@@ -5,9 +5,8 @@ AC_INIT([pedalevite], [r1], [http://ldesoras.free.fr/doc/articles/pedale-vite/pe
 AM_INIT_AUTOMAKE([foreign no-dist-gzip dist-xz subdir-objects no-define])
 AM_SILENT_RULES([yes])
 
-LT_INIT([win32-dll disable-static])
-
-AC_PROG_CXX
+AC_PROG_CXX([g++])
+AC_PROG_CC([g++])
 
 AC_CANONICAL_HOST
 
