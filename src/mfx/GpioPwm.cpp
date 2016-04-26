@@ -104,7 +104,7 @@ int	GpioPwm::init_chn (int chn, int subcycle_time)
 	channel._nbr_samples   =
 		(channel._subcycle_time + (_granularity >> 1)) / _granularity;
 	channel._nbr_cbs       = channel._nbr_samples * 2;
-	channel._nbr_pages     = 
+	channel._nbr_pages     =
 	   (   (channel._nbr_cbs * 32 + channel._nbr_samples * 4 + PAGE_SIZE - 1)
        >> PAGE_SHIFT);
 
@@ -114,7 +114,7 @@ int	GpioPwm::init_chn (int chn, int subcycle_time)
 	{
 		ret_val = channel.init_ctrl_data ();
 	}
-	
+
 	return ret_val;
 }
 
@@ -281,7 +281,7 @@ GpioPwm::DmaCtrlBlock & GpioPwm::Channel::use_cb ()
 		_mbox._virt_ptr + ((_nbr_samples + 7) & -8) * sizeof (uint32_t)
 	);
 	assert ((reinterpret_cast <uint32_t> (ptr) & 0x1F) == 0);
-	
+
 	return *ptr;
 }
 
@@ -496,7 +496,7 @@ int	GpioPwm::Channel::MBox::init (int size, int mem_flag)
 	_handle = -1; // mbox_open();
 	_size = size;
 	_mem_ref = mem_alloc (_handle, _size, 4096, mem_flag);
-	if (_mem_ref < 0)
+	if (_mem_ref == static_cast <unsigned int> (-1))
 	{
 		printf ("Failed to alloc memory from VideoCore\n");
 		ret_val = -1;
@@ -511,7 +511,7 @@ int	GpioPwm::Channel::MBox::init (int size, int mem_flag)
 	_virt_ptr = reinterpret_cast <uint8_t *> (
 		mapmem (_bus_adr & 0x3FFFFFFF, _size)
 	);
-	
+
 	return ret_val;
 }
 
