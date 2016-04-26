@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="mfx">
+      <UniqueIdentifier>{9dbe5005-b03a-41a5-b7f2-5f40d5da204e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\piapi">
+      <UniqueIdentifier>{cee897df-205a-4ed3-aae4-3825eef2ab4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="conc">
+      <UniqueIdentifier>{8001b601-47bf-48bd-89d9-44eda493b132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fstb">
+      <UniqueIdentifier>{f8c239ad-74be-4ed6-8b15-db2db9549ad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jack">
+      <UniqueIdentifier>{5a0a9cfa-12d0-4338-bc0b-aaa5fb514ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\tuner">
+      <UniqueIdentifier>{f386ef77-a094-4e9b-809e-f938c0e5b1ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\ui">
+      <UniqueIdentifier>{6f074c63-9327-4a2b-baf6-1226d06f039b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi">
+      <UniqueIdentifier>{0abc7ff7-ecb5-4920-994e-3fa9b489eeeb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mfx\piapi\Event.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\EventNoteOff.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\EventNoteOn.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\EventParam.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\EventTs.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\EventType.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\ParamCateg.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\ParamDescInterface.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\ParamDescInterface.hpp">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\PluginInterface.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AioAdd.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AioAdd.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AioMax.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AioMax.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AioSub.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AioSub.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicInt.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicInt.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicIntOp.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicIntOp.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicMem.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicMem.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicPtr.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicPtr.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicPtrIntPair.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\AtomicPtrIntPair.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\CellPool.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\CellPool.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\def.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\fnc.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\fnc.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\Interlocked.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\Interlocked.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\LockFreeCell.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\LockFreeQueue.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\LockFreeQueue.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\LockFreeStack.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\LockFreeStack.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\ObjFactoryDef.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\ObjFactoryDef.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\ObjFactoryInterface.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\ObjFactoryInterface.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\ObjPool.h">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="conc\ObjPool.hpp">
+      <Filter>conc</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\AllocAlign.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\AllocAlign.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\ArrayAlign.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\ArrayAlign.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\CpuId.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\def.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\fnc.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\fnc.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\SingleObj.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\SingleObj.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\ToolsAvx2.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\ToolsAvx2.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\ToolsSse2.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\ToolsSse2.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="jack\jack.h">
+      <Filter>jack</Filter>
+    </ClInclude>
+    <ClInclude Include="jack\systemdeps.h">
+      <Filter>jack</Filter>
+    </ClInclude>
+    <ClInclude Include="jack\transport.h">
+      <Filter>jack</Filter>
+    </ClInclude>
+    <ClInclude Include="jack\types.h">
+      <Filter>jack</Filter>
+    </ClInclude>
+    <ClInclude Include="jack\weakmacros.h">
+      <Filter>jack</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\ToolsSimd.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\ToolsSimd.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\tuner\FreqAnalyser.h">
+      <Filter>mfx\tuner</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\Overdrive.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\DisplayInterface.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\UserInputInterface.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\UserInputMsg.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\UserInputType.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\UserInputPi3.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\LedInterface.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\LedPi3.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\GpioPwm.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\EventTransport.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\FontDataDefault.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\Font.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mfx\piapi\PluginInterface.cpp">
+      <Filter>mfx\piapi</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\CpuId.cpp">
+      <Filter>fstb</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\fnc.cpp">
+      <Filter>fstb</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\ToolsAvx2.cpp">
+      <Filter>fstb</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\ToolsSse2.cpp">
+      <Filter>fstb</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="fstb\ToolsSimd.cpp">
+      <Filter>fstb</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\tuner\FreqAnalyser.cpp">
+      <Filter>mfx\tuner</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\Overdrive.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\DisplayInterface.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\UserInputInterface.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\UserInputPi3.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\LedInterface.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\LedPi3.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\GpioPwm.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\UserInputMsg.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\FontDataDefault.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\Font.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
