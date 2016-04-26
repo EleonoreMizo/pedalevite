@@ -200,7 +200,6 @@ static void MAIN_physical_input_thread (Context &ctx)
 				}
 				else if (type == mfx::ui::UserInputType_POT)
 				{
-					fprintf (stderr, "Pot\n");
 					if (index == 0)
 					{
 						const float    gain = std::max (val * val * 1000, 0.01f);
