@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4ECD73F9-7BF9-4B6F-95F0-F671660588AA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>mfx</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="conc\AioAdd.h" />
+    <ClInclude Include="conc\AioAdd.hpp" />
+    <ClInclude Include="conc\AioMax.h" />
+    <ClInclude Include="conc\AioMax.hpp" />
+    <ClInclude Include="conc\AioSub.h" />
+    <ClInclude Include="conc\AioSub.hpp" />
+    <ClInclude Include="conc\AtomicInt.h" />
+    <ClInclude Include="conc\AtomicInt.hpp" />
+    <ClInclude Include="conc\AtomicIntOp.h" />
+    <ClInclude Include="conc\AtomicIntOp.hpp" />
+    <ClInclude Include="conc\AtomicMem.h" />
+    <ClInclude Include="conc\AtomicMem.hpp" />
+    <ClInclude Include="conc\AtomicPtr.h" />
+    <ClInclude Include="conc\AtomicPtr.hpp" />
+    <ClInclude Include="conc\AtomicPtrIntPair.h" />
+    <ClInclude Include="conc\AtomicPtrIntPair.hpp" />
+    <ClInclude Include="conc\CellPool.h" />
+    <ClInclude Include="conc\CellPool.hpp" />
+    <ClInclude Include="conc\def.h" />
+    <ClInclude Include="conc\fnc.h" />
+    <ClInclude Include="conc\fnc.hpp" />
+    <ClInclude Include="conc\Interlocked.h" />
+    <ClInclude Include="conc\Interlocked.hpp" />
+    <ClInclude Include="conc\LockFreeCell.h" />
+    <ClInclude Include="conc\LockFreeQueue.h" />
+    <ClInclude Include="conc\LockFreeQueue.hpp" />
+    <ClInclude Include="conc\LockFreeStack.h" />
+    <ClInclude Include="conc\LockFreeStack.hpp" />
+    <ClInclude Include="conc\ObjFactoryDef.h" />
+    <ClInclude Include="conc\ObjFactoryDef.hpp" />
+    <ClInclude Include="conc\ObjFactoryInterface.h" />
+    <ClInclude Include="conc\ObjFactoryInterface.hpp" />
+    <ClInclude Include="conc\ObjPool.h" />
+    <ClInclude Include="conc\ObjPool.hpp" />
+    <ClInclude Include="fstb\AllocAlign.h" />
+    <ClInclude Include="fstb\AllocAlign.hpp" />
+    <ClInclude Include="fstb\ArrayAlign.h" />
+    <ClInclude Include="fstb\ArrayAlign.hpp" />
+    <ClInclude Include="fstb\CpuId.h" />
+    <ClInclude Include="fstb\def.h" />
+    <ClInclude Include="fstb\fnc.h" />
+    <ClInclude Include="fstb\fnc.hpp" />
+    <ClInclude Include="fstb\SingleObj.h" />
+    <ClInclude Include="fstb\SingleObj.hpp" />
+    <ClInclude Include="fstb\ToolsAvx2.h" />
+    <ClInclude Include="fstb\ToolsAvx2.hpp" />
+    <ClInclude Include="fstb\ToolsSimd.h" />
+    <ClInclude Include="fstb\ToolsSimd.hpp" />
+    <ClInclude Include="fstb\ToolsSse2.h" />
+    <ClInclude Include="fstb\ToolsSse2.hpp" />
+    <ClInclude Include="jack\jack.h" />
+    <ClInclude Include="jack\systemdeps.h" />
+    <ClInclude Include="jack\transport.h" />
+    <ClInclude Include="jack\types.h" />
+    <ClInclude Include="jack\weakmacros.h" />
+    <ClInclude Include="mfx\GpioPwm.h" />
+    <ClInclude Include="mfx\Overdrive.h" />
+    <ClInclude Include="mfx\piapi\Event.h" />
+    <ClInclude Include="mfx\piapi\EventNoteOff.h" />
+    <ClInclude Include="mfx\piapi\EventNoteOn.h" />
+    <ClInclude Include="mfx\piapi\EventParam.h" />
+    <ClInclude Include="mfx\piapi\EventTransport.h" />
+    <ClInclude Include="mfx\piapi\EventTs.h" />
+    <ClInclude Include="mfx\piapi\EventType.h" />
+    <ClInclude Include="mfx\piapi\ParamCateg.h" />
+    <ClInclude Include="mfx\piapi\ParamDescInterface.h" />
+    <ClInclude Include="mfx\piapi\ParamDescInterface.hpp" />
+    <ClInclude Include="mfx\piapi\PluginInterface.h" />
+    <ClInclude Include="mfx\tuner\FreqAnalyser.h" />
+    <ClInclude Include="mfx\ui\DisplayInterface.h" />
+    <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h" />
+    <ClInclude Include="mfx\ui\Font.h" />
+    <ClInclude Include="mfx\ui\FontDataDefault.h" />
+    <ClInclude Include="mfx\ui\LedInterface.h" />
+    <ClInclude Include="mfx\ui\LedPi3.h" />
+    <ClInclude Include="mfx\ui\UserInputInterface.h" />
+    <ClInclude Include="mfx\ui\UserInputMsg.h" />
+    <ClInclude Include="mfx\ui\UserInputPi3.h" />
+    <ClInclude Include="mfx\ui\UserInputType.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="fstb\CpuId.cpp" />
+    <ClCompile Include="fstb\fnc.cpp" />
+    <ClCompile Include="fstb\ToolsAvx2.cpp" />
+    <ClCompile Include="fstb\ToolsSimd.cpp" />
+    <ClCompile Include="fstb\ToolsSse2.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mfx\GpioPwm.cpp" />
+    <ClCompile Include="mfx\Overdrive.cpp" />
+    <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
+    <ClCompile Include="mfx\tuner\FreqAnalyser.cpp" />
+    <ClCompile Include="mfx\ui\DisplayInterface.cpp" />
+    <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp" />
+    <ClCompile Include="mfx\ui\Font.cpp" />
+    <ClCompile Include="mfx\ui\FontDataDefault.cpp" />
+    <ClCompile Include="mfx\ui\LedInterface.cpp" />
+    <ClCompile Include="mfx\ui\LedPi3.cpp" />
+    <ClCompile Include="mfx\ui\UserInputInterface.cpp" />
+    <ClCompile Include="mfx\ui\UserInputMsg.cpp" />
+    <ClCompile Include="mfx\ui\UserInputPi3.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
