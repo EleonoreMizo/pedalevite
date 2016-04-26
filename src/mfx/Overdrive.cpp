@@ -45,7 +45,7 @@ namespace mfx
 
 // 0: Normal, no foldback
 // > 0: Curve is mirrored, N time(s) per polarity
-#define mfx_Overdrive_FOLDBACK 1
+#define mfx_Overdrive_FOLDBACK 0
 
 
 
@@ -147,7 +147,7 @@ void	Overdrive::process_block (float spl_ptr [], int nbr_spl)
 			x = fstb::ToolsSimd::max_f32 (x, mi);
 
 			const auto     x2 = x * x;
-		
+
 #if (mfx_Overdrive_ALGO == 2)
 			x = (                       a3  * x2 + a1) * x * g;
 #else  // mfx_Overdrive_ALGO
