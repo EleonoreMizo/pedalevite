@@ -162,7 +162,6 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride)
 {
 	assert (is_ready ());
 	assert (buf_ptr != 0);
-	assert (ucs4 >= 0);
 	assert (dst_stride >= _char_w);
 
 	const int      c       = get_char_pos (ucs4);
@@ -188,7 +187,6 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag
 {
 	assert (is_ready ());
 	assert (buf_ptr != 0);
-	assert (ucs4 >= 0);
 	assert (dst_stride >= _char_w);
 	assert (mag_x > 0);
 	assert (mag_y > 0);
@@ -243,8 +241,6 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag
 // Returns -1 if not found
 int	Font::get_char_pos (char32_t ucs4) const
 {
-	assert (ucs4 >= 0);
-
 	int            pos = _not_found;
 
 	const size_t   zone_idx = ucs4 >> _zone_bits;

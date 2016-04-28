@@ -40,6 +40,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cctype>
+#include <cstring>
 
 
 
@@ -247,7 +248,6 @@ int	conv_to_lower_case (std::string &dest, const char src_0 [], const std::strin
 {
 	assert (&dest != 0);
 	assert (src_0 != 0);
-	assert (max_sz >= 0);
 
 	int				ret_val = Err_OK;
 
@@ -290,7 +290,6 @@ int	conv_to_upper_case (std::string &dest, const char src_0 [], const std::strin
 {
 	assert (&dest != 0);
 	assert (src_0 != 0);
-	assert (max_sz >= 0);
 
 	int				ret_val = Err_OK;
 

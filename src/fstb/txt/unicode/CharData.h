@@ -27,16 +27,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"fstb/txt/unicode/BidiClass.h"
-#include	"fstb/txt/unicode/Categ.h"
-#include	"fstb/txt/unicode/CharDataInfo.h"
-#include	"fstb/txt/unicode/GraphemeBreakProp.h"
-#include	"fstb/txt/unicode/LineBreakAction.h"
-#include	"fstb/txt/unicode/LineBreakProp.h"
-#include	"fstb/txt/unicode/WordBreakProp.h"
-#include	"fstb/txt/unicode/WordBreakPropTableNext.h"
-#include	"fstb/txt/unicode/WordBreakPropTablePrev.h"
+#include "fstb/txt/unicode/BidiClass.h"
+#include "fstb/txt/unicode/Categ.h"
+#include "fstb/txt/unicode/CharDataInfo.h"
+#include "fstb/txt/unicode/GraphemeBreakProp.h"
+#include "fstb/txt/unicode/LineBreakAction.h"
+#include "fstb/txt/unicode/LineBreakProp.h"
+#include "fstb/txt/unicode/WordBreakProp.h"
+#include "fstb/txt/unicode/WordBreakPropTableNext.h"
+#include "fstb/txt/unicode/WordBreakPropTablePrev.h"
 
+#include <cstddef>
 #include <cstdint>
 
 

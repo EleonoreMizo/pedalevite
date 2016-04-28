@@ -106,12 +106,6 @@ int	Codec8::get_char_seq_len_ucs (int &len, char32_t ucs4)
 		}
 	}
 
-	if (ucs4 < 0)
-	{
-		len = 0;
-		ret_val = Err_CHAR_OUT_OF_RANGE;
-	}
-
 	return (ret_val);
 }
 
@@ -295,7 +289,7 @@ int	Codec8::encode_char (char utf8_ptr [], char32_t ucs4, int &len)
 int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [])
 {
 	assert (&ucs4 != 0);
-	assert (&utf8_ptr != 0);
+	assert (utf8_ptr != 0);
 
 	int				dummy_len;
 
@@ -308,7 +302,7 @@ int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [])
 int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [], int &len)
 {
 	assert (&ucs4 != 0);
-	assert (&utf8_ptr != 0);
+	assert (utf8_ptr != 0);
 
 	ucs4 = 0;
 

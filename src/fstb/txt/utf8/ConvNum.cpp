@@ -177,13 +177,15 @@ int	ConvNum::conv_int64_to_str (char *txt_0, int64_t val, long max_len, int base
 
 	// Counts the number of required digits
    int            nbr_digits = 0;
-   int64_t        x = val;
-   do
    {
-      x /= base;
-      ++ nbr_digits;
-   }
-   while (x != 0);
+		int64_t        x = val;
+		do
+		{
+			x /= base;
+			++ nbr_digits;
+		}
+		while (x != 0);
+	}
 
 	const int      sign_offset = (val < 0) ? 1 : 0;
 	const int      nbr_char = nbr_digits + sign_offset;

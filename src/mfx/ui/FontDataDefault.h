@@ -68,7 +68,7 @@ private:
 	static const int  _char_per_table = 256;
 	static const int  _char_per_row   = 16;
 
-	static const int32_t
+	static const char32_t
 	               _mapping_8859_15 [_char_per_table];
 
 	static const uint8_t
