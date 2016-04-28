@@ -163,9 +163,12 @@ int	PluginInterface::reset (double sample_freq, int max_block_size, int &latency
 void	PluginInterface::process_block (ProcInfo &proc)
 {
 	assert (get_state () == State_ACTIVE);
-	assert (fstb::is_ptr_align_nz (proc._dst_arr));
-	assert (fstb::is_ptr_align_nz (proc._byp_arr));
-	assert (fstb::is_ptr_align_nz (proc._src_arr));
+	assert (proc._nbr_chn_arr [Dir_OUT] == 0 || proc._dst_arr  != 0);
+	assert (proc._nbr_chn_arr [Dir_OUT] == 0 || fstb::is_ptr_align_nz (proc._dst_arr [0]));
+	assert (! proc._byp_flag || proc._nbr_chn_arr [Dir_OUT] == 0 || proc._byp_arr [0] != 0);
+	assert (! proc._byp_flag || proc._nbr_chn_arr [Dir_OUT] == 0 || fstb::is_ptr_align_nz (proc._byp_arr [0]));
+	assert (proc._nbr_chn_arr [Dir_IN ] == 0 || proc._src_arr [0] != 0);
+	assert (proc._nbr_chn_arr [Dir_IN ] == 0 || fstb::is_ptr_align_nz (proc._src_arr [0]));
 	assert (proc._nbr_chn_arr != 0);
 	assert (proc._nbr_chn_arr [Dir_IN ] >= 0);
 	assert (proc._nbr_chn_arr [Dir_IN ] <= _max_nbr_chn);
