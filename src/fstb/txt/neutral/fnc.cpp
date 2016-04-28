@@ -24,12 +24,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"fstb/txt/neutral/fnc.h"
-#include	"fstb/txt/neutral/ConvDigit.h"
-#include	"fstb/Err.h"
+#include "fstb/txt/neutral/fnc.h"
+#include "fstb/txt/neutral/ConvDigit.h"
+#include "fstb/Err.h"
 
-#include	<cassert>
-#include	<cctype>
+#include <cassert>
+#include <cctype>
+#include <cstring>
 
 
 

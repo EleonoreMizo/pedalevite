@@ -24,10 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"fstb/txt/unicode/Categ.h"
-#include	"fstb/txt/unicode/CharData.h"
+#include "fstb/txt/unicode/Categ.h"
+#include "fstb/txt/unicode/CharData.h"
 
-#include	<cassert>
+#include <cassert>
 
 
 
@@ -171,7 +171,7 @@ Name: find_line_breaks
 Description:
 
 	Computes line breaks actions following each character of a string.
-	
+
 	The string should have been previously processed in order to submit to the
 	function an array of line break properties (each element correspounding to
 	a character).
@@ -187,7 +187,7 @@ Description:
 	Unicode Standard Annex #14: Unicode Line Breaking Algorithm
 	Section 7: Pair Table-Based Implementation
 	http://www.unicode.org/reports/tr14/
-	
+
 	http://www.unicode.org/Public/PROGRAMS/LineBreakSampleCpp/5.1.0/
 
 Input parameters:
@@ -523,7 +523,7 @@ const CharDataInfo &	CharData::use_info (char32_t c)
 {
 	int				index = 0;
 
-	if (c >= 0 && c < MAX_NBR_CODE_POINTS)
+	if (c < MAX_NBR_CODE_POINTS)
 	{
 		const int		page_code = _index_page_list [c >> PAGE_SIZE_L2];
 		const int		direct_mask = 1 << DIRECT_L2;
