@@ -25,6 +25,27 @@
     <Filter Include="mfx\pi">
       <UniqueIdentifier>{0abc7ff7-ecb5-4920-994e-3fa9b489eeeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\param">
+      <UniqueIdentifier>{979c7a9d-ed44-4b6a-b4bd-4526c8f82d1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fstb\txt">
+      <UniqueIdentifier>{966573b7-f3ad-4c46-bc91-f3e39f54407c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fstb\txt\utf8">
+      <UniqueIdentifier>{3209da5b-0bc4-46c9-a501-5abde1d0f232}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fstb\txt\unicode">
+      <UniqueIdentifier>{5fb7579f-1a41-4985-a08a-82d8e798b5e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fstb\txt\neutral">
+      <UniqueIdentifier>{ebf96f8b-f469-451a-91e2-f5caee42be72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fstb\util">
+      <UniqueIdentifier>{9b59e8d3-2f24-4e4f-9198-420d6c0ed415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp">
+      <UniqueIdentifier>{2a1487ea-4471-49cb-8474-9fd6c7b9f9e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -264,6 +285,216 @@
     <ClInclude Include="mfx\ui\Font.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\DistoSimple.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\HelperDispNum.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\MapLog.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\MapLog.hpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\Tools.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplEnum.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplEnum.hpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplInt.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplInt.hpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplLin.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplLin.hpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplLog.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplMapped.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\TplMapped.hpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\BidiClass.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\Categ.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\Categ.hpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\CategClass.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\CharData.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\CharDataBuilder.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\CharDataInfo.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\CharDataInfo.hpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\ConvCi.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\ConvCi.hpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\ConvNeutral.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\ConvNeutral.hpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\GraphemeBreakProp.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\LineBreakAction.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\LineBreakProp.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\PredEq.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\PredEq.hpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\PredLt.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\PredLt.hpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\StringU.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\unicode.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\unicode.hpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\WordBreakProp.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\WordBreakPropTableNext.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\unicode\WordBreakPropTablePrev.h">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\utf8\Codec8.h">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\utf8\ConvNum.h">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\utf8\def.h">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\utf8\PredStringCiEq.h">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\utf8\PredStringCiEq.hpp">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\utf8\PredStringCiLt.h">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\utf8\PredStringCiLt.hpp">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\Err.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\utf8\fnc.h">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\neutral\ConvDigit.h">
+      <Filter>fstb\txt\neutral</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\neutral\ConvDigit.hpp">
+      <Filter>fstb\txt\neutral</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\neutral\fnc.h">
+      <Filter>fstb\txt\neutral</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\txt\neutral\fnc.hpp">
+      <Filter>fstb\txt\neutral</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\NotificationFlagInterface.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\NotificationFlagInterface.hpp">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\ObserverInterface.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\ObserverInterface.hpp">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\ObservableInterface.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\ObservableInterface.hpp">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\NotificationFlag.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\NotificationFlag.hpp">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\NotificationFlagCascadeMixin.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\NotificationFlagCascadeMixin.hpp">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\NotificationFlagCascadeMulti.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\NotificationFlagCascadeSingle.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\ObservableMultiMixin.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\ObservableSingleMixin.h">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\util\ObservableSingleMixin.hpp">
+      <Filter>fstb\util</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\ParamState.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\InertiaLin.h">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\InertiaLin.hpp">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -320,6 +551,48 @@
     </ClCompile>
     <ClCompile Include="mfx\ui\Font.cpp">
       <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\DistoSimple.cpp">
+      <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\param\HelperDispNum.cpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\param\Tools.cpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\unicode\CharData.cpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\unicode\CharDataBuilder.cpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\unicode\unicode.cpp">
+      <Filter>fstb\txt\unicode</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\utf8\Codec8.cpp">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\utf8\ConvNum.cpp">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\utf8\def.cpp">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\utf8\fnc.cpp">
+      <Filter>fstb\txt\utf8</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\neutral\fnc.cpp">
+      <Filter>fstb\txt\neutral</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\param\TplLog.cpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\util\ObservableMultiMixin.cpp">
+      <Filter>fstb\util</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\ParamState.cpp">
+      <Filter>mfx\pi</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

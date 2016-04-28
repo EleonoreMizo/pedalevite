@@ -143,19 +143,14 @@ double	PluginInterface::get_param_val (ParamCateg categ, int index, int note_id)
 
 
 
-int	PluginInterface::reset (double sample_freq, int max_block_size, const int nbr_chn_arr [Dir_NBR_ELT], int &latency)
+int	PluginInterface::reset (double sample_freq, int max_block_size, int &latency)
 {
 	assert (   get_state () == State_INITIALISED
 	        || get_state () == State_ACTIVE);
 	assert (sample_freq > 0);
 	assert (max_block_size > 0);
-	assert (nbr_chn_arr != 0);
-	assert (nbr_chn_arr [Dir_IN ] >= 0);
-	assert (nbr_chn_arr [Dir_IN ] <= _max_nbr_chn);
-	assert (nbr_chn_arr [Dir_OUT] >= 0);
-	assert (nbr_chn_arr [Dir_OUT] <= _max_nbr_chn);
 
-	const int      ret_val = do_reset (sample_freq, max_block_size, nbr_chn_arr, latency);
+	const int      ret_val = do_reset (sample_freq, max_block_size, latency);
 	assert (ret_val == Err_OK || get_state () == State_INITIALISED);
 	assert (ret_val != Err_OK || get_state () == State_ACTIVE     );
 	assert (ret_val != Err_OK || latency >= 0);
@@ -171,6 +166,11 @@ void	PluginInterface::process_block (ProcInfo &proc)
 	assert (fstb::is_ptr_align_nz (proc._dst_arr));
 	assert (fstb::is_ptr_align_nz (proc._byp_arr));
 	assert (fstb::is_ptr_align_nz (proc._src_arr));
+	assert (proc._nbr_chn_arr != 0);
+	assert (proc._nbr_chn_arr [Dir_IN ] >= 0);
+	assert (proc._nbr_chn_arr [Dir_IN ] <= _max_nbr_chn);
+	assert (proc._nbr_chn_arr [Dir_OUT] >= 0);
+	assert (proc._nbr_chn_arr [Dir_OUT] <= _max_nbr_chn);
 	assert (proc._nbr_spl > 0);
 	assert (proc._evt_arr != 0 || proc._nbr_evt == 0);
 	assert (proc._nbr_evt >= 0);

@@ -153,6 +153,13 @@ int	round_int (double x)
 
 
 
+int64_t round_int64 (double x)
+{
+	return (int64_t (round (x)));
+}
+
+
+
 // May not give the right result for very small negative values.
 int	floor_int (double x)
 {
@@ -506,6 +513,40 @@ T	sshift_r (T x)
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
 	return (fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S < 0)>::sh (x));
+}
+
+
+
+// U must be a signed integer type
+template <class T, class U>
+T	ipow (T x, U n)
+{
+	const U			abs_n = std::abs (n);
+	const T			z (ipowp (x, abs_n));
+
+	return ((n < U (0)) ? T (1) / z : z);
+}
+
+
+
+// U must be an integer type (signed or not)
+template <class T, class U>
+T	ipowp (T x, U n)
+{
+	assert (! (n < U (0)));
+
+	T					z (1);
+	while (n != U (0))
+	{
+		if ((n & U (1)) != U (0))
+		{
+			z *= x;
+		}
+		n >>= 1;
+		x *= x;
+	}
+
+	return (z);
 }
 
 

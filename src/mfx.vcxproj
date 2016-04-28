@@ -16,33 +16,33 @@
     <RootNamespace>mfx</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
     <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -120,6 +120,7 @@
     <ClInclude Include="fstb\ArrayAlign.hpp" />
     <ClInclude Include="fstb\CpuId.h" />
     <ClInclude Include="fstb\def.h" />
+    <ClInclude Include="fstb\Err.h" />
     <ClInclude Include="fstb\fnc.h" />
     <ClInclude Include="fstb\fnc.hpp" />
     <ClInclude Include="fstb\SingleObj.h" />
@@ -130,11 +131,65 @@
     <ClInclude Include="fstb\ToolsSimd.hpp" />
     <ClInclude Include="fstb\ToolsSse2.h" />
     <ClInclude Include="fstb\ToolsSse2.hpp" />
+    <ClInclude Include="fstb\txt\neutral\ConvDigit.h" />
+    <ClInclude Include="fstb\txt\neutral\ConvDigit.hpp" />
+    <ClInclude Include="fstb\txt\neutral\fnc.h" />
+    <ClInclude Include="fstb\txt\neutral\fnc.hpp" />
+    <ClInclude Include="fstb\txt\unicode\BidiClass.h" />
+    <ClInclude Include="fstb\txt\unicode\Categ.h" />
+    <ClInclude Include="fstb\txt\unicode\Categ.hpp" />
+    <ClInclude Include="fstb\txt\unicode\CategClass.h" />
+    <ClInclude Include="fstb\txt\unicode\CharData.h" />
+    <ClInclude Include="fstb\txt\unicode\CharDataBuilder.h" />
+    <ClInclude Include="fstb\txt\unicode\CharDataInfo.h" />
+    <ClInclude Include="fstb\txt\unicode\CharDataInfo.hpp" />
+    <ClInclude Include="fstb\txt\unicode\ConvCi.h" />
+    <ClInclude Include="fstb\txt\unicode\ConvCi.hpp" />
+    <ClInclude Include="fstb\txt\unicode\ConvNeutral.h" />
+    <ClInclude Include="fstb\txt\unicode\ConvNeutral.hpp" />
+    <ClInclude Include="fstb\txt\unicode\GraphemeBreakProp.h" />
+    <ClInclude Include="fstb\txt\unicode\LineBreakAction.h" />
+    <ClInclude Include="fstb\txt\unicode\LineBreakProp.h" />
+    <ClInclude Include="fstb\txt\unicode\PredEq.h" />
+    <ClInclude Include="fstb\txt\unicode\PredEq.hpp" />
+    <ClInclude Include="fstb\txt\unicode\PredLt.h" />
+    <ClInclude Include="fstb\txt\unicode\PredLt.hpp" />
+    <ClInclude Include="fstb\txt\unicode\StringU.h" />
+    <ClInclude Include="fstb\txt\unicode\unicode.h" />
+    <ClInclude Include="fstb\txt\unicode\unicode.hpp" />
+    <ClInclude Include="fstb\txt\unicode\WordBreakProp.h" />
+    <ClInclude Include="fstb\txt\unicode\WordBreakPropTableNext.h" />
+    <ClInclude Include="fstb\txt\unicode\WordBreakPropTablePrev.h" />
+    <ClInclude Include="fstb\txt\utf8\Codec8.h" />
+    <ClInclude Include="fstb\txt\utf8\ConvNum.h" />
+    <ClInclude Include="fstb\txt\utf8\def.h" />
+    <ClInclude Include="fstb\txt\utf8\fnc.h" />
+    <ClInclude Include="fstb\txt\utf8\PredStringCiEq.h" />
+    <ClInclude Include="fstb\txt\utf8\PredStringCiEq.hpp" />
+    <ClInclude Include="fstb\txt\utf8\PredStringCiLt.h" />
+    <ClInclude Include="fstb\txt\utf8\PredStringCiLt.hpp" />
+    <ClInclude Include="fstb\util\NotificationFlag.h" />
+    <ClInclude Include="fstb\util\NotificationFlag.hpp" />
+    <ClInclude Include="fstb\util\NotificationFlagCascadeMixin.h" />
+    <ClInclude Include="fstb\util\NotificationFlagCascadeMixin.hpp" />
+    <ClInclude Include="fstb\util\NotificationFlagCascadeMulti.h" />
+    <ClInclude Include="fstb\util\NotificationFlagCascadeSingle.h" />
+    <ClInclude Include="fstb\util\NotificationFlagInterface.h" />
+    <ClInclude Include="fstb\util\NotificationFlagInterface.hpp" />
+    <ClInclude Include="fstb\util\ObservableInterface.h" />
+    <ClInclude Include="fstb\util\ObservableInterface.hpp" />
+    <ClInclude Include="fstb\util\ObservableMultiMixin.h" />
+    <ClInclude Include="fstb\util\ObservableSingleMixin.h" />
+    <ClInclude Include="fstb\util\ObservableSingleMixin.hpp" />
+    <ClInclude Include="fstb\util\ObserverInterface.h" />
+    <ClInclude Include="fstb\util\ObserverInterface.hpp" />
     <ClInclude Include="jack\jack.h" />
     <ClInclude Include="jack\systemdeps.h" />
     <ClInclude Include="jack\transport.h" />
     <ClInclude Include="jack\types.h" />
     <ClInclude Include="jack\weakmacros.h" />
+    <ClInclude Include="mfx\dsp\InertiaLin.h" />
+    <ClInclude Include="mfx\dsp\InertiaLin.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
     <ClInclude Include="mfx\Overdrive.h" />
     <ClInclude Include="mfx\piapi\Event.h" />
@@ -148,6 +203,21 @@
     <ClInclude Include="mfx\piapi\ParamDescInterface.h" />
     <ClInclude Include="mfx\piapi\ParamDescInterface.hpp" />
     <ClInclude Include="mfx\piapi\PluginInterface.h" />
+    <ClInclude Include="mfx\pi\DistoSimple.h" />
+    <ClInclude Include="mfx\pi\ParamState.h" />
+    <ClInclude Include="mfx\pi\param\HelperDispNum.h" />
+    <ClInclude Include="mfx\pi\param\MapLog.h" />
+    <ClInclude Include="mfx\pi\param\MapLog.hpp" />
+    <ClInclude Include="mfx\pi\param\Tools.h" />
+    <ClInclude Include="mfx\pi\param\TplEnum.h" />
+    <ClInclude Include="mfx\pi\param\TplEnum.hpp" />
+    <ClInclude Include="mfx\pi\param\TplInt.h" />
+    <ClInclude Include="mfx\pi\param\TplInt.hpp" />
+    <ClInclude Include="mfx\pi\param\TplLin.h" />
+    <ClInclude Include="mfx\pi\param\TplLin.hpp" />
+    <ClInclude Include="mfx\pi\param\TplLog.h" />
+    <ClInclude Include="mfx\pi\param\TplMapped.h" />
+    <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
     <ClInclude Include="mfx\tuner\FreqAnalyser.h" />
     <ClInclude Include="mfx\ui\DisplayInterface.h" />
     <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h" />
@@ -162,14 +232,37 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fstb\CpuId.cpp" />
-    <ClCompile Include="fstb\fnc.cpp" />
+    <ClCompile Include="fstb\fnc.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="fstb\ToolsAvx2.cpp" />
     <ClCompile Include="fstb\ToolsSimd.cpp" />
     <ClCompile Include="fstb\ToolsSse2.cpp" />
+    <ClCompile Include="fstb\txt\neutral\fnc.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="fstb\txt\unicode\CharData.cpp" />
+    <ClCompile Include="fstb\txt\unicode\CharDataBuilder.cpp" />
+    <ClCompile Include="fstb\txt\unicode\unicode.cpp" />
+    <ClCompile Include="fstb\txt\utf8\Codec8.cpp" />
+    <ClCompile Include="fstb\txt\utf8\ConvNum.cpp" />
+    <ClCompile Include="fstb\txt\utf8\def.cpp" />
+    <ClCompile Include="fstb\txt\utf8\fnc.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)3.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)3.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="fstb\util\ObservableMultiMixin.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mfx\GpioPwm.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
+    <ClCompile Include="mfx\pi\DistoSimple.cpp" />
+    <ClCompile Include="mfx\pi\ParamState.cpp" />
+    <ClCompile Include="mfx\pi\param\HelperDispNum.cpp" />
+    <ClCompile Include="mfx\pi\param\Tools.cpp" />
+    <ClCompile Include="mfx\pi\param\TplLog.cpp" />
     <ClCompile Include="mfx\tuner\FreqAnalyser.cpp" />
     <ClCompile Include="mfx\ui\DisplayInterface.cpp" />
     <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp" />

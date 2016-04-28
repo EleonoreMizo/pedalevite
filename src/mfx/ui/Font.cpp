@@ -41,7 +41,7 @@ namespace ui
 
 
 
-void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const int32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag)
+void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const char32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag)
 {
 	assert (nbr_char > 0);
 	assert (nbr_char <= 0x7FFF);
@@ -98,7 +98,7 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 	ZoneArray ().swap (_zone_arr);
 	for (int c = 0; c < nbr_char; ++c)
 	{
-		const int      ucs4     = unicode_arr [c];
+		const char32_t ucs4     = unicode_arr [c];
 		const size_t   zone_idx = ucs4 >> _zone_bits;
 		if (zone_idx >= _zone_arr.size ())
 		{
@@ -129,7 +129,7 @@ bool	Font::is_ready () const
 
 
 
-bool	Font::is_existing (int32_t ucs4) const
+bool	Font::is_existing (char32_t ucs4) const
 {
 	return (get_char_pos (ucs4) >= 0);
 }
@@ -150,14 +150,15 @@ int	Font::get_char_h () const
 
 
 
-int	Font::get_char_w (int32_t /*ucs4*/) const
+int	Font::get_char_w (char32_t /*ucs4*/) const
 {
 	return _char_w;
 }
 
 
 
-void	Font::render_char (uint8_t *buf_ptr, int ucs4, int dst_stride)
+// You can use std::codecvt_utf8 <char32_t> to convert from UTF-8.
+void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride)
 {
 	assert (is_ready ());
 	assert (buf_ptr != 0);
@@ -183,7 +184,7 @@ void	Font::render_char (uint8_t *buf_ptr, int ucs4, int dst_stride)
 
 
 
-void	Font::render_char (uint8_t *buf_ptr, int ucs4, int dst_stride, int mag_x, int mag_y)
+void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag_x, int mag_y)
 {
 	assert (is_ready ());
 	assert (buf_ptr != 0);
@@ -240,7 +241,7 @@ void	Font::render_char (uint8_t *buf_ptr, int ucs4, int dst_stride, int mag_x, i
 
 
 // Returns -1 if not found
-int	Font::get_char_pos (int32_t ucs4) const
+int	Font::get_char_pos (char32_t ucs4) const
 {
 	assert (ucs4 >= 0);
 
