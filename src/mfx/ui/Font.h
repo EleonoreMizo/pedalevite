@@ -52,16 +52,16 @@ public:
 	               Font ()  = default;
 	virtual        ~Font () = default;
 
-	void           init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const int32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag = true);
+	void           init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const char32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag = true);
 
 	bool           is_ready () const;
-	bool           is_existing (int32_t ucs4) const;
+	bool           is_existing (char32_t ucs4) const;
 	int            get_baseline () const;
 	int            get_char_h () const;
-	int            get_char_w (int32_t ucs4 = 32) const;
+	int            get_char_w (char32_t ucs4 = 32) const;
 
-	void           render_char (uint8_t *buf_ptr, int ucs4, int dst_stride);
-	void           render_char (uint8_t *buf_ptr, int ucs4, int dst_stride, int mag_x, int mag_y);
+	void           render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride);
+	void           render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag_x, int mag_y);
 
 
 
@@ -87,7 +87,7 @@ private:
 	typedef std::vector <ZoneUPtr> ZoneArray;
 	typedef std::vector <uint8_t>  PicData;
 
-	int            get_char_pos (int32_t ucs4) const;
+	int            get_char_pos (char32_t ucs4) const;
 
 	int            _nbr_char     = 0;
 	int            _char_w       = 0;

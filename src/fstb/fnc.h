@@ -44,6 +44,7 @@ template <class T>
 inline bool    is_pow_2 (T x);
 inline double  round (double x);
 inline int     round_int (double x);
+inline int64_t round_int64 (double x);
 inline int     floor_int (double x);
 inline int     ceil_int (double x);
 template <class T>
@@ -60,6 +61,10 @@ template <class T, int S>
 inline T       sshift_l (T x);
 template <class T, int S>
 inline T       sshift_r (T x);
+template <class T, class U>
+inline T	ipow (T x, U n);
+template <class T, class U>
+inline T	ipowp (T x, U n);
 
 void           conv_to_lower_case (std::string &str);
 

@@ -41,6 +41,65 @@ pedalevite_SOURCES = \
         ../../src/conc/ObjFactoryInterface.hpp \
         ../../src/conc/ObjPool.h \
         ../../src/conc/ObjPool.hpp \
+        ../../src/fstb/txt/neutral/ConvDigit.h \
+        ../../src/fstb/txt/neutral/ConvDigit.hpp \
+        ../../src/fstb/txt/neutral/fnc.cpp \
+        ../../src/fstb/txt/neutral/fnc.h \
+        ../../src/fstb/txt/neutral/fnc.hpp \
+        ../../src/fstb/txt/unicode/BidiClass.h \
+        ../../src/fstb/txt/unicode/Categ.h \
+        ../../src/fstb/txt/unicode/Categ.hpp \
+        ../../src/fstb/txt/unicode/CategClass.h \
+        ../../src/fstb/txt/unicode/CharData.cpp \
+        ../../src/fstb/txt/unicode/CharData.h \
+        ../../src/fstb/txt/unicode/CharDataInfo.h \
+        ../../src/fstb/txt/unicode/CharDataInfo.hpp \
+        ../../src/fstb/txt/unicode/ConvCi.h \
+        ../../src/fstb/txt/unicode/ConvCi.hpp \
+        ../../src/fstb/txt/unicode/ConvNeutral.h \
+        ../../src/fstb/txt/unicode/ConvNeutral.hpp \
+        ../../src/fstb/txt/unicode/GraphemeBreakProp.h \
+        ../../src/fstb/txt/unicode/LineBreakAction.h \
+        ../../src/fstb/txt/unicode/LineBreakProp.h \
+        ../../src/fstb/txt/unicode/PredEq.h \
+        ../../src/fstb/txt/unicode/PredEq.hpp \
+        ../../src/fstb/txt/unicode/PredLt.h \
+        ../../src/fstb/txt/unicode/PredLt.hpp \
+        ../../src/fstb/txt/unicode/StringU.h \
+        ../../src/fstb/txt/unicode/WordBreakProp.h \
+        ../../src/fstb/txt/unicode/WordBreakPropTableNext.h \
+        ../../src/fstb/txt/unicode/WordBreakPropTablePrev.h \
+        ../../src/fstb/txt/unicode/unicode.cpp \
+        ../../src/fstb/txt/unicode/unicode.h \
+        ../../src/fstb/txt/unicode/unicode.hpp \
+        ../../src/fstb/txt/utf8/Codec8.cpp \
+        ../../src/fstb/txt/utf8/Codec8.h \
+        ../../src/fstb/txt/utf8/ConvNum.cpp \
+        ../../src/fstb/txt/utf8/ConvNum.h \
+        ../../src/fstb/txt/utf8/PredStringCiEq.h \
+        ../../src/fstb/txt/utf8/PredStringCiEq.hpp \
+        ../../src/fstb/txt/utf8/PredStringCiLt.h \
+        ../../src/fstb/txt/utf8/PredStringCiLt.hpp \
+        ../../src/fstb/txt/utf8/def.cpp \
+        ../../src/fstb/txt/utf8/def.h \
+        ../../src/fstb/txt/utf8/fnc.cpp \
+        ../../src/fstb/txt/utf8/fnc.h \
+        ../../src/fstb/util/NotificationFlag.h \
+        ../../src/fstb/util/NotificationFlag.hpp \
+        ../../src/fstb/util/NotificationFlagCascadeMixin.h \
+        ../../src/fstb/util/NotificationFlagCascadeMixin.hpp \
+        ../../src/fstb/util/NotificationFlagCascadeMulti.h \
+        ../../src/fstb/util/NotificationFlagCascadeSingle.h \
+        ../../src/fstb/util/NotificationFlagInterface.h \
+        ../../src/fstb/util/NotificationFlagInterface.hpp \
+        ../../src/fstb/util/ObservableInterface.h \
+        ../../src/fstb/util/ObservableInterface.hpp \
+        ../../src/fstb/util/ObservableMultiMixin.cpp \
+        ../../src/fstb/util/ObservableMultiMixin.h \
+        ../../src/fstb/util/ObservableSingleMixin.h \
+        ../../src/fstb/util/ObservableSingleMixin.hpp \
+        ../../src/fstb/util/ObserverInterface.h \
+        ../../src/fstb/util/ObserverInterface.hpp \
         ../../src/fstb/AllocAlign.h \
         ../../src/fstb/AllocAlign.hpp \
         ../../src/fstb/ArrayAlign.h \
@@ -48,6 +107,7 @@ pedalevite_SOURCES = \
         ../../src/fstb/CpuId.cpp \
         ../../src/fstb/CpuId.h \
         ../../src/fstb/def.h \
+        ../../src/fstb/Err.h \
         ../../src/fstb/fnc.cpp \
         ../../src/fstb/fnc.h \
         ../../src/fstb/fnc.hpp \
@@ -61,6 +121,28 @@ pedalevite_SOURCES = \
         ../../src/jack/transport.h \
         ../../src/jack/types.h \
         ../../src/jack/weakmacros.h \
+        ../../src/mfx/dsp/InertiaLin.h \
+        ../../src/mfx/dsp/InertiaLin.hpp \
+        ../../src/mfx/pi/param/HelperDispNum.cpp \
+        ../../src/mfx/pi/param/HelperDispNum.h \
+        ../../src/mfx/pi/param/MapLog.h \
+        ../../src/mfx/pi/param/MapLog.hpp \
+        ../../src/mfx/pi/param/Tools.cpp \
+        ../../src/mfx/pi/param/Tools.h \
+        ../../src/mfx/pi/param/TplEnum.h \
+        ../../src/mfx/pi/param/TplEnum.hpp \
+        ../../src/mfx/pi/param/TplInt.h \
+        ../../src/mfx/pi/param/TplInt.hpp \
+        ../../src/mfx/pi/param/TplLin.h \
+        ../../src/mfx/pi/param/TplLin.hpp \
+        ../../src/mfx/pi/param/TplLog.cpp \
+        ../../src/mfx/pi/param/TplLog.h \
+        ../../src/mfx/pi/param/TplMapped.h \
+        ../../src/mfx/pi/param/TplMapped.hpp \
+        ../../src/mfx/pi/DistoSimple.cpp \
+        ../../src/mfx/pi/DistoSimple.h \
+        ../../src/mfx/pi/ParamState.cpp \
+        ../../src/mfx/pi/ParamState.h \
         ../../src/mfx/piapi/Event.h \
         ../../src/mfx/piapi/EventNoteOff.h \
         ../../src/mfx/piapi/EventNoteOn.h \
