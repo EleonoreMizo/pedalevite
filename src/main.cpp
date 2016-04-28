@@ -18,13 +18,14 @@
 
 #include "fstb/AllocAlign.h"
 #include "fstb/fnc.h"
+#include "mfx/pi/DistoSimple.h"
+#include "mfx/piapi/EventTs.h"
 #include "mfx/tuner/FreqAnalyser.h"
 #include "mfx/ui/DisplayPi3Pcd8544.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
 #include "mfx/ui/LedPi3.h"
 #include "mfx/ui/UserInputPi3.h"
-#include "mfx/Overdrive.h"
 
 #if (MAIN_API == MAIN_API_JACK)
 	#include <jack/jack.h>
@@ -105,8 +106,11 @@ public:
 	const int      _tuner_subspl  = 4;
 	volatile bool  _tuner_flag    = false;
 	volatile bool  _disto_flag    = false;
-	volatile float _disto_gain    = 1;
-	mfx::Overdrive _disto;
+	std::atomic <float>
+	               _disto_gain;
+	volatile float _disto_gain_nat = 1;
+	mfx::pi::DistoSimple
+	               _disto;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
 
@@ -202,8 +206,7 @@ static void MAIN_physical_input_thread (Context &ctx)
 				{
 					if (index == 0)
 					{
-						const float    gain = std::max (val * val * 1000, 0.01f);
-						ctx._disto_gain = gain;
+						ctx._disto_gain.exchange (val);
 					}
 				}
 
@@ -234,7 +237,7 @@ int MAIN_main_loop (Context &ctx)
 	{
 		const bool   tuner_flag = ctx._tuner_flag;
 		const bool   disto_flag = ctx._disto_flag;
-		const float  disto_gain = ctx._disto_gain;
+		const float  disto_gain = ctx._disto_gain_nat;
 		const float  usage_max  = ctx._usage_max.exchange (-1);
 		const float  usage_min  = ctx._usage_min.exchange (-1);
 		const float  freq = (tuner_flag) ? ctx._detected_freq : 0;
@@ -373,26 +376,59 @@ static int MAIN_process (::jack_nframes_t nbr_spl, void *arg)
 		);
 	}
 
-	if (ctx._disto_flag)
+	float             gain_nrm = ctx._disto_gain.exchange (-1);
+	if (gain_nrm >= 0)
 	{
-		float             gain = ctx._disto_gain;
-		ctx._disto.set_gain (gain);
-		for (int chn = 0; chn < 2; ++chn)
+		const mfx::piapi::ParamDescInterface & desc =
+			ctx._disto.get_param_info (mfx::piapi::ParamCateg_GLOBAL, 0);
+		ctx._disto_gain_nat = desc.conv_nrm_to_nat (gain_nrm);
+	}
+
+	for (int chn = 0; chn < 2; ++chn)
+	{
+		if (chn == 0 && ctx._disto_flag)
 		{
+			mfx::piapi::PluginInterface::ProcInfo proc;
+			mfx::piapi::EventTs evt;
+			std::array <const mfx::piapi::EventTs *, 1>	evt_ptr_arr;
+			evt_ptr_arr [0] = &evt;
+			
+			if (gain_nrm >= 0)
+			{
+				evt._timestamp           = 0;
+				evt._type                = mfx::piapi::EventType_PARAM;
+				evt._evt._param._categ   = mfx::piapi::ParamCateg_GLOBAL;
+				evt._evt._param._index   = 0;
+				evt._evt._param._val     = gain_nrm;
+				evt._evt._param._note_id = -1;
+				proc._nbr_evt = 1;
+				proc._evt_arr = &evt_ptr_arr [0];
+			}
+			
 			for (int pos = 0; pos < int (nbr_spl); ++pos)
 			{
 				ctx._buf_alig [pos] = src_arr [chn] [pos];
 			}
-			ctx._disto.process_block (&ctx._buf_alig [0], nbr_spl);
+			std::array <      float *, 1> dst_ptr_arr;
+			std::array <const float *, 1> src_ptr_arr;
+			dst_ptr_arr [0] = &ctx._buf_alig [0];
+			src_ptr_arr [0] = &ctx._buf_alig [0];
+
+			proc._dst_arr  = &dst_ptr_arr [0];
+			proc._byp_arr  = 0;
+			proc._src_arr  = &src_ptr_arr [0];
+			proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN ] = 1;
+			proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT] = 1;
+			proc._nbr_spl  = nbr_spl;
+			
+			ctx._disto.process_block (proc);
+
 			for (int pos = 0; pos < int (nbr_spl); ++pos)
 			{
 				dst_arr [chn] [pos] = ctx._buf_alig [pos];
 			}
 		}
-	}
-	else
-	{
-		for (int chn = 0; chn < 2; ++chn)
+		else
 		{
 			for (int pos = 0; pos < int (nbr_spl); ++pos)
 			{
@@ -509,6 +545,10 @@ int main (int argc, char *argv [])
 			);
 		}
 	}
+	ctx._disto.init ();
+	int             latency;
+	ctx._disto.reset (sample_freq, 4096, latency);
+	ctx._disto_gain.store (0);
 	
 	static const ::JackPortFlags port_dir [2] =
 	{
