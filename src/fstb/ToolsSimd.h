@@ -87,6 +87,8 @@ public:
 	               set_f32_zero ();
 	static inline VectF32
 	               set1_f32 (float a);
+	static inline VectF32
+	               set_f32 (float a0, float a1, float a2, float a3);
 	static inline void
 	               mac (VectF32 &s, VectF32 a, VectF32 b);
 	static inline VectF32

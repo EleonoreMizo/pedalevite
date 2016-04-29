@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TplLog.h
+        MapSq.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_param_TplLog_HEADER_INCLUDED)
-#define mfx_pi_param_TplLog_HEADER_INCLUDED
+#if ! defined (mfx_pi_param_MapSq_HEADER_INCLUDED)
+#define mfx_pi_param_MapSq_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -26,9 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#include "mfx/pi/param/MapLog.h"
-#include "mfx/pi/param/TplMapped.h"
 
 
 
@@ -41,18 +38,20 @@ namespace param
 
 
 
-class TplLog
-:	public TplMapped <MapLog>
+template <bool INVFLAG>
+class MapSq
 {
-
-	typedef TplMapped <MapLog> Inherited;
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	explicit       TplLog (double val_min, double val_max, const char *name_0, const char *unit_0, HelperDispNum::Preset preset = HelperDispNum::Preset_FLOAT_STD, int group_index = 0, const char *format_0 = "%5.2f");
-	virtual        ~TplLog () = default;
+	               MapSq ()  = default;
+	virtual        ~MapSq () = default;
+
+	inline void    config (double val_min, double val_max);
+	inline double  conv_norm_to_nat (double norm) const;
+	inline double  conv_nat_to_norm (double nat) const;
 
 
 
@@ -66,19 +65,22 @@ protected:
 
 private:
 
+	double         _a  = 1;
+	double         _b  = 0;
+	double         _ai = 1;    // 1 / _a
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	               TplLog ()                               = delete;
-	               TplLog (const TplLog &other)            = delete;
-	TplLog &       operator = (const TplLog &other)        = delete;
-	bool           operator == (const TplLog &other) const = delete;
-	bool           operator != (const TplLog &other) const = delete;
+	               MapSq (const MapSq &other)             = delete;
+	MapSq &        operator = (const MapSq &other)        = delete;
+	bool           operator == (const MapSq &other) const = delete;
+	bool           operator != (const MapSq &other) const = delete;
 
-}; // class TplLog
+}; // class MapSq
 
 
 
@@ -88,11 +90,11 @@ private:
 
 
 
-//#include "mfx/pi/param/TplLog.hpp"
+#include "mfx/pi/param/MapSq.hpp"
 
 
 
-#endif   // mfx_pi_param_TplLog_HEADER_INCLUDED
+#endif   // mfx_pi_param_MapSq_HEADER_INCLUDED
 
 
 

@@ -127,6 +127,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/HelperDispNum.h \
         ../../src/mfx/pi/param/MapLog.h \
         ../../src/mfx/pi/param/MapLog.hpp \
+        ../../src/mfx/pi/param/MapSq.h \
+        ../../src/mfx/pi/param/MapSq.hpp \
         ../../src/mfx/pi/param/Tools.cpp \
         ../../src/mfx/pi/param/Tools.h \
         ../../src/mfx/pi/param/TplEnum.h \
@@ -139,6 +141,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplLog.h \
         ../../src/mfx/pi/param/TplMapped.h \
         ../../src/mfx/pi/param/TplMapped.hpp \
+        ../../src/mfx/pi/param/TplSq.cpp \
+        ../../src/mfx/pi/param/TplSq.h \
         ../../src/mfx/pi/DistoSimple.cpp \
         ../../src/mfx/pi/DistoSimple.h \
         ../../src/mfx/pi/ParamState.cpp \

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MapLog.hpp
+        MapSq.hpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,8 +15,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (mfx_pi_param_MapLog_CODEHEADER_INCLUDED)
-#define mfx_pi_param_MapLog_CODEHEADER_INCLUDED
+#if ! defined (mfx_pi_param_MapSq_CODEHEADER_INCLUDED)
+#define mfx_pi_param_MapSq_CODEHEADER_INCLUDED
 
 
 
@@ -40,36 +40,35 @@ namespace param
 
 
 
-void	MapLog::config (double val_min, double val_max)
+template <bool INVFLAG>
+void	MapSq <INVFLAG>::config (double val_min, double val_max)
 {
 	assert (val_min > 0);
 	assert (val_min < val_max);
 
-	const double   val_min_log = log (val_min);
-	const double   val_max_log = log (val_max);
-	_a  = val_max_log - val_min_log;
-	_b  = val_min_log;
+	_a  = val_max - val_min;
+	_b  = val_min;
 	_ai = 1.0 / _a;
 }
 
 
 
-double	MapLog::conv_norm_to_nat (double norm) const
+template <bool INVFLAG>
+double	MapSq <INVFLAG>::conv_norm_to_nat (double norm) const
 {
-	const double   nat_log = norm * _a + _b;
-	double         nat = exp (nat_log);
+	const double   normu = (INVFLAG) ? 2 - norm : norm;
 
-	return (nat);
+	return norm * normu * _a + _b;
 }
 
 
 
-double	MapLog::conv_nat_to_norm (double nat) const
+template <bool INVFLAG>
+double	MapSq <INVFLAG>::conv_nat_to_norm (double nat) const
 {
-	const double   nat_log = log (nat);
-	double         norm = (nat_log - _b) * _ai;
+	const double   r = (nat - _b) * _ai;
 
-	return (norm);
+	return (INVFLAG) ? 1 - sqrt (1 - r) : sqrt (r);
 }
 
 
@@ -88,7 +87,7 @@ double	MapLog::conv_nat_to_norm (double nat) const
 
 
 
-#endif   // mfx_pi_param_MapLog_CODEHEADER_INCLUDED
+#endif   // mfx_pi_param_MapSq_CODEHEADER_INCLUDED
 
 
 

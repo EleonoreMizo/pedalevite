@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TplLog.h
+        TplSq.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_param_TplLog_HEADER_INCLUDED)
-#define mfx_pi_param_TplLog_HEADER_INCLUDED
+#if ! defined (mfx_pi_param_TplSq_HEADER_INCLUDED)
+#define mfx_pi_param_TplSq_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/param/MapLog.h"
+#include "mfx/pi/param/MapSq.h"
 #include "mfx/pi/param/TplMapped.h"
 
 
@@ -41,18 +41,19 @@ namespace param
 
 
 
-class TplLog
-:	public TplMapped <MapLog>
+template <bool INVFLAG>
+class TplSq
+:	public TplMapped <MapSq <INVFLAG> >
 {
 
-	typedef TplMapped <MapLog> Inherited;
+	typedef TplMapped <MapSq <INVFLAG> > Inherited;
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	explicit       TplLog (double val_min, double val_max, const char *name_0, const char *unit_0, HelperDispNum::Preset preset = HelperDispNum::Preset_FLOAT_STD, int group_index = 0, const char *format_0 = "%5.2f");
-	virtual        ~TplLog () = default;
+	explicit       TplSq (double val_min, double val_max, const char *name_0, const char *unit_0, HelperDispNum::Preset preset = HelperDispNum::Preset_FLOAT_STD, int group_index = 0, const char *format_0 = "%5.2f");
+	virtual        ~TplSq () = default;
 
 
 
@@ -72,13 +73,13 @@ private:
 
 private:
 
-	               TplLog ()                               = delete;
-	               TplLog (const TplLog &other)            = delete;
-	TplLog &       operator = (const TplLog &other)        = delete;
-	bool           operator == (const TplLog &other) const = delete;
-	bool           operator != (const TplLog &other) const = delete;
+	               TplSq ()                               = delete;
+	               TplSq (const TplSq &other)             = delete;
+	TplSq &        operator = (const TplSq &other)        = delete;
+	bool           operator == (const TplSq &other) const = delete;
+	bool           operator != (const TplSq &other) const = delete;
 
-}; // class TplLog
+}; // class TplSq
 
 
 
@@ -88,11 +89,11 @@ private:
 
 
 
-//#include "mfx/pi/param/TplLog.hpp"
+#include "mfx/pi/param/TplSq.hpp"
 
 
 
-#endif   // mfx_pi_param_TplLog_HEADER_INCLUDED
+#endif   // mfx_pi_param_TplSq_HEADER_INCLUDED
 
 
 

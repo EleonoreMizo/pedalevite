@@ -208,6 +208,8 @@
     <ClInclude Include="mfx\pi\param\HelperDispNum.h" />
     <ClInclude Include="mfx\pi\param\MapLog.h" />
     <ClInclude Include="mfx\pi\param\MapLog.hpp" />
+    <ClInclude Include="mfx\pi\param\MapSq.h" />
+    <ClInclude Include="mfx\pi\param\MapSq.hpp" />
     <ClInclude Include="mfx\pi\param\Tools.h" />
     <ClInclude Include="mfx\pi\param\TplEnum.h" />
     <ClInclude Include="mfx\pi\param\TplEnum.hpp" />
@@ -218,6 +220,8 @@
     <ClInclude Include="mfx\pi\param\TplLog.h" />
     <ClInclude Include="mfx\pi\param\TplMapped.h" />
     <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
+    <ClInclude Include="mfx\pi\param\TplSq.h" />
+    <ClInclude Include="mfx\pi\param\TplSq.hpp" />
     <ClInclude Include="mfx\tuner\FreqAnalyser.h" />
     <ClInclude Include="mfx\ui\DisplayInterface.h" />
     <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h" />

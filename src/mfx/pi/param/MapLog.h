@@ -64,8 +64,9 @@ protected:
 
 private:
 
-	double         _a = 1;     // nat = exp (norm * _a + _b)
-	double         _b = 0;
+	double         _a  = 1;    // nat = exp (norm * _a + _b)
+	double         _b  = 0;
+	double         _ai = 1;    // 1 / _a
 
 
 
