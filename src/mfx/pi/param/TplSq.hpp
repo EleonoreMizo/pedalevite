@@ -49,7 +49,7 @@ TplSq <INVFLAG>::TplSq (double val_min, double val_max, const char *name_0, cons
 		format_0
 	)
 {
-	MapSq <INVFLAG> & pm = use_mapper ();
+	typename Inherited::Mapper & pm = this->use_mapper ();
 	pm.config (val_min, val_max);
 }
 

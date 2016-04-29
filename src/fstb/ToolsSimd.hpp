@@ -88,8 +88,8 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3)
 #if fstb_IS (ARCHI, X86)
 	return _mm_set_ps (a3, a2, a1, a0);
 #elif fstb_IS (ARCHI, ARM)
-	float32x4_t    v01 = vdup_n_f32 (a0);
-	float32x4_t    v23 = vdup_n_f32 (a2);
+	float32x2_t    v01 = vdup_n_f32 (a0);
+	float32x2_t    v23 = vdup_n_f32 (a2);
 	v01 = vset_lane_f32 (a1, v01, 1);
 	v23 = vset_lane_f32 (a3, v23, 1);
 	return vcombine_f32 (v01, v23);
