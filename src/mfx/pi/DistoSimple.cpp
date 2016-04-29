@@ -47,15 +47,15 @@ DistoSimple::DistoSimple ()
 :	_state (State_CONSTRUCTED)
 ,	_param_state_gain ()
 ,	_param_desc_gain (
-		1, 1000,
+		float (_gain_min), float (_gain_max),
 		"Distortion Gain\nGain",
 		"dB",
+		param::HelperDispNum::Preset_DB,
 		0,
 		"%+5.1f"
 	)
-,	_gain (1)
+,	_gain (float (_gain_min))
 {
-	_param_desc_gain.use_disp_num ().set_preset (param::HelperDispNum::Preset_DB);
 	_param_state_gain.set_desc (_param_desc_gain);
 	_param_state_gain.set_ramp_time (0.02);
 }
@@ -130,6 +130,11 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
 
+	for (int chn = 0; chn < _max_nbr_chn; ++chn)
+	{
+		_buf_arr [chn].resize (max_buf_len);
+	}
+
 	_state = State_ACTIVE;
 
 	return Err_OK;
@@ -137,6 +142,9 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+// x -> { x - x^9/9 if x >  0
+//      { x + x^2/2 if x <= 0
+// x * (1 - x^8/9)
 void	DistoSimple::do_process_block (ProcInfo &proc)
 {
 	// Ignores timestamps for simplicity
@@ -158,6 +166,68 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 
 	_param_state_gain.tick (nbr_spl);
 
+	int            chn_src_step = 1;
+	if (proc._nbr_chn_arr [Dir_IN] == 1 && proc._nbr_chn_arr [Dir_OUT] > 1)
+	{
+		chn_src_step = 0;
+	}
+
+	// Gain (ramp)
+	if (_param_state_gain.is_ramping ())
+	{
+		const float    gain_beg = float (
+			_param_desc_gain.conv_nrm_to_nat (_param_state_gain.get_val_beg ())
+		);
+		const float    gain_end = float (
+			_param_desc_gain.conv_nrm_to_nat (_param_state_gain.get_val_end ())
+		);
+
+		const float    step    = (gain_end - gain_beg) / nbr_spl;
+		auto           g       = fstb::ToolsSimd::set1_f32 (gain_beg);
+		const auto     c0123   = fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
+		fstb::ToolsSimd::mac (g, fstb::ToolsSimd::set1_f32 (step), c0123);
+		const auto     g_step  = fstb::ToolsSimd::set1_f32 (step * 4);
+
+		int            chn_src = 0;
+		for (int chn_dst = 0; chn_dst < proc._nbr_chn_arr [Dir_OUT]; ++chn_dst)
+		{
+			const float *  src_ptr = proc._src_arr [chn_dst];
+			float *        dst_ptr = &_buf_arr [chn_dst] [0];
+			for (int pos = 0; pos < nbr_spl; pos += 4)
+			{
+				auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+				x *= g;
+				fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+				g += g_step;
+			}
+
+			chn_src += chn_src_step;
+		}
+
+		_gain = gain_end;
+	}
+
+	// Gain (constant)
+	else
+	{
+		const auto     g       = fstb::ToolsSimd::set1_f32 (_gain);
+
+		int            chn_src = 0;
+		for (int chn_dst = 0; chn_dst < proc._nbr_chn_arr [Dir_OUT]; ++chn_dst)
+		{
+			const float *  src_ptr = proc._src_arr [chn_dst];
+			float *        dst_ptr = &_buf_arr [chn_dst] [0];
+			for (int pos = 0; pos < nbr_spl; pos += 4)
+			{
+				auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+				x *= g;
+				fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+			}
+
+			chn_src += chn_src_step;
+		}
+	}
+
 	const auto     g     = fstb::ToolsSimd::set1_f32 (_gain);
 	const auto     mi    = fstb::ToolsSimd::set1_f32 (-1);
 	const auto     ma    = fstb::ToolsSimd::set1_f32 ( 1);
@@ -167,11 +237,6 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	const auto     bias  = fstb::ToolsSimd::set1_f32 ( 0.2f);
 
 	int            chn_src      = 0;
-	int            chn_src_step = 1;
-	if (proc._nbr_chn_arr [Dir_IN] == 1 && proc._nbr_chn_arr [Dir_OUT] > 1)
-	{
-		chn_src_step = 0;
-	}
 
 	for (int chn_dst = 0; chn_dst < proc._nbr_chn_arr [Dir_OUT]; ++chn_dst)
 	{
@@ -187,9 +252,6 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 			x = fstb::ToolsSimd::min_f32 (x, ma);
 			x = fstb::ToolsSimd::max_f32 (x, mi);
 
-			// x -> { x - x^9/9 if x >  0
-			//      { x + x^2/2 if x <= 0
-			// x * (1 - x^8/9)
 			const auto     x2  = x * x;
 			const auto     x4  = x2 * x2;
 			const auto     x8  = x4 * x4;

@@ -43,13 +43,13 @@ namespace param
 
 
 
-TplLog::TplLog (double val_min, double val_max, const char *name_0, const char *unit_0, int group_index, const char *format_0)
+TplLog::TplLog (double val_min, double val_max, const char *name_0, const char *unit_0, HelperDispNum::Preset preset, int group_index, const char *format_0)
 :	Inherited (
 		val_min,
 		val_max,
 		name_0,
 		unit_0,
-		HelperDispNum::Preset_FLOAT_STD,
+		preset,
 		group_index,
 		format_0
 	)
