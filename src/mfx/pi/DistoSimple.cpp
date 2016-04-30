@@ -198,7 +198,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 				&_buf_arr [0] [0],
 				&_buf_arr [1] [0],
 				&proc._src_arr [0] [0],
-				&proc._src_arr [2] [0],
+				&proc._src_arr [1] [0],
 				nbr_spl,
 				gain_beg,
 				gain_end
@@ -252,7 +252,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 				&_buf_arr [0] [0],
 				&_buf_arr [1] [0],
 				&proc._src_arr [0] [0],
-				&proc._src_arr [2] [0],
+				&proc._src_arr [1] [0],
 				nbr_spl,
 				_gain
 			);
@@ -283,7 +283,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
 	const auto     c_1_9 = fstb::ToolsSimd::set1_f32 ( 1.0f / 9);
 	const auto     c_1_2 = fstb::ToolsSimd::set1_f32 ( 1.0f / 2);
-	const auto     bias  = fstb::ToolsSimd::set1_f32 ( 0.5f);
+	const auto     bias  = fstb::ToolsSimd::set1_f32 ( 0.2f);
 
 	int            chn_src_step = 1;
 	if (proc._nbr_chn_arr [Dir_IN] == 1 && proc._nbr_chn_arr [Dir_OUT] > 1)
