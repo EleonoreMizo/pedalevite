@@ -1201,7 +1201,6 @@ void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], co
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	StereoLevel		vol = s_vol;
 	StereoLevel		step = e_vol;
 	step -= s_vol;
 	step *= 1.0f / nbr_spl;
@@ -2124,7 +2123,7 @@ void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const fl
 		a1 = _mm_shuffle_ps (k1, k2, pack_lo);	// A1 B1 C1 D1
 		a2 = _mm_shuffle_ps (k1, k2, pack_hi);	// A2 B2 C2 D2
 #else
-		transpose_f32 (a1, a2, a3, a4);
+		fstb::ToolsSimd::transpose_f32 (a1, a2, a3, a4);
 #endif
 
 		V128Dst::store_f32 (out_1_ptr, a1);
@@ -3019,7 +3018,6 @@ void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], con
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	StereoLevel		vol = s_vol;
 	StereoLevel		step = e_vol;
 	step -= s_vol;
 	step *= 1.0f / nbr_spl;
