@@ -283,7 +283,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
 	const auto     c_1_9 = fstb::ToolsSimd::set1_f32 ( 1.0f / 9);
 	const auto     c_1_2 = fstb::ToolsSimd::set1_f32 ( 1.0f / 2);
-	const auto     bias  = fstb::ToolsSimd::set1_f32 ( 0.2f);
+	const auto     bias  = fstb::ToolsSimd::set1_f32 ( 0.5f);
 
 	int            chn_src_step = 1;
 	if (proc._nbr_chn_arr [Dir_IN] == 1 && proc._nbr_chn_arr [Dir_OUT] > 1)
@@ -301,7 +301,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 			auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
 			x *= g;
 
-			x -= bias;
+			x += bias;
 
 			x = fstb::ToolsSimd::min_f32 (x, ma);
 			x = fstb::ToolsSimd::max_f32 (x, mi);
@@ -315,7 +315,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 			const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
 			x = fstb::ToolsSimd::select (t_0, x_p, x_n);
 
-			x += bias;
+			x -= bias;
 
 			fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
 		}
