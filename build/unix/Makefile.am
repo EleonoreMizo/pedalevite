@@ -121,8 +121,18 @@ pedalevite_SOURCES = \
         ../../src/jack/transport.h \
         ../../src/jack/types.h \
         ../../src/jack/weakmacros.h \
+        ../../src/mfx/dsp/mix/Align.cpp \
+        ../../src/mfx/dsp/mix/Align.h \
+        ../../src/mfx/dsp/mix/Fpu.cpp \
+        ../../src/mfx/dsp/mix/Fpu.h \
+        ../../src/mfx/dsp/mix/Generic.cpp \
+        ../../src/mfx/dsp/mix/Generic.h \
+        ../../src/mfx/dsp/mix/Simd.h \
+        ../../src/mfx/dsp/mix/Simd.hpp \
         ../../src/mfx/dsp/InertiaLin.h \
         ../../src/mfx/dsp/InertiaLin.hpp \
+        ../../src/mfx/dsp/StereoLevel.h \
+        ../../src/mfx/dsp/StereoLevel.hpp \
         ../../src/mfx/pi/param/HelperDispNum.cpp \
         ../../src/mfx/pi/param/HelperDispNum.h \
         ../../src/mfx/pi/param/MapLog.h \

@@ -18,6 +18,7 @@
 
 #include "fstb/AllocAlign.h"
 #include "fstb/fnc.h"
+#include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/DistoSimple.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/tuner/FreqAnalyser.h"
@@ -499,6 +500,8 @@ int main (int argc, char *argv [])
 	::delay (1);
 	::digitalWrite (MAIN_pin_reset, HIGH);
 	::delay (1);
+
+	mfx::dsp::mix::Align::setup ();
 
 	::jack_status_t   status = ::JackServerFailed;
 	MAIN_client_ptr = jack_client_open (
