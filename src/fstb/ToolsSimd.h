@@ -122,6 +122,8 @@ public:
 	public:
 		static inline VectF32
 		               rotate (VectF32 a);
+		static inline float
+		               extract (VectF32 a);
 	};
 
 
