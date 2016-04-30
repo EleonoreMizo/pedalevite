@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/mix/Simd.h"
 #include "fstb/CpuId.h"
+#include "fstb/DataAlign.h"
 #include "fstb/ToolsSimd.h"
 
 #include <cassert>
@@ -435,8 +436,8 @@ void	Align::setup_unaligned ()
 void	Align::setup_simd ()
 {
 	typedef	Simd <
-		fstb::ToolsSimd::Align <true>,
-		fstb::ToolsSimd::Align <true>
+		fstb::DataAlign <true>,
+		fstb::DataAlign <true>
 	>	SimdA;
 
 	// Scale

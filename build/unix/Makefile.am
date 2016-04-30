@@ -106,6 +106,8 @@ pedalevite_SOURCES = \
         ../../src/fstb/ArrayAlign.hpp \
         ../../src/fstb/CpuId.cpp \
         ../../src/fstb/CpuId.h \
+        ../../src/fstb/DataAlign.h \
+        ../../src/fstb/DataAlign.hpp \
         ../../src/fstb/def.h \
         ../../src/fstb/Err.h \
         ../../src/fstb/fnc.cpp \

@@ -119,6 +119,8 @@
     <ClInclude Include="fstb\ArrayAlign.h" />
     <ClInclude Include="fstb\ArrayAlign.hpp" />
     <ClInclude Include="fstb\CpuId.h" />
+    <ClInclude Include="fstb\DataAlign.h" />
+    <ClInclude Include="fstb\DataAlign.hpp" />
     <ClInclude Include="fstb\def.h" />
     <ClInclude Include="fstb\Err.h" />
     <ClInclude Include="fstb\fnc.h" />
