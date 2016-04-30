@@ -531,6 +531,12 @@
     <ClInclude Include="mfx\dsp\mix\Simd.hpp">
       <Filter>mfx\dsp\mix</Filter>
     </ClInclude>
+    <ClInclude Include="fstb\DataAlign.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\DataAlign.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">

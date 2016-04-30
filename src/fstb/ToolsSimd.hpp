@@ -35,43 +35,6 @@ namespace fstb
 
 
 
-template <bool A>
-bool	ToolsSimd::Align <A>::check_ptr (const void *ptr)
-{
-	return is_ptr_align_nz (ptr, 16);
-}
-
-template <bool A>
-ToolsSimd::VectF32	ToolsSimd::Align <A>::load_f32 (const void *ptr)
-{
-	return ToolsSimd::load_f32 (ptr);
-}
-
-template <bool A>
-void	ToolsSimd::Align <A>::store_f32 (void *ptr, VectF32 v)
-{
-	ToolsSimd::store_f32 (ptr, v);
-}
-
-
-
-bool	ToolsSimd::Align <false>::check_ptr (const void *ptr)
-{
-	return (ptr != 0);
-}
-
-ToolsSimd::VectF32	ToolsSimd::Align <false>::load_f32 (const void *ptr)
-{
-	return ToolsSimd::loadu_f32 (ptr);
-}
-
-void	ToolsSimd::Align <false>::store_f32 (void *ptr, VectF32 v)
-{
-	ToolsSimd::storeu_f32 (ptr, v);
-}
-
-
-
 ToolsSimd::VectF32	ToolsSimd::load_f32 (const void *ptr)
 {
 	assert (is_ptr_align_nz (ptr, 16));
