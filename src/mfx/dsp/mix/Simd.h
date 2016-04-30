@@ -42,6 +42,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/ToolsSimd.h"
 
 
 namespace mfx
@@ -239,13 +240,16 @@ protected:
 
 private:
 
-	typedef	float	VectFloat4 [4];
-	fstb_TYPEDEF_ALIGN (16, VectFloat4, VectFloat4Aligned);
+	union Combo
+	{
+		float          _f32 [4];
+		fstb::ToolsSimd::VectF32
+		               _vf32;
+	};
+	fstb_TYPEDEF_ALIGN (16, Combo, ComboAligned);
 
-	static const VectFloat4Aligned
+	static const ComboAligned
 						_cst_0123;
-	static const VectFloat4Aligned
-						_cst_4444;
 
 
 
