@@ -56,14 +56,10 @@ public:
 	inline void    set_r2l (float val);
 	inline void    set_r2r (float val);
 
-	float const inline
-	               get_l2l () const;
-	float const inline
-	               get_l2r () const;
-	float const inline
-	               get_r2l () const;
-	float const inline
-	               get_r2r () const;
+	float inline   get_l2l () const;
+	float inline   get_l2r () const;
+	float inline   get_r2l () const;
+	float inline   get_r2r () const;
 
 	void inline    mat_mul (const StereoLevel &other);
 

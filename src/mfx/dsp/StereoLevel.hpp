@@ -84,28 +84,28 @@ void	StereoLevel::set_r2r (float val)
 
 
 
-float const	StereoLevel::get_l2l () const
+float	StereoLevel::get_l2l () const
 {
 	return (_l2l);
 }
 
 
 
-float const	StereoLevel::get_l2r () const
+float	StereoLevel::get_l2r () const
 {
 	return (_l2r);
 }
 
 
 
-float const	StereoLevel::get_r2l () const
+float	StereoLevel::get_r2l () const
 {
 	return (_r2l);
 }
 
 
 
-float const	StereoLevel::get_r2r () const
+float	StereoLevel::get_r2r () const
 {
 	return (_r2r);
 }

@@ -53,16 +53,19 @@ void	DataAlign <A>::store_f32 (void *ptr, ToolsSimd::VectF32 v)
 
 
 
+template <>
 bool	DataAlign <false>::check_ptr (const void *ptr)
 {
 	return (ptr != 0);
 }
 
+template <>
 ToolsSimd::VectF32	DataAlign <false>::load_f32 (const void *ptr)
 {
 	return ToolsSimd::loadu_f32 (ptr);
 }
 
+template <>
 void	DataAlign <false>::store_f32 (void *ptr, ToolsSimd::VectF32 v)
 {
 	ToolsSimd::storeu_f32 (ptr, v);
