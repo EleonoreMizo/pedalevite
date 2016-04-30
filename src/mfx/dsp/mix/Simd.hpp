@@ -1676,8 +1676,8 @@ void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const
 		fstb::ToolsSimd::interleave_f32 (o1, o3, i1, i2);
 
 		// Upper part to lower pos.
-		const auto	o2 = fstb::ToolsSimd::rotate <2> (o1);	// B1 B2 xx xx
-		const auto	o4 = fstb::ToolsSimd::rotate <2> (o3);	// D1 D2 xx xx
+		const auto	o2 = fstb::ToolsSimd::Shift <2>::rotate (o1);	// B1 B2 xx xx
+		const auto	o4 = fstb::ToolsSimd::Shift <2>::rotate (o3);	// D1 D2 xx xx
 
 		V128Dst::store_f32 (out_ptr     , o1);
 		V128Dst::store_f32 (out_ptr +  4, o2);
@@ -2124,7 +2124,7 @@ void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const fl
 		a1 = _mm_shuffle_ps (k1, k2, pack_lo);	// A1 B1 C1 D1
 		a2 = _mm_shuffle_ps (k1, k2, pack_hi);	// A2 B2 C2 D2
 #else
-		transpose_f32 (a1, a2, a3, a4)
+		transpose_f32 (a1, a2, a3, a4);
 #endif
 
 		V128Dst::store_f32 (out_1_ptr, a1);

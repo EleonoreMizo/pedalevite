@@ -68,7 +68,7 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const void *ptr)
 #if fstb_IS (ARCHI, X86)
 	return _mm_loadu_ps (reinterpret_cast <const float *> (ptr));
 #elif fstb_IS (ARCHI, ARM)
-	return vreinterpretq_u8_f32 (
+	return vreinterpretq_f32_u8 (
 		vld1q_u8 (reinterpret_cast <const uint8_t *> (ptr))
 	);
 #endif // ff_arch_CPU
@@ -83,7 +83,7 @@ void	ToolsSimd::storeu_f32 (void *ptr, VectF32 v)
 #if fstb_IS (ARCHI, X86)
 	_mm_storeu_ps (reinterpret_cast <float *> (ptr), v);
 #elif fstb_IS (ARCHI, ARM)
-	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_f32_u8 (v));
+	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_f32 (v));
 #endif // ff_arch_CPU
 }
 
@@ -258,7 +258,7 @@ void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a
 
 
 template <int SHIFT>
-ToolsSimd::VectF32	ToolsSimd::rotate (VectF32 a)
+ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a)
 {
 #if fstb_IS (ARCHI, X86)
 	switch (SHIFT & 3)
@@ -269,7 +269,7 @@ ToolsSimd::VectF32	ToolsSimd::rotate (VectF32 a)
 	default: return a;
 	}
 #elif fstb_IS (ARCHI, ARM)
-	int32x4_t      aa = vreinterpretq_f32_i32 (a);
+	int32x4_t     aa = vreinterpretq_s32_f32 (a);
 	switch (SHIFT & 3)
 	{
 	case 1:  aa = vextq_s32 (aa, aa, 3);
@@ -277,7 +277,7 @@ ToolsSimd::VectF32	ToolsSimd::rotate (VectF32 a)
 	case 3:  aa = vextq_s32 (aa, aa, 1);
 	default: aa = aa;
 	}
-	return vreinterpretq_i32_f32 (aa);
+	return vreinterpretq_f32_s32 (aa);
 #endif // ff_arch_CPU
 }
 

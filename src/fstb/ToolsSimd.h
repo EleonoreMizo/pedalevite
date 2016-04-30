@@ -78,30 +78,6 @@ public:
 		uint16_t       _u16 [8];
 	};
 
-	template <bool A>
-	class Align
-	{
-	public:
-		static inline bool
-		               check_ptr (const void *ptr);
-		static inline VectF32
-		               load_f32 (const void *ptr);
-		static inline void
-		               store_f32 (void *ptr, VectF32 v);
-	};
-
-	template <>
-	class Align <false>
-	{
-	public:
-		static inline bool
-		               check_ptr (const void *ptr);
-		static inline VectF32
-		               load_f32 (const void *ptr);
-		static inline void
-		               store_f32 (void *ptr, VectF32 v);
-	};
-
 	static inline VectF32
 	               load_f32 (const void *ptr);
 	static inline void
@@ -141,8 +117,12 @@ public:
 	               transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3);
 
 	template <int SHIFT>
-	static inline VectF32
-	               rotate (VectF32 a);
+	class Shift
+	{
+	public:
+		static inline VectF32
+		               rotate (VectF32 a);
+	};
 
 
 
