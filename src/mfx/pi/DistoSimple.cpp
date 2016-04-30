@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/ToolsSimd.h"
+#include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/DistoSimple.h"
 #include "mfx/piapi/EventTs.h"
 
@@ -142,6 +143,8 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+#define mfx_pi_DistoSimple_USE_MIXALIGN
+
 // x -> { x - x^9/9 if x >  0
 //      { x + x^2/2 if x <= 0
 // x * (1 - x^8/9)
@@ -166,12 +169,6 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 
 	_param_state_gain.tick (nbr_spl);
 
-	int            chn_src_step = 1;
-	if (proc._nbr_chn_arr [Dir_IN] == 1 && proc._nbr_chn_arr [Dir_OUT] > 1)
-	{
-		chn_src_step = 0;
-	}
-
 	// Gain (ramp)
 	if (_param_state_gain.is_ramping ())
 	{
@@ -182,17 +179,44 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 			_param_desc_gain.conv_nrm_to_nat (_param_state_gain.get_val_end ())
 		);
 
+#if defined (mfx_pi_DistoSimple_USE_MIXALIGN)
+		
+		if (proc._nbr_chn_arr [Dir_IN] == 1)
+		{
+			mfx::dsp::mix::Align::copy_1_1_vlr (
+				&_buf_arr [0] [0],
+				&proc._src_arr [0] [0],
+				nbr_spl,
+				gain_beg,
+				gain_end
+			);
+		}
+		else
+		{
+			static_assert (_max_nbr_chn == 2, "Multichannel not supported");
+			mfx::dsp::mix::Align::copy_2_2_vlr (
+				&_buf_arr [0] [0],
+				&_buf_arr [1] [0],
+				&proc._src_arr [0] [0],
+				&proc._src_arr [2] [0],
+				nbr_spl,
+				gain_beg,
+				gain_end
+			);
+		}
+
+#else
+
 		const float    step    = (gain_end - gain_beg) / nbr_spl;
 		auto           g       = fstb::ToolsSimd::set1_f32 (gain_beg);
 		const auto     c0123   = fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
 		fstb::ToolsSimd::mac (g, fstb::ToolsSimd::set1_f32 (step), c0123);
 		const auto     g_step  = fstb::ToolsSimd::set1_f32 (step * 4);
 
-		int            chn_src = 0;
-		for (int chn_dst = 0; chn_dst < proc._nbr_chn_arr [Dir_OUT]; ++chn_dst)
+		for (int chn = 0; chn < proc._nbr_chn_arr [Dir_IN]; ++chn)
 		{
-			const float *  src_ptr = proc._src_arr [chn_dst];
-			float *        dst_ptr = &_buf_arr [chn_dst] [0];
+			const float *  src_ptr = proc._src_arr [chn];
+			float *        dst_ptr = &_buf_arr [chn] [0];
 			for (int pos = 0; pos < nbr_spl; pos += 4)
 			{
 				auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
@@ -200,9 +224,9 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 				fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
 				g += g_step;
 			}
-
-			chn_src += chn_src_step;
 		}
+
+#endif
 
 		_gain = gain_end;
 	}
@@ -210,22 +234,47 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	// Gain (constant)
 	else
 	{
-		const auto     g       = fstb::ToolsSimd::set1_f32 (_gain);
-
-		int            chn_src = 0;
-		for (int chn_dst = 0; chn_dst < proc._nbr_chn_arr [Dir_OUT]; ++chn_dst)
+#if defined (mfx_pi_DistoSimple_USE_MIXALIGN)
+		
+		if (proc._nbr_chn_arr [Dir_IN] == 1)
 		{
-			const float *  src_ptr = proc._src_arr [chn_dst];
-			float *        dst_ptr = &_buf_arr [chn_dst] [0];
+			mfx::dsp::mix::Align::copy_1_1_v (
+				&_buf_arr [0] [0],
+				&proc._src_arr [0] [0],
+				nbr_spl,
+				_gain
+			);
+		}
+		else
+		{
+			static_assert (_max_nbr_chn == 2, "Multichannel not supported");
+			mfx::dsp::mix::Align::copy_2_2_v (
+				&_buf_arr [0] [0],
+				&_buf_arr [1] [0],
+				&proc._src_arr [0] [0],
+				&proc._src_arr [2] [0],
+				nbr_spl,
+				_gain
+			);
+		}
+
+#else
+
+		const auto     gain = fstb::ToolsSimd::set1_f32 (_gain);
+
+		for (int chn = 0; chn < proc._nbr_chn_arr [Dir_OUT]; ++chn)
+		{
+			const float *  src_ptr = proc._src_arr [chn];
+			float *        dst_ptr = &_buf_arr [chn] [0];
 			for (int pos = 0; pos < nbr_spl; pos += 4)
 			{
 				auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-				x *= g;
+				x *= gain;
 				fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
 			}
-
-			chn_src += chn_src_step;
 		}
+
+#endif
 	}
 
 	const auto     g     = fstb::ToolsSimd::set1_f32 (_gain);
@@ -236,11 +285,16 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	const auto     c_1_2 = fstb::ToolsSimd::set1_f32 ( 1.0f / 2);
 	const auto     bias  = fstb::ToolsSimd::set1_f32 ( 0.2f);
 
-	int            chn_src      = 0;
+	int            chn_src_step = 1;
+	if (proc._nbr_chn_arr [Dir_IN] == 1 && proc._nbr_chn_arr [Dir_OUT] > 1)
+	{
+		chn_src_step = 0;
+	}
 
+	int            chn_src = 0;
 	for (int chn_dst = 0; chn_dst < proc._nbr_chn_arr [Dir_OUT]; ++chn_dst)
 	{
-		const float *  src_ptr = proc._src_arr [chn_dst];
+		const float *  src_ptr = proc._src_arr [chn_src];
 		float *        dst_ptr = proc._dst_arr [chn_dst];
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{

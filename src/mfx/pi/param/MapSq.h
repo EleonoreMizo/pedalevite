@@ -75,10 +75,11 @@ private:
 
 private:
 
-	               MapSq (const MapSq &other)             = delete;
-	MapSq &        operator = (const MapSq &other)        = delete;
-	bool           operator == (const MapSq &other) const = delete;
-	bool           operator != (const MapSq &other) const = delete;
+	               MapSq (const MapSq <INVFLAG> &other)             = delete;
+	MapSq <INVFLAG> &
+	               operator = (const MapSq <INVFLAG> &other)        = delete;
+	bool           operator == (const MapSq <INVFLAG> &other) const = delete;
+	bool           operator != (const MapSq <INVFLAG> &other) const = delete;
 
 }; // class MapSq
 

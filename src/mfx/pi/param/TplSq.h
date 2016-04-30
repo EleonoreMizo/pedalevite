@@ -73,11 +73,12 @@ private:
 
 private:
 
-	               TplSq ()                               = delete;
-	               TplSq (const TplSq &other)             = delete;
-	TplSq &        operator = (const TplSq &other)        = delete;
-	bool           operator == (const TplSq &other) const = delete;
-	bool           operator != (const TplSq &other) const = delete;
+	               TplSq ()                                         = delete;
+	               TplSq (const TplSq <INVFLAG> &other)             = delete;
+	TplSq <INVFLAG> &
+	               operator = (const TplSq <INVFLAG> &other)        = delete;
+	bool           operator == (const TplSq <INVFLAG> &other) const = delete;
+	bool           operator != (const TplSq <INVFLAG> &other) const = delete;
 
 }; // class TplSq
 

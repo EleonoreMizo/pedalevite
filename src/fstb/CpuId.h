@@ -49,7 +49,7 @@ public:
 
 	CpuId &        operator = (const CpuId &other) = default;
 
-#if (fstb_ARCHI == fstb_ARCHI_X86)
+#if (fstb_IS (ARCHI, X86))
 	static void		call_cpuid (unsigned int fnc_nbr, unsigned int &v_eax, unsigned int &v_ebx, unsigned int &v_ecx, unsigned int &v_edx);
 #endif
 

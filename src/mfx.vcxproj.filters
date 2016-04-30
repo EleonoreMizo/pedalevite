@@ -46,6 +46,9 @@
     <Filter Include="mfx\dsp">
       <UniqueIdentifier>{2a1487ea-4471-49cb-8474-9fd6c7b9f9e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\mix">
+      <UniqueIdentifier>{adce5933-baf3-4ef7-8a5a-758044080fd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -507,6 +510,27 @@
     <ClInclude Include="mfx\pi\param\TplSq.hpp">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\dsp\mix\Align.h">
+      <Filter>mfx\dsp\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\mix\Fpu.h">
+      <Filter>mfx\dsp\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\mix\Generic.h">
+      <Filter>mfx\dsp\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\StereoLevel.h">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\StereoLevel.hpp">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\mix\Simd.h">
+      <Filter>mfx\dsp\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\mix\Simd.hpp">
+      <Filter>mfx\dsp\mix</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -605,6 +629,15 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\ParamState.cpp">
       <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\mix\Align.cpp">
+      <Filter>mfx\dsp\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\mix\Fpu.cpp">
+      <Filter>mfx\dsp\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\mix\Generic.cpp">
+      <Filter>mfx\dsp\mix</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

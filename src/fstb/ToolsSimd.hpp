@@ -35,6 +35,43 @@ namespace fstb
 
 
 
+template <bool A>
+bool	ToolsSimd::Align <A>::check_ptr (const void *ptr)
+{
+	return is_ptr_align_nz (ptr, 16);
+}
+
+template <bool A>
+ToolsSimd::VectF32	ToolsSimd::Align <A>::load_f32 (const void *ptr)
+{
+	return ToolsSimd::load_f32 (ptr);
+}
+
+template <bool A>
+void	ToolsSimd::Align <A>::store_f32 (void *ptr, VectF32 v)
+{
+	ToolsSimd::store_f32 (ptr, v);
+}
+
+
+
+bool	ToolsSimd::Align <false>::check_ptr (const void *ptr)
+{
+	return (ptr != 0);
+}
+
+ToolsSimd::VectF32	ToolsSimd::Align <false>::load_f32 (const void *ptr)
+{
+	return ToolsSimd::loadu_f32 (ptr);
+}
+
+void	ToolsSimd::Align <false>::store_f32 (void *ptr, VectF32 v)
+{
+	ToolsSimd::storeu_f32 (ptr, v);
+}
+
+
+
 ToolsSimd::VectF32	ToolsSimd::load_f32 (const void *ptr)
 {
 	assert (is_ptr_align_nz (ptr, 16));
@@ -56,6 +93,34 @@ void	ToolsSimd::store_f32 (void *ptr, VectF32 v)
 	_mm_store_ps (reinterpret_cast <float *> (ptr), v);
 #elif fstb_IS (ARCHI, ARM)
 	*reinterpret_cast <VectF32 *> (ptr) = v;
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const void *ptr)
+{
+	assert (is_ptr_align_nz (ptr, 16));
+
+#if fstb_IS (ARCHI, X86)
+	return _mm_loadu_ps (reinterpret_cast <const float *> (ptr));
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_u8_f32 (
+		vld1q_u8 (reinterpret_cast <const uint8_t *> (ptr))
+	);
+#endif // ff_arch_CPU
+}
+
+
+
+void	ToolsSimd::storeu_f32 (void *ptr, VectF32 v)
+{
+	assert (is_ptr_align_nz (ptr, 16));
+
+#if fstb_IS (ARCHI, X86)
+	_mm_storeu_ps (reinterpret_cast <float *> (ptr), v);
+#elif fstb_IS (ARCHI, ARM)
+	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_f32_u8 (v));
 #endif // ff_arch_CPU
 }
 
@@ -88,10 +153,21 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3)
 #if fstb_IS (ARCHI, X86)
 	return _mm_set_ps (a3, a2, a1, a0);
 #elif fstb_IS (ARCHI, ARM)
+ #if 1
 	float32x2_t    v01 = vdup_n_f32 (a0);
 	float32x2_t    v23 = vdup_n_f32 (a2);
 	v01 = vset_lane_f32 (a1, v01, 1);
 	v23 = vset_lane_f32 (a3, v23, 1);
+ #else // Not tested
+	const float32x2_t    v01 = vcreate_f32 (
+		  (uint64_t (*reinterpret_cast <const uint32_t *> (&a0))      )
+		| (uint64_t (*reinterpret_cast <const uint32_t *> (&a1)) << 32)
+	);
+	const float32x2_t    v23 = vcreate_f32 (
+		  (uint64_t (*reinterpret_cast <const uint32_t *> (&a2))      )
+		| (uint64_t (*reinterpret_cast <const uint32_t *> (&a3)) << 32)
+	);
+ #endif
 	return vcombine_f32 (v01, v23);
 #endif // ff_arch_CPU
 }
@@ -174,6 +250,71 @@ ToolsSimd::VectF32	ToolsSimd::cmp_lt_f32 (VectF32 lhs, VectF32 rhs)
 	return _mm_cmplt_ps (lhs, rhs);
 #elif fstb_IS (ARCHI, ARM)
 	return vreinterpretq_f32_u32 (vcltq_f32 (lhs, rhs));
+#endif // ff_arch_CPU
+}
+
+
+
+void	ToolsSimd::interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1)
+{
+#if fstb_IS (ARCHI, X86)
+	i0 = _mm_unpacklo_ps (p0, p1);
+	i1 = _mm_unpackhi_ps (p0, p1);
+#elif fstb_IS (ARCHI, ARM)
+	const float32x4x2_t  tmp = vzipq_f32 (p0, p1);
+	i0 = tmp.val [0];
+	i1 = tmp.val [1];
+#endif // ff_arch_CPU
+}
+
+
+
+void	ToolsSimd::deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 i1)
+{
+#if fstb_IS (ARCHI, X86)
+	p0 = _mm_shuffle_ps (i0, i1, 0x88);
+	p1 = _mm_shuffle_ps (i0, i1, 0xDD);
+#elif fstb_IS (ARCHI, ARM)
+	const float32x4x2_t  tmp = vuzpq_f32 (i0, i1);
+	p0 = tmp.val [0];
+	p1 = tmp.val [1];
+#endif // ff_arch_CPU
+}
+
+
+
+void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3)
+{
+	VectF32        k0, k1, k2, k3;
+	interleave_f32 (k0, k1, a0, a2);
+	interleave_f32 (k2, k3, a1, a3);
+	interleave_f32 (a0, a1, k0, k2);
+	interleave_f32 (a2, a3, k1, k3);
+}
+
+
+
+template <int SHIFT>
+ToolsSimd::VectF32	ToolsSimd::rotate (VectF32 a)
+{
+#if fstb_IS (ARCHI, X86)
+	switch (SHIFT & 3)
+	{
+	case 1:  return _mm_shuffle_ps (a, a, (2<<6) | (1<<4) | (0<<2) | (3<<0));
+	case 2:  return _mm_shuffle_ps (a, a, (1<<6) | (0<<4) | (3<<2) | (2<<0));
+	case 3:  return _mm_shuffle_ps (a, a, (0<<6) | (3<<4) | (2<<2) | (1<<0));
+	default: return a;
+	}
+#elif fstb_IS (ARCHI, ARM)
+	int32x4_t      aa = vreinterpretq_f32_i32 (a);
+	switch (SHIFT & 3)
+	{
+	case 1:  aa = vextq_s32 (aa, aa, 3);
+	case 2:  aa = vextq_s32 (aa, aa, 2);
+	case 3:  aa = vextq_s32 (aa, aa, 1);
+	default: aa = aa;
+	}
+	return vreinterpretq_i32_f32 (aa);
 #endif // ff_arch_CPU
 }
 

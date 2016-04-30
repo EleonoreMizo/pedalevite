@@ -190,6 +190,13 @@
     <ClInclude Include="jack\weakmacros.h" />
     <ClInclude Include="mfx\dsp\InertiaLin.h" />
     <ClInclude Include="mfx\dsp\InertiaLin.hpp" />
+    <ClInclude Include="mfx\dsp\mix\Align.h" />
+    <ClInclude Include="mfx\dsp\mix\Fpu.h" />
+    <ClInclude Include="mfx\dsp\mix\Generic.h" />
+    <ClInclude Include="mfx\dsp\mix\Simd.h" />
+    <ClInclude Include="mfx\dsp\mix\Simd.hpp" />
+    <ClInclude Include="mfx\dsp\StereoLevel.h" />
+    <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
     <ClInclude Include="mfx\Overdrive.h" />
     <ClInclude Include="mfx\piapi\Event.h" />
@@ -259,6 +266,9 @@
     </ClCompile>
     <ClCompile Include="fstb\util\ObservableMultiMixin.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mfx\dsp\mix\Align.cpp" />
+    <ClCompile Include="mfx\dsp\mix\Fpu.cpp" />
+    <ClCompile Include="mfx\dsp\mix\Generic.cpp" />
     <ClCompile Include="mfx\GpioPwm.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />

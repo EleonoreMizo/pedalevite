@@ -78,10 +78,38 @@ public:
 		uint16_t       _u16 [8];
 	};
 
+	template <bool A>
+	class Align
+	{
+	public:
+		static inline bool
+		               check_ptr (const void *ptr);
+		static inline VectF32
+		               load_f32 (const void *ptr);
+		static inline void
+		               store_f32 (void *ptr, VectF32 v);
+	};
+
+	template <>
+	class Align <false>
+	{
+	public:
+		static inline bool
+		               check_ptr (const void *ptr);
+		static inline VectF32
+		               load_f32 (const void *ptr);
+		static inline void
+		               store_f32 (void *ptr, VectF32 v);
+	};
+
 	static inline VectF32
 	               load_f32 (const void *ptr);
 	static inline void
 	               store_f32 (void *ptr, VectF32 v);
+	static inline VectF32
+	               loadu_f32 (const void *ptr);
+	static inline void
+	               storeu_f32 (void *ptr, VectF32 v);
 
 	static inline VectF32
 	               set_f32_zero ();
@@ -104,6 +132,17 @@ public:
 	               cmp_gt_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectF32
 	               cmp_lt_f32 (VectF32 lhs, VectF32 rhs);
+
+	static inline void
+	               interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1);
+	static inline void
+	               deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 i1);
+	static inline void
+	               transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3);
+
+	template <int SHIFT>
+	static inline VectF32
+	               rotate (VectF32 a);
 
 
 
