@@ -283,6 +283,24 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a)
 
 
 
+template <int SHIFT>
+float	ToolsSimd::Shift <SHIFT>::extract (VectF32 a)
+{
+#if fstb_IS (ARCHI, X86)
+	switch (SHIFT & 3)
+	{
+	case 1:  a = _mm_shuffle_ps (a, a, 1);
+	case 2:  a = _mm_shuffle_ps (a, a, 2);
+	case 3:  a = _mm_shuffle_ps (a, a, 3);
+	}
+	return _mm_cvtss_f32 (a);
+#elif fstb_IS (ARCHI, ARM)
+	return vgetq_lane_f32 (a, SHIFT & 3);
+#endif // ff_arch_CPU
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
