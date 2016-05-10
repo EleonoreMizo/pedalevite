@@ -180,7 +180,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 		);
 
 #if defined (mfx_pi_DistoSimple_USE_MIXALIGN)
-		
+
 		if (proc._nbr_chn_arr [Dir_IN] == 1)
 		{
 			mfx::dsp::mix::Align::copy_1_1_vlr (
@@ -235,7 +235,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	else
 	{
 #if defined (mfx_pi_DistoSimple_USE_MIXALIGN)
-		
+
 		if (proc._nbr_chn_arr [Dir_IN] == 1)
 		{
 			mfx::dsp::mix::Align::copy_1_1_v (
@@ -277,7 +277,6 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 #endif
 	}
 
-	const auto     g     = fstb::ToolsSimd::set1_f32 (_gain);
 	const auto     mi    = fstb::ToolsSimd::set1_f32 (-1);
 	const auto     ma    = fstb::ToolsSimd::set1_f32 ( 1);
 	const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
@@ -294,12 +293,11 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	int            chn_src = 0;
 	for (int chn_dst = 0; chn_dst < proc._nbr_chn_arr [Dir_OUT]; ++chn_dst)
 	{
-		const float *  src_ptr = proc._src_arr [chn_src];
-		float *        dst_ptr = proc._dst_arr [chn_dst];
+		const float *  src_ptr = &_buf_arr [chn_src] [0];
+		float *        dst_ptr = &proc._dst_arr [chn_dst] [0];
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-			x *= g;
 
 			x += bias;
 
