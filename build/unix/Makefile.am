@@ -165,6 +165,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplSq.hpp \
         ../../src/mfx/pi/DistoSimple.cpp \
         ../../src/mfx/pi/DistoSimple.h \
+        ../../src/mfx/pi/DryWet.cpp \
+        ../../src/mfx/pi/DryWet.h \
         ../../src/mfx/pi/ParamDescSet.cpp \
         ../../src/mfx/pi/ParamDescSet.h \
         ../../src/mfx/pi/ParamState.cpp \

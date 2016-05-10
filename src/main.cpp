@@ -148,7 +148,7 @@ public:
 	mfx::ui::LedPi3
 	               _leds;
 	mfx::ui::Font  _fnt_8x12;
-	               
+
 	Context ();
 	~Context ();
 };
@@ -278,7 +278,7 @@ Context::Context ()
 	_msg_pool_cmd.expand_to (256);
 
 	_audio_world.set_context (_proc_ctx);
-	
+
 
 	/*** To do ***/
 
@@ -359,14 +359,14 @@ static void MAIN_physical_input_thread (Context &ctx)
 							if (val >= 0.5f)
 							{
 								ctx._disto_flag = (! ctx._disto_flag);
-								conc::LockFreeCell <mfx::Msg> * cell_ptr =
+								conc::LockFreeCell <mfx::Msg> * cell2_ptr =
 									ctx._msg_pool_cmd.take_cell (true);
-								cell_ptr->_val._sender = mfx::Msg::Sender_CMD;
-								cell_ptr->_val._type = mfx::Msg::Type_PARAM;
-								cell_ptr->_val._content._param._plugin_id = ctx._pi_id_disto_mix;
-								cell_ptr->_val._content._param._index     = mfx::pi::DryWet::Param_BYPASS;
-								cell_ptr->_val._content._param._val       = (ctx._disto_flag) ? 0 : 1;
-								ctx._queue_cmd_to_audio.enqueue (*cell_ptr);
+								cell2_ptr->_val._sender = mfx::Msg::Sender_CMD;
+								cell2_ptr->_val._type = mfx::Msg::Type_PARAM;
+								cell2_ptr->_val._content._param._plugin_id = ctx._pi_id_disto_mix;
+								cell2_ptr->_val._content._param._index     = mfx::pi::DryWet::Param_BYPASS;
+								cell2_ptr->_val._content._param._val       = (ctx._disto_flag) ? 0 : 1;
+								ctx._queue_cmd_to_audio.enqueue (*cell2_ptr);
 							}
 							break;
 						}

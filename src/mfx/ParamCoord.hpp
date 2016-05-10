@@ -34,8 +34,8 @@ namespace mfx
 
 
 ParamCoord::ParamCoord (int plugin_id, int param_index)
-:	_plugin_id   (_plugin_id  )
-,	_param_index (_param_index)
+:	_plugin_id   (plugin_id  )
+,	_param_index (param_index)
 {
 	// Nothing
 }

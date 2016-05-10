@@ -134,7 +134,7 @@ int	DryWet::do_restore ()
 
 
 
-bool	DryWet::do_get_nbr_io (int &nbr_i, int &nbr_o) const
+void	DryWet::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
 	nbr_i = 2;
 	nbr_o = 1;

@@ -35,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <stdexcept>
 
 #include <cassert>
+#include <climits>
 #include <ctime>
 
 
@@ -54,7 +55,9 @@ namespace ui
 const int	UserInputPi3::_i2c_dev_23017_arr [_nbr_dev_23017] =
 {
 	0x20 + 0,
+#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 	0x20 + 1
+#endif
 };
 
 const int	UserInputPi3::_gpio_pin_arr [_nbr_sw_gpio] = { 7, 22 };

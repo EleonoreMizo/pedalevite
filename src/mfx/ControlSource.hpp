@@ -42,7 +42,7 @@ bool	ControlSource::is_valid () const
 
 bool	ControlSource::is_relative () const
 {
-	return (_type == ui::UserInputType_ROTENC);
+	return (_type == ControllerType (ui::UserInputType_ROTENC));
 }
 
 

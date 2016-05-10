@@ -68,8 +68,8 @@ int	PluginPool::add (PluginUPtr pi_uptr)
 				pi_uptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
 			slot._details._param_arr.resize (nbr_param);
 			slot._details._param_update.set_nbr_elt (nbr_param);
-			slot._details._param_update_from_cmd.clear ();
-			slot._details._param_update_from_cmd.resize (nbr_param, false);
+			slot._details._param_update_from_audio.clear ();
+			slot._details._param_update_from_audio.resize (nbr_param, false);
 
 			for (int param_index = 0; param_index < nbr_param; ++param_index)
 			{

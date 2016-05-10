@@ -131,7 +131,7 @@ protected:
 	virtual State  do_get_state () const = 0;
 	virtual int    do_init () = 0;
 	virtual int    do_restore () = 0;
-	virtual bool   do_get_nbr_io (int &nbr_i, int &nbr_o) const = 0;
+	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const = 0;
 	virtual bool   do_prefer_stereo () const = 0;
 	virtual int    do_get_nbr_param (ParamCateg categ) const = 0;
 	virtual const ParamDescInterface &
