@@ -16,6 +16,7 @@ static const int  MAIN_pin_reset     = 18;
 static const int	MAIN_pin_interrupt = 8;
 static const int  MAIN_i2c_dev_23017 = 0x20 + 0;   // Slave address, p. 8
 static const int64_t MAIN_antibounce_time = 30 * 1000 * 1000; // Nanoseconds
+static const bool MAIN_incremental_coder_flag = true;
 
 // IOCON.BANK = 0
 enum Cmd : uint8_t
@@ -114,7 +115,10 @@ int main (int argc, char *argv [])
 		::wiringPiI2CWriteReg16 (handle, Cmd_INTCONA , 0x0000);
 		::wiringPiI2CWriteReg16 (handle, Cmd_GPINTENA, 0xFFFF);
 
-		::wiringPiISR (MAIN_pin_interrupt, INT_EDGE_BOTH, &interrupt_cb) ;
+		if (! MAIN_incremental_coder_flag)
+		{
+			::wiringPiISR (MAIN_pin_interrupt, INT_EDGE_BOTH, &interrupt_cb);
+		}
 	}
 
 	std::array <State, 16>  state_arr;
@@ -131,7 +135,7 @@ int main (int argc, char *argv [])
 			if (cur_flag != state_prev._flag)
 			{
 				const int64_t  dist = cur_time - state_prev._time_last;
-				if (dist >= MAIN_antibounce_time)
+				if (MAIN_incremental_coder_flag || dist >= MAIN_antibounce_time)
 				{
 					printf ("Pin %2d, value %d\n", i, cur_flag ? 1 : 0);
 					state_prev._flag      = cur_flag;
@@ -140,7 +144,10 @@ int main (int argc, char *argv [])
 			}
 		}
 
-		::delay (20);
+		if (! MAIN_incremental_coder_flag)
+		{
+			::delay (20);
+		}
 	}
 
 	if (handle != -1)
