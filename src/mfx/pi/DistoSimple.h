@@ -52,6 +52,13 @@ class DistoSimple
 
 public:
 
+	enum Param
+	{
+		Param_GAIN = 0,
+
+		Param_NBR_ELT
+	};
+
 	               DistoSimple ();
 	virtual        ~DistoSimple () = default;
 
@@ -65,7 +72,7 @@ protected:
 	virtual State  do_get_state () const;
 	virtual int    do_init ();
 	virtual int    do_restore ();
-	virtual bool   do_has_sidechain () const;
+	virtual bool   do_get_nbr_io (int &nbr_i, int &nbr_o) const;
 	virtual bool   do_prefer_stereo () const;
 	virtual int    do_get_nbr_param (piapi::ParamCateg categ) const;
 	virtual const piapi::ParamDescInterface &
@@ -80,7 +87,6 @@ protected:
 
 private:
 
-	static const int  _max_nbr_chn = 2;
 	static const int  _gain_min    = 1;
 	static const int  _gain_max    = 1000;
 

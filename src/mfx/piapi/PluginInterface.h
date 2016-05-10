@@ -69,7 +69,19 @@ public:
 
 	enum Err
 	{
-		Err_OK = 0
+		Err_OK = 0,
+
+		Err_EXCEPTION = -999,
+		Err_MEMORY_ALLOCATION
+	};
+
+	enum BypassState
+	{
+		BypassState_IGNORE = 0,
+		BypassState_ASK,
+		BypassState_PRODUCED,
+
+		BypassState_NBR_ELT
 	};
 
 	static const int  _max_nbr_chn = 2;
@@ -78,17 +90,17 @@ public:
 	{
 	public:
 		float * const *
-		               _dst_arr  = 0;
+		               _dst_arr   = 0;
 		float * const *
-		               _byp_arr  = 0;
+		               _byp_arr   = 0;
 		const float * const *
-		               _src_arr  = 0;
+		               _src_arr   = 0;
 		int            _nbr_chn_arr [Dir_NBR_ELT];
-		bool           _byp_flag = false;   // On input and output
-		int            _nbr_spl  = 0;
+		BypassState    _byp_state = BypassState_IGNORE; // On input and output
+		int            _nbr_spl   = 0;
 		const EventTs * const *
-		               _evt_arr  = 0;
-		int            _nbr_evt  = 0;
+		               _evt_arr   = 0;
+		int            _nbr_evt   = 0;
 	};
 
 	virtual        ~PluginInterface () = default;
@@ -98,7 +110,7 @@ public:
 	int            init ();
 	int            restore ();
 
-	bool           has_sidechain () const;
+	void           get_nbr_io (int &nbr_i, int &nbr_o) const;
 	bool           prefer_stereo () const;
 
 	int            get_nbr_param (ParamCateg categ) const;
@@ -119,7 +131,7 @@ protected:
 	virtual State  do_get_state () const = 0;
 	virtual int    do_init () = 0;
 	virtual int    do_restore () = 0;
-	virtual bool   do_has_sidechain () const = 0;
+	virtual bool   do_get_nbr_io (int &nbr_i, int &nbr_o) const = 0;
 	virtual bool   do_prefer_stereo () const = 0;
 	virtual int    do_get_nbr_param (ParamCateg categ) const = 0;
 	virtual const ParamDescInterface &
