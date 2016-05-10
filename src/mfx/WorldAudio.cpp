@@ -361,13 +361,6 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl)
 {
 	piapi::PluginInterface::ProcInfo proc_info;
-
-	static const int  max_src =
-		  Cst::_max_nbr_input                         
-		* piapi::PluginInterface::_max_nbr_chn;
-	static const int  max_dst =
-		(Cst::_max_nbr_input + Cst::_max_nbr_output)
-		* piapi::PluginInterface::_max_nbr_chn;
 	BufSrcArr      src_arr;
 	BufDstArr      dst_arr;
 	BufDstArr      byp_arr;

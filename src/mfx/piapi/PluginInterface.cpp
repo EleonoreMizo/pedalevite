@@ -167,8 +167,9 @@ void	PluginInterface::process_block (ProcInfo &proc)
 	assert (get_state () == State_ACTIVE);
 	assert (proc._nbr_chn_arr [Dir_OUT] == 0 || proc._dst_arr  != 0);
 	assert (proc._nbr_chn_arr [Dir_OUT] == 0 || fstb::is_ptr_align_nz (proc._dst_arr [0]));
-	assert (! proc._byp_flag || proc._nbr_chn_arr [Dir_OUT] == 0 || proc._byp_arr [0] != 0);
-	assert (! proc._byp_flag || proc._nbr_chn_arr [Dir_OUT] == 0 || fstb::is_ptr_align_nz (proc._byp_arr [0]));
+	assert (proc._byp_state == BypassState_IGNORE || proc._nbr_chn_arr [Dir_OUT] == 0 || proc._byp_arr [0] != 0);
+	assert (proc._byp_state == BypassState_IGNORE || proc._nbr_chn_arr [Dir_OUT] == 0 || fstb::is_ptr_align_nz (proc._byp_arr [0]));
+	assert (proc._byp_state == BypassState_IGNORE || proc._byp_state == BypassState_ASK);
 	assert (proc._nbr_chn_arr [Dir_IN ] == 0 || proc._src_arr [0] != 0);
 	assert (proc._nbr_chn_arr [Dir_IN ] == 0 || fstb::is_ptr_align_nz (proc._src_arr [0]));
 	assert (proc._nbr_chn_arr != 0);
@@ -181,6 +182,9 @@ void	PluginInterface::process_block (ProcInfo &proc)
 	assert (proc._nbr_evt >= 0);
 
 	do_process_block (proc);
+
+	assert (proc._byp_state >= 0);
+	assert (proc._byp_state < BypassState_NBR_ELT);
 }
 
 

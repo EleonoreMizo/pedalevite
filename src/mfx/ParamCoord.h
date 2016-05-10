@@ -83,7 +83,7 @@ inline bool	operator < (const ParamCoord &lhs, const ParamCoord &rhs);
 
 
 
-//#include "mfx/ParamCoord.hpp"
+#include "mfx/ParamCoord.hpp"
 
 
 

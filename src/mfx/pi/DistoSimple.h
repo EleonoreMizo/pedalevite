@@ -72,7 +72,7 @@ protected:
 	virtual State  do_get_state () const;
 	virtual int    do_init ();
 	virtual int    do_restore ();
-	virtual bool   do_get_nbr_io (int &nbr_i, int &nbr_o) const;
+	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const;
 	virtual bool   do_prefer_stereo () const;
 	virtual int    do_get_nbr_param (piapi::ParamCateg categ) const;
 	virtual const piapi::ParamDescInterface &

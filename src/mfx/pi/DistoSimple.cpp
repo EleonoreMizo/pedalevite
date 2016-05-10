@@ -92,7 +92,7 @@ int	DistoSimple::do_restore ()
 
 
 
-bool	DistoSimple::do_get_nbr_io (int &nbr_i, int &nbr_o) const
+void	DistoSimple::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
 	nbr_i = 1;
 	nbr_o = 1;

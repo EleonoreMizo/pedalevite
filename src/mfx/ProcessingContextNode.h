@@ -49,7 +49,10 @@ class ProcessingContextNode
 public:
 
 	               ProcessingContextNode ();
-	virtual        ~ProcessingContextNode () = default;
+	               ProcessingContextNode (const ProcessingContextNode &other) = default;
+	virtual        ~ProcessingContextNode ()                       = default;
+	ProcessingContextNode &
+	               operator = (const ProcessingContextNode &other) = default;
 
 	class Side
 	{
@@ -87,9 +90,6 @@ private:
 
 private:
 
-	               ProcessingContextNode (const ProcessingContextNode &other) = delete;
-	ProcessingContextNode &
-	               operator = (const ProcessingContextNode &other)        = delete;
 	bool           operator == (const ProcessingContextNode &other) const = delete;
 	bool           operator != (const ProcessingContextNode &other) const = delete;
 
