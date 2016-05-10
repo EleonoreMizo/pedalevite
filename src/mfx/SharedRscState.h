@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputType.h
+        SharedRscState.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputType_HEADER_INCLUDED)
-#define mfx_ui_UserInputType_HEADER_INCLUDED
+#if ! defined (mfx_SharedRscState_HEADER_INCLUDED)
+#define mfx_SharedRscState_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -31,36 +31,31 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+
+
+
+enum SharedRscState
 {
 
+	SharedRscState_FREE = 0,   // Empty slot
+	SharedRscState_INUSE,      // Created and potentially used by the audio thread
+	SharedRscState_RECYCLING,  // Scheduled for destruction by the main thread, message sent to the audio thread. Resource can be destroyed when the audio thread acknowledges.
 
+	SharedRscState_NBR_ELT
 
-enum UserInputType
-{
-
-	UserInputType_UNDEFINED = -1,
-
-	UserInputType_SW = 0,
-	UserInputType_POT,
-	UserInputType_ROTENC,
-
-	UserInputType_NBR_ELT
-
-}; // enum UserInputType
+}; // enum SharedRscState
 
 
 
-}  // namespace ui
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputType.hpp"
+//#include "mfx/SharedRscState.hpp"
 
 
 
-#endif   // mfx_ui_UserInputType_HEADER_INCLUDED
+#endif   // mfx_SharedRscState_HEADER_INCLUDED
 
 
 

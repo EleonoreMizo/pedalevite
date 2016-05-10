@@ -51,7 +51,11 @@ public:
 	               NotificationFlagCascadeMixin ()  = default;
 	inline explicit
 	               NotificationFlagCascadeMixin (bool state_flag);
+	               NotificationFlagCascadeMixin (const NotificationFlagCascadeMixin &other) = default;
 	virtual        ~NotificationFlagCascadeMixin () = default;
+
+	NotificationFlagCascadeMixin &
+	               operator = (const NotificationFlagCascadeMixin &other) = default;
 
 
 
@@ -85,9 +89,6 @@ private:
 
 private:
 
-	               NotificationFlagCascadeMixin (const NotificationFlagCascadeMixin &other) = delete;
-	NotificationFlagCascadeMixin &
-	               operator = (const NotificationFlagCascadeMixin &other)        = delete;
 	bool           operator == (const NotificationFlagCascadeMixin &other) const = delete;
 	bool           operator != (const NotificationFlagCascadeMixin &other) const = delete;
 

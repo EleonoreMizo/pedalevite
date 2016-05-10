@@ -6,7 +6,7 @@
 Template parameters:
 
 - VD: class writing and reading memory with SIMD vectors (destination access).
-	Typically, the fstb::ToolsSimd::Align classes for aligned and unaligned data.
+	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
 	static bool VD::check_ptr (const void *ptr);
 	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr);

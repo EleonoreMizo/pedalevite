@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.h
+        Cst.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputMsg_HEADER_INCLUDED)
-#define mfx_ui_UserInputMsg_HEADER_INCLUDED
+#if ! defined (mfx_Cst_HEADER_INCLUDED)
+#define mfx_Cst_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,36 +27,25 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputType.h"
-
 
 
 namespace mfx
 {
-namespace ui
-{
 
 
 
-class UserInputMsg
+class Cst
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               UserInputMsg ()                          = default;
-	               UserInputMsg (const UserInputMsg &other) = default;
-	virtual        ~UserInputMsg ()                         = default;
+	static const int  _max_nbr_buf     = 256;
+	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
+	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
+	static const int  _max_nbr_plugins = 256;
 
-	UserInputMsg & operator = (const UserInputMsg &other)   = default;
-
-	void           set (UserInputType type, int index, float val);
-	UserInputType  get_type () const;
-	int            get_index () const;
-	float          get_val  () const;
-
-	bool           is_valid () const;
 
 
 
@@ -70,33 +59,32 @@ protected:
 
 private:
 
-	UserInputType  _type  = UserInputType_UNDEFINED;
-	int            _index = -1;
-	float          _val   = -1;         // In range [0 ; 1]
-
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	bool           operator == (const UserInputMsg &other) const = delete;
-	bool           operator != (const UserInputMsg &other) const = delete;
+	virtual        ~Cst ()                              = delete;
+	               Cst ()                               = delete;
+	               Cst (const Cst &other)               = delete;
+	Cst &          operator = (const Cst &other)        = delete;
+	bool           operator == (const Cst &other) const = delete;
+	bool           operator != (const Cst &other) const = delete;
 
-}; // class UserInputMsg
+}; // class Cst
 
 
 
-}  // namespace ui
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputMsg.hpp"
+//#include "mfx/Cst.hpp"
 
 
 
-#endif   // mfx_ui_UserInputMsg_HEADER_INCLUDED
+#endif   // mfx_Cst_HEADER_INCLUDED
 
 
 

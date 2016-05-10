@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.h
+        ParamCoord.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputMsg_HEADER_INCLUDED)
-#define mfx_ui_UserInputMsg_HEADER_INCLUDED
+#if ! defined (mfx_ParamCoord_HEADER_INCLUDED)
+#define mfx_ParamCoord_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,36 +27,30 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputType.h"
-
 
 
 namespace mfx
 {
-namespace ui
-{
 
 
 
-class UserInputMsg
+class ParamCoord
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               UserInputMsg ()                          = default;
-	               UserInputMsg (const UserInputMsg &other) = default;
-	virtual        ~UserInputMsg ()                         = default;
+	               ~ParamCoord ()                       = default;
+	               ParamCoord ()                        = default;
+	               ParamCoord (const ParamCoord &other) = default;
+	inline         ParamCoord (int plugin_id, int param_index);
+	ParamCoord &   operator = (const ParamCoord &other) = default;
 
-	UserInputMsg & operator = (const UserInputMsg &other)   = default;
+	int            _plugin_id   = -1;
+	int            _param_index = -1;
 
-	void           set (UserInputType type, int index, float val);
-	UserInputType  get_type () const;
-	int            get_index () const;
-	float          get_val  () const;
-
-	bool           is_valid () const;
+	inline bool   is_valid () const;
 
 
 
@@ -70,33 +64,30 @@ protected:
 
 private:
 
-	UserInputType  _type  = UserInputType_UNDEFINED;
-	int            _index = -1;
-	float          _val   = -1;         // In range [0 ; 1]
-
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	bool           operator == (const UserInputMsg &other) const = delete;
-	bool           operator != (const UserInputMsg &other) const = delete;
 
-}; // class UserInputMsg
+}; // class ParamCoord
 
 
 
-}  // namespace ui
+inline bool	operator < (const ParamCoord &lhs, const ParamCoord &rhs);
+
+
+
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputMsg.hpp"
+//#include "mfx/ParamCoord.hpp"
 
 
 
-#endif   // mfx_ui_UserInputMsg_HEADER_INCLUDED
+#endif   // mfx_ParamCoord_HEADER_INCLUDED
 
 
 

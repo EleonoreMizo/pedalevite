@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.h
+        ControlSource.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputMsg_HEADER_INCLUDED)
-#define mfx_ui_UserInputMsg_HEADER_INCLUDED
+#if ! defined (mfx_ControlSource_HEADER_INCLUDED)
+#define mfx_ControlSource_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,36 +27,36 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputType.h"
+#include "mfx/ControllerType.h"
 
 
 
 namespace mfx
 {
-namespace ui
-{
 
 
 
-class UserInputMsg
+class ControlSource
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               UserInputMsg ()                          = default;
-	               UserInputMsg (const UserInputMsg &other) = default;
-	virtual        ~UserInputMsg ()                         = default;
+	               ControlSource ()                           = default;
+	               ~ControlSource ()                          = default;
+	               ControlSource (const ControlSource &other) = default;
+	ControlSource &
+	               operator = (const ControlSource &other)    = default;
 
-	UserInputMsg & operator = (const UserInputMsg &other)   = default;
+	ControllerType _type  = ControllerType_INVALID;
+	int            _index = -1;
 
-	void           set (UserInputType type, int index, float val);
-	UserInputType  get_type () const;
-	int            get_index () const;
-	float          get_val  () const;
+	inline bool    is_valid () const;
+	inline bool    is_relative () const;
 
-	bool           is_valid () const;
+	inline bool    operator == (const ControlSource &other) const;
+	inline bool    operator != (const ControlSource &other) const;
 
 
 
@@ -70,33 +70,30 @@ protected:
 
 private:
 
-	UserInputType  _type  = UserInputType_UNDEFINED;
-	int            _index = -1;
-	float          _val   = -1;         // In range [0 ; 1]
-
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	bool           operator == (const UserInputMsg &other) const = delete;
-	bool           operator != (const UserInputMsg &other) const = delete;
 
-}; // class UserInputMsg
+}; // class ControlSource
 
 
 
-}  // namespace ui
+inline bool	operator < (const ControlSource &lhs, const ControlSource &rhs);
+
+
+
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputMsg.hpp"
+#include "mfx/ControlSource.hpp"
 
 
 
-#endif   // mfx_ui_UserInputMsg_HEADER_INCLUDED
+#endif   // mfx_ControlSource_HEADER_INCLUDED
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.h
+        Msg.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputMsg_HEADER_INCLUDED)
-#define mfx_ui_UserInputMsg_HEADER_INCLUDED
+#if ! defined (mfx_Msg_HEADER_INCLUDED)
+#define mfx_Msg_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,36 +27,72 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputType.h"
-
 
 
 namespace mfx
 {
-namespace ui
-{
 
 
 
-class UserInputMsg
+class ProcessingContext;
+
+class Msg
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               UserInputMsg ()                          = default;
-	               UserInputMsg (const UserInputMsg &other) = default;
-	virtual        ~UserInputMsg ()                         = default;
+	enum Sender
+	{
+		Sender_INVALID = -1,
 
-	UserInputMsg & operator = (const UserInputMsg &other)   = default;
+		Sender_CMD = 0,
+		Sender_AUDIO,
 
-	void           set (UserInputType type, int index, float val);
-	UserInputType  get_type () const;
-	int            get_index () const;
-	float          get_val  () const;
+		Sender_NBR_ELT
+	};
 
-	bool           is_valid () const;
+	enum Type
+	{
+		Type_INVALID = -1,
+
+		Type_CTX = 0,
+		Type_PARAM,
+
+		Type_NBR_ELT
+	};
+
+	class Ctx
+	{
+	public:
+		const ProcessingContext *
+		               _ctx_ptr;
+	};
+
+	class Param
+	{
+	public:
+		int            _plugin_id;
+		int            _index;
+		float          _val;
+	};
+
+	union Content
+	{
+		Ctx            _ctx;
+		Param          _param;
+	};
+
+	               Msg ()                        = default;
+	               Msg (const Msg &other)        = default;
+	virtual        ~Msg ()                       = default;
+	Msg &          operator = (const Msg &other) = default;
+
+	Sender         _sender = Sender_INVALID;  // Original sender. To know if a message should be recycled.
+	Type           _type   = Type_INVALID;
+	Content        _content;
+
 
 
 
@@ -70,33 +106,28 @@ protected:
 
 private:
 
-	UserInputType  _type  = UserInputType_UNDEFINED;
-	int            _index = -1;
-	float          _val   = -1;         // In range [0 ; 1]
-
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	bool           operator == (const UserInputMsg &other) const = delete;
-	bool           operator != (const UserInputMsg &other) const = delete;
+	bool           operator == (const Msg &other) const = delete;
+	bool           operator != (const Msg &other) const = delete;
 
-}; // class UserInputMsg
+}; // class Msg
 
 
 
-}  // namespace ui
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputMsg.hpp"
+//#include "mfx/Msg.hpp"
 
 
 
-#endif   // mfx_ui_UserInputMsg_HEADER_INCLUDED
+#endif   // mfx_Msg_HEADER_INCLUDED
 
 
 

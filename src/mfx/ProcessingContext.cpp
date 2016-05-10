@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.cpp
+        ProcessingContext.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputMsg.h"
+#include "mfx/ProcessingContext.h"
 
 #include <cassert>
 
@@ -32,61 +32,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
-{
 
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-void	UserInputMsg::set (UserInputType type, int index, float val)
-{
-	assert (type >= 0);
-	assert (type < UserInputType_NBR_ELT);
-	assert (index >= 0);
-	assert (val >= 0 || type == UserInputType_ROTENC);
-	assert (val <= 1 || type == UserInputType_ROTENC);
-
-	_type  = type;
-	_index = index;
-	_val   = val;
-}
-
-
-
-UserInputType	UserInputMsg::get_type () const
-{
-	assert (is_valid ());
-
-	return _type;
-}
-
-
-
-int	UserInputMsg::get_index () const
-{
-	assert (is_valid ());
-
-	return _index;
-}
-
-
-
-float	UserInputMsg::get_val () const
-{
-	assert (is_valid ());
-
-	return _val;
-}
-
-
-
-bool	UserInputMsg::is_valid () const
-{
-	return (_type >= 0);
-}
 
 
 
@@ -98,7 +47,6 @@ bool	UserInputMsg::is_valid () const
 
 
 
-}  // namespace ui
 }  // namespace mfx
 
 

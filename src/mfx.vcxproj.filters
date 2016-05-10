@@ -537,6 +537,87 @@
     <ClInclude Include="fstb\DataAlign.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\DryWet.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\ParamDescSet.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\ParamStateSet.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\BitFieldSparse.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\BitFieldSparseIterator.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\BitFieldSparseIterator.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\BitFieldTools.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\BitFieldTools.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\MapS.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\MapS.hpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\PluginPool.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\SharedRscState.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\RotEnc.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\WorldAudio.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ProcessingContext.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ProcessingContextNode.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\Cst.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\Msg.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\MsgQueue.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ControllerType.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ControlSource.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ParamCoord.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\CtrlUnit.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ControlledParam.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ControlSource.hpp">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ParamCoord.hpp">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ControlCurve.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -644,6 +725,39 @@
     </ClCompile>
     <ClCompile Include="mfx\dsp\mix\Generic.cpp">
       <Filter>mfx\dsp\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\DryWet.cpp">
+      <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\ParamDescSet.cpp">
+      <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\ParamStateSet.cpp">
+      <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="fstb\BitFieldSparse.cpp">
+      <Filter>fstb</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\PluginPool.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\RotEnc.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\WorldAudio.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ProcessingContext.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ProcessingContextNode.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ControlledParam.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\CtrlUnit.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

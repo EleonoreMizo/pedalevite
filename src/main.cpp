@@ -20,6 +20,7 @@
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/DistoSimple.h"
+#include "mfx/pi/DryWet.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/tuner/FreqAnalyser.h"
 #include "mfx/ui/DisplayPi3Pcd8544.h"
@@ -27,6 +28,10 @@
 #include "mfx/ui/FontDataDefault.h"
 #include "mfx/ui/LedPi3.h"
 #include "mfx/ui/UserInputPi3.h"
+#include "mfx/MsgQueue.h"
+#include "mfx/PluginPool.h"
+#include "mfx/ProcessingContext.h"
+#include "mfx/WorldAudio.h"
 
 #if (MAIN_API == MAIN_API_JACK)
 	#include <jack/jack.h>
@@ -115,6 +120,22 @@ public:
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
 
+	// New audio engine
+	mfx::ProcessingContext
+	               _proc_ctx;
+	mfx::MsgQueue  _queue_cmd_to_audio;
+	mfx::MsgQueue  _queue_audio_to_cmd;
+	mfx::ui::UserInputInterface::MsgQueue
+	               _queue_from_input;
+	mfx::PluginPool
+	               _plugin_pool;
+	conc::CellPool <mfx::Msg>
+	               _msg_pool_cmd;
+	mfx::WorldAudio
+	               _audio_world;
+	int            _pi_id_disto_main;
+	int            _pi_id_disto_mix;
+
 	// Not for the audio thread
 	volatile bool	_quit_flag       = false;
 	volatile bool  _input_quit_flag = false;
@@ -128,21 +149,158 @@ public:
 	               _leds;
 	mfx::ui::Font  _fnt_8x12;
 	               
-	Context () : _display (_mutex_spi), _user_input (_mutex_spi) { }
-	~Context ()
-	{
-		mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
-		do
-		{
-			cell_ptr = _user_input_queue.dequeue ();
-			if (cell_ptr != 0)
-			{
-				_user_input.return_cell (*cell_ptr);
-			}
-		}
-		while (cell_ptr != 0);
-	}
+	Context ();
+	~Context ();
 };
+
+Context::Context ()
+:	_buf_alig (4096)
+,	_proc_ctx ()
+,	_queue_cmd_to_audio ()
+,	_queue_audio_to_cmd ()
+,	_queue_from_input ()
+,	_plugin_pool ()
+,	_msg_pool_cmd ()
+,	_audio_world (_plugin_pool, _queue_cmd_to_audio, _queue_audio_to_cmd, _queue_from_input, _user_input, _msg_pool_cmd)
+,	_display (_mutex_spi)
+,	_user_input (_mutex_spi)
+{
+	_usage_min.store (-1);
+	_usage_max.store (-1);
+	mfx::ui::FontDataDefault::make_08x12 (_fnt_8x12);
+
+	// Default: everything to the main queue
+	for (int type = 0; type < mfx::ui::UserInputType_NBR_ELT; ++type)
+	{
+		const int      nbr_param = _user_input.get_nbr_param (
+			static_cast <mfx::ui::UserInputType> (type)
+		);
+		for (int index = 0; index < nbr_param; ++index)
+		{
+			_user_input.set_msg_recipient (
+				static_cast <mfx::ui::UserInputType> (type),
+				index,
+				&_user_input_queue
+			);
+		}
+	}
+
+	// Pot 0 to the audio engine
+	_user_input.set_msg_recipient (mfx::ui::UserInputType_POT, 0, &_queue_from_input);
+
+	// Setup: disto + drywet
+	_pi_id_disto_main = _plugin_pool.add (mfx::PluginPool::PluginUPtr (
+		new mfx::pi::DistoSimple
+	));
+	_pi_id_disto_mix  = _plugin_pool.add (mfx::PluginPool::PluginUPtr (
+		new mfx::pi::DryWet
+	));
+
+	// Processing steps and buffers
+	{
+		mfx::ProcessingContextNode::Side &si =
+			_proc_ctx._interface_ctx._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
+		mfx::ProcessingContextNode::Side &so =
+			_proc_ctx._interface_ctx._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
+		si._buf_arr [0] = 0;
+		si._buf_arr [1] = 1;
+		si._nbr_chn     = 2;
+		si._nbr_chn_tot = 2;
+		so._buf_arr [0] = 4;
+		so._buf_arr [1] = 1;
+		so._nbr_chn     = 2;
+		so._nbr_chn_tot = 2;
+	}
+	{
+		mfx::ProcessingContext::PluginContext disto_bundle;
+		{
+			disto_bundle._main_pi._pi_id = _pi_id_disto_main;
+			mfx::ProcessingContextNode::Side &si =
+				disto_bundle._main_pi._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
+			mfx::ProcessingContextNode::Side &so =
+				disto_bundle._main_pi._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
+			si._buf_arr [0] = 0;
+			si._nbr_chn     = 1;
+			si._nbr_chn_tot = 1;
+			so._buf_arr [0] = 2;
+			so._nbr_chn     = 1;
+			so._nbr_chn_tot = 1;
+			disto_bundle._main_pi._bypass_buf_arr [0] = 3;
+		}
+		{
+			disto_bundle._mixer._pi_id = _pi_id_disto_mix;
+			mfx::ProcessingContextNode::Side &si =
+				disto_bundle._mixer._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
+			mfx::ProcessingContextNode::Side &so =
+				disto_bundle._mixer._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
+			si._buf_arr [0] = 2;
+			si._buf_arr [0] = 3;
+			si._nbr_chn     = 1;
+			si._nbr_chn_tot = 2;
+			so._buf_arr [0] = 4;
+			so._nbr_chn     = 1;
+			so._nbr_chn_tot = 1;
+		}
+		_proc_ctx._context_arr.push_back (disto_bundle);
+	}
+
+	// Automate the distortion gain with pot 0
+	mfx::ParamCoord   disto_gain_coord (
+		_pi_id_disto_main, mfx::pi::DistoSimple::Param_GAIN
+	);
+	std::shared_ptr <mfx::CtrlUnit> disto_gain_unit_sptr (
+		new mfx::CtrlUnit
+	);
+	disto_gain_unit_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
+	disto_gain_unit_sptr->_source._index = 0;
+	disto_gain_unit_sptr->_curve         = mfx::ControlCurve_LINEAR;
+	disto_gain_unit_sptr->_u2b_flag      = false;
+	disto_gain_unit_sptr->_abs_flag      = true;
+	disto_gain_unit_sptr->_base          = 0;
+	disto_gain_unit_sptr->_amp           = 1;
+	std::shared_ptr <mfx::ControlledParam> disto_gain_ctrl (
+		new mfx::ControlledParam (disto_gain_coord)
+	);
+	disto_gain_ctrl->use_unit_list ().push_back (disto_gain_unit_sptr);
+	_proc_ctx._map_param_ctrl.insert (std::make_pair (
+		disto_gain_coord,
+		disto_gain_ctrl
+	));
+	_proc_ctx._map_src_param.insert (std::make_pair (
+		disto_gain_unit_sptr->_source,
+		disto_gain_ctrl
+	));
+	_proc_ctx._map_src_unit.insert (std::make_pair (
+		disto_gain_unit_sptr->_source,
+		disto_gain_unit_sptr
+	));
+
+	_msg_pool_cmd.expand_to (256);
+
+	_audio_world.set_context (_proc_ctx);
+	
+
+	/*** To do ***/
+
+
+
+	_disto.init ();
+	_disto_gain.store (0);
+}
+
+Context::~Context ()
+{
+	mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
+	do
+	{
+		cell_ptr = _user_input_queue.dequeue ();
+		if (cell_ptr != 0)
+		{
+			_user_input.return_cell (*cell_ptr);
+		}
+	}
+	while (cell_ptr != 0);
+}
 
 static std::unique_ptr <Context>	MAIN_context_ptr;
 
@@ -176,45 +334,70 @@ static void MAIN_physical_input_thread (Context &ctx)
 {
 	while (! ctx._input_quit_flag)
 	{
-		mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
-		do
+		// From the input thread
 		{
-			cell_ptr = ctx._user_input_queue.dequeue ();
-			if (cell_ptr != 0)
+			mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
+			do
 			{
-				const mfx::ui::UserInputType type = cell_ptr->_val.get_type ();
-				const int      index = cell_ptr->_val.get_index ();
-				const float    val   = cell_ptr->_val.get_val ();
-				if (type == mfx::ui::UserInputType_SW)
+				cell_ptr = ctx._user_input_queue.dequeue ();
+				if (cell_ptr != 0)
 				{
-					switch (index)
+					const mfx::ui::UserInputType type = cell_ptr->_val.get_type ();
+					const int      index = cell_ptr->_val.get_index ();
+					const float    val   = cell_ptr->_val.get_val ();
+					if (type == mfx::ui::UserInputType_SW)
 					{
-					case  0: // Tuner toggle
-						if (val >= 0.5f)
+						switch (index)
 						{
-							ctx._tuner_flag = (! ctx._tuner_flag);
+						case  0: // Tuner toggle
+							if (val >= 0.5f)
+							{
+								ctx._tuner_flag = (! ctx._tuner_flag);
+							}
+							break;
+						case  1: // Distortion toggle
+							if (val >= 0.5f)
+							{
+								ctx._disto_flag = (! ctx._disto_flag);
+								conc::LockFreeCell <mfx::Msg> * cell_ptr =
+									ctx._msg_pool_cmd.take_cell (true);
+								cell_ptr->_val._sender = mfx::Msg::Sender_CMD;
+								cell_ptr->_val._type = mfx::Msg::Type_PARAM;
+								cell_ptr->_val._content._param._plugin_id = ctx._pi_id_disto_mix;
+								cell_ptr->_val._content._param._index     = mfx::pi::DryWet::Param_BYPASS;
+								cell_ptr->_val._content._param._val       = (ctx._disto_flag) ? 0 : 1;
+								ctx._queue_cmd_to_audio.enqueue (*cell_ptr);
+							}
+							break;
 						}
-						break;
-					case  1: // Distortion toggle
-						if (val >= 0.5f)
-						{
-							ctx._disto_flag= (! ctx._disto_flag);
-						}
-						break;
 					}
-				}
-				else if (type == mfx::ui::UserInputType_POT)
-				{
-					if (index == 0)
+					else if (type == mfx::ui::UserInputType_POT)
 					{
-						ctx._disto_gain.exchange (val);
+						if (index == 0)
+						{
+							ctx._disto_gain.exchange (val);
+						}
 					}
-				}
 
-				ctx._user_input.return_cell (*cell_ptr);
+					ctx._user_input.return_cell (*cell_ptr);
+				}
 			}
+			while (cell_ptr != 0 && ! ctx._input_quit_flag);
 		}
-		while (cell_ptr != 0 && ! ctx._input_quit_flag);
+
+		// From the audio thread
+		{
+			conc::LockFreeCell <mfx::Msg> * cell_ptr = 0;
+			do
+			{
+				cell_ptr = ctx._queue_audio_to_cmd.dequeue ();
+				if (cell_ptr != 0)
+				{
+					ctx._msg_pool_cmd.return_cell (*cell_ptr);
+				}
+			}
+			while (cell_ptr != 0 && ! ctx._input_quit_flag);
+		}
 
 		// 10 ms between updates
 		::delay (10);
@@ -385,60 +568,10 @@ static int MAIN_process (::jack_nframes_t nbr_spl, void *arg)
 		ctx._disto_gain_nat = desc.conv_nrm_to_nat (gain_nrm);
 	}
 
-	for (int chn = 0; chn < 2; ++chn)
-	{
-		if (chn == 0 && ctx._disto_flag)
-		{
-			mfx::piapi::PluginInterface::ProcInfo proc;
-			mfx::piapi::EventTs evt;
-			std::array <const mfx::piapi::EventTs *, 1>	evt_ptr_arr;
-			evt_ptr_arr [0] = &evt;
-			
-			if (gain_nrm >= 0)
-			{
-				evt._timestamp           = 0;
-				evt._type                = mfx::piapi::EventType_PARAM;
-				evt._evt._param._categ   = mfx::piapi::ParamCateg_GLOBAL;
-				evt._evt._param._index   = 0;
-				evt._evt._param._val     = gain_nrm;
-				evt._evt._param._note_id = -1;
-				proc._nbr_evt = 1;
-				proc._evt_arr = &evt_ptr_arr [0];
-			}
-			
-			for (int pos = 0; pos < int (nbr_spl); ++pos)
-			{
-				ctx._buf_alig [pos] = src_arr [chn] [pos];
-			}
-			std::array <      float *, 1> dst_ptr_arr;
-			std::array <const float *, 1> src_ptr_arr;
-			dst_ptr_arr [0] = &ctx._buf_alig [0];
-			src_ptr_arr [0] = &ctx._buf_alig [0];
+	// Audio graph
+	ctx._audio_world.process_block (dst_arr, src_arr, nbr_spl);
 
-			proc._dst_arr  = &dst_ptr_arr [0];
-			proc._byp_arr  = 0;
-			proc._src_arr  = &src_ptr_arr [0];
-			proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN ] = 1;
-			proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT] = 1;
-			proc._nbr_spl  = nbr_spl;
-			
-			ctx._disto.process_block (proc);
-
-			for (int pos = 0; pos < int (nbr_spl); ++pos)
-			{
-				dst_arr [chn] [pos] = ctx._buf_alig [pos];
-			}
-		}
-		else
-		{
-			for (int pos = 0; pos < int (nbr_spl); ++pos)
-			{
-				float          val = src_arr [chn] [pos];
-				dst_arr [chn] [pos] = val;
-			}
-		}
-	}
-
+	// Tuner
 	float           freq = 0;
 	if (ctx._tuner_flag)
 	{
@@ -528,30 +661,11 @@ int main (int argc, char *argv [])
 	MAIN_context_ptr = std::unique_ptr <Context> (new Context);
 	Context &      ctx = *MAIN_context_ptr;
 	ctx._client_ptr = client_ptr;
-	ctx._usage_min.store (-1);
-	ctx._usage_max.store (-1);
 	const double   sample_freq = double (jack_get_sample_rate (client_ptr));
 	ctx._freq_analyser.set_sample_freq (sample_freq / ctx._tuner_subspl);
-	ctx._buf_alig.resize (4096);
-	mfx::ui::FontDataDefault::make_08x12 (ctx._fnt_8x12);
-	for (int type = 0; type < mfx::ui::UserInputType_NBR_ELT; ++type)
-	{
-		const int      nbr_param = ctx._user_input.get_nbr_param (
-			static_cast <mfx::ui::UserInputType> (type)
-		);
-		for (int index = 0; index < nbr_param; ++index)
-		{
-			ctx._user_input.set_msg_recipient (
-				static_cast <mfx::ui::UserInputType> (type),
-				index,
-				&ctx._user_input_queue
-			);
-		}
-	}
-	ctx._disto.init ();
+	ctx._audio_world.set_process_info (sample_freq, 4096);
 	int             latency;
 	ctx._disto.reset (sample_freq, 4096, latency);
-	ctx._disto_gain.store (0);
 	
 	static const ::JackPortFlags port_dir [2] =
 	{

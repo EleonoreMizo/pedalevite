@@ -50,8 +50,62 @@ namespace ui
 
 
 
+// Slave address, p. 8
+const int	UserInputPi3::_i2c_dev_23017_arr [_nbr_dev_23017] =
+{
+	0x20 + 0,
+	0x20 + 1
+};
+
 const int	UserInputPi3::_gpio_pin_arr [_nbr_sw_gpio] = { 7, 22 };
 
+const UserInputPi3::SwitchSrc	UserInputPi3::_switch_arr [_nbr_switches] =
+{
+	{ BinSrc_GPIO    ,    0 },
+	{ BinSrc_GPIO    ,    1 },
+	{ BinSrc_PORT_EXP, 0x00 },
+	{ BinSrc_PORT_EXP, 0x01 },
+	{ BinSrc_PORT_EXP, 0x02 },
+	{ BinSrc_PORT_EXP, 0x03 },
+	{ BinSrc_PORT_EXP, 0x04 },
+	{ BinSrc_PORT_EXP, 0x05 },
+	{ BinSrc_PORT_EXP, 0x06 },
+	{ BinSrc_PORT_EXP, 0x07 },
+	{ BinSrc_PORT_EXP, 0x08 },
+	{ BinSrc_PORT_EXP, 0x09 },
+	{ BinSrc_PORT_EXP, 0x0A },
+	{ BinSrc_PORT_EXP, 0x0B },
+	{ BinSrc_PORT_EXP, 0x0C },
+	{ BinSrc_PORT_EXP, 0x0D },
+	{ BinSrc_PORT_EXP, 0x0E },
+	{ BinSrc_PORT_EXP, 0x0F },
+#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
+	{ BinSrc_PORT_EXP, 0x1C },
+	{ BinSrc_PORT_EXP, 0x1F }
+#endif
+};
+
+#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
+const UserInputPi3::RotEncSrc	UserInputPi3::_rotenc_arr [_nbr_rotenc] =
+{
+	{ BinSrc_PORT_EXP, 0x10, 0x11 },
+	{ BinSrc_PORT_EXP, 0x12, 0x13 },
+	{ BinSrc_PORT_EXP, 0x14, 0x15 },
+	{ BinSrc_PORT_EXP, 0x16, 0x17 },
+	{ BinSrc_PORT_EXP, 0x18, 0x19 },
+	{ BinSrc_PORT_EXP, 0x1A, 0x1B },
+	{ BinSrc_PORT_EXP, 0x1D, 0x1E }
+};
+#endif
+
+const int UserInputPi3::_pot_arr [_nbr_pot] =
+{
+#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
+	2, 3, 4
+#else
+	0
+#endif
+};
 
 
 // Before calling:
@@ -61,21 +115,28 @@ const int	UserInputPi3::_gpio_pin_arr [_nbr_sw_gpio] = { 7, 22 };
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
 UserInputPi3::UserInputPi3 (std::mutex &mutex_spi)
 :	_mutex_spi (mutex_spi)
-,	_hnd_23017 (::wiringPiI2CSetup (_i2c_dev_23017))
+,	_hnd_23017_arr ()
 ,	_hnd_3008 (::wiringPiSPISetup (_spi_port, _spi_rate))
 ,	_recip_list ()
-,	_switch_state_arr (do_get_nbr_param (UserInputType_SW))
-,	_pot_state_arr (do_get_nbr_param (UserInputType_POT))
+,	_switch_state_arr ()
+,	_pot_state_arr ()
+,	_rotenc_state_arr ()
 ,	_msg_pool ()
 ,	_quit_flag (false)
 ,	_polling_thread (&UserInputPi3::polling_loop, this)
 {
-	if (_hnd_23017 == -1)
+	for (int p = 0; p < _nbr_dev_23017; ++p)
 	{
-		throw std::runtime_error ("Error initializing I2C");
+		_hnd_23017_arr [p] = ::wiringPiI2CSetup (_i2c_dev_23017_arr [p]);
+		if (_hnd_23017_arr [p] == -1)
+		{
+			close_everything ();
+			throw std::runtime_error ("Error initializing I2C");
+		}
 	}
 	if (_hnd_3008 == -1)
 	{
+		close_everything ();
 		throw std::runtime_error ("Error initializing SPI");
 	}
 
@@ -87,32 +148,20 @@ UserInputPi3::UserInputPi3 (std::mutex &mutex_spi)
 		_recip_list [i].resize (nbr_dev, 0);
 	}
 
-	::wiringPiI2CWriteReg8 (_hnd_23017, Cmd23017_IOCONA, IOCon_MIRROR);
+	for (int p = 0; p < _nbr_dev_23017; ++p)
+	{
+		::wiringPiI2CWriteReg8 (_hnd_23017_arr [p], Cmd23017_IOCONA, IOCon_MIRROR);
 
-	// All the pins are set in read mode.
-	::wiringPiI2CWriteReg16 (_hnd_23017, Cmd23017_IODIRA, 0xFFFF);
+		// All the pins are set in read mode.
+		::wiringPiI2CWriteReg16 (_hnd_23017_arr [p], Cmd23017_IODIRA, 0xFFFF);
+	}
 }
 
 
 
 UserInputPi3::~UserInputPi3 ()
 {
-	if (_polling_thread.joinable ())
-	{
-		_quit_flag = true;
-		_polling_thread.join ();
-	}
-
-	if (_hnd_3008 != -1)
-	{
-		close (_hnd_3008);
-		_hnd_3008 = -1;
-	}
-	if (_hnd_23017 != -1)
-	{
-		close (_hnd_23017);
-		_hnd_23017 = -1;
-	}
+	close_everything ();
 }
 
 
@@ -127,11 +176,15 @@ int	UserInputPi3::do_get_nbr_param (UserInputType type) const
 
 	if (type == UserInputType_POT)
 	{
-		nbr = _nbr_adc;
+		nbr = _nbr_pot;
 	}
 	else if (type == UserInputType_SW)
 	{
-		nbr = _nbr_sw_23017 + _nbr_sw_gpio;
+		nbr = _nbr_switches;
+	}
+	else if (type == UserInputType_ROTENC)
+	{
+		nbr = _nbr_rotenc;
 	}
 
 	return nbr;
@@ -157,42 +210,103 @@ void	UserInputPi3::do_return_cell (MsgCell &cell)
 
 
 
+void	UserInputPi3::close_everything ()
+{
+	if (_polling_thread.joinable ())
+	{
+		_quit_flag = true;
+		_polling_thread.join ();
+	}
+
+	if (_hnd_3008 != -1)
+	{
+		close (_hnd_3008);
+		_hnd_3008 = -1;
+	}
+	for (int p = 0; p < _nbr_dev_23017; ++p)
+	{
+		if (_hnd_23017_arr [p] != -1)
+		{
+			close (_hnd_23017_arr [p]);
+			_hnd_23017_arr [p] = -1;
+		}
+	}
+}
+
+
+
 void	UserInputPi3::polling_loop ()
 {
+	typedef unsigned int InputState;
+	static_assert (
+		sizeof (InputState) * CHAR_BIT >= _nbr_sw_23017 * _nbr_dev_23017,
+		"state capacity for MCP23017"
+	);
+	static_assert (
+		sizeof (InputState) * CHAR_BIT >= _nbr_sw_gpio,
+		"state capacity for GPIO"
+	);
+
 	while (! _quit_flag)
 	{
 		const int64_t  cur_time = read_clock_ns ();
 
-		// On the port expander
-		uint16_t       state_all =
-			::wiringPiI2CReadReg16 (_hnd_23017, Cmd23017_GPIOA);
-		for (int i = 0; i < _nbr_sw_23017 && ! _quit_flag; ++i)
+		// Reads all binary inputs first
+		InputState     input_state_arr [BinSrc_NBR_ELT] = { 0, 0 };
+
+		static const InputState mask = (1U << _nbr_sw_23017) - 1;
+		for (int p = 0; p < _nbr_dev_23017; ++p)
 		{
-			const bool     flag  = (((state_all >> i) & 1) == 0);
-			const int      index = i;
-			handle_switch (index, flag, cur_time);
+			InputState     dev_state = InputState (
+				::wiringPiI2CReadReg16 (_hnd_23017_arr [p], Cmd23017_GPIOA)
+			);
+			dev_state ^= mask;
+			input_state_arr [BinSrc_PORT_EXP] |= dev_state << (p * _nbr_sw_23017);
 		}
 
-		// On the GPIO
-		for (int i = 0; i < _nbr_sw_gpio && ! _quit_flag; ++i)
+		for (int p = 0; p < _nbr_sw_gpio; ++p)
 		{
-			const int      sw_val = ::digitalRead (_gpio_pin_arr [i]);
-			const bool     flag   = (sw_val == 0);
-			const int      index  = _nbr_sw_23017 + i;
-			handle_switch (index, flag, cur_time);
+			InputState     sw_val = InputState (
+				::digitalRead (_gpio_pin_arr [p]) & 1
+			);
+			sw_val ^= 1;
+			input_state_arr [BinSrc_GPIO] |= sw_val << p;
 		}
+
+		// Switches
+		for (int s = 0; s < _nbr_switches; ++s)
+		{
+			const SwitchSrc & src = _switch_arr [s];
+			const int      val    = (input_state_arr [src._type] >> src._pos) & 1;
+			const bool     flag   = (val != 0);
+			handle_switch (s, flag, cur_time);
+		}
+
+#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
+		// Rotary incremental encoders
+		for (int i = 0; i < _nbr_rotenc; ++i)
+		{
+			const RotEncSrc & src       = _rotenc_arr [i];
+			const InputState  src_state = input_state_arr [src._type];
+			const int         v0        = (src_state >> src._pos_0) & 1;
+			const int         v1        = (src_state >> src._pos_1) & 1;
+			handle_rotenc (i, (v0 != 0), (v1 != 0), cur_time);
+		}
+#endif
 
 		// Potentiometers
-		for (int i = 0; i < _nbr_adc && ! _quit_flag; ++i)
+		for (int i = 0; i < _nbr_pot && ! _quit_flag; ++i)
 		{
-			const int      val = read_adc (_spi_port, i);
+			const int      adc_index = _pot_arr [i];
+			const int      val       = read_adc (_spi_port, adc_index);
 			if (val >= 0)
 			{
-				handle_adc (i, val, cur_time);
+				handle_pot (i, val, cur_time);
 			}
 		}
 
 		// 10 ms between updates
+		/*** To do: probably too long for the rotary encoders ***/
 		::delay (10);
 	}
 
@@ -212,28 +326,30 @@ void	UserInputPi3::handle_switch (int index, bool flag, int64_t cur_time)
 		{
 			sw._flag      = flag;
 			sw._time_last = cur_time;
-
-			MsgQueue *     queue_ptr = _recip_list [UserInputType_SW] [index];
-			if (queue_ptr != 0)
-			{
-				MsgCell *      cell_ptr = _msg_pool.take_cell (true);
-				if (cell_ptr == 0)
-				{
-					assert (false);
-				}
-				else
-				{
-					cell_ptr->_val.set (UserInputType_SW, index, (flag) ? 1 : 0);
-					queue_ptr->enqueue (*cell_ptr);
-				}
-			}
+			enqueue_val (UserInputType_SW, index, (flag) ? 1 : 0);
 		}
 	}
 }
 
 
 
-void	UserInputPi3::handle_adc (int index, int val, int64_t cur_time)
+#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
+
+void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, int64_t cur_time)
+{
+	RotEnc &       re  = _rotenc_state_arr [index];
+	const int      inc = re.set_new_state (f0, f1);
+	if (inc != 0)
+	{
+		enqueue_val (UserInputType_ROTENC, index, inc);
+	}
+}
+
+#endif
+
+
+
+void	UserInputPi3::handle_pot (int index, int val, int64_t cur_time)
 {
 	PotState &     pot      = _pot_state_arr [index];
 
@@ -266,20 +382,27 @@ void	UserInputPi3::handle_adc (int index, int val, int64_t cur_time)
 
 	if (new_flag)
 	{
-		MsgQueue *     queue_ptr = _recip_list [UserInputType_SW] [index];
-		if (queue_ptr != 0)
+		const float    val_flt = val * (1.0f / ((1 << _res_adc) - 1));
+		enqueue_val (UserInputType_POT, index, val_flt);
+	}
+}
+
+
+
+void	UserInputPi3::enqueue_val (UserInputType type, int index, float val)
+{
+	MsgQueue *     queue_ptr = _recip_list [type] [index];
+	if (queue_ptr != 0)
+	{
+		MsgCell *      cell_ptr = _msg_pool.take_cell (true);
+		if (cell_ptr == 0)
 		{
-			MsgCell *      cell_ptr = _msg_pool.take_cell (true);
-			if (cell_ptr == 0)
-			{
-				assert (false);
-			}
-			else
-			{
-				const float    val_flt = val * (1.0f / ((1 << _res_adc) - 1));
-				cell_ptr->_val.set (UserInputType_POT, index, val_flt);
-				queue_ptr->enqueue (*cell_ptr);
-			}
+			assert (false);
+		}
+		else
+		{
+			cell_ptr->_val.set (type, index, val);
+			queue_ptr->enqueue (*cell_ptr);
 		}
 	}
 }
