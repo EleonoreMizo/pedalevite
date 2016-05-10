@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputType.h
+        ControlCurve.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputType_HEADER_INCLUDED)
-#define mfx_ui_UserInputType_HEADER_INCLUDED
+#if ! defined (mfx_ControlCurve_HEADER_INCLUDED)
+#define mfx_ControlCurve_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -31,36 +31,38 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+
+
+
+enum ControlCurve
 {
 
+	ControlCurve_INVALID = -1,
+
+	ControlCurve_LINEAR = 0,
+	ControlCurve_SQ,
+	ControlCurve_CB,
+	ControlCurve_SAT2,
+	ControlCurve_SAT3,
+	ControlCurve_S1,
+	ControlCurve_S2,
+
+	ControlCurve_NBR_ELT
 
 
-enum UserInputType
-{
-
-	UserInputType_UNDEFINED = -1,
-
-	UserInputType_SW = 0,
-	UserInputType_POT,
-	UserInputType_ROTENC,
-
-	UserInputType_NBR_ELT
-
-}; // enum UserInputType
+}; // enum ControlCurve
 
 
 
-}  // namespace ui
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputType.hpp"
+//#include "mfx/ControlCurve.hpp"
 
 
 
-#endif   // mfx_ui_UserInputType_HEADER_INCLUDED
+#endif   // mfx_ControlCurve_HEADER_INCLUDED
 
 
 

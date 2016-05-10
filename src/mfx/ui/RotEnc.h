@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.h
+        RotEnc.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputMsg_HEADER_INCLUDED)
-#define mfx_ui_UserInputMsg_HEADER_INCLUDED
+#if ! defined (mfx_ui_RotEnc_HEADER_INCLUDED)
+#define mfx_ui_RotEnc_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputType.h"
+#include <array>
 
 
 
@@ -38,25 +38,20 @@ namespace ui
 
 
 
-class UserInputMsg
+class RotEnc
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               UserInputMsg ()                          = default;
-	               UserInputMsg (const UserInputMsg &other) = default;
-	virtual        ~UserInputMsg ()                         = default;
+	static const int  _nbr_pins = 2;
 
-	UserInputMsg & operator = (const UserInputMsg &other)   = default;
+	               RotEnc ()  = default;
+	virtual        ~RotEnc () = default;
 
-	void           set (UserInputType type, int index, float val);
-	UserInputType  get_type () const;
-	int            get_index () const;
-	float          get_val  () const;
-
-	bool           is_valid () const;
+	void           reset ();
+	int            set_new_state (bool a0_flag, bool a1_flag);
 
 
 
@@ -70,9 +65,9 @@ protected:
 
 private:
 
-	UserInputType  _type  = UserInputType_UNDEFINED;
-	int            _index = -1;
-	float          _val   = -1;         // In range [0 ; 1]
+	int            _pin_state     = 0;
+	int            _cumulated_pos = 0;
+
 
 
 
@@ -80,10 +75,12 @@ private:
 
 private:
 
-	bool           operator == (const UserInputMsg &other) const = delete;
-	bool           operator != (const UserInputMsg &other) const = delete;
+	               RotEnc (const RotEnc &other)            = delete;
+	RotEnc &       operator = (const RotEnc &other)        = delete;
+	bool           operator == (const RotEnc &other) const = delete;
+	bool           operator != (const RotEnc &other) const = delete;
 
-}; // class UserInputMsg
+}; // class RotEnc
 
 
 
@@ -92,11 +89,11 @@ private:
 
 
 
-//#include "mfx/ui/UserInputMsg.hpp"
+//#include "mfx/ui/RotEnc.hpp"
 
 
 
-#endif   // mfx_ui_UserInputMsg_HEADER_INCLUDED
+#endif   // mfx_ui_RotEnc_HEADER_INCLUDED
 
 
 

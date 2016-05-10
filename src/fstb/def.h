@@ -105,6 +105,7 @@ namespace fstb
 
 
 
+// Alignment
 #if defined (_MSC_VER)
 	#define	fstb_TYPEDEF_ALIGN( alignsize, srctype, dsttype)	\
 		typedef __declspec (align (alignsize)) srctype dsttype
@@ -114,6 +115,9 @@ namespace fstb
 #else
 	#error Undefined for this compiler
 #endif
+
+// Restrict for pointers
+#define fstb_RESTRICT __restrict
 
 
 

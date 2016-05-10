@@ -118,6 +118,11 @@
     <ClInclude Include="fstb\AllocAlign.hpp" />
     <ClInclude Include="fstb\ArrayAlign.h" />
     <ClInclude Include="fstb\ArrayAlign.hpp" />
+    <ClInclude Include="fstb\BitFieldSparse.h" />
+    <ClInclude Include="fstb\BitFieldSparseIterator.h" />
+    <ClInclude Include="fstb\BitFieldSparseIterator.hpp" />
+    <ClInclude Include="fstb\BitFieldTools.h" />
+    <ClInclude Include="fstb\BitFieldTools.hpp" />
     <ClInclude Include="fstb\CpuId.h" />
     <ClInclude Include="fstb\DataAlign.h" />
     <ClInclude Include="fstb\DataAlign.hpp" />
@@ -190,6 +195,13 @@
     <ClInclude Include="jack\transport.h" />
     <ClInclude Include="jack\types.h" />
     <ClInclude Include="jack\weakmacros.h" />
+    <ClInclude Include="mfx\ControlCurve.h" />
+    <ClInclude Include="mfx\ControlledParam.h" />
+    <ClInclude Include="mfx\ControllerType.h" />
+    <ClInclude Include="mfx\ControlSource.h" />
+    <ClInclude Include="mfx\ControlSource.hpp" />
+    <ClInclude Include="mfx\Cst.h" />
+    <ClInclude Include="mfx\CtrlUnit.h" />
     <ClInclude Include="mfx\dsp\InertiaLin.h" />
     <ClInclude Include="mfx\dsp\InertiaLin.hpp" />
     <ClInclude Include="mfx\dsp\mix\Align.h" />
@@ -200,7 +212,11 @@
     <ClInclude Include="mfx\dsp\StereoLevel.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
+    <ClInclude Include="mfx\Msg.h" />
+    <ClInclude Include="mfx\MsgQueue.h" />
     <ClInclude Include="mfx\Overdrive.h" />
+    <ClInclude Include="mfx\ParamCoord.h" />
+    <ClInclude Include="mfx\ParamCoord.hpp" />
     <ClInclude Include="mfx\piapi\Event.h" />
     <ClInclude Include="mfx\piapi\EventNoteOff.h" />
     <ClInclude Include="mfx\piapi\EventNoteOn.h" />
@@ -213,10 +229,15 @@
     <ClInclude Include="mfx\piapi\ParamDescInterface.hpp" />
     <ClInclude Include="mfx\piapi\PluginInterface.h" />
     <ClInclude Include="mfx\pi\DistoSimple.h" />
+    <ClInclude Include="mfx\pi\DryWet.h" />
+    <ClInclude Include="mfx\pi\ParamDescSet.h" />
     <ClInclude Include="mfx\pi\ParamState.h" />
+    <ClInclude Include="mfx\pi\ParamStateSet.h" />
     <ClInclude Include="mfx\pi\param\HelperDispNum.h" />
     <ClInclude Include="mfx\pi\param\MapLog.h" />
     <ClInclude Include="mfx\pi\param\MapLog.hpp" />
+    <ClInclude Include="mfx\pi\param\MapS.h" />
+    <ClInclude Include="mfx\pi\param\MapS.hpp" />
     <ClInclude Include="mfx\pi\param\MapSq.h" />
     <ClInclude Include="mfx\pi\param\MapSq.hpp" />
     <ClInclude Include="mfx\pi\param\Tools.h" />
@@ -231,6 +252,10 @@
     <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
     <ClInclude Include="mfx\pi\param\TplSq.h" />
     <ClInclude Include="mfx\pi\param\TplSq.hpp" />
+    <ClInclude Include="mfx\PluginPool.h" />
+    <ClInclude Include="mfx\ProcessingContext.h" />
+    <ClInclude Include="mfx\ProcessingContextNode.h" />
+    <ClInclude Include="mfx\SharedRscState.h" />
     <ClInclude Include="mfx\tuner\FreqAnalyser.h" />
     <ClInclude Include="mfx\ui\DisplayInterface.h" />
     <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h" />
@@ -238,12 +263,15 @@
     <ClInclude Include="mfx\ui\FontDataDefault.h" />
     <ClInclude Include="mfx\ui\LedInterface.h" />
     <ClInclude Include="mfx\ui\LedPi3.h" />
+    <ClInclude Include="mfx\ui\RotEnc.h" />
     <ClInclude Include="mfx\ui\UserInputInterface.h" />
     <ClInclude Include="mfx\ui\UserInputMsg.h" />
     <ClInclude Include="mfx\ui\UserInputPi3.h" />
     <ClInclude Include="mfx\ui\UserInputType.h" />
+    <ClInclude Include="mfx\WorldAudio.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="fstb\BitFieldSparse.cpp" />
     <ClCompile Include="fstb\CpuId.cpp" />
     <ClCompile Include="fstb\fnc.cpp">
       <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
@@ -268,17 +296,27 @@
     </ClCompile>
     <ClCompile Include="fstb\util\ObservableMultiMixin.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mfx\dsp\mix\Align.cpp" />
+    <ClCompile Include="mfx\ControlledParam.cpp" />
+    <ClCompile Include="mfx\CtrlUnit.cpp" />
+    <ClCompile Include="mfx\dsp\mix\Align.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
     <ClCompile Include="mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="mfx\dsp\mix\Generic.cpp" />
     <ClCompile Include="mfx\GpioPwm.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
     <ClCompile Include="mfx\pi\DistoSimple.cpp" />
+    <ClCompile Include="mfx\pi\DryWet.cpp" />
+    <ClCompile Include="mfx\pi\ParamDescSet.cpp" />
     <ClCompile Include="mfx\pi\ParamState.cpp" />
+    <ClCompile Include="mfx\pi\ParamStateSet.cpp" />
     <ClCompile Include="mfx\pi\param\HelperDispNum.cpp" />
     <ClCompile Include="mfx\pi\param\Tools.cpp" />
     <ClCompile Include="mfx\pi\param\TplLog.cpp" />
+    <ClCompile Include="mfx\PluginPool.cpp" />
+    <ClCompile Include="mfx\ProcessingContext.cpp" />
+    <ClCompile Include="mfx\ProcessingContextNode.cpp" />
     <ClCompile Include="mfx\tuner\FreqAnalyser.cpp" />
     <ClCompile Include="mfx\ui\DisplayInterface.cpp" />
     <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp" />
@@ -286,9 +324,11 @@
     <ClCompile Include="mfx\ui\FontDataDefault.cpp" />
     <ClCompile Include="mfx\ui\LedInterface.cpp" />
     <ClCompile Include="mfx\ui\LedPi3.cpp" />
+    <ClCompile Include="mfx\ui\RotEnc.cpp" />
     <ClCompile Include="mfx\ui\UserInputInterface.cpp" />
     <ClCompile Include="mfx\ui\UserInputMsg.cpp" />
     <ClCompile Include="mfx\ui\UserInputPi3.cpp" />
+    <ClCompile Include="mfx\WorldAudio.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

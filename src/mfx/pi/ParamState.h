@@ -53,7 +53,10 @@ class ParamState
 public:
 
 	               ParamState ();
-	virtual        ~ParamState () = default;
+	               ParamState (const ParamState &other) = default;
+	virtual        ~ParamState ()                       = default;
+
+	ParamState &   operator = (const ParamState &other) = default;
 
 	void           set_sample_freq (double fs);
 	void           set_ramp_time (double t);
@@ -104,8 +107,6 @@ private:
 
 private:
 
-	               ParamState (const ParamState &other)        = delete;
-	ParamState &   operator = (const ParamState &other)        = delete;
 	bool           operator == (const ParamState &other) const = delete;
 	bool           operator != (const ParamState &other) const = delete;
 

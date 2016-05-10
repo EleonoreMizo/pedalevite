@@ -46,7 +46,7 @@ class AllocAlign
 
 public:
 
-	enum {         ALIGNMENT = ALIG };
+	static const long ALIGNMENT = ALIG;
 
 	typedef	T	value_type;
 	typedef	value_type *	pointer;

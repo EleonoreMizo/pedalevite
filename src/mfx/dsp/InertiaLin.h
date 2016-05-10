@@ -43,8 +43,11 @@ class InertiaLin
 
 public:
 
-	               InertiaLin ()  = default;
-	virtual        ~InertiaLin () = default;
+	               InertiaLin ()                        = default;
+	               InertiaLin (const InertiaLin &other) = default;
+	virtual        ~InertiaLin ()                       = default;
+
+	InertiaLin &   operator = (const InertiaLin &other) = default;
 
 	inline void		set_inertia_time (double inertia_time);
 	inline double	get_inertia_time () const;
@@ -85,8 +88,6 @@ private:
 
 private:
 
-	               InertiaLin (const InertiaLin &other)        = delete;
-	InertiaLin &   operator = (const InertiaLin &other)        = delete;
 	bool           operator == (const InertiaLin &other) const = delete;
 	bool           operator != (const InertiaLin &other) const = delete;
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputType.h
+        ControllerType.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputType_HEADER_INCLUDED)
-#define mfx_ui_UserInputType_HEADER_INCLUDED
+#if ! defined (mfx_ControllerType_HEADER_INCLUDED)
+#define mfx_ControllerType_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,40 +27,42 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/ui/UserInputType.h"
+
 
 
 namespace mfx
 {
-namespace ui
+
+
+
+enum ControllerType
 {
+	ControllerType_INVALID      = -1,
+
+	ControllerType_UIT_ZONE_BEG = 0,
+	ControllerType_UIT_ZONE_LST = ui::UserInputType_NBR_ELT - 1,
+
+	ControllerType_MIDI,
+	ControllerType_SIG_PROBE,
+	ControllerType_LFO,
+	ControllerType_SEQ,
+
+	ControllerType_NBR_ELT
+
+}; // enum ControllerType
 
 
 
-enum UserInputType
-{
-
-	UserInputType_UNDEFINED = -1,
-
-	UserInputType_SW = 0,
-	UserInputType_POT,
-	UserInputType_ROTENC,
-
-	UserInputType_NBR_ELT
-
-}; // enum UserInputType
-
-
-
-}  // namespace ui
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputType.hpp"
+//#include "mfx/ControllerType.hpp"
 
 
 
-#endif   // mfx_ui_UserInputType_HEADER_INCLUDED
+#endif   // mfx_ControllerType_HEADER_INCLUDED
 
 
 

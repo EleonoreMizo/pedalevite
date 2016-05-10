@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.cpp
+        ProcessingContextNode.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,15 +24,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputMsg.h"
+#include "mfx/ProcessingContextNode.h"
 
 #include <cassert>
 
 
 
 namespace mfx
-{
-namespace ui
 {
 
 
@@ -41,51 +39,24 @@ namespace ui
 
 
 
-void	UserInputMsg::set (UserInputType type, int index, float val)
+ProcessingContextNode::ProcessingContextNode ()
+:	_pi_id (-1)
+,	_side_arr ()
 {
-	assert (type >= 0);
-	assert (type < UserInputType_NBR_ELT);
-	assert (index >= 0);
-	assert (val >= 0 || type == UserInputType_ROTENC);
-	assert (val <= 1 || type == UserInputType_ROTENC);
+	for (auto & side : _side_arr)
+	{
+		side._nbr_chn     = 0;
+		side._nbr_chn_tot = 0;
+		for (auto & buf_index : side._buf_arr)
+		{
+			buf_index = -1;
+		}
+	}
 
-	_type  = type;
-	_index = index;
-	_val   = val;
-}
-
-
-
-UserInputType	UserInputMsg::get_type () const
-{
-	assert (is_valid ());
-
-	return _type;
-}
-
-
-
-int	UserInputMsg::get_index () const
-{
-	assert (is_valid ());
-
-	return _index;
-}
-
-
-
-float	UserInputMsg::get_val () const
-{
-	assert (is_valid ());
-
-	return _val;
-}
-
-
-
-bool	UserInputMsg::is_valid () const
-{
-	return (_type >= 0);
+	for (auto & buf_index : _bypass_buf_arr)
+	{
+		buf_index = -1;
+	}
 }
 
 
@@ -98,7 +69,6 @@ bool	UserInputMsg::is_valid () const
 
 
 
-}  // namespace ui
 }  // namespace mfx
 
 

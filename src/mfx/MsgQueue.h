@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputType.h
+        MsgQueue.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputType_HEADER_INCLUDED)
-#define mfx_ui_UserInputType_HEADER_INCLUDED
+#if ! defined (mfx_MsgQueue_HEADER_INCLUDED)
+#define mfx_MsgQueue_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,40 +27,29 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/Msg.h"
+#include "conc/LockFreeQueue.h"
+
 
 
 namespace mfx
 {
-namespace ui
-{
 
 
 
-enum UserInputType
-{
-
-	UserInputType_UNDEFINED = -1,
-
-	UserInputType_SW = 0,
-	UserInputType_POT,
-	UserInputType_ROTENC,
-
-	UserInputType_NBR_ELT
-
-}; // enum UserInputType
+typedef conc::LockFreeQueue <Msg> MsgQueue;
 
 
 
-}  // namespace ui
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputType.hpp"
+//#include "mfx/MsgQueue.hpp"
 
 
 
-#endif   // mfx_ui_UserInputType_HEADER_INCLUDED
+#endif   // mfx_MsgQueue_HEADER_INCLUDED
 
 
 

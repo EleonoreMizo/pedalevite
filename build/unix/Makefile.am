@@ -104,6 +104,12 @@ pedalevite_SOURCES = \
         ../../src/fstb/AllocAlign.hpp \
         ../../src/fstb/ArrayAlign.h \
         ../../src/fstb/ArrayAlign.hpp \
+        ../../src/fstb/BitFieldSparse.cpp \
+        ../../src/fstb/BitFieldSparse.h \
+        ../../src/fstb/BitFieldSparseIterator.h \
+        ../../src/fstb/BitFieldSparseIterator.hpp \
+        ../../src/fstb/BitFieldTools.h \
+        ../../src/fstb/BitFieldTools.hpp \
         ../../src/fstb/CpuId.cpp \
         ../../src/fstb/CpuId.h \
         ../../src/fstb/DataAlign.h \
@@ -139,6 +145,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/HelperDispNum.h \
         ../../src/mfx/pi/param/MapLog.h \
         ../../src/mfx/pi/param/MapLog.hpp \
+        ../../src/mfx/pi/param/MapS.h \
+        ../../src/mfx/pi/param/MapS.hpp \
         ../../src/mfx/pi/param/MapSq.h \
         ../../src/mfx/pi/param/MapSq.hpp \
         ../../src/mfx/pi/param/Tools.cpp \
@@ -157,8 +165,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplSq.hpp \
         ../../src/mfx/pi/DistoSimple.cpp \
         ../../src/mfx/pi/DistoSimple.h \
+        ../../src/mfx/pi/ParamDescSet.cpp \
+        ../../src/mfx/pi/ParamDescSet.h \
         ../../src/mfx/pi/ParamState.cpp \
         ../../src/mfx/pi/ParamState.h \
+        ../../src/mfx/pi/ParamStateSet.cpp \
+        ../../src/mfx/pi/ParamStateSet.h \
         ../../src/mfx/piapi/Event.h \
         ../../src/mfx/piapi/EventNoteOff.h \
         ../../src/mfx/piapi/EventNoteOn.h \
@@ -185,6 +197,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/LedInterface.h \
         ../../src/mfx/ui/LedPi3.cpp \
         ../../src/mfx/ui/LedPi3.h \
+        ../../src/mfx/ui/RotEnc.cpp \
+        ../../src/mfx/ui/RotEnc.h \
         ../../src/mfx/ui/UserInputInterface.cpp \
         ../../src/mfx/ui/UserInputInterface.h \
         ../../src/mfx/ui/UserInputMsg.cpp \
@@ -192,10 +206,32 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputPi3.cpp \
         ../../src/mfx/ui/UserInputPi3.h \
         ../../src/mfx/ui/UserInputType.h \
+        ../../src/mfx/ControlCurve.h \
+        ../../src/mfx/ControlledParam.cpp \
+        ../../src/mfx/ControlledParam.h \
+        ../../src/mfx/ControllerType.h \
+        ../../src/mfx/ControlSource.h \
+        ../../src/mfx/ControlSource.hpp \
+        ../../src/mfx/Cst.h \
+        ../../src/mfx/CtrlUnit.cpp \
+        ../../src/mfx/CtrlUnit.h \
         ../../src/mfx/GpioPwm.cpp \
         ../../src/mfx/GpioPwm.h \
+        ../../src/mfx/Msg.h \
+        ../../src/mfx/MsgQueue.h \
         ../../src/mfx/Overdrive.cpp \
         ../../src/mfx/Overdrive.h \
+        ../../src/mfx/ParamCoord.h \
+        ../../src/mfx/ParamCoord.hpp \
+        ../../src/mfx/PluginPool.cpp \
+        ../../src/mfx/PluginPool.h \
+        ../../src/mfx/ProcessingContext.cpp \
+        ../../src/mfx/ProcessingContext.h \
+        ../../src/mfx/ProcessingContextNode.cpp \
+        ../../src/mfx/ProcessingContextNode.h \
+        ../../src/mfx/SharedRscState.h \
+        ../../src/mfx/WorldAudio.cpp \
+        ../../src/mfx/WorldAudio.h \
         ../../src/mailbox.c \
         ../../src/mailbox.h \
         ../../src/main.cpp

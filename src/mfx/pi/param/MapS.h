@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.h
+        MapS.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputMsg_HEADER_INCLUDED)
-#define mfx_ui_UserInputMsg_HEADER_INCLUDED
+#if ! defined (mfx_pi_param_MapS_HEADER_INCLUDED)
+#define mfx_pi_param_MapS_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,36 +27,31 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputType.h"
-
 
 
 namespace mfx
 {
-namespace ui
+namespace pi
+{
+namespace param
 {
 
 
 
-class UserInputMsg
+template <bool INVFLAG>
+class MapS
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               UserInputMsg ()                          = default;
-	               UserInputMsg (const UserInputMsg &other) = default;
-	virtual        ~UserInputMsg ()                         = default;
+	               MapS ()  = default;
+	virtual        ~MapS () = default;
 
-	UserInputMsg & operator = (const UserInputMsg &other)   = default;
-
-	void           set (UserInputType type, int index, float val);
-	UserInputType  get_type () const;
-	int            get_index () const;
-	float          get_val  () const;
-
-	bool           is_valid () const;
+	inline void    config (double val_min, double val_max);
+	inline double  conv_norm_to_nat (double norm) const;
+	inline double  conv_nat_to_norm (double nat) const;
 
 
 
@@ -70,9 +65,14 @@ protected:
 
 private:
 
-	UserInputType  _type  = UserInputType_UNDEFINED;
-	int            _index = -1;
-	float          _val   = -1;         // In range [0 ; 1]
+	static inline double
+	               map_direct (double x);
+	static inline double
+	               map_inv (double x);
+
+	double         _a  = 1;
+	double         _b  = 0;
+	double         _ai = 1;    // 1 / _a
 
 
 
@@ -80,23 +80,27 @@ private:
 
 private:
 
-	bool           operator == (const UserInputMsg &other) const = delete;
-	bool           operator != (const UserInputMsg &other) const = delete;
+	               MapS (const MapS <INVFLAG> &other)             = delete;
+	MapS <INVFLAG> &
+	               operator = (const MapS <INVFLAG> &other)        = delete;
+	bool           operator == (const MapS <INVFLAG> &other) const = delete;
+	bool           operator != (const MapS <INVFLAG> &other) const = delete;
 
-}; // class UserInputMsg
+}; // class MapS
 
 
 
-}  // namespace ui
+}  // namespace param
+}  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/UserInputMsg.hpp"
+#include "mfx/pi/param/MapS.hpp"
 
 
 
-#endif   // mfx_ui_UserInputMsg_HEADER_INCLUDED
+#endif   // mfx_pi_param_MapS_HEADER_INCLUDED
 
 
 
