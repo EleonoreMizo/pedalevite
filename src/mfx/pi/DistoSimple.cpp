@@ -92,9 +92,10 @@ int	DistoSimple::do_restore ()
 
 
 
-bool	DistoSimple::do_has_sidechain () const
+bool	DistoSimple::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
-	return false;
+	nbr_i = 1;
+	nbr_o = 1;
 }
 
 

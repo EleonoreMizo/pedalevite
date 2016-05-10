@@ -75,12 +75,14 @@ int	PluginInterface::restore ()
 
 
 
-bool	PluginInterface::has_sidechain () const
+void	PluginInterface::get_nbr_io (int &nbr_i, int &nbr_o) const
 {
 	assert (   get_state () == State_INITIALISED
 	        || get_state () == State_ACTIVE);
 
-	return do_has_sidechain ();
+	do_get_nbr_io (nbr_i, nbr_o);
+	assert (nbr_i > 0);
+	assert (nbr_o > 0);
 }
 
 
