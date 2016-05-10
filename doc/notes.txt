@@ -1,0 +1,740 @@
+﻿
+Réalisation pédalier d'effet pour guitare
+=========================================
+
+
+	HT	qté	adresse
+— Interface audio : Presonus AudioBox USB
+	82.50	1	http://www.thomann.de/fr/presonus_audiobox_usb.htm
+— Traitement DSP : Raspberry Pi 3
+	31.98	1	http://fr.farnell.com/raspberry-pi/raspberrypi3-modb-1gb/sbc-raspberry-pi-3-mod-b-1gb-ram/dp/2525225
+— Alimentation : 5V en 1 A ou plus, à voir (micro USB ou custom avec convertisseur DC/DC)
+	6.91	1	http://fr.farnell.com/stontronics/t6090dv/psu-raspberry-pi-5v-2-5a-uk-euro/dp/2520786
+— Mémoire de masse : à voir, carte SDHC (micro SD) au moins classe 4, 8 GB
+	11.53	1	http://fr.farnell.com/transcend/tsraspi10-16g/16gb-microsd-card-preloaded-with/dp/2521753
+– Câbe HDMI–DVI
+	5.82	1	http://fr.farnell.com/pro-signal/psg02575/cordon-hdmi-vers-dvi-3m/dp/1813135
+– LED rouges
+	0.211	10	http://fr.farnell.com/broadcom-limited/hlmp-d150/led-5mm-rouge/dp/1003231
+— Résistances pour les LED rouges (1500 ohm)
+	0.0737	10	http://fr.farnell.com/multicomp/mcf-0-5w-1k5/resistance-0-5w-5-1k5/dp/9338497
+
+	0.0722	10	http://fr.farnell.com/multicomp/mcf-0-5w-470r/resistance-0-5w-5-470r/dp/9338810
+	0.0687	10	http://fr.farnell.com/multicomp/mcf-0-5w-270r/resistance-0-5w-5-270r/dp/9338659
+– Résistances pour les interrupteurs
+	0.0748	20	http://fr.farnell.com/multicomp/mcf-0-5w-10k/resistance-couche-carbon-10k-0/dp/9338373
+	0.0723	20	http://fr.farnell.com/multicomp/mcf-0-5w-100k/resistance-0-5w-5-100k/dp/9338381
+	0.0636	20	http://fr.farnell.com/multicomp/mcf-0-5w-1m/resistance-0-5w-5-1m/dp/9338390
+– Fil (noir)
+	12.33	1	http://fr.farnell.com/alpha-wire/3051-bk005/fil-noir-22awg-7-30awg-30-5m/dp/2290872
+– Fil (rouge)
+	12.33	1	http://fr.farnell.com/alpha-wire/3051-rd005/fil-rouge-22awg-7-30awg-30-5m/dp/2290861
+– Breadboard sans soudure
+	8.67	1	http://fr.farnell.com/wisher/wbu-301j/plaque-d-experimentation-wbu-301j/dp/1472862
+– Cavaliers
+	22.95	1	http://fr.farnell.com/wisher/wjw60b/kit-de-350-fils/dp/1173677
+– Broches femelles à sertir (x25)
+	0.63	4	http://www.gotronic.fr/art-25-contacts-ndr-t-22802.htm
+– Boîtiers isolants pour les broches femelles (x25)
+	0.67	4	http://www.gotronic.fr/art-25-boitiers-nsr-01-22804.htm
+– Broches mâles (x36)
+	0.50	4	http://www.gotronic.fr/art-connecteur-he14-mh100-4457.htm
+— Peut-être une pédale d’expression --> Yamaha FC-7, pas trop cher
+	49.17	1	http://www.thomann.de/fr/yamaha_fc7.htm
+– Si pédale d’expression (simple potar), ADC à connecter sur l’interface SPI
+	2.23	1	http://fr.farnell.com/microchip/mcp3008-i-p/10bit-adc-2-7v-8ch-spi-16dip/dp/1627174
+– Jack femelle 6.35 stéréo
+	1.39	1	http://fr.farnell.com/lumberg/klbp-3/embase-stereo-6-35mm/dp/1217018
+– Afficheur 84 x 48
+	11.30	1	http://snootlab.com/adafruit/295-nokia-5110-3310-monochrome-lcd-fr.html
+– Expanseur de ports
+	1.21	1	http://fr.farnell.com/microchip/mcp23017-e-sp/16-bit-expander-i-o-i2c-i-f/dp/1332088
+– Breadboard sans soudure un peu plus grande :
+	10.11	1	http://fr.farnell.com/twin-industries/tw-e40-1020/carte-proto-ss-soudure-830-tie/dp/2213346
+– LED vertes
+	0.171	5	http://fr.farnell.com/avago-technologies/hlmp-4740/led-5mm-vert/dp/1003234
+– Résistances pour LED vertes (680 ohm)
+	0.0714	5	http://fr.farnell.com/multicomp/mcf-0-5w-680r/resistance-0-5w-5-680r/dp/9338926
+– Fils colorés (dispensables, pas vendus plus courts)
+	11.21		http://fr.farnell.com/alpha-wire/3051-br005/fil-brn-22awg-7-30awg-30-5m/dp/2290866
+	11.21		http://fr.farnell.com/alpha-wire/3051-sl005/fil-slt-22awg-7-30awg-30-5m/dp/2290860
+	18.52		http://fr.farnell.com/alpha-wire/3051-vi005/fil-vlt-22awg-7-30awg-30-5m/dp/2290859
+	13.66		http://fr.farnell.com/alpha-wire/3051-gr005/fil-vert-22awg-7-30awg-30-5m/dp/2290864
+	11.21		http://fr.farnell.com/alpha-wire/3051-yl005/fil-jaune-22awg-7-30awg-30-5m/dp/2290853
+	12.33		http://fr.farnell.com/alpha-wire/3051-wh005/fil-blanc-22awg-7-30awg-30-5m/dp/2290855
+	12.33		http://fr.farnell.com/alpha-wire/3051-bl005/fil-bleu-22awg-7-30awg-30-5m/dp/2290869
+– Interrupteurs momentanés simple :
+	0.549	20	http://fr.farnell.com/omron-electronic-components/b3wn-6002/interrupteur-spno-ci/dp/9945423
+	Beaucoup mieux :
+	0.114	20	http://fr.farnell.com/te-connectivity-alcoswitch/fsm4jrt/commutateur-tactile-spst-50ma/dp/2396052
+– USB mâle sortant verticalement, permettant de faire une sortie coudée
+	1.53	1	http://fr.farnell.com/lumberg/2410-07/fiche-usb-2-0-type-a-angle-droit/dp/1308875
+– Boutons stompbox Off-(On)
+	3.20	12	http://www.tube-town.net/ttstore/Interupteurs/Commutateurs-au-pied-standard/Footswitch-DPDT-momentary-ON-ON::5803.html
+– Jack mono femelle sur chassis
+	0.49	2	http://www.tube-town.net/ttstore/Fiches-et-prises/Prises-Jack-6-3mm/Jack-6-3-mm-Mono-Chassis-Mount::5425.html
+
+
+– Boutons pour l'interface, se montent directement sur la façade plutôt que sur PCB, par ordre de préférence :
+OK	3.11	6	http://fr.farnell.com/multicomp/mcpas6-d1-m1ces2-5/commutateur-carree-noir/dp/2146917
+non	2.41	6	http://fr.farnell.com/multicomp/r13-502ma-05-b/switch-spst-3a-125v-solder-black/dp/1634624
+non	3.01	6	http://fr.farnell.com/multicomp/r13-23a-05-bb/switch-spst-mom-black/dp/1634629
+non	4.09	6	http://fr.farnell.com/multicomp/mcpas6b2m1ce2/bouton-poussoir-spst-ip67-noir/dp/1638333
+
+– Condensateurs pour le 3008, 1 nF (céramique)
+non	0.331	2	http://fr.farnell.com/avx/sr151c102kaa/condensateur-mlcc-x7r-1nf-100v/dp/2332953
+– Condensateurs pour les IC, 0.1 uF (céramique)
+	0.174	10	http://fr.farnell.com/multicomp/mc0805b104k500a2-54mm/condensateur-mlcc-x7r-100nf-50v/dp/2309020
+– Condensateurs pour le 3008, 1 uF (céramique)
+	0.639	5	http://fr.farnell.com/multicomp/mcmlr50v105kx7r/condensateur-ceramique-x7r-1uf/dp/2112947
+– Condensateurs pour le 3008, 10 uF (électrolytique). (modèle selon disponibilités)
+non	0.326	4	http://fr.farnell.com/rubycon/160lle10mefc8x9/condensateur-elec-alu-10uf-160v/dp/2342086
+non	0.324	4	http://fr.farnell.com/rubycon/200lle10mefc8x11-5/condensateur-elec-alu-10uf-200v/dp/2102425
+– Condensateurs pour le 3008, 100 uF (électrolytique). Le plus cher a une meilleure durée de vie
+non	0.0913	1	http://fr.farnell.com/multicomp/mcrh25v107m6-3x11/condensateur-elec-alu-100uf-25v/dp/9451838
+non	0.733	1	http://fr.farnell.com/rubycon/63yxf100mefc10x12-5/condensateur-elec-alu-100uf-63v/dp/1144638
+– Résistances (x10)
+	0.17	1	http://www.gotronic.fr/art-10-resistances-1-4w-470-8486-2571.htm
+	0.17	2	http://www.gotronic.fr/art-10-resistances-1-4w-1-0k-8486-2574.htm
+	0.17	1	http://www.gotronic.fr/art-10-resistances-1-4w-1-5k-8486-2576.htm
+	0.17	2	http://www.gotronic.fr/art-10-resistances-1-4w-10k-8486-19.htm
+– Connecteurs 40 broches :
+	0.79	2	http://www.gotronic.fr/art-connecteur-he10bd40-20084.htm
+	4.91	1	http://fr.farnell.com/amphenol/fc40300-s/cordon-2-54mm-f-f-s-r-300mm-40voies/dp/2217675
+– Connecteurs mâles HE-14 2x36
+	0.75	2	http://www.gotronic.fr/art-connecteur-he14-mh200-4459.htm
+– Connecteurs 8 broches :
+	0.416	4 (10)	http://fr.farnell.com/multicomp/2226b-08/a-sertir-boitier-2-rangee-8voies/dp/1593521
+– Connecteurs 16 broches
+	0.193	2 (10)	http://fr.farnell.com/multicomp/2226b-16/a-sertir-boitier-2-rangee-16voies/dp/1593525
+– Connecteurs 3 broches :
+	0.1	5	http://www.gotronic.fr/art-connecteur-s003-124.htm
+	0.05	5	http://www.gotronic.fr/art-boitier-nsk254-3b-170.htm
+– Connecteurs 4 broches :
+	0.13	5	http://www.gotronic.fr/art-connecteur-s004-5858.htm
+	0.07	5	http://www.gotronic.fr/art-boitier-nsk254-4b-15398.htm
+– Contacts connecteurs 3-4 broches (x10)
+	0.17	4	http://www.gotronic.fr/art-10-contacts-nsk254-0-171.htm
+– Boîtiers pour contact femelle HE-14 (x25)
+	0.67	2	http://www.gotronic.fr/art-25-boitiers-nsr-01-22804.htm
+– Contacts femelle HE-14 à sertir (x25)
+	0.63	6	http://www.gotronic.fr/art-25-contacts-ndr-t-22802.htm
+– Contacts mâles HE-14 à sertir (x25)
+	1.04	2	http://www.gotronic.fr/art-25-contacts-males-ndr-tm-22803.htm
+– Connecteurs mâles HE-14 5x16
+	2.92	1	http://www.gotronic.fr/art-jeu-de-5-connecteurs-ard400-14861.htm
+– Boîtiers pour 3 contacts femelles HE-14 (x25)
+	0.64	1	http://www.gotronic.fr/art-25-boitiers-nsr-03-22806.htm
+– Boîtiers pour 4 contacts femelles HE-14 (x25)
+	0.71	1	http://www.gotronic.fr/art-25-boitiers-nsr-04-22831.htm
+– Connecteurs femelles sur circuit x36
+	2.08	2	http://www.gotronic.fr/art-connecteur-fh136z-4462.htm
+– Supports CI
+	0.22	2	http://www.gotronic.fr/art-support-tulipe-sup16t-4606.htm
+	0.63	2	http://www.gotronic.fr/art-support-tulipe-sup28te-220.htm
+
+– Pince à sertir
+	39.08	1	http://www.gotronic.fr/art-pince-a-sertir-pa09-22718.htm
+– Brucelles normales et à pression inversée 
+	3.00	1	http://www.gotronic.fr/art-brucelles-pt134-7003.htm
+– Outil à dénuder
+	34.75	1	http://www.gotronic.fr/art-outil-a-denuder-c-k-t3757esd2-16951.htm
+– Fer thermorégulé
+	60.75	1	http://www.gotronic.fr/art-fer-a-souder-tcs50-24019.htm
+– Mini perceuse
+	85.42	1	http://www.gotronic.fr/art-perceuse-industrielle-ib-e-16768.htm
+
+– Assortiments de fils
+	9.08	1	http://www.gotronic.fr/art-assortiment-fcr60-5212.htm
+– Câble monobrin cuivre nu étamé
+	11.22	1	http://fr.farnell.com/pro-power/tcw25-250g/fil-de-cuivre-etame-tcw-25swg/dp/1230990
+
+– Câble audio balancé basse capacitance, au m
+	2.17	5	http://www.thomann.de/fr/sommer_cable_galileo_238sw.htm
+– Câble audio mono basse capacitance, au m
+	2.17	25	http://www.thomann.de/fr/sommer_cable_the_spirit_llx.htm
+– Jack femelle stéréo (x2)
+	3.49	2	http://fr.farnell.com/neutrik/nys230/embase-jack-panneau-6-35mm-stereo/dp/4632667
+– Jack mâle stéréo
+	2.74	3	http://www.thomann.de/fr/neutriknp_3_x.htm
+
+– Cosses
+	1.92	1	http://www.gotronic.fr/art-100-cosses-a-souder-3-mm-coz30-4690.htm
+
+
+– Connecteur d’alimentation C14 (IEC 60320) sur chassis
+	4.23	1	http://fr.rs-online.com/web/p/connecteurs-iec/0488191/
+– Manchon isolant C14
+	3.35	1	http://fr.rs-online.com/web/p/products/5260724/
+
+– Carte prototypage (160x100, pads carrés, fibre de verre)
+	5.96	3	http://fr.farnell.com/roth-elektronik/re210-s1/carte-prototypage-re210-s1/dp/1221149
+
+– Entretoises 3.2-6 en 4, 5, 10 mm (x10)
+	0.79	1	http://www.gotronic.fr/art-10-entretoises-lisses-5-mm-23180.htm
+	0.75	1	http://www.gotronic.fr/art-10-entretoises-lisses-4-mm-23179.htm
+	1.00	1	http://www.gotronic.fr/art-10-entretoises-lisses-10-mm-23182.htm
+– Ventilateur 5 V 40x40x10 mm
+	3.25	1	http://www.gotronic.fr/art-mb40100v2-a99-18782.htm
+
+– Transistors low noise (en vue d'applications audio futures)
+	0.21		http://www.gotronic.fr/art-transistor-2sc1815-2004.htm
+	0.12		http://www.gotronic.fr/art-transistor-2sa1015-1991.htm
+
+
+
+
+Nouvelle commande
+-----------------
+
+* LED amplifiées (sur 3.3 V)
+
+– Transistors NPN pour LED (faibles courants : VCE(SAT) < 0.25 V, VBE(SAT) = 0.7 V)
+	0.13	5	http://www.gotronic.fr/art-transistor-bc547b-1336.htm
+– LED 180 mcd rouge (20 mA, 1.95 V) -> (3.3 - 0.25 - 1.95) / 0.020 -> 55 ohm
+	0.1805	5	http://fr.farnell.com/kingbright/l-9294surck/led-wide-view-130-rouge/dp/2079968
+– LED 150 mcd verte (20 mA, 2.1 V)  -> ajouter 20 % de courant pour égaliser la rouge (24 mA, 2.15 V) -> (3.3 - 0.25 - 2.15) / 0.024 = 37.5 ohm
+	0.1888	5	http://fr.farnell.com/kingbright/l-9294cgck/led-wide-view-130-vert/dp/2079971
+– Résistances base x10 : IBmin = IC / beta = 0.024 / 200 = 0.12 mA. (3.3 - 0.7) / 0.00012 = 21666 ohm -> 10 kohm OK, on fait avec les restes
+	0.17	0	http://www.gotronic.fr/art-10-resistances-1-4w-10k-8486-19.htm
+– Résistance alim rouge x10
+	0.17	1	http://www.gotronic.fr/art-10-resistances-1-4w-56-8486-2562.htm
+– Résistance alim verte x10
+	0.17	1	http://www.gotronic.fr/art-10-resistances-1-4w-39-8486-2560.htm
+
+* Nouvel afficheur
+
+– afficheur 128x64
+	18.25	1	http://www.gotronic.fr/art-module-graphique-lcd12864dfr-19395.htm
+	Doc : http://www.dfrobot.com/index.php?route=product/product&product_id=372	(sans le module arduino)
+– Connecteurs 8 broches (1x8)
+	0.327	10	http://fr.farnell.com/multicomp/2226a-08/a-sertir-boitier-1-rangee-8-voies/dp/1593512
+
+* Rotary encoders
+
+– Codeurs incrémentaux
+	1.79	8	http://fr.farnell.com/bourns/pec11r-4215f-s0024/codeur-increment-2canal-24impuls/dp/2474844
+– Boutons
+	0.556	10	http://fr.farnell.com/multicomp/cr-ba-7c6-180d/bouton-15-7mm-noir-blanc-line/dp/1441142
+– Expanseur de ports
+	1.21	1	http://fr.farnell.com/microchip/mcp23017-e-sp/16-bit-expander-i-o-i2c-i-f/dp/1332088
+– Support CI
+	0.63	1	http://www.gotronic.fr/art-support-tulipe-sup28te-220.htm
+Au choix :
+– Pull-up/protection 10 kohm avec condensateurs 10 nF
+	0.08	20	http://www.gotronic.fr/art-condensateur-ceramique-10-nf-8713.htm
+	0.17	2	http://www.gotronic.fr/art-10-resistances-1-4w-10k-8486-19.htm
+– Pull-up/protection 47 kohm avec condensateurs 2.7 nF
+	0.08	20	http://www.gotronic.fr/art-condensateur-ceramique-2-7-nf-8708.htm
+	0.17	2	http://www.gotronic.fr/art-10-resistances-1-4w-47k-8486-2588.htm
+=> Vérifier si on a ce qu’il faut en connecteurs. Il nous faut : int + rst + sda + scl + gnd + vcc = 6 pins. OK.
+
+* Refonte ADC
+
+— ADC à connecter sur l’interface SPI
+	2.23	1	http://fr.farnell.com/microchip/mcp3008-i-p/10bit-adc-2-7v-8ch-spi-16dip/dp/1627174
+– Support CI
+	0.22	1	http://www.gotronic.fr/art-support-tulipe-sup16t-4606.htm
+– Résistance 1500 ohm : on a du rab.
+– Condensateurs filtrage entrée 0.1 uF (céramique)
+	0.174	10	http://fr.farnell.com/multicomp/mc0805b104k500a2-54mm/condensateur-mlcc-x7r-100nf-50v/dp/2309020
+– Condensateurs filtrage VREF + VCC, 1 uF (céramique)
+	0.639	5	http://fr.farnell.com/multicomp/mcmlr50v105kx7r/condensateur-ceramique-x7r-1uf/dp/2112947
+
+* Refonte boutons/footswitches
+
+– Expanseur de ports
+	1.21	1	http://fr.farnell.com/microchip/mcp23017-e-sp/16-bit-expander-i-o-i2c-i-f/dp/1332088
+– Support CI
+	0.63	1	http://www.gotronic.fr/art-support-tulipe-sup28te-220.htm
+– Condensateur CI 0.1 uF (céramique) : on a du rab.
+– Condensateurs anti-rebond 0.1 uF (céramique)
+	0.174	20	http://fr.farnell.com/multicomp/mc0805b104k500a2-54mm/condensateur-mlcc-x7r-100nf-50v/dp/2309020
+– Résistances (x10)
+	0.17	2	http://www.gotronic.fr/art-10-resistances-1-4w-1-0k-8486-2574.htm
+	0.17	2	http://www.gotronic.fr/art-10-resistances-1-4w-10k-8486-19.htm
+=> Vérifier si on a ce qu’il faut en connecteurs. Il nous faut : int + rst + sda + scl + gnd + vcc + 2xGPIO = 8 pins. OK.
+
+* Divers
+
+– Carte prototypage (160x100, pads carrés, fibre de verre)
+	5.96	2	http://fr.farnell.com/roth-elektronik/re210-s1/carte-prototypage-re210-s1/dp/1221149
+– Pannes fer
+	4.92	1	http://www.gotronic.fr/art-panne-1-2-mm-1106-7504.htm
+	4.92	1	http://www.gotronic.fr/art-panne-0-8-mm-1105-7503.htm
+– Connecteurs 12 broches (2x6)
+	0.385	10	http://fr.farnell.com/multicomp/2226b-12/a-sertir-boitier-2-rangee-12voies/dp/1593524
+– Entretoises 3.2-6 en 10 mm (x10)
+	1.00	1	http://www.gotronic.fr/art-10-entretoises-lisses-10-mm-23182.htm
+– Vis et écrous 3 mm (x10)
+	0.29	1	http://www.gotronic.fr/art-10-vis-acier-m3-20mm-6508.htm
+	0.50	1	http://www.gotronic.fr/art-10-vis-acier-m3-30mm-6509.htm
+	0.17	2	http://www.gotronic.fr/art-10-ecrous-acier-m3-6510.htm
+	0.29	2	http://www.gotronic.fr/art-10-ecrous-a-blocage-m3-6512.htm
+– Interrupteur secteur
+	1.75	1	http://www.gotronic.fr/art-interrupteur-c6003l-4219.htm
+– Jacks mâles mono droits
+	3.06	6	http://fr.farnell.com/neutrik/np2x/fiche-male-6-35mm-2p/dp/8314535
+– Jacks mâles mono coudés
+	4.05	4	http://fr.farnell.com/neutrik/np2rx/fiche-male-jack-1-4-90-2pol/dp/1390162
+– Disques tronçonnage acier
+	3.25	2	http://www.gotronic.fr/art-5-disques-28820-7189.htm
+	2.46	1	http://www.gotronic.fr/art-10-disques-28810-7187.htm
+– Pince fine à bec long
+	7.83	1	http://www.gotronic.fr/art-pince-droite-a-longs-becs-pk102e-7664.htm
+– Barette tulipe
+	0.79	2	http://www.gotronic.fr/art-barrette-secable-stb32-4622.htm
+
+
+
+Reste à acheter :
+
+– 50 résistances 10 k
+	0.17	5	http://www.gotronic.fr/art-10-resistances-1-4w-10k-8486-19.htm
+– 10 résistances 1 M
+	0.17	1	http://www.gotronic.fr/art-10-resistances-1-4w-1-0m-8486-2602.htm
+– stock résistances 1 k ?
+	0.17	5	http://www.gotronic.fr/art-10-resistances-1-4w-1-0k-8486-2574.htm
+– Contacts femelles HE-14
+	0.63	4	http://www.gotronic.fr/art-25-contacts-ndr-t-22802.htm
+– bracelet anti-statique
+	4.92	1	http://www.gotronic.fr/art-bracelet-antistatique-bas2-7123.htm
+– Radiateur Pi 3
+	3.25	1	http://www.gotronic.fr/art-radiateurs-pour-raspberry-19847.htm
+– Connecteurs 3 broches :
+	0.1	15	http://www.gotronic.fr/art-connecteur-s003-124.htm
+	0.05	15	http://www.gotronic.fr/art-boitier-nsk254-3b-170.htm
+– Connecteurs 4 broches :
+	0.13	5	http://www.gotronic.fr/art-connecteur-s004-5858.htm
+	0.07	5	http://www.gotronic.fr/art-boitier-nsk254-4b-15398.htm
+– Connecteurs 5 broches :
+	0.15	5	http://www.gotronic.fr/art-connecteur-s005-5859.htm
+	0.08	5	http://www.gotronic.fr/art-boitier-nsk254-5b-22515.htm
+– Contacts connecteurs 3-4-5 broches (x10)
+	0.17	10	http://www.gotronic.fr/art-10-contacts-nsk254-0-171.htm
+
+
+
+
+Choix cartes proto :
+http://fr.farnell.com/webapp/wcs/stores/servlet/Search?catalogId=15001&langId=-2&storeId=10160&categoryId=700000005134&pageSize=100&beginIndex=1&showResults=true&aa=true&sf=432,502,714&pf=210018869,210018939,210188501,210209756,210240044,210329145,210441894,210478515,211735230,211879490
+
+
+On peut fabriquer une chaîne FX aux/return en branchant des effets entre la sortie droite de la carte et l’entrée droite. La sortie principale sera alors forcément mono.
+On peut aussi avoir un mode "talkbox" ou vocoder en utilisant l'entrée droite pour la voix.
+
+
+Commande par des interrupteurs reliés aux broches du port GPIO
+
+Cartes à réaliser et connecter :
+– Le Pi
+– Carte principale contenant les deux IC et la plupart des composants
+– Les LED, peut-être avec leur résistance ?
+– Afficheur
+– Boutons de l’interface utilisateur si ceux-ci doivent être fixés sur PCB
+Il serait envisageable de fusionner ou superposer certaines cartes
+
+
+
+
+Il faudrait une pédale toggle "mode accordage" :
+– Le signal de sortie devient muet
+– Le DSP détermine automatiquement quelle corde est en cours d’accord
+– Les LED indiquent si on est trop haut ou trop bas. On pourra utiliser un mécanisme de PWM (luminosité variable) pour raffiner l’affichage
+
+
+LED : 1500 ohm pour les rouges, 680 ohm pour la verte (voire 470 ohm, à tester, car moins brillante).
+2.3 mcd (verte) vs 3 mcd (rouge)
+I = Iref * 3 / 2.3 = 2.6 mA
+V reste à environ 1.9 V (1.925 ?)
+R = (3.3 - 1.925) / 0.0026 = 528 ohm
+=> Il faudra peut-être intensifier un peu la source de courant dans les pins du GPIO et la pousser à 4 mA (2 mA par défaut). Registres PADS.
+
+
+– Prise DVI embase :
+	3.27	1	http://fr.farnell.com/molex/74320-9010/embase-dvi-i-panneau-24-voies/dp/2060727
+	Semble peu réalisable en fin de compte.
+
+
+Idée :
+Contrôler le pédalier pour les réglages à l’aide d’un gamepad USB (basique : 4 directions + A/B). N’a de sens qu’avec un afficheur.
+	28.25	1	http://www.materiel.net/volants-pads-manettes-de-jeu-sieges-de-simulation-de-vol-et-automobile/microsoft-xbox-360-controller-for-windows-noir-67016.html
+	http://www.makeuseof.com/tag/useful-controller-configuration-tips-for-a-raspberry-pi-retro-gaming-centre/
+
+
+Pédales :
+
+Ernie Ball EB6180 VP-JR
+http://www.thomann.de/fr/ernie_ball_vpjr_volumepedal.htm
+122 €
+Potar 250 k. 1 jack in, 1 jack out
+
+Boss FV-500-H :
+http://www.thomann.de/fr/boss_fv500h.htm
+99 €
+Haute impédance.
+Deux types de connectique possible : volume (jacks in/out mono) ou expression (jack stéréo)
+Semble avoir de très bonnes critiques (mais volume encombrant)
+
+Yamaha FC-7 :
+http://www.thomann.de/fr/yamaha_fc7.htm
+59 €
+50 k
+Expression par jack stéréo attaché (longueur : 1,5 m)
+Bonnes critiques
+
+À propos de l’ADC :
+https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters
+Il faut ajouter une petite résistance entre le 3.3 V et VREF, de façon à ce qu’il n’y ait pas de court circuit possible en cas de défaillance du jack (ou fiche mal branchée)
+1000 ohm devraient peut-être suffire (on teste déjà avec les 1500 qu'on a sous la main).
+D’autre part, l’impédance de la pédale ne devrait pas être gênante mais il faudrait rajouter des capa vers la masse à différents points (VDD, VREF…), voir 6.4 de la doc. 10 uF par exemple, voire 100 uF pour VREF ?
+Et 1 nF en // du potar ?
+Mettre toutes ces capa aussi près que possible du circuit intégré.
+Voir danjperron, https://www.raspberrypi.org/forums/viewtopic.php?t=125173
+
+Implémentation de PWM sur n’importe quelle pin du GPIO par DMA (mi-soft-mi-hard) :
+https://github.com/metachris/RPIO/tree/master/source/c_pwm
+
+
+Linux, audio et Raspberry Pi
+http://wiki.linuxaudio.org/wiki/raspberrypi
+
+https://guitarextended.wordpress.com/2013/01/28/rpi-as-guitar-effects-processor-installing-and-configuring-pd/
+
+https://guitarextended.wordpress.com/2011/12/14/arduino-based-pedal-pduino/
+
+Avoir plus d’interrupteurs avec un expanseur de ports :
+http://www.raspberrypi-spy.co.uk/2013/07/how-to-use-a-mcp23017-i2c-port-expander-with-the-raspberry-pi-part-1/
+
+Sécurité rPi :
+http://forums.framboise314.fr/viewtopic.php?f=3&t=283
+
+Afficheur Nokia 5110 :
+http://blog.idleman.fr/raspberry-pi-11-relier-a-un-ecran-et-afficher-du-texte/
+https://www.adafruit.com/product/338
+Peut être piloté en SPI hardware:
+https://github.com/adafruit/Adafruit-PCD8544-Nokia-5110-LCD-library/blob/master/Adafruit_PCD8544.h#L75
+https://github.com/adafruit/Adafruit-PCD8544-Nokia-5110-LCD-library/blob/master/Adafruit_PCD8544.cpp
+
+Bureau virtuel :
+http://blog.idleman.fr/raspberry-pi-19-optimisation-trucs-astuces/
+
+
+
+
+
+Distance : 8 x 12 cm entre les pédales. Peut-être faire une séparation centrale à 12 cm pour obtenir deux groupes visuels.
+Plaques métal bricomarché : 60 x 100 cm. Devrait être amplement suffisant.
+
+
+
+Besoins :
+5 GPIO pour l’afficheur
+3 GPIO pour les LED
+SDA 1 + SCL 1 pour les footswitches (utilisation MCP23017)
+6 GPIO pour les boutons de contrôle
+SCLK + MISO + MOSI + CE0# (SPI) pour l’ADC de la pédale
+
+
+
+Réfléchir un peu à l’assemblage du tout.
+Les plaques acier semblent un peu fines (0.75 mm). Il faudrait les doubler sur les façades supérieure et arrière (côté intérieur). On laissera les pliage avec une épaisseur simple. Une fois ajustées, on pourra les boulonner (et mêmes les coller) avant des les percer et de faire les découpes de passage de câbles et de prises.
+Le pédalier serait agencé de la manière suivante :
+Boîtier de 52 x 25, sur 8 à 12 cm de hauteur environ.
+La carte son fait 45 mm d’épaisseur. Il faut compter au minimum 12 mm d’épaisseur du socle en bois, voire 20 mm.
+Elle fait 140 x 140 mm en longueur x largeur (boutons compris ? on ne sait pas). Il faut ajouter la place de la connectique (avant-arrière).
+Les boutons de l’interface font 13 mm de profondeur depuis la surface du panneau, il faut rajouter un peu de marge pour éviter les contacts.
+Les boutons à pied font entre 22 et 27 mm (au choix) depuis le dessous du panneau. Idem, marge à rajouter. (on dit 30 mm depuis le dessous)
+=> Profondeur minimale extérieure : 12 (socle) + 45 (carte son) + 30 (bouton à pied) + 1.5 (plaque acier doublée) = 88.5 mm, soit environ 9 cm aux points où se superposent carte son et interrupteurs au pied.
+Les trous sur la plaque du Pi font 2.75 mm de diamètre, il faut donc du 2.5 mm de diamètre extérieur (y compris filtage)
+Le Pi va avoir besoin d’être assez éloigné de la plaque à cause d’un footswitch en plein dessus. On utilisera une surélévation au tour du footswitch, en bois par exemple (prévoir des têtes rondes pour les vis au contact de la plaque), et on viendra visser le Pi de l’autre côté, toujours avec des vis à tête ronde, en intercalant 5 mm d’entretoise.
+Pour l’écran, les trous sont un peu plus larges et des vis de 3 mm font l’affaire. Prévoir des entretoises de 4 mm de haut, ce qui permet à l’écran d’être quasiment collé à la plaque.
+Ecran : fenêtre de 30 x 20 mm, située à (7, 5) mm des trous (bas) ou (7, 12) mm (haut). Les trous de fixation sont espacés de (44.5, 37.5) mm. Le haut de l’écran est situé du côté de la plaque large (mes soudures ont été faites en bas). La carte fait 49.25 x 42.25
+Deux possibilités :
+	– Reculer un peu la carte du Pi (environ 1 cm) pour permettre de loger une fiche USB coudée custom (fiche verticale sur un mini-circuit) qui va directement à la carte son sans passer par l'extérieur.
+		Il faudra glisser de l’isolant de l’autre côté du circuit pour être sûr de ne pas avoir de contact.
+		On peut d’ailleurs faire le choix de ne pas ouvrir le panneau au-dessus de cette prise, ce qui permet éventuellement de la visser (délicat, il faut être précis, calculer la bonne longueur d’entretoise)
+	– Placer la carte du Pi normalement, bien contre la façade, et creuser une ouverture en-dessous, dans laquelle loge un morceau du câble USB. On peut ainsi connecter ce morceau de câble lors de l’utilisation, et le ranger pour le transport.
+
+
+
+Structure :
+
+Un patch donné est composé d’une chaîne, elle-même composée de slots.
+Pour l’instant il n’y a qu’une seule chaîne, qui va de l’entrée à la sortie.
+On se garde pour plus tard la possibilité de faire des chaînes auxiliaires, et de les combiner à volonté.
+Chaque slot peut contenir zéro, un ou plusieurs effets.
+Il y a au plus un effet actif par slot.
+Les effets inactifs ne servent qu’à stocker leurs réglages lors de leur dernière instantiation (à voir si c’est persistant).
+On peut ainsi essayer différents effets, en y revenant on retrouve à chaque fois les paramètres tels qu’on les y avait laissés.
+Chaque effet dispose d’un bypass et d’un réglage dry/wet.
+Les effets sont mono, mono->stéréo ou stéréo.
+On part en mono, et si la sortie est stéréo, on convertit en stéréo au premier effet qui annonce préférer la stéréo.
+On peut ajouter les méta-data suivantes aux paramètres :
+– Unité spécifique d’édition (ms/beats/Hz). Utile quand un tempo est réglé ou détecté.
+– Lien à un contrôleur, essentiellement la pédale d’expression pour l’instant (on pourra aussi prévoir les MIDI CC plus tard)
+– Une ou plusieurs sources de modulation (un des LFO globaux par exemple, mais aussi la pédale d’expression pour un effet plus cadré).
+
+Quand un paramètre est lié à un contrôleur, sa valeur de réglage reste mémorisée. Le contrôleur ne s’applique qu’à partir du moment où il change (significativement). À voir : comment on traduit ça dans l’interface d’édition, car il peut être utile de récupérer la valeur fixée par le contrôleur.
+
+Les ressources sont référencée par un numéro (stockage et accès facile dans un tableau) et suivent un cycle : vide, en création, utilisé (par le thread audio), à recycler
+
+
+
+Gestion des effets :
+
+On dispose d’une pool de plug-ins.
+Certains sont en cours d’utilisation, d’autres gardés en cache.
+On pourra par exemple dire que tous les effets de tous les patches d’une config de pédalier sont chargés simultanément, ce qui leur permet d’être immédiatement disponibles quand on change de patch.
+D’autre part, quand on est dans le menu de sélection de l’effet pour un slot donné, tous les effets passés en revue restent instantiés.
+
+
+
+Plusieurs threads :
+– UI, qui est le thread principal (main)
+– Thread central de gestion
+	– Répond aussi vite que possible aux sollicitations UI
+	– Prépare les données pour leur utilisation par le thread audio
+	– Instantie, reconfigure et détruit les plus-ins
+– Audio (un ou plusieurs)
+
+
+Shutdown :
+
+Première approche possible : réserver un pin du GPIO pour faire un bouton qui commande un "sudo shutdown -h now". On peut aussi rajouter une entrée dans le menu principal de l'interface.
+Seconde approche : trouver un moyen de faire qu’une fois le boot effectué, le système soit intégralement logé en RAM.
+On peut alors démonter la SD card, et ne la remonter temporairement que lors de sauvegardes/chargements.
+En dehors de ces accès, le courant peut être coupé brutalement sans crainte d'endomager le hard ou le soft.
+Piste :
+	– https://linuxfr.org/users/khalahan/journaux/linux-presque-enti%C3%A8rement-en-ram
+	– http://www.framboise314.fr/et-si-on-se-passait-du-swap/
+	– http://blog.gegg.us/2014/03/a-raspbian-read-only-root-fs-howto/
+Autre possibilité : ajouter une batterie, et un système qui détecte la coupure de l'alim principale.
+
+
+
+Il serait peut-être judicieux de remplacer wiringPi par pigpio http://abyz.co.uk/rpi/pigpio/index.html
+
+À propos des pull-up internes :
+https://www.raspberrypi.org/forums/viewtopic.php?p=366210 (mahjongg » Sat Jun 08, 2013 6:27 pm ainsi que mahjongg » Sat Jun 08, 2013 8:03 pm)
+
+
+
+Connaître la température :
+	while true; do vcgencmd measure_clock arm; vcgencmd measure_temp; sleep 2; done
+
+Rebooter après un crash-freeze : 'Alt'+'SysRQ'+'b' (voir aussi https://fr.wikipedia.org/wiki/Magic_SysRq_key )
+
+Make en multithread :
+	make -j4.
+
+
+
+Plusieurs interfaces :
+– Entrées (boutons et contrôleurs analogiques)
+	– Abstraction complète de la couche physique (boutons et contrôleurs numérotés)
+	– Polling côté implémentation pour les entrées
+	– Traitement léger (anti-rebond, anti-oscillations)
+	– Des messages asynchrones sont générés pour les événements significatifs et envoyés au thread utilisateur
+	– Les destinataires des messages sont sélectionnables individuellement (par bouton ou contrôleur). Cela permet aux contrôleurs d’interagir directement avec le thread audio et de réduire la latence.
+	– Question : plusieurs destinataires possibles par contrôleurs ?
+– LED
+	– Boucle interne sur thread séparé
+	– Contrôle par envoi de messages async (numéro de led, intensité en %)
+– Affichage
+	– Mise à disposition d’un buffer image en Y8 ou encore RGB24/32
+	– Envoi de messages async de rafraîchissement de zones de l’écran
+	– Boucle interne sur thread séparé qui gère les rafraîchissements et les conversions vers le contrôleur physique
+Note : pour alléger le système, on peut faire tourner les boucles LED et affichage dans le même thread interne.
+Il vaut mieux séparer les entrées sur un autre thread pour être sûr qu’il soit toujours disponible.
+
+
+
+Installation
+------------
+
+Menu > Preferences > Raspberry Pi configuration
+	Interfaces
+		SPI : enabled
+		I2C : enabled
+	Localisation
+		Timezone : régler
+		Keyboard : régler
+Reboot
+Terminal :
+	sudo apt-get install geany
+		Éditeur de texte (graphique) décent.
+Brancher la carte audio USB. Ref :
+	– https://www.raspberrypi.org/forums/viewtopic.php?p=871926
+	– https://raspberrypi.stackexchange.com/questions/40831/how-do-i-configure-my-sound-for-jasper-on-raspbian-jessie
+Terminal :
+	aplay -l
+		-> la carte doit être listée
+	sudo nano /lib/modprobe.d/aliases.conf
+		Commenter :
+			#options snd-usb-audio index=-2
+	sudo nano /etc/modprobe.d/alsa-base.conf
+		Le fichier n'existe pas. Y ajouter :
+			# This sets the index value of the cards but doesn't reorder.
+			options snd_usb_audio index=0
+			options snd_bcm2835 index=1
+			# Does the reordering.
+			options snd slots=snd-usb-audio,snd-bcm2835
+Reboot
+Terminal :
+	cat /proc/asound/modules
+		Doit montrer l'USB en position 0.
+	aplay -v fichier.wav
+		Ne joue probablement pas encore au bon endroit
+	aplay -v -D plughw:0,0 fichier.wav
+		Doit jouer correctement
+	aplay -L
+		Chercher le nom du device USB (après "Card=")
+	sudo cp nano ~/.asoundrc /etc/asound.conf
+		Remplacer par les lignes suivantes et changer les <number of your card> avec le nom du device USB :
+			pcm.!default plughw:<number of your card>
+			ctl.!default plughw:<number of your card>
+Reboot
+Ça ne marche toujours pas, ~/.asoundrc est automatiquement corrigé ou remplacé avec l'interface interne bcm2835. Au pire on peut éditer /boot/config.txt et désactiver complètement le bcm2835 en commentant :
+	#dtparam=audio=on
+Connexion au net
+Terminal :
+	sudo apt-get install libjack-jackd2-dev
+	git clone git://git.drogon.net/wiringPi
+	cd wiringPi
+	git pull origin
+	./build
+
+Terminal, repo git :
+	sudo apt-get install git git-core
+	sudo adduser --disabled-password --gecos "" git && echo "git:git" | chpassw
+	su - git
+		mkdir pedalevite.git
+		cd pedalevite.git
+		git init --bare
+		exit
+cf. http://raspberrywebserver.com/serveradmin/run-a-script-on-start-up.html
+	sudo cp /etc/init.d/skeleton /etc/init.d/git-daemon
+	sudo chmod +x /etc/init.d/git-daemon
+	sudo nano /etc/init.d/git-daemon
+		Modifier :
+			#!/bin/sh
+			# kFreeBSD do not accept scripts as interpreters, using #!/bin/sh and sourcing.
+			if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
+			    set "$0" "$@"; INIT_D_SCRIPT_SOURCED=true . /lib/init/init-d-script
+			fi
+			### BEGIN INIT INFO
+			# Provides:          git-daemon
+			# Required-Start:    $remote_fs $syslog
+			# Required-Stop:     $remote_fs $syslog
+			# Default-Start:     2 3 4 5
+			# Default-Stop:      0 1 6
+			# Short-Description: Starts and stops the Git daemon
+			# Description:       This service is used to provide access to local
+			#                    git repositories.
+			### END INIT INFO
+
+			# Author: Foo Bar <foobar@baz.org>
+			#
+			# Please remove the "Author" lines above and replace them
+			# with your own name if you copy and modify this script.
+
+			case "$1" in
+			    start)
+				echo "Starting git daemon"
+				/usr/bin/git daemon --base-path=/home/git/ --export-all --reuseaddr --informative-errors --verbose --enable=receive-pack --user=git --group=git &
+				;;
+			    stop)
+				echo "Stopping git daemon"
+				killall git-daemon
+				;;
+			    *)
+				echo "Usage: /etc/init.d/git-daemon start|stop"
+				exit 1
+				;;
+			esac
+
+			exit 0
+	sudo update-rc.d git-daemon defaults
+	sudo /etc/init.d/git-daemon start
+Utiliser le repository suivant: git://git@<ip_raspberry>/pedalevite.git
+Sur le poste windows msysgit, pour éviter que les push ne bloquent à la fin :
+	git config --global sendpack.sideband false
+	
+
+
+
+
+
+class Preset
+{
+	std::vector <Slot> _fx_chain;
+};
+
+class Slot
+{
+	PluginModelId _plugin; // -1 = empty slot (aux settings not applicable)
+	std::set <PluginSettings> _settings_set;
+	std::string _slot_name; // Can be referenced by a footswitch
+	PluginSettings _settings_aux; // bypass/mix/gain
+};
+
+class PluginSettings
+{
+	bool _force_mono_flag;
+	std::vector <float> _param_list;
+	std::map <int, UnitConf> _special_unit_list;
+};
+
+class UnitConf
+{
+	int _unit_type; // Depends on the context. For example : note/Hz/beat/ms for a frequency
+};
+
+// Utilisation à prévoir : cranter sur des notes justes le réglage d'un paramètre de fréquence
+
+enum ControllerType { ... }; // LFO, pot, incremental encoder, footswitch, signal probe, MIDI CC...
+
+class ControlSource
+{
+	ControllerType _type;
+	int _index;
+};
+
+class ParamCoord
+{
+	int _plugin_id;
+	int _param_index;
+};
+
+class CtrlUnit
+{
+	ControlSource _source;
+	float _step; // For relative modes (incremental encoders)
+	float _val; // Absolute controller value (0-1)
+
+	int _curve; // Can be unipolar or bipolar
+	bool _absolute_flag; // true: controls the final value (only one per ControlLink), false: modulator (additive)
+	float _base; // Normalized value, for absolute mode
+	float _amp; // Normalized scale, for all modes. Can be negative.
+};
+
+class ControlledParam
+{
+	ParamCoord _param;
+	std::vector <CtrlUnit> _ctrl_list;
+};
+
+std::map <ControlSource, std::shared_ptr <ControlledParam> >
+std::map <ControlSource, std::shared_ptr <CtrlUnit> >
+std::map <ParamCoord, std::shared_ptr <ControlledParam> >
+
+On est obligé d’avoir des shared_ptr à cause des références multiples.
+Quand un objet de ces maps est modifié, il est d’abord copié complètement plutôt que modifié sur place.
+Ça permet d’éviter au thread audio de travailler sur une version en cours de modification.
+La substitution finale est faite entre les maps lors changement de contexte.
+
+
+
+
+
