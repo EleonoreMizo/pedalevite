@@ -64,6 +64,7 @@ void	ParamDescSet::add (piapi::ParamCateg categ, int index, piapi::ParamDescInte
 	assert (_categ_arr [categ] [index].get () == 0);
 
 	_categ_arr [categ] [index] = ParamSPtr (ptr);
+	-- _nbr_rem_param;
 }
 
 
@@ -91,7 +92,6 @@ bool	ParamDescSet::is_ready () const
 
 int	ParamDescSet::get_nbr_param (piapi::ParamCateg categ) const
 {
-	assert (is_ready ());
 	assert (categ >= 0);
 	assert (categ < piapi::ParamCateg_NBR_ELT);
 

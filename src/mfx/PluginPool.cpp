@@ -48,7 +48,7 @@ int	PluginPool::get_room () const
 
 // Please ensure there is room first.
 // Plug-in must be initialized.
-int	PluginPool::add (PluginUPtr pi_uptr)
+int	PluginPool::add (PluginUPtr &pi_uptr)
 {
 	assert (get_room () > 0);
 	assert (pi_uptr.get () != 0);
@@ -86,6 +86,8 @@ int	PluginPool::add (PluginUPtr pi_uptr)
 			++ _nbr_plugins;
 		}
 	}
+
+	assert (pi_uptr.get () == 0);
 
 	return found_pos;
 }

@@ -187,14 +187,12 @@ Context::Context ()
 	_user_input.set_msg_recipient (mfx::ui::UserInputType_POT, 0, &_queue_from_input);
 
 	// Setup: disto + drywet
-	_pi_id_disto_main = _plugin_pool.add (mfx::PluginPool::PluginUPtr (
-		new mfx::pi::DistoSimple
-	));
-	_pi_id_disto_mix  = _plugin_pool.add (mfx::PluginPool::PluginUPtr (
-		new mfx::pi::DryWet
-	));
-	_plugin_pool.use_plugin (_pi_id_disto_main)._pi_uptr->init ();
-	_plugin_pool.use_plugin (_pi_id_disto_mix )._pi_uptr->init ();
+	mfx::PluginPool::PluginUPtr disto_main_uptr (new mfx::pi::DistoSimple);
+	mfx::PluginPool::PluginUPtr disto_mix_uptr (new mfx::pi::DryWet);
+	disto_main_uptr->init ();
+	disto_mix_uptr->init ();
+	_pi_id_disto_main = _plugin_pool.add (disto_main_uptr);
+	_pi_id_disto_mix  = _plugin_pool.add (disto_mix_uptr );
 
 	// Processing steps and buffers
 	{
@@ -348,13 +346,13 @@ static void MAIN_physical_input_thread (Context &ctx)
 					{
 						switch (index)
 						{
-						case  0: // Tuner toggle
+						case  2: // Tuner toggle
 							if (val >= 0.5f)
 							{
 								ctx._tuner_flag = (! ctx._tuner_flag);
 							}
 							break;
-						case  1: // Distortion toggle
+						case  3: // Distortion toggle
 							if (val >= 0.5f)
 							{
 								ctx._disto_flag = (! ctx._disto_flag);
@@ -368,13 +366,6 @@ static void MAIN_physical_input_thread (Context &ctx)
 								ctx._queue_cmd_to_audio.enqueue (*cell2_ptr);
 							}
 							break;
-						}
-					}
-					else if (type == mfx::ui::UserInputType_POT)
-					{
-						if (index == 0)
-						{
-							ctx._disto_gain.exchange (val);
 						}
 					}
 
@@ -407,6 +398,8 @@ static void MAIN_physical_input_thread (Context &ctx)
 
 int MAIN_main_loop (Context &ctx)
 {
+	fprintf (stderr, "Entering main loop...\n");
+
 	int            ret_val = 0;
 
 	uint8_t *      p_ptr  = ctx._display.use_screen_buf ();
@@ -523,6 +516,8 @@ int MAIN_main_loop (Context &ctx)
 #endif
 	}
 
+	fprintf (stderr, "Exiting main loop.\n");
+
 	return ret_val;
 }
 
@@ -546,7 +541,7 @@ static int MAIN_process (::jack_nframes_t nbr_spl, void *arg)
 	ctx._usage_max.store (usage_max);
 	ctx._usage_min.store (usage_min);
 	ctx._time_beg = time_beg;
-	
+
 	const jack_default_audio_sample_t * src_arr [2];
 	jack_default_audio_sample_t *       dst_arr [2];
 	for (int chn = 0; chn < 2; ++chn)
@@ -599,7 +594,7 @@ static int MAIN_process (::jack_nframes_t nbr_spl, void *arg)
 					buf [i] = sum;
 				}
 				freq = ctx._freq_analyser.process_block (&buf [0], len_ss);
-			
+
 				work_pos += work_len;
 			}
 		}
@@ -667,7 +662,7 @@ int main (int argc, char *argv [])
 	ctx._plugin_pool.use_plugin (ctx._pi_id_disto_main)._pi_uptr->reset (sample_freq, 4096, latency);
 	ctx._plugin_pool.use_plugin (ctx._pi_id_disto_mix )._pi_uptr->reset (sample_freq, 4096, latency);
 
-	
+
 	static const ::JackPortFlags port_dir [2] =
 	{
 		::JackPortIsInput, ::JackPortIsOutput
@@ -799,7 +794,7 @@ int main (int argc, char *argv [])
 		signal (SIGHUP,  MAIN_signal_handler);
 #endif
 	}
-	
+
 	// User input thread
 	std::thread     user_input_thread;
 	if (ret_val == 0)
@@ -810,7 +805,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0)
 	{
 		ret_val = MAIN_main_loop (ctx);
-		
+
 		ctx._input_quit_flag = true;
 		user_input_thread.join ();
 	}
@@ -822,6 +817,8 @@ int main (int argc, char *argv [])
 	}
 
 	MAIN_context_ptr.reset ();
+
+	fprintf (stderr, "Exiting with code %d.\n", ret_val);
 
 	return ret_val;
 }
