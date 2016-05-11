@@ -73,10 +73,12 @@ int	PluginPool::add (PluginUPtr &pi_uptr)
 
 			for (int param_index = 0; param_index < nbr_param; ++param_index)
 			{
-				slot._details._param_arr [param_index] = pi_uptr->get_param_val (
-					piapi::ParamCateg_GLOBAL,
-					param_index,
-					0
+				slot._details._param_arr [param_index] = float (
+					pi_uptr->get_param_val (
+						piapi::ParamCateg_GLOBAL,
+						param_index,
+						0
+					)
 				);
 			}
 

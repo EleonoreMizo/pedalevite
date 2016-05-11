@@ -618,6 +618,15 @@
     <ClInclude Include="mfx\ControlCurve.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\ui\DisplayVoid.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\LedVoid.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\UserInputVoid.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -758,6 +767,15 @@
     </ClCompile>
     <ClCompile Include="mfx\CtrlUnit.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\DisplayVoid.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\LedVoid.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\UserInputVoid.cpp">
+      <Filter>mfx\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

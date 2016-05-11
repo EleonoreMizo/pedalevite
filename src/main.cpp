@@ -6,14 +6,21 @@
 // -march=armv8-a doesn't work with std::thread on this GCC version,
 // see last comment of bug #42734 on gcc.gnu.org 
 
-#define MAIN_API_JACK 1
-#define MAIN_API_ALSA 2
-#define MAIN_API MAIN_API_JACK
-
 
 #if defined (WIN32) || defined (_WIN32) || defined (__CYGWIN__)
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
+#endif
+
+#include "fstb/def.h"
+
+#define MAIN_API_JACK 1
+#define MAIN_API_ALSA 2
+#define MAIN_API_WIN  3
+#if fstb_IS (ARCHI, ARM)
+	#define MAIN_API MAIN_API_JACK
+#else
+	#define MAIN_API MAIN_API_WIN
 #endif
 
 #include "fstb/AllocAlign.h"
@@ -23,33 +30,42 @@
 #include "mfx/pi/DryWet.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/tuner/FreqAnalyser.h"
-#include "mfx/ui/DisplayPi3Pcd8544.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
-#include "mfx/ui/LedPi3.h"
-#include "mfx/ui/UserInputPi3.h"
 #include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
 #include "mfx/WorldAudio.h"
 
-#if (MAIN_API == MAIN_API_JACK)
-	#include <jack/jack.h>
-#elif (MAIN_API == MAIN_API_ALSA)
-	#include <alsa/asoundlib.h>
-#else
-	#error
-#endif
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
-#include <wiringPiSPI.h>
+#if fstb_IS (ARCHI, ARM)
+	#include "mfx/ui/DisplayPi3Pcd8544.h"
+	#include "mfx/ui/LedPi3.h"
+	#include "mfx/ui/UserInputPi3.h"
 
-#if defined (WIN32) || defined (_WIN32) || defined (__CYGWIN__)
-	#include <Windows.h> // For Sleep()
-#else
+	#if (MAIN_API == MAIN_API_JACK)
+		#include <jack/jack.h>
+	#elif (MAIN_API == MAIN_API_ALSA)
+		#include <alsa/asoundlib.h>
+	#else
+		#error
+	#endif
+	#include <wiringPi.h>
+	#include <wiringPiI2C.h>
+	#include <wiringPiSPI.h>
 	#include <unistd.h>
+	#include <signal.h>
+
+#elif fstb_IS (ARCHI, X86)
+	#include "mfx/ui/DisplayVoid.h"
+	#include "mfx/ui/LedVoid.h"
+	#include "mfx/ui/UserInputVoid.h"
+
+	#include <Windows.h>
+
+#else
+	#error Unsupported architecture
+
 #endif
-#include <signal.h>
 
 #include <algorithm>
 #include <array>
@@ -73,33 +89,37 @@ static const int  MAIN_pin_reset = 18;
 
 static int64_t MAIN_get_time ()
 {
+#if fstb_IS (ARCHI, ARM)
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
 	const long     ns_mul = 1000L * 1000L * 1000L;
 	return int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec;
+
+#else
+	::LARGE_INTEGER t;
+	::QueryPerformanceCounter (&t);
+	static double per = 0;
+	if (per == 0)
+	{
+		::LARGE_INTEGER f;
+		::QueryPerformanceFrequency (&f);
+		per = 1e9 / double (f.QuadPart);
+	}
+	return int64_t (t.QuadPart * per);
+
+#endif
 }
+
 
 
 
 class Context
 {
 public:
+#if fstb_IS (ARCHI, ARM)
 	std::mutex     _mutex_spi;
-
-#if (MAIN_API == MAIN_API_JACK)
-	::jack_client_t *
-	               _client_ptr;
-	::jack_port_t *               // [in/out] [chn]
-	               _mfx_port_arr [2] [2];
-#elif (MAIN_API == MAIN_API_ALSA)
-	snd_pcm_t *    _handle_in;
-	snd_pcm_t *    _handle_out;
-	/*** To do ***/
-#else
-	#error
 #endif
-
 	int64_t        _time_beg = MAIN_get_time ();
 	int64_t        _time_end = _time_beg;
 	std::atomic <float>            // Negative: the main thread read the value.
@@ -131,27 +151,36 @@ public:
 	               _msg_pool_cmd;
 	mfx::WorldAudio
 	               _audio_world;
-	int            _pi_id_disto_main;
-	int            _pi_id_disto_mix;
+	int            _pi_id_disto_main = -1;
+	int            _pi_id_disto_mix  = -1;
 
 	// Not for the audio thread
 	volatile bool	_quit_flag       = false;
 	volatile bool  _input_quit_flag = false;
+#if fstb_IS (ARCHI, ARM)
 	mfx::ui::DisplayPi3Pcd8544
 	               _display;
-	mfx::ui::UserInputInterface::MsgQueue
-	               _user_input_queue;
 	mfx::ui::UserInputPi3
 	               _user_input;
 	mfx::ui::LedPi3
 	               _leds;
+#else
+	mfx::ui::DisplayVoid
+	               _display;
+	mfx::ui::UserInputVoid
+	               _user_input;
+	mfx::ui::LedVoid
+	               _leds;
+#endif
+	mfx::ui::UserInputInterface::MsgQueue
+	               _user_input_queue;
 	mfx::ui::Font  _fnt_8x12;
 
-	Context ();
+	Context (double sample_freq, int max_block_size);
 	~Context ();
 };
 
-Context::Context ()
+Context::Context (double sample_freq, int max_block_size)
 :	_buf_alig (4096)
 ,	_proc_ctx ()
 ,	_queue_cmd_to_audio ()
@@ -160,8 +189,17 @@ Context::Context ()
 ,	_plugin_pool ()
 ,	_msg_pool_cmd ()
 ,	_audio_world (_plugin_pool, _queue_cmd_to_audio, _queue_audio_to_cmd, _queue_from_input, _user_input, _msg_pool_cmd)
+#if fstb_IS (ARCHI, ARM)
 ,	_display (_mutex_spi)
 ,	_user_input (_mutex_spi)
+,	_leds ()
+#else
+,	_display ()
+,	_user_input ()
+,	_leds ()
+#endif
+,	_user_input_queue ()
+,	_fnt_8x12 ()
 {
 	_usage_min.store (-1);
 	_usage_max.store (-1);
@@ -187,14 +225,21 @@ Context::Context ()
 	_user_input.set_msg_recipient (mfx::ui::UserInputType_POT, 0, &_queue_from_input);
 
 	// Setup: disto + drywet
-	mfx::PluginPool::PluginUPtr disto_main_uptr (new mfx::pi::DistoSimple);
-	mfx::PluginPool::PluginUPtr disto_mix_uptr (new mfx::pi::DryWet);
-	disto_main_uptr->init ();
-	disto_mix_uptr->init ();
-	_pi_id_disto_main = _plugin_pool.add (disto_main_uptr);
-	_pi_id_disto_mix  = _plugin_pool.add (disto_mix_uptr );
+	{
+		mfx::PluginPool::PluginUPtr disto_main_uptr (new mfx::pi::DistoSimple);
+		mfx::PluginPool::PluginUPtr disto_mix_uptr (new mfx::pi::DryWet);
+		disto_main_uptr->init ();
+		disto_mix_uptr->init ();
+		_pi_id_disto_main = _plugin_pool.add (disto_main_uptr);
+		_pi_id_disto_mix  = _plugin_pool.add (disto_mix_uptr );
+	}
 
 	// Processing steps and buffers
+	// 0: interface input L, disto input
+	// 1: interface input/output R (bypass)
+	// 2: disto output, mixer input
+	// 3: disto bypass
+	// 4: mixer output, interface output L
 	{
 		mfx::ProcessingContextNode::Side &si =
 			_proc_ctx._interface_ctx._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
@@ -212,27 +257,29 @@ Context::Context ()
 	{
 		mfx::ProcessingContext::PluginContext disto_bundle;
 		{
-			disto_bundle._main_pi._pi_id = _pi_id_disto_main;
+			mfx::ProcessingContextNode & node = disto_bundle._main_pi;
+			node._pi_id = _pi_id_disto_main;
 			mfx::ProcessingContextNode::Side &si =
-				disto_bundle._main_pi._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
+				node._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
 			mfx::ProcessingContextNode::Side &so =
-				disto_bundle._main_pi._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
+				node._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
 			si._buf_arr [0] = 0;
 			si._nbr_chn     = 1;
 			si._nbr_chn_tot = 1;
 			so._buf_arr [0] = 2;
 			so._nbr_chn     = 1;
 			so._nbr_chn_tot = 1;
-			disto_bundle._main_pi._bypass_buf_arr [0] = 3;
+			node._bypass_buf_arr [0] = 3;
 		}
 		{
-			disto_bundle._mixer._pi_id = _pi_id_disto_mix;
+			mfx::ProcessingContextNode & node = disto_bundle._mixer;
+			node._pi_id = _pi_id_disto_mix;
 			mfx::ProcessingContextNode::Side &si =
-				disto_bundle._mixer._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
+				node._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
 			mfx::ProcessingContextNode::Side &so =
-				disto_bundle._mixer._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
+				node._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
 			si._buf_arr [0] = 2;
-			si._buf_arr [0] = 3;
+			si._buf_arr [1] = si._buf_arr [0];
 			si._nbr_chn     = 1;
 			si._nbr_chn_tot = 2;
 			so._buf_arr [0] = 4;
@@ -277,12 +324,18 @@ Context::Context ()
 
 	_audio_world.set_context (_proc_ctx);
 
-
-	/*** To do ***/
-
-
-
 	_disto_gain.store (0);
+
+	// Get ready
+	_freq_analyser.set_sample_freq (sample_freq / _tuner_subspl);
+	_audio_world.set_process_info (sample_freq, max_block_size);
+	int             latency;
+	_plugin_pool.use_plugin (_pi_id_disto_main)._pi_uptr->reset (
+		sample_freq, max_block_size, latency
+	);
+	_plugin_pool.use_plugin (_pi_id_disto_mix )._pi_uptr->reset (
+		sample_freq, max_block_size, latency
+	);
 }
 
 Context::~Context ()
@@ -300,30 +353,6 @@ Context::~Context ()
 }
 
 static std::unique_ptr <Context>	MAIN_context_ptr;
-
-
-
-#if (MAIN_API == MAIN_API_JACK)
-
-static ::jack_client_t * volatile MAIN_client_ptr = 0;
-
-
-
-static void MAIN_signal_handler (int sig)
-{
-	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
-	MAIN_context_ptr->_quit_flag = true;
-}
-
-
-
-static void MAIN_jack_shutdown (void *arg)
-{
-	fprintf (stderr, "\nJack exited, exiting too...\n");
-	MAIN_context_ptr->_quit_flag = true;
-}
-
-#endif
 
 
 
@@ -362,7 +391,7 @@ static void MAIN_physical_input_thread (Context &ctx)
 								cell2_ptr->_val._type = mfx::Msg::Type_PARAM;
 								cell2_ptr->_val._content._param._plugin_id = ctx._pi_id_disto_mix;
 								cell2_ptr->_val._content._param._index     = mfx::pi::DryWet::Param_BYPASS;
-								cell2_ptr->_val._content._param._val       = (ctx._disto_flag) ? 0 : 1;
+								cell2_ptr->_val._content._param._val       = (ctx._disto_flag) ? 0.f : 1.f;
 								ctx._queue_cmd_to_audio.enqueue (*cell2_ptr);
 							}
 							break;
@@ -390,147 +419,19 @@ static void MAIN_physical_input_thread (Context &ctx)
 		}
 
 		// 10 ms between updates
+#if fstb_IS (ARCHI, ARM)
 		::delay (10);
-	}
-}
-
-
-
-int MAIN_main_loop (Context &ctx)
-{
-	fprintf (stderr, "Entering main loop...\n");
-
-	int            ret_val = 0;
-
-	uint8_t *      p_ptr  = ctx._display.use_screen_buf ();
-	const int      scr_w  = ctx._display.get_width ();
-	const int      scr_h  = ctx._display.get_height ();
-	const int      scr_s  = ctx._display.get_stride ();
-	bool           scr_clean_flag = false;
-	bool           scr_rfrsh_flag  = true;
-
-	while (ret_val == 0 && ! ctx._quit_flag)
-	{
-		const bool   tuner_flag = ctx._tuner_flag;
-		const bool   disto_flag = ctx._disto_flag;
-		const float  disto_gain = ctx._disto_gain_nat;
-		const float  usage_max  = ctx._usage_max.exchange (-1);
-		const float  usage_min  = ctx._usage_min.exchange (-1);
-		const float  freq = (tuner_flag) ? ctx._detected_freq : 0;
-		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
-		if (usage_max >= 0 && usage_min >= 0)
-		{
-			sprintf (cpu_0, "Time usage: %6.2f %% / %6.2f %%", usage_min * 100, usage_max * 100);
-		}
-
-		char           freq_0 [127+1] = "Note: ---- ---- ------- Hz";
-		char           note3_0 [127+1] = "-";
-		char           note4_0 [127+1] = "----";
-		const int      nbr_led           = 3;
-		float          lum_arr [nbr_led] = { 0, 0, 0 };
-		if (freq > 0)
-		{
-			const float    midi_pitch = log2 (freq / 220) * 12 - 3 + 60;
-			const int      midi_note  = fstb::round_int (midi_pitch);
-			const float    cents_dbl  = (midi_pitch - midi_note) * 100;
-			const int      cents      = fstb::round_int (cents_dbl);
-			const int      octave     = midi_note / 12;
-			const int      note       = midi_note - octave * 12;
-			static const char * const note_0_arr [12] =
-			{
-				"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
-			};
-
-			if (octave >= 0 && octave <= 9)
-			{
-				sprintf (note3_0, "%s%1d", note_0_arr [note], octave);
-			}
-			sprintf (note4_0, "%2s%-2d", note_0_arr [note], octave);
-			sprintf (freq_0, "Note: %4s %+4d %7.3lf Hz", note4_0, cents, freq);
-
-			const int      mid_index = (nbr_led - 1) / 2;
-			const float    cents_abs = fabs (cents_dbl);
-			lum_arr [mid_index    ] = std::max (5 - cents_abs, 0.0f) * (1.0f / 5);
-
-			const float    lum      = fstb::limit (cents_abs * (1.0f / 25), 0.0f, 1.0f);
-			lum_arr [mid_index - 1] = (cents_dbl < 0) ? lum : 0;
-			lum_arr [mid_index + 1] = (cents_dbl > 0) ? lum : 0;
-		}
-
-		for (int led_index = 0; led_index < nbr_led; ++led_index)
-		{
-			ctx._leds.set_led (led_index, lum_arr [led_index]);
-		}
-
-		char param_0 [255+1];
-		sprintf (
-			param_0,
-			"[%s] [%s] [%6.1f]",
-			tuner_flag ? "T" : " ",
-			disto_flag ? "D" : " ",
-			disto_gain
-		);
-
-		fprintf (stderr, "%s %s %s\r", cpu_0, freq_0, param_0);
-		fflush (stderr);
-
-		// Display test
-		if (! scr_clean_flag)
-		{
-			memset (p_ptr, 0, scr_s * scr_h);
-			scr_clean_flag = true;
-			scr_rfrsh_flag = true;
-		}
-		if (tuner_flag)
-		{
-			const int      char_w  = ctx._fnt_8x12.get_char_w ();
-			const int      char_h  = ctx._fnt_8x12.get_char_h ();
-			const int      txt_len = int (strlen (note3_0));
-			const int      mag_x   = scr_w / (txt_len * char_w);
-			const int      mag_y   = scr_h / char_h;
-			const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
-			const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
-			for (int i = 0; i < txt_len; ++i)
-			{
-				const int      c = static_cast <unsigned char> (note3_0 [i]);
-				ctx._fnt_8x12.render_char (
-					p_ptr + pos_x + pos_y * scr_s + i * char_w * mag_x,
-					c,
-					scr_s,
-					mag_x, mag_y
-				);
-			}
-			scr_clean_flag = false;
-			scr_rfrsh_flag = true;
-		}
-		if (scr_rfrsh_flag)
-		{
-			ctx._display.refresh (0, 0, scr_w, scr_h);
-			scr_rfrsh_flag = false;
-		}
-
-#if defined (WIN32) || defined (_WIN32) || defined (__CYGWIN__)
-		::Sleep (100);
 #else
-		::delay (100);
+		::Sleep (10);
 #endif
 	}
-
-	fprintf (stderr, "Exiting main loop.\n");
-
-	return ret_val;
 }
 
 
 
-#if (MAIN_API == MAIN_API_JACK)
-
-
-
-static int MAIN_process (::jack_nframes_t nbr_spl, void *arg)
+static int MAIN_audio_process (Context &ctx, float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
 	const int64_t  time_beg    = MAIN_get_time ();
-	Context &      ctx         = *reinterpret_cast <Context *> (arg);
 	const int64_t  dur_tot     =      time_beg - ctx._time_beg;
 	const int64_t  dur_act     = ctx._time_end - ctx._time_beg;
 	const float    usage_frame = float (dur_act) / float (dur_tot);
@@ -542,24 +443,12 @@ static int MAIN_process (::jack_nframes_t nbr_spl, void *arg)
 	ctx._usage_min.store (usage_min);
 	ctx._time_beg = time_beg;
 
-	const jack_default_audio_sample_t * src_arr [2];
-	jack_default_audio_sample_t *       dst_arr [2];
-	for (int chn = 0; chn < 2; ++chn)
-	{
-		src_arr [chn] = reinterpret_cast <const jack_default_audio_sample_t *> (
-			::jack_port_get_buffer (ctx._mfx_port_arr [0] [chn], nbr_spl)
-		);
-		dst_arr [chn] = reinterpret_cast <jack_default_audio_sample_t *> (
-			::jack_port_get_buffer (ctx._mfx_port_arr [1] [chn], nbr_spl)
-		);
-	}
-
 	float             gain_nrm = ctx._disto_gain.exchange (-1);
 	if (gain_nrm >= 0)
 	{
 		const mfx::piapi::ParamDescInterface & desc =
 			ctx._plugin_pool.use_plugin (ctx._pi_id_disto_main)._pi_uptr->get_param_info (mfx::piapi::ParamCateg_GLOBAL, 0);
-		ctx._disto_gain_nat = desc.conv_nrm_to_nat (gain_nrm);
+		ctx._disto_gain_nat = float (desc.conv_nrm_to_nat (gain_nrm));
 	}
 
 	// Audio graph
@@ -615,20 +504,55 @@ static int MAIN_process (::jack_nframes_t nbr_spl, void *arg)
 
 
 
-int main (int argc, char *argv [])
+#if (MAIN_API == MAIN_API_JACK)
+
+
+
+static ::jack_client_t * volatile MAIN_client_ptr = 0;
+static ::jack_port_t   * volatile MAIN_mfx_port_arr [2] [2]; // [in/out] [chn]
+
+
+
+static void MAIN_signal_handler (int sig)
+{
+	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
+	MAIN_context_ptr->_quit_flag = true;
+}
+
+
+
+static void MAIN_jack_shutdown (void *arg)
+{
+	fprintf (stderr, "\nJack exited, exiting too...\n");
+	MAIN_context_ptr->_quit_flag = true;
+}
+
+static int MAIN_audio_process_jack (::jack_nframes_t nbr_spl, void *arg)
+{
+	Context &      ctx = *reinterpret_cast <Context *> (arg);
+	const jack_default_audio_sample_t * src_arr [2];
+	jack_default_audio_sample_t *       dst_arr [2];
+	for (int chn = 0; chn < 2; ++chn)
+	{
+		src_arr [chn] = reinterpret_cast <const jack_default_audio_sample_t *> (
+			::jack_port_get_buffer (MAIN_mfx_port_arr [0] [chn], nbr_spl)
+		);
+		dst_arr [chn] = reinterpret_cast <jack_default_audio_sample_t *> (
+			::jack_port_get_buffer (MAIN_mfx_port_arr [1] [chn], nbr_spl)
+		);
+	}
+
+	MAIN_audio_process (ctx, dst_arr, src_arr, nbr_spl);
+}
+
+
+
+static int MAIN_audio_init (double &sample_freq, int &max_block_size)
 {
 	int            ret_val = 0;
 
-	::wiringPiSetupPhys ();
-
-	::pinMode (MAIN_pin_reset, OUTPUT);
-
-	::digitalWrite (MAIN_pin_reset, LOW);
-	::delay (1);
-	::digitalWrite (MAIN_pin_reset, HIGH);
-	::delay (1);
-
-	mfx::dsp::mix::Align::setup ();
+	sample_freq    = 44100;
+	max_block_size = 4096;
 
 	::jack_status_t   status = ::JackServerFailed;
 	MAIN_client_ptr = jack_client_open (
@@ -637,8 +561,7 @@ int main (int argc, char *argv [])
 		&status,
 		0
 	);
-	::jack_client_t * client_ptr = MAIN_client_ptr;
-	if (client_ptr == 0)
+	if (MAIN_client_ptr == 0)
 	{
 		fprintf (
 			stderr,
@@ -652,16 +575,20 @@ int main (int argc, char *argv [])
 		ret_val = -1;
 	}
 
-	MAIN_context_ptr = std::unique_ptr <Context> (new Context);
-	Context &      ctx = *MAIN_context_ptr;
-	ctx._client_ptr = client_ptr;
-	const double   sample_freq = double (jack_get_sample_rate (client_ptr));
-	ctx._freq_analyser.set_sample_freq (sample_freq / ctx._tuner_subspl);
-	ctx._audio_world.set_process_info (sample_freq, 4096);
-	int             latency;
-	ctx._plugin_pool.use_plugin (ctx._pi_id_disto_main)._pi_uptr->reset (sample_freq, 4096, latency);
-	ctx._plugin_pool.use_plugin (ctx._pi_id_disto_mix )._pi_uptr->reset (sample_freq, 4096, latency);
+	if (ret_val == 0)
+	{
+		sample_freq    = jack_get_sample_rate (MAIN_client_ptr);
+		max_block_size = 4096;
+	}
 
+	return ret_val;
+}
+
+
+
+static int MAIN_audio_start ()
+{
+	int            ret_val = 0;
 
 	static const ::JackPortFlags port_dir [2] =
 	{
@@ -684,7 +611,7 @@ int main (int argc, char *argv [])
 			fprintf (stderr, "Unique name \"%s\" assigned\n", name_0);
 		}
 
-		::jack_set_process_callback (client_ptr, MAIN_process, &ctx);
+		::jack_set_process_callback (client_ptr, MAIN_process_jack, &ctx);
 		::jack_on_shutdown (client_ptr, MAIN_jack_shutdown, &ctx);
 
 		static const char *  port_name_0_arr [2] [2] =
@@ -795,6 +722,328 @@ int main (int argc, char *argv [])
 #endif
 	}
 
+	return ret_val;
+}
+
+
+
+static int MAIN_audio_stop ()
+{
+	if (MAIN_client_ptr != 0)
+	{
+		::jack_client_close (MAIN_client_ptr);
+		MAIN_client_ptr = 0;
+	}
+
+	return 0;
+}
+
+
+
+#elif (MAIN_API == MAIN_API_ALSA)
+
+
+
+// Ref:
+// http://www.saunalahti.fi/~s7l/blog/2005/08/21/Full%20Duplex%20ALSA
+// http://jzu.blog.free.fr/public/SLAB/slab.c
+
+static snd_pcm_t * MAIN_handle_in;
+static snd_pcm_t * MAIN_handle_out;
+
+static int MAIN_audio_init (double &sample_freq, int &max_block_size)
+{
+	sample_freq    = 44100;
+	max_block_size = 4096;
+
+	if (ret_val == 0)
+	{
+		ret_val = ::snd_pcm_open (
+			&MAIN__handle_in,
+			"plughw:0",
+			SND_PCM_STREAM_CAPTURE,
+			0
+		);
+		if (ret_val != 0)
+		{
+			fprintf (stderr, "Error: cannot open capture device, returned %d.\n", ret_val);
+		}
+	}
+	if (ret_val == 0)
+	{
+		ret_val = ::snd_pcm_open (
+			&MAIN__handle_out,
+			"plughw:0",
+			SND_PCM_STREAM_PLAYBACK,
+			0
+		);
+		if (ret_val != 0)
+		{
+			fprintf (stderr, "Error: cannot open playback device, returned %d.\n", ret_val);
+		}
+	}
+
+
+	/*** To do ***/
+
+
+	return 0;
+}
+
+static int MAIN_audio_start ()
+{
+
+	/*** To do ***/
+
+	return 0;
+}
+
+static int MAIN_audio_stop ()
+{
+
+	/*** To do ***/
+
+	return 0;
+}
+
+
+
+#else // MAIN_API
+
+
+
+static int MAIN_audio_init (double &sample_freq, int &max_block_size)
+{
+	sample_freq    = 44100;
+	max_block_size = 4096;
+
+
+	/*** To do ***/
+
+	return 0;
+}
+
+static int MAIN_audio_start ()
+{
+
+	/*** To do ***/
+
+	return 0;
+}
+
+static int MAIN_audio_stop ()
+{
+
+	/*** To do ***/
+
+	return 0;
+}
+
+
+
+#endif
+
+
+
+int MAIN_main_loop (Context &ctx)
+{
+	fprintf (stderr, "Entering main loop...\n");
+
+	int            ret_val = 0;
+
+	uint8_t *      p_ptr  = ctx._display.use_screen_buf ();
+	const int      scr_w  = ctx._display.get_width ();
+	const int      scr_h  = ctx._display.get_height ();
+	const int      scr_s  = ctx._display.get_stride ();
+	bool           scr_clean_flag = false;
+	bool           scr_rfrsh_flag  = true;
+
+	while (ret_val == 0 && ! ctx._quit_flag)
+	{
+		const bool   tuner_flag = ctx._tuner_flag;
+		const bool   disto_flag = ctx._disto_flag;
+		const float  disto_gain = ctx._disto_gain_nat;
+		const float  usage_max  = ctx._usage_max.exchange (-1);
+		const float  usage_min  = ctx._usage_min.exchange (-1);
+		const float  freq = (tuner_flag) ? ctx._detected_freq : 0;
+		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
+		if (usage_max >= 0 && usage_min >= 0)
+		{
+			fstb::snprintf4all (
+				cpu_0, sizeof (cpu_0),
+				"Time usage: %6.2f %% / %6.2f %%",
+				usage_min * 100, usage_max * 100
+			);
+		}
+
+		char           freq_0 [127+1] = "Note: ---- ---- ------- Hz";
+		char           note3_0 [127+1] = "-";
+		char           note4_0 [127+1] = "----";
+		const int      nbr_led           = 3;
+		float          lum_arr [nbr_led] = { 0, 0, 0 };
+		if (freq > 0)
+		{
+			const float    midi_pitch = log2 (freq / 220) * 12 - 3 + 60;
+			const int      midi_note  = fstb::round_int (midi_pitch);
+			const float    cents_dbl  = (midi_pitch - midi_note) * 100;
+			const int      cents      = fstb::round_int (cents_dbl);
+			const int      octave     = midi_note / 12;
+			const int      note       = midi_note - octave * 12;
+			static const char * const note_0_arr [12] =
+			{
+				"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
+			};
+
+			if (octave >= 0 && octave <= 9)
+			{
+				fstb::snprintf4all (
+					note3_0, sizeof (note3_0),
+					"%s%1d",
+					note_0_arr [note], octave
+				);
+			}
+			fstb::snprintf4all (
+				note4_0, sizeof (note4_0),
+				"%2s%-2d",
+				note_0_arr [note], octave
+			);
+			fstb::snprintf4all (
+				freq_0, sizeof (freq_0),
+				"Note: %4s %+4d %7.3lf Hz",
+				note4_0, cents, freq
+			);
+
+			const int      mid_index = (nbr_led - 1) / 2;
+			const float    cents_abs = fabs (cents_dbl);
+			lum_arr [mid_index    ] = std::max (5 - cents_abs, 0.0f) * (1.0f / 5);
+
+			const float    lum      = fstb::limit (cents_abs * (1.0f / 25), 0.0f, 1.0f);
+			lum_arr [mid_index - 1] = (cents_dbl < 0) ? lum : 0;
+			lum_arr [mid_index + 1] = (cents_dbl > 0) ? lum : 0;
+		}
+
+		for (int led_index = 0; led_index < nbr_led; ++led_index)
+		{
+			ctx._leds.set_led (led_index, lum_arr [led_index]);
+		}
+
+		char param_0 [255+1];
+		fstb::snprintf4all (
+			param_0, sizeof (param_0),
+			"[%s] [%s] [%6.1f]",
+			tuner_flag ? "T" : " ",
+			disto_flag ? "D" : " ",
+			disto_gain
+		);
+
+		fprintf (stderr, "%s %s %s\r", cpu_0, freq_0, param_0);
+		fflush (stderr);
+
+		// Display test
+		if (! scr_clean_flag)
+		{
+			memset (p_ptr, 0, scr_s * scr_h);
+			scr_clean_flag = true;
+			scr_rfrsh_flag = true;
+		}
+		if (tuner_flag)
+		{
+			const int      char_w  = ctx._fnt_8x12.get_char_w ();
+			const int      char_h  = ctx._fnt_8x12.get_char_h ();
+			const int      txt_len = int (strlen (note3_0));
+			const int      mag_x   = scr_w / (txt_len * char_w);
+			const int      mag_y   = scr_h / char_h;
+			const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
+			const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
+			for (int i = 0; i < txt_len; ++i)
+			{
+				const int      c = static_cast <unsigned char> (note3_0 [i]);
+				ctx._fnt_8x12.render_char (
+					p_ptr + pos_x + pos_y * scr_s + i * char_w * mag_x,
+					c,
+					scr_s,
+					mag_x, mag_y
+				);
+			}
+			scr_clean_flag = false;
+			scr_rfrsh_flag = true;
+		}
+		if (scr_rfrsh_flag)
+		{
+			ctx._display.refresh (0, 0, scr_w, scr_h);
+			scr_rfrsh_flag = false;
+		}
+
+#if fstb_IS (ARCHI, ARM)
+		::delay (100);
+#else
+
+	#if 0
+
+		::Sleep (100);
+
+	#else
+
+/********************************************* TEMP *********************************/
+
+		const int      nbr_spl = 64;
+		float          buf [4] [nbr_spl];
+		memset (&buf [0] [0], 0, sizeof (buf [0]));
+		memset (&buf [1] [0], 0, sizeof (buf [1]));
+		const float *  src_arr [2] = { buf [0], buf [1] };
+		float *        dst_arr [2] = { buf [2], buf [3] };
+		
+		MAIN_audio_process (ctx, dst_arr, src_arr, nbr_spl);
+
+/********************************************* TEMP *********************************/
+
+	#endif
+
+#endif
+	}
+
+	fprintf (stderr, "Exiting main loop.\n");
+
+	return ret_val;
+}
+
+
+
+#if fstb_IS (ARCHI, ARM)
+int main (int argc, char *argv [])
+#else
+int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
+#endif
+{
+	int            ret_val = 0;
+
+#if fstb_IS (ARCHI, ARM)
+	::wiringPiSetupPhys ();
+
+	::pinMode (MAIN_pin_reset, OUTPUT);
+
+	::digitalWrite (MAIN_pin_reset, LOW);
+	::delay (100);
+	::digitalWrite (MAIN_pin_reset, HIGH);
+	::delay (100);
+#endif
+
+	mfx::dsp::mix::Align::setup ();
+
+	double         sample_freq;
+	int            max_block_size;
+	ret_val = MAIN_audio_init (sample_freq, max_block_size);
+
+	MAIN_context_ptr = std::unique_ptr <Context> (
+		new Context (sample_freq, max_block_size)
+	);
+	Context &      ctx = *MAIN_context_ptr;
+
+	if (ret_val == 0)
+	{
+		ret_val = MAIN_audio_start ();
+	}
+
 	// User input thread
 	std::thread     user_input_thread;
 	if (ret_val == 0)
@@ -810,11 +1059,7 @@ int main (int argc, char *argv [])
 		user_input_thread.join ();
 	}
 
-	if (client_ptr != 0)
-	{
-		::jack_client_close (client_ptr);
-		MAIN_client_ptr = 0;
-	}
+	MAIN_audio_stop ();
 
 	MAIN_context_ptr.reset ();
 
@@ -822,74 +1067,3 @@ int main (int argc, char *argv [])
 
 	return ret_val;
 }
-
-
-
-#elif (MAIN_API == MAIN_API_ALSA)
-
-
-
-// Ref:
-// http://www.saunalahti.fi/~s7l/blog/2005/08/21/Full%20Duplex%20ALSA
-// http://jzu.blog.free.fr/public/SLAB/slab.c
-
-
-int MAIN_config_alsa (::snd_pcm_t *handle)
-{
-	int            ret_val = 0;
-
-	const int      nbr_chn     = 2;
-	const int      sample_freq = 44100;
-
-	return ret_val;
-}
-
-
-
-int main (int argc, char *argv [])
-{
-	int            ret_val = 0;
-
-	Context        ctx;
-
-	if (ret_val == 0)
-	{
-		ret_val = ::snd_pcm_open (
-			&ctx._handle_in,
-			"plughw:0",
-			SND_PCM_STREAM_CAPTURE,
-			0
-		);
-		if (ret_val != 0)
-		{
-			fprintf (stderr, "Error: cannot open capture device, returned %d.\n", ret_val);
-		}
-	}
-	if (ret_val == 0)
-	{
-		ret_val = ::snd_pcm_open (
-			&ctx._handle_out,
-			"plughw:0",
-			SND_PCM_STREAM_PLAYBACK,
-			0
-		);
-		if (ret_val != 0)
-		{
-			fprintf (stderr, "Error: cannot open playback device, returned %d.\n", ret_val);
-		}
-	}
-
-
-	/*** To do ***/
-
-	return ret_val;
-}
-
-
-
-#else // MAIN_API
-	#error
-#endif
-
-
-

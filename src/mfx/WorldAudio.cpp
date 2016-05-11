@@ -48,9 +48,9 @@ namespace mfx
 
 WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQueue &queue_to_cmd, ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device, conc::CellPool <Msg> &msg_pool_cmd)
 :	_pi_pool (plugin_pool)
-,	_queue_from_cmd (_queue_from_cmd)
-,	_queue_to_cmd (_queue_to_cmd)
-,	_queue_from_input (_queue_from_input)
+,	_queue_from_cmd (queue_from_cmd)
+,	_queue_to_cmd (queue_to_cmd)
+,	_queue_from_input (queue_from_input)
 ,	_input_device (input_device)
 ,	_msg_pool_cmd (msg_pool_cmd)
 ,	_max_block_size (0)
