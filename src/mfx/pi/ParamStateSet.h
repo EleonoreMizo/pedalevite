@@ -58,7 +58,6 @@ class ParamStateSet
 public:
 
 	               ParamStateSet ()  = default;
-	explicit       ParamStateSet (piapi::ParamCateg categ, const ParamDescSet &param_desc_arr);
 	virtual        ~ParamStateSet () = default;
 
 	void           init (piapi::ParamCateg categ, const ParamDescSet &param_desc_arr);

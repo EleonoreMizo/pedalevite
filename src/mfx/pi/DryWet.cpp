@@ -53,7 +53,7 @@ namespace pi
 DryWet::DryWet ()
 :	_state (State_CONSTRUCTED)
 ,	_desc_set (Param_NBR_ELT, 0)
-,	_state_set (piapi::ParamCateg_GLOBAL, _desc_set)
+,	_state_set ()
 ,	_sample_freq (0)
 ,	_param_change_flag ()
 ,	_level_wet (1)
@@ -93,6 +93,8 @@ DryWet::DryWet ()
 		"%+5.1f"
 	);
 	_desc_set.add_glob (Param_GAIN, log_ptr);
+
+	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
 	_state_set.set_val (Param_BYPASS, 0   ); // Off
 	_state_set.set_val (Param_WET   , 1   ); // 100 %

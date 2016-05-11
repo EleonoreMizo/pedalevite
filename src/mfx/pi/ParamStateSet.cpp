@@ -44,16 +44,6 @@ namespace pi
 
 
 
-ParamStateSet::ParamStateSet (piapi::ParamCateg categ, const ParamDescSet &param_desc_arr)
-:	_categ (piapi::ParamCateg_UNDEFINED)
-,	_state_arr ()
-,	_change_flag_arr ()
-{
-	init (categ, param_desc_arr);
-}
-
-
-
 void	ParamStateSet::init (piapi::ParamCateg categ, const ParamDescSet &param_desc_arr)
 {
 	assert (categ >= 0);
