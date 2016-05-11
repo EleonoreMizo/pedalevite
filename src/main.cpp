@@ -115,8 +115,6 @@ public:
 	std::atomic <float>
 	               _disto_gain;
 	volatile float _disto_gain_nat = 1;
-	mfx::pi::DistoSimple
-	               _disto;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
 
@@ -195,6 +193,8 @@ Context::Context ()
 	_pi_id_disto_mix  = _plugin_pool.add (mfx::PluginPool::PluginUPtr (
 		new mfx::pi::DryWet
 	));
+	_plugin_pool.use_plugin (_pi_id_disto_main)._pi_uptr->init ();
+	_plugin_pool.use_plugin (_pi_id_disto_mix )._pi_uptr->init ();
 
 	// Processing steps and buffers
 	{
@@ -284,7 +284,6 @@ Context::Context ()
 
 
 
-	_disto.init ();
 	_disto_gain.store (0);
 }
 
@@ -564,7 +563,7 @@ static int MAIN_process (::jack_nframes_t nbr_spl, void *arg)
 	if (gain_nrm >= 0)
 	{
 		const mfx::piapi::ParamDescInterface & desc =
-			ctx._disto.get_param_info (mfx::piapi::ParamCateg_GLOBAL, 0);
+			ctx._plugin_pool.use_plugin (ctx._pi_id_disto_main)._pi_uptr->get_param_info (mfx::piapi::ParamCateg_GLOBAL, 0);
 		ctx._disto_gain_nat = desc.conv_nrm_to_nat (gain_nrm);
 	}
 
@@ -665,7 +664,9 @@ int main (int argc, char *argv [])
 	ctx._freq_analyser.set_sample_freq (sample_freq / ctx._tuner_subspl);
 	ctx._audio_world.set_process_info (sample_freq, 4096);
 	int             latency;
-	ctx._disto.reset (sample_freq, 4096, latency);
+	ctx._plugin_pool.use_plugin (ctx._pi_id_disto_main)._pi_uptr->reset (sample_freq, 4096, latency);
+	ctx._plugin_pool.use_plugin (ctx._pi_id_disto_mix )._pi_uptr->reset (sample_freq, 4096, latency);
+
 	
 	static const ::JackPortFlags port_dir [2] =
 	{
