@@ -61,7 +61,7 @@ DisplayPi3Pcd8544::DisplayPi3Pcd8544 (std::mutex &mutex_spi)
 ,	_msg_pool ()
 ,	_msg_queue ()
 ,	_quit_flag (false)
-,	_refresher (&DisplayPi3Pcd8544::refresh_loop, this)
+,	_refresher ()
 {
 	if (_hnd_spi == -1)
 	{
@@ -79,6 +79,8 @@ DisplayPi3Pcd8544::DisplayPi3Pcd8544 (std::mutex &mutex_spi)
 	send_cmd (Cmd_SET_VOP   | 0x3A);  // See 8.9, and modified manually
 	send_cmd (Cmd_FUNC_SET);
 	send_cmd (Cmd_DISP_CTRL | Cmd_NORMAL);
+
+	_refresher = std::thread (&DisplayPi3Pcd8544::refresh_loop, this);
 }
 
 

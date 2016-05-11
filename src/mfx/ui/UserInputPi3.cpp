@@ -126,7 +126,7 @@ UserInputPi3::UserInputPi3 (std::mutex &mutex_spi)
 ,	_rotenc_state_arr ()
 ,	_msg_pool ()
 ,	_quit_flag (false)
-,	_polling_thread (&UserInputPi3::polling_loop, this)
+,	_polling_thread ()
 {
 	for (int p = 0; p < _nbr_dev_23017; ++p)
 	{
@@ -158,6 +158,8 @@ UserInputPi3::UserInputPi3 (std::mutex &mutex_spi)
 		// All the pins are set in read mode.
 		::wiringPiI2CWriteReg16 (_hnd_23017_arr [p], Cmd23017_IODIRA, 0xFFFF);
 	}
+
+	_polling_thread = std::thread (&UserInputPi3::polling_loop, this);
 }
 
 

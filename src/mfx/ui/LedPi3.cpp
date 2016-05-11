@@ -56,7 +56,7 @@ LedPi3::LedPi3 ()
 :	_gpio_pwm (_pwm_resol)
 ,	_state_arr ()
 ,	_quit_flag (false)
-,	_refresher (&LedPi3::refresh_loop, this)
+,	_refresher ()
 {
 	const int      ret_val = _gpio_pwm.init_chn (_pwm_chn, _pwm_cycle);
 	if (ret_val != 0)
@@ -69,6 +69,8 @@ LedPi3::LedPi3 ()
 		::pinMode  (_gpio_pin_arr [i], OUTPUT);
 		::digitalWrite (_gpio_pin_arr [i], LOW);
 	}
+
+	_refresher = std::thread (&LedPi3::refresh_loop, this);
 }
 
 
