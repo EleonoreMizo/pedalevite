@@ -543,7 +543,7 @@ static int MAIN_audio_process_jack (::jack_nframes_t nbr_spl, void *arg)
 		);
 	}
 
-	MAIN_audio_process (ctx, dst_arr, src_arr, nbr_spl);
+	return MAIN_audio_process (ctx, dst_arr, src_arr, nbr_spl);
 }
 
 
@@ -586,7 +586,7 @@ static int MAIN_audio_init (double &sample_freq, int &max_block_size)
 
 
 
-static int MAIN_audio_start ()
+static int MAIN_audio_start (Context &ctx)
 {
 	int            ret_val = 0;
 
@@ -611,7 +611,7 @@ static int MAIN_audio_start ()
 			fprintf (stderr, "Unique name \"%s\" assigned\n", name_0);
 		}
 
-		::jack_set_process_callback (MAIN_client_ptr, MAIN_process_jack, &ctx);
+		::jack_set_process_callback (MAIN_client_ptr, MAIN_audio_process_jack, &ctx);
 		::jack_on_shutdown (MAIN_client_ptr, MAIN_jack_shutdown, &ctx);
 
 		static const char *  port_name_0_arr [2] [2] =
@@ -790,7 +790,7 @@ static int MAIN_audio_init (double &sample_freq, int &max_block_size)
 	return 0;
 }
 
-static int MAIN_audio_start ()
+static int MAIN_audio_start (Context &ctx)
 {
 
 	/*** To do ***/
@@ -823,7 +823,7 @@ static int MAIN_audio_init (double &sample_freq, int &max_block_size)
 	return 0;
 }
 
-static int MAIN_audio_start ()
+static int MAIN_audio_start (Context &ctx)
 {
 
 	/*** To do ***/
@@ -1041,7 +1041,7 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 
 	if (ret_val == 0)
 	{
-		ret_val = MAIN_audio_start ();
+		ret_val = MAIN_audio_start (ctx);
 	}
 
 	// User input thread
