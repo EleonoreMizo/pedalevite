@@ -63,7 +63,7 @@ void	ToolsSimd::store_f32 (void *ptr, VectF32 v)
 
 ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const void *ptr)
 {
-	assert (is_ptr_align_nz (ptr, 16));
+	assert (ptr != 0);
 
 #if fstb_IS (ARCHI, X86)
 	return _mm_loadu_ps (reinterpret_cast <const float *> (ptr));
@@ -78,7 +78,7 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const void *ptr)
 
 void	ToolsSimd::storeu_f32 (void *ptr, VectF32 v)
 {
-	assert (is_ptr_align_nz (ptr, 16));
+	assert (ptr != 0);
 
 #if fstb_IS (ARCHI, X86)
 	_mm_storeu_ps (reinterpret_cast <float *> (ptr), v);

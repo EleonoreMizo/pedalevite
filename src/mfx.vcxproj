@@ -51,12 +51,11 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -68,15 +67,19 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -259,15 +262,18 @@
     <ClInclude Include="mfx\tuner\FreqAnalyser.h" />
     <ClInclude Include="mfx\ui\DisplayInterface.h" />
     <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h" />
+    <ClInclude Include="mfx\ui\DisplayVoid.h" />
     <ClInclude Include="mfx\ui\Font.h" />
     <ClInclude Include="mfx\ui\FontDataDefault.h" />
     <ClInclude Include="mfx\ui\LedInterface.h" />
     <ClInclude Include="mfx\ui\LedPi3.h" />
+    <ClInclude Include="mfx\ui\LedVoid.h" />
     <ClInclude Include="mfx\ui\RotEnc.h" />
     <ClInclude Include="mfx\ui\UserInputInterface.h" />
     <ClInclude Include="mfx\ui\UserInputMsg.h" />
     <ClInclude Include="mfx\ui\UserInputPi3.h" />
     <ClInclude Include="mfx\ui\UserInputType.h" />
+    <ClInclude Include="mfx\ui\UserInputVoid.h" />
     <ClInclude Include="mfx\WorldAudio.h" />
   </ItemGroup>
   <ItemGroup>
@@ -285,7 +291,9 @@
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
     </ClCompile>
     <ClCompile Include="fstb\txt\unicode\CharData.cpp" />
-    <ClCompile Include="fstb\txt\unicode\CharDataBuilder.cpp" />
+    <ClCompile Include="fstb\txt\unicode\CharDataBuilder.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="fstb\txt\unicode\unicode.cpp" />
     <ClCompile Include="fstb\txt\utf8\Codec8.cpp" />
     <ClCompile Include="fstb\txt\utf8\ConvNum.cpp" />
@@ -298,12 +306,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mfx\ControlledParam.cpp" />
     <ClCompile Include="mfx\CtrlUnit.cpp" />
-    <ClCompile Include="mfx\dsp\mix\Align.cpp">
-      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
-    </ClCompile>
+    <ClCompile Include="mfx\dsp\mix\Align.cpp" />
     <ClCompile Include="mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="mfx\dsp\mix\Generic.cpp" />
-    <ClCompile Include="mfx\GpioPwm.cpp" />
+    <ClCompile Include="mfx\GpioPwm.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="mfx\Overdrive.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
     <ClCompile Include="mfx\pi\DistoSimple.cpp" />
@@ -319,15 +327,24 @@
     <ClCompile Include="mfx\ProcessingContextNode.cpp" />
     <ClCompile Include="mfx\tuner\FreqAnalyser.cpp" />
     <ClCompile Include="mfx\ui\DisplayInterface.cpp" />
-    <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp" />
+    <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\DisplayVoid.cpp" />
     <ClCompile Include="mfx\ui\Font.cpp" />
     <ClCompile Include="mfx\ui\FontDataDefault.cpp" />
     <ClCompile Include="mfx\ui\LedInterface.cpp" />
-    <ClCompile Include="mfx\ui\LedPi3.cpp" />
+    <ClCompile Include="mfx\ui\LedPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\LedVoid.cpp" />
     <ClCompile Include="mfx\ui\RotEnc.cpp" />
     <ClCompile Include="mfx\ui\UserInputInterface.cpp" />
     <ClCompile Include="mfx\ui\UserInputMsg.cpp" />
-    <ClCompile Include="mfx\ui\UserInputPi3.cpp" />
+    <ClCompile Include="mfx\ui\UserInputPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\UserInputVoid.cpp" />
     <ClCompile Include="mfx\WorldAudio.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
