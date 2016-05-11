@@ -192,11 +192,13 @@ template <class T>
 double	TplMapped <T>::do_conv_nrm_to_nat (double nrm) const
 {
 	double         nat     = _mapper.conv_norm_to_nat (nrm);
-	const double   margin  = 1e-3;      // For rounding errors
 	const double   val_min = _phdn.get_val_min ();
 	const double   val_max = _phdn.get_val_max ();
+#if ! defined (NDEBUG)
+	const double   margin  = 1e-3;      // For rounding errors
 	assert (nat >= val_min - margin);
 	assert (nat <= val_max + margin);
+#endif
 	nat = fstb::limit (nat, val_min, val_max);
 
 	return (nat);
@@ -208,9 +210,11 @@ template <class T>
 double	TplMapped <T>::do_conv_nat_to_nrm (double nat) const
 {
 	double         nrm    = _mapper.conv_nat_to_norm (nat);
+#if ! defined (NDEBUG)
 	const double   margin = 1e-6;       // For rounding errors
 	assert (nrm >= 0.0 - margin);
 	assert (nrm <= 1.0 + margin);
+#endif
 	nat = fstb::limit (nrm, 0.0, 1.0);
 
 	return (nrm);

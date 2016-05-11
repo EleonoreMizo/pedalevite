@@ -1,6 +1,6 @@
 warningflags = -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wshadow
 includeflags = -I$(srcdir)/../../src
-commonflags = -O3 $(MFLAGS) $(warningflags) $(includeflags)
+commonflags = $(MFLAGS) $(warningflags) $(includeflags)
 AM_CXXFLAGS = -std=c++11 $(commonflags)
 AM_LDFLAGS  = `pkg-config --cflags --libs jack` -l wiringPi -l pthread $(PLUGINLDFLAGS)
 
