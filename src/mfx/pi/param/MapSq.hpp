@@ -43,8 +43,7 @@ namespace param
 template <bool INVFLAG>
 void	MapSq <INVFLAG>::config (double val_min, double val_max)
 {
-	assert (val_min > 0);
-	assert (val_min < val_max);
+	assert (val_min != val_max);
 
 	_a  = val_max - val_min;
 	_b  = val_min;

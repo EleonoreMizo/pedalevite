@@ -12,11 +12,11 @@
 
 
 
-static const int  MAIN_pin_reset     = 18;
-static const int	MAIN_pin_interrupt = 8;
-static const int  MAIN_i2c_dev_23017 = 0x20 + 0;   // Slave address, p. 8
+static const int     MAIN_pin_reset       = 18;
+static const int     MAIN_pin_interrupt   = 8;
+static const int     MAIN_i2c_dev_23017   = 0x20 + 0;   // Slave address, p. 8
 static const int64_t MAIN_antibounce_time = 30 * 1000 * 1000; // Nanoseconds
-static const bool MAIN_incremental_coder_flag = true;
+static const bool    MAIN_incremental_coder_flag = false;
 
 // IOCON.BANK = 0
 enum Cmd : uint8_t
@@ -111,12 +111,12 @@ int main (int argc, char *argv [])
 		// All the pins are set in read mode.
 		::wiringPiI2CWriteReg16 (handle, Cmd_IODIRA, 0xFFFF);
 
-		// All the pins will cause an interrupt on input change
-		::wiringPiI2CWriteReg16 (handle, Cmd_INTCONA , 0x0000);
-		::wiringPiI2CWriteReg16 (handle, Cmd_GPINTENA, 0xFFFF);
-
 		if (! MAIN_incremental_coder_flag)
 		{
+			// All the pins will cause an interrupt on input change
+			::wiringPiI2CWriteReg16 (handle, Cmd_INTCONA , 0x0000);
+			::wiringPiI2CWriteReg16 (handle, Cmd_GPINTENA, 0xFFFF);
+
 			::wiringPiISR (MAIN_pin_interrupt, INT_EDGE_BOTH, &interrupt_cb);
 		}
 	}

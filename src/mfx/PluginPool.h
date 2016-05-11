@@ -70,7 +70,7 @@ public:
 
 	// Command thread
 	int            get_room () const;
-	int            add (PluginUPtr pi_uptr);
+	int            add (PluginUPtr &pi_uptr);
 	void           schedule_for_release (int index);
 	void           release (int index);
 
