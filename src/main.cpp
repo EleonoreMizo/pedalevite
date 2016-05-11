@@ -510,6 +510,7 @@ static int MAIN_audio_process (Context &ctx, float * const * dst_arr, const floa
 
 static ::jack_client_t * volatile MAIN_client_ptr = 0;
 static ::jack_port_t   * volatile MAIN_mfx_port_arr [2] [2]; // [in/out] [chn]
+static ::jack_status_t            MAIN_status = ::JackServerFailed;
 
 
 
@@ -554,11 +555,10 @@ static int MAIN_audio_init (double &sample_freq, int &max_block_size)
 	sample_freq    = 44100;
 	max_block_size = 4096;
 
-	::jack_status_t   status = ::JackServerFailed;
 	MAIN_client_ptr = jack_client_open (
 		"MultiFX",
 		::JackNullOption,
-		&status,
+		&MAIN_status,
 		0
 	);
 	if (MAIN_client_ptr == 0)
@@ -566,9 +566,9 @@ static int MAIN_audio_init (double &sample_freq, int &max_block_size)
 		fprintf (
 			stderr,
 			"jack_client_open() failed, status = 0x%2.0x\n",
-			status
+			MAIN_status
 		);
-		if ((status & ::JackServerFailed) != 0)
+		if ((MAIN_status & ::JackServerFailed) != 0)
 		{
 			fprintf (stderr, "Unable to connect to JACK server\n");
 		}
@@ -601,18 +601,18 @@ static int MAIN_audio_start ()
 
 	if (ret_val == 0)
 	{
-		if ((status & ::JackServerStarted) != 0)
+		if ((MAIN_status & ::JackServerStarted) != 0)
 		{
 			fprintf (stderr, "JACK server started\n");
 		}
-		if ((status & ::JackNameNotUnique) != 0)
+		if ((MAIN_status & ::JackNameNotUnique) != 0)
 		{
-			const char *   name_0 = ::jack_get_client_name (client_ptr);
+			const char *   name_0 = ::jack_get_client_name (MAIN_client_ptr);
 			fprintf (stderr, "Unique name \"%s\" assigned\n", name_0);
 		}
 
-		::jack_set_process_callback (client_ptr, MAIN_process_jack, &ctx);
-		::jack_on_shutdown (client_ptr, MAIN_jack_shutdown, &ctx);
+		::jack_set_process_callback (MAIN_client_ptr, MAIN_process_jack, &ctx);
+		::jack_on_shutdown (MAIN_client_ptr, MAIN_jack_shutdown, &ctx);
 
 		static const char *  port_name_0_arr [2] [2] =
 		{
@@ -622,14 +622,14 @@ static int MAIN_audio_start ()
 		{
 			for (int chn = 0; chn < 2 && ret_val == 0; ++chn)
 			{
-				ctx._mfx_port_arr [dir] [chn] = ::jack_port_register (
-					client_ptr,
+				MAIN_mfx_port_arr [dir] [chn] = ::jack_port_register (
+					MAIN_client_ptr,
 					port_name_0_arr [dir] [chn],
 					JACK_DEFAULT_AUDIO_TYPE,
 					port_dir [dir],
 					0
 				);
-				if (ctx._mfx_port_arr [dir] [chn] == 0)
+				if (MAIN_mfx_port_arr [dir] [chn] == 0)
 				{
 					fprintf (stderr, "No more JACK ports available.\n");
 					ret_val = -1;
@@ -640,7 +640,7 @@ static int MAIN_audio_start ()
 
 	if (ret_val == 0)
 	{
-		ret_val = ::jack_activate (client_ptr);
+		ret_val = ::jack_activate (MAIN_client_ptr);
 		if (ret_val != 0)
 		{
 			fprintf (stderr, "cannot activate client, returned %d.\n", ret_val);
@@ -650,7 +650,7 @@ static int MAIN_audio_start ()
 	for (int dir = 0; dir < 2 && ret_val == 0; ++dir)
 	{
 		const char **  port_0_arr = ::jack_get_ports (
-			client_ptr,
+			MAIN_client_ptr,
 			0,
 			0,
 			::JackPortIsPhysical | port_dir [1 - dir]
@@ -686,9 +686,9 @@ static int MAIN_audio_start ()
 				else
 				{
 					const char * inout_0 [2];
-					inout_0 [1 - dir] = ::jack_port_name (ctx._mfx_port_arr [dir] [chn]);
+					inout_0 [1 - dir] = ::jack_port_name (MAIN_mfx_port_arr [dir] [chn]);
 					inout_0 [    dir] = port_0_arr [chn];
-					ret_val = ::jack_connect (client_ptr, inout_0 [0], inout_0 [1]);
+					ret_val = ::jack_connect (MAIN_client_ptr, inout_0 [0], inout_0 [1]);
 					if (ret_val != 0)
 					{
 						fprintf (
