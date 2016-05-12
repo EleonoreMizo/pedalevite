@@ -132,8 +132,6 @@ public:
 	const int      _tuner_subspl  = 4;
 	volatile bool  _tuner_flag    = false;
 	volatile bool  _disto_flag    = false;
-	std::atomic <float>
-	               _disto_gain;
 	volatile float _disto_gain_nat = 1;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
@@ -324,8 +322,6 @@ Context::Context (double sample_freq, int max_block_size)
 
 	_audio_world.set_context (_proc_ctx);
 
-	_disto_gain.store (0);
-
 	// Get ready
 	_freq_analyser.set_sample_freq (sample_freq / _tuner_subspl);
 	_audio_world.set_process_info (sample_freq, max_block_size);
@@ -412,6 +408,23 @@ static void MAIN_physical_input_thread (Context &ctx)
 				cell_ptr = ctx._queue_audio_to_cmd.dequeue ();
 				if (cell_ptr != 0)
 				{
+					if (cell_ptr->_val._type == mfx::Msg::Type_PARAM)
+					{
+						const int      pi_id = cell_ptr->_val._content._param._plugin_id;
+						const int      index = cell_ptr->_val._content._param._index;
+						if (   pi_id == ctx._pi_id_disto_main
+						    && index == mfx::pi::DistoSimple::Param_GAIN)
+						{
+							const mfx::piapi::ParamDescInterface & desc =
+								ctx._plugin_pool.use_plugin (pi_id)._pi_uptr->get_param_info (
+									mfx::piapi::ParamCateg_GLOBAL,
+									index
+								);
+							const float    val = cell_ptr->_val._content._param._val;
+							ctx._disto_gain_nat = float (desc.conv_nrm_to_nat (val));
+						}
+					}
+
 					ctx._msg_pool_cmd.return_cell (*cell_ptr);
 				}
 			}
@@ -442,14 +455,6 @@ static int MAIN_audio_process (Context &ctx, float * const * dst_arr, const floa
 	ctx._usage_max.store (usage_max);
 	ctx._usage_min.store (usage_min);
 	ctx._time_beg = time_beg;
-
-	float             gain_nrm = ctx._disto_gain.exchange (-1);
-	if (gain_nrm >= 0)
-	{
-		const mfx::piapi::ParamDescInterface & desc =
-			ctx._plugin_pool.use_plugin (ctx._pi_id_disto_main)._pi_uptr->get_param_info (mfx::piapi::ParamCateg_GLOBAL, 0);
-		ctx._disto_gain_nat = float (desc.conv_nrm_to_nat (gain_nrm));
-	}
 
 	// Audio graph
 	ctx._audio_world.process_block (dst_arr, src_arr, nbr_spl);
