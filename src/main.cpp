@@ -256,7 +256,7 @@ Context::Context (double sample_freq, int max_block_size)
 	{
 		mfx::ProcessingContext::PluginContext disto_bundle;
 		{
-			mfx::ProcessingContextNode & node = disto_bundle._main_pi;
+			mfx::ProcessingContextNode & node = disto_bundle._main;
 			node._pi_id = _pi_id_disto_main;
 			mfx::ProcessingContextNode::Side &si =
 				node._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
