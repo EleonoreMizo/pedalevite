@@ -225,7 +225,11 @@ void	DryWet::do_process_block (ProcInfo &proc)
 			float (_state_set.get_val_end_nat (Param_WET));
 
 		lvl_wet_end =      mix_end  * (1 - byp_end) * vol_end;
+#if defined (mfx_pi_DryWet_GAIN_WET_ONLY)
+		lvl_dry_end = (1 - mix_end) *      byp_end;
+#else
 		lvl_dry_end = (1 - mix_end) *      byp_end  * vol_end;
+#endif
 
 		_level_wet = lvl_wet_end;
 		_level_dry = lvl_dry_end;
