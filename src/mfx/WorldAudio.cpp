@@ -246,7 +246,7 @@ void	WorldAudio::handle_controller (const ControlSource &controller, float val_r
 		// command thread.
 		mfx::ControlledParam::CtrlUnitList &   unit_list =
 			param.use_unit_list ();
-		if (unit_list.empty ())
+		if (! unit_list.empty ())
 		{
 			mfx::CtrlUnit &   unit_first = *(unit_list [0]);
 			if (   unit_first._source == controller
