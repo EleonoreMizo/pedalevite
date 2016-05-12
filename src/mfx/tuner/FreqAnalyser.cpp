@@ -86,25 +86,33 @@ float	FreqAnalyser::process_block (const float spl_ptr [], int nbr_spl)
 
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		const float    x = spl_ptr [pos];
-		int            write_pos = _buf_pos + _win_len + _delta - 1;
+		process_sample (spl_ptr [pos]);
+	}
+
+	return _freq_prev;
+}
+
+
+
+float	FreqAnalyser::process_sample (float x)
+{
+	int            write_pos = _buf_pos + _win_len + _delta - 1;
 #if defined (mfx_tuner_USE_SIMD)
-		for (int buf_index = 0; buf_index < 4; ++buf_index)
-		{
-			_buf_arr [buf_index] [(write_pos - buf_index) & _buf_mask] = x;
-		}
+	for (int buf_index = 0; buf_index < 4; ++buf_index)
+	{
+		_buf_arr [buf_index] [(write_pos - buf_index) & _buf_mask] = x;
+	}
 #else
-		_buffer [write_pos & _buf_mask] = x;
+	_buffer [write_pos & _buf_mask] = x;
 #endif
 
-		analyse_sample ();
+	analyse_sample ();
 
-		++ _delta;
-		if (_delta > _win_len)
-		{
-			_delta   = 1;
-			_buf_pos = (_buf_pos + _step_size) & _buf_mask;
-		}
+	++ _delta;
+	if (_delta > _win_len)
+	{
+		_delta   = 1;
+		_buf_pos = (_buf_pos + _step_size) & _buf_mask;
 	}
 
 	return _freq_prev;

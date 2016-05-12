@@ -58,6 +58,7 @@ public:
 
 	void           set_sample_freq (double sample_freq);
 	float          process_block (const float spl_ptr [], int nbr_spl);
+	float          process_sample (float x);
 
 
 
