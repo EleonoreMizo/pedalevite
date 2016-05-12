@@ -53,9 +53,10 @@ public:
 	{
 	public:
 		ProcessingContextNode
-		               _main_pi;
+		               _main;
 		ProcessingContextNode
 		               _mixer;
+		bool           _mixer_flag = false;
 	};
 
 	typedef std::vector <PluginContext> PluginCtxArray;

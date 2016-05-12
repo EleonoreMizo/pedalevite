@@ -375,19 +375,24 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	proc_info._evt_arr = 0;
 
 	// Main plug-in
-	proc_info._byp_state = piapi::PluginInterface::BypassState_ASK;
-	prepare_buffers (proc_info, pi_ctx._main_pi, false);
+	proc_info._byp_state = (pi_ctx._mixer_flag)
+		? piapi::PluginInterface::BypassState_ASK
+		: piapi::PluginInterface::BypassState_IGNORE;
+	prepare_buffers (proc_info, pi_ctx._main, false);
 
-	process_single_plugin (pi_ctx._main_pi._pi_id, proc_info);
+	process_single_plugin (pi_ctx._main._pi_id, proc_info);
 
 	const bool       bypass_produced_flag =
 		(proc_info._byp_state == piapi::PluginInterface::BypassState_PRODUCED);
 
 	// Bypass/Mix/Gain
-	proc_info._byp_state = piapi::PluginInterface::BypassState_IGNORE;
-	prepare_buffers (proc_info, pi_ctx._mixer, bypass_produced_flag);
+	if (proc_info._byp_state)
+	{
+		proc_info._byp_state = piapi::PluginInterface::BypassState_IGNORE;
+		prepare_buffers (proc_info, pi_ctx._mixer, bypass_produced_flag);
 
-	process_single_plugin (pi_ctx._mixer._pi_id, proc_info);
+		process_single_plugin (pi_ctx._mixer._pi_id, proc_info);
+	}
 }
 
 
