@@ -173,6 +173,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/ParamState.h \
         ../../src/mfx/pi/ParamStateSet.cpp \
         ../../src/mfx/pi/ParamStateSet.h \
+        ../../src/mfx/pi/Tuner.cpp \
+        ../../src/mfx/pi/Tuner.h \
         ../../src/mfx/piapi/Event.h \
         ../../src/mfx/piapi/EventNoteOff.h \
         ../../src/mfx/piapi/EventNoteOn.h \
