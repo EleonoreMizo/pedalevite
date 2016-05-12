@@ -176,6 +176,7 @@ public:
 
 	Context (double sample_freq, int max_block_size);
 	~Context ();
+	void send_param (int pi_id, int index, float val);
 };
 
 Context::Context (double sample_freq, int max_block_size)
@@ -332,6 +333,18 @@ Context::Context (double sample_freq, int max_block_size)
 	_plugin_pool.use_plugin (_pi_id_disto_mix )._pi_uptr->reset (
 		sample_freq, max_block_size, latency
 	);
+
+	// Initial parameters values
+	send_param (
+		_pi_id_disto_mix,
+		mfx::pi::DryWet::Param_BYPASS,
+		1.f
+	);
+	send_param (
+		_pi_id_disto_main,
+		mfx::pi::DistoSimple::Param_GAIN,
+		0.0f
+	);
 }
 
 Context::~Context ()
@@ -346,6 +359,18 @@ Context::~Context ()
 		}
 	}
 	while (cell_ptr != 0);
+}
+
+void Context::send_param (int pi_id, int index, float val)
+{
+	conc::LockFreeCell <mfx::Msg> * cell_ptr =
+		_msg_pool_cmd.take_cell (true);
+	cell_ptr->_val._sender = mfx::Msg::Sender_CMD;
+	cell_ptr->_val._type   = mfx::Msg::Type_PARAM;
+	cell_ptr->_val._content._param._plugin_id = pi_id;
+	cell_ptr->_val._content._param._index     = index;
+	cell_ptr->_val._content._param._val       = val;
+	_queue_cmd_to_audio.enqueue (*cell_ptr);
 }
 
 static std::unique_ptr <Context>	MAIN_context_ptr;
@@ -381,14 +406,11 @@ static void MAIN_physical_input_thread (Context &ctx)
 							if (val >= 0.5f)
 							{
 								ctx._disto_flag = (! ctx._disto_flag);
-								conc::LockFreeCell <mfx::Msg> * cell2_ptr =
-									ctx._msg_pool_cmd.take_cell (true);
-								cell2_ptr->_val._sender = mfx::Msg::Sender_CMD;
-								cell2_ptr->_val._type = mfx::Msg::Type_PARAM;
-								cell2_ptr->_val._content._param._plugin_id = ctx._pi_id_disto_mix;
-								cell2_ptr->_val._content._param._index     = mfx::pi::DryWet::Param_BYPASS;
-								cell2_ptr->_val._content._param._val       = (ctx._disto_flag) ? 0.f : 1.f;
-								ctx._queue_cmd_to_audio.enqueue (*cell2_ptr);
+								ctx.send_param (
+									ctx._pi_id_disto_mix,
+									mfx::pi::DryWet::Param_BYPASS,
+									(ctx._disto_flag) ? 0.f : 1.f
+								);
 							}
 							break;
 						}
