@@ -72,7 +72,8 @@ public:
 		Err_OK = 0,
 
 		Err_EXCEPTION = -999,
-		Err_MEMORY_ALLOCATION
+		Err_MEMORY_ALLOCATION,
+		Err_VALUE_NOT_SUPPORTED
 	};
 
 	enum BypassState

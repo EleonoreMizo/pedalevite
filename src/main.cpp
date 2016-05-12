@@ -28,8 +28,8 @@
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/DistoSimple.h"
 #include "mfx/pi/DryWet.h"
+#include "mfx/pi/Tuner.h"
 #include "mfx/piapi/EventTs.h"
-#include "mfx/tuner/FreqAnalyser.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
 #include "mfx/MsgQueue.h"
@@ -126,8 +126,6 @@ public:
 	               _usage_max;
 	std::atomic <float>            // Negative: the main thread read the value.
 	               _usage_min;
-	mfx::tuner::FreqAnalyser
-	               _freq_analyser;
 	volatile float _detected_freq = 0;
 	const int      _tuner_subspl  = 4;
 	volatile bool  _tuner_flag    = false;
@@ -139,6 +137,8 @@ public:
 	// New audio engine
 	mfx::ProcessingContext
 	               _proc_ctx;
+	mfx::ProcessingContext
+	               _tune_ctx;
 	mfx::MsgQueue  _queue_cmd_to_audio;
 	mfx::MsgQueue  _queue_audio_to_cmd;
 	mfx::ui::UserInputInterface::MsgQueue
@@ -151,6 +151,7 @@ public:
 	               _audio_world;
 	int            _pi_id_disto_main = -1;
 	int            _pi_id_disto_mix  = -1;
+	int            _pi_id_tuner_main = -1;
 
 	// Not for the audio thread
 	volatile bool	_quit_flag       = false;
@@ -177,6 +178,7 @@ public:
 	Context (double sample_freq, int max_block_size);
 	~Context ();
 	void send_param (int pi_id, int index, float val);
+	void send_context (mfx::ProcessingContext &ctx);
 };
 
 Context::Context (double sample_freq, int max_block_size)
@@ -223,14 +225,17 @@ Context::Context (double sample_freq, int max_block_size)
 	// Pot 0 to the audio engine
 	_user_input.set_msg_recipient (mfx::ui::UserInputType_POT, 0, &_queue_from_input);
 
-	// Setup: disto + drywet
+	// Setup: disto + drywet / tuner
 	{
 		mfx::PluginPool::PluginUPtr disto_main_uptr (new mfx::pi::DistoSimple);
 		mfx::PluginPool::PluginUPtr disto_mix_uptr (new mfx::pi::DryWet);
+		mfx::PluginPool::PluginUPtr tuner_main_uptr (new mfx::pi::Tuner);
 		disto_main_uptr->init ();
 		disto_mix_uptr->init ();
+		tuner_main_uptr->init ();
 		_pi_id_disto_main = _plugin_pool.add (disto_main_uptr);
 		_pi_id_disto_mix  = _plugin_pool.add (disto_mix_uptr );
+		_pi_id_tuner_main = _plugin_pool.add (tuner_main_uptr);
 	}
 
 	// Processing steps and buffers
@@ -255,6 +260,7 @@ Context::Context (double sample_freq, int max_block_size)
 	}
 	{
 		mfx::ProcessingContext::PluginContext disto_bundle;
+		disto_bundle._mixer_flag = true;
 		{
 			mfx::ProcessingContextNode & node = disto_bundle._main;
 			node._pi_id = _pi_id_disto_main;
@@ -286,6 +292,44 @@ Context::Context (double sample_freq, int max_block_size)
 			so._nbr_chn_tot = 1;
 		}
 		_proc_ctx._context_arr.push_back (disto_bundle);
+	}
+
+	// Alternate processing: tuner
+	// 0: interface input L, tuner input
+	// 1: interface input R (bypass)
+	// 2: tuner output, interface output L & R
+	{
+		mfx::ProcessingContextNode::Side &si =
+			_tune_ctx._interface_ctx._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
+		mfx::ProcessingContextNode::Side &so =
+			_tune_ctx._interface_ctx._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
+		si._buf_arr [0] = 0;
+		si._buf_arr [1] = 1;
+		si._nbr_chn     = 2;
+		si._nbr_chn_tot = 2;
+		so._buf_arr [0] = 2;
+		so._buf_arr [1] = 2;
+		so._nbr_chn     = 2;
+		so._nbr_chn_tot = 2;
+	}
+	{
+		mfx::ProcessingContext::PluginContext tuner_bundle;
+		tuner_bundle._mixer_flag = false;
+		{
+			mfx::ProcessingContextNode & node = tuner_bundle._main;
+			node._pi_id = _pi_id_tuner_main;
+			mfx::ProcessingContextNode::Side &si =
+				node._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
+			mfx::ProcessingContextNode::Side &so =
+				node._side_arr [mfx::piapi::PluginInterface::Dir_OUT];
+			si._buf_arr [0] = 0;
+			si._nbr_chn     = 1;
+			si._nbr_chn_tot = 1;
+			so._buf_arr [0] = 2;
+			so._nbr_chn     = 1;
+			so._nbr_chn_tot = 1;
+		}
+		_tune_ctx._context_arr.push_back (tuner_bundle);
 	}
 
 	// Automate the distortion gain with pot 0
@@ -324,7 +368,6 @@ Context::Context (double sample_freq, int max_block_size)
 	_audio_world.set_context (_proc_ctx);
 
 	// Get ready
-	_freq_analyser.set_sample_freq (sample_freq / _tuner_subspl);
 	_audio_world.set_process_info (sample_freq, max_block_size);
 	int             latency;
 	_plugin_pool.use_plugin (_pi_id_disto_main)._pi_uptr->reset (
@@ -373,6 +416,16 @@ void Context::send_param (int pi_id, int index, float val)
 	_queue_cmd_to_audio.enqueue (*cell_ptr);
 }
 
+void Context::send_context (mfx::ProcessingContext &ctx)
+{
+	conc::LockFreeCell <mfx::Msg> * cell_ptr =
+		_msg_pool_cmd.take_cell (true);
+	cell_ptr->_val._sender = mfx::Msg::Sender_CMD;
+	cell_ptr->_val._type   = mfx::Msg::Type_CTX;
+	cell_ptr->_val._content._ctx._ctx_ptr = &ctx;
+	_queue_cmd_to_audio.enqueue (*cell_ptr);
+}
+
 static std::unique_ptr <Context>	MAIN_context_ptr;
 
 
@@ -400,6 +453,9 @@ static void MAIN_physical_input_thread (Context &ctx)
 							if (val >= 0.5f)
 							{
 								ctx._tuner_flag = (! ctx._tuner_flag);
+								ctx.send_context (
+									ctx._tuner_flag ? ctx._tune_ctx : ctx._proc_ctx
+								);
 							}
 							break;
 						case  3: // Distortion toggle
@@ -485,43 +541,10 @@ static int MAIN_audio_process (Context &ctx, float * const * dst_arr, const floa
 	float           freq = 0;
 	if (ctx._tuner_flag)
 	{
-		if (ctx._tuner_subspl == 1)
-		{
-			freq = ctx._freq_analyser.process_block (&src_arr [0] [0], nbr_spl);
-		}
-		else
-		{
-			const int       buf_size = 1024;
-			std::array <float, buf_size>   buf;
-			int             work_pos = 0;
-			while (work_pos < int (nbr_spl))
-			{
-				const int       work_len =
-					std::min (int (nbr_spl) - work_pos, buf_size * ctx._tuner_subspl);
-				const int       len_ss = work_len / ctx._tuner_subspl;
-				for (int i = 0; i < len_ss; ++i)
-				{
-					float            sum  = 0;
-					const int        base = work_pos + i * ctx._tuner_subspl;
-					for (int j = 0; j < ctx._tuner_subspl; ++j)
-					{
-						sum += src_arr [0] [base + j];
-					}
-					buf [i] = sum;
-				}
-				freq = ctx._freq_analyser.process_block (&buf [0], len_ss);
-
-				work_pos += work_len;
-			}
-		}
-		ctx._detected_freq = freq;
-		for (int chn = 0; chn < 2; ++chn)
-		{
-			for (int pos = 0; pos < int (nbr_spl); ++pos)
-			{
-				dst_arr [chn] [pos] = 0;
-			}
-		}
+		const mfx::pi::Tuner &  tuner = dynamic_cast <const mfx::pi::Tuner &> (
+			*ctx._plugin_pool.use_plugin (ctx._pi_id_tuner_main)._pi_uptr
+		);
+		ctx._detected_freq = tuner.get_freq ();
 	}
 
 	ctx._time_end = MAIN_get_time ();

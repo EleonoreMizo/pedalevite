@@ -255,6 +255,7 @@
     <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
     <ClInclude Include="mfx\pi\param\TplSq.h" />
     <ClInclude Include="mfx\pi\param\TplSq.hpp" />
+    <ClInclude Include="mfx\pi\Tuner.h" />
     <ClInclude Include="mfx\PluginPool.h" />
     <ClInclude Include="mfx\ProcessingContext.h" />
     <ClInclude Include="mfx\ProcessingContextNode.h" />
@@ -322,6 +323,7 @@
     <ClCompile Include="mfx\pi\param\HelperDispNum.cpp" />
     <ClCompile Include="mfx\pi\param\Tools.cpp" />
     <ClCompile Include="mfx\pi\param\TplLog.cpp" />
+    <ClCompile Include="mfx\pi\Tuner.cpp" />
     <ClCompile Include="mfx\PluginPool.cpp" />
     <ClCompile Include="mfx\ProcessingContext.cpp" />
     <ClCompile Include="mfx\ProcessingContextNode.cpp" />
