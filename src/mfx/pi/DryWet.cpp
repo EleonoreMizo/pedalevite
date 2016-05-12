@@ -100,6 +100,11 @@ DryWet::DryWet ()
 	_state_set.set_val (Param_WET   , 1   ); // 100 %
 	_state_set.set_val (Param_GAIN  , 0.75); // 0 dB
 
+	for (int index = 0; index < Param_NBR_ELT; ++index)
+	{
+		_state_set.add_observer (index, _param_change_flag);
+	}
+
 	_state_set.set_ramp_time (Param_BYPASS, 0.010);
 	_state_set.set_ramp_time (Param_WET   , 0.010);
 	_state_set.set_ramp_time (Param_GAIN  , 0.010);

@@ -151,7 +151,6 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 // x * (1 - x^8/9)
 void	DistoSimple::do_process_block (ProcInfo &proc)
 {
-	// Ignores timestamps for simplicity
 	const int      nbr_evt = proc._nbr_evt;
 	for (int index = 0; index < nbr_evt; ++index)
 	{
@@ -160,9 +159,6 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 		{
 			const double   val_nrm = evt._evt._param._val;
 			_param_state_gain.set_val (val_nrm);
-
-			/*** To do: care about the ramping ***/
-			_gain = float (_param_desc_gain.conv_nrm_to_nat (val_nrm));
 		}
 	}
 
