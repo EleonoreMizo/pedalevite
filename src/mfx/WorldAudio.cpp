@@ -437,8 +437,8 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::P
 	}
 
 	// Finalizes the event list
-	proc_info._nbr_evt = int (_evt_ptr_arr.size ());
-	if (_evt_ptr_arr.empty ())
+	proc_info._nbr_evt = int (_evt_arr.size ());
+	if (_evt_arr.empty ())
 	{
 		proc_info._evt_arr = 0;
 	}
