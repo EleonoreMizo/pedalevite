@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#define mfx_pi_DryWet_GAIN_WET_ONLY
+
 #include "fstb/AllocAlign.h"
 #include "fstb/util/NotificationFlag.h"
 #include "mfx/pi/ParamDescSet.h"
