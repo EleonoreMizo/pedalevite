@@ -974,7 +974,7 @@ int MAIN_main_loop (Context &ctx)
 			scr_rfrsh_flag = false;
 		}
 
-#if 0
+#if 1
 
 	#if fstb_IS (ARCHI, ARM)
 		::delay (100);
