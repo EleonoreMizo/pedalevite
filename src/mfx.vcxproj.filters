@@ -16,9 +16,6 @@
     <Filter Include="jack">
       <UniqueIdentifier>{5a0a9cfa-12d0-4338-bc0b-aaa5fb514ab8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mfx\tuner">
-      <UniqueIdentifier>{f386ef77-a094-4e9b-809e-f938c0e5b1ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mfx\ui">
       <UniqueIdentifier>{6f074c63-9327-4a2b-baf6-1226d06f039b}</UniqueIdentifier>
     </Filter>
@@ -245,9 +242,6 @@
     </ClInclude>
     <ClInclude Include="fstb\ToolsSimd.hpp">
       <Filter>fstb</Filter>
-    </ClInclude>
-    <ClInclude Include="mfx\tuner\FreqAnalyser.h">
-      <Filter>mfx\tuner</Filter>
     </ClInclude>
     <ClInclude Include="mfx\Overdrive.h">
       <Filter>mfx</Filter>
@@ -630,6 +624,9 @@
     <ClInclude Include="mfx\pi\Tuner.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\FreqAnalyser.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -650,9 +647,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="fstb\ToolsSimd.cpp">
       <Filter>fstb</Filter>
-    </ClCompile>
-    <ClCompile Include="mfx\tuner\FreqAnalyser.cpp">
-      <Filter>mfx\tuner</Filter>
     </ClCompile>
     <ClCompile Include="mfx\Overdrive.cpp">
       <Filter>mfx</Filter>
@@ -781,6 +775,9 @@
       <Filter>mfx\ui</Filter>
     </ClCompile>
     <ClCompile Include="mfx\pi\Tuner.cpp">
+      <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\FreqAnalyser.cpp">
       <Filter>mfx\pi</Filter>
     </ClCompile>
   </ItemGroup>

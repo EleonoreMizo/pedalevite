@@ -167,6 +167,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/DistoSimple.h \
         ../../src/mfx/pi/DryWet.cpp \
         ../../src/mfx/pi/DryWet.h \
+        ../../src/mfx/pi/FreqAnalyser.cpp \
+        ../../src/mfx/pi/FreqAnalyser.h \
         ../../src/mfx/pi/ParamDescSet.cpp \
         ../../src/mfx/pi/ParamDescSet.h \
         ../../src/mfx/pi/ParamState.cpp \
@@ -187,8 +189,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/piapi/ParamDescInterface.hpp \
         ../../src/mfx/piapi/PluginInterface.cpp \
         ../../src/mfx/piapi/PluginInterface.h \
-        ../../src/mfx/tuner/FreqAnalyser.cpp \
-        ../../src/mfx/tuner/FreqAnalyser.h \
         ../../src/mfx/ui/DisplayInterface.cpp \
         ../../src/mfx/ui/DisplayInterface.h \
         ../../src/mfx/ui/DisplayPi3Pcd8544.cpp \
