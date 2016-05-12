@@ -28,8 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
+#include "mfx/pi/FreqAnalyser.h"
 #include "mfx/piapi/PluginInterface.h"
-#include "mfx/tuner/FreqAnalyser.h"
 
 #include <vector>
 
@@ -87,7 +87,7 @@ private:
 
 	State          _state   = State_CONSTRUCTED;
 
-	tuner::FreqAnalyser
+	pi::FreqAnalyser
 	               _analyser;
 	float          _freq    = 0;        // Hz. 0 = not found
 	BufAlign       _buffer;

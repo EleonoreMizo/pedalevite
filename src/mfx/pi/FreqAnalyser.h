@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_tuner_FreqAnalyser_HEADER_INCLUDED)
-#define mfx_tuner_FreqAnalyser_HEADER_INCLUDED
+#if ! defined (mfx_pi_FreqAnalyser_HEADER_INCLUDED)
+#define mfx_pi_FreqAnalyser_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,9 +27,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#define mfx_tuner_USE_SIMD
+#define mfx_pi_USE_SIMD
 
-#if defined (mfx_tuner_USE_SIMD)
+#if defined (mfx_pi_USE_SIMD)
 #include "fstb/AllocAlign.h"
 
 #include <array>
@@ -41,7 +41,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace tuner
+namespace pi
 {
 
 
@@ -80,7 +80,7 @@ private:
 	const float    _smoothing   = 0.125f;  // Smoothing coefficient (LERP between the new and accumulated values)
 	const float    _smooth_thr  = 0.02f;// Smoothing is done only on close values (threshold is relative)
 
-#if defined (mfx_tuner_USE_SIMD)
+#if defined (mfx_pi_USE_SIMD)
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 	std::array <BufAlign, 4>
 	               _buf_arr;
@@ -116,16 +116,16 @@ private:
 
 
 
-}  // namespace tuner
+}  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/tuner/FreqAnalyser.hpp"
+//#include "mfx/pir/FreqAnalyser.hpp"
 
 
 
-#endif   // mfx_tuner_FreqAnalyser_HEADER_INCLUDED
+#endif   // mfx_pi_FreqAnalyser_HEADER_INCLUDED
 
 
 

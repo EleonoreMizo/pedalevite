@@ -233,6 +233,7 @@
     <ClInclude Include="mfx\piapi\PluginInterface.h" />
     <ClInclude Include="mfx\pi\DistoSimple.h" />
     <ClInclude Include="mfx\pi\DryWet.h" />
+    <ClInclude Include="mfx\pi\FreqAnalyser.h" />
     <ClInclude Include="mfx\pi\ParamDescSet.h" />
     <ClInclude Include="mfx\pi\ParamState.h" />
     <ClInclude Include="mfx\pi\ParamStateSet.h" />
@@ -260,7 +261,6 @@
     <ClInclude Include="mfx\ProcessingContext.h" />
     <ClInclude Include="mfx\ProcessingContextNode.h" />
     <ClInclude Include="mfx\SharedRscState.h" />
-    <ClInclude Include="mfx\tuner\FreqAnalyser.h" />
     <ClInclude Include="mfx\ui\DisplayInterface.h" />
     <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h" />
     <ClInclude Include="mfx\ui\DisplayVoid.h" />
@@ -317,6 +317,7 @@
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
     <ClCompile Include="mfx\pi\DistoSimple.cpp" />
     <ClCompile Include="mfx\pi\DryWet.cpp" />
+    <ClCompile Include="mfx\pi\FreqAnalyser.cpp" />
     <ClCompile Include="mfx\pi\ParamDescSet.cpp" />
     <ClCompile Include="mfx\pi\ParamState.cpp" />
     <ClCompile Include="mfx\pi\ParamStateSet.cpp" />
@@ -327,7 +328,6 @@
     <ClCompile Include="mfx\PluginPool.cpp" />
     <ClCompile Include="mfx\ProcessingContext.cpp" />
     <ClCompile Include="mfx\ProcessingContextNode.cpp" />
-    <ClCompile Include="mfx\tuner\FreqAnalyser.cpp" />
     <ClCompile Include="mfx\ui\DisplayInterface.cpp" />
     <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
