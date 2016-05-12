@@ -47,8 +47,8 @@ namespace param
 TplLin::TplLin (double val_min, double val_max, const char *name_0, const char *unit_0, int group_index, const char *format_0)
 :	_phdn ()
 ,	_group_index (group_index)
-,	_unit (unit_0)
 ,	_name ()
+,	_unit (unit_0)
 ,	_categ (piapi::ParamDescInterface::Categ_UNDEFINED)
 {
 	assert (val_min < val_max);

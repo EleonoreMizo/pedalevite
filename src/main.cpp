@@ -376,6 +376,9 @@ Context::Context (double sample_freq, int max_block_size)
 	_plugin_pool.use_plugin (_pi_id_disto_mix )._pi_uptr->reset (
 		sample_freq, max_block_size, latency
 	);
+	_plugin_pool.use_plugin (_pi_id_tuner_main)._pi_uptr->reset (
+		sample_freq, max_block_size, latency
+	);
 
 	// Initial parameters values
 	send_param (
@@ -538,7 +541,6 @@ static int MAIN_audio_process (Context &ctx, float * const * dst_arr, const floa
 	ctx._audio_world.process_block (dst_arr, src_arr, nbr_spl);
 
 	// Tuner
-	float           freq = 0;
 	if (ctx._tuner_flag)
 	{
 		const mfx::pi::Tuner &  tuner = dynamic_cast <const mfx::pi::Tuner &> (
