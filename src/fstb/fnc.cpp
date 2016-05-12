@@ -71,7 +71,7 @@ int	snprintf4all (char *out_0, size_t size, const char *format_0, ...)
 
 #else
 
-	cnt = snprintf (out_0, size, format_0, ap);
+	cnt = vsnprintf (out_0, size, format_0, ap);
 
 #endif
 
