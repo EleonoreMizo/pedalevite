@@ -241,8 +241,8 @@ void	WorldAudio::handle_controller (const ControlSource &controller, float val_r
 		PluginPool::PluginDetails &   details = _pi_pool.use_plugin (pi_id);
 		details._param_update.fill_bit (index);
 
-		// If the parameter is directly linked to the controller,
-		// updates the value immediately and send a message to the
+		// If the parameter is directly linked to the controller,we
+		// update the value immediately and send a message to the
 		// command thread.
 		mfx::ControlledParam::CtrlUnitList &   unit_list =
 			param.use_unit_list ();
@@ -271,6 +271,8 @@ void	WorldAudio::handle_controller (const ControlSource &controller, float val_r
 				}
 			}
 		}
+
+		++ it_param;
 	}
 }
 
