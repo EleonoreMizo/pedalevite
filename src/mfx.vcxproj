@@ -198,6 +198,10 @@
     <ClInclude Include="jack\transport.h" />
     <ClInclude Include="jack\types.h" />
     <ClInclude Include="jack\weakmacros.h" />
+    <ClInclude Include="mfx\cmd\Central.h" />
+    <ClInclude Include="mfx\cmd\BufAlloc.h" />
+    <ClInclude Include="mfx\cmd\Plugin.h" />
+    <ClInclude Include="mfx\cmd\Slot.h" />
     <ClInclude Include="mfx\ControlCurve.h" />
     <ClInclude Include="mfx\ControlledParam.h" />
     <ClInclude Include="mfx\ControllerType.h" />
@@ -205,6 +209,11 @@
     <ClInclude Include="mfx\ControlSource.hpp" />
     <ClInclude Include="mfx\Cst.h" />
     <ClInclude Include="mfx\CtrlUnit.h" />
+    <ClInclude Include="mfx\doc\CtrlLink.h" />
+    <ClInclude Include="mfx\doc\CtrlLinkSet.h" />
+    <ClInclude Include="mfx\doc\PluginSettings.h" />
+    <ClInclude Include="mfx\doc\Preset.h" />
+    <ClInclude Include="mfx\doc\Slot.h" />
     <ClInclude Include="mfx\dsp\InertiaLin.h" />
     <ClInclude Include="mfx\dsp\InertiaLin.hpp" />
     <ClInclude Include="mfx\dsp\mix\Align.h" />
@@ -231,6 +240,7 @@
     <ClInclude Include="mfx\piapi\ParamDescInterface.h" />
     <ClInclude Include="mfx\piapi\ParamDescInterface.hpp" />
     <ClInclude Include="mfx\piapi\PluginInterface.h" />
+    <ClInclude Include="mfx\PiType.h" />
     <ClInclude Include="mfx\pi\DistoSimple.h" />
     <ClInclude Include="mfx\pi\DryWet.h" />
     <ClInclude Include="mfx\pi\FreqAnalyser.h" />
@@ -256,6 +266,7 @@
     <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
     <ClInclude Include="mfx\pi\param\TplSq.h" />
     <ClInclude Include="mfx\pi\param\TplSq.hpp" />
+    <ClInclude Include="mfx\pi\PluginModel.h" />
     <ClInclude Include="mfx\pi\Tuner.h" />
     <ClInclude Include="mfx\PluginPool.h" />
     <ClInclude Include="mfx\ProcessingContext.h" />
@@ -305,8 +316,12 @@
     </ClCompile>
     <ClCompile Include="fstb\util\ObservableMultiMixin.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mfx\cmd\Central.cpp" />
+    <ClCompile Include="mfx\cmd\BufAlloc.cpp" />
+    <ClCompile Include="mfx\cmd\Plugin.cpp" />
     <ClCompile Include="mfx\ControlledParam.cpp" />
     <ClCompile Include="mfx\CtrlUnit.cpp" />
+    <ClCompile Include="mfx\doc\CtrlLinkSet.cpp" />
     <ClCompile Include="mfx\dsp\mix\Align.cpp" />
     <ClCompile Include="mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="mfx\dsp\mix\Generic.cpp" />

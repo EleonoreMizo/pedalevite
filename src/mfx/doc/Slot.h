@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Cst.h
+        Slot.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_Cst_HEADER_INCLUDED)
-#define mfx_Cst_HEADER_INCLUDED
+#if ! defined (mfx_doc_Slot_HEADER_INCLUDED)
+#define mfx_doc_Slot_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,35 +27,41 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/PluginSettings.h"
+#include "mfx/pi/PluginModel.h"
+
+#include <map>
+#include <string>
+
 
 
 namespace mfx
 {
+namespace doc
+{
 
 
 
-class Cst
+class Slot
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _max_nbr_buf     = 256;
-	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_plugins = 256;
-	static const int  _nbr_chn_in      = 2;
-	static const int  _nbr_chn_out     = 2;
+	typedef std::shared_ptr <PluginSettings> SettingsSPtr;
+	typedef std::map <pi::PluginModel, SettingsSPtr> SettingHistory;
 
-	enum BufSpecial
-	{
-		BufSpecial_SILENCE = 0,
-		BufSpecial_TRASH,
+	               Slot ()                        = default;
+	               Slot (const Slot &other)       = default;
+	virtual        ~Slot ()                       = default;
+	Slot &         operator = (const Slot &other) = default;
 
-		BufSpecial_NBR_ELT
-	};
-
+	pi::PluginModel
+	               _pi_model = pi::PluginModel_INVALID;
+	SettingHistory _settings_all;
+	PluginSettings _settings_mixer;
+	std::string    _name;
 
 
 
@@ -75,26 +81,23 @@ private:
 
 private:
 
-	virtual        ~Cst ()                              = delete;
-	               Cst ()                               = delete;
-	               Cst (const Cst &other)               = delete;
-	Cst &          operator = (const Cst &other)        = delete;
-	bool           operator == (const Cst &other) const = delete;
-	bool           operator != (const Cst &other) const = delete;
+	bool           operator == (const Slot &other) const = delete;
+	bool           operator != (const Slot &other) const = delete;
 
-}; // class Cst
+}; // class Slot
 
 
 
+}  // namespace doc
 }  // namespace mfx
 
 
 
-//#include "mfx/Cst.hpp"
+//#include "mfx/doc/Slot.hpp"
 
 
 
-#endif   // mfx_Cst_HEADER_INCLUDED
+#endif   // mfx_doc_Slot_HEADER_INCLUDED
 
 
 

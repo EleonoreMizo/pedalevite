@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Cst.h
+        BufAlloc.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_Cst_HEADER_INCLUDED)
-#define mfx_Cst_HEADER_INCLUDED
+#if ! defined (mfx_cmd_BufAlloc_HEADER_INCLUDED)
+#define mfx_cmd_BufAlloc_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,35 +27,34 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/Cst.h"
+
+#include <array>
+
 
 
 namespace mfx
 {
+namespace cmd
+{
 
 
 
-class Cst
+class BufAlloc
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _max_nbr_buf     = 256;
-	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_plugins = 256;
-	static const int  _nbr_chn_in      = 2;
-	static const int  _nbr_chn_out     = 2;
+	               BufAlloc (int reserved_size = 0);
+	virtual        ~BufAlloc () = default;
 
-	enum BufSpecial
-	{
-		BufSpecial_SILENCE = 0,
-		BufSpecial_TRASH,
+	void           clear ();
 
-		BufSpecial_NBR_ELT
-	};
-
+	bool           has_room () const;
+	int            alloc ();
+	void           ret (int buf);
 
 
 
@@ -69,32 +68,40 @@ protected:
 
 private:
 
+	int            find_buf_pos (int buf) const;
+
+	// First part contains the used buffers,
+	// second part contains the free buffers
+	std::array <int, Cst::_max_nbr_buf>
+	               _buf_list;
+	const int      _reserved_size;
+	int            _free_index;
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	virtual        ~Cst ()                              = delete;
-	               Cst ()                               = delete;
-	               Cst (const Cst &other)               = delete;
-	Cst &          operator = (const Cst &other)        = delete;
-	bool           operator == (const Cst &other) const = delete;
-	bool           operator != (const Cst &other) const = delete;
+	               BufAlloc (const BufAlloc &other)          = delete;
+	BufAlloc &     operator = (const BufAlloc &other)        = delete;
+	bool           operator == (const BufAlloc &other) const = delete;
+	bool           operator != (const BufAlloc &other) const = delete;
 
-}; // class Cst
+}; // class BufAlloc
 
 
 
+}  // namespace cmd
 }  // namespace mfx
 
 
 
-//#include "mfx/Cst.hpp"
+//#include "mfx/cmd/BufAlloc.hpp"
 
 
 
-#endif   // mfx_Cst_HEADER_INCLUDED
+#endif   // mfx_cmd_BufAlloc_HEADER_INCLUDED
 
 
 

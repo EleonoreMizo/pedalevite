@@ -35,6 +35,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+namespace doc
+{
+	class CtrlLink;
+}
 
 
 class CtrlUnit
@@ -46,6 +50,7 @@ public:
 
 	               CtrlUnit ()                        = default;
 	               CtrlUnit (const CtrlUnit &other)   = default;
+	               CtrlUnit (const doc::CtrlLink &other, bool abs_flag);
 	virtual        ~CtrlUnit ()                       = default;
 	CtrlUnit &     operator = (const CtrlUnit &other) = default;
 

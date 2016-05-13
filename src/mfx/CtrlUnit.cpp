@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/doc/CtrlLink.h"
 #include "mfx/CtrlUnit.h"
 #include "mfx/ProcessingContext.h"
 
@@ -39,6 +40,21 @@ namespace mfx
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+CtrlUnit::CtrlUnit (const doc::CtrlLink &other, bool abs_flag)
+:	_source (other._source)
+,	_step (other._step)
+,	_val (0)
+,	_curve (other._curve)
+,	_u2b_flag (other._u2b_flag)
+,	_abs_flag (abs_flag)
+,	_base (other._base)
+,	_amp (other._amp)
+{
+	// Nothing
+}
 
 
 

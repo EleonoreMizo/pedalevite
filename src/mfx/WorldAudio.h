@@ -53,7 +53,7 @@ class WorldAudio
 public:
 
 	explicit       WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQueue &queue_to_cmd, ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device, conc::CellPool <Msg> &msg_pool_cmd);
-	virtual        ~WorldAudio () = default;
+	virtual        ~WorldAudio ();
 
 	void           set_process_info (double sample_freq, int max_block_size);
 

@@ -46,6 +46,12 @@
     <Filter Include="mfx\dsp\mix">
       <UniqueIdentifier>{adce5933-baf3-4ef7-8a5a-758044080fd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\doc">
+      <UniqueIdentifier>{b472b960-63a9-4a67-921a-941e3c871f48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\cmd">
+      <UniqueIdentifier>{3b78661b-f282-43c6-ba7b-c13716846db3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -627,6 +633,39 @@
     <ClInclude Include="mfx\pi\FreqAnalyser.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\doc\CtrlLink.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\CtrlLinkSet.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\PluginSettings.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\Slot.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\Preset.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\PluginModel.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\cmd\Central.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\cmd\Slot.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\cmd\Plugin.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\cmd\BufAlloc.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\PiType.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -779,6 +818,18 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\FreqAnalyser.cpp">
       <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\CtrlLinkSet.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\cmd\Central.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\cmd\Plugin.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\cmd\BufAlloc.cpp">
+      <Filter>mfx\cmd</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

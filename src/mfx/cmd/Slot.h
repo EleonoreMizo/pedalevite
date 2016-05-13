@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Cst.h
+        Slot.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_Cst_HEADER_INCLUDED)
-#define mfx_Cst_HEADER_INCLUDED
+#if ! defined (mfx_cmd_Slot_HEADER_INCLUDED)
+#define mfx_cmd_Slot_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,35 +27,37 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/cmd/Plugin.h"
+#include "mfx/PiType.h"
+
+#include <array>
+
 
 
 namespace mfx
 {
+namespace cmd
+{
 
 
 
-class Cst
+class Slot
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _max_nbr_buf     = 256;
-	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_plugins = 256;
-	static const int  _nbr_chn_in      = 2;
-	static const int  _nbr_chn_out     = 2;
+	               Slot ()                        = default;
+	               Slot (const Slot &other)       = default;
+	virtual        ~Slot ()                       = default;
+	Slot &         operator = (const Slot &other) = default;
 
-	enum BufSpecial
-	{
-		BufSpecial_SILENCE = 0,
-		BufSpecial_TRASH,
+	std::array <Plugin, PiType_NBR_ELT>
+	               _component_arr;
+	bool           _force_mono_flag = false;
 
-		BufSpecial_NBR_ELT
-	};
-
+	int            _ctx_index       = -1; // Index in ProcessingContext::_context_arr
 
 
 
@@ -75,26 +77,23 @@ private:
 
 private:
 
-	virtual        ~Cst ()                              = delete;
-	               Cst ()                               = delete;
-	               Cst (const Cst &other)               = delete;
-	Cst &          operator = (const Cst &other)        = delete;
-	bool           operator == (const Cst &other) const = delete;
-	bool           operator != (const Cst &other) const = delete;
+	bool           operator == (const Slot &other) const = delete;
+	bool           operator != (const Slot &other) const = delete;
 
-}; // class Cst
+}; // class Slot
 
 
 
+}  // namespace cmd
 }  // namespace mfx
 
 
 
-//#include "mfx/Cst.hpp"
+//#include "mfx/cmd/Slot.hpp"
 
 
 
-#endif   // mfx_Cst_HEADER_INCLUDED
+#endif   // mfx_cmd_Slot_HEADER_INCLUDED
 
 
 

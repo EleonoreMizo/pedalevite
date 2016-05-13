@@ -57,7 +57,7 @@ public:
 	{
 	public:
 		PluginUPtr     _pi_uptr;
-		std::vector <float>              // Only for ParamCateg_GLOBAL
+		std::vector <float>              // Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
 		               _param_arr;
 		fstb::BitFieldSparse             // Same remark. Managed by the audio thread only.
 		               _param_update;
@@ -73,6 +73,8 @@ public:
 	int            add (PluginUPtr &pi_uptr);
 	void           schedule_for_release (int index);
 	void           release (int index);
+	std::vector <int>
+	               list_plugins (SharedRscState state = SharedRscState_INUSE) const;
 
 	// Any thread
 	PluginDetails& use_plugin (int index);
