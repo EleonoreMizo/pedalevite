@@ -1,0 +1,9 @@
+﻿
+http://www.tube-town.net/ttstore/Interupteurs/Commutateurs-au-pied-standard/Footswitch-DPDT-momentary-ON-ON::5803.html
+
+Type: Footswitch
+Version: DPDT momentary ON - (ON)
+Drill Ø: 12 mm
+Termination Style: solder-lugs
+
+Notes : 2 voies (DPDT), 2 A - 250 V AC
