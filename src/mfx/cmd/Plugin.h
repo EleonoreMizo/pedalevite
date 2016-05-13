@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Cst.h
+        Plugin.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_Cst_HEADER_INCLUDED)
-#define mfx_Cst_HEADER_INCLUDED
+#if ! defined (mfx_cmd_Plugin_HEADER_INCLUDED)
+#define mfx_cmd_Plugin_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,35 +27,44 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/CtrlLinkSet.h"
+#include "mfx/pi/PluginModel.h"
+
+#include <map>
+#include <memory>
+#include <vector>
+
 
 
 namespace mfx
 {
+namespace cmd
+{
 
 
 
-class Cst
+class Plugin
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _max_nbr_buf     = 256;
-	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_plugins = 256;
-	static const int  _nbr_chn_in      = 2;
-	static const int  _nbr_chn_out     = 2;
+	typedef std::shared_ptr <doc::CtrlLinkSet> CtrlLinkSetSPtr;
+	typedef std::map <int, CtrlLinkSetSPtr> MapParamCtrl;
 
-	enum BufSpecial
-	{
-		BufSpecial_SILENCE = 0,
-		BufSpecial_TRASH,
+	               Plugin ()  = default;
+	virtual        ~Plugin () = default;
 
-		BufSpecial_NBR_ELT
-	};
+	               Plugin (const Plugin &other);
+	Plugin &       operator = (const Plugin &other);
 
+	int            _pi_id = -1;  // -1 = not set
+	pi::PluginModel
+	               _model = pi::PluginModel_INVALID;
+	MapParamCtrl   _ctrl_map;
+	std::vector <float>          // If there are settings to apply during the commit. Automatically removed at the end of the transaction.
+	               _param_list;
 
 
 
@@ -69,32 +78,31 @@ protected:
 
 private:
 
+	void           dup_shared_children ();
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	virtual        ~Cst ()                              = delete;
-	               Cst ()                               = delete;
-	               Cst (const Cst &other)               = delete;
-	Cst &          operator = (const Cst &other)        = delete;
-	bool           operator == (const Cst &other) const = delete;
-	bool           operator != (const Cst &other) const = delete;
+	bool           operator == (const Plugin &other) const = delete;
+	bool           operator != (const Plugin &other) const = delete;
 
-}; // class Cst
+}; // class Plugin
 
 
 
+}  // namespace cmd
 }  // namespace mfx
 
 
 
-//#include "mfx/Cst.hpp"
+//#include "mfx/cmd/Plugin.hpp"
 
 
 
-#endif   // mfx_Cst_HEADER_INCLUDED
+#endif   // mfx_cmd_Plugin_HEADER_INCLUDED
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Cst.h
+        CtrlLink.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_Cst_HEADER_INCLUDED)
-#define mfx_Cst_HEADER_INCLUDED
+#if ! defined (mfx_doc_CtrlLink_HEADER_INCLUDED)
+#define mfx_doc_CtrlLink_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,35 +27,38 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/ControlCurve.h"
+#include "mfx/ControlSource.h"
+
 
 
 namespace mfx
 {
+namespace doc
+{
 
 
 
-class Cst
+class CtrlLink
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _max_nbr_buf     = 256;
-	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_plugins = 256;
-	static const int  _nbr_chn_in      = 2;
-	static const int  _nbr_chn_out     = 2;
+	               CtrlLink ()                        = default;
+	               CtrlLink (const CtrlLink &other)   = default;
+	virtual        ~CtrlLink ()                       = default;
 
-	enum BufSpecial
-	{
-		BufSpecial_SILENCE = 0,
-		BufSpecial_TRASH,
+	CtrlLink &     operator = (const CtrlLink &other) = default;
 
-		BufSpecial_NBR_ELT
-	};
+	ControlSource  _source;
+	float          _step     = 1.0f / 64;  // For relative modes (incremental encoders). > 0
 
+	ControlCurve   _curve    = ControlCurve_LINEAR;
+	float          _base     = 0;       // Normalized value, for absolute mode
+	float          _amp      = 1;       // Normalized scale, for all modes. Can be negative.
+	bool           _u2b_flag = false;   // Unipolar to bipolar conversion (0...1 -> -1...1)
 
 
 
@@ -75,26 +78,23 @@ private:
 
 private:
 
-	virtual        ~Cst ()                              = delete;
-	               Cst ()                               = delete;
-	               Cst (const Cst &other)               = delete;
-	Cst &          operator = (const Cst &other)        = delete;
-	bool           operator == (const Cst &other) const = delete;
-	bool           operator != (const Cst &other) const = delete;
+	bool           operator == (const CtrlLink &other) const = delete;
+	bool           operator != (const CtrlLink &other) const = delete;
 
-}; // class Cst
+}; // class CtrlLink
 
 
 
+}  // namespace doc
 }  // namespace mfx
 
 
 
-//#include "mfx/Cst.hpp"
+//#include "mfx/doc/CtrlLink.hpp"
 
 
 
-#endif   // mfx_Cst_HEADER_INCLUDED
+#endif   // mfx_doc_CtrlLink_HEADER_INCLUDED
 
 
 

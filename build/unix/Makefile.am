@@ -129,6 +129,13 @@ pedalevite_SOURCES = \
         ../../src/jack/transport.h \
         ../../src/jack/types.h \
         ../../src/jack/weakmacros.h \
+        ../../src/mfx/BufAlloc.cpp \
+        ../../src/mfx/BufAlloc.h \
+        ../../src/mfx/Central.cpp \
+        ../../src/mfx/Central.h \
+        ../../src/mfx/Plugin.cpp \
+        ../../src/mfx/Plugin.h \
+        ../../src/mfx/Slot.h \
         ../../src/mfx/dsp/mix/Align.cpp \
         ../../src/mfx/dsp/mix/Align.h \
         ../../src/mfx/dsp/mix/Fpu.cpp \
@@ -141,6 +148,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/InertiaLin.hpp \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
+        ../../src/mfx/doc/CtrlLink.h \
+        ../../src/mfx/doc/CtrlLinkSet.cpp \
+        ../../src/mfx/doc/CtrlLinkSet.h \
+        ../../src/mfx/doc/PluginSettings.h \
+        ../../src/mfx/doc/Preset.h \
+        ../../src/mfx/doc/Slot.h \
         ../../src/mfx/pi/param/HelperDispNum.cpp \
         ../../src/mfx/pi/param/HelperDispNum.h \
         ../../src/mfx/pi/param/MapLog.h \
@@ -175,6 +188,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/ParamState.h \
         ../../src/mfx/pi/ParamStateSet.cpp \
         ../../src/mfx/pi/ParamStateSet.h \
+        ../../src/mfx/pi/PluginModel.h \
         ../../src/mfx/pi/Tuner.cpp \
         ../../src/mfx/pi/Tuner.h \
         ../../src/mfx/piapi/Event.h \
@@ -227,6 +241,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/Overdrive.h \
         ../../src/mfx/ParamCoord.h \
         ../../src/mfx/ParamCoord.hpp \
+        ../../src/mfx/PiType.h \
         ../../src/mfx/PluginPool.cpp \
         ../../src/mfx/PluginPool.h \
         ../../src/mfx/ProcessingContext.cpp \

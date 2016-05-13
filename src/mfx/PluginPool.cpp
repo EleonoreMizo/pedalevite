@@ -26,6 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/PluginPool.h"
 
+#include <utility>
+
 #include <cassert>
 
 
@@ -124,6 +126,27 @@ void	PluginPool::release (int index)
 		slot._state = SharedRscState_FREE;
 		-- _nbr_plugins;
 	}
+}
+
+
+
+std::vector <int>	PluginPool::list_plugins (SharedRscState state) const
+{
+	assert (state >= 0);
+	assert (state < SharedRscState_NBR_ELT);
+
+	std::vector <int> id_arr;
+
+	for (int index = 0; index < int (_pi_arr.size ()); ++index)
+	{
+		const PluginSlot &   slot = _pi_arr [index];
+		if (slot._state == state)
+		{
+			id_arr.push_back (index);
+		}
+	}
+
+	return std::move (id_arr);
 }
 
 

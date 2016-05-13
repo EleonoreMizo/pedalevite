@@ -29,8 +29,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/ControlledParam.h"
 #include "mfx/ControlSource.h"
+#include "mfx/PiType.h"
 #include "mfx/ProcessingContextNode.h"
 
+#include <array>
 #include <map>
 #include <memory>
 #include <vector>
@@ -52,10 +54,9 @@ public:
 	class PluginContext
 	{
 	public:
-		ProcessingContextNode
-		               _main;
-		ProcessingContextNode
-		               _mixer;
+		typedef std::array <ProcessingContextNode, PiType_NBR_ELT> NodeList;
+
+		NodeList       _node_arr;
 		bool           _mixer_flag = false;
 	};
 

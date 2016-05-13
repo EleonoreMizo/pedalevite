@@ -65,6 +65,16 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 
 
 
+WorldAudio::~WorldAudio ()
+{
+	// Flushes the queues
+	collect_msg_cmd ();
+	collect_msg_ui ();
+}
+
+
+
+// Does not reset() plug-ins.
 void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 {
 	assert (sample_freq > 0);
@@ -111,18 +121,19 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	collect_msg_ui ();
 
 	// Audio processing
-	assert (_ctx_ptr != 0);
-
-	copy_input (src_arr, nbr_spl);
-
-	const ProcessingContext::PluginCtxArray & pi_ctx_arr =
-		_ctx_ptr->_context_arr;
-	for (const auto & pi_ctx : pi_ctx_arr)
+	if (_ctx_ptr != 0)
 	{
-		process_plugin_bundle (pi_ctx, nbr_spl);
-	}
+		copy_input (src_arr, nbr_spl);
 
-	copy_output (dst_arr, nbr_spl);
+		const ProcessingContext::PluginCtxArray & pi_ctx_arr =
+			_ctx_ptr->_context_arr;
+		for (const auto & pi_ctx : pi_ctx_arr)
+		{
+			process_plugin_bundle (pi_ctx, nbr_spl);
+		}
+
+		copy_output (dst_arr, nbr_spl);
+	}
 }
 
 
@@ -201,7 +212,10 @@ void	WorldAudio::collect_msg_ui ()
 			controller._index      = cell_ptr->_val.get_index ();
 			const float    val_raw = cell_ptr->_val.get_val ();
 
-			handle_controller (controller, val_raw);
+			if (_ctx_ptr != 0)
+			{
+				handle_controller (controller, val_raw);
+			}
 
 			_input_device.return_cell (*cell_ptr);
 		}
@@ -213,6 +227,8 @@ void	WorldAudio::collect_msg_ui ()
 
 void	WorldAudio::handle_controller (const ControlSource &controller, float val_raw)
 {
+	assert (_ctx_ptr != 0);
+
 	// Updates controller unit values
 	const ProcessingContext::MapSourceUnit &  map_src_unit =
 		_ctx_ptr->_map_src_unit;
@@ -378,9 +394,9 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	proc_info._byp_state = (pi_ctx._mixer_flag)
 		? piapi::PluginInterface::BypassState_ASK
 		: piapi::PluginInterface::BypassState_IGNORE;
-	prepare_buffers (proc_info, pi_ctx._main, false);
+	prepare_buffers (proc_info, pi_ctx._node_arr [PiType_MAIN], false);
 
-	process_single_plugin (pi_ctx._main._pi_id, proc_info);
+	process_single_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info);
 
 	const bool       bypass_produced_flag =
 		(proc_info._byp_state == piapi::PluginInterface::BypassState_PRODUCED);
@@ -389,9 +405,9 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	if (proc_info._byp_state)
 	{
 		proc_info._byp_state = piapi::PluginInterface::BypassState_IGNORE;
-		prepare_buffers (proc_info, pi_ctx._mixer, bypass_produced_flag);
+		prepare_buffers (proc_info, pi_ctx._node_arr [PiType_MIX], bypass_produced_flag);
 
-		process_single_plugin (pi_ctx._mixer._pi_id, proc_info);
+		process_single_plugin (pi_ctx._node_arr [PiType_MIX]._pi_id, proc_info);
 	}
 }
 
@@ -529,7 +545,7 @@ void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, c
 
 void	WorldAudio::handle_msg_ctx (Msg::Ctx &msg)
 {
-	_ctx_ptr = msg._ctx_ptr;
+	std::swap (_ctx_ptr, msg._ctx_ptr);
 }
 
 

@@ -262,7 +262,7 @@ Context::Context (double sample_freq, int max_block_size)
 		mfx::ProcessingContext::PluginContext disto_bundle;
 		disto_bundle._mixer_flag = true;
 		{
-			mfx::ProcessingContextNode & node = disto_bundle._main;
+			mfx::ProcessingContextNode & node = disto_bundle._node_arr [mfx::PiType_MAIN];
 			node._pi_id = _pi_id_disto_main;
 			mfx::ProcessingContextNode::Side &si =
 				node._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
@@ -277,7 +277,7 @@ Context::Context (double sample_freq, int max_block_size)
 			node._bypass_buf_arr [0] = 3;
 		}
 		{
-			mfx::ProcessingContextNode & node = disto_bundle._mixer;
+			mfx::ProcessingContextNode & node = disto_bundle._node_arr [mfx::PiType_MIX];
 			node._pi_id = _pi_id_disto_mix;
 			mfx::ProcessingContextNode::Side &si =
 				node._side_arr [mfx::piapi::PluginInterface::Dir_IN ];
@@ -316,7 +316,7 @@ Context::Context (double sample_freq, int max_block_size)
 		mfx::ProcessingContext::PluginContext tuner_bundle;
 		tuner_bundle._mixer_flag = false;
 		{
-			mfx::ProcessingContextNode & node = tuner_bundle._main;
+			mfx::ProcessingContextNode & node = tuner_bundle._node_arr [mfx::PiType_MAIN];
 			node._pi_id = _pi_id_tuner_main;
 			mfx::ProcessingContextNode::Side &si =
 				node._side_arr [mfx::piapi::PluginInterface::Dir_IN ];

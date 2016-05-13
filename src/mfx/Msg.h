@@ -66,7 +66,7 @@ public:
 	class Ctx
 	{
 	public:
-		const ProcessingContext *
+		const ProcessingContext *	// Forward: the new context, on return: the context to be recycled.
 		               _ctx_ptr;
 	};
 

@@ -70,7 +70,7 @@ public:
 
 	int            _pi_id;
 	SideArray      _side_arr;
-	BypBufArray    _bypass_buf_arr;  // Filled with -1 if bypass should not be generated.
+	BypBufArray    _bypass_buf_arr;  // Starts with -1 if bypass should not be generated.
 
 
 
