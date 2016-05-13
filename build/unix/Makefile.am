@@ -129,13 +129,13 @@ pedalevite_SOURCES = \
         ../../src/jack/transport.h \
         ../../src/jack/types.h \
         ../../src/jack/weakmacros.h \
-        ../../src/mfx/BufAlloc.cpp \
-        ../../src/mfx/BufAlloc.h \
-        ../../src/mfx/Central.cpp \
-        ../../src/mfx/Central.h \
-        ../../src/mfx/Plugin.cpp \
-        ../../src/mfx/Plugin.h \
-        ../../src/mfx/Slot.h \
+        ../../src/mfx/cmd/BufAlloc.cpp \
+        ../../src/mfx/cmd/BufAlloc.h \
+        ../../src/mfx/cmd/Central.cpp \
+        ../../src/mfx/cmd/Central.h \
+        ../../src/mfx/cmd/Plugin.cpp \
+        ../../src/mfx/cmd/Plugin.h \
+        ../../src/mfx/cmd/Slot.h \
         ../../src/mfx/dsp/mix/Align.cpp \
         ../../src/mfx/dsp/mix/Align.h \
         ../../src/mfx/dsp/mix/Fpu.cpp \
