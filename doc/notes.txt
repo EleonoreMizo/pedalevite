@@ -521,7 +521,7 @@ https://www.raspberrypi.org/forums/viewtopic.php?p=366210 (mahjongg » Sat Jun 0
 
 
 Connaître la température :
-	while true; do vcgencmd measure_clock arm; vcgencmd measure_temp; sleep 2; done
+	while true; do printf '%s, %s\n' `vcgencmd measure_temp` `vcgencmd measure_clock arm`; sleep 2; done
 
 Rebooter après un crash-freeze : 'Alt'+'SysRQ'+'b' (voir aussi https://fr.wikipedia.org/wiki/Magic_SysRq_key )
 
@@ -668,22 +668,25 @@ Sur le poste windows msysgit, pour éviter que les push ne bloquent à la fin :
 
 class Preset
 {
-	std::vector <Slot> _fx_chain;
+	std::vector <Slot> _fx_set;
+	// future: + routing betwen the plug-ins of the set
+		
 };
 
 class Slot
 {
 	PluginModelId _plugin; // -1 = empty slot (aux settings not applicable)
-	std::set <PluginSettings> _settings_set;
+	std::map <PluginModelId, PluginSettings> _settings_main;
 	std::string _slot_name; // Can be referenced by a footswitch
-	PluginSettings _settings_aux; // bypass/mix/gain
+	PluginSettings _settings_mixer; // bypass/mix/gain
 };
 
 class PluginSettings
 {
-	bool _force_mono_flag;
+	bool _force_mono_flag; // For plug-ins prefering stereo
 	std::vector <float> _param_list;
-	std::map <int, UnitConf> _special_unit_list;
+	std::map <int, UnitConf> _special_unit_list; // param index
+	std::map <int, CtrlLinkSet> // param index
 };
 
 class UnitConf
@@ -691,39 +694,25 @@ class UnitConf
 	int _unit_type; // Depends on the context. For example : note/Hz/beat/ms for a frequency
 };
 
+class CtrlLinkSet
+{
+	std::unique_ptr <CtrlLink> _bind_uptr; // Direct control, if any
+	std::vector <CtrlLink> _mod_list; // Additive modulations
+};
+
+class CtrlLink
+{
+	ControllerType _src_type;
+	int _src_index;
+	float _step;
+	ControlCurve _curve;
+	bool _u2b_flag;
+	float _amp;
+	float _base;
+};
+
 // Utilisation à prévoir : cranter sur des notes justes le réglage d'un paramètre de fréquence
 
-enum ControllerType { ... }; // LFO, pot, incremental encoder, footswitch, signal probe, MIDI CC...
-
-class ControlSource
-{
-	ControllerType _type;
-	int _index;
-};
-
-class ParamCoord
-{
-	int _plugin_id;
-	int _param_index;
-};
-
-class CtrlUnit
-{
-	ControlSource _source;
-	float _step; // For relative modes (incremental encoders)
-	float _val; // Absolute controller value (0-1)
-
-	int _curve; // Can be unipolar or bipolar
-	bool _absolute_flag; // true: controls the final value (only one per ControlLink), false: modulator (additive)
-	float _base; // Normalized value, for absolute mode
-	float _amp; // Normalized scale, for all modes. Can be negative.
-};
-
-class ControlledParam
-{
-	ParamCoord _param;
-	std::vector <CtrlUnit> _ctrl_list;
-};
 
 std::map <ControlSource, std::shared_ptr <ControlledParam> >
 std::map <ControlSource, std::shared_ptr <CtrlUnit> >
