@@ -420,7 +420,8 @@ int	Central::set_plugin (int pos, pi::PluginModel model, PiType type)
 		// Not found? Create one
 		if (pi_id < 0)
 		{
-			pi_id = _plugin_pool.add (instantiate (model));
+			std::unique_ptr <piapi::PluginInterface> pi_uptr (instantiate (model));
+			pi_id = _plugin_pool.add (pi_uptr);
 			piapi::PluginInterface &   plug =
 				*_plugin_pool.use_plugin (pi_id)._pi_uptr;
 			int            ret_val = plug.init ();
@@ -603,13 +604,13 @@ void	Central::create_routing ()
 
 				// Dry/wet output
 				std::array <int, piapi::PluginInterface::_max_nbr_chn>   mix_buf_arr;
-				main_side_o._nbr_chn     = nbr_chn_out;
-				main_side_o._nbr_chn_tot = nbr_chn_out;
+				mix_side_o._nbr_chn     = nbr_chn_out;
+				mix_side_o._nbr_chn_tot = nbr_chn_out;
 				for (int chn = 0; chn < nbr_chn_out; ++chn)
 				{
 					const int      buf = buf_alloc.alloc ();
-					mix_buf_arr [chn]          = buf;
-					main_side_o._buf_arr [chn] = buf;
+					mix_buf_arr [chn]         = buf;
+					mix_side_o._buf_arr [chn] = buf;
 				}
 
 				// Shift buffers
