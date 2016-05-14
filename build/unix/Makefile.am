@@ -133,6 +133,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/cmd/BufAlloc.h \
         ../../src/mfx/cmd/Central.cpp \
         ../../src/mfx/cmd/Central.h \
+        ../../src/mfx/cmd/CentralCbInterface.cpp \
+        ../../src/mfx/cmd/CentralCbInterface.h \
         ../../src/mfx/cmd/Plugin.cpp \
         ../../src/mfx/cmd/Plugin.h \
         ../../src/mfx/cmd/Slot.h \

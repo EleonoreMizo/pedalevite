@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/cmd/BufAlloc.h"
 #include "mfx/cmd/Central.h"
+#include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/CtrlLinkSet.h"
 #include "mfx/pi/DistoSimple.h"
 #include "mfx/pi/DryWet.h"
@@ -67,6 +68,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserIn
 	)
 ,	_sample_freq (0)
 ,	_max_block_size (0)
+,	_cb_ptr (0)
 ,	_cur_sptr ()
 ,	_new_sptr ()
 ,	_ctx_trash ()
@@ -78,11 +80,17 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserIn
 
 Central::~Central ()
 {
+	// Flushes the audio -> cmd queue
+	_cb_ptr = 0;
+	process_queue_audio_to_cmd	();
+}
 
 
-	/*** To do ***/
 
-
+// 0 to cancel the callback
+void	Central::set_callback (CentralCbInterface *cb_ptr)
+{
+	_cb_ptr = cb_ptr;
 }
 
 
@@ -305,28 +313,13 @@ void	Central::process_queue_audio_to_cmd ()
 						}
 					}
 				}
-
-				_msg_pool.return_cell (*cell_ptr);
 			}
 
 			else
 			{
-				switch (cell_ptr->_val._type)
+				if (_cb_ptr != 0)
 				{
-				case Msg::Type_PARAM:
-
-
-
-					/*** To do ***/
-					assert (false);
-
-
-
-					break;
-
-				default:
-					assert (false);
-					break;
+					_cb_ptr->process_msg_audio_to_cmd (cell_ptr->_val);
 				}
 			}
 

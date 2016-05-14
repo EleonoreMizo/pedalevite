@@ -3,6 +3,8 @@
         Central.h
         Author: Laurent de Soras, 2016
 
+All function calls must be synchronised by the caller.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -58,6 +60,8 @@ namespace cmd
 
 
 
+class CentralCbInterface;
+
 class Central
 {
 
@@ -67,6 +71,8 @@ public:
 
 	explicit        Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device);
 	virtual        ~Central ();
+
+	void           set_callback (CentralCbInterface *cb_ptr);
 
 	// Audio
 	void           set_process_info (double sample_freq, int max_block_size);
@@ -158,6 +164,8 @@ private:
 	WorldAudio     _audio;
 	double         _sample_freq;  // 0 = not set
 	int            _max_block_size;  // 0 = not set
+	CentralCbInterface *
+	               _cb_ptr;       // 0 = not set
 
 	DocumentSPtr   _cur_sptr;     // Current state
 	DocumentSPtr   _new_sptr;     // Context being created or modified
