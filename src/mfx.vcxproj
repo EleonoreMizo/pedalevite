@@ -200,6 +200,7 @@
     <ClInclude Include="jack\weakmacros.h" />
     <ClInclude Include="mfx\cmd\Central.h" />
     <ClInclude Include="mfx\cmd\BufAlloc.h" />
+    <ClInclude Include="mfx\cmd\CentralCbInterface.h" />
     <ClInclude Include="mfx\cmd\Plugin.h" />
     <ClInclude Include="mfx\cmd\Slot.h" />
     <ClInclude Include="mfx\ControlCurve.h" />
@@ -318,6 +319,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mfx\cmd\Central.cpp" />
     <ClCompile Include="mfx\cmd\BufAlloc.cpp" />
+    <ClCompile Include="mfx\cmd\CentralCbInterface.cpp" />
     <ClCompile Include="mfx\cmd\Plugin.cpp" />
     <ClCompile Include="mfx\ControlledParam.cpp" />
     <ClCompile Include="mfx\CtrlUnit.cpp" />

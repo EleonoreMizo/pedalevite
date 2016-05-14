@@ -666,6 +666,9 @@
     <ClInclude Include="mfx\PiType.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\cmd\CentralCbInterface.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -829,6 +832,9 @@
       <Filter>mfx\cmd</Filter>
     </ClCompile>
     <ClCompile Include="mfx\cmd\BufAlloc.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\cmd\CentralCbInterface.cpp">
       <Filter>mfx\cmd</Filter>
     </ClCompile>
   </ItemGroup>
