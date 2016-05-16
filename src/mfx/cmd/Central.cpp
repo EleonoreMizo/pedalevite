@@ -165,6 +165,15 @@ void	Central::rollback ()
 
 
 
+void	Central::clear ()
+{
+	Document &     doc = modify ();
+
+	doc._slot_list.clear ();
+}
+
+
+
 // Insertion before the given position
 // The new slot is totally empty
 void	Central::insert_slot (int pos)
@@ -190,6 +199,18 @@ void	Central::delete_slot (int pos)
 	assert (pos < int (doc._slot_list.size ()));
 
 	doc._slot_list.erase (_new_sptr->_slot_list.begin () + pos);
+}
+
+
+
+void	Central::clear_slot (int pos)
+{
+	Document &     doc = modify ();
+
+	assert (pos >= 0);
+	assert (pos < int (doc._slot_list.size ()));
+
+	doc._slot_list [pos] = Slot ();
 }
 
 
@@ -236,6 +257,28 @@ void	Central::force_mono (int pos, bool flag)
 
 
 
+// Returns -1 if not found.
+int	Central::find_pi (int pi_id)
+{
+	int            pos     = -1;
+
+	Document *     doc_ptr = _new_sptr.get ();
+	if (doc_ptr == 0)
+	{
+		doc_ptr = _cur_sptr.get ();
+	}
+
+	auto           it_loc = doc_ptr->_map_id_loc.find (pi_id);
+	if (it_loc != doc_ptr->_map_id_loc.end ())
+	{
+		pos = it_loc->second._slot_pos;
+	}
+
+	return pos;
+}
+
+
+
 void	Central::set_pi_state (int pi_id, const std::vector <float> &param_list)
 {
 	Document &     doc = modify ();
@@ -246,6 +289,18 @@ void	Central::set_pi_state (int pi_id, const std::vector <float> &param_list)
 	Plugin &       plug = find_plugin (doc, pi_id);
 
 	plug._param_list = param_list;
+}
+
+
+
+void	Central::clear_mod (int pi_id)
+{
+	Document &     doc = modify ();
+
+	assert (pi_id >= 0);
+
+	Plugin &       plug = find_plugin (doc, pi_id);
+	plug._ctrl_map.clear ();
 }
 
 
@@ -331,6 +386,13 @@ void	Central::process_queue_audio_to_cmd ()
 
 
 
+PluginPool &	Central::use_pi_pool ()
+{
+	return (_plugin_pool);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -385,6 +447,7 @@ int	Central::set_plugin (int pos, pi::PluginModel model, PiType type)
 	if (plugin._model == model && plugin._pi_id >= 0)
 	{
 		pi_id = plugin._pi_id;
+		clear_mod (pi_id);
 	}
 
 	else
@@ -468,6 +531,7 @@ void	Central::remove_plugin (int pos, PiType type)
 	plugin._model = pi::PluginModel_INVALID;
 	plugin._pi_id = -1;
 	plugin._ctrl_map.clear ();
+	doc._slot_list [pos]._force_mono_flag = false;
 }
 
 

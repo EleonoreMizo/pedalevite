@@ -69,7 +69,7 @@ class Central
 
 public:
 
-	explicit        Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device);
+	explicit       Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device);
 	virtual        ~Central ();
 
 	void           set_callback (CentralCbInterface *cb_ptr);
@@ -82,14 +82,18 @@ public:
 	void           commit ();
 	void           rollback ();
 
+	void           clear ();
 	void           insert_slot (int pos);
 	void           delete_slot (int pos);
+	void           clear_slot (int pos);
 	int            set_plugin (int pos, pi::PluginModel model);
 	void           remove_plugin (int pos);
 	int            set_mixer (int pos);
 	void           remove_mixer (int pos);
 	void           force_mono (int pos, bool flag);
+	int            find_pi (int pi_id);
 	void           set_pi_state (int pi_id, const std::vector <float> &param_list);
+	void           clear_mod (int pi_id);
 	void           set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls);
 
 	// Immediate operations
@@ -97,6 +101,9 @@ public:
 
 	// Call this regularly
 	void           process_queue_audio_to_cmd ();
+
+	// Misc
+	PluginPool &   use_pi_pool ();
 
 
 
