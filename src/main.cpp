@@ -146,9 +146,9 @@ public:
 	               _queue_from_input;
 	mfx::cmd::Central
 	                _central;
-	int            _pi_id_disto_main = -1;
-	int            _pi_id_disto_mix  = -1;
-	int            _pi_id_tuner_main = -1;
+	volatile int   _pi_id_disto_main = -1;
+	volatile int   _pi_id_disto_mix  = -1;
+	volatile int   _pi_id_tuner_main = -1;
 
 	// Not for the audio thread
 	volatile bool	_quit_flag       = false;
@@ -393,7 +393,7 @@ static int MAIN_audio_process (Context &ctx, float * const * dst_arr, const floa
 	ctx._central.process_block (dst_arr, src_arr, nbr_spl);
 
 	// Tuner
-	if (ctx._tuner_flag)
+	if (ctx._tuner_flag && ctx._pi_id_tuner_main >= 0)
 	{
 		const mfx::pi::Tuner &  tuner = dynamic_cast <const mfx::pi::Tuner &> (
 			*ctx._central.use_pi_pool ().use_plugin (ctx._pi_id_tuner_main)._pi_uptr
