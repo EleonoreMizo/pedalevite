@@ -490,17 +490,15 @@ int	Central::set_plugin (int pos, pi::PluginModel model, PiType type)
 		if (pi_id < 0)
 		{
 			std::unique_ptr <piapi::PluginInterface> pi_uptr (instantiate (model));
-			pi_id = _plugin_pool.add (pi_uptr);
-			piapi::PluginInterface &   plug =
-				*_plugin_pool.use_plugin (pi_id)._pi_uptr;
-			int            ret_val = plug.init ();
+			int            ret_val = pi_uptr->init ();
 			assert (ret_val == piapi::PluginInterface::Err_OK);
 			if (_sample_freq > 0)
 			{
 				int         latency;
-				ret_val = plug.reset (_sample_freq, _max_block_size, latency);
+				ret_val = pi_uptr->reset (_sample_freq, _max_block_size, latency);
 				assert (ret_val == piapi::PluginInterface::Err_OK);
 			}
+			pi_id = _plugin_pool.add (pi_uptr);
 
 			doc._map_model_id [model] [pi_id] = true;
 		}
