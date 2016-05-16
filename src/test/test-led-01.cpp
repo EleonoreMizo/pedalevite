@@ -36,13 +36,20 @@ int main (int argc, char *argv [])
 	}
 
 	int            active = 0;
+	double         t      = 1000;
+	double         r      = 0.99;
 	while (true)
 	{
 		::digitalWrite (MAIN_led_pin_arr [active], HIGH);
-		sleep (1);
+		::delay (int (t + 0.5));
 		::digitalWrite (MAIN_led_pin_arr [active], LOW);
 
 		active = (active + 1) % MAIN_nbr_led;
+		t *= r;
+		if (t <= 1 || t >= 1000)
+		{
+			r = 1 / r;
+		}
 	}
 
 	return 0;
