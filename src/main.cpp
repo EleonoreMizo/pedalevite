@@ -240,6 +240,8 @@ Context::Context (double sample_freq, int max_block_size)
 		mfx::pi::DistoSimple::Param_GAIN,
 		0.0f
 	);
+
+	_central.set_process_info (sample_freq, max_block_size);
 }
 
 Context::~Context ()
