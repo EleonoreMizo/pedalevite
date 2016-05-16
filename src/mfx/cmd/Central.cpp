@@ -150,7 +150,10 @@ void	Central::commit ()
 			_queue_cmd_to_audio.enqueue (*cell_ptr);
 		}
 
-		_ctx_trash.insert (_cur_sptr->_ctx_sptr);
+		if (_cur_sptr.get () != 0)
+		{
+			_ctx_trash.insert (_cur_sptr->_ctx_sptr);
+		}
 		_cur_sptr = _new_sptr;
 		_new_sptr.reset ();
 	}
@@ -268,10 +271,13 @@ int	Central::find_pi (int pi_id)
 		doc_ptr = _cur_sptr.get ();
 	}
 
-	auto           it_loc = doc_ptr->_map_id_loc.find (pi_id);
-	if (it_loc != doc_ptr->_map_id_loc.end ())
+	if (doc_ptr != 0)
 	{
-		pos = it_loc->second._slot_pos;
+		auto           it_loc = doc_ptr->_map_id_loc.find (pi_id);
+		if (it_loc != doc_ptr->_map_id_loc.end ())
+		{
+			pos = it_loc->second._slot_pos;
+		}
 	}
 
 	return pos;
@@ -405,7 +411,14 @@ Central::Document &	Central::modify ()
 {
 	if (_new_sptr.get () == 0)
 	{
-		_new_sptr = DocumentSPtr (new Document (*_cur_sptr));
+		if (_cur_sptr.get () == 0)
+		{
+			_new_sptr = DocumentSPtr (new Document);
+		}
+		else
+		{
+			_new_sptr = DocumentSPtr (new Document (*_cur_sptr));
+		}
 		_new_sptr->_ctx_sptr.reset (); // Will be set during commit.
 	}
 
