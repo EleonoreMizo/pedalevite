@@ -80,9 +80,29 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserIn
 
 Central::~Central ()
 {
+	rollback ();
+
 	// Flushes the audio -> cmd queue
 	_cb_ptr = 0;
 	process_queue_audio_to_cmd	();
+
+	// Deinstantiate the plug-ins
+	if (_cur_sptr.get () != 0)
+	{
+		std::vector <int> pi_list;
+		
+		pi_list = _plugin_pool.list_plugins (mfx::SharedRscState_INUSE);
+		for (int index : pi_list)
+		{
+			_plugin_pool.schedule_for_release (index);
+		}
+
+		pi_list = _plugin_pool.list_plugins (mfx::SharedRscState_RECYCLING);
+		for (int index : pi_list)
+		{
+			_plugin_pool.release (index);
+		}
+	}
 }
 
 

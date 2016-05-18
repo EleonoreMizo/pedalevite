@@ -121,6 +121,10 @@ void	PluginPool::release (int index)
 
 	if (slot._state != SharedRscState_FREE)
 	{
+		if (slot._details._pi_uptr->get_state () > piapi::PluginInterface::State_CONSTRUCTED)
+		{
+			slot._details._pi_uptr->restore ();
+		}
 		slot._details._pi_uptr.reset ();
 		slot._details._param_arr.clear ();
 		slot._state = SharedRscState_FREE;
