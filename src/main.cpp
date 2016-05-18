@@ -766,6 +766,8 @@ int MAIN_main_loop (Context &ctx)
 
 	while (ret_val == 0 && ! ctx._quit_flag)
 	{
+		ctx._central.process_queue_audio_to_cmd ();
+		
 		const bool   tuner_flag = ctx._tuner_flag;
 		const bool   disto_flag = ctx._disto_flag;
 		const float  disto_gain = ctx._disto_gain_nat;

@@ -849,7 +849,7 @@ PluginPool::PluginUPtr	Central::instantiate (pi::PluginModel model)
 {
 	assert (model >= 0);
 	assert (model < pi::PluginModel_NBR_ELT);
-	
+
 	piapi::PluginInterface *   pi_ptr = 0;
 
 	switch (model)

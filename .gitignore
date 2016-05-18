@@ -5,6 +5,7 @@
 *.rar
 *.opensdf
 *.o
+*.out
 [Dd]ebug*/
 [Rr]elease*/
 Win32*/
