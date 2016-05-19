@@ -114,7 +114,7 @@ const int UserInputPi3::_pot_arr [_nbr_pot] =
 // Before calling:
 // ::wiringPiSetupPhys ()
 // ::pinMode (_pin_rst, OUTPUT);
-// ::digitalWrite (_pin_rst, LOW);  ::delay (1);
+// ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
 UserInputPi3::UserInputPi3 (std::mutex &mutex_spi)
 :	_mutex_spi (mutex_spi)

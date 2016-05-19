@@ -275,6 +275,7 @@
     <ClInclude Include="mfx\SharedRscState.h" />
     <ClInclude Include="mfx\ui\DisplayInterface.h" />
     <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h" />
+    <ClInclude Include="mfx\ui\DisplayPi3St7920.h" />
     <ClInclude Include="mfx\ui\DisplayVoid.h" />
     <ClInclude Include="mfx\ui\Font.h" />
     <ClInclude Include="mfx\ui\FontDataDefault.h" />
@@ -347,6 +348,9 @@
     <ClCompile Include="mfx\ProcessingContextNode.cpp" />
     <ClCompile Include="mfx\ui\DisplayInterface.cpp" />
     <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\DisplayPi3St7920.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="mfx\ui\DisplayVoid.cpp" />

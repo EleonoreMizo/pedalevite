@@ -1,1 +1,26 @@
 ﻿https://www.embeddedrelated.com/showthread/lpc2000/36610-1.php
+
+
+
+Connectique :
+1	VSS	GND
+2	VDD	+3,3 V
+3	V0	Contrast (pot GND-VDD)
+4	RS	Chip Select
+5	R/W	Data
+6	E	Clock
+7	DB0
+8	DB1
+9	DB2
+10	DB3
+11	DB4
+12	DB5
+13	DB6
+14	DB7
+15	PSB	Parallel/Serial -> GND
+16	(NC)
+17	RST	*
+18	VOUT
+19	BLA	+3,3 V
+20	BLK	Black light (switch GND/NC)
+

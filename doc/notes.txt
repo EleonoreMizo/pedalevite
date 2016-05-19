@@ -206,7 +206,9 @@ Nouvelle commande
 
 – afficheur 128x64
 	18.25	1	http://www.gotronic.fr/art-module-graphique-lcd12864dfr-19395.htm
-	Doc : http://www.dfrobot.com/index.php?route=product/product&product_id=372	(sans le module arduino)
+	Doc :
+		http://www.dfrobot.com/index.php?route=product/product&product_id=372	(sans le module arduino)
+		http://www.dfrobot.com/index.php?route=product/product&product_id=240
 – Connecteurs 8 broches (1x8)
 	0.327	10	http://fr.farnell.com/multicomp/2226a-08/a-sertir-boitier-1-rangee-8-voies/dp/1593512
 

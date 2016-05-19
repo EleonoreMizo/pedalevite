@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DisplayPi3Pcd8544.cpp
+        DisplayPi3St7920.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/DisplayPi3Pcd8544.h"
+#include "mfx/ui/DisplayPi3St7920.h"
 
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
@@ -54,7 +54,7 @@ namespace ui
 // ::pinMode (_pin_rst, OUTPUT);
 // ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-DisplayPi3Pcd8544::DisplayPi3Pcd8544 (std::mutex &mutex_spi)
+DisplayPi3St7920::DisplayPi3St7920 (std::mutex &mutex_spi)
 :	_mutex_spi (mutex_spi)
 ,	_screen_buf ()
 ,	_hnd_spi (::wiringPiSPISetup (_spi_port, _spi_rate))
@@ -65,7 +65,7 @@ DisplayPi3Pcd8544::DisplayPi3Pcd8544 (std::mutex &mutex_spi)
 {
 	if (_hnd_spi == -1)
 	{
-		throw std::runtime_error ("DisplayPi3Pcd8544: cannot open SPI port.");
+		throw std::runtime_error ("DisplayPi3St7920: cannot open SPI port.");
 	}
 
 	_msg_pool.expand_to (256);
@@ -73,19 +73,24 @@ DisplayPi3Pcd8544::DisplayPi3Pcd8544 (std::mutex &mutex_spi)
 	::pinMode  (_pin_dc , OUTPUT);
 	::pinMode  (_pin_cs , OUTPUT);
 
-	send_cmd (Cmd_FUNC_SET  | Cmd_H);
-	send_cmd (Cmd_TEMP_CTRL | 0x00);  // See 7.8
-	send_cmd (Cmd_BIAS_SYS  | 0x03);  // See 8.8
-	send_cmd (Cmd_SET_VOP   | 0x3A);  // See 8.9, and modified manually
-	send_cmd (Cmd_FUNC_SET);
-	send_cmd (Cmd_DISP_CTRL | Cmd_NORMAL);
+	send_cmd (Cmd_FNC_SET | Cmd_FNC_SET_DL); // Twice because RE cannot be set
+	send_cmd (Cmd_FNC_SET | Cmd_FNC_SET_DL); // at the same time as other bits.
 
-	_refresher = std::thread (&DisplayPi3Pcd8544::refresh_loop, this);
+	send_cmd (Cmd_CLEAR);
+	::delayMicroseconds (_delay_clr);
+	send_cmd (Cmd_ENTRY | Cmd_ENTRY_ID);
+	send_cmd (Cmd_DISPLAY);
+
+	send_cmd (Cmd_FNC_SET_E | Cmd_FNC_SET_DL);
+	send_cmd (Cmd_FNC_SET_E | Cmd_FNC_SET_DL | Cmd_FNC_SET_E_G);
+	send_cmd (Cmd_RAM_SEL);
+
+	_refresher = std::thread (&DisplayPi3St7920::refresh_loop, this);
 }
 
 
 
-DisplayPi3Pcd8544::~DisplayPi3Pcd8544 ()
+DisplayPi3St7920::~DisplayPi3St7920 ()
 {
 	if (_refresher.joinable ())
 	{
@@ -114,42 +119,42 @@ DisplayPi3Pcd8544::~DisplayPi3Pcd8544 ()
 
 
 
-int	DisplayPi3Pcd8544::do_get_width () const
+int	DisplayPi3St7920::do_get_width () const
 {
 	return _scr_w;
 }
 
 
 
-int	DisplayPi3Pcd8544::do_get_height () const
+int	DisplayPi3St7920::do_get_height () const
 {
 	return _scr_h;
 }
 
 
 
-int	DisplayPi3Pcd8544::do_get_stride () const
+int	DisplayPi3St7920::do_get_stride () const
 {
 	return _scr_w;
 }
 
 
 
-uint8_t *	DisplayPi3Pcd8544::do_use_screen_buf ()
+uint8_t *	DisplayPi3St7920::do_use_screen_buf ()
 {
 	return &_screen_buf [0];
 }
 
 
 
-const uint8_t *	DisplayPi3Pcd8544::do_use_screen_buf () const
+const uint8_t *	DisplayPi3St7920::do_use_screen_buf () const
 {
 	return &_screen_buf [0];
 }
 
 
 
-void	DisplayPi3Pcd8544::do_refresh (int x, int y, int w, int h)
+void	DisplayPi3St7920::do_refresh (int x, int y, int w, int h)
 {
 	MsgCell *      cell_ptr = _msg_pool.take_cell (true);
 	if (cell_ptr == 0)
@@ -173,63 +178,117 @@ void	DisplayPi3Pcd8544::do_refresh (int x, int y, int w, int h)
 
 
 
-// Not locked
-void	DisplayPi3Pcd8544::send_spi (uint8_t x)
+void	DisplayPi3St7920::send_byte_raw (uint8_t a)
 {
-	uint8_t        buffer [1] = { x };
-	::wiringPiSPIDataRW (_spi_port, &buffer [0], 1);
+	uint8_t        buffer [2] =
+	{
+		a & 0xF0,
+		a << 4
+	};
+	::wiringPiSPIDataRW (_spi_port, &buffer [0], sizeof (buffer));
 }
 
 
 
-void	DisplayPi3Pcd8544::send_cmd (uint8_t c)
+void	DisplayPi3St7920::send_bytes_header (uint8_t rwrs, uint8_t a)
 {
+	uint8_t        buffer [3] =
+	{
+		Serial_HEADER | rwrs,
+		a & 0xF0,
+		a << 4
+	};
+	::wiringPiSPIDataRW (_spi_port, &buffer [0], sizeof (buffer));
+}
+
+
+
+void	DisplayPi3St7920::send_cmd (uint8_t x)
+{
+	{
+		std::lock_guard <std::mutex>   lock (_mutex_spi);
+
+		::digitalWrite (_pin_cs, LOW);
+		send_bytes_header (0, x);
+		::digitalWrite (_pin_cs, HIGH);
+	}
+	::delayMicroseconds (_delay_std);
+}
+
+
+
+void	DisplayPi3St7920::send_data (uint8_t x)
+{
+	{
+		std::lock_guard <std::mutex>   lock (_mutex_spi);
+
+		::digitalWrite (_pin_cs, LOW);
+		send_bytes_header (Serial_RS, x);
+		::digitalWrite (_pin_cs, HIGH);
+	}
+	::delayMicroseconds (_delay_std);
+}
+
+
+
+// col is in 16-pixel blocks, len too
+void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int len)
+{
+	assert (col >= 0);
+	assert (y >= 0);
+	assert (y < _scr_h);
+	assert (len > 0);
+	assert ((len + col) * 16 <= _scr_w);
+
 	std::lock_guard <std::mutex>   lock (_mutex_spi);
 
-	::digitalWrite (_pin_dc, LOW);
 	::digitalWrite (_pin_cs, LOW);
-	send_spi (c);
+
+	send_bytes_header (0, Cmd_FNC_SET | Cmd_FNC_SET_RE);
+	::delayMicroseconds (_delay_std);
+
+	send_byte_raw (Cmd_GDRAM_ADR | y);
+	::delayMicroseconds (_delay_std);
+	send_byte_raw (Cmd_GDRAM_ADR | col);
+	::delayMicroseconds (_delay_std);
+
+	for (int c = 0; c < len; ++c)
+	{
+		uint16_t       val = 0;
+		for (int r2 = 0; r2 < 16; ++r2)
+		{
+			val <<= 1;
+			val |= *pix_ptr >> 7;
+			++ pix_ptr;
+		}
+
+		const uint8_t  d1508 = val >> 8;
+		const uint8_t  d0700 = val & 0xFF;
+		if (c == 0)
+		{
+			send_bytes_header (Serial_RS, d1508);
+		}
+		else
+		{
+			send_byte_raw (d1508);
+		}
+		send_byte_raw (d0700);
+		::delayMicroseconds (_delay_std);
+	}
+
 	::digitalWrite (_pin_cs, HIGH);
 }
 
 
 
-void	DisplayPi3Pcd8544::send_data (uint8_t a)
-{
-	std::lock_guard <std::mutex>   lock (_mutex_spi);
-
-	::digitalWrite (_pin_dc, HIGH);
-	::digitalWrite (_pin_cs, LOW);
-	send_spi (a);
-	::digitalWrite (_pin_cs, HIGH);
-}
-
-
-
-// data_ptr is not const because the input buffer will be altered.
-void	DisplayPi3Pcd8544::send_line (int x, int row, uint8_t data_ptr [], int len)
-{
-	send_cmd (Cmd_SET_Y | row);
-	send_cmd (Cmd_SET_X | x);
-
-	std::lock_guard <std::mutex>   lock (_mutex_spi);
-
-	::digitalWrite (_pin_dc, HIGH);
-	::digitalWrite (_pin_cs, LOW);
-	::wiringPiSPIDataRW (_spi_port, &data_ptr [0], len);
-	::digitalWrite (_pin_cs, HIGH);
-}
-
-
-
-void	DisplayPi3Pcd8544::return_cell (MsgCell &cell)
+void	DisplayPi3St7920::return_cell (MsgCell &cell)
 {
 	_msg_pool.return_cell (cell);
 }
 
 
 
-void	DisplayPi3Pcd8544::refresh_loop ()
+void	DisplayPi3St7920::refresh_loop ()
 {
 	while (! _quit_flag)
 	{
@@ -277,7 +336,7 @@ void	DisplayPi3Pcd8544::refresh_loop ()
 
 
 
-void	DisplayPi3Pcd8544::send_to_display (int x, int y, int w, int h)
+void	DisplayPi3St7920::send_to_display (int x, int y, int w, int h)
 {
 	assert (x >= 0);
 	assert (y >= 0);
@@ -286,32 +345,18 @@ void	DisplayPi3Pcd8544::send_to_display (int x, int y, int w, int h)
 	assert (x + w <= _scr_w);
 	assert (y + h <= _scr_h);
 
-	const int     row_beg =  y          >> 3;
-	const int     row_end = (y + h + 7) >> 3;
-	const int     col_end =  x + w;
-	const int     stride  = get_stride ();
-	uint8_t *     pix_ptr = &_screen_buf [0];
-	std::array <uint8_t, _scr_w>   data_arr;
-	for (int row = row_beg; row < row_end; ++row)
+	const int        col_beg =  x           >> 4;
+	const int        col_end = (x + w + 15) >> 4;
+	const int        nbr_col = col_end - col_beg;
+	const int        row_end =  y + h;
+	const int        stride  = get_stride ();
+	const uint8_t *  pix_ptr = &_screen_buf [col_beg * 16 + y * stride];
+
+	for (int row = y; row < row_end; ++row)
 	{
-		const int      row_pos = (row << 3) * stride;
-		for (int col = x; col < col_end; ++col)
-		{
-			uint8_t        val = 0;
-			int            ofs = row_pos + col;
-			for (int r2 = 0; r2 < 8; ++r2)
-			{
-				val |= (pix_ptr [ofs] >> 7) << r2;
-				ofs += stride;
-			}
-			data_arr [col] = val;
-		}
-
-		send_line (x, row, &data_arr [x], w);
+		send_line (col_beg, nbr_col, pix_ptr, nbr_col);
+		pix_ptr += stride;
 	}
-
-	// The last data byte is not taken into account if we don't do this.
-	send_cmd (Cmd_SET_Y | 0);
 }
 
 

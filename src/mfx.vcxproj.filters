@@ -669,6 +669,9 @@
     <ClInclude Include="mfx\cmd\CentralCbInterface.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\ui\DisplayPi3St7920.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -836,6 +839,9 @@
     </ClCompile>
     <ClCompile Include="mfx\cmd\CentralCbInterface.cpp">
       <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\DisplayPi3St7920.cpp">
+      <Filter>mfx\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

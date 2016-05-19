@@ -209,6 +209,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/DisplayInterface.h \
         ../../src/mfx/ui/DisplayPi3Pcd8544.cpp \
         ../../src/mfx/ui/DisplayPi3Pcd8544.h \
+        ../../src/mfx/ui/DisplayPi3St7920.cpp \
+        ../../src/mfx/ui/DisplayPi3St7920.h \
         ../../src/mfx/ui/Font.cpp \
         ../../src/mfx/ui/Font.h \
         ../../src/mfx/ui/FontDataDefault.cpp \
