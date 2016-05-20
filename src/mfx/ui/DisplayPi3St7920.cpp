@@ -237,66 +237,106 @@ void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int 
 	assert (col >= 0);
 	assert (y >= 0);
 	assert (y < _scr_h);
+	assert (pix_ptr != 0);
 	assert (len > 0);
 	assert ((len + col) * 16 <= _scr_w);
 
 	int            ofs_y = 0;
 	int            ofs_x = col;
-	if (y >= 32)
+	if (y >= _scr_h / 2)
 	{
-		ofs_y = -32;
-		ofs_x = 8;
+		ofs_y = -(_scr_h / 2);
+		ofs_x = _scr_w >> 4;
 	}
+
 	{
 		std::lock_guard <std::mutex>   lock (_mutex_spi);
 		::digitalWrite (_pin_cs, HIGH);
 		send_byte_header (0, Cmd_GDRAM_ADR | (y + ofs_y));
 		send_byte_raw (      Cmd_GDRAM_ADR | (    ofs_x));
-		::delayMicroseconds (2);
+		::delayMicroseconds (_delay_chg);
 
-		for (int c = 0; c < len; ++c)
-		{
-			uint16_t       val = 0;
-			for (int r2 = 0; r2 < 16; ++r2)
-			{
-				val <<= 1;
-				val |= *pix_ptr >> 7;
-				++ pix_ptr;
-			}
+		SpiBuffer       spibuf;
+		int             spipos = 1;
+		spibuf [0] = Serial_HEADER | Serial_RS;
+		prepare_line_data (spibuf, spipos, pix_ptr, len);
+		::wiringPiSPIDataRW (_spi_port, &spibuf [0], spipos);
+		::delayMicroseconds (_delay_chg);
 
-			const uint8_t  d1508 = val >> 8;
-			const uint8_t  d0700 = val & 0xFF;
-			if (c == 0)
-			{
-				send_byte_header (Serial_RS, d1508);
-			}
-			else
-			{
-				send_byte_raw (d1508);
-			}
-			send_byte_raw (d0700);
-		}
-
-		::delayMicroseconds (2);
-
-		// We need to put the current address out of the screen
-		// because sometimes parasite bytes are randomly written.
-		send_byte_header (0, Cmd_GDRAM_ADR | 63);
-		send_byte_header (0, Cmd_GDRAM_ADR | 0);
-		::digitalWrite (_pin_cs, LOW);
-		::delayMicroseconds (2);
+		send_line_epilogue ();
 	}
+
 	::delayMicroseconds (_delay_std);
+}
+
+
+
+void	DisplayPi3St7920::send_2_full_lines (int y, const uint8_t pix1_ptr [], const uint8_t pix2_ptr [])
+{
+	assert (y >= 0);
+	assert (y < _scr_h / 2);
+	assert (pix1_ptr != 0);
+	assert (pix2_ptr != 0);
+
 	{
 		std::lock_guard <std::mutex>   lock (_mutex_spi);
 		::digitalWrite (_pin_cs, HIGH);
-		send_byte_header (Serial_RS, 0);
-		send_byte_header (Serial_RS, 0);
-		::digitalWrite (_pin_cs, LOW);
-		::delayMicroseconds (2);
+		send_byte_header (0, Cmd_GDRAM_ADR | y);
+		send_byte_raw (      Cmd_GDRAM_ADR | 0);
+		::delayMicroseconds (_delay_chg);
+
+		SpiBuffer       spibuf;
+		int             spipos = 1;
+		spibuf [0] = Serial_HEADER | Serial_RS;
+		const int       len = _scr_w >> 4;
+		prepare_line_data (spibuf, spipos, pix1_ptr, len);
+		prepare_line_data (spibuf, spipos, pix2_ptr, len);
+		::wiringPiSPIDataRW (_spi_port, &spibuf [0], spipos);
+		::delayMicroseconds (_delay_chg);
+
+		send_line_epilogue ();
 	}
 
 	::delayMicroseconds (_delay_std);
+}
+
+
+
+void	DisplayPi3St7920::prepare_line_data (SpiBuffer &buf, int &pos, const uint8_t pix_ptr [], int len)
+{
+	for (int x = 0; x < len; ++x)
+	{
+		uint16_t       val = 0;
+		for (int x2 = 0; x2 < 16; ++x2)
+		{
+			val <<= 1;
+			val |= *pix_ptr >> 7;
+			++ pix_ptr;
+		}
+
+		const uint8_t   d1508 = val >> 8;
+		const uint8_t   d0700 = val & 0xFF;
+		buf [pos + 0] = d1508 & 0xF0;
+		buf [pos + 1] = d1508 << 4;
+		buf [pos + 2] = d0700 & 0xF0;
+		buf [pos + 3] = d0700 << 4;
+		pos += 4;
+	}
+}
+
+
+
+void	DisplayPi3St7920::send_line_epilogue ()
+{
+	// We need to put the current address out of the screen
+	// because sometimes parasite bytes are randomly written.
+	send_byte_header (0, Cmd_GDRAM_ADR | 63);
+	send_byte_header (0, Cmd_GDRAM_ADR | 0);
+	::delayMicroseconds (_delay_chg);
+	send_byte_header (Serial_RS, 0);
+	send_byte_header (Serial_RS, 0);
+	::digitalWrite (_pin_cs, LOW);
+	::delayMicroseconds (_delay_chg);
 }
 
 
@@ -368,10 +408,27 @@ void	DisplayPi3St7920::send_to_display (int x, int y, int w, int h)
 	const int        col_beg =  x           >> 4;
 	const int        col_end = (x + w + 15) >> 4;
 	const int        nbr_col = col_end - col_beg;
-	const int        row_end =  y + h;
 	const int        stride  = get_stride ();
 	const uint8_t *  pix_ptr = &_screen_buf [col_beg * 16 + y * stride];
 
+	if (col_beg == 0 && nbr_col == _scr_w >> 4)
+	{
+		const int        half_h   = _scr_h / 2;
+		const int        nbr_pair = h - half_h;
+		if (nbr_pair > 0)
+		{
+			h -= nbr_pair * 2;
+
+			for (int pair_cnt = 0; pair_cnt < nbr_pair; ++pair_cnt)
+			{
+				send_2_full_lines (y, pix_ptr, pix_ptr + stride * half_h);
+				pix_ptr += stride;
+				++ y;
+			}
+		}
+	}
+
+	const int        row_end =  y + h;
 	for (int row = y; row < row_end; ++row)
 	{
 		send_line (col_beg, row, pix_ptr, nbr_col);

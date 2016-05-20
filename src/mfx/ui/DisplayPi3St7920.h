@@ -152,12 +152,16 @@ private:
 	typedef conc::LockFreeCell <RefreshMsg>  MsgCell;
 	typedef conc::CellPool <RefreshMsg>      MsgPool;
 	typedef conc::LockFreeQueue <RefreshMsg> MsgQueue;
+	typedef std::array <uint8_t, (_scr_w >> 4) * 4 * 2 + 1> SpiBuffer;
 
 	void           send_byte_raw (uint8_t a);
 	void           send_byte_header (uint8_t rwrs, uint8_t a);
 	void           send_cmd (uint8_t x);
 	void           send_data (uint8_t x);
-	void           send_line (int col, int y, const uint8_t data_ptr [], int len);
+	void           send_line (int col, int y, const uint8_t pix_ptr [], int len);
+	void           send_2_full_lines (int y, const uint8_t pix1_ptr [], const uint8_t pix2_ptr []);
+	void           prepare_line_data (SpiBuffer &buf, int &pos, const uint8_t pix_ptr [], int len);
+	void           send_line_epilogue ();
 
 	void           return_cell (MsgCell &cell);
 
@@ -177,6 +181,7 @@ private:
 
 	static const int _delay_std =  101; // Microseconds. 72 us are required but wiringPi would use a cpu-consuming spinlock.
 	static const int _delay_clr = 1600; // Microseconds.
+	static const int _delay_chg =    2; // Microseconds. Short delay between address setting and data feeding
 
 
 
