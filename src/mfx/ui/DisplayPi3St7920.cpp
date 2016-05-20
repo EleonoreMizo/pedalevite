@@ -57,7 +57,7 @@ namespace ui
 DisplayPi3St7920::DisplayPi3St7920 (std::mutex &mutex_spi)
 :	_mutex_spi (mutex_spi)
 ,	_screen_buf ()
-,	_hnd_spi (::wiringPiSPISetup (_spi_port, _spi_rate))
+,	_hnd_spi (::wiringPiSPISetupMode (_spi_port, _spi_rate, 0))
 ,	_msg_pool ()
 ,	_msg_queue ()
 ,	_quit_flag (false)
@@ -78,8 +78,8 @@ DisplayPi3St7920::DisplayPi3St7920 (std::mutex &mutex_spi)
 
 	send_cmd (Cmd_CLEAR);
 	::delayMicroseconds (_delay_clr);
-	send_cmd (Cmd_ENTRY | Cmd_ENTRY_ID);
-	send_cmd (Cmd_DISPLAY);
+	send_cmd (Cmd_ENTRY     | Cmd_ENTRY_ID);
+	send_cmd (Cmd_DISPLAY   | Cmd_DISPLAY_DISP);
 
 	send_cmd (Cmd_FNC_SET_E | Cmd_FNC_SET_DL);
 	send_cmd (Cmd_FNC_SET_E | Cmd_FNC_SET_DL | Cmd_FNC_SET_E_G);
@@ -182,8 +182,8 @@ void	DisplayPi3St7920::send_byte_raw (uint8_t a)
 {
 	uint8_t        buffer [2] =
 	{
-		a & 0xF0,
-		a << 4
+		uint8_t (a & 0xF0),
+		uint8_t (a << 4)
 	};
 	::wiringPiSPIDataRW (_spi_port, &buffer [0], sizeof (buffer));
 }
@@ -194,9 +194,9 @@ void	DisplayPi3St7920::send_bytes_header (uint8_t rwrs, uint8_t a)
 {
 	uint8_t        buffer [3] =
 	{
-		Serial_HEADER | rwrs,
-		a & 0xF0,
-		a << 4
+		uint8_t (Serial_HEADER | rwrs),
+		uint8_t (a & 0xF0),
+		uint8_t (a << 4)
 	};
 	::wiringPiSPIDataRW (_spi_port, &buffer [0], sizeof (buffer));
 }
@@ -208,9 +208,9 @@ void	DisplayPi3St7920::send_cmd (uint8_t x)
 	{
 		std::lock_guard <std::mutex>   lock (_mutex_spi);
 
-		::digitalWrite (_pin_cs, LOW);
-		send_bytes_header (0, x);
 		::digitalWrite (_pin_cs, HIGH);
+		send_bytes_header (0, x);
+		::digitalWrite (_pin_cs, LOW);
 	}
 	::delayMicroseconds (_delay_std);
 }
@@ -222,9 +222,9 @@ void	DisplayPi3St7920::send_data (uint8_t x)
 	{
 		std::lock_guard <std::mutex>   lock (_mutex_spi);
 
-		::digitalWrite (_pin_cs, LOW);
-		send_bytes_header (Serial_RS, x);
 		::digitalWrite (_pin_cs, HIGH);
+		send_bytes_header (Serial_RS, x);
+		::digitalWrite (_pin_cs, LOW);
 	}
 	::delayMicroseconds (_delay_std);
 }
@@ -241,15 +241,17 @@ void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int 
 	assert ((len + col) * 16 <= _scr_w);
 
 	std::lock_guard <std::mutex>   lock (_mutex_spi);
+	::digitalWrite (_pin_cs, HIGH);
 
-	::digitalWrite (_pin_cs, LOW);
-
-	send_bytes_header (0, Cmd_FNC_SET | Cmd_FNC_SET_RE);
-	::delayMicroseconds (_delay_std);
-
-	send_byte_raw (Cmd_GDRAM_ADR | y);
-	::delayMicroseconds (_delay_std);
-	send_byte_raw (Cmd_GDRAM_ADR | col);
+	int            ofs_y = 0;
+	int            ofs_x = col;
+	if (y >= 32)
+	{
+		ofs_y = -32;
+		ofs_x = 8;
+	}
+	send_bytes_header (0, Cmd_GDRAM_ADR | (y + ofs_y));
+	send_bytes_header (0, Cmd_GDRAM_ADR | (    ofs_x));
 	::delayMicroseconds (_delay_std);
 
 	for (int c = 0; c < len; ++c)
@@ -264,19 +266,21 @@ void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int 
 
 		const uint8_t  d1508 = val >> 8;
 		const uint8_t  d0700 = val & 0xFF;
-		if (c == 0)
-		{
-			send_bytes_header (Serial_RS, d1508);
-		}
-		else
-		{
-			send_byte_raw (d1508);
-		}
-		send_byte_raw (d0700);
-		::delayMicroseconds (_delay_std);
+		send_bytes_header (Serial_RS, d1508);
+		send_bytes_header (Serial_RS, d0700);
 	}
 
-	::digitalWrite (_pin_cs, HIGH);
+	// For some reason we need to put the current address out of the screen
+	// because sometimes parasite bytes are randomly written.
+	::delayMicroseconds (_delay_std);
+	send_bytes_header (0, Cmd_GDRAM_ADR | 48);
+	send_bytes_header (0, Cmd_GDRAM_ADR | 0);
+	::delayMicroseconds (_delay_std);
+	send_bytes_header (Serial_RS, 0);
+	send_bytes_header (Serial_RS, 0);
+
+	::digitalWrite (_pin_cs, LOW);
+	::delayMicroseconds (_delay_std);
 }
 
 
@@ -354,7 +358,7 @@ void	DisplayPi3St7920::send_to_display (int x, int y, int w, int h)
 
 	for (int row = y; row < row_end; ++row)
 	{
-		send_line (col_beg, nbr_col, pix_ptr, nbr_col);
+		send_line (col_beg, row, pix_ptr, nbr_col);
 		pix_ptr += stride;
 	}
 }

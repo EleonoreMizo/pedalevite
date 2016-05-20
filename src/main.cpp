@@ -40,7 +40,8 @@
 #include "mfx/WorldAudio.h"
 
 #if fstb_IS (ARCHI, ARM)
-	#include "mfx/ui/DisplayPi3Pcd8544.h"
+//	#include "mfx/ui/DisplayPi3Pcd8544.h"
+	#include "mfx/ui/DisplayPi3St7920.h"
 	#include "mfx/ui/LedPi3.h"
 	#include "mfx/ui/UserInputPi3.h"
 
@@ -131,7 +132,7 @@ public:
 	               _usage_min;
 	volatile float _detected_freq = 0;
 	const int      _tuner_subspl  = 4;
-	volatile bool  _tuner_flag    = false;
+	volatile bool  _tuner_flag    = true;
 	volatile bool  _disto_flag    = false;
 	volatile float _disto_gain_nat = 1;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
@@ -154,7 +155,8 @@ public:
 	volatile bool	_quit_flag       = false;
 	volatile bool  _input_quit_flag = false;
 #if fstb_IS (ARCHI, ARM)
-	mfx::ui::DisplayPi3Pcd8544
+//	mfx::ui::DisplayPi3Pcd8544
+	mfx::ui::DisplayPi3St7920
 	               _display;
 	mfx::ui::UserInputPi3
 	               _user_input;
@@ -228,6 +230,7 @@ Context::Context (double sample_freq, int max_block_size)
 	_central.remove_mixer (1);
 
 	setup_chain_normal ();
+	setup_chain_tuner ();
 
 	// Initial parameters values
 	_central.set_param (
@@ -848,33 +851,41 @@ int MAIN_main_loop (Context &ctx)
 		fflush (stderr);
 
 		// Display test
-		if (! scr_clean_flag)
 		{
-			memset (p_ptr, 0, scr_s * scr_h);
-			scr_clean_flag = true;
-			scr_rfrsh_flag = true;
-		}
-		if (tuner_flag)
-		{
-			const int      char_w  = ctx._fnt_8x12.get_char_w ();
-			const int      char_h  = ctx._fnt_8x12.get_char_h ();
-			const int      txt_len = int (strlen (note3_0));
-			const int      mag_x   = scr_w / (txt_len * char_w);
-			const int      mag_y   = scr_h / char_h;
-			const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
-			const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
-			for (int i = 0; i < txt_len; ++i)
+#if fstb_IS (ARCHI, ARM)
+			// Dirty hack: make sure the graphic device thread doesn't send
+			// the buffer content to the display while it is being filled.
+			// We should do this with back buffer + copy.
+			std::lock_guard <std::mutex>   lock (ctx._mutex_spi);
+#endif
+			if (! scr_clean_flag)
 			{
-				const int      c = static_cast <unsigned char> (note3_0 [i]);
-				ctx._fnt_8x12.render_char (
-					p_ptr + pos_x + pos_y * scr_s + i * char_w * mag_x,
-					c,
-					scr_s,
-					mag_x, mag_y
-				);
+				memset (p_ptr, 0, scr_s * scr_h);
+				scr_clean_flag = true;
+				scr_rfrsh_flag = true;
 			}
-			scr_clean_flag = false;
-			scr_rfrsh_flag = true;
+			if (tuner_flag)
+			{
+				const int      char_w  = ctx._fnt_8x12.get_char_w ();
+				const int      char_h  = ctx._fnt_8x12.get_char_h ();
+				const int      txt_len = int (strlen (note3_0));
+				const int      mag_x   = scr_w / (txt_len * char_w);
+				const int      mag_y   = scr_h / char_h;
+				const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
+				const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
+				for (int i = 0; i < txt_len; ++i)
+				{
+					const int      c = static_cast <unsigned char> (note3_0 [i]);
+					ctx._fnt_8x12.render_char (
+						p_ptr + pos_x + pos_y * scr_s + i * char_w * mag_x,
+						c,
+						scr_s,
+						mag_x, mag_y
+					);
+				}
+				scr_clean_flag = false;
+				scr_rfrsh_flag = true;
+			}
 		}
 		if (scr_rfrsh_flag)
 		{

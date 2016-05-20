@@ -175,7 +175,7 @@ private:
 	volatile bool  _quit_flag;
 	std::thread    _refresher;
 
-	static const int _delay_std =  101; // Microseconds. 72 us are required but wiringPi would use a cpu-consuming spinlock.
+	static const int _delay_std =   72; // Microseconds. 72 us are required but wiringPi would use a cpu-consuming spinlock.
 	static const int _delay_clr = 1600; // Microseconds.
 
 
