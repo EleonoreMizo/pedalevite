@@ -12,6 +12,8 @@
 	#define NOMINMAX
 #endif
 
+#define MAIN_USE_ST7920
+
 #include "fstb/def.h"
 
 #define MAIN_API_JACK 1
@@ -40,8 +42,11 @@
 #include "mfx/WorldAudio.h"
 
 #if fstb_IS (ARCHI, ARM)
-//	#include "mfx/ui/DisplayPi3Pcd8544.h"
+ #if defined (MAIN_USE_ST7920)
 	#include "mfx/ui/DisplayPi3St7920.h"
+ #else
+	#include "mfx/ui/DisplayPi3Pcd8544.h"
+ #endif
 	#include "mfx/ui/LedPi3.h"
 	#include "mfx/ui/UserInputPi3.h"
 
@@ -155,8 +160,11 @@ public:
 	volatile bool	_quit_flag       = false;
 	volatile bool  _input_quit_flag = false;
 #if fstb_IS (ARCHI, ARM)
-//	mfx::ui::DisplayPi3Pcd8544
+ #if defined (MAIN_USE_ST7920)
 	mfx::ui::DisplayPi3St7920
+ #else
+	mfx::ui::DisplayPi3Pcd8544
+ #endif
 	               _display;
 	mfx::ui::UserInputPi3
 	               _user_input;
