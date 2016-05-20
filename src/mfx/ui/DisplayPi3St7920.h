@@ -154,7 +154,7 @@ private:
 	typedef conc::LockFreeQueue <RefreshMsg> MsgQueue;
 
 	void           send_byte_raw (uint8_t a);
-	void           send_bytes_header (uint8_t rwrs, uint8_t a);
+	void           send_byte_header (uint8_t rwrs, uint8_t a);
 	void           send_cmd (uint8_t x);
 	void           send_data (uint8_t x);
 	void           send_line (int col, int y, const uint8_t data_ptr [], int len);
@@ -175,7 +175,7 @@ private:
 	volatile bool  _quit_flag;
 	std::thread    _refresher;
 
-	static const int _delay_std =   72; // Microseconds. 72 us are required but wiringPi would use a cpu-consuming spinlock.
+	static const int _delay_std =  101; // Microseconds. 72 us are required but wiringPi would use a cpu-consuming spinlock.
 	static const int _delay_clr = 1600; // Microseconds.
 
 
