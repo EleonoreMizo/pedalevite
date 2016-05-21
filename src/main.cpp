@@ -196,7 +196,7 @@ protected:
 Context::Context (double sample_freq, int max_block_size)
 :
 #if fstb_IS (ARCHI, ARM)
-	_thread_spi (0 * 10 * 1000)
+	_thread_spi (10 * 1000)
 ,
 #endif
 	_buf_alig (4096)
@@ -784,10 +784,13 @@ int MAIN_main_loop (Context &ctx)
 
 	while (ret_val == 0 && ! ctx._quit_flag)
 	{
+#if 0 // When doing manual time sharing
 		while (! ctx._thread_spi.process_single_task ())
 		{
 			continue;
 		}
+#endif
+
 		ctx._central.process_queue_audio_to_cmd ();
 		
 		const bool   tuner_flag = ctx._tuner_flag;
@@ -910,10 +913,11 @@ int MAIN_main_loop (Context &ctx)
 
 		if (wait_flag)
 		{
+			const int    wait_ms = 100;
 		#if fstb_IS (ARCHI, ARM)
-			::delay (100);
+			::delay (wait_ms);
 		#else
-			::Sleep (100);
+			::Sleep (wait_ms);
 		#endif
 		}
 
