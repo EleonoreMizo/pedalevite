@@ -266,7 +266,7 @@ void	DisplayPi3St7920::start_redraw (int x, int y, int w, int h)
 		const int        half_h = _scr_h / 2;
 		_redraw._nbr_pairs = h - half_h;
 	}
-
+	
 	_state = State_REDRAW;
 }
 
@@ -278,7 +278,8 @@ void	DisplayPi3St7920::redraw_part ()
 
 	const int        stride = get_stride ();
 
-	for (int cnt = 0; cnt < 8 && _state == State_REDRAW; ++cnt)
+	const int        max_nbr_lines = 8;
+	for (int cnt = 0; cnt < max_nbr_lines && _state == State_REDRAW; ++cnt)
 	{
 		if (_redraw._pair_cnt < _redraw._nbr_pairs)
 		{
@@ -453,13 +454,21 @@ void	DisplayPi3St7920::send_line_epilogue ()
 {
 	::delayMicroseconds (_delay_chg);
 
-	// We need to put the current address out of the screen
-	// because sometimes parasite bytes are randomly written.
+#if 1 // s = 2 or 3
+	// When we're done, we need to put the current address out of the screen
+	// because of the Chip Select bug: the ST7920 reads SPI data from other
+	// devices even when it is not selected.
 	send_byte_header (0, Cmd_GDRAM_ADR | 63);
-	send_byte_header (0, Cmd_GDRAM_ADR | 0);
+	send_byte_raw (      Cmd_GDRAM_ADR |  0);
+//	::delayMicroseconds (_delay_chg);
+	send_byte_header (Serial_RS, 0);
+	send_byte_raw (              0);
+#elif 1
+	send_byte_header (0, Cmd_IRAM_ADR);
+	send_byte_header (0, Cmd_IRAM_ADR);
 	::delayMicroseconds (_delay_chg);
-	send_byte_header (Serial_RS, 0);
-	send_byte_header (Serial_RS, 0);
+#endif
+
 	::digitalWrite (_pin_cs, LOW);
 	::delayMicroseconds (_delay_std);
 }

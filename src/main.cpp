@@ -139,7 +139,7 @@ public:
 	               _usage_min;
 	volatile float _detected_freq = 0;
 	const int      _tuner_subspl  = 4;
-	volatile bool  _tuner_flag    = true;
+	volatile bool  _tuner_flag    = false;
 	volatile bool  _disto_flag    = false;
 	volatile float _disto_gain_nat = 1;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
@@ -196,7 +196,7 @@ protected:
 Context::Context (double sample_freq, int max_block_size)
 :
 #if fstb_IS (ARCHI, ARM)
-	_thread_spi (10 * 1000)
+	_thread_spi (0 * 10 * 1000)
 ,
 #endif
 	_buf_alig (4096)
@@ -245,7 +245,7 @@ Context::Context (double sample_freq, int max_block_size)
 	_central.remove_mixer (1);
 
 	setup_chain_normal ();
-	setup_chain_tuner ();
+//	setup_chain_tuner ();
 
 	// Initial parameters values
 	_central.set_param (
@@ -784,6 +784,10 @@ int MAIN_main_loop (Context &ctx)
 
 	while (ret_val == 0 && ! ctx._quit_flag)
 	{
+		while (! ctx._thread_spi.process_single_task ())
+		{
+			continue;
+		}
 		ctx._central.process_queue_audio_to_cmd ();
 		
 		const bool   tuner_flag = ctx._tuner_flag;
@@ -900,13 +904,18 @@ int MAIN_main_loop (Context &ctx)
 			scr_rfrsh_flag = false;
 		}
 
+		bool wait_flag = true;
+
 #if 1
 
-	#if fstb_IS (ARCHI, ARM)
-		::delay (100);
-	#else
-		::Sleep (100);
-	#endif
+		if (wait_flag)
+		{
+		#if fstb_IS (ARCHI, ARM)
+			::delay (100);
+		#else
+			::Sleep (100);
+		#endif
+		}
 
 #else
 

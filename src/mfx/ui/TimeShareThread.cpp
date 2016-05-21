@@ -61,16 +61,19 @@ TimeShareThread::TimeShareThread (int granularity)
 ,	_cb_list ()
 ,	_base_time (get_time ())
 ,	_quit_flag (false)
-,	_refresher (&TimeShareThread::polling_loop, this)
+,	_refresher ()
 {
-	assert (granularity > 0);
+	if (_granularity > 0)
+	{
+		_refresher = std::thread (&TimeShareThread::polling_loop, this);
+	}
 }
 
 
 
 TimeShareThread::~TimeShareThread ()
 {
-	if (_refresher.joinable ())
+	if (_granularity > 0 && _refresher.joinable ())
 	{
 		_quit_flag = true;
 		_refresher.join ();
@@ -106,6 +109,18 @@ void	TimeShareThread::remove_cb (TimeShareCbInterface &cb)
 	{
 		_cb_list.erase (it);
 	}
+}
+
+
+
+// Returns true if we can wait before the next call.
+bool	TimeShareThread::process_single_task ()
+{
+	assert (_granularity <= 0);
+
+	static int      scan_pos = 0;
+	
+	return find_and_execute_task (scan_pos);
 }
 
 

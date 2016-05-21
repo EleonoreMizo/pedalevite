@@ -56,6 +56,8 @@ public:
 	void           register_cb (TimeShareCbInterface &cb, int interval_us);
 	void           remove_cb (TimeShareCbInterface &cb);
 
+	bool           process_single_task ();
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -85,7 +87,7 @@ private:
 
 	static int64_t get_time ();
 
-	int            _granularity;
+	const int      _granularity;
 
 	std::mutex     _list_mtx;           // Access to the callback list
 	CbList         _cb_list;
@@ -101,8 +103,9 @@ private:
 private:
 
 	               TimeShareThread ()                               = delete;
-	               TimeShareThread (const TimeShareThread &other)         = delete;
-	TimeShareThread &    operator = (const TimeShareThread &other)        = delete;
+	               TimeShareThread (const TimeShareThread &other)   = delete;
+	TimeShareThread &
+	               operator = (const TimeShareThread &other)        = delete;
 	bool           operator == (const TimeShareThread &other) const = delete;
 	bool           operator != (const TimeShareThread &other) const = delete;
 

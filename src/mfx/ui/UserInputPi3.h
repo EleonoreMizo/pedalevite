@@ -39,7 +39,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#undef mfx_ui_UserInputPi3_NEW_BOARD
+#define mfx_ui_UserInputPi3_NEW_BOARD
 
 
 

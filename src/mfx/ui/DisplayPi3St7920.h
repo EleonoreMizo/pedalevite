@@ -179,7 +179,7 @@ private:
 	typedef conc::LockFreeCell <RefreshMsg>  MsgCell;
 	typedef conc::CellPool <RefreshMsg>      MsgPool;
 	typedef conc::LockFreeQueue <RefreshMsg> MsgQueue;
-	typedef std::array <uint8_t, (_scr_w >> 4) * 4 * 2 + 1> SpiBuffer;
+	typedef std::array <uint8_t, (_scr_w >> 4) * 2 * 6> SpiBuffer;
 
 	void           return_cell (MsgCell &cell);
 

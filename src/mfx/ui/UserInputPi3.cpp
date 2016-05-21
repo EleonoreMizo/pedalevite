@@ -435,20 +435,25 @@ int	UserInputPi3::read_adc (int port, int chn)
 	assert (chn >= 0);
 	assert (chn < 8);
 
-	// MCP doc, p. 21
-	// We could shift everything from 7 bits to improve the latency.
+	// MCP3008 doc, p. 21
+
+	// Amount of bit shifting, from 0 to 7.
+	// Only 2 and 3 are compatible with the 12864ZH (ST7920) Chip Select bug.
+	static const int  s = 3;
+
 	const int      msg_len = 3;
+	const int      chns4   = chn << (s + 4);
 	uint8_t        buffer [msg_len] =
 	{
-		0x01,
-		uint8_t (chn << 4),
+		uint8_t ((0x01 << s) + (chns4 >> 8)),
+		uint8_t (chns4),
 		0
 	};
 
 	int            ret_val = ::wiringPiSPIDataRW (port, &buffer [0], msg_len);
 	if (ret_val != -1)
 	{
-		ret_val = ((buffer [1] & 3) << 8) + buffer [2];
+		ret_val = (((buffer [1] << 8) + buffer [2]) >> s) & 0x3FF;
 	}
 
 	return ret_val;
