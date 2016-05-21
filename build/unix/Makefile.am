@@ -221,6 +221,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/LedPi3.h \
         ../../src/mfx/ui/RotEnc.cpp \
         ../../src/mfx/ui/RotEnc.h \
+        ../../src/mfx/ui/TimeShareCbInterface.cpp \
+        ../../src/mfx/ui/TimeShareCbInterface.h \
+        ../../src/mfx/ui/TimeShareThread.cpp \
+        ../../src/mfx/ui/TimeShareThread.h \
         ../../src/mfx/ui/UserInputInterface.cpp \
         ../../src/mfx/ui/UserInputInterface.h \
         ../../src/mfx/ui/UserInputMsg.cpp \

@@ -36,6 +36,7 @@
 #include "mfx/piapi/EventTs.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
+#include "mfx/ui/TimeShareThread.h"
 #include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
@@ -127,7 +128,8 @@ class Context
 {
 public:
 #if fstb_IS (ARCHI, ARM)
-	std::mutex     _mutex_spi;
+	mfx::ui::TimeShareThread
+	               _thread_spi;
 #endif
 	int64_t        _time_beg = MAIN_get_time ();
 	int64_t        _time_end = _time_beg;
@@ -197,8 +199,8 @@ Context::Context (double sample_freq, int max_block_size)
 ,	_queue_from_input ()
 ,	_central (_queue_from_input, _user_input)
 #if fstb_IS (ARCHI, ARM)
-,	_display (_mutex_spi)
-,	_user_input (_mutex_spi)
+,	_display (_thread_spi)
+,	_user_input (_thread_spi)
 ,	_leds ()
 #else
 ,	_display ()
@@ -859,41 +861,33 @@ int MAIN_main_loop (Context &ctx)
 		fflush (stderr);
 
 		// Display test
+		if (! scr_clean_flag)
 		{
-#if fstb_IS (ARCHI, ARM)
-			// Dirty hack: make sure the graphic device thread doesn't send
-			// the buffer content to the display while it is being filled.
-			// We should do this with back buffer + copy.
-			std::lock_guard <std::mutex>   lock (ctx._mutex_spi);
-#endif
-			if (! scr_clean_flag)
+			memset (p_ptr, 0, scr_s * scr_h);
+			scr_clean_flag = true;
+			scr_rfrsh_flag = true;
+		}
+		if (tuner_flag)
+		{
+			const int      char_w  = ctx._fnt_8x12.get_char_w ();
+			const int      char_h  = ctx._fnt_8x12.get_char_h ();
+			const int      txt_len = int (strlen (note3_0));
+			const int      mag_x   = scr_w / (txt_len * char_w);
+			const int      mag_y   = scr_h / char_h;
+			const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
+			const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
+			for (int i = 0; i < txt_len; ++i)
 			{
-				memset (p_ptr, 0, scr_s * scr_h);
-				scr_clean_flag = true;
-				scr_rfrsh_flag = true;
+				const int      c = static_cast <unsigned char> (note3_0 [i]);
+				ctx._fnt_8x12.render_char (
+					p_ptr + pos_x + pos_y * scr_s + i * char_w * mag_x,
+					c,
+					scr_s,
+					mag_x, mag_y
+				);
 			}
-			if (tuner_flag)
-			{
-				const int      char_w  = ctx._fnt_8x12.get_char_w ();
-				const int      char_h  = ctx._fnt_8x12.get_char_h ();
-				const int      txt_len = int (strlen (note3_0));
-				const int      mag_x   = scr_w / (txt_len * char_w);
-				const int      mag_y   = scr_h / char_h;
-				const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
-				const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
-				for (int i = 0; i < txt_len; ++i)
-				{
-					const int      c = static_cast <unsigned char> (note3_0 [i]);
-					ctx._fnt_8x12.render_char (
-						p_ptr + pos_x + pos_y * scr_s + i * char_w * mag_x,
-						c,
-						scr_s,
-						mag_x, mag_y
-					);
-				}
-				scr_clean_flag = false;
-				scr_rfrsh_flag = true;
-			}
+			scr_clean_flag = false;
+			scr_rfrsh_flag = true;
 		}
 		if (scr_rfrsh_flag)
 		{

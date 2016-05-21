@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "conc/CellPool.h"
 #include "mfx/ui/RotEnc.h"
+#include "mfx/ui/TimeShareCbInterface.h"
 #include "mfx/ui/UserInputInterface.h"
 
 #include <array>
@@ -49,8 +50,11 @@ namespace ui
 
 
 
+class TimeShareThread;
+
 class UserInputPi3
 :	public UserInputInterface
+,	public TimeShareCbInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -120,7 +124,7 @@ public:
 #endif
 	static const int  _pot_arr [_nbr_pot];
 
-	explicit       UserInputPi3 (std::mutex &mutex_spi);
+	explicit       UserInputPi3 (TimeShareThread &thread_spi);
 	virtual        ~UserInputPi3 ();
 
 
@@ -133,6 +137,9 @@ protected:
 	virtual int    do_get_nbr_param (UserInputType type) const;
 	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
 	virtual void   do_return_cell (MsgCell &cell);
+
+	// TimeShareCbInterface
+	virtual bool   do_process_timeshare_op ();
 
 
 
@@ -210,7 +217,8 @@ private:
 	int            read_adc (int port, int chn);
 	int64_t        read_clock_ns () const;
 
-	std::mutex &   _mutex_spi;
+	TimeShareThread &
+	               _thread_spi;
 	std::array <int, _nbr_dev_23017>
 	               _hnd_23017_arr;      // MCP23017: Port expander
 	int            _hnd_3008;           // MCP3008 : ADC

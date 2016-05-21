@@ -116,8 +116,8 @@ const int UserInputPi3::_pot_arr [_nbr_pot] =
 // ::pinMode (_pin_rst, OUTPUT);
 // ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-UserInputPi3::UserInputPi3 (std::mutex &mutex_spi)
-:	_mutex_spi (mutex_spi)
+UserInputPi3::UserInputPi3 (TimeShareThread &thread_spi)
+:	_thread_spi (thread_spi)
 ,	_hnd_23017_arr ()
 ,	_hnd_3008 (::wiringPiSPISetup (_spi_port, _spi_rate))
 ,	_recip_list ()
@@ -160,12 +160,14 @@ UserInputPi3::UserInputPi3 (std::mutex &mutex_spi)
 	}
 
 	_polling_thread = std::thread (&UserInputPi3::polling_loop, this);
+	_thread_spi.register_cb (*this, 1000 * 1000 / 100); // 100 Hz refresh rate
 }
 
 
 
 UserInputPi3::~UserInputPi3 ()
 {
+	_thread_spi.remove_cb (*this);
 	close_everything ();
 }
 
@@ -207,6 +209,26 @@ void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue
 void	UserInputPi3::do_return_cell (MsgCell &cell)
 {
 	_msg_pool.return_cell (cell);
+}
+
+
+
+bool	UserInputPi3::do_process_timeshare_op ()
+{
+	const int64_t  cur_time = read_clock_ns ();
+
+	// Potentiometers
+	for (int i = 0; i < _nbr_pot; ++i)
+	{
+		const int      adc_index = _pot_arr [i];
+		const int      val       = read_adc (_spi_port, adc_index);
+		if (val >= 0)
+		{
+			handle_pot (i, val, cur_time);
+		}
+	}
+
+	return false;
 }
 
 
@@ -298,17 +320,6 @@ void	UserInputPi3::polling_loop ()
 			handle_rotenc (i, (v0 != 0), (v1 != 0), cur_time);
 		}
 #endif
-
-		// Potentiometers
-		for (int i = 0; i < _nbr_pot && ! _quit_flag; ++i)
-		{
-			const int      adc_index = _pot_arr [i];
-			const int      val       = read_adc (_spi_port, adc_index);
-			if (val >= 0)
-			{
-				handle_pot (i, val, cur_time);
-			}
-		}
 
 		// 10 ms between updates
 		/*** To do: probably too long for the rotary encoders ***/

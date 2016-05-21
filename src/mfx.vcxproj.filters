@@ -672,6 +672,12 @@
     <ClInclude Include="mfx\ui\DisplayPi3St7920.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\ui\TimeShareCbInterface.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\ui\TimeShareThread.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -841,6 +847,12 @@
       <Filter>mfx\cmd</Filter>
     </ClCompile>
     <ClCompile Include="mfx\ui\DisplayPi3St7920.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\TimeShareCbInterface.cpp">
+      <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\TimeShareThread.cpp">
       <Filter>mfx\ui</Filter>
     </ClCompile>
   </ItemGroup>

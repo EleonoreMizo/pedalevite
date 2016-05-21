@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/DisplayPi3Pcd8544.h"
+#include "mfx/ui/TimeShareThread.h"
 
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
@@ -54,14 +55,13 @@ namespace ui
 // ::pinMode (_pin_rst, OUTPUT);
 // ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-DisplayPi3Pcd8544::DisplayPi3Pcd8544 (std::mutex &mutex_spi)
-:	_mutex_spi (mutex_spi)
+DisplayPi3Pcd8544::DisplayPi3Pcd8544 (TimeShareThread &thread_spi)
+:	_thread_spi (thread_spi)
+,	_state (State_INIT)
 ,	_screen_buf ()
 ,	_hnd_spi (::wiringPiSPISetup (_spi_port, _spi_rate))
 ,	_msg_pool ()
 ,	_msg_queue ()
-,	_quit_flag (false)
-,	_refresher ()
 {
 	if (_hnd_spi == -1)
 	{
@@ -70,28 +70,14 @@ DisplayPi3Pcd8544::DisplayPi3Pcd8544 (std::mutex &mutex_spi)
 
 	_msg_pool.expand_to (256);
 
-	::pinMode  (_pin_dc , OUTPUT);
-	::pinMode  (_pin_cs , OUTPUT);
-
-	send_cmd (Cmd_FUNC_SET  | Cmd_H);
-	send_cmd (Cmd_TEMP_CTRL | 0x00);  // See 7.8
-	send_cmd (Cmd_BIAS_SYS  | 0x03);  // See 8.8
-	send_cmd (Cmd_SET_VOP   | 0x3A);  // See 8.9, and modified manually
-	send_cmd (Cmd_FUNC_SET);
-	send_cmd (Cmd_DISP_CTRL | Cmd_NORMAL);
-
-	_refresher = std::thread (&DisplayPi3Pcd8544::refresh_loop, this);
+	_thread_spi.register_cb (*this, 1000 * 1000 / 20); // 20 fps max refresh rate
 }
 
 
 
 DisplayPi3Pcd8544::~DisplayPi3Pcd8544 ()
 {
-	if (_refresher.joinable ())
-	{
-		_quit_flag = true;
-		_refresher.join ();
-	}
+	_thread_spi.remove_cb (*this);
 
 	MsgCell *      cell_ptr = 0;
 	do
@@ -169,6 +155,22 @@ void	DisplayPi3Pcd8544::do_refresh (int x, int y, int w, int h)
 
 
 
+bool	DisplayPi3St7920::do_process_timeshare_op ()
+{
+	if (_state == State_INIT)
+	{
+		init_device ();
+	}
+	else
+	{
+		check_msg ();
+	}
+
+	return (false);
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -184,8 +186,6 @@ void	DisplayPi3Pcd8544::send_spi (uint8_t x)
 
 void	DisplayPi3Pcd8544::send_cmd (uint8_t c)
 {
-	std::lock_guard <std::mutex>   lock (_mutex_spi);
-
 	::digitalWrite (_pin_dc, LOW);
 	::digitalWrite (_pin_cs, LOW);
 	send_spi (c);
@@ -196,8 +196,6 @@ void	DisplayPi3Pcd8544::send_cmd (uint8_t c)
 
 void	DisplayPi3Pcd8544::send_data (uint8_t a)
 {
-	std::lock_guard <std::mutex>   lock (_mutex_spi);
-
 	::digitalWrite (_pin_dc, HIGH);
 	::digitalWrite (_pin_cs, LOW);
 	send_spi (a);
@@ -211,8 +209,6 @@ void	DisplayPi3Pcd8544::send_line (int x, int row, uint8_t data_ptr [], int len)
 {
 	send_cmd (Cmd_SET_Y | row);
 	send_cmd (Cmd_SET_X | x);
-
-	std::lock_guard <std::mutex>   lock (_mutex_spi);
 
 	::digitalWrite (_pin_dc, HIGH);
 	::digitalWrite (_pin_cs, LOW);
@@ -229,50 +225,51 @@ void	DisplayPi3Pcd8544::return_cell (MsgCell &cell)
 
 
 
-void	DisplayPi3Pcd8544::refresh_loop ()
+void	DisplayPi3Pcd8544::init_device ()
 {
-	while (! _quit_flag)
+	::pinMode  (_pin_dc , OUTPUT);
+	::pinMode  (_pin_cs , OUTPUT);
+
+	send_cmd (Cmd_FUNC_SET  | Cmd_H);
+	send_cmd (Cmd_TEMP_CTRL | 0x00);  // See 7.8
+	send_cmd (Cmd_BIAS_SYS  | 0x03);  // See 8.8
+	send_cmd (Cmd_SET_VOP   | 0x3A);  // See 8.9, and modified manually
+	send_cmd (Cmd_FUNC_SET);
+	send_cmd (Cmd_DISP_CTRL | Cmd_NORMAL);
+
+	_state = State_IDLE;
+}
+
+
+
+void	DisplayPi3Pcd8544::check_msg ()
+{
+	assert (_state == State_IDLE);
+
+	int            x1 = INT_MAX;
+	int            y1 = INT_MAX;
+	int            x2 = INT_MIN;
+	int            y2 = INT_MIN;
+	MsgCell *      cell_ptr = 0;
+	do
 	{
-		int            x1 = _scr_w;
-		int            y1 = _scr_h;
-		int            x2 = 0;
-		int            y2 = 0;
-		MsgCell *      cell_ptr = 0;
-		do
+		cell_ptr = _msg_queue.dequeue ();
+		if (cell_ptr != 0)
 		{
-			cell_ptr = _msg_queue.dequeue ();
-			if (cell_ptr != 0)
-			{
-				if (x2 - x1 <= 0)
-				{
-					x1 =      cell_ptr->_val._x;
-					y1 =      cell_ptr->_val._y;
-					x2 = x1 + cell_ptr->_val._w;
-					y2 = y1 + cell_ptr->_val._h;
-				}
-				else
-				{
-					x1 = std::min (x1, cell_ptr->_val._x);
-					y1 = std::min (y1, cell_ptr->_val._y);
-					x2 = std::max (x2, cell_ptr->_val._x + cell_ptr->_val._w);
-					y2 = std::max (y2, cell_ptr->_val._y + cell_ptr->_val._h);
-				}
+			x1 = std::min (x1, cell_ptr->_val._x);
+			y1 = std::min (y1, cell_ptr->_val._y);
+			x2 = std::max (x2, cell_ptr->_val._x + cell_ptr->_val._w);
+			y2 = std::max (y2, cell_ptr->_val._y + cell_ptr->_val._h);
 
-				return_cell (*cell_ptr);
-			}
+			return_cell (*cell_ptr);
 		}
-		while (cell_ptr != 0 && ! _quit_flag);
-
-		if (x2 - x1 > 0)
-		{
-			send_to_display (x1, y1, x2 - x1, y2 - y1);
-		}
-
-		// 20 Hz refresh. Should be enough for static display.
-		::delay (50);
 	}
+	while (cell_ptr != 0 && ! _quit_flag);
 
-	_quit_flag = false;
+	if (x1 < x2)
+	{
+		send_to_display (x1, y1, x2 - x1, y2 - y1);
+	}
 }
 
 

@@ -283,6 +283,8 @@
     <ClInclude Include="mfx\ui\LedPi3.h" />
     <ClInclude Include="mfx\ui\LedVoid.h" />
     <ClInclude Include="mfx\ui\RotEnc.h" />
+    <ClInclude Include="mfx\ui\TimeShareCbInterface.h" />
+    <ClInclude Include="mfx\ui\TimeShareThread.h" />
     <ClInclude Include="mfx\ui\UserInputInterface.h" />
     <ClInclude Include="mfx\ui\UserInputMsg.h" />
     <ClInclude Include="mfx\ui\UserInputPi3.h" />
@@ -362,6 +364,8 @@
     </ClCompile>
     <ClCompile Include="mfx\ui\LedVoid.cpp" />
     <ClCompile Include="mfx\ui\RotEnc.cpp" />
+    <ClCompile Include="mfx\ui\TimeShareCbInterface.cpp" />
+    <ClCompile Include="mfx\ui\TimeShareThread.cpp" />
     <ClCompile Include="mfx\ui\UserInputInterface.cpp" />
     <ClCompile Include="mfx\ui\UserInputMsg.cpp" />
     <ClCompile Include="mfx\ui\UserInputPi3.cpp">

@@ -31,10 +31,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "conc/LockFreeCell.h"
 #include "conc/LockFreeQueue.h"
 #include "mfx/ui/DisplayInterface.h"
+#include "mfx/ui/TimeShareCbInterface.h"
 
 #include <array>
-#include <mutex>
-#include <thread>
 
 
 
@@ -45,15 +44,18 @@ namespace ui
 
 
 
+class TimeShareThread;
+
 class DisplayPi3St7920
 :	public DisplayInterface
+,	public TimeShareCbInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	explicit       DisplayPi3St7920 (std::mutex &mutex_spi);
+	explicit       DisplayPi3St7920 (TimeShareThread &thread_spi);
 	virtual        ~DisplayPi3St7920 ();
 
 	void           send_to_display_immediate (int x, int y, int w, int h);
@@ -64,7 +66,6 @@ public:
 	static const int  _spi_port = 1;
 	static const int  _spi_rate = 1 * 1000*1000; // Hz.
 
-	static const int  _pin_dc   = 12;   // ?
 	static const int  _pin_cs   = 16;   // Chip select (RS)
 	static const int  _pin_rst  = 18;   // Reset (RST)
 
@@ -85,11 +86,37 @@ protected:
 
 	virtual void   do_refresh (int x, int y, int w, int h);
 
+	// TimeShareCbInterface
+	virtual bool   do_process_timeshare_op ();
+
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	enum State
+	{
+		State_INIT = 0,            // SPI interface needs to be initialized
+		State_IDLE,                // Waiting for redrawing messages
+		State_REDRAW,              // Drawing in progress
+
+		State_NBR_ELT
+	};
+
+	class StateRedraw
+	{
+	public:
+		int            _col_beg;
+		int            _nbr_col;
+		int            _y;
+		int            _h;
+		const uint8_t *
+		               _pix_ptr;
+		int            _nbr_pairs;
+		int            _pair_cnt;
+		int            _row;
+	};
 
 	// p. 16
 	enum Cmd : uint8_t
@@ -109,7 +136,7 @@ private:
 		Cmd_RAM_SEL       = 0x02,
 		Cmd_SCROLL        = 0x03,
 		Cmd_REVERSE       = 0x04,
-		Cmd_FNC_SET_E     = 0x24, // With RE flag set
+		Cmd_FNC_SET_E     = 0x24,  // With RE flag set
 		Cmd_IRAM_ADR      = 0x40,
 		Cmd_SCROLL_ADR    = 0x40,
 		Cmd_GDRAM_ADR     = 0x80,
@@ -156,6 +183,13 @@ private:
 	typedef conc::LockFreeQueue <RefreshMsg> MsgQueue;
 	typedef std::array <uint8_t, (_scr_w >> 4) * 4 * 2 + 1> SpiBuffer;
 
+	void           return_cell (MsgCell &cell);
+
+	void           init_device ();
+	void           check_msg ();
+	void           start_redraw (int x, int y, int w, int h);
+	void           redraw_part ();
+
 	void           send_byte_raw (uint8_t a);
 	void           send_byte_header (uint8_t rwrs, uint8_t a);
 	void           send_cmd (uint8_t x);
@@ -163,14 +197,13 @@ private:
 	void           send_line (int col, int y, const uint8_t pix_ptr [], int len);
 	void           send_2_full_lines (int y, const uint8_t pix1_ptr [], const uint8_t pix2_ptr []);
 	void           prepare_line_data (SpiBuffer &buf, int &pos, const uint8_t pix_ptr [], int len);
+	void           send_line_prologue (int x, int y, SpiBuffer &spibuf, int &spipos);
 	void           send_line_epilogue ();
 
-	void           return_cell (MsgCell &cell);
+	TimeShareThread &
+	               _thread_spi;
+	volatile State _state;
 
-	void           refresh_loop ();
-	void           send_to_display (int x, int y, int w, int h);
-
-	std::mutex &   _mutex_spi;
 	std::array <uint8_t, _scr_w * _scr_h>
 	               _screen_buf;
 	int            _hnd_spi;
@@ -178,8 +211,7 @@ private:
 	MsgPool        _msg_pool;
 	MsgQueue       _msg_queue;
 
-	volatile bool  _quit_flag;
-	std::thread    _refresher;
+	StateRedraw    _redraw;
 
 	static const int _delay_std =  101; // Microseconds. 72 us are required but wiringPi would use a cpu-consuming spinlock.
 	static const int _delay_clr = 1600; // Microseconds.
@@ -192,7 +224,7 @@ private:
 private:
 
 	               DisplayPi3St7920 ()                               = delete;
-	               DisplayPi3St7920 (const DisplayPi3St7920 &other) = delete;
+	               DisplayPi3St7920 (const DisplayPi3St7920 &other)  = delete;
 	DisplayPi3St7920 &
 	               operator = (const DisplayPi3St7920 &other)        = delete;
 	bool           operator == (const DisplayPi3St7920 &other) const = delete;

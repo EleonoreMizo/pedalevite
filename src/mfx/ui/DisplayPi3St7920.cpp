@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/DisplayPi3St7920.h"
+#include "mfx/ui/TimeShareThread.h"
 
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
@@ -54,14 +55,14 @@ namespace ui
 // ::pinMode (_pin_rst, OUTPUT);
 // ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-DisplayPi3St7920::DisplayPi3St7920 (std::mutex &mutex_spi)
-:	_mutex_spi (mutex_spi)
+DisplayPi3St7920::DisplayPi3St7920 (TimeShareThread &thread_spi)
+:	_thread_spi (thread_spi)
+,	_state (State_INIT)
 ,	_screen_buf ()
 ,	_hnd_spi (::wiringPiSPISetupMode (_spi_port, _spi_rate, 0))
 ,	_msg_pool ()
 ,	_msg_queue ()
-,	_quit_flag (false)
-,	_refresher ()
+,	_redraw ()
 {
 	if (_hnd_spi == -1)
 	{
@@ -70,33 +71,14 @@ DisplayPi3St7920::DisplayPi3St7920 (std::mutex &mutex_spi)
 
 	_msg_pool.expand_to (256);
 
-	::pinMode  (_pin_dc , OUTPUT);
-	::pinMode  (_pin_cs , OUTPUT);
-
-	send_cmd (Cmd_FNC_SET | Cmd_FNC_SET_DL); // Twice because RE cannot be set
-	send_cmd (Cmd_FNC_SET | Cmd_FNC_SET_DL); // at the same time as other bits.
-
-	send_cmd (Cmd_CLEAR);
-	::delayMicroseconds (_delay_clr);
-	send_cmd (Cmd_ENTRY     | Cmd_ENTRY_ID);
-	send_cmd (Cmd_DISPLAY   | Cmd_DISPLAY_DISP);
-
-	send_cmd (Cmd_FNC_SET_E | Cmd_FNC_SET_DL);
-	send_cmd (Cmd_FNC_SET_E | Cmd_FNC_SET_DL | Cmd_FNC_SET_E_G);
-	send_cmd (Cmd_RAM_SEL);
-
-	_refresher = std::thread (&DisplayPi3St7920::refresh_loop, this);
+	_thread_spi.register_cb (*this, 1000 * 1000 / 20); // 20 fps max refresh rate
 }
 
 
 
 DisplayPi3St7920::~DisplayPi3St7920 ()
 {
-	if (_refresher.joinable ())
-	{
-		_quit_flag = true;
-		_refresher.join ();
-	}
+	_thread_spi.remove_cb (*this);
 
 	MsgCell *      cell_ptr = 0;
 	do
@@ -181,7 +163,164 @@ void	DisplayPi3St7920::do_refresh (int x, int y, int w, int h)
 
 
 
+bool	DisplayPi3St7920::do_process_timeshare_op ()
+{
+	if (_state == State_INIT)
+	{
+		init_device ();
+	}
+	else if (_state == State_REDRAW)
+	{
+		redraw_part ();
+	}
+	else
+	{
+		check_msg ();
+	}
+
+	return (_state == State_REDRAW);
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	DisplayPi3St7920::return_cell (MsgCell &cell)
+{
+	_msg_pool.return_cell (cell);
+}
+
+
+
+void	DisplayPi3St7920::init_device ()
+{
+	assert (_state == State_INIT);
+
+	::pinMode  (_pin_cs , OUTPUT);
+
+	send_cmd (Cmd_FNC_SET | Cmd_FNC_SET_DL); // Twice because RE cannot be set
+	send_cmd (Cmd_FNC_SET | Cmd_FNC_SET_DL); // at the same time as other bits.
+
+	send_cmd (Cmd_CLEAR);
+	::delayMicroseconds (_delay_clr);
+	send_cmd (Cmd_ENTRY     | Cmd_ENTRY_ID);
+	send_cmd (Cmd_DISPLAY   | Cmd_DISPLAY_DISP);
+
+	send_cmd (Cmd_FNC_SET_E | Cmd_FNC_SET_DL);
+	send_cmd (Cmd_FNC_SET_E | Cmd_FNC_SET_DL | Cmd_FNC_SET_E_G);
+	send_cmd (Cmd_RAM_SEL);
+
+	_state = State_IDLE;
+}
+
+
+
+void	DisplayPi3St7920::check_msg ()
+{
+	int            x1 = INT_MAX;
+	int            y1 = INT_MAX;
+	int            x2 = INT_MIN;
+	int            y2 = INT_MIN;
+	MsgCell *      cell_ptr = 0;
+	do
+	{
+		cell_ptr = _msg_queue.dequeue ();
+		if (cell_ptr != 0)
+		{
+			x1 = std::min (x1, cell_ptr->_val._x);
+			y1 = std::min (y1, cell_ptr->_val._y);
+			x2 = std::max (x2, cell_ptr->_val._x + cell_ptr->_val._w);
+			y2 = std::max (y2, cell_ptr->_val._y + cell_ptr->_val._h);
+
+			return_cell (*cell_ptr);
+		}
+	}
+	while (cell_ptr != 0);
+
+	if (x1 < x2)
+	{
+		start_redraw (x1, y1, x2 - x1, y2 - y1);
+		redraw_part ();
+	}
+
+	return cont_flag;
+}
+
+
+
+void	DisplayPi3St7920::start_redraw (int x, int y, int w, int h)
+{
+	assert (_state == State_IDLE);
+	assert (x >= 0);
+	assert (y >= 0);
+	assert (w > 0);
+	assert (h > 0);
+	assert (x + w <= _scr_w);
+	assert (y + h <= _scr_h);
+
+	_redraw._y       = y;
+	_redraw._h       = h;
+	_redraw._col_beg =   x           >> 4;
+	_redraw._nbr_col = ((x + w + 15) >> 4) - col_beg;
+	const int        stride  = get_stride ();
+	_redraw._pix_ptr = &_screen_buf [(_redraw._col_beg << 4) + y * stride];
+
+	_redraw._nbr_pairs = 0;
+	_redraw._pair_cnt  = 0;
+	if (_redraw._col_beg == 0 && _redraw._nbr_col == _scr_w >> 4)
+	{
+		const int        half_h = _scr_h / 2;
+		_redraw._nbr_pairs = h - half_h;
+	}
+
+	_state = State_REDRAW;
+}
+
+
+
+void	DisplayPi3St7920::redraw_part ()
+{
+	assert (_state == State_REDRAW);
+
+	const int        stride = get_stride ();
+
+	for (int cnt = 0; cnt < 8 && _state == State_REDRAW; ++cnt)
+	{
+		if (_redraw._pair_cnt < _redraw._nbr_pairs)
+		{
+			const int        half_h = _scr_h / 2;
+			send_2_full_lines (
+				_redraw._y,
+				_redraw._pix_ptr,
+				_redraw._pix_ptr + stride * half_h
+			);
+			_redraw._pix_ptr += stride;
+			++ _redraw._y;
+			++ _redraw._pair_cnt;
+			_redraw._h -= 2;
+		}
+		else if (_redraw._h > 0)
+		{
+			send_line (
+				_redraw._col_beg,
+				_redraw._y,
+				_redraw._pix_ptr,
+				_redraw._nbr_col
+			);
+			_redraw._pix_ptr += stride;
+			++ _redraw._y;
+			-- _redraw._h;
+		}
+
+		// Finished?
+		if (_redraw._h <= 0)
+		{
+			_state == State_IDLE;
+		}
+	}
+}
 
 
 
@@ -212,14 +351,9 @@ void	DisplayPi3St7920::send_byte_header (uint8_t rwrs, uint8_t a)
 
 void	DisplayPi3St7920::send_cmd (uint8_t x)
 {
-	{
-		std::lock_guard <std::mutex>   lock (_mutex_spi);
-
-		::digitalWrite (_pin_cs, HIGH);
-		send_byte_header (0, x);
-		::digitalWrite (_pin_cs, LOW);
-		::delayMicroseconds (_delay_chg);
-	}
+	::digitalWrite (_pin_cs, HIGH);
+	send_byte_header (0, x);
+	::digitalWrite (_pin_cs, LOW);
 	::delayMicroseconds (_delay_std);
 }
 
@@ -227,14 +361,9 @@ void	DisplayPi3St7920::send_cmd (uint8_t x)
 
 void	DisplayPi3St7920::send_data (uint8_t x)
 {
-	{
-		std::lock_guard <std::mutex>   lock (_mutex_spi);
-
-		::digitalWrite (_pin_cs, HIGH);
-		send_byte_header (Serial_RS, x);
-		::digitalWrite (_pin_cs, LOW);
-		::delayMicroseconds (_delay_chg);
-	}
+	::digitalWrite (_pin_cs, HIGH);
+	send_byte_header (Serial_RS, x);
+	::digitalWrite (_pin_cs, LOW);
 	::delayMicroseconds (_delay_std);
 }
 
@@ -258,24 +387,14 @@ void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int 
 		ofs_x = _scr_w >> 4;
 	}
 
-	{
-		std::lock_guard <std::mutex>   lock (_mutex_spi);
+	SpiBuffer       spibuf;
+	int             spipos = 0;
+	send_line_prologue (ofs_x, y + ofs_y, spibuf, spipos);
 
-		::digitalWrite (_pin_cs, HIGH);
-		send_byte_header (0, Cmd_GDRAM_ADR | (y + ofs_y));
-		send_byte_raw (      Cmd_GDRAM_ADR | (    ofs_x));
-		::delayMicroseconds (_delay_chg);
+	prepare_line_data (spibuf, spipos, pix_ptr, len);
+	::wiringPiSPIDataRW (_spi_port, &spibuf [0], spipos);
 
-		SpiBuffer       spibuf;
-		int             spipos = 1;
-		spibuf [0] = Serial_HEADER | Serial_RS;
-		prepare_line_data (spibuf, spipos, pix_ptr, len);
-		::wiringPiSPIDataRW (_spi_port, &spibuf [0], spipos);
-		::delayMicroseconds (_delay_chg);
-
-		send_line_epilogue ();
-	}
-	::delayMicroseconds (_delay_std);
+	send_line_epilogue ();
 }
 
 
@@ -287,26 +406,16 @@ void	DisplayPi3St7920::send_2_full_lines (int y, const uint8_t pix1_ptr [], cons
 	assert (pix1_ptr != 0);
 	assert (pix2_ptr != 0);
 
-	{
-		std::lock_guard <std::mutex>   lock (_mutex_spi);
+	SpiBuffer       spibuf;
+	int             spipos = 0;
+	send_line_prologue (0, y, spibuf, spipos);
 
-		::digitalWrite (_pin_cs, HIGH);
-		send_byte_header (0, Cmd_GDRAM_ADR | y);
-		send_byte_raw (      Cmd_GDRAM_ADR | 0);
-		::delayMicroseconds (_delay_chg);
+	const int       len = _scr_w >> 4;
+	prepare_line_data (spibuf, spipos, pix1_ptr, len);
+	prepare_line_data (spibuf, spipos, pix2_ptr, len);
+	::wiringPiSPIDataRW (_spi_port, &spibuf [0], spipos);
 
-		SpiBuffer       spibuf;
-		int             spipos = 1;
-		spibuf [0] = Serial_HEADER | Serial_RS;
-		const int       len = _scr_w >> 4;
-		prepare_line_data (spibuf, spipos, pix1_ptr, len);
-		prepare_line_data (spibuf, spipos, pix2_ptr, len);
-		::wiringPiSPIDataRW (_spi_port, &spibuf [0], spipos);
-		::delayMicroseconds (_delay_chg);
-
-		send_line_epilogue ();
-	}
-	::delayMicroseconds (_delay_std);
+	send_line_epilogue ();
 }
 
 
@@ -335,8 +444,23 @@ void	DisplayPi3St7920::prepare_line_data (SpiBuffer &buf, int &pos, const uint8_
 
 
 
+void	DisplayPi3St7920::send_line_prologue (int x, int y, SpiBuffer &spibuf, int &spipos)
+{
+	::digitalWrite (_pin_cs, HIGH);
+	send_byte_header (0, Cmd_GDRAM_ADR | y);
+	send_byte_raw (      Cmd_GDRAM_ADR | x);
+	::delayMicroseconds (_delay_chg);
+
+	spibuf [spipos] = Serial_HEADER | Serial_RS;
+	++ spipos;
+}
+
+
+
 void	DisplayPi3St7920::send_line_epilogue ()
 {
+	::delayMicroseconds (_delay_chg);
+
 	// We need to put the current address out of the screen
 	// because sometimes parasite bytes are randomly written.
 	send_byte_header (0, Cmd_GDRAM_ADR | 63);
@@ -345,104 +469,7 @@ void	DisplayPi3St7920::send_line_epilogue ()
 	send_byte_header (Serial_RS, 0);
 	send_byte_header (Serial_RS, 0);
 	::digitalWrite (_pin_cs, LOW);
-	::delayMicroseconds (_delay_chg);
-}
-
-
-
-void	DisplayPi3St7920::return_cell (MsgCell &cell)
-{
-	_msg_pool.return_cell (cell);
-}
-
-
-
-void	DisplayPi3St7920::refresh_loop ()
-{
-	while (! _quit_flag)
-	{
-		int            x1 = _scr_w;
-		int            y1 = _scr_h;
-		int            x2 = 0;
-		int            y2 = 0;
-		MsgCell *      cell_ptr = 0;
-		do
-		{
-			cell_ptr = _msg_queue.dequeue ();
-			if (cell_ptr != 0)
-			{
-				if (x2 - x1 <= 0)
-				{
-					x1 =      cell_ptr->_val._x;
-					y1 =      cell_ptr->_val._y;
-					x2 = x1 + cell_ptr->_val._w;
-					y2 = y1 + cell_ptr->_val._h;
-				}
-				else
-				{
-					x1 = std::min (x1, cell_ptr->_val._x);
-					y1 = std::min (y1, cell_ptr->_val._y);
-					x2 = std::max (x2, cell_ptr->_val._x + cell_ptr->_val._w);
-					y2 = std::max (y2, cell_ptr->_val._y + cell_ptr->_val._h);
-				}
-
-				return_cell (*cell_ptr);
-			}
-		}
-		while (cell_ptr != 0 && ! _quit_flag);
-
-		if (x2 - x1 > 0)
-		{
-			send_to_display (x1, y1, x2 - x1, y2 - y1);
-		}
-
-		// 20 Hz refresh. Should be enough for static display.
-		::delay (50);
-	}
-
-	_quit_flag = false;
-}
-
-
-
-void	DisplayPi3St7920::send_to_display (int x, int y, int w, int h)
-{
-	assert (x >= 0);
-	assert (y >= 0);
-	assert (w > 0);
-	assert (h > 0);
-	assert (x + w <= _scr_w);
-	assert (y + h <= _scr_h);
-
-	const int        col_beg =  x           >> 4;
-	const int        col_end = (x + w + 15) >> 4;
-	const int        nbr_col = col_end - col_beg;
-	const int        stride  = get_stride ();
-	const uint8_t *  pix_ptr = &_screen_buf [col_beg * 16 + y * stride];
-
-	if (col_beg == 0 && nbr_col == _scr_w >> 4)
-	{
-		const int        half_h   = _scr_h / 2;
-		const int        nbr_pair = h - half_h;
-		if (nbr_pair > 0)
-		{
-			h -= nbr_pair * 2;
-
-			for (int pair_cnt = 0; pair_cnt < nbr_pair; ++pair_cnt)
-			{
-				send_2_full_lines (y, pix_ptr, pix_ptr + stride * half_h);
-				pix_ptr += stride;
-				++ y;
-			}
-		}
-	}
-
-	const int        row_end =  y + h;
-	for (int row = y; row < row_end; ++row)
-	{
-		send_line (col_beg, row, pix_ptr, nbr_col);
-		pix_ptr += stride;
-	}
+	::delayMicroseconds (_delay_std);
 }
 
 

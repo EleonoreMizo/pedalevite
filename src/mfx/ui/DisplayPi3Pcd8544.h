@@ -31,10 +31,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "conc/LockFreeCell.h"
 #include "conc/LockFreeQueue.h"
 #include "mfx/ui/DisplayInterface.h"
+#include "mfx/ui/TimeShareCbInterface.h"
 
 #include <array>
-#include <mutex>
-#include <thread>
 
 
 
@@ -45,15 +44,18 @@ namespace ui
 
 
 
+class TimeShareThread;
+
 class DisplayPi3Pcd8544
 :	public DisplayInterface
+,	public TimeShareCbInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	explicit       DisplayPi3Pcd8544 (std::mutex &mutex_spi);
+	explicit       DisplayPi3Pcd8544 (TimeShareThread &thread_spi);
 	virtual        ~DisplayPi3Pcd8544 ();
 
 	static const int  _scr_w    = 84;
@@ -83,11 +85,22 @@ protected:
 
 	virtual void   do_refresh (int x, int y, int w, int h);
 
+	// TimeShareCbInterface
+	virtual bool   do_process_timeshare_op ();
+
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	enum State
+	{
+		State_INIT = 0,            // SPI interface needs to be initialized
+		State_IDLE,                // Waiting for redrawing messages
+
+		State_NBR_ELT
+	};
 
 	// p. 14
 	enum Cmd : uint8_t
@@ -135,19 +148,21 @@ private:
 
 	void           return_cell (MsgCell &cell);
 
-	void           refresh_loop ();
+	void           init_device ();
+	void           check_msg ();
+
 	void           send_to_display (int x, int y, int w, int h);
 
-	std::mutex &   _mutex_spi;
+	TimeShareThread &
+	               _thread_spi;
+	volatile State _state;
+
 	std::array <uint8_t, _scr_w * _scr_h>
 	               _screen_buf;
 	int            _hnd_spi;
 
 	MsgPool        _msg_pool;
 	MsgQueue       _msg_queue;
-
-	volatile bool  _quit_flag;
-	std::thread    _refresher;
 
 
 
