@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/ui/TimeShareThread.h"
 #include "mfx/ui/UserInputPi3.h"
 
 #include <wiringPi.h>
@@ -443,8 +444,6 @@ int	UserInputPi3::read_adc (int port, int chn)
 		uint8_t (chn << 4),
 		0
 	};
-
-	std::lock_guard <std::mutex>   lock (_mutex_spi);
 
 	int            ret_val = ::wiringPiSPIDataRW (port, &buffer [0], msg_len);
 	if (ret_val != -1)

@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <stdexcept>
 
 #include <cassert>
+#include <climits>
 
 
 
@@ -93,13 +94,6 @@ DisplayPi3St7920::~DisplayPi3St7920 ()
 
 	close (_hnd_spi);
 	_hnd_spi = -1;
-}
-
-
-
-void	DisplayPi3St7920::send_to_display_immediate (int x, int y, int w, int h)
-{
-	send_to_display (x, y, w, h);
 }
 
 
@@ -244,8 +238,6 @@ void	DisplayPi3St7920::check_msg ()
 		start_redraw (x1, y1, x2 - x1, y2 - y1);
 		redraw_part ();
 	}
-
-	return cont_flag;
 }
 
 
@@ -263,7 +255,7 @@ void	DisplayPi3St7920::start_redraw (int x, int y, int w, int h)
 	_redraw._y       = y;
 	_redraw._h       = h;
 	_redraw._col_beg =   x           >> 4;
-	_redraw._nbr_col = ((x + w + 15) >> 4) - col_beg;
+	_redraw._nbr_col = ((x + w + 15) >> 4) - _redraw._col_beg;
 	const int        stride  = get_stride ();
 	_redraw._pix_ptr = &_screen_buf [(_redraw._col_beg << 4) + y * stride];
 
@@ -317,7 +309,7 @@ void	DisplayPi3St7920::redraw_part ()
 		// Finished?
 		if (_redraw._h <= 0)
 		{
-			_state == State_IDLE;
+			_state = State_IDLE;
 		}
 	}
 }

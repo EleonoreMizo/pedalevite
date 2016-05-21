@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <stdexcept>
 
 #include <cassert>
+#include <climits>
 
 
 
@@ -155,7 +156,7 @@ void	DisplayPi3Pcd8544::do_refresh (int x, int y, int w, int h)
 
 
 
-bool	DisplayPi3St7920::do_process_timeshare_op ()
+bool	DisplayPi3Pcd8544::do_process_timeshare_op ()
 {
 	if (_state == State_INIT)
 	{
@@ -264,7 +265,7 @@ void	DisplayPi3Pcd8544::check_msg ()
 			return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0 && ! _quit_flag);
+	while (cell_ptr != 0);
 
 	if (x1 < x2)
 	{

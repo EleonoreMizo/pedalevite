@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/TimeShareThread.h"
 
 #if fstb_IS (ARCHI, ARM)
+	#include <wiringPi.h>
 #elif fstb_IS (ARCHI, X86)
 	#include <Windows.h>
 #else

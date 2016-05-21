@@ -194,7 +194,12 @@ protected:
 };
 
 Context::Context (double sample_freq, int max_block_size)
-:	_buf_alig (4096)
+:
+#if fstb_IS (ARCHI, ARM)
+	_thread_spi (10 * 1000)
+,
+#endif
+	_buf_alig (4096)
 ,	_proc_ctx ()
 ,	_queue_from_input ()
 ,	_central (_queue_from_input, _user_input)
