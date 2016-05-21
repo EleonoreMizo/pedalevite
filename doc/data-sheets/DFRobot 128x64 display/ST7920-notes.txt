@@ -4,11 +4,11 @@
 
 Connectique :
 1	VSS	GND
-2	VDD	+3,3 V
-3	V0	Contrast (pot GND-VDD)
-4	RS	Chip Select
-5	R/W	Data
-6	E	Clock
+2	VDD	5 V
+3	V0		Contrast (pot GND-VDD)
+4	RS	x	Chip Select
+5	R/W	x	Data
+6	E	x	Clock
 7	DB0
 8	DB1
 9	DB2
@@ -17,10 +17,10 @@ Connectique :
 12	DB5
 13	DB6
 14	DB7
-15	PSB	Parallel/Serial -> GND
+15	PSB	GND	Parallel/Serial
 16	(NC)
-17	RST	*
+17	RST	x	Reset
 18	VOUT
-19	BLA	+3,3 V
-20	BLK	Black light (switch GND/NC)
+19	BLA	5 V	Back light alim
+20	BLK	GND	Back light (switch GND/NC) -> 0 = on
 
