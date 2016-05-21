@@ -115,6 +115,13 @@ DisplayPi3St7920::~DisplayPi3St7920 ()
 
 
 
+void	DisplayPi3St7920::send_to_display_immediate (int x, int y, int w, int h)
+{
+	send_to_display (x, y, w, h);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -211,6 +218,7 @@ void	DisplayPi3St7920::send_cmd (uint8_t x)
 		::digitalWrite (_pin_cs, HIGH);
 		send_byte_header (0, x);
 		::digitalWrite (_pin_cs, LOW);
+		::delayMicroseconds (_delay_chg);
 	}
 	::delayMicroseconds (_delay_std);
 }
@@ -225,6 +233,7 @@ void	DisplayPi3St7920::send_data (uint8_t x)
 		::digitalWrite (_pin_cs, HIGH);
 		send_byte_header (Serial_RS, x);
 		::digitalWrite (_pin_cs, LOW);
+		::delayMicroseconds (_delay_chg);
 	}
 	::delayMicroseconds (_delay_std);
 }
@@ -251,6 +260,7 @@ void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int 
 
 	{
 		std::lock_guard <std::mutex>   lock (_mutex_spi);
+
 		::digitalWrite (_pin_cs, HIGH);
 		send_byte_header (0, Cmd_GDRAM_ADR | (y + ofs_y));
 		send_byte_raw (      Cmd_GDRAM_ADR | (    ofs_x));
@@ -265,7 +275,6 @@ void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int 
 
 		send_line_epilogue ();
 	}
-
 	::delayMicroseconds (_delay_std);
 }
 
@@ -280,6 +289,7 @@ void	DisplayPi3St7920::send_2_full_lines (int y, const uint8_t pix1_ptr [], cons
 
 	{
 		std::lock_guard <std::mutex>   lock (_mutex_spi);
+
 		::digitalWrite (_pin_cs, HIGH);
 		send_byte_header (0, Cmd_GDRAM_ADR | y);
 		send_byte_raw (      Cmd_GDRAM_ADR | 0);
@@ -296,7 +306,6 @@ void	DisplayPi3St7920::send_2_full_lines (int y, const uint8_t pix1_ptr [], cons
 
 		send_line_epilogue ();
 	}
-
 	::delayMicroseconds (_delay_std);
 }
 

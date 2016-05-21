@@ -67,7 +67,6 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 	int            port = 0;
-	int            chn  = 0;
 
 	::wiringPiSetupPhys ();
 	int            file = ::wiringPiSPISetup  (port, 1000000);   // SPI clock: 1 MHz
@@ -79,17 +78,21 @@ int main (int argc, char *argv [])
 
 	while (ret_val == 0)
 	{
-		const int      val = MAIN_read_adc (port, chn);
-		if (val < 0)
+		printf ("\rPort %d", port);
+		for (int chn = 0; chn < 8 && ret_val == 0; ++chn)
 		{
-			ret_val = -1;
+			const int      val = MAIN_read_adc (port, chn);
+			if (val < 0)
+			{
+				ret_val = -1;
+			}
+			else
+			{
+				printf (", #%d: 0x%03X", chn, val);
+			}
 		}
-		else
-		{
-			printf ("\rPort %d, channel %d: 0x%03X", port, chn, val);
-			fflush (stdout);
-			::delay (250); // ms
-		}
+		fflush (stdout);
+		::delay (50); // ms
 	}
 
 	if (file != -1)

@@ -56,6 +56,8 @@ public:
 	explicit       DisplayPi3St7920 (std::mutex &mutex_spi);
 	virtual        ~DisplayPi3St7920 ();
 
+	void           send_to_display_immediate (int x, int y, int w, int h);
+
 	static const int  _scr_w    = 128;
 	static const int  _scr_h    = 64;
 
