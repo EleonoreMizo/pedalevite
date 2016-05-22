@@ -892,7 +892,9 @@ static int MAIN_main_loop (Context &ctx)
 
 		for (int led_index = 0; led_index < nbr_led; ++led_index)
 		{
-			ctx._leds.set_led (led_index, lum_arr [led_index]);
+			float           val = lum_arr [led_index];
+			//val = val * (0.25f + 0.75f * val);
+			ctx._leds.set_led (led_index, val);
 		}
 
 		char param_0 [255+1];

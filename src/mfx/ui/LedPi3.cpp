@@ -35,6 +35,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+#define mfx_ui_LedPi3_REVERSE_ORDER
+
+
 namespace mfx
 {
 namespace ui
@@ -46,7 +49,12 @@ namespace ui
 
 
 
-const int	LedPi3::_gpio_pin_arr [_nbr_led] = { 11, 13, 15 };
+const int	LedPi3::_gpio_pin_arr [_nbr_led] =
+#if defined (mfx_ui_LedPi3_REVERSE_ORDER)
+	{ 15, 13, 11 };
+#else
+	{ 11, 13, 15 };
+#endif
 
 
 
