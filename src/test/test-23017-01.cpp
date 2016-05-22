@@ -14,9 +14,9 @@
 
 static const int     MAIN_pin_reset       = 18;
 static const int     MAIN_pin_interrupt   = 8;
-static const int     MAIN_i2c_dev_23017   = 0x20 + 0;   // Slave address, p. 8
+static const int     MAIN_i2c_dev_23017   = 0x20 + 1;   // Slave address, p. 8
 static const int64_t MAIN_antibounce_time = 30 * 1000 * 1000; // Nanoseconds
-static const bool    MAIN_incremental_coder_flag = false;
+static const bool    MAIN_incremental_coder_flag = true;
 
 // IOCON.BANK = 0
 enum Cmd : uint8_t

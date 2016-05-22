@@ -183,6 +183,8 @@ public:
 	mfx::ui::UserInputInterface::MsgQueue
 	               _user_input_queue;
 	mfx::ui::Font  _fnt_8x12;
+	mfx::ui::Font  _fnt_6x8;
+	mfx::ui::Font  _fnt_6x6;
 
 	Context (double sample_freq, int max_block_size);
 	~Context ();
@@ -214,10 +216,13 @@ Context::Context (double sample_freq, int max_block_size)
 #endif
 ,	_user_input_queue ()
 ,	_fnt_8x12 ()
+,	_fnt_6x6 ()
 {
 	_usage_min.store (-1);
 	_usage_max.store (-1);
 	mfx::ui::FontDataDefault::make_08x12 (_fnt_8x12);
+	mfx::ui::FontDataDefault::make_06x08 (_fnt_6x8);
+	mfx::ui::FontDataDefault::make_06x06 (_fnt_6x6);
 
 	// Default: everything to the main queue
 	for (int type = 0; type < mfx::ui::UserInputType_NBR_ELT; ++type)
@@ -769,7 +774,37 @@ static int MAIN_audio_stop ()
 
 
 
-int MAIN_main_loop (Context &ctx)
+static void MAIN_print_text (int x, int y, const char *txt_0, uint8_t *screenbuf_ptr, int stride, mfx::ui::Font &fnt, int mag_x, int mag_y)
+{
+	int             pos    = 0;
+	const int       x_org  = x;
+	const int       char_w = fnt.get_char_w ();
+	const int       char_h = fnt.get_char_h ();
+	while (txt_0 [pos] != '\0')
+	{
+		const char      c = txt_0 [pos];
+		++ pos;
+		if (c == '\n')
+		{
+			x = x_org;
+			y += char_h * mag_y;
+		}
+		else
+		{
+			fnt.render_char (
+				screenbuf_ptr + x + y * stride,
+				c,
+				stride,
+				mag_x, mag_y
+			);
+			x += char_w * mag_x;
+		}
+	}
+}
+
+
+
+static int MAIN_main_loop (Context &ctx)
 {
 	fprintf (stderr, "Entering main loop...\n");
 
@@ -888,17 +923,19 @@ int MAIN_main_loop (Context &ctx)
 			const int      mag_y   = scr_h / char_h;
 			const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
 			const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
-			for (int i = 0; i < txt_len; ++i)
-			{
-				const int      c = static_cast <unsigned char> (note3_0 [i]);
-				ctx._fnt_8x12.render_char (
-					p_ptr + pos_x + pos_y * scr_s + i * char_w * mag_x,
-					c,
-					scr_s,
-					mag_x, mag_y
-				);
-			}
+			MAIN_print_text (pos_x, pos_y, note3_0, p_ptr, scr_s, ctx._fnt_8x12, mag_x, mag_y);
 			scr_clean_flag = false;
+			scr_rfrsh_flag = true;
+		}
+		else
+		{
+			const char   txt_0 [] =
+//				"012345678901234567890\n"
+				"Ceci est un texte\n"
+				"ecrit en tout petit.\n";
+			MAIN_print_text (0,  0, txt_0  , p_ptr, scr_s, ctx._fnt_6x6 , 1, 1);
+			MAIN_print_text (0, 16, param_0, p_ptr, scr_s, ctx._fnt_6x8 , 1, 1);
+			MAIN_print_text (0, 32, param_0, p_ptr, scr_s, ctx._fnt_8x12, 1, 1);
 			scr_rfrsh_flag = true;
 		}
 		if (scr_rfrsh_flag)

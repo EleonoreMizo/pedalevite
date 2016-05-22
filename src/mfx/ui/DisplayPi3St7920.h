@@ -167,6 +167,12 @@ private:
 		Serial_RW         = 0x04,
 		Serial_RS         = 0x02
 	};
+	
+	enum Mode
+	{
+		Mode_CMD  = Serial_HEADER,
+		Mode_DATA = Serial_HEADER | Serial_RS
+	};
 
 	class RefreshMsg
 	{
@@ -188,6 +194,7 @@ private:
 	void           start_redraw (int x, int y, int w, int h);
 	void           redraw_part ();
 
+	void           send_mode (Mode mode);
 	void           send_byte_raw (uint8_t a);
 	void           send_byte_header (uint8_t rwrs, uint8_t a);
 	void           send_cmd (uint8_t x);
