@@ -125,7 +125,8 @@ void	LedPi3::refresh_loop ()
 			LedState &     state = _state_arr [index];
 			if (state._val_cur != state._val_prev)
 			{
-				state._val_prev = state._val_cur;
+				const float    val = state._val_cur;
+				state._val_prev = val;
 #if 1
 				// Non-overlapping waveforms, half power
 				const int      half_width = _pwm_cycle >> 1;
