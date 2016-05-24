@@ -126,9 +126,17 @@ void	LedPi3::refresh_loop ()
 			if (state._val_cur != state._val_prev)
 			{
 				state._val_prev = state._val_cur;
-
-				const int      pw = fstb::round_int (state._val_cur * _pwm_cycle);
+#if 1
+				// Non-overlapping waveforms, half power
+				const int      half_width = _pwm_cycle >> 1;
+				const int      max_width  = half_width - _pwm_resol;
+				const int      pw         = fstb::round_int (val * max_width);
+				const int      start      = (index & 1) * half_width;
+				_gpio_pwm.set_pulse (_pwm_chn, _gpio_pin_arr [index], start, pw);
+#else
+				const int      pw = fstb::round_int (val * _pwm_cycle);
 				_gpio_pwm.set_pulse (_pwm_chn, _gpio_pin_arr [index], 0, pw);
+#endif
 			}
 		}
 

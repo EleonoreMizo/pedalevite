@@ -893,7 +893,7 @@ static int MAIN_main_loop (Context &ctx)
 		for (int led_index = 0; led_index < nbr_led; ++led_index)
 		{
 			float           val = lum_arr [led_index];
-			//val = val * (0.25f + 0.75f * val);
+			val = val * val;  // Gamma 2.0
 			ctx._leds.set_led (led_index, val);
 		}
 
