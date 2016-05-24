@@ -289,8 +289,6 @@ Au choix :
 
 
 
-Reste à acheter :
-
 – 50 résistances 10 k
 	0.17	5	http://www.gotronic.fr/art-10-resistances-1-4w-10k-8486-19.htm
 – 10 résistances 1 M
@@ -315,6 +313,25 @@ Reste à acheter :
 – Contacts connecteurs 3-4-5 broches (x10)
 	0.17	10	http://www.gotronic.fr/art-10-contacts-nsk254-0-171.htm
 
+
+
+– Portes AND
+	0.25	1	http://www.gotronic.fr/art-74hc08-10012.htm
+– Support tulipe 14 broches
+	0.29	1	http://www.gotronic.fr/art-support-tulipe-sup14t-4605.htm
+– Diode 1N444A
+	0.07	5	http://www.gotronic.fr/art-1n4448-1633.htm
+– Câbles colorés 24 AWG 7 brins, au mètre
+	0.15	30	http://www.gotronic.fr/art-fil-de-cablage-fc25n-5076.htm
+	0.15	20	http://www.gotronic.fr/art-fil-de-cablage-fc25g-5077.htm
+	0.15	20	http://www.gotronic.fr/art-fil-de-cablage-fc25br-5078.htm
+	0.15	20	http://www.gotronic.fr/art-fil-de-cablage-fc25vi-5079.htm
+	0.15	20	http://www.gotronic.fr/art-fil-de-cablage-fc25b-5080.htm
+	0.15	20	http://www.gotronic.fr/art-fil-de-cablage-fc25v-5081.htm
+	0.15	30	http://www.gotronic.fr/art-fil-de-cablage-fc25r-5082.htm
+	0.15	20	http://www.gotronic.fr/art-fil-de-cablage-fc25o-5083.htm
+	0.15	20	http://www.gotronic.fr/art-fil-de-cablage-fc25j-5084.htm
+	0.15	20	http://www.gotronic.fr/art-fil-de-cablage-fc25bl-5085.htm
 
 
 
@@ -443,15 +460,16 @@ Réfléchir un peu à l’assemblage du tout.
 Les plaques acier semblent un peu fines (0.75 mm). Il faudrait les doubler sur les façades supérieure et arrière (côté intérieur). On laissera les pliage avec une épaisseur simple. Une fois ajustées, on pourra les boulonner (et mêmes les coller) avant des les percer et de faire les découpes de passage de câbles et de prises.
 Le pédalier serait agencé de la manière suivante :
 Boîtier de 52 x 25, sur 8 à 12 cm de hauteur environ.
+Parois de côté et de renfort de 20 mm d’épaisseur, laissant 3 zones de 140 + 160 + 140 mm de largeur. Si pb de place ou matériaux, on peut descendre les renforts à 15 voire 12 mm d’épaisseur dernière limite (il faut pouvoir visser dans l’épaisseur)
 La carte son fait 45 mm d’épaisseur. Il faut compter au minimum 12 mm d’épaisseur du socle en bois, voire 20 mm.
-Elle fait 140 x 140 mm en longueur x largeur (boutons compris ? on ne sait pas). Il faut ajouter la place de la connectique (avant-arrière).
+Elle fait 140 x 140 mm en longueur x largeur (boutons compris ? manifestement non). Il faut ajouter la place de la connectique (avant-arrière).
 Les boutons de l’interface font 13 mm de profondeur depuis la surface du panneau, il faut rajouter un peu de marge pour éviter les contacts.
 Les boutons à pied font entre 22 et 27 mm (au choix) depuis le dessous du panneau. Idem, marge à rajouter. (on dit 30 mm depuis le dessous)
 => Profondeur minimale extérieure : 12 (socle) + 45 (carte son) + 30 (bouton à pied) + 1.5 (plaque acier doublée) = 88.5 mm, soit environ 9 cm aux points où se superposent carte son et interrupteurs au pied.
 Les trous sur la plaque du Pi font 2.75 mm de diamètre, il faut donc du 2.5 mm de diamètre extérieur (y compris filtage)
 Le Pi va avoir besoin d’être assez éloigné de la plaque à cause d’un footswitch en plein dessus. On utilisera une surélévation au tour du footswitch, en bois par exemple (prévoir des têtes rondes pour les vis au contact de la plaque), et on viendra visser le Pi de l’autre côté, toujours avec des vis à tête ronde, en intercalant 5 mm d’entretoise.
 Pour l’écran, les trous sont un peu plus larges et des vis de 3 mm font l’affaire. Prévoir des entretoises de 4 mm de haut, ce qui permet à l’écran d’être quasiment collé à la plaque.
-Ecran : fenêtre de 30 x 20 mm, située à (7, 5) mm des trous (bas) ou (7, 12) mm (haut). Les trous de fixation sont espacés de (44.5, 37.5) mm. Le haut de l’écran est situé du côté de la plaque large (mes soudures ont été faites en bas). La carte fait 49.25 x 42.25
+Ecran Nokia : fenêtre de 30 x 20 mm, située à (7, 5) mm des trous (bas) ou (7, 12) mm (haut). Les trous de fixation sont espacés de (44.5, 37.5) mm. Le haut de l’écran est situé du côté de la plaque large (mes soudures ont été faites en bas). La carte fait 49.25 x 42.25
 Deux possibilités :
 	– Reculer un peu la carte du Pi (environ 1 cm) pour permettre de loger une fiche USB coudée custom (fiche verticale sur un mini-circuit) qui va directement à la carte son sans passer par l'extérieur.
 		Il faudra glisser de l’isolant de l’autre côté du circuit pour être sûr de ne pas avoir de contact.
@@ -549,6 +567,11 @@ Plusieurs interfaces :
 	– Boucle interne sur thread séparé qui gère les rafraîchissements et les conversions vers le contrôleur physique
 Note : pour alléger le système, on peut faire tourner les boucles LED et affichage dans le même thread interne.
 Il vaut mieux séparer les entrées sur un autre thread pour être sûr qu’il soit toujours disponible.
+
+
+
+./configure --CXXFLAGS='-O3 -DNDEBUG' --CFLAGS='-O3 -DNDEBUG'
+./configure --CXXFLAGS='-O0 -g' --CFLAGS='-O0 -g'
 
 
 
@@ -665,6 +688,90 @@ Sur le poste windows msysgit, pour éviter que les push ne bloquent à la fin :
 	
 
 
+enum ActionTrigger
+{
+	ActionTrigger_PRESS = 0,
+	ActionTrigger_HOLD,
+	ActionTrigger_RELEASE,
+
+	ActionTrigger_NBR_ELT
+};
+
+
+enum ActionType
+{
+	ActionType_BANK,
+	ActionType_PRESET,
+	ActionType_TOGGLE_TUNER,
+	ActionType_TOGGLE_FX,
+	ActionType_LOOP_REC,
+	ActionType_LOOP_PLAY_STOP,
+	ActionType_LOOP_UNDO,
+	ActionType_EVENT
+};
+
+
+
+class ActionBank
+{
+	bool _relative;
+	int _number; // or step
+}
+class ActionPreset
+{
+	bool _relative;
+	int _number; // or step
+}
+class ActionToggleFxSingle
+{
+	enum Loc
+	{
+		Loc_NUMBER = 0,
+		Loc_TYPE,
+		Loc_LABEL
+	};
+	Loc _location;
+	union
+	{
+		int _number;
+		std::string _label;
+	} _where;
+};
+class ActionToggleFx
+{
+	std::vector <ActionToggleFxSingle> _toggle_list; // 1 or more
+};
+class ActionEvent
+{
+// To do
+};
+
+class PedalActionSingleInterface
+{
+	ActionType _type;
+	// Type-dependent parameters
+};
+
+class PedalActionCycle
+{
+	bool _inherit_flag
+	std::vector <std::shared_ptr <PedalActionSingleInterface> > _cycle; // 0, 1 or more
+};
+
+class PedalActionGroup
+{
+	PedalActionCycle _action_arr [ActionTrigger_NBR_ELT];
+};
+
+class PedalboardLayout
+{
+};
+
+
+
+class Bank
+{
+};
 
 
 
