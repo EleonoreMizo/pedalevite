@@ -94,7 +94,7 @@ void	PedalActionCycle::merge_cycle (const PedalActionCycle &other)
 		const int      cycle_size_cur = int (_cycle.size ());
 		const int      cycle_size_new = int (tmp.size ());
 		const int      cycle_size_add = std::min (cycle_size_cur, cycle_size_new);
-		for (int pos = 0; pos < cycle_size_new; ++pos)
+		for (int pos = 0; pos < cycle_size_add; ++pos)
 		{
 			if (pos < cycle_size_cur)
 			{

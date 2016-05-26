@@ -327,7 +327,6 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 
 	const doc::Slot & slot = *(preset._slot_list [slot_index]);
 
-	const float    zero_db  = 0.75f;
 	const bool     use_flag = (
 		   ! slot._settings_mixer._map_param_ctrl.empty ()
 		|| slot._settings_mixer._param_list [pi::DryWet::Param_BYPASS] != 0

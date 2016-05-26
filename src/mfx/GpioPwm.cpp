@@ -478,6 +478,9 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 		init_gpio (pin, gpio);
 	}
 
+	DmaCtrlBlock * cb_ptr = &use_cb ();
+	uint32_t *     d_ptr  = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
+
 	const int      nbr_pulses     = nbr_cycles * nbr_phases;
 	const int      max_duty_cycle = _nbr_samples - nbr_pulses;
 	const float    duty_per_spl   = float (nbr_phases) / max_duty_cycle;
@@ -577,7 +580,7 @@ float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases,
 
 
 
-void	GpioPwm::Channel::find_free_front_pos (int pin, int pos, bool up_flag, bool fwd_flag) const
+int	GpioPwm::Channel::find_free_front_pos (int pin, int pos, bool up_flag, bool fwd_flag)
 {
 	const int      gpio = ::physPinToGpio (pin);
 	const DmaCtrlBlock * cb_ptr = &use_cb ();
@@ -585,7 +588,7 @@ void	GpioPwm::Channel::find_free_front_pos (int pin, int pos, bool up_flag, bool
 		reinterpret_cast <const uint32_t *> (_mbox._virt_ptr);
 
 	const int      dir   = fwd_flag ? 1 : -1;
-	const int      avoid = up_flag ? _phys_gpclr0 : _phys_gpset0;
+	const uint32_t avoid = up_flag ? _phys_gpclr0 : _phys_gpset0;
 	while (   cb_ptr [pos * 2].dst == avoid
 		    && (d_ptr [pos] & ~(1 << gpio)) != 0)
 	{
