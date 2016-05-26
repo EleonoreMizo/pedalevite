@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.cpp
+        Preset.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputMsg.h"
+#include "mfx/doc/Preset.h"
 
 #include <cassert>
 
@@ -32,7 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+namespace doc
 {
 
 
@@ -41,61 +41,27 @@ namespace ui
 
 
 
-void	UserInputMsg::set (int64_t date, UserInputType type, int index, float val)
+Preset::Preset (const Preset &other)
+:	_slot_list (other._slot_list)
+,	_name (other._name)
+,	_layout (other._layout)
 {
-	assert (type >= 0);
-	assert (type < UserInputType_NBR_ELT);
-	assert (index >= 0);
-	assert (val >= 0 || type == UserInputType_ROTENC);
-	assert (val <= 1 || type == UserInputType_ROTENC);
-
-	_date  = date;
-	_type  = type;
-	_index = index;
-	_val   = val;
+	duplicate_slot_list ();
 }
 
 
 
-int64_t	UserInputMsg::get_date () const
+Preset &	Preset::operator = (const Preset &other)
 {
-	assert (is_valid ());
+	if (&other != this)
+	{
+		_slot_list = other._slot_list;
+		_name      = other._name;
+		_layout    = other._layout;
+		duplicate_slot_list ();
+	}
 
-	return _date;
-}
-
-
-
-UserInputType	UserInputMsg::get_type () const
-{
-	assert (is_valid ());
-
-	return _type;
-}
-
-
-
-int	UserInputMsg::get_index () const
-{
-	assert (is_valid ());
-
-	return _index;
-}
-
-
-
-float	UserInputMsg::get_val () const
-{
-	assert (is_valid ());
-
-	return _val;
-}
-
-
-
-bool	UserInputMsg::is_valid () const
-{
-	return (_type >= 0);
+	return *this;
 }
 
 
@@ -108,7 +74,20 @@ bool	UserInputMsg::is_valid () const
 
 
 
-}  // namespace ui
+void	Preset::duplicate_slot_list ()
+{
+	for (SlotSPtr &slot_sptr : _slot_list)
+	{
+		if (slot_sptr.get () != 0)
+		{
+			slot_sptr = SlotSPtr (new Slot (*slot_sptr));
+		}
+	}
+}
+
+
+
+}  // namespace doc
 }  // namespace mfx
 
 

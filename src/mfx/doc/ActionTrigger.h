@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PluginModel.h
+        ActionTrigger.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_PluginModel_HEADER_INCLUDED)
-#define mfx_pi_PluginModel_HEADER_INCLUDED
+#if ! defined (mfx_doc_ActionTrigger_HEADER_INCLUDED)
+#define mfx_doc_ActionTrigger_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,45 +27,34 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <string>
-
 
 
 namespace mfx
 {
-namespace pi
+namespace doc
 {
 
 
 
-enum PluginModel
+enum ActionTrigger
 {
-	PluginModel_INVALID = -1,
 
-	PluginModel_DRYWET  = 0,
-	PluginModel_TUNER,
-	PluginModel_DISTO_SIMPLE,
+	ActionTrigger_PRESS,
+	ActionTrigger_HOLD,
+	ActionTrigger_RELEASE,
 
-	PluginModel_NBR_ELT
+	ActionTrigger_NBR_ELT
 
-}; // enum PluginModel
-
-
-
-std::string PluginModel_get_name (PluginModel model);
+}; // enum ActionTrigger
 
 
 
-}  // namespace pi
+}  // namespace doc
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/PluginModel.hpp"
-
-
-
-#endif   // mfx_pi_PluginModel_HEADER_INCLUDED
+#endif   // mfx_doc_ActionTrigger_HEADER_INCLUDED
 
 
 

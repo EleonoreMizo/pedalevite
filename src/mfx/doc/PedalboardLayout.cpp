@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Preset.h
+        PedalboardLayout.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,12 +15,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#pragma once
-#if ! defined (mfx_doc_Preset_HEADER_INCLUDED)
-#define mfx_doc_Preset_HEADER_INCLUDED
-
 #if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
 #endif
 
 
@@ -28,10 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/PedalboardLayout.h"
-#include "mfx/doc/Slot.h"
 
-#include <memory>
-#include <vector>
+#include <cassert>
 
 
 
@@ -42,64 +37,39 @@ namespace doc
 
 
 
-class Preset
-{
-
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-public:
 
-	typedef std::shared_ptr <Slot> SlotSPtr;
-	typedef std::vector <SlotSPtr> SlotList;
 
-	               Preset ()  = default;
-	               Preset (const Preset &other);
-	virtual        ~Preset () = default;
+void	PedalboardLayout::merge_layout (const PedalboardLayout &other)
+{
+	for (size_t pag_index = 0; pag_index < _pedal_arr.size (); ++pag_index)
+	{
+		PedalActionGroup &         pag_cur =       _pedal_arr [pag_index];
+		const PedalActionGroup &   pag_oth = other._pedal_arr [pag_index];
 
-	Preset &       operator = (const Preset &other);
+		for (size_t pac_index = 0; pac_index < pag_cur._action_arr.size (); ++pac_index)
+		{
+			PedalActionCycle &      pac_cur = pag_cur._action_arr [pac_index];
+			const PedalActionCycle& pac_oth = pag_oth._action_arr [pac_index];
 
-	SlotList       _slot_list;
-	std::string    _name;
-	PedalboardLayout
-	               _layout;
+			pac_cur.merge_cycle (pac_oth);
+		}
+	}
+}
 
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-protected:
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	void           duplicate_slot_list ();
-
-
-
-/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	bool           operator == (const Preset &other) const = delete;
-	bool           operator != (const Preset &other) const = delete;
-
-}; // class Preset
 
 
 
 }  // namespace doc
 }  // namespace mfx
-
-
-
-//#include "mfx/doc/Preset.hpp"
-
-
-
-#endif   // mfx_doc_Preset_HEADER_INCLUDED
 
 
 

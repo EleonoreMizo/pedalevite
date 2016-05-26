@@ -343,7 +343,7 @@ void	UserInputPi3::handle_switch (int index, bool flag, int64_t cur_time)
 		{
 			sw._flag      = flag;
 			sw._time_last = cur_time;
-			enqueue_val (UserInputType_SW, index, (flag) ? 1 : 0);
+			enqueue_val (cur_time, UserInputType_SW, index, (flag) ? 1 : 0);
 		}
 	}
 }
@@ -358,7 +358,7 @@ void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, int64_t cur_time)
 	const int      inc = re.set_new_state (f0, f1);
 	if (inc != 0)
 	{
-		enqueue_val (UserInputType_ROTENC, index, inc);
+		enqueue_val (cur_time, UserInputType_ROTENC, index, inc);
 	}
 }
 
@@ -400,13 +400,13 @@ void	UserInputPi3::handle_pot (int index, int val, int64_t cur_time)
 	if (new_flag)
 	{
 		const float    val_flt = val * (1.0f / ((1 << _res_adc) - 1));
-		enqueue_val (UserInputType_POT, index, val_flt);
+		enqueue_val (cur_time, UserInputType_POT, index, val_flt);
 	}
 }
 
 
 
-void	UserInputPi3::enqueue_val (UserInputType type, int index, float val)
+void	UserInputPi3::enqueue_val (int64_t date, UserInputType type, int index, float val)
 {
 	MsgQueue *     queue_ptr = _recip_list [type] [index];
 	if (queue_ptr != 0)
@@ -418,7 +418,7 @@ void	UserInputPi3::enqueue_val (UserInputType type, int index, float val)
 		}
 		else
 		{
-			cell_ptr->_val.set (type, index, val);
+			cell_ptr->_val.set (date, type, index, val);
 			queue_ptr->enqueue (*cell_ptr);
 		}
 	}

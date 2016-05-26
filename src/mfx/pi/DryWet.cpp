@@ -96,9 +96,9 @@ DryWet::DryWet ()
 
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
-	_state_set.set_val (Param_BYPASS, 0   ); // Off
-	_state_set.set_val (Param_WET   , 1   ); // 100 %
-	_state_set.set_val (Param_GAIN  , 0.75); // 0 dB
+	_state_set.set_val (Param_BYPASS, 0            ); // Off
+	_state_set.set_val (Param_WET   , 1            ); // 100 %
+	_state_set.set_val (Param_GAIN  , _gain_neutral); // 0 dB
 
 	for (int index = 0; index < Param_NBR_ELT; ++index)
 	{
@@ -109,6 +109,10 @@ DryWet::DryWet ()
 	_state_set.set_ramp_time (Param_WET   , 0.010);
 	_state_set.set_ramp_time (Param_GAIN  , 0.010);
 }
+
+
+
+const float	DryWet::_gain_neutral = 0.75f;
 
 
 

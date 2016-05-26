@@ -69,7 +69,7 @@ class Central
 
 public:
 
-	explicit       Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device);
+	explicit       Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device);
 	virtual        ~Central ();
 
 	void           set_callback (CentralCbInterface *cb_ptr);
@@ -134,7 +134,7 @@ private:
 		std::vector <Slot>
 		               _slot_list;
 		ContextSPtr    _ctx_sptr;
-		std::map <pi::PluginModel, InstanceMap>
+		std::map <pi::PluginModel, InstanceMap>   // All the existing plug-ins, ordered by model.
 		               _map_model_id;
 		std::map <int, PluginLoc>
 		               _map_id_loc;
@@ -164,7 +164,7 @@ private:
 	ui::UserInputInterface &
 	               _input_device;
 	ui::UserInputInterface::MsgQueue &
-	               _queue_from_input;
+	               _queue_input_to_audio;
 	MsgQueue       _queue_cmd_to_audio;
 	MsgQueue       _queue_audio_to_cmd;
 	PluginPool     _plugin_pool;

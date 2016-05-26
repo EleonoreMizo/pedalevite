@@ -227,20 +227,18 @@ int	GpioPwm::Channel::init_ctrl_data ()
 		DmaCtrlBlock * cb_ptr = cb0_ptr;
 		for (int i = 0; i < int (_nbr_samples); ++ i)
 		{
-			const uint32_t phys_gpclr0 = PHYS_BASE + GPIO_OFS + 0x28;
 			cb_ptr->info   = DMA_NO_WIDE_BURSTS | DMA_WAIT_RESP;
 			cb_ptr->src    = mem_virt_to_phys (sample_ptr + i);  // src contains mask of which gpios need change at this sample
-			cb_ptr->dst    = phys_gpclr0;  // set each sample to clear set gpios by default
+			cb_ptr->dst    = _phys_gpclr0; // set each sample to clear set gpios by default
 			cb_ptr->length = 4;
 			cb_ptr->stride = 0;
 			cb_ptr->next   = mem_virt_to_phys (cb_ptr + 1);
 			++ cb_ptr;
 
 			// Delay
-			const uint32_t phys_fifo_adr = PHYS_BASE + PWM_OFS + 0x18;
 			cb_ptr->info   = DMA_NO_WIDE_BURSTS | DMA_WAIT_RESP | DMA_D_DREQ | (5 * DMA_PER_MAP);
 			cb_ptr->src    = mem_virt_to_phys (sample_ptr); // Any data will do
-			cb_ptr->dst    = phys_fifo_adr;
+			cb_ptr->dst    = _phys_fifo_adr;
 			cb_ptr->length = 4;
 			cb_ptr->stride = 0;
 			cb_ptr->next   = mem_virt_to_phys (cb_ptr + 1);
@@ -291,14 +289,13 @@ void	GpioPwm::Channel::clear ()
 {
 	assert (_mbox._virt_ptr != 0);
 
-	const uint32_t phys_gpclr0 = PHYS_BASE + GPIO_OFS + 0x28;
 	DmaCtrlBlock * cb_ptr      = &use_cb ();
 	uint32_t *     d_ptr       = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
 
 	// First we have to stop all currently enabled pulses
 	for (int i = 0; i < int (_nbr_samples); ++i)
 	{
-		cb_ptr [i * 2].dst = phys_gpclr0;
+		cb_ptr [i * 2].dst = _phys_gpclr0;
 	}
 
 	// Let DMA do one cycle to actually clear them
@@ -346,10 +343,7 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 	assert (start >= 0);
 	assert (start < int (_nbr_samples));
 
-	const int      gpio        = ::physPinToGpio (pin);
-	const uint32_t phys_gpclr0 = PHYS_BASE + GPIO_OFS + 0x28;
-	const uint32_t phys_gpset0 = PHYS_BASE + GPIO_OFS + 0x1C;
-
+	const int      gpio = ::physPinToGpio (pin);
 	if (! is_gpio_ready (gpio))
 	{
 		init_gpio (pin, gpio);
@@ -366,13 +360,13 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 		{
 			// Enable or disable gpio at this point in the cycle
 			d_ptr [pos] |= 1 << gpio;
-			cb_ptr [pos * 2].dst = phys_gpset0;
+			cb_ptr [pos * 2].dst = _phys_gpset0;
 		}
 		else
 		{
 			if ((d_ptr [pos] & (1 << gpio)) != 0)
 			{
-				state_flag = (cb_ptr [pos * 2].dst == phys_gpset0);
+				state_flag = (cb_ptr [pos * 2].dst == _phys_gpset0);
 			}
 			d_ptr [pos] &= ~(1 << gpio);  // Set just this gpio's bit to 0
 		}
@@ -388,7 +382,7 @@ void	GpioPwm::Channel::add_pulse (int pin, int start, int width)
 	if (width < int (_nbr_samples) && ! state_flag)
 	{
 		d_ptr [pos] |= 1 << gpio;
-		cb_ptr [pos * 2].dst = phys_gpclr0;
+		cb_ptr [pos * 2].dst = _phys_gpclr0;
 	}
 }
 
@@ -401,10 +395,7 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 	assert (start >= 0);
 	assert (start < int (_nbr_samples));
 
-	const int      gpio        = ::physPinToGpio (pin);
-	const uint32_t phys_gpclr0 = PHYS_BASE + GPIO_OFS + 0x28;
-	const uint32_t phys_gpset0 = PHYS_BASE + GPIO_OFS + 0x1C;
-
+	const int      gpio = ::physPinToGpio (pin);
 	if (! is_gpio_ready (gpio))
 	{
 		init_gpio (pin, gpio);
@@ -419,20 +410,20 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 		if (i == 0 && width > 0)
 		{
 			// Enable or disable gpio at this point in the cycle
-			cb_ptr [pos * 2].dst = phys_gpset0;
+			cb_ptr [pos * 2].dst = _phys_gpset0;
 			d_ptr [pos] |= 1 << gpio;
 		}
 		else if (i == width && width > 0)
 		{
 			// Clear GPIO at end
-			cb_ptr [pos * 2].dst = phys_gpclr0;
+			cb_ptr [pos * 2].dst = _phys_gpclr0;
 			d_ptr [pos] |= 1 << gpio;
 		}
 		else if (i > width)
 		{
 			if ((d_ptr [pos] & (1 << gpio)) != 0)
 			{
-				cb_ptr [pos * 2].dst = phys_gpclr0;
+				cb_ptr [pos * 2].dst = _phys_gpclr0;
 			}
 		}
 		else
@@ -451,6 +442,165 @@ void	GpioPwm::Channel::set_pulse (int pin, int start, int width)
 	{
 		::digitalWrite (pin, 0);
 	}
+}
+
+
+
+// === Function not tested ===
+//
+// Generates non-overlapping waveforms
+// Maximum duty cycle of indidividual pins depends on the number of
+// phases (below 1 / nbr_phase)
+// level is related to the maximum duty cycle achievable.
+// Some phases may have a larger maximum duty cycle than others.
+// It is possible to generate multiple pulses per DMA cycle, but
+// the more pulses, the shorter the maximum duty cycle (because
+// rising and falling fronts cannot occur at the same time), and
+// the greater the resulting error.
+// This function is not compatible with the set_pulse() function.
+// For a given DMA channel, this function must be called with the
+// same "physical" parameters (nbr_cycles, nbr_phases).
+// Returns the level error.
+float	GpioPwm::Channel::set_multilevel (int pin, int nbr_cycles, int nbr_phases, int phase, float level)
+{
+	assert (_mbox._virt_ptr != 0);
+	assert (nbr_cycles > 0);
+	assert (nbr_cycles * nbr_phases * 2 <= int (_nbr_samples));
+	assert (nbr_phases > 0);
+	assert (phase >= 0);
+	assert (phase < nbr_phases);
+	assert (level >= 0);
+	assert (level <= 1);
+
+	const int      gpio = ::physPinToGpio (pin);
+	if (! is_gpio_ready (gpio))
+	{
+		init_gpio (pin, gpio);
+	}
+
+	const int      nbr_pulses     = nbr_cycles * nbr_phases;
+	const int      max_duty_cycle = _nbr_samples - nbr_pulses;
+	const float    duty_per_spl   = float (nbr_phases) / max_duty_cycle;
+
+	int            pulse_val   = 0;
+	int            phase_cur   = 0;
+	int            pos         = 0;
+	float          duty        = 0;
+	bool           active_flag = false;
+	bool				pulse_slot_end_flag = false;
+	while (pos < int (_nbr_samples))
+	{
+		const bool     need_active_flag = (duty + duty_per_spl * 0.5 < level);
+		uint32_t       set_or_clear = _phys_gpclr0;
+
+		// Beginning or end of a pulse slot?
+		const bool     trans_flag = (pulse_val < nbr_pulses);
+		if (trans_flag)
+		{
+			// End
+			if (pulse_slot_end_flag)
+			{
+				d_ptr [pos] |= 1 << gpio;
+				pulse_slot_end_flag = false;
+				if (active_flag)
+				{
+					duty -= level;
+					active_flag = false;
+				}
+			}
+
+			// Beginning
+			else
+			{
+				set_or_clear = _phys_gpset0;
+				if (phase_cur == phase && need_active_flag)
+				{
+					d_ptr [pos] |= 1 << gpio;
+					active_flag = true;
+				}
+				else
+				{
+					d_ptr [pos] &= ~(1 << gpio);
+					active_flag = false;
+				}
+			}
+		}
+		else
+		{
+			if (active_flag)
+			{
+				if (need_active_flag)
+				{
+					d_ptr [pos] &= ~(1 << gpio);
+					duty += duty_per_spl;
+				}
+				else
+				{
+					d_ptr [pos] |= 1 << gpio;
+					duty -= level;
+					active_flag = false;
+				}
+			}
+			else
+			{
+				d_ptr [pos] |= 1 << gpio;
+			}
+		}
+
+		cb_ptr [pos * 2].dst = set_or_clear;
+
+		// Next sample
+		if (! pulse_slot_end_flag)
+		{
+			pulse_val += nbr_pulses;
+			if (pulse_val >= max_duty_cycle)
+			{
+				pulse_val -= max_duty_cycle;
+				pulse_slot_end_flag = true;
+				++ phase_cur;
+				if (phase_cur >= nbr_phases)
+				{
+					phase_cur = 0;
+				}
+			}
+		}
+		++ pos;
+	}
+
+	if (level == 0)
+	{
+		::digitalWrite (pin, 0);
+	}
+
+	return duty / nbr_cycles;
+}
+
+
+
+void	GpioPwm::Channel::find_free_front_pos (int pin, int pos, bool up_flag, bool fwd_flag) const
+{
+	const int      gpio = ::physPinToGpio (pin);
+	const DmaCtrlBlock * cb_ptr = &use_cb ();
+	const uint32_t *     d_ptr  =
+		reinterpret_cast <const uint32_t *> (_mbox._virt_ptr);
+
+	const int      dir   = fwd_flag ? 1 : -1;
+	const int      avoid = up_flag ? _phys_gpclr0 : _phys_gpset0;
+	while (   cb_ptr [pos * 2].dst == avoid
+		    && (d_ptr [pos] & ~(1 << gpio)) != 0)
+	{
+		pos += dir;
+		if (pos >= int (_nbr_samples))
+		{
+			pos -= _nbr_samples;
+		}
+		else if (pos < 0)
+		{
+			pos += _nbr_samples;
+		}
+	}
+
+	return pos;
 }
 
 

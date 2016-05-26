@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PluginModel.h
+        ActionPreset.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,57 +15,56 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#pragma once
-#if ! defined (mfx_pi_PluginModel_HEADER_INCLUDED)
-#define mfx_pi_PluginModel_HEADER_INCLUDED
-
 #if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
 #endif
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <string>
+#include "mfx/doc/ActionPreset.h"
+
+#include <cassert>
 
 
 
 namespace mfx
 {
-namespace pi
+namespace doc
 {
 
 
 
-enum PluginModel
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+ActionType	ActionPreset::do_get_type () const
 {
-	PluginModel_INVALID = -1,
-
-	PluginModel_DRYWET  = 0,
-	PluginModel_TUNER,
-	PluginModel_DISTO_SIMPLE,
-
-	PluginModel_NBR_ELT
-
-}; // enum PluginModel
+	return ActionType_PRESET;
+}
 
 
 
-std::string PluginModel_get_name (PluginModel model);
+PedalActionSingleInterface *	ActionPreset::do_duplicate () const
+{
+	return new ActionPreset (*this);
+}
 
 
 
-}  // namespace pi
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+}  // namespace doc
 }  // namespace mfx
-
-
-
-//#include "mfx/pi/PluginModel.hpp"
-
-
-
-#endif   // mfx_pi_PluginModel_HEADER_INCLUDED
 
 
 

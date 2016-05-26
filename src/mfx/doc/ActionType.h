@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PluginModel.h
+        ActionType.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_PluginModel_HEADER_INCLUDED)
-#define mfx_pi_PluginModel_HEADER_INCLUDED
+#if ! defined (mfx_doc_ActionType_HEADER_INCLUDED)
+#define mfx_doc_ActionType_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,45 +27,40 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <string>
-
 
 
 namespace mfx
 {
-namespace pi
+namespace doc
 {
 
 
 
-enum PluginModel
+enum ActionType
 {
-	PluginModel_INVALID = -1,
 
-	PluginModel_DRYWET  = 0,
-	PluginModel_TUNER,
-	PluginModel_DISTO_SIMPLE,
+	ActionType_BANK = 0,
+	ActionType_PRESET,
+	ActionType_TOGGLE_TUNER,
+	ActionType_TOGGLE_FX,
+	ActionType_LOOP_REC,
+	ActionType_LOOP_PLAY_STOP,
+	ActionType_LOOP_UNDO,
+	ActionType_PARAM,
+	ActionType_EVENT,
 
-	PluginModel_NBR_ELT
+	ActionType_NBR_ELT
 
-}; // enum PluginModel
-
-
-
-std::string PluginModel_get_name (PluginModel model);
+}; // class ActionType
 
 
 
-}  // namespace pi
+}  // namespace doc
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/PluginModel.hpp"
-
-
-
-#endif   // mfx_pi_PluginModel_HEADER_INCLUDED
+#endif   // mfx_doc_ActionType_HEADER_INCLUDED
 
 
 

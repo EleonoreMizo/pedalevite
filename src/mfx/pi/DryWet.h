@@ -64,6 +64,9 @@ public:
 	               DryWet ();
 	virtual        ~DryWet () = default;
 
+	static const float
+	               _gain_neutral;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

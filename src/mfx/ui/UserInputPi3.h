@@ -213,7 +213,7 @@ private:
 	void           handle_switch (int index, bool flag, int64_t cur_time);
 	void           handle_rotenc (int index, bool f0, bool f1, int64_t cur_time);
 	void           handle_pot (int index, int val, int64_t cur_time);
-	void           enqueue_val (UserInputType type, int index, float val);
+	void           enqueue_val (int64_t date, UserInputType type, int index, float val);
 	int            read_adc (int port, int chn);
 	int64_t        read_clock_ns () const;
 

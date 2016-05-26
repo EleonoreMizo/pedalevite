@@ -51,10 +51,10 @@ namespace cmd
 
 
 
-Central::Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device)
+Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device)
 :	_msg_pool ()
 ,	_input_device (input_device)
-,	_queue_from_input (queue_from_input)
+,	_queue_input_to_audio (queue_input_to_audio)
 ,	_queue_cmd_to_audio ()
 ,	_queue_audio_to_cmd ()
 ,	_plugin_pool ()
@@ -62,7 +62,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserIn
 		_plugin_pool,
 		_queue_cmd_to_audio,
 		_queue_audio_to_cmd,
-		queue_from_input,
+		queue_input_to_audio,
 		input_device,
 		_msg_pool
 	)

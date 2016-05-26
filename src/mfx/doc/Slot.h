@@ -59,7 +59,7 @@ public:
 
 	pi::PluginModel
 	               _pi_model = pi::PluginModel_INVALID;
-	SettingHistory _settings_all;
+	SettingHistory _settings_all;       // Should contain only non-zero pointers
 	PluginSettings _settings_mixer;
 	std::string    _name;
 

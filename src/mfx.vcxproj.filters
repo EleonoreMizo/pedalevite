@@ -678,6 +678,48 @@
     <ClInclude Include="mfx\ui\TimeShareThread.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\doc\ActionTrigger.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\ActionType.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\PedalActionCycle.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\PedalActionGroup.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\PedalboardLayout.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\Bank.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\ActionBank.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\ActionPreset.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\PedalActionSingleInterface.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\ActionToggleTuner.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\ActionToggleFx.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\ActionParam.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\FxId.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\Model.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -854,6 +896,39 @@
     </ClCompile>
     <ClCompile Include="mfx\ui\TimeShareThread.cpp">
       <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\ActionBank.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\ActionParam.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\ActionPreset.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\ActionToggleFx.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\ActionToggleTuner.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\PluginModel.cpp">
+      <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\Model.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\PedalActionCycle.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\PedalActionSingleInterface.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\PedalboardLayout.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\Preset.cpp">
+      <Filter>mfx\doc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -46,8 +46,9 @@ public:
 	int            init_chn (int chn, int subcycle_time);
 	void           clear (int chn);
 	void           clear (int chn, int pin);
-	void           set_pulse (int chn, int pin, int width_start, int width);
-	void           add_pulse (int chn, int pin, int width_start, int width);
+	void           set_pulse (int chn, int pin, int start, int width);
+	void           add_pulse (int chn, int pin, int start, int width);
+	float          set_multilevel (int chn, int pin, int nbr_cycles, int nbr_phases, int phase, float level);
 
 
 
@@ -96,8 +97,10 @@ private:
 
 		void           clear ();
 		void           clear (int pin);
-		void           add_pulse (int pin, int width_start, int width);
-		void           set_pulse (int pin, int width_start, int width);
+		void           add_pulse (int pin, int start, int width);
+		void           set_pulse (int pin, int start, int width);
+		float          set_multilevel (int pin, int nbr_cycles, int nbr_phases, int phase, float level);
+		int            find_free_front_pos (int pin, int pos, bool up_flag, bool fwd_flag) const;
 
 		static bool    is_gpio_ready (int gpio);
 		static void    init_gpio (int pin, int gpio);
@@ -156,6 +159,10 @@ private:
 	static const int        GPIO_OFS    = 0x00200000;
 	static const int        GPIO_LEN    = 0x100;
 
+	static const uint32_t   _phys_gpclr0   = PHYS_BASE + GPIO_OFS + 0x28;
+	static const uint32_t   _phys_gpset0   = PHYS_BASE + GPIO_OFS + 0x1C;
+	static const uint32_t	_phys_fifo_adr = PHYS_BASE + PWM_OFS  + 0x18;
+
 	// Datasheet p. 51:
 	static const uint32_t   DMA_NO_WIDE_BURSTS = 1 << 26;
 	static const uint32_t   DMA_WAIT_RESP      = 1 <<  3;
@@ -187,6 +194,7 @@ private:
 
 	static const uint32_t   PWMDMAC_ENAB    = 1 << 31;
 	static const uint32_t   PWMDMAC_THRSHLD = (15 << 8) | (15 << 0);
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

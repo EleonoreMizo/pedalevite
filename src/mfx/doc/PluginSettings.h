@@ -30,7 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/CtrlLinkSet.h"
 
 #include <map>
-#include <memory>
 #include <vector>
 
 
@@ -49,8 +48,7 @@ class PluginSettings
 
 public:
 
-	typedef std::shared_ptr <CtrlLinkSet> CtrlLinkSetSPtr;
-	typedef std::map <int, CtrlLinkSetSPtr> MapParamCtrl;
+	typedef std::map <int, CtrlLinkSet> MapParamCtrl;
 
 	               PluginSettings ()                            = default;
 	               PluginSettings (const PluginSettings &other) = default;

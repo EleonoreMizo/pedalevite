@@ -210,8 +210,21 @@
     <ClInclude Include="mfx\ControlSource.hpp" />
     <ClInclude Include="mfx\Cst.h" />
     <ClInclude Include="mfx\CtrlUnit.h" />
+    <ClInclude Include="mfx\doc\ActionBank.h" />
+    <ClInclude Include="mfx\doc\ActionParam.h" />
+    <ClInclude Include="mfx\doc\ActionPreset.h" />
+    <ClInclude Include="mfx\doc\ActionToggleFx.h" />
+    <ClInclude Include="mfx\doc\ActionToggleTuner.h" />
+    <ClInclude Include="mfx\doc\ActionTrigger.h" />
+    <ClInclude Include="mfx\doc\ActionType.h" />
+    <ClInclude Include="mfx\doc\Bank.h" />
     <ClInclude Include="mfx\doc\CtrlLink.h" />
     <ClInclude Include="mfx\doc\CtrlLinkSet.h" />
+    <ClInclude Include="mfx\doc\FxId.h" />
+    <ClInclude Include="mfx\doc\PedalActionCycle.h" />
+    <ClInclude Include="mfx\doc\PedalActionGroup.h" />
+    <ClInclude Include="mfx\doc\PedalActionSingleInterface.h" />
+    <ClInclude Include="mfx\doc\PedalboardLayout.h" />
     <ClInclude Include="mfx\doc\PluginSettings.h" />
     <ClInclude Include="mfx\doc\Preset.h" />
     <ClInclude Include="mfx\doc\Slot.h" />
@@ -225,6 +238,7 @@
     <ClInclude Include="mfx\dsp\StereoLevel.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
+    <ClInclude Include="mfx\Model.h" />
     <ClInclude Include="mfx\Msg.h" />
     <ClInclude Include="mfx\MsgQueue.h" />
     <ClInclude Include="mfx\Overdrive.h" />
@@ -326,13 +340,23 @@
     <ClCompile Include="mfx\cmd\Plugin.cpp" />
     <ClCompile Include="mfx\ControlledParam.cpp" />
     <ClCompile Include="mfx\CtrlUnit.cpp" />
+    <ClCompile Include="mfx\doc\ActionBank.cpp" />
+    <ClCompile Include="mfx\doc\ActionParam.cpp" />
+    <ClCompile Include="mfx\doc\ActionPreset.cpp" />
+    <ClCompile Include="mfx\doc\ActionToggleFx.cpp" />
+    <ClCompile Include="mfx\doc\ActionToggleTuner.cpp" />
     <ClCompile Include="mfx\doc\CtrlLinkSet.cpp" />
+    <ClCompile Include="mfx\doc\PedalActionCycle.cpp" />
+    <ClCompile Include="mfx\doc\PedalActionSingleInterface.cpp" />
+    <ClCompile Include="mfx\doc\PedalboardLayout.cpp" />
+    <ClCompile Include="mfx\doc\Preset.cpp" />
     <ClCompile Include="mfx\dsp\mix\Align.cpp" />
     <ClCompile Include="mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="mfx\dsp\mix\Generic.cpp" />
     <ClCompile Include="mfx\GpioPwm.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="mfx\Model.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
     <ClCompile Include="mfx\pi\DistoSimple.cpp" />
@@ -344,6 +368,7 @@
     <ClCompile Include="mfx\pi\param\HelperDispNum.cpp" />
     <ClCompile Include="mfx\pi\param\Tools.cpp" />
     <ClCompile Include="mfx\pi\param\TplLog.cpp" />
+    <ClCompile Include="mfx\pi\PluginModel.cpp" />
     <ClCompile Include="mfx\pi\Tuner.cpp" />
     <ClCompile Include="mfx\PluginPool.cpp" />
     <ClCompile Include="mfx\ProcessingContext.cpp" />

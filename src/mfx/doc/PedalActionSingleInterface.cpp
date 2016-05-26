@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PluginModel.h
+        PedalActionSingleInterface.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,57 +15,59 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#pragma once
-#if ! defined (mfx_pi_PluginModel_HEADER_INCLUDED)
-#define mfx_pi_PluginModel_HEADER_INCLUDED
-
 #if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
 #endif
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <string>
+#include "mfx/doc/PedalActionSingleInterface.h"
+
+#include <cassert>
 
 
 
 namespace mfx
 {
-namespace pi
+namespace doc
 {
 
 
 
-enum PluginModel
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+ActionType	PedalActionSingleInterface::get_type () const
 {
-	PluginModel_INVALID = -1,
+	const ActionType  type = do_get_type ();
+	assert (type >= 0);
+	assert (type < ActionType_NBR_ELT);
 
-	PluginModel_DRYWET  = 0,
-	PluginModel_TUNER,
-	PluginModel_DISTO_SIMPLE,
-
-	PluginModel_NBR_ELT
-
-}; // enum PluginModel
+	return type;
+}
 
 
 
-std::string PluginModel_get_name (PluginModel model);
+PedalActionSingleInterface *	PedalActionSingleInterface::duplicate () const
+{
+	PedalActionSingleInterface *  ptr = do_duplicate ();
+	assert (ptr != 0);
+
+	return ptr;
+}
 
 
 
-}  // namespace pi
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+}  // namespace doc
 }  // namespace mfx
-
-
-
-//#include "mfx/pi/PluginModel.hpp"
-
-
-
-#endif   // mfx_pi_PluginModel_HEADER_INCLUDED
 
 
 

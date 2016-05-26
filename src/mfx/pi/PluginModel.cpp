@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        UserInputMsg.cpp
+        PluginModel.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputMsg.h"
+#include "mfx/pi/PluginModel.h"
 
 #include <cassert>
 
@@ -32,7 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+namespace pi
 {
 
 
@@ -41,61 +41,21 @@ namespace ui
 
 
 
-void	UserInputMsg::set (int64_t date, UserInputType type, int index, float val)
+std::string	PluginModel_get_name (PluginModel model)
 {
-	assert (type >= 0);
-	assert (type < UserInputType_NBR_ELT);
-	assert (index >= 0);
-	assert (val >= 0 || type == UserInputType_ROTENC);
-	assert (val <= 1 || type == UserInputType_ROTENC);
+	assert (model >= 0);
+	assert (model < PluginModel_NBR_ELT);
 
-	_date  = date;
-	_type  = type;
-	_index = index;
-	_val   = val;
-}
+	switch (model)
+	{
+	case PluginModel_DRYWET:         return ("Dry/Wet mixer\nDry/Wet");
+	case PluginModel_TUNER:          return ("Tuner");
+	case PluginModel_DISTO_SIMPLE:   return ("Simple distortion\nDisto S");
+	default:
+		assert (false);
+	}
 
-
-
-int64_t	UserInputMsg::get_date () const
-{
-	assert (is_valid ());
-
-	return _date;
-}
-
-
-
-UserInputType	UserInputMsg::get_type () const
-{
-	assert (is_valid ());
-
-	return _type;
-}
-
-
-
-int	UserInputMsg::get_index () const
-{
-	assert (is_valid ());
-
-	return _index;
-}
-
-
-
-float	UserInputMsg::get_val () const
-{
-	assert (is_valid ());
-
-	return _val;
-}
-
-
-
-bool	UserInputMsg::is_valid () const
-{
-	return (_type >= 0);
+	return "Anonymous effect";
 }
 
 
@@ -108,7 +68,7 @@ bool	UserInputMsg::is_valid () const
 
 
 
-}  // namespace ui
+}  // namespace pi
 }  // namespace mfx
 
 
