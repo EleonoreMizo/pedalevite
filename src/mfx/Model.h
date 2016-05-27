@@ -133,6 +133,8 @@ private:
 	void           notify_slot_info ();
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
 
+	static void    reset_mixer_param (doc::Slot &slot);
+
 	cmd::Central   _central;
 	doc::Bank      _bank;
 	int            _preset_index;

@@ -269,13 +269,15 @@ void	Model::apply_settings ()
 
 void	Model::apply_settings_normal ()
 {
-	// Don't delete _preset_cur, we need it to check the differences
-	// with the new preset
-
 	const doc::Preset &  preset = _bank._preset_arr [_preset_index];
+
+	// Don't delete _preset_cur, we need it to check the differences
+	// with the new preset. Just ensure there is the same number of slots.
+	const int      nbr_slots = preset._slot_list.size ();
+	_preset_cur._slot_list.resize (nbr_slots);
+
 	_preset_cur._name = preset._name;
 
-	const int      nbr_slots = preset._slot_list.size ();
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
 		_central.insert_slot (slot_index);
@@ -298,6 +300,7 @@ void	Model::apply_settings_normal ()
 				_preset_cur._slot_list [slot_index] = doc::Preset::SlotSPtr (
 					new doc::Slot
 				);
+				reset_mixer_param (*_preset_cur._slot_list [slot_index]);
 			}
 			doc::Slot &       slot_cur = *(_preset_cur._slot_list [slot_index]);
 
@@ -310,7 +313,7 @@ void	Model::apply_settings_normal ()
 			// Now the main plug-in
 			const int      pi_id =
 				_central.set_plugin (slot_index, slot._pi_model);
-			_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = pi_id;
+			_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
 
 			// Settings
 			slot_cur._settings_all = slot._settings_all;
@@ -360,33 +363,26 @@ void	Model::check_mixer_plugin (int slot_index)
 	const doc::Preset &  preset = _bank._preset_arr [_preset_index];
 	assert (preset._slot_list [slot_index].get () != 0);
 
-	const bool     use_cur_flag = has_mixer_plugin (_preset_cur, slot_index);
-	const bool     use_new_flag = has_mixer_plugin (preset     , slot_index);
+	const bool     use_flag = has_mixer_plugin (preset, slot_index);
 	
 	const doc::Slot & slot     = *(     preset._slot_list [slot_index]);
 	doc::Slot &       slot_cur = *(_preset_cur._slot_list [slot_index]);
 
-	// Instantiation
-	if (! use_cur_flag && use_new_flag)
+	// Instantiation and setting update
+	if (use_flag)
 	{
 		const int      pi_id = _central.set_mixer (slot_index);
 		_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = pi_id;
+		slot_cur._settings_mixer = slot._settings_mixer;
+		send_effect_settings (pi_id, slot_cur._settings_mixer);
 	}
 
 	// Removal
-	else if (use_cur_flag && ! use_new_flag)
+	else
 	{
 		_central.remove_mixer (slot_index);
 		slot_cur._settings_mixer = slot._settings_mixer;
 		_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = -1;
-	}
-
-	// Setting update
-	if (use_new_flag)
-	{
-		const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [PiType_MIX];
-		slot_cur._settings_mixer = slot._settings_mixer;
-		send_effect_settings (pi_id, slot_cur._settings_mixer);
 	}
 }
 
@@ -399,12 +395,46 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 
 	const doc::Slot & slot = *(preset._slot_list [slot_index]);
 
-	const bool     use_flag = (
+	bool           use_flag = (
 		   ! slot._settings_mixer._map_param_ctrl.empty ()
 		|| slot._settings_mixer._param_list [pi::DryWet::Param_BYPASS] != 0
 		|| slot._settings_mixer._param_list [pi::DryWet::Param_WET   ] != 1
 		|| slot._settings_mixer._param_list [pi::DryWet::Param_GAIN  ] != pi::DryWet::_gain_neutral
 	);
+
+	// Check if it is referenced in the pedals
+	for (int p = 0; p < Cst::_nbr_pedals && ! use_flag; ++p)
+	{
+		const doc::PedalActionGroup & group = _layout_cur._pedal_arr [p];
+		for (size_t t = 0; t < group._action_arr.size () && ! use_flag; ++t)
+		{
+			const doc::PedalActionCycle & cycle = group._action_arr [t];
+			for (size_t a = 0; a < cycle._cycle.size () && ! use_flag; ++a)
+			{
+				const doc::PedalActionCycle::ActionArray &   aa = cycle._cycle [a];
+				for (size_t u = 0; u < aa.size () && ! use_flag; ++u)
+				{
+					const doc::PedalActionSingleInterface &   action = *(aa [u]);
+					if (action.get_type () == doc::ActionType_PARAM)
+					{
+						const doc::ActionParam &   ap =
+							dynamic_cast <const doc::ActionParam &> (action);
+						if (ap._fx_id._type == PiType_MIX)
+						{
+							if (ap._fx_id._location_type == doc::FxId::LocType_CATEGORY)
+							{
+								use_flag = (ap._fx_id._categ == slot._pi_model);
+							}
+							else
+							{
+								use_flag = (ap._fx_id._label == slot._label);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 	return use_flag;
 }
@@ -740,6 +770,18 @@ int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
 	}
 
 	return found_pos;
+}
+
+
+
+/*** To do: move this function into the Slot ctor ***/
+void	Model::reset_mixer_param (doc::Slot &slot)
+{
+	slot._settings_mixer._force_mono_flag = false;
+	slot._settings_mixer._param_list.resize (pi::DryWet::Param_NBR_ELT);
+	slot._settings_mixer._param_list [pi::DryWet::Param_BYPASS] = 0;
+	slot._settings_mixer._param_list [pi::DryWet::Param_WET   ] = 1;
+	slot._settings_mixer._param_list [pi::DryWet::Param_GAIN  ] = pi::DryWet::_gain_neutral;
 }
 
 
