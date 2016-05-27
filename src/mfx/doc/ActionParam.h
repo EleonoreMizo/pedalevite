@@ -30,8 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/FxId.h"
 #include "mfx/doc/PedalActionSingleInterface.h"
 
-#include <vector>
-
 
 
 namespace mfx
@@ -49,6 +47,7 @@ class ActionParam
 
 public:
 
+	explicit       ActionParam (const FxId &fx_id, int index, float val);
 	               ActionParam (const ActionParam &other) = default;
 	virtual        ~ActionParam ()                        = default;
 
@@ -56,8 +55,7 @@ public:
 
 	FxId           _fx_id;
 	int            _index;
-	std::vector <float>
-	               _val_cycle;
+	float          _val;
 
 
 

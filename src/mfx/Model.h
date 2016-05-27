@@ -3,6 +3,8 @@
         Model.h
         Author: Laurent de Soras, 2016
 
+All calls must be synchronized.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -31,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/Bank.h"
 #include "mfx/doc/PedalboardLayout.h"
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/ModelObserverInterface.h"
 
 
 
@@ -46,6 +49,11 @@ namespace doc
 	class ActionToggleTuner;
 }
 
+namespace pi
+{
+	class Tuner;
+}
+
 
 
 class Model
@@ -58,7 +66,13 @@ public:
 	explicit       Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device);
 	virtual        ~Model ();
 
-	// From the command thread
+	// Audio
+	void           set_process_info (double sample_freq, int max_block_size);
+	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
+
+	// Regular commands
+	void           set_observer (ModelObserverInterface *obs_ptr);
+
 	void           process_messages (); // Call this regularly
 	void           load_pedalboard_layout (const doc::PedalboardLayout &layout);
 	void           load_bank (const doc::Bank &bank, int preset);
@@ -100,6 +114,8 @@ private:
 	void           update_layout_bank ();
 	void           preinstantiate_all_plugins_from_bank ();
 	void           apply_settings ();
+	void           apply_settings_normal ();
+	void           apply_settings_tuner ();
 	void           check_mixer_plugin (int slot_index);
 	bool           has_mixer_plugin (const doc::Preset &preset, int slot_index);
 	void           send_effect_settings (int pi_id, const doc::PluginSettings &settings);
@@ -113,6 +129,9 @@ private:
 	void           process_action_preset (const doc::ActionPreset &action);
 	void           process_action_toggle_fx (const doc::ActionToggleFx &action);
 	void           process_action_toggle_tuner (const doc::ActionToggleTuner &action);
+	void           build_slot_info ();
+	void           notify_slot_info ();
+	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
 
 	cmd::Central   _central;
 	doc::Bank      _bank;
@@ -128,12 +147,18 @@ private:
 	PiIdList       _pi_id_list;
 	PedalStateArray
 	               _pedal_state_arr;
+	bool           _tuner_flag;
+	pi::Tuner *    _tuner_ptr;          // Can be 0.
 
 	ui::UserInputInterface &
 	               _input_device;
 	ui::UserInputInterface::MsgQueue &
 	               _queue_input_to_cmd;
+	ModelObserverInterface *            // Can be 0.
+	               _obs_ptr;
 
+	ModelObserverInterface::SlotInfoList   // Cached
+	               _slot_info;
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

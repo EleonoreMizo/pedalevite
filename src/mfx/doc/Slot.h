@@ -49,8 +49,7 @@ class Slot
 
 public:
 
-	typedef std::shared_ptr <PluginSettings> SettingsSPtr;
-	typedef std::map <pi::PluginModel, SettingsSPtr> SettingHistory;
+	typedef std::map <pi::PluginModel, PluginSettings> SettingHistory;
 
 	               Slot ()                        = default;
 	               Slot (const Slot &other)       = default;
@@ -59,9 +58,9 @@ public:
 
 	pi::PluginModel
 	               _pi_model = pi::PluginModel_INVALID;
-	SettingHistory _settings_all;       // Should contain only non-zero pointers
+	SettingHistory _settings_all;
 	PluginSettings _settings_mixer;
-	std::string    _name;
+	std::string    _label;
 
 
 

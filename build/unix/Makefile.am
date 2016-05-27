@@ -166,6 +166,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/CtrlLink.h \
         ../../src/mfx/doc/CtrlLinkSet.cpp \
         ../../src/mfx/doc/CtrlLinkSet.h \
+        ../../src/mfx/doc/FxId.cpp \
         ../../src/mfx/doc/FxId.h \
         ../../src/mfx/doc/PedalActionCycle.cpp \
         ../../src/mfx/doc/PedalActionCycle.h \
@@ -268,6 +269,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/GpioPwm.h \
         ../../src/mfx/Model.cpp \
         ../../src/mfx/Model.h \
+        ../../src/mfx/ModelObserverInterface.cpp \
+        ../../src/mfx/ModelObserverInterface.h \
         ../../src/mfx/Msg.h \
         ../../src/mfx/MsgQueue.h \
         ../../src/mfx/Overdrive.cpp \

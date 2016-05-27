@@ -239,6 +239,7 @@
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
     <ClInclude Include="mfx\Model.h" />
+    <ClInclude Include="mfx\ModelObserverInterface.h" />
     <ClInclude Include="mfx\Msg.h" />
     <ClInclude Include="mfx\MsgQueue.h" />
     <ClInclude Include="mfx\Overdrive.h" />
@@ -346,6 +347,7 @@
     <ClCompile Include="mfx\doc\ActionToggleFx.cpp" />
     <ClCompile Include="mfx\doc\ActionToggleTuner.cpp" />
     <ClCompile Include="mfx\doc\CtrlLinkSet.cpp" />
+    <ClCompile Include="mfx\doc\FxId.cpp" />
     <ClCompile Include="mfx\doc\PedalActionCycle.cpp" />
     <ClCompile Include="mfx\doc\PedalActionSingleInterface.cpp" />
     <ClCompile Include="mfx\doc\PedalboardLayout.cpp" />
@@ -357,6 +359,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="mfx\Model.cpp" />
+    <ClCompile Include="mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
     <ClCompile Include="mfx\pi\DistoSimple.cpp" />

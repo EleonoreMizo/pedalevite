@@ -720,6 +720,9 @@
     <ClInclude Include="mfx\Model.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\ModelObserverInterface.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -928,6 +931,12 @@
       <Filter>mfx\doc</Filter>
     </ClCompile>
     <ClCompile Include="mfx\doc\Preset.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ModelObserverInterface.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\FxId.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
   </ItemGroup>

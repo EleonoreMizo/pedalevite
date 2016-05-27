@@ -27,9 +27,9 @@
 
 #include "fstb/AllocAlign.h"
 #include "fstb/fnc.h"
-#include "mfx/cmd/Central.h"
-#include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/dsp/mix/Align.h"
+#include "mfx/doc/ActionParam.h"
+#include "mfx/doc/FxId.h"
 #include "mfx/pi/DistoSimple.h"
 #include "mfx/pi/DryWet.h"
 #include "mfx/pi/Tuner.h"
@@ -37,6 +37,8 @@
 #include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
 #include "mfx/ui/TimeShareThread.h"
+#include "mfx/Model.h"
+#include "mfx/ModelObserverInterface.h"
 #include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
@@ -124,7 +126,7 @@ static int64_t MAIN_get_time ()
 
 
 class Context
-:	public mfx::cmd::CentralCbInterface
+:	public mfx::ModelObserverInterface
 {
 public:
 #if fstb_IS (ARCHI, ARM)
@@ -140,8 +142,6 @@ public:
 	volatile float _detected_freq = 0;
 	const int      _tuner_subspl  = 4;
 	volatile bool  _tuner_flag    = false;
-	volatile bool  _disto_flag    = false;
-	volatile float _disto_gain_nat = 1;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
 
@@ -151,16 +151,18 @@ public:
 	mfx::ProcessingContext
 	               _tune_ctx;
 	mfx::ui::UserInputInterface::MsgQueue
-	               _queue_from_input;
-	mfx::cmd::Central
-	                _central;
+	               _queue_input_to_cmd;
+	mfx::ui::UserInputInterface::MsgQueue
+	               _queue_input_to_audio;
+	mfx::ModelObserverInterface::SlotInfoList
+	               _slot_info_list;
+	mfx::Model     _model;
 	volatile int   _pi_id_disto_main = -1;
 	volatile int   _pi_id_disto_mix  = -1;
 	volatile int   _pi_id_tuner_main = -1;
 
 	// Not for the audio thread
-	volatile bool	_quit_flag       = false;
-	volatile bool  _input_quit_flag = false;
+	volatile bool	_quit_flag = false;
 #if fstb_IS (ARCHI, ARM)
  #if defined (MAIN_USE_ST7920)
 	mfx::ui::DisplayPi3St7920
@@ -180,19 +182,17 @@ public:
 	mfx::ui::LedVoid
 	               _leds;
 #endif
-	mfx::ui::UserInputInterface::MsgQueue
-	               _user_input_queue;
 	mfx::ui::Font  _fnt_8x12;
 	mfx::ui::Font  _fnt_6x8;
 	mfx::ui::Font  _fnt_6x6;
 
 	Context (double sample_freq, int max_block_size);
 	~Context ();
-	void           setup_chain_normal ();
-	void           setup_chain_tuner ();
 protected:
-	// mfx::cmd::CentralCbInterface
-	virtual void   do_process_msg_audio_to_cmd (const mfx::Msg &msg);
+	// mfx::ModelObserverInterface
+	virtual void   do_set_tuner (bool active_flag);
+	virtual void   do_set_tuner_freq (float freq);
+	virtual void	do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list);
 };
 
 Context::Context (double sample_freq, int max_block_size)
@@ -203,8 +203,10 @@ Context::Context (double sample_freq, int max_block_size)
 #endif
 	_buf_alig (4096)
 ,	_proc_ctx ()
-,	_queue_from_input ()
-,	_central (_queue_from_input, _user_input)
+,	_queue_input_to_cmd ()
+,	_queue_input_to_audio ()
+,	_slot_info_list ()
+,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input)
 #if fstb_IS (ARCHI, ARM)
 ,	_display (_thread_spi)
 ,	_user_input (_thread_spi)
@@ -214,7 +216,6 @@ Context::Context (double sample_freq, int max_block_size)
 ,	_user_input ()
 ,	_leds ()
 #endif
-,	_user_input_queue ()
 ,	_fnt_8x12 ()
 ,	_fnt_6x6 ()
 {
@@ -224,7 +225,7 @@ Context::Context (double sample_freq, int max_block_size)
 	mfx::ui::FontDataDefault::make_06x08 (_fnt_6x8);
 	mfx::ui::FontDataDefault::make_06x06 (_fnt_6x6);
 
-	// Default: everything to the main queue
+	// Default: everything to the main queue, except pot to the audio engine
 	for (int type = 0; type < mfx::ui::UserInputType_NBR_ELT; ++type)
 	{
 		const int      nbr_param = _user_input.get_nbr_param (
@@ -235,56 +236,29 @@ Context::Context (double sample_freq, int max_block_size)
 			_user_input.set_msg_recipient (
 				static_cast <mfx::ui::UserInputType> (type),
 				index,
-				&_user_input_queue
+				  (type == mfx::ui::UserInputType_POT)
+				? &_queue_input_to_audio
+				: &_queue_input_to_cmd
 			);
 		}
 	}
 
-	// Pot 0 to the audio engine
-	_user_input.set_msg_recipient (mfx::ui::UserInputType_POT, 0, &_queue_from_input);
+	_model.set_observer (this);
 
-	_central.set_callback (this);
+	mfx::doc::Bank bank;
+	mfx::doc::Preset& preset   = bank._preset_arr [0];
+	preset._name = "Preset 1";
+	mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+	preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+	slot_ptr->_label    = "Disto 1";
+	slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
+	slot_ptr->_settings_mixer._param_list =
+		std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+	mfx::doc::PluginSettings & pi_settings =
+		slot_ptr->_settings_all [slot_ptr->_pi_model];
 
-	_central.insert_slot (0); // Disto
-	_central.insert_slot (1); // Tuner
-	_central.remove_mixer (1);
+	pi_settings._param_list = std::vector <float> (1, 0);
 
-	setup_chain_normal ();
-//	setup_chain_tuner ();
-
-	// Initial parameters values
-	_central.set_param (
-		_pi_id_disto_mix,
-		mfx::pi::DryWet::Param_BYPASS,
-		1.f
-	);
-	_central.set_param (
-		_pi_id_disto_main,
-		mfx::pi::DistoSimple::Param_GAIN,
-		0.0f
-	);
-
-	_central.set_process_info (sample_freq, max_block_size);
-}
-
-Context::~Context ()
-{
-	mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
-	do
-	{
-		cell_ptr = _user_input_queue.dequeue ();
-		if (cell_ptr != 0)
-		{
-			_user_input.return_cell (*cell_ptr);
-		}
-	}
-	while (cell_ptr != 0);
-}
-
-void	Context::setup_chain_normal ()
-{
-	_pi_id_disto_main = _central.set_plugin (0, mfx::pi::PluginModel_DISTO_SIMPLE);
-	_central.clear_mod (_pi_id_disto_main);
 	mfx::doc::CtrlLinkSet cls_main;
 	cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 	cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
@@ -293,110 +267,43 @@ void	Context::setup_chain_normal ()
 	cls_main._bind_sptr->_u2b_flag      = false;
 	cls_main._bind_sptr->_base          = 0;
 	cls_main._bind_sptr->_amp           = 1;
-	_central.set_mod (_pi_id_disto_main, mfx::pi::DistoSimple::Param_GAIN, cls_main);
+	pi_settings._map_param_ctrl [mfx::pi::DistoSimple::Param_GAIN] = cls_main;
 
-	_pi_id_disto_mix  = _central.set_mixer (0);
-	_central.clear_mod (_pi_id_disto_mix);
+	mfx::doc::PedalActionCycle &  cycle =
+		preset._layout._pedal_arr [0]._action_arr [mfx::doc::ActionTrigger_PRESS];
+	mfx::doc::PedalActionCycle::ActionArray   action_arr;
+	mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
+	action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+		new mfx::doc::ActionParam (fx_id, mfx::pi::DryWet::Param_BYPASS, 1)
+	));
+	cycle._cycle.push_back (action_arr);
+	
+	_model.load_bank (bank, 0);
 
-	_central.clear_slot (1);
-
-	_central.commit ();
+	_model.set_process_info (sample_freq, max_block_size);
 }
 
-void	Context::setup_chain_tuner ()
+Context::~Context ()
 {
-	_central.clear_slot (0);
-	_pi_id_tuner_main = _central.set_plugin (1, mfx::pi::PluginModel_TUNER);
-	_central.clear_mod (1);
-
-	_central.commit ();
+	// Nothing
 }
 
-void	Context::do_process_msg_audio_to_cmd (const mfx::Msg &msg)
+void	Context::do_set_tuner (bool active_flag)
 {
-	if (msg._type == mfx::Msg::Type_PARAM)
-	{
-		const int      pi_id = msg._content._param._plugin_id;
-		const int      index = msg._content._param._index;
-		if (   pi_id == _pi_id_disto_main
-		    && index == mfx::pi::DistoSimple::Param_GAIN)
-		{
-			const mfx::piapi::ParamDescInterface & desc =
-				_central.use_pi_pool ().use_plugin (pi_id)._pi_uptr->get_param_info (
-					mfx::piapi::ParamCateg_GLOBAL,
-					index
-				);
-			const float    val = msg._content._param._val;
-			_disto_gain_nat = float (desc.conv_nrm_to_nat (val));
-		}
-	}
+	_tuner_flag = active_flag;
+}
+
+void	Context::do_set_tuner_freq (float freq)
+{
+	_detected_freq = freq;
+}
+
+void	Context::do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list)
+{
+	_slot_info_list = info_list;
 }
 
 static std::unique_ptr <Context>	MAIN_context_ptr;
-
-
-
-static void MAIN_physical_input_thread (Context &ctx)
-{
-	while (! ctx._input_quit_flag)
-	{
-		// From the input thread
-		{
-			mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
-			do
-			{
-				cell_ptr = ctx._user_input_queue.dequeue ();
-				if (cell_ptr != 0)
-				{
-					const mfx::ui::UserInputType type = cell_ptr->_val.get_type ();
-					const int      index = cell_ptr->_val.get_index ();
-					const float    val   = cell_ptr->_val.get_val ();
-					if (type == mfx::ui::UserInputType_SW)
-					{
-						switch (index)
-						{
-						case  2: // Tuner toggle
-							if (val >= 0.5f)
-							{
-								ctx._tuner_flag = (! ctx._tuner_flag);
-								if (ctx._tuner_flag)
-								{
-									ctx.setup_chain_tuner ();
-								}
-								else
-								{
-									ctx.setup_chain_normal ();
-								}
-							}
-							break;
-						case  3: // Distortion toggle
-							if (val >= 0.5f)
-							{
-								ctx._disto_flag = (! ctx._disto_flag);
-								ctx._central.set_param (
-									ctx._pi_id_disto_mix,
-									mfx::pi::DryWet::Param_BYPASS,
-									(ctx._disto_flag) ? 0.f : 1.f
-								);
-							}
-							break;
-						}
-					}
-
-					ctx._user_input.return_cell (*cell_ptr);
-				}
-			}
-			while (cell_ptr != 0 && ! ctx._input_quit_flag);
-		}
-
-		// 10 ms between updates
-#if fstb_IS (ARCHI, ARM)
-		::delay (10);
-#else
-		::Sleep (10);
-#endif
-	}
-}
 
 
 
@@ -415,16 +322,7 @@ static int MAIN_audio_process (Context &ctx, float * const * dst_arr, const floa
 	ctx._time_beg = time_beg;
 
 	// Audio graph
-	ctx._central.process_block (dst_arr, src_arr, nbr_spl);
-
-	// Tuner
-	if (ctx._tuner_flag && ctx._pi_id_tuner_main >= 0)
-	{
-		const mfx::pi::Tuner &  tuner = dynamic_cast <const mfx::pi::Tuner &> (
-			*ctx._central.use_pi_pool ().use_plugin (ctx._pi_id_tuner_main)._pi_uptr
-		);
-		ctx._detected_freq = tuner.get_freq ();
-	}
+	ctx._model.process_block (dst_arr, src_arr, nbr_spl);
 
 	ctx._time_end = MAIN_get_time ();
 
@@ -826,11 +724,24 @@ static int MAIN_main_loop (Context &ctx)
 		}
 #endif
 
-		ctx._central.process_queue_audio_to_cmd ();
+		ctx._model.process_messages ();
 		
+		mfx::ModelObserverInterface::PluginInfoSPtr pi_efx_sptr =
+			ctx._slot_info_list [0] [mfx::PiType_MAIN];
+		mfx::ModelObserverInterface::PluginInfoSPtr pi_mix_sptr =
+			ctx._slot_info_list [0] [mfx::PiType_MIX];
+
+		const bool   disto_flag =
+			(pi_mix_sptr->_param_arr [mfx::pi::DryWet::Param_BYPASS] < 0.5f);
+		const mfx::piapi::ParamDescInterface & desc =
+			pi_efx_sptr->_pi.get_param_info (
+				mfx::piapi::ParamCateg_GLOBAL,
+				mfx::pi::DistoSimple::Param_GAIN
+			);
+		const float  disto_gain_nrm =
+			pi_mix_sptr->_param_arr [mfx::pi::DistoSimple::Param_GAIN];
+		const float  disto_gain = float (desc.conv_nrm_to_nat (disto_gain_nrm));
 		const bool   tuner_flag = ctx._tuner_flag;
-		const bool   disto_flag = ctx._disto_flag;
-		const float  disto_gain = ctx._disto_gain_nat;
 		const float  usage_max  = ctx._usage_max.exchange (-1);
 		const float  usage_min  = ctx._usage_min.exchange (-1);
 		const float  freq = (tuner_flag) ? ctx._detected_freq : 0;
@@ -896,6 +807,8 @@ static int MAIN_main_loop (Context &ctx)
 			val = val * val;  // Gamma 2.0
 			ctx._leds.set_led (led_index, val);
 		}
+
+
 
 		char param_0 [255+1];
 		fstb::snprintf4all (
@@ -1020,19 +933,9 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 		ret_val = MAIN_audio_start (ctx);
 	}
 
-	// User input thread
-	std::thread     user_input_thread;
-	if (ret_val == 0)
-	{
-		user_input_thread = std::thread (MAIN_physical_input_thread, std::ref (ctx));
-	}
-
 	if (ret_val == 0)
 	{
 		ret_val = MAIN_main_loop (ctx);
-
-		ctx._input_quit_flag = true;
-		user_input_thread.join ();
 	}
 
 	MAIN_audio_stop ();

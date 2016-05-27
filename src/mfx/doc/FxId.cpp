@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionParam.cpp
+        FxId.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionParam.h"
+#include "mfx/doc/FxId.h"
 
 #include <cassert>
 
@@ -41,10 +41,20 @@ namespace doc
 
 
 
-ActionParam::ActionParam (const FxId &fx_id, int index, float val)
-:	_fx_id (fx_id)
-,	_index (index)
-,	_val (val)
+FxId::FxId (std::string label, PiType type)
+:	_location_type (LocType_LABEL)
+,	_label (label)
+,	_type (type)
+{
+	// Nothing
+}
+
+
+
+FxId::FxId (pi::PluginModel categ, PiType type)
+:	_location_type (LocType_CATEGORY)
+,	_categ (categ)
+,	_type (type)
 {
 	// Nothing
 }
@@ -52,20 +62,6 @@ ActionParam::ActionParam (const FxId &fx_id, int index, float val)
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-ActionType	ActionParam::do_get_type () const
-{
-	return ActionType_PARAM;
-}
-
-
-
-PedalActionSingleInterface *	ActionParam::do_duplicate () const
-{
-	return new ActionParam (*this);
-}
 
 
 

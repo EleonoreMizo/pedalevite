@@ -27,6 +27,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/pi/PluginModel.h"
+#include "mfx/PiType.h"
+
 #include <string>
 
 
@@ -47,19 +50,26 @@ public:
 
 	enum LocType
 	{
+		LocType_INVALID = -1,
+
 		LocType_LABEL = 0,
 		LocType_CATEGORY,
 
 		LocType_NBR_ELT
 	};
 
+	explicit       FxId (std::string label, PiType type);
+	explicit       FxId (pi::PluginModel categ, PiType type);
 	               FxId (const FxId &other)       = default;
-	virtual        ~FxId () = default;
+	virtual        ~FxId ()                       = default;
 
 	FxId &         operator = (const FxId &other) = default;
 
-	LocType        _location_type;
-	std::string    _name;
+	LocType        _location_type = LocType_INVALID;
+	std::string    _label;
+	pi::PluginModel
+	               _categ         = pi::PluginModel_INVALID;
+	PiType         _type          = PiType_MAIN;
 
 
 

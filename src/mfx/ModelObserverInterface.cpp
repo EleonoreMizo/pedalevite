@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionParam.cpp
+        ModelObserverInterface.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,15 +24,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionParam.h"
+#include "mfx/ModelObserverInterface.h"
 
 #include <cassert>
 
 
 
 namespace mfx
-{
-namespace doc
 {
 
 
@@ -41,12 +39,33 @@ namespace doc
 
 
 
-ActionParam::ActionParam (const FxId &fx_id, int index, float val)
-:	_fx_id (fx_id)
-,	_index (index)
-,	_val (val)
+ModelObserverInterface::PluginInfo::PluginInfo (const piapi::PluginInterface &pi, const std::vector <float> &param_arr)
+:	_pi (pi)
+,	_param_arr (param_arr)
 {
 	// Nothing
+}
+
+
+
+void	ModelObserverInterface::set_tuner (bool active_flag)
+{
+	do_set_tuner (active_flag);
+}
+
+
+
+void	ModelObserverInterface::set_tuner_freq (float freq)
+{
+	do_set_tuner_freq (freq);
+}
+
+
+
+// Reference lifetime is the call. Please make a copy.
+void	ModelObserverInterface::set_slot_info_for_current_preset (const SlotInfoList &info_list)
+{
+	do_set_slot_info_for_current_preset (info_list);
 }
 
 
@@ -55,25 +74,6 @@ ActionParam::ActionParam (const FxId &fx_id, int index, float val)
 
 
 
-ActionType	ActionParam::do_get_type () const
-{
-	return ActionType_PARAM;
-}
-
-
-
-PedalActionSingleInterface *	ActionParam::do_duplicate () const
-{
-	return new ActionParam (*this);
-}
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-}  // namespace doc
 }  // namespace mfx
 
 

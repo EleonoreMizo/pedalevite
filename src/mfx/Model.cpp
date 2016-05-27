@@ -25,12 +25,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/pi/DryWet.h"
+#include "mfx/pi/Tuner.h"
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/Model.h"
+#include "mfx/ModelObserverInterface.h"
 
 #include <algorithm>
 
@@ -65,8 +67,11 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_preset_cur ()
 ,	_pi_id_list ()
 ,	_pedal_state_arr ()
+,	_tuner_flag (false)
+,	_tuner_ptr (0)
 ,	_input_device (input_device)
 ,	_queue_input_to_cmd (queue_input_to_cmd)
+,	_slot_info ()
 {
 	// Nothing
 }
@@ -90,6 +95,28 @@ Model::~Model ()
 
 
 
+void	Model::set_process_info (double sample_freq, int max_block_size)
+{
+	_central.set_process_info (sample_freq, max_block_size);
+}
+
+
+
+void	Model::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+{
+	_central.process_block (dst_arr, src_arr, nbr_spl);
+}
+
+
+
+// obs_ptr can be 0.
+void	Model::set_observer (ModelObserverInterface *obs_ptr)
+{
+	_obs_ptr = obs_ptr;
+}
+
+
+
 void	Model::process_messages ()
 {
 	_central.process_queue_audio_to_cmd ();
@@ -97,6 +124,11 @@ void	Model::process_messages ()
 
 	/*** To do: check hold state for pedals ***/
 
+	if (_obs_ptr != 0 && _tuner_flag && _tuner_ptr)
+	{
+		const float    freq = _tuner_ptr->get_freq ();
+		_obs_ptr->set_tuner_freq (freq);
+	}
 }
 
 
@@ -211,6 +243,32 @@ void	Model::apply_settings ()
 {
 	_central.clear ();
 	_pi_id_list.clear ();
+	_slot_info.clear ();
+
+	if (_tuner_flag)
+	{
+		apply_settings_tuner ();
+	}
+	else
+	{
+		apply_settings_normal ();
+	}
+
+	// Done.
+	_central.commit ();
+
+	build_slot_info ();
+
+	if (_obs_ptr != 0)
+	{
+		notify_slot_info ();
+	}
+}
+
+
+
+void	Model::apply_settings_normal ()
+{
 	// Don't delete _preset_cur, we need it to check the differences
 	// with the new preset
 
@@ -243,7 +301,7 @@ void	Model::apply_settings ()
 			}
 			doc::Slot &       slot_cur = *(_preset_cur._slot_list [slot_index]);
 
-			slot_cur._name = slot._name;
+			slot_cur._label = slot._label;
 
 			// First check if we need a mixer plug-in.
 			// Updates the parameters
@@ -263,14 +321,28 @@ void	Model::apply_settings ()
 			}
 			else
 			{
-				assert (it_s->second.get () != 0);
-				send_effect_settings (pi_id, *(it_s->second));
+				_central.force_mono (slot_index, it_s->second._force_mono_flag);
+				send_effect_settings (pi_id, it_s->second);
 			}
 		}
 	}
+}
 
-	// Done.
-	_central.commit ();
+
+
+void	Model::apply_settings_tuner ()
+{
+	_central.insert_slot (0);
+	_pi_id_list.resize (1);
+	_central.remove_mixer (0);
+
+	const int      tuner_id = _central.set_plugin (0, pi::PluginModel_TUNER);
+	_pi_id_list [0]._pi_id_arr [PiType_MAIN] = tuner_id;
+
+	const PluginPool::PluginDetails &   details =
+		_central.use_pi_pool ().use_plugin (tuner_id);
+	_tuner_ptr = dynamic_cast <pi::Tuner *> (details._pi_uptr.get ());
+	assert (_tuner_ptr != 0);
 }
 
 
@@ -538,18 +610,32 @@ void	Model::process_action_bank (const doc::ActionBank &action)
 
 void	Model::process_action_param (const doc::ActionParam &action)
 {
+	const int      slot_pos = find_slot_cur_preset (action._fx_id);
+	if (slot_pos >= 0)
+	{
+		const int      pi_id =
+			_pi_id_list [slot_pos]._pi_id_arr [action._fx_id._type];
+		assert (pi_id >= 0);
 
-	/*** To do ***/
-
+		_central.set_param (pi_id, action._index, action._val);
+	}
 }
 
 
 
 void	Model::process_action_preset (const doc::ActionPreset &action)
 {
+	int            new_index = action._val;
+	if (action._relative_flag)
+	{
+		new_index += _preset_index;
+		new_index += Cst::_nbr_presets_per_bank;
+		assert (new_index >= 0);
+		new_index %= Cst::_nbr_presets_per_bank;
+	}
+	_preset_index = new_index;
 
-	/*** To do ***/
-
+	apply_settings ();
 }
 
 
@@ -565,9 +651,95 @@ void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
 
 void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
 {
+	_tuner_flag = ! _tuner_flag;
+	if (! _tuner_flag)
+	{
+		_tuner_ptr = 0;
+	}
 
-	/*** To do ***/
+	apply_settings ();
 
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_tuner (_tuner_flag);
+	}
+}
+
+
+
+void	Model::build_slot_info ()
+{
+	_slot_info.clear ();
+	PluginPool &   pi_pool = _central.use_pi_pool ();
+
+	for (const SlotPiId &spi : _pi_id_list)
+	{
+		ModelObserverInterface::SlotInfo info;
+		for (size_t type = 0; type < spi._pi_id_arr.size (); ++type)
+		{
+			const int      pi_id = spi._pi_id_arr [type];
+			if (pi_id >= 0)
+			{
+				const PluginPool::PluginDetails &   details =
+					pi_pool.use_plugin (pi_id);
+				info [type] = ModelObserverInterface::PluginInfoSPtr (
+					new ModelObserverInterface::PluginInfo (
+						*details._pi_uptr,
+						details._param_arr
+					)
+				);
+			}
+		}
+
+		_slot_info.push_back (info);
+	}
+}
+
+
+
+void	Model::notify_slot_info ()
+{
+	assert (_obs_ptr != 0);
+	assert (_slot_info.size () == _pi_id_list.size ());
+
+	_obs_ptr->set_slot_info_for_current_preset (_slot_info);
+}
+
+
+
+// Returns -1 if not found
+int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
+{
+	assert (fx_id._location_type >= 0);
+	assert (fx_id._location_type < doc::FxId::LocType_NBR_ELT);
+
+	int            found_pos = -1;
+
+	const int      nbr_slots = _preset_cur._slot_list.size ();
+	for (int pos = 0; pos < nbr_slots && found_pos < 0; ++pos)
+	{
+		if (_preset_cur._slot_list [pos].get () != 0)
+		{
+			const doc::Slot & slot = *(_preset_cur._slot_list [pos]);
+
+			if (fx_id._location_type == doc::FxId::LocType_CATEGORY)
+			{
+				if (slot._pi_model == fx_id._categ)
+				{
+					found_pos = pos;
+				}
+			}
+			else
+			{
+				if (! slot._label.empty () && fx_id._label == slot._label)
+				{
+					found_pos = pos;
+				}
+			}
+		}
+	}
+
+	return found_pos;
 }
 
 
