@@ -153,10 +153,11 @@ private:
 	               _layout_bank;
 
 	doc::Preset    _preset_cur;         // Current preset and settings, as known by cmd::Central. Must be synchronized with _bank._preset_arr [_preset_index].
-	PiIdList       _pi_id_list;
+	PiIdList       _pi_id_list;         // Not affected by the tuner
 	PedalStateArray
 	               _pedal_state_arr;
 	bool           _tuner_flag;
+	int            _tuner_pi_id;
 	pi::Tuner *    _tuner_ptr;          // Can be 0.
 
 	ui::UserInputInterface &
@@ -166,7 +167,7 @@ private:
 	ModelObserverInterface *            // Can be 0.
 	               _obs_ptr;
 
-	ModelObserverInterface::SlotInfoList   // Cached
+	ModelObserverInterface::SlotInfoList   // Cached. Not affected by the tuner
 	               _slot_info;
 
 

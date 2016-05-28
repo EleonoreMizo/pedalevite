@@ -68,6 +68,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_pi_id_list ()
 ,	_pedal_state_arr ()
 ,	_tuner_flag (false)
+,	_tuner_pi_id (-1)
 ,	_tuner_ptr (0)
 ,	_input_device (input_device)
 ,	_queue_input_to_cmd (queue_input_to_cmd)
@@ -124,7 +125,7 @@ void	Model::process_messages ()
 
 	/*** To do: check hold state for pedals ***/
 
-	if (_obs_ptr != 0 && _tuner_flag && _tuner_ptr)
+	if (_obs_ptr != 0 && _tuner_flag && _tuner_ptr != 0)
 	{
 		const float    freq = _tuner_ptr->get_freq ();
 		_obs_ptr->set_tuner_freq (freq);
@@ -274,8 +275,6 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 void	Model::apply_settings ()
 {
 	_central.clear ();
-	_pi_id_list.clear ();
-	_slot_info.clear ();
 
 	if (_tuner_flag)
 	{
@@ -289,11 +288,14 @@ void	Model::apply_settings ()
 	// Done.
 	_central.commit ();
 
-	build_slot_info ();
-
-	if (_obs_ptr != 0)
+	if (! _tuner_flag)
 	{
-		notify_slot_info ();
+		build_slot_info ();
+
+		if (_obs_ptr != 0)
+		{
+			notify_slot_info ();
+		}
 	}
 }
 
@@ -301,6 +303,9 @@ void	Model::apply_settings ()
 
 void	Model::apply_settings_normal ()
 {
+	_pi_id_list.clear ();
+	_slot_info.clear ();
+
 	const doc::Preset &  preset = _bank._preset_arr [_preset_index];
 
 	// Don't delete _preset_cur, we need it to check the differences
@@ -367,15 +372,15 @@ void	Model::apply_settings_normal ()
 
 void	Model::apply_settings_tuner ()
 {
+	assert (_tuner_flag);
+
 	_central.insert_slot (0);
-	_pi_id_list.resize (1);
 	_central.remove_mixer (0);
 
-	const int      tuner_id = _central.set_plugin (0, pi::PluginModel_TUNER);
-	_pi_id_list [0]._pi_id_arr [PiType_MAIN] = tuner_id;
+	_tuner_pi_id = _central.set_plugin (0, pi::PluginModel_TUNER);
 
 	const PluginPool::PluginDetails &   details =
-		_central.use_pi_pool ().use_plugin (tuner_id);
+		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
 	_tuner_ptr = dynamic_cast <pi::Tuner *> (details._pi_uptr.get ());
 	assert (_tuner_ptr != 0);
 }
@@ -716,7 +721,8 @@ void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
 	_tuner_flag = ! _tuner_flag;
 	if (! _tuner_flag)
 	{
-		_tuner_ptr = 0;
+		_tuner_ptr   = 0;
+		_tuner_pi_id = -1;
 	}
 
 	apply_settings ();
