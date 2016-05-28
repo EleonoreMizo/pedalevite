@@ -66,6 +66,7 @@ public:
 	void           set_tuner (bool active_flag);
 	void           set_tuner_freq (float freq);
 	void           set_slot_info_for_current_preset (const SlotInfoList &info_list);
+	void           set_param (int pi_id, int index, float val, int preset, int slot_index, PiType type);
 
 
 
@@ -76,6 +77,7 @@ protected:
 	virtual void   do_set_tuner (bool active_flag) = 0;
 	virtual void   do_set_tuner_freq (float freq) = 0;
 	virtual void	do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;
+	virtual void   do_set_param (int pi_id, int index, float val, int preset, int slot_index, PiType type) = 0;
 
 
 

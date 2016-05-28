@@ -194,6 +194,7 @@ protected:
 	virtual void   do_set_tuner (bool active_flag);
 	virtual void   do_set_tuner_freq (float freq);
 	virtual void	do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list);
+	virtual void   do_set_param (int pi_id, int index, float val, int preset, int slot_index, mfx::PiType type);
 };
 
 Context::Context (double sample_freq, int max_block_size)
@@ -318,6 +319,11 @@ void	Context::do_set_tuner_freq (float freq)
 void	Context::do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list)
 {
 	_slot_info_list = info_list;
+}
+
+void	Context::do_set_param (int pi_id, int index, float val, int preset, int slot_index, mfx::PiType type)
+{
+	// Nothing
 }
 
 static std::unique_ptr <Context>	MAIN_context_ptr;

@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/cmd/Central.h"
+#include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/Bank.h"
 #include "mfx/doc/PedalboardLayout.h"
 #include "mfx/ui/UserInputInterface.h"
@@ -57,6 +58,7 @@ namespace pi
 
 
 class Model
+:	public cmd::CentralCbInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -85,6 +87,9 @@ public:
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 protected:
+
+	// mfx::cmd::CentralCbInterface
+	virtual void   do_process_msg_audio_to_cmd (const Msg &msg);
 
 
 
@@ -132,6 +137,8 @@ private:
 	void           build_slot_info ();
 	void           notify_slot_info ();
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
+	void           find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id) const;
+	bool           update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
 
 	static void    reset_mixer_param (doc::Slot &slot);
 
@@ -161,6 +168,7 @@ private:
 
 	ModelObserverInterface::SlotInfoList   // Cached
 	               _slot_info;
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

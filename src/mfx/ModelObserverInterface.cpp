@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/Cst.h"
 #include "mfx/ModelObserverInterface.h"
 
 #include <cassert>
@@ -66,6 +67,23 @@ void	ModelObserverInterface::set_tuner_freq (float freq)
 void	ModelObserverInterface::set_slot_info_for_current_preset (const SlotInfoList &info_list)
 {
 	do_set_slot_info_for_current_preset (info_list);
+}
+
+
+
+void	ModelObserverInterface::set_param (int pi_id, int index, float val, int preset, int slot_index, PiType type)
+{
+	assert (pi_id >= 0);
+	assert (index >= 0);
+	assert (val >= 0);
+	assert (val <= 1);
+	assert (preset >= 0);
+	assert (preset < Cst::_nbr_presets_per_bank);
+	assert (slot_index >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+
+	do_set_param (pi_id, index, val, preset, slot_index, type);
 }
 
 

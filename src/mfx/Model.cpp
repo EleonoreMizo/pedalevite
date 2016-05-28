@@ -159,6 +159,38 @@ void	Model::load_bank (const doc::Bank &bank, int preset)
 
 
 
+void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
+{
+	if (msg._type == mfx::Msg::Type_PARAM)
+	{
+		const int      pi_id = msg._content._param._plugin_id;
+		const int      index = msg._content._param._index;
+		const float    val   = msg._content._param._val;
+
+		int            slot_index;
+		PiType         type;
+		find_slot_type_cur_preset (slot_index, type, pi_id);
+		if (slot_index >= 0)
+		{
+			update_parameter (
+				_preset_cur, slot_index, type, index, val
+			);
+			const bool     ok_flag = update_parameter (
+				_bank._preset_arr [_preset_index], slot_index, type, index, val
+			);
+
+			if (ok_flag && _obs_ptr != 0)
+			{
+				_obs_ptr->set_param (
+					pi_id, index, val, _preset_index, slot_index, type
+				);
+			}
+		}
+	}
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -770,6 +802,62 @@ int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
 	}
 
 	return found_pos;
+}
+
+
+
+// Returns -1 in slot_index if not found
+void	Model::find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id) const
+{
+	assert (pi_id >= 0);
+
+	slot_index = -1;
+	const int      nbr_slots = _preset_cur._slot_list.size ();
+	assert (nbr_slots == _pi_id_list.size ());
+	for (int pos = 0; pos < nbr_slots && slot_index < 0; ++pos)
+	{
+		const SlotPiId &  spi = _pi_id_list [pos];
+		for (int tt = 0; tt < PiType_NBR_ELT && slot_index < 0; ++tt)
+		{
+			if (spi._pi_id_arr [tt] == pi_id)
+			{
+				slot_index = pos;
+				type       = PiType (tt);
+			}
+		}
+	}
+}
+
+
+
+bool	Model::update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val)
+{
+	bool           ok_flag = true;
+
+	doc::Slot *    slot_ptr = preset._slot_list [slot_index].get ();
+	if (slot_ptr == 0)
+	{
+		ok_flag = false;
+		assert (false);
+	}
+	else
+	{
+		doc::PluginSettings &  settings =
+				(type == PiType_MIX)
+			? slot_ptr->_settings_mixer
+			: slot_ptr->_settings_all [slot_ptr->_pi_model];
+		if (index >= int (settings._param_list.size ()))
+		{
+			ok_flag = false;
+			assert (false);
+		}
+		else
+		{
+			settings._param_list [index] = val;
+		}
+	}
+
+	return ok_flag;
 }
 
 
