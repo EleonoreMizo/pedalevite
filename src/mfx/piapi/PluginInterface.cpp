@@ -151,6 +151,7 @@ int	PluginInterface::reset (double sample_freq, int max_block_size, int &latency
 	        || get_state () == State_ACTIVE);
 	assert (sample_freq > 0);
 	assert (max_block_size > 0);
+	assert (latency == 0);
 
 	const int      ret_val = do_reset (sample_freq, max_block_size, latency);
 	assert (ret_val == Err_OK || get_state () == State_INITIALISED);

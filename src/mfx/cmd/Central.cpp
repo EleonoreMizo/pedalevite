@@ -129,7 +129,7 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 			details._pi_uptr->get_state ();
 		if (pi_state > piapi::PluginInterface::State_CONSTRUCTED)
 		{
-			int            latency;
+			int            latency = 0;
 			int            ret_val =
 				details._pi_uptr->reset (sample_freq, max_block_size, latency);
 			assert (ret_val == piapi::PluginInterface::Err_OK);
@@ -514,7 +514,7 @@ int	Central::set_plugin (int pos, pi::PluginModel model, PiType type)
 			assert (ret_val == piapi::PluginInterface::Err_OK);
 			if (_sample_freq > 0)
 			{
-				int         latency;
+				int         latency = 0;
 				ret_val = pi_uptr->reset (_sample_freq, _max_block_size, latency);
 				assert (ret_val == piapi::PluginInterface::Err_OK);
 			}

@@ -121,6 +121,8 @@ int	Tuner::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	int            ret_val = Err_OK;
 
+	latency = 0;
+
 	if (max_buf_len % _sub_spl == 0)
 	{
 		_buffer.resize (max_buf_len / _sub_spl);

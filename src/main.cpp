@@ -738,6 +738,8 @@ static int MAIN_main_loop (Context &ctx)
 	bool           scr_clean_flag = false;
 	bool           scr_rfrsh_flag  = true;
 
+	int            loop_count = 0;
+
 	while (ret_val == 0 && ! ctx._quit_flag)
 	{
 #if 0 // When doing manual time sharing
@@ -749,22 +751,27 @@ static int MAIN_main_loop (Context &ctx)
 
 		ctx._model.process_messages ();
 		
+		const bool   tuner_flag = ctx._tuner_flag;
+
 		mfx::ModelObserverInterface::PluginInfoSPtr pi_efx_sptr =
 			ctx._slot_info_list [0] [mfx::PiType_MAIN];
 		mfx::ModelObserverInterface::PluginInfoSPtr pi_mix_sptr =
 			ctx._slot_info_list [0] [mfx::PiType_MIX ];
 
-		const bool   disto_flag =
-			(pi_mix_sptr->_param_arr [mfx::pi::DryWet::Param_BYPASS] < 0.5f);
-		const mfx::piapi::ParamDescInterface & desc =
-			pi_efx_sptr->_pi.get_param_info (
-				mfx::piapi::ParamCateg_GLOBAL,
-				mfx::pi::DistoSimple::Param_GAIN
-			);
-		const float  disto_gain_nrm =
-			pi_efx_sptr->_param_arr [mfx::pi::DistoSimple::Param_GAIN];
-		const float  disto_gain = float (desc.conv_nrm_to_nat (disto_gain_nrm));
-		const bool   tuner_flag = ctx._tuner_flag;
+		bool           disto_flag = false;
+		float          disto_gain = 1;
+		if (! tuner_flag)
+		{
+			disto_flag = (pi_mix_sptr->_param_arr [mfx::pi::DryWet::Param_BYPASS] < 0.5f);
+			const mfx::piapi::ParamDescInterface & desc =
+				pi_efx_sptr->_pi.get_param_info (
+					mfx::piapi::ParamCateg_GLOBAL,
+					mfx::pi::DistoSimple::Param_GAIN
+				);
+			const float  disto_gain_nrm =
+				pi_efx_sptr->_param_arr [mfx::pi::DistoSimple::Param_GAIN];
+			disto_gain = float (desc.conv_nrm_to_nat (disto_gain_nrm));
+		}
 		const float  usage_max  = ctx._usage_max.exchange (-1);
 		const float  usage_min  = ctx._usage_min.exchange (-1);
 		const float  freq = (tuner_flag) ? ctx._detected_freq : 0;
@@ -831,15 +838,22 @@ static int MAIN_main_loop (Context &ctx)
 			ctx._leds.set_led (led_index, val);
 		}
 
-
-
+		char disto_gain_0 [255+1] = "------";
+		if (! tuner_flag)
+		{
+			fstb::snprintf4all (
+				disto_gain_0, sizeof (disto_gain_0),
+				"%6.1f",
+				disto_gain
+			);
+		}
 		char param_0 [255+1];
 		fstb::snprintf4all (
 			param_0, sizeof (param_0),
-			"[%s] [%s] [%6.1f]",
+			"[%s] [%s] [%s]",
 			tuner_flag ? "T" : " ",
-			disto_flag ? "D" : " ",
-			disto_gain
+			tuner_flag ? "-" : disto_flag ? "D" : " ",
+			disto_gain_0
 		);
 
 		fprintf (stderr, "%s %s %s\r", cpu_0, freq_0, param_0);
@@ -912,6 +926,21 @@ static int MAIN_main_loop (Context &ctx)
 /********************************************* TEMP *********************************/
 
 #endif
+
+
+/********************************************* TEMP *********************************/
+#if 0
+		if (loop_count == 10)
+		{
+			conc::LockFreeCell <mfx::ui::UserInputMsg> * cell_ptr = new conc::LockFreeCell <mfx::ui::UserInputMsg>;
+			cell_ptr->_next_ptr = 0;
+			cell_ptr->_val.set (0, mfx::ui::UserInputType_SW, 2, 1);
+			ctx._queue_input_to_cmd.enqueue (*cell_ptr);
+		}
+#endif
+/********************************************* TEMP *********************************/
+
+		++ loop_count;
 	}
 
 	fprintf (stderr, "Exiting main loop.\n");
