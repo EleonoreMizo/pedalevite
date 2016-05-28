@@ -73,7 +73,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_queue_input_to_cmd (queue_input_to_cmd)
 ,	_slot_info ()
 {
-	// Nothing
+	_central.set_callback (this);
 }
 
 
@@ -813,7 +813,7 @@ void	Model::find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id)
 
 	slot_index = -1;
 	const int      nbr_slots = _preset_cur._slot_list.size ();
-	assert (nbr_slots == _pi_id_list.size ());
+	assert (nbr_slots == int (_pi_id_list.size ()));
 	for (int pos = 0; pos < nbr_slots && slot_index < 0; ++pos)
 	{
 		const SlotPiId &  spi = _pi_id_list [pos];
