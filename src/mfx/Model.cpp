@@ -341,7 +341,8 @@ void	Model::apply_settings_normal ()
 			}
 			doc::Slot &       slot_cur = *(_preset_cur._slot_list [slot_index]);
 
-			slot_cur._label = slot._label;
+			slot_cur._label    = slot._label;
+			slot_cur._pi_model = slot._pi_model;
 
 			// First check if we need a mixer plug-in.
 			// Updates the parameters
