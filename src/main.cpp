@@ -29,6 +29,7 @@
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/doc/ActionParam.h"
+#include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/FxId.h"
 #include "mfx/pi/DistoSimple.h"
 #include "mfx/pi/DryWet.h"
@@ -269,14 +270,30 @@ Context::Context (double sample_freq, int max_block_size)
 	cls_main._bind_sptr->_amp           = 1;
 	pi_settings._map_param_ctrl [mfx::pi::DistoSimple::Param_GAIN] = cls_main;
 
-	mfx::doc::PedalActionCycle &  cycle =
-		preset._layout._pedal_arr [0]._action_arr [mfx::doc::ActionTrigger_PRESS];
-	mfx::doc::PedalActionCycle::ActionArray   action_arr;
-	mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
-	action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-		new mfx::doc::ActionParam (fx_id, mfx::pi::DryWet::Param_BYPASS, 1)
-	));
-	cycle._cycle.push_back (action_arr);
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			preset._layout._pedal_arr [1]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		const mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
+		mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
+		for (int i = 0; i < 2; ++i)
+		{
+			static const float val_arr [2] = { 1, 0 };
+			const float        val = val_arr [i];
+			action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
+				new mfx::doc::ActionParam (fx_id, mfx::pi::DryWet::Param_BYPASS, val)
+			);
+			cycle._cycle.push_back (action_arr);
+		}
+	}
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			preset._layout._pedal_arr [0]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionToggleTuner
+		));
+		cycle._cycle.push_back (action_arr);
+	}
 	
 	_model.load_bank (bank, 0);
 
@@ -729,7 +746,7 @@ static int MAIN_main_loop (Context &ctx)
 		mfx::ModelObserverInterface::PluginInfoSPtr pi_efx_sptr =
 			ctx._slot_info_list [0] [mfx::PiType_MAIN];
 		mfx::ModelObserverInterface::PluginInfoSPtr pi_mix_sptr =
-			ctx._slot_info_list [0] [mfx::PiType_MIX];
+			ctx._slot_info_list [0] [mfx::PiType_MIX ];
 
 		const bool   disto_flag =
 			(pi_mix_sptr->_param_arr [mfx::pi::DryWet::Param_BYPASS] < 0.5f);
@@ -739,7 +756,7 @@ static int MAIN_main_loop (Context &ctx)
 				mfx::pi::DistoSimple::Param_GAIN
 			);
 		const float  disto_gain_nrm =
-			pi_mix_sptr->_param_arr [mfx::pi::DistoSimple::Param_GAIN];
+			pi_efx_sptr->_param_arr [mfx::pi::DistoSimple::Param_GAIN];
 		const float  disto_gain = float (desc.conv_nrm_to_nat (disto_gain_nrm));
 		const bool   tuner_flag = ctx._tuner_flag;
 		const float  usage_max  = ctx._usage_max.exchange (-1);
