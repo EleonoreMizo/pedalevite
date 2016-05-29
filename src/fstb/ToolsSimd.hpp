@@ -337,9 +337,9 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_low (VectF32 p0, VectF32 p1)
 #if fstb_IS (ARCHI, X86)
 	return _mm_shuffle_ps (p0, p1, (1<<6) + (0<<4) + (1<<2) + (0<<0));
 #elif fstb_IS (ARCHI, ARM)
-	p0 = vget_low_f32 (p0);
-	p1 = vget_low_f32 (p1);
-	return vcombine_f32 (p0, p1);
+	const float32x2_t  p0x = vget_low_f32 (p0);
+	const float32x2_t  p1x = vget_low_f32 (p1);
+	return vcombine_f32 (p0x, p1x);
 #endif // ff_arch_CPU
 }
 
@@ -351,9 +351,9 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_high (VectF32 p0, VectF32 p1)
 #if fstb_IS (ARCHI, X86)
 	return _mm_shuffle_ps (p0, p1, (3<<6) + (2<<4) + (3<<2) + (2<<0));
 #elif fstb_IS (ARCHI, ARM)
-	p0 = vget_high_f32 (p0);
-	p1 = vget_high_f32 (p1);
-	return vcombine_f32 (p0, p1);
+	const float32x2_t  p0x = vget_high_f32 (p0);
+	const float32x2_t  p1x = vget_high_f32 (p1);
+	return vcombine_f32 (p0x, p1x);
 #endif // ff_arch_CPU
 }
 
@@ -453,7 +453,7 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::insert (VectF32 a, float val)
 	a = Shift <  SHIFT     >::rotate (a);
 	return a;
 #elif fstb_IS (ARCHI, ARM)
-	return vset_lane_f32 (val, a, SHIFT & 3);
+	return vsetq_lane_f32 (val, a, SHIFT & 3);
 #endif // ff_arch_CPU
 }
 

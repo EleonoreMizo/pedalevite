@@ -183,7 +183,6 @@ void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float
 	// Normalizes to make a0 = 1
 	const double      a0i = 1.0 / a [0];
 
-	const double      a0 = 1;
 	const double      a1 = a [1] * a0i;
 	const double      a2 = a [2] * a0i;
 	const double      b0 = b [0] * a0i;
