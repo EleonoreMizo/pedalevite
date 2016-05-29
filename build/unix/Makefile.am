@@ -138,6 +138,30 @@ pedalevite_SOURCES = \
         ../../src/mfx/cmd/Plugin.cpp \
         ../../src/mfx/cmd/Plugin.h \
         ../../src/mfx/cmd/Slot.h \
+        ../../src/mfx/dsp/iir/Biquad.cpp \
+        ../../src/mfx/dsp/iir/Biquad.h \
+        ../../src/mfx/dsp/iir/Biquad.hpp \
+        ../../src/mfx/dsp/iir/Svf2p.cpp \
+        ../../src/mfx/dsp/iir/Svf2p.h \
+        ../../src/mfx/dsp/iir/Svf2p.hpp \
+        ../../src/mfx/dsp/iir/SvfCore4Simd.h \
+        ../../src/mfx/dsp/iir/SvfCore4Simd.hpp \
+        ../../src/mfx/dsp/iir/SvfCore4SimdData.h \
+        ../../src/mfx/dsp/iir/SvfMixerBand.h \
+        ../../src/mfx/dsp/iir/SvfMixerBand.hpp \
+        ../../src/mfx/dsp/iir/SvfMixerDefault.h \
+        ../../src/mfx/dsp/iir/SvfMixerDefault.hpp \
+        ../../src/mfx/dsp/iir/SvfMixerHigh.h \
+        ../../src/mfx/dsp/iir/SvfMixerHigh.hpp \
+        ../../src/mfx/dsp/iir/SvfMixerLow.h \
+        ../../src/mfx/dsp/iir/SvfMixerLow.hpp \
+        ../../src/mfx/dsp/iir/SvfMixerPeak.h \
+        ../../src/mfx/dsp/iir/SvfMixerPeak.hpp \
+        ../../src/mfx/dsp/iir/TransS.cpp \
+        ../../src/mfx/dsp/iir/TransS.h \
+        ../../src/mfx/dsp/iir/TransSZBilin.cpp \
+        ../../src/mfx/dsp/iir/TransSZBilin.h \
+        ../../src/mfx/dsp/iir/TransSZBilin.hpp \
         ../../src/mfx/dsp/mix/Align.cpp \
         ../../src/mfx/dsp/mix/Align.h \
         ../../src/mfx/dsp/mix/Fpu.cpp \

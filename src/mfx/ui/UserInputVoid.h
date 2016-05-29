@@ -29,6 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/ui/UserInputInterface.h"
 
+#include <array>
+#include <vector>
+
 
 
 namespace mfx
@@ -46,8 +49,10 @@ class UserInputVoid
 
 public:
 
-	               UserInputVoid ()  = default;
+	               UserInputVoid ();
 	virtual        ~UserInputVoid () = default;
+
+	void           send_message (int64_t date, UserInputType type, int index, float val);
 
 
 
@@ -65,6 +70,11 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	typedef std::vector <MsgQueue *> QueueArray;
+	typedef std::array <QueueArray, UserInputType_NBR_ELT> RecipientList;
+
+	RecipientList  _recip_list;
 
 
 

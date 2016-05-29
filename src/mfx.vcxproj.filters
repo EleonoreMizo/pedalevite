@@ -52,6 +52,9 @@
     <Filter Include="mfx\cmd">
       <UniqueIdentifier>{3b78661b-f282-43c6-ba7b-c13716846db3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\iir">
+      <UniqueIdentifier>{bf81e6a5-3756-4691-bb37-3891a208ec87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -723,6 +726,66 @@
     <ClInclude Include="mfx\ModelObserverInterface.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfCore4Simd.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfCore4SimdData.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerBand.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerBand.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerDefault.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerDefault.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerHigh.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerHigh.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerLow.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerLow.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerPeak.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfMixerPeak.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Biquad.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Biquad.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\TransSZBilin.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\TransSZBilin.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\TransS.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Svf2p.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Svf2p.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SvfCore4Simd.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -938,6 +1001,18 @@
     </ClCompile>
     <ClCompile Include="mfx\doc\FxId.cpp">
       <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\iir\Biquad.cpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\iir\TransSZBilin.cpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\iir\TransS.cpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\iir\Svf2p.cpp">
+      <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

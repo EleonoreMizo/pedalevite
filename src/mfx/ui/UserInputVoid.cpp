@@ -41,6 +41,31 @@ namespace ui
 
 
 
+UserInputVoid::UserInputVoid ()
+:	_recip_list ()
+{
+	for (int i = 0; i < UserInputType_NBR_ELT; ++i)
+	{
+		const int      nbr_dev =
+			do_get_nbr_param (static_cast <UserInputType> (i));
+		_recip_list [i].resize (nbr_dev, 0);
+	}
+}
+
+
+
+void	UserInputVoid::send_message (int64_t date, UserInputType type, int index, float val)
+{
+	// The cell well be lost but we don't care, this is for debugging.
+	conc::LockFreeCell <UserInputMsg> * cell_ptr =
+		new conc::LockFreeCell <UserInputMsg>;
+	cell_ptr->_next_ptr = 0;
+	cell_ptr->_val.set (date, type, index, val);
+	_recip_list [type] [index]->enqueue (*cell_ptr);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -52,9 +77,9 @@ int	UserInputVoid::do_get_nbr_param (UserInputType /*type*/) const
 
 
 
-void	UserInputVoid::do_set_msg_recipient (UserInputType /*type*/, int /*index*/, MsgQueue * /*queue_ptr*/)
+void	UserInputVoid::do_set_msg_recipient (UserInputType type, int index, MsgQueue * queue_ptr)
 {
-	// Nothing
+	_recip_list [type] [index] = queue_ptr;
 }
 
 

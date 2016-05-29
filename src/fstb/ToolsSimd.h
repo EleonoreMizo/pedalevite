@@ -88,11 +88,21 @@ public:
 	               storeu_f32 (void *ptr, VectF32 v);
 
 	static inline VectF32
+	               loadu_2f32 (const void *ptr);
+	static inline void
+	               storeu_2f32 (void *ptr, VectF32 v);
+
+	static inline void
+	               storeu_1f32 (void *ptr, VectF32 v);
+
+	static inline VectF32
 	               set_f32_zero ();
 	static inline VectF32
 	               set1_f32 (float a);
 	static inline VectF32
 	               set_f32 (float a0, float a1, float a2, float a3);
+	static inline VectF32
+	               set_2f32 (float a0, float a1);
 	static inline void
 	               mac (VectF32 &s, VectF32 a, VectF32 b);
 	static inline VectF32
@@ -101,6 +111,14 @@ public:
 	               max_f32 (VectF32 lhs, VectF32 rhs);
 	static inline float
 	               sum_h_flt (VectF32 v);
+	static inline VectF32
+	               round (VectF32 v);
+	static inline VectF32
+	               abs (VectF32 v);
+	static inline VectF32
+	               rcp_approx (VectF32 v);
+	static inline VectF32
+	               rcp_approx2 (VectF32 v);
 
 	static inline VectF32
 	               select (VectF32 cond, VectF32 v_t, VectF32 v_f);
@@ -109,6 +127,10 @@ public:
 	static inline VectF32
 	               cmp_lt_f32 (VectF32 lhs, VectF32 rhs);
 
+	static inline VectF32
+	               interleave_2f32_low (VectF32 p0, VectF32 p1);
+	static inline VectF32
+	               interleave_2f32_high (VectF32 p0, VectF32 p1);
 	static inline void
 	               interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1);
 	static inline void
@@ -124,6 +146,10 @@ public:
 		               rotate (VectF32 a);
 		static inline float
 		               extract (VectF32 a);
+		static inline VectF32
+		               insert (VectF32 a, float val);
+		static inline VectF32
+		               spread (VectF32 a);
 	};
 
 

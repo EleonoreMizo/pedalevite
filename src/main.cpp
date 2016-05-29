@@ -932,10 +932,8 @@ static int MAIN_main_loop (Context &ctx)
 #if 0
 		if (loop_count == 10)
 		{
-			conc::LockFreeCell <mfx::ui::UserInputMsg> * cell_ptr = new conc::LockFreeCell <mfx::ui::UserInputMsg>;
-			cell_ptr->_next_ptr = 0;
-			cell_ptr->_val.set (0, mfx::ui::UserInputType_SW, 2, 1);
-			ctx._queue_input_to_cmd.enqueue (*cell_ptr);
+			ctx._user_input.send_message (0, mfx::ui::UserInputType_POT, 0, 0.5f);
+//			ctx._user_input.send_message (0, mfx::ui::UserInputType_SW, 2, 1);
 		}
 #endif
 /********************************************* TEMP *********************************/
