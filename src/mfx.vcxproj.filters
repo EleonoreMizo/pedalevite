@@ -309,9 +309,6 @@
     <ClInclude Include="mfx\pi\param\TplEnum.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
-    <ClInclude Include="mfx\pi\param\TplEnum.hpp">
-      <Filter>mfx\pi\param</Filter>
-    </ClInclude>
     <ClInclude Include="mfx\pi\param\TplInt.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
@@ -319,9 +316,6 @@
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
     <ClInclude Include="mfx\pi\param\TplLin.h">
-      <Filter>mfx\pi\param</Filter>
-    </ClInclude>
-    <ClInclude Include="mfx\pi\param\TplLin.hpp">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
     <ClInclude Include="mfx\pi\param\TplLog.h">
@@ -786,6 +780,15 @@
     <ClInclude Include="mfx\dsp\iir\SvfCore4Simd.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="fstb\Approx.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\Approx.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\Tremolo.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1013,6 +1016,15 @@
     </ClCompile>
     <ClCompile Include="mfx\dsp\iir\Svf2p.cpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\Tremolo.cpp">
+      <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\param\TplEnum.cpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\param\TplLin.cpp">
+      <Filter>mfx\pi\param</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

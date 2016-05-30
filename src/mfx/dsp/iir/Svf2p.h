@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 
 
 namespace mfx
@@ -88,6 +90,9 @@ public:
 	// Main conversion functions
 	static void    conv_poles (float &g0, float &g1, float &g2, double f0_fs, float k);
 	static void    conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const double b [3], const double a [3], double freq, double fs);
+
+	static void    approx_s1s2 (fstb::ToolsSimd::VectF32 &s1, fstb::ToolsSimd::VectF32 &s2, fstb::ToolsSimd::VectF32 f0_fs);
+	static void    conv_poles (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 f0_fs, fstb::ToolsSimd::VectF32 k);
 
 
 

@@ -51,6 +51,7 @@ std::string	PluginModel_get_name (PluginModel model)
 	case PluginModel_DRYWET:         return ("Dry/Wet mixer\nDry/Wet");
 	case PluginModel_TUNER:          return ("Tuner");
 	case PluginModel_DISTO_SIMPLE:   return ("Simple distortion\nDisto S");
+	case PluginModel_TREMOLO:        return ("Tremolo");
 	default:
 		assert (false);
 	}

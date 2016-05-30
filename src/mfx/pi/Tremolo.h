@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DryWet.h
+        Tremolo.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_DryWet_HEADER_INCLUDED)
-#define mfx_pi_DryWet_HEADER_INCLUDED
+#if ! defined (mfx_pi_Tremolo_HEADER_INCLUDED)
+#define mfx_pi_Tremolo_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -26,8 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#define mfx_pi_DryWet_GAIN_WET_ONLY
 
 #include "fstb/util/NotificationFlag.h"
 #include "mfx/pi/ParamDescSet.h"
@@ -43,7 +41,7 @@ namespace pi
 
 
 
-class DryWet
+class Tremolo
 :	public piapi::PluginInterface
 {
 
@@ -53,18 +51,28 @@ public:
 
 	enum Param
 	{
-		Param_BYPASS = 0,
-		Param_WET,
-		Param_GAIN,
+		Param_PER = 0,
+		Param_AMT,
+		Param_WF,
+		Param_GSAT,
+		Param_BIAS,
 
 		Param_NBR_ELT
 	};
 
-	               DryWet ();
-	virtual        ~DryWet () = default;
+	enum Waveform
+	{
+		Waveform_SIN = 0,
+		Waveform_SQUARE,
+		Waveform_TRI,
+		Waveform_RAMP_U,
+		Waveform_RAMP_D,
 
-	static const float
-	               _gain_neutral;
+		Waveform_NBR_ELT
+	};
+
+	               Tremolo ();
+	virtual        ~Tremolo () = default;
 
 
 
@@ -91,20 +99,25 @@ protected:
 
 private:
 
-	void           copy (const ProcInfo &proc, int chn_ofs, float lvl);
-	void           mix (const ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
+	float          get_lfo_val (float pos) const;
 
 	State          _state;
 
 	ParamDescSet   _desc_set;
 	ParamStateSet  _state_set;
-	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
+	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 
 	fstb::util::NotificationFlag
-	               _param_change_flag;
+	               _param_change_shape_flag;
+	fstb::util::NotificationFlag
+	               _param_change_amp_flag;
 
-	float          _level_wet;          // For steady state
-	float          _level_dry;          // For steady state
+	double         _lfo_pos;            // Position within the LFO. [-0.5; 0.5[
+	double         _lfo_step;           // Step per sample, >= 0
+	Waveform       _lfo_wf;
+	float          _amt;
+	float          _bias;
+	float          _sat;
 
 
 
@@ -112,12 +125,12 @@ private:
 
 private:
 
-	               DryWet (const DryWet &other)            = delete;
-	DryWet &       operator = (const DryWet &other)        = delete;
-	bool           operator == (const DryWet &other) const = delete;
-	bool           operator != (const DryWet &other) const = delete;
+	               Tremolo (const Tremolo &other)           = delete;
+	Tremolo &      operator = (const Tremolo &other)        = delete;
+	bool           operator == (const Tremolo &other) const = delete;
+	bool           operator != (const Tremolo &other) const = delete;
 
-}; // class DryWet
+}; // class Tremolo
 
 
 
@@ -126,11 +139,11 @@ private:
 
 
 
-//#include "mfx/pi/DryWet.hpp"
+//#include "mfx/pi/Tremolo.hpp"
 
 
 
-#endif   // mfx_pi_DryWet_HEADER_INCLUDED
+#endif   // mfx_pi_Tremolo_HEADER_INCLUDED
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TplLin.hpp
+        TplLin.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,8 +15,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (mfx_pi_param_TplLin_CODEHEADER_INCLUDED)
-#define mfx_pi_param_TplLin_CODEHEADER_INCLUDED
+#if defined (_MSC_VER)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
+#endif
 
 
 
@@ -24,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/pi/param/Tools.h"
+#include "mfx/pi/param/TplLin.h"
 
 #include	<cassert>
 
@@ -190,10 +193,6 @@ double	TplLin::do_conv_nat_to_nrm (double nat) const
 }  // namespace param
 }  // namespace pi
 }  // namespace mfx
-
-
-
-#endif   // mfx_pi_param_TplLin_CODEHEADER_INCLUDED
 
 
 

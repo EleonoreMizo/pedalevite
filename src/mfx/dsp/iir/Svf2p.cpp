@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/Approx.h"
 #include "fstb/def.h"
 #include "mfx/dsp/iir/Svf2p.h"
 
@@ -124,9 +125,6 @@ void	Svf2p::update_eq ()
 // f0_fs = f0 / fs
 void	Svf2p::conv_poles (float &g0, float &g1, float &g2, double f0_fs, float k)
 {
-	assert (g0  != 0);
-	assert (g1  != 0);
-	assert (g2  != 0);
 	assert (f0_fs > 0);
 	assert (f0_fs < 0.5);
 	assert (k > 0);
@@ -167,9 +165,6 @@ v2m = b0 - b2
 
 void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const double b [3], const double a [3], double freq, double fs)
 {
-	assert (g0  != 0);
-	assert (g1  != 0);
-	assert (g2  != 0);
 	assert (v0m != 0);
 	assert (v1m != 0);
 	assert (v2m != 0);
@@ -198,6 +193,31 @@ void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float
 	v0m = float (              b2);
 	v1m = float (     b1 - k * b2);
 	v2m = float (b0      -     b2);
+}
+
+
+
+void	Svf2p::approx_s1s2 (fstb::ToolsSimd::VectF32 &s1, fstb::ToolsSimd::VectF32 &s2, fstb::ToolsSimd::VectF32 f0_fs)
+{
+	f0_fs += f0_fs;
+	s1 = fstb::Approx::sin_rbj_halfpi (f0_fs);
+	s2 = fstb::Approx::sin_rbj_pi (f0_fs);
+}
+
+
+
+void	Svf2p::conv_poles (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 f0_fs, fstb::ToolsSimd::VectF32 k)
+{
+	fstb::ToolsSimd::VectF32   s1;
+	fstb::ToolsSimd::VectF32   s2;
+	approx_s1s2 (s1, s2, f0_fs);
+	const auto     two       = fstb::ToolsSimd::set1_f32 (2);
+	const auto     minus_two = fstb::ToolsSimd::set1_f32 (-2);
+	const auto     nrm = fstb::ToolsSimd::rcp_approx2 (two + k * s2);
+	const auto     s12 = s1 * s1;
+	g0  =                        s2  * nrm;
+	g1  = (minus_two * s12 - k * s2) * nrm;
+	g2  =        two * s12           * nrm;
 }
 
 

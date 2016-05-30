@@ -45,6 +45,7 @@ enum PluginModel
 	PluginModel_DRYWET  = 0,
 	PluginModel_TUNER,
 	PluginModel_DISTO_SIMPLE,
+	PluginModel_TREMOLO,
 
 	PluginModel_NBR_ELT
 

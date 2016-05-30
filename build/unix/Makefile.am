@@ -100,6 +100,8 @@ pedalevite_SOURCES = \
         ../../src/fstb/util/ObservableSingleMixin.hpp \
         ../../src/fstb/util/ObserverInterface.h \
         ../../src/fstb/util/ObserverInterface.hpp \
+        ../../src/fstb/Approx.h \
+        ../../src/fstb/Approx.hpp \
         ../../src/fstb/AllocAlign.h \
         ../../src/fstb/AllocAlign.hpp \
         ../../src/fstb/ArrayAlign.h \
@@ -213,12 +215,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/MapSq.hpp \
         ../../src/mfx/pi/param/Tools.cpp \
         ../../src/mfx/pi/param/Tools.h \
+        ../../src/mfx/pi/param/TplEnum.cpp \
         ../../src/mfx/pi/param/TplEnum.h \
-        ../../src/mfx/pi/param/TplEnum.hpp \
         ../../src/mfx/pi/param/TplInt.h \
         ../../src/mfx/pi/param/TplInt.hpp \
+        ../../src/mfx/pi/param/TplLin.cpp \
         ../../src/mfx/pi/param/TplLin.h \
-        ../../src/mfx/pi/param/TplLin.hpp \
         ../../src/mfx/pi/param/TplLog.cpp \
         ../../src/mfx/pi/param/TplLog.h \
         ../../src/mfx/pi/param/TplMapped.h \
@@ -239,6 +241,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/ParamStateSet.h \
         ../../src/mfx/pi/PluginModel.h \
         ../../src/mfx/pi/PluginModel.cpp \
+        ../../src/mfx/pi/Tremolo.cpp \
+        ../../src/mfx/pi/Tremolo.h \
         ../../src/mfx/pi/Tuner.cpp \
         ../../src/mfx/pi/Tuner.h \
         ../../src/mfx/piapi/Event.h \

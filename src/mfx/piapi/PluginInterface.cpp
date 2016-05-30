@@ -79,6 +79,8 @@ void	PluginInterface::get_nbr_io (int &nbr_i, int &nbr_o) const
 {
 	assert (   get_state () == State_INITIALISED
 	        || get_state () == State_ACTIVE);
+	assert (nbr_i == 1);
+	assert (nbr_o == 1);
 
 	do_get_nbr_io (nbr_i, nbr_o);
 	assert (nbr_i > 0);

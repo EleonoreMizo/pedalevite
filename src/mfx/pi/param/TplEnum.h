@@ -111,7 +111,7 @@ private:
 
 
 
-#include "mfx/pi/param/TplEnum.hpp"
+//#include "mfx/pi/param/TplEnum.hpp"
 
 
 
