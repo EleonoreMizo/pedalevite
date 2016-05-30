@@ -46,6 +46,7 @@ class ActionPreset
 
 public:
 
+	explicit       ActionPreset (bool relative_flag, int val);
 	               ActionPreset (const ActionPreset &other) = default;
 	virtual        ~ActionPreset ()                         = default;
 

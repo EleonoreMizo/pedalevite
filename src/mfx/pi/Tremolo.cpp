@@ -119,10 +119,10 @@ Tremolo::Tremolo ()
 
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
-	_state_set.set_val (Param_PER , 0.5);
-	_state_set.set_val (Param_AMT , 0.5);
+	_state_set.set_val (Param_PER , 0.21);
+	_state_set.set_val (Param_AMT , 0.42);
 	_state_set.set_val (Param_WF  , 0);
-	_state_set.set_val (Param_GSAT, 0.5);
+	_state_set.set_val (Param_GSAT, 0.75);
 	_state_set.set_val (Param_BIAS, 0.5);
 
 	_state_set.add_observer (Param_PER , _param_change_shape_flag);

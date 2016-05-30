@@ -29,6 +29,7 @@
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/doc/ActionParam.h"
+#include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/FxId.h"
 #include "mfx/pi/DistoSimple.h"
@@ -275,7 +276,7 @@ Context::Context (double sample_freq, int max_block_size)
 
 		{
 			mfx::doc::PedalActionCycle &  cycle =
-				preset._layout._pedal_arr [1]._action_arr [mfx::doc::ActionTrigger_PRESS];
+				preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
 			const mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
 			mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 			for (int i = 0; i < 2; ++i)
@@ -302,11 +303,11 @@ Context::Context (double sample_freq, int max_block_size)
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
-			pi_settings._param_list = std::vector <float> (1, 0.75f);
+			pi_settings._param_list = std::vector <float> (1, 0.125f);
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [1]._action_arr [mfx::doc::ActionTrigger_PRESS];
+					preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
 				const mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
 				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 				for (int i = 0; i < 2; ++i)
@@ -331,7 +332,7 @@ Context::Context (double sample_freq, int max_block_size)
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
 			pi_settings._param_list = std::vector <float> (
-				{ 0.5f, 0.5f, 0, 0.5f, 0.5f }
+				{ 0.21f, 0.42f, 0, 0.75f, 0.5f }
 			);
 
 			mfx::doc::CtrlLinkSet cls_main;
@@ -342,12 +343,22 @@ Context::Context (double sample_freq, int max_block_size)
 			cls_main._bind_sptr->_u2b_flag      = false;
 			cls_main._bind_sptr->_base          = 0;
 			cls_main._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_PER] = cls_main;
+			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_AMT] = cls_main;
 		}
+	}
+	for (int p = 0; p < 5; ++p)
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			bank._layout._pedal_arr [p]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionPreset (false, p)
+		));
+		cycle._cycle.push_back (action_arr);
 	}
 	{
 		mfx::doc::PedalActionCycle &  cycle =
-			bank._layout._pedal_arr [0]._action_arr [mfx::doc::ActionTrigger_PRESS];
+			bank._layout._pedal_arr [5]._action_arr [mfx::doc::ActionTrigger_PRESS];
 		mfx::doc::PedalActionCycle::ActionArray   action_arr;
 		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
 			new mfx::doc::ActionToggleTuner
@@ -355,7 +366,7 @@ Context::Context (double sample_freq, int max_block_size)
 		cycle._cycle.push_back (action_arr);
 	}
 	
-	_model.load_bank (bank, 0);
+	_model.load_bank (bank, 1);
 
 	_model.set_process_info (sample_freq, max_block_size);
 }

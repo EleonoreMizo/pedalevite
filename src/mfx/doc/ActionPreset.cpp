@@ -41,6 +41,15 @@ namespace doc
 
 
 
+ActionPreset::ActionPreset (bool relative_flag, int val)
+:	_relative_flag (relative_flag)
+,	_val (val)
+{
+	// Nothing
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
