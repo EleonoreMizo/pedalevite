@@ -26,10 +26,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/Approx.h"
 #include "fstb/ToolsSimd.h"
+#include "mfx/pi/param/HelperDispNum.h"
+#include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
-#include "mfx/pi/param//HelperDispNum.h"
+#include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/Tremolo.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
@@ -65,7 +67,41 @@ Tremolo::Tremolo ()
 ,	_bias (0)
 ,	_sat (0.5f)
 {
-	// Frequency
+#if 1
+	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
+
+	// Period
+	TplPll *   pll_ptr = new TplPll (
+		0.02, 2,
+		"Period\nPer",
+		"ms",
+		param::HelperDispNum::Preset_FLOAT_MILLI,
+		0,
+		"%6.1f"
+	);
+	pll_ptr->use_mapper ().set_first_value (0.02);
+	pll_ptr->use_mapper ().add_segment (0.75, 0.25, true);
+	pll_ptr->use_mapper ().add_segment (1, 2, true);
+	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+	_desc_set.add_glob (Param_PER, pll_ptr);
+
+	// Amount
+	pll_ptr = new TplPll (
+		0, 10,
+		"Amount\nAmt",
+		"%",
+		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		0,
+		"%6.1f"
+	);
+	pll_ptr->use_mapper ().set_first_value (0);
+	pll_ptr->use_mapper ().add_segment (0.125, 0.125, false);
+	pll_ptr->use_mapper ().add_segment (0.75, 0.75, true);
+	pll_ptr->use_mapper ().add_segment (1, 10, true);
+	_desc_set.add_glob (Param_AMT, pll_ptr);
+
+#else
+	// Period
 	param::TplLog *   log_ptr = new param::TplLog (
 		0.05, 5,
 		"Period\nPer",
@@ -87,6 +123,7 @@ Tremolo::Tremolo ()
 		"%6.1f"
 	);
 	_desc_set.add_glob (Param_AMT, log_ptr);
+#endif
 
 	// Waveform
 	param::TplEnum *  enum_ptr = new param::TplEnum (
@@ -120,8 +157,8 @@ Tremolo::Tremolo ()
 
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
-	_state_set.set_val (Param_PER , 0.21); // ~130 ms
-	_state_set.set_val (Param_AMT , 0.42); // 0.31
+	_state_set.set_val (Param_PER , 0.55); // Previously: 0.21 -> ~130 ms
+	_state_set.set_val (Param_AMT , 0.45); // Previously: 0.42 -> 0.31 %
 	_state_set.set_val (Param_WF  , 0);
 	_state_set.set_val (Param_GSAT, 0.75);
 	_state_set.set_val (Param_BIAS, 0.5);

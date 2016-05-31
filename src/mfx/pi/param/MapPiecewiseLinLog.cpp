@@ -49,7 +49,6 @@ MapPiecewiseLinLog::MapPiecewiseLinLog ()
 
 void	MapPiecewiseLinLog::config (double val_min, double val_max)
 {
-	assert (val_min > 0);
 	assert (val_min < val_max);
 
 	_val_min = val_min;

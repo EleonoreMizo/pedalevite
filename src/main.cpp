@@ -370,7 +370,7 @@ Context::Context (double sample_freq, int max_block_size)
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
 			pi_settings._param_list = std::vector <float> (
-				{ 0.21f, 0.42f, 0, 0.75f, 0.5f }
+				{ 0.55f, 0.45f, 0, 0.75f, 0.5f }
 			);
 
 			mfx::doc::CtrlLinkSet cls_main;
@@ -441,7 +441,7 @@ void	Context::display_page_preset ()
 	// Preset title
 	fstb::snprintf4all (
 		txt_0, nbr_chr_big, "%02d %s",
-		_preset_index,
+		_preset_index + 1,
 		preset._name.c_str ()
 	);
 	txt_0 [nbr_chr_big] = '\0';
