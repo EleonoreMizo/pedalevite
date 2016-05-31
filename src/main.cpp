@@ -246,7 +246,6 @@ Context::Context (double sample_freq, int max_block_size)
 ,	_proc_ctx ()
 ,	_queue_input_to_cmd ()
 ,	_queue_input_to_audio ()
-,	_slot_info_list ()
 ,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input)
 #if fstb_IS (ARCHI, ARM)
 ,	_display (_thread_spi)
@@ -258,7 +257,9 @@ Context::Context (double sample_freq, int max_block_size)
 ,	_leds ()
 #endif
 ,	_fnt_8x12 ()
+,	_fnt_6x8 ()
 ,	_fnt_6x6 ()
+,	_slot_info_list ()
 {
 	_usage_min.store (-1);
 	_usage_max.store (-1);
@@ -289,7 +290,7 @@ Context::Context (double sample_freq, int max_block_size)
 	mfx::doc::Bank bank;
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [0];
-		preset._name = "Simple disto";
+		preset._name = "Basic disto";
 		mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 		preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 		slot_ptr->_label    = "Disto 1";
@@ -329,7 +330,7 @@ Context::Context (double sample_freq, int max_block_size)
 	}
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [1];
-		preset._name = "Tremosto";
+		preset._name = "Tremolisto";
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
@@ -439,7 +440,7 @@ void	Context::display_page_preset ()
 
 	// Preset title
 	fstb::snprintf4all (
-		txt_0, nbr_chr_big, "%0d %s",
+		txt_0, nbr_chr_big, "%02d %s",
 		_preset_index,
 		preset._name.c_str ()
 	);
@@ -569,7 +570,7 @@ void	Context::video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int st
 	buf_ptr += y * stride + x;
 	for (y = 0; y < h; ++y)
 	{
-		for (int x = 0; x < w; ++x)
+		for (x = 0; x < w; ++x)
 		{
 			buf_ptr [x] = ~buf_ptr [x];
 		}
@@ -984,14 +985,6 @@ static int MAIN_main_loop (Context &ctx)
 	fprintf (stderr, "Entering main loop...\n");
 
 	int            ret_val = 0;
-
-	uint8_t *      p_ptr  = ctx._display.use_screen_buf ();
-	const int      scr_w  = ctx._display.get_width ();
-	const int      scr_h  = ctx._display.get_height ();
-	const int      scr_s  = ctx._display.get_stride ();
-	bool           scr_clean_flag = false;
-	bool           scr_rfrsh_flag  = true;
-
 	int            loop_count = 0;
 
 	while (ret_val == 0 && ! ctx._quit_flag)
