@@ -1063,7 +1063,7 @@ static int MAIN_main_loop (Context &ctx)
 		bool           disto_flag = false;
 		float          disto_gain = 1;
 
-		if (! ctx._slot_info_list.empty ())
+		if (! ctx._slot_info_list.empty () && ctx._preset_index < 2)
 		{
 			mfx::ModelObserverInterface::PluginInfoSPtr pi_efx_sptr =
 				ctx._slot_info_list [0] [mfx::PiType_MAIN];
