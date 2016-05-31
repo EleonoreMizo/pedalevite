@@ -158,7 +158,7 @@ int	Font::get_char_w (char32_t /*ucs4*/) const
 
 
 // You can use std::codecvt_utf8 <char32_t> to convert from UTF-8.
-void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride)
+void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride) const
 {
 	assert (is_ready ());
 	assert (buf_ptr != 0);
@@ -183,7 +183,7 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride)
 
 
 
-void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag_x, int mag_y)
+void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag_x, int mag_y) const
 {
 	assert (is_ready ());
 	assert (buf_ptr != 0);

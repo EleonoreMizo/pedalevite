@@ -3,6 +3,13 @@
         TplMapped.h
         Author: Laurent de Soras, 2016
 
+Template parameters:
+
+- T requires:
+	void    T::config (double val_min, double val_max);
+	double  T::conv_norm_to_nat (double norm) const;
+	double  T::conv_nat_to_norm (double nat) const;
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to

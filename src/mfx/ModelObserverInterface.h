@@ -39,6 +39,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+namespace doc
+{
+	class Bank;
+}
+
 
 
 class ModelObserverInterface
@@ -63,6 +68,8 @@ public:
 
 	virtual        ~ModelObserverInterface () = default;
 
+	void           set_bank (const doc::Bank &bank, int preset);
+	void           set_cur_preset (int preset);
 	void           set_tuner (bool active_flag);
 	void           set_tuner_freq (float freq);
 	void           set_slot_info_for_current_preset (const SlotInfoList &info_list);
@@ -74,6 +81,8 @@ public:
 
 protected:
 
+	virtual void   do_set_bank (const doc::Bank &bank, int preset) = 0;
+	virtual void   do_set_cur_preset (int preset) = 0;
 	virtual void   do_set_tuner (bool active_flag) = 0;
 	virtual void   do_set_tuner_freq (float freq) = 0;
 	virtual void	do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;

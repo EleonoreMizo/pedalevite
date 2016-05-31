@@ -127,6 +127,35 @@ static int64_t MAIN_get_time ()
 
 
 
+static void MAIN_print_text (int x, int y, const char *txt_0, uint8_t *screenbuf_ptr, int stride, const mfx::ui::Font &fnt, int mag_x, int mag_y)
+{
+	int             pos    = 0;
+	const int       x_org  = x;
+	const int       char_w = fnt.get_char_w ();
+	const int       char_h = fnt.get_char_h ();
+	while (txt_0 [pos] != '\0')
+	{
+		const char      c = txt_0 [pos];
+		++ pos;
+		if (c == '\n')
+		{
+			x = x_org;
+			y += char_h * mag_y;
+		}
+		else
+		{
+			fnt.render_char (
+				screenbuf_ptr + x + y * stride,
+				c,
+				stride,
+				mag_x, mag_y
+			);
+			x += char_w * mag_x;
+		}
+	}
+}
+
+
 
 class Context
 :	public mfx::ModelObserverInterface
@@ -142,9 +171,7 @@ public:
 	               _usage_max;
 	std::atomic <float>            // Negative: the main thread read the value.
 	               _usage_min;
-	volatile float _detected_freq = 0;
 	const int      _tuner_subspl  = 4;
-	volatile bool  _tuner_flag    = false;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
 
@@ -157,15 +184,12 @@ public:
 	               _queue_input_to_cmd;
 	mfx::ui::UserInputInterface::MsgQueue
 	               _queue_input_to_audio;
-	mfx::ModelObserverInterface::SlotInfoList
-	               _slot_info_list;
 	mfx::Model     _model;
-	volatile int   _pi_id_disto_main = -1;
-	volatile int   _pi_id_disto_mix  = -1;
-	volatile int   _pi_id_tuner_main = -1;
 
 	// Not for the audio thread
 	volatile bool	_quit_flag = false;
+
+	// View + controller
 #if fstb_IS (ARCHI, ARM)
  #if defined (MAIN_USE_ST7920)
 	mfx::ui::DisplayPi3St7920
@@ -188,11 +212,24 @@ public:
 	mfx::ui::Font  _fnt_8x12;
 	mfx::ui::Font  _fnt_6x8;
 	mfx::ui::Font  _fnt_6x6;
+	mfx::doc::Bank _bank;
+	int            _preset_index  = 0;
+	mfx::ModelObserverInterface::SlotInfoList
+	               _slot_info_list;
+	volatile bool  _tuner_flag    = false;
+	volatile float _detected_freq = 0;
 
 	Context (double sample_freq, int max_block_size);
 	~Context ();
+	void           display_page_preset ();
+	void           display_page_efx (int slot_index);
+	void           display_page_tuner (const char *note_0);
+	static void    print_name_bestfit (char txt_0 [], long max_len, const char src_list_0 []);
+	static void    video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride);
 protected:
 	// mfx::ModelObserverInterface
+	virtual void   do_set_bank (const mfx::doc::Bank &bank, int preset);
+	virtual void   do_set_cur_preset (int preset);
 	virtual void   do_set_tuner (bool active_flag);
 	virtual void   do_set_tuner_freq (float freq);
 	virtual void	do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list);
@@ -252,7 +289,7 @@ Context::Context (double sample_freq, int max_block_size)
 	mfx::doc::Bank bank;
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [0];
-		preset._name = "Preset 1";
+		preset._name = "Simple disto";
 		mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 		preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 		slot_ptr->_label    = "Disto 1";
@@ -292,7 +329,7 @@ Context::Context (double sample_freq, int max_block_size)
 	}
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [1];
-		preset._name = "Preset 2";
+		preset._name = "Tremosto";
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
@@ -366,7 +403,7 @@ Context::Context (double sample_freq, int max_block_size)
 		cycle._cycle.push_back (action_arr);
 	}
 	
-	_model.load_bank (bank, 1);
+	_model.load_bank (bank, 0);
 
 	_model.set_process_info (sample_freq, max_block_size);
 }
@@ -374,6 +411,183 @@ Context::Context (double sample_freq, int max_block_size)
 Context::~Context ()
 {
 	// Nothing
+}
+
+void	Context::display_page_preset ()
+{
+	uint8_t *      p_ptr  = _display.use_screen_buf ();
+	const int      scr_w  = _display.get_width ();
+	const int      scr_h  = _display.get_height ();
+	const int      scr_s  = _display.get_stride ();
+
+	memset (p_ptr, 0, scr_s * scr_h);
+
+	const mfx::ui::Font &   fnt_big = _fnt_8x12;
+	const mfx::ui::Font &   fnt_sml = _fnt_6x6;
+	const int      nbr_chr_big = scr_w / fnt_big.get_char_w ();
+	const int      nbr_chr_sml = scr_w / fnt_sml.get_char_w ();
+	const int      fx_list_y   = fnt_big.get_char_h () + 2;
+	const int      chr_h_sml   = fnt_sml.get_char_h ();
+	const int      nbr_lines   = (scr_h - fx_list_y) / chr_h_sml;
+
+	const int      max_textlen = 1023;
+	char           txt_0 [max_textlen+1];
+	assert (nbr_chr_big <= max_textlen);
+	assert (nbr_chr_sml <= max_textlen);
+
+	const mfx::doc::Preset &   preset = _bank._preset_arr [_preset_index];
+
+	// Preset title
+	fstb::snprintf4all (
+		txt_0, nbr_chr_big, "%0d %s",
+		_preset_index,
+		preset._name.c_str ()
+	);
+	txt_0 [nbr_chr_big] = '\0';
+	MAIN_print_text (0, 0, txt_0, p_ptr, scr_s, fnt_big, 1, 1);
+
+	// Effect list
+	int            line_pos = 0;
+	for (const auto &slot_sptr : preset._slot_list)
+	{
+		if (line_pos >= nbr_lines)
+		{
+			break;
+		}
+		const mfx::doc::Slot &  slot = *slot_sptr;
+		const std::string pi_type_name =
+			mfx::pi::PluginModel_get_name (slot._pi_model);
+		print_name_bestfit (txt_0, nbr_chr_sml, pi_type_name.c_str ());
+		const int      y = fx_list_y + line_pos * chr_h_sml;
+		MAIN_print_text (0, y, txt_0, p_ptr, scr_s, fnt_sml, 1, 1);
+		bool           mod_flag = (! slot._settings_mixer._map_param_ctrl.empty ());
+		if (! mod_flag)
+		{
+			const auto     it = slot._settings_all.find (slot._pi_model);
+			if (it != slot._settings_all.end ())
+			{
+				mod_flag = (! it->second._map_param_ctrl.empty ());
+			}
+		}
+		if (mod_flag)
+		{
+			video_invert (0, y, scr_w, chr_h_sml, p_ptr, scr_s);
+		}
+	}
+
+	_display.refresh (0, 0, scr_w, scr_h);
+}
+
+void	Context::display_page_efx (int slot_index)
+{
+	uint8_t *      p_ptr  = _display.use_screen_buf ();
+	const int      scr_w  = _display.get_width ();
+	const int      scr_h  = _display.get_height ();
+	const int      scr_s  = _display.get_stride ();
+
+	memset (p_ptr, 0, scr_s * scr_h);
+
+
+
+
+
+	_display.refresh (0, 0, scr_w, scr_h);
+}
+
+void	Context::display_page_tuner (const char *note_0)
+{
+	uint8_t *      p_ptr  = _display.use_screen_buf ();
+	const int      scr_w  = _display.get_width ();
+	const int      scr_h  = _display.get_height ();
+	const int      scr_s  = _display.get_stride ();
+
+	memset (p_ptr, 0, scr_s * scr_h);
+
+	const int      char_w  = _fnt_8x12.get_char_w ();
+	const int      char_h  = _fnt_8x12.get_char_h ();
+	const int      txt_len = int (strlen (note_0));
+	const int      mag_x   = scr_w / (txt_len * char_w);
+	const int      mag_y   = scr_h / char_h;
+	const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
+	const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
+	MAIN_print_text (pos_x, pos_y, note_0, p_ptr, scr_s, _fnt_8x12, mag_x, mag_y);
+	_display.refresh (0, 0, scr_w, scr_h);
+}
+
+void	Context::print_name_bestfit (char txt_0 [], long max_len, const char src_list_0 [])
+{
+	assert (txt_0 != 0);
+	assert (max_len > 0);
+	assert (src_list_0 != 0);
+
+	long           sel_label_len = 0;
+	long           sel_label_pos = 0;
+	long           cur_label_len = 0;
+	long           cur_label_pos = 0;
+	long           pos = 0;
+	bool           exit_flag = false;
+	do
+	{
+		const char     c = src_list_0 [pos];
+		if (c == '\n' || c == '\0')
+		{
+			if (cur_label_len > 0)
+			{
+				if (   (cur_label_len > sel_label_len && cur_label_len <= max_len)
+				    || (cur_label_len < sel_label_len && sel_label_len > max_len))
+				{
+					sel_label_len = cur_label_len;
+					sel_label_pos = cur_label_pos;
+				}
+			}
+
+			cur_label_pos = pos + 1;
+			cur_label_len = 0;
+
+			if (c == '\0')
+			{
+				exit_flag = true;
+			}
+		}
+
+		else
+		{
+			++ cur_label_len;
+		}
+
+		++ pos;
+	}
+	while (! exit_flag);
+
+	sel_label_len = std::min (sel_label_len, max_len);
+	memcpy (txt_0, src_list_0 + sel_label_pos, sel_label_len);
+	txt_0 [sel_label_len] = '\0';
+}
+
+void	Context::video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride)
+{
+	buf_ptr += y * stride + x;
+	for (y = 0; y < h; ++y)
+	{
+		for (int x = 0; x < w; ++x)
+		{
+			buf_ptr [x] = ~buf_ptr [x];
+		}
+		buf_ptr += stride;
+	}
+}
+
+void	Context::do_set_bank (const mfx::doc::Bank &bank, int preset)
+{
+	_bank = bank;
+	_preset_index = preset;
+	_slot_info_list.clear ();
+}
+
+void	Context::do_set_cur_preset (int preset)
+{
+	_preset_index = preset;
+	_slot_info_list.clear ();
 }
 
 void	Context::do_set_tuner (bool active_flag)
@@ -765,36 +979,6 @@ static int MAIN_audio_stop ()
 
 
 
-static void MAIN_print_text (int x, int y, const char *txt_0, uint8_t *screenbuf_ptr, int stride, mfx::ui::Font &fnt, int mag_x, int mag_y)
-{
-	int             pos    = 0;
-	const int       x_org  = x;
-	const int       char_w = fnt.get_char_w ();
-	const int       char_h = fnt.get_char_h ();
-	while (txt_0 [pos] != '\0')
-	{
-		const char      c = txt_0 [pos];
-		++ pos;
-		if (c == '\n')
-		{
-			x = x_org;
-			y += char_h * mag_y;
-		}
-		else
-		{
-			fnt.render_char (
-				screenbuf_ptr + x + y * stride,
-				c,
-				stride,
-				mag_x, mag_y
-			);
-			x += char_w * mag_x;
-		}
-	}
-}
-
-
-
 static int MAIN_main_loop (Context &ctx)
 {
 	fprintf (stderr, "Entering main loop...\n");
@@ -930,40 +1114,13 @@ static int MAIN_main_loop (Context &ctx)
 		fflush (stderr);
 
 		// Display test
-		if (! scr_clean_flag)
-		{
-			memset (p_ptr, 0, scr_s * scr_h);
-			scr_clean_flag = true;
-			scr_rfrsh_flag = true;
-		}
 		if (tuner_flag)
 		{
-			const int      char_w  = ctx._fnt_8x12.get_char_w ();
-			const int      char_h  = ctx._fnt_8x12.get_char_h ();
-			const int      txt_len = int (strlen (note3_0));
-			const int      mag_x   = scr_w / (txt_len * char_w);
-			const int      mag_y   = scr_h / char_h;
-			const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
-			const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
-			MAIN_print_text (pos_x, pos_y, note3_0, p_ptr, scr_s, ctx._fnt_8x12, mag_x, mag_y);
-			scr_clean_flag = false;
-			scr_rfrsh_flag = true;
+			ctx.display_page_tuner (note3_0);
 		}
 		else
 		{
-			const char   txt_0 [] =
-//				"012345678901234567890\n"
-				"Ceci est un texte\n"
-				"ecrit en tout petit.\n";
-			MAIN_print_text (0,  0, txt_0  , p_ptr, scr_s, ctx._fnt_6x6 , 1, 1);
-			MAIN_print_text (0, 16, param_0, p_ptr, scr_s, ctx._fnt_6x8 , 1, 1);
-			MAIN_print_text (0, 32, param_0, p_ptr, scr_s, ctx._fnt_8x12, 1, 1);
-			scr_rfrsh_flag = true;
-		}
-		if (scr_rfrsh_flag)
-		{
-			ctx._display.refresh (0, 0, scr_w, scr_h);
-			scr_rfrsh_flag = false;
+			ctx.display_page_preset ();
 		}
 
 		bool wait_flag = true;

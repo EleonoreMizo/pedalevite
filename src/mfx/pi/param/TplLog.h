@@ -41,44 +41,7 @@ namespace param
 
 
 
-class TplLog
-:	public TplMapped <MapLog>
-{
-
-	typedef TplMapped <MapLog> Inherited;
-
-/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-public:
-
-	explicit       TplLog (double val_min, double val_max, const char *name_0, const char *unit_0, HelperDispNum::Preset preset = HelperDispNum::Preset_FLOAT_STD, int group_index = 0, const char *format_0 = "%5.2f");
-	virtual        ~TplLog () = default;
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-protected:
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-
-
-/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	               TplLog ()                               = delete;
-	               TplLog (const TplLog &other)            = delete;
-	TplLog &       operator = (const TplLog &other)        = delete;
-	bool           operator == (const TplLog &other) const = delete;
-	bool           operator != (const TplLog &other) const = delete;
-
-}; // class TplLog
+typedef TplMapped <MapLog> TplLog;
 
 
 

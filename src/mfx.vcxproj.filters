@@ -504,9 +504,6 @@
     <ClInclude Include="mfx\pi\param\TplSq.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
-    <ClInclude Include="mfx\pi\param\TplSq.hpp">
-      <Filter>mfx\pi\param</Filter>
-    </ClInclude>
     <ClInclude Include="mfx\dsp\mix\Align.h">
       <Filter>mfx\dsp\mix</Filter>
     </ClInclude>
@@ -789,6 +786,9 @@
     <ClInclude Include="mfx\pi\Tremolo.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\param\MapPiecewiseLinLog.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -875,9 +875,6 @@
     </ClCompile>
     <ClCompile Include="fstb\txt\neutral\fnc.cpp">
       <Filter>fstb\txt\neutral</Filter>
-    </ClCompile>
-    <ClCompile Include="mfx\pi\param\TplLog.cpp">
-      <Filter>mfx\pi\param</Filter>
     </ClCompile>
     <ClCompile Include="fstb\util\ObservableMultiMixin.cpp">
       <Filter>fstb\util</Filter>
@@ -1024,6 +1021,9 @@
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
     <ClCompile Include="mfx\pi\param\TplLin.cpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\param\MapPiecewiseLinLog.cpp">
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
   </ItemGroup>

@@ -49,6 +49,28 @@ ModelObserverInterface::PluginInfo::PluginInfo (const piapi::PluginInterface &pi
 
 
 
+// set_slot_info_for_current_preset to be called later
+void	ModelObserverInterface::set_bank (const doc::Bank &bank, int preset)
+{
+	assert (preset >= 0);
+	assert (preset < Cst::_nbr_presets_per_bank);
+
+	do_set_bank (bank, preset);
+}
+
+
+
+// set_slot_info_for_current_preset to be called later
+void	ModelObserverInterface::set_cur_preset (int preset)
+{
+	assert (preset >= 0);
+	assert (preset < Cst::_nbr_presets_per_bank);
+
+	do_set_cur_preset (preset);
+}
+
+
+
 void	ModelObserverInterface::set_tuner (bool active_flag)
 {
 	do_set_tuner (active_flag);

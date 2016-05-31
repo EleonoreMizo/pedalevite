@@ -240,9 +240,9 @@ void	Central::clear_slot (int pos)
 
 
 // Returns the plug-in Id
-int	Central::set_plugin (int pos, pi::PluginModel model)
+int	Central::set_plugin (int pos, pi::PluginModel model, bool force_reset_flag)
 {
-	return set_plugin (pos, model, PiType_MAIN);
+	return set_plugin (pos, model, PiType_MAIN, force_reset_flag);
 }
 
 
@@ -257,7 +257,7 @@ void	Central::remove_plugin (int pos)
 // Returns the plug-in Id
 int	Central::set_mixer (int pos)
 {
-	return set_plugin (pos, pi::PluginModel_DRYWET, PiType_MIX);
+	return set_plugin (pos, pi::PluginModel_DRYWET, PiType_MIX, false);
 }
 
 
@@ -464,7 +464,7 @@ Plugin &	Central::find_plugin (Document &doc, int pi_id)
 
 
 
-int	Central::set_plugin (int pos, pi::PluginModel model, PiType type)
+int	Central::set_plugin (int pos, pi::PluginModel model, PiType type, bool force_reset_flag)
 {
 	Document &     doc = modify ();
 
@@ -502,6 +502,16 @@ int	Central::set_plugin (int pos, pi::PluginModel model, PiType type)
 				{
 					pi_id = inst_node.first;
 					inst_node.second = true;
+					if (force_reset_flag)
+					{
+						PluginPool::PluginDetails &   details =
+							_plugin_pool.use_plugin (pi_id);
+						int         latency = 0;
+						int         ret_val = details._pi_uptr->reset (
+							_sample_freq, _max_block_size, latency
+						);
+						assert (ret_val == piapi::PluginInterface::Err_OK);
+					}
 					break;
 				}
 			}

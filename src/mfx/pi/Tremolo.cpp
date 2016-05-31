@@ -74,6 +74,7 @@ Tremolo::Tremolo ()
 		0,
 		"%6.1f"
 	);
+	log_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
 	_desc_set.add_glob (Param_PER, log_ptr);
 
 	// Amount
@@ -119,8 +120,8 @@ Tremolo::Tremolo ()
 
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
-	_state_set.set_val (Param_PER , 0.21);
-	_state_set.set_val (Param_AMT , 0.42);
+	_state_set.set_val (Param_PER , 0.21); // ~130 ms
+	_state_set.set_val (Param_AMT , 0.42); // 0.31
 	_state_set.set_val (Param_WF  , 0);
 	_state_set.set_val (Param_GSAT, 0.75);
 	_state_set.set_val (Param_BIAS, 0.5);

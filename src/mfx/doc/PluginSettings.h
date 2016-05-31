@@ -56,7 +56,8 @@ public:
 	PluginSettings &
 	               operator = (const PluginSettings &other)     = default;
 
-	bool           _force_mono_flag;
+	bool           _force_mono_flag  = false;
+	bool           _force_reset_flag = false;
 	std::vector <float>
 	               _param_list;
 	MapParamCtrl   _map_param_ctrl;     // Parameter index -> controller list

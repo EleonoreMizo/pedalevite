@@ -42,45 +42,7 @@ namespace param
 
 
 template <bool INVFLAG>
-class TplSq
-:	public TplMapped <MapSq <INVFLAG> >
-{
-
-	typedef TplMapped <MapSq <INVFLAG> > Inherited;
-
-/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-public:
-
-	explicit       TplSq (double val_min, double val_max, const char *name_0, const char *unit_0, HelperDispNum::Preset preset = HelperDispNum::Preset_FLOAT_STD, int group_index = 0, const char *format_0 = "%5.2f");
-	virtual        ~TplSq () = default;
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-protected:
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-
-
-/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	               TplSq ()                                         = delete;
-	               TplSq (const TplSq <INVFLAG> &other)             = delete;
-	TplSq <INVFLAG> &
-	               operator = (const TplSq <INVFLAG> &other)        = delete;
-	bool           operator == (const TplSq <INVFLAG> &other) const = delete;
-	bool           operator != (const TplSq <INVFLAG> &other) const = delete;
-
-}; // class TplSq
+using TplSq = TplMapped <MapSq <INVFLAG> >;
 
 
 
@@ -90,7 +52,7 @@ private:
 
 
 
-#include "mfx/pi/param/TplSq.hpp"
+//#include "mfx/pi/param/TplSq.hpp"
 
 
 

@@ -209,6 +209,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/HelperDispNum.h \
         ../../src/mfx/pi/param/MapLog.h \
         ../../src/mfx/pi/param/MapLog.hpp \
+        ../../src/mfx/pi/param/MapPiecewiseLinLog.cpp \
+        ../../src/mfx/pi/param/MapPiecewiseLinLog.h \
         ../../src/mfx/pi/param/MapS.h \
         ../../src/mfx/pi/param/MapS.hpp \
         ../../src/mfx/pi/param/MapSq.h \
@@ -221,12 +223,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplInt.hpp \
         ../../src/mfx/pi/param/TplLin.cpp \
         ../../src/mfx/pi/param/TplLin.h \
-        ../../src/mfx/pi/param/TplLog.cpp \
         ../../src/mfx/pi/param/TplLog.h \
         ../../src/mfx/pi/param/TplMapped.h \
         ../../src/mfx/pi/param/TplMapped.hpp \
         ../../src/mfx/pi/param/TplSq.h \
-        ../../src/mfx/pi/param/TplSq.hpp \
         ../../src/mfx/pi/DistoSimple.cpp \
         ../../src/mfx/pi/DistoSimple.h \
         ../../src/mfx/pi/DryWet.cpp \

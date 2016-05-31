@@ -292,6 +292,7 @@
     <ClInclude Include="mfx\pi\param\MapS.hpp" />
     <ClInclude Include="mfx\pi\param\MapSq.h" />
     <ClInclude Include="mfx\pi\param\MapSq.hpp" />
+    <ClInclude Include="mfx\pi\param\MapPiecewiseLinLog.h" />
     <ClInclude Include="mfx\pi\param\Tools.h" />
     <ClInclude Include="mfx\pi\param\TplEnum.h" />
     <ClInclude Include="mfx\pi\param\TplInt.h" />
@@ -301,7 +302,6 @@
     <ClInclude Include="mfx\pi\param\TplMapped.h" />
     <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
     <ClInclude Include="mfx\pi\param\TplSq.h" />
-    <ClInclude Include="mfx\pi\param\TplSq.hpp" />
     <ClInclude Include="mfx\pi\PluginModel.h" />
     <ClInclude Include="mfx\pi\Tremolo.h" />
     <ClInclude Include="mfx\pi\Tuner.h" />
@@ -394,10 +394,10 @@
     <ClCompile Include="mfx\pi\ParamState.cpp" />
     <ClCompile Include="mfx\pi\ParamStateSet.cpp" />
     <ClCompile Include="mfx\pi\param\HelperDispNum.cpp" />
+    <ClCompile Include="mfx\pi\param\MapPiecewiseLinLog.cpp" />
     <ClCompile Include="mfx\pi\param\Tools.cpp" />
     <ClCompile Include="mfx\pi\param\TplEnum.cpp" />
     <ClCompile Include="mfx\pi\param\TplLin.cpp" />
-    <ClCompile Include="mfx\pi\param\TplLog.cpp" />
     <ClCompile Include="mfx\pi\PluginModel.cpp" />
     <ClCompile Include="mfx\pi\Tremolo.cpp" />
     <ClCompile Include="mfx\pi\Tuner.cpp" />

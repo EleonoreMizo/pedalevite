@@ -41,7 +41,7 @@ namespace param
 
 
 // name_0 = printf format string, with group_index as optional argument (can
-// be used up to 8 times)
+// be used up to 4 times)
 template <class T>
 TplMapped <T>::TplMapped (double val_min, double val_max, const char *name_0, const char *unit_0, HelperDispNum::Preset preset, int group_index, const char *format_0)
 :	_mapper ()
@@ -64,10 +64,11 @@ TplMapped <T>::TplMapped (double val_min, double val_max, const char *name_0, co
 
 	char           txt_0 [1023+1];
 	fstb::snprintf4all (txt_0, sizeof (txt_0), name_0,
-		_group_index, _group_index, _group_index, _group_index,
 		_group_index, _group_index, _group_index, _group_index
 	);
 	_name = txt_0;
+
+	_mapper.config (val_min, val_max);
 }
 
 

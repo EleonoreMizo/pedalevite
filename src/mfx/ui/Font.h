@@ -60,8 +60,8 @@ public:
 	int            get_char_h () const;
 	int            get_char_w (char32_t ucs4 = 32) const;
 
-	void           render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride);
-	void           render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag_x, int mag_y);
+	void           render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride) const;
+	void           render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag_x, int mag_y) const;
 
 
 

@@ -42,7 +42,7 @@ class Cst
 public:
 
 	static const int  _nbr_pedals      = 12;
-	static const int  _nbr_presets_per_bank = 128;
+	static const int  _nbr_presets_per_bank = 64;
 
 	static const int  _max_nbr_buf     = 256;
 	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)

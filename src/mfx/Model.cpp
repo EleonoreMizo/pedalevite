@@ -349,11 +349,6 @@ void	Model::apply_settings_normal ()
 			check_mixer_plugin (slot_index);
 
 			// Now the main plug-in
-			const int      pi_id =
-				_central.set_plugin (slot_index, slot._pi_model);
-			_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
-
-			// Settings
 			slot_cur._settings_all = slot._settings_all;
 			auto           it_s = slot_cur._settings_all.find (slot._pi_model);
 			if (it_s == slot_cur._settings_all.end ())
@@ -363,6 +358,9 @@ void	Model::apply_settings_normal ()
 			else
 			{
 				_central.force_mono (slot_index, it_s->second._force_mono_flag);
+				const int      pi_id =
+					_central.set_plugin (slot_index, slot._pi_model, it_s->second._force_reset_flag);
+				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
 				send_effect_settings (pi_id, it_s->second);
 			}
 		}
@@ -378,7 +376,7 @@ void	Model::apply_settings_tuner ()
 	_central.insert_slot (0);
 	_central.remove_mixer (0);
 
-	_tuner_pi_id = _central.set_plugin (0, pi::PluginModel_TUNER);
+	_tuner_pi_id = _central.set_plugin (0, pi::PluginModel_TUNER, false);
 
 	const PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
