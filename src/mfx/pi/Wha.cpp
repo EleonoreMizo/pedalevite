@@ -202,9 +202,9 @@ void	Wha::do_process_block (ProcInfo &proc)
 	// Parameters
 	_state_set.process_block (proc._nbr_spl);
 
-	float          freq_beg = _freq;
+//	float          freq_beg = _freq;
 	float          freq_end = _freq;
-	float          q_beg    = _q;
+//	float          q_beg    = _q;
 	float          q_end    = _q;
 
 	if (_param_change_flag (true))
@@ -215,6 +215,7 @@ void	Wha::do_process_block (ProcInfo &proc)
 		_freq = freq_end;
 		_q    = q_end;
 
+		// Computes the new filter coefficients
 		const float    inv_f      = 1.0f / freq_end;
 		const float    q          = q_end * 1000 * inv_f;
 		const float    inv_q      = 1.0f / q;
