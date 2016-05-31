@@ -73,19 +73,19 @@ Wha::Wha ()
 
 	// Base Q
 	log_ptr = new param::TplLog (
-		0.125, 8,
+		1, 16,
 		"Selectivity\nQ",
 		"",
 		param::HelperDispNum::Preset_FLOAT_PERCENT,
 		0,
-		"%5.1f"
+		"%4.1f"
 	);
 	_desc_set.add_glob (Param_Q, log_ptr);
 
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
 	_state_set.set_val (Param_FREQ, 0.50);
-	_state_set.set_val (Param_Q   , 0.50);
+	_state_set.set_val (Param_Q   , 0.50); // -> q = 5
 
 	_state_set.add_observer (Param_FREQ, _param_change_flag);
 	_state_set.add_observer (Param_Q   , _param_change_flag);
@@ -215,10 +215,23 @@ void	Wha::do_process_block (ProcInfo &proc)
 		_freq = freq_end;
 		_q    = q_end;
 
-		float          q          = q_end * 1000 / freq_end;
-		const float    inv_sqrt_q = 1.0f / sqrt (q);
-		const float    s_eq_b [3] = { 0, inv_sqrt_q, 0 };
-		const float    s_eq_a [3] = { 1, inv_sqrt_q * inv_sqrt_q, 1 };
+		const float    inv_f      = 1.0f / freq_end;
+		const float    q          = q_end * 1000 * inv_f;
+		const float    inv_q      = 1.0f / q;
+		float          g          = (freq_end - 100) * inv_f;
+		g *= g;
+		const float    s_eq_b [3] =
+		{
+			0.05f,
+			q_end * inv_q,
+			0.5f  * inv_q
+		};
+		const float    s_eq_a [3] =
+		{
+			1,
+			g * inv_q,
+			1
+		};
 		float          z_eq_b [3];
 		float          z_eq_a [3];
 		const float		k =
