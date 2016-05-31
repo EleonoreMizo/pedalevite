@@ -454,24 +454,28 @@ void	Context::display_page_preset ()
 		{
 			break;
 		}
-		const mfx::doc::Slot &  slot = *slot_sptr;
-		const std::string pi_type_name =
-			mfx::pi::PluginModel_get_name (slot._pi_model);
-		print_name_bestfit (txt_0, nbr_chr_sml, pi_type_name.c_str ());
-		const int      y = fx_list_y + line_pos * chr_h_sml;
-		MAIN_print_text (0, y, txt_0, p_ptr, scr_s, fnt_sml, 1, 1);
-		bool           mod_flag = (! slot._settings_mixer._map_param_ctrl.empty ());
-		if (! mod_flag)
+		if (slot_sptr.get () != 0)
 		{
-			const auto     it = slot._settings_all.find (slot._pi_model);
-			if (it != slot._settings_all.end ())
+			const mfx::doc::Slot &  slot = *slot_sptr;
+			const std::string pi_type_name =
+				mfx::pi::PluginModel_get_name (slot._pi_model);
+			print_name_bestfit (txt_0, nbr_chr_sml, pi_type_name.c_str ());
+			const int      y = fx_list_y + line_pos * chr_h_sml;
+			MAIN_print_text (0, y, txt_0, p_ptr, scr_s, fnt_sml, 1, 1);
+			bool           mod_flag = (! slot._settings_mixer._map_param_ctrl.empty ());
+			if (! mod_flag)
 			{
-				mod_flag = (! it->second._map_param_ctrl.empty ());
+				const auto     it = slot._settings_all.find (slot._pi_model);
+				if (it != slot._settings_all.end ())
+				{
+					mod_flag = (! it->second._map_param_ctrl.empty ());
+				}
 			}
-		}
-		if (mod_flag)
-		{
-			video_invert (0, y, scr_w, chr_h_sml, p_ptr, scr_s);
+			if (mod_flag)
+			{
+				video_invert (0, y, scr_w, chr_h_sml, p_ptr, scr_s);
+			}
+			++ line_pos;
 		}
 	}
 
