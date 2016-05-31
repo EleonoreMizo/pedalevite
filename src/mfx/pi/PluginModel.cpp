@@ -52,6 +52,7 @@ std::string	PluginModel_get_name (PluginModel model)
 	case PluginModel_TUNER:          return ("Tuner");
 	case PluginModel_DISTO_SIMPLE:   return ("Simple distortion\nDisto S");
 	case PluginModel_TREMOLO:        return ("Tremolo");
+	case PluginModel_WHA:            return ("Wha-wha");
 	default:
 		assert (false);
 	}

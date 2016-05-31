@@ -245,6 +245,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/Tremolo.h \
         ../../src/mfx/pi/Tuner.cpp \
         ../../src/mfx/pi/Tuner.h \
+        ../../src/mfx/pi/Wha.cpp \
+        ../../src/mfx/pi/Wha.h \
         ../../src/mfx/piapi/Event.h \
         ../../src/mfx/piapi/EventNoteOff.h \
         ../../src/mfx/piapi/EventNoteOn.h \

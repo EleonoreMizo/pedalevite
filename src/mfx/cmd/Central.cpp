@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/DryWet.h"
 #include "mfx/pi/Tremolo.h"
 #include "mfx/pi/Tuner.h"
+#include "mfx/pi/Wha.h"
 #include "mfx/Cst.h"
 
 #include <algorithm>
@@ -899,6 +900,10 @@ PluginPool::PluginUPtr	Central::instantiate (pi::PluginModel model)
 
 	case pi::PluginModel_TREMOLO:
 		pi_ptr = new pi::Tremolo;
+		break;
+
+	case pi::PluginModel_WHA:
+		pi_ptr = new pi::Wha;
 		break;
 
 	default:

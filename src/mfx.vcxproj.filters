@@ -789,6 +789,9 @@
     <ClInclude Include="mfx\pi\param\MapPiecewiseLinLog.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\Wha.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1025,6 +1028,9 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\param\MapPiecewiseLinLog.cpp">
       <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\Wha.cpp">
+      <Filter>mfx\pi</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

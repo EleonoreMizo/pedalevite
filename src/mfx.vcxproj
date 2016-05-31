@@ -305,6 +305,7 @@
     <ClInclude Include="mfx\pi\PluginModel.h" />
     <ClInclude Include="mfx\pi\Tremolo.h" />
     <ClInclude Include="mfx\pi\Tuner.h" />
+    <ClInclude Include="mfx\pi\Wha.h" />
     <ClInclude Include="mfx\PluginPool.h" />
     <ClInclude Include="mfx\ProcessingContext.h" />
     <ClInclude Include="mfx\ProcessingContextNode.h" />
@@ -401,6 +402,7 @@
     <ClCompile Include="mfx\pi\PluginModel.cpp" />
     <ClCompile Include="mfx\pi\Tremolo.cpp" />
     <ClCompile Include="mfx\pi\Tuner.cpp" />
+    <ClCompile Include="mfx\pi\Wha.cpp" />
     <ClCompile Include="mfx\PluginPool.cpp" />
     <ClCompile Include="mfx\ProcessingContext.cpp" />
     <ClCompile Include="mfx\ProcessingContextNode.cpp" />
