@@ -386,7 +386,7 @@ Context::Context (double sample_freq, int max_block_size)
 		}
 	}
 	{
-		mfx::doc::Preset& preset   = bank._preset_arr [1];
+		mfx::doc::Preset& preset   = bank._preset_arr [2];
 		preset._name = "Ouah-ouah";
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
