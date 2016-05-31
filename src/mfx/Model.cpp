@@ -151,6 +151,11 @@ void	Model::load_bank (const doc::Bank &bank, int preset)
 	_bank         = bank;
 	_preset_index = preset;
 
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_bank (_bank, _preset_index);
+	}
+
 	update_layout_bank ();
 }
 
@@ -700,6 +705,11 @@ void	Model::process_action_preset (const doc::ActionPreset &action)
 		new_index %= Cst::_nbr_presets_per_bank;
 	}
 	_preset_index = new_index;
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_cur_preset (_preset_index);
+	}
 
 	apply_settings ();
 }
