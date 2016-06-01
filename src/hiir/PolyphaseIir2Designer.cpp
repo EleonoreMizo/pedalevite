@@ -128,7 +128,6 @@ Throws: Nothing
 
 int	PolyphaseIir2Designer::compute_coefs (double coef_arr [], double attenuation, double transition)
 {
-	assert (&coef_arr != 0);
 	assert (attenuation > 0);
 	assert (transition > 0);
 	assert (transition < 0.5);
@@ -171,7 +170,6 @@ Throws: Nothing
 
 void	PolyphaseIir2Designer::compute_coefs_spec_order_tbw (double coef_arr [], int nbr_coefs, double transition)
 {
-	assert (&coef_arr != 0);
 	assert (nbr_coefs > 0);
 	assert (transition > 0);
 	assert (transition < 0.5);

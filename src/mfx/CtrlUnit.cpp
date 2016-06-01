@@ -76,7 +76,7 @@ void	CtrlUnit::update_abs_val (float raw_val)
 // param_val is the original parameter value, or modulated with the previous
 // modulations in the mod chain.
 // param_val and the return value are normalized but can be out of the
-// [0; 1] range, so clipping happend only on the final value.
+// [0; 1] range, so clipping happens only on the final value.
 float	CtrlUnit::evaluate (float param_val) const
 {
 	float          mod_val = _val;
