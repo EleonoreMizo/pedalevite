@@ -1198,6 +1198,12 @@ static int MAIN_main_loop (Context &ctx)
 		char           note4_0 [127+1] = "----";
 		const int      nbr_led           = 3;
 		float          lum_arr [nbr_led] = { 0, 0, 0 };
+
+		if (ctx._model.check_signal_clipping ())
+		{
+			lum_arr [0] = 1;
+		}
+
 		if (freq > 0)
 		{
 			const float    midi_pitch = log2 (freq / 220) * 12 - 3 + 60;

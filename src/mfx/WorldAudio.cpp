@@ -33,6 +33,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ProcessingContext.h"
 #include "mfx/WorldAudio.h"
 
+#include <algorithm>
+
 #include <cassert>
 
 
@@ -58,9 +60,12 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_ctx_ptr (0)
 ,	_evt_arr ()
 ,	_evt_ptr_arr ()
+,	_clip_flag ()
 {
 	_evt_arr.reserve (_max_nbr_evt);
 	_evt_ptr_arr.reserve (_max_nbr_evt);
+
+	_clip_flag.store (false);
 }
 
 
@@ -94,6 +99,8 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	{
 		_buf_arr [buf_index] = &_buf_zone [buf_index * block_align];
 	}
+
+	_clip_flag.store (false);
 }
 
 
@@ -101,6 +108,14 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 void	WorldAudio::set_context (const ProcessingContext &ctx)
 {
 	_ctx_ptr = &ctx;
+}
+
+
+
+// This function can be called from any thread.
+bool	WorldAudio::check_signal_clipping ()
+{
+	return _clip_flag.exchange (false);
 }
 
 
@@ -132,6 +147,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 			process_plugin_bundle (pi_ctx, nbr_spl);
 		}
 
+		check_signal_level (nbr_spl);
 		copy_output (dst_arr, nbr_spl);
 	}
 }
@@ -335,6 +351,40 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 
 
 
+void	WorldAudio::check_signal_level (int nbr_spl)
+{
+	const ProcessingContextNode::Side & side =
+		_ctx_ptr->_interface_ctx._side_arr [piapi::PluginInterface::Dir_OUT];
+
+	auto           lvl = fstb::ToolsSimd::set_f32_zero ();
+
+	for (int chn_cnt = 0; chn_cnt < side._nbr_chn; ++chn_cnt)
+	{
+		const int      buf_index = side._buf_arr [chn_cnt];
+		const float *  buf_ptr   = _buf_arr [buf_index];
+
+		for (int pos = 0; pos < nbr_spl; pos += 4)
+		{
+			const auto     x = fstb::ToolsSimd::load_f32 (buf_ptr + pos);
+			lvl = fstb::ToolsSimd::max_f32 (lvl, x);
+		}
+	}
+
+	float          v = 0;
+	v = std::max (v, fstb::ToolsSimd::Shift <0>::extract (lvl));
+	v = std::max (v, fstb::ToolsSimd::Shift <1>::extract (lvl));
+	v = std::max (v, fstb::ToolsSimd::Shift <2>::extract (lvl));
+	v = std::max (v, fstb::ToolsSimd::Shift <3>::extract (lvl));
+
+	// We subtract a tiny margin to be safe
+	if (v > 0.999f)
+	{
+		_clip_flag.exchange (true);
+	}
+}
+
+
+
 void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 {
 	typedef dsp::mix::Simd <
@@ -353,8 +403,8 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 		assert (buf_0_index < int (_buf_arr.size ()));
 		assert (buf_1_index >= 0);
 		assert (buf_1_index < int (_buf_arr.size ()));
-		float *        buf_0_ptr   = _buf_arr [buf_0_index];
-		float *        buf_1_ptr   = _buf_arr [buf_1_index];
+		const float *  buf_0_ptr   = _buf_arr [buf_0_index];
+		const float *  buf_1_ptr   = _buf_arr [buf_1_index];
 		MixAlignToUnalign::copy_2_2 (
 			dst_arr [0], dst_arr [1],
 			buf_0_ptr, buf_1_ptr,
@@ -368,7 +418,7 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 			const int      buf_index = side._buf_arr [chn];
 			assert (buf_index >= 0);
 			assert (buf_index < int (_buf_arr.size ()));
-			float *        buf_ptr   = _buf_arr [buf_index];
+			const float *  buf_ptr   = _buf_arr [buf_index];
 			MixAlignToUnalign::copy_1_1 (dst_arr [chn], buf_ptr, nbr_spl);
 		}
 	}

@@ -110,6 +110,13 @@ void	Model::process_block (float * const * dst_arr, const float * const * src_ar
 
 
 
+bool	Model::check_signal_clipping ()
+{
+	return _central.check_signal_clipping ();
+}
+
+
+
 // obs_ptr can be 0.
 void	Model::set_observer (ModelObserverInterface *obs_ptr)
 {

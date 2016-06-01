@@ -149,6 +149,13 @@ void	Central::process_block (float * const * dst_arr, const float * const * src_
 
 
 
+bool	Central::check_signal_clipping ()
+{
+	return _audio.check_signal_clipping ();
+}
+
+
+
 void	Central::commit ()
 {
 	if (_new_sptr.get () != 0)

@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/MsgQueue.h"
 #include "piapi/EventTs.h"
 
+#include <atomic>
 #include <vector>
 
 
@@ -59,6 +60,8 @@ public:
 
 	void           set_context (const ProcessingContext &ctx);
 	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
+
+	bool           check_signal_clipping ();
 
 
 
@@ -95,6 +98,7 @@ private:
 	void           collect_msg_ui ();
 	void           handle_controller (const ControlSource &controller, float val_raw);
 	void           copy_input (const float * const * src_arr, int nbr_spl);
+	void           check_signal_level (int nbr_spl);
 	void           copy_output (float * const * dst_arr, int nbr_spl);
 	void           process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl);
 	void           process_single_plugin (int plugin_id, piapi::PluginInterface::ProcInfo &proc_info);
@@ -124,6 +128,9 @@ private:
 
 	EventArray     _evt_arr;            // Preallocated
 	EventPtrList   _evt_ptr_arr;        // Preallocated
+
+	std::atomic <bool>
+	               _clip_flag;
 
 
 
