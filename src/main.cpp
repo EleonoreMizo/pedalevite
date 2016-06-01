@@ -279,7 +279,8 @@ Context::Context (double sample_freq, int max_block_size)
 			_user_input.set_msg_recipient (
 				static_cast <mfx::ui::UserInputType> (type),
 				index,
-				  (type == mfx::ui::UserInputType_POT)
+				  (   type == mfx::ui::UserInputType_POT
+				   || type == mfx::ui::UserInputType_ROTENC)
 				? &_queue_input_to_audio
 				: &_queue_input_to_cmd
 			);
@@ -371,7 +372,7 @@ Context::Context (double sample_freq, int max_block_size)
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
 			pi_settings._param_list = std::vector <float> ({
-				0.55f, 0.31f, 0, 0.75f, 0.5f
+				0.45f, 0.31f, 0, 0.75f, 0.5f
 			});
 
 			mfx::doc::CtrlLinkSet cls_main;
@@ -387,12 +388,12 @@ Context::Context (double sample_freq, int max_block_size)
 			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
 			cls_main._bind_sptr->_source._index = 5;
-			cls_main._bind_sptr->_step          = 0.01f;
+			cls_main._bind_sptr->_step          = 0.02f;
 			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls_main._bind_sptr->_u2b_flag      = false;
 			cls_main._bind_sptr->_base          = 0;
 			cls_main._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_PER] = cls_main;
+			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_FREQ] = cls_main;
 
 			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
@@ -436,7 +437,7 @@ Context::Context (double sample_freq, int max_block_size)
 			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
 			cls_main._bind_sptr->_source._index = 5;
-			cls_main._bind_sptr->_step          = 0.01f;
+			cls_main._bind_sptr->_step          = 0.05f;
 			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls_main._bind_sptr->_u2b_flag      = false;
 			cls_main._bind_sptr->_base          = 0;
@@ -457,7 +458,7 @@ Context::Context (double sample_freq, int max_block_size)
 			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
 			cls_main._bind_sptr->_source._index = 6;
-			cls_main._bind_sptr->_step          = 0.01f;
+			cls_main._bind_sptr->_step          = 0.05f;
 			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls_main._bind_sptr->_u2b_flag      = false;
 			cls_main._bind_sptr->_base          = 0;

@@ -71,18 +71,18 @@ Tremolo::Tremolo ()
 
 	// Period
 	TplPll *   pll_ptr = new TplPll (
-		0.02, 2,
-		"Period\nPer",
-		"ms",
-		param::HelperDispNum::Preset_FLOAT_MILLI,
+		0.5, 50,
+		"Frequency\nFreq",
+		"Hz",
+		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
-		"%6.1f"
+		"%6.3f"
 	);
-	pll_ptr->use_mapper ().set_first_value (  0.02);
-	pll_ptr->use_mapper ().add_segment (0.75, 0.25, true);
-	pll_ptr->use_mapper ().add_segment (1   , 2   , true);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
-	_desc_set.add_glob (Param_PER, pll_ptr);
+	pll_ptr->use_mapper ().set_first_value (   0.5);
+	pll_ptr->use_mapper ().add_segment (0.25,  4  , true);
+	pll_ptr->use_mapper ().add_segment (1   , 50  , true);
+	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_HZ);
+	_desc_set.add_glob (Param_FREQ, pll_ptr);
 
 	// Amount
 	pll_ptr = new TplPll (
@@ -136,13 +136,13 @@ Tremolo::Tremolo ()
 
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
-	_state_set.set_val (Param_PER , 0.55); // Previously: 0.21 -> ~130 ms
+	_state_set.set_val (Param_FREQ, 0.45); // Previously: 0.21 -> ~130 ms
 	_state_set.set_val (Param_AMT , 0.31); // Previously: 0.42 -> 0.31 %
 	_state_set.set_val (Param_WF  , 0);
 	_state_set.set_val (Param_GSAT, 0.75);
 	_state_set.set_val (Param_BIAS, 0.5);
 
-	_state_set.add_observer (Param_PER , _param_change_shape_flag);
+	_state_set.add_observer (Param_FREQ, _param_change_shape_flag);
 	_state_set.add_observer (Param_WF  , _param_change_shape_flag);
 	_state_set.add_observer (Param_AMT , _param_change_amp_flag);
 	_state_set.add_observer (Param_GSAT, _param_change_amp_flag);
@@ -284,8 +284,8 @@ void	Tremolo::do_process_block (ProcInfo &proc)
 			_state_set.get_val_tgt_nat (Param_WF)
 		));
 
-		const double      lfo_per = _state_set.get_val_tgt_nat (Param_PER);
-		_lfo_step = 1.0 / (lfo_per * _sample_freq);
+		const double      lfo_freq = _state_set.get_val_tgt_nat (Param_FREQ);
+		_lfo_step = lfo_freq / _sample_freq;
 	}
 
 	_lfo_pos += _lfo_step * proc._nbr_spl;

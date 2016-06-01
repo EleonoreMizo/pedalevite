@@ -51,7 +51,7 @@ public:
 
 	enum Param
 	{
-		Param_PER = 0,
+		Param_FREQ = 0,
 		Param_AMT,
 		Param_WF,
 		Param_GSAT,
