@@ -219,6 +219,7 @@ public:
 	               _slot_info_list;
 	volatile bool  _tuner_flag    = false;
 	volatile float _detected_freq = 0;
+	int            _disp_cur_slot = -1; // Negative: displays the preset page
 
 	Context (double sample_freq, int max_block_size);
 	~Context ();
@@ -515,7 +516,7 @@ void	Context::display_page_preset ()
 			const mfx::doc::Slot &  slot = *slot_sptr;
 			std::string    pi_type_name =
 				mfx::pi::PluginModel_get_name (slot._pi_model);
-			mfx::pi::param::Tools::print_name_bestfit (
+			pi_type_name = mfx::pi::param::Tools::print_name_bestfit (
 				nbr_chr_sml, pi_type_name.c_str ()
 			);
 			memcpy (txt_0, pi_type_name.c_str (), pi_type_name.length () + 1);
@@ -613,8 +614,12 @@ void	Context::display_page_efx (int slot_index)
 			    || _slot_info_list [slot_index] [type].get () == 0)
 			{
 				// When plug-in is not available
+				if (type == mfx::PiType_MIX)
+				{
+					break;
+				}
 				fstb::snprintf4all (
-					txt_0, nbr_chr_sml + 1, "%.4d%*.4f",
+					txt_0, nbr_chr_sml + 1, "%-4d%*.4f",
 					p,
 					nbr_chr_sml - 4,
 					settings_ptr->_param_list [p]
@@ -635,8 +640,8 @@ void	Context::display_page_efx (int slot_index)
 				const std::string name = desc.get_name (max_name_len);
 
 				fstb::snprintf4all (
-					txt_0, nbr_chr_sml + 1, "%.*s%s",
-					max_name_len + 1,
+					txt_0, nbr_chr_sml + 1, "%*s%s",
+					-max_name_len,
 					name.c_str (),
 					val_s.c_str ()
 				);
@@ -690,17 +695,20 @@ void	Context::do_set_bank (const mfx::doc::Bank &bank, int preset)
 	_bank = bank;
 	_preset_index = preset;
 	_slot_info_list.clear ();
+	_disp_cur_slot = -1;
 }
 
 void	Context::do_set_cur_preset (int preset)
 {
 	_preset_index = preset;
 	_slot_info_list.clear ();
+	_disp_cur_slot = -1;
 }
 
 void	Context::do_set_tuner (bool active_flag)
 {
 	_tuner_flag = active_flag;
+	_disp_cur_slot = -1;
 }
 
 void	Context::do_set_tuner_freq (float freq)
@@ -1223,8 +1231,28 @@ static int MAIN_main_loop (Context &ctx)
 		}
 		else
 		{
-//			ctx.display_page_preset ();
-			ctx.display_page_efx (0);
+			const mfx::doc::Preset &   preset = ctx._bank._preset_arr [ctx._preset_index];
+			const int    nbr_slots = int (preset._slot_list.size ());
+			if (ctx._disp_cur_slot < 0 || ctx._disp_cur_slot >= nbr_slots)
+			{
+				ctx.display_page_preset ();
+			}
+			else
+			{
+				ctx.display_page_efx (ctx._disp_cur_slot);
+			}
+			if ((loop_count & 31) == 31)
+			{
+				do
+				{
+					++ ctx._disp_cur_slot;
+				}
+				while (ctx._disp_cur_slot < nbr_slots && preset._slot_list [ctx._disp_cur_slot].get () == 0);
+				if (ctx._disp_cur_slot >= nbr_slots)
+				{
+					ctx._disp_cur_slot = -1;
+				}
+			}
 		}
 
 		bool wait_flag = true;

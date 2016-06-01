@@ -66,7 +66,7 @@ Wha::Wha ()
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
-		"%6f"
+		"%6.1f"
 	);
 	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
 	_desc_set.add_glob (Param_FREQ, log_ptr);
@@ -76,7 +76,7 @@ Wha::Wha ()
 		2, 32,
 		"Selectivity\nQ",
 		"",
-		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
 		"%4.1f"
 	);
