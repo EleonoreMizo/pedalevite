@@ -55,6 +55,9 @@
     <Filter Include="mfx\dsp\iir">
       <UniqueIdentifier>{bf81e6a5-3756-4691-bb37-3891a208ec87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hiir">
+      <UniqueIdentifier>{006017d9-b04a-4fef-924b-9cefa1e2601d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -792,6 +795,135 @@
     <ClInclude Include="mfx\pi\Wha.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
+    <ClInclude Include="hiir\def.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2x3dnow.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2x3dnow.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2x4Sse.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2x4Sse.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2xFpu.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2xFpu.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2xSse.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2xSse.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\fnc.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\fnc.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PhaseHalfPi3dnow.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PhaseHalfPi3dnow.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PhaseHalfPiFpu.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PhaseHalfPiFpu.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PhaseHalfPiSse.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PhaseHalfPiSse.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PolyphaseIir2Designer.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageData3dnow.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageDataSse.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProc3dnow.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProc3dnow.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProc4Sse.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProc4Sse.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProcFpu.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProcFpu.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProcSse.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProcSse.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2x3dnow.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2x3dnow.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2x4Sse.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2x4Sse.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2xFpu.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2xFpu.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2xSse.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2xSse.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageDataNeon.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProc4Neon.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProc4Neon.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProcNeon.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\StageProcNeon.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PhaseHalfPiNeon.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\PhaseHalfPiNeon.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1031,6 +1163,9 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\Wha.cpp">
       <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="hiir\PolyphaseIir2Designer.cpp">
+      <Filter>hiir</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
