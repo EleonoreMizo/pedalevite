@@ -219,12 +219,12 @@ void	Wha::do_process_block (ProcInfo &proc)
 		const float    inv_f      = 1.0f / freq_end;
 		const float    q          = q_end * 1000 * inv_f;
 		const float    inv_q      = 1.0f / q;
-		float          g          = (freq_end - 100) * inv_f;
+		float          g          = (freq_end - 70) * inv_f;
 		g *= g;
 		const float    s_eq_b [3] =
 		{
-			0.05f,
-			q_end * inv_q,
+			0.0f,
+			q_end * inv_q * 1.5f,
 			0.5f  * inv_q
 		};
 		const float    s_eq_a [3] =
