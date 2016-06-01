@@ -126,26 +126,26 @@ pedalevite_SOURCES = \
         ../../src/fstb/ToolsSimd.cpp \
         ../../src/fstb/ToolsSimd.h \
         ../../src/fstb/ToolsSimd.hpp \
-	../../src/hiir/def.h
-	../../src/hiir/Downsampler2xFpu.h
-	../../src/hiir/Downsampler2xFpu.hpp
-	../../src/hiir/fnc.h
-	../../src/hiir/fnc.hpp
-	../../src/hiir/PhaseHalfPiFpu.h
-	../../src/hiir/PhaseHalfPiFpu.hpp
-	../../src/hiir/PhaseHalfPiNeon.h
-	../../src/hiir/PhaseHalfPiNeon.hpp
-	../../src/hiir/PolyphaseIir2Designer.cpp
-	../../src/hiir/PolyphaseIir2Designer.h
-	../../src/hiir/StageDataNeon.h
-	../../src/hiir/StageProc4Neon.h
-	../../src/hiir/StageProc4Neon.hpp
-	../../src/hiir/StageProcFpu.h
-	../../src/hiir/StageProcFpu.hpp
-	../../src/hiir/StageProcNeon.h
-	../../src/hiir/StageProcNeon.hpp
-	../../src/hiir/Upsampler2xFpu.h
-	../../src/hiir/Upsampler2xFpu.hpp
+	../../src/hiir/def.h \
+	../../src/hiir/Downsampler2xFpu.h \
+	../../src/hiir/Downsampler2xFpu.hpp \
+	../../src/hiir/fnc.h \
+	../../src/hiir/fnc.hpp \
+	../../src/hiir/PhaseHalfPiFpu.h \
+	../../src/hiir/PhaseHalfPiFpu.hpp \
+	../../src/hiir/PhaseHalfPiNeon.h \
+	../../src/hiir/PhaseHalfPiNeon.hpp \
+	../../src/hiir/PolyphaseIir2Designer.cpp \
+	../../src/hiir/PolyphaseIir2Designer.h \
+	../../src/hiir/StageDataNeon.h \
+	../../src/hiir/StageProc4Neon.h \
+	../../src/hiir/StageProc4Neon.hpp \
+	../../src/hiir/StageProcFpu.h \
+	../../src/hiir/StageProcFpu.hpp \
+	../../src/hiir/StageProcNeon.h \
+	../../src/hiir/StageProcNeon.hpp \
+	../../src/hiir/Upsampler2xFpu.h \
+	../../src/hiir/Upsampler2xFpu.hpp \
         ../../src/jack/jack.h \
         ../../src/jack/systemdeps.h \
         ../../src/jack/transport.h \
