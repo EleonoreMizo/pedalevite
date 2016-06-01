@@ -77,6 +77,7 @@ Réalisation pédalier d'effet pour guitare
 
 – Boutons pour l'interface, se montent directement sur la façade plutôt que sur PCB, par ordre de préférence :
 OK	3.11	6	http://fr.farnell.com/multicomp/mcpas6-d1-m1ces2-5/commutateur-carree-noir/dp/2146917
+(same)	4.92	6	http://www.gotronic.fr/art-bp-noir-r1397n-19922.htm
 non	2.41	6	http://fr.farnell.com/multicomp/r13-502ma-05-b/switch-spst-3a-125v-solder-black/dp/1634624
 non	3.01	6	http://fr.farnell.com/multicomp/r13-23a-05-bb/switch-spst-mom-black/dp/1634629
 non	4.09	6	http://fr.farnell.com/multicomp/mcpas6b2m1ce2/bouton-poussoir-spst-ip67-noir/dp/1638333
