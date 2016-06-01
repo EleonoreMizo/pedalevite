@@ -81,6 +81,7 @@ public:
 		BinSrc         _type;
 		int            _pos_0;
 		int            _pos_1;
+		int            _dir_mul; // 1 or -1
 	};
 
 	static const int  _antibounce_time = 30 * 1000*1000; // Nanoseconds
@@ -234,6 +235,7 @@ private:
 
 	volatile bool  _quit_flag;
 	std::thread    _polling_thread;
+	int            _polling_count;
 
 
 

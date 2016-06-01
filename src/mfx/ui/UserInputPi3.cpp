@@ -92,13 +92,13 @@ const UserInputPi3::SwitchSrc	UserInputPi3::_switch_arr [_nbr_switches] =
 #if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 const UserInputPi3::RotEncSrc	UserInputPi3::_rotenc_arr [_nbr_rotenc] =
 {
-	{ BinSrc_PORT_EXP, 0x10, 0x11 },
-	{ BinSrc_PORT_EXP, 0x12, 0x13 },
-	{ BinSrc_PORT_EXP, 0x14, 0x15 },
-	{ BinSrc_PORT_EXP, 0x16, 0x17 },
-	{ BinSrc_PORT_EXP, 0x18, 0x19 },
-	{ BinSrc_PORT_EXP, 0x1A, 0x1B },
-	{ BinSrc_PORT_EXP, 0x1D, 0x1E }
+	{ BinSrc_PORT_EXP, 0x10, 0x11, -1 },
+	{ BinSrc_PORT_EXP, 0x12, 0x13, -1 },
+	{ BinSrc_PORT_EXP, 0x14, 0x15, -1 },
+	{ BinSrc_PORT_EXP, 0x16, 0x17, -1 },
+	{ BinSrc_PORT_EXP, 0x18, 0x19, -1 },
+	{ BinSrc_PORT_EXP, 0x1A, 0x1B, -1 },
+	{ BinSrc_PORT_EXP, 0x1D, 0x1E, -1 }
 };
 #endif
 
@@ -128,6 +128,7 @@ UserInputPi3::UserInputPi3 (TimeShareThread &thread_spi)
 ,	_msg_pool ()
 ,	_quit_flag (false)
 ,	_polling_thread ()
+,	_polling_count (0)
 {
 	for (int p = 0; p < _nbr_dev_23017; ++p)
 	{
@@ -278,7 +279,9 @@ void	UserInputPi3::polling_loop ()
 	while (! _quit_flag)
 	{
 		const int64_t  cur_time = read_clock_ns ();
-
+		
+		const bool     low_freq_flag = ((_polling_count & 15) == 0);
+		
 		// Reads all binary inputs first
 		InputState     input_state_arr [BinSrc_NBR_ELT] = { 0, 0 };
 
@@ -301,13 +304,16 @@ void	UserInputPi3::polling_loop ()
 			input_state_arr [BinSrc_GPIO] |= sw_val << p;
 		}
 
-		// Switches
-		for (int s = 0; s < _nbr_switches; ++s)
+		if (low_freq_flag)
 		{
-			const SwitchSrc & src = _switch_arr [s];
-			const int      val    = (input_state_arr [src._type] >> src._pos) & 1;
-			const bool     flag   = (val != 0);
-			handle_switch (s, flag, cur_time);
+			// Switches
+			for (int s = 0; s < _nbr_switches; ++s)
+			{
+				const SwitchSrc & src = _switch_arr [s];
+				const int      val    = (input_state_arr [src._type] >> src._pos) & 1;
+				const bool     flag   = (val != 0);
+				handle_switch (s, flag, cur_time);
+			}
 		}
 
 #if defined (mfx_ui_UserInputPi3_NEW_BOARD)
@@ -322,9 +328,9 @@ void	UserInputPi3::polling_loop ()
 		}
 #endif
 
-		// 10 ms between updates
-		/*** To do: probably too long for the rotary encoders ***/
-		::delay (10);
+		// 1 ms between updates. Not less because of the rotary encoders.
+		::delay (1);
+		++ _polling_count;
 	}
 
 	_quit_flag = false;
@@ -355,7 +361,8 @@ void	UserInputPi3::handle_switch (int index, bool flag, int64_t cur_time)
 void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, int64_t cur_time)
 {
 	RotEnc &       re  = _rotenc_state_arr [index];
-	const int      inc = re.set_new_state (f0, f1);
+	const int      dir = _rotenc_arr [index]._dir_mul;
+	const int      inc = re.set_new_state (f0, f1) * dir;
 	if (inc != 0)
 	{
 		enqueue_val (cur_time, UserInputType_ROTENC, index, inc);
