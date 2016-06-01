@@ -399,7 +399,7 @@ Context::Context (double sample_freq, int max_block_size)
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
 			pi_settings._param_list = std::vector <float> ({
-				0.5f, 0.5f
+				0.5f, 1.0f/3
 			});
 
 			mfx::doc::CtrlLinkSet cls_main;
@@ -408,8 +408,8 @@ Context::Context (double sample_freq, int max_block_size)
 			cls_main._bind_sptr->_source._index = 0;
 			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls_main._bind_sptr->_u2b_flag      = false;
-			cls_main._bind_sptr->_base          = 0;
-			cls_main._bind_sptr->_amp           = 1;
+			cls_main._bind_sptr->_base          = 0.35;	// Limits the range to the CryBaby's
+			cls_main._bind_sptr->_amp           = 0.75 - cls_main._bind_sptr->_base;
 			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_FREQ] = cls_main;
 		}
 		{

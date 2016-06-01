@@ -73,7 +73,7 @@ Wha::Wha ()
 
 	// Base Q
 	log_ptr = new param::TplLog (
-		1, 16,
+		2, 32,
 		"Selectivity\nQ",
 		"",
 		param::HelperDispNum::Preset_FLOAT_PERCENT,
@@ -84,8 +84,8 @@ Wha::Wha ()
 
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
-	_state_set.set_val (Param_FREQ, 0.50);
-	_state_set.set_val (Param_Q   , 0.50); // -> q = 5
+	_state_set.set_val (Param_FREQ, 0.50   );
+	_state_set.set_val (Param_Q   , 1.0 / 3); // -> q = 5
 
 	_state_set.add_observer (Param_FREQ, _param_change_flag);
 	_state_set.add_observer (Param_Q   , _param_change_flag);
