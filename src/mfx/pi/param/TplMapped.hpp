@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/pi/param/Tools.h"
 
+#include <algorithm>
+
 
 
 namespace mfx
@@ -171,8 +173,9 @@ double	TplMapped <T>::do_get_nat_max () const
 template <class T>
 std::string	TplMapped <T>::do_conv_nat_to_str (double nat, int len) const
 {
-	char           txt_0 [1023+1];
-	_phdn.conv_to_str (nat, txt_0, len);
+	const int      max_len = 1024;
+	char           txt_0 [max_len+1];
+	_phdn.conv_to_str (nat, txt_0, std::min (len, max_len));
 
 	return (txt_0);
 }

@@ -225,7 +225,6 @@ public:
 	void           display_page_preset ();
 	void           display_page_efx (int slot_index);
 	void           display_page_tuner (const char *note_0);
-	static void    print_name_bestfit (char txt_0 [], long max_len, const char src_list_0 []);
 	static void    video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride);
 protected:
 	// mfx::ModelObserverInterface
@@ -408,8 +407,8 @@ Context::Context (double sample_freq, int max_block_size)
 			cls_main._bind_sptr->_source._index = 0;
 			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls_main._bind_sptr->_u2b_flag      = false;
-			cls_main._bind_sptr->_base          = 0.35;	// Limits the range to the CryBaby's
-			cls_main._bind_sptr->_amp           = 0.75 - cls_main._bind_sptr->_base;
+			cls_main._bind_sptr->_base          = 0.35f;	// Limits the range to the CryBaby's
+			cls_main._bind_sptr->_amp           = 0.75f - cls_main._bind_sptr->_base;
 			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_FREQ] = cls_main;
 		}
 		{
@@ -497,11 +496,10 @@ void	Context::display_page_preset ()
 
 	// Preset title
 	fstb::snprintf4all (
-		txt_0, nbr_chr_big, "%02d %s",
+		txt_0, nbr_chr_big + 1, "%02d %s",
 		_preset_index + 1,
 		preset._name.c_str ()
 	);
-	txt_0 [nbr_chr_big] = '\0';
 	MAIN_print_text (0, 0, txt_0, p_ptr, scr_s, fnt_big, 1, 1);
 
 	// Effect list
@@ -515,9 +513,12 @@ void	Context::display_page_preset ()
 		if (slot_sptr.get () != 0)
 		{
 			const mfx::doc::Slot &  slot = *slot_sptr;
-			const std::string pi_type_name =
+			std::string    pi_type_name =
 				mfx::pi::PluginModel_get_name (slot._pi_model);
-			print_name_bestfit (txt_0, nbr_chr_sml, pi_type_name.c_str ());
+			mfx::pi::param::Tools::print_name_bestfit (
+				nbr_chr_sml, pi_type_name.c_str ()
+			);
+			memcpy (txt_0, pi_type_name.c_str (), pi_type_name.length () + 1);
 			const int      y = fx_list_y + line_pos * chr_h_sml;
 			MAIN_print_text (0, y, txt_0, p_ptr, scr_s, fnt_sml, 1, 1);
 			bool           mod_flag = (! slot._settings_mixer._map_param_ctrl.empty ());
@@ -549,9 +550,104 @@ void	Context::display_page_efx (int slot_index)
 
 	memset (p_ptr, 0, scr_s * scr_h);
 
+	const mfx::ui::Font &   fnt_big = _fnt_8x12;
+	const mfx::ui::Font &   fnt_mid = _fnt_6x8;
+	const mfx::ui::Font &   fnt_sml = _fnt_6x6;
+	const int      nbr_chr_big = scr_w / fnt_big.get_char_w ();
+	const int      nbr_chr_mid = scr_w / fnt_mid.get_char_w ();
+	const int      nbr_chr_sml = scr_w / fnt_sml.get_char_w ();
+	const int      par_list_y  = fnt_big.get_char_h () + 2 + fnt_mid.get_char_h () + 2;
+	const int      chr_h_sml   = fnt_sml.get_char_h ();
+	const int      nbr_lines   = (scr_h - par_list_y) / chr_h_sml;
 
+	const int      max_textlen = 1023;
+	char           txt_0 [max_textlen+1];
+	assert (nbr_chr_big <= max_textlen);
+	assert (nbr_chr_mid <= max_textlen);
+	assert (nbr_chr_sml <= max_textlen);
 
+	const mfx::doc::Preset &   preset = _bank._preset_arr [_preset_index];
 
+	// Preset title
+	fstb::snprintf4all (
+		txt_0, nbr_chr_big + 1, "%02d %s",
+		_preset_index + 1,
+		preset._name.c_str ()
+	);
+	MAIN_print_text (0, 0, txt_0, p_ptr, scr_s, fnt_big, 1, 1);
+
+	// Effect name
+	const mfx::doc::Slot &  slot = *(preset._slot_list [slot_index]);
+	std::string    pi_type_name =
+		mfx::pi::PluginModel_get_name (slot._pi_model);
+	pi_type_name = mfx::pi::param::Tools::print_name_bestfit (
+		nbr_chr_mid, pi_type_name.c_str ()
+	);
+	memcpy (txt_0, pi_type_name.c_str (), pi_type_name.length () + 1);
+	MAIN_print_text (
+		0, fnt_big.get_char_h () + 2, txt_0, p_ptr, scr_s, fnt_mid, 1, 1
+	);
+
+	// Parameter list
+	int            line_pos = 0;
+	for (int type = 0; type < mfx::PiType_NBR_ELT && line_pos < nbr_lines; ++type)
+	{
+		const mfx::doc::PluginSettings * settings_ptr =
+			&slot._settings_mixer;
+		if (type == mfx::PiType_MAIN)
+		{
+			const auto     it = slot._settings_all.find (slot._pi_model);
+			if (it == slot._settings_all.end ())
+			{
+				assert (false);
+			}
+			else
+			{
+				settings_ptr = &it->second;
+			}
+		}
+		const int      nbr_param = int (settings_ptr->_param_list.size ());
+		for (int p = 0; p < nbr_param && line_pos < nbr_lines; ++p)
+		{
+			if (   _slot_info_list.empty ()
+			    || _slot_info_list [slot_index] [type].get () == 0)
+			{
+				// When plug-in is not available
+				fstb::snprintf4all (
+					txt_0, nbr_chr_sml + 1, "%.4d%*.4f",
+					p,
+					nbr_chr_sml - 4,
+					settings_ptr->_param_list [p]
+				);
+			}
+
+			else
+			{
+				const mfx::ModelObserverInterface::PluginInfo & pi_info =
+					(*_slot_info_list [slot_index] [type]);
+				const mfx::piapi::ParamDescInterface & desc =
+					pi_info._pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, p);
+
+				const double   nat = desc.conv_nrm_to_nat (pi_info._param_arr [p]);
+				const std::string val_s = desc.conv_nat_to_str (nat, nbr_chr_sml);
+
+				const int      max_name_len = int (nbr_chr_sml - val_s.length ());
+				const std::string name = desc.get_name (max_name_len);
+
+				fstb::snprintf4all (
+					txt_0, nbr_chr_sml + 1, "%.*s%s",
+					max_name_len + 1,
+					name.c_str (),
+					val_s.c_str ()
+				);
+			}
+
+			const int      y = par_list_y + line_pos * chr_h_sml;
+			MAIN_print_text (0, y, txt_0, p_ptr, scr_s, fnt_sml, 1, 1);
+
+			++ line_pos;
+		}
+	}
 
 	_display.refresh (0, 0, scr_w, scr_h);
 }
@@ -574,56 +670,6 @@ void	Context::display_page_tuner (const char *note_0)
 	const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
 	MAIN_print_text (pos_x, pos_y, note_0, p_ptr, scr_s, _fnt_8x12, mag_x, mag_y);
 	_display.refresh (0, 0, scr_w, scr_h);
-}
-
-void	Context::print_name_bestfit (char txt_0 [], long max_len, const char src_list_0 [])
-{
-	assert (txt_0 != 0);
-	assert (max_len > 0);
-	assert (src_list_0 != 0);
-
-	long           sel_label_len = 0;
-	long           sel_label_pos = 0;
-	long           cur_label_len = 0;
-	long           cur_label_pos = 0;
-	long           pos = 0;
-	bool           exit_flag = false;
-	do
-	{
-		const char     c = src_list_0 [pos];
-		if (c == '\n' || c == '\0')
-		{
-			if (cur_label_len > 0)
-			{
-				if (   (cur_label_len > sel_label_len && cur_label_len <= max_len)
-				    || (cur_label_len < sel_label_len && sel_label_len > max_len))
-				{
-					sel_label_len = cur_label_len;
-					sel_label_pos = cur_label_pos;
-				}
-			}
-
-			cur_label_pos = pos + 1;
-			cur_label_len = 0;
-
-			if (c == '\0')
-			{
-				exit_flag = true;
-			}
-		}
-
-		else
-		{
-			++ cur_label_len;
-		}
-
-		++ pos;
-	}
-	while (! exit_flag);
-
-	sel_label_len = std::min (sel_label_len, max_len);
-	memcpy (txt_0, src_list_0 + sel_label_pos, sel_label_len);
-	txt_0 [sel_label_len] = '\0';
 }
 
 void	Context::video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride)
@@ -1177,7 +1223,8 @@ static int MAIN_main_loop (Context &ctx)
 		}
 		else
 		{
-			ctx.display_page_preset ();
+//			ctx.display_page_preset ();
+			ctx.display_page_efx (0);
 		}
 
 		bool wait_flag = true;
