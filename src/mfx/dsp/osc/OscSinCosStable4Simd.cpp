@@ -155,8 +155,8 @@ void	OscSinCosStable4Simd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsS
 	const auto     old_cos = pos_cos;
 	const auto     old_sin = pos_sin;
 
-   pos_cos = old_cos - (alpha * old_cos + beta * old_sin);
-   pos_sin = old_sin - (alpha * old_sin - beta * old_cos);
+   pos_cos = old_cos + (alpha * old_cos + beta * old_sin);
+   pos_sin = old_sin + (alpha * old_sin - beta * old_cos);
 }
 
 
