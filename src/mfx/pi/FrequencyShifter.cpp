@@ -277,12 +277,12 @@ void	FrequencyShifter::update_step ()
 	_step_angle = float ((fstb::PI * 2) * _freq / _sample_freq);
 	_ali->_osc.set_step (_step_angle);
 
-	const float    bs [3] = { 0, 0, 1 };
-	const float    as [3] = { 1, float (fstb::SQRT2) * 0.5f, 1 };
+	const float    bs [3]  = { 0,                          0, 1 };
+	const float    as [3]  = { 1, float (fstb::SQRT2) * 0.5f, 1 };
 	float          bz [3];
 	float          az [3];
 	const float    freq_aa = std::max (-_freq, 20.0f);
-	const float		k =
+	const float    k       =
 		dsp::iir::TransSZBilin::compute_k_approx (freq_aa * _inv_fs);
 	dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bs, as, k);
 	for (auto &chn : _ali->_chn_arr)
