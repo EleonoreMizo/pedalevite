@@ -219,8 +219,8 @@ void	FrequencyShifter::do_process_block (ProcInfo &proc)
 
 	// Signal processing
 	_ali->_osc.process_block (
-		&_buf_arr [0] [0],
-		&_buf_arr [1] [0],
+		&_buf_arr [Buf_COS] [0],
+		&_buf_arr [Buf_SIN] [0],
 		proc._nbr_spl / dsp::osc::OscSinCosStable4Simd::_nbr_units
 	);
 
@@ -232,25 +232,25 @@ void	FrequencyShifter::do_process_block (ProcInfo &proc)
 	for (int c = 0; c < nbr_chn_p; ++c)
 	{
 		_ali->_chn_arr [c]._aa.process_block (
-			&_buf_arr [2] [0],
+			&_buf_arr [Buf_AAF] [0],
 			proc._src_arr [c],
 			proc._nbr_spl
 		);
 
 		_ali->_chn_arr [c]._ssb.process_block (
-			&_buf_arr [3] [0],
-			&_buf_arr [4] [0],
-			&_buf_arr [2] [0],
+			&_buf_arr [Buf_PHC] [0],
+			&_buf_arr [Buf_PHS] [0],
+			&_buf_arr [Buf_AAF] [0],
 			proc._nbr_spl
 		);
 
 		float *        dst_ptr = proc._dst_arr [c];
 		for (int pos = 0; pos < proc._nbr_spl; pos += 4)
 		{
-			const auto     co  = fstb::ToolsSimd::load_f32 (&_buf_arr [0] [pos]);
-			const auto     si  = fstb::ToolsSimd::load_f32 (&_buf_arr [1] [pos]);
-			const auto     x   = fstb::ToolsSimd::load_f32 (&_buf_arr [3] [pos]);
-			const auto     y   = fstb::ToolsSimd::load_f32 (&_buf_arr [4] [pos]);
+			const auto     co  = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_COS] [pos]);
+			const auto     si  = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_SIN] [pos]);
+			const auto     x   = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_PHC] [pos]);
+			const auto     y   = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_PHS] [pos]);
 			const auto     val = co * x + si * y;
 			fstb::ToolsSimd::store_f32 (dst_ptr + pos, val);
 		}

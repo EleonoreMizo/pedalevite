@@ -92,8 +92,19 @@ protected:
 
 private:
 
+	enum Buf
+	{
+		Buf_COS = 0,
+		Buf_SIN,
+		Buf_AAF,
+		Buf_PHC,
+		Buf_PHS,
+
+		Buf_NBR_ELT
+	};
+
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-	typedef std::array <BufAlign, 5> BufArray; // Cos, Sin, AA, Phase 0, Phase 1
+	typedef std::array <BufAlign, Buf_NBR_ELT> BufArray;
 
 	static const int
 	               _max_freq = 5000;
