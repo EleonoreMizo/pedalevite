@@ -164,7 +164,7 @@ void	OscSinCosStable4Simd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsS
 void	OscSinCosStable4Simd::compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad)
 {
    const float    s = float (sin (angle_rad * 0.5f));
-   alpha = fstb::ToolsSimd::set1_f32 (s * s * 2);
+   alpha = fstb::ToolsSimd::set1_f32 (s * s * -2);
    beta  = fstb::ToolsSimd::set1_f32 (float (sin (angle_rad)));
 }
 
