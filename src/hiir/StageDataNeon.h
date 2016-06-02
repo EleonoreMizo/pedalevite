@@ -43,13 +43,17 @@ public:
 
 	union
 	{
-		float32x4_t    _coef4;     // Just to ensure alignement
-		float          _coef [4];  // a_{4n+1}, a_{4n}, a_{4n+3}, a_{4n+2}
+		__attribute__ ((aligned (16))) float32x4_t
+		               _coef4;
+		__attribute__ ((aligned (16))) float
+		               _coef [4];  // a_{4n+1}, a_{4n}, a_{4n+3}, a_{4n+2}
 	};
 	union
 	{
-		float32x4_t    _mem4;
-		float          _mem [4];   // y of the stage
+		__attribute__ ((aligned (16))) float32x4_t
+		               _mem4;
+		__attribute__ ((aligned (16))) float
+		               _mem [4];   // y of the stage
 	};
 
 

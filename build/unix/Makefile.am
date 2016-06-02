@@ -192,6 +192,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/mix/Generic.h \
         ../../src/mfx/dsp/mix/Simd.h \
         ../../src/mfx/dsp/mix/Simd.hpp \
+        ../../src/mfx/dsp/osc/OscSinCosStable4Simd.cpp \
+        ../../src/mfx/dsp/osc/OscSinCosStable4Simd.h \
         ../../src/mfx/dsp/InertiaLin.h \
         ../../src/mfx/dsp/InertiaLin.hpp \
         ../../src/mfx/dsp/StereoLevel.h \
@@ -253,6 +255,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/DryWet.h \
         ../../src/mfx/pi/FreqAnalyser.cpp \
         ../../src/mfx/pi/FreqAnalyser.h \
+        ../../src/mfx/pi/FrequencyShifter.cpp \
+        ../../src/mfx/pi/FrequencyShifter.h \
         ../../src/mfx/pi/ParamDescSet.cpp \
         ../../src/mfx/pi/ParamDescSet.h \
         ../../src/mfx/pi/ParamState.cpp \

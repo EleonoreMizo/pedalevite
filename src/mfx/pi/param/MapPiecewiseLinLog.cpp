@@ -177,7 +177,8 @@ void	MapPiecewiseLinLog::add_segment (double norm, double nat, bool log_flag)
 	});
 
 	// Ensures monotonic function on the whole range
-	assert (_seg_list.front ()._a_no2na * _seg_list.back ()._a_no2na > 0);
+	assert (  (_seg_list.front ()._val_u_nat - _seg_list.front ()._val_l_nat)
+	        * (_seg_list.back ()._val_u_nat  - _seg_list.back ()._val_l_nat) > 0);
 }
 
 

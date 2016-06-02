@@ -78,19 +78,17 @@ protected:
 
 private:
 
+	fstb_TYPEDEF_ALIGN (16, fstb::ToolsSimd::VectF32, VectF32Align);
+
 	inline void    step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta);
 
 	static inline void
 	               compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad);
 
-   fstb::ToolsSimd::VectF32
-	               _pos_cos;
-   fstb::ToolsSimd::VectF32
-	               _pos_sin;
-   fstb::ToolsSimd::VectF32
-	               _alpha;
-   fstb::ToolsSimd::VectF32
-	               _beta;
+	VectF32Align   _pos_cos;
+	VectF32Align   _pos_sin;
+	VectF32Align   _alpha;
+	VectF32Align   _beta;
 
 
 

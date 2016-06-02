@@ -274,7 +274,7 @@ void	FrequencyShifter::update_step ()
 	float          az [3];
 	const float    freq_aa = std::max (-_freq, 20.0f);
 	const float		k =
-		dsp::iir::TransSZBilin::compute_k_approx (_freq * _inv_fs);
+		dsp::iir::TransSZBilin::compute_k_approx (freq_aa * _inv_fs);
 	dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bs, as, k);
 	for (auto &chn : _ali->_chn_arr)
 	{

@@ -494,7 +494,7 @@ Context::Context (double sample_freq, int max_block_size)
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "FreqShift";
-			slot_ptr->_pi_model = mfx::pi::PluginModel_WHA;
+			slot_ptr->_pi_model = mfx::pi::PluginModel_FREQ_SHIFT;
 			slot_ptr->_settings_mixer._param_list =
 				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
 
@@ -513,7 +513,7 @@ Context::Context (double sample_freq, int max_block_size)
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 			pi_settings._param_list = std::vector <float> ({
-				0.5f, 1.0f/3
+				0.5f
 			});
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
