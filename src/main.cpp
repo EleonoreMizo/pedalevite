@@ -521,8 +521,8 @@ Context::Context (double sample_freq, int max_block_size)
 			cls._bind_sptr->_source._index = 0;
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0.0f;
-			cls._bind_sptr->_amp           = 1.0f;
+			cls._bind_sptr->_base          = 0.5f;   // More accuracy on the useful range
+			cls._bind_sptr->_amp           = 1.0f - cls._bind_sptr->_base;
 			pi_settings._map_param_ctrl [mfx::pi::FrequencyShifter::Param_FREQ] = cls;
 		}
 		{
@@ -585,7 +585,7 @@ Context::Context (double sample_freq, int max_block_size)
 		));
 		cycle._cycle.push_back (action_arr);
 	}
-	
+
 	_model.load_bank (bank, 3);
 
 	_model.set_process_info (sample_freq, max_block_size);
