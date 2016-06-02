@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+
 #if fstb_IS (ARCHI, X86)
 	#include "hiir/PhaseHalfPiSse.h"
 #elif fstb_IS (ARCHI, ARM)
@@ -45,12 +46,14 @@ namespace pi
 
 
 
+template <int N>
+using PhaseHalfPi =
 #if fstb_IS (ARCHI, X86)
-	typedef hiir::PhaseHalfPiSse <8> PhaseHalfPi;
+	hiir::PhaseHalfPiSse <N>;
 #elif fstb_IS (ARCHI, ARM)
-	typedef hiir::PhaseHalfPiNeon <8> PhaseHalfPi;
+	hiir::PhaseHalfPiNeon <N>;
 #else
-	typedef hiir::PhaseHalfPiFpu <8> PhaseHalfPi;
+	hiir::PhaseHalfPiFpu <N>;
 #endif
 
 

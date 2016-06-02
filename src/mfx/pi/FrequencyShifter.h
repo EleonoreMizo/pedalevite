@@ -97,13 +97,16 @@ private:
 
 	static const int
 	               _max_freq = 5000;
+	static const int
+	               _nbr_coef = 8;
 
 	class Channel
 	{
 	public:
 		dsp::iir::Biquad
 		               _aa;
-		PhaseHalfPi    _ssb;
+		PhaseHalfPi <_nbr_coef>
+		               _ssb;
 	};
 	typedef std::array <
 		Channel,

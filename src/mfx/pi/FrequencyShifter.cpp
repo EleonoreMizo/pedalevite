@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
@@ -102,7 +103,14 @@ piapi::PluginInterface::State	FrequencyShifter::do_get_state () const
 
 int	FrequencyShifter::do_init ()
 {
-
+	double         coef_list [_nbr_coef];
+	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
+		coef_list, _nbr_coef, 1 / 1000.0
+	);
+	for (auto &chn : _ali->_chn_arr)
+	{
+		chn._ssb.set_coefs (coef_list);
+	}
 
 	_state = State_INITIALISED;
 
@@ -236,6 +244,7 @@ void	FrequencyShifter::do_process_block (ProcInfo &proc)
 			proc._nbr_spl
 		);
 
+		float *        dst_ptr = proc._dst_arr [c];
 		for (int pos = 0; pos < proc._nbr_spl; pos += 4)
 		{
 			const auto     co  = fstb::ToolsSimd::load_f32 (&_buf_arr [0] [pos]);
@@ -243,7 +252,7 @@ void	FrequencyShifter::do_process_block (ProcInfo &proc)
 			const auto     x   = fstb::ToolsSimd::load_f32 (&_buf_arr [3] [pos]);
 			const auto     y   = fstb::ToolsSimd::load_f32 (&_buf_arr [4] [pos]);
 			const auto     val = co * x + si * y;
-			fstb::ToolsSimd::store_f32 (proc._dst_arr [c] + pos, val);
+			fstb::ToolsSimd::store_f32 (dst_ptr + pos, val);
 		}
 
 	}
