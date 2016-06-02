@@ -128,6 +128,7 @@ const long double LOG10_2 = 0.30102999566398119521373889472449L;
 const long double LOG2_E  = 1.0 / LN2;
 const long double LOG2_10 = LN10 / LN2;
 const long double	EXP1    = 2.7182818284590452353602874713527L;
+const long double SQRT2   = 1.4142135623730950488016887242097L;
 
 
 

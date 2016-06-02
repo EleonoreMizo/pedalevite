@@ -34,6 +34,7 @@
 #include "mfx/doc/FxId.h"
 #include "mfx/pi/DistoSimple.h"
 #include "mfx/pi/DryWet.h"
+#include "mfx/pi/FrequencyShifter.h"
 #include "mfx/pi/Tremolo.h"
 #include "mfx/pi/Tuner.h"
 #include "mfx/pi/Wha.h"
@@ -304,15 +305,16 @@ Context::Context (double sample_freq, int max_block_size)
 
 		pi_settings._param_list = std::vector <float> (1, 0);
 
-		mfx::doc::CtrlLinkSet cls_main;
-		cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-		cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
-		cls_main._bind_sptr->_source._index = 0;
-		cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-		cls_main._bind_sptr->_u2b_flag      = false;
-		cls_main._bind_sptr->_base          = 0;
-		cls_main._bind_sptr->_amp           = 1;
-		pi_settings._map_param_ctrl [mfx::pi::DistoSimple::Param_GAIN] = cls_main;
+		mfx::doc::CtrlLinkSet cls;
+
+		cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+		cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
+		cls._bind_sptr->_source._index = 0;
+		cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+		cls._bind_sptr->_u2b_flag      = false;
+		cls._bind_sptr->_base          = 0;
+		cls._bind_sptr->_amp           = 1;
+		pi_settings._map_param_ctrl [mfx::pi::DistoSimple::Param_GAIN] = cls;
 
 		{
 			mfx::doc::PedalActionCycle &  cycle =
@@ -375,35 +377,36 @@ Context::Context (double sample_freq, int max_block_size)
 				0.45f, 0.31f, 0, 0.75f, 0.5f
 			});
 
-			mfx::doc::CtrlLinkSet cls_main;
-			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
-			cls_main._bind_sptr->_source._index = 0;
-			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls_main._bind_sptr->_u2b_flag      = false;
-			cls_main._bind_sptr->_base          = 0;
-			cls_main._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_AMT] = cls_main;
+			mfx::doc::CtrlLinkSet cls;
 
-			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls_main._bind_sptr->_source._index = 5;
-			cls_main._bind_sptr->_step          = 0.02f;
-			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls_main._bind_sptr->_u2b_flag      = false;
-			cls_main._bind_sptr->_base          = 0;
-			cls_main._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_FREQ] = cls_main;
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
+			cls._bind_sptr->_source._index = 0;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_AMT] = cls;
 
-			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls_main._bind_sptr->_source._index = 6;
-			cls_main._bind_sptr->_step          = 1.0f / (mfx::pi::Tremolo::Waveform_NBR_ELT - 1);
-			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls_main._bind_sptr->_u2b_flag      = false;
-			cls_main._bind_sptr->_base          = 0;
-			cls_main._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_WF] = cls_main;
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 5;
+			cls._bind_sptr->_step          = 0.02f;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_FREQ] = cls;
+
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 6;
+			cls._bind_sptr->_step          = 1.0f / (mfx::pi::Tremolo::Waveform_NBR_ELT - 1);
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_WF] = cls;
 		}
 	}
 	{
@@ -423,26 +426,104 @@ Context::Context (double sample_freq, int max_block_size)
 				0.5f, 1.0f/3
 			});
 
-			mfx::doc::CtrlLinkSet cls_main;
+			mfx::doc::CtrlLinkSet cls;
 
-			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
-			cls_main._bind_sptr->_source._index = 0;
-			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls_main._bind_sptr->_u2b_flag      = false;
-			cls_main._bind_sptr->_base          = 0.35f;	// Limits the range to the CryBaby's
-			cls_main._bind_sptr->_amp           = 0.75f - cls_main._bind_sptr->_base;
-			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_FREQ] = cls_main;
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
+			cls._bind_sptr->_source._index = 0;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0.35f;	// Limits the range to the CryBaby's
+			cls._bind_sptr->_amp           = 0.75f - cls._bind_sptr->_base;
+			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_FREQ] = cls;
 
-			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls_main._bind_sptr->_source._index = 5;
-			cls_main._bind_sptr->_step          = 0.05f;
-			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls_main._bind_sptr->_u2b_flag      = false;
-			cls_main._bind_sptr->_base          = 0;
-			cls_main._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_Q] = cls_main;
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 5;
+			cls._bind_sptr->_step          = 0.05f;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_Q] = cls;
+		}
+		{
+			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			slot_ptr->_label    = "Disto 1";
+			slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
+			slot_ptr->_settings_mixer._param_list =
+				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+			mfx::doc::PluginSettings & pi_settings =
+				slot_ptr->_settings_all [slot_ptr->_pi_model];
+
+			mfx::doc::CtrlLinkSet cls;
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 6;
+			cls._bind_sptr->_step          = 0.05f;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::DistoSimple::Param_GAIN] = cls;
+
+			pi_settings._param_list = std::vector <float> (1, 0.25f);
+
+			{
+				mfx::doc::PedalActionCycle &  cycle =
+					preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
+				const mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
+				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
+				for (int i = 0; i < 2; ++i)
+				{
+					static const float val_arr [2] = { 1, 0 };
+					const float        val = val_arr [i];
+					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
+						new mfx::doc::ActionParam (fx_id, mfx::pi::DryWet::Param_BYPASS, val)
+					);
+					cycle._cycle.push_back (action_arr);
+				}
+			}
+		}
+	}
+	{
+		mfx::doc::Preset& preset   = bank._preset_arr [3];
+		preset._name = "Inharmonic";
+		{
+			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			slot_ptr->_label    = "FreqShift";
+			slot_ptr->_pi_model = mfx::pi::PluginModel_WHA;
+			slot_ptr->_settings_mixer._param_list =
+				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+
+			mfx::doc::CtrlLinkSet cls;
+
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 5;
+			cls._bind_sptr->_step          = 0.05f;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			slot_ptr->_settings_mixer._map_param_ctrl [mfx::pi::DryWet::Param_WET] = cls;
+
+			mfx::doc::PluginSettings & pi_settings =
+				slot_ptr->_settings_all [slot_ptr->_pi_model];
+			pi_settings._param_list = std::vector <float> ({
+				0.5f, 1.0f/3
+			});
+
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
+			cls._bind_sptr->_source._index = 0;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0.0f;
+			cls._bind_sptr->_amp           = 1.0f;
+			pi_settings._map_param_ctrl [mfx::pi::FrequencyShifter::Param_FREQ] = cls;
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
@@ -484,6 +565,7 @@ Context::Context (double sample_freq, int max_block_size)
 			}
 		}
 	}
+
 	for (int p = 0; p < 5; ++p)
 	{
 		mfx::doc::PedalActionCycle &  cycle =
@@ -504,7 +586,7 @@ Context::Context (double sample_freq, int max_block_size)
 		cycle._cycle.push_back (action_arr);
 	}
 	
-	_model.load_bank (bank, 2);
+	_model.load_bank (bank, 3);
 
 	_model.set_process_info (sample_freq, max_block_size);
 }

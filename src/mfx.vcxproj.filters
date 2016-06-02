@@ -58,6 +58,9 @@
     <Filter Include="hiir">
       <UniqueIdentifier>{006017d9-b04a-4fef-924b-9cefa1e2601d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\osc">
+      <UniqueIdentifier>{75aa7491-e44a-423e-bc1a-1b9eb514843e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -924,6 +927,15 @@
     <ClInclude Include="hiir\PhaseHalfPiNeon.hpp">
       <Filter>hiir</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\FrequencyShifter.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\PhaseHalfPi.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\osc\OscSinCosStable4Simd.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1166,6 +1178,12 @@
     </ClCompile>
     <ClCompile Include="hiir\PolyphaseIir2Designer.cpp">
       <Filter>hiir</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\FrequencyShifter.cpp">
+      <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\osc\OscSinCosStable4Simd.cpp">
+      <Filter>mfx\dsp\osc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -105,6 +105,8 @@ public:
 	               set_2f32 (float a0, float a1);
 	static inline void
 	               mac (VectF32 &s, VectF32 a, VectF32 b);
+	static inline void
+	               msu (VectF32 &s, VectF32 a, VectF32 b);
 	static inline VectF32
 	               min_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectF32

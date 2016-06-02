@@ -300,6 +300,7 @@
     <ClInclude Include="mfx\dsp\mix\Generic.h" />
     <ClInclude Include="mfx\dsp\mix\Simd.h" />
     <ClInclude Include="mfx\dsp\mix\Simd.hpp" />
+    <ClInclude Include="mfx\dsp\osc\OscSinCosStable4Simd.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
@@ -325,6 +326,7 @@
     <ClInclude Include="mfx\pi\DistoSimple.h" />
     <ClInclude Include="mfx\pi\DryWet.h" />
     <ClInclude Include="mfx\pi\FreqAnalyser.h" />
+    <ClInclude Include="mfx\pi\FrequencyShifter.h" />
     <ClInclude Include="mfx\pi\ParamDescSet.h" />
     <ClInclude Include="mfx\pi\ParamState.h" />
     <ClInclude Include="mfx\pi\ParamStateSet.h" />
@@ -345,6 +347,7 @@
     <ClInclude Include="mfx\pi\param\TplMapped.h" />
     <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
     <ClInclude Include="mfx\pi\param\TplSq.h" />
+    <ClInclude Include="mfx\pi\PhaseHalfPi.h" />
     <ClInclude Include="mfx\pi\PluginModel.h" />
     <ClInclude Include="mfx\pi\Tremolo.h" />
     <ClInclude Include="mfx\pi\Tuner.h" />
@@ -425,6 +428,7 @@
     <ClCompile Include="mfx\dsp\mix\Align.cpp" />
     <ClCompile Include="mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="mfx\dsp\mix\Generic.cpp" />
+    <ClCompile Include="mfx\dsp\osc\OscSinCosStable4Simd.cpp" />
     <ClCompile Include="mfx\GpioPwm.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -435,6 +439,7 @@
     <ClCompile Include="mfx\pi\DistoSimple.cpp" />
     <ClCompile Include="mfx\pi\DryWet.cpp" />
     <ClCompile Include="mfx\pi\FreqAnalyser.cpp" />
+    <ClCompile Include="mfx\pi\FrequencyShifter.cpp" />
     <ClCompile Include="mfx\pi\ParamDescSet.cpp" />
     <ClCompile Include="mfx\pi\ParamState.cpp" />
     <ClCompile Include="mfx\pi\ParamStateSet.cpp" />

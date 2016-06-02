@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/CtrlLinkSet.h"
 #include "mfx/pi/DistoSimple.h"
 #include "mfx/pi/DryWet.h"
+#include "mfx/pi/FrequencyShifter.h"
 #include "mfx/pi/Tremolo.h"
 #include "mfx/pi/Tuner.h"
 #include "mfx/pi/Wha.h"
@@ -911,6 +912,10 @@ PluginPool::PluginUPtr	Central::instantiate (pi::PluginModel model)
 
 	case pi::PluginModel_WHA:
 		pi_ptr = new pi::Wha;
+		break;
+
+	case pi::PluginModel_FREQ_SHIFT:
+		pi_ptr = new pi::FrequencyShifter;
 		break;
 
 	default:

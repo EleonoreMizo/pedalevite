@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Wha.h
+        FrequencyShifter.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_Wha_HEADER_INCLUDED)
-#define mfx_pi_Wha_HEADER_INCLUDED
+#if ! defined (mfx_pi_FrequencyShifter_HEADER_INCLUDED)
+#define mfx_pi_FrequencyShifter_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -28,12 +28,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/util/NotificationFlag.h"
+#include "fstb/AllocAlign.h"
+#include "fstb/SingleObj.h"
+#include "mfx/dsp/osc/OscSinCosStable4Simd.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/ParamDescSet.h"
 #include "mfx/pi/ParamStateSet.h"
+#include "mfx/pi/PhaseHalfPi.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
+#include <vector>
 
 
 
@@ -44,7 +49,7 @@ namespace pi
 
 
 
-class Wha
+class FrequencyShifter
 :	public piapi::PluginInterface
 {
 
@@ -55,13 +60,12 @@ public:
 	enum Param
 	{
 		Param_FREQ = 0,
-		Param_Q,
 
 		Param_NBR_ELT
 	};
 
-	               Wha ();
-	virtual        ~Wha () = default;
+	               FrequencyShifter ();
+	virtual        ~FrequencyShifter () = default;
 
 
 
@@ -88,10 +92,33 @@ protected:
 
 private:
 
+	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
+	typedef std::array <BufAlign, 5> BufArray; // Cos, Sin, AA, Phase 0, Phase 1
+
+	static const int
+	               _max_freq = 5000;
+
+	class Channel
+	{
+	public:
+		dsp::iir::Biquad
+		               _aa;
+		PhaseHalfPi    _ssb;
+	};
 	typedef std::array <
-		dsp::iir::Biquad,
+		Channel,
 		piapi::PluginInterface::_max_nbr_chn
-	>	FilterArray;
+	>	ChannelArray;
+
+	class Aligned
+	{
+	public:
+		ChannelArray   _chn_arr;
+		dsp::osc::OscSinCosStable4Simd
+		               _osc;
+	};
+
+	void           update_step ();
 
 	State          _state;
 
@@ -102,10 +129,13 @@ private:
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
-	FilterArray    _filter_arr;
+	fstb::SingleObj <Aligned, fstb::AllocAlign <Aligned, 16> >
+	               _ali;
 	float          _inv_fs;
 	float          _freq;
-	float          _q;
+	float          _step_angle;         // Radians
+
+	BufArray       _buf_arr;
 
 
 
@@ -113,12 +143,13 @@ private:
 
 private:
 
-	               Wha (const Wha &other)               = delete;
-	Wha &          operator = (const Wha &other)        = delete;
-	bool           operator == (const Wha &other) const = delete;
-	bool           operator != (const Wha &other) const = delete;
+	               FrequencyShifter (const FrequencyShifter &other)  = delete;
+	FrequencyShifter &
+	               operator = (const FrequencyShifter &other)        = delete;
+	bool           operator == (const FrequencyShifter &other) const = delete;
+	bool           operator != (const FrequencyShifter &other) const = delete;
 
-}; // class Wha
+}; // class FrequencyShifter
 
 
 
@@ -127,11 +158,11 @@ private:
 
 
 
-//#include "mfx/pi/Wha.hpp"
+//#include "mfx/pi/FrequencyShifter.hpp"
 
 
 
-#endif   // mfx_pi_Wha_HEADER_INCLUDED
+#endif   // mfx_pi_FrequencyShifter_HEADER_INCLUDED
 
 
 

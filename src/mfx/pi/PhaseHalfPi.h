@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PluginModel.h
+        PhaseHalfPi.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_PluginModel_HEADER_INCLUDED)
-#define mfx_pi_PluginModel_HEADER_INCLUDED
+#if ! defined (mfx_pi_PhaseHalfPi_HEADER_INCLUDED)
+#define mfx_pi_PhaseHalfPi_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,7 +27,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <string>
+#include "fstb/def.h"
+#if fstb_IS (ARCHI, X86)
+	#include "hiir/PhaseHalfPiSse.h"
+#elif fstb_IS (ARCHI, ARM)
+	#include "hiir/PhaseHalfPiNeon.h"
+#else
+	#include "hiir/PhaseHalfPiFpu.h"
+#endif
 
 
 
@@ -38,24 +45,13 @@ namespace pi
 
 
 
-enum PluginModel
-{
-	PluginModel_INVALID = -1,
-
-	PluginModel_DRYWET  = 0,
-	PluginModel_TUNER,
-	PluginModel_DISTO_SIMPLE,
-	PluginModel_TREMOLO,
-	PluginModel_WHA,
-	PluginModel_FREQ_SHIFT,
-
-	PluginModel_NBR_ELT
-
-}; // enum PluginModel
-
-
-
-std::string PluginModel_get_name (PluginModel model);
+#if fstb_IS (ARCHI, X86)
+	typedef hiir::PhaseHalfPiSse <8> PhaseHalfPi;
+#elif fstb_IS (ARCHI, ARM)
+	typedef hiir::PhaseHalfPiNeon <8> PhaseHalfPi;
+#else
+	typedef hiir::PhaseHalfPiFpu <8> PhaseHalfPi;
+#endif
 
 
 
@@ -64,11 +60,11 @@ std::string PluginModel_get_name (PluginModel model);
 
 
 
-//#include "mfx/pi/PluginModel.hpp"
+//#include "mfx/pi/PhaseHalfPi.hpp"
 
 
 
-#endif   // mfx_pi_PluginModel_HEADER_INCLUDED
+#endif   // mfx_pi_PhaseHalfPi_HEADER_INCLUDED
 
 
 

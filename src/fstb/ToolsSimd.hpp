@@ -208,6 +208,17 @@ void	ToolsSimd::mac (VectF32 &s, VectF32 a, VectF32 b)
 
 
 
+void	ToolsSimd::msu (VectF32 &s, VectF32 a, VectF32 b)
+{
+#if fstb_IS (ARCHI, X86)
+	s = _mm_sub_ps (s, _mm_mul_ps (a, b));
+#elif fstb_IS (ARCHI, ARM)
+	s = vmlsq_f32 (s, a, b);
+#endif // ff_arch_CPU
+}
+
+
+
 ToolsSimd::VectF32	ToolsSimd::min_f32 (VectF32 lhs, VectF32 rhs)
 {
 #if fstb_IS (ARCHI, X86)
