@@ -81,6 +81,7 @@ private:
 		double         _b_no2na;
 		double         _a_na2no;
 		bool           _log_flag;
+		bool           _neg_flag;  // For log segments
 	};
 
 	typedef std::vector <Segment> SegList;

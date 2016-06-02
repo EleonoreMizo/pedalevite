@@ -73,6 +73,10 @@ double	MapPiecewiseLinLog::conv_norm_to_nat (double norm) const
 	if (seg._log_flag)
 	{
 		nat = exp (nat);
+		if (seg._neg_flag)
+		{
+			nat = -nat;
+		}
 	}
 
 	return nat;
@@ -104,7 +108,7 @@ double	MapPiecewiseLinLog::conv_nat_to_norm (double nat) const
 	const Segment& seg = _seg_list [index];
 	if (seg._log_flag)
 	{
-		nat = log (nat);
+		nat = log (fabs (nat));
 	}
 	const double	norm = (nat - seg._b_no2na) * seg._a_na2no;
 
@@ -124,6 +128,7 @@ void	MapPiecewiseLinLog::set_first_value (double nat)
 		0,
 		0,
 		0,
+		false,
 		false
 	});
 }
@@ -152,13 +157,14 @@ void	MapPiecewiseLinLog::add_segment (double norm, double nat, bool log_flag)
 	// Log values should be non-zero and have the same sign
 	assert (! log_flag || nat * l_nat > 0);
 
-	const double   v0      = (log_flag) ? log (l_nat) : l_nat;
-	const double   v1      = (log_flag) ? log (  nat) :   nat;
-	const double   dna     = v1 - v0;
-	const double   dno     = norm - l_nrm;
-	const double   a_no2na = dna / dno;
-	const double   a_na2no = dno / dna;
-	const double   b_no2na = v0 - l_nrm * a_no2na;
+	const bool     neg_flag = (nat < 0);
+	const double   v0       = (log_flag) ? log (fabs (l_nat)) : l_nat;
+	const double   v1       = (log_flag) ? log (fabs (  nat)) :   nat;
+	const double   dna      = v1 - v0;
+	const double   dno      = norm - l_nrm;
+	const double   a_no2na  = dna / dno;
+	const double   a_na2no  = dno / dna;
+	const double   b_no2na  = v0 - l_nrm * a_no2na;
 
 	_seg_list.push_back ({
 		l_nrm, l_nat,
@@ -166,7 +172,8 @@ void	MapPiecewiseLinLog::add_segment (double norm, double nat, bool log_flag)
 		a_no2na,
 		b_no2na,
 		a_na2no,
-		log_flag
+		log_flag,
+		neg_flag
 	});
 
 	// Ensures monotonic function on the whole range
