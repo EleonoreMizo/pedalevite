@@ -68,7 +68,7 @@ void	FreqAnalyser::set_sample_freq (double sample_freq)
 	_buffer.resize (buf_len, 0);
 #endif
 	_buf_mask              = int (buf_len) - 1;
-	_cmndf_arr.resize (_win_len, 0);
+	_cmndf_arr.resize (_win_len + 1, 0);
 	_step_size             = _win_len;
 	_delta                 = 1;
 	_freq                  = 0;
