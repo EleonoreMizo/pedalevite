@@ -413,6 +413,7 @@ void	UserInputPi3::handle_pot (int index, int val, int64_t cur_time)
 
 
 
+// date is in nanoseconds
 void	UserInputPi3::enqueue_val (int64_t date, UserInputType type, int index, float val)
 {
 	MsgQueue *     queue_ptr = _recip_list [type] [index];
@@ -425,7 +426,7 @@ void	UserInputPi3::enqueue_val (int64_t date, UserInputType type, int index, flo
 		}
 		else
 		{
-			cell_ptr->_val.set (date, type, index, val);
+			cell_ptr->_val.set (date / 1000, type, index, val);
 			queue_ptr->enqueue (*cell_ptr);
 		}
 	}
