@@ -936,6 +936,9 @@
     <ClInclude Include="mfx\dsp\osc\OscSinCosStable4Simd.h">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\ui\IoWindows.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1184,6 +1187,9 @@
     </ClCompile>
     <ClCompile Include="mfx\dsp\osc\OscSinCosStable4Simd.cpp">
       <Filter>mfx\dsp\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ui\IoWindows.cpp">
+      <Filter>mfx\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@
 #endif
 
 #define MAIN_USE_ST7920
+#undef MAIN_USE_VOID
 
 #include "fstb/def.h"
 
@@ -72,15 +73,19 @@
 	#include <signal.h>
 
 #elif fstb_IS (ARCHI, X86)
-	#include "mfx/ui/DisplayVoid.h"
-	#include "mfx/ui/LedVoid.h"
-	#include "mfx/ui/UserInputVoid.h"
+	#include "mfx/ui/IoWindows.h"
 
 	#include <Windows.h>
 
 #else
 	#error Unsupported architecture
 
+#endif
+
+#if defined (MAIN_USE_VOID)
+	#include "mfx/ui/DisplayVoid.h"
+	#include "mfx/ui/LedVoid.h"
+	#include "mfx/ui/UserInputVoid.h"
 #endif
 
 #include <algorithm>
@@ -163,6 +168,8 @@ class Context
 :	public mfx::ModelObserverInterface
 {
 public:
+	const double   _sample_freq;
+	const int      _max_block_size;
 #if fstb_IS (ARCHI, ARM)
 	mfx::ui::TimeShareThread
 	               _thread_spi;
@@ -186,13 +193,19 @@ public:
 	               _queue_input_to_cmd;
 	mfx::ui::UserInputInterface::MsgQueue
 	               _queue_input_to_audio;
-	mfx::Model     _model;
 
 	// Not for the audio thread
 	volatile bool	_quit_flag = false;
 
 	// View + controller
-#if fstb_IS (ARCHI, ARM)
+#if defined (MAIN_USE_VOID)
+	mfx::ui::DisplayVoid
+	               _display;
+	mfx::ui::UserInputVoid
+	               _user_input;
+	mfx::ui::LedVoid
+	               _leds;
+#elif fstb_IS (ARCHI, ARM)
  #if defined (MAIN_USE_ST7920)
 	mfx::ui::DisplayPi3St7920
  #else
@@ -204,13 +217,16 @@ public:
 	mfx::ui::LedPi3
 	               _leds;
 #else
-	mfx::ui::DisplayVoid
+	mfx::ui::IoWindows
+	               _all_io;
+	mfx::ui::DisplayInterface &
 	               _display;
-	mfx::ui::UserInputVoid
+	mfx::ui::UserInputInterface &
 	               _user_input;
-	mfx::ui::LedVoid
+	mfx::ui::LedInterface &
 	               _leds;
 #endif
+	mfx::Model     _model;
 	mfx::ui::Font  _fnt_8x12;
 	mfx::ui::Font  _fnt_6x8;
 	mfx::ui::Font  _fnt_6x6;
@@ -239,25 +255,31 @@ protected:
 };
 
 Context::Context (double sample_freq, int max_block_size)
-:
+:	_sample_freq (sample_freq)
+,	_max_block_size (max_block_size)
 #if fstb_IS (ARCHI, ARM)
-	_thread_spi (10 * 1000)
-,
+,	_thread_spi (10 * 1000)
+
 #endif
-	_buf_alig (4096)
+,	_buf_alig (4096)
 ,	_proc_ctx ()
 ,	_queue_input_to_cmd ()
 ,	_queue_input_to_audio ()
-,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input)
-#if fstb_IS (ARCHI, ARM)
+#if defined (MAIN_USE_VOID)
+,	_display ()
+,	_user_input ()
+,	_leds ()
+#elif fstb_IS (ARCHI, ARM)
 ,	_display (_thread_spi)
 ,	_user_input (_thread_spi)
 ,	_leds ()
 #else
-,	_display ()
-,	_user_input ()
-,	_leds ()
+,	_all_io ()
+,	_display (_all_io)
+,	_user_input (_all_io)
+,	_leds (_all_io)
 #endif
+,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input)
 ,	_fnt_8x12 ()
 ,	_fnt_6x8 ()
 ,	_fnt_6x6 ()
@@ -588,7 +610,7 @@ Context::Context (double sample_freq, int max_block_size)
 
 	_model.load_bank (bank, 3);
 
-	_model.set_process_info (sample_freq, max_block_size);
+	_model.set_process_info (_sample_freq, _max_block_size);
 }
 
 Context::~Context ()
@@ -1406,8 +1428,21 @@ static int MAIN_main_loop (Context &ctx)
 
 		const int      nbr_spl = 64;
 		float          buf [4] [nbr_spl];
+	#if 0
 		memset (&buf [0] [0], 0, sizeof (buf [0]));
 		memset (&buf [1] [0], 0, sizeof (buf [1]));
+	#else
+		static double  angle_pos  = 0;
+		const double   angle_step = 2 * fstb::PI * 200 / ctx._sample_freq;
+		for (int i = 0; i < nbr_spl; ++i)
+		{
+			const float       val = float (sin (angle_pos));
+			buf [0] [i] = val;
+			buf [1] [i] = val;
+			angle_pos += angle_step;
+		}
+		angle_pos = fmod (angle_pos, 2 * fstb::PI);
+	#endif
 		const float *  src_arr [2] = { buf [0], buf [1] };
 		float *        dst_arr [2] = { buf [2], buf [3] };
 

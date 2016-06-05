@@ -362,6 +362,7 @@
     <ClInclude Include="mfx\ui\DisplayVoid.h" />
     <ClInclude Include="mfx\ui\Font.h" />
     <ClInclude Include="mfx\ui\FontDataDefault.h" />
+    <ClInclude Include="mfx\ui\IoWindows.h" />
     <ClInclude Include="mfx\ui\LedInterface.h" />
     <ClInclude Include="mfx\ui\LedPi3.h" />
     <ClInclude Include="mfx\ui\LedVoid.h" />
@@ -465,6 +466,7 @@
     <ClCompile Include="mfx\ui\DisplayVoid.cpp" />
     <ClCompile Include="mfx\ui\Font.cpp" />
     <ClCompile Include="mfx\ui\FontDataDefault.cpp" />
+    <ClCompile Include="mfx\ui\IoWindows.cpp" />
     <ClCompile Include="mfx\ui\LedInterface.cpp" />
     <ClCompile Include="mfx\ui\LedPi3.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
