@@ -127,7 +127,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	assert (src_arr != 0);
 	assert (src_arr [0] != 0);
 	assert (nbr_spl > 0);
-	assert (nbr_spl < _max_block_size);
+	assert (nbr_spl <= _max_block_size);
 
 	// Collects messages from the command thread
 	collect_msg_cmd (true);
