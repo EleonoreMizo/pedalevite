@@ -73,8 +73,8 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 WorldAudio::~WorldAudio ()
 {
 	// Flushes the queues
-	collect_msg_cmd ();
-	collect_msg_ui ();
+	collect_msg_cmd (false);
+	collect_msg_ui (false);
 }
 
 
@@ -130,10 +130,10 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	assert (nbr_spl < _max_block_size);
 
 	// Collects messages from the command thread
-	collect_msg_cmd ();
+	collect_msg_cmd (true);
 
 	// Collects messages from the user input thread
-	collect_msg_ui ();
+	collect_msg_ui (true);
 
 	// Audio processing
 	if (_ctx_ptr != 0)
@@ -162,7 +162,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 
 
 
-void	WorldAudio::collect_msg_cmd ()
+void	WorldAudio::collect_msg_cmd (bool proc_flag)
 {
 	conc::LockFreeCell <Msg> * cell_ptr = 0;
 	do
@@ -185,10 +185,16 @@ void	WorldAudio::collect_msg_cmd ()
 				switch (cell_ptr->_val._type)
 				{
 				case Msg::Type_CTX:
-					handle_msg_ctx (cell_ptr->_val._content._ctx);
+					if (proc_flag)
+					{
+						handle_msg_ctx (cell_ptr->_val._content._ctx);
+					}
 					break;
 				case Msg::Type_PARAM:
-					handle_msg_param (cell_ptr->_val._content._param);
+					if (proc_flag)
+					{
+						handle_msg_param (cell_ptr->_val._content._param);
+					}
 					ret_flag = false;
 					break;
 
@@ -215,7 +221,7 @@ void	WorldAudio::collect_msg_cmd ()
 
 
 
-void	WorldAudio::collect_msg_ui ()
+void	WorldAudio::collect_msg_ui (bool proc_flag)
 {
 	ui::UserInputInterface::MsgCell * cell_ptr = 0;
 	do
@@ -228,7 +234,7 @@ void	WorldAudio::collect_msg_ui ()
 			controller._index      = cell_ptr->_val.get_index ();
 			const float    val_raw = cell_ptr->_val.get_val ();
 
-			if (_ctx_ptr != 0)
+			if (_ctx_ptr != 0 && proc_flag)
 			{
 				handle_controller (controller, val_raw);
 			}

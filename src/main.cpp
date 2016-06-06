@@ -274,7 +274,7 @@ Context::Context (double sample_freq, int max_block_size)
 ,	_user_input (_thread_spi)
 ,	_leds ()
 #else
-,	_all_io ()
+,	_all_io (_quit_flag)
 ,	_display (_all_io)
 ,	_user_input (_all_io)
 ,	_leds (_all_io)

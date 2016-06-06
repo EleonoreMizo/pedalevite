@@ -106,6 +106,18 @@ Central::~Central ()
 			_plugin_pool.release (index);
 		}
 	}
+
+	// Flushes the cmd -> audio queue
+	conc::LockFreeCell <Msg> * cell_ptr = 0;
+	do
+	{
+		cell_ptr = _queue_cmd_to_audio.dequeue ();
+		if (cell_ptr != 0)
+		{
+			_msg_pool.return_cell (*cell_ptr);
+		}
+	}
+	while (cell_ptr != 0);
 }
 
 

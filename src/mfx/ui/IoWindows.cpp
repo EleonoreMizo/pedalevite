@@ -49,7 +49,7 @@ namespace ui
 
 
 
-IoWindows::IoWindows ()
+IoWindows::IoWindows (volatile bool &quit_request_flag)
 :	_screen_buf ()
 ,	_main_win (0)
 ,	_bitmap (0)
@@ -59,6 +59,7 @@ IoWindows::IoWindows ()
 ,	_msg_pool ()
 ,	_recip_list ()
 ,	_clock_freq (0)
+,	_quit_request_flag (quit_request_flag)
 ,	_quit_flag ()
 ,	_msg_loop_thread (&IoWindows::main_loop, this)
 {
@@ -330,7 +331,8 @@ void	IoWindows::main_loop ()
 		const ::BOOL   gm_res = ::GetMessageW (&msg, 0, 0, 0);
 		if (gm_res == 0 || gm_res == -1)
 		{
-			_quit_flag = true;
+			_quit_flag         = true;
+			_quit_request_flag = true;
 		}
 		else
 		{
@@ -416,6 +418,7 @@ void	IoWindows::init_bitmap (int w, int h)
 	switch (message)
 	{
 	case WM_CLOSE:
+		_quit_request_flag = true;
 		::PostQuitMessage (0);
 		break;
 

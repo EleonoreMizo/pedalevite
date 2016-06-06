@@ -94,8 +94,8 @@ private:
 	typedef std::vector <const piapi::EventTs *> EventPtrList;
 	typedef std::array <EventPtrList, Cst::_max_nbr_plugins> EventPtrListArray;
 
-	void           collect_msg_cmd ();
-	void           collect_msg_ui ();
+	void           collect_msg_cmd (bool proc_flag);
+	void           collect_msg_ui (bool proc_flag);
 	void           handle_controller (const ControlSource &controller, float val_raw);
 	void           copy_input (const float * const * src_arr, int nbr_spl);
 	void           check_signal_level (int nbr_spl);

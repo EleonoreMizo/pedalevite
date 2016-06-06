@@ -62,7 +62,7 @@ class IoWindows
 
 public:
 
-	               IoWindows ();
+	explicit       IoWindows (volatile bool &quit_request_flag);
 	virtual        ~IoWindows ();
 
 
@@ -168,7 +168,9 @@ private:
 	RecipientList  _recip_list;
 	int64_t        _clock_freq; // Hz
 
-	volatile bool  _quit_flag;
+	volatile bool& _quit_request_flag; // Application is requested to quit
+
+	volatile bool  _quit_flag;         // Thread should stop
 	std::thread    _msg_loop_thread;
 
 	static const wchar_t
@@ -182,6 +184,7 @@ private:
 
 private:
 
+	               IoWindows ()                               = delete;
 	               IoWindows (const IoWindows &other)         = delete;
 	IoWindows &    operator = (const IoWindows &other)        = delete;
 	bool           operator == (const IoWindows &other) const = delete;
