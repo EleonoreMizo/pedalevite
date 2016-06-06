@@ -51,9 +51,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;asiosdk2\common;asiosdk2\host;asiosdk2\host\pc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -67,9 +67,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;asiosdk2\common;asiosdk2\host;asiosdk2\host\pc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -83,6 +83,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="asiosdk2\common\asio.h" />
+    <ClInclude Include="asiosdk2\common\asiodrvr.h" />
+    <ClInclude Include="asiosdk2\common\asiosys.h" />
+    <ClInclude Include="asiosdk2\common\combase.h" />
+    <ClInclude Include="asiosdk2\common\iasiodrv.h" />
+    <ClInclude Include="asiosdk2\common\wxdebug.h" />
+    <ClInclude Include="asiosdk2\host\ASIOConvertSamples.h" />
+    <ClInclude Include="asiosdk2\host\asiodrivers.h" />
+    <ClInclude Include="asiosdk2\host\ginclude.h" />
+    <ClInclude Include="asiosdk2\host\pc\asiolist.h" />
     <ClInclude Include="conc\AioAdd.h" />
     <ClInclude Include="conc\AioAdd.hpp" />
     <ClInclude Include="conc\AioMax.h" />
@@ -377,6 +387,17 @@
     <ClInclude Include="mfx\WorldAudio.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="asiosdk2\common\asio.cpp" />
+    <ClCompile Include="asiosdk2\common\asiodrvr.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\common\combase.cpp" />
+    <ClCompile Include="asiosdk2\common\debugmessage.cpp" />
+    <ClCompile Include="asiosdk2\common\register.cpp" />
+    <ClCompile Include="asiosdk2\host\ASIOConvertSamples.cpp" />
+    <ClCompile Include="asiosdk2\host\asiodrivers.cpp" />
+    <ClCompile Include="asiosdk2\host\pc\asiolist.cpp" />
     <ClCompile Include="fstb\BitFieldSparse.cpp" />
     <ClCompile Include="fstb\CpuId.cpp" />
     <ClCompile Include="fstb\fnc.cpp">

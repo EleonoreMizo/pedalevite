@@ -61,6 +61,18 @@
     <Filter Include="mfx\dsp\osc">
       <UniqueIdentifier>{75aa7491-e44a-423e-bc1a-1b9eb514843e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="asiosdk2">
+      <UniqueIdentifier>{d62f9368-a297-4d55-8c21-3959a71f9d3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asiosdk2\common">
+      <UniqueIdentifier>{f87a93c6-d18f-4faa-9d9c-2c7d6c952372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asiosdk2\host">
+      <UniqueIdentifier>{1237eb12-e330-403d-a3da-4d66f54d6e44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asiosdk2\host\pc">
+      <UniqueIdentifier>{d127aaf8-cc2d-4a59-a594-ae739c57b559}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -939,6 +951,36 @@
     <ClInclude Include="mfx\ui\IoWindows.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
+    <ClInclude Include="asiosdk2\common\asio.h">
+      <Filter>asiosdk2\common</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\common\asiodrvr.h">
+      <Filter>asiosdk2\common</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\common\asiosys.h">
+      <Filter>asiosdk2\common</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\common\combase.h">
+      <Filter>asiosdk2\common</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\common\iasiodrv.h">
+      <Filter>asiosdk2\common</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\common\wxdebug.h">
+      <Filter>asiosdk2\common</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\host\ASIOConvertSamples.h">
+      <Filter>asiosdk2\host</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\host\asiodrivers.h">
+      <Filter>asiosdk2\host</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\host\ginclude.h">
+      <Filter>asiosdk2\host</Filter>
+    </ClInclude>
+    <ClInclude Include="asiosdk2\host\pc\asiolist.h">
+      <Filter>asiosdk2\host\pc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1190,6 +1232,30 @@
     </ClCompile>
     <ClCompile Include="mfx\ui\IoWindows.cpp">
       <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\common\asio.cpp">
+      <Filter>asiosdk2\common</Filter>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\common\asiodrvr.cpp">
+      <Filter>asiosdk2\common</Filter>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\common\combase.cpp">
+      <Filter>asiosdk2\common</Filter>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\common\debugmessage.cpp">
+      <Filter>asiosdk2\common</Filter>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\common\register.cpp">
+      <Filter>asiosdk2\common</Filter>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\host\ASIOConvertSamples.cpp">
+      <Filter>asiosdk2\host</Filter>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\host\asiodrivers.cpp">
+      <Filter>asiosdk2\host</Filter>
+    </ClCompile>
+    <ClCompile Include="asiosdk2\host\pc\asiolist.cpp">
+      <Filter>asiosdk2\host\pc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
