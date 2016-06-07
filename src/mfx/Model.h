@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/Bank.h"
 #include "mfx/doc/PedalboardLayout.h"
+#include "mfx/doc/Setup.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/ModelObserverInterface.h"
 
@@ -144,7 +145,9 @@ private:
 	static void    reset_mixer_param (doc::Slot &slot);
 
 	cmd::Central   _central;
+	doc::Setup     _setup;
 	doc::Bank      _bank;
+	int            _bank_index;
 	int            _preset_index;
 	doc::PedalboardLayout
 	               _layout_cur;
@@ -158,6 +161,7 @@ private:
 	PedalStateArray
 	               _pedal_state_arr;
 	int64_t        _hold_time;          // Pedal minimum hold time. Microseconds.
+	bool           _edit_flag;          // Changes are mirrored to the _setup
 	bool           _tuner_flag;
 	int            _tuner_pi_id;
 	pi::Tuner *    _tuner_ptr;          // Can be 0.

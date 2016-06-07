@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Cst.h
+        Setup.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_Cst_HEADER_INCLUDED)
-#define mfx_Cst_HEADER_INCLUDED
+#if ! defined (mfx_doc_Setup_HEADER_INCLUDED)
+#define mfx_doc_Setup_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,38 +27,41 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/Bank.h"
+#include "mfx/doc/PedalboardLayout.h"
+#include "mfx/Cst.h"
+
+#include <array>
+#include <string>
+
 
 
 namespace mfx
 {
+namespace doc
+{
 
 
 
-class Cst
+class Setup
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _nbr_pedals      = 12;
-	static const int  _nbr_presets_per_bank = 64;
-	static const int  _nbr_banks       = 16;  // Per setup
+	typedef std::array <Bank, Cst::_nbr_banks> BankArray;
 
-	static const int  _max_nbr_buf     = 256;
-	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_plugins = 256;
-	static const int  _nbr_chn_in      = 2;
-	static const int  _nbr_chn_out     = 2;
+	               Setup ()                               = default;
+	               Setup (const Setup &other)             = default;
+	virtual        ~Setup ()                              = default;
 
-	enum BufSpecial
-	{
-		BufSpecial_SILENCE = 0,
-		BufSpecial_TRASH,
+	Setup &        operator = (const Setup &other)        = default;
 
-		BufSpecial_NBR_ELT
-	};
+	BankArray      _bank_arr;
+	PedalboardLayout
+	               _layout;
+	std::string    _name;
 
 
 
@@ -78,26 +81,23 @@ private:
 
 private:
 
-	virtual        ~Cst ()                              = delete;
-	               Cst ()                               = delete;
-	               Cst (const Cst &other)               = delete;
-	Cst &          operator = (const Cst &other)        = delete;
-	bool           operator == (const Cst &other) const = delete;
-	bool           operator != (const Cst &other) const = delete;
+	bool           operator == (const Setup &other) const = delete;
+	bool           operator != (const Setup &other) const = delete;
 
-}; // class Cst
+}; // class Setup
 
 
 
+}  // namespace doc
 }  // namespace mfx
 
 
 
-//#include "mfx/Cst.hpp"
+//#include "mfx/doc/Setup.hpp"
 
 
 
-#endif   // mfx_Cst_HEADER_INCLUDED
+#endif   // mfx_doc_Setup_HEADER_INCLUDED
 
 
 

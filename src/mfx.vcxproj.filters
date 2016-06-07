@@ -981,6 +981,9 @@
     <ClInclude Include="asiosdk2\host\pc\asiolist.h">
       <Filter>asiosdk2\host\pc</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\doc\Setup.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">

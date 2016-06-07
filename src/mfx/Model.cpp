@@ -50,16 +50,18 @@ namespace mfx
 
 
 const std::array <int, Cst::_nbr_pedals>	Model::_pedal_to_switch_map =
-{ {
+{{
 	2, 3, 4, 5, 6, 7, 8, 9,
 	14, 15, 16, 17
-} };
+}};
 
 
 
 Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device)
 :	_central (queue_input_to_audio, input_device)
+,	_setup ()
 ,	_bank ()
+,	_bank_index (0)
 ,	_preset_index (0)
 ,	_layout_cur ()
 ,	_layout_base ()
@@ -68,6 +70,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_pi_id_list ()
 ,	_pedal_state_arr ()
 ,	_hold_time (2 * 1000*1000) // 2 s
+,	_edit_flag (true)
 ,	_tuner_flag (false)
 ,	_tuner_pi_id (-1)
 ,	_tuner_ptr (0)
@@ -118,7 +121,7 @@ bool	Model::check_signal_clipping ()
 
 
 
-// obs_ptr can be 0.
+// obs_ptr can be 0 to remove the observer.
 void	Model::set_observer (ModelObserverInterface *obs_ptr)
 {
 	_obs_ptr = obs_ptr;
@@ -158,6 +161,11 @@ void	Model::load_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
 	_layout_base = layout;
 
+	if (_edit_flag)
+	{
+		_setup._layout = layout;
+	}
+
 	update_layout_bank ();
 }
 
@@ -170,6 +178,11 @@ void	Model::load_bank (const doc::Bank &bank, int preset)
 
 	_bank         = bank;
 	_preset_index = preset;
+
+	if (_edit_flag)
+	{
+		_setup._bank_arr [_bank_index] = _bank;
+	}
 
 	if (_obs_ptr != 0)
 	{

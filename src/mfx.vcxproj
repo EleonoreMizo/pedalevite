@@ -282,6 +282,7 @@
     <ClInclude Include="mfx\doc\PedalboardLayout.h" />
     <ClInclude Include="mfx\doc\PluginSettings.h" />
     <ClInclude Include="mfx\doc\Preset.h" />
+    <ClInclude Include="mfx\doc\Setup.h" />
     <ClInclude Include="mfx\doc\Slot.h" />
     <ClInclude Include="mfx\dsp\iir\Biquad.h" />
     <ClInclude Include="mfx\dsp\iir\Biquad.hpp" />

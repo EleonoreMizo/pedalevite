@@ -160,6 +160,36 @@ pedalevite_SOURCES = \
         ../../src/mfx/cmd/Plugin.cpp \
         ../../src/mfx/cmd/Plugin.h \
         ../../src/mfx/cmd/Slot.h \
+        ../../src/mfx/doc/ActionBank.cpp \
+        ../../src/mfx/doc/ActionBank.h \
+        ../../src/mfx/doc/ActionParam.cpp \
+        ../../src/mfx/doc/ActionParam.h \
+        ../../src/mfx/doc/ActionPreset.cpp \
+        ../../src/mfx/doc/ActionPreset.h \
+        ../../src/mfx/doc/ActionToggleFx.cpp \
+        ../../src/mfx/doc/ActionToggleFx.h \
+        ../../src/mfx/doc/ActionToggleTuner.cpp \
+        ../../src/mfx/doc/ActionToggleTuner.h \
+        ../../src/mfx/doc/ActionTrigger.h \
+        ../../src/mfx/doc/ActionType.h \
+        ../../src/mfx/doc/Bank.h \
+        ../../src/mfx/doc/CtrlLink.h \
+        ../../src/mfx/doc/CtrlLinkSet.cpp \
+        ../../src/mfx/doc/CtrlLinkSet.h \
+        ../../src/mfx/doc/FxId.cpp \
+        ../../src/mfx/doc/FxId.h \
+        ../../src/mfx/doc/PedalActionCycle.cpp \
+        ../../src/mfx/doc/PedalActionCycle.h \
+        ../../src/mfx/doc/PedalActionGroup.h \
+        ../../src/mfx/doc/PedalActionSingleInterface.cpp \
+        ../../src/mfx/doc/PedalActionSingleInterface.h \
+        ../../src/mfx/doc/PedalboardLayout.cpp \
+        ../../src/mfx/doc/PedalboardLayout.h \
+        ../../src/mfx/doc/PluginSettings.h \
+        ../../src/mfx/doc/Preset.cpp \
+        ../../src/mfx/doc/Preset.h \
+        ../../src/mfx/doc/Setup.h \
+        ../../src/mfx/doc/Slot.h \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \
         ../../src/mfx/dsp/iir/Biquad.hpp \
@@ -198,35 +228,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/InertiaLin.hpp \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
-        ../../src/mfx/doc/ActionBank.cpp \
-        ../../src/mfx/doc/ActionBank.h \
-        ../../src/mfx/doc/ActionParam.cpp \
-        ../../src/mfx/doc/ActionParam.h \
-        ../../src/mfx/doc/ActionPreset.cpp \
-        ../../src/mfx/doc/ActionPreset.h \
-        ../../src/mfx/doc/ActionToggleFx.cpp \
-        ../../src/mfx/doc/ActionToggleFx.h \
-        ../../src/mfx/doc/ActionToggleTuner.cpp \
-        ../../src/mfx/doc/ActionToggleTuner.h \
-        ../../src/mfx/doc/ActionTrigger.h \
-        ../../src/mfx/doc/ActionType.h \
-        ../../src/mfx/doc/Bank.h \
-        ../../src/mfx/doc/CtrlLink.h \
-        ../../src/mfx/doc/CtrlLinkSet.cpp \
-        ../../src/mfx/doc/CtrlLinkSet.h \
-        ../../src/mfx/doc/FxId.cpp \
-        ../../src/mfx/doc/FxId.h \
-        ../../src/mfx/doc/PedalActionCycle.cpp \
-        ../../src/mfx/doc/PedalActionCycle.h \
-        ../../src/mfx/doc/PedalActionGroup.h \
-        ../../src/mfx/doc/PedalActionSingleInterface.cpp \
-        ../../src/mfx/doc/PedalActionSingleInterface.h \
-        ../../src/mfx/doc/PedalboardLayout.cpp \
-        ../../src/mfx/doc/PedalboardLayout.h \
-        ../../src/mfx/doc/PluginSettings.h \
-        ../../src/mfx/doc/Preset.cpp \
-        ../../src/mfx/doc/Preset.h \
-        ../../src/mfx/doc/Slot.h \
         ../../src/mfx/pi/param/HelperDispNum.cpp \
         ../../src/mfx/pi/param/HelperDispNum.h \
         ../../src/mfx/pi/param/MapLog.h \
