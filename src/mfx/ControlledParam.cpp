@@ -93,12 +93,24 @@ float	ControlledParam::compute_final_val (PluginPool &pi_pool) const
 		else
 		{
 			val = details._param_arr [index];
+			if (unit._source.is_relative ())
+			{
+				// Forces internal value for relative sources
+				float               mod_val = val - unit._base;
+				if (unit._amp != 0)
+				{
+					mod_val /= unit._amp;
+				}
+				mod_val = fstb::limit (mod_val, 0.f, 1.f);
+				/*** To do: We should apply the inverse unit._curve here. ***/
+				unit._val = mod_val;
+			}
 		}
 		beg = 1;
 	}
 	else
 	{
-		val = float (details._param_arr [index]);
+		val = details._param_arr [index];
 	}
 
 	for (int m = beg; m < int (_ctrl_list.size ()); ++m)
