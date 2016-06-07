@@ -214,6 +214,13 @@ void	Central::clear ()
 {
 	Document &     doc = modify ();
 
+	const int      nbr_slots = int (doc._slot_list.size ());
+	for (int pos = 0; pos < nbr_slots; ++pos)
+	{
+		remove_plugin (pos, PiType_MAIN);
+		remove_plugin (pos, PiType_MIX);
+	}
+
 	doc._slot_list.clear ();
 }
 
@@ -243,6 +250,8 @@ void	Central::delete_slot (int pos)
 	assert (pos >= 0);
 	assert (pos < int (doc._slot_list.size ()));
 
+	remove_plugin (pos, PiType_MAIN);
+	remove_plugin (pos, PiType_MIX);
 	doc._slot_list.erase (_new_sptr->_slot_list.begin () + pos);
 }
 
@@ -255,6 +264,8 @@ void	Central::clear_slot (int pos)
 	assert (pos >= 0);
 	assert (pos < int (doc._slot_list.size ()));
 
+	remove_plugin (pos, PiType_MAIN);
+	remove_plugin (pos, PiType_MIX);
 	doc._slot_list [pos] = Slot ();
 }
 
