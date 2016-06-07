@@ -178,6 +178,8 @@ class Context
 public:
 	const double   _sample_freq;
 	const int      _max_block_size;
+	std::atomic <bool>
+	               _dropout_flag;
 #if fstb_IS (ARCHI, ARM)
 	mfx::ui::TimeShareThread
 	               _thread_spi;
@@ -265,6 +267,7 @@ protected:
 Context::Context (double sample_freq, int max_block_size)
 :	_sample_freq (sample_freq)
 ,	_max_block_size (max_block_size)
+,	_dropout_flag ()
 #if fstb_IS (ARCHI, ARM)
 ,	_thread_spi (10 * 1000)
 
@@ -293,6 +296,7 @@ Context::Context (double sample_freq, int max_block_size)
 ,	_fnt_6x6 ()
 ,	_slot_info_list ()
 {
+	_dropout_flag.store (false);
 	_usage_min.store (-1);
 	_usage_max.store (-1);
 	mfx::ui::FontDataDefault::make_08x12 (_fnt_8x12);
@@ -951,6 +955,14 @@ static int MAIN_audio_process_jack (::jack_nframes_t nbr_spl, void *arg)
 	return MAIN_audio_process (ctx, &dst_arr [0], &src_arr [0], nbr_spl);
 }
 
+static int MAIN_audio_dropout_jack (void *arg)
+{
+	Context &      ctx = *reinterpret_cast <Context *> (arg);
+	ctx._dropout_flag.exchange (true);
+
+	return 0;
+}
+
 
 
 static int MAIN_audio_init (double &sample_freq, int &max_block_size)
@@ -1017,6 +1029,7 @@ static int MAIN_audio_start (Context &ctx)
 		}
 
 		::jack_set_process_callback (MAIN_client_ptr, MAIN_audio_process_jack, &ctx);
+		::jack_set_xrun_callback (MAIN_client_ptr, MAIN_audio_dropout_jack, &ctx);
 		::jack_on_shutdown (MAIN_client_ptr, MAIN_jack_shutdown, &ctx);
 
 		static const char *  port_name_0_arr [2] [2] =
@@ -1295,13 +1308,30 @@ static long	MAIN_asio_message (long selector, long value, void* message, double*
 	switch (selector)
 	{
 	case ::kAsioSelectorSupported:
-		ret_val = 1;
+		switch (value)
+		{
+		case ::kAsioSelectorSupported:
+		case ::kAsioResetRequest:
+		case ::kAsioBufferSizeChange:
+		case ::kAsioResyncRequest:
+		case ::kAsioOverload:
+			ret_val = 1;
+			break;
+		}
 		break;
 
 	case ::kAsioResetRequest:
+		MAIN_context_ptr->_quit_flag = true;
+		ret_val = 1;
+		break;
 	case ::kAsioBufferSizeChange:
+		MAIN_context_ptr->_quit_flag = true;
+		break;
 	case ::kAsioResyncRequest:
 		MAIN_context_ptr->_quit_flag = true;
+		break;
+	case ::kAsioOverload:
+		MAIN_context_ptr->_dropout_flag = true;
 		break;
 	}
 
@@ -1668,6 +1698,10 @@ static int MAIN_main_loop (Context &ctx)
 		if (ctx._model.check_signal_clipping ())
 		{
 			lum_arr [0] = 1;
+		}
+		if (ctx._dropout_flag.exchange (false))
+		{
+			lum_arr [2] = 1;
 		}
 
 		if (freq > 0)
