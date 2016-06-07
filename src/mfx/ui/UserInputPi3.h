@@ -138,6 +138,8 @@ protected:
 	virtual int    do_get_nbr_param (UserInputType type) const;
 	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
 	virtual void   do_return_cell (MsgCell &cell);
+	virtual int64_t
+	               do_get_cur_date () const;
 
 	// TimeShareCbInterface
 	virtual bool   do_process_timeshare_op ();

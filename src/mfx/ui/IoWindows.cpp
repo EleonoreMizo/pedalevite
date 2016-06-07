@@ -204,6 +204,19 @@ void	IoWindows::do_return_cell (MsgCell &cell)
 
 
 
+int64_t	IoWindows::do_get_cur_date () const
+{
+	::LARGE_INTEGER   d;
+	::QueryPerformanceCounter (&d);
+	const int64_t  date_us = int64_t (
+		double (d.QuadPart) * (1000 * 1000) / _clock_freq
+	);
+
+	return date_us;
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

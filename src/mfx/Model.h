@@ -157,6 +157,7 @@ private:
 	PiIdList       _pi_id_list;         // Not affected by the tuner
 	PedalStateArray
 	               _pedal_state_arr;
+	int64_t        _hold_time;          // Pedal minimum hold time. Microseconds.
 	bool           _tuner_flag;
 	int            _tuner_pi_id;
 	pi::Tuner *    _tuner_ptr;          // Can be 0.

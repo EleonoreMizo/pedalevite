@@ -105,6 +105,7 @@ public:
 
 	// Misc
 	PluginPool &   use_pi_pool ();
+	int64_t        get_cur_date () const;
 
 
 

@@ -215,6 +215,13 @@ void	UserInputPi3::do_return_cell (MsgCell &cell)
 
 
 
+int64_t	UserInputPi3::do_get_cur_date () const
+{
+	return read_clock_ns () / 1000;
+}
+
+
+
 bool	UserInputPi3::do_process_timeshare_op ()
 {
 	const int64_t  cur_time = read_clock_ns ();

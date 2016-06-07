@@ -91,6 +91,13 @@ void	UserInputVoid::do_return_cell (MsgCell &/*cell*/)
 
 
 
+int64_t	UserInputVoid::do_get_cur_date () const
+{
+	return 0;
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

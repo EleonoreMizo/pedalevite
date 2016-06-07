@@ -67,6 +67,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_preset_cur ()
 ,	_pi_id_list ()
 ,	_pedal_state_arr ()
+,	_hold_time (2 * 1000*1000) // 2 s
 ,	_tuner_flag (false)
 ,	_tuner_pi_id (-1)
 ,	_tuner_ptr (0)
@@ -130,8 +131,20 @@ void	Model::process_messages ()
 	_central.process_queue_audio_to_cmd ();
 	process_msg_ui ();
 
-	/*** To do: check hold state for pedals ***/
+	// Checks hold state for pedals
+	const int64_t  date_us = _central.get_cur_date ();
+	for (int ped_cnt = 0; ped_cnt < int (_pedal_state_arr.size ()); ++ped_cnt)
+	{
+		PedalState &   state = _pedal_state_arr [ped_cnt];
+		if (   state._press_flag && ! state._hold_flag
+		    && date_us >= state._press_ts + _hold_time)
+		{
+			state._hold_flag = true;
+			process_pedal_event (ped_cnt, doc::ActionTrigger_HOLD);
+		}
+	}
 
+	// Frequency detected by the tuner
 	if (_obs_ptr != 0 && _tuner_flag && _tuner_ptr != 0)
 	{
 		const float    freq = _tuner_ptr->get_freq ();

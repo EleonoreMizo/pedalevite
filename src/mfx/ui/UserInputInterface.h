@@ -32,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/UserInputMsg.h"
 #include "mfx/ui/UserInputType.h"
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -56,6 +58,7 @@ public:
 	int            get_nbr_param (UserInputType type) const;
 	void           set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
 	void           return_cell (MsgCell &cell);
+	int64_t        get_cur_date () const;
 
 
 
@@ -66,6 +69,8 @@ protected:
 	virtual int    do_get_nbr_param (UserInputType type) const = 0;
 	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr) = 0;
 	virtual void   do_return_cell (MsgCell &cell) = 0;
+	virtual int64_t
+	               do_get_cur_date () const = 0;
 
 
 

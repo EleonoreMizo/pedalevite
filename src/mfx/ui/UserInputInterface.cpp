@@ -73,6 +73,13 @@ void	UserInputInterface::return_cell (MsgCell &cell)
 
 
 
+int64_t	UserInputInterface::get_cur_date () const
+{
+	return do_get_cur_date ();
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

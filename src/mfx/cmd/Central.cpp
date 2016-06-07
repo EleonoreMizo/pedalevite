@@ -252,6 +252,7 @@ void	Central::delete_slot (int pos)
 
 	remove_plugin (pos, PiType_MAIN);
 	remove_plugin (pos, PiType_MIX);
+
 	doc._slot_list.erase (_new_sptr->_slot_list.begin () + pos);
 }
 
@@ -266,6 +267,7 @@ void	Central::clear_slot (int pos)
 
 	remove_plugin (pos, PiType_MAIN);
 	remove_plugin (pos, PiType_MIX);
+
 	doc._slot_list [pos] = Slot ();
 }
 
@@ -448,6 +450,13 @@ void	Central::process_queue_audio_to_cmd ()
 PluginPool &	Central::use_pi_pool ()
 {
 	return (_plugin_pool);
+}
+
+
+
+int64_t	Central::get_cur_date () const
+{
+	return _input_device.get_cur_date ();
 }
 
 

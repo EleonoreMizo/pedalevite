@@ -90,6 +90,8 @@ protected:
 	virtual int    do_get_nbr_param (UserInputType type) const;
 	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
 	virtual void   do_return_cell (MsgCell &cell);
+	virtual int64_t
+	               do_get_cur_date () const;
 
 
 
@@ -147,7 +149,6 @@ private:
 	bool           process_led (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
 	bool           process_paint (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
 	bool           process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool down_flag);
-	int64_t        get_time_us ();
 	void           enqueue_val (int64_t date, UserInputType type, int index, float val);
 	void           redraw_main_screen (int x1, int y1, int x2, int y2);
 	void           redraw_led (int x1, int y1, int x2, int y2, int led_cnt);
