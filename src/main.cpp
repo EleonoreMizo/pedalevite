@@ -1271,7 +1271,7 @@ static void	MAIN_audio_process_asio (long doubleBufferIndex, ::ASIOBool /*direct
 		{
 			for (int pos = 0; pos < ctx._max_block_size; ++pos)
 			{
-				float          val     = src_arr [chn] [pos];
+				float          val     = dst_arr [chn] [pos];
 				int32_t        val_int = fstb::conv_int_fast (val * (1 << 23));
 				val_int = fstb::limit (val_int, -(1 << 23), (1 << 23) - 1);
 				asio_dst_ptr [pos] = val_int << 8;
@@ -1519,7 +1519,10 @@ static int MAIN_audio_init (double &sample_freq, int &max_block_size)
 	{
 		err = ::ASIOCreateBuffers (
 			&MAIN_buf_info_arr [0] [0],
-			long (MAIN_buf_info_arr.size ()),
+			long (
+				  MAIN_buf_info_arr [mfx::piapi::PluginInterface::Dir_IN ].size ()
+				+ MAIN_buf_info_arr [mfx::piapi::PluginInterface::Dir_OUT].size ()
+			),
 			buffer_size,
 			&MAIN_asio_callbacks
 		);
