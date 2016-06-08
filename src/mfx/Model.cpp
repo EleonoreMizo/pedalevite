@@ -60,13 +60,10 @@ const std::array <int, Cst::_nbr_pedals>	Model::_pedal_to_switch_map =
 Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device)
 :	_central (queue_input_to_audio, input_device)
 ,	_setup ()
-,	_bank ()
 ,	_bank_index (0)
 ,	_preset_index (0)
-,	_layout_cur ()
-,	_layout_base ()
-,	_layout_bank ()
 ,	_preset_cur ()
+,	_layout_cur ()
 ,	_pi_id_list ()
 ,	_pedal_state_arr ()
 ,	_hold_time (2 * 1000*1000) // 2 s
@@ -157,39 +154,64 @@ void	Model::process_messages ()
 
 
 
-void	Model::load_pedalboard_layout (const doc::PedalboardLayout &layout)
+void	Model::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
-	_layout_base = layout;
+	_setup._layout = layout;
 
-	if (_edit_flag)
+	if (_obs_ptr != 0)
 	{
-		_setup._layout = layout;
+		_obs_ptr->set_pedalboard_layout (layout);
 	}
 
-	update_layout_bank ();
+	update_layout ();
 }
 
 
 
-void	Model::load_bank (const doc::Bank &bank, int preset)
+void	Model::set_bank (int index, const doc::Bank &bank)
 {
-	assert (preset >= 0);
-	assert (preset < int (_bank._preset_arr.size ()));
+	assert (index >= 0);
+	assert (index < Cst::_nbr_banks);
 
-	_bank         = bank;
-	_preset_index = preset;
-
-	if (_edit_flag)
-	{
-		_setup._bank_arr [_bank_index] = _bank;
-	}
+	_setup._bank_arr [index] = bank;
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->set_bank (_bank, _preset_index);
+		_obs_ptr->set_bank (index, bank);
+	}
+}
+
+
+
+void	Model::select_bank (int index)
+{
+	assert (index >= 0);
+	assert (index < Cst::_nbr_banks);
+
+	_bank_index = index;
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->select_bank (index);
+	}
+}
+
+
+
+void	Model::activate_preset (int index)
+{
+	assert (index >= 0);
+	assert (index < Cst::_nbr_presets_per_bank);
+
+	_preset_index = index;
+	_preset_cur   = _setup._bank_arr [_bank_index]._preset_arr [_preset_index];
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->activate_preset (index);
 	}
 
-	update_layout_bank ();
+	update_layout ();
 }
 
 
@@ -211,18 +233,12 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 		find_slot_type_cur_preset (slot_index, type, pi_id);
 		if (slot_index >= 0)
 		{
-			update_parameter (
-				_preset_cur, slot_index, type, index, val
-			);
-			const bool     ok_flag = update_parameter (
-				_bank._preset_arr [_preset_index], slot_index, type, index, val
-			);
+			const bool     ok_flag =
+				update_parameter (_preset_cur, slot_index, type, index, val);
 
 			if (ok_flag && _obs_ptr != 0)
 			{
-				_obs_ptr->set_param (
-					pi_id, index, val, _preset_index, slot_index, type
-				);
+				_obs_ptr->set_param (pi_id, index, val, slot_index, type);
 			}
 		}
 	}
@@ -242,13 +258,11 @@ Model::SlotPiId::SlotPiId ()
 
 
 
-void	Model::update_layout_bank ()
+void	Model::update_layout ()
 {
-	_layout_bank = _layout_base;
-	_layout_bank.merge_layout (_bank._layout);
-
-	_layout_cur  = _layout_bank;
-	_layout_cur.merge_layout (_bank._preset_arr [_preset_index]._layout);
+	_layout_cur = _setup._layout;
+	_layout_cur.merge_layout (_setup._bank_arr [_bank_index]._layout);
+	_layout_cur.merge_layout (_preset_cur._layout);
 
 	apply_settings ();
 }
@@ -257,17 +271,19 @@ void	Model::update_layout_bank ()
 
 void	Model::preinstantiate_all_plugins_from_bank ()
 {
+	const doc::Bank & bank = _setup._bank_arr [_bank_index];
+
 	// Counts all the plug-ins used in the bank
 
 	// [model] = count
 	std::map <pi::PluginModel, int>  pi_cnt_bank;
 
 	for (size_t preset_index = 0
-	;	preset_index < _bank._preset_arr.size ()
+	;	preset_index < bank._preset_arr.size ()
 	;	++preset_index)
 	{
 		// Count for this preset
-		const doc::Preset &  preset = _bank._preset_arr [preset_index];
+		const doc::Preset &  preset = bank._preset_arr [preset_index];
 		std::map <pi::PluginModel, int>  pi_cnt_preset;
 		for (const auto &slot_sptr : preset._slot_list)
 		{
@@ -310,6 +326,8 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 
 
 
+// Transmit to _central a preset built from scratch,
+// based on _preset_cur and _layout_cur
 void	Model::apply_settings ()
 {
 	_central.clear ();
@@ -344,60 +362,36 @@ void	Model::apply_settings_normal ()
 	_pi_id_list.clear ();
 	_slot_info.clear ();
 
-	const doc::Preset &  preset = _bank._preset_arr [_preset_index];
-
-	// Don't delete _preset_cur, we need it to check the differences
-	// with the new preset. Just ensure there is the same number of slots.
-	const int      nbr_slots = preset._slot_list.size ();
-	_preset_cur._slot_list.resize (nbr_slots);
-
-	_preset_cur._name = preset._name;
+	const int      nbr_slots = _preset_cur._slot_list.size ();
 
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
 		_central.insert_slot (slot_index);
 		_pi_id_list.push_back (SlotPiId ());
 
-		// Empty slot
-		if (preset._slot_list [slot_index].get () == 0)
-		{
-			_preset_cur._slot_list [slot_index].reset ();
-		}
-
 		// Full slot
-		else
+		if (_preset_cur._slot_list [slot_index].get () != 0)
 		{
-			const doc::Slot & slot     = *(preset._slot_list [slot_index]);
-
-			// Create it if it doesn't exist
-			if (_preset_cur._slot_list [slot_index].get () == 0)
-			{
-				_preset_cur._slot_list [slot_index] = doc::Preset::SlotSPtr (
-					new doc::Slot
-				);
-				reset_mixer_param (*_preset_cur._slot_list [slot_index]);
-			}
-			doc::Slot &       slot_cur = *(_preset_cur._slot_list [slot_index]);
-
-			slot_cur._label    = slot._label;
-			slot_cur._pi_model = slot._pi_model;
+			const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
 
 			// First check if we need a mixer plug-in.
 			// Updates the parameters
 			check_mixer_plugin (slot_index);
 
 			// Now the main plug-in
-			slot_cur._settings_all = slot._settings_all;
-			auto           it_s = slot_cur._settings_all.find (slot._pi_model);
-			if (it_s == slot_cur._settings_all.end ())
+			auto           it_s = slot._settings_all.find (slot._pi_model);
+			if (it_s == slot._settings_all.end ())
 			{
 				assert (false);
 			}
 			else
 			{
 				_central.force_mono (slot_index, it_s->second._force_mono_flag);
-				const int      pi_id =
-					_central.set_plugin (slot_index, slot._pi_model, it_s->second._force_reset_flag);
+				const int      pi_id = _central.set_plugin (
+					slot_index,
+					slot._pi_model,
+					it_s->second._force_reset_flag
+				);
 				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
 				send_effect_settings (pi_id, it_s->second);
 			}
@@ -429,51 +423,48 @@ void	Model::apply_settings_tuner ()
 // We need it if there is an automation or if it is set to something
 // different of 100% wet at 0 dB.
 // Does not commit anything
-// The slot should exist both in bank and in the current preset.
+// The slot should exist in the current preset.
 void	Model::check_mixer_plugin (int slot_index)
 {
 	assert (_preset_cur._slot_list [slot_index].get () != 0);
 
-	const doc::Preset &  preset = _bank._preset_arr [_preset_index];
-	assert (preset._slot_list [slot_index].get () != 0);
-
-	const bool     use_flag = has_mixer_plugin (preset, slot_index);
-	
-	const doc::Slot & slot     = *(     preset._slot_list [slot_index]);
-	doc::Slot &       slot_cur = *(_preset_cur._slot_list [slot_index]);
+	const bool        use_flag = has_mixer_plugin (_preset_cur, slot_index);	
+	const doc::Slot & slot     = *(_preset_cur._slot_list [slot_index]);
 
 	// Instantiation and setting update
 	if (use_flag)
 	{
 		const int      pi_id = _central.set_mixer (slot_index);
 		_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = pi_id;
-		slot_cur._settings_mixer = slot._settings_mixer;
-		send_effect_settings (pi_id, slot_cur._settings_mixer);
+		send_effect_settings (pi_id, slot._settings_mixer);
 	}
 
 	// Removal
 	else
 	{
 		_central.remove_mixer (slot_index);
-		slot_cur._settings_mixer = slot._settings_mixer;
 		_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = -1;
 	}
 }
 
 
 
+// Slot must exist
 bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 {
 	assert (slot_index >= 0);
 	assert (slot_index < int (preset._slot_list.size ()));
+	assert (preset._slot_list [slot_index].get () != 0);
 
 	const doc::Slot & slot = *(preset._slot_list [slot_index]);
+	const doc::PluginSettings::ParamList & plist =
+		slot._settings_mixer._param_list;
 
 	bool           use_flag = (
 		   ! slot._settings_mixer._map_param_ctrl.empty ()
-		|| slot._settings_mixer._param_list [pi::DryWet::Param_BYPASS] != 0
-		|| slot._settings_mixer._param_list [pi::DryWet::Param_WET   ] != 1
-		|| slot._settings_mixer._param_list [pi::DryWet::Param_GAIN  ] != pi::DryWet::_gain_neutral
+		|| plist [pi::DryWet::Param_BYPASS] != 0
+		|| plist [pi::DryWet::Param_WET   ] != 1
+		|| plist [pi::DryWet::Param_GAIN  ] != pi::DryWet::_gain_neutral
 	);
 
 	// Check if it is referenced in the pedals
@@ -645,8 +636,13 @@ void	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
 			}
 		}
 
-		const doc::PedalActionCycle::ActionArray &   action_list =
+		// Make a copy instead of taking a reference.
+		// The copy is quick because the array is made of shared_ptr.
+		// We need a copy because the current layout may be modified
+		// by the processed action(s).
+		const doc::PedalActionCycle::ActionArray  action_list =
 			cycle._cycle [cycle_pos];
+
 		for (const auto &action_sptr : action_list)
 		{
 			assert (action_sptr.get () != 0);
@@ -705,9 +701,16 @@ void	Model::process_action (const doc::PedalActionSingleInterface &action)
 
 void	Model::process_action_bank (const doc::ActionBank &action)
 {
+	int            new_index = action._val;
+	if (action._relative_flag)
+	{
+		new_index += _bank_index;
+		new_index += Cst::_nbr_banks;
+		assert (new_index >= 0);
+		new_index %= Cst::_nbr_banks;
+	}
 
-	/*** To do ***/
-
+	select_bank (new_index);
 }
 
 
@@ -737,14 +740,8 @@ void	Model::process_action_preset (const doc::ActionPreset &action)
 		assert (new_index >= 0);
 		new_index %= Cst::_nbr_presets_per_bank;
 	}
-	_preset_index = new_index;
 
-	if (_obs_ptr != 0)
-	{
-		_obs_ptr->set_cur_preset (_preset_index);
-	}
-
-	apply_settings ();
+	activate_preset (new_index);
 }
 
 

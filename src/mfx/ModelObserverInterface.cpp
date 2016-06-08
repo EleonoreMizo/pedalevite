@@ -49,24 +49,42 @@ ModelObserverInterface::PluginInfo::PluginInfo (const piapi::PluginInterface &pi
 
 
 
-// set_slot_info_for_current_preset to be called later
-void	ModelObserverInterface::set_bank (const doc::Bank &bank, int preset)
+// Reference lifetime is the call. Please make a copy.
+void	ModelObserverInterface::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
-	assert (preset >= 0);
-	assert (preset < Cst::_nbr_presets_per_bank);
+	do_set_pedalboard_layout (layout);
+}
 
-	do_set_bank (bank, preset);
+
+
+// Reference lifetime is the call. Please make a copy.
+void	ModelObserverInterface::set_bank (int index, const doc::Bank &bank)
+{
+	assert (index >= 0);
+	assert (index < Cst::_nbr_banks);
+
+	do_set_bank (index, bank);
+}
+
+
+
+void	ModelObserverInterface::select_bank (int index)
+{
+	assert (index >= 0);
+	assert (index < Cst::_nbr_banks);
+
+	do_select_bank (index);
 }
 
 
 
 // set_slot_info_for_current_preset to be called later
-void	ModelObserverInterface::set_cur_preset (int preset)
+void	ModelObserverInterface::activate_preset (int preset)
 {
 	assert (preset >= 0);
 	assert (preset < Cst::_nbr_presets_per_bank);
 
-	do_set_cur_preset (preset);
+	do_activate_preset (preset);
 }
 
 
@@ -93,19 +111,17 @@ void	ModelObserverInterface::set_slot_info_for_current_preset (const SlotInfoLis
 
 
 
-void	ModelObserverInterface::set_param (int pi_id, int index, float val, int preset, int slot_index, PiType type)
+void	ModelObserverInterface::set_param (int pi_id, int index, float val, int slot_index, PiType type)
 {
 	assert (pi_id >= 0);
 	assert (index >= 0);
 	assert (val >= 0);
 	assert (val <= 1);
-	assert (preset >= 0);
-	assert (preset < Cst::_nbr_presets_per_bank);
 	assert (slot_index >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 
-	do_set_param (pi_id, index, val, preset, slot_index, type);
+	do_set_param (pi_id, index, val, slot_index, type);
 }
 
 

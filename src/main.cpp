@@ -207,7 +207,7 @@ public:
 	// Not for the audio thread
 	volatile bool	_quit_flag = false;
 
-	// View + controller
+	// Controller
 #if defined (MAIN_USE_VOID)
 	mfx::ui::DisplayVoid
 	               _display;
@@ -237,11 +237,15 @@ public:
 	               _leds;
 #endif
 	mfx::Model     _model;
+
+	// View
 	mfx::ui::Font  _fnt_8x12;
 	mfx::ui::Font  _fnt_6x8;
 	mfx::ui::Font  _fnt_6x6;
-	mfx::doc::Bank _bank;
+	mfx::doc::Setup
+	               _setup;
 	int            _preset_index  = 0;
+	int            _bank_index    = 0;
 	mfx::ModelObserverInterface::SlotInfoList
 	               _slot_info_list;
 	volatile bool  _tuner_flag    = false;
@@ -256,12 +260,14 @@ public:
 	static void    video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride);
 protected:
 	// mfx::ModelObserverInterface
-	virtual void   do_set_bank (const mfx::doc::Bank &bank, int preset);
-	virtual void   do_set_cur_preset (int preset);
+	virtual void   do_set_pedalboard_layout (const mfx::doc::PedalboardLayout &layout);
+	virtual void   do_set_bank (int index, const mfx::doc::Bank &bank);
+	virtual void   do_select_bank (int index);
+	virtual void   do_activate_preset (int index);
 	virtual void   do_set_tuner (bool active_flag);
 	virtual void   do_set_tuner_freq (float freq);
 	virtual void	do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list);
-	virtual void   do_set_param (int pi_id, int index, float val, int preset, int slot_index, mfx::PiType type);
+	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, mfx::PiType type);
 };
 
 Context::Context (double sample_freq, int max_block_size)
@@ -620,7 +626,9 @@ Context::Context (double sample_freq, int max_block_size)
 		cycle._cycle.push_back (action_arr);
 	}
 
-	_model.load_bank (bank, 3);
+	_model.set_bank (0, bank);
+	_model.select_bank (0);
+	_model.activate_preset (3);
 
 	_model.set_process_info (_sample_freq, _max_block_size);
 }
@@ -652,7 +660,8 @@ void	Context::display_page_preset ()
 	assert (nbr_chr_big <= max_textlen);
 	assert (nbr_chr_sml <= max_textlen);
 
-	const mfx::doc::Preset &   preset = _bank._preset_arr [_preset_index];
+	const mfx::doc::Preset &   preset =
+		_setup._bank_arr [_bank_index]._preset_arr [_preset_index];
 
 	// Preset title
 	fstb::snprintf4all (
@@ -726,7 +735,8 @@ void	Context::display_page_efx (int slot_index)
 	assert (nbr_chr_mid <= max_textlen);
 	assert (nbr_chr_sml <= max_textlen);
 
-	const mfx::doc::Preset &   preset = _bank._preset_arr [_preset_index];
+	const mfx::doc::Preset &   preset =
+		_setup._bank_arr [_bank_index]._preset_arr [_preset_index];
 
 	// Preset title
 	fstb::snprintf4all (
@@ -849,22 +859,28 @@ void	Context::video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int st
 	}
 }
 
-void	Context::do_set_bank (const mfx::doc::Bank &bank, int preset)
+void	Context::do_set_pedalboard_layout (const mfx::doc::PedalboardLayout &layout)
 {
-	_bank = bank;
-	_preset_index = preset;
+}
+
+void	Context::do_set_bank (int index, const mfx::doc::Bank &bank)
+{
+	_setup._bank_arr [index] = bank;
+}
+
+void	Context::do_select_bank (int index)
+{
+	_bank_index = index;
+}
+
+void	Context::do_activate_preset (int index)
+{
+	_preset_index = index;
 	_slot_info_list.clear ();
 	_disp_cur_slot = -1;
 }
 
-void	Context::do_set_cur_preset (int preset)
-{
-	_preset_index = preset;
-	_slot_info_list.clear ();
-	_disp_cur_slot = -1;
-}
-
-void	Context::do_set_tuner (bool active_flag)
+	void	Context::do_set_tuner (bool active_flag)
 {
 	_tuner_flag = active_flag;
 	_disp_cur_slot = -1;
@@ -880,7 +896,7 @@ void	Context::do_set_slot_info_for_current_preset (const mfx::ModelObserverInter
 	_slot_info_list = info_list;
 }
 
-void	Context::do_set_param (int pi_id, int index, float val, int preset, int slot_index, mfx::PiType type)
+void	Context::do_set_param (int pi_id, int index, float val, int slot_index, mfx::PiType type)
 {
 	// Nothing
 }
@@ -1780,7 +1796,8 @@ static int MAIN_main_loop (Context &ctx)
 		}
 		else
 		{
-			const mfx::doc::Preset &   preset = ctx._bank._preset_arr [ctx._preset_index];
+			const mfx::doc::Preset &   preset =
+				ctx._setup._bank_arr [ctx._bank_index]._preset_arr [ctx._preset_index];
 			const int    nbr_slots = int (preset._slot_list.size ());
 			if (ctx._disp_cur_slot < 0 || ctx._disp_cur_slot >= nbr_slots)
 			{

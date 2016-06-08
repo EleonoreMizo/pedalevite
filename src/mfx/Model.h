@@ -78,8 +78,11 @@ public:
 	void           set_observer (ModelObserverInterface *obs_ptr);
 
 	void           process_messages (); // Call this regularly
-	void           load_pedalboard_layout (const doc::PedalboardLayout &layout);
-	void           load_bank (const doc::Bank &bank, int preset);
+
+	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
+	void           set_bank (int index, const doc::Bank &bank);
+	void           select_bank (int index);
+	void           activate_preset (int index);
 
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;
@@ -118,7 +121,7 @@ private:
 	};
 	typedef std::array <PedalState, Cst::_nbr_pedals> PedalStateArray;
 
-	void           update_layout_bank ();
+	void           update_layout ();
 	void           preinstantiate_all_plugins_from_bank ();
 	void           apply_settings ();
 	void           apply_settings_normal ();
@@ -145,18 +148,17 @@ private:
 	static void    reset_mixer_param (doc::Slot &slot);
 
 	cmd::Central   _central;
+
+	// Global data
 	doc::Setup     _setup;
-	doc::Bank      _bank;
 	int            _bank_index;
 	int            _preset_index;
-	doc::PedalboardLayout
-	               _layout_cur;
-	doc::PedalboardLayout               // Base layout, without inherited pedals
-	               _layout_base;
-	doc::PedalboardLayout               // Cached: base layout + current bank.
-	               _layout_bank;
 
-	doc::Preset    _preset_cur;         // Current preset and settings, as known by cmd::Central. Must be synchronized with _bank._preset_arr [_preset_index].
+	// Current and cached settings
+	doc::Preset    _preset_cur;         // Current preset and settings, as known by cmd::Central. Layout is without inherited layouts
+	doc::PedalboardLayout               // Final layout
+	               _layout_cur;
+
 	PiIdList       _pi_id_list;         // Not affected by the tuner
 	PedalStateArray
 	               _pedal_state_arr;

@@ -49,6 +49,7 @@ class PluginSettings
 public:
 
 	typedef std::map <int, CtrlLinkSet> MapParamCtrl;
+	typedef std::vector <float> ParamList;
 
 	               PluginSettings ()                            = default;
 	               PluginSettings (const PluginSettings &other) = default;
@@ -58,8 +59,7 @@ public:
 
 	bool           _force_mono_flag  = false;
 	bool           _force_reset_flag = false;
-	std::vector <float>
-	               _param_list;
+	ParamList      _param_list;
 	MapParamCtrl   _map_param_ctrl;     // Parameter index -> controller list
 
 
