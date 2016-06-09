@@ -69,10 +69,12 @@ public:
 
 	virtual        ~ModelObserverInterface () = default;
 
+	void           set_edit_mode (bool edit_flag);
 	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
 	void           set_bank (int index, const doc::Bank &bank);
 	void           select_bank (int index);
 	void           activate_preset (int index);
+	void           store_preset (int index);
 	void           set_tuner (bool active_flag);
 	void           set_tuner_freq (float freq);
 	void           set_slot_info_for_current_preset (const SlotInfoList &info_list);
@@ -84,10 +86,12 @@ public:
 
 protected:
 
+	virtual void   do_set_edit_mode (bool edit_flag) = 0;
 	virtual void   do_set_pedalboard_layout (const doc::PedalboardLayout &layout) = 0;
 	virtual void   do_set_bank (int index, const doc::Bank &bank) = 0;
 	virtual void   do_select_bank (int index) = 0;
 	virtual void   do_activate_preset (int index) = 0;
+	virtual void   do_store_preset (int index) = 0;
 	virtual void   do_set_tuner (bool active_flag) = 0;
 	virtual void   do_set_tuner_freq (float freq) = 0;
 	virtual void	do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;

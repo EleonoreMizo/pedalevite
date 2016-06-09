@@ -68,6 +68,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_pedal_state_arr ()
 ,	_hold_time (2 * 1000*1000) // 2 s
 ,	_edit_flag (true)
+,	_edit_preset_flag (false)
 ,	_tuner_flag (false)
 ,	_tuner_pi_id (-1)
 ,	_tuner_ptr (0)
@@ -154,6 +155,23 @@ void	Model::process_messages ()
 
 
 
+void	Model::set_edit_mode (bool edit_flag)
+{
+	if (! edit_flag && _edit_flag && _edit_preset_flag)
+	{
+		store_preset (_preset_index);
+	}
+
+	_edit_flag = edit_flag;
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_edit_mode (edit_flag);
+	}
+}
+
+
+
 void	Model::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
 	_setup._layout = layout;
@@ -179,20 +197,41 @@ void	Model::set_bank (int index, const doc::Bank &bank)
 	{
 		_obs_ptr->set_bank (index, bank);
 	}
+
+	if (_edit_flag && index == _bank_index)
+	{
+		_edit_preset_flag = false;
+		activate_preset (_preset_index);
+	}
 }
 
 
 
+// In edit mode, current preset is automatically activated upon bank change.
 void	Model::select_bank (int index)
 {
 	assert (index >= 0);
 	assert (index < Cst::_nbr_banks);
 
-	_bank_index = index;
-
-	if (_obs_ptr != 0)
+	if (index != _bank_index)
 	{
-		_obs_ptr->select_bank (index);
+		if (_edit_flag && _edit_preset_flag)
+		{
+			store_preset (_preset_index);
+			_edit_preset_flag = false;
+		}
+
+		_bank_index = index;
+
+		if (_obs_ptr != 0)
+		{
+			_obs_ptr->select_bank (index);
+		}
+
+		if (_edit_flag)
+		{
+			activate_preset (_preset_index);
+		}
 	}
 }
 
@@ -203,15 +242,36 @@ void	Model::activate_preset (int index)
 	assert (index >= 0);
 	assert (index < Cst::_nbr_presets_per_bank);
 
+	if (_edit_flag && _edit_preset_flag)
+	{
+		store_preset (_preset_index);
+	}
+
 	_preset_index = index;
 	_preset_cur   = _setup._bank_arr [_bank_index]._preset_arr [_preset_index];
-
 	if (_obs_ptr != 0)
 	{
 		_obs_ptr->activate_preset (index);
 	}
 
+	_edit_preset_flag = true;
+
 	update_layout ();
+}
+
+
+
+void	Model::store_preset (int index)
+{
+	assert (index >= 0);
+	assert (index < Cst::_nbr_presets_per_bank);
+
+	_setup._bank_arr [_bank_index]._preset_arr [index] = _preset_cur;
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->store_preset (index);
+	}
 }
 
 

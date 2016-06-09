@@ -260,10 +260,12 @@ public:
 	static void    video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride);
 protected:
 	// mfx::ModelObserverInterface
+	virtual void   do_set_edit_mode (bool edit_flag);
 	virtual void   do_set_pedalboard_layout (const mfx::doc::PedalboardLayout &layout);
 	virtual void   do_set_bank (int index, const mfx::doc::Bank &bank);
 	virtual void   do_select_bank (int index);
 	virtual void   do_activate_preset (int index);
+	virtual void   do_store_preset (int index);
 	virtual void   do_set_tuner (bool active_flag);
 	virtual void   do_set_tuner_freq (float freq);
 	virtual void	do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list);
@@ -859,8 +861,14 @@ void	Context::video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int st
 	}
 }
 
+void	Context::do_set_edit_mode (bool edit_flag)
+{
+	// Nothing
+}
+
 void	Context::do_set_pedalboard_layout (const mfx::doc::PedalboardLayout &layout)
 {
+	// Nothing
 }
 
 void	Context::do_set_bank (int index, const mfx::doc::Bank &bank)
@@ -880,7 +888,12 @@ void	Context::do_activate_preset (int index)
 	_disp_cur_slot = -1;
 }
 
-	void	Context::do_set_tuner (bool active_flag)
+void	Context::do_store_preset (int index)
+{
+	// Nothing
+}
+
+void	Context::do_set_tuner (bool active_flag)
 {
 	_tuner_flag = active_flag;
 	_disp_cur_slot = -1;

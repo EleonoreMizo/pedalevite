@@ -49,6 +49,13 @@ ModelObserverInterface::PluginInfo::PluginInfo (const piapi::PluginInterface &pi
 
 
 
+void	ModelObserverInterface::set_edit_mode (bool edit_flag)
+{
+	do_set_edit_mode (edit_flag);
+}
+
+
+
 // Reference lifetime is the call. Please make a copy.
 void	ModelObserverInterface::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
@@ -85,6 +92,16 @@ void	ModelObserverInterface::activate_preset (int preset)
 	assert (preset < Cst::_nbr_presets_per_bank);
 
 	do_activate_preset (preset);
+}
+
+
+
+void	ModelObserverInterface::store_preset (int preset)
+{
+	assert (preset >= 0);
+	assert (preset < Cst::_nbr_presets_per_bank);
+
+	do_store_preset (preset);
 }
 
 

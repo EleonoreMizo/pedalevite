@@ -79,10 +79,12 @@ public:
 
 	void           process_messages (); // Call this regularly
 
+	void           set_edit_mode (bool edit_flag);
 	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
 	void           set_bank (int index, const doc::Bank &bank);
 	void           select_bank (int index);
 	void           activate_preset (int index);
+	void           store_preset (int index);
 
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;
@@ -163,7 +165,8 @@ private:
 	PedalStateArray
 	               _pedal_state_arr;
 	int64_t        _hold_time;          // Pedal minimum hold time. Microseconds.
-	bool           _edit_flag;          // Changes are mirrored to the _setup
+	bool           _edit_flag;          // Changes must be mirrored to _setup
+	bool           _edit_preset_flag;   // _preset_cur corresonds to _bank_index/_preset_index
 	bool           _tuner_flag;
 	int            _tuner_pi_id;
 	pi::Tuner *    _tuner_ptr;          // Can be 0.
