@@ -215,7 +215,7 @@ int	DJack::do_start ()
 
 			for (int chn = 0; chn < _nbr_chn && ret_val == 0; ++chn)
 			{
-				const int      chn_jack = chn + _chn_base_arr [Dir_NBR_ELT];
+				const int      chn_jack = chn + _chn_base_arr [dir];
 				if (port_0_arr [chn_jack] == 0)
 				{
 					char           txt_0 [1023+1];
