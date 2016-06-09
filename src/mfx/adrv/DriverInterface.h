@@ -77,7 +77,7 @@ protected:
 	virtual std::string
 	               do_get_last_error () const = 0;
 
-	static const std::array <char *, Dir_NBR_ELT>
+	static const std::array <const char *, Dir_NBR_ELT>
 	               _dir_name_0_arr;
 
 

@@ -49,8 +49,8 @@ DAlsa::DAlsa ()
 ,	_block_size (0)
 ,	_sample_freq (0)
 ,	_chn_base_arr ({{ 0, 0 }})
-,	_msg_err ()
 ,	_handle_arr ()
+,	_msg_err ()
 ,	_buf_alig ()
 {
 	assert (_instance_ptr == 0);
@@ -130,20 +130,22 @@ int	DAlsa::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 
 int	DAlsa::do_start ()
 {
+	int            ret_val = 0;
 
 	/*** To do ***/
 
-	return /*** To do ***/;
+	return ret_val;
 }
 
 
 
 int	DAlsa::do_stop ()
 {
+	int            ret_val = 0;
 
 	/*** To do ***/
 
-	return /*** To do ***/;
+	return ret_val;
 }
 
 

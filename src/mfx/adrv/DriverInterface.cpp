@@ -88,7 +88,7 @@ std::string	DriverInterface::get_last_error () const
 
 
 
-const std::array <char *, DriverInterface::Dir_NBR_ELT>	DriverInterface::_dir_name_0_arr =
+const std::array <const char *, DriverInterface::Dir_NBR_ELT>	DriverInterface::_dir_name_0_arr =
 {{
 	"capture", "playback"
 }};
