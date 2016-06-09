@@ -28,6 +28,7 @@
 
 #include "fstb/AllocAlign.h"
 #include "fstb/fnc.h"
+#include "mfx/adrv/CbInterface.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
@@ -60,9 +61,9 @@
 	#include "mfx/ui/UserInputPi3.h"
 
 	#if (MAIN_API == MAIN_API_JACK)
-		#include <jack/jack.h>
+		#include "mfx/adrv/DJack.h"
 	#elif (MAIN_API == MAIN_API_ALSA)
-		#include <alsa/asoundlib.h>
+		#include "mfx/adrv/DAlsa.h"
 	#else
 		#error
 	#endif
@@ -76,9 +77,7 @@
 	#include "mfx/ui/IoWindows.h"
 
 	#if (MAIN_API == MAIN_API_ASIO)
-		#include "asiosdk2/common/asiosys.h"
-		#include "asiosdk2/common/asio.h"
-		#include "asiosdk2/host/asiodrivers.h"
+		#include "mfx/adrv/DAsio.h"
 	#else
 		#error Wrong MAIN_API value
 	#endif
@@ -174,10 +173,11 @@ static void MAIN_print_text (int x, int y, const char *txt_0, uint8_t *screenbuf
 
 class Context
 :	public mfx::ModelObserverInterface
+,	public mfx::adrv::CbInterface
 {
 public:
-	const double   _sample_freq;
-	const int      _max_block_size;
+	double         _sample_freq;
+	int            _max_block_size;
 	std::atomic <bool>
 	               _dropout_flag;
 #if fstb_IS (ARCHI, ARM)
@@ -252,8 +252,9 @@ public:
 	volatile float _detected_freq = 0;
 	int            _disp_cur_slot = -1; // Negative: displays the preset page
 
-	Context (double sample_freq, int max_block_size);
+	Context ();
 	~Context ();
+	void           set_proc_info (double sample_freq, int max_block_size);
 	void           display_page_preset ();
 	void           display_page_efx (int slot_index);
 	void           display_page_tuner (const char *note_0);
@@ -270,11 +271,15 @@ protected:
 	virtual void   do_set_tuner_freq (float freq);
 	virtual void	do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list);
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, mfx::PiType type);
+	// mfx::adrv:CbInterface
+	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
+	virtual void   do_notify_dropout ();
+	virtual void   do_request_exit ();
 };
 
-Context::Context (double sample_freq, int max_block_size)
-:	_sample_freq (sample_freq)
-,	_max_block_size (max_block_size)
+Context::Context ()
+:	_sample_freq (0)
+,	_max_block_size (0)
 ,	_dropout_flag ()
 #if fstb_IS (ARCHI, ARM)
 ,	_thread_spi (10 * 1000)
@@ -631,13 +636,18 @@ Context::Context (double sample_freq, int max_block_size)
 	_model.set_bank (0, bank);
 	_model.select_bank (0);
 	_model.activate_preset (3);
-
-	_model.set_process_info (_sample_freq, _max_block_size);
 }
 
 Context::~Context ()
 {
 	// Nothing
+}
+
+void	Context::set_proc_info (double sample_freq, int max_block_size)
+{
+	_sample_freq    = sample_freq;
+	_max_block_size = max_block_size;
+	_model.set_process_info (_sample_freq, _max_block_size);
 }
 
 void	Context::display_page_preset ()
@@ -914,752 +924,35 @@ void	Context::do_set_param (int pi_id, int index, float val, int slot_index, mfx
 	// Nothing
 }
 
-static std::unique_ptr <Context>	MAIN_context_ptr;
-
-
-
-static int MAIN_audio_process (Context &ctx, float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+void	Context::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
 	const int64_t  time_beg    = MAIN_get_time ();
-	const int64_t  dur_tot     =      time_beg - ctx._time_beg;
-	const int64_t  dur_act     = ctx._time_end - ctx._time_beg;
+	const int64_t  dur_tot     =  time_beg - _time_beg;
+	const int64_t  dur_act     = _time_end - _time_beg;
 	const float    usage_frame = float (dur_act) / float (dur_tot);
-	float          usage_max   = ctx._usage_max.load ();
-	float          usage_min   = ctx._usage_min.load ();
+	float          usage_max   = _usage_max.load ();
+	float          usage_min   = _usage_min.load ();
 	usage_max = std::max (usage_max, usage_frame);
 	usage_min = (usage_min < 0) ? usage_frame : std::min (usage_min, usage_frame);
-	ctx._usage_max.store (usage_max);
-	ctx._usage_min.store (usage_min);
-	ctx._time_beg = time_beg;
+	_usage_max.store (usage_max);
+	_usage_min.store (usage_min);
+	_time_beg = time_beg;
 
 	// Audio graph
-	ctx._model.process_block (dst_arr, src_arr, nbr_spl);
+	_model.process_block (dst_arr, src_arr, nbr_spl);
 
-	ctx._time_end = MAIN_get_time ();
-
-	return 0;
+	_time_end = MAIN_get_time ();
 }
 
-
-
-#if (MAIN_API == MAIN_API_JACK)
-
-
-
-static ::jack_client_t * volatile MAIN_client_ptr = 0;
-static ::jack_port_t   * volatile MAIN_mfx_port_arr [2] [2]; // [in/out] [chn]
-static ::jack_status_t            MAIN_status = ::JackServerFailed;
-
-
-
-static void MAIN_signal_handler (int sig)
+void	Context::do_notify_dropout ()
 {
-	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
-	MAIN_context_ptr->_quit_flag = true;
+	_dropout_flag.exchange (true);
 }
 
-
-
-static void MAIN_jack_shutdown (void *arg)
+void	Context::do_request_exit ()
 {
-	fprintf (stderr, "\nJack exited, exiting too...\n");
-	MAIN_context_ptr->_quit_flag = true;
+	_quit_flag = true;
 }
-
-static int MAIN_audio_process_jack (::jack_nframes_t nbr_spl, void *arg)
-{
-	Context &      ctx = *reinterpret_cast <Context *> (arg);
-	std::array <const jack_default_audio_sample_t *, 2>   src_arr;
-	std::array <      jack_default_audio_sample_t *, 2>   dst_arr;
-	for (int chn = 0; chn < 2; ++chn)
-	{
-		src_arr [chn] = reinterpret_cast <const jack_default_audio_sample_t *> (
-			::jack_port_get_buffer (MAIN_mfx_port_arr [0] [chn], nbr_spl)
-		);
-		dst_arr [chn] = reinterpret_cast <jack_default_audio_sample_t *> (
-			::jack_port_get_buffer (MAIN_mfx_port_arr [1] [chn], nbr_spl)
-		);
-	}
-
-	return MAIN_audio_process (ctx, &dst_arr [0], &src_arr [0], nbr_spl);
-}
-
-static int MAIN_audio_dropout_jack (void *arg)
-{
-	Context &      ctx = *reinterpret_cast <Context *> (arg);
-	ctx._dropout_flag.exchange (true);
-
-	return 0;
-}
-
-
-
-static int MAIN_audio_init (double &sample_freq, int &max_block_size)
-{
-	int            ret_val = 0;
-
-	sample_freq    = 44100;
-	max_block_size = 4096;
-
-	MAIN_client_ptr = jack_client_open (
-		"MultiFX",
-		::JackNullOption,
-		&MAIN_status,
-		0
-	);
-	if (MAIN_client_ptr == 0)
-	{
-		fprintf (
-			stderr,
-			"jack_client_open() failed, status = 0x%2.0x\n",
-			MAIN_status
-		);
-		if ((MAIN_status & ::JackServerFailed) != 0)
-		{
-			fprintf (stderr, "Unable to connect to JACK server\n");
-		}
-		ret_val = -1;
-	}
-
-	if (ret_val == 0)
-	{
-		sample_freq    = jack_get_sample_rate (MAIN_client_ptr);
-		max_block_size = 4096;
-	}
-
-	return ret_val;
-}
-
-
-
-static int MAIN_audio_start (Context &ctx)
-{
-	int            ret_val = 0;
-
-	static const ::JackPortFlags port_dir [2] =
-	{
-		::JackPortIsInput, ::JackPortIsOutput
-	};
-	static const char *  ext_port_dir_name_0_arr [2] =
-	{
-		"capture", "playback"
-	};
-
-	if (ret_val == 0)
-	{
-		if ((MAIN_status & ::JackServerStarted) != 0)
-		{
-			fprintf (stderr, "JACK server started\n");
-		}
-		if ((MAIN_status & ::JackNameNotUnique) != 0)
-		{
-			const char *   name_0 = ::jack_get_client_name (MAIN_client_ptr);
-			fprintf (stderr, "Unique name \"%s\" assigned\n", name_0);
-		}
-
-		::jack_set_process_callback (MAIN_client_ptr, MAIN_audio_process_jack, &ctx);
-		::jack_set_xrun_callback (MAIN_client_ptr, MAIN_audio_dropout_jack, &ctx);
-		::jack_on_shutdown (MAIN_client_ptr, MAIN_jack_shutdown, &ctx);
-
-		static const char *  port_name_0_arr [2] [2] =
-		{
-			{ "Input L", "Input R" }, { "Output L", "Output R" }
-		};
-		for (int dir = 0; dir < 2 && ret_val == 0; ++dir)
-		{
-			for (int chn = 0; chn < 2 && ret_val == 0; ++chn)
-			{
-				MAIN_mfx_port_arr [dir] [chn] = ::jack_port_register (
-					MAIN_client_ptr,
-					port_name_0_arr [dir] [chn],
-					JACK_DEFAULT_AUDIO_TYPE,
-					port_dir [dir],
-					0
-				);
-				if (MAIN_mfx_port_arr [dir] [chn] == 0)
-				{
-					fprintf (stderr, "No more JACK ports available.\n");
-					ret_val = -1;
-				}
-			}
-		}
-	}
-
-	if (ret_val == 0)
-	{
-		ret_val = ::jack_activate (MAIN_client_ptr);
-		if (ret_val != 0)
-		{
-			fprintf (stderr, "cannot activate client, returned %d.\n", ret_val);
-		}
-	}
-
-	for (int dir = 0; dir < 2 && ret_val == 0; ++dir)
-	{
-		const char **  port_0_arr = ::jack_get_ports (
-			MAIN_client_ptr,
-			0,
-			0,
-			::JackPortIsPhysical | port_dir [1 - dir]
-		);
-		if (port_0_arr == 0)
-		{
-			fprintf (
-				stderr,
-				"No physical %s port available.\n",
-				ext_port_dir_name_0_arr [dir]
-			);
-			ret_val = -1;
-		}
-		else
-		{
-			fprintf (stderr, "Available ports for %s:\n", ext_port_dir_name_0_arr [dir]);
-			for (int index = 0; port_0_arr [index] != 0; ++index)
-			{
-				fprintf (stderr, "%d: %s\n", index, port_0_arr [index]);
-			}
-
-			for (int chn = 0; chn < 2 && ret_val == 0; ++chn)
-			{
-				if (port_0_arr [chn] == 0)
-				{
-					fprintf (
-						stderr,
-						"Not enough physical %s port available.\n",
-						ext_port_dir_name_0_arr [dir]
-					);
-					ret_val = -1;
-				}
-				else
-				{
-					const char * inout_0 [2];
-					inout_0 [1 - dir] = ::jack_port_name (MAIN_mfx_port_arr [dir] [chn]);
-					inout_0 [    dir] = port_0_arr [chn];
-					ret_val = ::jack_connect (MAIN_client_ptr, inout_0 [0], inout_0 [1]);
-					if (ret_val != 0)
-					{
-						fprintf (
-							stderr,
-							"Cannot connect to %s port %d.\n",
-							ext_port_dir_name_0_arr [dir],
-							chn
-						);
-					}
-				}
-			}
-		}
-
-		if (port_0_arr != 0)
-		{
-			::jack_free (port_0_arr);
-		}
-	}
-
-	if (ret_val == 0)
-	{
-		fprintf (stderr, "Audio now running...\n");
-
-		signal (SIGINT,  MAIN_signal_handler);
-		signal (SIGTERM, MAIN_signal_handler);
-#if defined (WIN32) || defined (_WIN32) || defined (__CYGWIN__)
-		signal (SIGABRT, MAIN_signal_handler);
-#else
-		signal (SIGQUIT, MAIN_signal_handler);
-		signal (SIGHUP,  MAIN_signal_handler);
-#endif
-	}
-
-	return ret_val;
-}
-
-
-
-static int MAIN_audio_stop ()
-{
-	if (MAIN_client_ptr != 0)
-	{
-		::jack_client_close (MAIN_client_ptr);
-		MAIN_client_ptr = 0;
-	}
-
-	return 0;
-}
-
-
-
-#elif (MAIN_API == MAIN_API_ALSA)
-
-
-
-// Ref:
-// http://www.saunalahti.fi/~s7l/blog/2005/08/21/Full%20Duplex%20ALSA
-// http://jzu.blog.free.fr/public/SLAB/slab.c
-
-static snd_pcm_t * MAIN_handle_in;
-static snd_pcm_t * MAIN_handle_out;
-
-static int MAIN_audio_init (double &sample_freq, int &max_block_size)
-{
-	sample_freq    = 44100;
-	max_block_size = 4096;
-
-	if (ret_val == 0)
-	{
-		ret_val = ::snd_pcm_open (
-			&MAIN__handle_in,
-			"plughw:0",
-			SND_PCM_STREAM_CAPTURE,
-			0
-		);
-		if (ret_val != 0)
-		{
-			fprintf (stderr, "Error: cannot open capture device, returned %d.\n", ret_val);
-		}
-	}
-	if (ret_val == 0)
-	{
-		ret_val = ::snd_pcm_open (
-			&MAIN__handle_out,
-			"plughw:0",
-			SND_PCM_STREAM_PLAYBACK,
-			0
-		);
-		if (ret_val != 0)
-		{
-			fprintf (stderr, "Error: cannot open playback device, returned %d.\n", ret_val);
-		}
-	}
-
-
-	/*** To do ***/
-
-
-	return 0;
-}
-
-static int MAIN_audio_start (Context &ctx)
-{
-
-	/*** To do ***/
-
-	return 0;
-}
-
-static int MAIN_audio_stop ()
-{
-
-	/*** To do ***/
-
-	return 0;
-}
-
-
-
-#elif (MAIN_API == MAIN_API_ASIO)
-
-
-
-static std::array <
-	std::array <::ASIOBufferInfo, 2>,
-	mfx::piapi::PluginInterface::Dir_NBR_ELT
-> MAIN_buf_info_arr;
-static std::array <
-	std::array <::ASIOChannelInfo, 2>,
-	mfx::piapi::PluginInterface::Dir_NBR_ELT
-> MAIN_chn_info_arr;
-
-static void	MAIN_audio_process_asio (long doubleBufferIndex, ::ASIOBool /*directProcess*/)
-{
-	Context &      ctx = *MAIN_context_ptr;
-
-	const int      buf_alig_sz = (ctx._max_block_size + 3) & -4;
-
-	const std::array <float *, 2> src_arr =
-	{{
-		&ctx._buf_alig [buf_alig_sz * 0],
-		&ctx._buf_alig [buf_alig_sz * 1]
-	}};
-	const std::array <float *, 2> dst_arr =
-	{{
-		&ctx._buf_alig [buf_alig_sz * 2],
-		&ctx._buf_alig [buf_alig_sz * 3]
-	}};
-
-	for (int chn = 0; chn < 2; ++chn)
-	{
-		const ::ASIOBufferInfo &   buf_info =
-			MAIN_buf_info_arr [mfx::piapi::PluginInterface::Dir_IN ] [chn];
-		const int32_t *   asio_src_ptr = reinterpret_cast <const int32_t *> (
-			buf_info.buffers [doubleBufferIndex]
-		);
-
-		for (int pos = 0; pos < ctx._max_block_size; ++pos)
-		{
-			src_arr [chn] [pos] = asio_src_ptr [pos] * (1.0f / (32768.0f * 65536.0f));
-		}
-	}
-
-	MAIN_audio_process (ctx, &dst_arr [0], &src_arr [0], ctx._max_block_size);
-
-	for (int chn = 0; chn < 2; ++chn)
-	{
-		const ::ASIOBufferInfo &   buf_info =
-			MAIN_buf_info_arr [mfx::piapi::PluginInterface::Dir_OUT] [chn];
-		int32_t *      asio_dst_ptr = reinterpret_cast <int32_t *> (
-			buf_info.buffers [doubleBufferIndex]
-		);
-
-		if (asio_dst_ptr != 0)
-		{
-			for (int pos = 0; pos < ctx._max_block_size; ++pos)
-			{
-				float          val     = dst_arr [chn] [pos];
-				int32_t        val_int = fstb::conv_int_fast (val * (1 << 23));
-				val_int = fstb::limit (val_int, -(1 << 23), (1 << 23) - 1);
-				asio_dst_ptr [pos] = val_int << 8;
-			}
-		}
-	}
-}
-
-static void	MAIN_asio_samplerate_did_change (::ASIOSampleRate sRate)
-{
-	if (sRate != MAIN_context_ptr->_sample_freq)
-	{
-		MAIN_context_ptr->_quit_flag = true;
-	}
-}
-
-static long	MAIN_asio_message (long selector, long value, void* message, double* opt)
-{
-	long           ret_val = 0;
-
-	switch (selector)
-	{
-	case ::kAsioSelectorSupported:
-		switch (value)
-		{
-		case ::kAsioSelectorSupported:
-		case ::kAsioResetRequest:
-		case ::kAsioBufferSizeChange:
-		case ::kAsioResyncRequest:
-		case ::kAsioOverload:
-			ret_val = 1;
-			break;
-		}
-		break;
-
-	case ::kAsioResetRequest:
-		MAIN_context_ptr->_quit_flag = true;
-		ret_val = 1;
-		break;
-	case ::kAsioBufferSizeChange:
-		MAIN_context_ptr->_quit_flag = true;
-		break;
-	case ::kAsioResyncRequest:
-		MAIN_context_ptr->_quit_flag = true;
-		break;
-	case ::kAsioOverload:
-		MAIN_context_ptr->_dropout_flag = true;
-		break;
-	}
-
-	return ret_val;
-}
-
-static ::ASIOTime *	MAIN_buffer_switch_time_info (::ASIOTime* params, long doubleBufferIndex, ::ASIOBool directProcess)
-{
-	MAIN_audio_process_asio (doubleBufferIndex, directProcess);
-
-	return params;
-}
-
-// 0 = unloaded
-// 1 = loaded
-// 2 = initialized
-// 3 = prepared
-// 4 = running
-extern ::AsioDrivers *	asioDrivers; // From the SDK
-static int MAIN_asio_state = 0;
-static ::AsioDrivers *	MAIN_asio_drivers_ptr = 0;
-static const int	MAIN_asio_driver_index = 0;
-static ::ASIODriverInfo MAIN_asio_info;
-static const std::array <int, mfx::piapi::PluginInterface::Dir_NBR_ELT> MAIN_chn_base_arr =
-{{    // RME Fireface UCX:
-	2, // input channels 3+4 (instruments)
-	0  // output channels 1+2
-}};
-static ::ASIOCallbacks MAIN_asio_callbacks =
-{
-	&MAIN_audio_process_asio,
-	&MAIN_asio_samplerate_did_change,
-	&MAIN_asio_message,
-	&MAIN_buffer_switch_time_info
-};
-
-
-
-static int MAIN_audio_init (double &sample_freq, int &max_block_size)
-{
-	int            ret_val = 0;
-	::ASIOError    err;
-
-	sample_freq    = 0;
-	max_block_size = 0;
-
-	// -  -  -  -  - -  -  -  -  - -  -  -  -  - -  -  -  -  - -  -  -  -  -
-	// Unloaded
-
-	MAIN_asio_drivers_ptr = new ::AsioDrivers;
-	asioDrivers = MAIN_asio_drivers_ptr;
-
-	std::vector <std::array <char, 32+1> > driver_name_content_list (32);
-	std::vector <char *> driver_name_list;
-	for (auto &x : driver_name_content_list)
-	{
-		driver_name_list.push_back (&x [0]);
-	}
-	const long     nbr_drivers = MAIN_asio_drivers_ptr->getDriverNames (
-		&driver_name_list [0],
-		long (driver_name_list.size ())
-	);
-	if (MAIN_asio_driver_index >= nbr_drivers)
-	{
-		::MessageBox (0, "Driver not found.", "ASIO error", MB_OK);
-		ret_val = -1;
-	}
-
-	if (ret_val == 0)
-	{
-		const bool     ok_flag = MAIN_asio_drivers_ptr->loadDriver (
-			driver_name_list [MAIN_asio_driver_index]
-		);
-		if (ok_flag)
-		{
-			MAIN_asio_state = 1;
-		}
-		else
-		{
-			::MessageBox (0, "Cannot load driver.", "ASIO error", MB_OK);
-			ret_val = -1;
-		}
-	}
-
-	// -  -  -  -  - -  -  -  -  - -  -  -  -  - -  -  -  -  - -  -  -  -  -
-	// Loaded
-
-	// Driver init
-	if (ret_val == 0)
-	{
-		memset (&MAIN_asio_info, 0, sizeof (MAIN_asio_info));
-		MAIN_asio_info.asioVersion = 2;
-		MAIN_asio_info.sysRef      =
-			reinterpret_cast <void *> (::GetDesktopWindow ());
-		err = ::ASIOInit (&MAIN_asio_info);
-		if (err == ::ASE_OK)
-		{
-			MAIN_asio_state = 2;
-		}
-		else
-		{
-			::MessageBox (0, MAIN_asio_info.errorMessage, "ASIO error", MB_OK);
-			ret_val = -1;
-		}
-	}
-
-	// -  -  -  -  - -  -  -  -  - -  -  -  -  - -  -  -  -  - -  -  -  -  -
-	// Initialized
-
-	// Sampling rate
-	::ASIOSampleRate  sample_rate = 44100.0;
-	if (ret_val == 0)
-	{
-		err = ::ASIOCanSampleRate (sample_rate);
-		if (err != ::ASE_OK)
-		{
-			ret_val = -1;
-			::MessageBox (0, "ASIOCanSampleRate failed", "ASIO error", MB_OK);
-		}
-	}
-	if (ret_val == 0)
-	{
-		err = ::ASIOSetSampleRate (sample_rate);
-		if (err == ::ASE_OK)
-		{
-			sample_freq = double (sample_rate);
-		}
-		else
-		{
-			ret_val = -1;
-			::MessageBox (0, "ASIOSetSampleRate failed", "ASIO error", MB_OK);
-		}
-	}
-
-	// Buffer size
-	long           buffer_size = 0;
-	if (ret_val == 0)
-	{
-		long           buf_size_min;
-		long           buf_size_max;
-		long           buf_size_pref;
-		long           granularity;
-		err = ::ASIOGetBufferSize (
-			&buf_size_min,
-			&buf_size_max,
-			&buf_size_pref,
-			&granularity
-		);
-		if (err != ::ASE_OK)
-		{
-			::MessageBox (0, "ASIOGetBufferSize failed", "ASIO error", MB_OK);
-			ret_val = -1;
-		}
-		else
-		{
-			buffer_size = buf_size_pref;
-		}
-	}
-	if (ret_val == 0)
-	{
-		std::array <long, mfx::piapi::PluginInterface::Dir_NBR_ELT> nbr_chn_arr;
-		err = ::ASIOGetChannels (
-			&nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN ],
-			&nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT]
-		);
-		if (err != ::ASE_OK)
-		{
-			::MessageBox (0, "ASIOGetChannels failed", "ASIO error", MB_OK);
-			ret_val = -1;
-		}
-		for (int dir = 0; dir < int (nbr_chn_arr.size ()) && ret_val == 0; ++dir)
-		{
-			if (nbr_chn_arr [dir] < MAIN_chn_base_arr [dir] + int (MAIN_buf_info_arr [dir].size ()))
-			{
-				::MessageBox (0, "ASIOGetChannels: insufficient number of channels", "ASIO error", MB_OK);
-				ret_val = -1;
-			}
-		}
-	}
-
-	// Channel information
-	if (ret_val == 0)
-	{
-		for (int dir = 0; dir < mfx::piapi::PluginInterface::Dir_NBR_ELT && ret_val == 0; ++dir)
-		{
-			for (int chn = 0; chn < int (MAIN_buf_info_arr [dir].size ()) && ret_val == 0; ++chn)
-			{
-				::ASIOBufferInfo &   buf = MAIN_buf_info_arr [dir] [chn];
-				buf.isInput      =
-					(dir == mfx::piapi::PluginInterface::Dir_IN)
-					? ::ASIOTrue
-					: ::ASIOFalse;
-				buf.channelNum   = chn + MAIN_chn_base_arr [dir];
-
-				::ASIOChannelInfo &  chn_info = MAIN_chn_info_arr [dir] [chn];
-				chn_info.channel = buf.channelNum;
-				chn_info.isInput = buf.isInput;
-				err              = ::ASIOGetChannelInfo (&chn_info);
-				if (err != ::ASE_OK)
-				{
-					::MessageBox (0, "ASIOGetChannelInfo failed", "ASIO error", MB_OK);
-					ret_val = -1;
-				}
-				else if (chn_info.type != ::ASIOSTInt32LSB)
-				{
-					::MessageBox (0, "ASIOGetChannelInfo: unsupported data type", "ASIO error", MB_OK);
-					ret_val = -1;
-				}
-			}
-		}
-	}
-
-	// Channel allocation
-	if (ret_val == 0)
-	{
-		err = ::ASIOCreateBuffers (
-			&MAIN_buf_info_arr [0] [0],
-			long (
-				  MAIN_buf_info_arr [mfx::piapi::PluginInterface::Dir_IN ].size ()
-				+ MAIN_buf_info_arr [mfx::piapi::PluginInterface::Dir_OUT].size ()
-			),
-			buffer_size,
-			&MAIN_asio_callbacks
-		);
-
-		if (err == ::ASE_OK)
-		{
-			max_block_size  = buffer_size;
-			MAIN_asio_state = 3;
-		}
-		else
-		{
-			ret_val = -1;
-			::MessageBox (0, "ASIOCreateBuffers failed", "ASIO error", MB_OK);
-		}
-	}
-
-	return ret_val;
-}
-
-static int MAIN_audio_start (Context &ctx)
-{
-	assert (MAIN_asio_state == 3);
-
-	int            ret_val = 0;
-
-	::ASIOError    err = ::ASIOStart ();
-	if (err != ::ASE_OK)
-	{
-		::MessageBox (0, "ASIOStart failed", "ASIO error", MB_OK);
-		ret_val = -1;
-	}
-
-	return ret_val;
-}
-
-static int MAIN_audio_stop ()
-{
-	if (MAIN_asio_state == 4)
-	{
-		::ASIOStop ();
-		MAIN_asio_state = 3;
-	}
-
-	if (MAIN_asio_state == 3)
-	{
-		::ASIODisposeBuffers ();
-		MAIN_asio_state = 2;
-	}
-
-	if (MAIN_asio_state == 2)
-	{
-		::ASIOExit ();
-		MAIN_asio_state = 1;
-	}
-
-	if (MAIN_asio_state == 1)
-	{
-		if (MAIN_asio_drivers_ptr != 0 && asioDrivers != 0)
-		{
-			MAIN_asio_drivers_ptr->removeCurrentDriver ();
-		}
-		if (MAIN_asio_drivers_ptr != 0 && asioDrivers != 0)
-		{
-			delete MAIN_asio_drivers_ptr;
-		}
-		asioDrivers           = 0;
-		MAIN_asio_drivers_ptr = 0;
-		MAIN_asio_state       = 0;
-	}
-
-	return 0;
-}
-
-
-
-#else
-	#error Wrong MAIN_API value
-#endif   // MAIN_API
 
 
 
@@ -1905,8 +1198,6 @@ int main (int argc, char *argv [])
 int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
 #endif
 {
-	int            ret_val = 0;
-
 #if fstb_IS (ARCHI, ARM)
 	::wiringPiSetupPhys ();
 
@@ -1920,18 +1211,39 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 
 	mfx::dsp::mix::Align::setup ();
 
+	int            chn_idx_in  = 0;
+	int            chn_idx_out = 0;
+
+#if (MAIN_API == MAIN_API_JACK)
+	mfx::adrv::DJack  snd_drv;
+#elif (MAIN_API == MAIN_API_ALSA)
+	mfx::adrv::DAlsa  snd_drv;
+#elif (MAIN_API == MAIN_API_ASIO)
+	mfx::adrv::DAsio  snd_drv;
+	chn_idx_in = 2;
+#else
+	#error
+#endif
+
+
+	std::unique_ptr <Context>  ctx_uptr (new Context);
+	Context &      ctx = *ctx_uptr;
+
 	double         sample_freq;
 	int            max_block_size;
-	ret_val = MAIN_audio_init (sample_freq, max_block_size);
-
-	MAIN_context_ptr = std::unique_ptr <Context> (
-		new Context (sample_freq, max_block_size)
+	int            ret_val = snd_drv.init (
+		sample_freq,
+		max_block_size,
+		ctx,
+		0,
+		chn_idx_in,
+		chn_idx_out
 	);
-	Context &      ctx = *MAIN_context_ptr;
 
 	if (ret_val == 0)
 	{
-		ret_val = MAIN_audio_start (ctx);
+		ctx.set_proc_info (sample_freq, max_block_size);
+		ret_val = snd_drv.start ();
 	}
 
 	if (ret_val == 0)
@@ -1939,9 +1251,9 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 		ret_val = MAIN_main_loop (ctx);
 	}
 
-	MAIN_audio_stop ();
+	snd_drv.stop ();
 
-	MAIN_context_ptr.reset ();
+	ctx_uptr.reset ();
 
 	fprintf (stderr, "Exiting with code %d.\n", ret_val);
 

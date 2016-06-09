@@ -73,6 +73,9 @@
     <Filter Include="asiosdk2\host\pc">
       <UniqueIdentifier>{d127aaf8-cc2d-4a59-a594-ae739c57b559}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\adrv">
+      <UniqueIdentifier>{d3a0a7e3-fdb0-41c8-ba91-d3d03a483979}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -984,6 +987,21 @@
     <ClInclude Include="mfx\doc\Setup.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\adrv\DriverInterface.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\adrv\DAsio.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\adrv\DJack.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\adrv\DAlsa.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\adrv\CbInterface.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1259,6 +1277,21 @@
     </ClCompile>
     <ClCompile Include="asiosdk2\host\pc\asiolist.cpp">
       <Filter>asiosdk2\host\pc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\adrv\DriverInterface.cpp">
+      <Filter>mfx\adrv</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\adrv\DAsio.cpp">
+      <Filter>mfx\adrv</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\adrv\DJack.cpp">
+      <Filter>mfx\adrv</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\adrv\DAlsa.cpp">
+      <Filter>mfx\adrv</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\adrv\CbInterface.cpp">
+      <Filter>mfx\adrv</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

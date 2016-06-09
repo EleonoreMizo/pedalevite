@@ -151,6 +151,14 @@ pedalevite_SOURCES = \
         ../../src/jack/transport.h \
         ../../src/jack/types.h \
         ../../src/jack/weakmacros.h \
+        ../../src/mfx/adrv/CbInterface.cpp \
+        ../../src/mfx/adrv/CbInterface.h \
+        ../../src/mfx/adrv/DAlsa.cpp \
+        ../../src/mfx/adrv/DAlsa.h \
+        ../../src/mfx/adrv/DJack.cpp \
+        ../../src/mfx/adrv/DJack.h \
+        ../../src/mfx/adrv/DriverInterface.cpp \
+        ../../src/mfx/adrv/DriverInterface.h \
         ../../src/mfx/cmd/BufAlloc.cpp \
         ../../src/mfx/cmd/BufAlloc.h \
         ../../src/mfx/cmd/Central.cpp \
