@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/DisplayInterface.h"
 
 #include <cassert>
+#include <cstring>
 
 
 
@@ -102,6 +103,38 @@ void	DisplayInterface::refresh (int x, int y, int w, int h)
 	assert (y + h <= get_height ());
 
 	do_refresh (x, y, w, h);
+}
+
+
+
+void	DisplayInterface::bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, int ys, int ws, int hs, int ss)
+{
+	const int      wd      = get_width ();
+	const int      hd      = get_height ();
+	const int      sd      = get_stride ();
+	uint8_t *      dst_ptr = use_screen_buf ();
+
+	assert (xd >= 0);
+	assert (xd + ws <= wd);
+	assert (yd >= 0);
+	assert (yd + hs <= hd);
+
+	src_ptr += ys * ss + xs;
+	dst_ptr += yd * sd + xd;
+
+	if (ss == sd && ws == ss)
+	{
+		memcpy (dst_ptr, src_ptr, hs * ws);
+	}
+	else
+	{
+		for (int y = 0; y < hs; ++y)
+		{
+			memcpy (dst_ptr, src_ptr, ws);
+			src_ptr += ss;
+			dst_ptr += sd;
+		}
+	}
 }
 
 
