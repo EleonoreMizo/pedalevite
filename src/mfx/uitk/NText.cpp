@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/NText.h"
 
 #include <cassert>
+#include <cstring>
 
 
 

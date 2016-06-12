@@ -46,7 +46,7 @@ class Vec2d
 
 public:
 
-	typedef public std::array <int, 2> Inherited;
+	typedef std::array <int, 2> Inherited;
 
 	inline         Vec2d ();
 	inline         Vec2d (int x, int y);

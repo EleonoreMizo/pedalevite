@@ -333,8 +333,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/NodeInterface.h \
         ../../src/mfx/uitk/NText.cpp \
         ../../src/mfx/uitk/NText.h \
-        ../../src/mfx/uitk/NWindows.cpp \
-        ../../src/mfx/uitk/NWindows.h \
+        ../../src/mfx/uitk/NWindow.cpp \
+        ../../src/mfx/uitk/NWindow.h \
         ../../src/mfx/uitk/ParentInterface.cpp \
         ../../src/mfx/uitk/ParentInterface.h \
         ../../src/mfx/uitk/Rect.h \

@@ -48,7 +48,7 @@ class Rect
 
 public:
 
-	typedef public std::array <Vec2d, 2> Inherited;
+	typedef std::array <Vec2d, 2> Inherited;
 
 	inline         Rect (int x1, int y1, int x2, int y2);
 	inline         Rect (Vec2d c0, Vec2d c1);
