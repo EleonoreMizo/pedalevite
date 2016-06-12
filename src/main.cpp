@@ -1,5 +1,5 @@
 
-// g++ --std=c++11 -I. -Wall -mfpu=neon `pkg-config --cflags --libs jack` -l wiringPi -l pthread main.cpp mailbox.c fstb/fnc.cpp mfx/*.cpp mfx/tuner/*.cpp mfx/ui/*.cpp
+// g++ --std=c++11 -I. -Wall -mfpu=neon `pkg-config --cflags --libs jack` -l asound -l wiringPi -l pthread main.cpp mailbox.c fstb/fnc.cpp mfx/*.cpp mfx/tuner/*.cpp mfx/ui/*.cpp
 // sudo jackd -P70 -p16 -t2000 -dalsa -p64 -n3 -r44100 -s &
 // sudo ./a.out
 //
@@ -44,6 +44,9 @@
 #include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
 #include "mfx/ui/TimeShareThread.h"
+#include "mfx/uitk/NText.h"
+#include "mfx/uitk/NWindow.h"
+#include "mfx/uitk/ParentInterface.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverInterface.h"
 #include "mfx/MsgQueue.h"
@@ -174,6 +177,7 @@ static void MAIN_print_text (int x, int y, const char *txt_0, uint8_t *screenbuf
 class Context
 :	public mfx::ModelObserverInterface
 ,	public mfx::adrv::CbInterface
+,	public mfx::uitk::ParentInterface
 {
 public:
 	double         _sample_freq;
@@ -252,6 +256,11 @@ public:
 	volatile float _detected_freq = 0;
 	int            _disp_cur_slot = -1; // Negative: displays the preset page
 
+	mfx::uitk::Rect
+	               _inval_rect;
+	mfx::uitk::NWindow
+	               _page_content;
+
 	Context ();
 	~Context ();
 	void           set_proc_info (double sample_freq, int max_block_size);
@@ -259,6 +268,7 @@ public:
 	void           display_page_efx (int slot_index);
 	void           display_page_tuner (const char *note_0);
 	static void    video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride);
+	static void    clear_page (mfx::uitk::NWindow &win);
 protected:
 	// mfx::ModelObserverInterface
 	virtual void   do_set_edit_mode (bool edit_flag);
@@ -275,6 +285,10 @@ protected:
 	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	virtual void   do_notify_dropout ();
 	virtual void   do_request_exit ();
+	// mfx::uitk::ParentInterface
+	virtual mfx::uitk::Vec2d
+	               do_get_coord_abs () const;
+	virtual void   do_invalidate (const mfx::uitk::Rect &zone);
 };
 
 Context::Context ()
@@ -308,6 +322,8 @@ Context::Context ()
 ,	_fnt_6x8 ()
 ,	_fnt_6x6 ()
 ,	_slot_info_list ()
+,	_inval_rect ()
+,	_page_content ()
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -636,6 +652,12 @@ Context::Context ()
 	_model.set_bank (0, bank);
 	_model.select_bank (0);
 	_model.activate_preset (3);
+
+	_page_content.set_node_id (666999);
+	_page_content.notify_attachment (this);
+	_page_content.set_coord (mfx::uitk::Vec2d ());
+	const mfx::uitk::Vec2d  screen_size (_display.get_width (), _display.get_height ());
+	_page_content.set_size (screen_size, screen_size);
 }
 
 Context::~Context ()
@@ -657,8 +679,6 @@ void	Context::display_page_preset ()
 	const int      scr_h  = _display.get_height ();
 	const int      scr_s  = _display.get_stride ();
 
-	memset (p_ptr, 0, scr_s * scr_h);
-
 	const mfx::ui::Font &   fnt_big = _fnt_8x12;
 	const mfx::ui::Font &   fnt_sml = _fnt_6x6;
 	const int      nbr_chr_big = scr_w / fnt_big.get_char_w ();
@@ -675,13 +695,19 @@ void	Context::display_page_preset ()
 	const mfx::doc::Preset &   preset =
 		_setup._bank_arr [_bank_index]._preset_arr [_preset_index];
 
+	clear_page (_page_content);
+
 	// Preset title
 	fstb::snprintf4all (
 		txt_0, nbr_chr_big + 1, "%02d %s",
 		_preset_index + 1,
 		preset._name.c_str ()
 	);
-	MAIN_print_text (0, 0, txt_0, p_ptr, scr_s, fnt_big, 1, 1);
+	mfx::uitk::NText *   txt_ptr = new mfx::uitk::NText (0);
+	_page_content.push_back (mfx::uitk::ContainerInterface::NodeSPtr (txt_ptr));
+	txt_ptr->set_font (fnt_big);
+	txt_ptr->set_coord (mfx::uitk::Vec2d (0, 0));
+	txt_ptr->set_text (txt_0);
 
 	// Effect list
 	int            line_pos = 0;
@@ -696,12 +722,7 @@ void	Context::display_page_preset ()
 			const mfx::doc::Slot &  slot = *slot_sptr;
 			std::string    pi_type_name =
 				mfx::pi::PluginModel_get_name (slot._pi_model);
-			pi_type_name = mfx::pi::param::Tools::print_name_bestfit (
-				nbr_chr_sml, pi_type_name.c_str ()
-			);
-			memcpy (txt_0, pi_type_name.c_str (), pi_type_name.length () + 1);
 			const int      y = fx_list_y + line_pos * chr_h_sml;
-			MAIN_print_text (0, y, txt_0, p_ptr, scr_s, fnt_sml, 1, 1);
 			bool           mod_flag = (! slot._settings_mixer._map_param_ctrl.empty ());
 			if (! mod_flag)
 			{
@@ -711,13 +732,27 @@ void	Context::display_page_preset ()
 					mod_flag = (! it->second._map_param_ctrl.empty ());
 				}
 			}
-			if (mod_flag)
-			{
-				video_invert (0, y, scr_w, chr_h_sml, p_ptr, scr_s);
-			}
+
+			txt_ptr = new mfx::uitk::NText (line_pos + 1);
+			_page_content.push_back (mfx::uitk::ContainerInterface::NodeSPtr (txt_ptr));
+			txt_ptr->set_font (fnt_sml);
+			txt_ptr->set_frame (mfx::uitk::Vec2d (scr_w, 0), mfx::uitk::Vec2d (0, 0));
+			txt_ptr->set_coord (mfx::uitk::Vec2d (0, y));
+			txt_ptr->set_vid_inv (mod_flag);
+			pi_type_name = mfx::pi::param::Tools::print_name_bestfit (
+				scr_w, pi_type_name.c_str (),
+				*txt_ptr, &mfx::uitk::NText::get_char_width
+			);
+			txt_ptr->set_text (pi_type_name.c_str ());
+
 			++ line_pos;
 		}
 	}
+
+	// Redraw
+	memset (p_ptr, 0, scr_s * scr_h);
+	_page_content.redraw (_display, _inval_rect, mfx::uitk::Vec2d ());
+	_inval_rect = mfx::uitk::Rect ();
 
 	_display.refresh (0, 0, scr_w, scr_h);
 }
@@ -871,6 +906,15 @@ void	Context::video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int st
 	}
 }
 
+void	Context::clear_page (mfx::uitk::NWindow &win)
+{
+	const int      nbr_nodes = win.get_nbr_nodes ();
+	for (int pos = nbr_nodes - 1; pos >= 0; --pos)
+	{
+		win.erase (pos);
+	}
+}
+
 void	Context::do_set_edit_mode (bool edit_flag)
 {
 	// Nothing
@@ -952,6 +996,16 @@ void	Context::do_notify_dropout ()
 void	Context::do_request_exit ()
 {
 	_quit_flag = true;
+}
+
+mfx::uitk::Vec2d	Context::do_get_coord_abs () const
+{
+	return mfx::uitk::Vec2d ();
+}
+
+void	Context::do_invalidate (const mfx::uitk::Rect &zone)
+{
+	_inval_rect.merge (zone);
 }
 
 

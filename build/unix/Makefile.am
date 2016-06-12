@@ -320,6 +320,27 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputPi3.cpp \
         ../../src/mfx/ui/UserInputPi3.h \
         ../../src/mfx/ui/UserInputType.h \
+        ../../src/mfx/uitk/Button.h \
+        ../../src/mfx/uitk/ContainerInterface.cpp \
+        ../../src/mfx/uitk/ContainerInterface.h \
+        ../../src/mfx/uitk/NBitmap.cpp \
+        ../../src/mfx/uitk/NBitmap.h \
+        ../../src/mfx/uitk/NodeBase.cpp \
+        ../../src/mfx/uitk/NodeBase.h \
+        ../../src/mfx/uitk/NodeEvt.cpp \
+        ../../src/mfx/uitk/NodeEvt.h \
+        ../../src/mfx/uitk/NodeInterface.cpp \
+        ../../src/mfx/uitk/NodeInterface.h \
+        ../../src/mfx/uitk/NText.cpp \
+        ../../src/mfx/uitk/NText.h \
+        ../../src/mfx/uitk/NWindows.cpp \
+        ../../src/mfx/uitk/NWindows.h \
+        ../../src/mfx/uitk/ParentInterface.cpp \
+        ../../src/mfx/uitk/ParentInterface.h \
+        ../../src/mfx/uitk/Rect.h \
+        ../../src/mfx/uitk/Rect.hpp \
+        ../../src/mfx/uitk/Vec2d.h \
+        ../../src/mfx/uitk/Vec2d.hpp \
         ../../src/mfx/ControlCurve.h \
         ../../src/mfx/ControlledParam.cpp \
         ../../src/mfx/ControlledParam.h \

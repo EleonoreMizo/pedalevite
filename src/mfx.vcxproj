@@ -373,6 +373,19 @@
     <ClInclude Include="mfx\ProcessingContext.h" />
     <ClInclude Include="mfx\ProcessingContextNode.h" />
     <ClInclude Include="mfx\SharedRscState.h" />
+    <ClInclude Include="mfx\uitk\Button.h" />
+    <ClInclude Include="mfx\uitk\ContainerInterface.h" />
+    <ClInclude Include="mfx\uitk\NBitmap.h" />
+    <ClInclude Include="mfx\uitk\NodeBase.h" />
+    <ClInclude Include="mfx\uitk\NodeEvt.h" />
+    <ClInclude Include="mfx\uitk\NodeInterface.h" />
+    <ClInclude Include="mfx\uitk\NText.h" />
+    <ClInclude Include="mfx\uitk\NWindow.h" />
+    <ClInclude Include="mfx\uitk\ParentInterface.h" />
+    <ClInclude Include="mfx\uitk\Rect.h" />
+    <ClInclude Include="mfx\uitk\Rect.hpp" />
+    <ClInclude Include="mfx\uitk\Vec2d.h" />
+    <ClInclude Include="mfx\uitk\Vec2d.hpp" />
     <ClInclude Include="mfx\ui\DisplayInterface.h" />
     <ClInclude Include="mfx\ui\DisplayPi3Pcd8544.h" />
     <ClInclude Include="mfx\ui\DisplayPi3St7920.h" />
@@ -492,6 +505,14 @@
     <ClCompile Include="mfx\PluginPool.cpp" />
     <ClCompile Include="mfx\ProcessingContext.cpp" />
     <ClCompile Include="mfx\ProcessingContextNode.cpp" />
+    <ClCompile Include="mfx\uitk\ContainerInterface.cpp" />
+    <ClCompile Include="mfx\uitk\NBitmap.cpp" />
+    <ClCompile Include="mfx\uitk\NodeBase.cpp" />
+    <ClCompile Include="mfx\uitk\NodeEvt.cpp" />
+    <ClCompile Include="mfx\uitk\NodeInterface.cpp" />
+    <ClCompile Include="mfx\uitk\NText.cpp" />
+    <ClCompile Include="mfx\uitk\NWindow.cpp" />
+    <ClCompile Include="mfx\uitk\ParentInterface.cpp" />
     <ClCompile Include="mfx\ui\DisplayInterface.cpp" />
     <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
