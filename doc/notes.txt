@@ -625,7 +625,7 @@ Reboot
 	#dtparam=audio=on
 Connexion au net
 Terminal :
-	sudo apt-get install libjack-jackd2-dev
+	sudo apt-get install libjack-jackd2-dev libasound2-dev
 	git clone git://git.drogon.net/wiringPi
 	cd wiringPi
 	git pull origin
