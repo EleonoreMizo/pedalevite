@@ -80,7 +80,7 @@ IoWindows::IoWindows (volatile bool &quit_request_flag)
 	::QueryPerformanceFrequency (&freq);
 	_clock_freq = freq.QuadPart;
 
-	const int      sc = std::max (12 / _zoom, 1);
+	const int      sc = std::max (16 / _zoom, 1);
 	const int      pe = std::max (_zoom - 1, 1);
 	for (int y = 0; y < _zoom; ++y)
 	{
@@ -88,7 +88,8 @@ IoWindows::IoWindows (volatile bool &quit_request_flag)
 		for (int x = 0; x < _zoom; ++x)
 		{
 			const int       kx = (x < pe) ? sc : sc - 1;
-			_pix_table [y] [x] = 0x100 * (kx * ky) / (sc * sc);
+			const float     r  = float (kx * ky) / (sc * sc);
+			_pix_table [y] [x] = fstb::round_int (0x100 * pow (r, 1 / 2.2));
 		}
 	}
 }
