@@ -83,10 +83,10 @@ DryWet::DryWet ()
 	);
 	_desc_set.add_glob (Param_WET, maps_ptr);
 
-	// Gain
+	// Volume
 	param::TplLog *   log_ptr = new param::TplLog (
 		1e-3, 10,
-		"Gain",
+		"Volume\nVol",
 		"dB",
 		param::HelperDispNum::Preset_DB,
 		0,
