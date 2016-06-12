@@ -24,7 +24,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/txt/utf8/Codec8.h"
 #include "mfx/pi/param/Tools.h"
 
 #include <cassert>
@@ -56,68 +55,20 @@ Input parameters:
 	- max_len: Maximum length of the string, without the terminal '\0'. > 0.
 	- src_list_0: List of labels, as a single string, separated with a '\n'.
 		No '\n' needed for the last label.
-Throws: The best string. The label may be truncated if all the provided ones
+Returns: The best string. The label may be truncated if all the provided ones
 	are too long.
 ==============================================================================
 */
 
-std::string	Tools::print_name_bestfit (long max_len, const char src_list_0 [])
+std::string	Tools::print_name_bestfit (size_t max_len, const char src_list_0 [])
 {
 	assert (max_len > 0);
 	assert (src_list_0 != 0);
 
-	long				sel_label_len_ucs = 0;
-	long				sel_label_len_utf = 0;
-	long				sel_label_pos     = 0;
-	long				cur_label_len_ucs = 0;
-	long				cur_label_len_utf = 0;
-	long				cur_label_pos     = 0;
-	long				pos               = 0;
-	bool				exit_flag         = false;
-	do
-	{
-		const char		c = src_list_0 [pos];
-		int            c_len;
-		fstb::txt::utf8::Codec8::get_char_seq_len_utf (c_len, c);
-		if (c == '\n' || c == '\0')
-		{
-			if (cur_label_len_ucs > 0)
-			{
-				if (   (cur_label_len_ucs > sel_label_len_ucs && cur_label_len_ucs <= max_len)
-				    || (cur_label_len_ucs < sel_label_len_ucs && sel_label_len_ucs > max_len))
-				{
-					sel_label_len_ucs = cur_label_len_ucs;
-					sel_label_len_utf = cur_label_len_utf;
-					sel_label_pos     = cur_label_pos;
-				}
-			}
+	class MetricUnit { public: size_t eval (char32_t /*c*/) { return 1; } };
+	MetricUnit     met;
 
-			cur_label_len_ucs = 0;
-			cur_label_len_utf = 0;
-			cur_label_pos     = pos + c_len;
-
-			if (c == '\0')
-			{
-				exit_flag = true;
-			}
-		}
-
-		else
-		{
-			if (cur_label_len_ucs < max_len)
-			{
-				cur_label_len_utf += c_len;
-			}
-			++ cur_label_len_ucs;
-		}
-
-		pos += c_len;
-	}
-	while (! exit_flag);
-
-	assert (sel_label_len_utf <= max_len);
-
-	return (std::string (src_list_0 + sel_label_pos, sel_label_len_utf));
+	return print_name_bestfit (max_len, src_list_0, met, &MetricUnit::eval);
 }
 
 

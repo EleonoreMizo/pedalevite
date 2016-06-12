@@ -355,6 +355,7 @@
     <ClInclude Include="mfx\pi\param\MapSq.hpp" />
     <ClInclude Include="mfx\pi\param\MapPiecewiseLinLog.h" />
     <ClInclude Include="mfx\pi\param\Tools.h" />
+    <ClInclude Include="mfx\pi\param\Tools.hpp" />
     <ClInclude Include="mfx\pi\param\TplEnum.h" />
     <ClInclude Include="mfx\pi\param\TplInt.h" />
     <ClInclude Include="mfx\pi\param\TplInt.hpp" />

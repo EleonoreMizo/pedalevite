@@ -48,7 +48,14 @@ class Tools
 public:
 
 	static std::string
-	               print_name_bestfit (long max_len, const char src_list_0 []);
+	               print_name_bestfit (size_t max_len, const char src_list_0 []);
+
+	template <class T, class U>
+	static std::string
+	               print_name_bestfit (size_t max_len, const char src_list_0 [], T &metric_obj, U metric_fnc);
+
+	template <class T, class U>
+	static void    cut_str_bestfit (size_t &pos_utf8, size_t &len_utf8, size_t &len_metric, size_t max_len_metric, const char src_list_0 [], char delimiter, T &metric_obj, U metric_fnc);
 
 
 
@@ -85,7 +92,7 @@ private:
 
 
 
-//#include "mfx/pi/param/Tools.hpp"
+#include "mfx/pi/param/Tools.hpp"
 
 
 

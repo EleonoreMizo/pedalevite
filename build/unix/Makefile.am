@@ -248,6 +248,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/MapSq.hpp \
         ../../src/mfx/pi/param/Tools.cpp \
         ../../src/mfx/pi/param/Tools.h \
+        ../../src/mfx/pi/param/Tools.hpp \
         ../../src/mfx/pi/param/TplEnum.cpp \
         ../../src/mfx/pi/param/TplEnum.h \
         ../../src/mfx/pi/param/TplInt.h \
