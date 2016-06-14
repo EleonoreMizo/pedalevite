@@ -47,8 +47,10 @@
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/Page.h"
+#include "mfx/uitk/PageSwitcher.h"
 #include "mfx/uitk/ParentInterface.h"
 #include "mfx/uitk/pg/CurProg.h"
+#include "mfx/uitk/pg/PageType.h"
 #include "mfx/uitk/pg/Tuner.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverDefault.h"
@@ -277,6 +279,8 @@ public:
 	               _inval_rect;
 	mfx::uitk::Page
 	               _page_mgr;
+	mfx::uitk::PageSwitcher
+	               _page_switcher;
 	mfx::uitk::pg::CurProg
 	               _page_cur_prog;
 	mfx::uitk::pg::Tuner
@@ -328,8 +332,9 @@ Context::Context ()
 ,	_fnt_6x6 ()
 ,	_inval_rect ()
 ,	_page_mgr (_model, _view, _display, _queue_input_to_gui, _user_input, _fnt_6x6, _fnt_6x8, _fnt_8x12)
-,	_page_cur_prog (MAIN_get_ip_address ())
-,	_page_tuner (_leds)
+,	_page_switcher (_page_mgr)
+,	_page_cur_prog (_page_switcher, MAIN_get_ip_address ())
+,	_page_tuner (_page_switcher, _leds)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -675,7 +680,10 @@ Context::Context ()
 	_model.select_bank (0);
 	_model.activate_preset (3);
 
-	_page_mgr.set_page_content (_page_cur_prog);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG, _page_cur_prog);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER   , _page_tuner);
+
+	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG);
 }
 
 Context::~Context ()
@@ -694,11 +702,7 @@ void	Context::do_set_tuner (bool active_flag)
 {
 	if (active_flag)
 	{
-		_page_mgr.set_page_content (_page_tuner);
-	}
-	else
-	{
-		_page_mgr.set_page_content (_page_cur_prog);
+		_page_switcher.call_page (mfx::uitk::pg::PageType_TUNER);
 	}
 }
 

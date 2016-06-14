@@ -63,8 +63,9 @@ Parameter      value
 
     IP address
 */
-CurProg::CurProg (std::string ip_addr)
-:	_model_ptr (0)
+CurProg::CurProg (PageSwitcher &page_switcher, std::string ip_addr)
+:	_page_switcher (page_switcher)
+,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()

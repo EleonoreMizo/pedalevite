@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/Tuner.h"
 #include "mfx/uitk/ContainerInterface.h"
 #include "mfx/uitk/NodeEvt.h"
+#include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/LedInterface.h"
 #include "mfx/View.h"
@@ -51,8 +52,9 @@ namespace pg
 
 
 
-Tuner::Tuner (ui::LedInterface &led)
-:	_led (led)
+Tuner::Tuner (PageSwitcher &page_switcher, ui::LedInterface &led)
+:	_page_switcher (page_switcher)
+,	_led (led)
 ,	_leg_beg ((led.get_nbr_led () - _nbr_led) >> 1)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -133,6 +135,16 @@ MsgHandlerInterface::EvtProp	Tuner::do_handle_evt (const NodeEvt &evt)
 	}
 
 	return ret_val;
+}
+
+
+
+void	Tuner::do_set_tuner (bool active_flag)
+{
+	if (! active_flag)
+	{
+		_page_switcher.return_page ();
+	}
 }
 
 

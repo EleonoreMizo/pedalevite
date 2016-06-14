@@ -1077,6 +1077,12 @@
     <ClInclude Include="mfx\uitk\NavLoc.h">
       <Filter>mfx\uitk</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\uitk\PageSwitcher.h">
+      <Filter>mfx\uitk</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\uitk\pg\PageType.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1414,6 +1420,9 @@
       <Filter>mfx\uitk</Filter>
     </ClCompile>
     <ClCompile Include="mfx\uitk\NavLoc.cpp">
+      <Filter>mfx\uitk</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\uitk\PageSwitcher.cpp">
       <Filter>mfx\uitk</Filter>
     </ClCompile>
   </ItemGroup>

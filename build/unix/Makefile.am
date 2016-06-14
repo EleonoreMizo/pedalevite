@@ -322,6 +322,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputType.h \
         ../../src/mfx/uitk/pg/CurProg.cpp \
         ../../src/mfx/uitk/pg/CurProg.h \
+        ../../src/mfx/uitk/pg/PageType.h \
         ../../src/mfx/uitk/pg/Tuner.cpp \
         ../../src/mfx/uitk/pg/Tuner.h \
         ../../src/mfx/uitk/Button.h \
@@ -345,6 +346,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/NWindow.h \
         ../../src/mfx/uitk/Page.cpp \
         ../../src/mfx/uitk/Page.h \
+        ../../src/mfx/uitk/PageSwitcher.cpp \
+        ../../src/mfx/uitk/PageSwitcher.h \
         ../../src/mfx/uitk/PageInterface.cpp \
         ../../src/mfx/uitk/PageInterface.h \
         ../../src/mfx/uitk/PageMgrInterface.cpp \

@@ -44,6 +44,9 @@ namespace ui
 
 namespace uitk
 {
+
+class PageSwitcher;
+
 namespace pg
 {
 
@@ -57,7 +60,7 @@ class Tuner
 
 public:
 
-	explicit       Tuner (ui::LedInterface &led);
+	explicit       Tuner (PageSwitcher &page_switcher, ui::LedInterface &led);
 	virtual        ~Tuner () = default;
 
 
@@ -75,6 +78,7 @@ protected:
 	               do_handle_evt (const NodeEvt &evt);
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
+	virtual void   do_set_tuner (bool active_flag);
 	virtual void   do_set_tuner_freq (float freq);
 
 
@@ -100,6 +104,7 @@ private:
 
 	static float   find_closest_note (float note, Scale sc);
 
+	PageSwitcher & _page_switcher;
 	ui::LedInterface &
 	               _led;
 	const int      _leg_beg;

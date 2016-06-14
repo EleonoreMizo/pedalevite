@@ -38,6 +38,9 @@ namespace mfx
 {
 namespace uitk
 {
+
+class PageSwitcher;
+
 namespace pg
 {
 
@@ -51,7 +54,7 @@ class CurProg
 
 public:
 
-	explicit       CurProg (std::string ip_addr);
+	explicit       CurProg (PageSwitcher &page_switcher, std::string ip_addr);
 	virtual        ~CurProg () = default;
 
 
@@ -91,6 +94,7 @@ private:
 	void           i_set_prog_name (std::string name);
 	void           i_set_param (int pi_id, int index, float val, int slot_index, PiType type);
 
+	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	ContainerInterface *          // 0 = not connected
