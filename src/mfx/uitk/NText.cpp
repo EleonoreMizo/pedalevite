@@ -319,10 +319,12 @@ void	NText::update_content ()
 
 		// Margins from the top-left corner
 		const int      margin_x = fstb::round_int (
-			(_margin [0] + fw_pix - w_pix) * (1 - _justification [0])
+			  _margin [0]      * (1 - _justification [0])
+			+ (fw_pix - w_pix) *      _justification [0]
 		);
 		const int      margin_y = fstb::round_int (
-			(_margin [1] + fh_pix - h_pix) * (1 - _justification [1])
+			  _margin [1]      * (1 - _justification [1])
+			+ (fh_pix - h_pix) *      _justification [1]
 		);
 
 		uint8_t *      buf_ptr = use_buffer ();

@@ -87,7 +87,7 @@ void	Page::set_page_content (PageInterface &content)
 	_view.add_observer (*_content_ptr);
 	_screen.invalidate_all ();
 
-	check_curs ();
+	check_curs (true);
 }
 
 
@@ -138,7 +138,7 @@ void	Page::process_messages ()
 void	Page::do_set_nav_layout (const NavLocList &nav_list)
 {
 	_nav_list = nav_list;
-	check_curs ();
+	check_curs (true);
 }
 
 
@@ -350,7 +350,7 @@ int	Page::find_nav_node (int node_id) const
 
 
 
-bool	Page::check_curs ()
+bool	Page::check_curs (bool send_msg_flag)
 {
 	bool           move_flag = false;
 
@@ -366,11 +366,15 @@ bool	Page::check_curs ()
 	{
 		_curs_pos = 0;
 		const NavLoc & loc = _nav_list [_curs_pos];
-		_curs_id = loc._node_id;
+		_curs_id  = loc._node_id;
+		move_flag     = true;
+		send_msg_flag = true;
+	}
 
+	if (send_msg_flag && _curs_id >= 0)
+	{
 		NodeEvt        evt (NodeEvt::create_cursor (_curs_id, NodeEvt::Curs_ENTER));
 		send_event (evt);
-		move_flag = true;
 	}
 
 	return move_flag;
@@ -382,7 +386,7 @@ bool	Page::process_nav (Button but)
 {
 	bool           pass_flag = false;
 
-	if (check_curs () || _nav_list.empty ())
+	if (check_curs (false) || _nav_list.empty ())
 	{
 		pass_flag = true;
 	}

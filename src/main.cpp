@@ -50,6 +50,7 @@
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/uitk/ParentInterface.h"
 #include "mfx/uitk/pg/CurProg.h"
+#include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/PageType.h"
 #include "mfx/uitk/pg/Tuner.h"
@@ -288,6 +289,8 @@ public:
 	               _page_tuner;
 	mfx::uitk::pg::MenuMain
 	               _page_menu_main;
+	mfx::uitk::pg::EditProg
+	               _page_edit_prog;
 
 	Context ();
 	~Context ();
@@ -339,6 +342,7 @@ Context::Context ()
 ,	_page_cur_prog (_page_switcher, MAIN_get_ip_address ())
 ,	_page_tuner (_page_switcher, _leds)
 ,	_page_menu_main (_page_switcher)
+,	_page_edit_prog (_page_switcher)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -687,6 +691,7 @@ Context::Context ()
 	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG   , _page_cur_prog );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER      , _page_tuner    );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN  , _page_menu_main);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG  , _page_edit_prog);
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG);
 }

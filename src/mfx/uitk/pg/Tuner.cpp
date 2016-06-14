@@ -84,8 +84,8 @@ void	Tuner::do_connect (Model &model, const View &view, PageMgrInterface &page, 
 	_note_sptr->set_font (fnt_l);
 	_scale_sptr->set_font (fnt_l);
 
-	const int     x_mid = _page_size [0] >> 1;
-	const int     y_mid = _page_size [1] >> 1;
+	const int      x_mid = _page_size [0] >> 1;
+	const int      y_mid = _page_size [1] >> 1;
 
 	_note_sptr->set_coord (Vec2d (x_mid, y_mid));
 	_scale_sptr->set_coord (Vec2d (x_mid, y_mid));

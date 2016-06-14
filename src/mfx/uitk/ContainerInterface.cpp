@@ -107,6 +107,17 @@ ContainerInterface::NodeSPtr	ContainerInterface::use_node (int pos)
 
 
 
+void	ContainerInterface::clear_all_nodes ()
+{
+	const int      nbr_nodes = get_nbr_nodes ();
+	for (int pos = nbr_nodes - 1; pos >= 0; --pos)
+	{
+		erase (pos);
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

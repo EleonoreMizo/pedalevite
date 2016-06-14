@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MenuMain.h
+        EditProg.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_MenuMain_HEADER_INCLUDED)
-#define mfx_uitk_pg_MenuMain_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_EditProg_HEADER_INCLUDED)
+#define mfx_uitk_pg_EditProg_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -28,9 +28,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/NText.h"
+#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
+#include "mfx/uitk/PageMgrInterface.h"
 
 #include <memory>
+#include <vector>
 
 
 
@@ -46,7 +49,7 @@ namespace pg
 
 
 
-class MenuMain
+class EditProg
 :	public PageInterface
 {
 
@@ -54,8 +57,8 @@ class MenuMain
 
 public:
 
-	explicit       MenuMain (PageSwitcher &page_switcher);
-	virtual        ~MenuMain () = default;
+	explicit       EditProg (PageSwitcher &page_switcher);
+	virtual        ~EditProg () = default;
 
 
 
@@ -71,6 +74,9 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
+	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
+	virtual void   do_activate_preset (int index);
+
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -79,28 +85,33 @@ private:
 
 	enum Entry
 	{
-		Entry_PROG  = 0,
-		Entry_BANKS ,
-		Entry_LAYOUT,
-		Entry_MASTER,
-		Entry_REBOOT,
-
-		Entry_NBR_ELT
+		Entry_WINDOW    = 1000,
+		Entry_FX_LIST,
+		Entry_PROG_NAME,
+		Entry_CONTROLLERS
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
+	typedef std::shared_ptr <NWindow> WinSPtr;
+	typedef std::vector <TxtSPtr> TxtArray;
+
+	void           set_preset_info ();
+	void           set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel);
 
 	PageSwitcher & _page_switcher;
+	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
+	const ui::Font *              // 0 = not connected
+	               _fnt_m_ptr;
 
-	TxtSPtr        _edit_prog_sptr;
-	TxtSPtr        _edit_bank_sptr;
-	TxtSPtr        _edit_layout_sptr;
-	TxtSPtr        _edit_master_sptr;
-	TxtSPtr        _reboot_sptr;
+	WinSPtr        _menu_sptr;
+	TxtSPtr        _fx_list_sptr;
+	TxtSPtr        _prog_name_sptr;
+	TxtSPtr        _controllers_sptr;
+	TxtArray       _slot_list;
 
 
 
@@ -108,13 +119,13 @@ private:
 
 private:
 
-	               MenuMain ()                               = delete;
-	               MenuMain (const MenuMain &other)          = delete;
-	MenuMain &     operator = (const MenuMain &other)        = delete;
-	bool           operator == (const MenuMain &other) const = delete;
-	bool           operator != (const MenuMain &other) const = delete;
+	               EditProg ()                               = delete;
+	               EditProg (const EditProg &other)          = delete;
+	EditProg &     operator = (const EditProg &other)        = delete;
+	bool           operator == (const EditProg &other) const = delete;
+	bool           operator != (const EditProg &other) const = delete;
 
-}; // class MenuMain
+}; // class EditProg
 
 
 
@@ -124,11 +135,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/MenuMain.hpp"
+//#include "mfx/uitk/pg/EditProg.hpp"
 
 
 
-#endif   // mfx_uitk_pg_MenuMain_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_EditProg_HEADER_INCLUDED
 
 
 

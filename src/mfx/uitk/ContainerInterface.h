@@ -60,6 +60,9 @@ public:
 	int            get_nbr_nodes () const;
 	NodeSPtr       use_node (int pos);
 
+	// Convenience function
+	void           clear_all_nodes ();
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

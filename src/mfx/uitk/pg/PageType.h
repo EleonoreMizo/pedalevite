@@ -46,6 +46,7 @@ enum PageType
 	PageType_TUNER,
 	PageType_CUR_PROG,
 	PageType_MENU_MAIN,
+	PageType_EDIT_PROG,
 
 	PageType_NBR_ELT
 

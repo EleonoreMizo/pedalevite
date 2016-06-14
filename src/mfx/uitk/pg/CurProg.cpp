@@ -118,17 +118,17 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	_param_val_sptr->set_font (fnt_s);
 	_ip_sptr->set_font (fnt_m);
 
-	const int     bl_s  = fnt_s.get_baseline ();
-	const int     bl_m  = fnt_m.get_baseline ();
-	const int     h_s   = fnt_s.get_char_h ();
-	const int     h_l   = fnt_l.get_char_h ();
+	const int      bl_s  = fnt_s.get_baseline ();
+	const int      bl_m  = fnt_m.get_baseline ();
+	const int      h_s   = fnt_s.get_char_h ();
+	const int      h_l   = fnt_l.get_char_h ();
 
-	const int     x_mid = _page_size [0] >> 1;
-	const int     y_prg = std::max (bl_m * _mag_prog_nbr, h_s + bl_s );
+	const int      x_mid = _page_size [0] >> 1;
+	const int      y_prg = std::max (bl_m * _mag_prog_nbr, h_s + bl_s );
 	_size_max_bank_name =
 		_page_size [0] - _prog_nbr_sptr->get_char_width ('0') * 2;
-	const int     y_pna = y_prg + ( h_l      >> 1);
-	const int     y_fx  = y_pna + ((h_l * 3) >> 1);
+	const int      y_pna = y_prg + ( h_l      >> 1);
+	const int      y_fx  = y_pna + ((h_l * 3) >> 1);
 
 	_prog_nbr_sptr->set_coord (Vec2d (0, 0));
 	_prog_name_sptr->set_coord (Vec2d (x_mid, y_pna));
