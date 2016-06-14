@@ -124,7 +124,7 @@ bool	NodeEvt::is_button_ex () const
 
 Button	NodeEvt::get_button_ex () const
 {
-	Button         but;
+	Button         but = Button_U;
 	if (_type == Type_ROTENC)
 	{
 		const int      r = get_rotenc ();
@@ -136,6 +136,9 @@ Button	NodeEvt::get_button_ex () const
 		case (0 << 1) + 1: but = Button_D; break;
 		case (1 << 1) + 0: but = Button_L; break;
 		case (1 << 1) + 1: but = Button_R; break;
+		default:
+			assert (false);
+			break;
 		}
 	}
 	else
