@@ -322,6 +322,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputType.h \
         ../../src/mfx/uitk/pg/CurProg.cpp \
         ../../src/mfx/uitk/pg/CurProg.h \
+        ../../src/mfx/uitk/pg/MenuMain.cpp \
+        ../../src/mfx/uitk/pg/MenuMain.h \
         ../../src/mfx/uitk/pg/PageType.h \
         ../../src/mfx/uitk/pg/Tuner.cpp \
         ../../src/mfx/uitk/pg/Tuner.h \

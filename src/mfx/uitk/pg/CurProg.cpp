@@ -28,8 +28,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
 #include "mfx/uitk/pg/CurProg.h"
-#include "mfx/uitk/ContainerInterface.h"
 #include "mfx/uitk/NodeEvt.h"
+#include "mfx/uitk/PageMgrInterface.h"
+#include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
@@ -100,7 +101,7 @@ CurProg::CurProg (PageSwitcher &page_switcher, std::string ip_addr)
 
 
 
-void	CurProg::do_connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
 	_model_ptr = &model;
 	_view_ptr  = &view;
@@ -189,6 +190,10 @@ MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
 		case Button_D:
 			preset_index = (_preset_index + 1) % Cst::_nbr_presets_per_bank;
 			_model_ptr->activate_preset (preset_index);
+			ret_val = EvtProp_CATCH;
+			break;
+		case Button_S:
+			_page_switcher.switch_to (pg::PageType_MENU_MAIN);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:

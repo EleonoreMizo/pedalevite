@@ -26,8 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/uitk/pg/Tuner.h"
-#include "mfx/uitk/ContainerInterface.h"
 #include "mfx/uitk/NodeEvt.h"
+#include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/LedInterface.h"
@@ -74,7 +74,7 @@ Tuner::Tuner (PageSwitcher &page_switcher, ui::LedInterface &led)
 
 
 
-void	Tuner::do_connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	Tuner::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
 	_view_ptr  = &view;
 	_page_ptr  = &page;

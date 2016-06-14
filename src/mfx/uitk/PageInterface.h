@@ -49,7 +49,7 @@ namespace uitk
 
 
 
-class ContainerInterface;
+class PageMgrInterface;
 
 class PageInterface
 :	public MsgHandlerInterface
@@ -62,7 +62,7 @@ public:
 
 	virtual        ~PageInterface () = default;
 
-	void           connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
+	void           connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
 	void           disconnect ();
 
 
@@ -71,7 +71,7 @@ public:
 
 protected:
 
-	virtual void   do_connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l) = 0;
+	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l) = 0;
 	virtual void   do_disconnect () = 0;
 
 

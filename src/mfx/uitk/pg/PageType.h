@@ -45,6 +45,7 @@ enum PageType
 	PageType_BOOT    = 0,
 	PageType_TUNER,
 	PageType_CUR_PROG,
+	PageType_MENU_MAIN,
 
 	PageType_NBR_ELT
 

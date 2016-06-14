@@ -391,6 +391,7 @@
     <ClInclude Include="mfx\uitk\PageSwitcher.h" />
     <ClInclude Include="mfx\uitk\ParentInterface.h" />
     <ClInclude Include="mfx\uitk\pg\CurProg.h" />
+    <ClInclude Include="mfx\uitk\pg\MenuMain.h" />
     <ClInclude Include="mfx\uitk\pg\PageType.h" />
     <ClInclude Include="mfx\uitk\pg\Tuner.h" />
     <ClInclude Include="mfx\uitk\Rect.h" />
@@ -535,6 +536,7 @@
     <ClCompile Include="mfx\uitk\PageSwitcher.cpp" />
     <ClCompile Include="mfx\uitk\ParentInterface.cpp" />
     <ClCompile Include="mfx\uitk\pg\CurProg.cpp" />
+    <ClCompile Include="mfx\uitk\pg\MenuMain.cpp" />
     <ClCompile Include="mfx\uitk\pg\Tuner.cpp">
       <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>

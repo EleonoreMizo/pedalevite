@@ -73,7 +73,7 @@ Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInp
 
 Page::~Page ()
 {
-	clear ();
+	clear (false);
 }
 
 
@@ -92,18 +92,24 @@ void	Page::set_page_content (PageInterface &content)
 
 
 
-void	Page::clear ()
+void	Page::clear (bool evt_flag)
 {
+	_nav_list.clear ();
+
 	if (_content_ptr != 0)
 	{
+		if (_curs_id >= 0 && evt_flag)
+		{
+			NodeEvt        evt (NodeEvt::create_cursor (_curs_id, NodeEvt::Curs_LEAVE));
+			send_event (evt);
+		}
+		_curs_pos = -1;
+		_curs_id  = -1;
+
 		_view.remove_observer (*_content_ptr);
 		_content_ptr->disconnect ();
 		_content_ptr = 0;
 	}
-
-	_nav_list.clear ();
-	_curs_pos = -1;
-	_curs_id  = -1;
 
 	const int      nbr_nodes = _screen.get_nbr_nodes ();
 	for (int pos = nbr_nodes - 1; pos >= 0; --pos)

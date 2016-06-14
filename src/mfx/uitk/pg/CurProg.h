@@ -64,7 +64,7 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
+	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
 	virtual void   do_disconnect ();
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
@@ -97,7 +97,7 @@ private:
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
-	ContainerInterface *          // 0 = not connected
+	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
 	const std::string

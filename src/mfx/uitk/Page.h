@@ -67,7 +67,7 @@ public:
 	virtual        ~Page ();
 
 	void           set_page_content (PageInterface &content);
-	void           clear ();
+	void           clear (bool evt_flag = true);
 
 	void           process_messages ();
 

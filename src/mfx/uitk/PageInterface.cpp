@@ -24,8 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/ContainerInterface.h"
 #include "mfx/uitk/PageInterface.h"
+#include "mfx/uitk/PageMgrInterface.h"
 
 #include <cassert>
 
@@ -42,7 +42,7 @@ namespace uitk
 
 
 
-void	PageInterface::connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	PageInterface::connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
 	assert (page.get_nbr_nodes () == 0);
 	assert (page_size [0] > 0);

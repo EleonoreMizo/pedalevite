@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Tuner.h
+        MenuMain.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_Tuner_HEADER_INCLUDED)
-#define mfx_uitk_pg_Tuner_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_MenuMain_HEADER_INCLUDED)
+#define mfx_uitk_pg_MenuMain_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,12 +36,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-
-namespace ui
-{
-	class LedInterface;
-}
-
 namespace uitk
 {
 
@@ -52,7 +46,7 @@ namespace pg
 
 
 
-class Tuner
+class MenuMain
 :	public PageInterface
 {
 
@@ -60,8 +54,8 @@ class Tuner
 
 public:
 
-	explicit       Tuner (PageSwitcher &page_switcher, ui::LedInterface &led);
-	virtual        ~Tuner () = default;
+	explicit       MenuMain (PageSwitcher &page_switcher);
+	virtual        ~MenuMain () = default;
 
 
 
@@ -77,53 +71,25 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
-	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_tuner (bool active_flag);
-	virtual void   do_set_tuner_freq (float freq);
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	static const int  _nbr_led = 3;
-
-	enum Scale
-	{
-		Scale_CHROMA = 0,
-		Scale_GUITAR_EBGDAE,
-		Scale_BASS_GDAE,
-
-		Scale_NBR_ELT
-	};
-
 	typedef std::shared_ptr <NText> TxtSPtr;
 
-	void           i_set_freq (float freq);
-
-	static float   find_closest_note (float note, Scale sc);
-
 	PageSwitcher & _page_switcher;
-	ui::LedInterface &
-	               _led;
-	const int      _leg_beg;
-	const View *   _view_ptr;     // 0 = not set
-	PageMgrInterface *            // 0 = not set
+	const View *   _view_ptr;     // 0 = not connected
+	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
-	Scale          _scale;
 
-	TxtSPtr        _note_sptr;
-	TxtSPtr        _scale_sptr;
-
-	const ui::Font *
-	               _fnt_l_ptr;
-
-	static const char * const
-	               _note_0_arr [12];
-	static const std::array <std::vector <float>, Scale_NBR_ELT>
-	               _scale_data;
+	TxtSPtr        _edit_prog_sptr;
+	TxtSPtr        _edit_bank_sptr;
+	TxtSPtr        _edit_layout_sptr;
+	TxtSPtr        _edit_master_sptr;
+	TxtSPtr        _reboot_sptr;
 
 
 
@@ -131,13 +97,13 @@ private:
 
 private:
 
-	               Tuner ()                               = delete;
-	               Tuner (const Tuner &other)             = delete;
-	Tuner &        operator = (const Tuner &other)        = delete;
-	bool           operator == (const Tuner &other) const = delete;
-	bool           operator != (const Tuner &other) const = delete;
+	               MenuMain ()                               = delete;
+	               MenuMain (const MenuMain &other)          = delete;
+	MenuMain &     operator = (const MenuMain &other)        = delete;
+	bool           operator == (const MenuMain &other) const = delete;
+	bool           operator != (const MenuMain &other) const = delete;
 
-}; // class Tuner
+}; // class MenuMain
 
 
 
@@ -147,11 +113,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/Tuner.hpp"
+//#include "mfx/uitk/pg/MenuMain.hpp"
 
 
 
-#endif   // mfx_uitk_pg_Tuner_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_MenuMain_HEADER_INCLUDED
 
 
 
