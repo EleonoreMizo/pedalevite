@@ -57,8 +57,9 @@ public:
 	void           add_page (pg::PageType page_id, PageInterface &page);
 
 	void           switch_to (pg::PageType page_id);
-	void           call_page (pg::PageType page_id);
+	void           call_page (pg::PageType page_id, int node_id = -1);
 	void           return_page ();
+	int            get_return_node () const;
 
 
 
@@ -72,13 +73,23 @@ protected:
 
 private:
 
+	class PagePos
+	{
+	public:
+		pg::PageType   _page_id;
+		int            _node_id; // Cursor location
+	};
+
 	typedef std::map <pg::PageType, PageInterface *> PageMap;
-	typedef std::vector <pg::PageType> PageStack;
+	typedef std::vector <PagePos> PageStack;
+
+	void           switch_to (pg::PageType page_id, int node_id);
 
 	Page &         _page_mgr;
 	PageMap        _page_map;
 	PageStack      _call_stack;
 	pg::PageType   _cur_page;     // pg::PageType_INVALID: not set
+	int            _prev_node_id; // -1: not set or not known
 
 
 

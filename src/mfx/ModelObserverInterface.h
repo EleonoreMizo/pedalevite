@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/pi/PluginModel.h"
 #include "mfx/piapi/PluginInterface.h"
 #include "mfx/PiType.h"
 
@@ -67,6 +68,18 @@ public:
 	typedef std::array <PluginInfoSPtr, PiType_NBR_ELT> SlotInfo;
 	typedef std::vector <SlotInfo> SlotInfoList;
 
+	class PluginInitData
+	{
+	public:
+		pi::PluginModel
+		               _type;
+		std::array <int, piapi::PluginInterface::Dir_NBR_ELT>
+		               _nbr_io_arr;
+		std::array <int, piapi::ParamCateg_NBR_ELT>
+		               _nbr_param_arr;
+		bool           _prefer_stereo_flag;
+	};
+
 	virtual        ~ModelObserverInterface () = default;
 
 	void           set_edit_mode (bool edit_flag);
@@ -81,6 +94,9 @@ public:
 	void           set_tuner_freq (float freq);
 	void           set_slot_info_for_current_preset (const SlotInfoList &info_list);
 	void           set_param (int pi_id, int index, float val, int slot_index, PiType type);
+	void           set_nbr_slots (int nbr_slots);
+	void           set_plugin (int slot_index, const PluginInitData &pi_data);
+	void           remove_plugin (int slot_index);
 
 
 
@@ -100,6 +116,9 @@ protected:
 	virtual void   do_set_tuner_freq (float freq) = 0;
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type) = 0;
+	virtual void   do_set_nbr_slots (int nbr_slots) = 0;
+	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data) = 0;
+	virtual void   do_remove_plugin (int slot_index) = 0;
 
 
 

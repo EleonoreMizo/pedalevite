@@ -67,6 +67,7 @@ public:
 	virtual        ~Page ();
 
 	void           set_page_content (PageInterface &content);
+	int            get_cursor_node () const;
 	void           clear (bool evt_flag = true);
 
 	void           process_messages ();

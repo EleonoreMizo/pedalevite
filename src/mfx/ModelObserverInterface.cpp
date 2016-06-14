@@ -157,6 +157,37 @@ void	ModelObserverInterface::set_param (int pi_id, int index, float val, int slo
 
 
 
+// remove_plugin et al. to be called before depending on
+// required plug-in deletions
+void	ModelObserverInterface::set_nbr_slots (int nbr_slots)
+{
+	assert (nbr_slots >= 0);
+
+	do_set_nbr_slots (nbr_slots);
+}
+
+
+
+// set_slot_info_for_current_preset to be called later
+void	ModelObserverInterface::set_plugin (int slot_index, const PluginInitData &pi_data)
+{
+	assert (slot_index >= 0);
+
+	do_set_plugin (slot_index, pi_data);
+}
+
+
+
+// set_slot_info_for_current_preset to be called later
+void	ModelObserverInterface::remove_plugin (int slot_index)
+{
+	assert (slot_index >= 0);
+
+	do_remove_plugin (slot_index);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

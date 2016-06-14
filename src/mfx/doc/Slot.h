@@ -51,12 +51,14 @@ public:
 
 	typedef std::map <pi::PluginModel, PluginSettings> SettingHistory;
 
-	               Slot ()                        = default;
+	               Slot ();
 	               Slot (const Slot &other)       = default;
 	virtual        ~Slot ()                       = default;
 	Slot &         operator = (const Slot &other) = default;
 
-	pi::PluginModel
+	bool           is_empty () const;
+
+	pi::PluginModel // PluginModel_INVALID value is legal here and means the slot is empty.
 	               _pi_model = pi::PluginModel_INVALID;
 	SettingHistory _settings_all;
 	PluginSettings _settings_mixer;

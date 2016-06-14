@@ -58,6 +58,9 @@ public:
 	virtual void   do_set_tuner_freq (float freq) {}
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list) {}
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type) {}
+	virtual void   do_set_nbr_slots (int nbr_slots) {}
+	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data) {}
+	virtual void   do_remove_plugin (int slot_index) {}
 
 
 

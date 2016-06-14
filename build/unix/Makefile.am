@@ -197,6 +197,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/Preset.cpp \
         ../../src/mfx/doc/Preset.h \
         ../../src/mfx/doc/Setup.h \
+        ../../src/mfx/doc/Slot.cpp \
         ../../src/mfx/doc/Slot.h \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \

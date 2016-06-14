@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/pi/PluginModel.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
@@ -57,7 +58,7 @@ class EditProg
 
 public:
 
-	explicit       EditProg (PageSwitcher &page_switcher);
+	explicit       EditProg (PageSwitcher &page_switcher, const std::vector <pi::PluginModel> &fx_list);
 	virtual        ~EditProg () = default;
 
 
@@ -76,6 +77,9 @@ protected:
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
+	virtual void   do_set_nbr_slots (int nbr_slots);
+	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data);
+	virtual void   do_remove_plugin (int slot_index);
 
 
 
@@ -97,7 +101,10 @@ private:
 
 	void           set_preset_info ();
 	void           set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel);
+	EvtProp        change_effect (int node_id, int dir);
 
+	const std::vector <pi::PluginModel> &
+	               _fx_list;
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
@@ -107,11 +114,11 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_m_ptr;
 
-	WinSPtr        _menu_sptr;
+	WinSPtr        _menu_sptr;    // Contains 3 entries (2 of them are selectable) + the slot list
 	TxtSPtr        _fx_list_sptr;
 	TxtSPtr        _prog_name_sptr;
 	TxtSPtr        _controllers_sptr;
-	TxtArray       _slot_list;
+	TxtArray       _slot_list;    // Shows N+1 slots, the last one being the <Empty> line.
 
 
 

@@ -1437,5 +1437,8 @@
     <ClCompile Include="mfx\uitk\pg\EditProg.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
+    <ClCompile Include="mfx\doc\Slot.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

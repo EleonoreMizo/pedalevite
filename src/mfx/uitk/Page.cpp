@@ -92,6 +92,14 @@ void	Page::set_page_content (PageInterface &content)
 
 
 
+// -1: no cursor or position not known
+int	Page::get_cursor_node () const
+{
+	return (_curs_id);
+}
+
+
+
 void	Page::clear (bool evt_flag)
 {
 	_nav_list.clear ();
@@ -151,12 +159,17 @@ void	Page::do_jump_to (int node_id)
 		send_event (evt);
 	}
 
-	_curs_id  = node_id;
-	_curs_pos = find_nav_node (_curs_id);
-	assert (_curs_pos >= 0);
-
-	NodeEvt        evt (NodeEvt::create_cursor (_curs_id, NodeEvt::Curs_ENTER));
-	send_event (evt);
+	_curs_pos = find_nav_node (node_id);
+	if (_curs_pos < 0)
+	{
+		_curs_id = -1;
+	}
+	else
+	{
+		_curs_id = node_id;
+		NodeEvt        evt (NodeEvt::create_cursor (_curs_id, NodeEvt::Curs_ENTER));
+		send_event (evt);
+	}
 }
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Preset.cpp
+        Slot.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/Preset.h"
+#include "mfx/doc/Slot.h"
+#include "mfx/pi/DryWet.h"
 
 #include <cassert>
 
@@ -41,38 +42,24 @@ namespace doc
 
 
 
-Preset::Preset (const Preset &other)
-:	_slot_list (other._slot_list)
-,	_name (other._name)
-,	_layout (other._layout)
+Slot::Slot ()
+:	_pi_model (pi::PluginModel_INVALID)
+,	_settings_all ()
+,	_settings_mixer ()
+,	_label ()
 {
-	duplicate_slot_list ();
+	_settings_mixer._force_mono_flag = false;
+	_settings_mixer._param_list.resize (pi::DryWet::Param_NBR_ELT);
+	_settings_mixer._param_list [pi::DryWet::Param_BYPASS] = 0;
+	_settings_mixer._param_list [pi::DryWet::Param_WET   ] = 1;
+	_settings_mixer._param_list [pi::DryWet::Param_GAIN  ] = pi::DryWet::_gain_neutral;
 }
 
 
 
-Preset &	Preset::operator = (const Preset &other)
+bool	Slot::is_empty () const
 {
-	if (&other != this)
-	{
-		_slot_list = other._slot_list;
-		_name      = other._name;
-		_layout    = other._layout;
-		duplicate_slot_list ();
-	}
-
-	return *this;
-}
-
-
-
-bool	Preset::is_slot_empty (int index) const
-{
-	assert (index >= 0);
-	assert (index < int (_slot_list.size ()));
-
-	return (   _slot_list [index].get () == 0
-	        || _slot_list [index]->is_empty ());
+	return (_pi_model == pi::PluginModel_INVALID);
 }
 
 
@@ -82,19 +69,6 @@ bool	Preset::is_slot_empty (int index) const
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-void	Preset::duplicate_slot_list ()
-{
-	for (SlotSPtr &slot_sptr : _slot_list)
-	{
-		if (slot_sptr.get () != 0)
-		{
-			slot_sptr = SlotSPtr (new Slot (*slot_sptr));
-		}
-	}
-}
 
 
 

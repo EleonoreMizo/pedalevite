@@ -65,33 +65,30 @@ void	PageSwitcher::add_page (pg::PageType page_id, PageInterface &page)
 
 void	PageSwitcher::switch_to (pg::PageType page_id)
 {
-	assert (page_id >= 0);
-	assert (_page_map.find (page_id) != _page_map.end ());
-
-	PageInterface *   page_ptr = _page_map [page_id];
-	_cur_page = page_id;
-	_page_mgr.set_page_content (*page_ptr);
+	switch_to (page_id, -1);
 }
 
 
 
-void	PageSwitcher::call_page (pg::PageType page_id)
+// node_id = cursor location in the initial page
+void	PageSwitcher::call_page (pg::PageType page_id, int node_id)
 {
 	assert (_cur_page >= 0);
 
-	_call_stack.push_back (_cur_page);
+	_call_stack.push_back (PagePos { _cur_page, node_id });
 	switch_to (page_id);
 }
 
 
 
+// Returns the original node
 void	PageSwitcher::return_page ()
 {
 	assert (! _call_stack.empty ());
 
-	const pg::PageType   page_id = _call_stack.back ();
+	const PagePos        page_pos = _call_stack.back ();
 	_call_stack.pop_back ();
-	switch_to (page_id);
+	switch_to (page_pos._page_id, page_pos._node_id);
 }
 
 
@@ -101,6 +98,22 @@ void	PageSwitcher::return_page ()
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	PageSwitcher::switch_to (pg::PageType page_id, int node_id)
+{
+	assert (page_id >= 0);
+	assert (_page_map.find (page_id) != _page_map.end ());
+
+	PageInterface *   page_ptr = _page_map [page_id];
+	_cur_page = page_id;
+	_page_mgr.set_page_content (*page_ptr);
+	if (node_id >= 0)
+	{
+		_page_mgr.jump_to (node_id);
+	}
+}
 
 
 

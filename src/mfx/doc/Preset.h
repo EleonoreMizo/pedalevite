@@ -58,6 +58,8 @@ public:
 
 	Preset &       operator = (const Preset &other);
 
+	bool           is_slot_empty (int index) const;
+
 	SlotList       _slot_list;
 	std::string    _name;
 	PedalboardLayout

@@ -485,6 +485,7 @@
     <ClCompile Include="mfx\doc\PedalActionSingleInterface.cpp" />
     <ClCompile Include="mfx\doc\PedalboardLayout.cpp" />
     <ClCompile Include="mfx\doc\Preset.cpp" />
+    <ClCompile Include="mfx\doc\Slot.cpp" />
     <ClCompile Include="mfx\dsp\iir\Biquad.cpp" />
     <ClCompile Include="mfx\dsp\iir\Svf2p.cpp" />
     <ClCompile Include="mfx\dsp\iir\TransS.cpp" />

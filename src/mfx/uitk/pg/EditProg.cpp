@@ -50,8 +50,9 @@ namespace pg
 
 
 
-EditProg::EditProg (PageSwitcher &page_switcher)
-:	_page_switcher (page_switcher)
+EditProg::EditProg (PageSwitcher &page_switcher, const std::vector <pi::PluginModel> &fx_list)
+:	_fx_list (fx_list)
+,	_page_switcher (page_switcher)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -122,12 +123,38 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_button_ex ())
 	{
-		const Button   but = evt.get_button_ex ();
+		const Button   but     = evt.get_button_ex ();
+		const int      node_id = evt.get_target ();
 		switch (but)
 		{
+		case Button_S:
+			ret_val = EvtProp_CATCH;
+			if (node_id == Entry_PROG_NAME)
+			{
+				/*** To do ***/
+			}
+			else if (node_id == Entry_CONTROLLERS)
+			{
+				/*** To do ***/
+			}
+			else if (node_id >= 0 && node_id < int (_slot_list.size ()))
+			{
+				/*** To do ***/
+			}
+			else
+			{
+				ret_val = EvtProp_PASS;
+			}
+			break;
 		case Button_E:
 			_page_switcher.switch_to (pg::PageType_CUR_PROG);
 			ret_val = EvtProp_CATCH;
+			break;
+		case Button_L:
+			ret_val = change_effect (node_id, -1);
+			break;
+		case Button_R:
+			ret_val = change_effect (node_id, +1);
 			break;
 		default:
 			// Nothing
@@ -141,6 +168,27 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 
 
 void	EditProg::do_activate_preset (int index)
+{
+	set_preset_info ();
+}
+
+
+
+void	EditProg::do_set_nbr_slots (int nbr_slots)
+{
+	set_preset_info ();
+}
+
+
+
+void	EditProg::do_set_plugin (int slot_index, const PluginInitData &pi_data)
+{
+	set_preset_info ();
+}
+
+
+
+void	EditProg::do_remove_plugin (int slot_index)
 {
 	set_preset_info ();
 }
@@ -173,10 +221,10 @@ void	EditProg::set_preset_info ()
 	{
 		std::string    multilabel = "<Empty>";
 
-		const doc::Preset::SlotSPtr & slot_sptr = preset._slot_list [slot_index];
-		if (slot_sptr.get () != 0)
+		if (! preset.is_slot_empty (slot_index))
 		{
-			multilabel = mfx::pi::PluginModel_get_name (slot_sptr->_pi_model);
+			const doc::Slot & slot = *(preset._slot_list [slot_index]);
+			multilabel = mfx::pi::PluginModel_get_name (slot._pi_model);
 		}
 
 		set_slot (nav_list, slot_index, multilabel);
@@ -211,6 +259,71 @@ void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index,
 
 	assert (pos + 1 == _menu_sptr->get_nbr_nodes ());
 	_menu_sptr->push_back (entry_sptr);
+}
+
+
+
+MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
+{
+	assert (node_id >= 0);
+	assert (dir != 0);
+
+	EvtProp        ret_val = EvtProp_PASS;
+
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const int      nbr_slots = preset._slot_list.size ();
+
+	if (node_id <= nbr_slots)
+	{
+		const int      nbr_types = int (_fx_list.size ());
+
+		// Index within the official plug-in list. end = empty
+		int            pi_index  = nbr_types;
+		if (node_id < nbr_slots)
+		{
+			if (! preset.is_slot_empty (node_id))
+			{
+				const doc::Slot & slot = *(preset._slot_list [node_id]);
+				const pi::PluginModel   type = slot._pi_model;
+				auto          type_it =
+					std::find (_fx_list.begin (), _fx_list.end (), type);
+				assert (type_it != _fx_list.end ());
+				pi_index = type_it - _fx_list.begin ();
+			}
+		}
+
+		const int      mod_len = nbr_types + 1;
+		pi_index += dir;
+		pi_index = (pi_index + mod_len) % mod_len;
+
+		// We need to add a slot at the end?
+		if (node_id == nbr_slots && pi_index != nbr_types)
+		{
+			_model_ptr->set_nbr_slots (nbr_slots + 1);
+		}
+
+		if (pi_index == nbr_types)
+		{
+			_model_ptr->remove_plugin (node_id);
+		}
+		else
+		{
+			_model_ptr->set_plugin (node_id, _fx_list [pi_index]);
+		}
+
+		// Last slot needs to be removed?
+		if (node_id == nbr_slots - 1 && pi_index == nbr_types)
+		{
+			int         nbr_slots_new = nbr_slots - 1;
+			while (nbr_slots_new > 0 && preset.is_slot_empty (nbr_slots_new - 1))
+			{
+				-- nbr_slots_new;
+			}
+			_model_ptr->set_nbr_slots (nbr_slots_new);
+		}
+	}
+
+	return ret_val;
 }
 
 

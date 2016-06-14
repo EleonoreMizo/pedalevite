@@ -270,6 +270,8 @@ public:
 	               _leds;
 #endif
 	mfx::Model     _model;
+	std::vector <mfx::pi::PluginModel>
+	               _pi_type_list;
 
 	// View
 	mfx::View      _view;
@@ -332,6 +334,12 @@ Context::Context ()
 ,	_leds (_all_io)
 #endif
 ,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input)
+,	_pi_type_list ({
+		mfx::pi::PluginModel_DISTO_SIMPLE,
+		mfx::pi::PluginModel_TREMOLO,
+		mfx::pi::PluginModel_WHA,
+		mfx::pi::PluginModel_FREQ_SHIFT
+	})
 ,	_view ()
 ,	_fnt_8x12 ()
 ,	_fnt_6x8 ()
@@ -342,7 +350,7 @@ Context::Context ()
 ,	_page_cur_prog (_page_switcher, MAIN_get_ip_address ())
 ,	_page_tuner (_page_switcher, _leds)
 ,	_page_menu_main (_page_switcher)
-,	_page_edit_prog (_page_switcher)
+,	_page_edit_prog (_page_switcher, _pi_type_list)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -712,7 +720,10 @@ void	Context::do_set_tuner (bool active_flag)
 {
 	if (active_flag)
 	{
-		_page_switcher.call_page (mfx::uitk::pg::PageType_TUNER);
+		_page_switcher.call_page (
+			mfx::uitk::pg::PageType_TUNER,
+			_page_mgr.get_cursor_node ()
+		);
 	}
 }
 

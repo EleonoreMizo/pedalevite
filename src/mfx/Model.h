@@ -88,6 +88,9 @@ public:
 	void           set_preset_name (std::string name);
 	void           activate_preset (int index);
 	void           store_preset (int index);
+	void           set_nbr_slots (int nbr_slots);
+	void           set_plugin (int slot_index, pi::PluginModel type);
+	void           remove_plugin (int slot_index);
 
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;
@@ -131,7 +134,7 @@ private:
 	void           apply_settings ();
 	void           apply_settings_normal ();
 	void           apply_settings_tuner ();
-	void           check_mixer_plugin (int slot_index);
+	void           check_mixer_plugin (int slot_index, int slot_index_central);
 	bool           has_mixer_plugin (const doc::Preset &preset, int slot_index);
 	void           send_effect_settings (int pi_id, const doc::PluginSettings &settings);
 	void           process_msg_ui ();
@@ -149,8 +152,7 @@ private:
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
 	void           find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id) const;
 	bool           update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
-
-	static void    reset_mixer_param (doc::Slot &slot);
+	void           fill_pi_init_data (int slot_index, ModelObserverInterface::PluginInitData &pi_data);
 
 	cmd::Central   _central;
 

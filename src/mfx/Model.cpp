@@ -298,6 +298,86 @@ void	Model::store_preset (int index)
 
 
 
+void	Model::set_nbr_slots (int nbr_slots)
+{
+	assert (nbr_slots >= 0);
+
+	const int         nbr_slots_old = int (_preset_cur._slot_list.size ());
+	for (int slot_index = nbr_slots_old - 1
+	;	slot_index >= nbr_slots
+	;	-- slot_index)
+	{
+		remove_plugin (slot_index);
+	}
+
+	_preset_cur._slot_list.resize (nbr_slots);
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_nbr_slots (nbr_slots);
+	}
+}
+
+
+
+void	Model::set_plugin (int slot_index, pi::PluginModel type)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (type >= 0);
+	assert (type < pi::PluginModel_NBR_ELT);
+
+	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	if (slot_sptr.get () == 0)
+	{
+		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
+	}
+	slot_sptr->_pi_model = type;
+
+	apply_settings ();
+
+	if (_obs_ptr != 0)
+	{
+		ModelObserverInterface::PluginInitData pi_data;
+		fill_pi_init_data (slot_index, pi_data);
+
+		_obs_ptr->set_plugin (slot_index, pi_data);
+
+		// Parameter values
+		const int      nbr_param =
+			pi_data._nbr_param_arr [piapi::ParamCateg_GLOBAL];
+		const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [PiType_MAIN];
+		for (int p = 0; p < nbr_param; ++p)
+		{
+			const float    val = slot_sptr->_settings_all [type]._param_list [p];
+			_obs_ptr->set_param (pi_id, p, val, slot_index, PiType_MAIN);
+		}
+	}
+}
+
+
+
+void	Model::remove_plugin (int slot_index)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+
+	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	if (slot_sptr.get () != 0)
+	{
+		slot_sptr->_pi_model = pi::PluginModel_INVALID;
+	}
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->remove_plugin (slot_index);
+	}
+
+	apply_settings ();
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -369,7 +449,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 		std::map <pi::PluginModel, int>  pi_cnt_preset;
 		for (const auto &slot_sptr : preset._slot_list)
 		{
-			if (slot_sptr.get () != 0)
+			if (slot_sptr.get () != 0 && ! slot_sptr->is_empty ())
 			{
 				const doc::Slot & slot = *slot_sptr;
 				auto           it = pi_cnt_preset.find (slot._pi_model);
@@ -446,37 +526,56 @@ void	Model::apply_settings_normal ()
 
 	const int      nbr_slots = _preset_cur._slot_list.size ();
 
+	int            slot_index_central = 0;
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
-		_central.insert_slot (slot_index);
 		_pi_id_list.push_back (SlotPiId ());
 
 		// Full slot
-		if (_preset_cur._slot_list [slot_index].get () != 0)
+		if (! _preset_cur.is_slot_empty (slot_index))
 		{
-			const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
+			_central.insert_slot (slot_index_central);
+			doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
 
-			// First check if we need a mixer plug-in.
+			// Check first if we need a mixer plug-in.
 			// Updates the parameters
-			check_mixer_plugin (slot_index);
+			check_mixer_plugin (slot_index, slot_index_central);
 
 			// Now the main plug-in
-			auto           it_s = slot._settings_all.find (slot._pi_model);
+			auto           it_s  = slot._settings_all.find (slot._pi_model);
+			int            pi_id = -1;
 			if (it_s == slot._settings_all.end ())
 			{
-				assert (false);
+				// Probably the first creation on this slot.
+				// Creates the plug-ins and collects the parameter list
+				pi_id = _central.set_plugin (
+					slot_index_central,
+					slot._pi_model,
+					false
+				);
+				doc::PluginSettings &	settings =
+					slot._settings_all [slot._pi_model];
+				settings._param_list =
+					_central.use_pi_pool ().use_plugin (pi_id)._param_arr;
+				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
 			}
 			else
 			{
-				_central.force_mono (slot_index, it_s->second._force_mono_flag);
-				const int      pi_id = _central.set_plugin (
-					slot_index,
+				// Creates the plug-in and apply the stored settings
+				_central.force_mono (
+					slot_index_central,
+					it_s->second._force_mono_flag
+				);
+				pi_id = _central.set_plugin (
+					slot_index_central,
 					slot._pi_model,
 					it_s->second._force_reset_flag
 				);
 				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
 				send_effect_settings (pi_id, it_s->second);
 			}
+
+			++ slot_index_central;
 		}
 	}
 }
@@ -506,7 +605,7 @@ void	Model::apply_settings_tuner ()
 // different of 100% wet at 0 dB.
 // Does not commit anything
 // The slot should exist in the current preset.
-void	Model::check_mixer_plugin (int slot_index)
+void	Model::check_mixer_plugin (int slot_index, int slot_index_central)
 {
 	assert (_preset_cur._slot_list [slot_index].get () != 0);
 
@@ -516,7 +615,7 @@ void	Model::check_mixer_plugin (int slot_index)
 	// Instantiation and setting update
 	if (use_flag)
 	{
-		const int      pi_id = _central.set_mixer (slot_index);
+		const int      pi_id = _central.set_mixer (slot_index_central);
 		_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = pi_id;
 		send_effect_settings (pi_id, slot._settings_mixer);
 	}
@@ -524,7 +623,7 @@ void	Model::check_mixer_plugin (int slot_index)
 	// Removal
 	else
 	{
-		_central.remove_mixer (slot_index);
+		_central.remove_mixer (slot_index_central);
 		_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = -1;
 	}
 }
@@ -536,7 +635,7 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 {
 	assert (slot_index >= 0);
 	assert (slot_index < int (preset._slot_list.size ()));
-	assert (preset._slot_list [slot_index].get () != 0);
+	assert (! preset.is_slot_empty (slot_index));
 
 	const doc::Slot & slot = *(preset._slot_list [slot_index]);
 	const doc::PluginSettings::ParamList & plist =
@@ -907,7 +1006,7 @@ int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
 	const int      nbr_slots = _preset_cur._slot_list.size ();
 	for (int pos = 0; pos < nbr_slots && found_pos < 0; ++pos)
 	{
-		if (_preset_cur._slot_list [pos].get () != 0)
+		if (! _preset_cur.is_slot_empty (pos))
 		{
 			const doc::Slot & slot = *(_preset_cur._slot_list [pos]);
 
@@ -961,18 +1060,18 @@ bool	Model::update_parameter (doc::Preset &preset, int slot_index, PiType type, 
 {
 	bool           ok_flag = true;
 
-	doc::Slot *    slot_ptr = preset._slot_list [slot_index].get ();
-	if (slot_ptr == 0)
+	if (preset.is_slot_empty (slot_index))
 	{
 		ok_flag = false;
 		assert (false);
 	}
 	else
 	{
+		doc::Slot &    slot = *(preset._slot_list [slot_index]);
 		doc::PluginSettings &  settings =
 				(type == PiType_MIX)
-			? slot_ptr->_settings_mixer
-			: slot_ptr->_settings_all [slot_ptr->_pi_model];
+			? slot._settings_mixer
+			: slot._settings_all [slot._pi_model];
 		if (index >= int (settings._param_list.size ()))
 		{
 			ok_flag = false;
@@ -989,14 +1088,30 @@ bool	Model::update_parameter (doc::Preset &preset, int slot_index, PiType type, 
 
 
 
-/*** To do: move this function into the Slot ctor ***/
-void	Model::reset_mixer_param (doc::Slot &slot)
+void	Model::fill_pi_init_data (int slot_index, ModelObserverInterface::PluginInitData &pi_data)
 {
-	slot._settings_mixer._force_mono_flag = false;
-	slot._settings_mixer._param_list.resize (pi::DryWet::Param_NBR_ELT);
-	slot._settings_mixer._param_list [pi::DryWet::Param_BYPASS] = 0;
-	slot._settings_mixer._param_list [pi::DryWet::Param_WET   ] = 1;
-	slot._settings_mixer._param_list [pi::DryWet::Param_GAIN  ] = pi::DryWet::_gain_neutral;
+	assert (! _preset_cur.is_slot_empty (slot_index));
+
+	const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
+	pi_data._type = slot._pi_model;
+
+	const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [PiType_MAIN];
+	assert (pi_id >= 0);
+
+	const PluginPool::PluginDetails &   details =
+		_central.use_pi_pool ().use_plugin (pi_id);
+	pi_data._nbr_io_arr [piapi::PluginInterface::Dir_IN ] = 1;
+	pi_data._nbr_io_arr [piapi::PluginInterface::Dir_OUT] = 1;
+	details._pi_uptr->get_nbr_io (
+		pi_data._nbr_io_arr [piapi::PluginInterface::Dir_IN ],
+		pi_data._nbr_io_arr [piapi::PluginInterface::Dir_OUT]
+	);
+	for (int categ = 0; categ < piapi::ParamCateg_NBR_ELT; ++categ)
+	{
+		pi_data._nbr_param_arr [categ] =
+			details._pi_uptr->get_nbr_param (piapi::ParamCateg (categ));
+	}
+	pi_data._prefer_stereo_flag = details._pi_uptr->prefer_stereo ();
 }
 
 
