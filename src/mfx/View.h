@@ -91,8 +91,9 @@ protected:
 
 private:
 
-	std::set <ModelObserverInterface *>
-	               _obs_set;
+	typedef std::set <ModelObserverInterface *> ObsSet;
+
+	ObsSet         _obs_set;
 
 	// Cached data
 	bool           _edit_flag    = true;

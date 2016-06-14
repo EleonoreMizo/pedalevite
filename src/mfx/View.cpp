@@ -121,7 +121,14 @@ int	View::get_preset_index () const
 
 
 
-#define mfx_View_PROPAGATE(x) do { for (auto ptr : _obs_set) { ptr->x; } } while (false)
+// We need to copy the observer list because this list may be modified by
+// a sub-observer.
+/*** To do: turn this macro into a template function ***/
+#define mfx_View_PROPAGATE(x) \
+	do { \
+		ObsSet obs_set_copy (_obs_set); \
+		for (auto ptr : obs_set_copy) { ptr->x; } \
+	} while (false)
 
 
 
