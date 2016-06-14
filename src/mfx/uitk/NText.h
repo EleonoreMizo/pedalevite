@@ -68,7 +68,7 @@ public:
 	void           set_text (std::string txt);
 	void           set_font (const ui::Font &fnt);
 	void           set_mag (int x, int y);
-	void           set_justification (float x, float y);
+	void           set_justification (float x, float y, bool baseline_flag);
 	void           set_bold (bool bold_flag, bool space_flag);
 	void           set_vid_inv (bool vid_inv_flag);
 	void           set_underline (bool underline_flag);
@@ -83,6 +83,7 @@ protected:
 
 	// mfx::uitk::NodeInterface via mfx::uitk::NBitmap
 	virtual Rect   do_get_bounding_box () const;
+	virtual void   do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d node_coord);
 
 
 
@@ -103,6 +104,7 @@ private:
 	               _mag_arr;
 	std::array <float, 2>            // [0 ; 1]. 0 = left/top, 0.5 = center, 1.0 = right/bottom
 	               _justification;
+	bool           _baseline_flag;
 	bool           _bold_flag;
 	bool           _space_flag;      // When bold, insert one column between all characters
 	bool           _vid_inv_flag;    // In addition to the selection

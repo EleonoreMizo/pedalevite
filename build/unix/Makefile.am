@@ -320,9 +320,17 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputPi3.cpp \
         ../../src/mfx/ui/UserInputPi3.h \
         ../../src/mfx/ui/UserInputType.h \
+        ../../src/mfx/uitk/pg/CurProg.cpp \
+        ../../src/mfx/uitk/pg/CurProg.h \
+        ../../src/mfx/uitk/pg/Tuner.cpp \
+        ../../src/mfx/uitk/pg/Tuner.h \
         ../../src/mfx/uitk/Button.h \
         ../../src/mfx/uitk/ContainerInterface.cpp \
         ../../src/mfx/uitk/ContainerInterface.h \
+        ../../src/mfx/uitk/MsgHandlerInterface.cpp \
+        ../../src/mfx/uitk/MsgHandlerInterface.h \
+        ../../src/mfx/uitk/NavLoc.cpp \
+        ../../src/mfx/uitk/NavLoc.h \
         ../../src/mfx/uitk/NBitmap.cpp \
         ../../src/mfx/uitk/NBitmap.h \
         ../../src/mfx/uitk/NodeBase.cpp \
@@ -335,6 +343,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/NText.h \
         ../../src/mfx/uitk/NWindow.cpp \
         ../../src/mfx/uitk/NWindow.h \
+        ../../src/mfx/uitk/Page.cpp \
+        ../../src/mfx/uitk/Page.h \
+        ../../src/mfx/uitk/PageInterface.cpp \
+        ../../src/mfx/uitk/PageInterface.h \
+        ../../src/mfx/uitk/PageMgrInterface.cpp \
+        ../../src/mfx/uitk/PageMgrInterface.h \
         ../../src/mfx/uitk/ParentInterface.cpp \
         ../../src/mfx/uitk/ParentInterface.h \
         ../../src/mfx/uitk/Rect.h \
@@ -354,6 +368,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/GpioPwm.h \
         ../../src/mfx/Model.cpp \
         ../../src/mfx/Model.h \
+        ../../src/mfx/ModelObserverDefault.h \
         ../../src/mfx/ModelObserverInterface.cpp \
         ../../src/mfx/ModelObserverInterface.h \
         ../../src/mfx/Msg.h \
@@ -370,6 +385,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ProcessingContextNode.cpp \
         ../../src/mfx/ProcessingContextNode.h \
         ../../src/mfx/SharedRscState.h \
+        ../../src/mfx/View.cpp \
+        ../../src/mfx/View.h \
         ../../src/mfx/WorldAudio.cpp \
         ../../src/mfx/WorldAudio.h \
         ../../src/mailbox.c \

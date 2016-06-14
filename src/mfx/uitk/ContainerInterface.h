@@ -42,8 +42,7 @@ namespace uitk
 
 
 class ContainerInterface
-:	public NodeInterface
-,	public ParentInterface
+:	public ParentInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

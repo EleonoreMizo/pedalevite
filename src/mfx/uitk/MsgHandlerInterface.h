@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Button.h
+        MsgHandlerInterface.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_Button_HEADER_INCLUDED)
-#define mfx_uitk_Button_HEADER_INCLUDED
+#if ! defined (mfx_uitk_MsgHandlerInterface_HEADER_INCLUDED)
+#define mfx_uitk_MsgHandlerInterface_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,20 +36,39 @@ namespace uitk
 
 
 
-enum Button
+class NodeEvt;
+
+class MsgHandlerInterface
 {
-	Button_INVALID = -1,
 
-	Button_S = 0, // Select
-	Button_E,     // Escape
-	Button_U,     // Up
-	Button_D,     // Down
-	Button_L,     // Left
-	Button_R,     // Right
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-	Button_NBR_ELT
+public:
 
-}; // enum Button
+	enum EvtProp
+	{
+		EvtProp_PASS = 0,
+		EvtProp_CATCH,
+
+		EvtProp_NBR_ELT
+	};
+
+	virtual        ~MsgHandlerInterface () = default;
+
+	EvtProp        handle_evt (const NodeEvt &evt);
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+protected:
+
+	virtual EvtProp
+	               do_handle_evt (const NodeEvt &evt) = 0;
+
+
+
+}; // class MsgHandlerInterface
 
 
 
@@ -58,11 +77,11 @@ enum Button
 
 
 
-//#include "mfx/uitk/Button.hpp"
+//#include "mfx/uitk/MsgHandlerInterface.hpp"
 
 
 
-#endif   // mfx_uitk_Button_HEADER_INCLUDED
+#endif   // mfx_uitk_MsgHandlerInterface_HEADER_INCLUDED
 
 
 

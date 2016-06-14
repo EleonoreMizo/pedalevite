@@ -25,7 +25,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/DisplayInterface.h"
-#include "mfx/uitk/ContainerInterface.h"
 #include "mfx/uitk/NBitmap.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/Rect.h"
@@ -104,7 +103,7 @@ Rect	NBitmap::do_get_bounding_box () const
 
 
 
-NodeInterface::EvtProp	NBitmap::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	NBitmap::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -117,7 +116,7 @@ NodeInterface::EvtProp	NBitmap::do_handle_evt (const NodeEvt &evt)
 			_cursor_flag = (curs == NodeEvt::Curs_ENTER);
 			invalidate_all ();
 
-			ret_val = EvtProp_EAT;
+			ret_val = EvtProp_CATCH;
 		}
 	}
 

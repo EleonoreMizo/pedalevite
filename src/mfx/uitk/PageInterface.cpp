@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        NodeInterface.cpp
+        PageInterface.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/NodeInterface.h"
+#include "mfx/uitk/ContainerInterface.h"
+#include "mfx/uitk/PageInterface.h"
 
 #include <cassert>
 
@@ -41,44 +42,20 @@ namespace uitk
 
 
 
-// 0 to detach
-void	NodeInterface::notify_attachment (ParentInterface *cont_ptr)
+void	PageInterface::connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
-	do_notify_attachment (cont_ptr);
+	assert (page.get_nbr_nodes () == 0);
+	assert (page_size [0] > 0);
+	assert (page_size [1] > 0);
+
+	do_connect (model, view, page, page_size, fnt_s, fnt_m, fnt_l);
 }
 
 
 
-int	NodeInterface::get_id () const
+void	PageInterface::disconnect ()
 {
-	const int      ret_val = do_get_id ();
-	assert (ret_val >= 0);
-
-	return ret_val;
-}
-
-
-
-// Relative to the container coordinates
-Vec2d	NodeInterface::get_coord () const
-{
-	return do_get_coord ();
-}
-
-
-
-// Relative to the internal coordinates given by get_coord()
-Rect	NodeInterface::get_bounding_box () const
-{
-	return do_get_bounding_box ();
-}
-
-
-
-// Absolute coordinates of the node
-void	NodeInterface::redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord)
-{
-	do_redraw (disp, clipbox, parent_coord);
+	do_disconnect ();
 }
 
 

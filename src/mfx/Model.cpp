@@ -237,6 +237,28 @@ void	Model::select_bank (int index)
 
 
 
+void	Model::set_bank_name (std::string name)
+{
+	_setup._bank_arr [_bank_index]._name = name;
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_bank_name (name);
+	}
+}
+
+
+
+void	Model::set_preset_name (std::string name)
+{
+	_preset_cur._name = name;
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_preset_name (name);
+	}
+}
+
+
+
 void	Model::activate_preset (int index)
 {
 	assert (index >= 0);

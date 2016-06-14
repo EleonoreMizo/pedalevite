@@ -79,6 +79,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <Link>
+      <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -321,6 +322,7 @@
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
     <ClInclude Include="mfx\Model.h" />
+    <ClInclude Include="mfx\ModelObserverDefault.h" />
     <ClInclude Include="mfx\ModelObserverInterface.h" />
     <ClInclude Include="mfx\Msg.h" />
     <ClInclude Include="mfx\MsgQueue.h" />
@@ -375,13 +377,20 @@
     <ClInclude Include="mfx\SharedRscState.h" />
     <ClInclude Include="mfx\uitk\Button.h" />
     <ClInclude Include="mfx\uitk\ContainerInterface.h" />
+    <ClInclude Include="mfx\uitk\MsgHandlerInterface.h" />
+    <ClInclude Include="mfx\uitk\NavLoc.h" />
     <ClInclude Include="mfx\uitk\NBitmap.h" />
     <ClInclude Include="mfx\uitk\NodeBase.h" />
     <ClInclude Include="mfx\uitk\NodeEvt.h" />
     <ClInclude Include="mfx\uitk\NodeInterface.h" />
     <ClInclude Include="mfx\uitk\NText.h" />
     <ClInclude Include="mfx\uitk\NWindow.h" />
+    <ClInclude Include="mfx\uitk\Page.h" />
+    <ClInclude Include="mfx\uitk\PageInterface.h" />
+    <ClInclude Include="mfx\uitk\PageMgrInterface.h" />
     <ClInclude Include="mfx\uitk\ParentInterface.h" />
+    <ClInclude Include="mfx\uitk\pg\CurProg.h" />
+    <ClInclude Include="mfx\uitk\pg\Tuner.h" />
     <ClInclude Include="mfx\uitk\Rect.h" />
     <ClInclude Include="mfx\uitk\Rect.hpp" />
     <ClInclude Include="mfx\uitk\Vec2d.h" />
@@ -404,6 +413,7 @@
     <ClInclude Include="mfx\ui\UserInputPi3.h" />
     <ClInclude Include="mfx\ui\UserInputType.h" />
     <ClInclude Include="mfx\ui\UserInputVoid.h" />
+    <ClInclude Include="mfx\View.h" />
     <ClInclude Include="mfx\WorldAudio.h" />
   </ItemGroup>
   <ItemGroup>
@@ -500,19 +510,32 @@
     <ClCompile Include="mfx\pi\param\TplLin.cpp" />
     <ClCompile Include="mfx\pi\PluginModel.cpp" />
     <ClCompile Include="mfx\pi\Tremolo.cpp" />
-    <ClCompile Include="mfx\pi\Tuner.cpp" />
+    <ClCompile Include="mfx\pi\Tuner.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="mfx\pi\Wha.cpp" />
     <ClCompile Include="mfx\PluginPool.cpp" />
     <ClCompile Include="mfx\ProcessingContext.cpp" />
     <ClCompile Include="mfx\ProcessingContextNode.cpp" />
     <ClCompile Include="mfx\uitk\ContainerInterface.cpp" />
+    <ClCompile Include="mfx\uitk\MsgHandlerInterface.cpp" />
+    <ClCompile Include="mfx\uitk\NavLoc.cpp" />
     <ClCompile Include="mfx\uitk\NBitmap.cpp" />
     <ClCompile Include="mfx\uitk\NodeBase.cpp" />
     <ClCompile Include="mfx\uitk\NodeEvt.cpp" />
     <ClCompile Include="mfx\uitk\NodeInterface.cpp" />
     <ClCompile Include="mfx\uitk\NText.cpp" />
     <ClCompile Include="mfx\uitk\NWindow.cpp" />
+    <ClCompile Include="mfx\uitk\Page.cpp" />
+    <ClCompile Include="mfx\uitk\PageInterface.cpp" />
+    <ClCompile Include="mfx\uitk\PageMgrInterface.cpp" />
     <ClCompile Include="mfx\uitk\ParentInterface.cpp" />
+    <ClCompile Include="mfx\uitk\pg\CurProg.cpp" />
+    <ClCompile Include="mfx\uitk\pg\Tuner.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="mfx\ui\DisplayInterface.cpp" />
     <ClCompile Include="mfx\ui\DisplayPi3Pcd8544.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -538,6 +561,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="mfx\ui\UserInputVoid.cpp" />
+    <ClCompile Include="mfx\View.cpp" />
     <ClCompile Include="mfx\WorldAudio.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

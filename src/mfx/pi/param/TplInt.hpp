@@ -22,7 +22,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/pi/param/Tools.h"
+
+#include <algorithm>
 
 #include	<cassert>
 
@@ -74,14 +77,24 @@ TplInt::TplInt (int val_min, int val_max, const char *name_0, const char *unit_0
 
 std::string	TplInt::do_get_name (int len) const
 {
-	return (ParamTools::print_name_bestfit (len, _name.c_str ()));
+	if (len == 0)
+	{
+		return _name;
+	}
+
+	return (Tools::print_name_bestfit (len, _name.c_str ()));
 }
 
 
 
 std::string	TplInt::do_get_unit (int len) const
 {
-	return (ParamTools::print_name_bestfit (len, _unit.c_str ()));
+	if (len == 0)
+	{
+		return _unit;
+	}
+
+	return (Tools::print_name_bestfit (len, _unit.c_str ()));
 }
 
 
@@ -116,8 +129,10 @@ double	TplInt::do_get_nat_max () const
 
 std::string	TplInt::do_conv_nat_to_str (double nat, int len) const
 {
-	char           txt_0 [1024+1];
+	const int      max_len = 1024;
+	char           txt_0 [max_len+1];
 	nat = fstb::round (nat);
+	len = (len > 0) ? std::min (len, max_len) : max_len;
 	_phdn.conv_to_str (nat, txt_0, len);
 
 	return (txt_0);

@@ -135,21 +135,7 @@ Vec2d	NodeBase::do_get_coord () const
 
 
 
-bool	NodeBase::do_is_browsable () const
-{
-	return false;
-}
-
-
-
-int	NodeBase::do_get_override (Button but) const
-{
-	return OvrAction_DEFAULT;
-}
-
-
-
-NodeInterface::EvtProp	NodeBase::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	NodeBase::do_handle_evt (const NodeEvt &evt)
 {
 	return EvtProp_PASS;
 }

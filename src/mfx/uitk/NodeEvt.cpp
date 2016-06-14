@@ -115,6 +115,39 @@ Button	NodeEvt::get_button () const
 
 
 
+bool	NodeEvt::is_button_ex () const
+{
+	return (_type == Type_BUTTON || _type == Type_ROTENC);
+}
+
+
+
+Button	NodeEvt::get_button_ex () const
+{
+	Button         but;
+	if (_type == Type_ROTENC)
+	{
+		const int      r = get_rotenc ();
+		int            v = get_rotenc_val ();
+		v = (v > 0) ? 1 : 0;
+		switch ((r << 1) + v)
+		{
+		case (0 << 1) + 0: but = Button_U; break;
+		case (0 << 1) + 1: but = Button_D; break;
+		case (1 << 1) + 0: but = Button_L; break;
+		case (1 << 1) + 1: but = Button_R; break;
+		}
+	}
+	else
+	{
+		but = get_button ();
+	}
+
+	return but;
+}
+
+
+
 int	NodeEvt::get_rotenc () const
 {
 	assert (_type == Type_ROTENC);

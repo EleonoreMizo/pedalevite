@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        NodeInterface.h
+        PageInterface.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_NodeInterface_HEADER_INCLUDED)
-#define mfx_uitk_NodeInterface_HEADER_INCLUDED
+#if ! defined (mfx_uitk_PageInterface_HEADER_INCLUDED)
+#define mfx_uitk_PageInterface_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -28,17 +28,20 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/MsgHandlerInterface.h"
-#include "mfx/uitk/Rect.h"
 #include "mfx/uitk/Vec2d.h"
+#include "mfx/ModelObserverDefault.h"
 
 
 
 namespace mfx
 {
 
+class Model;
+class View;
+
 namespace ui
 {
-	class DisplayInterface;
+	class Font;
 }
 
 namespace uitk
@@ -46,24 +49,21 @@ namespace uitk
 
 
 
-class ParentInterface;
-class NodeEvt;
+class ContainerInterface;
 
-class NodeInterface
+class PageInterface
 :	public MsgHandlerInterface
+,	public ModelObserverDefault
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	virtual        ~NodeInterface () = default;
+	virtual        ~PageInterface () = default;
 
-	void           notify_attachment (ParentInterface *cont_ptr);
-	int            get_id () const;
-	Vec2d          get_coord () const;
-	Rect           get_bounding_box () const;
-	void           redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord);
+	void           connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
+	void           disconnect ();
 
 
 
@@ -71,15 +71,12 @@ public:
 
 protected:
 
-	virtual void   do_notify_attachment (ParentInterface *cont_ptr) = 0;
-	virtual int    do_get_id () const = 0;
-	virtual Vec2d  do_get_coord () const = 0;
-	virtual Rect   do_get_bounding_box () const = 0;
-	virtual void   do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord) = 0;
+	virtual void   do_connect (Model &model, const View &view, ContainerInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l) = 0;
+	virtual void   do_disconnect () = 0;
 
 
 
-}; // class NodeInterface
+}; // class PageInterface
 
 
 
@@ -88,11 +85,11 @@ protected:
 
 
 
-//#include "mfx/uitk/NodeInterface.hpp"
+//#include "mfx/uitk/PageInterface.hpp"
 
 
 
-#endif   // mfx_uitk_NodeInterface_HEADER_INCLUDED
+#endif   // mfx_uitk_PageInterface_HEADER_INCLUDED
 
 
 

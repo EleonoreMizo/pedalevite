@@ -80,6 +80,8 @@ public:
 	Type           get_type () const;
 
 	Button         get_button () const;
+	bool           is_button_ex () const;
+	Button         get_button_ex () const;
 
 	int            get_rotenc () const;
 	int            get_rotenc_val () const;

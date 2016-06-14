@@ -28,8 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/Err.h"
 #include "fstb/fnc.h"
 #include "mfx/ui/Font.h"
-#include "mfx/uitk/ContainerInterface.h"
 #include "mfx/uitk/NText.h"
+#include "mfx/uitk/ParentInterface.h"
 
 #include <cassert>
 #include <cstring>
@@ -54,6 +54,7 @@ NText::NText ()
 ,	_margin ()
 ,	_mag_arr ({{ 1, 1 }})
 ,	_justification ({{ 0, 0 }})
+,	_baseline_flag (false)
 ,	_bold_flag (false)
 ,	_space_flag (false)
 ,	_vid_inv_flag (false)
@@ -161,7 +162,7 @@ void	NText::set_mag (int x, int y)
 
 
 
-void	NText::set_justification (float x, float y)
+void	NText::set_justification (float x, float y, bool baseline_flag)
 {
 	assert (x >= 0);
 	assert (x <= 1);
@@ -172,6 +173,7 @@ void	NText::set_justification (float x, float y)
 
 	_justification [0] = x;
 	_justification [1] = y;
+	_baseline_flag     = baseline_flag;
 	update_content ();
 
 	ParentInterface * parent_ptr = get_parent ();
@@ -247,6 +249,13 @@ Rect	NText::do_get_bounding_box () const
 
 
 
+void	NText::do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d node_coord)
+{
+	Inherited::do_redraw (disp, clipbox, node_coord + _origin);
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -303,6 +312,10 @@ void	NText::update_content ()
 			-fstb::round_int (fw_pix * _justification [0]),
 			-fstb::round_int (fh_pix * _justification [1])
 		);
+		if (_baseline_flag)
+		{
+			_origin [1] = -_font_ptr->get_baseline ();
+		}
 
 		// Margins from the top-left corner
 		const int      margin_x =
@@ -322,12 +335,13 @@ void	NText::update_content ()
 
 		// Renders the string
 		{
-
 			uint8_t *      buf2_ptr = buf_ptr + fw_pix * margin_y;
 			int            x = margin_x;
 			for (auto c : _txt_ucs4)
 			{
-				_font_ptr->render_char (buf2_ptr + x, c, fw_pix);
+				_font_ptr->render_char (
+					buf2_ptr + x, c, fw_pix, _mag_arr [0], _mag_arr [1]
+				);
 				x += get_char_width (c);
 			}
 		}
@@ -335,14 +349,15 @@ void	NText::update_content ()
 		// Bold
 		if (_bold_flag)
 		{
-			const int      mag_x = _mag_arr [0];
+			const int      mag_x    = _mag_arr [0];
+			uint8_t *      buf2_ptr = buf_ptr + fw_pix * margin_y;
 			for (int y = 0; y < h_pix; ++y)
 			{
-				uint8_t *      buf2_ptr = buf_ptr + fw_pix * (margin_y + y);
-				for (int x = margin_x + w_pix - 1; x >= margin_x + mag_x; --x)
+				for (int x = margin_x + w_pix - 1; x >= margin_x + mag_x; -- x)
 				{
 					buf2_ptr [x] = std::max (buf2_ptr [x], buf2_ptr [x - mag_x]);
 				}
+				buf2_ptr += fw_pix;
 			}
 		}
 

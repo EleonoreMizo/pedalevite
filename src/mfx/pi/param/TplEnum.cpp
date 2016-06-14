@@ -31,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include	"fstb/Err.h"
 
+#include <algorithm>
+
 #include	<cassert>
 #include	<cstdio>
 #include	<cstring>
@@ -101,6 +103,11 @@ TplEnum::TplEnum (const char *val_list_0, const char *name_0, const char *unit_0
 
 std::string	TplEnum::do_get_name (int len) const
 {
+	if (len == 0)
+	{
+		return _name;
+	}
+
 	return (Tools::print_name_bestfit (len, _name.c_str ()));
 }
 
@@ -108,6 +115,11 @@ std::string	TplEnum::do_get_name (int len) const
 
 std::string	TplEnum::do_get_unit (int len) const
 {
+	if (len == 0)
+	{
+		return _unit;
+	}
+
 	return (Tools::print_name_bestfit (len, _unit.c_str ()));
 }
 
@@ -143,12 +155,14 @@ double	TplEnum::do_get_nat_max () const
 
 std::string	TplEnum::do_conv_nat_to_str (double nat, int len) const
 {
+	const int      max_len = 1024;
+	char           txt_0 [max_len+1];
 	const int      index = fstb::round_int (nat);
-	char           txt_0 [1023+1];
+	len = (len > 0) ? std::min (len, max_len) : max_len;
 
 	fstb::snprintf4all (
 		txt_0,
-		sizeof (txt_0),
+		len + 1,
 		_print_format.c_str (),
 		_name_list [index].c_str ()
 	);

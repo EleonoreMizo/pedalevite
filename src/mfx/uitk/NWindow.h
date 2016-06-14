@@ -41,13 +41,15 @@ namespace uitk
 
 
 class NWindow
-:	public ContainerInterface
+:	public NodeInterface
+,	public ContainerInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
+	explicit       NWindow (int node_id);
 	               NWindow ()  = default;
 	virtual        ~NWindow () = default;
 
@@ -78,13 +80,11 @@ protected:
 	virtual Vec2d  do_get_coord_abs () const;
 	virtual void   do_invalidate (const Rect &zone);
 
-	// mfx::uitk::NodeInterface via mfx::uitk::ContainerInterface
+	// mfx::uitk::NodeInterface
 	virtual void   do_notify_attachment (ParentInterface *cont_ptr);
 	virtual int    do_get_id () const;
 	virtual Vec2d  do_get_coord () const;
 	virtual Rect   do_get_bounding_box () const;
-	virtual bool   do_is_browsable () const;
-	virtual int    do_get_override (Button but) const;
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 	virtual void   do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d node_coord);

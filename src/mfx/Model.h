@@ -49,6 +49,7 @@ namespace doc
 	class ActionPreset;
 	class ActionToggleFx;
 	class ActionToggleTuner;
+	class FxId;
 }
 
 namespace pi
@@ -83,6 +84,8 @@ public:
 	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
 	void           set_bank (int index, const doc::Bank &bank);
 	void           select_bank (int index);
+	void           set_bank_name (std::string name);
+	void           set_preset_name (std::string name);
 	void           activate_preset (int index);
 	void           store_preset (int index);
 

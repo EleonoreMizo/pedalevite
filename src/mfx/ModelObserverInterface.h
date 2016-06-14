@@ -73,6 +73,8 @@ public:
 	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
 	void           set_bank (int index, const doc::Bank &bank);
 	void           select_bank (int index);
+	void           set_bank_name (std::string name);
+	void           set_preset_name (std::string name);
 	void           activate_preset (int index);
 	void           store_preset (int index);
 	void           set_tuner (bool active_flag);
@@ -90,11 +92,13 @@ protected:
 	virtual void   do_set_pedalboard_layout (const doc::PedalboardLayout &layout) = 0;
 	virtual void   do_set_bank (int index, const doc::Bank &bank) = 0;
 	virtual void   do_select_bank (int index) = 0;
+	virtual void   do_set_bank_name (std::string name) = 0;
+	virtual void   do_set_preset_name (std::string name) = 0;
 	virtual void   do_activate_preset (int index) = 0;
 	virtual void   do_store_preset (int index) = 0;
 	virtual void   do_set_tuner (bool active_flag) = 0;
 	virtual void   do_set_tuner_freq (float freq) = 0;
-	virtual void	do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;
+	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type) = 0;
 
 

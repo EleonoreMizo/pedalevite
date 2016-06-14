@@ -125,6 +125,11 @@ const HelperDispNum &	TplMapped <T>::use_disp_num () const
 template <class T>
 std::string	TplMapped <T>::do_get_name (int len) const
 {
+	if (len == 0)
+	{
+		return _name;
+	}
+
 	return (Tools::print_name_bestfit (len, _name.c_str ()));
 }
 
@@ -133,6 +138,11 @@ std::string	TplMapped <T>::do_get_name (int len) const
 template <class T>
 std::string	TplMapped <T>::do_get_unit (int len) const
 {
+	if (len == 0)
+	{
+		return _unit;
+	}
+
 	return (Tools::print_name_bestfit (len, _unit.c_str ()));
 }
 
@@ -175,7 +185,8 @@ std::string	TplMapped <T>::do_conv_nat_to_str (double nat, int len) const
 {
 	const int      max_len = 1024;
 	char           txt_0 [max_len+1];
-	_phdn.conv_to_str (nat, txt_0, std::min (len, max_len));
+	len = (len > 0) ? std::min (len, max_len) : max_len;
+	_phdn.conv_to_str (nat, txt_0, len);
 
 	return (txt_0);
 }

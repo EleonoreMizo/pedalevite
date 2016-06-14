@@ -37,7 +37,7 @@ namespace piapi
 
 
 
-// len = 0: no length constraint
+// len = 0: no length constraint, returns all the sub-labels
 std::string	ParamDescInterface::get_name (int len) const
 {
 	assert (len >= 0);
@@ -50,7 +50,7 @@ std::string	ParamDescInterface::get_name (int len) const
 
 
 
-// len = 0: no length constraint
+// len = 0: no length constraint, returns all the sub-labels
 std::string	ParamDescInterface::get_unit (int len) const
 {
 	assert (len >= 0);
@@ -101,6 +101,7 @@ double	ParamDescInterface::get_nat_max () const
 
 
 
+// len = 0: no length constraint, returns all the sub-labels
 std::string	ParamDescInterface::conv_nat_to_str (double nat, int len) const
 {
 	assert (nat >= do_get_nat_min ());

@@ -85,6 +85,20 @@ void	ModelObserverInterface::select_bank (int index)
 
 
 
+void	ModelObserverInterface::set_bank_name (std::string name)
+{
+	do_set_bank_name (name);
+}
+
+
+
+void	ModelObserverInterface::set_preset_name (std::string name)
+{
+	do_set_preset_name (name);
+}
+
+
+
 // set_slot_info_for_current_preset to be called later
 void	ModelObserverInterface::activate_preset (int preset)
 {

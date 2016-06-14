@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        NodeInterface.cpp
+        PageMgrInterface.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/NodeInterface.h"
+#include "mfx/uitk/PageMgrInterface.h"
 
 #include <cassert>
 
@@ -41,44 +41,18 @@ namespace uitk
 
 
 
-// 0 to detach
-void	NodeInterface::notify_attachment (ParentInterface *cont_ptr)
+void	PageMgrInterface::set_nav_layout (const NavLocList &nav_list)
 {
-	do_notify_attachment (cont_ptr);
+	do_set_nav_layout (nav_list);
 }
 
 
 
-int	NodeInterface::get_id () const
+void	PageMgrInterface::jump_to (int node_id)
 {
-	const int      ret_val = do_get_id ();
-	assert (ret_val >= 0);
+	assert (node_id >= 0);
 
-	return ret_val;
-}
-
-
-
-// Relative to the container coordinates
-Vec2d	NodeInterface::get_coord () const
-{
-	return do_get_coord ();
-}
-
-
-
-// Relative to the internal coordinates given by get_coord()
-Rect	NodeInterface::get_bounding_box () const
-{
-	return do_get_bounding_box ();
-}
-
-
-
-// Absolute coordinates of the node
-void	NodeInterface::redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord)
-{
-	do_redraw (disp, clipbox, parent_coord);
+	do_jump_to (node_id);
 }
 
 

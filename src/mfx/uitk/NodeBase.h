@@ -75,8 +75,6 @@ protected:
 	virtual void   do_notify_attachment (ParentInterface *cont_ptr);
 	virtual int    do_get_id () const;
 	virtual Vec2d  do_get_coord () const;
-	virtual bool   do_is_browsable () const;
-	virtual int    do_get_override (Button but) const;
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 

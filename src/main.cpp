@@ -46,12 +46,16 @@
 #include "mfx/ui/TimeShareThread.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
+#include "mfx/uitk/Page.h"
 #include "mfx/uitk/ParentInterface.h"
+#include "mfx/uitk/pg/CurProg.h"
+#include "mfx/uitk/pg/Tuner.h"
 #include "mfx/Model.h"
-#include "mfx/ModelObserverInterface.h"
+#include "mfx/ModelObserverDefault.h"
 #include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
+#include "mfx/View.h"
 #include "mfx/WorldAudio.h"
 
 #if fstb_IS (ARCHI, ARM)
@@ -73,6 +77,12 @@
 	#include <wiringPi.h>
 	#include <wiringPiI2C.h>
 	#include <wiringPiSPI.h>
+	#include <arpa/inet.h>
+	#include <net/if.h>
+	#include <netinet/in.h>
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <sys/ioctl.h>
 	#include <unistd.h>
 	#include <signal.h>
 
@@ -86,6 +96,8 @@
 	#endif
 
 	#include <Windows.h>
+	#include <winsock2.h>
+	#include <ws2tcpip.h>
 
 #else
 	#error Unsupported architecture
@@ -144,40 +156,51 @@ static int64_t MAIN_get_time ()
 
 
 
-static void MAIN_print_text (int x, int y, const char *txt_0, uint8_t *screenbuf_ptr, int stride, const mfx::ui::Font &fnt, int mag_x, int mag_y)
+static std::string MAIN_get_ip_address ()
 {
-	int             pos    = 0;
-	const int       x_org  = x;
-	const int       char_w = fnt.get_char_w ();
-	const int       char_h = fnt.get_char_h ();
-	while (txt_0 [pos] != '\0')
+	std::string    ip_addr;
+
+#if fstb_IS (ARCHI, ARM)
+
+	// Source:
+	// http://www.geekpage.jp/en/programming/linux-network/get-ipaddr.php
+	int            fd = socket (AF_INET, SOCK_DGRAM, 0);
+	struct ifreq   ifr;
+	ifr.ifr_addr.sa_family = AF_INET;
+	fstb::snprintf4all (ifr.ifr_name, IFNAMSIZ, "%s", "eth0");
+	int            ret_val = ioctl (fd, SIOCGIFADDR, &ifr);
+	if (ret_val == 0)
 	{
-		const char      c = txt_0 [pos];
-		++ pos;
-		if (c == '\n')
+		ip_addr = inet_ntoa (((struct sockaddr_in *) &ifr.ifr_addr)->sin_addr);
+	}
+	close (fd);
+
+#else
+
+	::WSADATA      wsa_data;
+	::WSAStartup (2, &wsa_data);
+	char           name_0 [255+1];
+	int            ret_val = gethostname (name_0, sizeof (name_0));
+	if (ret_val == 0)
+	{
+		::PHOSTENT     hostinfo = gethostbyname (name_0);
+		if (hostinfo != 0)
 		{
-			x = x_org;
-			y += char_h * mag_y;
-		}
-		else
-		{
-			fnt.render_char (
-				screenbuf_ptr + x + y * stride,
-				c,
-				stride,
-				mag_x, mag_y
-			);
-			x += char_w * mag_x;
+			ip_addr = inet_ntoa (*(struct in_addr *)(*hostinfo->h_addr_list));
 		}
 	}
+	::WSACleanup ();
+
+#endif
+
+	return ip_addr;
 }
 
 
 
 class Context
-:	public mfx::ModelObserverInterface
+:	public mfx::ModelObserverDefault
 ,	public mfx::adrv::CbInterface
-,	public mfx::uitk::ParentInterface
 {
 public:
 	double         _sample_freq;
@@ -203,6 +226,8 @@ public:
 	               _proc_ctx;
 	mfx::ProcessingContext
 	               _tune_ctx;
+	mfx::ui::UserInputInterface::MsgQueue
+	               _queue_input_to_gui;
 	mfx::ui::UserInputInterface::MsgQueue
 	               _queue_input_to_cmd;
 	mfx::ui::UserInputInterface::MsgQueue
@@ -243,52 +268,30 @@ public:
 	mfx::Model     _model;
 
 	// View
+	mfx::View      _view;
 	mfx::ui::Font  _fnt_8x12;
 	mfx::ui::Font  _fnt_6x8;
 	mfx::ui::Font  _fnt_6x6;
-	mfx::doc::Setup
-	               _setup;
-	int            _preset_index  = 0;
-	int            _bank_index    = 0;
-	mfx::ModelObserverInterface::SlotInfoList
-	               _slot_info_list;
-	volatile bool  _tuner_flag    = false;
-	volatile float _detected_freq = 0;
-	int            _disp_cur_slot = -1; // Negative: displays the preset page
 
 	mfx::uitk::Rect
 	               _inval_rect;
-	mfx::uitk::NWindow
-	               _page_content;
+	mfx::uitk::Page
+	               _page_mgr;
+	mfx::uitk::pg::CurProg
+	               _page_cur_prog;
+	mfx::uitk::pg::Tuner
+	               _page_tuner;
 
 	Context ();
 	~Context ();
 	void           set_proc_info (double sample_freq, int max_block_size);
-	void           display_page_preset ();
-	void           display_page_efx (int slot_index);
-	void           display_page_tuner (const char *note_0);
-	static void    video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride);
-	static void    clear_page (mfx::uitk::NWindow &win);
 protected:
-	// mfx::ModelObserverInterface
-	virtual void   do_set_edit_mode (bool edit_flag);
-	virtual void   do_set_pedalboard_layout (const mfx::doc::PedalboardLayout &layout);
-	virtual void   do_set_bank (int index, const mfx::doc::Bank &bank);
-	virtual void   do_select_bank (int index);
-	virtual void   do_activate_preset (int index);
-	virtual void   do_store_preset (int index);
+	// mfx::ModelObserverDefault
 	virtual void   do_set_tuner (bool active_flag);
-	virtual void   do_set_tuner_freq (float freq);
-	virtual void	do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list);
-	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, mfx::PiType type);
 	// mfx::adrv:CbInterface
 	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	virtual void   do_notify_dropout ();
 	virtual void   do_request_exit ();
-	// mfx::uitk::ParentInterface
-	virtual mfx::uitk::Vec2d
-	               do_get_coord_abs () const;
-	virtual void   do_invalidate (const mfx::uitk::Rect &zone);
 };
 
 Context::Context ()
@@ -301,6 +304,7 @@ Context::Context ()
 #endif
 ,	_buf_alig (4096 * 4)
 ,	_proc_ctx ()
+,	_queue_input_to_gui ()
 ,	_queue_input_to_cmd ()
 ,	_queue_input_to_audio ()
 #if defined (MAIN_USE_VOID)
@@ -318,12 +322,14 @@ Context::Context ()
 ,	_leds (_all_io)
 #endif
 ,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input)
+,	_view ()
 ,	_fnt_8x12 ()
 ,	_fnt_6x8 ()
 ,	_fnt_6x6 ()
-,	_slot_info_list ()
 ,	_inval_rect ()
-,	_page_content ()
+,	_page_mgr (_model, _view, _display, _queue_input_to_gui, _user_input, _fnt_6x6, _fnt_6x8, _fnt_8x12)
+,	_page_cur_prog (MAIN_get_ip_address ())
+,	_page_tuner (_leds)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -332,7 +338,8 @@ Context::Context ()
 	mfx::ui::FontDataDefault::make_06x08 (_fnt_6x8);
 	mfx::ui::FontDataDefault::make_06x06 (_fnt_6x6);
 
-	// Default: everything to the main queue, except pot to the audio engine
+	// Assigns input devices
+	/*** To do: build a common table in mfx::Cst for all assignments ***/
 	for (int type = 0; type < mfx::ui::UserInputType_NBR_ELT; ++type)
 	{
 		const int      nbr_param = _user_input.get_nbr_param (
@@ -340,20 +347,35 @@ Context::Context ()
 		);
 		for (int index = 0; index < nbr_param; ++index)
 		{
+			mfx::ui::UserInputInterface::MsgQueue * queue_ptr =
+				&_queue_input_to_cmd;
+			if (   type == mfx::ui::UserInputType_POT
+			    || type == mfx::ui::UserInputType_ROTENC)
+			{
+				queue_ptr = &_queue_input_to_audio;
+			}
+			if (   type == mfx::ui::UserInputType_SW
+			    && (index == 0 || index == 1 || (index >= 10 && index < 14)))
+			{
+				/*** To do: rotenc 5 and 6 ***/
+				queue_ptr = &_queue_input_to_gui;
+			}
 			_user_input.set_msg_recipient (
 				static_cast <mfx::ui::UserInputType> (type),
-				index,
-				  (   type == mfx::ui::UserInputType_POT
-				   || type == mfx::ui::UserInputType_ROTENC)
-				? &_queue_input_to_audio
-				: &_queue_input_to_cmd
+				index, queue_ptr
 			);
 		}
 	}
 
-	_model.set_observer (this);
+	_model.set_observer (&_view);
+	_view.add_observer (*this);
 
 	mfx::doc::Bank bank;
+	bank._name = "Cr\xC3\xA9" "dit Usurier";
+	for (auto &preset : bank._preset_arr)
+	{
+		preset._name = "<Empty preset>";
+	}
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [0];
 		preset._name = "Basic disto";
@@ -653,11 +675,7 @@ Context::Context ()
 	_model.select_bank (0);
 	_model.activate_preset (3);
 
-	_page_content.set_node_id (666999);
-	_page_content.notify_attachment (this);
-	_page_content.set_coord (mfx::uitk::Vec2d ());
-	const mfx::uitk::Vec2d  screen_size (_display.get_width (), _display.get_height ());
-	_page_content.set_size (screen_size, screen_size);
+	_page_mgr.set_page_content (_page_cur_prog);
 }
 
 Context::~Context ()
@@ -672,300 +690,16 @@ void	Context::set_proc_info (double sample_freq, int max_block_size)
 	_model.set_process_info (_sample_freq, _max_block_size);
 }
 
-void	Context::display_page_preset ()
-{
-	uint8_t *      p_ptr  = _display.use_screen_buf ();
-	const int      scr_w  = _display.get_width ();
-	const int      scr_h  = _display.get_height ();
-	const int      scr_s  = _display.get_stride ();
-
-	const mfx::ui::Font &   fnt_big = _fnt_8x12;
-	const mfx::ui::Font &   fnt_sml = _fnt_6x6;
-	const int      nbr_chr_big = scr_w / fnt_big.get_char_w ();
-	const int      nbr_chr_sml = scr_w / fnt_sml.get_char_w ();
-	const int      fx_list_y   = fnt_big.get_char_h () + 2;
-	const int      chr_h_sml   = fnt_sml.get_char_h ();
-	const int      nbr_lines   = (scr_h - fx_list_y) / chr_h_sml;
-
-	const int      max_textlen = 1023;
-	char           txt_0 [max_textlen+1];
-	assert (nbr_chr_big <= max_textlen);
-	assert (nbr_chr_sml <= max_textlen);
-
-	const mfx::doc::Preset &   preset =
-		_setup._bank_arr [_bank_index]._preset_arr [_preset_index];
-
-	clear_page (_page_content);
-
-	// Preset title
-	fstb::snprintf4all (
-		txt_0, nbr_chr_big + 1, "%02d %s",
-		_preset_index + 1,
-		preset._name.c_str ()
-	);
-	mfx::uitk::NText *   txt_ptr = new mfx::uitk::NText (0);
-	_page_content.push_back (mfx::uitk::ContainerInterface::NodeSPtr (txt_ptr));
-	txt_ptr->set_font (fnt_big);
-	txt_ptr->set_coord (mfx::uitk::Vec2d (0, 0));
-	txt_ptr->set_text (txt_0);
-
-	// Effect list
-	int            line_pos = 0;
-	for (const auto &slot_sptr : preset._slot_list)
-	{
-		if (line_pos >= nbr_lines)
-		{
-			break;
-		}
-		if (slot_sptr.get () != 0)
-		{
-			const mfx::doc::Slot &  slot = *slot_sptr;
-			std::string    pi_type_name =
-				mfx::pi::PluginModel_get_name (slot._pi_model);
-			const int      y = fx_list_y + line_pos * chr_h_sml;
-			bool           mod_flag = (! slot._settings_mixer._map_param_ctrl.empty ());
-			if (! mod_flag)
-			{
-				const auto     it = slot._settings_all.find (slot._pi_model);
-				if (it != slot._settings_all.end ())
-				{
-					mod_flag = (! it->second._map_param_ctrl.empty ());
-				}
-			}
-
-			txt_ptr = new mfx::uitk::NText (line_pos + 1);
-			_page_content.push_back (mfx::uitk::ContainerInterface::NodeSPtr (txt_ptr));
-			txt_ptr->set_font (fnt_sml);
-			txt_ptr->set_frame (mfx::uitk::Vec2d (scr_w, 0), mfx::uitk::Vec2d (0, 0));
-			txt_ptr->set_coord (mfx::uitk::Vec2d (0, y));
-			txt_ptr->set_vid_inv (mod_flag);
-			pi_type_name = mfx::pi::param::Tools::print_name_bestfit (
-				scr_w, pi_type_name.c_str (),
-				*txt_ptr, &mfx::uitk::NText::get_char_width
-			);
-			txt_ptr->set_text (pi_type_name.c_str ());
-
-			++ line_pos;
-		}
-	}
-
-	// Redraw
-	memset (p_ptr, 0, scr_s * scr_h);
-	_page_content.redraw (_display, _inval_rect, mfx::uitk::Vec2d ());
-	_inval_rect = mfx::uitk::Rect ();
-
-	_display.refresh (0, 0, scr_w, scr_h);
-}
-
-void	Context::display_page_efx (int slot_index)
-{
-	uint8_t *      p_ptr  = _display.use_screen_buf ();
-	const int      scr_w  = _display.get_width ();
-	const int      scr_h  = _display.get_height ();
-	const int      scr_s  = _display.get_stride ();
-
-	memset (p_ptr, 0, scr_s * scr_h);
-
-	const mfx::ui::Font &   fnt_big = _fnt_8x12;
-	const mfx::ui::Font &   fnt_mid = _fnt_6x8;
-	const mfx::ui::Font &   fnt_sml = _fnt_6x6;
-	const int      nbr_chr_big = scr_w / fnt_big.get_char_w ();
-	const int      nbr_chr_mid = scr_w / fnt_mid.get_char_w ();
-	const int      nbr_chr_sml = scr_w / fnt_sml.get_char_w ();
-	const int      par_list_y  = fnt_big.get_char_h () + 2 + fnt_mid.get_char_h () + 2;
-	const int      chr_h_sml   = fnt_sml.get_char_h ();
-	const int      nbr_lines   = (scr_h - par_list_y) / chr_h_sml;
-
-	const int      max_textlen = 1023;
-	char           txt_0 [max_textlen+1];
-	assert (nbr_chr_big <= max_textlen);
-	assert (nbr_chr_mid <= max_textlen);
-	assert (nbr_chr_sml <= max_textlen);
-
-	const mfx::doc::Preset &   preset =
-		_setup._bank_arr [_bank_index]._preset_arr [_preset_index];
-
-	// Preset title
-	fstb::snprintf4all (
-		txt_0, nbr_chr_big + 1, "%02d %s",
-		_preset_index + 1,
-		preset._name.c_str ()
-	);
-	MAIN_print_text (0, 0, txt_0, p_ptr, scr_s, fnt_big, 1, 1);
-
-	// Effect name
-	const mfx::doc::Slot &  slot = *(preset._slot_list [slot_index]);
-	std::string    pi_type_name =
-		mfx::pi::PluginModel_get_name (slot._pi_model);
-	pi_type_name = mfx::pi::param::Tools::print_name_bestfit (
-		nbr_chr_mid, pi_type_name.c_str ()
-	);
-	memcpy (txt_0, pi_type_name.c_str (), pi_type_name.length () + 1);
-	MAIN_print_text (
-		0, fnt_big.get_char_h () + 2, txt_0, p_ptr, scr_s, fnt_mid, 1, 1
-	);
-
-	// Parameter list
-	int            line_pos = 0;
-	for (int type = 0; type < mfx::PiType_NBR_ELT && line_pos < nbr_lines; ++type)
-	{
-		const mfx::doc::PluginSettings * settings_ptr =
-			&slot._settings_mixer;
-		if (type == mfx::PiType_MAIN)
-		{
-			const auto     it = slot._settings_all.find (slot._pi_model);
-			if (it == slot._settings_all.end ())
-			{
-				assert (false);
-			}
-			else
-			{
-				settings_ptr = &it->second;
-			}
-		}
-		const int      nbr_param = int (settings_ptr->_param_list.size ());
-		for (int p = 0; p < nbr_param && line_pos < nbr_lines; ++p)
-		{
-			if (   _slot_info_list.empty ()
-			    || _slot_info_list [slot_index] [type].get () == 0)
-			{
-				// When plug-in is not available
-				if (type == mfx::PiType_MIX)
-				{
-					break;
-				}
-				fstb::snprintf4all (
-					txt_0, nbr_chr_sml + 1, "%-4d%*.4f",
-					p,
-					nbr_chr_sml - 4,
-					settings_ptr->_param_list [p]
-				);
-			}
-
-			else
-			{
-				const mfx::ModelObserverInterface::PluginInfo & pi_info =
-					(*_slot_info_list [slot_index] [type]);
-				const mfx::piapi::ParamDescInterface & desc =
-					pi_info._pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, p);
-
-				const double   nat = desc.conv_nrm_to_nat (pi_info._param_arr [p]);
-				const std::string val_s = desc.conv_nat_to_str (nat, nbr_chr_sml);
-
-				const int      max_name_len = int (nbr_chr_sml - val_s.length ());
-				const std::string name = desc.get_name (max_name_len);
-
-				fstb::snprintf4all (
-					txt_0, nbr_chr_sml + 1, "%*s%s",
-					-max_name_len,
-					name.c_str (),
-					val_s.c_str ()
-				);
-			}
-
-			const int      y = par_list_y + line_pos * chr_h_sml;
-			MAIN_print_text (0, y, txt_0, p_ptr, scr_s, fnt_sml, 1, 1);
-
-			++ line_pos;
-		}
-	}
-
-	_display.refresh (0, 0, scr_w, scr_h);
-}
-
-void	Context::display_page_tuner (const char *note_0)
-{
-	uint8_t *      p_ptr  = _display.use_screen_buf ();
-	const int      scr_w  = _display.get_width ();
-	const int      scr_h  = _display.get_height ();
-	const int      scr_s  = _display.get_stride ();
-
-	memset (p_ptr, 0, scr_s * scr_h);
-
-	const int      char_w  = _fnt_8x12.get_char_w ();
-	const int      char_h  = _fnt_8x12.get_char_h ();
-	const int      txt_len = int (strlen (note_0));
-	const int      mag_x   = scr_w / (txt_len * char_w);
-	const int      mag_y   = scr_h / char_h;
-	const int      pos_x   = (scr_w - txt_len * char_w * mag_x) >> 1;
-	const int      pos_y   = (scr_h -           char_h * mag_y) >> 1;
-	MAIN_print_text (pos_x, pos_y, note_0, p_ptr, scr_s, _fnt_8x12, mag_x, mag_y);
-	_display.refresh (0, 0, scr_w, scr_h);
-}
-
-void	Context::video_invert (int x, int y, int w, int h, uint8_t *buf_ptr, int stride)
-{
-	buf_ptr += y * stride + x;
-	for (y = 0; y < h; ++y)
-	{
-		for (x = 0; x < w; ++x)
-		{
-			buf_ptr [x] = ~buf_ptr [x];
-		}
-		buf_ptr += stride;
-	}
-}
-
-void	Context::clear_page (mfx::uitk::NWindow &win)
-{
-	const int      nbr_nodes = win.get_nbr_nodes ();
-	for (int pos = nbr_nodes - 1; pos >= 0; --pos)
-	{
-		win.erase (pos);
-	}
-}
-
-void	Context::do_set_edit_mode (bool edit_flag)
-{
-	// Nothing
-}
-
-void	Context::do_set_pedalboard_layout (const mfx::doc::PedalboardLayout &layout)
-{
-	// Nothing
-}
-
-void	Context::do_set_bank (int index, const mfx::doc::Bank &bank)
-{
-	_setup._bank_arr [index] = bank;
-}
-
-void	Context::do_select_bank (int index)
-{
-	_bank_index = index;
-}
-
-void	Context::do_activate_preset (int index)
-{
-	_preset_index = index;
-	_slot_info_list.clear ();
-	_disp_cur_slot = -1;
-}
-
-void	Context::do_store_preset (int index)
-{
-	// Nothing
-}
-
 void	Context::do_set_tuner (bool active_flag)
 {
-	_tuner_flag = active_flag;
-	_disp_cur_slot = -1;
-}
-
-void	Context::do_set_tuner_freq (float freq)
-{
-	_detected_freq = freq;
-}
-
-void	Context::do_set_slot_info_for_current_preset (const mfx::ModelObserverInterface::SlotInfoList &info_list)
-{
-	_slot_info_list = info_list;
-}
-
-void	Context::do_set_param (int pi_id, int index, float val, int slot_index, mfx::PiType type)
-{
-	// Nothing
+	if (active_flag)
+	{
+		_page_mgr.set_page_content (_page_tuner);
+	}
+	else
+	{
+		_page_mgr.set_page_content (_page_cur_prog);
+	}
 }
 
 void	Context::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
@@ -998,16 +732,6 @@ void	Context::do_request_exit ()
 	_quit_flag = true;
 }
 
-mfx::uitk::Vec2d	Context::do_get_coord_abs () const
-{
-	return mfx::uitk::Vec2d ();
-}
-
-void	Context::do_invalidate (const mfx::uitk::Rect &zone)
-{
-	_inval_rect.merge (zone);
-}
-
 
 
 static int MAIN_main_loop (Context &ctx)
@@ -1028,33 +752,15 @@ static int MAIN_main_loop (Context &ctx)
 
 		ctx._model.process_messages ();
 		
-		const bool     tuner_flag = ctx._tuner_flag;
-		bool           disto_flag = false;
-		float          disto_gain = 1;
+		const bool     tuner_flag = ctx._view.is_tuner_active ();
 
-		if (! ctx._slot_info_list.empty () && ctx._preset_index < 2)
-		{
-			mfx::ModelObserverInterface::PluginInfoSPtr pi_efx_sptr =
-				ctx._slot_info_list [0] [mfx::PiType_MAIN];
-			mfx::ModelObserverInterface::PluginInfoSPtr pi_mix_sptr =
-				ctx._slot_info_list [0] [mfx::PiType_MIX ];
+		const int      preset_index = ctx._view.get_preset_index ();
+		const mfx::ModelObserverInterface::SlotInfoList & slot_info_list =
+			ctx._view.use_slot_info_list ();
 
-			if (! tuner_flag)
-			{
-				disto_flag = (pi_mix_sptr->_param_arr [mfx::pi::DryWet::Param_BYPASS] < 0.5f);
-				const mfx::piapi::ParamDescInterface & desc =
-					pi_efx_sptr->_pi.get_param_info (
-						mfx::piapi::ParamCateg_GLOBAL,
-						mfx::pi::DistoSimple::Param_GAIN
-					);
-				const float  disto_gain_nrm =
-					pi_efx_sptr->_param_arr [mfx::pi::DistoSimple::Param_GAIN];
-				disto_gain = float (desc.conv_nrm_to_nat (disto_gain_nrm));
-			}
-		}
 		const float  usage_max  = ctx._usage_max.exchange (-1);
 		const float  usage_min  = ctx._usage_min.exchange (-1);
-		const float  freq = (tuner_flag) ? ctx._detected_freq : 0;
+		const float  freq = (tuner_flag) ? ctx._view.get_tuner_freq () : 0;
 		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
 		if (usage_max >= 0 && usage_min >= 0)
 		{
@@ -1065,121 +771,30 @@ static int MAIN_main_loop (Context &ctx)
 			);
 		}
 
-		char           freq_0 [127+1] = "Note: ---- ---- ------- Hz";
-		char           note3_0 [127+1] = "-";
-		char           note4_0 [127+1] = "----";
-		const int      nbr_led           = 3;
-		float          lum_arr [nbr_led] = { 0, 0, 0 };
-
-		if (ctx._model.check_signal_clipping ())
-		{
-			lum_arr [0] = 1;
-		}
-		if (ctx._dropout_flag.exchange (false))
-		{
-			lum_arr [2] = 1;
-		}
-
-		if (freq > 0)
-		{
-			const float    midi_pitch = log2 (freq / 220) * 12 - 3 + 60;
-			const int      midi_note  = fstb::round_int (midi_pitch);
-			const float    cents_dbl  = (midi_pitch - midi_note) * 100;
-			const int      cents      = fstb::round_int (cents_dbl);
-			const int      octave     = midi_note / 12;
-			const int      note       = midi_note - octave * 12;
-			static const char * const note_0_arr [12] =
-			{
-				"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
-			};
-
-			if (octave >= 0 && octave <= 9)
-			{
-				fstb::snprintf4all (
-					note3_0, sizeof (note3_0),
-					"%s%1d",
-					note_0_arr [note], octave
-				);
-			}
-			fstb::snprintf4all (
-				note4_0, sizeof (note4_0),
-				"%2s%-2d",
-				note_0_arr [note], octave
-			);
-			fstb::snprintf4all (
-				freq_0, sizeof (freq_0),
-				"Note: %4s %+4d %7.3lf Hz",
-				note4_0, cents, freq
-			);
-
-			const int      mid_index = (nbr_led - 1) / 2;
-			const float    cents_abs = fabs (cents_dbl);
-			lum_arr [mid_index    ] = std::max (5 - cents_abs, 0.0f) * (1.0f / 5);
-
-			const float    lum      = fstb::limit (cents_abs * (1.0f / 25), 0.0f, 1.0f);
-			lum_arr [mid_index - 1] = (cents_dbl < 0) ? lum : 0;
-			lum_arr [mid_index + 1] = (cents_dbl > 0) ? lum : 0;
-		}
-
-		for (int led_index = 0; led_index < nbr_led; ++led_index)
-		{
-			float           val = lum_arr [led_index];
-			val = val * val;  // Gamma 2.0
-			ctx._leds.set_led (led_index, val);
-		}
-
-		char disto_gain_0 [255+1] = "------";
 		if (! tuner_flag)
 		{
-			fstb::snprintf4all (
-				disto_gain_0, sizeof (disto_gain_0),
-				"%6.1f",
-				disto_gain
-			);
+			const int      nbr_led           = 3;
+			float          lum_arr [nbr_led] = { 0, 0, 0 };
+			if (ctx._model.check_signal_clipping ())
+			{
+				lum_arr [0] = 1;
+			}
+			if (ctx._dropout_flag.exchange (false))
+			{
+				lum_arr [2] = 1;
+			}
+			for (int led_index = 0; led_index < nbr_led; ++led_index)
+			{
+				float           val = lum_arr [led_index];
+				val = val * val;  // Gamma 2.0
+				ctx._leds.set_led (led_index, val);
+			}
 		}
-		char param_0 [255+1];
-		fstb::snprintf4all (
-			param_0, sizeof (param_0),
-			"[%s] [%s] [%s]",
-			tuner_flag ? "T" : " ",
-			tuner_flag ? "-" : disto_flag ? "D" : " ",
-			disto_gain_0
-		);
 
-		fprintf (stderr, "%s %s %s\r", cpu_0, freq_0, param_0);
+		fprintf (stderr, "%s\r", cpu_0);
 		fflush (stderr);
 
-		// Display test
-		if (tuner_flag)
-		{
-			ctx.display_page_tuner (note3_0);
-		}
-		else
-		{
-			const mfx::doc::Preset &   preset =
-				ctx._setup._bank_arr [ctx._bank_index]._preset_arr [ctx._preset_index];
-			const int    nbr_slots = int (preset._slot_list.size ());
-			if (ctx._disp_cur_slot < 0 || ctx._disp_cur_slot >= nbr_slots)
-			{
-				ctx.display_page_preset ();
-			}
-			else
-			{
-				ctx.display_page_efx (ctx._disp_cur_slot);
-			}
-			if ((loop_count & 31) == 31)
-			{
-				do
-				{
-					++ ctx._disp_cur_slot;
-				}
-				while (ctx._disp_cur_slot < nbr_slots && preset._slot_list [ctx._disp_cur_slot].get () == 0);
-				if (ctx._disp_cur_slot >= nbr_slots)
-				{
-					ctx._disp_cur_slot = -1;
-				}
-			}
-		}
+		ctx._page_mgr.process_messages ();
 
 		bool wait_flag = true;
 

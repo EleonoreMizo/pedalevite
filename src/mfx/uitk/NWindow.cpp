@@ -41,6 +41,14 @@ namespace uitk
 
 
 
+NWindow::NWindow (int node_id)
+:	_node_id (node_id)
+{
+	assert (node_id >= 0);
+}
+
+
+
 void	NWindow::set_size (Vec2d disp, Vec2d virt)
 {
 	_size_disp = disp;
@@ -200,28 +208,14 @@ Rect	NWindow::do_get_bounding_box () const
 
 
 
-bool	NWindow::do_is_browsable () const
-{
-	return true;
-}
-
-
-
-int	NWindow::do_get_override (Button but) const
-{
-	return OvrAction_DEFAULT;
-}
-
-
-
-NodeInterface::EvtProp	NWindow::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	NWindow::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
 	for (auto &node_sptr : _node_list)
 	{
 		ret_val = node_sptr->handle_evt (evt);
-		if (ret_val == EvtProp_EAT)
+		if (ret_val == EvtProp_CATCH)
 		{
 			break;
 		}
