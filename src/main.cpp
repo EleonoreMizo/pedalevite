@@ -751,16 +751,14 @@ static int MAIN_main_loop (Context &ctx)
 #endif
 
 		ctx._model.process_messages ();
-		
+
 		const bool     tuner_flag = ctx._view.is_tuner_active ();
 
-		const int      preset_index = ctx._view.get_preset_index ();
 		const mfx::ModelObserverInterface::SlotInfoList & slot_info_list =
 			ctx._view.use_slot_info_list ();
 
 		const float  usage_max  = ctx._usage_max.exchange (-1);
 		const float  usage_min  = ctx._usage_min.exchange (-1);
-		const float  freq = (tuner_flag) ? ctx._view.get_tuner_freq () : 0;
 		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
 		if (usage_max >= 0 && usage_min >= 0)
 		{

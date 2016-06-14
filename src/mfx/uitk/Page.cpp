@@ -268,6 +268,9 @@ void	Page::process_input ()
 				assert (false);
 
 				break;
+			default:
+				// Nothing
+				break;
 			}
 
 			_input_device.return_cell (*cell_ptr);

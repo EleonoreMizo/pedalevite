@@ -125,6 +125,9 @@ MsgHandlerInterface::EvtProp	Tuner::do_handle_evt (const NodeEvt &evt)
 			_scale = Scale ((int (_scale)                 + 1) % Scale_NBR_ELT);
 			ret_val = EvtProp_CATCH;
 			break;
+		default:
+			// Nothing
+			break;
 		}
 		i_set_freq (_view_ptr->get_tuner_freq ());
 	}

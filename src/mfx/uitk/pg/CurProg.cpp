@@ -119,7 +119,6 @@ void	CurProg::do_connect (Model &model, const View &view, ContainerInterface &pa
 	const int     bl_s  = fnt_s.get_baseline ();
 	const int     bl_m  = fnt_m.get_baseline ();
 	const int     h_s   = fnt_s.get_char_h ();
-	const int     h_m   = fnt_m.get_char_h ();
 	const int     h_l   = fnt_l.get_char_h ();
 
 	const int     x_mid = _page_size [0] >> 1;
@@ -190,6 +189,9 @@ MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
 			preset_index = (_preset_index + 1) % Cst::_nbr_presets_per_bank;
 			_model_ptr->activate_preset (preset_index);
 			ret_val = EvtProp_CATCH;
+			break;
+		default:
+			// Nothing
 			break;
 		}
 	}
