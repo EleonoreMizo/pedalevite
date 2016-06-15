@@ -117,10 +117,19 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_cursor ())
 	{
-		if (   evt.get_cursor () == NodeEvt::Curs_ENTER
-		    && node_id >= 0 && node_id < int (_param_list.size ()))
+		const NodeEvt::Curs  curs = evt.get_cursor ();
+		if (node_id >= 0 && node_id < int (_param_list.size ()))
 		{
-			update_loc_edit (node_id);
+			if (curs == NodeEvt::Curs_ENTER)
+			{
+				update_loc_edit (node_id);
+			}
+
+			// Reflects the (un)selection on the value node
+			assert ((node_id & 1) == 0);
+			const int      val_id = node_id + 1;
+			NodeEvt        evt2 (NodeEvt::create_cursor (val_id, curs));
+			_param_list [val_id]->handle_evt (evt2);
 		}
 	}
 
@@ -190,7 +199,6 @@ void	ParamList::set_param_info ()
 
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
-	const int      frm_w = (scr_w * 3) >> 2;
 
 	const int      slot_index = _loc_edit._slot_index;
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
@@ -234,7 +242,7 @@ void	ParamList::set_param_info ()
 			TxtSPtr        name_sptr (new NText (node_id));
 			name_sptr->set_coord (Vec2d (0, h_m * pos_disp));
 			name_sptr->set_font (*_fnt_ptr);
-			name_sptr->set_frame (Vec2d (frm_w, 0), Vec2d ());
+			name_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
 			TxtSPtr        val_sptr (new NText (node_id + 1));
 			val_sptr->set_coord (Vec2d (scr_w, h_m * pos_disp));
@@ -329,7 +337,6 @@ int	ParamList::conv_param_to_node_id (PiType type, int index) const
 	}
 
 	const int      node_id = line_pos * 2;
-	assert (node_id < int (_param_list.size ()));
 
 	return node_id;
 }
