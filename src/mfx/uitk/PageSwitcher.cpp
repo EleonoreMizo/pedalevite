@@ -46,8 +46,8 @@ PageSwitcher::PageSwitcher (Page &page_mgr)
 :	_page_mgr (page_mgr)
 ,	_page_map ()
 ,	_call_stack ()
-,	_usr_ptr (0)
 ,	_cur_page (pg::PageType_INVALID)
+,	_usr_ptr (0)
 ,	_prev_node_id (-1)
 {
 	// Nothing

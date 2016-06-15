@@ -294,10 +294,10 @@ public:
 	               _page_tuner;
 	mfx::uitk::pg::MenuMain
 	               _page_menu_main;
-	mfx::uitk::pg::ParamList
-	               _page_param_list;
 	mfx::uitk::pg::EditProg
 	               _page_edit_prog;
+	mfx::uitk::pg::ParamList
+	               _page_param_list;
 
 	Context ();
 	~Context ();
