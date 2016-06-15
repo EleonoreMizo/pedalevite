@@ -94,6 +94,7 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	const int      h_m   = _fnt_m_ptr->get_char_h ();
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
+	_menu_sptr->set_disp_pos (Vec2d ());
 
 	_prog_name_sptr  ->set_coord (Vec2d (x_mid, 0 * h_m));
 	_controllers_sptr->set_coord (Vec2d (x_mid, 1 * h_m));

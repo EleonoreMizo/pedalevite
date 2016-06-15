@@ -54,6 +54,8 @@ public:
 	virtual        ~NWindow () = default;
 
 	void           set_size (Vec2d disp, Vec2d virt);
+	void           set_disp_pos (Vec2d pos);
+	void           set_autoscroll (bool flag);
 
 	void           set_node_id (int node_id);
 	ParentInterface *
@@ -95,17 +97,21 @@ protected:
 
 private:
 
-	int            _node_id    = -1;    // Negative: not set
-	ParentInterface *                   // 0 = not attached.
-	               _parent_ptr = 0;
+	void           keep_node_visible (NodeInterface &node);
+
+	int            _node_id        = -1;   // Negative: not set
+	ParentInterface *                      // 0 = not attached.
+	               _parent_ptr     = 0;
 	Vec2d          _coord;
 
 	Vec2d          _size_disp;
-	Vec2d          _size_virt;
+	Vec2d          _size_virt;             // Null component = unlimited (int both directions)
 	Vec2d          _pos_virt;
 
 	std::vector <NodeSPtr>
 	               _node_list;
+
+	bool           _autoscroll_flag = true;
 
 
 
