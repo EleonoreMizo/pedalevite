@@ -304,13 +304,15 @@ void	Tremolo::do_process_block (ProcInfo &proc)
 	const auto     one    = fstb::ToolsSimd::set1_f32 (1);
 	const auto     half   = fstb::ToolsSimd::set1_f32 (0.5f);
 	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
+	const auto     v_satm = fstb::ToolsSimd::set1_f32 (1e-4f);
 
 	auto           vol    = one + v_amt * (v_lfo + v_bias);
 	vol = fstb::ToolsSimd::max_f32 (vol, zero);
 
 	// Saturation:
 	// x = (1 - (1 - min (0.5 * s * x, 1)) ^ 2) / s
-	const auto     inv_s  = fstb::ToolsSimd::rcp_approx2 (v_sat);
+	const auto     v_satl = fstb::ToolsSimd::max_f32 (v_sat, v_satm);
+	const auto     inv_s  = fstb::ToolsSimd::rcp_approx2 (v_satl);
 	vol = one - fstb::ToolsSimd::min_f32 (vol * v_sat * half, one);
 	vol = (one - vol * vol) * inv_s;
 
