@@ -183,6 +183,7 @@ private:
 	               _queue_input_to_cmd;
 	ModelObserverInterface *            // Can be 0.
 	               _obs_ptr;
+	const int      _dummy_mix_id;
 
 	ModelObserverInterface::SlotInfoList   // Cached. Not affected by the tuner
 	               _slot_info;

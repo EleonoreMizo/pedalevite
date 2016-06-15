@@ -74,6 +74,8 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_tuner_ptr (0)
 ,	_input_device (input_device)
 ,	_queue_input_to_cmd (queue_input_to_cmd)
+,	_obs_ptr (0)
+,	_dummy_mix_id (_central.get_dummy_mix_id ())
 ,	_slot_info ()
 {
 	_central.set_callback (this);
@@ -389,11 +391,26 @@ void	Model::set_param (int slot_index, PiType type, int index, float val)
 	assert (val >= 0);
 	assert (val <= 1);
 
-	const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+	int            pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
 	assert (pi_id >= 0);
-	_central.set_param (pi_id, index, val);
+
+	if (pi_id != _dummy_mix_id)
+	{
+		_central.set_param (pi_id, index, val);
+	}
 
 	update_parameter (_preset_cur, slot_index, type, index, val);
+
+	// Add the mixer plug-in if necessary but don't remove it if not.
+	// This avoids clicks when switching back and forth between configurations
+	// with and without mixer. The removal will be effective at the next call
+	// to apply_settings.
+	if (pi_id == _dummy_mix_id && has_mixer_plugin (_preset_cur, slot_index))
+	{
+		apply_settings ();
+		pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+		assert (pi_id >= 0);
+	}
 
 	if (_obs_ptr != 0)
 	{
@@ -635,20 +652,27 @@ void	Model::check_mixer_plugin (int slot_index, int slot_index_central)
 
 	const bool        use_flag = has_mixer_plugin (_preset_cur, slot_index);	
 	const doc::Slot & slot     = *(_preset_cur._slot_list [slot_index]);
+	int &             id_ref   = _pi_id_list [slot_index]._pi_id_arr [PiType_MIX];
 
 	// Instantiation and setting update
 	if (use_flag)
 	{
-		const int      pi_id = _central.set_mixer (slot_index_central);
-		_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = pi_id;
-		send_effect_settings (pi_id, slot._settings_mixer);
+		if (id_ref < 0 || id_ref == _dummy_mix_id)
+		{
+			const int      pi_id = _central.set_mixer (slot_index_central);
+			id_ref = pi_id;
+			send_effect_settings (pi_id, slot._settings_mixer);
+		}
 	}
 
 	// Removal
 	else
 	{
-		_central.remove_mixer (slot_index_central);
-		_pi_id_list [slot_index]._pi_id_arr [PiType_MIX] = -1;
+		if (id_ref >= 0 && id_ref != _dummy_mix_id)
+		{
+			_central.remove_mixer (slot_index_central);
+		}
+		id_ref = _dummy_mix_id;
 	}
 }
 
@@ -929,7 +953,10 @@ void	Model::process_action_param (const doc::ActionParam &action)
 			_pi_id_list [slot_pos]._pi_id_arr [action._fx_id._type];
 		assert (pi_id >= 0);
 
-		_central.set_param (pi_id, action._index, action._val);
+		if (pi_id != _dummy_mix_id)
+		{
+			_central.set_param (pi_id, action._index, action._val);
+		}
 	}
 }
 
@@ -1060,6 +1087,7 @@ int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
 void	Model::find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id) const
 {
 	assert (pi_id >= 0);
+	assert (pi_id != _dummy_mix_id);
 
 	slot_index = -1;
 	const int      nbr_slots = _preset_cur._slot_list.size ();

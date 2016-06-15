@@ -106,6 +106,7 @@ public:
 	// Misc
 	PluginPool &   use_pi_pool ();
 	int64_t        get_cur_date () const;
+	int            get_dummy_mix_id () const;
 
 
 
@@ -179,6 +180,8 @@ private:
 	DocumentSPtr   _cur_sptr;     // Current state
 	DocumentSPtr   _new_sptr;     // Context being created or modified
 	ContextSet     _ctx_trash;    // Contexts waiting to be finally destroyed.
+
+	int            _dummy_mix_id;
 
 
 

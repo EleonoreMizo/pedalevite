@@ -75,8 +75,15 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 ,	_cur_sptr ()
 ,	_new_sptr ()
 ,	_ctx_trash ()
+,	_dummy_mix_id (-1)
 {
 	_msg_pool.expand_to (1024);
+
+	std::unique_ptr <piapi::PluginInterface>  dummy_mix_uptr (
+		instantiate (pi::PluginModel_DRYWET)
+	);
+	dummy_mix_uptr->init ();
+	_dummy_mix_id = _plugin_pool.add (dummy_mix_uptr);
 }
 
 
@@ -457,6 +464,13 @@ PluginPool &	Central::use_pi_pool ()
 int64_t	Central::get_cur_date () const
 {
 	return _input_device.get_cur_date ();
+}
+
+
+
+int	Central::get_dummy_mix_id () const
+{
+	return _dummy_mix_id;
 }
 
 
