@@ -228,11 +228,13 @@ void	DryWet::do_process_block (ProcInfo &proc)
 		const float    mix_end  =
 			float (_state_set.get_val_end_nat (Param_WET));
 
-		lvl_wet_end =      mix_end  * (1 - byp_end) * vol_end;
+		const float    wet_mix  = mix_end * (1 - byp_end);
+
+		lvl_wet_end =      wet_mix  * vol_end;
 #if defined (mfx_pi_DryWet_GAIN_WET_ONLY)
-		lvl_dry_end = (1 - mix_end) *      byp_end;
+		lvl_dry_end = (1 - wet_mix);
 #else
-		lvl_dry_end = (1 - mix_end) *      byp_end  * vol_end;
+		lvl_dry_end = (1 - wet_mix) * vol_end;
 #endif
 
 		_level_wet = lvl_wet_end;
