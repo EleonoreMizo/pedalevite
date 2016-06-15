@@ -302,11 +302,11 @@ void	Page::process_input ()
 
 void	Page::handle_redraw ()
 {
+	// Clips the zone to the physical boundaries of the screen
+	_zone_inval.intersect (Rect (Vec2d (), _disp_size));
+
 	if (! _zone_inval.empty ())
 	{
-		// Clips the zone to the physical boundaries of the screen
-		_zone_inval.intersect (Rect (Vec2d (), _disp_size));
-
 		// Clears the background
 		const int      stride  = _display.get_stride ();
 		uint8_t *      buf_ptr = _display.use_screen_buf ();
@@ -326,9 +326,9 @@ void	Page::handle_redraw ()
 			_zone_inval [0] [0], _zone_inval [0] [1],
 			z_size [0], z_size [1]
 		);
-
-		_zone_inval = Rect ();
 	}
+
+	_zone_inval = Rect ();
 }
 
 
