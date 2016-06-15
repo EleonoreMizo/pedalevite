@@ -198,7 +198,7 @@ void	NWindow::do_invalidate (const Rect &zone)
 {
 	if (_parent_ptr != 0)
 	{
-		Rect           zone_parent (zone + _coord);
+		Rect           zone_parent (zone + _coord - _pos_virt);
 		_parent_ptr->invalidate (zone_parent);
 	}
 }
