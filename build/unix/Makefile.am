@@ -328,6 +328,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/MenuMain.cpp \
         ../../src/mfx/uitk/pg/MenuMain.h \
         ../../src/mfx/uitk/pg/PageType.h \
+        ../../src/mfx/uitk/pg/ParamList.cpp \
+        ../../src/mfx/uitk/pg/ParamList.h \
+        ../../src/mfx/uitk/pg/Tools.cpp \
+        ../../src/mfx/uitk/pg/Tools.h \
         ../../src/mfx/uitk/pg/Tuner.cpp \
         ../../src/mfx/uitk/pg/Tuner.h \
         ../../src/mfx/uitk/Button.h \
@@ -374,6 +378,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/CtrlUnit.h \
         ../../src/mfx/GpioPwm.cpp \
         ../../src/mfx/GpioPwm.h \
+        ../../src/mfx/LocEdit.h \
         ../../src/mfx/Model.cpp \
         ../../src/mfx/Model.h \
         ../../src/mfx/ModelObserverDefault.h \

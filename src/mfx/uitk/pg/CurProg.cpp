@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
 #include "mfx/uitk/pg/CurProg.h"
+#include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -101,7 +102,7 @@ CurProg::CurProg (PageSwitcher &page_switcher, std::string ip_addr)
 
 
 
-void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
 	_model_ptr = &model;
 	_view_ptr  = &view;
@@ -193,7 +194,7 @@ MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_S:
-			_page_switcher.switch_to (pg::PageType_MENU_MAIN);
+			_page_switcher.switch_to (pg::PageType_MENU_MAIN, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -295,8 +296,6 @@ void	CurProg::i_set_prog_name (std::string name)
 
 void	CurProg::i_set_param (int pi_id, int index, float val, int slot_index, PiType type)
 {
-	char           txt_0 [255+1];
-
 	if (pi_id < 0 || _view_ptr == 0)
 	{
 		_fx_name_sptr->set_text ("");
@@ -306,96 +305,11 @@ void	CurProg::i_set_param (int pi_id, int index, float val, int slot_index, PiTy
 	}
 	else
 	{
-		const doc::Setup &    setup  = _view_ptr->use_setup ();
-		const doc::Preset &   preset =
-			setup._bank_arr [_bank_index]._preset_arr [_preset_index];
-		const doc::Slot &  slot = *(preset._slot_list [slot_index]);
-		const doc::PluginSettings * settings_ptr = &slot._settings_mixer;
-		if (type == PiType_MAIN)
-		{
-			const auto     it = slot._settings_all.find (slot._pi_model);
-			if (it == slot._settings_all.end ())
-			{
-				assert (false);
-			}
-			else
-			{
-				settings_ptr = &it->second;
-			}
-		}
-
-		const SlotInfoList & sil = _view_ptr->use_slot_info_list ();
-
-		size_t         rem_pix_fx_name = _page_size [0];
-
-		if (sil.empty () || sil [slot_index] [type].get () == 0)
-		{
-			_fx_name_sptr->set_text ("");
-			_param_unit_sptr->set_text ("");
-
-			fstb::snprintf4all (
-				txt_0, sizeof (txt_0), "%-4d",
-				index
-			);
-			_param_name_sptr->set_text (txt_0);
-
-			fstb::snprintf4all (
-				txt_0, sizeof (txt_0), "%.4f",
-				settings_ptr->_param_list [index]
-			);
-			_param_val_sptr->set_text (txt_0);
-
-			_param_unit_sptr->set_text ("");
-		}
-
-		else
-		{
-			const ModelObserverInterface::PluginInfo & pi_info =
-				*(sil [slot_index] [type]);
-			const piapi::ParamDescInterface & desc =
-				pi_info._pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
-
-			size_t         pos_utf8;
-			size_t         len_utf8;
-			size_t         len_pix;
-
-			// Value
-			const double   nat = desc.conv_nrm_to_nat (pi_info._param_arr [index]);
-			std::string    val_s = desc.conv_nat_to_str (nat, 0);
-			pi::param::Tools::cut_str_bestfit (
-				pos_utf8, len_utf8, len_pix,
-				_page_size [0], val_s.c_str (), '\n',
-				*_param_val_sptr, &NText::get_char_width
-			);
-			val_s = val_s.substr (pos_utf8, len_utf8);
-			_param_val_sptr->set_text (val_s);
-
-			// Name
-			std::string    name = desc.get_name (0);
-			name = pi::param::Tools::print_name_bestfit (
-				_page_size [0] - len_pix, name.c_str (),
-				*_param_name_sptr, &NText::get_char_width
-			);
-			_param_name_sptr->set_text (name);
-
-			// Unit
-			std::string    unit = desc.get_unit (0);
-			pi::param::Tools::cut_str_bestfit (
-				pos_utf8, len_utf8, len_pix,
-				_page_size [0], unit.c_str (), '\n',
-				*_param_unit_sptr, &NText::get_char_width
-			);
-			_param_unit_sptr->set_text (unit);
-			rem_pix_fx_name -= len_pix;
-		}
-
-		std::string    pi_type_name =
-			mfx::pi::PluginModel_get_name (slot._pi_model);
-		pi_type_name = pi::param::Tools::print_name_bestfit (
-			rem_pix_fx_name, pi_type_name.c_str (),
-			*_fx_name_sptr, &NText::get_char_width
+		Tools::set_param_text (
+			*_view_ptr, _page_size [0], index, val, slot_index, type,
+			*_param_name_sptr, *_param_val_sptr,
+			_param_unit_sptr.get (), _fx_name_sptr.get ()
 		);
-		_fx_name_sptr->set_text (pi_type_name);
 	}
 }
 

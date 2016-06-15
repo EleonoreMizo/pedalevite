@@ -78,12 +78,12 @@ Page::~Page ()
 
 
 
-void	Page::set_page_content (PageInterface &content)
+void	Page::set_page_content (PageInterface &content, void *usr_ptr)
 {
 	clear ();
 
 	_content_ptr = &content;
-	_content_ptr->connect (_model, _view, *this, _disp_size, _fnt_s, _fnt_m, _fnt_l);
+	_content_ptr->connect (_model, _view, *this, _disp_size, usr_ptr, _fnt_s, _fnt_m, _fnt_l);
 	_view.add_observer (*_content_ptr);
 	_screen.invalidate_all ();
 

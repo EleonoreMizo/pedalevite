@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PageInterface.h
+        Tools.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_PageInterface_HEADER_INCLUDED)
-#define mfx_uitk_PageInterface_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_Tools_HEADER_INCLUDED)
+#define mfx_uitk_pg_Tools_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,43 +27,33 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/MsgHandlerInterface.h"
-#include "mfx/uitk/Vec2d.h"
-#include "mfx/ModelObserverDefault.h"
+#include "mfx/PiType.h"
 
 
 
 namespace mfx
 {
 
-class Model;
 class View;
-
-namespace ui
-{
-	class Font;
-}
 
 namespace uitk
 {
 
+class NText;
+
+namespace pg
+{
 
 
-class PageMgrInterface;
 
-class PageInterface
-:	public MsgHandlerInterface
-,	public ModelObserverDefault
+class Tools
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	virtual        ~PageInterface () = default;
-
-	void           connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
-	void           disconnect ();
+	static void    set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText &param_name, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr);
 
 
 
@@ -71,25 +61,40 @@ public:
 
 protected:
 
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l) = 0;
-	virtual void   do_disconnect () = 0;
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+private:
 
 
 
-}; // class PageInterface
+/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+private:
+
+	               Tools ()                               = delete;
+	               Tools (const Tools &other)             = delete;
+	virtual        ~Tools () = default;
+	Tools &        operator = (const Tools &other)        = delete;
+	bool           operator == (const Tools &other) const = delete;
+	bool           operator != (const Tools &other) const = delete;
+
+}; // class Tools
 
 
 
+}  // namespace pg
 }  // namespace uitk
 }  // namespace mfx
 
 
 
-//#include "mfx/uitk/PageInterface.hpp"
+//#include "mfx/uitk/pg/Tools.hpp"
 
 
 
-#endif   // mfx_uitk_PageInterface_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_Tools_HEADER_INCLUDED
 
 
 

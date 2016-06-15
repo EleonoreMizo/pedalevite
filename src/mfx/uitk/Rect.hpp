@@ -82,10 +82,19 @@ Rect &	Rect::merge (const Rect &other)
 {
 	Rect &         lhs = *this;
 
-	lhs [0] [0] = std::min (lhs [0] [0], other [0] [0]);
-	lhs [0] [1] = std::min (lhs [0] [1], other [0] [1]);
-	lhs [1] [0] = std::max (lhs [1] [0], other [1] [0]);
-	lhs [1] [1] = std::max (lhs [1] [1], other [1] [1]);
+	const Vec2d    sz_lhs = lhs.get_size ();
+	const Vec2d    sz_rhs = other.get_size ();
+	if (sz_lhs [0] <= 0 || sz_lhs [1] <= 0)
+	{
+		lhs = other;
+	}
+	else if (sz_rhs [0] > 0 && sz_rhs [1] > 0)
+	{
+		lhs [0] [0] = std::min (lhs [0] [0], other [0] [0]);
+		lhs [0] [1] = std::min (lhs [0] [1], other [0] [1]);
+		lhs [1] [0] = std::max (lhs [1] [0], other [1] [0]);
+		lhs [1] [1] = std::max (lhs [1] [1], other [1] [1]);
+	}
 
 	return lhs;
 }

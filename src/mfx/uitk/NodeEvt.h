@@ -86,6 +86,7 @@ public:
 	int            get_rotenc () const;
 	int            get_rotenc_val () const;
 
+	bool           is_cursor () const;
 	Curs           get_cursor () const;
 
 

@@ -321,6 +321,7 @@
     <ClInclude Include="mfx\dsp\StereoLevel.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
+    <ClInclude Include="mfx\LocEdit.h" />
     <ClInclude Include="mfx\Model.h" />
     <ClInclude Include="mfx\ModelObserverDefault.h" />
     <ClInclude Include="mfx\ModelObserverInterface.h" />
@@ -394,6 +395,8 @@
     <ClInclude Include="mfx\uitk\pg\EditProg.h" />
     <ClInclude Include="mfx\uitk\pg\MenuMain.h" />
     <ClInclude Include="mfx\uitk\pg\PageType.h" />
+    <ClInclude Include="mfx\uitk\pg\ParamList.h" />
+    <ClInclude Include="mfx\uitk\pg\Tools.h" />
     <ClInclude Include="mfx\uitk\pg\Tuner.h" />
     <ClInclude Include="mfx\uitk\Rect.h" />
     <ClInclude Include="mfx\uitk\Rect.hpp" />
@@ -510,7 +513,10 @@
     <ClCompile Include="mfx\pi\ParamStateSet.cpp" />
     <ClCompile Include="mfx\pi\param\HelperDispNum.cpp" />
     <ClCompile Include="mfx\pi\param\MapPiecewiseLinLog.cpp" />
-    <ClCompile Include="mfx\pi\param\Tools.cpp" />
+    <ClCompile Include="mfx\pi\param\Tools.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="mfx\pi\param\TplEnum.cpp" />
     <ClCompile Include="mfx\pi\param\TplLin.cpp" />
     <ClCompile Include="mfx\pi\PluginModel.cpp" />
@@ -540,6 +546,11 @@
     <ClCompile Include="mfx\uitk\pg\CurProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\EditProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\MenuMain.cpp" />
+    <ClCompile Include="mfx\uitk\pg\ParamList.cpp" />
+    <ClCompile Include="mfx\uitk\pg\Tools.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="mfx\uitk\pg\Tuner.cpp">
       <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>

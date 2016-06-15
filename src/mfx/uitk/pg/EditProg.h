@@ -40,6 +40,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+class LocEdit;
+
 namespace uitk
 {
 
@@ -58,7 +61,7 @@ class EditProg
 
 public:
 
-	explicit       EditProg (PageSwitcher &page_switcher, const std::vector <pi::PluginModel> &fx_list);
+	explicit       EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <pi::PluginModel> &fx_list);
 	virtual        ~EditProg () = default;
 
 
@@ -68,7 +71,7 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
+	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
 	virtual void   do_disconnect ();
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
@@ -102,17 +105,20 @@ private:
 	void           set_preset_info ();
 	void           set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel);
 	EvtProp        change_effect (int node_id, int dir);
+	void           update_loc_edit (int node_id);
+	int            conv_loc_edit_to_node_id () const;
 
 	const std::vector <pi::PluginModel> &
 	               _fx_list;
 	PageSwitcher & _page_switcher;
+	LocEdit &      _loc_edit;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
 	const ui::Font *              // 0 = not connected
-	               _fnt_m_ptr;
+	               _fnt_ptr;
 
 	WinSPtr        _menu_sptr;    // Contains 3 entries (2 of them are selectable) + the slot list
 	TxtSPtr        _fx_list_sptr;

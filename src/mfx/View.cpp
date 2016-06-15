@@ -117,13 +117,69 @@ int	View::get_preset_index () const
 
 
 
+void	View::update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val)
+{
+	if (preset.is_slot_empty (slot_index))
+	{
+		assert (false);
+	}
+	else
+	{
+		doc::Slot &    slot = *(preset._slot_list [slot_index]);
+		doc::PluginSettings &  settings =
+				(type == PiType_MIX)
+			? slot._settings_mixer
+			: slot._settings_all [slot._pi_model];
+		if (index >= int (settings._param_list.size ()))
+		{
+			assert (false);
+		}
+		else
+		{
+			settings._param_list [index] = val;
+		}
+	}
+}
+
+
+
+float	View::get_param_val (const doc::Preset &preset, int slot_index, PiType type, int index)
+{
+	float          val = 0;
+
+	if (preset.is_slot_empty (slot_index))
+	{
+		assert (false);
+	}
+	else
+	{
+		doc::Slot &    slot = *(preset._slot_list [slot_index]);
+		doc::PluginSettings &  settings =
+				(type == PiType_MIX)
+			? slot._settings_mixer
+			: slot._settings_all [slot._pi_model];
+		if (index >= int (settings._param_list.size ()))
+		{
+			assert (false);
+		}
+		else
+		{
+			val = settings._param_list [index];
+		}
+	}
+
+	return val;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 // We need to copy the observer list because this list may be modified by
 // a sub-observer.
-/*** To do: turn this macro into a template function ***/
+/*** To do: turn this macro into a nice template function ***/
 #define mfx_View_PROPAGATE(x) \
 	do { \
 		ObsSet obs_set_copy (_obs_set); \
@@ -224,7 +280,7 @@ void	View::do_set_slot_info_for_current_preset (const SlotInfoList &info_list)
 
 void	View::do_set_param (int pi_id, int index, float val, int slot_index, PiType type)
 {
-	/*** To do ***/
+	update_parameter (_preset_cur, slot_index, type, index, val);
 	mfx_View_PROPAGATE (set_param (pi_id, index, val, slot_index, type));
 }
 

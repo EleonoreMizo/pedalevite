@@ -53,7 +53,9 @@
 #include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/PageType.h"
+#include "mfx/uitk/pg/ParamList.h"
 #include "mfx/uitk/pg/Tuner.h"
+#include "mfx/LocEdit.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverDefault.h"
 #include "mfx/MsgQueue.h"
@@ -281,6 +283,7 @@ public:
 
 	mfx::uitk::Rect
 	               _inval_rect;
+	mfx::LocEdit   _loc_edit;
 	mfx::uitk::Page
 	               _page_mgr;
 	mfx::uitk::PageSwitcher
@@ -291,6 +294,8 @@ public:
 	               _page_tuner;
 	mfx::uitk::pg::MenuMain
 	               _page_menu_main;
+	mfx::uitk::pg::ParamList
+	               _page_param_list;
 	mfx::uitk::pg::EditProg
 	               _page_edit_prog;
 
@@ -345,12 +350,14 @@ Context::Context ()
 ,	_fnt_6x8 ()
 ,	_fnt_6x6 ()
 ,	_inval_rect ()
+,	_loc_edit ()
 ,	_page_mgr (_model, _view, _display, _queue_input_to_gui, _user_input, _fnt_6x6, _fnt_6x8, _fnt_8x12)
 ,	_page_switcher (_page_mgr)
 ,	_page_cur_prog (_page_switcher, MAIN_get_ip_address ())
 ,	_page_tuner (_page_switcher, _leds)
 ,	_page_menu_main (_page_switcher)
-,	_page_edit_prog (_page_switcher, _pi_type_list)
+,	_page_edit_prog (_page_switcher, _loc_edit, _pi_type_list)
+,	_page_param_list (_page_switcher, _loc_edit)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -696,12 +703,13 @@ Context::Context ()
 	_model.select_bank (0);
 	_model.activate_preset (3);
 
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG   , _page_cur_prog );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER      , _page_tuner    );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN  , _page_menu_main);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG  , _page_edit_prog);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG  , _page_cur_prog  );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER     , _page_tuner     );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN , _page_menu_main );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG , _page_edit_prog );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST, _page_param_list);
 
-	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG);
+	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }
 
 Context::~Context ()
@@ -722,6 +730,7 @@ void	Context::do_set_tuner (bool active_flag)
 	{
 		_page_switcher.call_page (
 			mfx::uitk::pg::PageType_TUNER,
+			0,
 			_page_mgr.get_cursor_node ()
 		);
 	}

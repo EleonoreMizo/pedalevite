@@ -66,7 +66,7 @@ public:
 	explicit       Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
 	virtual        ~Page ();
 
-	void           set_page_content (PageInterface &content);
+	void           set_page_content (PageInterface &content, void *usr_ptr);
 	int            get_cursor_node () const;
 	void           clear (bool evt_flag = true);
 

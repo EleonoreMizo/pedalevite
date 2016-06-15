@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MenuMain.h
+        ParamList.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_MenuMain_HEADER_INCLUDED)
-#define mfx_uitk_pg_MenuMain_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_ParamList_HEADER_INCLUDED)
+#define mfx_uitk_pg_ParamList_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -28,14 +28,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/NText.h"
+#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
-
-#include <memory>
+#include "mfx/uitk/PageMgrInterface.h"
 
 
 
 namespace mfx
 {
+
+class LocEdit;
+
 namespace uitk
 {
 
@@ -46,7 +49,7 @@ namespace pg
 
 
 
-class MenuMain
+class ParamList
 :	public PageInterface
 {
 
@@ -54,8 +57,8 @@ class MenuMain
 
 public:
 
-	explicit       MenuMain (PageSwitcher &page_switcher);
-	virtual        ~MenuMain () = default;
+	explicit       ParamList (PageSwitcher &page_switcher, LocEdit &loc_edit);
+	virtual        ~ParamList () = default;
 
 
 
@@ -71,6 +74,11 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
+	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
+	virtual void   do_activate_preset (int index);
+	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type);
+	virtual void   do_remove_plugin (int slot_index);
+
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -79,28 +87,35 @@ private:
 
 	enum Entry
 	{
-		Entry_PROG  = 0,
-		Entry_BANKS ,
-		Entry_LAYOUT,
-		Entry_MASTER,
-		Entry_REBOOT,
-
-		Entry_NBR_ELT
+		Entry_WINDOW = 1000,
+		Entry_FX_SETUP
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
+	typedef std::shared_ptr <NWindow> WinSPtr;
+	typedef std::vector <TxtSPtr> TxtArray;
+
+	void           set_param_info ();
+	void           update_param_txt (PiType type, int index);
+	void           update_loc_edit (int node_id);
+	int            conv_loc_edit_to_node_id () const;
+	int            conv_param_to_node_id (PiType type, int index) const;
+	void           conv_node_id_to_param (PiType &type, int &index, int node_id);
+	EvtProp        change_param (int node_id, int dir);
 
 	PageSwitcher & _page_switcher;
+	LocEdit &      _loc_edit;
+	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
+	const ui::Font *              // 0 = not connected
+	               _fnt_ptr;
 
-	TxtSPtr        _edit_prog_sptr;
-	TxtSPtr        _edit_bank_sptr;
-	TxtSPtr        _edit_layout_sptr;
-	TxtSPtr        _edit_master_sptr;
-	TxtSPtr        _reboot_sptr;
+	WinSPtr        _menu_sptr;    // Contains 1 entry (selectable) + the slot list
+	TxtSPtr        _fx_setup_sptr;
+	TxtArray       _param_list;   // Parameters are grouped by pairs (name/value). First the mixer parameters, then the plug-in parameters.
 
 
 
@@ -108,13 +123,13 @@ private:
 
 private:
 
-	               MenuMain ()                               = delete;
-	               MenuMain (const MenuMain &other)          = delete;
-	MenuMain &     operator = (const MenuMain &other)        = delete;
-	bool           operator == (const MenuMain &other) const = delete;
-	bool           operator != (const MenuMain &other) const = delete;
+	               ParamList ()                               = delete;
+	               ParamList (const ParamList &other)         = delete;
+	ParamList &    operator = (const ParamList &other)        = delete;
+	bool           operator == (const ParamList &other) const = delete;
+	bool           operator != (const ParamList &other) const = delete;
 
-}; // class MenuMain
+}; // class ParamList
 
 
 
@@ -124,11 +139,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/MenuMain.hpp"
+//#include "mfx/uitk/pg/ParamList.hpp"
 
 
 
-#endif   // mfx_uitk_pg_MenuMain_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_ParamList_HEADER_INCLUDED
 
 
 

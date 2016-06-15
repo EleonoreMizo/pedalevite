@@ -74,7 +74,7 @@ Tuner::Tuner (PageSwitcher &page_switcher, ui::LedInterface &led)
 
 
 
-void	Tuner::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	Tuner::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
 	_view_ptr  = &view;
 	_page_ptr  = &page;

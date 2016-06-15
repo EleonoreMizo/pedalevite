@@ -79,7 +79,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 
 
 
-void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -145,18 +145,18 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			switch (evt.get_target ())
 			{
-			case Entry_PROG:   _page_switcher.switch_to (pg::PageType_EDIT_PROG);  break;
-/*			case Entry_BANKS:  _page_switcher.switch_to (pg::PageType_EDIT_BANKS); break;
-			case Entry_LAYOUT: _page_switcher.switch_to (pg::PageType_PB_LAYOUT);  break;
-			case Entry_MASTER: _page_switcher.switch_to (pg::PageType_MASTER_VOL); break;
-			case Entry_REBOOT: _page_switcher.switch_to (pg::PageType_REBOOT);     break;
+			case Entry_PROG:   _page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);  break;
+/*			case Entry_BANKS:  _page_switcher.switch_to (pg::PageType_EDIT_BANKS, 0); break;
+			case Entry_LAYOUT: _page_switcher.switch_to (pg::PageType_PB_LAYOUT, 0);  break;
+			case Entry_MASTER: _page_switcher.switch_to (pg::PageType_MASTER_VOL, 0); break;
+			case Entry_REBOOT: _page_switcher.switch_to (pg::PageType_REBOOT, 0);     break;
 */			default:
 				ret_val = EvtProp_PASS;
 				break;
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_CUR_PROG);
+			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:

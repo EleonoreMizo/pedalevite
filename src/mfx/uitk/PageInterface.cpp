@@ -42,13 +42,13 @@ namespace uitk
 
 
 
-void	PageInterface::connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	PageInterface::connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
 	assert (page.get_nbr_nodes () == 0);
 	assert (page_size [0] > 0);
 	assert (page_size [1] > 0);
 
-	do_connect (model, view, page, page_size, fnt_s, fnt_m, fnt_l);
+	do_connect (model, view, page, page_size, usr_ptr, fnt_s, fnt_m, fnt_l);
 }
 
 

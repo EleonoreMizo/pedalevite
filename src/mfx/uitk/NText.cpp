@@ -376,9 +376,8 @@ void	NText::update_content ()
 		}
 
 		// Video inverse
-		if (has_cursor () || _vid_inv_flag)
+		if (_vid_inv_flag)
 		{
-			NodeBase::invert_zone (buf_ptr, fw_pix, fh_pix, fw_pix);
 			if (has_cursor () && _vid_inv_flag && fw_pix >= 2 && fh_pix >= 2)
 			{
 				NodeBase::invert_zone (
@@ -387,6 +386,10 @@ void	NText::update_content ()
 					fh_pix - 2,
 					fw_pix
 				);
+			}
+			else
+			{
+				NodeBase::invert_zone (buf_ptr, fw_pix, fh_pix, fw_pix);
 			}
 		}
 

@@ -65,6 +65,9 @@ public:
 	int            get_bank_index () const;
 	int            get_preset_index () const;
 
+	static void    update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
+	static float   get_param_val (const doc::Preset &preset, int slot_index, PiType type, int index);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

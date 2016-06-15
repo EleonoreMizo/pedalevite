@@ -46,7 +46,9 @@ PageSwitcher::PageSwitcher (Page &page_mgr)
 :	_page_mgr (page_mgr)
 ,	_page_map ()
 ,	_call_stack ()
+,	_usr_ptr (0)
 ,	_cur_page (pg::PageType_INVALID)
+,	_prev_node_id (-1)
 {
 	// Nothing
 }
@@ -63,20 +65,20 @@ void	PageSwitcher::add_page (pg::PageType page_id, PageInterface &page)
 
 
 
-void	PageSwitcher::switch_to (pg::PageType page_id)
+void	PageSwitcher::switch_to (pg::PageType page_id, void *usr_ptr)
 {
-	switch_to (page_id, -1);
+	switch_to (page_id, usr_ptr, -1);
 }
 
 
 
 // node_id = cursor location in the initial page
-void	PageSwitcher::call_page (pg::PageType page_id, int node_id)
+void	PageSwitcher::call_page (pg::PageType page_id, void *usr_ptr, int node_id)
 {
 	assert (_cur_page >= 0);
 
-	_call_stack.push_back (PagePos { _cur_page, node_id });
-	switch_to (page_id);
+	_call_stack.push_back (PagePos { _cur_page, _usr_ptr, node_id });
+	switch_to (page_id, usr_ptr);
 }
 
 
@@ -88,7 +90,7 @@ void	PageSwitcher::return_page ()
 
 	const PagePos        page_pos = _call_stack.back ();
 	_call_stack.pop_back ();
-	switch_to (page_pos._page_id, page_pos._node_id);
+	switch_to (page_pos._page_id, page_pos._usr_ptr, page_pos._node_id);
 }
 
 
@@ -101,14 +103,15 @@ void	PageSwitcher::return_page ()
 
 
 
-void	PageSwitcher::switch_to (pg::PageType page_id, int node_id)
+void	PageSwitcher::switch_to (pg::PageType page_id, void *usr_ptr, int node_id)
 {
 	assert (page_id >= 0);
 	assert (_page_map.find (page_id) != _page_map.end ());
 
 	PageInterface *   page_ptr = _page_map [page_id];
 	_cur_page = page_id;
-	_page_mgr.set_page_content (*page_ptr);
+	_usr_ptr  = usr_ptr;
+	_page_mgr.set_page_content (*page_ptr, usr_ptr);
 	if (node_id >= 0)
 	{
 		_page_mgr.jump_to (node_id);

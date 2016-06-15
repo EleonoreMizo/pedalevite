@@ -378,6 +378,30 @@ void	Model::remove_plugin (int slot_index)
 
 
 
+void	Model::set_param (int slot_index, PiType type, int index, float val)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (! _preset_cur.is_slot_empty (slot_index));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+	assert (val >= 0);
+	assert (val <= 1);
+
+	const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+	assert (pi_id >= 0);
+	_central.set_param (pi_id, index, val);
+
+	update_parameter (_preset_cur, slot_index, type, index, val);
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_param (pi_id, index, val, slot_index, type);
+	}
+}
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

@@ -169,6 +169,13 @@ int	NodeEvt::get_rotenc_val () const
 
 
 
+bool	NodeEvt::is_cursor () const
+{
+	return (_type == Type_CURSOR);
+}
+
+
+
 NodeEvt::Curs	NodeEvt::get_cursor () const
 {
 	assert (_type == Type_CURSOR);
