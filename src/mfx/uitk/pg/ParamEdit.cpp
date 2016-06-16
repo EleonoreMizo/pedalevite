@@ -259,7 +259,7 @@ void	ParamEdit::update_display ()
 			(type == PiType_MIX)
 		? slot._settings_mixer
 		: slot._settings_all [slot._pi_model];
-	const int      index = _loc_edit._param_index;
+//	const int      index = _loc_edit._param_index;
 
 	bool           show_sync_flag = false;
 
@@ -280,7 +280,6 @@ void	ParamEdit::update_display ()
 		nav_list [_nbr_steps + 1]._node_id = Entry_FOLLOW;
 	}
 	_page_ptr->set_nav_layout (nav_list);
-
 
 	update_param_txt ();
 }

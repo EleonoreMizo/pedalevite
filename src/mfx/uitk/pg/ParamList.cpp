@@ -377,17 +377,11 @@ MsgHandlerInterface::EvtProp	ParamList::change_param (int node_id, int dir)
 	assert (node_id >= 0);
 	assert (dir != 0);
 
-	EvtProp        ret_val = EvtProp_PASS;
-
 	const int      slot_index = _loc_edit._slot_index;
 	PiType         type;
 	int            index;
 	conv_node_id_to_param (type, index, node_id);
 	assert (index >= 0);
-
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	float          val_nrm =
-		_view_ptr->get_param_val (preset, slot_index, type, index);
 
 	return Tools::change_param (
 		*_model_ptr, *_view_ptr, slot_index, type, index, 0.05f, dir);
