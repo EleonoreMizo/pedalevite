@@ -328,6 +328,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/MenuMain.cpp \
         ../../src/mfx/uitk/pg/MenuMain.h \
         ../../src/mfx/uitk/pg/PageType.h \
+        ../../src/mfx/uitk/pg/ParamEdit.cpp \
+        ../../src/mfx/uitk/pg/ParamEdit.h \
         ../../src/mfx/uitk/pg/ParamList.cpp \
         ../../src/mfx/uitk/pg/ParamList.h \
         ../../src/mfx/uitk/pg/Tools.cpp \

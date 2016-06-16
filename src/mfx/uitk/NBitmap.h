@@ -60,6 +60,7 @@ public:
 	NBitmap &      operator = (const NBitmap &other) = default;
 
 	void           set_size (Vec2d sz);
+	void           show (bool flag);
 	const uint8_t* use_buffer () const;
 	uint8_t *      use_buffer ();
 	bool           has_cursor () const;
@@ -86,6 +87,7 @@ private:
 	std::vector <uint8_t>
 	               _buffer;
 	bool           _cursor_flag = false;
+	bool           _show_flag   = true;
 
 	static void    invert_zone (ui::DisplayInterface &disp, Rect zone);
 

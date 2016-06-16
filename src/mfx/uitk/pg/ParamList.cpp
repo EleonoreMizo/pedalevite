@@ -139,7 +139,24 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 		switch (but)
 		{
 		case Button_S:
-			/*** To do ***/
+			ret_val = EvtProp_CATCH;
+			if (node_id == Entry_FX_SETUP)
+			{
+				/*** To do ***/
+			}
+			else if (node_id >= 0 && node_id < int (_param_list.size ()))
+			{
+				update_loc_edit (node_id);
+				if (_loc_edit._param_index >= 0)
+				{
+					_page_switcher.switch_to (pg::PageType_PARAM_EDIT, 0);
+				}
+			}
+			else
+			{
+				assert (false);
+				ret_val = EvtProp_PASS;
+			}
 			break;
 		case Button_E:
 			_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
@@ -278,18 +295,9 @@ void	ParamList::update_param_txt (PiType type, int index)
 	TxtSPtr &      val_sptr   = _param_list [node_id + 1];
 	const int      slot_index = _loc_edit._slot_index;
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	assert (! preset.is_slot_empty (slot_index));
-	doc::Slot &    slot = *(preset._slot_list [slot_index]);
-	doc::PluginSettings &  settings =
-			(type == PiType_MIX)
-		? slot._settings_mixer
-		: slot._settings_all [slot._pi_model];
-	const float    val = settings._param_list [index];
-
 	Tools::set_param_text (
-		*_view_ptr, _page_size [0], index, val, slot_index, type,
-		*name_sptr, *val_sptr, 0, 0
+		*_view_ptr, _page_size [0], index, -1, slot_index, type,
+		*name_sptr, *val_sptr, 0, 0, false
 	);
 }
 
@@ -380,41 +388,9 @@ MsgHandlerInterface::EvtProp	ParamList::change_param (int node_id, int dir)
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	float          val_nrm =
 		_view_ptr->get_param_val (preset, slot_index, type, index);
-	float          step    = 0.05f;
 
-	bool           done_flag = false;
-	const View::SlotInfoList & sil = _view_ptr->use_slot_info_list ();
-	if (! sil.empty () && sil [slot_index] [type].get () != 0)
-	{
-		const ModelObserverInterface::PluginInfo & pi_info =
-			*(sil [slot_index] [type]);
-		const piapi::ParamDescInterface & desc =
-			pi_info._pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
-		const piapi::ParamDescInterface::Range range = desc.get_range ();
-		if (range == piapi::ParamDescInterface::Range_DISCRETE)
-		{
-			double         val_nat = desc.conv_nrm_to_nat (val_nrm);
-			val_nat += dir;
-			const double   nat_min = desc.get_nat_min ();
-			const double   nat_max = desc.get_nat_max ();
-			val_nat   = fstb::limit (val_nat, nat_min, nat_max);
-			val_nrm   = float (desc.conv_nat_to_nrm (val_nat));
-			done_flag = true;
-		}
-	}
-
-	if (! done_flag)
-	{
-		val_nrm += step * dir;
-	}
-
-	val_nrm = fstb::limit (val_nrm, 0.0f ,1.0f);
-
-	_model_ptr->set_param (slot_index, type, index, val_nrm);
-
-	ret_val = EvtProp_CATCH;
-
-	return ret_val;
+	return Tools::change_param (
+		*_model_ptr, *_view_ptr, slot_index, type, index, 0.05f, dir);
 }
 
 

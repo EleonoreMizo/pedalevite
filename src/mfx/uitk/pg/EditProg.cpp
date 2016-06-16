@@ -87,9 +87,9 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt_m;
 
-	_prog_name_sptr  ->set_font (fnt_m);
-	_controllers_sptr->set_font (fnt_m);
-	_fx_list_sptr    ->set_font (fnt_s);
+	_prog_name_sptr  ->set_font (*_fnt_ptr);
+	_controllers_sptr->set_font (*_fnt_ptr);
+	_fx_list_sptr    ->set_font (*_fnt_ptr);
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;

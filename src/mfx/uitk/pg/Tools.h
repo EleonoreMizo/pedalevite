@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/MsgHandlerInterface.h"
 #include "mfx/PiType.h"
 
 
@@ -34,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+class Model;
 class View;
 
 namespace uitk
@@ -53,8 +55,9 @@ class Tools
 
 public:
 
-	static void    set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText &param_name, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr);
-
+	static void    set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText &param_name, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
+	static MsgHandlerInterface::EvtProp
+	               change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int dir);
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

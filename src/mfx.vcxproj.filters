@@ -1098,6 +1098,9 @@
     <ClInclude Include="mfx\uitk\pg\Tools.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\uitk\pg\ParamEdit.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1453,6 +1456,9 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="mfx\uitk\pg\Tools.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\uitk\pg\ParamEdit.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>

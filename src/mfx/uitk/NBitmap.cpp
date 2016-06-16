@@ -65,6 +65,14 @@ void	NBitmap::set_size (Vec2d sz)
 
 
 
+void	NBitmap::show (bool flag)
+{
+	_show_flag = flag;
+	invalidate_all ();
+}
+
+
+
 const uint8_t *	NBitmap::use_buffer () const
 {
 	assert (_size [0] > 0);
@@ -127,28 +135,31 @@ MsgHandlerInterface::EvtProp	NBitmap::do_handle_evt (const NodeEvt &evt)
 
 void	NBitmap::do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord)
 {
-	Rect           bitmap_abs (Vec2d (), _size);
-	const Vec2d    node_coord (parent_coord + get_coord ());
-	bitmap_abs += node_coord;
-	bitmap_abs.intersect (clipbox);
-	if (! bitmap_abs.empty ())
+	if (_show_flag)
 	{
-		assert (! _buffer.empty ());
-
-		const Rect     bitmap_rel (bitmap_abs - node_coord);
-		const Vec2d    disp_size (bitmap_abs.get_size ());
-
-		disp.bitblt (
-			bitmap_abs [0] [0], bitmap_abs [0] [1],
-			&_buffer [0],
-			bitmap_rel [0] [0], bitmap_rel [0] [1],
-			disp_size [0], disp_size [1],
-			_size [0]
-		);
-
-		if (_cursor_flag)
+		Rect           bitmap_abs (Vec2d (), _size);
+		const Vec2d    node_coord (parent_coord + get_coord ());
+		bitmap_abs += node_coord;
+		bitmap_abs.intersect (clipbox);
+		if (! bitmap_abs.empty ())
 		{
-			invert_zone (disp, bitmap_abs);
+			assert (! _buffer.empty ());
+
+			const Rect     bitmap_rel (bitmap_abs - node_coord);
+			const Vec2d    disp_size (bitmap_abs.get_size ());
+
+			disp.bitblt (
+				bitmap_abs [0] [0], bitmap_abs [0] [1],
+				&_buffer [0],
+				bitmap_rel [0] [0], bitmap_rel [0] [1],
+				disp_size [0], disp_size [1],
+				_size [0]
+			);
+
+			if (_cursor_flag)
+			{
+				invert_zone (disp, bitmap_abs);
+			}
 		}
 	}
 }

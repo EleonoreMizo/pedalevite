@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/ParamDescInterface.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NText.h"
+#include "mfx/Model.h"
 #include "mfx/View.h"
 
 #include <cassert>
@@ -48,39 +49,40 @@ namespace pg
 
 
 
-void	Tools::set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText &param_name, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr)
+// val = -1: use the settings content
+void	Tools::set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText &param_name, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag)
 {
-	char           txt_0 [255+1];
+	assert (val <= 1);
+	assert (width > 0);
+	assert (slot_index >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	if (param_unit_ptr == 0 && group_unit_val_flag)
+	{
+		param_unit_ptr = &param_val;
+	}
+
+	std::string    txt_val; 
+	std::string    txt_unit; 
 
 	const doc::Preset &   preset = view.use_preset_cur ();
-	const doc::Slot &  slot = *(preset._slot_list [slot_index]);
-	const doc::PluginSettings * settings_ptr = &slot._settings_mixer;
-	if (type == PiType_MAIN)
+	if (val < 0)
 	{
-		const auto     it = slot._settings_all.find (slot._pi_model);
-		if (it == slot._settings_all.end ())
-		{
-			assert (false);
-		}
-		else
-		{
-			settings_ptr = &it->second;
-		}
+		val = view.get_param_val (preset, slot_index, type, index);
 	}
 
 	const View::SlotInfoList & sil = view.use_slot_info_list ();
 
 	size_t         rem_pix_fx_name = width;
+	char           txt_0 [255+1];
 
 	if (sil.empty () || sil [slot_index] [type].get () == 0)
 	{
 		if (fx_name_ptr != 0)
 		{
 			fx_name_ptr->set_text ("");
-		}
-		if (param_unit_ptr != 0)
-		{
-			param_unit_ptr->set_text ("");
 		}
 
 		fstb::snprintf4all (
@@ -91,9 +93,9 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 
 		fstb::snprintf4all (
 			txt_0, sizeof (txt_0), "%.4f",
-			settings_ptr->_param_list [index]
+			val
 		);
-		param_val.set_text (txt_0);
+		txt_val = txt_0;
 	}
 
 	else
@@ -110,17 +112,19 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 		// Value
 		const double   nat   = desc.conv_nrm_to_nat (val);
 		std::string    val_s = desc.conv_nat_to_str (nat, 0);
-		while (! val_s.empty () && val_s [0] == ' ')
+		if (! group_unit_val_flag)
 		{
-			val_s = val_s.substr (1);
+			while (! val_s.empty () && val_s [0] == ' ')
+			{
+				val_s = val_s.substr (1);
+			}
 		}
 		pi::param::Tools::cut_str_bestfit (
 			pos_utf8, len_utf8, len_pix,
 			width, val_s.c_str (), '\n',
 			param_val, &NText::get_char_width
 		);
-		val_s = val_s.substr (pos_utf8, len_utf8);
-		param_val.set_text (val_s);
+		txt_val = val_s.substr (pos_utf8, len_utf8);
 
 		// Name
 		std::string    name = desc.get_name (0);
@@ -133,19 +137,43 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 		// Unit
 		if (param_unit_ptr != 0)
 		{
+			int            w_unit = width;
 			std::string    unit = desc.get_unit (0);
+			if (group_unit_val_flag)
+			{
+				w_unit -= len_pix;
+				unit = std::string (" ") + unit;
+				// We should do this on all the labels of the unit, but :efforts:
+			}
 			pi::param::Tools::cut_str_bestfit (
 				pos_utf8, len_utf8, len_pix,
-				width, unit.c_str (), '\n',
+				w_unit, unit.c_str (), '\n',
 				*param_unit_ptr, &NText::get_char_width
 			);
-			param_unit_ptr->set_text (unit);
-			rem_pix_fx_name -= len_pix;
+			txt_unit = unit.substr (pos_utf8, len_utf8);
+			if (! group_unit_val_flag)
+			{
+				rem_pix_fx_name -= len_pix;
+			}
+		}
+	}
+
+	if (group_unit_val_flag)
+	{
+		param_val.set_text (txt_val + txt_unit);
+	}
+	else
+	{
+		param_val.set_text (txt_val);
+		if (param_unit_ptr != 0)
+		{
+			param_unit_ptr->set_text (txt_unit);
 		}
 	}
 
 	if (fx_name_ptr != 0)
 	{
+		const doc::Slot &  slot = *(preset._slot_list [slot_index]);
 		std::string    pi_type_name =
 			mfx::pi::PluginModel_get_name (slot._pi_model);
 		pi_type_name = pi::param::Tools::print_name_bestfit (
@@ -154,6 +182,57 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 		);
 		fx_name_ptr->set_text (pi_type_name);
 	}
+}
+
+
+
+MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int dir)
+{
+	assert (slot_index >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+	assert (dir != 0);
+
+	MsgHandlerInterface::EvtProp  ret_val = MsgHandlerInterface::EvtProp_PASS;
+
+	const doc::Preset &  preset = view.use_preset_cur ();
+	float          val_nrm =
+		view.get_param_val (preset, slot_index, type, index);
+
+	bool           done_flag = false;
+	const View::SlotInfoList & sil = view.use_slot_info_list ();
+	if (! sil.empty () && sil [slot_index] [type].get () != 0)
+	{
+		const ModelObserverInterface::PluginInfo & pi_info =
+			*(sil [slot_index] [type]);
+		const piapi::ParamDescInterface & desc =
+			pi_info._pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+		const piapi::ParamDescInterface::Range range = desc.get_range ();
+		if (range == piapi::ParamDescInterface::Range_DISCRETE)
+		{
+			double         val_nat = desc.conv_nrm_to_nat (val_nrm);
+			val_nat += dir;
+			const double   nat_min = desc.get_nat_min ();
+			const double   nat_max = desc.get_nat_max ();
+			val_nat   = fstb::limit (val_nat, nat_min, nat_max);
+			val_nrm   = float (desc.conv_nat_to_nrm (val_nat));
+			done_flag = true;
+		}
+	}
+
+	if (! done_flag)
+	{
+		val_nrm += step * dir;
+	}
+
+	val_nrm = fstb::limit (val_nrm, 0.0f ,1.0f);
+
+	model.set_param (slot_index, type, index, val_nrm);
+
+	ret_val = MsgHandlerInterface::EvtProp_CATCH;
+
+	return ret_val;
 }
 
 

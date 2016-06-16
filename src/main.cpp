@@ -53,6 +53,7 @@
 #include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/PageType.h"
+#include "mfx/uitk/pg/ParamEdit.h"
 #include "mfx/uitk/pg/ParamList.h"
 #include "mfx/uitk/pg/Tuner.h"
 #include "mfx/LocEdit.h"
@@ -298,6 +299,8 @@ public:
 	               _page_edit_prog;
 	mfx::uitk::pg::ParamList
 	               _page_param_list;
+	mfx::uitk::pg::ParamEdit
+	               _page_param_edit;
 
 	Context ();
 	~Context ();
@@ -358,6 +361,7 @@ Context::Context ()
 ,	_page_menu_main (_page_switcher)
 ,	_page_edit_prog (_page_switcher, _loc_edit, _pi_type_list)
 ,	_page_param_list (_page_switcher, _loc_edit)
+,	_page_param_edit (_page_switcher, _loc_edit)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -708,6 +712,7 @@ Context::Context ()
 	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN , _page_menu_main );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG , _page_edit_prog );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST, _page_param_list);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT, _page_param_edit);
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }
