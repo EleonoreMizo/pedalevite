@@ -52,6 +52,7 @@
 #include "mfx/uitk/pg/CurProg.h"
 #include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/MenuMain.h"
+#include "mfx/uitk/pg/NotYet.h"
 #include "mfx/uitk/pg/PageType.h"
 #include "mfx/uitk/pg/ParamEdit.h"
 #include "mfx/uitk/pg/ParamList.h"
@@ -301,6 +302,8 @@ public:
 	               _page_param_list;
 	mfx::uitk::pg::ParamEdit
 	               _page_param_edit;
+	mfx::uitk::pg::NotYet
+	               _page_not_yet;
 
 	Context ();
 	~Context ();
@@ -362,6 +365,7 @@ Context::Context ()
 ,	_page_edit_prog (_page_switcher, _loc_edit, _pi_type_list)
 ,	_page_param_list (_page_switcher, _loc_edit)
 ,	_page_param_edit (_page_switcher, _loc_edit)
+,	_page_not_yet (_page_switcher)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -719,6 +723,7 @@ Context::Context ()
 	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG , _page_edit_prog );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST, _page_param_list);
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT, _page_param_edit);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET   , _page_not_yet   );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

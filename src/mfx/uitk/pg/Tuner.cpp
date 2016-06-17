@@ -185,8 +185,6 @@ void	Tuner::i_set_freq (float freq)
 	{
 		_scale_sptr->set_text ("");
 
-		/*** To do: take the selected scale into account ***/
-
 		const float    midi_pitch = log2 (freq / 220) * 12 - 3 + 60;
 
 		// LEDs

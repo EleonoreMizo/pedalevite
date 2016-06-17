@@ -395,6 +395,7 @@
     <ClInclude Include="mfx\uitk\pg\CurProg.h" />
     <ClInclude Include="mfx\uitk\pg\EditProg.h" />
     <ClInclude Include="mfx\uitk\pg\MenuMain.h" />
+    <ClInclude Include="mfx\uitk\pg\NotYet.h" />
     <ClInclude Include="mfx\uitk\pg\PageType.h" />
     <ClInclude Include="mfx\uitk\pg\ParamEdit.h" />
     <ClInclude Include="mfx\uitk\pg\ParamList.h" />
@@ -548,6 +549,7 @@
     <ClCompile Include="mfx\uitk\pg\CurProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\EditProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\MenuMain.cpp" />
+    <ClCompile Include="mfx\uitk\pg\NotYet.cpp" />
     <ClCompile Include="mfx\uitk\pg\ParamEdit.cpp" />
     <ClCompile Include="mfx\uitk\pg\ParamList.cpp" />
     <ClCompile Include="mfx\uitk\pg\Tools.cpp">

@@ -145,12 +145,30 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			switch (evt.get_target ())
 			{
-			case Entry_PROG:   _page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);  break;
-/*			case Entry_BANKS:  _page_switcher.switch_to (pg::PageType_EDIT_BANKS, 0); break;
-			case Entry_LAYOUT: _page_switcher.switch_to (pg::PageType_PB_LAYOUT, 0);  break;
-			case Entry_MASTER: _page_switcher.switch_to (pg::PageType_MASTER_VOL, 0); break;
-			case Entry_REBOOT: _page_switcher.switch_to (pg::PageType_REBOOT, 0);     break;
-*/			default:
+			case Entry_PROG:
+				_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+				break;
+			case Entry_BANKS:
+				/*** To do ***/
+				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
+				//_page_switcher.switch_to (pg::PageType_EDIT_BANKS, 0);
+				break;
+			case Entry_LAYOUT:
+				/*** To do ***/
+				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
+				//_page_switcher.switch_to (pg::PageType_PB_LAYOUT, 0);
+				break;
+			case Entry_MASTER:
+				/*** To do ***/
+				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
+				//_page_switcher.switch_to (pg::PageType_MASTER_VOL, 0);
+				break;
+			case Entry_REBOOT:
+				/*** To do ***/
+				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
+				//_page_switcher.switch_to (pg::PageType_REBOOT, 0);
+				break;
+			default:
 				ret_val = EvtProp_PASS;
 				break;
 			}

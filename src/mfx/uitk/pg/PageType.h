@@ -49,6 +49,7 @@ enum PageType
 	PageType_EDIT_PROG,
 	PageType_PARAM_LIST,
 	PageType_PARAM_EDIT,
+	PageType_NOT_YET,
 
 	PageType_NBR_ELT
 

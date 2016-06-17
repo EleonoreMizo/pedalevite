@@ -145,12 +145,12 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 			if (node_id == Entry_PROG_NAME)
 			{
 				/*** To do ***/
-				assert (false);
+				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
 			}
 			else if (node_id == Entry_CONTROLLERS)
 			{
 				/*** To do ***/
-				assert (false);
+				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
 			}
 			else if (node_id >= 0 && node_id < int (_slot_list.size ()))
 			{
@@ -166,7 +166,7 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 				{
 					// Empty slot
 					/*** To do ***/
-					assert (false);
+					_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
 				}
 			}
 			else

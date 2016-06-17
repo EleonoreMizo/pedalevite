@@ -181,12 +181,12 @@ MsgHandlerInterface::EvtProp	ParamEdit::do_handle_evt (const NodeEvt &evt)
 			if (node_id == Entry_CTRL)
 			{
 				/*** To do ***/
-				assert (false);
+				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
 			}
 			else if (node_id == Entry_FOLLOW)
 			{
 				/*** To do ***/
-				assert (false);
+				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
 			}
 			else
 			{
