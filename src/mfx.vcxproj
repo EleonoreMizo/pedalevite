@@ -282,6 +282,7 @@
     <ClInclude Include="mfx\doc\CtrlLink.h" />
     <ClInclude Include="mfx\doc\CtrlLinkSet.h" />
     <ClInclude Include="mfx\doc\FxId.h" />
+    <ClInclude Include="mfx\doc\ParamPresentation.h" />
     <ClInclude Include="mfx\doc\PedalActionCycle.h" />
     <ClInclude Include="mfx\doc\PedalActionGroup.h" />
     <ClInclude Include="mfx\doc\PedalActionSingleInterface.h" />

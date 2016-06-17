@@ -186,6 +186,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/CtrlLinkSet.h \
         ../../src/mfx/doc/FxId.cpp \
         ../../src/mfx/doc/FxId.h \
+        ../../src/mfx/doc/ParamPresentation.h \
         ../../src/mfx/doc/PedalActionCycle.cpp \
         ../../src/mfx/doc/PedalActionCycle.h \
         ../../src/mfx/doc/PedalActionGroup.h \

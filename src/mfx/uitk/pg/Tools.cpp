@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
 #include "mfx/uitk/pg/Tools.h"
@@ -109,9 +110,15 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 		size_t         len_utf8;
 		size_t         len_pix;
 
+		// Get value & unit
+		std::string    val_s;
+		std::string    unit;
+		print_param_with_pres (
+			val_s, unit,
+			preset, slot_index, type, index, val, desc
+		);
+
 		// Value
-		const double   nat   = desc.conv_nrm_to_nat (val);
-		std::string    val_s = desc.conv_nat_to_str (nat, 0);
 		if (! group_unit_val_flag)
 		{
 			while (! val_s.empty () && val_s [0] == ' ')
@@ -138,12 +145,14 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 		if (param_unit_ptr != 0)
 		{
 			int            w_unit = width;
-			std::string    unit = desc.get_unit (0);
 			if (group_unit_val_flag)
 			{
 				w_unit -= len_pix;
-				unit = std::string (" ") + unit;
-				// We should do this on all the labels of the unit, but :efforts:
+				if (! unit.empty ())
+				{
+					unit = std::string (" ") + unit;
+					// We should do this on all the labels of the unit, but :efforts:
+				}
 			}
 			pi::param::Tools::cut_str_bestfit (
 				pos_utf8, len_utf8, len_pix,
@@ -237,11 +246,141 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 
 
 
+// Returns a set of notches for time pots, in beats
+std::set <float>	Tools::create_beat_notches ()
+{
+	std::set <float>  notches;
+
+	for (float base = 1.0f / 256; base < 256; base *= 2)
+	{
+		notches.insert (base);
+		notches.insert (base * (4.0f / 3));
+		notches.insert (base * (3.0f / 2));
+		notches.insert (base * (8.0f / 5));
+	}
+
+	return notches;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc)
+{
+	val_s.clear ();
+	unit.clear ();
+
+	const double   nat = desc.conv_nrm_to_nat (val);
+
+	// Checks if the parameter has a forced display type
+	if (type == PiType_MAIN)
+	{
+		const piapi::ParamDescInterface::Categ categ = desc.get_categ ();
+		if (categ != piapi::ParamDescInterface::Categ_UNDEFINED)
+		{
+			assert (! preset.is_slot_empty (slot_index));
+			const doc::Slot & slot = *(preset._slot_list [slot_index]);
+			const auto     it_settings = slot._settings_all.find (slot._pi_model);
+			assert (it_settings != slot._settings_all.end ());
+			const doc::PluginSettings &	settings = it_settings->second;
+			const auto     it_pres = settings._map_param_pres.find (index);
+			if (it_pres != settings._map_param_pres.end ())
+			{
+				const double   val_min  = desc.get_nat_min ();
+				const double   val_max  = desc.get_nat_max ();
+
+				if (val_min > 0)
+				{
+					double         val_hdn  = nat;
+					bool           hdn_flag = false;
+					pi::param::HelperDispNum   hdn;
+
+					switch (it_pres->second._disp_mode)
+					{
+					case doc::ParamPresentation::DispMode_MS:
+						hdn.set_preset (pi::param::HelperDispNum::Preset_FLOAT_MILLI);
+						unit = "ms";
+						switch (categ)
+						{
+						case piapi::ParamDescInterface::Categ_TIME_HZ:
+						case piapi::ParamDescInterface::Categ_FREQ_HZ:
+							hdn.set_print_format ("%.1f");
+							hdn.set_range (1.0 / val_max, 1.0 / val_min);
+							val_hdn = 1.0 / nat;
+							hdn_flag = true;
+							break;
+						default:
+							//Nothing
+							break;
+						}
+						break;
+					case doc::ParamPresentation::DispMode_HZ:
+						hdn.set_preset (pi::param::HelperDispNum::Preset_FLOAT_STD);
+						unit = "Hz";
+						switch (categ)
+						{
+						case piapi::ParamDescInterface::Categ_TIME_S:
+							hdn.set_print_format ("%.3f");
+							hdn.set_range (1.0 / val_max, 1.0 / val_min);
+							val_hdn = 1.0 / nat;
+							hdn_flag = true;
+							break;
+						default:
+							//Nothing
+							break;
+						}
+						break;
+					case doc::ParamPresentation::DispMode_NOTE:
+						hdn.set_preset (pi::param::HelperDispNum::Preset_FREQ_NOTE);
+						switch (categ)
+						{
+						case piapi::ParamDescInterface::Categ_TIME_S:
+							hdn.set_range (1.0 / val_max, 1.0 / val_min);
+							val_hdn = 1.0 / nat;
+							hdn_flag = true;
+							break;
+						case piapi::ParamDescInterface::Categ_TIME_HZ:
+						case piapi::ParamDescInterface::Categ_FREQ_HZ:
+							hdn.set_range (val_min, val_max);
+							hdn_flag = true;
+							break;
+						default:
+							//Nothing
+							break;
+						}
+						break;
+					default:
+						// Nothing
+						break;
+					}
+
+					if (hdn_flag)
+					{
+						char           txt_0 [127+1];
+						const int      ret_val =
+							hdn.conv_to_str (val_hdn, txt_0, sizeof (txt_0));
+						if (ret_val == pi::param::HelperDispNum::Err_OK)
+						{
+							val_s = txt_0;
+						}
+					}
+				}
+			}
+		}
+	}
+	if (val_s.empty ())
+	{
+		val_s = desc.conv_nat_to_str (nat, 0);
+		unit  = desc.get_unit (0);
+	}
+}
 
 
 

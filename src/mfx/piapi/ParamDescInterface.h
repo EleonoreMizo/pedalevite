@@ -61,7 +61,6 @@ public:
 		Categ_TIME_S,
 		Categ_TIME_HZ,
 		Categ_FREQ_HZ,
-		Categ_FREQ_PITCH,
 
 		Categ_NBR_ELT
 	};

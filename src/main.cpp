@@ -563,6 +563,12 @@ Context::Context ()
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
 			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_Q] = cls;
+
+#if 0
+			mfx::doc::ParamPresentation pp;
+			pp._disp_mode = mfx::doc::ParamPresentation::DispMode_NOTE;
+			pi_settings._map_param_pres [mfx::pi::Wha::Param_FREQ] = pp;
+#endif
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;

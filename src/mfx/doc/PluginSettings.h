@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/CtrlLinkSet.h"
+#include "mfx/doc/ParamPresentation.h"
 
 #include <map>
 #include <vector>
@@ -49,6 +50,7 @@ class PluginSettings
 public:
 
 	typedef std::map <int, CtrlLinkSet> MapParamCtrl;
+	typedef std::map <int, ParamPresentation> MapPres;
 	typedef std::vector <float> ParamList;
 
 	               PluginSettings ()                            = default;
@@ -61,6 +63,7 @@ public:
 	bool           _force_reset_flag = false;
 	ParamList      _param_list;
 	MapParamCtrl   _map_param_ctrl;     // Parameter index -> controller list
+	MapPres        _map_param_pres;     // Parameter index -> presentation
 
 
 

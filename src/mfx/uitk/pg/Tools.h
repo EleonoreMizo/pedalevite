@@ -30,6 +30,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/MsgHandlerInterface.h"
 #include "mfx/PiType.h"
 
+#include <set>
+#include <string>
+
 
 
 namespace mfx
@@ -37,6 +40,11 @@ namespace mfx
 
 class Model;
 class View;
+
+namespace doc
+{
+	class Preset;
+}
 
 namespace uitk
 {
@@ -58,6 +66,9 @@ public:
 	static void    set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText &param_name, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int dir);
+	static std::set <float>
+	               create_beat_notches ();
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -69,6 +80,8 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static void    print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc);
 
 
 
