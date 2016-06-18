@@ -32,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Model.h"
 #include "mfx/View.h"
 
+#include <algorithm>
+
 #include <cassert>
 
 
@@ -83,6 +85,7 @@ void	Question::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	const int      w_sel = (_page_size [0] * 3) >> 2;
 	const int      h_l   = fnt_l.get_char_h ();
 	const int      h_m   = fnt_m.get_char_h ();
+	const int      ch_y  = std::max (h_l, h_m * 2);
 
 	_title_sptr->set_font (fnt_l);
 	_title_sptr->set_coord (Vec2d (x_mid, h_m * 0));
@@ -97,7 +100,7 @@ void	Question::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		choice_sptr->set_font (fnt_m);
 		choice_sptr->set_justification (0.5f, 0, false);
 		choice_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
-		choice_sptr->set_coord (Vec2d (x_mid, h_m * (c_cnt + 2)));
+		choice_sptr->set_coord (Vec2d (x_mid, ch_y + h_m * c_cnt));
 		_choice_list [c_cnt] = choice_sptr;
 		_page_ptr->push_back (choice_sptr);
 	}
