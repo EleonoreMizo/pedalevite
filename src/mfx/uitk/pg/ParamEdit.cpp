@@ -180,8 +180,7 @@ MsgHandlerInterface::EvtProp	ParamEdit::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			if (node_id == Entry_CTRL)
 			{
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_PARAM_CONTROLLERS, 0, node_id);
 			}
 			else if (node_id == Entry_FOLLOW)
 			{

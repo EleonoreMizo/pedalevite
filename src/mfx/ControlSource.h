@@ -43,6 +43,7 @@ class ControlSource
 
 public:
 
+	inline         ControlSource (ControllerType type, int index);
 	               ControlSource ()                           = default;
 	               ~ControlSource ()                          = default;
 	               ControlSource (const ControlSource &other) = default;

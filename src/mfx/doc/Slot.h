@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/doc/PluginSettings.h"
 #include "mfx/pi/PluginModel.h"
+#include "mfx/PiType.h"
 
 #include <map>
 #include <string>
@@ -57,6 +58,10 @@ public:
 	Slot &         operator = (const Slot &other) = default;
 
 	bool           is_empty () const;
+	PluginSettings &
+	               use_settings (PiType type);
+	const PluginSettings &
+	               use_settings (PiType type) const;
 
 	pi::PluginModel // PluginModel_INVALID value is legal here and means the slot is empty.
 	               _pi_model = pi::PluginModel_INVALID;

@@ -1,7 +1,11 @@
 /*****************************************************************************
 
-        NotYet.h
+        Question.h
         Author: Laurent de Soras, 2016
+
+Switch with call_page()
+Pass a QArg structure as usr_ptr
+Process the reply on the next connect() in the caller page.
 
 --- Legal stuff ---
 
@@ -16,8 +20,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_NotYet_HEADER_INCLUDED)
-#define mfx_uitk_pg_NotYet_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_Question_HEADER_INCLUDED)
+#define mfx_uitk_pg_Question_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -31,6 +35,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageInterface.h"
 
 #include <memory>
+#include <string>
+#include <vector>
 
 
 
@@ -46,8 +52,7 @@ namespace pg
 
 
 
-// Switch with call_page()
-class NotYet
+class Question
 :	public PageInterface
 {
 
@@ -55,8 +60,18 @@ class NotYet
 
 public:
 
-	explicit       NotYet (PageSwitcher &page_switcher);
-	virtual        ~NotYet () = default;
+	class QArg
+	{
+	public:
+		std::string    _title;
+		std::vector <std::string>
+		               _choice_arr;
+		int            _selection = 0; // Input/output
+		bool           _ok_flag;       // Output: Select or Esc
+	};
+
+	explicit       Question (PageSwitcher &page_switcher);
+	virtual        ~Question () = default;
 
 
 
@@ -79,6 +94,7 @@ protected:
 private:
 
 	typedef std::shared_ptr <NText> TxtSPtr;
+	typedef std::vector <TxtSPtr> TxtArray;
 
 	PageSwitcher & _page_switcher;
 	const View *   _view_ptr;     // 0 = not connected
@@ -86,8 +102,10 @@ private:
 	               _page_ptr;
 	Vec2d          _page_size;
 
-	TxtSPtr        _notyet_sptr;
-	TxtSPtr        _back_sptr;
+	TxtSPtr        _title_sptr;
+	TxtArray       _choice_list;
+
+	QArg *         _arg_ptr;
 
 
 
@@ -95,13 +113,13 @@ private:
 
 private:
 
-	               NotYet ()                               = delete;
-	               NotYet (const NotYet &other)            = delete;
-	NotYet &       operator = (const NotYet &other)        = delete;
-	bool           operator == (const NotYet &other) const = delete;
-	bool           operator != (const NotYet &other) const = delete;
+	               Question ()                               = delete;
+	               Question (const Question &other)          = delete;
+	Question &     operator = (const Question &other)        = delete;
+	bool           operator == (const Question &other) const = delete;
+	bool           operator != (const Question &other) const = delete;
 
-}; // class NotYet
+}; // class Question
 
 
 
@@ -111,11 +129,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/NotYet.hpp"
+//#include "mfx/uitk/pg/Question.hpp"
 
 
 
-#endif   // mfx_uitk_pg_NotYet_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_Question_HEADER_INCLUDED
 
 
 

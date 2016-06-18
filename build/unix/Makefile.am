@@ -194,6 +194,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/PedalActionSingleInterface.h \
         ../../src/mfx/doc/PedalboardLayout.cpp \
         ../../src/mfx/doc/PedalboardLayout.h \
+        ../../src/mfx/doc/PluginSettings.cpp \
         ../../src/mfx/doc/PluginSettings.h \
         ../../src/mfx/doc/Preset.cpp \
         ../../src/mfx/doc/Preset.h \
@@ -322,6 +323,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputPi3.cpp \
         ../../src/mfx/ui/UserInputPi3.h \
         ../../src/mfx/ui/UserInputType.h \
+        ../../src/mfx/uitk/pg/CtrlSrcNamed.cpp \
+        ../../src/mfx/uitk/pg/CtrlSrcNamed.h \
         ../../src/mfx/uitk/pg/CurProg.cpp \
         ../../src/mfx/uitk/pg/CurProg.h \
         ../../src/mfx/uitk/pg/EditProg.cpp \
@@ -331,10 +334,14 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/NotYet.cpp \
         ../../src/mfx/uitk/pg/NotYet.h \
         ../../src/mfx/uitk/pg/PageType.h \
+        ../../src/mfx/uitk/pg/ParamControllers.cpp \
+        ../../src/mfx/uitk/pg/ParamControllers.h \
         ../../src/mfx/uitk/pg/ParamEdit.cpp \
         ../../src/mfx/uitk/pg/ParamEdit.h \
         ../../src/mfx/uitk/pg/ParamList.cpp \
         ../../src/mfx/uitk/pg/ParamList.h \
+        ../../src/mfx/uitk/pg/Question.cpp \
+        ../../src/mfx/uitk/pg/Question.h \
         ../../src/mfx/uitk/pg/Tools.cpp \
         ../../src/mfx/uitk/pg/Tools.h \
         ../../src/mfx/uitk/pg/Tuner.cpp \
@@ -378,6 +385,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/ControllerType.h \
         ../../src/mfx/ControlSource.h \
         ../../src/mfx/ControlSource.hpp \
+        ../../src/mfx/Cst.cpp \
         ../../src/mfx/Cst.h \
         ../../src/mfx/CtrlUnit.cpp \
         ../../src/mfx/CtrlUnit.h \

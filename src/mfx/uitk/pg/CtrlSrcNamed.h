@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        LocEdit.h
+        CtrlSrcNamed.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_LocEdit_HEADER_INCLUDED)
-#define mfx_LocEdit_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_CtrlSrcNamed_HEADER_INCLUDED)
+#define mfx_uitk_pg_CtrlSrcNamed_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,30 +27,37 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/PiType.h"
+#include "mfx/ControlSource.h"
+
+#include <string>
 
 
 
 namespace mfx
 {
+namespace uitk
+{
+namespace pg
+{
 
 
 
-class LocEdit
+class CtrlSrcNamed
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               LocEdit ()  = default;
-	virtual        ~LocEdit () = default;
+						CtrlSrcNamed (ControllerType type, int index, const char *name_0);
+	               CtrlSrcNamed ()                          = default;
+	               CtrlSrcNamed (const CtrlSrcNamed &other) = default;
+	virtual        ~CtrlSrcNamed ()                         = default;
 
-	int            _slot_index    = -1;          // -1 if none
-	PiType         _pi_type       = PiType_MIX;  // Should always be valid
-	int            _param_index   = -1;          // -1 if none
-	int            _ctrl_index    = -1;          // -1 if none or new. Always 0 for existing direct links
-	bool           _ctrl_abs_flag = true;        // Link or simple modulation
+	CtrlSrcNamed & operator = (const CtrlSrcNamed &other)   = default;
+
+	ControlSource  _src;
+	std::string    _name;
 
 
 
@@ -70,24 +77,24 @@ private:
 
 private:
 
-	               LocEdit (const LocEdit &other)           = delete;
-	LocEdit &      operator = (const LocEdit &other)        = delete;
-	bool           operator == (const LocEdit &other) const = delete;
-	bool           operator != (const LocEdit &other) const = delete;
+	bool           operator == (const CtrlSrcNamed &other) const = delete;
+	bool           operator != (const CtrlSrcNamed &other) const = delete;
 
-}; // class LocEdit
+}; // class CtrlSrcNamed
 
 
 
+}  // namespace pg
+}  // namespace uitk
 }  // namespace mfx
 
 
 
-//#include "mfx/LocEdit.hpp"
+//#include "mfx/uitk/pg/CtrlSrcNamed.hpp"
 
 
 
-#endif   // mfx_LocEdit_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_CtrlSrcNamed_HEADER_INCLUDED
 
 
 

@@ -32,12 +32,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <set>
 #include <string>
+#include <vector>
 
 
 
 namespace mfx
 {
 
+class ControlSource;
 class Model;
 class View;
 
@@ -56,6 +58,8 @@ namespace pg
 
 
 
+class CtrlSrcNamed;
+
 class Tools
 {
 
@@ -68,6 +72,8 @@ public:
 	               change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int dir);
 	static std::set <float>
 	               create_beat_notches ();
+	static std::string
+	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 
 
 

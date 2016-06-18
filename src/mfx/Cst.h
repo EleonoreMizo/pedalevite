@@ -41,16 +41,16 @@ class Cst
 
 public:
 
-	static const int  _nbr_pedals      = 12;
+	static const int  _nbr_pedals      =  12;
 	static const int  _nbr_presets_per_bank = 64;
-	static const int  _nbr_banks       = 16;  // Per setup
+	static const int  _nbr_banks       =  16;  // Per setup
 
 	static const int  _max_nbr_buf     = 256;
 	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_plugins = 256;
-	static const int  _nbr_chn_in      = 2;
-	static const int  _nbr_chn_out     = 2;
+	static const int  _nbr_chn_in      =   2;
+	static const int  _nbr_chn_out     =   2;
 
 	enum BufSpecial
 	{

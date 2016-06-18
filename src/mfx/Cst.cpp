@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Slot.cpp
+        Cst.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,8 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/Slot.h"
-#include "mfx/pi/DryWet.h"
+#include "mfx/Cst.h"
 
 #include <cassert>
 
@@ -33,64 +32,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace doc
-{
 
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-Slot::Slot ()
-:	_pi_model (pi::PluginModel_INVALID)
-,	_settings_all ()
-,	_settings_mixer ()
-,	_label ()
-{
-	_settings_mixer._force_mono_flag = false;
-	_settings_mixer._param_list.resize (pi::DryWet::Param_NBR_ELT);
-	_settings_mixer._param_list [pi::DryWet::Param_BYPASS] = 0;
-	_settings_mixer._param_list [pi::DryWet::Param_WET   ] = 1;
-	_settings_mixer._param_list [pi::DryWet::Param_GAIN  ] = pi::DryWet::_gain_neutral;
-}
-
-
-
-bool	Slot::is_empty () const
-{
-	return (_pi_model == pi::PluginModel_INVALID);
-}
-
-
-
-PluginSettings &	Slot::use_settings (PiType type)
-{
-	if (type == PiType_MIX)
-	{
-		return _settings_mixer;
-	}
-
-	auto           it = _settings_all.find (_pi_model);
-	assert (it != _settings_all.end ());
-
-	return it->second;
-}
-
-
-
-const PluginSettings &	Slot::use_settings (PiType type) const
-{
-	if (type == PiType_MIX)
-	{
-		return _settings_mixer;
-	}
-
-	auto           it = _settings_all.find (_pi_model);
-	assert (it != _settings_all.end ());
-
-	return it->second;
-}
 
 
 
@@ -102,7 +47,6 @@ const PluginSettings &	Slot::use_settings (PiType type) const
 
 
 
-}  // namespace doc
 }  // namespace mfx
 
 

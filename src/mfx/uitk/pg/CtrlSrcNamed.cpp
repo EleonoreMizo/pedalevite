@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PageType.h
+        CtrlSrcNamed.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,17 +15,18 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#pragma once
-#if ! defined (mfx_uitk_pg_PageType_HEADER_INCLUDED)
-#define mfx_uitk_pg_PageType_HEADER_INCLUDED
-
 #if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
 #endif
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include "mfx/uitk/pg/CtrlSrcNamed.h"
+
+#include <cassert>
 
 
 
@@ -38,38 +39,30 @@ namespace pg
 
 
 
-enum PageType
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+CtrlSrcNamed::CtrlSrcNamed (ControllerType type, int index, const char *name_0)
+:	_src (type, index)
+,	_name (name_0)
 {
-	PageType_INVALID = -1,
+	assert (name_0 != 0);
+}
 
-	PageType_BOOT    = 0,
-	PageType_TUNER,
-	PageType_CUR_PROG,
-	PageType_MENU_MAIN,
-	PageType_EDIT_PROG,
-	PageType_PARAM_LIST,
-	PageType_PARAM_EDIT,
-	PageType_NOT_YET,
-	PageType_QUESTION,
-	PageType_PARAM_CONTROLLERS,
 
-	PageType_NBR_ELT
 
-}; // enum PageType
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 }  // namespace pg
 }  // namespace uitk
 }  // namespace mfx
-
-
-
-//#include "mfx/uitk/pg/PageType.hpp"
-
-
-
-#endif   // mfx_uitk_pg_PageType_HEADER_INCLUDED
 
 
 

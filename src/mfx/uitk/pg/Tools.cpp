@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
+#include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/Model.h"
@@ -380,6 +381,25 @@ void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const 
 		val_s = desc.conv_nat_to_str (nat, 0);
 		unit  = desc.get_unit (0);
 	}
+}
+
+
+
+std::string	Tools::find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list)
+{
+	std::string    name       = "\?\?\?";
+	const int      nbr_src    = int (ctrl_list.size ());
+	bool           found_flag = false;
+	for (int pos = 0; pos < nbr_src && ! found_flag; ++pos)
+	{
+		if (ctrl_list [pos]._src == src)
+		{
+			name       = ctrl_list [pos]._name;
+			found_flag = true;
+		}
+	}
+
+	return name;
 }
 
 

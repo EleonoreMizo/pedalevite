@@ -92,7 +92,7 @@ void	NotYet::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	_back_sptr->set_frame (Vec2d (_page_size [0] >> 1, 0), Vec2d ());
 
 	_notyet_sptr->set_coord (Vec2d (x_mid, (_page_size [1] - h_s) >> 1));
-	_back_sptr  ->set_coord (Vec2d (x_mid,  _page_size [1]));
+	_back_sptr  ->set_coord (Vec2d (x_mid,  _page_size [1]            ));
 
 	_page_ptr->push_back (_notyet_sptr);
 	_page_ptr->push_back (_back_sptr  );

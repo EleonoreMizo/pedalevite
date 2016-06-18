@@ -27,8 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/UserInputType.h"
-
 
 
 namespace mfx
@@ -38,10 +36,12 @@ namespace mfx
 
 enum ControllerType
 {
-	ControllerType_INVALID      = -1,
+	ControllerType_INVALID = -1,
 
-	ControllerType_UIT_ZONE_BEG = 0,
-	ControllerType_UIT_ZONE_LST = ui::UserInputType_NBR_ELT - 1,
+	// Same order as ui::UserInputType
+	ControllerType_SW = 0,
+	ControllerType_POT,
+	ControllerType_ROTENC,
 
 	ControllerType_MIDI,
 	ControllerType_SIG_PROBE,

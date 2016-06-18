@@ -1107,6 +1107,15 @@
     <ClInclude Include="mfx\uitk\pg\NotYet.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\uitk\pg\Question.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\uitk\pg\ParamControllers.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\uitk\pg\CtrlSrcNamed.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1468,6 +1477,21 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="mfx\uitk\pg\NotYet.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\uitk\pg\Question.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\uitk\pg\ParamControllers.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\Cst.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\PluginSettings.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\uitk\pg\CtrlSrcNamed.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>

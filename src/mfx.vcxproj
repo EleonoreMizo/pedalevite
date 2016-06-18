@@ -392,13 +392,16 @@
     <ClInclude Include="mfx\uitk\PageMgrInterface.h" />
     <ClInclude Include="mfx\uitk\PageSwitcher.h" />
     <ClInclude Include="mfx\uitk\ParentInterface.h" />
+    <ClInclude Include="mfx\uitk\pg\CtrlSrcNamed.h" />
     <ClInclude Include="mfx\uitk\pg\CurProg.h" />
     <ClInclude Include="mfx\uitk\pg\EditProg.h" />
     <ClInclude Include="mfx\uitk\pg\MenuMain.h" />
     <ClInclude Include="mfx\uitk\pg\NotYet.h" />
     <ClInclude Include="mfx\uitk\pg\PageType.h" />
+    <ClInclude Include="mfx\uitk\pg\ParamControllers.h" />
     <ClInclude Include="mfx\uitk\pg\ParamEdit.h" />
     <ClInclude Include="mfx\uitk\pg\ParamList.h" />
+    <ClInclude Include="mfx\uitk\pg\Question.h" />
     <ClInclude Include="mfx\uitk\pg\Tools.h" />
     <ClInclude Include="mfx\uitk\pg\Tuner.h" />
     <ClInclude Include="mfx\uitk\Rect.h" />
@@ -479,6 +482,7 @@
     <ClCompile Include="mfx\cmd\CentralCbInterface.cpp" />
     <ClCompile Include="mfx\cmd\Plugin.cpp" />
     <ClCompile Include="mfx\ControlledParam.cpp" />
+    <ClCompile Include="mfx\Cst.cpp" />
     <ClCompile Include="mfx\CtrlUnit.cpp" />
     <ClCompile Include="mfx\doc\ActionBank.cpp" />
     <ClCompile Include="mfx\doc\ActionParam.cpp" />
@@ -490,6 +494,7 @@
     <ClCompile Include="mfx\doc\PedalActionCycle.cpp" />
     <ClCompile Include="mfx\doc\PedalActionSingleInterface.cpp" />
     <ClCompile Include="mfx\doc\PedalboardLayout.cpp" />
+    <ClCompile Include="mfx\doc\PluginSettings.cpp" />
     <ClCompile Include="mfx\doc\Preset.cpp" />
     <ClCompile Include="mfx\doc\Slot.cpp" />
     <ClCompile Include="mfx\dsp\iir\Biquad.cpp" />
@@ -546,12 +551,15 @@
     <ClCompile Include="mfx\uitk\PageMgrInterface.cpp" />
     <ClCompile Include="mfx\uitk\PageSwitcher.cpp" />
     <ClCompile Include="mfx\uitk\ParentInterface.cpp" />
+    <ClCompile Include="mfx\uitk\pg\CtrlSrcNamed.cpp" />
     <ClCompile Include="mfx\uitk\pg\CurProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\EditProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\MenuMain.cpp" />
     <ClCompile Include="mfx\uitk\pg\NotYet.cpp" />
+    <ClCompile Include="mfx\uitk\pg\ParamControllers.cpp" />
     <ClCompile Include="mfx\uitk\pg\ParamEdit.cpp" />
     <ClCompile Include="mfx\uitk\pg\ParamList.cpp" />
+    <ClCompile Include="mfx\uitk\pg\Question.cpp" />
     <ClCompile Include="mfx\uitk\pg\Tools.cpp">
       <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>

@@ -59,6 +59,10 @@ public:
 	PluginSettings &
 	               operator = (const PluginSettings &other)     = default;
 
+	CtrlLinkSet &  use_ctrl_link_set (int index);
+	const CtrlLinkSet &
+	               use_ctrl_link_set (int index) const;
+
 	bool           _force_mono_flag  = false;
 	bool           _force_reset_flag = false;
 	ParamList      _param_list;

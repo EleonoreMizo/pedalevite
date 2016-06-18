@@ -54,8 +54,10 @@
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/NotYet.h"
 #include "mfx/uitk/pg/PageType.h"
+#include "mfx/uitk/pg/ParamControllers.h"
 #include "mfx/uitk/pg/ParamEdit.h"
 #include "mfx/uitk/pg/ParamList.h"
+#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/pg/Tuner.h"
 #include "mfx/LocEdit.h"
 #include "mfx/Model.h"
@@ -276,6 +278,8 @@ public:
 	mfx::Model     _model;
 	std::vector <mfx::pi::PluginModel>
 	               _pi_type_list;
+	std::vector <mfx::uitk::pg::CtrlSrcNamed>
+	               _csn_list;
 
 	// View
 	mfx::View      _view;
@@ -304,6 +308,10 @@ public:
 	               _page_param_edit;
 	mfx::uitk::pg::NotYet
 	               _page_not_yet;
+	mfx::uitk::pg::Question
+	               _page_question;
+	mfx::uitk::pg::ParamControllers
+	               _page_param_controllers;
 
 	Context ();
 	~Context ();
@@ -351,6 +359,28 @@ Context::Context ()
 		mfx::pi::PluginModel_WHA,
 		mfx::pi::PluginModel_FREQ_SHIFT
 	})
+,	_csn_list ({
+		{ mfx::ControllerType_POT   ,  0, "Expression 0" },
+		{ mfx::ControllerType_POT   ,  1, "Expression 1" },
+		{ mfx::ControllerType_POT   ,  2, "Expression 2" },
+		{ mfx::ControllerType_ROTENC,  0, "Knob 0"       },
+		{ mfx::ControllerType_ROTENC,  1, "Knob 1"       },
+		{ mfx::ControllerType_ROTENC,  2, "Knob 2"       },
+		{ mfx::ControllerType_ROTENC,  3, "Knob 3"       },
+		{ mfx::ControllerType_ROTENC,  4, "Knob 4"       },
+		{ mfx::ControllerType_SW    ,  2, "Footsw 0"     },
+		{ mfx::ControllerType_SW    ,  3, "Footsw 1"     },
+		{ mfx::ControllerType_SW    ,  4, "Footsw 2"     },
+		{ mfx::ControllerType_SW    ,  5, "Footsw 3"     },
+		{ mfx::ControllerType_SW    ,  6, "Footsw 4"     },
+		{ mfx::ControllerType_SW    ,  7, "Footsw 5"     },
+		{ mfx::ControllerType_SW    ,  8, "Footsw 6"     },
+		{ mfx::ControllerType_SW    ,  9, "Footsw 7"     },
+		{ mfx::ControllerType_SW    , 14, "Footsw 8"     },
+		{ mfx::ControllerType_SW    , 15, "Footsw 9"     },
+		{ mfx::ControllerType_SW    , 16, "Footsw 10"    },
+		{ mfx::ControllerType_SW    , 17, "Footsw 11"    }
+	})
 ,	_view ()
 ,	_fnt_8x12 ()
 ,	_fnt_6x8 ()
@@ -366,6 +396,8 @@ Context::Context ()
 ,	_page_param_list (_page_switcher, _loc_edit)
 ,	_page_param_edit (_page_switcher, _loc_edit)
 ,	_page_not_yet (_page_switcher)
+,	_page_question (_page_switcher)
+,	_page_param_controllers (_page_switcher, _loc_edit, _csn_list)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -717,13 +749,15 @@ Context::Context ()
 	_model.select_bank (0);
 	_model.activate_preset (3);
 
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG  , _page_cur_prog  );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER     , _page_tuner     );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN , _page_menu_main );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG , _page_edit_prog );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST, _page_param_list);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT, _page_param_edit);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET   , _page_not_yet   );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG         , _page_cur_prog         );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER            , _page_tuner            );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN        , _page_menu_main        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG        , _page_edit_prog        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST       , _page_param_list       );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT       , _page_param_edit       );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET          , _page_not_yet          );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_QUESTION         , _page_question         );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_CONTROLLERS, _page_param_controllers);
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

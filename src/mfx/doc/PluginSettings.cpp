@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ControlSource.hpp
+        PluginSettings.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,18 +15,24 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (mfx_ControlSource_CODEHEADER_INCLUDED)
-#define mfx_ControlSource_CODEHEADER_INCLUDED
+#if defined (_MSC_VER)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
+#endif
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include "mfx/doc/PluginSettings.h"
 
 #include <cassert>
 
 
 
 namespace mfx
+{
+namespace doc
 {
 
 
@@ -35,40 +41,22 @@ namespace mfx
 
 
 
-ControlSource::ControlSource (ControllerType type, int index)
-:	_type (type)
-,	_index (index)
+CtrlLinkSet &	PluginSettings::use_ctrl_link_set (int index)
 {
-	assert (type >= 0 && type < ControllerType_NBR_ELT);
-	assert (index >= 0);
+	auto           it = _map_param_ctrl.find (index);
+	assert (it != _map_param_ctrl.end ());
+
+	return it->second;
 }
 
 
 
-bool	ControlSource::is_valid () const
+const CtrlLinkSet &	PluginSettings::use_ctrl_link_set (int index) const
 {
-	return (_type >= 0 && _index >= 0);
-}
+	auto           it = _map_param_ctrl.find (index);
+	assert (it != _map_param_ctrl.end ());
 
-
-
-bool	ControlSource::is_relative () const
-{
-	return (_type == ControllerType_ROTENC);
-}
-
-
-
-bool	ControlSource::operator == (const ControlSource &other) const
-{
-	return (_type == other._type && _index == other._index);
-}
-
-
-
-bool	ControlSource::operator != (const ControlSource &other) const
-{
-	return ! (*this == other);
+	return it->second;
 }
 
 
@@ -81,23 +69,8 @@ bool	ControlSource::operator != (const ControlSource &other) const
 
 
 
-/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-bool	operator < (const ControlSource &lhs, const ControlSource &rhs)
-{
-	return (    lhs._type <  rhs._type
-	        || (lhs._type == rhs._type && lhs._index < rhs._index));
-}
-
-
-
+}  // namespace doc
 }  // namespace mfx
-
-
-
-#endif   // mfx_ControlSource_CODEHEADER_INCLUDED
 
 
 
