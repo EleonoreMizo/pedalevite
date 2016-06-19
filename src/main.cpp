@@ -50,6 +50,7 @@
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/uitk/ParentInterface.h"
 #include "mfx/uitk/pg/CurProg.h"
+#include "mfx/uitk/pg/CtrlEdit.h"
 #include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/NotYet.h"
@@ -312,6 +313,8 @@ public:
 	               _page_question;
 	mfx::uitk::pg::ParamControllers
 	               _page_param_controllers;
+	mfx::uitk::pg::CtrlEdit
+	               _page_ctrl_edit;
 
 	Context ();
 	~Context ();
@@ -398,6 +401,7 @@ Context::Context ()
 ,	_page_not_yet (_page_switcher)
 ,	_page_question (_page_switcher)
 ,	_page_param_controllers (_page_switcher, _loc_edit, _csn_list)
+,	_page_ctrl_edit (_page_switcher, _loc_edit, _csn_list)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -593,7 +597,7 @@ Context::Context ()
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
 			cls._bind_sptr->_source._index = 5;
-			cls._bind_sptr->_step          = 0.05f;
+			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
@@ -620,7 +624,7 @@ Context::Context ()
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
 			cls._bind_sptr->_source._index = 6;
-			cls._bind_sptr->_step          = 0.05f;
+			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
@@ -662,7 +666,7 @@ Context::Context ()
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
 			cls._bind_sptr->_source._index = 5;
-			cls._bind_sptr->_step          = 0.05f;
+			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
@@ -698,7 +702,7 @@ Context::Context ()
 			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
 			cls_main._bind_sptr->_source._index = 6;
-			cls_main._bind_sptr->_step          = 0.05f;
+			cls_main._bind_sptr->_step          = float (mfx::Cst::_step_param);
 			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls_main._bind_sptr->_u2b_flag      = false;
 			cls_main._bind_sptr->_base          = 0;
@@ -758,6 +762,7 @@ Context::Context ()
 	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET          , _page_not_yet          );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_QUESTION         , _page_question         );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_CONTROLLERS, _page_param_controllers);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_EDIT        , _page_ctrl_edit        );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

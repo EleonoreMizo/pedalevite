@@ -55,6 +55,7 @@ public:
 
 	inline bool    is_valid () const;
 	inline bool    is_relative () const;
+	inline bool    is_bipolar () const;
 
 	inline bool    operator == (const ControlSource &other) const;
 	inline bool    operator != (const ControlSource &other) const;

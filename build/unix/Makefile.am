@@ -323,6 +323,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputPi3.cpp \
         ../../src/mfx/ui/UserInputPi3.h \
         ../../src/mfx/ui/UserInputType.h \
+        ../../src/mfx/uitk/pg/CtrlEdit.cpp \
+        ../../src/mfx/uitk/pg/CtrlEdit.h \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.cpp \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.h \
         ../../src/mfx/uitk/pg/CurProg.cpp \
@@ -380,6 +382,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/Vec2d.h \
         ../../src/mfx/uitk/Vec2d.hpp \
         ../../src/mfx/ControlCurve.h \
+        ../../src/mfx/ControlCurve.cpp \
         ../../src/mfx/ControlledParam.cpp \
         ../../src/mfx/ControlledParam.h \
         ../../src/mfx/ControllerType.h \

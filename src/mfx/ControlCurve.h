@@ -53,6 +53,9 @@ enum ControlCurve
 }; // enum ControlCurve
 
 
+const char *  ControlCurve_get_name (ControlCurve c);
+
+
 
 }  // namespace mfx
 

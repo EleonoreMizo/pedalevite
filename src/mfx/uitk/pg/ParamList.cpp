@@ -298,7 +298,7 @@ void	ParamList::update_param_txt (PiType type, int index)
 
 	Tools::set_param_text (
 		*_view_ptr, _page_size [0], index, -1, slot_index, type,
-		*name_sptr, *val_sptr, 0, 0, false
+		name_sptr.get (), *val_sptr, 0, 0, false
 	);
 }
 

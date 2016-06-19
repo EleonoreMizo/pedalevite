@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ParamControllers.h
+        CtrlEdit.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_ParamControllers_HEADER_INCLUDED)
-#define mfx_uitk_pg_ParamControllers_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_CtrlEdit_HEADER_INCLUDED)
+#define mfx_uitk_pg_CtrlEdit_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,14 +27,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/PluginModel.h"
+#include "mfx/doc/CtrlLink.h"
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/NText.h"
-#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
 
-#include <memory>
 #include <vector>
 
 
@@ -59,7 +57,7 @@ namespace pg
 
 
 
-class ParamControllers
+class CtrlEdit
 :	public PageInterface
 {
 
@@ -67,8 +65,8 @@ class ParamControllers
 
 public:
 
-	explicit       ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <CtrlSrcNamed> &csn_list);
-	virtual        ~ParamControllers () = default;
+	explicit       CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <CtrlSrcNamed> &csn_list);
+	virtual        ~CtrlEdit () = default;
 
 
 
@@ -94,21 +92,35 @@ protected:
 
 private:
 
+	static const int  _nbr_steps = 4;
+
 	enum Entry
 	{
-		Entry_WINDOW = 1000,
-		Entry_LINK_VALUE,
-		Entry_LINK_TITLE,
-		Entry_MOD_TITLE
+		Entry_SRC = 0,
+		Entry_STEP_REL,
+		Entry_LABEL_MIN,
+		Entry_VAL_MIN,
+		Entry_STEP_MIN,
+		Entry_LABEL_MAX = Entry_STEP_MIN + _nbr_steps,
+		Entry_VAL_MAX,
+		Entry_STEP_MAX,
+		Entry_CURVE   = Entry_STEP_MAX + _nbr_steps,
+		Entry_CONV_U2B
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
-	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::vector <TxtSPtr> TxtArray;
 
-	void           set_controller_info ();
-	void           update_loc_edit (int node_id);
-	int            conv_loc_edit_to_node_id () const;
+	class MinMax
+	{
+	public:
+		TxtSPtr        _label_sptr;
+		TxtSPtr        _val_unit_sptr;
+		std::array <TxtSPtr, _nbr_steps>
+		               _step_sptr_arr;
+	};
+
+	void           update_display ();
+	EvtProp        change_something (int node_id, int dir);
 
 	const std::vector <CtrlSrcNamed> &
 	               _csn_list;
@@ -122,15 +134,28 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains 3 entries (1 of them is selectable) + the modulation list
-	TxtSPtr        _link_value_sptr;
-	TxtSPtr        _link_title_sptr;
-	TxtSPtr        _mod_title_sptr;
-	TxtArray       _mod_list;     // Shows N lines: controllers 1 to N-1, and the last line being <Empty>.
+	TxtSPtr        _src_sptr;
+	TxtSPtr        _step_rel_sptr;
+	std::array <MinMax, 2>
+	               _minmax;
+	TxtSPtr        _curve_sptr;
+	TxtSPtr        _u2b_sptr;
+
+	int            _step_index;
+	int            _val_unit_w;
+
+	static const std::array <Entry, 2>
+	               _id_label_arr;
+	static const std::array <Entry, 2>
+	               _id_val_arr;
+	static const std::array <Entry, 2>
+	               _id_step_arr;
 
 	// Cached data
 	const doc::CtrlLinkSet *      // 0 if not set. Updated on connect();
 	               _cls_ptr;
+	doc::CtrlLink  _ctrl_link;    // Only for display purpose, and to keep track of the values when the source is <Empty> (controller removed)
+	int            _ctrl_index;   // -1 if we started with an empty controller
 
 
 
@@ -138,13 +163,13 @@ private:
 
 private:
 
-	               ParamControllers ()                                = delete;
-	               ParamControllers (const ParamControllers &other)   = delete;
-	ParamControllers &     operator = (const ParamControllers &other) = delete;
-	bool           operator == (const ParamControllers &other) const  = delete;
-	bool           operator != (const ParamControllers &other) const  = delete;
+	               CtrlEdit ()                               = delete;
+	               CtrlEdit (const CtrlEdit &other)         = delete;
+	CtrlEdit &    operator = (const CtrlEdit &other)        = delete;
+	bool           operator == (const CtrlEdit &other) const = delete;
+	bool           operator != (const CtrlEdit &other) const = delete;
 
-}; // class ParamControllers
+}; // class CtrlEdit
 
 
 
@@ -154,11 +179,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/ParamControllers.hpp"
+//#include "mfx/uitk/pg/CtrlEdit.hpp"
 
 
 
-#endif   // mfx_uitk_pg_ParamControllers_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_CtrlEdit_HEADER_INCLUDED
 
 
 

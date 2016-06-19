@@ -51,8 +51,9 @@ namespace pg
 
 
 
+// val is a normalized value
 // val = -1: use the settings content
-void	Tools::set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText &param_name, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag)
+void	Tools::set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag)
 {
 	assert (val <= 1);
 	assert (width > 0);
@@ -87,11 +88,14 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 			fx_name_ptr->set_text ("");
 		}
 
-		fstb::snprintf4all (
-			txt_0, sizeof (txt_0), "%-4d",
-			index
-		);
-		param_name.set_text (txt_0);
+		if (param_name_ptr != 0)
+		{
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), "%-4d",
+				index
+			);
+			param_name_ptr->set_text (txt_0);
+		}
 
 		fstb::snprintf4all (
 			txt_0, sizeof (txt_0), "%.4f",
@@ -135,12 +139,15 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 		txt_val = val_s.substr (pos_utf8, len_utf8);
 
 		// Name
-		std::string    name = desc.get_name (0);
-		name = pi::param::Tools::print_name_bestfit (
-			width - len_pix, name.c_str (),
-			param_name, &NText::get_char_width
-		);
-		param_name.set_text (name);
+		if (param_name_ptr != 0)
+		{
+			std::string    name = desc.get_name (0);
+			name = pi::param::Tools::print_name_bestfit (
+				width - len_pix, name.c_str (),
+				*param_name_ptr, &NText::get_char_width
+			);
+			param_name_ptr->set_text (name);
+		}
 
 		// Unit
 		if (param_unit_ptr != 0)

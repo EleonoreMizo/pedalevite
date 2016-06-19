@@ -67,7 +67,7 @@ class Tools
 
 public:
 
-	static void    set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText &param_name, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
+	static void    set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int dir);
 	static std::set <float>

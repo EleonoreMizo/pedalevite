@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/Cst.h"
 #include "mfx/LocEdit.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
@@ -293,7 +294,7 @@ void	ParamEdit::update_param_txt ()
 
 	Tools::set_param_text (
 		*_view_ptr, _page_size [0], index, -1, slot_index, type,
-		*_name_sptr, *_val_unit_sptr, 0, 0, true
+		_name_sptr.get (), *_val_unit_sptr, 0, 0, true
 	);
 }
 
@@ -304,7 +305,8 @@ MsgHandlerInterface::EvtProp	ParamEdit::change_param (int dir)
 	const int      slot_index = _loc_edit._slot_index;
 	const PiType   type       = _loc_edit._pi_type;
 	const int      index      = _loc_edit._param_index;
-	const float    step       = float (0.05 * pow (10, -_step_index));
+	const float    step       =
+		float (Cst::_step_param / pow (10, _step_index));
 
 	return Tools::change_param (
 		*_model_ptr, *_view_ptr, slot_index, type, index, step, dir

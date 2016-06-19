@@ -52,6 +52,7 @@ enum PageType
 	PageType_NOT_YET,
 	PageType_QUESTION,
 	PageType_PARAM_CONTROLLERS,
+	PageType_CTRL_EDIT,
 
 	PageType_NBR_ELT
 

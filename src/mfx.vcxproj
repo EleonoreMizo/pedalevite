@@ -392,6 +392,7 @@
     <ClInclude Include="mfx\uitk\PageMgrInterface.h" />
     <ClInclude Include="mfx\uitk\PageSwitcher.h" />
     <ClInclude Include="mfx\uitk\ParentInterface.h" />
+    <ClInclude Include="mfx\uitk\pg\CtrlEdit.h" />
     <ClInclude Include="mfx\uitk\pg\CtrlSrcNamed.h" />
     <ClInclude Include="mfx\uitk\pg\CurProg.h" />
     <ClInclude Include="mfx\uitk\pg\EditProg.h" />
@@ -481,6 +482,7 @@
     <ClCompile Include="mfx\cmd\BufAlloc.cpp" />
     <ClCompile Include="mfx\cmd\CentralCbInterface.cpp" />
     <ClCompile Include="mfx\cmd\Plugin.cpp" />
+    <ClCompile Include="mfx\ControlCurve.cpp" />
     <ClCompile Include="mfx\ControlledParam.cpp" />
     <ClCompile Include="mfx\Cst.cpp" />
     <ClCompile Include="mfx\CtrlUnit.cpp" />
@@ -551,6 +553,7 @@
     <ClCompile Include="mfx\uitk\PageMgrInterface.cpp" />
     <ClCompile Include="mfx\uitk\PageSwitcher.cpp" />
     <ClCompile Include="mfx\uitk\ParentInterface.cpp" />
+    <ClCompile Include="mfx\uitk\pg\CtrlEdit.cpp" />
     <ClCompile Include="mfx\uitk\pg\CtrlSrcNamed.cpp" />
     <ClCompile Include="mfx\uitk\pg\CurProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\EditProg.cpp" />

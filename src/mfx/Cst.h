@@ -52,6 +52,8 @@ public:
 	static const int  _nbr_chn_in      =   2;
 	static const int  _nbr_chn_out     =   2;
 
+	static const double  _step_param;         // Unit step on normalized parameter value
+
 	enum BufSpecial
 	{
 		BufSpecial_SILENCE = 0,

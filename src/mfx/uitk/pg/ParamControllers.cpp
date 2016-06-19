@@ -156,17 +156,7 @@ MsgHandlerInterface::EvtProp	ParamControllers::do_handle_evt (const NodeEvt &evt
 			    || (node_id >= 0 && node_id < int (_mod_list.size ())))
 			{
 				update_loc_edit (node_id);
-				if (_loc_edit._ctrl_index >= 0)
-				{
-					// Full slot
-					/*** To do ***/
-				}
-				else
-				{
-					// Empty slot
-					/*** To do ***/
-				}
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.switch_to (PageType_CTRL_EDIT, 0);
 				ret_val = EvtProp_CATCH;
 			}
 			else
@@ -198,7 +188,10 @@ void	ParamControllers::do_activate_preset (int index)
 
 void	ParamControllers::do_remove_plugin (int slot_index)
 {
-	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+	if (slot_index == _loc_edit._slot_index)
+	{
+		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+	}
 }
 
 

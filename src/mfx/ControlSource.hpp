@@ -59,6 +59,13 @@ bool	ControlSource::is_relative () const
 
 
 
+bool	ControlSource::is_bipolar () const
+{
+	return (_type == ControllerType_LFO);
+}
+
+
+
 bool	ControlSource::operator == (const ControlSource &other) const
 {
 	return (_type == other._type && _index == other._index);

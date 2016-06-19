@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Cst.cpp
+        ControlCurve.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/Cst.h"
+#include "mfx/ControlCurve.h"
 
 #include <cassert>
 
@@ -39,7 +39,27 @@ namespace mfx
 
 
 
-const double	Cst::_step_param = 0.05;
+const char *  ControlCurve_get_name (ControlCurve c)
+{
+	assert (c >= 0);
+	assert (c < ControlCurve_NBR_ELT);
+
+	switch (c)
+	{
+	case ControlCurve_LINEAR: return ("Linear"); break;
+	case ControlCurve_SQ:	  return ("Square"); break;
+	case ControlCurve_CB:	  return ("Cubic" ); break;
+	case ControlCurve_SAT2:	  return ("Sat. 1"); break;
+	case ControlCurve_SAT3:	  return ("Sat. 2"); break;
+	case ControlCurve_S1:	  return ("S 2"   ); break;
+	case ControlCurve_S2:	  return ("S 1"   ); break;
+	default:
+		assert (false);
+		break;
+	}
+
+	return "\?\?\?";
+}
 
 
 
