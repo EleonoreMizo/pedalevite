@@ -462,13 +462,6 @@ MsgHandlerInterface::EvtProp	CtrlEdit::change_something (int node_id, int dir)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
-	const int      slot_index = _loc_edit._slot_index;
-	const PiType   type       = _loc_edit._pi_type;
-	const int      index      = _loc_edit._param_index;
-	const float    step       =
-		float (Cst::_step_param / pow (10, _step_index));
-
-	// Source
 	if (node_id == Entry_SRC)
 	{
 		change_source (dir);
