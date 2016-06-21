@@ -69,10 +69,14 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_u2b_sptr (     new NText (Entry_CONV_U2B))
 ,	_step_index (0)
 ,	_val_unit_w (0)
-,	_cls_ptr (0)
+,	_cls ()
 ,	_ctrl_link ()
 ,	_ctrl_index (-1)
+,	_src_unknown_flag (false)
+,	_src_unknown ()
 {
+	assert (! csn_list.empty ());
+
 	for (size_t mm = 0; mm < _minmax.size (); ++mm)
 	{
 		MinMax &       gork = _minmax [mm];
@@ -118,7 +122,7 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	assert (! preset.is_slot_empty (_loc_edit._slot_index));
 	const doc::Slot &    slot   = *(preset._slot_list [_loc_edit._slot_index]);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
-	_cls_ptr = &settings.use_ctrl_link_set (_loc_edit._param_index);
+	_cls = settings.use_ctrl_link_set (_loc_edit._param_index);
 	_ctrl_index = _loc_edit._ctrl_index;
 
 	_src_sptr     ->set_font (*_fnt_ptr);
@@ -174,6 +178,16 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_page_ptr->push_back (_curve_sptr);
 	_page_ptr->push_back (_u2b_sptr  );
+
+	_src_unknown_flag = false;
+	if (_loc_edit._ctrl_index >= 0)
+	{
+		update_ctrl_link ();
+		const int      csn_index =
+			Tools::find_ctrl_index (_ctrl_link._source, _csn_list);
+		_src_unknown_flag = (csn_index < 0);
+		_src_unknown      = _ctrl_link._source;
+	}
 
 	update_display ();
 	_page_ptr->jump_to (Entry_SRC);
@@ -253,6 +267,37 @@ void	CtrlEdit::do_remove_plugin (int slot_index)
 
 
 
+void	CtrlEdit::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+{
+	if (   slot_index == _loc_edit._slot_index
+	    && type       == _loc_edit._pi_type
+	    && index      == _loc_edit._param_index)
+	{
+		_cls = cls;
+
+		bool           stay_flag = true;
+		if (! _loc_edit._ctrl_abs_flag)
+		{
+			const int      nbr_mod = int (cls._mod_arr.size ());
+			if (_loc_edit._ctrl_index >= nbr_mod)
+			{
+				stay_flag = false;
+			}
+		}
+
+		if (stay_flag)
+		{
+			update_display ();
+		}
+		else
+		{
+			_page_switcher.switch_to (PageType_PARAM_CONTROLLERS, 0);
+		}
+	}
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -284,14 +329,7 @@ void	CtrlEdit::update_display ()
 	}
 	else
 	{
-		if (_loc_edit._ctrl_abs_flag)
-		{
-			_ctrl_link = *_cls_ptr->_bind_sptr;
-		}
-		else
-		{
-			_ctrl_link = *_cls_ptr->_mod_arr [_loc_edit._ctrl_index];
-		}
+		update_ctrl_link ();
 
 		const std::string src_name =
 			Tools::find_ctrl_name (_ctrl_link._source, _csn_list);
@@ -358,7 +396,7 @@ void	CtrlEdit::update_display ()
 		nav_list.resize (nav_list.size () + 1);
 		nav_list.back ()._node_id = Entry_CURVE;
 
-		if (! _ctrl_link._source.is_bipolar ())
+		if (! _ctrl_link._source.is_bipolar () && ! _loc_edit._ctrl_abs_flag)
 		{
 			_u2b_sptr->set_text (_ctrl_link._u2b_flag ? "Bipolar" : "Unipolar");
 
@@ -372,27 +410,294 @@ void	CtrlEdit::update_display ()
 
 
 
+void	CtrlEdit::update_ctrl_link ()
+{
+	assert (_loc_edit._ctrl_index >= 0);
+	if (_loc_edit._ctrl_abs_flag)
+	{
+		assert (_cls._bind_sptr.get () != 0);
+		_ctrl_link  = *_cls._bind_sptr;
+	}
+	else
+	{
+		assert (_cls._mod_arr [_loc_edit._ctrl_index].get () != 0);
+		_ctrl_link  = *(_cls._mod_arr [_loc_edit._ctrl_index]);
+		_ctrl_index = _loc_edit._ctrl_index;
+	}
+}
+
+
+
+doc::CtrlLink &	CtrlEdit::use_ctrl_link (doc::CtrlLinkSet &cls) const
+{
+	assert (_loc_edit._ctrl_index >= 0);
+	if (_loc_edit._ctrl_abs_flag)
+	{
+		assert (cls._bind_sptr.get () != 0);
+		return *cls._bind_sptr;
+	}
+
+	assert (cls._mod_arr [_loc_edit._ctrl_index].get () != 0);
+	return *(cls._mod_arr [_loc_edit._ctrl_index]);
+}
+
+
+
+const doc::CtrlLink &	CtrlEdit::use_ctrl_link (const doc::CtrlLinkSet &cls) const
+{
+	assert (_loc_edit._ctrl_index >= 0);
+	if (_loc_edit._ctrl_abs_flag)
+	{
+		assert (cls._bind_sptr.get () != 0);
+		return *cls._bind_sptr;
+	}
+
+	assert (cls._mod_arr [_loc_edit._ctrl_index].get () != 0);
+	return *(cls._mod_arr [_loc_edit._ctrl_index]);
+}
+
+
+
 MsgHandlerInterface::EvtProp	CtrlEdit::change_something (int node_id, int dir)
 {
+	EvtProp        ret_val = EvtProp_PASS;
+
 	const int      slot_index = _loc_edit._slot_index;
 	const PiType   type       = _loc_edit._pi_type;
 	const int      index      = _loc_edit._param_index;
 	const float    step       =
 		float (Cst::_step_param / pow (10, _step_index));
 
+	// Source
 	if (node_id == Entry_SRC)
 	{
-		if (_loc_edit._ctrl_index < 0)
+		change_source (dir);
+		ret_val = EvtProp_CATCH;
+	}
+	else if (node_id == Entry_CURVE)
+	{
+		change_curve (dir);
+		ret_val = EvtProp_CATCH;
+	}
+	else if (node_id == Entry_CONV_U2B)
+	{
+		change_u2b ();
+		ret_val = EvtProp_CATCH;
+	}
+	else
+	{
+		for (int mm = 0
+		;	mm < int (_minmax.size ()) && ret_val == EvtProp_PASS
+		;	++mm)
 		{
-		}
-		else
-		{
+			const int      step_base = _id_step_arr [mm];
+			if (node_id >= step_base && node_id < step_base + _nbr_steps)
+			{
+				change_val (mm, node_id - step_base, dir);
+			}
 		}
 	}
 
-	/*** To do ***/
+	return ret_val;
+}
 
-	return EvtProp_CATCH;
+
+
+void	CtrlEdit::change_source (int dir)
+{
+	doc::CtrlLinkSet    cls (_cls);
+	int            csn_index = find_next_source (dir);
+
+	if (_loc_edit._ctrl_abs_flag)
+	{
+		if (csn_index == -1)
+		{
+			cls._bind_sptr.reset ();
+			_loc_edit._ctrl_index = -1;
+		}
+		else
+		{
+			if (_loc_edit._ctrl_index < 0)
+			{
+				cls._bind_sptr = create_controller (csn_index);
+				_loc_edit._ctrl_index = 0;
+			}
+			else
+			{
+				cls._bind_sptr->_source = create_source (csn_index);
+			}
+		}
+	}
+
+	else
+	{
+		if (csn_index == -1)
+		{
+			if (_loc_edit._ctrl_index >= 0)
+			{
+				cls._mod_arr.erase (
+					cls._mod_arr.begin () + _loc_edit._ctrl_index
+				);
+				_loc_edit._ctrl_index = -1;
+			}
+		}
+		else
+		{
+			if (_loc_edit._ctrl_index < 0)
+			{
+				if (_ctrl_index < 0)
+				{
+					_ctrl_index = int (cls._mod_arr.size ());
+				}
+				cls._mod_arr.insert (
+					cls._mod_arr.begin () + _ctrl_index,
+					create_controller (csn_index)
+				);
+				_loc_edit._ctrl_index = _ctrl_index;
+			}
+			else
+			{
+				cls._mod_arr [_loc_edit._ctrl_index]->_source =
+					create_source (csn_index);
+			}
+		}
+	}
+
+	const int      slot_index = _loc_edit._slot_index;
+	const PiType   type       = _loc_edit._pi_type;
+	const int      index      = _loc_edit._param_index;
+	_model_ptr->set_param_ctrl (slot_index, type, index, cls);
+}
+
+
+
+void	CtrlEdit::change_curve (int dir)
+{
+	doc::CtrlLinkSet  cls (_cls);
+	doc::CtrlLink &   cl (use_ctrl_link (cls));
+
+	cl._curve = ControlCurve (
+		(cl._curve + dir + ControlCurve_NBR_ELT) % ControlCurve_NBR_ELT
+	);
+
+	const int      slot_index = _loc_edit._slot_index;
+	const PiType   type       = _loc_edit._pi_type;
+	const int      index      = _loc_edit._param_index;
+	_model_ptr->set_param_ctrl (slot_index, type, index, cls);
+}
+
+
+
+void	CtrlEdit::change_u2b ()
+{
+	doc::CtrlLinkSet  cls (_cls);
+	doc::CtrlLink &   cl (use_ctrl_link (cls));
+
+	cl._u2b_flag = ! cl._u2b_flag;
+
+	const int      slot_index = _loc_edit._slot_index;
+	const PiType   type       = _loc_edit._pi_type;
+	const int      index      = _loc_edit._param_index;
+	_model_ptr->set_param_ctrl (slot_index, type, index, cls);
+}
+
+
+
+void	CtrlEdit::change_val (int mm, int step_index, int dir)
+{
+	doc::CtrlLinkSet  cls (_cls);
+	doc::CtrlLink &   cl (use_ctrl_link (cls));
+
+	std::array <double, 2>  val_arr =
+	{
+		_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
+	};
+
+	const int      slot_index = _loc_edit._slot_index;
+	const PiType   type       = _loc_edit._pi_type;
+	const int      index      = _loc_edit._param_index;
+	const float    step       =
+		float (Cst::_step_param / pow (10, step_index));
+
+	val_arr [mm] = Tools::change_param (
+		val_arr [mm], *_view_ptr, slot_index, type, index, step, dir
+	);
+
+	cl._base = float (              val_arr [0]);
+	cl._amp  = float (val_arr [1] - val_arr [0]);
+
+	_model_ptr->set_param_ctrl (slot_index, type, index, cls);
+}
+
+
+
+// -2: unknown (_src_unknown)
+// -1: empty
+// 0 to N-1: from _csn_list
+int	CtrlEdit::find_next_source (int dir) const
+{
+	const int      nbr_csn = int (_csn_list.size ());
+	int            csn_index = -1;
+	if (_loc_edit._ctrl_index >= 0)
+	{
+		const doc::CtrlLink  ctrl_link (use_ctrl_link (_cls));
+		csn_index = Tools::find_ctrl_index (ctrl_link._source, _csn_list);
+		if (csn_index < 0)
+		{
+			assert (_src_unknown_flag);
+			assert (_src_unknown == ctrl_link._source);
+			csn_index = -2;
+		}
+	}
+
+	csn_index += dir;
+	int            val_min = (_src_unknown_flag) ? -2 : -1;
+	const int      length  = nbr_csn - val_min;
+	csn_index -= val_min;
+	csn_index += length;
+	csn_index %= length;
+	csn_index += val_min;
+
+	return csn_index;
+}
+
+
+
+doc::CtrlLinkSet::LinkSPtr	CtrlEdit::create_controller (int csn_index) const
+{
+	assert (csn_index != -1);
+
+	doc::CtrlLinkSet::LinkSPtr	sptr;
+	if (_ctrl_index >= 0)
+	{
+		sptr = doc::CtrlLinkSet::LinkSPtr (
+			new doc::CtrlLink (_ctrl_link)
+		);
+	}
+	else
+	{
+		sptr = doc::CtrlLinkSet::LinkSPtr (
+			new doc::CtrlLink
+		);
+	}
+
+	sptr->_source = create_source (csn_index);
+
+	return sptr;
+}
+
+
+
+ControlSource	CtrlEdit::create_source (int csn_index) const
+{
+	assert (csn_index != -1);
+
+	if (csn_index == -2)
+	{
+		return _src_unknown;
+	}
+
+	return _csn_list [csn_index]._src;
 }
 
 

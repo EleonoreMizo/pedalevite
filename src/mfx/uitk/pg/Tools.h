@@ -70,8 +70,10 @@ public:
 	static void    set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int dir);
+	static double  change_param (double val_nrm, const View &view, int slot_index, PiType type, int index, float step, int dir);
 	static std::set <float>
 	               create_beat_notches ();
+	static int     find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 

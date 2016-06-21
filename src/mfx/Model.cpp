@@ -159,16 +159,19 @@ void	Model::process_messages ()
 
 void	Model::set_edit_mode (bool edit_flag)
 {
-	if (! edit_flag && _edit_flag && _edit_preset_flag)
+	if (edit_flag != _edit_flag)
 	{
-		store_preset (_preset_index);
-	}
+		if (! edit_flag && _edit_flag && _edit_preset_flag)
+		{
+			store_preset (_preset_index);
+		}
 
-	_edit_flag = edit_flag;
+		_edit_flag = edit_flag;
 
-	if (_obs_ptr != 0)
-	{
-		_obs_ptr->set_edit_mode (edit_flag);
+		if (_obs_ptr != 0)
+		{
+			_obs_ptr->set_edit_mode (edit_flag);
+		}
 	}
 }
 
@@ -394,7 +397,7 @@ void	Model::set_param (int slot_index, PiType type, int index, float val)
 	int            pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
 	assert (pi_id >= 0);
 
-	if (pi_id != _dummy_mix_id)
+	if (! _tuner_flag && pi_id != _dummy_mix_id)
 	{
 		_central.set_param (pi_id, index, val);
 	}
@@ -417,6 +420,55 @@ void	Model::set_param (int slot_index, PiType type, int index, float val)
 		_obs_ptr->set_param (pi_id, index, val, slot_index, type);
 	}
 }
+
+
+
+void	Model::set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (! _preset_cur.is_slot_empty (slot_index));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::PluginSettings &   settings = slot.use_settings (type);
+	assert (index < int (settings._param_list.size ()));
+
+	settings._map_param_ctrl [index] = cls;
+
+	int            pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+	assert (pi_id >= 0);
+	const bool     cls_empty_flag =
+		(cls._bind_sptr.get () == 0 && cls._mod_arr.empty ());
+
+	if (pi_id == _dummy_mix_id)
+	{
+		if (! cls_empty_flag)
+		{
+			apply_settings ();
+		}
+	}
+	else if (! has_mixer_plugin (_preset_cur, slot_index))
+	{
+		apply_settings ();
+	}
+	else if (! _tuner_flag)
+	{
+		_central.set_mod (pi_id, index, cls);
+		_central.commit ();
+	}
+
+	if (_obs_ptr != 0)
+	{
+		// apply_settings() could have changed the list
+		pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+
+		_obs_ptr->set_param_ctrl (slot_index, type, index, cls);
+	}
+}
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

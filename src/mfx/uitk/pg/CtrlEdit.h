@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/CtrlLink.h"
+#include "mfx/doc/CtrlLinkSet.h"
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
@@ -41,11 +42,6 @@ namespace mfx
 {
 
 class LocEdit;
-
-namespace doc
-{
-	class CtrlLinkSet;
-}
 
 namespace uitk
 {
@@ -85,6 +81,7 @@ protected:
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
 	virtual void   do_remove_plugin (int slot_index);
+	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
 
 
 
@@ -120,7 +117,20 @@ private:
 	};
 
 	void           update_display ();
+	void           update_ctrl_link ();
+	doc::CtrlLink &
+	               use_ctrl_link (doc::CtrlLinkSet &cls) const;
+	const doc::CtrlLink &
+	               use_ctrl_link (const doc::CtrlLinkSet &cls) const;
 	EvtProp        change_something (int node_id, int dir);
+	void           change_source (int dir);
+	void           change_curve (int dir);
+	void           change_u2b ();
+	void           change_val (int mm, int step_index, int dir);
+	int            find_next_source (int dir) const;
+	doc::CtrlLinkSet::LinkSPtr
+	               create_controller (int csn_index) const;
+	ControlSource  create_source (int csn_index) const;
 
 	const std::vector <CtrlSrcNamed> &
 	               _csn_list;
@@ -152,10 +162,12 @@ private:
 	               _id_step_arr;
 
 	// Cached data
-	const doc::CtrlLinkSet *      // 0 if not set. Updated on connect();
-	               _cls_ptr;
+	doc::CtrlLinkSet              // Updated on connect()
+	               _cls;
 	doc::CtrlLink  _ctrl_link;    // Only for display purpose, and to keep track of the values when the source is <Empty> (controller removed)
 	int            _ctrl_index;   // -1 if we started with an empty controller
+	bool           _src_unknown_flag;   // Updated on connect()
+	ControlSource  _src_unknown;
 
 
 
@@ -164,8 +176,8 @@ private:
 private:
 
 	               CtrlEdit ()                               = delete;
-	               CtrlEdit (const CtrlEdit &other)         = delete;
-	CtrlEdit &    operator = (const CtrlEdit &other)        = delete;
+	               CtrlEdit (const CtrlEdit &other)          = delete;
+	CtrlEdit &     operator = (const CtrlEdit &other)        = delete;
 	bool           operator == (const CtrlEdit &other) const = delete;
 	bool           operator != (const CtrlEdit &other) const = delete;
 

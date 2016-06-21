@@ -211,12 +211,30 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 	assert (index >= 0);
 	assert (dir != 0);
 
-	MsgHandlerInterface::EvtProp  ret_val = MsgHandlerInterface::EvtProp_PASS;
-
 	const doc::Preset &  preset = view.use_preset_cur ();
 	float          val_nrm =
 		view.get_param_val (preset, slot_index, type, index);
 
+	val_nrm = float (change_param (
+		val_nrm, view, slot_index, type, index, step, dir
+	));
+
+	model.set_param (slot_index, type, index, val_nrm);
+
+	return MsgHandlerInterface::EvtProp_CATCH;
+}
+
+
+
+double	Tools::change_param (double val_nrm, const View &view, int slot_index, PiType type, int index, float step, int dir)
+{
+	assert (slot_index >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+	assert (dir != 0);
+
+	const doc::Preset &  preset = view.use_preset_cur ();
 	bool           done_flag = false;
 	const View::SlotInfoList & sil = view.use_slot_info_list ();
 	if (! sil.empty () && sil [slot_index] [type].get () != 0)
@@ -243,13 +261,9 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 		val_nrm += step * dir;
 	}
 
-	val_nrm = fstb::limit (val_nrm, 0.0f ,1.0f);
+	val_nrm = fstb::limit (val_nrm, 0.0 ,1.0);
 
-	model.set_param (slot_index, type, index, val_nrm);
-
-	ret_val = MsgHandlerInterface::EvtProp_CATCH;
-
-	return ret_val;
+	return val_nrm;
 }
 
 
@@ -392,18 +406,31 @@ void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const 
 
 
 
-std::string	Tools::find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list)
+// Returns -1 if not found
+int	Tools::find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list)
 {
-	std::string    name       = "\?\?\?";
 	const int      nbr_src    = int (ctrl_list.size ());
-	bool           found_flag = false;
-	for (int pos = 0; pos < nbr_src && ! found_flag; ++pos)
+	int            found_pos  = -1;
+	for (int pos = 0; pos < nbr_src && found_pos < 0; ++pos)
 	{
 		if (ctrl_list [pos]._src == src)
 		{
-			name       = ctrl_list [pos]._name;
-			found_flag = true;
+			found_pos = pos;
 		}
+	}
+
+	return found_pos;
+}
+
+
+
+std::string	Tools::find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list)
+{
+	std::string    name = "\?\?\?";
+	const int      pos  = find_ctrl_index (src, ctrl_list);
+	if (pos >= 0)
+	{
+		name = ctrl_list [pos]._name;
 	}
 
 	return name;

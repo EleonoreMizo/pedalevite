@@ -70,7 +70,7 @@ FrequencyShifter::FrequencyShifter ()
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
-		"%+6.1f"
+		"%+7.1f"
 	);
 	pll_ptr->use_mapper ().set_first_value (-_max_freq);
 	pll_ptr->use_mapper ().add_segment (0.4, -0.004 * _max_freq, true);

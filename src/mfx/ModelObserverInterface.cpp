@@ -188,6 +188,18 @@ void	ModelObserverInterface::remove_plugin (int slot_index)
 
 
 
+void	ModelObserverInterface::set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+{
+	assert (slot_index >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	do_set_param_ctrl (slot_index, type, index, cls);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

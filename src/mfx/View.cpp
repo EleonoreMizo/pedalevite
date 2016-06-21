@@ -324,6 +324,17 @@ void	View::do_remove_plugin (int slot_index)
 
 
 
+void	View::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+{
+	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::PluginSettings &   settings = slot.use_settings (type);
+	settings._map_param_ctrl [index] = cls;
+
+	mfx_View_PROPAGATE (set_param_ctrl (slot_index, type, index, cls));
+}
+
+
+
 #undef mfx_View_PROPAGATE
 
 

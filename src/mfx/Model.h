@@ -92,6 +92,7 @@ public:
 	void           set_plugin (int slot_index, pi::PluginModel type);
 	void           remove_plugin (int slot_index);
 	void           set_param (int slot_index, PiType type, int index, float val);
+	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
 
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;

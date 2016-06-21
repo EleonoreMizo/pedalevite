@@ -44,6 +44,7 @@ namespace doc
 {
 	class PedalboardLayout;
 	class Bank;
+	class CtrlLinkSet;
 }
 
 
@@ -97,6 +98,7 @@ public:
 	void           set_nbr_slots (int nbr_slots);
 	void           set_plugin (int slot_index, const PluginInitData &pi_data);
 	void           remove_plugin (int slot_index);
+	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
 
 
 
@@ -119,6 +121,7 @@ protected:
 	virtual void   do_set_nbr_slots (int nbr_slots) = 0;
 	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data) = 0;
 	virtual void   do_remove_plugin (int slot_index) = 0;
+	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls) = 0;
 
 
 
