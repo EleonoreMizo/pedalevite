@@ -384,8 +384,8 @@ void	DisplayPi3St7920::send_line (int col, int y, const uint8_t pix_ptr [], int 
 	int            ofs_x = col;
 	if (y >= _scr_h / 2)
 	{
-		ofs_y = -(_scr_h / 2);
-		ofs_x = _scr_w >> 4;
+		ofs_y  = -(_scr_h / 2);
+		ofs_x += _scr_w >> 4;
 	}
 
 	SpiBuffer       spibuf;
