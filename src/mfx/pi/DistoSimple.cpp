@@ -53,7 +53,7 @@ DistoSimple::DistoSimple ()
 		"dB",
 		param::HelperDispNum::Preset_DB,
 		0,
-		"%+5.1f"
+		"%5.1f"
 	)
 ,	_gain (float (_gain_min))
 {

@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
-#include "mfx/pi/param/TplSq.h"
+#include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/ParamState.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -88,11 +88,11 @@ protected:
 private:
 
 	static const int  _gain_min    = 1;
-	static const int  _gain_max    = 1000;
+	static const int  _gain_max    = 100000;
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 	typedef std::array <BufAlign, _max_nbr_chn> BufAlignArray;
-	typedef param::TplSq <false> ParamDescGain;
+	typedef param::TplLog ParamDescGain;
 
 	State          _state;
 
