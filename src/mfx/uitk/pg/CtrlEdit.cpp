@@ -170,8 +170,7 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		for (size_t k = 0; k < _nbr_steps; ++k)
 		{
 			_minmax [mm]._step_sptr_arr [k]->set_coord (Vec2d (x_step, y + h_m));
-			_page_ptr->push_back (_minmax [0]._step_sptr_arr [k]);
-			_page_ptr->push_back (_minmax [1]._step_sptr_arr [k]);
+			_page_ptr->push_back (_minmax [mm]._step_sptr_arr [k]);
 			x_step += dist + width_arr [k];
 		}
 	}
