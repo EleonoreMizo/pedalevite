@@ -73,6 +73,17 @@ void	NBitmap::show (bool flag)
 
 
 
+void	NBitmap::set_blend_mode (ui::DisplayInterface::BlendMode mode)
+{
+	assert (mode >= 0);
+	assert (mode < ui::DisplayInterface::BlendMode_NBR_ELT);
+
+	_blend_mode = mode;
+	invalidate_all ();
+}
+
+
+
 const uint8_t *	NBitmap::use_buffer () const
 {
 	assert (_size [0] > 0);
@@ -153,7 +164,8 @@ void	NBitmap::do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_
 				&_buffer [0],
 				bitmap_rel [0] [0], bitmap_rel [0] [1],
 				disp_size [0], disp_size [1],
-				_size [0]
+				_size [0],
+				_blend_mode
 			);
 
 			if (_cursor_flag)

@@ -59,10 +59,11 @@ Returns:
 ==============================================================================
 */
 
-int	conv_utf8_to_unicode (StringU & dest, const char src_0 [])
+int	conv_utf8_to_unicode (std::u32string & dest, const char src_0 [])
 {
 	int            err = Err_OK;
 
+	dest.clear ();
 	size_t         i   = 0;
 	while ((err == Err_OK) && (src_0 [i] != '\0'))
 	{
@@ -99,6 +100,7 @@ int	conv_unicode_to_utf8 (std::string & dest, const char32_t src_0 [])
 {
 	int            err = Err_OK;
 
+	dest.clear ();
 	size_t         i = 0;
 	while ((err == Err_OK) && (src_0 [i] != 0L))
 	{

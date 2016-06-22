@@ -177,7 +177,6 @@
     <ClInclude Include="fstb\txt\unicode\PredEq.hpp" />
     <ClInclude Include="fstb\txt\unicode\PredLt.h" />
     <ClInclude Include="fstb\txt\unicode\PredLt.hpp" />
-    <ClInclude Include="fstb\txt\unicode\StringU.h" />
     <ClInclude Include="fstb\txt\unicode\unicode.h" />
     <ClInclude Include="fstb\txt\unicode\unicode.hpp" />
     <ClInclude Include="fstb\txt\unicode\WordBreakProp.h" />
@@ -342,6 +341,7 @@
     <ClInclude Include="mfx\piapi\ParamDescInterface.h" />
     <ClInclude Include="mfx\piapi\ParamDescInterface.hpp" />
     <ClInclude Include="mfx\piapi\PluginInterface.h" />
+    <ClInclude Include="mfx\piapi\PluginState.h" />
     <ClInclude Include="mfx\PiType.h" />
     <ClInclude Include="mfx\pi\DistoSimple.h" />
     <ClInclude Include="mfx\pi\DryWet.h" />
@@ -396,7 +396,9 @@
     <ClInclude Include="mfx\uitk\pg\CtrlSrcNamed.h" />
     <ClInclude Include="mfx\uitk\pg\CurProg.h" />
     <ClInclude Include="mfx\uitk\pg\EditProg.h" />
+    <ClInclude Include="mfx\uitk\pg\EditText.h" />
     <ClInclude Include="mfx\uitk\pg\MenuMain.h" />
+    <ClInclude Include="mfx\uitk\pg\MenuSlot.h" />
     <ClInclude Include="mfx\uitk\pg\NotYet.h" />
     <ClInclude Include="mfx\uitk\pg\PageType.h" />
     <ClInclude Include="mfx\uitk\pg\ParamControllers.h" />
@@ -557,7 +559,9 @@
     <ClCompile Include="mfx\uitk\pg\CtrlSrcNamed.cpp" />
     <ClCompile Include="mfx\uitk\pg\CurProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\EditProg.cpp" />
+    <ClCompile Include="mfx\uitk\pg\EditText.cpp" />
     <ClCompile Include="mfx\uitk\pg\MenuMain.cpp" />
+    <ClCompile Include="mfx\uitk\pg\MenuSlot.cpp" />
     <ClCompile Include="mfx\uitk\pg\NotYet.cpp" />
     <ClCompile Include="mfx\uitk\pg\ParamControllers.cpp" />
     <ClCompile Include="mfx\uitk\pg\ParamEdit.cpp" />

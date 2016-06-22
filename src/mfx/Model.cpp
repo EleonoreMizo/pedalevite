@@ -129,6 +129,14 @@ void	Model::set_observer (ModelObserverInterface *obs_ptr)
 
 
 
+// Plug-in must have been instantiated at least once.
+const piapi::PluginState &	Model::use_default_settings (pi::PluginModel model) const
+{
+	return _central.use_default_settings (model);
+}
+
+
+
 void	Model::process_messages ()
 {
 	_central.process_queue_audio_to_cmd ();
@@ -321,6 +329,47 @@ void	Model::set_nbr_slots (int nbr_slots)
 	{
 		_obs_ptr->set_nbr_slots (nbr_slots);
 	}
+}
+
+
+
+void	Model::insert_slot (int slot_index)
+{
+	assert (slot_index >= 0);
+	assert (slot_index <= int (_preset_cur._slot_list.size ()));
+
+	_preset_cur._slot_list.insert (
+		_preset_cur._slot_list.begin () + slot_index,
+		doc::Preset::SlotSPtr ()
+	);
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->insert_slot (slot_index);
+	}
+
+	update_layout ();
+}
+
+
+
+void	Model::erase_slot (int slot_index)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+
+	remove_plugin (slot_index);
+
+	_preset_cur._slot_list.erase (
+		_preset_cur._slot_list.begin () + slot_index
+	);
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->erase_slot (slot_index);
+	}
+
+	update_layout ();
 }
 
 

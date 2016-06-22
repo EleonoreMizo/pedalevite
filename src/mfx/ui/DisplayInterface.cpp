@@ -107,7 +107,7 @@ void	DisplayInterface::refresh (int x, int y, int w, int h)
 
 
 
-void	DisplayInterface::bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, int ys, int ws, int hs, int ss)
+void	DisplayInterface::bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, int ys, int ws, int hs, int ss, BlendMode mode)
 {
 	const int      wd      = get_width ();
 	const int      hd      = get_height ();
@@ -122,7 +122,7 @@ void	DisplayInterface::bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, i
 	src_ptr += ys * ss + xs;
 	dst_ptr += yd * sd + xd;
 
-	if (ss == sd && ws == ss)
+	if (ss == sd && ws == ss && mode == BlendMode_OPAQUE)
 	{
 		memcpy (dst_ptr, src_ptr, hs * ws);
 	}
@@ -130,7 +130,18 @@ void	DisplayInterface::bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, i
 	{
 		for (int y = 0; y < hs; ++y)
 		{
-			memcpy (dst_ptr, src_ptr, ws);
+			switch (mode)
+			{
+			case BlendMode_XOR:
+				for (int x = 0; x < ws; ++x)
+				{
+					dst_ptr [x] ^= src_ptr [x];
+				}
+				break;
+			default:
+				memcpy (dst_ptr, src_ptr, ws);
+				break;
+			}
 			src_ptr += ss;
 			dst_ptr += sd;
 		}

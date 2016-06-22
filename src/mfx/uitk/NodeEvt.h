@@ -89,6 +89,8 @@ public:
 	bool           is_cursor () const;
 	Curs           get_cursor () const;
 
+	bool           is_timer () const;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

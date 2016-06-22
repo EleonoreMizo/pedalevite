@@ -42,7 +42,7 @@ namespace unicode
 
 
 template <class C>
-int	compare (const StringU &s1, const StringU &s2)
+int	compare (const std::u32string &s1, const std::u32string &s2)
 {
 	int				   ret_val = 0;
 

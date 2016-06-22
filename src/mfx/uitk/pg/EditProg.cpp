@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/param/Tools.h"
 #include "mfx/uitk/pg/EditProg.h"
+#include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -165,8 +166,7 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 				else
 				{
 					// Empty slot
-					/*** To do ***/
-					_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+					_page_switcher.switch_to (PageType_MENU_SLOT, 0);
 				}
 			}
 			else
@@ -203,6 +203,20 @@ void	EditProg::do_activate_preset (int index)
 
 
 void	EditProg::do_set_nbr_slots (int nbr_slots)
+{
+	set_preset_info ();
+}
+
+
+
+void	EditProg::do_insert_slot (int slot_index)
+{
+	set_preset_info ();
+}
+
+
+
+void	EditProg::do_erase_slot (int slot_index)
 {
 	set_preset_info ();
 }
@@ -304,52 +318,8 @@ MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
 
 	if (node_id <= nbr_slots)
 	{
-		const int      nbr_types = int (_fx_list.size ());
-
-		// Index within the official plug-in list. end = empty
-		int            pi_index  = nbr_types;
-		if (node_id < nbr_slots)
-		{
-			if (! preset.is_slot_empty (node_id))
-			{
-				const doc::Slot & slot = *(preset._slot_list [node_id]);
-				const pi::PluginModel   type = slot._pi_model;
-				auto          type_it =
-					std::find (_fx_list.begin (), _fx_list.end (), type);
-				assert (type_it != _fx_list.end ());
-				pi_index = type_it - _fx_list.begin ();
-			}
-		}
-
-		const int      mod_len = nbr_types + 1;
-		pi_index += dir;
-		pi_index = (pi_index + mod_len) % mod_len;
-
-		// We need to add a slot at the end?
-		if (node_id == nbr_slots && pi_index != nbr_types)
-		{
-			_model_ptr->set_nbr_slots (nbr_slots + 1);
-		}
-
-		if (pi_index == nbr_types)
-		{
-			_model_ptr->remove_plugin (node_id);
-		}
-		else
-		{
-			_model_ptr->set_plugin (node_id, _fx_list [pi_index]);
-		}
-
-		// Last slot needs to be removed?
-		if (node_id == nbr_slots - 1 && pi_index == nbr_types)
-		{
-			int         nbr_slots_new = nbr_slots - 1;
-			while (nbr_slots_new > 0 && preset.is_slot_empty (nbr_slots_new - 1))
-			{
-				-- nbr_slots_new;
-			}
-			_model_ptr->set_nbr_slots (nbr_slots_new);
-		}
+		Tools::change_plugin (*_model_ptr, *_view_ptr, node_id, dir, _fx_list);
+		ret_val = EvtProp_CATCH;
 	}
 
 	return ret_val;

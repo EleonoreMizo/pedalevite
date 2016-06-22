@@ -52,7 +52,9 @@
 #include "mfx/uitk/pg/CurProg.h"
 #include "mfx/uitk/pg/CtrlEdit.h"
 #include "mfx/uitk/pg/EditProg.h"
+#include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/pg/MenuMain.h"
+#include "mfx/uitk/pg/MenuSlot.h"
 #include "mfx/uitk/pg/NotYet.h"
 #include "mfx/uitk/pg/PageType.h"
 #include "mfx/uitk/pg/ParamControllers.h"
@@ -315,6 +317,10 @@ public:
 	               _page_param_controllers;
 	mfx::uitk::pg::CtrlEdit
 	               _page_ctrl_edit;
+	mfx::uitk::pg::MenuSlot
+	               _page_menu_slot;
+	mfx::uitk::pg::EditText
+	               _page_edit_text;
 
 	Context ();
 	~Context ();
@@ -402,6 +408,8 @@ Context::Context ()
 ,	_page_question (_page_switcher)
 ,	_page_param_controllers (_page_switcher, _loc_edit, _csn_list)
 ,	_page_ctrl_edit (_page_switcher, _loc_edit, _csn_list)
+,	_page_menu_slot (_page_switcher, _loc_edit, _pi_type_list)
+,	_page_edit_text (_page_switcher)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -763,6 +771,8 @@ Context::Context ()
 	_page_switcher.add_page (mfx::uitk::pg::PageType_QUESTION         , _page_question         );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_CONTROLLERS, _page_param_controllers);
 	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_EDIT        , _page_ctrl_edit        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_SLOT        , _page_menu_slot        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

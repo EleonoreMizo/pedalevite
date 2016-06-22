@@ -27,10 +27,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/txt/unicode/StringU.h"
 #include "mfx/uitk/NBitmap.h"
 
 #include <array>
+#include <string>
 
 
 
@@ -112,8 +112,7 @@ private:
 
 	// Cached
 	Vec2d          _origin;          // Top-left of the textbox relative to the node coord.
-	fstb::txt::unicode::StringU
-	               _txt_ucs4;
+	std::u32string _txt_ucs4;
 
 
 

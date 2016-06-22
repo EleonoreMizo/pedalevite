@@ -45,6 +45,14 @@ class DisplayInterface
 
 public:
 
+	enum BlendMode
+	{
+		BlendMode_OPAQUE = 0,
+		BlendMode_XOR,
+
+		BlendMode_NBR_ELT
+	};
+
 	virtual        ~DisplayInterface () = default;
 
 	int            get_width () const;
@@ -56,7 +64,7 @@ public:
 	void           refresh (int x, int y, int w, int h);
 
 	// Utility functions
-	void           bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, int ys, int ws, int hs, int ss);
+	void           bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, int ys, int ws, int hs, int ss, BlendMode mode);
 
 
 

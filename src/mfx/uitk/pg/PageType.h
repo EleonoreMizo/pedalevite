@@ -53,6 +53,8 @@ enum PageType
 	PageType_QUESTION,
 	PageType_PARAM_CONTROLLERS,
 	PageType_CTRL_EDIT,
+	PageType_MENU_SLOT,
+	PageType_EDIT_TEXT,
 
 	PageType_NBR_ELT
 

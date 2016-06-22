@@ -169,6 +169,26 @@ void	ModelObserverInterface::set_nbr_slots (int nbr_slots)
 
 
 // set_slot_info_for_current_preset to be called later
+void	ModelObserverInterface::insert_slot (int slot_index)
+{
+	assert (slot_index >= 0);
+
+	do_insert_slot (slot_index);
+}
+
+
+
+// remove_plugin et al. to be called later
+void	ModelObserverInterface::erase_slot (int slot_index)
+{
+	assert (slot_index >= 0);
+
+	do_erase_slot (slot_index);
+}
+
+
+
+// set_slot_info_for_current_preset to be called later
 void	ModelObserverInterface::set_plugin (int slot_index, const PluginInitData &pi_data)
 {
 	assert (slot_index >= 0);

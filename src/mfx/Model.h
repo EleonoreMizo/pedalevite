@@ -77,6 +77,8 @@ public:
 
 	// Regular commands
 	void           set_observer (ModelObserverInterface *obs_ptr);
+	const piapi::PluginState &
+	               use_default_settings (pi::PluginModel model) const;
 
 	void           process_messages (); // Call this regularly
 
@@ -89,6 +91,8 @@ public:
 	void           activate_preset (int index);
 	void           store_preset (int index);
 	void           set_nbr_slots (int nbr_slots);
+	void           insert_slot (int slot_index);
+	void           erase_slot (int slot_index);
 	void           set_plugin (int slot_index, pi::PluginModel type);
 	void           remove_plugin (int slot_index);
 	void           set_param (int slot_index, PiType type, int index, float val);

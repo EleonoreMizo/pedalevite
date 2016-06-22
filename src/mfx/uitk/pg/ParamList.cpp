@@ -142,8 +142,7 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			if (node_id == Entry_FX_SETUP)
 			{
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.switch_to (PageType_MENU_SLOT, 0);
 			}
 			else if (node_id >= 0 && node_id < int (_param_list.size ()))
 			{

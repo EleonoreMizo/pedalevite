@@ -294,6 +294,29 @@ void	View::do_set_nbr_slots (int nbr_slots)
 
 
 
+void	View::do_insert_slot (int slot_index)
+{
+	_preset_cur._slot_list.insert (
+		_preset_cur._slot_list.begin () + slot_index,
+		doc::Preset::SlotSPtr ()
+	);
+	_slot_info_list.clear ();
+	mfx_View_PROPAGATE (insert_slot (slot_index));
+}
+
+
+
+void	View::do_erase_slot (int slot_index)
+{
+	_preset_cur._slot_list.erase (
+		_preset_cur._slot_list.begin () + slot_index
+	);
+	_slot_info_list.clear ();
+	mfx_View_PROPAGATE (erase_slot (slot_index));
+}
+
+
+
 void	View::do_set_plugin (int slot_index, const PluginInitData &pi_data)
 {
 	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];

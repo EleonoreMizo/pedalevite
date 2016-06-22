@@ -57,6 +57,15 @@ void	PageMgrInterface::jump_to (int node_id)
 
 
 
+void	PageMgrInterface::set_timer (int node_id, bool enable_flag)
+{
+	assert (node_id >= 0);
+
+	do_set_timer (node_id, enable_flag);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

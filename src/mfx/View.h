@@ -88,6 +88,8 @@ protected:
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list);
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type);
 	virtual void   do_set_nbr_slots (int nbr_slots);
+	virtual void   do_insert_slot (int slot_index);
+	virtual void   do_erase_slot (int slot_index);
 	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_index);
 	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);

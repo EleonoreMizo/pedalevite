@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        EditProg.h
+        EditText.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_EditProg_HEADER_INCLUDED)
-#define mfx_uitk_pg_EditProg_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_EditText_HEADER_INCLUDED)
+#define mfx_uitk_pg_EditText_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,22 +27,18 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/PluginModel.h"
-#include "mfx/uitk/NText.h"
-#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
+#include "mfx/uitk/NBitmap.h"
+#include "mfx/uitk/NText.h"
+#include "mfx/uitk/NWindow.h"
 
-#include <memory>
-#include <vector>
+#include <map>
 
 
 
 namespace mfx
 {
-
-class LocEdit;
-
 namespace uitk
 {
 
@@ -53,7 +49,7 @@ namespace pg
 
 
 
-class EditProg
+class EditText
 :	public PageInterface
 {
 
@@ -61,8 +57,16 @@ class EditProg
 
 public:
 
-	explicit       EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <pi::PluginModel> &fx_list);
-	virtual        ~EditProg () = default;
+	class Param
+	{
+	public:
+		std::string    _title;           // Input
+		std::string    _text;            // Input/output
+		bool           _ok_flag = false; // Output
+	};
+
+	explicit       EditText (PageSwitcher &page_switcher);
+	virtual        ~EditText () = default;
 
 
 
@@ -78,13 +82,6 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
-	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_set_nbr_slots (int nbr_slots);
-	virtual void   do_insert_slot (int slot_index);
-	virtual void   do_erase_slot (int slot_index);
-	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data);
-	virtual void   do_remove_plugin (int slot_index);
 
 
 
@@ -94,39 +91,67 @@ private:
 
 	enum Entry
 	{
-		Entry_WINDOW    = 1000,
-		Entry_FX_LIST,
-		Entry_PROG_NAME,
-		Entry_CONTROLLERS
+		Entry_WINDOW = 0,
+		Entry_TITLE,
+		Entry_TEXT,
+		Entry_CURS,
+
+		Entry_NAV_BEG,
+		Entry_OK = Entry_NAV_BEG,
+		Entry_CANCEL,
+		Entry_SPACE,
+		Entry_DEL,
+		Entry_LEFT,
+		Entry_RIGHT,
+		Entry_CHAR_BEG
 	};
 
+	enum Span : char32_t
+	{
+		Span_R = 2,
+		Span_L
+	};
+
+	typedef std::shared_ptr <NBitmap> BitmapSPtr;
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
+	typedef std::vector <int> NodeIdRow;
+	typedef std::vector <NodeIdRow> NodeIdTable;
+	typedef std::map <int, char32_t> CharMap;
 
-	void           set_preset_info ();
-	void           set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel);
-	EvtProp        change_effect (int node_id, int dir);
-	void           update_loc_edit (int node_id);
-	int            conv_loc_edit_to_node_id () const;
+	void           update_display ();
+	void           update_curs ();
+	void           fill_nav (PageMgrInterface::NavLocList &nav_list, const NodeIdTable &nit, int x, int y) const;
 
-	const std::vector <pi::PluginModel> &
-	               _fx_list;
 	PageSwitcher & _page_switcher;
-	LocEdit &      _loc_edit;
-	Model *        _model_ptr;    // 0 = not connected
-	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
+	Param *        _param_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains 3 entries (2 of them are selectable) + the slot list
-	TxtSPtr        _fx_list_sptr;
-	TxtSPtr        _prog_name_sptr;
-	TxtSPtr        _controllers_sptr;
-	TxtArray       _slot_list;    // Shows N+1 slots, the last one being the <Empty> line.
+	WinSPtr        _menu_sptr;
+	BitmapSPtr     _curs_sptr;
+	TxtSPtr        _title_sptr;
+	TxtSPtr        _text_sptr;
+	TxtSPtr        _ok_sptr;
+	TxtSPtr        _cancel_sptr;
+	TxtSPtr        _space_sptr;
+	TxtSPtr        _del_sptr;
+	TxtSPtr        _left_sptr;
+	TxtSPtr        _right_sptr;
+	TxtArray       _char_list;
+
+	int            _curs_pos;
+	bool           _curs_blink_flag;
+	std::u32string _txt;
+
+	CharMap        _char_map;
+
+	static const std::array <std::u32string, 1+7>
+	               _char_table;
 
 
 
@@ -134,13 +159,13 @@ private:
 
 private:
 
-	               EditProg ()                               = delete;
-	               EditProg (const EditProg &other)          = delete;
-	EditProg &     operator = (const EditProg &other)        = delete;
-	bool           operator == (const EditProg &other) const = delete;
-	bool           operator != (const EditProg &other) const = delete;
+	               EditText ()                               = delete;
+	               EditText (const EditText &other)          = delete;
+	EditText &     operator = (const EditText &other)        = delete;
+	bool           operator == (const EditText &other) const = delete;
+	bool           operator != (const EditText &other) const = delete;
 
-}; // class EditProg
+}; // class EditText
 
 
 
@@ -150,11 +175,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/EditProg.hpp"
+//#include "mfx/uitk/pg/EditText.hpp"
 
 
 
-#endif   // mfx_uitk_pg_EditProg_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_EditText_HEADER_INCLUDED
 
 
 

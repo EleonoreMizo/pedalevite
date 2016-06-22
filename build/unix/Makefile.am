@@ -65,7 +65,6 @@ pedalevite_SOURCES = \
         ../../src/fstb/txt/unicode/PredEq.hpp \
         ../../src/fstb/txt/unicode/PredLt.h \
         ../../src/fstb/txt/unicode/PredLt.hpp \
-        ../../src/fstb/txt/unicode/StringU.h \
         ../../src/fstb/txt/unicode/WordBreakProp.h \
         ../../src/fstb/txt/unicode/WordBreakPropTableNext.h \
         ../../src/fstb/txt/unicode/WordBreakPropTablePrev.h \
@@ -296,6 +295,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/piapi/ParamDescInterface.hpp \
         ../../src/mfx/piapi/PluginInterface.cpp \
         ../../src/mfx/piapi/PluginInterface.h \
+        ../../src/mfx/piapi/PluginState.h \
         ../../src/mfx/ui/DisplayInterface.cpp \
         ../../src/mfx/ui/DisplayInterface.h \
         ../../src/mfx/ui/DisplayPi3Pcd8544.cpp \
@@ -331,8 +331,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/CurProg.h \
         ../../src/mfx/uitk/pg/EditProg.cpp \
         ../../src/mfx/uitk/pg/EditProg.h \
+        ../../src/mfx/uitk/pg/EditText.cpp \
+        ../../src/mfx/uitk/pg/EditText.h \
         ../../src/mfx/uitk/pg/MenuMain.cpp \
         ../../src/mfx/uitk/pg/MenuMain.h \
+        ../../src/mfx/uitk/pg/MenuSlot.cpp \
+        ../../src/mfx/uitk/pg/MenuSlot.h \
         ../../src/mfx/uitk/pg/NotYet.cpp \
         ../../src/mfx/uitk/pg/NotYet.h \
         ../../src/mfx/uitk/pg/PageType.h \

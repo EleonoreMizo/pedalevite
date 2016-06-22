@@ -55,6 +55,7 @@ public:
 
 	void           set_nav_layout (const NavLocList &nav_list);
 	void           jump_to (int node_id);
+	void           set_timer (int node_id, bool enable_flag);
 
 
 
@@ -64,6 +65,7 @@ protected:
 
 	virtual void   do_set_nav_layout (const NavLocList &nav_list) = 0;
 	virtual void   do_jump_to (int node_id) = 0;
+	virtual void   do_set_timer (int node_id, bool enable_flag) = 0;
 
 
 

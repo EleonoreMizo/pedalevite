@@ -185,6 +185,13 @@ NodeEvt::Curs	NodeEvt::get_cursor () const
 
 
 
+bool	NodeEvt::is_timer () const
+{
+	return (_type == Type_TIMER);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

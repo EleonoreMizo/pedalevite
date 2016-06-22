@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/MsgHandlerInterface.h"
+#include "mfx/pi/PluginModel.h"
 #include "mfx/PiType.h"
 
 #include <set>
@@ -76,6 +77,7 @@ public:
 	static int     find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
+	static void    change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <pi::PluginModel> &fx_list);
 
 
 

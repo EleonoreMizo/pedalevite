@@ -69,6 +69,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 		input_device,
 		_msg_pool
 	)
+,	_default_map ()
 ,	_sample_freq (0)
 ,	_max_block_size (0)
 ,	_cb_ptr (0)
@@ -475,6 +476,19 @@ int	Central::get_dummy_mix_id () const
 
 
 
+const piapi::PluginState &	Central::use_default_settings (pi::PluginModel model) const
+{
+	assert (model >= 0);
+	assert (model < pi::PluginModel_NBR_ELT);
+
+	auto           it = _default_map.find (model);
+	assert (it != _default_map.end ());
+
+	return it->second;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -584,6 +598,7 @@ int	Central::set_plugin (int pos, pi::PluginModel model, PiType type, bool force
 				ret_val = pi_uptr->reset (_sample_freq, _max_block_size, latency);
 				assert (ret_val == piapi::PluginInterface::Err_OK);
 			}
+			check_and_get_default_settings (*pi_uptr, model);
 			pi_id = _plugin_pool.add (pi_uptr);
 
 			doc._map_model_id [model] [pi_id] = true;
@@ -927,6 +942,25 @@ conc::LockFreeCell <Msg> *	Central::make_param_msg (int pi_id, int index, float 
 	cell_ptr->_val._content._param._val       = val;
 
 	return cell_ptr;
+}
+
+
+
+void	Central::check_and_get_default_settings (piapi::PluginInterface &plug, pi::PluginModel model)
+{
+	auto           it = _default_map.find (model);
+	if (it == _default_map.end ())
+	{
+		piapi::PluginState & def = _default_map [model];
+		const int      nbr_param = plug.get_nbr_param (piapi::ParamCateg_GLOBAL);
+		def._param_list.resize (nbr_param);
+		for (int index = 0; index < nbr_param; ++index)
+		{
+			def._param_list [index] = float (
+				plug.get_param_val (piapi::ParamCateg_GLOBAL, index, 0)
+			);
+		}
+	}
 }
 
 

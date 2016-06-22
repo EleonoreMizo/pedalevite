@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/Plugin.h"
 #include "mfx/cmd/Slot.h"
 #include "mfx/pi/PluginModel.h"
+#include "mfx/piapi/PluginState.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
@@ -107,6 +108,8 @@ public:
 	PluginPool &   use_pi_pool ();
 	int64_t        get_cur_date () const;
 	int            get_dummy_mix_id () const;
+	const piapi::PluginState &
+	               use_default_settings (pi::PluginModel model) const;
 
 
 
@@ -147,6 +150,8 @@ private:
 
 	typedef std::set <ContextSPtr> ContextSet;
 
+	typedef std::map <pi::PluginModel, piapi::PluginState> DefaultMap;
+
 	Document &     modify ();
 	Plugin &       find_plugin (Document &doc, int pi_id);
 	int            set_plugin (int pos, pi::PluginModel model, PiType type, bool force_reset_flag);
@@ -157,6 +162,7 @@ private:
 	void           create_param_msg (std::vector <conc::LockFreeCell <Msg> *> &msg_list);
 	conc::LockFreeCell <Msg> *
 	               make_param_msg (int pi_id, int index, float val);
+	void           check_and_get_default_settings (piapi::PluginInterface &plug, pi::PluginModel model);
 
 	static PluginPool::PluginUPtr
 	               instantiate (pi::PluginModel model);
@@ -172,6 +178,7 @@ private:
 	MsgQueue       _queue_audio_to_cmd;
 	PluginPool     _plugin_pool;
 	WorldAudio     _audio;
+	DefaultMap     _default_map;
 	double         _sample_freq;  // 0 = not set
 	int            _max_block_size;  // 0 = not set
 	CentralCbInterface *

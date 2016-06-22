@@ -81,7 +81,7 @@ FrequencyShifter::FrequencyShifter ()
 
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
 
-	_state_set.set_val (Param_FREQ, 0);
+	_state_set.set_val (Param_FREQ, 0.5f);
 
 	_state_set.add_observer (Param_FREQ, _param_change_flag);
 

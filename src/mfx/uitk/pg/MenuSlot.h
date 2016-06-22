@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        EditProg.h
+        MenuSlot.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_EditProg_HEADER_INCLUDED)
-#define mfx_uitk_pg_EditProg_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_MenuSlot_HEADER_INCLUDED)
+#define mfx_uitk_pg_MenuSlot_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,14 +27,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/PluginModel.h"
+#include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
-#include "mfx/uitk/PageMgrInterface.h"
-
-#include <memory>
-#include <vector>
 
 
 
@@ -53,7 +49,7 @@ namespace pg
 
 
 
-class EditProg
+class MenuSlot
 :	public PageInterface
 {
 
@@ -61,8 +57,8 @@ class EditProg
 
 public:
 
-	explicit       EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <pi::PluginModel> &fx_list);
-	virtual        ~EditProg () = default;
+	explicit       MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <pi::PluginModel> &fx_list);
+	virtual        ~MenuSlot () = default;
 
 
 
@@ -92,28 +88,36 @@ protected:
 
 private:
 
+	enum State
+	{
+		State_NORMAL = 0,
+		State_EDIT_LABEL
+	};
+
 	enum Entry
 	{
-		Entry_WINDOW    = 1000,
-		Entry_FX_LIST,
-		Entry_PROG_NAME,
-		Entry_CONTROLLERS
+		Entry_WINDOW = 0,
+		Entry_TYPE,
+		Entry_INSERT,
+		Entry_DELETE,
+		Entry_MOVE,
+		Entry_PRESETS,
+		Entry_RESET,
+		Entry_CHN,
+		Entry_LABEL
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::vector <TxtSPtr> TxtArray;
 
-	void           set_preset_info ();
-	void           set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel);
-	EvtProp        change_effect (int node_id, int dir);
-	void           update_loc_edit (int node_id);
-	int            conv_loc_edit_to_node_id () const;
+	void           update_display ();
+	EvtProp        change_type (int dir);
+	EvtProp        reset_plugin ();
 
-	const std::vector <pi::PluginModel> &
-	               _fx_list;
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
+	const std::vector <pi::PluginModel> &
+	               _fx_list;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -122,11 +126,23 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains 3 entries (2 of them are selectable) + the slot list
-	TxtSPtr        _fx_list_sptr;
-	TxtSPtr        _prog_name_sptr;
-	TxtSPtr        _controllers_sptr;
-	TxtArray       _slot_list;    // Shows N+1 slots, the last one being the <Empty> line.
+	State          _state;
+	int            _save_bank_index;
+	int            _save_preset_index;
+	int            _save_slot_index;
+
+	WinSPtr        _menu_sptr;
+	TxtSPtr        _typ_sptr;
+	TxtSPtr        _ins_sptr;
+	TxtSPtr        _del_sptr;
+	TxtSPtr        _mov_sptr;
+	TxtSPtr        _prs_sptr;
+	TxtSPtr        _rst_sptr;
+	TxtSPtr        _chn_sptr;
+	TxtSPtr        _lbl_sptr;
+
+	EditText::Param
+	               _name_param;
 
 
 
@@ -134,13 +150,13 @@ private:
 
 private:
 
-	               EditProg ()                               = delete;
-	               EditProg (const EditProg &other)          = delete;
-	EditProg &     operator = (const EditProg &other)        = delete;
-	bool           operator == (const EditProg &other) const = delete;
-	bool           operator != (const EditProg &other) const = delete;
+	               MenuSlot ()                               = delete;
+	               MenuSlot (const MenuSlot &other)          = delete;
+	MenuSlot &     operator = (const MenuSlot &other)        = delete;
+	bool           operator == (const MenuSlot &other) const = delete;
+	bool           operator != (const MenuSlot &other) const = delete;
 
-}; // class EditProg
+}; // class MenuSlot
 
 
 
@@ -150,11 +166,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/EditProg.hpp"
+//#include "mfx/uitk/pg/MenuSlot.hpp"
 
 
 
-#endif   // mfx_uitk_pg_EditProg_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_MenuSlot_HEADER_INCLUDED
 
 
 

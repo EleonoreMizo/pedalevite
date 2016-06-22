@@ -286,6 +286,65 @@ std::set <float>	Tools::create_beat_notches ()
 
 
 
+void	Tools::change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <pi::PluginModel> &fx_list)
+{
+	assert (slot_index >= 0);
+	assert (dir != 0);
+
+	const doc::Preset &  preset = view.use_preset_cur ();
+	const int      nbr_slots = preset._slot_list.size ();
+	assert (slot_index <= nbr_slots);
+
+	const int      nbr_types = int (fx_list.size ());
+
+	// Index within the official plug-in list. end = empty
+	int            pi_index  = nbr_types;
+	if (slot_index < nbr_slots)
+	{
+		if (! preset.is_slot_empty (slot_index))
+		{
+			const doc::Slot & slot = *(preset._slot_list [slot_index]);
+			const pi::PluginModel   type = slot._pi_model;
+			auto          type_it =
+				std::find (fx_list.begin (), fx_list.end (), type);
+			assert (type_it != fx_list.end ());
+			pi_index = type_it - fx_list.begin ();
+		}
+	}
+
+	const int      mod_len = nbr_types + 1;
+	pi_index += dir;
+	pi_index = (pi_index + mod_len) % mod_len;
+
+	// We need to add a slot at the end?
+	if (slot_index == nbr_slots && pi_index != nbr_types)
+	{
+		model.set_nbr_slots (nbr_slots + 1);
+	}
+
+	if (pi_index == nbr_types)
+	{
+		model.remove_plugin (slot_index);
+	}
+	else
+	{
+		model.set_plugin (slot_index, fx_list [pi_index]);
+	}
+
+	// Last slot needs to be removed?
+	if (slot_index == nbr_slots - 1 && pi_index == nbr_types)
+	{
+		int         nbr_slots_new = nbr_slots - 1;
+		while (nbr_slots_new > 0 && preset.is_slot_empty (nbr_slots_new - 1))
+		{
+			-- nbr_slots_new;
+		}
+		model.set_nbr_slots (nbr_slots_new);
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

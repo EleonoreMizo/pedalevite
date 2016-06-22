@@ -32,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/Rect.h"
 
+#include <set>
+
 
 
 namespace mfx
@@ -81,6 +83,7 @@ protected:
 	// mfx::uitk::PageMgrInterface
 	virtual void   do_set_nav_layout (const NavLocList &nav_list);
 	virtual void   do_jump_to (int node_id);
+	virtual void   do_set_timer (int node_id, bool enable_flag);
 
 	// mfx::uitk::ParentInterface via mfx::uitk::PageMgrInterface
 	virtual Vec2d  do_get_coord_abs () const;
@@ -130,6 +133,7 @@ private:
 	NavLocList     _nav_list;
 	int            _curs_pos;           // -1 = not shown
 	int            _curs_id;            // -1 = not shown
+	std::set <int> _timer_set;
 
 
 

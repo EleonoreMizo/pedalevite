@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/ui/DisplayInterface.h"
 #include "mfx/uitk/NodeBase.h"
 
 #include <vector>
@@ -61,6 +62,7 @@ public:
 
 	void           set_size (Vec2d sz);
 	void           show (bool flag);
+	void           set_blend_mode (ui::DisplayInterface::BlendMode mode);
 	const uint8_t* use_buffer () const;
 	uint8_t *      use_buffer ();
 	bool           has_cursor () const;
@@ -86,6 +88,8 @@ private:
 	Vec2d          _size;
 	std::vector <uint8_t>
 	               _buffer;
+	ui::DisplayInterface::BlendMode
+	               _blend_mode  = ui::DisplayInterface::BlendMode_OPAQUE;
 	bool           _cursor_flag = false;
 	bool           _show_flag   = true;
 

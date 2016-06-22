@@ -63,6 +63,7 @@ Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInp
 ,	_nav_list ()
 ,	_curs_pos (-1)
 ,	_curs_id (-1)
+,	_timer_set ()
 {
 	_screen.set_coord (Vec2d ());
 	_screen.set_size (_disp_size, _disp_size);
@@ -103,6 +104,7 @@ int	Page::get_cursor_node () const
 void	Page::clear (bool evt_flag)
 {
 	_nav_list.clear ();
+	_timer_set.clear ();
 
 	if (_content_ptr != 0)
 	{
@@ -135,6 +137,12 @@ void	Page::process_messages ()
 
 	// Redraw
 	handle_redraw ();
+
+	for (int node_id : _timer_set)
+	{
+		NodeEvt        evt (NodeEvt::create_timer (node_id));
+		send_event (evt);
+	}
 }
 
 
@@ -169,6 +177,24 @@ void	Page::do_jump_to (int node_id)
 		_curs_id = node_id;
 		NodeEvt        evt (NodeEvt::create_cursor (_curs_id, NodeEvt::Curs_ENTER));
 		send_event (evt);
+	}
+}
+
+
+
+void	Page::do_set_timer (int node_id, bool enable_flag)
+{
+	if (enable_flag)
+	{
+		_timer_set.insert (node_id);
+	}
+	else
+	{
+		auto        it = _timer_set.find (node_id);
+		if (it != _timer_set.end ())
+		{
+			_timer_set.erase (it);
+		}
 	}
 }
 

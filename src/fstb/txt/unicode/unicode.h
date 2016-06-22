@@ -32,8 +32,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"fstb/txt/unicode/StringU.h"
-
 #include	<string>
 
 
@@ -47,11 +45,11 @@ namespace unicode
 
 
 
-int	conv_utf8_to_unicode (StringU & dest, const char src_0 []);
+int	conv_utf8_to_unicode (std::u32string & dest, const char src_0 []);
 int	conv_unicode_to_utf8 (std::string & dest, const char32_t src_0 []);
 
 template <class C>	// C = ConvCi or ConvNeutral
-int	compare (const StringU &s1, const StringU &s2);
+int	compare (const std::u32string &s1, const std::u32string &s2);
 
 
 
