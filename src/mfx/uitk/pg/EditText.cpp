@@ -101,7 +101,6 @@ void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_param_ptr->_ok_flag = false;
 
-	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      w_m   = _fnt_ptr->get_char_w (' ');
 	const int      w_m2  = _fnt_ptr->get_char_w ('M');
@@ -181,9 +180,9 @@ void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &pag
 				TxtSPtr        char_sptr (new NText (node_id));
 				char_sptr->set_font (*_fnt_ptr);
 				char_sptr->set_coord (Vec2d (px, py));
-				std::string    str;
-				fstb::txt::utf8::Codec8::encode_char (str, c);
-				char_sptr->set_text (str);
+				std::string    str_c;
+				fstb::txt::utf8::Codec8::encode_char (str_c, c);
+				char_sptr->set_text (str_c);
 				_char_map [node_id] = c;
 				_char_list.push_back (char_sptr);
 				_menu_sptr->push_back (char_sptr);
@@ -302,6 +301,10 @@ MsgHandlerInterface::EvtProp	EditText::do_handle_evt (const NodeEvt &evt)
 		case Button_E:
 			_param_ptr->_ok_flag = false;
 			_page_switcher.return_page ();
+			ret_val = EvtProp_CATCH;
+			break;
+		default:
+			// Nothing
 			break;
 		}
 	}
