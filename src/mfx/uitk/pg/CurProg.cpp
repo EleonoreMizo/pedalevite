@@ -109,6 +109,8 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	_page_ptr  = &page;
 	_page_size = page_size;
 
+	_model_ptr->set_edit_mode (false);
+
 	_prog_nbr_sptr->set_font (fnt_m);
 	_prog_name_sptr->set_font (fnt_l);
 	_bank_nbr_sptr->set_font (fnt_s);

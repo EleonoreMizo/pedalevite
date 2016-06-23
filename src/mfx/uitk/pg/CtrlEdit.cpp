@@ -321,7 +321,6 @@ void	CtrlEdit::update_display ()
 		}
 	}
 
-
 	if (! active_flag)
 	{
 		_src_sptr->set_text ("<Empty/Delete>");

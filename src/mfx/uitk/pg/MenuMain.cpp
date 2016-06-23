@@ -85,6 +85,8 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr  = &page;
 	_page_size = page_size;
 
+	model.set_edit_mode (false);
+
 	_edit_prog_sptr  ->set_font (fnt_m);
 	_edit_bank_sptr  ->set_font (fnt_m);
 	_edit_layout_sptr->set_font (fnt_m);

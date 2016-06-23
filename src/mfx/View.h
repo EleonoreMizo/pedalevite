@@ -106,7 +106,7 @@ private:
 	ObsSet         _obs_set;
 
 	// Cached data
-	bool           _edit_flag    = true;
+	bool           _edit_flag    = false;
 	bool           _tuner_flag   = false;
 	float          _tuner_freq   = 0;
 	int            _bank_index   = 0;

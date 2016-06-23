@@ -67,7 +67,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_pi_id_list ()
 ,	_pedal_state_arr ()
 ,	_hold_time (2 * 1000*1000) // 2 s
-,	_edit_flag (true)
+,	_edit_flag (false)
 ,	_edit_preset_flag (false)
 ,	_tuner_flag (false)
 ,	_tuner_pi_id (-1)

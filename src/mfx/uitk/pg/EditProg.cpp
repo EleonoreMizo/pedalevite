@@ -88,6 +88,8 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt_m;
 
+	_model_ptr->set_edit_mode (true);
+
 	_prog_name_sptr  ->set_font (*_fnt_ptr);
 	_controllers_sptr->set_font (*_fnt_ptr);
 	_fx_list_sptr    ->set_font (*_fnt_ptr);
