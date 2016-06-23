@@ -1,3 +1,5 @@
 #!/bin/sh
 
 ./configure CXXFLAGS='-O3 -DNDEBUG' CFLAGS='-O3 -DNDEBUG'
+make clean
+

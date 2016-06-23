@@ -1,3 +1,4 @@
 #!/bin/sh
 
 ./configure CXXFLAGS='-O0 -g' CFLAGS='-O0 -g'
+make clean
