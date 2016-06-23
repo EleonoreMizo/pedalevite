@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <pthread.h>
 #include <sched.h>
+#include <signal.h>
 
 #include <stdexcept>
 
@@ -58,7 +59,7 @@ DAlsa::DAlsa ()
 ,	_buf_alig ()
 ,	_block_size_alig (0)
 ,	_thread_audio ()
-,	_stop_flag (false)
+,	_quit_flag (false)
 {
 	assert (_instance_ptr == 0);
 	if (_instance_ptr != 0)
@@ -76,7 +77,7 @@ DAlsa::~DAlsa ()
 
 	stop ();
 
-	for (int dir = 0; dir < Dir_NBR_ELT && ret_val == 0; ++ dir)
+	for (int dir = 0; dir < Dir_NBR_ELT; ++ dir)
 	{
 		if (_handle_arr [dir] != 0)
 		{
@@ -144,8 +145,8 @@ int	DAlsa::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 
 	if (ret_val == 0)
 	{
-		_block_size_alig = (_block_size + 3) >> 2;
-		_buf_alig.resize (_block_size_alig * _nbr_chn * Dir_NBR_ELT);
+		_block_size_alig = (_block_size + 3) & -4;
+		_buf_alig.resize (_block_size_alig * _nbr_chn * Dir_NBR_ELT, 0);
 
 		sample_freq    = _sample_freq;
 		max_block_size = _block_size;
@@ -178,7 +179,7 @@ int	DAlsa::do_start ()
 	int            max_prio = 0;
 	if (ret_val == 0)
 	{
-		_stop_flag    = false;
+		_quit_flag    = false;
 		_thread_audio = std::thread (&DAlsa::process_audio, this);
 
 		max_prio = ::sched_get_priority_max (policy);
@@ -206,6 +207,16 @@ int	DAlsa::do_start ()
 		{
 			fprintf (stderr, "Error: cannot set thread priority.\n");
 		}
+	}
+
+	if (ret_val == 0)
+	{
+		fprintf (stderr, "Audio now running...\n");
+
+		signal (SIGINT,  &signal_handler);
+		signal (SIGTERM, &signal_handler);
+		signal (SIGQUIT, &signal_handler);
+		signal (SIGHUP,  &signal_handler);
 	}
 
 	return ret_val;
@@ -314,7 +325,7 @@ int	DAlsa::configure_alsa_audio (int dir)
 		{
 			fprintf (
 				stderr,
-				"Error: sample format not available (%s)\n"
+				"Error: sample format not available (%s)\n",
 				::snd_strerror (ret_val)
 			);
 		}
@@ -336,7 +347,7 @@ int	DAlsa::configure_alsa_audio (int dir)
 		{
 			fprintf (
 				stderr,
-				"Error: sampling rate not available (%s)\n"
+				"Error: sampling rate not available (%s)\n",
 				::snd_strerror (ret_val)
 			);
 		}
@@ -352,7 +363,7 @@ int	DAlsa::configure_alsa_audio (int dir)
 		{
 			fprintf (
 				stderr,
-				"Error: channels not available (%s)\n"
+				"Error: channels not available (%s)\n",
 				::snd_strerror (ret_val)
 			);
 		}
@@ -373,7 +384,7 @@ int	DAlsa::configure_alsa_audio (int dir)
 		{
 			fprintf (
 				stderr,
-				"Error: cannot set the number of periods (%s)\n"
+				"Error: cannot set the number of periods (%s)\n",
 				::snd_strerror (ret_val)
 			);
 		}
@@ -395,7 +406,7 @@ int	DAlsa::configure_alsa_audio (int dir)
 		{
 			fprintf (
 				stderr,
-				"Error: cannot set the period size (%s)\n"
+				"Error: cannot set the period size (%s)\n",
 				::snd_strerror (ret_val)
 			);
 		}
@@ -409,7 +420,7 @@ int	DAlsa::configure_alsa_audio (int dir)
 		{
 			fprintf (
 				stderr,
-				"Error: cannot set hardware parameters (%s)\n"
+				"Error: cannot set hardware parameters (%s)\n",
 				::snd_strerror (ret_val)
 			);
 		}
@@ -418,26 +429,32 @@ int	DAlsa::configure_alsa_audio (int dir)
 	if (hw_params_ptr != 0)
 	{
 		::snd_pcm_hw_params_free (hw_params_ptr);
+		hw_params_ptr = 0;
 	}
 
-	return ret_val
+	return ret_val;
 }
 
 
 
 void	DAlsa::process_audio ()
 {
-	while (! _stop_flag)
+	int             nbr_initial_write = 0;
+	while (! _quit_flag)
 	{
-		process_block ();
+		process_block (nbr_initial_write == 0);
+		if (nbr_initial_write > 0)
+		{
+			-- nbr_initial_write;
+		}
 	}
 
-	_stop_flag = false;
+	_quit_flag = false;
 }
 
 
 
-void	DAlsa::process_block ()
+void	DAlsa::process_block (bool read_flag)
 {
 	std::array <std::array <float *, _nbr_chn>, Dir_NBR_ELT> buf_ptr_arr;
 	const int      ofs_r    = 0;
@@ -450,86 +467,118 @@ void	DAlsa::process_block ()
 		buf_ptr_arr [Dir_OUT] [chn] = &_buf_alig [ofs_w + ofs_c];
 	}
 
-	bool           ok_flag = false;
-	while (! ok_flag && ! _stop_flag)
+	if (read_flag)
 	{
-		const int      ret_val = ::snd_pcm_readn (
-			_handle_arr [Dir_IN ], &buf_ptr_arr [Dir_IN ] [0], _block_size
-		);
-		if (ret_val == -EAGAIN)
+		bool           ok_flag = false;
+		while (! ok_flag && ! _quit_flag)
 		{
-			// Try again
-		}
-		else if (ret_val == -EBADFD)
-		{
-			// Stop?
-		}
-		else if (ret_val == -EPIPE)
-		{
-			_cb_ptr->notify_dropout ();
-			::snd_pcm_prepare (_handle_arr [Dir_IN ]);
-		}
-		else if (ret_val == -ESTRPIPE)
-		{
-			// Wait?
-		}
-		else if (ret_val >= 0)
-		{
-			if (ret_val != _block_size)
+			const int      ret_val = ::snd_pcm_readn (
+				_handle_arr [Dir_IN ],
+				reinterpret_cast <void **> (&buf_ptr_arr [Dir_IN ] [0]),
+				_block_size
+			);
+			if (ret_val == -EAGAIN)
 			{
-				// Short read...
+				// Try again
+fprintf (stderr, "r EAGAIN\n");
 			}
-			else
+			else if (ret_val == -EBADFD)
 			{
-				ok_flag = true;
+				// Stop?
+fprintf (stderr, "r EBADFD\n");
+			}
+			else if (ret_val == -EPIPE)
+			{
+//fprintf (stderr, "r EPIPE\n");
+				_cb_ptr->notify_dropout ();
+				::snd_pcm_prepare (_handle_arr [Dir_IN ]);
+			}
+			else if (ret_val == -ESTRPIPE)
+			{
+				// Wait?
+fprintf (stderr, "r ESTRPIPE\n");
+			}
+			else if (ret_val >= 0)
+			{
+				if (ret_val != _block_size)
+				{
+					// Short read...
+fprintf (stderr, "r Short read\n");
+				}
+				else
+				{
+					ok_flag = true;
+				}
 			}
 		}
 	}
 
-	if (! _stop_flag)
+	if (! _quit_flag)
 	{
+#if 1
 		_cb_ptr->process_block (
 			const_cast <      float * const *> (&buf_ptr_arr [Dir_OUT] [0]),
 			const_cast <const float * const *> (&buf_ptr_arr [Dir_IN ] [0]),
 			_block_size
 		);
+#else
+		memcpy (buf_ptr_arr [Dir_OUT] [0], buf_ptr_arr [Dir_IN ] [0], _block_size * sizeof (float));
+		memcpy (buf_ptr_arr [Dir_OUT] [1], buf_ptr_arr [Dir_IN ] [1], _block_size * sizeof (float));
+#endif
 	}
 
-	ok_flag = false;
-	while (! ok_flag && ! _stop_flag)
 	{
-		const int      ret_val = ::snd_pcm_writen (
-			_handle_arr [Dir_OUT], &buf_ptr_arr [Dir_OUT] [0], _block_size
-		);
-		if (ret_val == -EAGAIN)
+		bool            ok_flag = false;
+		while (! ok_flag && ! _quit_flag)
 		{
-			// Try again
-		}
-		else if (ret_val == -EBADFD)
-		{
-			// Stop?
-		}
-		else if (ret_val == -EPIPE)
-		{
-			_cb_ptr->notify_dropout ();
-			::snd_pcm_prepare (_handle_arr [Dir_OUT]);
-		}
-		else if (ret_val == -ESTRPIPE)
-		{
-			// Wait?
-		}
-		else if (ret_val >= 0)
-		{
-			if (ret_val != _block_size)
+			const int      ret_val = ::snd_pcm_writen (
+				_handle_arr [Dir_OUT],
+				reinterpret_cast <void **> (&buf_ptr_arr [Dir_OUT] [0]),
+				_block_size
+			);
+			if (ret_val == -EAGAIN)
 			{
-				// Short read...
+				// Try again
+fprintf (stderr, "w EAGAIN\n");
 			}
-			else
+			else if (ret_val == -EBADFD)
 			{
-				ok_flag = true;
+				// Stop?
+fprintf (stderr, "w EBADFD\n");
+			}
+			else if (ret_val == -EPIPE)
+			{
+//fprintf (stderr, "w EPIPE\n");
+				_cb_ptr->notify_dropout ();
+				::snd_pcm_prepare (_handle_arr [Dir_OUT]);
+			}
+			else if (ret_val == -ESTRPIPE)
+			{
+				// Wait?
+fprintf (stderr, "w ESTRPIPE\n");
+			}
+			else if (ret_val >= 0)
+			{
+				if (ret_val != _block_size)
+				{
+					// Short write...
+fprintf (stderr, "w Short writen");
+				}
+				else
+				{
+					ok_flag = true;
+				}
 			}
 		}
 	}
+}
+
+
+
+void	DAlsa::signal_handler (int sig)
+{
+	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
+	_instance_ptr->_cb_ptr->request_exit ();
 }
 
 

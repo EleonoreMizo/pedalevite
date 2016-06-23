@@ -80,7 +80,9 @@ private:
 
 	int            configure_alsa_audio (int dir);
 	void           process_audio ();
-	void           process_block ();
+	void           process_block (bool read_flag);
+
+	static void    signal_handler (int sig);
 
 	CbInterface *  _cb_ptr;
 	int            _block_size;
@@ -96,9 +98,9 @@ private:
 	int            _block_size_alig;
 
 	std::thread    _thread_audio;
-	volatile bool  _stop_flag;
+	volatile bool  _quit_flag;
 
-	static DAlsa * _instance_ptr;       // Actually used only to ensure that we instantiated only one driver.
+	static DAlsa * _instance_ptr;
 
 
 
