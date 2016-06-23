@@ -133,12 +133,12 @@ int	DJack::do_start ()
 	{
 		if ((_status & ::JackServerStarted) != 0)
 		{
-//			fprintf (stderr, "JACK server started\n");
+			fprintf (stderr, "JACK server started\n");
 		}
 		if ((_status & ::JackNameNotUnique) != 0)
 		{
-//			const char *   name_0 = ::jack_get_client_name (_client_ptr);
-//			fprintf (stderr, "Unique name \"%s\" assigned\n", name_0);
+			const char *   name_0 = ::jack_get_client_name (_client_ptr);
+			fprintf (stderr, "Unique name \"%s\" assigned\n", name_0);
 		}
 
 		::jack_set_process_callback (_client_ptr, &process_jack, this);
@@ -205,13 +205,11 @@ int	DJack::do_start ()
 		}
 		else
 		{
-/*
 			fprintf (stderr, "Available ports for %s:\n", _dir_name_0_arr [dir]);
 			for (int index = 0; port_0_arr [index] != 0; ++index)
 			{
 				fprintf (stderr, "%d: %s\n", index, port_0_arr [index]);
 			}
-*/
 
 			for (int chn = 0; chn < _nbr_chn && ret_val == 0; ++chn)
 			{
@@ -256,7 +254,7 @@ int	DJack::do_start ()
 
 	if (ret_val == 0)
 	{
-//		fprintf (stderr, "Audio now running...\n");
+		fprintf (stderr, "Audio now running...\n");
 
 		signal (SIGINT,  &signal_handler);
 		signal (SIGTERM, &signal_handler);
@@ -320,7 +318,7 @@ void	DJack::process_block (int nbr_spl)
 
 void	DJack::signal_handler (int sig)
 {
-//	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
+	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
 	_instance_ptr->_cb_ptr->request_exit ();
 }
 
@@ -328,7 +326,7 @@ void	DJack::signal_handler (int sig)
 
 void	DJack::jack_shutdown (void *arg)
 {
-//	fprintf (stderr, "\nJack exited, exiting too...\n");
+	fprintf (stderr, "\nJack exited, exiting too...\n");
 	DJack &        obj = *reinterpret_cast <DJack *> (arg);
 	obj._cb_ptr->request_exit ();
 }

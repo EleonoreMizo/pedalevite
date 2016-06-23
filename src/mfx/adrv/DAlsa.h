@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <alsa/asoundlib.h>
 
 #include <array>
+#include <thread>
 #include <vector>
 
 
@@ -51,6 +52,9 @@ class DAlsa
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
+
+	static const int  _tgt_nbr_periods = 3;
+	static const int  _tgt_period_size = 64;
 
 	               DAlsa ();
 	virtual        ~DAlsa ();
@@ -74,6 +78,8 @@ protected:
 
 private:
 
+	int            configure_alsa_audio (int dir);
+	void           process_audio ();
 	void           process_block ();
 
 	CbInterface *  _cb_ptr;
@@ -87,8 +93,12 @@ private:
 
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
+	int            _block_size_alig;
 
-	static DAlsa * _instance_ptr;
+	std::thread    _thread_audio;
+	volatile bool  _stop_flag;
+
+	static DAlsa * _instance_ptr;       // Actually used only to ensure that we instantiated only one driver.
 
 
 

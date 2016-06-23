@@ -21,7 +21,8 @@
 #define MAIN_API_ALSA 2
 #define MAIN_API_ASIO 3
 #if fstb_IS (ARCHI, ARM)
-	#define MAIN_API MAIN_API_JACK
+//	#define MAIN_API MAIN_API_JACK
+	#define MAIN_API MAIN_API_ALSA
 #else
 	#define MAIN_API MAIN_API_ASIO
 #endif
