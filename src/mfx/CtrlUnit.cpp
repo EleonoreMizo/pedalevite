@@ -52,6 +52,7 @@ CtrlUnit::CtrlUnit (const doc::CtrlLink &other, bool abs_flag)
 ,	_abs_flag (abs_flag)
 ,	_base (other._base)
 ,	_amp (other._amp)
+,	_notch_list (other._notch_list)
 {
 	// Nothing
 }
@@ -95,6 +96,29 @@ float	CtrlUnit::evaluate (float param_val) const
 	else
 	{
 		param_val += mod_val;
+	}
+
+	if (! _notch_list.empty ())
+	{
+		auto           it_l = _notch_list.lower_bound (param_val);
+		if (it_l == _notch_list.end ())
+		{
+			param_val = *_notch_list.rbegin ();
+		}
+		else if (it_l == _notch_list.begin ())
+		{
+			param_val = *it_l;
+		}
+		else
+		{
+			assert (_notch_list.size () >= 2);
+			const float    v1 = *it_l;
+			-- it_l;
+			const float    v0 = *it_l;
+			const float    d1 = fabs (param_val - v1);
+			const float    d0 = fabs (param_val - v0);
+			param_val = (d0 < d1) ? v0 : v1;
+		}
 	}
 
 	return param_val;

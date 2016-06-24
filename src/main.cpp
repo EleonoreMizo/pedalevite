@@ -695,6 +695,25 @@ Context::Context ()
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0.5f;   // More accuracy on the useful range
 			cls._bind_sptr->_amp           = 1.0f - cls._bind_sptr->_base;
+			{
+				mfx::pi::FrequencyShifter dummy;
+				dummy.init ();
+				const mfx::piapi::ParamDescInterface & dd = dummy.get_param_info (
+					mfx::piapi::ParamCateg_GLOBAL,
+					mfx::pi::FrequencyShifter::Param_FREQ
+				);
+				for (int oct = 2; oct < 7; ++oct)
+				{
+					std::array <int, 2> note_arr = {{ 0, 7 }};
+					for (size_t n = 0; n < note_arr.size (); ++n)
+					{
+						const int      note = oct * 12 + note_arr [n];
+						const double   freq = 440 * pow (2, (note - 69) / 12.0);
+						const double   nrm  = dd.conv_nat_to_nrm (freq);
+						cls._bind_sptr->_notch_list.insert (float (nrm));
+					}
+				}
+			}
 			pi_settings._map_param_ctrl [mfx::pi::FrequencyShifter::Param_FREQ] = cls;
 		}
 		{

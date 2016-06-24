@@ -30,6 +30,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ControlCurve.h"
 #include "mfx/ControlSource.h"
 
+#include <set>
+
 
 
 namespace mfx
@@ -59,6 +61,9 @@ public:
 	float          _base     = 0;       // Normalized value, for absolute mode
 	float          _amp      = 1;       // Normalized scale, for all modes. Can be negative.
 	bool           _u2b_flag = false;   // Unipolar to bipolar conversion (0...1 -> -1...1)
+
+	std::set <float>                    // Normalized values. Applies on the final value
+	               _notch_list;
 
 
 

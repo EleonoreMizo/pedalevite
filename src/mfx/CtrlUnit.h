@@ -30,6 +30,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ControlCurve.h"
 #include "mfx/ControlSource.h"
 
+#include <set>
+
 
 
 namespace mfx
@@ -66,6 +68,9 @@ public:
 	bool           _abs_flag = false;   // true: controls the final value (only one per ControlledParam), false: modulator (additive)
 	float          _base     = 0;       // Normalized value, for absolute mode
 	float          _amp      = 1;       // Normalized scale, for all modes. Can be negative.
+
+	std::set <float>                    // Normalized values. Applies on the final value
+	               _notch_list;
 
 
 
