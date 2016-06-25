@@ -28,12 +28,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/Central.h"
 #include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/CtrlLinkSet.h"
-#include "mfx/pi/DistoSimple.h"
-#include "mfx/pi/DryWet.h"
-#include "mfx/pi/FrequencyShifter.h"
-#include "mfx/pi/Tremolo.h"
-#include "mfx/pi/Tuner.h"
-#include "mfx/pi/Wha.h"
+#include "mfx/pi/dist1/DistoSimple.h"
+#include "mfx/pi/dwm/DryWet.h"
+#include "mfx/pi/freqsh/FrequencyShifter.h"
+#include "mfx/pi/trem1/Tremolo.h"
+#include "mfx/pi/tuner/Tuner.h"
+#include "mfx/pi/wha1/Wha.h"
 #include "mfx/Cst.h"
 
 #include <algorithm>
@@ -83,7 +83,6 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 	std::unique_ptr <piapi::PluginInterface>  dummy_mix_uptr (
 		instantiate (pi::PluginModel_DRYWET)
 	);
-	dummy_mix_uptr->init ();
 	_dummy_mix_id = _plugin_pool.add (dummy_mix_uptr);
 }
 
@@ -148,15 +147,10 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 	{
 		PluginPool::PluginDetails &         details  =
 			_plugin_pool.use_plugin (pi_id);
-		const piapi::PluginInterface::State pi_state =
-			details._pi_uptr->get_state ();
-		if (pi_state > piapi::PluginInterface::State_CONSTRUCTED)
-		{
-			int            latency = 0;
-			int            ret_val =
-				details._pi_uptr->reset (sample_freq, max_block_size, latency);
-			assert (ret_val == piapi::PluginInterface::Err_OK);
-		}
+		int            latency = 0;
+		int            ret_val =
+			details._pi_uptr->reset (sample_freq, max_block_size, latency);
+		assert (ret_val == piapi::PluginInterface::Err_OK);
 	}
 	_audio.set_process_info (sample_freq, max_block_size);
 }
@@ -590,12 +584,11 @@ int	Central::set_plugin (int pos, pi::PluginModel model, PiType type, bool force
 		if (pi_id < 0)
 		{
 			std::unique_ptr <piapi::PluginInterface> pi_uptr (instantiate (model));
-			int            ret_val = pi_uptr->init ();
-			assert (ret_val == piapi::PluginInterface::Err_OK);
 			if (_sample_freq > 0)
 			{
 				int         latency = 0;
-				ret_val = pi_uptr->reset (_sample_freq, _max_block_size, latency);
+				int         ret_val =
+					pi_uptr->reset (_sample_freq, _max_block_size, latency);
 				assert (ret_val == piapi::PluginInterface::Err_OK);
 			}
 			check_and_get_default_settings (*pi_uptr, model);
@@ -975,27 +968,27 @@ PluginPool::PluginUPtr	Central::instantiate (pi::PluginModel model)
 	switch (model)
 	{
 	case pi::PluginModel_DRYWET:
-		pi_ptr = new pi::DryWet;
+		pi_ptr = new pi::dwm::DryWet;
 		break;
 
 	case pi::PluginModel_DISTO_SIMPLE:
-		pi_ptr = new pi::DistoSimple;
+		pi_ptr = new pi::dist1::DistoSimple;
 		break;
 
 	case pi::PluginModel_TUNER:
-		pi_ptr = new pi::Tuner;
+		pi_ptr = new pi::tuner::Tuner;
 		break;
 
 	case pi::PluginModel_TREMOLO:
-		pi_ptr = new pi::Tremolo;
+		pi_ptr = new pi::trem1::Tremolo;
 		break;
 
 	case pi::PluginModel_WHA:
-		pi_ptr = new pi::Wha;
+		pi_ptr = new pi::wha1::Wha;
 		break;
 
 	case pi::PluginModel_FREQ_SHIFT:
-		pi_ptr = new pi::FrequencyShifter;
+		pi_ptr = new pi::freqsh::FrequencyShifter;
 		break;
 
 	default:

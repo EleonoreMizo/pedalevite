@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/ToolsSimd.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/DistoSimple.h"
+#include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/piapi/EventTs.h"
 
 #include <cassert>
@@ -37,6 +37,8 @@ namespace mfx
 {
 namespace pi
 {
+namespace dist1
+{
 
 
 
@@ -45,7 +47,7 @@ namespace pi
 
 
 DistoSimple::DistoSimple ()
-:	_state (State_CONSTRUCTED)
+:	_state (State_CREATED)
 ,	_param_state_gain ()
 ,	_param_desc_gain (
 		float (_gain_min), float (_gain_max),
@@ -67,27 +69,16 @@ DistoSimple::DistoSimple ()
 
 
 
-piapi::PluginInterface::State	DistoSimple::do_get_state () const
+std::string	DistoSimple::do_get_unique_id () const
 {
-	return _state;
+	return "dist1";
 }
 
 
 
-int	DistoSimple::do_init ()
+std::string	DistoSimple::do_get_name () const
 {
-	_state = State_INITIALISED;
-
-	return Err_OK;
-}
-
-
-
-int	DistoSimple::do_restore ()
-{
-	_state = State_CONSTRUCTED;
-
-	return Err_OK;
+	return "Simple distortion\nDisto S";
 }
 
 
@@ -121,6 +112,13 @@ const piapi::ParamDescInterface &	DistoSimple::do_get_param_info (piapi::ParamCa
 
 
 
+piapi::PluginInterface::State	DistoSimple::do_get_state () const
+{
+	return _state;
+}
+
+
+
 double	DistoSimple::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
 	return _param_state_gain.get_val_tgt ();
@@ -144,7 +142,7 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-#define mfx_pi_DistoSimple_USE_MIXALIGN
+#define mfx_pi_dist1_DistoSimple_USE_MIXALIGN
 
 // x -> { x - x^9/9 if x >  0
 //      { x + x^2/2 if x <= 0
@@ -176,7 +174,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 			_param_desc_gain.conv_nrm_to_nat (_param_state_gain.get_val_end ())
 		);
 
-#if defined (mfx_pi_DistoSimple_USE_MIXALIGN)
+#if defined (mfx_pi_dist1_DistoSimple_USE_MIXALIGN)
 
 		if (proc._nbr_chn_arr [Dir_IN] == 1)
 		{
@@ -231,7 +229,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	// Gain (constant)
 	else
 	{
-#if defined (mfx_pi_DistoSimple_USE_MIXALIGN)
+#if defined (mfx_pi_dist1_DistoSimple_USE_MIXALIGN)
 
 		if (proc._nbr_chn_arr [Dir_IN] == 1)
 		{
@@ -325,6 +323,7 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 
 
 
+}  // namespace dist1
 }  // namespace pi
 }  // namespace mfx
 

@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_PhaseHalfPi_HEADER_INCLUDED)
-#define mfx_pi_PhaseHalfPi_HEADER_INCLUDED
+#if ! defined (mfx_pi_freqsh_PhaseHalfPi_HEADER_INCLUDED)
+#define mfx_pi_freqsh_PhaseHalfPi_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -43,6 +43,8 @@ namespace mfx
 {
 namespace pi
 {
+namespace freqsh
+{
 
 
 
@@ -58,16 +60,17 @@ using PhaseHalfPi =
 
 
 
+}  // namespace freqsh
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/PhaseHalfPi.hpp"
+//#include "mfx/pi/freqsh/PhaseHalfPi.hpp"
 
 
 
-#endif   // mfx_pi_PhaseHalfPi_HEADER_INCLUDED
+#endif   // mfx_pi_freqsh_PhaseHalfPi_HEADER_INCLUDED
 
 
 

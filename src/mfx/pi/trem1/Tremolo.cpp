@@ -32,7 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
-#include "mfx/pi/Tremolo.h"
+#include "mfx/pi/trem1/Tremolo.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -46,6 +46,8 @@ namespace mfx
 {
 namespace pi
 {
+namespace trem1
+{
 
 
 
@@ -54,7 +56,7 @@ namespace pi
 
 
 Tremolo::Tremolo ()
-:	_state (State_CONSTRUCTED)
+:	_state (State_CREATED)
 ,	_desc_set (Param_NBR_ELT, 0)
 ,	_state_set ()
 ,	_sample_freq (0)
@@ -159,27 +161,16 @@ Tremolo::Tremolo ()
 
 
 
-piapi::PluginInterface::State	Tremolo::do_get_state () const
+std::string	Tremolo::do_get_unique_id () const
 {
-	return _state;
+	return "tremolo1";
 }
 
 
 
-int	Tremolo::do_init ()
+std::string	Tremolo::do_get_name () const
 {
-	_state = State_INITIALISED;
-
-	return Err_OK;
-}
-
-
-
-int	Tremolo::do_restore ()
-{
-	_state = State_CONSTRUCTED;
-
-	return Err_OK;
+	return "Tremolo";
 }
 
 
@@ -209,6 +200,13 @@ int	Tremolo::do_get_nbr_param (piapi::ParamCateg categ) const
 const piapi::ParamDescInterface &	Tremolo::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
 	return _desc_set.use_param (categ, index);
+}
+
+
+
+piapi::PluginInterface::State	Tremolo::do_get_state () const
+{
+	return _state;
 }
 
 
@@ -381,6 +379,7 @@ float	Tremolo::get_lfo_val (float pos) const
 
 
 
+}  // namespace trem1
 }  // namespace pi
 }  // namespace mfx
 

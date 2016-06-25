@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/piapi/ParamCateg.h"
+#include "mfx/piapi/PluginDescInterface.h"
 
 #include <cstdint>
 
@@ -44,6 +45,7 @@ class EventTs;
 class ParamDescInterface;
 
 class PluginInterface
+:	public PluginDescInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -52,8 +54,7 @@ public:
 
 	enum State
 	{
-		State_CONSTRUCTED = 0,
-		State_INITIALISED,
+		State_CREATED = 0,
 		State_ACTIVE,
 
 		State_NBR_ELT
@@ -107,20 +108,8 @@ public:
 	virtual        ~PluginInterface () = default;
 
 	State          get_state () const;
-
-	int            init ();
-	int            restore ();
-
-	void           get_nbr_io (int &nbr_i, int &nbr_o) const;
-	bool           prefer_stereo () const;
-
-	int            get_nbr_param (ParamCateg categ) const;
-	const ParamDescInterface &
-	               get_param_info (ParamCateg categ, int index) const;
 	double         get_param_val (ParamCateg categ, int index, int note_id) const;
-
 	int            reset (double sample_freq, int max_block_size, int &latency);
-
 	void           process_block (ProcInfo &proc);
 
 
@@ -130,13 +119,6 @@ public:
 protected:
 
 	virtual State  do_get_state () const = 0;
-	virtual int    do_init () = 0;
-	virtual int    do_restore () = 0;
-	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const = 0;
-	virtual bool   do_prefer_stereo () const = 0;
-	virtual int    do_get_nbr_param (ParamCateg categ) const = 0;
-	virtual const ParamDescInterface &
-	               do_get_param_info (ParamCateg categ, int index) const = 0;
 	virtual double do_get_param_val (ParamCateg categ, int index, int note_id) const = 0;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency) = 0;
 	virtual void   do_process_block (ProcInfo &proc) = 0;

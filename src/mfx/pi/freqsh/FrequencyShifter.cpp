@@ -28,9 +28,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
+#include "mfx/pi/freqsh/FrequencyShifter.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplMapped.h"
-#include "mfx/pi/FrequencyShifter.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -43,6 +43,8 @@ namespace mfx
 {
 namespace pi
 {
+namespace freqsh
+{
 
 
 
@@ -51,7 +53,7 @@ namespace pi
 
 
 FrequencyShifter::FrequencyShifter ()
-:	_state (State_CONSTRUCTED)
+:	_state (State_CREATED)
 ,	_desc_set (Param_NBR_ELT, 0)
 ,	_state_set ()
 ,	_sample_freq (0)
@@ -86,23 +88,7 @@ FrequencyShifter::FrequencyShifter ()
 	_state_set.add_observer (Param_FREQ, _param_change_flag);
 
 	_state_set.set_ramp_time (Param_FREQ, 0.010);
-}
 
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-piapi::PluginInterface::State	FrequencyShifter::do_get_state () const
-{
-	return _state;
-}
-
-
-
-int	FrequencyShifter::do_init ()
-{
 	double         coef_list [_nbr_coef];
 	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
 		coef_list, _nbr_coef, 1 / 1000.0
@@ -111,19 +97,24 @@ int	FrequencyShifter::do_init ()
 	{
 		chn._ssb.set_coefs (coef_list);
 	}
-
-	_state = State_INITIALISED;
-
-	return Err_OK;
 }
 
 
 
-int	FrequencyShifter::do_restore ()
-{
-	_state = State_CONSTRUCTED;
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-	return Err_OK;
+
+
+std::string	FrequencyShifter::do_get_unique_id () const
+{
+	return "freqshift1";
+}
+
+
+
+std::string	FrequencyShifter::do_get_name () const
+{
+	return "Frequency Shifter\nFreq Shift\nFShift";
 }
 
 
@@ -153,6 +144,13 @@ int	FrequencyShifter::do_get_nbr_param (piapi::ParamCateg categ) const
 const piapi::ParamDescInterface &	FrequencyShifter::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
 	return _desc_set.use_param (categ, index);
+}
+
+
+
+piapi::PluginInterface::State	FrequencyShifter::do_get_state () const
+{
+	return _state;
 }
 
 
@@ -293,6 +291,7 @@ void	FrequencyShifter::update_step ()
 
 
 
+}  // namespace freqsh
 }  // namespace pi
 }  // namespace mfx
 

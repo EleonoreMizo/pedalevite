@@ -340,13 +340,14 @@
     <ClInclude Include="mfx\piapi\ParamCateg.h" />
     <ClInclude Include="mfx\piapi\ParamDescInterface.h" />
     <ClInclude Include="mfx\piapi\ParamDescInterface.hpp" />
+    <ClInclude Include="mfx\piapi\PluginDescInterface.h" />
     <ClInclude Include="mfx\piapi\PluginInterface.h" />
     <ClInclude Include="mfx\piapi\PluginState.h" />
     <ClInclude Include="mfx\PiType.h" />
-    <ClInclude Include="mfx\pi\DistoSimple.h" />
-    <ClInclude Include="mfx\pi\DryWet.h" />
-    <ClInclude Include="mfx\pi\FreqAnalyser.h" />
-    <ClInclude Include="mfx\pi\FrequencyShifter.h" />
+    <ClInclude Include="mfx\pi\dist1\DistoSimple.h" />
+    <ClInclude Include="mfx\pi\dwm\DryWet.h" />
+    <ClInclude Include="mfx\pi\freqsh\FrequencyShifter.h" />
+    <ClInclude Include="mfx\pi\freqsh\PhaseHalfPi.h" />
     <ClInclude Include="mfx\pi\ParamDescSet.h" />
     <ClInclude Include="mfx\pi\ParamState.h" />
     <ClInclude Include="mfx\pi\ParamStateSet.h" />
@@ -368,11 +369,11 @@
     <ClInclude Include="mfx\pi\param\TplMapped.h" />
     <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
     <ClInclude Include="mfx\pi\param\TplSq.h" />
-    <ClInclude Include="mfx\pi\PhaseHalfPi.h" />
     <ClInclude Include="mfx\pi\PluginModel.h" />
-    <ClInclude Include="mfx\pi\Tremolo.h" />
-    <ClInclude Include="mfx\pi\Tuner.h" />
-    <ClInclude Include="mfx\pi\Wha.h" />
+    <ClInclude Include="mfx\pi\trem1\Tremolo.h" />
+    <ClInclude Include="mfx\pi\tuner\FreqAnalyser.h" />
+    <ClInclude Include="mfx\pi\tuner\Tuner.h" />
+    <ClInclude Include="mfx\pi\wha1\Wha.h" />
     <ClInclude Include="mfx\PluginPool.h" />
     <ClInclude Include="mfx\ProcessingContext.h" />
     <ClInclude Include="mfx\ProcessingContextNode.h" />
@@ -515,11 +516,11 @@
     <ClCompile Include="mfx\Model.cpp" />
     <ClCompile Include="mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
+    <ClCompile Include="mfx\piapi\PluginDescInterface.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
-    <ClCompile Include="mfx\pi\DistoSimple.cpp" />
-    <ClCompile Include="mfx\pi\DryWet.cpp" />
-    <ClCompile Include="mfx\pi\FreqAnalyser.cpp" />
-    <ClCompile Include="mfx\pi\FrequencyShifter.cpp" />
+    <ClCompile Include="mfx\pi\dist1\DistoSimple.cpp" />
+    <ClCompile Include="mfx\pi\dwm\DryWet.cpp" />
+    <ClCompile Include="mfx\pi\freqsh\FrequencyShifter.cpp" />
     <ClCompile Include="mfx\pi\ParamDescSet.cpp" />
     <ClCompile Include="mfx\pi\ParamState.cpp" />
     <ClCompile Include="mfx\pi\ParamStateSet.cpp" />
@@ -532,12 +533,10 @@
     <ClCompile Include="mfx\pi\param\TplEnum.cpp" />
     <ClCompile Include="mfx\pi\param\TplLin.cpp" />
     <ClCompile Include="mfx\pi\PluginModel.cpp" />
-    <ClCompile Include="mfx\pi\Tremolo.cpp" />
-    <ClCompile Include="mfx\pi\Tuner.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
-    <ClCompile Include="mfx\pi\Wha.cpp" />
+    <ClCompile Include="mfx\pi\trem1\Tremolo.cpp" />
+    <ClCompile Include="mfx\pi\tuner\FreqAnalyser.cpp" />
+    <ClCompile Include="mfx\pi\tuner\Tuner.cpp" />
+    <ClCompile Include="mfx\pi\wha1\Wha.cpp" />
     <ClCompile Include="mfx\PluginPool.cpp" />
     <ClCompile Include="mfx\ProcessingContext.cpp" />
     <ClCompile Include="mfx\ProcessingContextNode.cpp" />

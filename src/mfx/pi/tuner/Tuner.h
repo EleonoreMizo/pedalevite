@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DryWet.h
+        Tuner.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_DryWet_HEADER_INCLUDED)
-#define mfx_pi_DryWet_HEADER_INCLUDED
+#if ! defined (mfx_pi_tuner_Tuner_HEADER_INCLUDED)
+#define mfx_pi_tuner_Tuner_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,12 +27,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#define mfx_pi_DryWet_GAIN_WET_ONLY
-
-#include "fstb/util/NotificationFlag.h"
-#include "mfx/pi/ParamDescSet.h"
-#include "mfx/pi/ParamStateSet.h"
+#include "fstb/AllocAlign.h"
+#include "mfx/pi/tuner/FreqAnalyser.h"
 #include "mfx/piapi/PluginInterface.h"
+
+#include <vector>
 
 
 
@@ -40,10 +39,12 @@ namespace mfx
 {
 namespace pi
 {
+namespace tuner
+{
 
 
 
-class DryWet
+class Tuner
 :	public piapi::PluginInterface
 {
 
@@ -51,20 +52,10 @@ class DryWet
 
 public:
 
-	enum Param
-	{
-		Param_BYPASS = 0,
-		Param_WET,
-		Param_GAIN,
+	               Tuner ()  = default;
+	virtual        ~Tuner () = default;
 
-		Param_NBR_ELT
-	};
-
-	               DryWet ();
-	virtual        ~DryWet () = default;
-
-	static const float
-	               _gain_neutral;
+	float          get_freq () const;
 
 
 
@@ -72,15 +63,19 @@ public:
 
 protected:
 
-	// mfx::piapi::PluginInterface
-	virtual State  do_get_state () const;
-	virtual int    do_init ();
-	virtual int    do_restore ();
+	// mfx::piapi::PluginDescInterface via mfx::piapi::PluginInterface
+	virtual std::string
+	               do_get_unique_id () const;
+	virtual std::string
+	               do_get_name () const;
 	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const;
 	virtual bool   do_prefer_stereo () const;
 	virtual int    do_get_nbr_param (piapi::ParamCateg categ) const;
 	virtual const piapi::ParamDescInterface &
 	               do_get_param_info (piapi::ParamCateg categ, int index) const;
+
+	// mfx::piapi::PluginInterface
+	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
 	virtual void   do_process_block (ProcInfo &proc);
@@ -91,20 +86,17 @@ protected:
 
 private:
 
-	void           copy (const ProcInfo &proc, int chn_ofs, float lvl);
-	void           mix (const ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
+	static const int                    // Subsampling
+	               _sub_spl = 4;
 
-	State          _state;
+	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
-	ParamDescSet   _desc_set;
-	ParamStateSet  _state_set;
-	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
+	State          _state   = State_CREATED;
 
-	fstb::util::NotificationFlag
-	               _param_change_flag;
-
-	float          _level_wet;          // For steady state
-	float          _level_dry;          // For steady state
+	pi::tuner::FreqAnalyser
+	               _analyser;
+	float          _freq    = 0;        // Hz. 0 = not found
+	BufAlign       _buffer;
 
 
 
@@ -112,25 +104,26 @@ private:
 
 private:
 
-	               DryWet (const DryWet &other)            = delete;
-	DryWet &       operator = (const DryWet &other)        = delete;
-	bool           operator == (const DryWet &other) const = delete;
-	bool           operator != (const DryWet &other) const = delete;
+	               Tuner (const Tuner &other)             = delete;
+	Tuner &        operator = (const Tuner &other)        = delete;
+	bool           operator == (const Tuner &other) const = delete;
+	bool           operator != (const Tuner &other) const = delete;
 
-}; // class DryWet
+}; // class Tuner
 
 
 
+}  // namespace tuner
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/DryWet.hpp"
+//#include "mfx/pi/tuner/Tuner.hpp"
 
 
 
-#endif   // mfx_pi_DryWet_HEADER_INCLUDED
+#endif   // mfx_pi_tuner_Tuner_HEADER_INCLUDED
 
 
 

@@ -54,7 +54,10 @@ namespace doc
 
 namespace pi
 {
+namespace tuner
+{
 	class Tuner;
+}
 }
 
 
@@ -180,7 +183,8 @@ private:
 	bool           _edit_preset_flag;   // _preset_cur corresonds to _bank_index/_preset_index
 	bool           _tuner_flag;
 	int            _tuner_pi_id;
-	pi::Tuner *    _tuner_ptr;          // Can be 0.
+	pi::tuner::Tuner *
+	               _tuner_ptr;          // Can be 0.
 
 	ui::UserInputInterface &
 	               _input_device;

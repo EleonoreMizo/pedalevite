@@ -25,7 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/Slot.h"
-#include "mfx/pi/DryWet.h"
+#include "mfx/pi/dwm/DryWet.h"
 
 #include <cassert>
 
@@ -49,10 +49,11 @@ Slot::Slot ()
 ,	_label ()
 {
 	_settings_mixer._force_mono_flag = false;
-	_settings_mixer._param_list.resize (pi::DryWet::Param_NBR_ELT);
-	_settings_mixer._param_list [pi::DryWet::Param_BYPASS] = 0;
-	_settings_mixer._param_list [pi::DryWet::Param_WET   ] = 1;
-	_settings_mixer._param_list [pi::DryWet::Param_GAIN  ] = pi::DryWet::_gain_neutral;
+	_settings_mixer._param_list.resize (pi::dwm::DryWet::Param_NBR_ELT);
+	_settings_mixer._param_list [pi::dwm::DryWet::Param_BYPASS] = 0;
+	_settings_mixer._param_list [pi::dwm::DryWet::Param_WET   ] = 1;
+	_settings_mixer._param_list [pi::dwm::DryWet::Param_GAIN  ] =
+		pi::dwm::DryWet::_gain_neutral;
 }
 
 

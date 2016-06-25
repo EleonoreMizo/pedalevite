@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FrequencyShifter.h
+        Tremolo.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_FrequencyShifter_HEADER_INCLUDED)
-#define mfx_pi_FrequencyShifter_HEADER_INCLUDED
+#if ! defined (mfx_pi_trem1_Tremolo_HEADER_INCLUDED)
+#define mfx_pi_trem1_Tremolo_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -28,17 +28,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/util/NotificationFlag.h"
-#include "fstb/AllocAlign.h"
-#include "fstb/SingleObj.h"
-#include "mfx/dsp/osc/OscSinCosStable4Simd.h"
-#include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/ParamDescSet.h"
 #include "mfx/pi/ParamStateSet.h"
-#include "mfx/pi/PhaseHalfPi.h"
 #include "mfx/piapi/PluginInterface.h"
-
-#include <array>
-#include <vector>
 
 
 
@@ -46,10 +38,12 @@ namespace mfx
 {
 namespace pi
 {
+namespace trem1
+{
 
 
 
-class FrequencyShifter
+class Tremolo
 :	public piapi::PluginInterface
 {
 
@@ -60,12 +54,27 @@ public:
 	enum Param
 	{
 		Param_FREQ = 0,
+		Param_AMT,
+		Param_WF,
+		Param_GSAT,
+		Param_BIAS,
 
 		Param_NBR_ELT
 	};
 
-	               FrequencyShifter ();
-	virtual        ~FrequencyShifter () = default;
+	enum Waveform
+	{
+		Waveform_SIN = 0,
+		Waveform_SQUARE,
+		Waveform_TRI,
+		Waveform_RAMP_U,
+		Waveform_RAMP_D,
+
+		Waveform_NBR_ELT
+	};
+
+	               Tremolo ();
+	virtual        ~Tremolo () = default;
 
 
 
@@ -73,15 +82,19 @@ public:
 
 protected:
 
-	// mfx::piapi::PluginInterface
-	virtual State  do_get_state () const;
-	virtual int    do_init ();
-	virtual int    do_restore ();
+	// mfx::piapi::PluginDescInterface via mfx::piapi::PluginInterface
+	virtual std::string
+	               do_get_unique_id () const;
+	virtual std::string
+	               do_get_name () const;
 	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const;
 	virtual bool   do_prefer_stereo () const;
 	virtual int    do_get_nbr_param (piapi::ParamCateg categ) const;
 	virtual const piapi::ParamDescInterface &
 	               do_get_param_info (piapi::ParamCateg categ, int index) const;
+
+	// mfx::piapi::PluginInterface
+	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
 	virtual void   do_process_block (ProcInfo &proc);
@@ -92,47 +105,7 @@ protected:
 
 private:
 
-	enum Buf
-	{
-		Buf_COS = 0,
-		Buf_SIN,
-		Buf_AAF,
-		Buf_PHC,
-		Buf_PHS,
-
-		Buf_NBR_ELT
-	};
-
-	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-	typedef std::array <BufAlign, Buf_NBR_ELT> BufArray;
-
-	static const int
-	               _max_freq = 5000;
-	static const int
-	               _nbr_coef = 8;
-
-	class Channel
-	{
-	public:
-		dsp::iir::Biquad
-		               _aa;
-		PhaseHalfPi <_nbr_coef>
-		               _ssb;
-	};
-	typedef std::array <
-		Channel,
-		piapi::PluginInterface::_max_nbr_chn
-	>	ChannelArray;
-
-	class Aligned
-	{
-	public:
-		ChannelArray   _chn_arr;
-		dsp::osc::OscSinCosStable4Simd
-		               _osc;
-	};
-
-	void           update_step ();
+	float          get_lfo_val (float pos) const;
 
 	State          _state;
 
@@ -141,15 +114,16 @@ private:
 	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 
 	fstb::util::NotificationFlag
-	               _param_change_flag;
+	               _param_change_shape_flag;
+	fstb::util::NotificationFlag
+	               _param_change_amp_flag;
 
-	fstb::SingleObj <Aligned, fstb::AllocAlign <Aligned, 16> >
-	               _ali;
-	float          _inv_fs;
-	float          _freq;
-	float          _step_angle;         // Radians
-
-	BufArray       _buf_arr;
+	double         _lfo_pos;            // Position within the LFO. [-0.5; 0.5[
+	double         _lfo_step;           // Step per sample, >= 0
+	Waveform       _lfo_wf;
+	float          _amt;
+	float          _bias;
+	float          _sat;
 
 
 
@@ -157,26 +131,26 @@ private:
 
 private:
 
-	               FrequencyShifter (const FrequencyShifter &other)  = delete;
-	FrequencyShifter &
-	               operator = (const FrequencyShifter &other)        = delete;
-	bool           operator == (const FrequencyShifter &other) const = delete;
-	bool           operator != (const FrequencyShifter &other) const = delete;
+	               Tremolo (const Tremolo &other)           = delete;
+	Tremolo &      operator = (const Tremolo &other)        = delete;
+	bool           operator == (const Tremolo &other) const = delete;
+	bool           operator != (const Tremolo &other) const = delete;
 
-}; // class FrequencyShifter
-
+}; // class Tremolo
 
 
+
+}  // namespace trem1
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/FrequencyShifter.hpp"
+//#include "mfx/pi/trem1/Tremolo.hpp"
 
 
 
-#endif   // mfx_pi_FrequencyShifter_HEADER_INCLUDED
+#endif   // mfx_pi_trem1_Tremolo_HEADER_INCLUDED
 
 
 

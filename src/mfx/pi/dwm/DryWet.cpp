@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
-#include "mfx/pi/DryWet.h"
+#include "mfx/pi/dwm/DryWet.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -43,6 +43,8 @@ namespace mfx
 {
 namespace pi
 {
+namespace dwm
+{
 
 
 
@@ -51,7 +53,7 @@ namespace pi
 
 
 DryWet::DryWet ()
-:	_state (State_CONSTRUCTED)
+:	_state (State_CREATED)
 ,	_desc_set (Param_NBR_ELT, 0)
 ,	_state_set ()
 ,	_sample_freq (0)
@@ -120,27 +122,16 @@ const float	DryWet::_gain_neutral = 0.75f;
 
 
 
-DryWet::State	DryWet::do_get_state () const
+std::string	DryWet::do_get_unique_id () const
 {
-	return _state;
+	return "\?drywetmix";
 }
 
 
 
-int	DryWet::do_init ()
+std::string	DryWet::do_get_name () const
 {
-	_state = State_INITIALISED;
-
-	return Err_OK;
-}
-
-
-
-int	DryWet::do_restore ()
-{
-	_state = State_CONSTRUCTED;
-
-	return Err_OK;
+	return "Dry/Wet mixer\nDry/Wet";
 }
 
 
@@ -170,6 +161,13 @@ int	DryWet::do_get_nbr_param (piapi::ParamCateg categ) const
 const piapi::ParamDescInterface &	DryWet::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
 	return _desc_set.use_param (categ, index);
+}
+
+
+
+DryWet::State	DryWet::do_get_state () const
+{
+	return _state;
 }
 
 
@@ -231,7 +229,7 @@ void	DryWet::do_process_block (ProcInfo &proc)
 		const float    wet_mix  = mix_end * (1 - byp_end);
 
 		lvl_wet_end =      wet_mix  * vol_end;
-#if defined (mfx_pi_DryWet_GAIN_WET_ONLY)
+#if defined (mfx_pi_dwm_DryWet_GAIN_WET_ONLY)
 		lvl_dry_end = (1 - wet_mix);
 #else
 		lvl_dry_end = (1 - wet_mix) * vol_end;
@@ -411,6 +409,7 @@ void	DryWet::mix (const ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, fl
 
 
 
+}  // namespace dwm
 }  // namespace pi
 }  // namespace mfx
 

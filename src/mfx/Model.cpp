@@ -24,8 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/DryWet.h"
-#include "mfx/pi/Tuner.h"
+#include "mfx/pi/dwm/DryWet.h"
+#include "mfx/pi/tuner/Tuner.h"
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
@@ -735,7 +735,7 @@ void	Model::apply_settings_tuner ()
 
 	const PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
-	_tuner_ptr = dynamic_cast <pi::Tuner *> (details._pi_uptr.get ());
+	_tuner_ptr = dynamic_cast <pi::tuner::Tuner *> (details._pi_uptr.get ());
 	assert (_tuner_ptr != 0);
 }
 
@@ -792,9 +792,9 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 
 	bool           use_flag = (
 		   ! slot._settings_mixer._map_param_ctrl.empty ()
-		|| plist [pi::DryWet::Param_BYPASS] != 0
-		|| plist [pi::DryWet::Param_WET   ] != 1
-		|| plist [pi::DryWet::Param_GAIN  ] != pi::DryWet::_gain_neutral
+		|| plist [pi::dwm::DryWet::Param_BYPASS] != 0
+		|| plist [pi::dwm::DryWet::Param_WET   ] != 1
+		|| plist [pi::dwm::DryWet::Param_GAIN  ] != pi::dwm::DryWet::_gain_neutral
 	);
 
 	// Check if it is referenced in the pedals

@@ -35,12 +35,11 @@
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/FxId.h"
-#include "mfx/pi/DistoSimple.h"
-#include "mfx/pi/DryWet.h"
-#include "mfx/pi/FrequencyShifter.h"
-#include "mfx/pi/Tremolo.h"
-#include "mfx/pi/Tuner.h"
-#include "mfx/pi/Wha.h"
+#include "mfx/pi/dist1/DistoSimple.h"
+#include "mfx/pi/dwm/DryWet.h"
+#include "mfx/pi/freqsh/FrequencyShifter.h"
+#include "mfx/pi/trem1/Tremolo.h"
+#include "mfx/pi/wha1/Wha.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
@@ -465,7 +464,7 @@ Context::Context ()
 		slot_ptr->_label    = "Disto 1";
 		slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
 		slot_ptr->_settings_mixer._param_list =
-			std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+			std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWet::_gain_neutral });
 		mfx::doc::PluginSettings & pi_settings =
 			slot_ptr->_settings_all [slot_ptr->_pi_model];
 
@@ -480,7 +479,7 @@ Context::Context ()
 		cls._bind_sptr->_u2b_flag      = false;
 		cls._bind_sptr->_base          = 0;
 		cls._bind_sptr->_amp           = 1;
-		pi_settings._map_param_ctrl [mfx::pi::DistoSimple::Param_GAIN] = cls;
+		pi_settings._map_param_ctrl [mfx::pi::dist1::DistoSimple::Param_GAIN] = cls;
 
 		{
 			mfx::doc::PedalActionCycle &  cycle =
@@ -492,7 +491,7 @@ Context::Context ()
 				static const float val_arr [2] = { 1, 0 };
 				const float        val = val_arr [i];
 				action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-					new mfx::doc::ActionParam (fx_id, mfx::pi::DryWet::Param_BYPASS, val)
+					new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::DryWet::Param_BYPASS, val)
 				);
 				cycle._cycle.push_back (action_arr);
 			}
@@ -507,7 +506,7 @@ Context::Context ()
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
 			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWet::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
@@ -523,7 +522,7 @@ Context::Context ()
 					static const float val_arr [2] = { 1, 0 };
 					const float        val = val_arr [i];
 					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-						new mfx::doc::ActionParam (fx_id, mfx::pi::DryWet::Param_BYPASS, val)
+						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::DryWet::Param_BYPASS, val)
 					);
 					cycle._cycle.push_back (action_arr);
 				}
@@ -535,7 +534,7 @@ Context::Context ()
 			slot_ptr->_label    = "Tremolo";
 			slot_ptr->_pi_model = mfx::pi::PluginModel_TREMOLO;
 			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWet::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
@@ -552,7 +551,7 @@ Context::Context ()
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_AMT] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::trem1::Tremolo::Param_AMT] = cls;
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
@@ -562,17 +561,17 @@ Context::Context ()
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_FREQ] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::trem1::Tremolo::Param_FREQ] = cls;
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
 			cls._bind_sptr->_source._index = 6;
-			cls._bind_sptr->_step          = 1.0f / (mfx::pi::Tremolo::Waveform_NBR_ELT - 1);
+			cls._bind_sptr->_step          = 1.0f / (mfx::pi::trem1::Tremolo::Waveform_NBR_ELT - 1);
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Tremolo::Param_WF] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::trem1::Tremolo::Param_WF] = cls;
 		}
 	}
 	{
@@ -584,7 +583,7 @@ Context::Context ()
 			slot_ptr->_label    = "Wha";
 			slot_ptr->_pi_model = mfx::pi::PluginModel_WHA;
 			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWet::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
@@ -601,7 +600,7 @@ Context::Context ()
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0.35f;	// Limits the range to the CryBaby's
 			cls._bind_sptr->_amp           = 0.75f - cls._bind_sptr->_base;
-			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_FREQ] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::wha1::Wha::Param_FREQ] = cls;
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
@@ -611,12 +610,12 @@ Context::Context ()
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::Wha::Param_Q] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::wha1::Wha::Param_Q] = cls;
 
 #if 0
 			mfx::doc::ParamPresentation pp;
 			pp._disp_mode = mfx::doc::ParamPresentation::DispMode_NOTE;
-			pi_settings._map_param_pres [mfx::pi::Wha::Param_FREQ] = pp;
+			pi_settings._map_param_pres [mfx::pi::wha1::Wha::Param_FREQ] = pp;
 #endif
 		}
 		{
@@ -625,7 +624,7 @@ Context::Context ()
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
 			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWet::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
@@ -638,7 +637,7 @@ Context::Context ()
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::DistoSimple::Param_GAIN] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::dist1::DistoSimple::Param_GAIN] = cls;
 
 			pi_settings._param_list = std::vector <float> (1, 0.25f);
 
@@ -652,7 +651,7 @@ Context::Context ()
 					static const float val_arr [2] = { 1, 0 };
 					const float        val = val_arr [i];
 					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-						new mfx::doc::ActionParam (fx_id, mfx::pi::DryWet::Param_BYPASS, val)
+						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::DryWet::Param_BYPASS, val)
 					);
 					cycle._cycle.push_back (action_arr);
 				}
@@ -668,7 +667,7 @@ Context::Context ()
 			slot_ptr->_label    = "FreqShift";
 			slot_ptr->_pi_model = mfx::pi::PluginModel_FREQ_SHIFT;
 			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWet::_gain_neutral });
 
 			mfx::doc::CtrlLinkSet cls;
 
@@ -680,7 +679,7 @@ Context::Context ()
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
-			slot_ptr->_settings_mixer._map_param_ctrl [mfx::pi::DryWet::Param_WET] = cls;
+			slot_ptr->_settings_mixer._map_param_ctrl [mfx::pi::dwm::DryWet::Param_WET] = cls;
 
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
@@ -696,11 +695,10 @@ Context::Context ()
 			cls._bind_sptr->_base          = 0.5f;   // More accuracy on the useful range
 			cls._bind_sptr->_amp           = 1.0f - cls._bind_sptr->_base;
 			{
-				mfx::pi::FrequencyShifter dummy;
-				dummy.init ();
+				mfx::pi::freqsh::FrequencyShifter dummy;
 				const mfx::piapi::ParamDescInterface & dd = dummy.get_param_info (
 					mfx::piapi::ParamCateg_GLOBAL,
-					mfx::pi::FrequencyShifter::Param_FREQ
+					mfx::pi::freqsh::FrequencyShifter::Param_FREQ
 				);
 				for (int oct = 2; oct < 7; ++oct)
 				{
@@ -714,7 +712,7 @@ Context::Context ()
 					}
 				}
 			}
-			pi_settings._map_param_ctrl [mfx::pi::FrequencyShifter::Param_FREQ] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::freqsh::FrequencyShifter::Param_FREQ] = cls;
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
@@ -722,7 +720,7 @@ Context::Context ()
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
 			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::DryWet::_gain_neutral });
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWet::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
@@ -735,7 +733,7 @@ Context::Context ()
 			cls_main._bind_sptr->_u2b_flag      = false;
 			cls_main._bind_sptr->_base          = 0;
 			cls_main._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::DistoSimple::Param_GAIN] = cls_main;
+			pi_settings._map_param_ctrl [mfx::pi::dist1::DistoSimple::Param_GAIN] = cls_main;
 
 			pi_settings._param_list = std::vector <float> (1, 0.25f);
 
@@ -749,7 +747,7 @@ Context::Context ()
 					static const float val_arr [2] = { 1, 0 };
 					const float        val = val_arr [i];
 					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-						new mfx::doc::ActionParam (fx_id, mfx::pi::DryWet::Param_BYPASS, val)
+						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::DryWet::Param_BYPASS, val)
 					);
 					cycle._cycle.push_back (action_arr);
 				}

@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/TplLog.h"
-#include "mfx/pi/Wha.h"
+#include "mfx/pi/wha1/Wha.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -42,6 +42,8 @@ namespace mfx
 {
 namespace pi
 {
+namespace wha1
+{
 
 
 
@@ -50,7 +52,7 @@ namespace pi
 
 
 Wha::Wha ()
-:	_state (State_CONSTRUCTED)
+:	_state (State_CREATED)
 ,	_desc_set (Param_NBR_ELT, 0)
 ,	_state_set ()
 ,	_sample_freq (0)
@@ -101,27 +103,16 @@ Wha::Wha ()
 
 
 
-piapi::PluginInterface::State	Wha::do_get_state () const
+std::string	Wha::do_get_unique_id () const
 {
-	return _state;
+	return "wha1";
 }
 
 
 
-int	Wha::do_init ()
+std::string	Wha::do_get_name () const
 {
-	_state = State_INITIALISED;
-
-	return Err_OK;
-}
-
-
-
-int	Wha::do_restore ()
-{
-	_state = State_CONSTRUCTED;
-
-	return Err_OK;
+	return "Wha-wha";
 }
 
 
@@ -151,6 +142,13 @@ int	Wha::do_get_nbr_param (piapi::ParamCateg categ) const
 const piapi::ParamDescInterface &	Wha::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
 	return _desc_set.use_param (categ, index);
+}
+
+
+
+piapi::PluginInterface::State	Wha::do_get_state () const
+{
+	return _state;
 }
 
 
@@ -279,6 +277,7 @@ void	Wha::do_process_block (ProcInfo &proc)
 
 
 
+}  // namespace wha1
 }  // namespace pi
 }  // namespace mfx
 

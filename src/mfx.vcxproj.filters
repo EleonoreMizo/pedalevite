@@ -82,6 +82,24 @@
     <Filter Include="mfx\uitk\pg">
       <UniqueIdentifier>{37bd46ba-874b-4b14-857d-228ae4f0976a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\dist1">
+      <UniqueIdentifier>{13b57145-d3b0-4adc-8e2a-c7adef616743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\dwm">
+      <UniqueIdentifier>{8a6965ba-68c3-438e-9d0d-6cb62128b503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\freqsh">
+      <UniqueIdentifier>{82991ff0-fbc8-44d2-bef9-c0a65792ac83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\trem1">
+      <UniqueIdentifier>{701d1324-fdb4-418c-b308-b0974d5ddf83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\tuner">
+      <UniqueIdentifier>{c3a3600b-14e2-467a-acaa-9480db5c3ca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\wha1">
+      <UniqueIdentifier>{7b2cbacf-c481-4ac2-be2a-747d26f73db6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -318,9 +336,6 @@
     <ClInclude Include="mfx\ui\Font.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
-    <ClInclude Include="mfx\pi\DistoSimple.h">
-      <Filter>mfx\pi</Filter>
-    </ClInclude>
     <ClInclude Include="mfx\pi\param\HelperDispNum.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
@@ -555,9 +570,6 @@
     <ClInclude Include="fstb\DataAlign.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
-    <ClInclude Include="mfx\pi\DryWet.h">
-      <Filter>mfx\pi</Filter>
-    </ClInclude>
     <ClInclude Include="mfx\pi\ParamDescSet.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
@@ -644,12 +656,6 @@
     </ClInclude>
     <ClInclude Include="mfx\ui\UserInputVoid.h">
       <Filter>mfx\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="mfx\pi\Tuner.h">
-      <Filter>mfx\pi</Filter>
-    </ClInclude>
-    <ClInclude Include="mfx\pi\FreqAnalyser.h">
-      <Filter>mfx\pi</Filter>
     </ClInclude>
     <ClInclude Include="mfx\doc\CtrlLink.h">
       <Filter>mfx\doc</Filter>
@@ -807,14 +813,8 @@
     <ClInclude Include="fstb\Approx.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
-    <ClInclude Include="mfx\pi\Tremolo.h">
-      <Filter>mfx\pi</Filter>
-    </ClInclude>
     <ClInclude Include="mfx\pi\param\MapPiecewiseLinLog.h">
       <Filter>mfx\pi\param</Filter>
-    </ClInclude>
-    <ClInclude Include="mfx\pi\Wha.h">
-      <Filter>mfx\pi</Filter>
     </ClInclude>
     <ClInclude Include="hiir\def.h">
       <Filter>hiir</Filter>
@@ -944,12 +944,6 @@
     </ClInclude>
     <ClInclude Include="hiir\PhaseHalfPiNeon.hpp">
       <Filter>hiir</Filter>
-    </ClInclude>
-    <ClInclude Include="mfx\pi\FrequencyShifter.h">
-      <Filter>mfx\pi</Filter>
-    </ClInclude>
-    <ClInclude Include="mfx\pi\PhaseHalfPi.h">
-      <Filter>mfx\pi</Filter>
     </ClInclude>
     <ClInclude Include="mfx\dsp\osc\OscSinCosStable4Simd.h">
       <Filter>mfx\dsp\osc</Filter>
@@ -1125,6 +1119,33 @@
     <ClInclude Include="mfx\piapi\PluginState.h">
       <Filter>mfx\piapi</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\piapi\PluginDescInterface.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dist1\DistoSimple.h">
+      <Filter>mfx\pi\dist1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dwm\DryWet.h">
+      <Filter>mfx\pi\dwm</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\freqsh\FrequencyShifter.h">
+      <Filter>mfx\pi\freqsh</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\freqsh\PhaseHalfPi.h">
+      <Filter>mfx\pi\freqsh</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\tuner\FreqAnalyser.h">
+      <Filter>mfx\pi\tuner</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\tuner\Tuner.h">
+      <Filter>mfx\pi\tuner</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\trem1\Tremolo.h">
+      <Filter>mfx\pi\trem1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\wha1\Wha.h">
+      <Filter>mfx\pi\wha1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1179,9 +1200,6 @@
     <ClCompile Include="mfx\ui\Font.cpp">
       <Filter>mfx\ui</Filter>
     </ClCompile>
-    <ClCompile Include="mfx\pi\DistoSimple.cpp">
-      <Filter>mfx\pi</Filter>
-    </ClCompile>
     <ClCompile Include="mfx\pi\param\HelperDispNum.cpp">
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
@@ -1227,9 +1245,6 @@
     <ClCompile Include="mfx\dsp\mix\Generic.cpp">
       <Filter>mfx\dsp\mix</Filter>
     </ClCompile>
-    <ClCompile Include="mfx\pi\DryWet.cpp">
-      <Filter>mfx\pi</Filter>
-    </ClCompile>
     <ClCompile Include="mfx\pi\ParamDescSet.cpp">
       <Filter>mfx\pi</Filter>
     </ClCompile>
@@ -1268,12 +1283,6 @@
     </ClCompile>
     <ClCompile Include="mfx\ui\UserInputVoid.cpp">
       <Filter>mfx\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="mfx\pi\Tuner.cpp">
-      <Filter>mfx\pi</Filter>
-    </ClCompile>
-    <ClCompile Include="mfx\pi\FreqAnalyser.cpp">
-      <Filter>mfx\pi</Filter>
     </ClCompile>
     <ClCompile Include="mfx\doc\CtrlLinkSet.cpp">
       <Filter>mfx\doc</Filter>
@@ -1350,9 +1359,6 @@
     <ClCompile Include="mfx\dsp\iir\Svf2p.cpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
-    <ClCompile Include="mfx\pi\Tremolo.cpp">
-      <Filter>mfx\pi</Filter>
-    </ClCompile>
     <ClCompile Include="mfx\pi\param\TplEnum.cpp">
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
@@ -1362,14 +1368,8 @@
     <ClCompile Include="mfx\pi\param\MapPiecewiseLinLog.cpp">
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
-    <ClCompile Include="mfx\pi\Wha.cpp">
-      <Filter>mfx\pi</Filter>
-    </ClCompile>
     <ClCompile Include="hiir\PolyphaseIir2Designer.cpp">
       <Filter>hiir</Filter>
-    </ClCompile>
-    <ClCompile Include="mfx\pi\FrequencyShifter.cpp">
-      <Filter>mfx\pi</Filter>
     </ClCompile>
     <ClCompile Include="mfx\dsp\osc\OscSinCosStable4Simd.cpp">
       <Filter>mfx\dsp\osc</Filter>
@@ -1514,6 +1514,30 @@
     </ClCompile>
     <ClCompile Include="mfx\uitk\pg\MenuSlot.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\piapi\PluginDescInterface.cpp">
+      <Filter>mfx\piapi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\dist1\DistoSimple.cpp">
+      <Filter>mfx\pi\dist1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\dwm\DryWet.cpp">
+      <Filter>mfx\pi\dwm</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\freqsh\FrequencyShifter.cpp">
+      <Filter>mfx\pi\freqsh</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\tuner\FreqAnalyser.cpp">
+      <Filter>mfx\pi\tuner</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\tuner\Tuner.cpp">
+      <Filter>mfx\pi\tuner</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\trem1\Tremolo.cpp">
+      <Filter>mfx\pi\trem1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\wha1\Wha.cpp">
+      <Filter>mfx\pi\wha1</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -49,92 +49,8 @@ PluginInterface::State	PluginInterface::get_state () const
 
 
 
-int	PluginInterface::init ()
-{
-	assert (get_state () == State_CONSTRUCTED);
-
-	const int      ret_val = do_init ();
-	assert (   (get_state () == State_INITIALISED && ret_val == Err_OK)
-	        || (get_state () == State_CONSTRUCTED && ret_val != Err_OK));
-
-	return (ret_val);
-}
-
-
-
-int	PluginInterface::restore ()
-{
-	assert (   get_state () == State_INITIALISED
-	        || get_state () == State_ACTIVE);
-
-	const int      ret_val = do_restore ();
-	assert (get_state () == State_CONSTRUCTED);
-
-	return (ret_val);
-}
-
-
-
-void	PluginInterface::get_nbr_io (int &nbr_i, int &nbr_o) const
-{
-	assert (   get_state () == State_INITIALISED
-	        || get_state () == State_ACTIVE);
-	assert (nbr_i == 1);
-	assert (nbr_o == 1);
-
-	do_get_nbr_io (nbr_i, nbr_o);
-	assert (nbr_i > 0);
-	assert (nbr_o > 0);
-}
-
-
-
-bool	PluginInterface::prefer_stereo () const
-{
-	assert (   get_state () == State_INITIALISED
-	        || get_state () == State_ACTIVE);
-
-	return do_prefer_stereo ();
-}
-
-
-
-int	PluginInterface::get_nbr_param (ParamCateg categ) const
-{
-	assert (   get_state () == State_INITIALISED
-	        || get_state () == State_ACTIVE);
-	assert (categ >= 0);
-	assert (categ < ParamCateg_NBR_ELT);
-
-	const int      nbr_param = do_get_nbr_param (categ);
-	assert (nbr_param >= 0);
-
-	return (nbr_param);
-}
-
-
-
-
-const ParamDescInterface &	PluginInterface::get_param_info (ParamCateg categ, int index) const
-{
-	assert (   get_state () == State_INITIALISED
-	        || get_state () == State_ACTIVE);
-	assert (categ >= 0);
-	assert (categ < ParamCateg_NBR_ELT);
-	assert (index >= 0);
-	assert (index < get_nbr_param (categ));
-
-	const auto &   desc = do_get_param_info (categ, index);
-
-	return (desc);
-}
-
-
-
 double	PluginInterface::get_param_val (ParamCateg categ, int index, int note_id) const
 {
-	assert (   get_state () == State_INITIALISED
-	        || get_state () == State_ACTIVE);
 	assert (categ >= 0);
 	assert (categ < ParamCateg_NBR_ELT);
 
@@ -149,15 +65,13 @@ double	PluginInterface::get_param_val (ParamCateg categ, int index, int note_id)
 
 int	PluginInterface::reset (double sample_freq, int max_block_size, int &latency)
 {
-	assert (   get_state () == State_INITIALISED
-	        || get_state () == State_ACTIVE);
 	assert (sample_freq > 0);
 	assert (max_block_size > 0);
 	assert (latency == 0);
 
 	const int      ret_val = do_reset (sample_freq, max_block_size, latency);
-	assert (ret_val == Err_OK || get_state () == State_INITIALISED);
-	assert (ret_val != Err_OK || get_state () == State_ACTIVE     );
+	assert (ret_val == Err_OK || get_state () == State_CREATED);
+	assert (ret_val != Err_OK || get_state () == State_ACTIVE );
 	assert (ret_val != Err_OK || latency >= 0);
 
 	return (ret_val);

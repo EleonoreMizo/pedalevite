@@ -25,8 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/pi/dwm/DryWet.h"
 #include "mfx/pi/param/Tools.h"
-#include "mfx/pi/DryWet.h"
 #include "mfx/uitk/pg/ParamList.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
@@ -341,7 +341,7 @@ int	ParamList::conv_param_to_node_id (PiType type, int index) const
 	int            line_pos = index;
 	if (type == PiType_MAIN)
 	{
-		line_pos += pi::DryWet::Param_NBR_ELT;
+		line_pos += pi::dwm::DryWet::Param_NBR_ELT;
 	}
 
 	const int      node_id = line_pos * 2;
@@ -361,10 +361,10 @@ void	ParamList::conv_node_id_to_param (PiType &type, int &index, int node_id)
 	else
 	{
 		int            line_pos = node_id >> 1;
-		if (line_pos >= pi::DryWet::Param_NBR_ELT)
+		if (line_pos >= pi::dwm::DryWet::Param_NBR_ELT)
 		{
 			type = PiType_MAIN;
-			line_pos -= pi::DryWet::Param_NBR_ELT;
+			line_pos -= pi::dwm::DryWet::Param_NBR_ELT;
 		}
 		index = line_pos;
 	}

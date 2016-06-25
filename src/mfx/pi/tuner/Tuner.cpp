@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/param/TplLin.h"
-#include "mfx/pi/Tuner.h"
+#include "mfx/pi/tuner/Tuner.h"
 
 #include <cassert>
 
@@ -35,6 +35,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 namespace pi
+{
+namespace tuner
 {
 
 
@@ -54,27 +56,16 @@ float	Tuner::get_freq () const
 
 
 
-piapi::PluginInterface::State	Tuner::do_get_state () const
+std::string	Tuner::do_get_unique_id () const
 {
-	return _state;
+	return "\?tuner";
 }
 
 
 
-int	Tuner::do_init ()
+std::string	Tuner::do_get_name () const
 {
-	_state = State_INITIALISED;
-
-	return Err_OK;
-}
-
-
-
-int	Tuner::do_restore ()
-{
-	_state = State_CONSTRUCTED;
-
-	return Err_OK;
+	return "Tuner";
 }
 
 
@@ -106,6 +97,13 @@ const piapi::ParamDescInterface &	Tuner::do_get_param_info (piapi::ParamCateg ca
 	static const param::TplLin dummy (0, 1, "", "");
 
 	return dummy;
+}
+
+
+
+piapi::PluginInterface::State	Tuner::do_get_state () const
+{
+	return _state;
 }
 
 
@@ -167,6 +165,7 @@ void	Tuner::do_process_block (ProcInfo &proc)
 
 
 
+}  // namespace tuner
 }  // namespace pi
 }  // namespace mfx
 

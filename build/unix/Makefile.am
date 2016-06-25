@@ -261,14 +261,20 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplMapped.h \
         ../../src/mfx/pi/param/TplMapped.hpp \
         ../../src/mfx/pi/param/TplSq.h \
-        ../../src/mfx/pi/DistoSimple.cpp \
-        ../../src/mfx/pi/DistoSimple.h \
-        ../../src/mfx/pi/DryWet.cpp \
-        ../../src/mfx/pi/DryWet.h \
-        ../../src/mfx/pi/FreqAnalyser.cpp \
-        ../../src/mfx/pi/FreqAnalyser.h \
-        ../../src/mfx/pi/FrequencyShifter.cpp \
-        ../../src/mfx/pi/FrequencyShifter.h \
+        ../../src/mfx/pi/dist1/DistoSimple.cpp \
+        ../../src/mfx/pi/dist1/DistoSimple.h \
+        ../../src/mfx/pi/dwm/DryWet.cpp \
+        ../../src/mfx/pi/dwm/DryWet.h \
+        ../../src/mfx/pi/freqsh/FrequencyShifter.cpp \
+        ../../src/mfx/pi/freqsh/FrequencyShifter.h \
+        ../../src/mfx/pi/trem1/Tremolo.cpp \
+        ../../src/mfx/pi/trem1/Tremolo.h \
+        ../../src/mfx/pi/tuner/FreqAnalyser.cpp \
+        ../../src/mfx/pi/tuner/FreqAnalyser.h \
+        ../../src/mfx/pi/tuner/Tuner.cpp \
+        ../../src/mfx/pi/tuner/Tuner.h \
+        ../../src/mfx/pi/wha1/Wha.cpp \
+        ../../src/mfx/pi/wha1/Wha.h \
         ../../src/mfx/pi/ParamDescSet.cpp \
         ../../src/mfx/pi/ParamDescSet.h \
         ../../src/mfx/pi/ParamState.cpp \
@@ -277,12 +283,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/ParamStateSet.h \
         ../../src/mfx/pi/PluginModel.h \
         ../../src/mfx/pi/PluginModel.cpp \
-        ../../src/mfx/pi/Tremolo.cpp \
-        ../../src/mfx/pi/Tremolo.h \
-        ../../src/mfx/pi/Tuner.cpp \
-        ../../src/mfx/pi/Tuner.h \
-        ../../src/mfx/pi/Wha.cpp \
-        ../../src/mfx/pi/Wha.h \
         ../../src/mfx/piapi/Event.h \
         ../../src/mfx/piapi/EventNoteOff.h \
         ../../src/mfx/piapi/EventNoteOn.h \
@@ -293,6 +293,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/piapi/ParamCateg.h \
         ../../src/mfx/piapi/ParamDescInterface.h \
         ../../src/mfx/piapi/ParamDescInterface.hpp \
+        ../../src/mfx/piapi/PluginDescInterface.cpp \
+        ../../src/mfx/piapi/PluginDescInterface.h \
         ../../src/mfx/piapi/PluginInterface.cpp \
         ../../src/mfx/piapi/PluginInterface.h \
         ../../src/mfx/piapi/PluginState.h \

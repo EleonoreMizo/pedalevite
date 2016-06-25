@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Tuner.h
+        Wha.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_Tuner_HEADER_INCLUDED)
-#define mfx_pi_Tuner_HEADER_INCLUDED
+#if ! defined (mfx_pi_wha1_Wha_HEADER_INCLUDED)
+#define mfx_pi_wha1_Wha_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,11 +27,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/AllocAlign.h"
-#include "mfx/pi/FreqAnalyser.h"
+#include "fstb/util/NotificationFlag.h"
+#include "mfx/dsp/iir/Biquad.h"
+#include "mfx/pi/ParamDescSet.h"
+#include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
-#include <vector>
+#include <array>
 
 
 
@@ -39,10 +41,12 @@ namespace mfx
 {
 namespace pi
 {
+namespace wha1
+{
 
 
 
-class Tuner
+class Wha
 :	public piapi::PluginInterface
 {
 
@@ -50,10 +54,16 @@ class Tuner
 
 public:
 
-	               Tuner ()  = default;
-	virtual        ~Tuner () = default;
+	enum Param
+	{
+		Param_FREQ = 0,
+		Param_Q,
 
-	float          get_freq () const;
+		Param_NBR_ELT
+	};
+
+	               Wha ();
+	virtual        ~Wha () = default;
 
 
 
@@ -61,15 +71,19 @@ public:
 
 protected:
 
-	// mfx::piapi::PluginInterface
-	virtual State  do_get_state () const;
-	virtual int    do_init ();
-	virtual int    do_restore ();
+	// mfx::piapi::PluginDescInterface via mfx::piapi::PluginInterface
+	virtual std::string
+	               do_get_unique_id () const;
+	virtual std::string
+	               do_get_name () const;
 	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const;
 	virtual bool   do_prefer_stereo () const;
 	virtual int    do_get_nbr_param (piapi::ParamCateg categ) const;
 	virtual const piapi::ParamDescInterface &
 	               do_get_param_info (piapi::ParamCateg categ, int index) const;
+
+	// mfx::piapi::PluginInterface
+	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
 	virtual void   do_process_block (ProcInfo &proc);
@@ -80,17 +94,24 @@ protected:
 
 private:
 
-	static const int                    // Subsampling
-	               _sub_spl = 4;
+	typedef std::array <
+		dsp::iir::Biquad,
+		piapi::PluginInterface::_max_nbr_chn
+	>	FilterArray;
 
-	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
+	State          _state;
 
-	State          _state   = State_CONSTRUCTED;
+	ParamDescSet   _desc_set;
+	ParamStateSet  _state_set;
+	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 
-	pi::FreqAnalyser
-	               _analyser;
-	float          _freq    = 0;        // Hz. 0 = not found
-	BufAlign       _buffer;
+	fstb::util::NotificationFlag
+	               _param_change_flag;
+
+	FilterArray    _filter_arr;
+	float          _inv_fs;
+	float          _freq;
+	float          _q;
 
 
 
@@ -98,25 +119,26 @@ private:
 
 private:
 
-	               Tuner (const Tuner &other)             = delete;
-	Tuner &        operator = (const Tuner &other)        = delete;
-	bool           operator == (const Tuner &other) const = delete;
-	bool           operator != (const Tuner &other) const = delete;
+	               Wha (const Wha &other)               = delete;
+	Wha &          operator = (const Wha &other)        = delete;
+	bool           operator == (const Wha &other) const = delete;
+	bool           operator != (const Wha &other) const = delete;
 
-}; // class Tuner
+}; // class Wha
 
 
 
+}  // namespace wha1
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/Tuner.hpp"
+//#include "mfx/pi/wha1/Wha.hpp"
 
 
 
-#endif   // mfx_pi_Tuner_HEADER_INCLUDED
+#endif   // mfx_pi_wha1_Wha_HEADER_INCLUDED
 
 
 
