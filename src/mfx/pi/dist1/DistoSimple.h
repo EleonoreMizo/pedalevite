@@ -27,9 +27,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
-#include "mfx/pi/param/TplLog.h"
-#include "mfx/pi/ParamState.h"
+#include "mfx/pi/dist1/DistoSimpleDesc.h"
+#include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
@@ -52,13 +53,6 @@ class DistoSimple
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	enum Param
-	{
-		Param_GAIN = 0,
-
-		Param_NBR_ELT
-	};
 
 	               DistoSimple ();
 	virtual        ~DistoSimple () = default;
@@ -92,17 +86,18 @@ protected:
 
 private:
 
-	static const int  _gain_min    = 1;
-	static const int  _gain_max    = 100000;
-
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 	typedef std::array <BufAlign, _max_nbr_chn> BufAlignArray;
-	typedef param::TplLog ParamDescGain;
 
 	State          _state;
 
-	ParamState     _param_state_gain;
-	ParamDescGain  _param_desc_gain;
+	DistoSimpleDesc
+	               _desc;
+	ParamStateSet  _state_set;
+
+	fstb::util::NotificationFlag
+	               _param_change_flag;
+
 	float          _gain;
 	BufAlignArray  _buf_arr;
 

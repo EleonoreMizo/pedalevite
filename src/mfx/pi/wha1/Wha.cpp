@@ -26,8 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/param/HelperDispNum.h"
-#include "mfx/pi/param/TplLog.h"
+#include "mfx/pi/wha1/Param.h"
 #include "mfx/pi/wha1/Wha.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
@@ -53,7 +52,7 @@ namespace wha1
 
 Wha::Wha ()
 :	_state (State_CREATED)
-,	_desc_set (Param_NBR_ELT, 0)
+,	_desc ()
 ,	_state_set ()
 ,	_sample_freq (0)
 ,	_param_change_flag ()
@@ -62,30 +61,7 @@ Wha::Wha ()
 ,	_freq (1000)
 ,	_q (1)
 {
-	// Frequency
-	param::TplLog *   log_ptr = new param::TplLog (
-		120, 120 * 32,
-		"Frequency\nFreq",
-		"Hz",
-		param::HelperDispNum::Preset_FLOAT_STD,
-		0,
-		"%6.1f"
-	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FREQ, log_ptr);
-
-	// Base Q
-	log_ptr = new param::TplLog (
-		2, 32,
-		"Selectivity\nQ",
-		"",
-		param::HelperDispNum::Preset_FLOAT_STD,
-		0,
-		"%4.1f"
-	);
-	_desc_set.add_glob (Param_Q, log_ptr);
-
-	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
+	_state_set.init (piapi::ParamCateg_GLOBAL, _desc.use_desc_set ());
 
 	_state_set.set_val (Param_FREQ, 0.50   );
 	_state_set.set_val (Param_Q   , 1.0 / 3); // -> q = 5
@@ -105,43 +81,42 @@ Wha::Wha ()
 
 std::string	Wha::do_get_unique_id () const
 {
-	return "wha1";
+	return _desc.get_unique_id ();
 }
 
 
 
 std::string	Wha::do_get_name () const
 {
-	return "Wha-wha";
+	return _desc.get_name ();
 }
 
 
 
 void	Wha::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
-	nbr_i = 1;
-	nbr_o = 1;
+	_desc.get_nbr_io (nbr_i, nbr_o);
 }
 
 
 
 bool	Wha::do_prefer_stereo () const
 {
-	return false;
+	return _desc.prefer_stereo ();
 }
 
 
 
 int	Wha::do_get_nbr_param (piapi::ParamCateg categ) const
 {
-	return _desc_set.get_nbr_param (categ);
+	return _desc.get_nbr_param (categ);
 }
 
 
 
 const piapi::ParamDescInterface &	Wha::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
-	return _desc_set.use_param (categ, index);
+	return _desc.get_param_info (categ, index);
 }
 
 

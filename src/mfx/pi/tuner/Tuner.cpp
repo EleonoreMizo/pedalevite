@@ -25,7 +25,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/tuner/Tuner.h"
 
 #include <cassert>
@@ -58,45 +57,42 @@ float	Tuner::get_freq () const
 
 std::string	Tuner::do_get_unique_id () const
 {
-	return "\?tuner";
+	return _desc.get_unique_id ();
 }
 
 
 
 std::string	Tuner::do_get_name () const
 {
-	return "Tuner";
+	return _desc.get_name ();
 }
 
 
 
 void	Tuner::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
-	nbr_i = 1;
-	nbr_o = 1;
+	_desc.get_nbr_io (nbr_i, nbr_o);
 }
 
 
 
 bool	Tuner::do_prefer_stereo () const
 {
-	return false;
+	return _desc.prefer_stereo ();
 }
 
 
 
 int	Tuner::do_get_nbr_param (piapi::ParamCateg categ) const
 {
-	return 0;
+	return _desc.get_nbr_param (categ);
 }
 
 
 
 const piapi::ParamDescInterface &	Tuner::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
-	static const param::TplLin dummy (0, 1, "", "");
-
-	return dummy;
+	return _desc.get_param_info (categ, index);
 }
 
 

@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/SingleObj.h"
 #include "mfx/dsp/osc/OscSinCosStable4Simd.h"
 #include "mfx/dsp/iir/Biquad.h"
+#include "mfx/pi/freqsh/FreqShiftDesc.h"
 #include "mfx/pi/freqsh/PhaseHalfPi.h"
 #include "mfx/pi/ParamDescSet.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -58,13 +59,6 @@ class FrequencyShifter
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	enum Param
-	{
-		Param_FREQ = 0,
-
-		Param_NBR_ELT
-	};
 
 	               FrequencyShifter ();
 	virtual        ~FrequencyShifter () = default;
@@ -113,8 +107,6 @@ private:
 	typedef std::array <BufAlign, Buf_NBR_ELT> BufArray;
 
 	static const int
-	               _max_freq = 5000;
-	static const int
 	               _nbr_coef = 8;
 
 	class Channel
@@ -142,7 +134,7 @@ private:
 
 	State          _state;
 
-	ParamDescSet   _desc_set;
+	FreqShiftDesc  _desc;
 	ParamStateSet  _state_set;
 	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 

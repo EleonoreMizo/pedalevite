@@ -30,7 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #define mfx_pi_dwm_DryWet_GAIN_WET_ONLY
 
 #include "fstb/util/NotificationFlag.h"
-#include "mfx/pi/ParamDescSet.h"
+#include "mfx/pi/dwm/DryWetDesc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -53,20 +53,8 @@ class DryWet
 
 public:
 
-	enum Param
-	{
-		Param_BYPASS = 0,
-		Param_WET,
-		Param_GAIN,
-
-		Param_NBR_ELT
-	};
-
 	               DryWet ();
 	virtual        ~DryWet () = default;
-
-	static const float
-	               _gain_neutral;
 
 
 
@@ -102,7 +90,7 @@ private:
 
 	State          _state;
 
-	ParamDescSet   _desc_set;
+	DryWetDesc     _desc;
 	ParamStateSet  _state_set;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 

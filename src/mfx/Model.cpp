@@ -24,7 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/dwm/DryWet.h"
+#include "mfx/pi/dwm/DryWetDesc.h"
+#include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/tuner/Tuner.h"
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
@@ -792,9 +793,9 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 
 	bool           use_flag = (
 		   ! slot._settings_mixer._map_param_ctrl.empty ()
-		|| plist [pi::dwm::DryWet::Param_BYPASS] != 0
-		|| plist [pi::dwm::DryWet::Param_WET   ] != 1
-		|| plist [pi::dwm::DryWet::Param_GAIN  ] != pi::dwm::DryWet::_gain_neutral
+		|| plist [pi::dwm::Param_BYPASS] != 0
+		|| plist [pi::dwm::Param_WET   ] != 1
+		|| plist [pi::dwm::Param_GAIN  ] != pi::dwm::DryWetDesc::_gain_neutral
 	);
 
 	// Check if it is referenced in the pedals

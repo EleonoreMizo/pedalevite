@@ -1146,6 +1146,42 @@
     <ClInclude Include="mfx\pi\wha1\Wha.h">
       <Filter>mfx\pi\wha1</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\wha1\WhaDesc.h">
+      <Filter>mfx\pi\wha1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\wha1\Param.h">
+      <Filter>mfx\pi\wha1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\trem1\Param.h">
+      <Filter>mfx\pi\trem1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\trem1\TremoloDesc.h">
+      <Filter>mfx\pi\trem1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\trem1\Waveform.h">
+      <Filter>mfx\pi\trem1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\freqsh\FreqShiftDesc.h">
+      <Filter>mfx\pi\freqsh</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\freqsh\Param.h">
+      <Filter>mfx\pi\freqsh</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dwm\DryWetDesc.h">
+      <Filter>mfx\pi\dwm</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dwm\Param.h">
+      <Filter>mfx\pi\dwm</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dist1\DistoSimpleDesc.h">
+      <Filter>mfx\pi\dist1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dist1\Param.h">
+      <Filter>mfx\pi\dist1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\tuner\TunerDesc.h">
+      <Filter>mfx\pi\tuner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1538,6 +1574,24 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\wha1\Wha.cpp">
       <Filter>mfx\pi\wha1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\wha1\WhaDesc.cpp">
+      <Filter>mfx\pi\wha1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\trem1\TremoloDesc.cpp">
+      <Filter>mfx\pi\trem1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\freqsh\FreqShiftDesc.cpp">
+      <Filter>mfx\pi\freqsh</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\dwm\DryWetDesc.cpp">
+      <Filter>mfx\pi\dwm</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\dist1\DistoSimpleDesc.cpp">
+      <Filter>mfx\pi\dist1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\tuner\TunerDesc.cpp">
+      <Filter>mfx\pi\tuner</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

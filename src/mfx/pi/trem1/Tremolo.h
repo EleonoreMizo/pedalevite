@@ -28,7 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/util/NotificationFlag.h"
-#include "mfx/pi/ParamDescSet.h"
+#include "mfx/pi/trem1/TremoloDesc.h"
+#include "mfx/pi/trem1/Waveform.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -50,28 +51,6 @@ class Tremolo
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	enum Param
-	{
-		Param_FREQ = 0,
-		Param_AMT,
-		Param_WF,
-		Param_GSAT,
-		Param_BIAS,
-
-		Param_NBR_ELT
-	};
-
-	enum Waveform
-	{
-		Waveform_SIN = 0,
-		Waveform_SQUARE,
-		Waveform_TRI,
-		Waveform_RAMP_U,
-		Waveform_RAMP_D,
-
-		Waveform_NBR_ELT
-	};
 
 	               Tremolo ();
 	virtual        ~Tremolo () = default;
@@ -109,7 +88,7 @@ private:
 
 	State          _state;
 
-	ParamDescSet   _desc_set;
+	TremoloDesc    _desc;
 	ParamStateSet  _state_set;
 	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 

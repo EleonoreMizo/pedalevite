@@ -29,8 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/freqsh/FrequencyShifter.h"
-#include "mfx/pi/param/MapPiecewiseLinLog.h"
-#include "mfx/pi/param/TplMapped.h"
+#include "mfx/pi/freqsh/Param.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -54,7 +53,7 @@ namespace freqsh
 
 FrequencyShifter::FrequencyShifter ()
 :	_state (State_CREATED)
-,	_desc_set (Param_NBR_ELT, 0)
+,	_desc ()
 ,	_state_set ()
 ,	_sample_freq (0)
 ,	_param_change_flag ()
@@ -63,25 +62,7 @@ FrequencyShifter::FrequencyShifter ()
 ,	_freq (0)
 ,	_step_angle (0)
 {
-	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
-
-	// Frequency
-	TplPll *   pll_ptr = new TplPll (
-		-_max_freq, _max_freq,
-		"Frequency\nFreq",
-		"Hz",
-		param::HelperDispNum::Preset_FLOAT_STD,
-		0,
-		"%+7.1f"
-	);
-	pll_ptr->use_mapper ().set_first_value (-_max_freq);
-	pll_ptr->use_mapper ().add_segment (0.4, -0.004 * _max_freq, true);
-	pll_ptr->use_mapper ().add_segment (0.6,  0.004 * _max_freq, false);
-	pll_ptr->use_mapper ().add_segment (1.0,          _max_freq, true);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FREQ, pll_ptr);
-
-	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
+	_state_set.init (piapi::ParamCateg_GLOBAL, _desc.use_desc_set ());
 
 	_state_set.set_val (Param_FREQ, 0.5f);
 
@@ -107,43 +88,42 @@ FrequencyShifter::FrequencyShifter ()
 
 std::string	FrequencyShifter::do_get_unique_id () const
 {
-	return "freqshift1";
+	return _desc.get_unique_id ();
 }
 
 
 
 std::string	FrequencyShifter::do_get_name () const
 {
-	return "Frequency Shifter\nFreq Shift\nFShift";
+	return _desc.get_name ();
 }
 
 
 
 void	FrequencyShifter::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
-	nbr_i = 1;
-	nbr_o = 1;
+	_desc.get_nbr_io (nbr_i, nbr_o);
 }
 
 
 
 bool	FrequencyShifter::do_prefer_stereo () const
 {
-	return false;
+	return _desc.prefer_stereo ();
 }
 
 
 
 int	FrequencyShifter::do_get_nbr_param (piapi::ParamCateg categ) const
 {
-	return _desc_set.get_nbr_param (categ);
+	return _desc.get_nbr_param (categ);
 }
 
 
 
 const piapi::ParamDescInterface &	FrequencyShifter::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
-	return _desc_set.use_param (categ, index);
+	return _desc.get_param_info (categ, index);
 }
 
 

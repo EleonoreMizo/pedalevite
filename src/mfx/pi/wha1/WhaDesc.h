@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Tuner.h
+        WhaDesc.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_tuner_Tuner_HEADER_INCLUDED)
-#define mfx_pi_tuner_Tuner_HEADER_INCLUDED
+#if ! defined (mfx_pi_wha1_WhaDesc_HEADER_INCLUDED)
+#define mfx_pi_wha1_WhaDesc_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,12 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/AllocAlign.h"
-#include "mfx/pi/tuner/FreqAnalyser.h"
-#include "mfx/pi/tuner/TunerDesc.h"
-#include "mfx/piapi/PluginInterface.h"
-
-#include <vector>
+#include "mfx/pi/ParamDescSet.h"
+#include "mfx/piapi/PluginDescInterface.h"
 
 
 
@@ -40,23 +36,23 @@ namespace mfx
 {
 namespace pi
 {
-namespace tuner
+namespace wha1
 {
 
 
 
-class Tuner
-:	public piapi::PluginInterface
+class WhaDesc
+:	public piapi::PluginDescInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               Tuner ()  = default;
-	virtual        ~Tuner () = default;
+	               WhaDesc ();
+	virtual        ~WhaDesc () = default;
 
-	float          get_freq () const;
+	ParamDescSet & use_desc_set ();
 
 
 
@@ -64,7 +60,7 @@ public:
 
 protected:
 
-	// mfx::piapi::PluginDescInterface via mfx::piapi::PluginInterface
+	// mfx::piapi::PluginDescInterface
 	virtual std::string
 	               do_get_unique_id () const;
 	virtual std::string
@@ -75,30 +71,13 @@ protected:
 	virtual const piapi::ParamDescInterface &
 	               do_get_param_info (piapi::ParamCateg categ, int index) const;
 
-	// mfx::piapi::PluginInterface
-	virtual State  do_get_state () const;
-	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
-	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_process_block (ProcInfo &proc);
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	static const int                    // Subsampling
-	               _sub_spl = 4;
-
-	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-
-	TunerDesc      _desc;
-	State          _state   = State_CREATED;
-
-	pi::tuner::FreqAnalyser
-	               _analyser;
-	float          _freq    = 0;        // Hz. 0 = not found
-	BufAlign       _buffer;
+	ParamDescSet   _desc_set;
 
 
 
@@ -106,26 +85,26 @@ private:
 
 private:
 
-	               Tuner (const Tuner &other)             = delete;
-	Tuner &        operator = (const Tuner &other)        = delete;
-	bool           operator == (const Tuner &other) const = delete;
-	bool           operator != (const Tuner &other) const = delete;
+	               WhaDesc (const WhaDesc &other)           = delete;
+	WhaDesc &      operator = (const WhaDesc &other)        = delete;
+	bool           operator == (const WhaDesc &other) const = delete;
+	bool           operator != (const WhaDesc &other) const = delete;
 
-}; // class Tuner
+}; // class WhaDesc
 
 
 
-}  // namespace tuner
+}  // namespace wha1
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/tuner/Tuner.hpp"
+//#include "mfx/pi/wha1/WhaDesc.hpp"
 
 
 
-#endif   // mfx_pi_tuner_Tuner_HEADER_INCLUDED
+#endif   // mfx_pi_wha1_WhaDesc_HEADER_INCLUDED
 
 
 

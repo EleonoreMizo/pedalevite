@@ -263,18 +263,36 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplSq.h \
         ../../src/mfx/pi/dist1/DistoSimple.cpp \
         ../../src/mfx/pi/dist1/DistoSimple.h \
+        ../../src/mfx/pi/dist1/DistoSimpleDesc.cpp \
+        ../../src/mfx/pi/dist1/DistoSimpleDesc.h \
+        ../../src/mfx/pi/dist1/Param.h \
         ../../src/mfx/pi/dwm/DryWet.cpp \
         ../../src/mfx/pi/dwm/DryWet.h \
+        ../../src/mfx/pi/dwm/DryWetDesc.cpp \
+        ../../src/mfx/pi/dwm/DryWetDesc.h \
+        ../../src/mfx/pi/dwm/Param.h \
         ../../src/mfx/pi/freqsh/FrequencyShifter.cpp \
         ../../src/mfx/pi/freqsh/FrequencyShifter.h \
+        ../../src/mfx/pi/freqsh/FreqShiftDesc.cpp \
+        ../../src/mfx/pi/freqsh/FreqShiftDesc.h \
+        ../../src/mfx/pi/freqsh/Param.h \
+        ../../src/mfx/pi/trem1/Param.h \
         ../../src/mfx/pi/trem1/Tremolo.cpp \
         ../../src/mfx/pi/trem1/Tremolo.h \
+        ../../src/mfx/pi/trem1/TremoloDesc.cpp \
+        ../../src/mfx/pi/trem1/TremoloDesc.h \
+        ../../src/mfx/pi/trem1/Waveform.h \
         ../../src/mfx/pi/tuner/FreqAnalyser.cpp \
         ../../src/mfx/pi/tuner/FreqAnalyser.h \
         ../../src/mfx/pi/tuner/Tuner.cpp \
         ../../src/mfx/pi/tuner/Tuner.h \
+        ../../src/mfx/pi/tuner/TunerDesc.cpp \
+        ../../src/mfx/pi/tuner/TunerDesc.h \
+        ../../src/mfx/pi/wha1/Param.h \
         ../../src/mfx/pi/wha1/Wha.cpp \
         ../../src/mfx/pi/wha1/Wha.h \
+        ../../src/mfx/pi/wha1/WhaDesc.cpp \
+        ../../src/mfx/pi/wha1/WhaDesc.h \
         ../../src/mfx/pi/ParamDescSet.cpp \
         ../../src/mfx/pi/ParamDescSet.h \
         ../../src/mfx/pi/ParamState.cpp \

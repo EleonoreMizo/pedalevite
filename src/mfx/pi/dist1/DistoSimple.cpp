@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/ToolsSimd.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/dist1/DistoSimple.h"
+#include "mfx/pi/dist1/Param.h"
 #include "mfx/piapi/EventTs.h"
 
 #include <cassert>
@@ -48,19 +49,21 @@ namespace dist1
 
 DistoSimple::DistoSimple ()
 :	_state (State_CREATED)
-,	_param_state_gain ()
-,	_param_desc_gain (
-		float (_gain_min), float (_gain_max),
-		"Distortion Gain\nGain",
-		"dB",
-		param::HelperDispNum::Preset_DB,
-		0,
-		"%5.1f"
-	)
-,	_gain (float (_gain_min))
+,	_desc ()
+,	_state_set ()
+,	_gain (float (DistoSimpleDesc::_gain_min))
+,	_buf_arr ()
 {
-	_param_state_gain.set_desc (_param_desc_gain);
-	_param_state_gain.set_ramp_time (0.02);
+	_state_set.init (piapi::ParamCateg_GLOBAL, _desc.use_desc_set ());
+
+	_state_set.set_val (Param_GAIN, 0); // 0 dB
+
+	for (int index = 0; index < Param_NBR_ELT; ++index)
+	{
+		_state_set.add_observer (index, _param_change_flag);
+	}
+
+	_state_set.set_ramp_time (Param_GAIN, 0.010);
 }
 
 
@@ -71,43 +74,42 @@ DistoSimple::DistoSimple ()
 
 std::string	DistoSimple::do_get_unique_id () const
 {
-	return "dist1";
+	return _desc.get_unique_id ();
 }
 
 
 
 std::string	DistoSimple::do_get_name () const
 {
-	return "Simple distortion\nDisto S";
+	return _desc.get_name ();
 }
 
 
 
 void	DistoSimple::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
-	nbr_i = 1;
-	nbr_o = 1;
+	_desc.get_nbr_io (nbr_i, nbr_o);
 }
 
 
 
 bool	DistoSimple::do_prefer_stereo () const
 {
-	return false;
+	return _desc.prefer_stereo ();
 }
 
 
 
 int	DistoSimple::do_get_nbr_param (piapi::ParamCateg categ) const
 {
-	return (categ == piapi::ParamCateg_GLOBAL) ? 1 : 0;
+	return _desc.get_nbr_param (categ);
 }
 
 
 
 const piapi::ParamDescInterface &	DistoSimple::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
-	return _param_desc_gain;
+	return _desc.get_param_info (categ, index);
 }
 
 
@@ -121,7 +123,9 @@ piapi::PluginInterface::State	DistoSimple::do_get_state () const
 
 double	DistoSimple::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
-	return _param_state_gain.get_val_tgt ();
+	assert (categ == piapi::ParamCateg_GLOBAL);
+
+	return _state_set.use_state (index).get_val_tgt ();
 }
 
 
@@ -129,6 +133,9 @@ double	DistoSimple::do_get_param_val (piapi::ParamCateg categ, int index, int no
 int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
+
+	_state_set.set_sample_freq (sample_freq);
+	_state_set.clear_buffers ();
 
 	for (int chn = 0; chn < _max_nbr_chn; ++chn)
 	{
@@ -155,24 +162,23 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 		const piapi::EventTs &  evt = *(proc._evt_arr [index]);
 		if (evt._type == piapi::EventType_PARAM)
 		{
-			const double   val_nrm = evt._evt._param._val;
-			_param_state_gain.set_val (val_nrm);
+			const piapi::EventParam &  evtp = evt._evt._param;
+			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
+			_state_set.set_val (evtp._index, evtp._val);
 		}
 	}
 
 	const int      nbr_spl = proc._nbr_spl;
 
-	_param_state_gain.tick (nbr_spl);
+	_state_set.process_block (nbr_spl);
 
 	// Gain (ramp)
-	if (_param_state_gain.is_ramping ())
+	if (_param_change_flag (true))
 	{
-		const float    gain_beg = float (
-			_param_desc_gain.conv_nrm_to_nat (_param_state_gain.get_val_beg ())
-		);
-		const float    gain_end = float (
-			_param_desc_gain.conv_nrm_to_nat (_param_state_gain.get_val_end ())
-		);
+		const float    gain_beg =
+			float (_state_set.get_val_beg_nat (Param_GAIN));
+		const float    gain_end =
+			float (_state_set.get_val_end_nat (Param_GAIN));
 
 #if defined (mfx_pi_dist1_DistoSimple_USE_MIXALIGN)
 

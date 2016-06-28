@@ -26,12 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/Approx.h"
 #include "fstb/ToolsSimd.h"
-#include "mfx/pi/param/HelperDispNum.h"
-#include "mfx/pi/param/MapPiecewiseLinLog.h"
-#include "mfx/pi/param/TplEnum.h"
-#include "mfx/pi/param/TplLin.h"
-#include "mfx/pi/param/TplLog.h"
-#include "mfx/pi/param/TplMapped.h"
+#include "mfx/pi/trem1/Param.h"
 #include "mfx/pi/trem1/Tremolo.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
@@ -57,7 +52,7 @@ namespace trem1
 
 Tremolo::Tremolo ()
 :	_state (State_CREATED)
-,	_desc_set (Param_NBR_ELT, 0)
+,	_desc ()
 ,	_state_set ()
 ,	_sample_freq (0)
 ,	_param_change_shape_flag ()
@@ -69,74 +64,7 @@ Tremolo::Tremolo ()
 ,	_bias (0)
 ,	_sat (0.5f)
 {
-	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
-
-	// Period
-	TplPll *   pll_ptr = new TplPll (
-		0.5, 50,
-		"Frequency\nFreq",
-		"Hz",
-		param::HelperDispNum::Preset_FLOAT_STD,
-		0,
-		"%6.3f"
-	);
-	pll_ptr->use_mapper ().set_first_value (   0.5);
-	pll_ptr->use_mapper ().add_segment (0.25,  4  , true);
-	pll_ptr->use_mapper ().add_segment (1   , 50  , true);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_HZ);
-	_desc_set.add_glob (Param_FREQ, pll_ptr);
-
-	// Amount
-	pll_ptr = new TplPll (
-		0, 10,
-		"Amount\nAmt",
-		"%",
-		param::HelperDispNum::Preset_FLOAT_PERCENT,
-		0,
-		"%6.1f"
-	);
-	pll_ptr->use_mapper ().set_first_value (   0);
-	pll_ptr->use_mapper ().add_segment (0.25,  0.25, false);
-	pll_ptr->use_mapper ().add_segment (0.75,  1.5 , true);
-	pll_ptr->use_mapper ().add_segment (1   , 10   , true);
-	_desc_set.add_glob (Param_AMT, pll_ptr);
-
-	// Waveform
-	param::TplEnum *  enum_ptr = new param::TplEnum (
-		"Sine\nSquare\nTriangle\nSaw Up\nSaw Down",
-		"Waveform\nWF",
-		""
-	);
-	assert (enum_ptr->get_nat_max () == Waveform_NBR_ELT - 1);
-	_desc_set.add_glob (Param_WF, enum_ptr);
-
-	// Gain Saturation
-	param::TplLin *   lin_ptr = new param::TplLin (
-		0, 1,
-		"Gain Staturation\nGain Sat\nGSat",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (
-		param::HelperDispNum::Preset_FLOAT_PERCENT
-	);
-	_desc_set.add_glob (Param_GSAT, lin_ptr);
-
-	// Bias
-	lin_ptr = new param::TplLin (
-		-1, 1,
-		"Bias",
-		"%",
-		0,
-		"%+6.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (
-		param::HelperDispNum::Preset_FLOAT_PERCENT
-	);
-	_desc_set.add_glob (Param_BIAS, lin_ptr);
-
-	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
+	_state_set.init (piapi::ParamCateg_GLOBAL, _desc.use_desc_set ());
 
 	_state_set.set_val (Param_FREQ, 0.45); // Previously: 0.21 -> ~130 ms
 	_state_set.set_val (Param_AMT , 0.31); // Previously: 0.42 -> 0.31 %
@@ -163,43 +91,42 @@ Tremolo::Tremolo ()
 
 std::string	Tremolo::do_get_unique_id () const
 {
-	return "tremolo1";
+	return _desc.get_unique_id ();
 }
 
 
 
 std::string	Tremolo::do_get_name () const
 {
-	return "Tremolo";
+	return _desc.get_name ();
 }
 
 
 
 void	Tremolo::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
-	nbr_i = 1;
-	nbr_o = 1;
+	_desc.get_nbr_io (nbr_i, nbr_o);
 }
 
 
 
 bool	Tremolo::do_prefer_stereo () const
 {
-	return false;
+	return _desc.prefer_stereo ();
 }
 
 
 
 int	Tremolo::do_get_nbr_param (piapi::ParamCateg categ) const
 {
-	return _desc_set.get_nbr_param (categ);
+	return _desc.get_nbr_param (categ);
 }
 
 
 
 const piapi::ParamDescInterface &	Tremolo::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
-	return _desc_set.use_param (categ, index);
+	return _desc.get_param_info (categ, index);
 }
 
 

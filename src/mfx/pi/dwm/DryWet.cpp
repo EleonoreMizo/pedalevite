@@ -25,11 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
-#include "mfx/pi/param/MapS.h"
-#include "mfx/pi/param/TplEnum.h"
-#include "mfx/pi/param/TplLog.h"
-#include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/dwm/DryWet.h"
+#include "mfx/pi/dwm/Param.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -54,53 +51,18 @@ namespace dwm
 
 DryWet::DryWet ()
 :	_state (State_CREATED)
-,	_desc_set (Param_NBR_ELT, 0)
+,	_desc ()
 ,	_state_set ()
 ,	_sample_freq (0)
 ,	_param_change_flag ()
 ,	_level_wet (1)
 ,	_level_dry (0)
 {
-	// Bypass
-	param::TplEnum *  enum_ptr = new param::TplEnum (
-		"Off\nOn",
-		"Bypass",
-		""
-	);
-	_desc_set.add_glob (Param_BYPASS, enum_ptr);
+	_state_set.init (piapi::ParamCateg_GLOBAL, _desc.use_desc_set ());
 
-	// Dry/Wet
-	param::TplMapped <param::MapS <false> > * maps_ptr =
-		new param::TplMapped <param::MapS <false> > (
-			0, 1,
-			"Effect Mix\nFX Mix",
-			"%",
-			param::HelperDispNum::Preset_FLOAT_PERCENT,
-			0,
-			"%5.1f"
-		);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
-	);
-	_desc_set.add_glob (Param_WET, maps_ptr);
-
-	// Volume
-	param::TplLog *   log_ptr = new param::TplLog (
-		1e-3, 10,
-		"Volume\nVol",
-		"dB",
-		param::HelperDispNum::Preset_DB,
-		0,
-		"%+5.1f"
-	);
-	_desc_set.add_glob (Param_GAIN, log_ptr);
-
-	_state_set.init (piapi::ParamCateg_GLOBAL, _desc_set);
-
-	_state_set.set_val (Param_BYPASS, 0            ); // Off
-	_state_set.set_val (Param_WET   , 1            ); // 100 %
-	_state_set.set_val (Param_GAIN  , _gain_neutral); // 0 dB
+	_state_set.set_val (Param_BYPASS, 0                        ); // Off
+	_state_set.set_val (Param_WET   , 1                        ); // 100 %
+	_state_set.set_val (Param_GAIN  , DryWetDesc::_gain_neutral); // 0 dB
 
 	for (int index = 0; index < Param_NBR_ELT; ++index)
 	{
@@ -114,53 +76,48 @@ DryWet::DryWet ()
 
 
 
-const float	DryWet::_gain_neutral = 0.75f;
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 std::string	DryWet::do_get_unique_id () const
 {
-	return "\?drywetmix";
+	return _desc.get_unique_id ();
 }
 
 
 
 std::string	DryWet::do_get_name () const
 {
-	return "Dry/Wet mixer\nDry/Wet";
+	return _desc.get_name ();
 }
 
 
 
 void	DryWet::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
-	nbr_i = 2;
-	nbr_o = 1;
+	_desc.get_nbr_io (nbr_i, nbr_o);
 }
 
 
 
 bool	DryWet::do_prefer_stereo () const
 {
-	return false;
+	return _desc.prefer_stereo ();
 }
 
 
 
 int	DryWet::do_get_nbr_param (piapi::ParamCateg categ) const
 {
-	return _desc_set.get_nbr_param (categ);
+	return _desc.get_nbr_param (categ);
 }
 
 
 
 const piapi::ParamDescInterface &	DryWet::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
-	return _desc_set.use_param (categ, index);
+	return _desc.get_param_info (categ, index);
 }
 
 

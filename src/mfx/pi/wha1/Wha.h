@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/util/NotificationFlag.h"
 #include "mfx/dsp/iir/Biquad.h"
-#include "mfx/pi/ParamDescSet.h"
+#include "mfx/pi/wha1/WhaDesc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -53,14 +53,6 @@ class Wha
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	enum Param
-	{
-		Param_FREQ = 0,
-		Param_Q,
-
-		Param_NBR_ELT
-	};
 
 	               Wha ();
 	virtual        ~Wha () = default;
@@ -101,7 +93,7 @@ private:
 
 	State          _state;
 
-	ParamDescSet   _desc_set;
+	WhaDesc        _desc;
 	ParamStateSet  _state_set;
 	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 
