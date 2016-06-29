@@ -106,6 +106,7 @@ private:
 
 	void           handle_msg_ctx (Msg::Ctx &msg);
 	void           handle_msg_param (Msg::Param &msg);
+	void           handle_msg_tempo (Msg::Tempo &msg);
 
 	PluginPool &   _pi_pool;
 	MsgQueue &     _queue_from_cmd;
@@ -131,6 +132,8 @@ private:
 
 	std::atomic <bool>
 	               _clip_flag;
+	float          _tempo_new;          // BPM. 0 when nothing new
+	float          _tempo_cur;          // BPM, > 0
 
 
 

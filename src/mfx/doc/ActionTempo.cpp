@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionType.h
+        ActionTempo.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,17 +15,18 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#pragma once
-#if ! defined (mfx_doc_ActionType_HEADER_INCLUDED)
-#define mfx_doc_ActionType_HEADER_INCLUDED
-
 #if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
 #endif
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include "mfx/doc/ActionTempo.h"
+
+#include <cassert>
 
 
 
@@ -36,32 +37,34 @@ namespace doc
 
 
 
-enum ActionType
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+ActionType	ActionTempo::do_get_type () const
 {
+	return ActionType_TEMPO;
+}
 
-	ActionType_BANK = 0,
-	ActionType_PRESET,
-	ActionType_TOGGLE_TUNER,
-	ActionType_TOGGLE_FX,
-	ActionType_LOOP_REC,
-	ActionType_LOOP_PLAY_STOP,
-	ActionType_LOOP_UNDO,
-	ActionType_PARAM,
-	ActionType_TEMPO,
-	ActionType_EVENT,
 
-	ActionType_NBR_ELT
 
-}; // class ActionType
+PedalActionSingleInterface *	ActionTempo::do_duplicate () const
+{
+	return new ActionTempo (*this);
+}
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 }  // namespace doc
 }  // namespace mfx
-
-
-
-#endif   // mfx_doc_ActionType_HEADER_INCLUDED
 
 
 

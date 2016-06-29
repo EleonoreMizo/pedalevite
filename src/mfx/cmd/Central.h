@@ -99,6 +99,7 @@ public:
 
 	// Immediate operations
 	void           set_param (int pi_id, int index, float val);
+	void           set_tempo (float bpm);
 
 	// Call this regularly
 	void           process_queue_audio_to_cmd ();

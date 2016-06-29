@@ -394,6 +394,21 @@ void	Central::set_param (int pi_id, int index, float val)
 
 
 
+void	Central::set_tempo (float bpm)
+{
+	assert (bpm > 0);
+
+	conc::LockFreeCell <Msg> * cell_ptr =
+		_msg_pool.take_cell (true);
+	cell_ptr->_val._sender              = Msg::Sender_CMD;
+	cell_ptr->_val._type                = Msg::Type_TEMPO;
+	cell_ptr->_val._content._tempo._bpm = bpm;
+
+	_queue_cmd_to_audio.enqueue (*cell_ptr);
+}
+
+
+
 void	Central::process_queue_audio_to_cmd ()
 {
 	conc::LockFreeCell <Msg> * cell_ptr = 0;

@@ -61,6 +61,8 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_evt_arr ()
 ,	_evt_ptr_arr ()
 ,	_clip_flag ()
+,	_tempo_new (0)
+,	_tempo_cur (120)
 {
 	_evt_arr.reserve (_max_nbr_evt);
 	_evt_ptr_arr.reserve (_max_nbr_evt);
@@ -150,6 +152,9 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 		check_signal_level (nbr_spl);
 		copy_output (dst_arr, nbr_spl);
 	}
+
+	_tempo_cur = _tempo_new;
+	_tempo_new = 0;
 }
 
 
@@ -194,6 +199,13 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 					if (proc_flag)
 					{
 						handle_msg_param (cell_ptr->_val._content._param);
+					}
+					ret_flag = false;
+					break;
+				case Msg::Type_TEMPO:
+					if (proc_flag)
+					{
+						handle_msg_tempo (cell_ptr->_val._content._tempo);
 					}
 					ret_flag = false;
 					break;
@@ -475,6 +487,17 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::P
 	_evt_arr.clear ();
 	_evt_ptr_arr.clear ();
 
+	// Checks the tempo
+	if (_tempo_new > 0)
+	{
+		piapi::EventTs    evt;
+		evt._timestamp = 0;
+		evt._type      = piapi::EventType_TRANSPORT;
+		evt._evt._transport._tempo = _tempo_new;
+		evt._evt._transport._flags = piapi::EventTransport::Flag_TEMPO;
+		_evt_arr.push_back (evt);
+	}
+
 	// Handles modulations and automations
 	PluginPool::PluginDetails &  details = _pi_pool.use_plugin (plugin_id);
 	if (details._param_update.has_a_bit_set ())
@@ -602,6 +625,9 @@ void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, c
 void	WorldAudio::handle_msg_ctx (Msg::Ctx &msg)
 {
 	std::swap (_ctx_ptr, msg._ctx_ptr);
+
+	// Automatic tempo refresh (for the new plug-ins)
+	_tempo_new = _tempo_cur;
 }
 
 
@@ -614,6 +640,20 @@ void	WorldAudio::handle_msg_param (Msg::Param &msg)
 	details._param_arr [index] = msg._val;
 	details._param_update.fill_bit (index);
 	details._param_update_from_audio [index] = false;
+}
+
+
+
+void	WorldAudio::handle_msg_tempo (Msg::Tempo &msg)
+{
+	if (msg._bpm == 0)
+	{
+		_tempo_new = _tempo_cur;
+	}
+	else
+	{
+		_tempo_new = msg._bpm;
+	}
 }
 
 

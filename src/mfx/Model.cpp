@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/Model.h"
@@ -77,6 +78,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_queue_input_to_cmd (queue_input_to_cmd)
 ,	_obs_ptr (0)
 ,	_dummy_mix_id (_central.get_dummy_mix_id ())
+,	_tempo_last_ts (INT64_MIN)
 ,	_slot_info ()
 {
 	_central.set_callback (this);
@@ -991,7 +993,7 @@ void	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
 		{
 			assert (action_sptr.get () != 0);
 			const doc::PedalActionSingleInterface &   action = *action_sptr;
-			process_action (action);
+			process_action (action, state._press_ts);
 		}
 
 		if (trigger == doc::ActionTrigger_PRESS)
@@ -1010,7 +1012,7 @@ void	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
 
 
 
-void	Model::process_action (const doc::PedalActionSingleInterface &action)
+void	Model::process_action (const doc::PedalActionSingleInterface &action, int64_t ts)
 {
 	const doc::ActionType   type = action.get_type ();
 
@@ -1117,6 +1119,22 @@ void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
 	{
 		_obs_ptr->set_tuner (_tuner_flag);
 	}
+}
+
+
+
+void	Model::process_action_tempo (const doc::ActionTempo &action, int64_t ts)
+{
+	const int64_t  dist = ts - _tempo_last_ts;
+	if (dist <= Cst::_tempo_detection_limit && dist > 0)
+	{
+		const double   tempo = (60.0 * 1000*1000) / double (dist);
+
+		/*** To do ***/
+
+	}
+
+	_tempo_last_ts = ts;
 }
 
 

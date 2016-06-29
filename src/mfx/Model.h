@@ -49,6 +49,7 @@ namespace doc
 	class ActionPreset;
 	class ActionToggleFx;
 	class ActionToggleTuner;
+	class ActionTempo;
 	class FxId;
 }
 
@@ -155,12 +156,13 @@ private:
 	int            find_pedal (int switch_index) const;
 	void           process_pedal (int pedal_index, bool set_flag, int64_t date);
 	void           process_pedal_event (int pedal_index, doc::ActionTrigger trigger);
-	void           process_action (const doc::PedalActionSingleInterface &action);
+	void           process_action (const doc::PedalActionSingleInterface &action, int64_t ts);
 	void           process_action_bank (const doc::ActionBank &action);
 	void           process_action_param (const doc::ActionParam &action);
 	void           process_action_preset (const doc::ActionPreset &action);
 	void           process_action_toggle_fx (const doc::ActionToggleFx &action);
 	void           process_action_toggle_tuner (const doc::ActionToggleTuner &action);
+	void           process_action_tempo (const doc::ActionTempo &action, int64_t ts);
 	void           build_slot_info ();
 	void           notify_slot_info ();
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
@@ -198,6 +200,7 @@ private:
 	ModelObserverInterface *            // Can be 0.
 	               _obs_ptr;
 	const int      _dummy_mix_id;
+	int64_t        _tempo_last_ts;      // Timestamp of the last tempo pedal action
 
 	ModelObserverInterface::SlotInfoList   // Cached. Not affected by the tuner
 	               _slot_info;

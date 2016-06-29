@@ -273,6 +273,7 @@
     <ClInclude Include="mfx\doc\ActionBank.h" />
     <ClInclude Include="mfx\doc\ActionParam.h" />
     <ClInclude Include="mfx\doc\ActionPreset.h" />
+    <ClInclude Include="mfx\doc\ActionTempo.h" />
     <ClInclude Include="mfx\doc\ActionToggleFx.h" />
     <ClInclude Include="mfx\doc\ActionToggleTuner.h" />
     <ClInclude Include="mfx\doc\ActionTrigger.h" />
@@ -507,6 +508,7 @@
     <ClCompile Include="mfx\doc\ActionBank.cpp" />
     <ClCompile Include="mfx\doc\ActionParam.cpp" />
     <ClCompile Include="mfx\doc\ActionPreset.cpp" />
+    <ClCompile Include="mfx\doc\ActionTempo.cpp" />
     <ClCompile Include="mfx\doc\ActionToggleFx.cpp" />
     <ClCompile Include="mfx\doc\ActionToggleTuner.cpp" />
     <ClCompile Include="mfx\doc\CtrlLinkSet.cpp" />

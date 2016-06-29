@@ -54,6 +54,8 @@ public:
 	static const int  _nbr_chn_in      =   2;
 	static const int  _nbr_chn_out     =   2;
 
+	static const int  _tempo_detection_limit = 2 * 1000*1000; // Maximum time between two tempo pedal actions. Microseconds
+
 	static const double  _step_param;         // Unit step on normalized parameter value
 
 	enum BufSpecial

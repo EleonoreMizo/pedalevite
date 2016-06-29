@@ -59,6 +59,7 @@ public:
 
 		Type_CTX = 0,
 		Type_PARAM,
+		Type_TEMPO,
 
 		Type_NBR_ELT
 	};
@@ -78,10 +79,17 @@ public:
 		float          _val;
 	};
 
+	class Tempo
+	{
+	public:
+		float          _bpm; // 0 = refresh
+	};
+
 	union Content
 	{
 		Ctx            _ctx;
 		Param          _param;
+		Tempo          _tempo;
 	};
 
 	               Msg ()                        = default;

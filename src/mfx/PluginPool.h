@@ -69,10 +69,12 @@ public:
 		               _desc_ptr = 0;
 		std::vector <float>              // Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
 		               _param_arr;
+		// Audio thread only
 		fstb::BitFieldSparse             // Same remark. Managed by the audio thread only.
 		               _param_update;
 		std::vector <bool>               // Indicates that the latest change comes from the audio thread. Same remark. Audio thread only
 		               _param_update_from_audio;
+
 	};
 
 	               PluginPool ();

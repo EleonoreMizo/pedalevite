@@ -1191,6 +1191,9 @@
     <ClInclude Include="mfx\pi\export.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\doc\ActionTempo.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1604,6 +1607,9 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\export.cpp">
       <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\ActionTempo.cpp">
+      <Filter>mfx\doc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
