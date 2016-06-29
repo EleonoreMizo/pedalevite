@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <string>
+
 
 
 namespace mfx
@@ -61,6 +63,11 @@ public:
 
 		BufSpecial_NBR_ELT
 	};
+
+	static const std::string
+	               _plugin_mix;
+	static const std::string
+	               _plugin_tuner;
 
 
 

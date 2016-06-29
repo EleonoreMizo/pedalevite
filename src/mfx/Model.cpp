@@ -131,7 +131,7 @@ void	Model::set_observer (ModelObserverInterface *obs_ptr)
 
 
 // Plug-in must have been instantiated at least once.
-const piapi::PluginState &	Model::use_default_settings (pi::PluginModel model) const
+const piapi::PluginState &	Model::use_default_settings (std::string model) const
 {
 	return _central.use_default_settings (model);
 }
@@ -375,19 +375,18 @@ void	Model::erase_slot (int slot_index)
 
 
 
-void	Model::set_plugin (int slot_index, pi::PluginModel type)
+void	Model::set_plugin (int slot_index, std::string model)
 {
 	assert (slot_index >= 0);
 	assert (slot_index < int (_preset_cur._slot_list.size ()));
-	assert (type >= 0);
-	assert (type < pi::PluginModel_NBR_ELT);
+	assert (! model.empty ());
 
 	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
 	if (slot_sptr.get () == 0)
 	{
 		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
 	}
-	slot_sptr->_pi_model = type;
+	slot_sptr->_pi_model = model;
 
 	apply_settings ();
 
@@ -404,7 +403,7 @@ void	Model::set_plugin (int slot_index, pi::PluginModel type)
 		const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [PiType_MAIN];
 		for (int p = 0; p < nbr_param; ++p)
 		{
-			const float    val = slot_sptr->_settings_all [type]._param_list [p];
+			const float    val = slot_sptr->_settings_all [model]._param_list [p];
 			_obs_ptr->set_param (pi_id, p, val, slot_index, PiType_MAIN);
 		}
 	}
@@ -420,7 +419,7 @@ void	Model::remove_plugin (int slot_index)
 	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
 	if (slot_sptr.get () != 0)
 	{
-		slot_sptr->_pi_model = pi::PluginModel_INVALID;
+		slot_sptr->_pi_model.clear ();
 	}
 
 	if (_obs_ptr != 0)
@@ -521,6 +520,20 @@ void	Model::set_param_ctrl (int slot_index, PiType type, int index, const doc::C
 
 
 
+std::vector <std::string>	Model::list_plugin_models () const
+{
+	return std::move (_central.use_pi_pool ().list_models ());
+}
+
+
+
+const piapi::PluginDescInterface &	Model::get_model_desc (std::string model_id) const
+{
+	return _central.use_pi_pool ().get_model_desc (model_id);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -581,7 +594,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 	// Counts all the plug-ins used in the bank
 
 	// [model] = count
-	std::map <pi::PluginModel, int>  pi_cnt_bank;
+	std::map <std::string, int>   pi_cnt_bank;
 
 	for (size_t preset_index = 0
 	;	preset_index < bank._preset_arr.size ()
@@ -589,7 +602,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 	{
 		// Count for this preset
 		const doc::Preset &  preset = bank._preset_arr [preset_index];
-		std::map <pi::PluginModel, int>  pi_cnt_preset;
+		std::map <std::string, int>  pi_cnt_preset;
 		for (const auto &slot_sptr : preset._slot_list)
 		{
 			if (slot_sptr.get () != 0 && ! slot_sptr->is_empty ())
@@ -732,7 +745,7 @@ void	Model::apply_settings_tuner ()
 	_central.insert_slot (0);
 	_central.remove_mixer (0);
 
-	_tuner_pi_id = _central.set_plugin (0, pi::PluginModel_TUNER, false);
+	_tuner_pi_id = _central.set_plugin (0, Cst::_plugin_tuner, false);
 
 	const PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
@@ -819,11 +832,11 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 						{
 							if (ap._fx_id._location_type == doc::FxId::LocType_CATEGORY)
 							{
-								use_flag = (ap._fx_id._categ == slot._pi_model);
+								use_flag = (ap._fx_id._label_or_model == slot._pi_model);
 							}
 							else
 							{
-								use_flag = (ap._fx_id._label == slot._label);
+								use_flag = (ap._fx_id._label_or_model == slot._label);
 							}
 						}
 					}
@@ -1165,14 +1178,14 @@ int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
 
 			if (fx_id._location_type == doc::FxId::LocType_CATEGORY)
 			{
-				if (slot._pi_model == fx_id._categ)
+				if (slot._pi_model == fx_id._label_or_model)
 				{
 					found_pos = pos;
 				}
 			}
 			else
 			{
-				if (! slot._label.empty () && fx_id._label == slot._label)
+				if (! slot._label.empty () && fx_id._label_or_model == slot._label)
 				{
 					found_pos = pos;
 				}
@@ -1247,7 +1260,7 @@ void	Model::fill_pi_init_data (int slot_index, ModelObserverInterface::PluginIni
 	assert (! _preset_cur.is_slot_empty (slot_index));
 
 	const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
-	pi_data._type = slot._pi_model;
+	pi_data._model = slot._pi_model;
 
 	const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [PiType_MAIN];
 	assert (pi_id >= 0);

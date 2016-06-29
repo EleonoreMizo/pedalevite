@@ -44,7 +44,7 @@ namespace doc
 
 
 Slot::Slot ()
-:	_pi_model (pi::PluginModel_INVALID)
+:	_pi_model ()
 ,	_settings_all ()
 ,	_settings_mixer ()
 ,	_label ()
@@ -61,7 +61,7 @@ Slot::Slot ()
 
 bool	Slot::is_empty () const
 {
-	return (_pi_model == pi::PluginModel_INVALID);
+	return (_pi_model.empty ());
 }
 
 

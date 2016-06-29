@@ -282,7 +282,7 @@ public:
 	               _leds;
 #endif
 	mfx::Model     _model;
-	std::vector <mfx::pi::PluginModel>
+	std::vector <std::string>
 	               _pi_type_list;
 	std::vector <mfx::uitk::pg::CtrlSrcNamed>
 	               _csn_list;
@@ -365,12 +365,7 @@ Context::Context ()
 ,	_leds (_all_io)
 #endif
 ,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input)
-,	_pi_type_list ({
-		mfx::pi::PluginModel_DISTO_SIMPLE,
-		mfx::pi::PluginModel_TREMOLO,
-		mfx::pi::PluginModel_WHA,
-		mfx::pi::PluginModel_FREQ_SHIFT
-	})
+,	_pi_type_list ()
 ,	_csn_list ({
 		{ mfx::ControllerType_POT   ,  0, "Expression 0" },
 		{ mfx::ControllerType_POT   ,  1, "Expression 1" },
@@ -450,6 +445,17 @@ Context::Context ()
 		}
 	}
 
+	// Lists public plug-ins
+	_pi_type_list.clear ();
+	std::vector <std::string> pi_list = _model.list_plugin_models ();
+	for (std::string model_id : pi_list)
+	{
+		if (model_id [0] != '\?')
+		{
+			_pi_type_list.push_back (model_id);
+		}
+	}
+
 	_model.set_observer (&_view);
 	_view.add_observer (*this);
 
@@ -465,7 +471,7 @@ Context::Context ()
 		mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 		preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 		slot_ptr->_label    = "Disto 1";
-		slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
+		slot_ptr->_pi_model = "dist1";
 		slot_ptr->_settings_mixer._param_list =
 			std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
 		mfx::doc::PluginSettings & pi_settings =
@@ -487,7 +493,7 @@ Context::Context ()
 		{
 			mfx::doc::PedalActionCycle &  cycle =
 				preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
-			const mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
+			const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
 			mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 			for (int i = 0; i < 2; ++i)
 			{
@@ -507,7 +513,7 @@ Context::Context ()
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "Disto 1";
-			slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
+			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
 				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
@@ -518,7 +524,7 @@ Context::Context ()
 			{
 				mfx::doc::PedalActionCycle &  cycle =
 					preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
-				const mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
+				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
 				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 				for (int i = 0; i < 2; ++i)
 				{
@@ -535,7 +541,7 @@ Context::Context ()
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "Tremolo";
-			slot_ptr->_pi_model = mfx::pi::PluginModel_TREMOLO;
+			slot_ptr->_pi_model = "tremolo1";
 			slot_ptr->_settings_mixer._param_list =
 				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
@@ -584,7 +590,7 @@ Context::Context ()
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "Wha";
-			slot_ptr->_pi_model = mfx::pi::PluginModel_WHA;
+			slot_ptr->_pi_model = "wha1";
 			slot_ptr->_settings_mixer._param_list =
 				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
@@ -625,7 +631,7 @@ Context::Context ()
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "Disto 1";
-			slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
+			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
 				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
@@ -647,7 +653,7 @@ Context::Context ()
 			{
 				mfx::doc::PedalActionCycle &  cycle =
 					preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
-				const mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
+				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
 				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 				for (int i = 0; i < 2; ++i)
 				{
@@ -668,7 +674,7 @@ Context::Context ()
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "FreqShift";
-			slot_ptr->_pi_model = mfx::pi::PluginModel_FREQ_SHIFT;
+			slot_ptr->_pi_model = "freqshift1";
 			slot_ptr->_settings_mixer._param_list =
 				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
 
@@ -721,7 +727,7 @@ Context::Context ()
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "Disto 1";
-			slot_ptr->_pi_model = mfx::pi::PluginModel_DISTO_SIMPLE;
+			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
 				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
@@ -743,7 +749,7 @@ Context::Context ()
 			{
 				mfx::doc::PedalActionCycle &  cycle =
 					preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
-				const mfx::doc::FxId    fx_id (slot_ptr->_label, mfx::PiType_MIX);
+				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
 				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 				for (int i = 0; i < 2; ++i)
 				{

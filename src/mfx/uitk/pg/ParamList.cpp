@@ -296,7 +296,7 @@ void	ParamList::update_param_txt (PiType type, int index)
 	const int      slot_index = _loc_edit._slot_index;
 
 	Tools::set_param_text (
-		*_view_ptr, _page_size [0], index, -1, slot_index, type,
+		*_model_ptr, *_view_ptr, _page_size [0], index, -1, slot_index, type,
 		name_sptr.get (), *val_sptr, 0, 0, false
 	);
 }

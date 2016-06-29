@@ -308,7 +308,7 @@ void	CurProg::i_set_param (int pi_id, int index, float val, int slot_index, PiTy
 	else
 	{
 		Tools::set_param_text (
-			*_view_ptr, _page_size [0], index, val, slot_index, type,
+			*_model_ptr, *_view_ptr, _page_size [0], index, val, slot_index, type,
 			_param_name_sptr.get (), *_param_val_sptr,
 			_param_unit_sptr.get (), _fx_name_sptr.get (),
 			false

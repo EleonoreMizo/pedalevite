@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/tuner/TunerDesc.h"
+#include "mfx/Cst.h"
 
 #include <cassert>
 
@@ -58,7 +59,7 @@ TunerDesc::TunerDesc ()
 
 std::string	TunerDesc::do_get_unique_id () const
 {
-	return "\?tuner";
+	return Cst::_plugin_tuner;
 }
 
 

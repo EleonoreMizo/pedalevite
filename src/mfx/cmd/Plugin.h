@@ -28,7 +28,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/CtrlLinkSet.h"
-#include "mfx/pi/PluginModel.h"
 
 #include <map>
 #include <memory>
@@ -60,8 +59,7 @@ public:
 	Plugin &       operator = (const Plugin &other);
 
 	int            _pi_id = -1;  // -1 = not set
-	pi::PluginModel
-	               _model = pi::PluginModel_INVALID;
+	std::string    _model;
 	MapParamCtrl   _ctrl_map;
 	std::vector <float>          // If there are settings to apply during the commit. Automatically removed at the end of the transaction.
 	               _param_list;

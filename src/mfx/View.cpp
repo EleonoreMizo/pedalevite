@@ -324,9 +324,9 @@ void	View::do_set_plugin (int slot_index, const PluginInitData &pi_data)
 	{
 		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
 	}
-	slot_sptr->_pi_model = pi_data._type;
+	slot_sptr->_pi_model = pi_data._model;
 	const int      nbr_param = pi_data._nbr_param_arr [piapi::ParamCateg_GLOBAL];
-	doc::PluginSettings &   settings = slot_sptr->_settings_all [pi_data._type];
+	doc::PluginSettings &   settings = slot_sptr->_settings_all [pi_data._model];
 	settings._param_list.resize (nbr_param, 0);
 
 	mfx_View_PROPAGATE (set_plugin (slot_index, pi_data));
@@ -339,7 +339,7 @@ void	View::do_remove_plugin (int slot_index)
 	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
 	if (slot_sptr.get () != 0)
 	{
-		slot_sptr->_pi_model = pi::PluginModel_INVALID;
+		slot_sptr->_pi_model.clear ();
 	}
 
 	mfx_View_PROPAGATE (remove_plugin (slot_index));

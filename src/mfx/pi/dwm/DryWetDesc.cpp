@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/Cst.h"
 
 #include <cassert>
 
@@ -106,7 +107,7 @@ const float	DryWetDesc::_gain_neutral = 0.75f;
 
 std::string	DryWetDesc::do_get_unique_id () const
 {
-	return "\?drywetmix";
+	return Cst::_plugin_mix;
 }
 
 

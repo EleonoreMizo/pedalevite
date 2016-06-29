@@ -28,7 +28,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/PluginSettings.h"
-#include "mfx/pi/PluginModel.h"
 #include "mfx/PiType.h"
 
 #include <map>
@@ -50,7 +49,7 @@ class Slot
 
 public:
 
-	typedef std::map <pi::PluginModel, PluginSettings> SettingHistory;
+	typedef std::map <std::string, PluginSettings> SettingHistory;
 
 	               Slot ();
 	               Slot (const Slot &other)       = default;
@@ -63,8 +62,7 @@ public:
 	const PluginSettings &
 	               use_settings (PiType type) const;
 
-	pi::PluginModel // PluginModel_INVALID value is legal here and means the slot is empty.
-	               _pi_model = pi::PluginModel_INVALID;
+	std::string    _pi_model; // Empty string is legal here and means the slot is empty.
 	SettingHistory _settings_all;
 	PluginSettings _settings_mixer;
 	std::string    _label;

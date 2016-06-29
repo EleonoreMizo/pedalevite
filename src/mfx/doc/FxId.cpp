@@ -41,22 +41,13 @@ namespace doc
 
 
 
-FxId::FxId (std::string label, PiType type)
+FxId::FxId (LocType loc_type, std::string label, PiType type)
 :	_location_type (LocType_LABEL)
-,	_label (label)
+,	_label_or_model (label)
 ,	_type (type)
 {
-	// Nothing
-}
-
-
-
-FxId::FxId (pi::PluginModel categ, PiType type)
-:	_location_type (LocType_CATEGORY)
-,	_categ (categ)
-,	_type (type)
-{
-	// Nothing
+	assert (loc_type >= 0);
+	assert (loc_type < LocType_NBR_ELT);
 }
 
 

@@ -31,7 +31,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/cmd/Plugin.h"
 #include "mfx/cmd/Slot.h"
-#include "mfx/pi/PluginModel.h"
 #include "mfx/piapi/PluginState.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/MsgQueue.h"
@@ -88,7 +87,7 @@ public:
 	void           insert_slot (int pos);
 	void           delete_slot (int pos);
 	void           clear_slot (int pos);
-	int            set_plugin (int pos, pi::PluginModel model, bool force_reset_flag);
+	int            set_plugin (int pos, std::string model, bool force_reset_flag);
 	void           remove_plugin (int pos);
 	int            set_mixer (int pos);
 	void           remove_mixer (int pos);
@@ -106,10 +105,12 @@ public:
 
 	// Misc
 	PluginPool &   use_pi_pool ();
+	const PluginPool &
+	               use_pi_pool () const;
 	int64_t        get_cur_date () const;
 	int            get_dummy_mix_id () const;
 	const piapi::PluginState &
-	               use_default_settings (pi::PluginModel model) const;
+	               use_default_settings (std::string model) const;
 
 
 
@@ -140,7 +141,7 @@ private:
 		std::vector <Slot>
 		               _slot_list;
 		ContextSPtr    _ctx_sptr;
-		std::map <pi::PluginModel, InstanceMap>   // All the existing plug-ins, ordered by model.
+		std::map <std::string, InstanceMap>       // All the existing plug-ins, ordered by model.
 		               _map_model_id;
 		std::map <int, PluginLoc>
 		               _map_id_loc;
@@ -150,11 +151,11 @@ private:
 
 	typedef std::set <ContextSPtr> ContextSet;
 
-	typedef std::map <pi::PluginModel, piapi::PluginState> DefaultMap;
+	typedef std::map <std::string, piapi::PluginState> DefaultMap;
 
 	Document &     modify ();
 	Plugin &       find_plugin (Document &doc, int pi_id);
-	int            set_plugin (int pos, pi::PluginModel model, PiType type, bool force_reset_flag);
+	int            set_plugin (int pos, std::string model, PiType type, bool force_reset_flag);
 	void           remove_plugin (int pos, PiType type);
 	void           create_routing ();
 	void           create_mod_maps ();
@@ -162,10 +163,7 @@ private:
 	void           create_param_msg (std::vector <conc::LockFreeCell <Msg> *> &msg_list);
 	conc::LockFreeCell <Msg> *
 	               make_param_msg (int pi_id, int index, float val);
-	void           check_and_get_default_settings (piapi::PluginInterface &plug, pi::PluginModel model);
-
-	static PluginPool::PluginUPtr
-	               instantiate (pi::PluginModel model);
+	void           check_and_get_default_settings (piapi::PluginInterface &plug, std::string model);
 
 	conc::CellPool <Msg>
 						_msg_pool;

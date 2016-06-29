@@ -353,6 +353,7 @@
     <ClInclude Include="mfx\pi\dwm\DryWet.h" />
     <ClInclude Include="mfx\pi\dwm\DryWetDesc.h" />
     <ClInclude Include="mfx\pi\dwm\Param.h" />
+    <ClInclude Include="mfx\pi\export.h" />
     <ClInclude Include="mfx\pi\freqsh\FreqShiftDesc.h" />
     <ClInclude Include="mfx\pi\freqsh\FrequencyShifter.h" />
     <ClInclude Include="mfx\pi\freqsh\Param.h" />
@@ -378,7 +379,6 @@
     <ClInclude Include="mfx\pi\param\TplMapped.h" />
     <ClInclude Include="mfx\pi\param\TplMapped.hpp" />
     <ClInclude Include="mfx\pi\param\TplSq.h" />
-    <ClInclude Include="mfx\pi\PluginModel.h" />
     <ClInclude Include="mfx\pi\trem1\Param.h" />
     <ClInclude Include="mfx\pi\trem1\Tremolo.h" />
     <ClInclude Include="mfx\pi\trem1\TremoloDesc.h" />
@@ -552,7 +552,6 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\param\TplEnum.cpp" />
     <ClCompile Include="mfx\pi\param\TplLin.cpp" />
-    <ClCompile Include="mfx\pi\PluginModel.cpp" />
     <ClCompile Include="mfx\pi\trem1\Tremolo.cpp" />
     <ClCompile Include="mfx\pi\trem1\TremoloDesc.cpp" />
     <ClCompile Include="mfx\pi\tuner\FreqAnalyser.cpp" />

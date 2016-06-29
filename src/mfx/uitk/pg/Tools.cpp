@@ -53,7 +53,7 @@ namespace pg
 
 // val is a normalized value
 // val = -1: use the settings content
-void	Tools::set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag)
+void	Tools::set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag)
 {
 	assert (val <= 1);
 	assert (width > 0);
@@ -191,8 +191,11 @@ void	Tools::set_param_text (const View &view, int width, int index, float val, i
 	if (fx_name_ptr != 0)
 	{
 		const doc::Slot &  slot = *(preset._slot_list [slot_index]);
-		std::string    pi_type_name =
-			mfx::pi::PluginModel_get_name (slot._pi_model);
+
+		const piapi::PluginDescInterface &  desc =
+			model.get_model_desc (slot._pi_model);
+		std::string    pi_type_name = desc.get_name ();
+
 		pi_type_name = pi::param::Tools::print_name_bestfit (
 			rem_pix_fx_name, pi_type_name.c_str (),
 			*fx_name_ptr, &NText::get_char_width
@@ -286,7 +289,7 @@ std::set <float>	Tools::create_beat_notches ()
 
 
 
-void	Tools::change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <pi::PluginModel> &fx_list)
+void	Tools::change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list)
 {
 	assert (slot_index >= 0);
 	assert (dir != 0);
@@ -304,7 +307,7 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 		if (! preset.is_slot_empty (slot_index))
 		{
 			const doc::Slot & slot = *(preset._slot_list [slot_index]);
-			const pi::PluginModel   type = slot._pi_model;
+			const std::string type = slot._pi_model;
 			auto          type_it =
 				std::find (fx_list.begin (), fx_list.end (), type);
 			assert (type_it != fx_list.end ());

@@ -52,7 +52,7 @@ namespace pg
 
 
 
-EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <pi::PluginModel> &fx_list)
+EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list)
 :	_fx_list (fx_list)
 ,	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
@@ -268,7 +268,9 @@ void	EditProg::set_preset_info ()
 		if (! preset.is_slot_empty (slot_index))
 		{
 			const doc::Slot & slot = *(preset._slot_list [slot_index]);
-			multilabel = mfx::pi::PluginModel_get_name (slot._pi_model);
+			const piapi::PluginDescInterface &  desc =
+				_model_ptr->get_model_desc (slot._pi_model);
+			multilabel = desc.get_name ();
 		}
 
 		set_slot (nav_list, slot_index, multilabel);

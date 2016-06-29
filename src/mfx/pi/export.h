@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PluginModel.h
+        export.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_PluginModel_HEADER_INCLUDED)
-#define mfx_pi_PluginModel_HEADER_INCLUDED
+#if ! defined (export_HEADER_INCLUDED)
+#define export_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,49 +27,30 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <string>
+#include "fstb/def.h"
+
+#include <memory>
+#include <vector>
 
 
 
 namespace mfx
 {
-namespace pi
+namespace piapi
 {
+	class FactoryInterface;
+}
+}
+
+fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::piapi::FactoryInterface> > &fact_list));
 
 
 
-enum PluginModel
-{
-	PluginModel_INVALID = -1,
-
-	PluginModel_DRYWET  = 0,
-	PluginModel_TUNER,
-
-	PluginModel_DISTO_SIMPLE,
-	PluginModel_TREMOLO,
-	PluginModel_WHA,
-	PluginModel_FREQ_SHIFT,
-
-	PluginModel_NBR_ELT
-
-}; // enum PluginModel
+//#include "export.hpp"
 
 
 
-std::string PluginModel_get_name (PluginModel model);
-
-
-
-}  // namespace pi
-}  // namespace mfx
-
-
-
-//#include "mfx/pi/PluginModel.hpp"
-
-
-
-#endif   // mfx_pi_PluginModel_HEADER_INCLUDED
+#endif   // export_HEADER_INCLUDED
 
 
 

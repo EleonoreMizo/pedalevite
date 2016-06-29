@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/tuner/TunerDesc.h"
 #include "mfx/pi/wha1/Wha.h"
 #include "mfx/pi/wha1/WhaDesc.h"
+#include "mfx/pi/export.h"
 
 #include <cassert>
 

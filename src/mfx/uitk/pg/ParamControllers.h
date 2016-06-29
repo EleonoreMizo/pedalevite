@@ -27,7 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/PluginModel.h"
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"

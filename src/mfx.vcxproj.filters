@@ -672,9 +672,6 @@
     <ClInclude Include="mfx\doc\Preset.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
-    <ClInclude Include="mfx\pi\PluginModel.h">
-      <Filter>mfx\pi</Filter>
-    </ClInclude>
     <ClInclude Include="mfx\cmd\Central.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
@@ -1191,6 +1188,9 @@
     <ClInclude Include="mfx\piapi\FactoryTpl.hpp">
       <Filter>mfx\piapi</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\export.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1367,9 +1367,6 @@
     </ClCompile>
     <ClCompile Include="mfx\doc\ActionToggleTuner.cpp">
       <Filter>mfx\doc</Filter>
-    </ClCompile>
-    <ClCompile Include="mfx\pi\PluginModel.cpp">
-      <Filter>mfx\pi</Filter>
     </ClCompile>
     <ClCompile Include="mfx\Model.cpp">
       <Filter>mfx</Filter>

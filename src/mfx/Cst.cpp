@@ -41,6 +41,8 @@ namespace mfx
 
 const double	Cst::_step_param = 0.05;
 
+const std::string	Cst::_plugin_mix   = "\?drywetmix";
+const std::string	Cst::_plugin_tuner = "\?tuner";
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

@@ -34,7 +34,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <array>
 #include <atomic>
+#include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 
@@ -43,6 +45,11 @@ namespace mfx
 {
 
 
+
+namespace piapi
+{
+	class FactoryInterface;
+}
 
 class PluginPool
 {
@@ -57,6 +64,8 @@ public:
 	{
 	public:
 		PluginUPtr     _pi_uptr;
+		const piapi::PluginDescInterface *
+		               _desc_ptr = 0;
 		std::vector <float>              // Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
 		               _param_arr;
 		fstb::BitFieldSparse             // Same remark. Managed by the audio thread only.
@@ -65,18 +74,22 @@ public:
 		               _param_update_from_audio;
 	};
 
-	               PluginPool ()  = default;
+	               PluginPool ();
 	virtual        ~PluginPool () = default;
 
 	// Command thread
 	int            get_room () const;
-	int            add (PluginUPtr &pi_uptr);
+	int            create (std::string model_id);
 	void           schedule_for_release (int index);
 	void           release (int index);
 	std::vector <int>
 	               list_plugins (SharedRscState state = SharedRscState_INUSE) const;
 
 	// Any thread
+	std::vector <std::string>
+	               list_models () const;
+	const piapi::PluginDescInterface &
+	               get_model_desc (std::string model_id) const;
 	PluginDetails& use_plugin (int index);
 	SharedRscState get_state (int index);
 
@@ -102,6 +115,13 @@ private:
 
 	typedef std::array <PluginSlot, Cst::_max_nbr_plugins> PluginArray;
 
+	typedef std::vector <std::shared_ptr <piapi::FactoryInterface> > FactoryList;
+	typedef std::map <std::string, std::shared_ptr <piapi::FactoryInterface> > MapIdToFactory;
+
+	int            add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc);
+
+	FactoryList    _fact_arr;
+	MapIdToFactory _map_model_to_factory;
 	PluginArray    _pi_arr;
 	int            _nbr_plugins = 0;
 

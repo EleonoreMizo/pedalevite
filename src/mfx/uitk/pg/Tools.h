@@ -28,7 +28,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/MsgHandlerInterface.h"
-#include "mfx/pi/PluginModel.h"
 #include "mfx/PiType.h"
 
 #include <set>
@@ -68,7 +67,7 @@ class Tools
 
 public:
 
-	static void    set_param_text (const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
+	static void    set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int dir);
 	static double  change_param (double val_nrm, const View &view, int slot_index, PiType type, int index, float step, int dir);
@@ -77,7 +76,7 @@ public:
 	static int     find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
-	static void    change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <pi::PluginModel> &fx_list);
+	static void    change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list);
 
 
 

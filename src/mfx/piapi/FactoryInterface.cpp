@@ -41,6 +41,7 @@ namespace piapi
 
 
 
+// Result must be valid during the factory lifetime.
 const PluginDescInterface &	FactoryInterface::describe ()
 {
 	return do_describe ();

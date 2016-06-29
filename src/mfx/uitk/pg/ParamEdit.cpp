@@ -293,7 +293,7 @@ void	ParamEdit::update_param_txt ()
 	const int      index      = _loc_edit._param_index;
 
 	Tools::set_param_text (
-		*_view_ptr, _page_size [0], index, -1, slot_index, type,
+		*_model_ptr, *_view_ptr, _page_size [0], index, -1, slot_index, type,
 		_name_sptr.get (), *_val_unit_sptr, 0, 0, true
 	);
 }

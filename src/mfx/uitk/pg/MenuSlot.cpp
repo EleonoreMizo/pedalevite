@@ -52,7 +52,7 @@ namespace pg
 
 
 
-MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <pi::PluginModel> &fx_list)
+MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_fx_list (fx_list)
@@ -371,7 +371,9 @@ void	MenuSlot::update_display ()
 	if (full_flag)
 	{
 		const doc::Slot & slot = *(preset._slot_list [_loc_edit._slot_index]);
-		multilabel = mfx::pi::PluginModel_get_name (slot._pi_model);
+		const piapi::PluginDescInterface &  desc =
+			_model_ptr->get_model_desc (slot._pi_model);
+		multilabel = desc.get_name ();
 	}
 	std::string    txt = pi::param::Tools::print_name_bestfit (
 		scr_w, multilabel.c_str (),

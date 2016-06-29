@@ -80,10 +80,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 {
 	_msg_pool.expand_to (1024);
 
-	std::unique_ptr <piapi::PluginInterface>  dummy_mix_uptr (
-		instantiate (pi::PluginModel_DRYWET)
-	);
-	_dummy_mix_id = _plugin_pool.add (dummy_mix_uptr);
+	_dummy_mix_id = _plugin_pool.create (Cst::_plugin_mix);
 }
 
 
@@ -276,7 +273,7 @@ void	Central::clear_slot (int pos)
 
 
 // Returns the plug-in Id
-int	Central::set_plugin (int pos, pi::PluginModel model, bool force_reset_flag)
+int	Central::set_plugin (int pos, std::string model, bool force_reset_flag)
 {
 	return set_plugin (pos, model, PiType_MAIN, force_reset_flag);
 }
@@ -293,7 +290,7 @@ void	Central::remove_plugin (int pos)
 // Returns the plug-in Id
 int	Central::set_mixer (int pos)
 {
-	return set_plugin (pos, pi::PluginModel_DRYWET, PiType_MIX, false);
+	return set_plugin (pos, Cst::_plugin_mix, PiType_MIX, false);
 }
 
 
@@ -456,6 +453,13 @@ PluginPool &	Central::use_pi_pool ()
 
 
 
+const PluginPool &	Central::use_pi_pool () const
+{
+	return (_plugin_pool);
+}
+
+
+
 int64_t	Central::get_cur_date () const
 {
 	return _input_device.get_cur_date ();
@@ -470,10 +474,9 @@ int	Central::get_dummy_mix_id () const
 
 
 
-const piapi::PluginState &	Central::use_default_settings (pi::PluginModel model) const
+const piapi::PluginState &	Central::use_default_settings (std::string model) const
 {
-	assert (model >= 0);
-	assert (model < pi::PluginModel_NBR_ELT);
+	assert (! model.empty ());
 
 	auto           it = _default_map.find (model);
 	assert (it != _default_map.end ());
@@ -527,14 +530,13 @@ Plugin &	Central::find_plugin (Document &doc, int pi_id)
 
 
 
-int	Central::set_plugin (int pos, pi::PluginModel model, PiType type, bool force_reset_flag)
+int	Central::set_plugin (int pos, std::string model, PiType type, bool force_reset_flag)
 {
 	Document &     doc = modify ();
 
 	assert (pos >= 0);
 	assert (pos < int (doc._slot_list.size ()));
-	assert (model >= 0);
-	assert (model < pi::PluginModel_NBR_ELT);
+	assert (! model.empty ());
 
 	Plugin &       plugin = doc._slot_list [pos]._component_arr [type];
 	int            pi_id = -1;
@@ -583,16 +585,20 @@ int	Central::set_plugin (int pos, pi::PluginModel model, PiType type, bool force
 		// Not found? Create one
 		if (pi_id < 0)
 		{
-			std::unique_ptr <piapi::PluginInterface> pi_uptr (instantiate (model));
+			pi_id = _plugin_pool.create (model);
+			PluginPool::PluginDetails &   details =
+				_plugin_pool.use_plugin (pi_id);
 			if (_sample_freq > 0)
 			{
 				int         latency = 0;
-				int         ret_val =
-					pi_uptr->reset (_sample_freq, _max_block_size, latency);
+				int         ret_val = details._pi_uptr->reset (
+					_sample_freq,
+					_max_block_size,
+					latency
+				);
 				assert (ret_val == piapi::PluginInterface::Err_OK);
 			}
-			check_and_get_default_settings (*pi_uptr, model);
-			pi_id = _plugin_pool.add (pi_uptr);
+			check_and_get_default_settings (*details._pi_uptr, model);
 
 			doc._map_model_id [model] [pi_id] = true;
 		}
@@ -633,7 +639,7 @@ void	Central::remove_plugin (int pos, PiType type)
 		doc._map_id_loc.erase (it_loc);
 	}
 
-	plugin._model = pi::PluginModel_INVALID;
+	plugin._model.clear ();
 	plugin._pi_id = -1;
 	plugin._ctrl_map.clear ();
 	doc._slot_list [pos]._force_mono_flag = false;
@@ -939,7 +945,7 @@ conc::LockFreeCell <Msg> *	Central::make_param_msg (int pi_id, int index, float 
 
 
 
-void	Central::check_and_get_default_settings (piapi::PluginInterface &plug, pi::PluginModel model)
+void	Central::check_and_get_default_settings (piapi::PluginInterface &plug, std::string model)
 {
 	auto           it = _default_map.find (model);
 	if (it == _default_map.end ())
@@ -954,49 +960,6 @@ void	Central::check_and_get_default_settings (piapi::PluginInterface &plug, pi::
 			);
 		}
 	}
-}
-
-
-
-PluginPool::PluginUPtr	Central::instantiate (pi::PluginModel model)
-{
-	assert (model >= 0);
-	assert (model < pi::PluginModel_NBR_ELT);
-
-	piapi::PluginInterface *   pi_ptr = 0;
-
-	switch (model)
-	{
-	case pi::PluginModel_DRYWET:
-		pi_ptr = new pi::dwm::DryWet;
-		break;
-
-	case pi::PluginModel_DISTO_SIMPLE:
-		pi_ptr = new pi::dist1::DistoSimple;
-		break;
-
-	case pi::PluginModel_TUNER:
-		pi_ptr = new pi::tuner::Tuner;
-		break;
-
-	case pi::PluginModel_TREMOLO:
-		pi_ptr = new pi::trem1::Tremolo;
-		break;
-
-	case pi::PluginModel_WHA:
-		pi_ptr = new pi::wha1::Wha;
-		break;
-
-	case pi::PluginModel_FREQ_SHIFT:
-		pi_ptr = new pi::freqsh::FrequencyShifter;
-		break;
-
-	default:
-		assert (false);
-		break;
-	}
-
-	return std::move (PluginPool::PluginUPtr (pi_ptr));
 }
 
 

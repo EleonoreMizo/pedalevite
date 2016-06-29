@@ -27,7 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/PluginModel.h"
 #include "mfx/PiType.h"
 
 #include <string>
@@ -58,17 +57,14 @@ public:
 		LocType_NBR_ELT
 	};
 
-	explicit       FxId (std::string label, PiType type);
-	explicit       FxId (pi::PluginModel categ, PiType type);
+	explicit       FxId (LocType loc_type, std::string label, PiType type);
 	               FxId (const FxId &other)       = default;
 	virtual        ~FxId ()                       = default;
 
 	FxId &         operator = (const FxId &other) = default;
 
 	LocType        _location_type = LocType_INVALID;
-	std::string    _label;
-	pi::PluginModel
-	               _categ         = pi::PluginModel_INVALID;
+	std::string    _label_or_model;
 	PiType         _type          = PiType_MAIN;
 
 

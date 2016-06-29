@@ -27,13 +27,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/PluginModel.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
 
 #include <memory>
+#include <string>
 #include <vector>
 
 
@@ -61,7 +61,7 @@ class EditProg
 
 public:
 
-	explicit       EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <pi::PluginModel> &fx_list);
+	explicit       EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list);
 	virtual        ~EditProg () = default;
 
 
@@ -110,7 +110,7 @@ private:
 	void           update_loc_edit (int node_id);
 	int            conv_loc_edit_to_node_id () const;
 
-	const std::vector <pi::PluginModel> &
+	const std::vector <std::string> &
 	               _fx_list;
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;

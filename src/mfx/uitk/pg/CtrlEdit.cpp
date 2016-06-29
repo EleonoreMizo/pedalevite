@@ -383,7 +383,7 @@ void	CtrlEdit::update_display ()
 
 			const float       val = val_arr [mm];
 			Tools::set_param_text (
-				*_view_ptr, _val_unit_w, index, val, slot_index, type,
+				*_model_ptr, *_view_ptr, _val_unit_w, index, val, slot_index, type,
 				0, *(_minmax [mm]._val_unit_sptr), 0, 0, true
 			);
 		}

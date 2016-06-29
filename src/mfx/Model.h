@@ -81,7 +81,7 @@ public:
 	// Regular commands
 	void           set_observer (ModelObserverInterface *obs_ptr);
 	const piapi::PluginState &
-	               use_default_settings (pi::PluginModel model) const;
+	               use_default_settings (std::string model) const;
 
 	void           process_messages (); // Call this regularly
 
@@ -96,10 +96,15 @@ public:
 	void           set_nbr_slots (int nbr_slots);
 	void           insert_slot (int slot_index);
 	void           erase_slot (int slot_index);
-	void           set_plugin (int slot_index, pi::PluginModel type);
+	void           set_plugin (int slot_index, std::string model);
 	void           remove_plugin (int slot_index);
 	void           set_param (int slot_index, PiType type, int index, float val);
 	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
+
+	std::vector <std::string>
+	               list_plugin_models () const;
+	const piapi::PluginDescInterface &
+	               get_model_desc (std::string model_id) const;
 
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;

@@ -57,7 +57,7 @@ class MenuSlot
 
 public:
 
-	explicit       MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <pi::PluginModel> &fx_list);
+	explicit       MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list);
 	virtual        ~MenuSlot () = default;
 
 
@@ -116,7 +116,7 @@ private:
 
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
-	const std::vector <pi::PluginModel> &
+	const std::vector <std::string> &
 	               _fx_list;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
