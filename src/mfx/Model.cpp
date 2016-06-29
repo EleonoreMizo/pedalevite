@@ -1129,9 +1129,7 @@ void	Model::process_action_tempo (const doc::ActionTempo &action, int64_t ts)
 	if (dist <= Cst::_tempo_detection_limit && dist > 0)
 	{
 		const double   tempo = (60.0 * 1000*1000) / double (dist);
-
-		/*** To do ***/
-
+		_central.set_tempo (float (tempo));
 	}
 
 	_tempo_last_ts = ts;
