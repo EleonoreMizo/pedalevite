@@ -87,6 +87,7 @@ public:
 
 	virtual        ~ModelObserverInterface () = default;
 
+	void           set_tempo (double bpm);
 	void           set_edit_mode (bool edit_flag);
 	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
 	void           set_bank (int index, const doc::Bank &bank);
@@ -112,6 +113,7 @@ public:
 
 protected:
 
+	virtual void   do_set_tempo (double bpm) = 0;
 	virtual void   do_set_edit_mode (bool edit_flag) = 0;
 	virtual void   do_set_pedalboard_layout (const doc::PedalboardLayout &layout) = 0;
 	virtual void   do_set_bank (int index, const doc::Bank &bank) = 0;

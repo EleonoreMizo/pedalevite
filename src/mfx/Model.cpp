@@ -1130,6 +1130,11 @@ void	Model::process_action_tempo (const doc::ActionTempo &action, int64_t ts)
 	{
 		const double   tempo = (60.0 * 1000*1000) / double (dist);
 		_central.set_tempo (float (tempo));
+
+		if (_obs_ptr != 0)
+		{
+			_obs_ptr->set_tempo (tempo);
+		}
 	}
 
 	_tempo_last_ts = ts;

@@ -61,6 +61,13 @@ void	View::remove_observer (ModelObserverInterface &obs)
 
 
 
+double	View::get_tempo () const
+{
+	return _tempo;
+}
+
+
+
 bool	View::is_editing () const
 {
 	return _edit_flag;
@@ -185,6 +192,14 @@ float	View::get_param_val (const doc::Preset &preset, int slot_index, PiType typ
 		ObsSet obs_set_copy (_obs_set); \
 		for (auto ptr : obs_set_copy) { ptr->x; } \
 	} while (false)
+
+
+
+void	View::do_set_tempo (double bpm)
+{
+	_tempo = bpm;
+	mfx_View_PROPAGATE (set_tempo (bpm));
+}
 
 
 

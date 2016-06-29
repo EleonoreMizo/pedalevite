@@ -53,6 +53,7 @@ public:
 	void           add_observer (ModelObserverInterface &obs);
 	void           remove_observer (ModelObserverInterface &obs);
 
+	double         get_tempo () const;
 	bool           is_editing () const;
 	bool           is_tuner_active () const;
 	float          get_tuner_freq () const;
@@ -75,6 +76,7 @@ public:
 protected:
 
 	// mfx::ModelObserverInterface
+	virtual void   do_set_tempo (double bpm);
 	virtual void   do_set_edit_mode (bool edit_flag);
 	virtual void   do_set_pedalboard_layout (const doc::PedalboardLayout &layout);
 	virtual void   do_set_bank (int index, const doc::Bank &bank);
@@ -106,6 +108,7 @@ private:
 	ObsSet         _obs_set;
 
 	// Cached data
+	double         _tempo        = 120;
 	bool           _edit_flag    = false;
 	bool           _tuner_flag   = false;
 	float          _tuner_freq   = 0;

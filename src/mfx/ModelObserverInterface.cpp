@@ -50,6 +50,15 @@ ModelObserverInterface::PluginInfo::PluginInfo (const piapi::PluginInterface &pi
 
 
 
+void	ModelObserverInterface::set_tempo (double bpm)
+{
+	assert (bpm > 0);
+	
+	do_set_tempo (bpm);
+}
+
+
+
 void	ModelObserverInterface::set_edit_mode (bool edit_flag)
 {
 	do_set_edit_mode (edit_flag);
