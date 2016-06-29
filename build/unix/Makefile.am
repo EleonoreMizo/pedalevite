@@ -293,6 +293,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/wha1/Wha.h \
         ../../src/mfx/pi/wha1/WhaDesc.cpp \
         ../../src/mfx/pi/wha1/WhaDesc.h \
+        ../../src/mfx/pi/export.cpp \
         ../../src/mfx/pi/ParamDescSet.cpp \
         ../../src/mfx/pi/ParamDescSet.h \
         ../../src/mfx/pi/ParamState.cpp \
@@ -308,6 +309,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/piapi/EventTransport.h \
         ../../src/mfx/piapi/EventTs.h \
         ../../src/mfx/piapi/EventType.h \
+        ../../src/mfx/piapi/FactoryInterface.cpp \
+        ../../src/mfx/piapi/FactoryInterface.h \
+        ../../src/mfx/piapi/FactoryTpl.h \
+        ../../src/mfx/piapi/FactoryTpl.hpp \
         ../../src/mfx/piapi/ParamCateg.h \
         ../../src/mfx/piapi/ParamDescInterface.h \
         ../../src/mfx/piapi/ParamDescInterface.hpp \

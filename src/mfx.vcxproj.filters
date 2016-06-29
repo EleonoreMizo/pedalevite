@@ -1182,6 +1182,15 @@
     <ClInclude Include="mfx\pi\tuner\TunerDesc.h">
       <Filter>mfx\pi\tuner</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\piapi\FactoryInterface.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\FactoryTpl.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\piapi\FactoryTpl.hpp">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1592,6 +1601,12 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\tuner\TunerDesc.cpp">
       <Filter>mfx\pi\tuner</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\piapi\FactoryInterface.cpp">
+      <Filter>mfx\piapi</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\export.cpp">
+      <Filter>mfx\pi</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

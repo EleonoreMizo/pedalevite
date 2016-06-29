@@ -337,6 +337,9 @@
     <ClInclude Include="mfx\piapi\EventTransport.h" />
     <ClInclude Include="mfx\piapi\EventTs.h" />
     <ClInclude Include="mfx\piapi\EventType.h" />
+    <ClInclude Include="mfx\piapi\FactoryInterface.h" />
+    <ClInclude Include="mfx\piapi\FactoryTpl.h" />
+    <ClInclude Include="mfx\piapi\FactoryTpl.hpp" />
     <ClInclude Include="mfx\piapi\ParamCateg.h" />
     <ClInclude Include="mfx\piapi\ParamDescInterface.h" />
     <ClInclude Include="mfx\piapi\ParamDescInterface.hpp" />
@@ -528,12 +531,14 @@
     <ClCompile Include="mfx\Model.cpp" />
     <ClCompile Include="mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
+    <ClCompile Include="mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="mfx\piapi\PluginDescInterface.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />
     <ClCompile Include="mfx\pi\dist1\DistoSimple.cpp" />
     <ClCompile Include="mfx\pi\dist1\DistoSimpleDesc.cpp" />
     <ClCompile Include="mfx\pi\dwm\DryWet.cpp" />
     <ClCompile Include="mfx\pi\dwm\DryWetDesc.cpp" />
+    <ClCompile Include="mfx\pi\export.cpp" />
     <ClCompile Include="mfx\pi\freqsh\FreqShiftDesc.cpp" />
     <ClCompile Include="mfx\pi\freqsh\FrequencyShifter.cpp" />
     <ClCompile Include="mfx\pi\ParamDescSet.cpp" />

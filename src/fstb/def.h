@@ -116,8 +116,28 @@ namespace fstb
 	#error Undefined for this compiler
 #endif
 
+
+
 // Restrict for pointers
 #define fstb_RESTRICT __restrict
+
+
+
+// Calling conventions and export functions
+#if defined (_WIN32) && ! defined (_WIN64)
+	#define fstb_CDECL __cdecl
+#else
+	#define fstb_CDECL
+#endif
+#if defined (_WIN32) || defined (__CYGWIN__)
+	#if defined (__GNUC__)
+		#define fstb_EXPORT(f) extern "C" __attribute__((dllexport)) f
+	#else
+		#define fstb_EXPORT(f) extern "C" __declspec(dllexport) f
+	#endif
+#else
+	#define fstb_EXPORT(f) extern "C" __attribute__((visibility("default"))) f
+#endif
 
 
 
