@@ -48,6 +48,11 @@ namespace doc
 	class Preset;
 }
 
+namespace piapi
+{
+	class ParamDescInterface;
+}
+
 namespace uitk
 {
 

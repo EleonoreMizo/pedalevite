@@ -79,48 +79,6 @@ Wha::Wha ()
 
 
 
-std::string	Wha::do_get_unique_id () const
-{
-	return _desc.get_unique_id ();
-}
-
-
-
-std::string	Wha::do_get_name () const
-{
-	return _desc.get_name ();
-}
-
-
-
-void	Wha::do_get_nbr_io (int &nbr_i, int &nbr_o) const
-{
-	_desc.get_nbr_io (nbr_i, nbr_o);
-}
-
-
-
-bool	Wha::do_prefer_stereo () const
-{
-	return _desc.prefer_stereo ();
-}
-
-
-
-int	Wha::do_get_nbr_param (piapi::ParamCateg categ) const
-{
-	return _desc.get_nbr_param (categ);
-}
-
-
-
-const piapi::ParamDescInterface &	Wha::do_get_param_info (piapi::ParamCateg categ, int index) const
-{
-	return _desc.get_param_info (categ, index);
-}
-
-
-
 piapi::PluginInterface::State	Wha::do_get_state () const
 {
 	return _state;

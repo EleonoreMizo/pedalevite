@@ -28,7 +28,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/piapi/ParamCateg.h"
-#include "mfx/piapi/PluginDescInterface.h"
 
 #include <cstdint>
 
@@ -42,10 +41,8 @@ namespace piapi
 
 
 class EventTs;
-class ParamDescInterface;
 
 class PluginInterface
-:	public PluginDescInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

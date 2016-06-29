@@ -857,7 +857,7 @@ void	Model::send_effect_settings (int pi_id, const doc::PluginSettings &settings
 	PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (pi_id);
 	const int      nbr_param =
-		details._pi_uptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
+		details._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
 	for (int p_index = 0; p_index < nbr_param; ++p_index)
 	{
 		const float    val = settings._param_list [p_index];
@@ -1139,6 +1139,7 @@ void	Model::build_slot_info ()
 				info [type] = ModelObserverInterface::PluginInfoSPtr (
 					new ModelObserverInterface::PluginInfo (
 						*details._pi_uptr,
+						*details._desc_ptr,
 						details._param_arr
 					)
 				);
@@ -1269,16 +1270,16 @@ void	Model::fill_pi_init_data (int slot_index, ModelObserverInterface::PluginIni
 		_central.use_pi_pool ().use_plugin (pi_id);
 	pi_data._nbr_io_arr [piapi::PluginInterface::Dir_IN ] = 1;
 	pi_data._nbr_io_arr [piapi::PluginInterface::Dir_OUT] = 1;
-	details._pi_uptr->get_nbr_io (
+	details._desc_ptr->get_nbr_io (
 		pi_data._nbr_io_arr [piapi::PluginInterface::Dir_IN ],
 		pi_data._nbr_io_arr [piapi::PluginInterface::Dir_OUT]
 	);
 	for (int categ = 0; categ < piapi::ParamCateg_NBR_ELT; ++categ)
 	{
 		pi_data._nbr_param_arr [categ] =
-			details._pi_uptr->get_nbr_param (piapi::ParamCateg (categ));
+			details._desc_ptr->get_nbr_param (piapi::ParamCateg (categ));
 	}
-	pi_data._prefer_stereo_flag = details._pi_uptr->prefer_stereo ();
+	pi_data._prefer_stereo_flag = details._desc_ptr->prefer_stereo ();
 }
 
 

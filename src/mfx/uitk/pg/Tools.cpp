@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
+#include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NText.h"
@@ -109,7 +110,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 		const ModelObserverInterface::PluginInfo & pi_info =
 			*(sil [slot_index] [type]);
 		const piapi::ParamDescInterface & desc =
-			pi_info._pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+			pi_info._desc.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
 
 		size_t         pos_utf8;
 		size_t         len_utf8;
@@ -245,7 +246,7 @@ double	Tools::change_param (double val_nrm, const View &view, int slot_index, Pi
 		const ModelObserverInterface::PluginInfo & pi_info =
 			*(sil [slot_index] [type]);
 		const piapi::ParamDescInterface & desc =
-			pi_info._pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+			pi_info._desc.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
 		const piapi::ParamDescInterface::Range range = desc.get_range ();
 		if (range == piapi::ParamDescInterface::Range_DISCRETE)
 		{

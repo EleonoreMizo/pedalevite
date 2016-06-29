@@ -61,17 +61,6 @@ public:
 
 protected:
 
-	// mfx::piapi::PluginDescInterface via mfx::piapi::PluginInterface
-	virtual std::string
-	               do_get_unique_id () const;
-	virtual std::string
-	               do_get_name () const;
-	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const;
-	virtual bool   do_prefer_stereo () const;
-	virtual int    do_get_nbr_param (piapi::ParamCateg categ) const;
-	virtual const piapi::ParamDescInterface &
-	               do_get_param_info (piapi::ParamCateg categ, int index) const;
-
 	// mfx::piapi::PluginInterface
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;

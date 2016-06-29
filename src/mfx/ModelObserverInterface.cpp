@@ -40,8 +40,9 @@ namespace mfx
 
 
 
-ModelObserverInterface::PluginInfo::PluginInfo (const piapi::PluginInterface &pi, const std::vector <float> &param_arr)
+ModelObserverInterface::PluginInfo::PluginInfo (const piapi::PluginInterface &pi, const piapi::PluginDescInterface &desc, const std::vector <float> &param_arr)
 :	_pi (pi)
+,	_desc (desc)
 ,	_param_arr (param_arr)
 {
 	// Nothing

@@ -46,6 +46,10 @@ namespace doc
 	class CtrlLinkSet;
 }
 
+namespace piapi
+{
+	class PluginDescInterface;
+}
 
 
 class ModelObserverInterface
@@ -58,9 +62,11 @@ public:
 	class PluginInfo
 	{
 	public:
-		               PluginInfo (const piapi::PluginInterface &pi, const std::vector <float> &param_arr);
+		               PluginInfo (const piapi::PluginInterface &pi, const piapi::PluginDescInterface &desc, const std::vector <float> &param_arr);
 		const piapi::PluginInterface &
 		               _pi;
+		const piapi::PluginDescInterface &
+		               _desc;
 		const std::vector <float> &
 		               _param_arr;
 	};

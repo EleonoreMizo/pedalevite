@@ -163,7 +163,7 @@ private:
 	void           create_param_msg (std::vector <conc::LockFreeCell <Msg> *> &msg_list);
 	conc::LockFreeCell <Msg> *
 	               make_param_msg (int pi_id, int index, float val);
-	void           check_and_get_default_settings (piapi::PluginInterface &plug, std::string model);
+	void           check_and_get_default_settings (piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model);
 
 	conc::CellPool <Msg>
 						_msg_pool;

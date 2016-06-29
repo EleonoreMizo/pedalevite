@@ -49,6 +49,7 @@ namespace mfx
 namespace piapi
 {
 	class FactoryInterface;
+	class PluginDescInterface;
 }
 
 class PluginPool

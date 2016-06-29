@@ -344,7 +344,7 @@ void	Central::set_pi_state (int pi_id, const std::vector <float> &param_list)
 	Document &     doc = modify ();
 
 	assert (pi_id >= 0);
-	assert (int (param_list.size ()) == _plugin_pool.use_plugin (pi_id)._pi_uptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
+	assert (int (param_list.size ()) == _plugin_pool.use_plugin (pi_id)._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
 
 	Plugin &       plug = find_plugin (doc, pi_id);
 
@@ -371,7 +371,7 @@ void	Central::set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls)
 
 	assert (pi_id >= 0);
 	assert (index >= 0);
-	assert (index < _plugin_pool.use_plugin (pi_id)._pi_uptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
+	assert (index < _plugin_pool.use_plugin (pi_id)._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
 
 	Plugin &       plug = find_plugin (doc, pi_id);
 
@@ -384,7 +384,7 @@ void	Central::set_param (int pi_id, int index, float val)
 {
 	assert (pi_id >= 0);
 	assert (index >= 0);
-	assert (index < _plugin_pool.use_plugin (pi_id)._pi_uptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
+	assert (index < _plugin_pool.use_plugin (pi_id)._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
 	assert (val >= 0);
 	assert (val <= 1);
 
@@ -598,7 +598,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 				);
 				assert (ret_val == piapi::PluginInterface::Err_OK);
 			}
-			check_and_get_default_settings (*details._pi_uptr, model);
+			check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
 
 			doc._map_model_id [model] [pi_id] = true;
 		}
@@ -683,9 +683,9 @@ void	Central::create_routing ()
 		if (pi_id_main >= 0)
 		{
 			int            nbr_chn_in  = nbr_chn_cur;
-			const piapi::PluginInterface &   pi_main =
-				*_plugin_pool.use_plugin (pi_id_main)._pi_uptr;
-			const bool     out_st_flag = pi_main.prefer_stereo ();
+			const piapi::PluginDescInterface &   desc_main =
+				*_plugin_pool.use_plugin (pi_id_main)._desc_ptr;
+			const bool     out_st_flag = desc_main.prefer_stereo ();
 			int            nbr_chn_out =
 				(out_st_flag && ! slot._force_mono_flag) ? 2 : nbr_chn_in;
 
@@ -707,7 +707,7 @@ void	Central::create_routing ()
 			int            main_nbr_o = 1;
 
 			// Input
-			pi_main.get_nbr_io (main_nbr_i, main_nbr_o);
+			desc_main.get_nbr_io (main_nbr_i, main_nbr_o);
 			main_side_i._nbr_chn     = nbr_chn_in;
 			main_side_i._nbr_chn_tot = nbr_chn_in * main_nbr_i;
 			for (int chn = 0; chn < main_side_i._nbr_chn_tot; ++chn)
@@ -945,13 +945,13 @@ conc::LockFreeCell <Msg> *	Central::make_param_msg (int pi_id, int index, float 
 
 
 
-void	Central::check_and_get_default_settings (piapi::PluginInterface &plug, std::string model)
+void	Central::check_and_get_default_settings (piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model)
 {
 	auto           it = _default_map.find (model);
 	if (it == _default_map.end ())
 	{
 		piapi::PluginState & def = _default_map [model];
-		const int      nbr_param = plug.get_nbr_param (piapi::ParamCateg_GLOBAL);
+		const int      nbr_param = desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
 		def._param_list.resize (nbr_param);
 		for (int index = 0; index < nbr_param; ++index)
 		{

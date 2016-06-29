@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/Err.h"
 #include "mfx/pi/export.h"
 #include "mfx/piapi/FactoryInterface.h"
+#include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/PluginPool.h"
 
 #include <stdexcept>
@@ -256,7 +257,7 @@ int	PluginPool::add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc
 
 			// Parameters
 			const int      nbr_param =
-				pi_uptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
+				desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
 			slot._details._param_arr.resize (nbr_param);
 			slot._details._param_update.set_nbr_elt (nbr_param);
 			slot._details._param_update_from_audio.clear ();
