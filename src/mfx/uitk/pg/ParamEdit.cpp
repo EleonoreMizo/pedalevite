@@ -309,7 +309,8 @@ MsgHandlerInterface::EvtProp	ParamEdit::change_param (int dir)
 		float (Cst::_step_param / pow (10, _step_index));
 
 	return Tools::change_param (
-		*_model_ptr, *_view_ptr, slot_index, type, index, step, dir
+		*_model_ptr, *_view_ptr, slot_index, type,
+		index, step, _step_index, dir
 	);
 }
 

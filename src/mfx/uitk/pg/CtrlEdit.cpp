@@ -611,7 +611,8 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 		float (Cst::_step_param / pow (10, step_index));
 
 	val_arr [mm] = Tools::change_param (
-		val_arr [mm], *_view_ptr, slot_index, type, index, step, dir
+		val_arr [mm], *_model_ptr, *_view_ptr, slot_index, type,
+		index, step, step_index, dir
 	);
 
 	cl._base = float (              val_arr [0]);

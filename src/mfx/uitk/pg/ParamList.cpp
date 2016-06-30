@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/Cst.h"
 #include "mfx/LocEdit.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
@@ -384,7 +385,9 @@ MsgHandlerInterface::EvtProp	ParamList::change_param (int node_id, int dir)
 	assert (index >= 0);
 
 	return Tools::change_param (
-		*_model_ptr, *_view_ptr, slot_index, type, index, 0.05f, dir);
+		*_model_ptr, *_view_ptr, slot_index, type,
+		index, float (Cst::_step_param), 0, dir
+	);
 }
 
 

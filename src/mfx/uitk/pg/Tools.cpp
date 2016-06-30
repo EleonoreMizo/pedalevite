@@ -77,103 +77,77 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 		val = view.get_param_val (preset, slot_index, type, index);
 	}
 
-	const View::SlotInfoList & sil = view.use_slot_info_list ();
+	assert (! preset.is_slot_empty (slot_index));
+	const doc::Slot &    slot     = *(preset._slot_list [slot_index]);
+	const std::string &  pi_model =
+		(type == PiType_MIX) ? Cst::_plugin_mix : slot._pi_model;
+	const piapi::PluginDescInterface &  desc_pi =
+		model.get_model_desc (pi_model);
+	const piapi::ParamDescInterface &   desc    =
+		desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
 
+	size_t         pos_utf8;
+	size_t         len_utf8;
+	size_t         len_pix;
 	size_t         rem_pix_fx_name = width;
-	char           txt_0 [255+1];
 
-	if (sil.empty () || sil [slot_index] [type].get () == 0)
+	// Get value & unit
+	std::string    val_s;
+	std::string    unit;
+	const double   tempo = view.get_tempo ();
+	print_param_with_pres (
+		val_s, unit,
+		preset, slot_index, type, index, val, desc, tempo
+	);
+
+	// Value
+	if (! group_unit_val_flag)
 	{
-		if (fx_name_ptr != 0)
+		while (! val_s.empty () && val_s [0] == ' ')
 		{
-			fx_name_ptr->set_text ("");
+			val_s = val_s.substr (1);
 		}
+	}
+	pi::param::Tools::cut_str_bestfit (
+		pos_utf8, len_utf8, len_pix,
+		width, val_s.c_str (), '\n',
+		param_val, &NText::get_char_width
+	);
+	txt_val = val_s.substr (pos_utf8, len_utf8);
 
-		if (param_name_ptr != 0)
-		{
-			fstb::snprintf4all (
-				txt_0, sizeof (txt_0), "%-4d",
-				index
-			);
-			param_name_ptr->set_text (txt_0);
-		}
-
-		fstb::snprintf4all (
-			txt_0, sizeof (txt_0), "%.4f",
-			val
+	// Name
+	if (param_name_ptr != 0)
+	{
+		std::string    name = desc.get_name (0);
+		name = pi::param::Tools::print_name_bestfit (
+			width - len_pix, name.c_str (),
+			*param_name_ptr, &NText::get_char_width
 		);
-		txt_val = txt_0;
+		param_name_ptr->set_text (name);
 	}
 
-	else
+	// Unit
+	if (param_unit_ptr != 0)
 	{
-		const ModelObserverInterface::PluginInfo & pi_info =
-			*(sil [slot_index] [type]);
-		const piapi::ParamDescInterface & desc =
-			pi_info._desc.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
-
-		size_t         pos_utf8;
-		size_t         len_utf8;
-		size_t         len_pix;
-
-		// Get value & unit
-		std::string    val_s;
-		std::string    unit;
-		const double   tempo = view.get_tempo ();
-		print_param_with_pres (
-			val_s, unit,
-			preset, slot_index, type, index, val, desc, tempo
-		);
-
-		// Value
-		if (! group_unit_val_flag)
+		int            w_unit = width;
+		if (group_unit_val_flag)
 		{
-			while (! val_s.empty () && val_s [0] == ' ')
+			w_unit -= len_pix;
+			if (! unit.empty ())
 			{
-				val_s = val_s.substr (1);
+				unit = std::string (" ") + unit;
+				// We should do this on all the labels of the unit, but :efforts:
 			}
 		}
 		pi::param::Tools::cut_str_bestfit (
 			pos_utf8, len_utf8, len_pix,
-			width, val_s.c_str (), '\n',
-			param_val, &NText::get_char_width
+			w_unit, unit.c_str (), '\n',
+			*param_unit_ptr, &NText::get_char_width
 		);
-		txt_val = val_s.substr (pos_utf8, len_utf8);
-
-		// Name
-		if (param_name_ptr != 0)
+		txt_unit = unit.substr (pos_utf8, len_utf8);
+		if (! group_unit_val_flag)
 		{
-			std::string    name = desc.get_name (0);
-			name = pi::param::Tools::print_name_bestfit (
-				width - len_pix, name.c_str (),
-				*param_name_ptr, &NText::get_char_width
-			);
-			param_name_ptr->set_text (name);
-		}
-
-		// Unit
-		if (param_unit_ptr != 0)
-		{
-			int            w_unit = width;
-			if (group_unit_val_flag)
-			{
-				w_unit -= len_pix;
-				if (! unit.empty ())
-				{
-					unit = std::string (" ") + unit;
-					// We should do this on all the labels of the unit, but :efforts:
-				}
-			}
-			pi::param::Tools::cut_str_bestfit (
-				pos_utf8, len_utf8, len_pix,
-				w_unit, unit.c_str (), '\n',
-				*param_unit_ptr, &NText::get_char_width
-			);
-			txt_unit = unit.substr (pos_utf8, len_utf8);
-			if (! group_unit_val_flag)
-			{
-				rem_pix_fx_name -= len_pix;
-			}
+			rem_pix_fx_name -= len_pix;
 		}
 	}
 
@@ -192,11 +166,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 
 	if (fx_name_ptr != 0)
 	{
-		const doc::Slot &  slot = *(preset._slot_list [slot_index]);
-
-		const piapi::PluginDescInterface &  desc =
-			model.get_model_desc (slot._pi_model);
-		std::string    pi_type_name = desc.get_name ();
+		std::string    pi_type_name = desc_pi.get_name ();
 
 		pi_type_name = pi::param::Tools::print_name_bestfit (
 			rem_pix_fx_name, pi_type_name.c_str (),
@@ -208,7 +178,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 
 
 
-MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int dir)
+MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int step_index, int dir)
 {
 	assert (slot_index >= 0);
 	assert (type >= 0);
@@ -221,17 +191,45 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 		view.get_param_val (preset, slot_index, type, index);
 
 	val_nrm = float (change_param (
-		val_nrm, view, slot_index, type, index, step, dir
+		val_nrm, model, view, slot_index, type, index, step, step_index, dir
 	));
 
-	model.set_param (slot_index, type, index, val_nrm);
+	// Check the beat case
+	bool           set_flag = false;
+	if (type == PiType_MAIN)
+	{
+		const doc::Slot &    slot = *(preset._slot_list [slot_index]);
+		const doc::PluginSettings & settings = slot.use_settings (PiType_MAIN);
+		const auto     it_pres = settings._map_param_pres.find (index);
+		if (it_pres != settings._map_param_pres.end ())
+		{
+			// Uses beats
+			if (it_pres->second._ref_beats >= 0)
+			{
+				const double   tempo = view.get_tempo ();
+				const piapi::PluginDescInterface &  desc_pi =
+					model.get_model_desc (slot._pi_model);
+				const piapi::ParamDescInterface &   desc    =
+					desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+				const float    val_beats =
+					float (conv_nrm_to_beats (val_nrm, desc, tempo));
+				model.set_param_beats (slot_index, index, val_beats);
+				set_flag = true;
+			}
+		}
+	}
+
+	if (! set_flag)
+	{
+		model.set_param (slot_index, type, index, val_nrm);
+	}
 
 	return MsgHandlerInterface::EvtProp_CATCH;
 }
 
 
 
-double	Tools::change_param (double val_nrm, const View &view, int slot_index, PiType type, int index, float step, int dir)
+double	Tools::change_param (double val_nrm, const Model &model, const View &view, int slot_index, PiType type, int index, float step, int step_index, int dir)
 {
 	assert (slot_index >= 0);
 	assert (type >= 0);
@@ -240,15 +238,59 @@ double	Tools::change_param (double val_nrm, const View &view, int slot_index, Pi
 	assert (dir != 0);
 
 	const doc::Preset &  preset = view.use_preset_cur ();
+	assert (! preset.is_slot_empty (slot_index));
+	const doc::Slot &    slot   = *(preset._slot_list [slot_index]);
+	const doc::PluginSettings & settings = slot.use_settings (type);
+
+	const std::string &  pi_model =
+		(type == PiType_MIX) ? Cst::_plugin_mix : slot._pi_model;
+	const piapi::PluginDescInterface &  desc_pi =
+		model.get_model_desc (pi_model);
+	const piapi::ParamDescInterface &   desc    =
+		desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+
 	bool           done_flag = false;
-	const View::SlotInfoList & sil = view.use_slot_info_list ();
-	if (! sil.empty () && sil [slot_index] [type].get () != 0)
+	if (step_index == 0)
 	{
-		const ModelObserverInterface::PluginInfo & pi_info =
-			*(sil [slot_index] [type]);
-		const piapi::ParamDescInterface & desc =
-			pi_info._desc.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+		// Uses a notch list
+		const std::set <float> *   notch_list_ptr =
+			Tools::find_notch_list (settings, index);
+		if (notch_list_ptr != 0)
+		{
+			const auto     it_notch =
+				advance_to_notch (float (val_nrm), *notch_list_ptr, dir);
+			val_nrm   = *it_notch;
+			done_flag = true;
+		}
+
+		else if (type != PiType_MIX)
+		{
+			// Check if we can use the beat mode
+			const auto     it_pres = settings._map_param_pres.find (index);
+			if (   it_pres != settings._map_param_pres.end ()
+			    && it_pres->second._ref_beats >= 0
+			    && desc.get_nat_min () >= 0)
+			{
+				const double   tempo     = view.get_tempo ();
+				double         val_beats = conv_nrm_to_beats (val_nrm, desc, tempo);
+
+				static const std::set <float> beat_notch_list =
+					create_beat_notches ();
+				const auto     it_notch =
+					advance_to_notch (float (val_beats), beat_notch_list, dir);
+				val_beats = *it_notch;
+
+				val_nrm   = float (conv_beats_to_nrm (val_beats, desc, tempo));
+				done_flag = true;
+			}
+		}
+	}
+
+	if (! done_flag)
+	{
 		const piapi::ParamDescInterface::Range range = desc.get_range ();
+
+		// Uses a discrete range
 		if (range == piapi::ParamDescInterface::Range_DISCRETE)
 		{
 			double         val_nat = desc.conv_nrm_to_nat (val_nrm);
@@ -346,6 +388,163 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 		}
 		model.set_nbr_slots (nbr_slots_new);
 	}
+}
+
+
+
+// Automatically clips to legal values
+double	Tools::conv_nrm_to_beats (double val_nrm, const piapi::ParamDescInterface &desc, double tempo)
+{
+	assert (val_nrm >= 0);
+	assert (val_nrm <= 1);
+	assert (desc.get_nat_min () >= 0);
+	assert (tempo > 0);
+
+	double         val_beats = 1;
+
+	const piapi::ParamDescInterface::Categ categ = desc.get_categ ();
+	const double   val_nat = desc.conv_nrm_to_nat (val_nrm);
+
+	switch (categ)
+	{
+	case piapi::ParamDescInterface::Categ_TIME_S:
+		val_beats = val_nat * tempo / 60;
+		break;
+	case piapi::ParamDescInterface::Categ_TIME_HZ:
+	case piapi::ParamDescInterface::Categ_FREQ_HZ:
+		val_beats = tempo / (std::max (val_nat, 1e-6) * 60);
+		break;
+	default:
+		assert (false);
+	}
+
+	return val_beats;
+}
+
+
+
+// Automatically clips to legal values
+double	Tools::conv_beats_to_nrm (double val_beats, const piapi::ParamDescInterface &desc, double tempo)
+{
+	assert (val_beats >= 0);
+	assert (desc.get_nat_min () >= 0);
+	assert (tempo > 0);
+
+	double         val_nat = 1;
+
+	const piapi::ParamDescInterface::Categ categ = desc.get_categ ();
+	switch (categ)
+	{
+	case piapi::ParamDescInterface::Categ_TIME_S:
+		val_nat = val_beats * 60 / tempo;
+		break;
+	case piapi::ParamDescInterface::Categ_TIME_HZ:
+	case piapi::ParamDescInterface::Categ_FREQ_HZ:
+		val_nat = tempo / (std::max (val_beats, 1e-6) * 60);
+		break;
+	default:
+		assert (false);
+	}
+
+	const double   nat_min = desc.get_nat_min ();
+	const double   nat_max = desc.get_nat_max ();
+	val_nat = fstb::limit (val_nat, nat_min, nat_max);
+
+	const double   val_nrm = desc.conv_nat_to_nrm (val_nat);
+
+	return val_nrm;
+}
+
+
+
+// Returns 0 if not found
+const std::set <float> *	Tools::find_notch_list (const doc::PluginSettings &settings, int index)
+{
+	assert (index >= 0);
+	assert (index < int (settings._param_list.size ()));
+
+	const std::set <float> *   notch_list_ptr = 0;
+
+	auto           it_cls = settings._map_param_ctrl.find (index);
+	if (it_cls != settings._map_param_ctrl.end ())
+	{
+		const doc::CtrlLinkSet &   cls = it_cls->second;
+		for (auto it_cl = cls._mod_arr.rbegin ()
+		;	it_cl != cls._mod_arr.rend () && notch_list_ptr == 0
+		;	++it_cl)
+		{
+			if (! (*it_cl)->_notch_list.empty ())
+			{
+				notch_list_ptr = &(*it_cl)->_notch_list;
+			}
+		}
+		if (   notch_list_ptr == 0
+		    && cls._bind_sptr.get () != 0
+		    && ! cls._bind_sptr->_notch_list.empty ())
+		{
+			notch_list_ptr = &cls._bind_sptr->_notch_list;
+		}
+	}
+
+	return notch_list_ptr;
+}
+
+
+
+std::set <float>::const_iterator	Tools::find_closest_notch (float val, const std::set <float> &notch_list)
+{
+	assert (! notch_list.empty ());
+
+	std::set <float>::const_iterator it_found = notch_list.end ();
+
+	auto           it_l = notch_list.lower_bound (val);
+	if (it_l == notch_list.end ())
+	{
+		-- it_l;
+		it_found = it_l;
+	}
+	else if (it_l == notch_list.begin ())
+	{
+		it_found = it_l;
+	}
+	else
+	{
+		assert (notch_list.size () >= 2);
+		it_found = it_l;
+		const float    v1 = *it_l;
+		-- it_l;
+		const float    v0 = *it_l;
+		const float    d1 = fabs (val - v1);
+		const float    d0 = fabs (val - v0);
+		if (d0 < d1)
+		{
+			it_found = it_l;
+		}
+	}
+
+	return it_found;
+}
+
+
+
+std::set <float>::const_iterator	Tools::advance_to_notch (float val, const std::set <float> &notch_list, int dir)
+{
+	assert (! notch_list.empty ());
+
+	auto           it_notch =
+		find_closest_notch (val, notch_list);
+	const float    val_n    = *it_notch;
+	const bool     eq_flag  = fstb::is_eq_rel (val, val_n, 1e-3f);
+	if (     dir > 0 && (val > val_n || eq_flag) && it_notch != --notch_list.end ())
+	{
+		++ it_notch;
+	}
+	else if (dir < 0 && (val < val_n || eq_flag) && it_notch != notch_list.begin ())
+	{
+		-- it_notch;
+	}
+
+	return it_notch;
 }
 
 
