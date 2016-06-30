@@ -14,7 +14,8 @@
 
 static const int     MAIN_pin_reset       = 18;
 static const int     MAIN_pin_interrupt   = 8;
-static const int     MAIN_i2c_dev_23017   = 0x20 + 1;   // Slave address, p. 8
+static const int     MAIN_nbr_dev         = 2;
+static const std::array <int, MAIN_nbr_dev> MAIN_i2c_dev_23017_arr = {{ 0x20 + 0, 0x20 + 1 }};   // Slave address, p. 8
 static const int64_t MAIN_antibounce_time = 30 * 1000 * 1000; // Nanoseconds
 static const bool    MAIN_incremental_coder_flag = true;
 
@@ -97,49 +98,56 @@ int main (int argc, char *argv [])
 	::digitalWrite (MAIN_pin_reset, HIGH);
 	::delay (100);
 
-	int            handle = ::wiringPiI2CSetup (MAIN_i2c_dev_23017);
-	if (handle == -1)
+	std::array <int, MAIN_nbr_dev> handle_arr;
+	for (int d = 0; d < MAIN_nbr_dev && ret_val == 0; ++d)
 	{
-		ret_val = errno;
-		printf ("Error initializing I2C. errno = %d\n", ret_val);
-	}
-
-	if (ret_val == 0)
-	{
-		::wiringPiI2CWriteReg8 (handle, Cmd_IOCONA, IOCon_MIRROR);
-
-		// All the pins are set in read mode.
-		::wiringPiI2CWriteReg16 (handle, Cmd_IODIRA, 0xFFFF);
-
-		if (! MAIN_incremental_coder_flag)
+		handle_arr [d] = ::wiringPiI2CSetup (MAIN_i2c_dev_23017_arr [d]);
+		if (handle_arr [d] == -1)
 		{
-			// All the pins will cause an interrupt on input change
-			::wiringPiI2CWriteReg16 (handle, Cmd_INTCONA , 0x0000);
-			::wiringPiI2CWriteReg16 (handle, Cmd_GPINTENA, 0xFFFF);
+			ret_val = errno;
+			printf ("Error initializing I2C. errno = %d\n", ret_val);
+		}
 
-			::wiringPiISR (MAIN_pin_interrupt, INT_EDGE_BOTH, &interrupt_cb);
+		if (ret_val == 0)
+		{
+			::wiringPiI2CWriteReg8 (handle_arr [d], Cmd_IOCONA, IOCon_MIRROR);
+
+			// All the pins are set in read mode.
+			::wiringPiI2CWriteReg16 (handle_arr [d], Cmd_IODIRA, 0xFFFF);
+
+			if (! MAIN_incremental_coder_flag)
+			{
+				// All the pins will cause an interrupt on input change
+				::wiringPiI2CWriteReg16 (handle_arr [d], Cmd_INTCONA , 0x0000);
+				::wiringPiI2CWriteReg16 (handle_arr [d], Cmd_GPINTENA, 0xFFFF);
+
+				::wiringPiISR (MAIN_pin_interrupt, INT_EDGE_BOTH, &interrupt_cb);
+			}
 		}
 	}
 
-	std::array <State, 16>  state_arr;
+	std::array <std::array <State, 16>, MAIN_nbr_dev>  state_arr;
 	while (ret_val == 0)
 	{
-		uint16_t       state_all = ::wiringPiI2CReadReg16 (handle, Cmd_GPIOA);
-		const int64_t  cur_time  = MAIN_get_time ();
-
 		// Update with anti-bounce system
-		for (int i = 0; i < 16; ++i)
+		for (int d = 0; d < MAIN_nbr_dev; ++d)
 		{
-			State &        state_prev = state_arr [i];
-			const bool     cur_flag   = (((state_all >> i) & 1) != 0);
-			if (cur_flag != state_prev._flag)
+			uint16_t       state_all = ::wiringPiI2CReadReg16 (handle_arr [d], Cmd_GPIOA);
+			const int64_t  cur_time  = MAIN_get_time ();
+
+			for (int i = 0; i < 16; ++i)
 			{
-				const int64_t  dist = cur_time - state_prev._time_last;
-				if (MAIN_incremental_coder_flag || dist >= MAIN_antibounce_time)
+				State &        state_prev = state_arr [d] [i];
+				const bool     cur_flag   = (((state_all >> i) & 1) != 0);
+				if (cur_flag != state_prev._flag)
 				{
-					printf ("Pin %2d, value %d\n", i, cur_flag ? 1 : 0);
-					state_prev._flag      = cur_flag;
-					state_prev._time_last = cur_time;
+					const int64_t  dist = cur_time - state_prev._time_last;
+					if (MAIN_incremental_coder_flag || dist >= MAIN_antibounce_time)
+					{
+						printf ("Dev %02x, pin %2d, value %d\n", MAIN_i2c_dev_23017_arr [d], i, cur_flag ? 1 : 0);
+						state_prev._flag      = cur_flag;
+						state_prev._time_last = cur_time;
+					}
 				}
 			}
 		}
@@ -150,9 +158,12 @@ int main (int argc, char *argv [])
 		}
 	}
 
-	if (handle != -1)
+	for (int d = 0; d < MAIN_nbr_dev; ++d)
 	{
-		close (handle);
+		if (handle_arr [d] != -1)
+		{
+			close (handle_arr [d]);
+		}
 	}
 
 	return ret_val;
