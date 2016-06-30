@@ -833,7 +833,29 @@ Quand un objet de ces maps est modifié, il est d’abord copié complètement p
 Ça permet d’éviter au thread audio de travailler sur une version en cours de modification.
 La substitution finale est faite entre les maps lors changement de contexte.
 
+ReverbLarge.wav -> trouvé sur http://blog.demofox.org/2015/03/23/diy-synth-convolution-reverb-1d-discrete-convolution-of-audio-samples/
+Réverb à évaluer : http://blog.demofox.org/2015/03/17/diy-synth-multitap-reverb/
 
 
+
+La DLL a une fonction statique :
+
+int enum_factories (std::vector <FactoryInterface *> &fact_list);
+
+class FactoryInterface
+{
+public:
+	const PluginDescInterface & describe ();
+	PluginInterface * create ();
+protected:
+	virtual const PluginDescInterface & do_describe () = 0;
+	virtual PluginInterface * do_create () = 0;
+};
+
+
+Idée d’effet : harmonic tremolo http://www.davidrolo.com/page/4/
+principe : on divise le signal en LP/HP (1,6 kHz) et on module AM les deux signaux avec des combinaisons de (x, x), (x, 1-x), (1, x) et (x, 1) (x = sortie du LFO unipolaire) suivant le mode choisi.
+
+Idée : amortir les footswitches avec des isolants de bouteille http://www.davidrolo.com/page/5/
 
 

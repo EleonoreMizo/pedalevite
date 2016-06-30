@@ -310,7 +310,7 @@ void	IoWindows::main_loop ()
 
 	_main_win = ::CreateWindowW (
 		_window_class_name_0,
-		L"Pedale Vite",
+		L"P\x00E9" L"dale Vite",
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 		CW_USEDEFAULT, 0,
 		320, 200,
@@ -631,13 +631,13 @@ void	IoWindows::redraw_main_screen (int x1, int y1, int x2, int y2)
 	const int      yd2 = (y2 + _zoom - 1) / _zoom;
 
 	PixArgb        bkg;
-	bkg._r = 255;
+	bkg._r = 0;
 	bkg._g = 0;
-	bkg._b = 0;
+	bkg._b = 255;
 	PixArgb        black;
-	black._r = 192;
+	black._r = 32;
 	black._g = 0;
-	black._b = 0;
+	black._b = 192;
 	PixArgb        w_dif;
 	w_dif._r = 255 - black._r;
 	w_dif._g = 255 - black._g;
@@ -665,9 +665,9 @@ void	IoWindows::redraw_main_screen (int x1, int y1, int x2, int y2)
 					for (int xz = 0; xz < _zoom; ++xz)
 					{
 						const int      v = _pix_table [yz] [xz];
-						dst2_ptr [xz]._b = uint8_t (bkg._r + ((v * coldif_r) >> 8));
+						dst2_ptr [xz]._b = uint8_t (bkg._b + ((v * coldif_b) >> 8));
 						dst2_ptr [xz]._g = uint8_t (bkg._g + ((v * coldif_g) >> 8));
-						dst2_ptr [xz]._r = uint8_t (bkg._b + ((v * coldif_b) >> 8));
+						dst2_ptr [xz]._r = uint8_t (bkg._r + ((v * coldif_r) >> 8));
 						dst2_ptr [xz]._a = 255;
 					}
 				}
