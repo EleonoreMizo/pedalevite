@@ -79,7 +79,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_queue_input_to_cmd (queue_input_to_cmd)
 ,	_obs_ptr (0)
 ,	_dummy_mix_id (_central.get_dummy_mix_id ())
-,	_tempo_last_ts (INT64_MIN)
+,	_tempo_last_ts (_central.get_cur_date () - Cst::_tempo_detection_max * 2)
 ,	_tempo (Cst::_tempo_ref)
 ,	_slot_info ()
 {
