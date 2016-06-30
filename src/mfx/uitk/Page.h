@@ -135,6 +135,11 @@ private:
 	int            _curs_id;            // -1 = not shown
 	std::set <int> _timer_set;
 
+	Button         _but_hold;
+	int64_t        _but_hold_date;      // Microseconds, beginning of the hold position
+	int            _but_hold_count;     // Number of elapsed repetitions
+
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

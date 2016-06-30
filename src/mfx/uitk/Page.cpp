@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/Page.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
+#include "mfx/Model.h"
 #include "mfx/View.h"
 
 #include <cassert>
@@ -64,6 +65,9 @@ Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInp
 ,	_curs_pos (-1)
 ,	_curs_id (-1)
 ,	_timer_set ()
+,	_but_hold (Button_INVALID)
+,	_but_hold_date (INT64_MIN)
+,	_but_hold_count (0)
 {
 	_screen.set_coord (Vec2d ());
 	_screen.set_size (_disp_size, _disp_size);
@@ -263,6 +267,8 @@ ContainerInterface::NodeSPtr	Page::do_use_node (int pos)
 
 void	Page::process_input ()
 {
+	bool           check_hold_flag = true;
+
 	ui::UserInputInterface::MsgCell * cell_ptr = 0;
 	do
 	{
@@ -283,7 +289,6 @@ void	Page::process_input ()
 			switch (type)
 			{
 			case ui::UserInputType_SW:
-				if (val > 0.5f)
 				{
 					Button         but = Button_INVALID;
 					switch (index)
@@ -298,12 +303,24 @@ void	Page::process_input ()
 					}
 					if (but != Button_INVALID)
 					{
-						const bool     pass_flag = process_nav (but);
-						if (pass_flag)
+						if (val < 0.5f)
 						{
-							NodeEvt        evt (NodeEvt::create_button (node_id, but));
-							send_event (evt);
+							_but_hold = Button_INVALID;
 						}
+						else
+						{
+							_but_hold       = but;
+							_but_hold_date  = _model.get_cur_date ();
+							_but_hold_count = 0;
+
+							const bool     pass_flag = process_nav (but);
+							if (pass_flag)
+							{
+								NodeEvt        evt (NodeEvt::create_button (node_id, but));
+								send_event (evt);
+							}
+						}
+						check_hold_flag = false;
 					}
 				}
 				break;
@@ -322,6 +339,40 @@ void	Page::process_input ()
 		}
 	}
 	while (cell_ptr != 0);
+
+	// Key repeat
+	if (check_hold_flag && _but_hold != Button_INVALID)
+	{
+		const int64_t  cur_date = _model.get_cur_date ();
+		const int64_t  dist     = cur_date - _but_hold_date;
+		const int      count    = int (
+			  (dist - Cst::_key_time_hold + Cst::_key_time_repeat)
+			/ Cst::_key_time_repeat
+		);
+		if (count > _but_hold_count)
+		{
+			const bool     pass_flag = process_nav (_but_hold);
+			if (pass_flag)
+			{
+				int            node_id = _screen.get_id ();
+				if (_curs_id >= 0)
+				{
+					node_id = _curs_id;
+				}
+				NodeEvt        evt (NodeEvt::create_button (node_id, _but_hold));
+				send_event (evt);
+			}
+
+			if (_but_hold_count + 2 >= count)
+			{
+				++ _but_hold_count;
+			}
+			else
+			{
+				_but_hold_count = count;
+			}
+		}
+	}
 }
 
 
