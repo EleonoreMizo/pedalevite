@@ -80,7 +80,7 @@ IoWindows::IoWindows (volatile bool &quit_request_flag)
 	::QueryPerformanceFrequency (&freq);
 	_clock_freq = freq.QuadPart;
 
-	const int      sc = std::max (16 / _zoom, 1);
+	const int      sc = std::max (12 / _zoom, 1);
 	const int      pe = std::max (_zoom - 1, 1);
 	for (int y = 0; y < _zoom; ++y)
 	{
@@ -630,6 +630,19 @@ void	IoWindows::redraw_main_screen (int x1, int y1, int x2, int y2)
 	const int      xd2 = (x2 + _zoom - 1) / _zoom;
 	const int      yd2 = (y2 + _zoom - 1) / _zoom;
 
+	PixArgb        bkg;
+	bkg._r = 255;
+	bkg._g = 0;
+	bkg._b = 0;
+	PixArgb        black;
+	black._r = 192;
+	black._g = 0;
+	black._b = 0;
+	PixArgb        w_dif;
+	w_dif._r = 255 - black._r;
+	w_dif._g = 255 - black._g;
+	w_dif._b = 255 - black._b;
+
 	if (xd1 < _scr_w && yd1 < _scr_h)
 	{
 		PixArgb *      dst_ptr = &_bitmap_data_ptr [yd1 * _disp_w * _zoom + xd1 * _zoom];
@@ -644,14 +657,17 @@ void	IoWindows::redraw_main_screen (int x1, int y1, int x2, int y2)
 			{
 				for (int x = 0; x < wd; ++x)
 				{
-					const uint8_t  v_base   = src_ptr [x];
+					const int      v_base   = src_ptr [x];
+					const int      coldif_r = black._r + ((v_base * w_dif._r) >> 8) - bkg._r;
+					const int      coldif_g = black._g + ((v_base * w_dif._g) >> 8) - bkg._g;
+					const int      coldif_b = black._b + ((v_base * w_dif._b) >> 8) - bkg._b;
 					PixArgb *      dst2_ptr = dst_ptr + x * _zoom;
 					for (int xz = 0; xz < _zoom; ++xz)
 					{
-						const uint8_t  v = v_base * _pix_table [yz] [xz] >> 8;
-						dst2_ptr [xz]._b = 192 + (v >> 2);
-						dst2_ptr [xz]._g = v;
-						dst2_ptr [xz]._r = v;
+						const int      v = _pix_table [yz] [xz];
+						dst2_ptr [xz]._b = uint8_t (bkg._r + ((v * coldif_r) >> 8));
+						dst2_ptr [xz]._g = uint8_t (bkg._g + ((v * coldif_g) >> 8));
+						dst2_ptr [xz]._r = uint8_t (bkg._b + ((v * coldif_b) >> 8));
 						dst2_ptr [xz]._a = 255;
 					}
 				}
