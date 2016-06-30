@@ -84,6 +84,7 @@ CurProg::CurProg (PageSwitcher &page_switcher, std::string ip_addr)
 ,	_size_max_bank_name (0)
 ,	_bank_index (0)
 ,	_preset_index (0)
+,	_tempo_date (INT64_MIN)
 {
 	_prog_nbr_sptr->set_mag (_mag_prog_nbr, _mag_prog_nbr);
 	_prog_nbr_sptr->set_bold (true, true);
@@ -210,6 +211,21 @@ MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
 
 
 
+void	CurProg::do_set_tempo (double bpm)
+{
+	_tempo_date = _model_ptr->get_cur_date ();
+
+	_fx_name_sptr->set_text ("");
+	_param_unit_sptr->set_text ("BPM");
+	_param_name_sptr->set_text ("Tempo");
+
+	char           val_0 [127+1];
+	fstb::snprintf4all (val_0, sizeof (val_0), "%7.3f", bpm);
+	_param_val_sptr->set_text (val_0);
+}
+
+
+
 void	CurProg::do_select_bank (int index)
 {
 	i_set_bank_nbr (index);
@@ -245,7 +261,12 @@ void	CurProg::do_activate_preset (int index)
 
 void	CurProg::do_set_param (int pi_id, int index, float val, int slot_index, PiType type)
 {
-	i_set_param (pi_id, index, val, slot_index, type);
+	const int64_t  cur_date = _model_ptr->get_cur_date ();
+	const int64_t  dist     = cur_date - _tempo_date;
+	if (dist >= 100*1000)
+	{
+		i_set_param (pi_id, index, val, slot_index, type);
+	}
 }
 
 

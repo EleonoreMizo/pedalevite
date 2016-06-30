@@ -100,12 +100,14 @@ public:
 	void           set_plugin (int slot_index, std::string model);
 	void           remove_plugin (int slot_index);
 	void           set_param (int slot_index, PiType type, int index, float val);
+	void           set_param_beats (int slot_index, int index, float beats);
 	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
 
 	std::vector <std::string>
 	               list_plugin_models () const;
 	const piapi::PluginDescInterface &
 	               get_model_desc (std::string model_id) const;
+	int64_t        get_cur_date () const;
 
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;
@@ -169,6 +171,7 @@ private:
 	void           find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id) const;
 	bool           update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
 	void           fill_pi_init_data (int slot_index, ModelObserverInterface::PluginInitData &pi_data);
+	void           update_all_beat_parameters ();
 
 	cmd::Central   _central;
 
@@ -201,6 +204,7 @@ private:
 	               _obs_ptr;
 	const int      _dummy_mix_id;
 	int64_t        _tempo_last_ts;      // Timestamp of the last tempo pedal action
+	double         _tempo;              // Actual tempo
 
 	ModelObserverInterface::SlotInfoList   // Cached. Not affected by the tuner
 	               _slot_info;

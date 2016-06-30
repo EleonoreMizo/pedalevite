@@ -54,7 +54,11 @@ public:
 	static const int  _nbr_chn_in      =   2;
 	static const int  _nbr_chn_out     =   2;
 
-	static const int  _tempo_detection_limit = 2 * 1000*1000; // Maximum time between two tempo pedal actions. Microseconds
+	static const int  _tempo_min       =  60;
+	static const int  _tempo_max       = 240;
+	static const int  _tempo_ref       = 120;
+	static const int  _tempo_detection_max = 2 * 1000*1000; // Maximum time between two tempo pedal actions. Microseconds
+	static const int  _tempo_detection_min =      100*1000; // Minimum time, microseconds
 
 	static const double  _step_param;         // Unit step on normalized parameter value
 

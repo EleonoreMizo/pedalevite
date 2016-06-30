@@ -100,6 +100,7 @@ public:
 	void           set_tuner_freq (float freq);
 	void           set_slot_info_for_current_preset (const SlotInfoList &info_list);
 	void           set_param (int pi_id, int index, float val, int slot_index, PiType type);
+	void           set_param_beats (int slot_index, int index, float beats);
 	void           set_nbr_slots (int nbr_slots);
 	void           insert_slot (int slot_index);
 	void           erase_slot (int slot_index);
@@ -126,6 +127,7 @@ protected:
 	virtual void   do_set_tuner_freq (float freq) = 0;
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type) = 0;
+	virtual void   do_set_param_beats (int slot_index, int index, float beats) = 0;
 	virtual void   do_set_nbr_slots (int nbr_slots) = 0;
 	virtual void   do_insert_slot (int slot_index) = 0;
 	virtual void   do_erase_slot (int slot_index) = 0;

@@ -72,6 +72,7 @@ protected:
 	               do_handle_evt (const NodeEvt &evt);
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
+	virtual void   do_set_tempo (double bpm);
 	virtual void   do_select_bank (int index);
 	virtual void   do_set_bank_name (std::string name);
 	virtual void   do_set_preset_name (std::string name);
@@ -116,6 +117,8 @@ private:
 
 	int            _bank_index;
 	int            _preset_index;
+
+	int64_t        _tempo_date;
 
 
 

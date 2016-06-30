@@ -73,6 +73,7 @@ void	UserInputInterface::return_cell (MsgCell &cell)
 
 
 
+// In microseconds. Reference date not specified.
 int64_t	UserInputInterface::get_cur_date () const
 {
 	return do_get_cur_date ();

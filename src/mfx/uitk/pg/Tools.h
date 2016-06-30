@@ -95,7 +95,7 @@ protected:
 
 private:
 
-	static void    print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc);
+	static void    print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo);
 
 
 

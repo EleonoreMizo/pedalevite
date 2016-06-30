@@ -89,6 +89,7 @@ protected:
 	virtual void   do_set_tuner_freq (float freq);
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list);
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type);
+	virtual void   do_set_param_beats (int slot_index, int index, float beats);
 	virtual void   do_set_nbr_slots (int nbr_slots);
 	virtual void   do_insert_slot (int slot_index);
 	virtual void   do_erase_slot (int slot_index);
@@ -108,7 +109,7 @@ private:
 	ObsSet         _obs_set;
 
 	// Cached data
-	double         _tempo        = 120;
+	double         _tempo        = Cst::_tempo_ref;
 	bool           _edit_flag    = false;
 	bool           _tuner_flag   = false;
 	float          _tuner_freq   = 0;

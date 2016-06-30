@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/BitFieldSparseIterator.h"
 #include "fstb/DataAlign.h"
 #include "mfx/dsp/mix/Simd.h"
+#include "mfx/Cst.h"
 #include "mfx/Msg.h"
 #include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
@@ -62,7 +63,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_evt_ptr_arr ()
 ,	_clip_flag ()
 ,	_tempo_new (0)
-,	_tempo_cur (120)
+,	_tempo_cur (float (Cst::_tempo_ref))
 {
 	_evt_arr.reserve (_max_nbr_evt);
 	_evt_ptr_arr.reserve (_max_nbr_evt);

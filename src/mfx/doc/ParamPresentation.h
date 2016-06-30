@@ -49,7 +49,8 @@ public:
 		DispMode_DEFAULT = 0,
 		DispMode_MS,
 		DispMode_HZ,
-		DispMode_NOTE
+		DispMode_NOTE,
+		DispMode_BEATS
 	};
 
 	               ParamPresentation ()                               = default;
@@ -59,7 +60,7 @@ public:
 	               operator = (const ParamPresentation &other)        = default;
 
 	DispMode       _disp_mode = DispMode_DEFAULT;
-	float          _ref_beats = 0; // Parameter time value, in beats. 0 = tempo sync not activated.
+	float          _ref_beats = -1;  // Parameter time value, in beats. >= 0. May exceed the internal parameter range. Negative = tempo sync not activated for this parameter.
 
 
 

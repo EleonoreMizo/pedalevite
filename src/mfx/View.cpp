@@ -301,6 +301,22 @@ void	View::do_set_param (int pi_id, int index, float val, int slot_index, PiType
 
 
 
+void	View::do_set_param_beats (int slot_index, int index, float beats)
+{
+	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+	assert (index < int (settings._param_list.size ()));
+
+	// Stores the beat value in the document
+	auto           it_pres = settings._map_param_pres.find (index);
+	assert (it_pres != settings._map_param_pres.end ());
+	it_pres->second._ref_beats = beats;
+
+	mfx_View_PROPAGATE (set_param_beats (slot_index, index, beats));
+}
+
+
+
 void	View::do_set_nbr_slots (int nbr_slots)
 {
 	_preset_cur._slot_list.resize (nbr_slots);

@@ -33,6 +33,7 @@
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/FxId.h"
 #include "mfx/pi/dist1/Param.h"
@@ -492,7 +493,7 @@ Context::Context ()
 
 		{
 			mfx::doc::PedalActionCycle &  cycle =
-				preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
+				preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
 			const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
 			mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 			for (int i = 0; i < 2; ++i)
@@ -523,7 +524,7 @@ Context::Context ()
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
+					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
 				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
 				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 				for (int i = 0; i < 2; ++i)
@@ -552,6 +553,7 @@ Context::Context ()
 			});
 
 			mfx::doc::CtrlLinkSet cls;
+			mfx::doc::ParamPresentation pres;
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
@@ -571,6 +573,10 @@ Context::Context ()
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
 			pi_settings._map_param_ctrl [mfx::pi::trem1::Param_FREQ] = cls;
+
+			pres._disp_mode = mfx::doc::ParamPresentation::DispMode_BEATS;
+			pres._ref_beats = 0.25f;
+			pi_settings._map_param_pres [mfx::pi::trem1::Param_FREQ] = pres;
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
@@ -652,7 +658,7 @@ Context::Context ()
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
+					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
 				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
 				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 				for (int i = 0; i < 2; ++i)
@@ -748,7 +754,7 @@ Context::Context ()
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
+					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
 				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
 				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
 				for (int i = 0; i < 2; ++i)
@@ -764,10 +770,11 @@ Context::Context ()
 		}
 	}
 
-	for (int p = 0; p < 5; ++p)
+	for (int p = 0; p < 9; ++p)
 	{
+		const int      pedal = (p < 5) ? p : p + 1;
 		mfx::doc::PedalActionCycle &  cycle =
-			bank._layout._pedal_arr [p]._action_arr [mfx::doc::ActionTrigger_PRESS];
+			bank._layout._pedal_arr [pedal]._action_arr [mfx::doc::ActionTrigger_PRESS];
 		mfx::doc::PedalActionCycle::ActionArray   action_arr;
 		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
 			new mfx::doc::ActionPreset (false, p)
@@ -780,6 +787,15 @@ Context::Context ()
 		mfx::doc::PedalActionCycle::ActionArray   action_arr;
 		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
 			new mfx::doc::ActionToggleTuner
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			bank._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionTempo
 		));
 		cycle._cycle.push_back (action_arr);
 	}

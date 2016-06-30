@@ -167,6 +167,18 @@ void	ModelObserverInterface::set_param (int pi_id, int index, float val, int slo
 
 
 
+// set_param has been called before with the real parameter value
+void	ModelObserverInterface::set_param_beats (int slot_index, int index, float beats)
+{
+	assert (slot_index >= 0);
+	assert (index >= 0);
+	assert (beats >= 0);
+
+	do_set_param_beats (slot_index, index, beats);
+}
+
+
+
 // remove_plugin et al. to be called before depending on
 // required plug-in deletions
 void	ModelObserverInterface::set_nbr_slots (int nbr_slots)

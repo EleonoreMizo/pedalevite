@@ -119,9 +119,10 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 		// Get value & unit
 		std::string    val_s;
 		std::string    unit;
+		const double   tempo = view.get_tempo ();
 		print_param_with_pres (
 			val_s, unit,
-			preset, slot_index, type, index, val, desc
+			preset, slot_index, type, index, val, desc, tempo
 		);
 
 		// Value
@@ -357,7 +358,7 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 
 
 
-void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc)
+void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo)
 {
 	val_s.clear ();
 	unit.clear ();
@@ -441,6 +442,26 @@ void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const 
 							break;
 						}
 						break;
+					case doc::ParamPresentation::DispMode_BEATS:
+						hdn.set_preset (pi::param::HelperDispNum::Preset_FRAC_STD);
+						unit = "beats";
+						switch (categ)
+						{
+						case piapi::ParamDescInterface::Categ_TIME_S:
+							hdn.set_range (val_min * tempo / 60, val_max * tempo / 60);
+							val_hdn = nat * tempo / 60;
+							hdn_flag = true;
+							break;
+						case piapi::ParamDescInterface::Categ_TIME_HZ:
+						case piapi::ParamDescInterface::Categ_FREQ_HZ:
+							hdn.set_range (tempo / (val_max * 60), tempo / (val_min * 60));
+							val_hdn = tempo / (nat * 60);
+							hdn_flag = true;
+							break;
+						default:
+							//Nothing
+							break;
+						}
 					default:
 						// Nothing
 						break;

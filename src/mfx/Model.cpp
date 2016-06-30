@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/pi/dwm/DryWetDesc.h"
 #include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/tuner/Tuner.h"
@@ -79,6 +80,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_obs_ptr (0)
 ,	_dummy_mix_id (_central.get_dummy_mix_id ())
 ,	_tempo_last_ts (INT64_MIN)
+,	_tempo (Cst::_tempo_ref)
 ,	_slot_info ()
 {
 	_central.set_callback (this);
@@ -474,6 +476,64 @@ void	Model::set_param (int slot_index, PiType type, int index, float val)
 
 
 
+void	Model::set_param_beats (int slot_index, int index, float beats)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (! _preset_cur.is_slot_empty (slot_index));
+	assert (index >= 0);
+	assert (beats >= 0);
+
+	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+	assert (index < int (settings._param_list.size ()));
+
+	// Stores the beat value in the document
+	auto           it_pres = settings._map_param_pres.find (index);
+	assert (it_pres != settings._map_param_pres.end ());
+	it_pres->second._ref_beats = beats;
+
+	// Retrieves the parameter category
+	const PluginPool &   pi_pool = _central.use_pi_pool ();
+	const piapi::PluginDescInterface &	pi_desc =
+		pi_pool.get_model_desc (slot._pi_model);
+	const piapi::ParamDescInterface &   param_desc =
+		pi_desc.get_param_info (piapi::ParamCateg_GLOBAL, index);
+	piapi::ParamDescInterface::Categ categ = param_desc.get_categ ();
+
+	// Converts the value from beats to the internal parameter unit
+	double         val_nat = 1;
+	switch (categ)
+	{
+	case piapi::ParamDescInterface::Categ_TIME_S:
+		val_nat = beats * 60 / _tempo;
+		break;
+	case piapi::ParamDescInterface::Categ_TIME_HZ:
+	case piapi::ParamDescInterface::Categ_FREQ_HZ:
+		val_nat = _tempo / (60 * beats);
+		break;
+	default:
+		assert (false);
+		break;
+	}
+
+	// Clips and converts to a normalized value
+	const double   v_min = param_desc.get_nat_min ();
+	const double   v_max = param_desc.get_nat_max ();
+	val_nat = fstb::limit (val_nat, v_min, v_max);
+	const double   val_nrm = param_desc.conv_nat_to_nrm (val_nat);
+
+	// Sets the parameter
+	set_param (slot_index, PiType_MAIN, index, float (val_nrm));
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_param_beats (slot_index, index, beats);
+	}
+}
+
+
+
 void	Model::set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
 	assert (slot_index >= 0);
@@ -532,6 +592,13 @@ std::vector <std::string>	Model::list_plugin_models () const
 const piapi::PluginDescInterface &	Model::get_model_desc (std::string model_id) const
 {
 	return _central.use_pi_pool ().get_model_desc (model_id);
+}
+
+
+
+int64_t	Model::get_cur_date () const
+{
+	return _central.get_cur_date ();
 }
 
 
@@ -1038,6 +1105,10 @@ void	Model::process_action (const doc::PedalActionSingleInterface &action, int64
 		process_action_toggle_tuner (dynamic_cast <const doc::ActionToggleTuner &> (action));
 		break;
 
+	case doc::ActionType_TEMPO:
+		process_action_tempo (dynamic_cast <const doc::ActionTempo &> (action), ts);
+		break;
+
 	default:
 		assert (false);
 	}
@@ -1126,15 +1197,30 @@ void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
 void	Model::process_action_tempo (const doc::ActionTempo &action, int64_t ts)
 {
 	const int64_t  dist = ts - _tempo_last_ts;
-	if (dist <= Cst::_tempo_detection_limit && dist > 0)
+	if (   dist <= Cst::_tempo_detection_max
+	    && dist >= Cst::_tempo_detection_min)
 	{
-		const double   tempo = (60.0 * 1000*1000) / double (dist);
+		double      tempo = (60.0 * 1000*1000) / double (dist);
+
+		// Fits tempo into the accepted range
+		while (tempo > Cst::_tempo_max)
+		{
+			tempo *= 0.5;
+		}
+		while (tempo < Cst::_tempo_min)
+		{
+			tempo *= 2;
+		}
+
+		_tempo = tempo;
 		_central.set_tempo (float (tempo));
 
 		if (_obs_ptr != 0)
 		{
 			_obs_ptr->set_tempo (tempo);
 		}
+
+		update_all_beat_parameters ();
 	}
 
 	_tempo_last_ts = ts;
@@ -1301,6 +1387,29 @@ void	Model::fill_pi_init_data (int slot_index, ModelObserverInterface::PluginIni
 			details._desc_ptr->get_nbr_param (piapi::ParamCateg (categ));
 	}
 	pi_data._prefer_stereo_flag = details._desc_ptr->prefer_stereo ();
+}
+
+
+
+void	Model::update_all_beat_parameters ()
+{
+	const int      nbr_slots = int (_preset_cur._slot_list.size ());
+	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
+	{
+		if (! _preset_cur.is_slot_empty (slot_index))
+		{
+			doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+			doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+			for (auto &p : settings._map_param_pres)
+			{
+				const float    beats = p.second._ref_beats;
+				if (beats >= 0)
+				{
+					set_param_beats (slot_index, p.first, beats);
+				}
+			}
+		}
+	}
 }
 
 
