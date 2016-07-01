@@ -52,11 +52,11 @@ public:
 	typedef std::shared_ptr <doc::CtrlLinkSet> CtrlLinkSetSPtr;
 	typedef std::map <int, CtrlLinkSetSPtr> MapParamCtrl;
 
-	               Plugin ()  = default;
-	virtual        ~Plugin () = default;
+	               Plugin ()                        = default;
+	               Plugin (const Plugin &other)     = default;
+	virtual        ~Plugin ()                       = default;
 
-	               Plugin (const Plugin &other);
-	Plugin &       operator = (const Plugin &other);
+	Plugin &       operator = (const Plugin &other) = default;
 
 	int            _pi_id = -1;  // -1 = not set
 	std::string    _model;
@@ -75,8 +75,6 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	void           dup_shared_children ();
 
 
 

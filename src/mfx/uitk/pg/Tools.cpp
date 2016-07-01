@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/Model.h"
+#include "mfx/ToolsParam.h"
 #include "mfx/View.h"
 
 #include <cassert>
@@ -199,23 +200,23 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 	if (type == PiType_MAIN)
 	{
 		const doc::Slot &    slot = *(preset._slot_list [slot_index]);
-		const doc::PluginSettings & settings = slot.use_settings (PiType_MAIN);
-		const auto     it_pres = settings._map_param_pres.find (index);
-		if (it_pres != settings._map_param_pres.end ())
+		const doc::PluginSettings& settings = slot.use_settings (PiType_MAIN);
+		const doc::ParamPresentation *   pres_ptr =
+			settings.use_pres_if_tempo_ctrl (index);
+
+		// Uses beats
+		if (pres_ptr != 0)
 		{
-			// Uses beats
-			if (it_pres->second._ref_beats >= 0)
-			{
-				const double   tempo = view.get_tempo ();
-				const piapi::PluginDescInterface &  desc_pi =
-					model.get_model_desc (slot._pi_model);
-				const piapi::ParamDescInterface &   desc    =
-					desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
-				const float    val_beats =
-					float (conv_nrm_to_beats (val_nrm, desc, tempo));
-				model.set_param_beats (slot_index, index, val_beats);
-				set_flag = true;
-			}
+			const double   tempo = view.get_tempo ();
+			const piapi::PluginDescInterface &  desc_pi =
+				model.get_model_desc (slot._pi_model);
+			const piapi::ParamDescInterface &   desc    =
+				desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+			const float    val_beats = float (
+				ToolsParam::conv_nrm_to_beats (val_nrm, desc, tempo)
+			);
+			model.set_param_beats (slot_index, index, val_beats);
+			set_flag = true;
 		}
 	}
 
@@ -254,11 +255,12 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 	{
 		// Uses a notch list
 		const std::set <float> *   notch_list_ptr =
-			Tools::find_notch_list (settings, index);
+			settings.find_notch_list (index);
 		if (notch_list_ptr != 0)
 		{
-			const auto     it_notch =
-				advance_to_notch (float (val_nrm), *notch_list_ptr, dir);
+			const auto     it_notch = ToolsParam::advance_to_notch (
+				float (val_nrm), *notch_list_ptr, dir
+			);
 			val_nrm   = *it_notch;
 			done_flag = true;
 		}
@@ -266,21 +268,23 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 		else if (type != PiType_MIX)
 		{
 			// Check if we can use the beat mode
-			const auto     it_pres = settings._map_param_pres.find (index);
-			if (   it_pres != settings._map_param_pres.end ()
-			    && it_pres->second._ref_beats >= 0
-			    && desc.get_nat_min () >= 0)
+			const doc::ParamPresentation *   pres_ptr =
+				settings.use_pres_if_tempo_ctrl (index);
+			if (pres_ptr != 0 && desc.get_nat_min () >= 0)
 			{
 				const double   tempo     = view.get_tempo ();
-				double         val_beats = conv_nrm_to_beats (val_nrm, desc, tempo);
+				double         val_beats = ToolsParam::conv_nrm_to_beats (
+					val_nrm, desc, tempo
+				);
 
-				static const std::set <float> beat_notch_list =
-					create_beat_notches ();
-				const auto     it_notch =
-					advance_to_notch (float (val_beats), beat_notch_list, dir);
+				const auto     it_notch = ToolsParam::advance_to_notch (
+					float (val_beats), ToolsParam::_beat_notch_list, dir
+				);
 				val_beats = *it_notch;
 
-				val_nrm   = float (conv_beats_to_nrm (val_beats, desc, tempo));
+				val_nrm   = float (ToolsParam::conv_beats_to_nrm (
+					val_beats, desc, tempo
+				));
 				done_flag = true;
 			}
 		}
@@ -311,24 +315,6 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 	val_nrm = fstb::limit (val_nrm, 0.0 ,1.0);
 
 	return val_nrm;
-}
-
-
-
-// Returns a set of notches for time pots, in beats
-std::set <float>	Tools::create_beat_notches ()
-{
-	std::set <float>  notches;
-
-	for (float base = 1.0f / 256; base < 256; base *= 2)
-	{
-		notches.insert (base);
-		notches.insert (base * (4.0f / 3));
-		notches.insert (base * (3.0f / 2));
-		notches.insert (base * (8.0f / 5));
-	}
-
-	return notches;
 }
 
 
@@ -388,163 +374,6 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 		}
 		model.set_nbr_slots (nbr_slots_new);
 	}
-}
-
-
-
-// Automatically clips to legal values
-double	Tools::conv_nrm_to_beats (double val_nrm, const piapi::ParamDescInterface &desc, double tempo)
-{
-	assert (val_nrm >= 0);
-	assert (val_nrm <= 1);
-	assert (desc.get_nat_min () >= 0);
-	assert (tempo > 0);
-
-	double         val_beats = 1;
-
-	const piapi::ParamDescInterface::Categ categ = desc.get_categ ();
-	const double   val_nat = desc.conv_nrm_to_nat (val_nrm);
-
-	switch (categ)
-	{
-	case piapi::ParamDescInterface::Categ_TIME_S:
-		val_beats = val_nat * tempo / 60;
-		break;
-	case piapi::ParamDescInterface::Categ_TIME_HZ:
-	case piapi::ParamDescInterface::Categ_FREQ_HZ:
-		val_beats = tempo / (std::max (val_nat, 1e-6) * 60);
-		break;
-	default:
-		assert (false);
-	}
-
-	return val_beats;
-}
-
-
-
-// Automatically clips to legal values
-double	Tools::conv_beats_to_nrm (double val_beats, const piapi::ParamDescInterface &desc, double tempo)
-{
-	assert (val_beats >= 0);
-	assert (desc.get_nat_min () >= 0);
-	assert (tempo > 0);
-
-	double         val_nat = 1;
-
-	const piapi::ParamDescInterface::Categ categ = desc.get_categ ();
-	switch (categ)
-	{
-	case piapi::ParamDescInterface::Categ_TIME_S:
-		val_nat = val_beats * 60 / tempo;
-		break;
-	case piapi::ParamDescInterface::Categ_TIME_HZ:
-	case piapi::ParamDescInterface::Categ_FREQ_HZ:
-		val_nat = tempo / (std::max (val_beats, 1e-6) * 60);
-		break;
-	default:
-		assert (false);
-	}
-
-	const double   nat_min = desc.get_nat_min ();
-	const double   nat_max = desc.get_nat_max ();
-	val_nat = fstb::limit (val_nat, nat_min, nat_max);
-
-	const double   val_nrm = desc.conv_nat_to_nrm (val_nat);
-
-	return val_nrm;
-}
-
-
-
-// Returns 0 if not found
-const std::set <float> *	Tools::find_notch_list (const doc::PluginSettings &settings, int index)
-{
-	assert (index >= 0);
-	assert (index < int (settings._param_list.size ()));
-
-	const std::set <float> *   notch_list_ptr = 0;
-
-	auto           it_cls = settings._map_param_ctrl.find (index);
-	if (it_cls != settings._map_param_ctrl.end ())
-	{
-		const doc::CtrlLinkSet &   cls = it_cls->second;
-		for (auto it_cl = cls._mod_arr.rbegin ()
-		;	it_cl != cls._mod_arr.rend () && notch_list_ptr == 0
-		;	++it_cl)
-		{
-			if (! (*it_cl)->_notch_list.empty ())
-			{
-				notch_list_ptr = &(*it_cl)->_notch_list;
-			}
-		}
-		if (   notch_list_ptr == 0
-		    && cls._bind_sptr.get () != 0
-		    && ! cls._bind_sptr->_notch_list.empty ())
-		{
-			notch_list_ptr = &cls._bind_sptr->_notch_list;
-		}
-	}
-
-	return notch_list_ptr;
-}
-
-
-
-std::set <float>::const_iterator	Tools::find_closest_notch (float val, const std::set <float> &notch_list)
-{
-	assert (! notch_list.empty ());
-
-	std::set <float>::const_iterator it_found = notch_list.end ();
-
-	auto           it_l = notch_list.lower_bound (val);
-	if (it_l == notch_list.end ())
-	{
-		-- it_l;
-		it_found = it_l;
-	}
-	else if (it_l == notch_list.begin ())
-	{
-		it_found = it_l;
-	}
-	else
-	{
-		assert (notch_list.size () >= 2);
-		it_found = it_l;
-		const float    v1 = *it_l;
-		-- it_l;
-		const float    v0 = *it_l;
-		const float    d1 = fabs (val - v1);
-		const float    d0 = fabs (val - v0);
-		if (d0 < d1)
-		{
-			it_found = it_l;
-		}
-	}
-
-	return it_found;
-}
-
-
-
-std::set <float>::const_iterator	Tools::advance_to_notch (float val, const std::set <float> &notch_list, int dir)
-{
-	assert (! notch_list.empty ());
-
-	auto           it_notch =
-		find_closest_notch (val, notch_list);
-	const float    val_n    = *it_notch;
-	const bool     eq_flag  = fstb::is_eq_rel (val, val_n, 1e-3f);
-	if (     dir > 0 && (val > val_n || eq_flag) && it_notch != --notch_list.end ())
-	{
-		++ it_notch;
-	}
-	else if (dir < 0 && (val < val_n || eq_flag) && it_notch != notch_list.begin ())
-	{
-		-- it_notch;
-	}
-
-	return it_notch;
 }
 
 

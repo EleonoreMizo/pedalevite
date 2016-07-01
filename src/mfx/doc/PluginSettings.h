@@ -63,6 +63,13 @@ public:
 	const CtrlLinkSet &
 	               use_ctrl_link_set (int index) const;
 
+	const std::set <float> *
+	               find_notch_list (int index) const;
+	const ParamPresentation *
+	               use_pres_if_tempo_ctrl (int index) const;
+	ParamPresentation *
+	               use_pres_if_tempo_ctrl (int index);
+
 	bool           _force_mono_flag  = false;
 	bool           _force_reset_flag = false;
 	ParamList      _param_list;

@@ -375,7 +375,9 @@ void	Central::set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls)
 
 	Plugin &       plug = find_plugin (doc, pi_id);
 
-	plug._ctrl_map [index] = cls.duplicate ();
+	plug._ctrl_map [index] = std::shared_ptr <doc::CtrlLinkSet> (
+		new doc::CtrlLinkSet (cls)
+	);
 }
 
 

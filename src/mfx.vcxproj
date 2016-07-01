@@ -331,6 +331,7 @@
     <ClInclude Include="mfx\Overdrive.h" />
     <ClInclude Include="mfx\ParamCoord.h" />
     <ClInclude Include="mfx\ParamCoord.hpp" />
+    <ClInclude Include="mfx\ToolsParam.h" />
     <ClInclude Include="mfx\piapi\Event.h" />
     <ClInclude Include="mfx\piapi\EventNoteOff.h" />
     <ClInclude Include="mfx\piapi\EventNoteOn.h" />
@@ -500,7 +501,6 @@
     <ClCompile Include="mfx\cmd\Central.cpp" />
     <ClCompile Include="mfx\cmd\BufAlloc.cpp" />
     <ClCompile Include="mfx\cmd\CentralCbInterface.cpp" />
-    <ClCompile Include="mfx\cmd\Plugin.cpp" />
     <ClCompile Include="mfx\ControlCurve.cpp" />
     <ClCompile Include="mfx\ControlledParam.cpp" />
     <ClCompile Include="mfx\Cst.cpp" />
@@ -533,6 +533,7 @@
     <ClCompile Include="mfx\Model.cpp" />
     <ClCompile Include="mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
+    <ClCompile Include="mfx\ToolsParam.cpp" />
     <ClCompile Include="mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="mfx\piapi\PluginDescInterface.cpp" />
     <ClCompile Include="mfx\piapi\PluginInterface.cpp" />

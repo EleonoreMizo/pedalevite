@@ -153,7 +153,7 @@ private:
 	void           apply_settings_tuner ();
 	void           check_mixer_plugin (int slot_index, int slot_index_central);
 	bool           has_mixer_plugin (const doc::Preset &preset, int slot_index);
-	void           send_effect_settings (int pi_id, const doc::PluginSettings &settings);
+	void           send_effect_settings (int pi_id, int slot_index, PiType type, const doc::PluginSettings &settings);
 	void           process_msg_ui ();
 	int            find_pedal (int switch_index) const;
 	void           process_pedal (int pedal_index, bool set_flag, int64_t date);
@@ -172,6 +172,7 @@ private:
 	bool           update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
 	void           fill_pi_init_data (int slot_index, ModelObserverInterface::PluginInitData &pi_data);
 	void           update_all_beat_parameters ();
+	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index);
 
 	cmd::Central   _central;
 

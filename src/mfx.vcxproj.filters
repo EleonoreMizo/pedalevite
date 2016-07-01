@@ -1194,6 +1194,9 @@
     <ClInclude Include="mfx\doc\ActionTempo.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\ToolsParam.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1336,9 +1339,6 @@
       <Filter>mfx\doc</Filter>
     </ClCompile>
     <ClCompile Include="mfx\cmd\Central.cpp">
-      <Filter>mfx\cmd</Filter>
-    </ClCompile>
-    <ClCompile Include="mfx\cmd\Plugin.cpp">
       <Filter>mfx\cmd</Filter>
     </ClCompile>
     <ClCompile Include="mfx\cmd\BufAlloc.cpp">
@@ -1610,6 +1610,9 @@
     </ClCompile>
     <ClCompile Include="mfx\doc\ActionTempo.cpp">
       <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ToolsParam.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

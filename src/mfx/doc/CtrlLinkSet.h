@@ -51,13 +51,10 @@ public:
 	typedef std::shared_ptr <CtrlLink> LinkSPtr;
 	typedef std::vector <LinkSPtr> ModArray;
 
-	               CtrlLinkSet ()                         = default;
-	               CtrlLinkSet (const CtrlLinkSet &other) = default;
-	virtual        ~CtrlLinkSet ()                        = default;
-	CtrlLinkSet &  operator = (const CtrlLinkSet &other)  = default;
-
-	std::shared_ptr <CtrlLinkSet>
-						duplicate () const;
+	               CtrlLinkSet ()  = default;
+	               CtrlLinkSet (const CtrlLinkSet &other);
+	virtual        ~CtrlLinkSet () = default;
+	CtrlLinkSet &  operator = (const CtrlLinkSet &other);
 
 	LinkSPtr       _bind_sptr;
 	ModArray       _mod_arr;
@@ -73,6 +70,8 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	void           duplicate_children ();
 
 
 

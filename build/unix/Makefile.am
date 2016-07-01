@@ -164,7 +164,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/cmd/Central.h \
         ../../src/mfx/cmd/CentralCbInterface.cpp \
         ../../src/mfx/cmd/CentralCbInterface.h \
-        ../../src/mfx/cmd/Plugin.cpp \
         ../../src/mfx/cmd/Plugin.h \
         ../../src/mfx/cmd/Slot.h \
         ../../src/mfx/doc/ActionBank.cpp \
@@ -444,6 +443,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ProcessingContextNode.cpp \
         ../../src/mfx/ProcessingContextNode.h \
         ../../src/mfx/SharedRscState.h \
+        ../../src/mfx/ToolsParam.cpp \
+        ../../src/mfx/ToolsParam.h \
         ../../src/mfx/View.cpp \
         ../../src/mfx/View.h \
         ../../src/mfx/WorldAudio.cpp \

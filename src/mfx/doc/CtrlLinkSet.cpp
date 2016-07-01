@@ -41,27 +41,48 @@ namespace doc
 
 
 
-std::shared_ptr <CtrlLinkSet>	CtrlLinkSet::duplicate () const
+CtrlLinkSet::CtrlLinkSet (const CtrlLinkSet &other)
+:	_bind_sptr (other._bind_sptr)
+,	_mod_arr (other._mod_arr)
 {
-	std::shared_ptr <CtrlLinkSet> new_sptr (new CtrlLinkSet (*this));
+	duplicate_children ();
+}
+
+
+
+CtrlLinkSet &  CtrlLinkSet::operator = (const CtrlLinkSet &other)
+{
+	if (this != &other)
+	{
+		_bind_sptr = other._bind_sptr;
+		_mod_arr   = other._mod_arr;
+
+		duplicate_children ();
+	}
+
+	return *this;
+}
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	CtrlLinkSet::duplicate_children ()
+{
 	if (_bind_sptr.get () != 0)
 	{
-		new_sptr->_bind_sptr = LinkSPtr (new CtrlLink (*_bind_sptr));
+		_bind_sptr = LinkSPtr (new CtrlLink (*_bind_sptr));
 	}
-	for (auto &mod_sptr : new_sptr->_mod_arr)
+	for (auto &mod_sptr :_mod_arr)
 	{
 		if (mod_sptr.get () != 0)
 		{
 			mod_sptr = LinkSPtr (new CtrlLink (*mod_sptr));
 		}
 	}
-
-	return new_sptr;
 }
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 

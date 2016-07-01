@@ -30,7 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/MsgHandlerInterface.h"
 #include "mfx/PiType.h"
 
-#include <set>
 #include <string>
 #include <vector>
 
@@ -77,22 +76,10 @@ public:
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int step_index, int dir);
 	static double  change_param (double val_nrm, const Model &model, const View &view, int slot_index, PiType type, int index, float step, int step_index, int dir);
-	static std::set <float>
-	               create_beat_notches ();
 	static int     find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static void    change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list);
-
-	static double  conv_nrm_to_beats (double val_nrm, const piapi::ParamDescInterface &desc, double tempo);
-	static double  conv_beats_to_nrm (double val_beats, const piapi::ParamDescInterface &desc, double tempo);
-
-	static const std::set <float> *
-	               find_notch_list (const doc::PluginSettings &settings, int index);
-	static std::set <float>::const_iterator
-	               find_closest_notch (float val, const std::set <float> &notch_list);
-	static std::set <float>::const_iterator
-	               advance_to_notch (float val, const std::set <float> &notch_list, int dir);
 
 
 

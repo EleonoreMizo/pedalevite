@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverInterface.h"
+#include "mfx/ToolsParam.h"
 
 #include <algorithm>
 
@@ -493,35 +494,16 @@ void	Model::set_param_beats (int slot_index, int index, float beats)
 	assert (it_pres != settings._map_param_pres.end ());
 	it_pres->second._ref_beats = beats;
 
-	// Retrieves the parameter category
-	const PluginPool &   pi_pool = _central.use_pi_pool ();
 	const piapi::PluginDescInterface &	pi_desc =
-		pi_pool.get_model_desc (slot._pi_model);
+		get_model_desc (slot._pi_model);
 	const piapi::ParamDescInterface &   param_desc =
 		pi_desc.get_param_info (piapi::ParamCateg_GLOBAL, index);
-	piapi::ParamDescInterface::Categ categ = param_desc.get_categ ();
 
 	// Converts the value from beats to the internal parameter unit
-	double         val_nat = 1;
-	switch (categ)
-	{
-	case piapi::ParamDescInterface::Categ_TIME_S:
-		val_nat = beats * 60 / _tempo;
-		break;
-	case piapi::ParamDescInterface::Categ_TIME_HZ:
-	case piapi::ParamDescInterface::Categ_FREQ_HZ:
-		val_nat = _tempo / (60 * beats);
-		break;
-	default:
-		assert (false);
-		break;
-	}
-
 	// Clips and converts to a normalized value
-	const double   v_min = param_desc.get_nat_min ();
-	const double   v_max = param_desc.get_nat_max ();
-	val_nat = fstb::limit (val_nat, v_min, v_max);
-	const double   val_nrm = param_desc.conv_nat_to_nrm (val_nat);
+	const double   val_nrm = ToolsParam::conv_beats_to_nrm (
+		beats, param_desc, _tempo
+	);
 
 	// Sets the parameter
 	set_param (slot_index, PiType_MAIN, index, float (val_nrm));
@@ -567,7 +549,7 @@ void	Model::set_param_ctrl (int slot_index, PiType type, int index, const doc::C
 	}
 	else if (! _tuner_flag)
 	{
-		_central.set_mod (pi_id, index, cls);
+		set_param_ctrl_internal (cls, pi_id, slot_index, type, index);
 		_central.commit ();
 	}
 
@@ -609,7 +591,7 @@ int64_t	Model::get_cur_date () const
 
 void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 {
-	if (msg._type == mfx::Msg::Type_PARAM)
+	if (msg._type == Msg::Type_PARAM)
 	{
 		const int      pi_id = msg._content._param._plugin_id;
 		const int      index = msg._content._param._index;
@@ -623,9 +605,36 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 			const bool     ok_flag =
 				update_parameter (_preset_cur, slot_index, type, index, val);
 
-			if (ok_flag && _obs_ptr != 0)
+			if (ok_flag)
 			{
-				_obs_ptr->set_param (pi_id, index, val, slot_index, type);
+				if (_obs_ptr != 0)
+				{
+					_obs_ptr->set_param (pi_id, index, val, slot_index, type);
+				}
+
+				// Checks if the parameter is tempo-controlled
+				doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+				doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+				assert (index < int (settings._param_list.size ()));
+				doc::ParamPresentation *   pres_ptr =
+					settings.use_pres_if_tempo_ctrl (index);
+				if (pres_ptr != 0)
+				{
+					const piapi::PluginDescInterface &	pi_desc =
+						get_model_desc (slot._pi_model);
+					const piapi::ParamDescInterface &   param_desc =
+						pi_desc.get_param_info (piapi::ParamCateg_GLOBAL, index);
+
+					const float    val_beats = float (
+						ToolsParam::conv_nrm_to_beats (val, param_desc, _tempo)
+					);
+					pres_ptr->_ref_beats = val_beats;
+
+					if (_obs_ptr != 0)
+					{
+						_obs_ptr->set_param_beats (slot_index, index, val_beats);
+					}
+				}
 			}
 		}
 	}
@@ -797,7 +806,9 @@ void	Model::apply_settings_normal ()
 					it_s->second._force_reset_flag
 				);
 				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
-				send_effect_settings (pi_id, it_s->second);
+				send_effect_settings (
+					pi_id, slot_index, PiType_MAIN, it_s->second
+				);
 			}
 
 			++ slot_index_central;
@@ -845,7 +856,9 @@ void	Model::check_mixer_plugin (int slot_index, int slot_index_central)
 		{
 			const int      pi_id = _central.set_mixer (slot_index_central);
 			id_ref = pi_id;
-			send_effect_settings (pi_id, slot._settings_mixer);
+			send_effect_settings (
+				pi_id, slot_index, PiType_MIX, slot._settings_mixer
+			);
 		}
 	}
 
@@ -920,7 +933,7 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 
 
 // Does not commit anything
-void	Model::send_effect_settings (int pi_id, const doc::PluginSettings &settings)
+void	Model::send_effect_settings (int pi_id, int slot_index, PiType type, const doc::PluginSettings &settings)
 {
 	// Parameters
 	PluginPool::PluginDetails &   details =
@@ -937,7 +950,7 @@ void	Model::send_effect_settings (int pi_id, const doc::PluginSettings &settings
 	for (const auto &x : settings._map_param_ctrl)
 	{
 		const int   p_index = x.first;
-		_central.set_mod (pi_id, p_index, x.second);
+		set_param_ctrl_internal (x.second, pi_id, slot_index, type, p_index);
 	}
 }
 
@@ -1393,6 +1406,8 @@ void	Model::fill_pi_init_data (int slot_index, ModelObserverInterface::PluginIni
 
 void	Model::update_all_beat_parameters ()
 {
+	bool           need_commit_flag = false;
+
 	const int      nbr_slots = int (_preset_cur._slot_list.size ());
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
@@ -1400,16 +1415,75 @@ void	Model::update_all_beat_parameters ()
 		{
 			doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
 			doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+			const int      pi_id =
+				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN];
 			for (auto &p : settings._map_param_pres)
 			{
 				const float    beats = p.second._ref_beats;
 				if (beats >= 0)
 				{
-					set_param_beats (slot_index, p.first, beats);
+					const int      index = p.first;
+					set_param_beats (slot_index, index, beats);
+
+					if (pi_id >= 0)
+					{
+						auto           it_cls = settings._map_param_ctrl.find (index);
+						if (it_cls != settings._map_param_ctrl.end ())
+						{
+							set_param_ctrl_internal (
+								it_cls->second, pi_id, slot_index, PiType_MAIN, index
+							);
+							need_commit_flag = true;
+						}
+					}
 				}
 			}
 		}
 	}
+
+	if (need_commit_flag)
+	{
+		_central.commit ();
+	}
+}
+
+
+
+// Requires commit
+void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index)
+{
+	assert (pi_id >= 0);
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (! _preset_cur.is_slot_empty (slot_index));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::PluginSettings &   settings = slot.use_settings (type);
+	assert (index < int (settings._param_list.size ()));
+
+	const doc::CtrlLinkSet *   cls_ptr = &cls;
+	doc::CtrlLinkSet           cls_mod;
+	if (type == PiType_MAIN)
+	{
+		const doc::ParamPresentation *   pres_ptr =
+			settings.use_pres_if_tempo_ctrl (index);
+		if (pres_ptr != 0)
+		{
+			const piapi::PluginDescInterface &  desc_pi =
+				get_model_desc (slot._pi_model);
+			const piapi::ParamDescInterface &   desc    =
+				desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+
+			cls_mod = cls;
+			ToolsParam::add_beat_notch_list_if_linked (cls_mod, desc, _tempo);
+			cls_ptr = &cls_mod;
+		}
+	}
+
+	_central.set_mod (pi_id, index, *cls_ptr);
 }
 
 
