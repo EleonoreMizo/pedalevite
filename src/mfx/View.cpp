@@ -348,6 +348,20 @@ void	View::do_erase_slot (int slot_index)
 
 
 
+void	View::do_set_slot_label (int slot_index, std::string name)
+{
+	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	if (slot_sptr.get () == 0)
+	{
+		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
+	}
+	slot_sptr->_label = name;
+
+	mfx_View_PROPAGATE (set_slot_label (slot_index, name));
+}
+
+
+
 void	View::do_set_plugin (int slot_index, const PluginInitData &pi_data)
 {
 	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];

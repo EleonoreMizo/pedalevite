@@ -380,6 +380,26 @@ void	Model::erase_slot (int slot_index)
 
 
 
+void	Model::set_slot_label (int slot_index, std::string name)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+
+	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	if (slot_sptr.get () == 0)
+	{
+		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
+	}
+	slot_sptr->_label = name;
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_slot_label (slot_index, name);
+	}
+}
+
+
+
 void	Model::set_plugin (int slot_index, std::string model)
 {
 	assert (slot_index >= 0);

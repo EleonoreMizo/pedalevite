@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
@@ -80,6 +81,7 @@ protected:
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
+	virtual void   do_set_preset_name (std::string name);
 	virtual void   do_set_nbr_slots (int nbr_slots);
 	virtual void   do_insert_slot (int slot_index);
 	virtual void   do_erase_slot (int slot_index);
@@ -92,12 +94,19 @@ protected:
 
 private:
 
+	enum State
+	{
+		State_NORMAL = 0,
+		State_EDIT_NAME
+	};
+
 	enum Entry
 	{
 		Entry_WINDOW    = 1000,
 		Entry_FX_LIST,
 		Entry_PROG_NAME,
-		Entry_CONTROLLERS
+		Entry_CONTROLLERS,
+		Entry_SAVE
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -126,7 +135,14 @@ private:
 	TxtSPtr        _fx_list_sptr;
 	TxtSPtr        _prog_name_sptr;
 	TxtSPtr        _controllers_sptr;
+	TxtSPtr        _save_sptr;
 	TxtArray       _slot_list;    // Shows N+1 slots, the last one being the <Empty> line.
+
+	State          _state;
+	int            _save_bank_index;
+	int            _save_preset_index;
+	EditText::Param
+	               _name_param;
 
 
 

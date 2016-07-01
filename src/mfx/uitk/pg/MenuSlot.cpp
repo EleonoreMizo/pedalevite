@@ -75,6 +75,7 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_rst_sptr (new NText (Entry_RESET  ))
 ,	_chn_sptr (new NText (Entry_CHN    ))
 ,	_lbl_sptr (new NText (Entry_LABEL  ))
+,	_name_param ()
 {
 	_ins_sptr->set_text ("Insert before");
 	_del_sptr->set_text ("Delete");
@@ -114,8 +115,9 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		    && _view_ptr->get_preset_index () == _save_preset_index
 		    && _loc_edit._slot_index          == _save_slot_index)
 		{
-			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-			preset._slot_list [_loc_edit._slot_index]->_label = _name_param._text;
+			_model_ptr->set_slot_label (
+				_loc_edit._slot_index, _name_param._text
+			);
 		}
 	}
 	_state = State_NORMAL;
@@ -222,7 +224,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 			case Entry_LABEL:
 				{
 					assert (_loc_edit._slot_index >= 0);
-					_name_param._title = "Effect label";
+					_name_param._title = "Effect label:";
 					_name_param._text  = preset._slot_list [_loc_edit._slot_index]->_label;
 					_state             = State_EDIT_LABEL;
 					_save_bank_index   = _view_ptr->get_bank_index ();
@@ -326,6 +328,16 @@ void	MenuSlot::do_erase_slot (int slot_index)
 		{
 			-- _loc_edit._slot_index;
 		}
+		update_display ();
+	}
+}
+
+
+
+void	MenuSlot::do_set_slot_label (int slot_index, std::string name)
+{
+	if (_loc_edit._slot_index == slot_index)
+	{
 		update_display ();
 	}
 }

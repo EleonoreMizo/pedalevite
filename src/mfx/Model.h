@@ -97,6 +97,7 @@ public:
 	void           set_nbr_slots (int nbr_slots);
 	void           insert_slot (int slot_index);
 	void           erase_slot (int slot_index);
+	void           set_slot_label (int slot_index, std::string name);
 	void           set_plugin (int slot_index, std::string model);
 	void           remove_plugin (int slot_index);
 	void           set_param (int slot_index, PiType type, int index, float val);

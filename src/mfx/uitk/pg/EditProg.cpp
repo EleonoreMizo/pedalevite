@@ -66,13 +66,22 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_fx_list_sptr (new NText (Entry_FX_LIST))
 ,	_prog_name_sptr (new NText (Entry_PROG_NAME))
 ,	_controllers_sptr (new NText (Entry_CONTROLLERS))
+,	_save_sptr (new NText (Entry_SAVE))
 ,	_slot_list ()
+,	_state (State_NORMAL)
+,	_save_bank_index (-1)
+,	_save_preset_index (-1)
+,	_name_param ()
 {
 	_prog_name_sptr  ->set_justification (0.5f, 0, false);
 	_controllers_sptr->set_justification (0.5f, 0, false);
+	_save_sptr       ->set_justification (0.5f, 0, false);
 	_fx_list_sptr    ->set_justification (0.5f, 1, false);
 	_controllers_sptr->set_text ("Controllers");
-	_fx_list_sptr    ->set_text ("-----");
+	_save_sptr       ->set_text ("Save to\xE2\x80\xA6");
+	_fx_list_sptr    ->set_text ("-----------------");
+	_prog_name_sptr  ->set_bold (true, true );
+	_fx_list_sptr    ->set_bold (true, false);
 }
 
 
@@ -91,8 +100,20 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_model_ptr->set_edit_mode (true);
 
+	if (_state == State_EDIT_NAME)
+	{
+		if (   _name_param._ok_flag
+			 && _view_ptr->get_bank_index ()   == _save_bank_index
+		    && _view_ptr->get_preset_index () == _save_preset_index)
+		{
+			_model_ptr->set_preset_name (_name_param._text);
+		}
+	}
+	_state = State_NORMAL;
+
 	_prog_name_sptr  ->set_font (*_fnt_ptr);
 	_controllers_sptr->set_font (*_fnt_ptr);
+	_save_sptr       ->set_font (*_fnt_ptr);
 	_fx_list_sptr    ->set_font (*_fnt_ptr);
 
 	const int      scr_w = _page_size [0];
@@ -104,10 +125,12 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_prog_name_sptr  ->set_coord (Vec2d (x_mid, 0 * h_m));
 	_controllers_sptr->set_coord (Vec2d (x_mid, 1 * h_m));
-	_fx_list_sptr    ->set_coord (Vec2d (x_mid, 3 * h_m));
+	_save_sptr       ->set_coord (Vec2d (x_mid, 2 * h_m));
+	_fx_list_sptr    ->set_coord (Vec2d (x_mid, 4 * h_m));
 
 	_prog_name_sptr  ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_controllers_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_save_sptr       ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
 	_page_ptr->push_back (_menu_sptr);
 
@@ -147,6 +170,17 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 		case Button_S:
 			ret_val = EvtProp_CATCH;
 			if (node_id == Entry_PROG_NAME)
+			{
+				const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+				_name_param._title = "Program name:";
+				_name_param._text  = preset._name;
+				_state             = State_EDIT_NAME;
+				_save_bank_index   = _view_ptr->get_bank_index ();
+				_save_preset_index = _view_ptr->get_preset_index ();
+				_page_switcher.call_page (PageType_EDIT_TEXT, &_name_param, node_id);
+				ret_val = EvtProp_CATCH;
+			}
+			else if (node_id == Entry_SAVE)
 			{
 				/*** To do ***/
 				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
@@ -205,6 +239,13 @@ void	EditProg::do_activate_preset (int index)
 
 
 
+void	EditProg::do_set_preset_name (std::string name)
+{
+	set_preset_info ();
+}
+
+
+
 void	EditProg::do_set_nbr_slots (int nbr_slots)
 {
 	set_preset_info ();
@@ -252,15 +293,17 @@ void	EditProg::set_preset_info ()
 	_prog_name_sptr->set_text (preset._name);
 
 	const int      nbr_slots = preset._slot_list.size ();
-	PageMgrInterface::NavLocList  nav_list (nbr_slots + 3);
+	PageMgrInterface::NavLocList  nav_list (nbr_slots + 4);
 	_slot_list.resize (nbr_slots + 1);
 
 	_menu_sptr->clear_all_nodes ();
 	_menu_sptr->push_back (_prog_name_sptr);
 	_menu_sptr->push_back (_controllers_sptr);
+	_menu_sptr->push_back (_save_sptr);
 	_menu_sptr->push_back (_fx_list_sptr);
 	nav_list [0]._node_id = Entry_PROG_NAME;
 	nav_list [1]._node_id = Entry_CONTROLLERS;
+	nav_list [2]._node_id = Entry_SAVE;
 
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
@@ -290,8 +333,8 @@ void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index,
 {
 	const int      h_m      = _fnt_ptr->get_char_h ();
 	const int      scr_w    = _page_size [0];
-	const int      pos_nav  = slot_index + 2; // In the nav_list
-	const int      pos_menu = slot_index + 3;
+	const int      pos_nav  = slot_index + 3; // In the nav_list
+	const int      pos_menu = slot_index + 4;
 
 	TxtSPtr        entry_sptr (new NText (slot_index));
 	entry_sptr->set_coord (Vec2d (0, h_m * pos_menu));

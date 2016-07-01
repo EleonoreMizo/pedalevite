@@ -210,6 +210,15 @@ void	ModelObserverInterface::erase_slot (int slot_index)
 
 
 
+void	ModelObserverInterface::set_slot_label (int slot_index, std::string name)
+{
+	assert (slot_index >= 0);
+
+	do_set_slot_label (slot_index, name);
+}
+
+
+
 // set_slot_info_for_current_preset to be called later
 void	ModelObserverInterface::set_plugin (int slot_index, const PluginInitData &pi_data)
 {
