@@ -69,7 +69,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 	_edit_prog_sptr  ->set_text ("Edit Program");
 	_edit_bank_sptr  ->set_text ("Banks");
 	_edit_layout_sptr->set_text ("Layout");
-	_edit_master_sptr->set_text ("Master volume");
+	_edit_master_sptr->set_text ("Volume & Levels");
 	_reboot_sptr     ->set_text ("Reboot");
 }
 
@@ -85,7 +85,10 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr  = &page;
 	_page_size = page_size;
 
-	model.set_edit_mode (false);
+	if (_view_ptr->use_setup ()._save_mode != doc::Setup::SaveMode_AUTO)
+	{
+		model.set_edit_mode (false);
+	}
 
 	_edit_prog_sptr  ->set_font (fnt_m);
 	_edit_bank_sptr  ->set_font (fnt_m);

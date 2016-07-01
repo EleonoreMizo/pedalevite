@@ -98,7 +98,10 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt_m;
 
-	_model_ptr->set_edit_mode (true);
+	if (_view_ptr->use_setup ()._save_mode != doc::Setup::SaveMode_MANUAL)
+	{
+		_model_ptr->set_edit_mode (true);
+	}
 
 	if (_state == State_EDIT_NAME)
 	{

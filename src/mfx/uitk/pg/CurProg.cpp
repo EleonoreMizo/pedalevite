@@ -111,7 +111,11 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	_page_size = page_size;
 
 	_tempo_date = _model_ptr->get_cur_date () - 1000*1000;
-	_model_ptr->set_edit_mode (false);
+
+	if (_view_ptr->use_setup ()._save_mode != doc::Setup::SaveMode_AUTO)
+	{
+		_model_ptr->set_edit_mode (false);
+	}
 
 	_prog_nbr_sptr->set_font (fnt_m);
 	_prog_name_sptr->set_font (fnt_l);

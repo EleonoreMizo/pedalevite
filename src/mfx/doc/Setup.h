@@ -50,6 +50,15 @@ class Setup
 
 public:
 
+	enum SaveMode
+	{
+		SaveMode_MANUAL = 0,
+		SaveMode_PARTIAL,
+		SaveMode_AUTO,
+
+		SaveMode_NBR_ELT
+	};
+
 	typedef std::array <Bank, Cst::_nbr_banks> BankArray;
 
 	               Setup ()                               = default;
@@ -62,6 +71,7 @@ public:
 	PedalboardLayout
 	               _layout;
 	std::string    _name;
+	SaveMode       _save_mode = SaveMode_PARTIAL;
 
 
 
