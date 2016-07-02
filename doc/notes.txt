@@ -530,6 +530,7 @@ Piste :
 	– https://linuxfr.org/users/khalahan/journaux/linux-presque-enti%C3%A8rement-en-ram
 	– http://www.framboise314.fr/et-si-on-se-passait-du-swap/
 	– http://blog.gegg.us/2014/03/a-raspbian-read-only-root-fs-howto/
+		-> Copie de fichier temporaire : https://github.com/giggls/web20mash/blob/master/mashctld_readonly_root_script.sh
 Autre possibilité : ajouter une batterie, et un système qui détecte la coupure de l'alim principale.
 
 
