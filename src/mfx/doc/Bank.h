@@ -42,6 +42,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class Bank
 {
 
@@ -54,6 +57,9 @@ public:
 	virtual        ~Bank ()                       = default;
 
 	Bank &         operator = (const Bank &other) = default;
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	std::array <Preset, Cst::_nbr_presets_per_bank>
                   _preset_arr;

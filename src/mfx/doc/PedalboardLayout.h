@@ -41,6 +41,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class PedalboardLayout
 {
 
@@ -56,6 +59,9 @@ public:
 	               operator = (const PedalboardLayout &other)       = default;
 
 	void           merge_layout (const PedalboardLayout &other);
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	std::array <PedalActionGroup, Cst::_nbr_pedals>
 	               _pedal_arr;

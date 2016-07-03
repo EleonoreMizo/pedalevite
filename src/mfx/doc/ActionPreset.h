@@ -38,6 +38,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class ActionPreset
 :	public PedalActionSingleInterface
 {
@@ -47,10 +50,14 @@ class ActionPreset
 public:
 
 	explicit       ActionPreset (bool relative_flag, int val);
+	explicit       ActionPreset (SerRInterface &ser);
 	               ActionPreset (const ActionPreset &other) = default;
 	virtual        ~ActionPreset ()                         = default;
 
 	ActionPreset & operator = (const ActionPreset &other)   = default;
+
+	virtual void   ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	bool           _relative_flag;
 	int            _val;                // Absolute number or step (+/-1)

@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/PedalboardLayout.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -56,6 +58,58 @@ void	PedalboardLayout::merge_layout (const PedalboardLayout &other)
 			pac_cur.merge_cycle (pac_oth);
 		}
 	}
+}
+
+
+
+void	PedalboardLayout::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.begin_list ();
+	bool           empty_flag = true;
+	for (size_t pos = 0; pos < _pedal_arr.size () && empty_flag; ++pos)
+	{
+		empty_flag = _pedal_arr [pos].is_empty_default ();
+	}
+	if (! empty_flag)
+	{
+		for (const auto &p : _pedal_arr)
+		{
+			p.ser_write (ser);
+		}
+	}
+	ser.end_list ();
+
+	ser.end_list ();
+}
+
+
+
+void	PedalboardLayout::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	int            nbr_elt;
+	ser.begin_list (nbr_elt);
+	if (nbr_elt == 0)
+	{
+		for (auto &p : _pedal_arr)
+		{
+			p = PedalActionGroup ();
+		}
+	}
+	else
+	{
+		assert (nbr_elt == int (_pedal_arr.size ()));
+		for (auto &p : _pedal_arr)
+		{
+			p.ser_read (ser);
+		}
+	}
+	ser.end_list ();
+
+	ser.end_list ();
 }
 
 

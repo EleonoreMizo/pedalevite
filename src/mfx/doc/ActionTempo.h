@@ -38,6 +38,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class ActionTempo
 :	public PedalActionSingleInterface
 {
@@ -47,10 +50,14 @@ class ActionTempo
 public:
 
 	               ActionTempo ()                         = default;
+	               ActionTempo (SerRInterface &ser);
 	               ActionTempo (const ActionTempo &other) = default;
 	virtual        ~ActionTempo ()                        = default;
 
 	ActionTempo &  operator = (const ActionTempo &other)  = default;
+
+	virtual void   ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 
 

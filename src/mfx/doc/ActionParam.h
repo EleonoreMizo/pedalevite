@@ -39,6 +39,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class ActionParam
 :	public PedalActionSingleInterface
 {
@@ -48,10 +51,14 @@ class ActionParam
 public:
 
 	explicit       ActionParam (const FxId &fx_id, int index, float val);
+	explicit       ActionParam (SerRInterface &ser);
 	               ActionParam (const ActionParam &other) = default;
 	virtual        ~ActionParam ()                        = default;
 
 	ActionParam &  operator = (const ActionParam &other)  = default;
+
+	virtual void   ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	FxId           _fx_id;
 	int            _index;

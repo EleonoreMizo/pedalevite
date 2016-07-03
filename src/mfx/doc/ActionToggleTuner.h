@@ -38,6 +38,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class ActionToggleTuner
 :	public PedalActionSingleInterface
 {
@@ -47,11 +50,15 @@ class ActionToggleTuner
 public:
 
 	               ActionToggleTuner ()                               = default;
+	               ActionToggleTuner (SerRInterface &ser);
 	               ActionToggleTuner (const ActionToggleTuner &other) = default;
 	virtual        ~ActionToggleTuner ()                              = default;
 
 	ActionToggleTuner &
 	               operator = (const ActionToggleTuner &other)        = default;
+
+	virtual void   ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 
 

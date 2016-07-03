@@ -41,6 +41,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class PedalActionCycle
 {
 
@@ -59,7 +62,11 @@ public:
 	PedalActionCycle &
 	               operator = (const PedalActionCycle &other);
 
+	bool           is_empty_default () const;
 	void           merge_cycle (const PedalActionCycle &other);
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	ActionCycle    _cycle;            // Null pointers and empty members not allowed (but _cycle can be empty). Only "PRESS" cycles are allowed to have more than 1 action array.
 	bool           _inherit_flag;     // cycle will merge to the parent cycle, possibly extending it.

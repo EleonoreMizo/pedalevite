@@ -24,6 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 #include "mfx/doc/Slot.h"
 #include "mfx/pi/dwm/DryWetDesc.h"
 #include "mfx/pi/dwm/Param.h"
@@ -92,6 +94,59 @@ const PluginSettings &	Slot::use_settings (PiType type) const
 	assert (it != _settings_all.end ());
 
 	return it->second;
+}
+
+
+
+void	Slot::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.write (_pi_model);
+	ser.write (_label);
+	_settings_mixer.ser_write (ser);
+
+	ser.begin_list ();
+	for (const auto &sp : _settings_all)
+	{
+		ser.begin_list ();
+
+		ser.write (sp.first);
+		sp.second.ser_write (ser);
+
+		ser.end_list ();
+	}
+	ser.end_list ();
+
+	ser.end_list ();
+}
+
+
+
+void	Slot::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.read (_pi_model);
+	ser.read (_label);
+	_settings_mixer.ser_read (ser);
+
+	int            nbr_elt;
+	ser.begin_list (nbr_elt);
+	_settings_all.clear ();
+	for (int cnt = 0; cnt < nbr_elt; ++cnt)
+	{
+		ser.begin_list ();
+
+		std::string    model_id;
+		ser.read (model_id);
+		_settings_all [model_id].ser_read (ser);
+
+		ser.end_list ();
+	}
+	ser.end_list ();
+
+	ser.end_list ();
 }
 
 

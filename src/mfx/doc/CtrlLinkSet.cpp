@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/CtrlLinkSet.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -61,6 +63,61 @@ CtrlLinkSet &  CtrlLinkSet::operator = (const CtrlLinkSet &other)
 	}
 
 	return *this;
+}
+
+
+
+void	CtrlLinkSet::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.begin_list ();
+	if (_bind_sptr.get () != 0)
+	{
+		_bind_sptr->ser_write (ser);
+	}
+	ser.end_list ();
+
+	ser.begin_list ();
+	for (const auto &l_sptr : _mod_arr)
+	{
+		l_sptr->ser_write (ser);
+	}
+	ser.end_list ();
+
+	ser.end_list ();
+}
+
+
+
+void	CtrlLinkSet::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	int            nbr_elt;
+	ser.begin_list (nbr_elt);
+	if (nbr_elt == 1)
+	{
+		_bind_sptr = LinkSPtr (new CtrlLink);
+		_bind_sptr->ser_read (ser);
+	}
+	else
+	{
+		assert (nbr_elt == 0);
+		_bind_sptr.reset ();
+	}
+	ser.end_list ();
+
+	ser.begin_list (nbr_elt);
+	_mod_arr.resize (nbr_elt);
+	for (auto &l_sptr : _mod_arr)
+	{
+		l_sptr = LinkSPtr (new CtrlLink);;
+		l_sptr->ser_read (ser);
+	}
+	ser.end_list ();
+
+	ser.end_list ();
 }
 
 

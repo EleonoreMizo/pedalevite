@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -46,6 +48,37 @@ ActionPreset::ActionPreset (bool relative_flag, int val)
 ,	_val (val)
 {
 	// Nothing
+}
+
+
+
+ActionPreset::ActionPreset (SerRInterface &ser)
+{
+	ser_read (ser);
+}
+
+
+
+void	ActionPreset::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.write (_relative_flag);
+	ser.write (_val);
+
+	ser.end_list ();
+}
+
+
+
+void	ActionPreset::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.read (_relative_flag);
+	ser.read (_val);
+
+	ser.end_list ();
 }
 
 

@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/ActionParam.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -47,6 +49,40 @@ ActionParam::ActionParam (const FxId &fx_id, int index, float val)
 ,	_val (val)
 {
 	// Nothing
+}
+
+
+
+ActionParam::ActionParam (SerRInterface &ser)
+:	_fx_id (FxId::LocType_LABEL, "", PiType_MAIN)
+{
+	ser_read (ser);
+}
+
+
+
+void	ActionParam::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	_fx_id.ser_write (ser);
+	ser.write (_index);
+	ser.write (_val);
+
+	ser.end_list ();
+}
+
+
+
+void	ActionParam::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	_fx_id.ser_read (ser);
+	ser.read (_index);
+	ser.read (_val);
+
+	ser.end_list ();
 }
 
 

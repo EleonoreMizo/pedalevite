@@ -34,6 +34,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+namespace doc
+{
+	class SerRInterface;
+	class SerWInterface;
+}
+
 
 
 class ControlSource
@@ -59,6 +65,9 @@ public:
 
 	inline bool    operator == (const ControlSource &other) const;
 	inline bool    operator != (const ControlSource &other) const;
+
+	void           ser_write (doc::SerWInterface &ser) const;
+	void           ser_read (doc::SerRInterface &ser);
 
 
 

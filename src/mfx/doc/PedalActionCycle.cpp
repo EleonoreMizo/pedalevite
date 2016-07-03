@@ -24,7 +24,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/ActionParam.h"
+#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionTempo.h"
+#include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/PedalActionCycle.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <algorithm>
 #include <utility>
@@ -78,6 +84,13 @@ PedalActionCycle &	PedalActionCycle::operator = (const PedalActionCycle &other)
 
 
 
+bool	PedalActionCycle::is_empty_default () const
+{
+	return (_cycle.empty () && _inherit_flag && _overridable_flag);
+}
+
+
+
 void	PedalActionCycle::merge_cycle (const PedalActionCycle &other)
 {
 	if (   _cycle.empty ()
@@ -114,6 +127,91 @@ void	PedalActionCycle::merge_cycle (const PedalActionCycle &other)
 			);
 		}
 	}
+}
+
+
+
+void	PedalActionCycle::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.write (_inherit_flag);
+	ser.write (_overridable_flag);
+
+	ser.begin_list ();
+	for (const auto &aa : _cycle)
+	{
+		ser.begin_list ();
+		for (const auto &a_sptr : aa)
+		{
+			ser.begin_list ();
+			const ActionType  type = a_sptr->get_type ();
+			ser.write (type);
+			a_sptr->ser_write (ser);
+			ser.end_list ();
+		}
+		ser.end_list ();
+	}
+	ser.end_list ();
+
+	ser.end_list ();
+}
+
+
+
+void	PedalActionCycle::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.read (_inherit_flag);
+	ser.read (_overridable_flag);
+
+	int            nbr_elt;
+	ser.begin_list (nbr_elt);
+	_cycle.resize (nbr_elt);
+	for (auto &aa : _cycle)
+	{
+		int            nbr_p;
+		ser.begin_list (nbr_p);
+		aa.resize (nbr_p);
+		for (auto &a_sptr : aa)
+		{
+			int            chk;
+			ser.begin_list (chk);
+			assert (chk == 2);
+			ActionType     type;
+			ser.read (type);
+			switch (type)
+			{
+			case ActionType_PRESET:
+				a_sptr = ActionSPtr (new ActionPreset (ser));
+				break;
+			case ActionType_TOGGLE_TUNER:
+				a_sptr = ActionSPtr (new ActionToggleTuner (ser));
+				break;
+			case ActionType_PARAM:
+				a_sptr = ActionSPtr (new ActionParam (ser));
+				break;
+			case ActionType_TEMPO:
+				a_sptr = ActionSPtr (new ActionTempo (ser));
+				break;
+
+			case ActionType_BANK:
+			case ActionType_TOGGLE_FX:
+			case ActionType_LOOP_REC:
+			case ActionType_LOOP_PLAY_STOP:
+			case ActionType_LOOP_UNDO:
+			case ActionType_EVENT:
+			default:
+				assert (false);
+			}
+			ser.end_list ();
+		}
+		ser.end_list ();
+	}
+	ser.end_list ();
+
+	ser.end_list ();
 }
 
 

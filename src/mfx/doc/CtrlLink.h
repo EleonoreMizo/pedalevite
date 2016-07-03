@@ -41,6 +41,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class CtrlLink
 {
 
@@ -53,6 +56,9 @@ public:
 	virtual        ~CtrlLink ()                       = default;
 
 	CtrlLink &     operator = (const CtrlLink &other) = default;
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	ControlSource  _source;
 	float          _step     = 1.0f / 64;  // For relative modes (incremental encoders). > 0

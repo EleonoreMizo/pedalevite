@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionToggleFx.cpp
+        ControlSource.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,17 +24,15 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
+#include "mfx/ControlSource.h"
 
 #include <cassert>
 
 
 
 namespace mfx
-{
-namespace doc
 {
 
 
@@ -43,22 +41,24 @@ namespace doc
 
 
 
-void	ActionToggleFx::ser_write (SerWInterface &ser) const
+void	ControlSource::ser_write (doc::SerWInterface &ser) const
 {
 	ser.begin_list ();
 
-	_fx_id.ser_write (ser);
+	ser.write (_type);
+	ser.write (_index);
 
 	ser.end_list ();
 }
 
 
 
-void	ActionToggleFx::ser_read (SerRInterface &ser)
+void	ControlSource::ser_read (doc::SerRInterface &ser)
 {
 	ser.begin_list ();
 
-	_fx_id.ser_read (ser);
+	ser.read (_type);
+	ser.read (_index);
 
 	ser.end_list ();
 }
@@ -69,25 +69,10 @@ void	ActionToggleFx::ser_read (SerRInterface &ser)
 
 
 
-ActionType	ActionToggleFx::do_get_type () const
-{
-	return ActionType_TOGGLE_FX;
-}
-
-
-
-PedalActionSingleInterface *	ActionToggleFx::do_duplicate () const
-{
-	return new ActionToggleFx (*this);
-}
-
-
-
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
-}  // namespace doc
 }  // namespace mfx
 
 

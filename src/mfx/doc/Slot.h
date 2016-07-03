@@ -42,6 +42,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class Slot
 {
 
@@ -61,6 +64,9 @@ public:
 	               use_settings (PiType type);
 	const PluginSettings &
 	               use_settings (PiType type) const;
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	std::string    _pi_model; // Empty string is legal here and means the slot is empty.
 	SettingHistory _settings_all;

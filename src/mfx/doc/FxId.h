@@ -40,6 +40,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class FxId
 {
 
@@ -62,6 +65,9 @@ public:
 	virtual        ~FxId ()                       = default;
 
 	FxId &         operator = (const FxId &other) = default;
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	LocType        _location_type = LocType_INVALID;
 	std::string    _label_or_model;

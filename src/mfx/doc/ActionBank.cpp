@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/ActionBank.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -38,6 +40,30 @@ namespace doc
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	ActionBank::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.write (_relative_flag);
+	ser.write (_val);
+
+	ser.end_list ();
+}
+
+
+
+void	ActionBank::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.read (_relative_flag);
+	ser.read (_val);
+
+	ser.end_list ();
+}
 
 
 

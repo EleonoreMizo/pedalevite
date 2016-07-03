@@ -43,6 +43,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class Setup
 {
 
@@ -67,11 +70,14 @@ public:
 
 	Setup &        operator = (const Setup &other)        = default;
 
-	BankArray      _bank_arr;
-	PedalboardLayout
-	               _layout;
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
+
 	std::string    _name;
 	SaveMode       _save_mode = SaveMode_PARTIAL;
+	PedalboardLayout
+	               _layout;
+	BankArray      _bank_arr;
 
 
 

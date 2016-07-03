@@ -41,6 +41,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class CtrlLinkSet
 {
 
@@ -56,8 +59,11 @@ public:
 	virtual        ~CtrlLinkSet () = default;
 	CtrlLinkSet &  operator = (const CtrlLinkSet &other);
 
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
+
 	LinkSPtr       _bind_sptr;
-	ModArray       _mod_arr;
+	ModArray       _mod_arr;   // Null pointers not allowed.
 
 
 

@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/ActionTempo.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -38,6 +40,31 @@ namespace doc
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+ActionTempo::ActionTempo (SerRInterface &ser)
+{
+	ser_read (ser);
+}
+
+
+
+void	ActionTempo::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.end_list ();
+}
+
+
+
+void	ActionTempo::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.end_list ();
+}
 
 
 

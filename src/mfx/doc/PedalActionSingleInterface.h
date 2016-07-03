@@ -38,6 +38,8 @@ namespace doc
 
 
 
+class SerWInterface;
+
 class PedalActionSingleInterface
 {
 
@@ -50,6 +52,8 @@ public:
 	ActionType     get_type () const;
 	PedalActionSingleInterface *
 	               duplicate () const;
+
+	virtual void   ser_write (SerWInterface &ser) const = 0;
 
 
 

@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/FxId.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -48,6 +50,34 @@ FxId::FxId (LocType loc_type, std::string label, PiType type)
 {
 	assert (loc_type >= 0);
 	assert (loc_type < LocType_NBR_ELT);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+}
+
+
+
+void	FxId::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.write (_location_type);
+	ser.write (_label_or_model);
+	ser.write (_type);
+
+	ser.end_list ();
+}
+
+
+
+void	FxId::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.read (_location_type);
+	ser.read (_label_or_model);
+	ser.read (_type);
+
+	ser.end_list ();
 }
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionToggleFx.cpp
+        Bank.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionToggleFx.h"
+#include "mfx/doc/Bank.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
@@ -43,22 +43,40 @@ namespace doc
 
 
 
-void	ActionToggleFx::ser_write (SerWInterface &ser) const
+void	Bank::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();
 
-	_fx_id.ser_write (ser);
+	ser.write (_name);
+	_layout.ser_write (ser);
+
+	ser.begin_list ();
+	for (const auto &p : _preset_arr)
+	{
+		p.ser_write (ser);
+	}
+	ser.end_list ();
 
 	ser.end_list ();
 }
 
 
 
-void	ActionToggleFx::ser_read (SerRInterface &ser)
+void	Bank::ser_read (SerRInterface &ser)
 {
 	ser.begin_list ();
 
-	_fx_id.ser_read (ser);
+	ser.read (_name);
+	_layout.ser_read (ser);
+
+	int            nbr_elt;
+	ser.begin_list (nbr_elt);
+	assert (nbr_elt == int (_preset_arr.size ()));
+	for (auto &p : _preset_arr)
+	{
+		p.ser_read (ser);
+	}
+	ser.end_list ();
 
 	ser.end_list ();
 }
@@ -66,20 +84,6 @@ void	ActionToggleFx::ser_read (SerRInterface &ser)
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-ActionType	ActionToggleFx::do_get_type () const
-{
-	return ActionType_TOGGLE_FX;
-}
-
-
-
-PedalActionSingleInterface *	ActionToggleFx::do_duplicate () const
-{
-	return new ActionToggleFx (*this);
-}
 
 
 

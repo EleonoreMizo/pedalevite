@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionToggleFx.cpp
+        SerRInterface.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,11 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/SerRInterface.h"
-#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -43,47 +42,38 @@ namespace doc
 
 
 
-void	ActionToggleFx::ser_write (SerWInterface &ser) const
+int	SerRInterface::begin_list (int &nbr_elt)
 {
-	ser.begin_list ();
+	const int      ret_val = do_begin_list (nbr_elt);
+	assert (nbr_elt >= 0 || ret_val != 0);
 
-	_fx_id.ser_write (ser);
-
-	ser.end_list ();
+	return ret_val;
 }
 
 
 
-void	ActionToggleFx::ser_read (SerRInterface &ser)
+int	SerRInterface::end_list ()
 {
-	ser.begin_list ();
+	return do_end_list ();
+}
 
-	_fx_id.ser_read (ser);
 
-	ser.end_list ();
+
+int	SerRInterface::read (double &x)
+{
+	return do_read (x);
+}
+
+
+
+int	SerRInterface::read (std::string &s)
+{
+	return do_read (s);
 }
 
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-ActionType	ActionToggleFx::do_get_type () const
-{
-	return ActionType_TOGGLE_FX;
-}
-
-
-
-PedalActionSingleInterface *	ActionToggleFx::do_duplicate () const
-{
-	return new ActionToggleFx (*this);
-}
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 

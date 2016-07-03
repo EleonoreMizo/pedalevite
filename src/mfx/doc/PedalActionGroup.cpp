@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionToggleFx.cpp
+        PedalActionGroup.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionToggleFx.h"
+#include "mfx/doc/PedalActionGroup.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
@@ -43,22 +43,47 @@ namespace doc
 
 
 
-void	ActionToggleFx::ser_write (SerWInterface &ser) const
+bool	PedalActionGroup::is_empty_default () const
+{
+	bool           empty_flag = true;
+	for (size_t pos = 0; pos < _action_arr.size () && empty_flag; ++pos)
+	{
+		empty_flag = _action_arr [pos].is_empty_default ();
+	}
+
+	return empty_flag;
+}
+
+
+
+void	PedalActionGroup::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();
 
-	_fx_id.ser_write (ser);
+	ser.begin_list ();
+	for (const auto &c : _action_arr)
+	{
+		c.ser_write (ser);
+	}
+	ser.end_list ();
 
 	ser.end_list ();
 }
 
 
 
-void	ActionToggleFx::ser_read (SerRInterface &ser)
+void	PedalActionGroup::ser_read (SerRInterface &ser)
 {
 	ser.begin_list ();
 
-	_fx_id.ser_read (ser);
+	int            nbr_elt;
+	ser.begin_list (nbr_elt);
+	assert (nbr_elt == int (_action_arr.size ()));
+	for (auto &c : _action_arr)
+	{
+		c.ser_read (ser);
+	}
+	ser.end_list ();
 
 	ser.end_list ();
 }
@@ -66,20 +91,6 @@ void	ActionToggleFx::ser_read (SerRInterface &ser)
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-ActionType	ActionToggleFx::do_get_type () const
-{
-	return ActionType_TOGGLE_FX;
-}
-
-
-
-PedalActionSingleInterface *	ActionToggleFx::do_duplicate () const
-{
-	return new ActionToggleFx (*this);
-}
 
 
 

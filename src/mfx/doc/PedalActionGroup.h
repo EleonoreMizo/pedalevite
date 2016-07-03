@@ -41,6 +41,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class PedalActionGroup
 {
 
@@ -54,6 +57,11 @@ public:
 
 	PedalActionGroup &
 	               operator = (const PedalActionGroup &other)       = default;
+
+	bool           is_empty_default () const;
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	std::array <PedalActionCycle, ActionTrigger_NBR_ELT>
 	               _action_arr;

@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/PluginSettings.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -133,6 +135,98 @@ ParamPresentation *	PluginSettings::use_pres_if_tempo_ctrl (int index)
 	}
 
 	return pres_ptr;
+}
+
+
+
+void	PluginSettings::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.write (_force_mono_flag);
+	ser.write (_force_reset_flag);
+
+	ser.begin_list ();
+	for (auto &v : _param_list)
+	{
+		ser.write (v);
+	}
+	ser.end_list ();
+
+	ser.begin_list ();
+	for (const auto &sp : _map_param_ctrl)
+	{
+		ser.begin_list ();
+
+		ser.write (sp.first);
+		sp.second.ser_write (ser);
+
+		ser.end_list ();
+	}
+	ser.end_list ();
+
+	ser.begin_list ();
+	for (const auto &sp : _map_param_pres)
+	{
+		ser.begin_list ();
+
+		ser.write (sp.first);
+		sp.second.ser_write (ser);
+
+		ser.end_list ();
+	}
+	ser.end_list ();
+
+	ser.end_list ();
+}
+
+
+
+void	PluginSettings::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.read (_force_mono_flag);
+	ser.read (_force_reset_flag);
+
+	int            nbr_elt;
+	ser.begin_list (nbr_elt);
+	_param_list.resize (nbr_elt);
+	for (auto &v : _param_list)
+	{
+		ser.read (v);
+	}
+	ser.end_list ();
+
+	ser.begin_list (nbr_elt);
+	_map_param_ctrl.clear ();
+	for (int cnt = 0; cnt < nbr_elt; ++cnt)
+	{
+		ser.begin_list ();
+
+		int            index;
+		ser.read (index);
+		_map_param_ctrl [index].ser_read (ser);
+
+		ser.end_list ();
+	}
+	ser.end_list ();
+
+	ser.begin_list (nbr_elt);
+	_map_param_pres.clear ();
+	for (int cnt = 0; cnt < nbr_elt; ++cnt)
+	{
+		ser.begin_list ();
+
+		int            index;
+		ser.read (index);
+		_map_param_pres [index].ser_read (ser);
+
+		ser.end_list ();
+	}
+	ser.end_list ();
+
+	ser.end_list ();
 }
 
 

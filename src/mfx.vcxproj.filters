@@ -1197,6 +1197,18 @@
     <ClInclude Include="mfx\ToolsParam.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\doc\SerWInterface.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\SerRInterface.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\SerWText.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\doc\SerRText.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1612,6 +1624,36 @@
       <Filter>mfx\doc</Filter>
     </ClCompile>
     <ClCompile Include="mfx\ToolsParam.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\SerWInterface.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\SerRInterface.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\SerRText.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\SerWText.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\Setup.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\PedalActionGroup.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\Bank.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\ParamPresentation.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\doc\CtrlLink.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\ControlSource.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>

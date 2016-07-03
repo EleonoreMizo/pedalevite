@@ -42,6 +42,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class PluginSettings
 {
 
@@ -69,6 +72,9 @@ public:
 	               use_pres_if_tempo_ctrl (int index) const;
 	ParamPresentation *
 	               use_pres_if_tempo_ctrl (int index);
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	bool           _force_mono_flag  = false;
 	bool           _force_reset_flag = false;

@@ -39,6 +39,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class ActionToggleFx
 :	public PedalActionSingleInterface
 {
@@ -52,6 +55,9 @@ public:
 
 	ActionToggleFx &
 	               operator = (const ActionToggleFx &other)     = default;
+
+	virtual void   ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	FxId           _fx_id;
 

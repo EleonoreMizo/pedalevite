@@ -38,6 +38,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class ActionBank
 :	public PedalActionSingleInterface
 {
@@ -50,6 +53,9 @@ public:
 	virtual        ~ActionBank ()                       = default;
 
 	ActionBank &   operator = (const ActionBank &other) = default;
+
+	virtual void   ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	bool           _relative_flag;
 	int            _val;                // Absolute number or step (+/-1)

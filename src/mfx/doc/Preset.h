@@ -42,6 +42,9 @@ namespace doc
 
 
 
+class SerRInterface;
+class SerWInterface;
+
 class Preset
 {
 
@@ -59,6 +62,9 @@ public:
 	Preset &       operator = (const Preset &other);
 
 	bool           is_slot_empty (int index) const;
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
 
 	SlotList       _slot_list;
 	std::string    _name;

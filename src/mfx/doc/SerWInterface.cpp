@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionToggleFx.cpp
+        SerWInterface.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,11 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionToggleFx.h"
-#include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -43,47 +42,37 @@ namespace doc
 
 
 
-void	ActionToggleFx::ser_write (SerWInterface &ser) const
+void	SerWInterface::begin_list ()
 {
-	ser.begin_list ();
-
-	_fx_id.ser_write (ser);
-
-	ser.end_list ();
+	do_begin_list ();
 }
 
 
 
-void	ActionToggleFx::ser_read (SerRInterface &ser)
+void	SerWInterface::end_list ()
 {
-	ser.begin_list ();
+	do_end_list ();
+}
 
-	_fx_id.ser_read (ser);
 
-	ser.end_list ();
+
+void	SerWInterface::write (double x)
+{
+	assert (isfinite (x));
+
+	do_write (x);
+}
+
+
+
+void	SerWInterface::write (std::string s)
+{
+	do_write (s);
 }
 
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-ActionType	ActionToggleFx::do_get_type () const
-{
-	return ActionType_TOGGLE_FX;
-}
-
-
-
-PedalActionSingleInterface *	ActionToggleFx::do_duplicate () const
-{
-	return new ActionToggleFx (*this);
-}
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 

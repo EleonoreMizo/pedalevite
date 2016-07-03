@@ -36,6 +36,8 @@
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/FxId.h"
+#include "mfx/doc/SerRText.h"
+#include "mfx/doc/SerWText.h"
 #include "mfx/pi/dist1/Param.h"
 #include "mfx/pi/dwm/DryWetDesc.h"
 #include "mfx/pi/dwm/Param.h"
@@ -818,6 +820,28 @@ Context::Context ()
 	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
+
+#if 0
+	// Serialization consistency test
+	mfx::doc::SerWText ser_w;
+	ser_w.clear ();
+	_view.use_setup ().ser_write (ser_w);
+	ser_w.terminate ();
+	const std::string result = ser_w.use_content ();
+
+	mfx::doc::SerRText ser_r;
+	ser_r.start (result);
+	std::unique_ptr <mfx::doc::Setup> sss_uptr (new mfx::doc::Setup);
+	sss_uptr->ser_read (ser_r);
+	ser_r.terminate ();
+
+	ser_w.clear ();
+	_view.use_setup ().ser_write (ser_w);
+	ser_w.terminate ();
+	const std::string result2 = ser_w.use_content ();
+
+	assert (result == result2);
+#endif
 }
 
 Context::~Context ()

@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/ActionToggleTuner.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
 
@@ -38,6 +40,31 @@ namespace doc
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+ActionToggleTuner::ActionToggleTuner (SerRInterface &ser)
+{
+	ser_read (ser);
+}
+
+
+
+void	ActionToggleTuner::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.end_list ();
+}
+
+
+
+void	ActionToggleTuner::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.end_list ();
+}
 
 
 

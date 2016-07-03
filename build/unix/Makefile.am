@@ -180,15 +180,19 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/ActionToggleTuner.h \
         ../../src/mfx/doc/ActionTrigger.h \
         ../../src/mfx/doc/ActionType.h \
+        ../../src/mfx/doc/Bank.cpp \
         ../../src/mfx/doc/Bank.h \
+        ../../src/mfx/doc/CtrlLink.cpp \
         ../../src/mfx/doc/CtrlLink.h \
         ../../src/mfx/doc/CtrlLinkSet.cpp \
         ../../src/mfx/doc/CtrlLinkSet.h \
         ../../src/mfx/doc/FxId.cpp \
         ../../src/mfx/doc/FxId.h \
+        ../../src/mfx/doc/ParamPresentation.cpp \
         ../../src/mfx/doc/ParamPresentation.h \
         ../../src/mfx/doc/PedalActionCycle.cpp \
         ../../src/mfx/doc/PedalActionCycle.h \
+        ../../src/mfx/doc/PedalActionGroup.cpp \
         ../../src/mfx/doc/PedalActionGroup.h \
         ../../src/mfx/doc/PedalActionSingleInterface.cpp \
         ../../src/mfx/doc/PedalActionSingleInterface.h \
@@ -198,6 +202,15 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/PluginSettings.h \
         ../../src/mfx/doc/Preset.cpp \
         ../../src/mfx/doc/Preset.h \
+        ../../src/mfx/doc/SerRInterface.cpp \
+        ../../src/mfx/doc/SerRInterface.h \
+        ../../src/mfx/doc/SerRText.cpp \
+        ../../src/mfx/doc/SerRText.h \
+        ../../src/mfx/doc/SerWInterface.cpp \
+        ../../src/mfx/doc/SerWInterface.h \
+        ../../src/mfx/doc/SerWText.cpp \
+        ../../src/mfx/doc/SerWText.h \
+        ../../src/mfx/doc/Setup.cpp \
         ../../src/mfx/doc/Setup.h \
         ../../src/mfx/doc/Slot.cpp \
         ../../src/mfx/doc/Slot.h \
@@ -415,6 +428,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/ControlledParam.cpp \
         ../../src/mfx/ControlledParam.h \
         ../../src/mfx/ControllerType.h \
+        ../../src/mfx/ControlSource.cpp \
         ../../src/mfx/ControlSource.h \
         ../../src/mfx/ControlSource.hpp \
         ../../src/mfx/Cst.cpp \

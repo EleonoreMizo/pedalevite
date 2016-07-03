@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ActionToggleFx.cpp
+        ParamPresentation.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/ActionToggleFx.h"
+#include "mfx/doc/ParamPresentation.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
@@ -43,22 +43,24 @@ namespace doc
 
 
 
-void	ActionToggleFx::ser_write (SerWInterface &ser) const
+void	ParamPresentation::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();
 
-	_fx_id.ser_write (ser);
+	ser.write (_disp_mode);
+	ser.write (_ref_beats);
 
 	ser.end_list ();
 }
 
 
 
-void	ActionToggleFx::ser_read (SerRInterface &ser)
+void	ParamPresentation::ser_read (SerRInterface &ser)
 {
 	ser.begin_list ();
 
-	_fx_id.ser_read (ser);
+	ser.read (_disp_mode);
+	ser.read (_ref_beats);
 
 	ser.end_list ();
 }
@@ -66,20 +68,6 @@ void	ActionToggleFx::ser_read (SerRInterface &ser)
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-ActionType	ActionToggleFx::do_get_type () const
-{
-	return ActionType_TOGGLE_FX;
-}
-
-
-
-PedalActionSingleInterface *	ActionToggleFx::do_duplicate () const
-{
-	return new ActionToggleFx (*this);
-}
 
 
 
