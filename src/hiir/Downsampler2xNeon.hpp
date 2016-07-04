@@ -124,9 +124,9 @@ float	Downsampler2xNeon <NC>::process_sample (const float in_ptr [2])
 	// Averages both paths and outputs the result
 	const float       out_0  = vgetq_lane_f32 (y, 3);
 	const float       out_1  = vgetq_lane_f32 (y, 2);
-	const float       y      = (out_0 + out_1) * 0.5f;
+	const float       out    = (out_0 + out_1) * 0.5f;
 
-	return y;
+	return out;
 }
 
 

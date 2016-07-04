@@ -53,11 +53,13 @@ template <int NC>
 class Downsampler2xNeon
 {
 
+	static_assert ((NC > 0), "Number of coefficient must be positive.");
+
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static_assert ((NC > 0), "Number of coefficient must be positive.");
+	enum {         NBR_COEFS = NC	};
 
 	               Downsampler2xNeon ();
 	               Downsampler2xNeon (const Downsampler2xNeon &other) = default;

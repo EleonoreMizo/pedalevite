@@ -65,6 +65,11 @@ public:
 	Upsampler2xNeon &
 	               operator = (const Upsampler2xNeon &other)        = default;
 
+	void           set_coefs (const double coef_arr [NBR_COEFS]);
+	inline void    process_sample (float &out_0, float &out_1, float input);
+	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
+	void           clear_buffers ();
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -77,12 +82,12 @@ protected:
 
 private:
 
-	enum {			STAGE_WIDTH	= 4	};
-	enum {			NBR_STAGES = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH	};
+	enum {         STAGE_WIDTH = 4 };
+	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH };
 
 	typedef	std::array <StageDataNeon, NBR_STAGES + 1>	Filter;	// Stage 0 contains only input memory
 
-	Filter			_filter;		// Should be the first member (thus easier to align)
+	Filter         _filter;    // Should be the first member (thus easier to align)
 
 
 
