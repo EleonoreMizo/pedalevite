@@ -50,7 +50,7 @@ Downsampler2x4Neon <NC>::Downsampler2x4Neon ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._coef = vdupq_n_f32 (0);
+		_filter [i]._coef4 = vdupq_n_f32 (0);
 	}
 
 	clear_buffers ();
@@ -75,11 +75,11 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Neon <NC>::set_coefs (const double coef_arr [])
 {
-	assert (&coef_arr != 0);
+	assert (coef_arr != 0);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_filter [i + 2]._coef = vdupq_n_f32 (float (coef_arr [i]));
+		_filter [i + 2]._coef4 = vdupq_n_f32 (float (coef_arr [i]));
 	}
 }
 
@@ -101,12 +101,12 @@ Throws: Nothing
 template <int NC>
 float32x4_t	Downsampler2x4Neon <NC>::process_sample (const float in_ptr [8])
 {
-	assert (&in_ptr != 0);
+	assert (in_ptr != 0);
 
 	const float32x4_t in_0 =
-		vreinterpretq_f32_u8 (*reinterpret_cast <const vld1q_u8 *> (in_ptr    ));
+		vreinterpretq_f32_u8 (*reinterpret_cast <const uint8x16_t *> (in_ptr    ));
 	const float32x4_t in_1 =
-		vreinterpretq_f32_u8 (*reinterpret_cast <const vld1q_u8 *> (in_ptr + 4));
+		vreinterpretq_f32_u8 (*reinterpret_cast <const uint8x16_t *> (in_ptr + 4));
 
 	return process_sample (in_0, in_1);
 }
@@ -174,7 +174,7 @@ void	Downsampler2x4Neon <NC>::process_block (float out_ptr [], const float in_pt
 	do
 	{
 		const float32x4_t val = process_sample (in_ptr + pos * 8);
-		*reinterpret_cast <vld1q_u8 *> (out_ptr + pos * 4) =
+		*reinterpret_cast <uint8x16_t *> (out_ptr + pos * 4) =
 			vreinterpretq_u8_f32 (val);
 		++ pos;
 	}
@@ -206,12 +206,12 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Neon <NC>::process_sample_split (float32x4_t &low, float32x4_t &high, const float in_ptr [8])
 {
-	assert (&in_ptr != 0);
+	assert (in_ptr != 0);
 
 	const float32x4_t in_0 =
-		vreinterpretq_f32_u8 (*reinterpret_cast <const vld1q_u8 *> (in_ptr    ));
+		vreinterpretq_f32_u8 (*reinterpret_cast <const uint8x16_t *> (in_ptr    ));
 	const float32x4_t in_1 =
-		vreinterpretq_f32_u8 (*reinterpret_cast <const vld1q_u8 *> (in_ptr + 4));
+		vreinterpretq_f32_u8 (*reinterpret_cast <const uint8x16_t *> (in_ptr + 4));
 
 	process_sample_split (low, high, in_0, in_1);
 }
@@ -248,7 +248,7 @@ void	Downsampler2x4Neon <NC>::process_sample_split (float32x4_t &low, float32x4_
 	float32x4_t    spl_0 = in_1;
 	float32x4_t    spl_1 = in_0;
 
-	StageProc4Sse <NBR_COEFS>::process_sample_pos (
+	StageProc4Neon <NBR_COEFS>::process_sample_pos (
 		NBR_COEFS, spl_0, spl_1, &_filter [0]
 	);
 
@@ -303,9 +303,9 @@ void	Downsampler2x4Neon <NC>::process_block_split (float out_l_ptr [], float out
 		float32x4_t    low;
 		float32x4_t    high;
 		process_sample_split (low, high, in_ptr + pos * 8);
-		*reinterpret_cast <vld1q_u8 *> (out_l_ptr + pos * 4) =
+		*reinterpret_cast <uint8x16_t *> (out_l_ptr + pos * 4) =
 			vreinterpretq_u8_f32 (low);
-		*reinterpret_cast <vld1q_u8 *> (out_h_ptr + pos * 4) =
+		*reinterpret_cast <uint8x16_t *> (out_h_ptr + pos * 4) =
 			vreinterpretq_u8_f32 (high);
 		++ pos;
 	}
@@ -329,7 +329,7 @@ void	Downsampler2x4Neon <NC>::clear_buffers ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._mem = vdupq_n_f32 (0);
+		_filter [i]._mem4 = vdupq_n_f32 (0);
 	}
 }
 

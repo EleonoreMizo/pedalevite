@@ -22,9 +22,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageProc4Neon.h"
+#include "hiir/StageProc4Neon.h"
 
-#include	<cassert>
+#include <cassert>
 
 
 
@@ -45,12 +45,12 @@ Throws: Nothing
 */
 
 template <int NC>
-Upsampler2x4Sse <NC>::Upsampler2x4Sse ()
+Upsampler2x4Neon <NC>::Upsampler2x4Neon ()
 :	_filter ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._coef = vdupq_n_f32 (0);
+		_filter [i]._coef4 = vdupq_n_f32 (0);
 	}
 
 	clear_buffers ();
@@ -73,13 +73,13 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2x4Sse <NC>::set_coefs (const double coef_arr [NBR_COEFS])
+void	Upsampler2x4Neon <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 {
-	assert (&coef_arr != 0);
+	assert (coef_arr != 0);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_filter [i + 2]._coef = vdupq_n_f32 (float (coef_arr [i]));
+		_filter [i + 2]._coef4 = vdupq_n_f32 (float (coef_arr [i]));
 	}
 }
 
@@ -100,7 +100,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2x4Sse <NC>::process_sample (float32x4_t &out_0, float32x4_t &out_1, float32x4_t input)
+void	Upsampler2x4Neon <NC>::process_sample (float32x4_t &out_0, float32x4_t &out_1, float32x4_t input)
 {
 	assert (&out_0 != 0);
 	assert (&out_1 != 0);
@@ -137,7 +137,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2x4Sse <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Upsampler2x4Neon <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
 	assert (out_ptr != 0);
 	assert (in_ptr != 0);
@@ -150,12 +150,12 @@ void	Upsampler2x4Sse <NC>::process_block (float out_ptr [], const float in_ptr [
 		float32x4_t       dst_0;
 		float32x4_t       dst_1;
 		const float32x4_t src = vreinterpretq_f32_u8 (
-			*reinterpret_cast <const vld1q_u8 *> (in_ptr + pos * 4)
+			*reinterpret_cast <const uint8x16_t *> (in_ptr + pos * 4)
 		);
 		process_sample (dst_0, dst_1, src);
-		*reinterpret_cast <vld1q_u8 *> (out_ptr + pos * 8    ) =
+		*reinterpret_cast <uint8x16_t *> (out_ptr + pos * 8    ) =
 			vreinterpretq_u8_f32 (dst_0);
-		*reinterpret_cast <vld1q_u8 *> (out_ptr + pos * 8 + 4) =
+		*reinterpret_cast <uint8x16_t *> (out_ptr + pos * 8 + 4) =
 			vreinterpretq_u8_f32 (dst_1);
 		++ pos;
 	}
@@ -175,11 +175,11 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Upsampler2x4Sse <NC>::clear_buffers ()
+void	Upsampler2x4Neon <NC>::clear_buffers ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._mem = vdupq_n_f32 (0);
+		_filter [i]._mem4 = vdupq_n_f32 (0);
 	}
 }
 

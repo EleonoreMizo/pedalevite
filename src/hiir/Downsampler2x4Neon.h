@@ -38,6 +38,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/def.h"
 #include "hiir/StageDataNeon.h"
 
+#include <arm_neon.h>
+
 #include <array>
 
 

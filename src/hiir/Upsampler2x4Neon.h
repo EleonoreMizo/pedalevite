@@ -38,6 +38,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/def.h"
 #include "hiir/StageDataNeon.h"
 
+#include <arm_neon.h>
+
 #include <array>
 
 
@@ -63,7 +65,7 @@ public:
 
 	void				set_coefs (const double coef_arr [NBR_COEFS]);
 	hiir_FORCEINLINE void
-	               process_sample (__m128 &out_0, __m128 &out_1, __m128 input);
+	               process_sample (float32x4_t &out_0, float32x4_t &out_1, float32x4_t input);
 	void				process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
 	void				clear_buffers ();
 

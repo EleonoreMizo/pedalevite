@@ -88,7 +88,7 @@ void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float3
 	spl_0 = tmp_0;
 	spl_1 = tmp_1;
 
-	StageProc4Sse <REMAINING - 2>::process_sample_pos (
+	StageProc4Neon <REMAINING - 2>::process_sample_pos (
 		nbr_coefs,
 		spl_0,
 		spl_1,
@@ -107,7 +107,7 @@ inline void	StageProc4Neon <1>::process_sample_neg (const int nbr_coefs, float32
 	tmp_0 += stage_arr [cnt    ]._mem4;
 	tmp_0 *= stage_arr [cnt    ]._coef4;
 	tmp_0 -= stage_arr [cnt - 2]._mem4;
-		
+
 	stage_arr [cnt - 2]._mem4 = spl_0;
 	stage_arr [cnt - 1]._mem4 = spl_1;
 	stage_arr [cnt    ]._mem4 = tmp_0;
@@ -145,7 +145,7 @@ void	StageProc4Neon <REMAINING>::process_sample_neg (const int nbr_coefs, float3
 	spl_0 = tmp_0;
 	spl_1 = tmp_1;
 
-	StageProc4Sse <REMAINING - 2>::process_sample_neg (
+	StageProc4Neon <REMAINING - 2>::process_sample_neg (
 		nbr_coefs,
 		spl_0,
 		spl_1,

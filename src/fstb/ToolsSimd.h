@@ -32,9 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 	#include <emmintrin.h>
 #elif (fstb_ARCHI == fstb_ARCHI_ARM)
-    #include <arm_neon.h>
+	#include <arm_neon.h>
 #else
-    #error
+	#error
 #endif
 
 #include <cstddef>
