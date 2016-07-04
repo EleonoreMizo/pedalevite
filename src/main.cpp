@@ -857,10 +857,10 @@ Context::Context ()
 	);
 	ds.set_coefs (coef_list);
 	us.set_coefs (coef_list);
-	std::vector <float> vs (256*2);
-	std::vector <float> vd (256*2);
+	std::vector <float> vs (256*2*4);
+	std::vector <float> vd (256*2*4);
 	ds.process_block (&vs [0], &vd [0], 256);
-	ds.process_block_split (&vs [0], &vs [256], &vd [0], 256);
+	ds.process_block_split (&vs [0], &vs [256*4], &vd [0], 256);
 	us.process_block (&vd [0], &vs [0], 256);
 
 #endif
