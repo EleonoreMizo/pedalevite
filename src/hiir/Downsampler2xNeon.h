@@ -1,12 +1,14 @@
 /*****************************************************************************
 
-        Downsampler2x4Sse.h
-        Copyright (c) 2015 Laurent de Soras
+        Downsampler2xNeon.h
+        Author: Laurent de Soras, 2016
 
-Downsamples vectors of 4 float by a factor 2 the input signal, using SSE
-instruction set.
+Downsamples by a factor 2 the input signal, using NEON instruction set.
 
 This object must be aligned on a 16-byte boundary!
+
+If the number of coefficients is 2 or 3 modulo 4, the output is delayed from
+1 sample, compared to the theoretical formula (or FPU implementation).
 
 Template parameters:
 	- NC: number of coefficients, > 0
@@ -24,8 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (hiir_Downsampler2x4Sse_HEADER_INCLUDED)
-#define hiir_Downsampler2x4Sse_HEADER_INCLUDED
+#if ! defined (hiir_Downsampler2xNeon_HEADER_INCLUDED)
+#define hiir_Downsampler2xNeon_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,9 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "hiir/def.h"
-#include "hiir/StageDataSse.h"
-
-#include <xmmintrin.h>
+#include "hiir/StageDataNeon.h"
 
 #include <array>
 
@@ -50,31 +50,29 @@ namespace hiir
 
 
 template <int NC>
-class Downsampler2x4Sse
+class Downsampler2xNeon
 {
-
-	static_assert ((NC > 0), "Number of coefficient must be positive.");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	enum {         NBR_COEFS = NC };
+	static_assert ((NC > 0), "Number of coefficient must be positive.");
 
-	               Downsampler2x4Sse ();
+	               Downsampler2xNeon ();
+	               Downsampler2xNeon (const Downsampler2xNeon &other) = default;
+
+	Downsampler2xNeon &
+	               operator = (const Downsampler2xNeon &other)        = default;
 
 	void           set_coefs (const double coef_arr []);
 
-	hiir_FORCEINLINE __m128
-	               process_sample (const float in_ptr [8]);
-	hiir_FORCEINLINE __m128
-	               process_sample (__m128 in_0, __m128 in_1);
+	hiir_FORCEINLINE float
+	               process_sample (const float in_ptr [2]);
 	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
 
 	hiir_FORCEINLINE void
-	               process_sample_split (__m128 &low, __m128 &high, const float in_ptr [8]);
-	hiir_FORCEINLINE void
-	               process_sample_split (__m128 &low, __m128 &high, __m128 in_0, __m128 in_1);
+	               process_sample_split (float &low, float &high, const float in_ptr [2]);
 	void           process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl);
 
 	void           clear_buffers ();
@@ -91,7 +89,10 @@ protected:
 
 private:
 
-	typedef std::array <StageDataSse, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
+	enum {         STAGE_WIDTH	= 4 };
+	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH	 };
+
+	typedef	std::array <StageDataNeon, NBR_STAGES + 1>	Filter;  // Stage 0 contains only input memory
 
 	Filter         _filter; // Should be the first member (thus easier to align)
 
@@ -101,10 +102,10 @@ private:
 
 private:
 
-	bool           operator == (const Downsampler2x4Sse &other) const;
-	bool           operator != (const Downsampler2x4Sse &other) const;
+	bool           operator == (const Downsampler2xNeon &other) const = delete;
+	bool           operator != (const Downsampler2xNeon &other) const = delete;
 
-}; // class Downsampler2x4Sse
+}; // class Downsampler2xNeon
 
 
 
@@ -112,11 +113,11 @@ private:
 
 
 
-#include "hiir/Downsampler2x4Sse.hpp"
+#include "hiir/Downsampler2xNeon.hpp"
 
 
 
-#endif   // hiir_Downsampler2x4Sse_HEADER_INCLUDED
+#endif   // hiir_Downsampler2xNeon_HEADER_INCLUDED
 
 
 

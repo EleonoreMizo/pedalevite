@@ -122,7 +122,7 @@ void	Upsampler2xSse <NC>::process_sample (float &out_0, float &out_1, float inpu
 	assert (&out_0 != 0);
 	assert (&out_1 != 0);
 
-	const __m128	spl_in = _mm_load_ss (&input);
+	const __m128	spl_in  = _mm_set_ss (input);
 	const __m128	spl_mid = _mm_load_ps (_filter [NBR_STAGES]._mem);
 	__m128			y = _mm_shuffle_ps (spl_in, spl_mid, 0x40);
 

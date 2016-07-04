@@ -130,6 +130,8 @@ pedalevite_SOURCES = \
 	../../src/hiir/Downsampler2x4Neon.hpp \
 	../../src/hiir/Downsampler2xFpu.h \
 	../../src/hiir/Downsampler2xFpu.hpp \
+	../../src/hiir/Downsampler2xNeon.h \
+	../../src/hiir/Downsampler2xNeon.hpp \
 	../../src/hiir/fnc.h \
 	../../src/hiir/fnc.hpp \
 	../../src/hiir/PhaseHalfPiFpu.h \
@@ -149,6 +151,8 @@ pedalevite_SOURCES = \
 	../../src/hiir/Upsampler2x4Neon.hpp \
 	../../src/hiir/Upsampler2xFpu.h \
 	../../src/hiir/Upsampler2xFpu.hpp \
+	../../src/hiir/Upsampler2xNeon.h \
+	../../src/hiir/Upsampler2xNeon.hpp \
         ../../src/jack/jack.h \
         ../../src/jack/systemdeps.h \
         ../../src/jack/transport.h \

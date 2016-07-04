@@ -48,8 +48,7 @@ template <int NC>
 class Downsampler2x3dnow
 {
 
-	// Template parameter check, not used
-	typedef	int	ChkTpl1 [(NC > 0) ? 1 : -1];
+	static_assert ((NC > 0), "Number of coefficient must be positive.");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 

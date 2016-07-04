@@ -1209,6 +1209,30 @@
     <ClInclude Include="mfx\doc\SerRText.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
+    <ClInclude Include="hiir\Downsampler2x4Neon.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2x4Neon.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2x4Neon.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2x4Neon.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2xNeon.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Downsampler2xNeon.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2xNeon.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
+    <ClInclude Include="hiir\Upsampler2xNeon.hpp">
+      <Filter>hiir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">

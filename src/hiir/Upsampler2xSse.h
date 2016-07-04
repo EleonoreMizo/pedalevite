@@ -54,8 +54,7 @@ template <int NC>
 class Upsampler2xSse
 {
 
-	// Template parameter check, not used
-	typedef	int	ChkTpl1 [(NC > 0) ? 1 : -1];
+	static_assert ((NC > 0), "Number of coefficient must be positive.");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -64,6 +63,9 @@ public:
 	enum {			NBR_COEFS	= NC	};
 
 						Upsampler2xSse ();
+	               Upsampler2xSse (const Upsampler2xSse &other)   = default;
+	Upsampler2xSse &
+	               operator = (const Upsampler2xSse &other)       = default;
 
 	void				set_coefs (const double coef_arr [NBR_COEFS]);
 	inline void		process_sample (float &out_0, float &out_1, float input);
@@ -95,8 +97,8 @@ private:
 
 private:
 
-	bool				operator == (const Upsampler2xSse &other);
-	bool				operator != (const Upsampler2xSse &other);
+	bool				operator == (const Upsampler2xSse &other) const = delete;
+	bool				operator != (const Upsampler2xSse &other) const = delete;
 
 };	// class Upsampler2xSse
 

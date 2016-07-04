@@ -75,7 +75,7 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Sse <NC>::set_coefs (const double coef_arr [])
 {
-	assert (&coef_arr != 0);
+	assert (coef_arr != 0);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
@@ -101,7 +101,7 @@ Throws: Nothing
 template <int NC>
 __m128	Downsampler2x4Sse <NC>::process_sample (const float in_ptr [8])
 {
-	assert (&in_ptr != 0);
+	assert (in_ptr != 0);
 
 	const __m128   in_0 = _mm_loadu_ps (in_ptr    );
 	const __m128   in_1 = _mm_loadu_ps (in_ptr + 4);
@@ -203,7 +203,7 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Sse <NC>::process_sample_split (__m128 &low, __m128 &high, const float in_ptr [8])
 {
-	assert (&in_ptr != 0);
+	assert (in_ptr != 0);
 
 	const __m128   in_0 = _mm_loadu_ps (in_ptr    );
 	const __m128   in_1 = _mm_loadu_ps (in_ptr + 4);

@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        Downsampler2xSse.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Downsampler2xNeon.hpp
+        Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
 
@@ -15,21 +15,16 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (hiir_Downsampler2xSse_CURRENT_CODEHEADER)
-	#error Recursive inclusion of Downsampler2xSse code header.
-#endif
-#define	hiir_Downsampler2xSse_CURRENT_CODEHEADER
-
-#if ! defined (hiir_Downsampler2xSse_CODEHEADER_INCLUDED)
-#define	hiir_Downsampler2xSse_CODEHEADER_INCLUDED
+#if ! defined (hiir_Downsampler2xNeon_CODEHEADER_INCLUDED)
+#define hiir_Downsampler2xNeon_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcSse.h"
+#include "hiir/StageProcNeon.h"
 
-#include <xmmintrin.h>
+#include <arm_neon.h>
 
 #include <cassert>
 
@@ -52,15 +47,12 @@ Throws: Nothing
 */
 
 template <int NC>
-Downsampler2xSse <NC>::Downsampler2xSse ()
+Downsampler2xNeon <NC>::Downsampler2xNeon ()
 :	_filter ()
 {
 	for (int i = 0; i < NBR_STAGES + 1; ++i)
 	{
-		_filter [i]._coef [0] = 0;
-		_filter [i]._coef [1] = 0;
-		_filter [i]._coef [2] = 0;
-		_filter [i]._coef [3] = 0;
+		_filter [i]._mem4 = vdupq_n_f32 (0);
 	}
 	if ((NBR_COEFS & 1) != 0)
 	{
@@ -88,7 +80,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xSse <NC>::set_coefs (const double coef_arr [])
+void	Downsampler2xNeon <NC>::set_coefs (const double coef_arr [])
 {
 	assert (coef_arr != 0);
 
@@ -115,32 +107,26 @@ Throws: Nothing
 */
 
 template <int NC>
-float	Downsampler2xSse <NC>::process_sample (const float in_ptr [2])
+float	Downsampler2xNeon <NC>::process_sample (const float in_ptr [2])
 {
 	assert (in_ptr != 0);
 
 	// Combines two input samples and two mid-processing data
-	const __m128   spl_in  = _mm_loadu_ps (in_ptr);
-	const __m128   spl_mid = _mm_load_ps (_filter [NBR_STAGES]._mem);
-	__m128         y       = _mm_shuffle_ps (spl_in, spl_mid, 0x44);
-
-	__m128         mem     = _mm_load_ps (_filter [0]._mem);
+	const float32x2_t spl_in  = *reinterpret_cast <const float32x2_t *> (in_ptr);
+	const float32x2_t spl_mid = vget_low_f32 (_filter [NBR_STAGES]._mem4);
+	float32x4_t       y       = vcombine_f32 (spl_in, spl_mid);
+	float32x4_t       mem     = _filter [0]._mem4;
 
 	// Processes each stage
-	StageProcSse <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
-
-	_mm_store_ps (_filter [NBR_STAGES]._mem, y);
+	StageProcNeon <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
+	_filter [NBR_STAGES]._mem4 = y;
 
 	// Averages both paths and outputs the result
-	const __m128   dup_y = y;
-	y = _mm_shuffle_ps (y, y, 0x80);
-	y = _mm_add_ps (y, dup_y);
-	y = _mm_shuffle_ps (y, y, 3);
-	y = _mm_mul_ss (y, _mm_set_ss (0.5f));
-	float          result;
-	_mm_store_ss (&result, y);
+	const float       out_0  = vgetq_lane_f32 (y, 3);
+	const float       out_1  = vgetq_lane_f32 (y, 2);
+	const float       y      = (out_0 + out_1) * 0.5f;
 
-	return (result);
+	return y;
 }
 
 
@@ -161,7 +147,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xSse <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Downsampler2xNeon <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
 	assert (in_ptr != 0);
 	assert (out_ptr != 0);
@@ -200,35 +186,27 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xSse <NC>::process_sample_split (float &low, float &high, const float in_ptr [2])
+void	Downsampler2xNeon <NC>::process_sample_split (float &low, float &high, const float in_ptr [2])
 {
 	assert (&low != 0);
 	assert (&high != 0);
 	assert (in_ptr != 0);
 
 	// Combines two input samples and two mid-processing data
-	const __m128   spl_in  = _mm_loadu_ps (in_ptr);
-	const __m128   spl_mid = _mm_load_ps (_filter [NBR_STAGES]._mem);
-	__m128         y       = _mm_shuffle_ps (spl_in, spl_mid, 0x44);
-
-	__m128         mem     = _mm_load_ps (_filter [0]._mem);
+	const float32x2_t spl_in  = *reinterpret_cast <const float32x2_t *> (in_ptr);
+	const float32x2_t spl_mid = vget_low_f32 (_filter [NBR_STAGES]._mem4);
+	float32x4_t       y       = vcombine_f32 (spl_in, spl_mid);
+	float32x4_t       mem     = _filter [0]._mem4;
 
 	// Processes each stage
-	StageProcSse <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
+	StageProcNeon <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
+	_filter [NBR_STAGES]._mem4 = y;
 
-	_mm_store_ps (_filter [NBR_STAGES]._mem, y);
-
-	//Outputs the result
-	__m128         dup_y = y;
-	y = _mm_shuffle_ps (y, y, 0x80);
-	y = _mm_add_ps (y, dup_y);
-	y = _mm_shuffle_ps (y, y, 3);
-	y = _mm_mul_ss (y, _mm_set_ss (0.5f));
-	_mm_store_ss (&low, y);
-
-	dup_y = _mm_shuffle_ps (dup_y, dup_y, 3);
-	dup_y = _mm_sub_ps (dup_y, y);
-	_mm_store_ss (&high, dup_y);
+	// Outputs the result
+	const float       out_0  = vgetq_lane_f32 (y, 3);
+	const float       out_1  = vgetq_lane_f32 (y, 2);
+	low  = (out_0 + out_1) * 0.5f;
+	high = out_0 - low;
 }
 
 
@@ -258,7 +236,7 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xSse <NC>::process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl)
+void	Downsampler2xNeon <NC>::process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl)
 {
 	assert (in_ptr != 0);
 	assert (out_l_ptr != 0);
@@ -290,14 +268,11 @@ Throws: Nothing
 */
 
 template <int NC>
-void	Downsampler2xSse <NC>::clear_buffers ()
+void	Downsampler2xNeon <NC>::clear_buffers ()
 {
 	for (int i = 0; i < NBR_STAGES + 1; ++i)
 	{
-		_filter [i]._mem [0] = 0;
-		_filter [i]._mem [1] = 0;
-		_filter [i]._mem [2] = 0;
-		_filter [i]._mem [3] = 0;
+		_filter [i]._mem4 = vdupq_n_f32 (0);
 	}
 }
 
@@ -311,13 +286,11 @@ void	Downsampler2xSse <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_Downsampler2xSse_CODEHEADER_INCLUDED
-
-#undef hiir_Downsampler2xSse_CURRENT_CODEHEADER
+#endif   // hiir_Downsampler2xNeon_CODEHEADER_INCLUDED
 
 
 
