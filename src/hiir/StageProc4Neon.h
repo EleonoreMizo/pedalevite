@@ -74,7 +74,7 @@ private:
 private:
 
 	               StageProc4Neon ()                               = delete;
-	               StageProc4Neon (const StageProc4Neon &other)     = delete;
+	               StageProc4Neon (const StageProc4Neon &other)    = delete;
 	               ~StageProc4Neon ()                              = delete;
 	StageProc4Neon &
 	               operator = (const StageProc4Neon &other)        = delete;

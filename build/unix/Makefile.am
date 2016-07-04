@@ -126,6 +126,8 @@ pedalevite_SOURCES = \
         ../../src/fstb/ToolsSimd.h \
         ../../src/fstb/ToolsSimd.hpp \
 	../../src/hiir/def.h \
+	../../src/hiir/Downsampler2x4Neon.h \
+	../../src/hiir/Downsampler2x4Neon.hpp \
 	../../src/hiir/Downsampler2xFpu.h \
 	../../src/hiir/Downsampler2xFpu.hpp \
 	../../src/hiir/fnc.h \
@@ -143,6 +145,8 @@ pedalevite_SOURCES = \
 	../../src/hiir/StageProcFpu.hpp \
 	../../src/hiir/StageProcNeon.h \
 	../../src/hiir/StageProcNeon.hpp \
+	../../src/hiir/Upsampler2x4Neon.h \
+	../../src/hiir/Upsampler2x4Neon.hpp \
 	../../src/hiir/Upsampler2xFpu.h \
 	../../src/hiir/Upsampler2xFpu.hpp \
         ../../src/jack/jack.h \
