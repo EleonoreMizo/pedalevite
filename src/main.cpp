@@ -77,6 +77,10 @@
 #include "mfx/View.h"
 #include "mfx/WorldAudio.h"
 
+#include "hiir/Downsampler2x4Neon.h"
+#include "hiir/Upsampler2x4Neon.h"
+#include "hiir/PolyphaseIir2Designer.h"
+
 #if fstb_IS (ARCHI, ARM)
  #if defined (MAIN_USE_ST7920)
 	#include "mfx/ui/DisplayPi3St7920.h"
@@ -841,6 +845,24 @@ Context::Context ()
 	const std::string result2 = ser_w.use_content ();
 
 	assert (result == result2);
+#endif
+
+#if 1
+	// Temporary test
+	hiir::Downsampler2x4Neon <8> ds;
+	hiir::Upsampler2x4Neon <8> us;
+	double         coef_list [8];
+	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
+		coef_list, 8, 1 / 1000.0
+	);
+	ds.set_coefs (coef_list);
+	us.set_coefs (coef_list);
+	std::vector <float> vs (256*2);
+	std::vector <float> vd (256*2);
+	ds.process_block (&vs [0], &vd [0], 256);
+	ds.process_block_split (&vs [0], &vs [256], &vd [0], 256);
+	us.process_block (&vd [0], &vs [0], 256);
+
 #endif
 }
 
