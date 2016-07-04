@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/Rect.h"
 
+#include <list>
 #include <set>
 
 
@@ -104,6 +105,13 @@ protected:
 
 private:
 
+	class SetPageContent
+	{
+	public:
+		PageInterface* _content_ptr;
+		void *         _usr_ptr;
+	};
+
 	void           process_input ();
 	void           handle_redraw ();
 	void           send_event (NodeEvt &evt);
@@ -138,6 +146,11 @@ private:
 	Button         _but_hold;
 	int64_t        _but_hold_date;      // Microseconds, beginning of the hold position
 	int            _but_hold_count;     // Number of elapsed repetitions
+
+	std::list <SetPageContent>
+	               _rec_spc;
+	bool           _recursive_flag;
+
 
 
 

@@ -78,6 +78,16 @@ public:
 	static const std::string
 	               _plugin_tuner;
 
+	static const std::string
+	               _empty_preset_name;
+
+	static const std::string
+	               _config_current;
+	static const std::string
+	               _config_factory;
+	static const std::string
+	               _config_dir;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

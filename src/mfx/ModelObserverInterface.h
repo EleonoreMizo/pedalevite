@@ -95,7 +95,7 @@ public:
 	void           set_bank_name (std::string name);
 	void           set_preset_name (std::string name);
 	void           activate_preset (int index);
-	void           store_preset (int index);
+	void           store_preset (int preset_index, int bank_index);
 	void           set_tuner (bool active_flag);
 	void           set_tuner_freq (float freq);
 	void           set_slot_info_for_current_preset (const SlotInfoList &info_list);
@@ -123,7 +123,7 @@ protected:
 	virtual void   do_set_bank_name (std::string name) = 0;
 	virtual void   do_set_preset_name (std::string name) = 0;
 	virtual void   do_activate_preset (int index) = 0;
-	virtual void   do_store_preset (int index) = 0;
+	virtual void   do_store_preset (int preset_index, int bank_index) = 0;
 	virtual void   do_set_tuner (bool active_flag) = 0;
 	virtual void   do_set_tuner_freq (float freq) = 0;
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;

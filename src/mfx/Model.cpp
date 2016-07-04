@@ -177,7 +177,7 @@ void	Model::set_edit_mode (bool edit_flag)
 	{
 		if (! edit_flag && _edit_flag && _edit_preset_flag)
 		{
-			store_preset (_preset_index);
+			store_preset (_preset_index, -1);
 		}
 
 		_edit_flag = edit_flag;
@@ -236,7 +236,7 @@ void	Model::select_bank (int index)
 	{
 		if (_edit_flag && _edit_preset_flag)
 		{
-			store_preset (_preset_index);
+			store_preset (_preset_index, -1);
 			_edit_preset_flag = false;
 		}
 
@@ -278,21 +278,21 @@ void	Model::set_preset_name (std::string name)
 
 
 
-void	Model::activate_preset (int index)
+void	Model::activate_preset (int preset_index)
 {
-	assert (index >= 0);
-	assert (index < Cst::_nbr_presets_per_bank);
+	assert (preset_index >= 0);
+	assert (preset_index < Cst::_nbr_presets_per_bank);
 
 	if (_edit_flag && _edit_preset_flag)
 	{
-		store_preset (_preset_index);
+		store_preset (_preset_index, -1);
 	}
 
-	_preset_index = index;
+	_preset_index = preset_index;
 	_preset_cur   = _setup._bank_arr [_bank_index]._preset_arr [_preset_index];
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->activate_preset (index);
+		_obs_ptr->activate_preset (preset_index);
 	}
 
 	_edit_preset_flag = true;
@@ -302,16 +302,20 @@ void	Model::activate_preset (int index)
 
 
 
-void	Model::store_preset (int index)
+// bank_index < 0: use the current bank
+void	Model::store_preset (int preset_index, int bank_index)
 {
-	assert (index >= 0);
-	assert (index < Cst::_nbr_presets_per_bank);
+	assert (preset_index >= 0);
+	assert (preset_index < Cst::_nbr_presets_per_bank);
+	assert (bank_index < Cst::_nbr_banks);
 
-	_setup._bank_arr [_bank_index]._preset_arr [index] = _preset_cur;
+	const int         bank_index2 = (bank_index < 0) ? _bank_index : bank_index;
+
+	_setup._bank_arr [bank_index2]._preset_arr [preset_index] = _preset_cur;
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->store_preset (index);
+		_obs_ptr->store_preset (preset_index, bank_index);
 	}
 }
 

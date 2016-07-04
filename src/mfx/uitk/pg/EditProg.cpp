@@ -176,17 +176,22 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 			{
 				const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 				_name_param._title = "Program name:";
-				_name_param._text  = preset._name;
+				if (preset._name == Cst::_empty_preset_name)
+				{
+					_name_param._text.clear ();
+				}
+				else
+				{
+					_name_param._text  = preset._name;
+				}
 				_state             = State_EDIT_NAME;
 				_save_bank_index   = _view_ptr->get_bank_index ();
 				_save_preset_index = _view_ptr->get_preset_index ();
 				_page_switcher.call_page (PageType_EDIT_TEXT, &_name_param, node_id);
-				ret_val = EvtProp_CATCH;
 			}
 			else if (node_id == Entry_SAVE)
 			{
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.switch_to (PageType_SAVE_PROG, 0);
 			}
 			else if (node_id == Entry_CONTROLLERS)
 			{

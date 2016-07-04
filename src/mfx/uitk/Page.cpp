@@ -68,6 +68,8 @@ Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInp
 ,	_but_hold (Button_INVALID)
 ,	_but_hold_date (INT64_MIN)
 ,	_but_hold_count (0)
+,	_rec_spc ()
+,	_recursive_flag (false)
 {
 	_screen.set_coord (Vec2d ());
 	_screen.set_size (_disp_size, _disp_size);
@@ -85,14 +87,33 @@ Page::~Page ()
 
 void	Page::set_page_content (PageInterface &content, void *usr_ptr)
 {
-	clear ();
+	_rec_spc.push_back ({ &content, usr_ptr });
 
-	_content_ptr = &content;
-	_content_ptr->connect (_model, _view, *this, _disp_size, usr_ptr, _fnt_s, _fnt_m, _fnt_l);
-	_view.add_observer (*_content_ptr);
-	_screen.invalidate_all ();
+	if (! _recursive_flag)
+	{
+		_recursive_flag = true;
 
-	check_curs (true);
+		while (! _rec_spc.empty ())
+		{
+			const SetPageContent &	spc = _rec_spc.front ();
+
+			clear ();
+
+			_content_ptr = spc._content_ptr;
+			_content_ptr->connect (
+				_model, _view, *this, _disp_size, spc._usr_ptr,
+				_fnt_s, _fnt_m, _fnt_l
+			);
+			_view.add_observer (*_content_ptr);
+			_screen.invalidate_all ();
+
+			check_curs (true);
+
+			_rec_spc.pop_front ();
+		}
+
+		_recursive_flag = false;
+	}
 }
 
 

@@ -55,6 +55,7 @@ enum PageType
 	PageType_CTRL_EDIT,
 	PageType_MENU_SLOT,
 	PageType_EDIT_TEXT,
+	PageType_SAVE_PROG,
 
 	PageType_NBR_ELT
 

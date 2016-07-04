@@ -111,7 +111,7 @@ void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	fstb::txt::unicode::conv_utf8_to_unicode (_txt, _param_ptr->_text.c_str ());
 	_curs_pos = int (_txt.length ());
 
-	_title_sptr ->set_font (*_fnt_ptr);
+	_title_sptr ->set_font (fnt_s);
 	_text_sptr  ->set_font (*_fnt_ptr);
 	_ok_sptr    ->set_font (*_fnt_ptr);
 	_cancel_sptr->set_font (*_fnt_ptr);

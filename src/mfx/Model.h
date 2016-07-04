@@ -92,8 +92,8 @@ public:
 	void           select_bank (int index);
 	void           set_bank_name (std::string name);
 	void           set_preset_name (std::string name);
-	void           activate_preset (int index);
-	void           store_preset (int index);
+	void           activate_preset (int preset_index);
+	void           store_preset (int preset_index, int bank_index);
 	void           set_nbr_slots (int nbr_slots);
 	void           insert_slot (int slot_index);
 	void           erase_slot (int slot_index);

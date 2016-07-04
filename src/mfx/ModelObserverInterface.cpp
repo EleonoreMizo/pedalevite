@@ -120,12 +120,14 @@ void	ModelObserverInterface::activate_preset (int preset)
 
 
 
-void	ModelObserverInterface::store_preset (int preset)
+// bank_index < 0: use the current bank
+void	ModelObserverInterface::store_preset (int preset_index, int bank_index)
 {
-	assert (preset >= 0);
-	assert (preset < Cst::_nbr_presets_per_bank);
+	assert (preset_index >= 0);
+	assert (preset_index < Cst::_nbr_presets_per_bank);
+	assert (bank_index < Cst::_nbr_banks);
 
-	do_store_preset (preset);
+	do_store_preset (preset_index, bank_index);
 }
 
 

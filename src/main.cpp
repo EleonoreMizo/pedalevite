@@ -67,6 +67,7 @@
 #include "mfx/uitk/pg/ParamEdit.h"
 #include "mfx/uitk/pg/ParamList.h"
 #include "mfx/uitk/pg/Question.h"
+#include "mfx/uitk/pg/SaveProg.h"
 #include "mfx/uitk/pg/Tuner.h"
 #include "mfx/LocEdit.h"
 #include "mfx/Model.h"
@@ -327,6 +328,8 @@ public:
 	               _page_menu_slot;
 	mfx::uitk::pg::EditText
 	               _page_edit_text;
+	mfx::uitk::pg::SaveProg
+	               _page_save_prog;
 
 	Context ();
 	~Context ();
@@ -411,6 +414,7 @@ Context::Context ()
 ,	_page_ctrl_edit (_page_switcher, _loc_edit, _csn_list)
 ,	_page_menu_slot (_page_switcher, _loc_edit, _pi_type_list)
 ,	_page_edit_text (_page_switcher)
+,	_page_save_prog (_page_switcher)
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -466,7 +470,7 @@ Context::Context ()
 	bank._name = "Cr\xC3\xA9" "dit Usurier";
 	for (auto &preset : bank._preset_arr)
 	{
-		preset._name = "<Empty preset>";
+		preset._name = mfx::Cst::_empty_preset_name;
 	}
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [0];
@@ -818,6 +822,7 @@ Context::Context ()
 	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_EDIT        , _page_ctrl_edit        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_SLOT        , _page_menu_slot        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 

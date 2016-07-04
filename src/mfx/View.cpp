@@ -261,10 +261,11 @@ void	View::do_activate_preset (int index)
 
 
 
-void	View::do_store_preset (int index)
+void	View::do_store_preset (int preset_index, int bank_index)
 {
-	_setup._bank_arr [_bank_index]._preset_arr [index] = _preset_cur;
-	mfx_View_PROPAGATE (store_preset (index));
+	const int      bank_index2 = (bank_index < 0) ? _bank_index : bank_index;
+	_setup._bank_arr [bank_index2]._preset_arr [preset_index] = _preset_cur;
+	mfx_View_PROPAGATE (store_preset (preset_index, bank_index));
 }
 
 
