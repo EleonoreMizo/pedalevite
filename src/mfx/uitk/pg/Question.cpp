@@ -29,7 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
-#include "mfx/Model.h"
 #include "mfx/View.h"
 
 #include <algorithm>

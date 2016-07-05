@@ -59,6 +59,7 @@
 #include "mfx/uitk/pg/CtrlEdit.h"
 #include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/EditText.h"
+#include "mfx/uitk/pg/EndMsg.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/MenuSlot.h"
 #include "mfx/uitk/pg/NotYet.h"
@@ -332,6 +333,8 @@ public:
 	               _page_edit_text;
 	mfx::uitk::pg::SaveProg
 	               _page_save_prog;
+	mfx::uitk::pg::EndMsg
+	               _page_end_msg;
 
 	Context ();
 	~Context ();
@@ -418,6 +421,7 @@ Context::Context ()
 ,	_page_menu_slot (_page_switcher, _loc_edit, _pi_type_list)
 ,	_page_edit_text (_page_switcher)
 ,	_page_save_prog (_page_switcher)
+,	_page_end_msg ()
 {
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
@@ -826,6 +830,7 @@ Context::Context ()
 	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_SLOT        , _page_menu_slot        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_END_MSG          , _page_end_msg          );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 

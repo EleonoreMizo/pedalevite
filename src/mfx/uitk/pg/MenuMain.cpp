@@ -104,15 +104,29 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 			{
 			case RestartMenu_RESTART:
 				{
+					_page_switcher.switch_to (
+						PageType_END_MSG, "Restarting\xE2\x80\xA6"
+					);
 					char * const * argv = _cmd_line.use_argv ();
 					char * const * envp = _cmd_line.use_envp ();
 					execve (argv [0], argv, envp);
 				}
 				break;
 			case RestartMenu_REBOOT:
+				_page_switcher.switch_to (
+					PageType_END_MSG, "Rebooting\xE2\x80\xA6"
+				);
 				system ("sudo shutdown -r now");
 				break;
 			case RestartMenu_SHUTDOWN:
+				_page_switcher.switch_to (
+					PageType_END_MSG,
+					"Shuting down\xE2\x80\xA6\n"
+					"Please wait a\n"
+					"few seconds\n"
+					"before turning\n"
+					"the device off."
+				);
 				system ("sudo shutdown -h now");
 				break;
 			default:
