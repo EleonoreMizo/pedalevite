@@ -36,8 +36,8 @@ namespace fstb
 
 #define fstb_IS(prop, val) (defined (fstb_##prop##_##val) && (fstb_##prop) == (fstb_##prop##_##val))
 
-#define fstb_ARCHI_X86	1
-#define fstb_ARCHI_ARM	2
+#define fstb_ARCHI_X86	(1)
+#define fstb_ARCHI_ARM	(2)
 
 #if defined (__i386__) || defined (_M_IX86) || defined (_X86_) || defined (_M_X64) || defined (__x86_64__) || defined (__INTEL__)
 	#define fstb_ARCHI	fstb_ARCHI_X86
@@ -51,20 +51,20 @@ namespace fstb
 
 // Native word size, in power of 2 bits
 #if defined (_WIN64) || defined (__64BIT__) || defined (__amd64__) || defined (__x86_64__) || defined (__arm64__) || defined (__arm64)
-	#define fstb_WORD_SIZE_L2      6
-	#define fstb_WORD_SIZE        64
-	#define fstb_WORD_SIZE_BYTE    8
+	#define fstb_WORD_SIZE_L2      (6)
+	#define fstb_WORD_SIZE        (64)
+	#define fstb_WORD_SIZE_BYTE    (8)
 #else
-	#define fstb_WORD_SIZE_L2      5
-	#define fstb_WORD_SIZE        32
-	#define fstb_WORD_SIZE_BYTE    4
+	#define fstb_WORD_SIZE_L2      (5)
+	#define fstb_WORD_SIZE        (32)
+	#define fstb_WORD_SIZE_BYTE    (4)
 #endif
 
 
 
 // Endianness
-#define fstb_ENDIAN_BIG    1
-#define fstb_ENDIAN_LITTLE 2
+#define fstb_ENDIAN_BIG    (1)
+#define fstb_ENDIAN_LITTLE (2)
 
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 	#define fstb_ENDIAN fstb_ENDIAN_LITTLE
@@ -80,9 +80,26 @@ namespace fstb
 
 
 
+// System
+#define fstb_SYS_UNDEF (1)
+#define fstb_SYS_WIN   (2)
+#define fstb_SYS_LINUX (3)
+#define fstb_SYS_MACOS (4)
+#if defined (linux) || defined (__linux) || defined (__linux__)
+	#define fstb_SYS fstb_SYS_LINUX
+#elif defined (_WIN32) || defined (WIN32) || defined (__WIN32__) || defined (__CYGWIN__) || defined (__CYGWIN32__)
+	#define fstb_SYS fstb_SYS_WIN
+#elif defined (macintosh) || defined (__APPLE__) || defined (__APPLE_CC__)
+	#define fstb_SYS fstb_SYS_MACOS
+#else
+	#define fstb_SYS fstb_SYS_UNDEF
+#endif
+
+
+
 // Compiler
-#define fstb_COMPILER_GCC  1
-#define fstb_COMPILER_MSVC 2
+#define fstb_COMPILER_GCC  (1)
+#define fstb_COMPILER_MSVC (2)
 
 #if defined (__GNUC__)
 	#define fstb_COMPILER fstb_COMPILER_GCC
@@ -129,7 +146,7 @@ namespace fstb
 #else
 	#define fstb_CDECL
 #endif
-#if defined (_WIN32) || defined (__CYGWIN__)
+#if fstb_IS (SYS, WIN)
 	#if defined (__GNUC__)
 		#define fstb_EXPORT(f) extern "C" __attribute__((dllexport)) f
 	#else
@@ -145,7 +162,7 @@ const long double PI      = 3.1415926535897932384626433832795L;
 const long double LN2     = 0.69314718055994530941723212145818L;
 const long double LN10    = 2.3025850929940456840179914546844L;
 const long double LOG10_2 = 0.30102999566398119521373889472449L;
-const long double LOG2_E  = 1.0 / LN2;
+const long double LOG2_E  = 1.0  / LN2;
 const long double LOG2_10 = LN10 / LN2;
 const long double	EXP1    = 2.7182818284590452353602874713527L;
 const long double SQRT2   = 1.4142135623730950488016887242097L;

@@ -20,7 +20,7 @@
 #define MAIN_API_JACK 1
 #define MAIN_API_ALSA 2
 #define MAIN_API_ASIO 3
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 //	#define MAIN_API MAIN_API_JACK
 	#define MAIN_API MAIN_API_ALSA
 #else
@@ -78,7 +78,7 @@
 #include "mfx/View.h"
 #include "mfx/WorldAudio.h"
 
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
  #if defined (MAIN_USE_ST7920)
 	#include "mfx/ui/DisplayPi3St7920.h"
  #else
@@ -106,7 +106,7 @@
 	#include <unistd.h>
 	#include <signal.h>
 
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_IS (SYS, WIN)
 	#include "mfx/ui/IoWindows.h"
 
 	#if (MAIN_API == MAIN_API_ASIO)
@@ -152,7 +152,7 @@ static const int  MAIN_pin_reset = 18;
 
 static int64_t MAIN_get_time ()
 {
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
@@ -180,7 +180,7 @@ static std::string MAIN_get_ip_address ()
 {
 	std::string    ip_addr;
 
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 
 	// Source:
 	// http://www.geekpage.jp/en/programming/linux-network/get-ipaddr.php
@@ -227,7 +227,7 @@ public:
 	int            _max_block_size;
 	std::atomic <bool>
 	               _dropout_flag;
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 	mfx::ui::TimeShareThread
 	               _thread_spi;
 #endif
@@ -264,7 +264,7 @@ public:
 	               _user_input;
 	mfx::ui::LedVoid
 	               _leds;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_IS (SYS, LINUX)
  #if defined (MAIN_USE_ST7920)
 	mfx::ui::DisplayPi3St7920
  #else
@@ -347,7 +347,7 @@ Context::Context ()
 :	_sample_freq (0)
 ,	_max_block_size (0)
 ,	_dropout_flag ()
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 ,	_thread_spi (10 * 1000)
 
 #endif
@@ -360,7 +360,7 @@ Context::Context ()
 ,	_display ()
 ,	_user_input ()
 ,	_leds ()
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_IS (SYS, LINUX)
 ,	_display (_thread_spi)
 ,	_user_input (_thread_spi)
 ,	_leds ()
@@ -972,7 +972,7 @@ static int MAIN_main_loop (Context &ctx)
 		if (wait_flag)
 		{
 			const int    wait_ms = 100;
-		#if fstb_IS (ARCHI, ARM)
+		#if fstb_IS (SYS, LINUX)
 			::delay (wait_ms);
 		#else
 			::Sleep (wait_ms);
@@ -1030,13 +1030,13 @@ static int MAIN_main_loop (Context &ctx)
 
 
 
-#if fstb_IS (ARCHI, ARM)
 int main (int argc, char *argv [])
+#if fstb_IS (SYS, LINUX)
 #else
 int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
 #endif
 {
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 	::wiringPiSetupPhys ();
 
 	::pinMode (MAIN_pin_reset, OUTPUT);

@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/Cst.h"
 
 #include <cassert>
@@ -49,10 +50,10 @@ const std::string	Cst::_empty_preset_name = "<Empty preset>";
 const std::string	Cst::_config_current = "current";      // Filename
 const std::string	Cst::_config_factory = "factory-default";
 const std::string	Cst::_config_dir     =
-#if defined (_WIN32)
-	"../etc/config";
-#else
+#if fstb_IS (SYS, LINUX)
 	"/opt/pedalevite/etc/config";
+#else
+	"../etc/config";
 #endif
 
 

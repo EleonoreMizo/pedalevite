@@ -29,12 +29,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/TimeShareCbInterface.h"
 #include "mfx/ui/TimeShareThread.h"
 
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 	#include <wiringPi.h>
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_IS (SYS, WIN)
 	#include <Windows.h>
 #else
-	#error Unsupported architecture
+	#error Unsupported system
 #endif
 
 #include <algorithm>
@@ -143,7 +143,7 @@ void	TimeShareThread::polling_loop ()
 
 		if (wait_flag && ! _quit_flag)
 		{
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 			::delayMicroseconds (_granularity);
 #else
 			::Sleep ((_granularity + 999) / 1000);
@@ -208,7 +208,7 @@ void	TimeShareThread::fix_scanpos (int &scan_pos)
 // Nanoseconds
 int64_t	TimeShareThread::get_time ()
 {
-#if fstb_IS (ARCHI, ARM)
+#if fstb_IS (SYS, LINUX)
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
