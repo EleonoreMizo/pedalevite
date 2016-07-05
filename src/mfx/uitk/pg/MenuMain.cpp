@@ -120,10 +120,8 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 					PageType_END_MSG,
 					const_cast <char *> ("Rebooting\xE2\x80\xA6")
 				);
-				std::async ([](){
-					::sleep (1);
-					system ("sudo shutdown -r now");
-				});
+				::sleep (1);
+				system ("sudo shutdown -r now");
 				break;
 			case RestartMenu_SHUTDOWN:
 				_page_switcher.switch_to (
@@ -136,10 +134,8 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 						"the device off."
 					)
 				);
-				std::async ([](){
-					::sleep (1);
-					system ("sudo shutdown -h now");
-				});
+				::sleep (1);
+				system ("sudo shutdown -h now");
 				break;
 			default:
 				// Nothing
