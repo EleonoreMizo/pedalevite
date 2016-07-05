@@ -894,18 +894,6 @@ static int MAIN_main_loop (Context &ctx)
 		const mfx::ModelObserverInterface::SlotInfoList & slot_info_list =
 			ctx._view.use_slot_info_list ();
 
-		const float  usage_max  = ctx._usage_max.exchange (-1);
-		const float  usage_min  = ctx._usage_min.exchange (-1);
-		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
-		if (usage_max >= 0 && usage_min >= 0)
-		{
-			fstb::snprintf4all (
-				cpu_0, sizeof (cpu_0),
-				"Time usage: %6.2f %% / %6.2f %%",
-				usage_min * 100, usage_max * 100
-			);
-		}
-
 		if (! tuner_flag)
 		{
 			const int      nbr_led           = 3;
@@ -926,8 +914,22 @@ static int MAIN_main_loop (Context &ctx)
 			}
 		}
 
+#if ! fstb_IS (SYS, LINUX) // Pollutes the logs when run in init.d
+		const float  usage_max  = ctx._usage_max.exchange (-1);
+		const float  usage_min  = ctx._usage_min.exchange (-1);
+		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
+		if (usage_max >= 0 && usage_min >= 0)
+		{
+			fstb::snprintf4all (
+				cpu_0, sizeof (cpu_0),
+				"Time usage: %6.2f %% / %6.2f %%",
+				usage_min * 100, usage_max * 100
+			);
+		}
+
 		fprintf (stderr, "%s\r", cpu_0);
 		fflush (stderr);
+#endif
 
 		ctx._page_mgr.process_messages ();
 
