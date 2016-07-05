@@ -69,6 +69,7 @@
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/pg/SaveProg.h"
 #include "mfx/uitk/pg/Tuner.h"
+#include "mfx/CmdLine.h"
 #include "mfx/LocEdit.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverDefault.h"
@@ -223,6 +224,7 @@ class Context
 ,	public mfx::adrv::CbInterface
 {
 public:
+	mfx::CmdLine   _cmd_line;
 	double         _sample_freq;
 	int            _max_block_size;
 	std::atomic <bool>
@@ -344,7 +346,8 @@ protected:
 };
 
 Context::Context ()
-:	_sample_freq (0)
+:	_cmd_line ()
+,	_sample_freq (0)
 ,	_max_block_size (0)
 ,	_dropout_flag ()
 #if fstb_IS (SYS, LINUX)
@@ -404,7 +407,7 @@ Context::Context ()
 ,	_page_switcher (_page_mgr)
 ,	_page_cur_prog (_page_switcher, MAIN_get_ip_address ())
 ,	_page_tuner (_page_switcher, _leds)
-,	_page_menu_main (_page_switcher)
+,	_page_menu_main (_page_switcher, _cmd_line)
 ,	_page_edit_prog (_page_switcher, _loc_edit, _pi_type_list)
 ,	_page_param_list (_page_switcher, _loc_edit)
 ,	_page_param_edit (_page_switcher, _loc_edit)
@@ -1030,8 +1033,8 @@ static int MAIN_main_loop (Context &ctx)
 
 
 
-int main (int argc, char *argv [])
 #if fstb_IS (SYS, LINUX)
+int main (int argc, char *argv [], char *envp [])
 #else
 int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
 #endif
@@ -1066,6 +1069,9 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 
 	std::unique_ptr <Context>  ctx_uptr (new Context);
 	Context &      ctx = *ctx_uptr;
+#if fstb_IS (SYS, LINUX)
+	ctx._cmd_line.set (argc, argv, envp);
+#endif
 
 	double         sample_freq;
 	int            max_block_size;

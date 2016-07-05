@@ -266,6 +266,7 @@
     <ClInclude Include="mfx\adrv\DAsio.h" />
     <ClInclude Include="mfx\adrv\DriverInterface.h" />
     <ClInclude Include="mfx\adrv\DJack.h" />
+    <ClInclude Include="mfx\CmdLine.h" />
     <ClInclude Include="mfx\cmd\Central.h" />
     <ClInclude Include="mfx\cmd\BufAlloc.h" />
     <ClInclude Include="mfx\cmd\CentralCbInterface.h" />
@@ -511,6 +512,7 @@
     <ClCompile Include="mfx\adrv\DJack.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="mfx\CmdLine.cpp" />
     <ClCompile Include="mfx\cmd\Central.cpp" />
     <ClCompile Include="mfx\cmd\BufAlloc.cpp" />
     <ClCompile Include="mfx\cmd\CentralCbInterface.cpp" />

@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
 
@@ -36,6 +37,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+class CmdLine;
+
 namespace uitk
 {
 
@@ -54,7 +58,7 @@ class MenuMain
 
 public:
 
-	explicit       MenuMain (PageSwitcher &page_switcher);
+	explicit       MenuMain (PageSwitcher &page_switcher, const CmdLine &cmd_line);
 	virtual        ~MenuMain () = default;
 
 
@@ -77,6 +81,22 @@ protected:
 
 private:
 
+	enum State
+	{
+		State_NORMAL = 0,
+		State_REBOOT
+	};
+
+	enum RestartMenu
+	{
+		RestartMenu_CANCEL = 0,
+		RestartMenu_RESTART,
+		RestartMenu_REBOOT,
+		RestartMenu_SHUTDOWN,
+
+		RestartMenu_NBR_ELT
+	};
+
 	enum Entry
 	{
 		Entry_PROG  = 0,
@@ -91,16 +111,20 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	PageSwitcher & _page_switcher;
+	const CmdLine& _cmd_line;
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
+	State          _state;
 
 	TxtSPtr        _edit_prog_sptr;
 	TxtSPtr        _edit_bank_sptr;
 	TxtSPtr        _edit_layout_sptr;
 	TxtSPtr        _edit_master_sptr;
 	TxtSPtr        _reboot_sptr;
+
+	Question::QArg _reboot_arg;
 
 
 

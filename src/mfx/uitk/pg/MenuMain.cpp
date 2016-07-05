@@ -24,15 +24,22 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/CmdLine.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
 
+#if fstb_IS (SYS, LINUX)
+	#include <unistd.h>
+#endif
+
 #include <cassert>
+#include <cstdlib>
 
 
 
@@ -49,16 +56,19 @@ namespace pg
 
 
 
-MenuMain::MenuMain (PageSwitcher &page_switcher)
+MenuMain::MenuMain (PageSwitcher &page_switcher, const CmdLine &cmd_line)
 :	_page_switcher (page_switcher)
+,	_cmd_line (cmd_line)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()
+,	_state (State_NORMAL)
 ,	_edit_prog_sptr (  new NText (Entry_PROG  ))
 ,	_edit_bank_sptr (  new NText (Entry_BANKS ))
 ,	_edit_layout_sptr (new NText (Entry_LAYOUT))
 ,	_edit_master_sptr (new NText (Entry_MASTER))
 ,	_reboot_sptr (     new NText (Entry_REBOOT))
+,	_reboot_arg ()
 {
 	_edit_prog_sptr  ->set_justification (0.5f, 0, false);
 	_edit_bank_sptr  ->set_justification (0.5f, 0, false);
@@ -68,9 +78,9 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 
 	_edit_prog_sptr  ->set_text ("Edit Program");
 	_edit_bank_sptr  ->set_text ("Banks");
-	_edit_layout_sptr->set_text ("Layout");
+	_edit_layout_sptr->set_text ("Pedal layout");
 	_edit_master_sptr->set_text ("Volume & Levels");
-	_reboot_sptr     ->set_text ("Reboot");
+	_reboot_sptr     ->set_text ("Restart");
 }
 
 
@@ -84,6 +94,37 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
+
+	if (_state == State_REBOOT)
+	{
+		if (_reboot_arg._ok_flag)
+		{
+#if fstb_IS (SYS, LINUX)
+			switch (_reboot_arg._selection)
+			{
+			case RestartMenu_RESTART:
+				{
+					char * const * argv = _cmd_line.use_argv ();
+					char * const * envp = _cmd_line.use_envp ();
+					execve (argv [0], argv, envp);
+				}
+				break;
+			case RestartMenu_REBOOT:
+				system ("sudo shutdown -r now");
+				break;
+			case RestartMenu_SHUTDOWN:
+				system ("sudo shutdown -h now");
+				break;
+			default:
+				// Nothing
+				break;
+			}
+#else
+			_page_switcher.call_page (PageType_NOT_YET, 0, -1);
+#endif
+		}
+	}
+	_state = State_NORMAL;
 
 	if (_view_ptr->use_setup ()._save_mode != doc::Setup::SaveMode_AUTO)
 	{
@@ -169,9 +210,12 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 				//_page_switcher.switch_to (pg::PageType_MASTER_VOL, 0);
 				break;
 			case Entry_REBOOT:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
-				//_page_switcher.switch_to (pg::PageType_REBOOT, 0);
+				_reboot_arg._title      = "RESTART";
+				_reboot_arg._ok_flag    = false;
+				_reboot_arg._selection  = 0;
+				_reboot_arg._choice_arr = { "Cancel", "Restart", "Reboot", "Shutdown" };
+				_page_switcher.call_page (PageType_QUESTION, &_reboot_arg);
+				_state = State_REBOOT;
 				break;
 			default:
 				ret_val = EvtProp_PASS;

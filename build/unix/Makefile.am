@@ -433,6 +433,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/Rect.hpp \
         ../../src/mfx/uitk/Vec2d.h \
         ../../src/mfx/uitk/Vec2d.hpp \
+        ../../src/mfx/CmdLine.h \
+        ../../src/mfx/CmdLine.cpp \
         ../../src/mfx/ControlCurve.h \
         ../../src/mfx/ControlCurve.cpp \
         ../../src/mfx/ControlledParam.cpp \
