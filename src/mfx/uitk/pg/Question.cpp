@@ -101,6 +101,7 @@ void	Question::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		choice_sptr->set_justification (0.5f, 0, false);
 		choice_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
 		choice_sptr->set_coord (Vec2d (x_mid, ch_y + h_m * c_cnt));
+		choice_sptr->set_text (_arg_ptr->_choice_arr [c_cnt]);
 		_choice_list [c_cnt] = choice_sptr;
 		_page_ptr->push_back (choice_sptr);
 	}
