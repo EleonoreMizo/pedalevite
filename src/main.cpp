@@ -178,48 +178,6 @@ static int64_t MAIN_get_time ()
 
 
 
-static std::string MAIN_get_ip_address ()
-{
-	std::string    ip_addr;
-
-#if fstb_IS (SYS, LINUX)
-
-	// Source:
-	// http://www.geekpage.jp/en/programming/linux-network/get-ipaddr.php
-	int            fd = socket (AF_INET, SOCK_DGRAM, 0);
-	struct ifreq   ifr;
-	ifr.ifr_addr.sa_family = AF_INET;
-	fstb::snprintf4all (ifr.ifr_name, IFNAMSIZ, "%s", "eth0");
-	int            ret_val = ioctl (fd, SIOCGIFADDR, &ifr);
-	if (ret_val == 0)
-	{
-		ip_addr = inet_ntoa (((struct sockaddr_in *) &ifr.ifr_addr)->sin_addr);
-	}
-	close (fd);
-
-#else
-
-	::WSADATA      wsa_data;
-	::WSAStartup (2, &wsa_data);
-	char           name_0 [255+1];
-	int            ret_val = gethostname (name_0, sizeof (name_0));
-	if (ret_val == 0)
-	{
-		::PHOSTENT     hostinfo = gethostbyname (name_0);
-		if (hostinfo != 0)
-		{
-			ip_addr = inet_ntoa (*(struct in_addr *)(*hostinfo->h_addr_list));
-		}
-	}
-	::WSACleanup ();
-
-#endif
-
-	return ip_addr;
-}
-
-
-
 class Context
 :	public mfx::ModelObserverDefault
 ,	public mfx::adrv::CbInterface

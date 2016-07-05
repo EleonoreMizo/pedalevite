@@ -254,7 +254,9 @@ void	ParamList::set_param_info ()
 		{
 			const int      pos_nav  = param_pos + 1; // In the nav_list
 			const int      pos_disp = pos_nav;
+#if ! defined (NDEBUG)
 			const int      pos_menu = param_pos * 2 + 1;
+#endif
 			const int      node_id  = param_pos * 2;
 
 			TxtSPtr        name_sptr (new NText (node_id));
