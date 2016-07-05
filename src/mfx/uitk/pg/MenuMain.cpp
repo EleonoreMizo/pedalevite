@@ -36,6 +36,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #if fstb_IS (SYS, LINUX)
 	#include <unistd.h>
+
+	#include <future>
 #endif
 
 #include <cassert>
@@ -118,7 +120,10 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 					PageType_END_MSG,
 					const_cast <char *> ("Rebooting\xE2\x80\xA6")
 				);
-				system ("sudo shutdown -r now");
+				std::async ([](){
+					::delay (500);
+					system ("sudo shutdown -r now");
+				})
 				break;
 			case RestartMenu_SHUTDOWN:
 				_page_switcher.switch_to (
@@ -131,7 +136,10 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 						"the device off."
 					)
 				);
-				system ("sudo shutdown -h now");
+				std::async ([](){
+					::delay (500);
+					system ("sudo shutdown -h now");
+				})
 				break;
 			default:
 				// Nothing
