@@ -24,6 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include "fstb/fnc.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
@@ -35,6 +37,23 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/Font.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
+
+#if fstb_IS (SYS, LINUX)
+	#include <arpa/inet.h>
+	#include <net/if.h>
+	#include <netinet/in.h>
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <sys/ioctl.h>
+	#include <unistd.h>
+#elif fstb_IS (SYS, WIN)
+	#define NOMINMAX
+	#define WIN32_LEAN_AND_MEAN
+	#include <winsock2.h>
+	#include <ws2tcpip.h>
+#else
+	#error Unsupported operating system
+#endif
 
 #include <cassert>
 
@@ -65,13 +84,13 @@ Parameter      value
 
     IP address
 */
-CurProg::CurProg (PageSwitcher &page_switcher, std::string ip_addr)
+CurProg::CurProg (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()
-,	_ip_addr (ip_addr)
+,	_ip_addr ()
 ,	_prog_nbr_sptr (  new NText (0))
 ,	_prog_name_sptr ( new NText (1))
 ,	_bank_nbr_sptr (  new NText (2))
@@ -94,7 +113,6 @@ CurProg::CurProg (PageSwitcher &page_switcher, std::string ip_addr)
 	_param_unit_sptr->set_justification (1.0f, 0, false);
 	_param_val_sptr->set_justification (1.0f, 0, false);
 	_ip_sptr->set_justification (0.5f, 1.0f, false);
-	_ip_sptr->set_text (ip_addr);
 }
 
 
@@ -115,6 +133,12 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	if (_view_ptr->use_setup ()._save_mode != doc::Setup::SaveMode_AUTO)
 	{
 		_model_ptr->set_edit_mode (false);
+	}
+
+	if (_ip_addr.empty ())
+	{
+		_ip_addr = get_ip_address ();
+		_ip_sptr->set_text (_ip_addr);
 	}
 
 	_prog_nbr_sptr->set_font (fnt_m);
@@ -204,6 +228,10 @@ MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
 		case Button_S:
 			_page_switcher.switch_to (pg::PageType_MENU_MAIN, 0);
 			ret_val = EvtProp_CATCH;
+			break;
+		case Button_E:
+			_ip_addr = get_ip_address ();
+			_ip_sptr->set_text (_ip_addr);
 			break;
 		default:
 			// Nothing
@@ -340,6 +368,48 @@ void	CurProg::i_set_param (int pi_id, int index, float val, int slot_index, PiTy
 			false
 		);
 	}
+}
+
+
+
+std::string CurProg::get_ip_address ()
+{
+	std::string    ip_addr;
+
+#if fstb_IS (SYS, LINUX)
+
+	// Source:
+	// http://www.geekpage.jp/en/programming/linux-network/get-ipaddr.php
+	int            fd = socket (AF_INET, SOCK_DGRAM, 0);
+	struct ifreq   ifr;
+	ifr.ifr_addr.sa_family = AF_INET;
+	fstb::snprintf4all (ifr.ifr_name, IFNAMSIZ, "%s", "eth0");
+	int            ret_val = ioctl (fd, SIOCGIFADDR, &ifr);
+	if (ret_val == 0)
+	{
+		ip_addr = inet_ntoa (((struct sockaddr_in *) &ifr.ifr_addr)->sin_addr);
+	}
+	close (fd);
+
+#else
+
+	::WSADATA      wsa_data;
+	::WSAStartup (2, &wsa_data);
+	char           name_0 [255+1];
+	int            ret_val = gethostname (name_0, sizeof (name_0));
+	if (ret_val == 0)
+	{
+		::PHOSTENT     hostinfo = gethostbyname (name_0);
+		if (hostinfo != 0)
+		{
+			ip_addr = inet_ntoa (*(struct in_addr *)(*hostinfo->h_addr_list));
+		}
+	}
+	::WSACleanup ();
+
+#endif
+
+	return ip_addr;
 }
 
 

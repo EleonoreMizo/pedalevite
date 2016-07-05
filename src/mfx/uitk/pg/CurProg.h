@@ -54,7 +54,7 @@ class CurProg
 
 public:
 
-	explicit       CurProg (PageSwitcher &page_switcher, std::string ip_addr);
+	explicit       CurProg (PageSwitcher &page_switcher);
 	virtual        ~CurProg () = default;
 
 
@@ -95,14 +95,16 @@ private:
 	void           i_set_prog_name (std::string name);
 	void           i_set_param (int pi_id, int index, float val, int slot_index, PiType type);
 
+	static std::string
+	               get_ip_address ();
+
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
-	const std::string
-	               _ip_addr;
+	std::string    _ip_addr;
 
 	TxtSPtr        _prog_nbr_sptr;
 	TxtSPtr        _prog_name_sptr;

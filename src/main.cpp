@@ -122,7 +122,7 @@
 	#include <ws2tcpip.h>
 
 #else
-	#error Unsupported architecture
+	#error Unsupported operating system
 
 #endif
 
@@ -408,7 +408,7 @@ Context::Context ()
 ,	_loc_edit ()
 ,	_page_mgr (_model, _view, _display, _queue_input_to_gui, _user_input, _fnt_6x6, _fnt_6x8, _fnt_8x12)
 ,	_page_switcher (_page_mgr)
-,	_page_cur_prog (_page_switcher, MAIN_get_ip_address ())
+,	_page_cur_prog (_page_switcher)
 ,	_page_tuner (_page_switcher, _leds)
 ,	_page_menu_main (_page_switcher, _cmd_line)
 ,	_page_edit_prog (_page_switcher, _loc_edit, _pi_type_list)
