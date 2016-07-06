@@ -380,16 +380,20 @@ MsgHandlerInterface::EvtProp	ParamList::change_param (int node_id, int dir)
 	assert (node_id >= 0);
 	assert (dir != 0);
 
+	EvtProp        ret_val = EvtProp_PASS;
 	const int      slot_index = _loc_edit._slot_index;
 	PiType         type;
 	int            index;
 	conv_node_id_to_param (type, index, node_id);
-	assert (index >= 0);
+	if (index >= 0)
+	{
+		ret_val = Tools::change_param (
+			*_model_ptr, *_view_ptr, slot_index, type,
+			index, float (Cst::_step_param), 0, dir
+		);
+	}
 
-	return Tools::change_param (
-		*_model_ptr, *_view_ptr, slot_index, type,
-		index, float (Cst::_step_param), 0, dir
-	);
+	return ret_val;
 }
 
 
