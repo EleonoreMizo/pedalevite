@@ -49,8 +49,8 @@ class DistoSimpleDesc
 
 public:
 
-	static const int  _gain_min = 1;
-	static const int  _gain_max = 100000;
+	static const double  _gain_min;
+	static const double  _gain_max;
 
 	               DistoSimpleDesc ();
 	virtual        ~DistoSimpleDesc () = default;

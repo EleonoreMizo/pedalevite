@@ -45,16 +45,21 @@ namespace dist1
 
 
 
+const double	DistoSimpleDesc::_gain_min = 0.1;
+const double	DistoSimpleDesc::_gain_max = 1000;
+
+
+
 DistoSimpleDesc::DistoSimpleDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	param::TplLog *   log_ptr = new param::TplLog (
-		float (_gain_min), float (_gain_max),
+		double (_gain_min), double (_gain_max),
 		"Distortion Gain\nGain",
 		"dB",
 		param::HelperDispNum::Preset_DB,
 		0,
-		"%5.1f"
+		"%+5.1f"
 	);
 	_desc_set.add_glob (Param_GAIN, log_ptr);
 }

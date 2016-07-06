@@ -75,6 +75,12 @@ protected:
 
 private:
 
+	// Attenuation. 1/_attn is the maximum volume that the disortion can reach,
+	// while gain at 0 remains unchanged.
+	static const float   _attn;
+	static const float   _m_9;
+	static const float   _m_2;
+
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 	typedef std::array <BufAlign, _max_nbr_chn> BufAlignArray;
 

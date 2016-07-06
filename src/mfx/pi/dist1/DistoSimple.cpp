@@ -56,7 +56,13 @@ DistoSimple::DistoSimple ()
 {
 	_state_set.init (piapi::ParamCateg_GLOBAL, _desc.use_desc_set ());
 
-	_state_set.set_val (Param_GAIN, 0); // 0 dB
+	_state_set.set_val (
+		Param_GAIN,
+		_desc.use_desc_set ().use_param (
+			piapi::ParamCateg_GLOBAL,
+			Param_GAIN
+		).conv_nat_to_nrm (1) // 0 dB
+	);
 
 	for (int index = 0; index < Param_NBR_ELT; ++index)
 	{
@@ -112,6 +118,11 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 // x -> { x - x^9/9 if x >  0
 //      { x + x^2/2 if x <= 0
 // x * (1 - x^8/9)
+// 
+// With an attenuation:
+// x -> x - (a^(p-1) / p) * x^p
+// p = power
+// a = attenuation (inverse of gain). 8 = -18 dB
 void	DistoSimple::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_evt = proc._nbr_evt;
@@ -236,12 +247,12 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 #endif
 	}
 
-	const auto     mi    = fstb::ToolsSimd::set1_f32 (-1);
-	const auto     ma    = fstb::ToolsSimd::set1_f32 ( 1);
-	const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
-	const auto     c_1_9 = fstb::ToolsSimd::set1_f32 ( 1.0f / 9);
-	const auto     c_1_2 = fstb::ToolsSimd::set1_f32 ( 1.0f / 2);
-	const auto     bias  = fstb::ToolsSimd::set1_f32 ( 0.2f);
+	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f / _attn);
+	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f / _attn);
+	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     c_9  = fstb::ToolsSimd::set1_f32 (_m_9);
+	const auto     c_2  = fstb::ToolsSimd::set1_f32 (_m_2);
+	const auto     bias = fstb::ToolsSimd::set1_f32 ( 0.2f / _attn);
 
 	int            chn_src_step = 1;
 	if (proc._nbr_chn_arr [Dir_IN] == 1 && proc._nbr_chn_arr [Dir_OUT] > 1)
@@ -267,8 +278,8 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 			const auto     x4  = x2 * x2;
 			const auto     x8  = x4 * x4;
 			const auto     x9  = x8 * x;
-			const auto     x_n = x + x2 * c_1_2;
-			const auto     x_p = x - x9 * c_1_9;
+			const auto     x_n = x + x2 * c_2;
+			const auto     x_p = x - x9 * c_9;
 			const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
 			x = fstb::ToolsSimd::select (t_0, x_p, x_n);
 
@@ -280,6 +291,12 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 		chn_src += chn_src_step;
 	}
 }
+
+
+
+const float	DistoSimple::_attn = 8;
+const float	DistoSimple::_m_9  = fstb::ipowp (_attn, 9) / 9;
+const float	DistoSimple::_m_2  = fstb::ipowp (_attn, 2) / 2;
 
 
 
