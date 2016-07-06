@@ -421,15 +421,24 @@ Context::Context ()
 		{
 			mfx::ui::UserInputInterface::MsgQueue * queue_ptr =
 				&_queue_input_to_cmd;
-			if (   type == mfx::ui::UserInputType_POT
-			    || type == mfx::ui::UserInputType_ROTENC)
+			if (type == mfx::ui::UserInputType_POT)
 			{
 				queue_ptr = &_queue_input_to_audio;
 			}
-			if (   type == mfx::ui::UserInputType_SW
-			    && (index == 0 || index == 1 || (index >= 10 && index < 14)))
+			if (type == mfx::ui::UserInputType_ROTENC)
 			{
-				/*** To do: rotenc 5 and 6 ***/
+				if (index < 5)
+				{
+					queue_ptr = &_queue_input_to_audio;
+				}
+				else
+				{
+					queue_ptr = &_queue_input_to_gui;
+				}
+			}
+			if (   type == mfx::ui::UserInputType_SW
+			    && (index == 0 || index == 1 || (index >= 10 && index < 14)) || index == 18 || index == 19)
+			{
 				queue_ptr = &_queue_input_to_gui;
 			}
 			_user_input.set_msg_recipient (
@@ -559,7 +568,7 @@ Context::Context ()
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 5;
+			cls._bind_sptr->_source._index = 0;
 			cls._bind_sptr->_step          = 0.02f;
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
@@ -573,7 +582,7 @@ Context::Context ()
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 6;
+			cls._bind_sptr->_source._index = 1;
 			cls._bind_sptr->_step          = 1.0f / (mfx::pi::trem1::Waveform_NBR_ELT - 1);
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
@@ -612,7 +621,7 @@ Context::Context ()
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 5;
+			cls._bind_sptr->_source._index = 0;
 			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
@@ -639,7 +648,7 @@ Context::Context ()
 			mfx::doc::CtrlLinkSet cls;
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 6;
+			cls._bind_sptr->_source._index = 1;
 			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
@@ -681,7 +690,7 @@ Context::Context ()
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 5;
+			cls._bind_sptr->_source._index = 0;
 			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
 			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls._bind_sptr->_u2b_flag      = false;
@@ -735,7 +744,7 @@ Context::Context ()
 			mfx::doc::CtrlLinkSet cls_main;
 			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls_main._bind_sptr->_source._index = 6;
+			cls_main._bind_sptr->_source._index = 1;
 			cls_main._bind_sptr->_step          = float (mfx::Cst::_step_param);
 			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
 			cls_main._bind_sptr->_u2b_flag      = false;
