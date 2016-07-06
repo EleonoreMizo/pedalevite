@@ -381,6 +381,28 @@ Context::Context ()
 ,	_page_save_prog (_page_switcher)
 ,	_page_end_msg ()
 {
+	// First, scans the input queue to check if the ESC button
+	// is pressed. If it is the case, we request exiting the program.
+	mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
+	bool           scan_flag = true;
+	do
+	{
+		cell_ptr = _queue_input_to_gui.dequeue ();
+		if (cell_ptr != 0)
+		{
+			const mfx::ui::UserInputType  type  = cell_ptr->_val.get_type ();
+			const int                     index = cell_ptr->_val.get_index ();
+			const float                   val   = cell_ptr->_val.get_val ();
+			if (type == mfx::ui::UserInputType_SW && index == 1 /*** To do: constant ***/)
+			{
+				_quit_flag = (val > 0.5f);
+				scan_flag = false;
+			}
+			_user_input.return_cell (*cell_ptr);
+		}
+	}
+	while (cell_ptr != 0 && scan_flag);
+
 	_dropout_flag.store (false);
 	_usage_min.store (-1);
 	_usage_max.store (-1);

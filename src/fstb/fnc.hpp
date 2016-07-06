@@ -535,7 +535,9 @@ T	ipowp (T x, U n)
 {
 	assert (! (n < U (0)));
 
+#if 1
 	T					z (1);
+
 	while (n != U (0))
 	{
 		if ((n & U (1)) != U (0))
@@ -545,6 +547,15 @@ T	ipowp (T x, U n)
 		n >>= 1;
 		x *= x;
 	}
+#else
+	T              z (((n & U (1)) != U (0)) ? x : 1);
+	n >>= 1;
+	if (n > U (0))
+	{
+		x *= x;
+		z *= ipowp (x, n);
+	}
+#endif
 
 	return (z);
 }

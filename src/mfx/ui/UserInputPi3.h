@@ -191,8 +191,9 @@ private:
 	class SwitchState
 	{
 	public:
-		bool           _flag      = false;
-		int64_t        _time_last = 0;
+		volatile bool  _flag      = false;
+		int64_t        _time_last = INT64_MIN; // ns
+		bool           is_set () const { return _time_last != INT64_MIN; }
 	};
 	typedef std::array <SwitchState, _nbr_switches> SwitchStateArray;
 
@@ -200,8 +201,9 @@ private:
 	{
 	public:
 		static const int  _val_none = -666;
-		int            _cur_val = _val_none;
+		volatile int   _cur_val = _val_none;
 		int            _alt_val = _val_none;
+		bool           is_set () const { return _cur_val != _val_none; }
 	};
 	typedef std::array <PotState, _nbr_adc> PotStateArray;
 
@@ -213,6 +215,7 @@ private:
 
 	void           close_everything ();
 	void           polling_loop ();
+	void           read_data (bool low_freq_flag);
 	void           handle_switch (int index, bool flag, int64_t cur_time);
 	void           handle_rotenc (int index, bool f0, bool f1, int64_t cur_time);
 	void           handle_pot (int index, int val, int64_t cur_time);

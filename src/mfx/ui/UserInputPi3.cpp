@@ -161,6 +161,9 @@ UserInputPi3::UserInputPi3 (TimeShareThread &thread_spi)
 		::wiringPiI2CWriteReg16 (_hnd_23017_arr [p], Cmd23017_IODIRA, 0xFFFF);
 	}
 
+	// Initial read
+	read_data (true);
+
 	_polling_thread = std::thread (&UserInputPi3::polling_loop, this);
 	_thread_spi.register_cb (*this, 1000 * 1000 / 100); // 100 Hz refresh rate
 }
@@ -203,7 +206,46 @@ int	UserInputPi3::do_get_nbr_param (UserInputType type) const
 
 void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr)
 {
+	const bool     send_flag = (_recip_list [type] [index] != queue_ptr);
+
 	_recip_list [type] [index] = queue_ptr;
+
+	if (send_flag)
+	{
+		switch (type)
+		{
+		case UserInputType_SW:
+			{
+				const SwitchState &  state = _switch_state_arr [index];
+				if (state.is_set ())
+				{
+					enqueue_val (
+						state._time_last,
+						UserInputType_SW,
+						index,
+						(flag) ? 1 : 0
+					);
+				}
+			}
+			break:
+		case UserInputType_POT:
+			{
+				const PotState &  state = _pot_state_arr [index];
+				if (state.is_set ())
+				{
+					const float    val_flt = _cur_val * (1.0f / ((1 << _res_adc) - 1));
+					const int64_t  cur_time = read_clock_ns ();
+					enqueue_val (
+						cur_time,
+						UserInputType_POT,
+						index,
+						val_flt
+					);
+				}
+			}
+			break;
+		}
+	}
 }
 
 
@@ -273,67 +315,10 @@ void	UserInputPi3::close_everything ()
 
 void	UserInputPi3::polling_loop ()
 {
-	typedef unsigned int InputState;
-	static_assert (
-		sizeof (InputState) * CHAR_BIT >= _nbr_sw_23017 * _nbr_dev_23017,
-		"state capacity for MCP23017"
-	);
-	static_assert (
-		sizeof (InputState) * CHAR_BIT >= _nbr_sw_gpio,
-		"state capacity for GPIO"
-	);
-
 	while (! _quit_flag)
 	{
-		const int64_t  cur_time = read_clock_ns ();
-		
 		const bool     low_freq_flag = ((_polling_count & 15) == 0);
-		
-		// Reads all binary inputs first
-		InputState     input_state_arr [BinSrc_NBR_ELT] = { 0, 0 };
-
-		static const InputState mask = (1U << _nbr_sw_23017) - 1;
-		for (int p = 0; p < _nbr_dev_23017; ++p)
-		{
-			InputState     dev_state = InputState (
-				::wiringPiI2CReadReg16 (_hnd_23017_arr [p], Cmd23017_GPIOA)
-			);
-			dev_state ^= mask;
-			input_state_arr [BinSrc_PORT_EXP] |= dev_state << (p * _nbr_sw_23017);
-		}
-
-		for (int p = 0; p < _nbr_sw_gpio; ++p)
-		{
-			InputState     sw_val = InputState (
-				::digitalRead (_gpio_pin_arr [p]) & 1
-			);
-			sw_val ^= 1;
-			input_state_arr [BinSrc_GPIO] |= sw_val << p;
-		}
-
-		if (low_freq_flag)
-		{
-			// Switches
-			for (int s = 0; s < _nbr_switches; ++s)
-			{
-				const SwitchSrc & src = _switch_arr [s];
-				const int      val    = (input_state_arr [src._type] >> src._pos) & 1;
-				const bool     flag   = (val != 0);
-				handle_switch (s, flag, cur_time);
-			}
-		}
-
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
-		// Rotary incremental encoders
-		for (int i = 0; i < _nbr_rotenc; ++i)
-		{
-			const RotEncSrc & src       = _rotenc_arr [i];
-			const InputState  src_state = input_state_arr [src._type];
-			const int         v0        = (src_state >> src._pos_0) & 1;
-			const int         v1        = (src_state >> src._pos_1) & 1;
-			handle_rotenc (i, (v0 != 0), (v1 != 0), cur_time);
-		}
-#endif
+		read_data (low_freq_flag);
 
 		// 1 ms between updates. Not less because of the rotary encoders.
 		::delay (1);
@@ -345,19 +330,79 @@ void	UserInputPi3::polling_loop ()
 
 
 
+void	UserInputPi3::read_data (bool low_freq_flag)
+{
+	typedef unsigned int InputState;
+	static_assert (
+		sizeof (InputState) * CHAR_BIT >= _nbr_sw_23017 * _nbr_dev_23017,
+		"state capacity for MCP23017"
+	);
+	static_assert (
+		sizeof (InputState) * CHAR_BIT >= _nbr_sw_gpio,
+		"state capacity for GPIO"
+	);
+
+	const int64_t  cur_time = read_clock_ns ();
+		
+	// Reads all binary inputs first
+	InputState     input_state_arr [BinSrc_NBR_ELT] = { 0, 0 };
+
+	static const InputState mask = (1U << _nbr_sw_23017) - 1;
+	for (int p = 0; p < _nbr_dev_23017; ++p)
+	{
+		InputState     dev_state = InputState (
+			::wiringPiI2CReadReg16 (_hnd_23017_arr [p], Cmd23017_GPIOA)
+		);
+		dev_state ^= mask;
+		input_state_arr [BinSrc_PORT_EXP] |= dev_state << (p * _nbr_sw_23017);
+	}
+
+	if (low_freq_flag)
+	{
+		for (int p = 0; p < _nbr_sw_gpio; ++p)
+		{
+			InputState     sw_val = InputState (
+				::digitalRead (_gpio_pin_arr [p]) & 1
+			);
+			sw_val ^= 1;
+			input_state_arr [BinSrc_GPIO] |= sw_val << p;
+		}
+
+		// Switches
+		for (int s = 0; s < _nbr_switches; ++s)
+		{
+			const SwitchSrc & src = _switch_arr [s];
+			const int      val    = (input_state_arr [src._type] >> src._pos) & 1;
+			const bool     flag   = (val != 0);
+			handle_switch (s, flag, cur_time);
+		}
+	}
+
+#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
+	// Rotary incremental encoders
+	for (int i = 0; i < _nbr_rotenc; ++i)
+	{
+		const RotEncSrc & src       = _rotenc_arr [i];
+		const InputState  src_state = input_state_arr [src._type];
+		const int         v0        = (src_state >> src._pos_0) & 1;
+		const int         v1        = (src_state >> src._pos_1) & 1;
+		handle_rotenc (i, (v0 != 0), (v1 != 0), cur_time);
+	}
+#endif
+}
+
+
+
 void	UserInputPi3::handle_switch (int index, bool flag, int64_t cur_time)
 {
 	SwitchState &  sw = _switch_state_arr [index];
 
-	if (flag != sw._flag)
+	const int64_t  dist = cur_time - sw._time_last;
+	if ((flag != sw._flag && dist >= _antibounce_time) || ! sw.is_set ())
 	{
-		const int64_t  dist = cur_time - sw._time_last;
-		if (dist >= _antibounce_time)
-		{
-			sw._flag      = flag;
-			sw._time_last = cur_time;
-			enqueue_val (cur_time, UserInputType_SW, index, (flag) ? 1 : 0);
-		}
+		sw._flag      = flag;
+		sw._time_last = cur_time;
+		enqueue_val (cur_time, UserInputType_SW, index, (flag) ? 1 : 0);
 	}
 }
 
