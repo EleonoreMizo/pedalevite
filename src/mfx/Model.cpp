@@ -869,7 +869,7 @@ void	Model::check_mixer_plugin (int slot_index, int slot_index_central)
 {
 	assert (_preset_cur._slot_list [slot_index].get () != 0);
 
-	const bool        use_flag = has_mixer_plugin (_preset_cur, slot_index);	
+	const bool        use_flag = has_mixer_plugin (_preset_cur, slot_index);
 	const doc::Slot & slot     = *(_preset_cur._slot_list [slot_index]);
 	int &             id_ref   = _pi_id_list [slot_index]._pi_id_arr [PiType_MIX];
 
@@ -995,6 +995,7 @@ void	Model::process_msg_ui ()
 				const int      pedal_index  = find_pedal (switch_index);
 				if (pedal_index < 0)
 				{
+
 					// We shouldn't have been connected to this switch
 					assert (false);
 				}

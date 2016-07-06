@@ -206,7 +206,8 @@ int	UserInputPi3::do_get_nbr_param (UserInputType type) const
 
 void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr)
 {
-	const bool     send_flag = (_recip_list [type] [index] != queue_ptr);
+	const bool     send_flag =
+		(queue_ptr != 0 &&_recip_list [type] [index] != queue_ptr);
 
 	_recip_list [type] [index] = queue_ptr;
 
@@ -223,17 +224,18 @@ void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue
 						state._time_last,
 						UserInputType_SW,
 						index,
-						(flag) ? 1 : 0
+						(state._flag) ? 1 : 0
 					);
 				}
 			}
-			break:
+			break;
 		case UserInputType_POT:
 			{
 				const PotState &  state = _pot_state_arr [index];
 				if (state.is_set ())
 				{
-					const float    val_flt = _cur_val * (1.0f / ((1 << _res_adc) - 1));
+					const float    val_flt  =
+						state._cur_val * (1.0f / ((1 << _res_adc) - 1));
 					const int64_t  cur_time = read_clock_ns ();
 					enqueue_val (
 						cur_time,
@@ -243,6 +245,9 @@ void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue
 					);
 				}
 			}
+			break;
+		default:
+			// Nothing
 			break;
 		}
 	}

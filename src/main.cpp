@@ -1,7 +1,5 @@
 
-// g++ --std=c++11 -I. -Wall -mfpu=neon `pkg-config --cflags --libs jack` -l asound -l wiringPi -l pthread main.cpp mailbox.c fstb/fnc.cpp mfx/*.cpp mfx/tuner/*.cpp mfx/ui/*.cpp
-// sudo jackd -P70 -p16 -t2000 -dalsa -p64 -n3 -r44100 -s &
-// sudo ./a.out
+// Running jack: sudo jackd -P70 -p16 -t2000 -dalsa -p64 -n3 -r44100 -s &
 //
 // -march=armv8-a doesn't work with std::thread on this GCC version,
 // see last comment of bug #42734 on gcc.gnu.org 
@@ -383,6 +381,11 @@ Context::Context ()
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
+	_user_input.set_msg_recipient (
+		mfx::ui::UserInputType_SW,
+		1 /*** To do: constant ***/,
+		&_queue_input_to_gui
+	);
 	mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
 	bool           scan_flag = true;
 	do
@@ -395,7 +398,12 @@ Context::Context ()
 			const float                   val   = cell_ptr->_val.get_val ();
 			if (type == mfx::ui::UserInputType_SW && index == 1 /*** To do: constant ***/)
 			{
-				_quit_flag = (val > 0.5f);
+fprintf (stderr, "Reading ESC button...\n");
+				if (val > 0.5f)
+				{
+					_quit_flag = true;
+					fprintf (stderr, "Exit requested.\n");
+				}
 				scan_flag = false;
 			}
 			_user_input.return_cell (*cell_ptr);
@@ -437,7 +445,7 @@ Context::Context ()
 				}
 			}
 			if (   type == mfx::ui::UserInputType_SW
-			    && (index == 0 || index == 1 || (index >= 10 && index < 14)) || index == 18 || index == 19)
+			    && (index == 0 || index == 1 || (index >= 10 && index < 14) || index == 18 || index == 19))
 			{
 				queue_ptr = &_queue_input_to_gui;
 			}
@@ -1069,29 +1077,34 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 	ctx._cmd_line.set (argc, argv, envp);
 #endif
 
-	double         sample_freq;
-	int            max_block_size;
-	int            ret_val = snd_drv.init (
-		sample_freq,
-		max_block_size,
-		ctx,
-		0,
-		chn_idx_in,
-		chn_idx_out
-	);
+	int            ret_val = 0;
 
-	if (ret_val == 0)
+	if (! ctx._quit_flag)
 	{
-		ctx.set_proc_info (sample_freq, max_block_size);
-		ret_val = snd_drv.start ();
-	}
+		double         sample_freq;
+		int            max_block_size;
+		ret_val = snd_drv.init (
+			sample_freq,
+			max_block_size,
+			ctx,
+			0,
+			chn_idx_in,
+			chn_idx_out
+		);
 
-	if (ret_val == 0)
-	{
-		ret_val = MAIN_main_loop (ctx);
-	}
+		if (ret_val == 0)
+		{
+			ctx.set_proc_info (sample_freq, max_block_size);
+			ret_val = snd_drv.start ();
+		}
 
-	snd_drv.stop ();
+		if (ret_val == 0)
+		{
+			ret_val = MAIN_main_loop (ctx);
+		}
+
+		snd_drv.stop ();
+	}
 
 	ctx_uptr.reset ();
 
