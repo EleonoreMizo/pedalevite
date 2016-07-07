@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/ControlCurve.h"
 #include "mfx/ControlSource.h"
+#include "mfx/Cst.h"
 
 #include <set>
 
@@ -61,7 +62,7 @@ public:
 	void           ser_read (SerRInterface &ser);
 
 	ControlSource  _source;
-	float          _step     = 1.0f / 64;  // For relative modes (incremental encoders). > 0
+	float          _step     = float (Cst::_step_param);  // For relative modes (incremental encoders). > 0
 
 	ControlCurve   _curve    = ControlCurve_LINEAR;
 	float          _base     = 0;       // Normalized value, for absolute mode

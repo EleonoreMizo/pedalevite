@@ -126,6 +126,23 @@ void	ParamStateSet::set_val (int index, double val)
 
 
 
+void	ParamStateSet::set_val_nat (const ParamDescSet &param_desc_arr, int index, double val)
+{
+	assert (_categ >= 0);
+	assert (index >= 0);
+	assert (index < int (_state_arr.size ()));
+
+	const piapi::ParamDescInterface &   desc =
+		param_desc_arr.use_param (_categ, index);
+	assert (val >= desc.get_nat_min ());
+	assert (val <= desc.get_nat_max ());
+
+	const double   val_nrm = desc.conv_nat_to_nrm (val);
+	set_val (index, val_nrm);
+}
+
+
+
 const ParamState &	ParamStateSet::use_state (int index) const
 {
 	assert (_categ >= 0);

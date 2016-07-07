@@ -65,6 +65,7 @@ public:
 	void           clear_buffers ();
 	void           set_ramp_time (int index, double t);
 	void           set_val (int index, double val);
+	void           set_val_nat (const ParamDescSet &param_desc_arr, int index, double val);
 	const ParamState &
 	               use_state (int index) const;
 	void           process_block (int nbr_spl);
