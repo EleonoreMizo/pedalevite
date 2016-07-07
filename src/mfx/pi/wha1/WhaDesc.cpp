@@ -63,7 +63,7 @@ WhaDesc::WhaDesc ()
 
 	// Base Q
 	log_ptr = new param::TplLog (
-		2, 32,
+		1, 32,
 		"Selectivity\nQ",
 		"",
 		param::HelperDispNum::Preset_FLOAT_STD,

@@ -61,10 +61,11 @@ Wha::Wha ()
 ,	_freq (1000)
 ,	_q (1)
 {
-	_state_set.init (piapi::ParamCateg_GLOBAL, _desc.use_desc_set ());
+	const ParamDescSet & desc = _desc.use_desc_set ();
+	_state_set.init (piapi::ParamCateg_GLOBAL, desc);
 
-	_state_set.set_val (Param_FREQ, 0.50   );
-	_state_set.set_val (Param_Q   , 1.0 / 3); // -> q = 5
+	_state_set.set_val (Param_FREQ, 0.5);
+	_state_set.set_val_nat (desc, Param_Q, 5);
 
 	_state_set.add_observer (Param_FREQ, _param_change_flag);
 	_state_set.add_observer (Param_Q   , _param_change_flag);
