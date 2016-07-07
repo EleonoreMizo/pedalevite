@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/CmdLine.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
 
@@ -59,8 +60,9 @@ namespace pg
 
 
 
-EndMsg::EndMsg ()
+EndMsg::EndMsg (const CmdLine &cmd_line)
 :	_model_ptr (0)
+,	_cmd_line (cmd_line)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()

@@ -40,6 +40,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+class CmdLine;
+
 namespace uitk
 {
 namespace pg
@@ -65,7 +68,7 @@ public:
 		EndType_NBR_ELT
 	};
 
-	               EndMsg ();
+	explicit       EndMsg (const CmdLine &cmd_line);
 	virtual        ~EndMsg () = default;
 
 
@@ -91,6 +94,7 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
 
+	const CmdLine& _cmd_line;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -108,6 +112,7 @@ private:
 
 private:
 
+	               EndMsg ()                               = delete;
 	               EndMsg (const EndMsg &other)            = delete;
 	EndMsg &       operator = (const EndMsg &other)        = delete;
 	bool           operator == (const EndMsg &other) const = delete;

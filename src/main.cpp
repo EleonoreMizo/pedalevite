@@ -367,7 +367,7 @@ Context::Context ()
 ,	_page_switcher (_page_mgr)
 ,	_page_cur_prog (_page_switcher)
 ,	_page_tuner (_page_switcher, _leds)
-,	_page_menu_main (_page_switcher, _cmd_line)
+,	_page_menu_main (_page_switcher)
 ,	_page_edit_prog (_page_switcher, _loc_edit, _pi_type_list)
 ,	_page_param_list (_page_switcher, _loc_edit)
 ,	_page_param_edit (_page_switcher, _loc_edit)
@@ -378,7 +378,7 @@ Context::Context ()
 ,	_page_menu_slot (_page_switcher, _loc_edit, _pi_type_list)
 ,	_page_edit_text (_page_switcher)
 ,	_page_save_prog (_page_switcher)
-,	_page_end_msg ()
+,	_page_end_msg (_cmd_line)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.

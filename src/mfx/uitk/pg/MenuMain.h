@@ -37,9 +37,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-
-class CmdLine;
-
 namespace uitk
 {
 
@@ -58,7 +55,7 @@ class MenuMain
 
 public:
 
-	explicit       MenuMain (PageSwitcher &page_switcher, const CmdLine &cmd_line);
+	explicit       MenuMain (PageSwitcher &page_switcher);
 	virtual        ~MenuMain () = default;
 
 
@@ -111,7 +108,6 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	PageSwitcher & _page_switcher;
-	const CmdLine& _cmd_line;
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
