@@ -114,6 +114,7 @@ private:
 
 	void           process_input ();
 	void           handle_redraw ();
+	void           send_button (int node_id, Button but);
 	void           send_event (NodeEvt &evt);
 	int            find_nav_node (int node_id) const;
 	bool           check_curs (bool send_msg_flag);

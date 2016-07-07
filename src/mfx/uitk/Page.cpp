@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/ui/DisplayInterface.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/Page.h"
@@ -328,6 +329,8 @@ void	Page::process_input ()
 					case 11: but = Button_D; break;
 					case 12: but = Button_L; break;
 					case 13: but = Button_R; break;
+					case 18: but = Button_S; break;
+					case 19: but = Button_S; break;
 					}
 					if (but != Button_INVALID)
 					{
@@ -340,23 +343,30 @@ void	Page::process_input ()
 							_but_hold       = but;
 							_but_hold_date  = _model.get_cur_date ();
 							_but_hold_count = 0;
-
-							const bool     pass_flag = process_nav (but);
-							if (pass_flag)
-							{
-								NodeEvt        evt (NodeEvt::create_button (node_id, but));
-								send_event (evt);
-							}
+							send_button (node_id, but);
 						}
 						check_hold_flag = false;
 					}
 				}
 				break;
 			case ui::UserInputType_ROTENC:
-
-				/*** To do ***/
-				assert (false);
-
+				{
+					Button         but     = Button_INVALID;
+					const int      val_lim =
+						fstb::limit (fstb::round_int (val), -1, 1);
+					switch (index * val_lim)
+					{
+					/*** To do: a better map ***/
+					case -5: but = Button_U; break;
+					case  5: but = Button_D; break;
+					case -6: but = Button_L; break;
+					case  6: but = Button_R; break;
+					}
+					if (but != Button_INVALID)
+					{
+						send_button (node_id, but);
+					}
+				}
 				break;
 			default:
 				// Nothing
@@ -445,6 +455,18 @@ void	Page::handle_redraw ()
 	}
 
 	_zone_inval = Rect ();
+}
+
+
+
+void	Page::send_button (int node_id, Button but)
+{
+	const bool     pass_flag = process_nav (but);
+	if (pass_flag)
+	{
+		NodeEvt        evt (NodeEvt::create_button (node_id, but));
+		send_event (evt);
+	}
 }
 
 
