@@ -255,15 +255,17 @@ void	ParamEdit::update_display ()
 	doc::Slot &    slot  = *(preset._slot_list [slot_index]);
 	const PiType   type  = _loc_edit._pi_type;
 	assert (slot._settings_all.find (slot._pi_model) != slot._settings_all.end ());
-	doc::PluginSettings &  settings =
-			(type == PiType_MIX)
-		? slot._settings_mixer
-		: slot._settings_all [slot._pi_model];
-//	const int      index = _loc_edit._param_index;
+	doc::PluginSettings &  settings = slot.use_settings (type);
+	const int      index = _loc_edit._param_index;
+
+	// Controllers
+	auto           it_cls = settings._map_param_ctrl.find (index);
+	const bool     ctrl_flag = (it_cls != settings._map_param_ctrl.end ());
+	_controllers_sptr->set_bold (ctrl_flag, true);
 
 	bool           show_sync_flag = false;
 
-	/*** To do: controllers + tempo sync ***/
+	/*** To do: tempo sync ***/
 
 
 	_follow_sptr->show (show_sync_flag);
