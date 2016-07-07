@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DistoSimpleDesc.cpp
+        DistToneDesc.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,8 +24,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/dist1/DistoSimpleDesc.h"
-#include "mfx/pi/dist1/Param.h"
+#include "mfx/pi/dtone1/DistToneDesc.h"
+#include "mfx/pi/dtone1/Param.h"
+#include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 
 #include <cassert>
@@ -36,7 +37,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace dist1
+namespace dtone1
 {
 
 
@@ -45,41 +46,52 @@ namespace dist1
 
 
 
-const double	DistoSimpleDesc::_gain_min = 0.1;
-const double	DistoSimpleDesc::_gain_max = 1000;
-
-
-
-DistoSimpleDesc::DistoSimpleDesc ()
+DistToneDesc::DistToneDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
-	// Gain
-	param::TplLog *   log_ptr = new param::TplLog (
-		double (_gain_min), double (_gain_max),
-		"Distortion Gain\nGain",
-		"dB",
-		param::HelperDispNum::Preset_DB,
+	// Tone
+	param::TplLin *   lin_ptr = new param::TplLin (
+		0, 1,
+		"Tone",
+		"%",
 		0,
-		"%+5.1f"
+		"%5.1f"
 	);
-	_desc_set.add_glob (Param_GAIN, log_ptr);
+	lin_ptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_TONE, lin_ptr);
 
-	// HPF Cutoff frequency
-	log_ptr = new param::TplLog (
-		3, 3000,
-		"Input high-pass filter cutoff frequency\nInput HPF Frequency\nHPF Cutoff Frequency\nHPF Frequency\nHPF Freq",
+	// Mid
+	// Internally maps from -0.2 to 1.0, 0.4 being neutral (flat with 50% tone)
+	lin_ptr = new param::TplLin (
+		-1, 1,
+		"Mid Boost\nMid",
+		"%",
+		0,
+		"%+6.1f"
+	);
+	lin_ptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_MID, lin_ptr);
+
+	// Center
+	param::TplLog *   log_ptr = new param::TplLog (
+		300, 1200,
+		"Mid Frequency\nMid Freq\nMidF",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
 		"%4.0f"
 	);
 	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_HPF_FREQ, log_ptr);
+	_desc_set.add_glob (Param_CENTER, log_ptr);
 }
 
 
 
-ParamDescSet &	DistoSimpleDesc::use_desc_set ()
+ParamDescSet &	DistToneDesc::use_desc_set ()
 {
 	return _desc_set;
 }
@@ -90,21 +102,21 @@ ParamDescSet &	DistoSimpleDesc::use_desc_set ()
 
 
 
-std::string	DistoSimpleDesc::do_get_unique_id () const
+std::string	DistToneDesc::do_get_unique_id () const
 {
-	return "dist1";
+	return "dtone1";
 }
 
 
 
-std::string	DistoSimpleDesc::do_get_name () const
+std::string	DistToneDesc::do_get_name () const
 {
-	return "Simple distortion\nDisto S";
+	return "Distortion Tone Stage\nDistortion Tone\nDist Tone";
 }
 
 
 
-void	DistoSimpleDesc::do_get_nbr_io (int &nbr_i, int &nbr_o) const
+void	DistToneDesc::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 {
 	nbr_i = 1;
 	nbr_o = 1;
@@ -112,21 +124,21 @@ void	DistoSimpleDesc::do_get_nbr_io (int &nbr_i, int &nbr_o) const
 
 
 
-bool	DistoSimpleDesc::do_prefer_stereo () const
+bool	DistToneDesc::do_prefer_stereo () const
 {
 	return false;
 }
 
 
 
-int	DistoSimpleDesc::do_get_nbr_param (piapi::ParamCateg categ) const
+int	DistToneDesc::do_get_nbr_param (piapi::ParamCateg categ) const
 {
 	return _desc_set.get_nbr_param (categ);
 }
 
 
 
-const piapi::ParamDescInterface &	DistoSimpleDesc::do_get_param_info (piapi::ParamCateg categ, int index) const
+const piapi::ParamDescInterface &	DistToneDesc::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
 	return _desc_set.use_param (categ, index);
 }
@@ -137,7 +149,7 @@ const piapi::ParamDescInterface &	DistoSimpleDesc::do_get_param_info (piapi::Par
 
 
 
-}  // namespace dist1
+}  // namespace dtone1
 }  // namespace pi
 }  // namespace mfx
 

@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dist1_Param_HEADER_INCLUDED)
-#define mfx_pi_dist1_Param_HEADER_INCLUDED
+#if ! defined (mfx_pi_dtone1_Param_HEADER_INCLUDED)
+#define mfx_pi_dtone1_Param_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -33,7 +33,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace dist1
+namespace dtone1
 {
 
 
@@ -41,26 +41,27 @@ namespace dist1
 enum Param
 {
 
-		Param_GAIN = 0,
-		Param_HPF_FREQ,
+	Param_TONE,
+	Param_MID,
+	Param_CENTER,
 
-		Param_NBR_ELT
+	Param_NBR_ELT
 
 }; // enum Param
 
 
 
-}  // namespace dist1
+}  // namespace dtone1
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/dist1/Param.hpp"
+//#include "mfx/pi/dtone1/Param.hpp"
 
 
 
-#endif   // mfx_pi_dist1_Param_HEADER_INCLUDED
+#endif   // mfx_pi_dtone1_Param_HEADER_INCLUDED
 
 
 

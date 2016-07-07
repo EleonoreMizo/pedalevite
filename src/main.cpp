@@ -37,6 +37,7 @@
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
 #include "mfx/pi/dist1/Param.h"
+#include "mfx/pi/dtone1/Param.h"
 #include "mfx/pi/dwm/DryWetDesc.h"
 #include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/freqsh/FreqShiftDesc.h"
@@ -479,41 +480,112 @@ fprintf (stderr, "Reading ESC button...\n");
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [0];
 		preset._name = "Basic disto";
-		mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-		preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
-		slot_ptr->_label    = "Disto 1";
-		slot_ptr->_pi_model = "dist1";
-		slot_ptr->_settings_mixer._param_list =
-			std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-		mfx::doc::PluginSettings & pi_settings =
-			slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-		pi_settings._param_list = std::vector <float> (1, 0);
-
-		mfx::doc::CtrlLinkSet cls;
-
-		cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-		cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
-		cls._bind_sptr->_source._index = 0;
-		cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-		cls._bind_sptr->_u2b_flag      = false;
-		cls._bind_sptr->_base          = 0;
-		cls._bind_sptr->_amp           = 1;
-		pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls;
-
 		{
-			mfx::doc::PedalActionCycle &  cycle =
-				preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
-			const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
-			mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
-			for (int i = 0; i < 2; ++i)
+			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			slot_ptr->_label    = "Disto 1";
+			slot_ptr->_pi_model = "dist1";
+			slot_ptr->_settings_mixer._param_list =
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
+			mfx::doc::PluginSettings & pi_settings =
+				slot_ptr->_settings_all [slot_ptr->_pi_model];
+
+			pi_settings._param_list = { 0.25f, 0.75f };
+
+			mfx::doc::CtrlLinkSet cls;
+
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
+			cls._bind_sptr->_source._index = 0;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls;
+
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 0;
+			cls._bind_sptr->_step          = 0.02f;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_HPF_FREQ] = cls;
+
 			{
-				static const float val_arr [2] = { 1, 0 };
-				const float        val = val_arr [i];
-				action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-					new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
-				);
-				cycle._cycle.push_back (action_arr);
+				mfx::doc::PedalActionCycle &  cycle =
+					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
+				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
+				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
+				for (int i = 0; i < 2; ++i)
+				{
+					static const float val_arr [2] = { 1, 0 };
+					const float        val = val_arr [i];
+					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
+						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
+					);
+					cycle._cycle.push_back (action_arr);
+				}
+			}
+		}
+		{
+			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			slot_ptr->_label    = "Tone 1";
+			slot_ptr->_pi_model = "dtone1";
+			slot_ptr->_settings_mixer._param_list =
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
+			mfx::doc::PluginSettings & pi_settings =
+				slot_ptr->_settings_all [slot_ptr->_pi_model];
+
+			pi_settings._param_list = { 0.5f, 0.5f, 0.40f };
+
+			mfx::doc::CtrlLinkSet cls;
+
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 1;
+			cls._bind_sptr->_step          = 0.02f;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::dtone1::Param_TONE] = cls;
+
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 2;
+			cls._bind_sptr->_step          = 0.02f;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::dtone1::Param_MID] = cls;
+
+			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
+			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
+			cls._bind_sptr->_source._index = 3;
+			cls._bind_sptr->_step          = 0.02f;
+			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
+			cls._bind_sptr->_u2b_flag      = false;
+			cls._bind_sptr->_base          = 0;
+			cls._bind_sptr->_amp           = 1;
+			pi_settings._map_param_ctrl [mfx::pi::dtone1::Param_CENTER] = cls;
+
+			{
+				mfx::doc::PedalActionCycle &  cycle =
+					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
+				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
+				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
+				for (int i = 0; i < 2; ++i)
+				{
+					static const float val_arr [2] = { 1, 0 };
+					const float        val = val_arr [i];
+					cycle._cycle [i].push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
+					));
+				}
 			}
 		}
 	}
@@ -530,7 +602,7 @@ fprintf (stderr, "Reading ESC button...\n");
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
-			pi_settings._param_list = std::vector <float> (1, 0.125f);
+			pi_settings._param_list = std::vector <float> ({ 0.375f, 0.75f });
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =
@@ -664,7 +736,7 @@ fprintf (stderr, "Reading ESC button...\n");
 			cls._bind_sptr->_amp           = 1;
 			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls;
 
-			pi_settings._param_list = std::vector <float> (1, 0.25f);
+			pi_settings._param_list = std::vector <float> ({ 0.50f, 0.75f });
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =
@@ -760,7 +832,7 @@ fprintf (stderr, "Reading ESC button...\n");
 			cls_main._bind_sptr->_amp           = 1;
 			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls_main;
 
-			pi_settings._param_list = std::vector <float> (1, 0.25f);
+			pi_settings._param_list = std::vector <float> ({ 0.50f, 0.75f });
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =

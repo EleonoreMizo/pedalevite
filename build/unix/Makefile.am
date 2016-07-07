@@ -225,6 +225,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \
         ../../src/mfx/dsp/iir/Biquad.hpp \
+        ../../src/mfx/dsp/iir/OnePole.cpp \
+        ../../src/mfx/dsp/iir/OnePole.h \
+        ../../src/mfx/dsp/iir/OnePole.hpp \
         ../../src/mfx/dsp/iir/Svf2p.cpp \
         ../../src/mfx/dsp/iir/Svf2p.h \
         ../../src/mfx/dsp/iir/Svf2p.hpp \
@@ -288,6 +291,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dist1/DistoSimpleDesc.cpp \
         ../../src/mfx/pi/dist1/DistoSimpleDesc.h \
         ../../src/mfx/pi/dist1/Param.h \
+        ../../src/mfx/pi/dtone1/DistTone.cpp \
+        ../../src/mfx/pi/dtone1/DistTone.h \
+        ../../src/mfx/pi/dtone1/DistToneDesc.cpp \
+        ../../src/mfx/pi/dtone1/DistToneDesc.h \
+        ../../src/mfx/pi/dtone1/Param.h \
         ../../src/mfx/pi/dwm/DryWet.cpp \
         ../../src/mfx/pi/dwm/DryWet.h \
         ../../src/mfx/pi/dwm/DryWetDesc.cpp \

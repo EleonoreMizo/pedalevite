@@ -306,6 +306,8 @@
     <ClInclude Include="mfx\doc\Slot.h" />
     <ClInclude Include="mfx\dsp\iir\Biquad.h" />
     <ClInclude Include="mfx\dsp\iir\Biquad.hpp" />
+    <ClInclude Include="mfx\dsp\iir\OnePole.h" />
+    <ClInclude Include="mfx\dsp\iir\OnePole.hpp" />
     <ClInclude Include="mfx\dsp\iir\Svf2p.h" />
     <ClInclude Include="mfx\dsp\iir\Svf2p.hpp" />
     <ClInclude Include="mfx\dsp\iir\SvfCore4Simd.h" />
@@ -344,6 +346,9 @@
     <ClInclude Include="mfx\Overdrive.h" />
     <ClInclude Include="mfx\ParamCoord.h" />
     <ClInclude Include="mfx\ParamCoord.hpp" />
+    <ClInclude Include="mfx\pi\dtone1\DistTone.h" />
+    <ClInclude Include="mfx\pi\dtone1\DistToneDesc.h" />
+    <ClInclude Include="mfx\pi\dtone1\Param.h" />
     <ClInclude Include="mfx\ToolsParam.h" />
     <ClInclude Include="mfx\piapi\Event.h" />
     <ClInclude Include="mfx\piapi\EventNoteOff.h" />
@@ -546,6 +551,7 @@
     <ClCompile Include="mfx\doc\Setup.cpp" />
     <ClCompile Include="mfx\doc\Slot.cpp" />
     <ClCompile Include="mfx\dsp\iir\Biquad.cpp" />
+    <ClCompile Include="mfx\dsp\iir\OnePole.cpp" />
     <ClCompile Include="mfx\dsp\iir\Svf2p.cpp" />
     <ClCompile Include="mfx\dsp\iir\TransS.cpp" />
     <ClCompile Include="mfx\dsp\iir\TransSZBilin.cpp" />
@@ -559,6 +565,8 @@
     <ClCompile Include="mfx\Model.cpp" />
     <ClCompile Include="mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
+    <ClCompile Include="mfx\pi\dtone1\DistTone.cpp" />
+    <ClCompile Include="mfx\pi\dtone1\DistToneDesc.cpp" />
     <ClCompile Include="mfx\ToolsParam.cpp" />
     <ClCompile Include="mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="mfx\piapi\PluginDescInterface.cpp" />
