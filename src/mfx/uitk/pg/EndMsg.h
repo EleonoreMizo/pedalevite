@@ -55,6 +55,16 @@ class EndMsg
 
 public:
 
+	enum EndType
+	{
+		EndType_NONE = 0,
+		EndType_RESTART,
+		EndType_REBOOT,
+		EndType_SHUTDOWN,
+
+		EndType_NBR_ELT
+	};
+
 	               EndMsg ();
 	virtual        ~EndMsg () = default;
 
@@ -81,12 +91,16 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
 
+	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
 
 	TxtArray       _line_list;
+	EndType        _end_type;
+
+	int64_t        _action_date;
 
 
 

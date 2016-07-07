@@ -24,12 +24,21 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include "mfx/uitk/pg/EndMsg.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/Model.h"
 #include "mfx/View.h"
+
+#if fstb_IS (SYS, LINUX)
+	#include <unistd.h>
+
+	#include <future>
+#endif
 
 #include <vector>
 
@@ -51,10 +60,12 @@ namespace pg
 
 
 EndMsg::EndMsg ()
-:	_view_ptr (0)
+:	_model_ptr (0)
+,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_line_list ()
+,	_end_type (EndType_NONE)
 {
 	// Nothing
 }
@@ -68,11 +79,32 @@ EndMsg::EndMsg ()
 void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
 	assert (usr_ptr != 0);
+	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
+	_end_type  = EndType (reinterpret_cast <int> (usr_ptr));
 
-	const std::string txt (reinterpret_cast <const char *> (usr_ptr));
+	std::string    txt;
+	switch (_end_type)
+	{
+	case EndType_RESTART:
+		txt = "Restarting\xE2\x80\xA6";
+		break;
+	case EndType_REBOOT:
+		txt = "Rebooting\xE2\x80\xA6";
+		break;
+	case EndType_SHUTDOWN:
+		txt =
+			"Shuting down\xE2\x80\xA6\n"
+			"Please wait a\n"
+			"few seconds\n"
+			"before turning\n"
+			"the device off.";
+		break;
+	default:
+		break;
+	}
 
 	size_t         pos = 0;
 	std::vector <std::string> line_arr;
@@ -109,21 +141,57 @@ void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page,
 		_line_list.push_back (line_sptr);
 		_page_ptr->push_back (line_sptr);
 	}
+
+	const int64_t  cur_date = _model_ptr->get_cur_date ();
+	_action_date = cur_date + 1 * 1000*1000;
+
+	_page_ptr->set_timer (0, true);
 }
 
 
 
 void	EndMsg::do_disconnect ()
 {
-	// Nothing
+	_page_ptr->set_timer (0, false);
 }
 
 
 
 MsgHandlerInterface::EvtProp	EndMsg::do_handle_evt (const NodeEvt &evt)
 {
-	// No exit
-	return (EvtProp_PASS);
+	EvtProp        ret_val = EvtProp_PASS;
+
+	if (evt.is_timer ())
+	{
+#if fstb_IS (SYS, LINUX)
+		const int64_t  cur_date = _model_ptr->get_cur_date ();
+		if (cur_date >= _action_date)
+		{
+			switch (_end_type)
+			{
+			case EndType_RESTART:
+				{
+					char * const * argv = _cmd_line.use_argv ();
+					char * const * envp = _cmd_line.use_envp ();
+					execve (argv [0], argv, envp);
+				}
+				break;
+			case EndType_REBOOT:
+				system ("sudo shutdown -r now");
+				break;
+			case EndType_SHUTDOWN:
+				system ("sudo shutdown -h now");
+				break;
+			default:
+				break;
+			}
+		}
+#endif
+
+		ret_val = EvtProp_CATCH;
+	}
+
+	return (ret_val);
 }
 
 

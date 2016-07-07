@@ -151,6 +151,8 @@ private:
 	               _rec_spc;
 	bool           _recursive_flag;
 
+	int64_t        _first_refresh_date;
+
 
 
 

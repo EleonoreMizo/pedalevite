@@ -70,6 +70,7 @@ Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInp
 ,	_but_hold_count (0)
 ,	_rec_spc ()
 ,	_recursive_flag (false)
+,	_first_refresh_date (INT64_MIN)
 {
 	_screen.set_coord (Vec2d ());
 	_screen.set_size (_disp_size, _disp_size);
@@ -110,6 +111,12 @@ void	Page::set_page_content (PageInterface &content, void *usr_ptr)
 			check_curs (true);
 
 			_rec_spc.pop_front ();
+
+			// Force several refreshing at the beginning
+			if (_first_refresh_date == INT64_MIN)
+			{
+				_first_refresh_date = _model.get_cur_date ();
+			}
 		}
 
 		_recursive_flag = false;
@@ -400,6 +407,17 @@ void	Page::process_input ()
 
 void	Page::handle_redraw ()
 {
+	// Forced refresh
+	if (_first_refresh_date != INT64_MIN)
+	{
+		const int64_t  cur_time = _model.get_cur_date ();
+		const int64_t  dist     = cur_time - _first_refresh_date;
+		if (dist < 1 * 1000*1000)
+		{
+			_zone_inval = Rect (Vec2d (), _disp_size);
+		}
+	}
+
 	// Clips the zone to the physical boundaries of the screen
 	_zone_inval.intersect (Rect (Vec2d (), _disp_size));
 

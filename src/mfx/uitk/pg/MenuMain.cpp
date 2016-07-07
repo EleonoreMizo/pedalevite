@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
+#include "mfx/uitk/pg/EndMsg.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -33,12 +33,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/CmdLine.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
-
-#if fstb_IS (SYS, LINUX)
-	#include <unistd.h>
-
-	#include <future>
-#endif
 
 #include <cassert>
 #include <cstdlib>
@@ -105,37 +99,22 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 			switch (_reboot_arg._selection)
 			{
 			case RestartMenu_RESTART:
-				{
-					_page_switcher.switch_to (
-						PageType_END_MSG,
-						const_cast <char *> ("Restarting\xE2\x80\xA6")
-					);
-					char * const * argv = _cmd_line.use_argv ();
-					char * const * envp = _cmd_line.use_envp ();
-					execve (argv [0], argv, envp);
-				}
+				_page_switcher.switch_to (
+					PageType_END_MSG,
+					reinterpret_cast <void *> (EndMsg::EndType_RESTART)
+				);
 				break;
 			case RestartMenu_REBOOT:
 				_page_switcher.switch_to (
 					PageType_END_MSG,
-					const_cast <char *> ("Rebooting\xE2\x80\xA6")
+					reinterpret_cast <void *> (EndMsg::EndType_REBOOT)
 				);
-				::sleep (1);
-				system ("sudo shutdown -r now");
 				break;
 			case RestartMenu_SHUTDOWN:
 				_page_switcher.switch_to (
 					PageType_END_MSG,
-					const_cast <char *> (
-						"Shuting down\xE2\x80\xA6\n"
-						"Please wait a\n"
-						"few seconds\n"
-						"before turning\n"
-						"the device off."
-					)
+					reinterpret_cast <void *> (EndMsg::EndType_SHUTDOWN)
 				);
-				::sleep (1);
-				system ("sudo shutdown -h now");
 				break;
 			default:
 				// Nothing
