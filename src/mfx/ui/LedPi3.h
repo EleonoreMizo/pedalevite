@@ -83,7 +83,7 @@ private:
 
 	static const int  _pwm_resol =        25; // Microseconds
 	static const int  _pwm_cycle = 10 * 1000; // Microseconds
-	static const int  _pwm_chn   = 0;
+	static const int  _pwm_chn   =         4; // Must be a free channel (see GpioPwm.h)
 
 	void           refresh_loop ();
 

@@ -1,7 +1,24 @@
 /*****************************************************************************
 
         GpioPwm.h
-        Copyright (c) 2016 Ohm Force
+        Author: Laurent de Soras, 2016
+
+"Avoid channels 0, 1, 2, 3, 6, 7. The GPU uses 1, 3, 6, 7.
+The frame buffer uses 0 and the SD card uses 2."
+"You can see the channels reserved for GPU use by
+cat /sys/module/dma/parameters/dmachans
+Mine shows 32565 or 0111 1111 0011 0101
+If bit n is 0 it is reserved for GPU use.
+In addition channels 0 and 2 are used by the ARM software."
+joan, https://www.raspberrypi.org/forums/viewtopic.php?f=32&t=86339
+
+--- Legal stuff ---
+
+This program is free software. It comes without any warranty, to
+the extent permitted by applicable law. You can redistribute it
+and/or modify it under the terms of the Do What The Fuck You Want
+To Public License, Version 2, as published by Sam Hocevar. See
+http://sam.zoy.org/wtfpl/COPYING for more details.
 
 *Tab=3***********************************************************************/
 
