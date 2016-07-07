@@ -106,10 +106,7 @@ private:
 		PhaseHalfPi <_nbr_coef>
 		               _ssb;
 	};
-	typedef std::array <
-		Channel,
-		piapi::PluginInterface::_max_nbr_chn
-	>	ChannelArray;
+	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
 	class Aligned
 	{

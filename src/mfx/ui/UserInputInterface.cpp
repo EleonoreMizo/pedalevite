@@ -54,6 +54,7 @@ int	UserInputInterface::get_nbr_param (UserInputType type) const
 
 
 
+// queue_ptr can be 0
 void	UserInputInterface::set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr)
 {
 	assert (type >= 0);
