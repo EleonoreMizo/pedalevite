@@ -61,8 +61,8 @@ namespace pg
 
 
 EndMsg::EndMsg (const CmdLine &cmd_line)
-:	_model_ptr (0)
-,	_cmd_line (cmd_line)
+:	_cmd_line (cmd_line)
+,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()
