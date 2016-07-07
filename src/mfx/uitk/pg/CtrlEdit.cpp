@@ -122,7 +122,15 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	assert (! preset.is_slot_empty (_loc_edit._slot_index));
 	const doc::Slot &    slot   = *(preset._slot_list [_loc_edit._slot_index]);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
-	_cls = settings.use_ctrl_link_set (_loc_edit._param_index);
+	auto           it_cls = settings._map_param_ctrl.find (_loc_edit._param_index);
+	if (it_cls == settings._map_param_ctrl.end ())
+	{
+		_cls = doc::CtrlLinkSet ();
+	}
+	else
+	{
+		_cls = it_cls->second;
+	}
 	_ctrl_index = _loc_edit._ctrl_index;
 
 	_src_sptr     ->set_font (*_fnt_ptr);
