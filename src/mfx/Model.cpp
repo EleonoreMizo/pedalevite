@@ -637,26 +637,29 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 				}
 
 				// Checks if the parameter is tempo-controlled
-				doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
-				doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
-				assert (index < int (settings._param_list.size ()));
-				doc::ParamPresentation *   pres_ptr =
-					settings.use_pres_if_tempo_ctrl (index);
-				if (pres_ptr != 0)
+				if (type == PiType_MAIN)
 				{
-					const piapi::PluginDescInterface &	pi_desc =
-						get_model_desc (slot._pi_model);
-					const piapi::ParamDescInterface &   param_desc =
-						pi_desc.get_param_info (piapi::ParamCateg_GLOBAL, index);
-
-					const float    val_beats = float (
-						ToolsParam::conv_nrm_to_beats (val, param_desc, _tempo)
-					);
-					pres_ptr->_ref_beats = val_beats;
-
-					if (_obs_ptr != 0)
+					doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+					doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+					assert (index < int (settings._param_list.size ()));
+					doc::ParamPresentation *   pres_ptr =
+						settings.use_pres_if_tempo_ctrl (index);
+					if (pres_ptr != 0)
 					{
-						_obs_ptr->set_param_beats (slot_index, index, val_beats);
+						const piapi::PluginDescInterface &	pi_desc =
+							get_model_desc (slot._pi_model);
+						const piapi::ParamDescInterface &   param_desc =
+							pi_desc.get_param_info (piapi::ParamCateg_GLOBAL, index);
+
+						const float    val_beats = float (
+							ToolsParam::conv_nrm_to_beats (val, param_desc, _tempo)
+						);
+						pres_ptr->_ref_beats = val_beats;
+
+						if (_obs_ptr != 0)
+						{
+							_obs_ptr->set_param_beats (slot_index, index, val_beats);
+						}
 					}
 				}
 			}
