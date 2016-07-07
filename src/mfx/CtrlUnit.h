@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/ControlCurve.h"
 #include "mfx/ControlSource.h"
+#include "mfx/Cst.h"
 
 #include <set>
 
@@ -57,10 +58,11 @@ public:
 	CtrlUnit &     operator = (const CtrlUnit &other) = default;
 
 	void           update_abs_val (float raw_val);
+	void           update_internal_val (float val_nrm);
 	float          evaluate (float param_val) const;
 
 	ControlSource  _source;
-	float          _step     = 1.0f / 64;  // For relative modes (incremental encoders). > 0
+	float          _step     = float (Cst::_step_param);  // For relative modes (incremental encoders). > 0
 	float          _val      = 0;       // Absolute controller value (-1...1). Values from relative encoders are always unipolar (0...1).
 
 	ControlCurve   _curve    = ControlCurve_LINEAR;

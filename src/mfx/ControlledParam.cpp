@@ -66,6 +66,17 @@ const ParamCoord &	ControlledParam::use_coord () const
 
 
 
+// For parameters with relative sources
+void	ControlledParam::update_internal_val(float val_nrm)
+{
+	assert (! _ctrl_list.empty () && _ctrl_list [0]->_abs_flag);
+
+	CtrlUnit &     unit = *_ctrl_list [0];
+	unit.update_internal_val (val_nrm);
+}
+
+
+
 // Controller absolute values should have been updated beforehand
 // Parameter value in the plug-in pool is updated if there is an absolute controler.
 float	ControlledParam::compute_final_val (PluginPool &pi_pool) const
@@ -96,14 +107,7 @@ float	ControlledParam::compute_final_val (PluginPool &pi_pool) const
 			if (unit._source.is_relative ())
 			{
 				// Forces internal value for relative sources
-				float               mod_val = val - unit._base;
-				if (unit._amp != 0)
-				{
-					mod_val /= unit._amp;
-				}
-				mod_val = fstb::limit (mod_val, 0.f, 1.f);
-				/*** To do: We should apply the inverse unit._curve here. ***/
-				unit._val = mod_val;
+				unit.update_internal_val (val);
 			}
 		}
 		beg = 1;

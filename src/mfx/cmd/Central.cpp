@@ -900,6 +900,17 @@ void	Central::add_controller (ProcessingContext &ctx, const doc::CtrlLink &link,
 {
 	const ParamCoord &   coord = ctrl_param_sptr->use_coord ();
 	std::shared_ptr <CtrlUnit> unit_sptr (new CtrlUnit (link, abs_flag));
+
+	// For direct-link using a relative source (rotenc), initialises
+	// the internal value from the current public value.
+	if (abs_flag && unit_sptr->_source.is_relative ())
+	{
+		PluginPool::PluginDetails &   details =
+			_plugin_pool.use_plugin (coord._plugin_id);
+		const float    val_nrm = details._param_arr [coord._param_index];
+		unit_sptr->update_internal_val (val_nrm);
+	}
+
 	ctrl_param_sptr->use_unit_list ().push_back (unit_sptr);
 	ctx._map_param_ctrl.insert (std::make_pair (
 		coord, ctrl_param_sptr

@@ -59,6 +59,24 @@ CtrlUnit::CtrlUnit (const doc::CtrlLink &other, bool abs_flag)
 
 
 
+void	CtrlUnit::update_internal_val (float val_nrm)
+{
+	assert (_abs_flag);
+
+	float               mod_val = val_nrm - _base;
+	if (_amp != 0)
+	{
+		mod_val /= _amp;
+	}
+	mod_val = fstb::limit (mod_val, 0.f, 1.f);
+
+	/*** To do: We should apply the inverse unit._curve here. ***/
+
+	_val = mod_val;
+}
+
+
+
 void	CtrlUnit::update_abs_val (float raw_val)
 {
 	if (_source.is_relative ())
