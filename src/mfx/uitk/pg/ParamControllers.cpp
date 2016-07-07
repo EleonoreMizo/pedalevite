@@ -97,7 +97,15 @@ void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterf
 	assert (! preset.is_slot_empty (_loc_edit._slot_index));
 	const doc::Slot &    slot   = *(preset._slot_list [_loc_edit._slot_index]);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
-	_cls_ptr = &settings.use_ctrl_link_set (_loc_edit._param_index);
+	auto           it_cls = settings._map_param_ctrl.find (_loc_edit._param_index);
+	if (it_cls == settings._map_param_ctrl.end ())
+	{
+		_cls_ptr = 0;
+	}
+	else
+	{
+		_cls_ptr = &it_cls->second;
+	}
 
 	_link_value_sptr->set_font (*_fnt_ptr);
 	_link_title_sptr->set_font (fnt_s);
@@ -219,8 +227,10 @@ void	ParamControllers::set_controller_info ()
 	const int      scr_w     = _page_size [0];
 	const int      h_m       = _fnt_ptr->get_char_h ();
 
-	const int      nbr_mod   = int (_cls_ptr->_mod_arr.size ());
-	const bool     bind_flag = (_cls_ptr->_bind_sptr.get () != 0);
+	const int      nbr_mod   =
+		(_cls_ptr != 0) ? int (_cls_ptr->_mod_arr.size ()) : 0;
+	const bool     bind_flag =
+		(_cls_ptr != 0 && _cls_ptr->_bind_sptr.get () != 0);
 
 	PageMgrInterface::NavLocList  nav_list (1 + nbr_mod + 1);
 	nav_list [0]._node_id = Entry_LINK_VALUE;
@@ -282,7 +292,8 @@ void	ParamControllers::update_loc_edit (int node_id)
 	if (node_id == Entry_LINK_VALUE)
 	{
 		_loc_edit._ctrl_abs_flag = true;
-		_loc_edit._ctrl_index    = (_cls_ptr->_bind_sptr.get () != 0) ? 0 : -1;
+		_loc_edit._ctrl_index    =
+			(_cls_ptr != 0 && _cls_ptr->_bind_sptr.get () != 0) ? 0 : -1;
 	}
 	else
 	{

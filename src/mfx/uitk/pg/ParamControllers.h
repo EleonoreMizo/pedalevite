@@ -129,7 +129,7 @@ private:
 	TxtArray       _mod_list;     // Shows N lines: controllers 1 to N-1, and the last line being <Empty>.
 
 	// Cached data
-	const doc::CtrlLinkSet *      // 0 if not set. Updated on connect();
+	const doc::CtrlLinkSet *      // Can be 0 if not set or empty. Updated on connect();
 	               _cls_ptr;
 
 
