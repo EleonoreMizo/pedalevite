@@ -103,6 +103,9 @@
     <Filter Include="mfx\pi\dtone1">
       <UniqueIdentifier>{981f767e-94b2-4087-b007-cca122a3825c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\iifix">
+      <UniqueIdentifier>{85f5954b-04e9-404b-9330-0dff7bdcf70f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -1260,6 +1263,15 @@
     <ClInclude Include="mfx\pi\dtone1\Param.h">
       <Filter>mfx\pi\dtone1</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\iifix\IIFix.h">
+      <Filter>mfx\pi\iifix</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\iifix\IIFixDesc.h">
+      <Filter>mfx\pi\iifix</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\iifix\Param.h">
+      <Filter>mfx\pi\iifix</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1724,6 +1736,12 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\dtone1\DistToneDesc.cpp">
       <Filter>mfx\pi\dtone1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\iifix\IIFix.cpp">
+      <Filter>mfx\pi\iifix</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\iifix\IIFixDesc.cpp">
+      <Filter>mfx\pi\iifix</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

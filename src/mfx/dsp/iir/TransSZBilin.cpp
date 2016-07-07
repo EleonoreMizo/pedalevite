@@ -248,6 +248,40 @@ void	TransSZBilin::map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb:
 
 
 
+void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [3], const float s_eq_a [2], float k)
+{
+	assert (z_eq_b != 0);
+	assert (z_eq_a != 0);
+	assert (s_eq_b != 0);
+	assert (s_eq_a != 0);
+
+	// s to z bilinear transform
+	const auto     kv   = fstb::ToolsSimd::set1_f32 (k);
+
+	const auto     x0s  = fstb::ToolsSimd::set_2f32 (s_eq_a [0], s_eq_b [0]);
+	const auto     x1s  = fstb::ToolsSimd::set_2f32 (s_eq_a [1], s_eq_b [1]);
+
+	const auto     x1k = x1s * kv;
+	auto           x1z = x0s - x1k;
+	auto           x0z = x0s + x1k;
+
+	// On a0z only. Requires accuracy
+	const auto     mult = fstb::ToolsSimd::Shift <0>::spread (
+		fstb::ToolsSimd::rcp_approx2 (x0z)
+	);
+
+	x0z *= mult;
+	x1z *= mult;
+
+	z_eq_b [0] = fstb::ToolsSimd::Shift <1>::extract (x0z);
+	z_eq_b [1] = fstb::ToolsSimd::Shift <1>::extract (x1z);
+
+	z_eq_a [0] = 1;
+	z_eq_a [1] = fstb::ToolsSimd::Shift <0>::extract (x1z);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

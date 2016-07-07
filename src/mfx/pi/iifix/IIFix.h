@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DistoSimple.h
+        IIFix.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dist1_DistoSimple_HEADER_INCLUDED)
-#define mfx_pi_dist1_DistoSimple_HEADER_INCLUDED
+#if ! defined (mfx_pi_iifix_IIFix_HEADER_INCLUDED)
+#define mfx_pi_iifix_IIFix_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -28,14 +28,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/util/NotificationFlag.h"
-#include "fstb/AllocAlign.h"
 #include "mfx/dsp/iir/OnePole.h"
-#include "mfx/pi/dist1/DistoSimpleDesc.h"
+#include "mfx/pi/iifix/IIFixDesc.h"
+#include "mfx/pi/ParamDescSet.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
-#include <vector>
 
 
 
@@ -43,11 +42,12 @@ namespace mfx
 {
 namespace pi
 {
-namespace dist1
+namespace iifix
 {
 
 
-class DistoSimple
+
+class IIFix
 :	public piapi::PluginInterface
 {
 
@@ -55,8 +55,8 @@ class DistoSimple
 
 public:
 
-	               DistoSimple ();
-	virtual        ~DistoSimple () = default;
+	               IIFix ();
+	virtual        ~IIFix () = default;
 
 
 
@@ -76,33 +76,23 @@ protected:
 
 private:
 
-	// Attenuation. 1/_attn is the maximum volume that the disortion can reach,
-	// while gain at 0 remains unchanged.
-	static const float   _attn;
-	static const float   _m_9;
-	static const float   _m_2;
+	typedef std::array <dsp::iir::OnePole, _max_nbr_chn> ChannelArray;
 
-	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-	typedef std::array <BufAlign, _max_nbr_chn> BufAlignArray;
-	typedef std::array <dsp::iir::OnePole, _max_nbr_chn> HpfInArray;
-
-	void           update_filter_in ();
+	void           update_filter ();
 
 	State          _state;
 
-	DistoSimpleDesc
-	               _desc;
+	IIFixDesc   _desc;
 	ParamStateSet  _state_set;
+	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
-	float          _sample_freq;
 	float          _inv_fs;
-	float          _gain;
-	float          _hpf_in_freq;
-	BufAlignArray  _buf_arr;
-	HpfInArray     _hpf_in_arr;
+	ChannelArray   _chn_arr;
+	float          _level;              // > 0
+	float          _freq;               // Hz, > 0
 
 
 
@@ -110,26 +100,26 @@ private:
 
 private:
 
-	               DistoSimple (const DistoSimple &other)       = delete;
-	DistoSimple &  operator = (const DistoSimple &other)        = delete;
-	bool           operator == (const DistoSimple &other) const = delete;
-	bool           operator != (const DistoSimple &other) const = delete;
+	               IIFix (const IIFix &other)          = delete;
+	IIFix &     operator = (const IIFix &other)        = delete;
+	bool           operator == (const IIFix &other) const = delete;
+	bool           operator != (const IIFix &other) const = delete;
 
-}; // class DistoSimple
+}; // class IIFix
 
 
 
-}  // namespace dist1
+}  // namespace iifix
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/dist1/DistoSimple.hpp"
+//#include "mfx/pi/iifix/IIFix.hpp"
 
 
 
-#endif   // mfx_pi_dist1_DistoSimple_HEADER_INCLUDED
+#endif   // mfx_pi_iifix_IIFix_HEADER_INCLUDED
 
 
 

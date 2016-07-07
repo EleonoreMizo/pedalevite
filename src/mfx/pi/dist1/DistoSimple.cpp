@@ -53,6 +53,7 @@ DistoSimple::DistoSimple ()
 ,	_desc ()
 ,	_state_set ()
 ,	_sample_freq (44100)
+,	_inv_fs (1 / _sample_freq)
 ,	_gain (float (DistoSimpleDesc::_gain_min))
 ,	_hpf_in_freq (1)
 ,	_buf_arr ()
@@ -100,6 +101,7 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 	latency = 0;
 
 	_sample_freq = float (sample_freq);
+	_inv_fs      = float (1 / sample_freq);
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 	update_filter_in ();
@@ -321,10 +323,12 @@ void	DistoSimple::update_filter_in ()
 	static const float   a_s [2] = { 1, 1 };
 	float                b_z [2];
 	float                a_z [2];
-	dsp::iir::TransSZBilin::map_s_to_z_one_pole (
+	const float    k       =
+		dsp::iir::TransSZBilin::compute_k_approx (_hpf_in_freq * _inv_fs);
+	dsp::iir::TransSZBilin::map_s_to_z_one_pole_approx (
 		b_z, a_z,
 		b_s, a_s,
-		_hpf_in_freq, _sample_freq
+		k
 	);
 
 	for (int chn = 0; chn < _max_nbr_chn; ++chn)

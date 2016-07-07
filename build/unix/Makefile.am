@@ -306,6 +306,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.cpp \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.h \
         ../../src/mfx/pi/freqsh/Param.h \
+        ../../src/mfx/pi/iifix/IIFix.cpp \
+        ../../src/mfx/pi/iifix/IIFix.h \
+        ../../src/mfx/pi/iifix/IIFixDesc.cpp \
+        ../../src/mfx/pi/iifix/IIFixDesc.h \
+        ../../src/mfx/pi/iifix/Param.h \
         ../../src/mfx/pi/trem1/Param.h \
         ../../src/mfx/pi/trem1/Tremolo.cpp \
         ../../src/mfx/pi/trem1/Tremolo.h \

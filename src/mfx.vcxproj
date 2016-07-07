@@ -349,6 +349,9 @@
     <ClInclude Include="mfx\pi\dtone1\DistTone.h" />
     <ClInclude Include="mfx\pi\dtone1\DistToneDesc.h" />
     <ClInclude Include="mfx\pi\dtone1\Param.h" />
+    <ClInclude Include="mfx\pi\iifix\IIFix.h" />
+    <ClInclude Include="mfx\pi\iifix\IIFixDesc.h" />
+    <ClInclude Include="mfx\pi\iifix\Param.h" />
     <ClInclude Include="mfx\ToolsParam.h" />
     <ClInclude Include="mfx\piapi\Event.h" />
     <ClInclude Include="mfx\piapi\EventNoteOff.h" />
@@ -567,6 +570,8 @@
     <ClCompile Include="mfx\Overdrive.cpp" />
     <ClCompile Include="mfx\pi\dtone1\DistTone.cpp" />
     <ClCompile Include="mfx\pi\dtone1\DistToneDesc.cpp" />
+    <ClCompile Include="mfx\pi\iifix\IIFix.cpp" />
+    <ClCompile Include="mfx\pi\iifix\IIFixDesc.cpp" />
     <ClCompile Include="mfx\ToolsParam.cpp" />
     <ClCompile Include="mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="mfx\piapi\PluginDescInterface.cpp" />
