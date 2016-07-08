@@ -57,12 +57,12 @@ IIFix::IIFix ()
 ,	_inv_fs (0)
 ,	_chn_arr ()
 ,	_level (2)
-,	_freq (5000)
+,	_freq (2000)
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_FREQ , 5000);
+	_state_set.set_val_nat (desc_set, Param_FREQ , 2000);
 	_state_set.set_val_nat (desc_set, Param_LEVEL,    2);
 
 	_state_set.add_observer (Param_FREQ , _param_change_flag);

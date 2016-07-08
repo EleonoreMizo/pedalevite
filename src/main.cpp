@@ -42,6 +42,7 @@
 #include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/freqsh/FreqShiftDesc.h"
 #include "mfx/pi/freqsh/Param.h"
+#include "mfx/pi/iifix/Param.h"
 #include "mfx/pi/trem1/Param.h"
 #include "mfx/pi/trem1/Waveform.h"
 #include "mfx/pi/wha1/Param.h"
@@ -483,6 +484,18 @@ fprintf (stderr, "Reading ESC button...\n");
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			slot_ptr->_label    = "Imp fix";
+			slot_ptr->_pi_model = "iifix";
+			slot_ptr->_settings_mixer._param_list =
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
+			mfx::doc::PluginSettings & pi_settings =
+				slot_ptr->_settings_all [slot_ptr->_pi_model];
+
+			pi_settings._param_list = { 0.5f, 0.5f };
+		}
+		{
+			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
@@ -595,6 +608,18 @@ fprintf (stderr, "Reading ESC button...\n");
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			slot_ptr->_label    = "Imp fix";
+			slot_ptr->_pi_model = "iifix";
+			slot_ptr->_settings_mixer._param_list =
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
+			mfx::doc::PluginSettings & pi_settings =
+				slot_ptr->_settings_all [slot_ptr->_pi_model];
+
+			pi_settings._param_list = { 0.5f, 0.5f };
+		}
+		{
+			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
@@ -674,6 +699,18 @@ fprintf (stderr, "Reading ESC button...\n");
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [2];
 		preset._name = "Ouah-ouah";
+		{
+			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			slot_ptr->_label    = "Imp fix";
+			slot_ptr->_pi_model = "iifix";
+			slot_ptr->_settings_mixer._param_list =
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
+			mfx::doc::PluginSettings & pi_settings =
+				slot_ptr->_settings_all [slot_ptr->_pi_model];
+
+			pi_settings._param_list = { 0.5f, 0.5f };
+		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
@@ -758,6 +795,18 @@ fprintf (stderr, "Reading ESC button...\n");
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [3];
 		preset._name = "Inharmonic";
+		{
+			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
+			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			slot_ptr->_label    = "Imp fix";
+			slot_ptr->_pi_model = "iifix";
+			slot_ptr->_settings_mixer._param_list =
+				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
+			mfx::doc::PluginSettings & pi_settings =
+				slot_ptr->_settings_all [slot_ptr->_pi_model];
+
+			pi_settings._param_list = { 0.5f, 0.5f };
+		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));

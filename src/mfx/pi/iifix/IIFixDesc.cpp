@@ -50,7 +50,7 @@ IIFixDesc::IIFixDesc ()
 {
 	// Center
 	param::TplLog *   log_ptr = new param::TplLog (
-		2000, 16000,
+		1000, 4000,
 		"Cutoff Frequency\nCutoff Freq\nCutoff",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
