@@ -86,7 +86,8 @@ protected:
 
 private:
 
-	static float   apply_curve (float val, ControlCurve curve);
+	static float   apply_curve (float val, ControlCurve curve, bool invert_flag);
+	static double  invert_s1 (double val);
 
 
 
