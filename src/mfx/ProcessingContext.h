@@ -77,6 +77,8 @@ public:
 	MapSourceParam _map_src_param;
 	MapSourceUnit  _map_src_unit;
 
+	int            _nbr_chn_out = 1;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

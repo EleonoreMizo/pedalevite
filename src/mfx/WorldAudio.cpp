@@ -414,32 +414,65 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 	const ProcessingContextNode::Side & side =
 		_ctx_ptr->_interface_ctx._side_arr [piapi::PluginInterface::Dir_OUT];
 
+	const int      buf_0_index = side._buf_arr [0];
+	const float *  buf_0_ptr   = _buf_arr [buf_0_index];
+
 	if (side._nbr_chn == 2)
 	{
-		const int      buf_0_index = side._buf_arr [0];
 		const int      buf_1_index = side._buf_arr [1];
 		assert (buf_0_index >= 0);
 		assert (buf_0_index < int (_buf_arr.size ()));
 		assert (buf_1_index >= 0);
 		assert (buf_1_index < int (_buf_arr.size ()));
-		const float *  buf_0_ptr   = _buf_arr [buf_0_index];
 		const float *  buf_1_ptr   = _buf_arr [buf_1_index];
-		MixAlignToUnalign::copy_2_2 (
-			dst_arr [0], dst_arr [1],
-			buf_0_ptr, buf_1_ptr,
-			nbr_spl
-		);
+		if (_ctx_ptr->_nbr_chn_out == 2)
+		{
+			MixAlignToUnalign::copy_2_2 (
+				dst_arr [0], dst_arr [1],
+				buf_0_ptr, buf_1_ptr,
+				nbr_spl
+			);
+		}
+		else
+		{
+			assert (_ctx_ptr->_nbr_chn_out == 1);
+			MixAlignToUnalign::copy_2_1 (
+				dst_arr [0],
+				buf_0_ptr, buf_1_ptr,
+				nbr_spl
+			);
+		}
 	}
 	else
 	{
-		for (int chn = 0; chn < side._nbr_chn; ++chn)
+		if (_ctx_ptr->_nbr_chn_out == 2)
 		{
-			const int      buf_index = side._buf_arr [chn];
-			assert (buf_index >= 0);
-			assert (buf_index < int (_buf_arr.size ()));
-			const float *  buf_ptr   = _buf_arr [buf_index];
-			MixAlignToUnalign::copy_1_1 (dst_arr [chn], buf_ptr, nbr_spl);
+			MixAlignToUnalign::copy_1_2 (
+				dst_arr [0], dst_arr [1],
+				buf_0_ptr,
+				nbr_spl
+			);
 		}
+		else if (_ctx_ptr->_nbr_chn_out == 1)
+		{
+			MixAlignToUnalign::copy_1_1 (dst_arr [0], buf_0_ptr, nbr_spl);
+		}
+		else
+		{
+			for (int chn = 0; chn < side._nbr_chn; ++chn)
+			{
+				const int      buf_index = side._buf_arr [chn];
+				assert (buf_index >= 0);
+				assert (buf_index < int (_buf_arr.size ()));
+				const float *  buf_ptr   = _buf_arr [buf_index];
+				MixAlignToUnalign::copy_1_1 (dst_arr [chn], buf_ptr, nbr_spl);
+			}
+		}
+	}
+
+	if (_ctx_ptr->_nbr_chn_out == 1)
+	{
+		MixAlignToUnalign::clear (dst_arr [1], nbr_spl);
 	}
 }
 
