@@ -1167,6 +1167,13 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 #if fstb_IS (SYS, LINUX)
 	::wiringPiSetupPhys ();
 
+	::pinMode (22, INPUT);
+	if (::digitalRead (22) == LOW)
+	{
+		fprintf (stderr, "Emergency exit\n");
+		exit (0);
+	}
+
 	::pinMode (MAIN_pin_reset, OUTPUT);
 
 	::digitalWrite (MAIN_pin_reset, LOW);
