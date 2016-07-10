@@ -68,6 +68,7 @@ public:
 	void           set_val_nat (const ParamDescSet &param_desc_arr, int index, double val);
 	const ParamState &
 	               use_state (int index) const;
+	ParamState &   use_state (int index);
 	void           process_block (int nbr_spl);
 
 	// Convenience functions

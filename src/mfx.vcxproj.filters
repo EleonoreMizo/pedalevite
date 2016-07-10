@@ -106,6 +106,27 @@
     <Filter Include="mfx\pi\iifix">
       <UniqueIdentifier>{85f5954b-04e9-404b-9330-0dff7bdcf70f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\dly">
+      <UniqueIdentifier>{b27b3e92-1367-4a12-a25e-4b5f750d9b6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\rspl">
+      <UniqueIdentifier>{dfe5e787-a621-4827-82fa-96d11190de0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\ctrl">
+      <UniqueIdentifier>{7062f69a-08da-4bb1-ad8b-c4b0378b36a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\ctrl\lfo">
+      <UniqueIdentifier>{553cc8e7-378a-4b04-bc5c-03131eebf338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\shape">
+      <UniqueIdentifier>{1bdcb0da-e6a7-4273-85c2-14c6afac3dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\dyn">
+      <UniqueIdentifier>{8607d3ff-be7f-42ae-b8c7-3ee15dad5fdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\flancho">
+      <UniqueIdentifier>{912f80df-ae98-4425-ae5e-aaa21ab5cd03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -1272,6 +1293,162 @@
     <ClInclude Include="mfx\pi\iifix\Param.h">
       <Filter>mfx\pi\iifix</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\dsp\dly\DelayLine.h">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dly\DelayLineData.h">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dly\DelayLineData.hpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dly\DelayLineFracFir4Base.h">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dly\DelayLineFracFir4Base.hpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dly\DelayLineReader.h">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\FixedPoint.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="fstb\FixedPoint.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\Cst.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\InterpolatorFir.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\InterpolatorFir.hpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\InterpolatorHermite43.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\InterpolatorInterface.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\InterpolatorInterface.hpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\InterpolatorLerp.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\SnhTool.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\Voice.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\InterpolatorHermite43Simd.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\rspl\InterpolatorLerpSimd.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\SplDataRetrievalInterface.h">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\PhaseGen.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\PhaseGen.hpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\PhaseGenChaos.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\PhaseDist.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\PhaseDist.hpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscInterface.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscInterface.hpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscSine.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscSquare.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscTri.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscSaw.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscNoiseFlt.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscNoiseFlt.hpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscNPhase.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\OscVariSlope.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\shape\MapSaturate.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\shape\MapSaturate.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\shape\MapSaturateBipolar.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\shape\MapSaturateBipolar.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dyn\EnvFollowerRms.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dyn\EnvFollowerRms.hpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\ctrl\lfo\LfoModule.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\flancho\FlanchoChn.h">
+      <Filter>mfx\pi\flancho</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\flancho\Flancho.h">
+      <Filter>mfx\pi\flancho</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\flancho\Param.h">
+      <Filter>mfx\pi\flancho</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\flancho\WfType.h">
+      <Filter>mfx\pi\flancho</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\flancho\Cst.h">
+      <Filter>mfx\pi\flancho</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\flancho\FlanchoDesc.h">
+      <Filter>mfx\pi\flancho</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\ParamMapFdbk.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\ParamMapFdbk.hpp">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\ParamMapFdbkBipolar.h">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\ParamMapFdbkBipolar.hpp">
+      <Filter>mfx\pi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1742,6 +1919,72 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\iifix\IIFixDesc.cpp">
       <Filter>mfx\pi\iifix</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\dly\DelayLine.cpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\dly\DelayLineReader.cpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\rspl\InterpolatorHermite43.cpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\rspl\InterpolatorInterface.cpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\rspl\InterpolatorLerp.cpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\rspl\SnhTool.cpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\rspl\Voice.cpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\rspl\InterpolatorHermite43Simd.cpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\rspl\InterpolatorLerpSimd.cpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\SplDataRetrievalInterface.cpp">
+      <Filter>mfx\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\ctrl\lfo\PhaseGenChaos.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\ctrl\lfo\OscSine.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\ctrl\lfo\OscSquare.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\ctrl\lfo\OscTri.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\ctrl\lfo\OscSaw.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\ctrl\lfo\OscNPhase.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\ctrl\lfo\OscVariSlope.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\dyn\EnvFollowerRms.cpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\ctrl\lfo\LfoModule.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\flancho\FlanchoChn.cpp">
+      <Filter>mfx\pi\flancho</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\flancho\Flancho.cpp">
+      <Filter>mfx\pi\flancho</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\flancho\FlanchoDesc.cpp">
+      <Filter>mfx\pi\flancho</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

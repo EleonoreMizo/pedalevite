@@ -59,6 +59,11 @@ public:
 	static inline ToolsSimd::VectF32
 	               sin_nick_2pi (ToolsSimd::VectF32 x);
 
+	static inline float
+	               log2 (float val);
+	static inline float
+	               exp2 (float val);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

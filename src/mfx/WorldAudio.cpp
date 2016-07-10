@@ -472,7 +472,7 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 
 	if (_ctx_ptr->_nbr_chn_out == 1)
 	{
-		MixAlignToUnalign::clear (dst_arr [1], nbr_spl);
+		MixAlignToUnalign::copy_1_1 (dst_arr [1], dst_arr [0], nbr_spl);
 	}
 }
 

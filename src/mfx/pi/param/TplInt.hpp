@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/Tools.h"
 
 #include <algorithm>
@@ -59,7 +60,7 @@ TplInt::TplInt (int val_min, int val_max, const char *name_0, const char *unit_0
 
 	_phdn.set_range (double (val_min), double (val_max));
 	_phdn.set_print_format (format_0);
-	_phdn.set_preset (ParamHelperDispNum::Preset_INT_BASE_0);
+	_phdn.set_preset (HelperDispNum::Preset_INT_BASE_0);
 
 	char           txt_0 [1023+1];
 	sprintf (txt_0, name_0,

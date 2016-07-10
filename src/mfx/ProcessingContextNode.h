@@ -57,7 +57,8 @@ public:
 	class Side
 	{
 	public:
-		typedef std::array <int, (Cst::_max_nbr_input + Cst::_max_nbr_output) * piapi::PluginInterface::_max_nbr_chn> BufArray;
+		typedef std::array <int, (2 * Cst::_max_nbr_output) * piapi::PluginInterface::_max_nbr_chn> BufArray;
+		static_assert (Cst::_max_nbr_input <= 2 * Cst::_max_nbr_output, "");
 
 		BufArray       _buf_arr;
 		int            _nbr_chn;      // For each input or output pin

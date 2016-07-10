@@ -117,6 +117,8 @@ pedalevite_SOURCES = \
         ../../src/fstb/DataAlign.hpp \
         ../../src/fstb/def.h \
         ../../src/fstb/Err.h \
+        ../../src/fstb/FixedPoint.h \
+        ../../src/fstb/FixedPoint.hpp \
         ../../src/fstb/fnc.cpp \
         ../../src/fstb/fnc.h \
         ../../src/fstb/fnc.hpp \
@@ -222,6 +224,41 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/Setup.h \
         ../../src/mfx/doc/Slot.cpp \
         ../../src/mfx/doc/Slot.h \
+        ../../src/mfx/dsp/ctrl/lfo/LfoModule.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/LfoModule.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscInterface.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscInterface.hpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscNoiseFlt.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscNoiseFlt.hpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscNPhase.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscNPhase.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscSaw.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscSaw.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscSine.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscSine.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscSquare.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscSquare.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscTri.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscTri.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscVariSlope.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscVariSlope.h \
+        ../../src/mfx/dsp/ctrl/lfo/PhaseDist.h \
+        ../../src/mfx/dsp/ctrl/lfo/PhaseDist.hpp \
+        ../../src/mfx/dsp/ctrl/lfo/PhaseGen.h \
+        ../../src/mfx/dsp/ctrl/lfo/PhaseGen.hpp \
+        ../../src/mfx/dsp/ctrl/lfo/PhaseGenChaos.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/PhaseGenChaos.h \
+        ../../src/mfx/dsp/dly/DelayLine.cpp \
+        ../../src/mfx/dsp/dly/DelayLine.h \
+        ../../src/mfx/dsp/dly/DelayLineData.h \
+        ../../src/mfx/dsp/dly/DelayLineData.hpp \
+        ../../src/mfx/dsp/dly/DelayLineFracFir4Base.h \
+        ../../src/mfx/dsp/dly/DelayLineFracFir4Base.hpp \
+        ../../src/mfx/dsp/dly/DelayLineReader.cpp \
+        ../../src/mfx/dsp/dly/DelayLineReader.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerRms.cpp \
+        ../../src/mfx/dsp/dyn/EnvFollowerRms.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerRms.hpp \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \
         ../../src/mfx/dsp/iir/Biquad.hpp \
@@ -259,8 +296,32 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/mix/Simd.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStable4Simd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStable4Simd.h \
+        ../../src/mfx/dsp/rspl/Cst.h \
+        ../../src/mfx/dsp/rspl/InterpolatorFir.h \
+        ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \
+        ../../src/mfx/dsp/rspl/InterpolatorHermite43.cpp \
+        ../../src/mfx/dsp/rspl/InterpolatorHermite43.h \
+        ../../src/mfx/dsp/rspl/InterpolatorHermite43Simd.cpp \
+        ../../src/mfx/dsp/rspl/InterpolatorHermite43Simd.h \
+        ../../src/mfx/dsp/rspl/InterpolatorInterface.cpp \
+        ../../src/mfx/dsp/rspl/InterpolatorInterface.h \
+        ../../src/mfx/dsp/rspl/InterpolatorInterface.hpp \
+        ../../src/mfx/dsp/rspl/InterpolatorLerp.cpp \
+        ../../src/mfx/dsp/rspl/InterpolatorLerp.h \
+        ../../src/mfx/dsp/rspl/InterpolatorLerpSimd.cpp \
+        ../../src/mfx/dsp/rspl/InterpolatorLerpSimd.h \
+        ../../src/mfx/dsp/rspl/SnhTool.cpp \
+        ../../src/mfx/dsp/rspl/SnhTool.h \
+        ../../src/mfx/dsp/rspl/Voice.cpp \
+        ../../src/mfx/dsp/rspl/Voice.h \
+        ../../src/mfx/dsp/shape/MapSaturate.h \
+        ../../src/mfx/dsp/shape/MapSaturate.hpp \
+        ../../src/mfx/dsp/shape/MapSaturateBipolar.h \
+        ../../src/mfx/dsp/shape/MapSaturateBipolar.hpp \
         ../../src/mfx/dsp/InertiaLin.h \
         ../../src/mfx/dsp/InertiaLin.hpp \
+        ../../src/mfx/dsp/SplDataRetrievalInterface.cpp \
+        ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
         ../../src/mfx/pi/param/HelperDispNum.cpp \
@@ -301,6 +362,15 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dwm/DryWetDesc.cpp \
         ../../src/mfx/pi/dwm/DryWetDesc.h \
         ../../src/mfx/pi/dwm/Param.h \
+        ../../src/mfx/pi/flancho/Cst.h \
+        ../../src/mfx/pi/flancho/Flancho.cpp \
+        ../../src/mfx/pi/flancho/Flancho.h \
+        ../../src/mfx/pi/flancho/FlanchoChn.cpp \
+        ../../src/mfx/pi/flancho/FlanchoChn.h \
+        ../../src/mfx/pi/flancho/FlanchoDesc.cpp \
+        ../../src/mfx/pi/flancho/FlanchoDesc.h \
+        ../../src/mfx/pi/flancho/Param.h \
+        ../../src/mfx/pi/flancho/WfType.h \
         ../../src/mfx/pi/freqsh/FrequencyShifter.cpp \
         ../../src/mfx/pi/freqsh/FrequencyShifter.h \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.cpp \
@@ -332,6 +402,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/export.h \
         ../../src/mfx/pi/ParamDescSet.cpp \
         ../../src/mfx/pi/ParamDescSet.h \
+        ../../src/mfx/pi/ParamMapFdbk.h \
+        ../../src/mfx/pi/ParamMapFdbk.hpp \
+        ../../src/mfx/pi/ParamMapFdbkBipolar.h \
+        ../../src/mfx/pi/ParamMapFdbkBipolar.hpp \
         ../../src/mfx/pi/ParamState.cpp \
         ../../src/mfx/pi/ParamState.h \
         ../../src/mfx/pi/ParamStateSet.cpp \

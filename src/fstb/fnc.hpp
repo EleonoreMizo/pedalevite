@@ -60,6 +60,23 @@ T	limit (T x, T mi, T ma)
 
 
 template <class T>
+void	sort_2_elt (T &mi, T &ma, T a, T b)
+{
+	if (a < b)
+	{
+		mi = a;
+		ma = b;
+	}
+	else
+	{
+		mi = b;
+		ma = a;
+	}
+}
+
+
+
+template <class T>
 bool	is_pow_2 (T x)
 {
 	return ((x & -x) == x);
@@ -242,6 +259,13 @@ int	floor_int (double x)
 
 
 
+int64_t	floor_int64 (double x)
+{
+	return (int64_t (floor (x)));
+}
+
+
+
 // May not give the right result for very small positive values.
 int	ceil_int (double x)
 {
@@ -416,6 +440,19 @@ bool	is_eq_rel (T v1, T v2, T tol)
 
 
 
+/*
+==============================================================================
+Name: get_prev_pow2
+Description:
+	Computes the exponent of the power of two equal to or immediately lower
+	than the parameter. It is the base-2 log rounded toward minus infinity.
+Input parameters:
+	- x: Number which we want to compute the base-2 log.
+Returns: The exponent
+Throws: Nothing
+==============================================================================
+*/
+
 int	get_prev_pow_2 (uint32_t x)
 {
 	assert (x > 0);
@@ -456,6 +493,93 @@ int	get_prev_pow_2 (uint32_t x)
 			x >>= 16;
 		}
 		while ((x & ~(uint32_t (0xF))) != 0)
+		{
+			p += 4;
+			x >>= 4;
+		}
+		while (x > 0)
+		{
+			++p;
+			x >>= 1;
+		}
+
+		return (int (p));
+	}
+}
+
+
+
+/*
+==============================================================================
+Name: get_next_pow2
+Description:
+	Computes the exponent of the power of two equal to or immediately greater
+	than the parameter. It is the base-2 log rounded toward plus infinity.
+Input parameters:
+	- x: Number which we want to compute the base-2 log.
+Returns: The exponent
+Throws: Nothing
+==============================================================================
+*/
+
+int	get_next_pow_2 (uint32_t x)
+{
+	assert (x > 0);
+
+#if (fstb_ARCHI == fstb_ARCHI_X86)
+
+ #if defined (_MSC_VER)
+
+  #if ((_MSC_VER / 100) < 14)
+
+	int				p;
+	-- x;
+
+	if (x == 0)
+	{
+		p = 0;
+	}
+	else
+	{
+		__asm
+		{
+			xor				eax, eax
+			bsr				eax, x
+			inc				eax
+			mov				p, eax
+		}
+	}
+
+  #else
+
+	unsigned long	p;
+	if (_BitScanReverse (&p, x - 1) == 0)
+	{
+		p = 0;
+	}
+	else
+	{
+		++ p;
+	}
+
+  #endif
+
+	return (int (p));
+
+ #endif
+
+#endif
+
+	{
+		--x;
+		int				p = 0;
+
+		while ((x & ~(uint32_t (0xFFFFL))) != 0)
+		{
+			p += 16;
+			x >>= 16;
+		}
+		while ((x & ~(uint32_t (0xFL))) != 0)
 		{
 			p += 4;
 			x >>= 4;

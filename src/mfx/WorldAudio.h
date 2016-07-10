@@ -80,13 +80,14 @@ private:
 	typedef std::vector <float, fstb::AllocAlign <float, 64> > AlignedZone;
 	typedef std::array <float *, Cst::_max_nbr_buf> BufferArray;
 
+	static_assert (Cst::_max_nbr_input <= Cst::_max_nbr_output * 2, "");
 	typedef std::array <
 		const float *,
-		Cst::_max_nbr_input                          * piapi::PluginInterface::_max_nbr_chn
+		Cst::_max_nbr_output * 2 * piapi::PluginInterface::_max_nbr_chn
 	> BufSrcArr;
 	typedef std::array <
 		float *,
-		(Cst::_max_nbr_input + Cst::_max_nbr_output) * piapi::PluginInterface::_max_nbr_chn
+		Cst::_max_nbr_output * piapi::PluginInterface::_max_nbr_chn
 	> BufDstArr;
 
 	typedef std::vector <piapi::EventTs> EventArray;

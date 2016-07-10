@@ -154,6 +154,17 @@ const ParamState &	ParamStateSet::use_state (int index) const
 
 
 
+ParamState &	ParamStateSet::use_state (int index)
+{
+	assert (_categ >= 0);
+	assert (index >= 0);
+	assert (index < int (_state_arr.size ()));
+
+	return _state_arr [index];
+}
+
+
+
 void	ParamStateSet::process_block (int nbr_spl)
 {
 	assert (_categ >= 0);

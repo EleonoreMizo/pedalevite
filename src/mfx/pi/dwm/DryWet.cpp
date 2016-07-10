@@ -179,20 +179,20 @@ void	DryWet::do_process_block (ProcInfo &proc)
 
 void	DryWet::copy (const ProcInfo &proc, int chn_ofs, float lvl)
 {
-	static const int  o_in  = 3;
 	static const int  o_out = 1;
 
 	const int            nbr_in  = proc._nbr_chn_arr [Dir_IN ];
 	const int            nbr_out = proc._nbr_chn_arr [Dir_OUT];
+	assert (nbr_in == nbr_out);
 	const int            vol     = fstb::is_eq (lvl, 1.0f, 1e-3f) ? 0 : 1;
 	const float * const* src_arr = proc._src_arr + chn_ofs * nbr_in;
 	float       * const* dst_arr = proc._dst_arr;
 	const int            nbr_spl = proc._nbr_spl;
 
-	switch ((nbr_in << o_in) + (nbr_out << o_out) + vol)
+	switch ((nbr_out << o_out) + vol)
 	{
 	// Mono to mono
-	case (1 << o_in) + (1 << o_out) + 0:
+	case (1 << o_out) + 0:
 		dsp::mix::Align::copy_1_1 (
 			dst_arr [0],
 			src_arr [0],
@@ -200,7 +200,7 @@ void	DryWet::copy (const ProcInfo &proc, int chn_ofs, float lvl)
 		);
 		break;
 
-	case (1 << o_in) + (1 << o_out) + 1:
+	case (1 << o_out) + 1:
 		dsp::mix::Align::copy_1_1_v (
 			dst_arr [0],
 			src_arr [0],
@@ -209,26 +209,8 @@ void	DryWet::copy (const ProcInfo &proc, int chn_ofs, float lvl)
 		);
 		break;
 
-	// Mono to stereo
-	case (1 << o_in) + (2 << o_out) + 0:
-		dsp::mix::Align::copy_1_2 (
-			dst_arr [0], dst_arr [1],
-			src_arr [0],
-			nbr_spl
-		);
-		break;
-
-	case (1 << o_in) + (2 << o_out) + 1:
-		dsp::mix::Align::copy_1_2_v (
-			dst_arr [0], dst_arr [1],
-			src_arr [0],
-			nbr_spl,
-			lvl
-		);
-		break;
-
 	// Stereo to stereo
-	case (2 << o_in) + (2 << o_out) + 0:
+	case (2 << o_out) + 0:
 		dsp::mix::Align::copy_2_2 (
 			dst_arr [0], dst_arr [1],
 			src_arr [0], src_arr [1],
@@ -236,7 +218,7 @@ void	DryWet::copy (const ProcInfo &proc, int chn_ofs, float lvl)
 		);
 		break;
 
-	case (2 << o_in) + (2 << o_out) + 1:
+	case (2 << o_out) + 1:
 		dsp::mix::Align::copy_2_2_v (
 			dst_arr [0], dst_arr [1],
 			src_arr [0], src_arr [1],

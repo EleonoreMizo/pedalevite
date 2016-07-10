@@ -774,17 +774,17 @@ void	Central::create_routing ()
 				}
 
 				// Dry/wet input
-				mix_side_i._nbr_chn     = nbr_chn_in;
-				mix_side_i._nbr_chn_tot = nbr_chn_in * 2;
+				mix_side_i._nbr_chn     = nbr_chn_out;
+				mix_side_i._nbr_chn_tot = nbr_chn_out * 2;
 				for (int chn = 0; chn < nbr_chn_out; ++chn)
 				{
 					// 1st pin: main output
-					mix_side_i._buf_arr [chn] = nxt_buf_arr [chn];
+					mix_side_i._buf_arr [              chn] = nxt_buf_arr [chn];
 
 					// 2nd pin: main input as default bypass
 					const int       chn_in = std::min (chn, nbr_chn_in - 1);
 					const int       buf    = cur_buf_arr [chn_in];
-					mix_side_i._buf_arr [nbr_chn_in + chn] = buf;
+					mix_side_i._buf_arr [nbr_chn_out + chn] = buf;
 				}
 
 				// Dry/wet output

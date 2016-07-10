@@ -103,6 +103,7 @@ public:
 	void           set_param (int slot_index, PiType type, int index, float val);
 	void           set_param_beats (int slot_index, int index, float beats);
 	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
+//	void           override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index);
 
 	std::vector <std::string>
 	               list_plugin_models () const;

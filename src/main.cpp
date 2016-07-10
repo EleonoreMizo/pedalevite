@@ -1095,7 +1095,7 @@ static int MAIN_main_loop (Context &ctx)
 
 		bool wait_flag = true;
 
-#if 1
+#if 0
 
 		if (wait_flag)
 		{
@@ -1131,7 +1131,7 @@ static int MAIN_main_loop (Context &ctx)
 		const float *  src_arr [2] = { buf [0], buf [1] };
 		float *        dst_arr [2] = { buf [2], buf [3] };
 
-		MAIN_audio_process (ctx, dst_arr, src_arr, nbr_spl);
+		ctx._model.process_block (dst_arr, src_arr, nbr_spl);
 
 /********************************************* TEMP *********************************/
 
