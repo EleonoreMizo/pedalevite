@@ -552,6 +552,21 @@ Make en multithread :
 
 
 
+If you just want the pin to go high at boot time (this will happen in the first few seconds after power on), then go low at shutdown, use this /boot/config.txt:
+dtoverlay=gpio-poweroff,gpiopin=25,active_low
+Change the GPIO number to the BRCM pin you want to use.
+
+Accélérer le boot :
+https://www.raspberrypi.org/forums/viewtopic.php?f=29&t=25777
+Qui prend du temps ? Taper : systemd-analyze blame
+Vérifier au minimum :
+	665ms bluetooth.service
+	563ms triggerhappy.service
+Penser à utiliser SquashFS (RO) pour le système, on pourra utiliser un FS plus conventionnel pour les données sauvegardables.
+À terme, utiliser buildroot ( https://buildroot.org/ , spécialisé pour le pi : https://github.com/gamaral/rpi-buildroot )
+
+
+
 Plusieurs interfaces :
 – Entrées (boutons et contrôleurs analogiques)
 	– Abstraction complète de la couche physique (boutons et contrôleurs numérotés)
@@ -687,7 +702,96 @@ cf. http://raspberrywebserver.com/serveradmin/run-a-script-on-start-up.html
 Utiliser le repository suivant: git://git@<ip_raspberry>/pedalevite.git
 Sur le poste windows msysgit, pour éviter que les push ne bloquent à la fin :
 	git config --global sendpack.sideband false
+
+Installation :
+	cd ~/Documents/pedalevite/
+	git pull
+	cd build/unix
+	./configure-release
+	make -j4
+		Vérfier que tout est bien compilé
+	sudo mkdir -p /opt/pedalevite/bin /opt/pedalevite/etc/config
+	sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
+
+Autorun:
+	sudo cp /etc/init.d/skeleton /etc/init.d/pedalevite
+	sudo chmod +x /etc/init.d/pedalevite
+	sudo nano /etc/init.d/pedalevite
+		Modifier :
+			#!/bin/sh
+			# kFreeBSD do not accept scripts as interpreters, using #!/bin/sh and sourcing.
+			if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
+			    set "$0" "$@"; INIT_D_SCRIPT_SOURCED=true . /lib/init/init-d-script
+			fi
+			### BEGIN INIT INFO
+			# Provides:          pedalevite
+			# Required-Start:    $local_fs
+			# Required-Stop:     $local_fs
+			# Default-Start:     2 3 4 5
+			# Default-Stop:      0 1 6
+			# Short-Description: Starts and stops Pedale Vite
+			# Description:       This service is used to process the sound from a guitar
+			### END INIT INFO
+
+			# Author: Foo Bar <foobar@baz.org>
+			#
+			# Please remove the "Author" lines above and replace them
+			# with your own name if you copy and modify this script.
+
+			case "$1" in
+			    start)
+				echo "Starting Pedale Vite"
+				/opt/pedalevite/bin/pedalevite &
+				;;
+			    stop)
+				echo "Stopping Pedale Vite"
+				killall pedalevite
+				;;
+			    *)
+				echo "Usage: /etc/init.d/pedalevite start|stop"
+				exit 1
+				;;
+			esac
+
+			exit 0
+	sudo update-rc.d pedalevite defaults
+	sudo /etc/init.d/pedalevite start
 	
+Optim boot :
+	sudo nano /etc/modprobe.d/raspi-blacklist.conf
+		Ajouter les lignes ( https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=138610 ) :
+			#wifi
+			blacklist brcmfmac
+			blacklist brcmutil
+			#bluetooth
+			blacklist btbcm
+			blacklist hci_uart
+
+Court-circuiter NOOBS au boot :
+	sudo fdisk -l
+		repérer le numéro de la partition de noobs (habituellement la Nº1, 1 Go FAT16)
+		repérer le numéro de l’autre partition de boot, en FAT32 (habituellement la Nº6, précédant la grosse partition Linux qui couvre le reste du disque)
+	Monter la partition NOOBS :
+	sudo mkdir /mnt/noobs
+	sudo mount /dev/mmcblk0p1 /mnt/noobs
+	Ajouter autoboot.txt ( https://github.com/raspberrypi/noobs#how-to-bypass-the-recovery-splashscreen-and-boot-directly-into-a-fixed-partition ) :
+	nano /mnt/noobs/autoboot.txt
+	Y écrire la ligne suivante, en remplaçant éventuellement 6 par le numéro de la partition voulue :
+		boot_partition=6
+
+Système read-only + optim boot (cf http://blog.gegg.us/2014/03/a-raspbian-read-only-root-fs-howto/ ) :
+Remove some stuff which is not needed or unsuitable for readonly operation:
+	sudo apt-get remove --purge wolfram-engine triggerhappy pi-bluetooth
+	sudo apt-get remove --purge cron anacron logrotate dbus dphys-swapfile
+Remove X-Server and related stuff:
+	sudo apt-get remove --purge xserver-common lightdm
+	sudo insserv -r x11-common
+auto-remove some X11 related libs:
+	sudo apt-get autoremove --purge
+Install busybox syslog instead of rsyslog:
+	sudo apt-get install busybox-syslogd
+	sudo dpkg --purge rsyslog
+(la suite plus tard)
 
 
 enum ActionTrigger
