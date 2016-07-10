@@ -673,14 +673,16 @@ void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], lon
 
 			chn_state._hold_val_max = data_ptr [pos];
 
-			const long		sub_block_end = pos + _hold_time;
-			do
 			{
-				data_ptr [pos] = chn_state._hold_val_max;
-				++ pos;
+				const long		sub_block_end = pos + _hold_time;
+				do
+				{
+					data_ptr [pos] = chn_state._hold_val_max;
+					++ pos;
+				}
+				while (pos < sub_block_end);
+				interp_val += _interp_step * _hold_time;
 			}
-			while (pos < sub_block_end);
-			interp_val += _interp_step * _hold_time;
 
 			do
 			{

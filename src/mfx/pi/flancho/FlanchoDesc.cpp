@@ -33,7 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
-#include "mfx/pi/ParamMapFdbKBipolar.h"
+#include "mfx/pi/ParamMapFdbkBipolar.h"
 
 #include <cassert>
 

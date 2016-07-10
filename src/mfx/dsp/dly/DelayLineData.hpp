@@ -152,7 +152,7 @@ void	DelayLineData <T, AL>::update_buffer_size ()
 		const long	min_buf_size   = max_delay_len + _extra_len;
 		const long	new_buf_size   = 1L << fstb::get_next_pow_2 (min_buf_size);
 		const long	new_total_size = new_buf_size + _unroll_pre + _unroll_post;
-		if (new_total_size != _buf.size ())
+		if (new_total_size != long (_buf.size ()))
 		{
 			_buf_ptr = 0;
 			_buf.resize (new_total_size);

@@ -1095,7 +1095,7 @@ static int MAIN_main_loop (Context &ctx)
 
 		bool wait_flag = true;
 
-#if 0
+#if 1
 
 		if (wait_flag)
 		{

@@ -71,15 +71,15 @@ Flancho::Flancho ()
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_SPEED     , 2);
-	_state_set.set_val_nat (desc_set, Param_DEPTH     , 0.010);
-	_state_set.set_val_nat (desc_set, Param_DELAY     , 0.004);
+	_state_set.set_val_nat (desc_set, Param_SPEED     , 0.5);
+	_state_set.set_val_nat (desc_set, Param_DEPTH     , 0.002);
+	_state_set.set_val_nat (desc_set, Param_DELAY     , 0.002);
 	_state_set.set_val_nat (desc_set, Param_FDBK      , 0);
 	_state_set.set_val_nat (desc_set, Param_WF_TYPE   , double (WfType_SINE));
 	_state_set.set_val_nat (desc_set, Param_WF_SHAPE  , 0);
 	_state_set.set_val_nat (desc_set, Param_NBR_VOICES, 1);
 	_state_set.set_val_nat (desc_set, Param_PHASE_SET , 0);
-	
+
 	_state_set.add_observer (Param_SPEED     , _param_change_flag_speed);
 	_state_set.add_observer (Param_DEPTH     , _param_change_flag_depth_fdbk);
 	_state_set.add_observer (Param_DELAY     , _param_change_flag_delay);
@@ -88,7 +88,7 @@ Flancho::Flancho ()
 	_state_set.add_observer (Param_WF_SHAPE  , _param_change_flag_wf);
 	_state_set.add_observer (Param_NBR_VOICES, _param_change_flag_voices);
 	_state_set.add_observer (Param_PHASE_SET , _param_change_flag_phase_set);
-	
+
 	_param_change_flag_depth_fdbk.add_observer (_param_change_flag);
 	_param_change_flag_wf        .add_observer (_param_change_flag);
 	_param_change_flag_speed     .add_observer (_param_change_flag);
@@ -212,7 +212,10 @@ void	Flancho::do_process_block (ProcInfo &proc)
 	int            pos = 0;
 	do
 	{
-		const int      work_len = std::min (proc._nbr_spl - pos, _update_resol);
+		// We need this intermediate varaible because for some reason GCC
+		// fails to link when _update_resol is directly used in std::min.
+		const int      max_len  = _update_resol;
+		const int      work_len = std::min (proc._nbr_spl - pos, max_len);
 
 		// Parameters
 		_state_set.process_block (work_len);
