@@ -153,32 +153,6 @@ static const int  MAIN_pin_reset = 18;
 
 
 
-static int64_t MAIN_get_time ()
-{
-#if fstb_IS (SYS, LINUX)
-	timespec       tp;
-	clock_gettime (CLOCK_REALTIME, &tp);
-
-	const long     ns_mul = 1000L * 1000L * 1000L;
-	return int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec;
-
-#else
-	::LARGE_INTEGER t;
-	::QueryPerformanceCounter (&t);
-	static double per = 0;
-	if (per == 0)
-	{
-		::LARGE_INTEGER f;
-		::QueryPerformanceFrequency (&f);
-		per = 1e9 / double (f.QuadPart);
-	}
-	return int64_t (t.QuadPart * per);
-
-#endif
-}
-
-
-
 class Context
 :	public mfx::ModelObserverDefault
 ,	public mfx::adrv::CbInterface
