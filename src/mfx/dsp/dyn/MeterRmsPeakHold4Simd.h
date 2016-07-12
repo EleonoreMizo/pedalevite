@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 
 
@@ -83,6 +84,8 @@ protected:
 
 private:
 
+	fstb_TYPEDEF_ALIGN (16, fstb::ToolsSimd::VectF32, VectF32);
+
 	void           update_times ();
 	inline void    process_sample_peak (fstb::ToolsSimd::VectF32 x_a, fstb::ToolsSimd::VectF32 &peak_max, fstb::ToolsSimd::VectF32 &peak_hold, fstb::ToolsSimd::VectF32 &hold_cnt, float coef_r_flt, int step_int) const;
 	inline void    process_sample_rms (fstb::ToolsSimd::VectF32 x, fstb::ToolsSimd::VectF32 &rms_sq) const;
@@ -92,14 +95,10 @@ private:
 	double         _release_time_s;  // Release time, in s
 
 	double         _sample_freq;     // Hz
-	fstb::ToolsSimd::VectF32
-	               _peak_max;        // Maximum peak value
-	fstb::ToolsSimd::VectF32
-	               _peak_hold;       // Hold value for peak
-	fstb::ToolsSimd::VectF32
-	               _hold_counter;    // Counter for holding time (samples). Set to the maximum at a peak, and decreased. When reaching 0, the peak is set to the instantaneous value.
-   fstb::ToolsSimd::VectF32
-	               _rms_sq;          // RMS value with an envelope, squared
+	VectF32        _peak_max;        // Maximum peak value
+	VectF32        _peak_hold;       // Hold value for peak
+	VectF32        _hold_counter;    // Counter for holding time (samples). Set to the maximum at a peak, and decreased. When reaching 0, the peak is set to the instantaneous value.
+   VectF32        _rms_sq;          // RMS value with an envelope, squared
 
 	int            _hold_time;       // Samples
 	float          _coef_r;
