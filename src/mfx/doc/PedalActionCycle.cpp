@@ -179,7 +179,7 @@ void	PedalActionCycle::ser_read (SerRInterface &ser)
 			int            chk;
 			ser.begin_list (chk);
 			assert (chk == 2);
-			ActionType     type;
+			ActionType     type = ActionType_NBR_ELT; // Any illegal value
 			ser.read (type);
 			switch (type)
 			{

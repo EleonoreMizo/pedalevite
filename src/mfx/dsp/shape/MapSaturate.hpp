@@ -76,7 +76,7 @@ T	MapSaturate <T, C, XS, YS>::desaturate (T y)
 	assert (x / get_xs () >= 0);
 	assert (x / get_xs () <= 1);
 
-	return y;
+	return x;
 }
 
 

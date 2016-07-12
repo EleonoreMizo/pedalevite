@@ -109,15 +109,13 @@ void	DisplayInterface::refresh (int x, int y, int w, int h)
 
 void	DisplayInterface::bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, int ys, int ws, int hs, int ss, BlendMode mode)
 {
-	const int      wd      = get_width ();
-	const int      hd      = get_height ();
+	assert (xd >= 0);
+	assert (xd + ws <= get_width ());
+	assert (yd >= 0);
+	assert (yd + hs <= get_height ());
+
 	const int      sd      = get_stride ();
 	uint8_t *      dst_ptr = use_screen_buf ();
-
-	assert (xd >= 0);
-	assert (xd + ws <= wd);
-	assert (yd >= 0);
-	assert (yd + hs <= hd);
 
 	src_ptr += ys * ss + xs;
 	dst_ptr += yd * sd + xd;

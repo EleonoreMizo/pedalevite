@@ -97,7 +97,7 @@ Central::~Central ()
 	if (_cur_sptr.get () != 0)
 	{
 		std::vector <int> pi_list;
-		
+
 		pi_list = _plugin_pool.list_plugins (mfx::SharedRscState_INUSE);
 		for (int index : pi_list)
 		{
@@ -148,6 +148,7 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 		int            ret_val =
 			details._pi_uptr->reset (sample_freq, max_block_size, latency);
 		assert (ret_val == piapi::PluginInterface::Err_OK);
+		ret_val = ret_val; // -Wunused-variable
 	}
 	_audio.set_process_info (sample_freq, max_block_size);
 }
@@ -593,6 +594,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 							_sample_freq, _max_block_size, latency
 						);
 						assert (ret_val == piapi::PluginInterface::Err_OK);
+						ret_val = ret_val; // -Wunused-variable
 					}
 					break;
 				}
@@ -614,6 +616,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 					latency
 				);
 				assert (ret_val == piapi::PluginInterface::Err_OK);
+				ret_val = ret_val; // -Wunused-variable
 			}
 			check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
 
