@@ -281,6 +281,7 @@
     <ClInclude Include="mfx\ControlSource.hpp" />
     <ClInclude Include="mfx\Cst.h" />
     <ClInclude Include="mfx\CtrlUnit.h" />
+    <ClInclude Include="mfx\Dir.h" />
     <ClInclude Include="mfx\doc\ActionBank.h" />
     <ClInclude Include="mfx\doc\ActionParam.h" />
     <ClInclude Include="mfx\doc\ActionPreset.h" />
@@ -330,6 +331,8 @@
     <ClInclude Include="mfx\dsp\dly\DelayLineReader.h" />
     <ClInclude Include="mfx\dsp\dyn\EnvFollowerRms.h" />
     <ClInclude Include="mfx\dsp\dyn\EnvFollowerRms.hpp" />
+    <ClInclude Include="mfx\dsp\dyn\MeterRmsPeakHold.h" />
+    <ClInclude Include="mfx\dsp\dyn\MeterRmsPeakHold4Simd.h" />
     <ClInclude Include="mfx\dsp\iir\Biquad.h" />
     <ClInclude Include="mfx\dsp\iir\Biquad.hpp" />
     <ClInclude Include="mfx\dsp\iir\OnePole.h" />
@@ -380,6 +383,8 @@
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="mfx\GpioPwm.h" />
     <ClInclude Include="mfx\LocEdit.h" />
+    <ClInclude Include="mfx\MeterResult.h" />
+    <ClInclude Include="mfx\MeterResultSet.h" />
     <ClInclude Include="mfx\Model.h" />
     <ClInclude Include="mfx\ModelObserverDefault.h" />
     <ClInclude Include="mfx\ModelObserverInterface.h" />
@@ -489,6 +494,7 @@
     <ClInclude Include="mfx\uitk\pg\EditProg.h" />
     <ClInclude Include="mfx\uitk\pg\EditText.h" />
     <ClInclude Include="mfx\uitk\pg\EndMsg.h" />
+    <ClInclude Include="mfx\uitk\pg\Levels.h" />
     <ClInclude Include="mfx\uitk\pg\MenuMain.h" />
     <ClInclude Include="mfx\uitk\pg\MenuSlot.h" />
     <ClInclude Include="mfx\uitk\pg\NotYet.h" />
@@ -616,6 +622,8 @@
     <ClCompile Include="mfx\dsp\dly\DelayLine.cpp" />
     <ClCompile Include="mfx\dsp\dly\DelayLineReader.cpp" />
     <ClCompile Include="mfx\dsp\dyn\EnvFollowerRms.cpp" />
+    <ClCompile Include="mfx\dsp\dyn\MeterRmsPeakHold.cpp" />
+    <ClCompile Include="mfx\dsp\dyn\MeterRmsPeakHold4Simd.cpp" />
     <ClCompile Include="mfx\dsp\iir\Biquad.cpp" />
     <ClCompile Include="mfx\dsp\iir\OnePole.cpp" />
     <ClCompile Include="mfx\dsp\iir\Svf2p.cpp" />
@@ -636,6 +644,7 @@
     <ClCompile Include="mfx\GpioPwm.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="mfx\MeterResultSet.cpp" />
     <ClCompile Include="mfx\Model.cpp" />
     <ClCompile Include="mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
@@ -698,6 +707,7 @@
     <ClCompile Include="mfx\uitk\pg\EditProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\EditText.cpp" />
     <ClCompile Include="mfx\uitk\pg\EndMsg.cpp" />
+    <ClCompile Include="mfx\uitk\pg\Levels.cpp" />
     <ClCompile Include="mfx\uitk\pg\MenuMain.cpp" />
     <ClCompile Include="mfx\uitk\pg\MenuSlot.cpp" />
     <ClCompile Include="mfx\uitk\pg\NotYet.cpp" />

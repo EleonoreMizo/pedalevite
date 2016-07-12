@@ -60,20 +60,20 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 ,	_edit_prog_sptr (  new NText (Entry_PROG  ))
 ,	_edit_bank_sptr (  new NText (Entry_BANKS ))
 ,	_edit_layout_sptr (new NText (Entry_LAYOUT))
-,	_edit_master_sptr (new NText (Entry_MASTER))
+,	_edit_levels_sptr (new NText (Entry_LEVELS))
 ,	_reboot_sptr (     new NText (Entry_REBOOT))
 ,	_reboot_arg ()
 {
 	_edit_prog_sptr  ->set_justification (0.5f, 0, false);
 	_edit_bank_sptr  ->set_justification (0.5f, 0, false);
 	_edit_layout_sptr->set_justification (0.5f, 0, false);
-	_edit_master_sptr->set_justification (0.5f, 0, false);
+	_edit_levels_sptr->set_justification (0.5f, 0, false);
 	_reboot_sptr     ->set_justification (0.5f, 0, false);
 
 	_edit_prog_sptr  ->set_text ("Edit Program");
 	_edit_bank_sptr  ->set_text ("Banks");
 	_edit_layout_sptr->set_text ("Pedal layout");
-	_edit_master_sptr->set_text ("Volume & Levels");
+	_edit_levels_sptr->set_text ("Volume & Levels");
 	_reboot_sptr     ->set_text ("Restart");
 }
 
@@ -133,7 +133,7 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_edit_prog_sptr  ->set_font (fnt_m);
 	_edit_bank_sptr  ->set_font (fnt_m);
 	_edit_layout_sptr->set_font (fnt_m);
-	_edit_master_sptr->set_font (fnt_m);
+	_edit_levels_sptr->set_font (fnt_m);
 	_reboot_sptr     ->set_font (fnt_m);
 
 	const int      x_mid =  _page_size [0]      >> 1;
@@ -143,19 +143,19 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_edit_prog_sptr  ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_edit_bank_sptr  ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_edit_layout_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
-	_edit_master_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
+	_edit_levels_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_reboot_sptr     ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 
 	_edit_prog_sptr  ->set_coord (Vec2d (x_mid, h_m * 0));
 	_edit_bank_sptr  ->set_coord (Vec2d (x_mid, h_m * 1));
 	_edit_layout_sptr->set_coord (Vec2d (x_mid, h_m * 2));
-	_edit_master_sptr->set_coord (Vec2d (x_mid, h_m * 3));
+	_edit_levels_sptr->set_coord (Vec2d (x_mid, h_m * 3));
 	_reboot_sptr     ->set_coord (Vec2d (x_mid, h_m * 4));
 
 	_page_ptr->push_back (_edit_prog_sptr  );
 	_page_ptr->push_back (_edit_bank_sptr  );
 	_page_ptr->push_back (_edit_layout_sptr);
-	_page_ptr->push_back (_edit_master_sptr);
+	_page_ptr->push_back (_edit_levels_sptr);
 	_page_ptr->push_back (_reboot_sptr     );
 
 	PageMgrInterface::NavLocList  nav_list (Entry_NBR_ELT);
@@ -191,7 +191,7 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 			switch (evt.get_target ())
 			{
 			case Entry_PROG:
-				_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+				_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 				break;
 			case Entry_BANKS:
 				/*** To do ***/
@@ -203,10 +203,8 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
 				//_page_switcher.switch_to (pg::PageType_PB_LAYOUT, 0);
 				break;
-			case Entry_MASTER:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
-				//_page_switcher.switch_to (pg::PageType_MASTER_VOL, 0);
+			case Entry_LEVELS:
+				_page_switcher.switch_to (PageType_LEVELS, 0);
 				break;
 			case Entry_REBOOT:
 				_reboot_arg._title      = "RESTART";

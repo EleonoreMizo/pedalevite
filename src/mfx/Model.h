@@ -53,6 +53,8 @@ namespace doc
 	class FxId;
 }
 
+class MeterResultSet;
+
 namespace pi
 {
 namespace tuner
@@ -77,7 +79,8 @@ public:
 	// Audio
 	void           set_process_info (double sample_freq, int max_block_size);
 	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
-	bool           check_signal_clipping ();
+	MeterResultSet &
+	               use_meters ();
 
 	// Regular commands
 	void           set_observer (ModelObserverInterface *obs_ptr);

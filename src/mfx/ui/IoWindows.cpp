@@ -684,14 +684,23 @@ void	IoWindows::redraw_main_screen (int x1, int y1, int x2, int y2)
 
 void	IoWindows::redraw_led (int x1, int y1, int x2, int y2, int led_cnt)
 {
+#if 1
+	const int      led_w  = _led_h;
+	const int      led_x1 = led_cnt * led_w;
+	const int      led_x2 = led_x1 + led_w;
+#else
 	const int      led_x1 =  led_cnt      * _disp_w / _nbr_led;
 	const int      led_x2 = (led_cnt + 1) * _disp_w / _nbr_led;
 	const int      led_w  = led_x2 - led_x1;
+#endif
 	const int      led_y1 = _scr_h * _zoom;
 	const int      led_y2 = led_y1 + _led_h;
 
 	x1 = std::max (x1, led_x1);
-	x2 = std::min (x2, led_x2);
+	if (led_cnt < _nbr_led - 1)
+	{
+		x2 = std::min (x2, led_x2);
+	}
 	y1 = std::max (y1, led_y1);
 	y2 = std::min (y2, led_y2);
 

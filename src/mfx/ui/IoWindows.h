@@ -130,9 +130,11 @@ private:
 	static const int  _nbr_led = 3;
 	static const int  _zoom    = 4;
 
-	static const int  _led_h   = _scr_h * _zoom / 2;
-	static const int  _disp_w  = _scr_w * _zoom;
-	static const int  _disp_h  = _scr_h * _zoom + _led_h;
+	static const int  _max_led_h = 32;
+	static const int  _led_h_tmp = _scr_h * _zoom / 2;
+	static const int  _led_h     = (_led_h_tmp < _max_led_h) ? _led_h_tmp : _max_led_h;
+	static const int  _disp_w    = _scr_w * _zoom;
+	static const int  _disp_h    = _scr_h * _zoom + _led_h;
 
 	typedef std::array <uint8_t, _scr_s * _scr_h> ScreenBuffer;
 

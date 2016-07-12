@@ -40,6 +40,8 @@ namespace mfx
 
 
 
+const float	Cst::_clip_lvl = 0.999f;   // We subtract a tiny margin to 0 dB to be safe
+
 const double	Cst::_step_param = 0.05;
 
 const std::string	Cst::_plugin_mix     = "\?drywetmix";

@@ -29,8 +29,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "conc/CellPool.h"
 #include "fstb/AllocAlign.h"
+#include "fstb/SingleObj.h"
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/dsp/dyn/MeterRmsPeakHold.h"
+#include "mfx/dsp/dyn/MeterRmsPeakHold4Simd.h"
 #include "mfx/Cst.h"
+#include "mfx/MeterResultSet.h"
 #include "mfx/MsgQueue.h"
 #include "piapi/EventTs.h"
 
@@ -61,7 +65,8 @@ public:
 	void           set_context (const ProcessingContext &ctx);
 	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 
-	bool           check_signal_clipping ();
+	MeterResultSet &
+	               use_meters ();
 
 
 
@@ -95,11 +100,16 @@ private:
 	typedef std::vector <const piapi::EventTs *> EventPtrList;
 	typedef std::array <EventPtrList, Cst::_max_nbr_plugins> EventPtrListArray;
 
+	typedef fstb::SingleObj <
+		dsp::dyn::MeterRmsPeakHold4Simd,
+		fstb::AllocAlign <dsp::dyn::MeterRmsPeakHold4Simd, 16>
+	> LevelMeter;
+
 	void           collect_msg_cmd (bool proc_flag);
 	void           collect_msg_ui (bool proc_flag);
 	void           handle_controller (const ControlSource &controller, float val_raw);
 	void           copy_input (const float * const * src_arr, int nbr_spl);
-	void           check_signal_level (int nbr_spl);
+	void           check_signal_level (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	void           copy_output (float * const * dst_arr, int nbr_spl);
 	void           process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl);
 	void           process_single_plugin (int plugin_id, piapi::PluginInterface::ProcInfo &proc_info);
@@ -128,13 +138,19 @@ private:
 	const ProcessingContext *
 	               _ctx_ptr;
 
+	LevelMeter     _lvl_meter;
+	MeterResultSet _meter_result;       // This structure can be accessed from any thread
+
 	EventArray     _evt_arr;            // Preallocated
 	EventPtrList   _evt_ptr_arr;        // Preallocated
 
-	std::atomic <bool>
-	               _clip_flag;
 	float          _tempo_new;          // BPM. 0 when nothing new
 	float          _tempo_cur;          // BPM, > 0
+
+	int64_t        _proc_date_beg;
+	int64_t        _proc_date_end;
+	dsp::dyn::MeterRmsPeakHold
+	               _proc_analyser;
 
 
 

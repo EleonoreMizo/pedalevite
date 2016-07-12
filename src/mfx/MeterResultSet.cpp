@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DriverInterface.cpp
+        MeterResultSet.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,15 +24,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/adrv/DriverInterface.h"
+#include "mfx/MeterResultSet.h"
 
 #include <cassert>
 
 
 
 namespace mfx
-{
-namespace adrv
 {
 
 
@@ -41,45 +39,53 @@ namespace adrv
 
 
 
-int	DriverInterface::init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+bool	MeterResultSet::Side::check_signal_clipping ()
 {
-	assert (driver_0 == 0 || driver_0 [0] != '\0');
-	assert (chn_idx_in >= 0);
-	assert (chn_idx_out >= 0);
-
-	const int      ret_val = do_init (
-		sample_freq,
-		max_block_size,
-		callback,
-		driver_0,
-		chn_idx_in,
-		chn_idx_out
-	);
-	assert (ret_val != 0 || sample_freq >= 41000);
-	assert (ret_val != 0 || max_block_size > 0);
-
-	return ret_val;
+	return _clip_flag.exchange (false);
 }
 
 
 
-int	DriverInterface::start ()
+MeterResultSet::MeterResultSet ()
+:	_audio_io ()
+,	_dsp_use ()
+,	_dsp_overload_flag ()
 {
-	return do_start ();
+	reset ();
 }
 
 
 
-int	DriverInterface::stop ()
+void	MeterResultSet::reset ()
 {
-	return do_stop ();
+	for (auto &s : _audio_io)
+	{
+		for (auto &c : s._chn_arr)
+		{
+			c._peak = 0;
+			c._rms  = 0;
+		}
+		s._clip_flag.store (false);
+	}
+	_dsp_use._peak = 0;
+	_dsp_use._rms  = 0;
+	_dsp_overload_flag.store (false);
 }
 
 
 
-std::string	DriverInterface::get_last_error () const
+bool	MeterResultSet::check_signal_clipping ()
 {
-	return do_get_last_error ();
+	bool           clip_flag = false;
+	for (auto &s : _audio_io)
+	{
+		if (s.check_signal_clipping ())
+		{
+			clip_flag = true;
+		}
+	}
+
+	return clip_flag;
 }
 
 
@@ -88,14 +94,10 @@ std::string	DriverInterface::get_last_error () const
 
 
 
-const std::array <const char *, Dir_NBR_ELT>	DriverInterface::_dir_name_0_arr =
-{{
-	"capture", "playback"
-}};
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
-}  // namespace adrv
 }  // namespace mfx
 
 

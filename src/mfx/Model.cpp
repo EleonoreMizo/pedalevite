@@ -120,9 +120,9 @@ void	Model::process_block (float * const * dst_arr, const float * const * src_ar
 
 
 
-bool	Model::check_signal_clipping ()
+MeterResultSet &	Model::use_meters ()
 {
-	return _central.check_signal_clipping ();
+	return _central.use_meters ();
 }
 
 
@@ -1416,11 +1416,11 @@ void	Model::fill_pi_init_data (int slot_index, ModelObserverInterface::PluginIni
 
 	const PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (pi_id);
-	pi_data._nbr_io_arr [piapi::PluginInterface::Dir_IN ] = 1;
-	pi_data._nbr_io_arr [piapi::PluginInterface::Dir_OUT] = 1;
+	pi_data._nbr_io_arr [Dir_IN ] = 1;
+	pi_data._nbr_io_arr [Dir_OUT] = 1;
 	details._desc_ptr->get_nbr_io (
-		pi_data._nbr_io_arr [piapi::PluginInterface::Dir_IN ],
-		pi_data._nbr_io_arr [piapi::PluginInterface::Dir_OUT]
+		pi_data._nbr_io_arr [Dir_IN ],
+		pi_data._nbr_io_arr [Dir_OUT]
 	);
 	for (int categ = 0; categ < piapi::ParamCateg_NBR_ELT; ++categ)
 	{

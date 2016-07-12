@@ -294,6 +294,52 @@ ToolsSimd::VectF32	ToolsSimd::rcp_approx2 (VectF32 v)
 
 
 
+ToolsSimd::VectF32	ToolsSimd::sqrt (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_sqrt_ps (v);
+#elif fstb_IS (ARCHI, ARM)
+	const uint32x4_t  nz_flag = vtstq_u32 (
+		vreinterpretq_u32_f32 (v),
+		vreinterpretq_u32_f32 (v)
+	);
+	float32x4_t       rs      = vrsqrteq_f32 (v);
+	rs *= vrsqrtsq_f32 (v, rs * rs);
+	rs *= vrsqrtsq_f32 (v, rs * rs);
+	rs *= vrsqrtsq_f32 (v, rs * rs);
+	const float32x4_t sqrt_a  = rs * v;
+	return vreinterpretq_f32_u32 (vandq_u32 (
+		vreinterpretq_u32_f32 (sqrt_a),
+		nz_flag
+	));
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::sqrt_approx (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	const __m128   nz_flag = _mm_cmpgt_ps (v, _mm_setzero_ps ());
+	const __m128   sqrt_a  = _mm_mul_ps (v, _mm_rsqrt_ps (v));
+	return _mm_and_ps (sqrt_a, nz_flag);
+#elif fstb_IS (ARCHI, ARM)
+	const uint32x4_t  nz_flag = vtstq_u32 (
+		vreinterpretq_u32_f32 (v),
+		vreinterpretq_u32_f32 (v)
+	);
+	float32x4_t       rs      = vrsqrteq_f32 (v);
+	rs *= vrsqrtsq_f32 (rs * v, rs);
+	const float32x4_t sqrt_a  = rs * v;
+	return vreinterpretq_f32_u32 (vandq_u32 (
+		vreinterpretq_u32_f32 (sqrt_a),
+		nz_flag
+	));
+#endif // ff_arch_CPU
+}
+
+
+
 float	ToolsSimd::sum_h_flt (VectF32 v)
 {
 #if fstb_IS (ARCHI, X86)
@@ -337,6 +383,34 @@ ToolsSimd::VectF32	ToolsSimd::cmp_lt_f32 (VectF32 lhs, VectF32 rhs)
 	return _mm_cmplt_ps (lhs, rhs);
 #elif fstb_IS (ARCHI, ARM)
 	return vreinterpretq_f32_u32 (vcltq_f32 (lhs, rhs));
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::and_f32 (VectF32 lhs, VectF32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_and_ps (lhs, rhs);
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_f32_u32 (vandq_u32 (
+		vreinterpretq_u32_f32 (lhs),
+		vreinterpretq_u32_f32 (rhs)
+	));
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::or_f32 (VectF32 lhs, VectF32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_or_ps (lhs, rhs);
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_f32_u32 (vorrq_u32 (
+		vreinterpretq_u32_f32 (lhs),
+		vreinterpretq_u32_f32 (rhs)
+	));
 #endif // ff_arch_CPU
 }
 

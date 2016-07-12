@@ -60,6 +60,7 @@
 #include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/pg/EndMsg.h"
+#include "mfx/uitk/pg/Levels.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/MenuSlot.h"
 #include "mfx/uitk/pg/NotYet.h"
@@ -186,18 +187,10 @@ public:
 	mfx::CmdLine   _cmd_line;
 	double         _sample_freq;
 	int            _max_block_size;
-	std::atomic <bool>
-	               _dropout_flag;
 #if fstb_IS (SYS, LINUX)
 	mfx::ui::TimeShareThread
 	               _thread_spi;
 #endif
-	int64_t        _time_beg = MAIN_get_time ();
-	int64_t        _time_end = _time_beg;
-	std::atomic <float>            // Negative: the main thread read the value.
-	               _usage_max;
-	std::atomic <float>            // Negative: the main thread read the value.
-	               _usage_min;
 	const int      _tuner_subspl  = 4;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
@@ -293,6 +286,8 @@ public:
 	               _page_save_prog;
 	mfx::uitk::pg::EndMsg
 	               _page_end_msg;
+	mfx::uitk::pg::Levels
+	               _page_levels;
 
 	Context ();
 	~Context ();
@@ -310,7 +305,6 @@ Context::Context ()
 :	_cmd_line ()
 ,	_sample_freq (0)
 ,	_max_block_size (0)
-,	_dropout_flag ()
 #if fstb_IS (SYS, LINUX)
 ,	_thread_spi (10 * 1000)
 
@@ -380,6 +374,7 @@ Context::Context ()
 ,	_page_edit_text (_page_switcher)
 ,	_page_save_prog (_page_switcher)
 ,	_page_end_msg (_cmd_line)
+,	_page_levels (_page_switcher)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
@@ -413,9 +408,6 @@ fprintf (stderr, "Reading ESC button...\n");
 	}
 	while (cell_ptr != 0 && scan_flag);
 
-	_dropout_flag.store (false);
-	_usage_min.store (-1);
-	_usage_max.store (-1);
 	mfx::ui::FontDataDefault::make_08x12 (_fnt_8x12);
 	mfx::ui::FontDataDefault::make_06x08 (_fnt_6x8);
 	mfx::ui::FontDataDefault::make_06x06 (_fnt_6x6);
@@ -949,6 +941,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_END_MSG          , _page_end_msg          );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_LEVELS           , _page_levels           );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 
@@ -1001,27 +994,13 @@ void	Context::do_set_tuner (bool active_flag)
 
 void	Context::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
-	const int64_t  time_beg    = MAIN_get_time ();
-	const int64_t  dur_tot     =  time_beg - _time_beg;
-	const int64_t  dur_act     = _time_end - _time_beg;
-	const float    usage_frame = float (dur_act) / float (dur_tot);
-	float          usage_max   = _usage_max.load ();
-	float          usage_min   = _usage_min.load ();
-	usage_max = std::max (usage_max, usage_frame);
-	usage_min = (usage_min < 0) ? usage_frame : std::min (usage_min, usage_frame);
-	_usage_max.store (usage_max);
-	_usage_min.store (usage_min);
-	_time_beg = time_beg;
-
-	// Audio graph
 	_model.process_block (dst_arr, src_arr, nbr_spl);
-
-	_time_end = MAIN_get_time ();
 }
 
 void	Context::do_notify_dropout ()
 {
-	_dropout_flag.exchange (true);
+	mfx::MeterResultSet &   meters = _model.use_meters ();
+	meters._dsp_overload_flag.exchange (true);
 }
 
 void	Context::do_request_exit ()
@@ -1054,15 +1033,17 @@ static int MAIN_main_loop (Context &ctx)
 		const mfx::ModelObserverInterface::SlotInfoList & slot_info_list =
 			ctx._view.use_slot_info_list ();
 
+		mfx::MeterResultSet &   meters = ctx._model.use_meters ();
+
 		if (! tuner_flag)
 		{
 			const int      nbr_led           = 3;
 			float          lum_arr [nbr_led] = { 0, 0, 0 };
-			if (ctx._model.check_signal_clipping ())
+			if (meters.check_signal_clipping ())
 			{
 				lum_arr [0] = 1;
 			}
-			if (ctx._dropout_flag.exchange (false))
+			if (meters._dsp_overload_flag.exchange (false))
 			{
 				lum_arr [2] = 1;
 			}
@@ -1075,15 +1056,15 @@ static int MAIN_main_loop (Context &ctx)
 		}
 
 #if ! fstb_IS (SYS, LINUX) // Pollutes the logs when run in init.d
-		const float  usage_max  = ctx._usage_max.exchange (-1);
-		const float  usage_min  = ctx._usage_min.exchange (-1);
+		const float  usage_max  = meters._dsp_use._peak;
+		const float  usage_avg  = meters._dsp_use._rms;
 		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
-		if (usage_max >= 0 && usage_min >= 0)
+		if (usage_max >= 0 && usage_avg >= 0)
 		{
 			fstb::snprintf4all (
 				cpu_0, sizeof (cpu_0),
 				"Time usage: %6.2f %% / %6.2f %%",
-				usage_min * 100, usage_max * 100
+				usage_avg * 100, usage_max * 100
 			);
 		}
 

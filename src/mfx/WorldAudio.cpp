@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/DataAlign.h"
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/Cst.h"
+#include "mfx/Dir.h"
 #include "mfx/Msg.h"
 #include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
@@ -59,16 +60,19 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_max_block_size (0)
 ,	_sample_freq (0)
 ,	_ctx_ptr (0)
+,	_lvl_meter ()
+,	_meter_result ()
 ,	_evt_arr ()
 ,	_evt_ptr_arr ()
-,	_clip_flag ()
 ,	_tempo_new (0)
 ,	_tempo_cur (float (Cst::_tempo_ref))
+,	_proc_date_beg (0)
+,	_proc_date_end (0)
+,	_proc_analyser ()
 {
 	_evt_arr.reserve (_max_nbr_evt);
 	_evt_ptr_arr.reserve (_max_nbr_evt);
-
-	_clip_flag.store (false);
+	_proc_analyser.set_release_time_s (1.0);
 }
 
 
@@ -103,7 +107,13 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 		_buf_arr [buf_index] = &_buf_zone [buf_index * block_align];
 	}
 
-	_clip_flag.store (false);
+	_lvl_meter->set_sample_freq (_sample_freq);
+	_proc_analyser.set_sample_freq (_sample_freq / max_block_size);
+
+	_meter_result.reset ();
+	const int64_t  date_cur = _input_device.get_cur_date ();
+	_proc_date_end = date_cur;
+	_proc_date_beg = date_cur;
 }
 
 
@@ -115,10 +125,9 @@ void	WorldAudio::set_context (const ProcessingContext &ctx)
 
 
 
-// This function can be called from any thread.
-bool	WorldAudio::check_signal_clipping ()
+MeterResultSet &	WorldAudio::use_meters ()
 {
-	return _clip_flag.exchange (false);
+	return _meter_result;
 }
 
 
@@ -131,6 +140,19 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	assert (src_arr [0] != 0);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_block_size);
+
+	// Time measurement
+	const int64_t  date_beg = _input_device.get_cur_date ();
+	const int64_t  dur_tot  =       date_beg - _proc_date_beg;
+	const int64_t  dur_proc = _proc_date_end - _proc_date_beg;
+	if (dur_tot > 0)
+	{
+		const float    ratio   = float (dur_proc) / float (dur_tot);
+		_proc_analyser.process_sample (ratio);
+		_meter_result._dsp_use._peak = float (_proc_analyser.get_peak_hold ());
+		_meter_result._dsp_use._rms  = float (_proc_analyser.get_rms ());
+	}
+	_proc_date_beg = date_beg;
 
 	// Collects messages from the command thread
 	collect_msg_cmd (true);
@@ -150,12 +172,15 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 			process_plugin_bundle (pi_ctx, nbr_spl);
 		}
 
-		check_signal_level (nbr_spl);
 		copy_output (dst_arr, nbr_spl);
+
+		check_signal_level (dst_arr, src_arr, nbr_spl);
 	}
 
 	_tempo_cur = _tempo_new;
 	_tempo_new = 0;
+
+	_proc_date_end = _input_device.get_cur_date ();
 }
 
 
@@ -337,7 +362,7 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 	> MixUnalignToAlign;
 
 	const ProcessingContextNode::Side & side =
-		_ctx_ptr->_interface_ctx._side_arr [piapi::PluginInterface::Dir_IN];
+		_ctx_ptr->_interface_ctx._side_arr [Dir_IN];
 
 	if (side._nbr_chn == 2)
 	{
@@ -370,10 +395,58 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 
 
 
-void	WorldAudio::check_signal_level (int nbr_spl)
+void	WorldAudio::check_signal_level (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
+#if 1
+
+	std::array <const float *, 4> data_ptr_arr = {{
+		src_arr [0],
+		src_arr [1],
+		dst_arr [0],
+		dst_arr [1]
+	}};
+
+	_lvl_meter->process_block (&data_ptr_arr [0], nbr_spl);
+
+	const auto     peak  = _lvl_meter->get_peak ();
+	const auto     hold  = _lvl_meter->get_peak_hold ();
+	const auto     rms   = _lvl_meter->get_rms ();
+	_lvl_meter->clear_peak ();
+
+	_meter_result._audio_io [Dir_IN ]._chn_arr [0]._peak = fstb::ToolsSimd::Shift <0>::extract (hold);
+	_meter_result._audio_io [Dir_IN ]._chn_arr [0]._rms  = fstb::ToolsSimd::Shift <0>::extract (rms );
+	_meter_result._audio_io [Dir_IN ]._chn_arr [1]._peak = fstb::ToolsSimd::Shift <1>::extract (hold);
+	_meter_result._audio_io [Dir_IN ]._chn_arr [1]._rms  = fstb::ToolsSimd::Shift <1>::extract (rms );
+	_meter_result._audio_io [Dir_OUT]._chn_arr [0]._peak = fstb::ToolsSimd::Shift <2>::extract (hold);
+	_meter_result._audio_io [Dir_OUT]._chn_arr [0]._rms  = fstb::ToolsSimd::Shift <2>::extract (rms );
+	_meter_result._audio_io [Dir_OUT]._chn_arr [1]._peak = fstb::ToolsSimd::Shift <3>::extract (hold);
+	_meter_result._audio_io [Dir_OUT]._chn_arr [1]._rms  = fstb::ToolsSimd::Shift <3>::extract (rms );
+
+	const float    p_i_0 = fstb::ToolsSimd::Shift <0>::extract (peak);
+	const float    p_i_1 = fstb::ToolsSimd::Shift <1>::extract (peak);
+	const float    p_o_0 = fstb::ToolsSimd::Shift <2>::extract (peak);
+	const float    p_o_1 = fstb::ToolsSimd::Shift <3>::extract (peak);
+
+	const float    p_i   = std::max (p_i_0, p_i_1);
+	if (p_i > Cst::_clip_lvl)
+	{
+		_meter_result._audio_io [Dir_IN ]._clip_flag.exchange (true);
+	}
+
+	float          p_o   = p_o_0;
+	if (_ctx_ptr->_nbr_chn_out > 1)
+	{
+		p_o = std::max (p_o_0, p_o_1);
+	}
+	if (p_o > Cst::_clip_lvl)
+	{
+		_meter_result._audio_io [Dir_OUT]._clip_flag.exchange (true);
+	}
+
+#else
+
 	const ProcessingContextNode::Side & side =
-		_ctx_ptr->_interface_ctx._side_arr [piapi::PluginInterface::Dir_OUT];
+		_ctx_ptr->_interface_ctx._side_arr [Dir_OUT];
 
 	auto           lvl = fstb::ToolsSimd::set_f32_zero ();
 
@@ -395,11 +468,12 @@ void	WorldAudio::check_signal_level (int nbr_spl)
 	v = std::max (v, fstb::ToolsSimd::Shift <2>::extract (lvl));
 	v = std::max (v, fstb::ToolsSimd::Shift <3>::extract (lvl));
 
-	// We subtract a tiny margin to be safe
-	if (v > 0.999f)
+	if (v > Cst::_clip_lvl)
 	{
-		_clip_flag.exchange (true);
+		_meter_result._audio_io [Dir_OUT]._clip_flag.exchange (true);
 	}
+
+#endif
 }
 
 
@@ -412,7 +486,7 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 	> MixAlignToUnalign;
 
 	const ProcessingContextNode::Side & side =
-		_ctx_ptr->_interface_ctx._side_arr [piapi::PluginInterface::Dir_OUT];
+		_ctx_ptr->_interface_ctx._side_arr [Dir_OUT];
 
 	const int      buf_0_index = side._buf_arr [0];
 	const float *  buf_0_ptr   = _buf_arr [buf_0_index];
@@ -436,10 +510,11 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 		else
 		{
 			assert (_ctx_ptr->_nbr_chn_out == 1);
-			MixAlignToUnalign::copy_2_1 (
+			MixAlignToUnalign::copy_2_1_v (
 				dst_arr [0],
 				buf_0_ptr, buf_1_ptr,
-				nbr_spl
+				nbr_spl,
+				0.5f
 			);
 		}
 	}
@@ -600,10 +675,8 @@ void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, c
 	float **       dst_arr = const_cast <float **      > (proc_info._dst_arr);
 	float **       byp_arr = const_cast <float **      > (proc_info._byp_arr);
 
-	const ProcessingContextNode::Side & side_i =
-		node._side_arr [piapi::PluginInterface::Dir_IN ];
-	const ProcessingContextNode::Side & side_o =
-		node._side_arr [piapi::PluginInterface::Dir_OUT];
+	const ProcessingContextNode::Side & side_i = node._side_arr [Dir_IN ];
+	const ProcessingContextNode::Side & side_o = node._side_arr [Dir_OUT];
 
 	// By default, for the mixer plug-in, the bypass channels are filled
 	// with the input buffers from the main plug-in. However we can
@@ -648,7 +721,7 @@ void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, c
 		}
 	}
 
-	for (int dir = 0; dir < piapi::PluginInterface::Dir_NBR_ELT; ++dir)
+	for (int dir = 0; dir < Dir_NBR_ELT; ++dir)
 	{
 		proc_info._nbr_chn_arr [dir] = node._side_arr [dir]._nbr_chn;
 	}

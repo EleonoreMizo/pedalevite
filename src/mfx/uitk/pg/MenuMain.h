@@ -99,7 +99,7 @@ private:
 		Entry_PROG  = 0,
 		Entry_BANKS ,
 		Entry_LAYOUT,
-		Entry_MASTER,
+		Entry_LEVELS,
 		Entry_REBOOT,
 
 		Entry_NBR_ELT
@@ -117,7 +117,7 @@ private:
 	TxtSPtr        _edit_prog_sptr;
 	TxtSPtr        _edit_bank_sptr;
 	TxtSPtr        _edit_layout_sptr;
-	TxtSPtr        _edit_master_sptr;
+	TxtSPtr        _edit_levels_sptr;
 	TxtSPtr        _reboot_sptr;
 
 	Question::QArg _reboot_arg;

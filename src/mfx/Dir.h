@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PageType.h
+        Dir.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_PageType_HEADER_INCLUDED)
-#define mfx_uitk_pg_PageType_HEADER_INCLUDED
+#if ! defined (mfx_Dir_HEADER_INCLUDED)
+#define mfx_Dir_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -31,51 +31,30 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace uitk
+
+
+
+enum Dir
 {
-namespace pg
-{
+
+	Dir_IN = 0,
+	Dir_OUT,
+
+	Dir_NBR_ELT
+
+}; // class Dir
 
 
 
-enum PageType
-{
-	PageType_INVALID = -1,
-
-	PageType_BOOT    = 0,
-	PageType_TUNER,
-	PageType_CUR_PROG,
-	PageType_MENU_MAIN,
-	PageType_EDIT_PROG,
-	PageType_PARAM_LIST,
-	PageType_PARAM_EDIT,
-	PageType_NOT_YET,
-	PageType_QUESTION,
-	PageType_PARAM_CONTROLLERS,
-	PageType_CTRL_EDIT,
-	PageType_MENU_SLOT,
-	PageType_EDIT_TEXT,
-	PageType_SAVE_PROG,
-	PageType_END_MSG,
-	PageType_LEVELS,
-
-	PageType_NBR_ELT
-
-}; // enum PageType
-
-
-
-}  // namespace pg
-}  // namespace uitk
 }  // namespace mfx
 
 
 
-//#include "mfx/uitk/pg/PageType.hpp"
+//#include "mfx/Dir.hpp"
 
 
 
-#endif   // mfx_uitk_pg_PageType_HEADER_INCLUDED
+#endif   // mfx_Dir_HEADER_INCLUDED
 
 
 

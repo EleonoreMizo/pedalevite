@@ -121,6 +121,10 @@ public:
 	               rcp_approx (VectF32 v);
 	static inline VectF32
 	               rcp_approx2 (VectF32 v);
+	static inline VectF32
+	               sqrt (VectF32 v);
+	static inline VectF32
+	               sqrt_approx (VectF32 v);
 
 	static inline VectF32
 	               select (VectF32 cond, VectF32 v_t, VectF32 v_f);
@@ -128,6 +132,10 @@ public:
 	               cmp_gt_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectF32
 	               cmp_lt_f32 (VectF32 lhs, VectF32 rhs);
+	static inline VectF32
+	               and_f32 (VectF32 lhs, VectF32 rhs);
+	static inline VectF32
+	               or_f32 (VectF32 lhs, VectF32 rhs);
 
 	static inline VectF32
 	               interleave_2f32_low (VectF32 p0, VectF32 p1);

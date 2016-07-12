@@ -259,6 +259,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.cpp \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.h \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.hpp \
+        ../../src/mfx/dsp/dyn/MeterRmsPeakHold.cpp \
+        ../../src/mfx/dsp/dyn/MeterRmsPeakHold.h \
+        ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.cpp \
+        ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.h \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \
         ../../src/mfx/dsp/iir/Biquad.hpp \
@@ -468,6 +472,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/EditText.h \
         ../../src/mfx/uitk/pg/EndMsg.cpp \
         ../../src/mfx/uitk/pg/EndMsg.h \
+        ../../src/mfx/uitk/pg/Levels.cpp \
+        ../../src/mfx/uitk/pg/Levels.h \
         ../../src/mfx/uitk/pg/MenuMain.cpp \
         ../../src/mfx/uitk/pg/MenuMain.h \
         ../../src/mfx/uitk/pg/MenuSlot.cpp \
@@ -534,11 +540,15 @@ pedalevite_SOURCES = \
         ../../src/mfx/ControlSource.hpp \
         ../../src/mfx/Cst.cpp \
         ../../src/mfx/Cst.h \
+        ../../src/mfx/Dir.h \
         ../../src/mfx/CtrlUnit.cpp \
         ../../src/mfx/CtrlUnit.h \
         ../../src/mfx/GpioPwm.cpp \
         ../../src/mfx/GpioPwm.h \
         ../../src/mfx/LocEdit.h \
+        ../../src/mfx/MeterResult.h \
+        ../../src/mfx/MeterResultSet.cpp \
+        ../../src/mfx/MeterResultSet.h \
         ../../src/mfx/Model.cpp \
         ../../src/mfx/Model.h \
         ../../src/mfx/ModelObserverDefault.h \

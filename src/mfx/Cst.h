@@ -51,8 +51,11 @@ public:
 	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_plugins = 256;
-	static const int  _nbr_chn_in      =   2;
-	static const int  _nbr_chn_out     =   2;
+	static const int  _nbr_chn_inout   =   2; // Max of _nbr_chn_in and _nbr_chn_out
+	static const int  _nbr_chn_in      = _nbr_chn_inout;
+	static const int  _nbr_chn_out     = _nbr_chn_inout;
+	static const float
+	                  _clip_lvl;
 
 	static const int  _tempo_min       =  60;
 	static const int  _tempo_max       = 240;

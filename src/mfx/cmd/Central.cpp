@@ -161,9 +161,9 @@ void	Central::process_block (float * const * dst_arr, const float * const * src_
 
 
 
-bool	Central::check_signal_clipping ()
+MeterResultSet &	Central::use_meters ()
 {
-	return _audio.check_signal_clipping ();
+	return _audio.use_meters ();
 }
 
 
@@ -683,7 +683,7 @@ void	Central::create_routing ()
 
 	// Input
 	ProcessingContextNode::Side & audio_i =
-		ctx._interface_ctx._side_arr [piapi::PluginInterface::Dir_IN ];
+		ctx._interface_ctx._side_arr [Dir_IN ];
 	audio_i._nbr_chn     = Cst::_nbr_chn_in;
 	audio_i._nbr_chn_tot = audio_i._nbr_chn;
 	for (int i = 0; i < audio_i._nbr_chn; ++i)
@@ -717,9 +717,9 @@ void	Central::create_routing ()
 			// Main plug-in
 			pi_ctx._node_arr [PiType_MAIN]._pi_id = pi_id_main;
 			ProcessingContextNode::Side & main_side_i =
-				pi_ctx._node_arr [PiType_MAIN]._side_arr [piapi::PluginInterface::Dir_IN ];
+				pi_ctx._node_arr [PiType_MAIN]._side_arr [Dir_IN ];
 			ProcessingContextNode::Side & main_side_o =
-				pi_ctx._node_arr [PiType_MAIN]._side_arr [piapi::PluginInterface::Dir_OUT];
+				pi_ctx._node_arr [PiType_MAIN]._side_arr [Dir_OUT];
 			int            main_nbr_i = 1;
 			int            main_nbr_o = 1;
 
@@ -762,9 +762,9 @@ void	Central::create_routing ()
 			{
 				pi_ctx._node_arr [PiType_MIX]._pi_id = pi_id_mix;
 				ProcessingContextNode::Side & mix_side_i =
-					pi_ctx._node_arr [PiType_MIX]._side_arr [piapi::PluginInterface::Dir_IN ];
+					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_IN ];
 				ProcessingContextNode::Side & mix_side_o =
-					pi_ctx._node_arr [PiType_MIX]._side_arr [piapi::PluginInterface::Dir_OUT];
+					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_OUT];
 
 				// Bypass output for the main plug-in
 				for (int chn = 0; chn < nbr_chn_out * main_nbr_o; ++chn)
@@ -827,7 +827,7 @@ void	Central::create_routing ()
 
 	// Output
 	ProcessingContextNode::Side & audio_o =
-		ctx._interface_ctx._side_arr [piapi::PluginInterface::Dir_OUT];
+		ctx._interface_ctx._side_arr [Dir_OUT];
 	audio_o._nbr_chn     = Cst::_nbr_chn_out;
 	audio_o._nbr_chn_tot = audio_o._nbr_chn;
 	for (int i = 0; i < audio_o._nbr_chn; ++i)

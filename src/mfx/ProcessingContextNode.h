@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/piapi/PluginInterface.h"
 #include "mfx/Cst.h"
+#include "mfx/Dir.h"
 
 #include <array>
 #include <memory>
@@ -67,7 +68,7 @@ public:
 
 	typedef std::array <int, Cst::_max_nbr_output * piapi::PluginInterface::_max_nbr_chn> BypBufArray;
 
-	typedef std::array <Side, piapi::PluginInterface::Dir_NBR_ELT> SideArray;
+	typedef std::array <Side, Dir_NBR_ELT> SideArray;
 
 	int            _pi_id;
 	SideArray      _side_arr;

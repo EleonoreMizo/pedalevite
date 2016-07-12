@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/piapi/PluginInterface.h"
+#include "mfx/Dir.h"
 #include "mfx/PiType.h"
 
 #include <array>
@@ -78,7 +79,7 @@ public:
 	{
 	public:
 		std::string    _model;
-		std::array <int, piapi::PluginInterface::Dir_NBR_ELT>
+		std::array <int, Dir_NBR_ELT>
 		               _nbr_io_arr;
 		std::array <int, piapi::ParamCateg_NBR_ELT>
 		               _nbr_param_arr;

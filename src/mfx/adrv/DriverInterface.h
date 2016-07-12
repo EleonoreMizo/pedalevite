@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/Dir.h"
+
 #include <array>
 #include <string>
 
@@ -49,14 +51,6 @@ class DriverInterface
 public:
 
 	static const int  _nbr_chn = 2;
-
-	enum Dir
-	{
-		Dir_IN = 0,
-		Dir_OUT,
-
-		Dir_NBR_ELT
-	};
 
 	virtual        ~DriverInterface () = default;
 
