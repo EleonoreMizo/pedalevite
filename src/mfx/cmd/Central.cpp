@@ -178,6 +178,7 @@ void	Central::commit ()
 
 		create_routing ();
 		create_mod_maps ();
+		_new_sptr->_ctx_sptr->_master_vol = _new_sptr->_master_vol;
 
 		std::vector <conc::LockFreeCell <Msg> *>  msg_list (1);
 		msg_list [0] = _msg_pool.take_cell (true);
@@ -379,6 +380,29 @@ void	Central::set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls)
 	plug._ctrl_map [index] = std::shared_ptr <doc::CtrlLinkSet> (
 		new doc::CtrlLinkSet (cls)
 	);
+}
+
+
+
+void	Central::set_chn_mode (ChnMode mode)
+{
+	Document &     doc = modify ();
+
+	assert (mode >= 0);
+	assert (mode < ChnMode_NBR_ELT);
+
+	_new_sptr->_chn_mode = mode;
+}
+
+
+
+void	Central::set_master_vol (double vol)
+{
+	Document &     doc = modify ();
+
+	assert (vol > 0);
+
+	_new_sptr->_master_vol = float (vol);
 }
 
 
@@ -675,6 +699,23 @@ void	Central::create_routing ()
 	Document &           doc = *_new_sptr;
 	ProcessingContext &  ctx = *doc._ctx_sptr;
 
+	// Final number of channels
+	int            nbr_chn_final = 1;
+	switch (doc._chn_mode)
+	{
+	case ChnMode_1M_1M:
+		nbr_chn_final = 1;
+		break;
+	case ChnMode_1M_1S:
+		nbr_chn_final = 2;
+		break;
+	default:
+		assert (false);
+		break;
+	}
+	ctx._nbr_chn_out = nbr_chn_final;
+
+	// Buffers
 	BufAlloc       buf_alloc (Cst::BufSpecial_NBR_ELT);
 
 	std::array <int, piapi::PluginInterface::_max_nbr_chn>   cur_buf_arr;
@@ -702,12 +743,15 @@ void	Central::create_routing ()
 		const int      pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
 		if (pi_id_main >= 0)
 		{
-			int            nbr_chn_in  = nbr_chn_cur;
+			int            nbr_chn_in      = nbr_chn_cur;
 			const piapi::PluginDescInterface &   desc_main =
 				*_plugin_pool.use_plugin (pi_id_main)._desc_ptr;
-			const bool     out_st_flag = desc_main.prefer_stereo ();
-			int            nbr_chn_out =
-				(out_st_flag && ! slot._force_mono_flag) ? 2 : nbr_chn_in;
+			const bool     out_st_flag     = desc_main.prefer_stereo ();
+			const bool     final_mono_flag = (nbr_chn_final == 1);
+			int            nbr_chn_out     =
+				  (out_st_flag && ! (slot._force_mono_flag || final_mono_flag))
+				? 2
+				: nbr_chn_in;
 
 			const int      pi_id_mix = slot._component_arr [PiType_MIX]._pi_id;
 

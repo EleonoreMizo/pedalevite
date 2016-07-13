@@ -48,6 +48,8 @@ void	Setup::ser_write (SerWInterface &ser) const
 	ser.begin_list ();
 	ser.write (_name);
 	ser.write (_save_mode);
+	ser.write (_chn_mode);
+	ser.write (_master_vol);
 	_layout.ser_write (ser);
 
 	ser.begin_list ();
@@ -67,6 +69,8 @@ void	Setup::ser_read (SerRInterface &ser)
 	ser.begin_list ();
 	ser.read (_name);
 	ser.read (_save_mode);
+	ser.read (_chn_mode);
+	ser.read (_master_vol);
 	_layout.ser_read (ser);
 
 	int            nbr_elt;

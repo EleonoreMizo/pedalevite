@@ -35,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/PedalboardLayout.h"
 #include "mfx/doc/Setup.h"
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/ChnMode.h"
 #include "mfx/ModelObserverInterface.h"
 
 
@@ -97,6 +98,8 @@ public:
 	void           set_preset_name (std::string name);
 	void           activate_preset (int preset_index);
 	void           store_preset (int preset_index, int bank_index);
+	void           set_chn_mode (ChnMode mode);
+	void           set_master_vol (double vol);
 	void           set_nbr_slots (int nbr_slots);
 	void           insert_slot (int slot_index);
 	void           erase_slot (int slot_index);

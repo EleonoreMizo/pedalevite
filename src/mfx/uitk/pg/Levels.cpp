@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/Font.h"
 #include "mfx/MeterResultSet.h"
 #include "mfx/Model.h"
+#include "mfx/View.h"
 
 #include <algorithm>
 
@@ -59,25 +60,27 @@ Levels::Levels (PageSwitcher &page_switcher)
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_dir_arr ()
+,	_lvl_sptr (    TxtSPtr (   new NText (  Entry_LVL_OUT)))
 ,	_chn_sptr (    TxtSPtr (   new NText (  Entry_CHN)))
 ,	_dsp_txt_sptr (TxtSPtr (   new NText (  Entry_DSP_TXT)))
 ,	_dsp_sptr (    BitmapSPtr (new NBitmap (Entry_DSP)))
 {
-	_dir_arr [Dir_IN ]._lvl_sptr = TxtSPtr (   new NText (  Entry_LVL_IN));
-	_dir_arr [Dir_IN ]._vum_sptr = BitmapSPtr (new NBitmap (Entry_VU_IN));
-	_dir_arr [Dir_OUT]._lvl_sptr = TxtSPtr (   new NText (  Entry_LVL_OUT));
-	_dir_arr [Dir_OUT]._vum_sptr = BitmapSPtr (new NBitmap (Entry_VU_OUT));
+	_dir_arr [Dir_IN ]._lab_sptr = TxtSPtr (   new NText (  Entry_LAB_IN));
+	_dir_arr [Dir_IN ]._vum_sptr = BitmapSPtr (new NBitmap (Entry_VUM_IN));
+	_dir_arr [Dir_OUT]._lab_sptr = TxtSPtr (   new NText (  Entry_LAB_OUT));
+	_dir_arr [Dir_OUT]._vum_sptr = BitmapSPtr (new NBitmap (Entry_VUM_OUT));
 
-	_dir_arr [Dir_IN ]._lvl_sptr->set_text ("Input");
+	_dir_arr [Dir_IN ]._lab_sptr->set_text ("Input");
 	_dir_arr [Dir_IN ]._vum_sptr->set_size (Vec2d (
 		_meter_audio_w,
 		_meter_audio_h + _meter_grad_h
 	));
-	_dir_arr [Dir_OUT]._lvl_sptr->set_text ("Output");
+	_dir_arr [Dir_OUT]._lab_sptr->set_text ("Output");
 	_dir_arr [Dir_OUT]._vum_sptr->set_size (Vec2d (
 		_meter_audio_w,
 		_meter_audio_h + _meter_grad_h
 	));
+	_lvl_sptr->set_justification (1, 0, false);
 	_chn_sptr->set_justification (0, 1, false);
 	_dsp_txt_sptr->set_text ("DSP");
 	_dsp_txt_sptr->set_justification (1, 1, false);
@@ -99,35 +102,49 @@ void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page,
 
 	const int      h_m   = fnt_m.get_char_h ();
 
-	_dir_arr [Dir_IN ]._lvl_sptr->set_font (fnt_m);
-	_dir_arr [Dir_OUT]._lvl_sptr->set_font (fnt_m);
+	_dir_arr [Dir_IN ]._lab_sptr->set_font (fnt_m);
+	_dir_arr [Dir_OUT]._lab_sptr->set_font (fnt_m);
+	_lvl_sptr->set_font (fnt_m);
 	_chn_sptr->set_font (fnt_m);
 	_dsp_txt_sptr->set_font (fnt_m);
 
-	_dir_arr [Dir_IN ]._lvl_sptr->set_coord (Vec2d (0,  0));
+	_dir_arr [Dir_IN ]._lab_sptr->set_coord (Vec2d (0,  0));
 	_dir_arr [Dir_IN ]._vum_sptr->set_coord (Vec2d (0,  0 + h_m));
-	_dir_arr [Dir_OUT]._lvl_sptr->set_coord (Vec2d (0, 28));
+	_dir_arr [Dir_OUT]._lab_sptr->set_coord (Vec2d (0, 28));
 	_dir_arr [Dir_OUT]._vum_sptr->set_coord (Vec2d (0, 28 + h_m));
+	_lvl_sptr->set_coord (Vec2d (_page_size [0], 28));
 	_chn_sptr->set_coord (Vec2d (0, _page_size [1]));
 	_dsp_txt_sptr->set_coord (_page_size - Vec2d (_meter_dsp_w, 0));
 	_dsp_sptr->set_coord (_page_size - Vec2d (_meter_dsp_w, _meter_dsp_h));
 
-	_page_ptr->push_back (_dir_arr [Dir_IN ]._lvl_sptr);
+	_page_ptr->push_back (_dir_arr [Dir_IN ]._lab_sptr);
 	_page_ptr->push_back (_dir_arr [Dir_IN ]._vum_sptr);
-	_page_ptr->push_back (_dir_arr [Dir_OUT]._lvl_sptr);
+	_page_ptr->push_back (_dir_arr [Dir_OUT]._lab_sptr);
 	_page_ptr->push_back (_dir_arr [Dir_OUT]._vum_sptr);
+	_page_ptr->push_back (_lvl_sptr);
 	_page_ptr->push_back (_chn_sptr);
 	_page_ptr->push_back (_dsp_txt_sptr);
 	_page_ptr->push_back (_dsp_sptr);
 
-	PageMgrInterface::NavLocList  nav_list (3);
-	nav_list [0]._node_id = Entry_LVL_IN;
+	PageMgrInterface::NavLocList  nav_list (4);
+	nav_list [0]._node_id = Entry_VUM_IN;
 	nav_list [1]._node_id = Entry_LVL_OUT;
-	nav_list [2]._node_id = Entry_CHN;
+	nav_list [2]._node_id = Entry_VUM_OUT;
+	nav_list [3]._node_id = Entry_CHN;
 	page.set_nav_layout (nav_list);
-	page.jump_to (nav_list [0]._node_id);
+	page.jump_to (Entry_LVL_OUT);
 
 	_page_ptr->set_timer (0, true);
+
+	for (auto & d : _dir_arr)
+	{
+		for (auto & c : d._chn_arr)
+		{
+			c._clip_flag = false;
+			c._lvl_peak  = 0;
+			c._lvl_rms   = 0;
+		}
+	}
 
 	refresh_display ();
 }
@@ -145,16 +162,9 @@ MsgHandlerInterface::EvtProp	Levels::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
-//	const int      node_id = evt.get_target ();
+	const int      node_id = evt.get_target ();
 
-	if (evt.is_cursor ())
-	{
-
-		/*** To do ***/
-
-	}
-
-	else if (evt.is_timer ())
+	if (evt.is_timer ())
 	{
 		refresh_display ();
 		ret_val = EvtProp_CATCH;
@@ -165,9 +175,59 @@ MsgHandlerInterface::EvtProp	Levels::do_handle_evt (const NodeEvt &evt)
 		const Button   but = evt.get_button_ex ();
 		switch (but)
 		{
+		case Button_S:
+			ret_val = EvtProp_CATCH;
+			switch (node_id)
+			{
+			case Entry_CHN:
+				chg_chn_mode (+1);
+				break;
+			case Entry_VUM_IN:
+				for (auto &c : _dir_arr [Dir_IN ]._chn_arr)
+				{
+					c._clip_flag = false;
+				}
+				refresh_display ();
+				break;
+			case Entry_VUM_OUT:
+				for (auto &c : _dir_arr [Dir_OUT]._chn_arr)
+				{
+					c._clip_flag = false;
+				}
+				refresh_display ();
+				break;
+			default:
+				ret_val = EvtProp_PASS;
+				break;
+			}
+			break;
 		case Button_E:
 			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
 			ret_val = EvtProp_CATCH;
+			break;
+		case Button_L:
+			if (node_id == Entry_LVL_OUT)
+			{
+				chg_master_vol (-1);
+				ret_val = EvtProp_CATCH;
+			}
+			else if (node_id == Entry_CHN)
+			{
+				chg_chn_mode (-1);
+				ret_val = EvtProp_CATCH;
+			}
+			break;
+		case Button_R:
+			if (node_id == Entry_LVL_OUT)
+			{
+				chg_master_vol (+1);
+				ret_val = EvtProp_CATCH;
+			}
+			else if (node_id == Entry_CHN)
+			{
+				chg_chn_mode (+1);
+				ret_val = EvtProp_CATCH;
+			}
 			break;
 		default:
 			// Nothing
@@ -176,6 +236,20 @@ MsgHandlerInterface::EvtProp	Levels::do_handle_evt (const NodeEvt &evt)
 	}
 
 	return ret_val;
+}
+
+
+
+void	Levels::do_set_chn_mode (ChnMode mode)
+{
+	refresh_display ();
+}
+
+
+
+void	Levels::do_set_master_vol (float vol)
+{
+	refresh_display ();
 }
 
 
@@ -200,13 +274,54 @@ void	Levels::refresh_display ()
 		}
 	}
 
-	const int      nbr_chn_out = 2; /*** To do: check the real number of channels ***/
+	const doc::Setup &   setup = _view_ptr->use_setup ();
+
+	const double   master_vol  = std::max (setup._master_vol, 1e-10); // Just in case the volume is 0.
+	const double   vol_db      =
+		fstb::limit (20 * log10 (master_vol), -99.9, +99.9);
+	char           txt_0 [255+1];
+	fstb::snprintf4all (txt_0, sizeof (txt_0), "%+5.1f dB", vol_db);
+	_lvl_sptr->set_text (txt_0);
+
+	int            nbr_chn_in   = 1;
+	int            nbr_pins_in  = 1;
+	int            nbr_chn_out  = 1;
+	int            nbr_pins_out = 1;
+	switch (setup._chn_mode)
+	{
+	case ChnMode_1M_1M:
+		nbr_chn_out = 1;
+		break;
+	case ChnMode_1M_1S:
+		nbr_chn_out = 2;
+		break;
+	default:
+		assert (false);
+		break;
+	}
+	std::string    txt;
+	txt  = conv_nbr_chn_to_str (nbr_pins_in , nbr_chn_in );
+	txt += "\xE2\x86\x92"; // U+2192 rightwards arrow
+	txt += conv_nbr_chn_to_str (nbr_pins_out, nbr_chn_out);
+	_chn_sptr->set_text (txt);
+
 	draw_audio_meter (_dir_arr [Dir_IN ], 2);
 	draw_audio_meter (_dir_arr [Dir_OUT], nbr_chn_out);
 	draw_dsp_meter (meters._dsp_use);
-	_chn_sptr->set_text (               // U+26AC and U+26AD
-		(nbr_chn_out == 1) ? "\xE2\x9A\xAC" : "\xE2\x9A\xAD"
-	);
+}
+
+
+
+std::string	Levels::conv_nbr_chn_to_str (int nbr_pins, int nbr_chn)
+{
+	std::string    str;
+
+	for (int p = 0; p < nbr_pins; ++p)
+	{
+		str += (nbr_chn == 1) ? "\xE2\x9A\xAC" : "\xE2\x9A\xAD";
+	}
+
+	return str;
 }
 
 
@@ -295,6 +410,10 @@ void	Levels::draw_dsp_meter (const MeterResult &meter)
 	for (int y = 1; y < size [1] - 1; ++y)
 	{
 		const int      ofs = y * size [0];
+		for (int x = 1 + (y & 1); x < pl; x += 2)
+		{
+			buf_ptr [ofs + x] = 255;
+		}
 		for (int x = pl; x < pr; ++x)
 		{
 			buf_ptr [ofs + x] = 255;
@@ -323,6 +442,29 @@ float	Levels::conv_level_to_pix (float lvl) const
 	x = fstb::limit (x, 0.f, float (_clip_audio_x - 1));
 
 	return x;
+}
+
+
+
+void	Levels::chg_chn_mode (int dir)
+{
+	const doc::Setup &   setup = _view_ptr->use_setup ();
+	ChnMode        chn_mode = setup._chn_mode;
+	chn_mode = static_cast <ChnMode> (
+		(int (chn_mode) + ChnMode_NBR_ELT + dir) % ChnMode_NBR_ELT
+	);
+	_model_ptr->set_chn_mode (chn_mode);
+}
+
+
+
+void	Levels::chg_master_vol (int dir)
+{
+	const doc::Setup &   setup = _view_ptr->use_setup ();
+	double               vol = setup._master_vol;
+	vol *= pow (10, dir / 20.0);
+	vol = fstb::limit (vol, pow (10, -99 / 20.0), pow (10, +99 / 20.0));
+	_model_ptr->set_master_vol (vol);
 }
 
 

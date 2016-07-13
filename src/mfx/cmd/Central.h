@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/Slot.h"
 #include "mfx/piapi/PluginState.h"
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/ChnMode.h"
 #include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
@@ -99,6 +100,8 @@ public:
 	void           set_pi_state (int pi_id, const std::vector <float> &param_list);
 	void           clear_mod (int pi_id);
 	void           set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls);
+	void           set_chn_mode (ChnMode mode);
+	void           set_master_vol (double vol);
 
 	// Immediate operations
 	void           set_param (int pi_id, int index, float val);
@@ -149,6 +152,8 @@ private:
 		               _map_model_id;
 		std::map <int, PluginLoc>
 		               _map_id_loc;
+		ChnMode        _chn_mode   = ChnMode_1M_1M;
+		float          _master_vol = 1;
 	};
 
 	typedef std::shared_ptr <Document> DocumentSPtr;

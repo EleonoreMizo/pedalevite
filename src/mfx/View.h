@@ -85,6 +85,8 @@ protected:
 	virtual void   do_set_preset_name (std::string name);
 	virtual void   do_activate_preset (int index);
 	virtual void   do_store_preset (int preset_index, int bank_index);
+	virtual void   do_set_chn_mode (ChnMode mode);
+	virtual void   do_set_master_vol (float vol);
 	virtual void   do_set_tuner (bool active_flag);
 	virtual void   do_set_tuner_freq (float freq);
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list);

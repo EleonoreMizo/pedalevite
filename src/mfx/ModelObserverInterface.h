@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/piapi/PluginInterface.h"
+#include "mfx/ChnMode.h"
 #include "mfx/Dir.h"
 #include "mfx/PiType.h"
 
@@ -97,6 +98,8 @@ public:
 	void           set_preset_name (std::string name);
 	void           activate_preset (int index);
 	void           store_preset (int preset_index, int bank_index);
+	void           set_chn_mode (ChnMode mode);
+	void           set_master_vol (float vol);
 	void           set_tuner (bool active_flag);
 	void           set_tuner_freq (float freq);
 	void           set_slot_info_for_current_preset (const SlotInfoList &info_list);
@@ -125,6 +128,8 @@ protected:
 	virtual void   do_set_preset_name (std::string name) = 0;
 	virtual void   do_activate_preset (int index) = 0;
 	virtual void   do_store_preset (int preset_index, int bank_index) = 0;
+	virtual void   do_set_chn_mode (ChnMode mode) = 0;
+	virtual void   do_set_master_vol (float vol) = 0;
 	virtual void   do_set_tuner (bool active_flag) = 0;
 	virtual void   do_set_tuner_freq (float freq) = 0;
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;

@@ -501,10 +501,11 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 		const float *  buf_1_ptr   = _buf_arr [buf_1_index];
 		if (_ctx_ptr->_nbr_chn_out == 2)
 		{
-			MixAlignToUnalign::copy_2_2 (
+			MixAlignToUnalign::copy_2_2_v (
 				dst_arr [0], dst_arr [1],
 				buf_0_ptr, buf_1_ptr,
-				nbr_spl
+				nbr_spl,
+				_ctx_ptr->_master_vol
 			);
 		}
 		else
@@ -514,7 +515,7 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 				dst_arr [0],
 				buf_0_ptr, buf_1_ptr,
 				nbr_spl,
-				0.5f
+				_ctx_ptr->_master_vol * 0.5f
 			);
 		}
 	}
@@ -522,15 +523,21 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 	{
 		if (_ctx_ptr->_nbr_chn_out == 2)
 		{
-			MixAlignToUnalign::copy_1_2 (
+			MixAlignToUnalign::copy_1_2_v (
 				dst_arr [0], dst_arr [1],
 				buf_0_ptr,
-				nbr_spl
+				nbr_spl,
+				_ctx_ptr->_master_vol
 			);
 		}
 		else if (_ctx_ptr->_nbr_chn_out == 1)
 		{
-			MixAlignToUnalign::copy_1_1 (dst_arr [0], buf_0_ptr, nbr_spl);
+			MixAlignToUnalign::copy_1_1_v (
+				dst_arr [0],
+				buf_0_ptr,
+				nbr_spl,
+				_ctx_ptr->_master_vol
+			);
 		}
 		else
 		{
@@ -540,7 +547,12 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 				assert (buf_index >= 0);
 				assert (buf_index < int (_buf_arr.size ()));
 				const float *  buf_ptr   = _buf_arr [buf_index];
-				MixAlignToUnalign::copy_1_1 (dst_arr [chn], buf_ptr, nbr_spl);
+				MixAlignToUnalign::copy_1_1_v (
+					dst_arr [chn],
+					buf_ptr,
+					nbr_spl,
+					_ctx_ptr->_master_vol
+				);
 			}
 		}
 	}

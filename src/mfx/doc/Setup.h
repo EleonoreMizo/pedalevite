@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/doc/Bank.h"
 #include "mfx/doc/PedalboardLayout.h"
+#include "mfx/ChnMode.h"
 #include "mfx/Cst.h"
 
 #include <array>
@@ -74,10 +75,12 @@ public:
 	void           ser_read (SerRInterface &ser);
 
 	std::string    _name;
-	SaveMode       _save_mode = SaveMode_PARTIAL;
+	SaveMode       _save_mode  = SaveMode_PARTIAL;
 	PedalboardLayout
 	               _layout;
 	BankArray      _bank_arr;
+	ChnMode        _chn_mode   = ChnMode_1M_1M;
+	double         _master_vol = 1;     // Linear, > 0
 
 
 

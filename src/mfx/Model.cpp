@@ -321,6 +321,39 @@ void	Model::store_preset (int preset_index, int bank_index)
 
 
 
+void	Model::set_chn_mode (ChnMode mode)
+{
+	assert (mode >= 0);
+	assert (mode < ChnMode_NBR_ELT);
+
+	_setup._chn_mode = mode;
+	_central.set_chn_mode (mode);
+	_central.commit ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_chn_mode (mode);
+	}
+}
+
+
+
+void	Model::set_master_vol (double vol)
+{
+	assert (vol > 0);
+
+	_setup._master_vol = vol;
+	_central.set_master_vol (vol);
+	_central.commit ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_master_vol (float (vol));
+	}
+}
+
+
+
 void	Model::set_nbr_slots (int nbr_slots)
 {
 	assert (nbr_slots >= 0);

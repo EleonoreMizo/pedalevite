@@ -81,8 +81,8 @@ protected:
 	               do_handle_evt (const NodeEvt &evt);
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-
-	/*** To do ***/
+	virtual void   do_set_chn_mode (ChnMode mode);
+	virtual void   do_set_master_vol (float vol);
 
 
 
@@ -92,10 +92,11 @@ private:
 
 	enum Entry
 	{
-		Entry_LVL_IN = 1000,
-		Entry_VU_IN,
+		Entry_LAB_IN = 1000,
+		Entry_VUM_IN,
+		Entry_LAB_OUT,
 		Entry_LVL_OUT,
-		Entry_VU_OUT,
+		Entry_VUM_OUT,
 		Entry_CHN,
 		Entry_DSP_TXT,
 		Entry_DSP
@@ -114,7 +115,7 @@ private:
 			float          _lvl_peak  = 0;
 			bool           _clip_flag = false;
 		};
-		TxtSPtr        _lvl_sptr;
+		TxtSPtr        _lab_sptr;
 		BitmapSPtr     _vum_sptr;
 		std::array <ChnInfo, Cst::_nbr_chn_inout>
 		               _chn_arr;
@@ -124,6 +125,11 @@ private:
 	void           draw_audio_meter (const DirInfo &info, int nbr_chn);
 	void           draw_dsp_meter (const MeterResult &meter);
 	float          conv_level_to_pix (float lvl) const;
+	void           chg_chn_mode (int dir);
+	void           chg_master_vol (int dir);
+
+	static std::string
+	                conv_nbr_chn_to_str (int nbr_pins, int nbr_chn);
 
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
@@ -134,6 +140,7 @@ private:
 
 	std::array <DirInfo, Dir_NBR_ELT>
 	               _dir_arr;
+	TxtSPtr        _lvl_sptr;
 	TxtSPtr        _chn_sptr;
 	TxtSPtr        _dsp_txt_sptr;
 	BitmapSPtr     _dsp_sptr;

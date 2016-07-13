@@ -270,6 +270,22 @@ void	View::do_store_preset (int preset_index, int bank_index)
 
 
 
+void	View::do_set_chn_mode (ChnMode mode)
+{
+	_setup._chn_mode = mode;
+	mfx_View_PROPAGATE (set_chn_mode (mode));
+}
+
+
+
+void	View::do_set_master_vol (float vol)
+{
+	_setup._master_vol = vol;
+	mfx_View_PROPAGATE (set_master_vol (vol));
+}
+
+
+
 void	View::do_set_tuner (bool active_flag)
 {
 	_tuner_flag = active_flag;

@@ -1467,6 +1467,9 @@
     <ClInclude Include="mfx\MeterResultSet.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\ChnMode.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">

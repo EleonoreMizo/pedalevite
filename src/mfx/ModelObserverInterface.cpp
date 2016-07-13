@@ -132,6 +132,25 @@ void	ModelObserverInterface::store_preset (int preset_index, int bank_index)
 
 
 
+void	ModelObserverInterface::set_chn_mode (ChnMode mode)
+{
+	assert (mode >= 0);
+	assert (mode < ChnMode_NBR_ELT);
+
+	do_set_chn_mode (mode);
+}
+
+
+
+void	ModelObserverInterface::set_master_vol (float vol)
+{
+	assert (vol > 0);
+
+	do_set_master_vol (vol);
+}
+
+
+
 void	ModelObserverInterface::set_tuner (bool active_flag)
 {
 	do_set_tuner (active_flag);

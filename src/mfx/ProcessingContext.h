@@ -77,6 +77,7 @@ public:
 	MapSourceParam _map_src_param;
 	MapSourceUnit  _map_src_unit;
 
+	float          _master_vol  = 1;
 	int            _nbr_chn_out = 1;
 
 

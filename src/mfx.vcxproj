@@ -268,6 +268,7 @@
     <ClInclude Include="mfx\adrv\DAsio.h" />
     <ClInclude Include="mfx\adrv\DriverInterface.h" />
     <ClInclude Include="mfx\adrv\DJack.h" />
+    <ClInclude Include="mfx\ChnMode.h" />
     <ClInclude Include="mfx\CmdLine.h" />
     <ClInclude Include="mfx\cmd\Central.h" />
     <ClInclude Include="mfx\cmd\BufAlloc.h" />
