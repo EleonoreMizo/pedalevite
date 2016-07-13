@@ -126,6 +126,7 @@ FlanchoDesc::FlanchoDesc ()
 		0,
 		"%+6.1f"
 	);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
 	_desc_set.add_glob (Param_WF_SHAPE, lin_ptr);
 
 	// Number of voices
