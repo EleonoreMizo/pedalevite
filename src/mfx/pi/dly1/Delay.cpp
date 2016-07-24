@@ -89,7 +89,7 @@ Delay::Delay ()
 	_state_set.set_val_nat (desc_set, Param_R_FDBK  , 0.5);
 	_state_set.set_val_nat (desc_set, Param_R_FILTER, 0);
 	_state_set.set_val_nat (desc_set, Param_X_FDBK  , 0);
-	
+
 	_state_set.add_observer (Param_LVL_IN  , _param_change_vol_flag);
 	_state_set.add_observer (Param_LVL_OUT , _param_change_vol_flag);
 	_state_set.add_observer (Param_L_TIME  , _param_change_time_flag);
@@ -100,12 +100,12 @@ Delay::Delay ()
 	_state_set.add_observer (Param_R_FDBK  , _param_change_vol_flag);
 	_state_set.add_observer (Param_R_FILTER, _param_change_filter_flag);
 	_state_set.add_observer (Param_X_FDBK  , _param_change_vol_flag);
-	
+
 	_param_change_filter_flag.add_observer (_param_change_flag);
 	_param_change_vol_flag   .add_observer (_param_change_flag);
 	_param_change_time_flag  .add_observer (_param_change_flag);
 	_param_change_link_flag  .add_observer (_param_change_flag);
-	
+
 	for (auto &gf : _gain_fdbk_arr)
 	{
 		gf.set_inertia_time (0.00125);
@@ -218,7 +218,10 @@ void	Delay::do_process_block (ProcInfo &proc)
 		// Parameter update
 		if (_param_change_flag (true))
 		{
-			work_len = std::min (work_len, _update_resol);
+			// We need this intermediate varaible because for some reason GCC
+			// fails to link when _update_resol is directly used in std::min.
+			const int      max_len  = _update_resol;
+			work_len = std::min (work_len, max_len);
 
 			_state_set.process_block (work_len);
 			update_param ();
@@ -401,12 +404,13 @@ void	Delay::process_block_part (float * const out_ptr_arr [], const float * cons
 
 	do
 	{
-		int            work_len = std::min (pos_end - pos_beg, _tmp_zone_len);
+		const int      max_len  = _tmp_zone_len;
+		int            work_len = std::min (pos_end - pos_beg, max_len);
 
 		for (int chn_cnt = 0; chn_cnt < _nbr_chn_out; ++chn_cnt)
 		{
-			const int      max_len  = _chn_arr [chn_cnt]->get_max_proc_len ();
-			work_len = std::min (work_len, max_len);
+			const int      max_len_chn  = _chn_arr [chn_cnt]->get_max_proc_len ();
+			work_len = std::min (work_len, max_len_chn);
 		}
 
 		// Special case for stereo
