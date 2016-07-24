@@ -48,7 +48,7 @@ namespace dly
 
 
 // Mandatory call
-void	DelayLineReader::set_tmp_buf (float *buf_ptr, long len)
+void	DelayLineReader::set_tmp_buf (float *buf_ptr, int len)
 {
 	assert (buf_ptr != 0);
 	assert (len > 0);
@@ -68,7 +68,7 @@ float *	DelayLineReader::get_tmp_buf_ptr () const
 
 
 
-long	DelayLineReader::get_tmp_buf_len () const
+int	DelayLineReader::get_tmp_buf_len () const
 {
 	assert (_tmp_buf_ptr != 0);
 
@@ -99,7 +99,7 @@ void	DelayLineReader::set_resampling_range (double rate_inf, double rate_sup)
 
 
 // Set shape_ptr to 0 to remove the shape and use the default (linear).
-void	DelayLineReader::set_crossfade (long nbr_spl, const float shape_ptr [])
+void	DelayLineReader::set_crossfade (int nbr_spl, const float shape_ptr [])
 {
 	assert (nbr_spl > 0);
 
@@ -119,7 +119,7 @@ bool	DelayLineReader::is_ready () const
 
 // transition_time is a time in samples, related to output. Therefore it is
 // related to oversampled data, if oversampling has been set.
-void	DelayLineReader::set_delay_time (double delay_time, long transition_time)
+void	DelayLineReader::set_delay_time (double delay_time, int transition_time)
 {
 	assert (is_ready ());
 	assert (delay_time >= _delay_line_ptr->get_min_delay_time ());
@@ -146,20 +146,20 @@ void	DelayLineReader::set_delay_time (double delay_time, long transition_time)
 // src_pos refers to the position within the virtual block bounded by two
 // consecutive calls to DelayLine::push_data().
 // Read data is oversampled, if delay line has been oversampled.
-void	DelayLineReader::read_data (float dest_ptr [], long nbr_spl, long src_pos)
+void	DelayLineReader::read_data (float dest_ptr [], int nbr_spl, int src_pos)
 {
 	assert (is_ready ());
 	assert (dest_ptr != 0);
 	assert (nbr_spl > 0);
 	assert (src_pos >= 0);
 
-	long           dest_pos = 0;
+	int            dest_pos = 0;
 	do
 	{
-		long           work_len = nbr_spl - dest_pos;
+		int            work_len = nbr_spl - dest_pos;
 		if (is_time_ramping ())
 		{
-			const long     rem_len = _trans_dur - _trans_pos;
+			const int      rem_len = _trans_dur - _trans_pos;
 			work_len = std::min (work_len, rem_len);
 
 				const double	lerp_pos_end =
@@ -222,7 +222,7 @@ void	DelayLineReader::read_data (float dest_ptr [], long nbr_spl, long src_pos)
 		if (is_time_change_programmed ())
 		{
 			_trans_prog -= work_len;
-			_trans_prog  = std::max (_trans_prog, 0L);
+			_trans_prog  = std::max (_trans_prog, 0);
 
 			if (! is_time_ramping ())
 			{
@@ -277,7 +277,7 @@ void	DelayLineReader::clear_buffers ()
 
 
 
-void	DelayLineReader::setup_immediate_transition (double delay_time, long transition_time)
+void	DelayLineReader::setup_immediate_transition (double delay_time, int transition_time)
 {
 	assert (transition_time >= 0);
 
@@ -288,7 +288,7 @@ void	DelayLineReader::setup_immediate_transition (double delay_time, long transi
 	_trans_prog = -1;	// Clears any pending transition
 
 	const int      ovrspl_l2 = _delay_line_ptr->get_ovrspl_l2 ();
-	const long     ttime_normal_rate = transition_time >> ovrspl_l2;
+	const int      ttime_normal_rate = transition_time >> ovrspl_l2;
 	if (ttime_normal_rate == 0)
 	{
 		_xfade_flag = true;
@@ -310,7 +310,7 @@ void	DelayLineReader::setup_immediate_transition (double delay_time, long transi
 
 
 
-void	DelayLineReader::apply_crossfade (float dest_ptr [], long nbr_spl, double lerp_pos_end, long src_pos)
+void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double lerp_pos_end, int src_pos)
 {
 	assert (_xfade_flag);
 	assert (_trans_pos + nbr_spl <= _trans_dur);

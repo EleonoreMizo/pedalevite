@@ -127,6 +127,9 @@
     <Filter Include="mfx\pi\flancho">
       <UniqueIdentifier>{912f80df-ae98-4425-ae5e-aaa21ab5cd03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\dly1">
+      <UniqueIdentifier>{5cb7326f-a8f6-4737-92d4-76b03d851e6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -1470,6 +1473,27 @@
     <ClInclude Include="mfx\ChnMode.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\dly1\Param.h">
+      <Filter>mfx\pi\dly1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dly1\Delay.h">
+      <Filter>mfx\pi\dly1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dly1\DelayDesc.h">
+      <Filter>mfx\pi\dly1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\MapPseudoLog.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\MapPseudoLog.hpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dly1\Cst.h">
+      <Filter>mfx\pi\dly1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\dly1\DelayChn.h">
+      <Filter>mfx\pi\dly1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -2018,6 +2042,15 @@
     </ClCompile>
     <ClCompile Include="mfx\MeterResultSet.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\dly1\Delay.cpp">
+      <Filter>mfx\pi\dly1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\dly1\DelayDesc.cpp">
+      <Filter>mfx\pi\dly1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\dly1\DelayChn.cpp">
+      <Filter>mfx\pi\dly1</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

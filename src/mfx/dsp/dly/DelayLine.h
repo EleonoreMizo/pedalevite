@@ -76,9 +76,9 @@ public:
 	// Real-time functions
 	double         get_min_delay_time () const;
 	double         get_max_delay_time () const;
-	long           estimate_max_one_shot_proc_w_feedback (double min_delay_time) const;
-	void           read_line (float dest_ptr [], long nbr_spl, double delay_beg, double delay_end, long pos_in_block);
-	void           push_data (const float src_ptr [], long nbr_spl);
+	int            estimate_max_one_shot_proc_w_feedback (double min_delay_time) const;
+	void           read_line (float dest_ptr [], int nbr_spl, double delay_beg, double delay_end, int pos_in_block);
+	void           push_data (const float src_ptr [], int nbr_spl);
 
 
 
@@ -98,13 +98,13 @@ private:
 
 	rspl::InterpolatorInterface *          // 0: interpolator not set.
 	               _interp_ptr   = 0;
-	long           _imp_len      = 1;      // Impulse length, samples. > 0
+	int            _imp_len      = 1;      // Impulse length, samples. > 0
 	fstb::FixedPoint                       // Group delay, samples. [0 ; _imp_len - 1]
 	               _group_dly    = fstb::FixedPoint (0);
 
 	DelayLineData <float>
 	               _line_data;
-	long           _write_pos    = 0;
+	int            _write_pos    = 0;
 	int            _ovrspl_l2    = 0; 		// Base-2 logarithm of the oversampling. >= 0.
 	double         _sample_freq  = 44100;  // Output (possibly oversampled) sample frequency, Hz, > 0.
 

@@ -610,6 +610,31 @@ double	sinc (double x)
 
 
 
+double  pseudo_exp (double x, double c)
+{
+	assert (x >= 0);
+	assert (c > 0);
+
+	const double   num = exp (c * x) - 1;
+	const double   den = exp (c    ) - 1;
+
+	return (num / den);
+}
+
+
+
+double  pseudo_log (double y, double c)
+{
+	assert (y >= 0);
+	assert (c > 0);
+
+	const double   num = log (y * (exp (c) - 1) + 1);
+
+	return (num / c);
+}
+
+
+
 template <class T, int S, bool L>
 class fnc_ShiftGeneric
 {

@@ -394,6 +394,11 @@
     <ClInclude Include="mfx\Overdrive.h" />
     <ClInclude Include="mfx\ParamCoord.h" />
     <ClInclude Include="mfx\ParamCoord.hpp" />
+    <ClInclude Include="mfx\pi\dly1\Cst.h" />
+    <ClInclude Include="mfx\pi\dly1\Delay.h" />
+    <ClInclude Include="mfx\pi\dly1\DelayChn.h" />
+    <ClInclude Include="mfx\pi\dly1\DelayDesc.h" />
+    <ClInclude Include="mfx\pi\dly1\Param.h" />
     <ClInclude Include="mfx\pi\dtone1\DistTone.h" />
     <ClInclude Include="mfx\pi\dtone1\DistToneDesc.h" />
     <ClInclude Include="mfx\pi\dtone1\Param.h" />
@@ -410,6 +415,8 @@
     <ClInclude Include="mfx\pi\ParamMapFdbk.hpp" />
     <ClInclude Include="mfx\pi\ParamMapFdbkBipolar.h" />
     <ClInclude Include="mfx\pi\ParamMapFdbkBipolar.hpp" />
+    <ClInclude Include="mfx\pi\param\MapPseudoLog.h" />
+    <ClInclude Include="mfx\pi\param\MapPseudoLog.hpp" />
     <ClInclude Include="mfx\ToolsParam.h" />
     <ClInclude Include="mfx\piapi\Event.h" />
     <ClInclude Include="mfx\piapi\EventNoteOff.h" />
@@ -649,6 +656,9 @@
     <ClCompile Include="mfx\Model.cpp" />
     <ClCompile Include="mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="mfx\Overdrive.cpp" />
+    <ClCompile Include="mfx\pi\dly1\Delay.cpp" />
+    <ClCompile Include="mfx\pi\dly1\DelayChn.cpp" />
+    <ClCompile Include="mfx\pi\dly1\DelayDesc.cpp" />
     <ClCompile Include="mfx\pi\dtone1\DistTone.cpp" />
     <ClCompile Include="mfx\pi\dtone1\DistToneDesc.cpp" />
     <ClCompile Include="mfx\pi\flancho\Flancho.cpp" />

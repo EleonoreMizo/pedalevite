@@ -900,6 +900,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	_model.set_bank (0, bank);
 	_model.select_bank (0);
 	_model.activate_preset (3);
+//	_model.set_chn_mode (mfx::ChnMode_1M_1S);
 
 	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG         , _page_cur_prog         );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER            , _page_tuner            );

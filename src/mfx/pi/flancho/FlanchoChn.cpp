@@ -293,7 +293,7 @@ void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], long nb
 		float *			render_ptr = _tmp_buf_arr [TmpBufType_RENDER]._ptr;
 
 		// We scan the voices in reverse order because:
-		// 1. We want to process feedback last, when already has been read on
+		// 1. We want to process feedback last, when it already has been read on
 		// the delay line.
 		// 2. We want to generate the feedback from the first voice, to ensure
 		// signal continuity when number of voices varies.

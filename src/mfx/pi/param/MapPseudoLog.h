@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ParamMapFdbk.h
+        MapPseudoLog.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,19 +15,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (mfx_pi_ParamMapFdbk_HEADER_INCLUDED)
-#define	mfx_pi_ParamMapFdbk_HEADER_INCLUDED
 #pragma once
+#if ! defined (mfx_pi_param_MapPseudoLog_HEADER_INCLUDED)
+#define mfx_pi_param_MapPseudoLog_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
-	#pragma warning (4 : 4250) // "Inherits via dominance."
+	#pragma warning (4 : 4250)
 #endif
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#include	"mfx/dsp/shape/MapSaturate.h"
 
 
 
@@ -35,30 +33,24 @@ namespace mfx
 {
 namespace pi
 {
+namespace param
+{
 
 
 
-class ParamMapFdbk
+class MapPseudoLog
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               ParamMapFdbk ()                          = default;
-	               ParamMapFdbk (const ParamMapFdbk &other) = default;
-	virtual        ~ParamMapFdbk ()                         = default;
-
-	ParamMapFdbk & operator = (const ParamMapFdbk &other)   = default;
+	               MapPseudoLog ()  = default;
+	virtual        ~MapPseudoLog () = default;
 
 	inline void    config (double val_min, double val_max);
 	inline double  conv_norm_to_nat (double norm) const;
 	inline double  conv_nat_to_norm (double nat) const;
-
-	static inline double 
-	               get_nat_min ();
-	static inline double 
-	               get_nat_max ();
 
 
 
@@ -72,12 +64,9 @@ protected:
 
 private:
 
-	typedef	dsp::shape::MapSaturate <
-		double,
-		std::ratio <  1,    2>,
-		std::ratio <  1,    1>,
-		std::ratio <995, 1000>
-	>	Mapper;
+	double         _a  = 1;    // nat = fnc (norm) * _a
+	double         _ai = 1;    // 1 / _a
+	double         _c  = 8;
 
 
 
@@ -85,23 +74,26 @@ private:
 
 private:
 
-	bool           operator == (const ParamMapFdbk &other) const = delete;
-	bool           operator != (const ParamMapFdbk &other) const = delete;
+	               MapPseudoLog (const MapPseudoLog &other)      = delete;
+	MapPseudoLog & operator = (const MapPseudoLog &other)        = delete;
+	bool           operator == (const MapPseudoLog &other) const = delete;
+	bool           operator != (const MapPseudoLog &other) const = delete;
 
-};	// class ParamMapFdbk
-
-
-
-}	// namespace pi
-}	// namespace mfx
+}; // class MapPseudoLog
 
 
 
-#include	"mfx/pi/ParamMapFdbk.hpp"
+}  // namespace param
+}  // namespace pi
+}  // namespace mfx
 
 
 
-#endif	// mfx_pi_ParamMapFdbk_HEADER_INCLUDED
+#include "mfx/pi/param/MapPseudoLog.hpp"
+
+
+
+#endif   // mfx_pi_param_MapPseudoLog_HEADER_INCLUDED
 
 
 

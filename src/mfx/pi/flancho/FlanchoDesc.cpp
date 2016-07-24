@@ -139,6 +139,16 @@ FlanchoDesc::FlanchoDesc ()
 	);
 	_desc_set.add_glob (Param_NBR_VOICES, int_ptr);
 
+	// Dry input
+	enu_ptr = new param::TplEnum (
+		"Off\nOn",
+		"D\nDry\nDry Input",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_DRY, enu_ptr);
+
 	// Phase set
 	lin_ptr = new param::TplLin (
 		0, 1,

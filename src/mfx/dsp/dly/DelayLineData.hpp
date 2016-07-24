@@ -59,7 +59,7 @@ DelayLineData <T, AL>::DelayLineData (const AllocatorType &al)
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::set_extra_len (long nbr_spl)
+void	DelayLineData <T, AL>::set_extra_len (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 	_extra_len = nbr_spl;
@@ -69,7 +69,7 @@ void	DelayLineData <T, AL>::set_extra_len (long nbr_spl)
 
 
 template <typename T, typename AL>
-long	DelayLineData <T, AL>::get_extra_len () const
+int	DelayLineData <T, AL>::get_extra_len () const
 {
 	return (_extra_len);
 }
@@ -77,7 +77,7 @@ long	DelayLineData <T, AL>::get_extra_len () const
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::set_unroll_pre (long nbr_spl)
+void	DelayLineData <T, AL>::set_unroll_pre (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 	_unroll_pre = nbr_spl;
@@ -87,7 +87,7 @@ void	DelayLineData <T, AL>::set_unroll_pre (long nbr_spl)
 
 
 template <typename T, typename AL>
-long	DelayLineData <T, AL>::get_unroll_pre () const
+int	DelayLineData <T, AL>::get_unroll_pre () const
 {
 	return (_unroll_pre);
 }
@@ -95,7 +95,7 @@ long	DelayLineData <T, AL>::get_unroll_pre () const
 
 
 template <typename T, typename AL>
-void	DelayLineData <T, AL>::set_unroll_post (long nbr_spl)
+void	DelayLineData <T, AL>::set_unroll_post (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 	_unroll_post = nbr_spl;
@@ -105,7 +105,7 @@ void	DelayLineData <T, AL>::set_unroll_post (long nbr_spl)
 
 
 template <typename T, typename AL>
-long	DelayLineData <T, AL>::get_unroll_post () const
+int	DelayLineData <T, AL>::get_unroll_post () const
 {
 	return (_unroll_post);
 }
@@ -148,11 +148,11 @@ void	DelayLineData <T, AL>::update_buffer_size ()
 {
 	if (_max_time > 0 && _sample_freq > 0)
 	{
-		const long	max_delay_len  = fstb::ceil_int (_max_time * _sample_freq);
-		const long	min_buf_size   = max_delay_len + _extra_len;
-		const long	new_buf_size   = 1L << fstb::get_next_pow_2 (min_buf_size);
-		const long	new_total_size = new_buf_size + _unroll_pre + _unroll_post;
-		if (new_total_size != long (_buf.size ()))
+		const int   max_delay_len  = fstb::ceil_int (_max_time * _sample_freq);
+		const int   min_buf_size   = max_delay_len + _extra_len;
+		const int   new_buf_size   = 1L << fstb::get_next_pow_2 (min_buf_size);
+		const int   new_total_size = new_buf_size + _unroll_pre + _unroll_post;
+		if (new_total_size != int (_buf.size ()))
 		{
 			_buf_ptr = 0;
 			_buf.resize (new_total_size);
@@ -181,7 +181,7 @@ void	DelayLineData <T, AL>::update_unroll_pre ()
 	assert (_buf_ptr != 0);
 	assert (_unroll_pre <= _buf_len);
 
-	for (long pos = -_unroll_pre; pos < 0; ++pos)
+	for (int pos = -_unroll_pre; pos < 0; ++pos)
 	{
 		_buf_ptr [pos] = _buf_ptr [_buf_len + pos];
 	}
@@ -194,7 +194,7 @@ void	DelayLineData <T, AL>::update_unroll_post ()
 {
 	assert (_buf_ptr != 0);
 
-	for (long pos = 0; pos < _unroll_post; ++pos)
+	for (int pos = 0; pos < _unroll_post; ++pos)
 	{
 		_buf_ptr [_buf_len + pos] = _buf_ptr [pos];
 	}
@@ -203,7 +203,7 @@ void	DelayLineData <T, AL>::update_unroll_post ()
 
 
 template <typename T, typename AL>
-long	DelayLineData <T, AL>::get_len () const
+int	DelayLineData <T, AL>::get_len () const
 {
 	assert (_buf_ptr != 0);
 
@@ -213,7 +213,7 @@ long	DelayLineData <T, AL>::get_len () const
 
 
 template <typename T, typename AL>
-long	DelayLineData <T, AL>::get_mask () const
+int	DelayLineData <T, AL>::get_mask () const
 {
 	assert (_buf_ptr != 0);
 

@@ -334,6 +334,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/MapLog.hpp \
         ../../src/mfx/pi/param/MapPiecewiseLinLog.cpp \
         ../../src/mfx/pi/param/MapPiecewiseLinLog.h \
+        ../../src/mfx/pi/param/MapPseudoLog.h \
+        ../../src/mfx/pi/param/MapPseudoLog.hpp \
         ../../src/mfx/pi/param/MapS.h \
         ../../src/mfx/pi/param/MapS.hpp \
         ../../src/mfx/pi/param/MapSq.h \
@@ -356,6 +358,14 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dist1/DistoSimpleDesc.cpp \
         ../../src/mfx/pi/dist1/DistoSimpleDesc.h \
         ../../src/mfx/pi/dist1/Param.h \
+        ../../src/mfx/pi/dly1/Cst.h \
+        ../../src/mfx/pi/dly1/Delay.cpp \
+        ../../src/mfx/pi/dly1/Delay.h \
+        ../../src/mfx/pi/dly1/DelayChn.cpp \
+        ../../src/mfx/pi/dly1/DelayChn.h \
+        ../../src/mfx/pi/dly1/DelayDesc.cpp \
+        ../../src/mfx/pi/dly1/DelayDesc.h \
+        ../../src/mfx/pi/dly1/Param.h \
         ../../src/mfx/pi/dtone1/DistTone.cpp \
         ../../src/mfx/pi/dtone1/DistTone.h \
         ../../src/mfx/pi/dtone1/DistToneDesc.cpp \

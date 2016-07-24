@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ParamMapFdbk.hpp
+        MapPseudoLog.hpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,15 +15,16 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (mfx_pi_ParamMapFdbk_CODEHEADER_INCLUDED)
-#define	mfx_pi_ParamMapFdbk_CODEHEADER_INCLUDED
+#if ! defined (mfx_pi_param_MapPseudoLog_CODEHEADER_INCLUDED)
+#define mfx_pi_param_MapPseudoLog_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <stdexcept>
+#include "fstb/fnc.h"
 
+#include <cassert>
 #include <cmath>
 
 
@@ -32,6 +33,8 @@ namespace mfx
 {
 namespace pi
 {
+namespace param
+{
 
 
 
@@ -39,40 +42,31 @@ namespace pi
 
 
 
-void	ParamMapFdbk::config (double val_min, double val_max)
+void	MapPseudoLog::config (double val_min, double val_max)
 {
-	if (val_min != 0 || val_max != Mapper::get_ys ())
-	{
-		throw std::range_error ("ParamMapFdbk: invalid range");
-	}
+	assert (val_min == 0);
+	assert (val_min < val_max);
+
+	_a  = val_max;
+	_ai = 1.0 / _a;
 }
 
 
 
-double	ParamMapFdbk::conv_norm_to_nat (double norm) const
+double	MapPseudoLog::conv_norm_to_nat (double norm) const
 {
-	return (Mapper::saturate (norm));
+	const double   nat = fstb::pseudo_exp (norm, _c) * _a;
+
+	return (nat);
 }
 
 
 
-double	ParamMapFdbk::conv_nat_to_norm (double nat) const
+double	MapPseudoLog::conv_nat_to_norm (double nat) const
 {
-	return (Mapper::desaturate (nat));
-}
+	const double   nrm = fstb::pseudo_log (nat * _ai, _c);
 
-
-
-double	ParamMapFdbk::get_nat_min ()
-{
-	return 0;
-}
-
-
-
-double	ParamMapFdbk::get_nat_max ()
-{
-	return Mapper::get_ys ();
+	return (nrm);
 }
 
 
@@ -85,12 +79,13 @@ double	ParamMapFdbk::get_nat_max ()
 
 
 
-}	// namespace pi
-}	// namespace mfx
+}  // namespace param
+}  // namespace pi
+}  // namespace mfx
 
 
 
-#endif	// mfx_pi_ParamMapFdbk_CODEHEADER_INCLUDED
+#endif   // mfx_pi_param_MapPseudoLog_CODEHEADER_INCLUDED
 
 
 

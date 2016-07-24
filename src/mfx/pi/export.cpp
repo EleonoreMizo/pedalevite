@@ -28,6 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/FactoryTpl.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
+#include "mfx/pi/dly1/Delay.h"
+#include "mfx/pi/dly1/DelayDesc.h"
 #include "mfx/pi/dtone1/DistTone.h"
 #include "mfx/pi/dtone1/DistToneDesc.h"
 #include "mfx/pi/dwm/DryWet.h"
@@ -70,7 +72,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::wha1::WhaDesc         , mfx::pi::wha1::Wha               >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::dtone1::DistToneDesc  , mfx::pi::dtone1::DistTone        >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::iifix::IIFixDesc      , mfx::pi::iifix::IIFix            >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::flancho::FlanchoDesc  , mfx::pi::flancho::Flancho        >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::flancho::FlanchoDesc  , mfx::pi::flancho::Flancho        >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::dly1::DelayDesc       , mfx::pi::dly1::Delay             >::create ()
 		};
 
 		fact_list = l;

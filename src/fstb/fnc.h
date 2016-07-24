@@ -61,6 +61,8 @@ inline bool    is_eq_rel (T v1, T v2, T tol = T (1e-6));
 inline int     get_prev_pow_2 (uint32_t x);
 inline int     get_next_pow_2 (uint32_t x);
 inline double  sinc (double x);
+inline double  pseudo_exp (double x, double c);
+inline double  pseudo_log (double y, double c);
 template <class T, int S>
 inline T       sshift_l (T x);
 template <class T, int S>

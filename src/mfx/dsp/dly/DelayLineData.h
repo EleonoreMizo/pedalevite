@@ -55,12 +55,12 @@ public:
 	               DelayLineData (const AllocatorType &al = AllocatorType ());
 	virtual        ~DelayLineData () = default;
 
-	void           set_extra_len (long nbr_spl);
-	long           get_extra_len () const;
-	void           set_unroll_pre (long nbr_spl);
-	long           get_unroll_pre () const;
-	void           set_unroll_post (long nbr_spl);
-	long           get_unroll_post () const;
+	void           set_extra_len (int nbr_spl);
+	int            get_extra_len () const;
+	void           set_unroll_pre (int nbr_spl);
+	int            get_unroll_pre () const;
+	void           set_unroll_post (int nbr_spl);
+	int            get_unroll_post () const;
 
 	void           set_sample_freq (double sample_freq);
 	void           set_max_delay_time (double max_time);
@@ -71,8 +71,8 @@ public:
 	void           update_unroll_pre ();
 	void           update_unroll_post ();
 
-	long           get_len () const;
-	long           get_mask () const;
+	int            get_len () const;
+	int            get_mask () const;
 	ValueType *    get_buffer ();
 	const ValueType *
 	               get_buffer () const;
@@ -99,11 +99,11 @@ private:
 
 	double         _sample_freq;     // Hz, > 0
 	double         _max_time;        // s, > 0
-	long           _unroll_pre;      // Samples, >= 0
-	long           _unroll_post;     // Samples, >= 0
-	long           _extra_len;       // Samples, >= 0
-	long           _buf_len;         // Power of 2, >= len + extra
-	long           _buf_mask;        // _buf_len - 1
+	int            _unroll_pre;      // Samples, >= 0
+	int            _unroll_post;     // Samples, >= 0
+	int            _extra_len;       // Samples, >= 0
+	int            _buf_len;         // Power of 2, >= len + extra
+	int            _buf_mask;        // _buf_len - 1
 
 
 

@@ -164,13 +164,13 @@ double	DelayLine::get_max_delay_time () const
 
 
 
-long	DelayLine::estimate_max_one_shot_proc_w_feedback (double min_delay_time) const
+int	DelayLine::estimate_max_one_shot_proc_w_feedback (double min_delay_time) const
 {
 	assert (is_ready ());
 	assert (min_delay_time >= get_min_delay_time ());
 	assert (min_delay_time <= get_max_delay_time ());
 
-	long           nbr_spl =
+	int            nbr_spl =
 		fstb::floor_int (min_delay_time * _sample_freq);
 
 	nbr_spl -= _imp_len;
@@ -187,7 +187,7 @@ long	DelayLine::estimate_max_one_shot_proc_w_feedback (double min_delay_time) co
 // in multiple times between two calls to push_data().
 // Important: read data is oversampled, if oversampling has been set.
 // Therefore pos_in_block is related to oversampled data, too.
-void	DelayLine::read_line (float dest_ptr [], long nbr_spl, double delay_beg, double delay_end, long pos_in_block)
+void	DelayLine::read_line (float dest_ptr [], int nbr_spl, double delay_beg, double delay_end, int pos_in_block)
 {
 	assert (is_ready ());
 	assert (dest_ptr != 0);
@@ -198,9 +198,9 @@ void	DelayLine::read_line (float dest_ptr [], long nbr_spl, double delay_beg, do
 	assert (delay_end <= _max_dly_time);
 	assert (pos_in_block >= 0);
 
-	const long     unroll_post   = _line_data.get_unroll_post ();
-	const long     mask          = _line_data.get_mask ();
-	const long     line_len      = _line_data.get_len ();
+	const int      unroll_post   = _line_data.get_unroll_post ();
+	const int      mask          = _line_data.get_mask ();
+	const int      line_len      = _line_data.get_len ();
 	float * const  data_ptr      = _line_data.get_buffer ();
 
 	const double   delay_beg_spl = delay_beg * _sample_freq;
@@ -222,11 +222,11 @@ void	DelayLine::read_line (float dest_ptr [], long nbr_spl, double delay_beg, do
 	pos_cur += comp;
 	pos_cur.bound_and (mask);
 
-	long           pos_dest = 0;
+	int            pos_dest = 0;
 
 	do
 	{
-		const long     proc_len = _interp_ptr->process_block (
+		const int      proc_len = _interp_ptr->process_block (
 			&dest_ptr,
 			&data_ptr,
 			pos_dest,
@@ -258,23 +258,23 @@ void	DelayLine::read_line (float dest_ptr [], long nbr_spl, double delay_beg, do
 
 
 // Input data is not oversampled (if oversampling has been set)
-void	DelayLine::push_data (const float src_ptr [], long nbr_spl)
+void	DelayLine::push_data (const float src_ptr [], int nbr_spl)
 {
 	assert (is_ready ());
 	assert (src_ptr != 0);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _line_data.get_len () - _imp_len);
 
-	const long     unroll_post = _line_data.get_unroll_post ();
-	const long     line_len    = _line_data.get_len ();
-	const long     mask        = _line_data.get_mask ();
+	const int      unroll_post = _line_data.get_unroll_post ();
+	const int      line_len    = _line_data.get_len ();
+	const int      mask        = _line_data.get_mask ();
 	float *        data_ptr    = _line_data.get_buffer ();
 
-	long           src_pos = 0;
+	int            src_pos = 0;
 	do
 	{
-		const long     rem_len = line_len - _write_pos;
-		long           work_len = nbr_spl - src_pos;
+		const int      rem_len  = line_len - _write_pos;
+		int            work_len = nbr_spl - src_pos;
 		work_len = std::min (work_len, rem_len);
 
 		mix::Generic::copy_1_1 (
@@ -284,7 +284,7 @@ void	DelayLine::push_data (const float src_ptr [], long nbr_spl)
 		);
 
 		// Updates the loop-unrolling zone
-		long				update_len = unroll_post - _write_pos;
+		int 				update_len = unroll_post - _write_pos;
 		if (update_len > 0)
 		{
 			update_len = std::min (update_len, work_len);

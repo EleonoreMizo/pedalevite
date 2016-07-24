@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/flancho/Cst.h"
 #include "mfx/pi/flancho/Flancho.h"
 #include "mfx/pi/flancho/Param.h"
@@ -61,13 +62,17 @@ Flancho::Flancho ()
 ,	_param_change_flag_delay ()
 ,	_param_change_flag_voices ()
 ,	_param_change_flag_phase_set ()
+,	_param_change_flag_dry ()
 ,	_chn_arr ()
 ,	_interp ()
 ,	_buf_tmp (1024)
 ,	_buf_render (1024)
 ,	_nbr_chn_in (0)
 ,	_nbr_chn_out (0)
+,	_dry_flag (false)
 {
+	dsp::mix::Align::setup ();
+
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
@@ -79,6 +84,7 @@ Flancho::Flancho ()
 	_state_set.set_val_nat (desc_set, Param_WF_SHAPE  , 0);
 	_state_set.set_val_nat (desc_set, Param_NBR_VOICES, 1);
 	_state_set.set_val_nat (desc_set, Param_PHASE_SET , 0);
+	_state_set.set_val_nat (desc_set, Param_DRY       , 1);
 
 	_state_set.add_observer (Param_SPEED     , _param_change_flag_speed);
 	_state_set.add_observer (Param_DEPTH     , _param_change_flag_depth_fdbk);
@@ -88,6 +94,7 @@ Flancho::Flancho ()
 	_state_set.add_observer (Param_WF_SHAPE  , _param_change_flag_wf);
 	_state_set.add_observer (Param_NBR_VOICES, _param_change_flag_voices);
 	_state_set.add_observer (Param_PHASE_SET , _param_change_flag_phase_set);
+	_state_set.add_observer (Param_DRY       , _param_change_flag_dry);
 
 	_param_change_flag_depth_fdbk.add_observer (_param_change_flag);
 	_param_change_flag_wf        .add_observer (_param_change_flag);
@@ -95,6 +102,7 @@ Flancho::Flancho ()
 	_param_change_flag_delay     .add_observer (_param_change_flag);
 	_param_change_flag_voices    .add_observer (_param_change_flag);
 	_param_change_flag_phase_set .add_observer (_param_change_flag);
+	_param_change_flag_dry       .add_observer (_param_change_flag);
 
 //	_state_set.set_ramp_time (Param_, 0.010);
 
@@ -232,12 +240,21 @@ void	Flancho::do_process_block (ProcInfo &proc)
 				proc._src_arr [chn_in ] + pos,
 				work_len
 			);
+			if (_dry_flag)
+			{
+				dsp::mix::Align::mix_1_1 (
+					proc._dst_arr [chn_cnt] + pos,
+					proc._src_arr [chn_in ] + pos,
+					work_len
+				);
+			}
 			chn_in += chn_in_inc;
 		}
 
 		pos += work_len;
 	}
 	while (pos < proc._nbr_spl);
+
 }
 
 
@@ -306,6 +323,12 @@ void	Flancho::update_param (bool force_flag)
 				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
 				chn.resync (phase);
 			}
+		}
+		if (_param_change_flag_dry (true) || force_flag)
+		{
+			const float    dry_flt =
+				float (_state_set.get_val_tgt_nat (Param_DRY));
+			_dry_flag = (dry_flt >= 0.5f);
 		}
 	}
 }

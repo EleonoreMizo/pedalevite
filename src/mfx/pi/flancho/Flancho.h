@@ -79,7 +79,7 @@ protected:
 
 private:
 
-	static const int  _update_resol = 64;
+	static const int  _update_resol = 64;  // Must be a multiple of 4
 
 	typedef std::shared_ptr <FlanchoChn>       ChnSPtr;
 	typedef std::array <ChnSPtr, _max_nbr_chn> ChnArray;
@@ -109,6 +109,8 @@ private:
 	               _param_change_flag_voices;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_phase_set;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_dry;
 
 	ChnArray			_chn_arr;
 	dsp::rspl::InterpolatorHermite43
@@ -119,6 +121,7 @@ private:
 	// Cached
 	int				_nbr_chn_in;			// > 0. 0 = not set
 	int				_nbr_chn_out;			// > 0. 0 = not set
+	bool           _dry_flag;
 
 
 
