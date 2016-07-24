@@ -477,6 +477,7 @@ Deux possibilités :
 		On peut d’ailleurs faire le choix de ne pas ouvrir le panneau au-dessus de cette prise, ce qui permet éventuellement de la visser (délicat, il faut être précis, calculer la bonne longueur d’entretoise)
 	– Placer la carte du Pi normalement, bien contre la façade, et creuser une ouverture en-dessous, dans laquelle loge un morceau du câble USB. On peut ainsi connecter ce morceau de câble lors de l’utilisation, et le ranger pour le transport.
 
+Le centre est à 44.2 x 32.5 mm du trou haut-gauche (vu de dessus). Fenêtre : 70 x 37 mm. Bord fenêtre : 9 x 14 de la vis
 
 
 Structure :
