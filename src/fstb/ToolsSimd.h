@@ -125,6 +125,10 @@ public:
 	               sqrt (VectF32 v);
 	static inline VectF32
 	               sqrt_approx (VectF32 v);
+	static inline VectF32
+	               log2_approx (VectF32 v);
+	static inline VectF32
+	               exp2_approx (VectF32 v);
 
 	static inline VectF32
 	               select (VectF32 cond, VectF32 v_t, VectF32 v_f);
@@ -173,6 +177,32 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	typedef int32_t VectInt4 [4];
+	fstb_TYPEDEF_ALIGN (16, VectInt4, VectInt4Aligned);
+
+	static const VectInt4Aligned
+	               _mask_mantissa;
+	static const VectInt4Aligned
+	               _exponent_bias;
+
+	static const int32_t
+	               _log2_sub;
+	static const float
+	               _log2_coef_a;
+	static const float
+	               _log2_coef_b;
+	static const float
+	               _log2_coef_c;
+
+	static const int32_t
+	               _exp2_add;
+	static const float
+	               _exp2_coef_a;
+	static const float
+	               _exp2_coef_b;
+	static const float
+	               _exp2_coef_c;
 
 
 

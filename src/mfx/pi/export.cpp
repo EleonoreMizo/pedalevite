@@ -26,6 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/Err.h"
 #include "mfx/piapi/FactoryTpl.h"
+#include "mfx/pi/cpx/Compex.h"
+#include "mfx/pi/cpx/CompexDesc.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dly1/Delay.h"
@@ -73,7 +75,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::dtone1::DistToneDesc  , mfx::pi::dtone1::DistTone        >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::iifix::IIFixDesc      , mfx::pi::iifix::IIFix            >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::flancho::FlanchoDesc  , mfx::pi::flancho::Flancho        >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::dly1::DelayDesc       , mfx::pi::dly1::Delay             >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::dly1::DelayDesc       , mfx::pi::dly1::Delay             >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::cpx::CompexDesc       , mfx::pi::cpx::Compex             >::create ()
 		};
 
 		fact_list = l;

@@ -21,7 +21,7 @@ Template parameters:
 	static bool VS::check_ptr (const void *ptr);
 	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr);
 
-- VP: same as VP, but for parametering and internal data.
+- VP: same as VD, but for parametering and internal data.
 	Requires: same as VD.
 
 - MX: output mixer, creating the final output from the input (v0) and the raw
@@ -98,10 +98,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/iir/SvfCore4SimdData.h"
-#include "mfx/dsp/iir/SvfMixerDefault.h"
 #include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
+#include "mfx/dsp/iir/SvfCore4SimdData.h"
+#include "mfx/dsp/iir/SvfMixerDefault.h"
 
 
 

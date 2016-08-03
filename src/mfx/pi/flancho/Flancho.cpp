@@ -254,7 +254,6 @@ void	Flancho::do_process_block (ProcInfo &proc)
 		pos += work_len;
 	}
 	while (pos < proc._nbr_spl);
-
 }
 
 

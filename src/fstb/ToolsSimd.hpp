@@ -340,6 +340,106 @@ ToolsSimd::VectF32	ToolsSimd::sqrt_approx (VectF32 v)
 
 
 
+ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+
+	// Extracts the exponent (actually log2_int = exponent - 1)
+	__m128i        xi = _mm_castps_si128 (v);
+	xi = _mm_srli_epi32 (xi, 23);
+	const __m128i  l2_sub = _mm_set1_epi32 (_log2_sub);
+	xi = _mm_sub_epi32 (xi, l2_sub);
+	const auto     log2_int = _mm_cvtepi32_ps (xi);
+
+#elif fstb_IS (ARCHI, ARM)
+
+	int32x4_t      xi = vreinterpretq_s32_f32 (v);
+	xi = vshrq_n_u32 (xi, 23);
+	const int32x4_t   l2_sub = vdupq_n_s32 (_log2_sub);
+	xi -= l2_sub;
+	const auto     log2_int = vcvtq_f32_s32 (xi);
+
+#endif // ff_arch_CPU
+
+	// Extracts the multiplicative part in [1 ; 2[
+	const auto     mask_mantissa = load_f32 (_mask_mantissa);
+	auto           part          = and_f32 (v, mask_mantissa);
+	const auto     bias          = load_f32 (_exponent_bias);
+	part = or_f32 (part, bias);
+
+	// Computes the polynomial [1 ; 2[ -> [1 ; 2[
+	// y = -1/3*x^2 + 2*x - 2/3
+	// Ensures the C1 continuity over the whole range.
+	// Its exact inverse is:
+	// x = 3 - sqrt (7 - 3*y)
+	const auto     a = set1_f32 (_log2_coef_a);
+	auto           poly = a * part;
+	const auto     b = set1_f32 (_log2_coef_b);
+	poly += b;
+	poly *= part;
+	const auto     c = set1_f32 (_log2_coef_c);
+	poly += c;
+
+	// Sums the components
+	const auto     total = log2_int + poly;
+
+	return total;
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
+{
+
+	// Separates integer and fractional parts
+#if fstb_IS (ARCHI, X86)
+	const auto     round_toward_m_i = set1_f32 (-0.5f);
+	auto           x    = v + v + round_toward_m_i;
+	auto           xi   = _mm_cvtps_epi32 (x);
+	xi = _mm_srai_epi32 (xi, 1);	// We'll use it later
+	const auto     val_floor = _mm_cvtepi32_ps (xi);
+#elif fstb_IS (ARCHI, ARM)
+	const int      round_ofs = 256;
+	int32x4_t      xi = vcvtq_s32_f32 (v + set1_f32 (round_ofs));
+	xi -= vdupq_n_s32 (round_ofs);
+	const auto     val_floor = vcvtq_f32_s32 (xi);
+#endif // ff_arch_CPU
+
+	const auto     frac = v - val_floor;
+
+	// Computes the polynomial [0 ; 1[ -> [1 ; 2[
+	// y = 1/3*x^2 + 2/3*x + 1
+	// Ensures the C1 continuity over the whole range.
+	// Its exact inverse is:
+	// x = sqrt (3*y - 2) - 1
+	const auto     a    = set1_f32 (_exp2_coef_a);
+	auto           poly = a * frac;
+	const auto     b    = set1_f32 (_exp2_coef_b);
+	poly += b;
+	poly *= frac;
+	const auto     c    = set1_f32 (_exp2_coef_c);
+	poly += c;
+
+	// Integer part
+#if fstb_IS (ARCHI, X86)
+	const __m128i	e2_add = _mm_set1_epi32 (_exp2_add);
+	xi  = _mm_add_epi32 (xi, e2_add);
+	xi  = _mm_slli_epi32 (xi, 23);
+	const auto     int_part = _mm_castsi128_ps (xi);
+#elif fstb_IS (ARCHI, ARM)
+	xi += vdupq_n_s32 (_exp2_add);
+	xi  = vshlq_n_s32 (23);
+	const auto     int_part = vreinterpretq_f32_s32 (xi);
+#endif // ff_arch_CPU
+
+	const auto     total = int_part * poly;
+
+	return total;
+
+}
+
+
+
 float	ToolsSimd::sum_h_flt (VectF32 v)
 {
 #if fstb_IS (ARCHI, X86)

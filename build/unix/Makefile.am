@@ -256,6 +256,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/DelayLineFracFir4Base.hpp \
         ../../src/mfx/dsp/dly/DelayLineReader.cpp \
         ../../src/mfx/dsp/dly/DelayLineReader.h \
+        ../../src/mfx/dsp/dly/EnvFollowerAR4SimdHelper.h \
+        ../../src/mfx/dsp/dly/EnvFollowerAR4SimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.cpp \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.h \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.hpp \
@@ -263,9 +265,18 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold.h \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.cpp \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.h \
+        ../../src/mfx/dsp/dly/SCPower.h \
+        ../../src/mfx/dsp/dly/SCPower.hpp \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \
         ../../src/mfx/dsp/iir/Biquad.hpp \
+        ../../src/mfx/dsp/iir/Biquad4Simd.h \
+        ../../src/mfx/dsp/iir/Biquad4Simd.hpp \
+        ../../src/mfx/dsp/iir/Biquad4SimdData.h \
+        ../../src/mfx/dsp/iir/Biquad4SimdMorph.h \
+        ../../src/mfx/dsp/iir/Biquad4SimdMorph.hpp \
+        ../../src/mfx/dsp/iir/BiquadPackSimd.h \
+        ../../src/mfx/dsp/iir/BiquadPackSimd.hpp \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \
@@ -328,31 +339,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
-        ../../src/mfx/pi/param/HelperDispNum.cpp \
-        ../../src/mfx/pi/param/HelperDispNum.h \
-        ../../src/mfx/pi/param/MapLog.h \
-        ../../src/mfx/pi/param/MapLog.hpp \
-        ../../src/mfx/pi/param/MapPiecewiseLinLog.cpp \
-        ../../src/mfx/pi/param/MapPiecewiseLinLog.h \
-        ../../src/mfx/pi/param/MapPseudoLog.h \
-        ../../src/mfx/pi/param/MapPseudoLog.hpp \
-        ../../src/mfx/pi/param/MapS.h \
-        ../../src/mfx/pi/param/MapS.hpp \
-        ../../src/mfx/pi/param/MapSq.h \
-        ../../src/mfx/pi/param/MapSq.hpp \
-        ../../src/mfx/pi/param/Tools.cpp \
-        ../../src/mfx/pi/param/Tools.h \
-        ../../src/mfx/pi/param/Tools.hpp \
-        ../../src/mfx/pi/param/TplEnum.cpp \
-        ../../src/mfx/pi/param/TplEnum.h \
-        ../../src/mfx/pi/param/TplInt.h \
-        ../../src/mfx/pi/param/TplInt.hpp \
-        ../../src/mfx/pi/param/TplLin.cpp \
-        ../../src/mfx/pi/param/TplLin.h \
-        ../../src/mfx/pi/param/TplLog.h \
-        ../../src/mfx/pi/param/TplMapped.h \
-        ../../src/mfx/pi/param/TplMapped.hpp \
-        ../../src/mfx/pi/param/TplSq.h \
+        ../../src/mfx/pi/cpx/Compex.cpp \
+        ../../src/mfx/pi/cpx/Compex.h \
+        ../../src/mfx/pi/cpx/CompexDesc.cpp \
+        ../../src/mfx/pi/cpx/CompexDesc.h \
+        ../../src/mfx/pi/cpx/Param.h \
         ../../src/mfx/pi/dist1/DistoSimple.cpp \
         ../../src/mfx/pi/dist1/DistoSimple.h \
         ../../src/mfx/pi/dist1/DistoSimpleDesc.cpp \
@@ -395,6 +386,33 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/iifix/IIFixDesc.cpp \
         ../../src/mfx/pi/iifix/IIFixDesc.h \
         ../../src/mfx/pi/iifix/Param.h \
+        ../../src/mfx/pi/param/HelperDispNum.cpp \
+        ../../src/mfx/pi/param/HelperDispNum.h \
+        ../../src/mfx/pi/param/MapLog.h \
+        ../../src/mfx/pi/param/MapLog.hpp \
+        ../../src/mfx/pi/param/MapPiecewiseLinLog.cpp \
+        ../../src/mfx/pi/param/MapPiecewiseLinLog.h \
+        ../../src/mfx/pi/param/MapPseudoLog.h \
+        ../../src/mfx/pi/param/MapPseudoLog.hpp \
+        ../../src/mfx/pi/param/MapRatio.cpp \
+        ../../src/mfx/pi/param/MapRatio.h \
+        ../../src/mfx/pi/param/MapS.h \
+        ../../src/mfx/pi/param/MapS.hpp \
+        ../../src/mfx/pi/param/MapSq.h \
+        ../../src/mfx/pi/param/MapSq.hpp \
+        ../../src/mfx/pi/param/Tools.cpp \
+        ../../src/mfx/pi/param/Tools.h \
+        ../../src/mfx/pi/param/Tools.hpp \
+        ../../src/mfx/pi/param/TplEnum.cpp \
+        ../../src/mfx/pi/param/TplEnum.h \
+        ../../src/mfx/pi/param/TplInt.h \
+        ../../src/mfx/pi/param/TplInt.hpp \
+        ../../src/mfx/pi/param/TplLin.cpp \
+        ../../src/mfx/pi/param/TplLin.h \
+        ../../src/mfx/pi/param/TplLog.h \
+        ../../src/mfx/pi/param/TplMapped.h \
+        ../../src/mfx/pi/param/TplMapped.hpp \
+        ../../src/mfx/pi/param/TplSq.h \
         ../../src/mfx/pi/trem1/Param.h \
         ../../src/mfx/pi/trem1/Tremolo.cpp \
         ../../src/mfx/pi/trem1/Tremolo.h \

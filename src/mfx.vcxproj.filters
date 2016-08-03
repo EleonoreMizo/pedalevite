@@ -130,6 +130,9 @@
     <Filter Include="mfx\pi\dly1">
       <UniqueIdentifier>{5cb7326f-a8f6-4737-92d4-76b03d851e6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\cpx">
+      <UniqueIdentifier>{16e39924-eebe-4b6a-90ba-13281aaf7eb3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -1494,6 +1497,51 @@
     <ClInclude Include="mfx\pi\dly1\DelayChn.h">
       <Filter>mfx\pi\dly1</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\cpx\Param.h">
+      <Filter>mfx\pi\cpx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\cpx\Compex.h">
+      <Filter>mfx\pi\cpx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\cpx\CompexDesc.h">
+      <Filter>mfx\pi\cpx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\param\MapRatio.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Biquad4Simd.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Biquad4Simd.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Biquad4SimdData.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Biquad4SimdMorph.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Biquad4SimdMorph.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\BiquadPackSimd.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\BiquadPackSimd.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dyn\EnvFollowerAR4SimdHelper.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dyn\EnvFollowerAR4SimdHelper.hpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dyn\SCPower.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\dyn\SCPower.hpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -2051,6 +2099,15 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\dly1\DelayChn.cpp">
       <Filter>mfx\pi\dly1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\cpx\Compex.cpp">
+      <Filter>mfx\pi\cpx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\cpx\CompexDesc.cpp">
+      <Filter>mfx\pi\cpx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\param\MapRatio.cpp">
+      <Filter>mfx\pi\param</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
