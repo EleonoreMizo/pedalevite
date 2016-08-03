@@ -354,7 +354,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
 #elif fstb_IS (ARCHI, ARM)
 
 	int32x4_t      xi = vreinterpretq_s32_f32 (v);
-	xi = vshrq_n_u32 (xi, 23);
+	xi = vshrq_n_s32 (xi, 23);
 	const int32x4_t   l2_sub = vdupq_n_s32 (_log2_sub);
 	xi -= l2_sub;
 	const auto     log2_int = vcvtq_f32_s32 (xi);
@@ -428,7 +428,7 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 	const auto     int_part = _mm_castsi128_ps (xi);
 #elif fstb_IS (ARCHI, ARM)
 	xi += vdupq_n_s32 (_exp2_add);
-	xi  = vshlq_n_s32 (23);
+	xi  = vshlq_n_s32 (xi, 23);
 	const auto     int_part = vreinterpretq_f32_s32 (xi);
 #endif // ff_arch_CPU
 

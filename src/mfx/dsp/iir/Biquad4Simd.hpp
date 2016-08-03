@@ -472,8 +472,8 @@ sample of the block. out_ptr points on sample N-4.
 template <class STP>
 void	Biquad4Simd_Proc <STP>::process_block_serial_immediate_post (Biquad4SimdData &data, float out_ptr [], const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3])
 {
-	const int		alt_pos = 1 - data._mem_pos;
-	float				x_s;
+	const int       alt_pos = 1 - data._mem_pos;
+	float           x_s;
 
 	out_ptr [0] = data._mem_y [data._mem_pos] [3];
 	STP::step_z_eq (data, b_inc, a_inc);
@@ -499,8 +499,6 @@ void	Biquad4Simd_Proc <STP>::process_block_serial_immediate_post (Biquad4SimdDat
 template <class STP>
 void	Biquad4Simd_Proc <STP>::process_block_2x2_latency (Biquad4SimdData &data, float out_ptr [], const float in_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3])
 {
-	typedef	Biquad4Simd <V128Dest, V128Src, V128Par>	BiqSse;
-
 	// If we are not on an even boudary, we process a single sample.
 	if (data._mem_pos != 0)
 	{
@@ -517,8 +515,8 @@ void	Biquad4Simd_Proc <STP>::process_block_2x2_latency (Biquad4SimdData &data, f
 		}
 	}
 
-	long				half_nbr_spl = nbr_spl >> 1;
-	long				index = 0;
+	long            half_nbr_spl = nbr_spl >> 1;
+	long            index = 0;
 	if (half_nbr_spl > 0)
 	{
 		auto           b0 = V128Par::load_f32 (data._z_eq_b [0]);
@@ -602,7 +600,7 @@ fstb::ToolsSimd::VectF32	Biquad4Simd_Proc <STP>::process_sample_2x2_latency (Biq
 
 	x = fstb::ToolsSimd::interleave_2f32_low (x, y1);		// y1[1 0] x[1 0]
 
-	auto           y  = _b0 * x;
+	auto           y  = b0 * x;
 	const auto     sb = b1 * x1 + b2 * x2;
 	const auto     sa = a1 * y1 + a2 * y2;
 	y += sb - sa;

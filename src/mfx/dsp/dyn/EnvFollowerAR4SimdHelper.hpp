@@ -95,7 +95,7 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP>::process_sample (
 	const auto     coef_a     = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r     = V128Par::load_f32 (_coef_rls);
 	const auto     coef       =
-		fstb::ToolsSimd::select (delta_gt_0, coef_ax, coef_rx);
+		fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
 
 	// state += coef * (in - state)
 	const auto     delta_coef = delta * coef;
@@ -135,7 +135,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP>::process_block (fstb::ToolsSimd::Vect
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls
 		const auto     coef       =
-			fstb::ToolsSimd::select (delta_gt_0, coef_ax, coef_rx);
+			fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
 
 		// state += coef * (in - state)
 		const auto     delta_coef = delta * coef;
@@ -161,16 +161,16 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP>::process_block_1_chn (float out_ptr [
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	float				state = _state [0];
+	float          state = _state [0];
 
-	long				pos = 0;
+	long           pos = 0;
 	do
 	{
-		const float		in = in_ptr [pos];
+		const float    in    = in_ptr [pos];
 		assert (in >= 0);
 
-		const float		delta = in - state;
-		const float		coef = (delta > 0) ? _coef_atk [0] : _coef_rls [0];
+		const float    delta = in - state;
+		const float    coef  = (delta > 0) ? _coef_atk [0] : _coef_rls [0];
 		state += delta * coef;
 
 		out_ptr [pos] = state;
