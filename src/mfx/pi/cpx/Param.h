@@ -41,8 +41,8 @@ namespace cpx
 enum Param
 {
 
-	Param_RATIO_L = 0,
-	Param_RATIO_H,
+	Param_RATIO_H = 0,
+	Param_RATIO_L,
 	Param_KNEE_LVL,   // Stored as log2
 	Param_ATTACK,
 	Param_RELEASE,
