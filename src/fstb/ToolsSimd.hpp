@@ -362,9 +362,9 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
 #endif // ff_arch_CPU
 
 	// Extracts the multiplicative part in [1 ; 2[
-	const auto     mask_mantissa = load_f32 (_mask_mantissa);
+	const auto     mask_mantissa = set1_f32 (1.1754942e-38f);  // Binary: (1 << 23) - 1
 	auto           part          = and_f32 (v, mask_mantissa);
-	const auto     bias          = load_f32 (_exponent_bias);
+	const auto     bias          = set1_f32 (1.0f);            // Binary: 127 << 23
 	part = or_f32 (part, bias);
 
 	// Computes the polynomial [1 ; 2[ -> [1 ; 2[

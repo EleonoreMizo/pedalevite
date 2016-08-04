@@ -178,14 +178,6 @@ protected:
 
 private:
 
-	typedef int32_t VectInt4 [4];
-	fstb_TYPEDEF_ALIGN (16, VectInt4, VectInt4Aligned);
-
-	static const VectInt4Aligned
-	               _mask_mantissa;
-	static const VectInt4Aligned
-	               _exponent_bias;
-
 	static const int32_t
 	               _log2_sub;
 	static const float

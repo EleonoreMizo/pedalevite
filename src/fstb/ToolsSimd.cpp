@@ -47,15 +47,6 @@ namespace fstb
 
 
 
-const ToolsSimd::VectInt4Aligned	ToolsSimd::_mask_mantissa =
-{
-	(1 << 23) - 1, (1 << 23) - 1, (1 << 23) - 1, (1 << 23) - 1
-};
-const ToolsSimd::VectInt4Aligned	ToolsSimd::_exponent_bias =
-{
-	127 << 23, 127 << 23, 127 << 23, 127 << 23
-};
-
 const int32_t	ToolsSimd::_log2_sub = 128;
 const float	ToolsSimd::_log2_coef_a = -1.f / 3;
 const float	ToolsSimd::_log2_coef_b =  2.f;
