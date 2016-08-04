@@ -91,7 +91,7 @@ CompexDesc::CompexDesc ()
 	// Knee Shape
 	lin_ptr = new param::TplLin (
 		0, 2,
-		"Th\nThr\nThres\nThreshold",
+		"KS\nKnSh\nKnee S\nKnee shape",
 		"dB",
 		0,
 		"%4.1f"

@@ -44,10 +44,10 @@ enum Param
 	Param_RATIO_L = 0,
 	Param_RATIO_H,
 	Param_KNEE_LVL,   // Stored as log2
-	Param_KNEE_SHAPE, // Stored as log2
 	Param_ATTACK,
 	Param_RELEASE,
 	Param_GAIN,       // Stored as log2
+	Param_KNEE_SHAPE, // Stored as log2
 
 	Param_NBR_ELT
 
