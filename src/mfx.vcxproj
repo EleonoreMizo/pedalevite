@@ -422,6 +422,12 @@
     <ClInclude Include="mfx\pi\flancho\FlanchoDesc.h" />
     <ClInclude Include="mfx\pi\flancho\Param.h" />
     <ClInclude Include="mfx\pi\flancho\WfType.h" />
+    <ClInclude Include="mfx\pi\fv\DelayAllPassSimd.h" />
+    <ClInclude Include="mfx\pi\fv\DelayComb.h" />
+    <ClInclude Include="mfx\pi\fv\DelayLineSimple.h" />
+    <ClInclude Include="mfx\pi\fv\Freeverb.h" />
+    <ClInclude Include="mfx\pi\fv\FreeverbDesc.h" />
+    <ClInclude Include="mfx\pi\fv\Param.h" />
     <ClInclude Include="mfx\pi\iifix\IIFix.h" />
     <ClInclude Include="mfx\pi\iifix\IIFixDesc.h" />
     <ClInclude Include="mfx\pi\iifix\Param.h" />
@@ -681,6 +687,11 @@
     <ClCompile Include="mfx\pi\flancho\Flancho.cpp" />
     <ClCompile Include="mfx\pi\flancho\FlanchoChn.cpp" />
     <ClCompile Include="mfx\pi\flancho\FlanchoDesc.cpp" />
+    <ClCompile Include="mfx\pi\fv\DelayAllPassSimd.cpp" />
+    <ClCompile Include="mfx\pi\fv\DelayComb.cpp" />
+    <ClCompile Include="mfx\pi\fv\DelayLineSimple.cpp" />
+    <ClCompile Include="mfx\pi\fv\Freeverb.cpp" />
+    <ClCompile Include="mfx\pi\fv\FreeverbDesc.cpp" />
     <ClCompile Include="mfx\pi\iifix\IIFix.cpp" />
     <ClCompile Include="mfx\pi\iifix\IIFixDesc.cpp" />
     <ClCompile Include="mfx\pi\param\MapRatio.cpp" />

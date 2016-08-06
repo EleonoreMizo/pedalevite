@@ -42,6 +42,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/iifix/IIFixDesc.h"
 #include "mfx/pi/flancho/Flancho.h"
 #include "mfx/pi/flancho/FlanchoDesc.h"
+#include "mfx/pi/fv/Freeverb.h"
+#include "mfx/pi/fv/FreeverbDesc.h"
 #include "mfx/pi/trem1/Tremolo.h"
 #include "mfx/pi/trem1/TremoloDesc.h"
 #include "mfx/pi/tuner/Tuner.h"
@@ -76,7 +78,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::iifix::IIFixDesc      , mfx::pi::iifix::IIFix            >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::flancho::FlanchoDesc  , mfx::pi::flancho::Flancho        >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::dly1::DelayDesc       , mfx::pi::dly1::Delay             >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::cpx::CompexDesc       , mfx::pi::cpx::Compex             >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::cpx::CompexDesc       , mfx::pi::cpx::Compex             >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::fv::FreeverbDesc      , mfx::pi::fv::Freeverb            >::create ()
 		};
 
 		fact_list = l;

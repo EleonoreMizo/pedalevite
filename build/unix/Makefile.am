@@ -381,6 +381,17 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.cpp \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.h \
         ../../src/mfx/pi/freqsh/Param.h \
+        ../../src/mfx/pi/fv/DelayAllPassSimd.cpp \
+        ../../src/mfx/pi/fv/DelayAllPassSimd.h \
+        ../../src/mfx/pi/fv/DelayComb.cpp \
+        ../../src/mfx/pi/fv/DelayComb.h \
+        ../../src/mfx/pi/fv/DelayLineSimple.cpp \
+        ../../src/mfx/pi/fv/DelayLineSimple.h \
+        ../../src/mfx/pi/fv/Freeverb.cpp \
+        ../../src/mfx/pi/fv/Freeverb.h \
+        ../../src/mfx/pi/fv/FreeverbDesc.cpp \
+        ../../src/mfx/pi/fv/FreeverbDesc.h \
+        ../../src/mfx/pi/fv/Param.h \
         ../../src/mfx/pi/iifix/IIFix.cpp \
         ../../src/mfx/pi/iifix/IIFix.h \
         ../../src/mfx/pi/iifix/IIFixDesc.cpp \
