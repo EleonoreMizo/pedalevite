@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/dsp/StereoLevel.h"
 #include "mfx/pi/fv/Freeverb.h"
@@ -66,6 +67,7 @@ Freeverb::Freeverb ()
 ,	_dry_lvl (1)
 ,	_wet_lvl_direct (_scalewet)
 ,	_wet_lvl_cross (0)
+,	_flt_flag (false)
 {
 	dsp::mix::Align::setup ();
 
@@ -100,6 +102,7 @@ Freeverb::Freeverb ()
 		{
 			ap.set_feedback (0.5f);
 		}
+		chn._filter.neutralise ();
 	}
 }
 
@@ -163,6 +166,7 @@ int	Freeverb::do_reset (double sample_freq, int max_buf_len, int &latency)
 			ap.set_delay (len * mult);
 			ap.clear_buffers ();
 		}
+		chn._filter.clear_buffers ();
 	}
 
 	_state = State_ACTIVE;
@@ -246,6 +250,16 @@ void	Freeverb::do_process_block (ProcInfo &proc)
 			);
 		}
 
+		// Filtering
+		if (_flt_flag)
+		{
+			chn._filter.process_block (
+				&chn._buf_arr [2] [0],
+				&chn._buf_arr [2] [0],
+				proc._nbr_spl
+			);
+		}
+
 		chn_in_cnt += chn_in_step;
 	}
 	// Final mix
@@ -301,7 +315,27 @@ void	Freeverb::update_param ()
 
 	if (_param_change_flag_flt (true))
 	{
-		/*** To do ***/
+		const float    f_lo = float (_state_set.get_val_tgt_nat (Param_LOCUT));
+		const float    f_hi = float (_state_set.get_val_tgt_nat (Param_HICUT));
+		const float    f_hr = float (
+			dsp::iir::TransSZBilin::prewarp_freq_rel_1 (f_hi, f_lo, _sample_freq)
+		);
+
+		const float    bs [3] = {    0, f_hr    , 0 };
+		const float    as [3] = { f_hr, f_hr + 1, 1 };
+		const float    fk = f_lo / float (_sample_freq);
+		const float    k  = dsp::iir::TransSZBilin::compute_k_approx (fk);
+		float          bz [3];
+		float          az [3];
+		dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bs, as, k);
+
+		for (auto &chn : _chn_arr)
+		{
+			chn._filter.set_z_eq (bz, az);
+		}
+
+		const float       margin = 0.001f;
+		_flt_flag = (f_lo > 20*(1+margin) || f_hi < 20000*(1-margin));
 	}
 
 	if (_param_change_flag_other (true))

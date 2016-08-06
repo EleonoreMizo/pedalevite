@@ -125,7 +125,7 @@ FreeverbDesc::FreeverbDesc ()
 
 	// Low Cut
 	param::TplLog *   log_ptr = new param::TplLog (
-		20, 2000,
+		20, 4000,
 		"Low Cut\nLow C\nLC",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
@@ -137,7 +137,7 @@ FreeverbDesc::FreeverbDesc ()
 
 	// High Cut
 	log_ptr = new param::TplLog (
-		2000, 20000,
+		500, 20000,
 		"High Cut\nHigh C\nHC",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,

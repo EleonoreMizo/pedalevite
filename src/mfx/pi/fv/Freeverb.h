@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
+#include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/fv/FreeverbDesc.h"
 #include "mfx/pi/fv/DelayAllPassSimd.h"
 #include "mfx/pi/fv/DelayComb.h"
@@ -96,6 +97,8 @@ private:
 		AllPassArray   _ap_arr;
 		std::array <std::vector <float, fstb::AllocAlign <float, 16> >, 3>
 		               _buf_arr;         // 0 = input, 1 = rendering, 2 = accumulate
+		dsp::iir::Biquad                 // On the reverb output
+		               _filter;
 	};
 
 	typedef std::array <Channel, _max_nbr_chn> ChnArray;
@@ -123,6 +126,7 @@ private:
 	float          _dry_lvl;
 	float          _wet_lvl_direct;
 	float          _wet_lvl_cross;
+	bool           _flt_flag;
 
 	static const float
 	               _scalewet;
