@@ -97,6 +97,7 @@ ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const void *ptr)
 	const auto     x_0 = _mm_load_ss (reinterpret_cast <const float *> (ptr)    );
 	const auto     x_1 = _mm_load_ss (reinterpret_cast <const float *> (ptr) + 1);
 	const auto     x   = _mm_unpacklo_ps (x_0, x_1);
+	return x;
 #elif fstb_IS (ARCHI, ARM)
 	const float32x2_t x = vreinterpret_f32_u8 (
 		vld1_u8 (reinterpret_cast <const uint8_t *> (ptr))
