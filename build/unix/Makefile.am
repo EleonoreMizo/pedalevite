@@ -277,6 +277,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/Biquad4SimdMorph.hpp \
         ../../src/mfx/dsp/iir/BiquadPackSimd.h \
         ../../src/mfx/dsp/iir/BiquadPackSimd.hpp \
+        ../../src/mfx/dsp/iir/DesignEq2p.cpp \
+        ../../src/mfx/dsp/iir/DesignEq2p.h \
+        ../../src/mfx/dsp/iir/DesignEq2p.hpp \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \
@@ -397,6 +400,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/iifix/IIFixDesc.cpp \
         ../../src/mfx/pi/iifix/IIFixDesc.h \
         ../../src/mfx/pi/iifix/Param.h \
+        ../../src/mfx/pi/peq/PEq.cpp \
+        ../../src/mfx/pi/peq/PEq.h \
+        ../../src/mfx/pi/peq/PEqDesc.cpp \
+        ../../src/mfx/pi/peq/PEqDesc.h \
+        ../../src/mfx/pi/peq/PEqType.h \
+        ../../src/mfx/pi/peq/Param.h \
         ../../src/mfx/pi/param/HelperDispNum.cpp \
         ../../src/mfx/pi/param/HelperDispNum.h \
         ../../src/mfx/pi/param/MapLog.h \

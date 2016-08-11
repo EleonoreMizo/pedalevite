@@ -136,6 +136,9 @@
     <Filter Include="mfx\pi\fv">
       <UniqueIdentifier>{5c7ef96f-9232-48e9-a35e-b6571e7cd56e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\peq">
+      <UniqueIdentifier>{2a94718d-f2e7-4fbe-82cb-c76255af6083}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -1563,6 +1566,24 @@
     <ClInclude Include="mfx\pi\fv\DelayComb.h">
       <Filter>mfx\pi\fv</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\peq\PEq.h">
+      <Filter>mfx\pi\peq</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\peq\PEqDesc.h">
+      <Filter>mfx\pi\peq</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\peq\Param.h">
+      <Filter>mfx\pi\peq</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\peq\PEqType.h">
+      <Filter>mfx\pi\peq</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\DesignEq2p.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\DesignEq2p.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -2144,6 +2165,15 @@
     </ClCompile>
     <ClCompile Include="mfx\pi\fv\DelayComb.cpp">
       <Filter>mfx\pi\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\peq\PEq.cpp">
+      <Filter>mfx\pi\peq</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\peq\PEqDesc.cpp">
+      <Filter>mfx\pi\peq</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\iir\DesignEq2p.cpp">
+      <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
