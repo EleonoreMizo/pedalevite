@@ -58,8 +58,8 @@ BiquadPackSimd <VD, VS>::BiquadPackSimd ()
 ,	_proc_conf (ProcConf_PARALLEL)
 ,	_biq_info_list ()
 {
-	assert (dsp::mix::Generic::is_ready ());
-	assert (dsp::mix::Simd::is_ready ());
+	dsp::mix::Generic::setup ();
+
 	set_config (0, 0);
 	set_buf_len (256);
 }
@@ -526,7 +526,7 @@ void	BiquadPackSimd <VD, VS>::set_config_internal (int nbr_stages, int nbr_chn)
 template <class VD, class VS>
 void	BiquadPackSimd <VD, VS>::save_info ()
 {
-	assert (_biq_info_list.size () >= _nbr_stages * _nbr_chn);
+	assert (int (_biq_info_list.size ()) >= _nbr_stages * _nbr_chn);
 
 	for (int stage = 0; stage < _nbr_stages; ++stage)
 	{
@@ -551,7 +551,7 @@ void	BiquadPackSimd <VD, VS>::save_info ()
 template <class VD, class VS>
 void	BiquadPackSimd <VD, VS>::load_info (int nbr_stages, int nbr_chn)
 {
-	assert (_biq_info_list.size () >= nbr_stages * nbr_chn);
+	assert (int (_biq_info_list.size ()) >= nbr_stages * nbr_chn);
 	assert (nbr_stages >= 0);
 	assert (nbr_chn >= 0);
 
@@ -600,7 +600,7 @@ void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr 
 			{
 				Pack4 &        pack = _pack_list [pack_index];
 				pack.process_block_parallel (
-					reinterpret_cast <archi::Vect128 *> (&_tmp_buf [0]),
+					reinterpret_cast <fstb::ToolsSimd::VectF32 *> (&_tmp_buf [0]),
 					in_ptr_arr [0] + block_pos,
 					block_len
 				);
@@ -642,8 +642,8 @@ void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr 
 			{
 				Pack4 &        pack = _pack_list [pack_index];
 				pack.process_block_parallel (
-					reinterpret_cast <archi::Vect128 *> (&_tmp_buf [0]),
-					reinterpret_cast <archi::Vect128 *> (&_tmp_buf [0]),
+					reinterpret_cast <fstb::ToolsSimd::VectF32 *> (&_tmp_buf [0]),
+					reinterpret_cast <fstb::ToolsSimd::VectF32 *> (&_tmp_buf [0]),
 					block_len
 				);
 
@@ -755,8 +755,8 @@ void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], c
 
 		// Interleaving
 		dsp::mix::Simd <
-			archi::fstb::DataAlign <true>,
-			archi::fstb::DataAlign <false>
+			fstb::DataAlign <true>,
+			fstb::DataAlign <false>
 		>::copy_2_2i (
 			&_tmp_buf [0],
 			in_ptr_arr [0] + pos,
@@ -773,8 +773,8 @@ void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], c
 
 		// Deinterleaving
 		dsp::mix::Simd <
-			archi::fstb::DataAlign <false>,
-			archi::fstb::DataAlign <true>
+			fstb::DataAlign <false>,
+			fstb::DataAlign <true>
 		>::copy_2i_2 (
 			out_ptr_arr [0] + pos,
 			out_ptr_arr [1] + pos,

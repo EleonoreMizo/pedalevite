@@ -115,11 +115,11 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_ramp_time (int nbr_spl)
 			auto           sa_1 = V128Par::load_f32 (_step_a [1]);
 			auto           sa_2 = V128Par::load_f32 (_step_a [2]);
 
-			V128Par::store (_step_b [0], _mm_mul_ps (sb_0, scale));
-			V128Par::store (_step_b [1], _mm_mul_ps (sb_1, scale));
-			V128Par::store (_step_b [2], _mm_mul_ps (sb_2, scale));
-			V128Par::store (_step_a [1], _mm_mul_ps (sa_1, scale));
-			V128Par::store (_step_a [2], _mm_mul_ps (sa_2, scale));
+			V128Par::store_f32 (_step_b [0], _mm_mul_ps (sb_0, scale));
+			V128Par::store_f32 (_step_b [1], _mm_mul_ps (sb_1, scale));
+			V128Par::store_f32 (_step_b [2], _mm_mul_ps (sb_2, scale));
+			V128Par::store_f32 (_step_a [1], _mm_mul_ps (sa_1, scale));
+			V128Par::store_f32 (_step_a [2], _mm_mul_ps (sa_2, scale));
 
 			_nbr_rem_spl = _ramp_len;
 		}
@@ -235,7 +235,7 @@ template <class VD, class VS, class VP>
 void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], const float a [3], bool ramp_flag)
 {
 	assert (biq >= 0);
-	assert (biq < BiqSse::_nbr_units);
+	assert (biq < BiqSimd::_nbr_units);
 	assert (b != 0);
 	assert (a != 0);
 
@@ -389,7 +389,7 @@ template <class VD, class VS, class VP>
 void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_target (int biq, float b [3], float a [3]) const
 {
 	assert (biq >= 0);
-	assert (biq < BiqSse::_nbr_units);
+	assert (biq < BiqSimd::_nbr_units);
 	assert (b != 0);
 	assert (a != 0);
 
@@ -446,7 +446,7 @@ bool	Biquad4SimdMorph <VD, VS, VP>::is_ramping () const
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (archi::Vect128 out_ptr [], const archi::Vect128 in_ptr [], long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl)
 {
 	long           pos = 0;
 	do
@@ -459,8 +459,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (archi::Vect128 out_p
 				out_ptr + pos,
 				in_ptr + pos,
 				work_len,
-				reinterpret_cast <const archi::Vect128 *> (_step_b),
-				reinterpret_cast <const archi::Vect128 *> (_step_a)
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
 			);
 		}
 		else
@@ -481,7 +481,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (archi::Vect128 out_p
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (archi::Vect128 out_ptr [], const float in_ptr [], long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], long nbr_spl)
 {
 	long           pos = 0;
 	do
@@ -494,8 +494,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (archi::Vect128 out_p
 				out_ptr + pos,
 				in_ptr + pos,
 				work_len,
-				reinterpret_cast <const archi::Vect128 *> (_step_b),
-				reinterpret_cast <const archi::Vect128 *> (_step_a)
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
 			);
 		}
 		else
@@ -529,8 +529,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_latency (float out_ptr 
 				out_ptr + pos,
 				in_ptr + pos,
 				work_len,
-				reinterpret_cast <const archi::Vect128 *> (_step_b),
-				reinterpret_cast <const archi::Vect128 *> (_step_a)
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
 			);
 		}
 		else
@@ -564,8 +564,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_immediate (float out_pt
 				out_ptr + pos,
 				in_ptr + pos,
 				work_len,
-				reinterpret_cast <const archi::Vect128 *> (_step_b),
-				reinterpret_cast <const archi::Vect128 *> (_step_a)
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
 			);
 		}
 		else
@@ -599,8 +599,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_latency (float out_ptr [],
 				out_ptr + pos * 2,
 				in_ptr + pos * 2,
 				work_len,
-				reinterpret_cast <const archi::Vect128 *> (_step_b),
-				reinterpret_cast <const archi::Vect128 *> (_step_a)
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
 			);
 		}
 		else
@@ -634,8 +634,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [
 				out_ptr + pos * 2,
 				in_ptr + pos * 2,
 				work_len,
-				reinterpret_cast <const archi::Vect128 *> (_step_b),
-				reinterpret_cast <const archi::Vect128 *> (_step_a)
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_b),
+				reinterpret_cast <const fstb::ToolsSimd::VectF32 *> (_step_a)
 			);
 		}
 		else
@@ -683,7 +683,7 @@ template <class VD, class VS, class VP>
 void	Biquad4SimdMorph <VD, VS, VP>::clear_buffers_one (int biq)
 {
 	assert (biq >= 0);
-	assert (biq < BiqSse::_nbr_units);
+	assert (biq < BiqSimd::_nbr_units);
 
 	_biq.clear_buffers_one (biq);
 }

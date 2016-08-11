@@ -7,7 +7,7 @@ Processes N channels with M biquads, for an almost optimal SSE use.
 It allows changing the (N, M) configuration during the processing.
 Changes of biquad equations can be smoothed.
 
-Requires dsp::BasicMixing to be initialised.
+Automatically initialises dsp::mix::Generic.
 
 Template parameters:
 
@@ -75,7 +75,7 @@ public:
 	typedef	VD	V128Dest;
 	typedef	VS	V128Src;
 
-	               BiquadPackSimd ()  = default;
+	               BiquadPackSimd ();
 	virtual        ~BiquadPackSimd () = default;
 
 	void				set_config (int nbr_stages, int nbr_chn);

@@ -62,7 +62,6 @@ public:
 
 	               Biquad4SimdMorph ();
 	               Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other);
-	               Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other)  = default;
 
 	Biquad4SimdMorph <VD, VS, VP> &
 	               operator = (const Biquad4SimdMorph <VD, VS, VP> &other)        = default;
@@ -84,8 +83,8 @@ public:
 	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const;
 
 	inline bool    is_ramping () const;
-	void           process_block_parallel (archi::Vect128 out_ptr [], const archi::Vect128 in_ptr [], long nbr_spl);
-	void           process_block_parallel (archi::Vect128 out_ptr [], const float in_ptr [], long nbr_spl);
+	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl);
+	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], long nbr_spl);
 	void           process_block_serial_latency (float out_ptr [], const float in_ptr [], long nbr_spl);
 	void           process_block_serial_immediate (float out_ptr [], const float in_ptr [], long nbr_spl);
 	void           process_block_2x2_latency (float out_ptr [], const float in_ptr [], long nbr_spl);

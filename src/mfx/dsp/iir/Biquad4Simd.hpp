@@ -119,11 +119,11 @@ void	Biquad4Simd_StepOn <VD, VS, VP, LD>::step_z_eq_store_result (Biquad4SimdDat
 template <class VD, class VS, class VP, class LD>
 void	Biquad4Simd_StepOn <VD, VS, VP, LD>::step_z_eq (fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &b2, fstb::ToolsSimd::VectF32 &a1, fstb::ToolsSimd::VectF32 &a2, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3])
 {
-	const auto     b0_inc = V128Par::load (&b_inc [0]);
-	const auto     b1_inc = V128Par::load (&b_inc [1]);
-	const auto     b2_inc = V128Par::load (&b_inc [2]);
-	const auto     a1_inc = V128Par::load (&a_inc [1]);
-	const	auto     a2_inc = V128Par::load (&a_inc [2]);
+	const auto     b0_inc = V128Par::load_f32 (&b_inc [0]);
+	const auto     b1_inc = V128Par::load_f32 (&b_inc [1]);
+	const auto     b2_inc = V128Par::load_f32 (&b_inc [2]);
+	const auto     a1_inc = V128Par::load_f32 (&a_inc [1]);
+	const	auto     a2_inc = V128Par::load_f32 (&a_inc [2]);
 
 	b0 += b0_inc;
 	b1 += b1_inc;
@@ -229,7 +229,7 @@ void	Biquad4Simd_Proc <STP>::process_block_parallel (Biquad4SimdData &data, fstb
 	// If we are not on an even boudary, we process a single sample.
 	if (data._mem_pos != 0)
 	{
-		const auto     x = STP::Loader::load_f32 (in_ptr);
+		const auto     x = STP::Loader::load (in_ptr);
 		const auto     y = process_sample_parallel (data, x, b_inc, a_inc);
 		V128Dest::store_f32 (out_ptr, y);
 		++ in_ptr;
@@ -263,7 +263,7 @@ void	Biquad4Simd_Proc <STP>::process_block_parallel (Biquad4SimdData &data, fstb
 
 		do
 		{
-			x  = STP::Loader::load_f32 (&in_ptr [index]);
+			x  = STP::Loader::load (&in_ptr [index]);
 			sb = b1 * x1 +  b2 * x2;
 			sa = a1 * y1 +  a2 * y2;
 			y2 = b0 * x  + (sb - sa);
@@ -296,7 +296,7 @@ void	Biquad4Simd_Proc <STP>::process_block_parallel (Biquad4SimdData &data, fstb
 	// If number of samples was odd, there is one more to process.
 	if ((nbr_spl & 1) > 0)
 	{
-		const auto     x = STP::Loader::load_f32 (&in_ptr [index]);
+		const auto     x = STP::Loader::load (&in_ptr [index]);
 		const auto     y = process_sample_parallel (data, x, b_inc, a_inc);
 		V128Dest::store_f32 (&out_ptr [index], y);
 	}
@@ -744,12 +744,12 @@ void	Biquad4Simd <VD, VS, VP>::set_z_eq (const VectFloat4 b [3], const VectFloat
 	assert (b != 0);
 	assert (a != 0);
 
-	V128Par::store_f32 (_data._z_eq_b [0], V128Par::load (b [0]));
-	V128Par::store_f32 (_data._z_eq_b [1], V128Par::load (b [1]));
-	V128Par::store_f32 (_data._z_eq_b [2], V128Par::load (b [2]));
+	V128Par::store_f32 (_data._z_eq_b [0], V128Par::load_f32 (b [0]));
+	V128Par::store_f32 (_data._z_eq_b [1], V128Par::load_f32 (b [1]));
+	V128Par::store_f32 (_data._z_eq_b [2], V128Par::load_f32 (b [2]));
 
-	V128Par::store_f32 (_data._z_eq_a [1], V128Par::load (a [1]));
-	V128Par::store_f32 (_data._z_eq_a [2], V128Par::load (a [2]));
+	V128Par::store_f32 (_data._z_eq_a [1], V128Par::load_f32 (a [1]));
+	V128Par::store_f32 (_data._z_eq_a [2], V128Par::load_f32 (a [2]));
 }
 
 
@@ -794,12 +794,12 @@ void	Biquad4Simd <VD, VS, VP>::get_z_eq (VectFloat4 b [3], VectFloat4 a [3]) con
 	assert (b != 0);
 	assert (a != 0);
 
-	V128Par::store_f32 (b [0], V128Par::load (_data._z_eq_b [0]));
-	V128Par::store_f32 (b [1], V128Par::load (_data._z_eq_b [1]));
-	V128Par::store_f32 (b [2], V128Par::load (_data._z_eq_b [2]));
+	V128Par::store_f32 (b [0], V128Par::load_f32 (_data._z_eq_b [0]));
+	V128Par::store_f32 (b [1], V128Par::load_f32 (_data._z_eq_b [1]));
+	V128Par::store_f32 (b [2], V128Par::load_f32 (_data._z_eq_b [2]));
 
-	V128Par::store_f32 (a [1], V128Par::load (_data._z_eq_a [1]));
-	V128Par::store_f32 (a [2], V128Par::load (_data._z_eq_a [2]));
+	V128Par::store_f32 (a [1], V128Par::load_f32 (_data._z_eq_a [1]));
+	V128Par::store_f32 (a [2], V128Par::load_f32 (_data._z_eq_a [2]));
 }
 
 
