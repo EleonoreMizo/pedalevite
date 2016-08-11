@@ -389,9 +389,9 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 				fstb::txt::utf8::strncat_0 (tmp_0, ":1", sizeof (tmp_0));
 			}
 		}
-	}
 
-	fstb::txt::utf8::strncpy_0 (txt_0, tmp_0, max_len + 1);
+		fstb::txt::utf8::strncpy_0 (txt_0, tmp_0, max_len + 1);
+	}
 
 	return (Err_OK);
 }
