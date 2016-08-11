@@ -29,3 +29,4 @@ missing
 .deps
 .dirstamp
 build/unix/pedalevite
+art/*.h
