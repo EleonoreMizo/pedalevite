@@ -52,6 +52,7 @@ TplMapped <T>::TplMapped (double val_min, double val_max, const char *name_0, co
 ,	_name ()
 ,	_unit (unit_0)
 ,	_categ (piapi::ParamDescInterface::Categ_UNDEFINED)
+,	_flags (0)
 {
 	assert (val_min < val_max);
 	assert (name_0 != 0);
@@ -118,6 +119,14 @@ const HelperDispNum &	TplMapped <T>::use_disp_num () const
 
 
 
+template <class T>
+void	TplMapped <T>::set_flags (int32_t flags)
+{
+	_flags = flags;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -160,6 +169,14 @@ template <class T>
 piapi::ParamDescInterface::Categ  TplMapped <T>::do_get_categ () const
 {
 	return _categ;
+}
+
+
+
+template <class T>
+int32_t	TplMapped <T>::do_get_flags () const
+{
+	return _flags;
 }
 
 

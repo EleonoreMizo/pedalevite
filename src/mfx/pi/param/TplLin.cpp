@@ -55,6 +55,7 @@ TplLin::TplLin (double val_min, double val_max, const char *name_0, const char *
 ,	_name ()
 ,	_unit (unit_0)
 ,	_categ (piapi::ParamDescInterface::Categ_UNDEFINED)
+,	_flags (0)
 {
 	assert (val_min < val_max);
 	assert (name_0);
@@ -99,6 +100,13 @@ const HelperDispNum &	TplLin::use_disp_num () const
 
 
 
+void	TplLin::set_flags (int32_t flags)
+{
+	_flags = flags;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -137,6 +145,13 @@ piapi::ParamDescInterface::Range  TplLin::do_get_range () const
 piapi::ParamDescInterface::Categ  TplLin::do_get_categ () const
 {
 	return _categ;
+}
+
+
+
+int32_t	TplLin::do_get_flags () const
+{
+	return _flags;
 }
 
 

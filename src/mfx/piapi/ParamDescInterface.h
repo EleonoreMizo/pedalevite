@@ -31,6 +31,8 @@ All strings are UTF-8
 
 #include <string>
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -65,6 +67,11 @@ public:
 		Categ_NBR_ELT
 	};
 
+	enum Flags : int32_t
+	{
+		Flags_AUTOLINK = 1 << 0 // Automatic link to a controller (for example, the filter cutoff on a wha effects)
+	};
+
 	virtual        ~ParamDescInterface () {}
 
 	inline std::string
@@ -73,6 +80,7 @@ public:
 	               get_unit (int len) const;
 	inline Range   get_range () const;
 	inline Categ   get_categ () const;
+	inline int32_t get_flags () const;
 	inline double  get_nat_min () const;
 	inline double  get_nat_max () const;
 	inline std::string
@@ -93,6 +101,8 @@ protected:
 	               do_get_unit (int len) const = 0;
 	virtual Range  do_get_range () const = 0;
 	virtual Categ  do_get_categ () const = 0;
+	virtual int32_t
+	               do_get_flags () const = 0;
 	virtual double do_get_nat_min () const = 0;
 	virtual double do_get_nat_max () const = 0;
 	virtual std::string

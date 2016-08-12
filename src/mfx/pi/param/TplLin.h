@@ -58,6 +58,8 @@ public:
 	const HelperDispNum &
 						use_disp_num () const;
 
+	void           set_flags (int32_t flags);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -71,6 +73,8 @@ protected:
 	               do_get_unit (int len) const;
 	virtual Range  do_get_range () const;
 	virtual Categ  do_get_categ () const;
+	virtual int32_t
+	               do_get_flags () const;
 	virtual double do_get_nat_min () const;
 	virtual double do_get_nat_max () const;
 	virtual std::string
@@ -90,6 +94,7 @@ private:
 	std::string    _name;
 	std::string    _unit;
 	Categ          _categ;
+	int32_t        _flags;
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

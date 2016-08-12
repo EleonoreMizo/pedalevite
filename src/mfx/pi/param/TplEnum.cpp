@@ -60,6 +60,7 @@ TplEnum::TplEnum (const char *val_list_0, const char *name_0, const char *unit_0
 ,	_name ()
 ,	_unit (unit_0)
 ,	_print_format (format_0)
+,	_flags (0)
 {
 	assert (val_list_0 != 0);
 	assert (name_0);
@@ -93,6 +94,13 @@ TplEnum::TplEnum (const char *val_list_0, const char *name_0, const char *unit_0
 		_group_index, _group_index, _group_index, _group_index
 	);
 	_name = txt_0;
+}
+
+
+
+void	TplEnum::set_flags (int32_t flags)
+{
+	_flags = flags;
 }
 
 
@@ -139,9 +147,16 @@ piapi::ParamDescInterface::Categ	TplEnum::do_get_categ () const
 
 
 
+int32_t	TplEnum::do_get_flags () const
+{
+	return _flags;
+}
+
+
+
 double	TplEnum::do_get_nat_min () const
 {
-	return (0);
+	return 0;
 }
 
 

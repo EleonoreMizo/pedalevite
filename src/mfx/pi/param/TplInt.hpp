@@ -52,6 +52,7 @@ TplInt::TplInt (int val_min, int val_max, const char *name_0, const char *unit_0
 ,	_group_index (group_index)
 ,	_name ()
 ,	_unit (unit_0)
+,	_flags (0)
 {
 	assert (val_min < val_max);
 	assert (name_0);
@@ -68,6 +69,13 @@ TplInt::TplInt (int val_min, int val_max, const char *name_0, const char *unit_0
 		_group_index, _group_index, _group_index, _group_index
 	);
 	_name = txt_0;
+}
+
+
+
+void	TplInt::set_flags (int32_t flags)
+{
+	_flags = flags;
 }
 
 
@@ -110,6 +118,13 @@ piapi::ParamDescInterface::Range	TplInt::do_get_range () const
 piapi::ParamDescInterface::Categ	TplInt::do_get_categ () const
 {
 	return (piapi::ParamDescInterface::Categ_UNDEFINED);
+}
+
+
+
+int32_t	TplInt::do_get_flags () const
+{
+	return _flags;
 }
 
 

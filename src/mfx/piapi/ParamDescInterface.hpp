@@ -85,6 +85,13 @@ ParamDescInterface::Categ	ParamDescInterface::get_categ () const
 
 
 
+int32_t	ParamDescInterface::get_flags () const
+{
+	return do_get_flags ();
+}
+
+
+
 // min <= max
 double	ParamDescInterface::get_nat_min () const
 {

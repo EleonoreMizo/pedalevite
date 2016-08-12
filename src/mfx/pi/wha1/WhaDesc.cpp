@@ -59,6 +59,7 @@ WhaDesc::WhaDesc ()
 		"%6.1f"
 	);
 	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	log_ptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
 	_desc_set.add_glob (Param_FREQ, log_ptr);
 
 	// Base Q
