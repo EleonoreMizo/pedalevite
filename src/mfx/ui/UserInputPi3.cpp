@@ -56,9 +56,7 @@ namespace ui
 const int	UserInputPi3::_i2c_dev_23017_arr [_nbr_dev_23017] =
 {
 	0x20 + 0,
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 	0x20 + 1
-#endif
 };
 
 const int	UserInputPi3::_gpio_pin_arr [_nbr_sw_gpio] = { 7, 22 };
@@ -83,13 +81,10 @@ const UserInputPi3::SwitchSrc	UserInputPi3::_switch_arr [_nbr_switches] =
 	{ BinSrc_PORT_EXP, 0x0D },
 	{ BinSrc_PORT_EXP, 0x0E },
 	{ BinSrc_PORT_EXP, 0x0F },
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 	{ BinSrc_PORT_EXP, 0x1C },
 	{ BinSrc_PORT_EXP, 0x1F }
-#endif
 };
 
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 const UserInputPi3::RotEncSrc	UserInputPi3::_rotenc_arr [_nbr_rotenc] =
 {
 	{ BinSrc_PORT_EXP, 0x10, 0x11, -1 },
@@ -100,15 +95,10 @@ const UserInputPi3::RotEncSrc	UserInputPi3::_rotenc_arr [_nbr_rotenc] =
 	{ BinSrc_PORT_EXP, 0x1A, 0x1B, -1 },
 	{ BinSrc_PORT_EXP, 0x1D, 0x1E, -1 }
 };
-#endif
 
-const int UserInputPi3::_pot_arr [_nbr_pot] =
+const int UserInputPi3::_pot_arr [Cst::_nbr_pot] =
 {
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 	2, 3, 4
-#else
-	0
-#endif
 };
 
 
@@ -188,7 +178,7 @@ int	UserInputPi3::do_get_nbr_param (UserInputType type) const
 
 	if (type == UserInputType_POT)
 	{
-		nbr = _nbr_pot;
+		nbr = Cst::_nbr_pot;
 	}
 	else if (type == UserInputType_SW)
 	{
@@ -274,7 +264,7 @@ bool	UserInputPi3::do_process_timeshare_op ()
 	const int64_t  cur_time = read_clock_ns ();
 
 	// Potentiometers
-	for (int i = 0; i < _nbr_pot; ++i)
+	for (int i = 0; i < Cst::_nbr_pot; ++i)
 	{
 		const int      adc_index = _pot_arr [i];
 		const int      val       = read_adc (_spi_port, adc_index);
@@ -383,7 +373,6 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 		}
 	}
 
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 	// Rotary incremental encoders
 	for (int i = 0; i < _nbr_rotenc; ++i)
 	{
@@ -393,7 +382,6 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 		const int         v1        = (src_state >> src._pos_1) & 1;
 		handle_rotenc (i, (v0 != 0), (v1 != 0), cur_time);
 	}
-#endif
 }
 
 
@@ -413,8 +401,6 @@ void	UserInputPi3::handle_switch (int index, bool flag, int64_t cur_time)
 
 
 
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
-
 void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, int64_t cur_time)
 {
 	RotEnc &       re  = _rotenc_state_arr [index];
@@ -425,8 +411,6 @@ void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, int64_t cur_time)
 		enqueue_val (cur_time, UserInputType_ROTENC, index, inc);
 	}
 }
-
-#endif
 
 
 

@@ -47,7 +47,9 @@ public:
 	static const int  _nbr_presets_per_bank = 16;
 	static const int  _nbr_banks       =  64;  // Per setup
 
-	static const int  _max_nbr_buf     = 256;
+	static const int  _nbr_pot         =   3;
+
+	static const int  _max_nbr_buf     = 256; // Number of buffers in the audio graph processing
 	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_plugins = 256;

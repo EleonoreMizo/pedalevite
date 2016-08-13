@@ -31,15 +31,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/RotEnc.h"
 #include "mfx/ui/TimeShareCbInterface.h"
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/Cst.h"
 
 #include <array>
 #include <mutex>
 #include <thread>
 #include <vector>
-
-
-
-#define mfx_ui_UserInputPi3_NEW_BOARD
 
 
 
@@ -86,11 +83,7 @@ public:
 
 	static const int  _antibounce_time = 30 * 1000*1000; // Nanoseconds
 
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 	static const int  _nbr_dev_23017   = 2;
-#else
-	static const int  _nbr_dev_23017   = 1;
-#endif
 	static const int  _i2c_dev_23017_arr [_nbr_dev_23017];
 	static const int  _nbr_sw_23017    = 16;            // Inputs per device
 
@@ -102,28 +95,15 @@ public:
 	static const int  _spi_port        = 0;             // For the ADC
 	static const int  _spi_rate        = 1 * 1000*1000; // Hz
 
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 	static const int  _nbr_switches    = _nbr_sw_gpio + _nbr_sw_23017 + 2;
-#else
-	static const int  _nbr_switches    = _nbr_sw_gpio + _nbr_sw_23017;
-#endif
 	static const SwitchSrc
 	                  _switch_arr [_nbr_switches];
 
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
 	static const int  _nbr_rotenc      = 7;
 	static const RotEncSrc
 	                  _rotenc_arr [_nbr_rotenc];
-#else
-	static const int  _nbr_rotenc      = 0;
-#endif
 
-#if defined (mfx_ui_UserInputPi3_NEW_BOARD)
-	static const int  _nbr_pot         = 3;
-#else
-	static const int  _nbr_pot         = 1;
-#endif
-	static const int  _pot_arr [_nbr_pot];
+	static const int  _pot_arr [Cst::_nbr_pot];
 
 	explicit       UserInputPi3 (TimeShareThread &thread_spi);
 	virtual        ~UserInputPi3 ();
