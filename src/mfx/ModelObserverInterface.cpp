@@ -272,6 +272,19 @@ void	ModelObserverInterface::set_param_ctrl (int slot_index, PiType type, int in
 
 
 
+// rotenc_index < 0: removes the override
+void	ModelObserverInterface::override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index)
+{
+	assert (slot_index >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	do_override_param_ctrl (slot_index, type, index, rotenc_index);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

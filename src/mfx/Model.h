@@ -38,6 +38,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ChnMode.h"
 #include "mfx/ModelObserverInterface.h"
 
+#include <map>
+
 
 
 namespace mfx
@@ -109,7 +111,7 @@ public:
 	void           set_param (int slot_index, PiType type, int index, float val);
 	void           set_param_beats (int slot_index, int index, float beats);
 	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
-//	void           override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index);
+	void           override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index);
 
 	std::vector <std::string>
 	               list_plugin_models () const;
@@ -154,6 +156,15 @@ private:
 	};
 	typedef std::array <PedalState, Cst::_nbr_pedals> PedalStateArray;
 
+	class OverrideLoc
+	{
+	public:
+		bool           operator < (const OverrideLoc &rhs) const;
+		int            _slot_index;
+		PiType         _type;
+		int            _index;
+	};
+
 	void           update_layout ();
 	void           preinstantiate_all_plugins_from_bank ();
 	void           apply_settings ();
@@ -180,6 +191,9 @@ private:
 	bool           update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
 	void           fill_pi_init_data (int slot_index, ModelObserverInterface::PluginInitData &pi_data);
 	void           update_all_beat_parameters ();
+	void           update_all_overriden_param_ctrl ();
+	void           update_param_ctrl (const OverrideLoc &loc);
+	void           set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index);
 	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index);
 	void           add_default_ctrl (int selected_slot_index = -1);
 
@@ -191,7 +205,7 @@ private:
 	int            _preset_index;
 
 	// Current and cached settings
-	doc::Preset    _preset_cur;         // Current preset and settings, as known by cmd::Central. Layout is without inherited layouts
+	doc::Preset    _preset_cur;         // Current preset and settings, as known by cmd::Central (but does not feature the parameter override). Layout is without inherited layouts.
 	doc::PedalboardLayout               // Final layout
 	               _layout_cur;
 
@@ -218,6 +232,9 @@ private:
 
 	ModelObserverInterface::SlotInfoList   // Cached. Not affected by the tuner
 	               _slot_info;
+
+	std::map <OverrideLoc, int>         // Parameter -> rot enc
+	               _override_map;
 
 
 

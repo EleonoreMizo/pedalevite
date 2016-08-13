@@ -112,6 +112,7 @@ public:
 	void           set_plugin (int slot_index, const PluginInitData &pi_data);
 	void           remove_plugin (int slot_index);
 	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
+	void           override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index);
 
 
 
@@ -142,6 +143,7 @@ protected:
 	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data) = 0;
 	virtual void   do_remove_plugin (int slot_index) = 0;
 	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls) = 0;
+	virtual void   do_override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index) = 0;
 
 
 

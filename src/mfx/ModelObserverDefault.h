@@ -69,6 +69,7 @@ public:
 	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data) {}
 	virtual void   do_remove_plugin (int slot_index) {}
 	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls) {}
+	virtual void   do_override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index) {}
 
 
 

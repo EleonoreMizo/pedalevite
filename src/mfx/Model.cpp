@@ -84,6 +84,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_tempo_last_ts (_central.get_cur_date () - Cst::_tempo_detection_max * 2)
 ,	_tempo (Cst::_tempo_ref)
 ,	_slot_info ()
+,	_override_map ()
 {
 	_central.set_callback (this);
 }
@@ -611,7 +612,7 @@ void	Model::set_param_ctrl (int slot_index, PiType type, int index, const doc::C
 	}
 	else if (! _tuner_flag)
 	{
-		set_param_ctrl_internal (cls, pi_id, slot_index, type, index);
+		set_param_ctrl_with_override (cls, pi_id, slot_index, type, index);
 		_central.commit ();
 	}
 
@@ -621,6 +622,43 @@ void	Model::set_param_ctrl (int slot_index, PiType type, int index, const doc::C
 		pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
 
 		_obs_ptr->set_param_ctrl (slot_index, type, index, cls);
+	}
+}
+
+
+
+// rotenc_index < 0: previous override is disabled, if existing.
+void	Model::override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (! _preset_cur.is_slot_empty (slot_index));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	const OverrideLoc loc { slot_index, type, index };
+
+	if (rotenc_index < 0)
+	{
+		auto           it = _override_map.find (loc);
+		if (it != _override_map.end ())
+		{
+			_override_map.erase (it);
+			update_param_ctrl (loc);
+			_central.commit ();
+		}
+	}
+	else
+	{
+		_override_map [loc] = rotenc_index;
+		update_param_ctrl (loc);
+		_central.commit ();
+	}
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->override_param_ctrl (slot_index, type, index, rotenc_index);
 	}
 }
 
@@ -715,6 +753,29 @@ Model::SlotPiId::SlotPiId ()
 :	_pi_id_arr ({{ -1, -1 }})
 {
 	// Nothing
+}
+
+
+
+bool	Model::OverrideLoc::operator < (const OverrideLoc &rhs) const
+{
+	if (_slot_index < rhs._slot_index)
+	{
+		return true;
+	}
+	else if (_slot_index == rhs._slot_index)
+	{
+		if (_type < rhs._type)
+		{
+			return true;
+		}
+		else if (_type == rhs._type)
+		{
+			return (_index < rhs._index);
+		}
+	}
+
+	return false;
 }
 
 
@@ -1015,7 +1076,7 @@ void	Model::send_effect_settings (int pi_id, int slot_index, PiType type, const 
 	for (const auto &x : settings._map_param_ctrl)
 	{
 		const int   p_index = x.first;
-		set_param_ctrl_internal (x.second, pi_id, slot_index, type, p_index);
+		set_param_ctrl_with_override (x.second, pi_id, slot_index, type, p_index);
 	}
 }
 
@@ -1299,7 +1360,10 @@ void	Model::process_action_tempo (const doc::ActionTempo &action, int64_t ts)
 			_obs_ptr->set_tempo (tempo);
 		}
 
-		update_all_beat_parameters ();
+		if (! _tuner_flag)
+		{
+			update_all_beat_parameters ();
+		}
 	}
 
 	_tempo_last_ts = ts;
@@ -1472,6 +1536,8 @@ void	Model::fill_pi_init_data (int slot_index, ModelObserverInterface::PluginIni
 
 void	Model::update_all_beat_parameters ()
 {
+	assert (! _tuner_flag);
+
 	bool           need_commit_flag = false;
 
 	const int      nbr_slots = int (_preset_cur._slot_list.size ());
@@ -1496,7 +1562,7 @@ void	Model::update_all_beat_parameters ()
 						auto           it_cls = settings._map_param_ctrl.find (index);
 						if (it_cls != settings._map_param_ctrl.end ())
 						{
-							set_param_ctrl_internal (
+							set_param_ctrl_with_override (
 								it_cls->second, pi_id, slot_index, PiType_MAIN, index
 							);
 							need_commit_flag = true;
@@ -1510,6 +1576,76 @@ void	Model::update_all_beat_parameters ()
 	if (need_commit_flag)
 	{
 		_central.commit ();
+	}
+}
+
+
+
+// Requires commit
+void	Model::update_all_overriden_param_ctrl ()
+{
+	for (auto &node : _override_map)
+	{
+		const OverrideLoc &  loc = node.first;
+		update_param_ctrl (loc);
+	}
+}
+
+
+
+// Requires commit
+void	Model::update_param_ctrl (const OverrideLoc &loc)
+{
+	const int      slot_index = loc._slot_index;
+	const PiType   type       = loc._type;
+	const int      index      = loc._index;
+	const int      pi_id      = _pi_id_list [slot_index]._pi_id_arr [type];
+
+	if (! _preset_cur.is_slot_empty (slot_index) && pi_id >= 0)
+	{
+		doc::CtrlLinkSet  cls;
+
+		doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+		doc::PluginSettings &   settings = slot.use_settings (type);
+		const auto     it_cls = settings._map_param_ctrl.find (index);
+		if (it_cls != settings._map_param_ctrl.end ())
+		{
+			cls = it_cls->second;
+		}
+
+		set_param_ctrl_with_override (cls, pi_id, slot_index, type, index);
+	}
+}
+
+
+
+// Requires commit
+void	Model::set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index)
+{
+	const OverrideLoc loc { slot_index, type, index };
+	auto           it = _override_map.find (loc);
+	if (it == _override_map.end ())
+	{
+		set_param_ctrl_internal (cls, pi_id, slot_index, type, index);
+	}
+	else
+	{
+		doc::CtrlLinkSet  clso (cls);
+
+		// Uses the override only if there is no direct control
+		if (clso._bind_sptr.get () == 0)
+		{
+			const int      rotenc_index = it->second;
+
+			// Uses the default values
+			doc::CtrlLinkSet::LinkSPtr link_sptr (new doc::CtrlLink);
+			link_sptr->_source._type  = ControllerType_ROTENC;
+			link_sptr->_source._index = rotenc_index;
+
+			clso._bind_sptr = link_sptr;
+		}
+
+		set_param_ctrl_internal (clso, pi_id, slot_index, type, index);
 	}
 }
 

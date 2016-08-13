@@ -124,6 +124,13 @@ int	View::get_preset_index () const
 
 
 
+const View::OverrideMap &	View::use_param_ctrl_override_map () const
+{
+	return _override_map;
+}
+
+
+
 void	View::update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val)
 {
 	if (preset.is_slot_empty (slot_index))
@@ -420,11 +427,55 @@ void	View::do_set_param_ctrl (int slot_index, PiType type, int index, const doc:
 
 
 
+void	View::do_override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index)
+{
+	const OverrideLoc loc { slot_index, type, index };
+	if (rotenc_index < 0)
+	{
+		const auto     it = _override_map.find (loc);
+		if (it != _override_map.end ())
+		{
+			_override_map.erase (it);
+		}
+	}
+	else
+	{
+		_override_map [loc] = rotenc_index;
+	}
+
+	mfx_View_PROPAGATE (override_param_ctrl (slot_index, type, index, rotenc_index));
+}
+
+
+
 #undef mfx_View_PROPAGATE
 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	View::OverrideLoc::operator < (const OverrideLoc &rhs) const
+{
+	if (_slot_index < rhs._slot_index)
+	{
+		return true;
+	}
+	else if (_slot_index == rhs._slot_index)
+	{
+		if (_type < rhs._type)
+		{
+			return true;
+		}
+		else if (_type == rhs._type)
+		{
+			return (_index < rhs._index);
+		}
+	}
+
+	return false;
+}
 
 
 
