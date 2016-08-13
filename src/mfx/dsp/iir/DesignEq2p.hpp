@@ -165,7 +165,7 @@ Throws: Nothing
 */
 
 template <typename T>
-void	DesignEq2p::make_3db_peak (T bs [3], T a [3], T q, T lvl)
+void	DesignEq2p::make_3db_peak (T bs [3], T as [3], T q, T lvl)
 {
 	assert (bs != 0);
 	assert (as != 0);

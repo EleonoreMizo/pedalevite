@@ -159,6 +159,17 @@ void	PEq::do_process_block (ProcInfo &proc)
 		cook_all_bands ();
 	}
 
+	std::array <const float *, _max_nbr_chn> src_chn_arr;
+	const float * const *   src_ptr_arr = proc._src_arr;
+	if (nbr_chn_in < nbr_chn_out)
+	{
+		for (int chn = 0; chn < nbr_chn_out; ++chn)
+		{
+			src_chn_arr [chn] = proc._src_arr [0];
+		}
+		src_ptr_arr = &src_chn_arr [0];
+	}
+
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -209,7 +220,7 @@ void	PEq::do_process_block (ProcInfo &proc)
 		}
 
 		// Signal processing
-		_biq_pack.process_block (proc._dst_arr, proc._src_arr, pos, pos + work_len);
+		_biq_pack.process_block (proc._dst_arr, src_ptr_arr, pos, pos + work_len);
 
 		pos += work_len;
 	}
@@ -247,12 +258,12 @@ bool	PEq::BandInfo::is_active () const
 bool PEq::BandInfo::is_bypass () const
 {
 	bool ret_val = _bypass_flag;
-	
+
 	if (_type != PEqType_LP && _type != PEqType_HP)
 	{
 		ret_val |= is_unit_gain (_gain);
 	}
-	
+
 	return ret_val;
 }
 

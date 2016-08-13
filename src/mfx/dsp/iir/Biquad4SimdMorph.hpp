@@ -115,11 +115,11 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_ramp_time (int nbr_spl)
 			auto           sa_1 = V128Par::load_f32 (_step_a [1]);
 			auto           sa_2 = V128Par::load_f32 (_step_a [2]);
 
-			V128Par::store_f32 (_step_b [0], _mm_mul_ps (sb_0, scale));
-			V128Par::store_f32 (_step_b [1], _mm_mul_ps (sb_1, scale));
-			V128Par::store_f32 (_step_b [2], _mm_mul_ps (sb_2, scale));
-			V128Par::store_f32 (_step_a [1], _mm_mul_ps (sa_1, scale));
-			V128Par::store_f32 (_step_a [2], _mm_mul_ps (sa_2, scale));
+			V128Par::store_f32 (_step_b [0], sb_0 * scale);
+			V128Par::store_f32 (_step_b [1], sb_1 * scale);
+			V128Par::store_f32 (_step_b [2], sb_2 * scale);
+			V128Par::store_f32 (_step_a [1], sa_1 * scale);
+			V128Par::store_f32 (_step_a [2], sa_2 * scale);
 
 			_nbr_rem_spl = _ramp_len;
 		}
