@@ -39,6 +39,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ToolsParam.h"
 
 #include <algorithm>
+#include <set>
 
 #include <cassert>
 
@@ -298,6 +299,8 @@ void	Model::activate_preset (int preset_index)
 	_edit_preset_flag = true;
 
 	update_layout ();
+
+	add_default_ctrl (-1);
 }
 
 
@@ -469,6 +472,8 @@ void	Model::set_plugin (int slot_index, std::string model)
 			_obs_ptr->set_param (pi_id, p, val, slot_index, PiType_MAIN);
 		}
 	}
+
+	add_default_ctrl (slot_index);
 }
 
 
@@ -1548,6 +1553,132 @@ void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int
 }
 
 
+
+// Configures the default controllers, if any
+// selected_slot_index adds to only one slot, -1: all slots
+void	Model::add_default_ctrl (int selected_slot_index)
+{
+	std::set <int> used_pot_set;
+
+	// Pair: slot_index, parameter
+	std::vector <std::pair <int, int> > ctrl_param_arr;
+
+	// Lists:
+	// - Parameters requiering a default controller
+	// - Used controllers
+	// Checks only the analogue absolute controllers (potentiometers)
+	const int      nbr_slots = int (_preset_cur._slot_list.size ());
+	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
+	{
+		if (! _preset_cur.is_slot_empty (slot_index))
+		{
+			const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
+			for (int type = 0; type < PiType_NBR_ELT; ++type)
+			{
+				const doc::PluginSettings &   settings =
+					slot.use_settings (static_cast <PiType> (type));
+
+				// Check the default controllers only for the main plug-in,
+				// we know that the mixer plug-in doesn't require this.
+				if (   type == PiType_MAIN
+				    && (   selected_slot_index < 0
+				        || slot_index == selected_slot_index))
+				{
+					const piapi::PluginDescInterface & desc =
+						get_model_desc (slot._pi_model);
+					const int      nbr_param =
+						desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
+					for (int index = 0; index < nbr_param; ++index)
+					{
+						const auto &   pdesc =
+							desc.get_param_info (piapi::ParamCateg_GLOBAL, index);
+						const int32_t  flags = pdesc.get_flags ();
+						if ((flags & piapi::ParamDescInterface::Flags_AUTOLINK) != 0)
+						{
+							bool           ok_flag = true;
+							const auto     it_ctrl =
+								settings._map_param_ctrl.find (index);
+							if (it_ctrl != settings._map_param_ctrl.end ())
+							{
+								ok_flag = (it_ctrl->second._bind_sptr.get () == 0);
+							}
+
+							if (ok_flag)
+							{
+								ctrl_param_arr.push_back (
+									std::make_pair (slot_index, index)
+								);
+							}
+						}
+					}
+				}
+
+				// Lists the controllers
+				for (const auto &node : settings._map_param_ctrl)
+				{
+					const doc::CtrlLinkSet &   cls = node.second;
+					if (cls._bind_sptr.get () != 0)
+					{
+						if (cls._bind_sptr->_source._type == ControllerType_POT)
+						{
+							used_pot_set.insert (cls._bind_sptr->_source._index);
+						}
+					}
+					for (const auto &mod_sptr : cls._mod_arr)
+					{
+						assert (mod_sptr.get () != 0);
+						if (mod_sptr->_source._type == ControllerType_POT)
+						{
+							used_pot_set.insert (mod_sptr->_source._index);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Now associates the listed parameters to the free controllers
+	for (const auto &p : ctrl_param_arr)
+	{
+		const int      slot_index = p.first;
+		const int      index      = p.second;
+
+		// Finds a free controller
+		int            pot_index = 0;
+		while (   used_pot_set.find (pot_index) != used_pot_set.end ()
+		       && pot_index < Cst::_nbr_pot)
+		{
+			++ pot_index;
+		}
+
+		if (pot_index < Cst::_nbr_pot)
+		{
+			doc::CtrlLinkSet  cls;
+
+			// Retrieves the existing controllers for this parameter
+			const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
+			const doc::PluginSettings &   settings =
+				slot.use_settings (PiType_MAIN);
+			const auto     it_ctrl =
+				settings._map_param_ctrl.find (index);
+			if (it_ctrl != settings._map_param_ctrl.end ())
+			{
+				assert (it_ctrl->second._bind_sptr.get () == 0);
+				cls = it_ctrl->second;
+			}
+
+			// Inserts the controller
+			cls._bind_sptr = doc::CtrlLinkSet::LinkSPtr (new doc::CtrlLink);
+			cls._bind_sptr->_source._type  = ControllerType_POT;
+			cls._bind_sptr->_source._index = pot_index;
+
+			set_param_ctrl (slot_index, PiType_MAIN, index, cls);
+
+			// Marks the pot as used
+			used_pot_set.insert (pot_index);
+		}
+	}
+}
 
 }  // namespace mfx
 

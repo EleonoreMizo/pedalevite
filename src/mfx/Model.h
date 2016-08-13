@@ -181,6 +181,7 @@ private:
 	void           fill_pi_init_data (int slot_index, ModelObserverInterface::PluginInitData &pi_data);
 	void           update_all_beat_parameters ();
 	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index);
+	void           add_default_ctrl (int selected_slot_index = -1);
 
 	cmd::Central   _central;
 
