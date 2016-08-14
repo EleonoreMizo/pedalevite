@@ -85,13 +85,14 @@ const UserInputPi3::SwitchSrc	UserInputPi3::_switch_arr [_nbr_switches] =
 	{ BinSrc_PORT_EXP, 0x1F }
 };
 
-const UserInputPi3::RotEncSrc	UserInputPi3::_rotenc_arr [_nbr_rotenc] =
+const UserInputPi3::RotEncSrc	UserInputPi3::_rotenc_arr [Cst::RotEnc_NBR_ELT] =
 {
 	{ BinSrc_PORT_EXP, 0x10, 0x11, -1 },
 	{ BinSrc_PORT_EXP, 0x12, 0x13, -1 },
 	{ BinSrc_PORT_EXP, 0x14, 0x15, -1 },
 	{ BinSrc_PORT_EXP, 0x16, 0x17, -1 },
 	{ BinSrc_PORT_EXP, 0x18, 0x19, -1 },
+
 	{ BinSrc_PORT_EXP, 0x1A, 0x1B, -1 },
 	{ BinSrc_PORT_EXP, 0x1D, 0x1E, -1 }
 };
@@ -186,7 +187,7 @@ int	UserInputPi3::do_get_nbr_param (UserInputType type) const
 	}
 	else if (type == UserInputType_ROTENC)
 	{
-		nbr = _nbr_rotenc;
+		nbr = Cst::RotEnc_NBR_ELT;
 	}
 
 	return nbr;
@@ -374,7 +375,7 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 	}
 
 	// Rotary incremental encoders
-	for (int i = 0; i < _nbr_rotenc; ++i)
+	for (int i = 0; i < Cst::RotEnc_NBR_ELT; ++i)
 	{
 		const RotEncSrc & src       = _rotenc_arr [i];
 		const InputState  src_state = input_state_arr [src._type];

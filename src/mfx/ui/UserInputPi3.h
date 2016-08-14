@@ -99,9 +99,8 @@ public:
 	static const SwitchSrc
 	                  _switch_arr [_nbr_switches];
 
-	static const int  _nbr_rotenc      = 7;
 	static const RotEncSrc
-	                  _rotenc_arr [_nbr_rotenc];
+	                  _rotenc_arr [Cst::RotEnc_NBR_ELT];
 
 	static const int  _pot_arr [Cst::_nbr_pot];
 

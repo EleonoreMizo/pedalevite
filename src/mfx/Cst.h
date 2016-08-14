@@ -49,6 +49,17 @@ public:
 
 	static const int  _nbr_pot         =   3;
 
+	enum RotEnc
+	{
+		RotEnc_GEN     = 0,
+		RotEnc_NBR_GEN = 5,
+
+		RotEnc_NAV_VER = RotEnc_GEN + RotEnc_NBR_GEN,
+		RotEnc_NAV_HOR,
+
+		RotEnc_NBR_ELT
+	};
+
 	static const int  _max_nbr_buf     = 256; // Number of buffers in the audio graph processing
 	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)

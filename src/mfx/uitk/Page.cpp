@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/Page.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
+#include "mfx/Cst.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
 
@@ -356,11 +357,10 @@ void	Page::process_input ()
 						fstb::limit (fstb::round_int (val), -1, 1);
 					switch (index * val_lim)
 					{
-					/*** To do: a better map ***/
-					case -5: but = Button_U; break;
-					case  5: but = Button_D; break;
-					case -6: but = Button_L; break;
-					case  6: but = Button_R; break;
+					case -Cst::RotEnc_NAV_VER: but = Button_U; break;
+					case  Cst::RotEnc_NAV_VER: but = Button_D; break;
+					case -Cst::RotEnc_NAV_HOR: but = Button_L; break;
+					case  Cst::RotEnc_NAV_HOR: but = Button_R; break;
 					}
 					if (but != Button_INVALID)
 					{
