@@ -186,7 +186,7 @@ private:
 	};
 	typedef std::array <PotState, _nbr_adc> PotStateArray;
 
-	typedef std::array <RotEnc, _nbr_rotenc>   RotEncStateArray;
+	typedef std::array <RotEnc, Cst::RotEnc_NBR_ELT>   RotEncStateArray;
 
 	typedef conc::CellPool <UserInputMsg> MsgPool;
 	typedef std::vector <MsgQueue *> QueueArray;
