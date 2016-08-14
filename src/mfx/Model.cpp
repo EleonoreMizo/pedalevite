@@ -664,6 +664,17 @@ void	Model::override_param_ctrl (int slot_index, PiType type, int index, int rot
 
 
 
+void	Model::reset_all_overridden_param_ctrl ()
+{
+	while (! _override_map.empty ())
+	{
+		const OverrideLoc &  loc = _override_map.begin ()->first;
+		override_param_ctrl (loc._slot_index, loc._type, loc._index, -1);
+	}
+}
+
+
+
 std::vector <std::string>	Model::list_plugin_models () const
 {
 	return std::move (_central.use_pi_pool ().list_models ());

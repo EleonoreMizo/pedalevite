@@ -378,6 +378,39 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 
 
 
+void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int slot_index, int page)
+{
+	model.reset_all_overridden_param_ctrl ();
+
+	const doc::Preset &  preset = view.use_preset_cur ();
+	if (! preset.is_slot_empty (slot_index))
+	{
+		const doc::Slot &    slot = *(preset._slot_list [slot_index]);
+		const auto     it_s       = slot._settings_all.find (slot._pi_model);
+		if (it_s != slot._settings_all.end ())
+		{
+			const int      nbr_param = int (it_s->second._param_list.size ());
+
+			for (int pos = 0; pos < Cst::RotEnc_NBR_GEN; ++pos)
+			{
+				const int      index = Cst::RotEnc_NBR_GEN * page + pos;
+				if (index < nbr_param)
+				{
+					const int      rotenc_index = Cst::RotEnc_GEN + pos;
+					model.override_param_ctrl (
+						slot_index,
+						PiType_MAIN,
+						index,
+						rotenc_index
+					);
+				}
+			}
+		}
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

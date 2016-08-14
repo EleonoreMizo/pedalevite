@@ -145,7 +145,10 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 void	EditProg::do_disconnect ()
 {
-	// Nothing
+	if (_model_ptr != 0)
+	{
+		_model_ptr->reset_all_overridden_param_ctrl ();
+	}
 }
 
 
@@ -162,6 +165,7 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 		    && node_id >= 0 && node_id < int (_slot_list.size ()))
 		{
 			update_loc_edit (node_id);
+			update_rotenc_mapping ();
 		}
 	}
 
@@ -297,6 +301,8 @@ void	EditProg::set_preset_info ()
 {
 	assert (_fnt_ptr != 0);
 
+	update_rotenc_mapping ();
+
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	_prog_name_sptr->set_text (preset._name);
 
@@ -374,9 +380,12 @@ MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
 
 	if (node_id <= nbr_slots)
 	{
+		_model_ptr->reset_all_overridden_param_ctrl ();
 		Tools::change_plugin (*_model_ptr, *_view_ptr, node_id, dir, _fx_list);
 		ret_val = EvtProp_CATCH;
 	}
+
+	update_rotenc_mapping ();
 
 	return ret_val;
 }
@@ -392,6 +401,28 @@ void	EditProg::update_loc_edit (int node_id)
 	else
 	{
 		_loc_edit._slot_index = node_id;
+	}
+}
+
+
+
+void	EditProg::update_rotenc_mapping ()
+{
+	assert (_model_ptr != 0);
+	assert (_view_ptr  != 0);
+
+	if (_loc_edit._slot_index < 0)
+	{
+		_model_ptr->reset_all_overridden_param_ctrl ();
+	}
+	else if (_loc_edit._slot_index < int (_slot_list.size ()))
+	{
+		Tools::assign_default_rotenc_mapping (
+			*_model_ptr,
+			*_view_ptr,
+			_loc_edit._slot_index,
+			0
+		);
 	}
 }
 

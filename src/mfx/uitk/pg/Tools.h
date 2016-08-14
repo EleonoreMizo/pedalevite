@@ -80,6 +80,7 @@ public:
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static void    change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list);
+	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_index, int page);
 
 
 
