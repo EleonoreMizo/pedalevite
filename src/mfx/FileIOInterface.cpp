@@ -112,7 +112,6 @@ int	FileIOInterface::read_txt_file_direct (const std::string &pathname, std::str
 		}
 	}
 
-	size_t         sz = 0;
 	if (ret_val == Err_OK)
 	{
 		int				c;
