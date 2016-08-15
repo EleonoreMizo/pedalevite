@@ -57,6 +57,7 @@ const std::string	Cst::_config_dir     =
 #else
 	"../etc/config";
 #endif
+const std::string	Cst::_copy_script_pathname = "/opt/pedalevite/bin/mv_rofs.sh";
 
 
 

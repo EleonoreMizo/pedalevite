@@ -284,6 +284,9 @@ protected:
 	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	virtual void   do_notify_dropout ();
 	virtual void   do_request_exit ();
+private:
+	static void    init_empty_bank (mfx::doc::Bank &bank);
+	static void    create_default_bank (mfx::doc::Bank &bank);
 };
 
 Context::Context ()
@@ -451,12 +454,110 @@ fprintf (stderr, "Reading ESC button...\n");
 	_view.add_observer (*this);
 
 #if defined (MAIN_GENERATE_FACTORY_PRESETS)
+
 	mfx::doc::Bank bank;
-	bank._name = "Cr\xC3\xA9" "dit Usurier";
+	create_default_bank (bank);
+	_model.set_bank (0, bank);
+	_model.select_bank (0);
+	_model.activate_preset (0);
+
+#else  // MAIN_GENERATE_FACTORY_PRESETS
+
+	const int      ret_val = _model.load_from_disk ();
+	if (ret_val != 0)
+	{
+		/*** To do ***/
+		assert (false);
+
+		mfx::doc::Bank bank;
+		init_empty_bank (bank);
+		for (int b = 0; b < mfx::Cst::_nbr_banks; ++b)
+		{
+			_model.set_bank (b, bank);
+		}
+		_model.select_bank (0);
+		_model.activate_preset (0);
+	}
+
+#endif // MAIN_GENERATE_FACTORY_PRESETS
+
+//	_model.set_chn_mode (mfx::ChnMode_1M_1S);
+
+	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG         , _page_cur_prog         );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER            , _page_tuner            );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN        , _page_menu_main        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG        , _page_edit_prog        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST       , _page_param_list       );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT       , _page_param_edit       );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET          , _page_not_yet          );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_QUESTION         , _page_question         );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_CONTROLLERS, _page_param_controllers);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_EDIT        , _page_ctrl_edit        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_SLOT        , _page_menu_slot        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_END_MSG          , _page_end_msg          );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_LEVELS           , _page_levels           );
+
+	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
+}
+
+Context::~Context ()
+{
+	// Nothing
+}
+
+void	Context::set_proc_info (double sample_freq, int max_block_size)
+{
+	_sample_freq    = sample_freq;
+	_max_block_size = max_block_size;
+	_model.set_process_info (_sample_freq, _max_block_size);
+}
+
+void	Context::do_set_tuner (bool active_flag)
+{
+	if (active_flag)
+	{
+		_page_switcher.call_page (
+			mfx::uitk::pg::PageType_TUNER,
+			0,
+			_page_mgr.get_cursor_node ()
+		);
+	}
+}
+
+void	Context::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+{
+	_model.process_block (dst_arr, src_arr, nbr_spl);
+}
+
+void	Context::do_notify_dropout ()
+{
+	mfx::MeterResultSet &   meters = _model.use_meters ();
+	meters._dsp_overload_flag.exchange (true);
+}
+
+void	Context::do_request_exit ()
+{
+	_quit_flag = true;
+}
+
+
+
+void	Context::init_empty_bank (mfx::doc::Bank &bank)
+{
 	for (auto &preset : bank._preset_arr)
 	{
 		preset._name = mfx::Cst::_empty_preset_name;
 	}
+}
+
+
+
+void	Context::create_default_bank (mfx::doc::Bank &bank)
+{
+	init_empty_bank (bank);
+	bank._name = "Cr\xC3\xA9" "dit Usurier";
 	{
 		mfx::doc::Preset& preset   = bank._preset_arr [0];
 		preset._name = "Basic disto";
@@ -910,10 +1011,6 @@ fprintf (stderr, "Reading ESC button...\n");
 		cycle._cycle.push_back (action_arr);
 	}
 
-	_model.set_bank (0, bank);
-	_model.select_bank (0);
-	_model.activate_preset (3);
-
 #if 0
 	// Serialization consistency test
 	mfx::doc::SerWText ser_w;
@@ -935,77 +1032,6 @@ fprintf (stderr, "Reading ESC button...\n");
 
 	assert (result == result2);
 #endif
-
-#else  // MAIN_GENERATE_FACTORY_PRESETS
-
-	const int      ret_val = _model.load_from_disk ();
-	if (ret_val != 0)
-	{
-		/*** To do ***/
-		assert (false);
-	}
-
-#endif // MAIN_GENERATE_FACTORY_PRESETS
-
-//	_model.set_chn_mode (mfx::ChnMode_1M_1S);
-
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG         , _page_cur_prog         );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER            , _page_tuner            );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN        , _page_menu_main        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG        , _page_edit_prog        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST       , _page_param_list       );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT       , _page_param_edit       );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET          , _page_not_yet          );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_QUESTION         , _page_question         );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_CONTROLLERS, _page_param_controllers);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_EDIT        , _page_ctrl_edit        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_SLOT        , _page_menu_slot        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_END_MSG          , _page_end_msg          );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_LEVELS           , _page_levels           );
-
-	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
-}
-
-Context::~Context ()
-{
-	// Nothing
-}
-
-void	Context::set_proc_info (double sample_freq, int max_block_size)
-{
-	_sample_freq    = sample_freq;
-	_max_block_size = max_block_size;
-	_model.set_process_info (_sample_freq, _max_block_size);
-}
-
-void	Context::do_set_tuner (bool active_flag)
-{
-	if (active_flag)
-	{
-		_page_switcher.call_page (
-			mfx::uitk::pg::PageType_TUNER,
-			0,
-			_page_mgr.get_cursor_node ()
-		);
-	}
-}
-
-void	Context::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
-{
-	_model.process_block (dst_arr, src_arr, nbr_spl);
-}
-
-void	Context::do_notify_dropout ()
-{
-	mfx::MeterResultSet &   meters = _model.use_meters ();
-	meters._dsp_overload_flag.exchange (true);
-}
-
-void	Context::do_request_exit ()
-{
-	_quit_flag = true;
 }
 
 

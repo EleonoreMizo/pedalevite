@@ -103,6 +103,8 @@ public:
 	               _config_factory;
 	static const std::string
 	               _config_dir;
+	static const std::string
+	               _copy_script_pathname;
 
 
 

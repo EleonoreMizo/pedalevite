@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/LedInterface.h"
+#include "mfx/Cst.h"
 #include "mfx/FileIOPi3.h"
 
 #include <cassert>
@@ -73,10 +74,13 @@ int	FileIOPi3::do_write_txt_file (const std::string &pathname, const std::string
 	const int      ret_val = write_txt_file_direct (pathname_tmp, content);
 	if (ret_val == 0)
 	{
-
-		/*** To do: use the R/W-R/O script for the move ***/
-
-		std::string    cmd = "sudo mv \'";
+		std::string    cmd = "sudo ";
+#if 1
+		cmd += Cst::_copy_script_pathname;
+#else
+		cmd += "mv";
+#endif
+		cmd += " \'";
 		cmd += pathname_tmp;
 		cmd += "\' \'";
 		cmd += pathname;
