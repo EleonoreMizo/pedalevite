@@ -532,6 +532,9 @@ Piste :
 	– http://www.framboise314.fr/et-si-on-se-passait-du-swap/
 	– http://blog.gegg.us/2014/03/a-raspbian-read-only-root-fs-howto/
 		-> Copie de fichier temporaire : https://github.com/giggls/web20mash/blob/master/mashctld_readonly_root_script.sh
+		Savoir si le système de fichier est R/O:
+			mount | grep " / " | grep -c "(ro[),]"
+		renvoie un nombre > 0 si / est read-only.
 Autre possibilité : ajouter une batterie, et un système qui détecte la coupure de l'alim principale.
 
 
