@@ -1584,6 +1584,15 @@
     <ClInclude Include="mfx\dsp\iir\DesignEq2p.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\FileIOInterface.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\FileIOPi3.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\FileIOWindows.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -2174,6 +2183,15 @@
     </ClCompile>
     <ClCompile Include="mfx\dsp\iir\DesignEq2p.cpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\FileIOInterface.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\FileIOPi3.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\FileIOWindows.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

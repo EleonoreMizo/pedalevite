@@ -34,6 +34,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/ActionToggleTuner.h"
+#include "mfx/doc/SerRText.h"
+#include "mfx/doc/SerWText.h"
+#include "mfx/FileIOInterface.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverInterface.h"
 #include "mfx/ToolsParam.h"
@@ -62,7 +65,7 @@ const std::array <int, Cst::_nbr_pedals>	Model::_pedal_to_switch_map =
 
 
 
-Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device)
+Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device, FileIOInterface &file_io)
 :	_central (queue_input_to_audio, input_device)
 ,	_setup ()
 ,	_bank_index (0)
@@ -77,6 +80,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_tuner_flag (false)
 ,	_tuner_pi_id (-1)
 ,	_tuner_ptr (0)
+,	_file_io (file_io)
 ,	_input_device (input_device)
 ,	_queue_input_to_cmd (queue_input_to_cmd)
 ,	_obs_ptr (0)
@@ -173,6 +177,79 @@ void	Model::process_messages ()
 
 
 
+int	Model::save_to_disk ()
+{
+	int            ret_val = 0;
+
+	doc::SerWText  ser_w;
+	ser_w.clear ();
+	_setup.ser_write (ser_w);
+	ret_val = ser_w.terminate ();
+	if (ret_val == 0)
+	{
+		const std::string content = ser_w.use_content ();
+		std::string    pathname = Cst::_config_dir + "/" + Cst::_config_current;
+		ret_val = _file_io.write_txt_file (pathname, content);
+	}
+
+	return ret_val;
+}
+
+
+
+int	Model::load_from_disk ()
+{
+	int            ret_val = 0;
+
+	std::string    content;
+
+	std::string    pathname = Cst::_config_dir + "/" + Cst::_config_current;
+	ret_val = _file_io.read_txt_file (pathname, content);
+
+	if (ret_val == 0)
+	{
+		doc::SerRText  ser_r;
+		ser_r.start (content);
+		std::unique_ptr <doc::Setup> sss_uptr (new doc::Setup);
+		sss_uptr->ser_read (ser_r);
+		ret_val = ser_r.terminate ();
+		if (ret_val == 0)
+		{
+			const int      nbr_banks = int (sss_uptr->_bank_arr.size ());
+			assert (nbr_banks == Cst::_nbr_banks);
+
+			set_setup_name (sss_uptr->_name);
+			set_pedalboard_layout (sss_uptr->_layout);
+			set_save_mode (sss_uptr->_save_mode);
+			for (int bank_cnt = 0; bank_cnt < nbr_banks; ++bank_cnt)
+			{
+				set_bank (bank_cnt, sss_uptr->_bank_arr [bank_cnt]);
+			}
+			set_chn_mode (sss_uptr->_chn_mode);
+			set_master_vol (sss_uptr->_master_vol);
+
+			select_bank (0);
+			activate_preset (0);
+		}
+	}
+
+	return ret_val;
+}
+
+
+
+void	Model::set_setup_name (std::string name)
+{
+	_setup._name = name;
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_setup_name (name);
+	}
+}
+
+
+
 void	Model::set_edit_mode (bool edit_flag)
 {
 	if (edit_flag != _edit_flag)
@@ -188,6 +265,21 @@ void	Model::set_edit_mode (bool edit_flag)
 		{
 			_obs_ptr->set_edit_mode (edit_flag);
 		}
+	}
+}
+
+
+
+void	Model::set_save_mode (doc::Setup::SaveMode mode)
+{
+	assert (mode >= 0);
+	assert (mode < doc::Setup::SaveMode_NBR_ELT);
+
+	_setup._save_mode = mode;
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_save_mode (mode);
 	}
 }
 

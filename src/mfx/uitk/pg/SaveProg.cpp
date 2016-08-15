@@ -108,6 +108,14 @@ void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 				}
 				_model_ptr->activate_preset (_save_preset_index);
 			}
+
+			const int      ret_val = _model_ptr->save_to_disk ();
+			if (ret_val != 0)
+			{
+				/*** To do ***/
+				assert (false);
+			}
+
 			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
 			return;
 		}

@@ -592,6 +592,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/Dir.h \
         ../../src/mfx/CtrlUnit.cpp \
         ../../src/mfx/CtrlUnit.h \
+        ../../src/mfx/FileIOInterface.cpp \
+        ../../src/mfx/FileIOInterface.h \
+        ../../src/mfx/FileIOPi3.cpp \
+        ../../src/mfx/FileIOPi3.h \
         ../../src/mfx/GpioPwm.cpp \
         ../../src/mfx/GpioPwm.h \
         ../../src/mfx/LocEdit.h \

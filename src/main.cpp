@@ -13,6 +13,8 @@
 #define MAIN_USE_ST7920
 #undef MAIN_USE_VOID
 
+#undef MAIN_GENERATE_FACTORY_PRESETS
+
 #include "fstb/def.h"
 
 #define MAIN_API_JACK 1
@@ -89,6 +91,7 @@
  #endif
 	#include "mfx/ui/LedPi3.h"
 	#include "mfx/ui/UserInputPi3.h"
+	#include "mfx/FileIOPi3.h"
 
 	#if (MAIN_API == MAIN_API_JACK)
 		#include "mfx/adrv/DJack.h"
@@ -111,6 +114,7 @@
 
 #elif fstb_IS (SYS, WIN)
 	#include "mfx/ui/IoWindows.h"
+	#include "mfx/FileIOWindows.h"
 
 	#if (MAIN_API == MAIN_API_ASIO)
 		#include "mfx/adrv/DAsio.h"
@@ -169,7 +173,7 @@ public:
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
 
-	// New audio engine
+	// Audio engine
 	mfx::ProcessingContext
 	               _proc_ctx;
 	mfx::ProcessingContext
@@ -213,6 +217,13 @@ public:
 	mfx::ui::LedInterface &
 	               _leds;
 #endif
+#if fstb_IS (SYS, LINUX)
+	mfx::FileIOPi3 _file_io;
+#else
+	mfx::FileIOWindows
+	               _file_io;
+#endif
+
 	mfx::Model     _model;
 	std::vector <std::string>
 	               _pi_type_list;
@@ -302,7 +313,8 @@ Context::Context ()
 ,	_user_input (_all_io)
 ,	_leds (_all_io)
 #endif
-,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input)
+,	_file_io (_leds)
+,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input, _file_io)
 ,	_pi_type_list ()
 ,	_csn_list ({
 		{ mfx::ControllerType_POT   ,  0, "Expression 0" },
@@ -438,6 +450,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	_model.set_observer (&_view);
 	_view.add_observer (*this);
 
+#if defined (MAIN_GENERATE_FACTORY_PRESETS)
 	mfx::doc::Bank bank;
 	bank._name = "Cr\xC3\xA9" "dit Usurier";
 	for (auto &preset : bank._preset_arr)
@@ -900,25 +913,6 @@ fprintf (stderr, "Reading ESC button...\n");
 	_model.set_bank (0, bank);
 	_model.select_bank (0);
 	_model.activate_preset (3);
-//	_model.set_chn_mode (mfx::ChnMode_1M_1S);
-
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG         , _page_cur_prog         );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER            , _page_tuner            );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN        , _page_menu_main        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG        , _page_edit_prog        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST       , _page_param_list       );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT       , _page_param_edit       );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET          , _page_not_yet          );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_QUESTION         , _page_question         );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_CONTROLLERS, _page_param_controllers);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_EDIT        , _page_ctrl_edit        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_SLOT        , _page_menu_slot        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_END_MSG          , _page_end_msg          );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_LEVELS           , _page_levels           );
-
-	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 
 #if 0
 	// Serialization consistency test
@@ -941,6 +935,37 @@ fprintf (stderr, "Reading ESC button...\n");
 
 	assert (result == result2);
 #endif
+
+#else  // MAIN_GENERATE_FACTORY_PRESETS
+
+	const int      ret_val = _model.load_from_disk ();
+	if (ret_val != 0)
+	{
+		/*** To do ***/
+		assert (false);
+	}
+
+#endif // MAIN_GENERATE_FACTORY_PRESETS
+
+//	_model.set_chn_mode (mfx::ChnMode_1M_1S);
+
+	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG         , _page_cur_prog         );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER            , _page_tuner            );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN        , _page_menu_main        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG        , _page_edit_prog        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST       , _page_param_list       );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT       , _page_param_edit       );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET          , _page_not_yet          );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_QUESTION         , _page_question         );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_CONTROLLERS, _page_param_controllers);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_EDIT        , _page_ctrl_edit        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_SLOT        , _page_menu_slot        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_END_MSG          , _page_end_msg          );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_LEVELS           , _page_levels           );
+
+	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }
 
 Context::~Context ()

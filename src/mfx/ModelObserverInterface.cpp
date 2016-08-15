@@ -66,6 +66,23 @@ void	ModelObserverInterface::set_edit_mode (bool edit_flag)
 
 
 
+void	ModelObserverInterface::set_save_mode (doc::Setup::SaveMode mode)
+{
+	assert (mode >= 0);
+	assert (mode < doc::Setup::SaveMode_NBR_ELT);
+
+	do_set_save_mode (mode);
+}
+
+
+
+void	ModelObserverInterface::set_setup_name (std::string name)
+{
+	do_set_setup_name (name);
+}
+
+
+
 // Reference lifetime is the call. Please make a copy.
 void	ModelObserverInterface::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {

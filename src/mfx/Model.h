@@ -56,6 +56,7 @@ namespace doc
 	class FxId;
 }
 
+class FileIOInterface;
 class MeterResultSet;
 
 namespace pi
@@ -76,7 +77,7 @@ class Model
 
 public:
 
-	explicit       Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device);
+	explicit       Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device, FileIOInterface &file_io);
 	virtual        ~Model ();
 
 	// Audio
@@ -92,8 +93,13 @@ public:
 
 	void           process_messages (); // Call this regularly
 
+	int            save_to_disk ();
+	int            load_from_disk ();
+
 	void           set_edit_mode (bool edit_flag);
+	void           set_save_mode (doc::Setup::SaveMode mode);
 	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
+	void           set_setup_name (std::string name);
 	void           set_bank (int index, const doc::Bank &bank);
 	void           select_bank (int index);
 	void           set_bank_name (std::string name);
@@ -221,6 +227,8 @@ private:
 	pi::tuner::Tuner *
 	               _tuner_ptr;          // Can be 0.
 
+	FileIOInterface &
+	               _file_io;
 	ui::UserInputInterface &
 	               _input_device;
 	ui::UserInputInterface::MsgQueue &

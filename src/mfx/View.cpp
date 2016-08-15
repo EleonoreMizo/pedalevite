@@ -218,6 +218,22 @@ void	View::do_set_edit_mode (bool edit_flag)
 
 
 
+void	View::do_set_save_mode (doc::Setup::SaveMode mode)
+{
+	_setup._save_mode = mode;
+	mfx_View_PROPAGATE (set_save_mode (mode));
+}
+
+
+
+void	View::do_set_setup_name (std::string name)
+{
+	_setup._name = name;
+	mfx_View_PROPAGATE (set_setup_name (name));
+}
+
+
+
 void	View::do_set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
 	_setup._layout = layout;

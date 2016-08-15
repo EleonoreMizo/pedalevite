@@ -30,3 +30,4 @@ missing
 .dirstamp
 build/unix/pedalevite
 art/*.h
+etc/config/current

@@ -395,6 +395,9 @@
     <ClInclude Include="mfx\dsp\SplDataRetrievalInterface.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
+    <ClInclude Include="mfx\FileIOInterface.h" />
+    <ClInclude Include="mfx\FileIOPi3.h" />
+    <ClInclude Include="mfx\FileIOWindows.h" />
     <ClInclude Include="mfx\GpioPwm.h" />
     <ClInclude Include="mfx\LocEdit.h" />
     <ClInclude Include="mfx\MeterResult.h" />
@@ -677,6 +680,11 @@
     <ClCompile Include="mfx\dsp\rspl\SnhTool.cpp" />
     <ClCompile Include="mfx\dsp\rspl\Voice.cpp" />
     <ClCompile Include="mfx\dsp\SplDataRetrievalInterface.cpp" />
+    <ClCompile Include="mfx\FileIOInterface.cpp" />
+    <ClCompile Include="mfx\FileIOPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="mfx\FileIOWindows.cpp" />
     <ClCompile Include="mfx\GpioPwm.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
