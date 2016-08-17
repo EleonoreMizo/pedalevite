@@ -218,19 +218,16 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 				ret_val = reset_plugin ();
 				break;
 			case Entry_CHN:
+				if (   _loc_edit._slot_index >= 0
+				    && ! preset.is_slot_empty (_loc_edit._slot_index))
 				{
-					const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-					if (   _loc_edit._slot_index >= 0
-					    && ! preset.is_slot_empty (_loc_edit._slot_index))
-					{
-						const doc::Slot & slot =
-							*(preset._slot_list [_loc_edit._slot_index]);
-						const doc::PluginSettings &   settings =
-							slot.use_settings (PiType_MAIN);
-						bool           fm_flag = settings._force_mono_flag;
-						fm_flag = ! fm_flag;
-						_model_ptr->set_plugin_mono (_loc_edit._slot_index, fm_flag);
-					}
+					const doc::Slot & slot =
+						*(preset._slot_list [_loc_edit._slot_index]);
+					const doc::PluginSettings &   settings =
+						slot.use_settings (PiType_MAIN);
+					bool           fm_flag = settings._force_mono_flag;
+					fm_flag = ! fm_flag;
+					_model_ptr->set_plugin_mono (_loc_edit._slot_index, fm_flag);
 				}
 				break;
 			case Entry_LABEL:
