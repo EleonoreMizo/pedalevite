@@ -112,7 +112,9 @@ float	Downsampler2xNeon <NC>::process_sample (const float in_ptr [2])
 	assert (in_ptr != 0);
 
 	// Combines two input samples and two mid-processing data
-	const float32x2_t spl_in  = *reinterpret_cast <const float32x2_t *> (in_ptr);
+	const float32x2_t spl_in  = vreinterpret_f32_u8 (
+		*reinterpret_cast <const uint8x8_t *> (in_ptr)
+	);
 	const float32x2_t spl_mid = vget_low_f32 (_filter [NBR_STAGES]._mem4);
 	float32x4_t       y       = vcombine_f32 (spl_in, spl_mid);
 	float32x4_t       mem     = _filter [0]._mem4;
@@ -193,7 +195,9 @@ void	Downsampler2xNeon <NC>::process_sample_split (float &low, float &high, cons
 	assert (in_ptr != 0);
 
 	// Combines two input samples and two mid-processing data
-	const float32x2_t spl_in  = *reinterpret_cast <const float32x2_t *> (in_ptr);
+	const float32x2_t spl_in  = vreinterpret_f32_u8 (
+		*reinterpret_cast <const uint8x8_t *> (in_ptr)
+	);
 	const float32x2_t spl_mid = vget_low_f32 (_filter [NBR_STAGES]._mem4);
 	float32x4_t       y       = vcombine_f32 (spl_in, spl_mid);
 	float32x4_t       mem     = _filter [0]._mem4;
