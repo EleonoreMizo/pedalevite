@@ -432,6 +432,18 @@ void	View::do_remove_plugin (int slot_index)
 
 
 
+void	View::do_set_plugin_mono (int slot_index, bool mono_flag)
+{
+	assert (! _preset_cur.is_slot_empty (slot_index));
+	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+	settings._force_mono_flag = mono_flag;
+
+	mfx_View_PROPAGATE (set_plugin_mono (slot_index, mono_flag));
+}
+
+
+
 void	View::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
 	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);

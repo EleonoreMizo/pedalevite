@@ -277,6 +277,15 @@ void	ModelObserverInterface::remove_plugin (int slot_index)
 
 
 
+void	ModelObserverInterface::set_plugin_mono (int slot_index, bool mono_flag)
+{
+	assert (slot_index >= 0);
+
+	do_set_plugin_mono (slot_index, mono_flag);
+}
+
+
+
 void	ModelObserverInterface::set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
 	assert (slot_index >= 0);

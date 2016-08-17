@@ -82,6 +82,7 @@ protected:
 	virtual void   do_set_slot_label (int slot_index, std::string name);
 	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_index);
+	virtual void   do_set_plugin_mono (int slot_index, bool mono_flag);
 
 
 

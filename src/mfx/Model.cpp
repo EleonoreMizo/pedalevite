@@ -592,6 +592,27 @@ void	Model::remove_plugin (int slot_index)
 
 
 
+void	Model::set_plugin_mono (int slot_index, bool mono_flag)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (! _preset_cur.is_slot_empty (slot_index));
+
+	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+
+	settings._force_mono_flag = mono_flag;
+
+	apply_settings ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_plugin_mono (slot_index, mono_flag);
+	}
+}
+
+
+
 void	Model::set_param (int slot_index, PiType type, int index, float val)
 {
 	assert (slot_index >= 0);

@@ -218,8 +218,20 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 				ret_val = reset_plugin ();
 				break;
 			case Entry_CHN:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				{
+					const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+					if (   _loc_edit._slot_index >= 0
+					    && ! preset.is_slot_empty (_loc_edit._slot_index))
+					{
+						const doc::Slot & slot =
+							*(preset._slot_list [_loc_edit._slot_index]);
+						const doc::PluginSettings &   settings =
+							slot.use_settings (PiType_MAIN);
+						bool           fm_flag = settings._force_mono_flag;
+						fm_flag = ! fm_flag;
+						_model_ptr->set_plugin_mono (_loc_edit._slot_index, fm_flag);
+					}
+				}
 				break;
 			case Entry_LABEL:
 				{
@@ -364,6 +376,16 @@ void	MenuSlot::do_remove_plugin (int slot_index)
 
 
 
+void	MenuSlot::do_set_plugin_mono (int slot_index, bool mono_flag)
+{
+	if (_loc_edit._slot_index == slot_index)
+	{
+		update_display ();
+	}
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -424,9 +446,8 @@ void	MenuSlot::update_display ()
 		nav._node_id = Entry_RESET;
 		nav_list.push_back (nav);
 
-		const auto     it = slot._settings_all.find (slot._pi_model);
-		assert (it != slot._settings_all.end ());
-		const bool     fm_flag = it->second._force_mono_flag;
+		const doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+		const bool     fm_flag = settings._force_mono_flag;
 		_chn_sptr->set_text (fm_flag ? "Prefer mono" : "Mono or stereo");
 		nav._node_id = Entry_CHN;
 		nav_list.push_back (nav);

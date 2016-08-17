@@ -114,6 +114,7 @@ public:
 	void           set_slot_label (int slot_index, std::string name);
 	void           set_plugin (int slot_index, std::string model);
 	void           remove_plugin (int slot_index);
+	void           set_plugin_mono (int slot_index, bool mono_flag);
 	void           set_param (int slot_index, PiType type, int index, float val);
 	void           set_param_beats (int slot_index, int index, float beats);
 	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
