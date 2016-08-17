@@ -415,14 +415,18 @@ void	EditProg::update_rotenc_mapping ()
 	{
 		_model_ptr->reset_all_overridden_param_ctrl ();
 	}
-	else if (_loc_edit._slot_index < int (_slot_list.size ()))
+	else
 	{
-		Tools::assign_default_rotenc_mapping (
-			*_model_ptr,
-			*_view_ptr,
-			_loc_edit._slot_index,
-			0
-		);
+		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+		if (_loc_edit._slot_index < int (preset._slot_list.size ()))
+		{
+			Tools::assign_default_rotenc_mapping (
+				*_model_ptr,
+				*_view_ptr,
+				_loc_edit._slot_index,
+				0
+			);
+		}
 	}
 }
 

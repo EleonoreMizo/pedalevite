@@ -377,7 +377,7 @@ void	Model::activate_preset (int preset_index)
 	assert (preset_index >= 0);
 	assert (preset_index < Cst::_nbr_presets_per_bank);
 
-	if (_edit_flag && _edit_preset_flag)
+	if (_edit_flag && _edit_preset_flag && preset_index != _preset_index)
 	{
 		store_preset (_preset_index, -1);
 	}

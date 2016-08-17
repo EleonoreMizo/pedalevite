@@ -105,6 +105,9 @@ void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 				    && _save_preset_index != cur_preset_index)
 				{
 					_model_ptr->set_preset_name (old_name);
+					// Makes sure the current preset is not overwritten by
+					// the activation of the saved preset
+					_model_ptr->activate_preset (cur_preset_index);
 				}
 				_model_ptr->activate_preset (_save_preset_index);
 			}
