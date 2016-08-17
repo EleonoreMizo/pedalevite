@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/EventTs.h"
 
 #include <cassert>
+#include <cstring>
 
 
 
@@ -291,7 +292,7 @@ void	DistoSimple::update_filter_in ()
 // x -> { x - x^9/9 if x >  0
 //      { x + x^2/2 if x <= 0
 // x * (1 - x^8/9)
-// 
+//
 // With an attenuation:
 // x -> x - (a^(p-1) / p) * x^p
 // p = power

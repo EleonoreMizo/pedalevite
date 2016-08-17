@@ -85,7 +85,8 @@ void	Downsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const floa
 	int            work_pos = 0;
 	do
 	{
-		const int      work_len = std::min (nbr_spl - work_pos, _buf_len);
+		const int      max_len  = _buf_len;
+		const int      work_len = std::min (nbr_spl - work_pos, max_len);
 		float * const  buf_ptr  = &buf [0];
 
 		_ds_42.process_block (buf_ptr, &src_ptr [work_pos * 4], work_len * 2);
