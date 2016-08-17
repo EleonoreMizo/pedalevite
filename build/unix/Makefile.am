@@ -280,6 +280,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/DesignEq2p.cpp \
         ../../src/mfx/dsp/iir/DesignEq2p.h \
         ../../src/mfx/dsp/iir/DesignEq2p.hpp \
+        ../../src/mfx/dsp/iir/Downsampler4xSimd.h \
+        ../../src/mfx/dsp/iir/Downsampler4xSimd.hpp \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \
@@ -304,6 +306,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/TransSZBilin.cpp \
         ../../src/mfx/dsp/iir/TransSZBilin.h \
         ../../src/mfx/dsp/iir/TransSZBilin.hpp \
+        ../../src/mfx/dsp/iir/Upsampler4xSimd.h \
+        ../../src/mfx/dsp/iir/Upsampler4xSimd.hpp \
         ../../src/mfx/dsp/mix/Align.cpp \
         ../../src/mfx/dsp/mix/Align.h \
         ../../src/mfx/dsp/mix/Fpu.cpp \

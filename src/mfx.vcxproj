@@ -349,6 +349,8 @@
     <ClInclude Include="mfx\dsp\iir\BiquadPackSimd.hpp" />
     <ClInclude Include="mfx\dsp\iir\DesignEq2p.h" />
     <ClInclude Include="mfx\dsp\iir\DesignEq2p.hpp" />
+    <ClInclude Include="mfx\dsp\iir\Downsampler4xSimd.h" />
+    <ClInclude Include="mfx\dsp\iir\Downsampler4xSimd.hpp" />
     <ClInclude Include="mfx\dsp\iir\OnePole.h" />
     <ClInclude Include="mfx\dsp\iir\OnePole.hpp" />
     <ClInclude Include="mfx\dsp\iir\Svf2p.h" />
@@ -369,6 +371,8 @@
     <ClInclude Include="mfx\dsp\iir\TransS.h" />
     <ClInclude Include="mfx\dsp\iir\TransSZBilin.h" />
     <ClInclude Include="mfx\dsp\iir\TransSZBilin.hpp" />
+    <ClInclude Include="mfx\dsp\iir\Upsampler4xSimd.h" />
+    <ClInclude Include="mfx\dsp\iir\Upsampler4xSimd.hpp" />
     <ClInclude Include="mfx\dsp\InertiaLin.h" />
     <ClInclude Include="mfx\dsp\InertiaLin.hpp" />
     <ClInclude Include="mfx\dsp\mix\Align.h" />

@@ -29,7 +29,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
+#include "fstb/SingleObj.h"
 #include "mfx/dsp/iir/OnePole.h"
+#include "mfx/dsp/iir/Downsampler4xSimd.h"
+#include "mfx/dsp/iir/Upsampler4xSimd.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
@@ -76,6 +79,10 @@ protected:
 
 private:
 
+	static const int     _ovrspl      = 4;
+	static const int     _nbr_coef_42 = 3;
+	static const int     _nbr_coef_21 = 8;
+
 	// Attenuation. 1/_attn is the maximum volume that the disortion can reach,
 	// while gain at 0 remains unchanged.
 	static const float   _attn;
@@ -83,10 +90,26 @@ private:
 	static const float   _m_2;
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-	typedef std::array <BufAlign, _max_nbr_chn> BufAlignArray;
-	typedef std::array <dsp::iir::OnePole, _max_nbr_chn> HpfInArray;
+
+	class Channel
+	{
+	public:
+		typedef dsp::iir::Upsampler4xSimd <_nbr_coef_42, _nbr_coef_21> UpSpl;
+		typedef dsp::iir::Downsampler4xSimd <_nbr_coef_42, _nbr_coef_21> DwSpl;
+
+		dsp::iir::OnePole
+		               _hpf;
+		fstb::SingleObj <UpSpl, fstb::AllocAlign <UpSpl, 16> >
+		               _us;
+		fstb::SingleObj <DwSpl, fstb::AllocAlign <DwSpl, 16> >
+		               _ds;
+		BufAlign       _buf;
+	};
+
+	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
 	void           update_filter_in ();
+	void           distort_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	State          _state;
 
@@ -101,8 +124,8 @@ private:
 	float          _inv_fs;
 	float          _gain;
 	float          _hpf_in_freq;
-	BufAlignArray  _buf_arr;
-	HpfInArray     _hpf_in_arr;
+	BufAlign       _buf_ovrspl;
+	ChannelArray   _chn_arr;
 
 
 

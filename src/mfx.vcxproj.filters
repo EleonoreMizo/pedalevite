@@ -1593,6 +1593,18 @@
     <ClInclude Include="mfx\FileIOWindows.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Upsampler4xSimd.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Upsampler4xSimd.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Downsampler4xSimd.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\Downsampler4xSimd.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">

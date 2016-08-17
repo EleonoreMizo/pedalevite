@@ -57,7 +57,7 @@ double	MapPseudoLog::conv_norm_to_nat (double norm) const
 {
 	const double   nat = fstb::pseudo_exp (norm, _c) * _a;
 
-	return (nat);
+	return nat;
 }
 
 
@@ -66,7 +66,7 @@ double	MapPseudoLog::conv_nat_to_norm (double nat) const
 {
 	const double   nrm = fstb::pseudo_log (nat * _ai, _c);
 
-	return (nrm);
+	return nrm;
 }
 
 

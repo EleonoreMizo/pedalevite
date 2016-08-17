@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/ToolsSimd.h"
+#include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/dist1/DistoSimple.h"
@@ -56,8 +57,8 @@ DistoSimple::DistoSimple ()
 ,	_inv_fs (1 / _sample_freq)
 ,	_gain (float (DistoSimpleDesc::_gain_min))
 ,	_hpf_in_freq (1)
-,	_buf_arr ()
-,	_hpf_in_arr ()
+,	_buf_ovrspl ()
+,	_chn_arr ()
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
@@ -106,11 +107,26 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.clear_buffers ();
 	update_filter_in ();
 
+	double         coef_42 [_nbr_coef_42];
+	double         coef_21 [_nbr_coef_21];
+	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
+		coef_42, _nbr_coef_42, 1.0 / 5
+	);
+	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
+		coef_21, _nbr_coef_21, 1.0 / 100
+	);
+
 	for (int chn = 0; chn < _max_nbr_chn; ++chn)
 	{
-		_buf_arr [chn].resize (max_buf_len);
-		_hpf_in_arr [chn].clear_buffers ();
+		Channel &      c = _chn_arr [chn];
+		c._hpf.clear_buffers ();
+		c._us->set_coefs (coef_42, coef_21);
+		c._us->clear_buffers ();
+		c._ds->set_coefs (coef_42, coef_21);
+		c._ds->clear_buffers ();
+		c._buf.resize (max_buf_len);
 	}
+	_buf_ovrspl.resize (max_buf_len * _ovrspl);
 
 	_state = State_ACTIVE;
 
@@ -121,16 +137,12 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 #define mfx_pi_dist1_DistoSimple_USE_MIXALIGN
 
-// x -> { x - x^9/9 if x >  0
-//      { x + x^2/2 if x <= 0
-// x * (1 - x^8/9)
-// 
-// With an attenuation:
-// x -> x - (a^(p-1) / p) * x^p
-// p = power
-// a = attenuation (inverse of gain). 8 = -18 dB
 void	DistoSimple::do_process_block (ProcInfo &proc)
 {
+	const int      nbr_chn_src = proc._nbr_chn_arr [Dir_IN ];
+	const int      nbr_chn_dst = proc._nbr_chn_arr [Dir_OUT];
+	assert (nbr_chn_src <= nbr_chn_dst);
+
 	const int      nbr_evt = proc._nbr_evt;
 	for (int index = 0; index < nbr_evt; ++index)
 	{
@@ -166,11 +178,11 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	}
 
 	// High-pass filtering
-	for (int chn = 0; chn < proc._nbr_chn_arr [Dir_IN]; ++chn)
+	for (int chn = 0; chn < nbr_chn_src; ++chn)
 	{
-		dsp::iir::OnePole &  hpf = _hpf_in_arr [chn];
+		dsp::iir::OnePole &  hpf = _chn_arr [chn]._hpf;
 		hpf.process_block (
-			&_buf_arr [chn] [0],
+			&_chn_arr [chn]._buf [0],
 			&proc._src_arr [chn] [0],
 			nbr_spl
 		);
@@ -179,12 +191,10 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	// Gain (ramp)
 	if (ramp_gain_flag)
 	{
-#if defined (mfx_pi_dist1_DistoSimple_USE_MIXALIGN)
-
-		if (proc._nbr_chn_arr [Dir_IN] == 1)
+		if (nbr_chn_src == 1)
 		{
 			mfx::dsp::mix::Align::scale_1_vlr (
-				&_buf_arr [0] [0],
+				&_chn_arr [0]._buf [0],
 				nbr_spl,
 				gain_beg,
 				gain_end
@@ -194,36 +204,13 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 		{
 			static_assert (_max_nbr_chn == 2, "Multichannel not supported");
 			mfx::dsp::mix::Align::scale_2_vlr (
-				&_buf_arr [0] [0],
-				&_buf_arr [1] [0],
+				&_chn_arr [0]._buf [0],
+				&_chn_arr [1]._buf [0],
 				nbr_spl,
 				gain_beg,
 				gain_end
 			);
 		}
-
-#else
-
-		const float    step    = (gain_end - gain_beg) / nbr_spl;
-		auto           g_beg   = fstb::ToolsSimd::set1_f32 (gain_beg);
-		const auto     c0123   = fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-		fstb::ToolsSimd::mac (g_beg, fstb::ToolsSimd::set1_f32 (step), c0123);
-		const auto     g_step  = fstb::ToolsSimd::set1_f32 (step * 4);
-
-		for (int chn = 0; chn < proc._nbr_chn_arr [Dir_IN]; ++chn)
-		{
-			auto           g        = g_beg;
-			float *        data_ptr = &_buf_arr [chn] [0];
-			for (int pos = 0; pos < nbr_spl; pos += 4)
-			{
-				auto           x = fstb::ToolsSimd::load_f32 (data_ptr + pos);
-				x *= g;
-				fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
-				g += g_step;
-			}
-		}
-
-#endif
 
 		_gain = gain_end;
 	}
@@ -231,12 +218,10 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	// Gain (constant)
 	else
 	{
-#if defined (mfx_pi_dist1_DistoSimple_USE_MIXALIGN)
-
-		if (proc._nbr_chn_arr [Dir_IN] == 1)
+		if (nbr_chn_src == 1)
 		{
 			mfx::dsp::mix::Align::scale_1_v (
-				&_buf_arr [0] [0],
+				&_chn_arr [0]._buf [0],
 				nbr_spl,
 				_gain
 			);
@@ -245,73 +230,36 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 		{
 			static_assert (_max_nbr_chn == 2, "Multichannel not supported");
 			mfx::dsp::mix::Align::scale_2_v (
-				&_buf_arr [0] [0],
-				&_buf_arr [1] [0],
+				&_chn_arr [0]._buf [0],
+				&_chn_arr [1]._buf [0],
 				nbr_spl,
 				_gain
 			);
 		}
+	}
 
+	for (int chn = 0; chn < nbr_chn_src; ++chn)
+	{
+		Channel &      c = _chn_arr [chn];
+
+		const float *  src_ptr = &c._buf [0];
+		float *        ovr_ptr = &_buf_ovrspl [0];
+		float *        dst_ptr = &proc._dst_arr [chn] [0];
+
+#if 1
+		c._us->process_block (ovr_ptr, src_ptr, nbr_spl);
+		distort_block (ovr_ptr, ovr_ptr, nbr_spl * _ovrspl);
+		c._ds->process_block (dst_ptr, ovr_ptr, nbr_spl);
 #else
-
-		const auto     gain = fstb::ToolsSimd::set1_f32 (_gain);
-
-		for (int chn = 0; chn < proc._nbr_chn_arr [Dir_OUT]; ++chn)
-		{
-			float *        data_ptr = &_buf_arr [chn] [0];
-			for (int pos = 0; pos < nbr_spl; pos += 4)
-			{
-				auto           x = fstb::ToolsSimd::load_f32 (data_ptr + pos);
-				x *= gain;
-				fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
-			}
-		}
-
+		distort_block (dst_ptr, src_ptr, nbr_spl);
 #endif
 	}
 
-	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f / _attn);
-	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f / _attn);
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
-	const auto     c_9  = fstb::ToolsSimd::set1_f32 (_m_9);
-	const auto     c_2  = fstb::ToolsSimd::set1_f32 (_m_2);
-	const auto     bias = fstb::ToolsSimd::set1_f32 ( 0.2f / _attn);
-
-	int            chn_src_step = 1;
-	if (proc._nbr_chn_arr [Dir_IN] == 1 && proc._nbr_chn_arr [Dir_OUT] > 1)
+	for (int chn = nbr_chn_src; chn < nbr_chn_dst; ++chn)
 	{
-		chn_src_step = 0;
-	}
-
-	int            chn_src = 0;
-	for (int chn_dst = 0; chn_dst < proc._nbr_chn_arr [Dir_OUT]; ++chn_dst)
-	{
-		const float *  src_ptr = &_buf_arr [chn_src] [0];
-		float *        dst_ptr = &proc._dst_arr [chn_dst] [0];
-		for (int pos = 0; pos < nbr_spl; pos += 4)
-		{
-			auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-
-			x += bias;
-
-			x = fstb::ToolsSimd::min_f32 (x, ma);
-			x = fstb::ToolsSimd::max_f32 (x, mi);
-
-			const auto     x2  = x * x;
-			const auto     x4  = x2 * x2;
-			const auto     x8  = x4 * x4;
-			const auto     x9  = x8 * x;
-			const auto     x_n = x + x2 * c_2;
-			const auto     x_p = x - x9 * c_9;
-			const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
-			x = fstb::ToolsSimd::select (t_0, x_p, x_n);
-
-			x -= bias;
-
-			fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
-		}
-
-		chn_src += chn_src_step;
+		const float *  src_ptr = &_chn_arr [0]._buf [0];
+		float *        dst_ptr = &proc._dst_arr [chn] [0];
+		memcpy (dst_ptr, src_ptr, sizeof (*dst_ptr) * nbr_spl);
 	}
 }
 
@@ -333,8 +281,51 @@ void	DistoSimple::update_filter_in ()
 
 	for (int chn = 0; chn < _max_nbr_chn; ++chn)
 	{
-		dsp::iir::OnePole &  hpf = _hpf_in_arr [chn];
+		dsp::iir::OnePole &  hpf = _chn_arr [chn]._hpf;
 		hpf.set_z_eq (b_z, a_z);
+	}
+}
+
+
+
+// x -> { x - x^9/9 if x >  0
+//      { x + x^2/2 if x <= 0
+// x * (1 - x^8/9)
+// 
+// With an attenuation:
+// x -> x - (a^(p-1) / p) * x^p
+// p = power
+// a = attenuation (inverse of gain). 8 = -18 dB
+void	DistoSimple::distort_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f / _attn);
+	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f / _attn);
+	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     c_9  = fstb::ToolsSimd::set1_f32 (_m_9);
+	const auto     c_2  = fstb::ToolsSimd::set1_f32 (_m_2);
+	const auto     bias = fstb::ToolsSimd::set1_f32 ( 0.2f / _attn);
+
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+
+		x += bias;
+
+		x = fstb::ToolsSimd::min_f32 (x, ma);
+		x = fstb::ToolsSimd::max_f32 (x, mi);
+
+		const auto     x2  = x  * x;
+		const auto     x4  = x2 * x2;
+		const auto     x8  = x4 * x4;
+		const auto     x9  = x8 * x;
+		const auto     x_n = x + x2 * c_2;
+		const auto     x_p = x - x9 * c_9;
+		const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
+		x = fstb::ToolsSimd::select (t_0, x_p, x_n);
+
+		x -= bias;
+
+		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
 	}
 }
 
