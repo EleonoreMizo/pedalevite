@@ -472,20 +472,22 @@ void	BiquadPackSimd <VD, VS>::find_biq (int &pack_index, int &biq_index, int sta
 	{
 	case	ProcConf_PARALLEL:
 		pack_index = (chn >> 2) * _group_size + stage;
-		biq_index = chn & 3;
+		biq_index  = chn & 3;
 		break;
 
 	case	ProcConf_SERIAL:
 		pack_index = chn * _group_size + (stage >> 2);
-		biq_index = stage & 3;
+		biq_index  = stage & 3;
 		break;
 
 	case	ProcConf_2X2:
 		pack_index = 0;
-		biq_index = stage * 2 + chn;
+		biq_index  = stage * 2 + chn;
 		break;
 
 	default:
+		pack_index = 0;
+		biq_index  = 0;
 		assert (false);
 		break;
 	}

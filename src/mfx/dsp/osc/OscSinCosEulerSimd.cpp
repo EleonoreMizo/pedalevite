@@ -70,12 +70,12 @@ void	OscSinCosEulerSimd::set_phase (float phase)
 
 
 // step in radian/sample
-void	OscSinCosEulerSimd::set_step (float step)
+void	OscSinCosEulerSimd::set_step (float stp)
 {
-	_step_cos1 = cos (step);
-	_step_sin1 = sin (step);
-	_step_cosn = cos (step * _nbr_units);
-	_step_sinn = sin (step * _nbr_units);
+	_step_cos1 = cos (stp);
+	_step_sin1 = sin (stp);
+	_step_cosn = cos (stp * _nbr_units);
+	_step_sinn = sin (stp * _nbr_units);
 
 	const float    c0 = fstb::ToolsSimd::Shift <0>::extract (
 		fstb::ToolsSimd::load_f32 (&_pos_cos)
@@ -150,8 +150,8 @@ void	OscSinCosEulerSimd::correct ()
 	auto           s  = fstb::ToolsSimd::load_f32 (&_pos_sin);
 	const auto     n  = fstb::ToolsSimd::sqrt (c * c + s * s);
 	const auto     ni = fstb::ToolsSimd::rcp_approx2 (n);
-	c *= n;
-	s *= n;
+	c *= ni;
+	s *= ni;
 	fstb::ToolsSimd::store_f32 (&_pos_cos, c);
 	fstb::ToolsSimd::store_f32 (&_pos_sin, s);
 }
@@ -166,7 +166,7 @@ void	OscSinCosEulerSimd::resync (float c0, float s0)
 {
 	auto           c = fstb::ToolsSimd::set1_f32 (c0);
 	auto           s = fstb::ToolsSimd::set1_f32 (s0);
-	
+
 	for (int k = 1; k < _nbr_units; ++k)
 	{
 		const float    c_new = c0 * _step_cos1 - s0 * _step_sin1;

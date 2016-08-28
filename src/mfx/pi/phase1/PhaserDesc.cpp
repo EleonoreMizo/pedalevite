@@ -25,7 +25,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/pi/param/HelperDispNum.h"
-#include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/MapS.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
@@ -56,7 +55,6 @@ namespace phase1
 PhaserDesc::PhaserDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
-	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
 
