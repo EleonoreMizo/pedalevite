@@ -28,7 +28,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
-#include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/trem1/Param.h"
 #include "mfx/pi/trem1/TremoloDesc.h"
@@ -56,10 +55,10 @@ TremoloDesc::TremoloDesc ()
 {
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
-	// Period
+	// Speed
 	TplPll *   pll_ptr = new TplPll (
 		0.5, 50,
-		"Frequency\nFreq",
+		"Speed\nSpd",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
@@ -67,7 +66,8 @@ TremoloDesc::TremoloDesc ()
 	);
 	pll_ptr->use_mapper ().set_first_value (   0.5);
 	pll_ptr->use_mapper ().add_segment (0.25,  4  , true);
-	pll_ptr->use_mapper ().add_segment (1   , 50  , true);
+	pll_ptr->use_mapper ().add_segment (0.75 , 10 , false);
+	pll_ptr->use_mapper ().add_segment (1    , 50 , true);
 	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_HZ);
 	_desc_set.add_glob (Param_FREQ, pll_ptr);
 

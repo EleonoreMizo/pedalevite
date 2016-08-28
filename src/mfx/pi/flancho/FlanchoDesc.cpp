@@ -71,7 +71,7 @@ FlanchoDesc::FlanchoDesc ()
 	_desc_set.add_glob (Param_SPEED, log_ptr);
 
 	// Depth
-	TplPll *   pll_ptr = new TplPll (
+	TplPll *       pll_ptr = new TplPll (
 		0, Cst::_depth_max / 1e6,
 		"D\nDpt\nDepth",
 		"ms",
@@ -122,7 +122,7 @@ FlanchoDesc::FlanchoDesc ()
 	param::TplLin *   lin_ptr = new param::TplLin (
 		-1, 1,
 		"S\nWf.S\nShape\nWaveform shape",
-		"",
+		"%",
 		0,
 		"%+6.1f"
 	);
