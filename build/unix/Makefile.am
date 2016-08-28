@@ -316,6 +316,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/mix/Generic.h \
         ../../src/mfx/dsp/mix/Simd.h \
         ../../src/mfx/dsp/mix/Simd.hpp \
+        ../../src/mfx/dsp/osc/OscSinCosEulerSimd.cpp \
+        ../../src/mfx/dsp/osc/OscSinCosEulerSimd.h \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
         ../../src/mfx/dsp/rspl/Cst.h \
@@ -437,6 +439,18 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplMapped.h \
         ../../src/mfx/pi/param/TplMapped.hpp \
         ../../src/mfx/pi/param/TplSq.h \
+        ../../src/mfx/pi/phase1/Cst.h \
+        ../../src/mfx/pi/phase1/Param.h \
+        ../../src/mfx/pi/phase1/Phase90Interface.cpp \
+        ../../src/mfx/pi/phase1/Phase90Interface.h \
+        ../../src/mfx/pi/phase1/Phase90Simd.h \
+        ../../src/mfx/pi/phase1/Phase90Simd.hpp \
+        ../../src/mfx/pi/phase1/PhasedVoice.cpp \
+        ../../src/mfx/pi/phase1/PhasedVoice.h \
+        ../../src/mfx/pi/phase1/Phaser.cpp \
+        ../../src/mfx/pi/phase1/Phaser.h \
+        ../../src/mfx/pi/phase1/PhaserDesc.cpp \
+        ../../src/mfx/pi/phase1/PhaserDesc.h \
         ../../src/mfx/pi/trem1/Param.h \
         ../../src/mfx/pi/trem1/Tremolo.cpp \
         ../../src/mfx/pi/trem1/Tremolo.h \

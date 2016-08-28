@@ -46,6 +46,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/fv/FreeverbDesc.h"
 #include "mfx/pi/peq/PEq.h"
 #include "mfx/pi/peq/PEqDesc.h"
+#include "mfx/pi/phase1/Phaser.h"
+#include "mfx/pi/phase1/PhaserDesc.h"
 #include "mfx/pi/trem1/Tremolo.h"
 #include "mfx/pi/trem1/TremoloDesc.h"
 #include "mfx/pi/tuner/Tuner.h"
@@ -82,7 +84,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::dly1::DelayDesc       , mfx::pi::dly1::Delay             >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::cpx::CompexDesc       , mfx::pi::cpx::Compex             >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::fv::FreeverbDesc      , mfx::pi::fv::Freeverb            >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc          , mfx::pi::peq::PEq                >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc          , mfx::pi::peq::PEq                >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::phase1::PhaserDesc    , mfx::pi::phase1::Phaser          >::create ()
 		};
 
 		fact_list = l;

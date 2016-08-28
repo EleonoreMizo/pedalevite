@@ -380,7 +380,8 @@
     <ClInclude Include="mfx\dsp\mix\Generic.h" />
     <ClInclude Include="mfx\dsp\mix\Simd.h" />
     <ClInclude Include="mfx\dsp\mix\Simd.hpp" />
-    <ClInclude Include="mfx\dsp\osc\OscSinCosStable4Simd.h" />
+    <ClInclude Include="mfx\dsp\osc\OscSinCosEulerSimd.h" />
+    <ClInclude Include="mfx\dsp\osc\OscSinCosStableSimd.h" />
     <ClInclude Include="mfx\dsp\rspl\Cst.h" />
     <ClInclude Include="mfx\dsp\rspl\InterpolatorFir.h" />
     <ClInclude Include="mfx\dsp\rspl\InterpolatorFir.hpp" />
@@ -451,6 +452,14 @@
     <ClInclude Include="mfx\pi\peq\PEq.h" />
     <ClInclude Include="mfx\pi\peq\PEqDesc.h" />
     <ClInclude Include="mfx\pi\peq\PEqType.h" />
+    <ClInclude Include="mfx\pi\phase1\Cst.h" />
+    <ClInclude Include="mfx\pi\phase1\Param.h" />
+    <ClInclude Include="mfx\pi\phase1\Phase90Interface.h" />
+    <ClInclude Include="mfx\pi\phase1\Phase90Simd.h" />
+    <ClInclude Include="mfx\pi\phase1\Phase90Simd.hpp" />
+    <ClInclude Include="mfx\pi\phase1\PhasedVoice.h" />
+    <ClInclude Include="mfx\pi\phase1\Phaser.h" />
+    <ClInclude Include="mfx\pi\phase1\PhaserDesc.h" />
     <ClInclude Include="mfx\ToolsParam.h" />
     <ClInclude Include="mfx\piapi\Event.h" />
     <ClInclude Include="mfx\piapi\EventNoteOff.h" />
@@ -675,7 +684,8 @@
     <ClCompile Include="mfx\dsp\mix\Align.cpp" />
     <ClCompile Include="mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="mfx\dsp\mix\Generic.cpp" />
-    <ClCompile Include="mfx\dsp\osc\OscSinCosStable4Simd.cpp" />
+    <ClCompile Include="mfx\dsp\osc\OscSinCosEulerSimd.cpp" />
+    <ClCompile Include="mfx\dsp\osc\OscSinCosStableSimd.cpp" />
     <ClCompile Include="mfx\dsp\rspl\InterpolatorHermite43.cpp" />
     <ClCompile Include="mfx\dsp\rspl\InterpolatorHermite43Simd.cpp" />
     <ClCompile Include="mfx\dsp\rspl\InterpolatorInterface.cpp" />
@@ -716,6 +726,10 @@
     <ClCompile Include="mfx\pi\param\MapRatio.cpp" />
     <ClCompile Include="mfx\pi\peq\PEq.cpp" />
     <ClCompile Include="mfx\pi\peq\PEqDesc.cpp" />
+    <ClCompile Include="mfx\pi\phase1\Phase90Interface.cpp" />
+    <ClCompile Include="mfx\pi\phase1\PhasedVoice.cpp" />
+    <ClCompile Include="mfx\pi\phase1\Phaser.cpp" />
+    <ClCompile Include="mfx\pi\phase1\PhaserDesc.cpp" />
     <ClCompile Include="mfx\ToolsParam.cpp" />
     <ClCompile Include="mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="mfx\piapi\PluginDescInterface.cpp" />

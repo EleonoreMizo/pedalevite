@@ -1,0 +1,123 @@
+/*****************************************************************************
+
+        OscSinCosEulerSimd.h
+        Author: Laurent de Soras, 2016
+
+This object must be aligned on 16-byte boundaries!
+
+--- Legal stuff ---
+
+This program is free software. It comes without any warranty, to
+the extent permitted by applicable law. You can redistribute it
+and/or modify it under the terms of the Do What The Fuck You Want
+To Public License, Version 2, as published by Sam Hocevar. See
+http://sam.zoy.org/wtfpl/COPYING for more details.
+
+*Tab=3***********************************************************************/
+
+
+
+#pragma once
+#if ! defined (mfx_dsp_osc_OscSinCosEulerSimd_HEADER_INCLUDED)
+#define mfx_dsp_osc_OscSinCosEulerSimd_HEADER_INCLUDED
+
+#if defined (_MSC_VER)
+	#pragma warning (4 : 4250)
+#endif
+
+
+
+/*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include "fstb/def.h"
+#include "fstb/ToolsSimd.h"
+
+
+
+namespace mfx
+{
+namespace dsp
+{
+namespace osc
+{
+
+
+
+class OscSinCosEulerSimd
+{
+
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+public:
+
+	static const int  _nbr_units_l2 = 2;
+	static const int  _nbr_units    = 1 << _nbr_units_l2;
+
+	               OscSinCosEulerSimd ();
+	virtual        ~OscSinCosEulerSimd () = default;
+
+	void           set_phase (float phase);
+	void           set_step (float step);
+
+	void           step ();
+	fstb::ToolsSimd::VectF32
+	               get_cos () const;
+	fstb::ToolsSimd::VectF32
+	               get_sin () const;
+	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_vec);
+	void           correct ();
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+protected:
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+private:
+
+	fstb_TYPEDEF_ALIGN (16, fstb::ToolsSimd::VectF32, VectF32Align);
+
+	void           resync (float c0, float s0);
+
+	VectF32Align   _pos_cos;
+	VectF32Align   _pos_sin;
+	float          _step_cosn;
+	float          _step_sinn;
+	float          _step_cos1;
+	float          _step_sin1;
+
+
+
+/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+private:
+
+	               OscSinCosEulerSimd (const OscSinCosEulerSimd &other) = delete;
+	OscSinCosEulerSimd &
+	               operator = (const OscSinCosEulerSimd &other)        = delete;
+	bool           operator == (const OscSinCosEulerSimd &other) const = delete;
+	bool           operator != (const OscSinCosEulerSimd &other) const = delete;
+
+}; // class OscSinCosEulerSimd
+
+
+
+}  // namespace osc
+}  // namespace dsp
+}  // namespace mfx
+
+
+
+//#include "mfx/dsp/osc/OscSinCosEulerSimd.hpp"
+
+
+
+#endif   // mfx_dsp_osc_OscSinCosEulerSimd_HEADER_INCLUDED
+
+
+
+/*\\\ EOF \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

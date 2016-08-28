@@ -139,6 +139,9 @@
     <Filter Include="mfx\pi\peq">
       <UniqueIdentifier>{2a94718d-f2e7-4fbe-82cb-c76255af6083}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\phase1">
+      <UniqueIdentifier>{8e31b991-c984-4b83-b837-340d9ce98c9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -981,9 +984,6 @@
     <ClInclude Include="hiir\PhaseHalfPiNeon.hpp">
       <Filter>hiir</Filter>
     </ClInclude>
-    <ClInclude Include="mfx\dsp\osc\OscSinCosStable4Simd.h">
-      <Filter>mfx\dsp\osc</Filter>
-    </ClInclude>
     <ClInclude Include="mfx\ui\IoWindows.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
@@ -1605,6 +1605,36 @@
     <ClInclude Include="mfx\dsp\iir\Downsampler4xSimd.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\pi\phase1\Phaser.h">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\phase1\PhaserDesc.h">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\phase1\PhasedVoice.h">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\phase1\Param.h">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\phase1\Phase90Interface.h">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\phase1\Phase90Simd.h">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\phase1\Phase90Simd.hpp">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\phase1\Cst.h">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\osc\OscSinCosStableSimd.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\osc\OscSinCosEulerSimd.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -1823,9 +1853,6 @@
     </ClCompile>
     <ClCompile Include="hiir\PolyphaseIir2Designer.cpp">
       <Filter>hiir</Filter>
-    </ClCompile>
-    <ClCompile Include="mfx\dsp\osc\OscSinCosStable4Simd.cpp">
-      <Filter>mfx\dsp\osc</Filter>
     </ClCompile>
     <ClCompile Include="mfx\ui\IoWindows.cpp">
       <Filter>mfx\ui</Filter>
@@ -2204,6 +2231,24 @@
     </ClCompile>
     <ClCompile Include="mfx\FileIOWindows.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\phase1\Phaser.cpp">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\phase1\PhaserDesc.cpp">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\phase1\PhasedVoice.cpp">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\phase1\Phase90Interface.cpp">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\osc\OscSinCosStableSimd.cpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\dsp\osc\OscSinCosEulerSimd.cpp">
+      <Filter>mfx\dsp\osc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

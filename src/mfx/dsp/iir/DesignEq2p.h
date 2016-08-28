@@ -68,6 +68,8 @@ public:
 	static void		make_low_pass (T bs [3], T as [3], T q);
 	template <typename T>
 	static void		make_hi_pass (T bs [3], T as [3], T q);
+	template <typename T>
+	static void		make_band_pass (T bs [3], T as [3], T q);
 
 	static void		make_nyq_peak (float bz [3], float az [3], double q, double lvl, double f0, double fs);
 	static void		make_nyq_peak (float bz [3], float az [3], double g0, double g, double gb, double w0, double dw);

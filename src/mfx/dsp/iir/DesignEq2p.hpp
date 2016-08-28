@@ -348,6 +348,24 @@ void	DesignEq2p::make_hi_pass (T bs [3], T as [3], T q)
 
 
 
+template <typename T>
+void	DesignEq2p::make_band_pass (T bs [3], T as [3], T q)
+{
+	assert (bs != 0);
+	assert (as != 0);
+	assert (q > 0);
+
+	bs [0] = 0;
+	bs [1] = 1 / q;
+	bs [2] = 0;
+
+	as [0] = 1;
+	as [1] = 1 / q;
+	as [2] = 1;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
