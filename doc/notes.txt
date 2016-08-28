@@ -533,8 +533,7 @@ Piste :
 	– http://blog.gegg.us/2014/03/a-raspbian-read-only-root-fs-howto/
 		-> Copie de fichier temporaire : https://github.com/giggls/web20mash/blob/master/mashctld_readonly_root_script.sh
 		Savoir si le système de fichier est R/O:
-			mount | grep " / " | grep -c "(ro[),]"
-		renvoie un nombre > 0 si / est read-only.
+			if [ `mount | grep " / " | grep -c "(ro[),]"` != "0" ]; then echo "haha"; fi
 Autre possibilité : ajouter une batterie, et un système qui détecte la coupure de l'alim principale.
 
 
@@ -716,6 +715,7 @@ Installation :
 		Vérfier que tout est bien compilé
 	sudo mkdir -p /opt/pedalevite/bin /opt/pedalevite/etc/config
 	sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
+	sudo cp ../../bin/mv_rofs.sh /opt/pedalevite/bin/mv_rofs.sh
 
 Autorun:
 	sudo cp /etc/init.d/skeleton /etc/init.d/pedalevite
@@ -783,7 +783,9 @@ Court-circuiter NOOBS au boot :
 	Y écrire la ligne suivante, en remplaçant éventuellement 6 par le numéro de la partition voulue :
 		boot_partition=6
 
-Système read-only + optim boot (cf http://blog.gegg.us/2014/03/a-raspbian-read-only-root-fs-howto/ ) :
+Système read-only + optim boot. cf :
+	http://blog.gegg.us/2014/03/a-raspbian-read-only-root-fs-howto/
+	http://k3a.me/how-to-make-raspberrypi-truly-read-only-reliable-and-trouble-free/
 Remove some stuff which is not needed or unsuitable for readonly operation:
 	sudo apt-get remove --purge wolfram-engine triggerhappy pi-bluetooth
 	sudo apt-get remove --purge cron anacron logrotate dbus dphys-swapfile
@@ -795,7 +797,47 @@ auto-remove some X11 related libs:
 Install busybox syslog instead of rsyslog:
 	sudo apt-get install busybox-syslogd
 	sudo dpkg --purge rsyslog
-(la suite plus tard)
+Changer la place des baux DHCP
+	sudo rm -rf /var/lib/dhcp/
+	sudo ln -s /tmp /var/lib/dhcp
+Liens symboliques sur var :
+	sudo rm -rf /var/run /var/spool /var/lock
+	sudo ln -s /tmp /var/run
+	sudo ln -s /tmp /var/spool
+	sudo ln -s /tmp /var/lock
+Autres trucs
+	sudo nano /etc/init.d/checkroot.sh
+		Commenter le do_start() à la fin
+	sudo nano /etc/init.d/checkfs.sh
+		Commenter le do_start() à la fin
+	sudo nano /etc/init.d/checkroot-bootclean.sh
+		Commenter le rm et le clean_all dans le case start
+	sudo nano /etc/init.d/mountall.sh
+		Commenter le swaponagain 'swapfile'
+	sudo insserv -r bootlogs
+	non: sudo insserv -r sudo
+	sudo insserv -r alsa-utils
+	sudo insserv -r console-setup
+	sudo insserv -r fake-hwclock
+	sudo nano /etc/fstab
+		Ajouter ",ro" après les defaults pour les partitions du disque:
+			proc            /proc           proc    defaults             0       0
+			/dev/mmcblk0p6  /boot           vfat    defaults,ro          0       2
+			/dev/mmcblk0p7  /               ext4    defaults,ro,noatime  0       1
+		Ajouter la ligne :
+			tmpfs           /tmp            tmpfs   defaults             0       0
+	sudo nano /boot/cmdline.txt
+		Ajouter "ro" :
+			dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p7 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait ro
+Reboot
+
+
+
+
+
+Passer le système en R/O ou R/W
+mount -o remount,rw /
+mount -o remount,ro /
 
 
 enum ActionTrigger
