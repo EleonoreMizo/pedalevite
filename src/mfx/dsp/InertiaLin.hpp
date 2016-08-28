@@ -64,6 +64,7 @@ void	InertiaLin::set_sample_freq (double fs)
 Name: set_inertia_time
 Description:
 	Sets the inertia time, the time to reach a new value.
+	The current ramp is not affected.
 Input parameters:
 	- inertia_time: time in seconds. >= 0.
 Throws: Nothing.
@@ -73,6 +74,40 @@ Throws: Nothing.
 void	InertiaLin::set_inertia_time (double inertia_time)
 {
 	assert (inertia_time >= 0);
+
+	_inertia_time = inertia_time;
+}
+
+
+
+/*
+==============================================================================
+Name: update_inertia_time
+Description:
+	Sets the inertia time, the time to reach a new value.
+	The current ramp is updated. If the inertia time is zero, the new value is
+	reached immediately.
+Input parameters:
+	- inertia_time: time in seconds. >= 0.
+Throws: Nothing.
+==============================================================================
+*/
+
+void	InertiaLin::update_inertia_time (double inertia_time)
+{
+	assert (inertia_time >= 0);
+
+	if (is_ramping ())
+	{
+		if (inertia_time > 0)
+		{
+			_step *= _inertia_time / inertia_time;
+		}
+		else
+		{
+			force_val (_new_val);
+		}
+	}
 
 	_inertia_time = inertia_time;
 }

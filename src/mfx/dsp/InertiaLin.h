@@ -50,6 +50,7 @@ public:
 	InertiaLin &   operator = (const InertiaLin &other) = default;
 
 	inline void		set_inertia_time (double inertia_time);
+	inline void    update_inertia_time (double inertia_time);
 	inline double	get_inertia_time () const;
 
 	inline void		set_sample_freq (double fs);
