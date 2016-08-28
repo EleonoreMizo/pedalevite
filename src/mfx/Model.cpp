@@ -1407,7 +1407,16 @@ void	Model::process_action_param (const doc::ActionParam &action)
 
 		if (pi_id != _dummy_mix_id)
 		{
-			_central.set_param (pi_id, action._index, action._val);
+			// At this point we are not sure about the type of the
+			// named plugin, so we have to check the parameter range.
+			PluginPool &   pi_pool   = _central.use_pi_pool ();
+			PluginPool::PluginDetails & details = pi_pool.use_plugin (pi_id);
+			const int      nbr_param =
+				details._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
+			if (action._index < nbr_param)
+			{
+				_central.set_param (pi_id, action._index, action._val);
+			}
 		}
 	}
 }
