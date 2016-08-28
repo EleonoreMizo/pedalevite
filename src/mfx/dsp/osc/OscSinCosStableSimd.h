@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        OscSinCosStable4Simd.h
+        OscSinCosStableSimd.h
         Author: Laurent de Soras, 2016
 
 This object must be aligned on 16-byte boundaries!
@@ -18,8 +18,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_osc_OscSinCosStable4Simd_HEADER_INCLUDED)
-#define mfx_dsp_osc_OscSinCosStable4Simd_HEADER_INCLUDED
+#if ! defined (mfx_dsp_osc_OscSinCosStableSimd_HEADER_INCLUDED)
+#define mfx_dsp_osc_OscSinCosStableSimd_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -42,7 +42,7 @@ namespace osc
 
 
 
-class OscSinCosStable4Simd
+class OscSinCosStableSimd
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -51,8 +51,8 @@ public:
 
 	static const int  _nbr_units = 4;
 
-	               OscSinCosStable4Simd ();
-	virtual        ~OscSinCosStable4Simd () = default;
+	               OscSinCosStableSimd ();
+	virtual        ~OscSinCosStableSimd () = default;
 
 	void           set_step (float angle_rad);
 
@@ -96,13 +96,13 @@ private:
 
 private:
 
-	               OscSinCosStable4Simd (const OscSinCosStable4Simd &other) = delete;
-	OscSinCosStable4Simd &
-	               operator = (const OscSinCosStable4Simd &other)           = delete;
-	bool           operator == (const OscSinCosStable4Simd &other) const    = delete;
-	bool           operator != (const OscSinCosStable4Simd &other) const    = delete;
+	               OscSinCosStableSimd (const OscSinCosStableSimd &other) = delete;
+	OscSinCosStableSimd &
+	               operator = (const OscSinCosStableSimd &other)           = delete;
+	bool           operator == (const OscSinCosStableSimd &other) const    = delete;
+	bool           operator != (const OscSinCosStableSimd &other) const    = delete;
 
-}; // class OscSinCosStable4Simd
+}; // class OscSinCosStableSimd
 
 
 
@@ -112,11 +112,11 @@ private:
 
 
 
-//#include "mfx/dsp/osc/OscSinCosStable4Simd.hpp"
+//#include "mfx/dsp/osc/OscSinCosStableSimd.hpp"
 
 
 
-#endif   // mfx_dsp_osc_OscSinCosStable4Simd_HEADER_INCLUDED
+#endif   // mfx_dsp_osc_OscSinCosStableSimd_HEADER_INCLUDED
 
 
 

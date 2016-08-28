@@ -316,8 +316,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/mix/Generic.h \
         ../../src/mfx/dsp/mix/Simd.h \
         ../../src/mfx/dsp/mix/Simd.hpp \
-        ../../src/mfx/dsp/osc/OscSinCosStable4Simd.cpp \
-        ../../src/mfx/dsp/osc/OscSinCosStable4Simd.h \
+        ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
+        ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
         ../../src/mfx/dsp/rspl/Cst.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        OscSinCosStable4Simd.cpp
+        OscSinCosStableSimd.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/osc/OscSinCosStable4Simd.h"
+#include "fstb/DataAlign.h"
+#include "mfx/dsp/osc/OscSinCosStableSimd.h"
 
 #include <cassert>
 #include <cmath>
@@ -44,7 +45,7 @@ namespace osc
 
 
 
-OscSinCosStable4Simd::OscSinCosStable4Simd ()
+OscSinCosStableSimd::OscSinCosStableSimd ()
 :	_pos_cos ()
 ,	_pos_sin ()
 ,	_alpha ()
@@ -57,7 +58,7 @@ OscSinCosStable4Simd::OscSinCosStable4Simd ()
 
 
 
-void	OscSinCosStable4Simd::set_step (float angle_rad)
+void	OscSinCosStableSimd::set_step (float angle_rad)
 {
 	fstb::ToolsSimd::VectF32   alpha;
 	fstb::ToolsSimd::VectF32   beta;
@@ -86,7 +87,7 @@ void	OscSinCosStable4Simd::set_step (float angle_rad)
 
 
 
-void	OscSinCosStable4Simd::step ()
+void	OscSinCosStableSimd::step ()
 {
 	auto           alpha   = fstb::ToolsSimd::load_f32 (&_alpha);
 	auto           beta    = fstb::ToolsSimd::load_f32 (&_beta );
@@ -101,8 +102,13 @@ void	OscSinCosStable4Simd::step ()
 
 
 
-void	OscSinCosStable4Simd::process_block (float cos_ptr [], float sin_ptr [], int nbr_vec)
+// nbr_spl = nbr_vec * 4
+void	OscSinCosStableSimd::process_block (float cos_ptr [], float sin_ptr [], int nbr_vec)
 {
+	assert (fstb::DataAlign <true>::check_ptr (cos_ptr));
+	assert (fstb::DataAlign <true>::check_ptr (sin_ptr));
+	assert (nbr_vec > 0);
+
 	auto           alpha   = fstb::ToolsSimd::load_f32 (&_alpha);
 	auto           beta    = fstb::ToolsSimd::load_f32 (&_beta );
 	auto           pos_cos = fstb::ToolsSimd::load_f32 (&_pos_cos);
@@ -122,21 +128,21 @@ void	OscSinCosStable4Simd::process_block (float cos_ptr [], float sin_ptr [], in
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosStable4Simd::get_cos () const
+fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_cos () const
 {
 	return (fstb::ToolsSimd::load_f32 (&_pos_cos));
 }
 
 
 
-fstb::ToolsSimd::VectF32	OscSinCosStable4Simd::get_sin () const
+fstb::ToolsSimd::VectF32	OscSinCosStableSimd::get_sin () const
 {
 	return (fstb::ToolsSimd::load_f32 (&_pos_sin));
 }
 
 
 
-void	OscSinCosStable4Simd::clear_buffers ()
+void	OscSinCosStableSimd::clear_buffers ()
 {
 	fstb::ToolsSimd::store_f32 (&_pos_cos, fstb::ToolsSimd::set1_f32 (1));
 	fstb::ToolsSimd::store_f32 (&_pos_sin, fstb::ToolsSimd::set_f32_zero ());
@@ -148,7 +154,7 @@ void	OscSinCosStable4Simd::clear_buffers ()
 
 
 
-void	OscSinCosStable4Simd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta)
+void	OscSinCosStableSimd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsSimd::VectF32 &pos_sin, fstb::ToolsSimd::VectF32 alpha, fstb::ToolsSimd::VectF32 beta)
 {
 	const auto     old_cos = pos_cos;
 	const auto     old_sin = pos_sin;
@@ -159,7 +165,7 @@ void	OscSinCosStable4Simd::step (fstb::ToolsSimd::VectF32 &pos_cos, fstb::ToolsS
 
 
 
-void	OscSinCosStable4Simd::compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad)
+void	OscSinCosStableSimd::compute_step (fstb::ToolsSimd::VectF32 &alpha, fstb::ToolsSimd::VectF32 &beta, float angle_rad)
 {
    const float    s = float (sin (angle_rad * 0.5f));
    alpha = fstb::ToolsSimd::set1_f32 (s * s * -2);

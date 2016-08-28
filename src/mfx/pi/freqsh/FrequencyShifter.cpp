@@ -157,7 +157,7 @@ void	FrequencyShifter::do_process_block (ProcInfo &proc)
 	_ali->_osc.process_block (
 		&_buf_arr [Buf_COS] [0],
 		&_buf_arr [Buf_SIN] [0],
-		proc._nbr_spl / dsp::osc::OscSinCosStable4Simd::_nbr_units
+		proc._nbr_spl / dsp::osc::OscSinCosStableSimd::_nbr_units
 	);
 
 	const int      nbr_chn_i =

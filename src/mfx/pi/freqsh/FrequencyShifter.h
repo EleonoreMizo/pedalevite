@@ -30,7 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/SingleObj.h"
-#include "mfx/dsp/osc/OscSinCosStable4Simd.h"
+#include "mfx/dsp/osc/OscSinCosStableSimd.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/freqsh/FreqShiftDesc.h"
 #include "mfx/pi/freqsh/PhaseHalfPi.h"
@@ -112,7 +112,7 @@ private:
 	{
 	public:
 		ChannelArray   _chn_arr;
-		dsp::osc::OscSinCosStable4Simd
+		dsp::osc::OscSinCosStableSimd
 		               _osc;
 	};
 
