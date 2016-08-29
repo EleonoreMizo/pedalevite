@@ -64,6 +64,9 @@ public:
 	static inline float
 	               exp2 (float val);
 
+	static inline float
+	               tan_taylor5 (float x);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

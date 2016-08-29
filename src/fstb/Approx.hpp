@@ -199,6 +199,18 @@ float	Approx::exp2 (float val)
 
 
 
+float	Approx::tan_taylor5 (float x)
+{
+	const float    x_2 = x * x;
+	const float    c_1 = 1;
+	const float    c_3 = 1.0f / 3;
+	const float    c_5 = 2.0f / 15;
+
+	return ((c_5 * x_2 + c_3) * x_2 + c_1) * x;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

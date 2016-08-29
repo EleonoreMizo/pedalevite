@@ -285,6 +285,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \
+        ../../src/mfx/dsp/iir/SqueezerOpBypass.h \
+        ../../src/mfx/dsp/iir/SqueezerOpDefect.h \
+        ../../src/mfx/dsp/iir/SqueezerOpDefect.hpp \
+        ../../src/mfx/dsp/iir/SqueezerSimd.h \
+        ../../src/mfx/dsp/iir/SqueezerSimd.hpp \
         ../../src/mfx/dsp/iir/Svf2p.cpp \
         ../../src/mfx/dsp/iir/Svf2p.h \
         ../../src/mfx/dsp/iir/Svf2p.hpp \
@@ -338,6 +343,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/rspl/SnhTool.h \
         ../../src/mfx/dsp/rspl/Voice.cpp \
         ../../src/mfx/dsp/rspl/Voice.h \
+        ../../src/mfx/dsp/shape/Poly3L1Bias.h \
+        ../../src/mfx/dsp/shape/Poly3L1Bias.hpp \
         ../../src/mfx/dsp/shape/MapSaturate.h \
         ../../src/mfx/dsp/shape/MapSaturate.hpp \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.h \
@@ -406,6 +413,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/iifix/IIFixDesc.cpp \
         ../../src/mfx/pi/iifix/IIFixDesc.h \
         ../../src/mfx/pi/iifix/Param.h \
+        ../../src/mfx/pi/lpfs/Param.h \
+        ../../src/mfx/pi/lpfs/Squeezer.cpp \
+        ../../src/mfx/pi/lpfs/Squeezer.h \
+        ../../src/mfx/pi/lpfs/SqueezerDesc.cpp \
+        ../../src/mfx/pi/lpfs/SqueezerDesc.h \
         ../../src/mfx/pi/peq/PEq.cpp \
         ../../src/mfx/pi/peq/PEq.h \
         ../../src/mfx/pi/peq/PEqDesc.cpp \

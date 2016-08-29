@@ -142,6 +142,9 @@
     <Filter Include="mfx\pi\phase1">
       <UniqueIdentifier>{8e31b991-c984-4b83-b837-340d9ce98c9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\lpfs">
+      <UniqueIdentifier>{472883ba-eae1-4106-9d2c-5d244f38ede6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mfx\piapi\Event.h">
@@ -1635,6 +1638,36 @@
     <ClInclude Include="mfx\dsp\osc\OscSinCosEulerSimd.h">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SqueezerSimd.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SqueezerSimd.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\shape\Poly3L1Bias.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\shape\Poly3L1Bias.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SqueezerOpBypass.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SqueezerOpDefect.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\dsp\iir\SqueezerOpDefect.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\lpfs\Squeezer.h">
+      <Filter>mfx\pi\lpfs</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\lpfs\SqueezerDesc.h">
+      <Filter>mfx\pi\lpfs</Filter>
+    </ClInclude>
+    <ClInclude Include="mfx\pi\lpfs\Param.h">
+      <Filter>mfx\pi\lpfs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfx\piapi\PluginInterface.cpp">
@@ -2249,6 +2282,12 @@
     </ClCompile>
     <ClCompile Include="mfx\dsp\osc\OscSinCosEulerSimd.cpp">
       <Filter>mfx\dsp\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\lpfs\Squeezer.cpp">
+      <Filter>mfx\pi\lpfs</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\pi\lpfs\SqueezerDesc.cpp">
+      <Filter>mfx\pi\lpfs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

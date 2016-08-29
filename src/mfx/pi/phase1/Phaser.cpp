@@ -225,7 +225,6 @@ void	Phaser::do_process_block (ProcInfo &proc)
 			chn_in += chn_in_inc;
 		}
 
-
 		// Phase mix
 		int            chn_out     = 0;
 		int            chn_out_inc =

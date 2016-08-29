@@ -353,6 +353,11 @@
     <ClInclude Include="mfx\dsp\iir\Downsampler4xSimd.hpp" />
     <ClInclude Include="mfx\dsp\iir\OnePole.h" />
     <ClInclude Include="mfx\dsp\iir\OnePole.hpp" />
+    <ClInclude Include="mfx\dsp\iir\SqueezerOpBypass.h" />
+    <ClInclude Include="mfx\dsp\iir\SqueezerOpDefect.h" />
+    <ClInclude Include="mfx\dsp\iir\SqueezerOpDefect.hpp" />
+    <ClInclude Include="mfx\dsp\iir\SqueezerSimd.h" />
+    <ClInclude Include="mfx\dsp\iir\SqueezerSimd.hpp" />
     <ClInclude Include="mfx\dsp\iir\Svf2p.h" />
     <ClInclude Include="mfx\dsp\iir\Svf2p.hpp" />
     <ClInclude Include="mfx\dsp\iir\SvfCore4Simd.h" />
@@ -397,6 +402,8 @@
     <ClInclude Include="mfx\dsp\shape\MapSaturate.hpp" />
     <ClInclude Include="mfx\dsp\shape\MapSaturateBipolar.h" />
     <ClInclude Include="mfx\dsp\shape\MapSaturateBipolar.hpp" />
+    <ClInclude Include="mfx\dsp\shape\Poly3L1Bias.hpp" />
+    <ClInclude Include="mfx\dsp\shape\Poly3L1Bias.h" />
     <ClInclude Include="mfx\dsp\SplDataRetrievalInterface.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.h" />
     <ClInclude Include="mfx\dsp\StereoLevel.hpp" />
@@ -441,6 +448,9 @@
     <ClInclude Include="mfx\pi\iifix\IIFix.h" />
     <ClInclude Include="mfx\pi\iifix\IIFixDesc.h" />
     <ClInclude Include="mfx\pi\iifix\Param.h" />
+    <ClInclude Include="mfx\pi\lpfs\Param.h" />
+    <ClInclude Include="mfx\pi\lpfs\Squeezer.h" />
+    <ClInclude Include="mfx\pi\lpfs\SqueezerDesc.h" />
     <ClInclude Include="mfx\pi\ParamMapFdbk.h" />
     <ClInclude Include="mfx\pi\ParamMapFdbk.hpp" />
     <ClInclude Include="mfx\pi\ParamMapFdbkBipolar.h" />
@@ -723,6 +733,8 @@
     <ClCompile Include="mfx\pi\fv\FreeverbDesc.cpp" />
     <ClCompile Include="mfx\pi\iifix\IIFix.cpp" />
     <ClCompile Include="mfx\pi\iifix\IIFixDesc.cpp" />
+    <ClCompile Include="mfx\pi\lpfs\Squeezer.cpp" />
+    <ClCompile Include="mfx\pi\lpfs\SqueezerDesc.cpp" />
     <ClCompile Include="mfx\pi\param\MapRatio.cpp" />
     <ClCompile Include="mfx\pi\peq\PEq.cpp" />
     <ClCompile Include="mfx\pi\peq\PEqDesc.cpp" />
