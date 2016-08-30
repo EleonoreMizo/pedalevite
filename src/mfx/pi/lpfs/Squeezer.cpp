@@ -208,6 +208,18 @@ void	Squeezer::do_process_block (ProcInfo &proc)
 				_drive_gain
 			);
 
+			// Hard-clips the input to avoid blowing the filter off
+			// at high cutoff frequencies (not enough oversampling...)
+			const auto     ma = fstb::ToolsSimd::set1_f32 ( 2);
+			const auto     mi = fstb::ToolsSimd::set1_f32 (-2);
+			for (int p = 0; p < work_len; p += 4)
+			{
+				auto           x = fstb::ToolsSimd::load_f32 (&_buf [p]);
+				x = fstb::ToolsSimd::min_f32 (x, ma);
+				x = fstb::ToolsSimd::max_f32 (x, mi);
+				fstb::ToolsSimd::store_f32 (&_buf [p], x);
+			}
+
 			// Upsampling
 			chn._us.process_block (&_buf_ovrspl [0], &_buf [0], work_len);
 
