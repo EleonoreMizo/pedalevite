@@ -62,6 +62,7 @@ Squeezer::Squeezer ()
 ,	_drive_inv (1)
 ,	_drive_gain_old (1)
 ,	_drive_inv_old (1)
+,	_type (0)
 ,	_buf ()
 ,	_buf_ovrspl ()
 ,	_chn_arr (_max_nbr_chn)
@@ -75,15 +76,18 @@ Squeezer::Squeezer ()
 	_state_set.set_val_nat (desc_set, Param_RESO ,    0.25f);
 	_state_set.set_val_nat (desc_set, Param_COLOR,    0.75f);
 	_state_set.set_val_nat (desc_set, Param_DRIVE,    4);
+	_state_set.set_val_nat (desc_set, Param_TYPE,     0);
 
 	_state_set.add_observer (Param_FREQ , _param_change_flag_freq_reso);
 	_state_set.add_observer (Param_RESO , _param_change_flag_freq_reso);
 	_state_set.add_observer (Param_COLOR, _param_change_flag_color    );
 	_state_set.add_observer (Param_DRIVE, _param_change_flag_drive    );
+	_state_set.add_observer (Param_TYPE , _param_change_flag_type     );
 
 	_param_change_flag_freq_reso.add_observer (_param_change_flag);
 	_param_change_flag_color    .add_observer (_param_change_flag);
 	_param_change_flag_drive    .add_observer (_param_change_flag);
+	_param_change_flag_type     .add_observer (_param_change_flag);
 
 	_state_set.set_ramp_time (Param_FREQ , 0.010);
 	_state_set.set_ramp_time (Param_DRIVE, 0.010);
@@ -133,8 +137,12 @@ int	Squeezer::do_reset (double sample_freq, int max_buf_len, int &latency)
 		c._ds.clear_buffers ();
 		c._us.set_coefs (coef_42, coef_21);
 		c._us.clear_buffers ();
-		c._lpf.set_sample_freq (_sample_freq * _ovrspl);
-		c._lpf.clear_buffers ();
+		c._lpf1.set_sample_freq (_sample_freq * _ovrspl);
+		c._lpf1.clear_buffers ();
+		c._lpf2.set_sample_freq (_sample_freq * _ovrspl);
+		c._lpf2.clear_buffers ();
+		c._lpf3.set_sample_freq (_sample_freq * _ovrspl);
+		c._lpf3.clear_buffers ();
 	}
 	const int      buf_len4 = (max_buf_len + 3) & -4;
 	_buf.resize (buf_len4);
@@ -204,7 +212,18 @@ void	Squeezer::do_process_block (ProcInfo &proc)
 			chn._us.process_block (&_buf_ovrspl [0], &_buf [0], work_len);
 
 			// Filtering
-			chn._lpf.process_block (&_buf_ovrspl [0], work_len * _ovrspl);
+			switch (_type)
+			{
+			case 0:
+				chn._lpf1.process_block (&_buf_ovrspl [0], work_len * _ovrspl);
+				break;
+			case 1:
+				chn._lpf2.process_block (&_buf_ovrspl [0], work_len * _ovrspl);
+				break;
+			default:
+				chn._lpf3.process_block (&_buf_ovrspl [0], work_len * _ovrspl);
+				break;
+			}
 
 			// Downsampling
 			chn._ds.process_block (&_buf [0], &_buf_ovrspl [0], work_len);
@@ -246,26 +265,62 @@ void	Squeezer::update_param (bool force_flag)
 {
 	if (_param_change_flag (true) || force_flag)
 	{
+		if (_param_change_flag_type (true) || force_flag)
+		{
+			_type = fstb::round_int (_state_set.get_val_tgt_nat (Param_TYPE));
+
+			// Forces update of the filter parameters
+			_param_change_flag_freq_reso.set ();
+			_param_change_flag_color.set ();
+		}
+
 		if (_param_change_flag_freq_reso (true) || force_flag)
 		{
 			const float    freq = float (_state_set.get_val_end_nat (Param_FREQ));
 			const float    reso = float (_state_set.get_val_end_nat (Param_RESO));
 			for (auto &c : _chn_arr)
 			{
-				c._lpf.set_freq (freq);
-				c._lpf.set_reso (reso);
-				c._lpf.update_eq ();
+				switch (_type)
+				{
+				case 0:
+					c._lpf1.set_freq (freq);
+					c._lpf1.set_reso (reso);
+					c._lpf1.update_eq ();
+					break;
+				case 1:
+					c._lpf2.set_freq (freq);
+					c._lpf2.set_reso (reso);
+					c._lpf2.update_eq ();
+					break;
+				default:
+					c._lpf3.set_freq (freq);
+					c._lpf3.set_reso (reso);
+					c._lpf3.update_eq ();
+					break;
+				}
 			}
 		}
+
 		if (_param_change_flag_color (true) || force_flag)
 		{
 			const float    col = float (_state_set.get_val_end_nat (Param_COLOR));
 			for (auto &c : _chn_arr)
 			{
-				c._lpf.set_p1 (col);
+				switch (_type)
+				{
+				case 0:
+					c._lpf1.set_p1 (col);
+					break;
+				case 1:
+					c._lpf2.set_p1 (col);
+					break;
+				default:
+					c._lpf3.set_p1 (col);
+					break;
+				}
 			}
-
 		}
+
 		if (_param_change_flag_drive (true) || force_flag)
 		{
 			_drive_gain = float (_state_set.get_val_end_nat (Param_DRIVE));

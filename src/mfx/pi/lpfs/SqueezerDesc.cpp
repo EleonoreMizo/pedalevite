@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/lpfs/Param.h"
 #include "mfx/pi/lpfs/SqueezerDesc.h"
+#include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 
@@ -94,6 +95,16 @@ SqueezerDesc::SqueezerDesc ()
 		"%+5.1f"
 	);
 	_desc_set.add_glob (Param_DRIVE, log_ptr);
+
+	// Type
+	param::TplEnum *  enu_ptr = new param::TplEnum (
+		"Hard\nSoft\nNone",
+		"F\nFold\nFoldback",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_TYPE, enu_ptr);
 }
 
 

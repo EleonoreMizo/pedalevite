@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "fstb/SingleObj.h"
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
+#include "mfx/dsp/iir/SqueezerOpBypass.h"
 #include "mfx/dsp/iir/SqueezerOpDefect.h"
 #include "mfx/dsp/iir/SqueezerSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
@@ -93,10 +94,14 @@ private:
 	public:
 		typedef dsp::iir::Upsampler4xSimd <_nbr_coef_42, _nbr_coef_21> UpSpl;
 		typedef dsp::iir::Downsampler4xSimd <_nbr_coef_42, _nbr_coef_21> DwSpl;
-		typedef dsp::iir::SqueezerSimd <true, dsp::iir::SqueezerOpDefect> Lpf;
+		typedef dsp::iir::SqueezerSimd <true, dsp::iir::SqueezerOpDefect <5> > Lpf1;
+		typedef dsp::iir::SqueezerSimd <true, dsp::iir::SqueezerOpDefect <2> > Lpf2;
+		typedef dsp::iir::SqueezerSimd <true, dsp::iir::SqueezerOpBypass     > Lpf3;
 		UpSpl          _us;
 		DwSpl          _ds;
-		Lpf            _lpf;
+		Lpf1           _lpf1;
+		Lpf2           _lpf2;
+		Lpf3           _lpf3;
 	};
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
@@ -118,11 +123,14 @@ private:
 	               _param_change_flag_color;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_drive;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_type;
 
 	float          _drive_gain;
 	float          _drive_inv;
 	float          _drive_gain_old;
 	float          _drive_inv_old;
+	int            _type;
 	BufAlign       _buf;
 	BufAlign       _buf_ovrspl;
 	ChannelArray   _chn_arr;

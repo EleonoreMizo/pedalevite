@@ -45,6 +45,7 @@ enum Param
 	Param_RESO,
 	Param_COLOR,
 	Param_DRIVE,
+	Param_TYPE,
 
 	Param_NBR_ELT,
 

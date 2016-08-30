@@ -40,19 +40,35 @@ namespace iir
 
 
 
-void	SqueezerOpDefect::config (float reso, float p1)
+template <int HA>
+void	SqueezerOpDefect <HA>::config (float reso, float p1)
 {
-	_param = 1.25f - p1 - reso * 0.125f;
+	_param   = 1.25f - p1 - reso * 0.125f;
 	assert (_param >= 0);
+	_param_i = 1.0f / _param;
+	_param_2 = 2 * _param;
 }
 
 
 
-float	SqueezerOpDefect::process_sample (float x)
+template <int HA>
+float	SqueezerOpDefect <HA>::process_sample (float x)
 {
-	if (fabs (x) > _param)
+	const float    xa = fabs (x);
+	if (xa > _param)
 	{
 		x = -x;
+	}
+	else if (HA < 5)
+	{
+		float          y  = x  * _param_i;
+		float          yy =  y *  y;
+		if (HA > 0) {  yy = yy * yy; }
+		if (HA > 1) {  yy = yy * yy; }
+		if (HA > 2) {  yy = yy * yy; }
+		if (HA > 3) {  yy = yy * yy; }
+		y *= (1 - yy) * _param_2;
+		x = y - x;
 	}
 
 	return x;

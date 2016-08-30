@@ -3,6 +3,10 @@
         SqueezerOpDefect.h
         Author: Laurent de Soras, 2016
 
+Template parameters:
+
+- HA: Harndness factor. 0 = smooth, 2 = mild, 5 = hard
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -38,8 +42,11 @@ namespace iir
 
 
 
+template <int HA>
 class SqueezerOpDefect
 {
+	static_assert (HA >= 0, "");
+	static_assert (HA <= 5, "");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -63,7 +70,9 @@ protected:
 
 private:
 
-	float          _param = 1.25f;
+	float          _param   = 1.25f;
+	float          _param_i = 1.0f / _param;
+	float          _param_2 = 2 * _param;
 
 
 
@@ -71,11 +80,11 @@ private:
 
 private:
 
-	               SqueezerOpDefect (const SqueezerOpDefect &other)  = delete;
-	SqueezerOpDefect &
-	               operator = (const SqueezerOpDefect &other)        = delete;
-	bool           operator == (const SqueezerOpDefect &other) const = delete;
-	bool           operator != (const SqueezerOpDefect &other) const = delete;
+	               SqueezerOpDefect (const SqueezerOpDefect <HA> &other)  = delete;
+	SqueezerOpDefect <HA> &
+	               operator = (const SqueezerOpDefect <HA> &other)        = delete;
+	bool           operator == (const SqueezerOpDefect <HA> &other) const = delete;
+	bool           operator != (const SqueezerOpDefect <HA> &other) const = delete;
 
 }; // class SqueezerOpDefect
 
