@@ -105,6 +105,8 @@ private:
 		fstb::AllocAlign <dsp::dyn::MeterRmsPeakHold4Simd, 16>
 	> LevelMeter;
 
+	void           reset_everything ();
+	void           reset_plugin (int pi_id);
 	void           collect_msg_cmd (bool proc_flag);
 	void           collect_msg_ui (bool proc_flag);
 	void           handle_controller (const ControlSource &controller, float val_raw);
@@ -151,6 +153,8 @@ private:
 	int64_t        _proc_date_end;
 	dsp::dyn::MeterRmsPeakHold
 	               _proc_analyser;
+
+	bool           _reset_flag;         // Indicates that we should reset all the chain, because something wrong occured.
 
 
 

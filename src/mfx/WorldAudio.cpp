@@ -69,6 +69,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_proc_date_beg (0)
 ,	_proc_date_end (0)
 ,	_proc_analyser ()
+,	_reset_flag (false)
 {
 	_evt_arr.reserve (_max_nbr_evt);
 	_evt_ptr_arr.reserve (_max_nbr_evt);
@@ -154,6 +155,13 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	}
 	_proc_date_beg = date_beg;
 
+	// A problem occured...
+	if (_reset_flag)
+	{
+		reset_everything ();
+		_reset_flag = false;
+	}
+
 	// Collects messages from the command thread
 	collect_msg_cmd (true);
 
@@ -190,6 +198,31 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	WorldAudio::reset_everything ()
+{
+	const ProcessingContext::PluginCtxArray & pi_ctx_arr =
+		_ctx_ptr->_context_arr;
+	for (const auto & pi_ctx : pi_ctx_arr)
+	{
+		reset_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id);
+		if (pi_ctx._mixer_flag)
+		{
+			reset_plugin (pi_ctx._node_arr [PiType_MIX]._pi_id);
+		}
+	}
+}
+
+
+
+void	WorldAudio::reset_plugin (int pi_id)
+{
+	PluginPool::PluginDetails &  details = _pi_pool.use_plugin (pi_id);
+	int            dummy_lat;
+	details._pi_uptr->reset (_sample_freq, _max_block_size, dummy_lat);
+}
 
 
 
@@ -675,6 +708,14 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::P
 	// Audio processing now
 	piapi::PluginInterface &  plugin = *(details._pi_uptr);
 	plugin.process_block (proc_info);
+
+	// Checks the output
+	const float          val = proc_info._dst_arr [0] [0];
+	static const float   thr = 1e9f;
+	if (isnan (val) || val < -thr || val > thr)
+	{
+		_reset_flag = true;
+	}
 }
 
 
