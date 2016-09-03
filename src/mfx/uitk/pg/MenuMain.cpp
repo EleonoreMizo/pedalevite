@@ -199,9 +199,7 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 				//_page_switcher.switch_to (pg::PageType_EDIT_BANKS, 0);
 				break;
 			case Entry_LAYOUT:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
-				//_page_switcher.switch_to (pg::PageType_PB_LAYOUT, 0);
+				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, 0);
 				break;
 			case Entry_LEVELS:
 				_page_switcher.switch_to (PageType_LEVELS, 0);

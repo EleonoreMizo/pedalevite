@@ -44,6 +44,10 @@ class View;
 
 namespace doc
 {
+	class ActionParam;
+	class FxId;
+	class PedalActionGroup;
+	class PedalboardLayout;
 	class PluginSettings;
 	class Preset;
 }
@@ -82,6 +86,9 @@ public:
 	static void    change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list);
 	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_index, int page);
 
+	static std::string
+	               conv_pedal_conf_to_short_txt (const doc::PedalboardLayout &layout, int index, const Model &model, const View &view);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -95,6 +102,14 @@ protected:
 private:
 
 	static void    print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo);
+	static bool    is_pedal_empty (const doc::PedalActionGroup &group);
+	static bool    is_pedal_simple_action (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
+	static bool    is_pedal_momentary_button (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
+	static bool    is_pedal_toggle (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
+	static std::string
+	               find_fx_type (const doc::FxId &fx_id, const View &view);
+	static std::string
+	               print_param_action (const doc::ActionParam &param, const Model &model, const View &view);
 
 
 

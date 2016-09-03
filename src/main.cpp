@@ -70,6 +70,7 @@
 #include "mfx/uitk/pg/ParamControllers.h"
 #include "mfx/uitk/pg/ParamEdit.h"
 #include "mfx/uitk/pg/ParamList.h"
+#include "mfx/uitk/pg/PedalboardConfig.h"
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/pg/SaveProg.h"
 #include "mfx/uitk/pg/Tuner.h"
@@ -273,6 +274,8 @@ public:
 	               _page_end_msg;
 	mfx::uitk::pg::Levels
 	               _page_levels;
+	mfx::uitk::pg::PedalboardConfig
+	               _page_pedalboard_config;
 
 	Context ();
 	~Context ();
@@ -287,6 +290,7 @@ protected:
 private:
 	static void    init_empty_bank (mfx::doc::Bank &bank);
 	static void    create_default_bank (mfx::doc::Bank &bank);
+	static void    create_default_layout (mfx::doc::PedalboardLayout &layout);
 };
 
 Context::Context ()
@@ -364,6 +368,7 @@ Context::Context ()
 ,	_page_save_prog (_page_switcher)
 ,	_page_end_msg (_cmd_line)
 ,	_page_levels (_page_switcher)
+,	_page_pedalboard_config (_page_switcher)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
@@ -457,6 +462,11 @@ fprintf (stderr, "Reading ESC button...\n");
 
 	mfx::doc::Bank bank;
 	create_default_bank (bank);
+
+	mfx::doc::PedalboardLayout layout;
+	create_default_layout (layout);
+
+	_model.set_pedalboard_layout (layout);
 	_model.set_bank (0, bank);
 	_model.select_bank (0);
 	_model.activate_preset (0);
@@ -498,6 +508,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_END_MSG          , _page_end_msg          );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_LEVELS           , _page_levels           );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDALBOARD_CONFIG, _page_pedalboard_config);
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }
@@ -981,36 +992,6 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 	}
 
-	for (int p = 0; p < 9; ++p)
-	{
-		const int      pedal = (p < 5) ? p : p + 1;
-		mfx::doc::PedalActionCycle &  cycle =
-			bank._layout._pedal_arr [pedal]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionPreset (false, p)
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-	{
-		mfx::doc::PedalActionCycle &  cycle =
-			bank._layout._pedal_arr [5]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionToggleTuner
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-	{
-		mfx::doc::PedalActionCycle &  cycle =
-			bank._layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionTempo
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-
 #if 0
 	// Serialization consistency test
 	mfx::doc::SerWText ser_w;
@@ -1031,6 +1012,59 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 	const std::string result2 = ser_w.use_content ();
 
 	assert (result == result2);
+#endif
+}
+
+
+
+void	Context::create_default_layout (mfx::doc::PedalboardLayout &layout)
+{
+	for (int p = 0; p < 9; ++p)
+	{
+		const int      pedal = (p < 5) ? p : p + 1;
+		mfx::doc::PedalActionCycle &  cycle =
+			layout._pedal_arr [pedal]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionPreset (false, p)
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			layout._pedal_arr [5]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionToggleTuner
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionTempo
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+
+#if 0 // Test code
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, "Disto 1", mfx::PiType_MIX);
+		mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
+		for (int i = 0; i < 2; ++i)
+		{
+			static const float val_arr [2] = { 1, 0 };
+			const float        val = val_arr [i];
+			action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
+				new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
+			);
+			cycle._cycle.push_back (action_arr);
+		}
+	}
 #endif
 }
 

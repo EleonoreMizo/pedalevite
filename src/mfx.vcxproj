@@ -563,6 +563,7 @@
     <ClInclude Include="mfx\uitk\pg\ParamControllers.h" />
     <ClInclude Include="mfx\uitk\pg\ParamEdit.h" />
     <ClInclude Include="mfx\uitk\pg\ParamList.h" />
+    <ClInclude Include="mfx\uitk\pg\PedalboardConfig.h" />
     <ClInclude Include="mfx\uitk\pg\Question.h" />
     <ClInclude Include="mfx\uitk\pg\SaveProg.h" />
     <ClInclude Include="mfx\uitk\pg\Tools.h" />
@@ -801,6 +802,7 @@
     <ClCompile Include="mfx\uitk\pg\ParamControllers.cpp" />
     <ClCompile Include="mfx\uitk\pg\ParamEdit.cpp" />
     <ClCompile Include="mfx\uitk\pg\ParamList.cpp" />
+    <ClCompile Include="mfx\uitk\pg\PedalboardConfig.cpp" />
     <ClCompile Include="mfx\uitk\pg\Question.cpp" />
     <ClCompile Include="mfx\uitk\pg\SaveProg.cpp" />
     <ClCompile Include="mfx\uitk\pg\Tools.cpp">

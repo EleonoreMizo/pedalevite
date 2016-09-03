@@ -1608,6 +1608,9 @@
     <ClInclude Include="mfx\dsp\iir\Downsampler4xSimd.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="mfx\uitk\pg\PedalboardConfig.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
     <ClInclude Include="mfx\pi\phase1\Phaser.h">
       <Filter>mfx\pi\phase1</Filter>
     </ClInclude>
@@ -2264,6 +2267,9 @@
     </ClCompile>
     <ClCompile Include="mfx\FileIOWindows.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="mfx\uitk\pg\PedalboardConfig.cpp">
+      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="mfx\pi\phase1\Phaser.cpp">
       <Filter>mfx\pi\phase1</Filter>

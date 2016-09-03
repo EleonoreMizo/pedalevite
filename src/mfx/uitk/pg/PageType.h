@@ -58,6 +58,7 @@ enum PageType
 	PageType_SAVE_PROG,
 	PageType_END_MSG,
 	PageType_LEVELS,
+	PageType_PEDALBOARD_CONFIG,
 
 	PageType_NBR_ELT
 

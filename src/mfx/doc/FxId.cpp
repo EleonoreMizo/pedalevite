@@ -82,6 +82,24 @@ void	FxId::ser_read (SerRInterface &ser)
 
 
 
+
+bool	FxId::operator == (const FxId &other) const
+{
+	return (   _location_type  == other._location_type
+	        && _label_or_model == other._label_or_model
+	        && _type           == other._type);
+}
+
+
+
+bool	FxId::operator != (const FxId &other) const
+{
+	return ! (*this == other);
+}
+
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

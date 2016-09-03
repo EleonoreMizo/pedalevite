@@ -66,6 +66,9 @@ public:
 
 	FxId &         operator = (const FxId &other) = default;
 
+	bool           operator == (const FxId &other) const;
+	bool           operator != (const FxId &other) const;
+
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
@@ -91,9 +94,7 @@ private:
 
 private:
 
-	               FxId ()                               = delete;
-	bool           operator == (const FxId &other) const = delete;
-	bool           operator != (const FxId &other) const = delete;
+	               FxId () = delete;
 
 }; // class FxId
 
