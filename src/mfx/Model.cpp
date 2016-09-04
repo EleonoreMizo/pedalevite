@@ -468,6 +468,8 @@ void	Model::set_nbr_slots (int nbr_slots)
 	{
 		_obs_ptr->set_nbr_slots (nbr_slots);
 	}
+
+	update_layout ();
 }
 
 
@@ -1064,6 +1066,8 @@ void	Model::apply_settings_normal ()
 			++ slot_index_central;
 		}
 	}
+
+	assert (_preset_cur._slot_list.size () == _pi_id_list.size ());
 }
 
 
