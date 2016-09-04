@@ -829,15 +829,17 @@ Autres trucs
 	sudo nano /boot/cmdline.txt
 		Ajouter "ro" :
 			dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p7 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait ro
+	sudo nano /etc/rc.local
+		Ajouter avant le "exit 0" : (nécessaire pour pouvoir exécuter configure-debug.dh et -release.sh sans sudo. on devrait pouvoir ajouter mode=1777 sur le fstab mais ça ne marche pas.)
+			chmod g+w,o+w /tmp
 Reboot
 
 
 
 
-
 Passer le système en R/O ou R/W
-mount -o remount,rw /
-mount -o remount,ro /
+sudo mount -o remount,rw /
+sudo mount -o remount,ro /
 
 
 enum ActionTrigger
