@@ -120,6 +120,7 @@ public:
 	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
 	void           override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index);
 	void           reset_all_overridden_param_ctrl ();
+	void           reset_all_overridden_param_ctrl (int slot_index);
 
 	std::vector <std::string>
 	               list_plugin_models () const;
@@ -168,9 +169,8 @@ private:
 	{
 	public:
 		bool           operator < (const OverrideLoc &rhs) const;
-		int            _slot_index;
-		PiType         _type;
-		int            _index;
+		int            _pi_id;           // >= 0
+		int            _index;           // Parameter index, >= 0
 	};
 
 	void           update_layout ();

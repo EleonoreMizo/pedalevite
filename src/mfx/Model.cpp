@@ -377,6 +377,8 @@ void	Model::activate_preset (int preset_index)
 	assert (preset_index >= 0);
 	assert (preset_index < Cst::_nbr_presets_per_bank);
 
+	reset_all_overridden_param_ctrl ();
+
 	if (_edit_flag && _edit_preset_flag && preset_index != _preset_index)
 	{
 		store_preset (_preset_index, -1);
@@ -384,14 +386,15 @@ void	Model::activate_preset (int preset_index)
 
 	_preset_index = preset_index;
 	_preset_cur   = _setup._bank_arr [_bank_index]._preset_arr [_preset_index];
-	if (_obs_ptr != 0)
-	{
-		_obs_ptr->activate_preset (preset_index);
-	}
 
 	_edit_preset_flag = true;
 
 	update_layout ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->activate_preset (preset_index);
+	}
 
 	add_default_ctrl (-1);
 }
@@ -541,6 +544,8 @@ void	Model::set_plugin (int slot_index, std::string model)
 	assert (slot_index < int (_preset_cur._slot_list.size ()));
 	assert (! model.empty ());
 
+	reset_all_overridden_param_ctrl (slot_index);
+
 	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
 	if (slot_sptr.get () == 0)
 	{
@@ -577,6 +582,8 @@ void	Model::remove_plugin (int slot_index)
 {
 	assert (slot_index >= 0);
 	assert (slot_index < int (_preset_cur._slot_list.size ()));
+
+	reset_all_overridden_param_ctrl (slot_index);
 
 	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
 	if (slot_sptr.get () != 0)
@@ -752,7 +759,10 @@ void	Model::override_param_ctrl (int slot_index, PiType type, int index, int rot
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	const OverrideLoc loc { slot_index, type, index };
+	const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+	assert (pi_id >= 0);
+
+	const OverrideLoc loc { pi_id, index };
 
 	if (rotenc_index < 0)
 	{
@@ -784,7 +794,48 @@ void	Model::reset_all_overridden_param_ctrl ()
 	while (! _override_map.empty ())
 	{
 		const OverrideLoc &  loc = _override_map.begin ()->first;
-		override_param_ctrl (loc._slot_index, loc._type, loc._index, -1);
+		int            slot_index;
+		PiType         type;
+		find_slot_type_cur_preset (slot_index, type, loc._pi_id);
+		if (slot_index >= 0)
+		{
+			override_param_ctrl (slot_index, type, loc._index, -1);
+		}
+	}
+}
+
+
+
+void	Model::reset_all_overridden_param_ctrl (int slot_index)
+{
+	assert (slot_index >= 0);
+	assert (slot_index < int (_preset_cur._slot_list.size ()));
+
+	for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
+	{
+		const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [type_cnt];
+
+		if (pi_id >= 0)
+		{
+			bool           erase_flag = false;
+			do
+			{
+				const auto     it = std::find_if (
+					_override_map.begin (),
+					_override_map.end (),
+					[pi_id] (const std::pair <OverrideLoc, int> &x)
+					{
+						return (x.first._pi_id == pi_id);
+					}
+				);
+				erase_flag = (it != _override_map.end ());
+				if (erase_flag)
+				{
+					_override_map.erase (it);
+				}
+			}
+			while (erase_flag);
+		}
 	}
 }
 
@@ -885,20 +936,13 @@ Model::SlotPiId::SlotPiId ()
 
 bool	Model::OverrideLoc::operator < (const OverrideLoc &rhs) const
 {
-	if (_slot_index < rhs._slot_index)
+	if (_pi_id < rhs._pi_id)
 	{
 		return true;
 	}
-	else if (_slot_index == rhs._slot_index)
+	else if (_pi_id == rhs._pi_id)
 	{
-		if (_type < rhs._type)
-		{
-			return true;
-		}
-		else if (_type == rhs._type)
-		{
-			return (_index < rhs._index);
-		}
+		return (_index < rhs._index);
 	}
 
 	return false;
@@ -1733,12 +1777,13 @@ void	Model::update_all_overriden_param_ctrl ()
 // Requires commit
 void	Model::update_param_ctrl (const OverrideLoc &loc)
 {
-	const int      slot_index = loc._slot_index;
-	const PiType   type       = loc._type;
+	const int      pi_id      = loc._pi_id;
 	const int      index      = loc._index;
-	const int      pi_id      = _pi_id_list [slot_index]._pi_id_arr [type];
+	int            slot_index;
+	PiType         type;
+	find_slot_type_cur_preset (slot_index, type, pi_id);
 
-	if (! _preset_cur.is_slot_empty (slot_index) && pi_id >= 0)
+	if (slot_index >= 0 && ! _preset_cur.is_slot_empty (slot_index))
 	{
 		doc::CtrlLinkSet  cls;
 
@@ -1759,7 +1804,7 @@ void	Model::update_param_ctrl (const OverrideLoc &loc)
 // Requires commit
 void	Model::set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index)
 {
-	const OverrideLoc loc { slot_index, type, index };
+	const OverrideLoc loc { pi_id, index };
 	auto           it = _override_map.find (loc);
 	if (it == _override_map.end ())
 	{
