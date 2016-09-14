@@ -1,0 +1,854 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{163F412F-8097-4D8B-B6A1-97B9A7356C76}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>mfxlib</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(Configuration)$(Platform)\</OutDir>
+    <IntDir>$(Configuration)$(Platform)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader></PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\asiosdk2\common;..\..\..\src\asiosdk2\host;..\..\..\src\asiosdk2\host\pc</AdditionalIncludeDirectories>
+   </ClCompile>
+   <Lib>
+      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+   </Lib>
+   <Link>
+      <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+   </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\asiosdk2\common\asio.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\common\asiodrvr.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\common\asiosys.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\common\combase.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\common\iasiodrv.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\common\wxdebug.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\host\ASIOConvertSamples.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\host\asiodrivers.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\host\ginclude.h" />
+    <ClInclude Include="..\..\..\src\asiosdk2\host\pc\asiolist.h" />
+    <ClInclude Include="..\..\..\src\conc\AioAdd.h" />
+    <ClInclude Include="..\..\..\src\conc\AioAdd.hpp" />
+    <ClInclude Include="..\..\..\src\conc\AioMax.h" />
+    <ClInclude Include="..\..\..\src\conc\AioMax.hpp" />
+    <ClInclude Include="..\..\..\src\conc\AioSub.h" />
+    <ClInclude Include="..\..\..\src\conc\AioSub.hpp" />
+    <ClInclude Include="..\..\..\src\conc\AtomicInt.h" />
+    <ClInclude Include="..\..\..\src\conc\AtomicInt.hpp" />
+    <ClInclude Include="..\..\..\src\conc\AtomicIntOp.h" />
+    <ClInclude Include="..\..\..\src\conc\AtomicIntOp.hpp" />
+    <ClInclude Include="..\..\..\src\conc\AtomicMem.h" />
+    <ClInclude Include="..\..\..\src\conc\AtomicMem.hpp" />
+    <ClInclude Include="..\..\..\src\conc\AtomicPtr.h" />
+    <ClInclude Include="..\..\..\src\conc\AtomicPtr.hpp" />
+    <ClInclude Include="..\..\..\src\conc\AtomicPtrIntPair.h" />
+    <ClInclude Include="..\..\..\src\conc\AtomicPtrIntPair.hpp" />
+    <ClInclude Include="..\..\..\src\conc\CellPool.h" />
+    <ClInclude Include="..\..\..\src\conc\CellPool.hpp" />
+    <ClInclude Include="..\..\..\src\conc\def.h" />
+    <ClInclude Include="..\..\..\src\conc\fnc.h" />
+    <ClInclude Include="..\..\..\src\conc\fnc.hpp" />
+    <ClInclude Include="..\..\..\src\conc\Interlocked.h" />
+    <ClInclude Include="..\..\..\src\conc\Interlocked.hpp" />
+    <ClInclude Include="..\..\..\src\conc\LockFreeCell.h" />
+    <ClInclude Include="..\..\..\src\conc\LockFreeQueue.h" />
+    <ClInclude Include="..\..\..\src\conc\LockFreeQueue.hpp" />
+    <ClInclude Include="..\..\..\src\conc\LockFreeStack.h" />
+    <ClInclude Include="..\..\..\src\conc\LockFreeStack.hpp" />
+    <ClInclude Include="..\..\..\src\conc\ObjFactoryDef.h" />
+    <ClInclude Include="..\..\..\src\conc\ObjFactoryDef.hpp" />
+    <ClInclude Include="..\..\..\src\conc\ObjFactoryInterface.h" />
+    <ClInclude Include="..\..\..\src\conc\ObjFactoryInterface.hpp" />
+    <ClInclude Include="..\..\..\src\conc\ObjPool.h" />
+    <ClInclude Include="..\..\..\src\conc\ObjPool.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\AllocAlign.h" />
+    <ClInclude Include="..\..\..\src\fstb\AllocAlign.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\Approx.h" />
+    <ClInclude Include="..\..\..\src\fstb\Approx.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\ArrayAlign.h" />
+    <ClInclude Include="..\..\..\src\fstb\ArrayAlign.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\BitFieldSparse.h" />
+    <ClInclude Include="..\..\..\src\fstb\BitFieldSparseIterator.h" />
+    <ClInclude Include="..\..\..\src\fstb\BitFieldSparseIterator.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\BitFieldTools.h" />
+    <ClInclude Include="..\..\..\src\fstb\BitFieldTools.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\CpuId.h" />
+    <ClInclude Include="..\..\..\src\fstb\DataAlign.h" />
+    <ClInclude Include="..\..\..\src\fstb\DataAlign.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\def.h" />
+    <ClInclude Include="..\..\..\src\fstb\Err.h" />
+    <ClInclude Include="..\..\..\src\fstb\FixedPoint.h" />
+    <ClInclude Include="..\..\..\src\fstb\FixedPoint.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\fnc.h" />
+    <ClInclude Include="..\..\..\src\fstb\fnc.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\SingleObj.h" />
+    <ClInclude Include="..\..\..\src\fstb\SingleObj.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\ToolsAvx2.h" />
+    <ClInclude Include="..\..\..\src\fstb\ToolsAvx2.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\ToolsSimd.h" />
+    <ClInclude Include="..\..\..\src\fstb\ToolsSimd.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\ToolsSse2.h" />
+    <ClInclude Include="..\..\..\src\fstb\ToolsSse2.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\neutral\ConvDigit.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\neutral\ConvDigit.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\neutral\fnc.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\neutral\fnc.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\BidiClass.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\Categ.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\Categ.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\CategClass.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\CharData.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\CharDataBuilder.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\CharDataInfo.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\CharDataInfo.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\ConvCi.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\ConvCi.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\ConvNeutral.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\ConvNeutral.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\GraphemeBreakProp.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\LineBreakAction.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\LineBreakProp.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\PredEq.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\PredEq.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\PredLt.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\PredLt.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\unicode.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\unicode.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\WordBreakProp.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\WordBreakPropTableNext.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\unicode\WordBreakPropTablePrev.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf8\Codec8.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf8\ConvNum.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf8\def.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf8\fnc.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf8\PredStringCiEq.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf8\PredStringCiEq.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf8\PredStringCiLt.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf8\PredStringCiLt.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\util\NotificationFlag.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\NotificationFlag.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\util\NotificationFlagCascadeMixin.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\NotificationFlagCascadeMixin.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\util\NotificationFlagCascadeMulti.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\NotificationFlagCascadeSingle.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\NotificationFlagInterface.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\NotificationFlagInterface.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\util\ObservableInterface.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\ObservableInterface.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\util\ObservableMultiMixin.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\ObservableSingleMixin.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\ObservableSingleMixin.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\util\ObserverInterface.h" />
+    <ClInclude Include="..\..\..\src\fstb\util\ObserverInterface.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\def.h" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2x3dnow.h" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2x3dnow.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2x4Neon.h" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2x4Neon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2x4Sse.h" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2x4Sse.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2xFpu.h" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2xFpu.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2xNeon.h" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2xNeon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2xSse.h" />
+    <ClInclude Include="..\..\..\src\hiir\Downsampler2xSse.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\fnc.h" />
+    <ClInclude Include="..\..\..\src\hiir\fnc.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPi3dnow.h" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPi3dnow.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiFpu.h" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiFpu.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiNeon.h" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiNeon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiSse.h" />
+    <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiSse.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\PolyphaseIir2Designer.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageData3dnow.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageDataNeon.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageDataSse.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageProc3dnow.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageProc3dnow.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\StageProc4Sse.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageProc4Sse.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\StageProcFpu.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageProcFpu.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\StageProc4Neon.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageProc4Neon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\StageProcNeon.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageProcNeon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\StageProcSse.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageProcSse.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2x3dnow.h" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2x3dnow.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2x4Neon.h" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2x4Neon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2x4Sse.h" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2x4Sse.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2xFpu.h" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2xFpu.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2xNeon.h" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2xNeon.hpp" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2xSse.h" />
+    <ClInclude Include="..\..\..\src\hiir\Upsampler2xSse.hpp" />
+    <ClInclude Include="..\..\..\src\jack\jack.h" />
+    <ClInclude Include="..\..\..\src\jack\systemdeps.h" />
+    <ClInclude Include="..\..\..\src\jack\transport.h" />
+    <ClInclude Include="..\..\..\src\jack\types.h" />
+    <ClInclude Include="..\..\..\src\jack\weakmacros.h" />
+    <ClInclude Include="..\..\..\src\mfx\adrv\CbInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\adrv\DAlsa.h" />
+    <ClInclude Include="..\..\..\src\mfx\adrv\DAsio.h" />
+    <ClInclude Include="..\..\..\src\mfx\adrv\DriverInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\adrv\DJack.h" />
+    <ClInclude Include="..\..\..\src\mfx\ChnMode.h" />
+    <ClInclude Include="..\..\..\src\mfx\CmdLine.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Central.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\BufAlloc.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\CentralCbInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Plugin.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Slot.h" />
+    <ClInclude Include="..\..\..\src\mfx\ControlCurve.h" />
+    <ClInclude Include="..\..\..\src\mfx\ControlledParam.h" />
+    <ClInclude Include="..\..\..\src\mfx\ControllerType.h" />
+    <ClInclude Include="..\..\..\src\mfx\ControlSource.h" />
+    <ClInclude Include="..\..\..\src\mfx\ControlSource.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\CtrlUnit.h" />
+    <ClInclude Include="..\..\..\src\mfx\Dir.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionBank.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionParam.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionPreset.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionTempo.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionToggleFx.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionToggleTuner.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionTrigger.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionType.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\Bank.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\CtrlLink.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\CtrlLinkSet.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\FxId.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ParamPresentation.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\PedalActionCycle.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\PedalActionGroup.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\PedalActionSingleInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\PedalboardLayout.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\PluginSettings.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\Preset.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\SerRInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\SerRText.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\SerWInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\SerWText.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\Setup.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\Slot.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNoiseFlt.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNoiseFlt.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSaw.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSine.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSquare.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseDist.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseDist.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGen.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGen.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGenChaos.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLine.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineData.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineData.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\SCPower.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\SCPower.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4Simd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4Simd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4SimdData.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4SimdMorph.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4SimdMorph.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\BiquadPackSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\BiquadPackSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler4xSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler4xSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerOpBypass.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerOpDefect.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerOpDefect.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Svf2p.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Svf2p.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfCore4Simd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfCore4Simd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfCore4SimdData.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerBand.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerBand.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerDefault.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerDefault.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerHigh.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerHigh.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerLow.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerLow.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerPeak.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfMixerPeak.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransS.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZBilin.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZBilin.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\InertiaLin.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\InertiaLin.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\mix\Align.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\mix\Fpu.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\mix\Generic.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\mix\Simd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\mix\Simd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorFir.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorFir.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43Simd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorInterface.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerp.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerpSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\SnhTool.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Voice.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturateBipolar.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturateBipolar.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\Poly3L1Bias.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\Poly3L1Bias.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\FileIOInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\FileIOPi3.h" />
+    <ClInclude Include="..\..\..\src\mfx\FileIOWindows.h" />
+    <ClInclude Include="..\..\..\src\mfx\GpioPwm.h" />
+    <ClInclude Include="..\..\..\src\mfx\LocEdit.h" />
+    <ClInclude Include="..\..\..\src\mfx\MeterResult.h" />
+    <ClInclude Include="..\..\..\src\mfx\MeterResultSet.h" />
+    <ClInclude Include="..\..\..\src\mfx\Model.h" />
+    <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
+    <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\Msg.h" />
+    <ClInclude Include="..\..\..\src\mfx\MsgQueue.h" />
+    <ClInclude Include="..\..\..\src\mfx\Overdrive.h" />
+    <ClInclude Include="..\..\..\src\mfx\ParamCoord.h" />
+    <ClInclude Include="..\..\..\src\mfx\ParamCoord.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cpx\Compex.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cpx\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly1\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly1\Delay.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly1\DelayChn.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly1\DelayDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dtone1\DistTone.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dtone1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\flancho\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\flancho\Flancho.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\flancho\FlanchoChn.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\flancho\FlanchoDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\flancho\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\flancho\WfType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayAllPassSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayComb.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayLineSimple.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\fv\Freeverb.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\fv\FreeverbDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\fv\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\iifix\IIFix.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\iifix\IIFixDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\iifix\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lpfs\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lpfs\Squeezer.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbkBipolar.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbkBipolar.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapPseudoLog.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapPseudoLog.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapRatio.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\PEq.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\PEqDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\PEqType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phase90Interface.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phase90Simd.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phase90Simd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phaser.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\ToolsParam.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\Event.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\EventNoteOff.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\EventNoteOn.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\EventParam.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\EventTransport.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\EventTs.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\EventType.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\FactoryInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\FactoryTpl.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\FactoryTpl.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\ParamCateg.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\ParamDescInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\ParamDescInterface.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\PluginDescInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\PluginInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\PluginState.h" />
+    <ClInclude Include="..\..\..\src\mfx\PiType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist1\DistoSimple.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist1\DistoSimpleDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dwm\DryWet.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dwm\DryWetDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dwm\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\export.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\freqsh\FreqShiftDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\freqsh\FrequencyShifter.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\freqsh\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\freqsh\PhaseHalfPi.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamState.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamStateSet.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\HelperDispNum.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapLog.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapLog.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapS.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapS.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSq.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSq.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapPiecewiseLinLog.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\Tools.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\Tools.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplEnum.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplInt.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplInt.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplLin.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplLog.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplMapped.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplMapped.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplSq.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\trem1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\trem1\Tremolo.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\trem1\TremoloDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\trem1\Waveform.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\tuner\FreqAnalyser.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\tuner\Tuner.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\tuner\TunerDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wha1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wha1\Wha.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wha1\WhaDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\PluginPool.h" />
+    <ClInclude Include="..\..\..\src\mfx\ProcessingContext.h" />
+    <ClInclude Include="..\..\..\src\mfx\ProcessingContextNode.h" />
+    <ClInclude Include="..\..\..\src\mfx\SharedRscState.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\Button.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\ContainerInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\MsgHandlerInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\NavLoc.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\NBitmap.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\NodeBase.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\NodeEvt.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\NodeInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\NText.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\NWindow.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\Page.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\PageInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\PageMgrInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\PageSwitcher.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\ParentInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlEdit.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlSrcNamed.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\CurProg.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditProg.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditText.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\EndMsg.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\Levels.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\MenuMain.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\MenuSlot.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\NotYet.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PageType.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ParamControllers.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ParamEdit.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ParamList.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalboardConfig.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\Question.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SaveProg.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\Tools.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\Tuner.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\Rect.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\Rect.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\Vec2d.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\Vec2d.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\ui\DisplayInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\DisplayPi3Pcd8544.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\DisplayPi3St7920.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\DisplayVoid.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\Font.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\FontDataDefault.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\IoWindows.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\LedInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\LedPi3.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\LedVoid.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\RotEnc.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\TimeShareCbInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\TimeShareThread.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\UserInputInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\UserInputMsg.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\UserInputPi3.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\UserInputType.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\UserInputVoid.h" />
+    <ClInclude Include="..\..\..\src\mfx\View.h" />
+    <ClInclude Include="..\..\..\src\mfx\WorldAudio.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\asiosdk2\common\asio.cpp" />
+    <ClCompile Include="..\..\..\src\asiosdk2\common\asiodrvr.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\asiosdk2\common\combase.cpp" />
+    <ClCompile Include="..\..\..\src\asiosdk2\common\debugmessage.cpp" />
+    <ClCompile Include="..\..\..\src\asiosdk2\common\register.cpp" />
+    <ClCompile Include="..\..\..\src\asiosdk2\host\ASIOConvertSamples.cpp" />
+    <ClCompile Include="..\..\..\src\asiosdk2\host\asiodrivers.cpp" />
+    <ClCompile Include="..\..\..\src\asiosdk2\host\pc\asiolist.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\BitFieldSparse.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\CpuId.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\fnc.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\ToolsAvx2.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\ToolsSimd.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\ToolsSse2.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\txt\neutral\fnc.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\txt\unicode\CharData.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\txt\unicode\CharDataBuilder.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\txt\unicode\unicode.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\txt\utf8\Codec8.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\txt\utf8\ConvNum.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\txt\utf8\def.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\txt\utf8\fnc.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)3.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)3.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\util\ObservableMultiMixin.cpp" />
+    <ClCompile Include="..\..\..\src\hiir\PolyphaseIir2Designer.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\adrv\CbInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\adrv\DAlsa.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\adrv\DAsio.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\adrv\DriverInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\adrv\DJack.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\CmdLine.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\Central.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\BufAlloc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\CentralCbInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ControlSource.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\Cst.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\CtrlUnit.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionBank.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionParam.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionPreset.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionTempo.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionToggleFx.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionToggleTuner.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\Bank.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\CtrlLink.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\CtrlLinkSet.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\FxId.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ParamPresentation.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\PedalActionCycle.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\PedalActionGroup.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\PedalActionSingleInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\PedalboardLayout.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\PluginSettings.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\Preset.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\SerRInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\SerRText.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\SerWInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\SerWText.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\Setup.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\Slot.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSaw.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSine.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSquare.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGenChaos.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLine.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\OnePole.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\Svf2p.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\TransS.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\TransSZBilin.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\mix\Align.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\mix\Fpu.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\mix\Generic.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43Simd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerp.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerpSimd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\SnhTool.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\Voice.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\FileIOPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\FileIOWindows.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\GpioPwm.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\MeterResultSet.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\Model.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\Overdrive.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\cpx\Compex.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayChn.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistTone.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\flancho\Flancho.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\flancho\FlanchoChn.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\flancho\FlanchoDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayAllPassSimd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayComb.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayLineSimple.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\fv\Freeverb.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFix.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFixDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\param\MapRatio.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\peq\PEq.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\peq\PEqDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phase90Interface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phaser.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\piapi\PluginDescInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist1\DistoSimple.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist1\DistoSimpleDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dwm\DryWet.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dwm\DryWetDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\export.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\freqsh\FreqShiftDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\freqsh\FrequencyShifter.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\ParamDescSet.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\ParamState.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\ParamStateSet.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\param\HelperDispNum.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\param\MapPiecewiseLinLog.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\param\Tools.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\param\TplEnum.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\param\TplLin.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\trem1\Tremolo.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\trem1\TremoloDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\tuner\FreqAnalyser.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\tuner\Tuner.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\tuner\TunerDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\wha1\Wha.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\wha1\WhaDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\PluginPool.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ProcessingContextNode.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\ContainerInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\MsgHandlerInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\NavLoc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\NBitmap.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\NodeBase.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\NodeEvt.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\NodeInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\NText.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\NWindow.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\Page.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\PageInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\PageMgrInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\PageSwitcher.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\ParentInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlEdit.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlSrcNamed.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\CurProg.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditProg.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditText.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\EndMsg.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Levels.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\MenuMain.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\MenuSlot.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\NotYet.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamControllers.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamEdit.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamList.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalboardConfig.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Question.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SaveProg.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tuner.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ui\DisplayInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\DisplayPi3Pcd8544.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ui\DisplayPi3St7920.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ui\DisplayVoid.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\Font.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\FontDataDefault.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\IoWindows.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\LedInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\LedPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ui\LedVoid.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\RotEnc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\TimeShareCbInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\TimeShareThread.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\UserInputInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\UserInputMsg.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\UserInputPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ui\UserInputVoid.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\View.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\WorldAudio.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
