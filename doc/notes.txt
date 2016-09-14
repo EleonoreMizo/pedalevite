@@ -842,6 +842,13 @@ sudo mount -o remount,rw /
 sudo mount -o remount,ro /
 
 
+Reste à faire :
+– Plan des câbles et connecteurs
+– Plan de disposition dans le boîtier
+– Nomenclature précise et budget
+
+
+
 enum ActionTrigger
 {
 	ActionTrigger_PRESS = 0,
