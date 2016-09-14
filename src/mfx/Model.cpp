@@ -1236,8 +1236,11 @@ void	Model::send_effect_settings (int pi_id, int slot_index, PiType type, const 
 	// Parameters
 	PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (pi_id);
-	const int      nbr_param =
+	int            nbr_param =
 		details._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
+	const int      nbr_param_check = int (settings._param_list.size ());
+	assert (nbr_param == nbr_param_check); // Most likely a plug-in version mismatch
+	nbr_param = std::min (nbr_param, nbr_param_check); // Just to make sure
 	for (int p_index = 0; p_index < nbr_param; ++p_index)
 	{
 		const float    val = settings._param_list [p_index];
