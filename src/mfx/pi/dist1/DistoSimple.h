@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/SingleObj.h"
+#include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
@@ -98,12 +99,15 @@ private:
 		typedef dsp::iir::Downsampler4xSimd <_nbr_coef_42, _nbr_coef_21> DwSpl;
 
 		dsp::iir::OnePole
-		               _hpf;
+		               _hpf_in;
+		dsp::iir::Biquad
+		               _env_lpf;
 		fstb::SingleObj <UpSpl, fstb::AllocAlign <UpSpl, 16> >
 		               _us;
 		fstb::SingleObj <DwSpl, fstb::AllocAlign <DwSpl, 16> >
 		               _ds;
 		BufAlign       _buf;
+		BufAlign       _buf_env;
 	};
 
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
@@ -124,6 +128,7 @@ private:
 	float          _inv_fs;
 	float          _gain;
 	float          _hpf_in_freq;
+	float          _bias;
 	BufAlign       _buf_ovrspl;
 	ChannelArray   _chn_arr;
 

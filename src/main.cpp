@@ -594,7 +594,7 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
-			pi_settings._param_list = { 0.25f, 0.75f };
+			pi_settings._param_list = { 0.25f, 0.75f, 0.65f };
 
 			mfx::doc::CtrlLinkSet cls;
 
@@ -718,7 +718,7 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 			mfx::doc::PluginSettings & pi_settings =
 				slot_ptr->_settings_all [slot_ptr->_pi_model];
 
-			pi_settings._param_list = std::vector <float> ({ 0.375f, 0.75f });
+			pi_settings._param_list = { 0.375f, 0.75f, 0.65f };
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =
@@ -864,7 +864,7 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 			cls._bind_sptr->_amp           = 1;
 			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls;
 
-			pi_settings._param_list = std::vector <float> ({ 0.50f, 0.75f });
+			pi_settings._param_list = { 0.50f, 0.75f, 0.65f };
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =
@@ -972,7 +972,7 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 			cls_main._bind_sptr->_amp           = 1;
 			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls_main;
 
-			pi_settings._param_list = std::vector <float> ({ 0.50f, 0.75f });
+			pi_settings._param_list = { 0.50f, 0.75f, 0.65f };
 
 			{
 				mfx::doc::PedalActionCycle &  cycle =

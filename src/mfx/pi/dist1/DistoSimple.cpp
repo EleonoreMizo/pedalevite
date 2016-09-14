@@ -58,14 +58,16 @@ DistoSimple::DistoSimple ()
 ,	_inv_fs (1 / _sample_freq)
 ,	_gain (float (DistoSimpleDesc::_gain_min))
 ,	_hpf_in_freq (1)
+,	_bias (0)
 ,	_buf_ovrspl ()
 ,	_chn_arr ()
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_GAIN    ,   1);   // 0 dB
-	_state_set.set_val_nat (desc_set, Param_HPF_FREQ, 600);
+	_state_set.set_val_nat (desc_set, Param_GAIN    ,   1  ); // 0 dB
+	_state_set.set_val_nat (desc_set, Param_HPF_FREQ, 600  );
+	_state_set.set_val_nat (desc_set, Param_BIAS    ,   0.3);
 
 	for (int index = 0; index < Param_NBR_ELT; ++index)
 	{
@@ -74,6 +76,7 @@ DistoSimple::DistoSimple ()
 
 	_state_set.set_ramp_time (Param_GAIN    , 0.010);
 	_state_set.set_ramp_time (Param_HPF_FREQ, 0.010);
+	_state_set.set_ramp_time (Param_BIAS    , 0.010);
 }
 
 
@@ -117,15 +120,31 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 		coef_21, _nbr_coef_21, 1.0 / 100
 	);
 
+	static const float   b_s [3] = { 1, 0, 0 };
+	static const float   a_s [3] = { 1, float (fstb::SQRT2), 1 };
+	float                b_z [3];
+	float                a_z [3];
+	const float    env_cutoff = 30;  // Hz
+	const float    k          =
+		dsp::iir::TransSZBilin::compute_k_approx (env_cutoff * _inv_fs);
+	dsp::iir::TransSZBilin::map_s_to_z_approx (
+		b_z, a_z,
+		b_s, a_s,
+		k
+	);
+
 	for (int chn = 0; chn < _max_nbr_chn; ++chn)
 	{
 		Channel &      c = _chn_arr [chn];
-		c._hpf.clear_buffers ();
+		c._hpf_in.clear_buffers ();
+		c._env_lpf.set_z_eq (b_z, a_z);
+		c._env_lpf.clear_buffers ();
 		c._us->set_coefs (coef_42, coef_21);
 		c._us->clear_buffers ();
 		c._ds->set_coefs (coef_42, coef_21);
 		c._ds->clear_buffers ();
 		c._buf.resize (max_buf_len);
+		c._buf_env.resize (max_buf_len);
 	}
 	_buf_ovrspl.resize (max_buf_len * _ovrspl);
 
@@ -163,6 +182,8 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 	bool           ramp_gain_flag = false;
 	float          gain_beg = _gain;
 	float          gain_end = _gain;
+	float          bias_beg = _bias;
+	float          bias_end = _bias;
 
 	if (_param_change_flag (true))
 	{
@@ -176,18 +197,44 @@ void	DistoSimple::do_process_block (ProcInfo &proc)
 			_hpf_in_freq = hpf_freq;
 			update_filter_in ();
 		}
+		bias_end = 2 * float (_state_set.get_val_end_nat (Param_BIAS));
 	}
 
-	// High-pass filtering
 	for (int chn = 0; chn < nbr_chn_src; ++chn)
 	{
-		dsp::iir::OnePole &  hpf = _chn_arr [chn]._hpf;
+		// High-pass filtering
+		dsp::iir::OnePole &  hpf = _chn_arr [chn]._hpf_in;
 		hpf.process_block (
 			&_chn_arr [chn]._buf [0],
 			&proc._src_arr [chn] [0],
 			nbr_spl
 		);
+
+		// Crude envelope extraction
+		for (int pos = 0; pos < nbr_spl; pos += 4)
+		{
+			auto           val =
+				fstb::ToolsSimd::load_f32 (&_chn_arr [chn]._buf [pos]);
+			val = fstb::ToolsSimd::abs (val);
+			fstb::ToolsSimd::store_f32 (&_chn_arr [chn]._buf_env [pos], val);
+		}
+		dsp::iir::Biquad &   lpf = _chn_arr [chn]._env_lpf;
+		lpf.process_block (
+			&_chn_arr [chn]._buf_env [0],
+			&_chn_arr [chn]._buf_env [0],
+			nbr_spl
+		);
+
+		// Bias
+		dsp::mix::Align::mix_1_1_vlrauto (
+			&_chn_arr [chn]._buf [0],
+			&_chn_arr [chn]._buf_env [0],
+			nbr_spl,
+			bias_beg,
+			bias_end
+		);
 	}
+	_bias = bias_end;
 
 	// Gain (ramp)
 	if (ramp_gain_flag)
@@ -282,7 +329,7 @@ void	DistoSimple::update_filter_in ()
 
 	for (int chn = 0; chn < _max_nbr_chn; ++chn)
 	{
-		dsp::iir::OnePole &  hpf = _chn_arr [chn]._hpf;
+		dsp::iir::OnePole &  hpf = _chn_arr [chn]._hpf_in;
 		hpf.set_z_eq (b_z, a_z);
 	}
 }

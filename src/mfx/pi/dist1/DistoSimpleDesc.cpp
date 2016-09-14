@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist1/Param.h"
+#include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 
 #include <cassert>
@@ -75,6 +76,17 @@ DistoSimpleDesc::DistoSimpleDesc ()
 	);
 	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
 	_desc_set.add_glob (Param_HPF_FREQ, log_ptr);
+
+	// Bias
+	param::TplLin *   lin_ptr = new param::TplLin (
+		-1, 1,
+		"Bias",
+		"%",
+		0,
+		"%+5.1f"
+	);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
+	_desc_set.add_glob (Param_BIAS, lin_ptr);
 }
 
 

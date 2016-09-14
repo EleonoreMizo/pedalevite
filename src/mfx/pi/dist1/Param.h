@@ -43,6 +43,7 @@ enum Param
 
 		Param_GAIN = 0,
 		Param_HPF_FREQ,
+		Param_BIAS,
 
 		Param_NBR_ELT
 
