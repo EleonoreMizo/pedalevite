@@ -62,6 +62,8 @@ DistoSimple::DistoSimple ()
 ,	_buf_ovrspl ()
 ,	_chn_arr ()
 {
+	mfx::dsp::mix::Align::setup ();
+
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
@@ -124,7 +126,7 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 	static const float   a_s [3] = { 1, float (fstb::SQRT2), 1 };
 	float                b_z [3];
 	float                a_z [3];
-	const float    env_cutoff = 30;  // Hz
+	const float    env_cutoff = 500;  // Hz
 	const float    k          =
 		dsp::iir::TransSZBilin::compute_k_approx (env_cutoff * _inv_fs);
 	dsp::iir::TransSZBilin::map_s_to_z_approx (
