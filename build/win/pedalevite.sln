@@ -11,6 +11,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfxlib", "mfxlib\mfxlib.vcxproj", "{163F412F-8097-4D8B-B6A1-97B9A7356C76}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{FFB7877F-99B3-4B41-9422-1BBD0F436346}"
+	ProjectSection(ProjectDependencies) = postProject
+		{163F412F-8097-4D8B-B6A1-97B9A7356C76} = {163F412F-8097-4D8B-B6A1-97B9A7356C76}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
