@@ -70,7 +70,7 @@ protected:
 
 private:
 
-	double         _thr         = 0.5;
+	double         _thr         = 0.5;   // [0 - 1]
 	double         _s1_mul      = 1;
 	double         _s2_mul      = 1;
 	double         _s2_add      = 0;

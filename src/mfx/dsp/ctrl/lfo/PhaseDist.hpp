@@ -48,26 +48,33 @@ void	PhaseDist::set_phase_dist (double dist)
 	assert (dist <= 1);
 
 	const double   margin = 1e-4;
-	if (dist < margin)
+	if (dist > 0.5 * (1 - margin) && dist < 0.5 * (1 + margin))
 	{
-		_thr    = 0;
-		_s1_mul = 1;
-		_s2_add = 1;
-		_s2_mul = 0.5;
+		_active_flag = false;
+	}
+	else if (dist < margin)
+	{
+		_thr         = 0;
+		_s1_mul      = 1;
+		_s2_add      = 1;
+		_s2_mul      = 0.5;
+		_active_flag = true;
 	}
 	else if (dist > 1 - margin)
 	{
-		_thr    = 1;
-		_s1_mul = 0.5;
-		_s2_add = 0;
-		_s2_mul = 1;
+		_thr         = 1;
+		_s1_mul      = 0.5;
+		_s2_add      = 0;
+		_s2_mul      = 1;
+		_active_flag = true;
 	}
 	else
 	{
-		_thr    = dist;
-		_s1_mul = 1 / (2 *      dist);
-		_s2_add = 1 - 2 * dist;
-		_s2_mul = 1 / (2 * (1 - dist));
+		_thr         = dist;
+		_s1_mul      = 1 / (2 *      dist);
+		_s2_add      = 1 -  2 *      dist;
+		_s2_mul      = 1 / (2 * (1 - dist));
+		_active_flag = true;
 	}
 }
 
