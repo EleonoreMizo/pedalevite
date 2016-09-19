@@ -61,6 +61,7 @@ Phaser::Phaser ()
 ,	_param_change_flag_fdbk ()
 ,	_param_change_flag_bpf ()
 ,	_param_change_flag_mix ()
+,	_param_change_flag_set ()
 ,	_phased_voice ()
 ,	_tmp_buf ()
 ,	_tmp_buf_pv ()
@@ -77,6 +78,7 @@ Phaser::Phaser ()
 	_state_set.set_val_nat (desc_set, Param_FDBK_COLOR, 0);
 	_state_set.set_val_nat (desc_set, Param_PHASE_MIX , 0.5);
 	_state_set.set_val_nat (desc_set, Param_MANUAL    , 0);
+	_state_set.set_val_nat (desc_set, Param_PHASE_SET , 0);
 	_state_set.set_val_nat (desc_set, Param_HOLD      , 0);
 	_state_set.set_val_nat (desc_set, Param_BPF_CUTOFF, 640);
 	_state_set.set_val_nat (desc_set, Param_BPF_Q     , 0.1);
@@ -87,6 +89,7 @@ Phaser::Phaser ()
 	_state_set.add_observer (Param_FDBK_COLOR, _param_change_flag_fdbk);
 	_state_set.add_observer (Param_PHASE_MIX , _param_change_flag_mix);
 	_state_set.add_observer (Param_MANUAL    , _param_change_flag_osc);
+	_state_set.add_observer (Param_PHASE_SET , _param_change_flag_set);
 	_state_set.add_observer (Param_HOLD      , _param_change_flag_osc);
 	_state_set.add_observer (Param_BPF_CUTOFF, _param_change_flag_bpf);
 	_state_set.add_observer (Param_BPF_Q     , _param_change_flag_bpf);
@@ -95,6 +98,7 @@ Phaser::Phaser ()
 	_param_change_flag_fdbk.add_observer (_param_change_flag);
 	_param_change_flag_bpf .add_observer (_param_change_flag);
 	_param_change_flag_mix .add_observer (_param_change_flag);
+	_param_change_flag_set .add_observer (_param_change_flag);
 }
 
 
@@ -300,6 +304,13 @@ void	Phaser::update_param (bool force_flag)
 		if (_param_change_flag_mix (true) || force_flag)
 		{
 			_phase_mix_cur = float (_state_set.get_val_end_nat (Param_PHASE_MIX));
+		}
+
+		if (_param_change_flag_set (true) || force_flag)
+		{
+			const float    phase =
+				float (_state_set.get_val_end_nat (Param_PHASE_SET));
+			_phased_voice->set_phase (phase);
 		}
 	}
 }

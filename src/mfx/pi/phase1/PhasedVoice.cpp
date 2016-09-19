@@ -60,6 +60,8 @@ PhasedVoice::PhasedVoice ()
 ,	_fdbk_color_old (0)
 ,	_phase_osc_cur (0)
 ,	_phase_osc_step (0)
+,	_phase_man (0)
+,	_phase_ref (0)
 ,	_phase_man_cur (0)
 ,	_phase_man_old (0)
 ,	_phase_hold_cur (0)
@@ -160,9 +162,19 @@ void	PhasedVoice::set_fdbk_color (float col)
 
 
 
+void	PhasedVoice::set_phase (float phase)
+{
+	_phase_ref     = phase * float (fstb::PI * 2);
+	_phase_man_cur = _phase_man + _phase_ref;
+	_osc_freq_update_flag = true;
+}
+
+
+
 void	PhasedVoice::set_phase_shift (float phase)
 {
-	_phase_man_cur = phase * float (fstb::PI * 2);
+	_phase_man     = phase * float (fstb::PI * 2);
+	_phase_man_cur = _phase_man + _phase_ref;
 	_osc_freq_update_flag = true;
 }
 

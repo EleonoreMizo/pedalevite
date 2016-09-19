@@ -109,6 +109,8 @@ private:
 	               _param_change_flag_bpf;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_mix;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_set;
 
 	fstb::SingleObj <PhasedVoice>
 	               _phased_voice;

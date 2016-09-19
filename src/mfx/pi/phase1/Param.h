@@ -47,6 +47,7 @@ enum Param
 	Param_FDBK_COLOR,
 	Param_PHASE_MIX,
 	Param_MANUAL,
+	Param_PHASE_SET,
 	Param_HOLD,
 	Param_BPF_CUTOFF,
 	Param_BPF_Q,

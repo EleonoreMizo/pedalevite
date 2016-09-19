@@ -78,6 +78,7 @@ public:
 	void           set_depth (int depth);
 	void           set_fdbk_level (float lvl);
 	void           set_fdbk_color (float col);
+	void           set_phase (float phase);
 	void           set_phase_shift (float phase);
 	void           set_hold (bool hold_flag);
 	void           set_bpf_cutoff (float freq);
@@ -128,7 +129,9 @@ private:
 
 	float          _phase_osc_cur;      // [0 ; 2*PI[, rad
 	float          _phase_osc_step;     // > 0, rad/sample. Not affected by Hold Oscillator parameter
-	float          _phase_man_cur;      // rad
+	float          _phase_man;          // rad, manual phase
+	float          _phase_ref;          // rad, absolute phase referencer
+	float          _phase_man_cur;      // rad, sum of _phase_man and _phase_ref
 	float          _phase_man_old;      // rad
 	float          _phase_hold_cur;     // rad
 	float          _phase_hold_old;     // rad

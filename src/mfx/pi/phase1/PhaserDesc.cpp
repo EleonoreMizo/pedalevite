@@ -99,9 +99,10 @@ PhaserDesc::PhaserDesc ()
 		"C\nCol\nFdbk Col\nFdbk Color\nFeedback Color",
 		"%",
 		0,
-		"%5.1f"
+		"%3.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
+	lin_ptr->use_disp_num ().set_scale (360);
 	_desc_set.add_glob (Param_FDBK_COLOR, lin_ptr);
 
 	// Phase Mix
@@ -119,17 +120,31 @@ PhaserDesc::PhaserDesc ()
 	);
 	_desc_set.add_glob (Param_PHASE_MIX, maps_ptr);
 
-	// Manual Phase
+	// Phase Offset
 	lin_ptr = new param::TplLin (
 		-1, 1,
-		"MP\nManual\nManual Phase",
+		"PO\nPh.Ofs\nOffset\nPhase Offset",
 		"%",
 		0,
-		"%+6.1f"
+		"%+5.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
+	lin_ptr->use_disp_num ().set_scale (360);
 	_desc_set.add_glob (Param_MANUAL, lin_ptr);
 
+	// Phase Set
+	lin_ptr = new param::TplLin (
+		0, 1,
+		"P\nPh.Set\nPhase Set",
+		"deg",
+		0,
+		"%3.0f"
+	);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
+	lin_ptr->use_disp_num ().set_scale (360);
+	_desc_set.add_glob (Param_PHASE_SET, lin_ptr);
+
+	// Hold
 	enu_ptr = new param::TplEnum (
 		"Off\nOn",
 		"H\nHold",
