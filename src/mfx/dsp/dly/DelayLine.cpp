@@ -314,9 +314,6 @@ void	DelayLine::push_sample (float src)
 	const int      mask        = _line_data.get_mask ();
 	float *        data_ptr    = _line_data.get_buffer ();
 
-	int            src_pos = 0;
-	const int      rem_len  = line_len - _write_pos;
-
 	data_ptr [_write_pos] = src;
 
 	// Updates the loop-unrolling zone
