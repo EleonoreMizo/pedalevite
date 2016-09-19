@@ -234,6 +234,13 @@ void	Page::do_set_timer (int node_id, bool enable_flag)
 
 
 
+void	Page::do_reset_display ()
+{
+	_display.force_reset ();
+}
+
+
+
 Vec2d	Page::do_get_coord_abs () const
 {
 	return Vec2d ();

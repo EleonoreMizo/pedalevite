@@ -64,6 +64,7 @@ protected:
 	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
 	virtual int    do_start ();
 	virtual int    do_stop ();
+	virtual void   do_restart ();
 	virtual std::string
 	               do_get_last_error () const;
 

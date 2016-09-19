@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <alsa/asoundlib.h>
 
 #include <array>
+#include <atomic>
 #include <thread>
 #include <vector>
 
@@ -69,6 +70,7 @@ protected:
 	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
 	virtual int    do_start ();
 	virtual int    do_stop ();
+	virtual void   do_restart ();
 	virtual std::string
 	               do_get_last_error () const;
 
@@ -99,6 +101,8 @@ private:
 
 	std::thread    _thread_audio;
 	volatile bool  _quit_flag;
+	std::atomic <bool>
+	               _restart_flag;
 
 	static DAlsa * _instance_ptr;
 

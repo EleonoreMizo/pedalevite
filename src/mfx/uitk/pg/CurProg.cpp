@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 
 #include "fstb/fnc.h"
+#include "mfx/adrv/DriverInterface.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
 #include "mfx/uitk/pg/CurProg.h"
@@ -84,8 +85,9 @@ Parameter      value
 
     IP address
 */
-CurProg::CurProg (PageSwitcher &page_switcher)
+CurProg::CurProg (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 :	_page_switcher (page_switcher)
+,	_snd_drv (snd_drv)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -104,6 +106,7 @@ CurProg::CurProg (PageSwitcher &page_switcher)
 ,	_bank_index (0)
 ,	_preset_index (0)
 ,	_tempo_date (INT64_MIN)
+,	_esc_count (0)
 {
 	_prog_nbr_sptr->set_mag (_mag_prog_nbr, _mag_prog_nbr);
 	_prog_nbr_sptr->set_bold (true, true);
@@ -192,6 +195,8 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	i_set_bank_name (setup._bank_arr [bank_index]._name);
 	i_set_prog_name (preset._name);
 	i_set_param (-1, 0, 0, 0, PiType (0));
+
+	_esc_count = 0;
 }
 
 
@@ -232,6 +237,16 @@ MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
 		case Button_E:
 			_ip_addr = get_ip_address ();
 			_ip_sptr->set_text (_ip_addr);
+			++ _esc_count;
+			if (_esc_count == 2)
+			{
+				_page_ptr->reset_display ();
+			}
+			else if (_esc_count == 3)
+			{
+				_snd_drv.restart ();
+				_esc_count = 0;
+			}
 			break;
 		default:
 			// Nothing

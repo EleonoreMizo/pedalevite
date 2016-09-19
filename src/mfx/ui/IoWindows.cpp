@@ -167,6 +167,14 @@ void	IoWindows::do_refresh (int x, int y, int w, int h)
 
 
 
+void	IoWindows::do_force_reset ()
+{
+	// Nothing more at this point
+	do_refresh (0, 0, _scr_w, _scr_h);
+}
+
+
+
 int	IoWindows::do_get_nbr_led () const
 {
 	return _nbr_led;

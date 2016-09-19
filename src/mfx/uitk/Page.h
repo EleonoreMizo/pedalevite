@@ -85,6 +85,7 @@ protected:
 	virtual void   do_set_nav_layout (const NavLocList &nav_list);
 	virtual void   do_jump_to (int node_id);
 	virtual void   do_set_timer (int node_id, bool enable_flag);
+	virtual void   do_reset_display ();
 
 	// mfx::uitk::ParentInterface via mfx::uitk::PageMgrInterface
 	virtual Vec2d  do_get_coord_abs () const;

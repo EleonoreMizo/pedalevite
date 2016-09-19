@@ -81,6 +81,7 @@ protected:
 	               do_use_screen_buf () const;
 
 	virtual void   do_refresh (int x, int y, int w, int h);
+	virtual void   do_force_reset ();
 
 	// LedInterface
 	virtual int    do_get_nbr_led () const;

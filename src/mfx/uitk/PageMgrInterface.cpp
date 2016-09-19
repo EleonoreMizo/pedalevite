@@ -66,6 +66,13 @@ void	PageMgrInterface::set_timer (int node_id, bool enable_flag)
 
 
 
+void	PageMgrInterface::reset_display ()
+{
+	do_reset_display ();
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

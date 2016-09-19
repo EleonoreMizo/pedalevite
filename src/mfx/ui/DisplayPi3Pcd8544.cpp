@@ -156,6 +156,13 @@ void	DisplayPi3Pcd8544::do_refresh (int x, int y, int w, int h)
 
 
 
+void	DisplayPi3Pcd8544::do_force_reset ()
+{
+	init_device ();
+}
+
+
+
 bool	DisplayPi3Pcd8544::do_process_timeshare_op ()
 {
 	if (_state == State_INIT)

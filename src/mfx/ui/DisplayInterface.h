@@ -62,6 +62,7 @@ public:
 	const uint8_t *use_screen_buf () const;
 
 	void           refresh (int x, int y, int w, int h);
+	void           force_reset ();
 
 	// Utility functions
 	void           bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, int ys, int ws, int hs, int ss, BlendMode mode);
@@ -81,6 +82,7 @@ protected:
 	               do_use_screen_buf () const = 0;
 
 	virtual void   do_refresh (int x, int y, int w, int h) = 0;
+	virtual void   do_force_reset () = 0;
 
 
 

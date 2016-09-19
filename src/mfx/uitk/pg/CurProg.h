@@ -36,6 +36,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+namespace adrv
+{
+	class DriverInterface;
+}
+
 namespace uitk
 {
 
@@ -54,7 +60,7 @@ class CurProg
 
 public:
 
-	explicit       CurProg (PageSwitcher &page_switcher);
+	explicit       CurProg (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv);
 	virtual        ~CurProg () = default;
 
 
@@ -99,6 +105,8 @@ private:
 	               get_ip_address ();
 
 	PageSwitcher & _page_switcher;
+	adrv::DriverInterface &
+	               _snd_drv;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -121,6 +129,7 @@ private:
 	int            _preset_index;
 
 	int64_t        _tempo_date;
+	int            _esc_count;
 
 
 

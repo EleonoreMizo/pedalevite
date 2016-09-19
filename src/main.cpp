@@ -277,8 +277,8 @@ public:
 	mfx::uitk::pg::PedalboardConfig
 	               _page_pedalboard_config;
 
-	Context ();
-	~Context ();
+	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
+	               ~Context ();
 	void           set_proc_info (double sample_freq, int max_block_size);
 protected:
 	// mfx::ModelObserverDefault
@@ -293,7 +293,7 @@ private:
 	static void    create_default_layout (mfx::doc::PedalboardLayout &layout);
 };
 
-Context::Context ()
+Context::Context (mfx::adrv::DriverInterface &snd_drv)
 :	_cmd_line ()
 ,	_sample_freq (0)
 ,	_max_block_size (0)
@@ -353,7 +353,7 @@ Context::Context ()
 ,	_loc_edit ()
 ,	_page_mgr (_model, _view, _display, _queue_input_to_gui, _user_input, _fnt_6x6, _fnt_6x8, _fnt_8x12)
 ,	_page_switcher (_page_mgr)
-,	_page_cur_prog (_page_switcher)
+,	_page_cur_prog (_page_switcher, snd_drv)
 ,	_page_tuner (_page_switcher, _leds)
 ,	_page_menu_main (_page_switcher)
 ,	_page_edit_prog (_page_switcher, _loc_edit, _pi_type_list)
@@ -1240,7 +1240,7 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 #endif
 
 
-	std::unique_ptr <Context>  ctx_uptr (new Context);
+	std::unique_ptr <Context>  ctx_uptr (new Context (snd_drv));
 	Context &      ctx = *ctx_uptr;
 #if fstb_IS (SYS, LINUX)
 	ctx._cmd_line.set (argc, argv, envp);

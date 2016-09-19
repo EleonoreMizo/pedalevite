@@ -107,6 +107,13 @@ void	DisplayInterface::refresh (int x, int y, int w, int h)
 
 
 
+void	DisplayInterface::force_reset ()
+{
+	do_force_reset ();
+}
+
+
+
 void	DisplayInterface::bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, int ys, int ws, int hs, int ss, BlendMode mode)
 {
 	assert (xd >= 0);

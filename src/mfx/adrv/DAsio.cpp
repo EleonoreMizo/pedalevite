@@ -381,6 +381,13 @@ int	DAsio::do_stop ()
 
 
 
+void	DAsio::do_restart ()
+{
+	/*** To do ***/
+}
+
+
+
 std::string	DAsio::do_get_last_error () const
 {
 	return _msg_err;

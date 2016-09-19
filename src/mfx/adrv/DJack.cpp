@@ -271,6 +271,13 @@ int	DJack::do_start ()
 
 
 
+void	DJack::do_restart ()
+{
+	/*** To do ***/
+}
+
+
+
 int	DJack::do_stop ()
 {
 	_msg_err.clear ();

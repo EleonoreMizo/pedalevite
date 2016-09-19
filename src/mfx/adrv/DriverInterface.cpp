@@ -77,6 +77,13 @@ int	DriverInterface::stop ()
 
 
 
+void	DriverInterface::restart ()
+{
+	do_restart ();
+}
+
+
+
 std::string	DriverInterface::get_last_error () const
 {
 	return do_get_last_error ();

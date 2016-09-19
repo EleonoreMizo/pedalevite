@@ -60,6 +60,7 @@ DAlsa::DAlsa ()
 ,	_block_size_alig (0)
 ,	_thread_audio ()
 ,	_quit_flag (false)
+,	_restart_flag ()
 {
 	assert (_instance_ptr == 0);
 	if (_instance_ptr != 0)
@@ -67,6 +68,8 @@ DAlsa::DAlsa ()
 		throw std::runtime_error ("mfx::adrv::DAlsa already instantiated.");
 	}
 	_instance_ptr = this;
+
+	_restart_flag.store (false);
 }
 
 
@@ -249,6 +252,13 @@ int	DAlsa::do_stop ()
 	}
 
 	return ret_val;
+}
+
+
+
+void	DAlsa::do_restart ()
+{
+	_restart_flag.exchange (true);
 }
 
 
@@ -465,6 +475,14 @@ void	DAlsa::process_block (bool read_flag)
 		const int      ofs_c = chn * _block_size_alig;
 		buf_ptr_arr [Dir_IN ] [chn] = &_buf_alig [ofs_r + ofs_c];
 		buf_ptr_arr [Dir_OUT] [chn] = &_buf_alig [ofs_w + ofs_c];
+	}
+
+	if (_restart_flag.exchange (false))
+	{
+		::snd_pcm_drop (_handle_arr [Dir_IN ]);
+		::snd_pcm_drop (_handle_arr [Dir_OUT]);
+		::snd_pcm_prepare (_handle_arr [Dir_IN ]);
+		::snd_pcm_prepare (_handle_arr [Dir_OUT]);
 	}
 
 	if (read_flag)
