@@ -80,6 +80,16 @@ void	PhaseDist::set_phase_dist (double dist)
 
 
 
+void	PhaseDist::set_phase_dist_offset (double offset)
+{
+	assert (offset >= 0);
+	assert (offset <= 1);
+
+	_offset = offset;
+}
+
+
+
 double	PhaseDist::process_phase (double phase) const
 {
 	assert (phase >= 0);
@@ -87,6 +97,12 @@ double	PhaseDist::process_phase (double phase) const
 
 	if (_active_flag)
 	{
+		phase -= _offset;
+		if (phase < 0)
+		{
+			phase += 1;
+		}
+
 		if (phase < _thr)
 		{
 			phase *= _s1_mul;
@@ -95,6 +111,12 @@ double	PhaseDist::process_phase (double phase) const
 		{
 			phase += _s2_add;
 			phase *= _s2_mul;
+		}
+
+		phase += _offset;
+		if (phase > 1)
+		{
+			phase -= 1;
 		}
 	}
 

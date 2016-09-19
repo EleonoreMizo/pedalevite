@@ -89,6 +89,16 @@ void	OscInterface::set_phase_dist (double dist)
 
 
 
+void	OscInterface::set_phase_dist_offset (double ofs)
+{
+	assert (ofs >= 0);
+	assert (ofs <= 1);
+
+	do_set_phase_dist_offset (ofs);
+}
+
+
+
 void	OscInterface::set_sign (bool inv_flag)
 {
 	do_set_sign (inv_flag);

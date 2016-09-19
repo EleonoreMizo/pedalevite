@@ -77,6 +77,7 @@ public:
 	void           set_phase (double phase);
 	void           set_chaos (double chaos);
 	void           set_phase_dist (double dist);
+	void           set_phase_dist_offset (double ofs);
 	void           set_sign (bool inv_flag);
 	void           set_polarity (bool unipolar_flag);
 	void           set_variation (int param, double val);
@@ -120,6 +121,7 @@ private:
 	double         _period;				// s, > 0
 	double         _phase_chaos;
 	double         _phase_dist;
+	double         _phase_dist_ofs;
 	bool           _inv_flag;
 	bool           _unipolar_flag;
 	std::array <double, OscInterface::Variation_NBR_ELT>

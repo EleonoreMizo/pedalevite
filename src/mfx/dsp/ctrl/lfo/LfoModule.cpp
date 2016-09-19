@@ -64,6 +64,7 @@ LfoModule::LfoModule ()
 ,	_period (1)
 ,	_phase_chaos (0)
 ,	_phase_dist (0.5)
+,	_phase_dist_ofs (0)
 ,	_inv_flag (false)
 ,	_unipolar_flag (false)
 ,	_variation_arr ()
@@ -161,6 +162,17 @@ void	LfoModule::set_phase_dist (double dist)
 
 	use_osc ().set_phase_dist (dist);
 	_phase_dist = dist;
+}
+
+
+
+void	LfoModule::set_phase_dist_offset (double ofs)
+{
+	assert (ofs >= 0);
+	assert (ofs <= 1);
+
+	use_osc ().set_phase_dist_offset (ofs);
+	_phase_dist_ofs = ofs;
 }
 
 
@@ -390,6 +402,7 @@ void	LfoModule::apply_osc_settings ()
 {
 	set_period (_period);
 	set_phase_dist (_phase_dist);
+	set_phase_dist_offset (_phase_dist_ofs);
 	set_sign (_inv_flag);
 	set_polarity (_unipolar_flag);
 	for (int var = 0; var < OscInterface::Variation_NBR_ELT; ++var)

@@ -72,6 +72,7 @@ protected:
 	virtual void   do_set_phase (double phase);
 	virtual void   do_set_chaos (double chaos);
 	virtual void   do_set_phase_dist (double dist);
+	virtual void   do_set_phase_dist_offset (double ofs);
 	virtual void   do_set_sign (bool inv_flag);
 	virtual void   do_set_polarity (bool unipolar_flag);
 	virtual void   do_set_variation (int param, double val);

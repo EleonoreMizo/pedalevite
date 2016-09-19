@@ -55,6 +55,7 @@ public:
 	PhaseDist &    operator = (const PhaseDist &other) = default;
 
 	inline void    set_phase_dist (double dist);
+	inline void    set_phase_dist_offset (double offset);
 
 	inline double  process_phase (double phase) const;
 
@@ -71,6 +72,7 @@ protected:
 private:
 
 	double         _thr         = 0.5;   // [0 - 1]
+	double         _offset      = 0;     // [0 - 1]
 	double         _s1_mul      = 1;
 	double         _s2_mul      = 1;
 	double         _s2_add      = 0;

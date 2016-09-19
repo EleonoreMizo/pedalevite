@@ -108,6 +108,14 @@ void	OscNoiseFlt <ORDER>::do_set_phase_dist (double /*dist*/)
 
 
 template <int ORDER>
+void	OscNoiseFlt <ORDER>::do_set_phase_dist_offset (double /*ofs*/)
+{
+	// Nothing
+}
+
+
+
+template <int ORDER>
 void	OscNoiseFlt <ORDER>::do_set_sign (bool /*inv_flag*/)
 {
 	// Nothing

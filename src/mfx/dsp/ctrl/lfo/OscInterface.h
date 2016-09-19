@@ -62,6 +62,7 @@ public:
 	inline void    set_phase (double phase);
 	inline void    set_chaos (double chaos);
 	inline void    set_phase_dist (double dist);
+	inline void    set_phase_dist_offset (double ofs);
 	inline void    set_sign (bool inv_flag);
 	inline void    set_polarity (bool unipolar_flag);
 	inline void    set_variation (int param, double val);
@@ -82,6 +83,7 @@ protected:
 	virtual void   do_set_phase (double phase) = 0;
 	virtual void   do_set_chaos (double chaos) = 0;
 	virtual void   do_set_phase_dist (double dist) = 0;
+	virtual void   do_set_phase_dist_offset (double ofs) = 0;
 	virtual void   do_set_sign (bool inv_flag) = 0;
 	virtual void   do_set_polarity (bool unipolar_flag) = 0;
 	virtual void   do_set_variation (int param, double val) = 0;

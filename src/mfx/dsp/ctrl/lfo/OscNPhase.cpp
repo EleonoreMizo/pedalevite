@@ -106,6 +106,13 @@ void	OscNPhase::do_set_phase_dist (double dist)
 
 
 
+void	OscNPhase::do_set_phase_dist_offset (double ofs)
+{
+	_phase_dist.set_phase_dist_offset (ofs);
+}
+
+
+
 void	OscNPhase::do_set_chaos (double /*chaos*/)
 {
 	// Nothing

@@ -86,6 +86,13 @@ void	OscVariSlope::do_set_phase_dist (double dist)
 
 
 
+void	OscVariSlope::do_set_phase_dist_offset (double ofs)
+{
+	_phase_dist.set_phase_dist_offset (ofs);
+}
+
+
+
 void	OscVariSlope::do_set_sign (bool inv_flag)
 {
 	_inv_flag = inv_flag;
