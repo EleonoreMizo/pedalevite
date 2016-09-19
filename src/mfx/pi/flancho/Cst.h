@@ -46,9 +46,8 @@ class Cst
 public:
 
 	static const int  _max_nbr_voices =     4;
-	static const int  _delay_min      =   400;   // us
+	static const int  _delay_min      =   200;   // us
 	static const int  _delay_max      = 40000;   // us
-	static const int  _depth_max      = 20000;   // us
 
 
 

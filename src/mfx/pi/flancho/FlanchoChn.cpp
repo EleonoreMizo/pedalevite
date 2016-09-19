@@ -56,11 +56,12 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 ,	_tmp_buf_arr ()
 ,	_nbr_voices (1)
 ,	_period (1)
-,	_delay ((Cst::_delay_min + Cst::_delay_max) * 0.5 / 1e6)
-,	_depth (Cst::_depth_max * 0.5 / 1e6)
+,	_delay (Cst::_delay_max * 0.5e-6)
+,	_depth (0.5)
 ,	_feedback (0)
 ,	_wf_shape (0)
 ,	_wf_type (WfType_SINE)
+,	_neg_flag (false)
 ,	_max_proc_len (0)
 ,	_feedback_old (0)
 ,	_sat_in_a (1)
@@ -69,12 +70,13 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 ,	_sat_out_b (0)
 ,	_fdbk_env ()
 {
-	assert (dsp::mix::Generic::is_ready ());
 	assert (&interp != 0);
 	assert (dly_buf_ptr != 0);
 	assert (dly_buf_len > 0);
 	assert (render_buf_ptr != 0);
 	assert (render_buf_len > 0);
+
+	dsp::mix::Generic::setup ();
 
 	_tmp_buf_arr [TmpBufType_DLY_READ]._ptr = dly_buf_ptr;
 	_tmp_buf_arr [TmpBufType_DLY_READ]._len = dly_buf_len;
@@ -83,9 +85,7 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 
 	_dly_line.set_sample_freq (_sample_freq, 0);
 	_dly_line.set_interpolator (interp);
-	_dly_line.set_max_delay_time (
-		(Cst::_delay_max + Cst::_depth_max * 2) / 1e6
-	);
+	_dly_line.set_max_delay_time (Cst::_delay_max * 2e-6);
 
 	for (int v_cnt = 0; v_cnt < Cst::_max_nbr_voices; ++v_cnt)
 	{
@@ -212,9 +212,11 @@ void	FlanchoChn::set_delay (double delay)
 void	FlanchoChn::set_depth (double depth)
 {
 	assert (depth >= 0);
-	assert (depth * 1e6 <= Cst::_depth_max);
+	assert (depth <= 1);
 
 	_depth = depth;
+
+	update_max_proc_len ();
 }
 
 
@@ -257,6 +259,13 @@ void	FlanchoChn::set_feedback (double fdbk)
 
 
 
+void	FlanchoChn::set_polarity (bool neg_flag)
+{
+	_neg_flag = neg_flag;
+}
+
+
+
 void	FlanchoChn::resync (double base_phase)
 {
 	assert (base_phase >= 0);
@@ -279,71 +288,133 @@ void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], long nb
 	assert (in_ptr != 0);
 	assert (nbr_spl > 0);
 
-	const double	fdbk_step = (_feedback - _feedback_old) / nbr_spl;
-	double			fdbk_cur = _feedback_old;
+	const double   fdbk_step  = (_feedback - _feedback_old) / nbr_spl;
+	double         fdbk_cur   = _feedback_old;
 
-	long				block_pos = 0;
+	float *        render_ptr = _tmp_buf_arr [TmpBufType_RENDER]._ptr;
+
+	long           block_pos  = 0;
 	do
 	{
-		long				work_len = nbr_spl - block_pos;
+		long           work_len = nbr_spl - block_pos;
 		work_len = std::min (work_len, _max_proc_len);
 
-		const double	fdbk_new = fdbk_cur + fdbk_step * work_len;
-
-		float *			render_ptr = _tmp_buf_arr [TmpBufType_RENDER]._ptr;
+		const double   fdbk_new = fdbk_cur + fdbk_step * work_len;
 
 		// We scan the voices in reverse order because:
 		// 1. We want to process feedback last, when it already has been read on
 		// the delay line.
 		// 2. We want to generate the feedback from the first voice, to ensure
 		// signal continuity when number of voices varies.
-		const int		last_voice = _nbr_voices - 1;
+		const int      last_voice = _nbr_voices - 1;
 		for (int v_cnt = last_voice; v_cnt >= 0; --v_cnt)
 		{
-			Voice &			voice = _voice_arr [v_cnt];
+			Voice &        voice = _voice_arr [v_cnt];
 
 			voice._lfo.tick (work_len);
-			const double	delay_time_new = compute_delay_time (voice._lfo);
+			const double   delay_time_new = compute_delay_time (voice._lfo);
 			voice._dly_reader.set_delay_time (delay_time_new, work_len);
 
 			// render_ptr contains the delay line output.
 			voice._dly_reader.read_data (render_ptr, work_len, 0);
 
-			if (v_cnt == last_voice)
+			if (work_len == 1)
 			{
-				// Copies to the output
-				dsp::mix::Generic::copy_1_1 (
-					out_ptr + block_pos,
-					render_ptr,
-					work_len
-				);
+				float          val = render_ptr [0];
+				if (v_cnt == last_voice)
+				{
+					if (_neg_flag)
+					{
+						out_ptr [block_pos] = -val;
+					}
+					else
+					{
+						out_ptr [block_pos] = val;
+					}
+				}
+				else
+				{
+					if (_neg_flag)
+					{
+						out_ptr [block_pos] -= val;
+					}
+					else
+					{
+						out_ptr [block_pos] += val;
+					}
+				}
+
+				if (v_cnt == 0)
+				{
+					// Feedback processing
+					val *= float (fdbk_cur);
+					val += in_ptr [block_pos];
+					_dly_line.push_sample (val);
+				}
 			}
 
-			// Other voices: just mix the output
 			else
 			{
-				dsp::mix::Generic::mix_1_1 (
-					out_ptr + block_pos,
-					render_ptr,
-					work_len
-				);
-			}
+				if (v_cnt == last_voice)
+				{
+					// Copies to the output
+					if (_neg_flag)
+					{
+						dsp::mix::Generic::copy_1_1_v (
+							out_ptr + block_pos,
+							render_ptr,
+							work_len,
+							-1
+						);
+					}
+					else
+					{
+						dsp::mix::Generic::copy_1_1 (
+							out_ptr + block_pos,
+							render_ptr,
+							work_len
+						);
+					}
+				}
 
-			if (v_cnt == 0)
-			{
-				// Feedback processing
-				dsp::mix::Generic::scale_1_vlrauto (
-					render_ptr,
-					work_len,
-					float (fdbk_cur),
-					float (fdbk_new)
-				);
-				dsp::mix::Generic::mix_1_1 (
-					render_ptr,
-					in_ptr + block_pos,
-					work_len
-				);
-				_dly_line.push_data (render_ptr, work_len);
+				// Other voices: just mix the output
+				else
+				{
+					if (_neg_flag)
+					{
+						dsp::mix::Generic::mix_1_1_v (
+							out_ptr + block_pos,
+							render_ptr,
+							work_len,
+							-1
+						);
+					}
+					else
+					{
+						dsp::mix::Generic::mix_1_1 (
+							out_ptr + block_pos,
+							render_ptr,
+							work_len
+						);
+					}
+				}
+
+				if (v_cnt == 0)
+				{
+					// Feedback processing
+					dsp::mix::Generic::scale_1_vlrauto (
+						render_ptr,
+						work_len,
+						float (fdbk_cur),
+						float (fdbk_new)
+					);
+					dsp::mix::Generic::mix_1_1 (
+						render_ptr,
+						in_ptr + block_pos,
+						work_len
+					);
+					_dly_line.push_data (render_ptr, work_len);
+				}
 			}
 		}
 
@@ -363,13 +434,13 @@ void	FlanchoChn::clear_buffers ()
 
 	for (int v_cnt = 0; v_cnt < Cst::_max_nbr_voices; ++v_cnt)
 	{
-		Voice &			voice = _voice_arr [v_cnt];
+		Voice &        voice = _voice_arr [v_cnt];
 
-		const double	phase = voice._lfo.get_phase ();
+		const double   phase = voice._lfo.get_phase ();
 		voice._lfo.clear_buffers ();
 		voice._lfo.set_phase (phase);
 
-		const double	delay_time_new = compute_delay_time (voice._lfo);
+		const double   delay_time_new = compute_delay_time (voice._lfo);
 		voice._dly_reader.set_delay_time (delay_time_new, 0);
 		voice._dly_reader.clear_buffers ();
 	}
@@ -389,8 +460,8 @@ void	FlanchoChn::clear_buffers ()
 
 double	FlanchoChn::estimate_base_phase () const
 {
-	const Voice &	voice = _voice_arr [0];
-	double			phase = voice._lfo.get_phase ();
+	const Voice &  voice = _voice_arr [0];
+	double         phase = voice._lfo.get_phase ();
 	phase -= voice._rel_phase;
 	phase -= _rel_phase;
 
@@ -420,6 +491,10 @@ void	FlanchoChn::set_wf_type (dsp::ctrl::lfo::LfoModule &lfo, WfType wf_type)
 
 	case	WfType_TRI:
 		lfo_type = dsp::ctrl::lfo::LfoModule::Type_VARISLOPE;
+		break;
+
+	case	WfType_SINE_HALF:
+		lfo_type = dsp::ctrl::lfo::LfoModule::Type_SINE_HALF;
 		break;
 
 	case	WfType_RAMP_UP:
@@ -453,7 +528,7 @@ double	FlanchoChn::compute_delay_time (dsp::ctrl::lfo::LfoModule &lfo)
 {
 	assert (&lfo != 0);
 
-	double		lfo_val = lfo.get_val ();
+	double         lfo_val = lfo.get_val ();
 
 	if (_wf_type != WfType_TRI)
 	{
@@ -469,8 +544,9 @@ double	FlanchoChn::compute_delay_time (dsp::ctrl::lfo::LfoModule &lfo)
 		lfo_val += _sat_out_b;
 	}
 
-	double			delay_time = _delay + (1 + lfo_val) * _depth;
-	delay_time = fstb::limit (delay_time, _delay, _delay + _depth * 2);
+	double         delay_time  = _delay * (1 + lfo_val * _depth);
+	const double   delay_limit = _dly_line.get_min_delay_time ();
+	delay_time = std::max (delay_time, delay_limit);
 
 	return (delay_time);
 }
@@ -479,7 +555,7 @@ double	FlanchoChn::compute_delay_time (dsp::ctrl::lfo::LfoModule &lfo)
 
 void	FlanchoChn::update_phase (Voice &voice, double base_phase)
 {
-	double			phase = base_phase + _rel_phase + voice._rel_phase;
+	double         phase = base_phase + _rel_phase + voice._rel_phase;
 	phase -= floor (phase);
 	voice._lfo.set_phase (phase);
 }
@@ -508,22 +584,22 @@ void	FlanchoChn::update_shape ()
 // the _wf_shape polarity.
 void	FlanchoChn::update_shaper_data ()
 {
-	const double	wp = std::max (_wf_shape, 0.0);
-	const double	wn = std::max (-_wf_shape, 0.0);
-	const double	lin_limit = 1.0 / 64;
-	const double	scale = SatFnc::get_xs () - lin_limit;
-	const double	a = 0.875;
-	const double	b = 1 - a;
-	const double	wp_m = (a * wp * wp + b) * wp;
-	const double	wn_m = (a * wn * wn + b) * wn;
+	const double   wp = std::max (_wf_shape, 0.0);
+	const double   wn = std::max (-_wf_shape, 0.0);
+	const double   lin_limit = 1.0 / 64;
+	const double   scale = SatFnc::get_xs () - lin_limit;
+	const double   a = 0.875;
+	const double   b = 1 - a;
+	const double   wp_m = (a * wp * wp + b) * wp;
+	const double   wn_m = (a * wn * wn + b) * wn;
 
-	const double	x_min = -lin_limit - wn_m * scale;
-	const double	x_max = +lin_limit + wp_m * scale;
+	const double   x_min = -lin_limit - wn_m * scale;
+	const double   x_max = +lin_limit + wp_m * scale;
 	_sat_in_a = (x_max - x_min) * 0.5;
 	_sat_in_b = x_min - _sat_in_a * -1;
 
-	const double	y_min = SatFnc::saturate (x_min);
-	const double	y_max = SatFnc::saturate (x_max);
+	const double   y_min = SatFnc::saturate (x_min);
+	const double   y_max = SatFnc::saturate (x_max);
 	_sat_out_a = 2 / (y_max - y_min);
 	_sat_out_b = -1 - _sat_out_a * y_min;
 }
@@ -534,7 +610,7 @@ void	FlanchoChn::update_lfo_param ()
 {
 	if (_wf_type == WfType_TRI)
 	{
-		const double	var_time = (_wf_shape + 1) * 0.5;
+		const double   var_time = (_wf_shape + 1) * 0.5;
 
 		for (int v_cnt = 0; v_cnt < Cst::_max_nbr_voices; ++v_cnt)
 		{
@@ -556,7 +632,10 @@ void	FlanchoChn::update_lfo_param ()
 
 void	FlanchoChn::update_max_proc_len ()
 {
-	_max_proc_len = _dly_line.estimate_max_one_shot_proc_w_feedback (_delay);
+	double         dly_min     = _delay * (1 - _depth);
+	const double   delay_limit = _dly_line.get_min_delay_time ();
+	dly_min = std::max (dly_min, delay_limit);
+	_max_proc_len = _dly_line.estimate_max_one_shot_proc_w_feedback (dly_min);
 	assert (_max_proc_len > 0);
 	_max_proc_len =
 		std::min (_max_proc_len, _tmp_buf_arr [TmpBufType_RENDER]._len);

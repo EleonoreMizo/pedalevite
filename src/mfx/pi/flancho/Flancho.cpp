@@ -70,6 +70,7 @@ Flancho::Flancho ()
 ,	_nbr_chn_in (0)
 ,	_nbr_chn_out (0)
 ,	_dry_flag (false)
+,	_neg_flag (false)
 {
 	dsp::mix::Align::setup ();
 
@@ -77,14 +78,15 @@ Flancho::Flancho ()
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
 	_state_set.set_val_nat (desc_set, Param_SPEED     , 0.5);
-	_state_set.set_val_nat (desc_set, Param_DEPTH     , 0.002);
-	_state_set.set_val_nat (desc_set, Param_DELAY     , 0.002);
+	_state_set.set_val_nat (desc_set, Param_DEPTH     , 0.5);
+	_state_set.set_val_nat (desc_set, Param_DELAY     , 0.004);
 	_state_set.set_val_nat (desc_set, Param_FDBK      , 0);
 	_state_set.set_val_nat (desc_set, Param_WF_TYPE   , double (WfType_SINE));
 	_state_set.set_val_nat (desc_set, Param_WF_SHAPE  , 0);
 	_state_set.set_val_nat (desc_set, Param_NBR_VOICES, 1);
-	_state_set.set_val_nat (desc_set, Param_PHASE_SET , 0);
 	_state_set.set_val_nat (desc_set, Param_DRY       , 1);
+	_state_set.set_val_nat (desc_set, Param_NEGATIVE  , 0);
+	_state_set.set_val_nat (desc_set, Param_PHASE_SET , 0);
 
 	_state_set.add_observer (Param_SPEED     , _param_change_flag_speed);
 	_state_set.add_observer (Param_DEPTH     , _param_change_flag_depth_fdbk);
@@ -93,8 +95,9 @@ Flancho::Flancho ()
 	_state_set.add_observer (Param_WF_TYPE   , _param_change_flag_wf);
 	_state_set.add_observer (Param_WF_SHAPE  , _param_change_flag_wf);
 	_state_set.add_observer (Param_NBR_VOICES, _param_change_flag_voices);
-	_state_set.add_observer (Param_PHASE_SET , _param_change_flag_phase_set);
 	_state_set.add_observer (Param_DRY       , _param_change_flag_dry);
+	_state_set.add_observer (Param_NEGATIVE  , _param_change_flag_dry);
+	_state_set.add_observer (Param_PHASE_SET , _param_change_flag_phase_set);
 
 	_param_change_flag_depth_fdbk.add_observer (_param_change_flag);
 	_param_change_flag_wf        .add_observer (_param_change_flag);
@@ -283,10 +286,12 @@ void	Flancho::update_param (bool force_flag)
 		{
 			const double   depth = _state_set.get_val_end_nat (Param_DEPTH);
 			const double   fdbk  = _state_set.get_val_end_nat (Param_FDBK);
+			const double   dmul  = 0.5 / _max_nbr_chn;
 			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 			{
 				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-				chn.set_depth (depth);
+				const double      chn_depth = depth * (1 - chn_cnt * dmul);
+				chn.set_depth (chn_depth);
 				chn.set_feedback (fdbk);
 			}
 		}
@@ -325,9 +330,13 @@ void	Flancho::update_param (bool force_flag)
 		}
 		if (_param_change_flag_dry (true) || force_flag)
 		{
-			const float    dry_flt =
-				float (_state_set.get_val_tgt_nat (Param_DRY));
-			_dry_flag = (dry_flt >= 0.5f);
+			_dry_flag = (_state_set.get_val_tgt_nat (Param_DRY) >= 0.5f);
+			_neg_flag = (_state_set.get_val_tgt_nat (Param_NEGATIVE) >= 0.5f);
+			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
+			{
+				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
+				chn.set_polarity (_neg_flag);
+			}
 		}
 	}
 }

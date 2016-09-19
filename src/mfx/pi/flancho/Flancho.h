@@ -122,6 +122,7 @@ private:
 	int				_nbr_chn_in;			// > 0. 0 = not set
 	int				_nbr_chn_out;			// > 0. 0 = not set
 	bool           _dry_flag;
+	bool           _neg_flag;
 
 
 

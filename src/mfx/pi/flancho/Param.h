@@ -48,8 +48,9 @@ enum Param
 	Param_WF_TYPE,
 	Param_WF_SHAPE,
 	Param_NBR_VOICES,
-	Param_DRY,
 	Param_PHASE_SET,
+	Param_DRY,
+	Param_NEGATIVE,
 
 	Param_NBR_ELT
 

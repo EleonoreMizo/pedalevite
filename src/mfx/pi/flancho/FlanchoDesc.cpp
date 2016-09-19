@@ -27,7 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/flancho/FlanchoDesc.h"
 #include "mfx/pi/flancho/Param.h"
 #include "mfx/pi/flancho/Cst.h"
-#include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplInt.h"
 #include "mfx/pi/param/TplLin.h"
@@ -55,7 +54,6 @@ namespace flancho
 FlanchoDesc::FlanchoDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
-	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 	typedef param::TplMapped <ParamMapFdbkBipolar> TplFdbk;
 
 	// Speed
@@ -71,18 +69,15 @@ FlanchoDesc::FlanchoDesc ()
 	_desc_set.add_glob (Param_SPEED, log_ptr);
 
 	// Depth
-	TplPll *       pll_ptr = new TplPll (
-		0, Cst::_depth_max / 1e6,
+	param::TplLin *   lin_ptr = new param::TplLin (
+		0, 1,
 		"D\nDpt\nDepth",
-		"ms",
-		param::HelperDispNum::Preset_FLOAT_MILLI,
+		"%",
 		0,
 		"%5.2f"
 	);
-	pll_ptr->use_mapper ().set_first_value (0);
-	pll_ptr->use_mapper ().add_segment (0.1, 0.002 * Cst::_depth_max / 1e6, false);
-	pll_ptr->use_mapper ().add_segment (1.0,         Cst::_depth_max / 1e6, true );
-	_desc_set.add_glob (Param_DEPTH, pll_ptr);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
+	_desc_set.add_glob (Param_DEPTH, lin_ptr);
 
 	// Delay
 	log_ptr = new param::TplLog (
@@ -110,7 +105,7 @@ FlanchoDesc::FlanchoDesc ()
 
 	// Waveform Type
 	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Sine\nTriangle\nRamp up\nRamp down\nRandom",
+		"Sine\nTriangle\nHalf-Sine\nRamp up\nRamp down\nRandom",
 		"T\nWf.T\nWaveform\nWaveform type",
 		"",
 		0,
@@ -119,7 +114,7 @@ FlanchoDesc::FlanchoDesc ()
 	_desc_set.add_glob (Param_WF_TYPE, enu_ptr);
 
 	// Waveform Shape
-	param::TplLin *   lin_ptr = new param::TplLin (
+	lin_ptr = new param::TplLin (
 		-1, 1,
 		"S\nWf.S\nShape\nWaveform shape",
 		"%",
@@ -152,7 +147,7 @@ FlanchoDesc::FlanchoDesc ()
 	// Phase set
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"P\nPh.S\nPhase set",
+		"P\nPh.Set\nPhase set",
 		"deg",
 		0,
 		"%3.0f"
@@ -160,6 +155,16 @@ FlanchoDesc::FlanchoDesc ()
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
 	lin_ptr->use_disp_num ().set_scale (360);
 	_desc_set.add_glob (Param_PHASE_SET, lin_ptr);
+
+	// Negative
+	enu_ptr = new param::TplEnum (
+		"Add\nSub",
+		"M\nMix\nMix Mode",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_NEGATIVE, enu_ptr);
 }
 
 

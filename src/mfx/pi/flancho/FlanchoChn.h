@@ -29,7 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include	"mfx/dsp/ctrl/lfo/LfoModule.h"
 #include	"mfx/dsp/dly/DelayLine.h"
+#include	"mfx/dsp/dly/DelayLineData.h"
 #include	"mfx/dsp/dly/DelayLineReader.h"
+#include	"mfx/dsp/rspl/InterpolatorOrder0.h"
 #include	"mfx/dsp/dyn/EnvFollowerRms.h"
 #include	"mfx/dsp/shape/MapSaturateBipolar.h"
 #include	"mfx/pi/flancho/Cst.h"
@@ -79,6 +81,7 @@ public:
 	void           set_wf_type (WfType wf_type);
 	void           set_wf_shape (double shape);
 	void           set_feedback (double fdbk);
+	void           set_polarity (bool neg_flag);
 	void           resync (double base_phase);
 	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
 	void           clear_buffers ();
@@ -94,6 +97,8 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static const long _dry_buf_len = 1024; // Samples
 
 	enum TmpBufType
 	{
@@ -151,10 +156,11 @@ private:
 	int            _nbr_voices;
 	double         _period;       // s
 	double         _delay;        // s
-	double         _depth;        // s
+	double         _depth;        // [0 ; 1]
 	double         _feedback;
 	double         _wf_shape;     // [-1 ; 1]
 	WfType         _wf_type;
+	bool           _neg_flag;     // Polarity of the delayed signal
 	long           _max_proc_len; // Maximum length. Depends on the delay.
 
 	double         _feedback_old;
