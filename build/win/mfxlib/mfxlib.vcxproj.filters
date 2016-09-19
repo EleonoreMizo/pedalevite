@@ -1671,6 +1671,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\lpfs\Param.h">
       <Filter>mfx\pi\lpfs</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2293,6 +2296,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp">
       <Filter>mfx\pi\lpfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

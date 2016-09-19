@@ -59,6 +59,7 @@ public:
 
 		Type_SINE = 0,
 		Type_TRIANGLE,
+		Type_SINE_HALF,
 		Type_SQUARE,
 		Type_SAW,
 		Type_N_PHASE,

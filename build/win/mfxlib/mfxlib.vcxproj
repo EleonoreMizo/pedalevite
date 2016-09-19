@@ -78,18 +78,19 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PrecompiledHeader></PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\asiosdk2\common;..\..\..\src\asiosdk2\host;..\..\..\src\asiosdk2\host\pc</AdditionalIncludeDirectories>
-   </ClCompile>
-   <Lib>
+    </ClCompile>
+    <Lib>
       <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
-   </Lib>
-   <Link>
+    </Lib>
+    <Link>
       <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-   </Link>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\asiosdk2\common\asio.h" />
@@ -324,6 +325,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSaw.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSine.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSquare.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.h" />
@@ -684,6 +686,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSaw.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSine.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSquare.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.cpp" />

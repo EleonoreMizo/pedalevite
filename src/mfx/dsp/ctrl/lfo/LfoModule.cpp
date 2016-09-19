@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/ctrl/lfo/OscNPhase.h"
 #include "mfx/dsp/ctrl/lfo/OscSaw.h"
 #include "mfx/dsp/ctrl/lfo/OscSine.h"
+#include "mfx/dsp/ctrl/lfo/OscSineHalf.h"
 #include "mfx/dsp/ctrl/lfo/OscSquare.h"
 #include "mfx/dsp/ctrl/lfo/OscTri.h"
 #include "mfx/dsp/ctrl/lfo/OscVariSlope.h"
@@ -227,6 +228,11 @@ void	LfoModule::set_type (Type type)
 		case	Type_TRIANGLE:
 			static_assert (sizeof (OscTri        ) <= sizeof (_osc), "Storage size");
 			::new (&_osc [0]) OscTri;
+			break;
+
+		case	Type_SINE_HALF:
+			static_assert (sizeof (OscSineHalf   ) <= sizeof (_osc), "Storage size");
+			::new (&_osc [0]) OscSineHalf;
 			break;
 
 		case	Type_SQUARE:
