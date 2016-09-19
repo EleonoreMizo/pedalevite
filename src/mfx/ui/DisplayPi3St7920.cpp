@@ -159,7 +159,7 @@ void	DisplayPi3St7920::do_refresh (int x, int y, int w, int h)
 
 void	DisplayPi3St7920::do_force_reset ()
 {
-	init_device ();
+	_state = State_INIT;
 }
 
 
