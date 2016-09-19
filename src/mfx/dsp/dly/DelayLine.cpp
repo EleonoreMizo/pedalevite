@@ -67,7 +67,7 @@ void	DelayLine::set_interpolator (rspl::InterpolatorInterface &interp)
 	_line_data.set_unroll_post (_imp_len);
 	_line_data.set_extra_len (_imp_len);
 	_line_data.update_buffer_size ();
-	_min_dly_time = double (_imp_len) / _sample_freq;
+	_min_dly_time = double (_imp_len + 1) / _sample_freq;
 
 	_interp_ptr->start (1);
 }
@@ -98,7 +98,7 @@ void	DelayLine::set_sample_freq (double sample_freq, int ovrspl_l2)
 	{
 		_interp_ptr->set_ovrspl_l2 (_ovrspl_l2);
 
-		_min_dly_time = double (_imp_len) / _sample_freq;
+		_min_dly_time = double (_imp_len + 1) / _sample_freq;
 	}
 }
 
@@ -132,8 +132,8 @@ void	DelayLine::set_max_delay_time (double max_time)
 bool	DelayLine::is_ready () const
 {
 	return (   _sample_freq > 0
-	        && _line_data.get_max_delay_time ()
-	        && _min_dly_time < _max_dly_time);
+	        && _line_data.get_max_delay_time () > 0
+	        && _min_dly_time <= _max_dly_time);
 }
 
 
@@ -300,7 +300,33 @@ void	DelayLine::push_data (const float src_ptr [], int nbr_spl)
 		src_pos += work_len;
 	}
 	while (src_pos < nbr_spl);
+}
 
+
+
+void	DelayLine::push_sample (float src)
+{
+	assert (is_ready ());
+	assert (1 <= _line_data.get_len () - _imp_len);
+
+	const int      unroll_post = _line_data.get_unroll_post ();
+	const int      line_len    = _line_data.get_len ();
+	const int      mask        = _line_data.get_mask ();
+	float *        data_ptr    = _line_data.get_buffer ();
+
+	int            src_pos = 0;
+	const int      rem_len  = line_len - _write_pos;
+
+	data_ptr [_write_pos] = src;
+
+	// Updates the loop-unrolling zone
+	int 				update_len = unroll_post - _write_pos;
+	if (update_len > 0)
+	{
+		data_ptr [_write_pos + line_len] = data_ptr [_write_pos];
+	}
+
+	_write_pos = (_write_pos + 1) & mask;
 }
 
 

@@ -79,6 +79,7 @@ public:
 	int            estimate_max_one_shot_proc_w_feedback (double min_delay_time) const;
 	void           read_line (float dest_ptr [], int nbr_spl, double delay_beg, double delay_end, int pos_in_block);
 	void           push_data (const float src_ptr [], int nbr_spl);
+	void           push_sample (float src);
 
 
 
