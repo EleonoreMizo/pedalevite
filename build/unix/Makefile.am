@@ -341,6 +341,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/rspl/InterpolatorLerp.h \
         ../../src/mfx/dsp/rspl/InterpolatorLerpSimd.cpp \
         ../../src/mfx/dsp/rspl/InterpolatorLerpSimd.h \
+        ../../src/mfx/dsp/rspl/InterpolatorOrder0.h \
+        ../../src/mfx/dsp/rspl/InterpolatorOrder0.hpp \
         ../../src/mfx/dsp/rspl/SnhTool.cpp \
         ../../src/mfx/dsp/rspl/SnhTool.h \
         ../../src/mfx/dsp/rspl/Voice.cpp \

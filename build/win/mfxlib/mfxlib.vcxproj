@@ -406,6 +406,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorInterface.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerp.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerpSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorOrder0.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorOrder0.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\SnhTool.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Voice.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.h" />
