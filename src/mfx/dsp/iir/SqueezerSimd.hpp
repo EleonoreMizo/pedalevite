@@ -56,8 +56,8 @@ SqueezerSimd <BR, LFOP>::SqueezerSimd ()
 ,	_g (1)
 ,	_lofi_op ()
 ,	_gain_out (1)
-,  _gain_out_cur (1)
-,  _gain_out_lerp_step (1.0f / 256)
+,	_gain_out_cur (1)
+,	_gain_out_lerp_step (1.0f / 256)
 ,	_br_scale (1)
 ,	_br_scale_inv (1)
 ,	_br_amt (0)
@@ -79,8 +79,8 @@ void	SqueezerSimd <BR, LFOP>::set_sample_freq (float fs)
 
 	_fs = fs;
 
-   // Base: 1/256 at 44100 Hz and 8x-oversampling
-   _gain_out_lerp_step = ((1.0f / 256) * (44100.0f * 8)) / _fs;
+	// Base: 1/256 at 44100 Hz and 8x-oversampling
+	_gain_out_lerp_step = ((1.0f / 256) * (44100.0f * 8)) / _fs;
 }
 
 
@@ -147,7 +147,7 @@ void	SqueezerSimd <BR, LFOP>::set_p1 (float p1)
 
 	const float    p1_rev = 1 - _p1;
 	_br_amt = 1 - p1_rev * p1_rev * p1_rev;
-   _br_amt *= 1.5f;
+	_br_amt *= 1.5f;
 
 	_lofi_op.config (_reso, _p1);
 }
@@ -177,7 +177,7 @@ void	SqueezerSimd <BR, LFOP>::update_eq ()
 template <bool BR, class LFOP>
 float	SqueezerSimd <BR, LFOP>::process_sample (float x)
 {
-   _gain_out_cur += (_gain_out - _gain_out_cur) * _gain_out_lerp_step;
+	_gain_out_cur += (_gain_out - _gain_out_cur) * _gain_out_lerp_step;
 
 	typedef dsp::shape::Poly3L1Bias <std::ratio <1, 8> > ClipperFdbk;
 
@@ -220,7 +220,7 @@ float	SqueezerSimd <BR, LFOP>::process_sample (float x)
 template <bool BR, class LFOP>
 void	SqueezerSimd <BR, LFOP>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dest_ptr != 0);
+	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
 	assert (nbr_spl > 0);
 
@@ -249,7 +249,7 @@ void	SqueezerSimd <BR, LFOP>::process_block (float spl_ptr [], int nbr_spl)
 template <bool BR, class LFOP>
 void	SqueezerSimd <BR, LFOP>::process_block_fm (float dst_ptr [], const float src_ptr [], const float freq_ptr [], int nbr_spl)
 {
-	assert (dest_ptr != 0);
+	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
 	assert (freq_ptr != 0);
 	assert (nbr_spl > 0);

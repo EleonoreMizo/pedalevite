@@ -32,7 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <sched.h>
 #include <signal.h>
 
+#include <chrono>
 #include <stdexcept>
+#include <thread>
 
 #include <cassert>
 
@@ -58,9 +60,10 @@ DAlsa::DAlsa ()
 ,	_msg_err ()
 ,	_buf_alig ()
 ,	_block_size_alig (0)
+,	_driver ()
+,	_nbr_periods_actual (0)
 ,	_thread_audio ()
 ,	_quit_flag (false)
-,	_restart_flag ()
 {
 	assert (_instance_ptr == 0);
 	if (_instance_ptr != 0)
@@ -68,8 +71,6 @@ DAlsa::DAlsa ()
 		throw std::runtime_error ("mfx::adrv::DAlsa already instantiated.");
 	}
 	_instance_ptr = this;
-
-	_restart_flag.store (false);
 }
 
 
@@ -114,6 +115,7 @@ int	DAlsa::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 	{
 		driver_0 = "plughw:0";
 	}
+	_driver = driver_0;
 
 	static const std::array <::snd_pcm_stream_t, Dir_NBR_ELT> stream_type_arr =
 	{{
@@ -164,15 +166,23 @@ int	DAlsa::do_start ()
 {
 	int            ret_val = 0;
 
-	for (int dir = 0; dir < Dir_NBR_ELT && ret_val == 0; ++ dir)
+	if (ret_val == 0)
 	{
-		ret_val = ::snd_pcm_prepare (_handle_arr [dir]);
+		ret_val = ::snd_pcm_link (_handle_arr [Dir_IN], _handle_arr [Dir_OUT]);
+		if (ret_val < 0)
+		{
+			fprintf (stderr, "Error: cannot link input and output streams.\n");
+		}
+	}
+
+	if (ret_val == 0)
+	{
+		ret_val = ::snd_pcm_prepare (_handle_arr [Dir_IN]);
 		if (ret_val != 0)
 		{
 			fprintf (
 				stderr,
-				"Error: cannot start %s stream (%s).\n",
-				_dir_name_0_arr [dir],
+				"Error: cannot start the streams (%s).\n",
 				::snd_strerror (ret_val)
 			);
 		}
@@ -251,6 +261,12 @@ int	DAlsa::do_stop ()
 		}
 	}
 
+	ret_val = ::snd_pcm_unlink (_handle_arr [Dir_IN]);
+	if (ret_val < 0)
+	{
+		fprintf (stderr, "Error: cannot unlink input and output streams.\n");
+	}
+
 	return ret_val;
 }
 
@@ -258,7 +274,26 @@ int	DAlsa::do_stop ()
 
 void	DAlsa::do_restart ()
 {
-	_restart_flag.exchange (true);
+	do_stop ();
+	for (int dir = 0; dir < Dir_NBR_ELT; ++ dir)
+	{
+		::snd_pcm_hw_free (_handle_arr [dir]);
+		::snd_pcm_close (_handle_arr [dir]);
+	}
+
+	std::this_thread::sleep_for (std::chrono::milliseconds (200));
+
+	double         sample_freq;
+	int            max_block_size;
+	do_init (
+		sample_freq,
+		max_block_size,
+		*_cb_ptr,
+		_driver.c_str (),
+		_chn_base_arr [Dir_IN ],
+		_chn_base_arr [Dir_OUT]
+	);
+	do_start ();
 }
 
 
@@ -388,6 +423,7 @@ int	DAlsa::configure_alsa_audio (int dir)
 		);
 		if (ret_val == 0)
 		{
+			_nbr_periods_actual = nper;
 			fprintf (stderr, "Number of periods: %d\n", int (nper));
 		}
 		else
@@ -449,14 +485,18 @@ int	DAlsa::configure_alsa_audio (int dir)
 
 void	DAlsa::process_audio ()
 {
-	int             nbr_initial_write = 0;
+	int             nbr_initial_write = _nbr_periods_actual + 1;
 	while (! _quit_flag)
 	{
-		process_block (nbr_initial_write == 0);
+		process_block ((nbr_initial_write <= 0), (nbr_initial_write >= 0));
 		if (nbr_initial_write > 0)
 		{
 			-- nbr_initial_write;
 		}
+		else if (nbr_initial_write < 0)
+                {
+                        ++ nbr_initial_write;
+                }
 	}
 
 	_quit_flag = false;
@@ -464,7 +504,7 @@ void	DAlsa::process_audio ()
 
 
 
-void	DAlsa::process_block (bool read_flag)
+void	DAlsa::process_block (bool read_flag, bool write_flag)
 {
 	std::array <std::array <float *, _nbr_chn>, Dir_NBR_ELT> buf_ptr_arr;
 	const int      ofs_r    = 0;
@@ -477,19 +517,13 @@ void	DAlsa::process_block (bool read_flag)
 		buf_ptr_arr [Dir_OUT] [chn] = &_buf_alig [ofs_w + ofs_c];
 	}
 
-	if (_restart_flag.exchange (false))
-	{
-		::snd_pcm_drop (_handle_arr [Dir_IN ]);
-		::snd_pcm_drop (_handle_arr [Dir_OUT]);
-		::snd_pcm_prepare (_handle_arr [Dir_IN ]);
-		::snd_pcm_prepare (_handle_arr [Dir_OUT]);
-	}
-
 	if (read_flag)
 	{
+		int            loop_count = 0;
 		bool           ok_flag = false;
 		while (! ok_flag && ! _quit_flag)
 		{
+			++ loop_count;
 			const int      ret_val = ::snd_pcm_readn (
 				_handle_arr [Dir_IN ],
 				reinterpret_cast <void **> (&buf_ptr_arr [Dir_IN ] [0]),
@@ -509,7 +543,14 @@ fprintf (stderr, "r EBADFD\n");
 			{
 //fprintf (stderr, "r EPIPE\n");
 				_cb_ptr->notify_dropout ();
-				::snd_pcm_prepare (_handle_arr [Dir_IN ]);
+				if (::snd_pcm_prepare (_handle_arr [Dir_IN ]) < 0)
+				{
+					fprintf (stderr, "r cannot recover from dropout\n");
+				}
+				else if (loop_count % 100 == 0)
+				{
+					fprintf (stderr, "r %d dropouts\n", loop_count);
+				}
 			}
 			else if (ret_val == -ESTRPIPE)
 			{
@@ -539,16 +580,19 @@ fprintf (stderr, "r Short read\n");
 			const_cast <const float * const *> (&buf_ptr_arr [Dir_IN ] [0]),
 			_block_size
 		);
-#else
+#else // Bypass, debugging code
 		memcpy (buf_ptr_arr [Dir_OUT] [0], buf_ptr_arr [Dir_IN ] [0], _block_size * sizeof (float));
 		memcpy (buf_ptr_arr [Dir_OUT] [1], buf_ptr_arr [Dir_IN ] [1], _block_size * sizeof (float));
 #endif
 	}
 
+	if (write_flag)
 	{
+		int             loop_count = 0;
 		bool            ok_flag = false;
 		while (! ok_flag && ! _quit_flag)
 		{
+			++ loop_count;
 			const int      ret_val = ::snd_pcm_writen (
 				_handle_arr [Dir_OUT],
 				reinterpret_cast <void **> (&buf_ptr_arr [Dir_OUT] [0]),
@@ -568,7 +612,14 @@ fprintf (stderr, "w EBADFD\n");
 			{
 //fprintf (stderr, "w EPIPE\n");
 				_cb_ptr->notify_dropout ();
-				::snd_pcm_prepare (_handle_arr [Dir_OUT]);
+				if (::snd_pcm_prepare (_handle_arr [Dir_OUT]) < 0)
+				{
+					fprintf (stderr, "w cannot recover from dropout\n");
+				}
+				else if (loop_count % 100 == 0)
+				{
+					fprintf (stderr, "w %d dropouts\n", loop_count);
+				}
 			}
 			else if (ret_val == -ESTRPIPE)
 			{
@@ -580,7 +631,7 @@ fprintf (stderr, "w ESTRPIPE\n");
 				if (ret_val != _block_size)
 				{
 					// Short write...
-fprintf (stderr, "w Short writen");
+fprintf (stderr, "w Short write\n");
 				}
 				else
 				{

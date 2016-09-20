@@ -82,7 +82,7 @@ private:
 
 	int            configure_alsa_audio (int dir);
 	void           process_audio ();
-	void           process_block (bool read_flag);
+	void           process_block (bool read_flag, bool write_flag);
 
 	static void    signal_handler (int sig);
 
@@ -98,11 +98,11 @@ private:
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
 	int            _block_size_alig;
+	std::string    _driver;
+	int            _nbr_periods_actual;
 
 	std::thread    _thread_audio;
 	volatile bool  _quit_flag;
-	std::atomic <bool>
-	               _restart_flag;
 
 	static DAlsa * _instance_ptr;
 
