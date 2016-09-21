@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 #include "mfx/doc/Setup.h"
+#include "mfx/Cst.h"
 
 #include <cassert>
 
@@ -45,7 +46,10 @@ namespace doc
 
 void	Setup::ser_write (SerWInterface &ser) const
 {
+	const int      version = Cst::_format_version;
+
 	ser.begin_list ();
+	ser.write (version);
 	ser.write (_name);
 	ser.write (_save_mode);
 	ser.write (_chn_mode);
@@ -66,7 +70,16 @@ void	Setup::ser_write (SerWInterface &ser) const
 
 void	Setup::ser_read (SerRInterface &ser)
 {
+	int            version;
+
 	ser.begin_list ();
+	ser.read (version);
+
+	if (version != Cst::_format_version)
+	{
+		/*** To do ***/
+	}
+
 	ser.read (_name);
 	ser.read (_save_mode);
 	ser.read (_chn_mode);
