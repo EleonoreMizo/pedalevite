@@ -117,6 +117,9 @@ private:
 	VectFlt4A      _prog_b [3];   // Target Z-equation for the subsequent ramp.
 	VectFlt4A      _prog_a [3];
 
+	VectFlt4A      _tmp_b [3];
+	VectFlt4A      _tmp_a [3];
+
 	int            _nbr_rem_spl;  // Number of remaining samples for the current ramp. 0 = no ramping.
 	int            _ramp_len;     // > 0
 	bool           _prog_flag;    // A ramp is programmed, will follow the current one.

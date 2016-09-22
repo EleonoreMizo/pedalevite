@@ -164,20 +164,18 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq (const VectFlt4 b [3], const VectFl
 		if (   _nbr_rem_spl == 0
 		    || _nbr_rem_spl == _ramp_len)
 		{
-			VectFlt4A      cur_b [3];
-			VectFlt4A      cur_a [3];
-			_biq.get_z_eq (cur_b, cur_a);
+			_biq.get_z_eq (_tmp_b, _tmp_a);
 
 			_nbr_rem_spl = _ramp_len;
 			_prog_flag = false;
 
 			const float    step_flt = 1.0f / _ramp_len;
 			const auto     step_mul = fstb::ToolsSimd::set1_f32 (step_flt);
-			const auto     dif_b0   = b0 - fstb::ToolsSimd::load_f32 (cur_b [0]);
-			const auto     dif_b1   = b1 - fstb::ToolsSimd::load_f32 (cur_b [1]);
-			const auto     dif_b2   = b2 - fstb::ToolsSimd::load_f32 (cur_b [2]);
-			const auto     dif_a1   = a1 - fstb::ToolsSimd::load_f32 (cur_a [1]);
-			const auto     dif_a2   = a2 - fstb::ToolsSimd::load_f32 (cur_a [2]);
+			const auto     dif_b0   = b0 - fstb::ToolsSimd::load_f32 (_tmp_b [0]);
+			const auto     dif_b1   = b1 - fstb::ToolsSimd::load_f32 (_tmp_b [1]);
+			const auto     dif_b2   = b2 - fstb::ToolsSimd::load_f32 (_tmp_b [2]);
+			const auto     dif_a1   = a1 - fstb::ToolsSimd::load_f32 (_tmp_a [1]);
+			const auto     dif_a2   = a2 - fstb::ToolsSimd::load_f32 (_tmp_a [2]);
 			const auto     step_b0  = dif_b0 * step_mul;
 			const auto     step_b1  = dif_b1 * step_mul;
 			const auto     step_b2  = dif_b2 * step_mul;
@@ -218,15 +216,13 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_same (const float b [3], const floa
 	assert (b != 0);
 	assert (a != 0);
 
-	VectFlt4A		b_ps [3];
-	VectFlt4A		a_ps [3];
-	V128Par::store_f32 (b_ps [0], fstb::ToolsSimd::set1_f32 (b [0]));
-	V128Par::store_f32 (b_ps [1], fstb::ToolsSimd::set1_f32 (b [1]));
-	V128Par::store_f32 (b_ps [2], fstb::ToolsSimd::set1_f32 (b [2]));
-	V128Par::store_f32 (a_ps [1], fstb::ToolsSimd::set1_f32 (a [1]));
-	V128Par::store_f32 (a_ps [2], fstb::ToolsSimd::set1_f32 (a [2]));
+	V128Par::store_f32 (_tmp_b [0], fstb::ToolsSimd::set1_f32 (b [0]));
+	V128Par::store_f32 (_tmp_b [1], fstb::ToolsSimd::set1_f32 (b [1]));
+	V128Par::store_f32 (_tmp_b [2], fstb::ToolsSimd::set1_f32 (b [2]));
+	V128Par::store_f32 (_tmp_a [1], fstb::ToolsSimd::set1_f32 (a [1]));
+	V128Par::store_f32 (_tmp_a [2], fstb::ToolsSimd::set1_f32 (a [2]));
 
-	set_z_eq (b_ps, a_ps, ramp_flag);
+	set_z_eq (_tmp_b, _tmp_a, ramp_flag);
 }
 
 
@@ -349,13 +345,11 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], co
 template <class VD, class VS, class VP>
 void	Biquad4SimdMorph <VD, VS, VP>::neutralise (bool ramp_flag)
 {
-	const VectFlt4A   ab [3] =
-	{
-		{ 1, 1, 1, 1 },
-		{ 0, 0, 0, 0 },
-		{ 0, 0, 0, 0 }
-	};
-	set_z_eq (ab, ab, ramp_flag);
+	V128Par::store_f32 (&_tmp_b [0] [0], fstb::ToolsSimd::set1_f32 (1));
+	V128Par::store_f32 (&_tmp_b [1] [0], fstb::ToolsSimd::set1_f32 (0));
+	V128Par::store_f32 (&_tmp_b [2] [0], fstb::ToolsSimd::set1_f32 (0));
+
+	set_z_eq (_tmp_b, _tmp_b, ramp_flag);
 }
 
 
