@@ -92,14 +92,14 @@ private:
 		bool           is_active () const;
 		bool           is_bypass () const;
 
-		float          _gain;               // Cached parameters
-		float          _freq;
-		float          _q;
-		PEqType        _type;
-		bool           _bypass_flag;
+		float          _gain        =    1;       // Cached parameters
+		float          _freq        = 1000;
+		float          _q           =    1;
+		PEqType        _type        = PEqType_PEAK;
+		bool           _bypass_flag = false;
 
-		long           _neutral_duration;   // Time elapsed (samples) since a band is considered as neutral. If == _neutral_time, band is removed from the pack.
-		int            _stage_index;        // Stage index in the biquad pack. -1: deactivated.
+		long           _neutral_duration =  0;    // Time elapsed (samples) since a band is considered as neutral. If == _neutral_time, band is removed from the pack.
+		int            _stage_index      = -1;    // Stage index in the biquad pack. -1: deactivated.
 		fstb::util::NotificationFlagCascadeSingle
 		               _change_flag;
 	};
