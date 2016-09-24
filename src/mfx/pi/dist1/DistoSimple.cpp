@@ -67,9 +67,9 @@ DistoSimple::DistoSimple ()
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_GAIN    ,   1  ); // 0 dB
-	_state_set.set_val_nat (desc_set, Param_HPF_FREQ, 600  );
-	_state_set.set_val_nat (desc_set, Param_BIAS    ,   0.3);
+	_state_set.set_val_nat (desc_set, Param_GAIN    ,  1  ); // 0 dB
+	_state_set.set_val_nat (desc_set, Param_HPF_FREQ, 30  );
+	_state_set.set_val_nat (desc_set, Param_BIAS    ,  0.3);
 
 	for (int index = 0; index < Param_NBR_ELT; ++index)
 	{
