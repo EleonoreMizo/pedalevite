@@ -841,6 +841,12 @@ Passer le système en R/O ou R/W
 sudo mount -o remount,rw /
 sudo mount -o remount,ro /
 
+Monter la clé USB :
+https://linuxconfig.org/howto-mount-usb-drive-in-linux
+Tout faire en sudo, ne pas éditer /etc/fstab
+Démonter : sudo umount /mnt/sda1
+
+
 
 Reste à faire :
 – Plan des câbles et connecteurs
