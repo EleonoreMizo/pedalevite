@@ -207,6 +207,16 @@ void	ParamList::do_remove_plugin (int slot_index)
 
 
 
+void	ParamList::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+{
+	if (slot_index == _loc_edit._slot_index)
+	{
+		set_param_info ();
+	}
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

@@ -293,6 +293,13 @@ void	EditProg::do_remove_plugin (int slot_index)
 
 
 
+void	EditProg::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+{
+	set_preset_info ();
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
