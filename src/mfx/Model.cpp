@@ -297,8 +297,6 @@ void	Model::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 	}
 }
 
-}
-
 
 
 void	Model::set_bank (int index, const doc::Bank &bank)
