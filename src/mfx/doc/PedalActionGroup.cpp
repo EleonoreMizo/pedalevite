@@ -80,7 +80,14 @@ void	PedalActionGroup::ser_read (SerRInterface &ser)
 	int            nbr_elt;
 	ser.begin_list (nbr_elt);
 
-	if (nbr_elt > 0)
+	if (nbr_elt <= 0)
+	{
+		for (auto &c : _action_arr)
+		{
+			c = PedalActionCycle ();
+		}
+	}
+	else
 	{
 		ser.begin_list (nbr_elt);
 		assert (nbr_elt == int (_action_arr.size ()));
