@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PedalboardConfig.h
+        PedalActionType.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_PedalboardConfig_HEADER_INCLUDED)
-#define mfx_uitk_pg_PedalboardConfig_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_PedalActionType_HEADER_INCLUDED)
+#define mfx_uitk_pg_PedalActionType_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -29,13 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/NText.h"
-#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
-#include "mfx/Cst.h"
-
-#include <array>
-#include <memory>
 
 
 
@@ -51,7 +46,7 @@ namespace pg
 
 
 
-class PedalboardConfig
+class PedalActionType
 :	public PageInterface
 {
 
@@ -59,8 +54,8 @@ class PedalboardConfig
 
 public:
 
-	explicit       PedalboardConfig (PageSwitcher &page_switcher);
-	virtual        ~PedalboardConfig () = default;
+	               PedalActionType (PageSwitcher &page_switcher);
+	virtual        ~PedalActionType () = default;
 
 
 
@@ -88,13 +83,16 @@ private:
 
 	enum Entry
 	{
-		Entry_WINDOW = 1000,
-		Entry_PEDAL_LIST
+		Entry_TITLE = 1000,
+		Entry_CLEAR,
+		Entry_PUSH,
+		Entry_MOMENTARY,
+		Entry_TOGGLE,
+
+		Entry_NBR_ELT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
-	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::array <TxtSPtr, Cst::_nbr_pedals> TxtArray;
 
 	const doc::PedalboardLayout &
 	               use_layout () const;
@@ -109,8 +107,12 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;
-	TxtArray       _pedal_list;
+	TxtSPtr        _title_sptr;
+	TxtSPtr        _clear_sptr;
+	TxtSPtr        _push_sptr;
+	TxtSPtr        _momentary_sptr;
+	TxtSPtr        _toggle_sptr;
+
 	PedalEditContext
 	               _ctx;
 
@@ -120,13 +122,14 @@ private:
 
 private:
 
-	               PedalboardConfig (const PedalboardConfig &other)  = delete;
-	PedalboardConfig &
-	               operator = (const PedalboardConfig &other)        = delete;
-	bool           operator == (const PedalboardConfig &other) const = delete;
-	bool           operator != (const PedalboardConfig &other) const = delete;
+	               PedalActionType ()                               = delete;
+	               PedalActionType (const PedalActionType &other)   = delete;
+	PedalActionType &
+	               operator = (const PedalActionType &other)        = delete;
+	bool           operator == (const PedalActionType &other) const = delete;
+	bool           operator != (const PedalActionType &other) const = delete;
 
-}; // class PedalboardConfig
+}; // class PedalActionType
 
 
 
@@ -136,11 +139,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/PedalboardConfig.hpp"
+//#include "mfx/uitk/pg/PedalActionType.hpp"
 
 
 
-#endif   // mfx_uitk_pg_PedalboardConfig_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_PedalActionType_HEADER_INCLUDED
 
 
 

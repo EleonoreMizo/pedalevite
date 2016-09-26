@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/PedalConf.h"
 #include "mfx/uitk/MsgHandlerInterface.h"
 #include "mfx/PiType.h"
 
@@ -87,7 +88,7 @@ public:
 	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_index, int page);
 
 	static std::string
-	               conv_pedal_conf_to_short_txt (const doc::PedalboardLayout &layout, int index, const Model &model, const View &view);
+	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalboardLayout &layout, int index, const Model &model, const View &view);
 
 
 

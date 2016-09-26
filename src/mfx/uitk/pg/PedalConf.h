@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PageType.h
+        PedalConf.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_PageType_HEADER_INCLUDED)
-#define mfx_uitk_pg_PageType_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_PedalConf_HEADER_INCLUDED)
+#define mfx_uitk_pg_PedalConf_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -38,32 +38,18 @@ namespace pg
 
 
 
-enum PageType
+enum PedalConf
 {
-	PageType_INVALID = -1,
 
-	PageType_BOOT    = 0,
-	PageType_TUNER,
-	PageType_CUR_PROG,
-	PageType_MENU_MAIN,
-	PageType_EDIT_PROG,
-	PageType_PARAM_LIST,
-	PageType_PARAM_EDIT,
-	PageType_NOT_YET,
-	PageType_QUESTION,
-	PageType_PARAM_CONTROLLERS,
-	PageType_CTRL_EDIT,
-	PageType_MENU_SLOT,
-	PageType_EDIT_TEXT,
-	PageType_SAVE_PROG,
-	PageType_END_MSG,
-	PageType_LEVELS,
-	PageType_PEDALBOARD_CONFIG,
-	PageType_PEDAL_ACTION_TYPE,
+	PedalConf_EMPTY = 0,
+	PedalConf_PUSH,
+	PedalConf_MOMENTARY,
+	PedalConf_TOGGLE,
+	PedalConf_OTHER,
 
-	PageType_NBR_ELT
+	PedalConf_NBR_ELT
 
-}; // enum PageType
+}; // enum PedalConf
 
 
 
@@ -73,11 +59,11 @@ enum PageType
 
 
 
-//#include "mfx/uitk/pg/PageType.hpp"
+//#include "mfx/uitk/pg/PedalConf.hpp"
 
 
 
-#endif   // mfx_uitk_pg_PageType_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_PedalConf_HEADER_INCLUDED
 
 
 

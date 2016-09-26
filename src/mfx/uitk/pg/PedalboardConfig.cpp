@@ -59,6 +59,7 @@ PedalboardConfig::PedalboardConfig (PageSwitcher &page_switcher)
 ,	_fnt_ptr (0)
 ,	_menu_sptr (new NWindow (Entry_WINDOW))
 ,	_pedal_list ()
+,	_ctx ()
 {
 	for (int ped_cnt = 0; ped_cnt < Cst::_nbr_pedals; ++ped_cnt)
 	{
@@ -80,6 +81,7 @@ void	PedalboardConfig::do_connect (Model &model, const View &view, PageMgrInterf
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt_m;
+	_ctx       = *reinterpret_cast <const PedalEditContext *> (usr_ptr);
 
 	const int      h_m = _fnt_ptr->get_char_h ();
 
@@ -128,11 +130,20 @@ MsgHandlerInterface::EvtProp	PedalboardConfig::do_handle_evt (const NodeEvt &evt
 		switch (but)
 		{
 		case Button_S:
-			/*** To do ***/
-			_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+			{
+				const int   pedal = node_id - Entry_PEDAL_LIST;
+				if (pedal >= 0 && pedal < Cst::_nbr_pedals)
+				{
+					_ctx._pedal   = pedal;
+					const doc::PedalboardLayout & layout = use_layout ();
+					_ctx._content = layout._pedal_arr [pedal];
+					_page_switcher.switch_to (PageType_PEDAL_ACTION_TYPE, &_ctx);
+					ret_val = EvtProp_CATCH;
+				}
+			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
+			_page_switcher.switch_to (PageType_CUR_PROG, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -146,17 +157,27 @@ MsgHandlerInterface::EvtProp	PedalboardConfig::do_handle_evt (const NodeEvt &evt
 
 
 
+void	PedalboardConfig::do_set_pedalboard_layout (const doc::PedalboardLayout &layout)
+{
+	update_display ();
+}
+
+
+
+void	PedalboardConfig::do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content)
+{
+	update_display ();
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 const doc::PedalboardLayout &	PedalboardConfig::use_layout () const
 {
-	const doc::Setup &   setup = _view_ptr->use_setup ();
-
-	return setup._layout;
-
-//	return _view_ptr->use_preset_cur ()._layout;
+	return _ctx.use_layout (*_view_ptr);
 }
 
 
@@ -173,7 +194,8 @@ void	PedalboardConfig::update_display ()
 		fstb::snprintf4all (txt_0, sizeof (txt_0), "%02d: ", ped_cnt + 1);
 		std::string    txt (txt_0);
 
-		txt += Tools::conv_pedal_conf_to_short_txt (layout, ped_cnt, *_model_ptr, *_view_ptr);
+		PedalConf      conf;
+		txt += Tools::conv_pedal_conf_to_short_txt (conf, layout, ped_cnt, *_model_ptr, *_view_ptr);
 
 		ntxt.set_text (txt);
 	}

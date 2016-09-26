@@ -576,7 +576,10 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ParamControllers.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ParamEdit.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ParamList.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalActionType.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalboardConfig.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalConf.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditContext.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Question.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SaveProg.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Tools.h" />
@@ -815,7 +818,9 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamControllers.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamEdit.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamList.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalActionType.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalboardConfig.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditContext.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Question.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SaveProg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools.cpp">

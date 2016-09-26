@@ -63,6 +63,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 ,	_edit_levels_sptr (new NText (Entry_LEVELS))
 ,	_reboot_sptr (     new NText (Entry_REBOOT))
 ,	_reboot_arg ()
+,	_layout_arg ()
 {
 	_edit_prog_sptr  ->set_justification (0.5f, 0, false);
 	_edit_bank_sptr  ->set_justification (0.5f, 0, false);
@@ -199,7 +200,11 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 				//_page_switcher.switch_to (pg::PageType_EDIT_BANKS, 0);
 				break;
 			case Entry_LAYOUT:
-				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, 0);
+				_layout_arg._type = PedalEditContext::Type_GLOBAL;
+				_page_switcher.switch_to (
+					pg::PageType_PEDALBOARD_CONFIG,
+					&_layout_arg
+				);
 				break;
 			case Entry_LEVELS:
 				_page_switcher.switch_to (PageType_LEVELS, 0);

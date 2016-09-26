@@ -569,8 +569,13 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/ParamEdit.h \
         ../../src/mfx/uitk/pg/ParamList.cpp \
         ../../src/mfx/uitk/pg/ParamList.h \
+        ../../src/mfx/uitk/pg/PedalActionType.cpp \
+        ../../src/mfx/uitk/pg/PedalActionType.h \
         ../../src/mfx/uitk/pg/PedalboardConfig.cpp \
         ../../src/mfx/uitk/pg/PedalboardConfig.h \
+        ../../src/mfx/uitk/pg/PedalConf.h \
+        ../../src/mfx/uitk/pg/PedalEditContext.cpp \
+        ../../src/mfx/uitk/pg/PedalEditContext.h \
         ../../src/mfx/uitk/pg/Question.cpp \
         ../../src/mfx/uitk/pg/Question.h \
         ../../src/mfx/uitk/pg/SaveProg.cpp \

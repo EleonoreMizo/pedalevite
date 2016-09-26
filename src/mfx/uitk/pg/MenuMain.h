@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
@@ -121,6 +122,8 @@ private:
 	TxtSPtr        _reboot_sptr;
 
 	Question::QArg _reboot_arg;
+	PedalEditContext
+	               _layout_arg;
 
 
 
