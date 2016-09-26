@@ -109,12 +109,15 @@ void	Slot::ser_write (SerWInterface &ser) const
 	ser.begin_list ();
 	for (const auto &sp : _settings_all)
 	{
-		ser.begin_list ();
+		if (sp.first == _pi_model)
+		{
+			ser.begin_list ();
 
-		ser.write (sp.first);
-		sp.second.ser_write (ser);
+			ser.write (sp.first);
+			sp.second.ser_write (ser);
 
-		ser.end_list ();
+			ser.end_list ();
+		}
 	}
 	ser.end_list ();
 
