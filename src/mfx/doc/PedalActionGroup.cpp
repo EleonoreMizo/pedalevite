@@ -60,12 +60,15 @@ void	PedalActionGroup::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();
 
-	ser.begin_list ();
-	for (const auto &c : _action_arr)
+	if (! is_empty_default ())
 	{
-		c.ser_write (ser);
+		ser.begin_list ();
+		for (const auto &c : _action_arr)
+		{
+			c.ser_write (ser);
+		}
+		ser.end_list ();
 	}
-	ser.end_list ();
 
 	ser.end_list ();
 }
@@ -74,16 +77,19 @@ void	PedalActionGroup::ser_write (SerWInterface &ser) const
 
 void	PedalActionGroup::ser_read (SerRInterface &ser)
 {
-	ser.begin_list ();
-
 	int            nbr_elt;
 	ser.begin_list (nbr_elt);
-	assert (nbr_elt == int (_action_arr.size ()));
-	for (auto &c : _action_arr)
+
+	if (nbr_elt > 0)
 	{
-		c.ser_read (ser);
+		ser.begin_list (nbr_elt);
+		assert (nbr_elt == int (_action_arr.size ()));
+		for (auto &c : _action_arr)
+		{
+			c.ser_read (ser);
+		}
+		ser.end_list ();
 	}
-	ser.end_list ();
 
 	ser.end_list ();
 }
