@@ -98,6 +98,28 @@ const PluginSettings &	Slot::use_settings (PiType type) const
 
 
 
+bool	Slot::has_ctrl () const
+{
+	bool           ctrl_flag  = false;
+
+	if (_settings_mixer._map_param_ctrl.empty ())
+	{
+		auto           it = _settings_all.find (_pi_model);
+		if (it != _settings_all.end ())
+		{
+			ctrl_flag = ! it->second._map_param_ctrl.empty ();
+		}
+	}
+	else
+	{
+		ctrl_flag = true;
+	}
+
+	return ctrl_flag;
+}
+
+
+
 void	Slot::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();

@@ -322,6 +322,7 @@ void	EditProg::set_preset_info ()
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
 		std::string    multilabel = "<Empty>";
+		bool           ctrl_flag  = false;
 
 		if (! preset.is_slot_empty (slot_index))
 		{
@@ -329,12 +330,13 @@ void	EditProg::set_preset_info ()
 			const piapi::PluginDescInterface &  desc =
 				_model_ptr->get_model_desc (slot._pi_model);
 			multilabel = desc.get_name ();
+			ctrl_flag  = slot.has_ctrl ();
 		}
 
-		set_slot (nav_list, slot_index, multilabel);
+		set_slot (nav_list, slot_index, multilabel, ctrl_flag);
 	}
 
-	set_slot (nav_list, nbr_slots, "<End>");
+	set_slot (nav_list, nbr_slots, "<End>", false);
 
 	_page_ptr->set_nav_layout (nav_list);
 
@@ -343,7 +345,7 @@ void	EditProg::set_preset_info ()
 
 
 
-void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel)
+void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel, bool bold_flag)
 {
 	const int      h_m      = _fnt_ptr->get_char_h ();
 	const int      scr_w    = _page_size [0];
@@ -354,6 +356,7 @@ void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index,
 	entry_sptr->set_coord (Vec2d (0, h_m * pos_menu));
 	entry_sptr->set_font (*_fnt_ptr);
 	entry_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	entry_sptr->set_bold (bold_flag, true);
 	std::string    txt = pi::param::Tools::print_name_bestfit (
 		scr_w, multilabel.c_str (),
 		*entry_sptr, &NText::get_char_width

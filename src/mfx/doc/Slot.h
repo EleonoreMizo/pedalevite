@@ -64,6 +64,7 @@ public:
 	               use_settings (PiType type);
 	const PluginSettings &
 	               use_settings (PiType type) const;
+	bool           has_ctrl () const;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);

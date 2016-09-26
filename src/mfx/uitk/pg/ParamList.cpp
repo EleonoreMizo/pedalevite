@@ -221,12 +221,25 @@ void	ParamList::set_param_info ()
 	const int      slot_index = _loc_edit._slot_index;
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	assert (! preset.is_slot_empty (slot_index));
-	doc::Slot &    slot = *(preset._slot_list [slot_index]);
+	const doc::Slot & slot = *(preset._slot_list [slot_index]);
+
+	const doc::PluginSettings *   settings_main_ptr = 0;
+	auto           it_settings = slot._settings_all.find (slot._pi_model);
+	if (it_settings != slot._settings_all.end ())
+	{
+		settings_main_ptr = &it_settings->second;
+	}
 
 	// Order: mixer, main
-	const std::array <int, PiType_NBR_ELT> nbr_param_arr = {{
+	std::array <const doc::PluginSettings *, PiType_NBR_ELT> settings_ptr_arr =
+	{{
+		&slot._settings_mixer,
+		settings_main_ptr
+	}};
+	const std::array <int, PiType_NBR_ELT> nbr_param_arr =
+	{{
 		int (slot._settings_mixer._param_list.size ()),
-		int (slot._settings_all [slot._pi_model]._param_list.size ())
+		(settings_main_ptr == 0) ? 0 : int (settings_main_ptr->_param_list.size ())
 	}};
 	const int      nbr_param_tot = nbr_param_arr [0] + nbr_param_arr [1];
 
@@ -252,6 +265,15 @@ void	ParamList::set_param_info ()
 
 		for (int index = 0; index < nbr_param; ++index)
 		{
+			bool           ctrl_flag = false;
+			if (settings_ptr_arr [type_cnt] != 0)
+			{
+				const auto &   map_ctrl =
+					settings_ptr_arr [type_cnt]->_map_param_ctrl;
+				const auto     it_ctrl  = map_ctrl.find (index);
+				ctrl_flag = (it_ctrl != map_ctrl.end ());
+			}
+
 			const int      pos_nav  = param_pos + 1; // In the nav_list
 			const int      pos_disp = pos_nav;
 #if ! defined (NDEBUG)
@@ -263,11 +285,13 @@ void	ParamList::set_param_info ()
 			name_sptr->set_coord (Vec2d (0, h_m * pos_disp));
 			name_sptr->set_font (*_fnt_ptr);
 			name_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+			name_sptr->set_bold (ctrl_flag, true);
 
 			TxtSPtr        val_sptr (new NText (node_id + 1));
 			val_sptr->set_coord (Vec2d (scr_w, h_m * pos_disp));
 			val_sptr->set_font (*_fnt_ptr);
 			val_sptr->set_justification (1, 0, false);
+			val_sptr->set_bold (ctrl_flag, true);
 
 			_param_list [node_id    ] = name_sptr;
 			_param_list [node_id + 1] = val_sptr;

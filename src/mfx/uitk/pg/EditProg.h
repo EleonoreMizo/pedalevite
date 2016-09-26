@@ -114,7 +114,7 @@ private:
 	typedef std::vector <TxtSPtr> TxtArray;
 
 	void           set_preset_info ();
-	void           set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel);
+	void           set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel, bool bold_flag);
 	EvtProp        change_effect (int node_id, int dir);
 	void           update_loc_edit (int node_id);
 	void           update_rotenc_mapping ();
