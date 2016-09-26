@@ -95,6 +95,7 @@ protected:
 	virtual void   do_set_save_mode (doc::Setup::SaveMode mode);
 	virtual void   do_set_setup_name (std::string name);
 	virtual void   do_set_pedalboard_layout (const doc::PedalboardLayout &layout);
+	virtual void   do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content);
 	virtual void   do_set_bank (int index, const doc::Bank &bank);
 	virtual void   do_select_bank (int index);
 	virtual void   do_set_bank_name (std::string name);

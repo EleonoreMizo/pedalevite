@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/Cst.h"
+#include "mfx/PedalLoc.h"
 #include "mfx/ModelObserverInterface.h"
 
 #include <cassert>
@@ -87,6 +88,19 @@ void	ModelObserverInterface::set_setup_name (std::string name)
 void	ModelObserverInterface::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
 	do_set_pedalboard_layout (layout);
+}
+
+
+
+// Reference lifetime is the call. Please make a copy.
+void	ModelObserverInterface::set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content)
+{
+	assert (loc._type >= 0);
+	assert (loc._type < PedalLoc::Type_NBR_ELT);
+	assert (loc._pedal_index >= 0);
+	assert (loc._pedal_index < Cst::_nbr_pedals);
+
+	do_set_pedal (loc, content);
 }
 
 

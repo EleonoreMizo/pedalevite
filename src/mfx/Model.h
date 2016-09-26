@@ -58,6 +58,7 @@ namespace doc
 
 class FileIOInterface;
 class MeterResultSet;
+class PedalLoc;
 
 namespace pi
 {
@@ -99,6 +100,7 @@ public:
 	void           set_edit_mode (bool edit_flag);
 	void           set_save_mode (doc::Setup::SaveMode mode);
 	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
+	void           set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content);
 	void           set_setup_name (std::string name);
 	void           set_bank (int index, const doc::Bank &bank);
 	void           select_bank (int index);

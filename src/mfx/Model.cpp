@@ -39,6 +39,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/FileIOInterface.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverInterface.h"
+#include "mfx/PedalLoc.h"
 #include "mfx/ToolsParam.h"
 
 #include <algorithm>
@@ -297,6 +298,55 @@ void	Model::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 	}
 }
 
+
+
+void	Model::set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content)
+{
+	assert (loc._type >= 0);
+	assert (loc._type < PedalLoc::Type_NBR_ELT);
+	assert (loc._pedal_index >= 0);
+	assert (loc._pedal_index < Cst::_nbr_pedals);
+
+	doc::PedalboardLayout * layout_ptr = 0;
+
+	switch (loc._type)
+	{
+	case PedalLoc::Type_GLOBAL:
+		layout_ptr = &_setup._layout;
+		break;
+
+	case PedalLoc::Type_BANK:
+		assert (loc._bank_index >= 0);
+		assert (loc._bank_index < Cst::_nbr_banks);
+		layout_ptr = &_setup._bank_arr [loc._bank_index]._layout;
+		break;
+
+	case PedalLoc::Type_PRESET:
+		assert (loc._bank_index >= 0);
+		assert (loc._bank_index < Cst::_nbr_banks);
+		assert (loc._preset_index >= 0);
+		assert (loc._preset_index < Cst::_nbr_presets_per_bank);
+		layout_ptr = &_setup._bank_arr [loc._bank_index]._preset_arr [loc._preset_index]._layout;
+		break;
+
+	case PedalLoc::Type_PRESET_CUR:
+		layout_ptr = &_preset_cur._layout;
+		break;
+		
+	default:
+		assert (false);
+		break;
+	}
+
+	if (layout_ptr != 0)
+	{
+		layout_ptr->_pedal_arr [loc._pedal_index] = content;
+		update_layout ();
+		if (_obs_ptr != 0)
+		{
+			_obs_ptr->set_pedal (loc, content);
+		}
+	}
 }
 
 

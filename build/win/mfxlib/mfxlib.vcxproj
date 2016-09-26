@@ -434,6 +434,7 @@
     <ClInclude Include="..\..\..\src\mfx\Overdrive.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\PedalLoc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\Compex.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\Param.h" />

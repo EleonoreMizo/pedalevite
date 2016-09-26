@@ -650,6 +650,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/ParamCoord.h \
         ../../src/mfx/ParamCoord.hpp \
         ../../src/mfx/PiType.h \
+        ../../src/mfx/PedalLoc.h \
         ../../src/mfx/PluginPool.cpp \
         ../../src/mfx/PluginPool.h \
         ../../src/mfx/ProcessingContext.cpp \

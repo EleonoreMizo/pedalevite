@@ -42,6 +42,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+class PedalLoc;
+
 namespace doc
 {
 	class PedalboardLayout;
@@ -95,6 +97,7 @@ public:
 	void           set_save_mode (doc::Setup::SaveMode mode);
 	void           set_setup_name (std::string name);
 	void           set_pedalboard_layout (const doc::PedalboardLayout &layout);
+	void           set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content);
 	void           set_bank (int index, const doc::Bank &bank);
 	void           select_bank (int index);
 	void           set_bank_name (std::string name);
@@ -129,6 +132,7 @@ protected:
 	virtual void   do_set_save_mode (doc::Setup::SaveMode mode) = 0;
 	virtual void   do_set_setup_name (std::string name) = 0;
 	virtual void   do_set_pedalboard_layout (const doc::PedalboardLayout &layout) = 0;
+	virtual void   do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content) = 0;
 	virtual void   do_set_bank (int index, const doc::Bank &bank) = 0;
 	virtual void   do_select_bank (int index) = 0;
 	virtual void   do_set_bank_name (std::string name) = 0;

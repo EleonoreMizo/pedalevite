@@ -1680,6 +1680,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.h">
       <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\PedalLoc.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
