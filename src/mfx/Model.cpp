@@ -289,12 +289,14 @@ void	Model::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
 	_setup._layout = layout;
 
+	update_layout ();
+
 	if (_obs_ptr != 0)
 	{
 		_obs_ptr->set_pedalboard_layout (layout);
 	}
+}
 
-	update_layout ();
 }
 
 
@@ -467,12 +469,12 @@ void	Model::set_nbr_slots (int nbr_slots)
 
 	_preset_cur._slot_list.resize (nbr_slots);
 
+	update_layout ();
+
 	if (_obs_ptr != 0)
 	{
 		_obs_ptr->set_nbr_slots (nbr_slots);
 	}
-
-	update_layout ();
 }
 
 
@@ -487,12 +489,12 @@ void	Model::insert_slot (int slot_index)
 		doc::Preset::SlotSPtr ()
 	);
 
+	update_layout ();
+
 	if (_obs_ptr != 0)
 	{
 		_obs_ptr->insert_slot (slot_index);
 	}
-
-	update_layout ();
 }
 
 
@@ -508,12 +510,12 @@ void	Model::erase_slot (int slot_index)
 		_preset_cur._slot_list.begin () + slot_index
 	);
 
+	update_layout ();
+
 	if (_obs_ptr != 0)
 	{
 		_obs_ptr->erase_slot (slot_index);
 	}
-
-	update_layout ();
 }
 
 
@@ -591,12 +593,12 @@ void	Model::remove_plugin (int slot_index)
 		slot_sptr->_pi_model.clear ();
 	}
 
+	apply_settings ();
+
 	if (_obs_ptr != 0)
 	{
 		_obs_ptr->remove_plugin (slot_index);
 	}
-
-	apply_settings ();
 }
 
 
