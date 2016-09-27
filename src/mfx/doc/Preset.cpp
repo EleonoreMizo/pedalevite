@@ -158,6 +158,37 @@ int	Preset::gen_slot_id () const
 
 
 
+std::vector <int>	Preset::build_ordered_node_list () const
+{
+	// Set of the nodes we already inserted into the vector
+	std::set <int> rem_slot_id;
+	for (const auto &node : _slot_map)
+	{
+		rem_slot_id.insert (node.first);
+	}
+
+	// Inserts the main chain
+	std::vector <int> slot_id_list = _routing._chain;
+
+	// Removes nodes of the main chain
+	for (int rem_id : slot_id_list)
+	{
+		const auto     it = rem_slot_id.find (rem_id);
+		assert (it != rem_slot_id.end ());
+		rem_slot_id.erase (it);
+	}
+
+	// Adds all the remaining slots
+	for (int rem_id : rem_slot_id)
+	{
+		slot_id_list.push_back (rem_id);
+	}
+
+	return slot_id_list;
+}
+
+
+
 void	Preset::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();

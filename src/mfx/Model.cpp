@@ -1941,22 +1941,7 @@ void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int
 void	Model::add_default_ctrl (int selected_slot_id)
 {
 	// First, lists the slots in the processing order
-	std::set <int> rem_slot_id;
-	for (const auto &node : _preset_cur._slot_map)
-	{
-		rem_slot_id.insert (node.first);
-	}
-	std::vector <int> slot_id_list = _preset_cur._routing._chain; // The main chain
-	for (int rem_id : slot_id_list)
-	{
-		const auto     it = rem_slot_id.find (rem_id);
-		assert (it != rem_slot_id.end ());
-		rem_slot_id.erase (it);
-	}
-	for (int rem_id : rem_slot_id) // Adds all the remaining slots
-	{
-		slot_id_list.push_back (rem_id);
-	}
+	std::vector <int> slot_id_list (_preset_cur.build_ordered_node_list ());
 
 	std::set <int> used_pot_set;
 

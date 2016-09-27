@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <memory>
 #include <map>
+#include <vector>
 
 
 
@@ -67,6 +68,8 @@ public:
 	Slot &         use_slot (int slot_id);
 	const Slot &   use_slot (int slot_id) const;
 	int            gen_slot_id () const;
+	std::vector <int>
+	               build_ordered_node_list () const;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
