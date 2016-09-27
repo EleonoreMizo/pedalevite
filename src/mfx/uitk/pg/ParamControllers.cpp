@@ -93,9 +93,9 @@ void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterf
 	_page_size = page_size;
 	_fnt_ptr   = &fnt_m;
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	assert (! preset.is_slot_empty (_loc_edit._slot_index));
-	const doc::Slot &    slot   = *(preset._slot_list [_loc_edit._slot_index]);
+	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
+	const int            slot_id = preset._routing._chain [_loc_edit._slot_index];
+	const doc::Slot &    slot    = preset.use_slot (slot_id);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
 	auto           it_cls = settings._map_param_ctrl.find (_loc_edit._param_index);
 	if (it_cls == settings._map_param_ctrl.end ())
@@ -194,9 +194,9 @@ void	ParamControllers::do_activate_preset (int index)
 
 
 
-void	ParamControllers::do_remove_plugin (int slot_index)
+void	ParamControllers::do_remove_plugin (int slot_id)
 {
-	if (slot_index == _loc_edit._slot_index)
+	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
 	{
 		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 	}
@@ -204,11 +204,11 @@ void	ParamControllers::do_remove_plugin (int slot_index)
 
 
 
-void	ParamControllers::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	ParamControllers::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	if (   slot_index == _loc_edit._slot_index
-	    && type       == _loc_edit._pi_type
-	    && index      == _loc_edit._param_index)
+	if (   slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index)
+	    && type    == _loc_edit._pi_type
+	    && index   == _loc_edit._param_index)
 	{
 		set_controller_info ();
 	}

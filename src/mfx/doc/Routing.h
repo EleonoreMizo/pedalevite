@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Preset.h
+        Routing.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_doc_Preset_HEADER_INCLUDED)
-#define mfx_doc_Preset_HEADER_INCLUDED
+#if ! defined (mfx_doc_Routing_HEADER_INCLUDED)
+#define mfx_doc_Routing_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,12 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/PedalboardLayout.h"
-#include "mfx/doc/Routing.h"
-#include "mfx/doc/Slot.h"
-
-#include <memory>
-#include <map>
+#include <vector>
 
 
 
@@ -46,36 +41,23 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class Preset
+class Routing
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	typedef std::shared_ptr <Slot> SlotSPtr;
-	typedef std::map <int, SlotSPtr> SlotMap;
-
-	               Preset ()  = default;
-	               Preset (const Preset &other);
-	virtual        ~Preset () = default;
-
-	Preset &       operator = (const Preset &other);
-
-	bool           is_slot_empty (int slot_id) const;
-	bool           is_slot_empty (SlotMap::const_iterator it) const;
-	Slot &         use_slot (int slot_id);
-	const Slot &   use_slot (int slot_id) const;
-	int            gen_slot_id () const;
+	               Routing ()                        = default;
+	               Routing (const Routing &other)    = default;
+	virtual        ~Routing ()                       = default;
+	Routing &      operator = (const Routing &other) = default;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
-	SlotMap        _slot_map;
-	Routing        _routing;
-	std::string    _name;
-	PedalboardLayout
-	               _layout;
+	std::vector <int>
+	               _chain;
 
 
 
@@ -89,18 +71,16 @@ protected:
 
 private:
 
-	void           duplicate_slot_list ();
-
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	bool           operator == (const Preset &other) const = delete;
-	bool           operator != (const Preset &other) const = delete;
+	bool           operator == (const Routing &other) const = delete;
+	bool           operator != (const Routing &other) const = delete;
 
-}; // class Preset
+}; // class Routing
 
 
 
@@ -109,11 +89,11 @@ private:
 
 
 
-//#include "mfx/doc/Preset.hpp"
+//#include "mfx/doc/Routing.hpp"
 
 
 
-#endif   // mfx_doc_Preset_HEADER_INCLUDED
+#endif   // mfx_doc_Routing_HEADER_INCLUDED
 
 
 

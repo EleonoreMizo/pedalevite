@@ -58,11 +58,11 @@ namespace pg
 
 // val is a normalized value
 // val = -1: use the settings content
-void	Tools::set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag)
+void	Tools::set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_id, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag)
 {
 	assert (val <= 1);
 	assert (width > 0);
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -78,11 +78,10 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	const doc::Preset &   preset = view.use_preset_cur ();
 	if (val < 0)
 	{
-		val = view.get_param_val (preset, slot_index, type, index);
+		val = view.get_param_val (preset, slot_id, type, index);
 	}
 
-	assert (! preset.is_slot_empty (slot_index));
-	const doc::Slot &    slot     = *(preset._slot_list [slot_index]);
+	const doc::Slot &    slot     = preset.use_slot (slot_id);
 	const std::string &  pi_model =
 		(type == PiType_MIX) ? Cst::_plugin_mix : slot._pi_model;
 	const piapi::PluginDescInterface &  desc_pi =
@@ -101,7 +100,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	const double   tempo = view.get_tempo ();
 	print_param_with_pres (
 		val_s, unit,
-		preset, slot_index, type, index, val, desc, tempo
+		preset, slot_id, type, index, val, desc, tempo
 	);
 
 	// Value
@@ -182,9 +181,9 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 
 
 
-MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int step_index, int dir)
+MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
@@ -192,17 +191,17 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 
 	const doc::Preset &  preset = view.use_preset_cur ();
 	float          val_nrm =
-		view.get_param_val (preset, slot_index, type, index);
+		view.get_param_val (preset, slot_id, type, index);
 
 	val_nrm = float (change_param (
-		val_nrm, model, view, slot_index, type, index, step, step_index, dir
+		val_nrm, model, view, slot_id, type, index, step, step_index, dir
 	));
 
 	// Check the beat case
 	bool           set_flag = false;
 	if (type == PiType_MAIN)
 	{
-		const doc::Slot &    slot = *(preset._slot_list [slot_index]);
+		const doc::Slot &    slot = preset.use_slot (slot_id);
 		const doc::PluginSettings& settings = slot.use_settings (PiType_MAIN);
 		const doc::ParamPresentation *   pres_ptr =
 			settings.use_pres_if_tempo_ctrl (index);
@@ -218,14 +217,14 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 			const float    val_beats = float (
 				ToolsParam::conv_nrm_to_beats (val_nrm, desc, tempo)
 			);
-			model.set_param_beats (slot_index, index, val_beats);
+			model.set_param_beats (slot_id, index, val_beats);
 			set_flag = true;
 		}
 	}
 
 	if (! set_flag)
 	{
-		model.set_param (slot_index, type, index, val_nrm);
+		model.set_param (slot_id, type, index, val_nrm);
 	}
 
 	return MsgHandlerInterface::EvtProp_CATCH;
@@ -233,17 +232,16 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 
 
 
-double	Tools::change_param (double val_nrm, const Model &model, const View &view, int slot_index, PiType type, int index, float step, int step_index, int dir)
+double	Tools::change_param (double val_nrm, const Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 	assert (dir != 0);
 
 	const doc::Preset &  preset = view.use_preset_cur ();
-	assert (! preset.is_slot_empty (slot_index));
-	const doc::Slot &    slot   = *(preset._slot_list [slot_index]);
+	const doc::Slot &    slot   = preset.use_slot (slot_id);
 	const doc::PluginSettings & settings = slot.use_settings (type);
 
 	const std::string &  pi_model =
@@ -360,18 +358,20 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 	assert (dir != 0);
 
 	const doc::Preset &  preset = view.use_preset_cur ();
-	const int      nbr_slots = preset._slot_list.size ();
+	const int      nbr_slots = int (preset._routing._chain.size ());
 	assert (slot_index <= nbr_slots);
 
 	const int      nbr_types = int (fx_list.size ());
 
 	// Index within the official plug-in list. end = empty
 	int            pi_index  = nbr_types;
+	int            slot_id   = -1;
 	if (slot_index < nbr_slots)
 	{
+		slot_id = view.conv_slot_index_to_id (slot_index);
 		if (! preset.is_slot_empty (slot_index))
 		{
-			const doc::Slot & slot = *(preset._slot_list [slot_index]);
+			const doc::Slot & slot = preset.use_slot (slot_id);
 			const std::string type = slot._pi_model;
 			auto          type_it =
 				std::find (fx_list.begin (), fx_list.end (), type);
@@ -387,41 +387,42 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 	// We need to add a slot at the end?
 	if (slot_index == nbr_slots && pi_index != nbr_types)
 	{
-		model.set_nbr_slots (nbr_slots + 1);
+		slot_id = model.insert_slot (nbr_slots);
 	}
 
 	if (pi_index == nbr_types)
 	{
-		model.remove_plugin (slot_index);
+		model.remove_plugin (slot_id);
 	}
 	else
 	{
-		model.set_plugin (slot_index, fx_list [pi_index]);
+		model.set_plugin (slot_id, fx_list [pi_index]);
 	}
 
 	// Last slot needs to be removed?
 	if (slot_index == nbr_slots - 1 && pi_index == nbr_types)
 	{
-		int         nbr_slots_new = nbr_slots - 1;
-		while (nbr_slots_new > 0 && preset.is_slot_empty (nbr_slots_new - 1))
+		int            nbr_slots_new = nbr_slots;
+		do
 		{
 			-- nbr_slots_new;
+			model.erase_slot (nbr_slots_new);
 		}
-		model.set_nbr_slots (nbr_slots_new);
+		while (nbr_slots_new > 0 && preset.is_slot_empty (nbr_slots_new - 1));
 	}
 }
 
 
 
-void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int slot_index, int page)
+void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page)
 {
 	model.reset_all_overridden_param_ctrl ();
 
 	const doc::Preset &  preset = view.use_preset_cur ();
-	if (! preset.is_slot_empty (slot_index))
+	if (! preset.is_slot_empty (slot_id))
 	{
-		const doc::Slot &    slot = *(preset._slot_list [slot_index]);
-		const auto     it_s       = slot._settings_all.find (slot._pi_model);
+		const doc::Slot & slot = preset.use_slot (slot_id);
+		const auto        it_s = slot._settings_all.find (slot._pi_model);
 		if (it_s != slot._settings_all.end ())
 		{
 			const int      nbr_param = int (it_s->second._param_list.size ());
@@ -433,7 +434,7 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 				{
 					const int      rotenc_index = Cst::RotEnc_GEN + pos;
 					model.override_param_ctrl (
-						slot_index,
+						slot_id,
 						PiType_MAIN,
 						index,
 						rotenc_index
@@ -490,7 +491,7 @@ std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::Ped
 
 
 
-void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo)
+void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_id, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo)
 {
 	val_s.clear ();
 	unit.clear ();
@@ -503,8 +504,7 @@ void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const 
 		const piapi::ParamDescInterface::Categ categ = desc.get_categ ();
 		if (categ != piapi::ParamDescInterface::Categ_UNDEFINED)
 		{
-			assert (! preset.is_slot_empty (slot_index));
-			const doc::Slot & slot = *(preset._slot_list [slot_index]);
+			const doc::Slot & slot = preset.use_slot (slot_id);
 			const auto     it_settings = slot._settings_all.find (slot._pi_model);
 			assert (it_settings != slot._settings_all.end ());
 			const doc::PluginSettings &	settings = it_settings->second;
@@ -938,14 +938,13 @@ std::string	Tools::find_fx_type (const doc::FxId &fx_id, const View &view)
 		{
 			for (auto & preset : bank._preset_arr)
 			{
-				const int      nbr_slots = int (preset._slot_list.size ());
-				for (int slot_index = 0
-				;	slot_index < nbr_slots && ! found_flag
-				;	++slot_index)
+				for (auto it_slot = preset._slot_map.begin ()
+				;	it_slot != preset._slot_map.end () && ! found_flag
+				;	++ it_slot)
 				{
-					if (! preset.is_slot_empty (slot_index))
+					if (! preset.is_slot_empty (it_slot))
 					{
-						const doc::Slot & slot = *(preset._slot_list [slot_index]);
+						const doc::Slot & slot = *(it_slot->second);
 						if (slot._label == fx_id._label_or_model)
 						{
 							type = slot._pi_model;

@@ -69,6 +69,9 @@ protected:
 	virtual int    do_read (double &x);
 	virtual int    do_read (std::string &s);
 
+	virtual void   do_set_doc_version (int vers);
+	virtual int    do_get_doc_version () const;
+
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -113,6 +116,8 @@ private:
 	ScanPos        _spos;
 	int            _info_index = 0;
 	int            _list_level = 0;
+
+	int            _doc_ver    = -1;
 
 
 

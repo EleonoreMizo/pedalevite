@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        SerRInterface.cpp
+        Routing.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,10 +24,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/Routing.h"
 #include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
-#include <cmath>
 
 
 
@@ -42,57 +43,45 @@ namespace doc
 
 
 
-int	SerRInterface::begin_list (int &nbr_elt)
+void	Routing::ser_write (SerWInterface &ser) const
 {
-	const int      ret_val = do_begin_list (nbr_elt);
-	assert (nbr_elt >= 0 || ret_val != 0);
+	ser.begin_list ();
 
-	return ret_val;
+	ser.begin_list ();
+	for (const auto &slot_id : _chain)
+	{
+		ser.write (slot_id);
+	}
+	ser.end_list ();
+
+	ser.end_list ();
 }
 
 
 
-int	SerRInterface::end_list ()
+void	Routing::ser_read (SerRInterface &ser)
 {
-	return do_end_list ();
-}
+	ser.begin_list ();
 
+	int            nbr_elt = 0;
+	ser.begin_list (nbr_elt);
+	_chain.resize (nbr_elt);
+	for (auto &slot_id : _chain)
+	{
+		ser.read (slot_id);
+	}
+	ser.end_list ();
 
-
-int	SerRInterface::read (double &x)
-{
-	return do_read (x);
-}
-
-
-
-int	SerRInterface::read (std::string &s)
-{
-	return do_read (s);
-}
-
-
-
-void	SerRInterface::set_doc_version (int vers)
-{
-	assert (vers >= 0);
-
-	do_set_doc_version (vers);
-}
-
-
-
-int	SerRInterface::get_doc_version () const
-{
-	const int      vers = do_get_doc_version ();
-	assert (vers >= 0);
-
-	return vers;
+	ser.end_list ();
 }
 
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 

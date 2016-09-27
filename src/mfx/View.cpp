@@ -104,9 +104,9 @@ const doc::Preset &	View::use_preset_cur () const
 
 
 
-const ModelObserverInterface::SlotInfoList &	View::use_slot_info_list () const
+const ModelObserverInterface::SlotInfoMap &	View::use_slot_info_map () const
 {
-	return _slot_info_list;
+	return _slot_info_map;
 }
 
 
@@ -132,15 +132,28 @@ const View::OverrideMap &	View::use_param_ctrl_override_map () const
 
 
 
-void	View::update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val)
+// Allows negative slot_index and returns -1 in this case
+int	View::conv_slot_index_to_id (int slot_index) const
 {
-	if (preset.is_slot_empty (slot_index))
+	assert (slot_index < int (_preset_cur._routing._chain.size ()));
+	return
+		  (slot_index < 0)
+		? -1
+		: _preset_cur._routing._chain [slot_index];
+}
+
+
+
+void	View::update_parameter (doc::Preset &preset, int slot_id, PiType type, int index, float val)
+{
+	auto           it_slot = preset._slot_map.find (slot_id);
+	if (preset.is_slot_empty (it_slot))
 	{
 		assert (false);
 	}
 	else
 	{
-		doc::Slot &    slot = *(preset._slot_list [slot_index]);
+		doc::Slot &    slot = *(it_slot->second);
 		doc::PluginSettings &  settings =
 				(type == PiType_MIX)
 			? slot._settings_mixer
@@ -158,17 +171,19 @@ void	View::update_parameter (doc::Preset &preset, int slot_index, PiType type, i
 
 
 
-float	View::get_param_val (const doc::Preset &preset, int slot_index, PiType type, int index)
+float	View::get_param_val (const doc::Preset &preset, int slot_id, PiType type, int index)
 {
 	float          val = 0;
 
-	if (preset.is_slot_empty (slot_index))
+	auto           it_slot = preset._slot_map.find (slot_id);
+	assert (it_slot != preset._slot_map.end ());
+	if (preset.is_slot_empty (it_slot))
 	{
 		assert (false);
 	}
 	else
 	{
-		doc::Slot &    slot = *(preset._slot_list [slot_index]);
+		doc::Slot &    slot = *(it_slot->second);
 		doc::PluginSettings &  settings =
 				(type == PiType_MIX)
 			? slot._settings_mixer
@@ -322,7 +337,7 @@ void	View::do_activate_preset (int index)
 {
 	_preset_index = index;
 	_preset_cur   = _setup._bank_arr [_bank_index]._preset_arr [_preset_index];
-	_slot_info_list.clear ();
+	_slot_info_map.clear ();
 	mfx_View_PROPAGATE (activate_preset (index));
 }
 
@@ -369,25 +384,25 @@ void	View::do_set_tuner_freq (float freq)
 
 
 
-void	View::do_set_slot_info_for_current_preset (const SlotInfoList &info_list)
+void	View::do_set_slot_info_for_current_preset (const SlotInfoMap &info_map)
 {
-	_slot_info_list = info_list;
-	mfx_View_PROPAGATE (set_slot_info_for_current_preset (info_list));
+	_slot_info_map = info_map;
+	mfx_View_PROPAGATE (set_slot_info_for_current_preset (info_map));
 }
 
 
 
-void	View::do_set_param (int pi_id, int index, float val, int slot_index, PiType type)
+void	View::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
 {
-	update_parameter (_preset_cur, slot_index, type, index, val);
-	mfx_View_PROPAGATE (set_param (pi_id, index, val, slot_index, type));
+	update_parameter (_preset_cur, slot_id, type, index, val);
+	mfx_View_PROPAGATE (set_param (pi_id, index, val, slot_id, type));
 }
 
 
 
-void	View::do_set_param_beats (int slot_index, int index, float beats)
+void	View::do_set_param_beats (int slot_id, int index, float beats)
 {
-	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	assert (index < int (settings._param_list.size ()));
 
@@ -396,59 +411,67 @@ void	View::do_set_param_beats (int slot_index, int index, float beats)
 	assert (it_pres != settings._map_param_pres.end ());
 	it_pres->second._ref_beats = beats;
 
-	mfx_View_PROPAGATE (set_param_beats (slot_index, index, beats));
+	mfx_View_PROPAGATE (set_param_beats (slot_id, index, beats));
 }
 
 
 
-void	View::do_set_nbr_slots (int nbr_slots)
+void	View::do_insert_slot (int slot_index, int slot_id)
 {
-	_preset_cur._slot_list.resize (nbr_slots);
-	mfx_View_PROPAGATE (set_nbr_slots (nbr_slots));
-}
-
-
-
-void	View::do_insert_slot (int slot_index)
-{
-	_preset_cur._slot_list.insert (
-		_preset_cur._slot_list.begin () + slot_index,
+	_preset_cur._slot_map.insert (std::make_pair (
+		slot_id,
 		doc::Preset::SlotSPtr ()
+	));
+	_preset_cur._routing._chain.insert (
+		_preset_cur._routing._chain.begin () + slot_index,
+		slot_id
 	);
-	_slot_info_list.clear ();
-	mfx_View_PROPAGATE (insert_slot (slot_index));
+	_slot_info_map.clear ();
+	mfx_View_PROPAGATE (insert_slot (slot_index, slot_id));
 }
 
 
 
 void	View::do_erase_slot (int slot_index)
 {
-	_preset_cur._slot_list.erase (
-		_preset_cur._slot_list.begin () + slot_index
+	assert (slot_index < int (_preset_cur._routing._chain.size ()));
+
+	const int      slot_id = _preset_cur._routing._chain [slot_index];
+	_preset_cur._routing._chain.erase (
+		_preset_cur._routing._chain.begin () + slot_index
 	);
-	_slot_info_list.clear ();
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+	_preset_cur._slot_map.erase (it_slot);
+
+	_slot_info_map.clear ();
+
 	mfx_View_PROPAGATE (erase_slot (slot_index));
 }
 
 
 
-void	View::do_set_slot_label (int slot_index, std::string name)
+void	View::do_set_slot_label (int slot_id, std::string name)
 {
-	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
 	if (slot_sptr.get () == 0)
 	{
 		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
 	}
 	slot_sptr->_label = name;
 
-	mfx_View_PROPAGATE (set_slot_label (slot_index, name));
+	mfx_View_PROPAGATE (set_slot_label (slot_id, name));
 }
 
 
 
-void	View::do_set_plugin (int slot_index, const PluginInitData &pi_data)
+void	View::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
-	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
 	if (slot_sptr.get () == 0)
 	{
 		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
@@ -458,50 +481,51 @@ void	View::do_set_plugin (int slot_index, const PluginInitData &pi_data)
 	doc::PluginSettings &   settings = slot_sptr->_settings_all [pi_data._model];
 	settings._param_list.resize (nbr_param, 0);
 
-	mfx_View_PROPAGATE (set_plugin (slot_index, pi_data));
+	mfx_View_PROPAGATE (set_plugin (slot_id, pi_data));
 }
 
 
 
-void	View::do_remove_plugin (int slot_index)
+void	View::do_remove_plugin (int slot_id)
 {
-	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
 	if (slot_sptr.get () != 0)
 	{
 		slot_sptr->_pi_model.clear ();
 	}
 
-	mfx_View_PROPAGATE (remove_plugin (slot_index));
+	mfx_View_PROPAGATE (remove_plugin (slot_id));
 }
 
 
 
-void	View::do_set_plugin_mono (int slot_index, bool mono_flag)
+void	View::do_set_plugin_mono (int slot_id, bool mono_flag)
 {
-	assert (! _preset_cur.is_slot_empty (slot_index));
-	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::Slot &    slot    = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	settings._force_mono_flag = mono_flag;
 
-	mfx_View_PROPAGATE (set_plugin_mono (slot_index, mono_flag));
+	mfx_View_PROPAGATE (set_plugin_mono (slot_id, mono_flag));
 }
 
 
 
-void	View::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	View::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 	settings._map_param_ctrl [index] = cls;
 
-	mfx_View_PROPAGATE (set_param_ctrl (slot_index, type, index, cls));
+	mfx_View_PROPAGATE (set_param_ctrl (slot_id, type, index, cls));
 }
 
 
 
-void	View::do_override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index)
+void	View::do_override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index)
 {
-	const OverrideLoc loc { slot_index, type, index };
+	const OverrideLoc loc { slot_id, type, index };
 	if (rotenc_index < 0)
 	{
 		const auto     it = _override_map.find (loc);
@@ -515,7 +539,7 @@ void	View::do_override_param_ctrl (int slot_index, PiType type, int index, int r
 		_override_map [loc] = rotenc_index;
 	}
 
-	mfx_View_PROPAGATE (override_param_ctrl (slot_index, type, index, rotenc_index));
+	mfx_View_PROPAGATE (override_param_ctrl (slot_id, type, index, rotenc_index));
 }
 
 
@@ -530,11 +554,11 @@ void	View::do_override_param_ctrl (int slot_index, PiType type, int index, int r
 
 bool	View::OverrideLoc::operator < (const OverrideLoc &rhs) const
 {
-	if (_slot_index < rhs._slot_index)
+	if (_slot_id < rhs._slot_id)
 	{
 		return true;
 	}
-	else if (_slot_index == rhs._slot_index)
+	else if (_slot_id == rhs._slot_id)
 	{
 		if (_type < rhs._type)
 		{

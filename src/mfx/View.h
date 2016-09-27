@@ -47,13 +47,11 @@ class View
 
 public:
 
-	// This is the same class as in Model.
-	// Should we share it?
 	class OverrideLoc
 	{
 	public:
 		bool           operator < (const OverrideLoc &rhs) const;
-		int            _slot_index;
+		int            _slot_id;
 		PiType         _type;
 		int            _index;
 	};
@@ -73,15 +71,17 @@ public:
 	               use_setup () const;
 	const doc::Preset &
 	               use_preset_cur () const;
-	const SlotInfoList &
-	               use_slot_info_list () const;
+	const SlotInfoMap &
+	               use_slot_info_map () const;
 	int            get_bank_index () const;
 	int            get_preset_index () const;
 	const OverrideMap &
 	               use_param_ctrl_override_map () const;
 
+	int            conv_slot_index_to_id (int slot_index) const;
+
 	static void    update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
-	static float   get_param_val (const doc::Preset &preset, int slot_index, PiType type, int index);
+	static float   get_param_val (const doc::Preset &preset, int slot_id, PiType type, int index);
 
 
 
@@ -106,18 +106,17 @@ protected:
 	virtual void   do_set_master_vol (float vol);
 	virtual void   do_set_tuner (bool active_flag);
 	virtual void   do_set_tuner_freq (float freq);
-	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list);
-	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type);
-	virtual void   do_set_param_beats (int slot_index, int index, float beats);
-	virtual void   do_set_nbr_slots (int nbr_slots);
-	virtual void   do_insert_slot (int slot_index);
+	virtual void   do_set_slot_info_for_current_preset (const SlotInfoMap &info_map);
+	virtual void   do_set_param (int pi_id, int index, float val, int slot_id, PiType type);
+	virtual void   do_set_param_beats (int slot_id, int index, float beats);
+	virtual void   do_insert_slot (int slot_index, int slot_id);
 	virtual void   do_erase_slot (int slot_index);
-	virtual void   do_set_slot_label (int slot_index, std::string name);
-	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data);
-	virtual void   do_remove_plugin (int slot_index);
-	virtual void   do_set_plugin_mono (int slot_index, bool mono_flag);
-	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
-	virtual void   do_override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index);
+	virtual void   do_set_slot_label (int slot_id, std::string name);
+	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
+	virtual void   do_remove_plugin (int slot_id);
+	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag);
+	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	virtual void   do_override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index);
 
 
 
@@ -139,7 +138,7 @@ private:
 	int            _preset_index = 0;
 	doc::Setup     _setup;
 	doc::Preset    _preset_cur;
-	SlotInfoList   _slot_info_list;
+	SlotInfoMap    _slot_info_map;
 	OverrideMap    _override_map;
 
 	PluginList     _lookup_list; // Id of the plug-ins we need to collect data after instantiation (number of parameters and other specs)

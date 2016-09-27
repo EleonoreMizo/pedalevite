@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/PiType.h"
 
 #include <array>
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -77,7 +78,7 @@ public:
 	};
 	typedef std::shared_ptr <PluginInfo> PluginInfoSPtr;
 	typedef std::array <PluginInfoSPtr, PiType_NBR_ELT> SlotInfo;
-	typedef std::vector <SlotInfo> SlotInfoList;
+	typedef std::map <int, SlotInfo> SlotInfoMap;
 
 	class PluginInitData
 	{
@@ -108,18 +109,17 @@ public:
 	void           set_master_vol (float vol);
 	void           set_tuner (bool active_flag);
 	void           set_tuner_freq (float freq);
-	void           set_slot_info_for_current_preset (const SlotInfoList &info_list);
-	void           set_param (int pi_id, int index, float val, int slot_index, PiType type);
-	void           set_param_beats (int slot_index, int index, float beats);
-	void           set_nbr_slots (int nbr_slots);
-	void           insert_slot (int slot_index);
+	void           set_slot_info_for_current_preset (const SlotInfoMap &info_map);
+	void           set_param (int pi_id, int index, float val, int slot_id, PiType type);
+	void           set_param_beats (int slot_id, int index, float beats);
+	void           insert_slot (int slot_index, int slot_id);
 	void           erase_slot (int slot_index);
-	void           set_slot_label (int slot_index, std::string name);
-	void           set_plugin (int slot_index, const PluginInitData &pi_data);
-	void           remove_plugin (int slot_index);
-	void           set_plugin_mono (int slot_index, bool mono_flag);
-	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
-	void           override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index);
+	void           set_slot_label (int slot_id, std::string name);
+	void           set_plugin (int slot_id, const PluginInitData &pi_data);
+	void           remove_plugin (int slot_id);
+	void           set_plugin_mono (int slot_id, bool mono_flag);
+	void           set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	void           override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index);
 
 
 
@@ -143,16 +143,15 @@ protected:
 	virtual void   do_set_master_vol (float vol) = 0;
 	virtual void   do_set_tuner (bool active_flag) = 0;
 	virtual void   do_set_tuner_freq (float freq) = 0;
-	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list) = 0;
+	virtual void   do_set_slot_info_for_current_preset (const SlotInfoMap &info_map) = 0;
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type) = 0;
 	virtual void   do_set_param_beats (int slot_index, int index, float beats) = 0;
-	virtual void   do_set_nbr_slots (int nbr_slots) = 0;
-	virtual void   do_insert_slot (int slot_index) = 0;
+	virtual void   do_insert_slot (int slot_index, int slot_id) = 0;
 	virtual void   do_erase_slot (int slot_index) = 0;
-	virtual void   do_set_slot_label (int slot_index, std::string name) = 0;
-	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data) = 0;
-	virtual void   do_remove_plugin (int slot_index) = 0;
-	virtual void   do_set_plugin_mono (int slot_index, bool mono_flag) = 0;
+	virtual void   do_set_slot_label (int slot_id, std::string name) = 0;
+	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data) = 0;
+	virtual void   do_remove_plugin (int slot_id) = 0;
+	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag) = 0;
 	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls) = 0;
 	virtual void   do_override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index) = 0;
 

@@ -45,6 +45,8 @@ namespace doc
 
 CtrlLinkSet &	PluginSettings::use_ctrl_link_set (int index)
 {
+	assert (index >= 0);
+
 	auto           it = _map_param_ctrl.find (index);
 	assert (it != _map_param_ctrl.end ());
 
@@ -55,10 +57,38 @@ CtrlLinkSet &	PluginSettings::use_ctrl_link_set (int index)
 
 const CtrlLinkSet &	PluginSettings::use_ctrl_link_set (int index) const
 {
+	assert (index >= 0);
+
 	auto           it = _map_param_ctrl.find (index);
 	assert (it != _map_param_ctrl.end ());
 
 	return it->second;
+}
+
+
+
+bool	PluginSettings::has_ctrl (int index) const
+{
+	assert (index >= 0);
+
+	auto           it = _map_param_ctrl.find (index);
+
+	return (it != _map_param_ctrl.end () && ! it->second.is_empty ());
+}
+
+
+
+bool	PluginSettings::has_any_ctrl () const
+{
+	for (auto & node : _map_param_ctrl)
+	{
+		if (! node.second.is_empty ())
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 
@@ -156,12 +186,15 @@ void	PluginSettings::ser_write (SerWInterface &ser) const
 	ser.begin_list ();
 	for (const auto &sp : _map_param_ctrl)
 	{
-		ser.begin_list ();
+		if (! sp.second.is_empty ())
+		{
+			ser.begin_list ();
 
-		ser.write (sp.first);
-		sp.second.ser_write (ser);
+			ser.write (sp.first);
+			sp.second.ser_write (ser);
 
-		ser.end_list ();
+			ser.end_list ();
+		}
 	}
 	ser.end_list ();
 

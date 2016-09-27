@@ -55,6 +55,9 @@ public:
 	int            read (double &x);
 	int            read (std::string &s);
 
+	void           set_doc_version (int vers);
+	int            get_doc_version () const;
+
 	// Helper functions
 	int            begin_list () { int dummy; return begin_list (dummy); }
 
@@ -86,6 +89,7 @@ public:
 	}
 
 
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 protected:
@@ -95,11 +99,12 @@ protected:
 	virtual int    do_read (double &x) = 0;
 	virtual int    do_read (std::string &s) = 0;
 
+	virtual void   do_set_doc_version (int vers) = 0;
+	virtual int    do_get_doc_version () const = 0;
+
 
 
 private:
-
-
 
 }; // class SerRInterface
 

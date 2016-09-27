@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerWInterface.h"
 
 #include <cassert>
+#include <climits>
 
 
 
@@ -44,7 +45,8 @@ namespace doc
 
 
 Preset::Preset (const Preset &other)
-:	_slot_list (other._slot_list)
+:	_slot_map (other._slot_map)
+,	_routing (other._routing)
 ,	_name (other._name)
 ,	_layout (other._layout)
 {
@@ -57,9 +59,10 @@ Preset &	Preset::operator = (const Preset &other)
 {
 	if (&other != this)
 	{
-		_slot_list = other._slot_list;
-		_name      = other._name;
-		_layout    = other._layout;
+		_slot_map = other._slot_map;
+		_routing  = other._routing;
+		_name     = other._name;
+		_layout   = other._layout;
 		duplicate_slot_list ();
 	}
 
@@ -68,13 +71,89 @@ Preset &	Preset::operator = (const Preset &other)
 
 
 
-bool	Preset::is_slot_empty (int index) const
+bool	Preset::is_slot_empty (int slot_id) const
 {
-	assert (index >= 0);
-	assert (index < int (_slot_list.size ()));
+	assert (slot_id >= 0);
+	const auto     it = _slot_map.find (slot_id);
 
-	return (   _slot_list [index].get () == 0
-	        || _slot_list [index]->is_empty ());
+	return is_slot_empty (it);
+}
+
+
+
+bool	Preset::is_slot_empty (SlotMap::const_iterator it) const
+{
+	assert (it != _slot_map.end ());
+
+	return (   it->second.get () == 0
+	        || it->second->is_empty ());
+}
+
+
+
+Slot &	Preset::use_slot (int slot_id)
+{
+	const auto     it = _slot_map.find (slot_id);
+	if (it == _slot_map.end ())
+	{
+		assert (false);
+		throw std::logic_error ("Slot does not exist.");
+	}
+	if (it->second.get () == 0)
+	{
+		assert (false);
+		throw std::logic_error ("Slot is empty.");
+	}
+
+	return *(it->second);
+}
+
+
+
+const Slot &	Preset::use_slot (int slot_id) const
+{
+	const auto     it = _slot_map.find (slot_id);
+	if (it == _slot_map.end ())
+	{
+		assert (false);
+		throw std::logic_error ("Slot does not exist.");
+	}
+	if (it->second.get () == 0)
+	{
+		assert (false);
+		throw std::logic_error ("Slot is empty.");
+	}
+
+	return *(it->second);
+}
+
+
+
+int	Preset::gen_slot_id () const
+{
+	int            slot_id = 0;
+
+	if (! _slot_map.empty ())
+	{
+		auto           it = _slot_map.rbegin ();
+		++ it;
+		slot_id = it->first;
+		do
+		{
+			static const int  inc = 11;
+			if (slot_id >= INT_MAX - (inc - 1))
+			{
+				slot_id = 0;
+			}
+			else
+			{
+				slot_id += inc;
+			}
+		}
+		while (_slot_map.find (slot_id) != _slot_map.end ());
+	}
+
+	return slot_id;
 }
 
 
@@ -87,11 +166,16 @@ void	Preset::ser_write (SerWInterface &ser) const
 	_layout.ser_write (ser);
 
 	ser.begin_list ();
-	for (const auto &s_sptr : _slot_list)
+	for (const auto &node : _slot_map)
 	{
-		s_sptr->ser_write (ser);
+		ser.begin_list ();
+		ser.write (node.first);
+		node.second->ser_write (ser);
+		ser.end_list ();
 	}
 	ser.end_list ();
+
+	_routing.ser_write (ser);
 
 	ser.end_list ();
 }
@@ -100,6 +184,9 @@ void	Preset::ser_write (SerWInterface &ser) const
 
 void	Preset::ser_read (SerRInterface &ser)
 {
+	const int      doc_ver = ser.get_doc_version ();
+	static const int  inc  = 11;
+
 	ser.begin_list ();
 
 	ser.read (_name);
@@ -107,13 +194,46 @@ void	Preset::ser_read (SerRInterface &ser)
 
 	int            nbr_elt;
 	ser.begin_list (nbr_elt);
-	_slot_list.resize (nbr_elt);
-	for (auto &s_sptr : _slot_list)
+	_slot_map.clear ();
+	for (int cnt = 0; cnt < nbr_elt; ++cnt)
 	{
-		s_sptr = SlotSPtr (new Slot);
+		int         slot_id;
+
+		if (doc_ver < 3)
+		{
+			slot_id = cnt * inc;
+		}
+		else
+		{
+			ser.begin_list ();
+
+			ser.read (slot_id);
+		}
+
+		SlotSPtr    s_sptr = SlotSPtr (new Slot);
 		s_sptr->ser_read (ser);
+
+		_slot_map [slot_id] = s_sptr;
+
+		if (doc_ver >= 3)
+		{
+			ser.end_list ();
+		}
 	}
 	ser.end_list ();
+
+	if (doc_ver >= 3)
+	{
+		_routing.ser_read (ser);
+	}
+	else
+	{
+		_routing = Routing ();
+		for (int cnt = 0; cnt < nbr_elt; ++ cnt)
+		{
+			_routing._chain.push_back (cnt * inc);
+		}
+	}
 
 	ser.end_list ();
 }
@@ -130,11 +250,11 @@ void	Preset::ser_read (SerRInterface &ser)
 
 void	Preset::duplicate_slot_list ()
 {
-	for (SlotSPtr &slot_sptr : _slot_list)
+	for (auto & node : _slot_map)
 	{
-		if (slot_sptr.get () != 0)
+		if (node.second.get () != 0)
 		{
-			slot_sptr = SlotSPtr (new Slot (*slot_sptr));
+			node.second = SlotSPtr (new Slot (*(node.second)));
 		}
 	}
 }

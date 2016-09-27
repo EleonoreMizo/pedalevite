@@ -579,7 +579,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		preset._name = "Basic disto";
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Imp fix";
 			slot_ptr->_pi_model = "iifix";
 			slot_ptr->_settings_mixer._param_list =
@@ -591,7 +592,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
@@ -640,7 +642,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Tone 1";
 			slot_ptr->_pi_model = "dtone1";
 			slot_ptr->_settings_mixer._param_list =
@@ -703,7 +706,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		preset._name = "Tremolisto";
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Imp fix";
 			slot_ptr->_pi_model = "iifix";
 			slot_ptr->_settings_mixer._param_list =
@@ -715,7 +719,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
@@ -743,7 +748,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Tremolo";
 			slot_ptr->_pi_model = "tremolo1";
 			slot_ptr->_settings_mixer._param_list =
@@ -797,7 +803,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		preset._name = "Ouah-ouah";
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Imp fix";
 			slot_ptr->_pi_model = "iifix";
 			slot_ptr->_settings_mixer._param_list =
@@ -809,7 +816,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Wha";
 			slot_ptr->_pi_model = "wha1";
 			slot_ptr->_settings_mixer._param_list =
@@ -850,7 +858,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
@@ -893,7 +902,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		preset._name = "Inharmonic";
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Imp fix";
 			slot_ptr->_pi_model = "iifix";
 			slot_ptr->_settings_mixer._param_list =
@@ -905,7 +915,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "FreqShift";
 			slot_ptr->_pi_model = "freqshift1";
 			slot_ptr->_settings_mixer._param_list =
@@ -958,7 +969,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 		}
 		{
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._slot_list.push_back (mfx::doc::Preset::SlotSPtr (slot_ptr));
+			preset._routing._chain.push_back (preset.gen_slot_id ());
+			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
 			slot_ptr->_label    = "Disto 1";
 			slot_ptr->_pi_model = "dist1";
 			slot_ptr->_settings_mixer._param_list =
@@ -1094,9 +1106,6 @@ static int MAIN_main_loop (Context &ctx)
 		ctx._model.process_messages ();
 
 		const bool     tuner_flag = ctx._view.is_tuner_active ();
-
-		const mfx::ModelObserverInterface::SlotInfoList & slot_info_list =
-			ctx._view.use_slot_info_list ();
 
 		mfx::MeterResultSet &   meters = ctx._model.use_meters ();
 

@@ -197,57 +197,47 @@ void	ModelObserverInterface::set_tuner_freq (float freq)
 
 
 // Reference lifetime is the call. Please make a copy.
-void	ModelObserverInterface::set_slot_info_for_current_preset (const SlotInfoList &info_list)
+void	ModelObserverInterface::set_slot_info_for_current_preset (const SlotInfoMap &info_map)
 {
-	do_set_slot_info_for_current_preset (info_list);
+	do_set_slot_info_for_current_preset (info_map);
 }
 
 
 
-void	ModelObserverInterface::set_param (int pi_id, int index, float val, int slot_index, PiType type)
+void	ModelObserverInterface::set_param (int pi_id, int index, float val, int slot_id, PiType type)
 {
 	assert (pi_id >= 0);
 	assert (index >= 0);
 	assert (val >= 0);
 	assert (val <= 1);
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 
-	do_set_param (pi_id, index, val, slot_index, type);
+	do_set_param (pi_id, index, val, slot_id, type);
 }
 
 
 
 // set_param has been called before with the real parameter value
-void	ModelObserverInterface::set_param_beats (int slot_index, int index, float beats)
+void	ModelObserverInterface::set_param_beats (int slot_id, int index, float beats)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 	assert (index >= 0);
 	assert (beats >= 0);
 
-	do_set_param_beats (slot_index, index, beats);
-}
-
-
-
-// remove_plugin et al. to be called before depending on
-// required plug-in deletions
-void	ModelObserverInterface::set_nbr_slots (int nbr_slots)
-{
-	assert (nbr_slots >= 0);
-
-	do_set_nbr_slots (nbr_slots);
+	do_set_param_beats (slot_id, index, beats);
 }
 
 
 
 // set_slot_info_for_current_preset to be called later
-void	ModelObserverInterface::insert_slot (int slot_index)
+void	ModelObserverInterface::insert_slot (int slot_index, int slot_id)
 {
 	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 
-	do_insert_slot (slot_index);
+	do_insert_slot (slot_index, slot_id);
 }
 
 
@@ -262,65 +252,65 @@ void	ModelObserverInterface::erase_slot (int slot_index)
 
 
 
-void	ModelObserverInterface::set_slot_label (int slot_index, std::string name)
+void	ModelObserverInterface::set_slot_label (int slot_id, std::string name)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 
-	do_set_slot_label (slot_index, name);
+	do_set_slot_label (slot_id, name);
 }
 
 
 
 // set_slot_info_for_current_preset to be called later
-void	ModelObserverInterface::set_plugin (int slot_index, const PluginInitData &pi_data)
+void	ModelObserverInterface::set_plugin (int slot_id, const PluginInitData &pi_data)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 
-	do_set_plugin (slot_index, pi_data);
+	do_set_plugin (slot_id, pi_data);
 }
 
 
 
 // set_slot_info_for_current_preset to be called later
-void	ModelObserverInterface::remove_plugin (int slot_index)
+void	ModelObserverInterface::remove_plugin (int slot_id)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 
-	do_remove_plugin (slot_index);
+	do_remove_plugin (slot_id);
 }
 
 
 
-void	ModelObserverInterface::set_plugin_mono (int slot_index, bool mono_flag)
+void	ModelObserverInterface::set_plugin_mono (int slot_id, bool mono_flag)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 
-	do_set_plugin_mono (slot_index, mono_flag);
+	do_set_plugin_mono (slot_id, mono_flag);
 }
 
 
 
-void	ModelObserverInterface::set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	ModelObserverInterface::set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	do_set_param_ctrl (slot_index, type, index, cls);
+	do_set_param_ctrl (slot_id, type, index, cls);
 }
 
 
 
 // rotenc_index < 0: removes the override
-void	ModelObserverInterface::override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index)
+void	ModelObserverInterface::override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	do_override_param_ctrl (slot_index, type, index, rotenc_index);
+	do_override_param_ctrl (slot_id, type, index, rotenc_index);
 }
 
 

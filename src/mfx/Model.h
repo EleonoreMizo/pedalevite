@@ -110,19 +110,18 @@ public:
 	void           store_preset (int preset_index, int bank_index);
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
-	void           set_nbr_slots (int nbr_slots);
-	void           insert_slot (int slot_index);
+	int            insert_slot (int slot_index);
 	void           erase_slot (int slot_index);
-	void           set_slot_label (int slot_index, std::string name);
-	void           set_plugin (int slot_index, std::string model);
-	void           remove_plugin (int slot_index);
-	void           set_plugin_mono (int slot_index, bool mono_flag);
-	void           set_param (int slot_index, PiType type, int index, float val);
-	void           set_param_beats (int slot_index, int index, float beats);
-	void           set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls);
-	void           override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index);
+	void           set_slot_label (int slot_id, std::string name);
+	void           set_plugin (int slot_id, std::string model);
+	void           remove_plugin (int slot_id);
+	void           set_plugin_mono (int slot_id, bool mono_flag);
+	void           set_param (int slot_id, PiType type, int index, float val);
+	void           set_param_beats (int slot_id, int index, float beats);
+	void           set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	void           override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index);
 	void           reset_all_overridden_param_ctrl ();
-	void           reset_all_overridden_param_ctrl (int slot_index);
+	void           reset_all_overridden_param_ctrl (int slot_id);
 
 	std::vector <std::string>
 	               list_plugin_models () const;
@@ -155,7 +154,7 @@ private:
 		std::array <int, PiType_NBR_ELT>
 		               _pi_id_arr;
 	};
-	typedef std::vector <SlotPiId> PiIdList;
+	typedef std::map <int, SlotPiId> PiIdMap;
 
 	class PedalState
 	{
@@ -180,9 +179,9 @@ private:
 	void           apply_settings ();
 	void           apply_settings_normal ();
 	void           apply_settings_tuner ();
-	void           check_mixer_plugin (int slot_index, int slot_index_central);
-	bool           has_mixer_plugin (const doc::Preset &preset, int slot_index);
-	void           send_effect_settings (int pi_id, int slot_index, PiType type, const doc::PluginSettings &settings);
+	void           check_mixer_plugin (int slot_id, int slot_index_central);
+	bool           has_mixer_plugin (const doc::Preset &preset, int slot_id);
+	void           send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings);
 	void           process_msg_ui ();
 	int            find_pedal (int switch_index) const;
 	void           process_pedal (int pedal_index, bool set_flag, int64_t date);
@@ -197,15 +196,15 @@ private:
 	void           build_slot_info ();
 	void           notify_slot_info ();
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
-	void           find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id) const;
-	bool           update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
-	void           fill_pi_init_data (int slot_index, ModelObserverInterface::PluginInitData &pi_data);
+	void           find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) const;
+	bool           update_parameter (doc::Preset &preset, int slot_id, PiType type, int index, float val);
+	void           fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitData &pi_data);
 	void           update_all_beat_parameters ();
 	void           update_all_overriden_param_ctrl ();
 	void           update_param_ctrl (const OverrideLoc &loc);
-	void           set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index);
-	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index);
-	void           add_default_ctrl (int selected_slot_index = -1);
+	void           set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);
+	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);
+	void           add_default_ctrl (int selected_slot_id = -1);
 
 	cmd::Central   _central;
 
@@ -219,7 +218,7 @@ private:
 	doc::PedalboardLayout               // Final layout
 	               _layout_cur;
 
-	PiIdList       _pi_id_list;         // Not affected by the tuner
+	PiIdMap        _pi_id_map;         // Not affected by the tuner
 	PedalStateArray
 	               _pedal_state_arr;
 	int64_t        _hold_time;          // Pedal minimum hold time. Microseconds.
@@ -241,8 +240,9 @@ private:
 	const int      _dummy_mix_id;
 	int64_t        _tempo_last_ts;      // Timestamp of the last tempo pedal action
 	double         _tempo;              // Actual tempo
+	int            _latest_slot_id;     // >= 0
 
-	ModelObserverInterface::SlotInfoList   // Cached. Not affected by the tuner
+	ModelObserverInterface::SlotInfoMap // Cached. Not affected by the tuner
 	               _slot_info;
 
 	std::map <OverrideLoc, int>         // Parameter -> rot enc

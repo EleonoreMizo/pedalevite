@@ -115,9 +115,9 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		    && _view_ptr->get_preset_index () == _save_preset_index
 		    && _loc_edit._slot_index          == _save_slot_index)
 		{
-			_model_ptr->set_slot_label (
-				_loc_edit._slot_index, _name_param._text
-			);
+			const int      slot_id =
+				_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+			_model_ptr->set_slot_label (slot_id, _name_param._text);
 		}
 	}
 	_state = State_NORMAL;
@@ -191,7 +191,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 					int            slot_index_new = _loc_edit._slot_index;
 					if (slot_index_new < 0)
 					{
-						slot_index_new = int (preset._slot_list.size ());
+						slot_index_new = int (preset._routing._chain.size ());
 					}
 					_model_ptr->insert_slot (slot_index_new);
 				}
@@ -218,23 +218,32 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 				ret_val = reset_plugin ();
 				break;
 			case Entry_CHN:
-				if (   _loc_edit._slot_index >= 0
-				    && ! preset.is_slot_empty (_loc_edit._slot_index))
+				if (_loc_edit._slot_index >= 0)
 				{
-					const doc::Slot & slot =
-						*(preset._slot_list [_loc_edit._slot_index]);
-					const doc::PluginSettings &   settings =
-						slot.use_settings (PiType_MAIN);
-					bool           fm_flag = settings._force_mono_flag;
-					fm_flag = ! fm_flag;
-					_model_ptr->set_plugin_mono (_loc_edit._slot_index, fm_flag);
+					const int      slot_id =
+						_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+					const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+					const auto     it_slot = preset._slot_map.find (slot_id);
+					assert (it_slot != preset._slot_map.end ());
+					if (! preset.is_slot_empty (it_slot))
+					{
+						const doc::Slot & slot = *(it_slot->second);
+						const doc::PluginSettings &   settings =
+							slot.use_settings (PiType_MAIN);
+						bool           fm_flag = settings._force_mono_flag;
+						fm_flag = ! fm_flag;
+						_model_ptr->set_plugin_mono (slot_id, fm_flag);
+					}
 				}
 				break;
 			case Entry_LABEL:
 				{
 					assert (_loc_edit._slot_index >= 0);
+					const int      slot_id =
+						_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+					const doc::Slot & slot = preset.use_slot (slot_id);
 					_name_param._title = "Effect label:";
-					_name_param._text  = preset._slot_list [_loc_edit._slot_index]->_label;
+					_name_param._text  = slot._label;
 					_state             = State_EDIT_LABEL;
 					_save_bank_index   = _view_ptr->get_bank_index ();
 					_save_preset_index = _view_ptr->get_preset_index ();
@@ -250,7 +259,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 			break;
 		case Button_E:
 			if (   _loc_edit._slot_index < 0
-			    || preset.is_slot_empty (_loc_edit._slot_index))
+			    || preset.is_slot_empty (_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index)))
 			{
 				_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 			}
@@ -290,30 +299,12 @@ void	MenuSlot::do_activate_preset (int index)
 
 
 
-void	MenuSlot::do_set_nbr_slots (int nbr_slots)
-{
-	if (_loc_edit._slot_index > nbr_slots)
-	{
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
-	}
-	else
-	{
-		if (_loc_edit._slot_index == nbr_slots)
-		{
-			_loc_edit._slot_index = -1;
-		}
-		update_display ();
-	}
-}
-
-
-
-void	MenuSlot::do_insert_slot (int slot_index)
+void	MenuSlot::do_insert_slot (int slot_index, int slot_id)
 {
 	if (_loc_edit._slot_index < 0)
 	{
 		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-		_loc_edit._slot_index = int (preset._slot_list.size () - 1);
+		_loc_edit._slot_index = int (preset._routing._chain.size ()) - 1;
 		_page_ptr->jump_to (Entry_TYPE);
 	}
 	else if (slot_index < _loc_edit._slot_index)
@@ -327,7 +318,7 @@ void	MenuSlot::do_insert_slot (int slot_index)
 
 void	MenuSlot::do_erase_slot (int slot_index)
 {
-	if (_loc_edit._slot_index == slot_index)
+	if (slot_index == _loc_edit._slot_index)
 	{
 		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 	}
@@ -343,9 +334,9 @@ void	MenuSlot::do_erase_slot (int slot_index)
 
 
 
-void	MenuSlot::do_set_slot_label (int slot_index, std::string name)
+void	MenuSlot::do_set_slot_label (int slot_id, std::string name)
 {
-	if (_loc_edit._slot_index == slot_index)
+	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
 	{
 		update_display ();
 	}
@@ -353,9 +344,9 @@ void	MenuSlot::do_set_slot_label (int slot_index, std::string name)
 
 
 
-void	MenuSlot::do_set_plugin (int slot_index, const PluginInitData &pi_data)
+void	MenuSlot::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
-	if (_loc_edit._slot_index == slot_index)
+	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
 	{
 		update_display ();
 	}
@@ -363,9 +354,9 @@ void	MenuSlot::do_set_plugin (int slot_index, const PluginInitData &pi_data)
 
 
 
-void	MenuSlot::do_remove_plugin (int slot_index)
+void	MenuSlot::do_remove_plugin (int slot_id)
 {
-	if (_loc_edit._slot_index == slot_index)
+	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
 	{
 		update_display ();
 	}
@@ -373,9 +364,9 @@ void	MenuSlot::do_remove_plugin (int slot_index)
 
 
 
-void	MenuSlot::do_set_plugin_mono (int slot_index, bool mono_flag)
+void	MenuSlot::do_set_plugin_mono (int slot_id, bool mono_flag)
 {
-	if (_loc_edit._slot_index == slot_index)
+	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
 	{
 		update_display ();
 	}
@@ -395,14 +386,16 @@ void	MenuSlot::update_display ()
 	NavLoc         nav;
 
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const bool     exist_flag = (_loc_edit._slot_index >= 0);
-	const bool     full_flag  =
-		(exist_flag && ! preset.is_slot_empty (_loc_edit._slot_index));
+	const bool     exist_flag   = (_loc_edit._slot_index >= 0);
+	const int      slot_id      =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const bool     full_flag    =
+		(exist_flag && slot_id >= 0 && ! preset.is_slot_empty (slot_id));
 
 	std::string    multilabel = "<Empty>";
 	if (full_flag)
 	{
-		const doc::Slot & slot = *(preset._slot_list [_loc_edit._slot_index]);
+		const doc::Slot & slot = preset.use_slot (slot_id);
 		const piapi::PluginDescInterface &  desc =
 			_model_ptr->get_model_desc (slot._pi_model);
 		multilabel = desc.get_name ();
@@ -435,7 +428,7 @@ void	MenuSlot::update_display ()
 	_lbl_sptr->show (full_flag);
 	if (full_flag)
 	{
-		const doc::Slot & slot = *(preset._slot_list [_loc_edit._slot_index]);
+		const doc::Slot & slot = preset.use_slot (slot_id);
 
 		nav._node_id = Entry_PRESETS;
 		nav_list.push_back (nav);
@@ -468,7 +461,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
 		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 		if (slot_index < 0)
 		{
-			slot_index = int (preset._slot_list.size ());
+			slot_index = int (preset._routing._chain.size ());
 		}
 	}
 
@@ -476,7 +469,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
 
 	{
 		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-		const int      nbr_slots = int (preset._slot_list.size ());
+		const int      nbr_slots = int (preset._routing._chain.size ());
 		if (slot_index >= nbr_slots)
 		{
 			slot_index = -1;
@@ -495,18 +488,17 @@ MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
 MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
 {
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const int      slot_index = _loc_edit._slot_index;
-	assert (slot_index >= 0);
-	assert (! preset.is_slot_empty (slot_index));
-	const doc::Slot & slot = *(preset._slot_list [slot_index]);
+	const int      slot_id      =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const doc::Slot & slot      = preset.use_slot (slot_id);
 	
 	const piapi::PluginState & def =
 		_model_ptr->use_default_settings (slot._pi_model);
-	const int      nbr_param = int (def._param_list.size ());
+	const int      nbr_param    = int (def._param_list.size ());
 	for (int index = 0; index < nbr_param; ++index)
 	{
 		const float    val = float (def._param_list [index]);
-		_model_ptr->set_param (slot_index, PiType_MAIN, index, val);
+		_model_ptr->set_param (slot_id, PiType_MAIN, index, val);
 	}
 
 	update_display ();

@@ -67,6 +67,13 @@ CtrlLinkSet &  CtrlLinkSet::operator = (const CtrlLinkSet &other)
 
 
 
+bool	CtrlLinkSet::is_empty () const
+{
+	return (_bind_sptr.get () == 0 && _mod_arr.empty ());
+}
+
+
+
 void	CtrlLinkSet::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();

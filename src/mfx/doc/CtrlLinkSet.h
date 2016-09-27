@@ -59,6 +59,8 @@ public:
 	virtual        ~CtrlLinkSet () = default;
 	CtrlLinkSet &  operator = (const CtrlLinkSet &other);
 
+	bool           is_empty () const;
+
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 

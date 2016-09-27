@@ -205,8 +205,9 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 			else if (node_id >= 0 && node_id < int (_slot_list.size ()))
 			{
 				const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-				if (   node_id < int (preset._slot_list.size ())
-				    && ! preset.is_slot_empty (node_id))
+				const int      chain_size   = int (preset._routing._chain.size ());
+				if (   node_id < chain_size
+				    && ! preset.is_slot_empty (preset._routing._chain [node_id]))
 				{
 					// Full slot
 					update_loc_edit (node_id);
@@ -258,14 +259,7 @@ void	EditProg::do_set_preset_name (std::string name)
 
 
 
-void	EditProg::do_set_nbr_slots (int nbr_slots)
-{
-	set_preset_info ();
-}
-
-
-
-void	EditProg::do_insert_slot (int slot_index)
+void	EditProg::do_insert_slot (int slot_index, int slot_id)
 {
 	set_preset_info ();
 }
@@ -279,21 +273,21 @@ void	EditProg::do_erase_slot (int slot_index)
 
 
 
-void	EditProg::do_set_plugin (int slot_index, const PluginInitData &pi_data)
+void	EditProg::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
 	set_preset_info ();
 }
 
 
 
-void	EditProg::do_remove_plugin (int slot_index)
+void	EditProg::do_remove_plugin (int slot_id)
 {
 	set_preset_info ();
 }
 
 
 
-void	EditProg::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	EditProg::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
 	set_preset_info ();
 }
@@ -313,7 +307,7 @@ void	EditProg::set_preset_info ()
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	_prog_name_sptr->set_text (preset._name);
 
-	const int      nbr_slots = preset._slot_list.size ();
+	const int      nbr_slots = preset._routing._chain.size ();
 	PageMgrInterface::NavLocList  nav_list (nbr_slots + 4);
 	_slot_list.resize (nbr_slots + 1);
 
@@ -328,12 +322,15 @@ void	EditProg::set_preset_info ()
 
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
+		const int      slot_id    = preset._routing._chain [slot_index];
 		std::string    multilabel = "<Empty>";
 		bool           ctrl_flag  = false;
 
-		if (! preset.is_slot_empty (slot_index))
+		const auto     it_slot    = preset._slot_map.find (slot_id);
+		assert (it_slot != preset._slot_map.end ());
+		if (! preset.is_slot_empty (it_slot))
 		{
-			const doc::Slot & slot = *(preset._slot_list [slot_index]);
+			const doc::Slot & slot = *(it_slot->second);
 			const piapi::PluginDescInterface &  desc =
 				_model_ptr->get_model_desc (slot._pi_model);
 			multilabel = desc.get_name ();
@@ -386,7 +383,7 @@ MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
 	EvtProp        ret_val = EvtProp_PASS;
 
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const int      nbr_slots = preset._slot_list.size ();
+	const int      nbr_slots = preset._routing._chain.size ();
 
 	if (node_id <= nbr_slots)
 	{
@@ -428,13 +425,12 @@ void	EditProg::update_rotenc_mapping ()
 	else
 	{
 		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-		if (_loc_edit._slot_index < int (preset._slot_list.size ()))
+		if (_loc_edit._slot_index < int (preset._routing._chain.size ()))
 		{
+			const int      slot_id =
+				_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
 			Tools::assign_default_rotenc_mapping (
-				*_model_ptr,
-				*_view_ptr,
-				_loc_edit._slot_index,
-				0
+				*_model_ptr, *_view_ptr, slot_id, 0
 			);
 		}
 	}

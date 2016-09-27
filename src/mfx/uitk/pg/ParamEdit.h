@@ -75,8 +75,8 @@ protected:
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
-	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type);
-	virtual void   do_remove_plugin (int slot_index);
+	virtual void   do_set_param (int pi_id, int index, float val, int slot_id, PiType type);
+	virtual void   do_remove_plugin (int slot_id);
 
 
 

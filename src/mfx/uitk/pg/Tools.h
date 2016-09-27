@@ -77,15 +77,15 @@ class Tools
 
 public:
 
-	static void    set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_index, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
+	static void    set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_id, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
 	static MsgHandlerInterface::EvtProp
-	               change_param (Model &model, const View &view, int slot_index, PiType type, int index, float step, int step_index, int dir);
-	static double  change_param (double val_nrm, const Model &model, const View &view, int slot_index, PiType type, int index, float step, int step_index, int dir);
+	               change_param (Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir);
+	static double  change_param (double val_nrm, const Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir);
 	static int     find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static void    change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list);
-	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_index, int page);
+	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page);
 
 	static std::string
 	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalboardLayout &layout, int index, const Model &model, const View &view);
@@ -102,7 +102,7 @@ protected:
 
 private:
 
-	static void    print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_index, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo);
+	static void    print_param_with_pres (std::string &val_s, std::string &unit, const doc::Preset &preset, int slot_id, PiType type, int index, float val, const piapi::ParamDescInterface &desc, double tempo);
 	static bool    is_pedal_empty (const doc::PedalActionGroup &group);
 	static bool    is_pedal_simple_action (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
 	static bool    is_pedal_momentary_button (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);

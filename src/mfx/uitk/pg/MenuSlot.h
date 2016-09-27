@@ -76,13 +76,12 @@ protected:
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
-	virtual void   do_set_nbr_slots (int nbr_slots);
-	virtual void   do_insert_slot (int slot_index);
+	virtual void   do_insert_slot (int slot_index, int slot_id);
 	virtual void   do_erase_slot (int slot_index);
-	virtual void   do_set_slot_label (int slot_index, std::string name);
-	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data);
-	virtual void   do_remove_plugin (int slot_index);
-	virtual void   do_set_plugin_mono (int slot_index, bool mono_flag);
+	virtual void   do_set_slot_label (int slot_id, std::string name);
+	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
+	virtual void   do_remove_plugin (int slot_id);
+	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag);
 
 
 

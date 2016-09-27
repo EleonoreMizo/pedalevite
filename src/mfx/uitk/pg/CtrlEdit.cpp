@@ -118,9 +118,10 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt_m;
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	assert (! preset.is_slot_empty (_loc_edit._slot_index));
-	const doc::Slot &    slot   = *(preset._slot_list [_loc_edit._slot_index]);
+	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
+	const int            slot_id =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const doc::Slot &    slot    = preset.use_slot (slot_id);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
 	auto           it_cls = settings._map_param_ctrl.find (_loc_edit._param_index);
 	if (it_cls == settings._map_param_ctrl.end ())
@@ -264,9 +265,9 @@ void	CtrlEdit::do_activate_preset (int index)
 
 
 
-void	CtrlEdit::do_remove_plugin (int slot_index)
+void	CtrlEdit::do_remove_plugin (int slot_id)
 {
-	if (slot_index == _loc_edit._slot_index)
+	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
 	{
 		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 	}
@@ -274,11 +275,11 @@ void	CtrlEdit::do_remove_plugin (int slot_index)
 
 
 
-void	CtrlEdit::do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	CtrlEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	if (   slot_index == _loc_edit._slot_index
-	    && type       == _loc_edit._pi_type
-	    && index      == _loc_edit._param_index)
+	if (   slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index)
+	    && type    == _loc_edit._pi_type
+	    && index   == _loc_edit._param_index)
 	{
 		_cls = cls;
 
@@ -378,9 +379,10 @@ void	CtrlEdit::update_display ()
 		{
 			_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
 		};
-		const int      slot_index = _loc_edit._slot_index;
-		const PiType   type       = _loc_edit._pi_type;
-		const int      index      = _loc_edit._param_index;
+		const int      slot_id =
+			_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+		const PiType   type    = _loc_edit._pi_type;
+		const int      index   = _loc_edit._param_index;
 		for (size_t mm = 0; mm < _minmax.size (); ++mm)
 		{
 			for (size_t k = 0; k < _nbr_steps; ++k)
@@ -391,7 +393,7 @@ void	CtrlEdit::update_display ()
 
 			const float       val = val_arr [mm];
 			Tools::set_param_text (
-				*_model_ptr, *_view_ptr, _val_unit_w, index, val, slot_index, type,
+				*_model_ptr, *_view_ptr, _val_unit_w, index, val, slot_id, type,
 				0, *(_minmax [mm]._val_unit_sptr), 0, 0, true
 			);
 		}
@@ -562,10 +564,11 @@ void	CtrlEdit::change_source (int dir)
 		}
 	}
 
-	const int      slot_index = _loc_edit._slot_index;
-	const PiType   type       = _loc_edit._pi_type;
-	const int      index      = _loc_edit._param_index;
-	_model_ptr->set_param_ctrl (slot_index, type, index, cls);
+	const int      slot_id =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const PiType   type    = _loc_edit._pi_type;
+	const int      index   = _loc_edit._param_index;
+	_model_ptr->set_param_ctrl (slot_id, type, index, cls);
 }
 
 
@@ -579,10 +582,11 @@ void	CtrlEdit::change_curve (int dir)
 		(cl._curve + dir + ControlCurve_NBR_ELT) % ControlCurve_NBR_ELT
 	);
 
-	const int      slot_index = _loc_edit._slot_index;
-	const PiType   type       = _loc_edit._pi_type;
-	const int      index      = _loc_edit._param_index;
-	_model_ptr->set_param_ctrl (slot_index, type, index, cls);
+	const int      slot_id =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const PiType   type    = _loc_edit._pi_type;
+	const int      index   = _loc_edit._param_index;
+	_model_ptr->set_param_ctrl (slot_id, type, index, cls);
 }
 
 
@@ -594,10 +598,11 @@ void	CtrlEdit::change_u2b ()
 
 	cl._u2b_flag = ! cl._u2b_flag;
 
-	const int      slot_index = _loc_edit._slot_index;
-	const PiType   type       = _loc_edit._pi_type;
-	const int      index      = _loc_edit._param_index;
-	_model_ptr->set_param_ctrl (slot_index, type, index, cls);
+	const int      slot_id =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const PiType   type    = _loc_edit._pi_type;
+	const int      index   = _loc_edit._param_index;
+	_model_ptr->set_param_ctrl (slot_id, type, index, cls);
 }
 
 
@@ -613,20 +618,22 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 	};
 
 	const int      slot_index = _loc_edit._slot_index;
+	const int      slot_id    =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
 	const PiType   type       = _loc_edit._pi_type;
 	const int      index      = _loc_edit._param_index;
 	const float    step       =
 		float (Cst::_step_param / pow (10, step_index));
 
 	val_arr [mm] = Tools::change_param (
-		val_arr [mm], *_model_ptr, *_view_ptr, slot_index, type,
+		val_arr [mm], *_model_ptr, *_view_ptr, slot_id, type,
 		index, step, step_index, dir
 	);
 
 	cl._base = float (              val_arr [0]);
 	cl._amp  = float (val_arr [1] - val_arr [0]);
 
-	_model_ptr->set_param_ctrl (slot_index, type, index, cls);
+	_model_ptr->set_param_ctrl (slot_id, type, index, cls);
 }
 
 

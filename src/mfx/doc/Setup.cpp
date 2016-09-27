@@ -75,10 +75,7 @@ void	Setup::ser_read (SerRInterface &ser)
 	ser.begin_list ();
 	ser.read (version);
 
-	if (version != Cst::_format_version)
-	{
-		/*** To do ***/
-	}
+	ser.set_doc_version (version);
 
 	ser.read (_name);
 	ser.read (_save_mode);

@@ -311,6 +311,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\PedalboardLayout.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\PluginSettings.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Preset.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\Routing.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SerRInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SerRText.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SerWInterface.h" />
@@ -682,6 +683,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\PedalboardLayout.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\PluginSettings.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Preset.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\Routing.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SerRInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SerRText.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SerWInterface.cpp" />

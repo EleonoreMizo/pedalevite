@@ -307,13 +307,13 @@ void	CurProg::do_activate_preset (int index)
 
 
 
-void	CurProg::do_set_param (int pi_id, int index, float val, int slot_index, PiType type)
+void	CurProg::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
 {
 	const int64_t  cur_date = _model_ptr->get_cur_date ();
 	const int64_t  dist     = cur_date - _tempo_date;
 	if (dist >= 100*1000)
 	{
-		i_set_param (pi_id, index, val, slot_index, type);
+		i_set_param (pi_id, index, val, slot_id, type);
 	}
 }
 
@@ -365,7 +365,7 @@ void	CurProg::i_set_prog_name (std::string name)
 
 
 
-void	CurProg::i_set_param (int pi_id, int index, float val, int slot_index, PiType type)
+void	CurProg::i_set_param (int pi_id, int index, float val, int slot_id, PiType type)
 {
 	if (pi_id < 0 || _view_ptr == 0)
 	{
@@ -377,7 +377,7 @@ void	CurProg::i_set_param (int pi_id, int index, float val, int slot_index, PiTy
 	else
 	{
 		Tools::set_param_text (
-			*_model_ptr, *_view_ptr, _page_size [0], index, val, slot_index, type,
+			*_model_ptr, *_view_ptr, _page_size [0], index, val, slot_id, type,
 			_param_name_sptr.get (), *_param_val_sptr,
 			_param_unit_sptr.get (), _fx_name_sptr.get (),
 			false

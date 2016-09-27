@@ -221,11 +221,11 @@ void	ParamEdit::do_activate_preset (int index)
 
 
 
-void	ParamEdit::do_set_param (int pi_id, int index, float val, int slot_index, PiType type)
+void	ParamEdit::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
 {
-	if (   slot_index == _loc_edit._slot_index
-	    && type       == _loc_edit._pi_type
-	    && index      == _loc_edit._param_index)
+	if (   slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index)
+	    && type    == _loc_edit._pi_type
+	    && index   == _loc_edit._param_index)
 	{
 		update_param_txt ();
 	}
@@ -233,9 +233,9 @@ void	ParamEdit::do_set_param (int pi_id, int index, float val, int slot_index, P
 
 
 
-void	ParamEdit::do_remove_plugin (int slot_index)
+void	ParamEdit::do_remove_plugin (int slot_id)
 {
-	if (slot_index == _loc_edit._slot_index)
+	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
 	{
 		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 	}
@@ -249,18 +249,17 @@ void	ParamEdit::do_remove_plugin (int slot_index)
 
 void	ParamEdit::update_display ()
 {
-	const int      slot_index   = _loc_edit._slot_index;
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	assert (! preset.is_slot_empty (slot_index));
-	doc::Slot &    slot  = *(preset._slot_list [slot_index]);
-	const PiType   type  = _loc_edit._pi_type;
+	const int            slot_index = _loc_edit._slot_index;
+	const doc::Preset &  preset     = _view_ptr->use_preset_cur ();
+	const int            slot_id    = preset._routing._chain [slot_index];
+	const doc::Slot &    slot       = preset.use_slot (slot_id);
+	const PiType         type       = _loc_edit._pi_type;
 	assert (slot._settings_all.find (slot._pi_model) != slot._settings_all.end ());
-	doc::PluginSettings &  settings = slot.use_settings (type);
+	const doc::PluginSettings &  settings = slot.use_settings (type);
 	const int      index = _loc_edit._param_index;
 
 	// Controllers
-	auto           it_cls = settings._map_param_ctrl.find (index);
-	const bool     ctrl_flag = (it_cls != settings._map_param_ctrl.end ());
+	const bool     ctrl_flag = settings.has_ctrl (index);
 	_controllers_sptr->set_bold (ctrl_flag, true);
 
 	bool           show_sync_flag = false;
@@ -290,12 +289,13 @@ void	ParamEdit::update_display ()
 
 void	ParamEdit::update_param_txt ()
 {
-	const int      slot_index = _loc_edit._slot_index;
-	const PiType   type       = _loc_edit._pi_type;
-	const int      index      = _loc_edit._param_index;
+	const int      slot_id =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const PiType   type    = _loc_edit._pi_type;
+	const int      index   = _loc_edit._param_index;
 
 	Tools::set_param_text (
-		*_model_ptr, *_view_ptr, _page_size [0], index, -1, slot_index, type,
+		*_model_ptr, *_view_ptr, _page_size [0], index, -1, slot_id, type,
 		_name_sptr.get (), *_val_unit_sptr, 0, 0, true
 	);
 }
@@ -304,14 +304,15 @@ void	ParamEdit::update_param_txt ()
 
 MsgHandlerInterface::EvtProp	ParamEdit::change_param (int dir)
 {
-	const int      slot_index = _loc_edit._slot_index;
-	const PiType   type       = _loc_edit._pi_type;
-	const int      index      = _loc_edit._param_index;
-	const float    step       =
+	const int      slot_id =
+		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const PiType   type    = _loc_edit._pi_type;
+	const int      index   = _loc_edit._param_index;
+	const float    step    =
 		float (Cst::_step_param / pow (10, _step_index));
 
 	return Tools::change_param (
-		*_model_ptr, *_view_ptr, slot_index, type,
+		*_model_ptr, *_view_ptr, slot_id, type,
 		index, step, _step_index, dir
 	);
 }

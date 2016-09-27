@@ -1692,6 +1692,9 @@
     <ClInclude Include="..\..\..\src\mfx\PedalLoc.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\doc\Routing.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2323,6 +2326,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditContext.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\Routing.cpp">
+      <Filter>mfx\doc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -50,6 +50,7 @@ void	SerRText::start (std::string content)
 	_content    = content;
 	_err_msg.clear ();
 	_err_flag   = false;
+	_doc_ver    = -1;
 
 	// Structural parsing: find the number of elements for every list
 	_list_info_arr.clear ();
@@ -287,6 +288,22 @@ int	SerRText::do_read (std::string &s)
 	}
 
 	return (_err_flag) ? -1 : 0;
+}
+
+
+
+void	SerRText::do_set_doc_version (int vers)
+{
+	assert (_doc_ver < 0);
+
+	_doc_ver = vers;
+}
+
+
+
+int	SerRText::do_get_doc_version () const
+{
+	return _doc_ver;
 }
 
 

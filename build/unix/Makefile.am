@@ -212,6 +212,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/PluginSettings.h \
         ../../src/mfx/doc/Preset.cpp \
         ../../src/mfx/doc/Preset.h \
+        ../../src/mfx/doc/Routing.cpp \
+        ../../src/mfx/doc/Routing.h \
         ../../src/mfx/doc/SerRInterface.cpp \
         ../../src/mfx/doc/SerRInterface.h \
         ../../src/mfx/doc/SerRText.cpp \

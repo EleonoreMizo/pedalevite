@@ -62,18 +62,17 @@ public:
 	virtual void   do_set_master_vol (float vol) {}
 	virtual void   do_set_tuner (bool active_flag) {}
 	virtual void   do_set_tuner_freq (float freq) {}
-	virtual void   do_set_slot_info_for_current_preset (const SlotInfoList &info_list) {}
-	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type) {}
-	virtual void   do_set_param_beats (int slot_index, int index, float beats) {}
-	virtual void   do_set_nbr_slots (int nbr_slots) {}
-	virtual void   do_insert_slot (int slot_index) {}
+	virtual void   do_set_slot_info_for_current_preset (const SlotInfoMap &info_map) {}
+	virtual void   do_set_param (int pi_id, int index, float val, int slot_id, PiType type) {}
+	virtual void   do_set_param_beats (int slot_id, int index, float beats) {}
+	virtual void   do_insert_slot (int slot_index, int slot_id) {}
 	virtual void   do_erase_slot (int slot_index) {}
-	virtual void   do_set_slot_label (int slot_index, std::string name) {}
-	virtual void   do_set_plugin (int slot_index, const PluginInitData &pi_data) {}
-	virtual void   do_remove_plugin (int slot_index) {}
-	virtual void   do_set_plugin_mono (int slot_index, bool mono_flag) {}
-	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls) {}
-	virtual void   do_override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index) {}
+	virtual void   do_set_slot_label (int slot_id, std::string name) {}
+	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data) {}
+	virtual void   do_remove_plugin (int slot_id) {}
+	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag) {}
+	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls) {}
+	virtual void   do_override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index) {}
 
 
 

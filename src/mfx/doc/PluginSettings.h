@@ -65,6 +65,8 @@ public:
 	CtrlLinkSet &  use_ctrl_link_set (int index);
 	const CtrlLinkSet &
 	               use_ctrl_link_set (int index) const;
+	bool           has_ctrl (int index) const;
+	bool           has_any_ctrl () const;
 
 	const std::set <float> *
 	               find_notch_list (int index) const;

@@ -44,6 +44,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <algorithm>
 #include <set>
+#include <utility>
 
 #include <cassert>
 
@@ -73,7 +74,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_preset_index (0)
 ,	_preset_cur ()
 ,	_layout_cur ()
-,	_pi_id_list ()
+,	_pi_id_map ()
 ,	_pedal_state_arr ()
 ,	_hold_time (2 * 1000*1000) // 2 s
 ,	_edit_flag (false)
@@ -88,6 +89,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_dummy_mix_id (_central.get_dummy_mix_id ())
 ,	_tempo_last_ts (_central.get_cur_date () - Cst::_tempo_detection_max * 2)
 ,	_tempo (Cst::_tempo_ref)
+,	_latest_slot_id (0)
 ,	_slot_info ()
 ,	_override_map ()
 {
@@ -505,46 +507,29 @@ void	Model::set_master_vol (double vol)
 
 
 
-void	Model::set_nbr_slots (int nbr_slots)
-{
-	assert (nbr_slots >= 0);
-
-	const int         nbr_slots_old = int (_preset_cur._slot_list.size ());
-	for (int slot_index = nbr_slots_old - 1
-	;	slot_index >= nbr_slots
-	;	-- slot_index)
-	{
-		remove_plugin (slot_index);
-	}
-
-	_preset_cur._slot_list.resize (nbr_slots);
-
-	update_layout ();
-
-	if (_obs_ptr != 0)
-	{
-		_obs_ptr->set_nbr_slots (nbr_slots);
-	}
-}
-
-
-
-void	Model::insert_slot (int slot_index)
+int	Model::insert_slot (int slot_index)
 {
 	assert (slot_index >= 0);
-	assert (slot_index <= int (_preset_cur._slot_list.size ()));
+	assert (slot_index <= int (_preset_cur._routing._chain.size ()));
 
-	_preset_cur._slot_list.insert (
-		_preset_cur._slot_list.begin () + slot_index,
+	const int      slot_id = _preset_cur.gen_slot_id ();
+	_preset_cur._slot_map.insert (std::make_pair (
+		slot_id,
 		doc::Preset::SlotSPtr ()
+	));
+	_preset_cur._routing._chain.insert (
+		_preset_cur._routing._chain.begin () + slot_index,
+		slot_id
 	);
 
 	update_layout ();
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->insert_slot (slot_index);
+		_obs_ptr->insert_slot (slot_index, slot_id);
 	}
+
+	return slot_id;
 }
 
 
@@ -552,13 +537,18 @@ void	Model::insert_slot (int slot_index)
 void	Model::erase_slot (int slot_index)
 {
 	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (slot_index < int (_preset_cur._routing._chain.size ()));
 
-	remove_plugin (slot_index);
+	const int      slot_id = _preset_cur._routing._chain [slot_index];
 
-	_preset_cur._slot_list.erase (
-		_preset_cur._slot_list.begin () + slot_index
+	remove_plugin (slot_id);
+
+	_preset_cur._routing._chain.erase (
+		_preset_cur._routing._chain.begin () + slot_index
 	);
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+	_preset_cur._slot_map.erase (it_slot);
 
 	update_layout ();
 
@@ -570,12 +560,14 @@ void	Model::erase_slot (int slot_index)
 
 
 
-void	Model::set_slot_label (int slot_index, std::string name)
+void	Model::set_slot_label (int slot_id, std::string name)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (slot_id >= 0);
 
-	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+
+	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
 	if (slot_sptr.get () == 0)
 	{
 		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
@@ -584,21 +576,23 @@ void	Model::set_slot_label (int slot_index, std::string name)
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->set_slot_label (slot_index, name);
+		_obs_ptr->set_slot_label (slot_id, name);
 	}
 }
 
 
 
-void	Model::set_plugin (int slot_index, std::string model)
+void	Model::set_plugin (int slot_id, std::string model)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (slot_id >= 0);
 	assert (! model.empty ());
 
-	reset_all_overridden_param_ctrl (slot_index);
+	reset_all_overridden_param_ctrl (slot_id);
 
-	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+
+	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
 	if (slot_sptr.get () == 0)
 	{
 		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
@@ -610,34 +604,36 @@ void	Model::set_plugin (int slot_index, std::string model)
 	if (_obs_ptr != 0)
 	{
 		ModelObserverInterface::PluginInitData pi_data;
-		fill_pi_init_data (slot_index, pi_data);
+		fill_pi_init_data (slot_id, pi_data);
 
-		_obs_ptr->set_plugin (slot_index, pi_data);
+		_obs_ptr->set_plugin (slot_id, pi_data);
 
 		// Parameter values
 		const int      nbr_param =
 			pi_data._nbr_param_arr [piapi::ParamCateg_GLOBAL];
-		const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [PiType_MAIN];
+		const int      pi_id = _pi_id_map [slot_id]._pi_id_arr [PiType_MAIN];
 		for (int p = 0; p < nbr_param; ++p)
 		{
 			const float    val = slot_sptr->_settings_all [model]._param_list [p];
-			_obs_ptr->set_param (pi_id, p, val, slot_index, PiType_MAIN);
+			_obs_ptr->set_param (pi_id, p, val, slot_id, PiType_MAIN);
 		}
 	}
 
-	add_default_ctrl (slot_index);
+	add_default_ctrl (slot_id);
 }
 
 
 
-void	Model::remove_plugin (int slot_index)
+void	Model::remove_plugin (int slot_id)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (slot_id >= 0);
 
-	reset_all_overridden_param_ctrl (slot_index);
+	reset_all_overridden_param_ctrl (slot_id);
 
-	doc::Preset::SlotSPtr &	slot_sptr = _preset_cur._slot_list [slot_index];
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+
+	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
 	if (slot_sptr.get () != 0)
 	{
 		slot_sptr->_pi_model.clear ();
@@ -647,19 +643,17 @@ void	Model::remove_plugin (int slot_index)
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->remove_plugin (slot_index);
+		_obs_ptr->remove_plugin (slot_id);
 	}
 }
 
 
 
-void	Model::set_plugin_mono (int slot_index, bool mono_flag)
+void	Model::set_plugin_mono (int slot_id, bool mono_flag)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
-	assert (! _preset_cur.is_slot_empty (slot_index));
+	assert (slot_id >= 0);
 
-	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 
 	settings._force_mono_flag = mono_flag;
@@ -668,24 +662,24 @@ void	Model::set_plugin_mono (int slot_index, bool mono_flag)
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->set_plugin_mono (slot_index, mono_flag);
+		_obs_ptr->set_plugin_mono (slot_id, mono_flag);
 	}
 }
 
 
 
-void	Model::set_param (int slot_index, PiType type, int index, float val)
+void	Model::set_param (int slot_id, PiType type, int index, float val)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
-	assert (! _preset_cur.is_slot_empty (slot_index));
+	assert (! _preset_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 	assert (val >= 0);
 	assert (val <= 1);
 
-	int            pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+	auto           it_id_map = _pi_id_map.find (slot_id);
+	assert (it_id_map != _pi_id_map.end ());
+	int            pi_id     = it_id_map->second._pi_id_arr [type];
 	assert (pi_id >= 0);
 
 	if (! _tuner_flag && pi_id != _dummy_mix_id)
@@ -693,36 +687,36 @@ void	Model::set_param (int slot_index, PiType type, int index, float val)
 		_central.set_param (pi_id, index, val);
 	}
 
-	update_parameter (_preset_cur, slot_index, type, index, val);
+	update_parameter (_preset_cur, slot_id, type, index, val);
 
 	// Add the mixer plug-in if necessary but don't remove it if not.
 	// This avoids clicks when switching back and forth between configurations
 	// with and without mixer. The removal will be effective at the next call
 	// to apply_settings.
-	if (pi_id == _dummy_mix_id && has_mixer_plugin (_preset_cur, slot_index))
+	if (pi_id == _dummy_mix_id && has_mixer_plugin (_preset_cur, slot_id))
 	{
 		apply_settings ();
-		pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+
+		// apply_settings() changed the list
+		it_id_map = _pi_id_map.find (slot_id);
+		pi_id     = it_id_map->second._pi_id_arr [type];
 		assert (pi_id >= 0);
 	}
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->set_param (pi_id, index, val, slot_index, type);
+		_obs_ptr->set_param (pi_id, index, val, slot_id, type);
 	}
 }
 
 
 
-void	Model::set_param_beats (int slot_index, int index, float beats)
+void	Model::set_param_beats (int slot_id, int index, float beats)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
-	assert (! _preset_cur.is_slot_empty (slot_index));
 	assert (index >= 0);
 	assert (beats >= 0);
 
-	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	assert (index < int (settings._param_list.size ()));
 
@@ -743,32 +737,31 @@ void	Model::set_param_beats (int slot_index, int index, float beats)
 	);
 
 	// Sets the parameter
-	set_param (slot_index, PiType_MAIN, index, float (val_nrm));
+	set_param (slot_id, PiType_MAIN, index, float (val_nrm));
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->set_param_beats (slot_index, index, beats);
+		_obs_ptr->set_param_beats (slot_id, index, beats);
 	}
 }
 
 
 
-void	Model::set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
-	assert (! _preset_cur.is_slot_empty (slot_index));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 	assert (index < int (settings._param_list.size ()));
 
 	settings._map_param_ctrl [index] = cls;
 
-	int            pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+	auto           it_id_map = _pi_id_map.find (slot_id);
+	assert (it_id_map != _pi_id_map.end ());
+	int            pi_id = it_id_map->second._pi_id_arr [type];
 	assert (pi_id >= 0);
 	const bool     cls_empty_flag =
 		(cls._bind_sptr.get () == 0 && cls._mod_arr.empty ());
@@ -780,38 +773,39 @@ void	Model::set_param_ctrl (int slot_index, PiType type, int index, const doc::C
 			apply_settings ();
 		}
 	}
-	else if (! has_mixer_plugin (_preset_cur, slot_index))
+	else if (! has_mixer_plugin (_preset_cur, slot_id))
 	{
 		apply_settings ();
 	}
 	else if (! _tuner_flag)
 	{
-		set_param_ctrl_with_override (cls, pi_id, slot_index, type, index);
+		set_param_ctrl_with_override (cls, pi_id, slot_id, type, index);
 		_central.commit ();
 	}
 
 	if (_obs_ptr != 0)
 	{
-		// apply_settings() could have changed the list
-		pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+		// apply_settings() changed the list
+		it_id_map = _pi_id_map.find (slot_id);
+		pi_id     = it_id_map->second._pi_id_arr [type];
 
-		_obs_ptr->set_param_ctrl (slot_index, type, index, cls);
+		_obs_ptr->set_param_ctrl (slot_id, type, index, cls);
 	}
 }
 
 
 
 // rotenc_index < 0: previous override is disabled, if existing.
-void	Model::override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index)
+void	Model::override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
-	assert (! _preset_cur.is_slot_empty (slot_index));
+	assert (! _preset_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [type];
+	auto           it_id_map = _pi_id_map.find (slot_id);
+	assert (it_id_map != _pi_id_map.end ());
+	int            pi_id     = it_id_map->second._pi_id_arr [type];
 	assert (pi_id >= 0);
 
 	const OverrideLoc loc { pi_id, index };
@@ -835,7 +829,7 @@ void	Model::override_param_ctrl (int slot_index, PiType type, int index, int rot
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->override_param_ctrl (slot_index, type, index, rotenc_index);
+		_obs_ptr->override_param_ctrl (slot_id, type, index, rotenc_index);
 	}
 }
 
@@ -846,47 +840,50 @@ void	Model::reset_all_overridden_param_ctrl ()
 	while (! _override_map.empty ())
 	{
 		const OverrideLoc &  loc = _override_map.begin ()->first;
-		int            slot_index;
+		int            slot_id;
 		PiType         type;
-		find_slot_type_cur_preset (slot_index, type, loc._pi_id);
-		if (slot_index >= 0)
+		find_slot_type_cur_preset (slot_id, type, loc._pi_id);
+		if (slot_id >= 0)
 		{
-			override_param_ctrl (slot_index, type, loc._index, -1);
+			override_param_ctrl (slot_id, type, loc._index, -1);
 		}
 	}
 }
 
 
 
-void	Model::reset_all_overridden_param_ctrl (int slot_index)
+void	Model::reset_all_overridden_param_ctrl (int slot_id)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
+	assert (slot_id >= 0);
 
-	for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
+	auto           it_pi_map = _pi_id_map.find (slot_id);
+	if (it_pi_map != _pi_id_map.end ())
 	{
-		const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [type_cnt];
-
-		if (pi_id >= 0)
+		for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
 		{
-			bool           erase_flag = false;
-			do
+			const int      pi_id = it_pi_map->second._pi_id_arr [type_cnt];
+
+			if (pi_id >= 0)
 			{
-				const auto     it = std::find_if (
-					_override_map.begin (),
-					_override_map.end (),
-					[pi_id] (const std::pair <OverrideLoc, int> &x)
-					{
-						return (x.first._pi_id == pi_id);
-					}
-				);
-				erase_flag = (it != _override_map.end ());
-				if (erase_flag)
+				bool           erase_flag = false;
+				do
 				{
-					_override_map.erase (it);
+					const auto     it = std::find_if (
+						_override_map.begin (),
+						_override_map.end (),
+						[pi_id] (const std::pair <OverrideLoc, int> &x)
+						{
+							return (x.first._pi_id == pi_id);
+						}
+					);
+					erase_flag = (it != _override_map.end ());
+					if (erase_flag)
+					{
+						_override_map.erase (it);
+					}
 				}
+				while (erase_flag);
 			}
-			while (erase_flag);
 		}
 	}
 }
@@ -926,25 +923,28 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 		const int      index = msg._content._param._index;
 		const float    val   = msg._content._param._val;
 
-		int            slot_index;
+		int            slot_id;
 		PiType         type;
-		find_slot_type_cur_preset (slot_index, type, pi_id);
-		if (slot_index >= 0)
+		find_slot_type_cur_preset (slot_id, type, pi_id);
+		if (slot_id >= 0)
 		{
 			const bool     ok_flag =
-				update_parameter (_preset_cur, slot_index, type, index, val);
+				update_parameter (_preset_cur, slot_id, type, index, val);
 
 			if (ok_flag)
 			{
 				if (_obs_ptr != 0)
 				{
-					_obs_ptr->set_param (pi_id, index, val, slot_index, type);
+					_obs_ptr->set_param (pi_id, index, val, slot_id, type);
 				}
 
 				// Checks if the parameter is tempo-controlled
 				if (type == PiType_MAIN)
 				{
-					doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+					auto           it_slot = _preset_cur._slot_map.find (slot_id);
+					assert (it_slot != _preset_cur._slot_map.end ());
+
+					doc::Slot &    slot = *(it_slot->second);
 					doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 					assert (index < int (settings._param_list.size ()));
 					doc::ParamPresentation *   pres_ptr =
@@ -963,7 +963,7 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 
 						if (_obs_ptr != 0)
 						{
-							_obs_ptr->set_param_beats (slot_index, index, val_beats);
+							_obs_ptr->set_param_beats (slot_id, index, val_beats);
 						}
 					}
 				}
@@ -1029,8 +1029,9 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 		// Count for this preset
 		const doc::Preset &  preset = bank._preset_arr [preset_index];
 		std::map <std::string, int>  pi_cnt_preset;
-		for (const auto &slot_sptr : preset._slot_list)
+		for (const auto &node : preset._slot_map)
 		{
+			const auto &   slot_sptr = node.second;
 			if (slot_sptr.get () != 0 && ! slot_sptr->is_empty ())
 			{
 				const doc::Slot & slot = *slot_sptr;
@@ -1103,25 +1104,30 @@ void	Model::apply_settings ()
 
 void	Model::apply_settings_normal ()
 {
-	_pi_id_list.clear ();
+	_pi_id_map.clear ();
 	_slot_info.clear ();
 
-	const int      nbr_slots = _preset_cur._slot_list.size ();
+	const int      nbr_slots = _preset_cur._routing._chain.size ();
 
 	int            slot_index_central = 0;
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
-		_pi_id_list.push_back (SlotPiId ());
+		const int      slot_id   = _preset_cur._routing._chain [slot_index];
+		auto           it_id_map =
+			_pi_id_map.insert (std::make_pair (slot_id, SlotPiId ())).first;
+		auto           it_slot   = _preset_cur._slot_map.find (slot_id);
+		assert (it_slot != _preset_cur._slot_map.end ());
 
 		// Full slot
-		if (! _preset_cur.is_slot_empty (slot_index))
+		if (! _preset_cur.is_slot_empty (it_slot))
 		{
 			_central.insert_slot (slot_index_central);
-			doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+
+			doc::Slot &	   slot = *(it_slot->second);
 
 			// Check first if we need a mixer plug-in.
 			// Updates the parameters
-			check_mixer_plugin (slot_index, slot_index_central);
+			check_mixer_plugin (slot_id, slot_index_central);
 
 			// Now the main plug-in
 			auto           it_s  = slot._settings_all.find (slot._pi_model);
@@ -1139,7 +1145,7 @@ void	Model::apply_settings_normal ()
 					slot._settings_all [slot._pi_model];
 				settings._param_list =
 					_central.use_pi_pool ().use_plugin (pi_id)._param_arr;
-				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
+				it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
 			}
 			else
 			{
@@ -1153,17 +1159,15 @@ void	Model::apply_settings_normal ()
 					slot._pi_model,
 					it_s->second._force_reset_flag
 				);
-				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN] = pi_id;
-				send_effect_settings (
-					pi_id, slot_index, PiType_MAIN, it_s->second
-				);
+				it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
+				send_effect_settings (pi_id, slot_id, PiType_MAIN, it_s->second);
 			}
 
 			++ slot_index_central;
 		}
 	}
 
-	assert (_preset_cur._slot_list.size () == _pi_id_list.size ());
+	assert (_preset_cur._slot_map.size () == _pi_id_map.size ());
 }
 
 
@@ -1191,13 +1195,15 @@ void	Model::apply_settings_tuner ()
 // different of 100% wet at 0 dB.
 // Does not commit anything
 // The slot should exist in the current preset.
-void	Model::check_mixer_plugin (int slot_index, int slot_index_central)
+void	Model::check_mixer_plugin (int slot_id, int slot_index_central)
 {
-	assert (_preset_cur._slot_list [slot_index].get () != 0);
+	auto           it_slot = _preset_cur._slot_map.find (slot_id);
+	assert (it_slot != _preset_cur._slot_map.end ());
+	assert (it_slot->second.get () != 0);
 
-	const bool        use_flag = has_mixer_plugin (_preset_cur, slot_index);
-	const doc::Slot & slot     = *(_preset_cur._slot_list [slot_index]);
-	int &             id_ref   = _pi_id_list [slot_index]._pi_id_arr [PiType_MIX];
+	const bool        use_flag = has_mixer_plugin (_preset_cur, slot_id);
+	const doc::Slot & slot     = *(it_slot->second);
+	int &             id_ref   = _pi_id_map [slot_id]._pi_id_arr [PiType_MIX];
 
 	// Instantiation and setting update
 	if (use_flag)
@@ -1207,7 +1213,7 @@ void	Model::check_mixer_plugin (int slot_index, int slot_index_central)
 			const int      pi_id = _central.set_mixer (slot_index_central);
 			id_ref = pi_id;
 			send_effect_settings (
-				pi_id, slot_index, PiType_MIX, slot._settings_mixer
+				pi_id, slot_id, PiType_MIX, slot._settings_mixer
 			);
 		}
 	}
@@ -1226,13 +1232,9 @@ void	Model::check_mixer_plugin (int slot_index, int slot_index_central)
 
 
 // Slot must exist
-bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
+bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_id)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (preset._slot_list.size ()));
-	assert (! preset.is_slot_empty (slot_index));
-
-	const doc::Slot & slot = *(preset._slot_list [slot_index]);
+	const doc::Slot & slot = preset.use_slot (slot_id);
 	const doc::PluginSettings::ParamList & plist =
 		slot._settings_mixer._param_list;
 
@@ -1283,7 +1285,7 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_index)
 
 
 // Does not commit anything
-void	Model::send_effect_settings (int pi_id, int slot_index, PiType type, const doc::PluginSettings &settings)
+void	Model::send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings)
 {
 	// Parameters
 	PluginPool::PluginDetails &   details =
@@ -1303,7 +1305,7 @@ void	Model::send_effect_settings (int pi_id, int slot_index, PiType type, const 
 	for (const auto &x : settings._map_param_ctrl)
 	{
 		const int   p_index = x.first;
-		set_param_ctrl_with_override (x.second, pi_id, slot_index, type, p_index);
+		set_param_ctrl_with_override (x.second, pi_id, slot_id, type, p_index);
 	}
 }
 
@@ -1501,11 +1503,13 @@ void	Model::process_action_bank (const doc::ActionBank &action)
 
 void	Model::process_action_param (const doc::ActionParam &action)
 {
-	const int      slot_pos = find_slot_cur_preset (action._fx_id);
-	if (slot_pos >= 0)
+	const int      slot_id = find_slot_cur_preset (action._fx_id);
+	if (slot_id >= 0)
 	{
+		const auto     it_id_map = _pi_id_map.find (slot_id);
+		assert (it_id_map != _pi_id_map.end ());
 		const int      pi_id =
-			_pi_id_list [slot_pos]._pi_id_arr [action._fx_id._type];
+			it_id_map->second._pi_id_arr [action._fx_id._type];
 		assert (pi_id >= 0);
 
 		if (pi_id != _dummy_mix_id)
@@ -1612,8 +1616,9 @@ void	Model::build_slot_info ()
 	_slot_info.clear ();
 	PluginPool &   pi_pool = _central.use_pi_pool ();
 
-	for (const SlotPiId &spi : _pi_id_list)
+	for (const auto &node : _pi_id_map)
 	{
+		const SlotPiId &  spi = node.second;
 		ModelObserverInterface::SlotInfo info;
 		for (size_t type = 0; type < spi._pi_id_arr.size (); ++type)
 		{
@@ -1632,7 +1637,7 @@ void	Model::build_slot_info ()
 			}
 		}
 
-		_slot_info.push_back (info);
+		_slot_info [node.first] = info;
 	}
 }
 
@@ -1641,68 +1646,70 @@ void	Model::build_slot_info ()
 void	Model::notify_slot_info ()
 {
 	assert (_obs_ptr != 0);
-	assert (_slot_info.size () == _pi_id_list.size ());
+	assert (_slot_info.size () == _pi_id_map.size ());
 
 	_obs_ptr->set_slot_info_for_current_preset (_slot_info);
 }
 
 
 
-// Returns -1 if not found
+// Returns a slot_id, -1 if not found
+/*** To do: return a set instead of a single element ***/
 int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
 {
 	assert (fx_id._location_type >= 0);
 	assert (fx_id._location_type < doc::FxId::LocType_NBR_ELT);
 
-	int            found_pos = -1;
+	int            found_slot_id = -1;
 
-	const int      nbr_slots = _preset_cur._slot_list.size ();
-	for (int pos = 0; pos < nbr_slots && found_pos < 0; ++pos)
+	for (auto it = _preset_cur._slot_map.begin ()
+	;	it != _preset_cur._slot_map.end () && found_slot_id < 0
+	;	++ it)
 	{
-		if (! _preset_cur.is_slot_empty (pos))
+		if (! _preset_cur.is_slot_empty (it))
 		{
-			const doc::Slot & slot = *(_preset_cur._slot_list [pos]);
+			const doc::Slot & slot = *(it->second);
 
 			if (fx_id._location_type == doc::FxId::LocType_CATEGORY)
 			{
 				if (slot._pi_model == fx_id._label_or_model)
 				{
-					found_pos = pos;
+					found_slot_id = it->first;
 				}
 			}
 			else
 			{
 				if (! slot._label.empty () && fx_id._label_or_model == slot._label)
 				{
-					found_pos = pos;
+					found_slot_id = it->first;
 				}
 			}
 		}
 	}
 
-	return found_pos;
+	return found_slot_id;
 }
 
 
 
-// Returns -1 in slot_index if not found
-void	Model::find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id) const
+// Returns -1 in slot_id if not found
+void	Model::find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) const
 {
 	assert (pi_id >= 0);
 	assert (pi_id != _dummy_mix_id);
 
-	slot_index = -1;
-	const int      nbr_slots = _preset_cur._slot_list.size ();
-	assert (nbr_slots == int (_pi_id_list.size ()));
-	for (int pos = 0; pos < nbr_slots && slot_index < 0; ++pos)
+	slot_id = -1;
+	for (auto it_pi_map = _pi_id_map.cbegin ()
+	;	it_pi_map != _pi_id_map.cend () && slot_id < 0
+	;	++ it_pi_map)
 	{
-		const SlotPiId &  spi = _pi_id_list [pos];
-		for (int tt = 0; tt < PiType_NBR_ELT && slot_index < 0; ++tt)
+		const SlotPiId &  spi = it_pi_map->second;
+		for (int tt = 0; tt < PiType_NBR_ELT && slot_id < 0; ++tt)
 		{
 			if (spi._pi_id_arr [tt] == pi_id)
 			{
-				slot_index = pos;
-				type       = PiType (tt);
+				slot_id = it_pi_map->first;
+				type    = PiType (tt);
 			}
 		}
 	}
@@ -1710,18 +1717,19 @@ void	Model::find_slot_type_cur_preset (int &slot_index, PiType &type, int pi_id)
 
 
 
-bool	Model::update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val)
+bool	Model::update_parameter (doc::Preset &preset, int slot_id, PiType type, int index, float val)
 {
 	bool           ok_flag = true;
 
-	if (preset.is_slot_empty (slot_index))
+	auto           it_slot = preset._slot_map.find (slot_id);
+	if (preset.is_slot_empty (it_slot))
 	{
 		ok_flag = false;
 		assert (false);
 	}
 	else
 	{
-		doc::Slot &    slot = *(preset._slot_list [slot_index]);
+		doc::Slot &    slot = *(it_slot->second);
 		doc::PluginSettings &  settings =
 				(type == PiType_MIX)
 			? slot._settings_mixer
@@ -1742,14 +1750,12 @@ bool	Model::update_parameter (doc::Preset &preset, int slot_index, PiType type, 
 
 
 
-void	Model::fill_pi_init_data (int slot_index, ModelObserverInterface::PluginInitData &pi_data)
+void	Model::fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitData &pi_data)
 {
-	assert (! _preset_cur.is_slot_empty (slot_index));
-
-	const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
+	const doc::Slot & slot = _preset_cur.use_slot (slot_id);
 	pi_data._model = slot._pi_model;
 
-	const int      pi_id = _pi_id_list [slot_index]._pi_id_arr [PiType_MAIN];
+	const int      pi_id = _pi_id_map [slot_id]._pi_id_arr [PiType_MAIN];
 	assert (pi_id >= 0);
 
 	const PluginPool::PluginDetails &   details =
@@ -1776,22 +1782,24 @@ void	Model::update_all_beat_parameters ()
 
 	bool           need_commit_flag = false;
 
-	const int      nbr_slots = int (_preset_cur._slot_list.size ());
-	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
+	for (auto it_slot = _preset_cur._slot_map.begin ()
+	;	it_slot != _preset_cur._slot_map.end ()
+	;	++ it_slot)
 	{
-		if (! _preset_cur.is_slot_empty (slot_index))
+		if (! _preset_cur.is_slot_empty (it_slot))
 		{
-			doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+			const int      slot_id = it_slot->first;
+			doc::Slot &    slot    = *(it_slot->second);
 			doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
-			const int      pi_id =
-				_pi_id_list [slot_index]._pi_id_arr [PiType_MAIN];
+			const int      pi_id   =
+				_pi_id_map [slot_id]._pi_id_arr [PiType_MAIN];
 			for (auto &p : settings._map_param_pres)
 			{
 				const float    beats = p.second._ref_beats;
 				if (beats >= 0)
 				{
 					const int      index = p.first;
-					set_param_beats (slot_index, index, beats);
+					set_param_beats (slot_id, index, beats);
 
 					if (pi_id >= 0)
 					{
@@ -1799,7 +1807,7 @@ void	Model::update_all_beat_parameters ()
 						if (it_cls != settings._map_param_ctrl.end ())
 						{
 							set_param_ctrl_with_override (
-								it_cls->second, pi_id, slot_index, PiType_MAIN, index
+								it_cls->second, pi_id, slot_id, PiType_MAIN, index
 							);
 							need_commit_flag = true;
 						}
@@ -1834,36 +1842,41 @@ void	Model::update_param_ctrl (const OverrideLoc &loc)
 {
 	const int      pi_id      = loc._pi_id;
 	const int      index      = loc._index;
-	int            slot_index;
+	int            slot_id;
 	PiType         type;
-	find_slot_type_cur_preset (slot_index, type, pi_id);
+	find_slot_type_cur_preset (slot_id, type, pi_id);
 
-	if (slot_index >= 0 && ! _preset_cur.is_slot_empty (slot_index))
+	if (slot_id >= 0)
 	{
-		doc::CtrlLinkSet  cls;
-
-		doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
-		doc::PluginSettings &   settings = slot.use_settings (type);
-		const auto     it_cls = settings._map_param_ctrl.find (index);
-		if (it_cls != settings._map_param_ctrl.end ())
+		auto           it_slot = _preset_cur._slot_map.find (slot_id);
+		assert (it_slot != _preset_cur._slot_map.end ());
+		if (! _preset_cur.is_slot_empty (it_slot))
 		{
-			cls = it_cls->second;
-		}
+			doc::CtrlLinkSet  cls;
 
-		set_param_ctrl_with_override (cls, pi_id, slot_index, type, index);
+			doc::Slot &    slot = *(it_slot->second);
+			doc::PluginSettings &   settings = slot.use_settings (type);
+			const auto     it_cls = settings._map_param_ctrl.find (index);
+			if (it_cls != settings._map_param_ctrl.end ())
+			{
+				cls = it_cls->second;
+			}
+
+			set_param_ctrl_with_override (cls, pi_id, slot_id, type, index);
+		}
 	}
 }
 
 
 
 // Requires commit
-void	Model::set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index)
+void	Model::set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index)
 {
 	const OverrideLoc loc { pi_id, index };
 	auto           it = _override_map.find (loc);
 	if (it == _override_map.end ())
 	{
-		set_param_ctrl_internal (cls, pi_id, slot_index, type, index);
+		set_param_ctrl_internal (cls, pi_id, slot_id, type, index);
 	}
 	else
 	{
@@ -1882,24 +1895,21 @@ void	Model::set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id
 			clso._bind_sptr = link_sptr;
 		}
 
-		set_param_ctrl_internal (clso, pi_id, slot_index, type, index);
+		set_param_ctrl_internal (clso, pi_id, slot_id, type, index);
 	}
 }
 
 
 
 // Requires commit
-void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_index, PiType type, int index)
+void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index)
 {
 	assert (pi_id >= 0);
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._slot_list.size ()));
-	assert (! _preset_cur.is_slot_empty (slot_index));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	doc::Slot &    slot = *(_preset_cur._slot_list [slot_index]);
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 	assert (index < int (settings._param_list.size ()));
 
@@ -1928,24 +1938,45 @@ void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int
 
 
 // Configures the default controllers, if any
-// selected_slot_index adds to only one slot, -1: all slots
-void	Model::add_default_ctrl (int selected_slot_index)
+// selected_slot_id adds to only one slot, -1: all slots
+void	Model::add_default_ctrl (int selected_slot_id)
 {
+	// First, lists the slots in the processing order
+	std::set <int> rem_slot_id;
+	for (const auto &node : _preset_cur._slot_map)
+	{
+		rem_slot_id.insert (node.first);
+	}
+	std::vector <int> slot_id_list = _preset_cur._routing._chain; // The main chain
+	for (int rem_id : slot_id_list)
+	{
+		const auto     it = rem_slot_id.find (rem_id);
+		assert (it != rem_slot_id.end ());
+		rem_slot_id.erase (it);
+	}
+	for (int rem_id : rem_slot_id) // Adds all the remaining slots
+	{
+		slot_id_list.push_back (rem_id);
+	}
+
 	std::set <int> used_pot_set;
 
-	// Pair: slot_index, parameter
+	// Pair: slot_id, parameter
 	std::vector <std::pair <int, int> > ctrl_param_arr;
 
 	// Lists:
 	// - Parameters requiering a default controller
 	// - Used controllers
 	// Checks only the analogue absolute controllers (potentiometers)
-	const int      nbr_slots = int (_preset_cur._slot_list.size ());
-	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
+	const int      nbr_slots = int (slot_id_list.size ());
+	for (int slot_pos = 0; slot_pos < nbr_slots; ++slot_pos)
 	{
-		if (! _preset_cur.is_slot_empty (slot_index))
+		const int      slot_id = slot_id_list [slot_pos];
+		const auto     it_slot = _preset_cur._slot_map.find (slot_id);
+		assert (it_slot != _preset_cur._slot_map.end ());
+		if (! _preset_cur.is_slot_empty (it_slot))
 		{
-			const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
+			const doc::Slot & slot = *(it_slot->second);
 			for (int type = 0; type < PiType_NBR_ELT; ++type)
 			{
 				const doc::PluginSettings &   settings =
@@ -1954,8 +1985,8 @@ void	Model::add_default_ctrl (int selected_slot_index)
 				// Check the default controllers only for the main plug-in,
 				// we know that the mixer plug-in doesn't require this.
 				if (   type == PiType_MAIN
-				    && (   selected_slot_index < 0
-				        || slot_index == selected_slot_index))
+				    && (   selected_slot_id < 0
+				        || slot_id == selected_slot_id))
 				{
 					const piapi::PluginDescInterface & desc =
 						get_model_desc (slot._pi_model);
@@ -1979,7 +2010,7 @@ void	Model::add_default_ctrl (int selected_slot_index)
 							if (ok_flag)
 							{
 								ctrl_param_arr.push_back (
-									std::make_pair (slot_index, index)
+									std::make_pair (slot_id, index)
 								);
 							}
 						}
@@ -2013,8 +2044,8 @@ void	Model::add_default_ctrl (int selected_slot_index)
 	// Now associates the listed parameters to the free controllers
 	for (const auto &p : ctrl_param_arr)
 	{
-		const int      slot_index = p.first;
-		const int      index      = p.second;
+		const int      slot_id = p.first;
+		const int      index   = p.second;
 
 		// Finds a free controller
 		int            pot_index = 0;
@@ -2029,7 +2060,7 @@ void	Model::add_default_ctrl (int selected_slot_index)
 			doc::CtrlLinkSet  cls;
 
 			// Retrieves the existing controllers for this parameter
-			const doc::Slot & slot = *(_preset_cur._slot_list [slot_index]);
+			const doc::Slot & slot = _preset_cur.use_slot (slot_id);
 			const doc::PluginSettings &   settings =
 				slot.use_settings (PiType_MAIN);
 			const auto     it_ctrl =
@@ -2045,13 +2076,15 @@ void	Model::add_default_ctrl (int selected_slot_index)
 			cls._bind_sptr->_source._type  = ControllerType_POT;
 			cls._bind_sptr->_source._index = pot_index;
 
-			set_param_ctrl (slot_index, PiType_MAIN, index, cls);
+			set_param_ctrl (slot_id, PiType_MAIN, index, cls);
 
 			// Marks the pot as used
 			used_pot_set.insert (pot_index);
 		}
 	}
 }
+
+
 
 }  // namespace mfx
 

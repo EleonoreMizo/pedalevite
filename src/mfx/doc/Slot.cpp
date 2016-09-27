@@ -102,17 +102,17 @@ bool	Slot::has_ctrl () const
 {
 	bool           ctrl_flag  = false;
 
-	if (_settings_mixer._map_param_ctrl.empty ())
+	if (_settings_mixer.has_any_ctrl ())
+	{
+		ctrl_flag = true;
+	}
+	else
 	{
 		auto           it = _settings_all.find (_pi_model);
 		if (it != _settings_all.end ())
 		{
-			ctrl_flag = ! it->second._map_param_ctrl.empty ();
+			ctrl_flag = it->second.has_any_ctrl ();
 		}
-	}
-	else
-	{
-		ctrl_flag = true;
 	}
 
 	return ctrl_flag;
