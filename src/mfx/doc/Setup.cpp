@@ -70,7 +70,7 @@ void	Setup::ser_write (SerWInterface &ser) const
 
 void	Setup::ser_read (SerRInterface &ser)
 {
-	int            version;
+	int            version = -1;
 
 	ser.begin_list ();
 	ser.read (version);

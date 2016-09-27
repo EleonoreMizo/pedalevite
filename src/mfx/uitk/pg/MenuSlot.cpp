@@ -111,7 +111,7 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	if (_state == State_EDIT_LABEL)
 	{
 		if (   _name_param._ok_flag
-			 && _view_ptr->get_bank_index ()   == _save_bank_index
+		    && _view_ptr->get_bank_index ()   == _save_bank_index
 		    && _view_ptr->get_preset_index () == _save_preset_index
 		    && _loc_edit._slot_index          == _save_slot_index)
 		{
@@ -222,7 +222,6 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 				{
 					const int      slot_id =
 						_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
-					const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 					const auto     it_slot = preset._slot_map.find (slot_id);
 					assert (it_slot != preset._slot_map.end ());
 					if (! preset.is_slot_empty (it_slot))

@@ -838,9 +838,9 @@ void	Model::reset_all_overridden_param_ctrl ()
 {
 	while (! _override_map.empty ())
 	{
-		const OverrideLoc &  loc = _override_map.begin ()->first;
-		int            slot_id;
-		PiType         type;
+		const OverrideLoc &  loc   = _override_map.begin ()->first;
+		int                  slot_id;
+		PiType               type = PiType_INVALID;
 		find_slot_type_cur_preset (slot_id, type, loc._pi_id);
 		if (slot_id >= 0)
 		{
@@ -1842,7 +1842,7 @@ void	Model::update_param_ctrl (const OverrideLoc &loc)
 	const int      pi_id      = loc._pi_id;
 	const int      index      = loc._index;
 	int            slot_id;
-	PiType         type;
+	PiType         type       = PiType_INVALID;
 	find_slot_type_cur_preset (slot_id, type, pi_id);
 
 	if (slot_id >= 0)

@@ -617,7 +617,6 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 		_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
 	};
 
-	const int      slot_index = _loc_edit._slot_index;
 	const int      slot_id    =
 		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
 	const PiType   type       = _loc_edit._pi_type;

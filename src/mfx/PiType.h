@@ -36,8 +36,9 @@ namespace mfx
 
 enum PiType
 {
+	PiType_INVALID = -1,
 
-	PiType_MAIN = 0,
+	PiType_MAIN    = 0,
 	PiType_MIX,
 
 	PiType_NBR_ELT
