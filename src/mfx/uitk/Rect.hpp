@@ -22,8 +22,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <utility>
-
 
 
 namespace mfx
@@ -154,7 +152,8 @@ mfx::uitk::Rect  operator + (const mfx::uitk::Rect &lhs, const mfx::uitk::Vec2d 
 {
 	mfx::uitk::Rect   res (lhs);
 	res += rhs;
-	return std::move (res);
+
+	return res;
 }
 
 
@@ -163,7 +162,8 @@ mfx::uitk::Rect  operator - (const mfx::uitk::Rect &lhs, const mfx::uitk::Vec2d 
 {
 	mfx::uitk::Rect   res (lhs);
 	res -= rhs;
-	return std::move (res);
+
+	return res;
 }
 
 

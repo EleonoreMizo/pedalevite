@@ -26,8 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/uitk/ContainerInterface.h"
 
-#include <utility>
-
 #include <cassert>
 
 
@@ -102,7 +100,7 @@ ContainerInterface::NodeSPtr	ContainerInterface::use_node (int pos)
 
 	NodeSPtr       node_sptr = do_use_node (pos);
 
-	return std::move (node_sptr);
+	return node_sptr;
 }
 
 

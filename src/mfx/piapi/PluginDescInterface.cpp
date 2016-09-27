@@ -26,8 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/piapi/PluginDescInterface.h"
 
-#include <utility>
-
 #include <cassert>
 
 
@@ -49,7 +47,7 @@ std::string	PluginDescInterface::get_unique_id () const
 	std::string    uid = do_get_unique_id ();
 	assert (! uid.empty ());
 
-	return std::move (uid);
+	return uid;
 }
 
 
@@ -59,7 +57,7 @@ std::string	PluginDescInterface::get_name () const
 	std::string    name = do_get_name ();
 	assert (! name.empty ());
 
-	return std::move (name);
+	return name;
 }
 
 

@@ -33,7 +33,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerWInterface.h"
 
 #include <algorithm>
-#include <utility>
 
 #include <cassert>
 
@@ -247,7 +246,7 @@ PedalActionCycle::ActionCycle	PedalActionCycle::duplicate_actions (const ActionC
 		lhs.push_back (array_new);
 	}
 
-	return std::move (lhs);
+	return lhs;
 }
 
 

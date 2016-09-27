@@ -22,8 +22,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <utility>
-
 
 
 namespace mfx
@@ -90,7 +88,8 @@ mfx::uitk::Vec2d  operator + (const mfx::uitk::Vec2d &lhs, const mfx::uitk::Vec2
 {
 	mfx::uitk::Vec2d  res (lhs);
 	res += rhs;
-	return std::move (res);
+
+	return res;
 }
 
 
@@ -99,7 +98,8 @@ mfx::uitk::Vec2d  operator - (const mfx::uitk::Vec2d &lhs, const mfx::uitk::Vec2
 {
 	mfx::uitk::Vec2d  res (lhs);
 	res -= rhs;
-	return std::move (res);
+
+	return res;
 }
 
 

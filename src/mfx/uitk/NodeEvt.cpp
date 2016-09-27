@@ -26,8 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/uitk/NodeEvt.h"
 
-#include <utility>
-
 #include <cassert>
 
 
@@ -51,7 +49,7 @@ NodeEvt	NodeEvt::create_button (int target, Button but)
 	NodeEvt        tmp (target, Type_BUTTON);
 	tmp._val_arr [0] = but;
 
-	return std::move (tmp);
+	return tmp;
 }
 
 
@@ -65,7 +63,7 @@ NodeEvt	NodeEvt::create_rotenc (int target, int rotenc, int val)
 	tmp._val_arr [0] = rotenc;
 	tmp._val_arr [1] = val;
 
-	return std::move (tmp);
+	return tmp;
 }
 
 
@@ -78,7 +76,7 @@ NodeEvt	NodeEvt::create_cursor (int target, Curs curs)
 	NodeEvt        tmp (target, Type_CURSOR);
 	tmp._val_arr [0] = curs;
 
-	return std::move (tmp);
+	return tmp;
 }
 
 
@@ -87,7 +85,7 @@ NodeEvt	NodeEvt::create_timer (int target)
 {
 	NodeEvt        tmp (target, Type_TIMER);
 
-	return std::move (tmp);
+	return tmp;
 }
 
 

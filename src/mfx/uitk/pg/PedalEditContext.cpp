@@ -27,8 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/View.h"
 
-#include <utility>
-
 #include <cassert>
 
 
@@ -109,7 +107,7 @@ PedalLoc	PedalEditContext::conv_to_loc (const View &view) const
 
 	loc._pedal_index = _pedal;
 
-	return std::move (loc);
+	return loc;
 }
 
 

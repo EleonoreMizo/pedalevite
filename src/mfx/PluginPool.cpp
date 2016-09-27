@@ -31,7 +31,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/PluginPool.h"
 
 #include <stdexcept>
-#include <utility>
 
 #include <cassert>
 
@@ -168,7 +167,7 @@ std::vector <int>	PluginPool::list_plugins (SharedRscState state) const
 		}
 	}
 
-	return std::move (id_arr);
+	return id_arr;
 }
 
 
@@ -182,7 +181,7 @@ std::vector <std::string>	PluginPool::list_models () const
 		name_list.push_back (p.first);
 	}
 
-	return std::move (name_list);
+	return name_list;
 }
 
 

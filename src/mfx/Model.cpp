@@ -44,7 +44,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <algorithm>
 #include <set>
-#include <utility>
 
 #include <cassert>
 
@@ -892,7 +891,7 @@ void	Model::reset_all_overridden_param_ctrl (int slot_id)
 
 std::vector <std::string>	Model::list_plugin_models () const
 {
-	return std::move (_central.use_pi_pool ().list_models ());
+	return _central.use_pi_pool ().list_models ();
 }
 
 

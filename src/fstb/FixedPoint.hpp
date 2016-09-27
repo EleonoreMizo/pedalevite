@@ -475,7 +475,7 @@ const FixedPoint	operator + (const FixedPoint &left, const FixedPoint &right)
 {
 	FixedPoint	temp (left);
 
-	return std::move (temp += right);
+	return temp += right;
 }
 
 
@@ -484,7 +484,7 @@ const FixedPoint	operator - (const FixedPoint &left, const FixedPoint &right)
 {
 	FixedPoint	temp (left);
 
-	return std::move (temp -= right);
+	return temp -= right;
 }
 
 
