@@ -33,7 +33,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <unistd.h>
 
+#include <chrono>
 #include <stdexcept>
+#include <thread>
 
 #include <cassert>
 #include <climits>
@@ -51,6 +53,10 @@ namespace ui
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
+
+const std::chrono::nanoseconds	UserInputPi3::_antibounce_time (
+	std::chrono::milliseconds (30)
+);
 
 // Slave address, p. 8
 const int	UserInputPi3::_i2c_dev_23017_arr [_nbr_dev_23017] =
@@ -156,7 +162,10 @@ UserInputPi3::UserInputPi3 (TimeShareThread &thread_spi)
 	read_data (true);
 
 	_polling_thread = std::thread (&UserInputPi3::polling_loop, this);
-	_thread_spi.register_cb (*this, 1000 * 1000 / 100); // 100 Hz refresh rate
+	_thread_spi.register_cb (
+		*this,
+		std::chrono::microseconds (1000 * 1000 / 100) // 100 Hz refresh rate
+	);
 }
 
 
@@ -227,7 +236,7 @@ void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue
 				{
 					const float    val_flt  =
 						state._cur_val * (1.0f / ((1 << _res_adc) - 1));
-					const int64_t  cur_time = read_clock_ns ();
+					const std::chrono::nanoseconds   cur_time (read_clock_ns ());
 					enqueue_val (
 						cur_time,
 						UserInputType_POT,
@@ -253,16 +262,18 @@ void	UserInputPi3::do_return_cell (MsgCell &cell)
 
 
 
-int64_t	UserInputPi3::do_get_cur_date () const
+std::chrono::microseconds	UserInputPi3::do_get_cur_date () const
 {
-	return read_clock_ns () / 1000;
+	return std::chrono::duration_cast <std::chrono::microseconds> (
+		read_clock_ns ()
+	);
 }
 
 
 
 bool	UserInputPi3::do_process_timeshare_op ()
 {
-	const int64_t  cur_time = read_clock_ns ();
+	const std::chrono::nanoseconds   cur_time (read_clock_ns ());
 
 	// Potentiometers
 	for (int i = 0; i < Cst::_nbr_pot; ++i)
@@ -317,7 +328,7 @@ void	UserInputPi3::polling_loop ()
 		read_data (low_freq_flag);
 
 		// 1 ms between updates. Not less because of the rotary encoders.
-		::delay (1);
+		std::this_thread::sleep_for (std::chrono::milliseconds (1));
 		++ _polling_count;
 	}
 
@@ -338,7 +349,7 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 		"state capacity for GPIO"
 	);
 
-	const int64_t  cur_time = read_clock_ns ();
+	const std::chrono::nanoseconds   cur_time (read_clock_ns ());
 		
 	// Reads all binary inputs first
 	InputState     input_state_arr [BinSrc_NBR_ELT] = { 0, 0 };
@@ -387,11 +398,11 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 
 
 
-void	UserInputPi3::handle_switch (int index, bool flag, int64_t cur_time)
+void	UserInputPi3::handle_switch (int index, bool flag, std::chrono::nanoseconds cur_time)
 {
 	SwitchState &  sw = _switch_state_arr [index];
 
-	const int64_t  dist = cur_time - sw._time_last;
+	const std::chrono::nanoseconds   dist (cur_time - sw._time_last);
 	if ((flag != sw._flag && dist >= _antibounce_time) || ! sw.is_set ())
 	{
 		sw._flag      = flag;
@@ -402,7 +413,7 @@ void	UserInputPi3::handle_switch (int index, bool flag, int64_t cur_time)
 
 
 
-void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, int64_t cur_time)
+void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, std::chrono::nanoseconds cur_time)
 {
 	RotEnc &       re  = _rotenc_state_arr [index];
 	const int      dir = _rotenc_arr [index]._dir_mul;
@@ -415,7 +426,7 @@ void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, int64_t cur_time)
 
 
 
-void	UserInputPi3::handle_pot (int index, int val, int64_t cur_time)
+void	UserInputPi3::handle_pot (int index, int val, std::chrono::nanoseconds cur_time)
 {
 	PotState &     pot      = _pot_state_arr [index];
 
@@ -456,7 +467,7 @@ void	UserInputPi3::handle_pot (int index, int val, int64_t cur_time)
 
 
 // date is in nanoseconds
-void	UserInputPi3::enqueue_val (int64_t date, UserInputType type, int index, float val)
+void	UserInputPi3::enqueue_val (std::chrono::nanoseconds date, UserInputType type, int index, float val)
 {
 	MsgQueue *     queue_ptr = _recip_list [type] [index];
 	if (queue_ptr != 0)
@@ -468,7 +479,12 @@ void	UserInputPi3::enqueue_val (int64_t date, UserInputType type, int index, flo
 		}
 		else
 		{
-			cell_ptr->_val.set (date / 1000, type, index, val);
+			cell_ptr->_val.set (
+				std::chrono::duration_cast <std::chrono::microseconds> (date),
+				type,
+				index,
+				val
+			);
 			queue_ptr->enqueue (*cell_ptr);
 		}
 	}
@@ -511,13 +527,30 @@ int	UserInputPi3::read_adc (int port, int chn)
 
 
 
-int64_t	UserInputPi3::read_clock_ns () const
+std::chrono::nanoseconds	UserInputPi3::read_clock_ns () const
 {
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
 	const long     ns_mul = 1000L * 1000L * 1000L;
-	return int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec;
+
+	return std::chrono::nanoseconds (int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec);
+}
+
+
+
+UserInputPi3::SwitchState::SwitchState ()
+:	_flag (false)
+,	_time_last (INT64_MIN)
+{
+	// Nothing
+}
+
+
+
+bool	UserInputPi3::SwitchState::is_set () const
+{
+	return (_time_last.count () != INT64_MIN);
 }
 
 

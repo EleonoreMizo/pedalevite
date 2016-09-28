@@ -29,7 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <wiringPi.h>
 
+#include <chrono>
 #include <stdexcept>
+#include <thread>
 
 #include <cassert>
 
@@ -141,7 +143,7 @@ void	LedPi3::refresh_loop ()
 			}
 		}
 
-		::delay (20);
+		std::this_thread::sleep_for (std::chrono::milliseconds (20));
 	}
 
 	_quit_flag = false;

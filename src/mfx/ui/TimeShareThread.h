@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <chrono>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -49,11 +50,11 @@ class TimeShareThread
 
 public:
 
-	explicit       TimeShareThread (int granularity);
+	explicit       TimeShareThread (std::chrono::microseconds granularity);
 	virtual        ~TimeShareThread ();
 
 	// Do not call from a callback
-	void           register_cb (TimeShareCbInterface &cb, int interval_us);
+	void           register_cb (TimeShareCbInterface &cb, std::chrono::microseconds interval_us);
 	void           remove_cb (TimeShareCbInterface &cb);
 
 	bool           process_single_task ();
@@ -75,8 +76,10 @@ private:
 	public:
 		TimeShareCbInterface *
 		               _cb_ptr;
-		int64_t        _interval;        // Between two complete tasks. Nanoseconds
-		int64_t        _next_time;       // Nanoseconds
+		std::chrono::nanoseconds
+		               _interval;        // Between two complete tasks
+		std::chrono::nanoseconds
+		               _next_time;
 	};
 
 	typedef std::vector <CbUnit> CbList;
@@ -85,13 +88,16 @@ private:
 	bool           find_and_execute_task (int &scan_pos);
 	void           fix_scanpos (int &scan_pos);
 
-	static int64_t get_time ();
+	static std::chrono::nanoseconds
+	               get_time ();
 
-	const int      _granularity;
+	const std::chrono::microseconds     // Positive: a dedicated thread is created
+	               _granularity;
 
 	std::mutex     _list_mtx;           // Access to the callback list
 	CbList         _cb_list;
-	const int64_t  _base_time;
+	const std::chrono::nanoseconds
+	               _base_time;
 
 	volatile bool  _quit_flag;
 	std::thread    _refresher;

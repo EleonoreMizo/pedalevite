@@ -52,7 +52,7 @@ public:
 	               UserInputVoid ();
 	virtual        ~UserInputVoid () = default;
 
-	void           send_message (int64_t date, UserInputType type, int index, float val);
+	void           send_message (std::chrono::microseconds date, UserInputType type, int index, float val);
 
 
 
@@ -64,7 +64,7 @@ protected:
 	virtual int    do_get_nbr_param (UserInputType type) const;
 	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
 	virtual void   do_return_cell (MsgCell &cell);
-	virtual int64_t
+	virtual std::chrono::microseconds
 	               do_get_cur_date () const;
 
 
@@ -78,6 +78,9 @@ private:
 	typedef std::array <QueueArray, UserInputType_NBR_ELT> RecipientList;
 
 	RecipientList  _recip_list;
+
+	std::chrono::high_resolution_clock
+	               _clk;
 
 
 

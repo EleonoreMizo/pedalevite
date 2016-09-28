@@ -42,6 +42,20 @@ namespace mfx
 
 const float	Cst::_clip_lvl = 0.999f;   // We subtract a tiny margin to 0 dB to be safe
 
+const std::chrono::microseconds	Cst::_tempo_detection_max (
+	std::chrono::seconds (2)
+);
+const std::chrono::microseconds	Cst::_tempo_detection_min (
+	std::chrono::milliseconds (100)
+);
+
+const std::chrono::microseconds	Cst::_key_time_hold (
+	std::chrono::milliseconds (500)
+);
+const std::chrono::microseconds	Cst::_key_time_repeat (
+	std::chrono::milliseconds (150)
+);
+
 const double	Cst::_step_param = 0.05;
 
 const std::string	Cst::_plugin_mix     = "\?drywetmix";

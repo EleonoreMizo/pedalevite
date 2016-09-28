@@ -131,7 +131,7 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	_page_ptr  = &page;
 	_page_size = page_size;
 
-	_tempo_date = _model_ptr->get_cur_date () - 1000*1000;
+	_tempo_date = _model_ptr->get_cur_date () - std::chrono::seconds (1);
 
 	if (_view_ptr->use_setup ()._save_mode != doc::Setup::SaveMode_AUTO)
 	{
@@ -309,9 +309,9 @@ void	CurProg::do_activate_preset (int index)
 
 void	CurProg::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
 {
-	const int64_t  cur_date = _model_ptr->get_cur_date ();
-	const int64_t  dist     = cur_date - _tempo_date;
-	if (dist >= 100*1000)
+	const std::chrono::microseconds  cur_date (_model_ptr->get_cur_date ());
+	const std::chrono::microseconds  dist     (cur_date - _tempo_date);
+	if (dist >= std::chrono::milliseconds (100))
 	{
 		i_set_param (pi_id, index, val, slot_id, type);
 	}

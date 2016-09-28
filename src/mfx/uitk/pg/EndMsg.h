@@ -104,7 +104,8 @@ private:
 	TxtArray       _line_list;
 	EndType        _end_type;
 
-	int64_t        _action_date;
+	std::chrono::microseconds
+	               _action_date;
 
 
 

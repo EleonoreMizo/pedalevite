@@ -142,6 +142,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <chrono>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -1154,12 +1155,8 @@ static int MAIN_main_loop (Context &ctx)
 
 		if (wait_flag)
 		{
-			const int    wait_ms = 100;
-		#if fstb_IS (SYS, LINUX)
-			::delay (wait_ms);
-		#else
-			::Sleep (wait_ms);
-		#endif
+			static const std::chrono::milliseconds wait_duration (100);
+			std::this_thread::sleep_for (wait_duration);
 		}
 
 #else
@@ -1232,9 +1229,9 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 	::pinMode (MAIN_pin_reset, OUTPUT);
 
 	::digitalWrite (MAIN_pin_reset, LOW);
-	::delay (100);
+	std::this_thread::sleep_for (std::chrono::milliseconds (100));
 	::digitalWrite (MAIN_pin_reset, HIGH);
-	::delay (100);
+	std::this_thread::sleep_for (std::chrono::milliseconds (100));
 #endif
 
 	mfx::dsp::mix::Align::setup ();

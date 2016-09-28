@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <chrono>
 #include <string>
 
 
@@ -75,11 +76,15 @@ public:
 	static const int  _tempo_min       =  60;
 	static const int  _tempo_max       = 240;
 	static const int  _tempo_ref       = 120;
-	static const int  _tempo_detection_max = 2 * 1000*1000; // Maximum time between two tempo pedal actions. Microseconds
-	static const int  _tempo_detection_min =      100*1000; // Minimum time, microseconds
+	static const std::chrono::microseconds    // Maximum time between two tempo pedal actions. Microseconds
+	                  _tempo_detection_max;
+	static const std::chrono::microseconds    // Minimum time, microseconds
+	                  _tempo_detection_min;
 
-	static const int  _key_time_hold   =  500*1000; // Microseconds
-	static const int  _key_time_repeat =  150*1000; // Microseconds
+	static const std::chrono::microseconds    // Microseconds
+	                  _key_time_hold;
+	static const std::chrono::microseconds    // Microseconds
+	                  _key_time_repeat;
 
 	static const double  _step_param;         // Unit step on normalized parameter value
 

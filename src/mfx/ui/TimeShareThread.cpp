@@ -55,7 +55,8 @@ namespace ui
 
 
 
-TimeShareThread::TimeShareThread (int granularity)
+// -1 for manual calls to process_single_task()
+TimeShareThread::TimeShareThread (std::chrono::microseconds granularity)
 :	_granularity (granularity)
 , 	_list_mtx ()
 ,	_cb_list ()
@@ -63,7 +64,7 @@ TimeShareThread::TimeShareThread (int granularity)
 ,	_quit_flag (false)
 ,	_refresher ()
 {
-	if (_granularity > 0)
+	if (_granularity.count () > 0)
 	{
 		_refresher = std::thread (&TimeShareThread::polling_loop, this);
 	}
@@ -73,7 +74,7 @@ TimeShareThread::TimeShareThread (int granularity)
 
 TimeShareThread::~TimeShareThread ()
 {
-	if (_granularity > 0 && _refresher.joinable ())
+	if (_granularity.count () > 0 && _refresher.joinable ())
 	{
 		_quit_flag = true;
 		_refresher.join ();
@@ -82,13 +83,13 @@ TimeShareThread::~TimeShareThread ()
 
 
 
-void	TimeShareThread::register_cb (TimeShareCbInterface &cb, int interval_us)
+void	TimeShareThread::register_cb (TimeShareCbInterface &cb, std::chrono::microseconds interval_us)
 {
-	assert (interval_us > 0);
+	assert (interval_us.count () > 0);
 
 	std::lock_guard <std::mutex>  lock (_list_mtx);
 
-	const CbUnit   cbu = { &cb, interval_us * 1000, _base_time };
+	const CbUnit   cbu = { &cb, interval_us, _base_time };
 	_cb_list.push_back (cbu);
 }
 
@@ -116,7 +117,7 @@ void	TimeShareThread::remove_cb (TimeShareCbInterface &cb)
 // Returns true if we can wait before the next call.
 bool	TimeShareThread::process_single_task ()
 {
-	assert (_granularity <= 0);
+	assert (_granularity.count () <= 0);
 
 	static int      scan_pos = 0;
 	
@@ -143,11 +144,7 @@ void	TimeShareThread::polling_loop ()
 
 		if (wait_flag && ! _quit_flag)
 		{
-#if fstb_IS (SYS, LINUX)
-			::delayMicroseconds (_granularity);
-#else
-			::Sleep ((_granularity + 999) / 1000);
-#endif
+			std::this_thread::sleep_for (_granularity);
 		}
 	}
 
@@ -166,7 +163,7 @@ bool	TimeShareThread::find_and_execute_task (int &scan_pos)
 
 	if (! _cb_list.empty ())
 	{
-		const int64_t  time_cur     = get_time ();
+		const auto     time_cur     = get_time ();
 		const int      scan_pos_org = scan_pos;
 		bool           done_flag    = false;
 		do
@@ -206,16 +203,16 @@ void	TimeShareThread::fix_scanpos (int &scan_pos)
 
 
 // Nanoseconds
-int64_t	TimeShareThread::get_time ()
+std::chrono::nanoseconds	TimeShareThread::get_time ()
 {
 #if fstb_IS (SYS, LINUX)
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
 	const long     ns_mul = 1000L * 1000L * 1000L;
-	return int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec;
+	return std::chrono::nanoseconds (int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec);
 
-#else
+#elif fstb_IS (SYS, WIN)
 	::LARGE_INTEGER t;
 	::QueryPerformanceCounter (&t);
 	static double per = 0;
@@ -225,7 +222,9 @@ int64_t	TimeShareThread::get_time ()
 		::QueryPerformanceFrequency (&f);
 		per = 1e9 / double (f.QuadPart);
 	}
-	return int64_t (t.QuadPart * per);
+	return std::chrono::nanoseconds (int64_t (t.QuadPart * per));
+#else
+	#error
 
 #endif
 }

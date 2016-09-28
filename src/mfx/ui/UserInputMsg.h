@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/ui/UserInputType.h"
 
-#include <cstdint>
+#include <chrono>
 
 
 
@@ -47,14 +47,15 @@ class UserInputMsg
 
 public:
 
-	               UserInputMsg ()                          = default;
+	               UserInputMsg ();
 	               UserInputMsg (const UserInputMsg &other) = default;
 	virtual        ~UserInputMsg ()                         = default;
 
 	UserInputMsg & operator = (const UserInputMsg &other)   = default;
 
-	void           set (int64_t date, UserInputType type, int index, float val);
-	int64_t        get_date () const;
+	void           set (std::chrono::microseconds date, UserInputType type, int index, float val);
+	std::chrono::microseconds
+	               get_date () const;
 	UserInputType  get_type () const;
 	int            get_index () const;
 	float          get_val  () const;
@@ -73,10 +74,11 @@ protected:
 
 private:
 
-	int64_t        _date  = INT64_MIN;  // Microseconds, reference depends on the emitter
-	UserInputType  _type  = UserInputType_UNDEFINED;
-	int            _index = -1;
-	float          _val   = -1;         // In range [0 ; 1]
+	std::chrono::microseconds  // Microseconds, reference depends on the emitter
+	               _date;
+	UserInputType  _type;
+	int            _index;
+	float          _val;       // In range [0 ; 1]
 
 
 

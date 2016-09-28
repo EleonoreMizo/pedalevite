@@ -91,7 +91,7 @@ protected:
 	virtual int    do_get_nbr_param (UserInputType type) const;
 	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
 	virtual void   do_return_cell (MsgCell &cell);
-	virtual int64_t
+	virtual std::chrono::microseconds
 	               do_get_cur_date () const;
 
 
@@ -125,11 +125,11 @@ private:
 		int            _dir;
 	};
 
-	static const int  _scr_w   = 128;
-	static const int  _scr_h   =  64;
-	static const int  _scr_s   = _scr_w;
-	static const int  _nbr_led = 3;
-	static const int  _zoom    = 4;
+	static const int  _scr_w     = 128;
+	static const int  _scr_h     =  64;
+	static const int  _scr_s     = _scr_w;
+	static const int  _nbr_led   = 3;
+	static const int  _zoom      = 4;
 
 	static const int  _max_led_h = 32;
 	static const int  _led_h_tmp = _scr_h * _zoom / 2;

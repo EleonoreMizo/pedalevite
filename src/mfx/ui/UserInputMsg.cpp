@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/UserInputMsg.h"
 
 #include <cassert>
+#include <cstdint>
 
 
 
@@ -41,7 +42,18 @@ namespace ui
 
 
 
-void	UserInputMsg::set (int64_t date, UserInputType type, int index, float val)
+UserInputMsg::UserInputMsg ()
+:	_date (INT64_MIN)
+,	_type (UserInputType_UNDEFINED)
+,	_index (-1)
+,	_val (-1)
+{
+	// Nothing
+}
+
+
+
+void	UserInputMsg::set (std::chrono::microseconds date, UserInputType type, int index, float val)
 {
 	assert (type >= 0);
 	assert (type < UserInputType_NBR_ELT);
@@ -57,7 +69,7 @@ void	UserInputMsg::set (int64_t date, UserInputType type, int index, float val)
 
 
 
-int64_t	UserInputMsg::get_date () const
+std::chrono::microseconds	UserInputMsg::get_date () const
 {
 	assert (is_valid ());
 

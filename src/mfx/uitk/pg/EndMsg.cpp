@@ -144,8 +144,8 @@ void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page,
 		_page_ptr->push_back (line_sptr);
 	}
 
-	const int64_t  cur_date = _model_ptr->get_cur_date ();
-	_action_date = cur_date + 1 * 1000*1000;
+	const std::chrono::microseconds  cur_date (_model_ptr->get_cur_date ());
+	_action_date = cur_date + std::chrono::seconds (1);
 
 	_page_ptr->set_timer (0, true);
 }

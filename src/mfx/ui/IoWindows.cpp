@@ -213,7 +213,7 @@ void	IoWindows::do_return_cell (MsgCell &cell)
 
 
 
-int64_t	IoWindows::do_get_cur_date () const
+std::chrono::microseconds	IoWindows::do_get_cur_date () const
 {
 	::LARGE_INTEGER   d;
 	::QueryPerformanceCounter (&d);
@@ -221,7 +221,7 @@ int64_t	IoWindows::do_get_cur_date () const
 		double (d.QuadPart) * (1000 * 1000) / _clock_freq
 	);
 
-	return date_us;
+	return std::chrono::microseconds (date_us);
 }
 
 
@@ -620,9 +620,9 @@ void	IoWindows::enqueue_val (int64_t date, UserInputType type, int index, float 
 		}
 		else
 		{
-			const int64_t  date_us = int64_t (
+			const std::chrono::microseconds  date_us (int64_t (
 				double (date) * (1000 * 1000) / _clock_freq
-			);
+			));
 			cell_ptr->_val.set (date_us, type, index, val);
 			queue_ptr->enqueue (*cell_ptr);
 		}

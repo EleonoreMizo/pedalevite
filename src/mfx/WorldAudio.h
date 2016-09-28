@@ -149,8 +149,10 @@ private:
 	float          _tempo_new;          // BPM. 0 when nothing new
 	float          _tempo_cur;          // BPM, > 0
 
-	int64_t        _proc_date_beg;
-	int64_t        _proc_date_end;
+	std::chrono::microseconds
+	               _proc_date_beg;
+	std::chrono::microseconds
+	               _proc_date_end;
 	dsp::dyn::MeterRmsPeakHold
 	               _proc_analyser;
 

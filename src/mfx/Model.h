@@ -127,7 +127,8 @@ public:
 	               list_plugin_models () const;
 	const piapi::PluginDescInterface &
 	               get_model_desc (std::string model_id) const;
-	int64_t        get_cur_date () const;
+	std::chrono::microseconds
+	               get_cur_date () const;
 
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;
@@ -161,7 +162,8 @@ private:
 	public:
 		bool           _press_flag = false;
 		bool           _hold_flag  = false;
-		int64_t        _press_ts   = INT64_MIN;
+		std::chrono::microseconds
+		               _press_ts   = INT64_MIN;
 		int            _cycle_pos  = 0; // Counts only "PRESS" events
 	};
 	typedef std::array <PedalState, Cst::_nbr_pedals> PedalStateArray;
@@ -184,20 +186,21 @@ private:
 	void           send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings);
 	void           process_msg_ui ();
 	int            find_pedal (int switch_index) const;
-	void           process_pedal (int pedal_index, bool set_flag, int64_t date);
+	void           process_pedal (int pedal_index, bool set_flag, std::chrono::microseconds date);
 	void           process_pedal_event (int pedal_index, doc::ActionTrigger trigger);
-	void           process_action (const doc::PedalActionSingleInterface &action, int64_t ts);
+	void           process_action (const doc::PedalActionSingleInterface &action, std::chrono::microseconds ts);
 	void           process_action_bank (const doc::ActionBank &action);
 	void           process_action_param (const doc::ActionParam &action);
 	void           process_action_preset (const doc::ActionPreset &action);
 	void           process_action_toggle_fx (const doc::ActionToggleFx &action);
 	void           process_action_toggle_tuner (const doc::ActionToggleTuner &action);
-	void           process_action_tempo (const doc::ActionTempo &action, int64_t ts);
+	void           process_action_tempo (const doc::ActionTempo &action, std::chrono::microseconds ts);
 	void           build_slot_info ();
 	void           notify_slot_info ();
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
 	void           find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) const;
 	bool           update_parameter (doc::Preset &preset, int slot_id, PiType type, int index, float val);
+	bool           update_parameter (doc::Preset &preset, doc::Preset::SlotMap::iterator it_slot, PiType type, int index, float val);
 	void           fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitData &pi_data);
 	void           update_all_beat_parameters ();
 	void           update_all_overriden_param_ctrl ();
@@ -221,7 +224,8 @@ private:
 	PiIdMap        _pi_id_map;         // Not affected by the tuner
 	PedalStateArray
 	               _pedal_state_arr;
-	int64_t        _hold_time;          // Pedal minimum hold time. Microseconds.
+	std::chrono::microseconds
+	               _hold_time;          // Pedal minimum hold time. Microseconds.
 	bool           _edit_flag;          // Changes must be mirrored to _setup
 	bool           _edit_preset_flag;   // _preset_cur corresonds to _bank_index/_preset_index
 	bool           _tuner_flag;
@@ -238,7 +242,8 @@ private:
 	ModelObserverInterface *            // Can be 0.
 	               _obs_ptr;
 	const int      _dummy_mix_id;
-	int64_t        _tempo_last_ts;      // Timestamp of the last tempo pedal action
+	std::chrono::microseconds
+	               _tempo_last_ts;      // Timestamp of the last tempo pedal action
 	double         _tempo;              // Actual tempo
 	int            _latest_slot_id;     // >= 0
 

@@ -146,14 +146,16 @@ private:
 	std::set <int> _timer_set;
 
 	Button         _but_hold;
-	int64_t        _but_hold_date;      // Microseconds, beginning of the hold position
+	std::chrono::microseconds           // Microseconds, beginning of the hold position
+	               _but_hold_date;
 	int            _but_hold_count;     // Number of elapsed repetitions
 
 	std::list <SetPageContent>
 	               _rec_spc;
 	bool           _recursive_flag;
 
-	int64_t        _first_refresh_date;
+	std::chrono::microseconds
+	               _first_refresh_date;
 
 
 

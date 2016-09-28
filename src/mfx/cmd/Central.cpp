@@ -502,7 +502,7 @@ const PluginPool &	Central::use_pi_pool () const
 
 
 
-int64_t	Central::get_cur_date () const
+std::chrono::microseconds	Central::get_cur_date () const
 {
 	return _input_device.get_cur_date ();
 }

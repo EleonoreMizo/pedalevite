@@ -54,7 +54,7 @@ UserInputVoid::UserInputVoid ()
 
 
 
-void	UserInputVoid::send_message (int64_t date, UserInputType type, int index, float val)
+void	UserInputVoid::send_message (std::chrono::microseconds date, UserInputType type, int index, float val)
 {
 	// The cell well be lost but we don't care, this is for debugging.
 	conc::LockFreeCell <UserInputMsg> * cell_ptr =
@@ -91,9 +91,11 @@ void	UserInputVoid::do_return_cell (MsgCell &/*cell*/)
 
 
 
-int64_t	UserInputVoid::do_get_cur_date () const
+std::chrono::microseconds	UserInputVoid::do_get_cur_date () const
 {
-	return 0;
+	return std::chrono::duration_cast <std::chrono::microseconds> (
+		_clk.now ().time_since_epoch ()
+	);
 }
 
 

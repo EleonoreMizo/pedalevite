@@ -115,7 +115,7 @@ void	Page::set_page_content (PageInterface &content, void *usr_ptr)
 			_rec_spc.pop_front ();
 
 			// Force several refreshing at the beginning
-			if (_first_refresh_date == INT64_MIN)
+			if (_first_refresh_date.count () == INT64_MIN)
 			{
 				_first_refresh_date = _model.get_cur_date ();
 			}
@@ -388,11 +388,11 @@ void	Page::process_input ()
 	// Key repeat
 	if (check_hold_flag && _but_hold != Button_INVALID)
 	{
-		const int64_t  cur_date = _model.get_cur_date ();
-		const int64_t  dist     = cur_date - _but_hold_date;
+		const std::chrono::microseconds  cur_date (_model.get_cur_date ());
+		const std::chrono::microseconds  dist (cur_date - _but_hold_date);
 		const int      count    = int (
-			  (dist - Cst::_key_time_hold + Cst::_key_time_repeat)
-			/ Cst::_key_time_repeat
+			  (dist - Cst::_key_time_hold + Cst::_key_time_repeat).count ()
+			/ Cst::_key_time_repeat.count ()
 		);
 		if (count > _but_hold_count)
 		{
@@ -425,11 +425,11 @@ void	Page::process_input ()
 void	Page::handle_redraw ()
 {
 	// Forced refresh
-	if (_first_refresh_date != INT64_MIN)
+	if (_first_refresh_date.count () != INT64_MIN)
 	{
-		const int64_t  cur_time = _model.get_cur_date ();
-		const int64_t  dist     = cur_time - _first_refresh_date;
-		if (dist < 1 * 1000*1000)
+		const std::chrono::microseconds  cur_time (_model.get_cur_date ());
+		const std::chrono::microseconds  dist (cur_time - _first_refresh_date);
+		if (dist < std::chrono::seconds (1))
 		{
 			_zone_inval = Rect (Vec2d (), _disp_size);
 		}

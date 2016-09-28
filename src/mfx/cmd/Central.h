@@ -40,6 +40,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/WorldAudio.h"
 
 #include <array>
+#include <chrono>
 #include <map>
 #include <memory>
 #include <set>
@@ -114,7 +115,8 @@ public:
 	PluginPool &   use_pi_pool ();
 	const PluginPool &
 	               use_pi_pool () const;
-	int64_t        get_cur_date () const;
+	std::chrono::microseconds
+	               get_cur_date () const;
 	int            get_dummy_mix_id () const;
 	const piapi::PluginState &
 	               use_default_settings (std::string model) const;

@@ -75,7 +75,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_layout_cur ()
 ,	_pi_id_map ()
 ,	_pedal_state_arr ()
-,	_hold_time (2 * 1000*1000) // 2 s
+,	_hold_time (std::chrono::seconds (2))
 ,	_edit_flag (false)
 ,	_edit_preset_flag (false)
 ,	_tuner_flag (false)
@@ -157,7 +157,7 @@ void	Model::process_messages ()
 	process_msg_ui ();
 
 	// Checks hold state for pedals
-	const int64_t  date_us = _central.get_cur_date ();
+	const std::chrono::microseconds  date_us (_central.get_cur_date ());
 	for (int ped_cnt = 0; ped_cnt < int (_pedal_state_arr.size ()); ++ped_cnt)
 	{
 		PedalState &   state = _pedal_state_arr [ped_cnt];
@@ -903,7 +903,7 @@ const piapi::PluginDescInterface &	Model::get_model_desc (std::string model_id) 
 
 
 
-int64_t	Model::get_cur_date () const
+std::chrono::microseconds	Model::get_cur_date () const
 {
 	return _central.get_cur_date ();
 }
@@ -927,8 +927,11 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 		find_slot_type_cur_preset (slot_id, type, pi_id);
 		if (slot_id >= 0)
 		{
+			auto           it_slot = _preset_cur._slot_map.find (slot_id);
+			assert (it_slot != _preset_cur._slot_map.end ());
+
 			const bool     ok_flag =
-				update_parameter (_preset_cur, slot_id, type, index, val);
+				update_parameter (_preset_cur, it_slot, type, index, val);
 
 			if (ok_flag)
 			{
@@ -940,9 +943,6 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 				// Checks if the parameter is tempo-controlled
 				if (type == PiType_MAIN)
 				{
-					auto           it_slot = _preset_cur._slot_map.find (slot_id);
-					assert (it_slot != _preset_cur._slot_map.end ());
-
 					doc::Slot &    slot = *(it_slot->second);
 					doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 					assert (index < int (settings._param_list.size ()));
@@ -1331,8 +1331,8 @@ void	Model::process_msg_ui ()
 				}
 				else
 				{
-					const float    val  = cell_ptr->_val.get_val ();
-					const int64_t  date = cell_ptr->_val.get_date ();
+					const float    val = cell_ptr->_val.get_val ();
+					const std::chrono::microseconds  date (cell_ptr->_val.get_date ());
 					process_pedal (pedal_index, (val >= 0.5f), date);
 				}
 			}
@@ -1371,7 +1371,7 @@ int	Model::find_pedal (int switch_index) const
 
 
 
-void	Model::process_pedal (int pedal_index, bool set_flag, int64_t date)
+void	Model::process_pedal (int pedal_index, bool set_flag, std::chrono::microseconds date)
 {
 	assert (pedal_index >= 0);
 	assert (pedal_index < Cst::_nbr_pedals);
@@ -1447,7 +1447,7 @@ void	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
 
 
 
-void	Model::process_action (const doc::PedalActionSingleInterface &action, int64_t ts)
+void	Model::process_action (const doc::PedalActionSingleInterface &action, std::chrono::microseconds ts)
 {
 	const doc::ActionType   type = action.get_type ();
 
@@ -1573,13 +1573,13 @@ void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
 
 
 
-void	Model::process_action_tempo (const doc::ActionTempo &action, int64_t ts)
+void	Model::process_action_tempo (const doc::ActionTempo &action, std::chrono::microseconds ts)
 {
-	const int64_t  dist = ts - _tempo_last_ts;
+	const std::chrono::microseconds  dist = ts - _tempo_last_ts;
 	if (   dist <= Cst::_tempo_detection_max
 	    && dist >= Cst::_tempo_detection_min)
 	{
-		double      tempo = (60.0 * 1000*1000) / double (dist);
+		double      tempo = (60.0 * 1000*1000) / double (dist.count ());
 
 		// Fits tempo into the accepted range
 		while (tempo > Cst::_tempo_max)
@@ -1718,9 +1718,16 @@ void	Model::find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) co
 
 bool	Model::update_parameter (doc::Preset &preset, int slot_id, PiType type, int index, float val)
 {
-	bool           ok_flag = true;
-
 	auto           it_slot = preset._slot_map.find (slot_id);
+
+	return update_parameter (preset, it_slot, type, index, val);
+}
+
+
+
+bool	Model::update_parameter (doc::Preset &preset, doc::Preset::SlotMap::iterator it_slot, PiType type, int index, float val)
+{
+	bool           ok_flag = true;
 	if (preset.is_slot_empty (it_slot))
 	{
 		ok_flag = false;

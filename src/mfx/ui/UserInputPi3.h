@@ -81,7 +81,8 @@ public:
 		int            _dir_mul; // 1 or -1
 	};
 
-	static const int  _antibounce_time = 30 * 1000*1000; // Nanoseconds
+	static const std::chrono::nanoseconds               // Nanoseconds
+	                  _antibounce_time;
 
 	static const int  _nbr_dev_23017   = 2;
 	static const int  _i2c_dev_23017_arr [_nbr_dev_23017];
@@ -117,7 +118,7 @@ protected:
 	virtual int    do_get_nbr_param (UserInputType type) const;
 	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
 	virtual void   do_return_cell (MsgCell &cell);
-	virtual int64_t
+	virtual std::chrono::microseconds
 	               do_get_cur_date () const;
 
 	// TimeShareCbInterface
@@ -170,9 +171,11 @@ private:
 	class SwitchState
 	{
 	public:
-		volatile bool  _flag      = false;
-		int64_t        _time_last = INT64_MIN; // ns
-		bool           is_set () const { return _time_last != INT64_MIN; }
+		               SwitchState ();
+		volatile bool  _flag;
+		std::chrono::nanoseconds
+		               _time_last; // ns
+		bool           is_set () const;
 	};
 	typedef std::array <SwitchState, _nbr_switches> SwitchStateArray;
 
@@ -195,12 +198,13 @@ private:
 	void           close_everything ();
 	void           polling_loop ();
 	void           read_data (bool low_freq_flag);
-	void           handle_switch (int index, bool flag, int64_t cur_time);
-	void           handle_rotenc (int index, bool f0, bool f1, int64_t cur_time);
-	void           handle_pot (int index, int val, int64_t cur_time);
-	void           enqueue_val (int64_t date, UserInputType type, int index, float val);
+	void           handle_switch (int index, bool flag, std::chrono::nanoseconds cur_time);
+	void           handle_rotenc (int index, bool f0, bool f1, std::chrono::nanoseconds cur_time);
+	void           handle_pot (int index, int val, std::chrono::nanoseconds cur_time);
+	void           enqueue_val (std::chrono::nanoseconds date, UserInputType type, int index, float val);
 	int            read_adc (int port, int chn);
-	int64_t        read_clock_ns () const;
+	std::chrono::nanoseconds
+	               read_clock_ns () const;
 
 	TimeShareThread &
 	               _thread_spi;

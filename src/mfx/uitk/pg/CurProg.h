@@ -128,7 +128,8 @@ private:
 	int            _bank_index;
 	int            _preset_index;
 
-	int64_t        _tempo_date;
+	std::chrono::microseconds
+	               _tempo_date;
 	int            _esc_count;
 
 
