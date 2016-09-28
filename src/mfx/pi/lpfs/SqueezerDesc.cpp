@@ -134,10 +134,11 @@ std::string	SqueezerDesc::do_get_name () const
 
 
 
-void	SqueezerDesc::do_get_nbr_io (int &nbr_i, int &nbr_o) const
+void	SqueezerDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 {
 	nbr_i = 1;
 	nbr_o = 1;
+	nbr_s = 0;
 }
 
 

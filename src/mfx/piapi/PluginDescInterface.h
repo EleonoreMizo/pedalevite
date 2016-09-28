@@ -54,7 +54,7 @@ public:
 	std::string    get_unique_id () const;
 	std::string    get_name () const;
 
-	void           get_nbr_io (int &nbr_i, int &nbr_o) const;
+	void           get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const;
 	bool           prefer_stereo () const;
 
 	int            get_nbr_param (ParamCateg categ) const;
@@ -72,7 +72,7 @@ protected:
 	virtual std::string
 	               do_get_name () const = 0;
 
-	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const = 0;
+	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const = 0;
 	virtual bool   do_prefer_stereo () const = 0;
 
 	virtual int    do_get_nbr_param (ParamCateg categ) const = 0;

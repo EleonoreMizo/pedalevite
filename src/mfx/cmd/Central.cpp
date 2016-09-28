@@ -769,9 +769,12 @@ void	Central::create_routing ()
 				pi_ctx._node_arr [PiType_MAIN]._side_arr [Dir_OUT];
 			int            main_nbr_i = 1;
 			int            main_nbr_o = 1;
+			int            main_nbr_s = 0;
 
 			// Input
-			desc_main.get_nbr_io (main_nbr_i, main_nbr_o);
+			desc_main.get_nbr_io (main_nbr_i, main_nbr_o, main_nbr_s);
+			assert (main_nbr_i > 0);
+			assert (main_nbr_o > 0);
 			main_side_i._nbr_chn     = nbr_chn_in;
 			main_side_i._nbr_chn_tot = nbr_chn_in * main_nbr_i;
 			for (int chn = 0; chn < main_side_i._nbr_chn_tot; ++chn)
@@ -804,6 +807,14 @@ void	Central::create_routing ()
 				}
 			}
 
+			// Signals
+			pi_ctx._node_arr [PiType_MAIN]._nbr_sig = main_nbr_s;
+			for (int sig = 0; sig < main_nbr_s; ++sig)
+			{
+				pi_ctx._node_arr [PiType_MAIN]._sig_buf_arr [sig] =
+					Cst::BufSpecial_TRASH;
+			}
+
 			// With dry/wet mixer
 			if (pi_id_mix >= 0)
 			{
@@ -812,6 +823,8 @@ void	Central::create_routing ()
 					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_IN ];
 				ProcessingContextNode::Side & mix_side_o =
 					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_OUT];
+
+				pi_ctx._node_arr [PiType_MIX]._nbr_sig = 0;
 
 				// Bypass output for the main plug-in
 				for (int chn = 0; chn < nbr_chn_out * main_nbr_o; ++chn)

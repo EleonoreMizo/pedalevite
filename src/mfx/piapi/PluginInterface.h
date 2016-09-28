@@ -94,6 +94,8 @@ public:
 		               _byp_arr   = 0;
 		const float * const *
 		               _src_arr   = 0;
+		float * const *
+		               _sig_arr   = 0;
 		int            _nbr_chn_arr [Dir_NBR_ELT];
 		BypassState    _byp_state = BypassState_IGNORE; // On input and output
 		int            _nbr_spl   = 0;

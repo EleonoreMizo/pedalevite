@@ -692,8 +692,9 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::P
 void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node, bool use_byp_as_src_flag)
 {
 	const float ** src_arr = const_cast <const float **> (proc_info._src_arr);
-	float **       dst_arr = const_cast <float **      > (proc_info._dst_arr);
-	float **       byp_arr = const_cast <float **      > (proc_info._byp_arr);
+	float **       dst_arr = const_cast <      float **> (proc_info._dst_arr);
+	float **       byp_arr = const_cast <      float **> (proc_info._byp_arr);
+	float **       sig_arr = const_cast <      float **> (proc_info._sig_arr);
 
 	const ProcessingContextNode::Side & side_i = node._side_arr [Dir_IN ];
 	const ProcessingContextNode::Side & side_o = node._side_arr [Dir_OUT];
@@ -739,6 +740,14 @@ void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, c
 			assert (buf_index < int (_buf_arr.size ()));
 			byp_arr [chn] = _buf_arr [buf_index];
 		}
+	}
+
+	for (int sig = 0; sig < node._nbr_sig; ++sig)
+	{
+		const int      buf_index = node._sig_buf_arr [sig];
+		assert (buf_index >= 0);
+		assert (buf_index < int (_buf_arr.size ()));
+		sig_arr [sig] = _buf_arr [buf_index];
 	}
 
 	for (int dir = 0; dir < Dir_NBR_ELT; ++dir)

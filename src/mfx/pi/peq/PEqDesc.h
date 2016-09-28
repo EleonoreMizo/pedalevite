@@ -69,7 +69,7 @@ protected:
 	               do_get_unique_id () const;
 	virtual std::string
 	               do_get_name () const;
-	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o) const;
+	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const;
 	virtual bool   do_prefer_stereo () const;
 	virtual int    do_get_nbr_param (piapi::ParamCateg categ) const;
 	virtual const piapi::ParamDescInterface &

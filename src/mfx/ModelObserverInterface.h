@@ -86,6 +86,7 @@ public:
 		std::string    _model;
 		std::array <int, Dir_NBR_ELT>
 		               _nbr_io_arr;
+		int            _nbr_sig;       // Number of signal outputs
 		std::array <int, piapi::ParamCateg_NBR_ELT>
 		               _nbr_param_arr;
 		bool           _prefer_stereo_flag;

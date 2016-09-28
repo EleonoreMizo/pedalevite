@@ -1779,9 +1779,11 @@ void	Model::fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitDa
 		_central.use_pi_pool ().use_plugin (pi_id);
 	pi_data._nbr_io_arr [Dir_IN ] = 1;
 	pi_data._nbr_io_arr [Dir_OUT] = 1;
+	pi_data._nbr_sig              = 0;
 	details._desc_ptr->get_nbr_io (
 		pi_data._nbr_io_arr [Dir_IN ],
-		pi_data._nbr_io_arr [Dir_OUT]
+		pi_data._nbr_io_arr [Dir_OUT],
+		pi_data._nbr_sig
 	);
 	for (int categ = 0; categ < piapi::ParamCateg_NBR_ELT; ++categ)
 	{

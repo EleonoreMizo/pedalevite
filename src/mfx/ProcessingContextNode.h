@@ -67,12 +67,15 @@ public:
 	};
 
 	typedef std::array <int, Cst::_max_nbr_output * piapi::PluginInterface::_max_nbr_chn> BypBufArray;
+	typedef std::array <int, Cst::_max_nbr_sig> SigBufArray;
 
 	typedef std::array <Side, Dir_NBR_ELT> SideArray;
 
 	int            _pi_id;
 	SideArray      _side_arr;
 	BypBufArray    _bypass_buf_arr;  // Starts with -1 if bypass should not be generated.
+	SigBufArray    _sig_buf_arr;
+	int            _nbr_sig;
 
 
 

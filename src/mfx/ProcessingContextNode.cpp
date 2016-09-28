@@ -42,6 +42,9 @@ namespace mfx
 ProcessingContextNode::ProcessingContextNode ()
 :	_pi_id (-1)
 ,	_side_arr ()
+,	_bypass_buf_arr ()
+,	_sig_buf_arr ()
+,	_nbr_sig (0)
 {
 	for (auto & side : _side_arr)
 	{
@@ -54,6 +57,11 @@ ProcessingContextNode::ProcessingContextNode ()
 	}
 
 	for (auto & buf_index : _bypass_buf_arr)
+	{
+		buf_index = -1;
+	}
+
+	for (auto &buf_index : _sig_buf_arr)
 	{
 		buf_index = -1;
 	}
