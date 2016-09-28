@@ -166,7 +166,7 @@ MsgHandlerInterface::EvtProp	EndMsg::do_handle_evt (const NodeEvt &evt)
 	if (evt.is_timer ())
 	{
 #if fstb_IS (SYS, LINUX)
-		const int64_t  cur_date = _model_ptr->get_cur_date ();
+		const auto     cur_date = _model_ptr->get_cur_date ();
 		if (cur_date >= _action_date)
 		{
 			switch (_end_type)

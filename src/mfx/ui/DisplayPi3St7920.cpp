@@ -72,7 +72,10 @@ DisplayPi3St7920::DisplayPi3St7920 (TimeShareThread &thread_spi)
 
 	_msg_pool.expand_to (256);
 
-	_thread_spi.register_cb (*this, 1000 * 1000 / 20); // 20 fps max refresh rate
+	_thread_spi.register_cb (
+		*this,
+		std::chrono::microseconds (1000 * 1000 / 20)
+	); // 20 fps max refresh rate
 }
 
 

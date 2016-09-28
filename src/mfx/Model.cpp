@@ -333,7 +333,7 @@ void	Model::set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content
 	case PedalLoc::Type_PRESET_CUR:
 		layout_ptr = &_preset_cur._layout;
 		break;
-		
+
 	default:
 		assert (false);
 		break;
@@ -979,6 +979,17 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 
 Model::SlotPiId::SlotPiId ()
 :	_pi_id_arr ({{ -1, -1 }})
+{
+	// Nothing
+}
+
+
+
+Model::PedalState::PedalState ()
+:	_press_flag (false)
+,	_hold_flag (false)
+,	_press_ts (INT64_MIN)
+,	_cycle_pos (0)
 {
 	// Nothing
 }

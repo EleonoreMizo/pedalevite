@@ -302,8 +302,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_sample_freq (0)
 ,	_max_block_size (0)
 #if fstb_IS (SYS, LINUX)
-,	_thread_spi (10 * 1000)
-
+,	_thread_spi (std::chrono::milliseconds (10))
 #endif
 ,	_buf_alig (4096 * 4)
 ,	_proc_ctx ()

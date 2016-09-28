@@ -160,11 +160,12 @@ private:
 	class PedalState
 	{
 	public:
-		bool           _press_flag = false;
-		bool           _hold_flag  = false;
+		               PedalState ();
+		bool           _press_flag;
+		bool           _hold_flag;
 		std::chrono::microseconds
-		               _press_ts   = INT64_MIN;
-		int            _cycle_pos  = 0; // Counts only "PRESS" events
+		               _press_ts;
+		int            _cycle_pos;       // Counts only "PRESS" events
 	};
 	typedef std::array <PedalState, Cst::_nbr_pedals> PedalStateArray;
 
