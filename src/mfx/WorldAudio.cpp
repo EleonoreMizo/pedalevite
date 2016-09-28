@@ -431,8 +431,6 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 
 void	WorldAudio::check_signal_level (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
-#if 1
-
 	std::array <const float *, 4> data_ptr_arr = {{
 		src_arr [0],
 		src_arr [1],
@@ -476,38 +474,6 @@ void	WorldAudio::check_signal_level (float * const * dst_arr, const float * cons
 	{
 		_meter_result._audio_io [Dir_OUT]._clip_flag.exchange (true);
 	}
-
-#else
-
-	const ProcessingContextNode::Side & side =
-		_ctx_ptr->_interface_ctx._side_arr [Dir_OUT];
-
-	auto           lvl = fstb::ToolsSimd::set_f32_zero ();
-
-	for (int chn_cnt = 0; chn_cnt < side._nbr_chn; ++chn_cnt)
-	{
-		const int      buf_index = side._buf_arr [chn_cnt];
-		const float *  buf_ptr   = _buf_arr [buf_index];
-
-		for (int pos = 0; pos < nbr_spl; pos += 4)
-		{
-			const auto     x = fstb::ToolsSimd::load_f32 (buf_ptr + pos);
-			lvl = fstb::ToolsSimd::max_f32 (lvl, x);
-		}
-	}
-
-	float          v = 0;
-	v = std::max (v, fstb::ToolsSimd::Shift <0>::extract (lvl));
-	v = std::max (v, fstb::ToolsSimd::Shift <1>::extract (lvl));
-	v = std::max (v, fstb::ToolsSimd::Shift <2>::extract (lvl));
-	v = std::max (v, fstb::ToolsSimd::Shift <3>::extract (lvl));
-
-	if (v > Cst::_clip_lvl)
-	{
-		_meter_result._audio_io [Dir_OUT]._clip_flag.exchange (true);
-	}
-
-#endif
 }
 
 
