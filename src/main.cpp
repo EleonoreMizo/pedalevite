@@ -45,6 +45,7 @@
 #include "mfx/pi/freqsh/FreqShiftDesc.h"
 #include "mfx/pi/freqsh/Param.h"
 #include "mfx/pi/iifix/Param.h"
+#include "mfx/pi/param/Tools.h"
 #include "mfx/pi/trem1/Param.h"
 #include "mfx/pi/trem1/Waveform.h"
 #include "mfx/pi/wha1/Param.h"
@@ -228,8 +229,10 @@ public:
 #endif
 
 	mfx::Model     _model;
-	std::vector <std::string>
-	               _pi_type_list;
+	std::vector <std::string>           // Audio plug-ins, at least 1 audio in and 1 audio out
+	               _pi_aud_type_list;
+	std::vector <std::string>           // Signal generators, (0 in or 0 out) and at least 1 signal output
+	               _pi_sig_type_list;
 	std::vector <mfx::uitk::pg::CtrlSrcNamed>
 	               _csn_list;
 
@@ -292,6 +295,7 @@ protected:
 	virtual void   do_notify_dropout ();
 	virtual void   do_request_exit ();
 private:
+	void           list_plugins (std::vector <std::string> &pi_aud_type_list, std::vector <std::string> &pi_sig_type_list) const;
 	static void    init_empty_bank (mfx::doc::Bank &bank);
 	static void    create_default_bank (mfx::doc::Bank &bank);
 	static void    create_default_layout (mfx::doc::PedalboardLayout &layout);
@@ -325,7 +329,8 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 #endif
 ,	_file_io (_leds)
 ,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input, _file_io)
-,	_pi_type_list ()
+,	_pi_aud_type_list ()
+,	_pi_sig_type_list ()
 ,	_csn_list ({
 		{ mfx::ControllerType_POT   ,  0, "Expression 0" },
 		{ mfx::ControllerType_POT   ,  1, "Expression 1" },
@@ -359,14 +364,14 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_page_cur_prog (_page_switcher, snd_drv)
 ,	_page_tuner (_page_switcher, _leds)
 ,	_page_menu_main (_page_switcher)
-,	_page_edit_prog (_page_switcher, _loc_edit, _pi_type_list)
+,	_page_edit_prog (_page_switcher, _loc_edit, _pi_aud_type_list)
 ,	_page_param_list (_page_switcher, _loc_edit)
 ,	_page_param_edit (_page_switcher, _loc_edit)
 ,	_page_not_yet (_page_switcher)
 ,	_page_question (_page_switcher)
 ,	_page_param_controllers (_page_switcher, _loc_edit, _csn_list)
 ,	_page_ctrl_edit (_page_switcher, _loc_edit, _csn_list)
-,	_page_menu_slot (_page_switcher, _loc_edit, _pi_type_list)
+,	_page_menu_slot (_page_switcher, _loc_edit, _pi_aud_type_list)
 ,	_page_edit_text (_page_switcher)
 ,	_page_save_prog (_page_switcher)
 ,	_page_end_msg (_cmd_line)
@@ -449,15 +454,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	}
 
 	// Lists public plug-ins
-	_pi_type_list.clear ();
-	std::vector <std::string> pi_list = _model.list_plugin_models ();
-	for (std::string model_id : pi_list)
-	{
-		if (model_id [0] != '\?')
-		{
-			_pi_type_list.push_back (model_id);
-		}
-	}
+	list_plugins (_pi_aud_type_list, _pi_sig_type_list);
 
 	_model.set_observer (&_view);
 	_view.add_observer (*this);
@@ -518,10 +515,14 @@ fprintf (stderr, "Reading ESC button...\n");
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }
 
+
+
 Context::~Context ()
 {
 	// Nothing
 }
+
+
 
 void	Context::set_proc_info (double sample_freq, int max_block_size)
 {
@@ -529,6 +530,8 @@ void	Context::set_proc_info (double sample_freq, int max_block_size)
 	_max_block_size = max_block_size;
 	_model.set_process_info (_sample_freq, _max_block_size);
 }
+
+
 
 void	Context::do_set_tuner (bool active_flag)
 {
@@ -542,10 +545,14 @@ void	Context::do_set_tuner (bool active_flag)
 	}
 }
 
+
+
 void	Context::do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
 	_model.process_block (dst_arr, src_arr, nbr_spl);
 }
+
+
 
 void	Context::do_notify_dropout ()
 {
@@ -553,9 +560,57 @@ void	Context::do_notify_dropout ()
 	meters._dsp_overload_flag.exchange (true);
 }
 
+
+
 void	Context::do_request_exit ()
 {
 	_quit_flag = true;
+}
+
+
+
+void	Context::list_plugins (std::vector <std::string> &pi_aud_type_list, std::vector <std::string> &pi_sig_type_list) const
+{
+	pi_aud_type_list.clear ();
+	pi_sig_type_list.clear ();
+	std::vector <std::string> pi_list = _model.list_plugin_models ();
+	std::map <std::string, std::string> pi_aud_map;
+	std::map <std::string, std::string> pi_sig_map;
+	for (std::string model_id : pi_list)
+	{
+		if (model_id [0] != '\?')
+		{
+			const mfx::piapi::PluginDescInterface &   desc =
+				_model.get_model_desc (model_id);
+
+			int            nbr_i = 1;
+			int            nbr_o = 1;
+			int            nbr_s = 0;
+			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
+
+			std::string    name_all = desc.get_name ();
+			std::string    name     = mfx::pi::param::Tools::extract_longest_str (
+				name_all.c_str (), '\n'
+			);
+
+			if (nbr_i > 0 && nbr_o > 0)
+			{
+				pi_aud_map [name] = model_id;
+			}
+			else if (nbr_s > 0)
+			{
+				pi_sig_map [name] = model_id;
+			}
+		}
+	}
+	for (auto &node : pi_aud_map)
+	{
+		pi_aud_type_list.push_back (node.second);
+	}
+	for (auto &node : pi_sig_map)
+	{
+		pi_sig_type_list.push_back (node.second);
+	}
 }
 
 

@@ -43,10 +43,8 @@ enum ControllerType
 	ControllerType_POT,
 	ControllerType_ROTENC,
 
+	ControllerType_FX_SIG,
 	ControllerType_MIDI,
-	ControllerType_SIG_PROBE,
-	ControllerType_LFO,
-	ControllerType_SEQ,
 
 	ControllerType_NBR_ELT
 

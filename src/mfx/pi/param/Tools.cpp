@@ -73,6 +73,46 @@ std::string	Tools::print_name_bestfit (size_t max_len, const char src_list_0 [])
 
 
 
+// Just compares the number of 8-bit characters, does not take real UTF-8
+// length into account.
+std::string	Tools::extract_longest_str (const char src_list_0 [], char delimiter)
+{
+	assert (src_list_0 != 0);
+
+	std::string    result;
+
+	size_t         pos   = 0;
+	while (src_list_0 [pos] != '\0')
+	{
+		if (! result.empty ())
+		{
+			result.push_back (delimiter);
+		}
+
+		std::string    name;
+		const char *   delim_0 = strchr (src_list_0 + pos, delimiter);
+		if (delim_0 == 0)
+		{
+			name = src_list_0 + pos;
+			pos  = strchr (src_list_0 + pos, '\0') - src_list_0;
+		}
+		else
+		{
+			name = std::string (src_list_0 + pos, delim_0);
+			pos  = delim_0 + 1 - src_list_0;
+		}
+
+		if (name.length () > result.length () || result.empty ())
+		{
+			result = name;
+		}
+	}
+
+	return result;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

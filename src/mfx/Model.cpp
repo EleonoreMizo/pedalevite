@@ -923,7 +923,7 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 		const float    val   = msg._content._param._val;
 
 		int            slot_id;
-		PiType         type;
+		PiType         type  = PiType_INVALID;
 		find_slot_type_cur_preset (slot_id, type, pi_id);
 		if (slot_id >= 0)
 		{

@@ -49,6 +49,8 @@ public:
 
 	static std::string
 	               print_name_bestfit (size_t max_len, const char src_list_0 []);
+	static std::string
+	               extract_longest_str (const char src_list_0 [], char delimiter);
 
 	template <class T, class U>
 	static std::string

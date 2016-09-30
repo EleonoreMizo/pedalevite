@@ -61,7 +61,7 @@ bool	ControlSource::is_relative () const
 
 bool	ControlSource::is_bipolar () const
 {
-	return (_type == ControllerType_LFO);
+	return (_type == ControllerType_FX_SIG);
 }
 
 
