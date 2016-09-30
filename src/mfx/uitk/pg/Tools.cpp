@@ -369,7 +369,7 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 	if (slot_index < nbr_slots)
 	{
 		slot_id = view.conv_slot_index_to_id (slot_index);
-		if (! preset.is_slot_empty (slot_index))
+		if (! preset.is_slot_empty (slot_id))
 		{
 			const doc::Slot & slot = preset.use_slot (slot_id);
 			const std::string type = slot._pi_model;
@@ -408,7 +408,7 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 			-- nbr_slots_new;
 			model.erase_slot (nbr_slots_new);
 		}
-		while (nbr_slots_new > 0 && preset.is_slot_empty (nbr_slots_new - 1));
+		while (nbr_slots_new > 0 && preset.is_slot_empty (preset._routing._chain [nbr_slots_new - 1]));
 	}
 }
 
