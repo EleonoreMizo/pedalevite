@@ -462,6 +462,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\iifix\IIFix.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\iifix\IIFixDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\iifix\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\Lfo.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\LfoType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\lpfs\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\lpfs\Squeezer.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.h" />
@@ -752,6 +756,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFix.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFixDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\Lfo.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\MapRatio.cpp" />

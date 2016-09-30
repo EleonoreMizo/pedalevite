@@ -367,7 +367,6 @@ double	LfoModule::get_phase () const
 void	LfoModule::clear_buffers ()
 {
 	use_osc ().clear_buffers ();
-	use_osc ().set_phase (0);
 }
 
 

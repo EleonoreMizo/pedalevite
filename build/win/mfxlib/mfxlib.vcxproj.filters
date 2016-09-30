@@ -145,6 +145,9 @@
     <Filter Include="mfx\pi\lpfs">
       <UniqueIdentifier>{472883ba-eae1-4106-9d2c-5d244f38ede6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\lfo1">
+      <UniqueIdentifier>{e49ee298-876c-4757-a5b0-51f0803942ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1695,6 +1698,18 @@
     <ClInclude Include="..\..\..\src\mfx\doc\Routing.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\Lfo.h">
+      <Filter>mfx\pi\lfo1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.h">
+      <Filter>mfx\pi\lfo1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\LfoType.h">
+      <Filter>mfx\pi\lfo1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\Param.h">
+      <Filter>mfx\pi\lfo1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2329,6 +2344,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\Routing.cpp">
       <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\Lfo.cpp">
+      <Filter>mfx\pi\lfo1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp">
+      <Filter>mfx\pi\lfo1</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

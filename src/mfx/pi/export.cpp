@@ -44,6 +44,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/fv/FreeverbDesc.h"
 #include "mfx/pi/iifix/IIFix.h"
 #include "mfx/pi/iifix/IIFixDesc.h"
+#include "mfx/pi/lfo1/Lfo.h"
+#include "mfx/pi/lfo1/LfoDesc.h"
 #include "mfx/pi/lpfs/Squeezer.h"
 #include "mfx/pi/lpfs/SqueezerDesc.h"
 #include "mfx/pi/peq/PEq.h"
@@ -88,7 +90,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::fv::FreeverbDesc      , mfx::pi::fv::Freeverb            >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc          , mfx::pi::peq::PEq                >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::phase1::PhaserDesc    , mfx::pi::phase1::Phaser          >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc    , mfx::pi::lpfs::Squeezer          >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc    , mfx::pi::lpfs::Squeezer          >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc         , mfx::pi::lfo1::Lfo               >::create ()
 		};
 
 		fact_list = l;

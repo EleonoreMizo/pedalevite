@@ -69,8 +69,8 @@ void	PluginDescInterface::get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	assert (nbr_s == 0);
 
 	do_get_nbr_io (nbr_i, nbr_o, nbr_s);
-	assert (nbr_i > 0);
-	assert (nbr_o > 0);
+	assert (nbr_i >= 0);
+	assert (nbr_o >= 0);
 	assert (nbr_s >= 0);
 }
 
