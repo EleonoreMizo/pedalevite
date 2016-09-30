@@ -320,21 +320,35 @@ void	EditProg::set_preset_info ()
 	nav_list [1]._node_id = Entry_CONTROLLERS;
 	nav_list [2]._node_id = Entry_SAVE;
 
+	std::vector <Tools::NodeEntry>   entry_list =
+		Tools::extract_slot_list (preset, *_model_ptr, false);
+	assert (entry_list.size () == nbr_slots);
+
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
-		const int      slot_id    = preset._routing._chain [slot_index];
+		const Tools::NodeEntry &   entry = entry_list [slot_index];
+		const int      slot_id    = entry._slot_id;
 		std::string    multilabel = "<Empty>";
 		bool           ctrl_flag  = false;
 
 		const auto     it_slot    = preset._slot_map.find (slot_id);
 		assert (it_slot != preset._slot_map.end ());
-		if (! preset.is_slot_empty (it_slot))
+		if (! entry._type.empty ())
 		{
 			const doc::Slot & slot = *(it_slot->second);
-			const piapi::PluginDescInterface &  desc =
-				_model_ptr->get_model_desc (slot._pi_model);
-			multilabel = desc.get_name ();
+			multilabel = entry._name_multilabel;
 			ctrl_flag  = slot.has_ctrl ();
+
+			if (entry._instance_nbr >= 0)
+			{
+				char        txt_0 [127+1];
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), " %d", entry._instance_nbr + 1
+				);
+				multilabel = pi::param::Tools::join_strings_multi (
+					multilabel.c_str (), '\n', "", txt_0
+				);
+			}
 		}
 
 		set_slot (nav_list, slot_index, multilabel, ctrl_flag);

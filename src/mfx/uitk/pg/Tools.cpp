@@ -483,6 +483,56 @@ std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::Ped
 
 
 
+std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &preset, const Model &model, bool sig_flag)
+{
+	std::vector <int> slot_id_list (preset.build_ordered_node_list ());
+	std::map <std::string, int>   type_map;      // [type   ] = count
+	std::map <int, NodeEntry>     instance_map;  // [slot_id] = data
+
+	for (auto it_slot = preset._slot_map.begin ()
+	;	it_slot != preset._slot_map.end ()
+	;	++ it_slot)
+	{
+		NodeEntry      entry;
+
+		const int      slot_id = it_slot->first;
+		entry._slot_id = slot_id;
+		if (! preset.is_slot_empty (it_slot))
+		{
+			const doc::Slot & slot = *(it_slot->second);
+			entry._type = slot._pi_model;
+
+			auto           it_count = type_map.emplace (std::make_pair (
+				slot._pi_model, 0
+			)).first;
+
+			entry._instance_nbr = it_count->second;
+
+			++ it_count->second;
+
+			const auto &   desc = model.get_model_desc (slot._pi_model);
+			entry._name_multilabel = desc.get_name ();
+		}
+
+		instance_map [slot_id] = entry;
+	}
+
+	std::vector <Tools::NodeEntry>   slot_list;
+	for (auto slot_id : slot_id_list)
+	{
+		NodeEntry &    entry = instance_map [slot_id];
+		if (type_map [entry._type] <= 1)
+		{
+			entry._instance_nbr = -1;
+		}
+		slot_list.push_back (entry);
+	}
+
+	return slot_list;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

@@ -77,6 +77,15 @@ class Tools
 
 public:
 
+	class NodeEntry
+	{
+	public:
+		int            _slot_id      = -1;
+		int            _instance_nbr = -1;  // -1 = unique instance
+		std::string    _type;               // Empty string: empty slot
+		std::string    _name_multilabel;
+	};
+
 	static void    set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_id, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir);
@@ -89,6 +98,9 @@ public:
 
 	static std::string
 	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalboardLayout &layout, int index, const Model &model, const View &view);
+
+	static std::vector <NodeEntry>
+	               extract_slot_list (const doc::Preset &preset, const Model &model, bool sig_flag);
 
 
 

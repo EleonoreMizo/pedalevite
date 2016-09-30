@@ -158,6 +158,8 @@ int	Preset::gen_slot_id () const
 
 
 
+// Returns a list of slot_id beginning with the chain,
+// followed by the other slots.
 std::vector <int>	Preset::build_ordered_node_list () const
 {
 	// Set of the nodes we already inserted into the vector

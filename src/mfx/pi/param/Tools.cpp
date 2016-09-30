@@ -113,6 +113,44 @@ std::string	Tools::extract_longest_str (const char src_list_0 [], char delimiter
 
 
 
+std::string	Tools::join_strings_multi (const char src_list_0 [], char delimiter, std::string pre, std::string post)
+{
+	assert (src_list_0 != 0);
+
+	std::string    result;
+
+	size_t         pos   = 0;
+	while (src_list_0 [pos] != '\0')
+	{
+		if (! result.empty ())
+		{
+			result.push_back (delimiter);
+		}
+
+		result += pre;
+
+		std::string    name;
+		const char *   delim_0 = strchr (src_list_0 + pos, delimiter);
+		if (delim_0 == 0)
+		{
+			name = src_list_0 + pos;
+			pos  = strchr (src_list_0 + pos, '\0') - src_list_0;
+		}
+		else
+		{
+			name = std::string (src_list_0 + pos, delim_0);
+			pos  = delim_0 + 1 - src_list_0;
+		}
+		result += name;
+
+		result += post;
+	}
+
+	return result;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
