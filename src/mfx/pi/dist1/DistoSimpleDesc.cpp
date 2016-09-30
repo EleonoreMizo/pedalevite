@@ -111,7 +111,7 @@ std::string	DistoSimpleDesc::do_get_unique_id () const
 
 std::string	DistoSimpleDesc::do_get_name () const
 {
-	return "Simple distortion\nDisto S";
+	return "Simple distortion\nSimple dist\nDist S";
 }
 
 
