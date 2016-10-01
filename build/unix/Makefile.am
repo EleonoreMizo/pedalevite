@@ -552,6 +552,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputType.h \
         ../../src/mfx/uitk/pg/CtrlEdit.cpp \
         ../../src/mfx/uitk/pg/CtrlEdit.h \
+        ../../src/mfx/uitk/pg/CtrlProg.cpp \
+        ../../src/mfx/uitk/pg/CtrlProg.h \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.cpp \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.h \
         ../../src/mfx/uitk/pg/CurProg.cpp \
