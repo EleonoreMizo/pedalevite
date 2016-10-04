@@ -232,22 +232,40 @@ void	ModelObserverInterface::set_param_beats (int slot_id, int index, float beat
 
 
 // set_slot_info_for_current_preset to be called later
-void	ModelObserverInterface::insert_slot (int slot_index, int slot_id)
+void	ModelObserverInterface::add_slot (int slot_id)
 {
-	assert (slot_index >= 0);
 	assert (slot_id >= 0);
 
-	do_insert_slot (slot_index, slot_id);
+	do_add_slot (slot_id);
 }
 
 
 
-// remove_plugin et al. to be called later
-void	ModelObserverInterface::erase_slot (int slot_index)
+// remove_plugin et al. to be called before
+void	ModelObserverInterface::remove_slot (int slot_id)
 {
-	assert (slot_index >= 0);
+	assert (slot_id >= 0);
 
-	do_erase_slot (slot_index);
+	do_remove_slot (slot_id);
+}
+
+
+
+void	ModelObserverInterface::insert_slot_in_chain (int index, int slot_id)
+{
+	assert (index >= 0);
+	assert (slot_id >= 0);
+
+	do_insert_slot_in_chain (index, slot_id);
+}
+
+
+
+void	ModelObserverInterface::erase_slot_from_chain (int index)
+{
+	assert (index >= 0);
+
+	do_erase_slot_from_chain (index);
 }
 
 

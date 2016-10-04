@@ -352,7 +352,7 @@ std::string	Tools::find_ctrl_name (const ControlSource &src, const std::vector <
 
 
 
-void	Tools::change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list)
+void	Tools::change_plugin_in_chain (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list)
 {
 	assert (slot_index >= 0);
 	assert (dir != 0);
@@ -387,7 +387,8 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 	// We need to add a slot at the end?
 	if (slot_index == nbr_slots && pi_index != nbr_types)
 	{
-		slot_id = model.insert_slot (nbr_slots);
+		slot_id = model.add_slot ();
+		model.insert_slot_in_chain (nbr_slots, slot_id);
 	}
 
 	if (pi_index == nbr_types)
@@ -406,7 +407,7 @@ void	Tools::change_plugin (Model &model, const View &view, int slot_index, int d
 		do
 		{
 			-- nbr_slots_new;
-			model.erase_slot (nbr_slots_new);
+			model.erase_slot_from_chain (nbr_slots_new);
 		}
 		while (nbr_slots_new > 0 && preset.is_slot_empty (preset._routing._chain [nbr_slots_new - 1]));
 	}
@@ -529,6 +530,26 @@ std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &pres
 	}
 
 	return slot_list;
+}
+
+
+
+// Returns -1 if not found
+int	Tools::find_chain_index (const doc::Preset &preset, int slot_id)
+{
+	assert (slot_id >= 0);
+
+	const int      chain_size = int (preset._routing._chain.size ());
+	int            found_pos  = -1;
+	for (int pos = 0; pos < chain_size && found_pos < 0; ++pos)
+	{
+		if (preset._routing._chain [pos] == slot_id)
+		{
+			found_pos = pos;
+		}
+	}
+
+	return found_pos;
 }
 
 

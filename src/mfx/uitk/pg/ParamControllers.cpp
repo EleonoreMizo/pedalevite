@@ -83,7 +83,7 @@ ParamControllers::ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_ed
 
 void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
-	assert (_loc_edit._slot_index >= 0);
+	assert (_loc_edit._slot_id >= 0);
 	assert (_loc_edit._pi_type >= 0);
 	assert (_loc_edit._param_index >= 0);
 
@@ -94,7 +94,7 @@ void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterf
 	_fnt_ptr   = &fnt_m;
 
 	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-	const int            slot_id = preset._routing._chain [_loc_edit._slot_index];
+	const int            slot_id = _loc_edit._slot_id;
 	const doc::Slot &    slot    = preset.use_slot (slot_id);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
 	auto           it_cls = settings._map_param_ctrl.find (_loc_edit._param_index);
@@ -196,7 +196,7 @@ void	ParamControllers::do_activate_preset (int index)
 
 void	ParamControllers::do_remove_plugin (int slot_id)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 	}
@@ -206,7 +206,7 @@ void	ParamControllers::do_remove_plugin (int slot_id)
 
 void	ParamControllers::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	if (   slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index)
+	if (   slot_id == _loc_edit._slot_id
 	    && type    == _loc_edit._pi_type
 	    && index   == _loc_edit._param_index)
 	{

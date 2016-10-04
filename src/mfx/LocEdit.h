@@ -46,7 +46,7 @@ public:
 	               LocEdit ()  = default;
 	virtual        ~LocEdit () = default;
 
-	int            _slot_index    = -1;          // -1 if none
+	int            _slot_id       = -1;          // -1 if none
 	PiType         _pi_type       = PiType_MIX;  // Should always be valid
 	int            _param_index   = -1;          // -1 if none
 	int            _ctrl_index    = -1;          // -1 if none or new. Always 0 for existing direct links

@@ -82,8 +82,10 @@ protected:
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
 	virtual void   do_set_preset_name (std::string name);
-	virtual void   do_insert_slot (int slot_index, int slot_id);
-	virtual void   do_erase_slot (int slot_index);
+	virtual void   do_add_slot (int slot_id);
+	virtual void   do_remove_slot (int slot_id);
+	virtual void   do_insert_slot_in_chain (int index, int slot_id);
+	virtual void   do_erase_slot_from_chain (int index);
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
 	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
@@ -137,13 +139,15 @@ private:
 	TxtSPtr        _prog_name_sptr;
 	TxtSPtr        _controllers_sptr;
 	TxtSPtr        _save_sptr;
-	TxtArray       _slot_list;    // Shows N+1 slots, the last one being the <Empty> line.
+	TxtArray       _slot_list;    // Shows N+1 slots, the last one being the <End> line.
 
 	State          _state;
 	int            _save_bank_index;
 	int            _save_preset_index;
 	EditText::Param
 	               _name_param;
+	std::vector <int>             // Ordered list of the edited slots
+	               _slot_id_list;
 
 
 

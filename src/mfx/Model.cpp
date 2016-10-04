@@ -506,26 +506,19 @@ void	Model::set_master_vol (double vol)
 
 
 
-int	Model::insert_slot (int slot_index)
+int	Model::add_slot ()
 {
-	assert (slot_index >= 0);
-	assert (slot_index <= int (_preset_cur._routing._chain.size ()));
-
 	const int      slot_id = _preset_cur.gen_slot_id ();
 	_preset_cur._slot_map.insert (std::make_pair (
 		slot_id,
 		doc::Preset::SlotSPtr ()
 	));
-	_preset_cur._routing._chain.insert (
-		_preset_cur._routing._chain.begin () + slot_index,
-		slot_id
-	);
 
 	update_layout ();
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->insert_slot (slot_index, slot_id);
+		_obs_ptr->add_slot (slot_id);
 	}
 
 	return slot_id;
@@ -533,18 +526,26 @@ int	Model::insert_slot (int slot_index)
 
 
 
-void	Model::erase_slot (int slot_index)
+// Automatically removes the slot from the routing and kills the plug-in
+void	Model::remove_slot (int slot_id)
 {
-	assert (slot_index >= 0);
-	assert (slot_index < int (_preset_cur._routing._chain.size ()));
+	assert (slot_id >= 0);
+	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
 
-	const int      slot_id = _preset_cur._routing._chain [slot_index];
+	// Removes the slot from the routing
+	const auto     it_beg = _preset_cur._routing._chain.begin ();
+	const auto     it_end = _preset_cur._routing._chain.end ();
+	const auto     it_cur = std::find (it_beg, it_end, slot_id);
+	if (it_cur != it_end)
+	{
+		const int     index = it_cur - it_beg;
+		erase_slot_from_chain (index);
+	}
 
+	// Kills the plug-in
 	remove_plugin (slot_id);
 
-	_preset_cur._routing._chain.erase (
-		_preset_cur._routing._chain.begin () + slot_index
-	);
+	// Finally removes the slot
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
 	_preset_cur._slot_map.erase (it_slot);
@@ -553,7 +554,53 @@ void	Model::erase_slot (int slot_index)
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->erase_slot (slot_index);
+		_obs_ptr->remove_slot (slot_id);
+	}
+}
+
+
+
+void	Model::insert_slot_in_chain (int index, int slot_id)
+{
+	assert (index >= 0);
+	assert (index <= int (_preset_cur._routing._chain.size ()));
+	assert (slot_id >= 0);
+	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
+	assert (std::find (
+		_preset_cur._routing._chain.begin (),
+		_preset_cur._routing._chain.end (),
+		slot_id
+	) == _preset_cur._routing._chain.end ());
+
+	_preset_cur._routing._chain.insert (
+		_preset_cur._routing._chain.begin () + index,
+		slot_id
+	);
+
+	update_layout ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->insert_slot_in_chain (index, slot_id);
+	}
+}
+
+
+
+void	Model::erase_slot_from_chain (int index)
+{
+	assert (index >= 0);
+	assert (index < int (_preset_cur._routing._chain.size ()));
+
+	_preset_cur._routing._chain.erase (
+		_preset_cur._routing._chain.begin () + index
+	);
+
+	update_layout ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->erase_slot_from_chain (index);
 	}
 }
 
@@ -1117,15 +1164,21 @@ void	Model::apply_settings_normal ()
 	_pi_id_map.clear ();
 	_slot_info.clear ();
 
-	const int      nbr_slots = _preset_cur._routing._chain.size ();
+	// Chain first, other plug-ins afterwards
+	const std::vector <int> onl = _preset_cur.build_ordered_node_list ();
+	const int      nbr_slots  = onl.size ();
+	const int      chain_size = int (_preset_cur._routing._chain.size ());
+	const int      onl_ofs    = chain_size;
 
 	int            slot_index_central = 0;
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
-		const int      slot_id   = _preset_cur._routing._chain [slot_index];
-		auto           it_id_map =
+		const int      onl_index  = (slot_index + onl_ofs) % nbr_slots;
+		const bool     chain_flag = (onl_index < chain_size);
+		const int      slot_id    = onl [onl_index];
+		auto           it_id_map  =
 			_pi_id_map.insert (std::make_pair (slot_id, SlotPiId ())).first;
-		auto           it_slot   = _preset_cur._slot_map.find (slot_id);
+		auto           it_slot    = _preset_cur._slot_map.find (slot_id);
 		assert (it_slot != _preset_cur._slot_map.end ());
 
 		// Full slot
@@ -1137,7 +1190,7 @@ void	Model::apply_settings_normal ()
 
 			// Check first if we need a mixer plug-in.
 			// Updates the parameters
-			check_mixer_plugin (slot_id, slot_index_central);
+			check_mixer_plugin (slot_id, slot_index_central, chain_flag);
 
 			// Now the main plug-in
 			auto           it_s  = slot._settings_all.find (slot._pi_model);
@@ -1149,7 +1202,8 @@ void	Model::apply_settings_normal ()
 				pi_id = _central.set_plugin (
 					slot_index_central,
 					slot._pi_model,
-					false
+					false,
+					true
 				);
 				doc::PluginSettings &	settings =
 					slot._settings_all [slot._pi_model];
@@ -1167,7 +1221,8 @@ void	Model::apply_settings_normal ()
 				pi_id = _central.set_plugin (
 					slot_index_central,
 					slot._pi_model,
-					it_s->second._force_reset_flag
+					it_s->second._force_reset_flag,
+					true
 				);
 				it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
 				send_effect_settings (pi_id, slot_id, PiType_MAIN, it_s->second);
@@ -1189,7 +1244,7 @@ void	Model::apply_settings_tuner ()
 	_central.insert_slot (0);
 	_central.remove_mixer (0);
 
-	_tuner_pi_id = _central.set_plugin (0, Cst::_plugin_tuner, false);
+	_tuner_pi_id = _central.set_plugin (0, Cst::_plugin_tuner, false, true);
 
 	const PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
@@ -1205,13 +1260,14 @@ void	Model::apply_settings_tuner ()
 // different of 100% wet at 0 dB.
 // Does not commit anything
 // The slot should exist in the current preset.
-void	Model::check_mixer_plugin (int slot_id, int slot_index_central)
+void	Model::check_mixer_plugin (int slot_id, int slot_index_central, int chain_flag)
 {
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
 	assert (it_slot->second.get () != 0);
 
-	const bool        use_flag = has_mixer_plugin (_preset_cur, slot_id);
+	const bool        use_flag =
+		chain_flag && has_mixer_plugin (_preset_cur, slot_id);
 	const doc::Slot & slot     = *(it_slot->second);
 	int &             id_ref   = _pi_id_map [slot_id]._pi_id_arr [PiType_MIX];
 

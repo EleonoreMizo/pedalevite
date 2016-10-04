@@ -65,7 +65,7 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_state (State_NORMAL)
 ,	_save_bank_index (-1)
 ,	_save_preset_index (-1)
-,	_save_slot_index (-1)
+,	_save_slot_id (-1)
 ,	_menu_sptr (new NWindow (Entry_WINDOW))
 ,	_typ_sptr (new NText (Entry_TYPE   ))
 ,	_ins_sptr (new NText (Entry_INSERT ))
@@ -113,11 +113,9 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		if (   _name_param._ok_flag
 		    && _view_ptr->get_bank_index ()   == _save_bank_index
 		    && _view_ptr->get_preset_index () == _save_preset_index
-		    && _loc_edit._slot_index          == _save_slot_index)
+		    && _loc_edit._slot_id             == _save_slot_id)
 		{
-			const int      slot_id =
-				_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
-			_model_ptr->set_slot_label (slot_id, _name_param._text);
+			_model_ptr->set_slot_label (_loc_edit._slot_id, _name_param._text);
 		}
 	}
 	_state = State_NORMAL;
@@ -188,18 +186,20 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 			{
 			case Entry_INSERT:
 				{
-					int            slot_index_new = _loc_edit._slot_index;
+					int            slot_index_new =
+						Tools::find_chain_index (preset, _loc_edit._slot_id);
 					if (slot_index_new < 0)
 					{
 						slot_index_new = int (preset._routing._chain.size ());
 					}
-					_model_ptr->insert_slot (slot_index_new);
+					const int      slot_id = _model_ptr->add_slot ();
+					_model_ptr->insert_slot_in_chain (slot_index_new, slot_id);
 				}
 				break;
 			case Entry_DELETE:
-				if (_loc_edit._slot_index >= 0)
+				if (_loc_edit._slot_id >= 0)
 				{
-					_model_ptr->erase_slot (_loc_edit._slot_index);
+					_model_ptr->remove_slot (_loc_edit._slot_id);
 				}
 				else
 				{
@@ -218,11 +218,10 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 				ret_val = reset_plugin ();
 				break;
 			case Entry_CHN:
-				if (_loc_edit._slot_index >= 0)
+				if (_loc_edit._slot_id >= 0)
 				{
-					const int      slot_id =
-						_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
-					const auto     it_slot = preset._slot_map.find (slot_id);
+					const auto     it_slot =
+						preset._slot_map.find (_loc_edit._slot_id);
 					assert (it_slot != preset._slot_map.end ());
 					if (! preset.is_slot_empty (it_slot))
 					{
@@ -231,22 +230,20 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 							slot.use_settings (PiType_MAIN);
 						bool           fm_flag = settings._force_mono_flag;
 						fm_flag = ! fm_flag;
-						_model_ptr->set_plugin_mono (slot_id, fm_flag);
+						_model_ptr->set_plugin_mono (_loc_edit._slot_id, fm_flag);
 					}
 				}
 				break;
 			case Entry_LABEL:
 				{
-					assert (_loc_edit._slot_index >= 0);
-					const int      slot_id =
-						_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
-					const doc::Slot & slot = preset.use_slot (slot_id);
+					assert (_loc_edit._slot_id >= 0);
+					const doc::Slot & slot = preset.use_slot (_loc_edit._slot_id);
 					_name_param._title = "Effect label:";
 					_name_param._text  = slot._label;
 					_state             = State_EDIT_LABEL;
 					_save_bank_index   = _view_ptr->get_bank_index ();
 					_save_preset_index = _view_ptr->get_preset_index ();
-					_save_slot_index   = _loc_edit._slot_index;
+					_save_slot_id      = _loc_edit._slot_id;
 					_page_switcher.call_page (PageType_EDIT_TEXT, &_name_param, node_id);
 					ret_val = EvtProp_CATCH;
 				}
@@ -257,8 +254,8 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			if (   _loc_edit._slot_index < 0
-			    || preset.is_slot_empty (_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index)))
+			if (   _loc_edit._slot_id < 0
+			    || preset.is_slot_empty (_loc_edit._slot_id))
 			{
 				_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 			}
@@ -298,35 +295,46 @@ void	MenuSlot::do_activate_preset (int index)
 
 
 
-void	MenuSlot::do_insert_slot (int slot_index, int slot_id)
+void	MenuSlot::do_insert_slot_in_chain (int index, int slot_id)
 {
-	if (_loc_edit._slot_index < 0)
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+
+	if (_loc_edit._slot_id < 0)
 	{
-		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-		_loc_edit._slot_index = int (preset._routing._chain.size ()) - 1;
+		_loc_edit._slot_id = preset._routing._chain.back ();
 		_page_ptr->jump_to (Entry_TYPE);
 	}
-	else if (slot_index < _loc_edit._slot_index)
+	else if (   index + 1 < int (preset._routing._chain.size ())
+	         && _loc_edit._slot_id == preset._routing._chain [index + 1])
 	{
-		++ _loc_edit._slot_index;
+		_loc_edit._slot_id = preset._routing._chain [index];
 	}
 	update_display ();
 }
 
 
 
-void	MenuSlot::do_erase_slot (int slot_index)
+void	MenuSlot::do_erase_slot_from_chain (int index)
 {
-	if (slot_index == _loc_edit._slot_index)
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	if (std::find (
+		preset._routing._chain.begin (),
+		preset._routing._chain.end (),
+		_loc_edit._slot_id
+	) == preset._routing._chain.end ())
 	{
+		if (index < int (preset._routing._chain.size ()))
+		{
+			_loc_edit._slot_id = preset._routing._chain [index];
+		}
+		else
+		{
+			_loc_edit._slot_id = -1;
+		}
 		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 	}
 	else
 	{
-		if (_loc_edit._slot_index > slot_index)
-		{
-			-- _loc_edit._slot_index;
-		}
 		update_display ();
 	}
 }
@@ -335,7 +343,7 @@ void	MenuSlot::do_erase_slot (int slot_index)
 
 void	MenuSlot::do_set_slot_label (int slot_id, std::string name)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();
 	}
@@ -345,7 +353,7 @@ void	MenuSlot::do_set_slot_label (int slot_id, std::string name)
 
 void	MenuSlot::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();
 	}
@@ -355,7 +363,7 @@ void	MenuSlot::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 
 void	MenuSlot::do_remove_plugin (int slot_id)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();
 	}
@@ -365,7 +373,7 @@ void	MenuSlot::do_remove_plugin (int slot_id)
 
 void	MenuSlot::do_set_plugin_mono (int slot_id, bool mono_flag)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();
 	}
@@ -385,11 +393,10 @@ void	MenuSlot::update_display ()
 	NavLoc         nav;
 
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const bool     exist_flag   = (_loc_edit._slot_index >= 0);
-	const int      slot_id      =
-		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const int      slot_id      = _loc_edit._slot_id;
+	const bool     exist_flag   = (slot_id >= 0);
 	const bool     full_flag    =
-		(exist_flag && slot_id >= 0 && ! preset.is_slot_empty (slot_id));
+		(exist_flag && ! preset.is_slot_empty (slot_id));
 
 	std::string    multilabel = "<Empty>";
 	if (full_flag)
@@ -455,19 +462,20 @@ void	MenuSlot::update_display ()
 
 MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
 {
-	int            slot_index = _loc_edit._slot_index;
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+
+	int            slot_index =
+		Tools::find_chain_index (preset, _loc_edit._slot_id);
 	{
-		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 		if (slot_index < 0)
 		{
 			slot_index = int (preset._routing._chain.size ());
 		}
 	}
 
-	Tools::change_plugin (*_model_ptr, *_view_ptr, slot_index, dir, _fx_list);
+	Tools::change_plugin_in_chain (*_model_ptr, *_view_ptr, slot_index, dir, _fx_list);
 
 	{
-		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 		const int      nbr_slots = int (preset._routing._chain.size ());
 		if (slot_index >= nbr_slots)
 		{
@@ -475,7 +483,14 @@ MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
 		}
 	}
 
-	_loc_edit._slot_index = slot_index;
+	if (slot_index < 0)
+	{
+		_loc_edit._slot_id = -1;
+	}
+	else
+	{
+		_loc_edit._slot_id = preset._routing._chain [slot_index];
+	}
 
 	update_display ();
 
@@ -487,8 +502,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
 MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
 {
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const int      slot_id      =
-		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const int      slot_id      = _loc_edit._slot_id;
 	const doc::Slot & slot      = preset.use_slot (slot_id);
 	
 	const piapi::PluginState & def =

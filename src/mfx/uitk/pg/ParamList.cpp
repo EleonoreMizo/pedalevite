@@ -189,7 +189,7 @@ void	ParamList::do_activate_preset (int index)
 
 void	ParamList::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		update_param_txt (type, index);
 	}
@@ -199,7 +199,7 @@ void	ParamList::do_set_param (int pi_id, int index, float val, int slot_id, PiTy
 
 void	ParamList::do_remove_plugin (int slot_id)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 	}
@@ -209,7 +209,7 @@ void	ParamList::do_remove_plugin (int slot_id)
 
 void	ParamList::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		set_param_info ();
 	}
@@ -228,8 +228,7 @@ void	ParamList::set_param_info ()
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
 
-	const int      slot_id =
-		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const int      slot_id = _loc_edit._slot_id;
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	const doc::Slot & slot = preset.use_slot (slot_id);
 
@@ -327,8 +326,7 @@ void	ParamList::update_param_txt (PiType type, int index)
 	const int      node_id    = conv_param_to_node_id (type, index);
 	TxtSPtr &      name_sptr  = _param_list [node_id    ];
 	TxtSPtr &      val_sptr   = _param_list [node_id + 1];
-	const int      slot_index = _loc_edit._slot_index;
-	const int      slot_id    = _view_ptr->conv_slot_index_to_id (slot_index);
+	const int      slot_id    = _loc_edit._slot_id;
 
 	Tools::set_param_text (
 		*_model_ptr, *_view_ptr, _page_size [0], index, -1, slot_id, type,
@@ -413,15 +411,13 @@ MsgHandlerInterface::EvtProp	ParamList::change_param (int node_id, int dir)
 	assert (dir != 0);
 
 	EvtProp        ret_val = EvtProp_PASS;
-	const int      slot_id =
-		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
 	PiType         type;
 	int            index;
 	conv_node_id_to_param (type, index, node_id);
 	if (index >= 0)
 	{
 		ret_val = Tools::change_param (
-			*_model_ptr, *_view_ptr, slot_id, type,
+			*_model_ptr, *_view_ptr, _loc_edit._slot_id, type,
 			index, float (Cst::_step_param), 0, dir
 		);
 	}

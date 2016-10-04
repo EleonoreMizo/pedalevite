@@ -416,37 +416,69 @@ void	View::do_set_param_beats (int slot_id, int index, float beats)
 
 
 
-void	View::do_insert_slot (int slot_index, int slot_id)
+void	View::do_add_slot (int slot_id)
 {
+	assert (_preset_cur._slot_map.find (slot_id) == _preset_cur._slot_map.end ());
+
 	_preset_cur._slot_map.insert (std::make_pair (
 		slot_id,
 		doc::Preset::SlotSPtr ()
 	));
-	_preset_cur._routing._chain.insert (
-		_preset_cur._routing._chain.begin () + slot_index,
-		slot_id
-	);
 	_slot_info_map.clear ();
-	mfx_View_PROPAGATE (insert_slot (slot_index, slot_id));
+
+	mfx_View_PROPAGATE (add_slot (slot_id));
 }
 
 
 
-void	View::do_erase_slot (int slot_index)
+void	View::do_remove_slot (int slot_id)
 {
-	assert (slot_index < int (_preset_cur._routing._chain.size ()));
+	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
+	assert (std::find (
+		_preset_cur._routing._chain.begin (),
+		_preset_cur._routing._chain.end (),
+		slot_id
+	) == _preset_cur._routing._chain.end ());
 
-	const int      slot_id = _preset_cur._routing._chain [slot_index];
-	_preset_cur._routing._chain.erase (
-		_preset_cur._routing._chain.begin () + slot_index
-	);
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
 	_preset_cur._slot_map.erase (it_slot);
-
 	_slot_info_map.clear ();
 
-	mfx_View_PROPAGATE (erase_slot (slot_index));
+	mfx_View_PROPAGATE (remove_slot (slot_id));
+}
+
+
+
+void	View::do_insert_slot_in_chain (int index, int slot_id)
+{
+	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
+	assert (std::find (
+		_preset_cur._routing._chain.begin (),
+		_preset_cur._routing._chain.end (),
+		slot_id
+	) == _preset_cur._routing._chain.end ());
+	assert (index <= int (_preset_cur._routing._chain.size ()));
+
+	_preset_cur._routing._chain.insert (
+		_preset_cur._routing._chain.begin () + index,
+		slot_id
+	);
+
+	mfx_View_PROPAGATE (insert_slot_in_chain (index, slot_id));
+}
+
+
+
+void	View::do_erase_slot_from_chain (int index)
+{
+	assert (index < int (_preset_cur._routing._chain.size ()));
+
+	_preset_cur._routing._chain.erase (
+		_preset_cur._routing._chain.begin () + index
+	);
+
+	mfx_View_PROPAGATE (erase_slot_from_chain (index));
 }
 
 

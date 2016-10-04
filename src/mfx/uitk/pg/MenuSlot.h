@@ -76,8 +76,8 @@ protected:
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
-	virtual void   do_insert_slot (int slot_index, int slot_id);
-	virtual void   do_erase_slot (int slot_index);
+	virtual void   do_insert_slot_in_chain (int index, int slot_id);
+	virtual void   do_erase_slot_from_chain (int index);
 	virtual void   do_set_slot_label (int slot_id, std::string name);
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
@@ -130,7 +130,7 @@ private:
 	State          _state;
 	int            _save_bank_index;
 	int            _save_preset_index;
-	int            _save_slot_index;
+	int            _save_slot_id;
 
 	WinSPtr        _menu_sptr;
 	TxtSPtr        _typ_sptr;

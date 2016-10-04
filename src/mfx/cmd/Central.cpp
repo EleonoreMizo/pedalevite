@@ -275,16 +275,23 @@ void	Central::clear_slot (int pos)
 
 
 // Returns the plug-in Id
-int	Central::set_plugin (int pos, std::string model, bool force_reset_flag)
+int	Central::set_plugin (int pos, std::string model, bool force_reset_flag, bool connected_flag)
 {
-	return set_plugin (pos, model, PiType_MAIN, force_reset_flag);
+	int            pi_id =
+		set_plugin (pos, model, PiType_MAIN, force_reset_flag, connected_flag);
+	if (! connected_flag)
+	{
+		remove_mixer (pos);
+	}
+
+	return pi_id;
 }
 
 
 
 void	Central::remove_plugin (int pos)
 {
-	return remove_plugin (pos, PiType_MAIN);
+	remove_plugin (pos, PiType_MAIN);
 }
 
 
@@ -292,14 +299,14 @@ void	Central::remove_plugin (int pos)
 // Returns the plug-in Id
 int	Central::set_mixer (int pos)
 {
-	return set_plugin (pos, Cst::_plugin_mix, PiType_MIX, false);
+	return set_plugin (pos, Cst::_plugin_mix, PiType_MIX, false, true);
 }
 
 
 
 void	Central::remove_mixer (int pos)
 {
-	return remove_plugin (pos, PiType_MIX);
+	remove_plugin (pos, PiType_MIX);
 }
 
 
@@ -572,7 +579,7 @@ Plugin &	Central::find_plugin (Document &doc, int pi_id)
 
 
 
-int	Central::set_plugin (int pos, std::string model, PiType type, bool force_reset_flag)
+int	Central::set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool connected_flag)
 {
 	Document &     doc = modify ();
 
@@ -580,7 +587,8 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 	assert (pos < int (doc._slot_list.size ()));
 	assert (! model.empty ());
 
-	Plugin &       plugin = doc._slot_list [pos]._component_arr [type];
+	Slot &         slot   = doc._slot_list [pos];
+	Plugin &       plugin = slot._component_arr [type];
 	int            pi_id = -1;
 
 	// If we replace a plug-in with one of the same type,
@@ -650,6 +658,11 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 		plugin._pi_id = pi_id;
 		plugin._model = model;
 		doc._map_id_loc [pi_id] = { pos, type };
+	}
+
+	if (type == PiType_MAIN)
+	{
+		slot._connected_flag = connected_flag;
 	}
 
 	return pi_id;
@@ -795,7 +808,7 @@ void	Central::create_routing ()
 			main_side_o._nbr_chn_tot = nbr_chn_out * main_nbr_o;
 			for (int chn = 0; chn < main_side_o._nbr_chn_tot; ++chn)
 			{
-				if (chn < nbr_chn_out)
+				if (chn < nbr_chn_out && slot._connected_flag)
 				{
 					const int      buf = buf_alloc.alloc ();
 					nxt_buf_arr [chn]          = buf;
@@ -818,6 +831,8 @@ void	Central::create_routing ()
 			// With dry/wet mixer
 			if (pi_id_mix >= 0)
 			{
+				assert (slot._connected_flag);
+
 				pi_ctx._node_arr [PiType_MIX]._pi_id = pi_id_mix;
 				ProcessingContextNode::Side & mix_side_i =
 					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_IN ];
@@ -873,15 +888,18 @@ void	Central::create_routing ()
 			}
 
 			// Next buffers
-			for (int chn = 0; chn < nbr_chn_out; ++chn)
+			if (slot._connected_flag)
 			{
-				if (chn < nbr_chn_in)
+				for (int chn = 0; chn < nbr_chn_out; ++chn)
 				{
-					buf_alloc.ret (cur_buf_arr [chn]);
+					if (chn < nbr_chn_in)
+					{
+						buf_alloc.ret (cur_buf_arr [chn]);
+					}
+					cur_buf_arr [chn] = nxt_buf_arr [chn];
 				}
-				cur_buf_arr [chn] = nxt_buf_arr [chn];
+				nbr_chn_cur = nbr_chn_out;
 			}
-			nbr_chn_cur = nbr_chn_out;
 		}
 	}
 

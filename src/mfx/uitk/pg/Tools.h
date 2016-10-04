@@ -93,7 +93,7 @@ public:
 	static int     find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
-	static void    change_plugin (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list);
+	static void    change_plugin_in_chain (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list);
 	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page);
 
 	static std::string
@@ -101,6 +101,7 @@ public:
 
 	static std::vector <NodeEntry>
 	               extract_slot_list (const doc::Preset &preset, const Model &model, bool sig_flag);
+	static int     find_chain_index (const doc::Preset &preset, int slot_id);
 
 
 

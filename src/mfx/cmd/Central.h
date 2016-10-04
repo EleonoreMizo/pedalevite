@@ -92,7 +92,7 @@ public:
 	void           insert_slot (int pos);
 	void           delete_slot (int pos);
 	void           clear_slot (int pos);
-	int            set_plugin (int pos, std::string model, bool force_reset_flag);
+	int            set_plugin (int pos, std::string model, bool force_reset_flag, bool connected_flag);
 	void           remove_plugin (int pos);
 	int            set_mixer (int pos);
 	void           remove_mixer (int pos);
@@ -166,7 +166,7 @@ private:
 
 	Document &     modify ();
 	Plugin &       find_plugin (Document &doc, int pi_id);
-	int            set_plugin (int pos, std::string model, PiType type, bool force_reset_flag);
+	int            set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool connected_flag);
 	void           remove_plugin (int pos, PiType type);
 	void           create_routing ();
 	void           create_mod_maps ();

@@ -110,8 +110,10 @@ public:
 	void           store_preset (int preset_index, int bank_index);
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
-	int            insert_slot (int slot_index);
-	void           erase_slot (int slot_index);
+	int            add_slot ();
+	void           remove_slot (int slot_id);
+	void           insert_slot_in_chain (int index, int slot_id);
+	void           erase_slot_from_chain (int index);
 	void           set_slot_label (int slot_id, std::string name);
 	void           set_plugin (int slot_id, std::string model);
 	void           remove_plugin (int slot_id);
@@ -182,7 +184,7 @@ private:
 	void           apply_settings ();
 	void           apply_settings_normal ();
 	void           apply_settings_tuner ();
-	void           check_mixer_plugin (int slot_id, int slot_index_central);
+	void           check_mixer_plugin (int slot_id, int slot_index_central, int chain_flag);
 	bool           has_mixer_plugin (const doc::Preset &preset, int slot_id);
 	void           send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings);
 	void           process_msg_ui ();

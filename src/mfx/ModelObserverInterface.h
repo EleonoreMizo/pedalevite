@@ -113,8 +113,10 @@ public:
 	void           set_slot_info_for_current_preset (const SlotInfoMap &info_map);
 	void           set_param (int pi_id, int index, float val, int slot_id, PiType type);
 	void           set_param_beats (int slot_id, int index, float beats);
-	void           insert_slot (int slot_index, int slot_id);
-	void           erase_slot (int slot_index);
+	void           add_slot (int slot_id);
+	void           remove_slot (int slot_id);
+	void           insert_slot_in_chain (int index, int slot_id);
+	void           erase_slot_from_chain (int index);
 	void           set_slot_label (int slot_id, std::string name);
 	void           set_plugin (int slot_id, const PluginInitData &pi_data);
 	void           remove_plugin (int slot_id);
@@ -147,8 +149,10 @@ protected:
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoMap &info_map) = 0;
 	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type) = 0;
 	virtual void   do_set_param_beats (int slot_index, int index, float beats) = 0;
-	virtual void   do_insert_slot (int slot_index, int slot_id) = 0;
-	virtual void   do_erase_slot (int slot_index) = 0;
+	virtual void   do_add_slot (int slot_id) = 0;
+	virtual void   do_remove_slot (int slot_id) = 0;
+	virtual void   do_insert_slot_in_chain (int index, int slot_id) = 0;
+	virtual void   do_erase_slot_from_chain (int index) = 0;
 	virtual void   do_set_slot_label (int slot_id, std::string name) = 0;
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data) = 0;
 	virtual void   do_remove_plugin (int slot_id) = 0;

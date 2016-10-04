@@ -95,7 +95,7 @@ ParamEdit::ParamEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 void	ParamEdit::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
-	assert (_loc_edit._slot_index >= 0);
+	assert (_loc_edit._slot_id >= 0);
 	assert (_loc_edit._pi_type >= 0);
 	assert (_loc_edit._param_index >= 0);
 
@@ -223,7 +223,7 @@ void	ParamEdit::do_activate_preset (int index)
 
 void	ParamEdit::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
 {
-	if (   slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index)
+	if (   slot_id == _loc_edit._slot_id
 	    && type    == _loc_edit._pi_type
 	    && index   == _loc_edit._param_index)
 	{
@@ -235,7 +235,7 @@ void	ParamEdit::do_set_param (int pi_id, int index, float val, int slot_id, PiTy
 
 void	ParamEdit::do_remove_plugin (int slot_id)
 {
-	if (slot_id == _view_ptr->conv_slot_index_to_id (_loc_edit._slot_index))
+	if (slot_id == _loc_edit._slot_id)
 	{
 		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 	}
@@ -249,9 +249,8 @@ void	ParamEdit::do_remove_plugin (int slot_id)
 
 void	ParamEdit::update_display ()
 {
-	const int            slot_index = _loc_edit._slot_index;
 	const doc::Preset &  preset     = _view_ptr->use_preset_cur ();
-	const int            slot_id    = preset._routing._chain [slot_index];
+	const int            slot_id    = _loc_edit._slot_id;
 	const doc::Slot &    slot       = preset.use_slot (slot_id);
 	const PiType         type       = _loc_edit._pi_type;
 	assert (slot._settings_all.find (slot._pi_model) != slot._settings_all.end ());
@@ -289,8 +288,7 @@ void	ParamEdit::update_display ()
 
 void	ParamEdit::update_param_txt ()
 {
-	const int      slot_id =
-		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const int      slot_id = _loc_edit._slot_id;
 	const PiType   type    = _loc_edit._pi_type;
 	const int      index   = _loc_edit._param_index;
 
@@ -304,8 +302,7 @@ void	ParamEdit::update_param_txt ()
 
 MsgHandlerInterface::EvtProp	ParamEdit::change_param (int dir)
 {
-	const int      slot_id =
-		_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
+	const int      slot_id = _loc_edit._slot_id;
 	const PiType   type    = _loc_edit._pi_type;
 	const int      index   = _loc_edit._param_index;
 	const float    step    =

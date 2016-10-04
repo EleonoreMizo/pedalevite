@@ -72,6 +72,7 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_save_bank_index (-1)
 ,	_save_preset_index (-1)
 ,	_name_param ()
+,	_slot_id_list ()
 {
 	_prog_name_sptr  ->set_justification (0.5f, 0, false);
 	_controllers_sptr->set_justification (0.5f, 0, false);
@@ -203,10 +204,10 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 			}
 			else if (node_id >= 0 && node_id < int (_slot_list.size ()))
 			{
-				const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-				const int      chain_size   = int (preset._routing._chain.size ());
-				if (   node_id < chain_size
-				    && ! preset.is_slot_empty (preset._routing._chain [node_id]))
+				const doc::Preset &  preset    = _view_ptr->use_preset_cur ();
+				const int            list_size = int (_slot_id_list.size ());
+				if (   node_id < list_size
+				    && ! preset.is_slot_empty (_slot_id_list [node_id]))
 				{
 					// Full slot
 					update_loc_edit (node_id);
@@ -258,14 +259,28 @@ void	EditProg::do_set_preset_name (std::string name)
 
 
 
-void	EditProg::do_insert_slot (int slot_index, int slot_id)
+void	EditProg::do_add_slot (int slot_id)
 {
 	set_preset_info ();
 }
 
 
 
-void	EditProg::do_erase_slot (int slot_index)
+void	EditProg::do_remove_slot (int slot_id)
+{
+	set_preset_info ();
+}
+
+
+
+void	EditProg::do_insert_slot_in_chain (int index, int slot_id)
+{
+	set_preset_info ();
+}
+
+
+
+void	EditProg::do_erase_slot_from_chain (int index)
 {
 	set_preset_info ();
 }
@@ -301,12 +316,14 @@ void	EditProg::set_preset_info ()
 {
 	assert (_fnt_ptr != 0);
 
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	_slot_id_list = preset._routing._chain;
+
 	update_rotenc_mapping ();
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	_prog_name_sptr->set_text (preset._name);
 
-	const int      nbr_slots = preset._routing._chain.size ();
+	const int      nbr_slots = _slot_id_list.size ();
 	PageMgrInterface::NavLocList  nav_list (nbr_slots + 4);
 	_slot_list.resize (nbr_slots + 1);
 
@@ -321,7 +338,7 @@ void	EditProg::set_preset_info ()
 
 	std::vector <Tools::NodeEntry>   entry_list =
 		Tools::extract_slot_list (preset, *_model_ptr, false);
-	assert (entry_list.size () == nbr_slots);
+	assert (nbr_slots <= int (entry_list.size ()));
 
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
@@ -395,13 +412,14 @@ MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
 
 	EvtProp        ret_val = EvtProp_PASS;
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const int      nbr_slots = preset._routing._chain.size ();
+	const int      nbr_slots = _slot_id_list.size ();
 
 	if (node_id <= nbr_slots)
 	{
 		_model_ptr->reset_all_overridden_param_ctrl ();
-		Tools::change_plugin (*_model_ptr, *_view_ptr, node_id, dir, _fx_list);
+		Tools::change_plugin_in_chain (
+			*_model_ptr, *_view_ptr, node_id, dir, _fx_list
+		);
 		ret_val = EvtProp_CATCH;
 	}
 
@@ -414,13 +432,13 @@ MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
 
 void	EditProg::update_loc_edit (int node_id)
 {
-	if (node_id < 0 || node_id >= int (_slot_list.size ()) - 1)
+	if (node_id < 0 || node_id >= int (_slot_id_list.size ()))
 	{
-		_loc_edit._slot_index = -1;
+		_loc_edit._slot_id = -1;
 	}
 	else
 	{
-		_loc_edit._slot_index = node_id;
+		_loc_edit._slot_id = _slot_id_list [node_id];
 	}
 }
 
@@ -431,21 +449,15 @@ void	EditProg::update_rotenc_mapping ()
 	assert (_model_ptr != 0);
 	assert (_view_ptr  != 0);
 
-	if (_loc_edit._slot_index < 0)
+	if (_loc_edit._slot_id < 0)
 	{
 		_model_ptr->reset_all_overridden_param_ctrl ();
 	}
 	else
 	{
-		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-		if (_loc_edit._slot_index < int (preset._routing._chain.size ()))
-		{
-			const int      slot_id =
-				_view_ptr->conv_slot_index_to_id (_loc_edit._slot_index);
-			Tools::assign_default_rotenc_mapping (
-				*_model_ptr, *_view_ptr, slot_id, 0
-			);
-		}
+		Tools::assign_default_rotenc_mapping (
+			*_model_ptr, *_view_ptr, _loc_edit._slot_id, 0
+		);
 	}
 }
 
@@ -453,10 +465,17 @@ void	EditProg::update_rotenc_mapping ()
 
 int	EditProg::conv_loc_edit_to_node_id () const
 {
-	if (   _loc_edit._slot_index >= 0
-	    && _loc_edit._slot_index < int (_slot_list.size ()))
+	if (_loc_edit._slot_id >= 0)
 	{
-		return _loc_edit._slot_index;
+		const auto     it_slot_id = std::find (
+			_slot_id_list.begin (),
+			_slot_id_list.end (),
+			_loc_edit._slot_id
+		);
+		if (it_slot_id != _slot_id_list.end ())
+		{
+			return it_slot_id - _slot_id_list.begin ();
+		}
 	}
 
 	return 0;
