@@ -1,0 +1,9 @@
+exclude.txt
+.sdf
+.suo
+.obj
+.opensdf
+.vcxproj.user
+Debug
+Release
+test\results
