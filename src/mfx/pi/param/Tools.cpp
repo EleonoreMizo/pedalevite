@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/Tools.h"
 
 #include <cassert>
+#include <cstring>
 
 
 

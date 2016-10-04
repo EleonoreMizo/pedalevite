@@ -106,7 +106,7 @@ MsgHandlerInterface::EvtProp	CtrlProg::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
-	const int      node_id = evt.get_target ();
+//	const int      node_id = evt.get_target ();
 
 	if (evt.is_button_ex ())
 	{
