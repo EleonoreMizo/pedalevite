@@ -1022,6 +1022,14 @@ protected:
 Idée d’effet : harmonic tremolo http://www.davidrolo.com/page/4/
 principe : on divise le signal en LP/HP (1,6 kHz) et on module AM les deux signaux avec des combinaisons de (x, x), (x, 1-x), (1, x) et (x, 1) (x = sortie du LFO unipolaire) suivant le mode choisi.
 
+Idée d’effet : delay qui s’active aléatoirement (on/off sur l’entrée du tap) à chaque attaque détectée. Voir par exemple l’intro de : dDamage - Tu seras sumo\01 - Ouverture
+
+Idée d’effet : Lazyspace, pour spatialiser du mono sans s’embêter (mix compatible mono). A = entrée, B = delay (A, t), L = A + B * g, R = A - B * g. Avec t court (qq dizaines de samples max), on a un effet "comb".
+
 Idée : amortir les footswitches avec des isolants de bouteille http://www.davidrolo.com/page/5/
+
+Ajout à faire : changer conv_nat_to_str pour inclure une unité (qu’on rend donc dynamique) et un contexte (tempo au besoin, indication d’unité)
+
+
 
 
