@@ -6,6 +6,7 @@
 *.opensdf
 *.o
 *.out
+*.dxf~
 [Dd]ebug*/
 [Rr]elease*/
 Win32*/
@@ -31,3 +32,5 @@ missing
 build/unix/pedalevite
 art/*.h
 etc/config/current
+legacy
+doc/exported
