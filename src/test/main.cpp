@@ -1,9 +1,17 @@
 
+#include "fstb/def.h"
+#include "fstb/AllocAlign.h"
+#include "mfx/pi/dist1/DistoSimple.h"
+#include "mfx/pi/dist1/Param.h"
+#include "mfx/piapi/EventTs.h"
 
+#include <algorithm>
+#include <array>
 #include <vector>
 
 #include <cassert>
 #include <climits>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
@@ -319,13 +327,88 @@ int main (int argc, char *argv [])
 	double         sample_freq;
 	std::vector <std::vector <float> >  chn_arr;
 
-	load_wav ("D:\\Work\\Perso\\Music\\Loops - Riffs\\guitar 18.wav", chn_arr, sample_freq);
+#if 1
 
+	load_wav ("../../../src/test/samples/guitar-01.wav", chn_arr, sample_freq);
+	const size_t   len  = chn_arr [0].size ();
 
-	/*** To do ***/
+#else
 
+	sample_freq = 44100;
+	chn_arr.resize (1);
+	const size_t   len = size_t (sample_freq * 10);
+	chn_arr [0].resize (len);
+	const double   freq = 200;
+	const double   muls = fstb::PI * 2 * freq / sample_freq;
+	const double   mule = -1 / sample_freq;
+	for (size_t i = 0; i < len; ++i)
+	{
+		chn_arr [0] [i] = float (
+			  sin (i * muls)
+			* exp (i * mule)
+		);
+	}
 
-	save_wav ("D:\\Work\\Perso\\Prog\\pedalevite\\src\\test\\t0.wav", chn_arr, sample_freq, 1);
+#endif
+
+	mfx::pi::dist1::DistoSimple   dist;
+	const int      max_block_size = 64;
+	int            latency = 0;
+	dist.reset (sample_freq, max_block_size, latency);
+	size_t         pos = 0;
+	std::vector <float, fstb::AllocAlign <float, 16> >  tmp_s (max_block_size);
+	std::vector <float, fstb::AllocAlign <float, 16> >  tmp_d (max_block_size);
+	std::array <float *, 1> dst_arr = {{ &tmp_d [0] }};
+	std::array <float *, 1> src_arr = {{ &tmp_s [0] }};
+	mfx::piapi::PluginInterface::ProcInfo  proc_info;
+	proc_info._dst_arr = &dst_arr [0];
+	proc_info._src_arr = &src_arr [0];
+	proc_info._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN ] = 1;
+	proc_info._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT] = 1;
+	mfx::piapi::EventTs  evt_gain;
+	mfx::piapi::EventTs  evt_bias;
+	evt_gain._timestamp = 0;
+	evt_gain._type      = mfx::piapi::EventType_PARAM;
+	evt_gain._evt._param._categ = mfx::piapi::ParamCateg_GLOBAL;
+	evt_gain._evt._param._note_id = 0;
+	evt_gain._evt._param._index = mfx::pi::dist1::Param_GAIN;
+	evt_gain._evt._param._val   = 0.75f;
+	evt_bias._timestamp = 0;
+	evt_bias._type      = mfx::piapi::EventType_PARAM;
+	evt_bias._evt._param._categ = mfx::piapi::ParamCateg_GLOBAL;
+	evt_bias._evt._param._note_id = 0;
+	evt_bias._evt._param._index = mfx::pi::dist1::Param_BIAS;
+	evt_bias._evt._param._val   = 0.65f;
+	std::array <mfx::piapi::EventTs *, 2>  evt_arr = {{ &evt_gain, &evt_bias }};
+	proc_info._evt_arr = &evt_arr [0];
+	proc_info._nbr_evt = 2;
+	do
+	{
+		const int      block_len =
+			int (std::min (len - pos, size_t (max_block_size)));
+
+		proc_info._nbr_spl = block_len;
+		
+		memcpy (
+			src_arr [0],
+			&chn_arr [0] [pos],
+			block_len * sizeof (src_arr [0] [0])
+		);
+
+		dist.process_block (proc_info);
+
+		memcpy (
+			&chn_arr [0] [pos],
+			dst_arr [0],
+			block_len * sizeof (chn_arr [0] [pos])
+		);
+
+		proc_info._nbr_evt = 0;
+		pos += block_len;
+	}
+	while (pos < len);
+
+	save_wav ("results/t0.wav", chn_arr, sample_freq, 1);
 
 	return ret_val;
 }
