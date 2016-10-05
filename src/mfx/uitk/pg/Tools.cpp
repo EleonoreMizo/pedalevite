@@ -407,7 +407,9 @@ void	Tools::change_plugin_in_chain (Model &model, const View &view, int slot_ind
 		do
 		{
 			-- nbr_slots_new;
+			const int   rem_slot_id = preset._routing._chain [nbr_slots_new];
 			model.erase_slot_from_chain (nbr_slots_new);
+			model.remove_slot (rem_slot_id);
 		}
 		while (nbr_slots_new > 0 && preset.is_slot_empty (preset._routing._chain [nbr_slots_new - 1]));
 	}
@@ -420,9 +422,17 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 	model.reset_all_overridden_param_ctrl ();
 
 	const doc::Preset &  preset = view.use_preset_cur ();
-	if (! preset.is_slot_empty (slot_id))
+
+	// Makes sure the slot really exists. Such a case could happen
+	// when we clear the last slot (by changing the plug-in type), and
+	// the previous slot was also empty. So both slots are removed
+	// automatically, therefore _loc_edit._slot_id points to an
+	// inexisting slot during the various model notifications sends
+	// during the process.
+	const auto     it_slot = preset._slot_map.find (slot_id);
+	if (it_slot != preset._slot_map.end () && ! preset.is_slot_empty (it_slot))
 	{
-		const doc::Slot & slot = preset.use_slot (slot_id);
+		const doc::Slot & slot = *(it_slot->second);
 		const auto        it_s = slot._settings_all.find (slot._pi_model);
 		if (it_s != slot._settings_all.end ())
 		{
