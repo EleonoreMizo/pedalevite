@@ -400,6 +400,7 @@ OscInterface &	LfoModule::use_osc ()
 void	LfoModule::apply_osc_settings ()
 {
 	set_period (_period);
+	set_chaos (_phase_chaos);
 	set_phase_dist (_phase_dist);
 	set_phase_dist_offset (_phase_dist_ofs);
 	set_sign (_inv_flag);
