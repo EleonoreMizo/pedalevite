@@ -314,6 +314,8 @@ void	Preset::ser_read (SerRInterface &ser)
 		ser.begin_list (nbr_elt);
 		for (int cnt = 0; cnt < nbr_elt; ++cnt)
 		{
+			ser.begin_list ();
+
 			int            port_index;
 			ser.read (port_index);
 
@@ -321,6 +323,8 @@ void	Preset::ser_read (SerRInterface &ser)
 			port.ser_read (ser);
 
 			_port_map [port_index] = port;
+
+			ser.end_list ();
 		}
 		ser.end_list ();
 	}
