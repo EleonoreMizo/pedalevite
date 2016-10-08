@@ -365,9 +365,9 @@ void	WorldAudio::handle_controller (const ControlSource &controller, float val_r
 			if (   unit_first._source == controller
 			    && unit_first._abs_flag)
 			{
-				const float    base_val = unit_first.evaluate (0);
-				details._param_arr [index] =
-					fstb::limit (base_val, 0.f, 1.f);
+				float          base_val = unit_first.evaluate (0);
+				base_val = fstb::limit (base_val, 0.f, 1.f);
+				details._param_arr [index] = base_val;
 				details._param_update_from_audio [index] = true;
 
 				conc::LockFreeCell <Msg> * cell_ptr =
