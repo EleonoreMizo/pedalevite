@@ -1010,9 +1010,9 @@ void	Central::add_controller (ProcessingContext &ctx, const doc::CtrlLink &link,
 	const ParamCoord &   coord = ctrl_param_sptr->use_coord ();
 	std::shared_ptr <CtrlUnit> unit_sptr (new CtrlUnit (link, abs_flag));
 
-	// For direct-link using a relative source (rotenc), initialises
-	// the internal value from the current public value.
-	if (abs_flag && unit_sptr->_source.is_relative ())
+	// For direct-link initialises the internal value from
+	// the current public value.
+	if (abs_flag)
 	{
 		PluginPool::PluginDetails &   details =
 			_plugin_pool.use_plugin (coord._plugin_id);
