@@ -1713,6 +1713,9 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlProg.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\doc\SignalPort.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2356,6 +2359,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlProg.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\SignalPort.cpp">
+      <Filter>mfx\doc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

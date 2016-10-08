@@ -67,7 +67,14 @@ public:
 	};
 
 	typedef std::array <int, Cst::_max_nbr_output * piapi::PluginInterface::_max_nbr_chn> BypBufArray;
-	typedef std::array <int, Cst::_max_nbr_sig> SigBufArray;
+
+	class SigInfo
+	{
+	public:
+		int            _buf_index  = Cst::BufSpecial_TRASH;
+		int            _port_index = -1;
+	};
+	typedef std::array <SigInfo, Cst::_max_nbr_sig> SigBufArray;
 
 	typedef std::array <Side, Dir_NBR_ELT> SideArray;
 

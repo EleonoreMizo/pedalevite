@@ -69,6 +69,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_proc_date_beg (0)
 ,	_proc_date_end (0)
 ,	_proc_analyser ()
+,	_sig_res_arr ()
 ,	_reset_flag (false)
 {
 	_evt_arr.reserve (_max_nbr_evt);
@@ -110,6 +111,8 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 
 	_lvl_meter->set_sample_freq (_sample_freq);
 	_proc_analyser.set_sample_freq (_sample_freq / max_block_size);
+
+	for (auto &x : _sig_res_arr) { x = 0; }
 
 	_meter_result.reset ();
 	const std::chrono::microseconds  date_cur (_input_device.get_cur_date ());
@@ -571,10 +574,12 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	BufSrcArr      src_arr;
 	BufDstArr      dst_arr;
 	BufDstArr      byp_arr;
+	BufSigArr      sig_arr;
 
 	proc_info._src_arr = &src_arr [0];
 	proc_info._dst_arr = &dst_arr [0];
 	proc_info._byp_arr = &byp_arr [0];
+	proc_info._sig_arr = &sig_arr [0];
 	proc_info._nbr_spl = nbr_spl;
 	proc_info._nbr_evt = 0;
 	proc_info._evt_arr = 0;
@@ -586,6 +591,8 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	prepare_buffers (proc_info, pi_ctx._node_arr [PiType_MAIN], false);
 
 	process_single_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info);
+
+	handle_signals (proc_info, pi_ctx._node_arr [PiType_MAIN]);
 
 	const bool       bypass_produced_flag =
 		(proc_info._byp_state == piapi::PluginInterface::BypassState_PRODUCED);
@@ -677,11 +684,14 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::P
 	plugin.process_block (proc_info);
 
 	// Checks the output
-	const float          val = proc_info._dst_arr [0] [0];
-	static const float   thr = 1e9f;
-	if (isnan (val) || val < -thr || val > thr)
+	if (proc_info._nbr_chn_arr [Dir_OUT] > 0)
 	{
-		_reset_flag = true;
+		const float          val = proc_info._dst_arr [0] [0];
+		static const float   thr = 1e9f;
+		if (isnan (val) || val < -thr || val > thr)
+		{
+			_reset_flag = true;
+		}
 	}
 }
 
@@ -744,7 +754,7 @@ void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, c
 
 	for (int sig = 0; sig < node._nbr_sig; ++sig)
 	{
-		const int      buf_index = node._sig_buf_arr [sig];
+		const int      buf_index = node._sig_buf_arr [sig]._buf_index;
 		assert (buf_index >= 0);
 		assert (buf_index < int (_buf_arr.size ()));
 		sig_arr [sig] = _buf_arr [buf_index];
@@ -753,6 +763,29 @@ void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, c
 	for (int dir = 0; dir < Dir_NBR_ELT; ++dir)
 	{
 		proc_info._nbr_chn_arr [dir] = node._side_arr [dir]._nbr_chn;
+	}
+}
+
+
+
+void	WorldAudio::handle_signals (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node)
+{
+	for (int sig_pos = 0; sig_pos < node._nbr_sig; ++sig_pos)
+	{
+		const ProcessingContextNode::SigInfo & sig_info =
+			node._sig_buf_arr [sig_pos];
+		if (sig_info._buf_index >= 0 && sig_info._port_index >= 0)
+		{
+			const float *  buf_ptr = proc_info._sig_arr [sig_pos];
+			assert (buf_ptr != 0);
+			const float    val     = buf_ptr [0];
+			_sig_res_arr [sig_info._port_index] = val;
+
+			ControlSource  controller;
+			controller._type       = ControllerType_FX_SIG;
+			controller._index      = sig_info._port_index;
+			handle_controller (controller, val);
+		}
 	}
 }
 

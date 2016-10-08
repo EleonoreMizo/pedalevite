@@ -111,7 +111,7 @@ private:
 	int            conv_loc_edit_to_node_id () const;
 
 	const std::vector <CtrlSrcNamed> &
-	               _csn_list;
+	               _csn_list_base;
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
 	Model *        _model_ptr;    // 0 = not connected
@@ -129,6 +129,8 @@ private:
 	TxtArray       _mod_list;     // Shows N lines: controllers 1 to N-1, and the last line being <Empty>.
 
 	// Cached data
+	std::vector <CtrlSrcNamed>
+	               _csn_list_full;
 	const doc::CtrlLinkSet *      // Can be 0 if not set or empty. Updated on connect();
 	               _cls_ptr;
 

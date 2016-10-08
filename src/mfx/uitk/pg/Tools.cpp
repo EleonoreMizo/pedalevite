@@ -106,10 +106,25 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	// Value
 	if (! group_unit_val_flag)
 	{
+		// Reformat: erases all leading whitespaces then adds a single one
 		while (! val_s.empty () && val_s [0] == ' ')
 		{
 			val_s = val_s.substr (1);
 		}
+		size_t         pos = 0;
+		do
+		{
+			pos = val_s.find ("\n ", pos);
+			if (pos != std::string::npos)
+			{
+				++ pos;
+				val_s.erase (val_s.begin () + pos);
+			}
+		}
+		while (pos != std::string::npos);
+		val_s = pi::param::Tools::join_strings_multi (
+			val_s.c_str (), '\n', " ", ""
+		);
 	}
 	pi::param::Tools::cut_str_bestfit (
 		pos_utf8, len_utf8, len_pix,
@@ -136,10 +151,11 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 		if (group_unit_val_flag)
 		{
 			w_unit -= len_pix;
-			if (! unit.empty ())
+			if (txt_val.back () != ' ' && ! unit.empty () && unit [0] != ' ')
 			{
-				unit = std::string (" ") + unit;
-				// We should do this on all the labels of the unit, but :efforts:
+				unit = pi::param::Tools::join_strings_multi (
+					unit.c_str (), '\n', " ", ""
+				);
 			}
 		}
 		pi::param::Tools::cut_str_bestfit (
@@ -352,31 +368,143 @@ std::string	Tools::find_ctrl_name (const ControlSource &src, const std::vector <
 
 
 
-void	Tools::change_plugin_in_chain (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list)
+std::vector <CtrlSrcNamed>	Tools::make_port_list (const Model &model, const View &view)
 {
-	assert (slot_index >= 0);
+	const doc::Preset &  preset = view.use_preset_cur ();
+	std::vector <CtrlSrcNamed> port_list;
+	port_list.reserve (preset._port_map.size ());
+
+	const std::vector <NodeEntry>   entry_list =
+		Tools::extract_slot_list (preset, model);
+
+	for (const auto &node_port : preset._port_map)
+	{
+		CtrlSrcNamed   csn;
+		csn._src._type  = ControllerType_FX_SIG;
+		csn._src._index = node_port.first;
+		char           txt_0 [127+1];
+
+		const int      slot_id = node_port.second._slot_id;
+		const auto     it_slot = preset._slot_map.find (slot_id);
+
+		if (it_slot == preset._slot_map.end () || preset.is_slot_empty (it_slot))
+		{
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0),
+				"<Unknown %d-%d>", slot_id, node_port.second._sig_index + 1
+			);
+			csn._name = txt_0;
+		}
+
+		else
+		{
+			const doc::Slot & slot = *(it_slot->second);
+			const piapi::PluginDescInterface &  desc =
+				model.get_model_desc (slot._pi_model);
+			int            nbr_i = 1;
+			int            nbr_o = 1;
+			int            nbr_s = 0;
+			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
+
+			std::string    multilabel = desc.get_name ();
+			std::string    txt_post;
+
+			// Checks if there are multiple instance of this model in the preset
+			const auto     it_entry = std::find_if (
+				entry_list.begin (),
+				entry_list.end (),
+				[slot_id] (const NodeEntry &x) { return x._slot_id == slot_id; }
+			);
+			assert (it_entry != entry_list.end ());
+			if (it_entry->_instance_nbr >= 0)
+			{
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), " %d", it_entry->_instance_nbr + 1
+				);
+				txt_post += txt_0;
+			}
+
+			// Checks if there are multiple signal pins on this plug-in
+			if (nbr_s > 1)
+			{
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "-s%d", node_port.second._sig_index + 1
+				);
+				txt_post += txt_0;
+			}
+
+			if (! txt_post.empty ())
+			{
+				multilabel = pi::param::Tools::join_strings_multi (
+					multilabel.c_str (), '\n', "", txt_post
+				);
+			}
+
+			csn._name = multilabel;
+		}
+
+		port_list.push_back (csn);
+	}
+
+	std::sort (
+		port_list.begin (),
+		port_list.end (),
+		[] (const CtrlSrcNamed &lhs, const CtrlSrcNamed &rhs)
+		{
+			return (lhs._name < rhs._name);
+		}
+	);
+
+	return port_list;
+}
+
+
+
+// If slot_id < 0, a new slot is created
+// Returns the slot_id resulting of the operation
+int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, const std::vector <std::string> &fx_list, bool chain_flag)
+{
 	assert (dir != 0);
 
 	const doc::Preset &  preset = view.use_preset_cur ();
-	const int      nbr_slots = int (preset._routing._chain.size ());
-	assert (slot_index <= nbr_slots);
+	const int      chain_size = int (preset._routing._chain.size ());
+
+	int            chain_pos = -1;
+	if (chain_flag)
+	{
+		if (slot_id >= 0)
+		{
+			chain_pos = find_chain_index (preset, slot_id);
+			assert (chain_pos >= 0);
+			assert (chain_pos <= chain_size);
+		}
+		else
+		{
+			chain_pos = chain_size;
+		}
+	}
 
 	const int      nbr_types = int (fx_list.size ());
 
 	// Index within the official plug-in list. end = empty
 	int            pi_index  = nbr_types;
-	int            slot_id   = -1;
-	if (slot_index < nbr_slots)
+	if (slot_id >= 0)
 	{
-		slot_id = view.conv_slot_index_to_id (slot_index);
 		if (! preset.is_slot_empty (slot_id))
 		{
 			const doc::Slot & slot = preset.use_slot (slot_id);
 			const std::string type = slot._pi_model;
-			auto          type_it =
+			auto          it_type =
 				std::find (fx_list.begin (), fx_list.end (), type);
-			assert (type_it != fx_list.end ());
-			pi_index = type_it - fx_list.begin ();
+			if (it_type == fx_list.end ())
+			{
+				// Shouldn't happen, but not harmful anyway
+				assert (false);
+			}
+			else
+			{
+				pi_index = it_type - fx_list.begin ();
+			}
 		}
 	}
 
@@ -385,10 +513,17 @@ void	Tools::change_plugin_in_chain (Model &model, const View &view, int slot_ind
 	pi_index = (pi_index + mod_len) % mod_len;
 
 	// We need to add a slot at the end?
-	if (slot_index == nbr_slots && pi_index != nbr_types)
+	if (pi_index != nbr_types)
 	{
-		slot_id = model.add_slot ();
-		model.insert_slot_in_chain (nbr_slots, slot_id);
+		if (chain_flag && chain_pos == chain_size)
+		{
+			slot_id = model.add_slot ();
+			model.insert_slot_in_chain (chain_size, slot_id);
+		}
+		else if (! chain_flag && slot_id < 0)
+		{
+			slot_id = model.add_slot ();
+		}
 	}
 
 	if (pi_index == nbr_types)
@@ -398,21 +533,33 @@ void	Tools::change_plugin_in_chain (Model &model, const View &view, int slot_ind
 	else
 	{
 		model.set_plugin (slot_id, fx_list [pi_index]);
+		create_missing_signal_ports (model, view, slot_id);
 	}
 
 	// Last slot needs to be removed?
-	if (slot_index == nbr_slots - 1 && pi_index == nbr_types)
+	if (pi_index == nbr_types)
 	{
-		int            nbr_slots_new = nbr_slots;
-		do
+		if (chain_flag && chain_pos == chain_size - 1)
 		{
-			-- nbr_slots_new;
-			const int   rem_slot_id = preset._routing._chain [nbr_slots_new];
-			model.erase_slot_from_chain (nbr_slots_new);
-			model.remove_slot (rem_slot_id);
+			int            chain_size_new = chain_size;
+			do
+			{
+				-- chain_size_new;
+				const int   rem_slot_id = preset._routing._chain [chain_size_new];
+				model.erase_slot_from_chain (chain_size_new);
+				model.remove_slot (rem_slot_id);
+			}
+			while (chain_size_new > 0 && preset.is_slot_empty (preset._routing._chain [chain_size_new - 1]));
+			slot_id = -1;
 		}
-		while (nbr_slots_new > 0 && preset.is_slot_empty (preset._routing._chain [nbr_slots_new - 1]));
+		else if (! chain_flag)
+		{
+			model.remove_slot (slot_id);
+			slot_id = -1;
+		}
 	}
+
+	return slot_id;
 }
 
 
@@ -494,9 +641,9 @@ std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::Ped
 
 
 
-std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &preset, const Model &model, bool sig_flag)
+std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &preset, const Model &model)
 {
-	std::vector <int> slot_id_list (preset.build_ordered_node_list ());
+	std::vector <int> slot_id_list (preset.build_ordered_node_list (true));
 	std::map <std::string, int>   type_map;      // [type   ] = count
 	std::map <int, NodeEntry>     instance_map;  // [slot_id] = data
 
@@ -1081,6 +1228,45 @@ std::string	Tools::print_param_action (const doc::ActionParam &param, const Mode
 	}
 
 	return name;
+}
+
+
+
+void	Tools::create_missing_signal_ports (Model &model, const View &view, int slot_id)
+{
+	const doc::Preset &  preset = view.use_preset_cur ();
+	const doc::Slot &    slot   = preset.use_slot (slot_id);
+	const piapi::PluginDescInterface &  desc =
+		model.get_model_desc (slot._pi_model);
+	int            nbr_i = 1;
+	int            nbr_o = 1;
+	int            nbr_s = 0;
+	desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
+	if (nbr_s > 0)
+	{
+		// First, checks if there are existing ports
+		uint64_t       exist_mask = 0;
+		for (auto it_node : preset._port_map)
+		{
+			if (it_node.second._slot_id == slot_id)
+			{
+				exist_mask |= (uint64_t (1)) << it_node.second._sig_index;
+			}
+		}
+
+		// Adds missing ports
+		for (int sig_index = 0; sig_index < nbr_s; ++sig_index)
+		{
+			if ((exist_mask & (uint64_t (1)) << sig_index) == 0)
+			{
+				const int      port_index = preset.find_free_port ();
+				doc::SignalPort   port;
+				port._slot_id   = slot_id;
+				port._sig_index = sig_index;
+				model.set_signal_port (port_index, port);
+			}
+		}
+	}
 }
 
 

@@ -98,6 +98,42 @@ const PluginSettings &	Slot::use_settings (PiType type) const
 
 
 
+PluginSettings *	Slot::test_and_get_settings (PiType type)
+{
+	if (type == PiType_MIX)
+	{
+		return &_settings_mixer;
+	}
+
+	auto           it = _settings_all.find (_pi_model);
+	if (it != _settings_all.end ())
+	{
+		return &(it->second);
+	}
+
+	return 0;
+}
+
+
+
+const PluginSettings *	Slot::test_and_get_settings (PiType type) const
+{
+	if (type == PiType_MIX)
+	{
+		return &_settings_mixer;
+	}
+
+	auto           it = _settings_all.find (_pi_model);
+	if (it != _settings_all.end ())
+	{
+		return &(it->second);
+	}
+
+	return 0;
+}
+
+
+
 bool	Slot::has_ctrl () const
 {
 	bool           ctrl_flag  = false;

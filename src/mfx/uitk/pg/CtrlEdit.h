@@ -133,7 +133,7 @@ private:
 	ControlSource  create_source (int csn_index) const;
 
 	const std::vector <CtrlSrcNamed> &
-	               _csn_list;
+	               _csn_list_base;
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
 	Model *        _model_ptr;    // 0 = not connected
@@ -162,6 +162,8 @@ private:
 	               _id_step_arr;
 
 	// Cached data
+	std::vector <CtrlSrcNamed>
+	               _csn_list_full;
 	doc::CtrlLinkSet              // Updated on connect()
 	               _cls;
 	doc::CtrlLink  _ctrl_link;    // Only for display purpose, and to keep track of the values when the source is <Empty> (controller removed)

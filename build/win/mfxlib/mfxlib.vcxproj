@@ -317,6 +317,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\SerWInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SerWText.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Setup.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\SignalPort.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Slot.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.h" />
@@ -694,6 +695,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\SerWInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SerWText.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Setup.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\SignalPort.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Slot.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.cpp" />

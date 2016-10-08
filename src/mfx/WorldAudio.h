@@ -94,6 +94,7 @@ private:
 		float *,
 		Cst::_max_nbr_output * piapi::PluginInterface::_max_nbr_chn
 	> BufDstArr;
+	typedef std::array <float *, Cst::_max_nbr_sig> BufSigArr;
 
 	typedef std::vector <piapi::EventTs> EventArray;
 
@@ -104,6 +105,8 @@ private:
 		dsp::dyn::MeterRmsPeakHold4Simd,
 		fstb::AllocAlign <dsp::dyn::MeterRmsPeakHold4Simd, 16>
 	> LevelMeter;
+
+	typedef std::array <float, Cst::_max_nbr_sig_ports> SigResultArray;
 
 	void           reset_everything ();
 	void           reset_plugin (int pi_id);
@@ -116,6 +119,7 @@ private:
 	void           process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl);
 	void           process_single_plugin (int plugin_id, piapi::PluginInterface::ProcInfo &proc_info);
 	void           prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node, bool use_byp_as_src_flag);
+	void           handle_signals (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node);
 
 	void           handle_msg_ctx (Msg::Ctx &msg);
 	void           handle_msg_param (Msg::Param &msg);
@@ -155,6 +159,8 @@ private:
 	               _proc_date_end;
 	dsp::dyn::MeterRmsPeakHold
 	               _proc_analyser;
+
+	SigResultArray _sig_res_arr;
 
 	bool           _reset_flag;         // Indicates that we should reset all the chain, because something wrong occured.
 

@@ -44,7 +44,7 @@ class Cst
 
 public:
 
-	static const int  _format_version  =   3;
+	static const int  _format_version  =   4;
 
 	static const int  _nbr_pedals      =  12;
 	static const int  _nbr_presets_per_bank = 16;
@@ -67,6 +67,7 @@ public:
 	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_sig     =   4;
+	static const int  _max_nbr_sig_ports = 256;
 	static const int  _max_nbr_plugins = 256;
 	static const int  _nbr_chn_inout   =   2; // Max of _nbr_chn_in and _nbr_chn_out
 	static const int  _nbr_chn_in      = _nbr_chn_inout;

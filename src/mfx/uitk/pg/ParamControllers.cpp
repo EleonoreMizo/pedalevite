@@ -53,7 +53,7 @@ namespace pg
 
 
 ParamControllers::ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <CtrlSrcNamed> &csn_list)
-:	_csn_list (csn_list)
+:	_csn_list_base (csn_list)
 ,	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_model_ptr (0)
@@ -66,6 +66,8 @@ ParamControllers::ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_ed
 ,	_link_title_sptr (new NText (Entry_LINK_TITLE))
 ,	_mod_title_sptr (new NText (Entry_MOD_TITLE))
 ,	_mod_list ()
+,	_csn_list_full (_csn_list_base)
+,	_cls_ptr (0)
 {
 	_link_title_sptr->set_text ("Direct Link");
 	_mod_title_sptr ->set_text ("Modulations");
@@ -224,6 +226,16 @@ void	ParamControllers::set_controller_info ()
 {
 	assert (_fnt_ptr != 0);
 
+	const std::vector <CtrlSrcNamed> csn_ports (
+		Tools::make_port_list (*_model_ptr, *_view_ptr)
+	);
+	_csn_list_full = _csn_list_base;
+	_csn_list_full.insert (
+		_csn_list_full.begin (),
+		csn_ports.begin (),
+		csn_ports.end ()
+	);
+
 	const int      scr_w     = _page_size [0];
 	const int      h_m       = _fnt_ptr->get_char_h ();
 
@@ -242,9 +254,13 @@ void	ParamControllers::set_controller_info ()
 
 	if (bind_flag)
 	{
-		const std::string txt = Tools::find_ctrl_name (
+		const std::string multilabel = Tools::find_ctrl_name (
 			_cls_ptr->_bind_sptr->_source,
-			_csn_list
+			_csn_list_full
+		);
+		const std::string txt = pi::param::Tools::print_name_bestfit (
+			scr_w, multilabel.c_str (),
+			*_link_value_sptr, &NText::get_char_width
 		);
 		_link_value_sptr->set_text (txt);
 	}
@@ -267,9 +283,13 @@ void	ParamControllers::set_controller_info ()
 		}
 		else
 		{
-			const std::string txt = Tools::find_ctrl_name (
+			const std::string multilabel = Tools::find_ctrl_name (
 				_cls_ptr->_mod_arr [m]->_source,
-				_csn_list
+				_csn_list_full
+			);
+			const std::string txt = pi::param::Tools::print_name_bestfit (
+				scr_w, multilabel.c_str (),
+				*mod_sptr, &NText::get_char_width
 			);
 			mod_sptr->set_text (txt);
 		}

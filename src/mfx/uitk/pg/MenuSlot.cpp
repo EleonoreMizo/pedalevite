@@ -53,10 +53,11 @@ namespace pg
 
 
 
-MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list)
+MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_fx_list (fx_list)
+,	_ms_list (ms_list)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -77,7 +78,6 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_lbl_sptr (new NText (Entry_LABEL  ))
 ,	_name_param ()
 {
-	_ins_sptr->set_text ("Insert before");
 	_del_sptr->set_text ("Delete");
 	_mov_sptr->set_text ("Move");
 	_prs_sptr->set_text ("Presets");
@@ -119,6 +119,9 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		}
 	}
 	_state = State_NORMAL;
+
+	// Updates _chain_flag, if possible
+	fix_chain_flag ();
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
@@ -193,7 +196,10 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 						slot_index_new = int (preset._routing._chain.size ());
 					}
 					const int      slot_id = _model_ptr->add_slot ();
-					_model_ptr->insert_slot_in_chain (slot_index_new, slot_id);
+					if (_loc_edit._chain_flag)
+					{
+						_model_ptr->insert_slot_in_chain (slot_index_new, slot_id);
+					}
 				}
 				break;
 			case Entry_DELETE:
@@ -207,8 +213,11 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 				}
 				break;
 			case Entry_MOVE:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				if (_loc_edit._chain_flag)
+				{
+					/*** To do ***/
+					_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				}
 				break;
 			case Entry_PRESETS:
 				/*** To do ***/
@@ -295,19 +304,32 @@ void	MenuSlot::do_activate_preset (int index)
 
 
 
+void	MenuSlot::do_remove_slot (int slot_id)
+{
+	if (slot_id == _loc_edit._slot_id)
+	{
+		_loc_edit._slot_id = -1;
+		update_display ();
+	}
+}
+
+
+
 void	MenuSlot::do_insert_slot_in_chain (int index, int slot_id)
 {
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 
 	if (_loc_edit._slot_id < 0)
 	{
-		_loc_edit._slot_id = preset._routing._chain.back ();
+		_loc_edit._slot_id    = preset._routing._chain.back ();
+		_loc_edit._chain_flag = true;
 		_page_ptr->jump_to (Entry_TYPE);
 	}
 	else if (   index + 1 < int (preset._routing._chain.size ())
 	         && _loc_edit._slot_id == preset._routing._chain [index + 1])
 	{
-		_loc_edit._slot_id = preset._routing._chain [index];
+		_loc_edit._slot_id    = preset._routing._chain [index];
+		_loc_edit._chain_flag = true;
 	}
 	update_display ();
 }
@@ -331,12 +353,8 @@ void	MenuSlot::do_erase_slot_from_chain (int index)
 		{
 			_loc_edit._slot_id = -1;
 		}
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 	}
-	else
-	{
-		update_display ();
-	}
+	update_display ();
 }
 
 
@@ -414,18 +432,22 @@ void	MenuSlot::update_display ()
 	nav._node_id = Entry_TYPE;
 	nav_list.push_back (nav);
 
+	_ins_sptr->set_text (_loc_edit._chain_flag ? "Insert before" : "Insert");
 	nav._node_id = Entry_INSERT;
 	nav_list.push_back (nav);
 
 	_del_sptr->show (exist_flag);
-	_mov_sptr->show (exist_flag);
+	_mov_sptr->show (exist_flag && _loc_edit._chain_flag);
 	if (exist_flag)
 	{
 		nav._node_id = Entry_DELETE;
 		nav_list.push_back (nav);
 
-		nav._node_id = Entry_MOVE;
-		nav_list.push_back (nav);
+		if (_loc_edit._chain_flag)
+		{
+			nav._node_id = Entry_MOVE;
+			nav_list.push_back (nav);
+		}
 	}
 
 	_prs_sptr->show (full_flag);
@@ -448,7 +470,7 @@ void	MenuSlot::update_display ()
 		nav._node_id = Entry_CHN;
 		nav_list.push_back (nav);
 
-		_lbl_sptr->set_text (slot._label);
+		_lbl_sptr->set_text ("Name: " + slot._label);
 		nav._node_id = Entry_LABEL;
 		nav_list.push_back (nav);
 	}
@@ -462,37 +484,21 @@ void	MenuSlot::update_display ()
 
 MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
 {
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const int      slot_id_new = Tools::change_plugin (
+		*_model_ptr,
+		*_view_ptr,
+		_loc_edit._slot_id,
+		dir,
+		(_loc_edit._chain_flag) ? _fx_list : _ms_list,
+		_loc_edit._chain_flag
+	);
 
-	int            slot_index =
-		Tools::find_chain_index (preset, _loc_edit._slot_id);
+	if (slot_id_new != _loc_edit._slot_id)
 	{
-		if (slot_index < 0)
-		{
-			slot_index = int (preset._routing._chain.size ());
-		}
+		_loc_edit._slot_id = slot_id_new;
+		fix_chain_flag ();
+		update_display ();
 	}
-
-	Tools::change_plugin_in_chain (*_model_ptr, *_view_ptr, slot_index, dir, _fx_list);
-
-	{
-		const int      nbr_slots = int (preset._routing._chain.size ());
-		if (slot_index >= nbr_slots)
-		{
-			slot_index = -1;
-		}
-	}
-
-	if (slot_index < 0)
-	{
-		_loc_edit._slot_id = -1;
-	}
-	else
-	{
-		_loc_edit._slot_id = preset._routing._chain [slot_index];
-	}
-
-	update_display ();
 
 	return EvtProp_CATCH;
 }
@@ -517,6 +523,26 @@ MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
 	update_display ();
 
 	return EvtProp_CATCH;
+}
+
+
+
+void	MenuSlot::fix_chain_flag ()
+{
+	if (_loc_edit._slot_id >= 0)
+	{
+		const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
+		const auto           it_slot = preset._slot_map.find (_loc_edit._slot_id);
+		if (it_slot != preset._slot_map.end ())
+		{
+			auto          it = std::find (
+				preset._routing._chain.begin (),
+				preset._routing._chain.end (),
+				_loc_edit._slot_id
+			);
+			_loc_edit._chain_flag = (it != preset._routing._chain.end ());
+		}
+	}
 }
 
 

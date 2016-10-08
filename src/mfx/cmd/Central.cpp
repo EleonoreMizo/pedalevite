@@ -275,11 +275,11 @@ void	Central::clear_slot (int pos)
 
 
 // Returns the plug-in Id
-int	Central::set_plugin (int pos, std::string model, bool force_reset_flag, bool connected_flag)
+int	Central::set_plugin (int pos, std::string model, bool force_reset_flag, bool gen_audio_flag)
 {
 	int            pi_id =
-		set_plugin (pos, model, PiType_MAIN, force_reset_flag, connected_flag);
-	if (! connected_flag)
+		set_plugin (pos, model, PiType_MAIN, force_reset_flag, gen_audio_flag);
+	if (! gen_audio_flag)
 	{
 		remove_mixer (pos);
 	}
@@ -387,6 +387,23 @@ void	Central::set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls)
 	plug._ctrl_map [index] = std::shared_ptr <doc::CtrlLinkSet> (
 		new doc::CtrlLinkSet (cls)
 	);
+}
+
+
+
+void	Central::set_sig_source (int pi_id, int sig_pin, int port_id)
+{
+	Document &     doc = modify ();
+
+	assert (sig_pin >= 0);
+
+	Plugin &       plug = find_plugin (doc, pi_id);
+
+	if (sig_pin >= int (plug._sig_port_list.size ()))
+	{
+		plug._sig_port_list.resize (sig_pin + 1, -1);
+	}
+	plug._sig_port_list [sig_pin] = port_id;
 }
 
 
@@ -579,7 +596,7 @@ Plugin &	Central::find_plugin (Document &doc, int pi_id)
 
 
 
-int	Central::set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool connected_flag)
+int	Central::set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool gen_audio_flag)
 {
 	Document &     doc = modify ();
 
@@ -662,7 +679,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 
 	if (type == PiType_MAIN)
 	{
-		slot._connected_flag = connected_flag;
+		slot._gen_audio_flag = gen_audio_flag;
 	}
 
 	return pi_id;
@@ -699,6 +716,7 @@ void	Central::remove_plugin (int pos, PiType type)
 	plugin._model.clear ();
 	plugin._pi_id = -1;
 	plugin._ctrl_map.clear ();
+	plugin._sig_port_list.clear ();
 	doc._slot_list [pos]._force_mono_flag = false;
 }
 
@@ -786,9 +804,7 @@ void	Central::create_routing ()
 
 			// Input
 			desc_main.get_nbr_io (main_nbr_i, main_nbr_o, main_nbr_s);
-			assert (main_nbr_i > 0);
-			assert (main_nbr_o > 0);
-			main_side_i._nbr_chn     = nbr_chn_in;
+			main_side_i._nbr_chn     = (main_nbr_i > 0) ? nbr_chn_in : 0;
 			main_side_i._nbr_chn_tot = nbr_chn_in * main_nbr_i;
 			for (int chn = 0; chn < main_side_i._nbr_chn_tot; ++chn)
 			{
@@ -804,11 +820,11 @@ void	Central::create_routing ()
 
 			// Output
 			std::array <int, piapi::PluginInterface::_max_nbr_chn>   nxt_buf_arr;
-			main_side_o._nbr_chn     = nbr_chn_out;
+			main_side_o._nbr_chn     = (main_nbr_o > 0) ? nbr_chn_out : 0;
 			main_side_o._nbr_chn_tot = nbr_chn_out * main_nbr_o;
 			for (int chn = 0; chn < main_side_o._nbr_chn_tot; ++chn)
 			{
-				if (chn < nbr_chn_out && slot._connected_flag)
+				if (chn < nbr_chn_out && slot._gen_audio_flag)
 				{
 					const int      buf = buf_alloc.alloc ();
 					nxt_buf_arr [chn]          = buf;
@@ -822,16 +838,31 @@ void	Central::create_routing ()
 
 			// Signals
 			pi_ctx._node_arr [PiType_MAIN]._nbr_sig = main_nbr_s;
+			const int      nbr_reg_sig =
+				int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
 			for (int sig = 0; sig < main_nbr_s; ++sig)
 			{
-				pi_ctx._node_arr [PiType_MAIN]._sig_buf_arr [sig] =
-					Cst::BufSpecial_TRASH;
+				ProcessingContextNode::SigInfo & sig_info =
+					pi_ctx._node_arr [PiType_MAIN]._sig_buf_arr [sig];
+				sig_info._buf_index  = Cst::BufSpecial_TRASH;
+				sig_info._port_index = -1;
+
+				if (sig < nbr_reg_sig)
+				{
+					const int      port_index =
+						slot._component_arr [PiType_MAIN]._sig_port_list [sig];
+					if (port_index >= 0)
+					{
+						sig_info._buf_index  = buf_alloc.alloc ();
+						sig_info._port_index = port_index;
+					}
+				}
 			}
 
 			// With dry/wet mixer
 			if (pi_id_mix >= 0)
 			{
-				assert (slot._connected_flag);
+				assert (slot._gen_audio_flag);
 
 				pi_ctx._node_arr [PiType_MIX]._pi_id = pi_id_mix;
 				ProcessingContextNode::Side & mix_side_i =
@@ -887,8 +918,8 @@ void	Central::create_routing ()
 				}
 			}
 
-			// Next buffers
-			if (slot._connected_flag)
+			// Output buffers become the next input buffers
+			if (slot._gen_audio_flag)
 			{
 				for (int chn = 0; chn < nbr_chn_out; ++chn)
 				{

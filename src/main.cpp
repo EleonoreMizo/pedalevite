@@ -367,14 +367,14 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_page_cur_prog (_page_switcher, snd_drv)
 ,	_page_tuner (_page_switcher, _leds)
 ,	_page_menu_main (_page_switcher)
-,	_page_edit_prog (_page_switcher, _loc_edit, _pi_aud_type_list)
+,	_page_edit_prog (_page_switcher, _loc_edit, _pi_aud_type_list, _pi_sig_type_list)
 ,	_page_param_list (_page_switcher, _loc_edit)
 ,	_page_param_edit (_page_switcher, _loc_edit)
 ,	_page_not_yet (_page_switcher)
 ,	_page_question (_page_switcher)
 ,	_page_param_controllers (_page_switcher, _loc_edit, _csn_list)
 ,	_page_ctrl_edit (_page_switcher, _loc_edit, _csn_list)
-,	_page_menu_slot (_page_switcher, _loc_edit, _pi_aud_type_list)
+,	_page_menu_slot (_page_switcher, _loc_edit, _pi_aud_type_list, _pi_sig_type_list)
 ,	_page_edit_text (_page_switcher)
 ,	_page_save_prog (_page_switcher)
 ,	_page_end_msg (_cmd_line)
@@ -598,7 +598,7 @@ void	Context::list_plugins (std::vector <std::string> &pi_aud_type_list, std::ve
 				name_all.c_str (), '\n'
 			);
 
-			if (nbr_i > 0 && nbr_o > 0)
+			if (nbr_i > 0 && (nbr_o > 0 || nbr_s > 0))
 			{
 				pi_aud_map [name] = model_id;
 			}

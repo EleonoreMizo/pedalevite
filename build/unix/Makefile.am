@@ -224,6 +224,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/SerWText.h \
         ../../src/mfx/doc/Setup.cpp \
         ../../src/mfx/doc/Setup.h \
+        ../../src/mfx/doc/SignalPort.cpp \
+        ../../src/mfx/doc/SignalPort.h \
         ../../src/mfx/doc/Slot.cpp \
         ../../src/mfx/doc/Slot.h \
         ../../src/mfx/dsp/ctrl/lfo/LfoModule.cpp \

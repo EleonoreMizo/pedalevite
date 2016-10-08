@@ -633,6 +633,7 @@ void	Model::set_plugin (int slot_id, std::string model)
 	assert (slot_id >= 0);
 	assert (! model.empty ());
 
+	clear_all_signal_ports_for_slot (slot_id);
 	reset_all_overridden_param_ctrl (slot_id);
 
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
@@ -674,6 +675,7 @@ void	Model::remove_plugin (int slot_id)
 {
 	assert (slot_id >= 0);
 
+	clear_all_signal_ports_for_slot (slot_id);
 	reset_all_overridden_param_ctrl (slot_id);
 
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
@@ -803,14 +805,25 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 	doc::PluginSettings &   settings = slot.use_settings (type);
 	assert (index < int (settings._param_list.size ()));
 
-	settings._map_param_ctrl [index] = cls;
+	const bool     cls_empty_flag = cls.is_empty ();
+
+	if (cls_empty_flag)
+	{
+		auto           it_cls = settings._map_param_ctrl.find (index);
+		if (it_cls != settings._map_param_ctrl.end ())
+		{
+			settings._map_param_ctrl.erase (it_cls);
+		}
+	}
+	else
+	{
+		settings._map_param_ctrl [index] = cls;
+	}
 
 	auto           it_id_map = _pi_id_map.find (slot_id);
 	assert (it_id_map != _pi_id_map.end ());
 	int            pi_id = it_id_map->second._pi_id_arr [type];
 	assert (pi_id >= 0);
-	const bool     cls_empty_flag =
-		(cls._bind_sptr.get () == 0 && cls._mod_arr.empty ());
 
 	if (pi_id == _dummy_mix_id)
 	{
@@ -837,6 +850,90 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 
 		_obs_ptr->set_param_ctrl (slot_id, type, index, cls);
 	}
+}
+
+
+
+// Removes all ControlSource occurrences from the current presets.
+// Does not handle the memory of the previous plugins
+void	Model::remove_ctrl_src (const ControlSource &src)
+{
+	for (auto it_slot = _preset_cur._slot_map.begin ()
+	;	it_slot != _preset_cur._slot_map.end ()
+	;	++ it_slot)
+	{
+		if (! _preset_cur.is_slot_empty (it_slot))
+		{
+			const doc::Slot & slot = *(it_slot->second);
+
+			for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
+			{
+				const PiType   type = static_cast <PiType> (type_cnt);
+				const doc::PluginSettings *   settings_ptr =
+					slot.test_and_get_settings (type);
+				if (settings_ptr != 0)
+				{
+					auto           it_cls = settings_ptr->_map_param_ctrl.begin ();
+					while (it_cls != settings_ptr->_map_param_ctrl.end ())
+					{
+						auto           it_cls_next = it_cls;
+						++ it_cls_next;
+
+						// Check if there is something to modify here
+						bool           mod_flag = false;
+						const doc::CtrlLinkSet &   cls_tst =
+							it_cls->second;
+						if (   cls_tst._bind_sptr.get () != 0
+						    && cls_tst._bind_sptr->_source == src)
+						{
+							mod_flag = true;
+						}
+						else
+						{
+							for (const auto &link_sptr : cls_tst._mod_arr)
+							{
+								assert (link_sptr.get () != 0);
+								if (link_sptr->_source == src)
+								{
+									mod_flag = true;
+									break;
+								}
+							}
+						}
+
+						// Does the modification if required
+						if (mod_flag)
+						{
+							doc::CtrlLinkSet  cls = it_cls->second;
+							if (   cls._bind_sptr.get () != 0
+								 && cls._bind_sptr->_source == src)
+							{
+								cls._bind_sptr.reset ();
+							}
+							size_t            pos = 0;
+							while (pos < cls._mod_arr.size ())
+							{
+								if (cls._mod_arr [pos]->_source == src)
+								{
+									cls._mod_arr.erase (cls._mod_arr.begin () + pos);
+								}
+								else
+								{
+									++ pos;
+								}
+							}
+
+							const int      slot_id = it_slot->first;
+							const int      index   = it_cls->first;
+							set_param_ctrl (slot_id, type, index, cls);
+						}
+
+						it_cls = it_cls_next;
+					} // Loop over ControlLinkSet-s
+				} // if settings
+			} // Loop over types
+		} // if slot not empty
+	} // Loop over slots
 }
 
 
@@ -893,6 +990,14 @@ void	Model::reset_all_overridden_param_ctrl ()
 		{
 			override_param_ctrl (slot_id, type, loc._index, -1);
 		}
+		else
+		{
+#if 0
+			_override_map.erase (_override_map.end ());
+#else
+			assert (false);
+#endif
+		}
 	}
 }
 
@@ -930,6 +1035,51 @@ void	Model::reset_all_overridden_param_ctrl (int slot_id)
 				}
 				while (erase_flag);
 			}
+		}
+	}
+}
+
+
+
+void	Model::set_signal_port (int port_id, const doc::SignalPort &port)
+{
+	assert (_preset_cur._slot_map.find (port._slot_id) != _preset_cur._slot_map.end ());
+
+	// Not strictly necessary, but helps to ensure global consistency.
+	clear_signal_port (port_id, false);
+
+	_preset_cur._port_map [port_id] = port;
+
+	apply_settings ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_signal_port (port_id, port);
+	}
+}
+
+
+
+void	Model::clear_signal_port (int port_id)
+{
+	clear_signal_port (port_id, true);
+}
+
+
+
+void	Model::clear_all_signal_ports_for_slot (int slot_id)
+{
+	auto           it_port = _preset_cur._port_map.begin ();
+	while (it_port != _preset_cur._port_map.end ())
+	{
+		// The element pointed by the iterator might be subject to deletion,
+		// so we step first before doing anything.
+		auto           it_port_tst = it_port;
+		++ it_port;
+
+		if (it_port_tst->second._slot_id == slot_id)
+		{
+			clear_signal_port (it_port_tst->first);
 		}
 	}
 }
@@ -1164,18 +1314,17 @@ void	Model::apply_settings_normal ()
 	_pi_id_map.clear ();
 	_slot_info.clear ();
 
-	// Chain first, other plug-ins afterwards
-	const std::vector <int> onl = _preset_cur.build_ordered_node_list ();
-	const int      nbr_slots  = onl.size ();
-	const int      chain_size = int (_preset_cur._routing._chain.size ());
-	const int      onl_ofs    = chain_size;
+	// Chain last, other plug-ins before
+	const std::vector <int> onl = _preset_cur.build_ordered_node_list (false);
+	const int      nbr_slots = onl.size ();
+	const int      chain_pos =
+		nbr_slots - int (_preset_cur._routing._chain.size ());
 
 	int            slot_index_central = 0;
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
-		const int      onl_index  = (slot_index + onl_ofs) % nbr_slots;
-		const bool     chain_flag = (onl_index < chain_size);
-		const int      slot_id    = onl [onl_index];
+		const bool     chain_flag = (slot_index >= chain_pos);
+		const int      slot_id    = onl [slot_index];
 		auto           it_id_map  =
 			_pi_id_map.insert (std::make_pair (slot_id, SlotPiId ())).first;
 		auto           it_slot    = _preset_cur._slot_map.find (slot_id);
@@ -1187,6 +1336,14 @@ void	Model::apply_settings_normal ()
 			_central.insert_slot (slot_index_central);
 
 			doc::Slot &	   slot = *(it_slot->second);
+
+			const piapi::PluginDescInterface &	desc =
+				get_model_desc (slot._pi_model);
+			int            nbr_i = 1;
+			int            nbr_o = 1;
+			int            nbr_s = 0;
+			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
+			const bool     gen_audio_flag = (chain_flag && nbr_o > 0);
 
 			// Check first if we need a mixer plug-in.
 			// Updates the parameters
@@ -1203,7 +1360,7 @@ void	Model::apply_settings_normal ()
 					slot_index_central,
 					slot._pi_model,
 					false,
-					true
+					gen_audio_flag
 				);
 				doc::PluginSettings &	settings =
 					slot._settings_all [slot._pi_model];
@@ -1222,10 +1379,30 @@ void	Model::apply_settings_normal ()
 					slot_index_central,
 					slot._pi_model,
 					it_s->second._force_reset_flag,
-					true
+					gen_audio_flag
 				);
 				it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
 				send_effect_settings (pi_id, slot_id, PiType_MAIN, it_s->second);
+			}
+
+			// Registers signal ports
+			for (int sig_index = 0; sig_index < nbr_s; ++sig_index)
+			{
+				int            port_id = -1;
+				const auto     it_sig = std::find_if (
+					_preset_cur._port_map.begin (),
+					_preset_cur._port_map.end (),
+					[slot_id, sig_index] (const doc::Preset::PortMap::value_type &node)
+					{
+						return (   node.second._slot_id   == slot_id
+						        && node.second._sig_index == sig_index);
+					}
+				);
+				if (it_sig != _preset_cur._port_map.end ())
+				{
+					port_id = it_sig->first;
+				}
+				_central.set_sig_source (pi_id, sig_index, port_id);
 			}
 
 			++ slot_index_central;
@@ -2017,7 +2194,7 @@ void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int
 void	Model::add_default_ctrl (int selected_slot_id)
 {
 	// First, lists the slots in the processing order
-	std::vector <int> slot_id_list (_preset_cur.build_ordered_node_list ());
+	std::vector <int> slot_id_list (_preset_cur.build_ordered_node_list (true));
 
 	std::set <int> used_pot_set;
 
@@ -2140,6 +2317,35 @@ void	Model::add_default_ctrl (int selected_slot_id)
 
 			// Marks the pot as used
 			used_pot_set.insert (pot_index);
+		}
+	}
+}
+
+
+
+void	Model::clear_signal_port (int port_id, bool req_exist_flag)
+{
+	const auto     it_port = _preset_cur._port_map.find (port_id);
+	if (it_port == _preset_cur._port_map.end ())
+	{
+		assert (! req_exist_flag);
+	}
+	else
+	{
+		// Removes any controller listening to this port.
+		// Not strictly necessary, but helps to ensure global consistency.
+		ControlSource  src;
+		src._index = port_id;
+		src._type  = ControllerType_FX_SIG;
+		remove_ctrl_src (src);
+
+		_preset_cur._port_map.erase (it_port);
+
+		apply_settings ();
+
+		if (_obs_ptr != 0)
+		{
+			_obs_ptr->clear_signal_port (port_id);
 		}
 	}
 }

@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/pi/param/Tools.h"
 #include "mfx/uitk/pg/CtrlEdit.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
@@ -54,7 +55,7 @@ namespace pg
 
 
 CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <CtrlSrcNamed> &csn_list)
-:	_csn_list (csn_list)
+:	_csn_list_base (csn_list)
 ,	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_model_ptr (0)
@@ -69,6 +70,7 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_u2b_sptr (     new NText (Entry_CONV_U2B))
 ,	_step_index (0)
 ,	_val_unit_w (0)
+,	_csn_list_full (_csn_list_base)
 ,	_cls ()
 ,	_ctrl_link ()
 ,	_ctrl_index (-1)
@@ -93,11 +95,11 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 			ratio += "0";
 		}
 
-		gork._label_sptr = TxtSPtr (new NText (_id_label_arr [mm]));
-		gork._label_sptr->set_text ((mm == 0) ? "Min: " : "Max: ");
-
+		gork._label_sptr    = TxtSPtr (new NText (_id_label_arr [mm]));
 		gork._val_unit_sptr = TxtSPtr (new NText (_id_val_arr [mm]));
 	}
+	_minmax [0]._label_sptr->set_text ("Min: ");
+	_minmax [1]._label_sptr->set_text ("Max: ");
 }
 
 
@@ -190,7 +192,7 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	{
 		update_ctrl_link ();
 		const int      csn_index =
-			Tools::find_ctrl_index (_ctrl_link._source, _csn_list);
+			Tools::find_ctrl_index (_ctrl_link._source, _csn_list_full);
 		_src_unknown_flag = (csn_index < 0);
 		_src_unknown      = _ctrl_link._source;
 	}
@@ -310,6 +312,18 @@ void	CtrlEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc
 
 void	CtrlEdit::update_display ()
 {
+	const int      scr_w = _page_size [0];
+
+	const std::vector <CtrlSrcNamed> csn_ports (
+		Tools::make_port_list (*_model_ptr, *_view_ptr)
+	);
+	_csn_list_full = _csn_list_base;
+	_csn_list_full.insert (
+		_csn_list_full.begin (),
+		csn_ports.begin (),
+		csn_ports.end ()
+	);
+
 	const bool     active_flag = (_loc_edit._ctrl_index >= 0);
 
 	_step_rel_sptr->show (active_flag);
@@ -336,8 +350,23 @@ void	CtrlEdit::update_display ()
 	{
 		update_ctrl_link ();
 
-		const std::string src_name =
-			Tools::find_ctrl_name (_ctrl_link._source, _csn_list);
+		std::string    min_txt = "Min: ";
+		if (! _loc_edit._ctrl_abs_flag)
+		{
+			min_txt = "Amp: ";
+		}
+		else if (_ctrl_link._source.is_bipolar ())
+		{
+			min_txt = "0  : ";
+		}
+		_minmax [0]._label_sptr->set_text (min_txt);
+
+		const std::string src_name_multilabel =
+			Tools::find_ctrl_name (_ctrl_link._source, _csn_list_full);
+		const std::string src_name = pi::param::Tools::print_name_bestfit (
+			scr_w, src_name_multilabel.c_str (),
+			*_src_sptr, &NText::get_char_width
+		);
 		_src_sptr->set_text (src_name);
 
 		char           txt_0 [127+1];
@@ -373,26 +402,48 @@ void	CtrlEdit::update_display ()
 			_step_rel_sptr->set_text (txt_0);
 		}
 
-		const std::array <float, 2>   val_arr =
+		if (_loc_edit._ctrl_abs_flag)
 		{
-			_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
-		};
-		const PiType   type    = _loc_edit._pi_type;
-		const int      index   = _loc_edit._param_index;
-		for (size_t mm = 0; mm < _minmax.size (); ++mm)
+			const std::array <float, 2>   val_arr =
+			{
+				_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
+			};
+			const PiType   type    = _loc_edit._pi_type;
+			const int      index   = _loc_edit._param_index;
+			for (size_t mm = 0; mm < _minmax.size (); ++mm)
+			{
+				for (size_t k = 0; k < _nbr_steps; ++k)
+				{
+					_minmax [mm]._step_sptr_arr [k]->show (true);
+					nav_list.resize (nav_list.size () + 1);
+					nav_list.back ()._node_id = _id_step_arr [mm] + k;
+				}
+
+				const float       val = val_arr [mm];
+				Tools::set_param_text (
+					*_model_ptr, *_view_ptr, _val_unit_w,
+					index, val, _loc_edit._slot_id, type,
+					0, *(_minmax [mm]._val_unit_sptr), 0, 0, true
+				);
+				_minmax [mm]._val_unit_sptr->show (true);
+				_minmax [mm]._label_sptr->show (true);
+			}
+		}
+		else
 		{
 			for (size_t k = 0; k < _nbr_steps; ++k)
 			{
+				_minmax [1]._step_sptr_arr [k]->show (false);
 				nav_list.resize (nav_list.size () + 1);
-				nav_list.back ()._node_id = _id_step_arr [mm] + k;
+				nav_list.back ()._node_id = _id_step_arr [0] + k;
 			}
 
-			const float       val = val_arr [mm];
-			Tools::set_param_text (
-				*_model_ptr, *_view_ptr, _val_unit_w,
-				index, val, _loc_edit._slot_id, type,
-				0, *(_minmax [mm]._val_unit_sptr), 0, 0, true
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), "%+7.2f %%", _ctrl_link._amp * 100
 			);
+			_minmax [0]._val_unit_sptr->set_text (txt_0);
+			_minmax [1]._val_unit_sptr->show (false);
+			_minmax [1]._label_sptr->show (false);
 		}
 
 		const std::string curve_name =
@@ -408,9 +459,15 @@ void	CtrlEdit::update_display ()
 			nav_list.resize (nav_list.size () + 1);
 			nav_list.back ()._node_id = Entry_CONV_U2B;
 		}
+		else
+		{
+			_u2b_sptr->set_text ("");
+		}
 	}
 
 	_page_ptr->set_nav_layout (nav_list);
+
+	_page_ptr->invalidate (Rect (Vec2d (0, 0), _page_size));
 }
 
 
@@ -606,24 +663,32 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 	doc::CtrlLinkSet  cls (_cls);
 	doc::CtrlLink &   cl (use_ctrl_link (cls));
 
-	std::array <double, 2>  val_arr =
-	{
-		_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
-	};
-
 	const int      slot_id    = _loc_edit._slot_id;
 	const PiType   type       = _loc_edit._pi_type;
 	const int      index      = _loc_edit._param_index;
 	const float    step       =
 		float (Cst::_step_param / pow (10, step_index));
 
-	val_arr [mm] = Tools::change_param (
-		val_arr [mm], *_model_ptr, *_view_ptr, slot_id, type,
-		index, step, step_index, dir
-	);
+	if (_loc_edit._ctrl_abs_flag)
+	{
+		std::array <double, 2>  val_arr =
+		{
+			_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
+		};
 
-	cl._base = float (              val_arr [0]);
-	cl._amp  = float (val_arr [1] - val_arr [0]);
+		val_arr [mm] = Tools::change_param (
+			val_arr [mm], *_model_ptr, *_view_ptr, slot_id, type,
+			index, step, step_index, dir
+		);
+
+		cl._base = float (              val_arr [0]);
+		cl._amp  = float (val_arr [1] - val_arr [0]);
+	}
+	else
+	{
+		cl._base = 0;
+		cl._amp  = fstb::limit (_ctrl_link._amp + step * dir, -4.0f, 4.0f);
+	}
 
 	_model_ptr->set_param_ctrl (slot_id, type, index, cls);
 }
@@ -632,15 +697,15 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 
 // -2: unknown (_src_unknown)
 // -1: empty
-// 0 to N-1: from _csn_list
+// 0 to N-1: from _csn_list_full
 int	CtrlEdit::find_next_source (int dir) const
 {
-	const int      nbr_csn = int (_csn_list.size ());
+	const int      nbr_csn = int (_csn_list_full.size ());
 	int            csn_index = -1;
 	if (_loc_edit._ctrl_index >= 0)
 	{
 		const doc::CtrlLink  ctrl_link (use_ctrl_link (_cls));
-		csn_index = Tools::find_ctrl_index (ctrl_link._source, _csn_list);
+		csn_index = Tools::find_ctrl_index (ctrl_link._source, _csn_list_full);
 		if (csn_index < 0)
 		{
 			assert (_src_unknown_flag);
@@ -682,6 +747,11 @@ doc::CtrlLinkSet::LinkSPtr	CtrlEdit::create_controller (int csn_index) const
 
 	sptr->_source = create_source (csn_index);
 
+	if (! _loc_edit._ctrl_abs_flag)
+	{
+		sptr->_amp = 0.10f;
+	}
+
 	return sptr;
 }
 
@@ -696,7 +766,7 @@ ControlSource	CtrlEdit::create_source (int csn_index) const
 		return _src_unknown;
 	}
 
-	return _csn_list [csn_index]._src;
+	return _csn_list_full [csn_index]._src;
 }
 
 

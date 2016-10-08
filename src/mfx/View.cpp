@@ -576,6 +576,28 @@ void	View::do_override_param_ctrl (int slot_id, PiType type, int index, int rote
 
 
 
+void	View::do_set_signal_port (int port_id, const doc::SignalPort &port)
+{
+	assert (_preset_cur._slot_map.find (port._slot_id) != _preset_cur._slot_map.end ());
+
+	_preset_cur._port_map [port_id] = port;
+
+	mfx_View_PROPAGATE (set_signal_port (port_id, port));
+}
+
+
+
+void	View::do_clear_signal_port (int port_id)
+{
+	const auto     it_port = _preset_cur._port_map.find (port_id);
+	assert (it_port != _preset_cur._port_map.end ());
+	_preset_cur._port_map.erase (it_port);
+
+	mfx_View_PROPAGATE (clear_signal_port (port_id));
+}
+
+
+
 #undef mfx_View_PROPAGATE
 
 

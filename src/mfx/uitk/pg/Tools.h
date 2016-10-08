@@ -93,14 +93,16 @@ public:
 	static int     find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
-	static void    change_plugin_in_chain (Model &model, const View &view, int slot_index, int dir, const std::vector <std::string> &fx_list);
+	static std::vector <CtrlSrcNamed>
+	               make_port_list (const Model &model, const View &view);
+	static int     change_plugin (Model &model, const View &view, int slot_id, int dir, const std::vector <std::string> &fx_list, bool chain_flag);
 	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page);
 
 	static std::string
 	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalboardLayout &layout, int index, const Model &model, const View &view);
 
 	static std::vector <NodeEntry>
-	               extract_slot_list (const doc::Preset &preset, const Model &model, bool sig_flag);
+	               extract_slot_list (const doc::Preset &preset, const Model &model);
 	static int     find_chain_index (const doc::Preset &preset, int slot_id);
 
 
@@ -124,6 +126,7 @@ private:
 	               find_fx_type (const doc::FxId &fx_id, const View &view);
 	static std::string
 	               print_param_action (const doc::ActionParam &param, const Model &model, const View &view);
+	static void    create_missing_signal_ports (Model &model, const View &view, int slot_id);
 
 
 

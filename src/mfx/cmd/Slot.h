@@ -56,7 +56,7 @@ public:
 	std::array <Plugin, PiType_NBR_ELT>
 	               _component_arr;
 	bool           _force_mono_flag = false;
-	bool           _connected_flag  = true;
+	bool           _gen_audio_flag  = true;
 
 	int            _ctx_index       = -1; // Index in ProcessingContext::_context_arr
 

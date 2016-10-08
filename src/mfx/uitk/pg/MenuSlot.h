@@ -57,7 +57,7 @@ class MenuSlot
 
 public:
 
-	explicit       MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list);
+	explicit       MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list);
 	virtual        ~MenuSlot () = default;
 
 
@@ -76,6 +76,7 @@ protected:
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
+	virtual void   do_remove_slot (int slot_id);
 	virtual void   do_insert_slot_in_chain (int index, int slot_id);
 	virtual void   do_erase_slot_from_chain (int index);
 	virtual void   do_set_slot_label (int slot_id, std::string name);
@@ -114,11 +115,14 @@ private:
 	void           update_display ();
 	EvtProp        change_type (int dir);
 	EvtProp        reset_plugin ();
+	void           fix_chain_flag ();
 
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
 	const std::vector <std::string> &
 	               _fx_list;
+	const std::vector <std::string> &
+	               _ms_list;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected

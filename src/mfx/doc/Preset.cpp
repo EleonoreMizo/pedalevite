@@ -49,6 +49,7 @@ Preset::Preset (const Preset &other)
 ,	_routing (other._routing)
 ,	_name (other._name)
 ,	_layout (other._layout)
+,	_port_map (other._port_map)
 {
 	duplicate_slot_list ();
 }
@@ -63,6 +64,7 @@ Preset &	Preset::operator = (const Preset &other)
 		_routing  = other._routing;
 		_name     = other._name;
 		_layout   = other._layout;
+		_port_map = other._port_map;
 		duplicate_slot_list ();
 	}
 
@@ -135,9 +137,7 @@ int	Preset::gen_slot_id () const
 
 	if (! _slot_map.empty ())
 	{
-		auto           it = _slot_map.rbegin ();
-		++ it;
-		slot_id = it->first;
+		slot_id = _slot_map.rbegin ()->first;
 		do
 		{
 			static const int  inc = 11;
@@ -158,9 +158,24 @@ int	Preset::gen_slot_id () const
 
 
 
+int	Preset::find_free_port () const
+{
+	int            port_index = 0;
+	auto           it_port    = _port_map.begin ();
+	while (it_port != _port_map.end () && port_index == it_port->first)
+	{
+		++ it_port;
+		++ port_index;
+	}
+
+	return port_index;
+}
+
+
+
 // Returns a list of slot_id beginning with the chain,
 // followed by the other slots.
-std::vector <int>	Preset::build_ordered_node_list () const
+std::vector <int>	Preset::build_ordered_node_list (bool chain_first_flag) const
 {
 	// Set of the nodes we already inserted into the vector
 	std::set <int> rem_slot_id;
@@ -169,21 +184,36 @@ std::vector <int>	Preset::build_ordered_node_list () const
 		rem_slot_id.insert (node.first);
 	}
 
-	// Inserts the main chain
-	std::vector <int> slot_id_list = _routing._chain;
-
 	// Removes nodes of the main chain
-	for (int rem_id : slot_id_list)
+	for (int rem_id : _routing._chain)
 	{
 		const auto     it = rem_slot_id.find (rem_id);
 		assert (it != rem_slot_id.end ());
 		rem_slot_id.erase (it);
 	}
 
+	std::vector <int> slot_id_list;
+
+	// Inserts the main chain (first position case)
+	if (chain_first_flag)
+	{
+		slot_id_list = _routing._chain;
+	}
+
 	// Adds all the remaining slots
 	for (int rem_id : rem_slot_id)
 	{
 		slot_id_list.push_back (rem_id);
+	}
+
+	// Inserts the main chain (last position case)
+	if (! chain_first_flag)
+	{
+		slot_id_list.insert (
+			slot_id_list.end (),
+			_routing._chain.begin (),
+			_routing._chain.end ()
+		);
 	}
 
 	return slot_id_list;
@@ -209,6 +239,16 @@ void	Preset::ser_write (SerWInterface &ser) const
 	ser.end_list ();
 
 	_routing.ser_write (ser);
+
+	ser.begin_list ();
+	for (const auto &node : _port_map)
+	{
+		ser.begin_list ();
+		ser.write (node.first);
+		node.second.ser_write (ser);
+		ser.end_list ();
+	}
+	ser.end_list ();
 
 	ser.end_list ();
 }
@@ -266,6 +306,23 @@ void	Preset::ser_read (SerRInterface &ser)
 		{
 			_routing._chain.push_back (cnt * inc);
 		}
+	}
+
+	_port_map.clear ();
+	if (doc_ver >= 4)
+	{
+		ser.begin_list (nbr_elt);
+		for (int cnt = 0; cnt < nbr_elt; ++cnt)
+		{
+			int            port_index;
+			ser.read (port_index);
+
+			SignalPort     port;
+			port.ser_read (ser);
+
+			_port_map [port_index] = port;
+		}
+		ser.end_list ();
 	}
 
 	ser.end_list ();

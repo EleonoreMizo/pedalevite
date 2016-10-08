@@ -98,7 +98,7 @@ float	ControlledParam::compute_final_val (PluginPool &pi_pool) const
 		if (details._param_update_from_audio [index])
 		{
 			val = unit.evaluate (0);
-			details._param_arr [index] = val;
+			details._param_arr [index] = fstb::limit (val, 0.f, 1.f);
 		}
 		// Otherwise, we get the value from the reference.
 		else

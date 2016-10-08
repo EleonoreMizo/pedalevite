@@ -62,7 +62,7 @@ class EditProg
 
 public:
 
-	explicit       EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list);
+	explicit       EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list);
 	virtual        ~EditProg () = default;
 
 
@@ -106,6 +106,7 @@ private:
 	{
 		Entry_WINDOW    = 1000,
 		Entry_FX_LIST,
+		Entry_MS_LIST,
 		Entry_PROG_NAME,
 		Entry_CONTROLLERS,
 		Entry_SAVE
@@ -116,14 +117,18 @@ private:
 	typedef std::vector <TxtSPtr> TxtArray;
 
 	void           set_preset_info ();
-	void           set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel, bool bold_flag);
+	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size);
 	EvtProp        change_effect (int node_id, int dir);
 	void           update_loc_edit (int node_id);
 	void           update_rotenc_mapping ();
+	int            conv_node_id_to_slot_id (int node_id) const;
+	int            conv_node_id_to_slot_id (int node_id, bool &chain_flag) const;
 	int            conv_loc_edit_to_node_id () const;
 
 	const std::vector <std::string> &
 	               _fx_list;
+	const std::vector <std::string> &
+	               _ms_list;
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
 	Model *        _model_ptr;    // 0 = not connected
@@ -136,10 +141,11 @@ private:
 
 	WinSPtr        _menu_sptr;    // Contains 3 entries (2 of them are selectable) + the slot list
 	TxtSPtr        _fx_list_sptr;
+	TxtSPtr        _ms_list_sptr;
 	TxtSPtr        _prog_name_sptr;
 	TxtSPtr        _controllers_sptr;
 	TxtSPtr        _save_sptr;
-	TxtArray       _slot_list;    // Shows N+1 slots, the last one being the <End> line.
+	TxtArray       _slot_list;   // Shows N+1+M+1 slots, the last one of each list being the <End> line.
 
 	State          _state;
 	int            _save_bank_index;

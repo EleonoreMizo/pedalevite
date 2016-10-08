@@ -63,6 +63,8 @@ public:
 	MapParamCtrl   _ctrl_map;
 	std::vector <float>          // If there are settings to apply during the commit. Automatically removed at the end of the transaction.
 	               _param_list;
+	std::vector <int>            // Port index for each signal pin. Vector size can be less than the number of pins.
+	               _sig_port_list;
 
 
 

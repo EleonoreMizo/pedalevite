@@ -53,8 +53,9 @@ namespace pg
 
 
 
-EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list)
+EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
 :	_fx_list (fx_list)
+,	_ms_list (ms_list)
 ,	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_model_ptr (0)
@@ -64,6 +65,7 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_fnt_ptr (0)
 ,	_menu_sptr (new NWindow (Entry_WINDOW))
 ,	_fx_list_sptr (new NText (Entry_FX_LIST))
+,	_ms_list_sptr (new NText (Entry_MS_LIST))
 ,	_prog_name_sptr (new NText (Entry_PROG_NAME))
 ,	_controllers_sptr (new NText (Entry_CONTROLLERS))
 ,	_save_sptr (new NText (Entry_SAVE))
@@ -78,11 +80,14 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 	_controllers_sptr->set_justification (0.5f, 0, false);
 	_save_sptr       ->set_justification (0.5f, 0, false);
 	_fx_list_sptr    ->set_justification (0.5f, 1, false);
+	_ms_list_sptr    ->set_justification (0.5f, 1, false);
 	_controllers_sptr->set_text ("Controllers");
 	_save_sptr       ->set_text ("Save to\xE2\x80\xA6");
 	_fx_list_sptr    ->set_text ("-----------------");
+	_ms_list_sptr    ->set_text ("-----------------");
 	_prog_name_sptr  ->set_bold (true, true );
 	_fx_list_sptr    ->set_bold (true, false);
+	_ms_list_sptr    ->set_bold (true, false);
 }
 
 
@@ -119,6 +124,7 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_controllers_sptr->set_font (*_fnt_ptr);
 	_save_sptr       ->set_font (*_fnt_ptr);
 	_fx_list_sptr    ->set_font (*_fnt_ptr);
+	_ms_list_sptr    ->set_font (*_fnt_ptr);
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
@@ -204,10 +210,9 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 			}
 			else if (node_id >= 0 && node_id < int (_slot_list.size ()))
 			{
-				const doc::Preset &  preset    = _view_ptr->use_preset_cur ();
-				const int            list_size = int (_slot_id_list.size ());
-				if (   node_id < list_size
-				    && ! preset.is_slot_empty (_slot_id_list [node_id]))
+				const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
+				const int            slot_id = conv_node_id_to_slot_id (node_id);
+				if (slot_id >= 0 && ! preset.is_slot_empty (slot_id))
 				{
 					// Full slot
 					update_loc_edit (node_id);
@@ -317,32 +322,41 @@ void	EditProg::set_preset_info ()
 	assert (_fnt_ptr != 0);
 
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	_slot_id_list = preset._routing._chain;
+	_slot_id_list = preset.build_ordered_node_list (true);
 
 	update_rotenc_mapping ();
 
 	_prog_name_sptr->set_text (preset._name);
 
 	const int      nbr_slots = _slot_id_list.size ();
-	PageMgrInterface::NavLocList  nav_list (nbr_slots + 4);
-	_slot_list.resize (nbr_slots + 1);
+	PageMgrInterface::NavLocList  nav_list (nbr_slots + 5);
+	_slot_list.resize (nbr_slots + 2);
 
 	_menu_sptr->clear_all_nodes ();
 	_menu_sptr->push_back (_prog_name_sptr);
 	_menu_sptr->push_back (_controllers_sptr);
 	_menu_sptr->push_back (_save_sptr);
 	_menu_sptr->push_back (_fx_list_sptr);
+	_menu_sptr->push_back (_ms_list_sptr);
 	nav_list [0]._node_id = Entry_PROG_NAME;
 	nav_list [1]._node_id = Entry_CONTROLLERS;
 	nav_list [2]._node_id = Entry_SAVE;
 
-	std::vector <Tools::NodeEntry>   entry_list =
-		Tools::extract_slot_list (preset, *_model_ptr, false);
-	assert (nbr_slots <= int (entry_list.size ()));
+	const std::vector <Tools::NodeEntry>   entry_list =
+		Tools::extract_slot_list (preset, *_model_ptr);
+	assert (nbr_slots == int (entry_list.size ()));
+	const int      chain_size = int (preset._routing._chain.size ());
+
+	const int      scr_w = _page_size [0];
+	const int      x_mid =  scr_w >> 1;
+	const int      h_m   = _fnt_ptr->get_char_h ();
+	_ms_list_sptr->set_coord (Vec2d (x_mid, (chain_size + 6) * h_m));
 
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
 		const Tools::NodeEntry &   entry = entry_list [slot_index];
+		assert (entry._slot_id == _slot_id_list [slot_index]);
+
 		const int      slot_id    = entry._slot_id;
 		std::string    multilabel = "<Empty>";
 		bool           ctrl_flag  = false;
@@ -367,10 +381,13 @@ void	EditProg::set_preset_info ()
 			}
 		}
 
-		set_slot (nav_list, slot_index, multilabel, ctrl_flag);
+		const int      skip     = (slot_index >= chain_size) ? 1 : 0;
+		const int      pos_list = slot_index + skip;
+		set_slot (nav_list, pos_list, multilabel, ctrl_flag, chain_size);
 	}
 
-	set_slot (nav_list, nbr_slots, "<End>", false);
+	set_slot (nav_list, chain_size   , "<End>", false, chain_size);
+	set_slot (nav_list, nbr_slots + 1, "<End>", false, chain_size);
 
 	_page_ptr->set_nav_layout (nav_list);
 
@@ -379,14 +396,15 @@ void	EditProg::set_preset_info ()
 
 
 
-void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index, std::string multilabel, bool bold_flag)
+void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size)
 {
 	const int      h_m      = _fnt_ptr->get_char_h ();
 	const int      scr_w    = _page_size [0];
-	const int      pos_nav  = slot_index + 3; // In the nav_list
-	const int      pos_menu = slot_index + 4;
+	const int      pos_nav  = pos_list + 3; // In the nav_list
+	const int      skip     = (pos_list >= chain_size + 1) ? 1 : 0;
+	const int      pos_menu = pos_list + 4 + skip;
 
-	TxtSPtr        entry_sptr (new NText (slot_index));
+	TxtSPtr        entry_sptr (new NText (pos_list));
 	entry_sptr->set_coord (Vec2d (0, h_m * pos_menu));
 	entry_sptr->set_font (*_fnt_ptr);
 	entry_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -396,10 +414,9 @@ void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int slot_index,
 		*entry_sptr, &NText::get_char_width
 	);
 	entry_sptr->set_text (txt);
-	_slot_list [slot_index] = entry_sptr;
-	nav_list [pos_nav]._node_id = slot_index;
+	_slot_list [pos_list] = entry_sptr;
+	nav_list [pos_nav]._node_id = pos_list;
 
-	assert (pos_menu == _menu_sptr->get_nbr_nodes ());
 	_menu_sptr->push_back (entry_sptr);
 }
 
@@ -410,36 +427,33 @@ MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
 	assert (node_id >= 0);
 	assert (dir != 0);
 
-	EvtProp        ret_val = EvtProp_PASS;
+	_model_ptr->reset_all_overridden_param_ctrl ();
 
-	const int      nbr_slots = _slot_id_list.size ();
-
-	if (node_id <= nbr_slots)
-	{
-		_model_ptr->reset_all_overridden_param_ctrl ();
-		Tools::change_plugin_in_chain (
-			*_model_ptr, *_view_ptr, node_id, dir, _fx_list
-		);
-		ret_val = EvtProp_CATCH;
-	}
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const int      chain_size   = int (preset._routing._chain.size ());
+	_loc_edit._chain_flag = (node_id <= chain_size);
+	const int      slot_id      = conv_node_id_to_slot_id (node_id);
+	Tools::change_plugin (
+		*_model_ptr,
+		*_view_ptr,
+		slot_id,
+		dir,
+		(_loc_edit._chain_flag) ? _fx_list : _ms_list,
+		_loc_edit._chain_flag
+	);
 
 	update_rotenc_mapping ();
 
-	return ret_val;
+	return EvtProp_CATCH;
 }
 
 
 
 void	EditProg::update_loc_edit (int node_id)
 {
-	if (node_id < 0 || node_id >= int (_slot_id_list.size ()))
-	{
-		_loc_edit._slot_id = -1;
-	}
-	else
-	{
-		_loc_edit._slot_id = _slot_id_list [node_id];
-	}
+	_loc_edit._slot_id = conv_node_id_to_slot_id (
+		node_id, _loc_edit._chain_flag
+	);
 }
 
 
@@ -463,6 +477,44 @@ void	EditProg::update_rotenc_mapping ()
 
 
 
+int	EditProg::conv_node_id_to_slot_id (int node_id) const
+{
+	bool           chain_flag = true;
+
+	return conv_node_id_to_slot_id (node_id, chain_flag);
+}
+
+
+
+int	EditProg::conv_node_id_to_slot_id (int node_id, bool &chain_flag) const
+{
+	int            slot_id = -1;
+
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const int      chain_size   = int (preset._routing._chain.size ());
+
+	if (node_id >= 0 && node_id <= chain_size)
+	{
+		if (node_id < chain_size)
+		{
+			slot_id = _slot_id_list [node_id];
+		}
+		chain_flag = true;
+	}
+	else if (node_id > chain_size && node_id <= int (_slot_list.size ()) - 1)
+	{
+		if (node_id < int (_slot_list.size ()) - 1)
+		{
+			slot_id = _slot_id_list [node_id - 1];
+		}
+		chain_flag = false;
+	}
+
+	return slot_id;
+}
+
+
+
 int	EditProg::conv_loc_edit_to_node_id () const
 {
 	if (_loc_edit._slot_id >= 0)
@@ -474,7 +526,16 @@ int	EditProg::conv_loc_edit_to_node_id () const
 		);
 		if (it_slot_id != _slot_id_list.end ())
 		{
-			return it_slot_id - _slot_id_list.begin ();
+			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+			const int      chain_size   = int (preset._routing._chain.size ());
+
+			int         pos = it_slot_id - _slot_id_list.begin ();
+			if (pos >= chain_size)
+			{
+				++ pos;
+			}
+
+			return pos;
 		}
 	}
 

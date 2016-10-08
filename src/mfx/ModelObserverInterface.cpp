@@ -333,6 +333,26 @@ void	ModelObserverInterface::override_param_ctrl (int slot_id, PiType type, int 
 
 
 
+void	ModelObserverInterface::set_signal_port (int port_id, const doc::SignalPort &port)
+{
+	assert (port_id >= 0);
+	assert (port._sig_index >= 0);
+	assert (port._slot_id >= 0);
+
+	do_set_signal_port (port_id, port);
+}
+
+
+
+void	ModelObserverInterface::clear_signal_port (int port_id)
+{
+	assert (port_id >= 0);
+
+	do_clear_signal_port (port_id);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

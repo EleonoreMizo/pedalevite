@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        LocEdit.h
+        SignalPort.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_LocEdit_HEADER_INCLUDED)
-#define mfx_LocEdit_HEADER_INCLUDED
+#if ! defined (mfx_doc_SignalPort_HEADER_INCLUDED)
+#define mfx_doc_SignalPort_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,31 +27,40 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/PiType.h"
-
 
 
 namespace mfx
 {
+namespace doc
+{
 
 
 
-class LocEdit
+class SerRInterface;
+class SerWInterface;
+
+class SignalPort
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               LocEdit ()  = default;
-	virtual        ~LocEdit () = default;
+	               SignalPort ()                        = default;
+	virtual        ~SignalPort ()                       = default;
+	               SignalPort (const SignalPort &other) = default;
 
-	int            _slot_id       = -1;          // -1 if none
-	PiType         _pi_type       = PiType_MIX;  // Should always be valid
-	int            _param_index   = -1;          // -1 if none
-	int            _ctrl_index    = -1;          // -1 if none or new. Always 0 for existing direct links
-	bool           _ctrl_abs_flag = true;        // Link or simple modulation
-	bool           _chain_flag    = true;        // When _slot_id is negative, indicates if we should focus on the main processing chain or elsewhere.
+	SignalPort &   operator = (const SignalPort &other) = default;
+
+	bool           operator == (const SignalPort &other) const;
+	bool           operator != (const SignalPort &other) const;
+	bool           operator < (const SignalPort &other) const;
+
+	void           ser_write (SerWInterface &ser) const;
+	void           ser_read (SerRInterface &ser);
+
+	int            _slot_id   = -1;
+	int            _sig_index = -1;
 
 
 
@@ -71,24 +80,20 @@ private:
 
 private:
 
-	               LocEdit (const LocEdit &other)           = delete;
-	LocEdit &      operator = (const LocEdit &other)        = delete;
-	bool           operator == (const LocEdit &other) const = delete;
-	bool           operator != (const LocEdit &other) const = delete;
-
-}; // class LocEdit
+}; // class SignalPort
 
 
 
+}  // namespace doc
 }  // namespace mfx
 
 
 
-//#include "mfx/LocEdit.hpp"
+//#include "mfx/doc/SignalPort.hpp"
 
 
 
-#endif   // mfx_LocEdit_HEADER_INCLUDED
+#endif   // mfx_doc_SignalPort_HEADER_INCLUDED
 
 
 

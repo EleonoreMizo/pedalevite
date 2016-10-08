@@ -92,7 +92,7 @@ public:
 	void           insert_slot (int pos);
 	void           delete_slot (int pos);
 	void           clear_slot (int pos);
-	int            set_plugin (int pos, std::string model, bool force_reset_flag, bool connected_flag);
+	int            set_plugin (int pos, std::string model, bool force_reset_flag, bool gen_audio_flag);
 	void           remove_plugin (int pos);
 	int            set_mixer (int pos);
 	void           remove_mixer (int pos);
@@ -101,6 +101,7 @@ public:
 	void           set_pi_state (int pi_id, const std::vector <float> &param_list);
 	void           clear_mod (int pi_id);
 	void           set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls);
+	void           set_sig_source (int pi_id, int sig_pin, int port_id);
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
 
@@ -166,7 +167,7 @@ private:
 
 	Document &     modify ();
 	Plugin &       find_plugin (Document &doc, int pi_id);
-	int            set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool connected_flag);
+	int            set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool gen_audio_flag);
 	void           remove_plugin (int pos, PiType type);
 	void           create_routing ();
 	void           create_mod_maps ();

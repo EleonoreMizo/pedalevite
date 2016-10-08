@@ -121,9 +121,13 @@ public:
 	void           set_param (int slot_id, PiType type, int index, float val);
 	void           set_param_beats (int slot_id, int index, float beats);
 	void           set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	void           remove_ctrl_src (const ControlSource &src);
 	void           override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index);
 	void           reset_all_overridden_param_ctrl ();
 	void           reset_all_overridden_param_ctrl (int slot_id);
+	void           set_signal_port (int port_id, const doc::SignalPort &port);
+	void           clear_signal_port (int port_id);
+	void           clear_all_signal_ports_for_slot (int slot_id);
 
 	std::vector <std::string>
 	               list_plugin_models () const;
@@ -211,6 +215,7 @@ private:
 	void           set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);
 	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);
 	void           add_default_ctrl (int selected_slot_id = -1);
+	void           clear_signal_port (int port_id, bool req_exist_flag);
 
 	cmd::Central   _central;
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ProcessingContextNode.cpp
+        SignalPort.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,13 +24,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ProcessingContextNode.h"
+#include "mfx/doc/SerRInterface.h"
+#include "mfx/doc/SerWInterface.h"
+#include "mfx/doc/SignalPort.h"
 
 #include <cassert>
 
 
 
 namespace mfx
+{
+namespace doc
 {
 
 
@@ -39,27 +43,56 @@ namespace mfx
 
 
 
-ProcessingContextNode::ProcessingContextNode ()
-:	_pi_id (-1)
-,	_side_arr ()
-,	_bypass_buf_arr ()
-,	_sig_buf_arr ()
-,	_nbr_sig (0)
+bool	SignalPort::operator == (const SignalPort &other) const
 {
-	for (auto & side : _side_arr)
+	return _slot_id == other._slot_id && _sig_index == other._sig_index;
+}
+
+
+
+bool	SignalPort::operator != (const SignalPort &other) const
+{
+	return ! (*this == other);
+}
+
+
+
+bool	SignalPort::operator < (const SignalPort &other) const
+{
+	if (_slot_id < other._slot_id)
 	{
-		side._nbr_chn     = 0;
-		side._nbr_chn_tot = 0;
-		for (auto & buf_index : side._buf_arr)
-		{
-			buf_index = -1;
-		}
+		return true;
+	}
+	else if (_slot_id == other._slot_id)
+	{
+		return _sig_index < other._sig_index;
 	}
 
-	for (auto & buf_index : _bypass_buf_arr)
-	{
-		buf_index = -1;
-	}
+	return false;
+}
+
+
+
+void	SignalPort::ser_write (SerWInterface &ser) const
+{
+	ser.begin_list ();
+
+	ser.write (_slot_id);
+	ser.write (_sig_index);
+
+	ser.end_list ();
+}
+
+
+
+void	SignalPort::ser_read (SerRInterface &ser)
+{
+	ser.begin_list ();
+
+	ser.read (_slot_id);
+	ser.read (_sig_index);
+
+	ser.end_list ();
 }
 
 
@@ -72,6 +105,7 @@ ProcessingContextNode::ProcessingContextNode ()
 
 
 
+}  // namespace doc
 }  // namespace mfx
 
 
