@@ -160,7 +160,7 @@ void	OscSquare::do_clear_buffers ()
 
 void	OscSquare::update_time_values ()
 {
-	_val_0 = (_unipolar_flag) ? -1.f : 0.f;
+	_val_0 = (_unipolar_flag) ? 0.f : -1.f;
 	_val_1 = 1.f;
 	if (_inv_flag)
 	{
