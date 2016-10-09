@@ -88,8 +88,6 @@ protected:
 
 private:
 
-	static const int  _noise_res = 64;
-
 	typedef std::array <double, ORDER + 1> StateArray;
 
 	void           update_period ();
@@ -104,6 +102,7 @@ private:
 	StateArray     _cur_val_arr;
 	double         _filter_coef;
 	int            _noise_pos;
+	int            _noise_res;
 
 
 

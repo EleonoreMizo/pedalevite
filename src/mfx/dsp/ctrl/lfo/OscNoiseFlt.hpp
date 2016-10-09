@@ -54,6 +54,7 @@ OscNoiseFlt <ORDER>::OscNoiseFlt ()
 ,	_cur_val_arr ()
 ,	_filter_coef (0)
 ,	_noise_pos (0)
+,	_noise_res (64)
 {
 	update_period ();
 	clear_buffers ();
@@ -68,6 +69,10 @@ OscNoiseFlt <ORDER>::OscNoiseFlt ()
 template <int ORDER>
 void	OscNoiseFlt <ORDER>::do_set_sample_freq (double sample_freq)
 {
+	// 44.1kHz-48kHz -> 64
+	const int      nr_l2  = fstb::round_int (log2 (sample_freq) - 9.5);
+	_noise_res = 1 << std::max (nr_l2, 0);
+
 	_phase_gen.set_sample_freq (sample_freq);
 	update_period ();
 }
