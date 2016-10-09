@@ -114,7 +114,7 @@ double	PhaseDist::process_phase (double phase) const
 		}
 
 		phase += _offset;
-		if (phase > 1)
+		if (phase >= 1)
 		{
 			phase -= 1;
 		}
