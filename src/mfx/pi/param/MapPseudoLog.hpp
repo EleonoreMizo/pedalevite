@@ -53,6 +53,15 @@ void	MapPseudoLog::config (double val_min, double val_max)
 
 
 
+void	MapPseudoLog::set_curvature (double c)
+{
+	assert (c > 0);
+
+	_c = c;
+}
+
+
+
 double	MapPseudoLog::conv_norm_to_nat (double norm) const
 {
 	const double   nat = fstb::pseudo_exp (norm, _c) * _a;

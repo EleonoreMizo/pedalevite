@@ -148,6 +148,9 @@
     <Filter Include="mfx\pi\lfo1">
       <UniqueIdentifier>{e49ee298-876c-4757-a5b0-51f0803942ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\envf">
+      <UniqueIdentifier>{6764f28f-2bf3-43ea-8b3b-ec8be8d5bb6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1716,6 +1719,21 @@
     <ClInclude Include="..\..\..\src\mfx\doc\SignalPort.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\envf\EnvFollowDesc.h">
+      <Filter>mfx\pi\envf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\envf\EnvFollow.h">
+      <Filter>mfx\pi\envf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\envf\Param.h">
+      <Filter>mfx\pi\envf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.hpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2362,6 +2380,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\SignalPort.cpp">
       <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\envf\EnvFollowDesc.cpp">
+      <Filter>mfx\pi\envf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\envf\EnvFollow.cpp">
+      <Filter>mfx\pi\envf</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

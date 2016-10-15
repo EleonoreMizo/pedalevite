@@ -36,6 +36,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dtone1/DistToneDesc.h"
 #include "mfx/pi/dwm/DryWet.h"
 #include "mfx/pi/dwm/DryWetDesc.h"
+#include "mfx/pi/envf/EnvFollow.h"
+#include "mfx/pi/envf/EnvFollowDesc.h"
 #include "mfx/pi/freqsh/FrequencyShifter.h"
 #include "mfx/pi/freqsh/FreqShiftDesc.h"
 #include "mfx/pi/flancho/Flancho.h"
@@ -91,7 +93,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc          , mfx::pi::peq::PEq                >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::phase1::PhaserDesc    , mfx::pi::phase1::Phaser          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc    , mfx::pi::lpfs::Squeezer          >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc         , mfx::pi::lfo1::Lfo               >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc         , mfx::pi::lfo1::Lfo               >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::envf::EnvFollowDesc   , mfx::pi::envf::EnvFollow         >::create ()
 		};
 
 		fact_list = l;

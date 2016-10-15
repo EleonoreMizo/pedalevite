@@ -49,6 +49,7 @@ public:
 	virtual        ~MapPseudoLog () = default;
 
 	inline void    config (double val_min, double val_max);
+	inline void    set_curvature (double c);
 	inline double  conv_norm_to_nat (double norm) const;
 	inline double  conv_nat_to_norm (double nat) const;
 

@@ -342,6 +342,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.h" />
@@ -448,6 +450,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\DistTone.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\envf\EnvFollow.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\envf\EnvFollowDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\envf\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\flancho\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\flancho\Flancho.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\flancho\FlanchoChn.h" />
@@ -749,6 +754,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistTone.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\envf\EnvFollow.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\envf\EnvFollowDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\flancho\Flancho.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\flancho\FlanchoChn.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\flancho\FlanchoDesc.cpp" />

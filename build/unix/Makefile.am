@@ -262,6 +262,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/DelayLineFracFir4Base.hpp \
         ../../src/mfx/dsp/dly/DelayLineReader.cpp \
         ../../src/mfx/dsp/dly/DelayLineReader.h \
+        ../../src/mfx/dsp/dly/EnvFollowerAHR4SimdHelper.h \
+        ../../src/mfx/dsp/dly/EnvFollowerAHR4SimdHelper.hpp \
         ../../src/mfx/dsp/dly/EnvFollowerAR4SimdHelper.h \
         ../../src/mfx/dsp/dly/EnvFollowerAR4SimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.cpp \
@@ -391,6 +393,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dwm/DryWetDesc.cpp \
         ../../src/mfx/pi/dwm/DryWetDesc.h \
         ../../src/mfx/pi/dwm/Param.h \
+        ../../src/mfx/pi/envf/EnvFollow.cpp \
+        ../../src/mfx/pi/envf/EnvFollow.h \
+        ../../src/mfx/pi/envf/EnvFollowDesc.cpp \
+        ../../src/mfx/pi/envf/EnvFollowDesc.h \
+        ../../src/mfx/pi/envf/Param.h \
         ../../src/mfx/pi/flancho/Cst.h \
         ../../src/mfx/pi/flancho/Flancho.cpp \
         ../../src/mfx/pi/flancho/Flancho.h \
