@@ -168,7 +168,7 @@ void	BitFieldTools <T, DL2>::activate_range (GroupType bit_arr [], long pos, lon
 	else
 	{
 		// Beginning
-		mask = -1L << beg_gpos;
+		mask = (~(0UL)) << beg_gpos;
 		bit_arr [beg_group] |= mask;
 
 		// Middle
@@ -222,7 +222,7 @@ void	BitFieldTools <T, DL2>::deactivate_range (GroupType bit_arr [], long pos, l
 		}
 
 		// End
-		mask = -2L << end_gpos;
+		mask = (~(1UL)) << end_gpos;
 		bit_arr [end_group] &= mask;
 	}
 }
