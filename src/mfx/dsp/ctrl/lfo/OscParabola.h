@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        OscSineHalf.h
+        OscParabola.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_ctrl_lfo_OscSineHalf_HEADER_INCLUDED)
-#define mfx_dsp_ctrl_lfo_OscSineHalf_HEADER_INCLUDED
+#if ! defined (mfx_dsp_ctrl_lfo_OscParabola_HEADER_INCLUDED)
+#define mfx_dsp_ctrl_lfo_OscParabola_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -44,7 +44,7 @@ namespace lfo
 
 
 
-class OscSineHalf
+class OscParabola
 :	public OscInterface
 {
 
@@ -52,10 +52,10 @@ class OscSineHalf
 
 public:
 
-	               OscSineHalf ()                        = default;
-	               OscSineHalf (const OscSineHalf &other)    = default;
-	virtual        ~OscSineHalf ()                       = default;
-	OscSineHalf &      operator = (const OscSineHalf &other) = default;
+	               OscParabola ()                         = default;
+	               OscParabola (const OscParabola &other) = default;
+	virtual        ~OscParabola ()                        = default;
+	OscParabola &  operator = (const OscParabola &other)  = default;
 
 
 
@@ -96,10 +96,10 @@ private:
 
 private:
 
-	bool           operator == (const OscSineHalf &other) const = delete;
-	bool           operator != (const OscSineHalf &other) const = delete;
+	bool           operator == (const OscParabola &other) const = delete;
+	bool           operator != (const OscParabola &other) const = delete;
 
-}; // class OscSineHalf
+}; // class OscParabola
 
 
 
@@ -110,11 +110,11 @@ private:
 
 
 
-//#include "mfx/dsp/ctrl/lfo/OscSineHalf.hpp"
+//#include "mfx/dsp/ctrl/lfo/OscParabola.hpp"
 
 
 
-#endif   // mfx_dsp_ctrl_lfo_OscSineHalf_HEADER_INCLUDED
+#endif   // mfx_dsp_ctrl_lfo_OscParabola_HEADER_INCLUDED
 
 
 

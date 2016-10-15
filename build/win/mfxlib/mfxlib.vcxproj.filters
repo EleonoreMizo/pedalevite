@@ -1683,9 +1683,6 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorOrder0.hpp">
       <Filter>mfx\dsp\rspl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.h">
-      <Filter>mfx\dsp\ctrl\lfo</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalActionType.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
@@ -1733,6 +1730,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.hpp">
       <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscParabola.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2357,9 +2357,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp">
       <Filter>mfx\pi\lpfs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.cpp">
-      <Filter>mfx\dsp\ctrl\lfo</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalActionType.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
@@ -2386,6 +2383,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\envf\EnvFollow.cpp">
       <Filter>mfx\pi\envf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscParabola.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -236,12 +236,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/ctrl/lfo/OscNoiseFlt.hpp \
         ../../src/mfx/dsp/ctrl/lfo/OscNPhase.cpp \
         ../../src/mfx/dsp/ctrl/lfo/OscNPhase.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscParabola.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscParabola.h \
         ../../src/mfx/dsp/ctrl/lfo/OscSaw.cpp \
         ../../src/mfx/dsp/ctrl/lfo/OscSaw.h \
         ../../src/mfx/dsp/ctrl/lfo/OscSine.cpp \
         ../../src/mfx/dsp/ctrl/lfo/OscSine.h \
-        ../../src/mfx/dsp/ctrl/lfo/OscSineHalf.cpp \
-        ../../src/mfx/dsp/ctrl/lfo/OscSineHalf.h \
         ../../src/mfx/dsp/ctrl/lfo/OscSquare.cpp \
         ../../src/mfx/dsp/ctrl/lfo/OscSquare.h \
         ../../src/mfx/dsp/ctrl/lfo/OscTri.cpp \

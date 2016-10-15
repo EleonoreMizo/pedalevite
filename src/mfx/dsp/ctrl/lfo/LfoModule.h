@@ -59,9 +59,9 @@ public:
 
 		Type_SINE = 0,
 		Type_TRIANGLE,
-		Type_SINE_HALF,
 		Type_SQUARE,
 		Type_SAW,
+		Type_PARABOLA,
 		Type_N_PHASE,
 		Type_BIPHASE,
 		Type_VARISLOPE,

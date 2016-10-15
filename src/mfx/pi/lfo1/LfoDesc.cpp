@@ -76,7 +76,7 @@ LfoDesc::LfoDesc ()
 
 	// Waveform
 	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Sine\nTriangle\nHalf-Sine\nSquare\nSaw\nBiphase\nN-Phase\nVarislope\nNoise",
+		"Sine\nTriangle\nSquare\nSaw\nParabola\nBiphase\nN-Phase\nVarislope\nNoise",
 		"W\nWavef\nWaveform",
 		"",
 		0,

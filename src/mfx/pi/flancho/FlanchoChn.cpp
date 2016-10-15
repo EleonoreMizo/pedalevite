@@ -493,8 +493,8 @@ void	FlanchoChn::set_wf_type (dsp::ctrl::lfo::LfoModule &lfo, WfType wf_type)
 		lfo_type = dsp::ctrl::lfo::LfoModule::Type_VARISLOPE;
 		break;
 
-	case	WfType_SINE_HALF:
-		lfo_type = dsp::ctrl::lfo::LfoModule::Type_SINE_HALF;
+	case	WfType_PARABOLA:
+		lfo_type = dsp::ctrl::lfo::LfoModule::Type_PARABOLA;
 		break;
 
 	case	WfType_RAMP_UP:

@@ -45,9 +45,9 @@ enum LfoType
 
 		LfoType_SINE = 0,
 		LfoType_TRIANGLE,
-		LfoType_SINE_HALF,
 		LfoType_SQUARE,
 		LfoType_SAW,
+		LfoType_PARABOLA,
 		LfoType_BIPHASE,
 		LfoType_N_PHASE,
 		LfoType_VARISLOPE,

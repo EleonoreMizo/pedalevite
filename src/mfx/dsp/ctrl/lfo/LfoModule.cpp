@@ -29,9 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/ctrl/lfo/LfoModule.h"
 #include "mfx/dsp/ctrl/lfo/OscNoiseFlt.h"
 #include "mfx/dsp/ctrl/lfo/OscNPhase.h"
+#include "mfx/dsp/ctrl/lfo/OscParabola.h"
 #include "mfx/dsp/ctrl/lfo/OscSaw.h"
 #include "mfx/dsp/ctrl/lfo/OscSine.h"
-#include "mfx/dsp/ctrl/lfo/OscSineHalf.h"
 #include "mfx/dsp/ctrl/lfo/OscSquare.h"
 #include "mfx/dsp/ctrl/lfo/OscTri.h"
 #include "mfx/dsp/ctrl/lfo/OscVariSlope.h"
@@ -240,9 +240,9 @@ void	LfoModule::set_type (Type type)
 		{
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SINE      , OscSine        ,       )
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_TRIANGLE  , OscTri         ,       )
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SINE_HALF , OscSineHalf    ,       )
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SQUARE    , OscSquare      ,       )
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SAW       , OscSaw         ,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_PARABOLA  , OscParabola    ,       )
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_BIPHASE   , OscNPhase      , (true))
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_N_PHASE   , OscNPhase      ,       )
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_VARISLOPE , OscVariSlope   ,       )

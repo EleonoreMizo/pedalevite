@@ -327,7 +327,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSaw.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSine.h" />
-    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscParabola.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSquare.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.h" />
@@ -706,7 +706,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSaw.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSine.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSineHalf.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscParabola.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSquare.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.cpp" />
