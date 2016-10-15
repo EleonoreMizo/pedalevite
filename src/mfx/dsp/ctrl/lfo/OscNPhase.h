@@ -54,7 +54,7 @@ class OscNPhase
 
 public:
 
-	               OscNPhase ();
+	               OscNPhase (bool biphase_flag = false);
 	               OscNPhase (const OscNPhase &other)  = default;
 	virtual        ~OscNPhase ()                       = default;
 	OscNPhase &    operator = (const OscNPhase &other) = default;
@@ -103,6 +103,7 @@ private:
 	PhaseDist      _phase_dist;
 	bool           _inv_flag      = false;
 	bool           _unipolar_flag = false;
+	bool           _biphase_flag  = false;
 
 
 

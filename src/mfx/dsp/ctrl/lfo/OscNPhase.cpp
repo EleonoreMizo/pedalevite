@@ -48,7 +48,7 @@ namespace lfo
 
 
 
-OscNPhase::OscNPhase ()
+OscNPhase::OscNPhase (bool biphase_flag)
 :	_sample_freq (44100)
 ,	_phase (0)
 ,	_step (0)
@@ -62,6 +62,7 @@ OscNPhase::OscNPhase ()
 ,	_phase_dist ()
 ,	_inv_flag (false)
 ,	_unipolar_flag (false)
+,	_biphase_flag (biphase_flag)
 {
 	_variation_arr [Variation_TIME ] = 0;
 	_variation_arr [Variation_SHAPE] = 0;
@@ -218,8 +219,16 @@ void	OscNPhase::update_period ()
 {
 	const float		ln_nc = float (_variation_arr [Variation_TIME] * 8);
 	_nc = fstb::Approx::exp2 (ln_nc);
-	_np = fstb::round_int (2 + 6 * _variation_arr [Variation_SHAPE]);
-	_inv_np = 1.0f / _np;
+	if (_biphase_flag)
+	{
+		_np = 2;
+		_inv_np = _variation_arr [Variation_SHAPE];
+	}
+	else
+	{
+		_np = fstb::round_int (2 + 6 * _variation_arr [Variation_SHAPE]);
+		_inv_np = 1.0f / _np;
+	}
 
 	const double	ps = _period * _sample_freq;
 
@@ -228,6 +237,11 @@ void	OscNPhase::update_period ()
 
 	_k_step = _nc / ps;
 	assert (_k_step < 1e6);	// To stay in acceptable range
+
+	if (_biphase_flag)
+	{
+		_step *= 2;
+	}
 }
 
 

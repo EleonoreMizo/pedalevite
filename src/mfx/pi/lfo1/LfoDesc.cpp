@@ -76,7 +76,7 @@ LfoDesc::LfoDesc ()
 
 	// Waveform
 	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Sine\nTriangle\nHalf-Sine\nSquare\nSaw\nN-Phase\nVarislope\nNoise",
+		"Sine\nTriangle\nHalf-Sine\nSquare\nSaw\nBiphase\nN-Phase\nVarislope\nNoise",
 		"W\nWavef\nWaveform",
 		"",
 		0,
@@ -193,22 +193,6 @@ LfoDesc::LfoDesc ()
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
 	lin_ptr->use_disp_num ().set_scale (360);
 	_desc_set.add_glob (Param_PHASE_SET, lin_ptr);
-
-#if 0
-Param_SPEED      
-Param_AMP        
-Param_WAVEFORM   
-Param_SNH        
-Param_SMOOTH     
-Param_CHAOS      
-Param_PH_DIST_AMT
-Param_PH_DIST_OFS
-Param_SIGN       
-Param_POLARITY   
-Param_VAR1       
-Param_VAR2       
-Param_PHASE_SET  
-#endif
 }
 
 

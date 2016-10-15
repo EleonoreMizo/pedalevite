@@ -48,6 +48,7 @@ enum LfoType
 		LfoType_SINE_HALF,
 		LfoType_SQUARE,
 		LfoType_SAW,
+		LfoType_BIPHASE,
 		LfoType_N_PHASE,
 		LfoType_VARISLOPE,
 		LfoType_NOISE_FLT,
