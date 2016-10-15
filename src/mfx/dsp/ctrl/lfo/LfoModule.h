@@ -64,7 +64,8 @@ public:
 		Type_SAW,
 		Type_N_PHASE,
 		Type_VARISLOPE,
-		Type_NOISE_FLT,
+		Type_NOISE_FLT1,
+		Type_NOISE_FLT2,
 
 		Type_NBR_ELT
 	};

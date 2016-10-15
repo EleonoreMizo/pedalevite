@@ -229,53 +229,29 @@ void	LfoModule::set_type (Type type)
 		use_osc ().~OscInterface ();
 		_type = Type_INVALID;
 
+#define mfx_dsp_ctrl_lfo_LfoModule_BUILD(c, T) \
+		case	c: \
+			static_assert (sizeof (T) <= sizeof (_osc), "Storage size"); \
+			::new (&_osc [0]) T; \
+			break;
+
 		// Build new oscillator
 		switch (type)
 		{
-		case	Type_SINE:
-			static_assert (sizeof (OscSine       ) <= sizeof (_osc), "Storage size");
-			::new (&_osc [0]) OscSine;
-			break;
-
-		case	Type_TRIANGLE:
-			static_assert (sizeof (OscTri        ) <= sizeof (_osc), "Storage size");
-			::new (&_osc [0]) OscTri;
-			break;
-
-		case	Type_SINE_HALF:
-			static_assert (sizeof (OscSineHalf   ) <= sizeof (_osc), "Storage size");
-			::new (&_osc [0]) OscSineHalf;
-			break;
-
-		case	Type_SQUARE:
-			static_assert (sizeof (OscSquare     ) <= sizeof (_osc), "Storage size");
-			::new (&_osc [0]) OscSquare;
-			break;
-
-		case	Type_SAW:
-			static_assert (sizeof (OscSaw        ) <= sizeof (_osc), "Storage size");
-			::new (&_osc [0]) OscSaw;
-			break;
-
-		case	Type_N_PHASE:
-			static_assert (sizeof (OscNPhase     ) <= sizeof (_osc), "Storage size");
-			::new (&_osc [0]) OscNPhase;
-			break;
-
-		case	Type_VARISLOPE:
-			static_assert (sizeof (OscVariSlope  ) <= sizeof (_osc), "Storage size");
-			::new (&_osc [0]) OscVariSlope;
-			break;
-
-		case	Type_NOISE_FLT:
-			static_assert (sizeof (OscNoiseFlt<1>) <= sizeof (_osc), "Storage size");
-			::new (&_osc [0]) OscNoiseFlt <1>;
-			break;
-
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SINE      , OscSine        )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_TRIANGLE  , OscTri         )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SINE_HALF , OscSineHalf    )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SQUARE    , OscSquare      )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SAW       , OscSaw         )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_N_PHASE   , OscNPhase      )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_VARISLOPE , OscVariSlope   )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_NOISE_FLT1, OscNoiseFlt <1>)
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_NOISE_FLT2, OscNoiseFlt <2>)
 		default:
 			assert (false);
 			break;
 		}
+#undef mfx_dsp_ctrl_lfo_LfoModule_BUILD
 
 		// Construction successful
 		_type = type;
