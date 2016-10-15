@@ -63,6 +63,7 @@ public:
 		Type_SQUARE,
 		Type_SAW,
 		Type_N_PHASE,
+		Type_BIPHASE,
 		Type_VARISLOPE,
 		Type_NOISE_FLT1,
 		Type_NOISE_FLT2,

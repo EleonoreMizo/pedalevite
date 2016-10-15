@@ -229,24 +229,25 @@ void	LfoModule::set_type (Type type)
 		use_osc ().~OscInterface ();
 		_type = Type_INVALID;
 
-#define mfx_dsp_ctrl_lfo_LfoModule_BUILD(c, T) \
+#define mfx_dsp_ctrl_lfo_LfoModule_BUILD(c, T, a) \
 		case	c: \
 			static_assert (sizeof (T) <= sizeof (_osc), "Storage size"); \
-			::new (&_osc [0]) T; \
+			::new (&_osc [0]) T a; \
 			break;
 
 		// Build new oscillator
 		switch (type)
 		{
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SINE      , OscSine        )
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_TRIANGLE  , OscTri         )
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SINE_HALF , OscSineHalf    )
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SQUARE    , OscSquare      )
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SAW       , OscSaw         )
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_N_PHASE   , OscNPhase      )
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_VARISLOPE , OscVariSlope   )
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_NOISE_FLT1, OscNoiseFlt <1>)
-		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_NOISE_FLT2, OscNoiseFlt <2>)
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SINE      , OscSine        ,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_TRIANGLE  , OscTri         ,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SINE_HALF , OscSineHalf    ,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SQUARE    , OscSquare      ,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_SAW       , OscSaw         ,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_BIPHASE   , OscNPhase      , (true))
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_N_PHASE   , OscNPhase      ,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_VARISLOPE , OscVariSlope   ,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_NOISE_FLT1, OscNoiseFlt <1>,       )
+		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_NOISE_FLT2, OscNoiseFlt <2>,       )
 		default:
 			assert (false);
 			break;
