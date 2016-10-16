@@ -710,6 +710,7 @@ Installation :
 	cd ~/Documents/pedalevite/
 	git pull
 	cd build/unix
+	./autogen.sh
 	./configure-release
 	make -j4
 		Vérfier que tout est bien compilé
@@ -1030,6 +1031,9 @@ Idée : amortir les footswitches avec des isolants de bouteille http://www.david
 
 Ajout à faire : changer conv_nat_to_str pour inclure une unité (qu’on rend donc dynamique) et un contexte (tempo au besoin, indication d’unité)
 
+À faire : mise à l’échelle automatique du wet sur FlanCho en fonction du nombre de voix.
 
+À faire : mise en marche de la seconde ligne de delay en mode mono (quand les deux lignes ne sont pas synchro), avec mix approprié.
 
+À faire : ajouter un second paramètre de delay, une valeur additive (ou multiplicative ?) graduée linéairement. Il suffit ensuite de brancher un LFO dessus.
 
