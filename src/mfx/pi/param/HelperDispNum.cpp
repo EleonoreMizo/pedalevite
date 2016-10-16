@@ -339,12 +339,18 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 				assert (midi_note >= margin * -12);
 				const int		octave    = (midi_note + 12 * margin) / 12 - margin;	// Rounds towards -oo
 				const int		note      = midi_note - octave * 12;
+				const int      cents     =
+					fstb::round_int ((val_p - midi_note) * 100);
+				char           tmp3_0 [1023+1];
+				tmp3_0 [0] = '\0';
+				if (cents != 0)
+				{
+					assert (std::abs (cents) < 100);
+					fstb::snprintf4all (tmp3_0, sizeof (tmp3_0), "%+03d", cents);
+				}
 				fstb::snprintf4all (
-					tmp2_0,
-					sizeof (tmp2_0),
-					"%2s%d",
-					_note_0_list [note],
-					octave
+					tmp2_0, sizeof (tmp2_0), "%2s%d%s",
+					_note_0_list [note], octave, tmp3_0
 				);
 			}
 			break;
@@ -469,11 +475,21 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 					{
 						ret_val = Err_CANNOT_CONVERT_VALUE;
 					}
-
 					else
 					{
 						const long		midi_note = octave * 12 + note;
 						val_p = double (midi_note);
+						char *         cents_0 = end_0;
+						long           cents = strtol (cents_0, &end_0, 0);
+						if (end_0 == cents_0)
+						{
+							cents = 0;
+						}
+						else if (octave == LONG_MIN || octave == LONG_MAX)
+						{
+							ret_val = Err_CANNOT_CONVERT_VALUE;
+						}
+						val_p += double (cents) / 100.f;
 					}
 				}
 			}
