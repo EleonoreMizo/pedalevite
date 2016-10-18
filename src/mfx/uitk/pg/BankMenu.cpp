@@ -148,6 +148,9 @@ MsgHandlerInterface::EvtProp	BankMenu::do_handle_evt (const NodeEvt &evt)
 			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
 			ret_val = EvtProp_CATCH;
 			break;
+		default:
+			// Nothing
+			break;
 		}
 	}
 
