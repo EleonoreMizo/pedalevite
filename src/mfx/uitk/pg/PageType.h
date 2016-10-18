@@ -61,6 +61,7 @@ enum PageType
 	PageType_PEDALBOARD_CONFIG,
 	PageType_PEDAL_ACTION_TYPE,
 	PageType_CTRL_PROG,
+	PageType_BANK_MENU,
 
 	PageType_NBR_ELT
 

@@ -58,6 +58,9 @@ public:
 	void           set_timer (int node_id, bool enable_flag);
 	void           reset_display ();
 
+	// Utility functions
+	static void    add_nav (NavLocList &nll, int node_id);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

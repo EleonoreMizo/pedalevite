@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ParamList.h
+        BankMenu.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_ParamList_HEADER_INCLUDED)
-#define mfx_uitk_pg_ParamList_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_BankMenu_HEADER_INCLUDED)
+#define mfx_uitk_pg_BankMenu_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,9 +36,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-
-class LocEdit;
-
 namespace uitk
 {
 
@@ -49,7 +46,7 @@ namespace pg
 
 
 
-class ParamList
+class BankMenu
 :	public PageInterface
 {
 
@@ -57,8 +54,8 @@ class ParamList
 
 public:
 
-	explicit       ParamList (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~ParamList () = default;
+	explicit       BankMenu (PageSwitcher &page_switcher);
+	virtual        ~BankMenu () = default;
 
 
 
@@ -75,10 +72,9 @@ protected:
 	               do_handle_evt (const NodeEvt &evt);
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_set_param (int pi_id, int index, float val, int slot_id, PiType type);
-	virtual void   do_remove_plugin (int slot_id);
-	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	virtual void   do_set_bank (int index, const doc::Bank &bank);
+	virtual void   do_select_bank (int index);
+	virtual void   do_set_bank_name (std::string name);
 
 
 
@@ -89,23 +85,17 @@ private:
 	enum Entry
 	{
 		Entry_WINDOW = 1000,
-		Entry_FX_SETUP
+		Entry_IMPORT,
+		Entry_EXPORT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
 
-	void           set_param_info ();
-	void           update_param_txt (PiType type, int index);
-	void           update_loc_edit (int node_id);
-	int            conv_loc_edit_to_node_id () const;
-	int            conv_param_to_node_id (PiType type, int index) const;
-	void           conv_node_id_to_param (PiType &type, int &index, int node_id);
-	EvtProp        change_param (int node_id, int dir);
+	void           update_display ();
 
 	PageSwitcher & _page_switcher;
-	LocEdit &      _loc_edit;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -114,9 +104,10 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains 1 entry (selectable) + the parameter list
-	TxtSPtr        _fx_setup_sptr;
-	TxtArray       _param_list;   // Parameters are grouped by pairs (name/value). First the mixer parameters, then the plug-in parameters.
+	WinSPtr        _menu_sptr;    // Contains a few entries (selectable) + the bank list
+	TxtSPtr        _import_sptr;
+	TxtSPtr        _export_sptr;
+	TxtArray       _bank_list;
 
 
 
@@ -124,13 +115,13 @@ private:
 
 private:
 
-	               ParamList ()                               = delete;
-	               ParamList (const ParamList &other)         = delete;
-	ParamList &    operator = (const ParamList &other)        = delete;
-	bool           operator == (const ParamList &other) const = delete;
-	bool           operator != (const ParamList &other) const = delete;
+	               BankMenu ()                               = delete;
+	               BankMenu (const BankMenu &other)          = delete;
+	BankMenu &     operator = (const BankMenu &other)        = delete;
+	bool           operator == (const BankMenu &other) const = delete;
+	bool           operator != (const BankMenu &other) const = delete;
 
-}; // class ParamList
+}; // class BankMenu
 
 
 
@@ -140,11 +131,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/ParamList.hpp"
+//#include "mfx/uitk/pg/BankMenu.hpp"
 
 
 
-#endif   // mfx_uitk_pg_ParamList_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_BankMenu_HEADER_INCLUDED
 
 
 

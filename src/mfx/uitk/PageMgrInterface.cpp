@@ -73,6 +73,15 @@ void	PageMgrInterface::reset_display ()
 
 
 
+void	PageMgrInterface::add_nav (NavLocList &nll, int node_id)
+{
+	NavLoc         nl;
+	nl._node_id = node_id;
+	nll.push_back (nl);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

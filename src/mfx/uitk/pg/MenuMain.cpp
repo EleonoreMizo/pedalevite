@@ -195,9 +195,7 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 				_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 				break;
 			case Entry_BANKS:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, -1);
-				//_page_switcher.switch_to (pg::PageType_EDIT_BANKS, 0);
+				_page_switcher.switch_to (pg::PageType_BANK_MENU, 0);
 				break;
 			case Entry_LAYOUT:
 				_layout_arg._type = PedalEditContext::Type_GLOBAL;

@@ -101,17 +101,22 @@ void	PedalActionType::do_connect (Model &model, const View &view, PageMgrInterfa
 	_momentary_sptr->set_coord (Vec2d (0, 4 * h_m));
 	_toggle_sptr   ->set_coord (Vec2d (0, 5 * h_m));
 
+	_clear_sptr    ->set_frame (Vec2d (0, h_m), Vec2d ());
+	_push_sptr     ->set_frame (Vec2d (0, h_m), Vec2d ());
+	_momentary_sptr->set_frame (Vec2d (0, h_m), Vec2d ());
+	_toggle_sptr   ->set_frame (Vec2d (0, h_m), Vec2d ());
+
 	_page_ptr->push_back (_title_sptr    );
 	_page_ptr->push_back (_clear_sptr    );
 	_page_ptr->push_back (_push_sptr     );
 	_page_ptr->push_back (_momentary_sptr);
 	_page_ptr->push_back (_toggle_sptr   );
 
-	PageMgrInterface::NavLocList  nav_list (4);
-	nav_list [0]._node_id = Entry_CLEAR    ;
-	nav_list [1]._node_id = Entry_PUSH     ;
-	nav_list [2]._node_id = Entry_MOMENTARY;
-	nav_list [3]._node_id = Entry_TOGGLE   ;
+	PageMgrInterface::NavLocList  nav_list;
+	PageMgrInterface::add_nav (nav_list, Entry_CLEAR    );
+	PageMgrInterface::add_nav (nav_list, Entry_PUSH     );
+	PageMgrInterface::add_nav (nav_list, Entry_MOMENTARY);
+	PageMgrInterface::add_nav (nav_list, Entry_TOGGLE   );
 	_page_ptr->set_nav_layout (nav_list);
 
 	update_display ();
