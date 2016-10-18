@@ -4,10 +4,11 @@
         Author: Laurent de Soras, 2016
 
 This class is intended to improve resampling speed in presence of oversampled
-processing. The idea is to generate less samples than required (in other
+processing (rendering at a high sampling rate then downsampling to the target
+sampling rate). The idea is to generate less samples than required (in other
 words, at a lower rate) and to let the object hold the values to fill the
-blanks. Sample & Hold is preferred here over zero-filling because it
-greatly simplifies rate changes.
+blanks. Sample & Hold is preferred here over zero-filling because it greatly
+simplifies rate changes.
 
 Set first the oversampling and the stream's number of channels.
 

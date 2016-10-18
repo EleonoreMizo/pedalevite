@@ -117,11 +117,11 @@ Name: compute_snh_data
 Description:
 	Call this function before resampling a block of data.
 	Then, process one sample every hold_time, starting the skip count at
-	rep_index, 0 being the index where the sample has to be processed.
+	rep_index (increasing), 0 being the index where the sample has to be
+	processed.
 	Other samples will be ignored and can be left unprocessed.
 	Here, provided rate must be positive. It's possible to use negative rates
-	in your processing, but you have to adapt it first before sending it to
-	this function. Be sure 
+	in your processing.
 Input parameters:
 	- max_nbr_spl: Maximum block length, in samples. Actual processed block may
 		be shorter. > 0.
@@ -141,7 +141,6 @@ void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, long max_nbr_spl
 	assert (&rep_index != 0);
 	assert (max_nbr_spl > 0);
 	assert (&rate != 0);
-	assert (rate.get_val_int64 () > 0);
 	assert (&rate_step != 0);
 
 	// Optimisation for non-oversampled data
@@ -156,18 +155,16 @@ void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, long max_nbr_spl
 	else
 	{
 		// Finds the minimum hold time which can be expected during the block
-		if (rate_step.get_int_val () >= 0)
-		{
-			fstb::FixedPoint	rate_end (rate_step);
-			rate_end.mul_int (max_nbr_spl);
-			rate_end.add (rate);
+		fstb::FixedPoint  rate_beg (rate);
+		rate_beg.abs ();
 
-			hold_time = compute_hold_time (rate_end, _ovrspl_l2);
-		}
-		else
-		{
-			hold_time = compute_hold_time (rate, _ovrspl_l2);
-		}
+		fstb::FixedPoint	rate_end (rate_step);
+		rate_end.mul_int (max_nbr_spl);
+		rate_end.add (rate);
+		rate_end.abs ();
+
+		fstb::FixedPoint	rate_max (std::max (rate_beg, rate_end));
+		hold_time = compute_hold_time (rate_max, _ovrspl_l2);
 
 		// If we are currently in transition, the current hold time may be shorter
 		// than the computed one.

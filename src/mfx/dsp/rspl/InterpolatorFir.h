@@ -34,6 +34,7 @@ Template parameters:
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/FixedPoint.h"
 #include	"mfx/dsp/rspl/InterpolatorInterface.h"
 #include	"mfx/dsp/rspl/SnhTool.h"
 
@@ -78,11 +79,11 @@ protected:
 	// InterpolatorInterface
 	virtual void	do_set_ovrspl_l2 (int ovrspl_l2);
 	virtual long	do_get_impulse_len () const;
-	virtual math::FixedPoint
+	virtual fstb::FixedPoint
 						do_get_group_delay () const;
 
 	virtual void	do_start (int nbr_chn);
-	virtual long	do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, math::FixedPoint pos_src, long end_dest, long beg_src, long end_src, math::FixedPoint rate, math::FixedPoint rate_step);
+	virtual long	do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
 
 
 
@@ -90,14 +91,14 @@ protected:
 
 private:
 
-	long				process_block_multi_chn (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, math::FixedPoint pos_src, long end_dest, long beg_src, long end_src, math::FixedPoint rate, math::FixedPoint rate_step);
-	long				process_block_mono (float dest_ptr [], const float src_ptr [], long pos_dest, math::FixedPoint pos_src, long end_dest, long beg_src, long end_src, math::FixedPoint rate, math::FixedPoint rate_step);
+	long				process_block_multi_chn (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
+	long				process_block_mono (float dest_ptr [], const float src_ptr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
 
-	long				process_block_multi_chn_sparse (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, math::FixedPoint pos_src, long end_dest, long beg_src, long end_src, math::FixedPoint rate, math::FixedPoint rate_step, int hold_time, int rep_index);
-	long				process_block_mono_sparse (float dest_ptr [], const float src_ptr [], long pos_dest, math::FixedPoint pos_src, long end_dest, long beg_src, long end_src, math::FixedPoint rate, math::FixedPoint rate_step, int hold_time, int rep_index);
+	long				process_block_multi_chn_sparse (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index);
+	long				process_block_mono_sparse (float dest_ptr [], const float src_ptr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index);
 
 	SnhTool			_snh_tool;
-	math::FixedPoint
+	fstb::FixedPoint
 						_grp_dly;
 	Convolver *		_conv_ptr;	// 0 = not initialised
 	int				_nbr_chn;
