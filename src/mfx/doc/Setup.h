@@ -75,7 +75,7 @@ public:
 	void           ser_read (SerRInterface &ser);
 
 	std::string    _name;
-	SaveMode       _save_mode  = SaveMode_PARTIAL;
+	SaveMode       _save_mode  = SaveMode_MANUAL;
 	PedalboardLayout
 	               _layout;
 	BankArray      _bank_arr;
