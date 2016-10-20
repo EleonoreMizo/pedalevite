@@ -68,6 +68,7 @@
 #include "mfx/uitk/pg/Levels.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/MenuSlot.h"
+#include "mfx/uitk/pg/MoveFx.h"
 #include "mfx/uitk/pg/NotYet.h"
 #include "mfx/uitk/pg/PageType.h"
 #include "mfx/uitk/pg/ParamControllers.h"
@@ -289,6 +290,8 @@ public:
 	               _page_ctrl_prog;
 	mfx::uitk::pg::BankMenu
 	               _page_bank_menu;
+	mfx::uitk::pg::MoveFx
+	               _page_move_fx;
 
 	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
 	               ~Context ();
@@ -386,6 +389,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_page_pedal_action_type (_page_switcher)
 ,	_page_ctrl_prog (_page_switcher)
 ,	_page_bank_menu (_page_switcher)
+,	_page_move_fx (_page_switcher, _loc_edit)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
@@ -521,6 +525,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_ACTION_TYPE, _page_pedal_action_type);
 	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_PROG        , _page_ctrl_prog        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_BANK_MENU        , _page_bank_menu        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MOVE_FX          , _page_move_fx          );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

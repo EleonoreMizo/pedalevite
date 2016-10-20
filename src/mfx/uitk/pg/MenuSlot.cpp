@@ -215,8 +215,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 			case Entry_MOVE:
 				if (_loc_edit._chain_flag)
 				{
-					/*** To do ***/
-					_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+					_page_switcher.call_page (PageType_MOVE_FX, 0, node_id);
 				}
 				break;
 			case Entry_PRESETS:

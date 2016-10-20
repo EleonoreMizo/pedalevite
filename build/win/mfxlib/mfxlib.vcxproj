@@ -584,6 +584,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Levels.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\MenuMain.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\MenuSlot.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\MoveFx.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\NotYet.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PageType.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ParamControllers.h" />
@@ -835,6 +836,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Levels.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\MenuMain.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\MenuSlot.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\MoveFx.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\NotYet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamControllers.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamEdit.cpp" />

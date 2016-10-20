@@ -691,6 +691,31 @@ std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &pres
 
 
 
+std::string	Tools::build_slot_name_with_index (const NodeEntry &entry)
+{
+	std::string    multilabel ("<Empty>");
+
+	if (! entry._type.empty ())
+	{
+		multilabel = entry._name_multilabel;
+
+		if (entry._instance_nbr >= 0)
+		{
+			char        txt_0 [127+1];
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), " %d", entry._instance_nbr + 1
+			);
+			multilabel = pi::param::Tools::join_strings_multi (
+				multilabel.c_str (), '\n', "", txt_0
+			);
+		}
+	}
+
+	return multilabel;
+}
+
+
+
 // Returns -1 if not found
 int	Tools::find_chain_index (const doc::Preset &preset, int slot_id)
 {

@@ -103,6 +103,8 @@ public:
 
 	static std::vector <NodeEntry>
 	               extract_slot_list (const doc::Preset &preset, const Model &model);
+	static std::string
+	               build_slot_name_with_index (const NodeEntry &entry);
 	static int     find_chain_index (const doc::Preset &preset, int slot_id);
 
 

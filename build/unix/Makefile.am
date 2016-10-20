@@ -581,6 +581,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/MenuMain.h \
         ../../src/mfx/uitk/pg/MenuSlot.cpp \
         ../../src/mfx/uitk/pg/MenuSlot.h \
+        ../../src/mfx/uitk/pg/MoveFx.cpp \
+        ../../src/mfx/uitk/pg/MoveFx.h \
         ../../src/mfx/uitk/pg/NotYet.cpp \
         ../../src/mfx/uitk/pg/NotYet.h \
         ../../src/mfx/uitk/pg/PageType.h \
