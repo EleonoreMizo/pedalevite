@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
 
@@ -79,7 +80,7 @@ private:
 
 	enum Entry
 	{
-		Entry_MOD_SRC = 1000
+		Entry_LAYOUT = 1000
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -93,7 +94,10 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	TxtSPtr        _mod_src_sptr;
+	TxtSPtr        _layout_sptr;
+
+	PedalEditContext
+	               _layout_arg;
 
 
 

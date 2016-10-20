@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
@@ -86,7 +87,8 @@ private:
 	{
 		Entry_WINDOW = 1000,
 		Entry_IMPORT,
-		Entry_EXPORT
+		Entry_EXPORT,
+		Entry_LAYOUT,
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -107,7 +109,11 @@ private:
 	WinSPtr        _menu_sptr;    // Contains a few entries (selectable) + the bank list
 	TxtSPtr        _import_sptr;
 	TxtSPtr        _export_sptr;
+	TxtSPtr        _layout_sptr;
 	TxtArray       _bank_list;
+
+	PedalEditContext
+	               _layout_arg;
 
 
 

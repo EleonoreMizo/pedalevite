@@ -143,7 +143,7 @@ MsgHandlerInterface::EvtProp	PedalboardConfig::do_handle_evt (const NodeEvt &evt
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (PageType_CUR_PROG, 0);
+			_page_switcher.switch_to (_ctx._ret_page, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:

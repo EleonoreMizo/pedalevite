@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/PedalActionGroup.h"
+#include "mfx/uitk/pg/PageType.h"
 #include "mfx/PedalLoc.h"
 
 
@@ -78,10 +79,11 @@ public:
 	               use_layout (const View &view) const;
 	PedalLoc       conv_to_loc (const View &view) const;
 
-	Type           _type  = Type_INVALID;
-	int            _pedal = -1;
+	Type           _type     = Type_INVALID;
+	int            _pedal    = -1;
 	doc::PedalActionGroup
 	               _content;
+	PageType       _ret_page = PageType_CUR_PROG;
 
 
 

@@ -56,10 +56,11 @@ CtrlProg::CtrlProg (PageSwitcher &page_switcher)
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_fnt_ptr (0)
-,	_mod_src_sptr (new NText (Entry_MOD_SRC))
+,	_layout_sptr (new NText (Entry_LAYOUT))
+,	_layout_arg ()
 {
-	_mod_src_sptr->set_justification (0.5f, 0, false);
-	_mod_src_sptr->set_text ("Mod. sources");
+	_layout_sptr->set_justification (0.5f, 0, false);
+	_layout_sptr->set_text ("Pedal layout");
 }
 
 
@@ -76,20 +77,21 @@ void	CtrlProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt_m;
 
-	_mod_src_sptr->set_font (*_fnt_ptr);
+	_layout_sptr->set_font (*_fnt_ptr);
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
 	const int      h_m   = _fnt_ptr->get_char_h ();
 
-	_mod_src_sptr->set_coord (Vec2d (x_mid, 0 * h_m));
+	_layout_sptr->set_coord (Vec2d (x_mid, 0 * h_m));
 
-	_mod_src_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_layout_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
-	_page_ptr->push_back (_mod_src_sptr);
+	_page_ptr->push_back (_layout_sptr);
 
-	PageMgrInterface::NavLocList  nav_list (1);
-	nav_list [0]._node_id = Entry_MOD_SRC;
+	PageMgrInterface::NavLocList  nav_list;
+	PageMgrInterface::add_nav (nav_list, Entry_LAYOUT);
+
 	_page_ptr->set_nav_layout (nav_list);
 }
 
@@ -106,7 +108,7 @@ MsgHandlerInterface::EvtProp	CtrlProg::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
-//	const int      node_id = evt.get_target ();
+	const int      node_id = evt.get_target ();
 
 	if (evt.is_button_ex ())
 	{
@@ -114,8 +116,21 @@ MsgHandlerInterface::EvtProp	CtrlProg::do_handle_evt (const NodeEvt &evt)
 		switch (but)
 		{
 		case Button_S:
-//			_page_switcher.switch_to (pg::PageType_, 0);
 			ret_val = EvtProp_CATCH;
+			switch (node_id)
+			{
+			case Entry_LAYOUT:
+				_layout_arg._type     = PedalEditContext::Type_PRESET;
+				_layout_arg._ret_page = pg::PageType_CTRL_PROG;
+				_page_switcher.switch_to (
+					pg::PageType_PEDALBOARD_CONFIG,
+					&_layout_arg
+				);
+				break;
+			default:
+				ret_val = EvtProp_PASS;
+				break;
+			}
 			break;
 		case Button_E:
 			_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
