@@ -174,7 +174,7 @@ void	TranscientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr []
 	{
 		const float *  src0_ptr = src_ptr_arr [0];
 		const float *  src1_ptr = src_ptr_arr [1];
-		const auto     gain = fstb::ToolsSimd::set1_f32 (float (fstb::SQRT2));
+		const auto     gain = fstb::ToolsSimd::set1_f32 (0.5f);
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x0 = fstb::ToolsSimd::load_f32 (src0_ptr + pos);
@@ -188,7 +188,7 @@ void	TranscientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr []
 
 	else
 	{
-		const auto     gain = fstb::ToolsSimd::set1_f32 (sqrt (float (nbr_chn)));
+		const auto     gain = fstb::ToolsSimd::set1_f32 (1.0f / float (nbr_chn));
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x = fstb::ToolsSimd::set_f32_zero ();
@@ -199,6 +199,7 @@ void	TranscientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr []
 				xn *= xn;
 				x += xn;
 			}
+			x *= gain;
 			spread_and_store (buf_ptr + pos, x);
 		}
 	}
