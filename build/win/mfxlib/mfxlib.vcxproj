@@ -319,6 +319,8 @@
     <ClInclude Include="..\..\..\src\mfx\doc\Setup.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SignalPort.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Slot.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.hpp" />
@@ -352,6 +354,14 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\SCPower.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\SCPower.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdEven.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdEven.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdOdd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdOdd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass2p.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass2p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4Simd.h" />
@@ -414,6 +424,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorOrder0.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\SnhTool.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Voice.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturateBipolar.h" />
@@ -442,6 +454,12 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\Compex.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\Disto2x.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoStage.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\TranscientAnalyser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly1\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly1\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly1\DelayChn.h" />
@@ -718,6 +736,8 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1p.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\OnePole.cpp" />
@@ -751,6 +771,11 @@
     <ClCompile Include="..\..\..\src\mfx\Overdrive.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\Compex.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2x.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\TranscientAnalyser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayChn.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc.cpp" />

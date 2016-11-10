@@ -275,6 +275,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.h \
         ../../src/mfx/dsp/dly/SCPower.h \
         ../../src/mfx/dsp/dly/SCPower.hpp \
+        ../../src/mfx/dsp/iir/AllPass1p.cpp \
+        ../../src/mfx/dsp/iir/AllPass1p.h \
+        ../../src/mfx/dsp/iir/AllPass1p.hpp \
+        ../../src/mfx/dsp/iir/AllPass2p.cpp \
+        ../../src/mfx/dsp/iir/AllPass2p.h \
+        ../../src/mfx/dsp/iir/AllPass2p.hpp \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \
         ../../src/mfx/dsp/iir/Biquad.hpp \
@@ -334,6 +340,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
         ../../src/mfx/dsp/rspl/Cst.h \
+        ../../src/mfx/dsp/rspl/DecWrapper.h \
+        ../../src/mfx/dsp/rspl/DecWrapper.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorFir.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorHermite43.cpp \
@@ -353,12 +361,20 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/rspl/SnhTool.h \
         ../../src/mfx/dsp/rspl/Voice.cpp \
         ../../src/mfx/dsp/rspl/Voice.h \
+        ../../src/mfx/dsp/shape/FncFiniteAsym.h \
+        ../../src/mfx/dsp/shape/FncFiniteAsym.hpp \
         ../../src/mfx/dsp/shape/Poly3L1Bias.h \
         ../../src/mfx/dsp/shape/Poly3L1Bias.hpp \
         ../../src/mfx/dsp/shape/MapSaturate.h \
         ../../src/mfx/dsp/shape/MapSaturate.hpp \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.h \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.hpp \
+        ../../src/mfx/dsp/BandSplitAllPassPair.h \
+        ../../src/mfx/dsp/BandSplitAllPassPair.hpp \
+        ../../src/mfx/dsp/FilterCascadeIdEven.h \
+        ../../src/mfx/dsp/FilterCascadeIdEven.hpp \
+        ../../src/mfx/dsp/FilterCascadeIdOdd.h \
+        ../../src/mfx/dsp/FilterCascadeIdOdd.hpp \
         ../../src/mfx/dsp/InertiaLin.h \
         ../../src/mfx/dsp/InertiaLin.hpp \
         ../../src/mfx/dsp/SplDataRetrievalInterface.cpp \
@@ -375,6 +391,17 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dist1/DistoSimpleDesc.cpp \
         ../../src/mfx/pi/dist1/DistoSimpleDesc.h \
         ../../src/mfx/pi/dist1/Param.h \
+        ../../src/mfx/pi/dist2/Disto2x.cpp \
+        ../../src/mfx/pi/dist2/Disto2x.h \
+        ../../src/mfx/pi/dist2/Disto2xDesc.cpp \
+        ../../src/mfx/pi/dist2/Disto2xDesc.h \
+        ../../src/mfx/pi/dist2/DistoStage.cpp \
+        ../../src/mfx/pi/dist2/DistoStage.h \
+        ../../src/mfx/pi/dist2/FreqSplitter.cpp \
+        ../../src/mfx/pi/dist2/FreqSplitter.h \
+        ../../src/mfx/pi/dist2/Param.h \
+        ../../src/mfx/pi/dist2/TranscientAnalyser.cpp \
+        ../../src/mfx/pi/dist2/TranscientAnalyser.h \
         ../../src/mfx/pi/dly1/Cst.h \
         ../../src/mfx/pi/dly1/Delay.cpp \
         ../../src/mfx/pi/dly1/Delay.h \

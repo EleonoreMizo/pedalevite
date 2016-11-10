@@ -282,6 +282,45 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2
 
 
 
+void	TransSZBilin::map_s_to_z_ap1_approx (float z_eq_b [2], float k)
+{
+	const float    a1z = 1 - k;
+	const float    a0z = 1 + k;
+
+	// IIR coefficients
+	assert (! fstb::is_null (a0z));
+	const auto     mult =
+		fstb::ToolsSimd::rcp_approx2 (fstb::ToolsSimd::set1_f32 (a0z));
+	const float    m1 = fstb::ToolsSimd::Shift <0>::extract (mult);
+	z_eq_b [0] = float (a1z * m1);
+	z_eq_b [1] = 1;
+}
+
+
+
+void	TransSZBilin::map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float k)
+{
+	const float    kk = k*k;
+
+	const float    a1k = s_eq_b1 * k;
+	const float    a2kk_plus_a0 = kk + 1;
+	const float    a0z = a2kk_plus_a0 + a1k;
+	const float    a2z = a2kk_plus_a0 - a1k;
+	const float    a1z = 2 * (1 - kk);
+
+	// IIR coefficients
+	assert (! fstb::is_null (a0z));
+	const auto     mult =
+		fstb::ToolsSimd::rcp_approx2 (fstb::ToolsSimd::set1_f32 (a0z));
+	const auto     axz  = fstb::ToolsSimd::set_2f32 (a2z, a1z);
+	const auto     z_eq = axz * mult;
+	z_eq_b [0] = fstb::ToolsSimd::Shift <0>::extract (z_eq);
+	z_eq_b [1] = fstb::ToolsSimd::Shift <1>::extract (z_eq);;
+	z_eq_b [2] = 1;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

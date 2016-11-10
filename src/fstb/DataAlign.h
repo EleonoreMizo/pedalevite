@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/ToolsSimd.h"
 
+#include <type_traits>
+
 
 
 namespace fstb
@@ -43,6 +45,8 @@ class DataAlign
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
+
+	typedef std::integral_constant <bool, A> Alignment;
 
 	static inline bool
 		            check_ptr (const void *ptr);

@@ -91,6 +91,7 @@ TplEnum::TplEnum (const char *val_list_0, const char *name_0, const char *unit_0
 	char           txt_0 [1023+1];
 	fstb::snprintf4all (txt_0, sizeof (txt_0), name_0,
 		_group_index, _group_index, _group_index, _group_index,
+		_group_index, _group_index, _group_index, _group_index,
 		_group_index, _group_index, _group_index, _group_index
 	);
 	_name = txt_0;

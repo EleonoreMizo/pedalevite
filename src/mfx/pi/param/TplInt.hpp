@@ -66,6 +66,7 @@ TplInt::TplInt (int val_min, int val_max, const char *name_0, const char *unit_0
 	char           txt_0 [1023+1];
 	sprintf (txt_0, name_0,
 		_group_index, _group_index, _group_index, _group_index,
+		_group_index, _group_index, _group_index, _group_index,
 		_group_index, _group_index, _group_index, _group_index
 	);
 	_name = txt_0;

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Biquad.h
+        AllPass2p.h
         Author: Laurent de Soras, 2016
 
 Can be inherited but is not polymorph.
@@ -18,8 +18,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_iir_Biquad_HEADER_INCLUDED)
-#define mfx_dsp_iir_Biquad_HEADER_INCLUDED
+#if ! defined (mfx_dsp_iir_AllPass2p_HEADER_INCLUDED)
+#define mfx_dsp_iir_AllPass2p_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -42,26 +42,25 @@ namespace iir
 
 
 
-class Biquad
+class AllPass2p
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               Biquad ();
-	               Biquad (const Biquad &other)     = default;
-	               ~Biquad ()                       = default;
-	Biquad &       operator = (const Biquad &other) = default;
+	               AllPass2p ();
+	               AllPass2p (const AllPass2p &other)  = default;
+	               ~AllPass2p ()                       = default;
+	AllPass2p &    operator = (const AllPass2p &other) = default;
 
-	inline void    neutralise ();
-	inline void    set_z_eq (const float b [3], const float a [3]);
-	inline void    get_z_eq (float b [3], float a [3]) const;
+	inline void    set_z_eq (float b0, float b1);
+	inline void    get_z_eq (float &b0, float &b1) const;
 
 	inline float   process_sample (float x);
-	inline float   process_sample (float x, const float inc_b [3], const float inc_a [3]);
+	inline float   process_sample (float x, const float inc_b [2]);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [3], const float inc_a [3]);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2]);
 
 	void           clear_buffers ();
 
@@ -77,12 +76,10 @@ protected:
 
 private:
 
-	inline void    step_z_eq (const float inc_b [3], const float inc_a [3]);
+	inline void    step_z_eq (const float inc_b [2]);
 
-	std::array <float, 3>      // Direct coefficients, order z^(-n)
+	std::array <float, 2>      // Direct coefficients, order z^(-n)
 						_eq_z_b;
-	std::array <float, 3>      // Recursive coefficients, order z^(-n). Index 0 is ignored.
-						_eq_z_a;
 
 	std::array <float, 2>      // Ring buffer for input memory
 	               _mem_x;
@@ -96,10 +93,10 @@ private:
 
 private:
 
-	bool           operator == (const Biquad &other) const = delete;
-	bool           operator != (const Biquad &other) const = delete;
+	bool           operator == (const AllPass2p &other) const = delete;
+	bool           operator != (const AllPass2p &other) const = delete;
 
-}; // class Biquad
+}; // class AllPass2p
 
 
 
@@ -109,11 +106,11 @@ private:
 
 
 
-#include "mfx/dsp/iir/Biquad.hpp"
+#include "mfx/dsp/iir/AllPass2p.hpp"
 
 
 
-#endif   // mfx_dsp_iir_Biquad_HEADER_INCLUDED
+#endif   // mfx_dsp_iir_AllPass2p_HEADER_INCLUDED
 
 
 

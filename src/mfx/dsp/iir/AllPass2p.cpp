@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Biquad.cpp
+        AllPass2p.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/iir/Biquad.h"
+#include "mfx/dsp/iir/AllPass2p.h"
 
 #include <cassert>
 
@@ -43,9 +43,8 @@ namespace iir
 
 
 
-Biquad::Biquad ()
-:	_eq_z_b ({{ 1, 0, 0 }})
-,	_eq_z_a ({{ 0, 0, 0 }})
+AllPass2p::AllPass2p ()
+:	_eq_z_b ({{ 0, 0 }})
 ,	_mem_x ({{ 0, 0 }})
 ,	_mem_y ({{ 0, 0 }})
 ,	_mem_pos (0)
@@ -69,7 +68,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	AllPass2p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -104,22 +103,18 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 		{
 			// First sample
 			float          x = src_ptr [index];
-			mem_y [1] =      _eq_z_b [0] *     x
-			            + (  _eq_z_b [1] * mem_x [0]
-			               + _eq_z_b [2] * mem_x [1])
-			            - (  _eq_z_a [1] * mem_y [0]
-			               + _eq_z_a [2] * mem_y [1]);
+			mem_y [1] =   _eq_z_b [0] * (    x     - mem_y [1])
+			            + _eq_z_b [1] * (mem_x [0] - mem_y [0])
+			            +                mem_x [1];
 
 			mem_x [1] = x;
 			dst_ptr [index    ] = mem_y [1];
 
 			// Second sample
 			x = src_ptr [index + 1];
-			mem_y [0] =      _eq_z_b [0] *     x
-			            + (  _eq_z_b [1] * mem_x [1]
-			               + _eq_z_b [2] * mem_x [0])
-			            - (  _eq_z_a [1] * mem_y [1]
-			               + _eq_z_a [2] * mem_y [0]);
+			mem_y [0] =   _eq_z_b [0] * (    x     - mem_y [0])
+			            + _eq_z_b [1] * (mem_x [1] - mem_y [1])
+			            +                mem_x [0];
 
 			mem_x [0] = x;
 			dst_ptr [index + 1] = mem_y [0];
@@ -144,18 +139,17 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 
 
-void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [3], const float inc_a [3])
+void	AllPass2p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2])
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
 	assert (nbr_spl > 0);
 	assert (inc_b != 0);
-	assert (inc_a != 0);
 
 	// If we're not on an even boudary, we process a single sample.
 	if (_mem_pos != 0)
 	{
-		*dst_ptr = process_sample (*src_ptr, inc_b, inc_a);
+		*dst_ptr = process_sample (*src_ptr, inc_b);
 		++ src_ptr;
 		++ dst_ptr;
 		-- nbr_spl;
@@ -166,8 +160,8 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 		}
 	}
 
-	int            half_nbr_spl = nbr_spl >> 1;
-	int            index = 0;
+	int 				half_nbr_spl = nbr_spl >> 1;
+	int 				index = 0;
 	if (half_nbr_spl > 0)
 	{
 		float				mem_x [2];
@@ -181,27 +175,23 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 		{
 			// First sample
 			float				x = src_ptr [index];
-			mem_y [1] =      _eq_z_b [0] *     x
-			            + (  _eq_z_b [1] * mem_x [0]
-			               + _eq_z_b [2] * mem_x [1])
-			            - (  _eq_z_a [1] * mem_y [0]
-			               + _eq_z_a [2] * mem_y [1]);
+			mem_y [1] =   _eq_z_b [0] * (    x     - mem_y [1])
+			            + _eq_z_b [1] * (mem_x [0] - mem_y [0])
+			            +                mem_x [1];
 
 			mem_x [1] = x;
 			dst_ptr [index    ] = mem_y [1];
-			step_z_eq (inc_b, inc_a);
+			step_z_eq (inc_b);
 
 			// Second sample
 			x = src_ptr [index + 1];
-			mem_y [0] =      _eq_z_b [0] *     x
-			            + (  _eq_z_b [1] * mem_x [1]
-			               + _eq_z_b [2] * mem_x [0])
-			            - (  _eq_z_a [1] * mem_y [1]
-			               + _eq_z_a [2] * mem_y [0]);
+			mem_y [0] =   _eq_z_b [0] * (    x     - mem_y [0])
+			            + _eq_z_b [1] * (mem_x [1] - mem_y [1])
+			            +                mem_x [0];
 
 			mem_x [0] = x;
 			dst_ptr [index + 1] = mem_y [0];
-			step_z_eq (inc_b, inc_a);
+			step_z_eq (inc_b);
 
 			index += 2;
 
@@ -218,13 +208,13 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	// If number of samples was odd, there is one more to process.
 	if ((nbr_spl & 1) > 0)
 	{
-		dst_ptr [index] = process_sample (src_ptr [index], inc_b, inc_a);
+		dst_ptr [index] = process_sample (src_ptr [index], inc_b);
 	}
 }
 
 
 
-void	Biquad::clear_buffers ()
+void	AllPass2p::clear_buffers ()
 {
 	_mem_x [0] = 0;
 	_mem_x [1] = 0;

@@ -58,6 +58,10 @@ public:
 	static void    map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs);
 	template <class TS, class TZ>
 	static void    map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s_eq_b [2], const TS s_eq_a [2], double f0, double fs);
+	template <class TS, class TZ>
+	static void    map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs);
+	template <class TS, class TZ>
+	static void    map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double fs);
 
 	template <class TS, class TZ>
 	static void    map_z_to_s (TS s_eq_b [3], TS s_eq_a [3], const TZ z_eq_b [3], const TZ z_eq_a [3], double f0, double fs);
@@ -71,6 +75,8 @@ public:
 	static void    map_s_to_z_approx (float z_eq_b [3], float z_eq_a [3], const float s_eq_b [3], const float s_eq_a [3], float k);
 	static void    map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 z_eq_a [3], const fstb::ToolsSimd::VectF32 s_eq_b [3], const fstb::ToolsSimd::VectF32 s_eq_a [3], fstb::ToolsSimd::VectF32 k);
 	static void    map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [3], const float s_eq_a [2], float k);
+	static void    map_s_to_z_ap1_approx (float z_eq_b [2], float k);
+	static void    map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float k);
 
 
 

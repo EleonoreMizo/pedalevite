@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        OnePole.cpp
+        AllPass1p.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/iir/OnePole.h"
+#include "mfx/dsp/iir/AllPass1p.h"
 
 #include <cassert>
 
@@ -43,17 +43,6 @@ namespace iir
 
 
 
-OnePole::OnePole ()
-:	_eq_z_b ({{ 1, 0 }})
-,	_eq_z_a ({{ 0, 0 }})
-,	_mem_x (0)
-,	_mem_y (0)
-{
-	// Nothing
-}
-
-
-
 /*
 ==============================================================================
 Name: process_block
@@ -68,7 +57,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	AllPass1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -81,9 +70,7 @@ void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_s
 	{
 		// First sample
 		float          x = src_ptr [pos];
-		y =   _eq_z_b [0] *     x
-		    + _eq_z_b [1] * mem_x
-		    - _eq_z_a [1] *     y;
+		y = _eq_z_b0 * (x - y) + mem_x;
 		dst_ptr [pos] = y;
 		mem_x         = x;
 		++ pos;
@@ -95,13 +82,11 @@ void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_s
 
 
 
-void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2], const float inc_a [2])
+void	AllPass1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float inc_b0)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
 	assert (nbr_spl > 0);
-	assert (inc_b != 0);
-	assert (inc_a != 0);
 
 	float          mem_x = _mem_x;
 	float          y     = _mem_y;
@@ -110,11 +95,9 @@ void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_s
 	{
 		// First sample
 		float          x = src_ptr [pos];
-		y =   _eq_z_b [0] *     x
-		    + _eq_z_b [1] * mem_x
-		    - _eq_z_a [1] *     y;
+		y = _eq_z_b0 * (x - y) + mem_x;
 		dst_ptr [pos] = y;
-		step_z_eq (inc_b, inc_a);
+		step_z_eq (inc_b0);
 		mem_x         = x;
 		++ pos;
 	}
@@ -125,7 +108,7 @@ void	OnePole::process_block (float dst_ptr [], const float src_ptr [], int nbr_s
 
 
 
-void	OnePole::clear_buffers ()
+void	AllPass1p::clear_buffers ()
 {
 	_mem_x = 0;
 	_mem_y = 0;

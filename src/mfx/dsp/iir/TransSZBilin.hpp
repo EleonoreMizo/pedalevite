@@ -167,6 +167,56 @@ void	TransSZBilin::map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s
 
 
 
+// 1st-order all-pass filter
+template <class TS, class TZ>
+void	TransSZBilin::map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs)
+{
+	assert (z_eq_b != 0);
+
+	// s to z bilinear transform
+	const double   inv_k = prewarp_freq (f0, fs);
+	assert (! fstb::is_null (inv_k));
+	const double   k = 1 / inv_k;
+
+	const double   a1z = 1 - k;
+	const double   a0z = 1 + k;
+
+	// IIR coefficients
+	assert (! fstb::is_null (a0z));
+	z_eq_b [0] = float (a1z / a0z);
+	z_eq_b [1] = 1;
+}
+
+
+
+// 2nd-order all-pass filter
+template <class TS, class TZ>
+void	TransSZBilin::map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double fs)
+{
+	assert (z_eq_b != 0);
+
+	// s to z bilinear transform
+	const double   inv_k = prewarp_freq (f0, fs);
+	assert (! fstb::is_null (inv_k));
+	const double   k = 1 / inv_k;
+	const double   kk = k*k;
+
+	const double   a1k = s_eq_b1 * k;
+	const double   a2kk_plus_a0 = kk + 1;
+	const double   a0z = a2kk_plus_a0 + a1k;
+	const double   a2z = a2kk_plus_a0 - a1k;
+	const double   a1z = 2 * (1 - kk);
+
+	// IIR coefficients
+	assert (! fstb::is_null (a0z));
+	const double   mult = 1 / a0z;
+	z_eq_b [0] = TZ (a2z * mult);
+	z_eq_b [1] = TZ (a1z * mult);
+	z_eq_b [2] = TZ (1);
+}
+
+
+
 /*
 From:
 k   = 1 / prewarp_freq (f0, fs)

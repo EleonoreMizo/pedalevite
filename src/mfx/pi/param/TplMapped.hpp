@@ -67,6 +67,8 @@ TplMapped <T>::TplMapped (double val_min, double val_max, const char *name_0, co
 
 	char           txt_0 [1023+1];
 	fstb::snprintf4all (txt_0, sizeof (txt_0), name_0,
+		_group_index, _group_index, _group_index, _group_index,
+		_group_index, _group_index, _group_index, _group_index,
 		_group_index, _group_index, _group_index, _group_index
 	);
 	_name = txt_0;

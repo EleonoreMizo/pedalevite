@@ -139,8 +139,8 @@ fstb::ToolsSimd::VectF32	EnvFollowerAHR4SimdHelper <VD, VS, VP>::process_sample 
 template <class VD, class VS, class VP>
 void	EnvFollowerAHR4SimdHelper <VD, VS, VP>::process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl)
 {
-	assert (V128Dest::check_address (out_ptr));
-	assert (V128Src::check_address (in_ptr));
+	assert (V128Dest::check_ptr (out_ptr));
+	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
 	auto           state  = V128Par::load_f32 (_state);

@@ -60,8 +60,8 @@ public:
 
 	inline float   process_sample (float x);
 	inline float   process_sample (float x, const float inc_b [2], const float inc_a [2]);
-	void           process_block (float dst_ptr [], const float src_ptr [], long nbr_spl);
-	void           process_block (float dst_ptr [], const float src_ptr [], long nbr_spl, const float inc_b [2], const float inc_a [2]);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [2], const float inc_a [2]);
 
 	void           clear_buffers ();
 

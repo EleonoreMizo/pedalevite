@@ -30,6 +30,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/cpx/CompexDesc.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
+#include "mfx/pi/dist2/Disto2x.h"
+#include "mfx/pi/dist2/Disto2xDesc.h"
 #include "mfx/pi/dly1/Delay.h"
 #include "mfx/pi/dly1/DelayDesc.h"
 #include "mfx/pi/dtone1/DistTone.h"
@@ -94,7 +96,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::phase1::PhaserDesc    , mfx::pi::phase1::Phaser          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc    , mfx::pi::lpfs::Squeezer          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc         , mfx::pi::lfo1::Lfo               >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::envf::EnvFollowDesc   , mfx::pi::envf::EnvFollow         >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::envf::EnvFollowDesc   , mfx::pi::envf::EnvFollow         >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::dist2::Disto2xDesc    , mfx::pi::dist2::Disto2x          >::create ()
 		};
 
 		fact_list = l;
