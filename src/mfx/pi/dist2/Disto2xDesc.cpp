@@ -26,7 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/dist2/Disto2xDesc.h"
 #include "mfx/pi/dist2/Param.h"
-#include "mfx/pi/param/MapPseudoLog.h"
 #include "mfx/pi/param/MapS.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
@@ -58,7 +57,6 @@ Disto2xDesc::Disto2xDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	typedef param::TplMapped <param::MapS <false> > TplMix;
-	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 
 	// Crossover frequency
 	param::TplLog *   log_ptr = new param::TplLog (
