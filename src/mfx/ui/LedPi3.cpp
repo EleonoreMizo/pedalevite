@@ -37,7 +37,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#define mfx_ui_LedPi3_REVERSE_ORDER
+#undef mfx_ui_LedPi3_REVERSE_ORDER
 
 
 namespace mfx
