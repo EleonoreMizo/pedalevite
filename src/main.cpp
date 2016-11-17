@@ -31,6 +31,7 @@
 #include "fstb/fnc.h"
 #include "mfx/adrv/CbInterface.h"
 #include "mfx/dsp/mix/Align.h"
+#include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionTempo.h"
@@ -489,8 +490,8 @@ fprintf (stderr, "Reading ESC button...\n");
 	const int      ret_val = _model.load_from_disk ();
 	if (ret_val != 0)
 	{
+
 		/*** To do ***/
-		assert (false);
 
 		mfx::doc::Bank bank;
 		init_empty_bank (bank);
@@ -1106,6 +1107,73 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 
 void	Context::create_default_layout (mfx::doc::PedalboardLayout &layout)
 {
+#if 1
+
+	// Presets
+	for (int p = 0; p < 7; ++p)
+	{
+		const int      pedal = (p < 4) ? p + 1 : p + 3;
+		mfx::doc::PedalActionCycle &  cycle =
+			layout._pedal_arr [pedal]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionPreset (false, p)
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+
+	// Tuner
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			layout._pedal_arr [5]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionToggleTuner
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+
+	// Tempo
+	{
+		mfx::doc::PedalActionCycle &  cycle =
+			layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
+		mfx::doc::PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+			new mfx::doc::ActionTempo
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+
+	// Prog-/Bank-, Prog+/Bank+
+	{
+		for (int p = 0; p < 2; ++p)
+		{
+			mfx::doc::PedalActionGroup &  group = layout._pedal_arr [p * 6];
+			const int      d = (p == 0) ? -1 : +1;
+			{
+				mfx::doc::PedalActionCycle &  cycle =
+					group._action_arr [mfx::doc::ActionTrigger_RELEASE];
+				mfx::doc::PedalActionCycle::ActionArray   action_arr;
+				action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+					new mfx::doc::ActionPreset (true, d)
+				));
+				cycle._cycle.push_back (action_arr);
+			}
+			{
+				mfx::doc::PedalActionCycle &  cycle =
+					group._action_arr [mfx::doc::ActionTrigger_HOLD];
+				mfx::doc::PedalActionCycle::ActionArray   action_arr;
+				action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
+					new mfx::doc::ActionBank (true, d)
+				));
+				cycle._cycle.push_back (action_arr);
+			}
+		}
+	}
+
+
+#else // Old
+
 	for (int p = 0; p < 9; ++p)
 	{
 		const int      pedal = (p < 5) ? p : p + 1;
@@ -1135,6 +1203,8 @@ void	Context::create_default_layout (mfx::doc::PedalboardLayout &layout)
 		));
 		cycle._cycle.push_back (action_arr);
 	}
+
+#endif
 
 #if 0 // Test code
 	{

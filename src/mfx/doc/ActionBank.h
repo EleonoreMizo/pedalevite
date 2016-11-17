@@ -49,6 +49,8 @@ class ActionBank
 
 public:
 
+	explicit       ActionBank (bool relative_flag, int val);
+	explicit       ActionBank (SerRInterface &ser);
 	               ActionBank (const ActionBank &other) = default;
 	virtual        ~ActionBank ()                       = default;
 

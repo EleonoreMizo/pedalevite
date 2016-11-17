@@ -43,6 +43,22 @@ namespace doc
 
 
 
+ActionBank::ActionBank (bool relative_flag, int val)
+:	_relative_flag (relative_flag)
+,	_val (val)
+{
+	// Nothing
+}
+
+
+
+ActionBank::ActionBank (SerRInterface &ser)
+{
+	ser_read (ser);
+}
+
+
+
 void	ActionBank::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();

@@ -1631,10 +1631,14 @@ void	Model::process_pedal (int pedal_index, bool set_flag, std::chrono::microsec
 	}
 	else
 	{
+		const bool     proc_flag = ! state._hold_flag;
 		state._hold_flag  = false;
 		state._press_flag = false;
 		state._press_ts   = date;
-		process_pedal_event (pedal_index, doc::ActionTrigger_RELEASE);
+		if (proc_flag)
+		{
+			process_pedal_event (pedal_index, doc::ActionTrigger_RELEASE);
+		}
 	}
 }
 

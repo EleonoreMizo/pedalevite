@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionTempo.h"
@@ -194,8 +195,10 @@ void	PedalActionCycle::ser_read (SerRInterface &ser)
 			case ActionType_TEMPO:
 				a_sptr = ActionSPtr (new ActionTempo (ser));
 				break;
-
 			case ActionType_BANK:
+				a_sptr = ActionSPtr (new ActionBank (ser));
+				break;
+
 			case ActionType_TOGGLE_FX:
 			case ActionType_LOOP_REC:
 			case ActionType_LOOP_PLAY_STOP:
