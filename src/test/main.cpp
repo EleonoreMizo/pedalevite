@@ -1,7 +1,9 @@
 
 #include "fstb/def.h"
 #include "fstb/AllocAlign.h"
+#include "fstb/DataAlign.h"
 #include "mfx/dsp/ctrl/lfo/LfoModule.h"
+#include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/Param.h"
 #include "mfx/piapi/EventTs.h"
@@ -323,20 +325,13 @@ int save_wav (const char *filename_0, const std::vector <std::vector <float> > &
 
 
 
-int	test_disto ()
+int	generate_test_signal (double &sample_freq, std::vector <std::vector <float> > &chn_arr)
 {
 	int            ret_val = 0;
 
-	double         sample_freq;
-	std::vector <std::vector <float> >  chn_arr;
-
 #if 1
 
-	if (ret_val == 0)
-	{
-		ret_val = load_wav ("../../../src/test/samples/guitar-01.wav", chn_arr, sample_freq);
-	}
-	const size_t   len  = chn_arr [0].size ();
+	ret_val = load_wav ("../../../src/test/samples/guitar-01.wav", chn_arr, sample_freq);
 
 #else
 
@@ -357,8 +352,19 @@ int	test_disto ()
 
 #endif
 
+	return ret_val;
+}
+
+int	test_disto ()
+{
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr;
+
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+
 	if (ret_val == 0)
 	{
+		const size_t   len = chn_arr [0].size ();
 		mfx::pi::dist1::DistoSimple   dist;
 		const int      max_block_size = 64;
 		int            latency = 0;
@@ -417,6 +423,96 @@ int	test_disto ()
 		while (pos < len);
 
 		ret_val = save_wav ("results/t0.wav", chn_arr, sample_freq, 1);
+	}
+
+	return ret_val;
+}
+
+
+
+float	compute_env_coef (float t, double sample_freq)
+{
+	assert (sample_freq > 0);
+	assert (t >= 0);
+
+	float          coef = 1;
+	const double   tsf  = t * sample_freq;
+	if (tsf > 1)
+	{
+		coef = float (1.0f - exp (-1.0f / tsf));
+	}
+
+	return coef;
+}
+
+
+
+int	test_transients ()
+{
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr;
+	std::vector <std::vector <float> >  dst_arr;
+
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+
+	if (ret_val == 0)
+	{
+		typedef mfx::dsp::dyn::EnvFollowerAHR4SimdHelper <
+			fstb::DataAlign <true>,
+			fstb::DataAlign <true>,
+			fstb::DataAlign <true>
+		> EnvHelper;
+		typedef std::vector <
+			fstb::ToolsSimd::VectF32,
+			fstb::AllocAlign <fstb::ToolsSimd::VectF32, 16>
+		> BufAlign;
+
+		const size_t   len     = chn_arr [0].size ();
+		const int      buf_len = 256;
+		BufAlign       buf_src (buf_len);
+		BufAlign       buf_dst (buf_len);
+		size_t         buf_pos = 0;
+		dst_arr.resize (4);
+		for (auto &chn : dst_arr)
+		{
+			chn.resize (len);
+		}
+		EnvHelper      env;
+		const double   min_freq = 50; // Hz
+		const int      hold_time = fstb::round_int (sample_freq / min_freq);
+
+		// Attack, fast envelope
+		env.set_atk_coef (0, compute_env_coef (0.0001f, sample_freq));
+		env.set_rls_coef (0, compute_env_coef (0.050f, sample_freq));
+		env.set_hold_time (0, hold_time);
+
+		// Attack, slow envelope
+		env.set_atk_coef (1, compute_env_coef (0.050f, sample_freq));
+		env.set_rls_coef (1, compute_env_coef (0.050f, sample_freq));
+		env.set_hold_time (1, hold_time);
+
+		// Sustain, fast envelope
+		env.set_atk_coef (2, compute_env_coef (0.005f, sample_freq));
+		env.set_rls_coef (2, compute_env_coef (0.200f, sample_freq));
+		env.set_hold_time (2, hold_time);
+
+		// Sustain, slow envelope
+		env.set_atk_coef (3, compute_env_coef (0.005f, sample_freq));
+		env.set_rls_coef (3, compute_env_coef (0.600f, sample_freq));
+		env.set_hold_time (3, hold_time);
+
+		for (size_t pos = 0; pos < len; ++pos)
+		{
+			auto           x = fstb::ToolsSimd::set1_f32 (fabs (chn_arr [0] [pos]));
+			x = env.process_sample (x);
+			for (int chn = 0; chn < 4; ++chn)
+			{
+				dst_arr [chn] [pos] = fstb::ToolsSimd::Shift <0>::extract (x);
+				x = fstb::ToolsSimd::Shift <-1>::rotate (x);
+			}
+		}
+
+		ret_val = save_wav ("results/transients-envelopes.wav", dst_arr, sample_freq, 1);
 	}
 
 	return ret_val;
@@ -617,8 +713,12 @@ int main (int argc, char *argv [])
 	test_disto ();
 #endif
 
-#if 1
+#if 0
 	draw_all_lfos ();
+#endif
+
+#if 1
+	test_transients ();
 #endif
 
 
