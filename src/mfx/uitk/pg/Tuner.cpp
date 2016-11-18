@@ -62,10 +62,13 @@ Tuner::Tuner (PageSwitcher &page_switcher, ui::LedInterface &led)
 ,	_scale (Scale_GUITAR_EBGDAE)
 ,	_note_sptr ( new NText (0))
 ,	_scale_sptr (new NText (1))
+,	_cents_sptr (new NText (2))
 ,	_fnt_l_ptr (0)
+,	_fnt_m_ptr (0)
 {
 	_note_sptr->set_justification (0.5f, 0.5f, false);
 	_scale_sptr->set_justification (0.5f, 0.5f, false);
+	_cents_sptr->set_justification (0.5f, 1.0f, false);
 }
 
 
@@ -80,18 +83,23 @@ void	Tuner::do_connect (Model &model, const View &view, PageMgrInterface &page, 
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_l_ptr = &fnt_l;
+	_fnt_m_ptr = &fnt_m;
 
 	_note_sptr->set_font (fnt_l);
 	_scale_sptr->set_font (fnt_l);
+	_cents_sptr->set_font (fnt_m);
 
 	const int      x_mid = _page_size [0] >> 1;
 	const int      y_mid = _page_size [1] >> 1;
+	const int      h_m   = _fnt_m_ptr->get_char_h ();
 
-	_note_sptr->set_coord (Vec2d (x_mid, y_mid));
+	_note_sptr->set_coord (Vec2d (x_mid, y_mid - h_m / 2));
 	_scale_sptr->set_coord (Vec2d (x_mid, y_mid));
+	_cents_sptr->set_coord (Vec2d (x_mid, _page_size [1]));
 
 	_page_ptr->push_back (_note_sptr);
 	_page_ptr->push_back (_scale_sptr);
+	_page_ptr->push_back (_cents_sptr);
 
 	i_set_freq (_view_ptr->get_tuner_freq ());
 }
@@ -179,6 +187,7 @@ void	Tuner::i_set_freq (float freq)
 
 		_note_sptr->set_text ("");
 		_scale_sptr->set_text (scale_name);
+		_cents_sptr->set_text ("");
 	}
 
 	else
@@ -214,15 +223,18 @@ void	Tuner::i_set_freq (float freq)
 		const int      len        = int (note_str.length ());
 		const int      w_l        = _fnt_l_ptr->get_char_w ();
 		const int      h_l        = _fnt_l_ptr->get_char_h ();
-		const int      mag_x      = _page_size [0] / (w_l * len);
-		const int      mag_y      = _page_size [1] / h_l;
+		const int      h_m        = _fnt_m_ptr->get_char_h ();
+		int            mag_x      = _page_size [0] / (w_l * len);
+		const int      mag_y      = (_page_size [1] - h_m * 0) / h_l;
+		mag_x = std::min (mag_x, mag_y * 3 / 2);
 		_note_sptr->set_mag (mag_x, mag_y);
 		_note_sptr->set_text (note3_0);
 
-		// Frequency and finetune, currently unused
+		// Frequency and finetune
 		const int      midi_note  = fstb::round_int (midi_pitch);
 		const float    cents_flt  = (midi_pitch - midi_note) * 100;
 		const int      cents      = fstb::round_int (cents_flt);
+#if 0 // Currently unused
 		const int      octave     = midi_note / 12;
 		const int      note       = midi_note - octave * 12;
 		char           freq_0 [127+1] = "---- ---- ------- Hz";
@@ -231,6 +243,10 @@ void	Tuner::i_set_freq (float freq)
 			"%2s%-2d %+4d %7.3lf Hz",
 			_note_0_arr [note], octave, cents, freq
 		);
+#endif
+		char           txt_0 [127+1];
+		fstb::snprintf4all (txt_0, sizeof (txt_0), "%+03d", cents);
+		_cents_sptr->set_text (txt_0);
 	}
 
 	for (int index = 0; index < _nbr_led; ++index)

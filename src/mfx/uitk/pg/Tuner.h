@@ -116,9 +116,12 @@ private:
 
 	TxtSPtr        _note_sptr;
 	TxtSPtr        _scale_sptr;
+	TxtSPtr        _cents_sptr;
 
 	const ui::Font *
 	               _fnt_l_ptr;
+	const ui::Font *
+	               _fnt_m_ptr;
 
 	static const char * const
 	               _note_0_arr [12];
