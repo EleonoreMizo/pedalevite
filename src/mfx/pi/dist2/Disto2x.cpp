@@ -262,7 +262,6 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 		const auto     sus_l2     = fstb::ToolsSimd::set1_f32 (_gmod_sus_l2);
 		const auto     atk_max_l2 = fstb::ToolsSimd::set1_f32 (_gmod_atk_max_l2);
 		const auto     sus_max_l2 = fstb::ToolsSimd::set1_f32 (_gmod_sus_max_l2);
-		const auto     zero       = fstb::ToolsSimd::set_f32_zero ();
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x =
