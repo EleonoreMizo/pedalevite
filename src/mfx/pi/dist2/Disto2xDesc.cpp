@@ -206,7 +206,7 @@ void	Disto2xDesc::register_stage (int stage, int base)
 	// HPF Cutoff frequency
 	param::TplLog *   log_ptr = new param::TplLog (
 		3, 3000,
-		"Stage %d input high-pass filter cutoff frequency\nStage %d input HPF frequency\nStage %d HPF cutoff frequency\nStage %d HPF frequency\nS%d HPF Freq\nS%d HPF",
+		"Stage %d input high-pass filter cutoff frequency\nStage %d input HPF frequency\nStage %d HPF cutoff frequency\nStage %d HPF frequency\nStage %d HPF freq\nStage %d HPF\nS%d HPF",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		stage,
@@ -231,7 +231,7 @@ void	Disto2xDesc::register_stage (int stage, int base)
 		"Diode\nAsym 1",
 		"Stage %d distortion type\nStage %d disto type\nStage %d type\nS%d type",
 		"",
-		0,
+		stage,
 		"%s"
 	);
 	assert (enu_ptr->get_nat_max () == DistoStage::Type_NBR_ELT - 1);
@@ -251,7 +251,7 @@ void	Disto2xDesc::register_stage (int stage, int base)
 	// LPF Cutoff frequency
 	log_ptr = new param::TplLog (
 		20, 20480,
-		"Stage %d output low-pass filter cutoff frequency\nStage %d output LPF frequency\nStage %d LPF cutoff frequency\nStage %d LPF frequency\nS%d LPF freq\nS%d LPF",
+		"Stage %d output low-pass filter cutoff frequency\nStage %d output LPF frequency\nStage %d LPF cutoff frequency\nStage %d LPF frequency\nStage %d LPF freq\nStage %d LPF\nS%d LPF",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		stage,
