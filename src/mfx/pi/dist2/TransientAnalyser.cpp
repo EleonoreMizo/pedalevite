@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TranscientAnalyser.cpp
+        TransientAnalyser.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -25,7 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "mfx/pi/dist2/TranscientAnalyser.h"
+#include "mfx/pi/dist2/TransientAnalyser.h"
 
 #include <cassert>
 #include <cfloat>
@@ -46,7 +46,7 @@ namespace dist2
 
 
 
-void	TranscientAnalyser::reset (double sample_freq, int max_block_size)
+void	TransientAnalyser::reset (double sample_freq, int max_block_size)
 {
 	assert (sample_freq > 0);
 	assert (max_block_size > 0);
@@ -57,22 +57,33 @@ void	TranscientAnalyser::reset (double sample_freq, int max_block_size)
 	const int      mbs_alig = (_max_block_size + 3) & -4;
 	_buf.resize (mbs_alig);
 
-	// Fast envelope
-	const float    af = compute_coef (0.005f);
-	const float    rf = compute_coef (0.050f);
-	_env_helper.set_atk_coef (0, af);
-	_env_helper.set_rls_coef (0, rf);
+	// Attack, fast envelope
+	_env_helper.set_atk_coef (0, compute_coef (0.0001f));
+	_env_helper.set_rls_coef (0, compute_coef (0.050f));
 
-	// Slow envelope
-	const float    as = compute_coef (0.025f);
-	const float    rs = compute_coef (0.250f);
-	_env_helper.set_atk_coef (1, as);
-	_env_helper.set_rls_coef (1, rs);
+	// Attack, slow envelope
+	_env_helper.set_atk_coef (1, compute_coef (0.050f));
+	_env_helper.set_rls_coef (1, compute_coef (0.050f));
+
+	// Sustain, fast envelope
+	_env_helper.set_atk_coef (2, compute_coef (0.005f));
+	_env_helper.set_rls_coef (2, compute_coef (0.200f));
+
+	// Sustain, slow envelope
+	_env_helper.set_atk_coef (3, compute_coef (0.005f));
+	_env_helper.set_rls_coef (3, compute_coef (0.600f));
+
+	const double   min_freq = 50; // Hz
+	const int      hold_time = fstb::round_int (sample_freq / min_freq);
+	for (int e = 0; e < EnvHelper::_nbr_env; ++e)
+	{
+		_env_helper.set_hold_time (e, hold_time);
+	}
 }
 
 
 
-void	TranscientAnalyser::set_epsilon (float eps)
+void	TransientAnalyser::set_epsilon (float eps)
 {
 	assert (eps > sqrt (FLT_MIN));
 
@@ -81,12 +92,16 @@ void	TranscientAnalyser::set_epsilon (float eps)
 
 
 
-// Stores the result as a ratio between the fast envelope and the slow envelope
-void	TranscientAnalyser::process_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl)
+// Stores the result as the log2 of the ratio between:
+// - the fast envelope and the slow envelope for the attack
+// - the slow envelope and the fast envelope for the sustain
+// Negative values are clipped to 0.
+void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl)
 {
 	assert (_sample_freq > 0);
 	assert (fstb::DataAlign <true>::check_ptr (src_ptr_arr [0]));
-	assert (fstb::DataAlign <true>::check_ptr (dst_ptr));
+	assert (fstb::DataAlign <true>::check_ptr (atk_ptr));
+	assert (fstb::DataAlign <true>::check_ptr (sus_ptr));
 	assert (nbr_chn > 0);
 	assert (nbr_spl > 0);
 
@@ -97,36 +112,41 @@ void	TranscientAnalyser::process_block (float dst_ptr [], const float * const sr
 	_env_helper.process_block (&_buf [0], &_buf [0], nbr_spl);
 
 	// Ratio
-	const auto     eps = fstb::ToolsSimd::set1_f32 (_eps_sq);
+	const auto     eps  = fstb::ToolsSimd::set1_f32 (_eps_sq);
+	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
-		// Collects the slow and fast envelopes into vectors
-		auto           r01 = fstb::ToolsSimd::interleave_2f32_low (
-			fstb::ToolsSimd::load_f32 (&_buf [pos    ]),
-			fstb::ToolsSimd::load_f32 (&_buf [pos + 1])
-		);
-		auto           r23 = fstb::ToolsSimd::interleave_2f32_low (
-			fstb::ToolsSimd::load_f32 (&_buf [pos + 2]),
-			fstb::ToolsSimd::load_f32 (&_buf [pos + 3])
-		);
-		fstb::ToolsSimd::VectF32   envf;
-		fstb::ToolsSimd::VectF32   envs;
-		fstb::ToolsSimd::deinterleave_f32 (envf, envs, r01, r23);
+		// Collects the envelopes into vectors
+		// Name: {e}nvelope - {a}ttack/{s}ustain - {s}low/{f}ast
+		auto           eaf = fstb::ToolsSimd::load_f32 (&_buf [pos    ]);
+		auto           eas = fstb::ToolsSimd::load_f32 (&_buf [pos + 1]);
+		auto           esf = fstb::ToolsSimd::load_f32 (&_buf [pos + 2]);
+		auto           ess = fstb::ToolsSimd::load_f32 (&_buf [pos + 3]);
+		fstb::ToolsSimd::transpose_f32 (eaf, eas, esf, ess);
 
-		// Computes the ratio
-		envf += eps;   // Prevents dividing by zero and makes a unity ratio
-		envs += eps;   // when everything tends toward zero.
-		auto           envs_inv = fstb::ToolsSimd::rcp_approx2 (envs);
-		auto           ratio_sq = envf * envs_inv;
-		auto           ratio    = fstb::ToolsSimd::sqrt_approx (ratio_sq);
+		// Computes the ratio for the attack
+		eaf += eps;    // Prevents dividing by zero and makes a unity ratio
+		eas += eps;    // when everything tends toward zero.
+		auto           eas_inv = fstb::ToolsSimd::rcp_approx2 (eas);
+		auto           ea_ratio = eaf * eas_inv;
+		auto           ea_r_l2 = fstb::ToolsSimd::log2_approx (ea_ratio);
+		ea_r_l2 = fstb::ToolsSimd::max_f32 (ea_r_l2, zero);
+		fstb::ToolsSimd::store_f32 (atk_ptr + pos, ea_r_l2);
 
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, ratio);
+		// Ratio for the sustain
+		esf += eps;
+		ess += eps;
+		auto           esf_inv = fstb::ToolsSimd::rcp_approx2 (esf);
+		auto           es_ratio = ess * esf_inv;
+		auto           es_r_l2 = fstb::ToolsSimd::log2_approx (es_ratio);
+		es_r_l2 = fstb::ToolsSimd::max_f32 (es_r_l2, zero);
+		fstb::ToolsSimd::store_f32 (sus_ptr + pos, es_r_l2);
 	}
 }
 
 
 
-void	TranscientAnalyser::clear_buffers ()
+void	TransientAnalyser::clear_buffers ()
 {
 	_env_helper.clear_buffers ();
 }
@@ -141,7 +161,7 @@ void	TranscientAnalyser::clear_buffers ()
 
 
 
-float	TranscientAnalyser::compute_coef (float t) const
+float	TransientAnalyser::compute_coef (float t) const
 {
 	assert (_sample_freq > 0);
 
@@ -157,7 +177,7 @@ float	TranscientAnalyser::compute_coef (float t) const
 
 
 
-void	TranscientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl)
+void	TransientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl)
 {
 	if (nbr_chn == 1)
 	{
@@ -165,7 +185,7 @@ void	TranscientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr []
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-			x *= x;
+			x = fstb::ToolsSimd::abs (x);
 			spread_and_store (buf_ptr + pos, x);
 		}
 	}
@@ -179,8 +199,8 @@ void	TranscientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr []
 		{
 			auto           x0 = fstb::ToolsSimd::load_f32 (src0_ptr + pos);
 			auto           x1 = fstb::ToolsSimd::load_f32 (src1_ptr + pos);
-			x0 *= x0;
-			x1 *= x1;
+			x0 = fstb::ToolsSimd::abs (x0);
+			x1 = fstb::ToolsSimd::abs (x1);
 			const auto     x = (x0 + x1) * gain;
 			spread_and_store (buf_ptr + pos, x);
 		}
@@ -196,7 +216,7 @@ void	TranscientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr []
 			{
 				const float *  src_ptr = src_ptr_arr [chn];
 				auto           xn = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-				xn *= xn;
+				xn = fstb::ToolsSimd::abs (xn);
 				x += xn;
 			}
 			x *= gain;
@@ -207,7 +227,7 @@ void	TranscientAnalyser::perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr []
 
 
 
-void	TranscientAnalyser::spread_and_store (fstb::ToolsSimd::VectF32 dst_ptr [], fstb::ToolsSimd::VectF32 x)
+void	TransientAnalyser::spread_and_store (fstb::ToolsSimd::VectF32 dst_ptr [], fstb::ToolsSimd::VectF32 x)
 {
 	fstb::ToolsSimd::store_f32 (
 		dst_ptr + 0, fstb::ToolsSimd::Shift <0>::spread (x)

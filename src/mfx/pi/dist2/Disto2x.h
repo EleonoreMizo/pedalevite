@@ -35,7 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dist2/Disto2xDesc.h"
 #include "mfx/pi/dist2/DistoStage.h"
 #include "mfx/pi/dist2/FreqSplitter.h"
-#include "mfx/pi/dist2/TranscientAnalyser.h"
+#include "mfx/pi/dist2/TransientAnalyser.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -101,7 +101,7 @@ private:
 		typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
 		ChannelArray   _chn_arr;
-		TranscientAnalyser
+		TransientAnalyser
 		               _trans_ana;
 		FreqSplitter   _freq_split;
 		std::array <DistoStage, Disto2x::_nbr_stages>
@@ -131,13 +131,20 @@ private:
 	float          _inv_fs;
 	ProcAlign      _proc;
 
+	float          _gmod_atk;           // Multiplier. 1 = neutral
+	float          _gmod_sus;           // Multiplier. 1 = neutral
+	float          _gmod_atk_l2;
+	float          _gmod_sus_l2;
+	float          _gmod_atk_max_l2;
+	float          _gmod_sus_max_l2;
 	float          _mix_s12_cur;
 	float          _mix_s12_old;
 	float          _mix_lb_cur;
 	float          _mix_lb_old;
 	float          _freq_lpf_pre;
 
-	BufAlign       _buf_trans_ana;
+	BufAlign       _buf_trans_atk;
+	BufAlign       _buf_trans_sus;
 
 	static const std::array <int, _nbr_stages>
 	               _param_stage_base_arr;

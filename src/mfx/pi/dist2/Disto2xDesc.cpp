@@ -25,8 +25,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/pi/dist2/Disto2xDesc.h"
+#include "mfx/pi/dist2/DistoStage.h"
 #include "mfx/pi/dist2/Param.h"
 #include "mfx/pi/param/MapS.h"
+#include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
@@ -81,6 +83,28 @@ Disto2xDesc::Disto2xDesc ()
 	);
 	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
 	_desc_set.add_glob (Param_PRE_LPF, log_ptr);
+
+	// Attack gain modifier
+	log_ptr = new param::TplLog (
+		1.0 / 16, 16,
+		"Attack gain modifier\nAttack gain mod\nAttack gain\nAtk gain\nAtk G",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	_desc_set.add_glob (Param_DYN_ATK, log_ptr);
+
+	// Sustain gain modifier
+	log_ptr = new param::TplLog (
+		1.0 / 16, 16,
+		"Sustain gain modifier\nSustain gain mod\nSustain gain\nSus gain\nSus G",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	_desc_set.add_glob (Param_DYN_RLS, log_ptr);
 
 	register_stage (1, Param_S1_BASE);
 	register_stage (2, Param_S2_BASE);
@@ -201,6 +225,17 @@ void	Disto2xDesc::register_stage (int stage, int base)
 	);
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
 	_desc_set.add_glob (base + ParamStage_BIAS, lin_ptr);
+
+	// Type
+	param::TplEnum *  enu_ptr = new param::TplEnum (
+		"Diode\nAsym 1",
+		"Stage %d distortion type\nStage %d disto type\nStage %d type\nS%d type",
+		"",
+		0,
+		"%s"
+	);
+	assert (enu_ptr->get_nat_max () == DistoStage::Type_NBR_ELT - 1);
+	_desc_set.add_glob (base + ParamStage_TYPE, enu_ptr);
 
 	// Gain
 	log_ptr = new param::TplLog (

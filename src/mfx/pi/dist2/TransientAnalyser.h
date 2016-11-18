@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TranscientAnalyser.h
+        TransientAnalyser.h
         Author: Laurent de Soras, 2016
 
 Objects of this class should be aligned on 16-bytes boudaries.
@@ -18,8 +18,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dist2_TranscientAnalyser_HEADER_INCLUDED)
-#define mfx_pi_dist2_TranscientAnalyser_HEADER_INCLUDED
+#if ! defined (mfx_pi_dist2_TransientAnalyser_HEADER_INCLUDED)
+#define mfx_pi_dist2_TransientAnalyser_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -32,7 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/DataAlign.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/ToolsSimd.h"
-#include "mfx/dsp/dyn/EnvFollowerAR4SimdHelper.h"
+#include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 
 #include <vector>
 
@@ -47,19 +47,19 @@ namespace dist2
 
 
 
-class TranscientAnalyser
+class TransientAnalyser
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               TranscientAnalyser ()  = default;
-	virtual        ~TranscientAnalyser () = default;
+	               TransientAnalyser ()  = default;
+	virtual        ~TransientAnalyser () = default;
 
 	void           set_epsilon (float eps);
 	void           reset (double sample_freq, int max_block_size);
-	void           process_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl);
+	void           process_block (float atk_ptr [], float sus_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl);
 	void           clear_buffers ();
 
 
@@ -79,7 +79,7 @@ private:
 		fstb::AllocAlign <fstb::ToolsSimd::VectF32, 16>
 	> Buffer4;
 
-	typedef dsp::dyn::EnvFollowerAR4SimdHelper <
+	typedef dsp::dyn::EnvFollowerAHR4SimdHelper <
 		fstb::DataAlign <true>,
 		fstb::DataAlign <true>,
 		fstb::DataAlign <true>
@@ -102,13 +102,13 @@ private:
 
 private:
 
-	               TranscientAnalyser (const TranscientAnalyser &other) = delete;
-	TranscientAnalyser &
-	               operator = (const TranscientAnalyser &other)        = delete;
-	bool           operator == (const TranscientAnalyser &other) const = delete;
-	bool           operator != (const TranscientAnalyser &other) const = delete;
+	               TransientAnalyser (const TransientAnalyser &other) = delete;
+	TransientAnalyser &
+	               operator = (const TransientAnalyser &other)        = delete;
+	bool           operator == (const TransientAnalyser &other) const = delete;
+	bool           operator != (const TransientAnalyser &other) const = delete;
 
-}; // class TranscientAnalyser
+}; // class TransientAnalyser
 
 
 
@@ -118,11 +118,11 @@ private:
 
 
 
-//#include "mfx/pi/dist2/TranscientAnalyser.hpp"
+//#include "mfx/pi/dist2/TransientAnalyser.hpp"
 
 
 
-#endif   // mfx_pi_dist2_TranscientAnalyser_HEADER_INCLUDED
+#endif   // mfx_pi_dist2_TransientAnalyser_HEADER_INCLUDED
 
 
 

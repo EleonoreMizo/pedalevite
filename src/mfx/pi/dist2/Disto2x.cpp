@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/Approx.h"
 #include "fstb/ToolsSimd.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
@@ -60,12 +61,19 @@ Disto2x::Disto2x ()
 ,	_sample_freq (44100)
 ,	_inv_fs (1 / _sample_freq)
 ,	_proc ()
+,	_gmod_atk (1)
+,	_gmod_sus (1)
+,	_gmod_atk_l2 (0)
+,	_gmod_sus_l2 (0)
+,	_gmod_atk_max_l2 (0)
+,	_gmod_sus_max_l2 (0)
 ,	_mix_s12_cur (1)
 ,	_mix_s12_old (1)
 ,	_mix_lb_cur (0)
 ,	_mix_lb_old (0)
 ,	_freq_lpf_pre (30)
-,	_buf_trans_ana ()
+,	_buf_trans_atk ()
+,	_buf_trans_sus ()
 {
 	mfx::dsp::mix::Align::setup ();
 
@@ -74,14 +82,20 @@ Disto2x::Disto2x ()
 
 	_state_set.set_val_nat (desc_set, Param_XOVER  ,    30);
 	_state_set.set_val_nat (desc_set, Param_PRE_LPF, 20480);
+	_state_set.set_val_nat (desc_set, Param_DYN_ATK,     1);
+	_state_set.set_val_nat (desc_set, Param_DYN_RLS,     1);
 	_state_set.set_val_nat (desc_set, Param_S12_MIX,     1);
 	_state_set.set_val_nat (desc_set, Param_LB_MIX ,     0);
 
 	_state_set.add_observer (Param_XOVER  , _param_change_flag_other);
 	_state_set.add_observer (Param_PRE_LPF, _param_change_flag_other);
+	_state_set.add_observer (Param_DYN_ATK, _param_change_flag_other);
+	_state_set.add_observer (Param_DYN_RLS, _param_change_flag_other);
 	_state_set.add_observer (Param_S12_MIX, _param_change_flag_other);
 	_state_set.add_observer (Param_LB_MIX , _param_change_flag_other);
 
+	_state_set.set_ramp_time (Param_DYN_ATK, 0.010);
+	_state_set.set_ramp_time (Param_DYN_RLS, 0.010);
 	_state_set.set_ramp_time (Param_S12_MIX, 0.010);
 	_state_set.set_ramp_time (Param_LB_MIX , 0.010);
 
@@ -90,6 +104,7 @@ Disto2x::Disto2x ()
 		const int      base = _param_stage_base_arr [stage];
 		_state_set.set_val_nat (desc_set, base + ParamStage_HPF_PRE ,    30);
 		_state_set.set_val_nat (desc_set, base + ParamStage_BIAS    ,     0);
+		_state_set.set_val_nat (desc_set, base + ParamStage_TYPE    , DistoStage::Type_DIODE_CLIPPER);
 		_state_set.set_val_nat (desc_set, base + ParamStage_GAIN    ,     8);
 		_state_set.set_val_nat (desc_set, base + ParamStage_LPF_POST, 20480);
 
@@ -142,7 +157,8 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.clear_buffers ();
 
 	const int      mbs_align = (max_buf_len + 3) & -4;
-	_buf_trans_ana.resize (mbs_align);
+	_buf_trans_atk.resize (mbs_align);
+	_buf_trans_sus.resize (mbs_align);
 	for (auto &chn : _proc->_chn_arr)
 	{
 		for (auto &buf : chn._buf_xover_arr)
@@ -200,8 +216,13 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 	_state_set.process_block (nbr_spl);
 	update_param ();
 
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Audio processing
+
+	// Transient analysis
 	_proc->_trans_ana.process_block (
-		&_buf_trans_ana [0],
+		&_buf_trans_atk [0],
+		&_buf_trans_sus [0],
 		proc._src_arr,
 		nbr_chn_src,
 		nbr_spl
@@ -212,6 +233,7 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 	// 2 = stage 2 output
 	std::array <std::array <float *, _max_nbr_chn>, 3> stage_io_arr;
 
+	// Frequency splitting, input LPF and transcient processing
 	for (int chn = 0; chn < nbr_chn_src; ++chn)
 	{
 		stage_io_arr [0] [chn] = &_proc->_chn_arr [chn]._buf_xover_arr [1] [0];
@@ -230,8 +252,35 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 			stage_io_arr [0] [chn],
 			nbr_spl
 		);
+
+		// Transient processing
+		// x *= exp2 (
+		//         clip (log2 (tr_atk)) * log2 (atk)
+		//       + clip (log2 (tr_sus)) * log2 (sus)
+		//      )
+		const auto     atk_l2     = fstb::ToolsSimd::set1_f32 (_gmod_atk_l2);
+		const auto     sus_l2     = fstb::ToolsSimd::set1_f32 (_gmod_sus_l2);
+		const auto     atk_max_l2 = fstb::ToolsSimd::set1_f32 (_gmod_atk_max_l2);
+		const auto     sus_max_l2 = fstb::ToolsSimd::set1_f32 (_gmod_sus_max_l2);
+		const auto     zero       = fstb::ToolsSimd::set_f32_zero ();
+		for (int pos = 0; pos < nbr_spl; pos += 4)
+		{
+			auto           x =
+				fstb::ToolsSimd::load_f32 (&stage_io_arr [0] [chn] [pos]);
+			auto           tra_l2 =
+				fstb::ToolsSimd::load_f32 (&_buf_trans_atk [pos]);
+			auto           trs_l2 =
+				fstb::ToolsSimd::load_f32 (&_buf_trans_sus [pos]);
+			tra_l2 = fstb::ToolsSimd::min_f32 (tra_l2, atk_max_l2);
+			trs_l2 = fstb::ToolsSimd::min_f32 (trs_l2, sus_max_l2);
+			const auto     mul_l2 = tra_l2 * atk_l2 + trs_l2 * sus_l2;
+			const auto     mul    = fstb::ToolsSimd::exp2_approx (mul_l2);
+			x *= mul;
+			fstb::ToolsSimd::store_f32 (&stage_io_arr [0] [chn] [pos], x);
+		}
 	}
 
+	// Distortion stages 1 and 2
 	_proc->_stage_arr [0].process_block (
 		&stage_io_arr [1] [0],
 		&stage_io_arr [0] [0],
@@ -246,6 +295,7 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 		nbr_chn_src
 	);
 
+	// Mixing
 	for (int chn = 0; chn < nbr_chn_src; ++chn)
 	{
 		dsp::mix::Align::copy_xfade_2_1_vlrauto (
@@ -299,9 +349,19 @@ void	Disto2x::update_param (bool force_flag)
 				float (_state_set.get_val_tgt_nat (Param_PRE_LPF));
 			update_lpf_pre ();
 
+			_gmod_atk        =
+				float (_state_set.get_val_end_nat (Param_DYN_ATK));
+			_gmod_atk_l2     = fstb::Approx::log2 (_gmod_atk);
+			_gmod_atk_max_l2 = std::max (_gmod_atk_l2, 3.0f);
+
+			_gmod_sus        =
+				float (_state_set.get_val_end_nat (Param_DYN_RLS));
+			_gmod_sus_l2     = fstb::Approx::log2 (_gmod_sus);
+			_gmod_sus_max_l2 = std::max (_gmod_sus_l2, 3.0f);
+
 			_mix_s12_cur =
 				float (_state_set.get_val_end_nat (Param_S12_MIX));
-			_mix_lb_cur =
+			_mix_lb_cur  =
 				float (_state_set.get_val_end_nat (Param_LB_MIX));
 		}
 
@@ -316,12 +376,16 @@ void	Disto2x::update_param (bool force_flag)
 					float (_state_set.get_val_tgt_nat (base + ParamStage_HPF_PRE ));
 				const float    bias     =
 					float (_state_set.get_val_end_nat (base + ParamStage_BIAS    ));
+				const int      type     = fstb::round_int (
+					_state_set.get_val_tgt_nat (base + ParamStage_TYPE)
+				);
 				const float    gain     =
 					float (_state_set.get_val_end_nat (base + ParamStage_GAIN    ));
 				const float    freq_lpf =
 					float (_state_set.get_val_tgt_nat (base + ParamStage_LPF_POST));
 
 				stage.set_bias (bias);
+				stage.set_type (static_cast <DistoStage::Type> (type));
 				stage.set_hpf_pre_cutoff (freq_hpf);
 				stage.set_lpf_post_cutoff (freq_lpf);
 

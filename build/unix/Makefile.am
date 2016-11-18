@@ -400,8 +400,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dist2/FreqSplitter.cpp \
         ../../src/mfx/pi/dist2/FreqSplitter.h \
         ../../src/mfx/pi/dist2/Param.h \
-        ../../src/mfx/pi/dist2/TranscientAnalyser.cpp \
-        ../../src/mfx/pi/dist2/TranscientAnalyser.h \
+        ../../src/mfx/pi/dist2/TransientAnalyser.cpp \
+        ../../src/mfx/pi/dist2/TransientAnalyser.h \
         ../../src/mfx/pi/dly1/Cst.h \
         ../../src/mfx/pi/dly1/Delay.cpp \
         ../../src/mfx/pi/dly1/Delay.h \

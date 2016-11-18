@@ -60,6 +60,7 @@ DistoStage::DistoStage ()
 ,	_gain_post_old (_gain_post)
 ,	_bias (0)
 ,	_bias_old (_bias)
+,	_type (Type_DIODE_CLIPPER)
 ,	_buf_x1 ()
 ,	_buf_ovr ()
 {
@@ -126,6 +127,16 @@ void	DistoStage::set_bias_freq (float f)
 
 	_freq_lpf_bias = f;
 	update_lpf_bias ();
+}
+
+
+
+void	DistoStage::set_type (Type type)
+{
+	assert (type >= 0);
+	assert (type < Type_NBR_ELT);
+
+	_type = type;
 }
 
 
@@ -342,6 +353,26 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 	assert (fstb::DataAlign <true>::check_ptr (src_ptr));
 	assert (nbr_spl > 0);
 
+	switch (_type)
+	{
+	case Type_DIODE_CLIPPER:
+		distort_block_diode_clipper (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_ASYM1:
+		distort_block_asym1 (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+
+	default:
+		assert (false);
+		dsp::mix::Align::copy_1_1 (dst_ptr, src_ptr, nbr_spl);
+		break;
+	}
+}
+
+
+
+void	DistoStage::distort_block_diode_clipper (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
 		dst_ptr [pos] = _shaper_diode_clipper (src_ptr [pos]);
@@ -350,11 +381,52 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 
 
 
+// x -> { x - x^9/9 if x >  0 (max: 0.89)
+//      { x + x^2/2 if x <= 0 (max: 0.5)
+// x * (1 - x^8/9)
+void	DistoStage::distort_block_asym1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f);
+	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f);
+	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     c_9  = fstb::ToolsSimd::set1_f32 (_asym1_m_9);
+	const auto     c_2  = fstb::ToolsSimd::set1_f32 (_asym1_m_2);
+	const auto     bias = fstb::ToolsSimd::set1_f32 ( 0.2f);
+
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+
+		x += bias;
+
+		x = fstb::ToolsSimd::min_f32 (x, ma);
+		x = fstb::ToolsSimd::max_f32 (x, mi);
+
+		const auto     x2  = x  * x;
+		const auto     x4  = x2 * x2;
+		const auto     x8  = x4 * x4;
+		const auto     x9  = x8 * x;
+		const auto     x_n = x + x2 * c_2;
+		const auto     x_p = x - x9 * c_9;
+		const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
+		x = fstb::ToolsSimd::select (t_0, x_p, x_n);
+
+		x -= bias;
+
+		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+	}
+}
+
+
+
 bool	DistoStage::_coef_init_flag = false;
 std::array <double, DistoStage::_nbr_coef_42>	DistoStage::_coef_42;
 std::array <double, DistoStage::_nbr_coef_21>	DistoStage::_coef_21;
+
 DistoStage::ShaperDiodeClipper	DistoStage::_shaper_diode_clipper;
 
+const float	DistoStage::_asym1_m_9  = 1.f / 9;
+const float	DistoStage::_asym1_m_2  = 1.f / 2;
 
 
 }  // namespace dist2

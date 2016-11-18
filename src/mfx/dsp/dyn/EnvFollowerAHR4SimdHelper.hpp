@@ -107,7 +107,7 @@ fstb::ToolsSimd::VectF32	EnvFollowerAHR4SimdHelper <VD, VS, VP>::process_sample 
 	const auto     one        = fstb::ToolsSimd::set1_f32 (1);
 	const auto     delta      = in - state;
 	const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
-	const auto     hold_t = V128Par::load_f32 (_hold_time);
+	const auto     hold_t     = V128Par::load_f32 (_hold_time);
 
 	const auto     hc_gt_0    = fstb::ToolsSimd::cmp_gt_f32 (hold_c, zero);
 
@@ -128,6 +128,7 @@ fstb::ToolsSimd::VectF32	EnvFollowerAHR4SimdHelper <VD, VS, VP>::process_sample 
 	hold_c = fstb::ToolsSimd::select (delta_gt_0, hold_t, hcm1);
 
 	V128Par::store_f32 (_state, state);
+	V128Par::store_f32 (_hold_counter, hold_c);
 
 	return state;
 }

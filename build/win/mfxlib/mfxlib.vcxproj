@@ -459,7 +459,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoStage.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Param.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\TranscientAnalyser.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly1\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly1\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly1\DelayChn.h" />
@@ -775,7 +775,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\dist2\TranscientAnalyser.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayChn.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc.cpp" />

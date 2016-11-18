@@ -42,6 +42,7 @@ enum ParamStage
 {
 	ParamStage_HPF_PRE = 0,
 	ParamStage_BIAS,
+	ParamStage_TYPE,
 	ParamStage_GAIN,
 	ParamStage_LPF_POST,
 
@@ -53,6 +54,8 @@ enum Param
 
 	Param_XOVER = 0,
 	Param_PRE_LPF,
+	Param_DYN_ATK,
+	Param_DYN_RLS,
 	Param_S1_BASE,
 	Param_S2_BASE = Param_S1_BASE + ParamStage_NBR_ELT,
 	Param_S12_MIX = Param_S2_BASE + ParamStage_NBR_ELT,

@@ -61,6 +61,14 @@ public:
 
 	static const int  _max_nbr_chn = piapi::PluginInterface::_max_nbr_chn;
 
+	enum Type
+	{
+		Type_DIODE_CLIPPER = 0,
+		Type_ASYM1,
+
+		Type_NBR_ELT
+	};
+
 	               DistoStage ();
 	virtual        ~DistoStage () = default;
 
@@ -69,6 +77,7 @@ public:
 	void           set_lpf_post_cutoff (float f);
 	void           set_bias (float bias);
 	void           set_bias_freq (float f);
+	void           set_type (Type type);
 	void           set_gain_pre (float g);
 	void           set_gain_post (float g);
 	void           process_block (float * const dst_ptr_arr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
@@ -127,6 +136,8 @@ private:
 	void           update_lpf_post ();
 	void           update_lpf_bias ();
 	void           distort_block (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_diode_clipper (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_asym1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	ChannelArray   _chn_arr;
 	float          _sample_freq;
@@ -140,6 +151,7 @@ private:
 	float          _gain_post_old;
 	float          _bias;
 	float          _bias_old;
+	Type           _type;
 	BufAlign       _buf_x1;
 	BufAlign       _buf_ovr;
 
@@ -148,8 +160,14 @@ private:
 	               _coef_42;
 	static std::array <double, _nbr_coef_21>
 	               _coef_21;
+
 	static ShaperDiodeClipper
 	               _shaper_diode_clipper;
+
+	static const float
+	               _asym1_m_9;
+	static const float
+	               _asym1_m_2;
 
 
 

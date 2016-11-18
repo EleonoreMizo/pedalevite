@@ -1794,7 +1794,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h">
       <Filter>mfx\pi\dist2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\TranscientAnalyser.h">
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.h">
       <Filter>mfx\pi\dist2</Filter>
     </ClInclude>
   </ItemGroup>
@@ -2474,7 +2474,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dist2\TranscientAnalyser.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.cpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClCompile>
   </ItemGroup>
