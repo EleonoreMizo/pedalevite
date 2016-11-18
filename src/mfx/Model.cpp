@@ -2188,7 +2188,10 @@ void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int
 		}
 	}
 
-	_central.set_mod (pi_id, index, *cls_ptr);
+	if (! _tuner_flag)
+	{
+		_central.set_mod (pi_id, index, *cls_ptr);
+	}
 }
 
 
