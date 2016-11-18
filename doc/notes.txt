@@ -843,8 +843,11 @@ sudo mount -o remount,rw /
 sudo mount -o remount,ro /
 
 Monter la clé USB :
-https://linuxconfig.org/howto-mount-usb-drive-in-linux
-Tout faire en sudo, ne pas éditer /etc/fstab
+Source : https://linuxconfig.org/howto-mount-usb-drive-in-linux (ne pas éditer le fstab)
+sudo fdisk -l
+Chercher le nom du device (quelque chose en sda1 en général)
+sudo mkdir /mnt/sda1
+sudo mount -t vfat /dev/sda1 /mnt/sda1
 Démonter : sudo umount /mnt/sda1
 
 
@@ -1027,6 +1030,8 @@ Idée d’effet : delay qui s’active aléatoirement (on/off sur l’entrée du
 
 Idée d’effet : Lazyspace, pour spatialiser du mono sans s’embêter (mix compatible mono). A = entrée, B = delay (A, t), L = A + B * g, R = A - B * g. Avec t court (qq dizaines de samples max), on a un effet "comb".
 
+Idée d’effet : ColorMe, qui propose différents filtres linéaires colorants (comb, formants, eq complexes…)
+
 Idée : amortir les footswitches avec des isolants de bouteille http://www.davidrolo.com/page/5/
 
 Ajout à faire : changer conv_nat_to_str pour inclure une unité (qu’on rend donc dynamique) et un contexte (tempo au besoin, indication d’unité)
@@ -1036,4 +1041,18 @@ Ajout à faire : changer conv_nat_to_str pour inclure une unité (qu’on rend d
 À faire : mise en marche de la seconde ligne de delay en mode mono (quand les deux lignes ne sont pas synchro), avec mix approprié.
 
 À faire : ajouter un second paramètre de delay, une valeur additive (ou multiplicative ?) graduée linéairement. Il suffit ensuite de brancher un LFO dessus.
+
+À faire : ajouter un métronome, calé sur le tempo. Utiliser des samples de batterie ou un son AY3-8912. En option, faire sortir le métronome sur la voie de droite uniquement.
+
+À faire : pouvoir éditer le tempo
+
+
+Idées pour une disto :
+
+– Pour les LPF, un paramètre ajuste le cutoff en fonction du gain (par exemple en oct/dB). Ça permet de garder un son clair ou légèrement crunchy assez brut en cas de gain faible.
+– On peut ajouter un paramètre de link entre les gains. Le paramètre de gain indique alors un gain relatif au principal.
+
+
+
+
 
