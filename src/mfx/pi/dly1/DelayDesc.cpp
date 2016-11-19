@@ -57,7 +57,7 @@ DelayDesc::DelayDesc ()
 {
 	init_level (false);
 	init_level (true);
-	for (int chn = 0; chn < Cst::_max_nbr_chn; ++chn)
+	for (int chn = 0; chn < Cst::_nbr_lines; ++chn)
 	{
 		init_time (chn);
 		init_fdbk (chn);
@@ -176,7 +176,7 @@ void DelayDesc::init_level (bool dry_flag)
 void	DelayDesc::init_time (int chn)
 {
 	assert (chn >= 0);
-	assert (chn < Cst::_max_nbr_chn);
+	assert (chn < Cst::_nbr_lines);
 
 	const char *	name_0 =
 		  (chn == 0)
@@ -199,7 +199,7 @@ void	DelayDesc::init_time (int chn)
 void	DelayDesc::init_fdbk (int chn)
 {
 	assert (chn >= 0);
-	assert (chn < Cst::_max_nbr_chn);
+	assert (chn < Cst::_nbr_lines);
 
 	const char *	name_0 =
 		  (chn == 0)
@@ -224,7 +224,7 @@ void	DelayDesc::init_fdbk (int chn)
 void	DelayDesc::init_filter (int chn)
 {
 	assert (chn >= 0);
-	assert (chn < Cst::_max_nbr_chn);
+	assert (chn < Cst::_nbr_lines);
 
 	const char *	name_0 =
 		  (chn == 0)

@@ -45,8 +45,8 @@ class Cst
 
 public:
 
-	static const int  _max_nbr_chn =    2;
-	static const int  _max_delay   = 4000; // ms
+	static const int  _nbr_lines =    2;
+	static const int  _max_delay = 4000; // ms
 
 
 

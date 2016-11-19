@@ -120,7 +120,6 @@ Delay::Delay ()
 		buf.resize (_tmp_zone_len);
 	}
 
-	_chn_arr.resize (_max_nbr_chn);
 	for (auto &chn_sptr : _chn_arr)
 	{
 		chn_sptr = ChnSPtr (new DelayChn);
@@ -296,9 +295,9 @@ void	Delay::update_param (bool force_flag)
 
 void	Delay::update_param_filter ()
 {
-	for (int chn = 0; chn < Cst::_max_nbr_chn; ++chn)
+	for (int chn = 0; chn < Cst::_nbr_lines; ++chn)
 	{
-		static const std::array <Param, Cst::_max_nbr_chn> par_arr =
+		static const std::array <Param, Cst::_nbr_lines> par_arr =
 		{{
 			Param_L_FILTER,
 			Param_R_FILTER
@@ -347,7 +346,7 @@ void	Delay::update_param_filter ()
 			freq_lo = freq_base * fstb::Approx::exp2 (range_oct * lerp);
 		}
 
-		if (_nbr_chn_out == Cst::_max_nbr_chn && ! _link_flag)
+		if (_nbr_chn_out == Cst::_nbr_lines && ! _link_flag)
 		{
 			_chn_arr [chn]->set_filter_freq (freq_lo, freq_hi);
 		}
@@ -407,9 +406,9 @@ void	Delay::process_block_part (float * const out_ptr_arr [], const float * cons
 		const int      max_len  = _tmp_zone_len;
 		int            work_len = std::min (pos_end - pos_beg, max_len);
 
-		for (int chn_cnt = 0; chn_cnt < _nbr_chn_out; ++chn_cnt)
+		for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
 		{
-			const int      max_len_chn  = _chn_arr [chn_cnt]->get_max_proc_len ();
+			const int      max_len_chn = _chn_arr [chn_cnt]->get_max_proc_len ();
 			work_len = std::min (work_len, max_len_chn);
 		}
 
@@ -470,7 +469,6 @@ void	Delay::process_block_part_stereo (float * const out_ptr_arr [], const float
 	_lvl_out.tick (nbr_spl);
 	const float    lvl_in_end  = float (_lvl_in.get_val ());
 	const float    lvl_out_end = float (_lvl_out.get_val ());
-
 
 	DelayChn &		chn_l = *(_chn_arr [0]);
 	DelayChn &		chn_r = *(_chn_arr [1]);
@@ -542,47 +540,63 @@ void	Delay::process_block_part_multic (float * const out_ptr_arr [], const float
 	const float    fdbk_end    = float (_gain_fdbk_arr [0].get_val ());
 
 	const float    lvl_in_beg  = float (_lvl_in.get_val ());
-	const float    lvl_out_beg = float (_lvl_out.get_val ());
+	float          lvl_out_beg = float (_lvl_out.get_val ());
 	_lvl_in.tick (nbr_spl);
 	_lvl_out.tick (nbr_spl);
 	const float    lvl_in_end  = float (_lvl_in.get_val ());
-	const float    lvl_out_end =  float (_lvl_out.get_val ());
+	float          lvl_out_end =  float (_lvl_out.get_val ());
 
+	if (_nbr_chn_out < Cst::_nbr_lines)
+	{
+		const float    gain = 1.0f / Cst::_nbr_lines;
+		lvl_out_beg *= gain;
+		lvl_out_end *= gain;
+	}
 
 	float *        dly_out_ptr = &_tmp_buf_arr [0] [0];
 	int            chn_in_idx  = 0;
-	const int      chn_in_inc  = (_nbr_chn_in >= _nbr_chn_out) ? 1 : 0;
-	for (int chn_cnt = 0; chn_cnt < _nbr_chn_out; ++chn_cnt)
+	const int      chn_in_inc  = (_nbr_chn_in >= Cst::_nbr_lines) ? 1 : 0;
+	int            chn_out_idx = 0;
+	const int      chn_out_inc = (_nbr_chn_out >= Cst::_nbr_lines) ? 1 : 0;
+	const int      nbr_chn_proc = std::max (_nbr_chn_out, Cst::_nbr_lines);
+	for (int chn_cnt = 0; chn_cnt < nbr_chn_proc; ++chn_cnt)
 	{
-		DelayChn &		chn = *(_chn_arr [chn_cnt]);
+		if (chn_cnt == 0 || chn_out_idx > 0)
+		{
+			dsp::mix::Generic::copy_1_1_vlrauto (
+				out_ptr_arr [chn_out_idx] + pos_beg,
+				in_ptr_arr [chn_in_idx]   + pos_beg,
+				nbr_spl,
+				lvl_in_beg,
+				lvl_in_end
+			);
+		}
 
-		chn.process_block_read (dly_out_ptr, nbr_spl);
+		if (chn_cnt < Cst::_nbr_lines)
+		{
+			DelayChn &		chn = *(_chn_arr [chn_cnt]);
 
-		chn.process_block_write (
-			in_ptr_arr [chn_in_idx] + pos_beg,
-			dly_out_ptr,
-			fdbk_beg,
-			fdbk_end,
-			nbr_spl
-		);
+			chn.process_block_read (dly_out_ptr, nbr_spl);
 
-		dsp::mix::Generic::copy_1_1_vlrauto (
-			out_ptr_arr [chn_cnt]   + pos_beg,
-			in_ptr_arr [chn_in_idx] + pos_beg,
-			nbr_spl,
-			lvl_in_beg,
-			lvl_in_end
-		);
+			chn.process_block_write (
+				in_ptr_arr [chn_in_idx] + pos_beg,
+				dly_out_ptr,
+				fdbk_beg,
+				fdbk_end,
+				nbr_spl
+			);
 
-		dsp::mix::Generic::mix_1_1_vlrauto (
-			out_ptr_arr [chn_cnt] + pos_beg,
-			dly_out_ptr,
-			nbr_spl,
-			lvl_out_beg,
-			lvl_out_end
-		);
+			dsp::mix::Generic::mix_1_1_vlrauto (
+				out_ptr_arr [chn_out_idx] + pos_beg,
+				dly_out_ptr,
+				nbr_spl,
+				lvl_out_beg,
+				lvl_out_end
+			);
+		}
 
-		chn_in_idx += chn_in_inc;
+		chn_in_idx  += chn_in_inc;
+		chn_out_idx += chn_out_inc;
 	}
 }
 
@@ -592,9 +606,9 @@ void	Delay::update_times (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 
-	if (_nbr_chn_out <= Cst::_max_nbr_chn && ! _link_flag)
+	if (! _link_flag)
 	{
-		for (int chn_cnt = 0; chn_cnt < _nbr_chn_out; ++chn_cnt)
+		for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
 		{
 			const float    time_s = compute_delay_time (chn_cnt);
 			_chn_arr [chn_cnt]->set_delay_time (time_s, nbr_spl);
@@ -603,7 +617,7 @@ void	Delay::update_times (int nbr_spl)
 	else
 	{
 		const float    time_s = compute_delay_time (0);
-		for (int chn_cnt = 0; chn_cnt < _nbr_chn_out; ++chn_cnt)
+		for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
 		{
 			_chn_arr [chn_cnt]->set_delay_time (time_s, nbr_spl);
 		}
@@ -615,7 +629,7 @@ void	Delay::update_times (int nbr_spl)
 float	Delay::compute_delay_time (int chn) const
 {
 	assert (chn >= 0);
-	assert (chn < Cst::_max_nbr_chn);
+	assert (chn < Cst::_nbr_lines);
 
 	return _delay_time_arr [chn];
 }

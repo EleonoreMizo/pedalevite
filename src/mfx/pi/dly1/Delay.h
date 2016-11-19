@@ -81,7 +81,7 @@ private:
 	static const int  _tmp_zone_len = 1024;   // Shared temporary zone for all the delay channels
 
 	typedef std::shared_ptr <DelayChn> ChnSPtr;
-	typedef std::vector <ChnSPtr>      ChnArray;
+	typedef std::array <ChnSPtr, Cst::_nbr_lines> ChnArray;
 
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
@@ -118,7 +118,7 @@ private:
 	               _tmp_chn_buf;
 	std::array <std::vector <float>, 2>	// Mixing buffer. Size = TMP_ZONE_LEN
 	               _tmp_buf_arr;
-	std::array <dsp::InertiaLin, Cst::_max_nbr_chn>		// Feedback level. Natural value
+	std::array <dsp::InertiaLin, Cst::_nbr_lines>		// Feedback level. Natural value
 	               _gain_fdbk_arr;
 	dsp::InertiaLin
 	               _cross_fdbk;
@@ -126,7 +126,7 @@ private:
 	               _lvl_in;
 	dsp::InertiaLin
 	               _lvl_out;
-	std::array <float, Cst::_max_nbr_chn>
+	std::array <float, Cst::_nbr_lines>
 	               _delay_time_arr;
 	bool           _link_flag;
 
