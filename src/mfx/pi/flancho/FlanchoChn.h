@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include	"mfx/dsp/ctrl/lfo/LfoModule.h"
+#include "mfx/dsp/iir/OnePole.h"
 #include	"mfx/dsp/dly/DelayLine.h"
 #include	"mfx/dsp/dly/DelayLineData.h"
 #include	"mfx/dsp/dly/DelayLineReader.h"
@@ -125,6 +126,8 @@ private:
 		dsp::ctrl::lfo::LfoModule
 		               _lfo;
 		double         _rel_phase; // Relative to the channel phase. 1 is a whole round, but the variable can contain any positive value.
+		dsp::iir::OnePole
+							_hpf;
 	};
 
 	typedef	std::array <Voice, Cst::_max_nbr_voices>	VoiceArr;
@@ -170,7 +173,7 @@ private:
 	double         _sat_out_a;
 	double         _sat_out_b;
 
-	dsp::dyn::EnvFollowerRms
+	dsp::dyn::EnvFollowerRms      // Not used actually
 	               _fdbk_env;
 
 

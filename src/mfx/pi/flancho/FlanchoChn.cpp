@@ -24,8 +24,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/rspl/InterpolatorInterface.h"
+#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Generic.h"
+#include "mfx/dsp/rspl/InterpolatorInterface.h"
 #include "mfx/pi/flancho/FlanchoChn.h"
 
 #include <algorithm>
@@ -117,10 +118,23 @@ void	FlanchoChn::set_sample_freq (double sample_freq)
 
 	_dly_line.set_sample_freq (_sample_freq, 0);
 
+	static const float   b_s [2] = { 0, 1 };
+	static const float   a_s [2] = { 1, 1 };
+	float                b_z [2];
+	float                a_z [2];
+	dsp::iir::TransSZBilin::map_s_to_z_one_pole (
+		b_z, a_z,
+		b_s, a_s,
+		80.0f,         // HPF cutoff
+		_sample_freq
+	);
+
 	for (int v_cnt = 0; v_cnt < Cst::_max_nbr_voices; ++v_cnt)
 	{
 		Voice &			voice = _voice_arr [v_cnt];
 		voice._lfo.set_sample_freq (_sample_freq);
+		voice._hpf.set_z_eq (b_z, a_z);
+		voice._hpf.clear_buffers ();
 	}
 
 	_fdbk_env.set_sample_freq (sample_freq);
@@ -348,6 +362,7 @@ void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], long nb
 				{
 					// Feedback processing
 					val *= float (fdbk_cur);
+					val = voice._hpf.process_sample (val);
 					val += in_ptr [block_pos];
 					_dly_line.push_sample (val);
 				}
@@ -443,7 +458,10 @@ void	FlanchoChn::clear_buffers ()
 		const double   delay_time_new = compute_delay_time (voice._lfo);
 		voice._dly_reader.set_delay_time (delay_time_new, 0);
 		voice._dly_reader.clear_buffers ();
+
+		voice._hpf.clear_buffers ();
 	}
+
 
 	_feedback_old = _feedback;
 }
