@@ -105,7 +105,7 @@ FlanchoDesc::FlanchoDesc ()
 
 	// Waveform Type
 	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Sine\nTriangle\nParabola\nRamp up\nRamp down\nRandom",
+		"Sine\nTriangle\nParabola\nInv.para\nRamp up\nRamp down\nRandom",
 		"T\nWf.T\nWaveform\nWaveform type",
 		"",
 		0,

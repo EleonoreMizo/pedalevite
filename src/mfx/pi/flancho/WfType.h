@@ -44,6 +44,7 @@ enum WfType
 	WfType_SINE = 0,
 	WfType_TRI,
 	WfType_PARABOLA,
+	WfType_PARABOLA_INV,
 	WfType_RAMP_UP,
 	WfType_RAMP_DOWN,
 	WfType_RND,
