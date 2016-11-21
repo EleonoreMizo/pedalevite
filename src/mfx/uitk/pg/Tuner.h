@@ -108,6 +108,7 @@ private:
 	ui::LedInterface &
 	               _led;
 	const int      _leg_beg;
+	Model *        _model_ptr;    // 0 = not set
 	const View *   _view_ptr;     // 0 = not set
 	PageMgrInterface *            // 0 = not set
 	               _page_ptr;

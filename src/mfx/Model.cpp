@@ -506,6 +506,25 @@ void	Model::set_master_vol (double vol)
 
 
 
+void	Model::set_tuner (bool tuner_flag)
+{
+	_tuner_flag = tuner_flag;
+	if (! _tuner_flag)
+	{
+		_tuner_ptr   = 0;
+		_tuner_pi_id = -1;
+	}
+
+	apply_settings ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_tuner (_tuner_flag);
+	}
+}
+
+
+
 int	Model::add_slot ()
 {
 	const int      slot_id = _preset_cur.gen_slot_id ();
@@ -1804,19 +1823,7 @@ void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
 
 void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
 {
-	_tuner_flag = ! _tuner_flag;
-	if (! _tuner_flag)
-	{
-		_tuner_ptr   = 0;
-		_tuner_pi_id = -1;
-	}
-
-	apply_settings ();
-
-	if (_obs_ptr != 0)
-	{
-		_obs_ptr->set_tuner (_tuner_flag);
-	}
+	set_tuner (! _tuner_flag);
 }
 
 

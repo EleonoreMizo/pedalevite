@@ -53,6 +53,7 @@ namespace pg
 
 MenuMain::MenuMain (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
+,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()
@@ -61,6 +62,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 ,	_edit_bank_sptr (  new NText (Entry_BANKS ))
 ,	_edit_layout_sptr (new NText (Entry_LAYOUT))
 ,	_edit_levels_sptr (new NText (Entry_LEVELS))
+,	_tuner_sptr (      new NText (Entry_TUNER ))
 ,	_reboot_sptr (     new NText (Entry_REBOOT))
 ,	_reboot_arg ()
 ,	_layout_arg ()
@@ -69,12 +71,14 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 	_edit_bank_sptr  ->set_justification (0.5f, 0, false);
 	_edit_layout_sptr->set_justification (0.5f, 0, false);
 	_edit_levels_sptr->set_justification (0.5f, 0, false);
+	_tuner_sptr      ->set_justification (0.5f, 0, false);
 	_reboot_sptr     ->set_justification (0.5f, 0, false);
 
 	_edit_prog_sptr  ->set_text ("Edit Program");
 	_edit_bank_sptr  ->set_text ("Banks");
 	_edit_layout_sptr->set_text ("Pedal layout");
 	_edit_levels_sptr->set_text ("Volume & Levels");
+	_tuner_sptr      ->set_text ("Tuner");
 	_reboot_sptr     ->set_text ("Restart");
 }
 
@@ -86,6 +90,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 
 void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
+	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
@@ -135,6 +140,7 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_edit_bank_sptr  ->set_font (fnt_m);
 	_edit_layout_sptr->set_font (fnt_m);
 	_edit_levels_sptr->set_font (fnt_m);
+	_tuner_sptr      ->set_font (fnt_m);
 	_reboot_sptr     ->set_font (fnt_m);
 
 	const int      x_mid =  _page_size [0]      >> 1;
@@ -145,18 +151,21 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_edit_bank_sptr  ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_edit_layout_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_edit_levels_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
+	_tuner_sptr      ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_reboot_sptr     ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 
 	_edit_prog_sptr  ->set_coord (Vec2d (x_mid, h_m * 0));
 	_edit_bank_sptr  ->set_coord (Vec2d (x_mid, h_m * 1));
 	_edit_layout_sptr->set_coord (Vec2d (x_mid, h_m * 2));
 	_edit_levels_sptr->set_coord (Vec2d (x_mid, h_m * 3));
-	_reboot_sptr     ->set_coord (Vec2d (x_mid, h_m * 4));
+	_tuner_sptr      ->set_coord (Vec2d (x_mid, h_m * 4));
+	_reboot_sptr     ->set_coord (Vec2d (x_mid, h_m * 5));
 
 	_page_ptr->push_back (_edit_prog_sptr  );
 	_page_ptr->push_back (_edit_bank_sptr  );
 	_page_ptr->push_back (_edit_layout_sptr);
 	_page_ptr->push_back (_edit_levels_sptr);
+	_page_ptr->push_back (_tuner_sptr      );
 	_page_ptr->push_back (_reboot_sptr     );
 
 	PageMgrInterface::NavLocList  nav_list (Entry_NBR_ELT);
@@ -214,6 +223,9 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 				_reboot_arg._choice_arr = { "Cancel", "Restart", "Reboot", "Shutdown" };
 				_page_switcher.call_page (PageType_QUESTION, &_reboot_arg);
 				_state = State_REBOOT;
+				break;
+			case Entry_TUNER:
+				_model_ptr->set_tuner (true);
 				break;
 			default:
 				ret_val = EvtProp_PASS;

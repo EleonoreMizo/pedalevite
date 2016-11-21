@@ -101,6 +101,7 @@ private:
 		Entry_BANKS ,
 		Entry_LAYOUT,
 		Entry_LEVELS,
+		Entry_TUNER,
 		Entry_REBOOT,
 
 		Entry_NBR_ELT
@@ -109,6 +110,7 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	PageSwitcher & _page_switcher;
+	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
@@ -119,6 +121,7 @@ private:
 	TxtSPtr        _edit_bank_sptr;
 	TxtSPtr        _edit_layout_sptr;
 	TxtSPtr        _edit_levels_sptr;
+	TxtSPtr        _tuner_sptr;
 	TxtSPtr        _reboot_sptr;
 
 	Question::QArg _reboot_arg;

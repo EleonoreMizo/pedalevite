@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/LedInterface.h"
+#include "mfx/Model.h"
 #include "mfx/View.h"
 
 #include <cassert>
@@ -56,6 +57,7 @@ Tuner::Tuner (PageSwitcher &page_switcher, ui::LedInterface &led)
 :	_page_switcher (page_switcher)
 ,	_led (led)
 ,	_leg_beg ((led.get_nbr_led () - _nbr_led) >> 1)
+,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()
@@ -79,6 +81,7 @@ Tuner::Tuner (PageSwitcher &page_switcher, ui::LedInterface &led)
 
 void	Tuner::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 {
+	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
@@ -125,6 +128,10 @@ MsgHandlerInterface::EvtProp	Tuner::do_handle_evt (const NodeEvt &evt)
 		const Button   but = evt.get_button ();
 		switch (but)
 		{
+		case Button_E:
+			_model_ptr->set_tuner (false);
+			ret_val = EvtProp_CATCH;
+			break;
 		case Button_U:
 		case Button_L:
 			_scale = Scale ((int (_scale) + Scale_NBR_ELT - 1) % Scale_NBR_ELT);
