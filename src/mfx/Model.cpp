@@ -75,7 +75,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_layout_cur ()
 ,	_pi_id_map ()
 ,	_pedal_state_arr ()
-,	_hold_time (std::chrono::seconds (2))
+,	_hold_time (std::chrono::seconds (1))
 ,	_edit_flag (false)
 ,	_edit_preset_flag (false)
 ,	_tuner_flag (false)
