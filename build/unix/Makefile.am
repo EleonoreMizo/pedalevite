@@ -511,6 +511,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/phase1/Phaser.h \
         ../../src/mfx/pi/phase1/PhaserDesc.cpp \
         ../../src/mfx/pi/phase1/PhaserDesc.h \
+        ../../src/mfx/pi/spkem/Param.h \
+        ../../src/mfx/pi/spkem/SpeakerEmu.cpp \
+        ../../src/mfx/pi/spkem/SpeakerEmu.h \
+        ../../src/mfx/pi/spkem/SpeakerEmuDesc.cpp \
+        ../../src/mfx/pi/spkem/SpeakerEmuDesc.h \
         ../../src/mfx/pi/trem1/Param.h \
         ../../src/mfx/pi/trem1/Tremolo.cpp \
         ../../src/mfx/pi/trem1/Tremolo.h \

@@ -56,6 +56,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/phase1/Phaser.h"
 #include "mfx/pi/phase1/PhaserDesc.h"
+#include "mfx/pi/spkem/SpeakerEmu.h"
+#include "mfx/pi/spkem/SpeakerEmuDesc.h"
 #include "mfx/pi/trem1/Tremolo.h"
 #include "mfx/pi/trem1/TremoloDesc.h"
 #include "mfx/pi/tuner/Tuner.h"
@@ -97,7 +99,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc    , mfx::pi::lpfs::Squeezer          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc         , mfx::pi::lfo1::Lfo               >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::envf::EnvFollowDesc   , mfx::pi::envf::EnvFollow         >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::dist2::Disto2xDesc    , mfx::pi::dist2::Disto2x          >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::dist2::Disto2xDesc    , mfx::pi::dist2::Disto2x          >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::spkem::SpeakerEmuDesc , mfx::pi::spkem::SpeakerEmu       >::create ()
 		};
 
 		fact_list = l;

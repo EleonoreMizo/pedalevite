@@ -512,6 +512,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phaser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\spkem\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\spkem\SpeakerEmu.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\ToolsParam.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\EventNoteOff.h" />
@@ -804,6 +807,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phaser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmu.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginDescInterface.cpp" />
