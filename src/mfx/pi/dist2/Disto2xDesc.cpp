@@ -221,7 +221,7 @@ void	Disto2xDesc::register_stage (int stage, int base)
 		"Stage %d Bias\nS%d Bias",
 		"%",
 		stage,
-		"%+5.1f"
+		"%+6.1f"
 	);
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
 	_desc_set.add_glob (base + ParamStage_BIAS, lin_ptr);
