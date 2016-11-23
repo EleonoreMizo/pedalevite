@@ -127,6 +127,7 @@ void	BiquadPackSimd <VD, VS>::reserve (int nbr_stages, int nbr_chn)
 		for (int pos = max_nbr_pack_old; pos < max_nbr_pack; ++pos)
 		{
 			Pack4 &     pack = _pack_list [pos];
+			pack.neutralise ();
 			pack.set_ramp_time (_ramp_len);
 			pack.clear_buffers ();
 		}
