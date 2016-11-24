@@ -46,6 +46,7 @@ enum Param
 	Param_TREBLE_LVL,
 	Param_TREBLE_FREQ,
 	Param_COMB_LVL,
+	Param_CHANNELS,
 
 	Param_NBR_ELT
 

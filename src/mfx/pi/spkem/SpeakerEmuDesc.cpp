@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/spkem/SpeakerEmuDesc.h"
 #include "mfx/pi/spkem/Param.h"
+#include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplLin.h"
 
@@ -105,6 +106,17 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 	);
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
 	_desc_set.add_glob (Param_COMB_LVL, lin_ptr);
+
+	// Channels
+	param::TplEnum *  enu_ptr = new param::TplEnum (
+		"All\nLeft\nRight",
+		"Channels\nChn",
+		"",
+		0,
+		"%s"
+	);
+	assert (enu_ptr->get_nat_max () == Channels_NBR_ELT - 1);
+	_desc_set.add_glob (Param_CHANNELS, enu_ptr);
 }
 
 

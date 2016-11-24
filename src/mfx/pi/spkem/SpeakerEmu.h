@@ -122,6 +122,7 @@ private:
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 	float          _inv_fs;             // 1 / _sample_freq
 	int            _nbr_chn;            // 0 = requires update
+	uint32_t       _channels;           // Bitmask
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;

@@ -65,6 +65,7 @@ SpeakerEmu::SpeakerEmu ()
 ,	_sample_freq (0)
 ,	_inv_fs (0)
 ,	_nbr_chn (0)
+,	_channels (~uint32_t (0))
 ,	_param_change_flag ()
 ,	_biq_pack ()
 ,	_stage_arr ()
@@ -89,12 +90,14 @@ SpeakerEmu::SpeakerEmu ()
 	_state_set.set_val_nat (desc_set, Param_TREBLE_LVL , powf (10.f, -32 / 20.f));
 	_state_set.set_val_nat (desc_set, Param_TREBLE_FREQ, 6500);
 	_state_set.set_val_nat (desc_set, Param_COMB_LVL   , 0.125f);
+	_state_set.set_val_nat (desc_set, Param_CHANNELS   , SpeakerEmuDesc::Channels_ALL);
 
 	_state_set.add_observer (Param_MID_LVL    , _param_change_flag);
 	_state_set.add_observer (Param_MID_FREQ   , _param_change_flag);
 	_state_set.add_observer (Param_TREBLE_LVL , _param_change_flag);
 	_state_set.add_observer (Param_TREBLE_FREQ, _param_change_flag);
 	_state_set.add_observer (Param_COMB_LVL   , _param_change_flag);
+	_state_set.add_observer (Param_CHANNELS   , _param_change_flag);
 
 	set_peak (   0,   300, powf (10,  -1.2f / 20.f), 1.3f );
 	set_peak (   1,  1000, powf (10,   2.2f / 20.f), 1.5f );
@@ -240,14 +243,30 @@ void	SpeakerEmu::do_process_block (ProcInfo &proc)
 	}
 	while (pos < proc._nbr_spl);
 
-	// Copies the remaining output channels
-	for (int chn_index = nbr_chn_in; chn_index < nbr_chn_out; ++chn_index)
+	// Duplicates the remaining output channels
+	for (int chn_index = 0; chn_index < nbr_chn_out; ++chn_index)
 	{
-		dsp::mix::Align::copy_1_1 (
-			proc._dst_arr [chn_index],
-			proc._dst_arr [        0],
-			proc._nbr_spl
-		);
+		const bool     proc_flag = (((_channels >> chn_index) & 1) != 0);
+		if (chn_index >= nbr_chn_in || ! proc_flag)
+		{
+			const float *  from_ptr = proc._dst_arr [0];
+			if (! proc_flag)
+			{
+				if (chn_index >= nbr_chn_in)
+				{
+					from_ptr = proc._src_arr [0];
+				}
+				else
+				{
+					from_ptr = proc._src_arr [chn_index];
+				}
+			}
+			dsp::mix::Align::copy_1_1 (
+				proc._dst_arr [chn_index],
+				from_ptr,
+				proc._nbr_spl
+			);
+		}
 	}
 }
 
@@ -288,6 +307,18 @@ void	SpeakerEmu::update_param (bool force_flag)
 		}
 
 		update_filter ();
+
+		const SpeakerEmuDesc::Channels   chn_val = static_cast <SpeakerEmuDesc::Channels> (
+			fstb::round_int (_state_set.get_val_tgt_nat (Param_CHANNELS))
+		);
+		if (chn_val == SpeakerEmuDesc::Channels_ALL)
+		{
+			_channels = ~uint32_t (0);
+		}
+		else
+		{
+			_channels = uint32_t (chn_val);
+		}
 	}
 }
 
