@@ -157,6 +157,9 @@
     <Filter Include="mfx\pi\spkem">
       <UniqueIdentifier>{b5a82214-33cc-4ae3-8d84-2d38427e36bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\tost">
+      <UniqueIdentifier>{dda3c7ee-6ef4-4d10-8b89-d0a7727bc8dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1809,6 +1812,12 @@
     <ClInclude Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.h">
       <Filter>mfx\pi\spkem</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereo.h">
+      <Filter>mfx\pi\tost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.h">
+      <Filter>mfx\pi\tost</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2494,6 +2503,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.cpp">
       <Filter>mfx\pi\spkem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereo.cpp">
+      <Filter>mfx\pi\tost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp">
+      <Filter>mfx\pi\tost</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

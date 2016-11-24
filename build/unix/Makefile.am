@@ -516,6 +516,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/spkem/SpeakerEmu.h \
         ../../src/mfx/pi/spkem/SpeakerEmuDesc.cpp \
         ../../src/mfx/pi/spkem/SpeakerEmuDesc.h \
+        ../../src/mfx/pi/tost/ToStereo.cpp \
+        ../../src/mfx/pi/tost/ToStereo.h \
+        ../../src/mfx/pi/tost/ToStereoDesc.cpp \
+        ../../src/mfx/pi/tost/ToStereoDesc.h \
         ../../src/mfx/pi/trem1/Param.h \
         ../../src/mfx/pi/trem1/Tremolo.cpp \
         ../../src/mfx/pi/trem1/Tremolo.h \
