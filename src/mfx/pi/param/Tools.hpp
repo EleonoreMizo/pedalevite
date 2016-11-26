@@ -100,18 +100,19 @@ void	Tools::cut_str_bestfit (size_t &pos_utf8, size_t &len_utf8, size_t &len_met
 	len_utf8   = 0;
 	len_metric = 0;
 
-	size_t         sel_label_len_ucs = 0;
-	size_t         sel_label_len_utf = 0;
-	size_t         sel_label_len_met = 0;
-	size_t         sel_label_len_brk = 0; // Metric
-	size_t         sel_label_pos     = 0;
-	size_t         cur_label_len_ucs = 0;
-	size_t         cur_label_len_utf = 0;
-	size_t         cur_label_len_met = 0;
-	size_t         cur_label_len_brk = 0; // Metric
-	size_t         cur_label_pos     = 0;
-	size_t         pos               = 0;
-	bool           exit_flag         = false;
+	struct LenInfo
+	{
+		size_t         _len_ucs = 0;
+		size_t         _len_utf = 0;
+		size_t         _len_met = 0;
+		size_t         _len_brk = 0; // Metric
+		size_t         _pos     = 0;
+	};
+
+	LenInfo        sel;
+	LenInfo        cur;
+	size_t         pos       = 0;
+	bool           exit_flag = false;
 	do
 	{
 		const char		c = src_list_0 [pos];
@@ -119,26 +120,23 @@ void	Tools::cut_str_bestfit (size_t &pos_utf8, size_t &len_utf8, size_t &len_met
 		fstb::txt::utf8::Codec8::get_char_seq_len_utf (c_len, c);
 		if (c == delimiter || c == '\0')
 		{
-			if (cur_label_len_ucs > 0)
+			if (cur._len_ucs > 0)
 			{
-				if (   (   cur_label_len_ucs > sel_label_len_ucs
-				        && cur_label_len_met <= max_len_metric)
-				    || (   cur_label_len_ucs < sel_label_len_ucs
-				        && sel_label_len_met > max_len_metric))
+				if (   (   cur._len_ucs >  sel._len_ucs
+				        && cur._len_met <= max_len_metric)
+				    || (   cur._len_ucs <  sel._len_ucs
+				        && sel._len_met >  max_len_metric)
+				    ||     sel._len_ucs == 0)
 				{
-					sel_label_len_ucs = cur_label_len_ucs;
-					sel_label_len_utf = cur_label_len_utf;
-					sel_label_len_met = cur_label_len_met;
-					sel_label_len_brk = cur_label_len_brk;
-					sel_label_pos     = cur_label_pos;
+					sel = cur;
 				}
 			}
 
-			cur_label_len_ucs = 0;
-			cur_label_len_utf = 0;
-			cur_label_len_met = 0;
-			cur_label_len_brk = 0;
-			cur_label_pos     = pos + c_len;
+			cur._len_ucs = 0;
+			cur._len_utf = 0;
+			cur._len_met = 0;
+			cur._len_brk = 0;
+			cur._pos     = pos + c_len;
 
 			if (c == '\0')
 			{
@@ -148,31 +146,31 @@ void	Tools::cut_str_bestfit (size_t &pos_utf8, size_t &len_utf8, size_t &len_met
 
 		else
 		{
-			if (cur_label_len_met <= max_len_metric)
+			if (cur._len_met <= max_len_metric)
 			{
 				char32_t       c_ucs4;
 				fstb::txt::utf8::Codec8::decode_char (c_ucs4, src_list_0 + pos);
 				const size_t   met_len = size_t ((metric_obj.*metric_fnc) (c_ucs4));
 
-				if (cur_label_len_met + met_len <= max_len_metric)
+				if (cur._len_met + met_len <= max_len_metric)
 				{
-					cur_label_len_utf += c_len;
-					cur_label_len_brk += met_len;
+					cur._len_utf += c_len;
+					cur._len_brk += met_len;
 				}
-				cur_label_len_met += met_len;
+				cur._len_met += met_len;
 			}
-			++ cur_label_len_ucs;
+			++ cur._len_ucs;
 		}
 
 		pos += c_len;
 	}
 	while (! exit_flag);
 
-	assert (sel_label_len_utf <= max_len_metric);
+	assert (sel._len_utf <= max_len_metric);
+	pos_utf8   = sel._pos;
+	len_utf8   = sel._len_utf;
+	len_metric = sel._len_brk;
 
-	pos_utf8   = sel_label_pos;
-	len_utf8   = sel_label_len_utf;
-	len_metric = sel_label_len_brk;
 }
 
 
