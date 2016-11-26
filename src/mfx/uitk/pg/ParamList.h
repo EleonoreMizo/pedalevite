@@ -117,6 +117,7 @@ private:
 	WinSPtr        _menu_sptr;    // Contains 1 entry (selectable) + the parameter list
 	TxtSPtr        _fx_setup_sptr;
 	TxtArray       _param_list;   // Parameters are grouped by pairs (name/value). First the mixer parameters, then the plug-in parameters.
+	bool           _mixer_flag;
 
 
 

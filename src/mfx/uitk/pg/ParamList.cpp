@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/param/Tools.h"
+#include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/uitk/pg/ParamList.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
@@ -66,6 +67,7 @@ ParamList::ParamList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_menu_sptr (new NWindow (Entry_WINDOW))
 ,	_fx_setup_sptr (new NText (Entry_FX_SETUP))
 ,	_param_list ()
+,	_mixer_flag (true)
 {
 	_fx_setup_sptr->set_text ("FX Setup");
 }
@@ -234,9 +236,20 @@ void	ParamList::set_param_info ()
 
 	const doc::PluginSettings *   settings_main_ptr = 0;
 	auto           it_settings = slot._settings_all.find (slot._pi_model);
+	_mixer_flag = true;
 	if (it_settings != slot._settings_all.end ())
 	{
 		settings_main_ptr = &it_settings->second;
+		const mfx::piapi::PluginDescInterface &   desc =
+			_model_ptr->get_model_desc (slot._pi_model);
+		int         nbr_i = 1;
+		int         nbr_o = 1;
+		int         nbr_s = 0;
+		desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
+		if (nbr_i == 0 || nbr_o == 0)
+		{
+			_mixer_flag = false;
+		}
 	}
 
 	// Order: mixer, main
@@ -247,8 +260,8 @@ void	ParamList::set_param_info ()
 	}};
 	const std::array <int, PiType_NBR_ELT> nbr_param_arr =
 	{{
-		int (slot._settings_mixer._param_list.size ()),
-		(settings_main_ptr == 0) ? 0 : int (settings_main_ptr->_param_list.size ())
+		(_mixer_flag) ? int (slot._settings_mixer._param_list.size ()) : 0,
+		(settings_main_ptr != 0) ? int (settings_main_ptr->_param_list.size ()) : 0
 	}};
 	const int      nbr_param_tot = nbr_param_arr [0] + nbr_param_arr [1];
 
@@ -372,7 +385,7 @@ int	ParamList::conv_param_to_node_id (PiType type, int index) const
 	assert (index >= 0);
 
 	int            line_pos = index;
-	if (type == PiType_MAIN)
+	if (_mixer_flag && type == PiType_MAIN)
 	{
 		line_pos += pi::dwm::Param_NBR_ELT;
 	}
@@ -393,11 +406,12 @@ void	ParamList::conv_node_id_to_param (PiType &type, int &index, int node_id)
 	}
 	else
 	{
+		const int      nbr_param_mix = (_mixer_flag) ? pi::dwm::Param_NBR_ELT : 0;
 		int            line_pos = node_id >> 1;
-		if (line_pos >= pi::dwm::Param_NBR_ELT)
+		if (line_pos >= nbr_param_mix)
 		{
 			type = PiType_MAIN;
-			line_pos -= pi::dwm::Param_NBR_ELT;
+			line_pos -= nbr_param_mix;
 		}
 		index = line_pos;
 	}
