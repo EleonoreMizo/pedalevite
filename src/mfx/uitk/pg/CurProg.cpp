@@ -277,6 +277,8 @@ void	CurProg::do_set_tempo (double bpm)
 void	CurProg::do_select_bank (int index)
 {
 	i_set_bank_nbr (index);
+	const doc::Setup &   setup = _view_ptr->use_setup ();
+	i_set_bank_name (setup._bank_arr [index]._name);
 }
 
 
