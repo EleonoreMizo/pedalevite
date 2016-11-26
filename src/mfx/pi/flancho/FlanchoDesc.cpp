@@ -165,6 +165,16 @@ FlanchoDesc::FlanchoDesc ()
 		"%s"
 	);
 	_desc_set.add_glob (Param_NEGATIVE, enu_ptr);
+
+	// Oversampling
+	enu_ptr = new param::TplEnum (
+		"\xC3\x97" "1\n" "\xC3\x97" "4", // U+00D7 multiplication sign (UTF-8 C3 97)
+		"O\nOvr\nOvrspl\nOversamp\nOversampling\nOversampling rate",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_OVRSPL, enu_ptr);
 }
 
 

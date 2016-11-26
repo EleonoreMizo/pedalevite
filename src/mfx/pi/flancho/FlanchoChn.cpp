@@ -69,7 +69,6 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 ,	_sat_in_b (0)
 ,	_sat_out_a (1)
 ,	_sat_out_b (0)
-,	_fdbk_env ()
 {
 	assert (&interp != 0);
 	assert (dly_buf_ptr != 0);
@@ -105,29 +104,41 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 		voice._lfo.set_type (dsp::ctrl::lfo::LfoModule::Type_SINE);
 	}
 
-	_fdbk_env.set_times (0.003f, 0.100f);
-
 	update_shape ();
 }
 
 
 
-void	FlanchoChn::set_sample_freq (double sample_freq)
+void	FlanchoChn::set_sample_freq (double sample_freq, bool fast_flag, dsp::rspl::InterpolatorInterface &interp)
 {
 	_sample_freq = sample_freq;
 
 	_dly_line.set_sample_freq (_sample_freq, 0);
+	_dly_line.set_interpolator (interp);
 
-	static const float   b_s [2] = { 0, 1 };
-	static const float   a_s [2] = { 1, 1 };
+	const float          hpf_freq = 80; // HPF cutoff
+	static const float   b_s [2]  = { 0, 1 };
+	static const float   a_s [2]  = { 1, 1 };
 	float                b_z [2];
 	float                a_z [2];
-	dsp::iir::TransSZBilin::map_s_to_z_one_pole (
-		b_z, a_z,
-		b_s, a_s,
-		80.0f,         // HPF cutoff
-		_sample_freq
-	);
+	if (fast_flag)
+	{
+		const float    k = dsp::iir::TransSZBilin::compute_k_approx (
+			hpf_freq / float (_sample_freq)
+		);
+		dsp::iir::TransSZBilin::map_s_to_z_one_pole_approx (
+			b_z, a_z, b_s, a_s, k
+		);
+	}
+	else
+	{
+		dsp::iir::TransSZBilin::map_s_to_z_one_pole (
+			b_z, a_z,
+			b_s, a_s,
+			hpf_freq,
+			_sample_freq
+		);
+	}
 
 	for (int v_cnt = 0; v_cnt < Cst::_max_nbr_voices; ++v_cnt)
 	{
@@ -136,8 +147,6 @@ void	FlanchoChn::set_sample_freq (double sample_freq)
 		voice._hpf.set_z_eq (b_z, a_z);
 		voice._hpf.clear_buffers ();
 	}
-
-	_fdbk_env.set_sample_freq (sample_freq);
 
 	update_max_proc_len ();
 }

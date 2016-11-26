@@ -5,6 +5,10 @@
 
 Objects of this class must be aligned on 16-byte boundaries
 
+Ref:
+Scott Wardle, A Hilbert-Transformer Frequency Shifter for Audio,
+First Workshop on Digital Audio Effects DAFx, 1998
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to

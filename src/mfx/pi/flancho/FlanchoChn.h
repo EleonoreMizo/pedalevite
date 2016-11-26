@@ -33,7 +33,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include	"mfx/dsp/dly/DelayLineData.h"
 #include	"mfx/dsp/dly/DelayLineReader.h"
 #include	"mfx/dsp/rspl/InterpolatorOrder0.h"
-#include	"mfx/dsp/dyn/EnvFollowerRms.h"
 #include	"mfx/dsp/shape/MapSaturateBipolar.h"
 #include	"mfx/pi/flancho/Cst.h"
 #include	"mfx/pi/flancho/WfType.h"
@@ -71,7 +70,7 @@ public:
 	explicit       FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_ptr [], long dly_buf_len, float render_buf_ptr [], long render_buf_len);
 	virtual        ~FlanchoChn () = default;
 
-	void           set_sample_freq (double sample_freq);
+	void           set_sample_freq (double sample_freq, bool fast_flag, dsp::rspl::InterpolatorInterface &interp);
 	void           set_rel_phase (double rel_phase);
 
 	void           set_nbr_voices (int nbr_voices);
@@ -172,9 +171,6 @@ private:
 	double         _sat_in_b;
 	double         _sat_out_a;
 	double         _sat_out_b;
-
-	dsp::dyn::EnvFollowerRms      // Not used actually
-	               _fdbk_env;
 
 
 

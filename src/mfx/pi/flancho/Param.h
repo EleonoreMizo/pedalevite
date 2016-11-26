@@ -51,6 +51,7 @@ enum Param
 	Param_PHASE_SET,
 	Param_DRY,
 	Param_NEGATIVE,
+	Param_OVRSPL,
 
 	Param_NBR_ELT
 

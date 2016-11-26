@@ -29,7 +29,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
+#include "fstb/AllocAlign.h"
+#include "mfx/dsp/iir/Downsampler4xSimd.h"
+#include "mfx/dsp/iir/Upsampler4xSimd.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
+#include "mfx/dsp/rspl/InterpolatorLerp.h"
 #include "mfx/pi/flancho/FlanchoChn.h"
 #include "mfx/pi/flancho/FlanchoDesc.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -80,12 +84,27 @@ protected:
 private:
 
 	static const int  _update_resol = 64;  // Must be a multiple of 4
+	static const int  _ovrspl       = 4;
+	static const int  _nbr_coef_42  = 3;
+	static const int  _nbr_coef_21  = 8;
 
-	typedef std::shared_ptr <FlanchoChn>       ChnSPtr;
-	typedef std::array <ChnSPtr, _max_nbr_chn> ChnArray;
+	typedef std::shared_ptr <FlanchoChn> ChnSPtr;
+
+	typedef dsp::iir::Upsampler4xSimd <_nbr_coef_42, _nbr_coef_21> UpSpl;
+	typedef dsp::iir::Downsampler4xSimd <_nbr_coef_42, _nbr_coef_21> DwSpl;
 
 	typedef	std::vector <float>	Buffer;
 
+	class Channel
+	{
+	public:
+		UpSpl          _us;
+		DwSpl          _ds;
+		ChnSPtr        _fchn_sptr;
+	};
+	typedef std::vector <Channel, fstb::AllocAlign <Channel, 16> > ChnArray;
+
+	void           init_coef ();
 	void				update_param (bool force_flag = false);
 	void				update_lfo_period ();
 
@@ -111,18 +130,32 @@ private:
 	               _param_change_flag_phase_set;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_dry;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_ovrspl;
 
 	ChnArray			_chn_arr;
 	dsp::rspl::InterpolatorHermite43
-						_interp;
+						_interp_cubic;
+	dsp::rspl::InterpolatorLerp
+	               _interp_linear;
 	Buffer			_buf_tmp;
 	Buffer			_buf_render;
+	Buffer         _buf_ovrspl_src;
+	Buffer         _buf_ovrspl_dst;
 
 	// Cached
 	int				_nbr_chn_in;			// > 0. 0 = not set
 	int				_nbr_chn_out;			// > 0. 0 = not set
 	bool           _dry_flag;
 	bool           _neg_flag;
+	bool           _ovrspl_flag;
+	int            _ovrspl_cur;         // Current oversampling rate (1 or _ovrspl)
+
+	static bool    _coef_init_flag;
+	static std::array <double, _nbr_coef_42>
+	               _coef_42;
+	static std::array <double, _nbr_coef_21>
+	               _coef_21;
 
 
 

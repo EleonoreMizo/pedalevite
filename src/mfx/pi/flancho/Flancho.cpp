@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/flancho/Cst.h"
 #include "mfx/pi/flancho/Flancho.h"
@@ -63,14 +64,20 @@ Flancho::Flancho ()
 ,	_param_change_flag_voices ()
 ,	_param_change_flag_phase_set ()
 ,	_param_change_flag_dry ()
-,	_chn_arr ()
-,	_interp ()
+,	_param_change_flag_ovrspl ()
+,	_chn_arr (_max_nbr_chn)
+,	_interp_cubic ()
+,	_interp_linear ()
 ,	_buf_tmp (1024)
 ,	_buf_render (1024)
+,	_buf_ovrspl_src ()
+,	_buf_ovrspl_dst ()
 ,	_nbr_chn_in (0)
 ,	_nbr_chn_out (0)
 ,	_dry_flag (false)
 ,	_neg_flag (false)
+,	_ovrspl_flag (false)
+,	_ovrspl_cur (1)
 {
 	dsp::mix::Align::setup ();
 
@@ -87,6 +94,7 @@ Flancho::Flancho ()
 	_state_set.set_val_nat (desc_set, Param_DRY       , 1);
 	_state_set.set_val_nat (desc_set, Param_NEGATIVE  , 0);
 	_state_set.set_val_nat (desc_set, Param_PHASE_SET , 0);
+	_state_set.set_val_nat (desc_set, Param_OVRSPL    , 0);
 
 	_state_set.add_observer (Param_SPEED     , _param_change_flag_speed);
 	_state_set.add_observer (Param_DEPTH     , _param_change_flag_depth_fdbk);
@@ -98,6 +106,7 @@ Flancho::Flancho ()
 	_state_set.add_observer (Param_DRY       , _param_change_flag_dry);
 	_state_set.add_observer (Param_NEGATIVE  , _param_change_flag_dry);
 	_state_set.add_observer (Param_PHASE_SET , _param_change_flag_phase_set);
+	_state_set.add_observer (Param_OVRSPL    , _param_change_flag_ovrspl);
 
 	_param_change_flag_depth_fdbk.add_observer (_param_change_flag);
 	_param_change_flag_wf        .add_observer (_param_change_flag);
@@ -106,19 +115,25 @@ Flancho::Flancho ()
 	_param_change_flag_voices    .add_observer (_param_change_flag);
 	_param_change_flag_phase_set .add_observer (_param_change_flag);
 	_param_change_flag_dry       .add_observer (_param_change_flag);
+	_param_change_flag_ovrspl    .add_observer (_param_change_flag);
 
 //	_state_set.set_ramp_time (Param_, 0.010);
 
+	init_coef ();
 	for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 	{
-		_chn_arr [chn_cnt] = ChnSPtr (new FlanchoChn (
-			_interp,
+		Channel &      chn = _chn_arr [chn_cnt];
+		chn._fchn_sptr = ChnSPtr (new FlanchoChn (
+			_interp_cubic,
 			&_buf_tmp [0],
 			long (_buf_tmp.size ()),
 			&_buf_render [0],
 			long (_buf_render.size ())
 		));
-		_chn_arr [chn_cnt]->set_rel_phase (0);
+		chn._fchn_sptr->set_rel_phase (0);
+
+		chn._us.set_coefs (&_coef_42 [0], &_coef_21 [0]);
+		chn._ds.set_coefs (&_coef_42 [0], &_coef_21 [0]);
 	}
 }
 
@@ -153,6 +168,10 @@ int	Flancho::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 
+	const int      mbl_ovrspl = max_buf_len * _ovrspl;
+	_buf_ovrspl_src.resize (mbl_ovrspl);
+	_buf_ovrspl_dst.resize (mbl_ovrspl);
+
 	_param_change_flag_depth_fdbk.set ();
 	_param_change_flag_wf.set ();
 	_state_set.use_state (Param_SPEED     ).use_notif_flag ().set ();
@@ -162,8 +181,16 @@ int	Flancho::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 	{
-		FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-		chn.set_sample_freq (_sample_freq);
+		Channel &		chn = _chn_arr [chn_cnt];
+
+		// Sets the oversampled rate first to make sure enough buffer is
+		// reserved.
+		chn._fchn_sptr->set_sample_freq (
+			_sample_freq * _ovrspl, true, _interp_linear
+		);
+		chn._fchn_sptr->set_sample_freq (
+			_sample_freq, false, _interp_cubic
+		);
 	}
 
 	_nbr_chn_in  = 0;
@@ -173,8 +200,10 @@ int	Flancho::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 	{
-		FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-		chn.clear_buffers ();
+		Channel &		chn = _chn_arr [chn_cnt];
+		chn._fchn_sptr->clear_buffers ();
+		chn._ds.clear_buffers ();
+		chn._us.clear_buffers ();
 	}
 
 	_state = State_ACTIVE;
@@ -200,7 +229,7 @@ void	Flancho::do_process_block (ProcInfo &proc)
 
 		for (int chn_cnt = 0; chn_cnt < nbr_chn_out; ++chn_cnt)
 		{
-			_chn_arr [chn_cnt]->set_rel_phase (chn_cnt * phase_mult);
+			_chn_arr [chn_cnt]._fchn_sptr->set_rel_phase (chn_cnt * phase_mult);
 		}
 	}
 
@@ -237,20 +266,41 @@ void	Flancho::do_process_block (ProcInfo &proc)
 		int            chn_in_inc = (_nbr_chn_in > _nbr_chn_out) ? 1 : 0;
 		for (int chn_cnt = 0; chn_cnt < _nbr_chn_out; ++chn_cnt)
 		{
-			FlanchoChn &   chn = *(_chn_arr [chn_cnt]);
-			chn.process_block (
-				proc._dst_arr [chn_cnt] + pos,
-				proc._src_arr [chn_in ] + pos,
-				work_len
+			Channel &      chn = _chn_arr [chn_cnt];
+
+			const float *  src_ptr      = proc._src_arr [chn_in ] + pos;
+			float *        dst_ptr      = proc._dst_arr [chn_cnt] + pos;
+			const float *  src_proc_ptr = src_ptr;
+			float *        dst_proc_ptr = dst_ptr;
+			int            len_mult     = 1;
+			if (_ovrspl_flag)
+			{
+				if (chn_in_inc > 0 || chn_cnt == 0)
+				{
+					chn._us.process_block (
+						&_buf_ovrspl_src [0], src_ptr, work_len
+					);
+				}
+				src_proc_ptr = &_buf_ovrspl_src [0];
+				dst_proc_ptr = &_buf_ovrspl_dst [0];
+				len_mult     = _ovrspl;
+			}
+
+			chn._fchn_sptr->process_block (
+				dst_proc_ptr, src_proc_ptr, work_len * len_mult
 			);
 			if (_dry_flag)
 			{
 				dsp::mix::Align::mix_1_1 (
-					proc._dst_arr [chn_cnt] + pos,
-					proc._src_arr [chn_in ] + pos,
-					work_len
+					dst_proc_ptr, src_proc_ptr, work_len * len_mult
 				);
 			}
+
+			if (_ovrspl_flag)
+			{
+				chn._ds.process_block (dst_ptr, dst_proc_ptr, work_len);
+			}
+
 			chn_in += chn_in_inc;
 		}
 
@@ -265,10 +315,46 @@ void	Flancho::do_process_block (ProcInfo &proc)
 
 
 
+void	Flancho::init_coef ()
+{
+	if (! _coef_init_flag)
+	{
+		hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
+			&_coef_42 [0], _nbr_coef_42, 1.0 / 5
+		);
+		hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
+			&_coef_21 [0], _nbr_coef_21, 1.0 / 100
+		);
+
+		_coef_init_flag = true;
+	}
+}
+
+
+
 void	Flancho::update_param (bool force_flag)
 {
 	if (_param_change_flag (true) || force_flag)
 	{
+		if (_param_change_flag_ovrspl (true) || force_flag)
+		{
+			const bool     ovrspl_old_flag = _ovrspl_flag;
+			_ovrspl_flag = (_state_set.get_val_tgt_nat (Param_OVRSPL) >= 0.5f);
+			if (_ovrspl_flag != ovrspl_old_flag)
+			{
+				_ovrspl_cur  = (_ovrspl_flag) ? _ovrspl : 1;
+				const float    fs = float (_sample_freq) * _ovrspl_cur;
+				dsp::rspl::InterpolatorInterface * interp_ptr =
+					(_ovrspl_flag)
+					? static_cast <dsp::rspl::InterpolatorInterface *> (&_interp_linear)
+					: static_cast <dsp::rspl::InterpolatorInterface *> (&_interp_cubic);
+				for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
+				{
+					Channel &		chn = _chn_arr [chn_cnt];
+					chn._fchn_sptr->set_sample_freq (fs, true, *interp_ptr);
+				}
+			}
+		}
 		if (_param_change_flag_speed (true) || force_flag)
 		{
 			update_lfo_period ();
@@ -278,8 +364,8 @@ void	Flancho::update_param (bool force_flag)
 			const double   delay = _state_set.get_val_end_nat (Param_DELAY);
 			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 			{
-				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-				chn.set_delay (delay);
+				Channel &      chn = _chn_arr [chn_cnt];
+				chn._fchn_sptr->set_delay (delay);
 			}
 		}
 		if (_param_change_flag_depth_fdbk (true) || force_flag)
@@ -289,10 +375,10 @@ void	Flancho::update_param (bool force_flag)
 			const double   dmul  = 0.5 / _max_nbr_chn;
 			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 			{
-				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
+				Channel &      chn = _chn_arr [chn_cnt];
 				const double      chn_depth = depth * (1 - chn_cnt * dmul);
-				chn.set_depth (chn_depth);
-				chn.set_feedback (fdbk);
+				chn._fchn_sptr->set_depth (chn_depth);
+				chn._fchn_sptr->set_feedback (fdbk);
 			}
 		}
 		if (_param_change_flag_wf (true) || force_flag)
@@ -303,9 +389,9 @@ void	Flancho::update_param (bool force_flag)
 			const double   shape = _state_set.get_val_end_nat (Param_WF_SHAPE);
 			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 			{
-				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-				chn.set_wf_type (type);
-				chn.set_wf_shape (shape);
+				Channel &      chn = _chn_arr [chn_cnt];
+				chn._fchn_sptr->set_wf_type (type);
+				chn._fchn_sptr->set_wf_shape (shape);
 			}
 		}
 		if (_param_change_flag_voices (true) || force_flag)
@@ -314,8 +400,8 @@ void	Flancho::update_param (bool force_flag)
 				fstb::round_int (_state_set.get_val_tgt_nat (Param_NBR_VOICES));
 			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 			{
-				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-				chn.set_nbr_voices (nbr_voices);
+				Channel &      chn = _chn_arr [chn_cnt];
+				chn._fchn_sptr->set_nbr_voices (nbr_voices);
 			}
 		}
 		if (_param_change_flag_phase_set (true) || force_flag)
@@ -324,8 +410,8 @@ void	Flancho::update_param (bool force_flag)
 			phase = std::min (phase, 0.999);
 			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 			{
-				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-				chn.resync (phase);
+				Channel &      chn = _chn_arr [chn_cnt];
+				chn._fchn_sptr->resync (phase);
 			}
 		}
 		if (_param_change_flag_dry (true) || force_flag)
@@ -334,8 +420,8 @@ void	Flancho::update_param (bool force_flag)
 			_neg_flag = (_state_set.get_val_tgt_nat (Param_NEGATIVE) >= 0.5f);
 			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 			{
-				FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-				chn.set_polarity (_neg_flag);
+				Channel &      chn = _chn_arr [chn_cnt];
+				chn._fchn_sptr->set_polarity (_neg_flag);
 			}
 		}
 	}
@@ -348,10 +434,16 @@ void	Flancho::update_lfo_period ()
 	const double   freq = _state_set.get_val_end_nat (Param_SPEED);
 	for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 	{
-		FlanchoChn &		chn = *(_chn_arr [chn_cnt]);
-		chn.set_speed (freq);
+		Channel &      chn = _chn_arr [chn_cnt];
+		chn._fchn_sptr->set_speed (freq);
 	}
 }
+
+
+
+bool	Flancho::_coef_init_flag = false;
+std::array <double, Flancho::_nbr_coef_42>	Flancho::_coef_42;
+std::array <double, Flancho::_nbr_coef_21>	Flancho::_coef_21;
 
 
 
