@@ -634,10 +634,13 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 				{
 					pi_id = inst_node.first;
 					inst_node.second = true;
-					if (force_reset_flag)
+					PluginPool::PluginDetails &   details =
+						_plugin_pool.use_plugin (pi_id);
+					const auto        state = details._pi_uptr->get_state ();
+					if (    _sample_freq > 0
+					    && (   force_reset_flag
+					        || state != piapi::PluginInterface::State_ACTIVE))
 					{
-						PluginPool::PluginDetails &   details =
-							_plugin_pool.use_plugin (pi_id);
 						int         latency = 0;
 						int         ret_val = details._pi_uptr->reset (
 							_sample_freq, _max_block_size, latency

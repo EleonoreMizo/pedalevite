@@ -162,7 +162,7 @@ private:
 		std::array <int, PiType_NBR_ELT>
 		               _pi_id_arr;
 	};
-	typedef std::map <int, SlotPiId> PiIdMap;
+	typedef std::map <int, SlotPiId> PiIdMap; // [slot_id] -> SlotPiId
 
 	class PedalState
 	{
