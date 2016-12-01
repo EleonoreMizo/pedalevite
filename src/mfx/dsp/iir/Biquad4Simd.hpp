@@ -830,11 +830,11 @@ void	Biquad4Simd <VD, VS, VP>::set_state_one (int biq, float const mem_x [2], co
 	assert (mem_x != 0);
 	assert (mem_y != 0);
 
-	_data._mem_x [0] [biq] = mem_x [0];
-	_data._mem_x [1] [biq] = mem_x [1];
+	_data._mem_x [    _data._mem_pos] [biq] = mem_x [0];
+	_data._mem_x [1 - _data._mem_pos] [biq] = mem_x [1];
 
-	_data._mem_y [0] [biq] = mem_y [0];
-	_data._mem_y [1] [biq] = mem_y [1];
+	_data._mem_y [    _data._mem_pos] [biq] = mem_y [0];
+	_data._mem_y [1 - _data._mem_pos] [biq] = mem_y [1];
 }
 
 
@@ -847,11 +847,11 @@ void	Biquad4Simd <VD, VS, VP>::get_state_one (int biq, float mem_x [2], float me
 	assert (mem_x != 0);
 	assert (mem_y != 0);
 
-	mem_x [0] = _data._mem_x [0] [biq];
-	mem_x [1] = _data._mem_x [1] [biq];
+	mem_x [0] = _data._mem_x [    _data._mem_pos] [biq];
+	mem_x [1] = _data._mem_x [1 - _data._mem_pos] [biq];
 
-	mem_y [0] = _data._mem_y [0] [biq];
-	mem_y [1] = _data._mem_y [1] [biq];
+	mem_y [0] = _data._mem_y [    _data._mem_pos] [biq];
+	mem_y [1] = _data._mem_y [1 - _data._mem_pos] [biq];
 }
 
 
