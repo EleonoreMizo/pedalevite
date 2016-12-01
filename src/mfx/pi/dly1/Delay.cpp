@@ -483,8 +483,8 @@ void	Delay::process_block_part_stereo (float * const out_ptr_arr [], const float
 		&_tmp_buf_arr [1] [0],
 		&_tmp_buf_arr [0] [0],
 		&_tmp_buf_arr [1] [0],
-		nbr_spl, 
-		s_vol, 
+		nbr_spl,
+		s_vol,
 		e_vol
 	);
 
@@ -558,7 +558,8 @@ void	Delay::process_block_part_multic (float * const out_ptr_arr [], const float
 	const int      chn_in_inc  = (_nbr_chn_in >= Cst::_nbr_lines) ? 1 : 0;
 	int            chn_out_idx = 0;
 	const int      chn_out_inc = (_nbr_chn_out >= Cst::_nbr_lines) ? 1 : 0;
-	const int      nbr_chn_proc = std::max (_nbr_chn_out, Cst::_nbr_lines);
+	const int      nbr_lines   = Cst::_nbr_lines;
+	const int      nbr_chn_proc = std::max (_nbr_chn_out, nbr_lines);
 	for (int chn_cnt = 0; chn_cnt < nbr_chn_proc; ++chn_cnt)
 	{
 		if (chn_cnt == 0 || chn_out_idx > 0)

@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/PedalLoc.h"
 #include "mfx/View.h"
 
+#include <algorithm>
+
 #include <cassert>
 
 
