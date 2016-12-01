@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/DataAlign.h"
 #include "fstb/AllocAlign.h"
+#include "fstb/SingleObj.h"
 #include "fstb/ToolsSimd.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 
@@ -84,13 +85,14 @@ private:
 		fstb::DataAlign <true>,
 		fstb::DataAlign <true>
 	> EnvHelper;
+	typedef fstb::SingleObj <EnvHelper, fstb::AllocAlign <EnvHelper, 16> > EnvHelperAlign;
 
 	float          compute_coef (float t) const;
 	static void    perpare_mono_input (fstb::ToolsSimd::VectF32 buf_ptr [], const float * const src_ptr_arr [], int nbr_chn, int nbr_spl);
 	static inline void
 	               spread_and_store (fstb::ToolsSimd::VectF32 dst_ptr [], fstb::ToolsSimd::VectF32 x);
 
-	EnvHelper      _env_helper;         // 0 = fast env, 1 = slow env
+	EnvHelperAlign _env_helper;         // 0 = fast env, 1 = slow env
 	Buffer4        _buf;
 	float          _sample_freq    = 0; // Hz, > 0. 0 = not initialized.
 	int            _max_block_size = 0; // samples, > 0. 0 = not initialized.

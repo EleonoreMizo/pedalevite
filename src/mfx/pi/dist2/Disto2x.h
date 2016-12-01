@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
+#include "fstb/def.h"
 #include "fstb/SingleObj.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/dist2/Disto2xDesc.h"
@@ -100,8 +101,10 @@ private:
 		};
 		typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
+		fstb_TYPEDEF_ALIGN (16, TransientAnalyser, TransientAnalyserAlign);
+
 		ChannelArray   _chn_arr;
-		TransientAnalyser
+		TransientAnalyserAlign
 		               _trans_ana;
 		FreqSplitter   _freq_split;
 		std::array <DistoStage, Disto2x::_nbr_stages>

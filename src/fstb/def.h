@@ -128,7 +128,7 @@ namespace fstb
 		typedef __declspec (align (alignsize)) srctype dsttype
 #elif defined (__GNUC__)
 	#define	fstb_TYPEDEF_ALIGN( alignsize, srctype, dsttype)	\
-		typedef srctype __attribute__ ((aligned (alignsize))) dsttype
+		typedef srctype dsttype __attribute__ ((aligned (alignsize)))
 #else
 	#error Undefined for this compiler
 #endif

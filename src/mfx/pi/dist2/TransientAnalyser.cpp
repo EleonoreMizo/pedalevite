@@ -58,26 +58,26 @@ void	TransientAnalyser::reset (double sample_freq, int max_block_size)
 	_buf.resize (mbs_alig);
 
 	// Attack, fast envelope
-	_env_helper.set_atk_coef (0, compute_coef (0.0001f));
-	_env_helper.set_rls_coef (0, compute_coef (0.050f));
+	_env_helper->set_atk_coef (0, compute_coef (0.0001f));
+	_env_helper->set_rls_coef (0, compute_coef (0.050f));
 
 	// Attack, slow envelope
-	_env_helper.set_atk_coef (1, compute_coef (0.050f));
-	_env_helper.set_rls_coef (1, compute_coef (0.050f));
+	_env_helper->set_atk_coef (1, compute_coef (0.050f));
+	_env_helper->set_rls_coef (1, compute_coef (0.050f));
 
 	// Sustain, fast envelope
-	_env_helper.set_atk_coef (2, compute_coef (0.005f));
-	_env_helper.set_rls_coef (2, compute_coef (0.200f));
+	_env_helper->set_atk_coef (2, compute_coef (0.005f));
+	_env_helper->set_rls_coef (2, compute_coef (0.200f));
 
 	// Sustain, slow envelope
-	_env_helper.set_atk_coef (3, compute_coef (0.005f));
-	_env_helper.set_rls_coef (3, compute_coef (0.600f));
+	_env_helper->set_atk_coef (3, compute_coef (0.005f));
+	_env_helper->set_rls_coef (3, compute_coef (0.600f));
 
 	const double   min_freq = 50; // Hz
 	const int      hold_time = fstb::round_int (sample_freq / min_freq);
 	for (int e = 0; e < EnvHelper::_nbr_env; ++e)
 	{
-		_env_helper.set_hold_time (e, hold_time);
+		_env_helper->set_hold_time (e, hold_time);
 	}
 }
 
@@ -109,7 +109,7 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 	perpare_mono_input (&_buf [0], src_ptr_arr, nbr_chn, nbr_spl);
 
 	// Envelope detection
-	_env_helper.process_block (&_buf [0], &_buf [0], nbr_spl);
+	_env_helper->process_block (&_buf [0], &_buf [0], nbr_spl);
 
 	// Ratio
 	const auto     eps  = fstb::ToolsSimd::set1_f32 (_eps_sq);
@@ -148,7 +148,7 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 
 void	TransientAnalyser::clear_buffers ()
 {
-	_env_helper.clear_buffers ();
+	_env_helper->clear_buffers ();
 }
 
 
@@ -166,7 +166,7 @@ float	TransientAnalyser::compute_coef (float t) const
 	assert (_sample_freq > 0);
 
 	float          coef = 1;
-	const float		tsf  = t * _sample_freq;
+	const float    tsf  = t * _sample_freq;
 	if (tsf > 1)
 	{
 		coef = float (1.0f - exp (-1.0f / tsf));
