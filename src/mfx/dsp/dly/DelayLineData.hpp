@@ -63,7 +63,7 @@ void	DelayLineData <T, AL>::set_extra_len (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 	_extra_len = nbr_spl;
-	_buf_ptr = 0;
+	invalidate_buf ();
 }
 
 
@@ -81,7 +81,7 @@ void	DelayLineData <T, AL>::set_unroll_pre (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 	_unroll_pre = nbr_spl;
-	_buf_ptr = 0;
+	invalidate_buf ();
 }
 
 
@@ -99,7 +99,7 @@ void	DelayLineData <T, AL>::set_unroll_post (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 	_unroll_post = nbr_spl;
-	_buf_ptr = 0;
+	invalidate_buf ();
 }
 
 
@@ -154,7 +154,7 @@ void	DelayLineData <T, AL>::update_buffer_size ()
 		const int   new_total_size = new_buf_size + _unroll_pre + _unroll_post;
 		if (new_total_size != int (_buf.size ()))
 		{
-			_buf_ptr = 0;
+			invalidate_buf ();
 			_buf.resize (new_total_size);
 		}
 		_buf_ptr  = &_buf [_unroll_pre];
@@ -215,8 +215,6 @@ int	DelayLineData <T, AL>::get_len () const
 template <typename T, typename AL>
 int	DelayLineData <T, AL>::get_mask () const
 {
-	assert (_buf_ptr != 0);
-
 	return (_buf_mask);
 }
 
@@ -261,6 +259,16 @@ void	DelayLineData <T, AL>::clear_buffers ()
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <typename T, typename AL>
+void	DelayLineData <T, AL>::invalidate_buf ()
+{
+	_buf_ptr  = 0;
+	_buf_len  = 0;
+	_buf_mask = 0;
+}
 
 
 

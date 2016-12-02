@@ -93,17 +93,19 @@ private:
 
 	typedef std::vector <ValueType, AllocatorType> Buffer;
 
+	void           invalidate_buf ();
+
 	Buffer         _buf;
 	ValueType *    _buf_ptr;         // Points on virtual buffer beginning (after _head_len)
 	                                 // 0 means buffer needs update
 
-	double         _sample_freq;     // Hz, > 0
-	double         _max_time;        // s, > 0
+	double         _sample_freq;     // Hz, > 0. 0 if not set.
+	double         _max_time;        // s, > 0. 0 if not set.
 	int            _unroll_pre;      // Samples, >= 0
 	int            _unroll_post;     // Samples, >= 0
 	int            _extra_len;       // Samples, >= 0
-	int            _buf_len;         // Power of 2, >= len + extra
-	int            _buf_mask;        // _buf_len - 1
+	int            _buf_len;         // Power of 2, >= len + extra. 0 if the buffer is not ready.
+	int            _buf_mask;        // _buf_len - 1. Always >= 0, even when the buffer is not ready.
 
 
 
