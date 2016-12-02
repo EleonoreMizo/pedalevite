@@ -217,6 +217,9 @@ void	WorldAudio::reset_everything ()
 			reset_plugin (pi_ctx._node_arr [PiType_MIX]._pi_id);
 		}
 	}
+
+	_lvl_meter->clear_peak ();
+	_lvl_meter->clear_buffers ();
 }
 
 
