@@ -252,8 +252,6 @@ void	Flancho::do_process_block (ProcInfo &proc)
 	int            pos = 0;
 	do
 	{
-		// We need this intermediate varaible because for some reason GCC
-		// fails to link when _update_resol is directly used in std::min.
 		const int      max_len  = _update_resol;
 		const int      work_len = std::min (proc._nbr_spl - pos, max_len);
 

@@ -93,7 +93,8 @@ private:
 	typedef dsp::iir::Upsampler4xSimd <_nbr_coef_42, _nbr_coef_21> UpSpl;
 	typedef dsp::iir::Downsampler4xSimd <_nbr_coef_42, _nbr_coef_21> DwSpl;
 
-	typedef	std::vector <float>	Buffer;
+	typedef std::vector <float> Buffer;
+	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
 	class Channel
 	{
@@ -140,8 +141,8 @@ private:
 	               _interp_linear;
 	Buffer			_buf_tmp;
 	Buffer			_buf_render;
-	Buffer         _buf_ovrspl_src;
-	Buffer         _buf_ovrspl_dst;
+	BufAlign       _buf_ovrspl_src;
+	BufAlign       _buf_ovrspl_dst;
 
 	// Cached
 	int				_nbr_chn_in;			// > 0. 0 = not set
