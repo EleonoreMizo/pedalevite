@@ -30,6 +30,7 @@
 #include "fstb/AllocAlign.h"
 #include "fstb/fnc.h"
 #include "mfx/adrv/CbInterface.h"
+#include "mfx/adrv/DriverInterface.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
@@ -1227,12 +1228,19 @@ void	Context::create_default_layout (mfx::doc::PedalboardLayout &layout)
 
 
 
-static int MAIN_main_loop (Context &ctx)
+static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 {
 	fprintf (stderr, "Entering main loop...\n");
 
-	int            ret_val = 0;
-	int            loop_count = 0;
+	int            ret_val         =   0;
+	int            loop_count      =   0;
+	int            overload_count  =   0;
+	const int      overload_limit  =  10;
+	int            recovery_count  =   0;
+	const int      recovery_limit  =  10;
+	const int      recovery_limit2 = 100; // For the restart
+	int            restart_count   =   0;
+	int            restart_limit   =   3;
 
 	while (ret_val == 0 && ! ctx._quit_flag)
 	{
@@ -1249,6 +1257,34 @@ static int MAIN_main_loop (Context &ctx)
 
 		mfx::MeterResultSet &   meters = ctx._model.use_meters ();
 
+		// Watchdog for audio overloads
+		const bool     overload_flag = meters._dsp_overload_flag.exchange (false);
+		if (overload_flag)
+		{
+			recovery_count = 0;
+			++ overload_count;
+			if (   overload_count > overload_limit
+			    && restart_count  < restart_limit)
+			{
+				snd_drv.restart ();
+				overload_count = 0;
+				++ restart_count;
+			}
+		}
+		else
+		{
+			++ recovery_count;
+			if (recovery_count > recovery_limit)
+			{
+				if (recovery_count > recovery_limit2)
+				{
+					restart_count = 0;
+				}
+				overload_count = 0;
+			}
+		}
+
+		// LEDs
 		if (! tuner_flag)
 		{
 			const int      nbr_led           = 3;
@@ -1257,7 +1293,7 @@ static int MAIN_main_loop (Context &ctx)
 			{
 				lum_arr [0] = 1;
 			}
-			if (meters._dsp_overload_flag.exchange (false))
+			if (overload_flag)
 			{
 				lum_arr [2] = 1;
 			}
@@ -1419,7 +1455,7 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 
 		if (ret_val == 0)
 		{
-			ret_val = MAIN_main_loop (ctx);
+			ret_val = MAIN_main_loop (ctx, snd_drv);
 		}
 
 		snd_drv.stop ();
