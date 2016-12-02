@@ -157,6 +157,7 @@ void	PEq::do_process_block (ProcInfo &proc)
 		const int		nbr_stages = count_nbr_stages ();
 		_biq_pack.adapt_config (nbr_stages, _nbr_chn);
 		cook_all_bands ();
+		_biq_pack.clear_buffers ();
 	}
 
 	std::array <const float *, _max_nbr_chn> src_chn_arr;
