@@ -67,6 +67,7 @@ void	DelayLine::set_interpolator (rspl::InterpolatorInterface &interp)
 	_line_data.set_unroll_post (_imp_len);
 	_line_data.set_extra_len (_imp_len);
 	_line_data.update_buffer_size ();
+	_write_pos &= _line_data.get_mask ();
 	_min_dly_time = double (_imp_len + 1) / _sample_freq;
 
 	_interp_ptr->start (1);
@@ -93,6 +94,7 @@ void	DelayLine::set_sample_freq (double sample_freq, int ovrspl_l2)
 	_ovrspl_l2   = ovrspl_l2;
 
 	_line_data.set_sample_freq (sample_freq);
+	_write_pos &= _line_data.get_mask ();
 
 	if (_interp_ptr != 0)
 	{
@@ -125,6 +127,7 @@ void	DelayLine::set_max_delay_time (double max_time)
 
 	_max_dly_time = max_time;
 	_line_data.set_max_delay_time (_max_dly_time);
+	_write_pos &= _line_data.get_mask ();
 }
 
 
