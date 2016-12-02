@@ -1232,18 +1232,20 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 {
 	fprintf (stderr, "Entering main loop...\n");
 
-	int            ret_val         =   0;
-	int            loop_count      =   0;
-	int            overload_count  =   0;
-	const int      overload_limit  =  10;
-	int            recovery_count  =   0;
-	const int      recovery_limit  =  10;
-	const int      recovery_limit2 = 100; // For the restart
-	int            restart_count   =   0;
-	int            restart_limit   =   3;
+	int            ret_val         =  0;
+	int            loop_count      =  0;
+	int            overload_count  =  0;
+	const int      overload_limit  = 10;
+	int            recovery_count  =  0;
+	const int      recovery_limit  = 10;
+	const int      recovery_limit2 = 50; // For the restart
+	int            restart_count   =  0;
+	int            restart_limit   =  3;
 
 	while (ret_val == 0 && ! ctx._quit_flag)
 	{
+		int            wait_ms = 100; // Milliseconds
+
 #if 0 // When doing manual time sharing
 		while (! ctx._thread_spi.process_single_task ())
 		{
@@ -1261,6 +1263,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 		const bool     overload_flag = meters._dsp_overload_flag.exchange (false);
 		if (overload_flag)
 		{
+			wait_ms        = 10;
 			recovery_count = 0;
 			++ overload_count;
 			if (   overload_count > overload_limit
@@ -1330,7 +1333,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 
 		if (wait_flag)
 		{
-			static const std::chrono::milliseconds wait_duration (100);
+			static const std::chrono::milliseconds wait_duration (wait_ms);
 			std::this_thread::sleep_for (wait_duration);
 		}
 
