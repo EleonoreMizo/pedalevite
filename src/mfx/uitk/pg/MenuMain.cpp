@@ -74,10 +74,10 @@ MenuMain::MenuMain (PageSwitcher &page_switcher)
 	_tuner_sptr      ->set_justification (0.5f, 0, false);
 	_reboot_sptr     ->set_justification (0.5f, 0, false);
 
-	_edit_prog_sptr  ->set_text ("Edit Program");
+	_edit_prog_sptr  ->set_text ("Edit program");
 	_edit_bank_sptr  ->set_text ("Banks");
 	_edit_layout_sptr->set_text ("Pedal layout");
-	_edit_levels_sptr->set_text ("Volume & Levels");
+	_edit_levels_sptr->set_text ("Volume & levels");
 	_tuner_sptr      ->set_text ("Tuner");
 	_reboot_sptr     ->set_text ("Restart");
 }

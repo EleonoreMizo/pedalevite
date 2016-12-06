@@ -64,7 +64,7 @@ DryWetDesc::DryWetDesc ()
 	param::TplMapped <param::MapS <false> > * maps_ptr =
 		new param::TplMapped <param::MapS <false> > (
 			0, 1,
-			"Effect Mix\nFX Mix",
+			"Effect mix\nFX mix",
 			"%",
 			param::HelperDispNum::Preset_FLOAT_PERCENT,
 			0,

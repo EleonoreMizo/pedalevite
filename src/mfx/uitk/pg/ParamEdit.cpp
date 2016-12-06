@@ -67,16 +67,12 @@ ParamEdit::ParamEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_follow_sptr (     new NText (Entry_FOLLOW))
 ,	_step_index (0)
 {
-	std::string    ratio = "1";
+	std::string    ratio;
 	for (size_t k = 0; k < _nbr_steps; ++k)
 	{
+		ratio += "\xE2\x9A\xAB";   // MEDIUM BLACK CIRCLE U+26AB
 		_step_sptr_arr [k] = TxtSPtr (new NText (Entry_STEP + k));
-		_step_sptr_arr [k]->set_text (ratio);
-		if (k == 0)
-		{
-			ratio = std::string (":") + ratio;
-		}
-		ratio += "0";
+		_step_sptr_arr [k]->set_text (" " + ratio + " ");
 	}
 
 	_controllers_sptr->set_text ("Controllers");

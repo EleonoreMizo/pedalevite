@@ -83,23 +83,19 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 	{
 		MinMax &       gork = _minmax [mm];
 
-		std::string    ratio = "1";
+		std::string    ratio;
 		for (size_t k = 0; k < _nbr_steps; ++k)
 		{
+			ratio += "\xE2\x9A\xAB";   // MEDIUM BLACK CIRCLE U+26AB
 			gork._step_sptr_arr [k] = TxtSPtr (new NText (_id_step_arr [mm] + k));
-			gork._step_sptr_arr [k]->set_text (ratio);
-			if (k == 0)
-			{
-				ratio = std::string (":") + ratio;
-			}
-			ratio += "0";
+			gork._step_sptr_arr [k]->set_text (" " + ratio + " ");
 		}
 
 		gork._label_sptr    = TxtSPtr (new NText (_id_label_arr [mm]));
 		gork._val_unit_sptr = TxtSPtr (new NText (_id_val_arr [mm]));
 	}
-	_minmax [0]._label_sptr->set_text ("Min: ");
-	_minmax [1]._label_sptr->set_text ("Max: ");
+	_minmax [0]._label_sptr->set_text ("Min  : ");
+	_minmax [1]._label_sptr->set_text ("Max  : ");
 }
 
 
@@ -342,22 +338,23 @@ void	CtrlEdit::update_display ()
 		}
 	}
 
+	std::string    src_txt ("Src  : ");
 	if (! active_flag)
 	{
-		_src_sptr->set_text ("<Empty/Delete>");
+		src_txt += "<Empty/Delete>";
 	}
 	else
 	{
 		update_ctrl_link ();
 
-		std::string    min_txt = "Min: ";
+		std::string    min_txt = "Min  : ";
 		if (! _loc_edit._ctrl_abs_flag)
 		{
-			min_txt = "Amp: ";
+			min_txt = "Amp  : ";
 		}
 		else if (_ctrl_link._source.is_bipolar ())
 		{
-			min_txt = "0  : ";
+			min_txt = "Zero : ";
 		}
 		_minmax [0]._label_sptr->set_text (min_txt);
 
@@ -367,18 +364,17 @@ void	CtrlEdit::update_display ()
 			scr_w, src_name_multilabel.c_str (),
 			*_src_sptr, &NText::get_char_width
 		);
-		_src_sptr->set_text (src_name);
+		src_txt += src_name;
 
 		char           txt_0 [127+1];
 
+		std::string    step_txt ("Step : ");
 		const bool     rel_flag = _ctrl_link._source.is_relative ();
-		_step_rel_sptr->show (rel_flag);
 		if (rel_flag)
 		{
 			nav_list.resize (nav_list.size () + 1);
 			nav_list.back ()._node_id = Entry_STEP_REL;
 
-			static const char label_0 [] = "Step: ";
 			bool              frac_flag = (_ctrl_link._step > 0);
 			int               inv_s_int = 0;
 			if (frac_flag)
@@ -390,17 +386,22 @@ void	CtrlEdit::update_display ()
 			if (frac_flag)
 			{
 				fstb::snprintf4all (
-					txt_0, sizeof (txt_0), "%s1/%d", label_0, inv_s_int
+					txt_0, sizeof (txt_0), "1/%d", inv_s_int
 				);
 			}
 			else
 			{
 				fstb::snprintf4all (
-					txt_0, sizeof (txt_0), "%s%3.3f%%", label_0, _ctrl_link._step
+					txt_0, sizeof (txt_0), "%3.3f%%", _ctrl_link._step
 				);
 			}
-			_step_rel_sptr->set_text (txt_0);
+			step_txt += txt_0;
 		}
+		else
+		{
+			step_txt += "--";
+		}
+		_step_rel_sptr->set_text (step_txt);
 
 		if (_loc_edit._ctrl_abs_flag)
 		{
@@ -448,22 +449,25 @@ void	CtrlEdit::update_display ()
 
 		const std::string curve_name =
 			ControlCurve_get_name (_ctrl_link._curve);
-		_curve_sptr->set_text (curve_name);
+		_curve_sptr->set_text ("Curve: " + curve_name);
 		nav_list.resize (nav_list.size () + 1);
 		nav_list.back ()._node_id = Entry_CURVE;
 
+		std::string    curve_txt ("Range: ");
 		if (! _ctrl_link._source.is_bipolar () && ! _loc_edit._ctrl_abs_flag)
 		{
-			_u2b_sptr->set_text (_ctrl_link._u2b_flag ? "Bipolar" : "Unipolar");
+			curve_txt += (_ctrl_link._u2b_flag ? "Bipolar" : "Unipolar");
 
 			nav_list.resize (nav_list.size () + 1);
 			nav_list.back ()._node_id = Entry_CONV_U2B;
 		}
 		else
 		{
-			_u2b_sptr->set_text ("");
+			curve_txt += "--";   // U+2014 EM DASH
 		}
+		_u2b_sptr->set_text (curve_txt);
 	}
+	_src_sptr->set_text (src_txt);
 
 	_page_ptr->set_nav_layout (nav_list);
 

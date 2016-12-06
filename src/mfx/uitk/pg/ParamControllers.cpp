@@ -69,7 +69,7 @@ ParamControllers::ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_ed
 ,	_csn_list_full (_csn_list_base)
 ,	_cls_ptr (0)
 {
-	_link_title_sptr->set_text ("Direct Link");
+	_link_title_sptr->set_text ("Direct link");
 	_mod_title_sptr ->set_text ("Modulations");
 	_link_title_sptr->set_justification (0, 1, false);
 	_mod_title_sptr ->set_justification (0, 1, false);
