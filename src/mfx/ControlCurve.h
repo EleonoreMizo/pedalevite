@@ -46,6 +46,8 @@ enum ControlCurve
 	ControlCurve_SAT3,
 	ControlCurve_S1,
 	ControlCurve_S2,
+	ControlCurve_FLAT1,
+	ControlCurve_FLAT2,
 
 	ControlCurve_NBR_ELT
 

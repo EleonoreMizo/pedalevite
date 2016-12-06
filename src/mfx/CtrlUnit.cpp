@@ -207,17 +207,21 @@ float	CtrlUnit::apply_curve (float val, ControlCurve curve, bool invert_flag)
 		break;
 
 	case ControlCurve_S1:
+	case ControlCurve_FLAT1 + inv:
 		val = std::copysign (val * val * (3 - 2 * fabs (val)), val);
 		break;
 	case ControlCurve_S1 + inv:
+	case ControlCurve_FLAT1:
 		val = float (invert_s1 (val));
 		break;
 
 	case ControlCurve_S2:
+	case ControlCurve_FLAT2 + inv:
 		val = apply_curve (val, ControlCurve_S1, false);
 		val = apply_curve (val, ControlCurve_S1, false);
 		break;
 	case ControlCurve_S2 + inv:
+	case ControlCurve_FLAT2:
 		val = float (invert_s1 (invert_s1 (val)));
 		break;
 

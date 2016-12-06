@@ -51,8 +51,10 @@ const char *  ControlCurve_get_name (ControlCurve c)
 	case ControlCurve_CB:	  return ("Cubic" ); break;
 	case ControlCurve_SAT2:	  return ("Sat. 1"); break;
 	case ControlCurve_SAT3:	  return ("Sat. 2"); break;
-	case ControlCurve_S1:	  return ("S 2"   ); break;
-	case ControlCurve_S2:	  return ("S 1"   ); break;
+	case ControlCurve_S1:	  return ("S 1"   ); break;
+	case ControlCurve_S2:	  return ("S 2"   ); break;
+	case ControlCurve_FLAT1:  return ("Flat 1"); break;
+	case ControlCurve_FLAT2:  return ("Flat 2"); break;
 	default:
 		assert (false);
 		break;
