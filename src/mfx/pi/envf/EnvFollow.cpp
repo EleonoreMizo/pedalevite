@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/Approx.h"
 #include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
+#include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/envf/EnvFollow.h"
 #include "mfx/pi/envf/Param.h"
 #include "mfx/piapi/EventParam.h"
@@ -249,29 +250,26 @@ float	EnvFollow::conv_time_to_coef (float t)
 void	EnvFollow::square_block (const ProcInfo &proc)
 {
 	const int      nbr_chn_src = proc._nbr_chn_arr [Dir_IN ];
-	const float *  s0_ptr      = proc._src_arr [0];
 	if (nbr_chn_src == 1)
 	{
-		for (int pos = 0; pos < proc._nbr_spl; pos += 4)
-		{
-			const auto  x  = fstb::ToolsSimd::load_f32 (s0_ptr + pos);
-			const auto  x2 = x * x;
-			fstb::ToolsSimd::store_f32 (&_buf_src [pos], x2);
-		}
+		dsp::mix::Align::sum_square_n_1 (
+			&_buf_src [0], proc._src_arr, proc._nbr_spl, nbr_chn_src,
+			0
+		);
 	}
-
+	else if (nbr_chn_src == 2)
+	{
+		dsp::mix::Align::sum_square_n_1_v (
+			&_buf_src [0], proc._src_arr, proc._nbr_spl, nbr_chn_src,
+			0, 0.5f
+		);
+	}
 	else
 	{
-		assert (nbr_chn_src == 2);
-		const float *  s1_ptr = proc._src_arr [1];
-		const auto     mult   = fstb::ToolsSimd::set1_f32 (0.5f);
-		for (int pos = 0; pos < proc._nbr_spl; pos += 4)
-		{
-			const auto     x   = fstb::ToolsSimd::load_f32 (s0_ptr + pos);
-			const auto     y   = fstb::ToolsSimd::load_f32 (s1_ptr + pos);
-			const auto     sum = (x * x + y * y) * mult;
-			fstb::ToolsSimd::store_f32 (&_buf_src [pos], sum);
-		}
+		dsp::mix::Align::sum_square_n_1_v (
+			&_buf_src [0], proc._src_arr, proc._nbr_spl, nbr_chn_src,
+			0, 1.0f / nbr_chn_src
+		);
 	}
 }
 
