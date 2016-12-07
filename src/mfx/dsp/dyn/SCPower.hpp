@@ -71,7 +71,7 @@ void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_
 	const long     nbr_spl       = pos_end - pos_beg;
 	const long     pos_end_block = pos_beg + (nbr_spl & -16L);
 	long           pos           = pos_beg;
-	do
+	while (pos < pos_end_block)
 	{
 		auto           s_0 = not_zero;
 		auto           s_1 = not_zero;
@@ -110,7 +110,6 @@ void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_
 
 		pos += 16;
 	}
-	while (pos < pos_end_block);
 
 	// Processes remaining samples
 	while (pos < pos_end)
