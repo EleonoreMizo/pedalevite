@@ -4269,12 +4269,12 @@ void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_pt
 	assert (nbr_chn <= max_nbr_chn);
 
 	const auto     init_val_v = fstb::ToolsSimd::set1_f32 (init_val);
-	const long     end = nbr_spl & -8L;
-	long           pos = 0;
+	const long     end        = nbr_spl & -8L;
+	long           pos        = 0;
 	if (nbr_chn == 1)
 	{
 		const float *  c0_ptr = src_ptr_arr [0];
-		while (pos < nbr_spl)
+		while (pos < end)
 		{
 			const auto     a0 = V128Dst::load_f32 (c0_ptr + pos    );
 			const auto     a1 = V128Dst::load_f32 (c0_ptr + pos + 4);
@@ -4291,7 +4291,7 @@ void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_pt
 	{
 		const float *  c0_ptr = src_ptr_arr [0];
 		const float *  c1_ptr = src_ptr_arr [1];
-		while (pos < nbr_spl)
+		while (pos < end)
 		{
 			const auto     a0 = V128Dst::load_f32 (c0_ptr + pos    );
 			const auto     a1 = V128Dst::load_f32 (c0_ptr + pos + 4);
@@ -4310,7 +4310,7 @@ void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_pt
 	}
 	else
 	{
-		while (pos < nbr_spl)
+		while (pos < end)
 		{
 			auto           v0  = init_val_v;
 			auto           v1  = init_val_v;
@@ -4363,12 +4363,12 @@ void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_
 
 	const auto     init_val_v = fstb::ToolsSimd::set1_f32 (init_val);
 	const auto     vol_v      = fstb::ToolsSimd::set1_f32 (vol);
-	const long     end = nbr_spl & -8L;
-	long           pos = 0;
+	const long     end        = nbr_spl & -8L;
+	long           pos        = 0;
 	if (nbr_chn == 1)
 	{
 		const float *  c0_ptr = src_ptr_arr [0];
-		while (pos < nbr_spl)
+		while (pos < end)
 		{
 			const auto     a0 = V128Dst::load_f32 (c0_ptr + pos    );
 			const auto     a1 = V128Dst::load_f32 (c0_ptr + pos + 4);
@@ -4387,7 +4387,7 @@ void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_
 	{
 		const float *  c0_ptr = src_ptr_arr [0];
 		const float *  c1_ptr = src_ptr_arr [1];
-		while (pos < nbr_spl)
+		while (pos < end)
 		{
 			const auto     a0 = V128Dst::load_f32 (c0_ptr + pos    );
 			const auto     a1 = V128Dst::load_f32 (c0_ptr + pos + 4);
@@ -4408,7 +4408,7 @@ void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_
 	}
 	else
 	{
-		while (pos < nbr_spl)
+		while (pos < end)
 		{
 			auto           v0  = init_val_v;
 			auto           v1  = init_val_v;
