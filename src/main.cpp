@@ -1298,7 +1298,16 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 			}
 			if (overload_flag)
 			{
-				lum_arr [2] = 1;
+				if (restart_count >= restart_limit)
+				{
+					lum_arr [0] = sqrt (0.375f);
+					lum_arr [1] = sqrt (0.125f);
+					lum_arr [2] = sqrt (0.5f  );
+				}
+				else
+				{
+					lum_arr [2] = 1;
+				}
 			}
 			for (int led_index = 0; led_index < nbr_led; ++led_index)
 			{
