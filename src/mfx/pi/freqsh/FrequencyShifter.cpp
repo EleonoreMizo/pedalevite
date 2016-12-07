@@ -213,8 +213,8 @@ void	FrequencyShifter::update_step ()
 	_step_angle = float ((fstb::PI * 2) * _freq / _sample_freq);
 	_ali->_osc.set_step (_step_angle);
 
-	const float    bs [3]  = { 0,                          0, 1 };
-	const float    as [3]  = { 1, float (fstb::SQRT2) * 0.5f, 1 };
+	const float    bs [3]  = { 0,                   0, 1 };
+	const float    as [3]  = { 1, float (fstb::SQRT2), 1 };
 	float          bz [3];
 	float          az [3];
 	const float    freq_aa = std::max (-_freq, 20.0f);
