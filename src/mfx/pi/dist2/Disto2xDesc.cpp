@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dist2/DistoStage.h"
 #include "mfx/pi/dist2/Param.h"
 #include "mfx/pi/param/MapS.h"
+#include "mfx/pi/param/MapPseudoLog.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
@@ -59,6 +60,7 @@ Disto2xDesc::Disto2xDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	typedef param::TplMapped <param::MapS <false> > TplMix;
+	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 
 	// Crossover frequency
 	param::TplLog *   log_ptr = new param::TplLog (
@@ -138,6 +140,28 @@ Disto2xDesc::Disto2xDesc ()
 		mix_ptr->get_nat_max ()
 	);
 	_desc_set.add_glob (Param_LB_MIX, mix_ptr);
+
+	// Density
+	param::TplLin *   lin_ptr = new param::TplLin (
+		0, 1,
+		"Density\nDens",
+		"%",
+		0,
+		"%5.1f"
+	);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
+	_desc_set.add_glob (Param_DENSITY, lin_ptr);
+
+	// Threshold
+	TplPsl *       pl_ptr = new TplPsl (
+		0, 1,
+		"Threshold\nThresh\nThr",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	_desc_set.add_glob (Param_THRESH, pl_ptr);
 }
 
 

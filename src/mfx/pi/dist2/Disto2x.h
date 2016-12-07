@@ -32,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "fstb/def.h"
 #include "fstb/SingleObj.h"
+#include "mfx/dsp/dyn/EnvFollowerRms.h"
+#include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/dist2/Disto2xDesc.h"
 #include "mfx/pi/dist2/DistoStage.h"
@@ -98,6 +100,8 @@ private:
 			               _buf_xover_arr;
 			std::array <BufAlign, _nbr_stages>
 			               _buf_stage_arr;
+			dsp::iir::OnePole
+			               _dc_killer;
 		};
 		typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -117,6 +121,7 @@ private:
 	void           clear_buffers ();
 	void           set_next_buffer ();
 	void           update_lpf_pre ();
+	void           square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
 
 	State          _state;
 
@@ -145,9 +150,20 @@ private:
 	float          _mix_lb_cur;
 	float          _mix_lb_old;
 	float          _freq_lpf_pre;
+	float          _density;
+	float          _thresh;
 
 	BufAlign       _buf_trans_atk;
 	BufAlign       _buf_trans_sus;
+	BufAlign       _buf_rms_pre;
+	BufAlign       _buf_rms_post;
+
+	dsp::dyn::EnvFollowerRms
+	               _env_pre;
+	dsp::dyn::EnvFollowerRms
+	               _env_post;
+	float          _fixgain_cur;
+	float          _fixgain_old;
 
 	static const std::array <int, _nbr_stages>
 	               _param_stage_base_arr;

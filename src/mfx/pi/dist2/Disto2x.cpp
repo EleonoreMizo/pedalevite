@@ -33,6 +33,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dist2/Param.h"
 #include "mfx/piapi/EventTs.h"
 
+#include <algorithm>
+
 #include <cassert>
 #include <cstring>
 
@@ -72,8 +74,16 @@ Disto2x::Disto2x ()
 ,	_mix_lb_cur (0)
 ,	_mix_lb_old (0)
 ,	_freq_lpf_pre (30)
+,	_density (1)
+,	_thresh (0)
 ,	_buf_trans_atk ()
 ,	_buf_trans_sus ()
+,	_buf_rms_pre ()
+,	_buf_rms_post ()
+,	_env_pre ()
+,	_env_post ()
+,	_fixgain_cur (1)
+,	_fixgain_old (1)
 {
 	mfx::dsp::mix::Align::setup ();
 
@@ -86,6 +96,8 @@ Disto2x::Disto2x ()
 	_state_set.set_val_nat (desc_set, Param_DYN_RLS,     1);
 	_state_set.set_val_nat (desc_set, Param_S12_MIX,     1);
 	_state_set.set_val_nat (desc_set, Param_LB_MIX ,     0);
+	_state_set.set_val_nat (desc_set, Param_DENSITY,     1);
+	_state_set.set_val_nat (desc_set, Param_THRESH ,     0);
 
 	_state_set.add_observer (Param_XOVER  , _param_change_flag_other);
 	_state_set.add_observer (Param_PRE_LPF, _param_change_flag_other);
@@ -93,11 +105,15 @@ Disto2x::Disto2x ()
 	_state_set.add_observer (Param_DYN_RLS, _param_change_flag_other);
 	_state_set.add_observer (Param_S12_MIX, _param_change_flag_other);
 	_state_set.add_observer (Param_LB_MIX , _param_change_flag_other);
+	_state_set.add_observer (Param_DENSITY, _param_change_flag_other);
+	_state_set.add_observer (Param_THRESH , _param_change_flag_other);
 
 	_state_set.set_ramp_time (Param_DYN_ATK, 0.010);
 	_state_set.set_ramp_time (Param_DYN_RLS, 0.010);
 	_state_set.set_ramp_time (Param_S12_MIX, 0.010);
 	_state_set.set_ramp_time (Param_LB_MIX , 0.010);
+	_state_set.set_ramp_time (Param_DENSITY, 0.010);
+	_state_set.set_ramp_time (Param_THRESH , 0.010);
 
 	for (int stage = 0; stage < _nbr_stages; ++stage)
 	{
@@ -123,6 +139,9 @@ Disto2x::Disto2x ()
 	}
 
 	_param_change_flag_other.add_observer (_param_change_flag);
+
+	_env_pre.set_times (0.001f, 0.020f);
+	_env_post.set_times (0.001f, 0.020f);
 }
 
 
@@ -159,8 +178,23 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 	const int      mbs_align = (max_buf_len + 3) & -4;
 	_buf_trans_atk.resize (mbs_align);
 	_buf_trans_sus.resize (mbs_align);
+	_buf_rms_pre.resize (mbs_align);
+	_buf_rms_post.resize (mbs_align);
+
+	static const float   b_s [2] = { 0, 1 };
+	static const float   a_s [2] = { 1, 1 };
+	float                b_z [2];
+	float                a_z [2];
+	const float    k       =
+		dsp::iir::TransSZBilin::compute_k_approx (30 * _inv_fs);
+	dsp::iir::TransSZBilin::map_s_to_z_one_pole_approx (
+		b_z, a_z,
+		b_s, a_s,
+		k
+	);
 	for (auto &chn : _proc->_chn_arr)
 	{
+		chn._dc_killer.set_z_eq (b_z, a_z);
 		for (auto &buf : chn._buf_xover_arr)
 		{
 			buf.resize (mbs_align);
@@ -178,6 +212,13 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 		stage.reset (sample_freq, max_buf_len);
 		stage.set_bias_freq (500);
 	}
+
+	_env_pre.set_sample_freq (sample_freq);
+	_env_post.set_sample_freq (sample_freq);
+
+	_mix_s12_cur = 1;
+	_mix_lb_cur  = 1;
+	_fixgain_cur = 1;
 
 	update_param (true);
 
@@ -233,7 +274,7 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 	// 2 = stage 2 output
 	std::array <std::array <float *, _max_nbr_chn>, 3> stage_io_arr;
 
-	// Frequency splitting, input LPF and transcient processing
+	// Frequency splitting
 	for (int chn = 0; chn < nbr_chn_src; ++chn)
 	{
 		stage_io_arr [0] [chn] = &_proc->_chn_arr [chn]._buf_xover_arr [1] [0];
@@ -247,6 +288,21 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 			proc._src_arr [chn],
 			nbr_spl
 		);
+	}
+
+	// Envelope detection
+	float          lvl_pre_sq = 1;
+	if (_density < 1)
+	{
+		square_block (
+			&_buf_rms_pre [0], &stage_io_arr [0] [0], nbr_spl, nbr_chn_src
+		);
+		lvl_pre_sq = _env_pre.analyse_block_raw (&_buf_rms_pre [0], nbr_spl);
+	}
+
+	// Input LPF and transcient processing
+	for (int chn = 0; chn < nbr_chn_src; ++chn)
+	{
 		_proc->_chn_arr [chn]._lpf_pre.process_block (
 			stage_io_arr [0] [chn],
 			stage_io_arr [0] [chn],
@@ -294,7 +350,7 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 		nbr_chn_src
 	);
 
-	// Mixing
+	// Mixing of both distortions
 	for (int chn = 0; chn < nbr_chn_src; ++chn)
 	{
 		dsp::mix::Align::copy_xfade_2_1_vlrauto (
@@ -306,6 +362,63 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 			_mix_s12_cur
 		);
 
+		// DC fix
+		_proc->_chn_arr [chn]._dc_killer.process_block (
+			stage_io_arr [0] [chn],
+			stage_io_arr [0] [chn],
+			nbr_spl
+		);
+	}
+
+	float          lvl_post_sq = 1;
+	_fixgain_cur = 1;
+	if (_density < 1)
+	{
+		// Envelope detection
+		square_block (
+			&_buf_rms_post [0], &stage_io_arr [0] [0], nbr_spl, nbr_chn_src
+		);
+		lvl_post_sq = _env_post.analyse_block_raw (&_buf_rms_post [0], nbr_spl);
+
+		// Fix gain calculation
+		const auto     lvl_sq   =
+			fstb::ToolsSimd::set_2f32 (lvl_pre_sq, lvl_post_sq);
+		const auto     lvl      = fstb::ToolsSimd::sqrt (lvl_sq);
+		const float    lvl_pre  = fstb::ToolsSimd::Shift <0>::extract (lvl);
+		const float    lvl_post = fstb::ToolsSimd::Shift <1>::extract (lvl);
+		const float    lvl_lim  = 2; // Limiter
+
+		assert (lvl_post > 0);
+		const float    lvl_post_inv = 1.0f / lvl_post;
+#if 1
+		const float    lvl_t = std::max (lvl_pre, _thresh);
+		const float    r  = std::min (lvl_t * lvl_post_inv, 1.0f);
+		const float    gd = pow (r, 1 - _density);
+		const float    gt = gd;
+#else
+		const float    r  = lvl_pre * lvl_post_inv;
+		const float    gd = pow (r, 1 - _density);
+		const float    gm = std::min (_thresh * lvl_post_inv, 1.0f);
+		const float    gt = std::max (gd, gm);
+#endif
+
+		_fixgain_cur  = std::min (gt, lvl_lim * lvl_post_inv);
+	}
+
+	// Fix gain
+	if (_fixgain_cur != 1 || _fixgain_old != 1)
+	{
+		for (int chn = 0; chn < nbr_chn_src; ++chn)
+		{
+			dsp::mix::Align::scale_1_vlrauto (
+				stage_io_arr [chn] [0], nbr_spl, _fixgain_old, _fixgain_cur
+			);
+		}
+	}
+
+	// Mixing of the distorted part with the low-frequency part
+	for (int chn = 0; chn < nbr_chn_src; ++chn)
+	{
 		dsp::mix::Align::copy_xfade_2_1_vlrauto (
 			stage_io_arr [0] [chn],
 			stage_io_arr [0] [chn],
@@ -326,7 +439,7 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 	{
 		const float *  src_ptr = &proc._dst_arr [0  ] [0];
 		float *        dst_ptr = &proc._dst_arr [chn] [0];
-		memcpy (dst_ptr, src_ptr, sizeof (*dst_ptr) * nbr_spl);
+		dsp::mix::Align::copy_1_1 (dst_ptr, src_ptr, nbr_spl);
 	}
 
 	set_next_buffer ();
@@ -362,6 +475,11 @@ void	Disto2x::update_param (bool force_flag)
 				float (_state_set.get_val_end_nat (Param_S12_MIX));
 			_mix_lb_cur  =
 				float (_state_set.get_val_end_nat (Param_LB_MIX));
+
+			_density =
+				float (_state_set.get_val_end_nat (Param_DENSITY));
+			_thresh  =
+				float (_state_set.get_val_end_nat (Param_THRESH));
 		}
 
 		for (int stage_cnt = 0; stage_cnt < _nbr_stages; ++stage_cnt)
@@ -403,6 +521,7 @@ void	Disto2x::clear_buffers ()
 	for (auto &chn : _proc->_chn_arr)
 	{
 		chn._lpf_pre.clear_buffers ();
+		chn._dc_killer.clear_buffers ();
 	}
 	_proc->_trans_ana.clear_buffers ();
 	_proc->_freq_split.clear_buffers ();
@@ -420,6 +539,7 @@ void	Disto2x::set_next_buffer ()
 {
 	_mix_s12_old = _mix_s12_cur;
 	_mix_lb_old  = _mix_lb_cur;
+	_fixgain_old = _fixgain_cur;
 }
 
 
@@ -441,6 +561,31 @@ void	Disto2x::update_lpf_pre ()
 	for (auto &chn : _proc->_chn_arr)
 	{
 		chn._lpf_pre.set_z_eq (b_z, a_z);
+	}
+}
+
+
+
+void	Disto2x::square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn)
+{
+	static const float   not_zero = 1e-30f;	// -600 dB
+	if (nbr_chn == 1)
+	{
+		dsp::mix::Align::sum_square_n_1 (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero
+		);
+	}
+	else if (nbr_chn == 2)
+	{
+		dsp::mix::Align::sum_square_n_1_v (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 0.5f
+		);
+	}
+	else
+	{
+		dsp::mix::Align::sum_square_n_1_v (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 1.0f / nbr_chn
+		);
 	}
 }
 

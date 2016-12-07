@@ -60,6 +60,8 @@ enum Param
 	Param_S2_BASE = Param_S1_BASE + ParamStage_NBR_ELT,
 	Param_S12_MIX = Param_S2_BASE + ParamStage_NBR_ELT,
 	Param_LB_MIX,
+	Param_DENSITY,
+	Param_THRESH,
 
 	Param_NBR_ELT
 
