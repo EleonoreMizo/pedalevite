@@ -26,6 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Fpu.h"
 #include "mfx/dsp/StereoLevel.h"
 
+#include <array>
+
 #include <cassert>
 #include <cstring>
 
@@ -272,6 +274,12 @@ void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], long nbr_
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
+#if 1
+
+	memcpy (out_ptr, in_ptr, nbr_spl * sizeof (out_ptr [0]));
+
+#else
+
 	const long			nbr_loop = nbr_spl >> 2;
 	long					pos = 0;
 		
@@ -293,6 +301,7 @@ void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], long nbr_
 			nbr_spl
 		);
 	}
+#endif
 }
 
 
@@ -414,6 +423,13 @@ void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const floa
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 	
+#if 1
+
+	memcpy (out_1_ptr, in_ptr, nbr_spl * sizeof (out_1_ptr [0]));
+	memcpy (out_2_ptr, in_ptr, nbr_spl * sizeof (out_2_ptr [0]));
+
+#else
+
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
@@ -438,6 +454,8 @@ void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const floa
 			nbr_spl
 		);
 	}
+
+#endif
 }
 
 
@@ -725,6 +743,13 @@ void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const floa
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
+#if 1
+
+	memcpy (out_1_ptr, in_1_ptr, nbr_spl * sizeof (out_1_ptr [0]));
+	memcpy (out_2_ptr, in_2_ptr, nbr_spl * sizeof (out_2_ptr [0]));
+
+#else
+
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 		
@@ -752,6 +777,8 @@ void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const floa
 			nbr_spl
 		);
 	}
+
+#endif
 }
 
 
@@ -4225,6 +4252,200 @@ void	Simd <VD, VS>::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], long
 		  out_2_ptr,
 		  nbr_spl
 	  );
+	}
+}
+
+
+
+template <class VD, class VS>
+void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val)
+{
+	static const int  max_nbr_chn = 64;
+	assert (out_ptr != 0);
+	assert (src_ptr_arr != 0);
+	assert (src_ptr_arr [0] != 0);
+	assert (nbr_spl > 0);
+	assert (nbr_chn > 0);
+	assert (nbr_chn <= max_nbr_chn);
+
+	const auto     init_val_v = fstb::ToolsSimd::set1_f32 (init_val);
+	const long     end = nbr_spl & -8L;
+	long           pos = 0;
+	if (nbr_chn == 1)
+	{
+		const float *  c0_ptr = src_ptr_arr [0];
+		while (pos < nbr_spl)
+		{
+			const auto     a0 = V128Dst::load_f32 (c0_ptr + pos    );
+			const auto     a1 = V128Dst::load_f32 (c0_ptr + pos + 4);
+			auto           v0 = init_val_v;
+			auto           v1 = init_val_v;
+			fstb::ToolsSimd::mac (v0, a0, a0);
+			fstb::ToolsSimd::mac (v1, a1, a1);
+			V128Dst::store_f32 (out_ptr + pos    , v0);
+			V128Dst::store_f32 (out_ptr + pos + 4, v1);
+			pos += 8;
+		}
+	}
+	else if (nbr_chn == 2)
+	{
+		const float *  c0_ptr = src_ptr_arr [0];
+		const float *  c1_ptr = src_ptr_arr [1];
+		while (pos < nbr_spl)
+		{
+			const auto     a0 = V128Dst::load_f32 (c0_ptr + pos    );
+			const auto     a1 = V128Dst::load_f32 (c0_ptr + pos + 4);
+			const auto     b0 = V128Dst::load_f32 (c1_ptr + pos    );
+			const auto     b1 = V128Dst::load_f32 (c1_ptr + pos + 4);
+			auto           v0 = init_val_v;
+			auto           v1 = init_val_v;
+			fstb::ToolsSimd::mac (v0, a0, a0);
+			fstb::ToolsSimd::mac (v1, a1, a1);
+			fstb::ToolsSimd::mac (v0, b0, b0);
+			fstb::ToolsSimd::mac (v1, b1, b1);
+			V128Dst::store_f32 (out_ptr + pos    , v0);
+			V128Dst::store_f32 (out_ptr + pos + 4, v1);
+			pos += 8;
+		}
+	}
+	else
+	{
+		while (pos < nbr_spl)
+		{
+			auto           v0  = init_val_v;
+			auto           v1  = init_val_v;
+			int            chn = 0;
+			do
+			{
+				const auto     a0 = V128Dst::load_f32 (src_ptr_arr [chn] + pos    );
+				const auto     a1 = V128Dst::load_f32 (src_ptr_arr [chn] + pos + 4);
+				fstb::ToolsSimd::mac (v0, a0, a0);
+				fstb::ToolsSimd::mac (v1, a1, a1);
+				++ chn;
+			}
+			while (chn < nbr_chn);
+			V128Dst::store_f32 (out_ptr + pos    , v0);
+			V128Dst::store_f32 (out_ptr + pos + 4, v1);
+			pos += 8;
+		}
+	}
+
+	nbr_spl &= 7;
+	if (nbr_spl > 0)
+	{
+		std::array <const float *, max_nbr_chn> src2_ptr_arr;
+		for (int chn = 0; chn < nbr_chn; ++chn)
+		{
+			src2_ptr_arr [chn] = src_ptr_arr [chn] + pos;
+		}
+		Fpu::sum_square_n_1 (
+			out_ptr + pos,
+			&src2_ptr_arr [0],
+			nbr_spl,
+			nbr_chn,
+			init_val
+		);
+	}
+}
+
+
+
+template <class VD, class VS>
+void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val, float vol)
+{
+	static const int  max_nbr_chn = 64;
+	assert (out_ptr != 0);
+	assert (src_ptr_arr != 0);
+	assert (src_ptr_arr [0] != 0);
+	assert (nbr_spl > 0);
+	assert (nbr_chn > 0);
+	assert (nbr_chn <= max_nbr_chn);
+
+	const auto     init_val_v = fstb::ToolsSimd::set1_f32 (init_val);
+	const auto     vol_v      = fstb::ToolsSimd::set1_f32 (vol);
+	const long     end = nbr_spl & -8L;
+	long           pos = 0;
+	if (nbr_chn == 1)
+	{
+		const float *  c0_ptr = src_ptr_arr [0];
+		while (pos < nbr_spl)
+		{
+			const auto     a0 = V128Dst::load_f32 (c0_ptr + pos    );
+			const auto     a1 = V128Dst::load_f32 (c0_ptr + pos + 4);
+			auto           v0 = init_val_v;
+			auto           v1 = init_val_v;
+			fstb::ToolsSimd::mac (v0, a0, a0);
+			fstb::ToolsSimd::mac (v1, a1, a1);
+			v0 *= vol_v;
+			v1 *= vol_v;
+			V128Dst::store_f32 (out_ptr + pos    , v0);
+			V128Dst::store_f32 (out_ptr + pos + 4, v1);
+			pos += 8;
+		}
+	}
+	else if (nbr_chn == 2)
+	{
+		const float *  c0_ptr = src_ptr_arr [0];
+		const float *  c1_ptr = src_ptr_arr [1];
+		while (pos < nbr_spl)
+		{
+			const auto     a0 = V128Dst::load_f32 (c0_ptr + pos    );
+			const auto     a1 = V128Dst::load_f32 (c0_ptr + pos + 4);
+			const auto     b0 = V128Dst::load_f32 (c1_ptr + pos    );
+			const auto     b1 = V128Dst::load_f32 (c1_ptr + pos + 4);
+			auto           v0 = init_val_v;
+			auto           v1 = init_val_v;
+			fstb::ToolsSimd::mac (v0, a0, a0);
+			fstb::ToolsSimd::mac (v1, a1, a1);
+			fstb::ToolsSimd::mac (v0, b0, b0);
+			fstb::ToolsSimd::mac (v1, b1, b1);
+			v0 *= vol_v;
+			v1 *= vol_v;
+			V128Dst::store_f32 (out_ptr + pos    , v0);
+			V128Dst::store_f32 (out_ptr + pos + 4, v1);
+			pos += 8;
+		}
+	}
+	else
+	{
+		while (pos < nbr_spl)
+		{
+			auto           v0  = init_val_v;
+			auto           v1  = init_val_v;
+			int            chn = 0;
+			do
+			{
+				const auto     a0 = V128Dst::load_f32 (src_ptr_arr [chn] + pos    );
+				const auto     a1 = V128Dst::load_f32 (src_ptr_arr [chn] + pos + 4);
+				fstb::ToolsSimd::mac (v0, a0, a0);
+				fstb::ToolsSimd::mac (v1, a1, a1);
+				++ chn;
+			}
+			while (chn < nbr_chn);
+			v0 *= vol_v;
+			v1 *= vol_v;
+			V128Dst::store_f32 (out_ptr + pos    , v0);
+			V128Dst::store_f32 (out_ptr + pos + 4, v1);
+			pos += 8;
+		}
+	}
+
+	nbr_spl &= 7;
+	if (nbr_spl > 0)
+	{
+		std::array <const float *, max_nbr_chn> src2_ptr_arr;
+		for (int chn = 0; chn < nbr_chn; ++chn)
+		{
+			src2_ptr_arr [chn] = src_ptr_arr [chn] + pos;
+		}
+		Fpu::sum_square_n_1_v (
+			out_ptr + pos,
+			&src2_ptr_arr [0],
+			nbr_spl,
+			nbr_chn,
+			init_val,
+			vol
+		);
 	}
 }
 

@@ -219,6 +219,9 @@ void	(*Generic::linop_cst_ip_1) (float data_ptr [], long nbr_spl, float mul_val,
 
 void	(*Generic::add_sub_ip_2_2) (float out_1_ptr [], float out_2_ptr [], long nbr_spl) = 0;
 
+void	(*Generic::sum_square_n_1) (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val) = 0;
+void	(*Generic::sum_square_n_1_v) (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val, float vol) = 0;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -410,21 +413,9 @@ void	Generic::setup_fpu ()
 	linop_cst_ip_1          = Fpu::linop_cst_ip_1;
 
 	add_sub_ip_2_2          = Fpu::add_sub_ip_2_2;
-}
 
-
-
-void	Generic::setup_sse ()
-{
-#if (fstb_IS (ARCHI, X86))
-
-	/*** To do ***/
-
-#else
-
-	assert (false);
-
-#endif
+	sum_square_n_1          = Fpu::sum_square_n_1;
+	sum_square_n_1_v        = Fpu::sum_square_n_1_v;
 }
 
 

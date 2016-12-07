@@ -224,6 +224,9 @@ void	(*Align::linop_cst_ip_1) (float data_ptr [], long nbr_spl, float mul_val, f
 
 void	(*Align::add_sub_ip_2_2) (float out_1_ptr [], float out_2_ptr [], long nbr_spl) = 0;
 
+void	(*Align::sum_square_n_1) (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val) = 0;
+void	(*Align::sum_square_n_1_v) (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val, float vol) = 0;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -427,6 +430,9 @@ void	Align::setup_unaligned ()
 	linop_cst_ip_1          = Generic::linop_cst_ip_1;
 
 	add_sub_ip_2_2          = Generic::add_sub_ip_2_2;
+
+	sum_square_n_1          = Generic::sum_square_n_1;
+	sum_square_n_1_v        = Generic::sum_square_n_1_v;
 }
 
 
@@ -599,6 +605,9 @@ void	Align::setup_simd ()
 	linop_cst_ip_1          = SimdA::linop_cst_ip_1;
 
 	add_sub_ip_2_2          = SimdA::add_sub_ip_2_2;
+
+	sum_square_n_1          = SimdA::sum_square_n_1;
+	sum_square_n_1_v        = SimdA::sum_square_n_1_v;
 }
 
 #endif // X86, ARM

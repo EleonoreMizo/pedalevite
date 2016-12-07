@@ -2308,6 +2308,115 @@ void	Fpu::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], long nbr_spl)
 
 
 
+void	Fpu::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val)
+{
+	assert (out_ptr != 0);
+	assert (src_ptr_arr != 0);
+	assert (src_ptr_arr [0] != 0);
+	assert (nbr_spl > 0);
+	assert (nbr_chn > 0);
+
+	long           pos = 0;
+	if (nbr_chn == 1)
+	{
+		const float *  c0_ptr = src_ptr_arr [0];
+		do
+		{
+			const float    a = c0_ptr [pos];
+			out_ptr [pos] = a * a + init_val;
+			++ pos;
+		}
+		while (pos < nbr_spl);
+	}
+	else if (nbr_chn == 2)
+	{
+		const float *  c0_ptr = src_ptr_arr [0];
+		const float *  c1_ptr = src_ptr_arr [1];
+		do
+		{
+			const float    a = c0_ptr [pos];
+			const float    b = c1_ptr [pos];
+			out_ptr [pos] = a * a + b * b + init_val;
+			++ pos;
+		}
+		while (pos < nbr_spl);
+	}
+	else
+	{
+		do
+		{
+			float          x   = init_val;
+			int            chn = 0;
+			do
+			{
+				const float    a = src_ptr_arr [chn] [pos];
+				x += a * a;
+				++ chn;
+			}
+			while (chn < nbr_chn);
+			out_ptr [pos] = x;
+			++ pos;
+		}
+		while (pos < nbr_spl);
+	}
+}
+
+
+
+void	Fpu::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val, float vol)
+{
+	assert (out_ptr != 0);
+	assert (src_ptr_arr != 0);
+	assert (nbr_spl > 0);
+	assert (nbr_chn > 0);
+
+	long           pos = 0;
+	if (nbr_chn == 1)
+	{
+		const float *  c0_ptr = src_ptr_arr [0];
+		do
+		{
+			const float    a = c0_ptr [pos];
+			out_ptr [pos] = (a * a + init_val) * vol;
+			++ pos;
+		}
+		while (pos < nbr_spl);
+	}
+	else if (nbr_chn == 2)
+	{
+		const float *  c0_ptr = src_ptr_arr [0];
+		const float *  c1_ptr = src_ptr_arr [1];
+		do
+		{
+			const float    a = c0_ptr [pos];
+			const float    b = c1_ptr [pos];
+			out_ptr [pos] = (a * a + b * b + init_val) * vol;
+			++ pos;
+		}
+		while (pos < nbr_spl);
+	}
+	else
+	{
+		do
+		{
+			float          x   = init_val;
+			int            chn = 0;
+			do
+			{
+				const float    a = src_ptr_arr [chn] [pos];
+				x += a * a;
+				++ chn;
+			}
+			while (chn < nbr_chn);
+			out_ptr [pos] = x * vol;
+			++ pos;
+		}
+		while (pos < nbr_spl);
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

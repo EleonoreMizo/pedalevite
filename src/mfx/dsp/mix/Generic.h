@@ -219,6 +219,9 @@ public:
 
 	static void    (*add_sub_ip_2_2) (float out_1_ptr [], float out_2_ptr [], long nbr_spl);
 
+	static void    (*sum_square_n_1) (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val);
+	static void    (*sum_square_n_1_v) (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val, float vol);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -236,7 +239,6 @@ private:
 	void           setup_internal ();
 
 	static void    setup_fpu ();
-	static void    setup_sse ();
 
 	static Generic &
 	               use_instance ();
