@@ -140,8 +140,8 @@ Disto2x::Disto2x ()
 
 	_param_change_flag_other.add_observer (_param_change_flag);
 
-	_env_pre.set_times (0.001f, 0.020f);
-	_env_post.set_times (0.001f, 0.020f);
+	_env_pre.set_times (0.001f, 0.050f);
+	_env_post.set_times (0.001f, 0.050f);
 }
 
 
