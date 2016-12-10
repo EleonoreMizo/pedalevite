@@ -170,6 +170,7 @@ private:
 		               PedalState ();
 		bool           _press_flag;
 		bool           _hold_flag;
+		bool           _reset_cycle_on_preset_flag;
 		std::chrono::microseconds
 		               _press_ts;
 		int            _cycle_pos;       // Counts only "PRESS" events

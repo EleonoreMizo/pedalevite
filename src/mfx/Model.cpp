@@ -442,6 +442,14 @@ void	Model::activate_preset (int preset_index)
 
 	_edit_preset_flag = true;
 
+	for (auto &state : _pedal_state_arr)
+	{
+		if (state._reset_cycle_on_preset_flag)
+		{
+			state._cycle_pos = 0;
+		}
+	}
+
 	update_layout ();
 
 	if (_obs_ptr != 0)
@@ -1204,6 +1212,7 @@ Model::SlotPiId::SlotPiId ()
 Model::PedalState::PedalState ()
 :	_press_flag (false)
 ,	_hold_flag (false)
+,	_reset_cycle_on_preset_flag (true)
 ,	_press_ts (INT64_MIN)
 ,	_cycle_pos (0)
 {
