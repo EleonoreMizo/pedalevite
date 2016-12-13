@@ -285,7 +285,7 @@ void	DesignEq2p::make_mid_peak (T bs [3], T as [3], T q, T lvl)
 	assert (bs != 0);
 	assert (as != 0);
 	assert (q > 0);
-	assert (lvl >= 0);
+	assert (lvl > 0);
 
 	const T        lvl_r2 = sqrt (lvl);
 
