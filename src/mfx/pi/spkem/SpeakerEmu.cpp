@@ -69,11 +69,11 @@ SpeakerEmu::SpeakerEmu ()
 ,	_param_change_flag ()
 ,	_biq_pack ()
 ,	_config_arr ()
+,	_nbr_stages_arr ({{ 8, 16, 12 }})
 ,	_chn_arr ()
 ,	_comb_time_spl (24)
 ,	_write_pos (0)
 ,	_config (0)
-,	_nbr_stages_arr ({{ 8, 16, 12 }})
 ,	_mid_freq (1900)
 ,	_mid_lvl (powf (10.f, 7 / 20.f))
 ,	_treble_freq (6500)
@@ -137,7 +137,7 @@ SpeakerEmu::SpeakerEmu ()
 	set_pass_h ( 2,  1,    73, 0    ,  1.25f );
 	set_peak (   2,  2,   130, 0.5f ,  2     );
 	set_peak (   2,  3,   170, 2    ,  2.7f  );
-	set_shelf_l (2,  4,   300, 0.2f ,  0.5f  );
+	set_shelf_l (2,  4,   300, 0.8f ,  0.5f  ); // Measured level was 0.2f instead of 0.8f. This new setting gives a flatter response in the low-mid range.
 	set_shelf_h (2,  5,   870, 1.1f ,  6     );
 	set_shelf_h (2,  6,  1780, 1.4f ,  4.7f  );
 	set_pass_l ( 2,  7,  3750, 0    ,  0.8f  );
@@ -145,7 +145,7 @@ SpeakerEmu::SpeakerEmu ()
 	set_pass_l ( 2,  9,  6000, 0    ,  0.8f  );
 	set_pass_l ( 2, 10,  8500, 1.25f,  4     );
 	set_pass_l ( 2, 11, 10000, 0.01f,  1     );
-	add_gain (   2, 1.5f);
+//	add_gain (   2, 1.5f);                      // Not needed with the flat response mod
 
 	for (auto &chn : _chn_arr)
 	{
