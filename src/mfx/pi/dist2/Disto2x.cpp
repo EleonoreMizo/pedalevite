@@ -390,19 +390,10 @@ void	Disto2x::do_process_block (ProcInfo &proc)
 
 		assert (lvl_post > 0);
 		const float    lvl_post_inv = 1.0f / lvl_post;
-#if 1
-		const float    lvl_t = std::max (lvl_pre, _thresh);
-		const float    r  = std::min (lvl_t * lvl_post_inv, 1.0f);
-		const float    gd = pow (r, 1 - _density);
-		const float    gt = gd;
-#else
-		const float    r  = lvl_pre * lvl_post_inv;
-		const float    gd = pow (r, 1 - _density);
-		const float    gm = std::min (_thresh * lvl_post_inv, 1.0f);
-		const float    gt = std::max (gd, gm);
-#endif
-
-		_fixgain_cur  = std::min (gt, lvl_lim * lvl_post_inv);
+		const float    lvl_t = std::max (lvl_pre, _thresh);        // Modified input level doesn't go below the threshold
+		const float    r  = std::min (lvl_t * lvl_post_inv, 1.0f); // Amplification factor to reach the modified input level
+		const float    gd = pow (r, 1 - _density);                 // Moderated by the density
+		_fixgain_cur  = std::min (gd, lvl_lim * lvl_post_inv);
 	}
 
 	// Fix gain
