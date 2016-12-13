@@ -1,0 +1,1320 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pédale Vite&nbsp;&mdash;&nbsp;pédalier multi-effet pour guitare et basse&nbsp;&mdash;&nbsp;Manuel d’utilisation</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body><div class="global">
+
+<h1>Pédale Vite&nbsp;&mdash;&nbsp;manuel d’utilisation</h1>
+
+<h2>Table des matières</h2>
+
+<ol style="list-style-type:upper-roman;">
+<li class="tcont"><a href="#intro">Introduction</a></li>
+<li class="tcont"><a href="#usage">Utilisation</a>
+	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#description">Description du matériel</a></li>
+	<li><a href="#startup">Démarrage</a></li>
+	<li><a href="#calibration">Calibration</a></li>
+	<li><a href="#baby-steps">Premiers pas</a></li>
+	</ol>
+</li>
+<li class="tcont"><a href="#reference">Référence</a>
+	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#concept">Concepts</a></li>
+	<li><a href="#leds">Diodes lumineuses</a></li>
+	<li><a href="#screen-main">Écrans principaux</a></li>
+	<li><a href="#screen-prog-edit">Édition d’un programme</a></li>
+	<li><a href="#screen-banks">Banques de programmes</a></li>
+	<li><a href="#screen-pedalboard-config">Configuration du pédalier</a></li>
+	<li><a href="#screen-levels">Volumes et niveaux</a></li>
+	<li><a href="#screen-tuner">Accordeur</a></li>
+	<li><a href="#screen-restart">Redémarrage</a></li>
+	</ol>
+</li>
+<li class="tcont"><a href="#effect-list">Effets disponibles</a>
+	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#fx-compex">CompEx — Compresseur/Expanseur</a></li>
+	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
+	<li><a href="#fx-delay">Delay — Écho stéréo</a></li>
+	<li><a href="#fx-disto-tone">Distortion Tone Stage — Tonalité pour distorsion</a></li>
+	<li><a href="#fx-disto2x">Double Distortion</a></li>
+	<li><a href="#fx-env-fol">Enveloppe Follower — Suiveur d’enveloppe</a></li>
+	<li><a href="#fx-filter-squeezer">Filter Squeezer — Filtre résonnant à distorsion</a></li>
+	<li><a href="#fx-flancho">FlanCho — Chorus et flanger</a></li>
+	<li><a href="#fx-freeverb">Freeverb — Réverbération</a></li>
+	<li><a href="#fx-freq-shift">Frequency Shifter — Translateur de fréquences</a></li>
+	<li><a href="#fx-imp-fix">Input Impedance Fix — Adaptation d’impédance d’entrée</a></li>
+	<li><a href="#fx-peq">Parametric Equalizer — Égaliseur paramétrique</a></li>
+	<li><a href="#fx-phaser">Phaser</a></li>
+	<li><a href="#fx-disto">Simple Distortion</a></li>
+	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
+	<li><a href="#fx-tremolo">Tremolo</a></li>
+	<li><a href="#fx-wha">Wha-wha</a></li>
+	<li><a href="#fx-lfo">LFO — Oscillateur basse fréquence</a></li>
+	</ol>
+</li>
+<li class="tcont"><a href="#troubleshooting">Dépannage</a></li>
+<li class="tcont"><a href="#softwareinstall">Installation logicielle</a></li>
+<li class="tcont"><a href="#changelog">Historique des versions</a></li>
+</ol>
+
+
+
+<h2><a id="intro"></a>I.&emsp;Introduction</h2>
+
+<p><i>Pédale Vite</i> est une pédalier multi-effet pour guitare à fabriquer
+soi-même (DIY, <i><span lang="en">do it yourself</span></i>).
+Ce manuel détaille comment utiliser le pédalier une fois monté et fonctionnel.</p>
+
+
+
+<h2><a id="usage"></a>II.&emsp;Utilisation</h2>
+
+
+
+<h3><a id="description"></a>Description du matériel</h3>
+
+<h4>Face arrière</h4>
+
+<ol style="list-style-type:decimal;">
+<li>Ports USB et Ethernet du Rasberry Pi 3</li>
+<li>Prises pour pédales d’expression</li>
+<li>Interrupteur de mise en marche</li>
+<li>Cordon d’alimentation secteur 220–240&#8239;V</li>
+<li>Sorties audio vers ampli ou console</li>
+<li>Sortie casque, stéréo en jack 6,35&#8239;mm.</li>
+<li>Entrées guitare</li>
+</ol>
+<div class="pic"><a href="panel-rear.png"><img src="panel-rear-small.png" /></a></div>
+<p>L’accès au Pi n’est pas nécessaire en fonctionnement courant et ne sert
+qu’aux opérations de maintenance.</p>
+<p>La première pédale d’expression se trouve à gauche sur le panneau, et donc
+à droite quand on fait face au pédalier.</p>
+<p>Tous les jacks sont en 6,35&#8239;mm et sont asymétriques (signal mono),
+à part la prise casque qui est stéréo.</p>
+<p>Les canaux gauches et droits des entrées et des sorties sont inversés
+afin qu’ils soient dans le bon ordre quand on se place devant le pédalier.
+Les entrées font environ 500&#8239;kΩ d’impédance.
+Utiliser le canal gauche pour brancher la guitare ou tout autre signal
+mono.
+Quand le pédalier est configuré en mono, les deux sorties diffusent le même
+signal.</p>
+
+<h4>Face supérieure</h4>
+
+<ol style="list-style-type:decimal;" start="8">
+<li>Bouton de contrôle des effets</li>
+<li>Écran</li>
+<li>Boutons rotatifs de navigation dans les menus</li>
+<li>Boutons de navigation dans les menus</li>
+<li>LED de contrôle, leur usage dépend du contexte.</li>
+<li>Deux rangées de six pédales permettant de changer les effets.</li>
+</ol>
+<div class="pic"><a href="panel-top.png"><img src="panel-top-small.png" /></a></div>
+<p>Les boutons poussoir de navigation sont agencés de la façon suivante.
+Sur la rangée supérieure&#8239;:
+Sélectionner/valider (<span class="key">Select</span>), flèche haut
+(<span class="keya">↑</span>), annuler/échappement
+(<span class="key">Esc</span>).
+Sur la rangée inférieure&#8239;: flèches gauche (<span class="keya">←</span>),
+bas (<span class="keya">↓</span>), droite (<span class="keya">→</span>).</p>
+<p>Les boutons rotatifs de navigation sont généralement redondants des
+boutons poussoir.
+Celui de gauche permet de se déplacer verticalement, et celui de droite
+horizontalement.</p>
+
+
+<h3><a id="startup"></a>Démarrage</h3>
+
+<div class="pic"><a href="how-to-plug.png"><img src="how-to-plug-small.png" /></a></div>
+<ol style="list-style-type:decimal;">
+<li>Brancher le cordon d’alimentation (4) sur le secteur.</li>
+<li>Brancher la guitare à l’entrée gauche (7).</li>
+<li>Brancher la sortie gauche du pédalier (5) sur un ampli.</li>
+<li>Allumer l’interrupteur de mise en marche (3).</li>
+</ol>
+<p>Au bout d’une petite dizaine de secondes, l’écran doit afficher le
+programme courant, nommé «&#8239;Bypass&#8239;».</p>
+<div class="pic"><img src="current-program-bypass.png" /></div>
+<ol style="list-style-type:decimal;" start="5">
+<li>Allumer l’ampli.</li>
+<li>Jouer.</li>
+</ol>
+<p>Le son est trop fort&#8239;? trop faible&#8239;? Vous n’entendez rien&#8239;?
+Se reporter à la section <a href="#calibration">calibration</a>.</p>
+<p>Pour arrêter, effectuer les opérations dans l’ordre inverse&#8239;:
+éteindre l’ampli, éteindre le pédalier puis débrancher.</p>
+<p>Note&#8239;: il est déconseillé d’avoir l’ampli en marche pendant
+l’allumage et l’extinction du pédalier.
+Si c’est le cas, veillez à ce que le volume soit baissé au minimum de façon
+à ce que d’éventuels craquements ne passent pas à travers la chaîne
+d’amplification.</p>
+
+
+
+<h3><a id="calibration"></a>Calibration</h3>
+
+<p>Pour que le pédalier donne des résultats optimaux, il est nécessaire de le
+régler, en particulier les niveaux d’entrée et de sortie.
+Le but est d’avoir un niveau d’entrée aussi fort que possible sans que le
+signal arrivant de la guitare ne sature à cet endroit.
+Ensuite, si on joue sur un ampli, il faut sortir à un niveau similaire à
+celui qu’aurait la guitare branchée directement.</p>
+<p>Il n’y a malheureusement pas de réglage pratique pour la calibration à
+l’extérieur du boîtier.
+Il faut donc s’aventurer à l’intérieur de la machine.</p>
+<p>Éteindre le pédalier et le retourner.
+À l’aide d’un tournevis cruciforme, retirer les 8 vis qui retiennent le socle.
+Soulever ce dernier, la carte son y est attachée.
+Prendre bien garde à ne pas débrancher ou arracher de câble.
+Poser le socle juste à côté du boîtier.</p>
+<p>L’interface audio y est accrochée sur la face intérieure.
+Brancher et allumer le pédalier, toujours ouvert.
+Éviter de mettre les doigts sur le câblage 220&#8239;V.
+À vous de trouver une méthode efficace de manipulation du boîtier,
+car vous allez devoir manipuler les boutons et examiner l’écran en façade
+tout en réglant l’interface audio.
+Poser et caler le boîtier sur la tranche avant devrait permettre cette
+manipulation sans trop de soucis.</p>
+<p>Presser le bouton Sélection, descendre sur le menu Volume & Levels,
+et enfoncer de nouveau Sélection.</p>
+<div class="pic"><img src="main-menu-levels.png" /></div>
+<p>Vous arrivez alors sur l’écran de contrôle des niveaux.
+La jauge du haut donne les niveaux d’entrée, celle du milieu ceux de sortie.
+Les niveaux à considérer (crêtes) sont donnés par les petits traits qui se baladent
+à droite des barres pleines (RMS).</p>
+<div class="pic"><img src="levels.png" /></div>
+
+<h4>Niveau d’entrée</h4>
+
+<p>Jouer aussi fort que possible.
+Le niveau d’entrée ne devrait jamais dépasser 0&#8239;dB, et ne passer
+qu’assez rarement au-dessus de &minus;6&#8239;dB.
+En revanche, il devrait être aussi élevé que possible.</p>
+<p>En principe, le niveau d’entrée est réglé par défaut au minimum, ce qui
+convient pour une guitare branchée directement au pédalier, compte tenu
+de l’interface audio choisie.
+Cependant, il peut être nécessaire de l’adapter.</p>
+<p>Ajuster le bouton de l’entrée 1 (la gauche) sur l’interface audio jusqu’à
+ce que son niveau semble adapté.
+Reporter ensuite le réglage sur l’entrée 2.</p>
+
+<h4>Niveau de sortie</h4>
+
+<p>Une fois le niveau d’entrée correctement réglé, on peut passer au
+niveau de sortie.
+Assurez-vous de bien être sur le programme «&#8239;Bypass&#8239;»,
+qui fait passer directement le signal de la guitare à la sortie sans
+modification particulière.</p>
+<p>Dans l’écran des niveaux, le volume de sortie doit être positionné
+à 0&#8239;dB.
+Si ce n’est pas le cas, descendez sur le réglage à l’aide des flèches
+verticales.
+Une fois sur l’indicateur de volume, utilisez les flèches horizontales
+pour ajuster sa valeur.</p>
+<p>Régler ensuite le niveau de sortie sur l’interface audio de façon à ce
+que le son qui en sorte soit similaire à celui de la guitare branchée
+directement dans l’ampli.
+En l’absence d’instrument de mesure en aval du pédalier, vous pouvez
+brancher alternativement le pédalier et la guitare sur l’ampli pour
+comparer les volumes à l’oreille.</p>
+<p>Enfin, vous pouvez régler le volume du casque, qui ne nécessite
+pas d’autre référence que vos oreilles.</p>
+<p>Éteindre maintenant le pédalier et refermer le socle en prenant bien
+garde à ce qu’aucun fil ne soit arraché et que tout s’emboîte sans forcer.</p>
+<p>Recâbler et rallumer.
+Contrôler une dernière fois que tout est bon.</p>
+
+
+
+<h3><a id="baby-steps"></a>Premiers pas</h3>
+
+<p>&hellip;</p>
+
+
+
+<h2><a id="reference"></a>III.&emsp;Référence</h2>
+
+
+
+<h3><a id="concept"></a>Concepts</h3>
+
+<p>Les effets du pédalier sont organisés en <dfn>programmes</dfn>.
+Un programme est constitué d’une chaîne d’effets et d’informations de
+pilotage des effets à partir des pédales et boutons, les
+<dfn>contrôleurs</dfn>.</p>
+<p>Les programmes sont eux-même regroupés dans des <dfn>banques</dfn>.
+Chaque banque héberge 16 programmes, et le pédalier contient 64 banques.
+Le pédalier est conçu pour naviguer facilement entre les programmes
+d’une même banque.</p>
+<p>Un programme est constitué d’une chaîne d’effets.
+Pour chaque effet il est possible d’ajuster son volume, le mix entre
+le signal d’entrée et le signal traité, et même de désactiver le
+traitement.</p>
+
+
+
+<h3><a id="leds"></a>Diodes lumineuses</h3>
+
+<p>Il y a trois diodes lumineuses sur le pédalier, une verte et deux rouges
+qui l’entourent.
+Leur signification dépend du contexte, de la fonction activée.
+Elles sont normalement éteintes, sauf dans le cas de l’accordeur.</p>
+
+<h4>En fonctionnement normal</h4>
+
+<div class="picr"><img src="led-1.png" /></div>
+<p>La diode rouge de gauche indique que le son sature en sortie.
+Il convient donc de baisser le volume principal, ou encore celui d’un des
+effets.</p>
+<div class="picr"><img src="led-2.png" /></div>
+<p>La diode verte indique que le pédalier sauvegarde des données sur sa carte
+mémoire.
+Une telle opération est généralement rapide, mais il convient de faire
+attention à ne pas couper le courant à ce moment-là.
+La carte mémoire risquerait d’être endommagée.</p>
+<div class="picr"><img src="led-3.png" /></div>
+<p>La diode rouge de droite indique que l’unité de traitement est surchargée.
+Il y a trop d’effets à la fois, ou ceux-ci on des réglages trop complexes,
+et le son ne peut pas être produit.
+Il convient alors de revenir à un programme plus simple, ou de revenir à
+des paramètres n’entraînant pas autant de charge de calcul.
+Il peut s’agit aussi d’une surcharge passagère, auquel cas il n’y a pas
+de problème particulier.
+En principe le son doit revenir de lui-même et la diode s’éteindre.</p>
+<div class="picr"><img src="led-123.png" /></div>
+<p>Cependant, si la charge reste importante dans la durée, le moteur audio
+abandonne ses tentatives de rétablissement.
+Cet état est indiqué par les trois diodes illuminées.
+Dans ce cas, il faut corriger le problème en activant un programme plus
+simple et redémarrer manuellement le moteur audio pour faire revenir le
+son.
+Le redémarrage s’obtient par un triple appui sur <span class="key">Esc</span>
+dans l’écran principal.</p>
+
+
+<h4>Accordeur</h4>
+
+<p>En mode accordeur, les diodes indiquent la justesse de la note jouée.
+La diode de gauche indique que la note est trop basse, et la diode de droite
+trop haute.</p>
+<p>Quand la note est juste, c’est la diode verte qui s’illumine.</p>
+
+
+
+<h3><a id="screen-main"></a>Écrans principaux</h3>
+
+<h4>Programme courant et informations</h4>
+
+<p>C’est l’écran sur lequel on arrive au démarrage.
+C’est aussi celui qui est au sommet de la hiérarchie de menus.
+Si on est perdu, il suffit de presser <span class="key">Esc</span>
+une ou plusieurs fois pour arriver à cet endroit.</p>
+<div class="pic"><img src="prog-cur.png" /></div>
+<p>Plusieurs informations importantes y sont affichées&#8239;:
+le programme et la banque courantes en haut, le dernier paramètre
+modifié au milieu, et l’adresse IP du Raspberry Pi en bas, quand elle
+est disponible.
+En effet il est nécessaire de connaître cette dernière pour se connecter en
+SSH à la machine afin d’effectuer des opérations de maintenance.</p>
+<p>La touche <span class="key">Esc</span> dans cet écran permet également
+l’accès à certaines fonctionnalités de nettoyage.
+La fonctionnalité obtenue est fonction du nombre d’appuis
+consécutifs&#8239;:</p>
+<ol style="list-style-type:decimal;">
+<li>Mise à jour l’affichage, en particulier de l’adresse IP du Pi</li>
+<li>Réinitialisation de l’écran</li>
+<li>Redémarrage du moteur audio</li>
+</ol>
+
+<h4>Menu principal</h4>
+
+<div class="pic"><img src="main-menu-levels.png" /></div>
+<p>On arrive dans ce menu par appui sur <span class="key">Select</span> dans
+l’écran du programme courant, on en sort par <span class="key">Esc</span>.
+La navigation se fait avec <span class="keya">↑</span> et
+<span class="keya">↓</span>.
+<span class="key">Select</span> sert à ouvrir la page pointée par le
+curseur.</p>
+<table>
+<tr><td><span class="ui">Edit program</span></td><td><a href="#screen-prog-edit">Édition du programme courant</a></tr></td>
+<tr><td><span class="ui">Banks</span></td><td>Accès aux <a href="#screen-banks">banques de programmes</a></tr></td>
+<tr><td><span class="ui">Pedal layout</span></td><td><a href="#screen-pedalboard-config">Configuration du pédalier</a></tr></td>
+<tr><td><span class="ui">Volume &amp; levels</span></td><td>Accès aux <a href="#screen-levels">volume et niveaux</a></tr></td>
+<tr><td><span class="ui">Tuner</span></td><td><a href="#screen-tuner">Accordeur</a></tr></td>
+<tr><td><span class="ui">Restart</span></td><td>Options de <a href="#screen-restart">redémarrage</a></tr></td>
+</table>
+
+
+
+<h3><a id="screen-prog-edit"></a>Édition d’un programme</h3>
+
+<h4><a id="screen-fx-chain"></a>Chaîne d’effets</h4>
+
+<div class="pic"><img src="prog-edit.png" /></div>
+
+<p>C’est la page principale de l’édition d’un programme.
+On peut naviguer dedans à l’aide de <span class="keya">↑</span>
+et&nbsp;<span class="keya">↓</span>.
+<span class="key">Select</span> permet de rentrer dans l’objet sélectionné
+et <span class="key">Esc</span> revient à la page du programme courant.</p>
+<p>La première ligne indique le nom du programme.
+On peut l’éditer en le sélectionnant.</p>
+<p><span class="ui">Controllers</span> donne accès aux intéractions entre
+la personne et le programme.</p>
+<p><a href="#screen-prog-save"><span class="ui">Save to…</span></a>
+permet de sauvegarder le programme en cours d’édition.</p>
+<p>La liste suivante donne la chaîne des effets, dans l’ordre de
+traitement.
+Chaque effet occupe une ligne.
+<span class="ui">&lt;Empty&gt;</span> signale qu’il n’y a pas d’effet sur la
+ligne et <span class="ui">&lt;End&gt;</span> donne la fin.
+Un effet en gras signale qu’au moins un contrôleur s’applique dessus.</p>
+<p>On peut changer l’effet de la ligne courante avec
+<span class="keya">←</span> et <span class="keya">→</span>, y compris
+<span class="ui">&lt;Empty&gt;</span> et <span class="ui">&lt;End&gt;</span>.
+Ces touches balayent la liste des effets disponibles.
+Si on remplace <span class="ui">&lt;End&gt;</span> par un effet, une nouvelle
+ligne vide est automatiquement ajoutée à la suite.
+Inversement, la dernière entrée de la liste des effets disponibles permet de
+vider la ligne de son effet.
+<span class="key">Select</span> donne accès à <a href="#screen-fx-setup">la
+configuration de l’effet</a>.</p>
+<p>Enfin la dernière liste énumère les effets qui ne nécessitent pas de source
+audio, comme les LFO par exemple.</p>
+<p>Les configurations et paramètres des effets sont mémorisées pour chaque
+type d’effets.
+Si on change le type d’effet d’une ligne par inadvertance, il suffit d’y
+revenir pour retrouver ses réglages.
+Il est également possible d’essayer plusieurs effets en ajustant leurs
+paramètres et de les comparer facilement.</p>
+<p>D’autre part, un nouvel effet d’un type donné apparaît généralement
+configuré de la même manière que la dernière instance de ce type d’effet.
+Si on veut repartir de zéro, il faut utiliser la fonction
+<span class="ui">Reset</span> de <a href="#screen-fx-setup">la configuration
+de l’effet</a>.</p>
+
+<h4><a id="screen-prog-save"></a>Sauvegarde du programme</h4>
+
+<p>Quand on sauve un programme, la liste des programme de la banque
+courante apparaît.</p>
+
+<div class="pic"><img src="prog-list.png" /></div>
+
+<p>La toute première ligne indique la banque de sauvegarde.
+Il est possible de changer de banque cible avec les flèches horizontales.</p>
+<p>On choisit le programme sur lequel (ré)écrire les réglages courants avec
+<span class="key">Select</span>.
+La ligne en gras indique le programme actif.
+C’est lui qui est sélectionné par défaut.
+<span class="key">Esc</span> annule la manœuvre et revient à
+<a href="#screen-fx-chain">la chaîne d’effets</a>.</p>
+<p>Une fois l’emplacement de sauvegarde validé, on peut rentrer le nom du
+programme.</p>
+<div class="pic"><img src="prog-save.png" /></div>
+<p>Le titre de l’écran rappelle l’emplacement de sauvegarde, pour mémoire.
+Le nom correspondant aux réglages actifs est pré-rentré.
+On peut le modifier en se dirigeant dans la liste des caractères avec les
+flèches directrices.
+<span class="key">Select</span> valide le caractère ou l’action indiquée
+sous le curseur de navigation.
+<span class="key">Esc</span> annule la manœuvre et revient à
+<a href="#screen-fx-chain">la chaîne d’effets</a>.</p>
+<table>
+<tr><td><span class="ui">OK</span></td><td>Valide le choix et effectue la sauvegarde. La LED verte s’illumine pendant ce temps.</tr></td>
+<tr><td><span class="ui">CANCEL</span></td><td>Annule l’opération.</tr></td>
+<tr><td><span class="ui">SPC</span></td><td>Insère un espace à la place du curseur d’édition.</li>
+<tr><td><span class="ui">DEL</span></td><td>Efface le caractère derrière le curseur.</tr></td>
+<tr><td><span class="ui">←</span> et <span class="ui">→</span></td><td>Déplacent le curseur.</tr></td>
+</table>
+
+<h4>Liste des paramètres</h4>
+
+<div class="pic"><img src="param-list.png" /></div>
+
+<p>La première ligne <span class="ui">FX setup</span> permet d’aller à
+<a href="#screen-fx-setup">la configuration de l’effet</a>.
+Les trois lignes suivantes sont communes à tous les effets et
+correspondent aux paramètres de mix.
+La valeur du paramètre est indiquée à sa droite.
+Les lignes qui suivent sont les paramètres particuliers à l’effet.
+Un paramètre en gras indique qu’au moins un contrôleur s’applique
+dessus.</p>
+<p>On peut changer la valeur du paramètre choisi avec les flèches
+horizontales, et rentrer plus en détail dans
+<a href="#screen-param-edit">l’édition du paramètre</a> (valeur précise,
+contrôleurs…) avec <span class="key">Select</span>.</p>
+
+<p class="var">Bypass</p>
+<p>Permet de désactiver l’effet quand on le positionne sur
+<span class="ui">On</span>.</p>
+
+<p class="var">Effect mix</p>
+<p>Permet de mélanger la sortie de l’effet avec son entrée.
+Le paramètre donne la proportion de la sortie dans le mélange, en
+pourcentage.</p>
+
+<p class="var">Volume</p>
+<p>Volume d’ajustement de la sortie de l’effet, en décibels.
+Ce paramètre permet d’homogénéiser le volume sonore, à la fois au
+sein de la chaîne et entre les différents programmes.
+Le volume est appliqué avant le mix entrée/sortie.</p>
+
+<h4><a id="screen-param-edit"></a>Édition d’un paramètre</h4>
+
+<div class="pic"><img src="param-edit.png" /></div>
+<p>Le nom, la valeur et éventuellement l’unité du paramètre sont
+indiqués en haut.</p>
+<p>Les quatre facteurs d’échelle, dans lequels on peut naviguer
+avec les touches verticales, permettent de régler plus ou moins
+finement la valeur avec les flèches horizontales.</p>
+<p>La ligne <span class="ui">Controllers</span> permet
+<a href="#screen-control-choice">de choisir</a> les liens directs et
+modulations du paramètre par un appui sur <span class="key">Select</span>.
+Le gras indique qu’au moins un contrôleur est rattaché au paramètre.
+Enfin la dernière ligne concerne les paramètres temporels.
+Elle indique le cas échéant si la valeur du paramètre suit le tempo ou
+si elle en est indépendante.</p>
+
+<h4><a id="screen-control-choice"></a>Choix des contrôleurs</h4>
+
+<div class="pic"><img src="controllers.png" /></div>
+<p>On choisit dans cet écran deux types de contrôleurs&#8239;:</p>
+<ul>
+<li><span class="ui">Direct link</span>&#8239;: c’est un contrôleur qui pilote
+directement la valeur du paramètre.
+Il y en a au plus un par paramètre.</li>
+<li><span class="ui">Modulations</span>&#8239;: c’est une liste de contrôleurs
+qui s’additionnent à la valeur d’un paramètre.
+Il peut y en avoir plusieurs et leur ordre n’a pas d’importance.</li>
+</ul>
+<p>On peut déplacer le curseur sur ces éléments avec les flèches verticales et
+passer à <a href="#screen-control-edit">l’édition du contrôleur</a> avec
+<span class="key">Select</span>.
+Une ligne <span class="ui">&lt;Empty&gt;</span> indique une absence de
+contrôleur.
+Elle est toujours présente à la fin des modulations pour permettre l’ajout
+d’une nouvelle.
+On peut revenir à <a href="#screen-param-edit">l’édition du paramètre</a> avec
+<span class="key">Esc</span>.</p>
+
+<h4><a id="screen-control-edit"></a>Édition d’un contrôleur</h4>
+
+<div class="pic"><img src="control-edit.png" /></div>
+<p>Cet écran permet de régler un contrôleur, direct ou de modulation.
+Un contrôleur direct nécessite deux valeurs de paramètre&#8239;:
+une valeur pour la position basse du contrôleur, et une valeur pour
+la position haute.
+Les différentes positions du contrôleur feront prendre au paramètre une valeur
+située entre ces deux extrêmes.
+Par défaut, ce sont les valeur minimale et maximale du paramètre qui sont
+utilisées.</p>
+<p>Un contrôleur de modulation ne nécessite qu’un seul réglage, son amplitude,
+en pourcentage de la course du paramètre.</p>
+<p>La première ligne <span class="ui">Src</span> indique la source du
+contrôleur.
+On peut choisir ces sources en cyclant dans la liste avec les flèches
+horizontales.
+Les sources disponibles sont les suivantes&#8239;:</p>
+<table>
+<tr><td colspan="2"><span class="ui">&lt;Empty/Delete&gt;</span></td><td>N’a de sens que durant l’édition et indique que le contrôleur est absent ou à supprimer.</td></tr>
+<tr><td><span class="ui">Expression</span></td><td>0–2</td><td>Pédales d’expression.</td></tr>
+<tr><td><span class="ui">Knob</span></td><td>0–4</td><td>Codeurs incrémentaux (boutons rotatifs).</td></tr>
+<tr><td><span class="ui">Footsw</span></td><td>0–11</td><td>Interrupteurs au pied (pédales).</td></tr>
+</table>
+<p>Il peut y avoir d’autres sources de modulation, en fonction de la
+configuration du programme&#8239;: LFO, suiveurs d’enveloppe…
+Ces source apparaissent en premier dans la liste.</p>
+<p><span class="ui">Step</span> n’existe que pour les codeurs incrémentaux.
+Elle permet d’en choisir la sensibilité.
+La valeur fractionnaire indique la portion de la course du paramètre qu’on
+franchit entre deux crans consécutifs.
+On peut la régler à l’aide des flèches horizontales.</p>
+<p>Viennent en-dessous les valeurs servant de borne ou l’amplitude de la
+modulation.
+Elles se manipulent exactement comme dans
+<a href="#screen-param-edit">l’édition d’un paramètre</a>.</p>
+<p><span class="ui">Curve</span> permet de sélectionner la courbe à appliquer
+à la source.
+Cette courbe permet de changer la sensibilité du contrôleur en fonction des
+plages de valeur.
+On la modifie à l’aide des flèches horizontales.</p>
+<table>
+<tr><td><span class="ui">Linear</span></td><td>Courbe neutre, par défaut.</td></tr>
+<tr><td><span class="ui">Square</span></td><td>Courbe parabolique. Permet une grande amplitude dans les faibles valeurs, et devient plus sensible sur les valeurs élevées.</td></tr>
+<tr><td><span class="ui">Cubic</span></td><td>Comme <span class="ui">Square</span>, mais plus accentuée.</li>
+<tr><td><span class="ui">Sat. 1</span></td><td>Courbe saturée. C’est l’inverse de <span class="ui">Square</span>&#8239;: les hautes valeurs peuvent être réglées finement, au détriment des valeurs faibles.</td></tr>
+<tr><td><span class="ui">Sat. 2</span></td><td>Comme la précédente, mais plus accentuée.</td></tr>
+<tr><td><span class="ui">S 1</span></td><td>Les plages de valeurs haute et basse peuvent être réglées finement, au détriment de la plage médiane.</td></tr>
+<tr><td><span class="ui">S 2</span></td><td>Comme <span class="ui">S 1</span>, mais en plus accentuée.</td></tr>
+<tr><td><span class="ui">Flat 1</span></td><td>La plage de valeurs intermédiaire peut être réglée finement, au détriment des plage hautes et basses.</td></tr>
+<tr><td><span class="ui">Flat 2</span></td><td>Comme <span class="ui">Flat 1</span>, mais en plus accentuée.</td></tr>
+</table>
+<p><span class="ui">Range</span> n’est utilisé que sur les modulations, avec
+certaines sources seulement.
+Cette option offre la possibilité de convertir un signal unipolaire dont les
+valeurs sont positives seulement en un signal bipolaire aux valeurs positives
+et négatives.
+La forme du signal est préservée, l’intervalle de valeur étant simplement
+étiré pour passer en-dessous de zéro.
+Cela permet de placer la valeur neutre de la modulation au milieu de la course
+du contrôleur.
+On peut sélectionner <span class="ui">Bipolar</span> ou
+<span class="ui">Unipolar</span> avec les flèches horizontales.</p>
+<p>On sort de cet écran en pressant <span class="key">Esc</span>.
+Les modifications sont prises en compte en temps réel, il n’y donc pas de
+validation particulière à effectuer.</p>
+
+<h4><a id="screen-fx-setup"></a>Configuration de l’effet</h4>
+
+<div class="pic"><img src="fx-setup.png" /></div>
+<p>La première ligne indique le type de l’effet, qu’on peut changer à l’aide
+des flèches horizontales.</p>
+<p><span class="ui">Insert before</span> rajoute un bloc vide dans la chaîne
+avant l’effet sélectionné.
+Ce bloc vide devient l’effet courant et est donc éditable immédiatement.</p>
+<p><span class="ui">Move</span> permet de déplacer l’effet dans la chaîne.
+Après appui sur <span class="key">Select</span>, la chaîne apparaît et il est
+possible de déplacer l’effet avec les flèches verticales.
+Les changement sont effectifs immédiatement.
+<span class="key">Select</span> ou <span class="key">Esc</span> pour sortir.</p>
+<p><span class="ui">Presets</span> est encore en chantier…</p>
+<p><span class="ui">Reset</span> restaure les paramètres par défaut.</p>
+<p><span class="ui">Mono or stereo</span> sert pour les plug-ins qui sont
+capables convertir un signal mono en stéréo (chorus, écho…)
+Il est alors possible de choisir si on veut la stéréo, ce qui ne sera effectif
+qu’avec une sortie audio configurée en stéréo, ou si on veut garder le signal
+mono dans tous les cas.
+Si le signal à l’entrée de l’effet est déjà stéréo, il le reste, quelle que
+soit l’option choisie.
+Utiliser les flèches horizontales pour choisir l’option.</p>
+<p><span class="ui">Name</span> sert à donner un nom à l’effet.
+Ce nom servira à l’identifier vis-à-vis de pédales ou de contrôleurs
+ayant une portée globale, indépendante du programme.
+Par exemple, cela permet d’avoir une pédale configurée à l’échelle du
+pédalier qui change l’état du bypass de tout plug-in nommé
+«&#8239;distorsion&#8239;».</p>
+
+<h3><a id="screen-banks"></a>Banques de programmes</h3>
+
+<div class="pic"><img src="bank-menu.png" /></div>
+
+
+
+<h3><a id="screen-pedalboard-config"></a>Configuration du pédalier</h3>
+
+<div class="pic"><img src="pedalboard-layout.png" /></div>
+
+
+
+<h3><a id="screen-levels"></a>Volumes et niveaux</h3>
+
+<div class="pic"><img src="levels.png" /></div>
+<p>Cet écran permet de visualiser et ajuster les niveaux.
+Les barres indiquent les volumes d’entrée et de sortie.
+Quand une barre est divisée en 2, cela veut dire que le signal visualisé est
+stéréo.
+C’est toujours le cas pour l’entrée, même si seul le canal gauche est pris en
+compte dans la chaîne d’effets.
+Le petit trait indique le niveau des crêtes avec un maintien stationnaire de
+2&#8239;s, et la barre pleine le volume RMS.</p>
+<p>La barre <span class="ui">DSP</span> du bas indique les ressources de
+calcul consommées par le traitement audio.
+La partie hachurée donne la charge moyenne, et la partie pleine les crêtes.
+Celles-ci doivent rester aussi bas que possible et ne jamais toucher la
+partie droite de la jauge, sous peine de craquement ou de perte de son.</p>
+<p>Il est possible de régler le volume de sortie
+<span class="ui">Output</span> à l’aide des flèches horizontales.</p>
+<p>Les symboles à gauche de la jauge <span class="ui">DSP</span> indique
+si les d’entrée et de sortie sont mono (un cercle) ou stéréo (deux cercles
+entremêlés).</p>
+
+
+
+<h3><a id="screen-tuner"></a>Accordeur</h3>
+
+<p>Il est possible de sélectionner plusieurs types d’accordage avec les
+flèches horizontales&#8239;:</p>
+<table>
+<tr><td><span class="ui">Guitare</span></td><td>E A<sub>110</sub> D G B E, réglage par défaut</td></tr>
+<tr><td><span class="ui">Basse</span></td><td>E A<sub>55</sub> D G</td></tr>
+<tr><td><span class="ui">Chromatic</span></td><td>Toutes les notes de la gamme chromatique</td></tr>
+</table>
+<p>L’écran affiche la note détectée la plus proche dans l’accordage
+sélectionné.
+Les LED permettent de savoir quand l’accordage est bon.
+La déviation en cents est également donnée à l’écran.</p>
+
+
+<h3><a id="screen-restart"></a>Redémarrage</h3>
+
+<div class="pic"><img src="restart.png" /></div>
+<ul>
+<li><span class="ui">Cancel</span> revient à l’écran principal.</li>
+<li><span class="ui">Restart</span> redémarre l’application, ce qui peut être utile en cas de bug persistant. L’état du programme courant est perdu.</li>
+<li><span class="ui">Reboot</span> redémarre le système, ce qui dure une dizaine de secondes. Attention, l’interface audio risque d’émettre des craquements lors de cette opération.</li>
+<li><span class="ui">Shutdown</span> prépare proprement la machine pour extinction ultérieure. Il n’est pas nécessaire de passer par cette option à chaque fois qu’on veut éteindre le pédalier, une extinction brutale ne doit pas mettre en danger le pédalier tant qu’il n’y a aucun accès disque en écriture.</li>
+</ul>
+<p>On peut sortir de cet écran par la touche <span class="key">Esc</span>.</p>
+
+
+<h2><a id="effect-list"></a>IV.&emsp;Effets disponibles</h2>
+
+
+
+<h3><a id="fx-compex"></a>CompEx — Compresseur/Expanseur</h3>
+
+<p>CompEx est un processeur de dynamique relativement simple et sait faire de
+la compression et de l’expansion.</p>
+<p>On commence par définir un niveau-seuil.
+Ensuite pour chaque plage au-dessus et en dessous de ce niveau, on peut
+choisir si on va réduire ou amplifier la dynamique.
+Généralement on s’intéresse à ce qui est au-dessus, mais il est possible
+de faire une sorte de <i><span lang="en">gate</span></i> en augmentant la dynamique en dessous.</p>
+
+<p class="var">Ratio High</p>
+<p>Taux d’amplification de la dynamique au-dessus du seuil.
+Si le taux est inférieur à 1, l’effet se comporte comme un compresseur.
+S’il est supérieur à 1, c’est un expanseur.
+Attention, dans ce dernier cas le réglage est délicat et le résultat peut être
+difficile à maîtriser.</p>
+
+<p class="var">Ratio Low</p>
+<p>Taux d’amplification de la dynamique en dessous du seuil.
+Utiliser un taux supérieur à 1 pour obtenir une
+<i><span lang="en">gate</span></i>.</p>
+
+<p class="var">Threshold</p>
+<p>C’est le niveau de seuil.
+Plus il est bas, plus l’effet de <var>Ratio High</var> est marqué.</p>
+
+<p class="var">Attack time</p>
+<p>Temps d’attaque pour la détection de l’enveloppe de volume.
+Plus le temps est bas, plus l’effet est réactif aux changements de dynamique.</p>
+
+<p class="var">Release time</p>
+<p>Temps de relâchement pour la détection de l’enveloppe de volume.
+Sa valeur est généralement supérieure à celle de l’attaque.</p>
+
+<p class="var">Make-up gain</p>
+<p>Volume de sortie de CompEx.
+Bien que la compensation en volume soit établie automatiquement en fonction de
+la valeur du taux supérieur, il est parfois nécessaire de faire des ajustements
+manuels.</p>
+
+<p class="var">Knee shape</p>
+<p>C’est la plage de niveau qui sert de transition entre les taux supérieurs et
+inférieurs.</p>
+
+
+
+<h3><a id="fx-convert-stereo"></a>Convert To Stereo</h3>
+
+<p>Ce n’est pas vraiment un effet, mais un dispositif qui sert à passer un
+signal mono en stéréo par simple dédoublement.
+Attention, le réglage dans <a href="#screen-fx-setup">la configuration de
+l’effet</a> donnant la préférence au mono prend le dessus sur l’effet
+lui-même.
+Il est donc important de s’assurer qu’on est en <span class="ui">Mono or
+stereo</span>.</p>
+
+
+
+<h3><a id="fx-delay"></a>Delay — Écho stéréo</h3>
+
+<p>C’est un effet d’écho relativement classique.
+Il peut générer un signal stéréo à partir d’une entrée mono.</p>
+<p>Il y a en fait deux lignes à retard indépendante, une pour chaque canal.
+Pour chaque ligne on peut régler la durée du retard, son niveau de sortie, le
+taux de réinjection et le filtrage (passe-haut ou passe-bas) de cette
+réinjection.
+Par défaut, les deux lignes sont liées ensemble et prennent pour paramètres
+ceux de la ligne gauche.</p>
+<p>Il est également possible de croiser les réinjection des lignes.</p>
+
+<p class="var">Input mix level</p>
+<p>Niveau du signal clair redirigé vers la sortie.</p>
+
+<p class="var">Delay mix level</p>
+<p>Niveau du signal retardé dans la sortie.</p>
+
+<p class="var">Time L/R</p>
+<p>Temps de retard pour les lignes gauche et droite.</p>
+
+<p class="var">Feedback L/R</p>
+<p>Taux de réinjection du signal issu des lignes gauche et droite.
+Quand le taux est à zéro, il n’y a qu’une seule répétition.
+Quand au contraire il est proche de 100&#8239;%, les répéptition sont
+quasiment infinies.</p>
+
+<p class="var">Filter L/R</p>
+<p>Taux de filtrage de la réinjection des lignes.
+Quand le taux est négatif, il s’agit d’un filtrage passe-bas.
+Quand il est positif, c’est un filtrage passe-haut.
+Le taux est directement lié à la fréquence de coupure.
+Plus il est élevé en valeur absolue, plus le filtre coupe de fréquences.</p>
+
+<p class="var">Channel link</p>
+<p>Permet de lier le canal droit au gauche.</p>
+
+<p class="var">Ping-pong</p>
+<p>Taux de croisement des réinjection.
+À 0&#8239;%, les deux lignes fonctionnent de manière indépendante.
+À 100&#8239;%, les réinjection sont complètement croisées, ce qui
+donne l’impression que le son passe d’un canal à l’autre à chaque
+répétition.</p>
+
+
+
+<h3><a id="fx-disto-tone"></a>Distortion Tone Stage — Tonalité pour distorsion</h3>
+
+<p>Il s’agit d’un réglage de tonalité modelé d’après un circuit qu’on trouve
+dans de nombreuses pédales, type DS-1 ou Big Muff Pi.
+C’est un complément à l’étage de distorsion pur, plus simple à manier qu’un
+egaliseur paramétrique complet.
+Il sert à établir une balance entre les graves et les aigus.</p>
+<p>Ce genre de filtre, tel qu’il est implémenté dans les pédales, fait
+apparaître systématiquement un creux dans les médiums.
+Le filtre à donc été modifié de façon à ajouter un réglage des médiums.
+Il est également possible de choisir la fréquence centrale du filtre, ce qui
+permet de calquer facilement l’étage de tonalité de la plupart des pédales
+utilisant ce système.</p>
+
+<p class="var">Tone</p>
+<p>Permet de choisir une répartition plutôt grave (valeurs faibles) ou aigue.
+50&#8239;% donne une réponse en fréquence équilibrée.</p>
+
+<p class="var">Mid boost</p>
+<p>Permet d’amplifier (valeurs positives) ou de creuser (valeurs négatives) les medium.
+À zéro, les médium sont neutres.
+Un valeur autour de &minus;75&#8239;% permet de recréer la tonalité du circuit
+original.</p>
+
+<p class="var">Mid frequency</p>
+<p>Permet de changer la fréquence centrale des medium.</p>
+
+
+
+<h3><a id="fx-disto2x"></a>Double Distortion</h3>
+
+<p>C’est une distorsion à deux étages.
+Chaque étage est composé d’un filtre coupe-bas, d’un biais de polarisation,
+de la distorsion proprement dite et finalement d’un filtre passe-bas.<p>
+<p>D’autre part le son est coupé dès le départ en deux bandes de fréquences.
+La bande basse ressort sans modification, tandis que la bande haute est 
+distordue.</p>
+<p>Un dispositif permet d’adapter le volume en fonction des dynamique et de
+modifier le gain en fonction des transitoires.<p>
+
+
+<p class="var">Crossover freq</p>
+<p>C’est la fréquence de séparation initiale en deux bandes.
+Il est ainsi possible de laisser les composantes les plus graves
+sans distorsion pour plus de dynamique et de clarté.</p>
+
+<p class="var">LPF freq</p>
+<p>Fréquence de coupure du filtre passe-bas initial (2<sup>d</sup> ordre).</p>
+
+<p class="var">Attack gain mod</p>
+<p>Influence des transitoires d’attaque sur le gain.
+Un valeur positive augmente le gain sur les attaques, et une négative
+l’atténue.</p>
+
+<p class="var">Sustain gain mod</p>
+<p>Permet de modifier le gain dans les parties où le volume décroît,
+prolongeant artificiellement le maintien de la note.
+Une valeur positive augmente le gain dans ces sections.</p>
+
+<p class="var">Stage 1/2 HPF freq</p>
+<p>Fréquence de coupure du filtre coupe-bas des étages 1 et 2.</p>
+
+<p class="var">Stage 1/2 Bias</p>
+<p>Biais de polarisation des étages 1 et 2.
+Augmenter le biais permet d’obtenir une distorsion plus asymétrique et
+favorise ainsi les harmoniques paires.
+Attention un biais trop élevé a tendance à couper le signal et donne une
+impression de circuit défectueux.</p>
+
+<p class="var">Stage 1/2 Type</p>
+<p>Type de distorsion pour chaque étage.</p>
+
+<p class="var">Stage 1/2 Gain</p>
+<p>Gain de la distorsion de chaque étage.</p>
+
+<p class="var">Stage 1/2 LPF freq</p>
+<p>Fréquence de coupure du filtre passe-bas appliqué après la distorsion
+de chaque étage.
+Ce filtre permet d’atténuer les fréquence les plus aigues qui sont
+déplaisantes à l’oreille.</p>
+
+<p class="var">Stage 1–2 mix</p>
+<p>Proportion des deux étages de distorsion composant le signal de sortie.
+Le pourcentage représente le taux du deuxième étage.</p>
+
+<p class="var">Low band mix</p>
+<p>Proportion de la bande basse fréquence réinjectée dans la sortie.</p>
+
+<p class="var">Density</p>
+<p>Permet d’ajuster le volume de la sortie à celui de l’entrée.
+Une valeur nulle compense totalement le volume, et la valeur maximale
+laisse la distorsion telle quelle.
+Cela donne des sons un peu plus percussifs mais moins naturels.</p>
+
+<p class="var">Threshold</p>
+<p>Seuil en-dessous duquel le volume n’est pas réduit par le paramètre
+<var>Density</var>.</p>
+
+
+
+<h3><a id="fx-env-fol"></a>Enveloppe Follower — Suiveur d’enveloppe</h3>
+
+<p>Cet effet n’est pas un effet audio mais un contrôleur qui travaille en
+analysant le son.
+On peut l’insérer à n’importe quel endroit de la chaîne, son effet sur le son
+sera neutre.</p>
+<p>Le suiveur d’enveloppe permet de détecter le volume instantané du son
+et le transforme en signal de contrôle.</p>
+
+<p class="var">Attack time</p>
+<p>Temps d’attaque du détecteur.
+Indique à quelle vitesse suivre les montées de volume.</p>
+
+<p class="var">Release time</p>
+<p>Temps de relâchement du detecteur.
+Indique à quelle vitesse suivre les descentes de volume.</p>
+
+<p class="var">Hold time</p>
+<p>Temps pendant lequel le détecteur maintient sa valeur
+à la fin d’une attaque avant de redescendre.</p>
+
+<p class="var">Gain</p>
+<p>Multiplicateur appliqué au signal de contrôle en sortie.</p>
+
+<p class="var">Threshold</p>
+<p>Seuil de volume en dessous duquel la sortie du détecteur reste nulle.
+En mode logarithmique, le seuil est utilisé comme valeur plancher, avec pour
+minimum &minus;60&#8239;dB.</p>
+
+<p class="var">Mode</p>
+<p>Permet de choisir une transformation du volume détecté.
+En mode linéaire, la valeur brute du volume est utilisée.
+En mode logarithmique, c’est une valeur en décibels qui est utilisée.
+La plage de variation est alors fixée par le seuil.</p>
+
+<p class="var">Clip</p>
+<p>Indique que le signal de contrôle en sortie doit être limité à la valeur
+maximale de 1.</p>
+
+
+
+<h3><a id="fx-filter-squeezer"></a>Filter Squeezer — Filtre résonnant à distorsion</h3>
+
+<p>C’est un filtre très particulier.
+Il est basé sur le fameux filtre Moog passe-bas 4 pôles, sérieusement modifié
+pour ne pas dire vilainement charcuté.</p>
+<p>Il donne un son qui va d’une douce chaleur un peu vintage à une fuzz
+rugissante en passant par une radio défectueuse ou le larsen parasité.
+Il y a des sons qui sont comparables à ceux obtenus par la Fuzz Factory.</p>
+
+<p class="var">Frequency</p>
+<p>Fréquence de coupure du filtre.
+Ce paramètre est automatiquement assignée à la pédale d’expression.</p>
+
+<p class="var">Resonance</p>
+<p>Résonance du filtre, se produisant un peu en dessous de la fréquence de
+coupure.
+Les valeurs les plus élevlées mettant le filtre en auto-oscillation.</p>
+
+<p class="var">Color</p>
+<p>Le réglage de coloration influe sur l’aspect destructif et fuzz du
+filtre.</p>
+
+<p class="var">Drive</p>
+<p>Ajuste le niveau d’entrée.
+Le filtre étant très sensible au volume de ce qui lui rentre dedans, on
+peut obtenir des sonorité très variées en changeant ce paramètre.
+Le gain inverse est appliqué en sortie, limité entre &minus;12 et
+0&#8239;dB.
+Il peut être d’ailleurs judicieux de placer devant un compresseur aux
+réglages musclés pour obtenir quelque chose d’un tant soit peu prévisible et
+reproductible.</p>
+
+<p class="var">Foldback</p>
+<p>Active différents types de distorsion interne.</p>
+
+
+
+<h3><a id="fx-flancho"></a>FlanCho — Chorus et flanger</h3>
+
+<p>C’est un chorus/flanger relativement classique.
+Il peut générer un signal stéréo à partir d’une entrée mono.</p>
+<p>L’effet opère en ajoutant au signal principal une version légèrement
+retardée de lui-même.
+Le retard varie continuellement ce qui crée des fluctuations de tonalité.</p>
+<p>Le chorus est caractérisé par un temps de retard significatif (autour de
+20&#8239;ms) et une amplitude peu élevée.
+Pour un flanger, on préférera une amplitude élevée, un temps de retard court
+et un minimum de réinjection.</p>
+
+<p class="var">Speed</p>
+<p>Vitesse des oscillations du temps de retard.</p>
+
+<p class="var">Depth</p>
+<p>Amplitude des oscillations du temps de retard.
+Au maximum, celles-ci varient entre 0 ou presque et
+<var>Delay</var>&#8239;&times;&#8239;2.
+Le changement de tonalité est alors très marqué.</p>
+
+<p class="var">Delay</p>
+<p>C’est le temps de retard moyen.</p>
+
+<p class="var">Feedback</p>
+<p>Taux de réinjection du signal retardé.
+Les valeurs proches de 100&#8239;% peuvent altérer fortement le volume.
+Les valeurs négatives donnent un son plus métallique que les positives.</p>
+
+<p class="var">Waveform type</p>
+<p>Forme prise par les oscillations du temps de retard.</p>
+<table>
+<tr><td><span class="ui">Sine</span></td><td>Sinusoïde</td></tr>
+<tr><td><span class="ui">Triangle</span></td><td>Triangle</td></tr>
+<tr><td><span class="ui">Parabola</span></td><td>Parabole</td></tr>
+<tr><td><span class="ui">Inv.para</span></td><td>Parabole inverse</td></tr>
+<tr><td><span class="ui">Ramp up</span></td><td>Dents de scie ascendentes</td></tr>
+<tr><td><span class="ui">Ramp down</span></td><td>Dents de scie descendentes</td></tr>
+<tr><td><span class="ui">Random</span></td><td>Sinusoïde avec variations aléatoires</td></tr>
+</table>
+
+<p class="var">Waveform shape</p>
+<p>Déformation de l’onde d’oscillation.
+À 0&#8239;%, l’onde reste telle quelle, sinon elle est saturée par le bas ou
+par le haut.
+Cela permet d’insister sur les temps de retards longs ou courts.</p>
+
+<p class="var">Number of voices</p>
+<p>Il est possible d’avoir de 1 à 4 voix de chorus/flanger simultanément,
+pour un son plus ou moins épais.
+Les oscillations de retard de chaque voix sont déphasées par rapport aux
+autres.</p>
+
+<p class="var">Phase set</p>
+<p>Permet de fixer manuellement la phase des oscillations, en degrés.
+Ce paramètre permet d’une part d’agir sur la tonalité de l’effet en y
+associant par exemple une pédale (d’expression ou non).
+D’autre part, il permet d’obtenir un son reproductible.
+En effet, lors de l’activation du programme, la phase est positionnée
+automatiquement à la valeur donnée par ce paramètre.</p>
+
+<p class="var">Dry input</p>
+<p>Indique que le signal d’entrée est mélangé au signal de sortie.
+Si on veut une proportion différente de 50–50&#8239;%, on peut placer ce
+paramètre sur <span class="ui">Off</span> et utiliser le réglage <var>Effect
+mix</var>.
+Quand le signal d’origine est totalement absent et qu’il n’y a pas de
+réinjection, l’effet obtenu est un vibrato.</p>
+
+<p class="var">Mix mode</p>
+<p>Permet de choisir si le signal retardé est ajouté ou retranché au signal
+d’origine.
+<span class="ui">Add</span> provoque une amplification des basses fréquences
+avec un temps de retard très court, alors que <span class="ui">Sub</span> au
+contraire les coupe.</p>
+
+<p class="var">Oversampling rate</p>
+<p>Taux de suréchantillonnage du traitement.
+Passer en <span class="ui">&times;4</span> permet d’atteindre des temps de
+retard beaucoup plus courts (une dizaine de microsecondes) quand
+<var>Depth</var> est proche de 100&#8239;% ce qui peut être utile pour des
+flangers ravageurs.
+En revanche cela consomme plus de ressources CPU.</p>
+
+
+
+<h3><a id="fx-freeverb"></a>Freeverb — Réverbération</h3>
+
+<p>Cet effet implémente
+<a href="https://ccrma.stanford.edu/~jos/pasp/Freeverb.html">Freeverb</a>,
+une réverbération de type Schroeder dont les coefficients ont été
+soigneusement choisis.
+Les réglages ont été mis au point par Jezar at Dreampoint et diffusés dans le
+domaine public.
+L’effet est capable de gérer un signal stéréo.</p>
+
+<p class="var">Reflectivity</p>
+<p>Ce paramètre varie le temps de réverbération.
+Plus il est élevé, plus les murs simulés sont réflectif et plus la
+réverbération est longue.
+Ce temps est cependant dépendant du <var>Damping</var>.</p>
+
+<p class="var">Damping</p>
+<p>Spécifie à quel point les hautes fréquences sont atténuées durant la
+réverbération.</p>
+
+<p class="var">Level wet</p>
+<p>Niveau de réverbération dans la sortie de l’effet.</p>
+
+<p class="var">Level dry</p>
+<p>Niveau du signal d’origine mixé dans la sortie de l’effet.</p>
+
+<p class="var">Width</p>
+<p>Niveau de séparation stéréo de la réverbération.
+À 0&#8239;%, la réverbération est complètement mono, et complètement stéréo à
+100&#8239;%.
+Note&#8239;: les deux canaux sont toujours traités indépendamment l’un de
+l’autre, comme deux réverbérations mono.
+Le paramètre ne contrôle que le mixage de sortie.</p>
+
+<p class="var">Mode</p>
+<p>Quand le mode <span class="ui">Freeze</span> est activé, l’entrée de la
+réverbération est coupée et le son de la réverbération reste figé dans le
+temps.
+Il peut être intéressant de relier ce paramètre à une pédale.</p>
+
+<p class="var">Low cut</p>
+<p>Fréquence du filtre coupe-bas sur la sortie de la réverbération.</p>
+
+<p class="var">High cut</p>
+<p>Fréquence du filtre coupe-haut sur la sortie de la réverbération.</p>
+
+
+
+<h3><a id="fx-freq-shift"></a>Frequency Shifter — Translateur de fréquences</h3>
+
+<p>C’est un effet assez simple qui décale toutes les fréquences du son.
+Comme les fréquences sont additionnées et non multipliées, les rapports
+harmoniques se perdent et le son devient atonal ou inharmonique,
+se rapprochant d’un son de cloche.
+Cependant quand la fréquence de décalage tombe sur une note spécifique,
+certaines notes en liaison (octave, quinte, quarte…) se mettent à sonner
+de nouveau juste et prennent une coloration très spéciale.</p>
+<p>Le translateur de fréquences ressemble au ring modulator, mais il ne
+réfléchit pas l’image spectrale comme c’est le cas pour ce dernier.</p>
+
+<p class="var">Frequency</p>
+<p>Fréquence de décalage, en Hz.
+Elle peut être négative ou positive.</p>
+
+
+
+<h3><a id="fx-imp-fix"></a>Input Impedance Fix — Adaptation d’impédance d’entrée</h3>
+
+<p>Cet effet permet de corriger en quelque sorte l’impédance d’entrée de la
+carte son, qui peut être un poil juste, résultant en une légère atténuation
+des aigus.
+Il s’agit d’un simple filtre linéaire de premier ordre de type high-shelf.</p>
+<p>Il faut calibrer l’effet en utilisant un ampli avec un réglage aussi
+transparent que possible (son clair, pas d’égalisation).
+On compare alors le son avec la guitare branchée directement avec celui du
+pédalier placé en intermédiaire avec cet unique effet.</p>
+
+<p class="var">Cutoff frequency</p>
+<p>Fréquence de seuil.</p>
+
+<p class="var">Level</p>
+<p>Niveau d’amplification des aigus.</p>
+
+
+
+<h3><a id="fx-peq"></a>Parametric Equalizer — Égaliseur paramétrique</h3>
+
+<p>Il s’agit d’un égaliseur paramétrique 4 bandes très classique.
+Chaque bande est constitué d’un filtre de second ordre.</p>
+
+<p class="var">Band 1/2/3/4 Type</p>
+<p>Type du filtre de la bande concernée&#8239;:</p>
+<table>
+<tr><td><span class="ui">Peak</span></td><td>Courbe en cloche. Augmente ou atténue la zone autour de la fréquence centrale.</td></tr>
+<tr><td><span class="ui">Low&nbsp;shelf</span></td><td>Plateau basse-fréquence. La fréquence de référence donne le milieu de la transition entre les deux plateaux.</td></tr>
+<tr><td><span class="ui">High&nbsp;Pass</span></td><td>Filtre passe-haut</td></tr>
+<tr><td><span class="ui">High&nbsp;shelf</span></td><td>Plateau haute-fréquence</td></tr>
+<tr><td><span class="ui">Low&nbsp;Pass</span></td><td>Filtre passe-bas</td></tr>
+</table>
+
+<p class="var">Band 1/2/3/4 Frequency</p>
+<p>Fréquence du centre de la bande.</p>
+
+<p class="var">Band 1/2/3/4 Q</p>
+<p>Facteur de qualité ou de sélectivité.
+Pour le filtre en cloche, plus <var>Q</var> est élevé, plus la cloche est fine.
+Pour les plateaux, plus <var>Q</var> est bas, plus la transition est lente.
+Par contre si <var>Q</var>&#8239;&gt;&#8239;0.71, une résonance et un creux
+apparaissent au début des plateaux haut et bas.
+L’effet est le même pour les passe-haut et bas, avec une résonance
+seulement.</p>
+
+<p class="var">Band 1/2/3/4 Gain</p>
+<p>Volume de la cloche ou du plateau.
+Sans effet sur les filtres passe-haut et bas.</p>
+
+<p class="var">Band 1/2/3/4 Bypass</p>
+<p>Permet de désactiver la bande.</p>
+
+
+
+<h3><a id="fx-phaser"></a>Phaser</h3>
+
+<p class="var">Speed</p>
+<p></p>
+
+<p class="var">Depth</p>
+<p></p>
+
+<p class="var">Feedback level</p>
+<p></p>
+
+<p class="var">Feedback color</p>
+<p></p>
+
+<p class="var">Phase mix</p>
+<p></p>
+
+<p class="var">Phase offset</p>
+<p></p>
+
+<p class="var">Phase set</p>
+<p></p>
+
+<p class="var">Hold</p>
+<p></p>
+
+<p class="var">BPF freq</p>
+<p></p>
+
+<p class="var">BPF selectivity</p>
+<p></p>
+
+
+
+<h3><a id="fx-disto"></a>Simple Distortion</h3>
+
+<p class="var">Distortion gain</p>
+<p></p>
+
+<p class="var">HPF frequency</p>
+<p></p>
+
+<p class="var">Bias</p>
+<p></p>
+
+
+
+<h3><a id="fx-speaker-emu"></a>Speaker Emulator — Émulation de haut-parleur</h3>
+
+<p class="var">Type</p>
+<p></p>
+
+<p class="var">Mid level</p>
+<p></p>
+
+<p class="var">Mid frequency</p>
+<p></p>
+
+<p class="var">Treble level</p>
+<p></p>
+
+<p class="var">Treble frequency</p>
+<p></p>
+
+<p class="var">Comb level</p>
+<p></p>
+
+<p class="var">Channels</p>
+<p></p>
+
+
+
+<h3><a id="fx-tremolo"></a>Tremolo</h3>
+
+<p class="var">Speed</p>
+<p></p>
+
+<p class="var">Amount</p>
+<p></p>
+
+<p class="var">Waveform</p>
+<p></p>
+
+<p class="var">Gain saturation</p>
+<p></p>
+
+<p class="var">Bias</p>
+<p></p>
+
+
+
+<h3><a id="fx-wha"></a>Wha-wha</h3>
+
+<p class="var">Frequency</p>
+<p></p>
+
+<p class="var">Selectivity</p>
+<p></p>
+
+
+
+<h3><a id="fx-lfo"></a>LFO — Oscillateur basse fréquence</h3>
+
+<p class="var">Speed</p>
+<p></p>
+
+<p class="var">Amplitude</p>
+<p></p>
+
+<p class="var">Waveform</p>
+<p></p>
+
+<p class="var">Sample and hold</p>
+<p></p>
+
+<p class="var">Smoothing</p>
+<p></p>
+
+<p class="var">Chaos amount</p>
+<p></p>
+
+<p class="var">Phase dist amount</p>
+<p></p>
+
+<p class="var">Phase dist offset</p>
+<p></p>
+
+<p class="var">Sign</p>
+<p></p>
+
+<p class="var">Polarity</p>
+<p></p>
+
+<p class="var">Variation 1</p>
+<p></p>
+
+<p class="var">Variation 2</p>
+<p></p>
+
+<p class="var">Phase set</p>
+<p></p>
+
+
+
+<h2><a id="troubleshooting"></a>V.&emsp;Dépannage</h2>
+
+
+
+<h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r0, 2016.11.29</b></p>
+<ul>
+<li>Création du document.</li>
+</ul>
+
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
+</div></body>
+</html>
+
+
