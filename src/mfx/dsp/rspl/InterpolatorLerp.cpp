@@ -89,19 +89,19 @@ long	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const fl
 	const fstb::FixedPoint  rate_old (rate);
 	const long		pos_dest_old = pos_dest;
 
-	const long		src_limit = end_src - IMPULSE_LEN + 1;
+	const long		src_limit   = end_src - IMPULSE_LEN + 1;
 	long				pos_src_int = pos_src.get_int_val ();
 
 	{
-		const float *	src_ptr = src_ptr_arr [0];
+		const float *	src_ptr  = src_ptr_arr [0];
 		float *			dest_ptr = dest_ptr_arr [0];
 
 		do
 		{
-			const float		q = pos_src.get_frac_val_flt ();
-			const float		in_0 = src_ptr [pos_src_int    ];
-			const float		in_1 = src_ptr [pos_src_int + 1];
-			const float		out = in_0 + q * (in_1 - in_0);
+			const float    q    = pos_src.get_frac_val_flt ();
+			const float    in_0 = src_ptr [pos_src_int    ];
+			const float    in_1 = src_ptr [pos_src_int + 1];
+			const float    out  = in_0 + q * (in_1 - in_0);
 			dest_ptr [pos_dest] = out;
 
 			pos_src += rate;
@@ -121,16 +121,16 @@ long	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const fl
 		pos_src  = pos_src_old;
 		rate     = rate_old;
 		pos_dest = pos_dest_old;
-		const float *	src_ptr = src_ptr_arr [chn];
+		const float *	src_ptr  = src_ptr_arr [chn];
 		float *			dest_ptr = dest_ptr_arr [chn];
 
 		do
 		{
 			pos_src_int = pos_src.get_int_val ();
-			const float		q = pos_src.get_frac_val_flt ();
-			const float		in_0 = src_ptr [pos_src_int    ];
-			const float		in_1 = src_ptr [pos_src_int + 1];
-			const float		out = in_0 + q * (in_1 - in_0);
+			const float    q    = pos_src.get_frac_val_flt ();
+			const float    in_0 = src_ptr [pos_src_int    ];
+			const float    in_1 = src_ptr [pos_src_int + 1];
+			const float    out  = in_0 + q * (in_1 - in_0);
 			dest_ptr [pos_dest] = out;
 
 			pos_src += rate;
@@ -141,6 +141,19 @@ long	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const fl
 	}
 
 	return (stop_pos - pos_dest_old);
+}
+
+
+
+float	InterpolatorLerp::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+{
+	const int32_t  pos_int = pos_src.get_int_val ();
+	const float    q       = pos_src.get_frac_val_flt ();
+	const float    in_0    = src_ptr [pos_int    ];
+	const float    in_1    = src_ptr [pos_int + 1];
+	const float    out     = in_0 + q * (in_1 - in_0);
+
+	return out;
 }
 
 

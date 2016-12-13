@@ -114,6 +114,15 @@ long	InterpolatorOrder0::do_process_block (float * const dest_ptr_arr [], const 
 
 
 
+float	InterpolatorOrder0::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+{
+	const int32_t  pos_int = pos_src.get_int_val ();
+
+	return src_ptr [pos_int];
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

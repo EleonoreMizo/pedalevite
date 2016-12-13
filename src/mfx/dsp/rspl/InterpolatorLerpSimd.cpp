@@ -213,6 +213,19 @@ long	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], cons
 
 
 
+float	InterpolatorLerpSimd::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+{
+	const int32_t  pos_int = pos_src.get_int_val ();
+	const float    q       = pos_src.get_frac_val_flt ();
+	const float    in_0    = src_ptr [pos_int    ];
+	const float    in_1    = src_ptr [pos_int + 1];
+	const float    out     = in_0 + q * (in_1 - in_0);
+
+	return out;
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

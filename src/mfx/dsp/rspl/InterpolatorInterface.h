@@ -56,6 +56,7 @@ public:
 
 	inline void		start (int nbr_chn);
 	inline long		process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
+	inline float   process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate);
 
 	// Utility functions
 	static inline fstb::FixedPoint
@@ -74,6 +75,7 @@ protected:
 
 	virtual void	do_start (int nbr_chn) = 0;
 	virtual long	do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) = 0;
+	virtual float  do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) = 0;
 
 	// Utility functions
 	static bool		test_and_process_trivial_cases (long &nbr_spl_gen, int nbr_chn, float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, fstb::FixedPoint group_delay);

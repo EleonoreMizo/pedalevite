@@ -236,6 +236,24 @@ long	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [],
 
 
 
+float	InterpolatorHermite43Simd::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+{
+	const int32_t  pos_int = pos_src.get_int_val ();
+	const float    q       = pos_src.get_frac_val_flt ();
+	const float    in_0    = src_ptr [pos_int    ];
+	const float    in_1    = src_ptr [pos_int + 1];
+	const float    in_2    = src_ptr [pos_int + 2];
+	const float    in_3    = src_ptr [pos_int + 3];
+	const float		c       = 0.5f * (in_2 - in_0);
+	const float		a       = 1.5f * (in_1 - in_2) + 0.5f * (in_3 - in_0);
+	const float		b       = in_0 - in_1 + c - a;
+	const float		out     = (((a * q) + b) * q + c) * q + in_1;
+
+	return out;
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

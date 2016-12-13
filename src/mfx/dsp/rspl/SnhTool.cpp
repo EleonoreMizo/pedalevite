@@ -86,6 +86,13 @@ void	SnhTool::set_nbr_chn (int nbr_chn)
 
 
 
+int	SnhTool::get_nbr_chn () const
+{
+	return _nbr_chn;
+}
+
+
+
 /*
 ==============================================================================
 Name: set_ovrspl
@@ -177,6 +184,34 @@ void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, long max_nbr_spl
 		// the transition one.
 		rep_index = _rep_index & (hold_time - 1);
 	}
+}
+
+
+
+// Same for a single sample. Indicates if we should generate data.
+bool	SnhTool::compute_snh_data_sample (const fstb::FixedPoint &rate) const
+{
+	if (_ovrspl_l2 == 0)
+	{
+		return true;
+	}
+
+	/*** To do: optimize by just comparing the provided rate with the current rate ***/
+
+	int            hold_time = compute_hold_time (rate, _ovrspl_l2);
+
+	// If we are currently in transition, the current hold time may be shorter
+	// than the computed one.
+	if (_hold_time < hold_time)
+	{
+		hold_time = _hold_time;
+	}
+
+	// Wraps the repeat index because computed hold time may be shorter than
+	// the transition one.
+	const int      rep_index = _rep_index & (hold_time - 1);
+
+	return (rep_index == 0);
 }
 
 

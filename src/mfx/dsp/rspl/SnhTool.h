@@ -103,8 +103,10 @@ public:
 
 	void				set_ovrspl (int ovrspl_l2);
 	void				set_nbr_chn (int nbr_chn);
+	int            get_nbr_chn () const;
 
 	void				compute_snh_data (int &hold_time, int &rep_index, long max_nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) const;
+	bool           compute_snh_data_sample (const fstb::FixedPoint &rate) const;
 	void				process_data (float * const data_ptr_arr [], long nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step);
 
 	void				clear_buffers ();

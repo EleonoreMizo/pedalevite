@@ -131,6 +131,15 @@ long	InterpolatorInterface::process_block (float * const dest_ptr_arr [], const 
 
 
 
+float	InterpolatorInterface::process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+{
+	assert (src_ptr != 0);
+
+	return do_process_sample (src_ptr, pos_src, rate);
+}
+
+
+
 fstb::FixedPoint	InterpolatorInterface::integrate_rate (long len, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step)
 {
 	assert (len >= 0);

@@ -224,6 +224,30 @@ long	InterpolatorFir <IT>::do_process_block (float * const dest_ptr_arr [], cons
 
 
 
+template <class IT>
+float	InterpolatorFir <IT>::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
+{
+	assert (is_ready ());
+	assert (_snh_tool.get_nbr_chn () == 1);
+
+	float          val      = 0;
+
+	const bool     gen_flag = _snh_tool.compute_snh_data_sample (rate);
+	if (gen_flag)
+	{
+		const long     pos_src_int = pos_src.get_int_val ();
+		const uint32_t pos_src_frac = pos_src.get_frac_val (); 
+		val = _conv_ptr->interpolate (&src_ptr [pos_src_int], pos_src_frac);
+	}
+
+	float *        dst_ptr = &val;
+	_snh_tool.process_data (&dest_ptr, 1, rate, rate_step);
+
+	return val;
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
