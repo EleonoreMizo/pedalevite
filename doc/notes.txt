@@ -336,6 +336,16 @@ Au choix :
 
 
 
+Pour toutes les connexions internes, on aurait pu prendre de la nappe (1 m suffisant, 2 m pour être sûr) :
+http://www.gotronic.fr/art-cable-en-nappe-cnm40-5129.htm
+
+
+
+Nécessité d’alimentation externe avec l’AudioBox USB :
+https://www.jerrytravis.com/1042/how-to-fix-presonus-audiobox-usb-electrical-noise-hissing-popping-and-clicking-problem
+
+
+
 Choix cartes proto :
 http://fr.farnell.com/webapp/wcs/stores/servlet/Search?catalogId=15001&langId=-2&storeId=10160&categoryId=700000005134&pageSize=100&beginIndex=1&showResults=true&aa=true&sf=432,502,714&pf=210018869,210018939,210188501,210209756,210240044,210329145,210441894,210478515,211735230,211879490
 
@@ -602,6 +612,7 @@ Menu > Preferences > Raspberry Pi configuration
 	Interfaces
 		SPI : enabled
 		I2C : enabled
+		SSH : enabled (sur les Raspbian récentes, SSH est désactivé. On peut toutefois glisser un fichier vide nommé "ssh" dans /boot/ de la partition de démarrage. ref: https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ )
 	Localisation
 		Timezone : régler
 		Keyboard : régler
@@ -635,7 +646,7 @@ Terminal :
 		Doit jouer correctement
 	aplay -L
 		Chercher le nom du device USB (après "Card=")
-	sudo cp nano ~/.asoundrc /etc/asound.conf
+	sudo cp ~/.asoundrc /etc/asound.conf
 		Remplacer par les lignes suivantes et changer les <number of your card> avec le nom du device USB :
 			pcm.!default plughw:<number of your card>
 			ctl.!default plughw:<number of your card>
@@ -842,6 +853,9 @@ Passer le système en R/O ou R/W
 sudo mount -o remount,rw /
 sudo mount -o remount,ro /
 
+En plus, avant un sudo apt-get dist-upgrade:
+sudo mount -o remount,rw /boot
+
 Monter la clé USB :
 Source : https://linuxconfig.org/howto-mount-usb-drive-in-linux (ne pas éditer le fstab)
 sudo fdisk -l
@@ -850,12 +864,17 @@ sudo mkdir /mnt/sda1
 sudo mount -t vfat /dev/sda1 /mnt/sda1
 Démonter : sudo umount /mnt/sda1
 
+Redémarrer la carte son pour améliorer la synchro des buffers :
+sudo modprobe -r snd_usb_audio
+sudo modprobe snd_usb_audio
+
+
+
+http://sweetclipart.com/electric-guitar-line-art-1675
 
 
 Reste à faire :
-– Plan des câbles et connecteurs
 – Plan de disposition dans le boîtier
-– Nomenclature précise et budget
 
 
 
@@ -1023,6 +1042,8 @@ protected:
 };
 
 
+CompEx : revoir la détection d'enveloppe > 1 canal. On somme les carrés sans diviser par le nb de canaux. Utiliser dsp::mix::Align::sum_square_n_1(_v) pour l’occasion.
+
 Idée d’effet : harmonic tremolo http://www.davidrolo.com/page/4/
 principe : on divise le signal en LP/HP (1,6 kHz) et on module AM les deux signaux avec des combinaisons de (x, x), (x, 1-x), (1, x) et (x, 1) (x = sortie du LFO unipolaire) suivant le mode choisi.
 
@@ -1044,14 +1065,109 @@ Ajout à faire : changer conv_nat_to_str pour inclure une unité (qu’on rend d
 
 À faire : ajouter un métronome, calé sur le tempo. Utiliser des samples de batterie ou un son AY3-8912. En option, faire sortir le métronome sur la voie de droite uniquement.
 
-À faire : pouvoir éditer le tempo
+À faire : pouvoir éditer le tempo en rentrant une valeur à la main
 
+À faire : une fonction de preset morphing "Morph to preset…" (menu FX Setup) qui amène à un écran où on sélectionne un contrôleur et un preset dans une liste (et peut-être une courbe de transition). Le programme configure alors automatiquement les modulations pour faire la transition entre le réglage courant et le preset donné.
+
+Idée : faire deux banques spéciales (par exemple 0 et 1) qui contiendront des presets « Pre » et « Post ». Un programme de chaque banque sera toujours sélectionné. Ces programmes seront implicitement et automatiquement ajoutés à toute chaîne en cours. Par contre il y a un peu de travail à faire sur l’intégration.
+
+Idée : ajouter à chaque programme un champ "Link to…" bank/prog, qui permet de changer automatiquement le ou les programmes liés quand on modifie l’un d’entre eux.
+
+Idée : Pouvoir insérer une référence à des { bank + programme } dans un autre programme. Ça pourrait remplacer l’idée du "Link to…" mais en mieux. Peut-être encore plus complexe à mettre en oeuvre.
+
+
+Amélioration programme disto lead : crossover freq 240 Hz, low band mix 32 %, volume +3 dB -> moins boueux avec les accords complexes
+
+
+
+Remplacement footswitch (touché sans clic) :
+– Avec pas de vis assez court (vérifier que ça passe), testé positivement par klr22222 sur Audiofanzine
+	2,35	12	http://www.musikding.de/1PST-momentary-footswitch-soft-short
+– Pas de vis un peu plus long
+	3,00	12	https://www.banzaimusic.com/Momentary-Soft-Touch-SPST-NO.html
+
+Gabarit approximé de la courbe de réponse https://www.tube-town.net/ttstore/Haut-parleurs/Par-fabricant/Eminence/Serie-Patriot/Eminence-Cannabis-Rex-12-50W-8-Ohm::1946.html
+u = [20 100 800 1000 1500 2500 3500 10000 20000]; g = [0.056 1 1 1.26 0.78 2.828 2 0.0316 0.0625];
+Comb filter additionnel pour faire des bosses un peu partout : b = [1 linspace(0,0,23) -0.125]; a = [1];
 
 Idées pour une disto :
 
 – Pour les LPF, un paramètre ajuste le cutoff en fonction du gain (par exemple en oct/dB). Ça permet de garder un son clair ou légèrement crunchy assez brut en cas de gain faible.
 – On peut ajouter un paramètre de link entre les gains. Le paramètre de gain indique alors un gain relatif au principal.
+– Gain de compensation
+	Actuellement en usage dans le QF :
+		lvl_lim  = 2 (limiteur)
+		lvl_pre  = RMS 50 ms
+		lvl_post = RMS 50 ms
+		density  = 0 – 1 (0 = volume d'origine, 1 = volume distordu)
+		r        = lvl_pre / lvl_post
+		gd       = pow (r, 1 - density)
+		g        = min (gd, lvl_lim / level_post)
+	Amélioration :
+		thresh   = niveau minimal de sortie, limité par le volume distordu
+		r        = lvl_pre / lvl_post
+		gd       = pow (r, 1 - density)
+		gt       = max (gd, min (thresh / level_post, 1))
+		g        = min (gt, lvl_lim / level_post)
 
+
+
+https://www.thomann.de/fr/fane_sovereign_12_250_tc.htm
+https://www.tube-town.net/ttstore/Haut-parleurs/Par-fabricant/Eminence/Serie-Patriot/Eminence-Cannabis-Rex-12-50W-8-Ohm::1946.html
+http://www.musiciansfriend.com/accessories/eminence-patriot-screamin-eagle-12-50w-guitar-speaker
+https://www.tube-town.net/ttstore/Haut-parleurs/Par-fabricant/Celestion/Celestion-Classic/Celestion-Vintage-30-12-60-W-8-Ohm::464.html
+
+
+
+
+Citation Bill Whitlock sur les impédances :
+https://www.gearslutz.com/board/so-many-guitars-so-little-time/95525-impedance-question-gtr-pickups-gtr-amps.html
+« I know this is an old thread, but I just ran across it. Let me start with the 11/21/2006 post by "foldback": the late Deane Jensen was right. Tascam, and lots of other vendors, assume you're so stupid (or maybe they are) that you don't know the difference between "output impedance" (the apparent resistance in series with the voltage source at the output of a device) and "load impedance" (what the output sees as a load, generally the input of the next device in the signal chain). The age-old rule of thumb is that load impedance should be at least 10 times the output impedance. Output impedance is sometimes (and correctly) referred to as "source impedance."
+
+The output impedance of a guitar pickup varies with frequency. At frequencies up to about 200 to 300 Hz, it's pretty much the DC resistance of its coils (typically in the 5 k? to 15 k? range). But pickups also have a high inductance, typically in the 3 to 10 Henry range. This causes the output impedance to double every octave above that 200 to 300 Hz "break-point." Then there's the matter of the distributed capacitance of the pickup windings plus the capacitance of the guitar cable that cause the pickup to become a parallel-resonant circuit ... typically at 2 or 3 kHz. At this frequency, the pickup's output impedance may be as high as 100 k? or more. Lowering load impedance will lower the "Q" of this resonant peak (just like an equalizer) and dull the "sizzle" or "bite" of the sound. Adding long guitar cables will have a similar effect but it does so by pushing the resonant frequency of the pickup downward. Early, especially DIY, "direct boxes" used transformers that had insufficient inductance, which lowered their input impedance ... often so much that both level and frequency response took a serious beating!
+
+However, a properly-designed transformer (like the Jensen JT-DB-E) has a very high input impedance (in the 200 k? to 1 M? range, depending on the mic preamp attached to its output) and has little audible effect on the sound, even though it's a totally passive device. It also has dual Faraday shields (not to be confused with magnetic shielding) for amazing noise rejection. The DB-E is still the only dual Faraday shielded direct box transformer in production!
+
+As far as pedals go, it's generally safe to assume that if a pedal is "active" (uses a battery or power), it will have a relatively low output impedance (generally < 5 k?) and can drive relatively long cables or other pedals easily. However, a "passive" pedal has no way to create a low output impedance, so its output should be treated just as if it were a guitar pickup output ... use high-impedance loads (i.e., > 100 k?) only.
+
+The fact that manufacturers often don't publish specifications at all, or mis-state them (like the Tascam example) has been a pet peeve of mine for over 20 years. The detailed specs on a Jensen data sheet are one result of my frustration
+
+Incidentally, I sold Jensen last year (to Radial Engineering) and am now semi-retired ... still consulting, writing, and teaching (the fun stuff) though out of my Oxnard, CA home office.
+
+Bill Whitlock
+Whitlock Consulting
+AES Life Fellow - IEEE Life Senior »
+
+
+
+Bugs contournés
+===============
+
+* Coupure de son
+
+Certains patches coupent le son quand on les active, généralement juste après l’initialisation. Il s’agit très probablement de variable non initialisées dans les effets. Le problème n’est pas reproductible en x86.
+Il s’agit de l’équaliseur paramétrique, et plus particulièrement dans le BiquadPackSimd ou son utilisation.
+Ça pose problème quand il y a plusieurs EQ dans un même programme. Le réglage testé présentait un pic avec un gain positif. Bizarrement le problème n’apparaît que quand pedalevite est lancé au boot (et s’annule si on fait restart -> restart).
+Le bug a été contourné par ajout d’un _biq_pack.clear_buffers () au début du process lors du changement de nombre de canaux, mais cette étape ne devrait pas être nécessaire et il est toujours présent.
+
+
+
+* Synchro audio 2
+
+Quand on entre en surcharge CPU, on perd la synchro et il n’est généralement pas possible de la récupérer même quand la charge baisse. Il faut manuellement redémarrer le moteur audio.
+La solution envisagée est de redémarrer automatiquement le moteur au bout de N buffers (N relativement faible, une dizaine par ex.)
+
+
+
+Bugs non-résolus
+================
+
+* Synchro audio 1
+
+Dans certains cas, la synchro audio s’établit mal et le thread audio prend beaucoup plus de CPU que d’habitude. Seule solution : redémarrer le driver USB
+	sudo modprobe -r snd_usb_audio
+	sudo modprobe snd_usb_audio
+Il doit être possible de détecter ce cas lors du démarrage en faisant les stat de charge CPU sur quelques tours de buffers, et d’envoyer les commandes qu’il faut. En limiter le nombre pour éviter les boucles infinies.
 
 
 
