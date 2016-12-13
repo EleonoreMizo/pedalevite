@@ -56,11 +56,11 @@ FreeverbDesc::FreeverbDesc ()
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
 
-	// Room size
+	// Reflectivity
 	TplFdbk *      fdbk_ptr = new TplFdbk (
 		TplFdbk::Mapper::get_nat_min (),
 		TplFdbk::Mapper::get_nat_max (),
-		"Room Size\nSize\nS",
+		"Reflectivity\nReflect\nRf",
 		"%",
 		param::HelperDispNum::Preset_FLOAT_PERCENT,
 		0,
