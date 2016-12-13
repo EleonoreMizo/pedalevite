@@ -79,7 +79,8 @@ protected:
 
 private:
 
-	static const int  _nbr_stages = 8;
+	static const int  _max_nbr_stages = 16;
+	static const int  _nbr_types      =  3;
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
@@ -97,7 +98,8 @@ private:
 		               _as;
 		float          _freq;
 	};
-	typedef std::array <Stage, _nbr_stages> StageArray;
+	typedef std::array <Stage, _max_nbr_stages> StageArray;
+	typedef std::array <StageArray, _nbr_types> ConfigArray;
 
 	class Channel
 	{
@@ -111,9 +113,12 @@ private:
 	void           update_param (bool force_flag = false);
 	void           update_filter ();
 
-	void           set_peak (int stage, float freq, float lvl, float q);
-	void           set_shelf_l (int stage, float freq, float lvl, float q);
-	void           set_shelf_h (int stage, float freq, float lvl, float q);
+	void           set_peak (int conf, int stage, float freq, float lvl, float q);
+	void           set_shelf_l (int conf, int stage, float freq, float lvl, float q);
+	void           set_shelf_h (int conf, int stage, float freq, float lvl, float q);
+	void           set_pass_l (int conf, int stage, float freq, float lvl, float q);
+	void           set_pass_h (int conf, int stage, float freq, float lvl, float q);
+	void           add_gain (int conf, float gain);
 
 	State          _state;
 
@@ -128,11 +133,14 @@ private:
 	               _param_change_flag;
 
 	BiqPack        _biq_pack;
-	StageArray     _stage_arr;
+	ConfigArray    _config_arr;
+	std::array <int, _nbr_types>
+	               _nbr_stages_arr;
 	ChannelArray   _chn_arr;
 	int            _comb_time_spl;      // Delay time for the comb filter, in samples. > 0.
 	int            _write_pos;          // Common for the delay lines of all channels.
 
+	int            _config;
 	float          _mid_freq;
 	float          _mid_lvl;
 	float          _treble_freq;

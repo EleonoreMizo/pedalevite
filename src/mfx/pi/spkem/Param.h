@@ -41,7 +41,8 @@ namespace spkem
 enum Param
 {
 
-	Param_MID_LVL = 0,
+	Param_TYPE = 0,
+	Param_MID_LVL,
 	Param_MID_FREQ,
 	Param_TREBLE_LVL,
 	Param_TREBLE_FREQ,

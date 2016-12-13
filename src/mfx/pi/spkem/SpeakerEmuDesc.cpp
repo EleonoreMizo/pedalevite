@@ -50,6 +50,16 @@ namespace spkem
 SpeakerEmuDesc::SpeakerEmuDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
+	// Type
+	param::TplEnum *  enu_ptr = new param::TplEnum (
+		"0\n1A\n1B",
+		"Type",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_TYPE, enu_ptr);
+
 	// Mid level
 	param::TplLog *   log_ptr = new param::TplLog (
 		1, 4,
@@ -108,7 +118,7 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 	_desc_set.add_glob (Param_COMB_LVL, lin_ptr);
 
 	// Channels
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	enu_ptr = new param::TplEnum (
 		"All\nLeft\nRight",
 		"Channels\nChn",
 		"",
