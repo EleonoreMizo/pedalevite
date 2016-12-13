@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/lpfs/Param.h"
@@ -31,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+
+#include <algorithm>
 
 #include <cassert>
 
@@ -336,7 +339,7 @@ void	Squeezer::update_param (bool force_flag)
 		if (_param_change_flag_drive (true) || force_flag)
 		{
 			_drive_gain = float (_state_set.get_val_end_nat (Param_DRIVE));
-			_drive_inv  = std::min (1.0f / _drive_gain, 1.0f);
+			_drive_inv  = fstb::limit (1.0f / _drive_gain, 0.25f, 1.0f);
 		}
 	}
 }
