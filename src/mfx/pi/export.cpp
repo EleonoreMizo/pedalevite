@@ -32,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist2/Disto2x.h"
 #include "mfx/pi/dist2/Disto2xDesc.h"
+#include "mfx/pi/distpwm/DistoPwm.h"
+#include "mfx/pi/distpwm/DistoPwmDesc.h"
 #include "mfx/pi/dly1/Delay.h"
 #include "mfx/pi/dly1/DelayDesc.h"
 #include "mfx/pi/dtone1/DistTone.h"
@@ -103,7 +105,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::envf::EnvFollowDesc   , mfx::pi::envf::EnvFollow         >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::dist2::Disto2xDesc    , mfx::pi::dist2::Disto2x          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::spkem::SpeakerEmuDesc , mfx::pi::spkem::SpeakerEmu       >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::tost::ToStereoDesc    , mfx::pi::tost::ToStereo          >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::tost::ToStereoDesc    , mfx::pi::tost::ToStereo          >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::distpwm::DistoPwmDesc , mfx::pi::distpwm::DistoPwm       >::create ()
 		};
 
 		fact_list = l;

@@ -160,6 +160,9 @@
     <Filter Include="mfx\pi\tost">
       <UniqueIdentifier>{dda3c7ee-6ef4-4d10-8b89-d0a7727bc8dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\distpwm">
+      <UniqueIdentifier>{9dd0ff58-4469-45a2-b26b-2c3b8f8c95a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1818,6 +1821,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.h">
       <Filter>mfx\pi\tost</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.h">
+      <Filter>mfx\pi\distpwm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm\DistoPwmDesc.h">
+      <Filter>mfx\pi\distpwm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm\Param.h">
+      <Filter>mfx\pi\distpwm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2509,6 +2521,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp">
       <Filter>mfx\pi\tost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.cpp">
+      <Filter>mfx\pi\distpwm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwmDesc.cpp">
+      <Filter>mfx\pi\distpwm</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
