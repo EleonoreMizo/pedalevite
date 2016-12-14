@@ -155,6 +155,7 @@ SpeakerEmu::SpeakerEmu ()
 	}
 
 	dsp::mix::Generic::setup ();
+	dsp::mix::Align::setup ();
 }
 
 
