@@ -71,11 +71,6 @@ DistoPwm::DistoPwm ()
 
 	_state_set.add_observer (Param_PW, _param_change_flag);
 
-	for (auto &chn : _chn_arr)
-	{
-		/*** To do ***/
-	}
-
 	dsp::mix::Align::setup ();
 }
 
