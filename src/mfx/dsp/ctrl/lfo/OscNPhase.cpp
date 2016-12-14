@@ -176,7 +176,7 @@ double	OscNPhase::do_get_val () const
 {
 	const int		k     = fstb::floor_int (_k_phase);
 	double			phase = _phase + k * _inv_np;	// [0 ; 2[
-	if (phase >= 1)
+	while (phase >= 1)
 	{
 		phase -= 1;
 	}
