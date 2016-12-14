@@ -77,7 +77,7 @@ SpeakerEmu::SpeakerEmu ()
 ,	_mid_freq (1900)
 ,	_mid_lvl (powf (10.f, 7 / 20.f))
 ,	_treble_freq (6500)
-,	_treble_lvl (powf (10.f, (-13*3+7) / 20.f))
+,	_treble_lvl (powf (10.f, -11*3 / 20.f))
 ,	_comb_fdbk (0.125f)
 ,	_buf_tmp ()
 {
@@ -89,8 +89,8 @@ SpeakerEmu::SpeakerEmu ()
 	// Other interesting combination: mid 3kHz/+5dB, comb 25%
 	_state_set.set_val_nat (desc_set, Param_TYPE       , 0);
 	_state_set.set_val_nat (desc_set, Param_MID_LVL    , powf (10.f,   7 / 20.f));
-	_state_set.set_val_nat (desc_set, Param_MID_FREQ   , 1900);
-	_state_set.set_val_nat (desc_set, Param_TREBLE_LVL , powf (10.f, -32 / 20.f));
+	_state_set.set_val_nat (desc_set, Param_MID_FREQ   , 1700);
+	_state_set.set_val_nat (desc_set, Param_TREBLE_LVL , powf (10.f, -33 / 20.f));
 	_state_set.set_val_nat (desc_set, Param_TREBLE_FREQ, 6500);
 	_state_set.set_val_nat (desc_set, Param_COMB_LVL   , 0.125f);
 	_state_set.set_val_nat (desc_set, Param_CHANNELS   , SpeakerEmuDesc::Channels_ALL);
@@ -104,14 +104,14 @@ SpeakerEmu::SpeakerEmu ()
 	_state_set.add_observer (Param_CHANNELS   , _param_change_flag);
 
 	// Type 0
-	set_peak (   0, 0,   300, powf (10,  -1.2f / 20.f), 1.3f );
-	set_peak (   0, 1,  1000, powf (10,   2.2f / 20.f), 1.5f );
-	set_peak (   0, 2,  1500, powf (10,  -1.5f / 20.f), 3    );
-	set_shelf_h (0, 3,  1900, powf (10,   7    / 20.f), 1    );
+	set_peak (   0, 0,   320, powf (10,  -1.2f / 20.f), 3    );
+	set_peak (   0, 1,  1050, powf (10,   4.5f / 20.f), 2    );
+	set_peak (   0, 2,  1500, powf (10,  -4    / 20.f), 3    );
+	set_shelf_h (0, 3,  1700, powf (10,   7    / 20.f), 1.5f  );
 	set_peak (   0, 4, 10000, powf (10, -10    / 20.f), 3    );
 	for (int i = 0; i < 3; ++i)
 	{
-		set_shelf_h (0, i + 5,  6500, powf (10, -13    / 20.f), 0.75f);
+		set_shelf_h (0, i + 5,  6500, powf (10, -11    / 20.f), 0.75f);
 	}
 
 	// Type 1A
@@ -348,7 +348,7 @@ void	SpeakerEmu::update_param (bool force_flag)
 
 		if (_config == 0)
 		{
-			set_shelf_h (0, 3, _mid_freq, _mid_lvl, 1);
+			set_shelf_h (0, 3, _mid_freq, _mid_lvl, 1.5f);
 
 			const float    treble_lvl_cbrt = cbrt (_treble_lvl);
 			for (int i = 0; i < 3; ++i)
