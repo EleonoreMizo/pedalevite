@@ -160,6 +160,9 @@
     <Filter Include="mfx\pi\tost">
       <UniqueIdentifier>{dda3c7ee-6ef4-4d10-8b89-d0a7727bc8dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\skel">
+      <UniqueIdentifier>{1c763792-00d6-4e59-ac63-e00e352caa87}</UniqueIdentifier>
+    </Filter>
     <Filter Include="mfx\pi\distpwm">
       <UniqueIdentifier>{9dd0ff58-4469-45a2-b26b-2c3b8f8c95a8}</UniqueIdentifier>
     </Filter>
@@ -1821,6 +1824,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.h">
       <Filter>mfx\pi\tost</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\skel\Eton.h">
+      <Filter>mfx\pi\skel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\skel\EtonDesc.h">
+      <Filter>mfx\pi\skel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\skel\Param.h">
+      <Filter>mfx\pi\skel</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.h">
       <Filter>mfx\pi\distpwm</Filter>
     </ClInclude>
@@ -2521,6 +2533,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp">
       <Filter>mfx\pi\tost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\skel\Eton.cpp">
+      <Filter>mfx\pi\skel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\skel\EtonDesc.cpp">
+      <Filter>mfx\pi\skel</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.cpp">
       <Filter>mfx\pi\distpwm</Filter>

@@ -515,6 +515,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phaser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\skel\Eton.h">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\skel\EtonDesc.h">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\skel\Param.h">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\spkem\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\spkem\SpeakerEmu.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.h" />
@@ -814,6 +823,12 @@
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phaser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\skel\Eton.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\skel\EtonDesc.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmu.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereo.cpp" />
