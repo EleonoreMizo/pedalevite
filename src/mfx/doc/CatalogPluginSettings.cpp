@@ -111,7 +111,7 @@ void	CatalogPluginSettings::ser_read (SerRInterface &ser)
 	{
 		ser.begin_list ();
 
-		int            index;
+		int            index = -1;
 		ser.read (index);
 		assert (index >= 0);
 		if (index >= int (_cell_arr.size ()))
