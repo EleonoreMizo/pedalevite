@@ -80,6 +80,22 @@ namespace fstb
 
 
 
+// 64-bit and 128-bit Compare-And-Swap
+#define	fstb_HAS_CAS_64	1
+
+#if ohm_archi_WORD_SIZE == 64
+	// We just ignore the early AMD 64-bit CPU without CMPXCHG16B
+	#if (fstb_ARCHI == fstb_ARCHI_X86)
+		#define	fstb_HAS_CAS_128	1
+
+	#elif (fstb_ARCHI == fstb_ARCHI_ARM)
+		#define	fstb_HAS_CAS_128	1
+
+	#endif
+#endif
+
+
+	
 // System
 #define fstb_SYS_UNDEF (1)
 #define fstb_SYS_WIN   (2)
