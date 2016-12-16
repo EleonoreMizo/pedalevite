@@ -71,6 +71,7 @@ public:
 	ActionCycle    _cycle;            // Null pointers and empty members not allowed (but _cycle can be empty). Only "PRESS" cycles are allowed to have more than 1 action array.
 	bool           _inherit_flag;     // cycle will merge to the parent cycle, possibly extending it.
 	bool           _overridable_flag; // Non-empty cycles will be replaced by a non-empty child
+	bool           _reset_on_pc_flag; // Cycle count resets on program change
 
 
 

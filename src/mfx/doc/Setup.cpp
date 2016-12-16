@@ -63,6 +63,24 @@ void	Setup::ser_write (SerWInterface &ser) const
 	}
 	ser.end_list ();
 
+	if (version >= 5)
+	{
+		ser.begin_list ();
+
+		for (const auto &m : _map_plugin_settings)
+		{
+			if (! m.second.is_empty ())
+			{
+				ser.begin_list ();
+				ser.write (m.first);
+				m.second.ser_write (ser);
+				ser.end_list ();
+			}
+		}
+
+		ser.end_list ();
+	}
+
 	ser.end_list ();
 }
 
@@ -91,6 +109,23 @@ void	Setup::ser_read (SerRInterface &ser)
 		b.ser_read (ser);
 	}
 	ser.end_list ();
+
+	_map_plugin_settings.clear ();
+	if (version >= 5)
+	{
+		ser.begin_list (nbr_elt);
+		for (int pos = 0; pos < nbr_elt; ++pos)
+		{
+			ser.begin_list ();
+			std::string    pi_model;
+			ser.read (pi_model);
+			CatalogPluginSettings & cat = _map_plugin_settings [pi_model];
+			cat.ser_read (ser);
+			ser.end_list ();
+		}
+
+		ser.end_list ();
+	}
 
 	ser.end_list ();
 }

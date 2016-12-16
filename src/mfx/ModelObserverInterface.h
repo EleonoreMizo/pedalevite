@@ -121,10 +121,15 @@ public:
 	void           set_plugin (int slot_id, const PluginInitData &pi_data);
 	void           remove_plugin (int slot_id);
 	void           set_plugin_mono (int slot_id, bool mono_flag);
+	void           set_plugin_reset (int slot_id, bool reset_flag);
+	void           set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr);
 	void           set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
 	void           override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index);
 	void           set_signal_port (int port_id, const doc::SignalPort &port);
 	void           clear_signal_port (int port_id);
+	void           add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
+	void           remove_settings (std::string model, int index);
+	void           clear_all_settings ();
 
 
 
@@ -159,10 +164,15 @@ protected:
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data) = 0;
 	virtual void   do_remove_plugin (int slot_id) = 0;
 	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag) = 0;
+	virtual void   do_set_plugin_reset (int slot_id, bool reset_flag) = 0;
+	virtual void   do_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr) = 0;
 	virtual void   do_set_param_ctrl (int slot_index, PiType type, int index, const doc::CtrlLinkSet &cls) = 0;
 	virtual void   do_override_param_ctrl (int slot_index, PiType type, int index, int rotenc_index) = 0;
 	virtual void   do_set_signal_port (int port_id, const doc::SignalPort &port) = 0;
 	virtual void   do_clear_signal_port (int port_id) = 0;
+	virtual void   do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix) = 0;
+	virtual void   do_remove_settings (std::string model, int index) = 0;
+	virtual void   do_clear_all_settings () = 0;
 
 
 

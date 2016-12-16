@@ -537,11 +537,45 @@ void	View::do_remove_plugin (int slot_id)
 
 void	View::do_set_plugin_mono (int slot_id, bool mono_flag)
 {
-	doc::Slot &    slot    = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	settings._force_mono_flag = mono_flag;
 
 	mfx_View_PROPAGATE (set_plugin_mono (slot_id, mono_flag));
+}
+
+
+
+void	View::do_set_plugin_reset (int slot_id, bool reset_flag)
+{
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+	settings._force_reset_flag = reset_flag;
+
+	mfx_View_PROPAGATE (set_plugin_reset (slot_id, reset_flag));
+}
+
+
+
+void	View::do_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr)
+{
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::PluginSettings &   settings = slot.use_settings (type);
+
+	if (pres_ptr == 0)
+	{
+		auto           pres_it = settings._map_param_pres.find (index);
+		if (pres_it != settings._map_param_pres.end ())
+		{
+			settings._map_param_pres.erase (pres_it);
+		}
+	}
+	else if (pres_ptr != 0)
+	{
+		settings._map_param_pres [index] = *pres_ptr;
+	}
+
+	mfx_View_PROPAGATE (set_param_pres (slot_id, type, index, pres_ptr));
 }
 
 
@@ -596,6 +630,42 @@ void	View::do_clear_signal_port (int port_id)
 	_preset_cur._port_map.erase (it_port);
 
 	mfx_View_PROPAGATE (clear_signal_port (port_id));
+}
+
+
+
+void	View::do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
+{
+	doc::CatalogPluginSettings &  cat = _setup._map_plugin_settings [model];
+	doc::CatalogPluginSettings::Cell cell;
+	cell._name  = name;
+	cell._main  = s_main;
+	cell._mixer = s_mix;
+	cat.add_settings (index, cell);
+
+	mfx_View_PROPAGATE (add_settings (model, index, name, s_main, s_mix));
+}
+
+
+
+void	View::do_remove_settings (std::string model, int index)
+{
+	auto           it_cat = _setup._map_plugin_settings.find (model);
+	assert (it_cat != _setup._map_plugin_settings.end ());
+
+	doc::CatalogPluginSettings &  cat = it_cat->second;
+	cat.remove_settings (index);
+
+	mfx_View_PROPAGATE (remove_settings (model, index));
+}
+
+
+
+void	View::do_clear_all_settings ()
+{
+	_setup._map_plugin_settings.clear ();
+
+	mfx_View_PROPAGATE (clear_all_settings ());
 }
 
 

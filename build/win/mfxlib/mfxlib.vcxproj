@@ -295,12 +295,14 @@
     <ClInclude Include="..\..\..\src\mfx\doc\ActionBank.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionParam.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionPreset.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionSettings.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionTempo.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionToggleFx.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionToggleTuner.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionTrigger.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionType.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Bank.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\CatalogPluginSettings.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\CtrlLink.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\CtrlLinkSet.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\FxId.h" />
@@ -717,10 +719,12 @@
     <ClCompile Include="..\..\..\src\mfx\doc\ActionBank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionPreset.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionSettings.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionTempo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionToggleFx.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionToggleTuner.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Bank.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\CatalogPluginSettings.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CtrlLink.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CtrlLinkSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\FxId.cpp" />

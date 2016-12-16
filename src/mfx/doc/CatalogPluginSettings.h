@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Setup.h
+        CatalogPluginSettings.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_doc_Setup_HEADER_INCLUDED)
-#define mfx_doc_Setup_HEADER_INCLUDED
+#if ! defined (mfx_doc_CatalogPluginSettings_HEADER_INCLUDED)
+#define mfx_doc_CatalogPluginSettings_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,15 +27,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/Bank.h"
-#include "mfx/doc/CatalogPluginSettings.h"
-#include "mfx/doc/PedalboardLayout.h"
-#include "mfx/ChnMode.h"
-#include "mfx/Cst.h"
+#include "mfx/doc/PluginSettings.h"
 
-#include <array>
-#include <map>
-#include <string>
+#include <memory>
+#include <vector>
 
 
 
@@ -46,45 +41,39 @@ namespace doc
 
 
 
-class SerRInterface;
-class SerWInterface;
-
-class Setup
+class CatalogPluginSettings
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	enum SaveMode
+	class Cell
 	{
-		SaveMode_MANUAL = 0,
-		SaveMode_PARTIAL,
-		SaveMode_AUTO,
-
-		SaveMode_NBR_ELT
+	public:
+		std::string    _name;
+		PluginSettings _main;
+		PluginSettings _mixer;
 	};
+	
+	typedef std::shared_ptr <Cell> CellSPtr;
+	typedef std::vector <CellSPtr> CellArray;
 
-	typedef std::array <Bank, Cst::_nbr_banks> BankArray;
-	typedef std::map <std::string, CatalogPluginSettings> CpsMap;
+	virtual        ~CatalogPluginSettings () = default;
+	               CatalogPluginSettings ()  = default;
+	               CatalogPluginSettings (const CatalogPluginSettings &other) = default;
+	CatalogPluginSettings &
+	               operator = (const CatalogPluginSettings &other)            = default;
 
-	               Setup ()                               = default;
-	               Setup (const Setup &other)             = default;
-	virtual        ~Setup ()                              = default;
-
-	Setup &        operator = (const Setup &other)        = default;
-
+	bool           is_empty () const;
+	bool           is_preset_existing (int index) const;
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
+	void           trim_array ();
+	void           add_settings (int index, const Cell &cell);
+	void           remove_settings (int index);
 
-	std::string    _name;
-	SaveMode       _save_mode  = SaveMode_MANUAL;
-	PedalboardLayout
-	               _layout;
-	BankArray      _bank_arr;
-	ChnMode        _chn_mode   = ChnMode_1M_1M;
-	double         _master_vol = 1;     // Linear, > 0
-	CpsMap         _map_plugin_settings;
+	CellArray      _cell_arr;    // Shared pointers can be 0
 
 
 
@@ -104,10 +93,10 @@ private:
 
 private:
 
-	bool           operator == (const Setup &other) const = delete;
-	bool           operator != (const Setup &other) const = delete;
+	bool           operator == (const CatalogPluginSettings &other) const = delete;
+	bool           operator != (const CatalogPluginSettings &other) const = delete;
 
-}; // class Setup
+}; // class CatalogPluginSettings
 
 
 
@@ -116,11 +105,11 @@ private:
 
 
 
-//#include "mfx/doc/Setup.hpp"
+//#include "mfx/doc/CatalogPluginSettings.hpp"
 
 
 
-#endif   // mfx_doc_Setup_HEADER_INCLUDED
+#endif   // mfx_doc_CatalogPluginSettings_HEADER_INCLUDED
 
 
 

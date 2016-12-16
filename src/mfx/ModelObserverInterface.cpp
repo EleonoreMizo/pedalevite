@@ -308,6 +308,27 @@ void	ModelObserverInterface::set_plugin_mono (int slot_id, bool mono_flag)
 
 
 
+void	ModelObserverInterface::set_plugin_reset (int slot_id, bool reset_flag)
+{
+	assert (slot_id >= 0);
+
+	do_set_plugin_reset (slot_id, reset_flag);
+}
+
+
+
+void	ModelObserverInterface::set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr)
+{
+	assert (slot_id >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	do_set_param_pres (slot_id, type, index, pres_ptr);
+}
+
+
+
 void	ModelObserverInterface::set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
 	assert (slot_id >= 0);
@@ -349,6 +370,33 @@ void	ModelObserverInterface::clear_signal_port (int port_id)
 	assert (port_id >= 0);
 
 	do_clear_signal_port (port_id);
+}
+
+
+
+void	ModelObserverInterface::add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
+{
+	assert (! model.empty ());
+	assert (index >= 0);
+
+	do_add_settings (model, index, name, s_main, s_mix);
+}
+
+
+
+void	ModelObserverInterface::remove_settings (std::string model, int index)
+{
+	assert (! model.empty ());
+	assert (index >= 0);
+
+	do_remove_settings (model, index);
+}
+
+
+
+void	ModelObserverInterface::clear_all_settings ()
+{
+	do_clear_all_settings ();
 }
 
 

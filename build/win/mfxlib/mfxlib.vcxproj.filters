@@ -1842,6 +1842,12 @@
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm\Param.h">
       <Filter>mfx\pi\distpwm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\doc\CatalogPluginSettings.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionSettings.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2545,6 +2551,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwmDesc.cpp">
       <Filter>mfx\pi\distpwm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\CatalogPluginSettings.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionSettings.cpp">
+      <Filter>mfx\doc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

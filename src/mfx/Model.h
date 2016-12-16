@@ -50,6 +50,7 @@ namespace doc
 	class ActionBank;
 	class ActionParam;
 	class ActionPreset;
+	class ActionSettings;
 	class ActionToggleFx;
 	class ActionToggleTuner;
 	class ActionTempo;
@@ -119,6 +120,8 @@ public:
 	void           set_plugin (int slot_id, std::string model);
 	void           remove_plugin (int slot_id);
 	void           set_plugin_mono (int slot_id, bool mono_flag);
+	void           set_plugin_reset (int slot_id, bool reset_flag);
+	void           set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr);
 	void           set_param (int slot_id, PiType type, int index, float val);
 	void           set_param_beats (int slot_id, int index, float beats);
 	void           set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
@@ -129,6 +132,9 @@ public:
 	void           set_signal_port (int port_id, const doc::SignalPort &port);
 	void           clear_signal_port (int port_id);
 	void           clear_all_signal_ports_for_slot (int slot_id);
+	void           add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
+	void           remove_settings (std::string model, int index);
+	void           clear_all_settings ();
 
 	std::vector <std::string>
 	               list_plugin_models () const;
@@ -170,7 +176,6 @@ private:
 		               PedalState ();
 		bool           _press_flag;
 		bool           _hold_flag;
-		bool           _reset_cycle_on_preset_flag;
 		std::chrono::microseconds
 		               _press_ts;
 		int            _cycle_pos;       // Counts only "PRESS" events
@@ -204,6 +209,7 @@ private:
 	void           process_action_toggle_fx (const doc::ActionToggleFx &action);
 	void           process_action_toggle_tuner (const doc::ActionToggleTuner &action);
 	void           process_action_tempo (const doc::ActionTempo &action, std::chrono::microseconds ts);
+	void           process_action_settings (const doc::ActionSettings &action);
 	void           build_slot_info ();
 	void           notify_slot_info ();
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
@@ -218,6 +224,7 @@ private:
 	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);
 	void           add_default_ctrl (int selected_slot_id = -1);
 	void           clear_signal_port (int port_id, bool req_exist_flag);
+	void           apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings);
 
 	cmd::Central   _central;
 
@@ -231,7 +238,7 @@ private:
 	doc::PedalboardLayout               // Final layout
 	               _layout_cur;
 
-	PiIdMap        _pi_id_map;         // Not affected by the tuner
+	PiIdMap        _pi_id_map;          // Not affected by the tuner
 	PedalStateArray
 	               _pedal_state_arr;
 	std::chrono::microseconds

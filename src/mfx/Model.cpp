@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/ActionToggleTuner.h"
@@ -226,6 +227,24 @@ int	Model::load_from_disk ()
 			for (int bank_cnt = 0; bank_cnt < nbr_banks; ++bank_cnt)
 			{
 				set_bank (bank_cnt, sss_uptr->_bank_arr [bank_cnt]);
+			}
+			clear_all_settings ();
+			for (const auto &node_cat : sss_uptr->_map_plugin_settings)
+			{
+				const std::string &  model = node_cat.first;
+				const doc::CatalogPluginSettings &  cat = node_cat.second;
+				const int      nbr_elt = int (cat._cell_arr.size ());
+				for (int index = 0; index < nbr_elt; ++index)
+				{
+					if (cat._cell_arr [index].get () != 0)
+					{
+						const doc::CatalogPluginSettings::Cell &  cell =
+							*(cat._cell_arr [index]);
+						add_settings (
+							model, index, cell._name, cell._main, cell._mixer
+						);
+					}
+				}
 			}
 			set_chn_mode (sss_uptr->_chn_mode);
 			set_master_vol (sss_uptr->_master_vol);
@@ -442,15 +461,20 @@ void	Model::activate_preset (int preset_index)
 
 	_edit_preset_flag = true;
 
-	for (auto &state : _pedal_state_arr)
+	update_layout ();
+
+	for (int ped_cnt = 0; ped_cnt < Cst::_nbr_pedals; ++ped_cnt)
 	{
-		if (state._reset_cycle_on_preset_flag)
+		const doc::PedalActionGroup & pg = _layout_cur._pedal_arr [ped_cnt];
+		for (auto &act : pg._action_arr)
 		{
-			state._cycle_pos = 0;
+			if (! act.is_empty_default () && act._reset_on_pc_flag)
+			{
+				_pedal_state_arr [ped_cnt]._cycle_pos = 0;
+				break;
+			}
 		}
 	}
-
-	update_layout ();
 
 	if (_obs_ptr != 0)
 	{
@@ -741,6 +765,57 @@ void	Model::set_plugin_mono (int slot_id, bool mono_flag)
 	}
 }
 
+
+void	Model::set_plugin_reset (int slot_id, bool reset_flag)
+{
+	assert (slot_id >= 0);
+
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
+
+	settings._force_reset_flag = reset_flag;
+
+	apply_settings ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_plugin_reset (slot_id, reset_flag);
+	}
+}
+
+
+
+// pres_ptr == 0 to remove the presentation
+void	Model::set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr)
+{
+	assert (slot_id >= 0);
+	assert (type >= 0);
+	assert (type <= PiType_NBR_ELT);
+	assert (index >= 0);
+
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::PluginSettings &   settings = slot.use_settings (type);
+
+	if (pres_ptr == 0)
+	{
+		auto           pres_it = settings._map_param_pres.find (index);
+		if (pres_it != settings._map_param_pres.end ())
+		{
+			settings._map_param_pres.erase (pres_it);
+		}
+	}
+	else if (pres_ptr != 0)
+	{
+		settings._map_param_pres [index] = *pres_ptr;
+	}
+
+	apply_settings ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_param_pres (slot_id, type, index, pres_ptr);
+	}
+}
 
 
 void	Model::set_param (int slot_id, PiType type, int index, float val)
@@ -1134,6 +1209,57 @@ std::chrono::microseconds	Model::get_cur_date () const
 
 
 
+void	Model::add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
+{
+	assert (! model.empty ());
+	assert (index >= 0);
+
+	doc::CatalogPluginSettings &  cat = _setup._map_plugin_settings [model];
+	doc::CatalogPluginSettings::Cell cell;
+	cell._name  = name;
+	cell._main  = s_main;
+	cell._mixer = s_mix;
+	cat.add_settings (index, cell);
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->add_settings (model, index, name, s_main, s_mix);
+	}
+}
+
+
+
+void	Model::remove_settings (std::string model, int index)
+{
+	assert (! model.empty ());
+	assert (index >= 0);
+
+	auto           it_cat = _setup._map_plugin_settings.find (model);
+	assert (it_cat != _setup._map_plugin_settings.end ());
+
+	doc::CatalogPluginSettings &  cat = it_cat->second;
+	cat.remove_settings (index);
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->remove_settings (model, index);
+	}
+}
+
+
+
+void	Model::clear_all_settings ()
+{
+	_setup._map_plugin_settings.clear ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->clear_all_settings ();
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -1212,7 +1338,6 @@ Model::SlotPiId::SlotPiId ()
 Model::PedalState::PedalState ()
 :	_press_flag (false)
 ,	_hold_flag (false)
-,	_reset_cycle_on_preset_flag (true)
 ,	_press_ts (INT64_MIN)
 ,	_cycle_pos (0)
 {
@@ -1753,6 +1878,10 @@ void	Model::process_action (const doc::PedalActionSingleInterface &action, std::
 		process_action_tempo (dynamic_cast <const doc::ActionTempo &> (action), ts);
 		break;
 
+	case doc::ActionType_SETTINGS:
+		process_action_settings (dynamic_cast <const doc::ActionSettings &> (action));
+		break;
+
 	default:
 		assert (false);
 	}
@@ -1781,6 +1910,28 @@ void	Model::process_action_param (const doc::ActionParam &action)
 	const int      slot_id = find_slot_cur_preset (action._fx_id);
 	if (slot_id >= 0)
 	{
+#if 1
+
+/*
+Temporary solution here (safe but too slow). We need to:
+- Keep the model consistent (view must be updated)
+- Keep only one commit, or a very few commits so changes are taken into
+account as quickly as possible
+
+apply_plugin_settings() has the same problems, and interferred with
+the previous method.
+
+Planned changes:
+- Split sensible functions like set_param() into several parts, before and
+after commit/apply_changes. This will require further thinking.
+- A separate method to set the whole settings, split too.
+- Maybe keep only the plug-in state (parameters) in the settings. Changing the
+controllers is questionable
+*/
+		set_param (slot_id, action._fx_id._type, action._index, action._val);
+
+#else
+
 		const auto     it_id_map = _pi_id_map.find (slot_id);
 		assert (it_id_map != _pi_id_map.end ());
 		const int      pi_id =
@@ -1800,6 +1951,7 @@ void	Model::process_action_param (const doc::ActionParam &action)
 				_central.set_param (pi_id, action._index, action._val);
 			}
 		}
+#endif
 	}
 }
 
@@ -1870,6 +2022,35 @@ void	Model::process_action_tempo (const doc::ActionTempo &action, std::chrono::m
 	}
 
 	_tempo_last_ts = ts;
+}
+
+
+
+void	Model::process_action_settings (const doc::ActionSettings &action)
+{
+	assert (! action._relative_flag); /*** To do ***/
+
+	const int      slot_id = find_slot_cur_preset (action._fx_id);
+	if (slot_id >= 0)
+	{
+		// Finds the preset
+		auto           it_slot = _preset_cur._slot_map.find (slot_id);
+		assert (it_slot != _preset_cur._slot_map.end ());
+		const std::string &  pi_model = it_slot->second->_pi_model;
+
+		const auto     it_cat = _setup._map_plugin_settings.find (pi_model);
+		if (it_cat != _setup._map_plugin_settings.end ())
+		{
+			if (it_cat->second.is_preset_existing (action._val))
+			{
+				const doc::CatalogPluginSettings::Cell & cell =
+					*(it_cat->second._cell_arr [action._val]);
+
+				apply_plugin_settings (slot_id, PiType_MAIN, cell._main);
+				apply_plugin_settings (slot_id, PiType_MIX , cell._mixer);
+			}
+		}
+	}
 }
 
 
@@ -2370,6 +2551,82 @@ void	Model::clear_signal_port (int port_id, bool req_exist_flag)
 		{
 			_obs_ptr->clear_signal_port (port_id);
 		}
+	}
+}
+
+
+
+// Slot must exist and contain a plug-in of the same type as the settings.
+void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings)
+{
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+
+	// Parameters
+	const int      nbr_param = int (settings._param_list.size ());
+	const doc::CtrlLinkSet cls_empty;
+	auto           it_ctrl = settings._map_param_ctrl.begin ();
+	auto           it_pres = settings._map_param_pres.begin ();
+	for (int index = 0; index < nbr_param; ++index)
+	{
+		bool           param_set_flag = false;
+		bool           ctrl_set_flag  = false;
+		bool           pres_set_flag  = false;
+
+		// Presentation
+		if (it_pres != settings._map_param_pres.end ())
+		{
+			if (index >= it_pres->first)
+			{
+				if (index == it_pres->first)
+				{
+					const doc::ParamPresentation & pres = it_pres->second;
+					set_param_pres (slot_id, type, index, &pres);
+					pres_set_flag = true;
+
+					if (type == PiType_MAIN && pres._ref_beats >= 0)
+					{
+						set_param_beats (slot_id, index, pres._ref_beats);
+						param_set_flag = true;
+					}
+				}
+				++ it_pres;
+			}
+		}
+
+		// Controllers
+		if (it_ctrl != settings._map_param_ctrl.end ())
+		{
+			if (index >= it_ctrl->first)
+			{
+				if (index == it_ctrl->first)
+				{
+					set_param_ctrl (slot_id, type, index, it_ctrl->second);
+					ctrl_set_flag = true;
+				}
+				++ it_ctrl;
+			}
+		}
+
+		// Default action
+		if (! param_set_flag)
+		{
+			set_param (slot_id, type, index, settings._param_list [index]);
+		}
+		if (! ctrl_set_flag)
+		{
+			set_param_ctrl (slot_id, type, index, cls_empty);
+		}
+		if (! pres_set_flag)
+		{
+			set_param_pres (slot_id, type, index, 0);
+		}
+	}
+
+	// Some flags
+	if (type == PiType_MAIN)
+	{
+		set_plugin_mono (slot_id, settings._force_mono_flag);
+		set_plugin_reset (slot_id, settings._force_reset_flag);
 	}
 }
 

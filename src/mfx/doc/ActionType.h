@@ -48,6 +48,7 @@ enum ActionType
 	ActionType_LOOP_UNDO,
 	ActionType_PARAM,
 	ActionType_TEMPO,
+	ActionType_SETTINGS,
 	ActionType_EVENT,
 
 	ActionType_NBR_ELT

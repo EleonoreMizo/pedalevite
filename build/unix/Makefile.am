@@ -182,6 +182,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/ActionParam.h \
         ../../src/mfx/doc/ActionPreset.cpp \
         ../../src/mfx/doc/ActionPreset.h \
+        ../../src/mfx/doc/ActionSettings.cpp \
+        ../../src/mfx/doc/ActionSettings.h \
         ../../src/mfx/doc/ActionTempo.cpp \
         ../../src/mfx/doc/ActionTempo.h \
         ../../src/mfx/doc/ActionToggleFx.cpp \
@@ -192,6 +194,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/ActionType.h \
         ../../src/mfx/doc/Bank.cpp \
         ../../src/mfx/doc/Bank.h \
+        ../../src/mfx/doc/CatalogPluginSettings.cpp \
+        ../../src/mfx/doc/CatalogPluginSettings.h \
         ../../src/mfx/doc/CtrlLink.cpp \
         ../../src/mfx/doc/CtrlLink.h \
         ../../src/mfx/doc/CtrlLinkSet.cpp \

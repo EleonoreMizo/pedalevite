@@ -27,11 +27,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/PedalActionCycle.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
+#include "mfx/Cst.h"
 
 #include <algorithm>
 
@@ -54,6 +56,7 @@ PedalActionCycle::PedalActionCycle ()
 :	_cycle ()
 ,	_inherit_flag (true)
 ,	_overridable_flag (true)
+,	_reset_on_pc_flag (true)
 {
 	// Nothing
 }
@@ -64,6 +67,7 @@ PedalActionCycle::PedalActionCycle (const PedalActionCycle &other)
 :	_cycle (duplicate_actions (other._cycle))
 ,	_inherit_flag (true)
 ,	_overridable_flag (true)
+,	_reset_on_pc_flag (other._reset_on_pc_flag)
 {
 	// Nothing
 }
@@ -77,6 +81,7 @@ PedalActionCycle &	PedalActionCycle::operator = (const PedalActionCycle &other)
 		_cycle            = duplicate_actions (other._cycle);
 		_inherit_flag     = other._inherit_flag;
 		_overridable_flag = other._overridable_flag;
+		_reset_on_pc_flag = other._reset_on_pc_flag;
 	}
 
 	return *this;
@@ -86,7 +91,7 @@ PedalActionCycle &	PedalActionCycle::operator = (const PedalActionCycle &other)
 
 bool	PedalActionCycle::is_empty_default () const
 {
-	return (_cycle.empty () && _inherit_flag && _overridable_flag);
+	return (_cycle.empty () && _inherit_flag && _overridable_flag && _reset_on_pc_flag);
 }
 
 
@@ -126,6 +131,11 @@ void	PedalActionCycle::merge_cycle (const PedalActionCycle &other)
 				tmp.end ()
 			);
 		}
+
+		if (other._reset_on_pc_flag)
+		{
+			_reset_on_pc_flag = true;
+		}
 	}
 }
 
@@ -137,6 +147,10 @@ void	PedalActionCycle::ser_write (SerWInterface &ser) const
 
 	ser.write (_inherit_flag);
 	ser.write (_overridable_flag);
+	if (Cst::_format_version >= 5)
+	{
+		ser.write (_reset_on_pc_flag);
+	}
 
 	ser.begin_list ();
 	for (const auto &aa : _cycle)
@@ -161,10 +175,18 @@ void	PedalActionCycle::ser_write (SerWInterface &ser) const
 
 void	PedalActionCycle::ser_read (SerRInterface &ser)
 {
+	const int      version = ser.get_doc_version ();
+
 	ser.begin_list ();
 
 	ser.read (_inherit_flag);
 	ser.read (_overridable_flag);
+
+	_reset_on_pc_flag = true;
+	if (version >= 5)
+	{
+		ser.read (_reset_on_pc_flag);
+	}
 
 	int            nbr_elt;
 	ser.begin_list (nbr_elt);
@@ -197,6 +219,9 @@ void	PedalActionCycle::ser_read (SerRInterface &ser)
 				break;
 			case ActionType_BANK:
 				a_sptr = ActionSPtr (new ActionBank (ser));
+				break;
+			case ActionType_SETTINGS:
+				a_sptr = ActionSPtr (new ActionSettings (ser));
 				break;
 
 			case ActionType_TOGGLE_FX:
