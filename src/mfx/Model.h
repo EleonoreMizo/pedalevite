@@ -190,6 +190,31 @@ private:
 		int            _index;           // Parameter index, >= 0
 	};
 
+	class ParamUpdate
+	{
+	public:
+		enum Update
+		{
+			Update_INVALID = -1,
+			Update_VAL     =  0,
+			Update_CTRL,
+			Update_PRES,
+			Update_NBR_ELT
+		};
+		Update         _update    = Update_INVALID;
+		PiType         _type      = PiType_INVALID;
+		int            _index     = -1;
+		float          _val       = 0;
+		float          _val_beats = 0; // Valid only if _beats_flag is set
+		bool           _beat_flag = false;
+		doc::CtrlLinkSet
+		               _cls;
+		doc::ParamPresentation
+		               _pres;
+		bool           _pres_flag = false;
+	};
+	typedef std::multimap <int, ParamUpdate> ParamUpdateMap; // [slot_id] = instruction
+
 	void           update_layout ();
 	void           preinstantiate_all_plugins_from_bank ();
 	void           apply_settings ();
@@ -214,17 +239,25 @@ private:
 	void           notify_slot_info ();
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
 	void           find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) const;
-	bool           update_parameter (doc::Preset &preset, int slot_id, PiType type, int index, float val);
-	bool           update_parameter (doc::Preset &preset, doc::Preset::SlotMap::iterator it_slot, PiType type, int index, float val);
+	bool           set_param_pre_commit (int slot_id, int pi_id, PiType type, int index, float val);
+	bool           set_param_beats_pre_commit (int slot_id, int pi_id, int index, float val_beats, doc::ParamPresentation &pres, const piapi::PluginDescInterface &pi_desc, float &val_nrm);
+	bool           set_param_pres_pre_commit (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr);
+	void           push_set_param (int slot_id, PiType type, int index, float val, bool beat_flag, float val_beats);
+	void           push_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	void           push_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr);
+	bool           set_preset_param (doc::Preset &preset, int slot_id, PiType type, int index, float val);
+	bool           set_preset_param (doc::Preset &preset, doc::Preset::SlotMap::iterator it_slot, PiType type, int index, float val);
+	void           set_preset_ctrl (doc::Preset &preset, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	void           commit_cumulated_changes ();
 	void           fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitData &pi_data);
-	void           update_all_beat_parameters ();
+	bool           update_all_beat_parameters ();
 	void           update_all_overriden_param_ctrl ();
 	void           update_param_ctrl (const OverrideLoc &loc);
 	void           set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);
 	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);
 	void           add_default_ctrl (int selected_slot_id = -1);
 	void           clear_signal_port (int port_id, bool req_exist_flag);
-	void           apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings);
+	void           apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings, bool ctrl_flag, bool pres_flag);
 
 	cmd::Central   _central;
 
@@ -269,6 +302,8 @@ private:
 
 	std::map <OverrideLoc, int>         // Parameter -> rot enc
 	               _override_map;
+
+	ParamUpdateMap _param_update_map;   // List of parameters that have been sent to _central but are not propagated to the view yet.
 
 
 

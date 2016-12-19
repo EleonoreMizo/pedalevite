@@ -92,6 +92,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_latest_slot_id (0)
 ,	_slot_info ()
 ,	_override_map ()
+,	_param_update_map ()
 {
 	_central.set_callback (this);
 }
@@ -709,11 +710,10 @@ void	Model::set_plugin (int slot_id, std::string model)
 		// Parameter values
 		const int      nbr_param =
 			pi_data._nbr_param_arr [piapi::ParamCateg_GLOBAL];
-		const int      pi_id = _pi_id_map [slot_id]._pi_id_arr [PiType_MAIN];
 		for (int p = 0; p < nbr_param; ++p)
 		{
 			const float    val = slot_sptr->_settings_all [model]._param_list [p];
-			_obs_ptr->set_param (pi_id, p, val, slot_id, PiType_MAIN);
+			_obs_ptr->set_param (slot_id, p, val, PiType_MAIN);
 		}
 	}
 
@@ -793,21 +793,7 @@ void	Model::set_param_pres (int slot_id, PiType type, int index, const doc::Para
 	assert (type <= PiType_NBR_ELT);
 	assert (index >= 0);
 
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
-	doc::PluginSettings &   settings = slot.use_settings (type);
-
-	if (pres_ptr == 0)
-	{
-		auto           pres_it = settings._map_param_pres.find (index);
-		if (pres_it != settings._map_param_pres.end ())
-		{
-			settings._map_param_pres.erase (pres_it);
-		}
-	}
-	else if (pres_ptr != 0)
-	{
-		settings._map_param_pres [index] = *pres_ptr;
-	}
+	set_param_pres_pre_commit (slot_id, type, index, pres_ptr);
 
 	apply_settings ();
 
@@ -827,17 +813,12 @@ void	Model::set_param (int slot_id, PiType type, int index, float val)
 	assert (val >= 0);
 	assert (val <= 1);
 
-	auto           it_id_map = _pi_id_map.find (slot_id);
+	const auto     it_id_map = _pi_id_map.find (slot_id);
 	assert (it_id_map != _pi_id_map.end ());
-	int            pi_id     = it_id_map->second._pi_id_arr [type];
+	const int      pi_id     = it_id_map->second._pi_id_arr [type];
 	assert (pi_id >= 0);
 
-	if (! _tuner_flag && pi_id != _dummy_mix_id)
-	{
-		_central.set_param (pi_id, index, val);
-	}
-
-	update_parameter (_preset_cur, slot_id, type, index, val);
+	set_param_pre_commit (slot_id, pi_id, type, index, val);
 
 	// Add the mixer plug-in if necessary but don't remove it if not.
 	// This avoids clicks when switching back and forth between configurations
@@ -845,17 +826,12 @@ void	Model::set_param (int slot_id, PiType type, int index, float val)
 	// to apply_settings.
 	if (pi_id == _dummy_mix_id && has_mixer_plugin (_preset_cur, slot_id))
 	{
-		apply_settings ();
-
-		// apply_settings() changed the list
-		it_id_map = _pi_id_map.find (slot_id);
-		pi_id     = it_id_map->second._pi_id_arr [type];
-		assert (pi_id >= 0);
+		apply_settings (); // pi_id not valid after this
 	}
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->set_param (pi_id, index, val, slot_id, type);
+		_obs_ptr->set_param (slot_id, index, val, type);
 	}
 }
 
@@ -903,24 +879,7 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
-	doc::PluginSettings &   settings = slot.use_settings (type);
-	assert (index < int (settings._param_list.size ()));
-
-	const bool     cls_empty_flag = cls.is_empty ();
-
-	if (cls_empty_flag)
-	{
-		auto           it_cls = settings._map_param_ctrl.find (index);
-		if (it_cls != settings._map_param_ctrl.end ())
-		{
-			settings._map_param_ctrl.erase (it_cls);
-		}
-	}
-	else
-	{
-		settings._map_param_ctrl [index] = cls;
-	}
+	set_preset_ctrl (_preset_cur, slot_id, type, index, cls);
 
 	auto           it_id_map = _pi_id_map.find (slot_id);
 	assert (it_id_map != _pi_id_map.end ());
@@ -929,7 +888,7 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 
 	if (pi_id == _dummy_mix_id)
 	{
-		if (! cls_empty_flag)
+		if (! cls.is_empty ())
 		{
 			apply_settings ();
 		}
@@ -946,10 +905,6 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 
 	if (_obs_ptr != 0)
 	{
-		// apply_settings() changed the list
-		it_id_map = _pi_id_map.find (slot_id);
-		pi_id     = it_id_map->second._pi_id_arr [type];
-
 		_obs_ptr->set_param_ctrl (slot_id, type, index, cls);
 	}
 }
@@ -1281,13 +1236,13 @@ void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
 			assert (it_slot != _preset_cur._slot_map.end ());
 
 			const bool     ok_flag =
-				update_parameter (_preset_cur, it_slot, type, index, val);
+				set_preset_param (_preset_cur, it_slot, type, index, val);
 
 			if (ok_flag)
 			{
 				if (_obs_ptr != 0)
 				{
-					_obs_ptr->set_param (pi_id, index, val, slot_id, type);
+					_obs_ptr->set_param (slot_id, index, val, type);
 				}
 
 				// Checks if the parameter is tempo-controlled
@@ -1843,7 +1798,7 @@ void	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
 		}
 	}
 
-	_central.commit ();
+	commit_cumulated_changes ();
 }
 
 
@@ -1910,28 +1865,6 @@ void	Model::process_action_param (const doc::ActionParam &action)
 	const int      slot_id = find_slot_cur_preset (action._fx_id);
 	if (slot_id >= 0)
 	{
-#if 1
-
-/*
-Temporary solution here (safe but too slow). We need to:
-- Keep the model consistent (view must be updated)
-- Keep only one commit, or a very few commits so changes are taken into
-account as quickly as possible
-
-apply_plugin_settings() has the same problems, and interferred with
-the previous method.
-
-Planned changes:
-- Split sensible functions like set_param() into several parts, before and
-after commit/apply_changes. This will require further thinking.
-- A separate method to set the whole settings, split too.
-- Maybe keep only the plug-in state (parameters) in the settings. Changing the
-controllers is questionable
-*/
-		set_param (slot_id, action._fx_id._type, action._index, action._val);
-
-#else
-
 		const auto     it_id_map = _pi_id_map.find (slot_id);
 		assert (it_id_map != _pi_id_map.end ());
 		const int      pi_id =
@@ -1940,7 +1873,7 @@ controllers is questionable
 
 		if (pi_id != _dummy_mix_id)
 		{
-			// At this point we are not sure about the type of the
+			// At this point we are not sure about the type of a
 			// named plugin, so we have to check the parameter range.
 			PluginPool &   pi_pool   = _central.use_pi_pool ();
 			PluginPool::PluginDetails & details = pi_pool.use_plugin (pi_id);
@@ -1948,10 +1881,26 @@ controllers is questionable
 				details._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
 			if (action._index < nbr_param)
 			{
-				_central.set_param (pi_id, action._index, action._val);
+				const bool     ok_flag = set_param_pre_commit (
+					slot_id,
+					pi_id,
+					action._fx_id._type,
+					action._index,
+					action._val
+				);
+				if (ok_flag)
+				{
+					push_set_param (
+						slot_id,
+						action._fx_id._type,
+						action._index,
+						action._val,
+						false,
+						0
+					);
+				}
 			}
 		}
-#endif
 	}
 }
 
@@ -2046,8 +1995,12 @@ void	Model::process_action_settings (const doc::ActionSettings &action)
 				const doc::CatalogPluginSettings::Cell & cell =
 					*(it_cat->second._cell_arr [action._val]);
 
-				apply_plugin_settings (slot_id, PiType_MAIN, cell._main);
-				apply_plugin_settings (slot_id, PiType_MIX , cell._mixer);
+				apply_plugin_settings (
+					slot_id, PiType_MAIN, cell._main , true, false
+				);
+				apply_plugin_settings (
+					slot_id, PiType_MIX , cell._mixer, true, false
+				);
 			}
 		}
 	}
@@ -2161,16 +2114,164 @@ void	Model::find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) co
 
 
 
-bool	Model::update_parameter (doc::Preset &preset, int slot_id, PiType type, int index, float val)
+bool	Model::set_param_pre_commit (int slot_id, int pi_id, PiType type, int index, float val)
 {
-	auto           it_slot = preset._slot_map.find (slot_id);
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (pi_id >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+	assert (val >= 0);
+	assert (val <= 1);
 
-	return update_parameter (preset, it_slot, type, index, val);
+	if (! _tuner_flag && pi_id != _dummy_mix_id)
+	{
+		_central.set_param (pi_id, index, val);
+	}
+
+	return set_preset_param (_preset_cur, slot_id, type, index, val);
 }
 
 
 
-bool	Model::update_parameter (doc::Preset &preset, doc::Preset::SlotMap::iterator it_slot, PiType type, int index, float val)
+bool	Model::set_param_beats_pre_commit (int slot_id, int pi_id, int index, float val_beats, doc::ParamPresentation &pres, const piapi::PluginDescInterface &pi_desc, float &val_nrm)
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (pi_id >= 0);
+	assert (index >= 0);
+	assert (val_beats > 0);
+	assert (&pres == _preset_cur.use_slot (slot_id)
+	                            .use_settings (PiType_MAIN)
+	                            .use_pres_if_tempo_ctrl (index));
+	assert (&pi_desc == &get_model_desc (_preset_cur.use_slot (slot_id)._pi_model));
+
+	// Stores the beat value in the document
+	pres._ref_beats = val_beats;
+
+	// Converts the value from beats to the internal parameter unit
+	// Clips and converts to a normalized value
+	const piapi::ParamDescInterface &   param_desc =
+		pi_desc.get_param_info (piapi::ParamCateg_GLOBAL, index);
+	val_nrm = float (ToolsParam::conv_beats_to_nrm (
+		val_beats, param_desc, _tempo
+	));
+
+	return set_param_pre_commit (slot_id, pi_id, PiType_MAIN, index, val_nrm);
+}
+
+
+
+// Requires a full apply_settings() actually
+bool	Model::set_param_pres_pre_commit (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr)
+{
+	assert (slot_id >= 0);
+	assert (type >= 0);
+	assert (type <= PiType_NBR_ELT);
+	assert (index >= 0);
+
+	bool           ok_flag = true;
+
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::PluginSettings &   settings = slot.use_settings (type);
+
+	if (index >= int (settings._param_list.size ()))
+	{
+		ok_flag = false;
+		assert (false);
+	}
+	else
+	{
+		if (pres_ptr == 0)
+		{
+			auto           pres_it = settings._map_param_pres.find (index);
+			if (pres_it != settings._map_param_pres.end ())
+			{
+				settings._map_param_pres.erase (pres_it);
+			}
+		}
+		else if (pres_ptr != 0)
+		{
+			settings._map_param_pres [index] = *pres_ptr;
+		}
+	}
+
+	return ok_flag;
+}
+
+
+
+void	Model::push_set_param (int slot_id, PiType type, int index, float val, bool beat_flag, float val_beats)
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+	assert (val >= 0);
+	assert (val <= 1);
+	assert (! beat_flag || val_beats > 0);
+
+	ParamUpdate       update;
+	update._update    = ParamUpdate::Update_VAL;
+	update._type      = type;
+	update._index     = index;
+	update._val       = val;
+	update._beat_flag = beat_flag;
+	update._val_beats = val_beats;
+	_param_update_map.insert (std::make_pair (slot_id, update));
+}
+
+
+
+void	Model::push_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	ParamUpdate       update;
+	update._update = ParamUpdate::Update_CTRL;
+	update._type   = type;
+	update._index  = index;
+	auto              it =
+		_param_update_map.insert (std::make_pair (slot_id, update));
+	it->second._cls = cls;
+}
+
+
+
+void	Model::push_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr)
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	ParamUpdate       update;
+	update._update    = ParamUpdate::Update_PRES;
+	update._type      = type;
+	update._index     = index;
+	update._pres_flag = (pres_ptr != 0);
+	auto              it =
+		_param_update_map.insert (std::make_pair (slot_id, update));
+	if (pres_ptr != 0)
+	{
+		it->second._pres = *pres_ptr;
+	}
+}
+
+
+
+bool	Model::set_preset_param (doc::Preset &preset, int slot_id, PiType type, int index, float val)
+{
+	auto           it_slot = preset._slot_map.find (slot_id);
+
+	return set_preset_param (preset, it_slot, type, index, val);
+}
+
+
+
+bool	Model::set_preset_param (doc::Preset &preset, doc::Preset::SlotMap::iterator it_slot, PiType type, int index, float val)
 {
 	bool           ok_flag = true;
 	if (preset.is_slot_empty (it_slot))
@@ -2197,6 +2298,121 @@ bool	Model::update_parameter (doc::Preset &preset, doc::Preset::SlotMap::iterato
 	}
 
 	return ok_flag;
+}
+
+
+
+void	Model::set_preset_ctrl (doc::Preset &preset, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
+{
+	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::PluginSettings &   settings = slot.use_settings (type);
+	assert (index < int (settings._param_list.size ()));
+
+	const bool     cls_empty_flag = cls.is_empty ();
+
+	if (cls_empty_flag)
+	{
+		auto           it_cls = settings._map_param_ctrl.find (index);
+		if (it_cls != settings._map_param_ctrl.end ())
+		{
+			settings._map_param_ctrl.erase (it_cls);
+		}
+	}
+	else
+	{
+		settings._map_param_ctrl [index] = cls;
+	}
+}
+
+
+
+void	Model::commit_cumulated_changes ()
+{
+	bool           apply_settings_flag = false;
+
+	// Collects information
+	PiIdMap::const_iterator it_id_map = _pi_id_map.end ();
+	int            slot_id   = -1;
+	int            pi_id_mix = -1;
+	for (const auto &node : _param_update_map)
+	{
+		if (node.first != slot_id)
+		{
+			slot_id    = node.first;
+			it_id_map  = _pi_id_map.find (slot_id);
+			assert (it_id_map != _pi_id_map.end ());
+			pi_id_mix  = it_id_map->second._pi_id_arr [PiType_MIX];
+			assert (pi_id_mix >= 0);
+
+			// Condition for any change
+			if (   pi_id_mix == _dummy_mix_id
+			    && has_mixer_plugin (_preset_cur, slot_id))
+			{
+				apply_settings_flag = true;
+			}
+		}
+
+		// Presentation changes always require apply_settings()
+		if (node.second._update == ParamUpdate::Update_PRES)
+		{
+			apply_settings_flag = true;
+		}
+
+		// No need to stay more
+		if (apply_settings_flag)
+		{
+			break;
+		}
+	}
+
+	// Commit things
+	if (apply_settings_flag)
+	{
+		apply_settings ();
+	}
+	else
+	{
+		_central.commit ();
+	}
+
+	// Propagates to the views
+	if (_obs_ptr != 0)
+	{
+		for (const auto &node : _param_update_map)
+		{
+			slot_id = node.first;
+			const ParamUpdate &  upd = node.second;
+			switch (upd._update)
+			{
+			case ParamUpdate::Update_VAL:
+				_obs_ptr->set_param (slot_id, upd._index, upd._val, upd._type);
+				if (upd._beat_flag)
+				{
+					_obs_ptr->set_param_beats (slot_id, upd._index, upd._val_beats);
+				}
+				break;
+
+			case ParamUpdate::Update_CTRL:
+				_obs_ptr->set_param_ctrl (
+					slot_id, upd._type, upd._index, upd._cls
+				);
+				break;
+
+			case ParamUpdate::Update_PRES:
+				_obs_ptr->set_param_pres (
+					slot_id, upd._type, upd._index,
+					(upd._pres_flag) ? &upd._pres : 0
+				);
+				break;
+
+			default:
+				assert (false);
+				break;
+			}
+		}
+	}
+
+	_param_update_map.clear ();
 }
 
 
@@ -2229,7 +2445,8 @@ void	Model::fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitDa
 
 
 
-void	Model::update_all_beat_parameters ()
+// Does not commit, returns true if needed
+bool	Model::update_all_beat_parameters ()
 {
 	assert (! _tuner_flag);
 
@@ -2270,10 +2487,7 @@ void	Model::update_all_beat_parameters ()
 		}
 	}
 
-	if (need_commit_flag)
-	{
-		_central.commit ();
-	}
+	return need_commit_flag;
 }
 
 
@@ -2557,15 +2771,23 @@ void	Model::clear_signal_port (int port_id, bool req_exist_flag)
 
 
 // Slot must exist and contain a plug-in of the same type as the settings.
-void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings)
+// Does not copy the flags
+// Requires commit
+void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings, bool ctrl_flag, bool pres_flag)
 {
 	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 
-	// Parameters
 	const int      nbr_param = int (settings._param_list.size ());
 	const doc::CtrlLinkSet cls_empty;
-	auto           it_ctrl = settings._map_param_ctrl.begin ();
-	auto           it_pres = settings._map_param_pres.begin ();
+	auto           it_ctrl   = settings._map_param_ctrl.begin ();
+	auto           it_pres   = settings._map_param_pres.begin ();
+	const auto     it_id_map = _pi_id_map.find (slot_id);
+	assert (it_id_map != _pi_id_map.end ());
+	const int      pi_id     = it_id_map->second._pi_id_arr [type];
+	assert (pi_id >= 0);
+	doc::PluginSettings &   settings_new = slot.use_settings (type);
+	const piapi::PluginDescInterface &	pi_desc =
+		get_model_desc (slot._pi_model);
 	for (int index = 0; index < nbr_param; ++index)
 	{
 		bool           param_set_flag = false;
@@ -2573,19 +2795,35 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 		bool           pres_set_flag  = false;
 
 		// Presentation
-		if (it_pres != settings._map_param_pres.end ())
+		if (pres_flag && it_pres != settings._map_param_pres.end ())
 		{
 			if (index >= it_pres->first)
 			{
 				if (index == it_pres->first)
 				{
 					const doc::ParamPresentation & pres = it_pres->second;
-					set_param_pres (slot_id, type, index, &pres);
+					set_param_pres_pre_commit (slot_id, type, index, &pres);
+					push_set_param_pres (slot_id, type, index, &pres);
 					pres_set_flag = true;
 
 					if (type == PiType_MAIN && pres._ref_beats >= 0)
 					{
-						set_param_beats (slot_id, index, pres._ref_beats);
+						doc::ParamPresentation *   pres_new_ptr =
+							settings_new.use_pres_if_tempo_ctrl (index);
+						assert (pres_new_ptr != 0);
+						float          val_nrm;
+						set_param_beats_pre_commit (
+							slot_id,
+							pi_id,
+							index,
+							pres._ref_beats,
+							*pres_new_ptr,
+							pi_desc,
+							val_nrm
+						);
+						push_set_param (
+							slot_id, type, index, val_nrm, true, pres._ref_beats
+						);
 						param_set_flag = true;
 					}
 				}
@@ -2594,13 +2832,16 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 		}
 
 		// Controllers
-		if (it_ctrl != settings._map_param_ctrl.end ())
+		if (ctrl_flag && it_ctrl != settings._map_param_ctrl.end ())
 		{
 			if (index >= it_ctrl->first)
 			{
 				if (index == it_ctrl->first)
 				{
-					set_param_ctrl (slot_id, type, index, it_ctrl->second);
+					set_preset_ctrl (
+						_preset_cur, slot_id, type, index, it_ctrl->second
+					);
+					push_set_param_ctrl (slot_id, type, index, it_ctrl->second);
 					ctrl_set_flag = true;
 				}
 				++ it_ctrl;
@@ -2610,23 +2851,20 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 		// Default action
 		if (! param_set_flag)
 		{
-			set_param (slot_id, type, index, settings._param_list [index]);
+			const float       val = settings._param_list [index];
+			set_param_pre_commit (slot_id, pi_id, type, index, val);
+			push_set_param (slot_id, type, index, val, false, 0);
 		}
-		if (! ctrl_set_flag)
+		if (ctrl_flag && ! ctrl_set_flag)
 		{
-			set_param_ctrl (slot_id, type, index, cls_empty);
+			set_preset_ctrl (_preset_cur, slot_id, type, index, cls_empty);
+			push_set_param_ctrl (slot_id, type, index, cls_empty);
 		}
-		if (! pres_set_flag)
+		if (pres_flag && ! pres_set_flag)
 		{
-			set_param_pres (slot_id, type, index, 0);
+			set_param_pres_pre_commit (slot_id, type, index, 0);
+			push_set_param_pres (slot_id, type, index, 0);
 		}
-	}
-
-	// Some flags
-	if (type == PiType_MAIN)
-	{
-		set_plugin_mono (slot_id, settings._force_mono_flag);
-		set_plugin_reset (slot_id, settings._force_reset_flag);
 	}
 }
 

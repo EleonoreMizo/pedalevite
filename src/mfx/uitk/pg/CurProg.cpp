@@ -194,7 +194,7 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	i_set_prog_nbr (preset_index);
 	i_set_bank_name (setup._bank_arr [bank_index]._name);
 	i_set_prog_name (preset._name);
-	i_set_param (-1, 0, 0, 0, PiType (0));
+	i_set_param (false, 0, 0, 0, PiType (0));
 
 	_esc_count = 0;
 }
@@ -304,18 +304,18 @@ void	CurProg::do_activate_preset (int index)
 	{
 		i_set_prog_name (_view_ptr->use_preset_cur ()._name);
 	}
-	i_set_param (-1, 0, 0, 0, PiType (0));
+	i_set_param (false, 0, 0, 0, PiType (0));
 }
 
 
 
-void	CurProg::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
+void	CurProg::do_set_param (int slot_id, int index, float val, PiType type)
 {
 	const std::chrono::microseconds  cur_date (_model_ptr->get_cur_date ());
 	const std::chrono::microseconds  dist     (cur_date - _tempo_date);
 	if (dist >= std::chrono::milliseconds (100))
 	{
-		i_set_param (pi_id, index, val, slot_id, type);
+		i_set_param (true, slot_id, index, val, type);
 	}
 }
 
@@ -367,9 +367,9 @@ void	CurProg::i_set_prog_name (std::string name)
 
 
 
-void	CurProg::i_set_param (int pi_id, int index, float val, int slot_id, PiType type)
+void	CurProg::i_set_param (bool show_flag, int slot_id, int index, float val, PiType type)
 {
-	if (pi_id < 0 || _view_ptr == 0)
+	if (! show_flag || _view_ptr == 0)
 	{
 		_fx_name_sptr->set_text ("");
 		_param_unit_sptr->set_text ("");

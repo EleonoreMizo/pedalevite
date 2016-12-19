@@ -107,7 +107,7 @@ protected:
 	virtual void   do_set_tuner (bool active_flag);
 	virtual void   do_set_tuner_freq (float freq);
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoMap &info_map);
-	virtual void   do_set_param (int pi_id, int index, float val, int slot_id, PiType type);
+	virtual void   do_set_param (int slot_id, int index, float val, PiType type);
 	virtual void   do_set_param_beats (int slot_id, int index, float beats);
 	virtual void   do_add_slot (int slot_id);
 	virtual void   do_remove_slot (int slot_id);

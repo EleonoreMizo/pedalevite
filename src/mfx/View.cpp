@@ -394,10 +394,10 @@ void	View::do_set_slot_info_for_current_preset (const SlotInfoMap &info_map)
 
 
 
-void	View::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
+void	View::do_set_param (int slot_id, int index, float val, PiType type)
 {
 	update_parameter (_preset_cur, slot_id, type, index, val);
-	mfx_View_PROPAGATE (set_param (pi_id, index, val, slot_id, type));
+	mfx_View_PROPAGATE (set_param (slot_id, index, val, type));
 }
 
 

@@ -111,7 +111,7 @@ public:
 	void           set_tuner (bool active_flag);
 	void           set_tuner_freq (float freq);
 	void           set_slot_info_for_current_preset (const SlotInfoMap &info_map);
-	void           set_param (int pi_id, int index, float val, int slot_id, PiType type);
+	void           set_param (int slot_id, int index, float val, PiType type);
 	void           set_param_beats (int slot_id, int index, float beats);
 	void           add_slot (int slot_id);
 	void           remove_slot (int slot_id);
@@ -154,7 +154,7 @@ protected:
 	virtual void   do_set_tuner (bool active_flag) = 0;
 	virtual void   do_set_tuner_freq (float freq) = 0;
 	virtual void   do_set_slot_info_for_current_preset (const SlotInfoMap &info_map) = 0;
-	virtual void   do_set_param (int pi_id, int index, float val, int slot_index, PiType type) = 0;
+	virtual void   do_set_param (int slot_id, int index, float val, PiType type) = 0;
 	virtual void   do_set_param_beats (int slot_index, int index, float beats) = 0;
 	virtual void   do_add_slot (int slot_id) = 0;
 	virtual void   do_remove_slot (int slot_id) = 0;

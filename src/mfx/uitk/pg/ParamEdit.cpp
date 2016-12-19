@@ -217,7 +217,7 @@ void	ParamEdit::do_activate_preset (int index)
 
 
 
-void	ParamEdit::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
+void	ParamEdit::do_set_param (int slot_id, int index, float val, PiType type)
 {
 	if (   slot_id == _loc_edit._slot_id
 	    && type    == _loc_edit._pi_type

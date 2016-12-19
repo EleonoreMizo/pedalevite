@@ -204,17 +204,16 @@ void	ModelObserverInterface::set_slot_info_for_current_preset (const SlotInfoMap
 
 
 
-void	ModelObserverInterface::set_param (int pi_id, int index, float val, int slot_id, PiType type)
+void	ModelObserverInterface::set_param (int slot_id, int index, float val, PiType type)
 {
-	assert (pi_id >= 0);
+	assert (slot_id >= 0);
 	assert (index >= 0);
 	assert (val >= 0);
 	assert (val <= 1);
-	assert (slot_id >= 0);
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 
-	do_set_param (pi_id, index, val, slot_id, type);
+	do_set_param (slot_id, index, val, type);
 }
 
 

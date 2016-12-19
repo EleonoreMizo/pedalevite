@@ -189,7 +189,7 @@ void	ParamList::do_activate_preset (int index)
 
 
 
-void	ParamList::do_set_param (int pi_id, int index, float val, int slot_id, PiType type)
+void	ParamList::do_set_param (int slot_id, int index, float val, PiType type)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{

@@ -83,7 +83,7 @@ protected:
 	virtual void   do_set_bank_name (std::string name);
 	virtual void   do_set_preset_name (std::string name);
 	virtual void   do_activate_preset (int index);
-	virtual void   do_set_param (int pi_id, int index, float val, int slot_id, PiType type);
+	virtual void   do_set_param (int slot_id, int index, float val, PiType type);
 
 
 
@@ -99,7 +99,7 @@ private:
 	void           i_set_prog_nbr (int index);
 	void           i_set_bank_name (std::string name);
 	void           i_set_prog_name (std::string name);
-	void           i_set_param (int pi_id, int index, float val, int slot_id, PiType type);
+	void           i_set_param (bool show_flag, int slot_id, int index, float val, PiType type);
 
 	static std::string
 	               get_ip_address ();
