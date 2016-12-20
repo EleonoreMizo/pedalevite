@@ -217,8 +217,9 @@ void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue
 		{
 		case UserInputType_SW:
 			{
+				// Creates an event only if the switch is ON (assumes OFF by default).
 				const SwitchState &  state = _switch_state_arr [index];
-				if (state.is_set ())
+				if (state.is_set () && state._flag)
 				{
 					enqueue_val (
 						state._time_last,
