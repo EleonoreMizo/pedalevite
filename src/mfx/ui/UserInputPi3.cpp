@@ -403,11 +403,17 @@ void	UserInputPi3::handle_switch (int index, bool flag, std::chrono::nanoseconds
 	SwitchState &  sw = _switch_state_arr [index];
 
 	const std::chrono::nanoseconds   dist (cur_time - sw._time_last);
-	if ((flag != sw._flag && dist >= _antibounce_time) || ! sw.is_set ())
+	if (flag != sw._flag && dist >= _antibounce_time)
 	{
 		sw._flag      = flag;
 		sw._time_last = cur_time;
 		enqueue_val (cur_time, UserInputType_SW, index, (flag) ? 1 : 0);
+	}
+	else if (! sw.is_set ())
+	{
+		// Does noe generate any event when reading the initial value
+		sw._flag      = flag;
+		sw._time_last = cur_time;
 	}
 }
 
