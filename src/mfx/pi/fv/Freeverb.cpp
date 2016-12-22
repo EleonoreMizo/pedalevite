@@ -209,13 +209,13 @@ void	Freeverb::do_process_block (ProcInfo &proc)
 		// Input
 		dsp::mix::Align::copy_1_1_v (
 			&chn._buf_arr [0] [0],
-			proc._src_arr [chn_cnt],
+			proc._src_arr [chn_in_cnt],
 			proc._nbr_spl,
 			_src_lvl
 		);
 		dsp::mix::Align::copy_1_1_v (
 			proc._dst_arr [chn_cnt],
-			proc._src_arr [chn_cnt],
+			proc._src_arr [chn_in_cnt],
 			proc._nbr_spl,
 			_dry_lvl
 		);
