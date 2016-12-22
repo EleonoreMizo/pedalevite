@@ -37,14 +37,14 @@ namespace mfx
 enum ChnMode
 {
 
-	ChnMode_1M_1M,    // Mono to mono
-	ChnMode_1M_1S,    // Mono to stereo
+	ChnMode_1M_1M = 0,   // Mono to mono
+	ChnMode_1M_1S,       // Mono to stereo
+	ChnMode_1S_1S,       // Stereo to stereo
 	// Future use
 #if 0
-	ChmMode_1S_1S,    // Stereo to stereo
-	ChnMode_2M_1M,    // 2 mono to 1 mono
-	ChnMode_2M_1S,    // 2 mono to 1 stereo
-	ChnMode_2M_2M,    // 2 mono chains
+	ChnMode_2M_1M,       // 2 mono to 1 mono
+	ChnMode_2M_1S,       // 2 mono to 1 stereo
+	ChnMode_2M_2M,       // 2 mono chains
 #endif
 
 	ChnMode_NBR_ELT

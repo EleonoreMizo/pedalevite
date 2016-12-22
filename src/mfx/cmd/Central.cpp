@@ -734,6 +734,7 @@ void	Central::create_routing ()
 	ProcessingContext &  ctx = *doc._ctx_sptr;
 
 	// Final number of channels
+	int            nbr_chn_cur   = 1;
 	int            nbr_chn_final = 1;
 	switch (doc._chn_mode)
 	{
@@ -741,6 +742,10 @@ void	Central::create_routing ()
 		nbr_chn_final = 1;
 		break;
 	case ChnMode_1M_1S:
+		nbr_chn_final = 2;
+		break;
+	case ChnMode_1S_1S:
+		nbr_chn_cur   = 2;
 		nbr_chn_final = 2;
 		break;
 	default:
@@ -753,7 +758,6 @@ void	Central::create_routing ()
 	BufAlloc       buf_alloc (Cst::BufSpecial_NBR_ELT);
 
 	std::array <int, piapi::PluginInterface::_max_nbr_chn>   cur_buf_arr;
-	int            nbr_chn_cur = 1;
 	for (auto &b : cur_buf_arr)
 	{
 		b = -1;
@@ -769,7 +773,11 @@ void	Central::create_routing ()
 		const int      buf = buf_alloc.alloc ();
 		audio_i._buf_arr [i] = buf;
 	}
-	cur_buf_arr [0] = audio_i._buf_arr [0];
+	assert (nbr_chn_cur <= audio_i._nbr_chn);
+	for (int i = 0; i < nbr_chn_cur; ++i)
+	{
+		cur_buf_arr [i] = audio_i._buf_arr [i];
+	}
 
 	// Plug-ins
 	for (Slot & slot : doc._slot_list)

@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/ChnMode.h"
 #include "mfx/MeterResultSet.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
@@ -293,6 +294,10 @@ void	Levels::refresh_display ()
 		nbr_chn_out = 1;
 		break;
 	case ChnMode_1M_1S:
+		nbr_chn_out = 2;
+		break;
+	case ChnMode_1S_1S:
+		nbr_chn_in  = 2;
 		nbr_chn_out = 2;
 		break;
 	default:
