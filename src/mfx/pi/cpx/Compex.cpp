@@ -379,9 +379,10 @@ void	Compex::update_param_vol_curves_ss ()
 	float          fixed_gain = gain_l2;
 	if (! _use_side_chain_flag)
 	{
-		const float    ratio_at_0 = (threshold_l2 < 0) ? rh : rl;
-		const float    gain_at_0  = threshold_l2 * (1 - ratio_at_0);
-		fixed_gain -= gain_at_0;
+		const float    thr_dist     = threshold_l2 - _lvl_ref_l2;
+		const float    ratio_at_ref = (thr_dist < 0) ? rh : rl;
+		const float    gain_at_ref  = thr_dist * (1 - ratio_at_ref);
+		fixed_gain -= gain_at_ref;
 	}
 
 	_vol_offset_post = fixed_gain;
@@ -573,6 +574,7 @@ fstb::ToolsSimd::VectF32	Compex::compute_gain (const fstb::ToolsSimd::VectF32 en
 const float	Compex::_gain_min_l2   = -16;
 const float	Compex::_gain_max_l2   =   8;
 const float	Compex::_active_thr_l2 = -14;
+const float	Compex::_lvl_ref_l2    =  -4; // -24 dB
 const float	Compex::_active_mul    = 1.0f / (-10 - -14);	// -60 -> -84 dB;
 
 

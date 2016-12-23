@@ -164,6 +164,8 @@ private:
 	               _active_thr_l2;
 	static const float
 	               _active_mul;
+	static const float                  // Reference level, does not move when the ratio are changed.
+	               _lvl_ref_l2;
 
 
 
