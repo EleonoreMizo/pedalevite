@@ -51,6 +51,7 @@
 	<li><a href="#fx-imp-fix">Input Impedance Fix — Adaptation d’impédance d’entrée</a></li>
 	<li><a href="#fx-peq">Parametric Equalizer — Égaliseur paramétrique</a></li>
 	<li><a href="#fx-phaser">Phaser</a></li>
+	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
@@ -1158,48 +1159,90 @@ Sans effet sur les filtres passe-haut et bas.</p>
 
 <h3><a id="fx-phaser"></a>Phaser</h3>
 
+<p>Cet effet de modulation fonctionne un peu différemment des phasers
+analogiques, mais en reprend les mêmes principes.
+Il a cependant un son très typé.
+Il peut générer un signal stéréo à partir d’une entrée mono.</p>
+<p>Un filtre passe-bande désactivable permet de choisir une plage de
+fréquences à conserver sur le son phasé. Cela permet essentiellement de
+limiter les basses fréquences sur les réglages un peu francs.</p>
+
 <p class="var">Speed</p>
-<p></p>
+<p>Vitesse des oscillations.</p>
 
 <p class="var">Depth</p>
-<p></p>
+<p>Ce paramètre fixe le nombre d’étages du phaser, parmi
+<span class="ui">4</span>, <span class="ui">8</span>,
+<span class="ui">16</span> et <span class="ui">32</span>.
+Le nombre d’étage change la coloration générale du son.</p>
 
 <p class="var">Feedback level</p>
-<p></p>
+<p>Quantité de signal réinjecté à l’entrée du phaser.
+Ce feedback est saturé, il peut donc être intéressant de pousser un peu le
+niveau du signal d’entrée pour enrichir le résultat.</p>
 
 <p class="var">Feedback color</p>
-<p></p>
+<p>Change la tonalité de la réinjection.</p>
 
 <p class="var">Phase mix</p>
-<p></p>
+<p>Quantité de signal déphasé ajoutée au signal d’origine.
+C’est le fait d’additionner les deux qui produit l’effet de phasing.
+Cet effet est maximum à 50&#8239;%.</p>
 
 <p class="var">Phase offset</p>
-<p></p>
+<p>Ce paramètre permet de déplacer la phase des oscillations par rapport
+à son cycle naturel.</p>
 
 <p class="var">Phase set</p>
-<p></p>
+<p>Fixe manuellement la phase des oscillations, en degrés.</p>
 
 <p class="var">Hold</p>
-<p></p>
+<p>Gèle les oscillations du phaser.</p>
 
 <p class="var">BPF freq</p>
-<p></p>
+<p>Fréquence centrale du filtre passe-bande appliqué au signal déphasé.</p>
 
 <p class="var">BPF selectivity</p>
-<p></p>
+<p>Permet d’isoler plus ou moins précisément le groupe de fréquences choisi
+avec le filtre passe-bande.
+Quand ce paramètre est au minimum, le filtrage est désactivé.</p>
+
+
+
+<h3><a id="fx-distpwm"></a>Pulse Width Modulation Distortion</h3>
+
+<p>Il s’agit d’une distortion à gain quasi-infini, le signal de sortie est
+rectangulaire.
+Cependant seules les fronts d’onde montants sont tirés du signal en entrée.
+Les fronts d’onde descendants sont générés automatiquement après un laps de
+temps déterminé, ce qui donne au son une coloration d’oscillateur
+«&#8239;PWM&#8239;», comme sur un synthétiseur.</p>
+
+<p class="var">Pulse width</p>
+<p>Durée des impulsions, en millisecondes.
+Plus la durée est courte, plus le spectre du son est chargé en particulier
+dans les aigus, et plus le volume apparent diminue.</p>
 
 
 
 <h3><a id="fx-disto"></a>Simple Distortion</h3>
 
+<p>Il s’agit d’une saturation asymétrique très simple, avec un filtre
+passe-haut en entrée afin de supprimer une éventuelle composante continue et
+de nettoyer un peu les graves.</p>
+
 <p class="var">Distortion gain</p>
-<p></p>
+<p>Gain de la distorsion en dB.</p>
 
 <p class="var">HPF frequency</p>
-<p></p>
+<p>Fréquence de coupure du filtre coupe-bas en entrée.</p>
 
 <p class="var">Bias</p>
-<p></p>
+<p>Biais de polarisation.
+Augmenter le biais permet d’obtenir une distorsion plus asymétrique et
+favorise ainsi les harmoniques paires.
+Attention un biais trop élevé a tendance à couper le signal et donne une
+impression de circuit défectueux.</p>
 
 
 
@@ -1230,30 +1273,60 @@ Sans effet sur les filtres passe-haut et bas.</p>
 
 <h3><a id="fx-tremolo"></a>Tremolo</h3>
 
+<p>L’effet de trémolo est une sorte de volume oscillant,
+modulé en amplitude par un LFO.</p>
+
 <p class="var">Speed</p>
-<p></p>
+<p>Vitesse des oscillations, en Hz.</p>
 
 <p class="var">Amount</p>
-<p></p>
+<p>Quantité d’oscillations.
+À 100&#8239;%, le signal est silencieux sur la partie la plus basse du LFO.
+Il est possible d’aller bien au-delà de cette valeur de façon à créer un effet
+plus dur, qui ressemble à une <i><span lang="en">gate</span></i>.</p>
 
 <p class="var">Waveform</p>
-<p></p>
+<p>Forme d’onde du LFO.</p>
+<table>
+<tr><td><span class="ui">Sine    </span></td><td>Sinus</td></tr>
+<tr><td><span class="ui">Square  </span></td><td>Carré</td></tr>
+<tr><td><span class="ui">Triangle</span></td><td>Triangle</td></tr>
+<tr><td><span class="ui">Saw Up  </span></td><td>Dents de scie montantes</td></tr>
+<tr><td><span class="ui">Saw Down</span></td><td>Dents de scie descendantes</td></tr>
+</table>
 
 <p class="var">Gain saturation</p>
-<p></p>
+<p>Indique à quel point les parties positives du LFO doivent être saturées de
+façon à ne pas provoquer de montée de volume exagérées quand <var>Amount</var>
+prend des valeurs un peu élevées.</p>
 
 <p class="var">Bias</p>
-<p></p>
+<p>Offset à appliquer à la valeur générée par le LFO de façon à déplacer sa
+courbe plutôt dans les basses amplitudes ou dans les hautes amplitudes.
+Cela permet de créer un son plus ou moins dense, en particulier quand
+<var>Amount</var> est élevé.
+Dans ce cas, le trémolo se comporte comme une
+<i><span lang="en">gate</span></i> et ce paramètre permet de régler son
+temps d’ouverture.</p>
 
 
 
 <h3><a id="fx-wha"></a>Wha-wha</h3>
 
+<p>Il s’agit d’une wha-wha plus ou moins calquée sur la Cry Baby.
+La plage de variation de la fréquences de coupure a été étendue, ce qui permet
+d’obtenir un son ravageur dans les basses fréquences.</p>
+
 <p class="var">Frequency</p>
-<p></p>
+<p>Fréquence de coupure du filtre.
+Ce paramètre est relié par défaut à la pédale d’expression.
+Pour retrouver le son d’une pédale wha classique, il convient d’en restreindre
+l’intervalle à environ 400–1600&#8239;Hz.</p>
 
 <p class="var">Selectivity</p>
-<p></p>
+<p>Résonance du filtre.
+Plus la valeur est élevée, plus le fitre est coloré et génère une tonalité
+distincte.</p>
 
 
 
