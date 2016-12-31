@@ -87,7 +87,9 @@ pre       { font-family: Courier, mono;
 .proto    { font-weight:bold; background-color: #FFF6EC;
             padding-left: 1em; padding-top: 1em; padding-right: 1em; padding-bottom: 1em; }
 .term     { color: #E0E0E0; font-weight:bold; background-color: #000000;
-            padding-left: 1em; padding-top: 1em; padding-right: 1em; padding-bottom: 1em; }
+            padding-left: 0.5em; padding-top: 0.5em; padding-right: 0.5em; padding-bottom: 0.5em;
+            white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; }
+.termhl   { color: #FFFFFF; background-color: #B00000; }
 
 code      { font-family: Courier, mono; font-size: 12px; }
 var       { font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: normal;
