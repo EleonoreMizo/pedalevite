@@ -43,7 +43,11 @@
 	<li><a href="#soft-ro">Passage du système en lecture seule et autres optimisations</a></li>
 	</ol>
 </li>
-<li class="tcont"><a href="#troubleshooting">Tests et dépannage</a></li>
+<li class="tcont"><a href="#maintenance">Maintenance</a></li>
+	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#troubleshooting">Tests et dépannage</a></li>
+	<li><a href="#source">Code source</a></li>
+	</ol>
 <li class="tcont"><a href="#improvements">Amérliorations et variations envisageables</a></li>
 <li class="tcont"><a href="#changelog">Historique des versions</a></li>
 </ol>
@@ -1179,16 +1183,224 @@ Il faut alors exécuter cette commande en plus&#8239;:</p>
 
 
 
-<h2><a id="troubleshooting"></a>V.&emsp;Tests et dépannage</h2>
+<h2><a id="maintenance"></a>V.&emsp;Maintenance</h2>
+
+<h3><a id="troubleshooting"></a>Tests et dépannage</h3>
 
 <p>À venir…</p>
+
+<h3><a id="source-code"></a>Code source</h3>
+
+<p>Bien que le matériel tienne une place de choix dans Pédale Vite,
+il s’agit quand même essentiellement d’un projet logiciel.
+Cette partie décrit succintement l’architecture du programme ainsi que ce
+qu’il faut savoir pour l’adapter facilement à des modifications du 
+matériel.</p>
+
+<h4>Compilation</h4>
+
+<p>Les fichiers de projet se trouvent dans le répertoire
+<code>pedalevite/build</code>.</p>
+<p>Le sous-répertoire <code>unix</code> contient ce qu’il faut pour compiler
+sur le Pi et à destination du Pi.
+<code>Makefile.am</code> est le fichier à modifier pour ajouter les fichiers
+source.
+<code>configure-debug</code> et <code>configure-release</code> permettent de
+choisir la configuration de compilation.
+Un coup de <code>make -j4</code> recompile le projet.
+Voir aussi les instructions d’installation logicielle.</p>
+<p><code>win</code> contient les projets pour Visual Studio 2013.
+Les sources sont divisées en plusieurs catégories&#8239;:</p>
+<ul>
+<li><code>mfxlib</code> est un projet regroupant la plupart des sources
+sous forme de bibliothèque statique.
+C’est une entité partagée entre les autres projets.</li>
+<li><code>pedalevite</code> est un programme émulant le pédalier avec une
+carte son ASIO, le clavier et l’écran de l’ordinateur.
+Ce programme est de loin la manière la plus simple de modifier et tester le
+logiciel de Pédale Vite.</li>
+<li><code>test</code> contient quelques tests unitaires de classes ou de
+fonctionnalités diverses.</li>
+</ul>
+<p>Ces trois projets sont intégrés dans la solution
+<code>pedalevite.sln</code>.</p>
+<p>Si la carte son de votre machine n’a pas de drivers ASIO, il est tout
+à fait possible de faire tourner <a href="www.asio4all.com">ASIO4ALL</a>.
+Par défaut les canaux d’entrée de l’émulateur Pédale Vite sont les numéros
+3 et 4 (ce sont les entrées niveau instrument de ma carte).
+Il vous faudra probablement les changer en modifiant la valeur de
+<code>chn_idx_in</code> vers la fin de
+<code>pedalevite/src/main.cpp</code>&#8239;:</p>
+<pre class="src">#elif (MAIN_API == MAIN_API_ASIO)
+	mfx::adrv::DAsio  snd_drv;
+	chn_idx_in = 2;
+#else</pre>
+<p>L’émulation utilise les touches suivantes&#8239;:</p>
+<table>
+<tr><td><span class="key">A Z E R T Y</span> ou <span class="key">Q W E R T Y</span></td><td>Pédales 0 à 5, rangée du haut</td></tr>
+<tr><td><span class="key">Q S D F G H</span> ou <span class="key">A S D F G H</span></td><td>Pédales 6 à 11, rangée du bas</td></tr>
+<tr><td><span class="key">0 1 2</span>… <span class="key">8 9</span> du pavé numérique</td><td>Différentes valeurs pour la pédale d’expression 0</td></tr>
+<tr><td><span class="key">1 2</span>,<br /><span class="key">3 4</span>,<br />… …,<br /><span class="key">9 0</span></td><td>&minus;1 et +1 des 5 codeurs incrémentaux</td></tr>
+<tr><td><span class="key">W X C</span> ou <span class="key">Z X C</span> et<br /><span class="key">V B N</span></td><td>&minus;1, +1 et bouton des 2 codeurs incrémentaux de navigation</td></tr>
+<tr><td><span class="key">Return</span></td><td><span class="key">Select</span> de l’interface d’utilisation</td></tr>
+<tr><td><span class="key">Esc</span></td><td><span class="key">Esc</span> de l’interface d’utilisation</td></tr>
+<tr><td>Flèches directionnelles</td><td>Flèches de l’interface d’utilisation</td></tr>
+</table>
+
+<h4>Architecture</h4>
+
+<h5>Threads</h5>
+
+<p>Le programme se répartit grosso-modo en 3 threads&#8239;:</p>
+<ul>
+<li>Le thread audio qui traite tout ce qui est entrées et sorties audio, et
+qui calcule ce qu’il faut entre les deux.</li>
+<li>Le thread principal, qui collecte les entrées de contrôle et émet les
+données à afficher.
+C’est lui qui gère toutes les interactions de l’interface d’utilisation et
+qui contrôle le thread audio.</li>
+<li>Enfin, le ou les (en fonction de la plateforme) threads E/S.
+Ils recueillent régulièrement les états des ports d’entrée et redirigent les
+informations d’affichage vers les périphériques adéquats.</li>
+</ul>
+<p>Les threads communiquent entre eux à l’aide de files non-bloquantes
+(<span lang="en"><i>lock-free queues</i></span>).
+La plupart des informations sont centralisées par le thread principal,
+cependant certaines communications ont lieu directement entre le thread
+des entrées et le thread audio, afin de maximiser la réactivité du
+traitement sonore face aux sollicitations extérieures.</p>
+
+<h5>Paradigme MVC</h5>
+
+<p>L’architecture suit le paradigme MVC
+(<span lang="en"><i>Model-View-Controller</i></span>).
+Le modèle <code>mfx::Model</code> pilote une partie bas-niveau de commande du
+moteur audio <code>mfx::cmd::Central</code>.
+Les données y sont préparées, toujours dans le thread principal, et
+communiquées de manière transactionnelle au thread audio dont l’essentiel se
+trouve dans <code>mfx::WorldAudio</code>.</p>
+<p>La structure du document (banques, programmes, réglages divers…) est
+décrite dans <code>mfx::doc</code>.
+Le fichier de sauvegarde <code>etc/config/current</code> est directement
+généré et lu par l’interface de sérialisation.</p>
+<p>Les différents drivers audio se trouvent dans <code>mfx::adrv</code>.
+Le gros du code spécifique à la plate-forme se trouve dans
+<code>mfx::ui</code>.
+C’est dans ces classes qu’on peut changer la polartié des interrupteurs,
+leur ordre, les numéros de broche GPIO, la vitesse des interfaces de
+communication et tout autre détail relevant du matériel.</p>
+<p>L’interface d’utilisation se décompose sous forme de pages dans
+<code>mfx::uitk::pg</code>.
+Ces pages sont activées en fonction de la navigation de l’utilisateur·ice.
+Elles sont enregistrées comme vues et agissent comme contrôleur, au sens
+MVC.
+Elles utilisent un système sommaire de GUI arborescente implémenté dans
+<code>mfx::uitk</code>, permettant de placer des contrôles, de recevoir
+des événements d’utilisation et de naviguer simplement dans ces éléments.</p>
+<p>Les effets sont organisés dans <code>mfx::pi</code> selon une logique de
+<span lang="en"><i>plug-in</i></span>, bien que celle-ci ne soit pas encore
+déployée comme telle.
+L’interface commune se trouve dans <code>mfx::piapi</code>.
+Chaque effet est en fait divisé en deux plug-ins.
+D’une part l’effet proprement dit, d’autre part un plug-in de mixage
+implémentant le bypass, le volume et le mélange dry/wet.</p>
+<p>Toutes ces pièces sont scotchées ensemble dans
+<code>pedalevite/src/mfx/main.cpp</code> qui a une forme encore très
+brouillonne.
+L’essentiel du paramétrage figure dans <code>mfx::Cst</code>.</p>
+<p>Il y aurait bien d’autres choses à dire sur l’architecture du code et les
+détails d’implémentation, cependant c’est une tâche sans fin.
+Cette section sera éventuellement étoffée plus tard.</p>
+
+<h4>Arborescence</h4>
+
+<p>L’arborescence des sources dans <code>pedalevite/src</code> suit
+relativement précisément celle des namespaces.
+Les classe sont implémentées dans des fichiers qui portent leur nom, à
+l’instar de la convention en Java.
+Notons les namespaces suivants&#8239;:</p>
+<ul>
+<li><code>fstb</code> est une sorte de boîte à outils générique.
+Elle fournit diverses fonctions et outils de bases.
+Il y a en particulier un wrapper sur les jeux d’instruction SIMD 128 bits
+SSE/SSE2 et NEON permettant d’écrire sans difficulté du code portable.</li>
+<li><code>conc</code> fournit des primitives pour la communication
+non bloquante.</li>
+<li><code>mfx::dsp</code> contient de nombreuses classes de traitement
+du signal audio (filtrage, mixage, lignes à retard…)
+Cette bibliothèque est abondamment utilisée par les effets.</li>
+</ul>
+<p><code>pedalevite/etc/config</code> contient les configurations du
+pédalier (en particulier <code>current</code>).
+Ce répertoire est copié dans le lieu d’installation
+<code>/opt/pedalevite</code> sur le Pi et utilisé <i>in-situ</i>
+par l’émulateur Windows.</p>
 
 
 
 <h2><a id="improvements"></a>VI.&emsp;Amérliorations et variations envisageables</h2>
 
-<p>À venir…</p>
+<p>Pour les personnes que la complexité ou le prix rebutte, il y a de
+nombreuses façons de réduire les coûts ou de simplifier le montage.
+Voici quelques unes de celles qui me sont passées par la tête.</p>
 
+<h4>Carte son à l’extérieur</h4>
+
+<p>Il y a de nombreux avantages&#8239;:</p>
+<ul>
+<li>Amincissement du pédalier. En effet, une grande partie de la hauteur nécessaire vient du besoin de faire tenir la carte son dans le boîtier.</li>
+<li>Réduction des coûts par la suppression de la connectique audio interne et du câble USB personnalisé. Mine de rien, c’est plus de 40&#8239;€ HT économisés par rapport aux matériaux utilisés dans le prototype.</li>
+<li>Simplification du montage pour les mêmes raisons.</li>
+<li>Accès direct aux réglages en façade pour calibration.</li>
+<li>Permet de changer de modèle de carte son sans se prendre la tête sur des questions géométriques.</li>
+</ul>
+<p>En terme d’inconvénients&#8239;:</p>
+<ul>
+<li>Plus d’éléments à trimbaler, connexions plus complexes lors de l’utilisation.</li>
+<li>Complexité encore ajoutée si on alimente séparément la carte au lieu d’utiliser l’USB.</li>
+<li>Ne permet pas de faire évoluer la connectique (prises mixtes XLR/jack).</li>
+</ul>
+
+<h4>Matériaux moins coûteux</h4>
+
+<p>On peut déjà optimiser les prix en choisissant des fournisseurs plus
+avantageux.
+Ça demande de faire une recherche un peu exhaustive et de vérifier la
+compatibilité des pièces si celles-ci diffèrent de celles suggérées.</p>
+<p>Il y a une réduction significative de coûts à faire avec la connectique
+audio interne, si on choisit de garder la carte son à l’intérieur.
+Inutile de prendre des prises jack Neutrik et du câble de première qualité.
+L’entrée de gamme devrait suffire, à condition que le blindage soit correct,
+surtout pour les câbles d’entrée.</p>
+<p>Par contre je pense qu’il serait maladroit d’essayer d’économiser sur les
+interrupteurs au pied.
+La solidité de ces composants est primordiale.</p>
+
+<h4>Suppression des codeurs incrémentaux</h4>
+
+<p>Dans la configuration actuelle, je ne les utilise pas aussi souvent que je
+l’imaginais. 
+Je pense qu’on peut s’en passer sans problème.</p>
+<p>Ça fait de la connectique, des coûts et une carte en moins.
+On doit pouvoir se passer de la deuxième plaque de prototypage.
+Le gain tourne autour de 25&#8239;€ HT</p>
+
+<h4>Substitution des résistances de pull-up</h4>
+
+<p>Le RPi ainsi que les extenseurs de ports 23017 disposent de résistances
+interne de pull-up.
+On peut les utiliser à la place de la myriade de 10&#8239;kΩ et faire sauter
+au passage les condensateurs anti-rebond qui vont avec.
+Ça donnera quelque chose d’électriquement un peu moins propre, mais qui
+devrait tenir la route.
+Le code à changer pour activer ces résistances dans les puces est minime.
+Le lissage des rebonds est déjà doublé en software et ne devrait pas
+nécessiter de changement.</p>
+<p>Il y a peu à gagner en terme de coûts, les résistances et condensateurs
+céramiques étant bon marché.
+Cependant la simplification des circuits est significative.
+On doit pouvoir faire tenir tout ce qui a trait aux contacts dans une seule
+carte.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
