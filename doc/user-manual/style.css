@@ -44,6 +44,11 @@ h4        { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 15px;
             padding: 0em 0em 0em 0.4em;
            margin-left: 0px; margin-right: 0px; margin-top: 1.5em; margin-bottom: 1em; }
 
+h5        { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;
+            font-style: normal; font-weight: bold;
+            padding: 0em 0em 0em 0.4em;
+           margin-left: 0px; margin-right: 0px; margin-top: 1.5em; margin-bottom: 1em; }
+
 p         { margin-left: 2em; margin-right: 0em; text-align: justify; text-indent: 1.5em; }
 .var { margin-left: 0.6em; font-style: italic; letter-spacing: 0.0833em; color: #660033; font-weight: bold; }
 .key { font-variant: small-caps; font-weight: bold; }

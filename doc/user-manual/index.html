@@ -791,13 +791,14 @@ utilisant ce système.</p>
 50&#8239;% donne une réponse en fréquence équilibrée.</p>
 
 <p class="var">Mid boost</p>
-<p>Permet d’amplifier (valeurs positives) ou de creuser (valeurs négatives) les medium.
+<p>Permet d’amplifier (valeurs positives) ou de creuser (valeurs négatives) les
+médiums.
 À zéro, les médium sont neutres.
 Un valeur autour de &minus;75&#8239;% permet de recréer la tonalité du circuit
 original.</p>
 
 <p class="var">Mid frequency</p>
-<p>Permet de changer la fréquence centrale des medium.</p>
+<p>Permet de changer la fréquence centrale des médiums.</p>
 
 
 
@@ -1249,25 +1250,30 @@ impression de circuit défectueux.</p>
 <h3><a id="fx-speaker-emu"></a>Speaker Emulator — Émulation de haut-parleur</h3>
 
 <p class="var">Type</p>
-<p></p>
+<p>Sélectionne un type d’émulation parmi celles proposées.
+Les contrôles de tonalité Mid et Treble ne fonctionnent que pour le type
+<span class="ui">0</span>.</p>
 
 <p class="var">Mid level</p>
-<p></p>
+<p>Niveau de la bosse des hauts médiums.</p>
 
 <p class="var">Mid frequency</p>
-<p></p>
+<p>Fréquence basse de la bosse des hauts médiums.</p>
 
 <p class="var">Treble level</p>
-<p></p>
+<p>Niveau des aigus.</p>
 
 <p class="var">Treble frequency</p>
-<p></p>
+<p>Fréquence séparant la chute des aigus de la bosse des hauts médiums.</p>
 
 <p class="var">Comb level</p>
-<p></p>
+<p>Niveau du filtrage en peigne permettant de bosseler la réponse spectrale
+du haut-parleur.</p>
 
 <p class="var">Channels</p>
-<p></p>
+<p>Indique sur quels canaux s’applique l’émulation.
+Utile si on désire diriger un canal sur une console ou un ampli générique,
+et l’autre cananl sur un ampli de guitare.</p>
 
 
 
@@ -1332,48 +1338,148 @@ distincte.</p>
 
 <h3><a id="fx-lfo"></a>LFO — Oscillateur basse fréquence</h3>
 
+<p>Cet effet n’est disponible que dans la catégorie des générateurs de signaux
+de contrôle puisqu’il ne traite aucun signal audio, ni en entrée ni en sortie.
+Son but est de créer un signal oscillant afin d’appliquer une modulation à un
+ou plusieurs paramètres d’un autre effet.</p>
+
 <p class="var">Speed</p>
-<p></p>
+<p>Fréquence des oscillations, en Hz.</p>
 
 <p class="var">Amplitude</p>
-<p></p>
+<p>Amplitude des oscillations.</p>
 
 <p class="var">Waveform</p>
-<p></p>
+<p>Forme de l’onde générée par le LFO.
+Chaque forme est décrite ci-dessous&#8239;:</p>
+
+<ul><li><span class="ui">Sine</span></li></ul>
+<div class="pic"><img src="lfo-sine.png" /></div>
+
+<ul><li><span class="ui">Triangle</span></li></ul>
+<div class="pic"><img src="lfo-triangle.png" /></div>
+
+<ul><li><span class="ui">Square</span></li></ul>
+<div class="pic"><img src="lfo-square.png" /></div>
+
+<ul><li><span class="ui">Saw</span></li></ul>
+<div class="pic"><img src="lfo-saw.png" /></div>
+
+<ul><li><span class="ui">Parabola</span></li></ul>
+<div class="pic"><img src="lfo-parabola.png" /></div>
+
+<ul><li><span class="ui">Biphase</span></li></ul>
+<p>Cette forme alterne régulièrement entre deux sinus déphasés.
+Elle est contrôlée par deux paramètres supplémentaires&#8239;:</p>
+<table>
+<tr><td><var>Variation&nbsp;1</var></td><td>Temps</td><td>Contrôle le temps de découpage d’une période élémentaire.</td></tr>
+<tr><td><var>Variation&nbsp;2</var></td><td>Phase</td><td>Déphasage entre les deux ondes.</td></tr>
+</table>
+<p>16 découpages, quadrature de phase&#8239;:</p>
+<div class="pic"><img src="lfo-biphase-050-025.png" /></div>
+<p>32 découpages, déphasage léger&#8239;:</p>
+<div class="pic"><img src="lfo-biphase-0625-003125.png" /></div>
+
+<ul><li><span class="ui">N-Phase</span></li></ul>
+<p>Cette forme est une extension du <span class="ui">Biphase</span>,
+constituée d’un nombre variable de sinus déphasés.
+Le LFO passe régulièrement d’une phase à l’autre, chacune leur tour.
+Les phases des sous-ondes sont fixées et réparties uniformément.
+Le déphasage dépend donc du nombre de phases.</p>
+<table>
+<tr><td><var>Variation&nbsp;1</var></td><td>Temps</td><td>Contrôle le temps de découpage d’une période élémentaire.</td></tr>
+<tr><td><var>Variation&nbsp;2</var></td><td>Phase</td><td>Nombre de phases.</td></tr>
+</table>
+<p>28 découpages, 2 phases&#8239;:</p>
+<div class="pic"><img src="lfo-nphase-060-000.png" /></div>
+<p>16 découpages, 3 phases&#8239;:</p>
+<div class="pic"><img src="lfo-nphase-050-015.png" /></div>
+
+<ul><li><span class="ui">Varislope</span></li></ul>
+<p>Il s’agit d’une onde qui peut incarner différentes formes situées
+entre le carré, le triangle et la dent de scie.
+On peut contrôler la forme précise à l’aide des deux paramètres
+auxiliaires.</p>
+<table>
+<tr><td><var>Variation&nbsp;1</var></td><td>Temps</td><td>Détermine la position temporelle du premier extremum de la courbe par rapport à la période complète.</td></tr>
+<tr><td><var>Variation&nbsp;2</var></td><td>Forme</td><td>Forme de la transition entre les deux extrema.</td></tr>
+</table>
+<p>Temps&nbsp;=&nbsp;25&#8239;%, forme&nbsp;=&nbsp;0&#8239;%&#8239;:</p>
+<div class="pic"><img src="lfo-varislope-025-000.png" /></div>
+<p>Temps&nbsp;=&nbsp;25&#8239;%, forme&nbsp;=&nbsp;50&#8239;%&#8239;:</p>
+<div class="pic"><img src="lfo-varislope-025-050.png" /></div>
+<p>Temps&nbsp;=&nbsp;25&#8239;%, forme variant entre 0 et 100&#8239;%&#8239;:</p>
+<div class="pic"><img src="lfo-varislope-025-morph.png" /></div>
+
+<ul><li><span class="ui">Noise</span></li></ul>
+<p>Il s’agit de bruit blanc filtré par un passe-bas à 12&#8239;dB/octave,
+dont la fréquence de coupure dépend du paramètre <var>Speed</var>.</p>
+<div class="pic"><img src="lfo-noise.png" /></div>
 
 <p class="var">Sample and hold</p>
-<p></p>
+<p>Ce paramètre permet de créneler la courbe du LFO en bloquant régulièrement
+sa valeur pendant une courte période.
+Il fixe le rapport entre la période de crénelage et la période
+principale des oscillations.</p>
+<div class="pic"><img src="lfo-sine-snh.png" /></div>
 
 <p class="var">Smoothing</p>
-<p></p>
+<p>Paramètre qui adoucit les transitions brutales dans la forme d’onde.
+Il fixe le rapport entre le temps de montée et la période principale des
+oscillations.</p>
+<div class="pic"><img src="lfo-square-smooth.png" /></div>
 
 <p class="var">Chaos amount</p>
-<p></p>
+<p>Ce paramètre introduit un élément chaotique dans les oscillations.
+Il accélère ou ralentit aléatoirement l’oscillateur en veillant
+à ce qu’il retombe toujours sur ses pieds afin que le rythme global soit
+conservé.
+C’est une manière très simple de rajouter un peu de vie dans une oscillation.
+Ci-dessous la même déformation de phase appliquée à deux formes
+d’onde&#8239;:</p>
+<div class="pic"><img src="lfo-sine-chaos.png" /></div>
+<div class="pic"><img src="lfo-saw-chaos.png" /></div>
 
 <p class="var">Phase dist amount</p>
-<p></p>
+<p>Distorsion de phase.
+Ce paramètre permet de déplacer la position temporelle du milieu de la forme
+d’onde.
+Il correspond à un réglage de <i>pulse width</i>.
+Ici sur un sinus&#8239;:</p>
+<div class="pic"><img src="lfo-sine-phdist-025-000.png" /></div>
 
 <p class="var">Phase dist offset</p>
-<p></p>
+<p>Paramètre qui permet de changer les points fixes ainsi que celui déplacé
+dans la distorsion de phase.
+Ci-dessous, la même déformation que précédemment en déplaçant le point situé
+aux trois quarts (partie basse de l’onde)&#8239;:</p>
+<div class="pic"><img src="lfo-sine-phdist-025-025.png" /></div>
 
 <p class="var">Sign</p>
-<p></p>
+<p>Inversion de signe.
+Elle sert par exemple à transformer une dent de scie montante en
+descendante&#8239;:</p>
+<div class="pic"><img src="lfo-saw-inv.png" /></div>
 
 <p class="var">Polarity</p>
-<p></p>
+<p>Passage en unipolaire.
+Ce paramètre remonte et compresse la courbe afin que le bas soit à zéro.
+Ce mode peut simplifier les réglages de taux de modulation car le minimum
+du LFO correspond à la valeur de base du paramètre modulé.</p>
+<div class="pic"><img src="lfo-square-uni.png" /></div>
 
-<p class="var">Variation 1</p>
-<p></p>
-
-<p class="var">Variation 2</p>
-<p></p>
+<p class="var">Variation 1, Variation 2</p>
+<p>La signification de ces deux paramètres dépend de la forme d’onde
+sélectionnée.</p>
 
 <p class="var">Phase set</p>
-<p></p>
+<p>Fixe manuellement la phase du LFO.</p>
 
 
 
 <h2><a id="troubleshooting"></a>V.&emsp;Dépannage</h2>
+
+<p>À venir…</p>
 
 
 
