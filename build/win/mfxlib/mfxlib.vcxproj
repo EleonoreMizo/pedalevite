@@ -449,7 +449,6 @@
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\Msg.h" />
     <ClInclude Include="..\..\..\src\mfx\MsgQueue.h" />
-    <ClInclude Include="..\..\..\src\mfx\Overdrive.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.hpp" />
     <ClInclude Include="..\..\..\src\mfx\PedalLoc.h" />
@@ -789,7 +788,6 @@
     <ClCompile Include="..\..\..\src\mfx\MeterResultSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\Model.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\Overdrive.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\Compex.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2x.cpp" />

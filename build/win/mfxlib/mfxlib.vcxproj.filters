@@ -363,9 +363,6 @@
     <ClInclude Include="..\..\..\src\fstb\ToolsSimd.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\Overdrive.h">
-      <Filter>mfx</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\ui\DisplayInterface.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
@@ -1867,9 +1864,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\ToolsSimd.cpp">
       <Filter>fstb</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\Overdrive.cpp">
-      <Filter>mfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayInterface.cpp">
       <Filter>mfx\ui</Filter>

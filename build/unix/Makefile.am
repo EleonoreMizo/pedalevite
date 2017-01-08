@@ -718,8 +718,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/ModelObserverInterface.h \
         ../../src/mfx/Msg.h \
         ../../src/mfx/MsgQueue.h \
-        ../../src/mfx/Overdrive.cpp \
-        ../../src/mfx/Overdrive.h \
         ../../src/mfx/ParamCoord.h \
         ../../src/mfx/ParamCoord.hpp \
         ../../src/mfx/PiType.h \
