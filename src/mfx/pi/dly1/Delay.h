@@ -89,8 +89,8 @@ private:
 	void           update_param_vol ();
 	void           update_param_time ();
 	void           process_block_part (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end);
-	void           process_block_part_stereo (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end);
-	void           process_block_part_multic (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end);
+	void           process_block_part_standard (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end);
+	void           process_block_part_mono_link (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end);
 	void           update_times (int nbr_spl);
 	float          compute_delay_time (int chn) const;
 
@@ -116,7 +116,7 @@ private:
 	ChnArray       _chn_arr;
 	std::vector <float>						// For the channel processors. Size = TMP_ZONE_LEN
 	               _tmp_chn_buf;
-	std::array <std::vector <float>, 2>	// Mixing buffer. Size = TMP_ZONE_LEN
+	std::array <std::vector <float>, Cst::_nbr_lines>	// Mixing buffer. Size = TMP_ZONE_LEN
 	               _tmp_buf_arr;
 	std::array <dsp::InertiaLin, Cst::_nbr_lines>		// Feedback level. Natural value
 	               _gain_fdbk_arr;

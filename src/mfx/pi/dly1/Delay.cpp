@@ -412,10 +412,10 @@ void	Delay::process_block_part (float * const out_ptr_arr [], const float * cons
 			work_len = std::min (work_len, max_len_chn);
 		}
 
-		// Special case for stereo
-		if (_nbr_chn_out == 2)
+		// Special case for mono + link
+		if (_link_flag && _nbr_chn_out == 1)
 		{
-			process_block_part_stereo (
+			process_block_part_mono_link (
 				out_ptr_arr,
 				in_ptr_arr,
 				pos_beg,
@@ -423,10 +423,9 @@ void	Delay::process_block_part (float * const out_ptr_arr [], const float * cons
 			);
 		}
 
-		// Mono and multi-channel
 		else
 		{
-			process_block_part_multic (
+			process_block_part_standard (
 				out_ptr_arr,
 				in_ptr_arr,
 				pos_beg,
@@ -441,7 +440,7 @@ void	Delay::process_block_part (float * const out_ptr_arr [], const float * cons
 
 
 
-void	Delay::process_block_part_stereo (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
+void	Delay::process_block_part_standard (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (out_ptr_arr != 0);
 	assert (in_ptr_arr != 0);
@@ -452,12 +451,15 @@ void	Delay::process_block_part_stereo (float * const out_ptr_arr [], const float
 
 	const int      chn_in_r    = (_nbr_chn_in > 1) ? 1 : 0;
 
-	const float    fdbk_l_beg  = float (_gain_fdbk_arr [0].get_val ());
-	const float    fdbk_r_beg  = float (_gain_fdbk_arr [1].get_val ());
-	_gain_fdbk_arr [0].tick (nbr_spl);
-	_gain_fdbk_arr [1].tick (nbr_spl);
-	const float    fdbk_l_end  = float (_gain_fdbk_arr [0].get_val ());
-	const float    fdbk_r_end  = float (_gain_fdbk_arr [1].get_val ());
+	std::array <float, Cst::_nbr_lines> fdbk_beg_arr;
+	std::array <float, Cst::_nbr_lines> fdbk_end_arr;
+
+	for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
+	{
+		fdbk_beg_arr [chn_cnt] = float (_gain_fdbk_arr [chn_cnt].get_val ());
+		_gain_fdbk_arr [chn_cnt].tick (nbr_spl);
+		fdbk_end_arr [chn_cnt] = float (_gain_fdbk_arr [chn_cnt].get_val ());
+	}
 
 	const float    xf_beg      = float (_cross_fdbk.get_val ());
 	_cross_fdbk.tick (nbr_spl);
@@ -491,42 +493,80 @@ void	Delay::process_block_part_stereo (float * const out_ptr_arr [], const float
 	chn_l.process_block_write (
 		in_ptr_arr [0] + pos_beg,
 		&_tmp_buf_arr [0] [0],
-		fdbk_l_beg,
-		fdbk_l_end,
+		fdbk_beg_arr [0],
+		fdbk_end_arr [0],
 		nbr_spl
 	);
 	chn_r.process_block_write (
 		in_ptr_arr [chn_in_r] + pos_beg,
 		&_tmp_buf_arr [1] [0],
-		fdbk_r_beg,
-		fdbk_r_end,
+		fdbk_beg_arr [1],
+		fdbk_end_arr [1],
 		nbr_spl
 	);
 
-	dsp::mix::Generic::copy_2_2_vlrauto (
-		out_ptr_arr [0] + pos_beg,
-		out_ptr_arr [1] + pos_beg,
-		in_ptr_arr [0       ] + pos_beg,
-		in_ptr_arr [chn_in_r] + pos_beg,
-		nbr_spl,
-		lvl_in_beg,
-		lvl_in_end
-	);
+	if (_nbr_chn_out == 2)
+	{
+		dsp::mix::Generic::copy_2_2_vlrauto (
+			out_ptr_arr [0] + pos_beg,
+			out_ptr_arr [1] + pos_beg,
+			in_ptr_arr [0       ] + pos_beg,
+			in_ptr_arr [chn_in_r] + pos_beg,
+			nbr_spl,
+			lvl_in_beg,
+			lvl_in_end
+		);
 
-	dsp::mix::Generic::mix_2_2_vlrauto (
-		out_ptr_arr [0] + pos_beg,
-		out_ptr_arr [1] + pos_beg,
-		&_tmp_buf_arr [0] [0],
-		&_tmp_buf_arr [1] [0],
-		nbr_spl,
-		lvl_out_beg,
-		lvl_out_end
-	);
+		dsp::mix::Generic::mix_2_2_vlrauto (
+			out_ptr_arr [0] + pos_beg,
+			out_ptr_arr [1] + pos_beg,
+			&_tmp_buf_arr [0] [0],
+			&_tmp_buf_arr [1] [0],
+			nbr_spl,
+			lvl_out_beg,
+			lvl_out_end
+		);
+	}
+	else
+	{
+		const int      nbr_chn_proc = std::max (_nbr_chn_out, Cst::_nbr_lines);
+		int            chn_in_idx   = 0;
+		const int      chn_in_inc   = (_nbr_chn_in  >= Cst::_nbr_lines) ? 1 : 0;
+		int            chn_out_idx  = 0;
+		const int      chn_out_inc  = (_nbr_chn_out >= Cst::_nbr_lines) ? 1 : 0;
+		for (int chn_cnt = 0; chn_cnt < nbr_chn_proc; ++chn_cnt)
+		{
+			if (chn_cnt < _nbr_chn_out)
+			{
+				dsp::mix::Generic::copy_1_1_vlrauto (
+					out_ptr_arr [chn_cnt]   + pos_beg,
+					in_ptr_arr [chn_in_idx] + pos_beg,
+					nbr_spl,
+					lvl_in_beg,
+					lvl_in_end
+				);
+			}
+
+			if (chn_cnt < Cst::_nbr_lines)
+			{
+				dsp::mix::Generic::mix_1_1_vlrauto (
+					out_ptr_arr [chn_out_idx] + pos_beg,
+					&_tmp_buf_arr [chn_cnt] [0],
+					nbr_spl,
+					lvl_out_beg,
+					lvl_out_end
+				);
+			}
+
+			chn_in_idx  += chn_in_inc;
+			chn_out_idx += chn_out_inc;
+		}
+	}
 }
 
 
 
-void	Delay::process_block_part_multic (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
+void	Delay::process_block_part_mono_link (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (out_ptr_arr != 0);
 	assert (in_ptr_arr != 0);
@@ -535,15 +575,9 @@ void	Delay::process_block_part_multic (float * const out_ptr_arr [], const float
 	const int      nbr_spl = pos_end - pos_beg;
 	assert (nbr_spl <= _tmp_zone_len);
 
-	std::array <float, Cst::_nbr_lines> fdbk_beg_arr;
-	std::array <float, Cst::_nbr_lines> fdbk_end_arr;
-
-	for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
-	{
-		fdbk_beg_arr [chn_cnt] = float (_gain_fdbk_arr [chn_cnt].get_val ());
-		_gain_fdbk_arr [chn_cnt].tick (nbr_spl);
-		fdbk_end_arr [chn_cnt] = float (_gain_fdbk_arr [chn_cnt].get_val ());
-	}
+	const float    fdbk_beg    = float (_gain_fdbk_arr [0].get_val ());
+	_gain_fdbk_arr [0].tick (nbr_spl);
+	const float    fdbk_end    = float (_gain_fdbk_arr [0].get_val ());
 
 	const float    lvl_in_beg  = float (_lvl_in.get_val ());
 	float          lvl_out_beg = float (_lvl_out.get_val ());
@@ -559,52 +593,33 @@ void	Delay::process_block_part_multic (float * const out_ptr_arr [], const float
 		lvl_out_end *= gain;
 	}
 
-	float *        dly_out_ptr = &_tmp_buf_arr [0] [0];
-	int            chn_in_idx  = 0;
-	const int      chn_in_inc  = (_nbr_chn_in >= Cst::_nbr_lines) ? 1 : 0;
-	int            chn_out_idx = 0;
-	const int      chn_out_inc = (_nbr_chn_out >= Cst::_nbr_lines) ? 1 : 0;
-	const int      nbr_lines   = Cst::_nbr_lines;
-	const int      nbr_chn_proc = std::max (_nbr_chn_out, nbr_lines);
-	for (int chn_cnt = 0; chn_cnt < nbr_chn_proc; ++chn_cnt)
-	{
-		if (chn_cnt == 0 || chn_out_idx > 0)
-		{
-			dsp::mix::Generic::copy_1_1_vlrauto (
-				out_ptr_arr [chn_out_idx] + pos_beg,
-				in_ptr_arr [chn_in_idx]   + pos_beg,
-				nbr_spl,
-				lvl_in_beg,
-				lvl_in_end
-			);
-		}
+	dsp::mix::Generic::copy_1_1_vlrauto (
+		out_ptr_arr [0] + pos_beg,
+		in_ptr_arr [0]  + pos_beg,
+		nbr_spl,
+		lvl_in_beg,
+		lvl_in_end
+	);
 
-		if (chn_cnt < Cst::_nbr_lines)
-		{
-			DelayChn &		chn = *(_chn_arr [chn_cnt]);
+	DelayChn &		chn = *(_chn_arr [0]);
 
-			chn.process_block_read (dly_out_ptr, nbr_spl);
+	chn.process_block_read (&_tmp_buf_arr [0] [0], nbr_spl);
 
-			chn.process_block_write (
-				in_ptr_arr [chn_in_idx] + pos_beg,
-				dly_out_ptr,
-				fdbk_beg_arr [chn_cnt],
-				fdbk_end_arr [chn_cnt],
-				nbr_spl
-			);
+	chn.process_block_write (
+		in_ptr_arr [0] + pos_beg,
+		&_tmp_buf_arr [0] [0],
+		fdbk_beg,
+		fdbk_end,
+		nbr_spl
+	);
 
-			dsp::mix::Generic::mix_1_1_vlrauto (
-				out_ptr_arr [chn_out_idx] + pos_beg,
-				dly_out_ptr,
-				nbr_spl,
-				lvl_out_beg,
-				lvl_out_end
-			);
-		}
-
-		chn_in_idx  += chn_in_inc;
-		chn_out_idx += chn_out_inc;
-	}
+	dsp::mix::Generic::mix_1_1_vlrauto (
+		out_ptr_arr [0] + pos_beg,
+		&_tmp_buf_arr [0] [0],
+		nbr_spl,
+		lvl_out_beg,
+		lvl_out_end
+	);
 }
 
 
