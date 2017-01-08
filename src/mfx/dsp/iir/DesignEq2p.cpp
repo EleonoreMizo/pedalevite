@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -187,6 +188,46 @@ void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double g0, double g,
 	az [0] = 1;
 	az [1] = float (2 * (w2 - 1)      * scale);
 	az [2] = float ((1 + w2 - a)      * scale);
+}
+
+
+
+
+/*
+==============================================================================
+Name: compute_butter_coef_a1
+Description:
+	Computes the a1 coefficients for a butterworth filter.
+
+	Even order:
+
+	                o/2-1         1
+	H(s) =         product -----------------
+	                k = 0  s^2 + a1  * s + 1
+	                               k
+	Odd order:
+
+	         1     (o-3)/2        1
+	H(s) = ----- * product ----------------- 
+	       s + 1    k = 0  s^2 + a1  * s + 1
+	                               k
+
+Input parameters:
+	- order: order of the butterworth filter (k), >= 2
+	- biq: biquad index, in [0 ; (order - 1) / 2[
+Returns:
+	a1[k] coefficient for the denominator
+Throws: Nothing
+==============================================================================
+*/
+
+double	DesignEq2p::compute_butter_coef_a1 (int order, int biq)
+{
+	assert (order >= 2);
+	assert (biq >= 0);
+	assert (biq < order / 2);
+
+	return -2 * cos (fstb::PI * (2 * biq + 1 + order) / (order * 2));
 }
 
 
