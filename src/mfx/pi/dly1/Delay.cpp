@@ -346,7 +346,7 @@ void	Delay::update_param_filter ()
 			freq_lo = freq_base * fstb::Approx::exp2 (range_oct * lerp);
 		}
 
-		if (_nbr_chn_out == Cst::_nbr_lines && ! _link_flag)
+		if (! _link_flag)
 		{
 			_chn_arr [chn]->set_filter_freq (freq_lo, freq_hi);
 		}
@@ -535,9 +535,15 @@ void	Delay::process_block_part_multic (float * const out_ptr_arr [], const float
 	const int      nbr_spl = pos_end - pos_beg;
 	assert (nbr_spl <= _tmp_zone_len);
 
-	const float    fdbk_beg    = float (_gain_fdbk_arr [0].get_val ());
-	_gain_fdbk_arr [0].tick (nbr_spl);
-	const float    fdbk_end    = float (_gain_fdbk_arr [0].get_val ());
+	std::array <float, Cst::_nbr_lines> fdbk_beg_arr;
+	std::array <float, Cst::_nbr_lines> fdbk_end_arr;
+
+	for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
+	{
+		fdbk_beg_arr [chn_cnt] = float (_gain_fdbk_arr [chn_cnt].get_val ());
+		_gain_fdbk_arr [chn_cnt].tick (nbr_spl);
+		fdbk_end_arr [chn_cnt] = float (_gain_fdbk_arr [chn_cnt].get_val ());
+	}
 
 	const float    lvl_in_beg  = float (_lvl_in.get_val ());
 	float          lvl_out_beg = float (_lvl_out.get_val ());
@@ -582,8 +588,8 @@ void	Delay::process_block_part_multic (float * const out_ptr_arr [], const float
 			chn.process_block_write (
 				in_ptr_arr [chn_in_idx] + pos_beg,
 				dly_out_ptr,
-				fdbk_beg,
-				fdbk_end,
+				fdbk_beg_arr [chn_cnt],
+				fdbk_end_arr [chn_cnt],
 				nbr_spl
 			);
 
@@ -607,21 +613,14 @@ void	Delay::update_times (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 
-	if (! _link_flag)
+	float          time_s = 0;
+	for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
 	{
-		for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
+		if (chn_cnt == 0 || ! _link_flag)
 		{
-			const float    time_s = compute_delay_time (chn_cnt);
-			_chn_arr [chn_cnt]->set_delay_time (time_s, nbr_spl);
+			time_s = compute_delay_time (chn_cnt);
 		}
-	}
-	else
-	{
-		const float    time_s = compute_delay_time (0);
-		for (int chn_cnt = 0; chn_cnt < Cst::_nbr_lines; ++chn_cnt)
-		{
-			_chn_arr [chn_cnt]->set_delay_time (time_s, nbr_spl);
-		}
+		_chn_arr [chn_cnt]->set_delay_time (time_s, nbr_spl);
 	}
 }
 
