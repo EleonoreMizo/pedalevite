@@ -51,8 +51,9 @@ namespace pg
 
 
 
-BankMenu::BankMenu (PageSwitcher &page_switcher)
+BankMenu::BankMenu (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 :	_page_switcher (page_switcher)
+,	_pedal_ctx (pedal_ctx)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -63,7 +64,6 @@ BankMenu::BankMenu (PageSwitcher &page_switcher)
 ,	_export_sptr (new NText (Entry_EXPORT))
 ,	_layout_sptr (new NText (Entry_LAYOUT))
 ,	_bank_list ()
-,	_layout_arg ()
 {
 	_import_sptr->set_text ("Import bank");
 	_export_sptr->set_text ("Export bank");
@@ -148,13 +148,9 @@ MsgHandlerInterface::EvtProp	BankMenu::do_handle_evt (const NodeEvt &evt)
 			}
 			else if (node_id == Entry_LAYOUT)
 			{
-				_layout_arg._type     = PedalEditContext::Type_BANK;
-				_layout_arg._ret_page = pg::PageType_BANK_MENU;
-				_page_switcher.switch_to (
-					pg::PageType_PEDALBOARD_CONFIG,
-					&_layout_arg
-				);
-				break;
+				_pedal_ctx._type     = PedalEditContext::Type_BANK;
+				_pedal_ctx._ret_page = PageType_BANK_MENU;
+				_page_switcher.switch_to (PageType_PEDALBOARD_CONFIG, 0);
 			}
 			else if (node_id >= 0 && node_id < Cst::_nbr_banks)
 			{

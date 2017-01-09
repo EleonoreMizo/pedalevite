@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        PedalboardConfig.h
-        Author: Laurent de Soras, 2016
+        PedalEditGroup.h
+        Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_PedalboardConfig_HEADER_INCLUDED)
-#define mfx_uitk_pg_PedalboardConfig_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_PedalEditGroup_HEADER_INCLUDED)
+#define mfx_uitk_pg_PedalEditGroup_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -29,12 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/NText.h"
-#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
-#include "mfx/Cst.h"
 
-#include <array>
 #include <memory>
 
 
@@ -51,7 +48,7 @@ namespace pg
 
 
 
-class PedalboardConfig
+class PedalEditGroup
 :	public PageInterface
 {
 
@@ -59,8 +56,8 @@ class PedalboardConfig
 
 public:
 
-	explicit       PedalboardConfig (PageSwitcher &page_switcher, PedalEditContext &ctx);
-	virtual        ~PedalboardConfig () = default;
+	               PedalEditGroup (PageSwitcher &page_switcher, PedalEditContext &ctx);
+	virtual        ~PedalEditGroup () = default;
 
 
 
@@ -88,13 +85,18 @@ private:
 
 	enum Entry
 	{
-		Entry_WINDOW = 1000,
-		Entry_PEDAL_LIST
+		Entry_TITLE = 1000,
+
+		Entry_TRIG_BEG,
+		Entry_PRESS = Entry_TRIG_BEG,
+		Entry_HOLD,
+		Entry_RELEASE,
+
+		Entry_NBR_ELT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
-	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::array <TxtSPtr, Cst::_nbr_pedals> TxtArray;
+	typedef std::array <TxtSPtr, doc::ActionTrigger_NBR_ELT> TrigArray;
 
 	const doc::PedalboardLayout &
 	               use_layout () const;
@@ -111,8 +113,8 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;
-	TxtArray       _pedal_list;
+	TxtSPtr        _title_sptr;
+	TrigArray      _trig_sptr_arr;
 
 
 
@@ -120,13 +122,14 @@ private:
 
 private:
 
-	               PedalboardConfig (const PedalboardConfig &other)  = delete;
-	PedalboardConfig &
-	               operator = (const PedalboardConfig &other)        = delete;
-	bool           operator == (const PedalboardConfig &other) const = delete;
-	bool           operator != (const PedalboardConfig &other) const = delete;
+	               PedalEditGroup ()                               = delete;
+	               PedalEditGroup (const PedalEditGroup &other)    = delete;
+	PedalEditGroup &
+	               operator = (const PedalEditGroup &other)        = delete;
+	bool           operator == (const PedalEditGroup &other) const = delete;
+	bool           operator != (const PedalEditGroup &other) const = delete;
 
-}; // class PedalboardConfig
+}; // class PedalEditGroup
 
 
 
@@ -136,11 +139,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/PedalboardConfig.hpp"
+//#include "mfx/uitk/pg/PedalEditGroup.hpp"
 
 
 
-#endif   // mfx_uitk_pg_PedalboardConfig_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_PedalEditGroup_HEADER_INCLUDED
 
 
 

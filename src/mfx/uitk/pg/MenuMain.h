@@ -56,7 +56,7 @@ class MenuMain
 
 public:
 
-	explicit       MenuMain (PageSwitcher &page_switcher);
+	explicit       MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
 	virtual        ~MenuMain () = default;
 
 
@@ -110,6 +110,8 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	PageSwitcher & _page_switcher;
+	PedalEditContext &
+	               _pedal_ctx;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -125,8 +127,6 @@ private:
 	TxtSPtr        _reboot_sptr;
 
 	Question::QArg _reboot_arg;
-	PedalEditContext
-	               _layout_arg;
 
 
 

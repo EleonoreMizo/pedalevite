@@ -99,6 +99,8 @@ public:
 	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page);
 
 	static std::string
+	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalActionGroup &group, const Model &model, const View &view);
+	static std::string
 	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalboardLayout &layout, int index, const Model &model, const View &view);
 
 	static std::vector <NodeEntry>

@@ -50,8 +50,9 @@ namespace pg
 
 
 
-PedalboardConfig::PedalboardConfig (PageSwitcher &page_switcher)
+PedalboardConfig::PedalboardConfig (PageSwitcher &page_switcher, PedalEditContext &ctx)
 :	_page_switcher (page_switcher)
+,	_ctx (ctx)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -59,7 +60,6 @@ PedalboardConfig::PedalboardConfig (PageSwitcher &page_switcher)
 ,	_fnt_ptr (0)
 ,	_menu_sptr (new NWindow (Entry_WINDOW))
 ,	_pedal_list ()
-,	_ctx ()
 {
 	for (int ped_cnt = 0; ped_cnt < Cst::_nbr_pedals; ++ped_cnt)
 	{
@@ -81,7 +81,6 @@ void	PedalboardConfig::do_connect (Model &model, const View &view, PageMgrInterf
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt_m;
-	_ctx       = *reinterpret_cast <const PedalEditContext *> (usr_ptr);
 
 	const int      h_m = _fnt_ptr->get_char_h ();
 
@@ -137,7 +136,9 @@ MsgHandlerInterface::EvtProp	PedalboardConfig::do_handle_evt (const NodeEvt &evt
 					_ctx._pedal   = pedal;
 					const doc::PedalboardLayout & layout = use_layout ();
 					_ctx._content = layout._pedal_arr [pedal];
-					_page_switcher.switch_to (PageType_PEDAL_ACTION_TYPE, &_ctx);
+					_page_switcher.call_page (
+						PageType_PEDAL_ACTION_TYPE, 0, node_id
+					);
 					ret_val = EvtProp_CATCH;
 				}
 			}

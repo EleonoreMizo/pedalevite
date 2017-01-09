@@ -53,7 +53,7 @@ class CtrlProg
 
 public:
 
-	explicit       CtrlProg (PageSwitcher &page_switcher);
+	explicit       CtrlProg (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
 	virtual        ~CtrlProg () = default;
 
 
@@ -86,6 +86,8 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	PageSwitcher & _page_switcher;
+	PedalEditContext &
+	               _pedal_ctx;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -95,9 +97,6 @@ private:
 	               _fnt_ptr;
 
 	TxtSPtr        _layout_sptr;
-
-	PedalEditContext
-	               _layout_arg;
 
 
 

@@ -63,6 +63,7 @@ enum PageType
 	PageType_CTRL_PROG,
 	PageType_BANK_MENU,
 	PageType_MOVE_FX,
+	PageType_PEDAL_EDIT_GROUP,
 
 	PageType_NBR_ELT
 

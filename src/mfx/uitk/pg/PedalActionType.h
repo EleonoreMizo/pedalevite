@@ -32,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
 
+#include <memory>
+
 
 
 namespace mfx
@@ -54,7 +56,7 @@ class PedalActionType
 
 public:
 
-	               PedalActionType (PageSwitcher &page_switcher);
+	               PedalActionType (PageSwitcher &page_switcher, PedalEditContext &ctx);
 	virtual        ~PedalActionType () = default;
 
 
@@ -84,6 +86,8 @@ private:
 	enum Entry
 	{
 		Entry_TITLE = 1000,
+		Entry_TITLE2,
+		Entry_FULL,
 		Entry_CLEAR,
 		Entry_PUSH,
 		Entry_MOMENTARY,
@@ -99,6 +103,8 @@ private:
 	void           update_display ();
 
 	PageSwitcher & _page_switcher;
+	PedalEditContext &
+	               _ctx;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -108,13 +114,13 @@ private:
 	               _fnt_ptr;
 
 	TxtSPtr        _title_sptr;
+	TxtSPtr        _title2_sptr;
+	TxtSPtr        _full_sptr;
 	TxtSPtr        _clear_sptr;
 	TxtSPtr        _push_sptr;
 	TxtSPtr        _momentary_sptr;
 	TxtSPtr        _toggle_sptr;
 
-	PedalEditContext
-	               _ctx;
 
 
 

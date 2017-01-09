@@ -1848,6 +1848,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\param\Simple.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditGroup.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2554,6 +2557,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\param\Simple.cpp">
       <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditGroup.cpp">
+      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

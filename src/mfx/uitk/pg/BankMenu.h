@@ -55,7 +55,7 @@ class BankMenu
 
 public:
 
-	explicit       BankMenu (PageSwitcher &page_switcher);
+	explicit       BankMenu (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
 	virtual        ~BankMenu () = default;
 
 
@@ -98,6 +98,8 @@ private:
 	void           update_display ();
 
 	PageSwitcher & _page_switcher;
+	PedalEditContext &
+	               _pedal_ctx;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -112,8 +114,6 @@ private:
 	TxtSPtr        _layout_sptr;
 	TxtArray       _bank_list;
 
-	PedalEditContext
-	               _layout_arg;
 
 
 

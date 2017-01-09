@@ -49,15 +49,15 @@ namespace pg
 
 
 
-CtrlProg::CtrlProg (PageSwitcher &page_switcher)
+CtrlProg::CtrlProg (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 :	_page_switcher (page_switcher)
+,	_pedal_ctx (pedal_ctx)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_fnt_ptr (0)
 ,	_layout_sptr (new NText (Entry_LAYOUT))
-,	_layout_arg ()
 {
 	_layout_sptr->set_justification (0.5f, 0, false);
 	_layout_sptr->set_text ("Pedal layout");
@@ -120,12 +120,9 @@ MsgHandlerInterface::EvtProp	CtrlProg::do_handle_evt (const NodeEvt &evt)
 			switch (node_id)
 			{
 			case Entry_LAYOUT:
-				_layout_arg._type     = PedalEditContext::Type_PRESET;
-				_layout_arg._ret_page = pg::PageType_CTRL_PROG;
-				_page_switcher.switch_to (
-					pg::PageType_PEDALBOARD_CONFIG,
-					&_layout_arg
-				);
+				_pedal_ctx._type     = PedalEditContext::Type_PRESET;
+				_pedal_ctx._ret_page = pg::PageType_CTRL_PROG;
+				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, 0);
 				break;
 			default:
 				ret_val = EvtProp_PASS;

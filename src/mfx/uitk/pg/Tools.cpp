@@ -605,15 +605,11 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 
 
 
-std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalboardLayout &layout, int index, const Model &model, const View &view)
+std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalActionGroup &group, const Model &model, const View &view)
 {
-	assert (index >= 0);
-	assert (index < Cst::_nbr_pedals);
-
 	std::string    txt = "<Complex>";
 	conf = PedalConf_OTHER;
 
-	const doc::PedalActionGroup & group = layout._pedal_arr [index];
 	std::string    name;
 	if (is_pedal_empty (group))
 	{
@@ -637,6 +633,19 @@ std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::Ped
 	}
 
 	return txt;
+}
+
+
+
+
+std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalboardLayout &layout, int index, const Model &model, const View &view)
+{
+	assert (index >= 0);
+	assert (index < Cst::_nbr_pedals);
+
+	const doc::PedalActionGroup & group = layout._pedal_arr [index];
+
+	return conv_pedal_conf_to_short_txt (conf, group, model, view);
 }
 
 
