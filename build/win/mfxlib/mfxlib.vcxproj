@@ -504,6 +504,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapPseudoLog.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapPseudoLog.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapRatio.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\Simple.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\peq\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\peq\PEq.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\peq\PEqDesc.h" />
@@ -819,6 +820,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\MapRatio.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\param\Simple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\peq\PEq.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\peq\PEqDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phase90Interface.cpp" />
