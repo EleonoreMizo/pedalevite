@@ -1958,9 +1958,6 @@
     <ClCompile Include="..\..\..\src\mfx\WorldAudio.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp">
-      <Filter>mfx</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ProcessingContextNode.cpp">
       <Filter>mfx</Filter>
     </ClCompile>

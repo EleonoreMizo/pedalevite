@@ -865,7 +865,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\wha1\Wha.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wha1\WhaDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\PluginPool.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProcessingContextNode.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\ContainerInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\MsgHandlerInterface.cpp" />
