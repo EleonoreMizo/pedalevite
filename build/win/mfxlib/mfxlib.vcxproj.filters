@@ -1851,6 +1851,9 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditGroup.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditCycle.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2559,6 +2562,12 @@
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditGroup.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionTrigger.cpp">
+      <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditCycle.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>

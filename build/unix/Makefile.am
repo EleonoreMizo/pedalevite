@@ -190,6 +190,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/ActionToggleFx.h \
         ../../src/mfx/doc/ActionToggleTuner.cpp \
         ../../src/mfx/doc/ActionToggleTuner.h \
+        ../../src/mfx/doc/ActionTrigger.cpp \
         ../../src/mfx/doc/ActionTrigger.h \
         ../../src/mfx/doc/ActionType.h \
         ../../src/mfx/doc/Bank.cpp \
@@ -644,6 +645,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/PedalboardConfig.cpp \
         ../../src/mfx/uitk/pg/PedalboardConfig.h \
         ../../src/mfx/uitk/pg/PedalConf.h \
+        ../../src/mfx/uitk/pg/PedalCycle.cpp \
+        ../../src/mfx/uitk/pg/PedalCycle.h \
         ../../src/mfx/uitk/pg/PedalEditGroup.cpp \
         ../../src/mfx/uitk/pg/PedalEditGroup.h \
         ../../src/mfx/uitk/pg/PedalEditContext.cpp \

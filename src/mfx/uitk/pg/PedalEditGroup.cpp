@@ -129,23 +129,17 @@ MsgHandlerInterface::EvtProp	PedalEditGroup::do_handle_evt (const NodeEvt &evt)
 		switch (but)
 		{
 		case Button_S:
-			switch (node_id)
+			if (   node_id >= Entry_TRIG_BEG
+			    && node_id <  Entry_TRIG_BEG + doc::ActionTrigger_NBR_ELT)
 			{
-			case Entry_PRESS:
-				/*** To do ***/
-				break;
-			case Entry_HOLD:
-				/*** To do ***/
-				break;
-			case Entry_RELEASE:
-				/*** To do ***/
-				break;
-			default:
-				assert (false);
-				break;
+				_ctx._trigger = doc::ActionTrigger (node_id - Entry_TRIG_BEG);
+				_page_switcher.call_page (PageType_PEDAL_EDIT_CYCLE, 0, node_id);
+				ret_val = EvtProp_CATCH;
 			}
-			_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
-			ret_val = EvtProp_CATCH;
+			else
+			{
+				assert (false);
+			}
 			break;
 		case Button_E:
 			_page_switcher.return_page ();
@@ -202,20 +196,12 @@ void	PedalEditGroup::update_display ()
 
 	_title_sptr->set_text (title);
 
-	static const std::array <
-		const char *,
-		doc::ActionTrigger_NBR_ELT
-	>              trig_txt_arr =
-	{{
-		"Press", "Hold", "Release"
-	}};
-
 	for (int trig_cnt = 0; trig_cnt < doc::ActionTrigger_NBR_ELT; ++trig_cnt)
 	{
-		fstb::snprintf4all (
-			txt_0, sizeof (txt_0), "%-7s: ", trig_txt_arr [trig_cnt]
-		);
-		std::string       txt (txt_0);
+		const char *   name_0 =
+			doc::ActionTrigger_get_name (doc::ActionTrigger (trig_cnt));
+		fstb::snprintf4all (txt_0, sizeof (txt_0), "%-7s: ", name_0);
+		std::string    txt (txt_0);
 
 		const doc::PedalActionCycle & cy = _ctx._content._action_arr [trig_cnt];
 		if (cy.is_empty_default ())

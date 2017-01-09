@@ -64,6 +64,7 @@ enum PageType
 	PageType_BANK_MENU,
 	PageType_MOVE_FX,
 	PageType_PEDAL_EDIT_GROUP,
+	PageType_PEDAL_EDIT_CYCLE,
 
 	PageType_NBR_ELT
 

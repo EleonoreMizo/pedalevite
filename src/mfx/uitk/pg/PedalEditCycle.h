@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PedalEditGroup.h
+        PedalEditCycle.h
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_PedalEditGroup_HEADER_INCLUDED)
-#define mfx_uitk_pg_PedalEditGroup_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_PedalEditCycle_HEADER_INCLUDED)
+#define mfx_uitk_pg_PedalEditCycle_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -29,11 +29,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/NText.h"
+#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
 
-#include <array>
 #include <memory>
+#include <vector>
 
 
 
@@ -49,7 +50,7 @@ namespace pg
 
 
 
-class PedalEditGroup
+class PedalEditCycle
 :	public PageInterface
 {
 
@@ -57,8 +58,8 @@ class PedalEditGroup
 
 public:
 
-	               PedalEditGroup (PageSwitcher &page_switcher, PedalEditContext &ctx);
-	virtual        ~PedalEditGroup () = default;
+	               PedalEditCycle (PageSwitcher &page_switcher, PedalEditContext &ctx);
+	virtual        ~PedalEditCycle () = default;
 
 
 
@@ -86,22 +87,26 @@ private:
 
 	enum Entry
 	{
-		Entry_TITLE = 1000,
+		Entry_STEP_LIST =    0,
 
-		Entry_TRIG_BEG,
-		Entry_PRESS = Entry_TRIG_BEG,
-		Entry_HOLD,
-		Entry_RELEASE,
+		Entry_WINDOW     = 1000,
+		Entry_TITLE,
+		Entry_INHERIT,
+		Entry_OVERRIDABLE,
+		Entry_RESET,
+		Entry_ADD,
 
 		Entry_NBR_ELT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
-	typedef std::array <TxtSPtr, doc::ActionTrigger_NBR_ELT> TrigArray;
+	typedef std::vector <TxtSPtr> StepList;
+	typedef std::shared_ptr <NWindow> WinSPtr;
 
 	const doc::PedalboardLayout &
 	               use_layout () const;
 	void           update_display ();
+	void           show_flag (NText &ctrl, const char *name_0, int name_size, bool flag);
 
 	PageSwitcher & _page_switcher;
 	PedalEditContext &
@@ -115,7 +120,12 @@ private:
 	               _fnt_ptr;
 
 	TxtSPtr        _title_sptr;
-	TrigArray      _trig_sptr_arr;
+	TxtSPtr        _inherit_sptr;
+	TxtSPtr        _overridable_sptr;
+	TxtSPtr        _reset_sptr;
+	TxtSPtr        _add_sptr;
+	WinSPtr        _menu_sptr;
+	StepList       _step_sptr_arr;
 
 
 
@@ -123,14 +133,14 @@ private:
 
 private:
 
-	               PedalEditGroup ()                               = delete;
-	               PedalEditGroup (const PedalEditGroup &other)    = delete;
-	PedalEditGroup &
-	               operator = (const PedalEditGroup &other)        = delete;
-	bool           operator == (const PedalEditGroup &other) const = delete;
-	bool           operator != (const PedalEditGroup &other) const = delete;
+	               PedalEditCycle ()                               = delete;
+	               PedalEditCycle (const PedalEditCycle &other)    = delete;
+	PedalEditCycle &
+	               operator = (const PedalEditCycle &other)        = delete;
+	bool           operator == (const PedalEditCycle &other) const = delete;
+	bool           operator != (const PedalEditCycle &other) const = delete;
 
-}; // class PedalEditGroup
+}; // class PedalEditCycle
 
 
 
@@ -140,11 +150,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/PedalEditGroup.hpp"
+//#include "mfx/uitk/pg/PedalEditCycle.hpp"
 
 
 
-#endif   // mfx_uitk_pg_PedalEditGroup_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_PedalEditCycle_HEADER_INCLUDED
 
 
 

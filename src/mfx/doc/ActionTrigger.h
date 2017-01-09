@@ -38,14 +38,19 @@ namespace doc
 
 enum ActionTrigger
 {
+	ActionTrigger_INVALID = -1,
 
-	ActionTrigger_PRESS,
+	ActionTrigger_PRESS   =  0,
 	ActionTrigger_HOLD,
 	ActionTrigger_RELEASE,
 
 	ActionTrigger_NBR_ELT
 
 }; // enum ActionTrigger
+
+
+
+const char *  ActionTrigger_get_name (ActionTrigger trig);
 
 
 
