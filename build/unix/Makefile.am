@@ -649,6 +649,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/PedalEditGroup.h \
         ../../src/mfx/uitk/pg/PedalEditContext.cpp \
         ../../src/mfx/uitk/pg/PedalEditContext.h \
+        ../../src/mfx/uitk/pg/PedalEditCycle.cpp \
+        ../../src/mfx/uitk/pg/PedalEditCycle.h \
         ../../src/mfx/uitk/pg/Question.cpp \
         ../../src/mfx/uitk/pg/Question.h \
         ../../src/mfx/uitk/pg/SaveProg.cpp \
