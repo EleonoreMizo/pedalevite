@@ -79,14 +79,15 @@ public:
 	               use_layout (const View &view) const;
 	PedalLoc       conv_to_loc (const View &view) const;
 
-	Type           _type       = Type_INVALID;
-	int            _pedal      = -1;
+	Type           _type         = Type_INVALID;
+	int            _pedal        = -1;
 	doc::ActionTrigger
-	               _trigger    = doc::ActionTrigger_INVALID;
-	int            _step_index = -1;
+	               _trigger      = doc::ActionTrigger_INVALID;
+	int            _step_index   = -1;
+	int            _action_index = -1;
 	doc::PedalActionGroup
 	               _content;
-	PageType       _ret_page   = PageType_CUR_PROG;
+	PageType       _ret_page     = PageType_CUR_PROG;
 
 
 

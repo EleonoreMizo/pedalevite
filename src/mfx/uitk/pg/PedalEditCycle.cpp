@@ -25,11 +25,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/doc/ActionPreset.h"
+#include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/pg/PedalEditCycle.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/Model.h"
 #include "mfx/View.h"
 
 #include <cassert>
@@ -84,6 +87,8 @@ void	PedalEditCycle::do_connect (Model &model, const View &view, PageMgrInterfac
 	_fnt_ptr   = &fnt_m;
 	assert (_ctx._pedal >= 0);
 	assert (_ctx._pedal < Cst::_nbr_pedals);
+	assert (_ctx._trigger >= 0);
+	assert (_ctx._trigger < doc::ActionTrigger_NBR_ELT);
 
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
@@ -130,9 +135,7 @@ MsgHandlerInterface::EvtProp	PedalEditCycle::do_handle_evt (const NodeEvt &evt)
 	{
 		doc::PedalActionCycle & cycle =
 			_ctx._content._action_arr [_ctx._trigger];
-		const int      nbr_steps = int (
-			_ctx._content._action_arr [_ctx._trigger]._cycle.size ()
-		);
+		const int      nbr_steps = int (cycle._cycle.size ());
 
 		const Button   but = evt.get_button_ex ();
 		switch (but)
@@ -143,28 +146,36 @@ MsgHandlerInterface::EvtProp	PedalEditCycle::do_handle_evt (const NodeEvt &evt)
 			{
 			case Entry_INHERIT:
 				cycle._inherit_flag     = ! cycle._inherit_flag;
-				update_display ();
+				update_model ();
 				break;
 			case Entry_OVERRIDABLE:
 				cycle._overridable_flag = ! cycle._overridable_flag;
-				update_display ();
+				update_model ();
 				break;
 			case Entry_RESET:
 				cycle._reset_on_pc_flag = ! cycle._reset_on_pc_flag;
-				update_display ();
+				update_model ();
 				break;
 			case Entry_ADD:
-				_ctx._step_index = nbr_steps;
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
-				/*** To do ***/
+				{
+					// Creates and add a non-empty ActionArray
+					doc::PedalActionCycle::ActionSPtr   action_sptr (
+						new doc::ActionPreset (false, 0)
+					);
+					doc::PedalActionCycle::ActionArray  action_arr;
+					action_arr.push_back (action_sptr);
+					cycle._cycle.push_back (action_arr);
+					_ctx._step_index = nbr_steps;
+					update_model ();
+					_page_switcher.call_page (PageType_PEDAL_EDIT_STEP, 0, node_id);
+				}
 				break;
 			default:
 				if (   node_id >= Entry_STEP_LIST
 				    && node_id <  Entry_STEP_LIST + nbr_steps)
 				{
 					_ctx._step_index = node_id - Entry_STEP_LIST;
-					_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
-					/*** To do ***/
+					_page_switcher.call_page (PageType_PEDAL_EDIT_STEP, 0, node_id);
 				}
 				else
 				{
@@ -191,6 +202,7 @@ MsgHandlerInterface::EvtProp	PedalEditCycle::do_handle_evt (const NodeEvt &evt)
 
 void	PedalEditCycle::do_set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
+	check_ctx ();
 	update_display ();
 }
 
@@ -198,6 +210,7 @@ void	PedalEditCycle::do_set_pedalboard_layout (const doc::PedalboardLayout &layo
 
 void	PedalEditCycle::do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content)
 {
+	check_ctx ();
 	update_display ();
 }
 
@@ -210,6 +223,28 @@ void	PedalEditCycle::do_set_pedal (const PedalLoc &loc, const doc::PedalActionGr
 const doc::PedalboardLayout &	PedalEditCycle::use_layout () const
 {
 	return _ctx.use_layout (*_view_ptr);
+}
+
+
+
+void	PedalEditCycle::check_ctx ()
+{
+	assert (_ctx._pedal >= 0);
+	assert (_ctx._pedal < Cst::_nbr_pedals);
+	assert (_ctx._trigger >= 0);
+	assert (_ctx._trigger < doc::ActionTrigger_NBR_ELT);
+
+	const doc::PedalActionCycle & cycle =
+		_ctx._content._action_arr [_ctx._trigger];
+	const int      nbr_steps = int (cycle._cycle.size ());
+	_ctx._step_index = fstb::limit (_ctx._step_index, 0, nbr_steps - 1);
+}
+
+
+
+void	PedalEditCycle::update_model ()
+{
+	_model_ptr->set_pedal (_ctx.conv_to_loc (*_view_ptr), _ctx._content);
 }
 
 
@@ -254,8 +289,8 @@ void	PedalEditCycle::update_display ()
 		const int      node_id = Entry_STEP_LIST + step_cnt;
 		TxtSPtr        step_sptr (new NText (node_id));
 
-		doc::PedalActionCycle::ActionArray &   step =
-			_ctx._content._action_arr [_ctx._trigger]._cycle [step_cnt];
+		const doc::PedalActionCycle::ActionArray &   step =
+			cycle._cycle [step_cnt];
 
 		const int      nbr_actions = int (step.size ());
 		fstb::snprintf4all (

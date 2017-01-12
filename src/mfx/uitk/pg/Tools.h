@@ -102,6 +102,8 @@ public:
 	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalActionGroup &group, const Model &model, const View &view);
 	static std::string
 	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalboardLayout &layout, int index, const Model &model, const View &view);
+	static std::string
+	               conv_pedal_action_to_short_txt (const doc::PedalActionSingleInterface &action, const Model &model, const View &view);
 
 	static std::vector <NodeEntry>
 	               extract_slot_list (const doc::Preset &preset, const Model &model);

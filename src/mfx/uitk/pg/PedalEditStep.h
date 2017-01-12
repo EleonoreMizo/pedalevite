@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PedalEditCycle.h
+        PedalEditStep.h
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_PedalEditCycle_HEADER_INCLUDED)
-#define mfx_uitk_pg_PedalEditCycle_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_PedalEditStep_HEADER_INCLUDED)
+#define mfx_uitk_pg_PedalEditStep_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -51,7 +51,7 @@ namespace pg
 
 class PedalEditContext;
 
-class PedalEditCycle
+class PedalEditStep
 :	public PageInterface
 {
 
@@ -59,8 +59,8 @@ class PedalEditCycle
 
 public:
 
-	               PedalEditCycle (PageSwitcher &page_switcher, PedalEditContext &ctx);
-	virtual        ~PedalEditCycle () = default;
+	               PedalEditStep (PageSwitcher &page_switcher, PedalEditContext &ctx);
+	virtual        ~PedalEditStep () = default;
 
 
 
@@ -88,20 +88,19 @@ private:
 
 	enum Entry
 	{
-		Entry_STEP_LIST =    0,
+		Entry_ACTION_LIST =    0,
 
-		Entry_WINDOW     = 1000,
+		Entry_WINDOW      = 1000,
 		Entry_TITLE,
-		Entry_INHERIT,
-		Entry_OVERRIDABLE,
-		Entry_RESET,
 		Entry_ADD,
+		Entry_UP,
+		Entry_DOWN,
 
 		Entry_NBR_ELT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
-	typedef std::vector <TxtSPtr> StepList;
+	typedef std::vector <TxtSPtr> ActionList;
 	typedef std::shared_ptr <NWindow> WinSPtr;
 
 	const doc::PedalboardLayout &
@@ -109,7 +108,6 @@ private:
 	void           check_ctx ();
 	void           update_model ();
 	void           update_display ();
-	void           show_flag (NText &ctrl, const char *name_0, int name_size, bool flag);
 
 	PageSwitcher & _page_switcher;
 	PedalEditContext &
@@ -123,12 +121,11 @@ private:
 	               _fnt_ptr;
 
 	TxtSPtr        _title_sptr;
-	TxtSPtr        _inherit_sptr;
-	TxtSPtr        _overridable_sptr;
-	TxtSPtr        _reset_sptr;
 	TxtSPtr        _add_sptr;
+	TxtSPtr        _up_sptr;
+	TxtSPtr        _down_sptr;
 	WinSPtr        _menu_sptr;
-	StepList       _step_sptr_arr;
+	ActionList     _action_sptr_arr;
 
 
 
@@ -136,14 +133,13 @@ private:
 
 private:
 
-	               PedalEditCycle ()                               = delete;
-	               PedalEditCycle (const PedalEditCycle &other)    = delete;
-	PedalEditCycle &
-	               operator = (const PedalEditCycle &other)        = delete;
-	bool           operator == (const PedalEditCycle &other) const = delete;
-	bool           operator != (const PedalEditCycle &other) const = delete;
+	               PedalEditStep ()                               = delete;
+	               PedalEditStep (const PedalEditStep &other)     = delete;
+	PedalEditStep& operator = (const PedalEditStep &other)        = delete;
+	bool           operator == (const PedalEditStep &other) const = delete;
+	bool           operator != (const PedalEditStep &other) const = delete;
 
-}; // class PedalEditCycle
+}; // class PedalEditStep
 
 
 
@@ -153,11 +149,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/PedalEditCycle.hpp"
+//#include "mfx/uitk/pg/PedalEditStep.hpp"
 
 
 
-#endif   // mfx_uitk_pg_PedalEditCycle_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_PedalEditStep_HEADER_INCLUDED
 
 
 

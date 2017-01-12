@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionSettings.h"
 #include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
@@ -650,6 +651,125 @@ std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::Ped
 
 
 
+std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleInterface &action, const Model &model, const View &view)
+{
+	std::string    name;
+	char           txt_0 [127+1];
+	const doc::ActionType   type = action.get_type ();
+
+	switch (type)
+	{
+	case doc::ActionType_BANK:
+		{
+			const doc::ActionBank & bank =
+				dynamic_cast <const doc::ActionBank &> (action);
+			if (bank._relative_flag)
+			{
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "%s", (bank._val < 0) ? "-" : "+"
+				);
+			}
+			else
+			{
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "%d", bank._val
+				);
+			}
+			name = "Bank ";
+			name += txt_0;
+		}
+		break;
+
+	case doc::ActionType_PRESET:
+		{
+			const doc::ActionPreset &  preset =
+				dynamic_cast <const doc::ActionPreset &> (action);
+			if (preset._relative_flag)
+			{
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "%s", (preset._val < 0) ? "-" : "+"
+				);
+			}
+			else
+			{
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "%d", preset._val
+				);
+			}
+			name = "Prog ";
+			name += txt_0;
+		}
+		break;
+
+	case doc::ActionType_TOGGLE_TUNER:
+		name = "Tuner";
+		break;
+
+	case doc::ActionType_TOGGLE_FX:
+		name = "FX" /*** To do ***/;
+		break;
+
+	case doc::ActionType_LOOP_REC:
+		name = "Loop rec";
+		break;
+
+	case doc::ActionType_LOOP_PLAY_STOP:
+		name = "Loop P/S";
+		break;
+
+	case doc::ActionType_LOOP_UNDO:
+		name = "Loop undo";
+		break;
+
+	case doc::ActionType_PARAM:
+		{
+			const doc::ActionParam &  param =
+				dynamic_cast <const doc::ActionParam &> (action);
+			name = print_param_action (param, model, view);
+			name = "Set " + name;
+		}
+		break;
+
+	case doc::ActionType_TEMPO:
+		name = "Tempo";
+		break;
+
+	case doc::ActionType_SETTINGS:
+		{
+			const doc::ActionSettings &   settings =
+				dynamic_cast <const doc::ActionSettings &> (action);
+			if (settings._relative_flag)
+			{
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "%s", (settings._val < 0) ? "-" : "+"
+				);
+			}
+			else
+			{
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "%d", settings._val
+				);
+			}
+			name = "Preset ";
+			name += txt_0;
+		}
+		break;
+
+	case doc::ActionType_EVENT:
+		name = "Event\?";
+		break;
+
+	default:
+		fstb::snprintf4all (txt_0, sizeof (txt_0), "type %d", type);
+		name = txt_0;
+		break;
+	}
+
+	return name;
+}
+
+
+
 std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &preset, const Model &model)
 {
 	std::vector <int> slot_id_list (preset.build_ordered_node_list (true));
@@ -942,92 +1062,11 @@ bool	Tools::is_pedal_simple_action (const doc::PedalActionGroup &group, const Mo
 	bool           ok_flag = false;
 	if (action_ptr != 0 && ! other_flag)
 	{
+		name    = conv_pedal_action_to_short_txt (*action_ptr, model, view);
 		ok_flag = true;
-		char           txt_0 [127+1];
-
-		const doc::ActionType   type = action_ptr->get_type ();
-		switch (type)
-		{
-		case doc::ActionType_BANK:
-			{
-				const doc::ActionBank & bank =
-					dynamic_cast <const doc::ActionBank &> (*action_ptr);
-				if (bank._relative_flag)
-				{
-					fstb::snprintf4all (
-						txt_0, sizeof (txt_0),
-						"%s", (bank._val < 0) ? "-" : "+"
-					);
-				}
-				else
-				{
-					fstb::snprintf4all (
-						txt_0, sizeof (txt_0),
-						"%d", bank._val
-					);
-				}
-				name = "Bank ";
-				name += txt_0;
-			}
-			break;
-		case doc::ActionType_PRESET:
-			{
-				const doc::ActionPreset &  preset =
-					dynamic_cast <const doc::ActionPreset &> (*action_ptr);
-				if (preset._relative_flag)
-				{
-					fstb::snprintf4all (
-						txt_0, sizeof (txt_0), "%s",
-						(preset._val < 0) ? "-" : "+"
-					);
-				}
-				else
-				{
-					fstb::snprintf4all (
-						txt_0, sizeof (txt_0),
-						"%d", preset._val
-					);
-				}
-				name = "Preset ";
-				name += txt_0;
-			}
-			break;
-		case doc::ActionType_TOGGLE_TUNER:
-			name = "Tuner";
-			break;
-		case doc::ActionType_TOGGLE_FX:
-			name = "FX" /*** To do ***/;
-			break;
-		case doc::ActionType_LOOP_REC:
-			name = "Loop Rec";
-			break;
-		case doc::ActionType_LOOP_PLAY_STOP:
-			name = "Loop P/S";
-			break;
-		case doc::ActionType_LOOP_UNDO:
-			name = "Loop Undo";
-			break;
-		case doc::ActionType_PARAM:
-			{
-				const doc::ActionParam &  param =
-					dynamic_cast <const doc::ActionParam &> (*action_ptr);
-				name = print_param_action (param, model, view);
-				name = "Set " + name;
-			}
-			break;
-		case doc::ActionType_TEMPO:
-			name = "Tempo";
-			break;
-		case doc::ActionType_EVENT:
-			name = "Event\?";
-			break;
-		default:
-			ok_flag = false;
-			break;
-		}
 	}
 
-	return (ok_flag);
+	return ok_flag;
 }
 
 
