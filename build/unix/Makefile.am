@@ -645,8 +645,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/PedalboardConfig.cpp \
         ../../src/mfx/uitk/pg/PedalboardConfig.h \
         ../../src/mfx/uitk/pg/PedalConf.h \
-        ../../src/mfx/uitk/pg/PedalCycle.cpp \
-        ../../src/mfx/uitk/pg/PedalCycle.h \
         ../../src/mfx/uitk/pg/PedalEditGroup.cpp \
         ../../src/mfx/uitk/pg/PedalEditGroup.h \
         ../../src/mfx/uitk/pg/PedalEditContext.cpp \
