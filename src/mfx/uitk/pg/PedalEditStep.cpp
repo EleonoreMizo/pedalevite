@@ -91,8 +91,6 @@ void	PedalEditStep::do_connect (Model &model, const View &view, PageMgrInterface
 	assert (_ctx._pedal < Cst::_nbr_pedals);
 	assert (_ctx._trigger >= 0);
 	assert (_ctx._trigger < doc::ActionTrigger_NBR_ELT);
-	assert (_ctx._step_index >= 0);
-	assert (_ctx._step_index < int (_ctx._content._action_arr [_ctx._trigger]._cycle.size ()));
 
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
@@ -115,6 +113,7 @@ void	PedalEditStep::do_connect (Model &model, const View &view, PageMgrInterface
 
 	_page_ptr->push_back (_menu_sptr);
 
+	check_ctx ();
 	update_display ();
 }
 
@@ -181,7 +180,7 @@ MsgHandlerInterface::EvtProp	PedalEditStep::do_handle_evt (const NodeEvt &evt)
 					_ctx._action_index = nbr_actions;
 					update_model ();
 					_page_switcher.call_page (
-						PageType_NOT_YET/*PageType_PEDAL_EDIT_ACTION*/, 0, node_id
+						PageType_PEDAL_EDIT_ACTION, 0, node_id
 					);
 				}
 				break;
@@ -191,7 +190,7 @@ MsgHandlerInterface::EvtProp	PedalEditStep::do_handle_evt (const NodeEvt &evt)
 				{
 					_ctx._action_index = node_id - Entry_ACTION_LIST;
 					_page_switcher.call_page (
-						PageType_NOT_YET/*PageType_PEDAL_EDIT_ACTION*/, 0, node_id
+						PageType_PEDAL_EDIT_ACTION, 0, node_id
 					);
 				}
 				else
@@ -255,10 +254,12 @@ void	PedalEditStep::check_ctx ()
 	const doc::PedalActionCycle & cycle =
 		_ctx._content._action_arr [_ctx._trigger];
 	const int      nbr_steps   = int (cycle._cycle.size ());
+	assert (nbr_steps > 0);
 	_ctx._step_index   = fstb::limit (_ctx._step_index, 0, nbr_steps - 1);
 	const doc::PedalActionCycle::ActionArray &   step =
 		cycle._cycle [_ctx._step_index];
 	const int      nbr_actions = int (step.size ());
+	assert (nbr_actions > 0);
 	_ctx._action_index = fstb::limit (_ctx._action_index, 0, nbr_actions - 1);
 }
 

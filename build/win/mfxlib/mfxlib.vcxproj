@@ -630,6 +630,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalActionType.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalboardConfig.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalConf.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditAction.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditContext.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditStep.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditCycle.h" />
@@ -904,6 +905,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamList.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalActionType.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalboardConfig.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditAction.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditContext.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditStep.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditCycle.cpp" />

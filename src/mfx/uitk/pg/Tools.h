@@ -110,6 +110,11 @@ public:
 	static std::string
 	               build_slot_name_with_index (const NodeEntry &entry);
 	static int     find_chain_index (const doc::Preset &preset, int slot_id);
+	static std::string
+	               find_fx_type (const doc::FxId &fx_id, const View &view);
+	static std::string
+	               find_fx_type_in_preset (const std::string &label, const doc::Preset &preset);
+	static void    print_param_action (std::string &model_name, std::string &param_name, const doc::ActionParam &param, const Model &model, const View &view);
 
 
 
@@ -128,8 +133,6 @@ private:
 	static bool    is_pedal_simple_action (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
 	static bool    is_pedal_momentary_button (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
 	static bool    is_pedal_toggle (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
-	static std::string
-	               find_fx_type (const doc::FxId &fx_id, const View &view);
 	static std::string
 	               print_param_action (const doc::ActionParam &param, const Model &model, const View &view);
 	static void    create_missing_signal_ports (Model &model, const View &view, int slot_id);

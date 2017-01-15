@@ -865,6 +865,119 @@ int	Tools::find_chain_index (const doc::Preset &preset, int slot_id)
 
 
 
+// Gives only the main plug-in type
+// Returns an empty string if not found
+std::string	Tools::find_fx_type (const doc::FxId &fx_id, const View &view)
+{
+	std::string    type;
+
+	if (fx_id._location_type == doc::FxId::LocType_CATEGORY)
+	{
+		type = fx_id._label_or_model;
+	}
+	else
+	{
+		const doc::Setup &   setup = view.use_setup ();
+
+		// First, search in the current preset
+		{
+			const int      preset_index = view.get_preset_index ();
+			const int      bank_index   = view.get_bank_index ();
+			const doc::Preset &  preset =
+				setup._bank_arr [bank_index]._preset_arr [preset_index];
+			type = find_fx_type_in_preset (fx_id._label_or_model, preset);
+		}
+
+		if (type.empty ())
+		{
+			bool           found_flag = false;
+			for (auto & bank : setup._bank_arr)
+			{
+				for (auto & preset : bank._preset_arr)
+				{
+					type = find_fx_type_in_preset (fx_id._label_or_model, preset);
+					if (! type.empty ())
+					{
+						found_flag = true;
+						break;
+					}
+				}
+				if (found_flag)
+				{
+					break;
+				}
+			}
+		}
+	}
+
+	return type;
+}
+
+
+
+// Gives only the main plug-in type
+// Returns an empty string if not found
+std::string	Tools::find_fx_type_in_preset (const std::string &label, const doc::Preset &preset)
+{
+	std::string    type;
+
+	bool           found_flag = false;
+	for (auto it_slot = preset._slot_map.begin ()
+	;	it_slot != preset._slot_map.end () && ! found_flag
+	;	++ it_slot)
+	{
+		if (! preset.is_slot_empty (it_slot))
+		{
+			const doc::Slot & slot = *(it_slot->second);
+			if (slot._label == label)
+			{
+				type       = slot._pi_model;
+				found_flag = true;
+			}
+		}
+	}
+
+	return type;
+}
+
+
+
+// Returns model_name as a multi-label string
+void	Tools::print_param_action (std::string &model_name, std::string &param_name, const doc::ActionParam &param, const Model &model, const View &view)
+{
+	const std::string model_id = find_fx_type (param._fx_id, view);
+	const piapi::PluginDescInterface & desc_main =
+		model.get_model_desc (model_id);
+	if (param._fx_id._location_type == doc::FxId::LocType_CATEGORY)
+	{
+		model_name = desc_main.get_name ();
+	}
+	else
+	{
+		model_name = param._fx_id._label_or_model;
+	}
+
+	const piapi::PluginDescInterface & desc = model.get_model_desc (
+		(param._fx_id._type == PiType_MAIN) ? model_id : Cst::_plugin_mix
+	);
+	const int      nbr_param =
+		desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
+	if (param._index < nbr_param)
+	{
+		const piapi::ParamDescInterface & param_desc =
+			desc.get_param_info (piapi::ParamCateg_GLOBAL, param._index);
+		param_name = param_desc.get_name (0);
+	}
+	else
+	{
+		char           txt_0 [127+1];
+		fstb::snprintf4all (txt_0, sizeof (txt_0), "%d", param._index);
+		param_name = txt_0;
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -1221,86 +1334,20 @@ bool	Tools::is_pedal_toggle (const doc::PedalActionGroup &group, const Model &mo
 
 
 
-// Gives only the main plug-in type
-// Returns an empty string if not found
-std::string	Tools::find_fx_type (const doc::FxId &fx_id, const View &view)
-{
-	std::string    type;
-
-	if (fx_id._location_type == doc::FxId::LocType_CATEGORY)
-	{
-		type = fx_id._label_or_model;
-	}
-	else
-	{
-		bool           found_flag = false;
-		const doc::Setup &   setup = view.use_setup ();
-		for (auto & bank : setup._bank_arr)
-		{
-			for (auto & preset : bank._preset_arr)
-			{
-				for (auto it_slot = preset._slot_map.begin ()
-				;	it_slot != preset._slot_map.end () && ! found_flag
-				;	++ it_slot)
-				{
-					if (! preset.is_slot_empty (it_slot))
-					{
-						const doc::Slot & slot = *(it_slot->second);
-						if (slot._label == fx_id._label_or_model)
-						{
-							type = slot._pi_model;
-							found_flag = true;
-						}
-					}
-				}
-				if (found_flag)
-				{
-					break;
-				}
-			}
-			if (found_flag)
-			{
-				break;
-			}
-		}
-	}
-
-	return type;
-}
-
-
-
 std::string	Tools::print_param_action (const doc::ActionParam &param, const Model &model, const View &view)
 {
-	const std::string model_id = find_fx_type (param._fx_id, view);
-	const piapi::PluginDescInterface & desc_main =
-		model.get_model_desc (model_id);
-	const std::string model_name_multi = desc_main.get_name ();
-	const std::string model_name =
-			(param._fx_id._location_type == doc::FxId::LocType_CATEGORY)
-		? pi::param::Tools::print_name_bestfit (8, model_name_multi.c_str ())
-		: param._fx_id._label_or_model;
-	std::string    name = model_name + " ";
-	const piapi::PluginDescInterface & desc = model.get_model_desc (
-		(param._fx_id._type == PiType_MAIN) ? model_id : Cst::_plugin_mix
-	);
-	const int      nbr_param =
-		desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
-	if (param._index < nbr_param)
-	{
-		const piapi::ParamDescInterface & param_desc =
-			desc.get_param_info (piapi::ParamCateg_GLOBAL, param._index);
-		const std::string param_name = param_desc.get_name (0);
-		name += param_name;
-	}
-	else
-	{
-		char           txt_0 [127+1];
-		fstb::snprintf4all (txt_0, sizeof (txt_0), "%d", param._index);
-		name += txt_0;
-	}
+	std::string    model_name;
+	std::string    param_name;
+	print_param_action (model_name, param_name, param, model, view);
 
-	return name;
+	model_name = pi::param::Tools::print_name_bestfit (
+		8, model_name.c_str ()
+	);
+	param_name = pi::param::Tools::print_name_bestfit (
+		1000, model_name.c_str ()
+	);
+
+	return model_name + " " + param_name;
 }
 
 
