@@ -36,3 +36,6 @@ art/*.h
 etc/config/current
 legacy/
 doc/exported/
+doc/pcb*/*.bak
+doc/pcb*/*-bak
+doc/pcb*/*.bck
