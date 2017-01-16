@@ -354,6 +354,7 @@ connecteur de la plaque des LED.</p>
 <li>16&#8239;&times;&#8239;&nbsp;&nbsp;5 trous entiers, soit &nbsp;&nbsp;43,2&#8239;&times;&#8239;15,2&#8239;mm², carte de patch pour l’écran</li>
 <li>18&#8239;&times;&#8239;&nbsp;&nbsp;4 trous entiers, soit &nbsp;&nbsp;48,3&#8239;&times;&#8239;12,7&#8239;mm², carte des codeurs incrémentaux de navigation</li>
 <li>48&#8239;&times;&#8239;&nbsp;&nbsp;3 trous entiers, soit 124,5&#8239;&times;&#8239;10,2&#8239;mm², carte des codeurs incrémentaux de contrôle</li>
+<li>16&#8239;&times;&#8239;&nbsp;&nbsp;6 trous entiers, soit &nbsp;&nbsp;43,2&#8239;&times;&#8239;17,8&#8239;mm², carte du filtre de l’alimentation audio (optionnel)</li>
 </ul>
 <p>Les plaque de prototypage standard font 61 trous sur 38.
 Il est donc possible d’extraire la carte principale et celle des interrupteurs
@@ -456,8 +457,9 @@ Pour chacun d’entre eux, vérifier les choses suivantes&#8239;:</p>
 contact avec elle, sauf peut-être d’autres broches de masse.</li>
 <li>Idem pour les broches d’alimentation.
 On retrouvera tout de même des connexions avec d’autres broches
-via les résistances de pull-up. Vérifier que ça arrive sur les boutons,
-et vérifier les résistances indiquées.</li>
+via les résistances de tirage (<span lang="en"><i>pull-up</i></span>).
+Vérifier que ça arrive sur les boutons, et vérifier les résistances
+indiquées.</li>
 <li>Pour chaque paire de broches voisines, vérifier qu’il n’y ait pas
 de contact, ou alors que les résistances indiquées soient cohérentes.</li>
 <li>Quand il y a deux paquets de soudure suspects l’un à côté de l’autre sur
@@ -577,12 +579,6 @@ extrémités du connecteur mâle de l’écran.</p>
 <p>Les boutons et pédales partagent quelques fils de masse.
 Préparer les câbles en les sertissant d’un seul côté.
 Ils seront soudés et connectés plus tard.</p>
-<p>Note&#8239;: comme beaucoup de fils voyagent ensemble, il est aussi
-possible de prendre de la nappe et de tailler des morceaux dedans afin
-d’avoir des groupes de fils déjà solidaires.
-Un bon mètre de nappe multicolore 40 fils devrait suffire.
-Attention tout de même, le diamètre du fil de nappe est souvent assez
-faible et peut être limite pour le brochage HE-14.</p>
 
 
 
@@ -657,6 +653,10 @@ Le câble doit être assez long pour que le socle sur lequel sera accorché
 le transfo puisse être posé à côté du boîtier tout en restant connecté.
 L’un des conducteur sera soudé à l’une des bornes de la prise C14, et l’autre
 à l’interrupteur (vérifier d’abord les broches qui font contact).</p>
+<p>Faire une dérivation à partir de cette prise femelle vers une deuxième
+prise femelle, avec un câble d’une quinzaine de centimètres.
+Cette deuxième prise alimentera le transformateur destiné à la carte
+audio.</p>
 <p>Enfin, relier l’interrupteur au connecteur C14 par les broches
 restantes.</p>
 <p>Fixer prise et interrupteur au boîtier et glisser les manchons sur les
@@ -762,9 +762,46 @@ epoxy ne fasse pas de court-circuit entre les différents signaux.
 Au besoin, gratter les pastilles qui ne sont de toute façon pas utilisées.</p>
 <div class="pic"><a href="usb-cable-plugged2.jpg"><img src="usb-cable-plugged2-small.jpg" /></a></div>
 
+<h4>Alimentation de la carte audio</h4>
+
+<p>Fabriquer un bout de câble à trois branches de la façon
+suivante&#8239;:</p>
+<p>La première branche, c’est le chargeur dont la prise a été coupée.
+Dénuder les fils.</p>
+<p>La seconde, l’entrée, est constituée du connecteur femelle USB-B (embase).
+Couper un petit carré de 4&#8239;&times;&#8239;4 trous dans une plaque de
+prototypage.
+Ce carré doit pouvoir être maintenu par les pattes de fixation de l’embase.
+Passer trois fils dans ce carré&#8239;
+Un noir pour la masse, et un blanc et un vert pour les données
+(<a href="https://en.wikipedia.org/wiki/USB">plan de connexion</a> pour
+référence).
+Les fils sont placés à côté des broches et ressortent par le côté.
+Ils sont ainsi coincés entre la fiche et le carré quand on soude les
+deux ensemble.</p>
+<div class="pic"><a href="audio-power-cable-usb-socket.png"><img src="audio-power-cable-usb-socket-small.png" /></a></div>
+<p>Le carré bleu indique où doivent être placées les broches de l’embase.
+Une fois repliées, les pattes de fixation de cette embase permettent de
+maintenir l’assemblage compressé.
+Souder câbles et broches.
+Faire des ponts entre câbles et broches adjascentes.</p>
+<p>La troisième est la prise USB-B mâle.
+Souder les deux fils de données ainsi que le fil rouge du chargeur
+(positif) au +5&#8239;V.
+La masse récupère un assemblage du fil noir du chargeur (négatif) et
+du fil noir issu de l’embase femelle.</p>
+<p>Envelopper le tout de ruban adhésif d’électricien pour le protéger.
+Le montage s’intercale entre le câble de liaison USB et la carte audio.</p>
+<p>Éventuellement&#8239;: intercaler le filtre RC d’alimentation entre
+ce montage et le chargeur.
+La nécessité du dispositif dépend de la qualité de l’alimentation.
+Laisser assez de câble de part et d’autre pour pouvoir être relativement
+libre dans le placement du filtre sur le socle.</p>
+
 <h4>Socle</h4>
 
-<p>Le socle doit supporter la carte son et le transformateur du Pi.
+<p>Le socle doit supporter la carte audio, les deux transformateurs et
+eventuellement le filtre d’alimentation.
 Découper une plaque de bois de
 520&#8239;&times;&#8239;250&#8239;&times;&#8239;10&#8239;mm³.</p>
 <p>Commencer par noter une orientation sur le socle.
@@ -792,8 +829,13 @@ tournevis plat ou un ciseau fin.
 Le faire progressivement en alternant les deux côtés pour éviter de ressortir
 en emportant toute la couche supérieure.</p>
 <div class="pic"><a href="box-bot-inside.jpg"><img src="box-bot-inside-small.jpg" /></a></div>
+<p><i>La photo ci-dessus ne montre ni le deuxième transformateur ni le
+filtre, pas encore réalisés au moment de la prise.</i></p>
 <p>Fixer ensuite les colliers de serrage.
-Il en faudra au moins deux pour chaque boucle enserrant la carte son.</p>
+Il en faudra au moins deux pour chaque boucle enserrant la carte son.
+Le second transformateur peut être attaché au premier avec un ruban adhésif.
+Le filtre de l’alimentation peut être vissé sur le socle à côté de la carte
+son.</p>
 <p>Il est recommandé de calibrer la carte son (régler les boutons, cf.
 manuel d’utilisation) avant de tout refermer.</p>
 <p>Pour faire les pieds, l’idéal serait d’avoir des gommes spécifiquement
@@ -1385,10 +1427,44 @@ Je pense qu’on peut s’en passer sans problème.</p>
 On doit pouvoir se passer de la deuxième plaque de prototypage.
 Le gain tourne autour de 25&#8239;€ HT</p>
 
-<h4>Substitution des résistances de pull-up</h4>
+<h4>Carte unique en PCB</h4>
+
+<p>Utiliser la version PCB de Pédale Vite est certainement un moyen efficace
+d’en simplifier le montage.
+On gagne sur le tracé des pistes, on fait sauter plusieurs câbles de liaison
+et il y a moins de trous à percer sur la plaque de métal.
+Par contre le PCB en l’état est double face et assez précis (vias de
+0,4&#8239;mm), il me semble difficile de le réaliser en DIY.
+Il faudra passer par une entreprise de gravure ou en changer la
+conception pour utiliser une insolation artisanale.</p>
+<p>Pour une production groupée, même à petite échelle, il doit y avoir un
+intérêt en terme budgétaire.
+Celui-ci reste tout de même à évaluer pour une production strictement
+individuelle.</p>
+<p>L’électronique est identique à celle utilisée sur les cartes proto.
+Les connecteurs également, à part deux d’entre eux.</p>
+<ul>
+<li>Le connecteur de l’écran.
+Il lui manque un des fils de masse, qui peut facilement être remplacé par la
+soudure d’un pont sur le circuit de l’écran, par exemple celui reliant BLK
+(broche 20) à VSS/GND (broche 1).
+Se reporter au schéma pour le reste du brochage de ce connecteur.</li>
+<li>Le système des diodes est simplifié&#8239;: il ne reste que le
++3,3&#8239;V et les trois signaux sur le connecteur.
+Là aussi, se reporter au schéma pour le brochage.
+La plaque des diodes doit être adaptée en conséquence, puisqu’il ne
+reste plus que lesdites diodes.</li>
+</ul>
+<p>La plaque se fixe au milieu, à la place de la carte des interrupteurs, dans
+le sens de la hauteur.
+Elle tient tout juste sous l’écran.
+Tous les fichiers nécessaires (sources KiCAD et exports Gerber) sont dans le
+dépôt Git dans <code>doc/pcb-v1_1</code>.</p>
+
+<h4>Substitution des résistances de tirage</h4>
 
 <p>Le RPi ainsi que les extenseurs de ports 23017 disposent de résistances
-interne de pull-up.
+interne de tirage.
 On peut les utiliser à la place de la myriade de 10&#8239;kΩ et faire sauter
 au passage les condensateurs anti-rebond qui vont avec.
 Ça donnera quelque chose d’électriquement un peu moins propre, mais qui
@@ -1404,7 +1480,7 @@ carte.</p>
 
 <h4>Utilisation des ponts sur l’écran</h4>
 
-<p>L’écran que j’utilise est un 12864ZW.
+<p>L’écran utilisé est un 12864ZW.
 Je ne l’ai appris que plus tard, mais celui-ci dispose de plusieurs passages
 sur son PCB permettant d’activer certaines fonctionnalités en y déposant un
 pont de soudure.
@@ -1412,6 +1488,23 @@ Ces ponts relient à la masse ou à la tension d’alimentation diverses broch
 du connecteur principal.
 Ça aurait été utile pour activer le rétro-éclairage ou le protocole série sans
 avoir à rajouter manuellement les broches et les cables qui allaient avec.</p>
+
+<h4>Réduction du nombre de connecteurs</h4>
+
+<p>La plupart des liaisons entre les cartes et composants principaux sont
+faites au moyen de câbles terminés par des connecteurs aux deux bouts.
+On peut s’en affranchir de certains et les remplacer par de la soudure
+simple.
+Toutefois je déconseille de souder les câbles aux deux bouts, la maintenance
+et le contrôle s’en trouveraient grandement réduits.</p>
+<p>D’autre part, comme beaucoup de fils voyagent ensemble, il est aussi
+possible de prendre de la nappe et de tailler des morceaux dedans afin
+d’avoir des groupes de fils déjà solidaires.
+Un bon mètre de nappe multicolore 40 fils devrait suffire pour l’ensemble du
+montage.
+Attention tout de même, le diamètre du fil de nappe est souvent assez
+faible et peut être limite pour le brochage HE-14.
+Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 
