@@ -24,6 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/ActionParam.h"
+#include "mfx/doc/ActionSettings.h"
+#include "mfx/doc/ActionToggleFx.h"
+#include "mfx/doc/FxId.h"
 #include "mfx/PedalLoc.h"
 #include "mfx/View.h"
 
@@ -142,6 +146,34 @@ int	View::conv_slot_index_to_id (int slot_index) const
 		  (slot_index < 0)
 		? -1
 		: _preset_cur._routing._chain [slot_index];
+}
+
+
+
+std::set <std::string>	View::collect_labels (bool cur_preset_flag) const
+{
+	std::set <std::string>  labels;
+
+	collect_labels (labels, _preset_cur);
+
+	if (! cur_preset_flag)
+	{
+		for (const auto &bank : _setup._bank_arr)
+		{
+			for (const auto &preset : bank._preset_arr)
+			{
+				collect_labels (labels, preset);
+			}
+
+			collect_labels (labels, bank._layout);
+		}
+
+		collect_labels (labels, _setup._layout);
+	}
+
+	assert (labels.find ("") == labels.end ());
+
+	return std::move (labels);
 }
 
 
@@ -675,6 +707,96 @@ void	View::do_clear_all_settings ()
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	View::collect_labels (std::set <std::string> &labels, const doc::Preset &preset) const
+{
+	for (const auto &node_slot : preset._slot_map)
+	{
+		if (node_slot.second.get () != 0)
+		{
+			const doc::Slot & slot = *node_slot.second;
+			if (! slot._label.empty ())
+			{
+				labels.insert (slot._label);
+			}
+		}
+	}
+
+	collect_labels (labels, preset._layout);
+}
+
+
+
+void	View::collect_labels (std::set <std::string> &labels, const doc::PedalboardLayout &layout) const
+{
+	for (const auto &pedal : layout._pedal_arr)
+	{
+		for (const auto &cycle : pedal._action_arr)
+		{
+			for (const auto &step : cycle._cycle)
+			{
+				for (const auto &action_sptr : step)
+				{
+					const doc::PedalActionSingleInterface &   action = *action_sptr;
+					const doc::ActionType & type = action.get_type ();
+					switch (type)
+					{
+					// All these actions contain an FxId
+					case doc::ActionType_TOGGLE_FX:
+						collect_labels (
+							labels,
+							dynamic_cast <const doc::ActionToggleFx &> (action)._fx_id
+						);
+						break;
+					case doc::ActionType_PARAM:
+						collect_labels (
+							labels,
+							dynamic_cast <const doc::ActionParam &> (action)._fx_id
+						);
+						break;
+					case doc::ActionType_SETTINGS:
+						collect_labels (
+							labels,
+							dynamic_cast <const doc::ActionSettings &> (action)._fx_id
+						);
+						break;
+
+					// These ones don't
+					case doc::ActionType_BANK:
+					case doc::ActionType_PRESET:
+					case doc::ActionType_TOGGLE_TUNER:
+					case doc::ActionType_LOOP_REC:
+					case doc::ActionType_LOOP_PLAY_STOP:
+					case doc::ActionType_LOOP_UNDO:
+					case doc::ActionType_TEMPO:
+					case doc::ActionType_EVENT:
+						// Nothing
+						break;
+
+					default:
+						assert (false);
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+void	View::collect_labels (std::set <std::string> &labels, const doc::FxId &fx_id) const
+{
+	if (fx_id._location_type == doc::FxId::LocType_LABEL)
+	{
+		if (! fx_id._label_or_model.empty ())
+		{
+			labels.insert (fx_id._label_or_model);
+		}
+	}
+}
 
 
 

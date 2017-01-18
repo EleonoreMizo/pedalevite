@@ -37,6 +37,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+namespace doc
+{
+	class FxId;
+}
+
 
 
 class View
@@ -79,6 +84,9 @@ public:
 	               use_param_ctrl_override_map () const;
 
 	int            conv_slot_index_to_id (int slot_index) const;
+
+	std::set <std::string>
+	               collect_labels (bool cur_preset_flag) const;
 
 	static void    update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
 	static float   get_param_val (const doc::Preset &preset, int slot_id, PiType type, int index);
@@ -135,6 +143,10 @@ private:
 
 	typedef std::set <ModelObserverInterface *> ObsSet;
 	typedef std::set <int> PluginList;
+
+	void           collect_labels (std::set <std::string> &labels, const doc::Preset &preset) const;
+	void           collect_labels (std::set <std::string> &labels, const doc::PedalboardLayout &layout) const;
+	void           collect_labels (std::set <std::string> &labels, const doc::FxId &fx_id) const;
 
 	ObsSet         _obs_set;
 

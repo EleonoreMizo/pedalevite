@@ -64,6 +64,7 @@
 #include "mfx/uitk/pg/CurProg.h"
 #include "mfx/uitk/pg/CtrlEdit.h"
 #include "mfx/uitk/pg/CtrlProg.h"
+#include "mfx/uitk/pg/EditLabel.h"
 #include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/pg/EndMsg.h"
@@ -308,6 +309,8 @@ public:
 	               _page_pedal_edit_step;
 	mfx::uitk::pg::PedalEditAction
 	               _page_pedal_edit_action;
+	mfx::uitk::pg::EditLabel
+	               _page_edit_label;
 
 	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
 	               ~Context ();
@@ -411,6 +414,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_page_pedal_edit_cycle (_page_switcher, _loc_edit_pedal)
 ,	_page_pedal_edit_step (_page_switcher, _loc_edit_pedal)
 ,	_page_pedal_edit_action (_page_switcher, _loc_edit_pedal)
+,	_page_edit_label (_page_switcher)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
@@ -551,6 +555,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_EDIT_CYCLE , _page_pedal_edit_cycle );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_EDIT_STEP  , _page_pedal_edit_step  );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_EDIT_ACTION, _page_pedal_edit_action);
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_LABEL       , _page_edit_label       );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

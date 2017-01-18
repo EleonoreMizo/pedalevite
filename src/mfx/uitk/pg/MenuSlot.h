@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/EditText.h"
+#include "mfx/uitk/pg/EditLabel.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
@@ -146,8 +146,8 @@ private:
 	TxtSPtr        _chn_sptr;
 	TxtSPtr        _lbl_sptr;
 
-	EditText::Param
-	               _name_param;
+	EditLabel::Param
+	               _label_param;
 
 
 

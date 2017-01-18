@@ -615,6 +615,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlProg.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlSrcNamed.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\CurProg.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditLabel.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditProg.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditText.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\EndMsg.h" />
@@ -892,6 +893,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlProg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlSrcNamed.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CurProg.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditLabel.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditProg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditText.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\EndMsg.cpp" />

@@ -76,7 +76,7 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_rst_sptr (new NText (Entry_RESET  ))
 ,	_chn_sptr (new NText (Entry_CHN    ))
 ,	_lbl_sptr (new NText (Entry_LABEL  ))
-,	_name_param ()
+,	_label_param ()
 {
 	_del_sptr->set_text ("Delete");
 	_mov_sptr->set_text ("Move");
@@ -110,12 +110,12 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	if (_state == State_EDIT_LABEL)
 	{
-		if (   _name_param._ok_flag
+		if (   _label_param._ok_flag
 		    && _view_ptr->get_bank_index ()   == _save_bank_index
 		    && _view_ptr->get_preset_index () == _save_preset_index
 		    && _loc_edit._slot_id             == _save_slot_id)
 		{
-			_model_ptr->set_slot_label (_loc_edit._slot_id, _name_param._text);
+			_model_ptr->set_slot_label (_loc_edit._slot_id, _label_param._label);
 		}
 	}
 	_state = State_NORMAL;
@@ -246,13 +246,15 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 				{
 					assert (_loc_edit._slot_id >= 0);
 					const doc::Slot & slot = preset.use_slot (_loc_edit._slot_id);
-					_name_param._title = "Effect label:";
-					_name_param._text  = slot._label;
-					_state             = State_EDIT_LABEL;
-					_save_bank_index   = _view_ptr->get_bank_index ();
-					_save_preset_index = _view_ptr->get_preset_index ();
-					_save_slot_id      = _loc_edit._slot_id;
-					_page_switcher.call_page (PageType_EDIT_TEXT, &_name_param, node_id);
+					_label_param._label        = slot._label;
+					_label_param._sep_cur_flag = true;
+					_state                     = State_EDIT_LABEL;
+					_save_bank_index           = _view_ptr->get_bank_index ();
+					_save_preset_index         = _view_ptr->get_preset_index ();
+					_save_slot_id              = _loc_edit._slot_id;
+					_page_switcher.call_page (
+						PageType_EDIT_LABEL, &_label_param, node_id
+					);
 					ret_val = EvtProp_CATCH;
 				}
 				break;

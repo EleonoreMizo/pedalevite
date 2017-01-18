@@ -617,6 +617,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.h \
         ../../src/mfx/uitk/pg/CurProg.cpp \
         ../../src/mfx/uitk/pg/CurProg.h \
+        ../../src/mfx/uitk/pg/EditLabel.cpp \
+        ../../src/mfx/uitk/pg/EditLabel.h \
         ../../src/mfx/uitk/pg/EditProg.cpp \
         ../../src/mfx/uitk/pg/EditProg.h \
         ../../src/mfx/uitk/pg/EditText.cpp \
