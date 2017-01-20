@@ -943,36 +943,42 @@ std::string	Tools::find_fx_type_in_preset (const std::string &label, const doc::
 
 
 // Returns model_name as a multi-label string
+// Returns empty strings if the effect cannot be located.
 void	Tools::print_param_action (std::string &model_name, std::string &param_name, const doc::ActionParam &param, const Model &model, const View &view)
 {
+	model_name.clear ();
+	param_name.clear ();
 	const std::string model_id = find_fx_type (param._fx_id, view);
-	const piapi::PluginDescInterface & desc_main =
-		model.get_model_desc (model_id);
-	if (param._fx_id._location_type == doc::FxId::LocType_CATEGORY)
+	if (! model_id.empty ())
 	{
-		model_name = desc_main.get_name ();
-	}
-	else
-	{
-		model_name = param._fx_id._label_or_model;
-	}
+		const piapi::PluginDescInterface & desc_main =
+			model.get_model_desc (model_id);
+		if (param._fx_id._location_type == doc::FxId::LocType_CATEGORY)
+		{
+			model_name = desc_main.get_name ();
+		}
+		else
+		{
+			model_name = param._fx_id._label_or_model;
+		}
 
-	const piapi::PluginDescInterface & desc = model.get_model_desc (
-		(param._fx_id._type == PiType_MAIN) ? model_id : Cst::_plugin_mix
-	);
-	const int      nbr_param =
-		desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
-	if (param._index < nbr_param)
-	{
-		const piapi::ParamDescInterface & param_desc =
-			desc.get_param_info (piapi::ParamCateg_GLOBAL, param._index);
-		param_name = param_desc.get_name (0);
-	}
-	else
-	{
-		char           txt_0 [127+1];
-		fstb::snprintf4all (txt_0, sizeof (txt_0), "%d", param._index);
-		param_name = txt_0;
+		const piapi::PluginDescInterface & desc = model.get_model_desc (
+			(param._fx_id._type == PiType_MAIN) ? model_id : Cst::_plugin_mix
+		);
+		const int      nbr_param =
+			desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
+		if (param._index < nbr_param)
+		{
+			const piapi::ParamDescInterface & param_desc =
+				desc.get_param_info (piapi::ParamCateg_GLOBAL, param._index);
+			param_name = param_desc.get_name (0);
+		}
+		else
+		{
+			char           txt_0 [127+1];
+			fstb::snprintf4all (txt_0, sizeof (txt_0), "%d", param._index);
+			param_name = txt_0;
+		}
 	}
 }
 
@@ -1344,7 +1350,7 @@ std::string	Tools::print_param_action (const doc::ActionParam &param, const Mode
 		8, model_name.c_str ()
 	);
 	param_name = pi::param::Tools::print_name_bestfit (
-		1000, model_name.c_str ()
+		1000, param_name.c_str ()
 	);
 
 	return model_name + " " + param_name;
