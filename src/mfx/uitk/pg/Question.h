@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/NText.h"
+#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 
 #include <memory>
@@ -67,7 +68,8 @@ public:
 		std::vector <std::string>
 		               _choice_arr;
 		int            _selection = 0; // Input/output
-		bool           _ok_flag;       // Output: Select or Esc
+		std::set <int> _check_set;     // Input. Indexes showing check marks
+		bool           _ok_flag;       // Output: choice validated or cancelled
 	};
 
 	explicit       Question (PageSwitcher &page_switcher);
@@ -93,8 +95,15 @@ protected:
 
 private:
 
+	enum Entry
+	{
+		Entry_WINDOW = 1000000,
+		Entry_TITLE
+	};
+
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
+	typedef std::shared_ptr <NWindow> WinSPtr;
 
 	PageSwitcher & _page_switcher;
 	const View *   _view_ptr;     // 0 = not connected
@@ -102,6 +111,7 @@ private:
 	               _page_ptr;
 	Vec2d          _page_size;
 
+	WinSPtr        _menu_sptr;
 	TxtSPtr        _title_sptr;
 	TxtArray       _choice_list;
 
