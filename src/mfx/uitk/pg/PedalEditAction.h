@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/EditFxId.h"
 #include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
@@ -95,13 +96,20 @@ protected:
 
 private:
 
+	enum State
+	{
+		State_NORMAL = 0,
+		State_EDIT_FXID,
+
+		State_NBR_ELT
+	};
+
 	enum Entry
 	{
 		Entry_TYPE = 1000,
 		Entry_RELATIVE,
 		Entry_INDEX,
 		Entry_VALUE,
-		Entry_LOC_TYPE,
 		Entry_LABEL,
 		Entry_UNIT,
 
@@ -127,7 +135,13 @@ private:
 	void           display_tempo (PageMgrInterface::NavLocList &nav_list, const doc::ActionTempo &action);
 	void           display_settings (PageMgrInterface::NavLocList &nav_list, const doc::ActionSettings &action);
 	void           display_event (PageMgrInterface::NavLocList &nav_list);
+	std::string    print_fx_id (const doc::FxId &fx_id) const;
 	EvtProp        change_value (int node_id, int dir);
+	EvtProp        change_type (int dir);
+	EvtProp        change_bank (int node_id, int dir);
+	EvtProp        change_preset (int node_id, int dir);
+	EvtProp        change_param (int node_id, int dir);
+	EvtProp        change_settings (int node_id, int dir);
 
 	PageSwitcher & _page_switcher;
 	PedalEditContext &
@@ -146,6 +160,9 @@ private:
 	TxtSPtr        _loc_type_sptr;
 	TxtSPtr        _label_sptr;
 
+	State          _state;
+	EditFxId::Param
+	               _arg_edit_fxid;
 
 
 

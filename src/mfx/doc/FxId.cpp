@@ -56,8 +56,17 @@ FxId::FxId (LocType loc_type, std::string label, PiType type)
 
 
 
+bool	FxId::is_valid () const
+{
+	return (_location_type != LocType_INVALID);
+}
+
+
+
 void	FxId::ser_write (SerWInterface &ser) const
 {
+	assert (is_valid ());
+
 	ser.begin_list ();
 
 	ser.write (_location_type);
@@ -85,6 +94,9 @@ void	FxId::ser_read (SerRInterface &ser)
 
 bool	FxId::operator == (const FxId &other) const
 {
+	assert (is_valid ());
+	assert (other.is_valid ());
+
 	return (   _location_type  == other._location_type
 	        && _label_or_model == other._label_or_model
 	        && _type           == other._type);

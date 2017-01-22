@@ -60,6 +60,7 @@ public:
 		LocType_NBR_ELT
 	};
 
+	               FxId ()                        = default;
 	explicit       FxId (LocType loc_type, std::string label, PiType type);
 	               FxId (const FxId &other)       = default;
 	virtual        ~FxId ()                       = default;
@@ -68,6 +69,8 @@ public:
 
 	bool           operator == (const FxId &other) const;
 	bool           operator != (const FxId &other) const;
+
+	bool           is_valid () const;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
@@ -93,8 +96,6 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	               FxId () = delete;
 
 }; // class FxId
 

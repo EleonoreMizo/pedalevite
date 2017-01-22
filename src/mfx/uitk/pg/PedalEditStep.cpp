@@ -72,6 +72,7 @@ PedalEditStep::PedalEditStep (PageSwitcher &page_switcher, PedalEditContext &ctx
 	_add_sptr  ->set_text ("<Add action>");
 	_up_sptr   ->set_text ("<Move up>");
 	_down_sptr ->set_text ("<Move down>");
+	_menu_sptr->set_autoscroll (true);
 }
 
 

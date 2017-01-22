@@ -68,6 +68,7 @@ enum PageType
 	PageType_PEDAL_EDIT_STEP,
 	PageType_PEDAL_EDIT_ACTION,
 	PageType_EDIT_LABEL,
+	PageType_EDIT_FXID,
 
 	PageType_NBR_ELT
 

@@ -198,7 +198,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 
 
 
-MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir)
+MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view, int slot_id, PiType type, int index, double step, int step_index, int dir)
 {
 	assert (slot_id >= 0);
 	assert (type >= 0);
@@ -207,12 +207,12 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 	assert (dir != 0);
 
 	const doc::Preset &  preset = view.use_preset_cur ();
-	float          val_nrm =
+	double         val_nrm =
 		view.get_param_val (preset, slot_id, type, index);
 
-	val_nrm = float (change_param (
+	val_nrm = change_param (
 		val_nrm, model, view, slot_id, type, index, step, step_index, dir
-	));
+	);
 
 	// Check the beat case
 	bool           set_flag = false;
@@ -241,7 +241,7 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 
 	if (! set_flag)
 	{
-		model.set_param (slot_id, type, index, val_nrm);
+		model.set_param (slot_id, type, index, float (val_nrm));
 	}
 
 	return MsgHandlerInterface::EvtProp_CATCH;
@@ -249,7 +249,7 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 
 
 
-double	Tools::change_param (double val_nrm, const Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir)
+double	Tools::change_param (double val_nrm, const Model &model, const View &view, int slot_id, PiType type, int index, double step, int step_index, int dir)
 {
 	assert (slot_id >= 0);
 	assert (type >= 0);
@@ -273,7 +273,7 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 
 
 
-double	Tools::change_param (double val_nrm, const View &view, const piapi::PluginDescInterface &desc_pi, const doc::PluginSettings &settings, int index, float step, int step_index, int dir)
+double	Tools::change_param (double val_nrm, const View &view, const piapi::PluginDescInterface &desc_pi, const doc::PluginSettings &settings, int index, double step, int step_index, int dir)
 {
 	assert (index >= 0);
 	assert (dir != 0);
@@ -335,7 +335,7 @@ double	Tools::change_param (double val_nrm, const View &view, const piapi::Plugi
 
 
 
-double	Tools::change_param (double val_nrm, const piapi::PluginDescInterface &desc_pi, int index, float step, int dir)
+double	Tools::change_param (double val_nrm, const piapi::PluginDescInterface &desc_pi, int index, double step, int dir)
 {
 	assert (index >= 0);
 	assert (dir != 0);
@@ -355,7 +355,7 @@ double	Tools::change_param (double val_nrm, const piapi::PluginDescInterface &de
 		const double   nat_min = desc.get_nat_min ();
 		const double   nat_max = desc.get_nat_max ();
 		val_nat   = fstb::limit (val_nat, nat_min, nat_max);
-		val_nrm   = float (desc.conv_nat_to_nrm (val_nat));
+		val_nrm   = desc.conv_nat_to_nrm (val_nat);
 		done_flag = true;
 	}
 
