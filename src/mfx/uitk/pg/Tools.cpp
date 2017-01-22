@@ -265,6 +265,19 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 		(type == PiType_MIX) ? Cst::_plugin_mix : slot._pi_model;
 	const piapi::PluginDescInterface &  desc_pi =
 		model.get_model_desc (pi_model);
+
+	return change_param (
+		val_nrm, view, desc_pi, settings, index, step, step_index, dir
+	);
+}
+
+
+
+double	Tools::change_param (double val_nrm, const View &view, const piapi::PluginDescInterface &desc_pi, const doc::PluginSettings &settings, int index, float step, int step_index, int dir)
+{
+	assert (index >= 0);
+	assert (dir != 0);
+
 	const piapi::ParamDescInterface &   desc    =
 		desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
 
@@ -283,7 +296,7 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 			done_flag = true;
 		}
 
-		else if (type != PiType_MIX)
+		else  // else if (type != PiType_MIX)
 		{
 			// Check if we can use the beat mode
 			const doc::ParamPresentation *   pres_ptr =
@@ -308,21 +321,42 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 		}
 	}
 
-	if (! done_flag)
+	if (done_flag)
 	{
-		const piapi::ParamDescInterface::Range range = desc.get_range ();
+		val_nrm = fstb::limit (val_nrm, 0.0 ,1.0);
+	}
+	else
+	{
+		val_nrm = change_param (val_nrm, desc_pi, index, step, dir);
+	}
 
-		// Uses a discrete range
-		if (range == piapi::ParamDescInterface::Range_DISCRETE)
-		{
-			double         val_nat = desc.conv_nrm_to_nat (val_nrm);
-			val_nat += dir;
-			const double   nat_min = desc.get_nat_min ();
-			const double   nat_max = desc.get_nat_max ();
-			val_nat   = fstb::limit (val_nat, nat_min, nat_max);
-			val_nrm   = float (desc.conv_nat_to_nrm (val_nat));
-			done_flag = true;
-		}
+	return val_nrm;
+}
+
+
+
+double	Tools::change_param (double val_nrm, const piapi::PluginDescInterface &desc_pi, int index, float step, int dir)
+{
+	assert (index >= 0);
+	assert (dir != 0);
+
+	bool           done_flag = false;
+
+	const piapi::ParamDescInterface &   desc =
+		desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+
+	const piapi::ParamDescInterface::Range range = desc.get_range ();
+
+	// Uses a discrete range
+	if (range == piapi::ParamDescInterface::Range_DISCRETE)
+	{
+		double         val_nat = desc.conv_nrm_to_nat (val_nrm);
+		val_nat += dir;
+		const double   nat_min = desc.get_nat_min ();
+		const double   nat_max = desc.get_nat_max ();
+		val_nat   = fstb::limit (val_nat, nat_min, nat_max);
+		val_nrm   = float (desc.conv_nat_to_nrm (val_nat));
+		done_flag = true;
 	}
 
 	if (! done_flag)

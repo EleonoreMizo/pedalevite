@@ -90,6 +90,8 @@ public:
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir);
 	static double  change_param (double val_nrm, const Model &model, const View &view, int slot_id, PiType type, int index, float step, int step_index, int dir);
+	static double  change_param (double val_nrm, const View &view, const piapi::PluginDescInterface &desc_pi, const doc::PluginSettings &settings, int index, float step, int step_index, int dir);
+	static double  change_param (double val_nrm, const piapi::PluginDescInterface &desc_pi, int index, float step, int dir);
 	static int     find_ctrl_index (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
 	static std::string
 	               find_ctrl_name (const ControlSource &src, const std::vector <CtrlSrcNamed> &ctrl_list);
