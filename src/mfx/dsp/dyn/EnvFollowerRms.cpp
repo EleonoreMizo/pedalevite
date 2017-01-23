@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
+#include "mfx/dsp/dyn/EnvHelper.h"
 
 #include <cassert>
 
@@ -246,19 +247,12 @@ void	EnvFollowerRms::clear_buffers ()
 
 void	EnvFollowerRms::update_parameters ()
 {
-	_coef_a = 1;
-	const float		tasf = _time_a * _sample_freq;
-	if (tasf > 1)
-	{
-		_coef_a = float (1.0f - exp (-1.0f / tasf));
-	}
-
-	_coef_r = 1;
-	const float		trsf = _time_r * _sample_freq;
-	if (trsf > 1)
-	{
-		_coef_r = float (1.0f - exp (-1.0f / trsf));
-	}
+	_coef_a = float (
+		EnvHelper::compute_env_coef_simple (_time_a, _sample_freq)
+	);
+	_coef_r = float (
+		EnvHelper::compute_env_coef_simple (_time_r, _sample_freq)
+	);
 }
 
 

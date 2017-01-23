@@ -267,13 +267,15 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/DelayLineFracFir4Base.hpp \
         ../../src/mfx/dsp/dly/DelayLineReader.cpp \
         ../../src/mfx/dsp/dly/DelayLineReader.h \
-        ../../src/mfx/dsp/dly/EnvFollowerAHR4SimdHelper.h \
-        ../../src/mfx/dsp/dly/EnvFollowerAHR4SimdHelper.hpp \
-        ../../src/mfx/dsp/dly/EnvFollowerAR4SimdHelper.h \
-        ../../src/mfx/dsp/dly/EnvFollowerAR4SimdHelper.hpp \
+        ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.hpp \
+        ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.cpp \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.h \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.hpp \
+        ../../src/mfx/dsp/dyn/EnvHelper.h \
+        ../../src/mfx/dsp/dyn/EnvHelper.hpp \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold.cpp \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold.h \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.cpp \

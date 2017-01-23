@@ -352,6 +352,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvHelper.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\SCPower.h" />

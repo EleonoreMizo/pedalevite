@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/DataAlign.h"
 #include "fstb/fnc.h"
+#include "mfx/dsp/dyn/EnvHelper.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold4Simd.h"
 
 #include <algorithm>
@@ -255,30 +256,19 @@ void	MeterRmsPeakHold4Simd::clear_peak ()
 
 void	MeterRmsPeakHold4Simd::update_times ()
 {
-	_hold_time   = fstb::ceil_int (_sample_freq * _hold_time_s);
-	_coef_r      = 1;
-	const double   trsf = _release_time_s * _sample_freq;
-	if (trsf > 1)
-	{
-		_coef_r   = float (1.0 - exp (-1.0 / trsf));
-	}
-	const double   trsf4x = _release_time_s * (_sample_freq * 0.25);
-	if (trsf4x > 1)
-	{
-		_coef_r4x = float (1.0 - exp (-1.0 / trsf4x));
-	}
-	_coef_r2     = 1;
-	const double   tr2sf = _release_time_s * _sample_freq * 0.5;
-	if (tr2sf > 1)
-	{
-		_coef_r2  = float (1.0 - exp (-1.0 / tr2sf));
-	}
-	_coef_a2     = 1;
-	const double   ta2sf = _attack_time_s * _sample_freq * 0.5;
-	if (ta2sf > 1)
-	{
-		_coef_a2 = float (1.0 - exp (-1.0 / ta2sf));
-	}
+	_hold_time = fstb::ceil_int (_sample_freq * _hold_time_s);
+	_coef_r    = float (
+		EnvHelper::compute_env_coef_simple (_release_time_s, _sample_freq)
+	);
+	_coef_r4x  = float (
+		EnvHelper::compute_env_coef_simple (_release_time_s, _sample_freq * 0.25)
+	);
+	_coef_r2   = float (
+		EnvHelper::compute_env_coef_simple (_release_time_s, _sample_freq * 0.5)
+	);
+	_coef_a2   = float (
+		EnvHelper::compute_env_coef_simple (_attack_time_s, _sample_freq * 0.5)
+	);
 }
 
 

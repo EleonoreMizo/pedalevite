@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "mfx/dsp/dyn/EnvHelper.h"
 #include "mfx/pi/dist2/TransientAnalyser.h"
 
 #include <cassert>
@@ -165,14 +166,9 @@ float	TransientAnalyser::compute_coef (float t) const
 {
 	assert (_sample_freq > 0);
 
-	float          coef = 1;
-	const float    tsf  = t * _sample_freq;
-	if (tsf > 1)
-	{
-		coef = float (1.0f - exp (-1.0f / tsf));
-	}
-
-	return coef;
+	return float (
+		dsp::dyn::EnvHelper::compute_env_coef_simple (t, _sample_freq)
+	);
 }
 
 

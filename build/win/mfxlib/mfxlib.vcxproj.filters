@@ -1866,6 +1866,12 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditFxId.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvHelper.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvHelper.hpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
