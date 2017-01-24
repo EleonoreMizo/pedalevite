@@ -69,6 +69,9 @@ template <class VD, class VS, class VP, int ORD>
 class EnvFollowerAHR4SimdHelper
 {
 
+	static_assert ((ORD >= 1), "Filter order must be between 1 and 8.");
+	static_assert ((ORD <= 8), "Filter order must be between 1 and 8.");
+
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:

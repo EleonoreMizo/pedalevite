@@ -112,6 +112,31 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sam
 
 
 
+#define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD( fltn) \
+	fstb::ToolsSimd::VectF32   state##fltn; \
+	if (fltn - 1 < ORD) \
+	{ \
+		state##fltn = V128Par::load_f32 (_state [fltn - 1]); \
+	}
+#define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC( flt, fltn) \
+	if (flt < ORD) \
+	{ \
+		delta      = state##flt - state##fltn; \
+		delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero); \
+		coef       = fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r); \
+		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
+	}
+#define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT( ord) \
+	if (ord == ORD) \
+	{ \
+		V128Dest::store_f32 (out_ptr + pos, state##ord); \
+	}
+#define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE( fltn) \
+	if (fltn - 1 < ORD) \
+	{ \
+		V128Par::store_f32 (_state [fltn - 1],state##fltn); \
+	}
+
 // Input data must contain only positive values!
 // Can work in-place.
 template <class VD, class VS, class VP, int ORD>
@@ -121,47 +146,61 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd:
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	std::array <fstb::ToolsSimd::VectF32, ORD + 1>   state;
-	for (int flt = 0; flt < ORD; ++flt)
-	{
-		state [flt + 1] = V128Par::load_f32 (_state [flt]);
-	}
-
 	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
 	const auto     coef_a = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r = V128Par::load_f32 (_coef_rls);
 
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (1)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (2)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (3)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (4)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (5)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (6)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (7)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD (8)
+
 	long				pos = 0;
 	do
 	{
-		state [0] = V128Src::load_f32 (in_ptr + pos);
-		assert (test_ge_0 (state [0]));
+		const auto     state0 = V128Src::load_f32 (in_ptr + pos);
+		assert (test_ge_0 (state0));
 
-		for (int flt = 0; flt < ORD; ++flt)
-		{
-			const auto     delta      = state [flt] - state [flt + 1];
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (0, 2)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (1, 2)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (2, 3)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (3, 4)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (4, 5)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (5, 6)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (6, 7)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (7, 8)
 
-			// delta >  0 (attack)       ---> coef = _coef_atk
-			// delta <= 0 (release/hold) ---> coef = _coef_rls
-			const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
-			const auto     coef       =
-				fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
-
-			// state += coef * (in - state)
-			fstb::ToolsSimd::mac (state [flt + 1], delta, coef);
-		}
-
-		V128Dest::store_f32 (out_ptr + pos, state [ORD]);
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT (1)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT (2)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT (3)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT (4)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT (5)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT (6)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT (7)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT (8)
 
 		++ pos;
 	}
 	while (pos < nbr_spl);
 
-	for (int flt = 0; flt < ORD; ++flt)
-	{
-		V128Par::store_f32 (_state [flt], state [flt + 1]);
-	}
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (1)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (2)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (3)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (4)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (5)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (6)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (7)
+	mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE (8)
 }
+
+#undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_LOAD
+#undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC
+#undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT
+#undef mfx_dsp_dyn_EnvFollowerAR4SimdHelper_SAVE
 
 
 
@@ -174,7 +213,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out_
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	std::array <float, ORD + 1> state;
+	float          state [ORD + 1];
 	for (int flt = 0; flt < ORD; ++flt)
 	{
 		state [flt + 1] = _state [flt] [0];
