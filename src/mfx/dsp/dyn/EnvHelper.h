@@ -49,6 +49,8 @@ public:
 	               compute_env_coef_simple (double t, double fs);
 	static inline double
 	               compute_env_coef_w_zero (double t, double fs);
+	static inline double
+	               compensate_order (double t, int ord);
 
 
 

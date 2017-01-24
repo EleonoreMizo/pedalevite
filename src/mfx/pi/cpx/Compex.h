@@ -91,7 +91,8 @@ private:
 	typedef dsp::dyn::EnvFollowerAR4SimdHelper <
 		fstb::DataAlign <true>,
 		fstb::DataAlign <true>,
-		fstb::DataAlign <true>
+		fstb::DataAlign <true>,
+		1
 	> EnvFollower;
 
 	typedef dsp::iir::Biquad4Simd <

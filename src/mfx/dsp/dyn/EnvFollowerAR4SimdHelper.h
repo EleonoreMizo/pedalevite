@@ -23,6 +23,8 @@ Template parameters:
 - VP: same as VD, but for parametering and internal data.
 	Requires: same as VD.
 
+- ORD: filter order. >= 1
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -50,6 +52,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 
+#include <array>
+
 
 
 namespace mfx
@@ -61,9 +65,11 @@ namespace dyn
 
 
 
-template <class VD, class VS, class VP>
+template <class VD, class VS, class VP, int ORD>
 class EnvFollowerAR4SimdHelper
 {
+
+	static_assert ((ORD >= 1), "Filter order must be strictly positive");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -106,7 +112,7 @@ private:
 	fstb_FORCEINLINE static bool
 	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in);
 
-	VectFloat4Aligned
+	std::array <VectFloat4Aligned, ORD>
 	               _state;
 	VectFloat4Aligned
 	               _coef_atk;
@@ -119,11 +125,11 @@ private:
 
 private:
 
-	               EnvFollowerAR4SimdHelper (const EnvFollowerAR4SimdHelper <VD, VS, VP> &other) = delete;
-	EnvFollowerAR4SimdHelper <VD, VS, VP> &
-	               operator = (const EnvFollowerAR4SimdHelper <VD, VS, VP> &other)               = delete;
-	bool           operator == (const EnvFollowerAR4SimdHelper <VD, VS, VP> &other) const        = delete;
-	bool           operator != (const EnvFollowerAR4SimdHelper <VD, VS, VP> &other) const        = delete;
+	               EnvFollowerAR4SimdHelper (const EnvFollowerAR4SimdHelper <VD, VS, VP, ORD> &other) = delete;
+	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD> &
+	               operator = (const EnvFollowerAR4SimdHelper <VD, VS, VP, ORD> &other)               = delete;
+	bool           operator == (const EnvFollowerAR4SimdHelper <VD, VS, VP, ORD> &other) const        = delete;
+	bool           operator != (const EnvFollowerAR4SimdHelper <VD, VS, VP, ORD> &other) const        = delete;
 
 }; // class EnvFollowerAR4SimdHelper
 

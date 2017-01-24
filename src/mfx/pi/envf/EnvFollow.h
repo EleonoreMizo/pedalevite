@@ -82,7 +82,8 @@ private:
 	typedef dsp::dyn::EnvFollowerAHR4SimdHelper <
 		fstb::DataAlign <true>,
 		fstb::DataAlign <true>,
-		fstb::DataAlign <true>
+		fstb::DataAlign <true>,
+		1
 	> EnvFolHelper;
 	typedef fstb::SingleObj <EnvFolHelper> EnvFolAlign;
 

@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
+#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/pi/dist2/TransientAnalyser.h"
 
 #include <cassert>
@@ -47,6 +48,22 @@ namespace dist2
 
 
 
+void	TransientAnalyser::set_prefilter (bool enable_flag)
+{
+	_prefilter_flag = enable_flag;
+}
+
+
+
+void	TransientAnalyser::set_epsilon (float eps)
+{
+	assert (eps > sqrt (FLT_MIN));
+
+	_eps_sq = eps * eps;
+}
+
+
+
 void	TransientAnalyser::reset (double sample_freq, int max_block_size)
 {
 	assert (sample_freq > 0);
@@ -57,6 +74,21 @@ void	TransientAnalyser::reset (double sample_freq, int max_block_size)
 
 	const int      mbs_alig = (_max_block_size + 3) & -4;
 	_buf.resize (mbs_alig);
+
+	const float    bs [2] = { 0.125f, 3 };
+	const float    as [2] = { 1     , 1 };
+	float          bz [2];
+	float          az [2];
+	mfx::dsp::iir::TransSZBilin::map_s_to_z_one_pole (
+		bz, az, bs, as, 2000, sample_freq
+	);
+	for (int chn_cnt = 0; chn_cnt < int (_chn_arr.size ()); ++chn_cnt)
+	{
+		Channel &      chn = _chn_arr [chn_cnt];
+		chn._buf.resize (mbs_alig);
+		_buf_filter_ref_arr [chn_cnt] = &chn._buf [0];
+		chn._hpf.set_z_eq (bz, az);
+	}
 
 	// Attack, fast envelope
 	_env_helper->set_atk_coef (0, compute_coef (0.0001f));
@@ -84,15 +116,7 @@ void	TransientAnalyser::reset (double sample_freq, int max_block_size)
 
 
 
-void	TransientAnalyser::set_epsilon (float eps)
-{
-	assert (eps > sqrt (FLT_MIN));
-
-	_eps_sq = eps * eps;
-}
-
-
-
+// Pointers must be aligned to 16 bytes.
 // Stores the result as the log2 of the ratio between:
 // - the fast envelope and the slow envelope for the attack
 // - the slow envelope and the fast envelope for the sustain
@@ -104,7 +128,16 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 	assert (fstb::DataAlign <true>::check_ptr (atk_ptr));
 	assert (fstb::DataAlign <true>::check_ptr (sus_ptr));
 	assert (nbr_chn > 0);
+	assert (! _prefilter_flag || nbr_chn <= _max_nbr_chn);
 	assert (nbr_spl > 0);
+	assert (nbr_spl <= _max_block_size);
+
+	// Prefiltering
+	if (_prefilter_flag)
+	{
+		prefilter_block (src_ptr_arr, nbr_chn, nbr_spl);
+		src_ptr_arr = &_buf_filter_ref_arr [0];
+	}
 
 	// Converts everything to mono (squared)
 	perpare_mono_input (&_buf [0], src_ptr_arr, nbr_chn, nbr_spl);
@@ -169,6 +202,29 @@ float	TransientAnalyser::compute_coef (float t) const
 	return float (
 		dsp::dyn::EnvHelper::compute_env_coef_simple (t, _sample_freq)
 	);
+}
+
+
+
+void	TransientAnalyser::prefilter_block (const float * const src_ptr_arr [], int nbr_chn, int nbr_spl)
+{
+	assert (src_ptr_arr != 0);
+	assert (nbr_chn > 0);
+	assert (nbr_chn <= _max_nbr_chn);
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= _max_block_size);
+
+	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
+	{
+		assert (src_ptr_arr [chn_cnt] != 0);
+
+		Channel &      chn = _chn_arr [chn_cnt];
+		chn._hpf.process_block (
+			_buf_filter_ref_arr [chn_cnt],
+			src_ptr_arr [chn_cnt],
+			nbr_spl
+		);
+	}
 }
 
 

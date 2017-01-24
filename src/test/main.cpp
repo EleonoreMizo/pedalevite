@@ -4,6 +4,9 @@
 #include "fstb/DataAlign.h"
 #include "mfx/dsp/ctrl/lfo/LfoModule.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
+#include "mfx/dsp/dyn/EnvHelper.h"
+#include "mfx/dsp/iir/OnePole.h"
+#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/Param.h"
 #include "mfx/piapi/EventTs.h"
@@ -430,23 +433,6 @@ int	test_disto ()
 
 
 
-float	compute_env_coef (float t, double sample_freq)
-{
-	assert (sample_freq > 0);
-	assert (t >= 0);
-
-	float          coef = 1;
-	const double   tsf  = t * sample_freq;
-	if (tsf > 1)
-	{
-		coef = float (1.0f - exp (-1.0f / tsf));
-	}
-
-	return coef;
-}
-
-
-
 int	test_transients ()
 {
 	double         sample_freq;
@@ -457,10 +443,12 @@ int	test_transients ()
 
 	if (ret_val == 0)
 	{
+		static const int  order = 2;
 		typedef mfx::dsp::dyn::EnvFollowerAHR4SimdHelper <
 			fstb::DataAlign <true>,
 			fstb::DataAlign <true>,
-			fstb::DataAlign <true>
+			fstb::DataAlign <true>,
+			order
 		> EnvHelper;
 		typedef std::vector <
 			fstb::ToolsSimd::VectF32,
@@ -482,28 +470,41 @@ int	test_transients ()
 		const int      hold_time = fstb::round_int (sample_freq / min_freq);
 
 		// Attack, fast envelope
-		env.set_atk_coef (0, compute_env_coef (0.0001f, sample_freq));
-		env.set_rls_coef (0, compute_env_coef (0.050f, sample_freq));
+		env.set_atk_coef (0, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.0001f, order), sample_freq)));
+		env.set_rls_coef (0, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050f , order), sample_freq)));
 		env.set_hold_time (0, hold_time);
 
 		// Attack, slow envelope
-		env.set_atk_coef (1, compute_env_coef (0.050f, sample_freq));
-		env.set_rls_coef (1, compute_env_coef (0.050f, sample_freq));
+		env.set_atk_coef (1, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050f , order), sample_freq)));
+		env.set_rls_coef (1, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050f , order), sample_freq)));
 		env.set_hold_time (1, hold_time);
 
 		// Sustain, fast envelope
-		env.set_atk_coef (2, compute_env_coef (0.005f, sample_freq));
-		env.set_rls_coef (2, compute_env_coef (0.200f, sample_freq));
+		env.set_atk_coef (2, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.005f , order), sample_freq)));
+		env.set_rls_coef (2, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.200f , order), sample_freq)));
 		env.set_hold_time (2, hold_time);
 
 		// Sustain, slow envelope
-		env.set_atk_coef (3, compute_env_coef (0.005f, sample_freq));
-		env.set_rls_coef (3, compute_env_coef (0.600f, sample_freq));
+		env.set_atk_coef (3, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.005f , order), sample_freq)));
+		env.set_rls_coef (3, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.600f , order), sample_freq)));
 		env.set_hold_time (3, hold_time);
+
+		mfx::dsp::iir::OnePole  hpf;
+		const float    bs [2] = { 0.125f, 3 };
+		const float    as [2] = { 1     , 1 };
+		float          bz [2];
+		float          az [2];
+		mfx::dsp::iir::TransSZBilin::map_s_to_z_one_pole (
+			bz, az, bs, as, 2000, sample_freq
+		);
+		hpf.set_z_eq (bz, az);
 
 		for (size_t pos = 0; pos < len; ++pos)
 		{
-			auto           x = fstb::ToolsSimd::set1_f32 (fabs (chn_arr [0] [pos]));
+			float          a = chn_arr [0] [pos];
+			a = hpf.process_sample (a);
+
+			auto           x = fstb::ToolsSimd::set1_f32 (fabs (a));
 			x = env.process_sample (x);
 			for (int chn = 0; chn < 4; ++chn)
 			{

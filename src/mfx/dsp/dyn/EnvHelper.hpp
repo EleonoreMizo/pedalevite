@@ -79,6 +79,17 @@ double	EnvHelper::compute_env_coef_w_zero (double t, double fs)
 
 
 
+// Computes a new time compensating the latency caused by filter orders > 1,
+// so the 90% rise time remains more or less constant.
+double	EnvHelper::compensate_order (double t, int ord)
+{
+	assert (ord >= 1);
+
+	return t * 3 / (ord * 2 + 1);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

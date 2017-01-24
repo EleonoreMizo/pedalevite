@@ -37,8 +37,8 @@ namespace dyn
 
 
 
-template <class VD, class VS, class VP>
-EnvFollowerAR4SimdHelper <VD, VS, VP>::EnvFollowerAR4SimdHelper ()
+template <class VD, class VS, class VP, int ORD>
+EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::EnvFollowerAR4SimdHelper ()
 /*:	_state ()
 ,	_coef_atk ()
 ,	_coef_rls ()*/
@@ -52,8 +52,8 @@ EnvFollowerAR4SimdHelper <VD, VS, VP>::EnvFollowerAR4SimdHelper ()
 
 
 
-template <class VD, class VS, class VP>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP>::set_atk_coef (int env, float coef)
+template <class VD, class VS, class VP, int ORD>
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_atk_coef (int env, float coef)
 {
 	assert (env >= 0);
 	assert (env < _nbr_env);
@@ -65,8 +65,8 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP>::set_atk_coef (int env, float coef)
 
 
 
-template <class VD, class VS, class VP>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP>::set_rls_coef (int env, float coef)
+template <class VD, class VS, class VP, int ORD>
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::set_rls_coef (int env, float coef)
 {
 	assert (env >= 0);
 	assert (env < _nbr_env);
@@ -79,29 +79,33 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP>::set_rls_coef (int env, float coef)
 
 
 // in must contain only positive values!
-template <class VD, class VS, class VP>
-fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP>::process_sample (const fstb::ToolsSimd::VectF32 &in)
+template <class VD, class VS, class VP, int ORD>
+fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sample (const fstb::ToolsSimd::VectF32 &in)
 {
 	assert (test_ge_0 (in));
 
-	auto           state      = V128Par::load_f32 (_state);
-
 	const auto     zero       = fstb::ToolsSimd::set_f32_zero ();
-	const auto     delta      = in - state;
-	const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
-
-	// delta >  0 (attack)       ---> coef = _coef_atk
-	// delta <= 0 (release/hold) ---> coef = _coef_rls
 	const auto     coef_a     = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r     = V128Par::load_f32 (_coef_rls);
-	const auto     coef       =
-		fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
 
-	// state += coef * (in - state)
-	const auto     delta_coef = delta * coef;
-	state += delta_coef;
+	auto           state      = V128Par::load_f32 (_state [0]);
 
-	V128Par::store_f32 (_state, state);
+	for (int flt = 0; flt < ORD; ++flt)
+	{
+		const auto     prev       = state;
+		state = V128Par::load_f32 (_state [flt]);
+		const auto     delta      = prev - state;
+
+		// delta >  0 (attack)       ---> coef = _coef_atk
+		// delta <= 0 (release/hold) ---> coef = _coef_rls
+		const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
+		const auto     coef       =
+			fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
+
+		// state += coef * (in - state)
+		fstb::ToolsSimd::mac (state, delta, coef);
+		V128Par::store_f32 (_state [flt], state);
+	}
 
 	return state;
 }
@@ -110,14 +114,18 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP>::process_sample (
 
 // Input data must contain only positive values!
 // Can work in-place.
-template <class VD, class VS, class VP>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP>::process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl)
+template <class VD, class VS, class VP, int ORD>
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl)
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	auto           state  = V128Par::load_f32 (_state);
+	std::array <fstb::ToolsSimd::VectF32, ORD + 1>   state;
+	for (int flt = 0; flt < ORD; ++flt)
+	{
+		state [flt + 1] = V128Par::load_f32 (_state [flt]);
+	}
 
 	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
 	const auto     coef_a = V128Par::load_f32 (_coef_atk);
@@ -126,68 +134,86 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP>::process_block (fstb::ToolsSimd::Vect
 	long				pos = 0;
 	do
 	{
-		const auto     in = V128Src::load_f32 (in_ptr + pos);
-		assert (test_ge_0 (in));
+		state [0] = V128Src::load_f32 (in_ptr + pos);
+		assert (test_ge_0 (state [0]));
 
-		const auto     delta      = in - state;
-		const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
+		for (int flt = 0; flt < ORD; ++flt)
+		{
+			const auto     delta      = state [flt] - state [flt + 1];
 
-		// delta >  0 (attack)       ---> coef = _coef_atk
-		// delta <= 0 (release/hold) ---> coef = _coef_rls
-		const auto     coef       =
-			fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
+			// delta >  0 (attack)       ---> coef = _coef_atk
+			// delta <= 0 (release/hold) ---> coef = _coef_rls
+			const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
+			const auto     coef       =
+				fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
 
-		// state += coef * (in - state)
-		const auto     delta_coef = delta * coef;
-		state += delta_coef;
+			// state += coef * (in - state)
+			fstb::ToolsSimd::mac (state [flt + 1], delta, coef);
+		}
 
-		V128Dest::store_f32 (out_ptr + pos, state);
+		V128Dest::store_f32 (out_ptr + pos, state [ORD]);
 
 		++ pos;
 	}
 	while (pos < nbr_spl);
 
-	V128Par::store_f32 (_state, state);
+	for (int flt = 0; flt < ORD; ++flt)
+	{
+		V128Par::store_f32 (_state [flt], state [flt + 1]);
+	}
 }
 
 
 
 // Input data must contain only positive values!
 // Can work in-place.
-template <class VD, class VS, class VP>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP>::process_block_1_chn (float out_ptr [], const float in_ptr [], long nbr_spl)
+template <class VD, class VS, class VP, int ORD>
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	float          state = _state [0];
+	std::array <float, ORD + 1> state;
+	for (int flt = 0; flt < ORD; ++flt)
+	{
+		state [flt + 1] = _state [flt] [0];
+	}
 
 	long           pos = 0;
 	do
 	{
-		const float    in    = in_ptr [pos];
-		assert (in >= 0);
+		state [0] = in_ptr [pos];
+		assert (state [0] >= 0);
 
-		const float    delta = in - state;
-		const float    coef  = (delta > 0) ? _coef_atk [0] : _coef_rls [0];
-		state += delta * coef;
+		for (int flt = 0; flt < ORD; ++flt)
+		{
+			const float    delta = state [flt] - state [flt + 1];
+			const float    coef  = (delta > 0) ? _coef_atk [0] : _coef_rls [0];
+			state [flt + 1] += delta * coef;
+		}
 
-		out_ptr [pos] = state;
+		out_ptr [pos] = state [ORD];
 
 		++ pos;
 	}
 	while (pos < nbr_spl);
 
-	_state [0] = state;
+	for (int flt = 0; flt < ORD; ++flt)
+	{
+		_state [flt] [0] = state [flt + 1];
+	}
 }
 
 
 
-template <class VD, class VS, class VP>
-void	EnvFollowerAR4SimdHelper <VD, VS, VP>::clear_buffers ()
+template <class VD, class VS, class VP, int ORD>
+void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::clear_buffers ()
 {
-	V128Par::store_f32 (_state, fstb::ToolsSimd::set_f32_zero ());
+	for (int flt = 0; flt < ORD; ++flt)
+	{
+		V128Par::store_f32 (_state [flt], fstb::ToolsSimd::set_f32_zero ());
+	}
 }
 
 
@@ -200,8 +226,8 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP>::clear_buffers ()
 
 
 
-template <class VD, class VS, class VP>
-bool	EnvFollowerAR4SimdHelper <VD, VS, VP>::test_ge_0 (const fstb::ToolsSimd::VectF32 &in)
+template <class VD, class VS, class VP, int ORD>
+bool	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::test_ge_0 (const fstb::ToolsSimd::VectF32 &in)
 {
 	return (
 		   fstb::ToolsSimd::Shift <0>::extract (in) >= 0
