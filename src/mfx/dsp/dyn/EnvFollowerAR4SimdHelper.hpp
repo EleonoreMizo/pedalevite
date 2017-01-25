@@ -121,9 +121,9 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sam
 #define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC( flt, fltn) \
 	if (flt < ORD) \
 	{ \
-		delta      = state##flt - state##fltn; \
-		delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero); \
-		coef       = fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r); \
+		const auto     delta      = state##flt - state##fltn; \
+		const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero); \
+		const auto     coef       = fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r); \
 		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT( ord) \

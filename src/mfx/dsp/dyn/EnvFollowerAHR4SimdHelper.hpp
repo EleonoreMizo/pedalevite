@@ -286,7 +286,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out
 		state [0] = in_ptr [pos];
 		assert (state [0] >= 0);
 
-		const float    delta = state [0] - state [1];
+		float          delta = state [0] - state [1];
 		float          coef  = 0;
 		if (delta > 0)
 		{
@@ -308,8 +308,8 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out
 
 		for (int flt = 1; flt < ORD; ++flt)
 		{
-			const float    delta = state [flt] - state [flt + 1];
-			const float    coef  = (delta > 0) ? _coef_atk [0] : _coef_rls [0];
+			delta = state [flt] - state [flt + 1];
+			coef  = (delta > 0) ? _coef_atk [0] : _coef_rls [0];
 			state [flt + 1] += delta * coef;
 		}
 

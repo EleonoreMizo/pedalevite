@@ -52,8 +52,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 
-#include <array>
-
 
 
 namespace mfx
@@ -113,8 +111,8 @@ private:
 	fstb_FORCEINLINE static bool
 	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in);
 
-	std::array <VectFloat4Aligned, ORD>
-	               _state;
+	VectFloat4Aligned
+	               _state [ORD];
 	VectFloat4Aligned
 	               _coef_atk;
 	VectFloat4Aligned
