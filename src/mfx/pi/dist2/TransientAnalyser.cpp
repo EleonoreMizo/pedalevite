@@ -93,22 +93,22 @@ void	TransientAnalyser::reset (double sample_freq, int max_block_size)
 
 	// Attack, fast envelope
 	_env_helper->set_atk_coef (0, compute_coef (0.0001f));
-	_env_helper->set_rls_coef (0, compute_coef (0.050f));
+	_env_helper->set_rls_coef (0, compute_coef (0.015f));
 
 	// Attack, slow envelope
-	_env_helper->set_atk_coef (1, compute_coef (0.050f));
-	_env_helper->set_rls_coef (1, compute_coef (0.050f));
+	_env_helper->set_atk_coef (1, compute_coef (0.015f));
+	_env_helper->set_rls_coef (1, compute_coef (0.015f));
 
 	// Sustain, fast envelope
-	_env_helper->set_atk_coef (2, compute_coef (0.005f));
-	_env_helper->set_rls_coef (2, compute_coef (0.200f));
+	_env_helper->set_atk_coef (2, compute_coef (0.004f));
+	_env_helper->set_rls_coef (2, compute_coef (0.150f));
 
 	// Sustain, slow envelope
-	_env_helper->set_atk_coef (3, compute_coef (0.005f));
-	_env_helper->set_rls_coef (3, compute_coef (0.600f));
+	_env_helper->set_atk_coef (3, compute_coef (0.004f));
+	_env_helper->set_rls_coef (3, compute_coef (0.450f));
 
-	const double   min_freq = 50; // Hz
-	const int      hold_time = fstb::round_int (sample_freq / min_freq);
+	const double   min_freq = 50; // Hz. * 0.5 because of absolute value
+	const int      hold_time = fstb::round_int (0.5 * sample_freq / min_freq);
 	for (int e = 0; e < EnvHelper::_nbr_env; ++e)
 	{
 		_env_helper->set_hold_time (e, hold_time);
