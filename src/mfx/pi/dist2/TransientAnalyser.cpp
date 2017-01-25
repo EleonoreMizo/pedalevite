@@ -88,6 +88,7 @@ void	TransientAnalyser::reset (double sample_freq, int max_block_size)
 		chn._buf.resize (mbs_alig);
 		_buf_filter_ref_arr [chn_cnt] = &chn._buf [0];
 		chn._hpf.set_z_eq (bz, az);
+		chn._hpf.clear_buffers ();
 	}
 
 	// Attack, fast envelope
