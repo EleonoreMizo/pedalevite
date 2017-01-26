@@ -56,6 +56,7 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 ,	_rel_phase (0)
 ,	_tmp_buf_arr ()
 ,	_nbr_voices (1)
+,	_voice_vol (1)
 ,	_period (1)
 ,	_delay (Cst::_delay_max * 0.5e-6)
 ,	_depth (0.5)
@@ -195,6 +196,7 @@ void	FlanchoChn::set_nbr_voices (int nbr_voices)
 	}
 
 	_nbr_voices = nbr_voices;
+	_voice_vol  = sqrt (2.0f / float (_nbr_voices + 1));
 }
 
 
@@ -341,30 +343,23 @@ void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], long nb
 			// render_ptr contains the delay line output.
 			voice._dly_reader.read_data (render_ptr, work_len, 0);
 
+			float          vol = float (_voice_vol);
+			if (_neg_flag)
+			{
+				vol = -vol;
+			}
+
 			if (work_len == 1)
 			{
-				float          val = render_ptr [0];
+				float          val     = render_ptr [0];
+				const float    val_vol = val * vol;
 				if (v_cnt == last_voice)
 				{
-					if (_neg_flag)
-					{
-						out_ptr [block_pos] = -val;
-					}
-					else
-					{
-						out_ptr [block_pos] = val;
-					}
+					out_ptr [block_pos] = val_vol;
 				}
 				else
 				{
-					if (_neg_flag)
-					{
-						out_ptr [block_pos] -= val;
-					}
-					else
-					{
-						out_ptr [block_pos] += val;
-					}
+					out_ptr [block_pos] += val_vol;
 				}
 
 				if (v_cnt == 0)
@@ -382,13 +377,13 @@ void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], long nb
 				if (v_cnt == last_voice)
 				{
 					// Copies to the output
-					if (_neg_flag)
+					if (vol != 1)
 					{
 						dsp::mix::Generic::copy_1_1_v (
 							out_ptr + block_pos,
 							render_ptr,
 							work_len,
-							-1
+							vol
 						);
 					}
 					else
@@ -404,13 +399,13 @@ void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], long nb
 				// Other voices: just mix the output
 				else
 				{
-					if (_neg_flag)
+					if (vol != 1)
 					{
 						dsp::mix::Generic::mix_1_1_v (
 							out_ptr + block_pos,
 							render_ptr,
 							work_len,
-							-1
+							vol
 						);
 					}
 					else

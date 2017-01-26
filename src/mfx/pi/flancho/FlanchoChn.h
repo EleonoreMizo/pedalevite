@@ -156,6 +156,7 @@ private:
 	double         _rel_phase;    // Relative to the main absolute phase. [0 ; 1[
 	TmpBufArray    _tmp_buf_arr;
 	int            _nbr_voices;
+	double         _voice_vol;    // Voice relative volume, depends on _nbr_voices
 	double         _period;       // s
 	double         _delay;        // s
 	double         _depth;        // [0 ; 1]
