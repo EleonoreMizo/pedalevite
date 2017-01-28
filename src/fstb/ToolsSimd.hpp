@@ -89,6 +89,7 @@ void	ToolsSimd::storeu_f32 (void *ptr, VectF32 v)
 
 
 
+// Returns: ptr [0] | ptr [1] | ? | ?
 ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const void *ptr)
 {
 	assert (ptr != 0);
@@ -108,6 +109,8 @@ ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const void *ptr)
 
 
 
+// ptr [0] = v0
+// ptr [1] = v1
 void	ToolsSimd::storeu_2f32 (void *ptr, VectF32 v)
 {
 	assert (ptr != 0);
@@ -126,6 +129,7 @@ void	ToolsSimd::storeu_2f32 (void *ptr, VectF32 v)
 
 
 
+// *ptr = v0
 void	ToolsSimd::storeu_1f32 (void *ptr, VectF32 v)
 {
 	assert (ptr != 0);
@@ -150,6 +154,7 @@ ToolsSimd::VectF32	ToolsSimd::set_f32_zero ()
 
 
 
+// Returns a0 | a0 | a0 | a0
 ToolsSimd::VectF32	ToolsSimd::set1_f32 (float a)
 {
 #if fstb_IS (ARCHI, X86)
@@ -161,6 +166,7 @@ ToolsSimd::VectF32	ToolsSimd::set1_f32 (float a)
 
 
 
+// Returns a0 | a1 | a2 | a3
 ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3)
 {
 #if fstb_IS (ARCHI, X86)
@@ -187,12 +193,68 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3)
 
 
 
+// Returns a0 | a1 | ? | ?
 ToolsSimd::VectF32	ToolsSimd::set_2f32 (float a0, float a1)
 {
 #if fstb_IS (ARCHI, X86)
 	return _mm_unpacklo_ps (_mm_set_ss (a0), _mm_set_ss (a1));
 #elif fstb_IS (ARCHI, ARM)
 	return vsetq_lane_f32 (a1, vdupq_n_f32 (a0), 1);
+#endif // ff_arch_CPU
+}
+
+
+
+// Returns a0 | a1 | a0 | a1
+ToolsSimd::VectF32	ToolsSimd::set_2f32_fill (float a02, float a13)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_unpacklo_ps (_mm_set1_ps (a02), _mm_set1_ps (a13));
+#elif fstb_IS (ARCHI, ARM)
+	const float32x2_t v01 = vset_lane_f32 (a13, vdup_n_f32 (a02), 1);
+	return vcombine_f32 (v01, v01);
+#endif // ff_arch_CPU
+}
+
+
+
+// Returns a01 | a01 | a23 | a23
+ToolsSimd::VectF32	ToolsSimd::set_2f32_dbl (float a01, float a23)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_shuffle_ps (_mm_set_ss (a01), _mm_set_ss (a23), 0x00);
+#elif fstb_IS (ARCHI, ARM)
+	return vcombine_f32 (vdup_n_f32 (a01), vdup_n_f32 (a23));
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::swap_2f32 (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_shuffle_ps (v, v, (2<<0) + (3<<2) + (0<<4) + (1<<6));
+#elif fstb_IS (ARCHI, ARM)
+	const float32x2_t v01 = vget_low_f32 (v);
+	const float32x2_t v23 = vget_high_f32 (v);
+	return vcombine_f32 (v23, v01);
+#endif // ff_arch_CPU
+}
+
+
+
+// ra = v0 | v1 | v0 | v1
+// rb = v2 | v3 | v2 | v3
+void	ToolsSimd::spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	ra = _mm_shuffle_ps (v, v, (0<<0) + (1<<2) + (0<<4) + (1<<6));
+	rb = _mm_shuffle_ps (v, v, (2<<0) + (3<<2) + (2<<4) + (3<<6));
+#elif fstb_IS (ARCHI, ARM)
+	const float32x2_t v01 = vget_low_f32 (v);
+	const float32x2_t v23 = vget_high_f32 (v);
+	ra = vcombine_f32 (v01, v01);
+	rb = vcombine_f32 (v23, v23);
 #endif // ff_arch_CPU
 }
 

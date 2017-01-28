@@ -103,6 +103,14 @@ public:
 	               set_f32 (float a0, float a1, float a2, float a3);
 	static inline VectF32
 	               set_2f32 (float a0, float a1);
+	static inline VectF32
+	               set_2f32_fill (float a02, float a13);
+	static inline VectF32
+	               set_2f32_dbl (float a01, float a23);
+	static inline VectF32
+	               swap_2f32 (VectF32 v);
+	static inline void
+	               spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v);
 	static inline void
 	               mac (VectF32 &s, VectF32 a, VectF32 b);
 	static inline void
