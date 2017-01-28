@@ -64,6 +64,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/tost/ToStereoDesc.h"
 #include "mfx/pi/trem1/Tremolo.h"
 #include "mfx/pi/trem1/TremoloDesc.h"
+#include "mfx/pi/tremh/HarmTrem.h"
+#include "mfx/pi/tremh/HarmTremDesc.h"
 #include "mfx/pi/tuner/Tuner.h"
 #include "mfx/pi/tuner/TunerDesc.h"
 #include "mfx/pi/wha1/Wha.h"
@@ -106,7 +108,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::dist2::Disto2xDesc    , mfx::pi::dist2::Disto2x          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::spkem::SpeakerEmuDesc , mfx::pi::spkem::SpeakerEmu       >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::tost::ToStereoDesc    , mfx::pi::tost::ToStereo          >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::distpwm::DistoPwmDesc , mfx::pi::distpwm::DistoPwm       >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::distpwm::DistoPwmDesc , mfx::pi::distpwm::DistoPwm       >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::tremh::HarmTremDesc   , mfx::pi::tremh::HarmTrem         >::create ()
 		};
 
 		fact_list = l;

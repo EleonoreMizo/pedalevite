@@ -533,6 +533,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereo.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\tremh\HarmTrem.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\tremh\LfoType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\tremh\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\ToolsParam.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\EventNoteOff.h" />
@@ -846,6 +850,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTrem.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginDescInterface.cpp" />

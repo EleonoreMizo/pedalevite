@@ -48,6 +48,7 @@
 	<li><a href="#fx-flancho">FlanCho — Chorus et flanger</a></li>
 	<li><a href="#fx-freeverb">Freeverb — Réverbération</a></li>
 	<li><a href="#fx-freq-shift">Frequency Shifter — Translateur de fréquences</a></li>
+	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Trémolo bi-bande</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix — Adaptation d’impédance d’entrée</a></li>
 	<li><a href="#fx-peq">Parametric Equalizer — Égaliseur paramétrique</a></li>
 	<li><a href="#fx-phaser">Phaser</a></li>
@@ -1103,6 +1104,71 @@ Elle peut être négative ou positive.</p>
 
 
 
+<h3><a id="fx-tremolo-harm"></a>Harmonic Tremolo — Trémolo bi-bande</h3>
+
+<p>C’est une variation de l’effet de <a href="#fx-tremolo">trémolo</a>
+qu’on retrouve dans les vieux amplificateurs Fender Brownface.
+Le son est divisé en deux bandes, les basses et les aigus.
+Les deux bandes sont modulées en amplitude par deux signaux opposés
+issus du LFO.
+Le son alterne ainsi entre les aigus et les graves.</p>
+
+<p class="var">Speed</p>
+<p>Vitesse des oscillations, en Hz.</p>
+
+<p class="var">Amount</p>
+<p>Quantité d’oscillations.
+À 100&#8239;%, le son modulé est silencieux sur la partie la plus basse du
+LFO.
+Il est possible d’aller bien au-delà de cette valeur de façon à créer un effet
+plus dur, qui ressemble à une <i><span lang="en">gate</span></i>.</p>
+
+<p class="var">Bass</p>
+<p>Amplitude du signal de LFO utilisé pour modulé les graves.
+À 0, le son n’est pas modulé.</p>
+
+<p class="var">Treble</p>
+<p>Amplitude du signal de LFO utilisé pour modulé les aigus.
+À 0, le son n’est pas modulé.
+Les résultats les plus probants sont obtenus quand les amplitudes des
+aigus et des graves sont de signe opposé.</p>
+
+<p class="var">Cutoff frequency</p>
+<p>Fréquence de séparation entre les graves et les aigus, en Hz.</p>
+
+<p class="var">Gain saturation</p>
+<p>Indique à quel point les parties positives du LFO doivent être saturées de
+façon à ne pas provoquer de montée de volume exagérées quand <var>Amount</var>
+prend des valeurs un peu élevées.</p>
+
+<p class="var">Bias</p>
+<p>Offset à appliquer à la valeur générée par le LFO de façon à déplacer sa
+courbe plutôt dans les basses amplitudes ou dans les hautes amplitudes.
+Cela permet de créer un son plus ou moins dense, en particulier quand
+<var>Amount</var> est élevé.
+Dans ce cas, le trémolo se comporte comme une
+<i><span lang="en">gate</span></i> et ce paramètre permet de régler son
+temps d’ouverture.</p>
+
+<p class="var">Tone</p>
+<p>Permet d’ajuster la proportion entre graves et aigus.
+Les valeurs négatives atténuent les aigus, et les positives les graves.</p>
+
+<p class="var">Stereo</p>
+<p>Quand la sortie de l’effet est stéréo, ce paramètre permet d’élargir
+l’image stéréo, en particulier quand la source est mono.
+Les modulation se font avec un signe opposé sur les deux canaux.
+Attention, si le son repasse en mono ultérieurement, l’effet est en grande
+partie perdu.</p>
+
+<p class="var">Waveform, Sample and hold, Smoothing, Chaos amount, Phase
+distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
+Phase set</p>
+<p>Ces paramètres sont identiques à ceux de l’effet
+<a href="fx-lfo">LFO</a>.</p>
+
+
+
 <h3><a id="fx-imp-fix"></a>Input Impedance Fix — Adaptation d’impédance d’entrée</h3>
 
 <p>Cet effet permet de corriger en quelque sorte l’impédance d’entrée de la
@@ -1484,6 +1550,11 @@ sélectionnée.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r1, 2017.01.28</b></p>
+<ul>
+<li>Ajout de l’effet Harmonic tremolo.</li>
+</ul>
 
 <p><b>r0, 2016.11.29</b></p>
 <ul>
