@@ -85,10 +85,10 @@ LfoDesc::LfoDesc ()
 	_desc_set.add_glob (Param_WAVEFORM, enu_ptr);
 	assert (enu_ptr->get_nat_max () == LfoType_NBR_ELT - 1);
 
-	// Sample and Hold
+	// Sample and hold
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"SnH\nSplHold\nSample & Hold\nSample And Hold",
+		"SnH\nSplHold\nSample & hold\nSample and hold",
 		"%",
 		0,
 		"%5.1f"
@@ -107,10 +107,10 @@ LfoDesc::LfoDesc ()
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
 	_desc_set.add_glob (Param_SMOOTH, lin_ptr);
 
-	// Chaos Amount
+	// Chaos amount
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"C\nChaos\nChaos Amt\nChaos Amount",
+		"C\nChaos\nChaos Amt\nChaos amount",
 		"%",
 		0,
 		"%5.1f"
@@ -118,10 +118,10 @@ LfoDesc::LfoDesc ()
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
 	_desc_set.add_glob (Param_CHAOS, lin_ptr);
 
-	// Phase Distortion Amount
+	// Phase distortion amount
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"PDA\nPhDistA\nPhDistAmt\nPhase Dist Amt\nPhase Dist Amount\nPhase Distortion Amount",
+		"PDA\nPhDistA\nPhDistAmt\nPhase dist amt\nPhase dist amount\nPhase distortion amount",
 		"%",
 		0,
 		"%5.1f"
@@ -129,10 +129,10 @@ LfoDesc::LfoDesc ()
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
 	_desc_set.add_glob (Param_PH_DIST_AMT, lin_ptr);
 
-	// Phase Distortion Offset
+	// Phase distortion offset
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"PDO\nPhDistO\nPhDistOfs\nPhase Dist Ofs\nPhase Dist Offset\nPhase Distortion Offset",
+		"PDO\nPhDistO\nPhDistOfs\nPhase dist ofs\nPhase dist offset\nPhase distortion offset",
 		"%",
 		0,
 		"%5.1f"
@@ -182,10 +182,10 @@ LfoDesc::LfoDesc ()
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
 	_desc_set.add_glob (Param_VAR2, lin_ptr);
 
-	// Phase Set
+	// Phase set
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"PS\nPh Set\nPhase Set",
+		"PS\nPh set\nPhase set",
 		"deg",
 		0,
 		"%3.0f"
