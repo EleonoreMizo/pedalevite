@@ -540,6 +540,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/trem1/TremoloDesc.cpp \
         ../../src/mfx/pi/trem1/TremoloDesc.h \
         ../../src/mfx/pi/trem1/Waveform.h \
+        ../../src/mfx/pi/tremh/HarmTrem.cpp \
+        ../../src/mfx/pi/tremh/HarmTrem.h \
+        ../../src/mfx/pi/tremh/HarmTremDesc.cpp \
+        ../../src/mfx/pi/tremh/HarmTremDesc.h \
+        ../../src/mfx/pi/tremh/LfoType.h \
+        ../../src/mfx/pi/tremh/Param.h \
         ../../src/mfx/pi/tuner/FreqAnalyser.cpp \
         ../../src/mfx/pi/tuner/FreqAnalyser.h \
         ../../src/mfx/pi/tuner/Tuner.cpp \
