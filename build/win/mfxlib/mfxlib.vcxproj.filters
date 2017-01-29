@@ -1893,6 +1893,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\LfoType.h">
       <Filter>mfx\pi\tremh</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\BandParam.h">
+      <Filter>mfx\pi\peq</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2620,6 +2623,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.cpp">
       <Filter>mfx\pi\tremh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\peq\BandParam.cpp">
+      <Filter>mfx\pi\peq</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

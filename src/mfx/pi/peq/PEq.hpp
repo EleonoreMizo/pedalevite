@@ -23,8 +23,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
-#include "mfx/dsp/iir/DesignEq2p.h"
-#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/pi/peq/Param.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
@@ -264,11 +262,13 @@ bool	PEq <NB>::BandInfo::is_active () const
 template <int NB>
 bool PEq <NB>::BandInfo::is_bypass () const
 {
-	bool ret_val = _bypass_flag;
+	bool           ret_val = _param.is_bypass ();
+	const PEqType  type    = _param.get_type ();
 
-	if (_type != PEqType_LP && _type != PEqType_HP)
+	if (type != PEqType_LP && type != PEqType_HP)
 	{
-		ret_val |= is_unit_gain (_gain);
+		const float    gain = _param.get_gain ();
+		ret_val |= is_unit_gain (gain);
 	}
 
 	return ret_val;
@@ -428,18 +428,19 @@ void	PEq <NB>::collect_parameters (int band)
 	assert (band >= 0);
 	assert (band <= _nbr_bands);
 
-	BandInfo &     b_info = _band_info_arr [band];
+	BandParam &    b_param = _band_info_arr [band]._param;
 
-	const int      base   = DescType::compute_param_base (band);
+	const int      base    = DescType::compute_param_base (band);
 
-	b_info._freq = float (_state_set.get_val_end_nat (base + Param_FREQ));
-	b_info._q    = float (_state_set.get_val_end_nat (base + Param_Q));
-	b_info._gain = float (_state_set.get_val_end_nat (base + Param_GAIN));
-	b_info._type = static_cast <PEqType> (fstb::round_int (
+	b_param.set_freq (float (_state_set.get_val_end_nat (base + Param_FREQ)));
+	b_param.set_q    (float (_state_set.get_val_end_nat (base + Param_Q)));
+	b_param.set_gain (float (_state_set.get_val_end_nat (base + Param_GAIN)));
+	b_param.set_type (static_cast <PEqType> (fstb::round_int (
 		_state_set.get_val_tgt_nat (base + Param_TYPE)
-	));
-	b_info._bypass_flag =
-		(_state_set.get_val_tgt_nat (base + Param_BYPASS) >= 0.5f);
+	)));
+	b_param.set_bypass (
+		(_state_set.get_val_tgt_nat (base + Param_BYPASS) >= 0.5f)
+	);
 }
 
 
@@ -453,52 +454,9 @@ void	PEq <NB>::update_filter_eq (int band)
 
 	BandInfo &     b_info = _band_info_arr [band];
 
-	float          bs [3];
-	float          as [3];
 	float          bz [3];
 	float          az [3];
-	bool           z_flag = false;
-
-	switch (b_info._type)
-	{
-	case	PEqType_PEAK:
-#if 1	// This design requires more calculations
-		dsp::iir::DesignEq2p::make_nyq_peak (
-			bz,
-			az,
-			b_info._q,
-			b_info._gain,
-			b_info._freq,
-			_sample_freq
-		);
-		z_flag = true;
-#else
-		dsp::iir::DesignEq2p::make_mid_peak (bs, as, b_info._q, b_info._gain);
-#endif
-		break;
-	case	PEqType_SHELF_LO:
-		dsp::iir::DesignEq2p::make_mid_shelf_lo (bs, as, b_info._q, b_info._gain);
-		break;
-	case	PEqType_HP:
-		dsp::iir::DesignEq2p::make_hi_pass (bs, as, b_info._q);
-		break;
-	case	PEqType_SHELF_HI:
-		dsp::iir::DesignEq2p::make_mid_shelf_hi (bs, as, b_info._q, b_info._gain);
-		break;
-	case	PEqType_LP:
-		dsp::iir::DesignEq2p::make_low_pass (bs, as, b_info._q);
-		break;
-	default:
-		assert (false);
-		break;
-	}
-
-	if (! z_flag)
-	{
-		const float    k =
-			dsp::iir::TransSZBilin::compute_k_approx (b_info._freq * _inv_fs);
-		dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bs, as, k);
-	}
+	b_info._param.create_filter (bz, az, _sample_freq, _inv_fs);
 
 	const int		stage_index = b_info._stage_index;
 	for (int chn = 0; chn < _nbr_chn; ++chn)

@@ -35,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/DataAlign.h"
 #include "mfx/dsp/iir/BiquadPackSimd.h"
+#include "mfx/pi/peq/BandParam.h"
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/peq/PEqType.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -72,6 +73,8 @@ public:
 	               PEq ();
 	virtual        ~PEq () = default;
 
+	static void    create_filter_for_band (float bz [3], float az [3], const BandParam &param, float fs, float inv_fs);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -101,11 +104,7 @@ private:
 		bool           is_active () const;
 		bool           is_bypass () const;
 
-		float          _gain        =    1;       // Cached parameters
-		float          _freq        = 1000;
-		float          _q           =    1;
-		PEqType        _type        = PEqType_PEAK;
-		bool           _bypass_flag = false;
+		BandParam      _param;                    // Cached parameters
 
 		long           _neutral_duration =  0;    // Time elapsed (samples) since a band is considered as neutral. If == _neutral_time, band is removed from the pack.
 		int            _stage_index      = -1;    // Stage index in the biquad pack. -1: deactivated.

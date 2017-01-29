@@ -478,6 +478,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/lpfs/Squeezer.h \
         ../../src/mfx/pi/lpfs/SqueezerDesc.cpp \
         ../../src/mfx/pi/lpfs/SqueezerDesc.h \
+        ../../src/mfx/pi/peq/BandParam.cpp \
+        ../../src/mfx/pi/peq/BandParam.h \
         ../../src/mfx/pi/peq/PEq.h \
         ../../src/mfx/pi/peq/PEq.hpp \
         ../../src/mfx/pi/peq/PEqDesc.h \
