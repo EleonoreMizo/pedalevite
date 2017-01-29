@@ -1593,7 +1593,13 @@
     <ClInclude Include="..\..\..\src\mfx\pi\peq\PEq.h">
       <Filter>mfx\pi\peq</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\PEq.hpp">
+      <Filter>mfx\pi\peq</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\peq\PEqDesc.h">
+      <Filter>mfx\pi\peq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\PEqDesc.hpp">
       <Filter>mfx\pi\peq</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\peq\Param.h">
@@ -2458,12 +2464,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayComb.cpp">
       <Filter>mfx\pi\fv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\peq\PEq.cpp">
-      <Filter>mfx\pi\peq</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\peq\PEqDesc.cpp">
-      <Filter>mfx\pi\peq</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp">
       <Filter>mfx\dsp\iir</Filter>

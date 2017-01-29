@@ -3,6 +3,10 @@
         PEq.h
         Author: Laurent de Soras, 2016
 
+Template parameters:
+
+- NB: number of bands, > 0
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -49,15 +53,20 @@ namespace peq
 
 
 
+template <int NB>
 class PEq
 :	public piapi::PluginInterface
 {
+
+	static_assert ((NB > 0), "NB must be strictly positive");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _nbr_bands    = PEqDesc::_nbr_bands;
+	typedef PEqDesc <NB> DescType;
+
+	static const int  _nbr_bands    = DescType::_nbr_bands;
 	static const int  _update_resol = 64; // Samples, multiple of 4
 
 	               PEq ();
@@ -125,7 +134,7 @@ private:
 
 	State          _state;
 
-	PEqDesc        _desc;
+	DescType       _desc;
 	ParamStateSet  _state_set;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 	float          _inv_fs;             // 1 / _sample_freq
@@ -144,10 +153,10 @@ private:
 
 private:
 
-	               PEq (const PEq &other)               = delete;
-	PEq &          operator = (const PEq &other)        = delete;
-	bool           operator == (const PEq &other) const = delete;
-	bool           operator != (const PEq &other) const = delete;
+	               PEq (const PEq <NB> &other)               = delete;
+	PEq <NB> &     operator = (const PEq <NB> &other)        = delete;
+	bool           operator == (const PEq <NB> &other) const = delete;
+	bool           operator != (const PEq <NB> &other) const = delete;
 
 }; // class PEq
 
@@ -159,7 +168,7 @@ private:
 
 
 
-//#include "mfx/pi/peq/PEq.hpp"
+#include "mfx/pi/peq/PEq.hpp"
 
 
 

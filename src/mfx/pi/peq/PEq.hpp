@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PEq.cpp
+        PEq.hpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,10 +15,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
+#if ! defined (mfx_pi_peq_PEq_CODEHEADER_INCLUDED)
+#define mfx_pi_peq_PEq_CODEHEADER_INCLUDED
 
 
 
@@ -28,7 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/DesignEq2p.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/pi/peq/Param.h"
-#include "mfx/pi/peq/PEq.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -52,7 +49,8 @@ namespace peq
 
 
 
-PEq::PEq ()
+template <int NB>
+PEq <NB>::PEq ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
@@ -70,7 +68,7 @@ PEq::PEq ()
 
 	for (int band = 0; band < _nbr_bands; ++band)
 	{
-		const int      base = PEqDesc::compute_param_base (band);
+		const int      base = DescType::compute_param_base (band);
 
 		_state_set.set_val_nat (desc_set, base + Param_TYPE  , PEqType_PEAK);
 		_state_set.set_val (base + Param_FREQ, (band + 0.5) / _nbr_bands);
@@ -104,14 +102,16 @@ PEq::PEq ()
 
 
 
-piapi::PluginInterface::State	PEq::do_get_state () const
+template <int NB>
+piapi::PluginInterface::State	PEq <NB>::do_get_state () const
 {
 	return _state;
 }
 
 
 
-double	PEq::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
+template <int NB>
+double	PEq <NB>::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
 	assert (categ == piapi::ParamCateg_GLOBAL);
 
@@ -120,7 +120,8 @@ double	PEq::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) c
 
 
 
-int	PEq::do_reset (double sample_freq, int max_buf_len, int &latency)
+template <int NB>
+int	PEq <NB>::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
 
@@ -147,7 +148,8 @@ int	PEq::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	PEq::do_process_block (ProcInfo &proc)
+template <int NB>
+void	PEq <NB>::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_chn_in =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
@@ -251,14 +253,16 @@ void	PEq::do_process_block (ProcInfo &proc)
 
 
 
-bool	PEq::BandInfo::is_active () const
+template <int NB>
+bool	PEq <NB>::BandInfo::is_active () const
 {
 	return (_stage_index >= 0);
 }
 
 
 
-bool PEq::BandInfo::is_bypass () const
+template <int NB>
+bool PEq <NB>::BandInfo::is_bypass () const
 {
 	bool ret_val = _bypass_flag;
 
@@ -272,7 +276,8 @@ bool PEq::BandInfo::is_bypass () const
 
 
 
-int	PEq::find_empty_stage () const
+template <int NB>
+int	PEq <NB>::find_empty_stage () const
 {
 	int            empty_stage = 0;
 	while (_stage_to_band_arr [empty_stage] >= 0)
@@ -286,7 +291,8 @@ int	PEq::find_empty_stage () const
 
 
 
-int	PEq::count_nbr_stages () const
+template <int NB>
+int	PEq <NB>::count_nbr_stages () const
 {
 	int            nbr_stages = 0;
 	for (int stage = 0; stage < _nbr_bands; ++stage)
@@ -302,7 +308,8 @@ int	PEq::count_nbr_stages () const
 
 
 
-void	PEq::neutralise_stage_immediate (int stage_index)
+template <int NB>
+void	PEq <NB>::neutralise_stage_immediate (int stage_index)
 {
 	assert (stage_index >= 0);
 	assert (stage_index < _nbr_bands);
@@ -317,7 +324,8 @@ void	PEq::neutralise_stage_immediate (int stage_index)
 
 
 
-void	PEq::clear_buffers_stage (int stage_index)
+template <int NB>
+void	PEq <NB>::clear_buffers_stage (int stage_index)
 {
 	assert (stage_index >= 0);
 	assert (stage_index < _nbr_bands);
@@ -330,14 +338,16 @@ void	PEq::clear_buffers_stage (int stage_index)
 
 
 
-bool	PEq::is_band_active (int band) const
+template <int NB>
+bool	PEq <NB>::is_band_active (int band) const
 {
 	return (_band_info_arr [band].is_active ());
 }
 
 
 
-void	PEq::activate_band (int band)
+template <int NB>
+void	PEq <NB>::activate_band (int band)
 {
 	assert (band >= 0);
 	assert (band <= _nbr_bands);
@@ -367,7 +377,8 @@ void	PEq::activate_band (int band)
 
 
 
-void	PEq::deactivate_band (int band)
+template <int NB>
+void	PEq <NB>::deactivate_band (int band)
 {
 	assert (band >= 0);
 	assert (band <= _nbr_bands);
@@ -397,7 +408,8 @@ void	PEq::deactivate_band (int band)
 
 
 
-void	PEq::cook_all_bands ()
+template <int NB>
+void	PEq <NB>::cook_all_bands ()
 {
 	for (int band = 0; band < _nbr_bands; ++band)
 	{
@@ -410,14 +422,15 @@ void	PEq::cook_all_bands ()
 
 
 
-void	PEq::collect_parameters (int band)
+template <int NB>
+void	PEq <NB>::collect_parameters (int band)
 {
 	assert (band >= 0);
 	assert (band <= _nbr_bands);
 
 	BandInfo &     b_info = _band_info_arr [band];
 
-	const int      base   = PEqDesc::compute_param_base (band);
+	const int      base   = DescType::compute_param_base (band);
 
 	b_info._freq = float (_state_set.get_val_end_nat (base + Param_FREQ));
 	b_info._q    = float (_state_set.get_val_end_nat (base + Param_Q));
@@ -431,7 +444,8 @@ void	PEq::collect_parameters (int band)
 
 
 
-void	PEq::update_filter_eq (int band)
+template <int NB>
+void	PEq <NB>::update_filter_eq (int band)
 {
 	assert (band >= 0);
 	assert (band <= _nbr_bands);
@@ -495,7 +509,8 @@ void	PEq::update_filter_eq (int band)
 
 
 
-void	PEq::cook_band (int band)
+template <int NB>
+void	PEq <NB>::cook_band (int band)
 {
 	assert (band >= 0);
 	assert (band <= _nbr_bands);
@@ -507,7 +522,8 @@ void	PEq::cook_band (int band)
 
 
 
-bool	PEq::is_unit_gain (float gain)
+template <int NB>
+bool	PEq <NB>::is_unit_gain (float gain)
 {
 	assert (gain > 0);
 
@@ -519,6 +535,10 @@ bool	PEq::is_unit_gain (float gain)
 }  // namespace peq
 }  // namespace pi
 }  // namespace mfx
+
+
+
+#endif   // mfx_pi_peq_PEq_CODEHEADER_INCLUDED
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        PEqDesc.cpp
+        PEqDesc.hpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,16 +15,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
+#if ! defined (mfx_pi_peq_PEqDesc_CODEHEADER_INCLUDED)
+#define mfx_pi_peq_PEqDesc_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/peq/Param.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplEnum.h"
@@ -48,7 +45,8 @@ namespace peq
 
 
 
-PEqDesc::PEqDesc ()
+template <int NB>
+PEqDesc <NB>::PEqDesc ()
 :	_desc_set (Param_NBR_ELT * _nbr_bands, 0)
 {
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
@@ -133,14 +131,16 @@ PEqDesc::PEqDesc ()
 
 
 
-ParamDescSet &	PEqDesc::use_desc_set ()
+template <int NB>
+ParamDescSet &	PEqDesc <NB>::use_desc_set ()
 {
 	return _desc_set;
 }
 
 
 
-int	PEqDesc::compute_param_base (int band)
+template <int NB>
+int	PEqDesc <NB>::compute_param_base (int band)
 {
 	return band * Param_NBR_ELT;
 }
@@ -151,21 +151,42 @@ int	PEqDesc::compute_param_base (int band)
 
 
 
-std::string	PEqDesc::do_get_unique_id () const
+template <int NB>
+std::string	PEqDesc <NB>::do_get_unique_id () const
 {
-	return "peq";
+	std::string    result = "peq";
+	if (_nbr_bands != 4)
+	{
+		result += print_nbr_bands ();
+	}
+
+	return result;
 }
 
 
 
-std::string	PEqDesc::do_get_name () const
+template <int NB>
+std::string	PEqDesc <NB>::do_get_name () const
 {
-	return "Parametric Equalizer\nParametric Eq\nParam Eq\nPEq";
+	if (_nbr_bands == 4)
+	{
+		return "Parametric Equalizer\nParametric Eq\nParam Eq\nPEq";
+	}
+	else
+	{
+		const std::string s = print_nbr_bands ();
+		return
+			    "Parametric Equalizer " + s
+			+ "\nParametric Eq "        + s
+			+ "\nParam Eq "             + s
+			+ "\nPEq "                  + s;
+	}
 }
 
 
 
-void	PEqDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
+template <int NB>
+void	PEqDesc <NB>::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 {
 	nbr_i = 1;
 	nbr_o = 1;
@@ -174,21 +195,24 @@ void	PEqDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 
 
 
-bool	PEqDesc::do_prefer_stereo () const
+template <int NB>
+bool	PEqDesc <NB>::do_prefer_stereo () const
 {
 	return false;
 }
 
 
 
-int	PEqDesc::do_get_nbr_param (piapi::ParamCateg categ) const
+template <int NB>
+int	PEqDesc <NB>::do_get_nbr_param (piapi::ParamCateg categ) const
 {
 	return _desc_set.get_nbr_param (categ);
 }
 
 
 
-const piapi::ParamDescInterface &	PEqDesc::do_get_param_info (piapi::ParamCateg categ, int index) const
+template <int NB>
+const piapi::ParamDescInterface &	PEqDesc <NB>::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
 	return _desc_set.use_param (categ, index);
 }
@@ -199,9 +223,32 @@ const piapi::ParamDescInterface &	PEqDesc::do_get_param_info (piapi::ParamCateg 
 
 
 
+template <int NB>
+std::string	PEqDesc <NB>::print_nbr_bands ()
+{
+	std::string    s;
+
+	int            n = _nbr_bands;
+	while (n > 0)
+	{
+		const int      i       = n % 10;
+		const char     c_0 [2] = { '0' + char (i), '\0' };
+		s = c_0 + s;
+		n /= 10;
+	}
+
+	return s;
+}
+
+
+
 }  // namespace peq
 }  // namespace pi
 }  // namespace mfx
+
+
+
+#endif   // mfx_pi_peq_PEqDesc_CODEHEADER_INCLUDED
 
 
 

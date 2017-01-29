@@ -100,7 +100,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::dly1::DelayDesc       , mfx::pi::dly1::Delay             >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::cpx::CompexDesc       , mfx::pi::cpx::Compex             >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::fv::FreeverbDesc      , mfx::pi::fv::Freeverb            >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc          , mfx::pi::peq::PEq                >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc <4>      , mfx::pi::peq::PEq <4>            >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::phase1::PhaserDesc    , mfx::pi::phase1::Phaser          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc    , mfx::pi::lpfs::Squeezer          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc         , mfx::pi::lfo1::Lfo               >::create (),

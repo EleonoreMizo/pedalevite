@@ -509,7 +509,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\param\Simple.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\peq\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\peq\PEq.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\PEq.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\peq\PEqDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\peq\PEqDesc.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\peq\PEqType.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\Param.h" />
@@ -834,8 +836,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\MapRatio.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\Simple.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\peq\PEq.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\peq\PEqDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phase90Interface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phaser.cpp" />

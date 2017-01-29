@@ -3,6 +3,10 @@
         PEqDesc.h
         Author: Laurent de Soras, 2016
 
+Template parameters:
+
+- NB: number of bands, > 0
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -41,15 +45,18 @@ namespace peq
 
 
 
+template <int NB>
 class PEqDesc
 :	public piapi::PluginDescInterface
 {
+
+	static_assert ((NB > 0), "NB must be strictly positive");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _nbr_bands = 4;
+	static const int  _nbr_bands = NB;
 
 	               PEqDesc ();
 	virtual        ~PEqDesc () = default;
@@ -81,6 +88,9 @@ protected:
 
 private:
 
+	static std::string
+	               print_nbr_bands ();
+
 	ParamDescSet   _desc_set;
 
 
@@ -89,10 +99,10 @@ private:
 
 private:
 
-	               PEqDesc (const PEqDesc &other)           = delete;
-	PEqDesc &      operator = (const PEqDesc &other)        = delete;
-	bool           operator == (const PEqDesc &other) const = delete;
-	bool           operator != (const PEqDesc &other) const = delete;
+	               PEqDesc (const PEqDesc <NB> &other)           = delete;
+	PEqDesc <NB> & operator = (const PEqDesc <NB> &other)        = delete;
+	bool           operator == (const PEqDesc <NB> &other) const = delete;
+	bool           operator != (const PEqDesc <NB> &other) const = delete;
 
 }; // class PEqDesc
 
@@ -104,7 +114,7 @@ private:
 
 
 
-//#include "mfx/pi/peq/PEqDesc.hpp"
+#include "mfx/pi/peq/PEqDesc.hpp"
 
 
 
