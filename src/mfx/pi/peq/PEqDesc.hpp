@@ -232,7 +232,7 @@ std::string	PEqDesc <NB>::print_nbr_bands ()
 	while (n > 0)
 	{
 		const int      i       = n % 10;
-		const char     c_0 [2] = { '0' + char (i), '\0' };
+		const char     c_0 [2] = { char ('0' + i), '\0' };
 		s = c_0 + s;
 		n /= 10;
 	}
