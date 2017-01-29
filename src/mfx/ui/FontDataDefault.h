@@ -47,6 +47,7 @@ class FontDataDefault
 
 public:
 
+	static void    make_04x06 (Font &fnt);
 	static void    make_06x06 (Font &fnt);
 	static void    make_06x08 (Font &fnt);
 	static void    make_08x12 (Font &fnt);
@@ -71,6 +72,8 @@ private:
 	static const char32_t
 	               _mapping_8859_15 [_char_per_table];
 
+	static const uint8_t
+	               _data_04x06 [_char_per_table * 4*6];
 	static const uint8_t
 	               _data_06x06 [_char_per_table * 6*6];
 	static const uint8_t
