@@ -70,7 +70,7 @@ Question::Question (PageSwitcher &page_switcher)
 
 
 
-void	Question::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	Question::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (usr_ptr != 0);
 	_view_ptr  = &view;
@@ -89,13 +89,13 @@ void	Question::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	const bool     title_flag = (! _arg_ptr->_title.empty ());
 	const int      x_mid =  _page_size [0]      >> 1;
 	const int      w_sel = (_page_size [0] * 3) >> 2;
-	const int      h_l   = fnt_l.get_char_h ();
-	const int      h_m   = fnt_m.get_char_h ();
+	const int      h_l   = fnt._l.get_char_h ();
+	const int      h_m   = fnt._m.get_char_h ();
 	int            ch_y  = 0;
 
 	if (title_flag)
 	{
-		_title_sptr->set_font (fnt_l);
+		_title_sptr->set_font (fnt._l);
 		_title_sptr->set_coord (Vec2d (x_mid, h_m * 0));
 		_title_sptr->set_text (_arg_ptr->_title);
 		_menu_sptr->push_back (_title_sptr);
@@ -116,7 +116,7 @@ void	Question::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		}
 
 		TxtSPtr        choice_sptr (new NText (c_cnt));
-		choice_sptr->set_font (fnt_m);
+		choice_sptr->set_font (fnt._m);
 		choice_sptr->set_justification (0.5f, 0, false);
 		choice_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
 		choice_sptr->set_coord (Vec2d (x_mid, ch_y + h_m * c_cnt));

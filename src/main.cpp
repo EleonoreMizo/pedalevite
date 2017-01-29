@@ -252,6 +252,7 @@ public:
 	mfx::ui::Font  _fnt_8x12;
 	mfx::ui::Font  _fnt_6x8;
 	mfx::ui::Font  _fnt_6x6;
+	mfx::ui::Font  _fnt_4x6;
 
 	mfx::uitk::Rect
 	               _inval_rect;
@@ -388,10 +389,11 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_fnt_8x12 ()
 ,	_fnt_6x8 ()
 ,	_fnt_6x6 ()
+,	_fnt_4x6 ()
 ,	_inval_rect ()
 ,	_loc_edit ()
 ,	_loc_edit_pedal ()
-,	_page_mgr (_model, _view, _display, _queue_input_to_gui, _user_input, _fnt_6x6, _fnt_6x8, _fnt_8x12)
+,	_page_mgr (_model, _view, _display, _queue_input_to_gui, _user_input, _fnt_4x6, _fnt_6x6, _fnt_6x8, _fnt_8x12)
 ,	_page_switcher (_page_mgr)
 ,	_page_cur_prog (_page_switcher, snd_drv)
 ,	_page_tuner (_page_switcher, _leds)
@@ -455,6 +457,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	mfx::ui::FontDataDefault::make_08x12 (_fnt_8x12);
 	mfx::ui::FontDataDefault::make_06x08 (_fnt_6x8);
 	mfx::ui::FontDataDefault::make_06x06 (_fnt_6x6);
+	mfx::ui::FontDataDefault::make_04x06 (_fnt_4x6);
 
 	// Assigns input devices
 	/*** To do: build a common table in mfx::Cst for all assignments ***/

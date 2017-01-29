@@ -79,13 +79,13 @@ PedalActionType::PedalActionType (PageSwitcher &page_switcher, PedalEditContext 
 
 
 
-void	PedalActionType::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	PedalActionType::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
-	_fnt_ptr   = &fnt_m;
+	_fnt_ptr   = &fnt._m;
 	assert (_ctx._pedal >= 0);
 	assert (_ctx._pedal < Cst::_nbr_pedals);
 
@@ -93,13 +93,13 @@ void	PedalActionType::do_connect (Model &model, const View &view, PageMgrInterfa
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
 
-	_title_sptr    ->set_font (fnt_m);
-	_title2_sptr   ->set_font (fnt_m);
-	_full_sptr     ->set_font (fnt_m);
-	_clear_sptr    ->set_font (fnt_m);
-	_push_sptr     ->set_font (fnt_m);
-	_momentary_sptr->set_font (fnt_m);
-	_toggle_sptr   ->set_font (fnt_m);
+	_title_sptr    ->set_font (fnt._m);
+	_title2_sptr   ->set_font (fnt._m);
+	_full_sptr     ->set_font (fnt._m);
+	_clear_sptr    ->set_font (fnt._m);
+	_push_sptr     ->set_font (fnt._m);
+	_momentary_sptr->set_font (fnt._m);
+	_toggle_sptr   ->set_font (fnt._m);
 
 	_title_sptr    ->set_coord (Vec2d (x_mid, 0 * h_m));
 	_title2_sptr   ->set_coord (Vec2d (x_mid, 1 * h_m));

@@ -83,7 +83,7 @@ ParamControllers::ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_ed
 
 
 
-void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (_loc_edit._slot_id >= 0);
 	assert (_loc_edit._pi_type >= 0);
@@ -93,7 +93,7 @@ void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterf
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
-	_fnt_ptr   = &fnt_m;
+	_fnt_ptr   = &fnt._m;
 
 	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
 	const int            slot_id = _loc_edit._slot_id;
@@ -110,8 +110,8 @@ void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterf
 	}
 
 	_link_value_sptr->set_font (*_fnt_ptr);
-	_link_title_sptr->set_font (fnt_s);
-	_mod_title_sptr ->set_font (fnt_s);
+	_link_title_sptr->set_font (fnt._s);
+	_mod_title_sptr ->set_font (fnt._s);
 
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();

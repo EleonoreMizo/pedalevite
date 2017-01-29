@@ -69,22 +69,22 @@ NotYet::NotYet (PageSwitcher &page_switcher)
 
 
 
-void	NotYet::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	NotYet::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
 
-	_notyet_sptr->set_font (fnt_l);
-	_back_sptr  ->set_font (fnt_s);
+	_notyet_sptr->set_font (fnt._l);
+	_back_sptr  ->set_font (fnt._s);
 
 	static const std::string   txt_ny ("NOT YET");
 	_notyet_sptr->set_text (txt_ny);
 
 	const int      x_mid =  _page_size [0] >> 1;
-	const int      h_s   = fnt_s.get_char_h ();
-	const int      h_l   = fnt_l.get_char_h ();
-	const int      w_l   = fnt_l.get_char_w ();
+	const int      h_s   = fnt._s.get_char_h ();
+	const int      h_l   = fnt._l.get_char_h ();
+	const int      w_l   = fnt._l.get_char_w ();
 	const int      mag_x = _page_size [0] / (w_l * int (txt_ny.length ()));
 	const int      mag_y = (_page_size [1] - h_s) / h_l;
 	_notyet_sptr->set_mag (mag_x, mag_y);

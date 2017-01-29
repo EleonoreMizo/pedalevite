@@ -50,15 +50,13 @@ namespace uitk
 
 
 
-Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, const ui::Font &fnt_t, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
 :	_model (model)
 ,	_view (view)
 ,	_display (display)
 ,	_queue_input_to_gui (queue_input_to_gui)
 ,	_input_device (input_device)
-,	_fnt_s (fnt_s)
-,	_fnt_m (fnt_m)
-,	_fnt_l (fnt_l)
+,	_fnt_set (fnt_t, fnt_s, fnt_m, fnt_l)
 ,	_disp_size (display.get_width (), display.get_height ())
 ,	_screen (_disp_node_id)
 ,	_zone_inval (Vec2d (), _disp_size)
@@ -104,8 +102,7 @@ void	Page::set_page_content (PageInterface &content, void *usr_ptr)
 
 			_content_ptr = spc._content_ptr;
 			_content_ptr->connect (
-				_model, _view, *this, _disp_size, spc._usr_ptr,
-				_fnt_s, _fnt_m, _fnt_l
+				_model, _view, *this, _disp_size, spc._usr_ptr, _fnt_set
 			);
 			_view.add_observer (*_content_ptr);
 			_screen.invalidate_all ();

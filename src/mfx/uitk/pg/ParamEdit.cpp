@@ -89,7 +89,7 @@ ParamEdit::ParamEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 
 
-void	ParamEdit::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	ParamEdit::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (_loc_edit._slot_id >= 0);
 	assert (_loc_edit._pi_type >= 0);
@@ -99,10 +99,10 @@ void	ParamEdit::do_connect (Model &model, const View &view, PageMgrInterface &pa
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
-	_fnt_ptr   = &fnt_m;
+	_fnt_ptr   = &fnt._m;
 
 	_name_sptr       ->set_font (*_fnt_ptr);
-	_val_unit_sptr   ->set_font (fnt_l);
+	_val_unit_sptr   ->set_font (fnt._l);
 	_controllers_sptr->set_font (*_fnt_ptr);
 	_follow_sptr     ->set_font (*_fnt_ptr);
 

@@ -94,20 +94,20 @@ Levels::Levels (PageSwitcher &page_switcher)
 
 
 
-void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
 
-	const int      h_m   = fnt_m.get_char_h ();
+	const int      h_m   = fnt._m.get_char_h ();
 
-	_dir_arr [Dir_IN ]._lab_sptr->set_font (fnt_m);
-	_dir_arr [Dir_OUT]._lab_sptr->set_font (fnt_m);
-	_lvl_sptr->set_font (fnt_m);
-	_chn_sptr->set_font (fnt_m);
-	_dsp_txt_sptr->set_font (fnt_m);
+	_dir_arr [Dir_IN ]._lab_sptr->set_font (fnt._m);
+	_dir_arr [Dir_OUT]._lab_sptr->set_font (fnt._m);
+	_lvl_sptr->set_font (fnt._m);
+	_chn_sptr->set_font (fnt._m);
+	_dsp_txt_sptr->set_font (fnt._m);
 
 	_dir_arr [Dir_IN ]._lab_sptr->set_coord (Vec2d (0,  0));
 	_dir_arr [Dir_IN ]._vum_sptr->set_coord (Vec2d (0,  0 + h_m));

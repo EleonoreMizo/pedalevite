@@ -77,13 +77,13 @@ SaveProg::SaveProg (PageSwitcher &page_switcher)
 
 
 
-void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
-	_fnt_ptr   = &fnt_m;
+	_fnt_ptr   = &fnt._m;
 
 	const int      cur_preset_index = _view_ptr->get_preset_index ();
 	const int      cur_bank_index   = _view_ptr->get_bank_index ();
@@ -135,7 +135,7 @@ void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_menu_sptr->set_disp_pos (Vec2d ());
 	PageMgrInterface::NavLocList  nav_list (1 + int (_prog_list.size ()));
 
-	_bank_sptr->set_font (fnt_s);
+	_bank_sptr->set_font (fnt._s);
 	_bank_sptr->set_coord (Vec2d (0, 0));
 	_bank_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	nav_list [0]._node_id = Entry_BANK;

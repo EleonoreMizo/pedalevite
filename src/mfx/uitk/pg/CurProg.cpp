@@ -124,7 +124,7 @@ CurProg::CurProg (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 
 
 
-void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	_model_ptr = &model;
 	_view_ptr  = &view;
@@ -144,20 +144,20 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 		_ip_sptr->set_text (_ip_addr);
 	}
 
-	_prog_nbr_sptr->set_font (fnt_m);
-	_prog_name_sptr->set_font (fnt_l);
-	_bank_nbr_sptr->set_font (fnt_s);
-	_bank_name_sptr->set_font (fnt_s);
-	_fx_name_sptr->set_font (fnt_s);
-	_param_unit_sptr->set_font (fnt_s);
-	_param_name_sptr->set_font (fnt_s);
-	_param_val_sptr->set_font (fnt_s);
-	_ip_sptr->set_font (fnt_m);
+	_prog_nbr_sptr->set_font (fnt._m);
+	_prog_name_sptr->set_font (fnt._l);
+	_bank_nbr_sptr->set_font (fnt._s);
+	_bank_name_sptr->set_font (fnt._s);
+	_fx_name_sptr->set_font (fnt._s);
+	_param_unit_sptr->set_font (fnt._s);
+	_param_name_sptr->set_font (fnt._s);
+	_param_val_sptr->set_font (fnt._s);
+	_ip_sptr->set_font (fnt._m);
 
-	const int      bl_s  = fnt_s.get_baseline ();
-	const int      bl_m  = fnt_m.get_baseline ();
-	const int      h_s   = fnt_s.get_char_h ();
-	const int      h_l   = fnt_l.get_char_h ();
+	const int      bl_s  = fnt._s.get_baseline ();
+	const int      bl_m  = fnt._m.get_baseline ();
+	const int      h_s   = fnt._s.get_char_h ();
+	const int      h_l   = fnt._l.get_char_h ();
 
 	const int      x_mid = _page_size [0] >> 1;
 	const int      y_prg = std::max (bl_m * _mag_prog_nbr, h_s + bl_s );

@@ -78,7 +78,7 @@ EndMsg::EndMsg (const CmdLine &cmd_line)
 
 
 
-void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (usr_ptr != 0);
 	_model_ptr = &model;
@@ -127,7 +127,7 @@ void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	}
 
 	const int      x_mid =  _page_size [0] >> 1;
-	const int      h_l   = fnt_l.get_char_h ();
+	const int      h_l   = fnt._l.get_char_h ();
 
 	_line_list.clear ();
 	const int      nbr_lines = int (line_arr.size ());
@@ -135,7 +135,7 @@ void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	for (int l_cnt = 0; l_cnt < nbr_lines; ++l_cnt)
 	{
 		TxtSPtr        line_sptr (new NText (l_cnt));
-		line_sptr->set_font (fnt_l);
+		line_sptr->set_font (fnt._l);
 		line_sptr->set_justification (0.5f, 0, false);
 		line_sptr->set_frame (Vec2d (_page_size [0], 0), Vec2d ());
 		line_sptr->set_coord (Vec2d (x_mid, y_base + h_l * l_cnt));

@@ -90,13 +90,13 @@ EditText::EditText (PageSwitcher &page_switcher)
 
 
 
-void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (usr_ptr != 0);
 
 	_page_ptr  = &page;
 	_page_size = page_size;
-	_fnt_ptr   = &fnt_m;
+	_fnt_ptr   = &fnt._m;
 	_param_ptr = reinterpret_cast <Param *> (usr_ptr);
 
 	_param_ptr->_ok_flag = false;
@@ -111,7 +111,7 @@ void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	fstb::txt::unicode::conv_utf8_to_unicode (_txt, _param_ptr->_text.c_str ());
 	_curs_pos = int (_txt.length ());
 
-	_title_sptr ->set_font (fnt_s);
+	_title_sptr ->set_font (fnt._s);
 	_text_sptr  ->set_font (*_fnt_ptr);
 	_ok_sptr    ->set_font (*_fnt_ptr);
 	_cancel_sptr->set_font (*_fnt_ptr);

@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/Rect.h"
@@ -54,8 +55,6 @@ namespace uitk
 
 
 
-class PageInterface;
-
 class Page
 :	public PageMgrInterface
 {
@@ -66,7 +65,7 @@ public:
 
 	static const int  _disp_node_id = 666999;
 
-	explicit       Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
+	explicit       Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, const ui::Font &fnt_t, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
 	virtual        ~Page ();
 
 	void           set_page_content (PageInterface &content, void *usr_ptr);
@@ -129,12 +128,8 @@ private:
 	               _queue_input_to_gui;
 	ui::UserInputInterface &            // To return message cells
 	               _input_device;
-	const ui::Font &
-	               _fnt_s;
-	const ui::Font &
-	               _fnt_m;
-	const ui::Font &
-	               _fnt_l;
+	const PageInterface::FontSet
+	               _fnt_set;
 	const Vec2d    _disp_size;
 	NWindow        _screen;
 	Rect           _zone_inval;

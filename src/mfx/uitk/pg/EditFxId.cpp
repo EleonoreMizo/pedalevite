@@ -73,7 +73,7 @@ EditFxId::EditFxId (PageSwitcher &page_switcher, const std::vector <std::string>
 
 
 
-void	EditFxId::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	EditFxId::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (usr_ptr != 0);
 	_model_ptr = &model;
@@ -81,7 +81,7 @@ void	EditFxId::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr  = &page;
 	_param_ptr = reinterpret_cast <Param *> (usr_ptr);
 
-	_chr_per_line = page_size [0] / fnt_m.get_char_w ();
+	_chr_per_line = page_size [0] / fnt._m.get_char_w ();
 
 	switch (_state)
 	{

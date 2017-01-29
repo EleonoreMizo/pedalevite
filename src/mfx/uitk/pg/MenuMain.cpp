@@ -88,7 +88,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 
 
 
-void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	_model_ptr = &model;
 	_view_ptr  = &view;
@@ -136,16 +136,16 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		model.set_edit_mode (false);
 	}
 
-	_edit_prog_sptr  ->set_font (fnt_m);
-	_edit_bank_sptr  ->set_font (fnt_m);
-	_edit_layout_sptr->set_font (fnt_m);
-	_edit_levels_sptr->set_font (fnt_m);
-	_tuner_sptr      ->set_font (fnt_m);
-	_reboot_sptr     ->set_font (fnt_m);
+	_edit_prog_sptr  ->set_font (fnt._m);
+	_edit_bank_sptr  ->set_font (fnt._m);
+	_edit_layout_sptr->set_font (fnt._m);
+	_edit_levels_sptr->set_font (fnt._m);
+	_tuner_sptr      ->set_font (fnt._m);
+	_reboot_sptr     ->set_font (fnt._m);
 
 	const int      x_mid =  _page_size [0]      >> 1;
 	const int      w_sel = (_page_size [0] * 3) >> 2;
-	const int      h_m   = fnt_m.get_char_h ();
+	const int      h_m   = fnt._m.get_char_h ();
 
 	_edit_prog_sptr  ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_edit_bank_sptr  ->set_frame (Vec2d (w_sel, 0), Vec2d ());

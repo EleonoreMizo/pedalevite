@@ -79,18 +79,18 @@ Tuner::Tuner (PageSwitcher &page_switcher, ui::LedInterface &led)
 
 
 
-void	Tuner::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l)
+void	Tuner::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
-	_fnt_l_ptr = &fnt_l;
-	_fnt_m_ptr = &fnt_m;
+	_fnt_l_ptr = &fnt._l;
+	_fnt_m_ptr = &fnt._m;
 
-	_note_sptr->set_font (fnt_l);
-	_scale_sptr->set_font (fnt_l);
-	_cents_sptr->set_font (fnt_m);
+	_note_sptr->set_font (fnt._l);
+	_scale_sptr->set_font (fnt._l);
+	_cents_sptr->set_font (fnt._m);
 
 	const int      x_mid = _page_size [0] >> 1;
 	const int      y_mid = _page_size [1] >> 1;
