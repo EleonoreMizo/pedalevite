@@ -26,6 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/ui/DisplayInterface.h"
 
+#include <algorithm>
+
 #include <cassert>
 #include <cstring>
 
@@ -143,6 +145,19 @@ void	DisplayInterface::bitblt (int xd, int yd, const uint8_t *src_ptr, int xs, i
 					dst_ptr [x] ^= src_ptr [x];
 				}
 				break;
+			case BlendMode_MIN:
+				for (int x = 0; x < ws; ++x)
+				{
+					dst_ptr [x] = std::min (dst_ptr [x], src_ptr [x]);
+				}
+				break;
+			case BlendMode_MAX:
+				for (int x = 0; x < ws; ++x)
+				{
+					dst_ptr [x] = std::max (dst_ptr [x], src_ptr [x]);
+				}
+				break;
+			case BlendMode_OPAQUE:
 			default:
 				memcpy (dst_ptr, src_ptr, ws);
 				break;

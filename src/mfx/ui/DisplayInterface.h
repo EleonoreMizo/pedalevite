@@ -49,6 +49,8 @@ public:
 	{
 		BlendMode_OPAQUE = 0,
 		BlendMode_XOR,
+		BlendMode_MIN,
+		BlendMode_MAX,
 
 		BlendMode_NBR_ELT
 	};
