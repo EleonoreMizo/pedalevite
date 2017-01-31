@@ -62,6 +62,7 @@ public:
 
 	// Convenience function
 	void           clear_all_nodes ();
+	void           erase (NodeSPtr node_sptr);
 
 
 

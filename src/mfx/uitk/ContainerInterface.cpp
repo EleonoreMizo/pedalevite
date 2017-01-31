@@ -116,6 +116,22 @@ void	ContainerInterface::clear_all_nodes ()
 
 
 
+void	ContainerInterface::erase (NodeSPtr node_sptr)
+{
+	bool           done_flag = false;
+	const int      nbr_nodes = get_nbr_nodes ();
+	for (int pos = 0; pos < nbr_nodes && ! done_flag; ++pos)
+	{
+		if (use_node (pos) == node_sptr)
+		{
+			erase (pos);
+			done_flag = true;
+		}
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
