@@ -37,16 +37,70 @@ namespace fstb
 
 
 
+// f(x) ~ sin (x)
+// x in [-pi/2 ; pi/2]
+// Max error: 2.411e-8
+// Scaled formula
+ToolsSimd::VectF32	Approx::sin_rbj (ToolsSimd::VectF32 x)
+{
+	const auto    a  = ToolsSimd::set1_f32 ( 2.628441118718695e-06f);
+	const auto    b  = ToolsSimd::set1_f32 (-1.982061326014539e-04f);
+	const auto    c  = ToolsSimd::set1_f32 ( 0.008333224441393f);
+	const auto    d  = ToolsSimd::set1_f32 (-0.166666657479818f);
+	const auto    e  = ToolsSimd::set1_f32 ( 1);
+	const auto    x2 = x * x;
+
+	return (((((a * x2 + b) * x2 + c) * x2 + d) * x2) + e) * x;
+}
+
+
+
+// f1 (x) ~ sin (x)
+// f2 (x) ~ cos (x)
+// x in [-3*pi ; 3*pi]
+void	Approx::cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x)
+{
+	const auto     hp  = ToolsSimd::set1_f32 (float ( 0.5 * fstb::PI));
+	const auto     hpm = ToolsSimd::set1_f32 (float (-0.5 * fstb::PI));
+	const auto     tp  = ToolsSimd::set1_f32 (float ( 2   * fstb::PI));
+	const auto     p   = ToolsSimd::set1_f32 (float (       fstb::PI));
+	const auto     pm  = ToolsSimd::set1_f32 (float (      -fstb::PI));
+
+	// x -> [-pi ; pi]
+	x = restrict_angle_to_mpi_pi (x, pm, p, tp);
+
+	auto           xs = x;
+
+	// xs -> [-pi/2 ; pi/2]
+	xs = restrict_sin_angle_to_mhpi_hpi (xs, hpm, hp, pm, p);
+
+	auto           xc = x + hp;
+
+	// xc -> [-pi ; pi]
+	xc = fstb::ToolsSimd::select (
+		fstb::ToolsSimd::cmp_gt_f32 (xc, p ), xc - tp, xc
+	);
+
+	// xc -> [-pi/2 ; pi/2]
+	xc = restrict_sin_angle_to_mhpi_hpi (xc, hpm, hp, pm, p);
+
+	s = sin_rbj (xs);
+	c = sin_rbj (xc);
+}
+
+
+
 // f(x) ~ sin (x * pi/2)
 // x in [-1 ; 1]
 // Max error: 2.411e-8
+// Original formula
 ToolsSimd::VectF32	Approx::sin_rbj_halfpi (ToolsSimd::VectF32 x)
 {
-	const auto    a = ToolsSimd::set1_f32 ( 0.0001530302f);
-	const auto    b = ToolsSimd::set1_f32 (-0.0046768800f);
-	const auto    c = ToolsSimd::set1_f32 ( 0.0796915849f);
-	const auto    d = ToolsSimd::set1_f32 (-0.6459640619f);
-	const auto    e = ToolsSimd::set1_f32 ( 1.5707963268f);
+	const auto    a  = ToolsSimd::set1_f32 ( 0.0001530302f);
+	const auto    b  = ToolsSimd::set1_f32 (-0.0046768800f);
+	const auto    c  = ToolsSimd::set1_f32 ( 0.0796915849f);
+	const auto    d  = ToolsSimd::set1_f32 (-0.6459640619f);
+	const auto    e  = ToolsSimd::set1_f32 ( 1.5707963268f);
 	const auto    x2 = x * x;
 
 	return (((((a * x2 + b) * x2 + c) * x2 + d) * x2) + e) * x;
@@ -216,6 +270,38 @@ float	Approx::tan_taylor5 (float x)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+// [-3*pi ; 3*pi] -> [-pi ; pi]
+// p = pi, pm = -pi, tp = 2*pi
+ToolsSimd::VectF32	Approx::restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp)
+{
+	x = fstb::ToolsSimd::select (
+		fstb::ToolsSimd::cmp_lt_f32 (x, pm), x + tp, x
+	);
+	x = fstb::ToolsSimd::select (
+		fstb::ToolsSimd::cmp_gt_f32 (x, p ), x - tp, x
+	);
+
+	return x;
+}
+
+
+
+// [-pi ; pi] -> [-pi/2 ; pi/2]
+// hpm = -pi/2, hp = pi/2, pm = -pi, p = pi
+ToolsSimd::VectF32	Approx::restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p)
+{
+	x = fstb::ToolsSimd::select (
+		fstb::ToolsSimd::cmp_lt_f32 (x, hpm), pm - x, x
+	);
+	x = fstb::ToolsSimd::select (
+		fstb::ToolsSimd::cmp_gt_f32 (x, hp ), p  - x, x
+	);
+
+	return x;
+}
 
 
 

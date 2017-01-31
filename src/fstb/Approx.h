@@ -44,6 +44,10 @@ class Approx
 public:
 
 	static inline ToolsSimd::VectF32
+	               sin_rbj (ToolsSimd::VectF32 x);
+	static inline void
+	               cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x);
+	static inline ToolsSimd::VectF32
 	               sin_rbj_halfpi (ToolsSimd::VectF32 x);
 	static inline ToolsSimd::VectF32
 	               sin_rbj_pi (ToolsSimd::VectF32 x);
@@ -78,6 +82,11 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static inline ToolsSimd::VectF32
+	               restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp);
+	static inline ToolsSimd::VectF32
+	               restrict_sin_angle_to_mhpi_hpi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &hpm, const ToolsSimd::VectF32 &hp, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p);
 
 
 
