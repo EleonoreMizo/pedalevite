@@ -140,6 +140,12 @@
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
 
+	#if defined (_MSC_VER)
+		#include	<crtdbg.h>
+		#include	<new.h>
+		#include	<new>
+	#endif	// _MSC_VER
+
 #else
 	#error Unsupported operating system
 
@@ -1433,12 +1439,61 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 
 
 
+#if defined (_MSC_VER)
+
+static int __cdecl	MAIN_new_handler_cb (size_t dummy)
+{
+	throw std::bad_alloc ();
+	return (0);
+}
+void MAIN_prog_init ()
+{
+	::_set_new_handler (::MAIN_new_handler_cb);
+
+#if ! defined (NDEBUG)
+	const int	mode =   (1 * _CRTDBG_MODE_DEBUG)
+					       | (1 * _CRTDBG_MODE_WNDW);
+	::_CrtSetReportMode (_CRT_WARN, mode);
+	::_CrtSetReportMode (_CRT_ERROR, mode);
+	::_CrtSetReportMode (_CRT_ASSERT, mode);
+
+	const int	old_flags = ::_CrtSetDbgFlag (_CRTDBG_REPORT_FLAG);
+	::_CrtSetDbgFlag (  old_flags
+	                  | (1 * _CRTDBG_LEAK_CHECK_DF)
+	                  | (0 * _CRTDBG_CHECK_ALWAYS_DF));
+	::_CrtSetBreakAlloc (-1);	// Specify here a memory bloc number
+#endif	// NDEBUG
+}
+
+void MAIN_prog_end ()
+{
+#if defined (_MSC_VER) && ! defined (NDEBUG)
+	const int	mode =   (1 * _CRTDBG_MODE_DEBUG)
+					       | (0 * _CRTDBG_MODE_WNDW);
+	::_CrtSetReportMode (_CRT_WARN, mode);
+	::_CrtSetReportMode (_CRT_ERROR, mode);
+	::_CrtSetReportMode (_CRT_ASSERT, mode);
+
+	::_CrtMemState	mem_state;
+	::_CrtMemCheckpoint (&mem_state);
+	::_CrtMemDumpStatistics (&mem_state);
+#endif	// _MSC_VER, NDEBUG
+}
+
+#endif // _MSC_VER
+
+
+
 #if fstb_IS (SYS, LINUX)
 int main (int argc, char *argv [], char *envp [])
 #else
 int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
 #endif
 {
+#if defined (_MSC_VER)
+	MAIN_prog_init ();
+#endif
+
 #if fstb_IS (SYS, LINUX)
 	::wiringPiSetupPhys ();
 
@@ -1512,6 +1567,10 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 	ctx_uptr.reset ();
 
 	fprintf (stderr, "Exiting with code %d.\n", ret_val);
+
+#if defined (_MSC_VER)
+	MAIN_prog_end ();
+#endif
 
 	return ret_val;
 }
