@@ -82,10 +82,20 @@ public:
 	               load_f32 (const void *ptr);
 	static inline void
 	               store_f32 (void *ptr, VectF32 v);
+	static inline void
+	               store_f32_part (void *ptr, VectF32 v, int n);
 	static inline VectF32
 	               loadu_f32 (const void *ptr);
+	static inline VectF32
+	               loadu_f32_part (const void *ptr, int n);
 	static inline void
 	               storeu_f32 (void *ptr, VectF32 v);
+	static inline void
+	               storeu_s32 (void *ptr, VectS32 v);
+	static inline void
+	               storeu_f32_part (void *ptr, VectF32 v, int n);
+	static inline void
+	               storeu_s32_part (void *ptr, VectS32 v, int n);
 
 	static inline VectF32
 	               loadu_2f32 (const void *ptr);
@@ -160,6 +170,11 @@ public:
 	static inline void
 	               transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3);
 
+	static inline VectS32
+	               conv_f32_to_s32 (VectF32 x);
+	static inline VectF32
+	               conv_s32_to_f32 (VectS32 x);
+
 	template <int SHIFT>
 	class Shift
 	{
@@ -172,6 +187,15 @@ public:
 		               insert (VectF32 a, float val);
 		static inline VectF32
 		               spread (VectF32 a);
+
+		static inline VectS32
+		               rotate (VectS32 a);
+		static inline int32_t
+		               extract (VectS32 a);
+		static inline VectS32
+		               insert (VectS32 a, int32_t val);
+		static inline VectS32
+		               spread (VectS32 a);
 	};
 
 
@@ -185,6 +209,14 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static inline void
+	               store_f32_part_n13 (void *ptr, VectF32 v, int n);
+	static inline void
+	               store_s32_part_n13 (void *ptr, VectS32 v, int n);
+	static inline VectF32
+	               load_f32_part_n13 (const void *ptr, int n);
+
 
 	static const int32_t
 	               _log2_sub;

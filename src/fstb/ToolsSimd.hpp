@@ -61,6 +61,23 @@ void	ToolsSimd::store_f32 (void *ptr, VectF32 v)
 
 
 
+// n = number of scalars to store (from the LSB)
+void	ToolsSimd::store_f32_part (void *ptr, VectF32 v, int n)
+{
+	assert (n > 0);
+
+	if (n >= 4)
+	{
+		store_f32 (ptr, v);
+	}
+	else
+	{
+		store_f32_part_n13 (ptr, v, n);
+	}
+}
+
+
+
 ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const void *ptr)
 {
 	assert (ptr != 0);
@@ -76,6 +93,20 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const void *ptr)
 
 
 
+ToolsSimd::VectF32	ToolsSimd::loadu_f32_part (const void *ptr, int n)
+{
+	assert (n > 0);
+
+	if (n >= 4)
+	{
+		return loadu_f32 (ptr);
+	}
+
+	return load_f32_part_n13 (ptr, n);
+}
+
+
+
 void	ToolsSimd::storeu_f32 (void *ptr, VectF32 v)
 {
 	assert (ptr != 0);
@@ -85,6 +116,53 @@ void	ToolsSimd::storeu_f32 (void *ptr, VectF32 v)
 #elif fstb_IS (ARCHI, ARM)
 	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_f32 (v));
 #endif // ff_arch_CPU
+}
+
+
+
+void	ToolsSimd::storeu_s32 (void *ptr, VectS32 v)
+{
+	assert (ptr != 0);
+
+#if fstb_IS (ARCHI, X86)
+	_mm_storeu_si128 (reinterpret_cast <__m128i *> (ptr), v);
+#elif fstb_IS (ARCHI, ARM)
+	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_s32 (v));
+#endif // ff_arch_CPU
+}
+
+
+
+// n = number of scalars to store (from the LSB)
+void	ToolsSimd::storeu_f32_part (void *ptr, VectF32 v, int n)
+{
+	assert (n > 0);
+
+	if (n >= 4)
+	{
+		storeu_f32 (ptr, v);
+	}
+	else
+	{
+		store_f32_part_n13 (ptr, v, n);
+	}
+}
+
+
+
+// n = number of scalars to store (from the LSB)
+void	ToolsSimd::storeu_s32_part (void *ptr, VectS32 v, int n)
+{
+	assert (n > 0);
+
+	if (n >= 4)
+	{
+		storeu_s32 (ptr, v);
+	}
+	else
+	{
+		store_s32_part_n13 (ptr, v, n);
+	}
 }
 
 
@@ -646,6 +724,28 @@ void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a
 
 
 
+ToolsSimd::VectS32	ToolsSimd::conv_f32_to_s32 (VectF32 x)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_cvtps_epi32 (x);
+#elif fstb_IS (ARCHI, ARM)
+	return vcvtq_s32_f32 (x);
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::conv_s32_to_f32 (VectS32 x)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_cvtepi32_ps (x);
+#elif fstb_IS (ARCHI, ARM)
+	return vcvtq_f32_s32 (x);
+#endif // ff_arch_CPU
+}
+
+
+
 // Positive = left
 template <int SHIFT>
 ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a)
@@ -707,7 +807,6 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::insert (VectF32 a, float val)
 
 
 
-
 template <int SHIFT>
 ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::spread (VectF32 a)
 {
@@ -720,11 +819,196 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::spread (VectF32 a)
 
 
 
+// Positive = left
+template <int SHIFT>
+ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::rotate (VectS32 a)
+{
+#if fstb_IS (ARCHI, X86)
+	switch (SHIFT & 3)
+	{
+	case 1:  return _mm_shuffle_epi32 (a, (2<<6) | (1<<4) | (0<<2) | (3<<0));
+	case 2:  return _mm_shuffle_epi32 (a, (1<<6) | (0<<4) | (3<<2) | (2<<0));
+	case 3:  return _mm_shuffle_epi32 (a, (0<<6) | (3<<4) | (2<<2) | (1<<0));
+	default: return a;
+	}
+#elif fstb_IS (ARCHI, ARM)
+	switch (SHIFT & 3)
+	{
+	case 1:  a = vextq_s32 (a, a, 3); break;
+	case 2:  a = vextq_s32 (a, a, 2); break;
+	case 3:  a = vextq_s32 (a, a, 1); break;
+	default: a = a;
+	}
+	return a;
+#endif // ff_arch_CPU
+}
+
+
+
+template <int SHIFT>
+int32_t	ToolsSimd::Shift <SHIFT>::extract (VectS32 a)
+{
+#if fstb_IS (ARCHI, X86)
+	switch (SHIFT & 3)
+	{
+	case 1:  a = _mm_shuffle_epi32 (a, 1);	break;
+	case 2:  a = _mm_shuffle_epi32 (a, 2);	break;
+	case 3:  a = _mm_shuffle_epi32 (a, 3);	break;
+	default: a = a;
+	}
+	return _mm_cvtsi128_si32 (a);
+#elif fstb_IS (ARCHI, ARM)
+	return vgetq_lane_s32 (a, SHIFT & 3);
+#endif // ff_arch_CPU
+}
+
+
+
+template <int SHIFT>
+ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::insert (VectS32 a, int32_t val)
+{
+#if fstb_IS (ARCHI, X86)
+	a = Shift <(-SHIFT) & 3>::rotate (a);
+	a = _mm_castps_si128 (_mm_move_ss (
+		_mm_castsi128_ps (a),
+		_mm_castsi128_ps (_mm_set_ss (val))
+	));
+	a = Shift <  SHIFT     >::rotate (a);
+	return a;
+#elif fstb_IS (ARCHI, ARM)
+	return vsetq_lane_s32 (val, a, SHIFT & 3);
+#endif // ff_arch_CPU
+}
+
+
+
+template <int SHIFT>
+ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::spread (VectS32 a)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_shuffle_epi32 (a, 0x55 * SHIFT);
+#elif fstb_IS (ARCHI, ARM)
+	return vdupq_n_s32 (vgetq_lane_s32 (a, SHIFT));
+#endif // ff_arch_CPU
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	ToolsSimd::store_f32_part_n13 (void *ptr, VectF32 v, int n)
+{
+	assert (n > 0);
+	assert (n < 4);
+
+	float *        f_ptr = reinterpret_cast <float *> (ptr);
+
+#if fstb_IS (ARCHI, ARM)
+
+	f_ptr [0] = vgetq_lane_f32 (v, 0);
+	if (n >= 2)
+	{
+		f_ptr [1] = vgetq_lane_f32 (v, 1);
+		if (n >= 3)
+		{
+			f_ptr [2] = vgetq_lane_f32 (v, 2);
+		}
+	}
+
+#else
+
+	for (int i = 0; i < n; ++i)
+	{
+		f_ptr [i] = Shift < 0>::extract (v);
+		v         = Shift <-1>::rotate (v);
+	}
+
+#endif
+}
+
+
+
+void	ToolsSimd::store_s32_part_n13 (void *ptr, VectS32 v, int n)
+{
+	assert (n > 0);
+	assert (n < 4);
+
+	int32_t *      f_ptr = reinterpret_cast <int32_t *> (ptr);
+
+#if fstb_IS (ARCHI, ARM)
+
+	f_ptr [0] = vgetq_lane_s32 (v, 0);
+	if (n >= 2)
+	{
+		f_ptr [1] = vgetq_lane_s32 (v, 1);
+		if (n >= 3)
+		{
+			f_ptr [2] = vgetq_lane_s32 (v, 2);
+		}
+	}
+
+#else
+
+	for (int i = 0; i < n; ++i)
+	{
+		f_ptr [i] = Shift < 0>::extract (v);
+		v         = Shift <-1>::rotate (v);
+	}
+
+#endif
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const void *ptr, int n)
+{
+	assert (n > 0);
+	assert (n < 4);
+
+	const float *  f_ptr = reinterpret_cast <const float *> (ptr);
+	VectF32        v;
+#if fstb_IS (ARCHI, X86)
+	switch (n)
+	{
+	case 1:
+		v = _mm_load_ss (f_ptr);
+		break;
+	case 2:
+		v = _mm_load_ss (f_ptr + 1);
+		v = Shift <1>::rotate (v);
+		v = Shift <0>::insert (v, f_ptr [0]);
+		break;
+	case 3:
+		v = _mm_load_ss (f_ptr + 2);
+		v = Shift <1>::rotate (v);
+		v = Shift <0>::insert (v, f_ptr [1]);
+		v = Shift <1>::rotate (v);
+		v = Shift <0>::insert (v, f_ptr [0]);
+		break;
+	}
+	for (int k = 0; k < n; ++k)
+	{
+	}
+#elif fstb_IS (ARCHI, ARM)
+	v = vsetq_lane_f32 (v, ptr [0], 0);
+	if (n >= 2)
+	{
+		v = vsetq_lane_f32 (v, ptr [1], 1);
+		if (n >= 3)
+		{
+			v = vsetq_lane_f32 (v, ptr [2], 2);
+		}
+	}
+#endif // ff_arch_CPU
+
+	return v;
+}
 
 
 
