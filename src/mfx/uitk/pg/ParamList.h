@@ -27,10 +27,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/PageType.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
+
+#include <memory>
+#include <vector>
 
 
 
@@ -88,8 +92,9 @@ private:
 
 	enum Entry
 	{
-		Entry_WINDOW = 1000,
-		Entry_FX_SETUP
+		Entry_WINDOW = 1000000,
+		Entry_FX_SETUP,
+		Entry_GUI
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -97,6 +102,7 @@ private:
 	typedef std::vector <TxtSPtr> TxtArray;
 
 	void           set_param_info ();
+	void           check_gui (const std::string &pi_model);
 	void           update_param_txt (PiType type, int index);
 	void           update_loc_edit (int node_id);
 	int            conv_loc_edit_to_node_id () const;
@@ -116,8 +122,11 @@ private:
 
 	WinSPtr        _menu_sptr;    // Contains 1 entry (selectable) + the parameter list
 	TxtSPtr        _fx_setup_sptr;
+	TxtSPtr        _gui_sptr;
 	TxtArray       _param_list;   // Parameters are grouped by pairs (name/value). First the mixer parameters, then the plug-in parameters.
 	bool           _mixer_flag;   // Indicates that we should display the mixer parameter (not needed for signal generators)
+	bool           _gui_flag;     // We have a GUI to edit this effect
+	PageType       _gui_page;
 
 
 

@@ -66,10 +66,14 @@ ParamList::ParamList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_fnt_ptr (0)
 ,	_menu_sptr (new NWindow (Entry_WINDOW))
 ,	_fx_setup_sptr (new NText (Entry_FX_SETUP))
+,	_gui_sptr (     new NText (Entry_GUI))
 ,	_param_list ()
 ,	_mixer_flag (true)
+,	_gui_flag (false)
+,	_gui_page (PageType_INVALID)
 {
 	_fx_setup_sptr->set_text ("FX Setup");
+	_gui_sptr     ->set_text ("Graphic editing");
 }
 
 
@@ -86,16 +90,21 @@ void	ParamList::do_connect (Model &model, const View &view, PageMgrInterface &pa
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
 
-	_fx_setup_sptr->set_font (*_fnt_ptr);
-
 	const int      scr_w = _page_size [0];
 	const int      frm_w = (scr_w * 3) >> 2;
+	const int      h_m   = _fnt_ptr->get_char_h ();
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
 
-	_fx_setup_sptr->set_coord (Vec2d (0, 0));
+	_fx_setup_sptr->set_font (*_fnt_ptr);
+	_gui_sptr     ->set_font (*_fnt_ptr);
+
+	_fx_setup_sptr->set_coord (Vec2d (0, 0 * h_m));
+	_gui_sptr     ->set_coord (Vec2d (0, 1 * h_m));
+
 	_fx_setup_sptr->set_frame (Vec2d (frm_w, 0), Vec2d ());
+	_gui_sptr     ->set_frame (Vec2d (frm_w, 0), Vec2d ());
 
 	_page_ptr->push_back (_menu_sptr);
 
@@ -146,6 +155,18 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 			if (node_id == Entry_FX_SETUP)
 			{
 				_page_switcher.switch_to (PageType_MENU_SLOT, 0);
+			}
+			else if (node_id == Entry_GUI)
+			{
+				if (_gui_flag)
+				{
+					_page_switcher.switch_to (_gui_page, 0);
+				}
+				else
+				{
+					assert (false);
+					ret_val = EvtProp_PASS;
+				}
 			}
 			else if (node_id >= 0 && node_id < int (_param_list.size ()))
 			{
@@ -223,6 +244,42 @@ void	ParamList::do_set_param_ctrl (int slot_id, PiType type, int index, const do
 
 
 
+void	ParamList::check_gui (const std::string &pi_model)
+{
+	_gui_flag = false;
+	_gui_page = PageType_INVALID;
+
+	static const int  peq_len = 3;
+	if (pi_model.substr (0, peq_len) == "peq")
+	{
+		// 4 bands
+		if (pi_model.length () == peq_len)
+		{
+			_gui_flag = true;
+			_gui_page = PageType_FX_PEQ;
+		}
+
+		// Other number of bands
+		else
+		{
+			const char *   nbands_0  = pi_model.c_str () + peq_len;
+			char *         end_0     = const_cast <char *> (nbands_0);
+			long           nbr_bands = strtol (nbands_0, &end_0, 10);
+			if (   end_0 != nbands_0
+			    && end_0 - nbands_0 + peq_len == pi_model.length ())
+			{
+				if (nbr_bands > 0)
+				{
+					_gui_flag = true;
+					_gui_page = PageType_FX_PEQ;
+				}
+			}
+		}
+	}
+}
+
+
+
 void	ParamList::set_param_info ()
 {
 	assert (_fnt_ptr != 0);
@@ -234,13 +291,15 @@ void	ParamList::set_param_info ()
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	const doc::Slot & slot = preset.use_slot (slot_id);
 
+	check_gui (slot._pi_model);
+
 	const doc::PluginSettings *   settings_main_ptr = 0;
 	auto           it_settings = slot._settings_all.find (slot._pi_model);
 	_mixer_flag = true;
 	if (it_settings != slot._settings_all.end ())
 	{
 		settings_main_ptr = &it_settings->second;
-		const mfx::piapi::PluginDescInterface &   desc =
+		const piapi::PluginDescInterface &   desc =
 			_model_ptr->get_model_desc (slot._pi_model);
 		int         nbr_i = 1;
 		int         nbr_o = 1;
@@ -265,13 +324,21 @@ void	ParamList::set_param_info ()
 	}};
 	const int      nbr_param_tot = nbr_param_arr [0] + nbr_param_arr [1];
 
-	PageMgrInterface::NavLocList  nav_list (nbr_param_tot + 1);
+	PageMgrInterface::NavLocList  nav_list;
 	_param_list.resize (nbr_param_tot * 2);
-
 	_menu_sptr->clear_all_nodes ();
-	_menu_sptr->push_back (_fx_setup_sptr);
 
-	nav_list [0]._node_id = Entry_FX_SETUP;
+	int            pos_base = 1;
+	_menu_sptr->push_back (_fx_setup_sptr);
+	PageMgrInterface::add_nav (nav_list, Entry_FX_SETUP);
+
+	_gui_sptr->show (_gui_flag);
+	if (_gui_flag)
+	{
+		_menu_sptr->push_back (_gui_sptr);
+		PageMgrInterface::add_nav (nav_list, Entry_GUI);
+		++ pos_base;
+	}
 
 	static const std::array <PiType, PiType_NBR_ELT>   type_arr =
 	{{
@@ -293,10 +360,9 @@ void	ParamList::set_param_info ()
 				ctrl_flag = settings_ptr_arr [type_cnt]->has_ctrl (index);
 			}
 
-			const int      pos_nav  = param_pos + 1; // In the nav_list
-			const int      pos_disp = pos_nav;
+			const int      pos_disp = param_pos     + pos_base;
 #if ! defined (NDEBUG)
-			const int      pos_menu = param_pos * 2 + 1;
+			const int      pos_menu = param_pos * 2 + pos_base;
 #endif
 			const int      node_id  = param_pos * 2;
 
@@ -315,7 +381,7 @@ void	ParamList::set_param_info ()
 			_param_list [node_id    ] = name_sptr;
 			_param_list [node_id + 1] = val_sptr;
 
-			nav_list [pos_nav]._node_id = node_id;
+			PageMgrInterface::add_nav (nav_list, node_id);
 
 			assert (pos_menu == _menu_sptr->get_nbr_nodes ());
 			_menu_sptr->push_back (name_sptr);
