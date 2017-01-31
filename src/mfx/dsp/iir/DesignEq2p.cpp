@@ -89,7 +89,7 @@ void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double q, double lvl
 	assert (f0 > 0);
 	assert (f0 < fs * 0.5);
 
-	const double	w0 = fstb::PI * f0 / fs;
+	const double	w0 = (2 * fstb::PI) * f0 / fs;
 	const double	gb = sqrt (lvl);
 
 	const double	q_i = 1 / q;
@@ -99,7 +99,7 @@ void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double q, double lvl
 	const double	margin = 0.001;
 	const double	f1p = std::min (f1, fs * (0.5 - margin * 2));
 	const double	f2p = std::min (f2, fs * (0.5 - margin    ));
-	const double	dw = fstb::PI * (f2p - f1p) / fs;
+	const double	dw = (2 * fstb::PI) * (f2p - f1p) / fs;
 
 	make_nyq_peak (bz, az, 1, lvl, gb, w0, dw);
 }
@@ -121,7 +121,8 @@ function.
 Algorithm from:
 
 	Sophocles J. Orfanidis, Digital Parametric Equalizer Design With Prescribed
-	Nyquist-Frequency Gain, http://www.ece.rutgers.edu/~orfanidi/ece521/peq.pdf
+	Nyquist-Frequency Gain, Journal of the AES, 1997
+	http://www.ece.rutgers.edu/~orfanidi/ece521/peq.pdf
 
 Input parameters:
 	- g0: Level at DC, >= 0.
