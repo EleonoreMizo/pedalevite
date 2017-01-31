@@ -69,6 +69,7 @@ const std::array <int, Cst::_nbr_pedals>	Model::_pedal_to_switch_map =
 
 Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device, FileIOInterface &file_io)
 :	_central (queue_input_to_audio, input_device)
+,	_sample_freq (0)
 ,	_setup ()
 ,	_bank_index (0)
 ,	_preset_index (0)
@@ -119,6 +120,16 @@ Model::~Model ()
 void	Model::set_process_info (double sample_freq, int max_block_size)
 {
 	_central.set_process_info (sample_freq, max_block_size);
+	_sample_freq = sample_freq;
+}
+
+
+
+double	Model::get_sample_freq () const
+{
+	assert (_sample_freq > 0);
+
+	return (_sample_freq);
 }
 
 

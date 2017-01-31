@@ -84,6 +84,7 @@ public:
 
 	// Audio
 	void           set_process_info (double sample_freq, int max_block_size);
+	double         get_sample_freq () const;
 	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	MeterResultSet &
 	               use_meters ();
@@ -260,6 +261,7 @@ private:
 	void           apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings, bool ctrl_flag, bool pres_flag);
 
 	cmd::Central   _central;
+	double         _sample_freq;        // Hz. 0 = not set
 
 	// Global data
 	doc::Setup     _setup;
