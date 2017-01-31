@@ -336,6 +336,7 @@ void	Levels::draw_audio_meter (const DirInfo &info, int nbr_chn)
 	assert (nbr_chn > 0);
 
 	uint8_t *      buf_ptr   = info._vum_sptr->use_buffer ();
+	const int      stride    = info._vum_sptr->get_stride ();
 	int            nbr_pix   = _meter_audio_w * _meter_audio_h;
 	const uint8_t* meter_ptr =
 		  (nbr_chn == 1)
@@ -371,7 +372,7 @@ void	Levels::draw_audio_meter (const DirInfo &info, int nbr_chn)
 
 		for (int y = 0; y < h; ++y)
 		{
-			const int      ofs = (yb + y) * size [0];
+			const int      ofs = (yb + y) * stride;
 			for (int p = 0; p < x_rms; ++p)
 			{
 				buf_ptr [ofs + p] = 255;
@@ -400,6 +401,7 @@ void	Levels::draw_audio_meter (const DirInfo &info, int nbr_chn)
 void	Levels::draw_dsp_meter (const MeterResult &meter)
 {
 	uint8_t *      buf_ptr = _dsp_sptr->use_buffer ();
+	const int      stride  = _dsp_sptr->get_stride ();
 	const int      nbr_pix = _meter_dsp_w * _meter_dsp_h;
 	for (int p = 0; p < nbr_pix; ++p)
 	{
@@ -414,7 +416,7 @@ void	Levels::draw_dsp_meter (const MeterResult &meter)
 
 	for (int y = 1; y < size [1] - 1; ++y)
 	{
-		const int      ofs = y * size [0];
+		const int      ofs = y * stride;
 		for (int x = 1 + (y & 1); x < pl; x += 2)
 		{
 			buf_ptr [ofs + x] = 255;

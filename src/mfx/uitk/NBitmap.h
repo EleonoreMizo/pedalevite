@@ -65,6 +65,7 @@ public:
 	void           set_blend_mode (ui::DisplayInterface::BlendMode mode);
 	const uint8_t* use_buffer () const;
 	uint8_t *      use_buffer ();
+	int            get_stride () const;
 	bool           has_cursor () const;
 
 

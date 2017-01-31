@@ -329,23 +329,24 @@ void	NText::update_content ()
 		);
 
 		uint8_t *      buf_ptr = use_buffer ();
+		const int      stride  = get_stride ();
 
 		// Cleans the buffer if required
 		if (   (_bold_flag && _space_flag)
 		    || fw_pix > w_pix
 		    || fh_pix > h_pix)
 		{
-			memset (buf_ptr, 0, fw_pix * fh_pix);
+			memset (buf_ptr, 0, stride * fh_pix);
 		}
 
 		// Renders the string
 		{
-			uint8_t *      buf2_ptr = buf_ptr + fw_pix * margin_y;
+			uint8_t *      buf2_ptr = buf_ptr + stride * margin_y;
 			int            x = margin_x;
 			for (auto c : _txt_ucs4)
 			{
 				_font_ptr->render_char (
-					buf2_ptr + x, c, fw_pix, _mag_arr [0], _mag_arr [1]
+					buf2_ptr + x, c, stride, _mag_arr [0], _mag_arr [1]
 				);
 				x += get_char_width (c);
 			}
@@ -355,14 +356,14 @@ void	NText::update_content ()
 		if (_bold_flag)
 		{
 			const int      mag_x    = _mag_arr [0];
-			uint8_t *      buf2_ptr = buf_ptr + fw_pix * margin_y;
+			uint8_t *      buf2_ptr = buf_ptr + stride * margin_y;
 			for (int y = 0; y < h_pix; ++y)
 			{
 				for (int x = margin_x + w_pix - 1; x >= margin_x + mag_x; -- x)
 				{
 					buf2_ptr [x] = std::max (buf2_ptr [x], buf2_ptr [x - mag_x]);
 				}
-				buf2_ptr += fw_pix;
+				buf2_ptr += stride;
 			}
 		}
 
@@ -372,7 +373,7 @@ void	NText::update_content ()
 			const int      mag_y     = _mag_arr [1];
 			const int      thickness = (mag_y + 1) >> 1;
 			const int      y = margin_y + h_pix - thickness;
-			memset (buf_ptr + y * w_pix + margin_x, 255, fw_pix * thickness);
+			memset (buf_ptr + y * w_pix + margin_x, 255, stride * thickness);
 		}
 
 		// Video inverse
@@ -384,12 +385,12 @@ void	NText::update_content ()
 					buf_ptr + fw_pix + 1,
 					fw_pix - 2,
 					fh_pix - 2,
-					fw_pix
+					stride
 				);
 			}
 			else
 			{
-				NodeBase::invert_zone (buf_ptr, fw_pix, fh_pix, fw_pix);
+				NodeBase::invert_zone (buf_ptr, fw_pix, fh_pix, stride);
 			}
 		}
 

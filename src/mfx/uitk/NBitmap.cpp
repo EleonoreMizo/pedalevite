@@ -104,6 +104,16 @@ uint8_t *	NBitmap::use_buffer ()
 
 
 
+int	NBitmap::get_stride () const
+{
+	assert (_size [0] > 0);
+	assert (_size [1] > 0);
+
+	return (_size [0]);
+}
+
+
+
 bool	NBitmap::has_cursor () const
 {
 	return _cursor_flag;
