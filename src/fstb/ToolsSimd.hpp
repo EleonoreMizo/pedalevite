@@ -996,13 +996,13 @@ ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const void *ptr, int n)
 	{
 	}
 #elif fstb_IS (ARCHI, ARM)
-	v = vsetq_lane_f32 (v, ptr [0], 0);
+	v = vmovq_n_f32 (f_ptr [0]);
 	if (n >= 2)
 	{
-		v = vsetq_lane_f32 (v, ptr [1], 1);
+		v = vsetq_lane_f32 (f_ptr [1], v, 1);
 		if (n >= 3)
 		{
-			v = vsetq_lane_f32 (v, ptr [2], 2);
+			v = vsetq_lane_f32 (f_ptr [2], v, 2);
 		}
 	}
 #endif // ff_arch_CPU

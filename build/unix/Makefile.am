@@ -637,6 +637,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/EditText.h \
         ../../src/mfx/uitk/pg/EndMsg.cpp \
         ../../src/mfx/uitk/pg/EndMsg.h \
+        ../../src/mfx/uitk/pg/FxPEq.cpp \
+        ../../src/mfx/uitk/pg/FxPEq.h \
         ../../src/mfx/uitk/pg/Levels.cpp \
         ../../src/mfx/uitk/pg/Levels.h \
         ../../src/mfx/uitk/pg/MenuMain.cpp \

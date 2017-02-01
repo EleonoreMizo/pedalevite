@@ -266,7 +266,7 @@ void	ParamList::check_gui (const std::string &pi_model)
 			char *         end_0     = const_cast <char *> (nbands_0);
 			long           nbr_bands = strtol (nbands_0, &end_0, 10);
 			if (   end_0 != nbands_0
-			    && end_0 - nbands_0 + peq_len == pi_model.length ())
+			    && end_0 - nbands_0 + peq_len == int (pi_model.length ()))
 			{
 				if (nbr_bands > 0)
 				{

@@ -130,8 +130,6 @@ MsgHandlerInterface::EvtProp	FxPEq::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
-	const int      node_id = evt.get_target ();
-
 	if (evt.is_button_ex ())
 	{
 		const Button   but = evt.get_button_ex ();
@@ -211,7 +209,6 @@ void	FxPEq::update_display ()
 	_page_ptr->push_back (_prec_sptr);
 
 	const int      scr_w = _page_size [0];
-	const int      h_t   = _fnt_t_ptr->get_char_h ();
 
 	const float    f_beg = 20;    // Hz
 	const float    f_end = 20000; // Hz
@@ -227,7 +224,6 @@ void	FxPEq::update_display ()
 	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
 	const doc::Slot &    slot    = preset.use_slot (slot_id);
 
-	const doc::PluginSettings *   settings_main_ptr = 0;
 	auto           it_settings = slot._settings_all.find (slot._pi_model);
 	if (it_settings == slot._settings_all.end ())
 	{
@@ -433,11 +429,6 @@ void	FxPEq::update_param_txt ()
 	// Band parameters
 	else
 	{
-		const int            slot_id = _loc_edit._slot_id;
-		const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-		const doc::Slot &    slot    = preset.use_slot (slot_id);
-
-		const doc::PluginSettings *   settings_main_ptr = 0;
 		auto           it_settings = slot._settings_all.find (slot._pi_model);
 		if (it_settings == slot._settings_all.end ())
 		{
