@@ -652,29 +652,17 @@ H (z) = (b0 + b1 * z^-1 + b2 * z^-2) / (1 + a1 * z^-1 + a2 * z^-2)
 
 z -> exp (j * w)
 
-exp (jw) = cos (w) + j * sin (w)
-c1 = cos (-w)   =  cos (w)
-c2 = cos (-2*w) =  cos (2*w)
-s1 = sin (-w)   = -sin (w)
-s2 = sin (-2*w) = -sin (2*w)
+c1 = cos (w)
+s1 = sin (w)
 
-H (w)
-= (b0 + b1 * exp (-jw) + b2 * exp (-2jw)) / (1 + a1 * exp (-jw) + a2 * exp (-2jw))
-= (b0 + b1 * (c1 + j*s1) + b2 * (c2 + j*s2) / (1 + a1 * (c1 + j*s1) + a2 * (c2 + j*s2))
-=   ((b0 + b1 * c1 + b2 * c2) + j * (b1 * s1 + b2 * s2))
-  / (( 1 + a1 * c1 + a2 * c2) + j * (a1 * s1 + a2 * s2))
-
-(p + j*q) / (r + j*s)
-= (p + j*q) * (r - j*s) / (r^2 + s^2)
-= (p * r + q * s + j * (q * r - p *s)) / (r^2 + s^2)
-
+|H (z)|^2 = H (z) * H*(z)
+= (((b0 + b2) * c1 + b1)^2 + ((b0 - b2) * s1)^2) / (((1 + a2) * c1 + a1)^2 + ((1 - a2) * s1)^2)
 */
 void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <float> &puls_arr, const Biq &biq) const
 {
 	const int      nbr_freq = int (puls_arr.size ());
 	assert (int (lvl_arr.size ()) == nbr_freq);
 
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
 	const auto     one  = fstb::ToolsSimd::set1_f32 (1);
 	const auto     b0   = fstb::ToolsSimd::set1_f32 (biq._b [0]);
 	const auto     b1   = fstb::ToolsSimd::set1_f32 (biq._b [1]);
@@ -686,8 +674,7 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 	{
 		const int      ns = nbr_freq - f_idx;
 
-		// Negative
-		const auto     w  = zero - fstb::ToolsSimd::loadu_f32_part (
+		const auto     w  = fstb::ToolsSimd::loadu_f32_part (
 			&puls_arr [f_idx], ns
 		);
 
@@ -695,20 +682,14 @@ void	FxPEq::compute_freq_resp (std::vector <float> &lvl_arr, const std::vector <
 		fstb::ToolsSimd::VectF32   s1;
 		fstb::Approx::cos_sin_rbj (c1, s1, w);
 
-		fstb::ToolsSimd::VectF32   c2;
-		fstb::ToolsSimd::VectF32   s2;
-		fstb::Approx::cos_sin_rbj (c2, s2, w + w);
-
-		const auto     p =  b0 + b1 * c1 + b2 * c2;
-		const auto     q =       b1 * s1 + b2 * s2;
-		const auto     r = one + a1 * c1 + a2 * c2;
-		const auto     s =       a1 * s1 + a2 * s2;
-
-		const auto     hd_inv = fstb::ToolsSimd::rcp_approx2 (r * r + s * s);
-		const auto     hn_r   = p * r + q * s;
-		const auto     hn_i   = q * r - p * s;
-		const auto     h_abs  =
-			fstb::ToolsSimd::sqrt (hn_r * hn_r + hn_i * hn_i) * hd_inv;
+		const auto     h2_nc = (b0  + b2) * c1 + b1;
+		const auto     h2_dc = (one + a2) * c1 + a1;
+		const auto     h2_ns = (b0  - b2) * s1;
+		const auto     h2_ds = (one - a2) * s1;
+		const auto     h2_n  = h2_nc * h2_nc + h2_ns * h2_ns;
+		const auto     h2_d  = h2_dc * h2_dc + h2_ds * h2_ds;
+		const auto     h2    = h2_n * fstb::ToolsSimd::rcp_approx2 (h2_d);
+		const auto     h_abs = fstb::ToolsSimd::sqrt (h2);
 
 		auto           l =
 			fstb::ToolsSimd::loadu_f32_part (&lvl_arr [f_idx], ns);
