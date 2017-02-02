@@ -227,7 +227,7 @@ void	WorldAudio::reset_everything ()
 void	WorldAudio::reset_plugin (int pi_id)
 {
 	PluginPool::PluginDetails &  details = _pi_pool.use_plugin (pi_id);
-	int            dummy_lat;
+	int            dummy_lat = 0;
 	details._pi_uptr->reset (_sample_freq, _max_block_size, dummy_lat);
 }
 
