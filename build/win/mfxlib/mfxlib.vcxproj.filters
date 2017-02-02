@@ -1899,6 +1899,12 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\FxPEq.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZMatched.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZMatched.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

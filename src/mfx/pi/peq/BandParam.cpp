@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/dsp/iir/DesignEq2p.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
+#include "mfx/dsp/iir/TransSZMatched.h"
 #include "mfx/pi/peq/BandParam.h"
 
 #include <cassert>
@@ -125,6 +126,11 @@ bool	BandParam::is_bypass () const
 
 
 
+// 1 = Bilinear 100%
+// 2 = Bilinear + Orfanidis for peaks
+// 3 = Vicanek (not working well for now)
+#define mfx_pi_peq_BandParam_METHOD 2
+
 void	BandParam::create_filter (float bz [3], float az [3], float fs, float inv_fs) const
 {
 	assert (fs > 0);
@@ -138,7 +144,8 @@ void	BandParam::create_filter (float bz [3], float az [3], float fs, float inv_f
 	switch (_type)
 	{
 	case	PEqType_PEAK:
-#if 1	// This design requires more calculations
+#if (mfx_pi_peq_BandParam_METHOD == 2)
+		// This design requires more calculations
 		dsp::iir::DesignEq2p::make_nyq_peak (
 			bz,
 			az,
@@ -171,11 +178,17 @@ void	BandParam::create_filter (float bz [3], float az [3], float fs, float inv_f
 
 	if (! z_flag)
 	{
+#if (mfx_pi_peq_BandParam_METHOD == 3)
+		dsp::iir::TransSZMatched::map_s_to_z (bz, az, bs, as, _freq, fs);
+#else
 		const float    k =
 			dsp::iir::TransSZBilin::compute_k_approx (_freq * inv_fs);
 		dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bs, as, k);
+#endif
 	}
 }
+
+#undef mfx_pi_peq_BandParam_METHOD
 
 
 

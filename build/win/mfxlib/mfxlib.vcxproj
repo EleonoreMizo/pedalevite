@@ -404,6 +404,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransS.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZBilin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZBilin.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZMatched.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZMatched.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\InertiaLin.h" />

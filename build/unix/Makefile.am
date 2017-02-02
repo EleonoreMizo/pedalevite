@@ -332,6 +332,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/TransSZBilin.cpp \
         ../../src/mfx/dsp/iir/TransSZBilin.h \
         ../../src/mfx/dsp/iir/TransSZBilin.hpp \
+        ../../src/mfx/dsp/iir/TransSZMatched.h \
+        ../../src/mfx/dsp/iir/TransSZMatched.hpp \
         ../../src/mfx/dsp/iir/Upsampler4xSimd.h \
         ../../src/mfx/dsp/iir/Upsampler4xSimd.hpp \
         ../../src/mfx/dsp/mix/Align.cpp \
