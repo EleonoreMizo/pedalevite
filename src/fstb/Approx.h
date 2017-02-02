@@ -45,6 +45,8 @@ public:
 
 	static inline ToolsSimd::VectF32
 	               sin_rbj (ToolsSimd::VectF32 x);
+	static inline ToolsSimd::VectF32
+	               cos_rbj (ToolsSimd::VectF32 x);
 	static inline void
 	               cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x);
 	static inline ToolsSimd::VectF32

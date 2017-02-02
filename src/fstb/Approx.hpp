@@ -55,9 +55,26 @@ ToolsSimd::VectF32	Approx::sin_rbj (ToolsSimd::VectF32 x)
 
 
 
+// f(x) ~ cos (x)
+// x in [-pi ; pi]
+// Max error: 2.411e-8
+// Scaled formula
+ToolsSimd::VectF32	Approx::cos_rbj (ToolsSimd::VectF32 x)
+{
+	x = ToolsSimd::abs (x);
+
+	const auto     hp  = ToolsSimd::set1_f32 (float ( 0.5 * fstb::PI));
+	x = hp - x;
+
+	return sin_rbj (x);
+}
+
+
+
 // f1 (x) ~ sin (x)
 // f2 (x) ~ cos (x)
 // x in [-3*pi ; 3*pi]
+// Scaled formula
 void	Approx::cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x)
 {
 	const auto     hp  = ToolsSimd::set1_f32 (float ( 0.5 * fstb::PI));
