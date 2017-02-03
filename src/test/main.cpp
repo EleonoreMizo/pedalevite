@@ -2,6 +2,9 @@
 #include "fstb/def.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
+#include "mfx/doc/SerRText.h"
+#include "mfx/doc/SerWText.h"
+#include "mfx/doc/Setup.h"
 #include "mfx/dsp/ctrl/lfo/LfoModule.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
@@ -9,7 +12,11 @@
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/Param.h"
+#include "mfx/pi/peq/Param.h"
+#include "mfx/pi/peq/PEqDesc.h"
+#include "mfx/pi/peq/PEqType.h"
 #include "mfx/piapi/EventTs.h"
+#include "mfx/FileIOInterface.h"
 #include "test/EPSPlot.h"
 #include "test/Gridaxis.h"
 
@@ -706,6 +713,161 @@ int	draw_all_lfos ()
 
 
 
+void	patch_setup_file_fix_peq_freq (mfx::doc::PluginSettings &settings, const mfx::piapi::ParamDescInterface &desc_freq, const mfx::piapi::ParamDescInterface &desc_type, const mfx::piapi::ParamDescInterface &desc_gain)
+{
+	const int      nbr_param = settings._param_list.size ();
+	const int      nbr_bands = nbr_param / mfx::pi::peq::Param_NBR_ELT;
+
+	for (int b_cnt = 0; b_cnt < nbr_bands; ++b_cnt)
+	{
+		const int	   index_base = b_cnt * mfx::pi::peq::Param_NBR_ELT;
+		const int      index_type = index_base + mfx::pi::peq::Param_TYPE;
+		const int      index_freq = index_base + mfx::pi::peq::Param_FREQ;
+		const int      index_gain = index_base + mfx::pi::peq::Param_GAIN;
+
+		const float    type_nrm = settings._param_list [index_type];
+		const double   type_nat = desc_type.conv_nrm_to_nat (type_nrm);
+		const mfx::pi::peq::PEqType   type =
+			mfx::pi::peq::PEqType (fstb::round_int (type_nat));
+
+		if (type == mfx::pi::peq::PEqType_PEAK)
+		{
+			const float    gain_nrm = settings._param_list [index_gain];
+			const double   gain_nat = desc_gain.conv_nrm_to_nat (gain_nrm);
+			if (! fstb::is_eq_rel (gain_nat, 1.0, 1e-3))
+			{
+				float          freq_nrm = settings._param_list [index_freq];
+				double         freq_nat = desc_freq.conv_nrm_to_nat (freq_nrm);
+
+				freq_nat *= 0.5;
+
+				freq_nrm = float (desc_freq.conv_nat_to_nrm (freq_nat));
+				settings._param_list [index_freq] = freq_nrm;
+			}
+		}
+	}
+}
+
+int	patch_setup_file ()
+{
+	int            ret_val = 0;
+
+	const std::string pathname_load = "../../../etc/config/current"; // Put the settings file here
+	const std::string pathname_save = pathname_load + ".patched";
+
+	std::string    content;
+	std::unique_ptr <mfx::doc::Setup> sss_uptr;
+
+	// Loading
+	ret_val = mfx::FileIOInterface::read_txt_file_direct (
+		pathname_load, content
+	);
+
+	if (ret_val == 0)
+	{
+		mfx::doc::SerRText   ser_r;
+		ser_r.start (content);
+		sss_uptr = std::unique_ptr <mfx::doc::Setup> (new mfx::doc::Setup);
+		sss_uptr->ser_read (ser_r);
+		ret_val = ser_r.terminate ();
+	}
+	
+	// Put the code to change the settings here
+	if (ret_val == 0)
+	{
+#if 1
+
+		// In all PEq settings, divides by 2 the frequencies for all active
+		// bell curves to preserve the tones after bugfix b995bbb221.
+
+		mfx::pi::peq::PEqDesc <4> desc_pi;
+		const mfx::piapi::ParamDescInterface & desc_freq =
+			desc_pi.get_param_info (
+				mfx::piapi::ParamCateg_GLOBAL, mfx::pi::peq::Param_FREQ
+			);
+		const mfx::piapi::ParamDescInterface & desc_type =
+			desc_pi.get_param_info (
+				mfx::piapi::ParamCateg_GLOBAL, mfx::pi::peq::Param_TYPE
+			);
+		const mfx::piapi::ParamDescInterface & desc_gain =
+			desc_pi.get_param_info (
+				mfx::piapi::ParamCateg_GLOBAL, mfx::pi::peq::Param_GAIN
+			);
+
+		for (auto &bank : sss_uptr->_bank_arr)
+		{
+			for (auto &preset : bank._preset_arr)
+			{
+				for (auto &slot_node : preset._slot_map)
+				{
+					if (slot_node.second.get () != 0)
+					{
+						auto &         slot = *(slot_node.second);
+						if (slot._pi_model == "peq")
+						{
+						   mfx::doc::PluginSettings * settings_ptr =
+								slot.test_and_get_settings (mfx::PiType_MAIN);
+							if (settings_ptr != 0)
+							{
+								patch_setup_file_fix_peq_freq  (
+									*settings_ptr, desc_freq, desc_type, desc_gain
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		auto           it_peq = sss_uptr->_map_plugin_settings.find ("peq");
+		if (it_peq != sss_uptr->_map_plugin_settings.end ())
+		{
+			for (auto &settings_sptr : it_peq->second._cell_arr)
+			{
+				if (settings_sptr.get () != 0)
+				{
+					patch_setup_file_fix_peq_freq  (
+						settings_sptr->_main, desc_freq, desc_type, desc_gain
+					);
+				}
+			}
+		}
+
+#endif
+
+	}
+
+	// Saving
+	mfx::doc::SerWText   ser_w;
+	if (ret_val == 0)
+	{
+		assert (sss_uptr.get () != 0);
+		ser_w.clear ();
+		sss_uptr->ser_write (ser_w);
+		ret_val = ser_w.terminate ();
+	}
+	if (ret_val == 0)
+	{
+		content = ser_w.use_content ();
+		ret_val = mfx::FileIOInterface::write_txt_file_direct (
+			pathname_save, content
+		);
+	}
+
+	if (ret_val == 0)
+	{
+		fprintf (stderr, "Patched settings successfully.\n");
+	}
+	else
+	{
+		fprintf (stderr, "*** An error occured when patching the settings ***\n");
+	}
+
+	return ret_val;
+}
+
+
+
 int main (int argc, char *argv [])
 {
 	int            ret_val = 0;
@@ -718,8 +880,12 @@ int main (int argc, char *argv [])
 	draw_all_lfos ();
 #endif
 
-#if 1
+#if 0
 	test_transients ();
+#endif
+
+#if 0
+	patch_setup_file ();
 #endif
 
 

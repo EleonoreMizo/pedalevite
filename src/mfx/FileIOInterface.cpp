@@ -58,10 +58,6 @@ int	FileIOInterface::read_txt_file (const std::string &pathname, std::string &co
 
 
 
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
 int	FileIOInterface::write_txt_file_direct (const std::string &pathname, const std::string &content)
 {
 	int            ret_val = Err_OK;
@@ -139,6 +135,10 @@ int	FileIOInterface::read_txt_file_direct (const std::string &pathname, std::str
 
 	return ret_val;
 }
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 

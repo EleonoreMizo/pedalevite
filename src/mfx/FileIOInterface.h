@@ -59,6 +59,10 @@ public:
 	int            write_txt_file (const std::string &pathname, const std::string &content);
 	int            read_txt_file (const std::string &pathname, std::string &content);
 
+	// Shared utility functions
+	static int     write_txt_file_direct (const std::string &pathname, const std::string &content);
+	static int     read_txt_file_direct (const std::string &pathname, std::string &content);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -67,10 +71,6 @@ protected:
 
 	virtual int    do_write_txt_file (const std::string &pathname, const std::string &content) = 0;
 	virtual int    do_read_txt_file (const std::string &pathname, std::string &content) = 0;
-
-	// Shared utility functions
-	static int     write_txt_file_direct (const std::string &pathname, const std::string &content);
-	static int     read_txt_file_direct (const std::string &pathname, std::string &content);
 
 
 }; // class FileIOInterface
