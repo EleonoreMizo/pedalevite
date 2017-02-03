@@ -49,6 +49,7 @@ public:
 
 	void           begin_list ();
 	void           end_list ();
+	void           write (float x);
 	void           write (double x);
 	void           write (std::string s);
 
@@ -72,6 +73,7 @@ protected:
 
 	virtual void   do_begin_list () = 0;
 	virtual void   do_end_list () = 0;
+	virtual void   do_write (float x) = 0;
 	virtual void   do_write (double x) = 0;
 	virtual void   do_write (std::string s) = 0;
 

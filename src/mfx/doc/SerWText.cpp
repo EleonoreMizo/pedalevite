@@ -143,6 +143,18 @@ void	SerWText::do_end_list ()
 
 
 
+void	SerWText::do_write (float x)
+{
+	if (! _err_flag)
+	{
+		char           txt_0 [127+1];
+		fstb::snprintf4all (txt_0, sizeof (txt_0), "%g", x);
+		add_base_elt (txt_0);
+	}
+}
+
+
+
 void	SerWText::do_write (double x)
 {
 	if (! _err_flag)

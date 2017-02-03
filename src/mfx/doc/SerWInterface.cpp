@@ -56,6 +56,15 @@ void	SerWInterface::end_list ()
 
 
 
+void	SerWInterface::write (float x)
+{
+	assert (std::isfinite (x));
+
+	do_write (x);
+}
+
+
+
 void	SerWInterface::write (double x)
 {
 	assert (std::isfinite (x));

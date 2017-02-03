@@ -71,6 +71,7 @@ protected:
 	// doc::mfx::SerWInterface
 	virtual void   do_begin_list ();
 	virtual void   do_end_list ();
+	virtual void   do_write (float x);
 	virtual void   do_write (double x);
 	virtual void   do_write (std::string s);
 
