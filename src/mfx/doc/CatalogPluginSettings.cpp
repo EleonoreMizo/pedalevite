@@ -49,7 +49,7 @@ bool	CatalogPluginSettings::is_empty () const
 	{
 		if (cell_sptr.get () != 0)
 		{
-			return true;
+			return false;
 		}
 	}
 
