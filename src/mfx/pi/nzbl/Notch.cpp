@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cmath>
+#include <cstring>
 
 
 
