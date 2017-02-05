@@ -54,6 +54,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/lfo1/LfoDesc.h"
 #include "mfx/pi/lpfs/Squeezer.h"
 #include "mfx/pi/lpfs/SqueezerDesc.h"
+#include "mfx/pi/nzbl/NoiseBleach.h"
+#include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/peq/PEq.h"
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/phase1/Phaser.h"
@@ -109,7 +111,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::spkem::SpeakerEmuDesc , mfx::pi::spkem::SpeakerEmu       >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::tost::ToStereoDesc    , mfx::pi::tost::ToStereo          >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::distpwm::DistoPwmDesc , mfx::pi::distpwm::DistoPwm       >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::tremh::HarmTremDesc   , mfx::pi::tremh::HarmTrem         >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::tremh::HarmTremDesc   , mfx::pi::tremh::HarmTrem         >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::nzbl::NoiseBleachDesc , mfx::pi::nzbl::NoiseBleach       >::create ()
 		};
 
 		fact_list = l;

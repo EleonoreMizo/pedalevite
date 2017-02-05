@@ -160,14 +160,17 @@
     <Filter Include="mfx\pi\tost">
       <UniqueIdentifier>{dda3c7ee-6ef4-4d10-8b89-d0a7727bc8dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mfx\pi\skel">
-      <UniqueIdentifier>{1c763792-00d6-4e59-ac63-e00e352caa87}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mfx\pi\distpwm">
       <UniqueIdentifier>{9dd0ff58-4469-45a2-b26b-2c3b8f8c95a8}</UniqueIdentifier>
     </Filter>
     <Filter Include="mfx\pi\tremh">
       <UniqueIdentifier>{65dffbb2-ed16-4866-ad89-1cdf235d7062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\nzbl">
+      <UniqueIdentifier>{549504dd-71a4-444d-993e-d5480ccf94c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\-- skel --">
+      <UniqueIdentifier>{1c763792-00d6-4e59-ac63-e00e352caa87}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1831,13 +1834,13 @@
       <Filter>mfx\pi\tost</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\skel\Eton.h">
-      <Filter>mfx\pi\skel</Filter>
+      <Filter>mfx\pi\-- skel --</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\skel\EtonDesc.h">
-      <Filter>mfx\pi\skel</Filter>
+      <Filter>mfx\pi\-- skel --</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\skel\Param.h">
-      <Filter>mfx\pi\skel</Filter>
+      <Filter>mfx\pi\-- skel --</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.h">
       <Filter>mfx\pi\distpwm</Filter>
@@ -1904,6 +1907,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZMatched.hpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.h">
+      <Filter>mfx\pi\nzbl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.h">
+      <Filter>mfx\pi\nzbl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Param.h">
+      <Filter>mfx\pi\nzbl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Cst.h">
+      <Filter>mfx\pi\nzbl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Notch.h">
+      <Filter>mfx\pi\nzbl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2586,10 +2604,10 @@
       <Filter>mfx\pi\tost</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\skel\Eton.cpp">
-      <Filter>mfx\pi\skel</Filter>
+      <Filter>mfx\pi\-- skel --</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\skel\EtonDesc.cpp">
-      <Filter>mfx\pi\skel</Filter>
+      <Filter>mfx\pi\-- skel --</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.cpp">
       <Filter>mfx\pi\distpwm</Filter>
@@ -2638,6 +2656,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\FxPEq.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.cpp">
+      <Filter>mfx\pi\nzbl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.cpp">
+      <Filter>mfx\pi\nzbl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\Notch.cpp">
+      <Filter>mfx\pi\nzbl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

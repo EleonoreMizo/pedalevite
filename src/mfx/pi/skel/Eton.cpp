@@ -61,6 +61,8 @@ Eton::Eton ()
 ,	_param_change_flag ()
 ,	_chn_arr ()
 {
+	dsp::mix::Align::setup ();
+
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
@@ -72,8 +74,6 @@ Eton::Eton ()
 	{
 		/*** To do ***/
 	}
-
-	dsp::mix::Align::setup ();
 }
 
 
@@ -113,6 +113,8 @@ int	Eton::do_reset (double sample_freq, int max_buf_len, int &latency)
 		/*** To do ***/
 	}
 
+	_param_change_flag/*** To do: all low-level flags ***/.set ();
+
 	update_param (true);
 
 	clear_buffers ();
@@ -126,12 +128,12 @@ int	Eton::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 void	Eton::do_process_block (ProcInfo &proc)
 {
-	const int      nbr_chn_in =
+	const int      nbr_chn_src =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_out =
+	const int      nbr_chn_dst =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
-	assert (nbr_chn_in <= nbr_chn_out);
-	const int      nbr_chn_proc = std::min (nbr_chn_in, nbr_chn_out);
+	assert (nbr_chn_src <= nbr_chn_dst);
+	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -159,7 +161,7 @@ void	Eton::do_process_block (ProcInfo &proc)
 	}
 
 	// Duplicates the remaining output channels
-	for (int chn_index = 0; chn_index < nbr_chn_out; ++chn_index)
+	for (int chn_index = 0; chn_index < nbr_chn_dst; ++chn_index)
 	{
 		dsp::mix::Align::copy_1_1 (
 			proc._dst_arr [chn_index],

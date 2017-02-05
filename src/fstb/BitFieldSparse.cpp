@@ -73,9 +73,9 @@ void	BitFieldSparse::set_nbr_elt (long nbr_elt)
 	long				nbr_elt_l2 = 0;
 	if (nbr_elt > 0)
 	{
-		nbr_elt_l2 = get_prev_pow_2 (uint32_t (nbr_elt));
+		nbr_elt_l2 = get_next_pow_2 (uint32_t (nbr_elt));
 	}
-	int				nbr_lvl = (nbr_elt_l2 - 1) / BITDEPTH_L2;
+	int				nbr_lvl = (nbr_elt_l2 + BITDEPTH_L2 - 1) / BITDEPTH_L2;
 	nbr_lvl = std::max (nbr_lvl, 1);
 
 	// Leaves the object in a safe state, even if an allocation fails and

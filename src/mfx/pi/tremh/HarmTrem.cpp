@@ -28,13 +28,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "fstb/ToolsSimd.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
+#include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/tremh/HarmTrem.h"
 #include "mfx/pi/tremh/LfoType.h"
 #include "mfx/pi/tremh/Param.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
-#include "mfx/dsp/mix/Align.h"
 
 #include <cassert>
 
