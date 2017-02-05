@@ -481,10 +481,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/lpfs/SqueezerDesc.cpp \
         ../../src/mfx/pi/lpfs/SqueezerDesc.h \
         ../../src/mfx/pi/nzbl/Cst.h \
+        ../../src/mfx/pi/nzbl/NoiseBleach.cpp \
         ../../src/mfx/pi/nzbl/NoiseBleach.h \
-        ../../src/mfx/pi/nzbl/NoiseBleach.hpp \
+        ../../src/mfx/pi/nzbl/NoiseBleachDesc.cpp \
         ../../src/mfx/pi/nzbl/NoiseBleachDesc.h \
-        ../../src/mfx/pi/nzbl/NoiseBleachDesc.hpp \
+        ../../src/mfx/pi/nzbl/Notch.cpp \
+        ../../src/mfx/pi/nzbl/Notch.h \
         ../../src/mfx/pi/nzbl/Param.h \
         ../../src/mfx/pi/peq/BandParam.cpp \
         ../../src/mfx/pi/peq/BandParam.h \
