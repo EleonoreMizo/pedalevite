@@ -44,11 +44,11 @@ namespace iir
 Name: set_coef
 Description:
 	Set the coefficient for the first order all pass transfert function:
-	                 -1
-	        b0 +    z
+	                -1
+	       b0 +    z
 	H(z) = -----------
-	                 -1
-	        1  + b0.z
+	                -1
+	       1  + b0.z
 	The equivalent time equation is:
 	y[t] = b0.x[t-0] + x[t-1] - b0.y[t-1]
 Input parameters:
