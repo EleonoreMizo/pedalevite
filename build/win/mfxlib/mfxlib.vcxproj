@@ -417,6 +417,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Generic.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Simd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Simd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Cst.h" />
@@ -795,6 +797,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\mix\Align.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\mix\Generic.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\nz\WhiteFast.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43.cpp" />
