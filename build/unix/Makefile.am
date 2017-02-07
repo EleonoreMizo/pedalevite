@@ -285,6 +285,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/AllPass1p.cpp \
         ../../src/mfx/dsp/iir/AllPass1p.h \
         ../../src/mfx/dsp/iir/AllPass1p.hpp \
+        ../../src/mfx/dsp/iir/AllPass1pChain.cpp \
+        ../../src/mfx/dsp/iir/AllPass1pChain.h \
+        ../../src/mfx/dsp/iir/AllPass1pChain.hpp \
         ../../src/mfx/dsp/iir/AllPass2p.cpp \
         ../../src/mfx/dsp/iir/AllPass2p.h \
         ../../src/mfx/dsp/iir/AllPass2p.hpp \

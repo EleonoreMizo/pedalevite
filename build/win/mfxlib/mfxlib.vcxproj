@@ -364,6 +364,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdOdd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass2p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass2p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.h" />
@@ -782,6 +784,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1p.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp" />
