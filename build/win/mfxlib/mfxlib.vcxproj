@@ -533,6 +533,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phaser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\StereoOut.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\skel\Eton.h">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClInclude>
@@ -741,7 +742,10 @@
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlSource.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\Cst.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\Cst.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\CtrlUnit.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionBank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionParam.cpp" />
@@ -855,6 +859,10 @@
     <ClCompile Include="..\..\..\src\mfx\pi\param\MapRatio.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\Simple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\peq\BandParam.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\phase1\Cst.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phase90Interface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phaser.cpp" />

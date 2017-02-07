@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/phase1/Cst.h"
 #include "mfx/pi/phase1/Param.h"
 #include "mfx/pi/phase1/PhaserDesc.h"
+#include "mfx/pi/phase1/StereoOut.h"
 #include "mfx/pi/ParamMapFdbk.h"
 
 #include <cassert>
@@ -176,6 +177,58 @@ PhaserDesc::PhaserDesc ()
 		"%4.1f"
 	);
 	_desc_set.add_glob (Param_BPF_Q, log_ptr);
+
+	// Direction
+	enu_ptr = new param::TplEnum (
+		"Down\nUp",
+		"Direction\nDir\nD",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_DIR, enu_ptr);
+
+	// Mono phase mix
+	enu_ptr = new param::TplEnum (
+		"Left\nMixed",
+		"Mono phase mix\nMono mix\nMono\nM",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_OP_MONO, enu_ptr);
+	
+	// Stereo phase mix
+	enu_ptr = new param::TplEnum (
+		"Spat mix\nSpat sep\nBi-mono",
+		"Stereo phase mix\nStereo mix\nStereo\nS",
+		"",
+		0,
+		"%s"
+	);
+	assert (enu_ptr->get_nat_max () == StereoOut_NBR_ELT - 1);
+	_desc_set.add_glob (Param_OP_STEREO, enu_ptr);
+
+	// All-pass delay
+	lin_ptr = new param::TplLin (
+		0, Cst::_max_apf_delay_time,
+		"All-pass delay\nAllP delay\nAP delay\nAP dly\nD",
+		"us",
+		0,
+		"%4.0f"
+	);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_MICRO);
+	_desc_set.add_glob (Param_AP_DELAY, lin_ptr);
+
+	// All-pass coefficient
+	lin_ptr = new param::TplLin (
+		-0.5, 0.5,
+		"All-pass coefficient\nAll-pass coef\nAllP coef\nAP coef\nC",
+		"",
+		0,
+		"%+5.2f"
+	);
+	_desc_set.add_glob (Param_AP_COEF, lin_ptr);
 }
 
 

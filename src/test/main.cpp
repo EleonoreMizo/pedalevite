@@ -10,11 +10,16 @@
 #include "mfx/dsp/dyn/EnvHelper.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
+#include "mfx/dsp/nz/WhiteFast.h"
 #include "mfx/pi/dist1/DistoSimple.h"
+#include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist1/Param.h"
 #include "mfx/pi/peq/Param.h"
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/peq/PEqType.h"
+#include "mfx/pi/phase1/Param.h"
+#include "mfx/pi/phase1/Phaser.h"
+#include "mfx/pi/phase1/PhaserDesc.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/FileIOInterface.h"
 #include "test/EPSPlot.h"
@@ -365,6 +370,172 @@ int	generate_test_signal (double &sample_freq, std::vector <std::vector <float> 
 	return ret_val;
 }
 
+
+
+int    generate_test_signal_noise_w (double &sample_freq, std::vector <std::vector <float> > &chn_arr)
+{
+	sample_freq = 44100;
+	if (chn_arr.empty ())
+	{
+		chn_arr.resize (1);
+	}
+	const size_t   len = size_t (sample_freq * 10);
+	mfx::dsp::nz::WhiteFast gen;
+	for (auto &chn : chn_arr)
+	{
+		chn.resize (len);
+		gen.process_block (&chn [0], int (len));
+	}
+
+	return 0;
+}
+
+
+
+class PiProc
+{
+public:
+	typedef std::shared_ptr <mfx::piapi::PluginDescInterface> DescSPtr;
+	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
+	void           set_desc (DescSPtr desc_sptr);
+	int            setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o, double sample_freq, int max_block_size, int &latency);
+	void           set_param_nat (int index, double val_nat);
+	void           reset_param ();
+	mfx::piapi::PluginInterface::ProcInfo &
+	               use_proc_info ();
+	float *const * use_buf_list_src () const;
+	float *const * use_buf_list_dst () const;
+	float *const * use_buf_list_sig () const;
+private:
+	DescSPtr       _desc_sptr;
+	std::vector <mfx::piapi::EventTs>
+	               _evt_list;
+	std::vector <const mfx::piapi::EventTs *>
+	               _evt_ptr_list;
+	mfx::piapi::PluginInterface::ProcInfo
+	               _proc_info;
+	std::vector <BufAlign>
+	               _buf_list;
+	std::vector <float *>
+	               _buf_src_ptr_list;
+	std::vector <float *>
+	               _buf_dst_ptr_list;
+	std::vector <float *>
+	               _buf_sig_ptr_list;
+};
+
+void	PiProc::set_desc (DescSPtr desc_sptr)
+{
+	assert (desc_sptr.get () != 0);
+
+	_desc_sptr = desc_sptr;
+}
+
+int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o, double sample_freq, int max_block_size, int &latency)
+{
+	assert (_desc_sptr.get () != 0);
+	const int      mbs_alig = (max_block_size + 3) & -4;
+	int            nbr_i = 1;
+	int            nbr_o = 1;
+	int            nbr_s = 0;
+	_desc_sptr->get_nbr_io (nbr_i, nbr_o, nbr_s);
+	assert (nbr_chn_i >= nbr_i);
+	assert (nbr_chn_o >= nbr_o);
+	_buf_list.resize (nbr_chn_i * nbr_i + nbr_chn_o * nbr_o + nbr_s);
+	_buf_src_ptr_list.resize (nbr_chn_i * nbr_i);
+	_buf_dst_ptr_list.resize (nbr_chn_o * nbr_o);
+	_buf_sig_ptr_list.resize (nbr_s);
+
+	int            buf_idx = 0;
+
+	for (int chn = 0; chn < nbr_chn_i * nbr_i; ++chn)
+	{
+		_buf_list [buf_idx].resize (mbs_alig);
+		_buf_src_ptr_list [chn] = &_buf_list [buf_idx] [0];
+		++ buf_idx;
+	}
+	_proc_info._src_arr = &_buf_src_ptr_list [0];
+	_proc_info._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN ] = nbr_chn_i;
+
+	for (int chn = 0; chn < nbr_chn_o * nbr_o; ++chn)
+	{
+		_buf_list [buf_idx].resize (mbs_alig);
+		_buf_dst_ptr_list [chn] = &_buf_list [buf_idx] [0];
+		++ buf_idx;
+	}
+	_proc_info._dst_arr = &_buf_dst_ptr_list [0];
+	_proc_info._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT] = nbr_chn_o;
+
+	for (int chn = 0; chn < nbr_s; ++chn)
+	{
+		_buf_list [buf_idx].resize (mbs_alig);
+		_buf_sig_ptr_list [chn] = &_buf_list [buf_idx] [0];
+		++ buf_idx;
+	}
+	_proc_info._sig_arr = (nbr_s <= 0) ? 0 : &_buf_sig_ptr_list [0];
+
+	latency = 0;
+
+	return pi.reset (sample_freq, max_block_size, latency);
+}
+
+void	PiProc::set_param_nat (int index, double val_nat)
+{
+	assert (_desc_sptr.get () != 0);
+	assert (_evt_list.size () == _evt_ptr_list.size ());
+	assert (index >= 0);
+	assert (index < _desc_sptr->get_nbr_param (mfx::piapi::ParamCateg_GLOBAL));
+	const mfx::piapi::ParamDescInterface & desc_param =
+		_desc_sptr->get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+	const double   val_nrm = desc_param.conv_nat_to_nrm (val_nat);
+
+	mfx::piapi::EventTs  evt;
+	evt._timestamp = 0;
+	evt._type      = mfx::piapi::EventType_PARAM;
+	evt._evt._param._categ = mfx::piapi::ParamCateg_GLOBAL;
+	evt._evt._param._note_id = 0;
+	evt._evt._param._index = index;
+	evt._evt._param._val   = float (val_nrm);
+	_evt_list.push_back (evt);
+	_evt_ptr_list.clear ();
+	for (const auto &evt : _evt_list)
+	{
+		_evt_ptr_list.push_back (&evt);
+	}
+	_proc_info._evt_arr = &_evt_ptr_list [0];
+	_proc_info._nbr_evt = int (_evt_ptr_list.size ());
+}
+
+void	PiProc::reset_param ()
+{
+	_evt_list.clear ();
+	_evt_ptr_list.clear ();
+	_proc_info._evt_arr = 0;
+	_proc_info._nbr_evt = 0;
+}
+
+mfx::piapi::PluginInterface::ProcInfo &	PiProc::use_proc_info ()
+{
+	return _proc_info;
+}
+
+float * const *	PiProc::use_buf_list_src () const
+{
+	return &_buf_src_ptr_list [0];
+}
+
+float * const *	PiProc::use_buf_list_dst () const
+{
+	return &_buf_dst_ptr_list [0];
+}
+
+float * const *	PiProc::use_buf_list_sig () const
+{
+	return (_buf_sig_ptr_list.empty ()) ? 0 : &_buf_sig_ptr_list [0];
+}
+
+
+
 int	test_disto ()
 {
 	double         sample_freq;
@@ -378,34 +549,16 @@ int	test_disto ()
 		mfx::pi::dist1::DistoSimple   dist;
 		const int      max_block_size = 64;
 		int            latency = 0;
-		dist.reset (sample_freq, max_block_size, latency);
+		PiProc         pi_proc;
+		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::dist1::DistoSimpleDesc));
+		pi_proc.setup (dist, 1, 1, sample_freq, max_block_size, latency);
 		size_t         pos = 0;
-		std::vector <float, fstb::AllocAlign <float, 16> >  tmp_s (max_block_size);
-		std::vector <float, fstb::AllocAlign <float, 16> >  tmp_d (max_block_size);
-		std::array <float *, 1> dst_arr = {{ &tmp_d [0] }};
-		std::array <float *, 1> src_arr = {{ &tmp_s [0] }};
-		mfx::piapi::PluginInterface::ProcInfo  proc_info;
-		proc_info._dst_arr = &dst_arr [0];
-		proc_info._src_arr = &src_arr [0];
-		proc_info._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN ] = 1;
-		proc_info._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT] = 1;
-		mfx::piapi::EventTs  evt_gain;
-		mfx::piapi::EventTs  evt_bias;
-		evt_gain._timestamp = 0;
-		evt_gain._type      = mfx::piapi::EventType_PARAM;
-		evt_gain._evt._param._categ = mfx::piapi::ParamCateg_GLOBAL;
-		evt_gain._evt._param._note_id = 0;
-		evt_gain._evt._param._index = mfx::pi::dist1::Param_GAIN;
-		evt_gain._evt._param._val   = 0.75f;
-		evt_bias._timestamp = 0;
-		evt_bias._type      = mfx::piapi::EventType_PARAM;
-		evt_bias._evt._param._categ = mfx::piapi::ParamCateg_GLOBAL;
-		evt_bias._evt._param._note_id = 0;
-		evt_bias._evt._param._index = mfx::pi::dist1::Param_BIAS;
-		evt_bias._evt._param._val   = 0.65f;
-		std::array <mfx::piapi::EventTs *, 2>  evt_arr = {{ &evt_gain, &evt_bias }};
-		proc_info._evt_arr = &evt_arr [0];
-		proc_info._nbr_evt = 2;
+		std::array <float *, 1> dst_arr = {{ pi_proc.use_buf_list_dst () [0] }};
+		std::array <float *, 1> src_arr = {{ pi_proc.use_buf_list_src () [0] }};
+		mfx::piapi::PluginInterface::ProcInfo &   proc_info = pi_proc.use_proc_info ();
+		pi_proc.reset_param ();
+		pi_proc.set_param_nat (mfx::pi::dist1::Param_GAIN, 100   );
+		pi_proc.set_param_nat (mfx::pi::dist1::Param_BIAS,   0.30);
 		do
 		{
 			const int      block_len =
@@ -420,6 +573,7 @@ int	test_disto ()
 			);
 
 			dist.process_block (proc_info);
+			pi_proc.reset_param ();
 
 			memcpy (
 				&chn_arr [0] [pos],
@@ -433,6 +587,72 @@ int	test_disto ()
 		while (pos < len);
 
 		ret_val = save_wav ("results/t0.wav", chn_arr, sample_freq, 1);
+	}
+
+	return ret_val;
+}
+
+
+
+int	test_phaser ()
+{
+	static const int  nbr_chn = 1;
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr (nbr_chn);
+
+	int            ret_val = generate_test_signal_noise_w (sample_freq, chn_arr);
+
+	if (ret_val == 0)
+	{
+		const size_t   len = chn_arr [0].size ();
+		mfx::pi::phase1::Phaser plugin;
+		const int      max_block_size = 64;
+		int            latency = 0;
+		PiProc         pi_proc;
+		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::phase1::PhaserDesc));
+		pi_proc.setup (plugin, nbr_chn, nbr_chn, sample_freq, max_block_size, latency);
+		size_t         pos = 0;
+		float * const* dst_arr = pi_proc.use_buf_list_dst ();
+		float * const* src_arr = pi_proc.use_buf_list_src ();
+		mfx::piapi::PluginInterface::ProcInfo &   proc_info = pi_proc.use_proc_info ();
+		pi_proc.reset_param ();
+		pi_proc.set_param_nat (mfx::pi::phase1::Param_SPEED    ,  0.1);
+		pi_proc.set_param_nat (mfx::pi::phase1::Param_DEPTH    ,  0);
+		pi_proc.set_param_nat (mfx::pi::phase1::Param_AP_DELAY ,  0.001);
+		pi_proc.set_param_nat (mfx::pi::phase1::Param_AP_COEF  ,  -0.5);
+		do
+		{
+			const int      block_len =
+				int (std::min (len - pos, size_t (max_block_size)));
+
+			proc_info._nbr_spl = block_len;
+		
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				memcpy (
+					src_arr [chn],
+					&chn_arr [chn] [pos],
+					block_len * sizeof (src_arr [chn] [0])
+				);
+			}
+
+			plugin.process_block (proc_info);
+
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				memcpy (
+					&chn_arr [chn] [pos],
+					dst_arr [chn],
+					block_len * sizeof (chn_arr [chn] [pos])
+				);
+			}
+
+			pi_proc.reset_param ();
+			pos += block_len;
+		}
+		while (pos < len);
+
+		ret_val = save_wav ("results/phaser0.wav", chn_arr, sample_freq, 1);
 	}
 
 	return ret_val;
@@ -874,6 +1094,10 @@ int main (int argc, char *argv [])
 
 #if 0
 	test_disto ();
+#endif
+
+#if 1
+	test_phaser ();
 #endif
 
 #if 0

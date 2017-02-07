@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        Param.h
-        Author: Laurent de Soras, 2016
+        Cst.cpp
+        Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
 
@@ -15,17 +15,18 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#pragma once
-#if ! defined (mfx_pi_phase1_Param_HEADER_INCLUDED)
-#define mfx_pi_phase1_Param_HEADER_INCLUDED
-
 #if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
+	#pragma warning (1 : 4130 4223 4705 4706)
+	#pragma warning (4 : 4355 4786 4800)
 #endif
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include "mfx/pi/phase1/Cst.h"
+
+#include <cassert>
 
 
 
@@ -38,42 +39,25 @@ namespace phase1
 
 
 
-enum Param
-{
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-	Param_SPEED = 0,
-	Param_DEPTH,
-	Param_FDBK_LEVEL,
-	Param_FDBK_COLOR,
-	Param_PHASE_MIX,
-	Param_MANUAL,
-	Param_PHASE_SET,
-	Param_HOLD,
-	Param_BPF_CUTOFF,
-	Param_BPF_Q,
-	Param_DIR,
-	Param_OP_MONO,
-	Param_OP_STEREO,
-	Param_AP_DELAY,
-	Param_AP_COEF,
 
-	Param_NBR_ELT
 
-}; // enum Param
+const float	Cst::_max_apf_delay_time = 0.001f;
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 }  // namespace phase1
 }  // namespace pi
 }  // namespace mfx
-
-
-
-//#include "mfx/pi/phase1/Param.hpp"
-
-
-
-#endif   // mfx_pi_phase1_Param_HEADER_INCLUDED
 
 
 

@@ -531,6 +531,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplMapped.h \
         ../../src/mfx/pi/param/TplMapped.hpp \
         ../../src/mfx/pi/param/TplSq.h \
+        ../../src/mfx/pi/phase1/Cst.cpp \
         ../../src/mfx/pi/phase1/Cst.h \
         ../../src/mfx/pi/phase1/Param.h \
         ../../src/mfx/pi/phase1/Phase90Interface.cpp \
@@ -543,6 +544,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/phase1/Phaser.h \
         ../../src/mfx/pi/phase1/PhaserDesc.cpp \
         ../../src/mfx/pi/phase1/PhaserDesc.h \
+        ../../src/mfx/pi/phase1/StereoOut.h \
         ../../src/mfx/pi/spkem/Param.h \
         ../../src/mfx/pi/spkem/SpeakerEmu.cpp \
         ../../src/mfx/pi/spkem/SpeakerEmu.h \

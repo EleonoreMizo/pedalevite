@@ -46,6 +46,8 @@ class Cst
 public:
 
 	static const int  _nbr_phase_filters = 4;
+	static const float                        // Seconds
+	                  _max_apf_delay_time;
 
 
 

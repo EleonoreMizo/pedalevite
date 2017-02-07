@@ -62,12 +62,15 @@ Phaser::Phaser ()
 ,	_param_change_flag_bpf ()
 ,	_param_change_flag_mix ()
 ,	_param_change_flag_set ()
-,	_phased_voice ()
+,	_param_change_flag_apd ()
+,	_phased_voice_arr (PhasedVoice::_nbr_chn_out)
 ,	_tmp_buf ()
 ,	_tmp_buf_pv ()
 ,	_mbl_align (0)
 ,	_phase_mix_cur (0.5f)
 ,	_phase_mix_old (0.5f)
+,	_mono_mix_flag (false)
+,	_stereo_out (StereoOut_SPAT_MIX)
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
@@ -82,6 +85,11 @@ Phaser::Phaser ()
 	_state_set.set_val_nat (desc_set, Param_HOLD      , 0);
 	_state_set.set_val_nat (desc_set, Param_BPF_CUTOFF, 640);
 	_state_set.set_val_nat (desc_set, Param_BPF_Q     , 0.1);
+	_state_set.set_val_nat (desc_set, Param_DIR       , 0);
+	_state_set.set_val_nat (desc_set, Param_OP_MONO   , 0);
+	_state_set.set_val_nat (desc_set, Param_OP_STEREO , StereoOut_SPAT_MIX);
+	_state_set.set_val_nat (desc_set, Param_AP_DELAY  , 0);
+	_state_set.set_val_nat (desc_set, Param_AP_COEF   , -0.5);
 
 	_state_set.add_observer (Param_SPEED     , _param_change_flag_osc);
 	_state_set.add_observer (Param_DEPTH     , _param_change_flag_osc);
@@ -93,12 +101,18 @@ Phaser::Phaser ()
 	_state_set.add_observer (Param_HOLD      , _param_change_flag_osc);
 	_state_set.add_observer (Param_BPF_CUTOFF, _param_change_flag_bpf);
 	_state_set.add_observer (Param_BPF_Q     , _param_change_flag_bpf);
+	_state_set.add_observer (Param_DIR       , _param_change_flag_osc);
+	_state_set.add_observer (Param_OP_MONO   , _param_change_flag_mix);
+	_state_set.add_observer (Param_OP_STEREO , _param_change_flag_mix);
+	_state_set.add_observer (Param_AP_DELAY  , _param_change_flag_apd);
+	_state_set.add_observer (Param_AP_COEF   , _param_change_flag_apd);
 
 	_param_change_flag_osc .add_observer (_param_change_flag);
 	_param_change_flag_fdbk.add_observer (_param_change_flag);
 	_param_change_flag_bpf .add_observer (_param_change_flag);
 	_param_change_flag_mix .add_observer (_param_change_flag);
 	_param_change_flag_set .add_observer (_param_change_flag);
+	_param_change_flag_apd .add_observer (_param_change_flag);
 }
 
 
@@ -136,12 +150,17 @@ int	Phaser::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_param_change_flag_fdbk.set ();
 	_param_change_flag_bpf .set ();
 	_param_change_flag_mix .set ();
+	_param_change_flag_set .set ();
+	_param_change_flag_apd .set ();
 
 	_mbl_align = (max_buf_len + 3) & -4;
 	_tmp_buf.resize (_mbl_align * Buf_NBR_ELT);
 	_tmp_buf_pv.resize (_mbl_align * PhasedVoice::Buf_NBR_ELT);
 
-	_phased_voice->reset (_sample_freq, max_buf_len, &_tmp_buf_pv [0]);
+	for (auto &voice : _phased_voice_arr)
+	{
+		voice.reset (_sample_freq, max_buf_len, &_tmp_buf_pv [0]);
+	}
 
 	_phase_mix_old = _phase_mix_cur;
 
@@ -154,9 +173,9 @@ int	Phaser::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 void	Phaser::do_process_block (ProcInfo &proc)
 {
-	const int      nbr_chn_in =
+	const int      nbr_chn_src =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_out =
+	const int      nbr_chn_dst =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -187,34 +206,30 @@ void	Phaser::do_process_block (ProcInfo &proc)
 		// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 		// Signal processing
 
-		// Mono input
+		// Mono input for the phased signal
 		const float *  src_ptr = proc._src_arr [0] + pos;
-		if (nbr_chn_in > 1)
+		if (nbr_chn_src > 1)
 		{
-			dsp::mix::Simd <
-				fstb::DataAlign <true>,
-				fstb::DataAlign <false>
-			>::copy_2_1_v (
-				&_tmp_buf [_mbl_align * Buf_SRC],
-				proc._src_arr [0] + pos,
-				proc._src_arr [1] + pos,
-				work_len, 0.5f
-			);
-			src_ptr = &_tmp_buf [0];
+			assert (nbr_chn_dst > 1);
+			if (_stereo_out == StereoOut_SPAT_MIX)
+			{
+				dsp::mix::Simd <
+					fstb::DataAlign <true>,
+					fstb::DataAlign <false>
+				>::copy_2_1_v (
+					&_tmp_buf [_mbl_align * Buf_SRC],
+					proc._src_arr [0] + pos,
+					proc._src_arr [1] + pos,
+					work_len, 0.5f
+				);
+				src_ptr = &_tmp_buf [_mbl_align * Buf_SRC];
+			}
 		}
-
-		// Phasing stage
-		float * const dst_ptr_arr [PhasedVoice::_nbr_chn_out] =
-		{
-			&_tmp_buf [_mbl_align * Buf_PH_L],
-			&_tmp_buf [_mbl_align * Buf_PH_R]
-		};
-		_phased_voice->process_block (dst_ptr_arr, src_ptr, work_len);
 
 		// Input mix
 		int            chn_in     = 0;
-		int            chn_in_inc = (nbr_chn_in > nbr_chn_out) ? 1 : 0;
-		for (int chn_cnt = 0; chn_cnt < nbr_chn_out; ++chn_cnt)
+		int            chn_in_inc = (nbr_chn_src >= nbr_chn_dst) ? 1 : 0;
+		for (int chn_cnt = 0; chn_cnt < nbr_chn_dst; ++chn_cnt)
 		{
 			dsp::mix::Simd <
 				fstb::DataAlign <false>,
@@ -229,23 +244,66 @@ void	Phaser::do_process_block (ProcInfo &proc)
 			chn_in += chn_in_inc;
 		}
 
-		// Phase mix
-		int            chn_out     = 0;
-		int            chn_out_inc =
-			(PhasedVoice::_nbr_chn_out <= nbr_chn_out) ? 1 : 0;
-		for (int chn_cnt = 0; chn_cnt < PhasedVoice::_nbr_chn_out; ++chn_cnt)
+		const int      nbr_pv =
+			  (nbr_chn_src > 1 && _stereo_out != StereoOut_SPAT_MIX)
+			? PhasedVoice::_nbr_chn_out
+			: 1;
+
+		float *        trash_ptr = &_tmp_buf [_mbl_align * Buf_TRASH];
+		for (int pv_cnt = 0; pv_cnt < nbr_pv; ++pv_cnt)
 		{
-			dsp::mix::Simd <
-				fstb::DataAlign <true>,
-				fstb::DataAlign <false>
-			>::mix_1_1_vlrauto (
-				proc._dst_arr [chn_out] + pos,
-				&_tmp_buf [_mbl_align * (Buf_PH_L + chn_cnt)],
-				work_len,
-				_phase_mix_old,
-				_phase_mix_cur
+			if (pv_cnt > 0)
+			{
+				assert (nbr_chn_src > 1);
+				src_ptr = proc._src_arr [pv_cnt] + pos;
+			}
+
+			// Phasing stage
+			float *        dst_ptr_arr [PhasedVoice::_nbr_chn_out] =
+			{
+				&_tmp_buf [_mbl_align * Buf_PH_L],
+				&_tmp_buf [_mbl_align * Buf_PH_R]
+			};
+			if (   (nbr_chn_src == 1 && ! _mono_mix_flag)
+			    || (nbr_chn_src >  1 && _stereo_out == StereoOut_SPAT_SEP))
+			{
+				dst_ptr_arr [PhasedVoice::_nbr_chn_out - 1 - pv_cnt] = trash_ptr;
+			}
+			else if (nbr_chn_src > 1 && _stereo_out == StereoOut_BIMONO && ! _mono_mix_flag)
+			{
+				dst_ptr_arr [1] = trash_ptr;
+			}
+
+			_phased_voice_arr [pv_cnt].process_block (
+				dst_ptr_arr, src_ptr, work_len
 			);
-			chn_out += chn_out_inc;
+
+			// Phase mix
+			int            chn_out     = 0;
+			int            chn_out_inc =
+				(PhasedVoice::_nbr_chn_out <= nbr_chn_dst) ? 1 : 0;
+			if (nbr_chn_src > 1 && _stereo_out != StereoOut_SPAT_MIX)
+			{
+				chn_out     = pv_cnt;
+				chn_out_inc = 0;
+			}
+			for (int chn_cnt = 0; chn_cnt < PhasedVoice::_nbr_chn_out; ++chn_cnt)
+			{
+				if (dst_ptr_arr [chn_cnt] != trash_ptr)
+				{
+					dsp::mix::Simd <
+						fstb::DataAlign <true>,
+						fstb::DataAlign <false>
+					>::mix_1_1_vlrauto (
+						proc._dst_arr [chn_out] + pos,
+						dst_ptr_arr [chn_cnt],
+						work_len,
+						_phase_mix_old,
+						_phase_mix_cur
+					);
+				}
+				chn_out += chn_out_inc;
+			}
 		}
 
 		_phase_mix_old = _phase_mix_cur;
@@ -272,12 +330,18 @@ void	Phaser::update_param (bool force_flag)
 				fstb::round_int (_state_set.get_val_tgt_nat (Param_DEPTH));
 			const float    manual = float (_state_set.get_val_end_nat (Param_MANUAL));
 			const bool     hold_flag =
-				(_state_set.get_val_end_nat (Param_HOLD) >= 0.5f);
+				(_state_set.get_val_tgt_nat (Param_HOLD) >= 0.5f);
+			const bool     neg_flag  =
+				(_state_set.get_val_tgt_nat (Param_DIR) >= 0.5f);
 			
-			_phased_voice->set_speed (speed);
-			_phased_voice->set_depth (depth);
-			_phased_voice->set_phase_shift (manual);
-			_phased_voice->set_hold (hold_flag);
+			for (auto &voice : _phased_voice_arr)
+			{
+				voice.set_speed (speed);
+				voice.set_depth (depth);
+				voice.set_phase_shift (manual);
+				voice.set_hold (hold_flag);
+				voice.set_polarity (neg_flag);
+			}
 		}
 
 		if (_param_change_flag_fdbk (true) || force_flag)
@@ -287,8 +351,11 @@ void	Phaser::update_param (bool force_flag)
 			const float    color =
 				float (_state_set.get_val_end_nat (Param_FDBK_COLOR));
 
-			_phased_voice->set_fdbk_level (level);
-			_phased_voice->set_fdbk_color (color);
+			for (auto &voice : _phased_voice_arr)
+			{
+				voice.set_fdbk_level (level);
+				voice.set_fdbk_color (color);
+			}
 		}
 
 		if (_param_change_flag_bpf (true) || force_flag)
@@ -297,20 +364,43 @@ void	Phaser::update_param (bool force_flag)
 				float (_state_set.get_val_end_nat (Param_BPF_CUTOFF));
 			const float    q = float (_state_set.get_val_end_nat (Param_BPF_Q));
 
-			_phased_voice->set_bpf_cutoff (freq);
-			_phased_voice->set_bpf_q (q);
+			for (auto &voice : _phased_voice_arr)
+			{
+				voice.set_bpf_cutoff (freq);
+				voice.set_bpf_q (q);
+			}
 		}
 
 		if (_param_change_flag_mix (true) || force_flag)
 		{
 			_phase_mix_cur = float (_state_set.get_val_end_nat (Param_PHASE_MIX));
+			_mono_mix_flag = (_state_set.get_val_tgt_nat (Param_OP_MONO) >= 0.5f);
+			_stereo_out    = static_cast <StereoOut> (fstb::round_int (
+				_state_set.get_val_tgt_nat (Param_OP_STEREO)
+			));
 		}
 
 		if (_param_change_flag_set (true) || force_flag)
 		{
 			const float    phase =
 				float (_state_set.get_val_end_nat (Param_PHASE_SET));
-			_phased_voice->set_phase (phase);
+			for (auto &voice : _phased_voice_arr)
+			{
+				voice.set_phase (phase);
+			}
+		}
+
+		if (_param_change_flag_apd (true) || force_flag)
+		{
+			const float    dly  =
+				float (_state_set.get_val_end_nat (Param_AP_DELAY));
+			const float    coef =
+				float (_state_set.get_val_end_nat (Param_AP_COEF));
+			for (auto &voice : _phased_voice_arr)
+			{
+				voice.set_ap_delay (dly);
+				voice.set_ap_coef (coef);
+			}
 		}
 	}
 }

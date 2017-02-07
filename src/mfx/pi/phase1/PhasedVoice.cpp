@@ -55,9 +55,12 @@ PhasedVoice::PhasedVoice ()
 ,	_depth (0)
 ,	_osc_freq (0)
 ,	_osc_hold_flag (false)
+,	_osc_neg_flag (false)
 ,	_fdbk_level (0)
 ,	_fdbk_color (0)
 ,	_fdbk_color_old (0)
+,	_apfd_delay (0)
+,	_apfd_coef (0)
 ,	_phase_osc_cur (0)
 ,	_phase_osc_step (0)
 ,	_phase_man (0)
@@ -79,6 +82,7 @@ PhasedVoice::PhasedVoice ()
 ,	_bpf_changed_flag (true)
 ,	_bpf_flag (false)
 ,	_dist_flag (true)
+,	_apf_changed_flag (true)
 ,	_phase_filter_0 ()
 ,	_phase_filter_1 ()
 ,	_phase_filter_2 ()
@@ -91,6 +95,7 @@ PhasedVoice::PhasedVoice ()
 ,	_max_buf_len (0)
 ,	_buf_size (0)
 ,	_bpf_arr ()
+,	_apf_delay ()
 {
 	assert (_bpf_q < _bpf_q_threshold);
 
@@ -115,7 +120,20 @@ void	PhasedVoice::reset (float sample_freq, int max_buf_len, float *tmp_buf_ptr)
 
 	_buf_size = (_max_buf_len + 3) & -4;
 
+	const int      nbr_apf_max =
+		fstb::ceil_int (Cst::_max_apf_delay_time * sample_freq);
+	_apf_delay.reserve (nbr_apf_max);
+	_apf_changed_flag = true;
+
 	clear_buffers ();
+}
+
+
+
+void	PhasedVoice::set_polarity (bool neg_flag)
+{
+	_osc_neg_flag = neg_flag;
+	update_phase_osc_step ();
 }
 
 
@@ -124,9 +142,8 @@ void	PhasedVoice::set_speed (float speed)
 {
 	assert (speed > 0);
 
-	_osc_freq       = speed;
-	_phase_osc_step = float (2 * fstb::PI) * _osc_freq / _sample_freq;
-	_osc_freq_update_flag = true;
+	_osc_freq = speed;
+	update_phase_osc_step ();
 }
 
 
@@ -218,6 +235,28 @@ void	PhasedVoice::set_dist (bool dist_flag)
 
 
 
+void	PhasedVoice::set_ap_delay (float dly)
+{
+	assert (dly >= 0);
+	assert (dly <= Cst::_max_apf_delay_time);
+
+	_apfd_delay       = dly;
+	_apf_changed_flag = true;
+}
+
+
+
+void	PhasedVoice::set_ap_coef (float coef)
+{
+	assert (coef >= -1);
+	assert (coef <=  1);
+
+	_apfd_coef        = coef;
+	_apf_changed_flag = true;
+}
+
+
+
 void	PhasedVoice::clear_buffers ()
 {
 	_osc_phase.set_phase (0);
@@ -238,6 +277,9 @@ void	PhasedVoice::clear_buffers ()
 
 	_hold_param_changed_flag = true;
 	_hold_phase_chanded_flag = true;
+	_apf_changed_flag        = true;
+
+	_apf_delay.clear_buffers ();
 }
 
 
@@ -248,6 +290,11 @@ void	PhasedVoice::process_block (float * const dst_ptr_arr [_nbr_chn_out], const
 	assert (fstb::DataAlign <true>::check_ptr (dst_ptr_arr [1]));
 	assert (src_ptr != 0);
 	assert (nbr_spl > 0);
+
+	if (_apf_changed_flag)
+	{
+		update_apf ();
+	}
 
 	update_hold_phase ();
 	update_osc_phase (nbr_spl);
@@ -269,8 +316,6 @@ void	PhasedVoice::process_block (float * const dst_ptr_arr [_nbr_chn_out], const
 	_fdbk_color_old = _fdbk_color;
 	_phase_man_old  = _phase_man_cur;
 	_phase_hold_old = _phase_hold_cur;
-
-	_osc_phase.correct ();
 }
 
 
@@ -321,6 +366,19 @@ void	PhasedVoice::setup_phase_filters ()
 		);
 		pp_uptr->set_coefs (&coef_list [0]);
 	}
+}
+
+
+
+void	PhasedVoice::update_phase_osc_step ()
+{
+	_phase_osc_step = float (2 * fstb::PI) * _osc_freq / _sample_freq;
+	if (_osc_neg_flag)
+	{
+		_phase_osc_step = -_phase_osc_step;
+	}
+
+	_osc_freq_update_flag = true;
 }
 
 
@@ -420,6 +478,46 @@ void	PhasedVoice::update_bpf ()
 
 
 
+void	PhasedVoice::update_apf ()
+{
+	const int      nbr_apf_old = _apf_delay.get_length ();
+	const float    nbr_apf_flt = _apfd_delay * _sample_freq;
+	const int      nbr_apf     = fstb::ceil_int (nbr_apf_flt - 1e-3f); // Small margin for no delay at all
+
+	if (nbr_apf <= nbr_apf_old)
+	{
+		_apf_delay.set_length (nbr_apf);
+	}
+	else
+	{
+		float          state_last = 0;
+		if (nbr_apf_old > 0)
+		{
+			state_last = _apf_delay.get_state (nbr_apf_old);
+		}
+		_apf_delay.set_length (nbr_apf);
+		for (int pos = nbr_apf_old; pos < nbr_apf; ++pos)
+		{
+			_apf_delay.set_state (pos + 1, state_last);
+		}
+	}
+
+	_apf_delay.set_coef_all (_apfd_coef);
+
+	// Last element: fractional delay
+	if (nbr_apf_flt < float (nbr_apf))
+	{
+		const float     delay   = nbr_apf_flt - (nbr_apf - 1);
+		float           coef    = _apfd_coef;
+		const float     nodelay = (coef < 0) ? -1.f : 1.f;
+		coef = nodelay + delay * (coef - nodelay);
+
+		_apf_delay.set_coef (nbr_apf - 1, coef);
+	}
+}
+
+
+
 void	PhasedVoice::process_osc (int nbr_spl)
 {
 	assert ((nbr_spl & ((1 << Osc::_nbr_units_l2) - 1)) == 0);
@@ -431,6 +529,7 @@ void	PhasedVoice::process_osc (int nbr_spl)
 		buf_s_ptr,
 		nbr_spl >> Osc::_nbr_units_l2
 	);
+	_osc_phase.correct ();
 }
 
 
@@ -544,12 +643,17 @@ void	PhasedVoice::process_block_vfc (float * const dst_ptr_arr [_nbr_chn_out], c
 
 void	PhasedVoice::process_sample (float &dst_l, float &dst_r, float src, float cos_a, float sin_a)
 {
+	float          pf_in = src + _fdbk_buf;
+	
+	// All-pass delay
+	pf_in = _apf_delay.process_sample (pf_in);
+
 	// All-pass stage, Hilbert transform
 	float				b [2];
 	_phase_filter_ptr->process_sample (
 		b [0],
 		b [1],
-		src + _fdbk_buf
+		pf_in
 	);
 
 	// SSB modulation

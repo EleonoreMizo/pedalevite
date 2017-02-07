@@ -1938,6 +1938,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.hpp">
       <Filter>mfx\dsp\nz</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\phase1\StereoOut.h">
+      <Filter>mfx\pi\phase1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2686,6 +2689,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\nz\WhiteFast.cpp">
       <Filter>mfx\dsp\nz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\phase1\Cst.cpp">
+      <Filter>mfx\pi\phase1</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

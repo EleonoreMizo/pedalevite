@@ -30,9 +30,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
-#include "fstb/SingleObj.h"
 #include "mfx/pi/phase1/PhasedVoice.h"
 #include "mfx/pi/phase1/PhaserDesc.h"
+#include "mfx/pi/phase1/StereoOut.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -62,6 +62,7 @@ public:
 		Buf_SRC = 0,
 		Buf_PH_L,
 		Buf_PH_R,
+		Buf_TRASH,
 
 		Buf_NBR_ELT
 	};
@@ -90,6 +91,7 @@ private:
 	static const int  _update_resol = 64;  // Must be a multiple of 4
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
+	typedef std::vector <PhasedVoice, fstb::AllocAlign <PhasedVoice, 16> > VoiceAlignArray;
 
 	void           update_param (bool force_flag = false);
 
@@ -111,15 +113,19 @@ private:
 	               _param_change_flag_mix;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_set;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_apd;
 
-	fstb::SingleObj <PhasedVoice>
-	               _phased_voice;
+	VoiceAlignArray
+	               _phased_voice_arr;
 
 	BufAlign       _tmp_buf;
 	BufAlign       _tmp_buf_pv;
 	int            _mbl_align;
 	float          _phase_mix_cur;
 	float          _phase_mix_old;
+	bool           _mono_mix_flag;      // For the phased signal in mono, use a mix of L+R (+/-sin). Otherwise, just use one signal (L, +sin)
+	StereoOut      _stereo_out;
 
 
 

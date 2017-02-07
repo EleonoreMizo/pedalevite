@@ -1278,6 +1278,9 @@ Il peut générer un signal stéréo à partir d’une entrée mono.</p>
 <p>Un filtre passe-bande désactivable permet de choisir une plage de
 fréquences à conserver sur le son phasé. Cela permet essentiellement de
 limiter les basses fréquences sur les réglages un peu francs.</p>
+<p>Il est aussi possible d’obtenir un effet de type
+<span lang="en"><i>barberpole phaser</i></span>, qui donne l’impression
+d’avoir des tonalités qui montent ou qui descendent sans fin.<p>
 
 <p class="var">Speed</p>
 <p>Vitesse des oscillations.</p>
@@ -1286,7 +1289,9 @@ limiter les basses fréquences sur les réglages un peu francs.</p>
 <p>Ce paramètre fixe le nombre d’étages du phaser, parmi
 <span class="ui">4</span>, <span class="ui">8</span>,
 <span class="ui">16</span> et <span class="ui">32</span>.
-Le nombre d’étage change la coloration générale du son.</p>
+Le nombre d’étage change la coloration générale du son.
+Plus il est grand, plus le nombre de trous
+(<span lang="en"><i>notches</i></span>) dans le spectre est élevé.</p>
 
 <p class="var">Feedback level</p>
 <p>Quantité de signal réinjecté à l’entrée du phaser.
@@ -1306,7 +1311,10 @@ Cet effet est maximum à 50&#8239;%.</p>
 à son cycle naturel.</p>
 
 <p class="var">Phase set</p>
-<p>Fixe manuellement la phase des oscillations, en degrés.</p>
+<p>Fixe manuellement la phase des oscillations, en degrés.
+Ce paramètre est intéressant à moduler en mode gelé avec un LFO externe.
+Il permet d’obtenir un effet oscillant plus proche d’un phaser
+conventionnel.</p>
 
 <p class="var">Hold</p>
 <p>Gèle les oscillations du phaser.</p>
@@ -1318,6 +1326,47 @@ Cet effet est maximum à 50&#8239;%.</p>
 <p>Permet d’isoler plus ou moins précisément le groupe de fréquences choisi
 avec le filtre passe-bande.
 Quand ce paramètre est au minimum, le filtrage est désactivé.</p>
+
+<p class="var">Direction</p>
+<p>Direction des oscillations sur le canal gauche.
+<span class="ui">Down</span> fait descendre les trous dans le spectre,
+et <span class="ui">Up</span> les fait remonter.</p>
+
+<p class="var">Mono phase mix</p>
+<p>Indique comment le signal déphasé doit être mixé avec le signal principal
+quand la sortie est mono.
+<span class="ui">Left</span> n’utilise qu’un des deux signaux conduisant à une
+tonalité qui va toujours dans la direction indiquée par <var>Direction</var>.
+<span class="ui">Mixed</span> mélange les deux signaux qui vont vers le haut
+et vers le bas, produisant une sorte d’oscillation.</p>
+
+<p class="var">Stereo phase mix</p>
+<p>Indique comment le signal déphasé doit être traité quand la sortie est
+stéréo.</p>
+<table>
+<tr><td><span class="ui">Spat&nbsp;mix</span></td><td>Les canaux d’entrée sont mélangés avant d’être déphasés.
+Les trous spectraux dans les canaux de sortie gauche et droit glissent dans des directions opposées, ce qui donne une forte image stéréo, y compris avec un signal d’entrée mono.</td></tr>
+<tr><td><span class="ui">Spat&nbsp;sep</span></td><td>Comme <span class="ui">Spat mix</span>, mais les canaux d’entrée sont traités indépendamment.</td></tr>
+<tr><td><span class="ui">Bi-mono</span></td><td>Les canaux gauche et droit sont traités indépendamment et utilisent le réglage de <var>Mono phase mix</var> pour définir la direction de glissement des trous.</td></tr>
+</table>
+
+
+<p class="var">All-pass delay</p>
+<p>Ce paramètre permet d’introduire une sorte de micro-retard complémentaire
+dans le signal déphasé.
+Cela permet d’augmenter le nombre de trous glissant dans le spectre.
+La répartition spectrale de ces trous est guidée par la valeur d’<var>All-pass
+coefficient</var>.</p>
+
+<p class="var">All-pass coefficient</p>
+<p>Coefficient des filtres de déphasage utilisés pour le micro-retard.
+À 0, le filtre se comporte comme un retard pur.
+Une valeur négative compresse les trous sur le bas du spectre, et une valeur
+positive vers le haut.
+Quand le coefficient vaut &minus;0,5, avec un retard d’environ 700&#8239;µs
+et <var>Depth</var> faible, la répartition des trous est quasi-harmonique ce
+qui permet d’obtenir une illusion auditive similaire à celle de
+Sherpard-Risset.</p>
 
 
 
@@ -1595,6 +1644,11 @@ sélectionnée.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r3, 2017.02.07</b></p>
+<ul>
+<li>Ajout de cinq paramètres au phaser.</li>
+</ul>
 
 <p><b>r2, 2017.02.05</b></p>
 <ul>

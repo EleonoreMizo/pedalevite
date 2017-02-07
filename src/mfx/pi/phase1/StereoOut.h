@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        Param.h
-        Author: Laurent de Soras, 2016
+        StereoOut.h
+        Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_phase1_Param_HEADER_INCLUDED)
-#define mfx_pi_phase1_Param_HEADER_INCLUDED
+#if ! defined (mfx_pi_phase1_StereoOut_HEADER_INCLUDED)
+#define mfx_pi_phase1_StereoOut_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -38,28 +38,16 @@ namespace phase1
 
 
 
-enum Param
+enum StereoOut
 {
 
-	Param_SPEED = 0,
-	Param_DEPTH,
-	Param_FDBK_LEVEL,
-	Param_FDBK_COLOR,
-	Param_PHASE_MIX,
-	Param_MANUAL,
-	Param_PHASE_SET,
-	Param_HOLD,
-	Param_BPF_CUTOFF,
-	Param_BPF_Q,
-	Param_DIR,
-	Param_OP_MONO,
-	Param_OP_STEREO,
-	Param_AP_DELAY,
-	Param_AP_COEF,
+	StereoOut_SPAT_MIX = 0, // Both channels are mixed to produce the phased signal
+	StereoOut_SPAT_SEP,     // Each channel has its own PhasedVoice which uses L/R polarities for the sin part.
+	StereoOut_BIMONO,       // Each channel has its own PhasedVoice and uses the mono settings
 
-	Param_NBR_ELT
+	StereoOut_NBR_ELT
 
-}; // enum Param
+}; // enum StereoOut
 
 
 
@@ -69,11 +57,11 @@ enum Param
 
 
 
-//#include "mfx/pi/phase1/Param.hpp"
+//#include "mfx/pi/phase1/StereoOut.hpp"
 
 
 
-#endif   // mfx_pi_phase1_Param_HEADER_INCLUDED
+#endif   // mfx_pi_phase1_StereoOut_HEADER_INCLUDED
 
 
 

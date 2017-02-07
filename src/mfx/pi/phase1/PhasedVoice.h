@@ -6,8 +6,12 @@
 Objects of this class must be aligned on 16-byte boundaries
 
 Ref:
+
 Scott Wardle, A Hilbert-Transformer Frequency Shifter for Audio,
 First Workshop on Digital Audio Effects DAFx, 1998
+
+Fabian Esqueda, Vesa Valimaki, Julian Parker, Barberpole Phasing and Flanging
+Illusions, 18th Int. Conference on Digital Audio Effect (DAFx), 2015
 
 --- Legal stuff ---
 
@@ -33,6 +37,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/dsp/iir/AllPass1pChain.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/osc/OscSinCosEulerSimd.h"
 #include "mfx/pi/phase1/Cst.h"
@@ -78,6 +83,7 @@ public:
 
 	void           reset (float sample_freq, int max_buf_len, float *tmp_buf_ptr);
 
+	void           set_polarity (bool neg_flag);
 	void           set_speed (float speed);
 	void           set_depth (int depth);
 	void           set_fdbk_level (float lvl);
@@ -88,6 +94,8 @@ public:
 	void           set_bpf_cutoff (float freq);
 	void           set_bpf_q (float q);
 	void           set_dist (bool dist_flag);
+	void           set_ap_delay (float dly);
+	void           set_ap_coef (float coef);
 
 	void           clear_buffers ();
 	void           process_block (float * const dst_ptr_arr [_nbr_chn_out], const float src_ptr [], int nbr_spl);
@@ -108,10 +116,12 @@ private:
 
 	float *        use_buf (Buf buf);
 	void           setup_phase_filters ();
+	void           update_phase_osc_step ();
 	void           update_fdbk_color ();
 	void           update_hold_phase ();
 	void           update_osc_phase (int nbr_spl);
 	void           update_bpf ();
+	void           update_apf ();
 	void           process_osc (int nbr_spl);
 	void           process_osc_fdbk_col (int nbr_spl);
 	void           process_block_cfc (float * const dst_ptr_arr [_nbr_chn_out], const float src_ptr [], int nbr_spl);
@@ -127,9 +137,12 @@ private:
 	int            _depth;              // [0 ; Cst::_nbr_phase_filters-1]
 	float          _osc_freq;           // > 0, Hz. Oscillation frequency in Hz.
 	bool           _osc_hold_flag;      // false = oscillator + manual, true = manual only
+	bool           _osc_neg_flag;       // Negative phase increment
 	float          _fdbk_level;         // [0 ; 1], multiplier
 	float          _fdbk_color;         // [0 ; 1], multiplier. Should ramp when changed.
 	float          _fdbk_color_old;     // For ramping
+	float          _apfd_delay;         // All-pass filter chain delay, s, >= 0
+	float          _apfd_coef;          // Global coefficient for the all-pass chain, [-1...1]
 
 	float          _phase_osc_cur;      // [0 ; 2*PI[, rad
 	float          _phase_osc_step;     // > 0, rad/sample. Not affected by Hold Oscillator parameter
@@ -152,6 +165,7 @@ private:
 	bool           _bpf_changed_flag;
 	bool           _bpf_flag;
 	bool           _dist_flag;
+	bool           _apf_changed_flag;
 
 	Phase90Simd < 4>
 	               _phase_filter_0;
@@ -172,6 +186,9 @@ private:
 	int            _buf_size;
 	std::array <dsp::iir::Biquad, _nbr_chn_out>
 	               _bpf_arr;
+
+	dsp::iir::AllPass1pChain
+	               _apf_delay;
 
 
 
