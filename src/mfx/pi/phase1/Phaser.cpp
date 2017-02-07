@@ -264,12 +264,12 @@ void	Phaser::do_process_block (ProcInfo &proc)
 				&_tmp_buf [_mbl_align * Buf_PH_L],
 				&_tmp_buf [_mbl_align * Buf_PH_R]
 			};
-			if (   (nbr_chn_src == 1 && ! _mono_mix_flag)
+			if (   (nbr_chn_dst == 1 && ! _mono_mix_flag)
 			    || (nbr_chn_src >  1 && _stereo_out == StereoOut_SPAT_SEP))
 			{
 				dst_ptr_arr [PhasedVoice::_nbr_chn_out - 1 - pv_cnt] = trash_ptr;
 			}
-			else if (nbr_chn_src > 1 && _stereo_out == StereoOut_BIMONO && ! _mono_mix_flag)
+			else if (nbr_chn_dst > 1 && _stereo_out == StereoOut_BIMONO && ! _mono_mix_flag)
 			{
 				dst_ptr_arr [1] = trash_ptr;
 			}
@@ -279,6 +279,12 @@ void	Phaser::do_process_block (ProcInfo &proc)
 			);
 
 			// Phase mix
+			int            chn_src     = 0;
+			int            chn_src_inc = 1;
+			if (nbr_chn_dst > 1 && _stereo_out == StereoOut_BIMONO && ! _mono_mix_flag)
+			{
+				chn_src_inc = 0;
+			}
 			int            chn_out     = 0;
 			int            chn_out_inc =
 				(PhasedVoice::_nbr_chn_out <= nbr_chn_dst) ? 1 : 0;
@@ -289,19 +295,20 @@ void	Phaser::do_process_block (ProcInfo &proc)
 			}
 			for (int chn_cnt = 0; chn_cnt < PhasedVoice::_nbr_chn_out; ++chn_cnt)
 			{
-				if (dst_ptr_arr [chn_cnt] != trash_ptr)
+				if (dst_ptr_arr [chn_src] != trash_ptr)
 				{
 					dsp::mix::Simd <
 						fstb::DataAlign <true>,
 						fstb::DataAlign <false>
 					>::mix_1_1_vlrauto (
 						proc._dst_arr [chn_out] + pos,
-						dst_ptr_arr [chn_cnt],
+						dst_ptr_arr [chn_src],
 						work_len,
 						_phase_mix_old,
 						_phase_mix_cur
 					);
 				}
+				chn_src += chn_src_inc;
 				chn_out += chn_out_inc;
 			}
 		}
