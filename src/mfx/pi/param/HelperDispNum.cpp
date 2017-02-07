@@ -98,6 +98,13 @@ void	HelperDispNum::set_preset (Preset preset)
 		_offset       = 0;
 		break;
 
+	case	Preset_FLOAT_MICRO:
+		_type         = Type_FLOAT;
+		_log_flag     = false;
+		_scale        = 1000*1000;
+		_offset       = 0;
+		break;
+
 	case	Preset_DB:
 		_type         = Type_FLOAT;
 		_log_flag     = true;

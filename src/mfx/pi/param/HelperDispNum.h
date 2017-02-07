@@ -64,6 +64,7 @@ public:
 		Preset_FLOAT_STD,
 		Preset_FLOAT_PERCENT,
 		Preset_FLOAT_MILLI,
+		Preset_FLOAT_MICRO,
 		Preset_DB,
 		Preset_DB_FROM_LOG2,
 		Preset_INT_BASE_0,
