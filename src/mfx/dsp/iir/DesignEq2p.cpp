@@ -196,6 +196,37 @@ void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double g0, double g,
 
 /*
 ==============================================================================
+Name: compute_butter_pole
+Description:
+	Computes the conjugate poles for one of the biquads constituting a
+	butterworth filter.
+	Odd order filters always have a pole at -1 (not given by this function).
+Input parameters:
+	- order: order of the butterworth filter (k), >= 2
+	- biq: biquad index, in [0 ; (order - 1) / 2[
+Returns:
+	Complex pole. The other pole of the biquad is its implicit conjugate.
+Throws: Nothing
+==============================================================================
+*/
+
+std::complex <double>	DesignEq2p::compute_butter_pole (int order, int biq)
+{
+	assert (order >= 2);
+	assert (biq >= 0);
+	assert (biq < order / 2);
+
+	const double   angle = -fstb::PI * 0.5 * (2 * biq + 1) / order;
+	const double   re    = sin (angle);
+	const double   im    = cos (angle);
+
+	return std::complex <double> (re, im);
+}
+
+
+
+/*
+==============================================================================
 Name: compute_butter_coef_a1
 Description:
 	Computes the a1 coefficients for a butterworth filter.
@@ -228,7 +259,7 @@ double	DesignEq2p::compute_butter_coef_a1 (int order, int biq)
 	assert (biq >= 0);
 	assert (biq < order / 2);
 
-	return -2 * cos (fstb::PI * (2 * biq + 1 + order) / (order * 2));
+	return -2 * cos (fstb::PI * 0.5 * (2 * biq + 1 + order) / order);
 }
 
 

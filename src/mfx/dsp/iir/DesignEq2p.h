@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <complex>
+
 
 
 namespace mfx
@@ -74,6 +76,7 @@ public:
 	static void		make_nyq_peak (float bz [3], float az [3], double q, double lvl, double f0, double fs);
 	static void		make_nyq_peak (float bz [3], float az [3], double g0, double g, double gb, double w0, double dw);
 
+	static std::complex <double>  compute_butter_pole (int order, int biq);
 	static double  compute_butter_coef_a1 (int order, int biq);
 
 
