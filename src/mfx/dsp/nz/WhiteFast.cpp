@@ -48,7 +48,7 @@ void	WhiteFast::set_rough_level (float lvl)
 	assert (lvl > 0);
 
 	Mixed          both;
-	both._f = lvl;
+	both._f = lvl * (0.25f / 0.7f);
 	_exp_or = both._i & 0x7F800000;
 }
 

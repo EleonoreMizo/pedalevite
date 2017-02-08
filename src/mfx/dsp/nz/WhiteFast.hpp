@@ -56,7 +56,7 @@ float	WhiteFast::gen_new_val (uint32_t &state)
 {
 	Mixed          res;
 	state  = (state * _a + _c) & _mm;
-	res._i = (state & _mant_and) | _exp_or;
+	res._i = ((state << 1) & _mant_and) | _exp_or;
 
 	return res._f;
 }
