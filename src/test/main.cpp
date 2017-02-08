@@ -14,6 +14,9 @@
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist1/Param.h"
+#include "mfx/pi/nzbl/NoiseBleach.h"
+#include "mfx/pi/nzbl/NoiseBleachDesc.h"
+#include "mfx/pi/nzbl/Param.h"
 #include "mfx/pi/peq/Param.h"
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/peq/PEqType.h"
@@ -381,6 +384,7 @@ int    generate_test_signal_noise_w (double &sample_freq, std::vector <std::vect
 	}
 	const size_t   len = size_t (sample_freq * 10);
 	mfx::dsp::nz::WhiteFast gen;
+	gen.set_rough_level (0.75f);
 	for (auto &chn : chn_arr)
 	{
 		chn.resize (len);
@@ -653,6 +657,76 @@ int	test_phaser ()
 		while (pos < len);
 
 		ret_val = save_wav ("results/phaser0.wav", chn_arr, sample_freq, 1);
+	}
+
+	return ret_val;
+}
+
+
+
+int	test_noise_bleach ()
+{
+	static const int  nbr_chn = 1;
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr (nbr_chn);
+
+	int            ret_val = generate_test_signal_noise_w (sample_freq, chn_arr);
+
+	if (ret_val == 0)
+	{
+		const size_t   len = chn_arr [0].size ();
+		mfx::pi::nzbl::NoiseBleach plugin;
+		const int      max_block_size = 64;
+		int            latency = 0;
+		PiProc         pi_proc;
+		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::nzbl::NoiseBleachDesc));
+		pi_proc.setup (plugin, nbr_chn, nbr_chn, sample_freq, max_block_size, latency);
+		size_t         pos = 0;
+		float * const* dst_arr = pi_proc.use_buf_list_dst ();
+		float * const* src_arr = pi_proc.use_buf_list_src ();
+		mfx::piapi::PluginInterface::ProcInfo &   proc_info = pi_proc.use_proc_info ();
+		pi_proc.reset_param ();
+		pi_proc.set_param_nat (mfx::pi::nzbl::Param_LVL    ,  1);
+		for (int b = 0; b < mfx::pi::nzbl::Cst::_nbr_notches; ++b)
+		{
+			const int      base = mfx::pi::nzbl::NoiseBleachDesc::get_base_notch (b);
+			pi_proc.set_param_nat (base + mfx::pi::nzbl::ParamNotch_FREQ, 160 << b);
+			pi_proc.set_param_nat (base + mfx::pi::nzbl::ParamNotch_Q,       0.33f);
+			pi_proc.set_param_nat (base + mfx::pi::nzbl::ParamNotch_LVL,    16);
+		}
+		do
+		{
+			const int      block_len =
+				int (std::min (len - pos, size_t (max_block_size)));
+
+			proc_info._nbr_spl = block_len;
+		
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				memcpy (
+					src_arr [chn],
+					&chn_arr [chn] [pos],
+					block_len * sizeof (src_arr [chn] [0])
+				);
+			}
+
+			plugin.process_block (proc_info);
+
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				memcpy (
+					&chn_arr [chn] [pos],
+					dst_arr [chn],
+					block_len * sizeof (chn_arr [chn] [pos])
+				);
+			}
+
+			pi_proc.reset_param ();
+			pos += block_len;
+		}
+		while (pos < len);
+
+		ret_val = save_wav ("results/noisebleach0.wav", chn_arr, sample_freq, 1);
 	}
 
 	return ret_val;
@@ -1096,8 +1170,12 @@ int main (int argc, char *argv [])
 	test_disto ();
 #endif
 
-#if 1
+#if 0
 	test_phaser ();
+#endif
+
+#if 1
+	test_noise_bleach ();
 #endif
 
 #if 0
