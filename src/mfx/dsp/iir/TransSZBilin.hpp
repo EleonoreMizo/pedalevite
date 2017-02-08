@@ -291,40 +291,39 @@ void	TransSZBilin::map_z_to_s_one_pole (TS s_eq_b [2], TS s_eq_a [2], const TZ z
 
 
 
+// f = f0 / fs
+// returns an approximation of 1 / tan (pi * f)
+// ~ (1 - (pi^2*f^2)/3 - (pi^4*f^4)/36) / (pi*f)
 float	TransSZBilin::compute_k_approx (float f)
 {
-	const float    pi3      = float (fstb::PI * fstb::PI * fstb::PI);
-	const float    pi5      = float (pi3      * fstb::PI * fstb::PI);
-	const float    c2pi5_15 = pi5 * 2 / 15;
-	const float    cpi3_3   = pi3     /  3;
-	const float    cpi      = float (fstb::PI);
+	const float    pi2      = float (fstb::PI * fstb::PI);
+	const float    c0       = float (1 / fstb::PI);
+	const float    c2       = float (-fstb::PI       /  3);
+	const float    c4       = float (-fstb::PI * pi2 / 36);
 
 	const float    f2       = f * f;
-	const float    poly     = ((c2pi5_15 * f2 + cpi3_3) * f2 + cpi) * f;
-	const auto     poly_v   = fstb::ToolsSimd::set1_f32 (poly);
-	const auto     k_v      = fstb::ToolsSimd::rcp_approx (poly_v);
-	const float    k        = fstb::ToolsSimd::Shift <0>::extract (k_v);
+	const float    num      = (f2 * c4 + c2) * f2 + c0;
+	const auto     den_v    = fstb::ToolsSimd::set1_f32 (f);
+	const auto     invden_v = fstb::ToolsSimd::rcp_approx (den_v);
+	const float    invden   = fstb::ToolsSimd::Shift <0>::extract (invden_v);
+	const float    k        = num * invden;
 
 	return k;
 }
 
 
 
-// k = 1 / tan (f * PI)
-// Approx: tan (x) ~ ((2.0f/15 * x*x + 1.0f/3) * x*x + 1) * x
-//         tan (f * pi) ~ (2*pi^5/15 * f^2 + pi^3/3) * f^2 + pi) * f
 fstb::ToolsSimd::VectF32	TransSZBilin::compute_k_approx (fstb::ToolsSimd::VectF32 f)
 {
-	const float    pi3      = float (fstb::PI * fstb::PI * fstb::PI);
-	const float    pi5      = float (pi3      * fstb::PI * fstb::PI);
-	const auto     c2pi5_15 = fstb::ToolsSimd::set1_f32 (pi5 * 2 / 15);
-	const auto     cpi3_3   = fstb::ToolsSimd::set1_f32 (pi3     /  3);
-	const auto     cpi      = fstb::ToolsSimd::set1_f32 (float (fstb::PI));
+	const float    pi2    = float (fstb::PI * fstb::PI);
+	const auto     c0     = fstb::ToolsSimd::set1_f32 (float (1 / fstb::PI));
+	const auto     c2     = fstb::ToolsSimd::set1_f32 (float (-fstb::PI       /  3));
+	const auto     c4     = fstb::ToolsSimd::set1_f32 (float (-fstb::PI * pi2 / 36));
 
-	const auto     f2       = f * f;
-	const auto     k        = fstb::ToolsSimd::rcp_approx (
-		((c2pi5_15 * f2 + cpi3_3) * f2 + cpi) * f
-	);
+	const auto     f2     = f * f;
+	const auto     num    = (f2 * c4 + c2) * f2 + c0;
+	const auto     invden = fstb::ToolsSimd::rcp_approx (f);
+	const auto     k      = num * invden;
 
 	return k;
 }
