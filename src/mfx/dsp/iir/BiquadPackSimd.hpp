@@ -597,6 +597,7 @@ void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr 
 			block_len = std::min (block_len, _buf_len);
 
 			const int      nbr_end_chn = _nbr_chn - chn_base;
+			const int      group_end   = pack_index + _nbr_stages;
 
 			// Mono source : first processing + interleaving
 			if (mono_source_flag)
@@ -640,7 +641,6 @@ void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr 
 			}
 
 			// Processing
-			const int      group_end = pack_index + _nbr_stages;
 			while (pack_index < group_end)
 			{
 				Pack4 &        pack = _pack_list [pack_index];

@@ -13,7 +13,7 @@ Template parameters:
 	Requires:
 	static bool VD::check_ptr (const void *ptr);
 	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr);
-	static void VD::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val);
+	static void VD::store_f32 (void *ptr, fstb::ToolsSimd::VectF32 val);
 
 - VS: same as VD, but for reading only (source access)
 	Requires:

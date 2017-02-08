@@ -12,16 +12,16 @@ Automatically initialises dsp::mix::Generic.
 Template parameters:
 
 - VD: class writing and reading memory with SIMD vectors (destination access).
-	Typically, the archi::Vect128MemOp* classes for aligned and unaligned data.
+	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
-	static bool VD::check_address (const void *ptr);
-	static archi::Vect128 VD::load (const void *ptr);
-	static void VD::store (void *ptr, const archi::Vect128 &val);
+	static bool VD::check_ptr (const void *ptr);
+	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr);
+	static void VD::store_f32 (void *ptr, fstb::ToolsSimd::VectF32 val);
 
 - VS: same as VD, but for reading only (source access)
 	Requires:
-	static bool VS::check_address (const void *ptr);
-	static archi::Vect128 VS::load (const void *ptr);
+	static bool VS::check_ptr (const void *ptr);
+	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr);
 
 --- Legal stuff ---
 
