@@ -182,15 +182,20 @@ void	Notch::update_filter ()
 {
 	assert (_inv_fs > 0);
 
+	const float    bw_rel = 1 / _q;
+	const float    f_rel  = _freq * _inv_fs;
+	const float    k      =
+		dsp::iir::TransSZBilin::compute_k_approx (f_rel);
+
+	// Cheaply fix the frequency warping caused by the BLT
+	const float    q      = _q * (1 - 1.875f * f_rel * f_rel);
+
 	float          b_s [3];
 	float          a_s [3];
-	dsp::iir::DesignEq2p::make_band_pass (b_s, a_s, _q);
+	dsp::iir::DesignEq2p::make_band_pass (b_s, a_s, q);
 
 	float          b_z [3];
 	float          a_z [3];
-	const float    k       =
-		dsp::iir::TransSZBilin::compute_k_approx (_freq * _inv_fs);
-
 	dsp::iir::TransSZBilin::map_s_to_z_approx (
 		b_z, a_z, b_s, a_s, k
 	);
@@ -201,7 +206,7 @@ void	Notch::update_filter ()
 	// keeping a fast response.
 	const int      mult  = 16;
 	const float    delta = sqrt (4 * _q * _q + 1);
-	const float    f1    = _freq * (delta - 1) / (2 * _q);   // Lowest freq at -3 dB
+	const float    f1    = _freq * (delta - 1) * bw_rel * 0.5f; // Lowest freq at -3 dB
 	const float    t     = float (mult / (2 * fstb::PI)) / f1;
 	_env.set_times (t, t);
 
