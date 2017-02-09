@@ -97,14 +97,9 @@ void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], long nbr_spl, float s_vol, f
 	assert (V128Dst::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
 
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step = vec_step * fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
@@ -202,14 +197,9 @@ void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], long 
 	assert (V128Dst::check_ptr (data_2_ptr));
 	assert (nbr_spl > 0);
 
-	const float		step = (e_vol - s_vol) / nbr_spl;
-
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
@@ -362,14 +352,9 @@ void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], long 
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
@@ -522,14 +507,9 @@ void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
@@ -677,15 +657,10 @@ void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], con
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
-	
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
+
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 		
@@ -851,15 +826,10 @@ void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
-	
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 		
@@ -970,22 +940,13 @@ void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [],
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const float		step_l = (e_vol_l - s_vol_l) / nbr_spl;
-	const float		step_r = (e_vol_r - s_vol_r) / nbr_spl;
-	
-	auto			vec_step_l = fstb::ToolsSimd::set1_f32 (step_l);
-	auto			vec_vol_l = fstb::ToolsSimd::set1_f32 (s_vol_l);
-	const auto	vec_step_l_spl = vec_step_l * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
+	fstb::ToolsSimd::VectF32   vec_vol_l;
+	fstb::ToolsSimd::VectF32   vec_step_l;
+	fstb::ToolsSimd::start_lerp (vec_vol_l, vec_step_l, s_vol_l, e_vol_l, nbr_spl);
 
-	vec_vol_l  += vec_step_l_spl;
-	vec_step_l *= fstb::ToolsSimd::set1_f32 (4);
-
-	auto			vec_step_r = fstb::ToolsSimd::set1_f32 (step_r);
-	auto			vec_vol_r = fstb::ToolsSimd::set1_f32 (s_vol_r);
-	const auto	vec_step_r_spl = vec_step_r * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-
-	vec_vol_r  += vec_step_r_spl;
-	vec_step_r *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol_r;
+	fstb::ToolsSimd::VectF32   vec_step_r;
+	fstb::ToolsSimd::start_lerp (vec_vol_r, vec_step_r, s_vol_r, e_vol_r, nbr_spl);
 
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
@@ -1096,14 +1057,9 @@ void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const float		step = (e_xf - s_xf) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_xf = fstb::ToolsSimd::set1_f32 (s_xf);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-
-	vec_xf += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_xf;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_xf, vec_step, s_xf, e_xf, nbr_spl);
 
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
@@ -1230,36 +1186,27 @@ void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], co
 
 	StereoLevel		step = e_vol;
 	step -= s_vol;
-	step *= 1.0f / nbr_spl;
+	step *= 4.0f / nbr_spl;
 	
-	const float &	step_l2l = step.get_l2l ();
-	auto			vec_step_l2l = fstb::ToolsSimd::set1_f32 (step_l2l);
-	const auto	vec_step_l2l_spl = vec_step_l2l * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	auto			vec_vol_l2l = fstb::ToolsSimd::set1_f32 (s_vol.get_l2l ());
-	vec_vol_l2l += vec_step_l2l_spl;
-	vec_step_l2l *= fstb::ToolsSimd::set1_f32 (4);
+	const auto  c0123 = fstb::ToolsSimd::set_f32 (0, 0.25f, 0.5f, 0.75f);
+	const auto  c4    = fstb::ToolsSimd::set1_f32 (4);
 
-	const float &	step_r2l = step.get_r2l ();
-	auto			vec_step_r2l = fstb::ToolsSimd::set1_f32 (step_r2l);
-	const auto	vec_step_r2l_spl = vec_step_r2l * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	auto			vec_vol_r2l = fstb::ToolsSimd::set1_f32 (s_vol.get_r2l ());
-	vec_vol_r2l += vec_step_r2l_spl;
-	vec_step_r2l *= fstb::ToolsSimd::set1_f32 (4);
-		
-	const float &	step_l2r = step.get_l2r ();
-	auto			vec_step_l2r = fstb::ToolsSimd::set1_f32 (step_l2r);
-	const auto	vec_step_l2r_spl = vec_step_l2r * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	auto			vec_vol_l2r = fstb::ToolsSimd::set1_f32 (s_vol.get_l2r ());
-	vec_vol_l2r += vec_step_l2r_spl;
-	vec_step_l2r *= fstb::ToolsSimd::set1_f32 (4);
+	auto        vec_step_l2l = fstb::ToolsSimd::set1_f32 (step.get_l2l ());
+	auto        vec_vol_l2l = fstb::ToolsSimd::set1_f32 (s_vol.get_l2l ());
+	fstb::ToolsSimd::mac (vec_vol_l2l, vec_step_l2l, c0123);
+
+	auto        vec_step_r2l = fstb::ToolsSimd::set1_f32 (step.get_r2l ());
+	auto        vec_vol_r2l = fstb::ToolsSimd::set1_f32 (s_vol.get_r2l ());
+	fstb::ToolsSimd::mac (vec_vol_r2l, vec_step_r2l, c0123);
+
+	auto        vec_step_l2r = fstb::ToolsSimd::set1_f32 (step.get_l2r ());
+	auto        vec_vol_l2r = fstb::ToolsSimd::set1_f32 (s_vol.get_l2r ());
+	fstb::ToolsSimd::mac (vec_vol_l2r, vec_step_l2r, c0123);
 	
-	const float &	step_r2r = step.get_r2r ();
-	auto			vec_step_r2r = fstb::ToolsSimd::set1_f32 (step_r2r);
-	const auto	vec_step_r2r_spl = vec_step_r2r * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	auto			vec_vol_r2r = fstb::ToolsSimd::set1_f32 (s_vol.get_r2r ());
-	vec_vol_r2r += vec_step_r2r_spl;
-	vec_step_r2r *= fstb::ToolsSimd::set1_f32 (4);
-	
+	auto        vec_step_r2r = fstb::ToolsSimd::set1_f32 (step.get_r2r ());
+	auto        vec_vol_r2r = fstb::ToolsSimd::set1_f32 (s_vol.get_r2r ());
+	fstb::ToolsSimd::mac (vec_vol_r2r, vec_step_r2r, c0123);
+
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 		
@@ -1422,15 +1369,10 @@ void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], long
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
-	
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
+
 	while (pos < nbr_loop)
 	{
 		auto			vec_data = V128Src::load_f32 (in_ptr);
@@ -1575,14 +1517,9 @@ void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], co
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 
 	while (pos < nbr_loop)
 	{
@@ -1826,14 +1763,9 @@ void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], long
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	while (pos < nbr_loop)
 	{
@@ -1977,14 +1909,9 @@ void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	while (pos < nbr_loop)
 	{
@@ -2281,14 +2208,9 @@ void	Simd <VD, VS>::mix_1_1_vlr (float out_ptr [], const float in_ptr [], long n
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	while (pos < nbr_loop)
 	{
@@ -2436,14 +2358,9 @@ void	Simd <VD, VS>::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	auto			vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	while (pos < nbr_loop)
 	{
@@ -2595,14 +2512,9 @@ void	Simd <VD, VS>::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], cons
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
 	while (pos < nbr_loop)
 	{
@@ -2765,14 +2677,9 @@ void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 		
 	while (pos < nbr_loop)
 	{
@@ -2892,23 +2799,14 @@ void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], 
 	assert (in_ptr != 0);
 	assert (nbr_spl > 0);
 
-	const float		step_l = (e_vol_l - s_vol_l) / nbr_spl;
-	const float		step_r = (e_vol_r - s_vol_r) / nbr_spl;
-	
-	auto			vec_step_l = fstb::ToolsSimd::set1_f32 (step_l);
-	auto			vec_vol_l = fstb::ToolsSimd::set1_f32 (s_vol_l);
-	const auto	vec_step_l_spl = vec_step_l * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
+	fstb::ToolsSimd::VectF32   vec_vol_l;
+	fstb::ToolsSimd::VectF32   vec_step_l;
+	fstb::ToolsSimd::start_lerp (vec_vol_l, vec_step_l, s_vol_l, e_vol_l, nbr_spl);
 
-	vec_vol_l += vec_step_l_spl;
-	vec_step_l *= fstb::ToolsSimd::set1_f32 (4);
+	fstb::ToolsSimd::VectF32   vec_vol_r;
+	fstb::ToolsSimd::VectF32   vec_step_r;
+	fstb::ToolsSimd::start_lerp (vec_vol_r, vec_step_r, s_vol_r, e_vol_r, nbr_spl);
 
-	auto			vec_step_r = fstb::ToolsSimd::set1_f32 (step_r);
-	auto			vec_vol_r = fstb::ToolsSimd::set1_f32 (s_vol_r);
-	const auto	vec_step_r_spl = vec_step_r * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-
-	vec_vol_r += vec_step_r_spl;
-	vec_step_r *= fstb::ToolsSimd::set1_f32 (4);
-	
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 		
@@ -3047,35 +2945,26 @@ void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], con
 
 	StereoLevel		step = e_vol;
 	step -= s_vol;
-	step *= 1.0f / nbr_spl;
+	step *= 4.0f / nbr_spl;
 	
-	const float &	step_l2l = step.get_l2l ();
-	auto			vec_step_l2l = fstb::ToolsSimd::set1_f32 (step_l2l);
-	const auto	vec_step_l2l_spl = vec_step_l2l * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	auto			vec_vol_l2l = fstb::ToolsSimd::set1_f32 (s_vol.get_l2l ());
-	vec_vol_l2l += vec_step_l2l_spl;
-	vec_step_l2l *= fstb::ToolsSimd::set1_f32 (4);
-		
-	const float &	step_r2l = step.get_r2l ();
-	auto			vec_step_r2l = fstb::ToolsSimd::set1_f32 (step_r2l);
-	const auto	vec_step_r2l_spl = vec_step_r2l * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	auto			vec_vol_r2l = fstb::ToolsSimd::set1_f32 (s_vol.get_r2l ());
-	vec_vol_r2l += vec_step_r2l_spl;
-	vec_step_r2l *= fstb::ToolsSimd::set1_f32 (4);
-		
-	const float &	step_l2r = step.get_l2r ();
-	auto			vec_step_l2r = fstb::ToolsSimd::set1_f32 (step_l2r);
-	const auto	vec_step_l2r_spl = vec_step_l2r * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	auto			vec_vol_l2r = fstb::ToolsSimd::set1_f32 (s_vol.get_l2r ());
-	vec_vol_l2r += vec_step_l2r_spl;
-	vec_step_l2r *= fstb::ToolsSimd::set1_f32 (4);
+	const auto  c0123 = fstb::ToolsSimd::set_f32 (0, 0.25f, 0.5f, 0.75f);
+	const auto  c4    = fstb::ToolsSimd::set1_f32 (4);
+
+	auto        vec_step_l2l = fstb::ToolsSimd::set1_f32 (step.get_l2l ());
+	auto        vec_vol_l2l = fstb::ToolsSimd::set1_f32 (s_vol.get_l2l ());
+	fstb::ToolsSimd::mac (vec_vol_l2l, vec_step_l2l, c0123);
+
+	auto        vec_step_r2l = fstb::ToolsSimd::set1_f32 (step.get_r2l ());
+	auto        vec_vol_r2l = fstb::ToolsSimd::set1_f32 (s_vol.get_r2l ());
+	fstb::ToolsSimd::mac (vec_vol_r2l, vec_step_r2l, c0123);
+
+	auto        vec_step_l2r = fstb::ToolsSimd::set1_f32 (step.get_l2r ());
+	auto        vec_vol_l2r = fstb::ToolsSimd::set1_f32 (s_vol.get_l2r ());
+	fstb::ToolsSimd::mac (vec_vol_l2r, vec_step_l2r, c0123);
 	
-	const float &	step_r2r = step.get_r2r ();
-	auto			vec_step_r2r = fstb::ToolsSimd::set1_f32 (step_r2r);
-	const auto	vec_step_r2r_spl = vec_step_r2r * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	auto			vec_vol_r2r = fstb::ToolsSimd::set1_f32 (s_vol.get_r2r ());
-	vec_vol_r2r += vec_step_r2r_spl;
-	vec_step_r2r *= fstb::ToolsSimd::set1_f32 (4);
+	auto        vec_step_r2r = fstb::ToolsSimd::set1_f32 (step.get_r2r ());
+	auto        vec_vol_r2r = fstb::ToolsSimd::set1_f32 (s_vol.get_r2r ());
+	fstb::ToolsSimd::mac (vec_vol_r2r, vec_step_r2r, c0123);
 
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
@@ -3250,13 +3139,10 @@ void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], long 
 	
 	const float		step = (e_vol - s_vol) / nbr_spl;
 	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
-	
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
+
 	while (pos < nbr_loop)
 	{
 		auto			vec_data = V128Src::load_f32 (in_ptr);
@@ -3410,15 +3296,10 @@ void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], con
 	const long     nbr_loop = nbr_spl >> 2;
 	long           pos = 0;
 	
-	const float    step = (e_vol - s_vol) / nbr_spl;
-	
-	auto           vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto           vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto     vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
-	
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
+
 	while (pos < nbr_loop)
 	{
 		auto			   in_1_vec_data = V128Src::load_f32 (in_1_ptr);
@@ -3572,15 +3453,10 @@ void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], long 
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 	
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
-	
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
+
 	while (pos < nbr_loop)
 	{
 		const auto	in_vec_data_1 = V128Src::load_f32 (in_ptr    );
@@ -3733,15 +3609,10 @@ void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
 
-	const float		step = (e_vol - s_vol) / nbr_spl;
-	
-	auto			vec_step = fstb::ToolsSimd::set1_f32 (step);
-	auto			vec_vol = fstb::ToolsSimd::set1_f32 (s_vol);
-	const auto	vec_step_spl = vec_step * fstb::ToolsSimd::set_f32 (0, 1, 2, 3);
-	
-	vec_vol += vec_step_spl;
-	vec_step *= fstb::ToolsSimd::set1_f32 (4);
-	
+	fstb::ToolsSimd::VectF32   vec_vol;
+	fstb::ToolsSimd::VectF32   vec_step;
+	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
+
 	while (pos < nbr_loop)
 	{
 		const auto	in_vec_data_1 = V128Src::load_f32 (in_ptr    );

@@ -746,6 +746,28 @@ ToolsSimd::VectF32	ToolsSimd::conv_s32_to_f32 (VectS32 x)
 
 
 
+void	ToolsSimd::start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, float val_end, int size)
+{
+	assert (size > 0);
+
+	const float    dif = val_end - val_beg;
+	float          four_over_size;
+	if (size < _inv_table_4_len)
+	{
+		four_over_size = _inv_table_4 [size];
+	}
+	else
+	{
+		four_over_size = 4.0f / float (size);
+	}
+	step    = set1_f32 (dif * four_over_size);
+	val_cur = set1_f32 (val_beg);
+	const auto     c0123 = set_f32 (0, 0.25f, 0.5f, 0.75f);
+	fstb::ToolsSimd::mac (val_cur, step, c0123);
+}
+
+
+
 // Positive = left
 template <int SHIFT>
 ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a)

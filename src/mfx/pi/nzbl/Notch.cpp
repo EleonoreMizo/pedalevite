@@ -136,7 +136,6 @@ void	Notch::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl
 		const auto     mul   = fstb::ToolsSimd::set1_f32 (1.0f / (_rel_thr - 1));
 		const auto     one   = fstb::ToolsSimd::set1_f32 (1);
 		const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
-		const auto     c0123 = fstb::ToolsSimd::set_f32 (0, 0.25f, 0.5f, 0.75f);
 
 /*
 Optimisation: downsample src^2 with an average filter, here at x32.
@@ -190,17 +189,15 @@ Not sure if the benefit is interesting, especially for small buffers.
 			// Simple linear interpolation on the gain
 			// Division can be avoided just by reading a table, block_len is
 			// integer and bounded by _dspl_rate.
-			const float    step4s = (gt_end - gt_beg) * 4 * blen_inv;
-			const auto     step4  = fstb::ToolsSimd::set1_f32 (step4s);
-			gt = fstb::ToolsSimd::Shift < 0>::spread (gt);
-			fstb::ToolsSimd::mac (gt, step4, c0123);
+			fstb::ToolsSimd::VectF32   step;
+			fstb::ToolsSimd::start_lerp (gt, step, gt_beg, gt_end, block_len);
 			for (int pos = 0; pos < block_len; pos += 4)
 			{
 				const auto     s  = fstb::ToolsSimd::load_f32 (sr2_ptr + pos);
 				const auto     b  = fstb::ToolsSimd::load_f32 (bpf_ptr + pos);
 				const auto     y  = s - b * gt;
 				fstb::ToolsSimd::store_f32 (ds2_ptr + pos, y);
-				gt += step4;
+				gt += step;
 			}
 
 			block_pos += block_len;

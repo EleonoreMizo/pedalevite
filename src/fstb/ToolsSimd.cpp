@@ -46,6 +46,25 @@ namespace fstb
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
+#define fstb_ToolsSimd_INV4(x, y) \
+	4.0f / (x +  y), 4.0f / (x +  1), 4.0f / (x +  2), 4.0f / (x +  3), \
+	4.0f / (x +  4), 4.0f / (x +  5), 4.0f / (x +  6), 4.0f / (x +  7), \
+	4.0f / (x +  8), 4.0f / (x +  9), 4.0f / (x + 10), 4.0f / (x + 11), \
+	4.0f / (x + 12), 4.0f / (x + 13), 4.0f / (x + 14), 4.0f / (x + 15)
+
+const float	ToolsSimd::_inv_table_4 [_inv_table_4_len] =
+{
+	fstb_ToolsSimd_INV4 (0x00, 1), fstb_ToolsSimd_INV4 (0x10, 0),
+	fstb_ToolsSimd_INV4 (0x20, 0), fstb_ToolsSimd_INV4 (0x30, 0),
+	fstb_ToolsSimd_INV4 (0x40, 0), fstb_ToolsSimd_INV4 (0x50, 0),
+	fstb_ToolsSimd_INV4 (0x60, 0), fstb_ToolsSimd_INV4 (0x70, 0),
+	fstb_ToolsSimd_INV4 (0x80, 0), fstb_ToolsSimd_INV4 (0x90, 0),
+	fstb_ToolsSimd_INV4 (0xA0, 0), fstb_ToolsSimd_INV4 (0xB0, 0),
+	fstb_ToolsSimd_INV4 (0xC0, 0), fstb_ToolsSimd_INV4 (0xD0, 0),
+	fstb_ToolsSimd_INV4 (0xE0, 0), fstb_ToolsSimd_INV4 (0xF0, 0)
+};
+
+#undef fstb_ToolsSimd_INV4
 
 const int32_t	ToolsSimd::_log2_sub = 128;
 const float	ToolsSimd::_log2_coef_a = -1.f / 3;

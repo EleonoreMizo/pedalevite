@@ -175,6 +175,9 @@ public:
 	static inline VectF32
 	               conv_s32_to_f32 (VectS32 x);
 
+	static inline void
+	               start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, float val_end, int size);
+
 	template <int SHIFT>
 	class Shift
 	{
@@ -209,6 +212,11 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static const int
+	               _inv_table_4_len = 256;
+	static const float
+	               _inv_table_4 [_inv_table_4_len];
 
 	static inline void
 	               store_f32_part_n13 (void *ptr, VectF32 v, int n);
