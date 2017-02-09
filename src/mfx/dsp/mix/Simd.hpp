@@ -1189,7 +1189,6 @@ void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], co
 	step *= 4.0f / nbr_spl;
 	
 	const auto  c0123 = fstb::ToolsSimd::set_f32 (0, 0.25f, 0.5f, 0.75f);
-	const auto  c4    = fstb::ToolsSimd::set1_f32 (4);
 
 	auto        vec_step_l2l = fstb::ToolsSimd::set1_f32 (step.get_l2l ());
 	auto        vec_vol_l2l = fstb::ToolsSimd::set1_f32 (s_vol.get_l2l ());
@@ -2948,7 +2947,6 @@ void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], con
 	step *= 4.0f / nbr_spl;
 	
 	const auto  c0123 = fstb::ToolsSimd::set_f32 (0, 0.25f, 0.5f, 0.75f);
-	const auto  c4    = fstb::ToolsSimd::set1_f32 (4);
 
 	auto        vec_step_l2l = fstb::ToolsSimd::set1_f32 (step.get_l2l ());
 	auto        vec_vol_l2l = fstb::ToolsSimd::set1_f32 (s_vol.get_l2l ());
@@ -3136,8 +3134,6 @@ void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], long 
 
 	const long		nbr_loop = nbr_spl >> 2;
 	long				pos = 0;
-	
-	const float		step = (e_vol - s_vol) / nbr_spl;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
