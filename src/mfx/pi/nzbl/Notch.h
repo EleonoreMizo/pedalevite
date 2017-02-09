@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#define mfx_pi_nzbl_Notch_DSPL
+
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 
@@ -69,16 +71,21 @@ protected:
 
 private:
 
+#if defined (mfx_pi_nzbl_Notch_DSPL)
+	static const int  _dspl_rate_l2 = 5;   // Must be > 2
+	static const int  _dspl_rate    = 1 << _dspl_rate_l2;
+#endif
+
 	void           update_filter ();
 
-	float          _sample_freq  = 0;     // Hz, > 0. 0 = not initialized
-	float          _inv_fs       = 0;     // s, > 0. 0 = not initialized
-	int            _max_buf_size = 0;     // Samples, > 0. 0 = not initialized
+	float          _sample_freq  = 0;      // Hz, > 0. 0 = not initialized
+	float          _inv_fs       = 0;      // s, > 0. 0 = not initialized
+	int            _max_buf_size = 0;      // Samples, > 0. 0 = not initialized
 
-	float          _freq         = 5000;  // Hz, > 0
-	float          _q            = 0.25f; // > 0
-	float          _lvl          = 1;     // >= 0. 0 = off
-	float          _rel_thr      = 20;    // Threshold (relatvie to _lvl) above which the notch has no effect
+	float          _freq         = 5000;   // Hz, > 0
+	float          _q            = 0.25f;  // > 0
+	float          _lvl          = 1;      // >= 0. 0 = off
+	float          _rel_thr      = 20;     // Threshold (relatvie to _lvl) above which the notch has no effect
 
 	bool           _flt_dirty_flag = true;
 	dsp::iir::Biquad
@@ -86,8 +93,8 @@ private:
 	dsp::dyn::EnvFollowerRms
 	               _env;
 
-	float *        _buf_env_ptr  = 0;     // Aligned to 16 bytes. 0 = not set
-	float *        _buf_bpf_ptr  = 0;     // Aligned to 16 bytes. 0 = not set
+	float *        _buf_env_ptr  = 0;      // Aligned to 16 bytes. 0 = not set
+	float *        _buf_bpf_ptr  = 0;      // Aligned to 16 bytes. 0 = not set
 
 
 

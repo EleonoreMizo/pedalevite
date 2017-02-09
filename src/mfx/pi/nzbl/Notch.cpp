@@ -26,8 +26,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
-#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/iir/DesignEq2p.h"
+#include "mfx/dsp/iir/TransSZBilin.h"
+#include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/nzbl/Notch.h"
 
 #include <cassert>
@@ -55,6 +56,8 @@ void	Notch::reset (double sample_freq, int max_buf_len, float buf_0_ptr [], floa
 	assert (max_buf_len > 0);
 	assert (fstb::is_ptr_align_nz (buf_0_ptr));
 	assert (fstb::is_ptr_align_nz (buf_1_ptr));
+
+	dsp::mix::Align::setup ();
 
 	_sample_freq  = float (    sample_freq);
 	_inv_fs       = float (1 / sample_freq);
@@ -126,17 +129,87 @@ void	Notch::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl
 	}
 	else
 	{
-/*
-Possible optimisation: downsample src^2 with an average filter, at x16 for
-example. Take the envelope (process_block_raw) and compute the gain with
-these data. This should reduce the computation load per sample (env + sqrt
-+ rcp). Linearly interpolate the gain between the points.
-The exact rate is not important so we don't need to track the exact location
-of the downsampling points. It could just be relative to the buffer beginning.
+#if defined (mfx_pi_nzbl_Notch_DSPL)
 
-Other improvement: use a 4th-order band-pass filter. Should be cheap with
-dsp::iir::Biquad4Simd and it could process stereo signals too.
+		_bpf.process_block (_buf_bpf_ptr, src_ptr, nbr_spl);
+
+		const auto     lvl   = fstb::ToolsSimd::set1_f32 (_lvl);
+		const auto     thr   = fstb::ToolsSimd::set1_f32 (_rel_thr);
+		const auto     mul   = fstb::ToolsSimd::set1_f32 (1.0f / (_rel_thr - 1));
+		const auto     one   = fstb::ToolsSimd::set1_f32 (1);
+		const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
+		const auto     c0123 = fstb::ToolsSimd::set_f32 (0, 0.25f, 0.5f, 0.75f);
+
+/*
+Optimisation: downsample src^2 with an average filter, here at x32.
+Take the envelope and compute the gain with these data.
+This should reduce the computation load per sample (env + sqrt + rcp).
+Linearly interpolate the gain between the points.
+The exact rate is not important so we don't need to track the exact location
+of the downsampling points.
+
+Further possible optimisation: two pass, first one to collect e2_end with a
+maximum of 4 sub-blocks, an intermediate step to vector-compute gt for all e2
+collected, and the second pass to adjust the gain in the previous sub-blocks.
+Not sure if the benefit is interesting, especially for small buffers.
 */
+
+		int            block_pos = 0;
+		do
+		{
+			const float *  bpf_ptr   = _buf_bpf_ptr + block_pos;
+			const float *  sr2_ptr   = src_ptr      + block_pos;
+			float *        ds2_ptr   = dst_ptr      + block_pos;
+			const int      max_len   = _dspl_rate;
+			const int      block_len = std::min (nbr_spl - block_pos, max_len);
+			const float    blen_inv  = 1.0f / block_len;
+
+			// Downsamples input^2 by averaging
+			auto           sum_v     = fstb::ToolsSimd::set_f32_zero ();
+			for (int pos = 0; pos < block_len; pos += 4)
+			{
+				const auto     x = fstb::ToolsSimd::load_f32 (bpf_ptr + pos);
+				sum_v += x * x;
+			}
+			const float    avg = fstb::ToolsSimd::sum_h_flt (sum_v) * blen_inv;
+
+			const float    e2_beg = _env.get_state_no_sqrt ();
+			const float    e2_end = _env.analyse_block_raw_cst (avg, block_len);
+
+			// g0 = lvl / max (env, lvl)
+			const auto     e2 = fstb::ToolsSimd::set_2f32 (e2_beg, e2_end);
+			const auto     e  = fstb::ToolsSimd::sqrt_approx (e2);
+			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
+			const auto     g0 = fstb::ToolsSimd::rcp_approx (et) * lvl;
+
+			// gain = max ((g0 * tmp - 1) / (g0 - 1), 0)
+			auto           gt = (thr * g0 - one) * mul;
+			gt = fstb::ToolsSimd::max_f32 (gt, zero);
+
+			const float    gt_beg = fstb::ToolsSimd::Shift <0>::extract (gt);
+			const float    gt_end = fstb::ToolsSimd::Shift <1>::extract (gt);
+
+			// Simple linear interpolation on the gain
+			// Division can be avoided just by reading a table, block_len is
+			// integer and bounded by _dspl_rate.
+			const float    step4s = (gt_end - gt_beg) * 4 * blen_inv;
+			const auto     step4  = fstb::ToolsSimd::set1_f32 (step4s);
+			gt = fstb::ToolsSimd::Shift < 0>::spread (gt);
+			fstb::ToolsSimd::mac (gt, step4, c0123);
+			for (int pos = 0; pos < block_len; pos += 4)
+			{
+				const auto     s  = fstb::ToolsSimd::load_f32 (sr2_ptr + pos);
+				const auto     b  = fstb::ToolsSimd::load_f32 (bpf_ptr + pos);
+				const auto     y  = s - b * gt;
+				fstb::ToolsSimd::store_f32 (ds2_ptr + pos, y);
+				gt += step4;
+			}
+
+			block_pos += block_len;
+		}
+		while (block_pos < nbr_spl);
+
+#else
 
 		_bpf.process_block (_buf_bpf_ptr, src_ptr, nbr_spl);
 		_env.process_block_no_sqrt (_buf_env_ptr, _buf_bpf_ptr, nbr_spl);
@@ -165,6 +238,8 @@ dsp::iir::Biquad4Simd and it could process stereo signals too.
 
 			fstb::ToolsSimd::store_f32 (dst_ptr + pos, y);
 		}
+
+#endif
 	}
 }
 
