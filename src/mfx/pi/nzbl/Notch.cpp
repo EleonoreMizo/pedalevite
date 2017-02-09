@@ -129,8 +129,6 @@ void	Notch::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl
 	}
 	else
 	{
-#if defined (mfx_pi_nzbl_Notch_DSPL)
-
 		_bpf.process_block (_buf_bpf_ptr, src_ptr, nbr_spl);
 
 		const auto     lvl   = fstb::ToolsSimd::set1_f32 (_lvl);
@@ -143,7 +141,7 @@ void	Notch::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl
 /*
 Optimisation: downsample src^2 with an average filter, here at x32.
 Take the envelope and compute the gain with these data.
-This should reduce the computation load per sample (env + sqrt + rcp).
+This reduces the computation load per sample (env + sqrt + rcp).
 Linearly interpolate the gain between the points.
 The exact rate is not important so we don't need to track the exact location
 of the downsampling points.
@@ -182,7 +180,7 @@ Not sure if the benefit is interesting, especially for small buffers.
 			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
 			const auto     g0 = fstb::ToolsSimd::rcp_approx (et) * lvl;
 
-			// gain = max ((g0 * tmp - 1) / (g0 - 1), 0)
+			// gain = max ((thr * g0 - 1) / (g0 - 1), 0)
 			auto           gt = (thr * g0 - one) * mul;
 			gt = fstb::ToolsSimd::max_f32 (gt, zero);
 
@@ -208,38 +206,6 @@ Not sure if the benefit is interesting, especially for small buffers.
 			block_pos += block_len;
 		}
 		while (block_pos < nbr_spl);
-
-#else
-
-		_bpf.process_block (_buf_bpf_ptr, src_ptr, nbr_spl);
-		_env.process_block_no_sqrt (_buf_env_ptr, _buf_bpf_ptr, nbr_spl);
-
-		const auto     lvl   = fstb::ToolsSimd::set1_f32 (_lvl);
-		const auto     thr   = fstb::ToolsSimd::set1_f32 (_rel_thr);
-		const auto     mul   = fstb::ToolsSimd::set1_f32 (1.0f / (_rel_thr - 1));
-		const auto     one   = fstb::ToolsSimd::set1_f32 (1);
-		const auto     zero  = fstb::ToolsSimd::set_f32_zero ();
-		for (int pos = 0; pos < nbr_spl; pos += 4)
-		{
-			const auto     s  = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-			const auto     b  = fstb::ToolsSimd::load_f32 (_buf_bpf_ptr + pos);
-			const auto     e2 = fstb::ToolsSimd::load_f32 (_buf_env_ptr + pos);
-
-			// g0 = lvl / max (env, lvl)
-			const auto     e  = fstb::ToolsSimd::sqrt_approx (e2);
-			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
-			const auto     g0 = fstb::ToolsSimd::rcp_approx (et) * lvl;
-
-			// gain = max ((g0 * tmp - 1) / (g0 - 1), 0)
-			auto           gt = (thr * g0 - one) * mul;
-			gt = fstb::ToolsSimd::max_f32 (gt, zero);
-
-			const auto     y  = s - b * gt;
-
-			fstb::ToolsSimd::store_f32 (dst_ptr + pos, y);
-		}
-
-#endif
 	}
 }
 

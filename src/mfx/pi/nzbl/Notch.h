@@ -27,8 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#define mfx_pi_nzbl_Notch_DSPL
-
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 
@@ -71,10 +69,8 @@ protected:
 
 private:
 
-#if defined (mfx_pi_nzbl_Notch_DSPL)
-	static const int  _dspl_rate_l2 = 5;   // Must be > 2
+	static const int  _dspl_rate_l2 = 6;   // Must be > 2
 	static const int  _dspl_rate    = 1 << _dspl_rate_l2;
-#endif
 
 	void           update_filter ();
 
