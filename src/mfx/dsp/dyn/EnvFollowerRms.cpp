@@ -24,10 +24,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -226,6 +228,33 @@ float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], long nbr_spl)
 	_state = state;
 
 	return (state);
+}
+
+
+
+// Input is not squared
+// Output is not square-rooted
+float	EnvFollowerRms::analyse_block_raw_cst (float x2, long nbr_spl)
+{
+	assert (x2 >= 0);
+	assert (nbr_spl > 0);
+
+	const float		delta = x2 - _state;
+	const float		coef  = (delta >= 0) ? _coef_a : _coef_r;
+
+	float          coef_block;
+	if (nbr_spl < 100000)
+	{
+		coef_block = 1 - fstb::ipowp (1 - coef, nbr_spl);
+	}
+	else
+	{
+		coef_block = float (1 - pow (1 - coef, nbr_spl));
+	}
+
+	_state += delta * coef_block;
+
+	return (_state);
 }
 
 

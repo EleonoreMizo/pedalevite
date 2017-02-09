@@ -82,6 +82,13 @@ void	EnvFollowerRms::apply_volume (float gain)
 
 
 
+float	EnvFollowerRms::get_state_no_sqrt () const
+{
+	return _state;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
