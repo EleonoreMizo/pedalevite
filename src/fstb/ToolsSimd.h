@@ -167,8 +167,17 @@ public:
 	               interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1);
 	static inline void
 	               deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 i1);
+	static inline VectF32
+	               deinterleave_f32_lo (VectF32 i0, VectF32 i1);
+	static inline VectF32
+	               deinterleave_f32_hi (VectF32 i0, VectF32 i1);
 	static inline void
 	               transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3);
+
+	static inline VectF32
+	               monofy_2f32_lo (VectF32 v);
+	static inline VectF32
+	               monofy_2f32_hi (VectF32 v);
 
 	static inline VectS32
 	               conv_f32_to_s32 (VectF32 x);

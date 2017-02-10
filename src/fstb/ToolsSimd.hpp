@@ -658,7 +658,7 @@ ToolsSimd::VectF32	ToolsSimd::or_f32 (VectF32 lhs, VectF32 rhs)
 
 
 // p1[1 0] p0[1 0]
-ToolsSimd::VectF32	ToolsSimd::interleave_2f32_low (VectF32 p0, VectF32 p1)
+ToolsSimd::VectF32	ToolsSimd::interleave_2f32_lo (VectF32 p0, VectF32 p1)
 {
 #if fstb_IS (ARCHI, X86)
 	return _mm_shuffle_ps (p0, p1, (1<<6) + (0<<4) + (1<<2) + (0<<0));
@@ -672,7 +672,7 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_low (VectF32 p0, VectF32 p1)
 
 
 // p1[3 2] p0[3 2]
-ToolsSimd::VectF32	ToolsSimd::interleave_2f32_high (VectF32 p0, VectF32 p1)
+ToolsSimd::VectF32	ToolsSimd::interleave_2f32_hi (VectF32 p0, VectF32 p1)
 {
 #if fstb_IS (ARCHI, X86)
 	return _mm_shuffle_ps (p0, p1, (3<<6) + (2<<4) + (3<<2) + (2<<0));
@@ -713,6 +713,28 @@ void	ToolsSimd::deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 
 
 
 
+ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_lo (VectF32 i0, VectF32 i1)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_shuffle_ps (i0, i1, 0x88);
+#elif fstb_IS (ARCHI, ARM)
+	return vuzpq_f32 (i0, i1) [0];
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_hi (VectF32 i0, VectF32 i1)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_shuffle_ps (i0, i1, 0xDD);
+#elif fstb_IS (ARCHI, ARM)
+	return vuzpq_f32 (i0, i1) [1];
+#endif // ff_arch_CPU
+}
+
+
+
 void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3)
 {
 	VectF32        k0, k1, k2, k3;
@@ -720,6 +742,28 @@ void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a
 	interleave_f32 (k2, k3, a1, a3);
 	interleave_f32 (a0, a1, k0, k2);
 	interleave_f32 (a2, a3, k1, k3);
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::monofy_2f32_lo (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_shuffle_ps (v, v, 0xA0);
+#elif fstb_IS (ARCHI, ARM)
+	return vuzpq_f32 (v, v).val [0];
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::monofy_2f32_hi (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_shuffle_ps (v, v, 0xF5);
+#elif fstb_IS (ARCHI, ARM)
+	return vuzpq_f32 (v, v).val [1];
+#endif // ff_arch_CPU
 }
 
 
