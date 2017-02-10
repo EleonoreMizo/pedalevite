@@ -160,9 +160,9 @@ public:
 	               or_f32 (VectF32 lhs, VectF32 rhs);
 
 	static inline VectF32
-	               interleave_2f32_low (VectF32 p0, VectF32 p1);
+	               interleave_2f32_lo (VectF32 p0, VectF32 p1);
 	static inline VectF32
-	               interleave_2f32_high (VectF32 p0, VectF32 p1);
+	               interleave_2f32_hi (VectF32 p0, VectF32 p1);
 	static inline void
 	               interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1);
 	static inline void

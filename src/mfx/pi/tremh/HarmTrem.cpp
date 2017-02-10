@@ -303,14 +303,14 @@ void	HarmTrem::do_process_block (ProcInfo &proc)
 	auto           v_lo_r = vol_r * v_lo_m;
 	v_lo_l += fstb::ToolsSimd::swap_2f32 (v_lo_l);
 	v_lo_r += fstb::ToolsSimd::swap_2f32 (v_lo_r);
-	auto           v_lo   = fstb::ToolsSimd::interleave_2f32_low (v_lo_l, v_lo_r);
+	auto           v_lo   = fstb::ToolsSimd::interleave_2f32_lo (v_lo_l, v_lo_r);
 	v_lo += v_lo_o;
 
 	auto           v_hi_l = vol   * v_hi_m;
 	auto           v_hi_r = vol_r * v_hi_m;
 	v_hi_l += fstb::ToolsSimd::swap_2f32 (v_hi_l);
 	v_hi_r += fstb::ToolsSimd::swap_2f32 (v_hi_r);
-	auto           v_hi   = fstb::ToolsSimd::interleave_2f32_low (v_hi_l, v_hi_r);
+	auto           v_hi   = fstb::ToolsSimd::interleave_2f32_lo (v_hi_l, v_hi_r);
 	v_hi += v_hi_o;
 
 	// Bass/treble level from the tone setting
