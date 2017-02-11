@@ -217,7 +217,10 @@ void	NoiseBleach::do_process_block (ProcInfo &proc)
 			src_ptr = dst_ptr;
 		}
 
-		chn._filter_bank.process_block (dst_ptr, src_ptr, nbr_spl);
+		if (_band_active_flag)
+		{
+			chn._filter_bank.process_block (dst_ptr, src_ptr, nbr_spl);
+		}
 	}
 
 	// Duplicates the remaining output channels
