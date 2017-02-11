@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
 #include "mfx/pi/nzbl/Cst.h"
+#include "mfx/pi/nzbl/FilterBank.h"
 #include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/nzbl/Notch.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -83,6 +84,7 @@ private:
 	public:
 		std::array <Notch, Cst::_nbr_notches>
 		               _notch_arr;
+		FilterBank     _filter_bank;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -90,6 +92,7 @@ private:
 
 	void           update_param (bool force_flag);
 	void           update_all_levels ();
+	void           check_band_activity ();
 
 	State          _state;
 
@@ -105,13 +108,17 @@ private:
 	               _param_change_flag_misc;
 	std::array <fstb::util::NotificationFlagCascadeSingle, Cst::_nbr_notches>
 	               _param_change_flag_notch_arr;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_band;
 
 	ChannelArray   _chn_arr;
-	float          _noise_ratio;        // 0 = pure denoised output, 1 = pure noise (phase-inverted)
 
 	float          _lvl_base;
 	std::array <float, Cst::_nbr_notches>
 	               _lvl_notch_arr;
+	std::array <float, Cst::_nbr_notches>
+	               _lvl_band_arr;
+	bool           _band_active_flag;
 
 	std::array <BufAlign, 2>
 	               _buf_tmp_arr;

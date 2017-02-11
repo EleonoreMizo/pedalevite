@@ -46,6 +46,7 @@ class Cst
 public:
 
 	static const int  _nbr_notches = 8;
+	static const int  _nbr_bands   = 8;
 
 
 

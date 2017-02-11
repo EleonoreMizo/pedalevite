@@ -57,10 +57,12 @@ NoiseBleach::NoiseBleach ()
 ,	_param_change_flag ()
 ,	_param_change_flag_misc ()
 ,	_param_change_flag_notch_arr ()
+,	_param_change_flag_band ()
 ,	_chn_arr ()
-,	_noise_ratio (0)
 ,	_lvl_base (1e-4f)
 ,	_lvl_notch_arr ()
+,	_lvl_band_arr ()
+,	_band_active_flag (false)
 ,	_buf_tmp_arr ()
 {
 	mfx::dsp::mix::Align::setup ();
@@ -69,12 +71,11 @@ NoiseBleach::NoiseBleach ()
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
 	_state_set.set_val_nat (desc_set, Param_LVL     , 1e-5);
-	_state_set.set_val_nat (desc_set, Param_OUT     , 0);
 
 	_state_set.add_observer (Param_LVL     , _param_change_flag_misc);
-	_state_set.add_observer (Param_OUT     , _param_change_flag_misc);
 	
 	_param_change_flag_misc.add_observer (_param_change_flag);
+	_param_change_flag_band.add_observer (_param_change_flag);
 
 	// Notches
 	for (int index = 0; index < Cst::_nbr_notches; ++index)
@@ -95,6 +96,17 @@ NoiseBleach::NoiseBleach ()
 
 		cflag.add_observer (_param_change_flag);
 	}
+
+	// Bands
+	for (int index = 0; index < Cst::_nbr_notches; ++index)
+	{
+		const int      base  = NoiseBleachDesc::get_base_band (index);
+
+		_lvl_band_arr [index] = 0;
+		_state_set.set_val_nat (desc_set, base + ParamBand_LVL , 0);
+		_state_set.add_observer (base + ParamBand_LVL , _param_change_flag_band);
+	}
+
 }
 
 
@@ -146,13 +158,16 @@ int	NoiseBleach::do_reset (double sample_freq, int max_buf_len, int &latency)
 				&_buf_tmp_arr [1] [0]
 			);
 		}
+		chn._filter_bank.reset (sample_freq, max_buf_len);
 	}
+	
 
 	_param_change_flag_misc.set ();
 	for (auto &cflag : _param_change_flag_notch_arr)
 	{
 		 cflag.set ();
 	}
+	_param_change_flag_band.set ();
 
 	update_param (true);
 
@@ -202,15 +217,7 @@ void	NoiseBleach::do_process_block (ProcInfo &proc)
 			src_ptr = dst_ptr;
 		}
 
-		if (_noise_ratio > 1e-4f)
-		{
-			dsp::mix::Align::mix_1_1_v (
-				proc._dst_arr [chn_index],
-				proc._src_arr [chn_index],
-				nbr_spl,
-				-_noise_ratio
-			);
-		}
+		chn._filter_bank.process_block (dst_ptr, src_ptr, nbr_spl);
 	}
 
 	// Duplicates the remaining output channels
@@ -238,9 +245,6 @@ void	NoiseBleach::update_param (bool force_flag)
 		{
 			_lvl_base = float (_state_set.get_val_end_nat (Param_LVL));
 			update_all_levels ();
-
-			_noise_ratio =
-				(_state_set.get_val_end_nat (Param_OUT) >= 0.5f) ? 1.f : 0.f;
 		}
 
 		// Notches
@@ -269,6 +273,25 @@ void	NoiseBleach::update_param (bool force_flag)
 				}
 			}
 		}
+
+		// Bands
+		if (_param_change_flag_band (true) || force_flag)
+		{
+			for (int index = 0; index < Cst::_nbr_bands; ++index)
+			{
+				const int      base  = NoiseBleachDesc::get_base_band (index);
+				_lvl_band_arr [index] = float (
+					_state_set.get_val_end_nat (base + ParamBand_LVL)
+				);
+				
+				const float    lvl_final = _lvl_band_arr [index] * _lvl_base;
+				for (auto &chn : _chn_arr)
+				{
+					chn._filter_bank.set_level (index, lvl_final);
+				}
+				check_band_activity ();
+			}
+		}
 	}
 }
 
@@ -276,14 +299,35 @@ void	NoiseBleach::update_param (bool force_flag)
 
 void	NoiseBleach::update_all_levels ()
 {
-	for (auto &chn : _chn_arr)
+	for (int index = 0; index < Cst::_nbr_notches; ++index)
 	{
-		for (int index = 0; index < Cst::_nbr_notches; ++index)
+		const float    lvl_final = _lvl_notch_arr [index] * _lvl_base;
+		for (auto &chn : _chn_arr)
 		{
-			Notch &        notch = chn._notch_arr [index];
-			notch.set_lvl (_lvl_notch_arr [index] * _lvl_base);
+			chn._notch_arr [index].set_lvl (lvl_final);
 		}
 	}
+	for (int index = 0; index < Cst::_nbr_bands; ++index)
+	{
+		const float    lvl_final = _lvl_band_arr [index] * _lvl_base;
+		for (auto &chn : _chn_arr)
+		{
+			chn._filter_bank.set_level (index, lvl_final);
+		}
+	}
+	check_band_activity ();
+}
+
+
+
+void	NoiseBleach::check_band_activity ()
+{
+	bool           active_flag = false;
+	for (int index = 0; index < Cst::_nbr_bands && ! active_flag; ++index)
+	{
+		active_flag |= (_lvl_band_arr [index] > 1e-9f);
+	}
+	_band_active_flag = active_flag;
 }
 
 

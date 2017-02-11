@@ -506,6 +506,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\lpfs\Squeezer.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\FilterBank.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Notch.h" />
@@ -853,6 +854,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\Notch.cpp" />

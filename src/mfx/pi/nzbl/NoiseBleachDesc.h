@@ -55,6 +55,7 @@ public:
 	ParamDescSet & use_desc_set ();
 
 	static int     get_base_notch (int index);
+	static int     get_base_band (int index);
 
 
 
@@ -80,6 +81,7 @@ protected:
 private:
 
 	void           add_notch (int index);
+	void           add_band (int index);
 
 	ParamDescSet   _desc_set;
 

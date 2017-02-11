@@ -50,11 +50,18 @@ enum ParamNotch
 	ParamNotch_NBR_ELT
 };
 
+enum ParamBand
+{
+	ParamBand_LVL = 0,
+
+	ParamBand_NBR_ELT
+};
+
 enum Param
 {
 	Param_LVL = 0,
-	Param_OUT,
-	Param_BASE_NOTCH,
+	Param_BASE_BAND,
+	Param_BASE_NOTCH = Param_BASE_BAND + ParamBand_NBR_ELT * Cst::_nbr_bands,
 
 	Param_NBR_ELT = Param_BASE_NOTCH + ParamNotch_NBR_ELT * Cst::_nbr_notches
 

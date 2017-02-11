@@ -26,12 +26,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
-#include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/nzbl/Cst.h"
 #include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/nzbl/Param.h"
+
+#include <array>
 
 #include <cassert>
 
@@ -69,20 +70,16 @@ NoiseBleachDesc::NoiseBleachDesc ()
 	pll_ptr->use_mapper ().add_segment (1    , 1   , true);
 	_desc_set.add_glob (Param_LVL, pll_ptr);
 
-	// Output
-	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Denoised\nNoise",
-		"Output",
-		"",
-		0,
-		"%s"
-	);
-	_desc_set.add_glob (Param_OUT, enu_ptr);
-
 	// Notches
-	for (int notch = 0; notch < Cst::_nbr_notches; ++notch)
+	for (int index = 0; index < Cst::_nbr_notches; ++index)
 	{
-		add_notch (notch);
+		add_notch (index);
+	}
+
+	// Bands
+	for (int index = 0; index < Cst::_nbr_bands; ++index)
+	{
+		add_band (index);
 	}
 }
 
@@ -101,6 +98,16 @@ int	NoiseBleachDesc::get_base_notch (int index)
 	assert (index < Cst::_nbr_notches);
 
 	return Param_BASE_NOTCH + index * ParamNotch_NBR_ELT;
+}
+
+
+
+int	NoiseBleachDesc::get_base_band (int index)
+{
+	assert (index >= 0);
+	assert (index < Cst::_nbr_bands);
+
+	return Param_BASE_BAND + index * ParamBand_NBR_ELT;
 }
 
 
@@ -199,6 +206,39 @@ void	NoiseBleachDesc::add_notch (int index)
 	pll_ptr->use_mapper ().add_segment (0.25,   1.0 / 256, false);
 	pll_ptr->use_mapper ().add_segment (1    , 16        , true );
 	_desc_set.add_glob (base + ParamNotch_LVL, pll_ptr);
+}
+
+
+
+void	NoiseBleachDesc::add_band (int index)
+{
+	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
+
+	const int      base = get_base_band (index);
+
+	static const std::array <const char *, Cst::_nbr_bands> band_range_0_arr =
+	{{
+		"20-125", "125-250", "250-500", "500-1k",
+		"1k-2k", "2k-4k", "4k-8k", "8k-20k"
+	}};
+
+	// Band N level
+	const std::string range = band_range_0_arr [index];
+	const std::string name  =
+		"Band " + range + " level\nLevel " + range +"\n"
+		"Lvl " + range + "\n" + range + "\nB%dL";
+	TplPll *   pll_ptr = new TplPll (
+		0, 16,
+		name.c_str (),
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		index + 1,
+		"%+6.1f"
+	);
+	pll_ptr->use_mapper ().set_first_value (    0);
+	pll_ptr->use_mapper ().add_segment (0.25,   1.0 / 256, false);
+	pll_ptr->use_mapper ().add_segment (1    , 16        , true );
+	_desc_set.add_glob (base + ParamBand_LVL, pll_ptr);
 }
 
 

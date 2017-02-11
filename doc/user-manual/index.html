@@ -1192,33 +1192,41 @@ pédalier placé en intermédiaire avec cet unique effet.</p>
 <h3><a id="fx-nzbl"></a>Noise Bleach — Barrière anti-bruit</h3>
 
 <p>Noise Bleach est une sorte de <i><span lang="en">noise gate</span></i>.
-Il est constitué d’une série de filtres coupe-bande qui ne rejettent le signal
-ciblé qu’en-dessous d’un certain seuil.</p>
+Il est constitué de deux types de filtres fonctionnant en rejettent le signal
+ciblé uniquement quand celui-ci est en-dessous d’un certain seuil.</p>
+<p>Le premier est une série de filtres coupe-bande
+(<i><span lang="en">notch</span></i>), dont la fréquence est ajustable, et qui
+sert essentiellement à couper des fréquences fixes particulières.
+Par exemple le 50 ou le 60&#8239;Hz du secteur et ses harmoniques.</p>
+<p>Le second procède de la même façon, mais sous forme de plages
+de fréquences contiguës couvrant l’ensemble du spectre audible.</p>
 
 <p>Pour régler le dispositif, il faut le bruit sans autre son
 «&#8239;utile&#8239;».
 Commencez par régler le niveau global à &minus;100&#8239;dB.
-Ensuite, pour chaque bande, sélectionner une fréquence (à l’intuition).
-On peut commencer avec une sélectivité de 0,5, pour ratisser suffisamment
-large.</p>
-<p>Monter progressivement le niveau de la bande.
+Ensuite, pour chaque plage, monter progressivement son seuil.
 Arrêter quand le son change et que du bruit est effectivement retiré.
-Ne pas aller plus loin, ce serait dommageable pour le signal utile.
-Ajuster ensuite au besoin la fréquence et la sélectivité.
-Si le bruit est étalé sur une large partie du spectre, on peut garder la
-sélectivité basse en espaçant toutes les bandes d’une octave.</p>
+Ne pas aller plus loin, ce serait dommageable pour le signal utile.</p>
 <p>Recommencer sur autant de bandes que nécessaire.
 Rééquilibrer au besoin le niveau global et celui des bandes.</p>
+<p>Si le bruit est localisé dans une plage restreinte de fréquences,
+essayer d’abord avec les filtres coupe-bande en ajustant la fréquence
+et la sélectivité.</p>
 
 <p class="var">Global level</p>
 <p>C’est le niveau global de réjection du filtre, à adapter en fonction du
 niveau de bruit dans le son.
-Tous les filtres coupe-bande sont mis à échelle en fonction de ce paramètre.
+Toutes les plages et les filtres coupe-bande sont mis à échelle en fonction
+de ce paramètre.
 Les valeurs usuelles sont de l’ordre de &minus;100&#8239;dB.</p>
 
 <p class="var">Output</p>
 <p><span class="ui">Denoised</span> permet de sortir un son débruité,
 alors que <span class="ui">Noise</span> donne le bruit uniquement.</p>
+
+<p class="var">Band x-y level</p>
+<p>Seuil relatif de filtrage pour la plage de fréquence indiquée, en dB.
+À &minus;&infin;, la bande est désactivée.</p>
 
 <p class="var">Notch 1–8 frequency</p>
 <p>Fréquence centrale du filtre coupe-bande, en Hz.</p>
@@ -1230,8 +1238,6 @@ Plus la sélectivité est grande, plus la bande filtrée sera étroite.</p>
 <p class="var">Notch 1–8 level</p>
 <p>Seuil relatif de filtrage de la bande, en dB.
 À &minus;&infin;, la bande est désactivée.</p>
-
-
 
 <h3><a id="fx-peq"></a>Parametric Equalizer — Égaliseur paramétrique</h3>
 
@@ -1644,6 +1650,11 @@ sélectionnée.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r4, 2017.02.11</b></p>
+<ul>
+<li>Ajout du filtrage par bandes continues sur le Noise bleach.</li>
+</ul>
 
 <p><b>r3, 2017.02.07</b></p>
 <ul>
