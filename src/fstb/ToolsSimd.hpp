@@ -718,7 +718,7 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_lo (VectF32 i0, VectF32 i1)
 #if fstb_IS (ARCHI, X86)
 	return _mm_shuffle_ps (i0, i1, 0x88);
 #elif fstb_IS (ARCHI, ARM)
-	return vuzpq_f32 (i0, i1) [0];
+	return vuzpq_f32 (i0, i1).val [0];
 #endif // ff_arch_CPU
 }
 
@@ -729,7 +729,7 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_hi (VectF32 i0, VectF32 i1)
 #if fstb_IS (ARCHI, X86)
 	return _mm_shuffle_ps (i0, i1, 0xDD);
 #elif fstb_IS (ARCHI, ARM)
-	return vuzpq_f32 (i0, i1) [1];
+	return vuzpq_f32 (i0, i1).val [1];
 #endif // ff_arch_CPU
 }
 
