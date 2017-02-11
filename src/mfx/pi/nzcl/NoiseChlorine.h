@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        NoiseBleach.h
+        NoiseChlorine.h
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_nzbl_NoiseBleach_HEADER_INCLUDED)
-#define mfx_pi_nzbl_NoiseBleach_HEADER_INCLUDED
+#if ! defined (mfx_pi_nzcl_NoiseChlorine_HEADER_INCLUDED)
+#define mfx_pi_nzcl_NoiseChlorine_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -30,9 +30,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
-#include "mfx/pi/nzbl/Cst.h"
-#include "mfx/pi/nzbl/FilterBank.h"
-#include "mfx/pi/nzbl/NoiseBleachDesc.h"
+#include "mfx/pi/nzcl/Cst.h"
+#include "mfx/pi/nzcl/NoiseChlorineDesc.h"
+#include "mfx/pi/nzcl/Notch.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -44,12 +44,12 @@ namespace mfx
 {
 namespace pi
 {
-namespace nzbl
+namespace nzcl
 {
 
 
 
-class NoiseBleach
+class NoiseChlorine
 :	public piapi::PluginInterface
 {
 
@@ -57,8 +57,8 @@ class NoiseBleach
 
 public:
 
-	               NoiseBleach ();
-	virtual        ~NoiseBleach () = default;
+	               NoiseChlorine ();
+	virtual        ~NoiseChlorine () = default;
 
 
 
@@ -81,7 +81,8 @@ private:
 	class Channel
 	{
 	public:
-		FilterBank     _filter_bank;
+		std::array <Notch, Cst::_nbr_notches>
+		               _notch_arr;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -89,11 +90,10 @@ private:
 
 	void           update_param (bool force_flag);
 	void           update_all_levels ();
-	void           check_band_activity ();
 
 	State          _state;
 
-	NoiseBleachDesc
+	NoiseChlorineDesc
 	               _desc;
 	ParamStateSet  _state_set;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
@@ -103,15 +103,14 @@ private:
 	               _param_change_flag;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_misc;
-	fstb::util::NotificationFlagCascadeSingle
-	               _param_change_flag_band;
+	std::array <fstb::util::NotificationFlagCascadeSingle, Cst::_nbr_notches>
+	               _param_change_flag_notch_arr;
 
 	ChannelArray   _chn_arr;
 
 	float          _lvl_base;
-	std::array <float, Cst::_nbr_bands>
-	               _lvl_band_arr;
-	bool           _band_active_flag;
+	std::array <float, Cst::_nbr_notches>
+	               _lvl_notch_arr;
 
 	std::array <BufAlign, 2>
 	               _buf_tmp_arr;
@@ -123,26 +122,26 @@ private:
 
 private:
 
-	               NoiseBleach (const NoiseBleach &other)       = delete;
-	NoiseBleach &  operator = (const NoiseBleach &other)        = delete;
-	bool           operator == (const NoiseBleach &other) const = delete;
-	bool           operator != (const NoiseBleach &other) const = delete;
+	               NoiseChlorine (const NoiseChlorine &other)     = delete;
+	NoiseChlorine& operator = (const NoiseChlorine &other)        = delete;
+	bool           operator == (const NoiseChlorine &other) const = delete;
+	bool           operator != (const NoiseChlorine &other) const = delete;
 
-}; // class NoiseBleach
+}; // class NoiseChlorine
 
 
 
-}  // namespace nzbl
+}  // namespace nzcl
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/nzbl/NoiseBleach.hpp"
+//#include "mfx/pi/nzcl/NoiseChlorine.hpp"
 
 
 
-#endif   // mfx_pi_nzbl_NoiseBleach_HEADER_INCLUDED
+#endif   // mfx_pi_nzcl_NoiseChlorine_HEADER_INCLUDED
 
 
 

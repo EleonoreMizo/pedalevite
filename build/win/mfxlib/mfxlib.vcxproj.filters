@@ -175,6 +175,9 @@
     <Filter Include="mfx\dsp\nz">
       <UniqueIdentifier>{3b112d29-77cd-44e7-86c9-eba75608cc84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\nzcl">
+      <UniqueIdentifier>{6b66749e-9ca3-49e7-a138-077fe2436331}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1923,9 +1926,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Cst.h">
       <Filter>mfx\pi\nzbl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Notch.h">
-      <Filter>mfx\pi\nzbl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.h">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
@@ -1943,6 +1943,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\FilterBank.h">
       <Filter>mfx\pi\nzbl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\Cst.h">
+      <Filter>mfx\pi\nzcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\Notch.h">
+      <Filter>mfx\pi\nzcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\Param.h">
+      <Filter>mfx\pi\nzcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorine.h">
+      <Filter>mfx\pi\nzcl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorineDesc.h">
+      <Filter>mfx\pi\nzcl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2684,9 +2699,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.cpp">
       <Filter>mfx\pi\nzbl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\Notch.cpp">
-      <Filter>mfx\pi\nzbl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.cpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
@@ -2698,6 +2710,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBank.cpp">
       <Filter>mfx\pi\nzbl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\nzcl\Notch.cpp">
+      <Filter>mfx\pi\nzcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorine.cpp">
+      <Filter>mfx\pi\nzcl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorineDesc.cpp">
+      <Filter>mfx\pi\nzcl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

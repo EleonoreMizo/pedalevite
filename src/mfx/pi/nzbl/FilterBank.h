@@ -13,16 +13,16 @@ depending on the band position, according to the flowgraph described by
 Christofer Bustad on the Music-DSP mailing list:
 http://music.columbia.edu/pipermail/music-dsp/2004-March/059520.html
 
-In -+-->HP1---+--->HP2---+--> ... --+--->HP6---+--->HP7--.
-    |         |          |          |          |         |
-    v         v          v          v          v         |
-   LP1       LP2        LP3        LP6        LP7        |
-    |         |          |          |          |         |
-    v         v          v          v          v         v
-    P1        P2         P3         P6         P7        P8
-    |         |          |          |          |         |
-    v         v          v          v          v         v
-    +-->LP2--(+)-->LP3--(+)-> ... -(+)-->LP7--(+)-------(+)-> Out
+In -+-->HP1----+--->HP2----+--> ... ---+--->HP6----+--->HP7--.
+    |          |           |           |           |         |
+    v          v           v           v           v         |
+   LP1        LP2         LP3         LP6         LP7        |
+    |          |           |           |           |         |
+    v          v           v           v           v         v
+    P1         P2          P3          P6          P7        P8
+    |          |           |           |           |         |
+    |          v           v           v           v         v
+    `-->LP2-->(+)-->LP3-->(+)-> ... ->(+)-->LP7-->(+)------>(+)-> Out
 
 HPi/LPi are the filters at the i-th frequency between band i and i + 1.
 Pi is the processing for the i-th band.

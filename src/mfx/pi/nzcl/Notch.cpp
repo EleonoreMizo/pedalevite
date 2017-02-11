@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/DesignEq2p.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/nzbl/Notch.h"
+#include "mfx/pi/nzcl/Notch.h"
 
 #include <cassert>
 #include <cmath>
@@ -41,7 +41,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace nzbl
+namespace nzcl
 {
 
 
@@ -245,7 +245,8 @@ void	Notch::update_filter ()
 	const int      mult  = 16;
 	const float    delta = sqrt (4 * _q * _q + 1);
 	const float    f1    = _freq * (delta - 1) * bw_rel * 0.5f; // Lowest freq at -3 dB
-	const float    t     = float (mult / (2 * fstb::PI)) / f1;
+	float          t     = float (mult / (2 * fstb::PI)) / f1;
+	t = std::max (t, 0.005f);
 	_env.set_times (t, t);
 
 	_flt_dirty_flag = false;
@@ -253,7 +254,7 @@ void	Notch::update_filter ()
 
 
 
-}  // namespace nzbl
+}  // namespace nzcl
 }  // namespace pi
 }  // namespace mfx
 

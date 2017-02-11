@@ -509,8 +509,12 @@
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\FilterBank.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Notch.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorine.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorineDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\Notch.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzcl\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbkBipolar.h" />
@@ -857,7 +861,9 @@
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\Notch.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorine.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorineDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\nzcl\Notch.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\MapRatio.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\Simple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\peq\BandParam.cpp" />

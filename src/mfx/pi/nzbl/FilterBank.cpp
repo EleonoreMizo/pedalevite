@@ -87,7 +87,8 @@ void	FilterBank::reset (double sample_freq, int max_buf_len)
 			f = compute_split_freq (band_cnt - 1);
 		}
 		const int      mult  = 16;
-		const float    t     = float (mult / (2 * fstb::PI)) / f;
+		float          t     = float (mult / (2 * fstb::PI)) / f;
+		t = std::max (t, 0.005f);
 		band._env.set_times (t, t);
 	}
 
@@ -313,9 +314,11 @@ void	FilterBank::process_band (int band_idx, int nbr_spl)
 			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
 			const auto     g0 = fstb::ToolsSimd::rcp_approx (et) * lvl;
 
-			// gain = 1 - max ((thr * g0 - 1) / (g0 - 1), 0)
+			// gain = (1 - max ((thr * g0 - 1) / (g0 - 1), 0)) ^ 4
 			auto           gt = (thr * g0 - one) * mul;
 			gt = one - fstb::ToolsSimd::max_f32 (gt, zero);
+			gt = gt * gt;
+			gt = gt * gt;
 
 			// Volume
 			const float    gt_beg = fstb::ToolsSimd::Shift <0>::extract (gt);

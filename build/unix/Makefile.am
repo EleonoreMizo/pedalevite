@@ -493,9 +493,15 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/nzbl/NoiseBleach.h \
         ../../src/mfx/pi/nzbl/NoiseBleachDesc.cpp \
         ../../src/mfx/pi/nzbl/NoiseBleachDesc.h \
-        ../../src/mfx/pi/nzbl/Notch.cpp \
-        ../../src/mfx/pi/nzbl/Notch.h \
         ../../src/mfx/pi/nzbl/Param.h \
+        ../../src/mfx/pi/nzcl/Cst.h \
+        ../../src/mfx/pi/nzcl/NoiseChlorine.cpp \
+        ../../src/mfx/pi/nzcl/NoiseChlorine.h \
+        ../../src/mfx/pi/nzcl/NoiseChlorineDesc.cpp \
+        ../../src/mfx/pi/nzcl/NoiseChlorineDesc.h \
+        ../../src/mfx/pi/nzcl/Notch.cpp \
+        ../../src/mfx/pi/nzcl/Notch.h \
+        ../../src/mfx/pi/nzcl/Param.h \
         ../../src/mfx/pi/peq/BandParam.cpp \
         ../../src/mfx/pi/peq/BandParam.h \
         ../../src/mfx/pi/peq/PEq.h \

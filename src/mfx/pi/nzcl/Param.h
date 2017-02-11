@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_nzbl_Param_HEADER_INCLUDED)
-#define mfx_pi_nzbl_Param_HEADER_INCLUDED
+#if ! defined (mfx_pi_nzcl_Param_HEADER_INCLUDED)
+#define mfx_pi_nzcl_Param_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/nzbl/Cst.h"
+#include "mfx/pi/nzcl/Cst.h"
 
 
 
@@ -35,41 +35,43 @@ namespace mfx
 {
 namespace pi
 {
-namespace nzbl
+namespace nzcl
 {
 
 
 
 
-enum ParamBand
+enum ParamNotch
 {
-	ParamBand_LVL = 0,
+	ParamNotch_FREQ = 0,
+	ParamNotch_Q,
+	ParamNotch_LVL,
 
-	ParamBand_NBR_ELT
+	ParamNotch_NBR_ELT
 };
 
 enum Param
 {
 	Param_LVL = 0,
-	Param_BASE_BAND,
+	Param_BASE_NOTCH,
 
-	Param_NBR_ELT = Param_BASE_BAND + ParamBand_NBR_ELT * Cst::_nbr_bands
+	Param_NBR_ELT = Param_BASE_NOTCH + ParamNotch_NBR_ELT * Cst::_nbr_notches
 
 }; // enum Param
 
 
 
-}  // namespace nzbl
+}  // namespace nzcl
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/nzbl/Param.hpp"
+//#include "mfx/pi/nzcl/Param.hpp"
 
 
 
-#endif   // mfx_pi_nzbl_Param_HEADER_INCLUDED
+#endif   // mfx_pi_nzcl_Param_HEADER_INCLUDED
 
 
 

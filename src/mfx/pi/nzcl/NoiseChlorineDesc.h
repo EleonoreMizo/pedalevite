@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        NoiseBleachDesc.h
+        NoiseChlorineDesc.h
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_nzbl_NoiseBleachDesc_HEADER_INCLUDED)
-#define mfx_pi_nzbl_NoiseBleachDesc_HEADER_INCLUDED
+#if ! defined (mfx_pi_nzcl_NoiseChlorineDesc_HEADER_INCLUDED)
+#define mfx_pi_nzcl_NoiseChlorineDesc_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,12 +36,12 @@ namespace mfx
 {
 namespace pi
 {
-namespace nzbl
+namespace nzcl
 {
 
 
 
-class NoiseBleachDesc
+class NoiseChlorineDesc
 :	public piapi::PluginDescInterface
 {
 
@@ -49,12 +49,12 @@ class NoiseBleachDesc
 
 public:
 
-	               NoiseBleachDesc ();
-	virtual        ~NoiseBleachDesc () = default;
+	               NoiseChlorineDesc ();
+	virtual        ~NoiseChlorineDesc () = default;
 
 	ParamDescSet & use_desc_set ();
 
-	static int     get_base_band (int index);
+	static int     get_base_notch (int index);
 
 
 
@@ -79,7 +79,7 @@ protected:
 
 private:
 
-	void           add_band (int index);
+	void           add_notch (int index);
 
 	ParamDescSet   _desc_set;
 
@@ -89,27 +89,27 @@ private:
 
 private:
 
-	               NoiseBleachDesc (const NoiseBleachDesc &other)   = delete;
-	NoiseBleachDesc &
-	               operator = (const NoiseBleachDesc &other)        = delete;
-	bool           operator == (const NoiseBleachDesc &other) const = delete;
-	bool           operator != (const NoiseBleachDesc &other) const = delete;
+	               NoiseChlorineDesc (const NoiseChlorineDesc &other) = delete;
+	NoiseChlorineDesc &
+	               operator = (const NoiseChlorineDesc &other)        = delete;
+	bool           operator == (const NoiseChlorineDesc &other) const = delete;
+	bool           operator != (const NoiseChlorineDesc &other) const = delete;
 
-}; // class NoiseBleachDesc
+}; // class NoiseChlorineDesc
 
 
 
-}  // namespace nzbl
+}  // namespace nzcl
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/nzbl/NoiseBleachDesc.hpp"
+//#include "mfx/pi/nzcl/NoiseChlorineDesc.hpp"
 
 
 
-#endif   // mfx_pi_nzbl_NoiseBleachDesc_HEADER_INCLUDED
+#endif   // mfx_pi_nzcl_NoiseChlorineDesc_HEADER_INCLUDED
 
 
 

@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_nzbl_Cst_HEADER_INCLUDED)
-#define mfx_pi_nzbl_Cst_HEADER_INCLUDED
+#if ! defined (mfx_pi_nzcl_Cst_HEADER_INCLUDED)
+#define mfx_pi_nzcl_Cst_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -33,7 +33,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace nzbl
+namespace nzcl
 {
 
 
@@ -45,7 +45,7 @@ class Cst
 
 public:
 
-	static const int  _nbr_bands   = 8;
+	static const int  _nbr_notches = 8;
 
 
 
@@ -76,17 +76,17 @@ private:
 
 
 
-}  // namespace nzbl
+}  // namespace nzcl
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/nzbl/Cst.hpp"
+//#include "mfx/pi/nzcl/Cst.hpp"
 
 
 
-#endif   // mfx_pi_nzbl_Cst_HEADER_INCLUDED
+#endif   // mfx_pi_nzcl_Cst_HEADER_INCLUDED
 
 
 
