@@ -65,9 +65,9 @@ BankMenu::BankMenu (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 ,	_layout_sptr (new NText (Entry_LAYOUT))
 ,	_bank_list ()
 {
-	_import_sptr->set_text ("Import bank");
-	_export_sptr->set_text ("Export bank");
-	_layout_sptr->set_text ("Pedal layout");
+	_import_sptr->set_text ("Import bank\xE2\x80\xA6");
+	_export_sptr->set_text ("Export bank\xE2\x80\xA6");
+	_layout_sptr->set_text ("Pedal layout\xE2\x80\xA6");
 	_import_sptr->set_justification (0.5f, 0.0f, false);
 	_export_sptr->set_justification (0.5f, 0.0f, false);
 	_layout_sptr->set_justification (0.5f, 0.0f, false);

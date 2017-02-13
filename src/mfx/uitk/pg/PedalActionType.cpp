@@ -246,7 +246,7 @@ void	PedalActionType::update_display ()
 
 	_title_sptr    ->set_text (title);
 	_title2_sptr   ->set_text (title2);
-	_full_sptr     ->set_text (      "  Full edit");
+	_full_sptr     ->set_text (      "  Full edit\xE2\x80\xA6");
 	_clear_sptr    ->set_text (cl_h + " Clear/empty");
 	_push_sptr     ->set_text (pu_h + " Push");
 	_momentary_sptr->set_text (mo_h + " Momentary");

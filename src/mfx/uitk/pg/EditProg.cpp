@@ -81,7 +81,7 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 	_save_sptr       ->set_justification (0.5f, 0, false);
 	_fx_list_sptr    ->set_justification (0.5f, 1, false);
 	_ms_list_sptr    ->set_justification (0.5f, 1, false);
-	_controllers_sptr->set_text ("Controllers");
+	_controllers_sptr->set_text ("Controllers\xE2\x80\xA6");
 	_save_sptr       ->set_text ("Save to\xE2\x80\xA6");
 	_fx_list_sptr    ->set_text ("-----------------");
 	_ms_list_sptr    ->set_text ("-----------------");

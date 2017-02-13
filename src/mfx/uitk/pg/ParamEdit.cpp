@@ -75,7 +75,7 @@ ParamEdit::ParamEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 		_step_sptr_arr [k]->set_text (" " + ratio + " ");
 	}
 
-	_controllers_sptr->set_text ("Controllers");
+	_controllers_sptr->set_text ("Controllers\xE2\x80\xA6");
 
 	_name_sptr       ->set_justification (0.5f, 0   , false);
 	_val_unit_sptr   ->set_justification (0.5f, 0.5f, false);

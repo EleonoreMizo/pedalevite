@@ -79,8 +79,8 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_label_param ()
 {
 	_del_sptr->set_text ("Delete");
-	_mov_sptr->set_text ("Move");
-	_prs_sptr->set_text ("Presets");
+	_mov_sptr->set_text ("Move\xE2\x80\xA6");
+	_prs_sptr->set_text ("Presets\xE2\x80\xA6");
 	_rst_sptr->set_text ("Reset");
 
 	_menu_sptr->push_back (_typ_sptr);

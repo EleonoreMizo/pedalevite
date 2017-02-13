@@ -72,8 +72,8 @@ ParamList::ParamList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_gui_flag (false)
 ,	_gui_page (PageType_INVALID)
 {
-	_fx_setup_sptr->set_text ("FX Setup");
-	_gui_sptr     ->set_text ("Graphic editing");
+	_fx_setup_sptr->set_text ("FX Setup\xE2\x80\xA6");
+	_gui_sptr     ->set_text ("Graphic editing\xE2\x80\xA6");
 }
 
 
