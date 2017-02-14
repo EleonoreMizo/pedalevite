@@ -5,12 +5,15 @@
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
 #include "mfx/doc/Setup.h"
+#include "mfx/dsp/dly/BbdLine.h"
 #include "mfx/dsp/ctrl/lfo/LfoModule.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
+#include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/nz/WhiteFast.h"
+#include	"mfx/dsp/rspl/InterpolatorHermite43.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist1/Param.h"
@@ -392,6 +395,31 @@ int    generate_test_signal_noise_w (double &sample_freq, std::vector <std::vect
 	{
 		chn.resize (len);
 		gen.process_block (&chn [0], int (len));
+	}
+
+	return 0;
+}
+
+
+
+int    generate_test_signal_spikes (double &sample_freq, std::vector <std::vector <float> > &chn_arr, double duration, double spike_len)
+{
+	sample_freq = 44100;
+	if (chn_arr.empty ())
+	{
+		chn_arr.resize (1);
+	}
+	const size_t   len = size_t (sample_freq * duration);
+	for (auto &chn : chn_arr)
+	{
+		chn.resize (len);
+		mfx::dsp::mix::Generic::clear (&chn [0], len);
+		for (double t = 0; t < duration; t += spike_len)
+		{
+			const size_t   pos = size_t (t * sample_freq);
+			assert (pos < len);
+			chn [pos] = 1;
+		}
 	}
 
 	return 0;
@@ -1233,8 +1261,106 @@ int	patch_setup_file ()
 
 
 
+int	test_bbd_line ()
+{
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr;
+
+#if 1
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+	float          fdbk    = 0.75f;
+#elif 0
+	int            ret_val = generate_test_signal_spikes (sample_freq, chn_arr, 86.6667, 0.1);
+	float          fdbk    = 0.75f;
+#else
+	int            ret_val = generate_test_signal_spikes (sample_freq, chn_arr, 20, 2.6973);
+	float          fdbk    = 1;
+#endif
+
+	mfx::dsp::dly::BbdLine delay;
+	if (ret_val == 0)
+	{
+		chn_arr.resize (1);
+
+		mfx::dsp::rspl::InterpolatorHermite43  interp;
+
+		int            bbd_size  = 4096;
+		delay.init (bbd_size, sample_freq, interp, 0);
+		delay.clear_buffers ();
+
+		const int      buf_len   =
+			bbd_size << -mfx::dsp::dly::BbdLine::_min_speed_l2;
+		std::vector <float>  buf (buf_len);
+		const float    spd_min   = 1.0f / (1 << -mfx::dsp::dly::BbdLine::_min_speed_l2);
+		const float    spd_max   = float ( 1 <<  mfx::dsp::dly::BbdLine::_max_speed_l2);
+
+		float          dly_time  = float (bbd_size);
+		float          speed     = 1;
+		double         osc_freq  = 0.1; // Hz
+
+		const int      nbr_spl   = int (chn_arr [0].size ());
+		int            block_pos = 0;
+		while (block_pos < nbr_spl)
+		{
+			const float    c =
+				float (cos (osc_freq * 2 * fstb::PI * block_pos / sample_freq));
+			speed = spd_min + (1 - c) * 0.5f * (spd_max - spd_min);
+
+			delay.set_speed (speed);
+
+			const int      rem_len   = nbr_spl - block_pos;
+			const int      max_len   =
+				delay.estimate_max_one_shot_proc_w_feedback (dly_time);
+			const int      max_len2  = 999999999; // 64;
+			const int      block_len =
+				std::min (std::min (std::min (rem_len, max_len), buf_len), max_len2);
+
+			delay.read_block (&buf [0], block_len, dly_time, dly_time);
+			mfx::dsp::mix::Generic::scale_1_v (&buf [0], block_len, fdbk);
+			if (block_pos < nbr_spl * 3 / 4)
+			{
+				mfx::dsp::mix::Generic::mix_1_1 (
+					&buf [0],
+					&chn_arr [0] [block_pos],
+					block_len
+				);
+			}
+			else
+			{
+				fdbk = 1.0f;
+			}
+			mfx::dsp::mix::Generic::copy_1_1 (
+				&chn_arr [0] [block_pos],
+				&buf [0],
+				block_len
+			);
+			delay.push_block (&buf [0], block_len);
+
+			block_pos += block_len;
+		}
+
+		ret_val = save_wav ("results/bbdline0.wav", chn_arr, sample_freq, 1);
+	}
+
+	if (ret_val == 0)
+	{
+		fprintf (stderr, "test_bbd_line successful.\n");
+	}
+	else
+	{
+		fprintf (stderr, "*** An error occured in test_bbd_line ***\n");
+	}
+
+	return ret_val;
+}
+
+
+
+
 int main (int argc, char *argv [])
 {
+	mfx::dsp::mix::Generic::setup ();
+
 	int            ret_val = 0;
 
 #if 0
@@ -1249,7 +1375,7 @@ int main (int argc, char *argv [])
 	test_noise_chlorine ();
 #endif
 
-#if 1
+#if 0
 	test_noise_bleach ();
 #endif
 
@@ -1263,6 +1389,10 @@ int main (int argc, char *argv [])
 
 #if 0
 	patch_setup_file ();
+#endif
+
+#if 1
+	test_bbd_line ();
 #endif
 
 
