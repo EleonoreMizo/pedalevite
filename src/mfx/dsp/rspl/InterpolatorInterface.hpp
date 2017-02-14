@@ -65,6 +65,7 @@ long	InterpolatorInterface::get_impulse_len () const
 
 
 
+// Group delay at fractional position 0.
 fstb::FixedPoint	InterpolatorInterface::get_group_delay () const
 {
 	const fstb::FixedPoint	group_delay = do_get_group_delay ();
