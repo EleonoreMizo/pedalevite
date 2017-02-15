@@ -73,7 +73,7 @@ long	InterpolatorHermite43Simd::do_get_impulse_len () const
 
 fstb::FixedPoint	InterpolatorHermite43Simd::do_get_group_delay () const
 {
-	return (fstb::FixedPoint (2));
+	return (fstb::FixedPoint (1));
 }
 
 
