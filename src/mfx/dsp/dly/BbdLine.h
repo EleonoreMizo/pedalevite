@@ -67,8 +67,8 @@ class BbdLine
 
 public:
 
-	static const int  _max_speed_l2  =  6; // Log2 of the maximum BBD speed, > 0.
-	static const int  _min_speed_l2  = -2; // Log2 of the minimum BBD speed, <= 0.
+	// Log2 of the minimum BBD speed, <= 0. Impacts data buffer size.
+	static const int  _min_speed_l2  = -4;
 
 	               BbdLine ()  = default;
 	virtual        ~BbdLine () = default;
@@ -116,7 +116,7 @@ private:
 	               _interp_ptr   = 0;
 	DataLine       _line_data;
 
-	float          _speed        = 1;   // Speed of the delay line relative to the in/out stream. In other words, it's a dynamic oversampling factor. Range: ]0 ; 1<<_max_speed_l2]
+	float          _speed        = 1;   // Speed of the delay line relative to the in/out stream. In other words, it's a dynamic oversampling factor. Range: ]0 ; +oo[. The higher the speed, the higher the CPU load.
 	float          _speed_inv    = 1;   // 1 / _speed
 	int            _bbd_size     = 0;   // Number of BBD elements (samples). Must be a power of 2. 0 = not set
 	float          _ts_pos_w     = 0;   // Writing position within the BBD line for the beginning of the block. [0 ; _bbd_size[

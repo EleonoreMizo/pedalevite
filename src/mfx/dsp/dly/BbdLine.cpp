@@ -110,7 +110,6 @@ void	BbdLine::set_bbd_size (int bbd_size)
 void	BbdLine::set_speed (float speed)
 {
 	assert (speed * (1 << -_min_speed_l2) >= 1);
-	assert (speed <= 1 << _max_speed_l2);
 
 	_speed     =     speed;
 	_speed_inv = 1 / speed;
@@ -131,13 +130,36 @@ int	BbdLine::estimate_max_one_shot_proc_w_feedback (float dly_min) const
 
 
 
-// dly_beg and dly_end in number of samples of the BBD line.
+/*
+dly_beg and dly_end in number of samples of the BBD line.
+Set them both to _bbd_size for standard BBD emulation.
+The actual lower bound for dly_* depends on the availability of the sample
+data and the interpolation filter.
+Required data is bound by:
+	[floor (ts - _group_dly) ; floor (ts - _group_dly) + _imp_len - 1]
+ts comes from the timestamp delay line.
+We suppose it negative here (relative to the writing position), so:
+	floor (ts - _group_dly) + _imp_len - 1 < 0.
+with:
+	ts <= -dly / speed
+Note that the speed is the recording speed. So:
+	floor (-dly / speed - _group_dly) < 1 - _imp_len
+	-dly / speed - _group_dly + 1 <= 1 - _imp_len
+Finally:
+	dly >= (_imp_len - _group_dly) * speed
+In the assert() below we use the current speed because the recording
+speed is difficult to evaluate, even if we keep track of it for every
+BBD bin.
+*/
+
 void	BbdLine::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end) const
 {
 	assert (dst_ptr != 0);
 	assert (nbr_spl > 0);
 	assert (dly_beg >= 1);
 	assert (dly_end >= 1);
+	assert (dly_beg >= (_imp_len - _group_dly.get_val_flt ()) * _speed);
+	assert (dly_end >= (_imp_len - _group_dly.get_val_flt ()) * _speed);
 	assert (dly_beg <= _bbd_size);
 	assert (dly_end <= _bbd_size);
 
@@ -165,6 +187,7 @@ void	BbdLine::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float d
 float	BbdLine::read_sample (float dly) const
 {
 	assert (dly >= 1);
+	assert (dly >= (_imp_len - _group_dly.get_val_flt ()) * _speed);
 	assert (dly <= _bbd_size);
 
 	const int      ts_mask      = _line_ts.get_mask ();

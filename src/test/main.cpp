@@ -1292,7 +1292,7 @@ int	test_bbd_line ()
 			bbd_size << -mfx::dsp::dly::BbdLine::_min_speed_l2;
 		std::vector <float>  buf (buf_len);
 		const float    spd_min   = 1.0f / (1 << -mfx::dsp::dly::BbdLine::_min_speed_l2);
-		const float    spd_max   = float ( 1 <<  mfx::dsp::dly::BbdLine::_max_speed_l2);
+		const float    spd_max   = 64;
 
 		float          dly_time  = float (bbd_size);
 		float          speed     = 1;
