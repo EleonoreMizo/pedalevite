@@ -147,7 +147,11 @@ private:
 	// Cached
 	int				_nbr_chn_in;			// > 0. 0 = not set
 	int				_nbr_chn_out;			// > 0. 0 = not set
+#if defined (mfx_pi_flancho_Cst_MIX)
+	float          _mix;
+#else
 	bool           _dry_flag;
+#endif
 	bool           _neg_flag;
 	bool           _ovrspl_flag;
 	int            _ovrspl_cur;         // Current oversampling rate (1 or _ovrspl)

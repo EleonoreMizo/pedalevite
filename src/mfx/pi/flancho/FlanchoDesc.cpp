@@ -27,6 +27,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/flancho/FlanchoDesc.h"
 #include "mfx/pi/flancho/Param.h"
 #include "mfx/pi/flancho/Cst.h"
+#if defined (mfx_pi_flancho_Cst_MIX)
+	#include "mfx/pi/param/MapS.h"
+#endif
+#include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplInt.h"
 #include "mfx/pi/param/TplLin.h"
@@ -55,18 +59,25 @@ FlanchoDesc::FlanchoDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	typedef param::TplMapped <ParamMapFdbkBipolar> TplFdbk;
+	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
+#if defined (mfx_pi_flancho_Cst_MIX)
+	typedef param::TplMapped <param::MapS <false> > TplMaps;
+#endif
 
 	// Speed
-	param::TplLog *   log_ptr = new param::TplLog (
-		0.01, 100,
+	TplPll *   pll_ptr = new TplPll (
+		0.01, 1000,
 		"Speed",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
 		"%7.3f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_SPEED, log_ptr);
+	pll_ptr->use_mapper ().set_first_value (     0.01);
+	pll_ptr->use_mapper ().add_segment (0.75,  100, true);
+	pll_ptr->use_mapper ().add_segment (1   , 1000, true);
+	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_SPEED, pll_ptr);
 
 	// Depth
 	param::TplLin *   lin_ptr = new param::TplLin (
@@ -80,7 +91,7 @@ FlanchoDesc::FlanchoDesc ()
 	_desc_set.add_glob (Param_DEPTH, lin_ptr);
 
 	// Delay
-	log_ptr = new param::TplLog (
+	param::TplLog *   log_ptr = new param::TplLog (
 		Cst::_delay_min / 1e6, Cst::_delay_max / 1e6,
 		"D\nDly\nDelay",
 		"ms",
@@ -134,6 +145,22 @@ FlanchoDesc::FlanchoDesc ()
 	);
 	_desc_set.add_glob (Param_NBR_VOICES, int_ptr);
 
+#if defined (mfx_pi_flancho_Cst_MIX)
+	// Mix
+	TplMaps *      maps_ptr = new TplMaps (
+		0, 1,
+		"M\nMix",
+		"%",
+		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		0,
+		"%5.1f"
+	);
+	maps_ptr->use_mapper ().config (
+		maps_ptr->get_nat_min (),
+		maps_ptr->get_nat_max ()
+	);
+	_desc_set.add_glob (Param_MIX, maps_ptr);
+#else
 	// Dry input
 	enu_ptr = new param::TplEnum (
 		"Off\nOn",
@@ -143,6 +170,7 @@ FlanchoDesc::FlanchoDesc ()
 		"%s"
 	);
 	_desc_set.add_glob (Param_DRY, enu_ptr);
+#endif
 
 	// Phase set
 	lin_ptr = new param::TplLin (

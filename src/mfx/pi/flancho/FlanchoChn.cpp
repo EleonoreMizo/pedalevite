@@ -49,7 +49,7 @@ namespace flancho
 
 
 
-FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_ptr [], long dly_buf_len, float render_buf_ptr [], long render_buf_len)
+FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_ptr [], int dly_buf_len, float render_buf_ptr [], int render_buf_len)
 :	_dly_line ()
 ,	_voice_arr ()
 ,	_sample_freq (44100)
@@ -65,6 +65,7 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 ,	_wf_type (WfType_SINE)
 ,	_neg_flag (false)
 ,	_max_proc_len (0)
+,	_mpl_lfo (0)
 ,	_feedback_old (0)
 ,	_sat_in_a (1)
 ,	_sat_in_b (0)
@@ -150,6 +151,7 @@ void	FlanchoChn::set_sample_freq (double sample_freq, bool fast_flag, dsp::rspl:
 	}
 
 	update_max_proc_len ();
+	update_mpl_lfo ();
 }
 
 
@@ -210,6 +212,8 @@ void	FlanchoChn::set_period (double period)
 		Voice &			voice = _voice_arr [v_cnt];
 		voice._lfo.set_period (_period);
 	}
+
+	update_mpl_lfo ();
 }
 
 
@@ -306,7 +310,7 @@ void	FlanchoChn::resync (double base_phase)
 
 
 
-void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (_max_proc_len > 0);
 	assert (out_ptr != 0);
@@ -318,11 +322,12 @@ void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], long nb
 
 	float *        render_ptr = _tmp_buf_arr [TmpBufType_RENDER]._ptr;
 
-	long           block_pos  = 0;
+	int            block_pos  = 0;
 	do
 	{
-		long           work_len = nbr_spl - block_pos;
+		int            work_len = nbr_spl - block_pos;
 		work_len = std::min (work_len, _max_proc_len);
+		work_len = std::min (work_len, _mpl_lfo);
 
 		const double   fdbk_new = fdbk_cur + fdbk_step * work_len;
 
@@ -666,6 +671,15 @@ void	FlanchoChn::update_max_proc_len ()
 	assert (_max_proc_len > 0);
 	_max_proc_len =
 		std::min (_max_proc_len, _tmp_buf_arr [TmpBufType_RENDER]._len);
+}
+
+
+
+void	FlanchoChn::update_mpl_lfo ()
+{
+	float          p_spl = float (_period * _sample_freq);
+	const int      seg   = fstb::round_int (p_spl * (1.0f / 64));
+	_mpl_lfo = fstb::limit (seg, 2, 256);
 }
 
 

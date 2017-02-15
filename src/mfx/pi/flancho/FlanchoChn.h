@@ -67,7 +67,7 @@ class FlanchoChn
 
 public:
 
-	explicit       FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_ptr [], long dly_buf_len, float render_buf_ptr [], long render_buf_len);
+	explicit       FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_ptr [], int dly_buf_len, float render_buf_ptr [], int render_buf_len);
 	virtual        ~FlanchoChn () = default;
 
 	void           set_sample_freq (double sample_freq, bool fast_flag, dsp::rspl::InterpolatorInterface &interp);
@@ -83,7 +83,7 @@ public:
 	void           set_feedback (double fdbk);
 	void           set_polarity (bool neg_flag);
 	void           resync (double base_phase);
-	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
+	void           process_block (float out_ptr [], const float in_ptr [], int nbr_spl);
 	void           clear_buffers ();
 
 
@@ -112,7 +112,7 @@ private:
 	{
 	public:
 		float *        _ptr;
-		long           _len;
+		int            _len;
 	};
 
 	typedef	std::array <TmpBufInfo, TmpBufType_NBR_ELT>	TmpBufArray;
@@ -148,6 +148,7 @@ private:
 	void           update_shaper_data ();
 	void           update_lfo_param ();
 	void           update_max_proc_len ();
+	void           update_mpl_lfo ();
 
 	dsp::dly::DelayLine
 	               _dly_line;
@@ -164,7 +165,8 @@ private:
 	double         _wf_shape;     // [-1 ; 1]
 	WfType         _wf_type;
 	bool           _neg_flag;     // Polarity of the delayed signal
-	long           _max_proc_len; // Maximum length. Depends on the delay.
+	int            _max_proc_len; // Maximum block processing length. Depends on the delay.
+	int            _mpl_lfo;      // Maximum block processing length. Depends on the LFO.
 
 	double         _feedback_old;
 
