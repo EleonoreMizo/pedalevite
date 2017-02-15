@@ -54,6 +54,7 @@ namespace doc
 	class ActionToggleFx;
 	class ActionToggleTuner;
 	class ActionTempo;
+	class ActionTempoSet;
 	class FxId;
 }
 
@@ -234,8 +235,10 @@ private:
 	void           process_action_preset (const doc::ActionPreset &action);
 	void           process_action_toggle_fx (const doc::ActionToggleFx &action);
 	void           process_action_toggle_tuner (const doc::ActionToggleTuner &action);
-	void           process_action_tempo (const doc::ActionTempo &action, std::chrono::microseconds ts);
+	void           process_action_tempo_tap (const doc::ActionTempo &action, std::chrono::microseconds ts);
 	void           process_action_settings (const doc::ActionSettings &action);
+	void           process_action_tempo_set (const doc::ActionTempoSet &action);
+	void           process_action_tempo (double tempo);
 	void           build_slot_info ();
 	void           notify_slot_info ();
 	int            find_slot_cur_preset (const doc::FxId &fx_id) const;

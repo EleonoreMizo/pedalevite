@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
+#include "mfx/doc/ActionTempoSet.h"
 #include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/piapi/ParamDescInterface.h"
@@ -297,13 +298,16 @@ void	PedalEditAction::update_display ()
 		display_param (nav_list, dynamic_cast <const doc::ActionParam &> (action));
 		break;
 	case doc::ActionType_TEMPO:
-		display_tempo (nav_list, dynamic_cast <const doc::ActionTempo &> (action));
+		display_tempo_tap (nav_list, dynamic_cast <const doc::ActionTempo &> (action));
 		break;
 	case doc::ActionType_SETTINGS:
 		display_settings (nav_list, dynamic_cast <const doc::ActionSettings &> (action));
 		break;
 	case doc::ActionType_EVENT:
 		display_event (nav_list);
+		break;
+	case doc::ActionType_TEMPO_SET:
+		display_tempo_set (nav_list, dynamic_cast <const doc::ActionTempoSet &> (action));
 		break;
 	default:
 		assert (false);
@@ -563,7 +567,7 @@ void	PedalEditAction::display_param (PageMgrInterface::NavLocList &nav_list, con
 
 
 
-void	PedalEditAction::display_tempo (PageMgrInterface::NavLocList &nav_list, const doc::ActionTempo &action)
+void	PedalEditAction::display_tempo_tap (PageMgrInterface::NavLocList &nav_list, const doc::ActionTempo &action)
 {
 	// Action type
 	_type_sptr->set_text ("Tempo tap");
@@ -642,6 +646,28 @@ void	PedalEditAction::display_event (PageMgrInterface::NavLocList &nav_list)
 
 
 
+void	PedalEditAction::display_tempo_set (PageMgrInterface::NavLocList &nav_list, const doc::ActionTempoSet &action)
+{
+	// Action type
+	_type_sptr->set_text ("Tempo set");
+
+	const int      h_m   = _fnt_ptr->get_char_h ();
+	const int      scr_w = _page_size [0];
+
+	char           txt_0 [127+1];
+	fstb::snprintf4all (
+		txt_0, sizeof (txt_0), "BPM: %7.3f", action._tempo_bpm
+	);
+
+	_value_sptr->set_text (txt_0);
+	_value_sptr->set_coord (Vec2d (0, 2 * h_m));
+	_value_sptr->show (true);
+	_page_ptr->push_back (_value_sptr);
+	PageMgrInterface::add_nav (nav_list, Entry_VALUE);
+}
+
+
+
 // Prints to _label_sptr
 // Returns the guessed plug-in type (empty string if not found)
 std::string	PedalEditAction::print_fx_id (const doc::FxId &fx_id) const
@@ -715,6 +741,9 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_value (int node_id, int dir
 		case doc::ActionType_SETTINGS:
 			ret_val = change_settings (node_id, dir);
 			break;
+		case doc::ActionType_TEMPO_SET:
+			ret_val = change_tempo_set (node_id, dir);
+			break;
 		default:
 			// Nothing
 			break;
@@ -737,14 +766,15 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 	doc::ActionType   action_type = action_sptr->get_type ();
 
 	// Currently we only support this set of actions.
-	static const std::array <doc::ActionType, 7>  type_list =
+	static const std::array <doc::ActionType, 8>  type_list =
 	{{
 		doc::ActionType_BANK,
 		doc::ActionType_PRESET,
 		doc::ActionType_TOGGLE_TUNER,
 		doc::ActionType_PARAM,
 		doc::ActionType_TEMPO,
-		doc::ActionType_SETTINGS
+		doc::ActionType_SETTINGS,
+		doc::ActionType_TEMPO_SET
 	}};
 	const int      type_list_size = int (type_list.size ());
 	int            type_pos       = 0;
@@ -804,6 +834,11 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 				new doc::ActionSettings (doc::FxId (
 					doc::FxId::LocType_LABEL, "X", PiType_MAIN
 				), false, 0)
+			);
+			break;
+		case doc::ActionType_TEMPO_SET:
+			action_sptr = doc::PedalActionCycle::ActionSPtr (
+				new doc::ActionTempoSet (120)
 			);
 			break;
 		default:
@@ -1062,6 +1097,30 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_settings (int node_id, int 
 	}
 
 	return ret_val;
+}
+
+
+
+MsgHandlerInterface::EvtProp	PedalEditAction::change_tempo_set (int node_id, int dir)
+{
+	doc::PedalActionCycle & cycle =
+		_ctx._content._action_arr [_ctx._trigger];
+	doc::PedalActionCycle::ActionArray &   step =
+		cycle._cycle [_ctx._step_index];
+	doc::PedalActionCycle::ActionSPtr & action_sptr =
+		step [_ctx._action_index];
+	assert (action_sptr->get_type () == doc::ActionType_TEMPO_SET);
+	doc::ActionTempoSet &   action =
+		dynamic_cast <doc::ActionTempoSet &> (*action_sptr);
+
+	double         bpm = action._tempo_bpm;
+	bpm += dir;
+	bpm = fstb::limit (bpm, double (Cst::_tempo_min), double (Cst::_tempo_max));
+	action._tempo_bpm = bpm;
+
+	update_model ();
+
+	return EvtProp_CATCH;
 }
 
 

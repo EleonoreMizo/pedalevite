@@ -186,6 +186,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/ActionSettings.h \
         ../../src/mfx/doc/ActionTempo.cpp \
         ../../src/mfx/doc/ActionTempo.h \
+        ../../src/mfx/doc/ActionTempoSet.cpp \
+        ../../src/mfx/doc/ActionTempoSet.h \
         ../../src/mfx/doc/ActionToggleFx.cpp \
         ../../src/mfx/doc/ActionToggleFx.h \
         ../../src/mfx/doc/ActionToggleTuner.cpp \

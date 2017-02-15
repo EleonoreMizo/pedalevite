@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        ActionTempo.h
-        Author: Laurent de Soras, 2016
+        ActionTempoSet.h
+        Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_doc_ActionTempo_HEADER_INCLUDED)
-#define mfx_doc_ActionTempo_HEADER_INCLUDED
+#if ! defined (mfx_doc_ActionTempoSet_HEADER_INCLUDED)
+#define mfx_doc_ActionTempoSet_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -41,7 +41,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionTempo
+class ActionTempoSet
 :	public PedalActionSingleInterface
 {
 
@@ -49,15 +49,17 @@ class ActionTempo
 
 public:
 
-	               ActionTempo ()                         = default;
-	               ActionTempo (SerRInterface &ser);
-	               ActionTempo (const ActionTempo &other) = default;
-	virtual        ~ActionTempo ()                        = default;
-
-	ActionTempo &  operator = (const ActionTempo &other)  = default;
+	explicit       ActionTempoSet (double tempo_bpm);
+	explicit       ActionTempoSet (SerRInterface &ser);
+	               ActionTempoSet (const ActionTempoSet &other) = default;
+	virtual        ~ActionTempoSet ()                           = default;
+	ActionTempoSet &
+	               operator = (const ActionTempoSet &other)     = default;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
+
+	double         _tempo_bpm;          // BPM, > 0
 
 
 
@@ -83,10 +85,11 @@ private:
 
 private:
 
-	bool           operator == (const ActionTempo &other) const = delete;
-	bool           operator != (const ActionTempo &other) const = delete;
+	               ActionTempoSet ()                               = delete;
+	bool           operator == (const ActionTempoSet &other) const = delete;
+	bool           operator != (const ActionTempoSet &other) const = delete;
 
-}; // class ActionTempo
+}; // class ActionTempoSet
 
 
 
@@ -95,11 +98,11 @@ private:
 
 
 
-//#include "mfx/doc/ActionTempo.hpp"
+//#include "mfx/doc/ActionTempoSet.hpp"
 
 
 
-#endif   // mfx_doc_ActionTempo_HEADER_INCLUDED
+#endif   // mfx_doc_ActionTempoSet_HEADER_INCLUDED
 
 
 

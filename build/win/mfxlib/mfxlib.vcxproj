@@ -297,6 +297,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\ActionPreset.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionSettings.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionTempo.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionTempoSet.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionToggleFx.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionToggleTuner.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\ActionTrigger.h" />
@@ -758,6 +759,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\ActionPreset.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionSettings.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionTempo.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionTempoSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionToggleFx.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionToggleTuner.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionTrigger.cpp" />

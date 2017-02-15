@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
+#include "mfx/doc/ActionTempoSet.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/PedalActionCycle.h"
 #include "mfx/doc/SerRInterface.h"
@@ -222,6 +223,9 @@ void	PedalActionCycle::ser_read (SerRInterface &ser)
 				break;
 			case ActionType_SETTINGS:
 				a_sptr = ActionSPtr (new ActionSettings (ser));
+				break;
+			case ActionType_TEMPO_SET:
+				a_sptr = ActionSPtr (new ActionTempoSet (ser));
 				break;
 
 			case ActionType_TOGGLE_FX:

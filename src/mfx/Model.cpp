@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
+#include "mfx/doc/ActionTempoSet.h"
 #include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/SerRText.h"
@@ -1841,11 +1842,15 @@ void	Model::process_action (const doc::PedalActionSingleInterface &action, std::
 		break;
 
 	case doc::ActionType_TEMPO:
-		process_action_tempo (dynamic_cast <const doc::ActionTempo &> (action), ts);
+		process_action_tempo_tap (dynamic_cast <const doc::ActionTempo &> (action), ts);
 		break;
 
 	case doc::ActionType_SETTINGS:
 		process_action_settings (dynamic_cast <const doc::ActionSettings &> (action));
+		break;
+
+	case doc::ActionType_TEMPO_SET:
+		process_action_tempo_set (dynamic_cast <const doc::ActionTempoSet &> (action));
 		break;
 
 	default:
@@ -1949,36 +1954,15 @@ void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
 
 
 
-void	Model::process_action_tempo (const doc::ActionTempo &action, std::chrono::microseconds ts)
+void	Model::process_action_tempo_tap (const doc::ActionTempo &action, std::chrono::microseconds ts)
 {
 	const std::chrono::microseconds  dist = ts - _tempo_last_ts;
 	if (   dist <= Cst::_tempo_detection_max
 	    && dist >= Cst::_tempo_detection_min)
 	{
-		double      tempo = (60.0 * 1000*1000) / double (dist.count ());
+		const double   tempo = (60.0 * 1000*1000) / double (dist.count ());
 
-		// Fits tempo into the accepted range
-		while (tempo > Cst::_tempo_max)
-		{
-			tempo *= 0.5;
-		}
-		while (tempo < Cst::_tempo_min)
-		{
-			tempo *= 2;
-		}
-
-		_tempo = tempo;
-		_central.set_tempo (float (tempo));
-
-		if (_obs_ptr != 0)
-		{
-			_obs_ptr->set_tempo (tempo);
-		}
-
-		if (! _tuner_flag)
-		{
-			update_all_beat_parameters ();
-		}
+		process_action_tempo (tempo);
 	}
 
 	_tempo_last_ts = ts;
@@ -2014,6 +1998,43 @@ void	Model::process_action_settings (const doc::ActionSettings &action)
 				);
 			}
 		}
+	}
+}
+
+
+
+void	Model::process_action_tempo_set (const doc::ActionTempoSet &action)
+{
+	process_action_tempo (action._tempo_bpm);
+}
+
+
+
+void	Model::process_action_tempo (double tempo)
+{
+	assert (tempo > 0);
+
+	// Fits tempo into the accepted range
+	while (tempo > Cst::_tempo_max)
+	{
+		tempo *= 0.5;
+	}
+	while (tempo < Cst::_tempo_min)
+	{
+		tempo *= 2;
+	}
+
+	_tempo = tempo;
+	_central.set_tempo (float (tempo));
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_tempo (tempo);
+	}
+
+	if (! _tuner_flag)
+	{
+		update_all_beat_parameters ();
 	}
 }
 

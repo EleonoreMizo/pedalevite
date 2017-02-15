@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionSettings.h"
+#include "mfx/doc/ActionTempoSet.h"
 #include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
@@ -784,7 +785,7 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 		break;
 
 	case doc::ActionType_TEMPO:
-		name = "Tempo";
+		name = "Tempo tap";
 		break;
 
 	case doc::ActionType_SETTINGS:
@@ -810,6 +811,17 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 
 	case doc::ActionType_EVENT:
 		name = "Event\?";
+		break;
+
+	case doc::ActionType_TEMPO_SET:
+		{
+			const doc::ActionTempoSet & tempo =
+				dynamic_cast <const doc::ActionTempoSet &> (action);
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), "BPM %.0f", tempo._tempo_bpm
+			);
+			name = txt_0;
+		}
 		break;
 
 	default:

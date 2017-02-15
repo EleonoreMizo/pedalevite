@@ -47,9 +47,10 @@ enum ActionType
 	ActionType_LOOP_PLAY_STOP,
 	ActionType_LOOP_UNDO,
 	ActionType_PARAM,
-	ActionType_TEMPO,
+	ActionType_TEMPO,          // Tap
 	ActionType_SETTINGS,
 	ActionType_EVENT,
+	ActionType_TEMPO_SET,
 
 	ActionType_NBR_ELT
 
