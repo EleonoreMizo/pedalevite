@@ -57,7 +57,7 @@ long	InterpolatorOrder0::do_get_impulse_len () const
 
 fstb::FixedPoint	InterpolatorOrder0::do_get_group_delay () const
 {
-	return fstb::FixedPoint (0);
+	return fstb::FixedPoint (-1, uint32_t (1) << 31); // -0.5
 }
 
 

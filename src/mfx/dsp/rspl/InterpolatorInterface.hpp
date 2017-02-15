@@ -55,6 +55,8 @@ void	InterpolatorInterface::set_ovrspl_l2 (int ovrspl_l2)
 
 
 
+// Number of required samples, starting from the operational position (pos_src
+// in process_block). The filter implementation is mostly anti-causal.
 long	InterpolatorInterface::get_impulse_len () const
 {
 	const long		len = do_get_impulse_len ();
@@ -65,11 +67,18 @@ long	InterpolatorInterface::get_impulse_len () const
 
 
 
-// Group delay at fractional position 0.
+// Not exactly the group delay. It is actually the location of the energy
+// peak relative to the beginning of the impulse for integer pos_src (null
+// fractional position).
+// In other words, it is the value to subtract to the desired interpolation
+// location to obtain the operational position:
+// pos_src = desired interpolation location - offset
+// For a FIR filter, it is more or less equivalent to:
+// impulse length - 1 - filter group delay.
 fstb::FixedPoint	InterpolatorInterface::get_group_delay () const
 {
 	const fstb::FixedPoint	group_delay = do_get_group_delay ();
-	assert (group_delay.get_val_int64 () >= 0);
+	assert (group_delay.get_int_val () >= -1);
 
 	return (group_delay);
 }
