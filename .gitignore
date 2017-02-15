@@ -33,7 +33,7 @@ missing
 build/unix/pedalevite
 **/test/results/
 art/*.h
-etc/config/current
+etc/config/current*
 legacy/
 doc/exported/
 doc/pcb*/*.bak
