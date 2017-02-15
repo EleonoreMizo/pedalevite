@@ -198,6 +198,25 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 
 
 
+void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const Model &model, const View &view, const doc::Preset &preset, int slot_id, PiType type, int index, float val)
+{
+	const doc::Slot &    slot     = preset.use_slot (slot_id);
+	const std::string &  pi_model =
+		(type == PiType_MIX) ? Cst::_plugin_mix : slot._pi_model;
+	const piapi::PluginDescInterface &  desc_pi =
+		model.get_model_desc (pi_model);
+	const piapi::ParamDescInterface &   desc    =
+		desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
+
+	const double   tempo = view.get_tempo ();
+	print_param_with_pres (
+		val_s, unit,
+		preset, slot_id, type, index, val, desc, tempo
+	);
+}
+
+
+
 MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view, int slot_id, PiType type, int index, double step, int step_index, int dir)
 {
 	assert (slot_id >= 0);

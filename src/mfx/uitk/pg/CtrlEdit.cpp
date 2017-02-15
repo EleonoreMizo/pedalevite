@@ -68,6 +68,10 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_minmax ()
 ,	_curve_sptr (   new NText (Entry_CURVE   ))
 ,	_u2b_sptr (     new NText (Entry_CONV_U2B))
+,	_mod_minmax_arr ({{
+		TxtSPtr (    new NText (Entry_MOD_MIN)),
+		TxtSPtr (    new NText (Entry_MOD_MAX))
+	}})
 ,	_step_index (0)
 ,	_val_unit_w (0)
 ,	_csn_list_full (_csn_list_base)
@@ -179,6 +183,12 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 			x_step += dist + width_arr [k];
 		}
 	}
+	for (int mm = 0; mm < int (_mod_minmax_arr.size ()); ++mm)
+	{
+		_mod_minmax_arr [mm]->set_font (*_fnt_ptr);
+		_mod_minmax_arr [mm]->set_coord (Vec2d (0, (4 + mm) * h_m));
+		_page_ptr->push_back (_mod_minmax_arr [mm]);
+	}
 
 	_page_ptr->push_back (_curve_sptr);
 	_page_ptr->push_back (_u2b_sptr  );
@@ -257,6 +267,30 @@ MsgHandlerInterface::EvtProp	CtrlEdit::do_handle_evt (const NodeEvt &evt)
 void	CtrlEdit::do_activate_preset (int index)
 {
 	_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+}
+
+
+
+void	CtrlEdit::do_set_param (int slot_id, int index, float val, PiType type)
+{
+	if (   slot_id == _loc_edit._slot_id
+	    && type    == _loc_edit._pi_type
+	    && index   == _loc_edit._param_index)
+	{
+		update_display ();
+	}
+}
+
+
+
+void	CtrlEdit::do_set_param_beats (int slot_id, int index, float beats)
+{
+	if (   slot_id     == _loc_edit._slot_id
+	    && PiType_MAIN == _loc_edit._pi_type
+	    && index       == _loc_edit._param_index)
+	{
+		update_display ();
+	}
 }
 
 
@@ -429,6 +463,9 @@ void	CtrlEdit::update_display ()
 				_minmax [mm]._val_unit_sptr->show (true);
 				_minmax [mm]._label_sptr->show (true);
 			}
+
+			_mod_minmax_arr [0]->show (false);
+			_mod_minmax_arr [1]->show (false);
 		}
 		else
 		{
@@ -445,6 +482,30 @@ void	CtrlEdit::update_display ()
 			_minmax [0]._val_unit_sptr->set_text (txt_0);
 			_minmax [1]._val_unit_sptr->show (false);
 			_minmax [1]._label_sptr->show (false);
+
+			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+			const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+			const doc::PluginSettings &   settings =
+				slot.use_settings (_loc_edit._pi_type);
+			const float    val_cur = settings._param_list [_loc_edit._param_index];
+			for (int mm = 0; mm < 2; ++mm)
+			{
+				const float    val_rel = fstb::limit (
+					val_cur + (mm * 2 - 1) * _ctrl_link._amp,
+					0.0f, 1.0f
+				);
+				std::string    val_str;
+				std::string    unit;
+				Tools::print_param_with_pres (
+					val_str, unit,
+					*_model_ptr, *_view_ptr, preset, _loc_edit._slot_id,
+					_loc_edit._pi_type, _loc_edit._param_index, val_rel
+				);
+				const std::string tit = (mm == 0) ? "Min  :" : "Max  :";
+				const std::string txt = tit + " " + val_str + " " + unit;
+				_mod_minmax_arr [mm]->set_text (txt);
+				_mod_minmax_arr [mm]->show (true);
+			}
 		}
 
 		const std::string curve_name =

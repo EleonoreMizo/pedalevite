@@ -87,6 +87,7 @@ public:
 	};
 
 	static void    set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_id, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
+	static void    print_param_with_pres (std::string &val_s, std::string &unit, const Model &model, const View &view, const doc::Preset &preset, int slot_id, PiType type, int index, float val);
 	static MsgHandlerInterface::EvtProp
 	               change_param (Model &model, const View &view, int slot_id, PiType type, int index, double step, int step_index, int dir);
 	static double  change_param (double val_nrm, const Model &model, const View &view, int slot_id, PiType type, int index, double step, int step_index, int dir);

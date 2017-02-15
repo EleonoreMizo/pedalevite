@@ -80,6 +80,8 @@ protected:
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
+	virtual void   do_set_param (int slot_id, int index, float val, PiType type);
+	virtual void   do_set_param_beats (int slot_id, int index, float beats);
 	virtual void   do_remove_plugin (int slot_id);
 	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
 
@@ -102,7 +104,9 @@ private:
 		Entry_VAL_MAX,
 		Entry_STEP_MAX,
 		Entry_CURVE   = Entry_STEP_MAX + _nbr_steps,
-		Entry_CONV_U2B
+		Entry_CONV_U2B,
+		Entry_MOD_MIN,
+		Entry_MOD_MAX
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -150,6 +154,8 @@ private:
 	               _minmax;
 	TxtSPtr        _curve_sptr;
 	TxtSPtr        _u2b_sptr;
+	std::array <TxtSPtr, 2>
+	               _mod_minmax_arr;
 
 	int            _step_index;
 	int            _val_unit_w;
