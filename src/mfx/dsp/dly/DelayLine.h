@@ -94,8 +94,6 @@ protected:
 private:
 
 	int            compute_margin () const;
-	fstb::FixedPoint
-	               compute_compensation_for_group_delay (int dir) const;
 
 	rspl::InterpolatorInterface *          // 0: interpolator not set.
 	               _interp_ptr   = 0;

@@ -71,7 +71,8 @@ void	DelayLine::set_interpolator (rspl::InterpolatorInterface &interp)
 	{
 		_write_pos &= _line_data.get_mask ();
 	}
-	_min_dly_time = double (_imp_len + 1) / _sample_freq;
+	_min_dly_time =
+		double (_imp_len - _group_dly.get_val_dbl () + 1) / _sample_freq;
 
 	_interp_ptr->start (1);
 }
@@ -102,7 +103,8 @@ void	DelayLine::set_sample_freq (double sample_freq, int ovrspl_l2)
 	{
 		_interp_ptr->set_ovrspl_l2 (_ovrspl_l2);
 
-		_min_dly_time = double (_imp_len + 1) / _sample_freq;
+		_min_dly_time =
+			double (_imp_len - _group_dly.get_val_dbl () + 1) / _sample_freq;
 	}
 
 	if (is_ready ())
@@ -183,12 +185,11 @@ int	DelayLine::estimate_max_one_shot_proc_w_feedback (double min_delay_time) con
 	assert (min_delay_time >= get_min_delay_time ());
 	assert (min_delay_time <= get_max_delay_time ());
 
-	int            nbr_spl =
-		fstb::floor_int (min_delay_time * _sample_freq);
+	const float    nbr_spl_f =
+		min_delay_time * _sample_freq - (_imp_len - _group_dly.get_val_dbl ());
+	int            nbr_spl = fstb::floor_int (nbr_spl_f);
 
-	nbr_spl -= _imp_len;
-
-	assert (nbr_spl >= 0);
+	assert (nbr_spl > 0);
 
 	return (nbr_spl);
 }
@@ -224,15 +225,13 @@ void	DelayLine::read_line (float dest_ptr [], int nbr_spl, double delay_beg, dou
 	rate >>= _ovrspl_l2;
 	rate += fstb::FixedPoint ((delay_beg_spl - delay_end_spl) / nbr_spl);
 
-	const fstb::FixedPoint  comp (compute_compensation_for_group_delay (1));
-
 	fstb::FixedPoint        pos_in_block_line (pos_in_block, 0);
 	pos_in_block_line >>= _ovrspl_l2;
 
 	fstb::FixedPoint       pos_cur (_write_pos, 0);
 	pos_cur -= dcur;
 	pos_cur += pos_in_block_line;
-	pos_cur += comp;
+	pos_cur -= _group_dly;
 	pos_cur.bound_and (mask);
 
 	int            pos_dest = 0;
@@ -346,34 +345,6 @@ void	DelayLine::push_sample (float src)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-int	DelayLine::compute_margin () const
-{
-	assert (_interp_ptr != 0);
-
-	const double   gd1        = _group_dly.get_val_dbl ();
-	const double   gd2        = _imp_len - gd1;
-	const double   margin_flt = std::max (gd1, gd2);
-	const int      margin_spl = fstb::ceil_int (margin_flt);
-
-	return (margin_spl);
-}
-
-
-
-// Adding compensation moves the cursor in the direction opposed to dir
-fstb::FixedPoint	DelayLine::compute_compensation_for_group_delay (int dir) const
-{
-	assert (dir == +1 || dir == -1);
-
-	fstb::FixedPoint  comp (_imp_len - 1, 0);
-	comp -= _group_dly;
-	comp.mul_int (-dir);
-
-	return (comp);
-}
 
 
 
