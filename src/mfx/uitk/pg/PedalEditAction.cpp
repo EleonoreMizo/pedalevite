@@ -652,7 +652,6 @@ void	PedalEditAction::display_tempo_set (PageMgrInterface::NavLocList &nav_list,
 	_type_sptr->set_text ("Tempo set");
 
 	const int      h_m   = _fnt_ptr->get_char_h ();
-	const int      scr_w = _page_size [0];
 
 	char           txt_0 [127+1];
 	fstb::snprintf4all (
