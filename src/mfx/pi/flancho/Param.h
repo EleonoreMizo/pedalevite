@@ -27,8 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/flancho/Cst.h"	/******************************************************/
-
 
 
 namespace mfx
@@ -51,11 +49,7 @@ enum Param
 	Param_WF_SHAPE,
 	Param_NBR_VOICES,
 	Param_PHASE_SET,
-#if defined (mfx_pi_flancho_Cst_MIX)
 	Param_MIX,
-#else
-	Param_DRY,
-#endif
 	Param_NEGATIVE,
 	Param_OVRSPL,
 

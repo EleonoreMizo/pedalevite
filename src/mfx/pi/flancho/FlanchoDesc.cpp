@@ -27,10 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/flancho/FlanchoDesc.h"
 #include "mfx/pi/flancho/Param.h"
 #include "mfx/pi/flancho/Cst.h"
-#if defined (mfx_pi_flancho_Cst_MIX)
-	#include "mfx/pi/param/MapS.h"
-#endif
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
+#include "mfx/pi/param/MapS.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplInt.h"
 #include "mfx/pi/param/TplLin.h"
@@ -60,9 +58,7 @@ FlanchoDesc::FlanchoDesc ()
 {
 	typedef param::TplMapped <ParamMapFdbkBipolar> TplFdbk;
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
-#if defined (mfx_pi_flancho_Cst_MIX)
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
-#endif
 
 	// Speed
 	TplPll *   pll_ptr = new TplPll (
@@ -74,7 +70,7 @@ FlanchoDesc::FlanchoDesc ()
 		"%7.3f"
 	);
 	pll_ptr->use_mapper ().set_first_value (     0.01);
-	pll_ptr->use_mapper ().add_segment (0.75,  100, true);
+	pll_ptr->use_mapper ().add_segment (0.75,   10, true);
 	pll_ptr->use_mapper ().add_segment (1   , 1000, true);
 	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
 	_desc_set.add_glob (Param_SPEED, pll_ptr);
@@ -145,7 +141,6 @@ FlanchoDesc::FlanchoDesc ()
 	);
 	_desc_set.add_glob (Param_NBR_VOICES, int_ptr);
 
-#if defined (mfx_pi_flancho_Cst_MIX)
 	// Mix
 	TplMaps *      maps_ptr = new TplMaps (
 		0, 1,
@@ -160,17 +155,6 @@ FlanchoDesc::FlanchoDesc ()
 		maps_ptr->get_nat_max ()
 	);
 	_desc_set.add_glob (Param_MIX, maps_ptr);
-#else
-	// Dry input
-	enu_ptr = new param::TplEnum (
-		"Off\nOn",
-		"D\nDry\nDry Input",
-		"",
-		0,
-		"%s"
-	);
-	_desc_set.add_glob (Param_DRY, enu_ptr);
-#endif
 
 	// Phase set
 	lin_ptr = new param::TplLin (

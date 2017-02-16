@@ -74,11 +74,7 @@ Flancho::Flancho ()
 ,	_buf_ovrspl_dst ()
 ,	_nbr_chn_in (0)
 ,	_nbr_chn_out (0)
-#if defined (mfx_pi_flancho_Cst_MIX)
 ,	_mix (0.5f)
-#else
-,	_dry_flag (false)
-#endif
 ,	_neg_flag (false)
 ,	_ovrspl_flag (false)
 ,	_ovrspl_cur (1)
@@ -95,11 +91,7 @@ Flancho::Flancho ()
 	_state_set.set_val_nat (desc_set, Param_WF_TYPE   , double (WfType_SINE));
 	_state_set.set_val_nat (desc_set, Param_WF_SHAPE  , 0);
 	_state_set.set_val_nat (desc_set, Param_NBR_VOICES, 1);
-#if defined (mfx_pi_flancho_Cst_MIX)
 	_state_set.set_val_nat (desc_set, Param_MIX       , 0.5);
-#else
-	_state_set.set_val_nat (desc_set, Param_DRY       , 1);
-#endif
 	_state_set.set_val_nat (desc_set, Param_NEGATIVE  , 0);
 	_state_set.set_val_nat (desc_set, Param_PHASE_SET , 0);
 	_state_set.set_val_nat (desc_set, Param_OVRSPL    , 0);
@@ -111,11 +103,7 @@ Flancho::Flancho ()
 	_state_set.add_observer (Param_WF_TYPE   , _param_change_flag_wf);
 	_state_set.add_observer (Param_WF_SHAPE  , _param_change_flag_wf);
 	_state_set.add_observer (Param_NBR_VOICES, _param_change_flag_voices);
-#if defined (mfx_pi_flancho_Cst_MIX)
 	_state_set.add_observer (Param_MIX       , _param_change_flag_dry);
-#else
-	_state_set.add_observer (Param_DRY       , _param_change_flag_dry);
-#endif
 	_state_set.add_observer (Param_NEGATIVE  , _param_change_flag_dry);
 	_state_set.add_observer (Param_PHASE_SET , _param_change_flag_phase_set);
 	_state_set.add_observer (Param_OVRSPL    , _param_change_flag_ovrspl);
@@ -268,9 +256,7 @@ void	Flancho::do_process_block (ProcInfo &proc)
 		const int      work_len = std::min (proc._nbr_spl - pos, max_len);
 
 		// Parameters
-#if defined (mfx_pi_flancho_Cst_MIX)
 		const float       mix_old = _mix;
-#endif
 		_state_set.process_block (work_len);
 		update_param ();
 
@@ -303,7 +289,6 @@ void	Flancho::do_process_block (ProcInfo &proc)
 				dst_proc_ptr, src_proc_ptr, work_len * len_mult
 			);
 
-#if defined (mfx_pi_flancho_Cst_MIX)
 			dsp::mix::Align::copy_xfade_2_1_vlrauto (
 				dst_proc_ptr,
 				src_proc_ptr,
@@ -312,14 +297,6 @@ void	Flancho::do_process_block (ProcInfo &proc)
 				mix_old,
 				_mix
 			);
-#else
-			if (_dry_flag)
-			{
-				dsp::mix::Align::mix_1_1 (
-					dst_proc_ptr, src_proc_ptr, work_len * len_mult
-				);
-			}
-#endif
 
 			if (_ovrspl_flag)
 			{
@@ -441,11 +418,7 @@ void	Flancho::update_param (bool force_flag)
 		}
 		if (_param_change_flag_dry (true) || force_flag)
 		{
-#if defined (mfx_pi_flancho_Cst_MIX)
 			_mix      = float (_state_set.get_val_tgt_nat (Param_MIX));
-#else
-			_dry_flag = (_state_set.get_val_tgt_nat (Param_DRY) >= 0.5f);
-#endif
 			_neg_flag = (_state_set.get_val_tgt_nat (Param_NEGATIVE) >= 0.5f);
 			for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 			{
