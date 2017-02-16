@@ -99,7 +99,8 @@ private:
 		Entry_VUM_OUT,
 		Entry_CHN,
 		Entry_DSP_TXT,
-		Entry_DSP
+		Entry_DSP,
+		Entry_DSP_VAL
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -144,6 +145,7 @@ private:
 	TxtSPtr        _chn_sptr;
 	TxtSPtr        _dsp_txt_sptr;
 	BitmapSPtr     _dsp_sptr;
+	TxtSPtr        _dsp_val_sptr;
 
 	static const int  _meter_audio_w  = 128;
 	static const int  _meter_grad_h   = 7;

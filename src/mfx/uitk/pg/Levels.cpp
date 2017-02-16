@@ -65,6 +65,7 @@ Levels::Levels (PageSwitcher &page_switcher)
 ,	_chn_sptr (    TxtSPtr (   new NText (  Entry_CHN)))
 ,	_dsp_txt_sptr (TxtSPtr (   new NText (  Entry_DSP_TXT)))
 ,	_dsp_sptr (    BitmapSPtr (new NBitmap (Entry_DSP)))
+,	_dsp_val_sptr (TxtSPtr (   new NText (  Entry_DSP_VAL)))
 {
 	_dir_arr [Dir_IN ]._lab_sptr = TxtSPtr (   new NText (  Entry_LAB_IN));
 	_dir_arr [Dir_IN ]._vum_sptr = BitmapSPtr (new NBitmap (Entry_VUM_IN));
@@ -85,6 +86,8 @@ Levels::Levels (PageSwitcher &page_switcher)
 	_chn_sptr->set_justification (0, 1, false);
 	_dsp_txt_sptr->set_text ("DSP");
 	_dsp_txt_sptr->set_justification (1, 1, false);
+	_dsp_val_sptr->set_justification (1, 1, false);
+	_dsp_val_sptr->set_blend_mode (ui::DisplayInterface::BlendMode_XOR);
 	_dsp_sptr->set_size (Vec2d (_meter_dsp_w, _meter_dsp_h));
 }
 
@@ -108,6 +111,7 @@ void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	_lvl_sptr->set_font (fnt._m);
 	_chn_sptr->set_font (fnt._m);
 	_dsp_txt_sptr->set_font (fnt._m);
+	_dsp_val_sptr->set_font (fnt._s);
 
 	_dir_arr [Dir_IN ]._lab_sptr->set_coord (Vec2d (0,  0));
 	_dir_arr [Dir_IN ]._vum_sptr->set_coord (Vec2d (0,  0 + h_m));
@@ -117,6 +121,7 @@ void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	_chn_sptr->set_coord (Vec2d (0, _page_size [1]));
 	_dsp_txt_sptr->set_coord (_page_size - Vec2d (_meter_dsp_w, 0));
 	_dsp_sptr->set_coord (_page_size - Vec2d (_meter_dsp_w, _meter_dsp_h));
+	_dsp_val_sptr->set_coord (_page_size - Vec2d (1, 1));
 
 	_page_ptr->push_back (_dir_arr [Dir_IN ]._lab_sptr);
 	_page_ptr->push_back (_dir_arr [Dir_IN ]._vum_sptr);
@@ -126,6 +131,7 @@ void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	_page_ptr->push_back (_chn_sptr);
 	_page_ptr->push_back (_dsp_txt_sptr);
 	_page_ptr->push_back (_dsp_sptr);
+	_page_ptr->push_back (_dsp_val_sptr);
 
 	PageMgrInterface::NavLocList  nav_list (4);
 	nav_list [0]._node_id = Entry_VUM_IN;
@@ -313,6 +319,10 @@ void	Levels::refresh_display ()
 	draw_audio_meter (_dir_arr [Dir_IN ], 2);
 	draw_audio_meter (_dir_arr [Dir_OUT], nbr_chn_out);
 	draw_dsp_meter (meters._dsp_use);
+
+	const float    cpu_percent = meters._dsp_use._rms * 100;
+	fstb::snprintf4all (txt_0, sizeof (txt_0), "%5.1f", cpu_percent);
+	_dsp_val_sptr->set_text (txt_0);
 }
 
 
