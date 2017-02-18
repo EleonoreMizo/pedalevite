@@ -25,11 +25,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+// For debugging: records all the processing steps
+#undef mfx_WorldAudio_BUF_REC
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "conc/CellPool.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/SingleObj.h"
+#if defined (mfx_WorldAudio_BUF_REC)
+	#include "fstb/BitFieldSparse.h"
+#endif
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold4Simd.h"
@@ -125,6 +133,10 @@ private:
 	void           handle_msg_param (Msg::Param &msg);
 	void           handle_msg_tempo (Msg::Tempo &msg);
 
+#if defined (mfx_WorldAudio_BUF_REC)
+	void           store_data (const float src_ptr [], int nbr_spl);
+	static int     save_wav (const char *filename_0, const std::vector <AlignedZone > &chn_arr, double sample_freq, float scale = 1);
+#endif
 	PluginPool &   _pi_pool;
 	MsgQueue &     _queue_from_cmd;
 	MsgQueue &     _queue_to_cmd;
@@ -163,6 +175,18 @@ private:
 	SigResultArray _sig_res_arr;
 
 	bool           _reset_flag;         // Indicates that we should reset all the chain, because something wrong occured.
+
+#if defined (mfx_WorldAudio_BUF_REC)
+	static const int  _max_rec_duration = 30;   // Seconds. Records to disk once time elapsed.
+	bool           _data_rec_flag;
+	std::vector <AlignedZone>
+	               _data_rec_arr;
+	volatile size_t
+	               _data_rec_cur_buf;
+	volatile size_t
+	               _data_rec_pos;       // Recording position in samples. Reset to 0 when the recording is saved to disk.
+	size_t         _data_rec_len;
+#endif
 
 
 

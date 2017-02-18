@@ -71,6 +71,13 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_proc_analyser ()
 ,	_sig_res_arr ()
 ,	_reset_flag (false)
+#if defined (mfx_WorldAudio_BUF_REC)
+,	_data_rec_flag (true)
+,	_data_rec_arr ()
+,	_data_rec_cur_buf (0)
+,	_data_rec_pos (0)
+,	_data_rec_len (0)
+#endif
 {
 	_evt_arr.reserve (_max_nbr_evt);
 	_evt_ptr_arr.reserve (_max_nbr_evt);
@@ -108,6 +115,16 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	{
 		_buf_arr [buf_index] = &_buf_zone [buf_index * block_align];
 	}
+
+#if defined (mfx_WorldAudio_BUF_REC)
+	// Preallocates a few recording buffers
+	_data_rec_arr.resize (16);
+	_data_rec_len = size_t (sample_freq * _max_rec_duration);
+	for (auto &zone : _data_rec_arr)
+	{
+		zone.reserve (_data_rec_len);
+	}
+#endif
 
 	_lvl_meter->set_sample_freq (_sample_freq);
 	_proc_analyser.set_sample_freq (_sample_freq / max_block_size);
@@ -175,6 +192,13 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	// Audio processing
 	if (_ctx_ptr != 0)
 	{
+#if defined (mfx_WorldAudio_BUF_REC)
+		if (_data_rec_flag)
+		{
+			_data_rec_cur_buf = 0;
+		}
+#endif
+
 		copy_input (src_arr, nbr_spl);
 
 		const ProcessingContext::PluginCtxArray & pi_ctx_arr =
@@ -187,6 +211,17 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 		copy_output (dst_arr, nbr_spl);
 
 		check_signal_level (dst_arr, src_arr, nbr_spl);
+
+#if defined (mfx_WorldAudio_BUF_REC)
+		if (_data_rec_flag)
+		{
+			_data_rec_pos += nbr_spl;
+			if (_data_rec_pos >= _data_rec_len)
+			{
+				_data_rec_flag = false;
+			}
+		}
+#endif
 	}
 
 	_tempo_cur = _tempo_new;
@@ -295,6 +330,21 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 		}
 	}
 	while (cell_ptr != 0);
+
+#if defined (mfx_WorldAudio_BUF_REC)
+	if (_data_rec_pos >= _data_rec_len)
+	{
+		while (! _data_rec_arr.empty () && _data_rec_arr.back ().empty ())
+		{
+			_data_rec_arr.pop_back ();
+		}
+		if (! _data_rec_arr.empty ())
+		{
+			save_wav ("audiodump.wav", _data_rec_arr, _sample_freq, 1);
+		}
+		_data_rec_pos = 0;
+	}
+#endif
 }
 
 
@@ -431,6 +481,17 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 			MixUnalignToAlign::copy_1_1 (buf_ptr, src_arr [chn], nbr_spl);
 		}
 	}
+
+#if defined (mfx_WorldAudio_BUF_REC)
+	if (_data_rec_flag)
+	{
+		for (int chn = 0; chn < side._nbr_chn; ++chn)
+		{
+			const int      buf_index = side._buf_arr [chn];
+			store_data (_buf_arr [buf_index], nbr_spl);
+		}
+	}
+#endif
 }
 
 
@@ -594,6 +655,21 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	prepare_buffers (proc_info, pi_ctx._node_arr [PiType_MAIN], false);
 
 	process_single_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info);
+
+#if defined (mfx_WorldAudio_BUF_REC)
+	if (_data_rec_flag)
+	{
+		// Records only the first output pin
+		const int      nbr_chn = proc_info._nbr_chn_arr [Dir_OUT];
+		if (nbr_chn > 0)
+		{
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				store_data (proc_info._dst_arr [chn], proc_info._nbr_spl);
+			}
+		}
+	}
+#endif
 
 	handle_signals (proc_info, pi_ctx._node_arr [PiType_MAIN]);
 
@@ -827,6 +903,170 @@ void	WorldAudio::handle_msg_tempo (Msg::Tempo &msg)
 		_tempo_new = msg._bpm;
 	}
 }
+
+
+
+#if defined (mfx_WorldAudio_BUF_REC)
+
+
+
+void	WorldAudio::store_data (const float src_ptr [], int nbr_spl)
+{
+	assert (fstb::DataAlign <true>::check_ptr (src_ptr));
+	assert (nbr_spl > 0);
+
+	size_t         idx = _data_rec_cur_buf;
+	if (idx >= int (_data_rec_arr.size ()))
+	{
+		_data_rec_arr.resize (idx + 1);
+	}
+	AlignedZone &  zone = _data_rec_arr [idx];
+
+	if (zone.empty ())
+	{
+		zone.resize (_data_rec_len, 0);
+	}
+
+	const size_t   rem_len  = zone.size () - _data_rec_pos;
+	const size_t   work_len = std::min (size_t (nbr_spl), rem_len);
+	dsp::mix::Simd <
+		fstb::DataAlign <true>,
+		fstb::DataAlign <true>
+	>::copy_1_1 (&zone [_data_rec_pos], src_ptr, int (work_len));
+
+	++ _data_rec_cur_buf;
+}
+
+
+
+int	WorldAudio::save_wav (const char *filename_0, const std::vector <AlignedZone > &chn_arr, double sample_freq, float scale)
+{
+	assert (! chn_arr.empty ());
+	assert (sample_freq > 0);
+
+	struct WavRiff
+	{
+		char           _chunk_id [4];  // "RIFF"
+		uint32_t       _chunk_size;
+		char           _wave_id [4];   // "WAVE"
+	};
+
+	struct WavFmt
+	{
+		char           _chunk_id [4];  // "fmt "
+		uint32_t       _chunk_size;
+		int16_t        _format_tag;
+		uint16_t       _channels;
+		uint32_t       _samples_per_sec;
+		uint32_t       _avg_bytes_per_sec;
+		uint16_t       _block_align;
+		uint16_t       _bits_per_sample;
+
+		uint16_t       _size;
+		uint16_t       _valid_bits_per_sample;
+		uint32_t       _channel_mask;
+		uint8_t        _subformat [16];
+	};
+
+	struct WavData
+	{
+		char           _chunk_id [4];  // "data"
+		uint32_t       _chunk_size;
+	};
+
+	enum WavFormat : uint16_t
+	{
+ 		WavFormat_PCM        = 0x0001,
+ 		WavFormat_IEEE_FLOAT = 0x0003,
+ 		WavFormat_ALAW		   = 0x0006,
+ 		WavFormat_MULAW	   = 0x0007,
+ 		WavFormat_EXTENSIBLE = 0xFFFE
+	};
+
+	int            ret_val = 0;
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Prepares the chunks
+
+	const size_t   nbr_spl = chn_arr [0].size ();
+	const int      nbr_chn = int (chn_arr.size ());
+	for (auto &chn : chn_arr)
+	{
+		assert (chn.size () == nbr_spl);
+	}
+	const int      header_len = 8;
+
+	WavFmt         fmt { { 'f', 'm', 't', ' ' } };
+	fmt._chunk_size        = offsetof (WavFmt, _size) - header_len;
+	fmt._format_tag        = WavFormat_IEEE_FLOAT;
+	fmt._channels          = int (chn_arr.size ());
+	fmt._samples_per_sec   = uint32_t (floor (sample_freq + 0.5f));
+	fmt._block_align       = sizeof (float) * nbr_chn;
+	fmt._avg_bytes_per_sec = fmt._block_align * fmt._samples_per_sec;
+	fmt._bits_per_sample   = sizeof (float) * CHAR_BIT;
+
+	WavData        data { { 'd', 'a', 't', 'a' } };
+	data._chunk_size = fmt._block_align * nbr_spl;
+	assert ((data._chunk_size & 1) == 0);
+
+	WavRiff        riff { { 'R', 'I', 'F', 'F' }, 0, { 'W', 'A', 'V', 'E' } };
+	riff._chunk_size = 4 + header_len * 2 + fmt._chunk_size + data._chunk_size;
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Writes the file
+
+	FILE *         f_ptr = fopen (filename_0, "wb");
+	if (f_ptr == 0)
+	{
+		ret_val = -1;
+	}
+
+	if (ret_val == 0)
+	{
+		if (fwrite (&riff, header_len + 4, 1, f_ptr) != 1)
+		{
+			ret_val = -1;
+		}
+	}
+	if (ret_val == 0)
+	{
+		if (fwrite (&fmt, header_len + fmt._chunk_size, 1, f_ptr) != 1)
+		{
+			ret_val = -1;
+		}
+	}
+	if (ret_val == 0)
+	{
+		if (fwrite (&data, header_len, 1, f_ptr) != 1)
+		{
+			ret_val = -1;
+		}
+	}
+	std::vector <float> tmp (nbr_chn);
+	for (size_t pos = 0; pos < nbr_spl && ret_val == 0; ++pos)
+	{
+		for (int chn = 0; chn < nbr_chn; ++chn)
+		{
+			tmp [chn] = chn_arr [chn] [pos] * scale;
+		}
+		if (fwrite (&tmp [0], sizeof (tmp [0]), nbr_chn, f_ptr) != nbr_chn)
+		{
+			ret_val = -1;
+		}
+	}
+
+	if (f_ptr != 0)
+	{
+		fclose (f_ptr);
+		f_ptr = 0;
+	}
+
+	return ret_val;
+}
+
+
+
+#endif
 
 
 
