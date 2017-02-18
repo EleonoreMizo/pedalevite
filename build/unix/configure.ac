@@ -55,7 +55,7 @@ AS_IF(
 AS_IF(
       [test "x$ARM" = "xtrue"],
       [
-       MFLAGS="-mfpu=neon"
+       MFLAGS="-mfloat-abi=hard -mfpu=neon -mtune=cortex-a53 -ftree-vectorize"
        AC_SUBST([MFLAGS])
       ]
 )
