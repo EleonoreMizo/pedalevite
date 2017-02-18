@@ -83,6 +83,7 @@ public:
 	PedalboardLayout
 	               _layout;
 	PortMap        _port_map;
+	bool           _smooth_transition_flag = false;
 
 
 

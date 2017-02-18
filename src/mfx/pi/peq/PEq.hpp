@@ -60,6 +60,7 @@ PEq <NB>::PEq ()
 ,	_stage_to_band_arr ()
 ,	_param_change_flag ()
 ,	_neutral_time (4096)
+,	_ramp_flag (true)
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
@@ -133,11 +134,14 @@ int	PEq <NB>::do_reset (double sample_freq, int max_buf_len, int &latency)
 	{
 		b_inf._change_flag.set ();
 	}
+	_ramp_flag = false;
+	update_param (true);
 
 	_nbr_chn      = 0; // Force update
 	_neutral_time = max_buf_len * 2;
 
 	_biq_pack.clear_buffers ();
+	_ramp_flag = false;
 
 	_state = State_ACTIVE;
 
@@ -189,38 +193,12 @@ void	PEq <NB>::do_process_block (ProcInfo &proc)
 	int            pos = 0;
 	do
 	{
-		// We need this intermediate varaible because for some reason GCC
-		// fails to link when _update_resol is directly used in std::min.
 		const int      max_len  = _update_resol;
 		const int      work_len = std::min (proc._nbr_spl - pos, max_len);
 
 		// Parameters
 		_state_set.process_block (work_len);
-		if (_param_change_flag (true))
-		{
-			for (int band = 0; band < _nbr_bands; ++band)
-			{
-				BandInfo &        band_info = _band_info_arr [band];
-				if (band_info._change_flag (true))
-				{
-					collect_parameters (band);
-
-					if (! band_info.is_active () && ! band_info.is_bypass ())
-					{
-						activate_band (band);
-					}
-
-					if (band_info.is_active ())
-					{
-						update_filter_eq (band);
-						if (! band_info.is_bypass ())
-						{
-							band_info._neutral_duration = 0;
-						}
-					}
-				}
-			}
-		}
+		update_param (false);
 
 		// Signal processing
 		_biq_pack.process_block (proc._dst_arr, src_ptr_arr, pos, pos + work_len);
@@ -272,6 +250,40 @@ bool PEq <NB>::BandInfo::is_bypass () const
 	}
 
 	return ret_val;
+}
+
+
+
+template <int NB>
+void	PEq <NB>::update_param (bool force_flag)
+{
+	if (_param_change_flag (true) || force_flag)
+	{
+		for (int band = 0; band < _nbr_bands; ++band)
+		{
+			BandInfo &        band_info = _band_info_arr [band];
+			if (band_info._change_flag (true) || force_flag)
+			{
+				collect_parameters (band);
+
+				if (! band_info.is_active () && ! band_info.is_bypass ())
+				{
+					activate_band (band);
+				}
+
+				if (band_info.is_active ())
+				{
+					update_filter_eq (band);
+					if (! band_info.is_bypass ())
+					{
+						band_info._neutral_duration = 0;
+					}
+				}
+			}
+		}
+
+		_ramp_flag = true;
+	}
 }
 
 
@@ -461,7 +473,7 @@ void	PEq <NB>::update_filter_eq (int band)
 	const int		stage_index = b_info._stage_index;
 	for (int chn = 0; chn < _nbr_chn; ++chn)
 	{
-		_biq_pack.set_biquad (stage_index, chn, bz, az, true);
+		_biq_pack.set_biquad (stage_index, chn, bz, az, _ramp_flag);
 	}
 }
 

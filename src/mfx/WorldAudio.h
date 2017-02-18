@@ -70,7 +70,6 @@ public:
 
 	void           set_process_info (double sample_freq, int max_block_size);
 
-	void           set_context (const ProcessingContext &ctx);
 	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 
 	MeterResultSet &
@@ -175,6 +174,7 @@ private:
 	SigResultArray _sig_res_arr;
 
 	bool           _reset_flag;         // Indicates that we should reset all the chain, because something wrong occured.
+	uint64_t       _fade_chnmap;        // Smooth transition needed on these channels during this block (because of program changes)
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	static const int  _max_rec_duration = 30;   // Seconds. Records to disk once time elapsed.

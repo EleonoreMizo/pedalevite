@@ -71,6 +71,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_proc_analyser ()
 ,	_sig_res_arr ()
 ,	_reset_flag (false)
+,	_fade_chnmap (0)
 #if defined (mfx_WorldAudio_BUF_REC)
 ,	_data_rec_flag (true)
 ,	_data_rec_arr ()
@@ -135,13 +136,8 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	const std::chrono::microseconds  date_cur (_input_device.get_cur_date ());
 	_proc_date_end = date_cur;
 	_proc_date_beg = date_cur;
-}
 
-
-
-void	WorldAudio::set_context (const ProcessingContext &ctx)
-{
-	_ctx_ptr = &ctx;
+	_fade_chnmap   = 0;
 }
 
 
@@ -450,6 +446,10 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 		fstb::DataAlign <true>,
 		fstb::DataAlign <false>
 	> MixUnalignToAlign;
+	typedef dsp::mix::Simd <
+		fstb::DataAlign <true>,
+		fstb::DataAlign <true>
+	> MixAlign;
 
 	const ProcessingContextNode::Side & side =
 		_ctx_ptr->_interface_ctx._side_arr [Dir_IN];
@@ -480,6 +480,37 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 			float *        buf_ptr   = _buf_arr [buf_index];
 			MixUnalignToAlign::copy_1_1 (buf_ptr, src_arr [chn], nbr_spl);
 		}
+	}
+
+	if (_fade_chnmap != 0)
+	{
+
+/*** To do:
+Fading the input is not enough, we should also mix the output with a
+fade out version of the extrapolation of the previous output.
+We can use LPC: build a filter (16 coef?) from the last known output
+samples (buffer them first), filter with LPC the previous buffer, use
+the filter output + a time-reverted version of it to feed the inverse
+LPC filter and keep the second part. Fade it out and mix.
+LPC code:
+https://www.dsprelated.com/showthread/comp.dsp/119064-1.php
+https://www.dsprelated.com/showthread/comp.dsp/134663-1.php
+***/
+
+		const int      fade_len = std::min (
+			fstb::floor_int (_sample_freq * 0.0015f),
+			nbr_spl
+		);
+		for (int chn = 0; chn < side._nbr_chn; ++chn)
+		{
+			if (((_fade_chnmap >> chn) & 1) != 0)
+			{
+				const int      buf_index = side._buf_arr [chn];
+				float *        buf_ptr   = _buf_arr [buf_index];
+				MixAlign::scale_1_vlr (buf_ptr, fade_len, 0, 1);
+			}
+		}
+		_fade_chnmap = 0;
 	}
 
 #if defined (mfx_WorldAudio_BUF_REC)
@@ -873,6 +904,7 @@ void	WorldAudio::handle_signals (piapi::PluginInterface::ProcInfo &proc_info, co
 void	WorldAudio::handle_msg_ctx (Msg::Ctx &msg)
 {
 	std::swap (_ctx_ptr, msg._ctx_ptr);
+	_fade_chnmap = msg._fade_chnmap;
 
 	// Automatic tempo refresh (for the new plug-ins)
 	_tempo_new = _tempo_cur;

@@ -103,6 +103,11 @@ int	IIFix::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	update_filter ();
 
+	for (auto &op : _chn_arr)
+	{
+		op.clear_buffers ();
+	}
+
 	_state = State_ACTIVE;
 
 	return Err_OK;

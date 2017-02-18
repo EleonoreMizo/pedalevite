@@ -1434,6 +1434,11 @@ void	Model::apply_settings_normal ()
 	_pi_id_map.clear ();
 	_slot_info.clear ();
 
+	if (_preset_cur._smooth_transition_flag)
+	{
+		_central.set_transition (true);
+	}
+
 	// Chain last, other plug-ins before
 	const std::vector <int> onl = _preset_cur.build_ordered_node_list (false);
 	const int      nbr_slots = onl.size ();
@@ -1503,6 +1508,7 @@ void	Model::apply_settings_normal ()
 				);
 				it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
 				send_effect_settings (pi_id, slot_id, PiType_MAIN, it_s->second);
+				/*** To do: send some "quick clean" event to the plug-in if _force_reset_flag ***/
 			}
 
 			// Registers signal ports

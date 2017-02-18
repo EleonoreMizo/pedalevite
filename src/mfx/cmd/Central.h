@@ -104,6 +104,7 @@ public:
 	void           set_sig_source (int pi_id, int sig_pin, int port_id);
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
+	void           set_transition (bool smooth_flag);
 
 	// Immediate operations
 	void           set_param (int pi_id, int index, float val);
@@ -157,6 +158,7 @@ private:
 		               _map_id_loc;
 		ChnMode        _chn_mode   = ChnMode_1M_1M;
 		float          _master_vol = 1;
+		bool           _smooth_transition_flag = false;
 	};
 
 	typedef std::shared_ptr <Document> DocumentSPtr;
@@ -167,6 +169,7 @@ private:
 
 	Document &     modify ();
 	Plugin &       find_plugin (Document &doc, int pi_id);
+	bool           is_plugin_used_in_audio_thread (int pi_id) const;
 	int            set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool gen_audio_flag);
 	void           remove_plugin (int pos, PiType type);
 	void           create_routing ();

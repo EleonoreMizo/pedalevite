@@ -185,6 +185,10 @@ void	Central::commit ()
 		msg_list [0]->_val._sender = Msg::Sender_CMD;
 		msg_list [0]->_val._type   = Msg::Type_CTX;
 		msg_list [0]->_val._content._ctx._ctx_ptr = _new_sptr->_ctx_sptr.get ();
+		if (doc._smooth_transition_flag)
+		{
+			msg_list [0]->_val._content._ctx._fade_chnmap = ~uint64_t (0);
+		}
 
 		create_param_msg (msg_list);
 
@@ -431,6 +435,15 @@ void	Central::set_master_vol (double vol)
 
 
 
+void	Central::set_transition (bool smooth_flag)
+{
+	Document &     doc = modify ();
+
+	_new_sptr->_smooth_transition_flag = smooth_flag;
+}
+
+
+
 void	Central::set_param (int pi_id, int index, float val)
 {
 	assert (pi_id >= 0);
@@ -596,6 +609,49 @@ Plugin &	Central::find_plugin (Document &doc, int pi_id)
 
 
 
+// Checks in the current config
+bool	Central::is_plugin_used_in_audio_thread (int pi_id) const
+{
+	// Current
+	const auto     it         = _cur_sptr->_map_id_loc.find (pi_id);
+	bool           found_flag = (it != _cur_sptr->_map_id_loc.end ());
+
+// Not necessary.
+// Trash content shouldn't be active in the audio thread any more.
+#if 0
+	// Trash
+	if (! found_flag)
+	{
+		for (const auto &ctx_sptr : _ctx_trash)
+		{
+			for (const auto &pi_ctx : ctx_sptr->_context_arr)
+			{
+				for (const auto &node : pi_ctx._node_arr)
+				{
+					if (node._pi_id == pi_id)
+					{
+						found_flag = true;
+						break;
+					}
+				}
+				if (found_flag)
+				{
+					break;
+				}
+			}
+			if (found_flag)
+			{
+				break;
+			}
+		}
+	}
+#endif
+
+	return found_flag;
+}
+
+
+
 int	Central::set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool gen_audio_flag)
 {
 	Document &     doc = modify ();
@@ -628,27 +684,33 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 		if (it_inst_map != doc._map_model_id.end ())
 		{
 			Document::InstanceMap & inst_map = it_inst_map->second;
-			for (auto &&inst_node : inst_map)
+			for (auto &inst_node : inst_map)
 			{
 				if (! inst_node.second)
 				{
-					pi_id = inst_node.first;
-					inst_node.second = true;
-					PluginPool::PluginDetails &   details =
-						_plugin_pool.use_plugin (pi_id);
-					const auto        state = details._pi_uptr->get_state ();
-					if (    _sample_freq > 0
-					    && (   force_reset_flag
-					        || state != piapi::PluginInterface::State_ACTIVE))
+					// If we need to do a reset, we don't want a plug-in that is
+					// potentially used in the audio thread at the moment.
+					if (! (   force_reset_flag
+					       && is_plugin_used_in_audio_thread (inst_node.first)))
 					{
-						int         latency = 0;
-						int         ret_val = details._pi_uptr->reset (
-							_sample_freq, _max_block_size, latency
-						);
-						assert (ret_val == piapi::PluginInterface::Err_OK);
-						ret_val = ret_val; // -Wunused-variable
+						pi_id = inst_node.first;
+						inst_node.second = true;
+						PluginPool::PluginDetails &   details =
+							_plugin_pool.use_plugin (pi_id);
+						const auto     state = details._pi_uptr->get_state ();
+						if (    _sample_freq > 0
+						    && (   force_reset_flag
+						        || state != piapi::PluginInterface::State_ACTIVE))
+						{
+							int            latency = 0;
+							int            ret_val = details._pi_uptr->reset (
+								_sample_freq, _max_block_size, latency
+							);
+							assert (ret_val == piapi::PluginInterface::Err_OK);
+							ret_val = ret_val; // -Wunused-variable
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}

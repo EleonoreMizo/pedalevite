@@ -69,6 +69,7 @@ public:
 	public:
 		const ProcessingContext *	// Forward: the new context, on return: the context to be recycled.
 		               _ctx_ptr;
+		uint64_t       _fade_chnmap;
 	};
 
 	class Param

@@ -115,6 +115,8 @@ private:
 	typedef std::array <BandInfo, _nbr_bands> BandInfoArray;
 	typedef std::array <int     , _nbr_bands> StageInfoArr;
 
+	void           update_param (bool force_flag);
+
 	int            find_empty_stage () const;
 	int            count_nbr_stages () const;
 	void           neutralise_stage_immediate (int stage_index);
@@ -145,6 +147,7 @@ private:
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 	int            _neutral_time;       // Should be greater than the block length
+	bool           _ramp_flag;          // Next parameter changes should ramp (default)
 
 
 
