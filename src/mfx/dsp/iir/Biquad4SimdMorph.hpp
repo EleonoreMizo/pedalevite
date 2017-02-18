@@ -270,6 +270,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], co
 		// We are not ramping yet, initiates a new ramp from scratch.
 		if (_nbr_rem_spl == 0)
 		{
+			assert (! _prog_flag);
+
 			_biq.get_z_eq (_target_b, _target_a);
 			V128Par::store_f32 (_step_b [0], fstb::ToolsSimd::set_f32_zero ());
 			V128Par::store_f32 (_step_b [1], fstb::ToolsSimd::set_f32_zero ());
@@ -701,6 +703,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::handle_ramp_post (long nbr_spl)
 	if (_nbr_rem_spl > 0)
 	{
 		_nbr_rem_spl -= nbr_spl;
+		assert (_nbr_rem_spl >= 0);
 		if (_nbr_rem_spl == 0)
 		{
 			// Make sure we continue with the exact equation (because of the
