@@ -948,7 +948,7 @@ void	WorldAudio::store_data (const float src_ptr [], int nbr_spl)
 	assert (nbr_spl > 0);
 
 	size_t         idx = _data_rec_cur_buf;
-	if (idx >= int (_data_rec_arr.size ()))
+	if (idx >= _data_rec_arr.size ())
 	{
 		_data_rec_arr.resize (idx + 1);
 	}
@@ -1081,7 +1081,7 @@ int	WorldAudio::save_wav (const char *filename_0, const std::vector <AlignedZone
 		{
 			tmp [chn] = chn_arr [chn] [pos] * scale;
 		}
-		if (fwrite (&tmp [0], sizeof (tmp [0]), nbr_chn, f_ptr) != nbr_chn)
+		if (fwrite (&tmp [0], sizeof (tmp [0]), nbr_chn, f_ptr) != size_t (nbr_chn))
 		{
 			ret_val = -1;
 		}
