@@ -67,6 +67,7 @@ public:
 	typedef VS V128Src;
 	typedef VP V128Par;
 	typedef LD Loader;
+	typedef Biquad4Simd <VD, VS, VP> Biq4S;
 
 	static fstb_FORCEINLINE void
 	               step_z_eq (Biquad4SimdData &data, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
@@ -98,7 +99,6 @@ void	Biquad4Simd_StepOn <VD, VS, VP, LD>::step_z_eq (Biquad4SimdData &data, cons
 template <class VD, class VS, class VP, class LD>
 void	Biquad4Simd_StepOn <VD, VS, VP, LD>::store_result (Biquad4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &b2, fstb::ToolsSimd::VectF32 &a1, fstb::ToolsSimd::VectF32 &a2)
 {
-	typedef Biquad4Simd <VD, VS, VP> Biq4S;
 	assert (Biq4S::check_stability (a1, a2));
 
 	V128Par::store_f32 (data._z_eq_b [0], b0);
