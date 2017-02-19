@@ -98,6 +98,9 @@ void	Biquad4Simd_StepOn <VD, VS, VP, LD>::step_z_eq (Biquad4SimdData &data, cons
 template <class VD, class VS, class VP, class LD>
 void	Biquad4Simd_StepOn <VD, VS, VP, LD>::store_result (Biquad4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &b2, fstb::ToolsSimd::VectF32 &a1, fstb::ToolsSimd::VectF32 &a2)
 {
+	typedef typename Biquad4Simd <VD, VS, VP> Biq4S;
+	assert (Biq4S::check_stability (a1, a2));
+
 	V128Par::store_f32 (data._z_eq_b [0], b0);
 	V128Par::store_f32 (data._z_eq_b [1], b1);
 	V128Par::store_f32 (data._z_eq_b [2], b2);
@@ -748,8 +751,11 @@ void	Biquad4Simd <VD, VS, VP>::set_z_eq (const VectFloat4 b [3], const VectFloat
 	V128Par::store_f32 (_data._z_eq_b [1], V128Par::load_f32 (b [1]));
 	V128Par::store_f32 (_data._z_eq_b [2], V128Par::load_f32 (b [2]));
 
-	V128Par::store_f32 (_data._z_eq_a [1], V128Par::load_f32 (a [1]));
-	V128Par::store_f32 (_data._z_eq_a [2], V128Par::load_f32 (a [2]));
+	const auto     a1 = V128Par::load_f32 (a [1]);
+	const auto     a2 = V128Par::load_f32 (a [2]);
+	assert (check_stability (a1, a2));
+	V128Par::store_f32 (_data._z_eq_a [1], a1);
+	V128Par::store_f32 (_data._z_eq_a [2], a2);
 }
 
 
@@ -759,6 +765,7 @@ void	Biquad4Simd <VD, VS, VP>::set_z_eq_same (const float b [3], const float a [
 {
 	assert (b != 0);
 	assert (a != 0);
+	assert (check_stability (a [1], a [2]));
 
 	V128Par::store_f32 (_data._z_eq_b [0], fstb::ToolsSimd::set1_f32 (b [0]));
 	V128Par::store_f32 (_data._z_eq_b [1], fstb::ToolsSimd::set1_f32 (b [1]));
@@ -777,6 +784,7 @@ void	Biquad4Simd <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], const f
 	assert (biq < _nbr_units);
 	assert (b != 0);
 	assert (a != 0);
+	assert (check_stability (a [1], a [2]));
 
 	_data._z_eq_b [0] [biq] = b [0];
 	_data._z_eq_b [1] [biq] = b [1];
@@ -1393,6 +1401,27 @@ void	Biquad4Simd <VD, VS, VP>::clear_buffers_one (int biq)
 
 	_data._mem_y [0] [biq] = 0;
 	_data._mem_y [1] [biq] = 0;
+}
+
+
+
+// |a1| < a2 + 1 && |a2| < 1
+template <class VD, class VS, class VP>
+bool	Biquad4Simd <VD, VS, VP>::check_stability (float a1, float a2)
+{
+	return (fabs (a1) < a2 + 1 && fabs (a2) < 1);
+}
+
+
+
+template <class VD, class VS, class VP>
+bool	Biquad4Simd <VD, VS, VP>::check_stability (fstb::ToolsSimd::VectF32 a1, fstb::ToolsSimd::VectF32 a2)
+{
+	const auto     one = fstb::ToolsSimd::set1_f32 (1);
+	const auto     c1  = fstb::ToolsSimd::cmp_lt_f32 (fstb::ToolsSimd::abs (a1), a2 + one);
+	const auto     c2  = fstb::ToolsSimd::cmp_lt_f32 (fstb::ToolsSimd::abs (a2),      one);
+
+	return fstb::ToolsSimd::and_h (fstb::ToolsSimd::and_f32 (c1, c2));
 }
 
 

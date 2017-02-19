@@ -139,6 +139,11 @@ public:
 	void				clear_buffers ();
 	void				clear_buffers_one (int biq);
 
+	fstb_FORCEINLINE static bool
+	               check_stability (float a1, float a2);
+	fstb_FORCEINLINE static bool
+	               check_stability (fstb::ToolsSimd::VectF32 a1, fstb::ToolsSimd::VectF32 a2);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
