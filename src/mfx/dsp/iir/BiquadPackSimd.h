@@ -78,17 +78,19 @@ public:
 	               BiquadPackSimd ();
 	virtual        ~BiquadPackSimd () = default;
 
-	void				set_config (int nbr_stages, int nbr_chn);
-	void				reserve (int nbr_stages, int nbr_chn);
-	void				set_buf_len (long nbr_spl);
+	void           set_config (int nbr_stages, int nbr_chn);
+	void           reserve (int nbr_stages, int nbr_chn);
+	void           set_buf_len (long nbr_spl);
 
-	void				set_ramp_time (long nbr_spl);
-	void				adapt_config (int nbr_stages, int nbr_chn);
-	void				set_biquad (int stage, int chn, const float b [3], const float a [3], bool ramp_flag = false);
-	void				process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], long pos_beg, long pos_end);
-	void				process_block (float * const out_ptr_arr [], const float in_ptr [], long pos_beg, long pos_end);
-	void				clear_buffers ();
-	void				clear_buffers_one (int stage, int chn);
+	void           set_ramp_time (long nbr_spl);
+	void           adapt_config (int nbr_stages, int nbr_chn);
+	void           set_biquad (int stage, int chn, const float b [3], const float a [3], bool ramp_flag = false);
+	void           get_biquad (int stage, int chn, float b [3], float a [3]) const;
+	void           get_biquad_target (int stage, int chn, float b [3], float a [3]) const;
+	void           process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], long pos_beg, long pos_end);
+	void           process_block (float * const out_ptr_arr [], const float in_ptr [], long pos_beg, long pos_end);
+	void           clear_buffers ();
+	void           clear_buffers_one (int stage, int chn);
 
 
 

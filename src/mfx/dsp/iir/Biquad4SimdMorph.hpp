@@ -382,7 +382,32 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one (int biq, float b [3], float a 
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_target (int biq, float b [3], float a [3]) const
+void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_ramp (int biq, float b [3], float a [3]) const
+{
+	assert (biq >= 0);
+	assert (biq < BiqSimd::_nbr_units);
+	assert (b != 0);
+	assert (a != 0);
+
+
+	if (_nbr_rem_spl == 0)
+	{
+		_biq.get_z_eq_one (biq, b, a);
+	}
+	else
+	{
+		b [0] = _target_b [0] [biq];
+		b [1] = _target_b [1] [biq];
+		b [2] = _target_b [2] [biq];
+		a [1] = _target_a [1] [biq];
+		a [2] = _target_a [2] [biq];
+	}
+}
+
+
+
+template <class VD, class VS, class VP>
+void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_final (int biq, float b [3], float a [3]) const
 {
 	assert (biq >= 0);
 	assert (biq < BiqSimd::_nbr_units);

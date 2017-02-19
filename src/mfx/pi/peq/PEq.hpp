@@ -471,6 +471,15 @@ void	PEq <NB>::update_filter_eq (int band)
 	b_info._param.create_filter (bz, az, _sample_freq, _inv_fs);
 
 	const int		stage_index = b_info._stage_index;
+	bool           ramp_flag   = _ramp_flag;
+	if (ramp_flag)
+	{
+		assert (_nbr_chn > 0);
+		float          bz2 [3];
+		float          az2 [3];
+		_biq_pack.get_biquad_target (stage_index, 0, bz2, az2);
+		ramp_flag = is_ramping_ok (az2 [1], az2 [2], az [1], az [2]);
+	}
 	for (int chn = 0; chn < _nbr_chn; ++chn)
 	{
 		_biq_pack.set_biquad (stage_index, chn, bz, az, _ramp_flag);
@@ -498,6 +507,25 @@ bool	PEq <NB>::is_unit_gain (float gain)
 	assert (gain > 0);
 
 	return (fstb::is_eq (gain, 1.0f, 1e-2f));
+}
+
+
+
+template <int NB>
+bool	PEq <NB>::is_ramping_ok (float a1d, float a2d, float a1s, float a2s)
+{
+	const float    dd = compute_pole_delta (a1d, a2d);
+	const float    ds = compute_pole_delta (a1s, a2s);
+
+	return (dd * ds >= 0);
+}
+
+
+
+template <int NB>
+float	PEq <NB>::compute_pole_delta (float a1, float a2)
+{
+	return a1 * a1 - 4 * a2;
 }
 
 

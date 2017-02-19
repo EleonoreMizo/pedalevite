@@ -45,6 +45,13 @@ namespace iir
 
 
 
+/*
+==============================================================================
+Name: ctor
+Throws: Nothing
+==============================================================================
+*/
+
 template <class VD, class VS>
 BiquadPackSimd <VD, VS>::BiquadPackSimd ()
 :	_pack_list ()
@@ -263,6 +270,84 @@ void	BiquadPackSimd <VD, VS>::set_biquad (int stage, int chn, const float b [3],
 
 	Pack4 &        pack = _pack_list [pack_index];
 	pack.set_z_eq_one (biq_index, b, a, ramp_flag);
+}
+
+
+
+/*
+==============================================================================
+Name: get_biquad
+Description:
+	Retrieve a biquad equation in the Z domain. The equation is the one
+	currently in use (coefficients may ramp).
+Input parameters:
+	- stage: Stage index, [0 ; max number of stages[.
+	- chn: Channel index, [0 ; max number of channels[.
+	- b: Num. of the biquad in the Z-plane, index is the power of z.
+	- a: Denom. of the biquad in the Z-plane.
+Throws: Nothing
+==============================================================================
+*/
+
+template <class VD, class VS>
+void	BiquadPackSimd <VD, VS>::get_biquad (int stage, int chn, float b [3], float a [3]) const
+{
+	assert (stage >= 0);
+	assert (stage < _nbr_stages);
+	assert (chn >= 0);
+	assert (chn < _nbr_chn);
+	assert (b != 0);
+	assert (a != 0);
+
+	int            pack_index;
+	int            biq_index;
+	find_biq (pack_index, biq_index, stage, chn);
+
+	const Pack4 &  pack = _pack_list [pack_index];
+	pack.get_z_eq_one (biq_index, b, a);
+}
+
+
+
+/*
+==============================================================================
+Name: get_biquad_target
+Description:
+	Retrieve a biquad equation in the Z domain. The equation is the target,
+	if a ramp is active.
+	However it does not return a subsequent programmed equation.
+Input parameters:
+	- stage: Stage index, [0 ; max number of stages[.
+	- chn: Channel index, [0 ; max number of channels[.
+	- b: Num. of the biquad in the Z-plane, index is the power of z.
+	- a: Denom. of the biquad in the Z-plane.
+Throws: Nothing
+==============================================================================
+*/
+
+template <class VD, class VS>
+void	BiquadPackSimd <VD, VS>::get_biquad_target (int stage, int chn, float b [3], float a [3]) const
+{
+	assert (stage >= 0);
+	assert (stage < _nbr_stages);
+	assert (chn >= 0);
+	assert (chn < _nbr_chn);
+	assert (b != 0);
+	assert (a != 0);
+
+	int            pack_index;
+	int            biq_index;
+	find_biq (pack_index, biq_index, stage, chn);
+
+	const Pack4 &  pack = _pack_list [pack_index];
+	if (pack.is_ramping ())
+	{
+		pack.get_z_eq_one_ramp (biq_index, b, a);
+	}
+	else
+	{
+		pack.get_z_eq_one (biq_index, b, a);
+	}
 }
 
 
@@ -544,7 +629,7 @@ void	BiquadPackSimd <VD, VS>::save_info ()
 
 			const Pack4 &	pack = _pack_list [pack_index];
 			pack.get_state_one (biq_index, info._mem_x, info._mem_y);
-			pack.get_z_eq_one_target (biq_index, info._b, info._a);
+			pack.get_z_eq_one_final (biq_index, info._b, info._a);
 		}
 	}
 }

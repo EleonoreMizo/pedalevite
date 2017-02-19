@@ -77,7 +77,8 @@ public:
 
 	void           get_z_eq (VectFlt4 b [3], VectFlt4 a [3]) const;
 	void           get_z_eq_one (int biq, float b [3], float a [3]) const;
-	void           get_z_eq_one_target (int biq, float b [3], float a [3]) const;
+	void           get_z_eq_one_ramp (int biq, float b [3], float a [3]) const;
+	void           get_z_eq_one_final (int biq, float b [3], float a [3]) const;
 
 	void           set_state_one (int biq, float const mem_x [2], const float mem_y [2]);
 	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const;

@@ -132,6 +132,8 @@ private:
 	void           cook_band (int band);
 
 	static bool    is_unit_gain (float gain);
+	static bool    is_ramping_ok (float a1d, float a2d, float a1s, float a2s);
+	static float   compute_pole_delta (float a1, float a2);
 
 	State          _state;
 
