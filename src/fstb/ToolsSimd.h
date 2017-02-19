@@ -158,6 +158,10 @@ public:
 	               and_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectF32
 	               or_f32 (VectF32 lhs, VectF32 rhs);
+	static inline bool
+	               and_h (VectF32 cond);
+	static inline bool
+	               or_h (VectF32 cond);
 
 	static inline VectF32
 	               interleave_2f32_lo (VectF32 p0, VectF32 p1);

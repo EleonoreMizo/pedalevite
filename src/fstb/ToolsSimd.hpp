@@ -657,6 +657,40 @@ ToolsSimd::VectF32	ToolsSimd::or_f32 (VectF32 lhs, VectF32 rhs)
 
 
 
+// Works only with well-formed condition results (tested bits depends on the implementation).
+// For each scalar, true = all bits set, false = all bits cleared
+bool	ToolsSimd::and_h (VectF32 cond)
+{
+#if fstb_IS (ARCHI, X86)
+	return (_mm_movemask_ps (cond) == 15);
+#elif fstb_IS (ARCHI, ARM)
+	const uint32x2_t  tmp = vreinterpret_u32_u16 (
+		vqmovn_u32 (vreinterpretq_u32_f32 (cond))
+	);
+	return (   vget_lane_u32 (tmp, 0) == 0xFFFFFFFFU
+	        && vget_lane_u32 (tmp, 1) == 0xFFFFFFFFU);
+#endif // ff_arch_CPU
+}
+
+
+
+// Works only with well-formed condition results (tested bits depends on the implementation).
+// For each scalar, true = all bits set, false = all bits cleared
+bool	ToolsSimd::or_h (VectF32 cond)
+{
+#if fstb_IS (ARCHI, X86)
+	return (_mm_movemask_ps (cond) != 0);
+#elif fstb_IS (ARCHI, ARM)
+	const uint32x2_t  tmp = vreinterpret_u32_u16 (
+		vqmovn_u32 (vreinterpretq_u32_f32 (cond))
+	);
+	return (   vget_lane_u32 (tmp, 0) != 0
+	        || vget_lane_u32 (tmp, 1) != 0);
+#endif // ff_arch_CPU
+}
+
+
+
 // p1[1 0] p0[1 0]
 ToolsSimd::VectF32	ToolsSimd::interleave_2f32_lo (VectF32 p0, VectF32 p1)
 {
