@@ -17,10 +17,13 @@
 
 #include "fstb/def.h"
 
-#define MAIN_API_JACK 1
-#define MAIN_API_ALSA 2
-#define MAIN_API_ASIO 3
-#if fstb_IS (SYS, LINUX)
+#define MAIN_API_JACK   1
+#define MAIN_API_ALSA   2
+#define MAIN_API_ASIO   3
+#define MAIN_API_MANUAL 4
+#if 0 // For debugging complex audio things
+	#define MAIN_API MAIN_API_MANUAL
+#elif fstb_IS (SYS, LINUX)
 //	#define MAIN_API MAIN_API_JACK
 	#define MAIN_API MAIN_API_ALSA
 #else
@@ -112,8 +115,10 @@
 		#include "mfx/adrv/DJack.h"
 	#elif (MAIN_API == MAIN_API_ALSA)
 		#include "mfx/adrv/DAlsa.h"
+	#elif (MAIN_API == MAIN_API_MANUAL)
+		#include "mfx/adrv/DManual.h"
 	#else
-		#error
+		#error Wrong MAIN_API value
 	#endif
 	#include <wiringPi.h>
 	#include <wiringPiI2C.h>
@@ -133,6 +138,8 @@
 
 	#if (MAIN_API == MAIN_API_ASIO)
 		#include "mfx/adrv/DAsio.h"
+	#elif (MAIN_API == MAIN_API_MANUAL)
+		#include "mfx/adrv/DManual.h"
 	#else
 		#error Wrong MAIN_API value
 	#endif
@@ -1393,6 +1400,33 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 			std::this_thread::sleep_for (wait_duration);
 		}
 
+	#if (MAIN_API == MAIN_API_MANUAL)
+
+		{
+			mfx::adrv::DManual & snd_drv_man =
+				dynamic_cast <mfx::adrv::DManual &> (snd_drv);
+			const size_t   sample_index = snd_drv_man.get_sample_index ();
+			const int      nbr_spl      = ctx._max_block_size;
+			float *        in_ptr_arr [mfx::adrv::DriverInterface::_nbr_chn];
+			const float *  out_ptr_arr [mfx::adrv::DriverInterface::_nbr_chn];
+			snd_drv_man.get_buffers (in_ptr_arr, out_ptr_arr);
+			const double   freq = 82.40689; // E
+			const double   mul  = 2 * fstb::PI * freq / ctx._sample_freq;
+			const float    amp  = 0.1f;
+			for (int i = 0; i < nbr_spl; ++i)
+			{
+				const float     val = float (sin ((sample_index + i) * mul)) * amp; 
+				for (int chn = 0; chn < mfx::adrv::DriverInterface::_nbr_chn; ++ chn)
+				{
+					in_ptr_arr [chn] [i] = val;
+				}
+			}
+
+			snd_drv_man.process_block ();
+		}
+
+	#endif
+
 #else
 
 /********************************************* TEMP *********************************/
@@ -1529,6 +1563,8 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 #elif (MAIN_API == MAIN_API_ASIO)
 	mfx::adrv::DAsio  snd_drv;
 	chn_idx_in = 2;
+#elif (MAIN_API == MAIN_API_MANUAL)
+	mfx::adrv::DManual   snd_drv;
 #else
 	#error
 #endif

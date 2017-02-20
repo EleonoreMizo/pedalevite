@@ -166,6 +166,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/adrv/DAlsa.h \
         ../../src/mfx/adrv/DJack.cpp \
         ../../src/mfx/adrv/DJack.h \
+        ../../src/mfx/adrv/DManual.cpp \
+        ../../src/mfx/adrv/DManual.h \
         ../../src/mfx/adrv/DriverInterface.cpp \
         ../../src/mfx/adrv/DriverInterface.h \
         ../../src/mfx/cmd/BufAlloc.cpp \

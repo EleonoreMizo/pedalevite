@@ -1965,6 +1965,9 @@
     <ClInclude Include="..\..\..\src\mfx\doc\ActionTempoSet.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\adrv\DManual.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2731,6 +2734,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\ActionTempoSet.cpp">
       <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\adrv\DManual.cpp">
+      <Filter>mfx\adrv</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
