@@ -262,28 +262,28 @@ void	Biquad4Simd_Proc <STP>::process_block_parallel (Biquad4SimdData &data, fstb
 
 		fstb::ToolsSimd::VectF32   sb;
 		fstb::ToolsSimd::VectF32   sa;
-		fstb::ToolsSimd::VectF32   x;
 
 		do
 		{
-			x  = STP::Loader::load (&in_ptr [index]);
+			const auto     xa = STP::Loader::load (&in_ptr [index    ]);
+			const auto     xb = STP::Loader::load (&in_ptr [index + 1]);
+
 			sb = b1 * x1 +  b2 * x2;
 			sa = a1 * y1 +  a2 * y2;
-			y2 = b0 * x  + (sb - sa);
-			x2 = x;
-			V128Dest::store_f32 (&out_ptr [index    ], y2);
+			y2 = b0 * xa + (sb - sa);
+			x2 = xa;
 			STP::step_z_eq (b0, b1, b2, a1, a2, b_inc, a_inc);
 
-			x  = STP::Loader::load (&in_ptr [index + 1]);
 			sb = b1 * x2 +  b2 * x1;
 			sa = a1 * y2 +  a2 * y1;
-			y1 = b0 * x  + (sb - sa);
-			x1 = x;
-			V128Dest::store_f32 (&out_ptr [index + 1], y1);
+			y1 = b0 * xb + (sb - sa);
+			x1 = xb;
 			STP::step_z_eq (b0, b1, b2, a1, a2, b_inc, a_inc);
 
-			index += 2;
+			V128Dest::store_f32 (&out_ptr [index    ], y2);
+			V128Dest::store_f32 (&out_ptr [index + 1], y1);
 
+			index += 2;
 			-- half_nbr_spl;
 		}
 		while (half_nbr_spl > 0);

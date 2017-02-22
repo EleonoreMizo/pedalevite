@@ -604,6 +604,7 @@ void	BiquadPackSimd <VD, VS>::set_config_internal (int nbr_stages, int nbr_chn)
 	{
 		Pack4 &        pack = _pack_list [pack_index];
 		pack.neutralise ();
+		pack.set_ramp_time (_ramp_len);
 	}
 
 	clear_buffers ();
