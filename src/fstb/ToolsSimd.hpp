@@ -35,34 +35,37 @@ namespace fstb
 
 
 
-ToolsSimd::VectF32	ToolsSimd::load_f32 (const void *ptr)
+template <typename MEM>
+ToolsSimd::VectF32	ToolsSimd::load_f32 (const MEM *ptr)
 {
 	assert (is_ptr_align_nz (ptr, 16));
 
 #if fstb_IS (ARCHI, X86)
 	return _mm_load_ps (reinterpret_cast <const float *> (ptr));
 #elif fstb_IS (ARCHI, ARM)
-	return *reinterpret_cast <const VectF32 *> (ptr);
+	return vld1q_f32 (reinterpret_cast <const float32_t *> (ptr));
 #endif // ff_arch_CPU
 }
 
 
 
-void	ToolsSimd::store_f32 (void *ptr, VectF32 v)
+template <typename MEM>
+void	ToolsSimd::store_f32 (MEM *ptr, VectF32 v)
 {
 	assert (is_ptr_align_nz (ptr, 16));
 
 #if fstb_IS (ARCHI, X86)
 	_mm_store_ps (reinterpret_cast <float *> (ptr), v);
 #elif fstb_IS (ARCHI, ARM)
-	*reinterpret_cast <VectF32 *> (ptr) = v;
+	vst1q_f32 (reinterpret_cast <float32_t *> (ptr), v);
 #endif // ff_arch_CPU
 }
 
 
 
 // n = number of scalars to store (from the LSB)
-void	ToolsSimd::store_f32_part (void *ptr, VectF32 v, int n)
+template <typename MEM>
+void	ToolsSimd::store_f32_part (MEM *ptr, VectF32 v, int n)
 {
 	assert (n > 0);
 
@@ -78,7 +81,8 @@ void	ToolsSimd::store_f32_part (void *ptr, VectF32 v, int n)
 
 
 
-ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const void *ptr)
+template <typename MEM>
+ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const MEM *ptr)
 {
 	assert (ptr != 0);
 
@@ -93,7 +97,8 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const void *ptr)
 
 
 
-ToolsSimd::VectF32	ToolsSimd::loadu_f32_part (const void *ptr, int n)
+template <typename MEM>
+ToolsSimd::VectF32	ToolsSimd::loadu_f32_part (const MEM *ptr, int n)
 {
 	assert (n > 0);
 
@@ -107,7 +112,8 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32_part (const void *ptr, int n)
 
 
 
-void	ToolsSimd::storeu_f32 (void *ptr, VectF32 v)
+template <typename MEM>
+void	ToolsSimd::storeu_f32 (MEM *ptr, VectF32 v)
 {
 	assert (ptr != 0);
 
@@ -120,7 +126,8 @@ void	ToolsSimd::storeu_f32 (void *ptr, VectF32 v)
 
 
 
-void	ToolsSimd::storeu_s32 (void *ptr, VectS32 v)
+template <typename MEM>
+void	ToolsSimd::storeu_s32 (MEM *ptr, VectS32 v)
 {
 	assert (ptr != 0);
 
@@ -134,7 +141,8 @@ void	ToolsSimd::storeu_s32 (void *ptr, VectS32 v)
 
 
 // n = number of scalars to store (from the LSB)
-void	ToolsSimd::storeu_f32_part (void *ptr, VectF32 v, int n)
+template <typename MEM>
+void	ToolsSimd::storeu_f32_part (MEM *ptr, VectF32 v, int n)
 {
 	assert (n > 0);
 
@@ -151,7 +159,8 @@ void	ToolsSimd::storeu_f32_part (void *ptr, VectF32 v, int n)
 
 
 // n = number of scalars to store (from the LSB)
-void	ToolsSimd::storeu_s32_part (void *ptr, VectS32 v, int n)
+template <typename MEM>
+void	ToolsSimd::storeu_s32_part (MEM *ptr, VectS32 v, int n)
 {
 	assert (n > 0);
 
@@ -168,7 +177,8 @@ void	ToolsSimd::storeu_s32_part (void *ptr, VectS32 v, int n)
 
 
 // Returns: ptr [0] | ptr [1] | ? | ?
-ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const void *ptr)
+template <typename MEM>
+ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const MEM *ptr)
 {
 	assert (ptr != 0);
 
@@ -189,7 +199,8 @@ ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const void *ptr)
 
 // ptr [0] = v0
 // ptr [1] = v1
-void	ToolsSimd::storeu_2f32 (void *ptr, VectF32 v)
+template <typename MEM>
+void	ToolsSimd::storeu_2f32 (MEM *ptr, VectF32 v)
 {
 	assert (ptr != 0);
 
@@ -208,14 +219,15 @@ void	ToolsSimd::storeu_2f32 (void *ptr, VectF32 v)
 
 
 // *ptr = v0
-void	ToolsSimd::storeu_1f32 (void *ptr, VectF32 v)
+template <typename MEM>
+void	ToolsSimd::storeu_1f32 (MEM *ptr, VectF32 v)
 {
 	assert (ptr != 0);
 
 #if fstb_IS (ARCHI, X86)
 	_mm_store_ss (reinterpret_cast <float *> (ptr), v);
 #elif fstb_IS (ARCHI, ARM)
-	*reinterpret_cast <float *> (ptr) = vgetq_lane_f32 (v, 0);
+	vst1q_lane_f32 (reinterpret_cast <float32_t *> (ptr), v, 0);
 #endif // ff_arch_CPU
 }
 
@@ -1002,7 +1014,8 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::spread (VectS32 a)
 
 
 
-void	ToolsSimd::store_f32_part_n13 (void *ptr, VectF32 v, int n)
+template <typename MEM>
+void	ToolsSimd::store_f32_part_n13 (MEM *ptr, VectF32 v, int n)
 {
 	assert (n > 0);
 	assert (n < 4);
@@ -1011,13 +1024,13 @@ void	ToolsSimd::store_f32_part_n13 (void *ptr, VectF32 v, int n)
 
 #if fstb_IS (ARCHI, ARM)
 
-	f_ptr [0] = vgetq_lane_f32 (v, 0);
+	vst1q_lane_f32 (f_ptr + 0, v, 0);
 	if (n >= 2)
 	{
-		f_ptr [1] = vgetq_lane_f32 (v, 1);
+		vst1q_lane_f32 (f_ptr + 1, v, 1);
 		if (n >= 3)
 		{
-			f_ptr [2] = vgetq_lane_f32 (v, 2);
+			vst1q_lane_f32 (f_ptr + 2, v, 2);
 		}
 	}
 
@@ -1034,7 +1047,8 @@ void	ToolsSimd::store_f32_part_n13 (void *ptr, VectF32 v, int n)
 
 
 
-void	ToolsSimd::store_s32_part_n13 (void *ptr, VectS32 v, int n)
+template <typename MEM>
+void	ToolsSimd::store_s32_part_n13 (MEM *ptr, VectS32 v, int n)
 {
 	assert (n > 0);
 	assert (n < 4);
@@ -1043,13 +1057,13 @@ void	ToolsSimd::store_s32_part_n13 (void *ptr, VectS32 v, int n)
 
 #if fstb_IS (ARCHI, ARM)
 
-	f_ptr [0] = vgetq_lane_s32 (v, 0);
+	vst1q_lane_s32 (f_ptr + 0, v, 0);
 	if (n >= 2)
 	{
-		f_ptr [1] = vgetq_lane_s32 (v, 1);
+		vst1q_lane_s32 (f_ptr + 1, v, 1);
 		if (n >= 3)
 		{
-			f_ptr [2] = vgetq_lane_s32 (v, 2);
+			vst1q_lane_s32 (f_ptr + 2, v, 2);
 		}
 	}
 
@@ -1066,7 +1080,8 @@ void	ToolsSimd::store_s32_part_n13 (void *ptr, VectS32 v, int n)
 
 
 
-ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const void *ptr, int n)
+template <typename MEM>
+ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const MEM *ptr, int n)
 {
 	assert (n > 0);
 	assert (n < 4);
@@ -1092,17 +1107,14 @@ ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const void *ptr, int n)
 		v = Shift <0>::insert (v, f_ptr [0]);
 		break;
 	}
-	for (int k = 0; k < n; ++k)
-	{
-	}
 #elif fstb_IS (ARCHI, ARM)
 	v = vmovq_n_f32 (f_ptr [0]);
 	if (n >= 2)
 	{
-		v = vsetq_lane_f32 (f_ptr [1], v, 1);
+		v = vld1q_lane_f32 (f_ptr + 1, v, 1);
 		if (n >= 3)
 		{
-			v = vsetq_lane_f32 (f_ptr [2], v, 2);
+			v = vld1q_lane_f32 (f_ptr + 2, v, 2);
 		}
 	}
 #endif // ff_arch_CPU

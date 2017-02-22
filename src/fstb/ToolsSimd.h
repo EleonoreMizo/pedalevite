@@ -78,32 +78,44 @@ public:
 		uint16_t       _u16 [8];
 	};
 
+	template <typename MEM>
 	static inline VectF32
-	               load_f32 (const void *ptr);
+	               load_f32 (const MEM *ptr);
+	template <typename MEM>
 	static inline void
-	               store_f32 (void *ptr, VectF32 v);
+	               store_f32 (MEM *ptr, VectF32 v);
+	template <typename MEM>
 	static inline void
-	               store_f32_part (void *ptr, VectF32 v, int n);
+	               store_f32_part (MEM *ptr, VectF32 v, int n);
+	template <typename MEM>
 	static inline VectF32
-	               loadu_f32 (const void *ptr);
+	               loadu_f32 (const MEM *ptr);
+	template <typename MEM>
 	static inline VectF32
-	               loadu_f32_part (const void *ptr, int n);
+	               loadu_f32_part (const MEM *ptr, int n);
+	template <typename MEM>
 	static inline void
-	               storeu_f32 (void *ptr, VectF32 v);
+	               storeu_f32 (MEM *ptr, VectF32 v);
+	template <typename MEM>
 	static inline void
-	               storeu_s32 (void *ptr, VectS32 v);
+	               storeu_s32 (MEM *ptr, VectS32 v);
+	template <typename MEM>
 	static inline void
-	               storeu_f32_part (void *ptr, VectF32 v, int n);
+	               storeu_f32_part (MEM *ptr, VectF32 v, int n);
+	template <typename MEM>
 	static inline void
-	               storeu_s32_part (void *ptr, VectS32 v, int n);
+	               storeu_s32_part (MEM *ptr, VectS32 v, int n);
 
+	template <typename MEM>
 	static inline VectF32
-	               loadu_2f32 (const void *ptr);
+	               loadu_2f32 (const MEM *ptr);
+	template <typename MEM>
 	static inline void
-	               storeu_2f32 (void *ptr, VectF32 v);
+	               storeu_2f32 (MEM *ptr, VectF32 v);
 
+	template <typename MEM>
 	static inline void
-	               storeu_1f32 (void *ptr, VectF32 v);
+	               storeu_1f32 (MEM *ptr, VectF32 v);
 
 	static inline VectF32
 	               set_f32_zero ();
@@ -231,12 +243,15 @@ private:
 	static const float
 	               _inv_table_4 [_inv_table_4_len];
 
+	template <typename MEM>
 	static inline void
-	               store_f32_part_n13 (void *ptr, VectF32 v, int n);
+	               store_f32_part_n13 (MEM *ptr, VectF32 v, int n);
+	template <typename MEM>
 	static inline void
-	               store_s32_part_n13 (void *ptr, VectS32 v, int n);
+	               store_s32_part_n13 (MEM *ptr, VectS32 v, int n);
+	template <typename MEM>
 	static inline VectF32
-	               load_f32_part_n13 (const void *ptr, int n);
+	               load_f32_part_n13 (const MEM *ptr, int n);
 
 
 	static const int32_t
