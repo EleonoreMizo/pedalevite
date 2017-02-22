@@ -1405,24 +1405,41 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 		{
 			mfx::adrv::DManual & snd_drv_man =
 				dynamic_cast <mfx::adrv::DManual &> (snd_drv);
-			const size_t   sample_index = snd_drv_man.get_sample_index ();
+			size_t         sample_index = snd_drv_man.get_sample_index ();
 			const int      nbr_spl      = ctx._max_block_size;
+			const int      nbr_blocks   = fstb::ceil_int (ctx._sample_freq * wait_ms / (1000.0 * nbr_spl));
+
+#if 0
+			const int      sec          = int (sample_index / size_t (ctx._sample_freq));
+			const size_t   sec_spl     = sec * size_t (ctx._sample_freq);
+			if (sec_spl <= sample_index && sample_index < sec_spl + nbr_spl * nbr_blocks)
+			{
+				printf ("%d ", sec);
+				fflush (stdout);
+			}
+#endif
+
 			float *        in_ptr_arr [mfx::adrv::DriverInterface::_nbr_chn];
 			const float *  out_ptr_arr [mfx::adrv::DriverInterface::_nbr_chn];
 			snd_drv_man.get_buffers (in_ptr_arr, out_ptr_arr);
 			const double   freq = 82.40689; // E
 			const double   mul  = 2 * fstb::PI * freq / ctx._sample_freq;
 			const float    amp  = 0.1f;
-			for (int i = 0; i < nbr_spl; ++i)
+			for (int b = 0; b < nbr_blocks; ++b)
 			{
-				const float     val = float (sin ((sample_index + i) * mul)) * amp; 
-				for (int chn = 0; chn < mfx::adrv::DriverInterface::_nbr_chn; ++ chn)
+				for (int i = 0; i < nbr_spl; ++i)
 				{
-					in_ptr_arr [chn] [i] = val;
+					const float     val = float (sin ((sample_index + i) * mul)) * amp; 
+					for (int chn = 0; chn < mfx::adrv::DriverInterface::_nbr_chn; ++ chn)
+					{
+						in_ptr_arr [chn] [i] = val;
+					}
 				}
-			}
 
-			snd_drv_man.process_block ();
+				snd_drv_man.process_block ();
+
+				sample_index += nbr_spl;
+			}
 		}
 
 	#endif
