@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -798,7 +799,7 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::P
 	{
 		const float          val = proc_info._dst_arr [0] [0];
 		static const float   thr = 1e9f;
-		if (isnan (val) || val < -thr || val > thr)
+		if (! std::isfinite (val) || val < -thr || val > thr)
 		{
 			_reset_flag = true;
 		}
