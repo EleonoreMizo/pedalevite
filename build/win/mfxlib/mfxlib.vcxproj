@@ -325,6 +325,11 @@
     <ClInclude Include="..\..\..\src\mfx\doc\Slot.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrSeg.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.hpp" />
@@ -785,6 +790,8 @@
     <ClCompile Include="..\..\..\src\mfx\doc\Setup.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SignalPort.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Slot.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSaw.cpp" />

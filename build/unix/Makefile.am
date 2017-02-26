@@ -237,6 +237,13 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/SignalPort.h \
         ../../src/mfx/doc/Slot.cpp \
         ../../src/mfx/doc/Slot.h \
+        ../../src/mfx/dsp/ctrl/env/AdsrRc.cpp \
+        ../../src/mfx/dsp/ctrl/env/AdsrRc.h \
+        ../../src/mfx/dsp/ctrl/env/AdsrRc.hpp \
+        ../../src/mfx/dsp/ctrl/env/AdsrSeg.h \
+        ../../src/mfx/dsp/ctrl/env/SegmentRc.cpp \
+        ../../src/mfx/dsp/ctrl/env/SegmentRc.h \
+        ../../src/mfx/dsp/ctrl/env/SegmentRc.hpp \
         ../../src/mfx/dsp/ctrl/lfo/LfoModule.cpp \
         ../../src/mfx/dsp/ctrl/lfo/LfoModule.h \
         ../../src/mfx/dsp/ctrl/lfo/OscInterface.h \

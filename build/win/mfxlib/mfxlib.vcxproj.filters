@@ -178,6 +178,9 @@
     <Filter Include="mfx\pi\nzcl">
       <UniqueIdentifier>{6b66749e-9ca3-49e7-a138-077fe2436331}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\ctrl\env">
+      <UniqueIdentifier>{bf0f6e1c-2e42-4715-a85e-ecf75bd63084}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1968,6 +1971,21 @@
     <ClInclude Include="..\..\..\src\mfx\adrv\DManual.h">
       <Filter>mfx\adrv</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrSeg.h">
+      <Filter>mfx\dsp\ctrl\env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.h">
+      <Filter>mfx\dsp\ctrl\env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.hpp">
+      <Filter>mfx\dsp\ctrl\env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.h">
+      <Filter>mfx\dsp\ctrl\env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.hpp">
+      <Filter>mfx\dsp\ctrl\env</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2737,6 +2755,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\adrv\DManual.cpp">
       <Filter>mfx\adrv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.cpp">
+      <Filter>mfx\dsp\ctrl\env</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.cpp">
+      <Filter>mfx\dsp\ctrl\env</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
