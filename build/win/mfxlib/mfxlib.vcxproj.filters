@@ -178,6 +178,9 @@
     <Filter Include="mfx\pi\nzcl">
       <UniqueIdentifier>{6b66749e-9ca3-49e7-a138-077fe2436331}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\click">
+      <UniqueIdentifier>{e4e6b042-642f-436d-b45f-3125b63e8bc6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="mfx\dsp\ctrl\env">
       <UniqueIdentifier>{bf0f6e1c-2e42-4715-a85e-ecf75bd63084}</UniqueIdentifier>
     </Filter>
@@ -1971,6 +1974,15 @@
     <ClInclude Include="..\..\..\src\mfx\adrv\DManual.h">
       <Filter>mfx\adrv</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\click\Click.h">
+      <Filter>mfx\pi\click</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\click\ClickDesc.h">
+      <Filter>mfx\pi\click</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\click\Param.h">
+      <Filter>mfx\pi\click</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrSeg.h">
       <Filter>mfx\dsp\ctrl\env</Filter>
     </ClInclude>
@@ -1985,6 +1997,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.hpp">
       <Filter>mfx\dsp\ctrl\env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\doc\ActionClick.h">
+      <Filter>mfx\doc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2756,11 +2771,20 @@
     <ClCompile Include="..\..\..\src\mfx\adrv\DManual.cpp">
       <Filter>mfx\adrv</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\click\Click.cpp">
+      <Filter>mfx\pi\click</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\click\ClickDesc.cpp">
+      <Filter>mfx\pi\click</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.cpp">
       <Filter>mfx\dsp\ctrl\env</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.cpp">
       <Filter>mfx\dsp\ctrl\env</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\ActionClick.cpp">
+      <Filter>mfx\doc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/doc/ActionBank.h"
+#include "mfx/doc/ActionClick.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionSettings.h"
@@ -308,6 +309,9 @@ void	PedalEditAction::update_display ()
 		break;
 	case doc::ActionType_TEMPO_SET:
 		display_tempo_set (nav_list, dynamic_cast <const doc::ActionTempoSet &> (action));
+		break;
+	case doc::ActionType_CLICK:
+		display_click (nav_list, dynamic_cast <const doc::ActionClick &> (action));
 		break;
 	default:
 		assert (false);
@@ -667,6 +671,40 @@ void	PedalEditAction::display_tempo_set (PageMgrInterface::NavLocList &nav_list,
 
 
 
+void	PedalEditAction::display_click (PageMgrInterface::NavLocList &nav_list, const doc::ActionClick &action)
+{
+	// Action type
+	_type_sptr->set_text ("Click");
+
+	const int      h_m   = _fnt_ptr->get_char_h ();
+	char           txt_0 [127+1];
+
+	static const std::array <char *, 3> mode_0_arr =
+	{{
+		"Off", "On", "Toggle"
+	}};
+	fstb::snprintf4all (
+		txt_0, sizeof (txt_0), "Action: %s", mode_0_arr [action._mode]
+	);
+	_value_sptr->set_text (txt_0);
+	_value_sptr->set_coord (Vec2d (0, 2 * h_m));
+	_value_sptr->show (true);
+	_page_ptr->push_back (_value_sptr);
+	PageMgrInterface::add_nav (nav_list, Entry_VALUE);
+
+	fstb::snprintf4all (
+		txt_0, sizeof (txt_0), "Mode  : %s",
+		(action._bar_flag) ? "Single bar" : "Permanent"
+	);
+	_index_sptr->set_text (txt_0);
+	_index_sptr->set_coord (Vec2d (0, 3 * h_m));
+	_index_sptr->show (true);
+	_page_ptr->push_back (_index_sptr);
+	PageMgrInterface::add_nav (nav_list, Entry_INDEX);
+}
+
+
+
 // Prints to _label_sptr
 // Returns the guessed plug-in type (empty string if not found)
 std::string	PedalEditAction::print_fx_id (const doc::FxId &fx_id) const
@@ -743,6 +781,9 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_value (int node_id, int dir
 		case doc::ActionType_TEMPO_SET:
 			ret_val = change_tempo_set (node_id, dir);
 			break;
+		case doc::ActionType_CLICK:
+			ret_val = change_click (node_id, dir);
+			break;
 		default:
 			// Nothing
 			break;
@@ -765,7 +806,7 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 	doc::ActionType   action_type = action_sptr->get_type ();
 
 	// Currently we only support this set of actions.
-	static const std::array <doc::ActionType, 8>  type_list =
+	static const std::array <doc::ActionType, 9>  type_list =
 	{{
 		doc::ActionType_BANK,
 		doc::ActionType_PRESET,
@@ -773,7 +814,8 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 		doc::ActionType_PARAM,
 		doc::ActionType_TEMPO,
 		doc::ActionType_SETTINGS,
-		doc::ActionType_TEMPO_SET
+		doc::ActionType_TEMPO_SET,
+		doc::ActionType_CLICK
 	}};
 	const int      type_list_size = int (type_list.size ());
 	int            type_pos       = 0;
@@ -838,6 +880,11 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 		case doc::ActionType_TEMPO_SET:
 			action_sptr = doc::PedalActionCycle::ActionSPtr (
 				new doc::ActionTempoSet (120)
+			);
+			break;
+		case doc::ActionType_CLICK:
+			action_sptr = doc::PedalActionCycle::ActionSPtr (
+				new doc::ActionClick (doc::ActionClick::Mode_TOGGLE, false)
 			);
 			break;
 		default:
@@ -1116,6 +1163,40 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_tempo_set (int node_id, int
 	bpm += dir;
 	bpm = fstb::limit (bpm, double (Cst::_tempo_min), double (Cst::_tempo_max));
 	action._tempo_bpm = bpm;
+
+	update_model ();
+
+	return EvtProp_CATCH;
+}
+
+
+
+MsgHandlerInterface::EvtProp	PedalEditAction::change_click (int node_id, int dir)
+{
+	doc::PedalActionCycle & cycle =
+		_ctx._content._action_arr [_ctx._trigger];
+	doc::PedalActionCycle::ActionArray &   step =
+		cycle._cycle [_ctx._step_index];
+	doc::PedalActionCycle::ActionSPtr & action_sptr =
+		step [_ctx._action_index];
+	assert (action_sptr->get_type () == doc::ActionType_CLICK);
+	doc::ActionClick &   action =
+		dynamic_cast <doc::ActionClick &> (*action_sptr);
+
+	if (node_id == Entry_INDEX)
+	{
+		if (dir != 0)
+		{
+			action._bar_flag = ! action._bar_flag;
+		}
+	}
+	else
+	{
+		int         mode = int (action._mode);
+		mode += dir;
+		mode = fstb::limit (mode, 0, int (doc::ActionClick::Mode_NBR_ELT) - 1);
+		action._mode = static_cast <doc::ActionClick::Mode> (mode);
+	}
 
 	update_model ();
 

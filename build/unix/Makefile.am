@@ -180,6 +180,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/cmd/Slot.h \
         ../../src/mfx/doc/ActionBank.cpp \
         ../../src/mfx/doc/ActionBank.h \
+        ../../src/mfx/doc/ActionClick.cpp \
+        ../../src/mfx/doc/ActionClick.h \
         ../../src/mfx/doc/ActionParam.cpp \
         ../../src/mfx/doc/ActionParam.h \
         ../../src/mfx/doc/ActionPreset.cpp \
@@ -409,6 +411,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
+        ../../src/mfx/pi/click/Click.cpp \
+        ../../src/mfx/pi/click/Click.h \
+        ../../src/mfx/pi/click/ClickDesc.cpp \
+        ../../src/mfx/pi/click/ClickDesc.h \
+        ../../src/mfx/pi/click/Param.h \
         ../../src/mfx/pi/cpx/Compex.cpp \
         ../../src/mfx/pi/cpx/Compex.h \
         ../../src/mfx/pi/cpx/CompexDesc.cpp \

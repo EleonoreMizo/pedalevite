@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/tuner/Tuner.h"
 #include "mfx/doc/ActionBank.h"
+#include "mfx/doc/ActionClick.h"
 #include "mfx/doc/ActionParam.h"
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionSettings.h"
@@ -84,6 +85,8 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_tuner_flag (false)
 ,	_tuner_pi_id (-1)
 ,	_tuner_ptr (0)
+,	_click_flag (false)
+,	_click_slot ()
 ,	_file_io (file_io)
 ,	_input_device (input_device)
 ,	_queue_input_to_cmd (queue_input_to_cmd)
@@ -96,6 +99,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_override_map ()
 ,	_param_update_map ()
 {
+	_click_slot._pi_model = "\?click";
 	_central.set_callback (this);
 }
 
@@ -1475,41 +1479,9 @@ void	Model::apply_settings_normal ()
 			check_mixer_plugin (slot_id, slot_index_central, chain_flag);
 
 			// Now the main plug-in
-			auto           it_s  = slot._settings_all.find (slot._pi_model);
-			int            pi_id = -1;
-			if (it_s == slot._settings_all.end ())
-			{
-				// Probably the first creation on this slot.
-				// Creates the plug-ins and collects the parameter list
-				pi_id = _central.set_plugin (
-					slot_index_central,
-					slot._pi_model,
-					false,
-					gen_audio_flag
-				);
-				doc::PluginSettings &	settings =
-					slot._settings_all [slot._pi_model];
-				settings._param_list =
-					_central.use_pi_pool ().use_plugin (pi_id)._param_arr;
-				it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
-			}
-			else
-			{
-				// Creates the plug-in and apply the stored settings
-				_central.force_mono (
-					slot_index_central,
-					it_s->second._force_mono_flag
-				);
-				pi_id = _central.set_plugin (
-					slot_index_central,
-					slot._pi_model,
-					it_s->second._force_reset_flag,
-					gen_audio_flag
-				);
-				it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
-				send_effect_settings (pi_id, slot_id, PiType_MAIN, it_s->second);
-				/*** To do: send some "quick clean" event to the plug-in if _force_reset_flag ***/
-			}
+			int            pi_id = insert_plugin_main (
+				slot, slot_id, it_id_map, slot_index_central, gen_audio_flag
+			);
 
 			// Registers signal ports
 			for (int sig_index = 0; sig_index < nbr_s; ++sig_index)
@@ -1535,6 +1507,19 @@ void	Model::apply_settings_normal ()
 		}
 	}
 
+	// Finally, the click
+	if (_click_flag)
+	{
+		_central.insert_slot (slot_index_central);
+		_central.remove_mixer (slot_index_central);
+
+		insert_plugin_main (
+			_click_slot, -1, _pi_id_map.end (), slot_index_central, true
+		);
+
+		++ slot_index_central;
+	}
+
 	assert (_preset_cur._slot_map.size () == _pi_id_map.size ());
 }
 
@@ -1553,6 +1538,60 @@ void	Model::apply_settings_tuner ()
 		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
 	_tuner_ptr = dynamic_cast <pi::tuner::Tuner *> (details._pi_uptr.get ());
 	assert (_tuner_ptr != 0);
+}
+
+
+
+// slot_id can be negative if the slot isn't part of _preset_cur,
+// same for it_id_map that should be _pi_id_map.end () in this case.
+int	Model::insert_plugin_main (doc::Slot &slot, int slot_id, PiIdMap::iterator it_id_map, int slot_index_central, bool gen_audio_flag)
+{
+	assert (   (slot_id >= 0 && it_id_map != _pi_id_map.end ())
+	        || (slot_id <  0 && it_id_map == _pi_id_map.end ()));
+
+	auto           it_s  = slot._settings_all.find (slot._pi_model);
+	int            pi_id = -1;
+	if (it_s == slot._settings_all.end ())
+	{
+		// Probably the first creation on this slot.
+		// Creates the plug-ins and collects the parameter list
+		pi_id = _central.set_plugin (
+			slot_index_central,
+			slot._pi_model,
+			false,
+			gen_audio_flag
+		);
+		doc::PluginSettings &	settings =
+			slot._settings_all [slot._pi_model];
+		settings._param_list =
+			_central.use_pi_pool ().use_plugin (pi_id)._param_arr;
+		if (it_id_map != _pi_id_map.end ())
+		{
+			it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
+		}
+	}
+	else
+	{
+		// Creates the plug-in and apply the stored settings
+		_central.force_mono (
+			slot_index_central,
+			it_s->second._force_mono_flag
+		);
+		pi_id = _central.set_plugin (
+			slot_index_central,
+			slot._pi_model,
+			it_s->second._force_reset_flag,
+			gen_audio_flag
+		);
+		if (it_id_map != _pi_id_map.end ())
+		{
+			it_id_map->second._pi_id_arr [PiType_MAIN] = pi_id;
+		}
+		send_effect_settings (pi_id, slot_id, PiType_MAIN, it_s->second);
+		/*** To do: send some "quick clean" event to the plug-in if _force_reset_flag ***/
+	}
+
+	return (pi_id);
 }
 
 
@@ -1654,6 +1693,7 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_id)
 
 
 // Does not commit anything
+// If slot_id < 0, does not setup modulations and automations
 void	Model::send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings)
 {
 	// Parameters
@@ -1671,10 +1711,13 @@ void	Model::send_effect_settings (int pi_id, int slot_id, PiType type, const doc
 	}
 
 	// Modulations and automations
-	for (const auto &x : settings._map_param_ctrl)
+	if (slot_id >= 0)
 	{
-		const int   p_index = x.first;
-		set_param_ctrl_with_override (x.second, pi_id, slot_id, type, p_index);
+		for (const auto &x : settings._map_param_ctrl)
+		{
+			const int   p_index = x.first;
+			set_param_ctrl_with_override (x.second, pi_id, slot_id, type, p_index);
+		}
 	}
 }
 
@@ -1859,6 +1902,10 @@ void	Model::process_action (const doc::PedalActionSingleInterface &action, std::
 		process_action_tempo_set (dynamic_cast <const doc::ActionTempoSet &> (action));
 		break;
 
+	case doc::ActionType_CLICK:
+		process_action_click (dynamic_cast <const doc::ActionClick &> (action));
+		break;
+
 	default:
 		assert (false);
 	}
@@ -2012,6 +2059,34 @@ void	Model::process_action_settings (const doc::ActionSettings &action)
 void	Model::process_action_tempo_set (const doc::ActionTempoSet &action)
 {
 	process_action_tempo (action._tempo_bpm);
+}
+
+
+
+void	Model::process_action_click (const doc::ActionClick &action)
+{
+	switch (action._mode)
+	{
+	case doc::ActionClick::Mode_OFF:
+		_click_flag = false;
+		break;
+	case doc::ActionClick::Mode_ON:
+		_click_flag = true;
+		break;
+	case doc::ActionClick::Mode_TOGGLE:
+		_click_flag = ! _click_flag;
+		break;
+	default:
+		assert (false);
+		break;
+	}
+
+	apply_settings ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_click (_click_flag);
+	}
 }
 
 
@@ -2577,6 +2652,8 @@ void	Model::update_param_ctrl (const OverrideLoc &loc)
 // Requires commit
 void	Model::set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index)
 {
+	assert (slot_id >= 0);
+
 	const OverrideLoc loc { pi_id, index };
 	auto           it = _override_map.find (loc);
 	if (it == _override_map.end ())

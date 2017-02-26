@@ -71,6 +71,7 @@ public:
 	double         get_tempo () const;
 	bool           is_editing () const;
 	bool           is_tuner_active () const;
+	bool           is_click_active () const;
 	float          get_tuner_freq () const;
 	const doc::Setup &
 	               use_setup () const;
@@ -134,6 +135,7 @@ protected:
 	virtual void   do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
 	virtual void   do_remove_settings (std::string model, int index);
 	virtual void   do_clear_all_settings ();
+	virtual void   do_set_click (bool click_flag);
 
 
 
@@ -153,6 +155,7 @@ private:
 	// Cached data
 	double         _tempo        = Cst::_tempo_ref;
 	bool           _edit_flag    = false;
+	bool           _click_flag   = false;
 	bool           _tuner_flag   = false;
 	float          _tuner_freq   = 0;
 	int            _bank_index   = 0;

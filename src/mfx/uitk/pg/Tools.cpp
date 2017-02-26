@@ -824,6 +824,10 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 		}
 		break;
 
+	case doc::ActionType_CLICK:
+		name = "Click";
+		break;
+
 	default:
 		fstb::snprintf4all (txt_0, sizeof (txt_0), "type %d", type);
 		name = txt_0;

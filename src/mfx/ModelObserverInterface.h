@@ -130,6 +130,7 @@ public:
 	void           add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
 	void           remove_settings (std::string model, int index);
 	void           clear_all_settings ();
+	void           set_click (bool click_flag);
 
 
 
@@ -173,6 +174,7 @@ protected:
 	virtual void   do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix) = 0;
 	virtual void   do_remove_settings (std::string model, int index) = 0;
 	virtual void   do_clear_all_settings () = 0;
+	virtual void   do_set_click (bool click_flag) = 0;
 
 
 

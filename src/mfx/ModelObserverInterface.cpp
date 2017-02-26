@@ -400,6 +400,13 @@ void	ModelObserverInterface::clear_all_settings ()
 
 
 
+void	ModelObserverInterface::set_click (bool click_flag)
+{
+	do_set_click (click_flag);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

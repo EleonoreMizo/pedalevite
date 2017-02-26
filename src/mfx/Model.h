@@ -48,6 +48,7 @@ namespace mfx
 namespace doc
 {
 	class ActionBank;
+	class ActionClick;
 	class ActionParam;
 	class ActionPreset;
 	class ActionSettings;
@@ -222,6 +223,7 @@ private:
 	void           apply_settings ();
 	void           apply_settings_normal ();
 	void           apply_settings_tuner ();
+	int            insert_plugin_main (doc::Slot &slot, int slot_id, PiIdMap::iterator it_id_map, int slot_index_central, bool gen_audio_flag);
 	void           check_mixer_plugin (int slot_id, int slot_index_central, int chain_flag);
 	bool           has_mixer_plugin (const doc::Preset &preset, int slot_id);
 	void           send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings);
@@ -238,6 +240,7 @@ private:
 	void           process_action_tempo_tap (const doc::ActionTempo &action, std::chrono::microseconds ts);
 	void           process_action_settings (const doc::ActionSettings &action);
 	void           process_action_tempo_set (const doc::ActionTempoSet &action);
+	void           process_action_click (const doc::ActionClick &action);
 	void           process_action_tempo (double tempo);
 	void           build_slot_info ();
 	void           notify_slot_info ();
@@ -287,6 +290,9 @@ private:
 	int            _tuner_pi_id;
 	pi::tuner::Tuner *
 	               _tuner_ptr;          // Can be 0.
+
+	bool           _click_flag;
+	doc::Slot      _click_slot;
 
 	FileIOInterface &
 	               _file_io;

@@ -43,6 +43,7 @@ namespace mfx
 namespace doc
 {
 	class ActionBank;
+	class ActionClick;
 	class ActionParam;
 	class ActionPreset;
 	class ActionSettings;
@@ -137,6 +138,7 @@ private:
 	void           display_settings (PageMgrInterface::NavLocList &nav_list, const doc::ActionSettings &action);
 	void           display_event (PageMgrInterface::NavLocList &nav_list);
 	void           display_tempo_set (PageMgrInterface::NavLocList &nav_list, const doc::ActionTempoSet &action);
+	void           display_click (PageMgrInterface::NavLocList &nav_list, const doc::ActionClick &action);
 	std::string    print_fx_id (const doc::FxId &fx_id) const;
 	EvtProp        change_value (int node_id, int dir);
 	EvtProp        change_type (int dir);
@@ -145,6 +147,7 @@ private:
 	EvtProp        change_param (int node_id, int dir);
 	EvtProp        change_settings (int node_id, int dir);
 	EvtProp        change_tempo_set (int node_id, int dir);
+	EvtProp        change_click (int node_id, int dir);
 
 	PageSwitcher & _page_switcher;
 	PedalEditContext &

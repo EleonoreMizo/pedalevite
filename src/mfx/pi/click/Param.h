@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        ActionType.h
-        Author: Laurent de Soras, 2016
+        Param.h
+        Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_doc_ActionType_HEADER_INCLUDED)
-#define mfx_doc_ActionType_HEADER_INCLUDED
+#if ! defined (mfx_pi_click_Param_HEADER_INCLUDED)
+#define mfx_pi_click_Param_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -31,40 +31,33 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace doc
+namespace pi
+{
+namespace click
 {
 
 
 
-enum ActionType
+enum Param
 {
 
-	ActionType_BANK = 0,
-	ActionType_PRESET,
-	ActionType_TOGGLE_TUNER,
-	ActionType_TOGGLE_FX,
-	ActionType_LOOP_REC,
-	ActionType_LOOP_PLAY_STOP,
-	ActionType_LOOP_UNDO,
-	ActionType_PARAM,
-	ActionType_TEMPO,          // Tap
-	ActionType_SETTINGS,
-	ActionType_EVENT,
-	ActionType_TEMPO_SET,
-	ActionType_CLICK,
+	Param_NBR_ELT = 0
 
-	ActionType_NBR_ELT
-
-}; // class ActionType
+}; // enum Param
 
 
 
-}  // namespace doc
+}  // namespace click
+}  // namespace pi
 }  // namespace mfx
 
 
 
-#endif   // mfx_doc_ActionType_HEADER_INCLUDED
+//#include "mfx/pi/click/Param.hpp"
+
+
+
+#endif   // mfx_pi_click_Param_HEADER_INCLUDED
 
 
 

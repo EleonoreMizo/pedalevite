@@ -26,6 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/Err.h"
 #include "mfx/piapi/FactoryTpl.h"
+#include "mfx/pi/click/Click.h"
+#include "mfx/pi/click/ClickDesc.h"
 #include "mfx/pi/cpx/Compex.h"
 #include "mfx/pi/cpx/CompexDesc.h"
 #include "mfx/pi/dist1/DistoSimple.h"
@@ -115,7 +117,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 			mfx::piapi::FactoryTpl <mfx::pi::distpwm::DistoPwmDesc  , mfx::pi::distpwm::DistoPwm       >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::tremh::HarmTremDesc    , mfx::pi::tremh::HarmTrem         >::create (),
 			mfx::piapi::FactoryTpl <mfx::pi::nzbl::NoiseBleachDesc  , mfx::pi::nzbl::NoiseBleach       >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::nzcl::NoiseChlorineDesc, mfx::pi::nzcl::NoiseChlorine     >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::nzcl::NoiseChlorineDesc, mfx::pi::nzcl::NoiseChlorine     >::create (),
+			mfx::piapi::FactoryTpl <mfx::pi::click::ClickDesc       , mfx::pi::click::Click            >::create ()
 		};
 
 		fact_list = l;

@@ -89,6 +89,13 @@ bool	View::is_tuner_active () const
 
 
 
+bool	View::is_click_active () const
+{
+	return _click_flag;
+}
+
+
+
 float	View::get_tuner_freq () const
 {
 	return _tuner_freq;
@@ -698,6 +705,15 @@ void	View::do_clear_all_settings ()
 	_setup._map_plugin_settings.clear ();
 
 	mfx_View_PROPAGATE (clear_all_settings ());
+}
+
+
+
+void	View::do_set_click (bool click_flag)
+{
+	_click_flag = click_flag;
+
+	mfx_View_PROPAGATE (set_click (click_flag));
 }
 
 

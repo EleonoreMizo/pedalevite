@@ -221,8 +221,11 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 #endif
 	}
 
-	_tempo_cur = _tempo_new;
-	_tempo_new = 0;
+	if (_tempo_new > 0)
+	{
+		_tempo_cur = _tempo_new;
+		_tempo_new = 0;
+	}
 
 	_proc_date_end = _input_device.get_cur_date ();
 }

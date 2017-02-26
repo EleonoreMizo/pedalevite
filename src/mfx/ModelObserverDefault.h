@@ -82,6 +82,7 @@ public:
 	virtual void   do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix) {}
 	virtual void   do_remove_settings (std::string model, int index) {}
 	virtual void   do_clear_all_settings () {}
+	virtual void   do_set_click (bool click_flag) {}
 
 
 
