@@ -679,7 +679,7 @@ void	PedalEditAction::display_click (PageMgrInterface::NavLocList &nav_list, con
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	char           txt_0 [127+1];
 
-	static const std::array <char *, 3> mode_0_arr =
+	static const std::array <const char *, 3> mode_0_arr =
 	{{
 		"Off", "On", "Toggle"
 	}};
