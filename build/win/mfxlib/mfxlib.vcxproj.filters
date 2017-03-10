@@ -2001,6 +2001,9 @@
     <ClInclude Include="..\..\..\src\mfx\doc\ActionClick.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\Compander.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2785,6 +2788,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\ActionClick.cpp">
       <Filter>mfx\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\Compander.cpp">
+      <Filter>mfx\dsp\dyn</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

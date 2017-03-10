@@ -282,6 +282,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/DelayLineFracFir4Base.hpp \
         ../../src/mfx/dsp/dly/DelayLineReader.cpp \
         ../../src/mfx/dsp/dly/DelayLineReader.h \
+        ../../src/mfx/dsp/dyn/Compander.cpp \
+        ../../src/mfx/dsp/dyn/Compander.h \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.h \

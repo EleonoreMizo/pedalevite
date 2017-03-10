@@ -355,6 +355,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\Compander.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.h" />
@@ -809,6 +810,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\Compander.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.cpp" />
