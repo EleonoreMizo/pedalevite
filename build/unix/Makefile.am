@@ -282,6 +282,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/DelayLineFracFir4Base.hpp \
         ../../src/mfx/dsp/dly/DelayLineReader.cpp \
         ../../src/mfx/dsp/dly/DelayLineReader.h \
+        ../../src/mfx/dsp/dly/RingBufVectorizer.cpp \
+        ../../src/mfx/dsp/dly/RingBufVectorizer.h \
+        ../../src/mfx/dsp/dly/RingBufVectorizer.hpp \
         ../../src/mfx/dsp/dyn/Compander.cpp \
         ../../src/mfx/dsp/dyn/Compander.h \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h \

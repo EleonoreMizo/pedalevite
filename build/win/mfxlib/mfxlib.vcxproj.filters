@@ -2004,6 +2004,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\Compander.h">
       <Filter>mfx\dsp\dyn</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.h">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.hpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2791,6 +2797,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\Compander.cpp">
       <Filter>mfx\dsp\dyn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.cpp">
+      <Filter>mfx\dsp\dly</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
