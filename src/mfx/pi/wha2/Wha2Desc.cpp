@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        WhaDesc.cpp
+        Wha2Desc.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,10 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/param/HelperDispNum.h"
-#include "mfx/pi/param/TplLog.h"
-#include "mfx/pi/wha1/Param.h"
-#include "mfx/pi/wha1/WhaDesc.h"
+#include "mfx/pi/wha2/Wha2Desc.h"
+#include "mfx/pi/wha2/Param.h"
+#include "mfx/pi/param/Simple.h"
+#include "mfx/pi/param/TplEnum.h"
 
 #include <cassert>
 
@@ -37,7 +37,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace wha1
+namespace wha2
 {
 
 
@@ -46,37 +46,28 @@ namespace wha1
 
 
 
-WhaDesc::WhaDesc ()
+Wha2Desc::Wha2Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
-	// Frequency
-	param::TplLog *   log_ptr = new param::TplLog (
-		120, 120 * 32,
-		"Frequency\nFreq",
-		"Hz",
-		param::HelperDispNum::Preset_FLOAT_STD,
-		0,
-		"%6.1f"
-	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	log_ptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
-	_desc_set.add_glob (Param_FREQ, log_ptr);
+	// Position
+	param::Simple *   sim_ptr = new param::Simple ("Position\nPos");
+	sim_ptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
+	_desc_set.add_glob (Param_POS, sim_ptr);
 
-	// Base Q
-	log_ptr = new param::TplLog (
-		1, 32,
-		"Selectivity\nQ",
+	// Type
+	param::TplEnum *  enu_ptr = new param::TplEnum (
+		"GCB-95\nV-847\nOriginal\nMcCoy\nVocal\nExtreme",
+		"Type",
 		"",
-		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
-		"%4.1f"
+		"%s"
 	);
-	_desc_set.add_glob (Param_Q, log_ptr);
+	_desc_set.add_glob (Param_TYPE, enu_ptr);
 }
 
 
 
-ParamDescSet &	WhaDesc::use_desc_set ()
+ParamDescSet &	Wha2Desc::use_desc_set ()
 {
 	return _desc_set;
 }
@@ -87,21 +78,21 @@ ParamDescSet &	WhaDesc::use_desc_set ()
 
 
 
-std::string	WhaDesc::do_get_unique_id () const
+std::string	Wha2Desc::do_get_unique_id () const
 {
-	return "wah1";
+	return "wah2";
 }
 
 
 
-std::string	WhaDesc::do_get_name () const
+std::string	Wha2Desc::do_get_name () const
 {
-	return "Wah-wah";
+	return "Wah-wah (CryBaby)";
 }
 
 
 
-void	WhaDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
+void	Wha2Desc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 {
 	nbr_i = 1;
 	nbr_o = 1;
@@ -110,21 +101,21 @@ void	WhaDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 
 
 
-bool	WhaDesc::do_prefer_stereo () const
+bool	Wha2Desc::do_prefer_stereo () const
 {
 	return false;
 }
 
 
 
-int	WhaDesc::do_get_nbr_param (piapi::ParamCateg categ) const
+int	Wha2Desc::do_get_nbr_param (piapi::ParamCateg categ) const
 {
 	return _desc_set.get_nbr_param (categ);
 }
 
 
 
-const piapi::ParamDescInterface &	WhaDesc::do_get_param_info (piapi::ParamCateg categ, int index) const
+const piapi::ParamDescInterface &	Wha2Desc::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
 	return _desc_set.use_param (categ, index);
 }
@@ -135,7 +126,7 @@ const piapi::ParamDescInterface &	WhaDesc::do_get_param_info (piapi::ParamCateg 
 
 
 
-}  // namespace wha1
+}  // namespace wha2
 }  // namespace pi
 }  // namespace mfx
 

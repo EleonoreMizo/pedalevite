@@ -573,6 +573,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\LfoType.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Wha2.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Wha2Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\ToolsParam.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\EventNoteOff.h" />
@@ -914,6 +917,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTrem.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\wha2\Wha2.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\wha2\Wha2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginDescInterface.cpp" />

@@ -184,6 +184,9 @@
     <Filter Include="mfx\dsp\ctrl\env">
       <UniqueIdentifier>{bf0f6e1c-2e42-4715-a85e-ecf75bd63084}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\wha2">
+      <UniqueIdentifier>{17893118-e8da-4cf8-8dc7-80fe06c5b2c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2010,6 +2013,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.hpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Param.h">
+      <Filter>mfx\pi\wha2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Wha2.h">
+      <Filter>mfx\pi\wha2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Wha2Desc.h">
+      <Filter>mfx\pi\wha2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\envf\Cst.h">
       <Filter>mfx\pi\envf</Filter>
     </ClInclude>
@@ -2803,6 +2815,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.cpp">
       <Filter>mfx\dsp\dly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\wha2\Wha2.cpp">
+      <Filter>mfx\pi\wha2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\wha2\Wha2Desc.cpp">
+      <Filter>mfx\pi\wha2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\envf\Cst.cpp">
       <Filter>mfx\pi\envf</Filter>

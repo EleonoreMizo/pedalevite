@@ -612,6 +612,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/wha1/Wha.h \
         ../../src/mfx/pi/wha1/WhaDesc.cpp \
         ../../src/mfx/pi/wha1/WhaDesc.h \
+        ../../src/mfx/pi/wha2/Param.h \
+        ../../src/mfx/pi/wha2/Wha2.cpp \
+        ../../src/mfx/pi/wha2/Wha2.h \
+        ../../src/mfx/pi/wha2/Wha2Desc.cpp \
+        ../../src/mfx/pi/wha2/Wha2Desc.h \
         ../../src/mfx/pi/export.cpp \
         ../../src/mfx/pi/export.h \
         ../../src/mfx/pi/ParamDescSet.cpp \

@@ -59,6 +59,7 @@
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
+	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
 	<li><a href="#fx-lfo">LFO — Oscillateur basse fréquence</a></li>
 	</ol>
 </li>
@@ -1544,6 +1545,23 @@ distincte.</p>
 
 
 
+<h3><a id="fx-wah2"></a>Wah-wah (Cry Baby)</h3>
+
+<p>Cette effet est une émulation précise de différents modèles de
+wah-wah Cry Baby.
+La modélisation de ces pédale et l’algorithme résultant ont été écrits
+par <a href="http://cackleberrypines.net/transmogrifox/src/bela/inductor_wah_C_src">Transmogrifox</a>.</p>
+
+<p class="var">Position</p>
+<p>Position de la pédale, ce qui correspond à la fréquence de coupure du
+filtre.
+Ce paramètre est relié par défaut à la pédale d’expression.</p>
+
+<p class="var">Type</p>
+<p>Permet de sélectionner le modèle de Cry Baby.</p>
+
+
+
 <h3><a id="fx-lfo"></a>LFO — Oscillateur basse fréquence</h3>
 
 <p>Cet effet n’est disponible que dans la catégorie des générateurs de signaux
@@ -1693,9 +1711,10 @@ sélectionnée.</p>
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
 
-<p><b>r6, 2017.xx.xx</b></p>
+<p><b>r6, 2017.04.22</b></p>
 <ul>
 <li>Ajout de nouveaux paramètres au détecteur d’enveloppe.</li>
+<li>Ajout d’un deuxième effet de wah-wah.</li>
 </ul>
 
 <p><b>r5, 2017.02.11</b></p>
