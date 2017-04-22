@@ -248,7 +248,7 @@ void	TransSZBilin::map_s_to_z_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb:
 
 
 
-void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [3], const float s_eq_a [2], float k)
+void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [2], const float s_eq_a [2], float k)
 {
 	assert (z_eq_b != 0);
 	assert (z_eq_a != 0);
@@ -278,6 +278,33 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2
 
 	z_eq_a [0] = 1;
 	z_eq_a [1] = fstb::ToolsSimd::Shift <0>::extract (x1z);
+}
+
+
+
+void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 z_eq_a [2], const fstb::ToolsSimd::VectF32 s_eq_b [2], const fstb::ToolsSimd::VectF32 s_eq_a [2], fstb::ToolsSimd::VectF32 k)
+{
+	const auto     b0s  = fstb::ToolsSimd::load_f32 (&s_eq_b [0]);
+	const auto     b1s  = fstb::ToolsSimd::load_f32 (&s_eq_b [1]);
+
+	const auto     b1k = b1s * k;
+	const auto     b1z = b0s - b1k;
+	const auto     b0z = b0s + b1k;
+
+	const auto     a0s  = fstb::ToolsSimd::load_f32 (&s_eq_a [0]);
+	const auto     a1s  = fstb::ToolsSimd::load_f32 (&s_eq_a [1]);
+
+	const auto     a1k = a1s * k;
+	const auto     a1z = a0s - a1k;
+	const auto     a0z = a0s + a1k;
+
+	const auto     mult = fstb::ToolsSimd::rcp_approx2 (a0z);
+
+	fstb::ToolsSimd::store_f32 (&z_eq_b [0], b0z * mult);
+	fstb::ToolsSimd::store_f32 (&z_eq_b [1], b1z * mult);
+
+	fstb::ToolsSimd::store_f32 (&z_eq_a [0], fstb::ToolsSimd::set1_f32 (1));
+	fstb::ToolsSimd::store_f32 (&z_eq_a [1], a1z * mult);
 }
 
 
