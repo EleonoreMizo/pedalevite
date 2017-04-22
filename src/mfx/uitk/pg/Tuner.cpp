@@ -237,20 +237,8 @@ void	Tuner::i_set_freq (float freq)
 		_note_sptr->set_mag (mag_x, mag_y);
 		_note_sptr->set_text (note3_0);
 
-		// Frequency and finetune
-		const int      midi_note  = fstb::round_int (midi_pitch);
-		const float    cents_flt  = (midi_pitch - midi_note) * 100;
-		const int      cents      = fstb::round_int (cents_flt);
-#if 0 // Currently unused
-		const int      octave     = midi_note / 12;
-		const int      note       = midi_note - octave * 12;
-		char           freq_0 [127+1] = "---- ---- ------- Hz";
-		fstb::snprintf4all (
-			freq_0, sizeof (freq_0),
-			"%2s%-2d %+4d %7.3lf Hz",
-			_note_0_arr [note], octave, cents, freq
-		);
-#endif
+		// Finetune
+		const int      cents      = fstb::round_int (dist_cent);
 		char           txt_0 [127+1];
 		fstb::snprintf4all (txt_0, sizeof (txt_0), "%+03d", cents);
 		_cents_sptr->set_text (txt_0);
