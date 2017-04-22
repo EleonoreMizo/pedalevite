@@ -43,7 +43,7 @@
 	<li><a href="#fx-delay">Delay — Écho stéréo</a></li>
 	<li><a href="#fx-disto-tone">Distortion Tone Stage — Tonalité pour distorsion</a></li>
 	<li><a href="#fx-disto2x">Double Distortion</a></li>
-	<li><a href="#fx-env-fol">Enveloppe Follower — Suiveur d’enveloppe</a></li>
+	<li><a href="#fx-env-fol">Envelope Follower — Suiveur d’enveloppe</a></li>
 	<li><a href="#fx-filter-squeezer">Filter Squeezer — Filtre résonnant à distorsion</a></li>
 	<li><a href="#fx-flancho">FlanCho — Chorus et flanger</a></li>
 	<li><a href="#fx-freeverb">Freeverb — Réverbération</a></li>
@@ -58,7 +58,7 @@
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
-	<li><a href="#fx-wha">Wha-wha</a></li>
+	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-lfo">LFO — Oscillateur basse fréquence</a></li>
 	</ol>
 </li>
@@ -880,7 +880,7 @@ Cela donne des sons un peu plus percussifs mais moins naturels.</p>
 
 
 
-<h3><a id="fx-env-fol"></a>Enveloppe Follower — Suiveur d’enveloppe</h3>
+<h3><a id="fx-env-fol"></a>Envelope Follower — Suiveur d’enveloppe</h3>
 
 <p>Cet effet n’est pas un effet audio mais un contrôleur qui travaille en
 analysant le son.
@@ -915,9 +915,23 @@ En mode linéaire, la valeur brute du volume est utilisée.
 En mode logarithmique, c’est une valeur en décibels qui est utilisée.
 La plage de variation est alors fixée par le seuil.</p>
 
-<p class="var">Clip</p>
+<p class="var">Clip envelope</p>
 <p>Indique que le signal de contrôle en sortie doit être limité à la valeur
 maximale de 1.</p>
+
+<p class="var">Clip source</p>
+<p>Règle le niveau au-dessus duquel le signal source sature.
+Ce paramètre permet de neutraliser les attaques un peu trop fortes quand le
+temps de release est significatif, limitant ainsi le temps de retard induit
+avant lequel l’enveloppe retombe.
+Quand le paramètre est réglé au maximum, la saturation de la source est
+désactivée.</p>
+
+<p class="var">Low-cut frequency</p>
+<p>Fréquence de coupure du filtre coupe-bas.
+Ce filtre permet de diminuer l’influence des basses fréquences dans la
+détection, donnant une enveloppe plus réactive aux attaques.
+Quand le paramètre est réglé au minimum, le filtre est désactivé.</p>
 
 
 
@@ -1511,16 +1525,16 @@ temps d’ouverture.</p>
 
 
 
-<h3><a id="fx-wha"></a>Wha-wha</h3>
+<h3><a id="fx-wah"></a>Wah-wah</h3>
 
-<p>Il s’agit d’une wha-wha plus ou moins calquée sur la Cry Baby.
+<p>Il s’agit d’une wah-wah plus ou moins calquée sur la Cry Baby.
 La plage de variation de la fréquences de coupure a été étendue, ce qui permet
 d’obtenir un son ravageur dans les basses fréquences.</p>
 
 <p class="var">Frequency</p>
 <p>Fréquence de coupure du filtre.
 Ce paramètre est relié par défaut à la pédale d’expression.
-Pour retrouver le son d’une pédale wha classique, il convient d’en restreindre
+Pour retrouver le son d’une pédale wah classique, il convient d’en restreindre
 l’intervalle à environ 400–1600&#8239;Hz.</p>
 
 <p class="var">Selectivity</p>
@@ -1678,6 +1692,11 @@ sélectionnée.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r6, 2017.xx.xx</b></p>
+<ul>
+<li>Ajout de nouveaux paramètres au détecteur d’enveloppe.</li>
+</ul>
 
 <p><b>r5, 2017.02.11</b></p>
 <ul>

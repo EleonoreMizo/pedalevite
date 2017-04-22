@@ -2010,6 +2010,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.hpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\envf\Cst.h">
+      <Filter>mfx\pi\envf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2800,6 +2803,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.cpp">
       <Filter>mfx\dsp\dly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\envf\Cst.cpp">
+      <Filter>mfx\pi\envf</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

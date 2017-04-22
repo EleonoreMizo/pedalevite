@@ -47,7 +47,9 @@ enum Param
 	Param_GAIN,
 	Param_THRESH,
 	Param_MODE,
-	Param_CLIP,
+	Param_CLIP_E,
+	Param_CLIP_S,
+	Param_LC_FREQ,
 
 	Param_NBR_ELT
 

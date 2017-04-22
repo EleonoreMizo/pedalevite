@@ -94,31 +94,31 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 	{
 		static const std::vector <std::shared_ptr <mfx::piapi::FactoryInterface> > l =
 		{
-			mfx::piapi::FactoryTpl <mfx::pi::dwm::DryWetDesc        , mfx::pi::dwm::DryWet             >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::tuner::TunerDesc       , mfx::pi::tuner::Tuner            >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::dist1::DistoSimpleDesc , mfx::pi::dist1::DistoSimple      >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::freqsh::FreqShiftDesc  , mfx::pi::freqsh::FrequencyShifter>::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::trem1::TremoloDesc     , mfx::pi::trem1::Tremolo          >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::wha1::WhaDesc          , mfx::pi::wha1::Wha               >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::dtone1::DistToneDesc   , mfx::pi::dtone1::DistTone        >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::iifix::IIFixDesc       , mfx::pi::iifix::IIFix            >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::flancho::FlanchoDesc   , mfx::pi::flancho::Flancho        >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::dly1::DelayDesc        , mfx::pi::dly1::Delay             >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::cpx::CompexDesc        , mfx::pi::cpx::Compex             >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::fv::FreeverbDesc       , mfx::pi::fv::Freeverb            >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc <4>       , mfx::pi::peq::PEq <4>            >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::phase1::PhaserDesc     , mfx::pi::phase1::Phaser          >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc     , mfx::pi::lpfs::Squeezer          >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc          , mfx::pi::lfo1::Lfo               >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::envf::EnvFollowDesc    , mfx::pi::envf::EnvFollow         >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::dist2::Disto2xDesc     , mfx::pi::dist2::Disto2x          >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::spkem::SpeakerEmuDesc  , mfx::pi::spkem::SpeakerEmu       >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::tost::ToStereoDesc     , mfx::pi::tost::ToStereo          >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::distpwm::DistoPwmDesc  , mfx::pi::distpwm::DistoPwm       >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::tremh::HarmTremDesc    , mfx::pi::tremh::HarmTrem         >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::nzbl::NoiseBleachDesc  , mfx::pi::nzbl::NoiseBleach       >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::nzcl::NoiseChlorineDesc, mfx::pi::nzcl::NoiseChlorine     >::create (),
-			mfx::piapi::FactoryTpl <mfx::pi::click::ClickDesc       , mfx::pi::click::Click            >::create ()
+			mfx::piapi::FactoryTpl <mfx::pi::dwm::DryWetDesc        , mfx::pi::dwm::DryWet             >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::tuner::TunerDesc       , mfx::pi::tuner::Tuner            >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::dist1::DistoSimpleDesc , mfx::pi::dist1::DistoSimple      >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::freqsh::FreqShiftDesc  , mfx::pi::freqsh::FrequencyShifter>::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::trem1::TremoloDesc     , mfx::pi::trem1::Tremolo          >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::wha1::WhaDesc          , mfx::pi::wha1::Wha               >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::dtone1::DistToneDesc   , mfx::pi::dtone1::DistTone        >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::iifix::IIFixDesc       , mfx::pi::iifix::IIFix            >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::flancho::FlanchoDesc   , mfx::pi::flancho::Flancho        >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::dly1::DelayDesc        , mfx::pi::dly1::Delay             >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::cpx::CompexDesc        , mfx::pi::cpx::Compex             >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::fv::FreeverbDesc       , mfx::pi::fv::Freeverb            >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc <4>       , mfx::pi::peq::PEq <4>            >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::phase1::PhaserDesc     , mfx::pi::phase1::Phaser          >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc     , mfx::pi::lpfs::Squeezer          >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc          , mfx::pi::lfo1::Lfo               >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::envf::EnvFollowDesc    , mfx::pi::envf::EnvFollow         >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::dist2::Disto2xDesc     , mfx::pi::dist2::Disto2x          >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::spkem::SpeakerEmuDesc  , mfx::pi::spkem::SpeakerEmu       >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::tost::ToStereoDesc     , mfx::pi::tost::ToStereo          >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::distpwm::DistoPwmDesc  , mfx::pi::distpwm::DistoPwm       >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::tremh::HarmTremDesc    , mfx::pi::tremh::HarmTrem         >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::nzbl::NoiseBleachDesc  , mfx::pi::nzbl::NoiseBleach       >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::nzcl::NoiseChlorineDesc, mfx::pi::nzcl::NoiseChlorine     >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::click::ClickDesc       , mfx::pi::click::Click            >::create ()
 		};
 
 		fact_list = l;

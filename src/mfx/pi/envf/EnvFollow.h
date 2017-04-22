@@ -33,10 +33,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/DataAlign.h"
 #include "fstb/SingleObj.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
+#include "mfx/dsp/iir/OnePole.h"
 #include "mfx/pi/envf/EnvFollowDesc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
+#include <array>
 #include <vector>
 
 
@@ -97,15 +99,26 @@ private:
 		Mode_NBR_ELT
 	};
 
+	class Channel
+	{
+	public:
+		dsp::iir::OnePole
+		               _hpf;
+	};
+	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
+
+	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 	float          conv_time_to_coef (float t);
 	void           square_block (const ProcInfo &proc);
+	void           clip_block (int nbr_spl);
 
 	State          _state;
 
 	EnvFollowDesc  _desc;
 	ParamStateSet  _state_set;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
+	float          _inv_fs;
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;
@@ -114,16 +127,23 @@ private:
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_misc;
 
+	ChannelArray   _chn_arr;
+
 	EnvFolAlign    _envf;
 	BufAlign       _buf_src;
 	BufAlign       _buf_env;
 
+	dsp::iir::OnePole
+	               _hpf;
+	float          _hpf_freq;
 	Mode           _mode;
 	float          _gain;
 	float          _thresh;
 	float          _log_mul;
 	float          _log_add;
-	bool           _clip_flag;
+	float          _clip_src_lvl;
+	bool           _clip_env_flag;
+	bool           _hpf_flag;
 
 
 

@@ -465,6 +465,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dwm/DryWetDesc.cpp \
         ../../src/mfx/pi/dwm/DryWetDesc.h \
         ../../src/mfx/pi/dwm/Param.h \
+        ../../src/mfx/pi/envf/Cst.cpp \
+        ../../src/mfx/pi/envf/Cst.h \
         ../../src/mfx/pi/envf/EnvFollow.cpp \
         ../../src/mfx/pi/envf/EnvFollow.h \
         ../../src/mfx/pi/envf/EnvFollowDesc.cpp \

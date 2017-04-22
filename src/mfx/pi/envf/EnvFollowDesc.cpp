@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "mfx/pi/envf/Cst.h"
 #include "mfx/pi/envf/Param.h"
 #include "mfx/pi/envf/EnvFollowDesc.h"
 #include "mfx/pi/param/MapPseudoLog.h"
@@ -114,15 +115,38 @@ EnvFollowDesc::EnvFollowDesc ()
 	);
 	_desc_set.add_glob (Param_MODE, enu_ptr);
 
-	// Clip
+	// Clip envelope
 	enu_ptr = new param::TplEnum (
 		"Off\nOn",
-		"Clip\nC",
+		"Clip envelope\nClip env\nClip E\nClpE",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_CLIP, enu_ptr);
+	_desc_set.add_glob (Param_CLIP_E, enu_ptr);
+
+	// Clip source
+	log_ptr = new param::TplLog (
+		0.01, Cst::_clip_max,
+		"Clip source\nClip src\nClip S\nClpS",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	_desc_set.add_glob (Param_CLIP_S, log_ptr);
+
+	// Low-cut frequency
+	log_ptr = new param::TplLog (
+		Cst::_lc_freq_min, Cst::_lc_freq_min * 1024,
+		"Low-cut frequency\nLow-cut freq\nLC freq\nLCF",
+		"dB",
+		param::HelperDispNum::Preset_FLOAT_STD,
+		0,
+		"%6.1f"
+	);
+	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_LC_FREQ, log_ptr);
 }
 
 
