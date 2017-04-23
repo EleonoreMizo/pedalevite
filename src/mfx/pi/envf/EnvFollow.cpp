@@ -271,7 +271,8 @@ void	EnvFollow::update_param (bool force_flag)
 				// energy when the cutoff frequency increases.
 				const float    fz     = 100; // Hz
 				const float    fz_inv = 1.0f / fz;
-				const float    gain   = std::max (sqrt (_hpf_freq * fz_inv), 1.0f);
+				float          gain   =
+					std::max (float (sqrt (_hpf_freq * fz_inv)), 1.0f);
 				const float    bs [2] = { 0, gain };
 				const float    as [2] = { 1,    1 };
 				const float    f = _hpf_freq * _inv_fs;
