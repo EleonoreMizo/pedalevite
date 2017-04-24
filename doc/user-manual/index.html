@@ -60,6 +60,7 @@
 	<li><a href="#fx-tremolo">Tremolo</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
+	<li><a href="#fx-ramp">Control ramp — Transition de paramètre</a></li>
 	<li><a href="#fx-lfo">LFO — Oscillateur basse fréquence</a></li>
 	</ol>
 </li>
@@ -1562,6 +1563,61 @@ Ce paramètre est relié par défaut à la pédale d’expression.</p>
 
 
 
+<h3><a id="fx-ramp"></a>Control ramp — Transition de paramètre</h3>
+
+<p>Cet effet n’est disponible que dans la catégorie des générateurs de signaux
+de contrôle puisqu’il ne traite aucun signal audio, ni en entrée ni en sortie.
+Son but est de créer un signal qui passe progressivement de 0 à 1 ou de 1 à 0.</p>
+<p>La transition est initié aussitôt que l’effet est activé.
+On peut cependant la redémarrer à n’importe quel moment en fixant le paramètre
+<var>Set position</var>.</p>
+
+<p class="var">Time</p>
+<p>Durée de la transition, en secondes.</p>
+
+<p class="var">Amplitude</p>
+<p>Amplitude de la transition, en %.</p>
+
+<p class="var">Curve</p>
+<p>Courbe de transition.</p>
+<table>
+<tr><th>Courbe</th><th>Description</th></tr>
+<tr><td><span class="ui">Linear</span></td><td>Transition régulière</td></tr>
+<tr><td><span class="ui">Acc&nbsp;1</span></td><td rowspan="4">Transitions lentes au début, allant en accélérant</td></tr>
+<tr><td><span class="ui">Acc&nbsp;2</span></td></tr>
+<tr><td><span class="ui">Acc&nbsp;3</span></td></tr>
+<tr><td><span class="ui">Acc&nbsp;4</span></td></tr>
+<tr><td><span class="ui">Sat&nbsp;1</span></td><td rowspan="4">Transitions rapides au début, allant en ralentissant</td></tr>
+<tr><td><span class="ui">Sat&nbsp;2</span></td></tr>
+<tr><td><span class="ui">Sat&nbsp;3</span></td></tr>
+<tr><td><span class="ui">Sat&nbsp;4</span></td></tr>
+<tr><td><span class="ui">Fast&nbsp;1</span></td><td rowspan="2">Transitions rapides en milieu de course</td></tr>
+<tr><td><span class="ui">Fast&nbsp;2</span></td></tr>
+<tr><td><span class="ui">Slow&nbsp;1</span></td><td rowspan="2">Transitions lentes en milieu de course</td></tr>
+<tr><td><span class="ui">Slow&nbsp;2</span></td></tr>
+</table>
+
+<p class="var">Sample and hold</p>
+<p>Ce paramètre permet de créneler la courbe de transition en bloquant
+régulièrement sa valeur pendant une courte période.
+Il est exprimé comme un rapport entre la période de bloquage et le temps de
+transition total.</p>
+
+<p class="var">Smoothing</p>
+<p>Paramètre qui adoucit les transitions brutales dans la transition.
+Il fixe le rapport entre le temps de montée et le temps de transition.
+Ce paramètre est plutôt destiné à accompagner <var>Sample and hold</var>.</p>
+
+<p class="var">Direction</p>
+<p>Donne la direction de la transition, qui s’établit normalement de 0 à 1.
+En inverse, la sortie passe de 1 à 0.</p>
+
+<p class="var">Set position</p>
+<p>Fixe le point courant dans la transition, en pourcentage de progression.
+Elle peut alors recommencer si elle était déjà achevée.</p>
+
+
+
 <h3><a id="fx-lfo"></a>LFO — Oscillateur basse fréquence</h3>
 
 <p>Cet effet n’est disponible que dans la catégorie des générateurs de signaux
@@ -1710,6 +1766,11 @@ sélectionnée.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r7, 2017.04.24</b></p>
+<ul>
+<li>Ajout de l’effet Ramp.</li>
+</ul>
 
 <p><b>r6, 2017.04.22</b></p>
 <ul>

@@ -555,6 +555,11 @@
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phaser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\StereoOut.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ramp\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ramp\Ramp.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ramp\CurveType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\skel\Eton.h">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClInclude>
@@ -905,6 +910,9 @@
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phaser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\ramp\Ramp.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampModule.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\skel\Eton.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>

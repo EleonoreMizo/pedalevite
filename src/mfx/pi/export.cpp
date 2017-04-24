@@ -64,6 +64,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/phase1/Phaser.h"
 #include "mfx/pi/phase1/PhaserDesc.h"
+#include "mfx/pi/ramp/Ramp.h"
+#include "mfx/pi/ramp/RampDesc.h"
 #include "mfx/pi/spkem/SpeakerEmu.h"
 #include "mfx/pi/spkem/SpeakerEmuDesc.h"
 #include "mfx/pi/tost/ToStereo.h"
@@ -76,6 +78,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/tuner/TunerDesc.h"
 #include "mfx/pi/wha1/Wha.h"
 #include "mfx/pi/wha1/WhaDesc.h"
+#include "mfx/pi/wha2/Wha2.h"
+#include "mfx/pi/wha2/Wha2Desc.h"
 #include "mfx/pi/export.h"
 
 #include <cassert>
@@ -119,6 +123,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::nzbl::NoiseBleachDesc  , mfx::pi::nzbl::NoiseBleach       >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::nzcl::NoiseChlorineDesc, mfx::pi::nzcl::NoiseChlorine     >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::click::ClickDesc       , mfx::pi::click::Click            >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::wha2::Wha2Desc         , mfx::pi::wha2::Wha2              >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::ramp::RampDesc         , mfx::pi::ramp::Ramp              >::create ()
 		};
 
 		fact_list = l;
