@@ -225,7 +225,7 @@ void	LfoModule::set_type (Type type)
 	if (type != _type)
 	{
 		// Remove previous instance
-		const double	phase = get_phase ();
+		const double   phase = get_phase ();
 		use_osc ().~OscInterface ();
 		_type = Type_INVALID;
 
@@ -284,26 +284,26 @@ void	LfoModule::set_smooth (double ratio)
 
 
 
-void	LfoModule::tick (long nbr_spl)
+void	LfoModule::tick (int nbr_spl)
 {
-	long				work_len = nbr_spl;
+	int            work_len = nbr_spl;
 	if (_snh_flag)
 	{
 		// Compute the S&H position at the end of this block
-		const double	end_snh_pos = _snh_pos + _snh_step * nbr_spl;
-		const long		end_snh_pos_int = fstb::floor_int (end_snh_pos);
+		const double   end_snh_pos = _snh_pos + _snh_step * nbr_spl;
+		const int      end_snh_pos_int = fstb::floor_int (end_snh_pos);
 
 		// If it is triggered at least once during the block
 		if (end_snh_pos_int > 0)
 		{
-			const long		spl_before_last_snh =
+			const int      spl_before_last_snh =
 				fstb::ceil_int ((end_snh_pos_int - _snh_pos) / _snh_step);
 			work_len = spl_before_last_snh;
 		}
 	}
 	tick_sub (work_len);
 
-	const long		rem_len = nbr_spl - work_len;
+	const int      rem_len = nbr_spl - work_len;
 	if (rem_len > 0)
 	{
 		tick_sub (rem_len);
@@ -315,7 +315,7 @@ void	LfoModule::tick (long nbr_spl)
 double	LfoModule::get_val () const
 {
 	// Source: smooth, S&H or direct
-	double			val;
+	double         val;
 	if (_smooth_flag)
 	{
 		val = _smooth_state;
@@ -344,6 +344,9 @@ double	LfoModule::get_phase () const
 void	LfoModule::clear_buffers ()
 {
 	use_osc ().clear_buffers ();
+	const double   raw_val = use_osc ().get_val ();
+	_snh_state    = raw_val;
+	_smooth_state = raw_val;
 }
 
 
@@ -418,7 +421,7 @@ void	LfoModule::update_smooth ()
 	if (_smooth <= 0)
 	{
 		_smooth_spl_coef = 0;
-		_smooth_flag = false;
+		_smooth_flag     = false;
 	}
 
 	else
@@ -429,15 +432,13 @@ void	LfoModule::update_smooth ()
 			_smooth_state = _snh_flag ? _snh_state : use_osc ().get_val ();
 		}
 
-		using namespace std;
-
 		// exp (-4) ~= 0.018, this means we reach 98 % of the final amplitude
 		// after t_spl.
-		const float		t_spl = float (_period * _smooth * _sample_freq);
+		const float    t_spl = float (_period * _smooth * _sample_freq);
 //		_smooth_spl_coef = exp (-4.0f / t_spl);
       // +0.1f to avoid too low numbers at the input of fast_exp2
 		_smooth_spl_coef = fstb::Approx::exp2 (-5.75f / (t_spl + 0.1f));
-		_smooth_flag = true;
+		_smooth_flag     = true;
 	}
 }
 
@@ -455,9 +456,9 @@ void	LfoModule::tick_sub (long nbr_spl)
 	// but we can't do much better without sample per sample processing.
 	if (_smooth_flag)
 	{
-		const double	src = _snh_flag ? _snh_state : use_osc ().get_val ();
-		const double	k = fstb::ipowp (_smooth_spl_coef, nbr_spl);
-		const double	a = 1 - k;
+		const double   src = _snh_flag ? _snh_state : use_osc ().get_val ();
+		const double   k   = fstb::ipowp (_smooth_spl_coef, nbr_spl);
+		const double   a   = 1 - k;
 		_smooth_state += a * (src - _smooth_state);
 	}
 
@@ -466,8 +467,8 @@ void	LfoModule::tick_sub (long nbr_spl)
 		_snh_pos += _snh_step * nbr_spl;
 		if (_snh_pos >= 1)
 		{
-			_snh_pos -= fstb::floor_int (_snh_pos);
-			_snh_state = use_osc ().get_val ();
+			_snh_pos   -= fstb::floor_int (_snh_pos);
+			_snh_state  = use_osc ().get_val ();
 		}
 	}
 }

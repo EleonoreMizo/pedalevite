@@ -87,7 +87,7 @@ public:
 	void           set_type (Type type);
 	void           set_snh (double ratio);
 	void           set_smooth (double ratio);
-	void           tick (long nbr_spl);
+	void           tick (int nbr_spl);
 	double         get_val () const;
 	double         get_phase () const;
 	void           clear_buffers ();
