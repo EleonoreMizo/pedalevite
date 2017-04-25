@@ -60,10 +60,12 @@ Click::Click ()
 ,	_tempo (120)
 ,	_beat_per_spl (0)
 ,	_beat_per_bar (4)
-,	_cur_beat (-1)
 ,	_vol (0.5f)
+,	_gain_bar (1.25f)
+,	_cur_beat (-1)
 ,	_osc_pos (0)
 ,	_osc_inc (0)
+,	_gain_cur (_vol)
 ,	_rnd_gen ()
 ,	_rnd_pos (0)
 ,	_rnd_inc (0)
@@ -178,7 +180,7 @@ void	Click::do_process_block (ProcInfo &proc)
 			{
 				float          val = (_osc_pos < 0.5f) ? -1.f : 1.f;
 				val += _rnd_val * _rnd_mix;
-				_buf_env [pos] *= val * _vol;
+				_buf_env [pos] *= val * _gain_cur;
 				_osc_pos += _osc_inc;
 				_rnd_pos += _rnd_inc;
 				if (_osc_pos >= 1)
@@ -210,6 +212,11 @@ void	Click::do_process_block (ProcInfo &proc)
 		{
 			// New event
 			_env.note_on ();
+			_gain_cur = _vol;
+			if (_cur_beat == 0)
+			{
+				_gain_cur *= _gain_bar;
+			}
 
 			++ _cur_beat;
 			if (_cur_beat >= _beat_per_bar)

@@ -92,10 +92,13 @@ private:
 	double         _tempo;              // BPM
 	double         _beat_per_spl;
 	int            _beat_per_bar;
-	int            _cur_beat;           // Index of the beat currently playing
 	float          _vol;
+	float          _gain_bar;           // Relative volume for the first beat of a bar, generally slightly louder
+
+	int            _cur_beat;           // Index of the beat currently playing
 	float          _osc_pos;
 	float          _osc_inc;
+	float          _gain_cur;
 	std::minstd_rand
 	               _rnd_gen;
 	float          _rnd_pos;
