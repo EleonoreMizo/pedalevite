@@ -220,15 +220,15 @@ float	Approx::log2 (float val)
 		float          _f;
 	}              combo;
 	combo._f = val;
-	int				x = combo._i;
-	const int		log_2 = ((x >> 23) & 255) - 128;
-	x &= ~(255 << 23);
-	x += 127 << 23;
-	combo._i = x;
-	val  = combo._f;
+	int            x     = combo._i;
+	const int      log_2 = ((x >> 23) & 255) - 128;
+	x        &= ~(255 << 23);
+	x        +=   127 << 23;
+	combo._i  = x;
+	val       = combo._f;
 
 	const float		k = 0.5f;
-	const float		a = (k - 1) / (k + 1);
+	const float		a = (k - 1  ) / (k + 1);
 	const float		b = (4 - 2*k) / (k + 1);	// 1 - 3*a
 	const float		c = 2*a;
 	val = (a * val + b) * val + c;
@@ -241,15 +241,15 @@ float	Approx::log2 (float val)
 float	Approx::exp2 (float val)
 {
 	// Truncated val for integer power of 2
-	const long		tx = floor_int (val);
+	const int      tx = floor_int (val);
 
 	// Float remainder of power of 2
 	val -= static_cast <float> (tx);
 
 	// Quadratic approximation of 2^x in [0 ; 1]
-	const float		a = 1.0f / 3.0f;
-	const float		b = 2.0f / 3.0f;
-	const float		c = 1.0f;
+	const float    a = 1.0f / 3.0f;
+	const float    b = 2.0f / 3.0f;
+	const float    c = 1.0f;
 	val = (a * val + b) * val + c;
 
 	union
@@ -261,7 +261,7 @@ float	Approx::exp2 (float val)
 
 	// Add integer power of 2 to exponent
 	combo._i += tx << 23;
-	val = combo._f;
+	val       = combo._f;
 
 	assert (val >= 0);
 
@@ -270,6 +270,9 @@ float	Approx::exp2 (float val)
 
 
 
+// Errors:
+// below 0.01% up to pi/8
+// below 1.33% up to pi/4
 float	Approx::tan_taylor5 (float x)
 {
 	const float    x_2 = x * x;
