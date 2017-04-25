@@ -53,6 +53,7 @@ public:
 	virtual        ~Font () = default;
 
 	void           init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const char32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag = true);
+	void           add_char (char32_t ucs4, int index);
 
 	bool           is_ready () const;
 	bool           is_existing (char32_t ucs4) const;

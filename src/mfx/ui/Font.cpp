@@ -98,26 +98,36 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 	ZoneArray ().swap (_zone_arr);
 	for (int c = 0; c < nbr_char; ++c)
 	{
-		const char32_t ucs4     = unicode_arr [c];
-		const size_t   zone_idx = ucs4 >> _zone_bits;
-		if (zone_idx >= _zone_arr.size ())
-		{
-			_zone_arr.resize (zone_idx + 1);
-		}
-		Zone *         zone_ptr = _zone_arr [zone_idx].get ();
-		if (zone_ptr == 0)
-		{
-			zone_ptr = new Zone;
-			_zone_arr [zone_idx] = ZoneUPtr (zone_ptr);
-			for (size_t i = 0; i < zone_ptr->size (); ++i)
-			{
-				(*zone_ptr) [i] = _not_found;
-			}
-		}
-
-		const int      loc = ucs4 & _zone_mask;
-		(*zone_ptr) [loc] = c;
+		add_char (unicode_arr [c], c);
 	}
+}
+
+
+
+void	Font::add_char (char32_t ucs4, int index)
+{
+	assert (is_ready ());
+	assert (index >= 0);
+	assert (index < _nbr_char);
+
+	const size_t   zone_idx = ucs4 >> _zone_bits;
+	if (zone_idx >= _zone_arr.size ())
+	{
+		_zone_arr.resize (zone_idx + 1);
+	}
+	Zone *         zone_ptr = _zone_arr [zone_idx].get ();
+	if (zone_ptr == 0)
+	{
+		zone_ptr = new Zone;
+		_zone_arr [zone_idx] = ZoneUPtr (zone_ptr);
+		for (size_t i = 0; i < zone_ptr->size (); ++i)
+		{
+			(*zone_ptr) [i] = _not_found;
+		}
+	}
+
+	const int      loc = ucs4 & _zone_mask;
+	(*zone_ptr) [loc] = index;
 }
 
 
@@ -164,7 +174,8 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride) const
 	assert (buf_ptr != 0);
 	assert (dst_stride >= _char_w);
 
-	const int      c       = get_char_pos (ucs4);
+	// Replaces unmapped characters with the one at position 0
+	const int      c       = std::max (get_char_pos (ucs4), 0);
 	const int      row     = c / _char_per_row;
 	const int      col     = c - row * _char_per_row;
 	const int      pos_src = row * _char_h * _stride + col * _char_w;
@@ -197,7 +208,8 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag
 	}
 	else
 	{
-		const int      c       = get_char_pos (ucs4);
+		// Replaces unmapped characters with the one at position 0
+		const int      c       = std::max (get_char_pos (ucs4), 0);
 		const int      row     = c / _char_per_row;
 		const int      col     = c - row * _char_per_row;
 		const int      pos_src = row * _char_h * _stride + col * _char_w;

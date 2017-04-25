@@ -53,6 +53,7 @@ void	FontDataDefault::make_04x06 (Font &fnt)
 		5,
 		1
 	);
+	map_extra (fnt);
 }
 
 
@@ -69,6 +70,7 @@ void	FontDataDefault::make_06x06 (Font &fnt)
 		5,
 		1
 	);
+	map_extra (fnt);
 }
 
 
@@ -85,6 +87,7 @@ void	FontDataDefault::make_06x08 (Font &fnt)
 		7,
 		1
 	);
+	map_extra (fnt);
 }
 
 
@@ -101,6 +104,7 @@ void	FontDataDefault::make_08x12 (Font &fnt)
 		10,
 		1
 	);
+	map_extra (fnt);
 }
 
 
@@ -110,6 +114,16 @@ void	FontDataDefault::make_08x12 (Font &fnt)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	FontDataDefault::map_extra (Font &fnt)
+{
+	fnt.add_char (0x2018, '\'');
+	fnt.add_char (0x2019, '\'');
+	fnt.add_char (0x201C, '\"');
+	fnt.add_char (0x201D, '\"');
+}
 
 
 

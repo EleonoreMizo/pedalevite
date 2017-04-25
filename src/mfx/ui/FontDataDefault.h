@@ -66,6 +66,8 @@ protected:
 
 private:
 
+	static void    map_extra (Font &fnt);
+
 	static const int  _char_per_table = 256;
 	static const int  _char_per_row   = 16;
 
