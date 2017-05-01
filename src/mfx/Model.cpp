@@ -400,6 +400,8 @@ void	Model::set_bank (int index, const doc::Bank &bank)
 		_obs_ptr->set_bank (index, bank);
 	}
 
+	preinstantiate_all_plugins_from_bank ();
+
 	if (_edit_flag && index == _bank_index)
 	{
 		_edit_preset_flag = false;
@@ -424,6 +426,8 @@ void	Model::select_bank (int index)
 		}
 
 		_bank_index = index;
+
+		preinstantiate_all_plugins_from_bank ();
 
 		if (_obs_ptr != 0)
 		{
@@ -1352,6 +1356,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 
 	// [model] = count
 	std::map <std::string, int>   pi_cnt_bank;
+	int            max_nbr_slots = 0;
 
 	for (size_t preset_index = 0
 	;	preset_index < bank._preset_arr.size ()
@@ -1359,6 +1364,12 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 	{
 		// Count for this preset
 		const doc::Preset &  preset = bank._preset_arr [preset_index];
+
+		// Slots (potential Dry/Wet/Mix plug-ins)
+		const int      nbr_slots = int (preset._slot_map.size ());
+		max_nbr_slots = std::max (max_nbr_slots, nbr_slots);
+
+		// Standard plug-ins
 		std::map <std::string, int>  pi_cnt_preset;
 		for (const auto &node : preset._slot_map)
 		{
@@ -1384,7 +1395,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 			auto           it = pi_cnt_bank.find (elt.first);
 			if (it == pi_cnt_bank.end ())
 			{
-				pi_cnt_bank.insert (*it);
+				pi_cnt_bank.insert (elt);
 			}
 			else
 			{
@@ -1393,11 +1404,16 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 		}
 	}
 
+	pi_cnt_bank [Cst::_plugin_mix] = max_nbr_slots;
+
 	// Instantiate all the plug-ins
+	for (const auto & node : pi_cnt_bank)
+	{
+		const std::string &  model_id = node.first;
+		const int      nbr_instances  = node.second;
 
-	/*** To do ***/
-
-
+		_central.preinstantiate_plugins (model_id, nbr_instances);
+	}
 }
 
 

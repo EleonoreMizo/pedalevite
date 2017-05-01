@@ -93,6 +93,7 @@ public:
 	void           delete_slot (int pos);
 	void           clear_slot (int pos);
 	int            set_plugin (int pos, std::string model, bool force_reset_flag, bool gen_audio_flag);
+	void           preinstantiate_plugins (std::string model, int count);
 	void           remove_plugin (int pos);
 	int            set_mixer (int pos);
 	void           remove_mixer (int pos);

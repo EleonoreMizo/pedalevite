@@ -293,6 +293,46 @@ int	Central::set_plugin (int pos, std::string model, bool force_reset_flag, bool
 
 
 
+void	Central::preinstantiate_plugins (std::string model, int count)
+{
+	Document &     doc = modify ();
+
+	// Counts the plug-in already existing
+	int            nbr_found   = 0;
+	auto           it_inst_map = doc._map_model_id.find (model);
+	if (it_inst_map != doc._map_model_id.end ())
+	{
+		Document::InstanceMap & inst_map = it_inst_map->second;
+		nbr_found = inst_map.size ();
+	}
+
+	// Creates the remaining plug-ins, if required
+	const int         nbr_inst = count - nbr_found;
+	for (int pi_cnt = 0; pi_cnt < nbr_inst; ++ pi_cnt)
+	{
+		const int      pi_id = _plugin_pool.create (model);
+		PluginPool::PluginDetails &   details =
+			_plugin_pool.use_plugin (pi_id);
+		if (_sample_freq > 0)
+		{
+			int            latency = 0;
+			int            ret_val = details._pi_uptr->reset (
+				_sample_freq,
+				_max_block_size,
+				latency
+			);
+			assert (ret_val == piapi::PluginInterface::Err_OK);
+			ret_val = ret_val; // -Wunused-variable
+		}
+		check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
+
+		// Not used, actually
+		doc._map_model_id [model] [pi_id] = false;
+	}
+}
+
+
+
 void	Central::remove_plugin (int pos)
 {
 	remove_plugin (pos, PiType_MAIN);
@@ -723,8 +763,8 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 				_plugin_pool.use_plugin (pi_id);
 			if (_sample_freq > 0)
 			{
-				int         latency = 0;
-				int         ret_val = details._pi_uptr->reset (
+				int            latency = 0;
+				int            ret_val = details._pi_uptr->reset (
 					_sample_freq,
 					_max_block_size,
 					latency
