@@ -68,9 +68,11 @@ inline T       sshift_l (T x);
 template <class T, int S>
 inline T       sshift_r (T x);
 template <class T, class U>
-inline T	ipow (T x, U n);
+inline T       ipow (T x, U n);
 template <class T, class U>
-inline T	ipowp (T x, U n);
+inline T       ipowp (T x, U n);
+template <class T>
+inline T       rcp_uint (int x);
 
 void           conv_to_lower_case (std::string &str);
 
