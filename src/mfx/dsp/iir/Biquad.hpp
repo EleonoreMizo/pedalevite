@@ -85,7 +85,7 @@ float	Biquad::get_state_y () const
 
 
 
-float	Biquad::set_state_y (float y)
+void	Biquad::set_state_y (float y)
 {
 	_mem_y [_mem_pos] = y;
 }

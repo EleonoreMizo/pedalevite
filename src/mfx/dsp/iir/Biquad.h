@@ -59,7 +59,7 @@ public:
 	inline void    set_z_eq (const float b [3], const float a [3]);
 	inline void    get_z_eq (float b [3], float a [3]) const;
 	inline float   get_state_y () const;
-	inline float   set_state_y (float y);
+	inline void    set_state_y (float y);
 
 	inline float   process_sample (float x);
 	inline float   process_sample (float x, const float inc_b [3], const float inc_a [3]);
