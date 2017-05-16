@@ -272,6 +272,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/ctrl/lfo/PhaseGen.hpp \
         ../../src/mfx/dsp/ctrl/lfo/PhaseGenChaos.cpp \
         ../../src/mfx/dsp/ctrl/lfo/PhaseGenChaos.h \
+        ../../src/mfx/dsp/ctrl/Ramp.h \
+        ../../src/mfx/dsp/ctrl/Ramp.hpp \
         ../../src/mfx/dsp/dly/BbdLine.cpp \
         ../../src/mfx/dsp/dly/BbdLine.h \
         ../../src/mfx/dsp/dly/DelayLine.cpp \

@@ -348,6 +348,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGen.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGen.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGenChaos.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLine.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLine.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineData.h" />
