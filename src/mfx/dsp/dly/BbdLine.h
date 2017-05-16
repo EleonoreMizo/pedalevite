@@ -7,6 +7,12 @@ Simple emulation of an ideal Bucket Brigade Device line.
 It is advised to oversample this processor.
 Does not include anti-aliasing filters for speeds < 1.
 
+Call order in a loop:
+set_speed()
+estimate_max_one_shot_proc_w_feedback()
+read_block()
+push_block()
+
 Reference:
 
 Antti Huovilainen, Enhanced Digital Models for Analog Modulation Effects,
@@ -73,14 +79,18 @@ public:
 	               BbdLine ()  = default;
 	virtual        ~BbdLine () = default;
 
-	void           init (int max_bbd_size, double sample_freq, rspl::InterpolatorInterface &interp, int ovrspl_l2);
+	void           init (int max_bbd_size, rspl::InterpolatorInterface &interp, int ovrspl_l2);
+	int            get_ovrspl_l2 () const;
 	const rspl::InterpolatorInterface &
 	               use_interpolator () const;
+
 	void           set_bbd_size (int bbd_size);
+	int            get_bbd_size () const;
 
 	void           set_speed (float speed);
+	float          compute_min_delay () const;
 	int            estimate_max_one_shot_proc_w_feedback (float dly_min) const;
-	void           read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end) const;
+	void           read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const;
 	float          read_sample (float dly) const;
 	void           push_block (const float src_ptr [], int nbr_spl);
 	void           push_sample (float x);
@@ -107,7 +117,7 @@ private:
 	fstb_FORCEINLINE void
 	               push_timestamps (int nbr_spl);
 	fstb_FORCEINLINE float
-	               read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr []) const;
+	               read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr [], int pos_in_block) const;
 
 	int            _max_bbd_size = 0;
 	TimestampLine  _line_ts;

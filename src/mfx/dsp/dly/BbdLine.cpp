@@ -49,10 +49,9 @@ namespace dly
 
 
 
-void	BbdLine::init (int max_bbd_size, double sample_freq, rspl::InterpolatorInterface &interp, int ovrspl_l2)
+void	BbdLine::init (int max_bbd_size, rspl::InterpolatorInterface &interp, int ovrspl_l2)
 {
 	assert (max_bbd_size > 1);
-	assert (sample_freq > 0);
 	assert (ovrspl_l2 >= 0);
 
 	const int      margin = 256;
@@ -91,6 +90,15 @@ const rspl::InterpolatorInterface &	BbdLine::use_interpolator () const
 
 
 
+int	BbdLine::get_ovrspl_l2 () const
+{
+	assert (_ovrspl_l2 >= 0);
+
+	return _ovrspl_l2;
+}
+
+
+
 // May cause some transients when the size is increased. It's safer to call
 // clear_buffers() after.
 void	BbdLine::set_bbd_size (int bbd_size)
@@ -106,6 +114,15 @@ void	BbdLine::set_bbd_size (int bbd_size)
 
 
 
+int	BbdLine::get_bbd_size () const
+{
+	assert (_bbd_size > 1);
+
+	return _bbd_size;
+}
+
+
+
 // Call this first, before any other function.
 void	BbdLine::set_speed (float speed)
 {
@@ -117,7 +134,21 @@ void	BbdLine::set_speed (float speed)
 
 
 
+// Valid for the current speed
+// delay in samples
+float	BbdLine::compute_min_delay () const
+{
+	return std::max (
+		(_imp_len - _group_dly.get_val_flt ()) * _speed,
+		1.0f
+	);
+}
+
+
+
 // Call this after set_speed() and before read_block().
+// May return 0 if the delay is really small, below compute_min_delay ().
+// dly_min in samples
 int	BbdLine::estimate_max_one_shot_proc_w_feedback (float dly_min) const
 {
 	assert (dly_min >= 1);
@@ -152,16 +183,14 @@ speed is difficult to evaluate, even if we keep track of it for every
 BBD bin.
 */
 
-void	BbdLine::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end) const
+void	BbdLine::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const
 {
 	assert (dst_ptr != 0);
 	assert (nbr_spl > 0);
-	assert (dly_beg >= 1);
-	assert (dly_end >= 1);
-	assert (dly_beg >= (_imp_len - _group_dly.get_val_flt ()) * _speed);
-	assert (dly_end >= (_imp_len - _group_dly.get_val_flt ()) * _speed);
-	assert (dly_beg <= _bbd_size);
-	assert (dly_end <= _bbd_size);
+	assert (dly_beg >= compute_min_delay ());
+	assert (dly_end >= compute_min_delay ());
+	assert (dly_beg <= get_bbd_size ());
+	assert (dly_end <= get_bbd_size ());
 
 	const int      ts_mask      = _line_ts.get_mask ();
 	const fstb::FixedPoint *   ts_buf_ptr = _line_ts.get_buffer ();
@@ -176,7 +205,9 @@ void	BbdLine::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float d
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
 		dst_ptr [pos] = read_sample (
-			float (dly_cur), ts_mask, ts_buf_ptr, data_mask, data_len, data_buf_ptr
+			float (dly_cur), ts_mask, ts_buf_ptr,
+			data_mask, data_len, data_buf_ptr,
+			pos_in_block
 		);
 		dly_cur += dly_step;
 	}
@@ -197,7 +228,7 @@ float	BbdLine::read_sample (float dly) const
 	const float *  data_buf_ptr = _line_data.get_buffer ();
 
 	return read_sample (
-		dly, ts_mask, ts_buf_ptr, data_mask, data_len, data_buf_ptr
+		dly, ts_mask, ts_buf_ptr, data_mask, data_len, data_buf_ptr, 0
 	);
 }
 
@@ -274,11 +305,12 @@ void	BbdLine::clear_buffers ()
 
 
 
-float	BbdLine::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr []) const
+float	BbdLine::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr [], int pos_in_block) const
 {
 	assert (dly_cur >= 1);
 
-	const float    read_pos_f = _ts_pos_w - dly_cur;
+	const float    pib_sc     = std::scalbn (float (pos_in_block), -_ovrspl_l2); // pos_in_block * fstb::ipowp (0.5f, _ovrspl_l2);
+	const float    read_pos_f = _ts_pos_w - dly_cur + pib_sc;
 	const int      read_pos_i = fstb::floor_int (read_pos_f);
 	const float    read_pos_r = read_pos_f - read_pos_i;
 	const int      idx_0      =  read_pos_i      & ts_mask;
@@ -297,7 +329,7 @@ float	BbdLine::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint t
 	ts -= _group_dly;
 	ts.bound_and (data_mask);
 
-	const fstb::FixedPoint  rate (/*** To do ***/ 1);
+	const fstb::FixedPoint  rate (/*** To do: guess the actual playback rate ***/ 1);
 	const float       y =
 		_interp_ptr->process_sample (data_buf_ptr, ts, rate);
 

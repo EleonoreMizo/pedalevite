@@ -1285,7 +1285,7 @@ int	test_bbd_line ()
 		mfx::dsp::rspl::InterpolatorHermite43  interp;
 
 		int            bbd_size  = 4096;
-		delay.init (bbd_size, sample_freq, interp, 0);
+		delay.init (bbd_size, interp, 0);
 		delay.clear_buffers ();
 
 		const int      buf_len   =
@@ -1315,7 +1315,7 @@ int	test_bbd_line ()
 			const int      block_len =
 				std::min (std::min (std::min (rem_len, max_len), buf_len), max_len2);
 
-			delay.read_block (&buf [0], block_len, dly_time, dly_time);
+			delay.read_block (&buf [0], block_len, dly_time, dly_time, 0);
 			mfx::dsp::mix::Generic::scale_1_v (&buf [0], block_len, fdbk);
 			if (block_pos < nbr_spl * 3 / 4)
 			{
