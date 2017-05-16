@@ -93,6 +93,8 @@ void	Compander::clear_buffers ()
 
 float	Compander::process_sample (float x)
 {
+	assert (_sample_freq > 0);
+
 	float          y = x;
 
 	if (_state == Type_EXP)
@@ -117,6 +119,7 @@ float	Compander::process_sample (float x)
 
 void	Compander::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	assert (_sample_freq > 0);
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
 	assert (nbr_spl > 0);
@@ -160,7 +163,13 @@ void	Compander::process_block (float dst_ptr [], const float src_ptr [], int nbr
 
 void	Compander::update_coef ()
 {
-	_coef = float (EnvHelper::compute_env_coef_simple (_avg_time, _sample_freq));
+	if (_sample_freq > 0)
+	{
+		_coef = float (EnvHelper::compute_env_coef_simple (
+			_avg_time,
+			_sample_freq
+		));
+	}
 }
 
 
