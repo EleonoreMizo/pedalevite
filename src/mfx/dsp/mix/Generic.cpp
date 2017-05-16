@@ -95,9 +95,11 @@ void	(*Generic::copy_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], co
 void	(*Generic::copy_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = 0;
 
 // Cross-fade copying
-void	(*Generic::copy_xfade_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float xf);
-void	(*Generic::copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf);
-void	(*Generic::copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf);
+void	(*Generic::copy_xfade_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float xf) = 0;
+void	(*Generic::copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf) = 0;
+void	(*Generic::copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf) = 0;
+
+void	(*Generic::copy_xfade_3_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], long nbr_spl) = 0;
 
 // Matrix copying
 void	(*Generic::copy_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &vol) = 0;
@@ -293,6 +295,8 @@ void	Generic::setup_fpu ()
 	copy_xfade_2_1_v        = Fpu::copy_xfade_2_1_v;
 	copy_xfade_2_1_vlr      = Fpu::copy_xfade_2_1_vlr;
 	copy_xfade_2_1_vlrauto  = Fpu::copy_xfade_2_1_vlrauto;
+
+	copy_xfade_3_1          = Fpu::copy_xfade_3_1;
 
 	// Matrix copying
 	copy_mat_2_2_v          = Fpu::copy_mat_2_2_v;

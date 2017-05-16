@@ -634,6 +634,28 @@ void	Fpu::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], con
 
 
 
+void	Fpu::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], long nbr_spl)
+{
+	assert (out_ptr != 0);
+	assert (in_1_ptr != 0);
+	assert (in_2_ptr != 0);
+	assert (in_3_ptr != 0);
+	assert (nbr_spl > 0);
+
+	long				pos = 0;
+	do
+	{
+		const float		x_1 = in_1_ptr [pos];
+		const float		x_2 = in_2_ptr [pos];
+		const float    m   = in_3_ptr [pos];
+		out_ptr [pos] = x_1 + (x_2 - x_1) * m;
+		++ pos;
+	}
+	while (pos < nbr_spl);
+}
+
+
+
 /*****************************************************************************
 *
 *       MATRIX COPYING

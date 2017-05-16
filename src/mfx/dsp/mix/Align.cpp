@@ -100,9 +100,11 @@ void	(*Align::copy_spread_1_2_vlr) (float out_1_ptr [], float out_2_ptr [], cons
 void	(*Align::copy_spread_1_2_vlrauto) (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r) = 0;
 
 // Cross-fade copying
-void	(*Align::copy_xfade_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float xf);
-void	(*Align::copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf);
-void	(*Align::copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf);
+void	(*Align::copy_xfade_2_1_v) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float xf) = 0;
+void	(*Align::copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf) = 0;
+void	(*Align::copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf) = 0;
+
+void	(*Align::copy_xfade_3_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], long nbr_spl) = 0;
 
 // Matrix copying
 void	(*Align::copy_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &vol) = 0;
@@ -311,6 +313,8 @@ void	Align::setup_unaligned ()
 	copy_xfade_2_1_vlr      = Generic::copy_xfade_2_1_vlr;
 	copy_xfade_2_1_vlrauto  = Generic::copy_xfade_2_1_vlrauto;
 
+	copy_xfade_3_1          = Generic::copy_xfade_3_1;
+
 	// Matrix copying
 	copy_mat_2_2_v          = Generic::copy_mat_2_2_v;
 	copy_mat_2_2_vlr        = Generic::copy_mat_2_2_vlr;
@@ -485,6 +489,8 @@ void	Align::setup_simd ()
 	copy_xfade_2_1_v        = SimdA::copy_xfade_2_1_v;
 	copy_xfade_2_1_vlr      = SimdA::copy_xfade_2_1_vlr;
 	copy_xfade_2_1_vlrauto  = SimdA::copy_xfade_2_1_vlrauto;
+
+	copy_xfade_3_1          = SimdA::copy_xfade_3_1;
 
 	// Matrix copying
 	copy_mat_2_2_v          = SimdA::copy_mat_2_2_v;

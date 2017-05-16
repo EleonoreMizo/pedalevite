@@ -99,6 +99,8 @@ public:
 	static void    (*copy_xfade_2_1_vlr) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf);
 	static void    (*copy_xfade_2_1_vlrauto) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf);
 
+	static void    (*copy_xfade_3_1) (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], long nbr_spl);
+
 	// Matrix copying
 	static void    (*copy_mat_2_2_v) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &vol);
 	static void    (*copy_mat_2_2_vlr) (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol);

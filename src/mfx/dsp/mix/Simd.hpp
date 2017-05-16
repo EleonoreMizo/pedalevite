@@ -1110,6 +1110,49 @@ void	Simd <VD, VS>::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_p
 
 
 
+template <class VD, class VS>
+void	Simd <VD, VS>::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], long nbr_spl)
+{
+	assert (V128Dst::check_ptr (out_ptr));
+	assert (V128Src::check_ptr (in_1_ptr));
+	assert (V128Src::check_ptr (in_2_ptr));
+	assert (V128Src::check_ptr (in_3_ptr));
+	assert (nbr_spl > 0);
+
+	const long		nbr_loop = nbr_spl >> 2;
+	long				pos = 0;
+	
+	while (pos < nbr_loop)
+	{
+		const auto	in_1_vec_data = V128Src::load_f32 (in_1_ptr);
+		const auto	in_2_vec_data = V128Src::load_f32 (in_2_ptr);
+		const auto	xf_vec_data   = V128Src::load_f32 (in_3_ptr);
+		const auto	diff_vec_data = in_2_vec_data - in_1_vec_data;
+		const auto	mul_vec_data = diff_vec_data * xf_vec_data;
+		const auto	out_vec_data = in_1_vec_data + mul_vec_data;
+		V128Dst::store_f32 (out_ptr, out_vec_data);
+		out_ptr  += 4;
+		in_1_ptr += 4;
+		in_2_ptr += 4;
+		in_3_ptr += 4;
+		++pos;
+	}
+	
+	nbr_spl &= 3;
+	if (nbr_spl > 0)
+	{
+		Fpu::copy_xfade_3_1 (
+			out_ptr,
+			in_1_ptr,
+			in_2_ptr,
+			in_3_ptr,
+			nbr_spl
+		);
+	}
+}
+
+
+
 /*****************************************************************************
 *
 *       MATRIX COPYING
