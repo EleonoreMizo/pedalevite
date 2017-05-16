@@ -358,6 +358,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReaderPitch.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReaderPitch.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.hpp" />
