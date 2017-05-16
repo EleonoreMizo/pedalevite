@@ -44,6 +44,7 @@ class InertiaLin
 public:
 
 	               InertiaLin ()                        = default;
+	inline         InertiaLin (double val);
 	               InertiaLin (const InertiaLin &other) = default;
 	virtual        ~InertiaLin ()                       = default;
 
@@ -78,6 +79,7 @@ private:
 
 	double         _inertia_time = 0.100;  // s
 	double         _fs           = 44100;  // Hz
+	double         _step_mul     = 1 / (_inertia_time * _fs);
 	double         _old_val      = 0;
 	double         _new_val      = 0;
 	double         _cur_val      = 0;

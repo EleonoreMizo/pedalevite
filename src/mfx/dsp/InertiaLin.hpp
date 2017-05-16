@@ -38,6 +38,16 @@ namespace dsp
 
 
 
+InertiaLin::InertiaLin (double val)
+:	_old_val (val)
+,	_new_val (val)
+,	_cur_val (val)
+{
+	// Nothing
+}
+
+
+
 /*
 ==============================================================================
 Name: set_sample_freq
@@ -53,8 +63,9 @@ void	InertiaLin::set_sample_freq (double fs)
 {
 	assert (fs > 0);
 
-	_step *= _fs / fs;
-	_fs    = fs;
+	_step     *= _fs / fs;
+	_fs        = fs;
+	_step_mul  = 1.0 / (_inertia_time * _fs);
 }
 
 
@@ -76,6 +87,7 @@ void	InertiaLin::set_inertia_time (double inertia_time)
 	assert (inertia_time >= 0);
 
 	_inertia_time = inertia_time;
+	_step_mul     = 1.0 / (_inertia_time * _fs);
 }
 
 
@@ -109,7 +121,7 @@ void	InertiaLin::update_inertia_time (double inertia_time)
 		}
 	}
 
-	_inertia_time = inertia_time;
+	set_inertia_time (inertia_time);
 }
 
 
@@ -151,7 +163,7 @@ void	InertiaLin::set_val (double val)
 
 	else
 	{
-		double         new_step = (val - _cur_val) / (_fs * _inertia_time);
+		double         new_step = (val - _cur_val) * _step_mul;
 
 		// If we accumulate multiple set_val() during a ramp tending toward the
 		// same direction, keep the quickest gliding speed.
