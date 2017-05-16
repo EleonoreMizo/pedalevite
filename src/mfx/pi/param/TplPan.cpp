@@ -50,8 +50,8 @@ namespace param
 
 
 TplPan::TplPan (const char *name_0, int group_index)
-:	_name ()
-,	_group_index (group_index)
+:	_group_index (group_index)
+,	_name ()
 ,	_flags (0)
 {
 	assert (name_0 != 0);
