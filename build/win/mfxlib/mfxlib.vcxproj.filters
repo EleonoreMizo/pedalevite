@@ -2013,6 +2013,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.hpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.hpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.h">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
@@ -2845,6 +2851,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplInt.cpp">
       <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.cpp">
+      <Filter>mfx\dsp\dyn</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.cpp">
       <Filter>mfx\dsp\dly</Filter>
