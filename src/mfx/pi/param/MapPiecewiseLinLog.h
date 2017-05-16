@@ -58,6 +58,8 @@ public:
 	void           add_segment (double norm, double nat, bool log_flag);
 	bool				is_ok () const;
 
+	void           gen_log (int nbr_seg, double logbase = 2);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -87,8 +89,8 @@ private:
 	typedef std::vector <Segment> SegList;
 
 	SegList        _seg_list;
-	double         _val_min;
-	double         _val_max;
+	double         _val_min;      // Natural value
+	double         _val_max;      // Natural value
 
 
 

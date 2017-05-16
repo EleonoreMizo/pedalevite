@@ -17,6 +17,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 
 #include <cassert>
@@ -186,6 +187,43 @@ void	MapPiecewiseLinLog::add_segment (double norm, double nat, bool log_flag)
 bool	MapPiecewiseLinLog::is_ok () const
 {
 	return (! _seg_list.empty () && _seg_list.back ()._val_u_nrm == 1.0);
+}
+
+
+
+// Only works with positive values for now.
+// If the first point is 0, the first segment is a ramp. The rest of the curve
+// is log and nbr_seg is related to the logbase unit, like a pseudo-log curve.
+void	MapPiecewiseLinLog::gen_log (int nbr_seg, double logbase)
+{
+	assert (nbr_seg >= 2);
+	assert (logbase > 1);
+	assert (_val_min >= 0);
+
+	double         vmin    = _val_min;
+	int            seg_beg = 0;
+	if (_val_min == 0)
+	{
+		vmin = _val_max * fstb::ipow (logbase, -nbr_seg);
+		set_first_value (_val_min);
+		add_segment (1.0 / nbr_seg, vmin * logbase, false);
+		seg_beg = 1;
+	}
+	else
+	{
+		set_first_value (_val_min);
+	}
+
+	const double   lmi = log (vmin);
+	const double   lma = log (_val_max);
+	for (int seg = seg_beg; seg < nbr_seg - 1; ++seg)
+	{
+		const double   nrm = double (seg + 1) / nbr_seg;
+		const double   nat = exp (lmi + nrm * (lma - lmi));
+		add_segment (nrm, nat, false);
+	}
+
+	add_segment (1, _val_max, false);
 }
 
 
