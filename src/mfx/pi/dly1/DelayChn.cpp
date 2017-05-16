@@ -164,7 +164,7 @@ void	DelayChn::process_block_write (const float src_ptr [], const float fdbk_ptr
 
 	dsp::mix::Generic::copy_1_1 (_tmp_ptr, src_ptr, nbr_spl);
 	dsp::mix::Generic::mix_1_1_vlrauto (_tmp_ptr, fdbk_ptr, nbr_spl, lvl_beg, lvl_end);
-	_dly_line.push_data (_tmp_ptr, nbr_spl);
+	_dly_line.push_block (_tmp_ptr, nbr_spl);
 }
 
 

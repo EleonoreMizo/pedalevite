@@ -25,8 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/dsp/mix/Generic.h"
-#include "mfx/dsp/dly/DelayLine.h"
 #include "mfx/dsp/dly/DelayLineReader.h"
+#include "mfx/dsp/dly/DelayLineReadInterface.h"
 
 #include <algorithm>
 
@@ -78,7 +78,7 @@ int	DelayLineReader::get_tmp_buf_len () const
 
 
 // Mandatory call
-void	DelayLineReader::set_delay_line (DelayLine &delay_line)
+void	DelayLineReader::set_delay_line (const DelayLineReadInterface &delay_line)
 {
 	assert (&delay_line != 0);
 
@@ -144,14 +144,14 @@ void	DelayLineReader::set_delay_time (double delay_time, int transition_time)
 
 
 // src_pos refers to the position within the virtual block bounded by two
-// consecutive calls to DelayLine::push_data().
+// consecutive calls to DelayLine::push_block(). It can be negative if
+// push_block() is called before reading the line.
 // Read data is oversampled, if delay line has been oversampled.
 void	DelayLineReader::read_data (float dest_ptr [], int nbr_spl, int src_pos)
 {
 	assert (is_ready ());
 	assert (dest_ptr != 0);
 	assert (nbr_spl > 0);
-	assert (src_pos >= 0);
 
 	int            dest_pos = 0;
 	do
@@ -183,7 +183,7 @@ void	DelayLineReader::read_data (float dest_ptr [], int nbr_spl, int src_pos)
 				const double   time_end =
 					_time_beg + (_time_end - _time_beg) * lerp_pos_end;
 
-				_delay_line_ptr->read_line (
+				_delay_line_ptr->read_block (
 					dest_ptr + dest_pos,
 					work_len,
 					_time_cur,
@@ -208,7 +208,7 @@ void	DelayLineReader::read_data (float dest_ptr [], int nbr_spl, int src_pos)
 		// Steady state
 		else
 		{
-			_delay_line_ptr->read_line (
+			_delay_line_ptr->read_block (
 				dest_ptr + dest_pos,
 				work_len,
 				_time_cur,
@@ -320,7 +320,7 @@ void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double le
 	if (_xfade_shape_ptr == 0)
 	{
 		// The temporary buffer contains the old delay (fade out)
-		_delay_line_ptr->read_line (
+		_delay_line_ptr->read_block (
 			_tmp_buf_ptr,
 			nbr_spl,
 			_time_beg,
@@ -329,7 +329,7 @@ void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double le
 		);
 
 		// The destination buffer contains the new delay (fade in)
-		_delay_line_ptr->read_line (
+		_delay_line_ptr->read_block (
 			dest_ptr,
 			nbr_spl,
 			_time_end,
@@ -360,9 +360,40 @@ void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double le
 	{
 		const float *  shape_ptr = _xfade_shape_ptr + _trans_pos;
 
+#if 1
+
+		// Fade out part (temporary buffer)
+		_delay_line_ptr->read_block (
+			_tmp_buf_ptr,
+			nbr_spl,
+			_time_beg,
+			_time_beg,
+			src_pos
+		);
+
+		// Fade in part (destination buffer)
+		_delay_line_ptr->read_block (
+			dest_ptr,
+			nbr_spl,
+			_time_end,
+			_time_end,
+			src_pos
+		);
+
+		// Mix
+		mix::Generic::copy_xfade_3_1 (
+			dest_ptr,
+			_tmp_buf_ptr,
+			dest_ptr,
+			shape_ptr,
+			nbr_spl
+		);
+
+#else
+
 		// Fade out part (temporary buffer)
 		mix::Generic::linop_cst_1_1 (dest_ptr, shape_ptr, nbr_spl, -1, 1);
-		_delay_line_ptr->read_line (
+		_delay_line_ptr->read_block (
 			_tmp_buf_ptr,
 			nbr_spl,
 			_time_beg,
@@ -372,7 +403,7 @@ void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double le
 		mix::Generic::mult_ip_1_1 (_tmp_buf_ptr, dest_ptr, nbr_spl);
 
 		// Fade in part (destination buffer)
-		_delay_line_ptr->read_line (
+		_delay_line_ptr->read_block (
 			dest_ptr,
 			nbr_spl,
 			_time_end,
@@ -383,6 +414,8 @@ void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double le
 
 		// Mix
 		mix::Generic::mix_1_1 (dest_ptr, _tmp_buf_ptr, nbr_spl);
+
+#endif
 	}
 }
 

@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/FixedPoint.h"
 #include "mfx/dsp/dly/DelayLineData.h"
+#include "mfx/dsp/dly/DelayLineReadInterface.h"
 
 
 
@@ -50,6 +51,7 @@ namespace dly
 
 
 class DelayLine
+:	public DelayLineReadInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -64,28 +66,29 @@ public:
 	               use_interpolator () const;
 
 	void           set_sample_freq (double sample_freq, int ovrspl_l2);
-	double         get_sample_freq () const;
-	int            get_ovrspl_l2 () const;
-
 	void           set_max_delay_time (double max_time);
-
 	bool           is_ready () const;
-
 	void           clear_buffers ();
 
 	// Real-time functions
-	double         get_min_delay_time () const;
-	double         get_max_delay_time () const;
-	int            estimate_max_one_shot_proc_w_feedback (double min_delay_time) const;
-	void           read_line (float dest_ptr [], int nbr_spl, double delay_beg, double delay_end, int pos_in_block);
-	void           push_data (const float src_ptr [], int nbr_spl);
+	void           push_block (const float src_ptr [], int nbr_spl);
 	void           push_sample (float src);
+	void           move_write_head (int offset);
 
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 protected:
+
+	// DelayLineReadInterface
+	virtual double do_get_sample_freq () const;
+	virtual int    do_get_ovrspl_l2 () const;
+	virtual double do_get_min_delay_time () const;
+	virtual double do_get_max_delay_time () const;
+	virtual int    do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const;
+	virtual void   do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const;
+	virtual float  do_read_sample (float dly) const;
 
 
 

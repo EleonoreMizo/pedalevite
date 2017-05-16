@@ -40,7 +40,7 @@ namespace dly
 
 
 
-class DelayLine;
+class DelayLineReadInterface;
 
 class DelayLineReader
 {
@@ -56,7 +56,7 @@ public:
 	float *        get_tmp_buf_ptr () const;
 	int            get_tmp_buf_len () const;
 
-	void           set_delay_line (DelayLine &delay_line);
+	void           set_delay_line (const DelayLineReadInterface &delay_line);
 
 	void           set_resampling_range (double rate_inf, double rate_sup);
 	void           set_crossfade (int nbr_spl, const float shape_ptr []);
@@ -84,7 +84,8 @@ private:
 	void           setup_immediate_transition (double delay_time, int transition_time);
 	void           apply_crossfade (float dest_ptr [], int nbr_spl, double lerp_pos_end, int src_pos);
 
-	DelayLine *    _delay_line_ptr  =  0;  // 0 = not initialised.
+	const DelayLineReadInterface *
+	               _delay_line_ptr  =  0;  // 0 = not initialised.
 
 	const float *  _xfade_shape_ptr =  0; // 0 = not set.
 

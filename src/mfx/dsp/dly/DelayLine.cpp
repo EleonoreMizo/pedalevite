@@ -115,20 +115,6 @@ void	DelayLine::set_sample_freq (double sample_freq, int ovrspl_l2)
 
 
 
-double	DelayLine::get_sample_freq () const
-{
-	return (_sample_freq);
-}
-
-
-
-int	DelayLine::get_ovrspl_l2 () const
-{
-	return (_ovrspl_l2);
-}
-
-
-
 // Mandatory call
 void	DelayLine::set_max_delay_time (double max_time)
 {
@@ -161,116 +147,8 @@ void	DelayLine::clear_buffers ()
 
 
 
-double	DelayLine::get_min_delay_time () const
-{
-	assert (is_ready ());
-
-	return (_min_dly_time);
-}
-
-
-
-double	DelayLine::get_max_delay_time () const
-{
-	assert (is_ready ());
-
-	return (_max_dly_time);
-}
-
-
-
-int	DelayLine::estimate_max_one_shot_proc_w_feedback (double min_delay_time) const
-{
-	assert (is_ready ());
-	assert (min_delay_time >= get_min_delay_time ());
-	assert (min_delay_time <= get_max_delay_time ());
-
-	const float    nbr_spl_f =
-		min_delay_time * _sample_freq - (_imp_len - _group_dly.get_val_dbl ());
-	int            nbr_spl = fstb::floor_int (nbr_spl_f);
-
-	assert (nbr_spl > 0);
-
-	return (nbr_spl);
-}
-
-
-
-// pos_in_block (in samples) is subtracted to both delay_beg and delay_end
-// (in seconds). Use it to offset the read position if you read the line
-// in multiple times between two calls to push_data().
-// Important: read data is oversampled, if oversampling has been set.
-// Therefore pos_in_block is related to oversampled data, too.
-void	DelayLine::read_line (float dest_ptr [], int nbr_spl, double delay_beg, double delay_end, int pos_in_block)
-{
-	assert (is_ready ());
-	assert (dest_ptr != 0);
-	assert (nbr_spl > 0);
-	assert (delay_beg - pos_in_block / _sample_freq >= _min_dly_time);
-	assert (delay_beg <= _max_dly_time);
-	assert (delay_end - pos_in_block / _sample_freq >= _min_dly_time);
-	assert (delay_end <= _max_dly_time);
-	assert (pos_in_block >= 0);
-
-	const int      unroll_post   = _line_data.get_unroll_post ();
-	const int      mask          = _line_data.get_mask ();
-	const int      line_len      = _line_data.get_len ();
-	float * const  data_ptr      = _line_data.get_buffer ();
-
-	const double   delay_beg_spl = delay_beg * _sample_freq;
-	const double   delay_end_spl = delay_end * _sample_freq;
-
-	const fstb::FixedPoint  dcur (delay_beg_spl);
-	fstb::FixedPoint        rate (1);
-	rate >>= _ovrspl_l2;
-	rate += fstb::FixedPoint ((delay_beg_spl - delay_end_spl) / nbr_spl);
-
-	fstb::FixedPoint        pos_in_block_line (pos_in_block, 0);
-	pos_in_block_line >>= _ovrspl_l2;
-
-	fstb::FixedPoint       pos_cur (_write_pos, 0);
-	pos_cur -= dcur;
-	pos_cur += pos_in_block_line;
-	pos_cur -= _group_dly;
-	pos_cur.bound_and (mask);
-
-	int            pos_dest = 0;
-
-	do
-	{
-		const int      proc_len = _interp_ptr->process_block (
-			&dest_ptr,
-			&data_ptr,
-			pos_dest,
-			pos_cur,
-			nbr_spl,
-			0,
-			line_len + unroll_post,
-			rate,
-			fstb::FixedPoint (0, 0)
-		);
-
-		pos_dest += proc_len;
-
-		// Second pass required
-		if (pos_dest < nbr_spl)
-		{
-			fstb::FixedPoint  skip (rate);
-			skip.mul_int (proc_len);
-			pos_cur += skip;
-			assert (   pos_cur.get_int_val () < 0
-			        || pos_cur.get_int_val () >= line_len);
-
-			pos_cur.bound_and (mask);
-		}
-	}
-	while (pos_dest < nbr_spl);
-}
-
-
-
 // Input data is not oversampled (if oversampling has been set)
-void	DelayLine::push_data (const float src_ptr [], int nbr_spl)
+void	DelayLine::push_block (const float src_ptr [], int nbr_spl)
 {
 	assert (is_ready ());
 	assert (src_ptr != 0);
@@ -340,7 +218,144 @@ void	DelayLine::push_sample (float src)
 
 
 
+// offset can be negative
+void	DelayLine::move_write_head (int offset)
+{
+	const int      mask = _line_data.get_mask ();
+	_write_pos = (_write_pos + offset) & mask;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+double	DelayLine::do_get_sample_freq () const
+{
+	return _sample_freq;
+}
+
+
+
+int	DelayLine::do_get_ovrspl_l2 () const
+{
+	return _ovrspl_l2;
+}
+
+
+
+double	DelayLine::do_get_min_delay_time () const
+{
+	assert (is_ready ());
+
+	return _min_dly_time;
+}
+
+
+
+double	DelayLine::do_get_max_delay_time () const
+{
+	assert (is_ready ());
+
+	return _max_dly_time;
+}
+
+
+
+int	DelayLine::do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const
+{
+	assert (is_ready ());
+	assert (min_dly_time >= do_get_min_delay_time ());
+	assert (min_dly_time <= do_get_max_delay_time ());
+
+	const float    nbr_spl_f = float (
+		min_dly_time * _sample_freq - (_imp_len - _group_dly.get_val_dbl ())
+	);
+	int            nbr_spl = fstb::floor_int (nbr_spl_f);
+
+	assert (nbr_spl > 0);
+
+	return nbr_spl;
+}
+
+
+
+void	DelayLine::do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const
+{
+	assert (is_ready ());
+	assert (dst_ptr != 0);
+	assert (nbr_spl > 0);
+	assert (dly_beg - pos_in_block / _sample_freq >= _min_dly_time);
+	assert (dly_beg <= _max_dly_time);
+	assert (dly_end - pos_in_block / _sample_freq >= _min_dly_time);
+	assert (dly_end <= _max_dly_time);
+
+	const int      unroll_post    = _line_data.get_unroll_post ();
+	const int      mask           = _line_data.get_mask ();
+	const int      line_len       = _line_data.get_len ();
+	const float * const  data_ptr = _line_data.get_buffer ();
+
+	const double   dly_beg_spl    = dly_beg * _sample_freq;
+	const double   dly_end_spl    = dly_end * _sample_freq;
+
+	const fstb::FixedPoint  dcur (dly_beg_spl);
+	fstb::FixedPoint        rate (1);
+	rate >>= _ovrspl_l2;
+	rate += fstb::FixedPoint ((dly_beg_spl - dly_end_spl) / nbr_spl);
+
+	fstb::FixedPoint        pos_in_block_line (pos_in_block, 0);
+	pos_in_block_line >>= _ovrspl_l2;
+
+	fstb::FixedPoint       pos_cur (_write_pos, 0);
+	pos_cur -= dcur;
+	pos_cur += pos_in_block_line;
+	pos_cur -= _group_dly;
+	pos_cur.bound_and (mask);
+
+	int            pos_dest = 0;
+
+	do
+	{
+		const int      proc_len = _interp_ptr->process_block (
+			&dst_ptr,
+			&data_ptr,
+			pos_dest,
+			pos_cur,
+			nbr_spl,
+			0,
+			line_len + unroll_post,
+			rate,
+			fstb::FixedPoint (0, 0)
+		);
+
+		pos_dest += proc_len;
+
+		// Second pass required
+		if (pos_dest < nbr_spl)
+		{
+			fstb::FixedPoint  skip (rate);
+			skip.mul_int (proc_len);
+			pos_cur += skip;
+			assert (   pos_cur.get_int_val () < 0
+			        || pos_cur.get_int_val () >= line_len);
+
+			pos_cur.bound_and (mask);
+		}
+	}
+	while (pos_dest < nbr_spl);
+}
+
+
+
+float	DelayLine::do_read_sample (float dly) const
+{
+	float          dst;
+
+	do_read_block (&dst, 1, dly, dly, 0);
+
+	return dst;
+}
 
 
 

@@ -437,7 +437,7 @@ void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], int nbr
 						in_ptr + block_pos,
 						work_len
 					);
-					_dly_line.push_data (render_ptr, work_len);
+					_dly_line.push_block (render_ptr, work_len);
 				}
 			}
 		}
