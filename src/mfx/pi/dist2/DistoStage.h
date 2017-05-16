@@ -138,6 +138,8 @@ private:
 	void           distort_block (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_diode_clipper (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_asym1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_rcp1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_rcp2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	ChannelArray   _chn_arr;
 	float          _sample_freq;

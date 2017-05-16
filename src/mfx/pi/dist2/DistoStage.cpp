@@ -419,6 +419,51 @@ void	DistoStage::distort_block_asym1 (Channel &chn, float dst_ptr [], const floa
 
 
 
+// Asymptotes at -1 and +1
+// f(x) = x / (abs (x) + 1)
+void	DistoStage::distort_block_rcp1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto        one = fstb::ToolsSimd::set1_f32 (1.0f);
+
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+
+		const auto     d = fstb::ToolsSimd::abs (x) + one;
+		const auto     r = fstb::ToolsSimd::rcp_approx (d);
+		x *= r;
+
+		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+	}
+}
+
+
+
+// Pure linear part in [-t ; t], asymptotes at -2t and +2t
+// t     = 0.5
+// f0(x) = t / max (abs (x), t)
+// f(x)  = x * f0(x) * (2 - f0(x))
+void	DistoStage::distort_block_rcp2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto        t   = fstb::ToolsSimd::set1_f32 (0.5f);
+	const auto        two = fstb::ToolsSimd::set1_f32 (2);
+
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+
+		const auto     a = fstb::ToolsSimd::abs (x);
+		const auto     m = fstb::ToolsSimd::max_f32 (a, t);
+		const auto     f = fstb::ToolsSimd::rcp_approx (m);
+		const auto     g = f * (two - f);
+		x *= g;
+
+		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+	}
+}
+
+
+
 bool	DistoStage::_coef_init_flag = false;
 std::array <double, DistoStage::_nbr_coef_42>	DistoStage::_coef_42;
 std::array <double, DistoStage::_nbr_coef_21>	DistoStage::_coef_21;
