@@ -184,6 +184,9 @@
     <Filter Include="mfx\dsp\ctrl\env">
       <UniqueIdentifier>{bf0f6e1c-2e42-4715-a85e-ecf75bd63084}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\dly2">
+      <UniqueIdentifier>{3e8ffe7a-d324-406e-b425-d939dae426d6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="mfx\pi\wha2">
       <UniqueIdentifier>{17893118-e8da-4cf8-8dc7-80fe06c5b2c0}</UniqueIdentifier>
     </Filter>
@@ -2004,6 +2007,18 @@
     <ClInclude Include="..\..\..\src\mfx\doc\ActionClick.h">
       <Filter>mfx\doc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\Delay2.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\Delay2Desc.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\Param.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\Cst.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\Compander.h">
       <Filter>mfx\dsp\dyn</Filter>
     </ClInclude>
@@ -2016,11 +2031,32 @@
     <ClInclude Include="..\..\..\src\mfx\pi\param\TplPan.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\FilterType.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\StageTaps.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\TapUnit.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\DelayLineBbd.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\FxDisto.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.h">
       <Filter>mfx\dsp\dyn</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.hpp">
       <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\Eq.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\FxSection.h">
+      <Filter>mfx\pi\dly2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.h">
       <Filter>mfx\dsp\dly</Filter>
@@ -2060,6 +2096,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.hpp">
       <Filter>mfx\dsp\ctrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\XFadeShape.h">
+      <Filter>mfx\pi\dly2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReaderPitch.h">
       <Filter>mfx\dsp\dly</Filter>
@@ -2852,6 +2891,12 @@
     <ClCompile Include="..\..\..\src\mfx\doc\ActionClick.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\Delay2.cpp">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\Delay2Desc.cpp">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\Compander.cpp">
       <Filter>mfx\dsp\dyn</Filter>
     </ClCompile>
@@ -2864,8 +2909,26 @@
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplInt.cpp">
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\StageTaps.cpp">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\TapUnit.cpp">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\DelayLineBbd.cpp">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\FxDisto.cpp">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.cpp">
       <Filter>mfx\dsp\dyn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\Eq.cpp">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\FxSection.cpp">
+      <Filter>mfx\pi\dly2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.cpp">
       <Filter>mfx\dsp\dly</Filter>
@@ -2890,6 +2953,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampModule.cpp">
       <Filter>mfx\pi\ramp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\XFadeShape.cpp">
+      <Filter>mfx\pi\dly2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

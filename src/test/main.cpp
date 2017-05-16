@@ -17,6 +17,9 @@
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist1/Param.h"
+#include "mfx/pi/dly2/Delay2.h"
+#include "mfx/pi/dly2/Delay2Desc.h"
+#include "mfx/pi/dly2/Param.h"
 #include "mfx/pi/nzbl/NoiseBleach.h"
 #include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/nzbl/Param.h"
@@ -1356,6 +1359,74 @@ int	test_bbd_line ()
 
 
 
+int	test_delay2 ()
+{
+	static const int  nbr_chn = 1;
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr (nbr_chn);
+
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+
+	if (ret_val == 0)
+	{
+		const size_t   len = chn_arr [0].size ();
+		mfx::pi::dly2::Delay2 plugin;
+		const int      max_block_size = 64;
+		int            latency = 0;
+		PiProc         pi_proc;
+		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::dly2::Delay2Desc));
+		pi_proc.setup (plugin, nbr_chn, nbr_chn, sample_freq, max_block_size, latency);
+		size_t         pos = 0;
+		float * const* dst_arr = pi_proc.use_buf_list_dst ();
+		float * const* src_arr = pi_proc.use_buf_list_src ();
+		mfx::piapi::PluginInterface::ProcInfo &   proc_info = pi_proc.use_proc_info ();
+		pi_proc.reset_param ();
+		pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (1) + mfx::pi::dly2::ParamLine_VOL, 0);
+		pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (0) + mfx::pi::dly2::ParamLine_DLY_BASE, 0.375);
+		do
+		{
+			const int      block_len =
+				int (std::min (len - pos, size_t (max_block_size)));
+
+			proc_info._nbr_spl = block_len;
+		
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				memcpy (
+					src_arr [chn],
+					&chn_arr [chn] [pos],
+					block_len * sizeof (src_arr [chn] [0])
+				);
+			}
+
+			if (pos >= (len >> 1) && pos < (len >> 1) + block_len)
+			{
+				pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (0) + mfx::pi::dly2::ParamLine_DLY_BASE, 0.5);
+			}
+
+			plugin.process_block (proc_info);
+
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				memcpy (
+					&chn_arr [chn] [pos],
+					dst_arr [chn],
+					block_len * sizeof (chn_arr [chn] [pos])
+				);
+			}
+
+			pi_proc.reset_param ();
+			pos += block_len;
+		}
+		while (pos < len);
+
+		ret_val = save_wav ("results/delay20.wav", chn_arr, sample_freq, 1);
+	}
+
+	return ret_val;
+}
+
+
 
 int main (int argc, char *argv [])
 {
@@ -1391,8 +1462,12 @@ int main (int argc, char *argv [])
 	patch_setup_file ();
 #endif
 
-#if 1
+#if 0
 	test_bbd_line ();
+#endif
+
+#if 1
+	test_delay2 ();
 #endif
 
 

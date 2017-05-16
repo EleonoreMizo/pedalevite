@@ -466,6 +466,26 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dly1/DelayDesc.cpp \
         ../../src/mfx/pi/dly1/DelayDesc.h \
         ../../src/mfx/pi/dly1/Param.h \
+        ../../src/mfx/pi/dly2/Delay2.cpp \
+        ../../src/mfx/pi/dly2/Delay2.h \
+        ../../src/mfx/pi/dly2/Delay2Desc.cpp \
+        ../../src/mfx/pi/dly2/Delay2Desc.h \
+        ../../src/mfx/pi/dly2/DelayLineBbd.cpp \
+        ../../src/mfx/pi/dly2/DelayLineBbd.h \
+        ../../src/mfx/pi/dly2/Eq.cpp \
+        ../../src/mfx/pi/dly2/Eq.h \
+        ../../src/mfx/pi/dly2/FilterType.h \
+        ../../src/mfx/pi/dly2/FxDisto.cpp \
+        ../../src/mfx/pi/dly2/FxDisto.h \
+        ../../src/mfx/pi/dly2/FxSection.cpp \
+        ../../src/mfx/pi/dly2/FxSection.h \
+        ../../src/mfx/pi/dly2/Param.h \
+        ../../src/mfx/pi/dly2/StageTaps.cpp \
+        ../../src/mfx/pi/dly2/StageTaps.h \
+        ../../src/mfx/pi/dly2/TapUnit.cpp \
+        ../../src/mfx/pi/dly2/TapUnit.h \
+        ../../src/mfx/pi/dly2/XFadeShape.cpp \
+        ../../src/mfx/pi/dly2/XFadeShape.h \
         ../../src/mfx/pi/dtone1/DistTone.cpp \
         ../../src/mfx/pi/dtone1/DistTone.h \
         ../../src/mfx/pi/dtone1/DistToneDesc.cpp \
