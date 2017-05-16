@@ -576,6 +576,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/param/TplLog.h \
         ../../src/mfx/pi/param/TplMapped.h \
         ../../src/mfx/pi/param/TplMapped.hpp \
+        ../../src/mfx/pi/param/TplPan.cpp \
+        ../../src/mfx/pi/param/TplPan.h \
         ../../src/mfx/pi/param/TplSq.h \
         ../../src/mfx/pi/phase1/Cst.cpp \
         ../../src/mfx/pi/phase1/Cst.h \
