@@ -271,7 +271,6 @@ void	Delay2::do_process_block (ProcInfo &proc)
 	const int      nbr_chn_dst =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
 	assert (nbr_chn_src <= nbr_chn_dst);
-	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
