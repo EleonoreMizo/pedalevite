@@ -351,6 +351,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLine.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLine.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineData.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineData.hpp" />
@@ -822,6 +823,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGenChaos.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLine.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.cpp" />

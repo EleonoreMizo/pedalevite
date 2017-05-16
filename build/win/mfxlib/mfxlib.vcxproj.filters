@@ -2019,6 +2019,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.h">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.h">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\wha2\Param.h">
       <Filter>mfx\pi\wha2</Filter>
     </ClInclude>
@@ -2844,6 +2847,9 @@
       <Filter>mfx\dsp\dly</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.cpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.cpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\wha2\Wha2.cpp">
