@@ -2758,7 +2758,7 @@ void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], co
 	{
 		const auto	in_vec_data = V128Src::load_f32 (in_ptr);
 		auto			out_1_vec_data = V128Dst::load_f32 (out_1_ptr);
-		auto			out_2_vec_data = V128Dst::load_f32 (out_1_ptr);
+		auto			out_2_vec_data = V128Dst::load_f32 (out_2_ptr);
 		
 		const auto	add_out_1_vec_data = in_vec_data * vol_l_vec;
 		const auto	add_out_2_vec_data = in_vec_data * vol_r_vec;
@@ -2777,7 +2777,7 @@ void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], co
 	nbr_spl &= 3;
 	if (nbr_spl > 0)
 	{
-		Fpu::copy_spread_1_2_v (
+		Fpu::mix_spread_1_2_v (
 			out_1_ptr,
 			out_2_ptr,
 			in_ptr,
@@ -2813,7 +2813,7 @@ void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], 
 	{
 		const auto	in_vec_data = V128Src::load_f32 (in_ptr);
 		auto			out_1_vec_data = V128Dst::load_f32 (out_1_ptr);
-		auto			out_2_vec_data = V128Dst::load_f32 (out_1_ptr);
+		auto			out_2_vec_data = V128Dst::load_f32 (out_2_ptr);
 
 		const auto	add_out_1_vec_data = in_vec_data * vec_vol_l;
 		const auto	add_out_2_vec_data = in_vec_data * vec_vol_r;
@@ -2834,7 +2834,7 @@ void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], 
 	nbr_spl &= 3;
 	if (nbr_spl > 0)
 	{
-		Fpu::copy_spread_1_2_vlr (
+		Fpu::mix_spread_1_2_vlr (
 			out_1_ptr,
 			out_2_ptr,
 			in_ptr,
@@ -2854,11 +2854,11 @@ void	Simd <VD, VS>::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr 
 {
 	if (e_vol_l == s_vol_l && e_vol_r == s_vol_r)
 	{
-		copy_spread_1_2_v (out_1_ptr, out_2_ptr, in_ptr, nbr_spl, s_vol_l, s_vol_r);
+		mix_spread_1_2_v (out_1_ptr, out_2_ptr, in_ptr, nbr_spl, s_vol_l, s_vol_r);
 	}
 	else
 	{
-		copy_spread_1_2_vlr (out_1_ptr, out_2_ptr, in_ptr, nbr_spl, s_vol_l, s_vol_r, e_vol_l, e_vol_r);
+		mix_spread_1_2_vlr (out_1_ptr, out_2_ptr, in_ptr, nbr_spl, s_vol_l, s_vol_r, e_vol_l, e_vol_r);
 	}
 }
 
