@@ -238,7 +238,6 @@ const piapi::ParamDescInterface &	Delay2Desc::do_get_param_info (piapi::ParamCat
 void	Delay2Desc::init_tap (int index)
 {
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
-	typedef param::TplMapped <param::MapS <false> > TplS;
 
 	const int      base = get_tap_base (index);
 
@@ -340,7 +339,6 @@ void	Delay2Desc::init_tap (int index)
 void	Delay2Desc::init_line (int index)
 {
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
-	typedef param::TplMapped <param::MapS <false> > TplS;
 
 	const int      base = get_line_base (index);
 

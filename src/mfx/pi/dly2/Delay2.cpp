@@ -63,7 +63,6 @@ Delay2::Delay2 ()
 ,	_inv_fs (0)
 ,	_param_change_flag_misc ()
 ,	_param_change_flag ()
-,	_chn_arr ()
 ,	_tap_arr ()
 ,	_line_arr ()
 ,	_buf_tmp_zone ()
@@ -178,11 +177,6 @@ Delay2::Delay2 ()
 		_state_set.set_ramp_time (base + ParamLine_PAN        , 0.010f);
 		_state_set.set_ramp_time (base + ParamLine_VOL        , 0.010f);
 	}
-
-	for (auto &chn : _chn_arr)
-	{
-		/*** To do ***/
-	}
 }
 
 
@@ -234,11 +228,6 @@ int	Delay2::do_reset (double sample_freq, int max_buf_len, int &latency)
 	for (auto &buf : _buf_fdbk_arr)
 	{
 		buf.resize (buf_len_align);
-	}
-
-	for (auto &chn : _chn_arr)
-	{
-		/*** To do ***/
 	}
 
 	_param_change_flag_misc.set ();
@@ -425,11 +414,6 @@ void	Delay2::clear_buffers ()
 	for (auto &info : _line_arr)
 	{
 		info._delay.clear_buffers ();
-	}
-
-	for (auto &chn : _chn_arr)
-	{
-		/*** To do ***/
 	}
 }
 

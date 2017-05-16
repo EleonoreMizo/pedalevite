@@ -29,10 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dly2/Delay2Desc.h"
 #include "mfx/pi/dly2/DelayLineBbd.h"
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <Windows.h>
-
 #include <cassert>
 
 
@@ -268,7 +264,6 @@ void	DelayLineBbd::read_line (float dst_ptr [], int nbr_spl, float &f_beg, float
 	if (_xfade_pos <= 0 && dly_beg != dly_end)
 	{
 		// The new delay time requires crossfading?
-		const int      rem_len    = _delay_time.get_rem_len ();
 		const float    read_speed =
 			1 - (dly_end - dly_beg) * fstb::rcp_uint <float> (nbr_spl);
 		if (fabs (read_speed) > _speed_limit)

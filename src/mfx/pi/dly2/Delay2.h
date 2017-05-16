@@ -82,12 +82,6 @@ private:
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
-	class Channel
-	{
-	public:
-	};
-	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
-
 	class InfoTap
 	{
 	public:
@@ -139,7 +133,6 @@ private:
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
-	ChannelArray   _chn_arr;	
 	TapArray       _tap_arr;
 	LineArray      _line_arr;
 	StageTaps      _taps;
