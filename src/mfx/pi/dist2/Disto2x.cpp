@@ -121,7 +121,7 @@ Disto2x::Disto2x ()
 		_state_set.set_val_nat (desc_set, base + ParamStage_HPF_PRE ,    30);
 		_state_set.set_val_nat (desc_set, base + ParamStage_BIAS    ,     0);
 		_state_set.set_val_nat (desc_set, base + ParamStage_TYPE    , DistoStage::Type_DIODE_CLIPPER);
-		_state_set.set_val_nat (desc_set, base + ParamStage_GAIN    ,     8);
+		_state_set.set_val_nat (desc_set, base + ParamStage_GAIN    ,     1);
 		_state_set.set_val_nat (desc_set, base + ParamStage_LPF_POST, 20480);
 
 		for (int index = 0; index < ParamStage_NBR_ELT; ++index)
@@ -498,8 +498,9 @@ void	Disto2x::update_param (bool force_flag)
 				stage.set_lpf_post_cutoff (freq_lpf);
 
 				const float    gain_post = 0.125f;
+				const float    gain_fix  = (gain < 1) ? 1 / gain : 1;
 				stage.set_gain_pre (gain * (1 / gain_post));
-				stage.set_gain_post (           gain_post );
+				stage.set_gain_post (gain_fix * gain_post );
 			}
 		}
 	}
