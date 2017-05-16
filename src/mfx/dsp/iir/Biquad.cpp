@@ -224,6 +224,85 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 
 
+void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, std::function <float (float)> shaper)
+{
+	assert (dst_ptr != 0);
+	assert (src_ptr != 0);
+	assert (nbr_spl > 0);
+
+	// If we're not on an even boudary, we process a single sample.
+	if (_mem_pos != 0)
+	{
+		*dst_ptr = process_sample (*src_ptr);
+		++ src_ptr;
+		++ dst_ptr;
+		-- nbr_spl;
+
+		if (nbr_spl <= 0)
+		{
+			return;
+		}
+	}
+
+	int            half_nbr_spl = nbr_spl >> 1;
+	int            index = 0;
+	if (half_nbr_spl > 0)
+	{
+		float          mem_x [2];
+		float          mem_y [2];
+		mem_x [0] = _mem_x [0];
+		mem_x [1] = _mem_x [1];
+		mem_y [0] = _mem_y [0];
+		mem_y [1] = _mem_y [1];
+
+		do
+		{
+			// First sample
+			float          x = src_ptr [index];
+			mem_y [1] = shaper (
+				     _eq_z_b [0] *     x
+				+ (  _eq_z_b [1] * mem_x [0]
+				   + _eq_z_b [2] * mem_x [1])
+				- (  _eq_z_a [1] * mem_y [0]
+				   + _eq_z_a [2] * mem_y [1])
+			);
+
+			mem_x [1] = x;
+			dst_ptr [index    ] = mem_y [1];
+
+			// Second sample
+			x = src_ptr [index + 1];
+			mem_y [0] = shaper (
+					  _eq_z_b [0] *     x
+				+ (  _eq_z_b [1] * mem_x [1]
+				   + _eq_z_b [2] * mem_x [0])
+				- (  _eq_z_a [1] * mem_y [1]
+				   + _eq_z_a [2] * mem_y [0])
+			);
+
+			mem_x [0] = x;
+			dst_ptr [index + 1] = mem_y [0];
+
+			index += 2;
+			-- half_nbr_spl;
+		}
+		while (half_nbr_spl > 0);
+
+		_mem_x [0] = mem_x [0];
+		_mem_x [1] = mem_x [1];
+		_mem_y [0] = mem_y [0];
+		_mem_y [1] = mem_y [1];
+	}
+
+	// If number of samples was odd, there is one more to process.
+	if ((nbr_spl & 1) > 0)
+	{
+		dst_ptr [index] = process_sample (src_ptr [index]);
+	}
+}
+
+
+
 void	Biquad::clear_buffers ()
 {
 	_mem_x [0] = 0;

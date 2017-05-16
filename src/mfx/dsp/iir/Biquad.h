@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <functional>
 #include <array>
 
 
@@ -57,11 +58,14 @@ public:
 	inline void    neutralise ();
 	inline void    set_z_eq (const float b [3], const float a [3]);
 	inline void    get_z_eq (float b [3], float a [3]) const;
+	inline float   get_state_y () const;
+	inline float   set_state_y (float y);
 
 	inline float   process_sample (float x);
 	inline float   process_sample (float x, const float inc_b [3], const float inc_a [3]);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [3], const float inc_a [3]);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, std::function <float (float)> shaper);
 
 	void           clear_buffers ();
 

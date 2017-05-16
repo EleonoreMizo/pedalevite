@@ -78,6 +78,20 @@ void	Biquad::get_z_eq (float b [3], float a [3]) const
 
 
 
+float	Biquad::get_state_y () const
+{
+	return _mem_y [_mem_pos];
+}
+
+
+
+float	Biquad::set_state_y (float y)
+{
+	_mem_y [_mem_pos] = y;
+}
+
+
+
 float	Biquad::process_sample (float x)
 {
 	const int      alt_pos = 1 - _mem_pos;
