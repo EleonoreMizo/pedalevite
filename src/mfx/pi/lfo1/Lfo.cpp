@@ -203,11 +203,10 @@ void	Lfo::update_param (bool force_flag)
 	if (_param_change_flag_phset (true) || force_flag)
 	{
 		float          p = float (_state_set.get_val_tgt_nat (Param_PHASE_SET));
-		if (p >= 1)
+		if (p <= 0.9999f)
 		{
-			p = 0;
+			_lfo.set_phase (p);
 		}
-		_lfo.set_phase (p);
 	}
 	if (_param_change_flag_shape (true) || force_flag)
 	{
