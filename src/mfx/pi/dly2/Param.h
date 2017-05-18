@@ -73,6 +73,7 @@ enum ParamLine
 	ParamLine_FX_FLT_R,
 	ParamLine_FX_FLT_Q,
 	ParamLine_FX_DIST_A,
+	ParamLine_FX_DIST_F,
 	ParamLine_FX_SHLF_F,
 	ParamLine_FX_SHLF_L,
 

@@ -67,6 +67,7 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_FLT_R   , 1);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_FLT_Q   , 1);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_DIST_A  , 0);
+	state_set.set_val_nat (desc_set, base + ParamLine_FX_DIST_F  , 0);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_SHLF_F  , 4000);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_SHLF_L  , 1);
 
@@ -75,6 +76,7 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 	state_set.add_observer (base + ParamLine_FX_FLT_R   , _param_change_flag_filter);
 	state_set.add_observer (base + ParamLine_FX_FLT_Q   , _param_change_flag_filter);
 	state_set.add_observer (base + ParamLine_FX_DIST_A  , _param_change_flag_dist);
+	state_set.add_observer (base + ParamLine_FX_DIST_F  , _param_change_flag_dist);
 	state_set.add_observer (base + ParamLine_FX_SHLF_F  , _param_change_flag_shelf);
 	state_set.add_observer (base + ParamLine_FX_SHLF_L  , _param_change_flag_shelf);
 
@@ -85,6 +87,7 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 	state_set.set_ramp_time (base + ParamLine_FX_FLT_F   , 0.010f);
 	state_set.set_ramp_time (base + ParamLine_FX_FLT_R   , 0.010f);
 	state_set.set_ramp_time (base + ParamLine_FX_DIST_A  , 0.010f);
+	state_set.set_ramp_time (base + ParamLine_FX_DIST_F  , 0.010f);
 	state_set.set_ramp_time (base + ParamLine_FX_SHLF_L  , 0.010f);
 
 	_shelf_hi.neutralise ();
@@ -167,10 +170,14 @@ void	FxSection::update_param (bool force_flag)
 
 		if (_param_change_flag_dist (true) || force_flag)
 		{
-			const float    amt = float (
+			const float    amt  = float (
 				_state_set_ptr->get_val_end_nat (base + ParamLine_FX_DIST_A)
 			);
 			_disto.set_amount (amt);
+			const float    fold = float (
+				_state_set_ptr->get_val_end_nat (base + ParamLine_FX_DIST_F)
+			);
+			_disto.set_foldback (fold);
 		}
 
 		if (_param_change_flag_shelf (true) || force_flag)

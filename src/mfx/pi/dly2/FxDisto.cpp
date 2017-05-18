@@ -72,11 +72,22 @@ void	FxDisto::set_amount (float amt)
 
 
 
+void	FxDisto::set_foldback (float foldback)
+{
+	assert (foldback >= 0);
+	assert (foldback <= 1);
+
+	_fold_cur = foldback;
+}
+
+
+
 void	FxDisto::clear_buffers ()
 {
 	_env_pre.clear_buffers ();
 	_env_post.clear_buffers ();
 	_amount_old = _amount_cur;
+	_fold_old   = _fold_cur;
 	update_gains ();
 }
 
@@ -98,7 +109,10 @@ void	FxDisto::process_block (float data_ptr [], int nbr_spl)
 
 	float          gain_pre_end   = gain_pre_beg;
 	float          gain_post_end  = gain_post_beg;
-	const bool     amt_chg_flag   = (_amount_cur != _amount_old);
+	const bool     amt_chg_flag   = (
+		   _amount_cur != _amount_old
+		|| _fold_cur   != _fold_old
+	);
 	if (amt_chg_flag)
 	{
 		update_gains ();
@@ -125,16 +139,13 @@ void	FxDisto::process_block (float data_ptr [], int nbr_spl)
 		);
 
 		// Waveshaping
-		const auto     a  = fstb::ToolsSimd::set1_f32 (-4.0f / 27);
-		const auto     mi = fstb::ToolsSimd::set1_f32 (-1.5f);
-		const auto     ma = fstb::ToolsSimd::set1_f32 (+1.5f);
-		for (int pos = 0; pos < nbr_spl; pos += 4)
+		if (_fold_cur + _fold_old < 1e-3f)
 		{
-			auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
-			x = fstb::ToolsSimd::min_f32 (x, ma);
-			x = fstb::ToolsSimd::max_f32 (x, mi);
-			fstb::ToolsSimd::mac (x, a * x, x * x);
-			fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
+			process_softclip (data_ptr, nbr_spl);
+		}
+		else
+		{
+			process_foldback (data_ptr, nbr_spl);
 		}
 
 		// New volume detection with virtual post-scaling
@@ -203,6 +214,7 @@ void	FxDisto::process_block (float data_ptr [], int nbr_spl)
 	}
 
 	_amount_old = _amount_cur;
+	_fold_old   = _fold_cur;
 }
 
 
@@ -217,10 +229,75 @@ void	FxDisto::process_block (float data_ptr [], int nbr_spl)
 
 void	FxDisto::update_gains ()
 {
-	_gain_pre  = fstb::Approx::exp2 (_amount_cur * 8);
+	const float    k = 1 - _fold_cur * 0.25f;
+	_gain_pre  = fstb::Approx::exp2 (_amount_cur * k * 8 - 2);
 
 	_gain_post = 1.0f / _gain_pre;
 	_gain_post = std::max (_gain_post, 1.0f);
+
+	const int      nbr_steps = fstb::round_int (12 * _fold_cur);
+	_clip_val = 1.5f * std::min (1.0f + nbr_steps, 8.0f);
+}
+
+
+
+// y = x - (4/27) * x^3
+void	FxDisto::process_softclip (float data_ptr [], int nbr_spl)
+{
+	assert (fstb::DataAlign <true>::check_ptr (data_ptr));
+	assert (nbr_spl > 0);
+
+	const auto     a  = fstb::ToolsSimd::set1_f32 (-4.0f / 27);
+	const auto     mi = fstb::ToolsSimd::set1_f32 (-1.5f);
+	const auto     ma = fstb::ToolsSimd::set1_f32 (+1.5f);
+
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
+		x = fstb::ToolsSimd::min_f32 (x, ma);
+		x = fstb::ToolsSimd::max_f32 (x, mi);
+
+		fstb::ToolsSimd::mac (x, a * x, x * x);
+		fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
+	}
+}
+
+
+
+// v = abs (abs (x - 6 * round (x/6) - 3/2) - 3) - 3/2
+// y = v - (4/27) * v^3
+void	FxDisto::process_foldback (float data_ptr [], int nbr_spl)
+{
+	assert (fstb::DataAlign <true>::check_ptr (data_ptr));
+	assert (nbr_spl > 0);
+
+	const auto     a    = fstb::ToolsSimd::set1_f32 (-4.0f / 27);
+	const auto     mi   = fstb::ToolsSimd::set1_f32 (-_clip_val);
+	const auto     ma   = fstb::ToolsSimd::set1_f32 ( _clip_val);
+	const auto     c1_6 = fstb::ToolsSimd::set1_f32 ( 1.0f / 6 );
+	const auto     c6_1 = fstb::ToolsSimd::set1_f32 (-6.0f);
+	const auto     ofs1 = fstb::ToolsSimd::set1_f32 ( 1.5f);
+	const auto     ofs2 = fstb::ToolsSimd::set1_f32 ( 3.0f);
+
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
+		x = fstb::ToolsSimd::min_f32 (x, ma);
+		x = fstb::ToolsSimd::max_f32 (x, mi);
+
+		const auto     u  = fstb::ToolsSimd::conv_s32_to_f32 (
+			fstb::ToolsSimd::round_f32_to_s32 (x * c1_6)
+		);
+		fstb::ToolsSimd::mac (x, u, c6_1);
+		x -= ofs1;
+		x  = fstb::ToolsSimd::abs (x);
+		x -= ofs2;
+		x  = fstb::ToolsSimd::abs (x);
+		x -= ofs1;
+
+		fstb::ToolsSimd::mac (x, a * x, x * x);
+		fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
+	}
 }
 
 

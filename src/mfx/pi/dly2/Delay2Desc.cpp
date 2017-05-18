@@ -531,10 +531,10 @@ void	Delay2Desc::init_line (int index)
 	pll_ptr->use_mapper ().gen_log (4);
 	_desc_set.add_glob (base + ParamLine_FX_FLT_Q, pll_ptr);
 
-	// Line distortion
+	// Line distortion amount
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"Line %d distortion\nLine %d dist\nL%d dist\nL%dD",
+		"Line %d distortion amount\nLine %d dist amt\nLine %d dist a\nL%d dist a\nL%dDA",
 		"%",
 		index + 1,
 		"%5.1f"
@@ -543,6 +543,19 @@ void	Delay2Desc::init_line (int index)
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
 	_desc_set.add_glob (base + ParamLine_FX_DIST_A, lin_ptr);
+
+	// Line distortion foldback
+	lin_ptr = new param::TplLin (
+		0, 1,
+		"Line %d distortion floldback\nLine %d dist fold\nLine %d dist f\nL%d dist f\nL%dDF",
+		"%",
+		index + 1,
+		"%5.1f"
+	);
+	lin_ptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (base + ParamLine_FX_DIST_F, lin_ptr);
 
 	// Line high shelf frequency
 	pll_ptr = new TplPll (

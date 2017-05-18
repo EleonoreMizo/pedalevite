@@ -53,6 +53,7 @@ public:
 
 	void           set_sample_freq (double sample_freq);
 	void           set_amount (float amt);
+	void           set_foldback (float foldback);
 	void           clear_buffers ();
 	void           process_block (float data_ptr [], int nbr_spl);
 
@@ -69,6 +70,8 @@ protected:
 private:
 
 	void           update_gains ();
+	void           process_softclip (float data_ptr [], int nbr_spl);
+	void           process_foldback (float data_ptr [], int nbr_spl);
 
 	dsp::dyn::EnvFollowerRmsSimple
 	               _env_pre;
@@ -77,11 +80,14 @@ private:
 	float          _limiter_level = 0.75f;
 	float          _amount_cur    = 0;
 	float          _amount_old    = 0;
+	float          _fold_cur      = 1;
+	float          _fold_old      = 1;
 
 	float          _gain_pre      = 0.25f;
 	float          _gain_post     = 4;
+	float          _clip_val      = 1.5f;
 
-	static const float                  // Maximum gain for volume compensation (not taking into account _gain_post)
+	static const float                  // Maximum gain for volume compensation (not taking _gain_post into account)
 	               _gain_max_comp;
 
 
