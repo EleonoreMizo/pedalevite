@@ -1354,8 +1354,9 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 
 	// Counts all the plug-ins used in the bank
 
-	// [model] = count
-	std::map <std::string, int>   pi_cnt_bank;
+	// [model] = count, settings
+	typedef std::pair <int, piapi::PluginState> CountState;
+	std::map <std::string, CountState>   pi_cnt_bank;
 	int            max_nbr_slots = 0;
 
 	for (size_t preset_index = 0
@@ -1370,7 +1371,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 		max_nbr_slots = std::max (max_nbr_slots, nbr_slots);
 
 		// Standard plug-ins
-		std::map <std::string, int>  pi_cnt_preset;
+		std::map <std::string, CountState>  pi_cnt_preset;
 		for (const auto &node : preset._slot_map)
 		{
 			const auto &   slot_sptr = node.second;
@@ -1378,13 +1379,24 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 			{
 				const doc::Slot & slot = *slot_sptr;
 				auto           it = pi_cnt_preset.find (slot._pi_model);
-				if (it == pi_cnt_preset.end ())
+				if (it != pi_cnt_preset.end ())
 				{
-					pi_cnt_preset [slot._pi_model] = 1;
+					++ it->second.first;
 				}
 				else
 				{
-					++ it->second;
+					std::pair <std::string, CountState>   p;
+					p.first = slot._pi_model;
+					CountState &    cs = p.second;
+					cs.first = 1;
+					piapi::PluginState & state = cs.second;
+					const doc::PluginSettings &   settings =
+						slot.use_settings (PiType_MAIN);
+					for (auto val : settings._param_list)
+					{
+						state._param_list.push_back (val);
+					}
+					pi_cnt_preset.insert (std::make_pair (slot._pi_model, cs));
 				}
 			}
 		}
@@ -1399,20 +1411,21 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 			}
 			else
 			{
-				it->second = std::max (it->second, elt.second);
+				it->second.first = std::max (it->second.first, elt.second.first);
 			}
 		}
 	}
 
-	pi_cnt_bank [Cst::_plugin_mix] = max_nbr_slots;
+	_central.preinstantiate_plugins (Cst::_plugin_mix, max_nbr_slots, 0);
 
 	// Instantiate all the plug-ins
 	for (const auto & node : pi_cnt_bank)
 	{
 		const std::string &  model_id = node.first;
-		const int      nbr_instances  = node.second;
+		const CountState &   cs       = node.second;
+		const int      nbr_instances  = cs.first;
 
-		_central.preinstantiate_plugins (model_id, nbr_instances);
+		_central.preinstantiate_plugins (model_id, nbr_instances, &cs.second);
 	}
 }
 

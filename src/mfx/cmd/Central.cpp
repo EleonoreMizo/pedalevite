@@ -24,20 +24,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/AllocAlign.h"
 #include "mfx/cmd/BufAlloc.h"
 #include "mfx/cmd/Central.h"
 #include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/CtrlLinkSet.h"
-#include "mfx/pi/dist1/DistoSimple.h"
-#include "mfx/pi/dwm/DryWet.h"
-#include "mfx/pi/freqsh/FrequencyShifter.h"
-#include "mfx/pi/trem1/Tremolo.h"
-#include "mfx/pi/tuner/Tuner.h"
-#include "mfx/pi/wha1/Wha.h"
+#include "mfx/piapi/PluginDescInterface.h"
+#include "mfx/piapi/PluginInterface.h"
 #include "mfx/Cst.h"
 
 #include <algorithm>
+#include <array>
 #include <utility>
+#include <vector>
 
 #include <cassert>
 
@@ -293,7 +292,8 @@ int	Central::set_plugin (int pos, std::string model, bool force_reset_flag, bool
 
 
 
-void	Central::preinstantiate_plugins (std::string model, int count)
+// state_ptr can be null to keep the the default state.
+void	Central::preinstantiate_plugins (std::string model, int count, const piapi::PluginState *state_ptr)
 {
 	Document &     doc = modify ();
 
@@ -308,6 +308,29 @@ void	Central::preinstantiate_plugins (std::string model, int count)
 
 	// Creates the remaining plug-ins, if required
 	const int         nbr_inst = count - nbr_found;
+	std::vector <piapi::EventTs> evt_list;
+	std::vector <const piapi::EventTs *> evt_ptr_list;
+
+	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
+	std::array <BufAlign, 6>  buf_arr;
+	std::array <const float *, 2> src_ptr_arr = { 0, 0 };
+	std::array <      float *, 2> dst_ptr_arr = { 0, 0 };
+	std::array <      float *, 2> sig_ptr_arr = { 0, 0 };
+	if (_sample_freq > 0)
+	{
+		const int      mbs_alig = (_max_block_size + 3) & ~3;
+		for (auto &buf : buf_arr)
+		{
+			buf.resize (mbs_alig, 0);
+		}
+		src_ptr_arr [0] = &buf_arr [0] [0];
+		src_ptr_arr [1] = &buf_arr [1] [0];
+		dst_ptr_arr [0] = &buf_arr [2] [0];
+		dst_ptr_arr [1] = &buf_arr [3] [0];
+		sig_ptr_arr [0] = &buf_arr [4] [0];
+		sig_ptr_arr [1] = &buf_arr [5] [0];
+	}
+
 	for (int pi_cnt = 0; pi_cnt < nbr_inst; ++ pi_cnt)
 	{
 		const int      pi_id = _plugin_pool.create (model);
@@ -328,6 +351,41 @@ void	Central::preinstantiate_plugins (std::string model, int count)
 
 		// Not used, actually
 		doc._map_model_id [model] [pi_id] = false;
+
+		// Sets the requested plug-in state by processing a sample buffer
+		if (state_ptr != 0 && _sample_freq > 0)
+		{
+			const int      nbr_param = int (state_ptr->_param_list.size ());
+			evt_list.resize (nbr_param);
+			evt_ptr_list.resize (nbr_param);
+			for (int index = 0; index < nbr_param; ++index)
+			{
+				piapi::EventTs &  evt = evt_list [index];
+				evt_ptr_list [index]  = &evt;
+
+				evt._type                = piapi::EventType_PARAM;
+				evt._timestamp           = 0;
+
+				evt._evt._param._categ   = piapi::ParamCateg_GLOBAL;
+				evt._evt._param._index   = index;
+				evt._evt._param._note_id = -1;
+				evt._evt._param._val     = float (state_ptr->_param_list [index]);
+			}
+
+			piapi::PluginInterface::ProcInfo proc_info;
+			proc_info._byp_arr   = 0;
+			proc_info._byp_state = piapi::PluginInterface::BypassState_IGNORE;
+			proc_info._dst_arr   = &dst_ptr_arr [0];
+			proc_info._evt_arr   = (nbr_param > 0) ? &evt_ptr_list [0] : 0;
+			proc_info._nbr_chn_arr [piapi::PluginInterface::Dir_IN ] = 2;
+			proc_info._nbr_chn_arr [piapi::PluginInterface::Dir_OUT] = 2;
+			proc_info._nbr_evt   = int (evt_ptr_list.size ());
+			proc_info._nbr_spl   = _max_block_size;
+			proc_info._sig_arr   = &sig_ptr_arr [0];
+			proc_info._src_arr   = &src_ptr_arr [0];
+
+			details._pi_uptr->process_block (proc_info);
+		}
 	}
 }
 

@@ -93,7 +93,7 @@ public:
 	void           delete_slot (int pos);
 	void           clear_slot (int pos);
 	int            set_plugin (int pos, std::string model, bool force_reset_flag, bool gen_audio_flag);
-	void           preinstantiate_plugins (std::string model, int count);
+	void           preinstantiate_plugins (std::string model, int count, const piapi::PluginState *state_ptr);
 	void           remove_plugin (int pos);
 	int            set_mixer (int pos);
 	void           remove_mixer (int pos);
