@@ -814,11 +814,30 @@ ToolsSimd::VectF32	ToolsSimd::monofy_2f32_hi (VectF32 v)
 
 
 
+// Rounding method is unspecified (towards 0 on ARM, depends on MXCSR on x86)
 ToolsSimd::VectS32	ToolsSimd::conv_f32_to_s32 (VectF32 x)
 {
 #if fstb_IS (ARCHI, X86)
 	return _mm_cvtps_epi32 (x);
 #elif fstb_IS (ARCHI, ARM)
+	return vcvtq_s32_f32 (x);
+#endif // ff_arch_CPU
+}
+
+
+
+// Assumes rounding mode is to-nearest on x86
+ToolsSimd::VectS32	ToolsSimd::round_f32_to_s32 (VectF32 x)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_cvtps_epi32 (x);
+#elif fstb_IS (ARCHI, ARM)
+	const auto     zero = vdupq_n_f32 ( 0.0f);
+	const auto     m    = vdupq_n_f32 (-0.5f);
+	const auto     p    = vdupq_n_f32 (+0.5f);
+	const auto     gt0  = vcgtq_f32 (x, zero);
+	const auto     u    = vbslq_f32 (gt0, p, m);
+	x = vaddq_f32 (x, u);
 	return vcvtq_s32_f32 (x);
 #endif // ff_arch_CPU
 }

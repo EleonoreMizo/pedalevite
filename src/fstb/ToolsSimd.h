@@ -197,6 +197,8 @@ public:
 
 	static inline VectS32
 	               conv_f32_to_s32 (VectF32 x);
+	static inline VectS32
+	               round_f32_to_s32 (VectF32 x);
 	static inline VectF32
 	               conv_s32_to_f32 (VectS32 x);
 
