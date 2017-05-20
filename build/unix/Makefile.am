@@ -525,6 +525,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/fv/DelayLineSimple.h \
         ../../src/mfx/pi/fv/Freeverb.cpp \
         ../../src/mfx/pi/fv/Freeverb.h \
+        ../../src/mfx/pi/fv/FreeverbCore.cpp \
+        ../../src/mfx/pi/fv/FreeverbCore.h \
         ../../src/mfx/pi/fv/FreeverbDesc.cpp \
         ../../src/mfx/pi/fv/FreeverbDesc.h \
         ../../src/mfx/pi/fv/Param.h \

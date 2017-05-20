@@ -33,9 +33,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
 #include "mfx/dsp/iir/Biquad.h"
+#include "mfx/pi/fv/FreeverbCore.h"
 #include "mfx/pi/fv/FreeverbDesc.h"
-#include "mfx/pi/fv/DelayAllPassSimd.h"
-#include "mfx/pi/fv/DelayComb.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -82,21 +81,11 @@ protected:
 
 private:
 
-	static const int
-	               _nbr_comb = 8;
-	static const int
-	               _nbr_ap   = 4;
-
-	typedef std::array <DelayComb, _nbr_comb> CombArray;
-	typedef std::array <DelayAllPassSimd, _nbr_ap> AllPassArray;
-
 	class Channel
 	{
 	public:
-		CombArray      _comb_arr;
-		AllPassArray   _ap_arr;
-		std::array <std::vector <float, fstb::AllocAlign <float, 16> >, 3>
-		               _buf_arr;         // 0 = input, 1 = rendering, 2 = accumulate
+		std::array <std::vector <float, fstb::AllocAlign <float, 16> >, 2>
+		               _buf_arr;         // 0 = FV input, 1 = FV output
 		dsp::iir::Biquad                 // On the reverb output
 		               _filter;
 	};
@@ -121,21 +110,13 @@ private:
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_other;
 
+	FreeverbCore   _fv;
 	ChnArray       _chn_arr;
 	float          _src_lvl;
 	float          _dry_lvl;
 	float          _wet_lvl_direct;
 	float          _wet_lvl_cross;
 	bool           _flt_flag;
-
-	static const float
-	               _scalewet;
-	static const int
-	               _stereospread;
-	static const std::array <int, _nbr_comb>
-	               _comb_len_arr;
-	static const std::array <int, _nbr_ap>
-	               _ap_len_arr;
 
 
 

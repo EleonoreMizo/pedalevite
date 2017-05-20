@@ -62,10 +62,11 @@ Freeverb::Freeverb ()
 ,	_param_change_flag_lvl ()
 ,	_param_change_flag_flt ()
 ,	_param_change_flag_other ()
+,	_fv ()
 ,	_chn_arr ()
 ,	_src_lvl (1)
 ,	_dry_lvl (1)
-,	_wet_lvl_direct (_scalewet)
+,	_wet_lvl_direct (FreeverbCore::_scalewet)
 ,	_wet_lvl_cross (0)
 ,	_flt_flag (false)
 {
@@ -98,10 +99,6 @@ Freeverb::Freeverb ()
 
 	for (auto &chn : _chn_arr)
 	{
-		for (auto &ap : chn._ap_arr)
-		{
-			ap.set_feedback (0.5f);
-		}
 		chn._filter.neutralise ();
 	}
 }
@@ -141,30 +138,14 @@ int	Freeverb::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_param_change_flag_flt  .set ();
 	_param_change_flag_other.set ();
 
-	const int      mult =
-		std::max (fstb::round_int (sample_freq / 44100), 1);
+	_fv.reset (sample_freq, max_buf_len);
+
 	for (int chn_cnt = 0; chn_cnt < int (_chn_arr.size ()); ++chn_cnt)
 	{
 		Channel &      chn = _chn_arr [chn_cnt];
 		for (auto &buf : chn._buf_arr)
 		{
 			buf.resize (max_buf_len);
-		}
-		for (int comb_cnt = 0; comb_cnt < int (chn._comb_arr.size ()); ++comb_cnt)
-		{
-			DelayComb &    comb = chn._comb_arr [comb_cnt];
-			int            len  = _comb_len_arr [comb_cnt];
-			len += chn_cnt * _stereospread;
-			len *= mult;
-			comb.set_delay (len);
-			comb.clear_buffers ();
-		}
-		for (int ap_cnt = 0; ap_cnt < int (chn._ap_arr.size ()); ++ap_cnt)
-		{
-			DelayAllPassSimd &   ap  = chn._ap_arr [ap_cnt];
-			const int            len = _ap_len_arr [ap_cnt];
-			ap.set_delay (len * mult);
-			ap.clear_buffers ();
 		}
 		chn._filter.clear_buffers ();
 	}
@@ -202,9 +183,14 @@ void	Freeverb::do_process_block (ProcInfo &proc)
 	// Signal processing
 	const int      chn_in_step = (nbr_chn_in < nbr_chn_out) ? 0 : 1;
 	int            chn_in_cnt  = 0;
+	std::array <const float *, _max_nbr_chn> tmp_src_ptr_arr;
+	std::array <      float *, _max_nbr_chn> tmp_dst_ptr_arr;
 	for (int chn_cnt = 0; chn_cnt < nbr_chn_out; ++chn_cnt)
 	{
 		Channel &      chn = _chn_arr [chn_cnt];
+
+		tmp_src_ptr_arr [chn_cnt] = &chn._buf_arr [0] [0];
+		tmp_dst_ptr_arr [chn_cnt] = &chn._buf_arr [1] [0];
 
 		// Input
 		dsp::mix::Align::copy_1_1_v (
@@ -220,54 +206,37 @@ void	Freeverb::do_process_block (ProcInfo &proc)
 			_dry_lvl
 		);
 
-		// Comb filters in parallel
-		bool           full_flag = false;
-		for (auto &comb : chn._comb_arr)
-		{
-			float *        dst_ptr =
-				  (full_flag)
-				? &chn._buf_arr [1] [0]
-				: &chn._buf_arr [2] [0];
-			comb.process_block (dst_ptr, &chn._buf_arr [0] [0], proc._nbr_spl);
-			if (full_flag)
-			{
-				dsp::mix::Align::mix_1_1 (
-					&chn._buf_arr [2] [0],
-					&chn._buf_arr [1] [0],
-					proc._nbr_spl
-				);
-			}
-			full_flag = true;
-		}
-
-		// Allpasses in series
-		for (auto &ap : chn._ap_arr)
-		{
-			ap.process_block (
-				&chn._buf_arr [2] [0],
-				&chn._buf_arr [2] [0],
-				proc._nbr_spl
-			);
-		}
-
-		// Filtering
-		if (_flt_flag)
-		{
-			chn._filter.process_block (
-				&chn._buf_arr [2] [0],
-				&chn._buf_arr [2] [0],
-				proc._nbr_spl
-			);
-		}
-
 		chn_in_cnt += chn_in_step;
 	}
+
+	// Reverb
+	_fv.process_block (
+		&tmp_dst_ptr_arr [0],
+		&tmp_src_ptr_arr [0],
+		proc._nbr_spl,
+		nbr_chn_out
+	);
+
+	// Filtering
+	if (_flt_flag)
+	{
+		for (int chn_cnt = 0; chn_cnt < nbr_chn_out; ++chn_cnt)
+		{
+			Channel &      chn = _chn_arr [chn_cnt];
+			chn._filter.process_block (
+				&chn._buf_arr [1] [0],
+				&chn._buf_arr [1] [0],
+				proc._nbr_spl
+			);
+		}
+	}
+
 	// Final mix
 	if (nbr_chn_out == 1)
 	{
 		dsp::mix::Align::mix_1_1_v (
 			proc._dst_arr [0],
-			&_chn_arr [0]._buf_arr [2] [0],
+			&_chn_arr [0]._buf_arr [1] [0],
 			proc._nbr_spl,
 			_wet_lvl_direct
 		);
@@ -278,8 +247,8 @@ void	Freeverb::do_process_block (ProcInfo &proc)
 		dsp::mix::Align::mix_mat_2_2_v (
 			proc._dst_arr [0],
 			proc._dst_arr [1],
-			&_chn_arr [0]._buf_arr [2] [0],
-			&_chn_arr [1]._buf_arr [2] [0],
+			&_chn_arr [0]._buf_arr [1] [0],
+			&_chn_arr [1]._buf_arr [1] [0],
 			proc._nbr_spl,
 			dsp::StereoLevel (
 				_wet_lvl_direct,
@@ -307,7 +276,7 @@ void	Freeverb::update_param ()
 		_dry_lvl = float (_state_set.get_val_tgt_nat (Param_DRY));
 
 		float          wet_lvl = float (_state_set.get_val_tgt_nat (Param_WET));
-		wet_lvl *= _scalewet;
+		wet_lvl *= FreeverbCore::_scalewet;
 
 		_wet_lvl_direct = wet_lvl * (0.5f + hwidth);
 		_wet_lvl_cross  = wet_lvl * (0.5f - hwidth);
@@ -353,37 +322,15 @@ void	Freeverb::update_param ()
 		}
 		else
 		{
-			// Original freeverb had 0.015 but we're not summing both channel
-			// together as it did, so we have to double the input gain.
-			_src_lvl = 0.030f;
+			_src_lvl = FreeverbCore::_scalein;
 			damp = std::min (damp, 0.99f);
 		}
 
-		for (auto &chn : _chn_arr)
-		{
-			for (auto &comb : chn._comb_arr)
-			{
-				comb.set_feedback (rsize);
-				comb.set_damp (damp);
-			}
-		}
+		_fv.set_damp (damp);
+		_fv.set_reflectivity (rsize);
 	}
 }
 
-
-
-const float	Freeverb::_scalewet     =  3.0f / 2.0f;
-
-const int	Freeverb::_stereospread = 23;
-
-const std::array <int, Freeverb::_nbr_comb>	Freeverb::_comb_len_arr =
-{{
-	1116, 1188, 1277, 1356, 1422, 1491, 1557, 1617
-}};
-const std::array <int, Freeverb::_nbr_ap>	Freeverb::_ap_len_arr =
-{{
-	556, 441, 341, 225
-}};
 
 
 }  // namespace fv
