@@ -514,6 +514,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/flancho/WfType.h \
         ../../src/mfx/pi/freqsh/FrequencyShifter.cpp \
         ../../src/mfx/pi/freqsh/FrequencyShifter.h \
+        ../../src/mfx/pi/freqsh/FreqShiftCore.cpp \
+        ../../src/mfx/pi/freqsh/FreqShiftCore.h \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.cpp \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.h \
         ../../src/mfx/pi/freqsh/Param.h \

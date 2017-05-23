@@ -2109,6 +2109,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\fv\FreeverbCore.h">
       <Filter>mfx\pi\fv</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\freqsh\FreqShiftCore.h">
+      <Filter>mfx\pi\freqsh</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayLineSimpleMod.h">
       <Filter>mfx\pi\fv</Filter>
     </ClInclude>
@@ -2965,6 +2968,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbCore.cpp">
       <Filter>mfx\pi\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\freqsh\FreqShiftCore.cpp">
+      <Filter>mfx\pi\freqsh</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayLineSimpleMod.cpp">
       <Filter>mfx\pi\fv</Filter>

@@ -525,6 +525,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\flancho\FlanchoDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\flancho\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\flancho\WfType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\freqsh\FreqShiftCore.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayAllPassSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayComb.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayLineSimple.h" />
@@ -916,6 +917,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\flancho\Flancho.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\flancho\FlanchoChn.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\flancho\FlanchoDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\freqsh\FreqShiftCore.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayAllPassSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayComb.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayLineSimple.cpp" />

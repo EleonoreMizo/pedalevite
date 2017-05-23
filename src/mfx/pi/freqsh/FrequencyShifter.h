@@ -28,12 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/util/NotificationFlag.h"
-#include "fstb/AllocAlign.h"
-#include "fstb/SingleObj.h"
-#include "mfx/dsp/osc/OscSinCosStableSimd.h"
-#include "mfx/dsp/iir/Biquad.h"
+#include "mfx/pi/freqsh/FreqShiftCore.h"
 #include "mfx/pi/freqsh/FreqShiftDesc.h"
-#include "mfx/pi/freqsh/PhaseHalfPi.h"
 #include "mfx/pi/ParamDescSet.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
@@ -81,43 +77,6 @@ protected:
 
 private:
 
-	enum Buf
-	{
-		Buf_COS = 0,
-		Buf_SIN,
-		Buf_AAF,
-		Buf_PHC,
-		Buf_PHS,
-
-		Buf_NBR_ELT
-	};
-
-	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-	typedef std::array <BufAlign, Buf_NBR_ELT> BufArray;
-
-	static const int
-	               _nbr_coef = 8;
-
-	class Channel
-	{
-	public:
-		dsp::iir::Biquad
-		               _aa;
-		PhaseHalfPi <_nbr_coef>
-		               _ssb;
-	};
-	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
-
-	class Aligned
-	{
-	public:
-		ChannelArray   _chn_arr;
-		dsp::osc::OscSinCosStableSimd
-		               _osc;
-	};
-
-	void           update_step ();
-
 	State          _state;
 
 	FreqShiftDesc  _desc;
@@ -127,13 +86,7 @@ private:
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
-	fstb::SingleObj <Aligned, fstb::AllocAlign <Aligned, 16> >
-	               _ali;
-	float          _inv_fs;
-	float          _freq;
-	float          _step_angle;         // Radians
-
-	BufArray       _buf_arr;
+	FreqShiftCore  _freq_shift;
 
 
 
