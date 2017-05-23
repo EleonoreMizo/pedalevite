@@ -528,6 +528,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayAllPassSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayComb.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayLineSimple.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayLineSimpleMod.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fv\Freeverb.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fv\FreeverbCore.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fv\FreeverbDesc.h" />
@@ -918,6 +919,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayAllPassSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayComb.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayLineSimple.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayLineSimpleMod.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\fv\Freeverb.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbCore.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbDesc.cpp" />
