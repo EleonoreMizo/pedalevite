@@ -69,7 +69,10 @@ protected:
 
 private:
 
+	static const int  _resol = 64;      // Samples. Must be a multiple of 4 (for alignment)
+
 	void           update_gains ();
+	void           process_block_sub (float data_ptr [], int nbr_spl);
 	void           process_softclip (float data_ptr [], int nbr_spl);
 	void           process_foldback (float data_ptr [], int nbr_spl);
 

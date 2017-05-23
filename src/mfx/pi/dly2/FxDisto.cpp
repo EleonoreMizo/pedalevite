@@ -97,7 +97,46 @@ void	FxDisto::process_block (float data_ptr [], int nbr_spl)
 {
 	assert (fstb::DataAlign <true>::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
-	assert (nbr_spl <= Cst::_max_frame_size);
+
+	int            block_pos = 0;
+	do
+	{
+		const int      max_len  = _resol;
+		const int      work_len = std::min (nbr_spl - block_pos, max_len);
+		process_block_sub (data_ptr + block_pos, work_len);
+		block_pos += work_len;
+	}
+	while (block_pos < nbr_spl);
+}
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	FxDisto::update_gains ()
+{
+	const float    k = 1 - _fold_cur * 0.25f;
+	_gain_pre  = fstb::Approx::exp2 (_amount_cur * k * 8 - 2);
+
+	_gain_post = 1.0f / _gain_pre;
+	_gain_post = std::max (_gain_post, 1.0f);
+
+	const int      nbr_steps = fstb::round_int (12 * _fold_cur);
+	_clip_val = 1.5f * std::min (1.0f + nbr_steps, 8.0f);
+}
+
+
+
+void	FxDisto::process_block_sub (float data_ptr [], int nbr_spl)
+{
+	assert (fstb::DataAlign <true>::check_ptr (data_ptr));
+	assert (nbr_spl > 0);
 
 	// Volume detection
 	float          vol_pre_beg_sq = _env_pre.get_state_no_sqrt ();
@@ -215,28 +254,6 @@ void	FxDisto::process_block (float data_ptr [], int nbr_spl)
 
 	_amount_old = _amount_cur;
 	_fold_old   = _fold_cur;
-}
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-void	FxDisto::update_gains ()
-{
-	const float    k = 1 - _fold_cur * 0.25f;
-	_gain_pre  = fstb::Approx::exp2 (_amount_cur * k * 8 - 2);
-
-	_gain_post = 1.0f / _gain_pre;
-	_gain_post = std::max (_gain_post, 1.0f);
-
-	const int      nbr_steps = fstb::round_int (12 * _fold_cur);
-	_clip_val = 1.5f * std::min (1.0f + nbr_steps, 8.0f);
 }
 
 
