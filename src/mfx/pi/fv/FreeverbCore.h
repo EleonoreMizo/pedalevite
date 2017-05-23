@@ -59,8 +59,10 @@ public:
 
 	void           reset (double sample_freq, int max_buf_len);
 	void           set_reflectivity (float fdbk);
+	void           set_reflectivity (float fdbk, int chn_index);
 	void           set_damp (float damp);
-	void           process_block (float * const dst_ptr_arr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
+	void           set_damp (float damp, int chn_index);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, int chn_index);
 	void           clear_buffers ();
 
 	static const float
@@ -101,7 +103,9 @@ private:
 	               _buf;
 
 	static const int
-	               _stereospread;
+	               _stereospread        = 23;
+	static const int
+	               _stereospread_mp     =  5;
 	static const std::array <int, _nbr_comb>
 	               _comb_len_arr;
 	static const std::array <int, _nbr_ap>

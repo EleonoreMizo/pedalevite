@@ -181,16 +181,12 @@ void	Freeverb::do_process_block (ProcInfo &proc)
 	update_param ();
 
 	// Signal processing
+	assert (nbr_chn_in <= nbr_chn_out);
 	const int      chn_in_step = (nbr_chn_in < nbr_chn_out) ? 0 : 1;
 	int            chn_in_cnt  = 0;
-	std::array <const float *, _max_nbr_chn> tmp_src_ptr_arr;
-	std::array <      float *, _max_nbr_chn> tmp_dst_ptr_arr;
 	for (int chn_cnt = 0; chn_cnt < nbr_chn_out; ++chn_cnt)
 	{
 		Channel &      chn = _chn_arr [chn_cnt];
-
-		tmp_src_ptr_arr [chn_cnt] = &chn._buf_arr [0] [0];
-		tmp_dst_ptr_arr [chn_cnt] = &chn._buf_arr [1] [0];
 
 		// Input
 		dsp::mix::Align::copy_1_1_v (
@@ -207,15 +203,15 @@ void	Freeverb::do_process_block (ProcInfo &proc)
 		);
 
 		chn_in_cnt += chn_in_step;
-	}
 
-	// Reverb
-	_fv.process_block (
-		&tmp_dst_ptr_arr [0],
-		&tmp_src_ptr_arr [0],
-		proc._nbr_spl,
-		nbr_chn_out
-	);
+		// Reverb
+		_fv.process_block (
+			&chn._buf_arr [1] [0],
+			&chn._buf_arr [0] [0],
+			proc._nbr_spl,
+			chn_cnt
+		);
+	}
 
 	// Filtering
 	if (_flt_flag)

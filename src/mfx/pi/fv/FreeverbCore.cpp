@@ -102,12 +102,25 @@ void	FreeverbCore::set_reflectivity (float fdbk)
 	assert (fdbk > -1);
 	assert (fdbk <  1);
 
-	for (auto &chn : _chn_arr)
+	for (int chn_index = 0; chn_index < _max_nbr_chn; ++chn_index)
 	{
-		for (auto &comb : chn._comb_arr)
-		{
-			comb.set_feedback (fdbk);
-		}
+		set_reflectivity (fdbk, chn_index);
+	}
+}
+
+
+
+void	FreeverbCore::set_reflectivity (float fdbk, int chn_index)
+{
+	assert (fdbk > -1);
+	assert (fdbk <  1);
+	assert (chn_index >= 0);
+	assert (chn_index < _max_nbr_chn);
+
+	Channel &      chn = _chn_arr [chn_index];
+	for (auto &comb : chn._comb_arr)
+	{
+		comb.set_feedback (fdbk);
 	}
 }
 
@@ -118,59 +131,57 @@ void	FreeverbCore::set_damp (float damp)
 	assert (damp >= 0);
 	assert (damp <  1);
 
-	for (auto &chn : _chn_arr)
+	for (int chn_index = 0; chn_index < _max_nbr_chn; ++chn_index)
 	{
-		for (auto &comb : chn._comb_arr)
-		{
-			comb.set_damp (damp);
-		}
+		set_damp (damp, chn_index);
 	}
 }
 
 
 
-void	FreeverbCore::process_block (float * const dst_ptr_arr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn)
+void	FreeverbCore::set_damp (float damp, int chn_index)
 {
-	assert (dst_ptr_arr != 0);
-	assert (fstb::DataAlign <true>::check_ptr (dst_ptr_arr [0]));
-	assert (src_ptr_arr != 0);
-	assert (fstb::DataAlign <true>::check_ptr (src_ptr_arr [0]));
-	assert (nbr_spl > 0);
-	assert (nbr_chn > 0);
+	assert (damp >= 0);
+	assert (damp <  1);
+	assert (chn_index >= 0);
+	assert (chn_index < _max_nbr_chn);
 
-	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
+	Channel &      chn = _chn_arr [chn_index];
+	for (auto &comb : chn._comb_arr)
 	{
-		Channel &      chn = _chn_arr [chn_cnt];
+		comb.set_damp (damp);
+	}
+}
 
-		// Comb filters in parallel
-		bool           full_flag = false;
-		for (auto &comb : chn._comb_arr)
-		{
-			float *        dst_ptr =
-				  (full_flag)
-				? &_buf [0]
-				: dst_ptr_arr [chn_cnt];
-			comb.process_block (dst_ptr, src_ptr_arr [chn_cnt], nbr_spl);
-			if (full_flag)
-			{
-				dsp::mix::Align::mix_1_1 (
-					dst_ptr_arr [chn_cnt],
-					&_buf [0],
-					nbr_spl
-				);
-			}
-			full_flag = true;
-		}
 
-		// Allpasses in series
-		for (auto &ap : chn._ap_arr)
+
+void	FreeverbCore::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, int chn_index)
+{
+	assert (fstb::DataAlign <true>::check_ptr (dst_ptr));
+	assert (fstb::DataAlign <true>::check_ptr (src_ptr));
+	assert (nbr_spl > 0);
+	assert (chn_index >= 0);
+	assert (chn_index < _max_nbr_chn);
+
+	Channel &      chn = _chn_arr [chn_index];
+
+	// Comb filters in parallel
+	bool           full_flag = false;
+	for (auto &comb : chn._comb_arr)
+	{
+		float *        dst2_ptr = (full_flag) ? &_buf [0] : dst_ptr;
+		comb.process_block (dst2_ptr, src_ptr, nbr_spl);
+		if (full_flag)
 		{
-			ap.process_block (
-				dst_ptr_arr [chn_cnt],
-				dst_ptr_arr [chn_cnt],
-				nbr_spl
-			);
+			dsp::mix::Align::mix_1_1 (dst_ptr, &_buf [0], nbr_spl);
 		}
+		full_flag = true;
+	}
+
+	// Allpasses in series
+	for (auto &ap : chn._ap_arr)
+	{
+		ap.process_block (dst_ptr, dst_ptr, nbr_spl);
 	}
 }
 
@@ -209,8 +220,6 @@ const float	FreeverbCore::_scalein  = 0.030f;
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
-
-const int	FreeverbCore::_stereospread = 23;
 
 const std::array <int, FreeverbCore::_nbr_comb>	FreeverbCore::_comb_len_arr =
 {{
