@@ -31,8 +31,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/iir/OnePole.h"
+#include "mfx/dsp/ctrl/Ramp.h"
 #include "mfx/pi/dly2/FilterType.h"
 #include "mfx/pi/dly2/FxDisto.h"
+#include "mfx/pi/freqsh/FreqShiftCore.h"
+
 
 
 namespace mfx
@@ -58,7 +61,7 @@ public:
 	virtual        ~FxSection () = default;
 
 	void           init (int line_index, const ParamDescSet &desc_set, ParamStateSet &state_set);
-	void           reset (double sample_freq);
+	void           reset (double sample_freq, int max_buf_len);
 	void           clear_buffers ();
 
 	void           process_block (float data_ptr [], int nbr_spl);
@@ -92,6 +95,8 @@ private:
 	FxDisto        _disto;
 	dsp::iir::OnePole
 	               _shelf_hi;
+	freqsh::FreqShiftCore
+	               _freq_shift;
 
 	fstb::util::NotificationFlag
 		            _param_change_flag;
@@ -101,6 +106,8 @@ private:
 		            _param_change_flag_dist;
 	fstb::util::NotificationFlagCascadeSingle
 		            _param_change_flag_shelf;
+	fstb::util::NotificationFlagCascadeSingle
+		            _param_change_flag_freqsh;
 
 	FilterType     _filter_type   = FilterType_RESO;
 	float          _filter_freq   = 1000;

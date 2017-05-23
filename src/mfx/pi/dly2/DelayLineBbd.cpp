@@ -102,7 +102,7 @@ void	DelayLineBbd::reset (double sample_freq, int max_block_size, float buf_zone
 		sample_freq * Cst::_max_delay * (1 / 1000.0)
 	);
 	_bbd.init (max_dly_spl, _interp, 0);
-	_fx.reset (sample_freq);
+	_fx.reset (sample_freq, max_block_size);
 	_eq.set_sample_freq (sample_freq);
 	_xfade_shape.set_sample_freq (sample_freq);
 	_xfade_len = _xfade_shape.get_len ();

@@ -24,8 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/DataAlign.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
+#include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/dly2/Cst.h"
 #include "mfx/pi/dly2/Delay2Desc.h"
 #include "mfx/pi/dly2/FxSection.h"
@@ -56,6 +58,8 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 	assert (_desc_set_ptr  == 0);
 	assert (_state_set_ptr == 0);
 
+	dsp::mix::Align::setup ();
+
 	_line_index      = line_index;
 	_desc_set_ptr    = &desc_set;
 	_state_set_ptr   = &state_set;
@@ -70,6 +74,7 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_DIST_F  , 0);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_SHLF_F  , 4000);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_SHLF_L  , 1);
+	state_set.set_val_nat (desc_set, base + ParamLine_FX_FSH_F   , 0);
 
 	state_set.add_observer (base + ParamLine_FX_FLT_T   , _param_change_flag_filter);
 	state_set.add_observer (base + ParamLine_FX_FLT_F   , _param_change_flag_filter);
@@ -79,10 +84,12 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 	state_set.add_observer (base + ParamLine_FX_DIST_F  , _param_change_flag_dist);
 	state_set.add_observer (base + ParamLine_FX_SHLF_F  , _param_change_flag_shelf);
 	state_set.add_observer (base + ParamLine_FX_SHLF_L  , _param_change_flag_shelf);
+	state_set.add_observer (base + ParamLine_FX_FSH_F   , _param_change_flag_freqsh);
 
 	_param_change_flag_filter.add_observer (_param_change_flag);
 	_param_change_flag_dist  .add_observer (_param_change_flag);
 	_param_change_flag_shelf .add_observer (_param_change_flag);
+	_param_change_flag_freqsh.add_observer (_param_change_flag);
 
 	state_set.set_ramp_time (base + ParamLine_FX_FLT_F   , 0.010f);
 	state_set.set_ramp_time (base + ParamLine_FX_FLT_R   , 0.010f);
@@ -96,14 +103,21 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 
 
 
-void	FxSection::reset (double sample_freq)
+void	FxSection::reset (double sample_freq, int max_buf_len)
 {
 	assert (sample_freq > 0);
+	assert (max_buf_len > 0);
 
 	_sample_freq     = float (    sample_freq);
 	_inv_fs          = float (1 / sample_freq);
 
 	_disto.set_sample_freq (sample_freq);
+	_freq_shift.reset (sample_freq, max_buf_len);
+
+	_param_change_flag_filter.set ();
+	_param_change_flag_dist  .set ();
+	_param_change_flag_shelf .set ();
+	_param_change_flag_freqsh.set ();
 
 	update_param (true);
 
@@ -117,6 +131,7 @@ void	FxSection::clear_buffers ()
 	_filter.clear_buffers ();
 	_disto.clear_buffers ();
 	_shelf_hi.clear_buffers ();
+	_freq_shift.clear_buffers ();
 }
 
 
@@ -124,7 +139,7 @@ void	FxSection::clear_buffers ()
 void	FxSection::process_block (float data_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
-	assert (data_ptr != 0);
+	assert (fstb::DataAlign <true>::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
 
 	update_param (false);
@@ -132,6 +147,10 @@ void	FxSection::process_block (float data_ptr [], int nbr_spl)
 	_filter.process_block (data_ptr, data_ptr, nbr_spl);
 	_disto.process_block (data_ptr, nbr_spl);
 	_shelf_hi.process_block (data_ptr, data_ptr, nbr_spl);
+	if (_freq_shift.is_active ())
+	{
+		_freq_shift.process_block (&data_ptr, &data_ptr, nbr_spl, 1);
+	}
 }
 
 
@@ -190,6 +209,14 @@ void	FxSection::update_param (bool force_flag)
 			);
 
 			update_shelf ();
+		}
+
+		if (_param_change_flag_freqsh (true) || force_flag)
+		{
+			const float    freq = float (
+				_state_set_ptr->get_val_end_nat (base + ParamLine_FX_FSH_F)
+			);
+			_freq_shift.set_freq (freq);
 		}
 	}
 }

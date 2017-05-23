@@ -52,6 +52,7 @@ public:
 	static const int  _max_frame_size =    64;   // Samples, for internal processing
 	static const int  _eq_freq_min    =    16;
 	static const int  _eq_freq_max    = 20480;
+	static const int  _max_freq_shift =  5000;   // Hz
 
 
 

@@ -583,6 +583,22 @@ void	Delay2Desc::init_line (int index)
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_DB);
 	_desc_set.add_glob (base + ParamLine_FX_SHLF_L, lin_ptr);
 
+	// Line frequency shifting
+	pll_ptr = new TplPll (
+		-Cst::_max_freq_shift, Cst::_max_freq_shift,
+		"Line %d frequency shift\nLine %d freq shift\nLine %d f shift\nL%d f shift\nL%dFS",
+		"Hz",
+		param::HelperDispNum::Preset_FLOAT_STD,
+		index + 1,
+		"%+7.1f"
+	);
+	pll_ptr->use_mapper ().set_first_value (-Cst::_max_freq_shift);
+	pll_ptr->use_mapper ().add_segment (0.4, -0.004 * Cst::_max_freq_shift, true);
+	pll_ptr->use_mapper ().add_segment (0.6,  0.004 * Cst::_max_freq_shift, false);
+	pll_ptr->use_mapper ().add_segment (1.0,          Cst::_max_freq_shift, true);
+	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamLine_FX_FSH_F, pll_ptr);
+
 	// Line reverb mix
 	TplMaps *      maps_ptr = new TplMaps (
 		0, 1,
