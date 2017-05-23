@@ -76,6 +76,9 @@ enum ParamLine
 	ParamLine_FX_DIST_F,
 	ParamLine_FX_SHLF_F,
 	ParamLine_FX_SHLF_L,
+	ParamLine_FX_REV_MX,
+	ParamLine_FX_REV_DC,
+	ParamLine_FX_REV_DA,
 
 	ParamLine_NBR_ELT
 };

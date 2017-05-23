@@ -152,6 +152,9 @@ Delay2::Delay2 ()
 		_state_set.set_val_nat (desc_set, base + ParamLine_CUT_HI     , 20480);
 		_state_set.set_val_nat (desc_set, base + ParamLine_PAN        , 0);
 		_state_set.set_val_nat (desc_set, base + ParamLine_VOL        , 1);
+		_state_set.set_val_nat (desc_set, base + ParamLine_FX_REV_MX  , 0);
+		_state_set.set_val_nat (desc_set, base + ParamLine_FX_REV_DC  , 0.5);
+		_state_set.set_val_nat (desc_set, base + ParamLine_FX_REV_DA  , 0.5);
 
 		_state_set.add_observer (base + ParamLine_GAIN_IN    , info._param_change_flag_input);
 		_state_set.add_observer (base + ParamLine_DLY_BASE   , info._param_change_flag_delay);
@@ -163,12 +166,16 @@ Delay2::Delay2 ()
 		_state_set.add_observer (base + ParamLine_CUT_HI     , info._param_change_flag_eq);
 		_state_set.add_observer (base + ParamLine_PAN        , info._param_change_flag_mix);
 		_state_set.add_observer (base + ParamLine_VOL        , info._param_change_flag_mix);
+		_state_set.add_observer (base + ParamLine_FX_REV_MX  , info._param_change_flag_rev);
+		_state_set.add_observer (base + ParamLine_FX_REV_DC  , info._param_change_flag_rev);
+		_state_set.add_observer (base + ParamLine_FX_REV_DA  , info._param_change_flag_rev);
 
 		info._param_change_flag_input .add_observer (info._param_change_flag);
 		info._param_change_flag_delay .add_observer (info._param_change_flag);
 		info._param_change_flag_fdbk  .add_observer (info._param_change_flag);
 		info._param_change_flag_eq    .add_observer (info._param_change_flag);
 		info._param_change_flag_mix   .add_observer (info._param_change_flag);
+		info._param_change_flag_rev   .add_observer (info._param_change_flag);
 
 		info._param_change_flag.add_observer (_param_change_flag);
 
@@ -176,6 +183,8 @@ Delay2::Delay2 ()
 		_state_set.set_ramp_time (base + ParamLine_FDBK       , 0.010f);
 		_state_set.set_ramp_time (base + ParamLine_PAN        , 0.010f);
 		_state_set.set_ramp_time (base + ParamLine_VOL        , 0.010f);
+
+		info._rev_mix.set_val (0);
 	}
 }
 
@@ -246,12 +255,17 @@ int	Delay2::do_reset (double sample_freq, int max_buf_len, int &latency)
 		info._delay.reset (
 			sample_freq, max_buf_len, &_buf_tmp_zone [0], buf_len_align
 		);
+		const int      ramp_len  = fstb::round_int (sample_freq * 0.010);
+		const float    ramp_step = 1.0f / float (ramp_len);
+		info._rev_mix.set_time (ramp_len, ramp_step);
 		info._param_change_flag_input.set ();
 		info._param_change_flag_delay.set ();
 		info._param_change_flag_fdbk .set ();
 		info._param_change_flag_eq   .set ();
 		info._param_change_flag_mix  .set ();
+		info._param_change_flag_rev  .set ();
 	}
+	_reverb.reset (sample_freq, max_buf_len);
 
 	update_param (true);
 
@@ -309,6 +323,45 @@ void	Delay2::do_process_block (ProcInfo &proc)
 		nbr_chn_src,
 		nbr_chn_dst
 	);
+
+	// Reverb
+	for (int line_index = 0; line_index < _nbr_lines; ++line_index)
+	{
+		InfoLine &     info = _line_arr [line_index];
+		info._rev_mix.tick (proc._nbr_spl);
+
+		const float    rmix_beg = info._rev_mix.get_beg ();
+		const float    rmix_end = info._rev_mix.get_end ();
+		if (rmix_beg + rmix_end >= 1e-6f)
+		{
+			_reverb.process_block (
+				&_buf_tmp_zone [0],
+				&_buf_tap_arr [line_index] [0],
+				proc._nbr_spl,
+				line_index
+			);
+
+			const float    dry_beg = 1 - rmix_beg;
+			const float    dry_end = 1 - rmix_end;
+			const float    wet_beg =     rmix_beg;
+			const float    wet_end =     rmix_end;
+
+			dsp::mix::Align::scale_1_vlrauto (
+				&_buf_tap_arr [line_index] [0],
+				proc._nbr_spl,
+				dry_beg,
+				dry_end
+			);
+
+			dsp::mix::Align::mix_1_1_vlrauto (
+				&_buf_tap_arr [line_index] [0],
+				&_buf_tmp_zone [0],
+				proc._nbr_spl,
+				wet_beg * fv::FreeverbCore::_scalein,
+				wet_end * fv::FreeverbCore::_scalein
+			);
+		}
+	}
 
 	// Feedback delay lines
 	float          xfdbk_beg = _xfdbk_old;
@@ -413,7 +466,9 @@ void	Delay2::clear_buffers ()
 	for (auto &info : _line_arr)
 	{
 		info._delay.clear_buffers ();
+		info._rev_mix.clear_buffers ();
 	}
+	_reverb.clear_buffers ();
 }
 
 
@@ -563,6 +618,21 @@ void	Delay2::update_param (bool force_flag)
 				{
 					info._delay.set_vol (float (_state_set.get_val_end_nat (base + ParamLine_VOL)));
 					info._delay.set_pan (float (_state_set.get_val_end_nat (base + ParamLine_PAN)));
+				}
+
+				if (info._param_change_flag_rev (true) || force_flag)
+				{
+					const float    decay = float (
+						_state_set.get_val_end_nat (base + ParamLine_FX_REV_DC)
+					);
+					const float    damp  = float (
+						_state_set.get_val_end_nat (base + ParamLine_FX_REV_DA)
+					);
+					_reverb.set_reflectivity (decay, index);
+					_reverb.set_damp (damp, index);
+					info._rev_mix.set_val (float (
+						_state_set.get_val_end_nat (base + ParamLine_FX_REV_MX)
+					));
 				}
 			}
 		}

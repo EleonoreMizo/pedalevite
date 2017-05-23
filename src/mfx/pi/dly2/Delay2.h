@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dly2/Delay2Desc.h"
 #include "mfx/pi/dly2/DelayLineBbd.h"
 #include "mfx/pi/dly2/StageTaps.h"
+#include "mfx/pi/fv/FreeverbCore.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -114,6 +115,10 @@ private:
 			            _param_change_flag_eq;
 		fstb::util::NotificationFlagCascadeSingle
 			            _param_change_flag_mix;
+		fstb::util::NotificationFlagCascadeSingle
+			            _param_change_flag_rev;
+		dsp::ctrl::Ramp
+		               _rev_mix = dsp::ctrl::Ramp (0);
 	};
 	typedef std::array <InfoLine, Cst::_nbr_lines> LineArray;
 
@@ -136,6 +141,8 @@ private:
 	TapArray       _tap_arr;
 	LineArray      _line_arr;
 	StageTaps      _taps;
+	fv::FreeverbCore
+	               _reverb;
 
 	BufAlign       _buf_tmp_zone;       // Used by the delay lines
 	std::array <BufAlign, Cst::_nbr_lines>

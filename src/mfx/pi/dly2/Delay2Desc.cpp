@@ -339,6 +339,8 @@ void	Delay2Desc::init_tap (int index)
 void	Delay2Desc::init_line (int index)
 {
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
+	typedef param::TplMapped <param::MapS <false> > TplMaps;
+	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
 
 	const int      base = get_line_base (index);
 
@@ -580,6 +582,45 @@ void	Delay2Desc::init_line (int index)
 	);
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_DB);
 	_desc_set.add_glob (base + ParamLine_FX_SHLF_L, lin_ptr);
+
+	// Line reverb mix
+	TplMaps *      maps_ptr = new TplMaps (
+		0, 1,
+		"Line %d reverb mix\nLine %d rev mix\nL%d rev mix\nL%dRM",
+		"%",
+		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		index + 1,
+		"%5.1f"
+	);
+	maps_ptr->use_mapper ().config (
+		maps_ptr->get_nat_min (),
+		maps_ptr->get_nat_max ()
+	);
+	_desc_set.add_glob (base + ParamLine_FX_REV_MX, maps_ptr);
+
+	// Line reverb decay
+	TplFdbk *      fdbk_ptr = new TplFdbk (
+		TplFdbk::Mapper::get_nat_min (),
+		TplFdbk::Mapper::get_nat_max (),
+		"Line %d reverb decay\nLine %d rev decay\nLine %d rev dcy\nL%d rev dcy\nL%dRDc",
+		"%",
+		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		index + 1,
+		"%5.1f"
+	);
+	_desc_set.add_glob (base + ParamLine_FX_REV_DC, fdbk_ptr);
+
+	// Line reverb damp
+	fdbk_ptr = new TplFdbk (
+		TplFdbk::Mapper::get_nat_min (),
+		TplFdbk::Mapper::get_nat_max (),
+		"Line %d reverb damp\nLine %d rev damp\nL%d rev dmp\nL%dRDa",
+		"%",
+		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		index + 1,
+		"%5.1f"
+	);
+	_desc_set.add_glob (base + ParamLine_FX_REV_DA, fdbk_ptr);
 }
 
 
