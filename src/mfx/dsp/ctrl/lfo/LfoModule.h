@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/ctrl/lfo/OscInterface.h"
 
 #include <array>
+#include <memory>
 
 #include <cstdint>
 
@@ -45,6 +46,8 @@ namespace lfo
 {
 
 
+
+class OscStepSeq;
 
 class LfoModule
 {
@@ -67,6 +70,7 @@ public:
 		Type_VARISLOPE,
 		Type_NOISE_FLT1,
 		Type_NOISE_FLT2,
+		Type_STEP_SEQ,
 
 		Type_NBR_ELT
 	};
@@ -87,6 +91,9 @@ public:
 	void           set_type (Type type);
 	void           set_snh (double ratio);
 	void           set_smooth (double ratio);
+	void           set_step_seq (bool flag);
+	bool           has_step_seq () const;
+	OscStepSeq &   use_step_seq ();
 	void           tick (int nbr_spl);
 	double         get_val () const;
 	double         get_phase () const;
@@ -106,6 +113,8 @@ private:
 
 	static const size_t  _storage_size = 256;
 	typedef std::array <uint8_t, _storage_size> OscStorage;
+
+	typedef std::unique_ptr <OscStepSeq> StepSeqUPtr;
 
 	inline const OscInterface &
 	               use_osc () const;
@@ -131,6 +140,8 @@ private:
 	double         _snh_ratio;			// ratio relative to _period, >= 0. 0 = no Sample & Hold
 	double         _smooth;				// ratio relative to _period, >= 0. 0 = no smoothing
 	Type           _type;				// -1 = no oscillator constructed
+	StepSeqUPtr    _step_seq_uptr;
+	OscInterface * _osc_ptr;
 
 	// Internal variables
 	bool           _snh_flag;

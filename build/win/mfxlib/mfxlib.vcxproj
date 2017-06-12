@@ -341,6 +341,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSine.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscParabola.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSquare.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscStepSeq.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseDist.h" />
@@ -838,6 +839,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscParabola.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSquare.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscStepSeq.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGenChaos.cpp" />

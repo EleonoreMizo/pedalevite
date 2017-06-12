@@ -262,6 +262,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/ctrl/lfo/OscSine.h \
         ../../src/mfx/dsp/ctrl/lfo/OscSquare.cpp \
         ../../src/mfx/dsp/ctrl/lfo/OscSquare.h \
+        ../../src/mfx/dsp/ctrl/lfo/OscStepSeq.cpp \
+        ../../src/mfx/dsp/ctrl/lfo/OscStepSeq.h \
         ../../src/mfx/dsp/ctrl/lfo/OscTri.cpp \
         ../../src/mfx/dsp/ctrl/lfo/OscTri.h \
         ../../src/mfx/dsp/ctrl/lfo/OscVariSlope.cpp \

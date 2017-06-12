@@ -2115,6 +2115,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayLineSimpleMod.h">
       <Filter>mfx\pi\fv</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscStepSeq.h">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2974,6 +2977,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayLineSimpleMod.cpp">
       <Filter>mfx\pi\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscStepSeq.cpp">
+      <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

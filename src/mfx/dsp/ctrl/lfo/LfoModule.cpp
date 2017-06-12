@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/ctrl/lfo/OscSaw.h"
 #include "mfx/dsp/ctrl/lfo/OscSine.h"
 #include "mfx/dsp/ctrl/lfo/OscSquare.h"
+#include "mfx/dsp/ctrl/lfo/OscStepSeq.h"
 #include "mfx/dsp/ctrl/lfo/OscTri.h"
 #include "mfx/dsp/ctrl/lfo/OscVariSlope.h"
 
@@ -71,6 +72,8 @@ LfoModule::LfoModule ()
 ,	_snh_ratio (0)
 ,	_smooth (0)
 ,	_type (Type_INVALID)
+,	_step_seq_uptr ()
+,	_osc_ptr (reinterpret_cast <OscInterface *> (&_osc [0]))
 ,	_snh_flag (false)
 ,	_smooth_flag (false)
 ,	_snh_pos (0)
@@ -226,7 +229,10 @@ void	LfoModule::set_type (Type type)
 	{
 		// Remove previous instance
 		const double   phase = get_phase ();
-		use_osc ().~OscInterface ();
+		if (_type != Type_STEP_SEQ)
+		{
+			use_osc ().~OscInterface ();
+		}
 		_type = Type_INVALID;
 
 #define mfx_dsp_ctrl_lfo_LfoModule_BUILD(c, T, a) \
@@ -248,6 +254,9 @@ void	LfoModule::set_type (Type type)
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_VARISLOPE , OscVariSlope   ,       )
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_NOISE_FLT1, OscNoiseFlt <1>,       )
 		mfx_dsp_ctrl_lfo_LfoModule_BUILD (Type_NOISE_FLT2, OscNoiseFlt <2>,       )
+		case Type_STEP_SEQ:
+			assert (has_step_seq ());
+			break;
 		default:
 			assert (false);
 			break;
@@ -256,6 +265,14 @@ void	LfoModule::set_type (Type type)
 
 		// Construction successful
 		_type = type;
+		if (type == Type_STEP_SEQ)
+		{
+			_osc_ptr = _step_seq_uptr.get ();
+		}
+		else
+		{
+			_osc_ptr = reinterpret_cast <OscInterface *> (&_osc [0]);
+		}
 		use_osc ().set_sample_freq (_sample_freq);
 		apply_osc_settings ();
 		set_phase (phase);
@@ -280,6 +297,36 @@ void	LfoModule::set_smooth (double ratio)
 
 	_smooth = ratio;
 	update_smooth ();
+}
+
+
+
+void	LfoModule::set_step_seq (bool flag)
+{
+	if (! flag)
+	{
+		_step_seq_uptr.reset ();
+	}
+	else if (_step_seq_uptr.get () == 0)
+	{
+		_step_seq_uptr = StepSeqUPtr (new OscStepSeq);
+	}
+}
+
+
+
+bool	LfoModule::has_step_seq () const
+{
+	return (_step_seq_uptr.get () != 0);
+}
+
+
+
+OscStepSeq &	LfoModule::use_step_seq ()
+{
+	assert (has_step_seq ());
+
+	return *_step_seq_uptr;
 }
 
 
@@ -363,7 +410,7 @@ const OscInterface &	LfoModule::use_osc () const
 {
 	assert (_type >= 0);
 
-	return reinterpret_cast <const OscInterface &> (_osc [0]);
+	return *_osc_ptr;
 }
 
 
@@ -372,7 +419,7 @@ OscInterface &	LfoModule::use_osc ()
 {
 	assert (_type >= 0);
 
-	return reinterpret_cast <OscInterface &> (_osc [0]);
+	return *_osc_ptr;
 }
 
 
