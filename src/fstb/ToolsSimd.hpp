@@ -333,6 +333,19 @@ ToolsSimd::VectF32	ToolsSimd::swap_2f32 (VectF32 v)
 
 
 
+void	ToolsSimd::extract_2f32 (float &a0, float &a1, VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	a0 = _mm_cvtss_f32 (v);
+	a1 = _mm_cvtss_f32 (_mm_shuffle_ps (v, v, 1));
+#elif fstb_IS (ARCHI, ARM)
+	a0 = vgetq_lane_f32 (a, 0);
+	a1 = vgetq_lane_f32 (a, 1);
+#endif // ff_arch_CPU
+}
+
+
+
 // ra = v0 | v1 | v0 | v1
 // rb = v2 | v3 | v2 | v3
 void	ToolsSimd::spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v)

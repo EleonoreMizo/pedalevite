@@ -132,6 +132,8 @@ public:
 	static inline VectF32
 	               swap_2f32 (VectF32 v);
 	static inline void
+	               extract_2f32 (float &a0, float &a1, VectF32 v);
+	static inline void
 	               spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v);
 	static inline void
 	               mac (VectF32 &s, VectF32 a, VectF32 b);
