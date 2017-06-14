@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
+#include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/pi/dly2/Cst.h"
 #include "mfx/pi/dly2/Delay2Desc.h"
 #include "mfx/pi/dly2/DelayLineBbd.h"
@@ -116,15 +117,21 @@ private:
 		fstb::util::NotificationFlagCascadeSingle
 			            _param_change_flag_mix;
 		fstb::util::NotificationFlagCascadeSingle
+			            _param_change_flag_duck;
+		fstb::util::NotificationFlagCascadeSingle
 			            _param_change_flag_rev;
 		dsp::ctrl::Ramp
-		               _rev_mix = dsp::ctrl::Ramp (0);
+		               _rev_mix   = dsp::ctrl::Ramp (0);
+		bool           _duck_flag = false;
 	};
 	typedef std::array <InfoLine, Cst::_nbr_lines> LineArray;
 
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 	void           set_next_block ();
+	void           update_duck_state ();
+
+	static void    square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
 
 	State          _state;
 
@@ -135,6 +142,8 @@ private:
 
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_misc;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_duck;
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
@@ -143,6 +152,8 @@ private:
 	StageTaps      _taps;
 	fv::FreeverbCore
 	               _reverb;
+	dsp::dyn::EnvFollowerRms
+	               _env_duck;
 
 	BufAlign       _buf_tmp_zone;       // Used by the delay lines
 	std::array <BufAlign, Cst::_nbr_lines>
@@ -151,11 +162,14 @@ private:
 	               _buf_line_arr;       // Intermediate results for the lines
 	std::array <BufAlign, Cst::_nbr_lines>
 	               _buf_fdbk_arr;
+	BufAlign       _buf_duck;
 
 	int            _nbr_lines;          // >= 0
 	float          _xfdbk_cur;          // 0 = no cross-feedback, 1 = full
 	float          _xfdbk_old;
+	float          _duck_time;          // s. Corresponds to the attack time
 	bool           _freeze_flag;
+	bool           _duck_flag;          // Set if at least one of the lines uses the ducking
 
 
 

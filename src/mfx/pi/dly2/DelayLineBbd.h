@@ -82,10 +82,12 @@ public:
 	void           set_freq_hi (float f);
 	void           set_vol (float v);
 	void           set_pan (float p);
+	void           set_duck_sensitivity (float s);
+	void           set_duck_amount (float amt);
 
 	int            start_and_compute_max_proc_len ();
 	void           read_line (float dst_ptr [], int nbr_spl, float &f_beg, float &f_end);
-	void           finish_processing (float * const out_ptr_arr [2], const float fx_ptr [], const float src_ptr [], const float fdbk_ptr [], int pos_out, bool stereo_flag, bool mix_flag);
+	void           finish_processing (float * const out_ptr_arr [2], const float fx_ptr [], const float src_ptr [], const float fdbk_ptr [], const float duck_ptr [], int pos_out, bool stereo_flag, bool mix_flag);
 
 
 
@@ -132,6 +134,10 @@ private:
 	               _pan;
 	dsp::ctrl::Ramp
 	               _vol;
+	dsp::ctrl::Ramp
+	               _duck_amt;
+	float          _duck_sens;          // As a reference level
+	float          _duck_sens_inv;
 
 	int            _block_len;
 	dsp::ctrl::Ramp                     // Samples

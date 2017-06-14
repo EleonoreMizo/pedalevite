@@ -62,6 +62,9 @@ DelayLineBbd::DelayLineBbd ()
 ,	_fdbk (0.5f)
 ,	_pan (0)
 ,	_vol (0)
+,	_duck_amt (0)
+,	_duck_sens (1)
+,	_duck_sens_inv (1)
 ,	_block_len (0)
 ,	_delay_time (0)
 ,	_delay_time_lb (0)
@@ -129,6 +132,7 @@ void	DelayLineBbd::clear_buffers ()
 	_pan       .clear_buffers ();
 	_vol       .clear_buffers ();
 	_delay_time.clear_buffers ();
+	_duck_amt  .clear_buffers ();
 }
 
 
@@ -146,6 +150,7 @@ void	DelayLineBbd::set_ramp_time (int ramp_time)
 		_fdbk      .set_time (ramp_time, time_step);
 		_pan       .set_time (ramp_time, time_step);
 		_vol       .set_time (ramp_time, time_step);
+		_duck_amt  .set_time (ramp_time, time_step);
 		_delay_time.set_time (ramp_time, time_step);
 	}
 }
@@ -227,6 +232,26 @@ void	DelayLineBbd::set_pan (float p)
 
 
 
+void	DelayLineBbd::set_duck_sensitivity (float s)
+{
+	assert (s > 0);
+
+	_duck_sens     = s;
+	_duck_sens_inv = 1.0f / _duck_sens;
+}
+
+
+
+void	DelayLineBbd::set_duck_amount (float amt)
+{
+	assert (amt >= 0);
+	assert (amt <= 1);
+
+	_duck_amt.set_val (amt);
+}
+
+
+
 // Before calling: set the parameters for the frame
 int	DelayLineBbd::start_and_compute_max_proc_len ()
 {
@@ -253,6 +278,7 @@ void	DelayLineBbd::read_line (float dst_ptr [], int nbr_spl, float &f_beg, float
 	_pan       .tick (nbr_spl);
 	_vol       .tick (nbr_spl);
 	_delay_time.tick (nbr_spl);
+	_duck_amt  .tick (nbr_spl);
 
 	// Read data from line
 	float          dly_beg = _delay_time.get_beg ();
@@ -322,11 +348,13 @@ void	DelayLineBbd::read_line (float dst_ptr [], int nbr_spl, float &f_beg, float
 
 // Inbetween: feedback matrix processing
 
-// out_ptr_arr: stereo line output, after mixing data
+// out_ptr_arr: stereo line output, after mixing data. Written position is
+// given by pos_out.
 // fx_ptr: output from the previous call to read_line(),
 // src_ptr: line input
 // fdbk_ptr: processed feedback, to be mixed
-void	DelayLineBbd::finish_processing (float * const out_ptr_arr [2], const float fx_ptr [], const float src_ptr [], const float fdbk_ptr [], int pos_out, bool stereo_flag, bool mix_flag)
+// duck_ptr: detected envelope for ducking, squared.
+void	DelayLineBbd::finish_processing (float * const out_ptr_arr [2], const float fx_ptr [], const float src_ptr [], const float fdbk_ptr [], const float duck_ptr [], int pos_out, bool stereo_flag, bool mix_flag)
 {
 	assert (_block_len > 0);
 
@@ -342,8 +370,28 @@ void	DelayLineBbd::finish_processing (float * const out_ptr_arr [2], const float
 		_eq.process_block (tmp_ptr, fx_ptr, _block_len);
 	}
 
-	const float    vol_beg = _vol.get_beg ();
-	const float    vol_end = _vol.get_end ();
+	float          vol_beg      = _vol.get_beg ();
+	float          vol_end      = _vol.get_end ();
+	
+	const float    duck_amt_beg = _duck_amt.get_beg ();
+	const float    duck_amt_end = _duck_amt.get_end ();
+	if (duck_amt_beg + duck_amt_end >= 1e-3f)
+	{
+		float          env_beg  = duck_ptr [0             ];
+		float          env_end  = duck_ptr [_block_len - 1];
+		auto           env      = fstb::ToolsSimd::set_2f32 (env_beg, env_end);
+		env  = fstb::ToolsSimd::sqrt_approx (env);
+		env *= fstb::ToolsSimd::set1_f32 (_duck_sens_inv);
+		const auto     amt      =
+			fstb::ToolsSimd::set_2f32 (duck_amt_beg, duck_amt_end);
+		auto           dvol     = fstb::ToolsSimd::max_f32 (
+			fstb::ToolsSimd::set1_f32 (1) - amt * env,
+			fstb::ToolsSimd::set_f32_zero ()
+		);
+		auto           vol      = fstb::ToolsSimd::set_2f32 (vol_beg, vol_end);
+		vol *= dvol;
+		fstb::ToolsSimd::extract_2f32 (vol_beg, vol_end, vol);
+	}
 
 	// Stereo output
 	if (stereo_flag)

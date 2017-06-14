@@ -62,16 +62,24 @@ Delay2::Delay2 ()
 ,	_sample_freq (0)
 ,	_inv_fs (0)
 ,	_param_change_flag_misc ()
+,	_param_change_flag_duck ()
 ,	_param_change_flag ()
 ,	_tap_arr ()
 ,	_line_arr ()
+,	_taps ()
+,	_reverb ()
+,	_env_duck ()
 ,	_buf_tmp_zone ()
 ,	_buf_tap_arr ()
 ,	_buf_line_arr ()
 ,	_buf_fdbk_arr ()
+,	_buf_duck ()
 ,	_nbr_lines (1)
 ,	_xfdbk_cur (0)
 ,	_xfdbk_old (0)
+,	_duck_time (0.100f)
+,	_freeze_flag (false)
+,	_duck_flag (false)
 {
 	dsp::mix::Align::setup ();
 
@@ -85,6 +93,8 @@ Delay2::Delay2 ()
 	_state_set.set_val_nat (desc_set, Param_FREEZE      , 0);
 	_state_set.set_val_nat (desc_set, Param_NBR_LINES   , 1);
 	_state_set.set_val_nat (desc_set, Param_X_FDBK      , 0);
+	_state_set.set_val_nat (desc_set, Param_DUCK_SENS   , 1);
+	_state_set.set_val_nat (desc_set, Param_DUCK_TIME   , 0.1);
 
 	_state_set.add_observer (Param_TAPS_GAIN_IN, _param_change_flag_misc);
 	_state_set.add_observer (Param_TAPS_VOL    , _param_change_flag_misc);
@@ -93,8 +103,11 @@ Delay2::Delay2 ()
 	_state_set.add_observer (Param_FREEZE      , _param_change_flag_misc);
 	_state_set.add_observer (Param_NBR_LINES   , _param_change_flag_misc);
 	_state_set.add_observer (Param_X_FDBK      , _param_change_flag_misc);
+	_state_set.add_observer (Param_DUCK_SENS   , _param_change_flag_duck);
+	_state_set.add_observer (Param_DUCK_TIME   , _param_change_flag_duck);
 
 	_param_change_flag_misc.add_observer (_param_change_flag);
+	_param_change_flag_duck.add_observer (_param_change_flag);
 
 	// Taps
 	for (int index = 0; index < Cst::_nbr_taps; ++index)
@@ -152,6 +165,7 @@ Delay2::Delay2 ()
 		_state_set.set_val_nat (desc_set, base + ParamLine_CUT_HI     , 20480);
 		_state_set.set_val_nat (desc_set, base + ParamLine_PAN        , 0);
 		_state_set.set_val_nat (desc_set, base + ParamLine_VOL        , 1);
+		_state_set.set_val_nat (desc_set, base + ParamLine_DUCK_AMT   , 0);
 		_state_set.set_val_nat (desc_set, base + ParamLine_FX_REV_MX  , 0);
 		_state_set.set_val_nat (desc_set, base + ParamLine_FX_REV_DC  , 0.5);
 		_state_set.set_val_nat (desc_set, base + ParamLine_FX_REV_DA  , 0.5);
@@ -166,6 +180,7 @@ Delay2::Delay2 ()
 		_state_set.add_observer (base + ParamLine_CUT_HI     , info._param_change_flag_eq);
 		_state_set.add_observer (base + ParamLine_PAN        , info._param_change_flag_mix);
 		_state_set.add_observer (base + ParamLine_VOL        , info._param_change_flag_mix);
+		_state_set.add_observer (base + ParamLine_DUCK_AMT   , info._param_change_flag_duck);
 		_state_set.add_observer (base + ParamLine_FX_REV_MX  , info._param_change_flag_rev);
 		_state_set.add_observer (base + ParamLine_FX_REV_DC  , info._param_change_flag_rev);
 		_state_set.add_observer (base + ParamLine_FX_REV_DA  , info._param_change_flag_rev);
@@ -175,6 +190,7 @@ Delay2::Delay2 ()
 		info._param_change_flag_fdbk  .add_observer (info._param_change_flag);
 		info._param_change_flag_eq    .add_observer (info._param_change_flag);
 		info._param_change_flag_mix   .add_observer (info._param_change_flag);
+		info._param_change_flag_duck  .add_observer (info._param_change_flag);
 		info._param_change_flag_rev   .add_observer (info._param_change_flag);
 
 		info._param_change_flag.add_observer (_param_change_flag);
@@ -183,6 +199,7 @@ Delay2::Delay2 ()
 		_state_set.set_ramp_time (base + ParamLine_FDBK       , 0.010f);
 		_state_set.set_ramp_time (base + ParamLine_PAN        , 0.010f);
 		_state_set.set_ramp_time (base + ParamLine_VOL        , 0.010f);
+		_state_set.set_ramp_time (base + ParamLine_DUCK_AMT   , 0.010f);
 
 		info._rev_mix.set_val (0);
 	}
@@ -238,6 +255,7 @@ int	Delay2::do_reset (double sample_freq, int max_buf_len, int &latency)
 	{
 		buf.resize (buf_len_align);
 	}
+	_buf_duck.resize (buf_len_align);
 
 	_param_change_flag_misc.set ();
 	for (int index = 0; index < Cst::_nbr_taps; ++index)
@@ -266,6 +284,7 @@ int	Delay2::do_reset (double sample_freq, int max_buf_len, int &latency)
 		info._param_change_flag_rev  .set ();
 	}
 	_reverb.reset (sample_freq, max_buf_len);
+	_env_duck.set_sample_freq (sample_freq);
 
 	update_param (true);
 
@@ -309,6 +328,15 @@ void	Delay2::do_process_block (ProcInfo &proc)
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Signal processing
+
+	// Ducking
+	if (_duck_flag)
+	{
+		square_block (&_buf_duck [0], proc._src_arr, proc._nbr_spl, nbr_chn_src);
+		_env_duck.process_block_raw (&_buf_duck [0], &_buf_duck [0], proc._nbr_spl);
+		// The content is left squared. We'll take the sqrt() on the position we
+		// really want and which are constrained by the delay lines.
+	}
 
 	// Taps
 	std::array <float * const, Cst::_nbr_lines>  buf_tap_arr =
@@ -365,7 +393,8 @@ void	Delay2::do_process_block (ProcInfo &proc)
 
 	// Feedback delay lines
 	float          xfdbk_beg = _xfdbk_old;
-	float          xfdbk_stp = (_xfdbk_cur - _xfdbk_old) / proc._nbr_spl;
+	float          xfdbk_stp =
+		(_xfdbk_cur - _xfdbk_old) * fstb::rcp_uint <float> (proc._nbr_spl);
 	int            block_pos = 0;
 	do
 	{
@@ -432,12 +461,13 @@ void	Delay2::do_process_block (ProcInfo &proc)
 		// Mix
 		for (int line_index = 0; line_index < _nbr_lines; ++line_index)
 		{
-			DelayLineBbd & line = _line_arr [line_index]._delay;
-			line.finish_processing (
+			InfoLine &     info = _line_arr [line_index];
+			info._delay.finish_processing (
 				proc._dst_arr,
 				&_buf_line_arr [line_index] [0],
 				&_buf_tap_arr [line_index] [block_pos],
 				&_buf_fdbk_arr [line_index] [0],
+				&_buf_duck [block_pos],
 				block_pos,
 				(nbr_chn_dst >= 2),
 				true
@@ -469,6 +499,9 @@ void	Delay2::clear_buffers ()
 		info._rev_mix.clear_buffers ();
 	}
 	_reverb.clear_buffers ();
+	_env_duck.clear_buffers ();
+
+	update_duck_state ();
 }
 
 
@@ -508,6 +541,21 @@ void	Delay2::update_param (bool force_flag)
 			_taps.set_level_predelay (taps_vol);
 			_taps.set_level_dry (dry_vol);
 			_taps.set_tap_spread (Cst::_nbr_taps, dry_spread);
+		}
+
+		if (_param_change_flag_duck (true) || force_flag)
+		{
+			const float    at =
+				float (_state_set.get_val_end_nat (Param_DUCK_TIME));
+			const float    rt = at * 4;
+			_env_duck.set_times (at, rt);
+
+			const float    sensitivity =
+				float (_state_set.get_val_end_nat (Param_DUCK_SENS));
+			for (auto &info : _line_arr)
+			{
+				info._delay.set_duck_sensitivity (sensitivity);
+			}
 		}
 
 		// Taps
@@ -559,7 +607,8 @@ void	Delay2::update_param (bool force_flag)
 
 				if (info._param_change_flag_mix (true) || force_flag)
 				{
-					const float   pan = float (_state_set.get_val_end_nat (base + ParamTap_PAN));
+					const float   pan =
+						float (_state_set.get_val_end_nat (base + ParamTap_PAN));
 					_taps.set_tap_pan (index, pan);
 				}
 			}
@@ -616,8 +665,22 @@ void	Delay2::update_param (bool force_flag)
 
 				if (info._param_change_flag_mix (true) || force_flag)
 				{
-					info._delay.set_vol (float (_state_set.get_val_end_nat (base + ParamLine_VOL)));
-					info._delay.set_pan (float (_state_set.get_val_end_nat (base + ParamLine_PAN)));
+					info._delay.set_vol (float (
+						_state_set.get_val_end_nat (base + ParamLine_VOL)
+					));
+					info._delay.set_pan (float (
+						_state_set.get_val_end_nat (base + ParamLine_PAN)
+					));
+				}
+
+				if (info._param_change_flag_duck (true) || force_flag)
+				{
+					const float    amt =
+						float (_state_set.get_val_end_nat (base + ParamLine_DUCK_AMT));
+					info._delay.set_duck_amount (amt);
+					info._duck_flag = (amt >= 1e-3f);
+
+					update_duck_state ();
 				}
 
 				if (info._param_change_flag_rev (true) || force_flag)
@@ -644,6 +707,46 @@ void	Delay2::update_param (bool force_flag)
 void	Delay2::set_next_block ()
 {
 	_xfdbk_old = _xfdbk_cur;
+}
+
+
+
+void	Delay2::update_duck_state ()
+{
+	_duck_flag = false;
+	for (auto &info : _line_arr)
+	{
+		if (info._duck_flag)
+		{
+			_duck_flag = true;
+			break;
+		}
+	}
+}
+
+
+
+void	Delay2::square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn)
+{
+	static const float   not_zero = 1e-30f;	// -600 dB
+	if (nbr_chn == 1)
+	{
+		dsp::mix::Align::sum_square_n_1 (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero
+		);
+	}
+	else if (nbr_chn == 2)
+	{
+		dsp::mix::Align::sum_square_n_1_v (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 0.5f
+		);
+	}
+	else
+	{
+		dsp::mix::Align::sum_square_n_1_v (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 1.0f / nbr_chn
+		);
+	}
 }
 
 

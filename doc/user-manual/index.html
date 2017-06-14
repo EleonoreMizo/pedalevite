@@ -55,6 +55,7 @@
 	<li><a href="#fx-peq">Parametric Equalizer — Égaliseur paramétrique</a></li>
 	<li><a href="#fx-phaser">Phaser</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
+	<li><a href="#fx-sgirlz">SiemensGirlz — Écho créatif</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
@@ -1457,6 +1458,214 @@ impression de circuit défectueux.</p>
 
 
 
+<h3><a id="fx-sgirlz"></a>SiemensGirlz — Écho créatif</h3>
+
+<p>SiemensGirlz est un effet d’écho créatif relativement complexe permettant
+d’obtenir des sonorités très variés, en particulier quand les paramètres
+sont modulés par des LFO.</p>
+<p>Le son passe à travers 4 <i><span lang="en">taps</span></i>, sortes d’échos
+simples sans répétition.
+L’ensemble des taps et du signal d’origine alimente une réverbération.
+Ce signal réverbéré rentre à son tour dans une ou deux lignes à retard
+avec réinjection.
+Des effets peuvent être appliqués dans le signal retardé et réinjecté.
+Les réinjections des deux lignes peuvent également se croiser.</p>
+<p>Les effets de ligne sont les suivants, dans cet ordre&#8239;:</p>
+<ul>
+<li>Filtre résonant</li>
+<li>Distorsion</li>
+<li>Filtre plateau haut</li>
+<li>Translateur de fréquences</li>
+</ul>
+<p>En plus de cela, un système de <i><span lang="en">ducking</span></i>
+permet d’atténuer ou de couper la sortie des lignes à réinjection en
+fonction du volume de l’entrée, par exemple pour améliorer la clarté
+du son d’origine tout en gardant l’enrobage de l’effet d’écho quand
+l’entrée est silencieuse.</p>
+
+<h4>Paramètres généraux</h4>
+
+<p class="var">Tap gain in</p>
+<p>Quantité de signal source qui passe dans l’ensemble des taps,
+en pourcentage.
+Une fois automatisé, ce paramètre permet de couper ou réactiver
+l’entrée des taps.</p>
+
+<p class="var">Tap global volume</p>
+<p>Volume général de l’ensemble des taps dans le mix final, en dB.</p>
+
+<p class="var">Dry volume</p>
+<p>Volume du son d’origine dans le mix final, en dB.</p>
+
+<p class="var">Dry spread</p>
+<p>Répartition du son d’origine dans les deux lignes à retard.
+À 0&#8239;%, le son va dans la première ligne exclusivement, et à 100&#8239;%,
+dans la deuxième.
+Le paramètre n’a aucun effet quand il n’y a qu’une ligne activée.</p>
+
+<p class="var">Freeze lines</p>
+<p>Coupe l’entrée des lignes et remonte leur taux de réinjection à
+100&#8239;%.
+Cela permet de geler les lignes à retard, qui répètent en boucle leur contenu.
+Le son continue d’être progressivement altéré par les effets intégrés aux
+lignes.</p>
+
+<p class="var">Number of feedback lines</p>
+<p>Nombre de lignes à retard à réinjection, 1 ou 2.</p>
+
+<p class="var">Cross-freedback</p>
+<p>Taux de réinjection croisée.
+À 0&#8239;%, chaque ligne est indépendante.
+À 100&#8239;%, les lignes s’échangent complètement leur signal de
+réinjection.</p>
+
+<p class="var">Ducking sensitivity</p>
+<p>Donne la sensibilité de référence du ducking, en décibels.
+Quand le ducking est activé sur une ligne, celle-ci se coupe quand le volume
+du signal d’entrée dépasse un certain seuil.
+Ce dernier est fixé par ce paramètre.</p>
+
+<p class="var">Ducking time</p>
+<p>Constante de temps de l’analyseur de volume du ducking.
+Indique le temps d’attaque.
+Le temps de release en est automatiquement déduit.</p>
+
+<h4>Paramètres de taps</h4>
+
+<p class="var">Tap input gain</p>
+<p>Niveau d’entrée du tap, en pourcentage.</p>
+
+<p class="var">Tap spread</p>
+<p>Répartition de la sortie du tap dans les deux lignes à retard.
+Le paramètre fonctionne comme <var>Dry spread</var>.</p>
+
+<p class="var">Tap delay time, base</p>
+<p>Temps de retard du tap, en millisecondes.</p>
+
+<p class="var">Tap delay time, relative</p>
+<p>Ajustement multiplicateur sur le temps de retard principal.
+Contrairement à ce dernier, l’ajustement a un mapping linéaire, ce qui
+facilite la création d’effets spéciaux par automation.</p>
+
+<p class="var">Tap pitch</p>
+<p>Pseudo-pitch-shifting du tap, en demi-tons.
+Celui-ci est réalisé en produisant en interne deux taps rééchantillonnés
+qui se recouvrent alternativement.
+Nécessite un minimum de retard sur le tap pour être effectif.</p>
+
+<p class="var">Tap low-cut frequency</p>
+<p>Fréquence du filtre coupe-bas appliqué entre la sortie du tap et le
+mix final.</p>
+
+<p class="var">Tap high-cut frequency</p>
+<p>Fréquence du filtre coupe-haut appliqué entre la sortie du tap et le
+mix final.</p>
+
+<p class="var">Tap pan</p>
+<p>Balance panoramique de la sortie du tap dans le mix final.</p>
+
+<h4>Paramètres de ligne</h4>
+
+<p class="var">Line input gain</p>
+<p>Niveau d’entrée de la ligne, en pourcentage.</p>
+
+<p class="var">Line delay time, base</p>
+<p>Temps de retard de la ligne, en millisecondes.</p>
+
+<p class="var">Line delay time, relative</p>
+<p>Ajustement multiplicateur sur le temps de retard principal.
+Contrairement à ce dernier, l’ajustement a un mapping linéaire, ce qui
+facilite la création d’effets spéciaux par automation.</p>
+
+<p class="var">Line speed</p>
+<p>Vitesse de l’émulateur de BBD (<i><span lang="en">bucket brigade
+device</span></i>), en pourcentage.
+Les retards spécifiés dans les paramètres précédents sont valables à
+100&#8239;%.
+Quand la ligne va plus vite, les temps de retard sont raccourcis.
+Ils sont rallongés quand elle va plus lentement.
+Changer la vitesse de la ligne permet d’obtenir des effets de pitch
+caractéristiques.</p>
+
+<p class="var">Line pitch</p>
+<p>Pseudo-pitch-shifting de la ligne, en demi-tons.
+Ce paramètre n’est pas opérant pour l’instant.</p>
+
+<p class="var">Line feedback</p>
+<p>Taux de réinjection de la ligne, en pourcentage.
+Plus le taux est haut et plus les échos se répètent longtemps.</p>
+
+<p class="var">Line low-cut frequency</p>
+<p>Fréquence du filtre coupe-bas appliqué entre la sortie de la ligne et le
+mix final.</p>
+
+<p class="var">Line high-cut frequency</p>
+<p>Fréquence du filtre coupe-haut appliqué entre la sortie de la ligne et le
+mix final.</p>
+
+<p class="var">Line pan</p>
+<p>Balance panoramique de la sortie de la ligne dans le mix final.</p>
+
+<p class="var">Line volume</p>
+<p>Volume de sortie de la ligne dans le mix final.</p>
+
+<p class="var">Line ducking amount</p>
+<p>Taux de ducking appliqué à la ligne.
+L’effet dépend des paramètres de sensibilité et de temps de réponse.</p>
+
+<p class="var">Line filter type</p>
+<p>Type de filtre résonant utilisé dans la chaîne de réinjection.</p>
+<table>
+<tr><td><span class="ui">PK</span></td><td>Courbe en cloche</td></tr>
+<tr><td><span class="ui">LP</span></td><td>Passe-bas</td></tr>
+<tr><td><span class="ui">BP</span></td><td>Passe-bande</td></tr>
+<tr><td><span class="ui">HP</span></td><td>Passe-haut</td></tr>
+</table>
+
+<p class="var">Line filter frequency</p>
+<p>Fréquence de coupure du filtre résonant, en Hz.</p>
+
+<p class="var">Line filter resonance</p>
+<p>Résonance du filtre, en décibels.</p>
+
+<p class="var">Line filter selectivity</p>
+<p>Sélectivité (Q) du filtre résonant.</p>
+
+<p class="var">Line distortion amount</p>
+<p>Taux de distorsion de la chaîne de réinjection, en pourcentage.</p>
+
+<p class="var">Line distortion foldback</p>
+<p>Courbure de la distorsion.
+Change la répartition des harmoniques créées par la distorsion.</p>
+
+<p class="var">Line high shelf frequency</p>
+<p>Fréquence de coupure du filtre plateau haut, post-distorsion.</p>
+
+<p class="var">Line high shelf level</p>
+<p>Niveau du filtre plateau haut, en dB.
+Permet d’atténuer les harmoniques du haut du spectre créées par la
+distorsion.</p>
+
+<p class="var">Line frequency shifting</p>
+<p>Décalage en Hz du translateur de fréquences.
+0&#8239;Hz donne un effet neutre.</p>
+
+<p class="var">Line reverb mix</p>
+<p>Proportion de signal réverbéré qui rentre dans la ligne à retard,
+en pourcentage.</p>
+
+<p class="var">Line reverb decay</p>
+<p>Paramètre influant sur le temps de réverbération.
+Plus le paramètre est élevé, plus la réverbération est longue.</p>
+
+<p class="var">Line reverb damp</p>
+<p>Influe sur l’atténuation des hautes fréquences dans la queue de la
+réverbération.
+À 100&#8239;%, l’atténuation est maximale.
+Ce paramètre raccourcit implicitement le temps de réverbération.</p>
+
+
+
 <h3><a id="fx-speaker-emu"></a>Speaker Emulator — Émulation de haut-parleur</h3>
 
 <p class="var">Type</p>
@@ -1769,6 +1978,11 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r8, 2017.06.14</b></p>
+<ul>
+<li>Ajout de l’effet SiemensGirlz.</li>
+</ul>
 
 <p><b>r7, 2017.04.24</b></p>
 <ul>

@@ -67,7 +67,7 @@ Delay2Desc::Delay2Desc ()
 		new param::Simple ("Tap gain in\nTap G in\nTap in\nTGI");
 	_desc_set.add_glob (ParamLine_GAIN_IN, sim_ptr);
 
-	// Tap global volume 
+	// Tap global volume
 	TplPll *       pll_ptr = new TplPll (
 		0, 4,
 		"Tap global volume\nTap glob vol\nTap vol\nTapV\nTV",
@@ -79,7 +79,7 @@ Delay2Desc::Delay2Desc ()
 	pll_ptr->use_mapper ().gen_log (8, 2);
 	_desc_set.add_glob (Param_TAPS_VOL, pll_ptr);
 
-	// Dry volume 
+	// Dry volume
 	pll_ptr = new TplPll (
 		0, 4,
 		"Dry volume\nDry vol\nDryV\nDV",
@@ -140,6 +140,30 @@ Delay2Desc::Delay2Desc ()
 		maps_ptr->get_nat_max ()
 	);
 	_desc_set.add_glob (Param_X_FDBK, maps_ptr);
+
+	// Ducking sensitivity
+	pll_ptr = new TplPll (
+		1.0/64, 4,
+		"Ducking sensitivity\nDuck sensitivity\nDuck sens\nDuck S\nDS",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	pll_ptr->use_mapper ().gen_log (8, 2);
+	_desc_set.add_glob (Param_DUCK_SENS, pll_ptr);
+
+	// Ducking time
+	pll_ptr = new TplPll (
+		1.0/256, 1,
+		"Ducking time\nDuck time\nDuck T\nDT",
+		"dB",
+		param::HelperDispNum::Preset_FLOAT_MILLI,
+		0,
+		"%5.0f"
+	);
+	pll_ptr->use_mapper ().gen_log (8, 2);
+	_desc_set.add_glob (Param_DUCK_TIME, pll_ptr);
 
 	// Taps
 	for (int index = 0; index < Cst::_nbr_taps; ++index)
@@ -479,6 +503,19 @@ void	Delay2Desc::init_line (int index)
 	);
 	pll_ptr->use_mapper ().gen_log (8, 2);
 	_desc_set.add_glob (base + ParamLine_VOL, pll_ptr);
+
+	// Line ducking amount
+	lin_ptr = new param::TplLin (
+		0, 1,
+		"Line %d ducking amount\nLine %d duck amount\nLine %d duck amt\nL%d duck\nL%dDK",
+		"%",
+		index + 1,
+		"%5.1f"
+	);
+	lin_ptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (base + ParamLine_DUCK_AMT, lin_ptr);
 
 	// Line filter type
 	param::TplEnum *  enu_ptr = new param::TplEnum (

@@ -66,6 +66,7 @@ enum ParamLine
 	ParamLine_CUT_HI,
 	ParamLine_PAN,
 	ParamLine_VOL,
+	ParamLine_DUCK_AMT,
 
 	// FX
 	ParamLine_FX_FLT_T,
@@ -94,6 +95,8 @@ enum Param
 	Param_FREEZE,
 	Param_NBR_LINES,
 	Param_X_FDBK,
+	Param_DUCK_SENS,
+	Param_DUCK_TIME,
 
 	Param_BASE_TAP,
 	Param_BASE_LINE = Param_BASE_TAP  + Cst::_nbr_taps  * ParamTap_NBR_ELT,
