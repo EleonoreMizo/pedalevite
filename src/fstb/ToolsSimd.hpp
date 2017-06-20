@@ -339,8 +339,8 @@ void	ToolsSimd::extract_2f32 (float &a0, float &a1, VectF32 v)
 	a0 = _mm_cvtss_f32 (v);
 	a1 = _mm_cvtss_f32 (_mm_shuffle_ps (v, v, 1));
 #elif fstb_IS (ARCHI, ARM)
-	a0 = vgetq_lane_f32 (a, 0);
-	a1 = vgetq_lane_f32 (a, 1);
+	a0 = vgetq_lane_f32 (v, 0);
+	a1 = vgetq_lane_f32 (v, 1);
 #endif // ff_arch_CPU
 }
 
