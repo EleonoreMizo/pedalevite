@@ -359,6 +359,7 @@ int	DelayLineReaderPitch <TC>::Grain::clip_block_len (int len) const
 
 	if (is_ramping ())
 	{
+		assert (_trans_len > _trans_pos);
 		len = std::min (len, _trans_len - _trans_pos);
 	}
 
@@ -443,6 +444,7 @@ void	DelayLineReaderPitch <TC>::check_and_start_transition ()
 				else if (g_old._dly_stp != 0)
 				{
 					g_old._trans_len = xfade_dur;
+					g_old._trans_pos = std::min (g_old._trans_pos, g_old._trans_len - 1);
 				}
 
 				// Starts crossfading
