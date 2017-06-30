@@ -84,6 +84,12 @@ void	PhaseGenChaos::set_chaos (double chaos)
 	assert (chaos <= 1);
 
 	_chaos = fstb::floor_int (chaos * 256);
+	if (_chaos <= 0)
+	{
+		_ramp_flag   = false;
+		_ramp_pos    = 0;
+		_phase_shift = 0;
+	}
 }
 
 
@@ -203,10 +209,13 @@ void	PhaseGenChaos::tick (int nbr_spl)
 double	PhaseGenChaos::get_phase () const
 {
 	double			pos = _phase_gen.get_phase ();
-	pos += _phase_shift + 1;
-	while (pos >= 1)
+	if (_chaos > 0)
 	{
-		pos -= 1;
+		pos += _phase_shift + 1;
+		while (pos >= 1)
+		{
+			pos -= 1;
+		}
 	}
 
 	return pos;
