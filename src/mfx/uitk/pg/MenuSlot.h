@@ -83,6 +83,7 @@ protected:
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
 	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag);
+	virtual void   do_set_plugin_reset (int slot_id, bool reset_flag);
 
 
 
@@ -106,6 +107,7 @@ private:
 		Entry_PRESETS,
 		Entry_RESET,
 		Entry_CHN,
+		Entry_FRESH,
 		Entry_LABEL
 	};
 
@@ -144,6 +146,7 @@ private:
 	TxtSPtr        _prs_sptr;
 	TxtSPtr        _rst_sptr;
 	TxtSPtr        _chn_sptr;
+	TxtSPtr        _frs_sptr;
 	TxtSPtr        _lbl_sptr;
 
 	EditLabel::Param

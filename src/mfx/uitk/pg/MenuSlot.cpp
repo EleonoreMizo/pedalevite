@@ -75,6 +75,7 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_prs_sptr (new NText (Entry_PRESETS))
 ,	_rst_sptr (new NText (Entry_RESET  ))
 ,	_chn_sptr (new NText (Entry_CHN    ))
+,	_frs_sptr (new NText (Entry_FRESH  ))
 ,	_lbl_sptr (new NText (Entry_LABEL  ))
 ,	_label_param ()
 {
@@ -90,6 +91,7 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 	_menu_sptr->push_back (_prs_sptr);
 	_menu_sptr->push_back (_rst_sptr);
 	_menu_sptr->push_back (_chn_sptr);
+	_menu_sptr->push_back (_frs_sptr);
 	_menu_sptr->push_back (_lbl_sptr);
 	_menu_sptr->set_autoscroll (true);
 }
@@ -136,6 +138,7 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_prs_sptr->set_font (*_fnt_ptr);
 	_rst_sptr->set_font (*_fnt_ptr);
 	_chn_sptr->set_font (*_fnt_ptr);
+	_frs_sptr->set_font (*_fnt_ptr);
 	_lbl_sptr->set_font (*_fnt_ptr);
 
 	_typ_sptr->set_coord (Vec2d (0, h_m * 0));
@@ -145,7 +148,8 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_prs_sptr->set_coord (Vec2d (0, h_m * 4));
 	_rst_sptr->set_coord (Vec2d (0, h_m * 5));
 	_chn_sptr->set_coord (Vec2d (0, h_m * 6));
-	_lbl_sptr->set_coord (Vec2d (0, h_m * 7));
+	_frs_sptr->set_coord (Vec2d (0, h_m * 7));
+	_lbl_sptr->set_coord (Vec2d (0, h_m * 8));
 
 	_typ_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_ins_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -154,6 +158,7 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_prs_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_rst_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_chn_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_frs_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_lbl_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
 	_page_ptr->push_back (_menu_sptr);
@@ -239,6 +244,23 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 						bool           fm_flag = settings._force_mono_flag;
 						fm_flag = ! fm_flag;
 						_model_ptr->set_plugin_mono (_loc_edit._slot_id, fm_flag);
+					}
+				}
+				break;
+			case Entry_FRESH:
+				if (_loc_edit._slot_id >= 0)
+				{
+					const auto     it_slot =
+						preset._slot_map.find (_loc_edit._slot_id);
+					assert (it_slot != preset._slot_map.end ());
+					if (! preset.is_slot_empty (it_slot))
+					{
+						const doc::Slot & slot = *(it_slot->second);
+						const doc::PluginSettings &   settings =
+							slot.use_settings (PiType_MAIN);
+						bool           fresh_flag = settings._force_reset_flag;
+						fresh_flag = ! fresh_flag;
+						_model_ptr->set_plugin_reset (_loc_edit._slot_id, fresh_flag);
 					}
 				}
 				break;
@@ -360,7 +382,7 @@ void	MenuSlot::do_erase_slot_from_chain (int index)
 
 
 
-void	MenuSlot::do_set_slot_label (int slot_id, std::string name)
+void	MenuSlot::do_set_slot_label (int slot_id, std::string /*name*/)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -370,7 +392,7 @@ void	MenuSlot::do_set_slot_label (int slot_id, std::string name)
 
 
 
-void	MenuSlot::do_set_plugin (int slot_id, const PluginInitData &pi_data)
+void	MenuSlot::do_set_plugin (int slot_id, const PluginInitData &/*pi_data*/)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -390,7 +412,17 @@ void	MenuSlot::do_remove_plugin (int slot_id)
 
 
 
-void	MenuSlot::do_set_plugin_mono (int slot_id, bool mono_flag)
+void	MenuSlot::do_set_plugin_mono (int slot_id, bool /*mono_flag*/)
+{
+	if (slot_id == _loc_edit._slot_id)
+	{
+		update_display ();
+	}
+}
+
+
+
+void	MenuSlot::do_set_plugin_reset (int slot_id, bool /*reset_flag*/)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -454,6 +486,7 @@ void	MenuSlot::update_display ()
 	_prs_sptr->show (full_flag);
 	_rst_sptr->show (full_flag);
 	_chn_sptr->show (full_flag);
+	_frs_sptr->show (full_flag);
 	_lbl_sptr->show (full_flag);
 	if (full_flag)
 	{
@@ -467,11 +500,24 @@ void	MenuSlot::update_display ()
 
 		const doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 		const bool     fm_flag = settings._force_mono_flag;
-		_chn_sptr->set_text (fm_flag ? "Prefer mono" : "Mono or stereo");
+		_chn_sptr->set_text (
+			  fm_flag
+			? "Chan : prefer mono"
+			: "Chan : auto"
+		);
 		nav._node_id = Entry_CHN;
 		nav_list.push_back (nav);
 
-		_lbl_sptr->set_text ("Name: " + slot._label);
+		const bool     fresh_flag = settings._force_reset_flag;
+		_frs_sptr->set_text (
+			  fresh_flag
+			? "State: fresh"
+			: "State: keep"
+		);
+		nav._node_id = Entry_FRESH;
+		nav_list.push_back (nav);
+
+		_lbl_sptr->set_text ("Name : " + slot._label);
 		nav._node_id = Entry_LABEL;
 		nav_list.push_back (nav);
 	}
