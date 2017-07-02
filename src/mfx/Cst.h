@@ -75,7 +75,7 @@ public:
 	static const float
 	                  _clip_lvl;
 
-	static const int  _tempo_min       =  60;
+	static const int  _tempo_min       =  30;
 	static const int  _tempo_max       = 240;
 	static const int  _tempo_ref       = 120;
 	static const std::chrono::microseconds    // Maximum time between two tempo pedal actions. Microseconds
