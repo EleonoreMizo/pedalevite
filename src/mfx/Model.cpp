@@ -594,8 +594,8 @@ void	Model::set_click (bool click_flag)
 
 void	Model::set_tempo (double bpm)
 {
-	assert (tempo >= Cst::_tempo_min);
-	assert (tempo <= Cst::_tempo_max);
+	assert (bpm >= Cst::_tempo_min);
+	assert (bpm <= Cst::_tempo_max);
 
 	_tempo = bpm;
 	_central.set_tempo (float (bpm));
