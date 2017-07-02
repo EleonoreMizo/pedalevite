@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MenuMain.h
+        SettingsOther.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_MenuMain_HEADER_INCLUDED)
-#define mfx_uitk_pg_MenuMain_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_SettingsOther_HEADER_INCLUDED)
+#define mfx_uitk_pg_SettingsOther_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,12 +27,15 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/PedalEditContext.h"
-#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
+#include "mfx/uitk/PageMgrInterface.h"
+#include "mfx/Cst.h"
+#include "mfx/Dir.h"
 
+#include <array>
 #include <memory>
+#include <vector>
 
 
 
@@ -48,7 +51,7 @@ namespace pg
 
 
 
-class MenuMain
+class SettingsOther
 :	public PageInterface
 {
 
@@ -56,8 +59,8 @@ class MenuMain
 
 public:
 
-	explicit       MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
-	virtual        ~MenuMain () = default;
+	explicit       SettingsOther (PageSwitcher &page_switcher);
+	virtual        ~SettingsOther () = default;
 
 
 
@@ -73,62 +76,36 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
+	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
+	virtual void   do_set_tempo (double bpm);
+	virtual void   do_set_click (bool click_flag);
+
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	enum State
-	{
-		State_NORMAL = 0,
-		State_REBOOT
-	};
-
-	enum RestartMenu
-	{
-		RestartMenu_CANCEL = 0,
-		RestartMenu_RESTART,
-		RestartMenu_REBOOT,
-		RestartMenu_SHUTDOWN,
-
-		RestartMenu_NBR_ELT
-	};
-
 	enum Entry
 	{
-		Entry_PROG  = 0,
-		Entry_BANKS ,
-		Entry_LAYOUT,
-		Entry_LEVELS,
-		Entry_SETTINGS,
-		Entry_TUNER,
-		Entry_REBOOT,
-
-		Entry_NBR_ELT
+		Entry_TEMPO = 1000,
+		Entry_CLICK
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 
+	void           refresh_display ();
+	EvtProp        change_tempo (double delta);
+
 	PageSwitcher & _page_switcher;
-	PedalEditContext &
-	               _pedal_ctx;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
-	State          _state;
 
-	TxtSPtr        _edit_prog_sptr;
-	TxtSPtr        _edit_bank_sptr;
-	TxtSPtr        _edit_layout_sptr;
-	TxtSPtr        _edit_levels_sptr;
-	TxtSPtr        _settings_sptr;
-	TxtSPtr        _tuner_sptr;
-	TxtSPtr        _reboot_sptr;
-
-	Question::QArg _reboot_arg;
+	TxtSPtr        _tempo_sptr;
+	TxtSPtr        _click_sptr;
 
 
 
@@ -136,13 +113,13 @@ private:
 
 private:
 
-	               MenuMain ()                               = delete;
-	               MenuMain (const MenuMain &other)          = delete;
-	MenuMain &     operator = (const MenuMain &other)        = delete;
-	bool           operator == (const MenuMain &other) const = delete;
-	bool           operator != (const MenuMain &other) const = delete;
+	               SettingsOther ()                               = delete;
+	               SettingsOther (const SettingsOther &other)     = delete;
+	SettingsOther& operator = (const SettingsOther &other)        = delete;
+	bool           operator == (const SettingsOther &other) const = delete;
+	bool           operator != (const SettingsOther &other) const = delete;
 
-}; // class MenuMain
+}; // class SettingsOther
 
 
 
@@ -152,11 +129,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/MenuMain.hpp"
+//#include "mfx/uitk/pg/SettingsOther.hpp"
 
 
 
-#endif   // mfx_uitk_pg_MenuMain_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_SettingsOther_HEADER_INCLUDED
 
 
 

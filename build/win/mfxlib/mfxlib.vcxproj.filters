@@ -2118,6 +2118,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscStepSeq.h">
       <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SettingsOther.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2980,6 +2983,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscStepSeq.cpp">
       <Filter>mfx\dsp\ctrl\lfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SettingsOther.cpp">
+      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

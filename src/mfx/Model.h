@@ -115,6 +115,8 @@ public:
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
 	void           set_tuner (bool tuner_flag);
+	void           set_click (bool click_flag);
+	void           set_tempo (double bpm);
 	int            add_slot ();
 	void           remove_slot (int slot_id);
 	void           insert_slot_in_chain (int index, int slot_id);

@@ -63,6 +63,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 ,	_edit_bank_sptr (  new NText (Entry_BANKS ))
 ,	_edit_layout_sptr (new NText (Entry_LAYOUT))
 ,	_edit_levels_sptr (new NText (Entry_LEVELS))
+,	_settings_sptr    (new NText (Entry_SETTINGS))
 ,	_tuner_sptr (      new NText (Entry_TUNER ))
 ,	_reboot_sptr (     new NText (Entry_REBOOT))
 ,	_reboot_arg ()
@@ -71,6 +72,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 	_edit_bank_sptr  ->set_justification (0.5f, 0, false);
 	_edit_layout_sptr->set_justification (0.5f, 0, false);
 	_edit_levels_sptr->set_justification (0.5f, 0, false);
+	_settings_sptr   ->set_justification (0.5f, 0, false);
 	_tuner_sptr      ->set_justification (0.5f, 0, false);
 	_reboot_sptr     ->set_justification (0.5f, 0, false);
 
@@ -78,6 +80,7 @@ MenuMain::MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 	_edit_bank_sptr  ->set_text ("Banks");
 	_edit_layout_sptr->set_text ("Pedal layout");
 	_edit_levels_sptr->set_text ("Volume & levels");
+	_settings_sptr   ->set_text ("Other settings");
 	_tuner_sptr      ->set_text ("Tuner");
 	_reboot_sptr     ->set_text ("Restart");
 }
@@ -140,6 +143,7 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_edit_bank_sptr  ->set_font (fnt._m);
 	_edit_layout_sptr->set_font (fnt._m);
 	_edit_levels_sptr->set_font (fnt._m);
+	_settings_sptr   ->set_font (fnt._m);
 	_tuner_sptr      ->set_font (fnt._m);
 	_reboot_sptr     ->set_font (fnt._m);
 
@@ -151,6 +155,7 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_edit_bank_sptr  ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_edit_layout_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_edit_levels_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
+	_settings_sptr   ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_tuner_sptr      ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 	_reboot_sptr     ->set_frame (Vec2d (w_sel, 0), Vec2d ());
 
@@ -158,13 +163,15 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_edit_bank_sptr  ->set_coord (Vec2d (x_mid, h_m * 1));
 	_edit_layout_sptr->set_coord (Vec2d (x_mid, h_m * 2));
 	_edit_levels_sptr->set_coord (Vec2d (x_mid, h_m * 3));
-	_tuner_sptr      ->set_coord (Vec2d (x_mid, h_m * 4));
-	_reboot_sptr     ->set_coord (Vec2d (x_mid, h_m * 5));
+	_settings_sptr   ->set_coord (Vec2d (x_mid, h_m * 4));
+	_tuner_sptr      ->set_coord (Vec2d (x_mid, h_m * 5));
+	_reboot_sptr     ->set_coord (Vec2d (x_mid, h_m * 6));
 
 	_page_ptr->push_back (_edit_prog_sptr  );
 	_page_ptr->push_back (_edit_bank_sptr  );
 	_page_ptr->push_back (_edit_layout_sptr);
 	_page_ptr->push_back (_edit_levels_sptr);
+	_page_ptr->push_back (_settings_sptr   );
 	_page_ptr->push_back (_tuner_sptr      );
 	_page_ptr->push_back (_reboot_sptr     );
 
@@ -213,6 +220,9 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 				break;
 			case Entry_LEVELS:
 				_page_switcher.switch_to (PageType_LEVELS, 0);
+				break;
+			case Entry_SETTINGS:
+				_page_switcher.switch_to (PageType_SETTINGS_OTHER, 0);
 				break;
 			case Entry_REBOOT:
 				_reboot_arg._title      = "RESTART";

@@ -578,6 +578,41 @@ void	Model::set_tuner (bool tuner_flag)
 
 
 
+void	Model::set_click (bool click_flag)
+{
+	_click_flag = click_flag;
+
+	apply_settings ();
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_click (_click_flag);
+	}
+}
+
+
+
+void	Model::set_tempo (double bpm)
+{
+	assert (tempo >= Cst::_tempo_min);
+	assert (tempo <= Cst::_tempo_max);
+
+	_tempo = bpm;
+	_central.set_tempo (float (bpm));
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_tempo (bpm);
+	}
+
+	if (! _tuner_flag)
+	{
+		update_all_beat_parameters ();
+	}
+}
+
+
+
 int	Model::add_slot ()
 {
 	const int      slot_id = _preset_cur.gen_slot_id ();
@@ -2097,24 +2132,17 @@ void	Model::process_action_click (const doc::ActionClick &action)
 	switch (action._mode)
 	{
 	case doc::ActionClick::Mode_OFF:
-		_click_flag = false;
+		set_click (false);
 		break;
 	case doc::ActionClick::Mode_ON:
-		_click_flag = true;
+		set_click (true);
 		break;
 	case doc::ActionClick::Mode_TOGGLE:
-		_click_flag = ! _click_flag;
+		set_click (! _click_flag);
 		break;
 	default:
 		assert (false);
 		break;
-	}
-
-	apply_settings ();
-
-	if (_obs_ptr != 0)
-	{
-		_obs_ptr->set_click (_click_flag);
 	}
 }
 
@@ -2134,18 +2162,7 @@ void	Model::process_action_tempo (double tempo)
 		tempo *= 2;
 	}
 
-	_tempo = tempo;
-	_central.set_tempo (float (tempo));
-
-	if (_obs_ptr != 0)
-	{
-		_obs_ptr->set_tempo (tempo);
-	}
-
-	if (! _tuner_flag)
-	{
-		update_all_beat_parameters ();
-	}
+	set_tempo (tempo);
 }
 
 

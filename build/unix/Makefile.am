@@ -782,6 +782,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/Question.h \
         ../../src/mfx/uitk/pg/SaveProg.cpp \
         ../../src/mfx/uitk/pg/SaveProg.h \
+        ../../src/mfx/uitk/pg/SettingsOther.cpp \
+        ../../src/mfx/uitk/pg/SettingsOther.h \
         ../../src/mfx/uitk/pg/Tools.cpp \
         ../../src/mfx/uitk/pg/Tools.h \
         ../../src/mfx/uitk/pg/Tuner.cpp \
