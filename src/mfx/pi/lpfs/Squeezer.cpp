@@ -137,27 +137,28 @@ int	Squeezer::do_reset (double sample_freq, int max_buf_len, int &latency)
 	for (auto &c : _chn_arr)
 	{
 		c._ds.set_coefs (coef_42, coef_21);
-		c._ds.clear_buffers ();
 		c._us.set_coefs (coef_42, coef_21);
-		c._us.clear_buffers ();
 		c._lpf1.set_sample_freq (_sample_freq * _ovrspl);
-		c._lpf1.clear_buffers ();
 		c._lpf2.set_sample_freq (_sample_freq * _ovrspl);
-		c._lpf2.clear_buffers ();
 		c._lpf3.set_sample_freq (_sample_freq * _ovrspl);
-		c._lpf3.clear_buffers ();
 	}
 	const int      buf_len4 = (max_buf_len + 3) & -4;
 	_buf.resize (buf_len4);
 	_buf_ovrspl.resize (buf_len4 * _ovrspl);
 
 	update_param (true);
-	_drive_gain_old = _drive_gain;
-	_drive_inv_old	 = _drive_inv;
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Squeezer::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -273,6 +274,23 @@ void	Squeezer::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Squeezer::clear_buffers ()
+{
+	for (auto &c : _chn_arr)
+	{
+		c._ds.clear_buffers ();
+		c._us.clear_buffers ();
+		c._lpf1.clear_buffers ();
+		c._lpf2.clear_buffers ();
+		c._lpf3.clear_buffers ();
+	}
+
+	_drive_gain_old = _drive_gain;
+	_drive_inv_old	 = _drive_inv;
+}
 
 
 

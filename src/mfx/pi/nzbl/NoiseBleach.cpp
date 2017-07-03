@@ -133,10 +133,28 @@ int	NoiseBleach::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_param_change_flag_band.set ();
 
 	update_param (true);
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	NoiseBleach::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
+void	NoiseBleach::clear_buffers ()
+{
+	for (auto &chn : _chn_arr)
+	{
+		chn._filter_bank.clear_buffers ();
+	}
 }
 
 

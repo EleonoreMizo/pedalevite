@@ -121,16 +121,23 @@ int	Click::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_env.set_sus_time (0.040f);
 	_env.set_sus_lvl (1.f);
 	_env.set_rls_time (0.010f);
-	_env.clear_buffers ();
 
 	const int      msb_align = (max_buf_len + 3) & -4;
 	_buf_env.resize (msb_align);
 
 	update_rates ();
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Click::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -252,6 +259,16 @@ void	Click::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Click::clear_buffers ()
+{
+	_env.clear_buffers ();
+	_pos_beat = 0;
+	_cur_beat = -1;
+	_osc_pos  = 0;
+}
 
 
 

@@ -147,12 +147,20 @@ int	Freeverb::do_reset (double sample_freq, int max_buf_len, int &latency)
 		{
 			buf.resize (max_buf_len);
 		}
-		chn._filter.clear_buffers ();
 	}
+
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Freeverb::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -259,6 +267,17 @@ void	Freeverb::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Freeverb::clear_buffers ()
+{
+	_fv.clear_buffers ();
+	for (auto &chn : _chn_arr)
+	{
+		chn._filter.clear_buffers ();
+	}
+}
 
 
 

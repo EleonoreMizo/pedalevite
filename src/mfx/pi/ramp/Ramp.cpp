@@ -124,12 +124,18 @@ int	Ramp::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_param_change_flag_pos  .set ();
 
 	update_param (true);
-
-	_ramp.clear_buffers ();
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Ramp::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -161,6 +167,13 @@ void	Ramp::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Ramp::clear_buffers ()
+{
+	_ramp.clear_buffers ();
+}
 
 
 

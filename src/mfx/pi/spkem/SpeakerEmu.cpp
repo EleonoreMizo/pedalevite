@@ -214,6 +214,13 @@ int	SpeakerEmu::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+void	SpeakerEmu::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
 void	SpeakerEmu::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_chn_in =

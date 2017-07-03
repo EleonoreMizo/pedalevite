@@ -74,6 +74,7 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
+	virtual void   do_clean_quick ();
 	virtual void   do_process_block (ProcInfo &proc);
 
 
@@ -170,6 +171,7 @@ private:
 	float          _duck_time;          // s. Corresponds to the attack time
 	bool           _freeze_flag;
 	bool           _duck_flag;          // Set if at least one of the lines uses the ducking
+	bool           _quick_clean_req_flag;
 
 
 

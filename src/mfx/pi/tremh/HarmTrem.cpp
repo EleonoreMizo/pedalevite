@@ -183,10 +183,6 @@ int	HarmTrem::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_lfo.set_sample_freq (sample_freq);
 
 	update_filter_freq ();
-	for (auto &chn : _chn_arr)
-	{
-		chn._lpf.clear_buffers ();
-	}
 
 	const int      mbs_align = (max_buf_len + 3) & -4;
 	for (auto &buf : _buf_arr)
@@ -203,12 +199,29 @@ int	HarmTrem::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_param_change_flag_lfo_wf   .set ();
 
 	update_param (true);
-
-	_lfo.clear_buffers ();
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	HarmTrem::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
+void	HarmTrem::clear_buffers ()
+{
+	_lfo.clear_buffers ();
+	for (auto &chn : _chn_arr)
+	{
+		chn._lpf.clear_buffers ();
+	}
 }
 
 

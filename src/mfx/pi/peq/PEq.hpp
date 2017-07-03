@@ -139,13 +139,19 @@ int	PEq <NB>::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_nbr_chn      = 0; // Force update
 	_neutral_time = max_buf_len * 2;
-
-	_biq_pack.clear_buffers ();
-	_ramp_flag = false;
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+template <int NB>
+void	PEq <NB>::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -250,6 +256,15 @@ bool PEq <NB>::BandInfo::is_bypass () const
 	}
 
 	return ret_val;
+}
+
+
+
+template <int NB>
+void	PEq <NB>::clear_buffers ()
+{
+	_ramp_flag = false;
+	_biq_pack.clear_buffers ();
 }
 
 

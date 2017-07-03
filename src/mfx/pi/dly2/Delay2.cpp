@@ -80,6 +80,7 @@ Delay2::Delay2 ()
 ,	_duck_time (0.100f)
 ,	_freeze_flag (false)
 ,	_duck_flag (false)
+,	_quick_clean_req_flag (false)
 {
 	dsp::mix::Align::setup ();
 
@@ -297,6 +298,13 @@ int	Delay2::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+void	Delay2::do_clean_quick ()
+{
+	_quick_clean_req_flag = true;
+}
+
+
+
 void	Delay2::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_chn_src =
@@ -325,6 +333,16 @@ void	Delay2::do_process_block (ProcInfo &proc)
 		line.set_ramp_time (proc._nbr_spl);
 	}
 	update_param ();
+
+	if (_quick_clean_req_flag)
+	{
+
+		/*** To do: something quicker ***/
+		clear_buffers ();
+
+
+		_quick_clean_req_flag = true;
+	}
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Signal processing
@@ -502,6 +520,8 @@ void	Delay2::clear_buffers ()
 	_env_duck.clear_buffers ();
 
 	update_duck_state ();
+
+	_quick_clean_req_flag = false;
 }
 
 

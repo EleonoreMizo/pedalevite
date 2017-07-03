@@ -153,10 +153,18 @@ int	NoiseChlorine::do_reset (double sample_freq, int max_buf_len, int &latency)
 	}
 
 	update_param (true);
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	NoiseChlorine::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -215,6 +223,19 @@ void	NoiseChlorine::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	NoiseChlorine::clear_buffers ()
+{
+	for (auto &chn : _chn_arr)
+	{
+		for (auto &notch : chn._notch_arr)
+		{
+			notch.clear_buffers ();
+		}
+	}
+}
 
 
 

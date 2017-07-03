@@ -55,6 +55,7 @@ public:
 	void           set_freq (float freq);
 	void           set_q (float q);
 	void           set_lvl (float lvl);
+	void           clear_buffers ();
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 

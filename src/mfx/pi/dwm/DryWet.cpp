@@ -111,6 +111,13 @@ int	DryWet::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+void	DryWet::do_clean_quick ()
+{
+	// Nothing
+}
+
+
+
 void	DryWet::do_process_block (ProcInfo &proc)
 {
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)

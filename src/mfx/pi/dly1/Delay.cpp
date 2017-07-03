@@ -71,6 +71,7 @@ Delay::Delay ()
 ,	_lvl_out ()
 ,	_delay_time_arr ()
 ,	_link_flag (false)
+,	_quick_clean_req_flag (false)
 ,	_nbr_chn_in (0)
 ,	_nbr_chn_out (0)
 {
@@ -182,6 +183,13 @@ int	Delay::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+void	Delay::do_clean_quick ()
+{
+	_quick_clean_req_flag = true;
+}
+
+
+
 void	Delay::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_chn_in =
@@ -207,6 +215,17 @@ void	Delay::do_process_block (ProcInfo &proc)
 			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
 			_state_set.set_val (evtp._index, evtp._val);
 		}
+	}
+
+	if (_quick_clean_req_flag)
+	{
+
+
+		/*** To do: something quicker ***/
+		clear_buffers ();
+
+
+		_quick_clean_req_flag = false;
 	}
 
 	int            block_pos = 0;
@@ -247,8 +266,6 @@ void	Delay::do_process_block (ProcInfo &proc)
 
 void	Delay::clear_buffers ()
 {
-	update_param (true);
-
 	_gain_fdbk_arr [0].clear_buffers ();
 	_gain_fdbk_arr [1].clear_buffers ();
 	_cross_fdbk.clear_buffers ();
@@ -259,6 +276,8 @@ void	Delay::clear_buffers ()
 	{
 		chn_sptr->clear_buffers ();
 	}
+
+	_quick_clean_req_flag = false;
 }
 
 

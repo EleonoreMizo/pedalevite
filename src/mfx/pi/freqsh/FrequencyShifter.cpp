@@ -106,6 +106,13 @@ int	FrequencyShifter::do_reset (double sample_freq, int max_buf_len, int &latenc
 
 
 
+void	FrequencyShifter::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
 void	FrequencyShifter::do_process_block (ProcInfo &proc)
 {
 	// Events
@@ -155,6 +162,13 @@ void	FrequencyShifter::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	FrequencyShifter::clear_buffers ()
+{
+	_freq_shift.clear_buffers ();
+}
 
 
 

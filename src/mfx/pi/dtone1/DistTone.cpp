@@ -115,9 +115,18 @@ int	DistTone::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_inv_fs = float (1.0 / _sample_freq);
 	update_filter_coef ();
 
+	clear_buffers ();
+
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	DistTone::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -176,6 +185,16 @@ void	DistTone::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	DistTone::clear_buffers ()
+{
+	for (auto &chn : _chn_arr)
+	{
+		chn.clear_buffers ();
+	}
+}
 
 
 

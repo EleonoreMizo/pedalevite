@@ -109,15 +109,30 @@ int	Tremolo::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
 	_sample_freq = float (sample_freq);
-	_lfo_pos = 0;
 
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 	_param_change_shape_flag.set ();
 
+	clear_buffers ();
+
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Tremolo::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
+void	Tremolo::clear_buffers ()
+{
+	_lfo_pos = 0;
 }
 
 

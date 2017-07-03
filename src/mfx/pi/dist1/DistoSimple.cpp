@@ -138,21 +138,26 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 	for (int chn = 0; chn < _max_nbr_chn; ++chn)
 	{
 		Channel &      c = _chn_arr [chn];
-		c._hpf_in.clear_buffers ();
 		c._env_lpf.set_z_eq (b_z, a_z);
-		c._env_lpf.clear_buffers ();
 		c._us->set_coefs (coef_42, coef_21);
-		c._us->clear_buffers ();
 		c._ds->set_coefs (coef_42, coef_21);
-		c._ds->clear_buffers ();
 		c._buf.resize (max_buf_len);
 		c._buf_env.resize (max_buf_len);
 	}
 	_buf_ovrspl.resize (max_buf_len * _ovrspl);
 
+	clear_buffers ();
+
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	DistoSimple::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -388,6 +393,19 @@ const float	DistoSimple::_m_2  = fstb::ipowp (_attn, 2 - 1) / 2;
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	DistoSimple::clear_buffers ()
+{
+	for (auto &chn : _chn_arr)
+	{
+		chn._hpf_in.clear_buffers ();
+		chn._env_lpf.clear_buffers ();
+		chn._us->clear_buffers ();
+		chn._ds->clear_buffers ();
+	}
+}
 
 
 

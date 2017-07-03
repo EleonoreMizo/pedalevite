@@ -143,12 +143,20 @@ int	EnvFollow::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_buf_env.resize (len_align);
 
 	update_param (true);
+	_state_set.clear_buffers ();
 
 	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	EnvFollow::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -208,7 +216,6 @@ void	EnvFollow::do_process_block (ProcInfo &proc)
 
 void	EnvFollow::clear_buffers ()
 {
-	_state_set.clear_buffers ();
 	for (auto &chn : _chn_arr)
 	{
 		chn._hpf.clear_buffers ();

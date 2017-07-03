@@ -162,11 +162,18 @@ int	Phaser::do_reset (double sample_freq, int max_buf_len, int &latency)
 		voice.reset (_sample_freq, max_buf_len, &_tmp_buf_pv [0]);
 	}
 
-	_phase_mix_old = _phase_mix_cur;
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Phaser::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -323,6 +330,17 @@ void	Phaser::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Phaser::clear_buffers ()
+{
+	for (auto &voice : _phased_voice_arr)
+	{
+		voice.clear_buffers ();
+	}
+	_phase_mix_old = _phase_mix_cur;
+}
 
 
 

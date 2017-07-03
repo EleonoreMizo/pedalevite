@@ -231,6 +231,13 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+void	Disto2x::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
 void	Disto2x::do_process_block (ProcInfo &proc)
 {
 	// Channels

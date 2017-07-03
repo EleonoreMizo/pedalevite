@@ -210,16 +210,19 @@ int	Compex::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_param_change_flag_ar			  .set ();
 	_param_change_flag_vol_curves_ss.set ();
 
-	_env_fol_xptr->clear_buffers ();
-	_smoother_xptr->clear_buffers ();
-
-	_cur_gain = 0;
-
 	update_param (true);
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Compex::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -290,6 +293,16 @@ float	Compex::AddProc::process_scalar (float in)
 fstb::ToolsSimd::VectF32	Compex::AddProc::process_vect (const fstb::ToolsSimd::VectF32 &in)
 {
 	return (in);
+}
+
+
+
+void	Compex::clear_buffers ()
+{
+	_env_fol_xptr->clear_buffers ();
+	_smoother_xptr->clear_buffers ();
+
+	_cur_gain = 0;
 }
 
 

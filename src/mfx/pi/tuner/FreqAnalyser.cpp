@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cmath>
+#include <cstring>
 
 
 
@@ -76,6 +77,25 @@ void	FreqAnalyser::set_sample_freq (double sample_freq)
 	_freq                  = 0;
 	_freq_prev             = 0;
 	_dif_sum               = 0;
+}
+
+
+
+void	FreqAnalyser::clear_buffers ()
+{
+#if defined (mfx_pi_tuner_USE_SIMD)
+	for (BufAlign &buf : _buf_arr)
+	{
+		memset (&buf [0], 0, sizeof (buf [0]));
+	}
+#else
+	memset (&_buffer [0], 0, sizeof (_buffer [0]));
+#endif
+	_buf_pos   = 0;
+	_delta     = 1;
+	_freq      = 0;
+	_freq_prev = 0;
+	_dif_sum   = 0;
 }
 
 

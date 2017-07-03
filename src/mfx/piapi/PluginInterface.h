@@ -109,6 +109,7 @@ public:
 	State          get_state () const;
 	double         get_param_val (ParamCateg categ, int index, int note_id) const;
 	int            reset (double sample_freq, int max_block_size, int &latency);
+	void           clean_quick ();
 	void           process_block (ProcInfo &proc);
 
 
@@ -120,6 +121,7 @@ protected:
 	virtual State  do_get_state () const = 0;
 	virtual double do_get_param_val (ParamCateg categ, int index, int note_id) const = 0;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency) = 0;
+	virtual void   do_clean_quick () = 0;
 	virtual void   do_process_block (ProcInfo &proc) = 0;
 
 

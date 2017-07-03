@@ -197,18 +197,18 @@ int	Flancho::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_nbr_chn_out = 0;
 
 	update_param (true);
-
-	for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
-	{
-		Channel &		chn = _chn_arr [chn_cnt];
-		chn._fchn_sptr->clear_buffers ();
-		chn._ds.clear_buffers ();
-		chn._us.clear_buffers ();
-	}
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Flancho::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -314,6 +314,18 @@ void	Flancho::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Flancho::clear_buffers ()
+{
+	for (auto &chn : _chn_arr)
+	{
+		chn._fchn_sptr->clear_buffers ();
+		chn._ds.clear_buffers ();
+		chn._us.clear_buffers ();
+	}
+}
 
 
 

@@ -126,6 +126,13 @@ int	Eton::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+void	Eton::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
 void	Eton::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_chn_src =

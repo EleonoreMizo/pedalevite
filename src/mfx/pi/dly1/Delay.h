@@ -69,6 +69,7 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
+	virtual void   do_clean_quick ();
 	virtual void   do_process_block (ProcInfo &proc);
 
 
@@ -129,6 +130,7 @@ private:
 	std::array <float, Cst::_nbr_lines>
 	               _delay_time_arr;
 	bool           _link_flag;
+	bool           _quick_clean_req_flag;
 
 	// Cached
 	int				_nbr_chn_in;			// > 0. 0 = not set

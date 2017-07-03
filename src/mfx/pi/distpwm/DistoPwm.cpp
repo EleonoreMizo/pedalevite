@@ -140,6 +140,13 @@ int	DistoPwm::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+void	DistoPwm::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
 void	DistoPwm::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_chn_in =

@@ -139,6 +139,13 @@ int	Wha2::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
+void	Wha2::do_clean_quick ()
+{
+	clear_buffers ();
+}
+
+
+
 void	Wha2::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_chn_src =

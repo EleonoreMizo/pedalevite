@@ -75,6 +75,7 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
+	virtual void   do_clean_quick ();
 	virtual void   do_process_block (ProcInfo &proc);
 
 
@@ -105,6 +106,7 @@ private:
 	};
 	typedef std::vector <Channel, fstb::AllocAlign <Channel, 16> > ChnArray;
 
+	void           clear_buffers ();
 	void           init_coef ();
 	void				update_param (bool force_flag = false);
 	void				update_lfo_period ();

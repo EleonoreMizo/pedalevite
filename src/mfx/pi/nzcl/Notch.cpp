@@ -59,18 +59,17 @@ void	Notch::reset (double sample_freq, int max_buf_len, float buf_0_ptr [], floa
 
 	dsp::mix::Align::setup ();
 
-	_sample_freq  = float (    sample_freq);
-	_inv_fs       = float (1 / sample_freq);
-	_max_buf_size = max_buf_len;
-
+	_sample_freq    = float (    sample_freq);
+	_inv_fs         = float (1 / sample_freq);
+	_max_buf_size   = max_buf_len;
 	_flt_dirty_flag = true;
-	_bpf.clear_buffers ();
 
 	_env.set_sample_freq (sample_freq);
-	_env.clear_buffers ();
 
 	_buf_env_ptr = buf_0_ptr;
 	_buf_bpf_ptr = buf_1_ptr;
+
+	clear_buffers ();
 }
 
 
@@ -102,6 +101,14 @@ void	Notch::set_lvl (float lvl)
 	assert (lvl >= 0);
 
 	_lvl = lvl;
+}
+
+
+
+void	Notch::clear_buffers ()
+{
+	_bpf.clear_buffers ();
+	_env.clear_buffers ();
 }
 
 

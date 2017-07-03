@@ -105,14 +105,19 @@ int	Wha::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.clear_buffers ();
 
 	_inv_fs = float (1.0 / _sample_freq);
-	for (int c = 0; c < int (_filter_arr.size ()); ++ c)
-	{
-		_filter_arr [c].clear_buffers ();
-	}
+
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Wha::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -208,6 +213,16 @@ void	Wha::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Wha::clear_buffers ()
+{
+	for (auto &chn : _filter_arr)
+	{
+		chn.clear_buffers ();
+	}
+}
 
 
 

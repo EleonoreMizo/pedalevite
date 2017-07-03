@@ -142,12 +142,18 @@ int	Lfo::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_param_change_flag_wf   .set ();
 
 	update_param (true);
-
-	_lfo.clear_buffers ();
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	Lfo::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -179,6 +185,13 @@ void	Lfo::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Lfo::clear_buffers ()
+{
+	_lfo.clear_buffers ();
+}
 
 
 

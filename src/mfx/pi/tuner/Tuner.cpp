@@ -87,7 +87,16 @@ int	Tuner::do_reset (double sample_freq, int max_buf_len, int &latency)
 		ret_val = Err_VALUE_NOT_SUPPORTED;
 	}
 
+	clear_buffers ();
+
 	return ret_val;
+}
+
+
+
+void	Tuner::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -116,6 +125,13 @@ void	Tuner::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Tuner::clear_buffers ()
+{
+	_freq = 0;
+}
 
 
 

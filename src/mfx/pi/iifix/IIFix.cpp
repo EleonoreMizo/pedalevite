@@ -102,15 +102,18 @@ int	IIFix::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.clear_buffers ();
 
 	update_filter ();
-
-	for (auto &op : _chn_arr)
-	{
-		op.clear_buffers ();
-	}
+	clear_buffers ();
 
 	_state = State_ACTIVE;
 
 	return Err_OK;
+}
+
+
+
+void	IIFix::do_clean_quick ()
+{
+	clear_buffers ();
 }
 
 
@@ -156,6 +159,16 @@ void	IIFix::do_process_block (ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	IIFix::clear_buffers ()
+{
+	for (auto &chn : _chn_arr)
+	{
+		chn.clear_buffers ();
+	}
+}
 
 
 
