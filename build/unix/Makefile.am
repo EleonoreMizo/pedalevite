@@ -750,6 +750,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/Levels.h \
         ../../src/mfx/uitk/pg/MenuMain.cpp \
         ../../src/mfx/uitk/pg/MenuMain.h \
+        ../../src/mfx/uitk/pg/MenuPresets.cpp \
+        ../../src/mfx/uitk/pg/MenuPresets.h \
         ../../src/mfx/uitk/pg/MenuSlot.cpp \
         ../../src/mfx/uitk/pg/MenuSlot.h \
         ../../src/mfx/uitk/pg/MoveFx.cpp \

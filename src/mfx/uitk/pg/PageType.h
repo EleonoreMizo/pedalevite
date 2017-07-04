@@ -71,6 +71,7 @@ enum PageType
 	PageType_EDIT_FXID,
 	PageType_FX_PEQ,
 	PageType_SETTINGS_OTHER,
+	PageType_MENU_PRESETS,
 
 	PageType_NBR_ELT
 

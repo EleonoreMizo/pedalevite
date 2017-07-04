@@ -2121,6 +2121,9 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SettingsOther.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\MenuPresets.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2985,6 +2988,9 @@
       <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SettingsOther.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\MenuPresets.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
