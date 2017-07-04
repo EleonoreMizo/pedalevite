@@ -839,6 +839,7 @@ ToolsSimd::VectS32	ToolsSimd::conv_f32_to_s32 (VectF32 x)
 
 
 
+// Not exact on the rounding boundaries
 // Assumes rounding mode is to-nearest on x86
 ToolsSimd::VectS32	ToolsSimd::round_f32_to_s32 (VectF32 x)
 {
@@ -852,6 +853,25 @@ ToolsSimd::VectS32	ToolsSimd::round_f32_to_s32 (VectF32 x)
 	const auto     u    = vbslq_f32 (gt0, p, m);
 	x = vaddq_f32 (x, u);
 	return vcvtq_s32_f32 (x);
+#endif // ff_arch_CPU
+}
+
+
+
+// Not exact on the rounding boundaries
+// Assumes rounding mode is to-nearest on x86
+ToolsSimd::VectS32	ToolsSimd::floor_f32_to_s32 (VectF32 x)
+{
+#if fstb_IS (ARCHI, X86)
+	x = _mm_add_ps (x, _mm_set1_ps (-0.5f));
+	return _mm_cvtps_epi32 (x);
+#elif fstb_IS (ARCHI, ARM)
+	const auto     one  = vdupq_n_f32 (1.0f);
+	const auto     gt0  = vcgtq_f32 (x, zero);
+	x = vbslq_f32 (gt0, x, vsubq_f32 (one, x));
+	auto           i    = vcvtq_s32_f32 (x);
+	i = vbslq_s32 (gt0, i, vnegq_s32 (i));
+	return i;
 #endif // ff_arch_CPU
 }
 
@@ -886,6 +906,43 @@ void	ToolsSimd::start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, floa
 	val_cur = set1_f32 (val_beg);
 	const auto     c0123 = set_f32 (0, 0.25f, 0.5f, 0.75f);
 	fstb::ToolsSimd::mac (val_cur, step, c0123);
+}
+
+
+
+ToolsSimd::VectS32	ToolsSimd::select (VectS32 cond, VectS32 v_t, VectS32 v_f)
+{
+#if fstb_IS (ARCHI, X86)
+	const auto     cond_1 = _mm_and_si128 (cond, v_t);
+	const auto     cond_0 = _mm_andnot_si128 (cond, v_f);
+	return _mm_or_si128 (cond_0, cond_1);
+#elif fstb_IS (ARCHI, ARM)
+	return vbslq_s32 (vreinterpretq_u32_s32 (cond), v_t, v_f);
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectS32	ToolsSimd::min_s32 (VectS32 lhs, VectS32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	const auto     gt = _mm_cmpgt_epi32 (lhs, rhs);
+	return select (gt, lhs, rhs);
+#elif fstb_IS (ARCHI, ARM)
+	return vminq_s32 (lhs, rhs);
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectS32	ToolsSimd::max_s32 (VectS32 lhs, VectS32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	const auto     lt = _mm_cmplt_epi32 (lhs, rhs);
+	return select (lt, lhs, rhs);
+#elif fstb_IS (ARCHI, ARM)
+	return vmaxq_s32 (lhs, rhs);
+#endif // ff_arch_CPU
 }
 
 

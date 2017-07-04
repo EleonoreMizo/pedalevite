@@ -201,11 +201,20 @@ public:
 	               conv_f32_to_s32 (VectF32 x);
 	static inline VectS32
 	               round_f32_to_s32 (VectF32 x);
+	static inline VectS32
+	               floor_f32_to_s32 (VectF32 x);
 	static inline VectF32
 	               conv_s32_to_f32 (VectS32 x);
 
 	static inline void
 	               start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, float val_end, int size);
+
+	static inline VectS32
+	               select (VectS32 cond, VectS32 v_t, VectS32 v_f);
+	static inline VectS32
+	               min_s32 (VectS32 lhs, VectS32 rhs);
+	static inline VectS32
+	               max_s32 (VectS32 lhs, VectS32 rhs);
 
 	template <int SHIFT>
 	class Shift
