@@ -866,6 +866,7 @@ ToolsSimd::VectS32	ToolsSimd::floor_f32_to_s32 (VectF32 x)
 	x = _mm_add_ps (x, _mm_set1_ps (-0.5f));
 	return _mm_cvtps_epi32 (x);
 #elif fstb_IS (ARCHI, ARM)
+	const auto     zero = vdupq_n_f32 (0.0f);
 	const auto     one  = vdupq_n_f32 (1.0f);
 	const auto     gt0  = vcgtq_f32 (x, zero);
 	x = vbslq_f32 (gt0, x, vsubq_f32 (one, x));
