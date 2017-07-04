@@ -37,6 +37,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 #include <array>
 
 
@@ -64,6 +66,8 @@ public:
 	virtual        ~FncFiniteAsym () = default;
 
 	inline float   operator () (float x) const;
+	inline fstb::ToolsSimd::VectF32
+	               operator () (fstb::ToolsSimd::VectF32 x) const;
 
 
 
@@ -82,7 +86,7 @@ private:
 	static const int  _prec_frac  = 1024;
 
 	typedef std::array <float, _order + 1> Curve;
-	typedef std::array <Curve, _table_size> CurveTable;
+	typedef std::array <Curve, _table_size + 1> CurveTable;	// +1 to secure rounding errors
 
 	static void    init_coefs ();
 

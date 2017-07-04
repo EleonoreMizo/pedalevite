@@ -55,7 +55,7 @@ float	FncFiniteAsym <BL, BU, GF>::operator () (float x) const
 {
 	assert (_init_flag);
 
-	const int      	pos = fstb::floor_int (x - BL);
+	const int      pos = fstb::floor_int (x - BL);
    if (pos < 0)
    {
       return (_val_min);
@@ -74,6 +74,45 @@ float	FncFiniteAsym <BL, BU, GF>::operator () (float x) const
 
 
 
+template <int BL, int BU, class GF>
+fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF>::operator () (fstb::ToolsSimd::VectF32 x) const
+{
+	assert (_init_flag);
+
+	const auto     bl   = fstb::ToolsSimd::set1_f32 (float (BL));
+	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     ts   = fstb::ToolsSimd::set1_f32 (float (_table_size));
+	const auto     xo   = x - bl;
+	xo = fstb::ToolsSimd::max_f32 (xo, zero);
+	xo = fstb::ToolsSimd::min_f32 (xo, ts);
+	auto           pos  = fstb::ToolsSimd::floor_f32_to_s32 (xo);
+
+	/*** To do: check if a matrix transposition is faster ***/
+	auto           c0   = zero;
+	auto           c1   = zero;
+	auto           c2   = zero;
+	auto           c3   = zero;
+	for (int k = 0; k < 4; ++k)
+	{
+		const int      p     = fstb::ToolsSimd::Shift <0>::extract (pos);
+		const Curve &  curve = _coef_arr [p];
+		fstb::ToolsSimd::Shift <0>::insert (c0, curve [0]);
+		fstb::ToolsSimd::Shift <0>::insert (c1, curve [1]);
+		fstb::ToolsSimd::Shift <0>::insert (c2, curve [2]);
+		fstb::ToolsSimd::Shift <0>::insert (c3, curve [3]);
+		c0  = fstb::ToolsSimd::Shift <1>::rotate (c0);
+		c1  = fstb::ToolsSimd::Shift <1>::rotate (c1);
+		c2  = fstb::ToolsSimd::Shift <1>::rotate (c2);
+		c3  = fstb::ToolsSimd::Shift <1>::rotate (c3);
+		pos = fstb::ToolsSimd::Shift <1>::rotate (pos);
+	}
+	const auto     y    = c0 + x * (c1 + x * (c2 + x * c3));
+
+	return y;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -85,8 +124,8 @@ float	FncFiniteAsym <BL, BU, GF>::operator () (float x) const
 template <int BL, int BU, class GF>
 void	FncFiniteAsym <BL, BU, GF>::init_coefs ()
 {
-	std::array <double, _table_size + 1>     y;
-	std::array <double, _table_size + 1> slope;
+	std::array <double, _table_size + 2>     y;
+	std::array <double, _table_size + 2> slope;
 	GF             fnc;
 
 	const float    delta = 0.5f / _prec_frac;
@@ -102,10 +141,13 @@ void	FncFiniteAsym <BL, BU, GF>::init_coefs ()
 		slope [pos] = (yp - ym) * _prec_frac;
 	}
 
+	y [_table_size + 1]     = y [_table_size];
+	slope [_table_size + 1] = 0;
+
 	_val_min = float (y [          0]);
 	_val_max = float (y [_table_size]);
 
-	for (int pos = 0; pos < _table_size; ++pos)
+	for (int pos = 0; pos < _table_size + 1; ++pos)
 	{
 		Curve &        curve = _coef_arr [pos];
 
