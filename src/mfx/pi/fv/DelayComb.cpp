@@ -108,7 +108,6 @@ void	DelayComb::process_block (float dst_ptr [], const float src_ptr [], int nbr
 			const float   buf = r_ptr [p2];
 			const float   src = src_ptr [p2];
 			mem_y = buf * _fdbkdamp + mem_y * _damp;
-			const float   dly = src + mem_y;
 			dst_ptr [p2] = buf;
 			w_ptr [p2]   = mem_y + src;
 		}
