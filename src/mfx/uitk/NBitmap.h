@@ -75,10 +75,13 @@ public:
 protected:
 
 	// mfx::uitk::NodeInterface via mfx::uitk::NodeBase
+	virtual void   do_notify_attachment (ParentInterface *cont_ptr);
 	virtual Rect   do_get_bounding_box () const;
+	virtual void   do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord);
+
+	// mfx::uitk::MsgHandlerInterface via mfx::uitk::NodeBase
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
-	virtual void   do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord);
 
 
 

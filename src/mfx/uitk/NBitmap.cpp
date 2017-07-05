@@ -67,7 +67,8 @@ void	NBitmap::set_size (Vec2d sz)
 
 void	NBitmap::show (bool flag)
 {
-	_show_flag = flag;
+	_show_flag   = flag;
+	_cursor_flag = false;
 	invalidate_all ();
 }
 
@@ -125,31 +126,20 @@ bool	NBitmap::has_cursor () const
 
 
 
-Rect	NBitmap::do_get_bounding_box () const
+void	NBitmap::do_notify_attachment (ParentInterface *cont_ptr)
 {
-	return Rect (Vec2d (), _size);
+	Inherited::do_notify_attachment (cont_ptr);
+	if (cont_ptr == 0)
+	{
+		_cursor_flag = false;
+	}
 }
 
 
 
-MsgHandlerInterface::EvtProp	NBitmap::do_handle_evt (const NodeEvt &evt)
+Rect	NBitmap::do_get_bounding_box () const
 {
-	EvtProp        ret_val = EvtProp_PASS;
-
-	if (evt.get_target () == get_id ())
-	{
-		const NodeEvt::Type  type = evt.get_type ();
-		if (type == NodeEvt::Type_CURSOR)
-		{
-			const NodeEvt::Curs  curs = evt.get_cursor ();
-			_cursor_flag = (curs == NodeEvt::Curs_ENTER);
-			invalidate_all ();
-
-			ret_val = EvtProp_CATCH;
-		}
-	}
-
-	return ret_val;
+	return Rect (Vec2d (), _size);
 }
 
 
@@ -184,6 +174,28 @@ void	NBitmap::do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_
 			}
 		}
 	}
+}
+
+
+
+MsgHandlerInterface::EvtProp	NBitmap::do_handle_evt (const NodeEvt &evt)
+{
+	EvtProp        ret_val = EvtProp_PASS;
+
+	if (evt.get_target () == get_id ())
+	{
+		const NodeEvt::Type  type = evt.get_type ();
+		if (type == NodeEvt::Type_CURSOR)
+		{
+			const NodeEvt::Curs  curs = evt.get_cursor ();
+			_cursor_flag = (curs == NodeEvt::Curs_ENTER);
+			invalidate_all ();
+
+			ret_val = EvtProp_CATCH;
+		}
+	}
+
+	return ret_val;
 }
 
 
