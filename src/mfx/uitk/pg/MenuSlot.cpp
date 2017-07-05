@@ -557,13 +557,24 @@ MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
 	const int      slot_id      = _loc_edit._slot_id;
 	const doc::Slot & slot      = preset.use_slot (slot_id);
 	
-	const piapi::PluginState & def =
-		_model_ptr->use_default_settings (slot._pi_model);
-	const int      nbr_param    = int (def._param_list.size ());
-	for (int index = 0; index < nbr_param; ++index)
+	const doc::CtrlLinkSet  cls;
+	for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
 	{
-		const float    val = float (def._param_list [index]);
-		_model_ptr->set_param (slot_id, PiType_MAIN, index, val);
+		const PiType   pi_type = static_cast <PiType> (type_cnt);
+		const std::string pi_model =
+			  (pi_type == PiType_MIX)
+			? Cst::_plugin_mix
+			: slot._pi_model;
+		const piapi::PluginState & def =
+			_model_ptr->use_default_settings (pi_model);
+		const int      nbr_param    = int (def._param_list.size ());
+		for (int index = 0; index < nbr_param; ++index)
+		{
+			const float    val = float (def._param_list [index]);
+			_model_ptr->set_param (slot_id, pi_type, index, val);
+			_model_ptr->set_param_ctrl (slot_id, pi_type, index, cls);
+			_model_ptr->set_param_pres (slot_id, pi_type, index, 0);
+		}
 	}
 
 	update_display ();
