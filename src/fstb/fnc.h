@@ -73,6 +73,8 @@ template <class T, class U>
 inline T       ipowp (T x, U n);
 template <class T>
 inline T       rcp_uint (int x);
+template <class T>
+inline T       lerp (T v0, T v1, T p);
 
 void           conv_to_lower_case (std::string &str);
 

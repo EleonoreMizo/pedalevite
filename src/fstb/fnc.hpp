@@ -796,6 +796,14 @@ T	rcp_uint (int x)
 
 
 
+template <class T>
+T	lerp (T v0, T v1, T p)
+{
+	return v0 + p * (v1 - v0);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
