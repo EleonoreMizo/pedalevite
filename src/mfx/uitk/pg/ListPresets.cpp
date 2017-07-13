@@ -110,9 +110,7 @@ void	ListPresets::do_connect (Model &model, const View &view, PageMgrInterface &
 		_state_set_idx = -1;
 	}
 
-	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
-	const int      x_mid = scr_w >> 1;
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
