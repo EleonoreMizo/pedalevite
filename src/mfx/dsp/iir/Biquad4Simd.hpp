@@ -1409,7 +1409,9 @@ void	Biquad4Simd <VD, VS, VP>::clear_buffers_one (int biq)
 template <class VD, class VS, class VP>
 bool	Biquad4Simd <VD, VS, VP>::check_stability (float a1, float a2)
 {
-	return (fabs (a1) < a2 + 1 && fabs (a2) < 1);
+	const float    margin = 5e-6f;
+
+	return (fabs (a1) < a2 + (1 + margin) && fabs (a2) < (1 + margin));
 }
 
 
@@ -1417,7 +1419,8 @@ bool	Biquad4Simd <VD, VS, VP>::check_stability (float a1, float a2)
 template <class VD, class VS, class VP>
 bool	Biquad4Simd <VD, VS, VP>::check_stability (fstb::ToolsSimd::VectF32 a1, fstb::ToolsSimd::VectF32 a2)
 {
-	const auto     one = fstb::ToolsSimd::set1_f32 (1);
+	const float    margin = 5e-6f;
+	const auto     one = fstb::ToolsSimd::set1_f32 (1 + margin);
 	const auto     c1  = fstb::ToolsSimd::cmp_lt_f32 (fstb::ToolsSimd::abs (a1), a2 + one);
 	const auto     c2  = fstb::ToolsSimd::cmp_lt_f32 (fstb::ToolsSimd::abs (a2),      one);
 
