@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#include <algorithm>
 #include <type_traits>
 
 #if defined (_MSC_VER)
