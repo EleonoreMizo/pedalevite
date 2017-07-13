@@ -19,9 +19,11 @@
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/ListPresets.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
+
 
 
 namespace mfx
@@ -67,11 +69,8 @@ protected:
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
 	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_insert_slot_in_chain (int index, int slot_id);
-	virtual void   do_erase_slot_from_chain (int index);
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
-	virtual void   do_set_plugin_reset (int slot_id, bool reset_flag);
 
 
 
@@ -115,6 +114,10 @@ private:
 	TxtSPtr        _mrph_sptr;
 	TxtSPtr        _dele_sptr;
 	TxtSPtr        _orga_sptr;
+
+	ListPresets::Param
+	               _lp_param;
+	int            _node_id_save;
 
 
 

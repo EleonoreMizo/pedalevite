@@ -72,6 +72,7 @@ enum PageType
 	PageType_FX_PEQ,
 	PageType_SETTINGS_OTHER,
 	PageType_MENU_PRESETS,
+	PageType_LIST_PRESETS,
 
 	PageType_NBR_ELT
 

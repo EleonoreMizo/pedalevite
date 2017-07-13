@@ -17,7 +17,6 @@
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/pg/MenuPresets.h"
-#include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -60,6 +59,8 @@ MenuPresets::MenuPresets (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_mrph_sptr (new NText (Entry_MORPH   ))
 ,	_dele_sptr (new NText (Entry_DELETE  ))
 ,	_orga_sptr (new NText (Entry_ORGANIZE))
+,	_lp_param ()
+,	_node_id_save (Entry_LOAD)
 {
 	_load_sptr->set_text ("Load\xE2\x80\xA6");
 	_brow_sptr->set_text ("Browse\xE2\x80\xA6");
@@ -96,6 +97,8 @@ void	MenuPresets::do_connect (Model &model, const View &view, PageMgrInterface &
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
+
+	_page_ptr->clear_all_nodes ();
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
@@ -145,6 +148,7 @@ void	MenuPresets::do_connect (Model &model, const View &view, PageMgrInterface &
 	_page_ptr->set_nav_layout (nav_list);
 
 	_menu_sptr->invalidate_all ();
+	_page_ptr->jump_to (_node_id_save);
 }
 
 
@@ -170,36 +174,37 @@ MsgHandlerInterface::EvtProp	MenuPresets::do_handle_evt (const NodeEvt &evt)
 		switch (but)
 		{
 		case Button_S:
-			ret_val = EvtProp_CATCH;
+			_node_id_save = node_id;
+			ret_val       = EvtProp_CATCH;
 			switch (node_id)
 			{
 			case Entry_LOAD:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_lp_param._action = ListPresets::Action_LOAD;
+				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
 				break;
 			case Entry_BROWSE:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_lp_param._action = ListPresets::Action_BROWSE;
+				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
 				break;
 			case Entry_STORE:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_lp_param._action = ListPresets::Action_STORE;
+				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
 				break;
 			case Entry_SWAP:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_lp_param._action = ListPresets::Action_SWAP;
+				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
 				break;
 			case Entry_RENAME:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_lp_param._action = ListPresets::Action_RENAME;
+				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
 				break;
 			case Entry_MORPH:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_lp_param._action = ListPresets::Action_MORPH;
+				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
 				break;
 			case Entry_DELETE:
-				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_lp_param._action = ListPresets::Action_DELETE;
+				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
 				break;
 			case Entry_ORGANIZE:
 				/*** To do ***/
@@ -242,23 +247,6 @@ void	MenuPresets::do_remove_slot (int slot_id)
 
 
 
-void	MenuPresets::do_insert_slot_in_chain (int index, int slot_id)
-{
-	if (slot_id == _loc_edit._slot_id)
-	{
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
-	}
-}
-
-
-
-void	MenuPresets::do_erase_slot_from_chain (int index)
-{
-	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
-}
-
-
-
 void	MenuPresets::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
 	if (slot_id == _loc_edit._slot_id)
@@ -271,14 +259,10 @@ void	MenuPresets::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 
 void	MenuPresets::do_remove_plugin (int slot_id)
 {
-	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
-}
-
-
-
-void	MenuPresets::do_set_plugin_reset (int slot_id, bool reset_flag)
-{
-	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+	if (slot_id == _loc_edit._slot_id)
+	{
+		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+	}
 }
 
 

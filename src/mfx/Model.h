@@ -140,6 +140,8 @@ public:
 	void           add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
 	void           remove_settings (std::string model, int index);
 	void           clear_all_settings ();
+	void           load_plugin_settings (int slot_id, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
+	void           load_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings);
 
 	std::vector <std::string>
 	               list_plugin_models () const;

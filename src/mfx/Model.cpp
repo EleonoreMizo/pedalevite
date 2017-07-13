@@ -1270,6 +1270,57 @@ void	Model::clear_all_settings ()
 
 
 
+void	Model::load_plugin_settings (int slot_id, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
+{
+	assert (slot_id >= 0);
+
+	load_plugin_settings (slot_id, PiType_MAIN, s_main);
+	load_plugin_settings (slot_id, PiType_MIX , s_mix );
+}
+
+
+
+void	Model::load_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings)
+{
+	assert (slot_id >= 0);
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+
+	// Parameters
+	const int      nbr_param = int (settings._param_list.size ());
+	for (int index = 0; index < nbr_param; ++index)
+	{
+		const float    val = settings._param_list [index];
+		set_param (slot_id, type, index, val);
+	}
+
+	// Controllers
+	for (auto &node_ctrl : settings._map_param_ctrl)
+	{
+		const int                  index = node_ctrl.first;
+		const doc::CtrlLinkSet &   cls   = node_ctrl.second;
+		set_param_pres (slot_id, type, index, 0);
+		set_param_ctrl (slot_id, type, index, cls);
+	}
+
+	// Presentation
+	for (auto &node_pres : settings._map_param_pres)
+	{
+		const int                        index = node_pres.first;
+		const doc::ParamPresentation &   pres = node_pres.second;
+		set_param_pres (slot_id, type, index, &pres);
+	}
+
+	// Flags
+	if (type == PiType_MAIN)
+	{
+		set_plugin_mono (slot_id, settings._force_mono_flag);
+		set_plugin_reset (slot_id, settings._force_reset_flag);
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
