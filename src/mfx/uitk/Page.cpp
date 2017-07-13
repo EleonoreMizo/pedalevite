@@ -124,6 +124,13 @@ void	Page::set_page_content (PageInterface &content, void *usr_ptr)
 
 
 
+const PageInterface *	Page::get_page_content () const
+{
+	return _content_ptr;
+}
+
+
+
 // -1: no cursor or position not known
 int	Page::get_cursor_node () const
 {

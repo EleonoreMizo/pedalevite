@@ -112,7 +112,9 @@ void	PageSwitcher::switch_to (pg::PageType page_id, void *usr_ptr, int node_id)
 	_cur_page = page_id;
 	_usr_ptr  = usr_ptr;
 	_page_mgr.set_page_content (*page_ptr, usr_ptr);
-	if (node_id >= 0)
+	// Makes sure we're still on the same page before jumping, because the page
+	// switch could trigger another switch.
+	if (page_ptr == _page_mgr.get_page_content () && node_id >= 0)
 	{
 		_page_mgr.jump_to (node_id);
 	}

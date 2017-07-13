@@ -69,6 +69,8 @@ public:
 	virtual        ~Page ();
 
 	void           set_page_content (PageInterface &content, void *usr_ptr);
+	const PageInterface *
+	               get_page_content () const;
 	int            get_cursor_node () const;
 	void           clear (bool evt_flag = true);
 
