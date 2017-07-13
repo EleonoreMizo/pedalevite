@@ -65,6 +65,8 @@ public:
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
+	bool           is_similar (const ParamPresentation &other) const;
+
 	DispMode       _disp_mode = DispMode_DEFAULT;
 	float          _ref_beats = -1;  // Parameter time value, in beats. >= 0. May exceed the internal parameter range. Negative = tempo sync not activated for this parameter.
 

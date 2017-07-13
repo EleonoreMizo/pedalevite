@@ -74,6 +74,21 @@ bool	CtrlLinkSet::is_empty () const
 
 
 
+bool	CtrlLinkSet::is_similar (const CtrlLinkSet &other) const
+{
+	bool           same_flag = (_bind_sptr->is_similar (*other._bind_sptr));
+	const size_t   nbr_mod   = _mod_arr.size ();
+	same_flag &= (nbr_mod == other._mod_arr.size ());
+	for (size_t index = 0; index < nbr_mod && same_flag; ++index)
+	{
+		same_flag = (_mod_arr [index]->is_similar (*(other._mod_arr [index])));
+	}
+
+	return same_flag;
+}
+
+
+
 void	CtrlLinkSet::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();

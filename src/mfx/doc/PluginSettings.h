@@ -78,6 +78,8 @@ public:
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
+	bool           is_similar (const PluginSettings &other) const;
+
 	bool           _force_mono_flag  = false;
 	bool           _force_reset_flag = false;
 	ParamList      _param_list;

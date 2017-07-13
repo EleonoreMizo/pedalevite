@@ -61,6 +61,8 @@ public:
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
+	bool           is_similar (const CtrlLink &other) const;
+
 	ControlSource  _source;
 	float          _step     = float (Cst::_step_param);  // For relative modes (incremental encoders). > 0
 

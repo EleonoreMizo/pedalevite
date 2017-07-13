@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/doc/CtrlLink.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
@@ -97,6 +98,33 @@ void	CtrlLink::ser_read (SerRInterface &ser)
 
 
 
+bool	CtrlLink::is_similar (const CtrlLink &other) const
+{
+	const float    tol = 1e-5f;
+
+	bool           same_flag = (_source == other._source);
+	same_flag &= (_curve    == other._curve   );
+	same_flag &= (_u2b_flag == other._u2b_flag);
+	same_flag &= fstb::is_eq (_step, other._step, tol);
+	same_flag &= fstb::is_eq (_base, other._base, tol);
+	same_flag &= fstb::is_eq (_amp , other._amp , tol);
+
+	const size_t   nbr_n = _notch_list.size ();
+	same_flag &= (nbr_n == other._notch_list.size ());
+	if (same_flag)
+	{
+		auto           it_1 = _notch_list.begin ();
+		auto           it_2 = other._notch_list.begin ();
+		while (it_1 != _notch_list.end () && same_flag)
+		{
+			same_flag = fstb::is_eq (*it_1, *it_2, tol);
+			++ it_1;
+			++ it_2;
+		}
+	}
+
+	return same_flag;
+}
 
 
 

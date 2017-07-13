@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/doc/ParamPresentation.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
@@ -63,6 +64,22 @@ void	ParamPresentation::ser_read (SerRInterface &ser)
 	ser.read (_ref_beats);
 
 	ser.end_list ();
+}
+
+
+
+bool	ParamPresentation::is_similar (const ParamPresentation &other) const
+{
+	const float    tol = 1e-5f;
+
+	bool           same_flag = (_disp_mode == other._disp_mode);
+	same_flag &= (_ref_beats * other._ref_beats >= 0);
+	if (same_flag && _ref_beats >= 0)
+	{
+		same_flag = fstb::is_eq_rel (_ref_beats, other._ref_beats, tol);
+	}
+
+	return same_flag;
 }
 
 

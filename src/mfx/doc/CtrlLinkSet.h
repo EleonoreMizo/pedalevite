@@ -60,6 +60,7 @@ public:
 	CtrlLinkSet &  operator = (const CtrlLinkSet &other);
 
 	bool           is_empty () const;
+	bool           is_similar (const CtrlLinkSet &other) const;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);

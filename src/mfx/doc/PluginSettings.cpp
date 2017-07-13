@@ -24,9 +24,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/doc/PluginSettings.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
+
+#include <algorithm>
 
 #include <cassert>
 
@@ -260,6 +263,69 @@ void	PluginSettings::ser_read (SerRInterface &ser)
 	ser.end_list ();
 
 	ser.end_list ();
+}
+
+
+
+/*** To do: loose equality. This currently checks the exact equality. ***/
+bool	PluginSettings::is_similar (const PluginSettings &other) const
+{
+	const float    tol = 1e-5f;
+
+	bool           same_flag = true;
+
+	same_flag &= (_force_mono_flag  == other._force_mono_flag );
+	same_flag &= (_force_reset_flag == other._force_reset_flag);
+
+	// Parameters
+	const size_t   nbr_p = _param_list.size ();
+	same_flag &= (nbr_p == other._param_list.size ());
+	for (size_t index = 0; same_flag && index < nbr_p; ++index)
+	{
+		same_flag = fstb::is_eq (
+			_param_list [index],
+			other._param_list [index],
+			tol
+		);
+	}
+
+	// Controllers
+	same_flag &= (_map_param_ctrl.size () == other._map_param_ctrl.size ());
+	if (same_flag)
+	{
+		auto           it_1 = _map_param_ctrl.begin ();
+		auto           it_2 = _map_param_ctrl.end ();
+		while (same_flag && it_1 != _map_param_ctrl.end ())
+		{
+			same_flag = (
+				   it_1->first == it_2->first
+				&& it_1->second.is_similar (it_2->second)
+			);
+
+			++ it_1;
+			++ it_2;
+		}
+	}
+
+	// Presentations
+	same_flag &= (_map_param_pres.size () == other._map_param_pres.size ());
+	if (same_flag)
+	{
+		auto           it_1 = _map_param_pres.begin ();
+		auto           it_2 = _map_param_pres.end ();
+		while (same_flag && it_1 != _map_param_pres.end ())
+		{
+			same_flag = (
+				   it_1->first == it_2->first
+				&& it_1->second.is_similar (it_2->second)
+			);
+
+			++ it_1;
+			++ it_2;
+		}
+	}
+
+	return same_flag;
 }
 
 
