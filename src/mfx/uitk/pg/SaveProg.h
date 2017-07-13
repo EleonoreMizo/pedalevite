@@ -116,7 +116,7 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains 3 entries (2 of them are selectable) + the slot list
+	WinSPtr        _menu_sptr;    // Contains 1 entry (current bank) + the program list
 	TxtSPtr        _bank_sptr;
 	TxtArray       _prog_list;
 

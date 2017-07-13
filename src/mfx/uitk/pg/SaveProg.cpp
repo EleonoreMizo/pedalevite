@@ -216,7 +216,7 @@ MsgHandlerInterface::EvtProp	SaveProg::do_handle_evt (const NodeEvt &evt)
 				{
 					_name_param._text  = preset_saved._name;
 				}
-				_state             = State_EDIT_NAME;
+				_state  = State_EDIT_NAME;
 				_page_switcher.call_page (PageType_EDIT_TEXT, &_name_param, node_id);
 				ret_val = EvtProp_CATCH;
 			}

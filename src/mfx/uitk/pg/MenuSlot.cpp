@@ -575,6 +575,9 @@ MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
 			_model_ptr->set_param_ctrl (slot_id, pi_type, index, cls);
 			_model_ptr->set_param_pres (slot_id, pi_type, index, 0);
 		}
+
+		/*** To do: add the default controllers ***/
+
 	}
 
 	update_display ();
