@@ -70,6 +70,7 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_FLT_F   , 640);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_FLT_R   , 1);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_FLT_Q   , 1);
+	state_set.set_val_nat (desc_set, base + ParamLine_FX_FLT_M   , 1);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_DIST_A  , 0);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_DIST_F  , 0);
 	state_set.set_val_nat (desc_set, base + ParamLine_FX_SHLF_F  , 4000);
@@ -80,6 +81,7 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 	state_set.add_observer (base + ParamLine_FX_FLT_F   , _param_change_flag_filter);
 	state_set.add_observer (base + ParamLine_FX_FLT_R   , _param_change_flag_filter);
 	state_set.add_observer (base + ParamLine_FX_FLT_Q   , _param_change_flag_filter);
+	state_set.add_observer (base + ParamLine_FX_FLT_M   , _param_change_flag_filter);
 	state_set.add_observer (base + ParamLine_FX_DIST_A  , _param_change_flag_dist);
 	state_set.add_observer (base + ParamLine_FX_DIST_F  , _param_change_flag_dist);
 	state_set.add_observer (base + ParamLine_FX_SHLF_F  , _param_change_flag_shelf);
@@ -183,6 +185,9 @@ void	FxSection::update_param (bool force_flag)
 			_filter_q   = float (
 				_state_set_ptr->get_val_end_nat (base + ParamLine_FX_FLT_Q)
 			);
+			_filter_mix = float (
+				_state_set_ptr->get_val_end_nat (base + ParamLine_FX_FLT_M)
+			);
 
 			update_filter ();
 		}
@@ -237,34 +242,42 @@ void	FxSection::update_filter ()
 		{
 			const float   inv_q = 1 / _filter_q;
 			bs [2] = 1;
-			bs [1] = _filter_reso * inv_q;
+			bs [1] = fstb::lerp (1.0f, _filter_reso, _filter_mix) * inv_q;
 			bs [0] = 1;
 			as [1] = inv_q;
 		}
 		break;
 
 	case FilterType_LP:
-		bs [2] = 0;
-		bs [1] = 0;
-		bs [0] = 1;
-		as [1] = 1 / _filter_reso;
+		{
+			const float    inv_res = 1 / _filter_reso;
+			const float    rev_mix = 1 - _filter_mix;
+			bs [2] = rev_mix * rev_mix;
+			bs [1] = rev_mix * inv_res;
+			bs [0] = 1;
+			as [1] =           inv_res;
+		}
 		break;
 
 	case FilterType_BP:
 		{
 			const float   inv_q = 1 / _filter_q;
-			bs [2] = 0;
-			bs [1] = _filter_reso * inv_q;
-			bs [0] = 0;
+			bs [2] = 1 - _filter_mix;
+			bs [1] = fstb::lerp (1.0f, _filter_reso, _filter_mix) * inv_q;
+			bs [0] = 1 - _filter_mix;
 			as [1] = inv_q;
 		}
 		break;
 
 	case FilterType_HP:
-		bs [2] = 1;
-		bs [1] = 0;
-		bs [0] = 0;
-		as [1] = 1 / _filter_reso;
+		{
+			const float    inv_res = 1 / _filter_reso;
+			const float    rev_mix = 1 - _filter_mix;
+			bs [2] = 1;
+			bs [1] = rev_mix * inv_res;
+			bs [0] = rev_mix * rev_mix;
+			as [1] =           inv_res;
+		}
 		break;
 
 	default:	

@@ -113,6 +113,7 @@ private:
 	float          _filter_freq   = 1000;
 	float          _filter_reso   = 1;
 	float          _filter_q      = 1;
+	float          _filter_mix    = 1;
 	float          _shelf_freq    = 1000;
 	float          _shelf_lvl     = 1;
 

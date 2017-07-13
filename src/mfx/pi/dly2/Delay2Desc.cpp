@@ -570,6 +570,17 @@ void	Delay2Desc::init_line (int index)
 	pll_ptr->use_mapper ().gen_log (4);
 	_desc_set.add_glob (base + ParamLine_FX_FLT_Q, pll_ptr);
 
+	// Line filter mix
+	lin_ptr = new param::TplLin (
+		0, 1,
+		"Line %d filter mix\nLine %d filt mix\nL%d filt mix\nL%d FM",
+		"dB",
+		index + 1,
+		"%5.1f"
+	);
+	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
+	_desc_set.add_glob (base + ParamLine_FX_FLT_M, lin_ptr);
+
 	// Line distortion amount
 	lin_ptr = new param::TplLin (
 		0, 1,
