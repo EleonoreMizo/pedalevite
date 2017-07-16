@@ -111,11 +111,6 @@ ColorMe::ColorMe ()
 	_param_change_flag_vow_type.add_observer (_param_change_flag_vow);
 
 	_param_change_flag_vow.add_observer (_param_change_flag);
-
-	for (auto &chn : _chn_arr)
-	{
-		// Nothing
-	}
 }
 
 
