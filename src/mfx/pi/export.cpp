@@ -28,6 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/FactoryTpl.h"
 #include "mfx/pi/click/Click.h"
 #include "mfx/pi/click/ClickDesc.h"
+#include "mfx/pi/colorme/ColorMe.h"
+#include "mfx/pi/colorme/ColorMeDesc.h"
 #include "mfx/pi/cpx/Compex.h"
 #include "mfx/pi/cpx/CompexDesc.h"
 #include "mfx/pi/dist1/DistoSimple.h"
@@ -128,6 +130,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::wha2::Wha2Desc         , mfx::pi::wha2::Wha2              >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::ramp::RampDesc         , mfx::pi::ramp::Ramp              >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::dly2::Delay2Desc       , mfx::pi::dly2::Delay2            >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::colorme::ColorMeDesc   , mfx::pi::colorme::ColorMe        >::create ()
 		};
 
 		fact_list = l;

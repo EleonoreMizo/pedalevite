@@ -484,6 +484,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\click\Click.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\click\ClickDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\click\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\colorme\ColorMe.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\colorme\ColorMeDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\colorme\Cst.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\colorme\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\Compex.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\Param.h" />
@@ -893,6 +897,8 @@
     <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\Click.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\ClickDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\colorme\ColorMe.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\colorme\ColorMeDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\Compex.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2x.cpp" />

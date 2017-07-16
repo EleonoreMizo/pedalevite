@@ -434,6 +434,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/click/ClickDesc.cpp \
         ../../src/mfx/pi/click/ClickDesc.h \
         ../../src/mfx/pi/click/Param.h \
+        ../../src/mfx/pi/colorme/ColorMe.cpp \
+        ../../src/mfx/pi/colorme/ColorMe.h \
+        ../../src/mfx/pi/colorme/ColorMeDesc.cpp \
+        ../../src/mfx/pi/colorme/ColorMeDesc.h \
+        ../../src/mfx/pi/colorme/Cst.h \
+        ../../src/mfx/pi/colorme/Param.h \
         ../../src/mfx/pi/cpx/Compex.cpp \
         ../../src/mfx/pi/cpx/Compex.h \
         ../../src/mfx/pi/cpx/CompexDesc.cpp \
