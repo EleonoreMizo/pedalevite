@@ -1390,9 +1390,9 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_single_stage (SvfCore4SimdDa
 {
 	assert (&data != 0);
 	assert (stage >= 0);
-	assert (stage < SvfCore4SseData::NBR_UNITS);
+	assert (stage < SvfCore4SimdData::_nbr_units);
 	assert (stage_y >= 0);
-	assert (stage_y < SvfCore4SseData::NBR_UNITS);
+	assert (stage_y < SvfCore4SimdData::_nbr_units);
 
 	const float    t0 = x_s - data._ic2eq [stage];
 	const float    t1 = data._g0 [stage] * t0 + data._g1 [stage] * data._ic1eq [stage];
@@ -1420,8 +1420,8 @@ void	SvfCore4Simd <VD, VS, VP, MX>::iterate_parallel (const fstb::ToolsSimd::Vec
 	const auto     t2 = g2 * t0 + g0 * ic1eq;
 	v1     = t1 + ic1eq;
 	v2     = t2 + ic2eq;
-	ic1eq += t1 + t1);
-	ic2eq += t2 + t2);
+	ic1eq += t1 + t1;
+	ic2eq += t2 + t2;
 }
 
 

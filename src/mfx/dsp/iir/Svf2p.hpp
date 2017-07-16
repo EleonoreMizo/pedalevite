@@ -43,7 +43,8 @@ void	Svf2p::set_sample_freq (float fs)
 {
 	assert (fs > 0);
 
-	_sample_freq = fs;
+	_sample_freq =        fs;
+	_inv_fs      = 1.0f / fs;
 }
 
 

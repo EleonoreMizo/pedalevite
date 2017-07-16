@@ -107,6 +107,7 @@ protected:
 private:
 
 	float          _sample_freq;
+	float          _inv_fs;
 	float          _f0;
 	float          _q;
 	Type           _type;

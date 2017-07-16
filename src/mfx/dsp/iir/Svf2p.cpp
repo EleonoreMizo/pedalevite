@@ -48,6 +48,7 @@ namespace iir
 
 Svf2p::Svf2p ()
 :	_sample_freq (44100)
+,	_inv_fs (1.0f / _sample_freq)
 ,	_f0 (1000)
 ,	_q (0.5f)
 ,	_type (Type_RESONATOR)
@@ -67,7 +68,7 @@ Svf2p::Svf2p ()
 void	Svf2p::update_eq ()
 {
 	const float    k = float (1.0 / _q);
-	conv_poles (_g0, _g1, _g2, _f0 / _sample_freq, k);
+	conv_poles (_g0, _g1, _g2, _f0 * _inv_fs, k);
 
 	switch (_type)
 	{

@@ -91,7 +91,7 @@ private:
 
 
 
-//#include "mfx/dsp/iir/SvfMixerPeak.hpp"
+#include "mfx/dsp/iir/SvfMixerPeak.hpp"
 
 
 
