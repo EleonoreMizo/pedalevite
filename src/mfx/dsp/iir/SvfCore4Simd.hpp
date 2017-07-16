@@ -908,7 +908,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat (float x_s, const fs
 	V128Par::store_f32 (_data._ic2eq, ic2eq);
 	V128Par::store_f32 (_data._y    , y    );
 
-	const float    y_s = ToolsSimd::Shift <0>::extract (y);
+	const float    y_s = fstb::ToolsSimd::Shift <0>::extract (y);
 
 	return y_s;
 }
@@ -947,7 +947,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat_inc (float x_s, cons
 	V128Par::store_f32 (_data._ic2eq, ic2eq);
 	V128Par::store_f32 (_data._y    , y    );
 
-	const float    y_s = ToolsSimd::Shift <0>::extract (y);
+	const float    y_s = fstb::ToolsSimd::Shift <0>::extract (y);
 
 	return y_s;
 }
