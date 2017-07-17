@@ -32,12 +32,14 @@
 	<li><a href="#screen-banks">Banques de programmes</a></li>
 	<li><a href="#screen-pedalboard-config">Configuration du pédalier</a></li>
 	<li><a href="#screen-levels">Volumes et niveaux</a></li>
+	<li><a href="#screen-othersettings">Réglages divers</a></li>
 	<li><a href="#screen-tuner">Accordeur</a></li>
 	<li><a href="#screen-restart">Redémarrage</a></li>
 	</ol>
 </li>
 <li class="tcont"><a href="#effect-list">Effets disponibles</a>
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#fx-colorme">Color Me — Filtre de coloration vocale</a></li>
 	<li><a href="#fx-compex">CompEx — Compresseur/Expanseur</a></li>
 	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
 	<li><a href="#fx-delay">Delay — Écho stéréo</a></li>
@@ -353,6 +355,7 @@ curseur.</p>
 <tr><td><span class="ui">Banks</span></td><td>Accès aux <a href="#screen-banks">banques de programmes</a></tr></td>
 <tr><td><span class="ui">Pedal layout</span></td><td><a href="#screen-pedalboard-config">Configuration du pédalier</a></tr></td>
 <tr><td><span class="ui">Volume &amp; levels</span></td><td>Accès aux <a href="#screen-levels">volume et niveaux</a></tr></td>
+<tr><td><span class="ui">Other settings</span></td><td><a href="#screen-othersettings">Réglages divers</a></tr></td>
 <tr><td><span class="ui">Tuner</span></td><td><a href="#screen-tuner">Accordeur</a></tr></td>
 <tr><td><span class="ui">Restart</span></td><td>Options de <a href="#screen-restart">redémarrage</a></tr></td>
 </table>
@@ -596,14 +599,21 @@ Les changement sont effectifs immédiatement.
 <span class="key">Select</span> ou <span class="key">Esc</span> pour sortir.</p>
 <p><span class="ui">Presets…</span> est encore en chantier…</p>
 <p><span class="ui">Reset</span> restaure les paramètres par défaut.</p>
-<p><span class="ui">Mono or stereo</span> sert pour les plug-ins qui sont
+<p><span class="ui">Chan</span> sert pour les plug-ins qui sont
 capables convertir un signal mono en stéréo (chorus, écho…)
-Il est alors possible de choisir si on veut la stéréo, ce qui ne sera effectif
+Il est alors possible de choisir si on veut la stéréo
+(<span class="ui">auto</span>), ce qui ne sera effectif
 qu’avec une sortie audio configurée en stéréo, ou si on veut garder le signal
-mono dans tous les cas.
+mono dans tous les cas (<span class="ui">prefer mono</span>).
 Si le signal à l’entrée de l’effet est déjà stéréo, il le reste, quelle que
 soit l’option choisie.
-Utiliser les flèches horizontales pour choisir l’option.</p>
+Utiliser <span class="key">Select</span> pour changer l’option.</p>
+<p><span class="ui">State</span> sert à indiquer si l’on veut que la mémoire
+de l’effet soit nettoyée (<span class="ui">fresh</span>) lors de l’activation
+du programme ou conservée depuis la dernière utilisation
+(<span class="ui">keep</span>).
+Le nettoyage peut avoir un impact sur le temps de réponse de l’activation,
+mais doit demeurer relativement léger.</p>
 <p><span class="ui">Name</span> sert à donner un nom à l’effet.
 Ce nom servira à l’identifier vis-à-vis de pédales ou de contrôleurs
 ayant une portée globale, indépendante du programme.
@@ -619,7 +629,60 @@ pédalier qui change l’état du bypass de tout plug-in nommé
 
 <h3><a id="screen-pedalboard-config"></a>Configuration du pédalier</h3>
 
+<p>Cette partie sert à régler l’action de chaque pédale au niveau global.
+Il est également possible d’ajuster ces réglages au niveau de la banque
+et du programme, les menus sont identiques et les actions configurées se
+superposent.</p>
+
 <div class="pic"><img src="pedalboard-layout.png" /></div>
+<p>La liste ci-dessus permet de d’observer d’un rapide coup d’œil quelles sont
+les actions de chaque pédale.
+Les douze pédales sont numérotées en deux rangées&#8239;: la supérieure
+d’abord (la plus éloignée), de 1 à 6 de gauche à droite, puis l’inférieure (la
+plus proche) de 7 à 12.
+Utiliser les flèches verticales pour naviguer et
+<span class="key">Select</span> pour éditer une pédale.</p>
+
+<div class="pic"><img src="pedalboard-layout-pedal-menu.png" /></div>
+<p>Dans ce menu, <span class="ui">Full edit…</span> permet d’éditer le contenu
+de la pédale et <span class="ui">Clear/empty</span> de la remettre à zéro.
+Les autres fonctions ne sont pas encore implémentées.</p>
+
+<div class="pic"><img src="pedalboard-layout-pedal-fulledit.png" /></div>
+<p>Le menu ci-dessus donne accès aux trois modes de déclanchement de la pédale
+et indique si tel mode est utilisé ou non.
+Les modes sont les suivants&#8239;:</p>
+<table>
+<tr><td><span class="ui">Press</span></td><td>Action immédiate lors de l’appui</td></tr>
+<tr><td><span class="ui">Hold</span></td><td>Action après environ deux secondes d’appui maintenu</td></tr>
+<tr><td><span class="ui">Release</span></td><td>Action quand on relâche la pédale</td></tr>
+</table>
+<p>On peut utiliser les trois modes à la fois pour obtenir des actions
+différenciées sur la même pédale.
+Cependant, quand le mode <span class="ui">Hold</span> est utilisé, il est
+souvent préférable de déplacer le contenu de <span class="ui">Press</span>
+vers <span class="ui">Release</span> afin d’éviter des interférences
+indésirées.</p>
+<p>Il n’y a pas de répétition automatique comme sur les touches d’un clavier
+d’ordinateur.
+Une nouvelle action est déclanchée uniquement après un changement d’état de la
+pédale.</p>
+
+<div class="pic"><img src="pedalboard-layout-cycle.png" /></div>
+<p>Chaque mode de déclanchement est relié à un cycle composé d’étapes
+(<span class="ui">Step</span>).
+Lors d’un déclanchement, une étape du cycle est activée, et on passera
+à la suivante au prochain déclanchement, ainsi de suite jusqu’à recommancer
+le cycle.</p>
+<p>Dans la majorité des cas, les cycles ne sont composés que d’une seule
+étape.
+D’autre part, les modes <span class="ui">Hold</span> et
+<span class="ui">Release</span> n’acceptent qu’une étape unique.</p>
+
+<div class="pic"><img src="pedalboard-layout-step.png" /></div>
+<p>Le menu ci-dessus permet de modifier une étape.
+Une étape est constituée une ou plusieurs actions, qui seront menées
+simultanément lors de l’activation de l’étape.</p>
 
 
 
@@ -644,6 +707,12 @@ partie droite de la jauge, sous peine de craquement ou de perte de son.</p>
 <p>Les symboles à gauche de la jauge <span class="ui">DSP</span> indique
 si les d’entrée et de sortie sont mono (un cercle) ou stéréo (deux cercles
 entremêlés).</p>
+
+
+
+<h3><a id="screen-othersettings"></a>Réglages divers</h3>
+
+<div class="pic"><img src="other-settings.png" /></div>
 
 
 
@@ -675,6 +744,75 @@ La déviation en cents est également donnée à l’écran.</p>
 
 
 <h2><a id="effect-list"></a>IV.&emsp;Effets disponibles</h2>
+
+
+
+<h3><a id="fx-colorme"></a>Color Me — Filtre de coloration vocale</h3>
+
+<p>Color Me permet de sculpter le spectre du son à l’aide de formants
+(bosses résonantes autour de fréquences caractéristiques),
+lui donnant ainsi une coloration vocale.
+On choisit une série de deux à quatre voyelles parmi une dizaine.
+Le paramètre principal sert à faire la transition entre les voyelles
+sélectionnées, donnant un son tendant vers l’une ou l’autre.</p>
+<p>Note: avec des réglages très accentués, il peut être judicieux de faire
+suivre l’effet d’un compresseur afin de limiter de trop fortes résonances.</p>
+
+<p class="var">Vowel morphing</p>
+<p>Ce paramètre contrôle la transition entre les voyelles sélectionnées.
+Il est assigné par défaut à un contrôleur libre.</p>
+
+<p class="var">Formant resonance</p>
+<p>Chaque formant est modélisé par un filtre en cloche.
+Ce paramètre permet d’ajuster le niveau de résonance de ce filtre.</p>
+
+<p class="var">Formant selectivity</p>
+<p>Permet de contrôler la sélectivité (Q) du filtre formantique.
+Il est souvent préférable de le faire varier en conjonction avec
+<var>Formant resonance</var>.</p>
+
+<p class="var">Formant transpose</p>
+<p>Permet de décaler les formants de plus ou moins une octave.
+Ce décalage reflète la taille de l’appareil vocal émulé et influe sur le
+timbre de la voix synthétique, donnant quelque chose allant de Jabba the Hutt
+à Mickey Mouse.</p>
+
+<p class="var">Number of formants</p>
+<p>Seuls deux formants permettent d’identifier une voyelle mais le son
+résultant est assez particulier.
+Un troisième formant donne plus de clarté et de réalisme.
+Ce paramètre permet de choisir entre les deux.</p>
+
+<p class="var">Number of vowels</p>
+<p>Nombre des voyelles transformées par <var>Vowel morphing</var>.</p>
+
+<p class="var">Vowel 1, 2, 3, 4 type</p>
+<p>Type de la voyelle.
+Les voyelles de la liste sont tirées de la langue française.</p>
+<table>
+<tr><th>Voyelle</th><th>Phonétique</th></tr>
+<tr><td><span class="ui">i</span></td><td>i</td></tr>
+<tr><td><span class="ui">é</span></td><td>e</td></tr>
+<tr><td><span class="ui">è</span></td><td>ɛ</td></tr>
+<tr><td><span class="ui">a</span></td><td>a</td></tr>
+<tr><td><span class="ui">u</span></td><td>y</td></tr>
+<tr><td><span class="ui">eu</span></td><td>ø</td></tr>
+<tr><td><span class="ui">œ</span></td><td>œ</td></tr>
+<tr><td><span class="ui">ou</span></td><td>u</td></tr>
+<tr><td><span class="ui">au</span></td><td>o</td></tr>
+<tr><td><span class="ui">o</span></td><td>ɔ</td></tr>
+</table>
+
+<p class="var">Vowel 1, 2, 3, 4 set</p>
+<p>Il y a trois jeux de voyelles, les fréquences des formants étant issues de
+différentes études.
+Ce paramètre premet de choisir le jeu et de disposer ainsi des variations sur
+chaque voyelle.</p>
+<table>
+<tr><td><span class="ui">Call</span></td><td>Calliope (Tubach, 1989)</td></tr>
+<tr><td><span class="ui">GD</span></td><td>Groupe Didactique (Landron, 2011), locutrices de région parisienne</td></tr>
+<tr><td><span class="ui">G&amp;A</span></td><td>Gendrot et Adda-Decker (2005), voix radiophoniques</td></tr>
+</table>
 
 
 
@@ -1978,6 +2116,12 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r9, 2017.07.17</b></p>
+<ul>
+<li>Ajout de l’effet Color Me.</li>
+<li>Mise à jour de divers écrans de l’interface d’utilisation.</li>
+</ul>
 
 <p><b>r8, 2017.06.14</b></p>
 <ul>
