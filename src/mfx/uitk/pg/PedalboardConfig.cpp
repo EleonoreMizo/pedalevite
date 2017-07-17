@@ -82,7 +82,9 @@ void	PedalboardConfig::do_connect (Model &model, const View &view, PageMgrInterf
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
 
-	const int      h_m = _fnt_ptr->get_char_h ();
+	const int      h_m     = _fnt_ptr->get_char_h ();
+	const int      scr_w   = _page_size [0];
+	const int      frame_w = scr_w * 3 / 4;
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
@@ -95,6 +97,7 @@ void	PedalboardConfig::do_connect (Model &model, const View &view, PageMgrInterf
 		TxtSPtr &      txt_sptr = _pedal_list [ped_cnt];
 		txt_sptr->set_coord (Vec2d (0, ped_cnt * h_m));
 		txt_sptr->set_font (*_fnt_ptr);
+		txt_sptr->set_frame (Vec2d (frame_w, 0), Vec2d (0, 0));
 		const int      node_id = Entry_PEDAL_LIST + ped_cnt;
 		_menu_sptr->push_back (txt_sptr);
 		nav_list [ped_cnt]._node_id = node_id;
