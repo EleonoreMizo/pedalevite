@@ -200,8 +200,7 @@ void	EditFxId::handle_fx_type ()
 	if (_arg_fx_type._ok_flag)
 	{
 		_param_ptr->_fx_id._location_type  = doc::FxId::LocType_CATEGORY;
-		_param_ptr->_fx_id._label_or_model =
-			_arg_fx_type._choice_arr [_arg_fx_type._selection];
+		_param_ptr->_fx_id._label_or_model = _fx_list [_arg_fx_type._selection];
 		_param_ptr->_ok_flag               = true;
 		_state = State_NONE;
 		_page_switcher.return_page ();
