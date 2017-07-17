@@ -789,6 +789,7 @@ void	View::collect_labels (std::set <std::string> &labels, const doc::Pedalboard
 					case doc::ActionType_TEMPO:
 					case doc::ActionType_EVENT:
 					case doc::ActionType_TEMPO_SET:
+					case doc::ActionType_CLICK:
 						// Nothing
 						break;
 
