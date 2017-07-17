@@ -121,7 +121,7 @@ std::string	Tools::join_strings_multi (const char src_list_0 [], char delimiter,
 	std::string    result;
 
 	size_t         pos   = 0;
-	while (src_list_0 [pos] != '\0')
+	do
 	{
 		if (! result.empty ())
 		{
@@ -146,6 +146,7 @@ std::string	Tools::join_strings_multi (const char src_list_0 [], char delimiter,
 
 		result += post;
 	}
+	while (src_list_0 [pos] != '\0');
 
 	return result;
 }
