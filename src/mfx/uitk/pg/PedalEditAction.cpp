@@ -1019,19 +1019,64 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_param (int node_id, int dir
 	{
 		int            index = action._index;
 		index += dir;
-		index = std::max (index, 0);
 
-		std::string   pi_id =
-			  (action._fx_id._type == PiType_MIX)
-			? Cst::_plugin_mix
-			: Tools::find_fx_type (action._fx_id, *_view_ptr);
-		if (! pi_id.empty ())
+		const piapi::PluginDescInterface &   pi_desc_mix =
+			_model_ptr->get_model_desc (Cst::_plugin_mix);
+		const int      nbr_param_mix =
+			pi_desc_mix.get_nbr_param (piapi::ParamCateg_GLOBAL);
+		if (index < 0)
 		{
-			const piapi::PluginDescInterface &   pi_desc =
-				_model_ptr->get_model_desc (pi_id);
-			const int      nbr_param =
-				pi_desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
-			index = std::min (index, nbr_param - 1);
+			if (action._fx_id._type == PiType_MIX)
+			{
+				index               = 0;
+			}
+			else
+			{
+				action._fx_id._type = PiType_MIX;
+				index               = nbr_param_mix - 1;
+			}
+		}
+		else
+		{
+			int            nbr_param = 0;
+			const std::string   pi_id =
+				Tools::find_fx_type (action._fx_id, *_view_ptr);
+			if (! pi_id.empty ())
+			{
+				const piapi::PluginDescInterface &   pi_desc =
+					_model_ptr->get_model_desc (pi_id);
+				nbr_param = pi_desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
+			}
+			if (action._fx_id._type == PiType_MAIN)
+			{
+				if (index >= nbr_param)
+				{
+					if (nbr_param > 0)
+					{
+						index = nbr_param - 1;
+					}
+					else
+					{
+						action._fx_id._type = PiType_MIX;
+						index               = nbr_param_mix - 1;
+					}
+				}
+			}
+			else
+			{
+				if (index >= nbr_param_mix)
+				{
+					if (nbr_param > 0)
+					{
+						action._fx_id._type = PiType_MAIN;
+						index               = 0;
+					}
+					else
+					{
+						index               = nbr_param_mix - 1;
+					}
+				}
+			}
 		}
 
 		action._index = index;
