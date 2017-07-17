@@ -95,6 +95,7 @@ private:
 		Entry_ADD,
 		Entry_UP,
 		Entry_DOWN,
+		Entry_DELETE,
 
 		Entry_NBR_ELT
 	};
@@ -124,6 +125,7 @@ private:
 	TxtSPtr        _add_sptr;
 	TxtSPtr        _up_sptr;
 	TxtSPtr        _down_sptr;
+	TxtSPtr        _del_sptr;
 	WinSPtr        _menu_sptr;
 	ActionList     _action_sptr_arr;
 

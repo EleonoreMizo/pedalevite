@@ -61,10 +61,11 @@ PedalEditStep::PedalEditStep (PageSwitcher &page_switcher, PedalEditContext &ctx
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_fnt_ptr (0)
-,	_title_sptr (new NText (Entry_TITLE))
-,	_add_sptr (  new NText (Entry_ADD  ))
-,	_up_sptr (   new NText (Entry_UP   ))
-,	_down_sptr ( new NText (Entry_DOWN ))
+,	_title_sptr (new NText (Entry_TITLE  ))
+,	_add_sptr (  new NText (Entry_ADD    ))
+,	_up_sptr (   new NText (Entry_UP     ))
+,	_down_sptr ( new NText (Entry_DOWN   ))
+,	_del_sptr (  new NText (Entry_DELETE ))
 ,	_menu_sptr (new NWindow (Entry_WINDOW))
 ,	_action_sptr_arr ()
 {
@@ -72,6 +73,7 @@ PedalEditStep::PedalEditStep (PageSwitcher &page_switcher, PedalEditContext &ctx
 	_add_sptr  ->set_text ("<Add action>");
 	_up_sptr   ->set_text ("<Move up>");
 	_down_sptr ->set_text ("<Move down>");
+	_del_sptr  ->set_text ("<Delete step>");
 	_menu_sptr->set_autoscroll (true);
 }
 
@@ -105,10 +107,12 @@ void	PedalEditStep::do_connect (Model &model, const View &view, PageMgrInterface
 	_up_sptr   ->set_font (fnt._m);
 	_down_sptr ->set_font (fnt._m);
 	_add_sptr  ->set_font (fnt._m);
+	_del_sptr  ->set_font (fnt._m);
 
 	_up_sptr   ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_down_sptr ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_add_sptr  ->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_del_sptr  ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
 	_title_sptr->set_coord (Vec2d (x_mid, 0 * h_m));
 
@@ -185,6 +189,19 @@ MsgHandlerInterface::EvtProp	PedalEditStep::do_handle_evt (const NodeEvt &evt)
 					);
 				}
 				break;
+			case Entry_DELETE:
+				cycle._cycle.erase (cycle._cycle.begin () + _ctx._step_index);
+				if (_ctx._step_index >= nbr_steps - 1)
+				{
+					-- _ctx._step_index;
+				}
+				if (cycle._cycle.empty ())
+				{
+					_ctx._step_index = -1;
+				}
+				update_model ();
+				_page_switcher.return_page ();
+				break;
 			default:
 				if (   node_id >= Entry_ACTION_LIST
 				    && node_id <  Entry_ACTION_LIST + nbr_actions)
@@ -255,13 +272,26 @@ void	PedalEditStep::check_ctx ()
 	const doc::PedalActionCycle & cycle =
 		_ctx._content._action_arr [_ctx._trigger];
 	const int      nbr_steps   = int (cycle._cycle.size ());
-	assert (nbr_steps > 0);
-	_ctx._step_index   = fstb::limit (_ctx._step_index, 0, nbr_steps - 1);
-	const doc::PedalActionCycle::ActionArray &   step =
-		cycle._cycle [_ctx._step_index];
-	const int      nbr_actions = int (step.size ());
-	assert (nbr_actions > 0);
-	_ctx._action_index = fstb::limit (_ctx._action_index, 0, nbr_actions - 1);
+	if (nbr_steps <= 0)
+	{
+		_ctx._step_index = -1;
+	}
+	else
+	{
+		_ctx._step_index   = fstb::limit (_ctx._step_index, 0, nbr_steps - 1);
+		const doc::PedalActionCycle::ActionArray &   step =
+			cycle._cycle [_ctx._step_index];
+		const int      nbr_actions = int (step.size ());
+		if (nbr_actions <= 0)
+		{
+			_ctx._action_index = -1;
+		}
+		else
+		{
+			_ctx._action_index =
+				fstb::limit (_ctx._action_index, 0, nbr_actions - 1);
+		}
+	}
 }
 
 
@@ -275,85 +305,92 @@ void	PedalEditStep::update_model ()
 
 void	PedalEditStep::update_display ()
 {
-	char           txt_0 [127+1];
-	const char *   trigger_name_0 =
-		doc::ActionTrigger_get_name (_ctx._trigger);
-	fstb::snprintf4all (
-		txt_0, sizeof (txt_0), "P%02d, %s, step %d",
-		_ctx._pedal + 1, trigger_name_0, _ctx._step_index
-	);
-	_title_sptr->set_text (txt_0);
-
+	_menu_sptr->clear_all_nodes ();
 	PageMgrInterface::NavLocList  nav_list;
 
-	const doc::PedalActionCycle & cycle =
-		_ctx._content._action_arr [_ctx._trigger];
-	const doc::PedalActionCycle::ActionArray &   step =
-		cycle._cycle [_ctx._step_index];
-
-	_menu_sptr->clear_all_nodes ();
-	_menu_sptr->push_back (_title_sptr);
-	_menu_sptr->push_back (_add_sptr);
-	_menu_sptr->push_back (_up_sptr);
-	_menu_sptr->push_back (_down_sptr);
-
-	const int      nbr_steps   = int (cycle._cycle.size ());
-	const int      nbr_actions = int (step.size ());
-
-	const int      h_m   = _fnt_ptr->get_char_h ();
-	const int      scr_w = _page_size [0];
-	int            pos_y = 2;
-
-	_action_sptr_arr.resize (nbr_actions);
-	for (int action_cnt = 0; action_cnt < nbr_actions; ++action_cnt)
+	if (_ctx._step_index >= 0)
 	{
-		const int      node_id = Entry_ACTION_LIST + action_cnt;
-		TxtSPtr        action_sptr (new NText (node_id));
-
-		assert (step [action_cnt].get () != 0);
-		const doc::PedalActionSingleInterface &   action = *(step [action_cnt]);
-
-		const std::string desc = Tools::conv_pedal_action_to_short_txt (
-			action, *_model_ptr, *_view_ptr
-		);
+		char           txt_0 [127+1];
+		const char *   trigger_name_0 =
+			doc::ActionTrigger_get_name (_ctx._trigger);
 		fstb::snprintf4all (
-			txt_0, sizeof (txt_0), "%02d: %s", action_cnt, desc.c_str ()
+			txt_0, sizeof (txt_0), "P%02d, %s, step %d",
+			_ctx._pedal + 1, trigger_name_0, _ctx._step_index
 		);
+		_title_sptr->set_text (txt_0);
 
-		action_sptr->set_font (*_fnt_ptr);
-		action_sptr->set_coord (Vec2d (0, pos_y * h_m));
-		action_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-		action_sptr->set_text (txt_0);
-		_menu_sptr->push_back (action_sptr);
-		PageMgrInterface::add_nav (nav_list, node_id);
+		const doc::PedalActionCycle & cycle =
+			_ctx._content._action_arr [_ctx._trigger];
+		const doc::PedalActionCycle::ActionArray &   step =
+			cycle._cycle [_ctx._step_index];
+
+		_menu_sptr->push_back (_title_sptr);
+		_menu_sptr->push_back (_add_sptr);
+		_menu_sptr->push_back (_up_sptr);
+		_menu_sptr->push_back (_down_sptr);
+		_menu_sptr->push_back (_del_sptr);
+
+		const int      nbr_steps   = int (cycle._cycle.size ());
+		const int      nbr_actions = int (step.size ());
+
+		const int      h_m   = _fnt_ptr->get_char_h ();
+		const int      scr_w = _page_size [0];
+		int            pos_y = 2;
+
+		_action_sptr_arr.resize (nbr_actions);
+		for (int action_cnt = 0; action_cnt < nbr_actions; ++action_cnt)
+		{
+			const int      node_id = Entry_ACTION_LIST + action_cnt;
+			TxtSPtr        action_sptr (new NText (node_id));
+
+			assert (step [action_cnt].get () != 0);
+			const doc::PedalActionSingleInterface &   action = *(step [action_cnt]);
+
+			const std::string desc = Tools::conv_pedal_action_to_short_txt (
+				action, *_model_ptr, *_view_ptr
+			);
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), "%02d: %s", action_cnt, desc.c_str ()
+			);
+
+			action_sptr->set_font (*_fnt_ptr);
+			action_sptr->set_coord (Vec2d (0, pos_y * h_m));
+			action_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+			action_sptr->set_text (txt_0);
+			_menu_sptr->push_back (action_sptr);
+			PageMgrInterface::add_nav (nav_list, node_id);
+			++ pos_y;
+		}
+
+		_add_sptr ->set_coord (Vec2d (0, pos_y * h_m));
+		PageMgrInterface::add_nav (nav_list, Entry_ADD);
 		++ pos_y;
-	}
 
-	_add_sptr ->set_coord (Vec2d (0, pos_y * h_m));
-	PageMgrInterface::add_nav (nav_list, Entry_ADD);
-	++ pos_y;
+		const bool     can_move_up_flag   = (_ctx._step_index     > 0        );
+		const bool     can_move_down_flag = (_ctx._step_index + 1 < nbr_steps);
 
-	const bool     can_move_up_flag   = (_ctx._step_index     > 0        );
-	const bool     can_move_down_flag = (_ctx._step_index + 1 < nbr_steps);
+		_up_sptr->show (can_move_up_flag);
+		if (can_move_up_flag)
+		{
+			_up_sptr->set_coord (Vec2d (0, pos_y * h_m));
+			PageMgrInterface::add_nav (nav_list, Entry_UP);
+			++ pos_y;
+		}
 
-	_up_sptr->show (can_move_up_flag);
-	if (can_move_up_flag)
-	{
-		_up_sptr->set_coord (Vec2d (0, pos_y * h_m));
-		PageMgrInterface::add_nav (nav_list, Entry_UP);
-		++ pos_y;
-	}
+		_down_sptr->show (can_move_down_flag);
+		if (can_move_down_flag)
+		{
+			_down_sptr->set_coord (Vec2d (0, pos_y * h_m));
+			PageMgrInterface::add_nav (nav_list, Entry_DOWN);
+			++ pos_y;
+		}
 
-	_down_sptr->show (can_move_down_flag);
-	if (can_move_down_flag)
-	{
-		_down_sptr->set_coord (Vec2d (0, pos_y * h_m));
-		PageMgrInterface::add_nav (nav_list, Entry_DOWN);
+		_del_sptr ->set_coord (Vec2d (0, pos_y * h_m));
+		PageMgrInterface::add_nav (nav_list, Entry_DELETE);
 		++ pos_y;
 	}
 
 	_page_ptr->set_nav_layout (nav_list);
-
 	_menu_sptr->invalidate_all ();
 }
 
