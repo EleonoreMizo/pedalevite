@@ -143,14 +143,14 @@ Delay2Desc::Delay2Desc ()
 
 	// Ducking sensitivity
 	pll_ptr = new TplPll (
-		1.0/64, 4,
+		1.0/1024, 1,
 		"Ducking sensitivity\nDuck sensitivity\nDuck sens\nDuck S\nDS",
 		"dB",
 		param::HelperDispNum::Preset_DB,
 		0,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8, 2);
+	pll_ptr->use_mapper ().gen_log (10, 2);
 	_desc_set.add_glob (Param_DUCK_SENS, pll_ptr);
 
 	// Ducking time

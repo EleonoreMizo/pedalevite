@@ -78,6 +78,7 @@ Delay2::Delay2 ()
 ,	_xfdbk_cur (0)
 ,	_xfdbk_old (0)
 ,	_duck_time (0.100f)
+,	_duck_sens (1)
 ,	_freeze_flag (false)
 ,	_duck_flag (false)
 ,	_quick_clean_req_flag (false)
@@ -351,6 +352,7 @@ void	Delay2::do_process_block (ProcInfo &proc)
 	if (_duck_flag)
 	{
 		square_block (&_buf_duck [0], proc._src_arr, proc._nbr_spl, nbr_chn_src);
+		min_block (&_buf_duck [0], proc._nbr_spl, _duck_sens * _duck_sens);
 		_env_duck.process_block_raw (&_buf_duck [0], &_buf_duck [0], proc._nbr_spl);
 		// The content is left squared. We'll take the sqrt() on the position we
 		// really want and which are constrained by the delay lines.
@@ -572,6 +574,7 @@ void	Delay2::update_param (bool force_flag)
 
 			const float    sensitivity =
 				float (_state_set.get_val_end_nat (Param_DUCK_SENS));
+			_duck_sens = sensitivity;
 			for (auto &info : _line_arr)
 			{
 				info._delay.set_duck_sensitivity (sensitivity);
@@ -766,6 +769,20 @@ void	Delay2::square_block (float dst_ptr [], const float * const src_ptr_arr [],
 		dsp::mix::Align::sum_square_n_1_v (
 			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 1.0f / nbr_chn
 		);
+	}
+}
+
+
+
+// Buffer must be aligned in address and size
+void	Delay2::min_block (float dst_ptr [], int nbr_spl, float val_max)
+{
+	const auto     vm = fstb::ToolsSimd::set1_f32 (val_max);
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto        x = fstb::ToolsSimd::load_f32 (dst_ptr + pos);
+		x = fstb::ToolsSimd::min_f32 (x, vm);
+		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
 	}
 }
 

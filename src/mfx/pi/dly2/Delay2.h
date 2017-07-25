@@ -169,6 +169,7 @@ private:
 	float          _xfdbk_cur;          // 0 = no cross-feedback, 1 = full
 	float          _xfdbk_old;
 	float          _duck_time;          // s. Corresponds to the attack time
+	float          _duck_sens;          // Level for the ducking
 	bool           _freeze_flag;
 	bool           _duck_flag;          // Set if at least one of the lines uses the ducking
 	bool           _quick_clean_req_flag;
