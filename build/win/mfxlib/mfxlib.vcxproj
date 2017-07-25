@@ -509,6 +509,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\Delay2.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\Delay2Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\DelayLineBbd.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\DelayLineBbdPitch.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\Eq.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\FilterType.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\FxDisto.h" />
@@ -914,6 +915,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\Delay2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\Delay2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\DelayLineBbd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\DelayLineBbdPitch.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\Eq.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\FxDisto.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\FxSection.cpp" />

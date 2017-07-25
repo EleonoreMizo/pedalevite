@@ -242,7 +242,7 @@ int	Delay2::do_reset (double sample_freq, int max_buf_len, int &latency)
 	const int      buf_len_align = (max_buf_len + 3) & ~3;
 	const int      nbr_buf       = std::max (
 		int (StageTaps::Buf_NBR_ELT),
-		int (DelayLineBbd::Buf_NBR_ELT)
+		int (DelayLineBbdPitch::Buf_NBR_ELT)
 	);
 	_buf_tmp_zone.resize (buf_len_align * nbr_buf);
 	for (auto &buf : _buf_line_arr)
@@ -330,7 +330,7 @@ void	Delay2::do_process_block (ProcInfo &proc)
 	_state_set.process_block (proc._nbr_spl);
 	for (auto &info : _line_arr)
 	{
-		DelayLineBbd & line = info._delay;
+		DelayLineBbdPitch &  line = info._delay;
 		line.set_ramp_time (proc._nbr_spl);
 	}
 	update_param ();
@@ -422,8 +422,8 @@ void	Delay2::do_process_block (ProcInfo &proc)
 		int            work_len = proc._nbr_spl - block_pos;
 		for (int line_index = 0; line_index < _nbr_lines; ++line_index)
 		{
-			DelayLineBbd & line    = _line_arr [line_index]._delay;
-			const int      max_len = line.start_and_compute_max_proc_len ();
+			DelayLineBbdPitch &  line    = _line_arr [line_index]._delay;
+			const int            max_len = line.start_and_compute_max_proc_len ();
 			work_len = std::min (work_len, max_len);
 		}
 
@@ -432,7 +432,7 @@ void	Delay2::do_process_block (ProcInfo &proc)
 		std::array <float, 2>   fdbk_end_arr = { 0, 0 };
 		for (int line_index = 0; line_index < _nbr_lines; ++line_index)
 		{
-			DelayLineBbd & line = _line_arr [line_index]._delay;
+			DelayLineBbdPitch &  line = _line_arr [line_index]._delay;
 			line.read_line (
 				&_buf_line_arr [line_index] [0],
 				work_len,
@@ -667,6 +667,11 @@ void	Delay2::update_param (bool force_flag)
 					info._delay.set_bbd_speed (
 						float (_state_set.get_val_end_nat (base + ParamLine_DLY_BBD_SPD))
 					);
+
+					const float    pitch =
+						float (_state_set.get_val_tgt_nat (base + ParamLine_PITCH));
+					const float    ratio = fstb::Approx::exp2 (pitch);
+					info._delay.set_grain_pitch (ratio);
 				}
 
 				if (info._param_change_flag_fdbk (true) || force_flag)

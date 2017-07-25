@@ -2142,6 +2142,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\colorme\Cst.h">
       <Filter>mfx\pi\colorme</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly2\DelayLineBbdPitch.h">
+      <Filter>mfx\pi\dly2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3019,6 +3022,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\colorme\ColorMeDesc.cpp">
       <Filter>mfx\pi\colorme</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly2\DelayLineBbdPitch.cpp">
+      <Filter>mfx\pi\dly2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

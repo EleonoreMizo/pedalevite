@@ -430,6 +430,44 @@ int    generate_test_signal_spikes (double &sample_freq, std::vector <std::vecto
 
 
 
+int    generate_test_signal_short_sine (double &sample_freq, std::vector <std::vector <float> > &chn_arr, double duration, double sine_duration, double freq, double vol, double fade)
+{
+	assert (sine_duration <= sine_duration);
+
+	sample_freq = 44100;
+	if (chn_arr.empty ())
+	{
+		chn_arr.resize (1);
+	}
+	const size_t   len    = size_t (sample_freq *      duration);
+	const size_t   len_s  = size_t (sample_freq * sine_duration);
+	const double   inv_fs = 1.0 / sample_freq;
+	for (auto &chn : chn_arr)
+	{
+		chn.resize (len);
+		mfx::dsp::mix::Generic::clear (&chn [0], len);
+		for (size_t k = 0; k < len_s; ++k)
+		{
+			float          env = 1;
+			const double   t   = k * inv_fs;
+			if (t < fade)
+			{
+				env = 0.5f - float (cos (fstb::PI * t / fade)) * 0.5f;
+			}
+			else if (t > sine_duration - fade)
+			{
+				env = 0.5f - float (cos (fstb::PI * (sine_duration - t) / fade)) * 0.5f;
+			}
+			const float    vv  = float (vol) * env;
+			chn [k] = float (sin (2 * fstb::PI * freq * inv_fs * k)) * vv;
+		}
+	}
+
+	return 0;
+}
+
+
+
 class PiProc
 {
 public:
@@ -1365,7 +1403,8 @@ int	test_delay2 ()
 	double         sample_freq;
 	std::vector <std::vector <float> >  chn_arr (nbr_chn);
 
-	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+//	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+	int            ret_val = generate_test_signal_short_sine (sample_freq, chn_arr, 5, 0.9, 110, 0.5, 0.01);
 
 	if (ret_val == 0)
 	{
@@ -1382,7 +1421,9 @@ int	test_delay2 ()
 		mfx::piapi::PluginInterface::ProcInfo &   proc_info = pi_proc.use_proc_info ();
 		pi_proc.reset_param ();
 		pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (1) + mfx::pi::dly2::ParamLine_VOL, 0);
-		pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (0) + mfx::pi::dly2::ParamLine_DLY_BASE, 0.375);
+		pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (0) + mfx::pi::dly2::ParamLine_DLY_BASE, 1.0);
+		pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (0) + mfx::pi::dly2::ParamLine_PITCH, 4.0/12);
+		pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (0) + mfx::pi::dly2::ParamLine_FDBK, 0.95);
 		do
 		{
 			const int      block_len =
@@ -1401,7 +1442,7 @@ int	test_delay2 ()
 
 			if (pos >= (len >> 1) && pos < (len >> 1) + block_len)
 			{
-				pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (0) + mfx::pi::dly2::ParamLine_DLY_BASE, 0.5);
+				pi_proc.set_param_nat (mfx::pi::dly2::Delay2Desc::get_line_base (0) + mfx::pi::dly2::ParamLine_DLY_BASE, 1.1);
 			}
 
 			plugin.process_block (proc_info);

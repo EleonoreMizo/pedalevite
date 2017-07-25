@@ -33,7 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/pi/dly2/Cst.h"
 #include "mfx/pi/dly2/Delay2Desc.h"
-#include "mfx/pi/dly2/DelayLineBbd.h"
+#include "mfx/pi/dly2/DelayLineBbdPitch.h"
 #include "mfx/pi/dly2/StageTaps.h"
 #include "mfx/pi/fv/FreeverbCore.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -104,7 +104,8 @@ private:
 	class InfoLine
 	{
 	public:
-		DelayLineBbd   _delay;
+		DelayLineBbdPitch
+		               _delay;
 		fstb::util::NotificationFlagCascadeSingle
 			            _param_change_flag;
 		fstb::util::NotificationFlagCascadeSingle
@@ -133,6 +134,7 @@ private:
 	void           update_duck_state ();
 
 	static void    square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
+	static void    min_block (float dst_ptr [], int nbr_spl, float val_max);
 
 	State          _state;
 

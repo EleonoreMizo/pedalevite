@@ -480,6 +480,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dly2/Delay2Desc.h \
         ../../src/mfx/pi/dly2/DelayLineBbd.cpp \
         ../../src/mfx/pi/dly2/DelayLineBbd.h \
+        ../../src/mfx/pi/dly2/DelayLineBbdPitch.cpp \
+        ../../src/mfx/pi/dly2/DelayLineBbdPitch.h \
         ../../src/mfx/pi/dly2/Eq.cpp \
         ../../src/mfx/pi/dly2/Eq.h \
         ../../src/mfx/pi/dly2/FilterType.h \
