@@ -147,13 +147,14 @@ float	BbdLine::compute_min_delay () const
 
 
 // Call this after set_speed() and before read_block().
-// May return 0 if the delay is really small, below compute_min_delay ().
+// May return 0 or less if the delay is really small, below
+// compute_min_delay ().
 // dly_min in samples
 int	BbdLine::estimate_max_one_shot_proc_w_feedback (float dly_min) const
 {
 	assert (dly_min >= 1);
 
-	const float    nbr_spl_f = (dly_min - 1) * _speed_inv;
+	const float    nbr_spl_f = dly_min * _speed_inv - 1;
 	const int      nbr_spl_i = fstb::floor_int (nbr_spl_f);
 
 	return nbr_spl_i;
