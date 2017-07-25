@@ -105,7 +105,7 @@ private:
 
 	const DelayLineReadInterface *
 	               _delay_line_ptr  =  0;  // 0 = not initialised.
-	TC             _dly_min    = -1;    // Min and max delay times, cached. Negative = not set
+	TC             _dly_min    = -1;    // Min and max delay times, seconds, cached. Negative = not set
 	TC             _dly_max    = -1;
 
 
