@@ -46,13 +46,16 @@ namespace dly2
 
 
 
-void	XFadeShape::set_duration (double duration)
+void	XFadeShape::set_duration (double duration, float fade_ratio)
 {
 	assert (duration > 0);
+	assert (fade_ratio > 0);
+	assert (fade_ratio <= 1);
 
-	if (duration != _duration)
+	if (duration != _duration || fade_ratio != _fade_ratio)
 	{
-		_duration = duration;
+		_duration  = duration;
+		_fade_ratio = fade_ratio;
 		if (is_ready ())
 		{
 			make_shape ();
@@ -117,13 +120,19 @@ void	XFadeShape::make_shape ()
 		const int      len_margin = len + 3;
 		_shape.resize (len_margin);
 
+		const float    p    = 0.25f / _fade_ratio;
 		fstb::ToolsSimd::VectF32   x;
 		fstb::ToolsSimd::VectF32   step;
-		fstb::ToolsSimd::start_lerp (x, step, -0.25f, 0.25f, len);
-		const auto     half = fstb::ToolsSimd::set1_f32 (0.5f);
+		fstb::ToolsSimd::start_lerp (x, step, -p, p, len);
+		const auto     half = fstb::ToolsSimd::set1_f32 ( 0.5f );
+		const auto     mi   = fstb::ToolsSimd::set1_f32 (-0.25f);
+		const auto     ma   = fstb::ToolsSimd::set1_f32 (+0.25f);
 		for (int pos = 0; pos < len; pos += 4)
 		{
-			auto           v = fstb::Approx::sin_nick_2pi (x);
+			auto           xx = x;
+			xx = fstb::ToolsSimd::min_f32 (xx, ma);
+			xx = fstb::ToolsSimd::max_f32 (xx, mi);
+			auto           v  = fstb::Approx::sin_nick_2pi (xx);
 			v *= half;
 			v += half;
 			fstb::ToolsSimd::store_f32 (&_shape [pos], v);

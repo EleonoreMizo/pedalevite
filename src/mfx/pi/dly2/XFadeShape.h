@@ -54,7 +54,7 @@ public:
 	virtual        ~XFadeShape ()                       = default;
 	XFadeShape &   operator = (const XFadeShape &other) = default;
 
-	void           set_duration (double duration);
+	void           set_duration (double duration, float fade_ratio = 1);
 	void           set_sample_freq (double sample_freq);
 
 	bool           is_ready () const;
@@ -80,6 +80,7 @@ private:
 	double         _sample_freq = 0;       // Hz. 0 = not set
 	double         _duration    = 0.010;   // s, > 0
 	int            _len         = 0;       // 0 = not set
+	float          _fade_ratio  = 1;       // Proportion of fade in the shape. ]0 ; 1]
 	BufAlign       _shape;
 
 
