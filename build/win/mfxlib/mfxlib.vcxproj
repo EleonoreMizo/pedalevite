@@ -585,6 +585,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\Phaser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase1\StereoOut.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase2\LfoType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase2\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase2\Phaser2.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\Ramp.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampDesc.h" />
@@ -963,6 +967,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phaser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\Ramp.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampModule.cpp" />

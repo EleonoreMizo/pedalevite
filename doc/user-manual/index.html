@@ -55,7 +55,8 @@
 	<li><a href="#fx-nzbl">Noise Bleach — Barrière anti-bruit</a></li>
 	<li><a href="#fx-nzcl">Noise Chlorine — Barrière anti-bruit</a></li>
 	<li><a href="#fx-peq">Parametric Equalizer — Égaliseur paramétrique</a></li>
-	<li><a href="#fx-phaser">Phaser</a></li>
+	<li><a href="#fx-phaserap">Phaser AP</a></li>
+	<li><a href="#fx-phaserht">Phaser HT</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
 	<li><a href="#fx-sgirlz">SiemensGirlz — Écho créatif</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
@@ -1458,7 +1459,48 @@ Sans effet sur les filtres passe-haut et bas.</p>
 
 
 
-<h3><a id="fx-phaser"></a>Phaser</h3>
+<h3><a id="fx-phaserap"></a>Phaser AP</h3>
+
+<p>Phaser classique, constitué d’une cascade de filtres
+<span lang="en"><i>all-pass</i></span> avec réinjection.</p>
+
+<p class="var">Speed</p>
+<p>Vitesse des oscillations.</p>
+
+<p class="var">Mix</p>
+<p>Proportion de signal déphasé dans le mix final.</p>
+
+<p class="var">Feedback</p>
+<p>Quantité de signal déphasé réinjecté.
+Plus le feedback est élevé, plus l’effet est marqué.</p>
+
+<p class="var">Number of stages</p>
+<p>Ordre du filtre de déphasage.</p>
+
+<p class="var">Minimum frequency</p>
+<p>Fréquence de coupure minimum du filtre de déphasage, en Hz.
+L’oscillateur fait varier la fréquence entre les minimum et
+maximum.</p>
+
+<p class="var">Maximum frequency</p>
+<p>Fréquence de coupure maximum du filtre de déphasage, en Hz.
+En plaçant la fréquence max au même niveau que la fréquence min,
+il est possible de figer l’oscillation et de se servir du phaser
+comme d’un filtre de coloration fixe.</p>
+
+<p class="var">Feedback source</p>
+<p>Numéro de l’étage du filtre sur lequel est prélevé le signal à
+réinjecter.</p>
+
+<p class="var">Waveform, Sample and hold, Smoothing, Chaos amount, Phase
+distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
+Phase set</p>
+<p>Ces paramètres sont identiques à ceux de l’effet
+<a href="fx-lfo">LFO</a>.</p>
+
+
+
+<h3><a id="fx-phaserht"></a>Phaser HT</h3>
 
 <p>Cet effet de modulation fonctionne un peu différemment des phasers
 analogiques, mais en reprend les mêmes principes.
@@ -1726,8 +1768,7 @@ Changer la vitesse de la ligne permet d’obtenir des effets de pitch
 caractéristiques.</p>
 
 <p class="var">Line pitch</p>
-<p>Pseudo-pitch-shifting de la ligne, en demi-tons.
-Ce paramètre n’est pas opérant pour l’instant.</p>
+<p>Pseudo-pitch-shifting de la ligne, en demi-tons.</p>
 
 <p class="var">Line feedback</p>
 <p>Taux de réinjection de la ligne, en pourcentage.
@@ -2116,6 +2157,11 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r10, 2017.08.01</b></p>
+<ul>
+<li>Ajout de l’effet Phaser AP.</li>
+</ul>
 
 <p><b>r9, 2017.07.17</b></p>
 <ul>

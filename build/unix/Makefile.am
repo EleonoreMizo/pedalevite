@@ -629,6 +629,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/phase1/PhaserDesc.cpp \
         ../../src/mfx/pi/phase1/PhaserDesc.h \
         ../../src/mfx/pi/phase1/StereoOut.h \
+        ../../src/mfx/pi/phase2/LfoType.h \
+        ../../src/mfx/pi/phase2/Param.h \
+        ../../src/mfx/pi/phase2/Phaser2.cpp \
+        ../../src/mfx/pi/phase2/Phaser2.h \
+        ../../src/mfx/pi/phase2/Phaser2Desc.cpp \
+        ../../src/mfx/pi/phase2/Phaser2Desc.h \
         ../../src/mfx/pi/spkem/Param.h \
         ../../src/mfx/pi/spkem/SpeakerEmu.cpp \
         ../../src/mfx/pi/spkem/SpeakerEmu.h \

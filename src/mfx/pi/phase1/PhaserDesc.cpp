@@ -253,7 +253,7 @@ std::string	PhaserDesc::do_get_unique_id () const
 
 std::string	PhaserDesc::do_get_name () const
 {
-	return "Phaser";
+	return "Phaser HT";
 }
 
 

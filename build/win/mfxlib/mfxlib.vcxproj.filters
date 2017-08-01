@@ -196,6 +196,9 @@
     <Filter Include="mfx\pi\colorme">
       <UniqueIdentifier>{4e5fdbab-b761-4f1f-a536-80f45fafb0b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\phase2">
+      <UniqueIdentifier>{463cd455-46da-458b-8359-44d70a509e93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2145,6 +2148,18 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\DelayLineBbdPitch.h">
       <Filter>mfx\pi\dly2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\phase2\LfoType.h">
+      <Filter>mfx\pi\phase2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\phase2\Param.h">
+      <Filter>mfx\pi\phase2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\phase2\Phaser2.h">
+      <Filter>mfx\pi\phase2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.h">
+      <Filter>mfx\pi\phase2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3025,6 +3040,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\DelayLineBbdPitch.cpp">
       <Filter>mfx\pi\dly2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2.cpp">
+      <Filter>mfx\pi\phase2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.cpp">
+      <Filter>mfx\pi\phase2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
