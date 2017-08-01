@@ -77,6 +77,20 @@ TplInt::TplInt (int val_min, int val_max, const char *name_0, const char *unit_0
 
 
 
+HelperDispNum &	TplInt::use_disp_num ()
+{
+	return (_phdn);
+}
+
+
+
+const HelperDispNum &	TplInt::use_disp_num () const
+{
+	return (_phdn);
+}
+
+
+
 void	TplInt::set_flags (int32_t flags)
 {
 	_flags = flags;

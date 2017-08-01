@@ -52,6 +52,10 @@ public:
 	explicit       TplInt (int val_min, int val_max, const char *name_0, const char *unit_0, int group_index = 0, const char *format_0 = "%.0f");
 	virtual        ~TplInt () = default;
 
+	HelperDispNum& use_disp_num ();
+	const HelperDispNum &
+						use_disp_num () const;
+
 	void           set_flags (int32_t flags);
 
 
