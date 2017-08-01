@@ -124,6 +124,7 @@ int	BbdLine::get_bbd_size () const
 
 
 // Call this first, before any other function.
+// speed indicates the rate of the BDD relative to the in/out sampling freq.
 void	BbdLine::set_speed (float speed)
 {
 	assert (speed * (1 << -_min_speed_l2) >= 1);
@@ -235,7 +236,6 @@ float	BbdLine::read_sample (float dly) const
 
 
 
-// speed indicates the rate of the BDD relative to the in/out sampling freq.
 void	BbdLine::push_block (const float src_ptr [], int nbr_spl)
 {
 	assert (src_ptr != 0);
