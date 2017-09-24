@@ -556,7 +556,7 @@ On peut vérifier avec un multimètre et deux broches mâles que la connexion
 se fait bien entre les deux trous débouchés.
 Attention, il faut que ce soit une nappe de 40 fils, et surtout pas les nappes
 plus récentes Ultra-DMA de 80 fils.
-Leurs connexions ne sont pas équivalentes, et parfois un fil est même coupé.
+Leurs connexions ne sont pas équivalentes, et parfois même un fil est coupé.
 En terme de connexion, le fil qui se trouve du côté de la carte micro-SD sur
 le Pi doit aboutir côté gauche sur la carte principale (le repère coloré
 indique la première broche).</p>
@@ -573,7 +573,7 @@ et femelle afin de faire la correspondance facilement.</p>
 <p>Le câblage de l’écran est spécifique, puisque quatre prises sont
 interconnectées, à cause de la carte de patch.
 La prise sur la carte principal nécessite un petit cavalier pour connecter
-V<sub>CC</sub> sur le 5&#8239;V plutôt que le 3,3&#8239;V.
+V<sub>CC</sub> sur le 5&#8239;V (plutôt que le 3,3&#8239;V).
 Côté écran, utiliser deux connecteurs de 8 broches et les placer aux deux
 extrémités du connecteur mâle de l’écran.</p>
 <p>Les boutons et pédales partagent quelques fils de masse.
@@ -591,11 +591,11 @@ cartes, prises, interrupteurs…</p>
 <div class="pic"><a href="box-boards-only-inside.jpg"><img src="box-boards-only-inside-small.jpg" /></a></div>
 <p>La fixation du support du Pi peut être délicate.
 Utiliser de grandes vis de façon à pouvoir y mettre les écrous avec la plaque
-inclinée encore.
+encore inclinée, ce qui permet de passer les doigts.
 Ne serrer qu’une fois que toutes les vis sont posées.
 Au besoin, démonter provisoirement le montant latéral s’il est trop gênant.</p>
 <p>D’autre part il est conseillé de ne pas fixer tout de suite les deux
-interrupteurs en haut à droite, sous la plaque du Pi.
+interrupteurs au pied en haut à droite, sous la plaque du Pi.
 En effet la soudure des câbles y seront très difficile avec le support par
 dessus.</p>
 <div class="pic"><a href="box-top.jpg"><img src="box-top-small.jpg" /></a></div>
@@ -614,12 +614,15 @@ Souder les fils de masse aux interrupteurs les plus proches du connecteur
 et passer la masse de proche en proche en soudant des fils intermédiaires.</p>
 <p>Les interrupteurs des pédales demandent un traitement attentif et
 délicat.
-En premier lieu, la position de contact de chaque interrupteur est unique.
+En premier lieu, si on utilise des DPDT, il faut partir du principe que la
+position de contact de chaque interrupteur est unique.
+Il n’y a pas de marque ou de signe distincif fiable donnant une orientation.
 La cosse commune (masse) est au centre et c’est tout ce que l’on sait.
 Il faut tester individuellement chaque interrupteur à l’aide d’un
 multimètre pour connaître la paire de broche correspondant à un contact
 en position enfoncée.</p>
-<p>D’autre part, le modèle choisi n’est pas des plus solides.
+<p>D’autre part, le modèle précédemment retenu n’était pas des plus solides
+(celui donné dans la liste des matériaux est plus fiable).
 Lors du vissage il faut faire attention à ne pas trop appuyer sur le boîtier
 plastique car celui-ci a facilement tendance à se détacher.
 Lors de la soudure, ce même boîtier plastique peut fondre très facilement
@@ -688,9 +691,8 @@ de manière plus ou moins imperceptible.
 Après chaque soudure, toujours tester la résistance qu’il y a entre les
 différents conducteurs du câble.
 Il ne doit y avoir absolument aucun contact (résistance infinie).
-Si ce n’est pas le cas, dénuder un peu plus la masse (isolant extérieur) et
-bien écarter la tresse de cuivre de l’isolant central.
-Cette manipulation arranger la situation.
+Si ce n’est pas le cas, vérifier qu’une éventuelle couche plus ou moins
+conductrice située autour de l’isolant central a bien été retirée.
 Tester au multimètre.
 S’il y a toujours un contact, couper le fil et refaire la soudure.</p>
 <p>Souder ensuite les prises femelles avec les mêmes précautions.
@@ -730,8 +732,8 @@ USB-B (côté carte son).</p>
 <p>La prise utilisée est conçue pour être soudée directement sur un PCB et non
 à un câble.
 On peut soit souder les fils directement aux broches et enrouler chacune
-d’adhésif d’élecricien pour les isoler, soit fabriquer un petit montage pour
-arriver à quelque chose de plus solide.
+d’adhésif d’élecricien ou de gaine thermo-rétractable pour les isoler, soit
+fabriquer un petit montage pour arriver à quelque chose de plus solide.
 C’est cette deuxième option qui a été retenue.</p>
 <p>On va utiliser un petit morceau d’epoxy venant d’une chute de plaque de
 prototypage.
@@ -784,16 +786,17 @@ deux ensemble.</p>
 Une fois repliées, les pattes de fixation de cette embase permettent de
 maintenir l’assemblage compressé.
 Souder câbles et broches.
-Faire des ponts entre câbles et broches adjascentes.</p>
+Faire des ponts de soudure entre câbles et broches adjascentes.</p>
 <p>La troisième est la prise USB-B mâle.
 Souder les deux fils de données ainsi que le fil rouge du chargeur
 (positif) au +5&#8239;V.
 La masse récupère un assemblage du fil noir du chargeur (négatif) et
 du fil noir issu de l’embase femelle.</p>
-<p>Envelopper le tout de ruban adhésif d’électricien pour le protéger.
+<p>Envelopper le tout de ruban adhésif d’électricien ou de la gaine
+thermo-rétractable pour le protéger.
 Le montage s’intercale entre le câble de liaison USB et la carte audio.</p>
 <p>Éventuellement&#8239;: intercaler le filtre RC d’alimentation entre
-ce montage et le chargeur.
+ce montage et le chargeur (non décrit ici).
 La nécessité du dispositif dépend de la qualité de l’alimentation.
 Laisser assez de câble de part et d’autre pour pouvoir être relativement
 libre dans le placement du filtre sur le socle.</p>
@@ -825,7 +828,7 @@ de serrage qui serviront à accrocher les deux appareils.
 Pour cela, percer des paires de trous étroits distants de quelques
 millimètres.
 Défoncer ensuite les fines parties de bois entre chaque paire avec un
-tournevis plat ou un ciseau fin.
+tournevis plat, un ciseau fin ou tout autre outil approprié.
 Le faire progressivement en alternant les deux côtés pour éviter de ressortir
 en emportant toute la couche supérieure.</p>
 <div class="pic"><a href="box-bot-inside.jpg"><img src="box-bot-inside-small.jpg" /></a></div>
@@ -838,20 +841,18 @@ Le filtre de l’alimentation peut être vissé sur le socle à côté de la car
 son.</p>
 <p>Il est recommandé de calibrer la carte son (régler les boutons, cf.
 manuel d’utilisation) avant de tout refermer.</p>
-<p>Pour faire les pieds, l’idéal serait d’avoir des gommes spécifiquement
-faites pour cela qui s’intercalaraient entre les vis et le socle.
-La solution retenue est plus rustique.
+<p>Pour faire les pieds, l’idéal est d’avoir des gommes spécifiquement
+faites pour cela, qui s’intercalent entre les vis et le socle.
+Sinon on peut envisager une solution plus rustique.
 Pour chaque pied, prendre deux joints de goulot de bouteille en caoutchouc.
 Placer dessus une rondelle qui retient la vis et qui couvre une partie
 seulement du joint.
 Insérer la vis et serrer, fermement mais sans forcer.
 Le joint du dessus doit prendre une forme conique sous la pression et
 dépasser la tête de vis.
-Je n’ai utilisé ce système que sur les quatre angles et le résultat
-n’est que moyennement concluant, les têtes de vis frottant encore un peu
-sur le sol.
-Je réessaierai ultérieurement en montant des pieds sur toutes les vis, ce qui
-sera d’ailleurs meilleur pour le tansfert de force.</p>
+J’ai utilisé ce système en première approche et le résultat n’est que
+moyennement concluant, les têtes de vis frottant encore un peu sur le sol,
+l’adhérence restant encore relativement faible sur un sol lisse.</p>
 
 
 
@@ -1509,6 +1510,11 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r1, 2017.09.24</b></p>
+<ul>
+<li>Reformulations et mises à jour mineures.</li>
+</ul>
 
 <p><b>r0, 2016.12.31</b></p>
 <ul>
