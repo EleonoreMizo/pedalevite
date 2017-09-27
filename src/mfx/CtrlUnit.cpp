@@ -26,11 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/doc/CtrlLink.h"
-#include "mfx/dsp/shape/MapSaturateBipolar.h"
 #include "mfx/CtrlUnit.h"
 #include "mfx/ProcessingContext.h"
-
-#include <complex>
 
 #include <cassert>
 #include <cmath>
@@ -74,7 +71,7 @@ void	CtrlUnit::update_internal_val (float val_nrm)
 	mod_val = fstb::limit (mod_val, 0.f, 1.f);
 
 	// Inverse curve
-	mod_val = apply_curve (mod_val, _curve, true);
+	mod_val = ControlCurve_apply_curve (mod_val, _curve, true);
 
 	_val = mod_val;
 }
@@ -108,7 +105,7 @@ float	CtrlUnit::evaluate (float param_val) const
 		mod_val = mod_val * 2 - 1;
 	}
 
-	mod_val  = apply_curve (mod_val, _curve, false);
+	mod_val  = ControlCurve_apply_curve (mod_val, _curve, false);
 	mod_val *= _amp;
 
 	if (_abs_flag)
@@ -153,155 +150,6 @@ float	CtrlUnit::evaluate (float param_val) const
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-namespace
-{
-	template <int N> using MapSatBipolN = dsp::shape::MapSaturateBipolar <
-		float,
-		std::ratio <1, (N << 1) - 1>,
-		std::ratio <1, 1>,
-		std::ratio <1, 1>
-	>;
-}
-
-// Input is not range-restricted, it can be bipolar too.
-float	CtrlUnit::apply_curve (float val, ControlCurve curve, bool invert_flag)
-{
-	static const int  inv = 1000;
-	switch (curve + ((invert_flag) ? inv : 0))
-	{
-	case ControlCurve_LINEAR:
-	case ControlCurve_LINEAR + inv:
-		// Nothing
-		break;
-
-	case ControlCurve_SQ:
-		val = fabs (val) * val;
-		break;
-	case ControlCurve_SQ + inv:
-		val = std::copysign (sqrt (fabs (val)), val);
-		break;
-
-	case ControlCurve_CB:
-		val = val * val * val;
-		break;
-	case ControlCurve_CB + inv:
-		val = cbrt (val);
-		break;
-
-	case ControlCurve_SQINV:
-		{
-			const float    vx = 1 - fabs (val);
-			val = std::copysign (1 - vx * vx, val);
-		}
-		break;
-	case ControlCurve_SQINV + inv:
-		{
-			const float    vy = fabs (val);
-			val = std::copysign (1 - sqrt (1 - vy), val);
-		}
-		break;
-
-	case ControlCurve_CBINV:
-		{
-			const float    vx = 1 - fabs (val);
-			val = std::copysign (1 - vx * vx * vx, val);
-		}
-		break;
-	case ControlCurve_CBINV + inv:
-		{
-			const float    vy = fabs (val);
-			val = std::copysign (1 - cbrt (1 - vy), val);
-		}
-		break;
-
-	case ControlCurve_S1:
-	case ControlCurve_FLAT1 + inv:
-		val = std::copysign (val * val * (3 - 2 * fabs (val)), val);
-		break;
-	case ControlCurve_S1 + inv:
-	case ControlCurve_FLAT1:
-		val = float (invert_s1 (val));
-		break;
-
-	case ControlCurve_S2:
-	case ControlCurve_FLAT2 + inv:
-		val = apply_curve (val, ControlCurve_S1, false);
-		val = apply_curve (val, ControlCurve_S1, false);
-		break;
-	case ControlCurve_S2 + inv:
-	case ControlCurve_FLAT2:
-		val = float (invert_s1 (invert_s1 (val)));
-		break;
-
-	case ControlCurve_DES1:
-	case ControlCurve_SAT1 + inv:
-		val = MapSatBipolN <1>::desaturate (val);
-		break;
-	case ControlCurve_DES1 + inv:
-	case ControlCurve_SAT1:
-		val = MapSatBipolN <1>::saturate (val);
-		break;
-
-	case ControlCurve_DES2:
-	case ControlCurve_SAT2 + inv:
-		val = MapSatBipolN <2>::desaturate (val);
-		break;
-	case ControlCurve_DES2 + inv:
-	case ControlCurve_SAT2:
-		val = MapSatBipolN <2>::saturate (val);
-		break;
-
-	case ControlCurve_DES3:
-	case ControlCurve_SAT3 + inv:
-		val = MapSatBipolN <3>::desaturate (val);
-		break;
-	case ControlCurve_DES3 + inv:
-	case ControlCurve_SAT3:
-		val = MapSatBipolN <3>::saturate (val);
-		break;
-
-	case ControlCurve_DES4:
-	case ControlCurve_SAT4 + inv:
-		val = MapSatBipolN <4>::desaturate (val);
-		break;
-	case ControlCurve_DES4 + inv:
-	case ControlCurve_SAT4:
-		val = MapSatBipolN <4>::saturate (val);
-		break;
-
-	default:
-		assert (false);
-		break;
-	}
-
-	return val;
-}
-
-
-
-// 3x^2 - 2x^3 - a = 0
-// d = cbrt (2 * sqrt (a * (a - 1)) - 2 * a + 1)
-// | x = 0.5 + 0.5 * (d + 1 / d)
-// | x = -0.25 * (1 - i * sqrt (3)) * d - 0.25*(1 + i * sqrt(3)) / d + 0.5
-// | x = -0.25 * (1 + i * sqrt (3)) * d - 0.25*(1 - i * sqrt(3)) / d + 0.5 <-- this one
-double	CtrlUnit::invert_s1 (double val)
-{
-	const double                  a_r = fabs (val);
-	const std::complex <double>   a (a_r, 0);
-	const std::complex <double>   aam1 (a_r * (a_r - 1.));
-	const std::complex <double>   d   =
-		std::pow ((std::sqrt (aam1) - a) * 2. + 1., 1 / 3.0);
-	const double      s3 = sqrt (3);
-	const double      x  =
-		(- 0.25 * std::complex <double> (1,  s3) * d
-		 - 0.25 * std::complex <double> (1, -s3) / d).real ()
-		+ 0.5;
-	
-	return std::copysign (x, val);
-}
 
 
 

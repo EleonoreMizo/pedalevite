@@ -64,6 +64,7 @@ enum ControlCurve
 
 
 const char *  ControlCurve_get_name (ControlCurve c);
+float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag);
 
 
 

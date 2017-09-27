@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/CtrlLink.h"
 #include "mfx/doc/CtrlLinkSet.h"
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
+#include "mfx/uitk/NBitmap.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -106,10 +107,12 @@ private:
 		Entry_CURVE   = Entry_STEP_MAX + _nbr_steps,
 		Entry_CONV_U2B,
 		Entry_MOD_MIN,
-		Entry_MOD_MAX
+		Entry_MOD_MAX,
+		Entry_CURVE_GFX
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
+	typedef std::shared_ptr <NBitmap> BitmapSPtr;
 
 	class MinMax
 	{
@@ -136,6 +139,8 @@ private:
 	               create_controller (int csn_index) const;
 	ControlSource  create_source (int csn_index) const;
 
+	static void    draw_curve (NBitmap &gfx, ControlCurve curve);
+
 	const std::vector <CtrlSrcNamed> &
 	               _csn_list_base;
 	PageSwitcher & _page_switcher;
@@ -153,12 +158,14 @@ private:
 	std::array <MinMax, 2>
 	               _minmax;
 	TxtSPtr        _curve_sptr;
+	BitmapSPtr     _curve_gfx_sptr;
 	TxtSPtr        _u2b_sptr;
 	std::array <TxtSPtr, 2>
 	               _mod_minmax_arr;
 
 	int            _step_index;
 	int            _val_unit_w;
+	bool           _curve_mode_flag;
 
 	static const std::array <Entry, 2>
 	               _id_label_arr;

@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/View.h"
 
 #include <cassert>
+#include <cstring>
 
 
 
@@ -67,6 +68,7 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_step_rel_sptr (new NText (Entry_STEP_REL))
 ,	_minmax ()
 ,	_curve_sptr (   new NText (Entry_CURVE   ))
+,	_curve_gfx_sptr (new NBitmap (Entry_CURVE_GFX))
 ,	_u2b_sptr (     new NText (Entry_CONV_U2B))
 ,	_mod_minmax_arr ({{
 		TxtSPtr (    new NText (Entry_MOD_MIN)),
@@ -74,6 +76,7 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 	}})
 ,	_step_index (0)
 ,	_val_unit_w (0)
+,	_curve_mode_flag (false)
 ,	_csn_list_full (_csn_list_base)
 ,	_cls ()
 ,	_ctrl_link ()
@@ -120,6 +123,8 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
 
+	_curve_mode_flag = false;
+
 	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
 	const doc::Slot &    slot    = preset.use_slot (_loc_edit._slot_id);
 	const doc::PluginSettings &   settings = slot.use_settings (_loc_edit._pi_type);
@@ -142,13 +147,17 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
 
-	_src_sptr     ->set_coord (Vec2d (0, h_m * 0));
-	_step_rel_sptr->set_coord (Vec2d (0, h_m * 1));
-	_curve_sptr   ->set_coord (Vec2d (0, h_m * 6));
-	_u2b_sptr     ->set_coord (Vec2d (0, h_m * 7));
+	_curve_gfx_sptr->set_size (_page_size);
 
-	_page_ptr->push_back (_src_sptr     );
-	_page_ptr->push_back (_step_rel_sptr);
+	_curve_gfx_sptr->set_coord (Vec2d (0,       0));
+	_src_sptr      ->set_coord (Vec2d (0, h_m * 0));
+	_step_rel_sptr ->set_coord (Vec2d (0, h_m * 1));
+	_curve_sptr    ->set_coord (Vec2d (0, h_m * 6));
+	_u2b_sptr      ->set_coord (Vec2d (0, h_m * 7));
+
+	_page_ptr->push_back (_curve_gfx_sptr);
+	_page_ptr->push_back (_src_sptr      );
+	_page_ptr->push_back (_step_rel_sptr );
 
 	std::array <int, _nbr_steps>  width_arr;
 	int            total_w = 0;
@@ -235,6 +244,12 @@ MsgHandlerInterface::EvtProp	CtrlEdit::do_handle_evt (const NodeEvt &evt)
 					_step_index = node_id - step_base;
 				}
 			}
+
+			if (node_id != Entry_CURVE && _curve_mode_flag)
+			{
+				_curve_mode_flag = false;
+				update_display ();
+			}
 		}
 	}
 
@@ -243,8 +258,24 @@ MsgHandlerInterface::EvtProp	CtrlEdit::do_handle_evt (const NodeEvt &evt)
 		const Button   but = evt.get_button_ex ();
 		switch (but)
 		{
+		case Button_S:
+			if (node_id == Entry_CURVE)
+			{
+				_curve_mode_flag = ! _curve_mode_flag;
+				update_display ();
+				ret_val = EvtProp_CATCH;
+			}
+			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PARAM_CONTROLLERS, 0);
+			if (_curve_mode_flag)
+			{
+				_curve_mode_flag = false;
+				update_display ();
+			}
+			else
+			{
+				_page_switcher.switch_to (pg::PageType_PARAM_CONTROLLERS, 0);
+			}
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:
@@ -342,7 +373,11 @@ void	CtrlEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc
 
 void	CtrlEdit::update_display ()
 {
+	const bool     active_flag = (_loc_edit._ctrl_index >= 0);
+
 	const int      scr_w = _page_size [0];
+
+	_curve_gfx_sptr->show (active_flag && _curve_mode_flag);
 
 	const std::vector <CtrlSrcNamed> csn_ports (
 		Tools::make_port_list (*_model_ptr, *_view_ptr)
@@ -354,22 +389,26 @@ void	CtrlEdit::update_display ()
 		csn_ports.end ()
 	);
 
-	const bool     active_flag = (_loc_edit._ctrl_index >= 0);
-
-	_step_rel_sptr->show (active_flag);
-	_curve_sptr->show (active_flag);
-	_u2b_sptr->show (active_flag);
+	_src_sptr     ->show (active_flag && ! _curve_mode_flag);
+	_step_rel_sptr->show (active_flag && ! _curve_mode_flag);
+	_curve_sptr   ->show (active_flag                      );
+	_u2b_sptr     ->show (active_flag && ! _curve_mode_flag);
 
 	PageMgrInterface::NavLocList  nav_list (1);
 	nav_list [0]._node_id = Entry_SRC;
 
 	for (size_t mm = 0; mm < _minmax.size (); ++mm)
 	{
-		_minmax [mm]._val_unit_sptr->show (active_flag);
+		_minmax [mm]._val_unit_sptr->show (active_flag && ! _curve_mode_flag);
 		for (size_t k = 0; k < _nbr_steps; ++k)
 		{
-			_minmax [mm]._step_sptr_arr [k]->show (active_flag);
+			_minmax [mm]._step_sptr_arr [k]->show (active_flag && ! _curve_mode_flag);
 		}
+		_minmax [mm]._label_sptr->show (! _curve_mode_flag);
+	}
+	for (auto &mmm_sptr : _mod_minmax_arr)
+	{
+		mmm_sptr->show (false);
 	}
 
 	std::string    src_txt ("Src  : ");
@@ -449,7 +488,7 @@ void	CtrlEdit::update_display ()
 			{
 				for (size_t k = 0; k < _nbr_steps; ++k)
 				{
-					_minmax [mm]._step_sptr_arr [k]->show (true);
+					_minmax [mm]._step_sptr_arr [k]->show (! _curve_mode_flag);
 					nav_list.resize (nav_list.size () + 1);
 					nav_list.back ()._node_id = _id_step_arr [mm] + k;
 				}
@@ -460,12 +499,9 @@ void	CtrlEdit::update_display ()
 					index, val, _loc_edit._slot_id, type,
 					0, *(_minmax [mm]._val_unit_sptr), 0, 0, true
 				);
-				_minmax [mm]._val_unit_sptr->show (true);
-				_minmax [mm]._label_sptr->show (true);
+				_minmax [mm]._val_unit_sptr->show (! _curve_mode_flag);
+				_minmax [mm]._label_sptr->show (! _curve_mode_flag);
 			}
-
-			_mod_minmax_arr [0]->show (false);
-			_mod_minmax_arr [1]->show (false);
 		}
 		else
 		{
@@ -504,13 +540,17 @@ void	CtrlEdit::update_display ()
 				const std::string tit = (mm == 0) ? "Min  :" : "Max  :";
 				const std::string txt = tit + " " + val_str + " " + unit;
 				_mod_minmax_arr [mm]->set_text (txt);
-				_mod_minmax_arr [mm]->show (true);
+				_mod_minmax_arr [mm]->show (! _curve_mode_flag);
 			}
 		}
 
-		const std::string curve_name =
+		std::string       curve_name =
 			ControlCurve_get_name (_ctrl_link._curve);
-		_curve_sptr->set_text ("Curve: " + curve_name);
+		if (! _curve_mode_flag)
+		{
+			curve_name = "Curve: " + curve_name;
+		}
+		_curve_sptr->set_text (curve_name);
 		nav_list.resize (nav_list.size () + 1);
 		nav_list.back ()._node_id = Entry_CURVE;
 
@@ -527,6 +567,11 @@ void	CtrlEdit::update_display ()
 			curve_txt += "--";   // U+2014 EM DASH
 		}
 		_u2b_sptr->set_text (curve_txt);
+
+		if (_curve_mode_flag)
+		{
+			draw_curve (*_curve_gfx_sptr, _ctrl_link._curve);
+		}
 	}
 	_src_sptr->set_text (src_txt);
 
@@ -832,6 +877,59 @@ ControlSource	CtrlEdit::create_source (int csn_index) const
 	}
 
 	return _csn_list_full [csn_index]._src;
+}
+
+
+
+void	CtrlEdit::draw_curve (NBitmap &gfx, ControlCurve curve)
+{
+	const Rect     bb      = gfx.get_bounding_box ();
+	const Vec2d    sz      = bb.get_size ();
+	uint8_t *      pix_ptr = gfx.use_buffer ();
+	const int      stride  = gfx.get_stride ();
+
+	const int      width   = sz [0];
+	const int      height  = sz [1];
+	if (width >= 2 && height >= 2)
+	{
+		memset (pix_ptr, 0, stride * (height - 1) + width);
+
+		// Horizontal scan
+		const float    step_x = 1.0f / float (width  - 1);
+		const float    mul_y  =        float (height - 1);
+		for (int pix_x = 0; pix_x < width; ++pix_x)
+		{
+			const float    x     = pix_x * step_x;
+			const float    y     = ControlCurve_apply_curve (x, curve, false);
+			const int      pix_y = height - 1 - fstb::round_int (y * mul_y);
+			if (pix_y >= 0 && pix_y < height)
+			{
+				pix_ptr [pix_y * stride + pix_x] = 255;
+			}
+
+			// Linear curve, for reference
+			if ((pix_x & 1) == 0)
+			{
+				const int      pix_y2 =
+					height - 1 - fstb::round_int (pix_x * (step_x * mul_y));
+				pix_ptr [pix_y2 * stride + pix_x] = 255;
+			}
+		}
+
+		// Vertical scan
+		const float    step_y = 1.0f / float (height - 1);
+		const float    mul_x  =        float (width  - 1);
+		for (int pix_y = 0; pix_y < height; ++pix_y)
+		{
+			const float    y     = (height - 1 - pix_y) * step_y;
+			const float    x     = ControlCurve_apply_curve (y, curve, true);
+			const int      pix_x = fstb::round_int (x * mul_x);
+			if (pix_x >= 0 && pix_x < width)
+			{
+				pix_ptr [pix_y * stride + pix_x] = 255;
+			}
+		}
+	}
 }
 
 
