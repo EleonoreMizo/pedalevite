@@ -12,6 +12,7 @@ saturate() gives a "saturated" curve:
 desaturate() gives a kind of exponential curve:
 	x = -c - (1+c)*c / (y - (1+c))
 	x'(0) = c / (1+c)
+	x'(1+c-sqrt((1+c)*c)) = 1
 
 Mapping is done in order to realize:
 - x == desaturate (saturate (x))

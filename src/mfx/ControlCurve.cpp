@@ -47,14 +47,22 @@ const char *  ControlCurve_get_name (ControlCurve c)
 	switch (c)
 	{
 	case ControlCurve_LINEAR: return ("Linear"); break;
-	case ControlCurve_SQ:	  return ("Square"); break;
-	case ControlCurve_CB:	  return ("Cubic" ); break;
-	case ControlCurve_SAT2:	  return ("Sat. 1"); break;
-	case ControlCurve_SAT3:	  return ("Sat. 2"); break;
-	case ControlCurve_S1:	  return ("S 1"   ); break;
-	case ControlCurve_S2:	  return ("S 2"   ); break;
+	case ControlCurve_SQ:     return ("Square"); break;
+	case ControlCurve_CB:     return ("Cubic" ); break;
+	case ControlCurve_SQINV:  return ("Sq inv"); break;
+	case ControlCurve_CBINV:  return ("Cb inv"); break;
+	case ControlCurve_S1:     return ("S 1"   ); break;
+	case ControlCurve_S2:     return ("S 2"   ); break;
 	case ControlCurve_FLAT1:  return ("Flat 1"); break;
 	case ControlCurve_FLAT2:  return ("Flat 2"); break;
+	case ControlCurve_DES1:   return ("Prog 1"); break;
+	case ControlCurve_SAT1:   return ("Sat 1" ); break;
+	case ControlCurve_DES2:   return ("Prog 2"); break;
+	case ControlCurve_SAT2:   return ("Sat 2" ); break;
+	case ControlCurve_DES3:   return ("Prog 3"); break;
+	case ControlCurve_SAT3:   return ("Sat 3" ); break;
+	case ControlCurve_DES4:   return ("Prog 4"); break;
+	case ControlCurve_SAT4:   return ("Sat 4" ); break;
 	default:
 		assert (false);
 		break;

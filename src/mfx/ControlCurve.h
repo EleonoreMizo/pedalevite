@@ -42,12 +42,20 @@ enum ControlCurve
 	ControlCurve_LINEAR = 0,
 	ControlCurve_SQ,
 	ControlCurve_CB,
-	ControlCurve_SAT2,
-	ControlCurve_SAT3,
+	ControlCurve_SQINV,
+	ControlCurve_CBINV,
 	ControlCurve_S1,
 	ControlCurve_S2,
 	ControlCurve_FLAT1,
 	ControlCurve_FLAT2,
+	ControlCurve_DES1,
+	ControlCurve_SAT1,
+	ControlCurve_DES2,
+	ControlCurve_SAT2,
+	ControlCurve_DES3,
+	ControlCurve_SAT3,
+	ControlCurve_DES4,
+	ControlCurve_SAT4,
 
 	ControlCurve_NBR_ELT
 

@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/doc/CtrlLink.h"
+#include "mfx/dsp/shape/MapSaturateBipolar.h"
 #include "mfx/CtrlUnit.h"
 #include "mfx/ProcessingContext.h"
 
@@ -155,6 +156,16 @@ float	CtrlUnit::evaluate (float param_val) const
 
 
 
+namespace
+{
+	template <int N> using MapSatBipolN = dsp::shape::MapSaturateBipolar <
+		float,
+		std::ratio <1, (N << 1) - 1>,
+		std::ratio <1, 1>,
+		std::ratio <1, 1>
+	>;
+}
+
 // Input is not range-restricted, it can be bipolar too.
 float	CtrlUnit::apply_curve (float val, ControlCurve curve, bool invert_flag)
 {
@@ -180,26 +191,26 @@ float	CtrlUnit::apply_curve (float val, ControlCurve curve, bool invert_flag)
 		val = cbrt (val);
 		break;
 
-	case ControlCurve_SAT2:
+	case ControlCurve_SQINV:
 		{
 			const float    vx = 1 - fabs (val);
 			val = std::copysign (1 - vx * vx, val);
 		}
 		break;
-	case ControlCurve_SAT2 + inv:
+	case ControlCurve_SQINV + inv:
 		{
 			const float    vy = fabs (val);
 			val = std::copysign (1 - sqrt (1 - vy), val);
 		}
 		break;
 
-	case ControlCurve_SAT3:
+	case ControlCurve_CBINV:
 		{
 			const float    vx = 1 - fabs (val);
 			val = std::copysign (1 - vx * vx * vx, val);
 		}
 		break;
-	case ControlCurve_SAT3 + inv:
+	case ControlCurve_CBINV + inv:
 		{
 			const float    vy = fabs (val);
 			val = std::copysign (1 - cbrt (1 - vy), val);
@@ -223,6 +234,42 @@ float	CtrlUnit::apply_curve (float val, ControlCurve curve, bool invert_flag)
 	case ControlCurve_S2 + inv:
 	case ControlCurve_FLAT2:
 		val = float (invert_s1 (invert_s1 (val)));
+		break;
+
+	case ControlCurve_DES1:
+	case ControlCurve_SAT1 + inv:
+		val = MapSatBipolN <1>::desaturate (val);
+		break;
+	case ControlCurve_DES1 + inv:
+	case ControlCurve_SAT1:
+		val = MapSatBipolN <1>::saturate (val);
+		break;
+
+	case ControlCurve_DES2:
+	case ControlCurve_SAT2 + inv:
+		val = MapSatBipolN <2>::desaturate (val);
+		break;
+	case ControlCurve_DES2 + inv:
+	case ControlCurve_SAT2:
+		val = MapSatBipolN <2>::saturate (val);
+		break;
+
+	case ControlCurve_DES3:
+	case ControlCurve_SAT3 + inv:
+		val = MapSatBipolN <3>::desaturate (val);
+		break;
+	case ControlCurve_DES3 + inv:
+	case ControlCurve_SAT3:
+		val = MapSatBipolN <3>::saturate (val);
+		break;
+
+	case ControlCurve_DES4:
+	case ControlCurve_SAT4 + inv:
+		val = MapSatBipolN <4>::desaturate (val);
+		break;
+	case ControlCurve_DES4 + inv:
+	case ControlCurve_SAT4:
+		val = MapSatBipolN <4>::saturate (val);
 		break;
 
 	default:
