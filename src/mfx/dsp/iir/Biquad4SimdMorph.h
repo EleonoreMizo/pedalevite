@@ -131,8 +131,8 @@ private:
 
 private:
 
-	bool           operator == (const Biquad4SimdMorph &other) const = delete;
-	bool           operator != (const Biquad4SimdMorph &other) const = delete;
+	bool           operator == (const Biquad4SimdMorph <VD, VS, VP> &other) const = delete;
+	bool           operator != (const Biquad4SimdMorph <VD, VS, VP> &other) const = delete;
 
 }; // class Biquad4SimdMorph
 
