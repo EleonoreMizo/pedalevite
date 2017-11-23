@@ -494,9 +494,9 @@ void	DAlsa::process_audio ()
 			-- nbr_initial_write;
 		}
 		else if (nbr_initial_write < 0)
-                {
-                        ++ nbr_initial_write;
-                }
+		{
+			++ nbr_initial_write;
+		}
 	}
 
 	_quit_flag = false;

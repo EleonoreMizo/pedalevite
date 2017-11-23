@@ -156,7 +156,7 @@ MsgHandlerInterface::EvtProp	BankMenu::do_handle_evt (const NodeEvt &evt)
 			{
 				_model_ptr->select_bank (node_id);
 				_model_ptr->activate_preset (0);
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+//				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
 				/*** To do ***/
 			}
 			break;

@@ -28,7 +28,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/dsp/dyn/EnvFollowerRmsSimple.h"
-#include "mfx/dsp/InertiaLin.h"
 
 
 

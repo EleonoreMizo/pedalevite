@@ -247,6 +247,7 @@ MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
 				_snd_drv.restart ();
 				_esc_count = 0;
 			}
+			_page_ptr->invalidate (Rect (Vec2d (), _page_size));
 			break;
 		default:
 			// Nothing
