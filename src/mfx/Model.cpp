@@ -182,8 +182,8 @@ void	Model::process_messages ()
 		if (   state._press_flag && ! state._hold_flag
 		    && date_us >= state._press_ts + _hold_time)
 		{
-			state._hold_flag = true;
-			process_pedal_event (ped_cnt, doc::ActionTrigger_HOLD);
+			state._hold_flag =
+				process_pedal_event (ped_cnt, doc::ActionTrigger_HOLD);
 		}
 	}
 
@@ -1929,7 +1929,9 @@ void	Model::process_pedal (int pedal_index, bool set_flag, std::chrono::microsec
 
 
 // Commits modifications
-void	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
+// Returns true if at least one action has been executed (and false if the
+// event is empty)
+bool	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
 {
 	const doc::PedalActionGroup & group = _layout_cur._pedal_arr [pedal_index];
 	const doc::PedalActionCycle & cycle = group._action_arr [trigger];
@@ -1975,6 +1977,8 @@ void	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
 	}
 
 	commit_cumulated_changes ();
+
+	return (nbr_actions > 0);
 }
 
 

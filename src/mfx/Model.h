@@ -234,7 +234,7 @@ private:
 	void           process_msg_ui ();
 	int            find_pedal (int switch_index) const;
 	void           process_pedal (int pedal_index, bool set_flag, std::chrono::microseconds date);
-	void           process_pedal_event (int pedal_index, doc::ActionTrigger trigger);
+	bool           process_pedal_event (int pedal_index, doc::ActionTrigger trigger);
 	void           process_action (const doc::PedalActionSingleInterface &action, std::chrono::microseconds ts);
 	void           process_action_bank (const doc::ActionBank &action);
 	void           process_action_param (const doc::ActionParam &action);
