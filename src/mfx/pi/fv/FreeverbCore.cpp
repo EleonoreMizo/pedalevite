@@ -100,7 +100,7 @@ void	FreeverbCore::reset (double sample_freq, int max_buf_len)
 void	FreeverbCore::set_reflectivity (float fdbk)
 {
 	assert (fdbk > -1);
-	assert (fdbk <  1);
+	assert (fdbk <= 1);
 
 	for (int chn_index = 0; chn_index < _max_nbr_chn; ++chn_index)
 	{
@@ -113,7 +113,7 @@ void	FreeverbCore::set_reflectivity (float fdbk)
 void	FreeverbCore::set_reflectivity (float fdbk, int chn_index)
 {
 	assert (fdbk > -1);
-	assert (fdbk <  1);
+	assert (fdbk <= 1);
 	assert (chn_index >= 0);
 	assert (chn_index < _max_nbr_chn);
 
