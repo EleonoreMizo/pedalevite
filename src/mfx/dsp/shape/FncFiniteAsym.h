@@ -13,6 +13,8 @@ Template parameters:
 	GF::GF ();
 	double GF::operator () (double x) const;
 
+- RES: internal resolution, > 0
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -52,11 +54,12 @@ namespace shape
 
 
 
-template <int BL, int BU, class GF>
+template <int BL, int BU, class GF, int RES = 1>
 class FncFiniteAsym
 {
 
 	static_assert (BL < BU, "");
+	static_assert (RES >= 1, "");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -81,9 +84,9 @@ protected:
 
 private:
 
-	static const int  _table_size = BU - BL;
+	static const int  _table_size = (BU - BL) * RES;
 	static const int  _order      = 3;
-	static const int  _prec_frac  = 1024;
+	static const int  _prec_frac  = 1024 * RES;
 
 	typedef std::array <float, _order + 1> Curve;
 	typedef std::array <Curve, _table_size + 1> CurveTable;	// +1 to secure rounding errors
@@ -102,11 +105,11 @@ private:
 
 private:
 
-	               FncFiniteAsym (const FncFiniteAsym &other)     = delete;
-	FncFiniteAsym &
-	               operator = (const FncFiniteAsym &other)        = delete;
-	bool           operator == (const FncFiniteAsym &other) const = delete;
-	bool           operator != (const FncFiniteAsym &other) const = delete;
+	               FncFiniteAsym (const FncFiniteAsym <BL, BU, GF, RES> &other)     = delete;
+	FncFiniteAsym <BL, BU, GF, RES> &
+	               operator = (const FncFiniteAsym <BL, BU, GF, RES> &other)        = delete;
+	bool           operator == (const FncFiniteAsym <BL, BU, GF, RES> &other) const = delete;
+	bool           operator != (const FncFiniteAsym <BL, BU, GF, RES> &other) const = delete;
 
 }; // class FncFiniteAsym
 

@@ -39,8 +39,8 @@ namespace shape
 
 
 
-template <int BL, int BU, class GF>
-FncFiniteAsym <BL, BU, GF>::FncFiniteAsym ()
+template <int BL, int BU, class GF, int RES>
+FncFiniteAsym <BL, BU, GF, RES>::FncFiniteAsym ()
 {
 	if (! _init_flag)
 	{
@@ -50,12 +50,12 @@ FncFiniteAsym <BL, BU, GF>::FncFiniteAsym ()
 
 
 
-template <int BL, int BU, class GF>
-float	FncFiniteAsym <BL, BU, GF>::operator () (float x) const
+template <int BL, int BU, class GF, int RES>
+float	FncFiniteAsym <BL, BU, GF, RES>::operator () (float x) const
 {
 	assert (_init_flag);
 
-	const int      pos = fstb::floor_int (x - BL);
+	const int      pos = fstb::floor_int ((x - BL) * RES);
    if (pos < 0)
    {
       return (_val_min);
@@ -74,17 +74,22 @@ float	FncFiniteAsym <BL, BU, GF>::operator () (float x) const
 
 
 
-template <int BL, int BU, class GF>
-fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF>::operator () (fstb::ToolsSimd::VectF32 x) const
+template <int BL, int BU, class GF, int RES>
+fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::ToolsSimd::VectF32 x) const
 {
 	assert (_init_flag);
 
 	const auto     bl   = fstb::ToolsSimd::set1_f32 (float (BL));
+	const auto     bu   = fstb::ToolsSimd::set1_f32 (float (BU));
 	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
 	const auto     ts   = fstb::ToolsSimd::set1_f32 (float (_table_size));
-	const auto     xo   = x - bl;
-	xo = fstb::ToolsSimd::max_f32 (xo, zero);
-	xo = fstb::ToolsSimd::min_f32 (xo, ts);
+	x = fstb::ToolsSimd::max_f32 (x, bl);
+	x = fstb::ToolsSimd::min_f32 (x, bu);
+	auto           xo   = x - bl;
+	if (RES > 1)
+	{
+		xo *= fstb::ToolsSimd::set1_f32 (float (RES));
+	}
 	auto           pos  = fstb::ToolsSimd::floor_f32_to_s32 (xo);
 
 	/*** To do: check if a matrix transposition is faster ***/
@@ -121,17 +126,17 @@ fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF>::operator () (fstb::ToolsSim
 
 
 
-template <int BL, int BU, class GF>
-void	FncFiniteAsym <BL, BU, GF>::init_coefs ()
+template <int BL, int BU, class GF, int RES>
+void	FncFiniteAsym <BL, BU, GF, RES>::init_coefs ()
 {
 	std::array <double, _table_size + 2>     y;
 	std::array <double, _table_size + 2> slope;
 	GF             fnc;
 
 	const float    delta = 0.5f / _prec_frac;
-	for (int pos = 0; pos <= _table_size; ++pos)
+	for (int pos = 0; pos < _table_size + 1; ++pos)
 	{
-		const double   x  = pos + BL;
+		const double   x  = double (pos) / RES + BL;
 
 		const double   y0 = double (fnc (x        ));
 		const double   ym = double (fnc (x - delta));
@@ -147,26 +152,28 @@ void	FncFiniteAsym <BL, BU, GF>::init_coefs ()
 	_val_min = float (y [          0]);
 	_val_max = float (y [_table_size]);
 
+	const double   RES2 = RES * RES;
+	const double   RES3 = RES * RES2;
 	for (int pos = 0; pos < _table_size + 1; ++pos)
 	{
 		Curve &        curve = _coef_arr [pos];
 
-		const int      x = pos + BL;
+		const double   x = double (pos) / RES + BL;
 		const double   p = slope [pos    ];
 		const double   q = slope [pos + 1];
 		const double   k = y [pos + 1] - y [pos];
 
-		// Coefficients in [0 ; 1]
-		const double   A =  q +   p - 2*k;
-		const double   B = -q - 2*p + 3*k;
+		// Coefficients in [0 ; 1/RES]
+		const double   A = ( q +     p) * RES2 - 2 * k * RES3;
+		const double   B = (-q - 2 * p) * RES  + 3 * k * RES2;
 		const double   C = p;
 		const double   D = y [pos];
 
-		// Shift to [x ; x+1]
-		const double   a =    A;
-		const double   b = -3*A*x + B;
-		const double   c = (3*A*x - B*2) * x + C;
-		const double   d = ((-A*x + B)   * x - C) * x + D;
+		// Shift to [x ; x+1/RES]
+		const double   a =         A;
+		const double   b =   -3 *  A * x + B;
+		const double   c = (  3 *  A * x - B * 2) * x + C;
+		const double   d = ((     -A * x + B    ) * x - C) * x + D;
 
 		curve [0] = float (d);
 		curve [1] = float (c);
@@ -179,14 +186,14 @@ void	FncFiniteAsym <BL, BU, GF>::init_coefs ()
 
 
 
-template <int BL, int BU, class GF>
-typename FncFiniteAsym <BL, BU, GF>::CurveTable	FncFiniteAsym <BL, BU, GF>::_coef_arr;
-template <int BL, int BU, class GF>
-float	FncFiniteAsym <BL, BU, GF>::_val_min = 0;
-template <int BL, int BU, class GF>
-float	FncFiniteAsym <BL, BU, GF>::_val_max = 0;
-template <int BL, int BU, class GF>
-bool	FncFiniteAsym <BL, BU, GF>::_init_flag = false;
+template <int BL, int BU, class GF, int RES>
+typename FncFiniteAsym <BL, BU, GF, RES>::CurveTable	FncFiniteAsym <BL, BU, GF, RES>::_coef_arr;
+template <int BL, int BU, class GF, int RES>
+float	FncFiniteAsym <BL, BU, GF, RES>::_val_min = 0;
+template <int BL, int BU, class GF, int RES>
+float	FncFiniteAsym <BL, BU, GF, RES>::_val_max = 0;
+template <int BL, int BU, class GF, int RES>
+bool	FncFiniteAsym <BL, BU, GF, RES>::_init_flag = false;
 
 
 
