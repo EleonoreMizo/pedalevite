@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dist2/Param.h"
 #include "mfx/pi/param/MapS.h"
 #include "mfx/pi/param/MapPseudoLog.h"
-#include "mfx/pi/param/TplEnum.h"
+#include "mfx/pi/param/TplEnumEvol.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
@@ -251,8 +251,10 @@ void	Disto2xDesc::register_stage (int stage, int base)
 	_desc_set.add_glob (base + ParamStage_BIAS, lin_ptr);
 
 	// Type
-	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Diode\nAsym 1",
+	param::TplEnumEvol * enu_ptr = new param::TplEnumEvol (
+		2,
+		"Arcsinh\nAsym 1\nProg 1\nProg 2\nProg 3\nSudden\nHardclip\nPuncher 1"
+		"\nPuncher 2\nPuncher 3\nOvershoot\nBitcrush\nSlew rate",
 		"Stage %d distortion type\nStage %d disto type\nStage %d type\nS%d type",
 		"",
 		stage,

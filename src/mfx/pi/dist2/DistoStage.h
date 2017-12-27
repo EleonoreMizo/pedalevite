@@ -30,6 +30,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
+#include "fstb/def.h"
+#include "fstb/fnc.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
@@ -37,6 +39,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
+#include <ratio>
 #include <vector>
 
 #include <cmath>
@@ -65,6 +68,17 @@ public:
 	{
 		Type_DIODE_CLIPPER = 0,
 		Type_ASYM1,
+		Type_PROG1,
+		Type_PROG2,
+		Type_PROG3,
+		Type_SUDDEN,
+		Type_HARDCLIP,
+		Type_PUNCHER1,
+		Type_PUNCHER2,
+		Type_PUNCHER3,
+		Type_OVERSHOOT,
+		Type_BITCRUSH,
+		Type_SLEWRATE,
 
 		Type_NBR_ELT
 	};
@@ -115,6 +129,7 @@ private:
 		               _lpf_env;
 		UpSpl          _us;
 		DwSpl          _ds;
+		float          _slew_rate_val = 0;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -126,9 +141,101 @@ private:
 			return asinh (x);
 		}
 	};
-	typedef dsp::shape::FncFiniteAsym <
-		-256, 256, FncDiodeClipper
-	> ShaperDiodeClipper;
+
+	// A, B and C are std::ratio templates
+	template <typename A, typename B, typename C>
+	class FncProgClipper
+	{
+	public:
+		double         operator () (double x)
+		{
+			const double   a  = double (A::num) / double (A::den);
+			const double   bi = double (B::den) / double (B::num);
+			const double   c  = double (C::num) / double (C::den);
+			const double   f1 = tanh (x * bi);
+			const double   f2 = (2 / fstb::PI) * atan (fstb::PI * 0.5 * x * (1 / (1 - a) - bi));
+			const double   x3 = x * x * x;
+			const double   z  = fabs (x * 2) + 1;
+			const double   z2 = z * z;
+			const double   z5 = z2 * z2 * z;
+			const double   f3 = 8 * x3 / z5;
+			const double   y  = a * f1 + (1 - a) * f2 - c * f3;
+			return y;
+		}
+	};
+
+	// Minimum input range: [-8; +8]
+	class FncPuncherA
+	{
+	public:
+		double         operator () (double x)
+		{
+			const double   xx = fstb::limit (
+				x,
+				double (fstb::PI * -2.5),
+				double (fstb::PI * +2.5)
+			);
+
+			return sin (xx);
+		}
+	};
+
+	// Minimum input range: [-20; +20]
+	template <int N>
+	class FncPuncherB
+	{
+	public:
+		double         operator () (double x)
+		{
+			const double   m  = 20;
+			const double   z  = log (m + 1);
+			const double   a  = ((1.5 + N) * fstb::PI - z) / (z * z);
+			const double   xx = fstb::limit (x, -m, +m);
+			const double   u  = log (fabs (x) + 1);
+
+			return std::copysign (sin ((a * u + 1) * u), x);
+		}
+	};
+
+	class FncOvershoot
+	{
+	public:
+		double         operator () (double x)
+		{
+			return std::copysign (1 - cos (x) * exp (-fabs (x)), x);
+		}
+	};
+
+	template <class FNC>
+	using ShaperLong = dsp::shape::FncFiniteAsym <
+		-256, 256, FNC
+	>;
+
+	template <class FNC>
+	using ShaperStd = dsp::shape::FncFiniteAsym <
+		-20, 20, FNC, 2
+	>;
+
+	template <class FNC>
+	using ShaperShort = dsp::shape::FncFiniteAsym <
+		-8, 8, FNC, 4
+	>;
+
+	typedef ShaperLong <FncDiodeClipper> ShaperDiode;
+	typedef ShaperStd <FncProgClipper <
+		std::ratio < 2, 4>,
+		std::ratio < 4, 1>,
+		std::ratio < 2, 1>
+	> > ShaperProg1;
+	typedef ShaperStd <FncProgClipper <
+		std::ratio < 3, 4>,
+		std::ratio <10, 1>,
+		std::ratio < 0, 1>
+	> > ShaperProg2;
+	typedef ShaperStd <FncPuncherB <0> > ShaperPuncher1;
+	typedef ShaperStd <FncPuncherB <1> > ShaperPuncher2;
+	typedef ShaperShort <FncPuncherA> ShaperPuncher3;
+	typedef ShaperShort <FncOvershoot> ShaperOvershoot;
 
 	void           init_coef ();
 	void           set_next_block ();
@@ -136,10 +243,14 @@ private:
 	void           update_lpf_post ();
 	void           update_lpf_bias ();
 	void           distort_block (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_diode_clipper (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	template <typename S>
+	void           distort_block_shaper (S &shaper, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_asym1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_rcp1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_rcp2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_hardclip (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_bitcrush (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_slewrate_limit (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	ChannelArray   _chn_arr;
 	float          _sample_freq;
@@ -153,6 +264,7 @@ private:
 	float          _gain_post_old;
 	float          _bias;
 	float          _bias_old;
+	float          _slew_rate_limit; // Amplitude units per sample
 	Type           _type;
 	BufAlign       _buf_x1;
 	BufAlign       _buf_ovr;
@@ -163,8 +275,20 @@ private:
 	static std::array <double, _nbr_coef_21>
 	               _coef_21;
 
-	static ShaperDiodeClipper
+	static ShaperDiode
 	               _shaper_diode_clipper;
+	static ShaperProg1
+	               _shaper_prog1;
+	static ShaperProg2
+	               _shaper_prog2;
+	static ShaperPuncher1
+	               _shaper_puncher1;
+	static ShaperPuncher2
+	               _shaper_puncher2;
+	static ShaperPuncher3
+	               _shaper_puncher3;
+	static ShaperOvershoot
+	               _shaper_overshoot;
 
 	static const float
 	               _asym1_m_9;

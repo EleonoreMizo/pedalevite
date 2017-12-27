@@ -60,6 +60,7 @@ DistoStage::DistoStage ()
 ,	_gain_post_old (_gain_post)
 ,	_bias (0)
 ,	_bias_old (_bias)
+,	_slew_rate_limit (1)
 ,	_type (Type_DIODE_CLIPPER)
 ,	_buf_x1 ()
 ,	_buf_ovr ()
@@ -88,6 +89,9 @@ void	DistoStage::reset (double sample_freq, int max_block_size)
 	const int      mbs_align = (max_block_size + 3) & -4;
 	_buf_x1.resize (mbs_align);
 	_buf_ovr.resize (mbs_align * _ovrspl);
+
+	// Let pass a sine of 100 Hz at 0 dB
+	_slew_rate_limit = 100 * _inv_fs;
 
 	clear_buffers ();
 }
@@ -240,6 +244,7 @@ void	DistoStage::clear_buffers ()
 		chn._lpf_env.clear_buffers ();
 		chn._us.clear_buffers ();
 		chn._ds.clear_buffers ();
+		chn._slew_rate_val = 0;
 	}
 
 	set_next_block ();
@@ -356,10 +361,43 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 	switch (_type)
 	{
 	case Type_DIODE_CLIPPER:
-		distort_block_diode_clipper (chn, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_shaper_diode_clipper, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_ASYM1:
 		distort_block_asym1 (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_PROG1:
+		distort_block_shaper (_shaper_prog1, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_PROG2:
+		distort_block_shaper (_shaper_prog2, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_PROG3:
+		distort_block_rcp1 (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_SUDDEN:
+		distort_block_rcp2 (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_HARDCLIP:
+		distort_block_hardclip (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_PUNCHER1:
+		distort_block_shaper (_shaper_puncher1, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_PUNCHER2:
+		distort_block_shaper (_shaper_puncher2, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_PUNCHER3:
+		distort_block_shaper (_shaper_puncher3, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_OVERSHOOT:
+		distort_block_shaper (_shaper_overshoot, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_BITCRUSH:
+		distort_block_bitcrush (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_SLEWRATE:
+		distort_block_slewrate_limit (chn, dst_ptr, src_ptr, nbr_spl);
 		break;
 
 	default:
@@ -371,11 +409,12 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 
 
 
-void	DistoStage::distort_block_diode_clipper (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+template <typename S>
+void	DistoStage::distort_block_shaper (S &shaper, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		dst_ptr [pos] = _shaper_diode_clipper (src_ptr [pos]);
+		dst_ptr [pos] = shaper (src_ptr [pos]);
 	}
 }
 
@@ -454,7 +493,7 @@ void	DistoStage::distort_block_rcp2 (Channel &chn, float dst_ptr [], const float
 
 		const auto     a = fstb::ToolsSimd::abs (x);
 		const auto     m = fstb::ToolsSimd::max_f32 (a, t);
-		const auto     f = fstb::ToolsSimd::rcp_approx (m);
+		const auto     f = t * fstb::ToolsSimd::rcp_approx (m);
 		const auto     g = f * (two - f);
 		x *= g;
 
@@ -464,11 +503,92 @@ void	DistoStage::distort_block_rcp2 (Channel &chn, float dst_ptr [], const float
 
 
 
+void	DistoStage::distort_block_hardclip (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
+	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
+
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+
+		x = fstb::ToolsSimd::max_f32 (x, m1);
+		x = fstb::ToolsSimd::min_f32 (x, p1);
+
+		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+	}
+}
+
+
+
+void	DistoStage::distort_block_bitcrush (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const float    s = 4;
+	const auto     scale     = fstb::ToolsSimd::set1_f32 (      s);
+	const auto     scale_inv = fstb::ToolsSimd::set1_f32 (1.f / s);
+	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
+	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
+
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
+
+		x  = fstb::ToolsSimd::max_f32 (x, m1);
+		x  = fstb::ToolsSimd::min_f32 (x, p1);
+		x *= scale;
+		x  = fstb::ToolsSimd::conv_s32_to_f32 (
+			fstb::ToolsSimd::round_f32_to_s32 (x)
+		);
+		x *= scale_inv;
+
+		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
+	}
+}
+
+
+
+void	DistoStage::distort_block_slewrate_limit (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	float          state = chn._slew_rate_val;
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		const float    x   = src_ptr [pos];
+		const float    dif = x - state;
+		if (fabs (dif) < _slew_rate_limit)
+		{
+			state = x;
+		}
+		else
+		{
+			if (dif > 0)
+			{
+				state += _slew_rate_limit;
+			}
+			else
+			{
+				state -= _slew_rate_limit;
+			}
+		}
+		dst_ptr [pos] = state;
+	}
+
+	chn._slew_rate_val = state;
+}
+
+
+
 bool	DistoStage::_coef_init_flag = false;
 std::array <double, DistoStage::_nbr_coef_42>	DistoStage::_coef_42;
 std::array <double, DistoStage::_nbr_coef_21>	DistoStage::_coef_21;
 
-DistoStage::ShaperDiodeClipper	DistoStage::_shaper_diode_clipper;
+DistoStage::ShaperDiode	DistoStage::_shaper_diode_clipper;
+DistoStage::ShaperProg1	DistoStage::_shaper_prog1;
+DistoStage::ShaperProg2	DistoStage::_shaper_prog2;
+DistoStage::ShaperPuncher1	DistoStage::_shaper_puncher1;
+DistoStage::ShaperPuncher2	DistoStage::_shaper_puncher2;
+DistoStage::ShaperPuncher3	DistoStage::_shaper_puncher3;
+DistoStage::ShaperOvershoot	DistoStage::_shaper_overshoot;
 
 const float	DistoStage::_asym1_m_9  = 1.f / 9;
 const float	DistoStage::_asym1_m_2  = 1.f / 2;
