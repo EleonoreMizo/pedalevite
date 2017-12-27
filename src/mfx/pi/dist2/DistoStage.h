@@ -184,14 +184,15 @@ private:
 	template <int N>
 	class FncPuncherB
 	{
+		static_assert ((N >= 0), "");
 	public:
 		double         operator () (double x)
 		{
-			const double   m  = 20;
+			const double   m  = 20; // Range
 			const double   z  = log (m + 1);
 			const double   a  = ((1.5 + N) * fstb::PI - z) / (z * z);
 			const double   xx = fstb::limit (x, -m, +m);
-			const double   u  = log (fabs (x) + 1);
+			const double   u  = log (fabs (xx) + 1);
 
 			return std::copysign (sin ((a * u + 1) * u), x);
 		}
