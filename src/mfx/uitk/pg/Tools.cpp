@@ -187,7 +187,10 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 
 	if (fx_name_ptr != 0)
 	{
-		std::string    pi_type_name = desc_pi.get_name ();
+		// Displays the main plug-in name, never the dry/wet mixer
+		const piapi::PluginDescInterface &  desc_pi_main =
+			model.get_model_desc (slot._pi_model);
+		std::string    pi_type_name = desc_pi_main.get_name ();
 
 		pi_type_name = pi::param::Tools::print_name_bestfit (
 			rem_pix_fx_name, pi_type_name.c_str (),
