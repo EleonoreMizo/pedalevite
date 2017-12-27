@@ -80,7 +80,7 @@ private:
 		1
 	> Filter0;
 	typedef dsp::iir::AllPass2p	Filter1;
-	typedef dsp::BandSplitAllPassPair <Filter0, Filter1, false> BandSplitApp;
+	typedef dsp::BandSplitAllPassPair <Filter0, Filter1, true> BandSplitApp;
 	typedef std::array <BandSplitApp, piapi::PluginInterface::_max_nbr_chn> SplitArray;
 
 	void           update_filter ();
