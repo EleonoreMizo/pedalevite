@@ -2160,6 +2160,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.h">
       <Filter>mfx\pi\phase2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\param\TplEnumEvol.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3046,6 +3049,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.cpp">
       <Filter>mfx\pi\phase2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\param\TplEnumEvol.cpp">
+      <Filter>mfx\pi\param</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
