@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/adrv/DriverInterface.h"
 #include "mfx/uitk/pg/Levels.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -54,8 +55,9 @@ namespace pg
 
 
 
-Levels::Levels (PageSwitcher &page_switcher)
+Levels::Levels (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 :	_page_switcher (page_switcher)
+,	_snd_drv (snd_drv)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -133,11 +135,12 @@ void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	_page_ptr->push_back (_dsp_sptr);
 	_page_ptr->push_back (_dsp_val_sptr);
 
-	PageMgrInterface::NavLocList  nav_list (4);
-	nav_list [0]._node_id = Entry_VUM_IN;
-	nav_list [1]._node_id = Entry_LVL_OUT;
-	nav_list [2]._node_id = Entry_VUM_OUT;
-	nav_list [3]._node_id = Entry_CHN;
+	PageMgrInterface::NavLocList  nav_list;
+	PageMgrInterface::add_nav (nav_list, Entry_VUM_IN );
+	PageMgrInterface::add_nav (nav_list, Entry_LVL_OUT);
+	PageMgrInterface::add_nav (nav_list, Entry_VUM_OUT);
+	PageMgrInterface::add_nav (nav_list, Entry_CHN    );
+	PageMgrInterface::add_nav (nav_list, Entry_DSP_TXT);
 	page.set_nav_layout (nav_list);
 	page.jump_to (Entry_LVL_OUT);
 
@@ -201,6 +204,10 @@ MsgHandlerInterface::EvtProp	Levels::do_handle_evt (const NodeEvt &evt)
 				{
 					c._clip_flag = false;
 				}
+				refresh_display ();
+				break;
+			case Entry_DSP_TXT:
+				_snd_drv.restart ();
 				refresh_display ();
 				break;
 			default:

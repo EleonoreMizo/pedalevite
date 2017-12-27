@@ -45,6 +45,11 @@ namespace mfx
 
 class MeterResult;
 
+namespace adrv
+{
+	class DriverInterface;
+}
+
 namespace uitk
 {
 
@@ -63,7 +68,7 @@ class Levels
 
 public:
 
-	explicit       Levels (PageSwitcher &page_switcher);
+	explicit       Levels (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv);
 	virtual        ~Levels () = default;
 
 
@@ -133,6 +138,8 @@ private:
 	                conv_nbr_chn_to_str (int nbr_pins, int nbr_chn);
 
 	PageSwitcher & _page_switcher;
+	adrv::DriverInterface &
+	               _snd_drv;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
