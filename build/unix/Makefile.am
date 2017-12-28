@@ -672,16 +672,16 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/tuner/Tuner.h \
         ../../src/mfx/pi/tuner/TunerDesc.cpp \
         ../../src/mfx/pi/tuner/TunerDesc.h \
-        ../../src/mfx/pi/wha1/Param.h \
-        ../../src/mfx/pi/wha1/Wha.cpp \
-        ../../src/mfx/pi/wha1/Wha.h \
-        ../../src/mfx/pi/wha1/WhaDesc.cpp \
-        ../../src/mfx/pi/wha1/WhaDesc.h \
-        ../../src/mfx/pi/wha2/Param.h \
-        ../../src/mfx/pi/wha2/Wha2.cpp \
-        ../../src/mfx/pi/wha2/Wha2.h \
-        ../../src/mfx/pi/wha2/Wha2Desc.cpp \
-        ../../src/mfx/pi/wha2/Wha2Desc.h \
+        ../../src/mfx/pi/wah1/Param.h \
+        ../../src/mfx/pi/wah1/Wah.cpp \
+        ../../src/mfx/pi/wah1/Wah.h \
+        ../../src/mfx/pi/wah1/WahDesc.cpp \
+        ../../src/mfx/pi/wah1/WahDesc.h \
+        ../../src/mfx/pi/wah2/Param.h \
+        ../../src/mfx/pi/wah2/Wah2.cpp \
+        ../../src/mfx/pi/wah2/Wah2.h \
+        ../../src/mfx/pi/wah2/Wah2Desc.cpp \
+        ../../src/mfx/pi/wah2/Wah2Desc.h \
         ../../src/mfx/pi/export.cpp \
         ../../src/mfx/pi/export.h \
         ../../src/mfx/pi/ParamDescSet.cpp \

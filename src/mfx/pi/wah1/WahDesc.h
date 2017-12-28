@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        WhaDesc.h
+        WahDesc.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_wha1_WhaDesc_HEADER_INCLUDED)
-#define mfx_pi_wha1_WhaDesc_HEADER_INCLUDED
+#if ! defined (mfx_pi_wah1_WahDesc_HEADER_INCLUDED)
+#define mfx_pi_wah1_WahDesc_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,12 +36,12 @@ namespace mfx
 {
 namespace pi
 {
-namespace wha1
+namespace wah1
 {
 
 
 
-class WhaDesc
+class WahDesc
 :	public piapi::PluginDescInterface
 {
 
@@ -49,8 +49,8 @@ class WhaDesc
 
 public:
 
-	               WhaDesc ();
-	virtual        ~WhaDesc () = default;
+	               WahDesc ();
+	virtual        ~WahDesc () = default;
 
 	ParamDescSet & use_desc_set ();
 
@@ -85,26 +85,26 @@ private:
 
 private:
 
-	               WhaDesc (const WhaDesc &other)           = delete;
-	WhaDesc &      operator = (const WhaDesc &other)        = delete;
-	bool           operator == (const WhaDesc &other) const = delete;
-	bool           operator != (const WhaDesc &other) const = delete;
+	               WahDesc (const WahDesc &other)           = delete;
+	WahDesc &      operator = (const WahDesc &other)        = delete;
+	bool           operator == (const WahDesc &other) const = delete;
+	bool           operator != (const WahDesc &other) const = delete;
 
-}; // class WhaDesc
+}; // class WahDesc
 
 
 
-}  // namespace wha1
+}  // namespace wah1
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/wha1/WhaDesc.hpp"
+//#include "mfx/pi/wah1/WahDesc.hpp"
 
 
 
-#endif   // mfx_pi_wha1_WhaDesc_HEADER_INCLUDED
+#endif   // mfx_pi_wah1_WahDesc_HEADER_INCLUDED
 
 
 

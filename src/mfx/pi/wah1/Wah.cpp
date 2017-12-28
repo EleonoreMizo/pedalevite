@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Wha.cpp
+        Wah.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -26,8 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/wha1/Param.h"
-#include "mfx/pi/wha1/Wha.h"
+#include "mfx/pi/wah1/Param.h"
+#include "mfx/pi/wah1/Wah.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -41,7 +41,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace wha1
+namespace wah1
 {
 
 
@@ -50,7 +50,7 @@ namespace wha1
 
 
 
-Wha::Wha ()
+Wah::Wah ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
@@ -80,14 +80,14 @@ Wha::Wha ()
 
 
 
-piapi::PluginInterface::State	Wha::do_get_state () const
+piapi::PluginInterface::State	Wah::do_get_state () const
 {
 	return _state;
 }
 
 
 
-double	Wha::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
+double	Wah::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
 	assert (categ == piapi::ParamCateg_GLOBAL);
 
@@ -96,7 +96,7 @@ double	Wha::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) c
 
 
 
-int	Wha::do_reset (double sample_freq, int max_buf_len, int &latency)
+int	Wah::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
 	_sample_freq = float (sample_freq);
@@ -115,14 +115,14 @@ int	Wha::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	Wha::do_clean_quick ()
+void	Wah::do_clean_quick ()
 {
 	clear_buffers ();
 }
 
 
 
-void	Wha::do_process_block (ProcInfo &proc)
+void	Wah::do_process_block (ProcInfo &proc)
 {
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -216,7 +216,7 @@ void	Wha::do_process_block (ProcInfo &proc)
 
 
 
-void	Wha::clear_buffers ()
+void	Wah::clear_buffers ()
 {
 	for (auto &chn : _filter_arr)
 	{
@@ -226,7 +226,7 @@ void	Wha::clear_buffers ()
 
 
 
-}  // namespace wha1
+}  // namespace wah1
 }  // namespace pi
 }  // namespace mfx
 

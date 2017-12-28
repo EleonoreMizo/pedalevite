@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Wha2.cpp
+        Wah2.cpp
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -28,8 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/wha2/Param.h"
-#include "mfx/pi/wha2/Wha2.h"
+#include "mfx/pi/wah2/Param.h"
+#include "mfx/pi/wah2/Wah2.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -45,7 +45,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace wha2
+namespace wah2
 {
 
 
@@ -54,7 +54,7 @@ namespace wha2
 
 
 
-Wha2::Wha2 ()
+Wah2::Wah2 ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
@@ -99,14 +99,14 @@ Wha2::Wha2 ()
 
 
 
-piapi::PluginInterface::State	Wha2::do_get_state () const
+piapi::PluginInterface::State	Wah2::do_get_state () const
 {
 	return _state;
 }
 
 
 
-double	Wha2::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
+double	Wah2::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
 	assert (categ == piapi::ParamCateg_GLOBAL);
 
@@ -115,7 +115,7 @@ double	Wha2::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) 
 
 
 
-int	Wha2::do_reset (double sample_freq, int max_buf_len, int &latency)
+int	Wah2::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
 
@@ -139,14 +139,14 @@ int	Wha2::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	Wha2::do_clean_quick ()
+void	Wah2::do_clean_quick ()
 {
 	clear_buffers ();
 }
 
 
 
-void	Wha2::do_process_block (ProcInfo &proc)
+void	Wah2::do_process_block (ProcInfo &proc)
 {
 	const int      nbr_chn_src =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
@@ -203,7 +203,7 @@ void	Wha2::do_process_block (ProcInfo &proc)
 
 
 
-void	Wha2::Channel::clear_buffers ()
+void	Wah2::Channel::clear_buffers ()
 {
 	_hpf.clear_buffers ();
 	for (auto &x : _mem_x) { x = 0; }
@@ -212,7 +212,7 @@ void	Wha2::Channel::clear_buffers ()
 
 
 
-void	Wha2::clear_buffers ()
+void	Wah2::clear_buffers ()
 {
 	for (auto &chn : _chn_arr)
 	{
@@ -222,7 +222,7 @@ void	Wha2::clear_buffers ()
 
 
 
-void	Wha2::update_param (bool force_flag)
+void	Wah2::update_param (bool force_flag)
 {
 	if (_param_change_flag (true) || force_flag)
 	{
@@ -247,7 +247,7 @@ void	Wha2::update_param (bool force_flag)
 
 
 
-void	Wha2::update_model ()
+void	Wah2::update_model ()
 {
 	const Spec &   spec = _spec_arr [_model];
 
@@ -290,7 +290,7 @@ void	Wha2::update_model ()
 
 
 
-void	Wha2::update_model (float f_hp, float f0, float q, float gf, float gi, float gbpf)
+void	Wah2::update_model (float f_hp, float f0, float q, float gf, float gi, float gbpf)
 {
 	// High-pass filter
 	// BJT forward gain worked in here to save extra multiplications in
@@ -352,7 +352,7 @@ void	Wha2::update_model (float f_hp, float f0, float q, float gf, float gi, floa
 
 
 
-void	Wha2::process_reso (Channel &chn, float spl_ptr [], int nbr_spl) const
+void	Wah2::process_reso (Channel &chn, float spl_ptr [], int nbr_spl) const
 {
 	float          x1 = chn._mem_x [0];
 	float          x2 = chn._mem_x [1];
@@ -392,21 +392,21 @@ void	Wha2::process_reso (Channel &chn, float spl_ptr [], int nbr_spl) const
 
 
 
-float	Wha2::para (float a, float b)
+float	Wah2::para (float a, float b)
 {
 	return (a * b) / (a + b);
 }
 
 
 
-float	Wha2::para (float a, float b, float c)
+float	Wah2::para (float a, float b, float c)
 {
 	return para (para (a, b), c);
 }
 
 
 
-float	Wha2::shaper (float x)
+float	Wah2::shaper (float x)
 {
 	x = fstb::limit (x, -1.12f, 1.2f);
 
@@ -429,7 +429,7 @@ float	Wha2::shaper (float x)
 
 
 
-const Wha2::Spec	Wha2::_spec_arr [6] =
+const Wah2::Spec	Wah2::_spec_arr [6] =
 {
 	{ 22e3f, 100e3f, 470e3f, 390,  250, 10e-9f, 10e-9f,  68e3f,  33e3f, Spec::RpPar_RE   , 0.50f, 1.5e3f },
 	{ 22e3f, 100e3f, 470e3f, 510,  650, 10e-9f, 10e-9f,  68e3f,  33e3f, Spec::RpPar_RI   , 0.50f, 1.5e3f },
@@ -441,7 +441,7 @@ const Wha2::Spec	Wha2::_spec_arr [6] =
 
 
 
-}  // namespace wha2
+}  // namespace wah2
 }  // namespace pi
 }  // namespace mfx
 

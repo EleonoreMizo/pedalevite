@@ -82,10 +82,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/tremh/HarmTremDesc.h"
 #include "mfx/pi/tuner/Tuner.h"
 #include "mfx/pi/tuner/TunerDesc.h"
-#include "mfx/pi/wha1/Wha.h"
-#include "mfx/pi/wha1/WhaDesc.h"
-#include "mfx/pi/wha2/Wha2.h"
-#include "mfx/pi/wha2/Wha2Desc.h"
+#include "mfx/pi/wah1/Wah.h"
+#include "mfx/pi/wah1/WahDesc.h"
+#include "mfx/pi/wah2/Wah2.h"
+#include "mfx/pi/wah2/Wah2Desc.h"
 #include "mfx/pi/export.h"
 
 #include <cassert>
@@ -109,7 +109,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::dist1::DistoSimpleDesc , mfx::pi::dist1::DistoSimple      >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::freqsh::FreqShiftDesc  , mfx::pi::freqsh::FrequencyShifter>::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::trem1::TremoloDesc     , mfx::pi::trem1::Tremolo          >::create ()
-		,	mfx::piapi::FactoryTpl <mfx::pi::wha1::WhaDesc          , mfx::pi::wha1::Wha               >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::wah1::WahDesc          , mfx::pi::wah1::Wah               >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::dtone1::DistToneDesc   , mfx::pi::dtone1::DistTone        >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::iifix::IIFixDesc       , mfx::pi::iifix::IIFix            >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::flancho::FlanchoDesc   , mfx::pi::flancho::Flancho        >::create ()
@@ -129,7 +129,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::nzbl::NoiseBleachDesc  , mfx::pi::nzbl::NoiseBleach       >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::nzcl::NoiseChlorineDesc, mfx::pi::nzcl::NoiseChlorine     >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::click::ClickDesc       , mfx::pi::click::Click            >::create ()
-		,	mfx::piapi::FactoryTpl <mfx::pi::wha2::Wha2Desc         , mfx::pi::wha2::Wha2              >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::wah2::Wah2Desc         , mfx::pi::wah2::Wah2              >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::ramp::RampDesc         , mfx::pi::ramp::Ramp              >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::dly2::Delay2Desc       , mfx::pi::dly2::Delay2            >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::colorme::ColorMeDesc   , mfx::pi::colorme::ColorMe        >::create ()

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Wha2Desc.h
+        Wah2Desc.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_wha2_Wha2Desc_HEADER_INCLUDED)
-#define mfx_pi_wha2_Wha2Desc_HEADER_INCLUDED
+#if ! defined (mfx_pi_wah2_Wah2Desc_HEADER_INCLUDED)
+#define mfx_pi_wah2_Wah2Desc_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,12 +36,12 @@ namespace mfx
 {
 namespace pi
 {
-namespace wha2
+namespace wah2
 {
 
 
 
-class Wha2Desc
+class Wah2Desc
 :	public piapi::PluginDescInterface
 {
 
@@ -58,8 +58,8 @@ public:
 		Channels_NBR_ELT
 	};
 
-	explicit       Wha2Desc ();
-	virtual        ~Wha2Desc () = default;
+	explicit       Wah2Desc ();
+	virtual        ~Wah2Desc () = default;
 
 	ParamDescSet & use_desc_set ();
 
@@ -94,27 +94,26 @@ private:
 
 private:
 
-	               Wha2Desc (const Wha2Desc &other)    = delete;
-	Wha2Desc &
-	               operator = (const Wha2Desc &other)        = delete;
-	bool           operator == (const Wha2Desc &other) const = delete;
-	bool           operator != (const Wha2Desc &other) const = delete;
+	               Wah2Desc (const Wah2Desc &other)    = delete;
+	Wah2Desc &    operator = (const Wah2Desc &other)        = delete;
+	bool           operator == (const Wah2Desc &other) const = delete;
+	bool           operator != (const Wah2Desc &other) const = delete;
 
-}; // class Wha2Desc
-
+}; // class Wah2Desc
 
 
-}  // namespace wha2
+
+}  // namespace wah2
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/wha2/Wha2Desc.hpp"
+//#include "mfx/pi/wah2/Wah2Desc.hpp"
 
 
 
-#endif   // mfx_pi_wha2_Wha2Desc_HEADER_INCLUDED
+#endif   // mfx_pi_wah2_Wah2Desc_HEADER_INCLUDED
 
 
 

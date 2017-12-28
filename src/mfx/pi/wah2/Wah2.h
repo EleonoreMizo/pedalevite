@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Wha2.h
+        Wah2.h
         Author: Laurent de Soras, 2017
 
 Original model and algorithm by Transmogrifox
@@ -19,8 +19,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_wha2_Wha2_HEADER_INCLUDED)
-#define mfx_pi_wha2_Wha2_HEADER_INCLUDED
+#if ! defined (mfx_pi_wah2_Wah2_HEADER_INCLUDED)
+#define mfx_pi_wah2_Wah2_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -35,7 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/iir/Biquad.h"
-#include "mfx/pi/wha2/Wha2Desc.h"
+#include "mfx/pi/wah2/Wah2Desc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -48,12 +48,12 @@ namespace mfx
 {
 namespace pi
 {
-namespace wha2
+namespace wah2
 {
 
 
 
-class Wha2
+class Wah2
 :	public piapi::PluginInterface
 {
 
@@ -61,8 +61,8 @@ class Wha2
 
 public:
 
-	               Wha2 ();
-	virtual        ~Wha2 () = default;
+	               Wah2 ();
+	virtual        ~Wah2 () = default;
 
 
 
@@ -136,7 +136,7 @@ private:
 
 	State          _state;
 
-	Wha2Desc       _desc;
+	Wah2Desc       _desc;
 	ParamStateSet  _state_set;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 	float          _inv_fs;             // 1 / _sample_freq
@@ -171,26 +171,26 @@ private:
 
 private:
 
-	               Wha2 (const Wha2 &other)        = delete;
-	Wha2 &   operator = (const Wha2 &other)        = delete;
-	bool           operator == (const Wha2 &other) const = delete;
-	bool           operator != (const Wha2 &other) const = delete;
+	               Wah2 (const Wah2 &other)        = delete;
+	Wah2 &   operator = (const Wah2 &other)        = delete;
+	bool           operator == (const Wah2 &other) const = delete;
+	bool           operator != (const Wah2 &other) const = delete;
 
-}; // class Wha2
+}; // class Wah2
 
 
 
-}  // namespace wha2
+}  // namespace wah2
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/wha2/Wha2.hpp"
+//#include "mfx/pi/wah2/Wah2.hpp"
 
 
 
-#endif   // mfx_pi_wha2_Wha2_HEADER_INCLUDED
+#endif   // mfx_pi_wah2_Wah2_HEADER_INCLUDED
 
 
 

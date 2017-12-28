@@ -613,9 +613,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\LfoType.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\Param.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Param.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Wha2.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\wha2\Wha2Desc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wah2\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wah2\Wah2.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wah2\Wah2Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\ToolsParam.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\EventNoteOff.h" />
@@ -672,9 +672,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\tuner\FreqAnalyser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tuner\Tuner.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tuner\TunerDesc.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\wha1\Param.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\wha1\Wha.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\wha1\WhaDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wah1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wah1\Wah.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\wah1\WahDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\PluginPool.h" />
     <ClInclude Include="..\..\..\src\mfx\ProcessingContext.h" />
     <ClInclude Include="..\..\..\src\mfx\ProcessingContextNode.h" />
@@ -986,8 +986,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTrem.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\wha2\Wha2.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\wha2\Wha2Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginDescInterface.cpp" />
@@ -1015,8 +1015,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\tuner\FreqAnalyser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tuner\Tuner.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tuner\TunerDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\wha1\Wha.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\wha1\WhaDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\wah1\Wah.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\wah1\WahDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\PluginPool.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProcessingContextNode.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\ContainerInterface.cpp" />

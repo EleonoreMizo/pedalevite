@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_wha1_Param_HEADER_INCLUDED)
-#define mfx_pi_wha1_Param_HEADER_INCLUDED
+#if ! defined (mfx_pi_wah1_Param_HEADER_INCLUDED)
+#define mfx_pi_wah1_Param_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -33,7 +33,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace wha1
+namespace wah1
 {
 
 
@@ -50,17 +50,17 @@ enum Param
 
 
 
-}  // namespace wha1
+}  // namespace wah1
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/wha1/Param.hpp"
+//#include "mfx/pi/wah1/Param.hpp"
 
 
 
-#endif   // mfx_pi_wha1_Param_HEADER_INCLUDED
+#endif   // mfx_pi_wah1_Param_HEADER_INCLUDED
 
 
 

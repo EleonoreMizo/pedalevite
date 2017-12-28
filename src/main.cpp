@@ -53,7 +53,7 @@
 #include "mfx/pi/param/Tools.h"
 #include "mfx/pi/trem1/Param.h"
 #include "mfx/pi/trem1/Waveform.h"
-#include "mfx/pi/wha1/Param.h"
+#include "mfx/pi/wah1/Param.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
@@ -959,8 +959,8 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
 			preset._routing._chain.push_back (preset.gen_slot_id ());
 			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Wha";
-			slot_ptr->_pi_model = "wha1";
+			slot_ptr->_label    = "Wah";
+			slot_ptr->_pi_model = "wah1";
 			slot_ptr->_settings_mixer._param_list =
 				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
 			mfx::doc::PluginSettings & pi_settings =
@@ -979,7 +979,7 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0.35f;	// Limits the range to the CryBaby's
 			cls._bind_sptr->_amp           = 0.75f - cls._bind_sptr->_base;
-			pi_settings._map_param_ctrl [mfx::pi::wha1::Param_FREQ] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::wah1::Param_FREQ] = cls;
 
 			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
 			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
@@ -989,12 +989,12 @@ void	Context::create_default_bank (mfx::doc::Bank &bank)
 			cls._bind_sptr->_u2b_flag      = false;
 			cls._bind_sptr->_base          = 0;
 			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::wha1::Param_Q] = cls;
+			pi_settings._map_param_ctrl [mfx::pi::wah1::Param_Q] = cls;
 
 #if 0
 			mfx::doc::ParamPresentation pp;
 			pp._disp_mode = mfx::doc::ParamPresentation::DispMode_NOTE;
-			pi_settings._map_param_pres [mfx::pi::wha1::Param_FREQ] = pp;
+			pi_settings._map_param_pres [mfx::pi::wah1::Param_FREQ] = pp;
 #endif
 		}
 		{
