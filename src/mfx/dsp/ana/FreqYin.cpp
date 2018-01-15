@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FreqAnalyser.cpp
+        FreqYin.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,8 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/tuner/FreqAnalyser.h"
-#if defined (mfx_pi_tuner_USE_SIMD)
+#include "mfx/dsp/ana/FreqYin.h"
+#if defined (mfx_dsp_ana_USE_SIMD)
 #include "fstb/ToolsSimd.h"
 #endif
 
@@ -39,9 +39,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace tuner
+namespace ana
 {
 
 
@@ -50,18 +50,18 @@ namespace tuner
 
 
 
-void	FreqAnalyser::set_sample_freq (double sample_freq)
+void	FreqYin::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
 	_sample_freq           = float (sample_freq);
 	_min_delta             = int (sample_freq / _max_freq);
 	_win_len               = int (sample_freq / _min_freq) + 1;
-#if defined (mfx_pi_tuner_USE_SIMD)
+#if defined (mfx_dsp_ana_USE_SIMD)
 	_win_len = (_win_len + 3) & -4;
 #endif
 	size_t         buf_len = 1 << int (ceil (log2 (_win_len * 3)));
-#if defined (mfx_pi_tuner_USE_SIMD)
+#if defined (mfx_dsp_ana_USE_SIMD)
 	assert ((buf_len & 3) == 0);
 	for (BufAlign &buf : _buf_arr)
 	{
@@ -81,9 +81,9 @@ void	FreqAnalyser::set_sample_freq (double sample_freq)
 
 
 
-void	FreqAnalyser::clear_buffers ()
+void	FreqYin::clear_buffers ()
 {
-#if defined (mfx_pi_tuner_USE_SIMD)
+#if defined (mfx_dsp_ana_USE_SIMD)
 	for (BufAlign &buf : _buf_arr)
 	{
 		memset (&buf [0], 0, sizeof (buf [0]));
@@ -100,7 +100,7 @@ void	FreqAnalyser::clear_buffers ()
 
 
 
-float	FreqAnalyser::process_block (const float spl_ptr [], int nbr_spl)
+float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
 	assert (spl_ptr != 0);
@@ -116,10 +116,10 @@ float	FreqAnalyser::process_block (const float spl_ptr [], int nbr_spl)
 
 
 
-float	FreqAnalyser::process_sample (float x)
+float	FreqYin::process_sample (float x)
 {
 	int            write_pos = _buf_pos + _win_len + _delta - 1;
-#if defined (mfx_pi_tuner_USE_SIMD)
+#if defined (mfx_dsp_ana_USE_SIMD)
 	for (int buf_index = 0; buf_index < 4; ++buf_index)
 	{
 		_buf_arr [buf_index] [(write_pos - buf_index) & _buf_mask] = x;
@@ -150,11 +150,7 @@ float	FreqAnalyser::process_sample (float x)
 
 
 
-// Alain de Chevigne, Hideki Kawahara
-// YIN, a fundamental frequency estimator for speech and music,
-// Acoustical Society of America, 2002
-// Implemented up to step 5.
-void	FreqAnalyser::analyse_sample ()
+void	FreqYin::analyse_sample ()
 {
 	if (_delta <= 1)
 	{
@@ -167,7 +163,7 @@ void	FreqAnalyser::analyse_sample ()
 	{
 		float          sum = 0;
 
-#if defined (mfx_pi_tuner_USE_SIMD)
+#if defined (mfx_dsp_ana_USE_SIMD)
 
 		auto           sum_v     = fstb::ToolsSimd::set_f32_zero ();
 		const int      p1_beg    = _buf_pos;
@@ -245,6 +241,8 @@ void	FreqAnalyser::analyse_sample ()
 
 /*
 
+Parabolic interpolation formula:
+
 f (x) = a * x^2 + b * x + c
 
 f (-1) = r1
@@ -277,8 +275,8 @@ x = (r1 - r3) * 0.5 / (r1 + r3 - 2 * r2)
 
 
 
-}  // namespace tuner
-}  // namespace pi
+}  // namespace ana
+}  // namespace dsp
 }  // namespace mfx
 
 

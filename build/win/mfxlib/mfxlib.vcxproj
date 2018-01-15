@@ -324,6 +324,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\Setup.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SignalPort.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Slot.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.h" />
@@ -677,7 +678,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\trem1\Tremolo.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\trem1\TremoloDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\trem1\Waveform.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\tuner\FreqAnalyser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tuner\Tuner.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tuner\TunerDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\wah1\Param.h" />
@@ -852,6 +852,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\Setup.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SignalPort.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Slot.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.cpp" />
@@ -1021,7 +1022,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplLin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\trem1\Tremolo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\trem1\TremoloDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\tuner\FreqAnalyser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tuner\Tuner.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tuner\TunerDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah1\Wah.cpp" />

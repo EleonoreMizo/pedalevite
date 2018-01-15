@@ -239,6 +239,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/SignalPort.h \
         ../../src/mfx/doc/Slot.cpp \
         ../../src/mfx/doc/Slot.h \
+        ../../src/mfx/dsp/ana/FreqYin.cpp \
+        ../../src/mfx/dsp/ana/FreqYin.h \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.cpp \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.h \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.hpp \
@@ -675,8 +677,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/tremh/HarmTremDesc.h \
         ../../src/mfx/pi/tremh/LfoType.h \
         ../../src/mfx/pi/tremh/Param.h \
-        ../../src/mfx/pi/tuner/FreqAnalyser.cpp \
-        ../../src/mfx/pi/tuner/FreqAnalyser.h \
         ../../src/mfx/pi/tuner/Tuner.cpp \
         ../../src/mfx/pi/tuner/Tuner.h \
         ../../src/mfx/pi/tuner/TunerDesc.cpp \

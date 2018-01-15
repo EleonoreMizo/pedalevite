@@ -1,7 +1,13 @@
 /*****************************************************************************
 
-        FreqAnalyser.h
+        FreqYin.h
         Author: Laurent de Soras, 2016
+
+Based on:
+Alain de Chevigne, Hideki Kawahara
+YIN, a fundamental frequency estimator for speech and music,
+Acoustical Society of America, 2002
+Implemented up to step 5.
 
 --- Legal stuff ---
 
@@ -16,8 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_tuner_FreqAnalyser_HEADER_INCLUDED)
-#define mfx_pi_tuner_FreqAnalyser_HEADER_INCLUDED
+#if ! defined (mfx_dsp_ana_FreqYin_HEADER_INCLUDED)
+#define mfx_dsp_ana_FreqYin_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,9 +33,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#define mfx_pi_tuner_USE_SIMD
+#define mfx_dsp_ana_USE_SIMD
 
-#if defined (mfx_pi_tuner_USE_SIMD)
+#if defined (mfx_dsp_ana_USE_SIMD)
 #include "fstb/AllocAlign.h"
 
 #include <array>
@@ -41,22 +47,22 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace tuner
+namespace ana
 {
 
 
 
-class FreqAnalyser
+class FreqYin
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               FreqAnalyser ()  = default;
-	virtual        ~FreqAnalyser () = default;
+	               FreqYin ()  = default;
+	virtual        ~FreqYin () = default;
 
 	void           set_sample_freq (double sample_freq);
 	void           clear_buffers ();
@@ -83,7 +89,7 @@ private:
 	const float    _smoothing   = 0.125f;  // Smoothing coefficient (LERP between the new and accumulated values)
 	const float    _smooth_thr  = 0.02f;// Smoothing is done only on close values (threshold is relative)
 
-#if defined (mfx_pi_tuner_USE_SIMD)
+#if defined (mfx_dsp_ana_USE_SIMD)
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 	std::array <BufAlign, 4>
 	               _buf_arr;
@@ -110,26 +116,26 @@ private:
 
 private:
 
-	               FreqAnalyser (const FreqAnalyser &other)      = delete;
-	FreqAnalyser & operator = (const FreqAnalyser &other)        = delete;
-	bool           operator == (const FreqAnalyser &other) const = delete;
-	bool           operator != (const FreqAnalyser &other) const = delete;
+	               FreqYin (const FreqYin &other)           = delete;
+	FreqYin &      operator = (const FreqYin &other)        = delete;
+	bool           operator == (const FreqYin &other) const = delete;
+	bool           operator != (const FreqYin &other) const = delete;
 
-}; // class FreqAnalyser
+}; // class FreqYin
 
 
 
-}  // namespace tuner
-}  // namespace pi
+}  // namespace ana
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-//#include "mfx/pir/tuner/FreqAnalyser.hpp"
+//#include "mfx/dsp/ana/FreqYin.hpp"
 
 
 
-#endif   // mfx_pi_tuner_FreqAnalyser_HEADER_INCLUDED
+#endif   // mfx_dsp_ana_FreqYin_HEADER_INCLUDED
 
 
 

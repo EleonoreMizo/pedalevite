@@ -199,6 +199,9 @@
     <Filter Include="mfx\pi\wah2">
       <UniqueIdentifier>{17893118-e8da-4cf8-8dc7-80fe06c5b2c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\ana">
+      <UniqueIdentifier>{b6355eea-6990-4019-b62d-6760d7bb342b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1221,9 +1224,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\freqsh\PhaseHalfPi.h">
       <Filter>mfx\pi\freqsh</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\tuner\FreqAnalyser.h">
-      <Filter>mfx\pi\tuner</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\tuner\Tuner.h">
       <Filter>mfx\pi\tuner</Filter>
     </ClInclude>
@@ -2187,6 +2187,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym3.hpp">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -2551,9 +2554,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\freqsh\FrequencyShifter.cpp">
       <Filter>mfx\pi\freqsh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\tuner\FreqAnalyser.cpp">
-      <Filter>mfx\pi\tuner</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\tuner\Tuner.cpp">
       <Filter>mfx\pi\tuner</Filter>
@@ -3079,6 +3079,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.cpp">
       <Filter>mfx\dsp\dyn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYin.cpp">
+      <Filter>mfx\dsp\ana</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
