@@ -465,6 +465,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturateBipolar.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\Poly3L1Bias.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\Poly3L1Bias.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym1.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym1.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym2.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym2.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym3.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym3.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.hpp" />

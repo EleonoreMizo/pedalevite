@@ -420,6 +420,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/shape/MapSaturate.hpp \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.h \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.hpp \
+        ../../src/mfx/dsp/shape/WsInterFtorAsym1.h \
+        ../../src/mfx/dsp/shape/WsInterFtorAsym1.hpp \
+        ../../src/mfx/dsp/shape/WsInterFtorAsym2.h \
+        ../../src/mfx/dsp/shape/WsInterFtorAsym2.hpp \
+        ../../src/mfx/dsp/shape/WsInterFtorAsym3.h \
+        ../../src/mfx/dsp/shape/WsInterFtorAsym3.hpp \
         ../../src/mfx/dsp/BandSplitAllPassPair.h \
         ../../src/mfx/dsp/BandSplitAllPassPair.hpp \
         ../../src/mfx/dsp/FilterCascadeIdEven.h \
