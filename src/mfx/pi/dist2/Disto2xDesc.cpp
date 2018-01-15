@@ -254,7 +254,7 @@ void	Disto2xDesc::register_stage (int stage, int base)
 	param::TplEnumEvol * enu_ptr = new param::TplEnumEvol (
 		2,
 		"Arcsinh\nAsym 1\nProg 1\nProg 2\nProg 3\nSudden\nHardclip\nPuncher 1"
-		"\nPuncher 2\nPuncher 3\nOvershoot\nBitcrush\nSlew rate",
+		"\nPuncher 2\nPuncher 3\nOvershoot\nBitcrush\nSlew rate\nLopsided\nPorridge",
 		"Stage %d distortion type\nStage %d disto type\nStage %d type\nS%d type",
 		"",
 		stage,

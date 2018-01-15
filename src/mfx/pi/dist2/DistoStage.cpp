@@ -73,6 +73,8 @@ DistoStage::DistoStage ()
 	{
 		chn._us.set_coefs (&_coef_42 [0], &_coef_21 [0]);
 		chn._ds.set_coefs (&_coef_42 [0], &_coef_21 [0]);
+		chn._porridge_limiter.set_time (0.001f);
+		chn._porridge_limiter.set_level (1.0f);
 	}
 }
 
@@ -399,6 +401,12 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 	case Type_SLEWRATE:
 		distort_block_slewrate_limit (chn, dst_ptr, src_ptr, nbr_spl);
 		break;
+	case Type_LOPSIDED:
+		distort_block_shaper (_shaper_lopsided, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_PORRIDGE:
+		chn._porridge_limiter.process_block (dst_ptr, src_ptr, nbr_spl);
+		break;
 
 	default:
 		assert (false);
@@ -589,6 +597,7 @@ DistoStage::ShaperPuncher1	DistoStage::_shaper_puncher1;
 DistoStage::ShaperPuncher2	DistoStage::_shaper_puncher2;
 DistoStage::ShaperPuncher3	DistoStage::_shaper_puncher3;
 DistoStage::ShaperOvershoot	DistoStage::_shaper_overshoot;
+DistoStage::ShaperLopsided	DistoStage::_shaper_lopsided;
 
 const float	DistoStage::_asym1_m_9  = 1.f / 9;
 const float	DistoStage::_asym1_m_2  = 1.f / 2;

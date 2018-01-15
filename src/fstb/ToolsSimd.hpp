@@ -469,7 +469,7 @@ ToolsSimd::VectF32	ToolsSimd::sqrt (VectF32 v)
 		vreinterpretq_u32_f32 (v),
 		vreinterpretq_u32_f32 (v)
 	);
-	float32x4_t       rs      = vrsqrteq_f32 (v);
+	float32x4_t    rs      = vrsqrteq_f32 (v);
 	rs *= vrsqrtsq_f32 (v, rs * rs);
 	rs *= vrsqrtsq_f32 (v, rs * rs);
 	rs *= vrsqrtsq_f32 (v, rs * rs);
@@ -494,13 +494,26 @@ ToolsSimd::VectF32	ToolsSimd::sqrt_approx (VectF32 v)
 		vreinterpretq_u32_f32 (v),
 		vreinterpretq_u32_f32 (v)
 	);
-	float32x4_t       rs      = vrsqrteq_f32 (v);
+	float32x4_t    rs      = vrsqrteq_f32 (v);
 	rs *= vrsqrtsq_f32 (rs * v, rs);
 	const float32x4_t sqrt_a  = rs * v;
 	return vreinterpretq_f32_u32 (vandq_u32 (
 		vreinterpretq_u32_f32 (sqrt_a),
 		nz_flag
 	));
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::rsqrt_approx (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_rsqrt_ps (v);
+#elif fstb_IS (ARCHI, ARM)
+	float32x4_t    rs = vrsqrteq_f32 (v);
+	rs *= vrsqrtsq_f32 (rs * v, rs);
+	return rs;
 #endif // ff_arch_CPU
 }
 

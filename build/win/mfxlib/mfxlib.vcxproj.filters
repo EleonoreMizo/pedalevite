@@ -2163,6 +2163,12 @@
     <ClInclude Include="..\..\..\src\mfx\pi\param\TplEnumEvol.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.hpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3052,6 +3058,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplEnumEvol.cpp">
       <Filter>mfx\pi\param</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.cpp">
+      <Filter>mfx\dsp\dyn</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

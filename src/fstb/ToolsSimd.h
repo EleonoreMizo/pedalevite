@@ -158,6 +158,8 @@ public:
 	static inline VectF32
 	               sqrt_approx (VectF32 v);
 	static inline VectF32
+	               rsqrt_approx (VectF32 v);
+	static inline VectF32
 	               log2_approx (VectF32 v);
 	static inline VectF32
 	               exp2_approx (VectF32 v);

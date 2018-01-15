@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
+#include "mfx/dsp/dyn/LimiterRms.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
@@ -79,6 +80,8 @@ public:
 		Type_OVERSHOOT,
 		Type_BITCRUSH,
 		Type_SLEWRATE,
+		Type_LOPSIDED,
+		Type_PORRIDGE,
 
 		Type_NBR_ELT
 	};
@@ -130,6 +133,8 @@ private:
 		UpSpl          _us;
 		DwSpl          _ds;
 		float          _slew_rate_val = 0;
+		dsp::dyn::LimiterRms
+		               _porridge_limiter;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -203,6 +208,20 @@ private:
 	public:
 		double         operator () (double x)
 		{
+			const double   a   = exp (x - 1);
+			const double   b   = exp (-x);
+			const double   num = a - b - (1 / fstb::EXP1) + 1;
+			const double   den = a + b;
+
+			return (num / den);
+		}
+	};
+
+	class FncLopsided
+	{
+	public:
+		double         operator () (double x)
+		{
 			return std::copysign (1 - cos (x) * exp (-fabs (x)), x);
 		}
 	};
@@ -237,6 +256,7 @@ private:
 	typedef ShaperStd <FncPuncherB <1> > ShaperPuncher2;
 	typedef ShaperShort <FncPuncherA> ShaperPuncher3;
 	typedef ShaperShort <FncOvershoot> ShaperOvershoot;
+	typedef ShaperShort <FncLopsided> ShaperLopsided;
 
 	void           init_coef ();
 	void           set_next_block ();
@@ -290,6 +310,8 @@ private:
 	               _shaper_puncher3;
 	static ShaperOvershoot
 	               _shaper_overshoot;
+	static ShaperLopsided
+	               _shaper_lopsided;
 
 	static const float
 	               _asym1_m_9;

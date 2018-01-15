@@ -375,6 +375,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvHelper.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\SCPower.h" />
@@ -865,6 +867,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\Compander.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1p.cpp" />

@@ -309,6 +309,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dyn/EnvFollowerRmsSimple.hpp \
         ../../src/mfx/dsp/dyn/EnvHelper.h \
         ../../src/mfx/dsp/dyn/EnvHelper.hpp \
+        ../../src/mfx/dsp/dyn/LimiterRms.cpp \
+        ../../src/mfx/dsp/dyn/LimiterRms.h \
+        ../../src/mfx/dsp/dyn/LimiterRms.hpp \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold.cpp \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold.h \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.cpp \
