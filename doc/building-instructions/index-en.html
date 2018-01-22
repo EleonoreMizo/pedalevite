@@ -743,8 +743,8 @@ I will try later to do it to simplify the task.</p>
 <p>Download
 <a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian</a>, light
 version.
-Minimum recommended version is from 2016-11-25 (Jessie).
-I have not tried the new Stretch versions yet.
+Minimum recommended version is from 2017-11-29 (Stretch).
+Recent Jessie-based Raspbian should work too, with minor installation changes.
 No need to use NOOBS because we will have to remove it later.
 Anyway this remains technically possible.</p>
 <p>Unpack somewhere the <code>.img</code> file contained in the archive.</p>
@@ -802,9 +802,11 @@ interface subsystem:</p>
 <pre class="term">sudo raspi-config</pre>
 <p>Select <code>3 Boot Options</code>, then <code>B1 Desktop /
 CLI</code> and choose <code>Console</code>.
-Possibly go to <code>4. Internationalisation Options</code> and set your
+Possibly go to <code>4. Localisation Options</code> and set your
 language and keyboard preferences.
-Finally, hit the left arrow to select <code>Finish</code>.</p>
+Finally, hit the left arrow to select <code>Finish</code>.
+Reboot if required:</p>
+<pre class="term">sudo shutdown -r now</pre>
 
 
 
@@ -815,7 +817,8 @@ Finally, hit the left arrow to select <code>Finish</code>.</p>
 sudo apt-get -y dist-upgrade</pre>
 <p>This will take a while.
 Sometimes, a information message will block the operation.
-Scroll down and quit the text viewing program to continue.</p>
+Scroll down and quit the text viewing program to continue.
+No need to reboot once it is done, we’ll do it a bit later.</p>
 
 
 
@@ -845,7 +848,7 @@ Plug the audio output, then type:</p>
 
 <p>Install git, Jack2, ALSA and autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev
-sudo apt-get -y install git git-core autoconf</pre>
+sudo apt-get -y install git git-core autoconf insserv</pre>
 <p>wiringPi has its own installing procedure:</p>
 <pre class="term">git clone git://git.drogon.net/wiringPi
 cd wiringPi
@@ -883,9 +886,8 @@ Once done, run Pédale Vite for a quick check:</p>
 
 <h3><a id="soft-autorun"></a>Pédale Vite autostart</h3>
 
-<pre class="term">sudo cp /etc/init.d/skeleton /etc/init.d/pedalevite
-sudo chmod +x /etc/init.d/pedalevite
-sudo nano /etc/init.d/pedalevite</pre>
+<p>Create this file:</p>
+<pre class="term">sudo nano /etc/init.d/pedalevite</pre>
 <p>Modify the file the following way:</p>
 <pre class="term">#!/bin/sh
 # kFreeBSD do not accept scripts as interpreters, using #!/bin/sh and sourcing.
@@ -894,20 +896,15 @@ if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
 fi
 ### BEGIN INIT INFO
 # Provides:          pedalevite
-# Required-Start:    <span class="termhl">$local_fs</span>
-# Required-Stop:     <span class="termhl">$local_fs</span>
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: <span class="termhl">Starts and stops Pedale Vite</span>
-# Description:       <span class="termhl">This service is used to process the sound from a guitar</span>
+# Short-Description: Starts and stops Pedale Vite
+# Description:       This service is used to process the sound from a guitar
 ### END INIT INFO
 
-# Author: Foo Bar <foobar@baz.org>
-#
-# Please remove the "Author" lines above and replace them
-# with your own name if you copy and modify this script.
-
-<span class="termhl">case "$1" in
+case "$1" in
     start)
 	echo "Starting Pedale Vite"
 	/opt/pedalevite/bin/pedalevite &
@@ -922,9 +919,10 @@ fi
 	;;
 esac
 
-exit 0</span></pre>
+exit 0</pre>
 <p>Then:</p>
-<pre class="term">sudo update-rc.d pedalevite defaults</pre>
+<pre class="term">sudo chmod +x /etc/init.d/pedalevite
+sudo update-rc.d pedalevite defaults</pre>
 <p>Pédale Vite will run automatically at the next reboot.
 It can be run immediately, too:</p>
 <pre class="term">sudo /etc/init.d/pedalevite start</pre>
@@ -999,9 +997,9 @@ sudo ln -s /tmp /var/spool
 sudo ln -s /tmp /var/lock
 sudo rm /var/lib/systemd/random-seed
 sudo ln -s /tmp/random-seed /var/lib/systemd/random-seed
-sudo rmdir /var/run/sshd
-sudo ln -s /tmp /var/run/sshd</pre>
-<p>Create the <code>/tmp/random-seed</code> file at reboot:</p>
+sudo rmdir /run/sshd
+sudo ln -s /tmp /run/sshd</pre>
+<p>Create or edit the <code>/tmp/random-seed</code> file at reboot:</p>
 <pre class="term">sudo nano /lib/systemd/system/systemd-random-seed.service</pre>
 <p>Add a <code>ExecStartPre</code> line in
 <code>[Services]</code>&#8239;:</p>
@@ -1013,24 +1011,27 @@ ExecStart=/lib/systemd/systemd-random-seed load
 ExecStop=/lib/systemd/systemd-random-seed save</pre>
 <p>Other details:</p>
 <pre class="term">sudo nano /etc/init.d/checkroot.sh</pre>
-<p>Comment the <code>do_start</code> in the <code>case</code> block at the end
-of the file:</p>
+<p>If the file exists, comment the <code>do_start</code> in the
+<code>case</code> block at the end of the file:</p>
 <pre class="term">case "$1" in
   start|"")
         <span class="termhl">#</span>do_start
         ;;
   restart|reload|force-reload)</pre>
 <pre class="term">sudo nano /etc/init.d/checkfs.sh</pre>
-<p>Same, comment the <code>do_start</code> at the end.</p>
+<p>Same, comment the <code>do_start</code> at the end if the file exists.</p>
 <pre class="term">sudo nano /etc/init.d/checkroot-bootclean.sh</pre>
 <p>Comment the <code>rm</code> and the <code>clean_all</code> in the
-<code>case start</code></p>
+<code>case start</code> if the file exists</p>
 <pre class="term">sudo insserv -r bootlogs
 sudo insserv -r alsa-utils
 sudo insserv -r console-setup
 sudo insserv -r fake-hwclock</pre>
-<pre class="term">sudo nano /etc/systemd/system/dhcpcd5</pre>
-<p>Modify the file to put the <code>PIDFile</code> in
+<p>It’s not important if several of the commands above fail (“no such file or
+directory”).</p>
+<pre class="term">sudo nano /etc/systemd/system/dhcpcd5.service</pre>
+<p>The file may also be called <code>dhcpcd5</code>.
+Modify it to put the <code>PIDFile</code> in
 <code>/var</code>&#8239;:</p>
 <pre class="term">[Service]
 Type=forking
@@ -1042,7 +1043,8 @@ ExecStop=/sbin/dhcpcd -x</pre>
 <pre class="term">proc            /proc           proc    defaults             0       0
 /dev/mmcblk0p1  /boot           vfat    defaults<span class="termhl">,ro</span>          0       2
 /dev/mmcblk0p2  /               ext4    defaults<span class="termhl">,ro</span>,noatime  0       1</pre>
-<p><code>mmcblk0p1</code> and <code>2</code> will be replaced by
+<p>These lines may also start with <code>PARTUUID=</code>.
+<code>mmcblk0p1</code> and <code>2</code> will be replaced by
 <code>6</code> or <code>7</code> in case of a NOOBS install.
 Also add the lines:</p>
 <pre class="term">tmpfs           /tmp            tmpfs   nosuid,nodev         0       0

@@ -871,7 +871,9 @@ somme de travail.</p>
 <p>Télécharger
 <a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian</a> en
 version Lite.
-La version minimum recommandée est datée du 2016-11-25.
+La version minimum recommandée est datée du 2017-11-29 (Stretch).
+Les versions récentes de Jessie doivent également fonctionner, moyennant
+probablement quelques modifications mineures dans la procédure d’installation.
 Inutile de passer par NOOBS car nous devrons de toute façon nous en débarasser
 ultérieurement.
 Mais cela reste techniquement possible.</p>
@@ -933,9 +935,11 @@ graphique&#8239;:</p>
 <pre class="term">sudo raspi-config</pre>
 <p>Sélectionner ensuite <code>3 Boot Options</code>, puis <code>B1 Desktop /
 CLI</code> et choisir <code>Console</code>.
-Éventuellement passer dans <code>4. Internationalisation Options</code> et
+Éventuellement passer dans <code>4. Localisation Options</code> et
 régler les préférences de langue et de clavier.
-Finalement, flèche gauche pour sélectionner <code>Finish</code>.</p>
+Finalement, flèche gauche pour sélectionner <code>Finish</code>.
+Redémarrer si le programme l’indique comme étant nécessaire:</p>
+<pre class="term">sudo shutdown -r now</pre>
 
 
 
@@ -944,9 +948,11 @@ Finalement, flèche gauche pour sélectionner <code>Finish</code>.</p>
 <p>Ensuite, mettre à jour le système&#8239;:</p>
 <pre class="term">sudo apt-get -y update
 sudo apt-get -y dist-upgrade</pre>
-<p>La suite des opération va prendre un peu de temps, allez donc faire quelques
+<p>L’opération va prendre un peu de temps, allez donc faire quelques
 <a href="http://george-abitbol.fr/v/722d9335">exercices isométriques</a> en
-attendant.</p>
+attendant.
+Inutile de redémarrer tout de suite même si les messages de la console vous
+le conseillent.</p>
 
 
 
@@ -976,7 +982,7 @@ Brancher la sortie de la carte son, puis&#8239;:</p>
 
 <p>Installer git, Jack2, ALSA et autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev
-sudo apt-get -y install git git-core autoconf</pre>
+sudo apt-get -y install git git-core autoconf insserv</pre>
 <p>wiringPi passe par un autre mode d’installation&#8239;:</p>
 <pre class="term">git clone git://git.drogon.net/wiringPi
 cd wiringPi
@@ -1014,10 +1020,9 @@ Une fois ceci fait, on peut lancer Pédale Vite pour tester&#8239;:</p>
 
 <h3><a id="soft-autorun"></a>Démarrage automatique de Pédale Vite</h3>
 
-<pre class="term">sudo cp /etc/init.d/skeleton /etc/init.d/pedalevite
-sudo chmod +x /etc/init.d/pedalevite
-sudo nano /etc/init.d/pedalevite</pre>
-<p>Modifier le fichier de la façon suivante&#8239;:</p>
+<p>Créer le fichier&#8239;:</p>
+<pre class="term">sudo nano /etc/init.d/pedalevite</pre>
+<p>Lui ajouter le contenu suivant&#8239;:</p>
 <pre class="term">#!/bin/sh
 # kFreeBSD do not accept scripts as interpreters, using #!/bin/sh and sourcing.
 if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
@@ -1025,20 +1030,15 @@ if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
 fi
 ### BEGIN INIT INFO
 # Provides:          pedalevite
-# Required-Start:    <span class="termhl">$local_fs</span>
-# Required-Stop:     <span class="termhl">$local_fs</span>
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: <span class="termhl">Starts and stops Pedale Vite</span>
-# Description:       <span class="termhl">This service is used to process the sound from a guitar</span>
+# Short-Description: Starts and stops Pedale Vite
+# Description:       This service is used to process the sound from a guitar
 ### END INIT INFO
 
-# Author: Foo Bar <foobar@baz.org>
-#
-# Please remove the "Author" lines above and replace them
-# with your own name if you copy and modify this script.
-
-<span class="termhl">case "$1" in
+case "$1" in
     start)
 	echo "Starting Pedale Vite"
 	/opt/pedalevite/bin/pedalevite &
@@ -1053,9 +1053,10 @@ fi
 	;;
 esac
 
-exit 0</span></pre>
+exit 0</pre>
 <p>Puis&#8239;:</p>
-<pre class="term">sudo update-rc.d pedalevite defaults</pre>
+<pre class="term">sudo chmod +x /etc/init.d/pedalevite
+sudo update-rc.d pedalevite defaults</pre>
 <p>Pédale Vite se lancera automatiquement au prochain démarrage du Pi.
 Il peut être lancé immédiatement&#8239;:</p>
 <pre class="term">sudo /etc/init.d/pedalevite start</pre>
@@ -1130,9 +1131,9 @@ sudo ln -s /tmp /var/spool
 sudo ln -s /tmp /var/lock
 sudo rm /var/lib/systemd/random-seed
 sudo ln -s /tmp/random-seed /var/lib/systemd/random-seed
-sudo rmdir /var/run/sshd
-sudo ln -s /tmp /var/run/sshd</pre>
-<p>Créer le fichier <code>/tmp/random-seed</code> au démarrage&#8239;:</p>
+sudo rmdir /run/sshd
+sudo ln -s /tmp /run/sshd</pre>
+<p>Créer ou éditer le fichier <code>/tmp/random-seed</code> au démarrage&#8239;:</p>
 <pre class="term">sudo nano /lib/systemd/system/systemd-random-seed.service</pre>
 <p>Ajouter la ligne <code>ExecStartPre</code> dans
 <code>[Services]</code>&#8239;:</p>
@@ -1144,24 +1145,27 @@ ExecStart=/lib/systemd/systemd-random-seed load
 ExecStop=/lib/systemd/systemd-random-seed save</pre>
 <p>Autres détails&#8239;:</p>
 <pre class="term">sudo nano /etc/init.d/checkroot.sh</pre>
-<p>Commenter le <code>do_start</code> dans le bloc <code>case</code> à la
-fin du fichier&#8239;:</p>
+<p>Si le fichier existe, commenter le <code>do_start</code> dans le bloc
+<code>case</code> à la fin du fichier&#8239;:</p>
 <pre class="term">case "$1" in
   start|"")
         <span class="termhl">#</span>do_start
         ;;
   restart|reload|force-reload)</pre>
 <pre class="term">sudo nano /etc/init.d/checkfs.sh</pre>
-<p>Idem, commenter le <code>do_start</code> à la fin</p>
+<p>Idem, commenter le <code>do_start</code> à la fin si le fichier existe</p>
 <pre class="term">sudo nano /etc/init.d/checkroot-bootclean.sh</pre>
-<p>Commenter le <code>rm</code> et le <code>clean_all</code> dans le
-<code>case start</code></p>
+<p>Toujours si le fichier existe, commenter le <code>rm</code> et le
+<code>clean_all</code> dans le <code>case start</code></p>
 <pre class="term">sudo insserv -r bootlogs
 sudo insserv -r alsa-utils
 sudo insserv -r console-setup
 sudo insserv -r fake-hwclock</pre>
-<pre class="term">sudo nano /etc/systemd/system/dhcpcd5</pre>
-<p>Modifier le fichier pour placer le <code>PIDFile</code> dans
+<p>Cela n’a pas d’importance qu’une ou plusieurs des commandes ci-dessus
+échouent.</p>
+<pre class="term">sudo nano /etc/systemd/system/dhcpcd5.service</pre>
+<p>Le fichier peut aussi être appelé <code>dhcpcd5</code>.
+Le modifier pour placer le <code>PIDFile</code> dans
 <code>/var</code>&#8239;:</p>
 <pre class="term">[Service]
 Type=forking
@@ -1176,6 +1180,7 @@ disque&#8239;:</p>
 /dev/mmcblk0p2  /               ext4    defaults<span class="termhl">,ro</span>,noatime  0       1</pre>
 <p><code>mmcblk0p1</code> et <code>2</code> seront remplacés par
 <code>6</code> et <code>7</code> dans le cas d’une installation NOOBS.
+Il se peut aussi que ces lignes commencent par <code>PARTUUID=</code>.
 Ajouter également les ligne&#8239;:</p>
 <pre class="term">tmpfs           /tmp            tmpfs   nosuid,nodev         0       0
 tmpfs           /var/log        tmpfs   nosuid,nodev         0       0
