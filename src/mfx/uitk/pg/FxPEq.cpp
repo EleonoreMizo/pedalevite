@@ -439,8 +439,6 @@ void	FxPEq::update_param_txt ()
 			const doc::PluginSettings &   settings = it_settings->second;
 			const piapi::PluginDescInterface &   desc =
 				_model_ptr->get_model_desc (slot._pi_model);
-			const piapi::PluginDescInterface &   desc_mix =
-				_model_ptr->get_model_desc (Cst::_plugin_mix);
 
 			const int      band_idx  =
 				(_cur_param - Param_BAND_BASE) / pi::peq::Param_NBR_ELT;

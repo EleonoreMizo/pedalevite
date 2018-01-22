@@ -83,7 +83,6 @@ PedalLoc	PedalEditContext::conv_to_loc (const View &view) const
 	assert (_type >= 0);
 
 	PedalLoc             loc;
-	const doc::Setup &   setup = view.use_setup ();
 
 	switch (_type)
 	{

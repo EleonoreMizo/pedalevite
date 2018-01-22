@@ -415,10 +415,13 @@ void	Central::remove_mixer (int pos)
 
 void	Central::force_mono (int pos, bool flag)
 {
+#if defined (NDEBUG)
+	modify ();
+#else
 	Document &     doc = modify ();
-
 	assert (pos >= 0);
 	assert (pos < int (doc._slot_list.size ()));
+#endif
 
 	_new_sptr->_slot_list [pos]._force_mono_flag = flag;
 }
@@ -512,7 +515,7 @@ void	Central::set_sig_source (int pi_id, int sig_pin, int port_id)
 
 void	Central::set_chn_mode (ChnMode mode)
 {
-	Document &     doc = modify ();
+	modify ();
 
 	assert (mode >= 0);
 	assert (mode < ChnMode_NBR_ELT);
@@ -524,7 +527,7 @@ void	Central::set_chn_mode (ChnMode mode)
 
 void	Central::set_master_vol (double vol)
 {
-	Document &     doc = modify ();
+	modify ();
 
 	assert (vol > 0);
 
@@ -535,7 +538,7 @@ void	Central::set_master_vol (double vol)
 
 void	Central::set_transition (bool smooth_flag)
 {
-	Document &     doc = modify ();
+	modify ();
 
 	_new_sptr->_smooth_transition_flag = smooth_flag;
 }
@@ -1134,9 +1137,6 @@ void	Central::create_mod_maps ()
 
 	for (const Slot & slot : doc._slot_list)
 	{
-		ProcessingContext::PluginContext & ctx_slot =
-			ctx._context_arr [slot._ctx_index];
-
 		for (int component_index = 0
 		;	component_index < int (slot._component_arr.size ())
 		;	++ component_index)
@@ -1212,7 +1212,6 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <Msg> *> &msg_li
 	assert (_new_sptr->_ctx_sptr.get () != 0);
 
 	Document &           doc = *_new_sptr;
-	ProcessingContext &  ctx = *doc._ctx_sptr;
 
 	for (Slot & slot : doc._slot_list)
 	{

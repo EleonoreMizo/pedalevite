@@ -433,7 +433,7 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 
 	else
 	{
-		double			val_p;
+		double			val_p = 0;
 
 		switch (_type)
 		{
@@ -519,6 +519,7 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 
 		default:
 			assert (false);
+			ret_val = Err_CANNOT_CONVERT_VALUE;
 			break;
 		}
 

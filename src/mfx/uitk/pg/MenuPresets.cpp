@@ -176,8 +176,6 @@ MsgHandlerInterface::EvtProp	MenuPresets::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_button_ex ())
 	{
-		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-
 		const Button   but = evt.get_button_ex ();
 		switch (but)
 		{
