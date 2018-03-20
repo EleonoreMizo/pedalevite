@@ -62,8 +62,9 @@ SettingsOther::SettingsOther (PageSwitcher &page_switcher)
 ,	_page_size ()
 ,	_tempo_sptr (TxtSPtr (new NText (Entry_TEMPO)))
 ,	_click_sptr (TxtSPtr (new NText (Entry_CLICK)))
+,	_save_sptr ( TxtSPtr (new NText (Entry_SAVE)))
 {
-	// Nothing
+	_save_sptr->set_text ("Save settings");
 }
 
 
@@ -80,19 +81,28 @@ void	SettingsOther::do_connect (Model &model, const View &view, PageMgrInterface
 	_page_size = page_size;
 
 	const int      h_m   = fnt._m.get_char_h ();
+	const int      w_34  = page_size [0] * 3 / 4;
 
 	_tempo_sptr->set_font (fnt._m);
 	_click_sptr->set_font (fnt._m);
+	_save_sptr ->set_font (fnt._m);
 
-	_tempo_sptr->set_coord (Vec2d (0, 0 * h_m));
-	_click_sptr->set_coord (Vec2d (0, 1 * h_m));
+	_tempo_sptr->set_coord (Vec2d (0, 0 * h_m    ));
+	_click_sptr->set_coord (Vec2d (0, 1 * h_m    ));
+	_save_sptr ->set_coord (Vec2d (0, 5 * h_m / 2));
+
+	_tempo_sptr->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
+	_click_sptr->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
+	_save_sptr ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
 
 	_page_ptr->push_back (_tempo_sptr);
 	_page_ptr->push_back (_click_sptr);
+	_page_ptr->push_back (_save_sptr );
 
 	PageMgrInterface::NavLocList  nav_list;
 	PageMgrInterface::add_nav (nav_list, Entry_TEMPO);
 	PageMgrInterface::add_nav (nav_list, Entry_CLICK);
+	PageMgrInterface::add_nav (nav_list, Entry_SAVE );
 	page.set_nav_layout (nav_list);
 
 	refresh_display ();
@@ -132,6 +142,16 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 				{
 					const bool     click_flag = _view_ptr->is_click_active ();
 					_model_ptr->set_click (! click_flag);
+				}
+				break;
+			case Entry_SAVE:
+				{
+					const int      ret_val = _model_ptr->save_to_disk ();
+					if (ret_val != 0)
+					{
+						/*** To do ***/
+						assert (false);
+					}
 				}
 				break;
 			default:

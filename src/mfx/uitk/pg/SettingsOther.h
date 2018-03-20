@@ -89,7 +89,8 @@ private:
 	enum Entry
 	{
 		Entry_TEMPO = 1000,
-		Entry_CLICK
+		Entry_CLICK,
+		Entry_SAVE
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -106,6 +107,7 @@ private:
 
 	TxtSPtr        _tempo_sptr;
 	TxtSPtr        _click_sptr;
+	TxtSPtr        _save_sptr;
 
 
 
