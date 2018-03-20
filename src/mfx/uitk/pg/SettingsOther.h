@@ -88,7 +88,8 @@ private:
 
 	enum Entry
 	{
-		Entry_TEMPO = 1000,
+		Entry_TEMPO_I = 1000,
+		Entry_TEMPO_F,
 		Entry_CLICK,
 		Entry_SAVE
 	};
@@ -105,7 +106,8 @@ private:
 	               _page_ptr;
 	Vec2d          _page_size;
 
-	TxtSPtr        _tempo_sptr;
+	TxtSPtr        _tempo_i_sptr;
+	TxtSPtr        _tempo_f_sptr;
 	TxtSPtr        _click_sptr;
 	TxtSPtr        _save_sptr;
 
