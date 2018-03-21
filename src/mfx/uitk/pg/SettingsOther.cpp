@@ -159,8 +159,8 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 				break;
 			case Entry_SAVE:
 				{
-					const int      ret_val = _model_ptr->save_to_disk ();
-					if (ret_val != 0)
+					const int      ret_val_loc = _model_ptr->save_to_disk ();
+					if (ret_val_loc != 0)
 					{
 						/*** To do ***/
 						assert (false);
