@@ -79,6 +79,8 @@ int	Tuner::do_reset (double sample_freq, int max_buf_len, int &latency)
 	{
 		_buffer.resize (max_buf_len / _sub_spl);
 		_analyser.set_sample_freq (sample_freq / _sub_spl);
+		_analyser.set_freq_bot (30.0f);
+		_analyser.set_freq_top (500.0f);
 		_state = State_ACTIVE;
 	}
 	else

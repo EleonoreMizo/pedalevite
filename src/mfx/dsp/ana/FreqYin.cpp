@@ -55,12 +55,11 @@ void	FreqYin::set_sample_freq (double sample_freq)
 	assert (sample_freq > 0);
 
 	_sample_freq           = float (sample_freq);
-	_min_delta             = int (sample_freq / _max_freq);
-	_win_len               = int (sample_freq / _min_freq) + 1;
+	int            win_len_max = int (sample_freq / _min_freq) + 1;
 #if defined (mfx_dsp_ana_USE_SIMD)
-	_win_len = (_win_len + 3) & -4;
+	win_len_max = (win_len_max + 3) & ~3;
 #endif
-	size_t         buf_len = 1 << int (ceil (log2 (_win_len * 3)));
+	size_t         buf_len = 1 << int (ceil (log2 (win_len_max * 3)));
 #if defined (mfx_dsp_ana_USE_SIMD)
 	assert ((buf_len & 3) == 0);
 	for (BufAlign &buf : _buf_arr)
@@ -71,12 +70,36 @@ void	FreqYin::set_sample_freq (double sample_freq)
 	_buffer.resize (buf_len, 0);
 #endif
 	_buf_mask              = int (buf_len) - 1;
-	_cmndf_arr.resize (_win_len + 1, 0);
-	_step_size             = _win_len;
+	_cmndf_arr.resize (win_len_max + 1, 0);
 	_delta                 = 1;
 	_freq                  = 0;
 	_freq_prev             = 0;
 	_dif_sum               = 0;
+
+	update_freq_bot_param ();
+	update_freq_top_param ();
+}
+
+
+
+void	FreqYin::set_freq_bot (float f)
+{
+	_freq_bot = f;
+	if (_sample_freq > 0)
+	{
+		update_freq_bot_param ();
+	}
+}
+
+
+
+void	FreqYin::set_freq_top (float f)
+{
+	_freq_top = f;
+	if (_sample_freq > 0)
+	{
+		update_freq_top_param ();
+	}
 }
 
 
@@ -103,6 +126,7 @@ void	FreqYin::clear_buffers ()
 float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
+	assert (_freq_bot < _freq_top);
 	assert (spl_ptr != 0);
 	assert (nbr_spl >= 0);
 
@@ -118,6 +142,9 @@ float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
 
 float	FreqYin::process_sample (float x)
 {
+	assert (_sample_freq > 0);
+	assert (_freq_bot < _freq_top);
+
 	int            write_pos = _buf_pos + _win_len + _delta - 1;
 #if defined (mfx_dsp_ana_USE_SIMD)
 	for (int buf_index = 0; buf_index < 4; ++buf_index)
@@ -147,6 +174,29 @@ float	FreqYin::process_sample (float x)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	FreqYin::update_freq_bot_param ()
+{
+	assert (_sample_freq > 0);
+
+	_win_len   = int (_sample_freq / _freq_bot) + 1;
+#if defined (mfx_dsp_ana_USE_SIMD)
+	_win_len   = (_win_len + 3) & ~3;
+#endif
+	assert (_win_len <= _buf_mask);
+	_step_size = _win_len;
+}
+
+
+
+void	FreqYin::update_freq_top_param ()
+{
+	assert (_sample_freq > 0);
+
+	_min_delta = int (_sample_freq / _freq_top);
+}
 
 
 

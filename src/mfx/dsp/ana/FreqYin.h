@@ -65,6 +65,8 @@ public:
 	virtual        ~FreqYin () = default;
 
 	void           set_sample_freq (double sample_freq);
+	void           set_freq_bot (float f);
+	void           set_freq_top (float f);
 	void           clear_buffers ();
 	float          process_block (const float spl_ptr [], int nbr_spl);
 	float          process_sample (float x);
@@ -81,13 +83,14 @@ protected:
 
 private:
 
+	void           update_freq_bot_param ();
+	void           update_freq_top_param ();
 	void           analyse_sample ();
 
-	const double   _min_freq    = 30.0; // Hz
-	const double   _max_freq    = 500.0;
+	const float    _min_freq    = 20.0f; // Hz
 	const float    _threshold   = 0.1f;
 	const float    _smoothing   = 0.125f;  // Smoothing coefficient (LERP between the new and accumulated values)
-	const float    _smooth_thr  = 0.02f;// Smoothing is done only on close values (threshold is relative)
+	const float    _smooth_thr  = 0.02f;   // Smoothing is done only on close values (threshold is relative)
 
 #if defined (mfx_dsp_ana_USE_SIMD)
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
@@ -105,6 +108,8 @@ private:
 	int            _step_size   = 0;    // Number of samples between two analysis
 
 	int            _delta       = 1;    // We write at _win_len + _delta - 1 relative to _buf_pos.
+	float          _freq_bot    = _min_freq; // Hz, > 0
+	float          _freq_top    = 1000; // Hz, > _freq_bot
 	float          _freq        = 0;    // Hz. 0 = not found (yet)
 	float          _freq_prev   = 0;    // Hz
 	float          _dif_sum     = 0;
