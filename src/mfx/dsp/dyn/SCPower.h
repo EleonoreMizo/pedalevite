@@ -35,6 +35,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 
 
 namespace mfx
@@ -46,7 +48,18 @@ namespace dyn
 
 
 
-template <class AP>
+class SPower_Bypass
+{
+public:
+	static inline float
+	               process_scalar (float in) { return in; }
+	static inline fstb::ToolsSimd::VectF32
+	               process_vect (fstb::ToolsSimd::VectF32 in) { return in; }
+};
+
+
+
+template <class AP = SPower_Bypass>
 class SCPower
 {
 
