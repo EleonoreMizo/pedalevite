@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         EtonDesc.cpp
-        Author: Laurent de Soras, 2016
+        Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
 

@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Eton.cpp
-        Author: Laurent de Soras, 2016
+        Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
 
@@ -168,7 +168,7 @@ void	Eton::do_process_block (ProcInfo &proc)
 	}
 
 	// Duplicates the remaining output channels
-	for (int chn_index = 0; chn_index < nbr_chn_dst; ++chn_index)
+	for (int chn_index = nbr_chn_proc; chn_index < nbr_chn_dst; ++chn_index)
 	{
 		dsp::mix::Align::copy_1_1 (
 			proc._dst_arr [chn_index],
