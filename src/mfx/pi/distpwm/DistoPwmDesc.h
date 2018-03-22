@@ -49,15 +49,6 @@ class DistoPwmDesc
 
 public:
 
-	enum Channels
-	{
-		Channels_ALL,
-		Channels_L,
-		Channels_R,
-
-		Channels_NBR_ELT
-	};
-
 	explicit       DistoPwmDesc ();
 	virtual        ~DistoPwmDesc () = default;
 
