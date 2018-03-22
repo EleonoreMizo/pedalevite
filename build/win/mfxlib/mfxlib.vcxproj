@@ -599,6 +599,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\phase2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase2\Phaser2.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet\PitchDetect.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet\PitchDetectDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\Ramp.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampDesc.h" />
@@ -981,6 +984,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetect.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetectDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\Ramp.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampModule.cpp" />

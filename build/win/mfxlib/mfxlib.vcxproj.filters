@@ -19,12 +19,6 @@
     <Filter Include="mfx\ui">
       <UniqueIdentifier>{6f074c63-9327-4a2b-baf6-1226d06f039b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mfx\pi">
-      <UniqueIdentifier>{0abc7ff7-ecb5-4920-994e-3fa9b489eeeb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mfx\pi\param">
-      <UniqueIdentifier>{979c7a9d-ed44-4b6a-b4bd-4526c8f82d1f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="fstb\txt">
       <UniqueIdentifier>{966573b7-f3ad-4c46-bc91-f3e39f54407c}</UniqueIdentifier>
     </Filter>
@@ -82,6 +76,39 @@
     <Filter Include="mfx\uitk\pg">
       <UniqueIdentifier>{37bd46ba-874b-4b14-857d-228ae4f0976a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\dly">
+      <UniqueIdentifier>{b27b3e92-1367-4a12-a25e-4b5f750d9b6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\rspl">
+      <UniqueIdentifier>{dfe5e787-a621-4827-82fa-96d11190de0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\ctrl">
+      <UniqueIdentifier>{7062f69a-08da-4bb1-ad8b-c4b0378b36a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\ctrl\lfo">
+      <UniqueIdentifier>{553cc8e7-378a-4b04-bc5c-03131eebf338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\shape">
+      <UniqueIdentifier>{1bdcb0da-e6a7-4273-85c2-14c6afac3dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\dyn">
+      <UniqueIdentifier>{8607d3ff-be7f-42ae-b8c7-3ee15dad5fdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\nz">
+      <UniqueIdentifier>{3b112d29-77cd-44e7-86c9-eba75608cc84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\ctrl\env">
+      <UniqueIdentifier>{bf0f6e1c-2e42-4715-a85e-ecf75bd63084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\ana">
+      <UniqueIdentifier>{b6355eea-6990-4019-b62d-6760d7bb342b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi">
+      <UniqueIdentifier>{0abc7ff7-ecb5-4920-994e-3fa9b489eeeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\param">
+      <UniqueIdentifier>{979c7a9d-ed44-4b6a-b4bd-4526c8f82d1f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="mfx\pi\dist1">
       <UniqueIdentifier>{13b57145-d3b0-4adc-8e2a-c7adef616743}</UniqueIdentifier>
     </Filter>
@@ -102,24 +129,6 @@
     </Filter>
     <Filter Include="mfx\pi\iifix">
       <UniqueIdentifier>{85f5954b-04e9-404b-9330-0dff7bdcf70f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mfx\dsp\dly">
-      <UniqueIdentifier>{b27b3e92-1367-4a12-a25e-4b5f750d9b6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mfx\dsp\rspl">
-      <UniqueIdentifier>{dfe5e787-a621-4827-82fa-96d11190de0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mfx\dsp\ctrl">
-      <UniqueIdentifier>{7062f69a-08da-4bb1-ad8b-c4b0378b36a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mfx\dsp\ctrl\lfo">
-      <UniqueIdentifier>{553cc8e7-378a-4b04-bc5c-03131eebf338}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mfx\dsp\shape">
-      <UniqueIdentifier>{1bdcb0da-e6a7-4273-85c2-14c6afac3dd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mfx\dsp\dyn">
-      <UniqueIdentifier>{8607d3ff-be7f-42ae-b8c7-3ee15dad5fdd}</UniqueIdentifier>
     </Filter>
     <Filter Include="mfx\pi\flancho">
       <UniqueIdentifier>{912f80df-ae98-4425-ae5e-aaa21ab5cd03}</UniqueIdentifier>
@@ -169,17 +178,11 @@
     <Filter Include="mfx\pi\-- skel --">
       <UniqueIdentifier>{1c763792-00d6-4e59-ac63-e00e352caa87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mfx\dsp\nz">
-      <UniqueIdentifier>{3b112d29-77cd-44e7-86c9-eba75608cc84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mfx\pi\nzcl">
       <UniqueIdentifier>{6b66749e-9ca3-49e7-a138-077fe2436331}</UniqueIdentifier>
     </Filter>
     <Filter Include="mfx\pi\click">
       <UniqueIdentifier>{e4e6b042-642f-436d-b45f-3125b63e8bc6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mfx\dsp\ctrl\env">
-      <UniqueIdentifier>{bf0f6e1c-2e42-4715-a85e-ecf75bd63084}</UniqueIdentifier>
     </Filter>
     <Filter Include="mfx\pi\dly2">
       <UniqueIdentifier>{3e8ffe7a-d324-406e-b425-d939dae426d6}</UniqueIdentifier>
@@ -199,8 +202,8 @@
     <Filter Include="mfx\pi\wah2">
       <UniqueIdentifier>{17893118-e8da-4cf8-8dc7-80fe06c5b2c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mfx\dsp\ana">
-      <UniqueIdentifier>{b6355eea-6990-4019-b62d-6760d7bb342b}</UniqueIdentifier>
+    <Filter Include="mfx\pi\pidet">
+      <UniqueIdentifier>{fe1ea7aa-e8e5-48f3-8780-7c746a516426}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2190,6 +2193,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h">
       <Filter>mfx\dsp\ana</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet\PitchDetect.h">
+      <Filter>mfx\pi\pidet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet\PitchDetectDesc.h">
+      <Filter>mfx\pi\pidet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet\Param.h">
+      <Filter>mfx\pi\pidet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3082,6 +3094,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYin.cpp">
       <Filter>mfx\dsp\ana</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetect.cpp">
+      <Filter>mfx\pi\pidet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetectDesc.cpp">
+      <Filter>mfx\pi\pidet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

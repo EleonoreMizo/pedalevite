@@ -57,6 +57,7 @@
 	<li><a href="#fx-peq">Parametric Equalizer — Égaliseur paramétrique</a></li>
 	<li><a href="#fx-phaserap">Phaser AP</a></li>
 	<li><a href="#fx-phaserht">Phaser HT</a></li>
+	<li><a href="#fx-pitchdetector">Pitch Detector — Détecteur de note</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
 	<li><a href="#fx-sgirlz">SiemensGirlz — Écho créatif</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
@@ -69,7 +70,6 @@
 	</ol>
 </li>
 <li class="tcont"><a href="#troubleshooting">Dépannage</a></li>
-<li class="tcont"><a href="#softwareinstall">Installation logicielle</a></li>
 <li class="tcont"><a href="#changelog">Historique des versions</a></li>
 </ol>
 
@@ -1604,6 +1604,41 @@ Sherpard-Risset.</p>
 
 
 
+<h3><a id="fx-pitchdetector"></a>Pitch Detector — Détecteur de note</h3>
+
+<p>Cet effet n’est pas un effet audio mais un contrôleur qui travaille en
+analysant le son.
+On peut l’insérer à n’importe quel endroit de la chaîne, son effet sur le son
+sera neutre.</p>
+<p>Le détecteur de note permet de récupérer la hauteur de la note jouée
+et de s’en servir comme signal de contrôle afin de moduler des effets.
+Le détecteur ne marche que sur des sons monophoniques.
+Un accord donnera un résultat indéterminé.</p>
+
+<p class="var">Minimum frequency</p>
+<p>Fréquence minimum de détection, en Hz.
+Toute note située sous cette fréquence est ignorée.
+Ce paramètre a une influence sur le temps de calcul pris par l’effet.</p>
+
+<p class="var">Maximum frequency</p>
+<p>Fréquence maximum de détection, en Hz.
+Toute note située au-dessus de cette fréquence est ignorée.</p>
+
+<p class="var">Output type</p>
+<p>Indique comment la note détectée est mise en forme.</p>
+<table>
+<tr><td><span class="ui">Pitch</span></td><td>La note est donnée sous forme de
+pitch, en octaves.
+0 correspond au <i>do</i> central (<i><span lang="en">Middle C</span></i>), et
+&minus;10 indique qu’aucune note n’a été trouvée.</td></tr>
+<tr><td><span class="ui">Freq</span></td><td>La note est donnée en kHz.
+Quand aucune note n’est détectée, la fréquence de la dernière note connue est
+restituée.
+Si aucune note n’a jamais été détectée, le signal est nul.</td></tr>
+</table>
+
+
+
 <h3><a id="fx-distpwm"></a>Pulse Width Modulation Distortion</h3>
 
 <p>Il s’agit d’une distortion à gain quasi-infini, le signal de sortie est
@@ -1617,27 +1652,6 @@ temps déterminé, ce qui donne au son une coloration d’oscillateur
 <p>Durée des impulsions, en millisecondes.
 Plus la durée est courte, plus le spectre du son est chargé en particulier
 dans les aigus, et plus le volume apparent diminue.</p>
-
-
-
-<h3><a id="fx-disto"></a>Simple Distortion</h3>
-
-<p>Il s’agit d’une saturation asymétrique très simple, avec un filtre
-passe-haut en entrée afin de supprimer une éventuelle composante continue et
-de nettoyer un peu les graves.</p>
-
-<p class="var">Distortion gain</p>
-<p>Gain de la distorsion en dB.</p>
-
-<p class="var">HPF frequency</p>
-<p>Fréquence de coupure du filtre coupe-bas en entrée.</p>
-
-<p class="var">Bias</p>
-<p>Biais de polarisation.
-Augmenter le biais permet d’obtenir une distorsion plus asymétrique et
-favorise ainsi les harmoniques paires.
-Attention un biais trop élevé a tendance à couper le signal et donne une
-impression de circuit défectueux.</p>
 
 
 
@@ -1845,6 +1859,27 @@ Plus le paramètre est élevé, plus la réverbération est longue.</p>
 réverbération.
 À 100&#8239;%, l’atténuation est maximale.
 Ce paramètre raccourcit implicitement le temps de réverbération.</p>
+
+
+
+<h3><a id="fx-disto"></a>Simple Distortion</h3>
+
+<p>Il s’agit d’une saturation asymétrique très simple, avec un filtre
+passe-haut en entrée afin de supprimer une éventuelle composante continue et
+de nettoyer un peu les graves.</p>
+
+<p class="var">Distortion gain</p>
+<p>Gain de la distorsion en dB.</p>
+
+<p class="var">HPF frequency</p>
+<p>Fréquence de coupure du filtre coupe-bas en entrée.</p>
+
+<p class="var">Bias</p>
+<p>Biais de polarisation.
+Augmenter le biais permet d’obtenir une distorsion plus asymétrique et
+favorise ainsi les harmoniques paires.
+Attention un biais trop élevé a tendance à couper le signal et donne une
+impression de circuit défectueux.</p>
 
 
 
@@ -2160,6 +2195,11 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r11, 2018.03.22</b></p>
+<ul>
+<li>Ajout de l’effet Pitch Detector.</li>
+</ul>
 
 <p><b>r10, 2017.08.01</b></p>
 <ul>

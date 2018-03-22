@@ -648,6 +648,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/phase2/Phaser2.h \
         ../../src/mfx/pi/phase2/Phaser2Desc.cpp \
         ../../src/mfx/pi/phase2/Phaser2Desc.h \
+        ../../src/mfx/pi/pidet/Param.h \
+        ../../src/mfx/pi/pidet/PitchDetect.cpp \
+        ../../src/mfx/pi/pidet/PitchDetect.h \
+        ../../src/mfx/pi/pidet/PitchDetectDesc.cpp \
+        ../../src/mfx/pi/pidet/PitchDetectDesc.h \
         ../../src/mfx/pi/spkem/Param.h \
         ../../src/mfx/pi/spkem/SpeakerEmu.cpp \
         ../../src/mfx/pi/spkem/SpeakerEmu.h \
