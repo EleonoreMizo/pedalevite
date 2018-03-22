@@ -165,7 +165,7 @@ void	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd:
 		const auto     state0 = V128Src::load_f32 (in_ptr + pos);
 		assert (test_ge_0 (state0));
 
-		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (0, 2)
+		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (0, 1)
 		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (1, 2)
 		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (2, 3)
 		mfx_dsp_dyn_EnvFollowerAR4SimdHelper_PROC (3, 4)
