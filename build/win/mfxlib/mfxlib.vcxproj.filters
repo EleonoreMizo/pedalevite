@@ -205,6 +205,9 @@
     <Filter Include="mfx\pi\pidet">
       <UniqueIdentifier>{fe1ea7aa-e8e5-48f3-8780-7c746a516426}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ffft">
+      <UniqueIdentifier>{8b4106ec-caaa-4f61-877a-8b6fcfbc8aa4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2201,6 +2204,66 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\pidet\Param.h">
       <Filter>mfx\pi\pidet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\Array.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\Array.hpp">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\def.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\DynArray.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\DynArray.hpp">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTReal.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTReal.hpp">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealFixLen.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealFixLen.hpp">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealFixLenParam.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealPassDirect.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealPassDirect.hpp">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealPassInverse.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealPassInverse.hpp">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealSelect.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealSelect.hpp">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealUseTrigo.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\FFTRealUseTrigo.hpp">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\OscSinCos.h">
+      <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ffft\OscSinCos.hpp">
+      <Filter>ffft</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
