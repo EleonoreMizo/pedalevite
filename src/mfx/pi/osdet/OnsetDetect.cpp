@@ -24,11 +24,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-/*******************************************************************************************/
-#define NOMINMAX
-#include <Windows.h>
-/*******************************************************************************************/
-
 #include "fstb/fnc.h"
 #include "fstb/ToolsSimd.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
@@ -284,20 +279,6 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 
 	proc._sig_arr [0] [0] = ret_onset;
 	proc._sig_arr [1] [0] = ret_offset;
-
-/*******************************************************************************************/
-	char           txt_0 [255+1];
-	if (ret_onset != 0)
-	{
-		fstb::snprintf4all (txt_0, sizeof (txt_0), "On: %.3f\n", ret_onset);
-		::OutputDebugStringA (txt_0);
-	}
-	if (ret_offset != 0)
-	{
-		fstb::snprintf4all (txt_0, sizeof (txt_0), "Off\n");
-		::OutputDebugStringA (txt_0);
-	}
-/*******************************************************************************************/
 }
 
 
