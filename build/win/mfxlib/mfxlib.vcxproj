@@ -611,6 +611,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorineDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzcl\Notch.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\nzcl\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\osdet\OnsetDetect.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\osdet\OnsetDetectDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\osdet\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbkBipolar.h" />
@@ -661,6 +664,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\spkem\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\spkem\SpeakerEmu.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\syn0\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\syn0\Synth0.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\syn0\Synth0Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereo.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\HarmTrem.h" />
@@ -1010,6 +1016,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorineDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzcl\Notch.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\osdet\OnsetDetect.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\osdet\OnsetDetectDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\MapRatio.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\Simple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplEnumEvol.cpp" />
@@ -1039,6 +1047,8 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmu.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\syn0\Synth0.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\syn0\Synth0Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTrem.cpp" />

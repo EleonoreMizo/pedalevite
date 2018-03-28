@@ -64,6 +64,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/nzcl/NoiseChlorine.h"
 #include "mfx/pi/nzcl/NoiseChlorineDesc.h"
+#include "mfx/pi/osdet/OnsetDetect.h"
+#include "mfx/pi/osdet/OnsetDetectDesc.h"
 #include "mfx/pi/peq/PEq.h"
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/phase1/Phaser.h"
@@ -74,6 +76,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/pidet/PitchDetectDesc.h"
 #include "mfx/pi/ramp/Ramp.h"
 #include "mfx/pi/ramp/RampDesc.h"
+#include "mfx/pi/syn0/Synth0.h"
+#include "mfx/pi/syn0/Synth0Desc.h"
 #include "mfx/pi/spkem/SpeakerEmu.h"
 #include "mfx/pi/spkem/SpeakerEmuDesc.h"
 #include "mfx/pi/tost/ToStereo.h"
@@ -139,6 +143,8 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::colorme::ColorMeDesc   , mfx::pi::colorme::ColorMe        >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::phase2::Phaser2Desc    , mfx::pi::phase2::Phaser2         >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::pidet::PitchDetectDesc , mfx::pi::pidet::PitchDetect      >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::osdet::OnsetDetectDesc , mfx::pi::osdet::OnsetDetect      >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::syn0::Synth0Desc       , mfx::pi::syn0::Synth0            >::create ()
 		};
 
 		fact_list = l;
@@ -152,7 +158,6 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 
 	return ret_val;
 }
-
 
 
 

@@ -629,6 +629,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/nzcl/Notch.cpp \
         ../../src/mfx/pi/nzcl/Notch.h \
         ../../src/mfx/pi/nzcl/Param.h \
+        ../../src/mfx/pi/osdet/Param.h \
+        ../../src/mfx/pi/osdet/OnsetDetect.cpp \
+        ../../src/mfx/pi/osdet/OnsetDetect.h \
+        ../../src/mfx/pi/osdet/OnsetDetectDesc.cpp \
+        ../../src/mfx/pi/osdet/OnsetDetectDesc.h \
         ../../src/mfx/pi/peq/BandParam.cpp \
         ../../src/mfx/pi/peq/BandParam.h \
         ../../src/mfx/pi/peq/PEq.h \
@@ -708,6 +713,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/ramp/RampDesc.h \
         ../../src/mfx/pi/ramp/RampModule.cpp \
         ../../src/mfx/pi/ramp/RampModule.h \
+        ../../src/mfx/pi/syn0/Param.h \
+        ../../src/mfx/pi/syn0/Synth0.cpp \
+        ../../src/mfx/pi/syn0/Synth0.h \
+        ../../src/mfx/pi/syn0/Synth0Desc.cpp \
+        ../../src/mfx/pi/syn0/Synth0Desc.h \
         ../../src/mfx/pi/tost/ToStereo.cpp \
         ../../src/mfx/pi/tost/ToStereo.h \
         ../../src/mfx/pi/tost/ToStereoDesc.cpp \

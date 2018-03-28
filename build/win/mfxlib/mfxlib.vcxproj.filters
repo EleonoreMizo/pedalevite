@@ -205,6 +205,12 @@
     <Filter Include="mfx\pi\pidet">
       <UniqueIdentifier>{fe1ea7aa-e8e5-48f3-8780-7c746a516426}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\osdet">
+      <UniqueIdentifier>{0c7a0302-b55b-44bd-9784-a83201ccfb4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\syn0">
+      <UniqueIdentifier>{74ce2013-4a1a-407b-99a8-3cf0141171c8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ffft">
       <UniqueIdentifier>{8b4106ec-caaa-4f61-877a-8b6fcfbc8aa4}</UniqueIdentifier>
     </Filter>
@@ -2211,6 +2217,24 @@
     <ClInclude Include="..\..\..\src\mfx\pi\pidet\Param.h">
       <Filter>mfx\pi\pidet</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\osdet\OnsetDetect.h">
+      <Filter>mfx\pi\osdet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\osdet\OnsetDetectDesc.h">
+      <Filter>mfx\pi\osdet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\osdet\Param.h">
+      <Filter>mfx\pi\osdet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\syn0\Param.h">
+      <Filter>mfx\pi\syn0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\syn0\Synth0.h">
+      <Filter>mfx\pi\syn0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\syn0\Synth0Desc.h">
+      <Filter>mfx\pi\syn0</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ffft\Array.h">
       <Filter>ffft</Filter>
     </ClInclude>
@@ -3235,6 +3259,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetectDesc.cpp">
       <Filter>mfx\pi\pidet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\osdet\OnsetDetect.cpp">
+      <Filter>mfx\pi\osdet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\osdet\OnsetDetectDesc.cpp">
+      <Filter>mfx\pi\osdet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\syn0\Synth0.cpp">
+      <Filter>mfx\pi\syn0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\syn0\Synth0Desc.cpp">
+      <Filter>mfx\pi\syn0</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
