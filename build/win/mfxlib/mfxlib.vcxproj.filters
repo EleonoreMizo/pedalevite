@@ -208,6 +208,12 @@
     <Filter Include="ffft">
       <UniqueIdentifier>{8b4106ec-caaa-4f61-877a-8b6fcfbc8aa4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\spec">
+      <UniqueIdentifier>{49222795-43f2-4e7e-bca2-04d42725f5c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\wnd">
+      <UniqueIdentifier>{edba3398-b3a6-48ea-b456-8401798ca898}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2264,6 +2270,72 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\ffft\OscSinCos.hpp">
       <Filter>ffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.h">
+      <Filter>mfx\dsp\spec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.hpp">
+      <Filter>mfx\dsp\spec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBHMinLobe.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBHMinLobe.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBlackman.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBlackman.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenHann.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenHann.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CosineSum.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CosineSum.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\DolphCheby.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\DolphCheby.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Generic.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Generic.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\HannPoisson.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\HannPoisson.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Kaiser.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Kaiser.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Ultraspherical.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Ultraspherical.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

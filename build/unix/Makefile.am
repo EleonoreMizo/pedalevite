@@ -448,6 +448,28 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/shape/WsInterFtorAsym2.hpp \
         ../../src/mfx/dsp/shape/WsInterFtorAsym3.h \
         ../../src/mfx/dsp/shape/WsInterFtorAsym3.hpp \
+        ../../src/mfx/dsp/spec/StftHelper.h \
+        ../../src/mfx/dsp/spec/StftHelper.hpp \
+        ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.h \
+        ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.hpp \
+        ../../src/mfx/dsp/wnd/CoefGenBlackman.h \
+        ../../src/mfx/dsp/wnd/CoefGenBlackman.hpp \
+        ../../src/mfx/dsp/wnd/CoefGenHann.h \
+        ../../src/mfx/dsp/wnd/CoefGenHann.hpp \
+        ../../src/mfx/dsp/wnd/CosineSum.h \
+        ../../src/mfx/dsp/wnd/CosineSum.hpp \
+        ../../src/mfx/dsp/wnd/DolphCheby.h \
+        ../../src/mfx/dsp/wnd/DolphCheby.hpp \
+        ../../src/mfx/dsp/wnd/Generic.h \
+        ../../src/mfx/dsp/wnd/Generic.hpp \
+        ../../src/mfx/dsp/wnd/HannPoisson.h \
+        ../../src/mfx/dsp/wnd/HannPoisson.hpp \
+        ../../src/mfx/dsp/wnd/Kaiser.h \
+        ../../src/mfx/dsp/wnd/Kaiser.hpp \
+        ../../src/mfx/dsp/wnd/Ultraspherical.h \
+        ../../src/mfx/dsp/wnd/Ultraspherical.hpp \
+        ../../src/mfx/dsp/wnd/WndInterface.h \
+        ../../src/mfx/dsp/wnd/WndInterface.hpp \
         ../../src/mfx/dsp/BandSplitAllPassPair.h \
         ../../src/mfx/dsp/BandSplitAllPassPair.hpp \
         ../../src/mfx/dsp/FilterCascadeIdEven.h \
