@@ -42,11 +42,9 @@ namespace dyn
 
 float	EnvFollowerRms::process_sample (float x)
 {
-	using namespace std;
-
 	const float		y = process_sample_no_sqrt (x);
 
-	return (static_cast <float> (sqrt (y)));
+	return float (sqrt (y));
 }
 
 
@@ -55,7 +53,7 @@ float	EnvFollowerRms::process_sample_no_sqrt (float x)
 {
 	process_sample_internal (_state, x);
 
-	return (_state);
+	return _state;
 }
 
 

@@ -113,8 +113,6 @@ void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], lon
 	long				pos = 0;
 	do
 	{
-		using namespace std;
-
 		const float		x = in_ptr [pos];
 		process_sample_internal (state, x);
 		out_ptr [pos] = float (sqrt (state));
@@ -198,9 +196,7 @@ float	EnvFollowerRms::analyse_block (const float data_ptr [], long nbr_spl)
 
 	_state = state;
 
-	using namespace std;
-
-	return (float (sqrt (state)));
+	return float (sqrt (state));
 }
 
 
@@ -227,7 +223,7 @@ float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], long nbr_spl)
 
 	_state = state;
 
-	return (state);
+	return state;
 }
 
 
@@ -254,7 +250,7 @@ float	EnvFollowerRms::analyse_block_raw_cst (float x2, long nbr_spl)
 
 	_state += delta * coef_block;
 
-	return (_state);
+	return _state;
 }
 
 
