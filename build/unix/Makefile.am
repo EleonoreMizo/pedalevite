@@ -323,6 +323,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.h \
         ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.hpp \
+        ../../src/mfx/dsp/dyn/EnvFollowerPeak.cpp \
+        ../../src/mfx/dsp/dyn/EnvFollowerPeak.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerPeak.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.cpp \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.h \
         ../../src/mfx/dsp/dyn/EnvFollowerRms.hpp \

@@ -2367,6 +2367,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DcKiller1p.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerPeak.h">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerPeak.hpp">
+      <Filter>mfx\dsp\dyn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3280,6 +3286,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DcKiller1p.cpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerPeak.cpp">
+      <Filter>mfx\dsp\dyn</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

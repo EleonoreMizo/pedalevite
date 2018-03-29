@@ -390,6 +390,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerPeak.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerPeak.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.h" />
@@ -925,6 +927,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\Compander.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerPeak.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRmsSimple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.cpp" />
