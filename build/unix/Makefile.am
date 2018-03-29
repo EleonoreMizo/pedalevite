@@ -359,6 +359,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/Biquad4SimdMorph.hpp \
         ../../src/mfx/dsp/iir/BiquadPackSimd.h \
         ../../src/mfx/dsp/iir/BiquadPackSimd.hpp \
+        ../../src/mfx/dsp/iir/DcKiller1p.cpp \
+        ../../src/mfx/dsp/iir/DcKiller1p.h \
+        ../../src/mfx/dsp/iir/DcKiller1p.hpp \
         ../../src/mfx/dsp/iir/DesignEq2p.cpp \
         ../../src/mfx/dsp/iir/DesignEq2p.h \
         ../../src/mfx/dsp/iir/DesignEq2p.hpp \
