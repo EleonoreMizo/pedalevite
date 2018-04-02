@@ -344,6 +344,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\Setup.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SignalPort.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Slot.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqFast.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\BandSplitAllPassPair.hpp" />
@@ -907,6 +908,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\Setup.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\SignalPort.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Slot.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqFast.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.cpp" />

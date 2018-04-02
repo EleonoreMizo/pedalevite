@@ -2361,6 +2361,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.hpp">
       <Filter>mfx\dsp\wnd</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqFast.h">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DcKiller1p.h">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
@@ -3283,6 +3286,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\syn0\Synth0Desc.cpp">
       <Filter>mfx\pi\syn0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqFast.cpp">
+      <Filter>mfx\dsp\ana</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DcKiller1p.cpp">
       <Filter>mfx\dsp\iir</Filter>

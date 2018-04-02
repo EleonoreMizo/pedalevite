@@ -259,6 +259,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/SignalPort.h \
         ../../src/mfx/doc/Slot.cpp \
         ../../src/mfx/doc/Slot.h \
+        ../../src/mfx/dsp/ana/FreqFast.cpp \
+        ../../src/mfx/dsp/ana/FreqFast.h \
         ../../src/mfx/dsp/ana/FreqYin.cpp \
         ../../src/mfx/dsp/ana/FreqYin.h \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.cpp \
