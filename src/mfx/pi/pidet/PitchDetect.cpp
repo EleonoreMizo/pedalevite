@@ -76,6 +76,8 @@ PitchDetect::PitchDetect ()
 
 	_state_set.add_observer (Param_FREQ_MIN, _param_change_flag);
 	_state_set.add_observer (Param_FREQ_MAX, _param_change_flag);
+
+	_analyser.set_smoothing (0.5f, 0.0f);
 }
 
 

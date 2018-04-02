@@ -104,6 +104,18 @@ void	FreqYin::set_freq_top (float f)
 
 
 
+void	FreqYin::set_smoothing (float responsiveness, float thr)
+{
+	assert (responsiveness > 0);
+	assert (responsiveness <= 1);
+	assert (thr >= 0);
+
+	_smoothing  = responsiveness;
+	_smooth_thr = thr;
+}
+
+
+
 void	FreqYin::clear_buffers ()
 {
 #if defined (mfx_dsp_ana_USE_SIMD)

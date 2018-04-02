@@ -67,6 +67,7 @@ public:
 	void           set_sample_freq (double sample_freq);
 	void           set_freq_bot (float f);
 	void           set_freq_top (float f);
+	void           set_smoothing (float responsiveness, float thr);
 	void           clear_buffers ();
 	float          process_block (const float spl_ptr [], int nbr_spl);
 	float          process_sample (float x);
@@ -89,8 +90,6 @@ private:
 
 	const float    _min_freq    = 20.0f; // Hz
 	const float    _threshold   = 0.1f;
-	const float    _smoothing   = 0.125f;  // Smoothing coefficient (LERP between the new and accumulated values)
-	const float    _smooth_thr  = 0.02f;   // Smoothing is done only on close values (threshold is relative)
 
 #if defined (mfx_dsp_ana_USE_SIMD)
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
@@ -103,6 +102,8 @@ private:
 	int            _buf_pos     = 0;    // Beginning of the analysis buffer within the ring buffer
 	int            _buf_mask    = 0;
 	float          _sample_freq = 0;    // Hz. 0 = not set
+	float          _smoothing   = 0.125f;  // Smoothing coefficient (LERP between the new and accumulated values)
+	float          _smooth_thr  = 0.02f;   // Smoothing is done only on close values (threshold is relative)
 	int            _win_len     = 0;    // Samples
 	int            _min_delta   = 0;
 	int            _step_size   = 0;    // Number of samples between two analysis
