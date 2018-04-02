@@ -35,9 +35,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
 
-#include "mfx/dsp/wnd/CoefGenBHMinLobe.h"
-#include "mfx/dsp/wnd/Generic.h"
-
 #include <algorithm>
 
 #include <cassert>
@@ -65,30 +62,19 @@ OnsetDetect::OnsetDetect ()
 ,	_sample_freq (0)
 ,	_inv_fs (0)
 ,	_param_change_flag ()
-,	_buf_env_main ()
+,	_buf_env_vol ()
+,	_buf_env_os ()
+,	_buf_old_vol ()
+,	_buf_old_os ()
 ,	_buf_tmp ()
-,	_buf_freq ()
-,	_buf_mag_arr ()
-,	_buf_psp (_fft_len / 2)
-,	_env_main ()
-,	_onset_prefilter ()
-,	_frame_len (32)
-,	_frame_pos (0)
-,	_vol_sq (0)
-,	_velo_gain (8)
-,	_thr_off (1e-3f)
-,	_velo_clip_flag (false)
-,	_note_on_flag (false)
-,	_stft ()
-,	_buf_index (0)
-,	_odf_val_post_old (0)
-,	_dist_min (5)
-,	_dist_cur (0)
-,	_relax_coef (0)
-,	_relax_time (0)
-,	_psp_floor (0.1f)
-,	_odf_mem_arr ()
-,	_odf_mem_pos ()
+,	_prefilter ()
+,	_env_os ()
+,	_dly_vol ()
+,	_dly_os ()
+,	_interp ()
+,	_last_count (0)
+,	_last_delay (1000)
+,	_note_flag (false)
 {
 	dsp::mix::Align::setup ();
 
@@ -101,16 +87,8 @@ OnsetDetect::OnsetDetect ()
 	_state_set.add_observer (Param_VELO_CLIP    , _param_change_flag);
 	_state_set.add_observer (Param_REL_THR      , _param_change_flag);
 
-	std::vector <float>  win_data (_fft_len);
-	dsp::wnd::Generic <float, dsp::wnd::CoefGenBHMinLobe> win;
-	win.make_win (&win_data [0], _fft_len);
-	_stft.set_win (&win_data [0]);
-	_stft.set_hop_size (_hop_size);
-
-	for (auto &buf : _buf_mag_arr)
-	{
-		buf.resize (_fft_len / 2);
-	}
+	_dly_vol.set_interpolator (_interp);
+	_dly_os.set_interpolator (_interp);
 }
 
 
@@ -146,25 +124,27 @@ int	OnsetDetect::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.clear_buffers ();
 
 	const int      mbs_align = (max_buf_len + 3) & ~3;
-	_buf_env_main.resize (mbs_align);
+	_buf_env_vol.resize (mbs_align);
+	_buf_env_os.resize (mbs_align);
+	_buf_old_vol.resize (mbs_align);
+	_buf_old_os.resize (mbs_align);
 	_buf_tmp.resize (mbs_align);
-	_buf_freq.resize (_fft_len);
 
-	set_relax_coef (1, _hop_size);
-
-	const float    bs [2] = { 0.125f, 1 };
-	const float    as [2] = { 1     , 1 };
-	float          bz [2];
-	float          az [2];
-	mfx::dsp::iir::TransSZBilin::map_s_to_z_one_pole (
+	const float    bs [3] = { 0, 0, 4 };
+	const float    as [3] = { 1, 3, 1 };
+	float          bz [3];
+	float          az [3];
+	mfx::dsp::iir::TransSZBilin::map_s_to_z (
 		bz, az, bs, as, 1000, sample_freq
 	);
-	_onset_prefilter.set_z_eq (bz, az);
+	_prefilter.set_z_eq (bz, az);
 
-	static const double  ana_frame_duration = 0.001;   // s
-	_frame_len = fstb::round_int (sample_freq * ana_frame_duration);
-
-	_env_main.set_times (0.0001f, 0.010f);
+	_env_os.set_times (0.003f, 0.030f);
+	_dly_vol.set_max_delay_time (float (0.100 + max_buf_len / sample_freq));
+	_dly_vol.set_sample_freq (sample_freq, 1);
+	_dly_os.set_max_delay_time (float (0.100 + max_buf_len / sample_freq));
+	_dly_os.set_sample_freq (sample_freq, 1);
+	_last_delay = fstb::round_int (0.020f * sample_freq);
 
 	_param_change_flag.set ();
 
@@ -209,73 +189,54 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 
 	const int      nbr_spl = proc._nbr_spl;
 
-	// Emphasis high-mid frequencies and lowers the bass frequencies
-	_onset_prefilter.process_block (&_buf_tmp [0], proc._src_arr [0], nbr_spl);
-
-	_env_main.process_block_no_sqrt (
-		&_buf_env_main [0], &_buf_tmp [0], nbr_spl
+	_env_vol.process_block_no_sqrt (
+		&_buf_env_vol [0], proc._src_arr [0], nbr_spl
 	);
+	_dly_vol.push_block (&_buf_env_vol [0], nbr_spl);
+	_dly_vol.read_block (&_buf_old_vol [0], nbr_spl, 0.080f, 0.080f, -nbr_spl);
+
+	// Emphasis high-mid frequencies and lowers the bass frequencies
+	_prefilter.process_block (&_buf_tmp [0], proc._src_arr [0], nbr_spl);
+
+	_env_os.process_block (
+		&_buf_env_os [0], &_buf_tmp [0], nbr_spl
+	);
+	_dly_os.push_block (&_buf_env_os [0], nbr_spl);
+	_dly_os.read_block (&_buf_old_os [0], nbr_spl, 0.015f, 0.015f, -nbr_spl);
 
 	float          ret_onset  = 0;
 	float          ret_offset = 0;
 
-	int            pos_r      = 0;
-	do
+	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		float          vol2 = _buf_env_main [pos_r];
-
-		// Note On
-		int            work_len;
-		bool           trans_flag;
-		_stft.process_block (
-			&_buf_tmp [pos_r],
-			&_buf_freq [0],
-			nbr_spl - pos_r,
-			trans_flag,
-			work_len
-		);
-
-		if (trans_flag)
+		const float    vol2_cur   = _buf_env_vol [pos];
+		const float    vol2_old   = _buf_old_vol [pos];
+		const float    env_os_cur = _buf_env_os [pos];
+		const float    env_os_old = _buf_old_os [pos];
+		if (_last_count > 0)
 		{
-			// Magnitude extraction
-			compute_magnitudes ();
-
-			// Whitening
-			whiten ();
-
-			// Onset detection function
-			float          val = compute_mkl ();
-
-			const bool     onset_flag = detect_onset (val);
-			if (onset_flag)
-			{
-				_dist_cur     = _dist_min;
-				_note_on_flag = true;
-				_vol_sq       = vol2;
-				float          final_velo = sqrt (_vol_sq) * _velo_gain;
-				if (_velo_clip_flag)
-				{
-					final_velo = std::min (final_velo, 1.0f);
-				}
-				ret_onset     = final_velo;
-			}			
-
-			_buf_index = 1 - _buf_index;
+			_last_count -= nbr_spl;
 		}
-
-		// Note Off
-		if (_note_on_flag)
+		else
 		{
-			if (vol2 < _vol_sq * (_thr_off * _thr_off))
+			if (env_os_cur > env_os_old * 1.5f && vol2_cur > 1e-2f * 1e-2f)
 			{
-				ret_offset    = 1;
-				_note_on_flag = false;
+				ret_onset   = float (sqrt (vol2_cur));
+				_note_flag  = true;
+				_last_count = _last_delay - nbr_spl;
 			}
 		}
 
-		pos_r += work_len;
+		if (_note_flag)
+		{
+			const float    thr = 1e-3f;
+			if (vol2_cur * 2 < vol2_old || vol2_cur < thr * thr)
+			{
+				ret_offset = 1;
+				_note_flag = false;
+			}
+		}
 	}
-	while (pos_r < nbr_spl);
 
 	proc._sig_arr [0] [0] = ret_onset;
 	proc._sig_arr [1] [0] = ret_offset;
@@ -289,25 +250,11 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 
 void	OnsetDetect::clear_buffers ()
 {
-	_onset_prefilter.clear_buffers ();
-	_frame_pos = 0;
-	_vol_sq    = 0;
-	_note_on_flag = false;
-
-	_stft.clear_buffers ();
-	_buf_index = 0;
-	for (auto &buf : _buf_mag_arr)
-	{
-		dsp::mix::Align::clear (&buf [0], int (buf.size ()));
-	}
-	dsp::mix::Align::clear (&_buf_psp [0], int (_buf_psp.size ()));
-	_odf_val_post_old = 0;
-	_dist_cur = 0;
-	for (auto &val : _odf_mem_arr)
-	{
-		val = 0;
-	}
-	_odf_mem_pos = 0;
+	_prefilter.clear_buffers ();
+	_dly_vol.clear_buffers ();
+	_dly_os.clear_buffers ();
+	_last_count = 0;
+	_note_flag  = false;
 }
 
 
@@ -316,178 +263,8 @@ void	OnsetDetect::update_param (bool force_flag)
 {
 	if (_param_change_flag (true) || force_flag)
 	{
-		_velo_clip_flag = (_state_set.get_val_tgt_nat (Param_VELO_CLIP) >= 0.5f);
-		_thr_off        = float (
-			_state_set.get_val_tgt_nat (Param_REL_THR)
-		);
+		/*** To do ***/
 	}
-}
-
-
-
-float	OnsetDetect::compute_coef (double t) const
-{
-	assert (_sample_freq > 0);
-
-	return float (
-		dsp::dyn::EnvHelper::compute_env_coef_simple (t, _sample_freq)
-	);
-}
-
-
-
-void	OnsetDetect::set_relax_coef (float t, int hop_size)
-{
-	_relax_time = t;
-	_relax_coef = 0;
-	if (t > 0)
-	{
-		_relax_coef = float (exp ((log (0.1) * hop_size) / (t * _sample_freq)));
-	}
-}
-
-
-
-void	OnsetDetect::compute_magnitudes ()
-{
-	const int      ofs_imag = _fft_len / 2;
-	BufAlign &     buf_cur  = _buf_mag_arr [_buf_index];
-#if 0
-	for (int bin = 1; bin < _nbr_bins; ++bin)
-	{
-		const float    real = _buf_freq [bin           ];
-		const float    imag = _buf_freq [bin + ofs_imag];
-		const float    mag  = sqrt (real * real + imag * imag);
-		buf_cur [bin] = mag;
-	}
-#else
-	for (int bin = 0; bin < _nbr_bins; bin += 4)
-	{
-		const auto     real =
-			fstb::ToolsSimd::load_f32 (&_buf_freq [bin           ]);
-		const auto     imag =
-			fstb::ToolsSimd::load_f32 (&_buf_freq [bin + ofs_imag]);
-		const auto     mag  = fstb::ToolsSimd::sqrt (real * real + imag * imag);
-		fstb::ToolsSimd::store_f32 (&buf_cur [bin], mag);
-	}
-	buf_cur [0] = 0;  // Makes sure DC is 0
-#endif
-}
-
-
-
-void	OnsetDetect::whiten ()
-{
-	BufAlign &     buf_cur  = _buf_mag_arr [_buf_index];
-#if 0
-	for (int bin = 1; bin < _nbr_bins; ++bin)
-	{
-		const float    mag     = buf_cur [bin];
-		float          psp_cur = mag;
-		const float    psp_old = _buf_psp [bin];
-		if (psp_cur < psp_old)
-		{
-			psp_cur += (psp_old - psp_cur) * _relax_coef;
-		}
-		_buf_psp [bin] = psp_cur;
-
-		buf_cur [bin] = mag / std::max (psp_cur, _psp_floor);
-	}
-#else
-	const auto     coef      = fstb::ToolsSimd::set1_f32 (_relax_coef);
-	const auto     psp_floor = fstb::ToolsSimd::set1_f32 (_psp_floor);
-	for (int bin = 0; bin < _nbr_bins; bin += 4)
-	{
-		auto           mag     = fstb::ToolsSimd::load_f32 (&buf_cur [bin]);
-		auto           psp_cur = mag;
-		const auto     psp_old = fstb::ToolsSimd::load_f32 (&_buf_psp [bin]);
-		const auto     c_inf_o = fstb::ToolsSimd::cmp_lt_f32 (psp_cur, psp_old);
-		auto           lerp    = (psp_old - psp_cur) * coef;
-		lerp = fstb::ToolsSimd::and_f32 (lerp, c_inf_o);
-		psp_cur += lerp;
-
-		fstb::ToolsSimd::store_f32 (&_buf_psp [bin], psp_cur);
-
-		const auto     mx     = fstb::ToolsSimd::max_f32 (psp_cur, psp_floor);
-		const auto     mx_inv = fstb::ToolsSimd::rcp_approx2 (mx);
-		mag *= mx_inv;
-
-		fstb::ToolsSimd::store_f32 (&buf_cur [bin], mag);
-	}
-#endif
-}
-
-
-
-// Computes the modified Kullback-Liebler distance (eq. 2.9)
-float	OnsetDetect::compute_mkl ()
-{
-	BufAlign &     buf_cur  = _buf_mag_arr [_buf_index];
-	BufAlign &     buf_old  = _buf_mag_arr [1 - _buf_index];
-	const float    eps      = 1e-2f;
-	float          val      = 0;
-#if 0
-	for (int bin = 1; bin < _nbr_bins; ++bin)
-	{
-		const float    mag_cur = buf_cur [bin];
-		const float    mag_old = buf_old [bin];
-		const float    ratio   = mag_cur / (mag_old + eps);
-		const float    term    = log (1 + ratio);
-		val += term ;
-	}
-#else
-	const auto     eps_v    = fstb::ToolsSimd::set1_f32 (eps);
-	const auto     one      = fstb::ToolsSimd::set1_f32 (1.f);
-	auto           val_v    = fstb::ToolsSimd::set_f32_zero ();
-	for (int bin = 0; bin < _nbr_bins; bin += 4)
-	{
-		const auto     mag_cur = fstb::ToolsSimd::load_f32 (&buf_cur [bin]);
-		const auto     mag_old = fstb::ToolsSimd::load_f32 (&buf_old [bin]);
-		const auto     den     = fstb::ToolsSimd::rcp_approx2 (mag_old + eps_v);
-		const auto     ratio   = mag_cur * den;
-		const auto     term    = fstb::ToolsSimd::log2_approx (one + ratio);
-		val_v += term;
-	}
-
-	val  = fstb::ToolsSimd::sum_h_flt (val_v);
-	val *= float (fstb::LN2);
-#endif
-
-	val *= 7.68f * 0.125f / _nbr_bins;
-
-	return val;
-}
-
-
-
-bool	OnsetDetect::detect_onset (float odf_val)
-{
-	bool           onset_flag = false;
-
-	_odf_mem_arr [_odf_mem_pos] = odf_val;
-
-	std::array <float, _med_span> odf_val_sorted = _odf_mem_arr;
-	std::sort (odf_val_sorted.begin (), odf_val_sorted.end ());
-
-	const float    val_post = odf_val - odf_val_sorted [(_med_span - 1) >> 1];
-	if (_dist_cur > 0)
-	{
-		-- _dist_cur;
-	}
-	else
-	{
-		const float    thr = 0.5f; // Threshold is arbirary.
-		if (val_post > thr && _odf_val_post_old <= thr)
-		{
-			onset_flag = true;
-			_dist_cur  = _dist_min;
-		}
-	}			
-
-	_odf_mem_pos = (_odf_mem_pos + 1) % _med_span;
-	_odf_val_post_old = val_post;
-
-	return onset_flag;
 }
 
 
