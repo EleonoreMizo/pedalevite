@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/osdet/Param.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/pi/param/TplLin.h"
 
 #include <cassert>
 
@@ -59,16 +60,50 @@ OnsetDetectDesc::OnsetDetectDesc ()
 	);
 	_desc_set.add_glob (Param_VELO_CLIP, enu_ptr);
 
-	// Release threshold
+	// Attack threshold
 	param::TplLog *   log_ptr = new param::TplLog (
-		1e-4, 0.1,
-		"Release threshold\nRelease thr\nRel thr\nRT",
+		1e-4, 1e-1,
+		"Attack threshold\nAttack thr\nAtk thr\nAT",
 		"dB",
 		param::HelperDispNum::Preset_DB,
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_REL_THR, log_ptr);
+	_desc_set.add_glob (Param_ATK_THR, log_ptr);
+
+	// Attack ratio
+	log_ptr = new param::TplLog (
+		1, 8,
+		"Attack ratio\nAtk ratio\nAtk R\nAR",
+		"%",
+		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		0,
+		"%3.0f"
+	);
+	_desc_set.add_glob (Param_ATK_RATIO, log_ptr);
+
+	// Release threshold
+	log_ptr = new param::TplLog (
+		1e-4, 1e-1,
+		"Release threshold\nRelease thr\nRls thr\nRT",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	_desc_set.add_glob (Param_RLS_THR, log_ptr);
+
+	// Release ratio
+	log_ptr = new param::TplLog (
+		1, 8,
+		"Release ratio\nRls ratio\nRls R\nRR",
+		"%",
+		param::HelperDispNum::Preset_FLOAT_PERCENT,
+		0,
+		"%3.0f"
+	);
+	_desc_set.add_glob (Param_RLS_RATIO, log_ptr);
+
 }
 
 

@@ -119,6 +119,12 @@ private:
 	dsp::rspl::InterpolatorOrder0
 	               _interp;
 
+	bool           _velo_clip_flag;
+	float          _atk_thr;
+	float          _atk_ratio;
+	float          _rls_thr;
+	float          _rls_ratio;
+
 	int            _last_count;
 	int            _last_delay;
 	bool           _note_flag;

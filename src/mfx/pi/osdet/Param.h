@@ -42,7 +42,10 @@ enum Param
 {
 
 	Param_VELO_CLIP = 0,
-	Param_REL_THR,
+	Param_ATK_THR,
+	Param_ATK_RATIO,
+	Param_RLS_THR,
+	Param_RLS_RATIO,
 
 	Param_NBR_ELT
 

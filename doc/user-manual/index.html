@@ -54,10 +54,11 @@
 	<li><a href="#fx-imp-fix">Input Impedance Fix — Adaptation d’impédance d’entrée</a></li>
 	<li><a href="#fx-nzbl">Noise Bleach — Barrière anti-bruit</a></li>
 	<li><a href="#fx-nzcl">Noise Chlorine — Barrière anti-bruit</a></li>
+	<li><a href="#fx-onsetdetector">Onset detector – Détecteur de début et de fin de note</a></li>
 	<li><a href="#fx-peq">Parametric Equalizer — Égaliseur paramétrique</a></li>
 	<li><a href="#fx-phaserap">Phaser AP</a></li>
 	<li><a href="#fx-phaserht">Phaser HT</a></li>
-	<li><a href="#fx-pitchdetector">Pitch Detector — Détecteur de note</a></li>
+	<li><a href="#fx-pitchdetector">Pitch Detector — Détecteur de hauteur de note</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
 	<li><a href="#fx-sgirlz">SiemensGirlz — Écho créatif</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
@@ -562,14 +563,25 @@ On la modifie à l’aide des flèches horizontales.</p>
 <table>
 <tr><td><span class="ui">Linear</span></td><td>Courbe neutre, par défaut.</td></tr>
 <tr><td><span class="ui">Square</span></td><td>Courbe parabolique. Permet une grande amplitude dans les faibles valeurs, et devient plus sensible sur les valeurs élevées.</td></tr>
-<tr><td><span class="ui">Cubic</span></td><td>Comme <span class="ui">Square</span>, mais plus accentuée.</li>
-<tr><td><span class="ui">Sat. 1</span></td><td>Courbe saturée. C’est l’inverse de <span class="ui">Square</span>&#8239;: les hautes valeurs peuvent être réglées finement, au détriment des valeurs faibles.</td></tr>
-<tr><td><span class="ui">Sat. 2</span></td><td>Comme la précédente, mais plus accentuée.</td></tr>
+<tr><td><span class="ui">Cubic</span></td><td>Comme <span class="ui">Square</span>, mais plus accentuée.</td></tr>
+<tr><td><span class="ui">Sq inv</span></td><td>Courbe saturée. C’est l’inverse de <span class="ui">Square</span>&#8239;: les hautes valeurs peuvent être réglées finement, au détriment des valeurs faibles.</td></tr>
+<tr><td><span class="ui">Cb inv</span></td><td>Comme la précédente, mais plus accentuée.</td></tr>
 <tr><td><span class="ui">S 1</span></td><td>Les plages de valeurs haute et basse peuvent être réglées finement, au détriment de la plage médiane.</td></tr>
 <tr><td><span class="ui">S 2</span></td><td>Comme <span class="ui">S 1</span>, mais en plus accentuée.</td></tr>
 <tr><td><span class="ui">Flat 1</span></td><td>La plage de valeurs intermédiaire peut être réglée finement, au détriment des plage hautes et basses.</td></tr>
 <tr><td><span class="ui">Flat 2</span></td><td>Comme <span class="ui">Flat 1</span>, mais en plus accentuée.</td></tr>
+<tr><td><span class="ui">Prog 1</span></td><td rowspan="4">Différentes courbes à montée plus ou moins progressive.</td></tr>
+<tr><td><span class="ui">Prog 2</span></td></tr>
+<tr><td><span class="ui">Prog 3</span></td></tr>
+<tr><td><span class="ui">Prog 4</span></td></tr>
+<tr><td><span class="ui">Sat 1</span></td><td rowspan="4">Différentes courbes plus ou moins saturées.</td></tr>
+<tr><td><span class="ui">Sat 2</span></td></tr>
+<tr><td><span class="ui">Sat 3</span></td></tr>
+<tr><td><span class="ui">Sat 4</span></td></tr>
 </table>
+<p>Il est possible de voir le graphique de la courbe avec
+<span class="key">Select</span>.</p>
+<div class="pic"><img src="control-edit-curve.png" /></div>
 <p><span class="ui">Range</span> n’est utilisé que sur les modulations, avec
 certaines sources seulement.
 Cette option offre la possibilité de convertir un signal unipolaire dont les
@@ -1426,9 +1438,55 @@ Plus la sélectivité est grande, plus la bande filtrée sera étroite.</p>
 
 
 
+<h3><a id="fx-onsetdetector"></a>Onset detector — Détecteur de début et de fin de note</h3>
+
+<p>Cet effet n’est pas un effet audio mais un contrôleur qui travaille en
+analysant le son.
+On peut l’insérer à n’importe quel endroit de la chaîne, son effet sur le son
+sera neutre.</p>
+<p>Il détecte le début et la fin de notes ou d’accords et génère un signal
+de contrôle à partir de ces informations afin de moduler d’autres effets.
+L’effet est en fait très simple et ne peut prendre en compte qu’une seule
+note ou accord à la fois.</p>
+<p>Il y a deux signaux en sortie:</p>
+<ol style="list-style-type:decimal;">
+<li>Attaque.
+Prend une valeur &gt;&nbsp;0 is une attaque est détectée, sinon 0.
+La valeur est liée à la vélocité de la note détectée.</li>
+<li>Relâche.
+Donne 1 si une fin de note est détectée, sinon 0.</li>
+</ol>
+<p>N.B.&#8239;: le détecteur peut avoir quelques millisecondes de retard.</p>
+
+<p class="var">Velocity clipping</p>
+<p>Indique que la vélocité de la note sera écrêtée à un maximum de 1.</p>
+
+<p class="var">Attack threshold</p>
+<p>Niveau minimum à atteindre pour qu’une attaque soit détectée, en dB.
+Plus le niveau est bas, plus le détecteur est sensible mais aussi plus
+vulnérable aux faux positifs induits par le bruit.</p>
+
+<p class="var">Attack ratio</p>
+<p>Rapport de volume permettant de détecter une attaque, en pourcentage.
+Plus celui-ci est bas, plus le détecteur est sensible mais plus il peut
+générer de faux positifs.</p>
+
+<p class="var">Release threshold</p>
+<p>Niveau maximum en-dessous duquel il faut plonger pour qu’une fin de note
+soit détectée, en dB.
+Plus le niveau est haut, plus le détecteur est sensible.</p>
+
+<p class="var">Release ratio</p>
+<p>Rapport de volume permettant de détecter une fin de note.
+Plus le rapport est bas, plus le détecteur est sensible, toujours avec les
+mêmes considérations sur les faux positifs.</p>
+
+
+
 <h3><a id="fx-peq"></a>Parametric Equalizer — Égaliseur paramétrique</h3>
 
-<p>Il s’agit d’un égaliseur paramétrique 4 bandes très classique.
+<p>Il s’agit d’un égaliseur paramétrique 4, 8 ou 16 bandes (selon l’option
+choisie) très classique.
 Chaque bande est constitué d’un filtre de second ordre.</p>
 
 <p class="var">Band 1/2/3/4 Type</p>
@@ -1459,6 +1517,23 @@ Sans effet sur les filtres passe-haut et bas.</p>
 
 <p class="var">Band 1/2/3/4 Bypass</p>
 <p>Permet de désactiver la bande.</p>
+
+<h4>Édition graphique</h4>
+
+<p>On peut aussi régler les paramètres de l’égaliseur avec un aperçu graphique
+immédiat.</p>
+<div class="pic"><img src="fx-gui-peq.png" /></div>
+<p>Il est possible de faire défiler les paramètres comme d’habitude, ceux-ci
+sont affichés un par un en bas à gauche.
+Le tout premier paramètre <span class="ui">R</span> donne l’échelle verticale
+de la représentation, en dB.</p>
+<p>Les points en bas à droite indiquent la précision du changement des paramètres
+que l’on obtient avec les touches <span class="keya">←</span> et
+<span class="keya">→</span>.
+On peut changer cette précision avec la touche
+<span class="keya">Select</span>.
+<span class="keya">Esc</span> pour revenir à l’écran principal de paramétrage
+de l’effet.</p>
 
 
 
@@ -1604,7 +1679,7 @@ Sherpard-Risset.</p>
 
 
 
-<h3><a id="fx-pitchdetector"></a>Pitch Detector — Détecteur de note</h3>
+<h3><a id="fx-pitchdetector"></a>Pitch Detector — Détecteur de hauteur de note</h3>
 
 <p>Cet effet n’est pas un effet audio mais un contrôleur qui travaille en
 analysant le son.
@@ -2196,64 +2271,71 @@ courante.</p>
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
 
-<p><b>r11, 2018.03.22</b></p>
+<p><b>r12, 2018-04-03</b></p>
+<ul>
+<li>Ajout de l’effet Onset Detector.</li>
+<li>Mise à jour des courbes de modulation.</li>
+<li>Mise à jour des écrans de l’interface d’utilisation.</li>
+</ul>
+
+<p><b>r11, 2018-03-22</b></p>
 <ul>
 <li>Ajout de l’effet Pitch Detector.</li>
 </ul>
 
-<p><b>r10, 2017.08.01</b></p>
+<p><b>r10, 2017-08-01</b></p>
 <ul>
 <li>Ajout de l’effet Phaser AP.</li>
 </ul>
 
-<p><b>r9, 2017.07.17</b></p>
+<p><b>r9, 2017-07-17</b></p>
 <ul>
 <li>Ajout de l’effet Color Me.</li>
 <li>Mise à jour de divers écrans de l’interface d’utilisation.</li>
 </ul>
 
-<p><b>r8, 2017.06.14</b></p>
+<p><b>r8, 2017-06-14</b></p>
 <ul>
 <li>Ajout de l’effet SiemensGirlz.</li>
 </ul>
 
-<p><b>r7, 2017.04.24</b></p>
+<p><b>r7, 2017-04-24</b></p>
 <ul>
 <li>Ajout de l’effet Ramp.</li>
 </ul>
 
-<p><b>r6, 2017.04.22</b></p>
+<p><b>r6, 2017-04-22</b></p>
 <ul>
 <li>Ajout de nouveaux paramètres au détecteur d’enveloppe.</li>
 <li>Ajout d’un deuxième effet de wah-wah.</li>
 </ul>
 
-<p><b>r5, 2017.02.11</b></p>
+<p><b>r5, 2017-02-11</b></p>
 <ul>
 <li>Déplacement de la partie notch de Noise bleach dans un effet séparé, Noise chlorine.</li>
 </ul>
 
-<p><b>r4, 2017.02.11</b></p>
+<p><b>r4, 2017-02-11</b></p>
 <ul>
 <li>Ajout du filtrage par bandes continues sur le Noise bleach.</li>
 </ul>
 
-<p><b>r3, 2017.02.07</b></p>
+<p><b>r3, 2017-02-07</b></p>
 <ul>
 <li>Ajout de cinq paramètres au phaser.</li>
 </ul>
 
-<p><b>r2, 2017.02.05</b></p>
+<p><b>r2, 2017-02-05</b></p>
 <ul>
 <li>Ajout de l’effet Noise bleach.</li>
 </ul>
 
-<p><b>r1, 2017.01.28</b></p>
+<p><b>r1, 2017-01-28</b></p>
 <ul>
 <li>Ajout de l’effet Harmonic tremolo.</li>
 </ul>
 
-<p><b>r0, 2016.11.29</b></p>
+<p><b>r0, 2016-11-29</b></p>
 <ul>
 <li>Création du document.</li>
 </ul>

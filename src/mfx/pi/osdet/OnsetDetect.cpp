@@ -72,6 +72,11 @@ OnsetDetect::OnsetDetect ()
 ,	_dly_vol ()
 ,	_dly_os ()
 ,	_interp ()
+,	_velo_clip_flag (true)
+,	_atk_thr (1e-2f)
+,	_atk_ratio (1.5f)
+,	_rls_thr (1e-3f)
+,	_rls_ratio (1.414f)
 ,	_last_count (0)
 ,	_last_delay (1000)
 ,	_note_flag (false)
@@ -81,11 +86,17 @@ OnsetDetect::OnsetDetect ()
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_VELO_CLIP    ,  0);
-	_state_set.set_val_nat (desc_set, Param_REL_THR      ,  1e-2);
+	_state_set.set_val_nat (desc_set, Param_VELO_CLIP, 1);
+	_state_set.set_val_nat (desc_set, Param_ATK_THR  , 1e-2);
+	_state_set.set_val_nat (desc_set, Param_ATK_RATIO, 1.5);
+	_state_set.set_val_nat (desc_set, Param_RLS_THR  , 1e-3);
+	_state_set.set_val_nat (desc_set, Param_RLS_RATIO, 1.414);
 
-	_state_set.add_observer (Param_VELO_CLIP    , _param_change_flag);
-	_state_set.add_observer (Param_REL_THR      , _param_change_flag);
+	_state_set.add_observer (Param_VELO_CLIP, _param_change_flag);
+	_state_set.add_observer (Param_ATK_THR  , _param_change_flag);
+	_state_set.add_observer (Param_ATK_RATIO, _param_change_flag);
+	_state_set.add_observer (Param_RLS_THR  , _param_change_flag);
+	_state_set.add_observer (Param_RLS_RATIO, _param_change_flag);
 
 	_dly_vol.set_interpolator (_interp);
 	_dly_os.set_interpolator (_interp);
@@ -219,9 +230,14 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 		}
 		else
 		{
-			if (env_os_cur > env_os_old * 1.5f && vol2_cur > 1e-2f * 1e-2f)
+			if (   env_os_cur > env_os_old * _atk_ratio
+			    && vol2_cur > _atk_thr * _atk_thr)
 			{
 				ret_onset   = float (sqrt (vol2_cur));
+				if (_velo_clip_flag)
+				{
+					ret_onset = std::min (ret_onset, 1.0f);
+				}
 				_note_flag  = true;
 				_last_count = _last_delay - nbr_spl;
 			}
@@ -229,8 +245,8 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 
 		if (_note_flag)
 		{
-			const float    thr = 1e-3f;
-			if (vol2_cur * 2 < vol2_old || vol2_cur < thr * thr)
+			if (   vol2_cur * (_rls_ratio * _rls_ratio) < vol2_old
+			    || vol2_cur < _rls_thr * _rls_thr)
 			{
 				ret_offset = 1;
 				_note_flag = false;
@@ -263,7 +279,12 @@ void	OnsetDetect::update_param (bool force_flag)
 {
 	if (_param_change_flag (true) || force_flag)
 	{
-		/*** To do ***/
+		_velo_clip_flag =
+			(_state_set.get_val_tgt_nat (Param_VELO_CLIP) >= 0.5f);
+		_atk_thr   = float (_state_set.get_val_tgt_nat (Param_ATK_THR  ));
+		_atk_ratio = float (_state_set.get_val_tgt_nat (Param_ATK_RATIO));
+		_rls_thr   = float (_state_set.get_val_tgt_nat (Param_RLS_THR  ));
+		_rls_ratio = float (_state_set.get_val_tgt_nat (Param_RLS_RATIO));
 	}
 }
 
