@@ -797,15 +797,22 @@ dtparam=spi=on
 #dtparam=audio=on</pre>
 <p>Therefore the default audio device is removed.
 This is important because it simplifies our audio interface installation.
-Then, we can change the boot preferences to avoid loading the graphical
+Then, we ask to load the I2C module during boot:</p>
+<pre class="term">sudo nano /etc/modules</pre>
+<p>Add the following lines at the end of the file:</p>
+<pre class="term">i2c-bcm2708
+i2c-dev</pre>
+<p>We now ask to boot to the command line to avoid loading the graphical
 interface subsystem:</p>
+<pre class="term">sudo systemctl set-default multi-user.target
+sudo ln -fs /lib/systemd/system/getty@.service \
+/etc/systemd/system/getty.target.wants/getty@tty1.service</pre>
+<p>Now you can set your language and keyboard preferences (optional):</p>
 <pre class="term">sudo raspi-config</pre>
-<p>Select <code>3 Boot Options</code>, then <code>B1 Desktop /
-CLI</code> and choose <code>Console</code>.
-Possibly go to <code>4. Localisation Options</code> and set your
+<p>Select <code>4. Localisation Options</code> and set your
 language and keyboard preferences.
 Finally, hit the left arrow to select <code>Finish</code>.
-Reboot if required:</p>
+Reboot if the program requires it:</p>
 <pre class="term">sudo shutdown -r now</pre>
 
 
@@ -878,7 +885,7 @@ sudo cp ../../bin/mv_rofs.sh /opt/pedalevite/bin/mv_rofs.sh</pre>
 <p>The Pi can now be inserted in the enclosure and connected to all the
 required cards and peripherals (see the building instructions).
 Once done, run Pédale Vite for a quick check:</p>
-<pre class="term">/opt/pedalevite/bin/pedalevite</pre>
+<pre class="term">sudo /opt/pedalevite/bin/pedalevite</pre>
 <p>The program should run normally.
 <code>Ctrl+C</code> to stop it.</p>
 
@@ -1349,12 +1356,12 @@ connectors.</p>
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
 
-<p><b>r1, 2017.09.24</b></p>
+<p><b>r1, 2017-09-24</b></p>
 <ul>
 <li>Document translation in English.</li>
 </ul>
 
-<p><b>r0, 2016.12.31</b></p>
+<p><b>r0, 2016-12-31</b></p>
 <ul>
 <li>Document creation (in French).</li>
 </ul>

@@ -929,14 +929,22 @@ suit&#8239;:</p>
 dtparam=spi=on
 #dtparam=audio=on</pre>
 <p>Donc on vire le son par défaut au passage.
-C’est important parce que ça simplifie beaucoup l’installation de notre carte.
-Ensuite on peut changer les préférences de boot pour ne pas avoir le système
+C’est important parce que ça simplifie beaucoup l’installation de notre
+carte.
+Puis on demande de charger le module I2C lors du boot&#8239;:</p>
+<pre class="term">sudo nano /etc/modules</pre>
+<p>Ajouter les lignes suivantes à la fin du fichier&#8239;:</p>
+<pre class="term">i2c-bcm2708
+i2c-dev</pre>
+<p>Ensuite on peut changer les préférences de boot pour ne pas avoir le système
 graphique&#8239;:</p>
+<pre class="term">sudo systemctl set-default multi-user.target
+sudo ln -fs /lib/systemd/system/getty@.service \
+/etc/systemd/system/getty.target.wants/getty@tty1.service</pre>
+<p>En option, on peut régler les préférences de langue et de clavier&#8239;:</p>
 <pre class="term">sudo raspi-config</pre>
-<p>Sélectionner ensuite <code>3 Boot Options</code>, puis <code>B1 Desktop /
-CLI</code> et choisir <code>Console</code>.
-Éventuellement passer dans <code>4. Localisation Options</code> et
-régler les préférences de langue et de clavier.
+<p>Sélectionner <code>4. Localisation Options</code> et
+régler les préférences voulues.
 Finalement, flèche gauche pour sélectionner <code>Finish</code>.
 Redémarrer si le programme l’indique comme étant nécessaire:</p>
 <pre class="term">sudo shutdown -r now</pre>
@@ -1012,7 +1020,7 @@ sudo cp ../../bin/mv_rofs.sh /opt/pedalevite/bin/mv_rofs.sh</pre>
 <p>Le Pi peut maintenant être inséré dans son boîtier et connecté à toutes
 les cartes et périphériques nécessaires (cf. les instructions de montage).
 Une fois ceci fait, on peut lancer Pédale Vite pour tester&#8239;:</p>
-<pre class="term">/opt/pedalevite/bin/pedalevite</pre>
+<pre class="term">sudo /opt/pedalevite/bin/pedalevite</pre>
 <p>Le programme doit se mettre en route et tourner normalement.
 <code>Ctrl+C</code> pour l’interrompre.</p>
 
@@ -1516,12 +1524,12 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
 
-<p><b>r1, 2017.09.24</b></p>
+<p><b>r1, 2017-09-24</b></p>
 <ul>
 <li>Reformulations et mises à jour mineures.</li>
 </ul>
 
-<p><b>r0, 2016.12.31</b></p>
+<p><b>r0, 2016-12-31</b></p>
 <ul>
 <li>Création du document.</li>
 </ul>
