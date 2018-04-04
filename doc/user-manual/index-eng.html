@@ -732,48 +732,48 @@ The error in cent is also given on the display.</p>
 
 <h3><a id="fx-colorme"></a>Color Me — Vocal filter</h3>
 
-<p>Color Me permet de sculpter le spectre du son à l’aide de formants
-(bosses résonantes autour de fréquences caractéristiques),
-lui donnant ainsi une coloration vocale.
-On choisit une série de deux à quatre voyelles parmi une dizaine.
-Le paramètre principal sert à faire la transition entre les voyelles
-sélectionnées, donnant un son tendant vers l’une ou l’autre.</p>
-<p>Note: avec des réglages très accentués, il peut être judicieux de faire
-suivre l’effet d’un compresseur afin de limiter de trop fortes résonances.</p>
+<p>Color Me sculpts the sound spectrum with formants (resonant bumps centered
+around characteristic frequencies),
+giving a vocal color.
+A series of two to four vowels is chosen from a dozen.
+The main parameter is used to make the transition between the selected vowels,
+giving a sound tending towards one or the other.</p>
+<p>Note: with very accentuated settings, it can be judicious to make follow
+the effect with a compressor in order to limit too strong resonances.</p>
 
 <p class="var">Vowel morphing</p>
-<p>Ce paramètre contrôle la transition entre les voyelles sélectionnées.
-Il est assigné par défaut à un contrôleur libre.</p>
+<p>This parameter controls the transition between the selected vowels.
+It is assigned by default to a free controller.</p>
 
 <p class="var">Formant resonance</p>
-<p>Chaque formant est modélisé par un filtre en cloche.
-Ce paramètre permet d’ajuster le niveau de résonance de ce filtre.</p>
+<p>Each formant is modeled by a bell filter.
+This parameter is used to adjust the resonance of this filter.</p>
 
 <p class="var">Formant selectivity</p>
-<p>Permet de contrôler la sélectivité (Q) du filtre formantique.
-Il est souvent préférable de le faire varier en conjonction avec
+<p>Used to control the selectivity (Q) of the formant filter.
+It is often best to vary it in conjunction with
 <var>Formant resonance</var>.</p>
 
 <p class="var">Formant transpose</p>
-<p>Permet de décaler les formants de plus ou moins une octave.
-Ce décalage reflète la taille de l’appareil vocal émulé et influe sur le
-timbre de la voix synthétique, donnant quelque chose allant de Jabba the Hutt
-à Mickey Mouse.</p>
+<p>Allows to shift the formants by more or less one octave.
+This shift reflects the size of the emulated vocal apparatus and
+influences the timbre of the synthetic voice, giving something from Jabba the
+Hutt to Mickey Mouse.</p>
 
 <p class="var">Number of formants</p>
-<p>Seuls deux formants permettent d’identifier une voyelle mais le son
-résultant est assez particulier.
-Un troisième formant donne plus de clarté et de réalisme.
-Ce paramètre permet de choisir entre les deux.</p>
+<p>Only two formants make it possible to identify a vowel but the resulting
+sound is somewhat weird.
+A third formant gives more clarity and realism.
+This parameter allows you to choose between two or three.</p>
 
 <p class="var">Number of vowels</p>
-<p>Nombre des voyelles transformées par <var>Vowel morphing</var>.</p>
+<p>Number of voyels transformed by the <var>Vowel morphing</var>.</p>
 
 <p class="var">Vowel 1, 2, 3, 4 type</p>
-<p>Type de la voyelle.
-Les voyelles de la liste sont tirées de la langue française.</p>
+<p>Vowel type.
+The vowels of the following list are taken from the French language.</p>
 <table>
-<tr><th>Voyelle</th><th>Phonétique</th></tr>
+<tr><th>Vowel</th><th>Phonetic</th></tr>
 <tr><td><span class="ui">i</span></td><td>i</td></tr>
 <tr><td><span class="ui">é</span></td><td>e</td></tr>
 <tr><td><span class="ui">è</span></td><td>ɛ</td></tr>
@@ -787,220 +787,210 @@ Les voyelles de la liste sont tirées de la langue française.</p>
 </table>
 
 <p class="var">Vowel 1, 2, 3, 4 set</p>
-<p>Il y a trois jeux de voyelles, les fréquences des formants étant issues de
-différentes études.
-Ce paramètre premet de choisir le jeu et de disposer ainsi des variations sur
-chaque voyelle.</p>
+<p>There is three sets of vowels, formant frequencies coming from different
+studies.
+This parameter selects the set and allows to get some variations on a give
+vowel.</p>
 <table>
 <tr><td><span class="ui">Call</span></td><td>Calliope (Tubach, 1989)</td></tr>
-<tr><td><span class="ui">GD</span></td><td>Groupe Didactique (Landron, 2011), locutrices de région parisienne</td></tr>
-<tr><td><span class="ui">G&amp;A</span></td><td>Gendrot et Adda-Decker (2005), voix radiophoniques</td></tr>
+<tr><td><span class="ui">GD</span></td><td>Groupe Didactique (Landron, 2011), Paris area speakers</td></tr>
+<tr><td><span class="ui">G&amp;A</span></td><td>Gendrot and Adda-Decker (2005), radio voices</td></tr>
 </table>
 
 
 
 <h3><a id="fx-compex"></a>CompEx — Dynamics compressor/expander</h3>
 
-<p>CompEx est un processeur de dynamique relativement simple et sait faire de
-la compression et de l’expansion.</p>
-<p>On commence par définir un niveau-seuil.
-Ensuite pour chaque plage au-dessus et en dessous de ce niveau, on peut
-choisir si on va réduire ou amplifier la dynamique.
-Généralement on s’intéresse à ce qui est au-dessus, mais il est possible
-de faire une sorte de <i><span lang="en">gate</span></i> en augmentant la dynamique en dessous.</p>
+<p>CompEx is a relatively simple dynamic processor and can do compression
+and expansion.</p>
+<p>First, set a threshold level.
+The for each range above or below this level, one can select if the dynamics
+will be increased or reduced.
+Generally “above” is more interesting for compression. “Below” can be used
+for gates.</p>
 
 <p class="var">Ratio High</p>
-<p>Taux d’amplification de la dynamique au-dessus du seuil.
-Si le taux est inférieur à 1, l’effet se comporte comme un compresseur.
-S’il est supérieur à 1, c’est un expanseur.
-Attention, dans ce dernier cas le réglage est délicat et le résultat peut être
-difficile à maîtriser.</p>
+<p>Dynamic amplification rate above the threshold.
+If the rate is less than 1, the effect is a compressor.
+If it is greater than 1, it’s an expander.
+In this case the settings are sensitive and the result can be difficult
+to control.</p>
 
 <p class="var">Ratio Low</p>
-<p>Taux d’amplification de la dynamique en dessous du seuil.
-Utiliser un taux supérieur à 1 pour obtenir une
-<i><span lang="en">gate</span></i>.</p>
+<p>Dynamic amplification rate below the threshold.
+Use a value greater than 1 to get a gate.</p>
 
 <p class="var">Threshold</p>
-<p>C’est le niveau de seuil.
-Plus il est bas, plus l’effet de <var>Ratio High</var> est marqué.</p>
+<p>The threshold level.
+The lower, the more the <var>Ratio High</var> effect is pronounced.</p>
 
 <p class="var">Attack time</p>
-<p>Temps d’attaque pour la détection de l’enveloppe de volume.
-Plus le temps est bas, plus l’effet est réactif aux changements de dynamique.</p>
+<p>Attack time for the volume envelope detection, in ms.
+The lower, the quicker the effect reacts to dymanic changes.</p>
 
 <p class="var">Release time</p>
-<p>Temps de relâchement pour la détection de l’enveloppe de volume.
-Sa valeur est généralement supérieure à celle de l’attaque.</p>
+<p>Release time for the volume envelope detection.
+Generally greater than the attack time by one order of magnitude.</p>
 
 <p class="var">Make-up gain</p>
-<p>Volume de sortie de CompEx.
-Bien que la compensation en volume soit établie automatiquement en fonction de
-la valeur du taux supérieur, il est parfois nécessaire de faire des ajustements
-manuels.</p>
+<p>Output volume.
+Although volume compensation is automatically based on the <var>Ratio
+High</var> value, manual adjustments are sometimes necessary.</p>
 
 <p class="var">Knee shape</p>
-<p>C’est la plage de niveau qui sert de transition entre les taux supérieurs et
-inférieurs.</p>
+<p>The threshold level is actually a range where the dynamic processing
+changes progressively from the <var>Ratio Low</var> to the <var>Ratio
+High</var>.
+This parameter indicates the depth of the range.</p>
 
 
 
 <h3><a id="fx-convert-stereo"></a>Convert To Stereo</h3>
 
-<p>Ce n’est pas vraiment un effet, mais un dispositif qui sert à passer un
-signal mono en stéréo par simple dédoublement.
-Attention, le réglage dans <a href="#screen-fx-setup">la configuration de
-l’effet</a> donnant la préférence au mono prend le dessus sur l’effet
-lui-même.
-Il est donc important de s’assurer qu’on est en <span class="ui">Mono or
-stereo</span>.</p>
+<p>It’s not really an effect, it’s a device to help changing a mono source
+to stereo.
+The setting in the <a href="#screen-fx-setup">effect configuration</a>
+is overriding the effect.
+So please ensure that you are in <span class="ui">Auto</span>.</p>
 
 
 
 <h3><a id="fx-delay"></a>Delay — Stereo delay</h3>
 
-<p>C’est un effet d’écho relativement classique.
-Il peut générer un signal stéréo à partir d’une entrée mono.</p>
-<p>Il y a en fait deux lignes à retard indépendante, une pour chaque canal.
-Pour chaque ligne on peut régler la durée du retard, son niveau de sortie, le
-taux de réinjection et le filtrage (passe-haut ou passe-bas) de cette
-réinjection.
-Par défaut, les deux lignes sont liées ensemble et prennent pour paramètres
-ceux de la ligne gauche.</p>
-<p>Il est également possible de croiser les réinjection des lignes.</p>
+<p>A classic stereo echo effect.
+It can generate a stereo signal from a mono input.</p>
+<p>There are actually two independant delay lines, one for each channel.
+For each line, one can set the delay time, its output level, the feedback
+level and the feedback filtering (low- or high-pass).
+By default, both lines are linked together and use the parameters from the
+left line.</p>
+<p>It is also possible to cross the line feedbacks.</p>
 
 <p class="var">Input mix level</p>
-<p>Niveau du signal clair redirigé vers la sortie.</p>
+<p>Dry level copied to the output.</p>
 
 <p class="var">Delay mix level</p>
-<p>Niveau du signal retardé dans la sortie.</p>
+<p>Level of the delayed signal.</p>
 
 <p class="var">Time L/R</p>
-<p>Temps de retard pour les lignes gauche et droite.</p>
+<p>Delay time for the left and right lines.</p>
 
 <p class="var">Feedback L/R</p>
-<p>Taux de réinjection du signal issu des lignes gauche et droite.
-Quand le taux est à zéro, il n’y a qu’une seule répétition.
-Quand au contraire il est proche de 100&#8239;%, les répéptition sont
-quasiment infinies.</p>
+<p>Level of the output signal fed back into the lines.
+When the level is 0, there is only one echo.
+When it is close to 100%, the echo is repeated almost infinitely.</p>
 
 <p class="var">Filter L/R</p>
-<p>Taux de filtrage de la réinjection des lignes.
-Quand le taux est négatif, il s’agit d’un filtrage passe-bas.
-Quand il est positif, c’est un filtrage passe-haut.
-Le taux est directement lié à la fréquence de coupure.
-Plus il est élevé en valeur absolue, plus le filtre coupe de fréquences.</p>
+<p>Filtering of the line feedback.
+When the rate is negative, the filter is a low-pass one.
+When it is positive, the filter is a high-pass one.
+The parameter is directly linked to the cutoff frequency.
+The higher in absolute value, the stronger is the filtering.</p>
 
 <p class="var">Channel link</p>
-<p>Permet de lier le canal droit au gauche.</p>
+<p>Links the right channel to the left one.</p>
 
 <p class="var">Ping-pong</p>
-<p>Taux de croisement des réinjection.
-À 0&#8239;%, les deux lignes fonctionnent de manière indépendante.
-À 100&#8239;%, les réinjection sont complètement croisées, ce qui
-donne l’impression que le son passe d’un canal à l’autre à chaque
-répétition.</p>
+<p>Cross-feedback level.
+At 0%, both lines are independant.
+At 100%, the lines are completely crossed, giving the illusion that
+the sound reflects from left to right and from right to left.</p>
 
 
 
 <h3><a id="fx-disto-tone"></a>Distortion Tone Stage</h3>
 
-<p>Il s’agit d’un réglage de tonalité modelé d’après un circuit qu’on trouve
-dans de nombreuses pédales, type DS-1 ou Big Muff Pi.
-C’est un complément à l’étage de distorsion pur, plus simple à manier qu’un
-egaliseur paramétrique complet.
-Il sert à établir une balance entre les graves et les aigus.</p>
-<p>Ce genre de filtre, tel qu’il est implémenté dans les pédales, fait
-apparaître systématiquement un creux dans les médiums.
-Le filtre à donc été modifié de façon à ajouter un réglage des médiums.
-Il est également possible de choisir la fréquence centrale du filtre, ce qui
-permet de calquer facilement l’étage de tonalité de la plupart des pédales
-utilisant ce système.</p>
+<p>This is a standard tone stack often found in distortion pedals, like
+the DS-1 or Big Muff Pi.
+It completes a pure distortion stage.
+It is easier to setup than a complete parameteric equalizer.
+It achieves a balance between the bass and the treble.</p>
+<p>This kind of filter generally has a dip in the mids.
+Here, it has been modified to add a mid level to change the filtering shape.
+It is also possible to chose the filtering center frequency, which can be
+used to mimic the settings of most pedals using this tone stack.</p>
 
 <p class="var">Tone</p>
-<p>Permet de choisir une répartition plutôt grave (valeurs faibles) ou aigue.
-50&#8239;% donne une réponse en fréquence équilibrée.</p>
+<p>Balances between the basses (low values) and trebles (high values).
+50% is balanced.</p>
 
 <p class="var">Mid boost</p>
-<p>Permet d’amplifier (valeurs positives) ou de creuser (valeurs négatives) les
-médiums.
-À zéro, les médium sont neutres.
-Un valeur autour de &minus;75&#8239;% permet de recréer la tonalité du circuit
-original.</p>
+<p>Amplifies (positive values) or cut (negative values) the mid frequencies.
+At 0, mids are neutral.
+For the original circuit tone, use a value near &minus;75%.</p>
 
 <p class="var">Mid frequency</p>
-<p>Permet de changer la fréquence centrale des médiums.</p>
+<p>Selects the center frequency.</p>
 
 
 
 <h3><a id="fx-disto2x"></a>Double Distortion</h3>
 
-<p>C’est une distorsion à deux étages.
-Chaque étage est composé d’un filtre coupe-bas, d’un biais de polarisation,
-de la distorsion proprement dite et finalement d’un filtre passe-bas.<p>
-<p>D’autre part le son est coupé dès le départ en deux bandes de fréquences.
-La bande basse ressort sans modification, tandis que la bande haute est 
-distordue.</p>
-<p>Un dispositif permet d’adapter le volume en fonction des dynamique et de
-modifier le gain en fonction des transitoires.<p>
+<p>This is a two-stage distortion.
+Each stage is made of a low-cut filter, a bias, the distortion itself and
+finally a high-cut filter.<p>
+<p>But first, the sound is cut into two frequency bands.
+The low band is not modified, and the high band is distorted.</p>
+<p>It has also a system to adapt the volumes depending on the dynamics
+and to modify the gain depending on the transients.<p>
 
 
 <p class="var">Crossover freq</p>
-<p>C’est la fréquence de séparation initiale en deux bandes.
-Il est ainsi possible de laisser les composantes les plus graves
-sans distorsion pour plus de dynamique et de clarté.</p>
+<p>This is the frequency for the first split.
+Thus, it is possible to let the lowest components unaltered for more
+dynamics and clarity.</p>
 
 <p class="var">LPF freq</p>
-<p>Fréquence de coupure du filtre passe-bas initial (2<sup>d</sup> ordre).</p>
+<p>Frequency for the initial low-pass filter (2nd order).</p>
 
 <p class="var">Attack gain mod</p>
-<p>Influence des transitoires d’attaque sur le gain.
-Un valeur positive augmente le gain sur les attaques, et une négative
-l’atténue.</p>
+<p>This parameter sets how the attack transients modify the gain.
+A positive value increases the gain on attacks, and a negative one reduces
+it.</p>
 
 <p class="var">Sustain gain mod</p>
-<p>Permet de modifier le gain dans les parties où le volume décroît,
-prolongeant artificiellement le maintien de la note.
-Une valeur positive augmente le gain dans ces sections.</p>
+<p>Sets how a release modifies the gain,
+to prolongate or reduce the note sustain.
+A positive value increases the gain when the note fades out.</p>
 
 <p class="var">Stage 1/2 HPF freq</p>
-<p>Fréquence de coupure du filtre coupe-bas des étages 1 et 2.</p>
+<p>Cutoff frequency of the high-pass filter for stages 1 and 2.</p>
 
 <p class="var">Stage 1/2 Bias</p>
-<p>Biais de polarisation des étages 1 et 2.
-Augmenter le biais permet d’obtenir une distorsion plus asymétrique et
-favorise ainsi les harmoniques paires.
-Attention un biais trop élevé a tendance à couper le signal et donne une
-impression de circuit défectueux.</p>
+<p>Bias for the stages 1 et 2.
+When the bias is increased in absolute value, the distortion becomes more
+asymetric and favor the even harmonics.
+But beware, when the bias is too high, the signal can be cut, which gives
+an effect of defective circuit.</p>
 
 <p class="var">Stage 1/2 Type</p>
-<p>Type de distorsion pour chaque étage.</p>
+<p>Type of distortion for each stage.</p>
 
 <p class="var">Stage 1/2 Gain</p>
-<p>Gain de la distorsion de chaque étage.</p>
+<p>Distortion gain for each stage.</p>
 
 <p class="var">Stage 1/2 LPF freq</p>
-<p>Fréquence de coupure du filtre passe-bas appliqué après la distorsion
-de chaque étage.
-Ce filtre permet d’atténuer les fréquence les plus aigues qui sont
-déplaisantes à l’oreille.</p>
+<p>Cutoff frequency of the low-pass filter applied after the distortion of
+each stage.
+This filter attenuates the harsh frequencies generated by the signal
+shaping.</p>
 
 <p class="var">Stage 1–2 mix</p>
-<p>Proportion des deux étages de distorsion composant le signal de sortie.
-Le pourcentage représente le taux du deuxième étage.</p>
+<p>Mixes both stage outputs in the output signal.
+The percentage is related to the second stage.</p>
 
 <p class="var">Low band mix</p>
-<p>Proportion de la bande basse fréquence réinjectée dans la sortie.</p>
+<p>Ratio fo the clean low band in the output.</p>
 
 <p class="var">Density</p>
-<p>Permet d’ajuster le volume de la sortie à celui de l’entrée.
-Une valeur nulle compense totalement le volume, et la valeur maximale
-laisse la distorsion telle quelle.
-Cela donne des sons un peu plus percussifs mais moins naturels.</p>
+<p>Adjusts the output volume to the input volume.
+A null value totally compensates the volume, and 100% keeps the distortion
+untouched.
+A low value gives more percussive and less natural sounds.</p>
 
 <p class="var">Threshold</p>
-<p>Seuil en-dessous duquel le volume n’est pas réduit par le paramètre
-<var>Density</var>.</p>
+<p>Threshold below which the volume is not reduced by the <var>Density</var>
+parameter.</p>
 
 
 
@@ -1010,398 +1000,377 @@ Cela donne des sons un peu plus percussifs mais moins naturels.</p>
 the incoming sound.
 It can be inserted at any point in the processing chain, it will not modify
 the sound.</p>
-<p>Le suiveur d’enveloppe permet de détecter le volume instantané du son
-et le transforme en signal de contrôle.</p>
+<p>The envelope follower detects the instantaneous sound volume and turns
+it into a control signal.</p>
 
 <p class="var">Attack time</p>
-<p>Temps d’attaque du détecteur.
-Indique à quelle vitesse suivre les montées de volume.</p>
+<p>Detection attack time.
+This is the speed at which the envelope follows volume increases.</p>
 
 <p class="var">Release time</p>
-<p>Temps de relâchement du detecteur.
-Indique à quelle vitesse suivre les descentes de volume.</p>
+<p>Detection release time.
+This is the speed at which the envelope follows volume decreases.</p>
 
 <p class="var">Hold time</p>
-<p>Temps pendant lequel le détecteur maintient sa valeur
-à la fin d’une attaque avant de redescendre.</p>
+<p>Time during which the detector holds its value after an attack, before
+releasing.</p>
 
 <p class="var">Gain</p>
-<p>Multiplicateur appliqué au signal de contrôle en sortie.</p>
+<p>Multiplier applied to the control signal.</p>
 
 <p class="var">Threshold</p>
-<p>Seuil de volume en dessous duquel la sortie du détecteur reste nulle.
-En mode logarithmique, le seuil est utilisé comme valeur plancher, avec pour
-minimum &minus;60&#8239;dB.</p>
+<p>Threshold below which the output of the detector keeps quiet.
+In logarithmic mode, the threshold is used as a floor value, with a minimum
+of &minus;60dB.</p>
 
 <p class="var">Mode</p>
-<p>Permet de choisir une transformation du volume détecté.
-En mode linéaire, la valeur brute du volume est utilisée.
-En mode logarithmique, c’est une valeur en décibels qui est utilisée.
-La plage de variation est alors fixée par le seuil.</p>
+<p>Selects how the volume is turned into a control signal.
+In linear mode, the raw volume value is directly used.
+In logarithmic mode, this is a decibel value.
+The range is set by the <var>Threshold</var> parameter.</p>
 
 <p class="var">Clip envelope</p>
-<p>Indique que le signal de contrôle en sortie doit être limité à la valeur
-maximale de 1.</p>
+<p>Indicates that the control signal is limited to a maximum of 1.</p>
 
 <p class="var">Clip source</p>
-<p>Règle le niveau au-dessus duquel le signal source sature.
-Ce paramètre permet de neutraliser les attaques un peu trop fortes quand le
-temps de release est significatif, limitant ainsi le temps de retard induit
-avant lequel l’enveloppe retombe.
-Quand le paramètre est réglé au maximum, la saturation de la source est
-désactivée.</p>
+<p>Sets the level below which the source signal is clipped.
+This parameters helps to neutralize the strongest attacks when the release
+time is significant, limiting the induced delay between the actual peak
+end and the envelope release.
+When the parameter is set to the maximum, the clipping is deactivated.</p>
 
 <p class="var">Low-cut frequency</p>
-<p>Fréquence de coupure du filtre coupe-bas.
-Ce filtre permet de diminuer l’influence des basses fréquences dans la
-détection, donnant une enveloppe plus réactive aux attaques.
-Quand le paramètre est réglé au minimum, le filtre est désactivé.</p>
+<p>Cutoff frequency for the low-cut filter.
+This filter decreases the influence of the bass frequencies in the
+detection, giving an envelope more reactive to guitar strums.
+When set to the minimum, the filter is deactivated.</p>
 
 
 
 <h3><a id="fx-filter-squeezer"></a>Filter Squeezer — Distorted resonant filter</h3>
 
-<p>C’est un filtre très particulier.
-Il est basé sur le fameux filtre Moog passe-bas 4 pôles, sérieusement modifié
-pour ne pas dire vilainement charcuté.</p>
-<p>Il donne un son qui va d’une douce chaleur un peu vintage à une fuzz
-rugissante en passant par une radio défectueuse ou le larsen parasité.
-Il y a des sons qui sont comparables à ceux obtenus par la Fuzz Factory.</p>
+<p>This is a very specific filter.
+It is based on the famous Moog 4-pole low-pass filter, and heavily
+modified.</p>
+<p>It gives a sound ranging from something warm and vintage to something very
+fuzzy via a defective radio or a feedback interference.
+Some sounds are comparable to those obtained with the Fuzz Factory.</p>
 
 <p class="var">Frequency</p>
-<p>Fréquence de coupure du filtre.
-Ce paramètre est automatiquement assignée à la pédale d’expression.</p>
+<p>Filter cutoff frequency.
+This parameter is automatically assigned to the expression pedal.</p>
 
 <p class="var">Resonance</p>
-<p>Résonance du filtre, se produisant un peu en dessous de la fréquence de
-coupure.
-Les valeurs les plus élevlées mettant le filtre en auto-oscillation.</p>
+<p>Resonance of the filter, occurring slightly below the cutoff frequency.
+The highest values put the filter in self-oscillation.</p>
 
 <p class="var">Color</p>
-<p>Le réglage de coloration influe sur l’aspect destructif et fuzz du
-filtre.</p>
+<p>The color setting influences the destructive and fuzz aspect of the
+filter.</p>
 
 <p class="var">Drive</p>
-<p>Ajuste le niveau d’entrée.
-Le filtre étant très sensible au volume de ce qui lui rentre dedans, on
-peut obtenir des sonorité très variées en changeant ce paramètre.
-Le gain inverse est appliqué en sortie, limité entre &minus;12 et
-0&#8239;dB.
-Il peut être d’ailleurs judicieux de placer devant un compresseur aux
-réglages musclés pour obtenir quelque chose d’un tant soit peu prévisible et
-reproductible.</p>
+<p>Adjusts the input level.
+The filter being very sensitive to the input signal volume, one can obtain
+very varied sonority by changing this parameter.
+The inverse gain is applied at output, limited between &minus;12 and 0dB.
+It can also be wise to place in front of a compressor with strong settings
+to obtain something somewhat predictable and reproducible.</p>
 
 <p class="var">Foldback</p>
-<p>Active différents types de distorsion interne.</p>
+<p>Activates different types of internal distortion.</p>
 
 
 
 <h3><a id="fx-flancho"></a>FlanCho — Chorus and flanger</h3>
 
-<p>C’est un chorus/flanger relativement classique.
-Il peut générer un signal stéréo à partir d’une entrée mono.</p>
-<p>L’effet opère en ajoutant au signal principal une version légèrement
-retardée de lui-même.
-Le retard varie continuellement ce qui crée des fluctuations de tonalité.</p>
-<p>Le chorus est caractérisé par un temps de retard significatif (autour de
-20&#8239;ms) et une amplitude peu élevée.
-Pour un flanger, on préférera une amplitude élevée, un temps de retard court
-et un minimum de réinjection.</p>
+<p>It is a relatively classical chorus/flanger.
+It can generate a stereo signal from a mono input.</p>
+<p>The effect works by adding a slightly delayed version of itself to the main
+signal.
+The delay continuously varies which creates tone fluctuations.</p>
+<p>The chorus is characterized by a significant delay time (around 20ms) and a
+low depth.
+For a flanger, a high depth, a short delay time and a minimum feedback are
+preferable.</p>
 
 <p class="var">Speed</p>
-<p>Vitesse des oscillations du temps de retard.</p>
+<p>Speed of the oscillations of the delay time.</p>
 
 <p class="var">Depth</p>
-<p>Amplitude des oscillations du temps de retard.
-Au maximum, celles-ci varient entre 0 ou presque et
-<var>Delay</var>&#8239;&times;&#8239;2.
-Le changement de tonalité est alors très marqué.</p>
+<p>Amplitude of the oscillations of the delay time.
+At most, these vary between 0 or almost <var>Delay</var>&times;2.
+The tonal change is then very pronounced.</p>
 
 <p class="var">Delay</p>
-<p>C’est le temps de retard moyen.</p>
+<p>Average delay time.</p>
 
 <p class="var">Feedback</p>
-<p>Taux de réinjection du signal retardé.
-Les valeurs proches de 100&#8239;% peuvent altérer fortement le volume.
-Les valeurs négatives donnent un son plus métallique que les positives.</p>
+<p>Feedback ratio of the delayed signal.
+Values close to 100% can alter significantly the volume.
+Negative values give a more metallic sound than the positive ones.</p>
 
 <p class="var">Waveform type</p>
-<p>Forme prise par les oscillations du temps de retard.</p>
+<p>Shape of the oscillations for the delay time.</p>
 <table>
-<tr><td><span class="ui">Sine</span></td><td>Sinusoïde</td></tr>
-<tr><td><span class="ui">Triangle</span></td><td>Triangle</td></tr>
-<tr><td><span class="ui">Parabola</span></td><td>Parabole</td></tr>
-<tr><td><span class="ui">Inv.para</span></td><td>Parabole inverse</td></tr>
-<tr><td><span class="ui">Ramp up</span></td><td>Dents de scie ascendentes</td></tr>
-<tr><td><span class="ui">Ramp down</span></td><td>Dents de scie descendentes</td></tr>
-<tr><td><span class="ui">Random</span></td><td>Sinusoïde avec variations aléatoires</td></tr>
+<tr><td><span class="ui">Sine</span></td><td></td></tr>
+<tr><td><span class="ui">Triangle</span></td><td></td></tr>
+<tr><td><span class="ui">Parabola</span></td><td>Parabola</td></tr>
+<tr><td><span class="ui">Inv.para</span></td><td>Inverse parabola</td></tr>
+<tr><td><span class="ui">Ramp up</span></td><td></td></tr>
+<tr><td><span class="ui">Ramp down</span></td><td></td></tr>
+<tr><td><span class="ui">Random</span></td><td>Sine with random variations</td></tr>
 </table>
 
 <p class="var">Waveform shape</p>
-<p>Déformation de l’onde d’oscillation.
-À 0&#8239;%, l’onde reste telle quelle, sinon elle est saturée par le bas ou
-par le haut.
-Cela permet d’insister sur les temps de retards longs ou courts.</p>
+<p>How the waveforme is deformed.
+At 0%, it keeps the orignal shape.
+Otherwise, it is saturated by the bottom or by the top.
+It emphasise the longest or shortest time delays.</p>
 
 <p class="var">Number of voices</p>
-<p>Il est possible d’avoir de 1 à 4 voix de chorus/flanger simultanément,
-pour un son plus ou moins épais.
-Les oscillations de retard de chaque voix sont déphasées par rapport aux
-autres.</p>
+<p>It is possible to have 1 to 4 chorus/flanger voices simultaneously,
+for a more or less thick sound.
+The delay oscillations of each voice are not synchronized with the
+others.</p>
 
 <p class="var">Phase set</p>
-<p>Permet de fixer manuellement la phase des oscillations, en degrés.
-Ce paramètre permet d’une part d’agir sur la tonalité de l’effet en y
-associant par exemple une pédale (d’expression ou non).
-D’autre part, il permet d’obtenir un son reproductible.
-En effet, lors de l’activation du programme, la phase est positionnée
-automatiquement à la valeur donnée par ce paramètre.</p>
+<p>Allows the phase of oscillations to be set manually, in degrees.
+This parameter allows on the one hand to act on the tone of the effect by
+associating for example a pedal (expression or not).
+On the other hand, it provides reproducible sound.
+Indeed, when the program is activated, the phase is automatically set to the
+value given by this parameter.</p>
 
 <p class="var">Dry input</p>
-<p>Indique que le signal d’entrée est mélangé au signal de sortie.
-Si on veut une proportion différente de 50–50&#8239;%, on peut placer ce
-paramètre sur <span class="ui">Off</span> et utiliser le réglage <var>Effect
-mix</var>.
-Quand le signal d’origine est totalement absent et qu’il n’y a pas de
-réinjection, l’effet obtenu est un vibrato.</p>
+<p>Indicates that the input signal is mixed with the output signal.
+If we want a ratio different of 50–50%, one can put this parameter on
+<span class="ui">Off</span> and use the <var>Effect mix</var> parameter.
+When the original signal is totally missing and there is no feedback,
+the obtained effect is a vibrato.</p>
 
 <p class="var">Mix mode</p>
-<p>Permet de choisir si le signal retardé est ajouté ou retranché au signal
-d’origine.
-<span class="ui">Add</span> provoque une amplification des basses fréquences
-avec un temps de retard très court, alors que <span class="ui">Sub</span> au
-contraire les coupe.</p>
+<p>Select whether the delayed signal is added to or subtracted from the
+original signal.
+<span class="ui">Add</span> causes an amplification of the low frequencies
+with a very short delay time, whereas <span class="ui">Sub</span> cuts
+them.</p>
 
 <p class="var">Oversampling rate</p>
-<p>Taux de suréchantillonnage du traitement.
-Passer en <span class="ui">&times;4</span> permet d’atteindre des temps de
-retard beaucoup plus courts (une dizaine de microsecondes) quand
-<var>Depth</var> est proche de 100&#8239;% ce qui peut être utile pour des
-flangers ravageurs.
-En revanche cela consomme plus de ressources CPU.</p>
+<p>Oversampling rate for the processing.
+When set to <span class="ui">&times;4</span>, shortest delay time can be
+achieved (a tenth of microseconds) when <var>Depth</var> is close to 100%,
+which can be useful for devastating flangers.
+However, it eats more CPU resource.</p>
 
 
 
 <h3><a id="fx-freeverb"></a>Freeverb — Reverberation</h3>
 
-<p>Cet effet implémente
+<p>This effect implements
 <a href="https://ccrma.stanford.edu/~jos/pasp/Freeverb.html">Freeverb</a>,
-une réverbération de type Schroeder dont les coefficients ont été
-soigneusement choisis.
-Les réglages ont été mis au point par Jezar at Dreampoint et diffusés dans le
-domaine public.
-L’effet est capable de gérer un signal stéréo.</p>
+a Schroeder reverberator which coefficients have been carefully tweaked.
+It has been designed by Jezar at Dreampoint and released in the public domain.
+The effect is able to generate a stereo signal.</p>
 
 <p class="var">Reflectivity</p>
-<p>Ce paramètre varie le temps de réverbération.
-Plus il est élevé, plus les murs simulés sont réflectif et plus la
-réverbération est longue.
-Ce temps est cependant dépendant du <var>Damping</var>.</p>
+<p>This parameter is the reverberation time.
+The higher, the more reflective are the simulated walls, and the longer the
+reverberation.
+This time is also dependent on the <var>Damping</var>.</p>
 
 <p class="var">Damping</p>
-<p>Spécifie à quel point les hautes fréquences sont atténuées durant la
-réverbération.</p>
+<p>Specifies at which point the high frequencies are attenuated during the
+reverberation.</p>
 
 <p class="var">Level wet</p>
-<p>Niveau de réverbération dans la sortie de l’effet.</p>
+<p>Level of the reverberated signal in the effect output.</p>
 
 <p class="var">Level dry</p>
-<p>Niveau du signal d’origine mixé dans la sortie de l’effet.</p>
+<p>Level of the original signal in the effect outpout.</p>
 
 <p class="var">Width</p>
-<p>Niveau de séparation stéréo de la réverbération.
-À 0&#8239;%, la réverbération est complètement mono, et complètement stéréo à
-100&#8239;%.
-Note&#8239;: les deux canaux sont toujours traités indépendamment l’un de
-l’autre, comme deux réverbérations mono.
-Le paramètre ne contrôle que le mixage de sortie.</p>
+<p>Stereo spread of the effect.
+At 0%, the reverberation is completely mono, and completely stereo at 100%.
+Note: both channels are always processed independantly, like two mono
+reverberations.
+The parameter only controls the output mixing.</p>
 
 <p class="var">Mode</p>
-<p>Quand le mode <span class="ui">Freeze</span> est activé, l’entrée de la
-réverbération est coupée et le son de la réverbération reste figé dans le
-temps.
-Il peut être intéressant de relier ce paramètre à une pédale.</p>
+<p>When the mode <span class="ui">Freeze</span> is activated, the input
+of the reverberation is cut and the reverberated sound is frozen.
+It can be interresting to link this parameter to a footswitch.</p>
 
 <p class="var">Low cut</p>
-<p>Fréquence du filtre coupe-bas sur la sortie de la réverbération.</p>
+<p>Cutoff frequency of the low-cut filter on the reverberation output.</p>
 
 <p class="var">High cut</p>
-<p>Fréquence du filtre coupe-haut sur la sortie de la réverbération.</p>
+<p>Cutoff frequency of the high-cut filter on the reverberation output.</p>
 
 
 
 <h3><a id="fx-freq-shift"></a>Frequency Shifter</h3>
 
-<p>C’est un effet assez simple qui décale toutes les fréquences du son.
-Comme les fréquences sont additionnées et non multipliées, les rapports
-harmoniques se perdent et le son devient atonal ou inharmonique,
-se rapprochant d’un son de cloche.
-Cependant quand la fréquence de décalage tombe sur une note spécifique,
-certaines notes en liaison (octave, quinte, quarte…) se mettent à sonner
-de nouveau juste et prennent une coloration très spéciale.</p>
-<p>Le translateur de fréquences ressemble au ring modulator, mais il ne
-réfléchit pas l’image spectrale comme c’est le cas pour ce dernier.</p>
+<p>This is a pretty simple effect that shifts all the frequencies of the sound.
+As the frequencies are added and not multiplied, the harmonic ratios are lost
+and the sound becomes atonal or inharmonic, approaching a bell sound.
+However, when the shift frequency falls on a specific note, some linked notes
+(octave, fifth, quarte...) start to sound right again and take a very special
+color.</p>
+<p>The frequency translator looks like the ring modulator, but it does not
+reflect the spectral image as is the case for the latter.</p>
 
 <p class="var">Frequency</p>
-<p>Fréquence de décalage, en Hz.
-Elle peut être négative ou positive.</p>
+<p>Shiftig frequency, in Hz.
+It can be negative or positive.</p>
 
 
 
 <h3><a id="fx-tremolo-harm"></a>Harmonic Tremolo — Two-band tremolo</h3>
 
-<p>C’est une variation de l’effet de <a href="#fx-tremolo">trémolo</a>
-qu’on retrouve dans les vieux amplificateurs Fender Brownface.
-Le son est divisé en deux bandes, les basses et les aigus.
-Les deux bandes sont modulées en amplitude par deux signaux opposés
-issus du LFO.
-Le son alterne ainsi entre les aigus et les graves.</p>
+<p>This is a variation of the <a href="#fx-tremolo">tremolo</a>
+effect found in old Fender Brownface amplifiers.
+The sound is divided into two bands, bass and treble.
+The two bands are modulated in amplitude by two opposite signals from the LFO.
+The sound alternates between treble and bass.</p>
 
 <p class="var">Speed</p>
-<p>Vitesse des oscillations, en Hz.</p>
+<p>Oscillation speed, in Hz.</p>
 
 <p class="var">Amount</p>
-<p>Quantité d’oscillations.
-À 100&#8239;%, le son modulé est silencieux sur la partie la plus basse du
-LFO.
-Il est possible d’aller bien au-delà de cette valeur de façon à créer un effet
-plus dur, qui ressemble à une <i><span lang="en">gate</span></i>.</p>
+<p>Amount of oscillations.
+At 100%, the modulated sound is silent on the lowest part of the LFO.
+It is possible to go far beyond this value in order to create a harder effect,
+sounding like a gate.</p>
 
 <p class="var">Bass</p>
-<p>Amplitude du signal de LFO utilisé pour modulé les graves.
-À 0, le son n’est pas modulé.</p>
+<p>Amplitude of the LFO signal used to modulate the bass frequencies.
+At 0, the sound is not modulated.</p>
 
 <p class="var">Treble</p>
-<p>Amplitude du signal de LFO utilisé pour modulé les aigus.
-À 0, le son n’est pas modulé.
-Les résultats les plus probants sont obtenus quand les amplitudes des
-aigus et des graves sont de signe opposé.</p>
+<p>Amplitude of the LFO signal used to modulate the treble.
+At 0, the sound is not modulated.
+The best results are obtained when the amplitudes of the bass and treble
+are of opposite signs.</p>
 
 <p class="var">Cutoff frequency</p>
-<p>Fréquence de séparation entre les graves et les aigus, en Hz.</p>
+<p>Split frequency between the bass and the treble, in Hz.</p>
 
 <p class="var">Gain saturation</p>
-<p>Indique à quel point les parties positives du LFO doivent être saturées de
-façon à ne pas provoquer de montée de volume exagérées quand <var>Amount</var>
-prend des valeurs un peu élevées.</p>
+<p>Indicates to what extent the positive parts of the LFO should be saturated
+in order to avoid exaggerated volume rise when <var>Amount</var> takes high
+values.</p>
 
 <p class="var">Bias</p>
-<p>Offset à appliquer à la valeur générée par le LFO de façon à déplacer sa
-courbe plutôt dans les basses amplitudes ou dans les hautes amplitudes.
-Cela permet de créer un son plus ou moins dense, en particulier quand
-<var>Amount</var> est élevé.
-Dans ce cas, le trémolo se comporte comme une
-<i><span lang="en">gate</span></i> et ce paramètre permet de régler son
-temps d’ouverture.</p>
+<p>Offset to apply to the values generated by the LFO to shift its curve in
+the low or high amplitudes.
+This creates a more or less dense sound, especially when <var>Amount</var> is
+high.
+In this case, the tremolo behaves like a gate and this parameter allows to set
+its opening time.</p>
 
 <p class="var">Tone</p>
-<p>Permet d’ajuster la proportion entre graves et aigus.
-Les valeurs négatives atténuent les aigus, et les positives les graves.</p>
+<p>Allows you to adjust the ratio between bass and treble.
+Negative values reduce high frequencies and positive values reduce low
+frequencies.</p>
 
 <p class="var">Stereo</p>
-<p>Quand la sortie de l’effet est stéréo, ce paramètre permet d’élargir
-l’image stéréo, en particulier quand la source est mono.
-Les modulation se font avec un signe opposé sur les deux canaux.
-Attention, si le son repasse en mono ultérieurement, l’effet est en grande
-partie perdu.</p>
+<p>When the effect output is stereo, this parameter widens the stereo image,
+especially when the source is mono.
+Modulation is done with an opposite sign on both channels.
+Be careful, if the sound goes back to mono later, the effect is lost.</p>
 
 <p class="var">Waveform, Sample and hold, Smoothing, Chaos amount, Phase
 distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
 Phase set</p>
-<p>Ces paramètres sont identiques à ceux de l’effet
+<p>These parameters are identical to the ones from the
 <a href="fx-lfo">LFO</a>.</p>
 
 
 
 <h3><a id="fx-imp-fix"></a>Input Impedance Fix</h3>
 
-<p>Cet effet permet de corriger en quelque sorte l’impédance d’entrée de la
-carte son, qui peut être un poil juste, résultant en une légère atténuation
-des aigus.
-Il s’agit d’un simple filtre linéaire de premier ordre de type high-shelf.</p>
-<p>Il faut calibrer l’effet en utilisant un ampli avec un réglage aussi
-transparent que possible (son clair, pas d’égalisation).
-On compare alors le son avec la guitare branchée directement avec celui du
-pédalier placé en intermédiaire avec cet unique effet.</p>
+<p>This effect allows to correct the input impedance of the sound card, which
+can be a bit low, resulting in a slight attenuation of the treble.
+It is a simple first-order linear high-shelf filter.</p>
+<p>The effect should be calibrated using an amp with a setting as transparent
+as possible (clear sound, no equalization).
+Then we compare the sound of the guitar directly connected with the one coming
+from the pedalboard with just this effect.</p>
 
 <p class="var">Cutoff frequency</p>
-<p>Fréquence de seuil.</p>
+<p>Cutoff frequency.</p>
 
 <p class="var">Level</p>
-<p>Niveau d’amplification des aigus.</p>
+<p>Treble amplification level.</p>
 
 
 
 <h3><a id="fx-nzbl"></a>Noise Bleach — Noise gate</h3>
 
-<p>Noise Bleach est une sorte de <i><span lang="en">noise gate</span></i>.
-Il découpe le spectre du signal d’entrée en plages de fréquences contiguës
-couvrant l’ensemble du spectre audible.
-Le son sur chaque bande ne passe que s’il est au-dessus d’un certain
-seuil.</p>
-<p>Pour régler le dispositif, il faut le bruit sans autre son
-«&#8239;utile&#8239;».
-Commencez par régler le niveau global à &minus;100&#8239;dB.
-Ensuite, pour chaque plage, monter progressivement son seuil.
-Arrêter quand le son change et que du bruit est effectivement retiré.
-Ne pas aller plus loin, ce serait dommageable pour le signal utile.</p>
-<p>Recommencer sur autant de bandes que nécessaire.
-Rééquilibrer au besoin le niveau global et celui des bandes.</p>
+<p>Noise Bleach is a kind of noise gate.
+It splits the input signal spectrum into adjacent frequency bands covering the
+entire audible spectrum.
+The sound on each band passes only if it is above a certain threshold.</p>
+<p>To adjust the device, you need the noise without any other “useful” sound.
+Start by setting the global level to &minus;100dB.
+Then, for each band, gradually raise its threshold.
+Stop when sound changes and noise is actually removed.
+Do not go further, this would be harmful for the audio content.</p>
+<p>Repeat on as many bands as necessary.
+If required, balance the global level with the single band levels.</p>
 
 <p class="var">Global level</p>
-<p>C’est le niveau global de réjection du filtre, à adapter en fonction du
-niveau de bruit dans le son.
-Toutes les plages et les filtres coupe-bande sont mis à échelle en fonction
-de ce paramètre.
-Les valeurs usuelles sont de l’ordre de &minus;100&#8239;dB.</p>
+<p>This is the overall filter rejection level, to be adapted according to the
+noise level.
+All filter levels are scaled according to this parameter.
+Usual values are in the &minus;100dB range.</p>
 
 <p class="var">Band x-y level</p>
-<p>Seuil relatif de filtrage pour la plage de fréquence indiquée, en dB.
-À &minus;&infin;, la bande est désactivée.</p>
+<p>Relative filter threshold for the specified frequency range, in dB.
+At &minus;&infin;, the band filter is disabled.</p>
 
 
 
 <h3><a id="fx-nzcl"></a>Noise Chlorine — Noise gate</h3>
 
-<p>Noise Chlorine est une sorte de <i><span lang="en">noise gate</span></i>,
-similaire à <a href="#fx-nzbl">Noise Bleach</a>.
-Il est constitué d’une série de filtres coupe-bande qui ne rejettent le signal
-ciblé qu’en-dessous d’un certain seuil.
-Par exemple le 50 ou le 60&#8239;Hz du secteur et ses harmoniques.
-Mais on peut aussi s’en servir pour filtre du bruit à large bande comme
-alternative à Noise Bleach, moins coûteuse mais moins puissante.</p>
+<p>Noise Chlorine is a kind of noise gate, similar to
+<a href="#fx-nzbl">Noise Bleach</a>.
+It consists of a series of notch filters that reject the target signal only
+below a certain threshold.
+For example the 50 or 60Hz from the mains and its harmonics.
+But it can also be used as a broadband noise filter as a cheap alternative to
+<a href="fx-nzbl">Noise Bleach</a>.</p>
 
-<p>Pour régler le dispositif, il faut le bruit sans autre son
-«&#8239;utile&#8239;».
-Commencez par régler le niveau global à &minus;100&#8239;dB.
-Ensuite, pour chaque bande, sélectionner une fréquence (à l’intuition).
-On peut commencer avec une sélectivité de 0,5, pour ratisser suffisamment
-large.</p>
-<p>Monter progressivement le niveau de la bande.
-Arrêter quand le son change et que du bruit est effectivement retiré.
-Ne pas aller plus loin, ce serait dommageable pour le signal utile.
-Ajuster ensuite au besoin la fréquence et la sélectivité.
-Si le bruit est étalé sur une large partie du spectre, on peut garder la
-sélectivité basse en espaçant toutes les bandes d’une octave.</p>
-<p>Recommencer sur autant de bandes que nécessaire.
-Rééquilibrer au besoin le niveau global et celui des bandes.</p>
+<p>To adjust the device, you need the noise without any other “useful” sound.
+Start by setting the global level to &minus;100dB.
+Then, for each band, select a frequency (intuitively).
+We can start with a selectivity of 0.5 which is broad enough to start
+with.</p>
+<p>Gradually raise the band threshold.
+Stop when sound changes and noise is actually removed.
+Do not go further, this would be harmful for the audio content.
+Then adjust the frequency and selectivity as needed.
+If the noise is spread over a large part of the spectrum, the selectivity can
+be kept low by spacing all bands by one octave.</p>
+<p>Repeat on as many bands as necessary.
+If required, balance the global level with the single band levels.</p>
 
 <p class="var">Global level</p>
-<p>C’est le niveau global de réjection du filtre, à adapter en fonction du
-niveau de bruit dans le son.
-Tous les filtres coupe-bande sont mis à échelle en fonction de ce paramètre.
-Les valeurs usuelles sont de l’ordre de &minus;100&#8239;dB.</p>
+<p>This is the overall filter rejection level, to be adapted according to the
+noise level.
+All notch filter levels are scaled according to this parameter.
+Usual values are in the &minus;100dB range.</p>
 
 <p class="var">Notch 1–8 frequency</p>
-<p>Fréquence centrale du filtre coupe-bande, en Hz.</p>
+<p>Notch filter cutoff frequency, in Hz.</p>
 
 <p class="var">Notch 1–8 selectivity (Q)</p>
-<p>Sélectivité du filtre.
-Plus la sélectivité est grande, plus la bande filtrée sera étroite.</p>
+<p>Filter selectivity.
+The higher the selectivity, the thinner the filtered band.</p>
 
 <p class="var">Notch 1–8 level</p>
-<p>Seuil relatif de filtrage de la bande, en dB.
-À &minus;&infin;, la bande est désactivée.</p>
+<p>Relative filter threshold for the specified frequency range, in dB.
+At &minus;&infin;, the band filter is disabled.</p>
 
 
 
@@ -1450,195 +1419,188 @@ The lower, the more sensitive, but can lead to unexpected note ends.</p>
 
 <h3><a id="fx-peq"></a>Parametric Equalizer</h3>
 
-<p>Il s’agit d’un égaliseur paramétrique 4, 8 ou 16 bandes (selon l’option
-choisie) très classique.
-Chaque bande est constitué d’un filtre de second ordre.</p>
+<p>It is a classic 4-, 8- or 16-band parametric equalizer (depending on the
+selected option).
+Each band is made of a second-order filter.</p>
 
 <p class="var">Band 1/2/3/4 Type</p>
-<p>Type du filtre de la bande concernée&#8239;:</p>
+<p>Filter type for the band:</p>
 <table>
-<tr><td><span class="ui">Peak</span></td><td>Courbe en cloche. Augmente ou atténue la zone autour de la fréquence centrale.</td></tr>
-<tr><td><span class="ui">Low&nbsp;shelf</span></td><td>Plateau basse-fréquence. La fréquence de référence donne le milieu de la transition entre les deux plateaux.</td></tr>
-<tr><td><span class="ui">High&nbsp;Pass</span></td><td>Filtre passe-haut</td></tr>
-<tr><td><span class="ui">High&nbsp;shelf</span></td><td>Plateau haute-fréquence</td></tr>
-<tr><td><span class="ui">Low&nbsp;Pass</span></td><td>Filtre passe-bas</td></tr>
+<tr><td><span class="ui">Peak</span></td><td>Bell curve. Boosts or cuts the area around the frequency.</td></tr>
+<tr><td><span class="ui">Low&nbsp;shelf</span></td><td>Low-frequency shelf. The reference frequency is the middle of the transition between the main part and the shelf.</td></tr>
+<tr><td><span class="ui">High&nbsp;Pass</span></td><td>High-pass filter</td></tr>
+<tr><td><span class="ui">High&nbsp;shelf</span></td><td>High-frequency shelf</td></tr>
+<tr><td><span class="ui">Low&nbsp;Pass</span></td><td>Low-pass filter</td></tr>
 </table>
 
 <p class="var">Band 1/2/3/4 Frequency</p>
-<p>Fréquence du centre de la bande.</p>
+<p>Band refrence frequency.</p>
 
 <p class="var">Band 1/2/3/4 Q</p>
-<p>Facteur de qualité ou de sélectivité.
-Pour le filtre en cloche, plus <var>Q</var> est élevé, plus la cloche est fine.
-Pour les plateaux, plus <var>Q</var> est bas, plus la transition est lente.
-Par contre si <var>Q</var>&#8239;&gt;&#8239;0.71, une résonance et un creux
-apparaissent au début des plateaux haut et bas.
-L’effet est le même pour les passe-haut et bas, avec une résonance
-seulement.</p>
+<p>Band selectivity or quality factor.
+For the bell filter, the higher <var>Q</var>, the thinner the bell.
+For shelves, the higher <var>Q</var>, the steeper the slope.
+But if <var>Q</var>&gt;0.71, a resonance and a notch start to show at both
+ends of the shelves.
+Same with the high- and low-pass filters, with a resonance only.</p>
 
 <p class="var">Band 1/2/3/4 Gain</p>
-<p>Volume de la cloche ou du plateau.
-Sans effet sur les filtres passe-haut et bas.</p>
+<p>Gain of the bell or shelf
+No effect on the high- and low-pass filters.</p>
 
 <p class="var">Band 1/2/3/4 Bypass</p>
-<p>Permet de désactiver la bande.</p>
+<p>Deactivate a single band.</p>
 
 <h4>Édition graphique</h4>
 
-<p>On peut aussi régler les paramètres de l’égaliseur avec un aperçu graphique
-immédiat.</p>
+<p>You can also adjust the equalizer settings with an immediate graphical
+preview.</p>
 <div class="pic"><img src="fx-gui-peq.png" /></div>
-<p>Il est possible de faire défiler les paramètres comme d’habitude, ceux-ci
-sont affichés un par un en bas à gauche.
-Le tout premier paramètre <span class="ui">R</span> donne l’échelle verticale
-de la représentation, en dB.</p>
-<p>Les points en bas à droite indiquent la précision du changement des paramètres
-que l’on obtient avec les touches <span class="keya">←</span> et
-<span class="keya">→</span>.
-On peut changer cette précision avec la touche
-<span class="keya">Select</span>.
-<span class="keya">Esc</span> pour revenir à l’écran principal de paramétrage
-de l’effet.</p>
+<p>The parameters can be scrolled as usual, they are displayed one by one at
+the bottom left.
+The very first parameter <span class="ui">R</span> gives the display vertical
+scale, in dB.</p>
+<p>The dots at the bottom right give the precision of the changes obtained
+with the <span class="keya">←</span> and <span class="keya">→</span> keys.
+This precision can be changed with <span class="keya">Select</span>.
+<span class="keya">Esc</span> to go back to the main parameter screen.</p>
 
 
 
 <h3><a id="fx-phaserap"></a>Phaser AP</h3>
 
-<p>Phaser classique, constitué d’une cascade de filtres
-<span lang="en"><i>all-pass</i></span> avec réinjection.</p>
+<p>Classic phaser, made of a cascade of all-pass filters with feedback.</p>
 
 <p class="var">Speed</p>
-<p>Vitesse des oscillations.</p>
+<p>Oscillation speed.</p>
 
 <p class="var">Mix</p>
-<p>Proportion de signal déphasé dans le mix final.</p>
+<p>Ratio of phased signal in the final mix.</p>
 
 <p class="var">Feedback</p>
-<p>Quantité de signal déphasé réinjecté.
-Plus le feedback est élevé, plus l’effet est marqué.</p>
+<p>Amount of feedback from the phased signal.
+The higher the feedback, the more pronounced the effect.</p>
 
 <p class="var">Number of stages</p>
-<p>Ordre du filtre de déphasage.</p>
+<p>Order for the phasing filter.</p>
 
 <p class="var">Minimum frequency</p>
-<p>Fréquence de coupure minimum du filtre de déphasage, en Hz.
-L’oscillateur fait varier la fréquence entre les minimum et
-maximum.</p>
+<p>Minimum cutoff frequency for the phasing filter, in Hz.
+The oscillator make the filter cutoff frequency vary between the minimum and
+maximum frequencies.</p>
 
 <p class="var">Maximum frequency</p>
-<p>Fréquence de coupure maximum du filtre de déphasage, en Hz.
-En plaçant la fréquence max au même niveau que la fréquence min,
-il est possible de figer l’oscillation et de se servir du phaser
-comme d’un filtre de coloration fixe.</p>
+<p>Maximum cutoff frequency for the phasing filter, in Hz.
+By putting the maximum frequency at the same value as the minimum frequency,
+it is possible to stop the oscillation and to use the phaser as fixed filter
+for coloring the sound.</p>
 
 <p class="var">Feedback source</p>
-<p>Numéro de l’étage du filtre sur lequel est prélevé le signal à
-réinjecter.</p>
+<p>Number of the stage from which the feedback signal is taken.</p>
 
 <p class="var">Waveform, Sample and hold, Smoothing, Chaos amount, Phase
 distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
 Phase set</p>
-<p>Ces paramètres sont identiques à ceux de l’effet
+<p>These parameters are identical to the ones from the
 <a href="fx-lfo">LFO</a>.</p>
 
 
 
 <h3><a id="fx-phaserht"></a>Phaser HT</h3>
 
-<p>Cet effet de modulation fonctionne un peu différemment des phasers
-analogiques, mais en reprend les mêmes principes.
-Il a cependant un son très typé.
-Il peut générer un signal stéréo à partir d’une entrée mono.</p>
-<p>Un filtre passe-bande désactivable permet de choisir une plage de
-fréquences à conserver sur le son phasé. Cela permet essentiellement de
-limiter les basses fréquences sur les réglages un peu francs.</p>
-<p>Il est aussi possible d’obtenir un effet de type
-<span lang="en"><i>barberpole phaser</i></span>, qui donne l’impression
-d’avoir des tonalités qui montent ou qui descendent sans fin.<p>
+<p>This modulation effect works a little differently from phasers
+but uses the same principles.
+However, it has a very typical sound.
+It can generate a stereo signal from a mono input.</p>
+<p>An optional band-pass filter allows the selection of a range of
+frequencies to be kept from the phased sound.
+This essentially makes it possible to limit the low frequencies when the
+settings are a bit strong.</p>
+<p>It is also possible to obtain a “barberpole phaser” effect, which gives the
+impression of having tones that go up or down endlessly.<p>
 
 <p class="var">Speed</p>
-<p>Vitesse des oscillations.</p>
+<p>Oscillation speed.</p>
 
 <p class="var">Depth</p>
-<p>Ce paramètre fixe le nombre d’étages du phaser, parmi
+<p>This is the number of stage of the phaser, amongst
 <span class="ui">4</span>, <span class="ui">8</span>,
 <span class="ui">16</span> et <span class="ui">32</span>.
-Le nombre d’étage change la coloration générale du son.
-Plus il est grand, plus le nombre de trous
-(<span lang="en"><i>notches</i></span>) dans le spectre est élevé.</p>
+The number of stages changes the general sound color.
+The larger, the greater the number of notches.</p>
 
 <p class="var">Feedback level</p>
-<p>Quantité de signal réinjecté à l’entrée du phaser.
-Ce feedback est saturé, il peut donc être intéressant de pousser un peu le
-niveau du signal d’entrée pour enrichir le résultat.</p>
+<p>Amount of signal fed back to the phaser input.
+This feedback is saturated, so it may be interesting to push the input signal
+level a little to enrich the result.</p>
 
 <p class="var">Feedback color</p>
-<p>Change la tonalité de la réinjection.</p>
+<p>Changes the feedback tone color.</p>
 
 <p class="var">Phase mix</p>
-<p>Quantité de signal déphasé ajoutée au signal d’origine.
-C’est le fait d’additionner les deux qui produit l’effet de phasing.
-Cet effet est maximum à 50&#8239;%.</p>
+<p>Amount of phase-shifted signal added to the original signal.
+Adding both is what produces the phasing effect.
+This effect is maximum at 50%.</p>
 
 <p class="var">Phase offset</p>
-<p>Ce paramètre permet de déplacer la phase des oscillations par rapport
-à son cycle naturel.</p>
+<p>This parameter allows the phase of the oscillations to be moved relative to
+its natural cycle.</p>
 
 <p class="var">Phase set</p>
-<p>Fixe manuellement la phase des oscillations, en degrés.
-Ce paramètre est intéressant à moduler en mode gelé avec un LFO externe.
-Il permet d’obtenir un effet oscillant plus proche d’un phaser
-conventionnel.</p>
+<p>Manually sets the phase of oscillations, in degrees.
+It is interesting to modulate this parameter with an external LFO in frozen
+mode.
+It gives an oscillating effect closer to a conventional phaser.</p>
 
 <p class="var">Hold</p>
-<p>Gèle les oscillations du phaser.</p>
+<p>Freezes the phaser oscillations.</p>
 
 <p class="var">BPF freq</p>
-<p>Fréquence centrale du filtre passe-bande appliqué au signal déphasé.</p>
+<p>Middle band-pass filter frequency, for the phased signal.</p>
 
 <p class="var">BPF selectivity</p>
-<p>Permet d’isoler plus ou moins précisément le groupe de fréquences choisi
-avec le filtre passe-bande.
-Quand ce paramètre est au minimum, le filtrage est désactivé.</p>
+<p>Selects more or less accurately a band of frequencies with the band-pass
+filter.
+When this parameter is minimum, the filtering is deactivated.</p>
 
 <p class="var">Direction</p>
-<p>Direction des oscillations sur le canal gauche.
-<span class="ui">Down</span> fait descendre les trous dans le spectre,
-et <span class="ui">Up</span> les fait remonter.</p>
+<p>Direction of the oscillations on the left channel.
+<span class="ui">Down</span> makes the notches go down,
+and <span class="ui">Up</span> makes them go up.</p>
 
 <p class="var">Mono phase mix</p>
-<p>Indique comment le signal déphasé doit être mixé avec le signal principal
-quand la sortie est mono.
-<span class="ui">Left</span> n’utilise qu’un des deux signaux conduisant à une
-tonalité qui va toujours dans la direction indiquée par <var>Direction</var>.
-<span class="ui">Mixed</span> mélange les deux signaux qui vont vers le haut
-et vers le bas, produisant une sorte d’oscillation.</p>
+<p>Specifies how the phase-shifted signal should be mixed with the main signal
+when the output is mono.
+<span class="ui">Left</span> uses only one of both signals, leading to a tone
+going always in the same direction indicated by <var>Direction</var>.
+<span class="ui">Mixed</span> mixes both signals going up and down, producing
+a kind of oscillation.</p>
 
 <p class="var">Stereo phase mix</p>
-<p>Indique comment le signal déphasé doit être traité quand la sortie est
-stéréo.</p>
+<p>Indicates how the phased signal should be processed when the effect output
+is stereo.</p>
 <table>
-<tr><td><span class="ui">Spat&nbsp;mix</span></td><td>Les canaux d’entrée sont mélangés avant d’être déphasés.
-Les trous spectraux dans les canaux de sortie gauche et droit glissent dans des directions opposées, ce qui donne une forte image stéréo, y compris avec un signal d’entrée mono.</td></tr>
-<tr><td><span class="ui">Spat&nbsp;sep</span></td><td>Comme <span class="ui">Spat mix</span>, mais les canaux d’entrée sont traités indépendamment.</td></tr>
-<tr><td><span class="ui">Bi-mono</span></td><td>Les canaux gauche et droit sont traités indépendamment et utilisent le réglage de <var>Mono phase mix</var> pour définir la direction de glissement des trous.</td></tr>
+<tr><td><span class="ui">Spat&nbsp;mix</span></td><td>Input channels are mixed before being phased.
+The spectral notches in the left and right channels sweep in opposite directions, which gives a strong stereo image, including with a mono input signal.</td></tr>
+<tr><td><span class="ui">Spat&nbsp;sep</span></td><td>Like <span class="ui">Spat mix</span>, but the input channels are processed independently.</td></tr>
+<tr><td><span class="ui">Bi-mono</span></td><td>Left and right channels are processed independantly and use the <var>Mono phase mix</var> setting to specify the direction of the notch sweeps.</td></tr>
 </table>
 
 <p class="var">All-pass delay</p>
-<p>Ce paramètre permet d’introduire une sorte de micro-retard complémentaire
-dans le signal déphasé.
-Cela permet d’augmenter le nombre de trous glissant dans le spectre.
-La répartition spectrale de ces trous est guidée par la valeur d’<var>All-pass
-coefficient</var>.</p>
+<p>This parameter allows to introduce a kind of complementary micro-delay in
+the phase-shifted signal.
+This increases the number of sweeping notches in the spectrum.
+The spectral distribution of these notches is guided by the <var>All-pass
+coefficient</var> value.</p>
 
 <p class="var">All-pass coefficient</p>
-<p>Coefficient des filtres de déphasage utilisés pour le micro-retard.
-À 0, le filtre se comporte comme un retard pur.
-Une valeur négative compresse les trous sur le bas du spectre, et une valeur
-positive vers le haut.
-Quand le coefficient vaut &minus;0,5, avec un retard d’environ 700&#8239;µs
-et <var>Depth</var> faible, la répartition des trous est quasi-harmonique ce
-qui permet d’obtenir une illusion auditive similaire à celle de
+<p>Coefficient of the phase-shift filters used to achieve a micro-delay.
+At 0, the filter behaves like a pure delay.
+A negative value groups the notches on the bottom of the spectrum, and a
+positive value on the top.
+When the coefficient is &minus;0.5, with a delay of about 700µs and a low
+value for <var>Depth</var>, the notch distribution is almost harmonic, which
+makes it possible to obtain an audio illusion similar to the
 Sherpard-Risset.</p>
 
 
@@ -1678,224 +1640,210 @@ If there isn’t any last known note, the signal is 0.</td></tr>
 
 <h3><a id="fx-distpwm"></a>Pulse Width Modulation Distortion</h3>
 
-<p>Il s’agit d’une distortion à gain quasi-infini, le signal de sortie est
-rectangulaire.
-Cependant seules les fronts d’onde montants sont tirés du signal en entrée.
-Les fronts d’onde descendants sont générés automatiquement après un laps de
-temps déterminé, ce qui donne au son une coloration d’oscillateur
-«&#8239;PWM&#8239;», comme sur un synthétiseur.</p>
+<p>This is an almost infinite-gain distortion, the output signal is
+rectangular.
+Only the rising wave fronts are taken from the input signal.
+Downward wave fronts are generated automatically after a fixed period of time,
+which gives the sound a “PWM oscillator” color, like with a synthesizer.</p>
 
 <p class="var">Pulse width</p>
-<p>Durée des impulsions, en millisecondes.
-Plus la durée est courte, plus le spectre du son est chargé en particulier
-dans les aigus, et plus le volume apparent diminue.</p>
+<p>Pulse duration, in milliseconds.
+The shorter the duration, the more filled the sound spectrum is, especially
+in high frequencies, and the lower the apparent volume.</p>
 
 
 
 <h3><a id="fx-sgirlz"></a>SiemensGirlz — Écho créatif</h3>
 
-<p>SiemensGirlz est un effet d’écho créatif relativement complexe permettant
-d’obtenir des sonorités très variés, en particulier quand les paramètres
-sont modulés par des LFO.</p>
-<p>Le son passe à travers 4 <i><span lang="en">taps</span></i>, sortes d’échos
-simples sans répétition.
-L’ensemble des taps et du signal d’origine alimente une réverbération.
-Ce signal réverbéré rentre à son tour dans une ou deux lignes à retard
-avec réinjection.
-Des effets peuvent être appliqués dans le signal retardé et réinjecté.
-Les réinjections des deux lignes peuvent également se croiser.</p>
-<p>Les effets de ligne sont les suivants, dans cet ordre&#8239;:</p>
+<p>SiemensGirlz is a relatively complex creative delay effect for obtaining a wide variety of sounds, especially when the parameters are modulated by LFOs.</p>
+<pThe sound passes through 4 taps, kind of simple echoes without repetition.
+The four taps and the original signal feed a reverb.
+This reverberated signal enters one or two feedback delay lines.
+Effects can be applied to the delayed signal and fed back.
+The feedback of the two lines can also cross.</p>
+<p>The delay line effects are as follows, in this order:</p>
 <ul>
-<li>Filtre résonant</li>
-<li>Distorsion</li>
-<li>Filtre plateau haut</li>
-<li>Translateur de fréquences</li>
+<li>Resonant filter</li>
+<li>Distortion</li>
+<li>High-shelf filter</li>
+<li>Frequency shifter</li>
 </ul>
-<p>En plus de cela, un système de <i><span lang="en">ducking</span></i>
-permet d’atténuer ou de couper la sortie des lignes à réinjection en
-fonction du volume de l’entrée, par exemple pour améliorer la clarté
-du son d’origine tout en gardant l’enrobage de l’effet d’écho quand
-l’entrée est silencieuse.</p>
+<p>In addition, a ducking system attenuates or mutes the output of the
+feedback lines according to the volume of the input, for example to improve
+the clarity of the original sound while keeping the delay effect when the
+input is silent.</p>
 
-<h4>Paramètres généraux</h4>
+<h4>General parameters</h4>
 
 <p class="var">Tap gain in</p>
-<p>Quantité de signal source qui passe dans l’ensemble des taps,
-en pourcentage.
-Une fois automatisé, ce paramètre permet de couper ou réactiver
-l’entrée des taps.</p>
+<p>Amount of source signal that passes through all taps, in percent.
+Once automated, this parameter allows to cut or reactivate the input of the taps.</p>
 
 <p class="var">Tap global volume</p>
-<p>Volume général de l’ensemble des taps dans le mix final, en dB.</p>
+<p>General volume of all taps in the final mix, in dB.</p>
 
 <p class="var">Dry volume</p>
-<p>Volume du son d’origine dans le mix final, en dB.</p>
+<p>Original sound volume in the final mix, in dB.</p>
 
 <p class="var">Dry spread</p>
-<p>Répartition du son d’origine dans les deux lignes à retard.
-À 0&#8239;%, le son va dans la première ligne exclusivement, et à 100&#8239;%,
-dans la deuxième.
-Le paramètre n’a aucun effet quand il n’y a qu’une ligne activée.</p>
+<p>Distribution of the original sound in the two delay lines.
+At 0%, the sound goes in the first line exclusively, and at 100%, in the
+second line.
+The parameter has no effect when only one line is activated.</p>
 
 <p class="var">Freeze lines</p>
-<p>Coupe l’entrée des lignes et remonte leur taux de réinjection à
-100&#8239;%.
-Cela permet de geler les lignes à retard, qui répètent en boucle leur contenu.
-Le son continue d’être progressivement altéré par les effets intégrés aux
-lignes.</p>
+<p>Cuts the input of the lines and increases their feedback level to 100%.
+This freezes the delay lines, repeating their content infinitely.
+The sound continues to be gradually altered by the line effects.</p>
 
 <p class="var">Number of feedback lines</p>
-<p>Nombre de lignes à retard à réinjection, 1 ou 2.</p>
+<p>Number of feedback delay lines, 0, 1 ou 2.</p>
 
 <p class="var">Cross-freedback</p>
-<p>Taux de réinjection croisée.
-À 0&#8239;%, chaque ligne est indépendante.
-À 100&#8239;%, les lignes s’échangent complètement leur signal de
-réinjection.</p>
+<p>Cross-feedback level.
+At 0%, each line is independent.
+At 100%, the lines swap their feedback signal.</p>
 
 <p class="var">Ducking sensitivity</p>
-<p>Donne la sensibilité de référence du ducking, en décibels.
-Quand le ducking est activé sur une ligne, celle-ci se coupe quand le volume
-du signal d’entrée dépasse un certain seuil.
-Ce dernier est fixé par ce paramètre.</p>
+<p>The ducking reference sensitivity, in decibels.
+When ducking is activated on a line, the line is switched off when the volume
+of the input signal exceeds a certain threshold.
+This parameter sets the latter.</p>
 
 <p class="var">Ducking time</p>
-<p>Constante de temps de l’analyseur de volume du ducking.
-Indique le temps d’attaque.
-Le temps de release en est automatiquement déduit.</p>
+<p>Time constant for the volume analyzer.
+It indicates the attack time.
+The release time is automatically deducted.</p>
 
-<h4>Paramètres de taps</h4>
+<h4>Tap parameters</h4>
 
 <p class="var">Tap input gain</p>
-<p>Niveau d’entrée du tap, en pourcentage.</p>
+<p>Input tap level, in percent.</p>
 
 <p class="var">Tap spread</p>
-<p>Répartition de la sortie du tap dans les deux lignes à retard.
-Le paramètre fonctionne comme <var>Dry spread</var>.</p>
+<p>Distribution of the tap output in the two delay lines.
+The parameter works as <var>Dry spread</var>.</p>
 
 <p class="var">Tap delay time, base</p>
-<p>Temps de retard du tap, en millisecondes.</p>
+<p>Main tap delay time, in milliseconds.</p>
 
 <p class="var">Tap delay time, relative</p>
-<p>Ajustement multiplicateur sur le temps de retard principal.
-Contrairement à ce dernier, l’ajustement a un mapping linéaire, ce qui
-facilite la création d’effets spéciaux par automation.</p>
+<p>Multiplier on the main delay time.
+The mapping of this parameter is linear, which make easier the creation
+of special effects by automating it.</p>
 
 <p class="var">Tap pitch</p>
-<p>Pseudo-pitch-shifting du tap, en demi-tons.
-Celui-ci est réalisé en produisant en interne deux taps rééchantillonnés
-qui se recouvrent alternativement.
-Nécessite un minimum de retard sur le tap pour être effectif.</p>
+<p>Tap pitch shifting, in semi-tones.
+This is done by internally producing two alternately overlapping resampled
+taps.
+Requires a minimum delay on the tap to be effective.</p>
 
 <p class="var">Tap low-cut frequency</p>
-<p>Fréquence du filtre coupe-bas appliqué entre la sortie du tap et le
-mix final.</p>
+<p>Cutoff frequency of the low-cut filter applied between the tap output and
+the final mix.</p>
 
 <p class="var">Tap high-cut frequency</p>
-<p>Fréquence du filtre coupe-haut appliqué entre la sortie du tap et le
-mix final.</p>
+<p>Cutoff frequency of the high-cut filter applied between the tap output and
+the final mix.</p>
 
 <p class="var">Tap pan</p>
-<p>Balance panoramique de la sortie du tap dans le mix final.</p>
+<p>Panoramic balance for the tap output in the final mix.</p>
 
-<h4>Paramètres de ligne</h4>
+<h4>Feedback delay line parameters</h4>
 
 <p class="var">Line input gain</p>
-<p>Niveau d’entrée de la ligne, en pourcentage.</p>
+<p>Line input gain, percent.</p>
 
 <p class="var">Line delay time, base</p>
-<p>Temps de retard de la ligne, en millisecondes.</p>
+<p>Main line delay time, milliseconds.</p>
 
 <p class="var">Line delay time, relative</p>
-<p>Ajustement multiplicateur sur le temps de retard principal.
-Contrairement à ce dernier, l’ajustement a un mapping linéaire, ce qui
-facilite la création d’effets spéciaux par automation.</p>
+<p>Multiplier on the main delay time.
+The mapping of this parameter is linear, which make easier the creation
+of special effects by automating it.</p>
 
 <p class="var">Line speed</p>
-<p>Vitesse de l’émulateur de BBD (<i><span lang="en">bucket brigade
-device</span></i>), en pourcentage.
-Les retards spécifiés dans les paramètres précédents sont valables à
-100&#8239;%.
-Quand la ligne va plus vite, les temps de retard sont raccourcis.
-Ils sont rallongés quand elle va plus lentement.
-Changer la vitesse de la ligne permet d’obtenir des effets de pitch
-caractéristiques.</p>
+<p>Speed of the BBD (bucket brigade device) emulator, in percent.
+Delay times specified in the previous parameters are valid when the parameter
+is set to 100%.
+When the line is faster, delay times become sorter.
+They become longer when the line goes slower.
+Change the line speed makes possible to achieve characteristic pitch
+effects.</p>
 
 <p class="var">Line pitch</p>
-<p>Pseudo-pitch-shifting de la ligne, en demi-tons.</p>
+<p>Line pitch shifting, in semi-tones.</p>
 
 <p class="var">Line feedback</p>
-<p>Taux de réinjection de la ligne, en pourcentage.
-Plus le taux est haut et plus les échos se répètent longtemps.</p>
+<p>Line feedback level, percent.
+The higher, the longer the echoes repeat.</p>
 
 <p class="var">Line low-cut frequency</p>
-<p>Fréquence du filtre coupe-bas appliqué entre la sortie de la ligne et le
-mix final.</p>
+<p>Cutoff frequency of the low-cut filter applied between the line output and
+the final mix.</p>
 
 <p class="var">Line high-cut frequency</p>
-<p>Fréquence du filtre coupe-haut appliqué entre la sortie de la ligne et le
-mix final.</p>
+<p>Cutoff frequency of the high-cut filter applied between the line output and
+the final mix.</p>
 
 <p class="var">Line pan</p>
-<p>Balance panoramique de la sortie de la ligne dans le mix final.</p>
+<p>Panoramic balance for the line output in the final mix.</p>
 
 <p class="var">Line volume</p>
-<p>Volume de sortie de la ligne dans le mix final.</p>
+<p>Line output volume in the final mix.</p>
 
 <p class="var">Line ducking amount</p>
-<p>Taux de ducking appliqué à la ligne.
-L’effet dépend des paramètres de sensibilité et de temps de réponse.</p>
+<p>Ducking amount applied to the delay line.
+The effect depends on the <var>Ducking sensitivity</var> and the <var>Ducking
+time</var> parameters.</p>
 
 <p class="var">Line filter type</p>
-<p>Type de filtre résonant utilisé dans la chaîne de réinjection.</p>
+<p>Type of resonant filter used in the feedback processing chain.</p>
 <table>
-<tr><td><span class="ui">PK</span></td><td>Courbe en cloche</td></tr>
-<tr><td><span class="ui">LP</span></td><td>Passe-bas</td></tr>
-<tr><td><span class="ui">BP</span></td><td>Passe-bande</td></tr>
-<tr><td><span class="ui">HP</span></td><td>Passe-haut</td></tr>
+<tr><td><span class="ui">PK</span></td><td>Bell filter</td></tr>
+<tr><td><span class="ui">LP</span></td><td>Low-pass filter</td></tr>
+<tr><td><span class="ui">BP</span></td><td>Band-pass filter</td></tr>
+<tr><td><span class="ui">HP</span></td><td>High-pass filter</td></tr>
 </table>
 
 <p class="var">Line filter frequency</p>
-<p>Fréquence de coupure du filtre résonant, en Hz.</p>
+<p>Cutoff frequency of the resonant filter, in Hz.</p>
 
 <p class="var">Line filter resonance</p>
-<p>Résonance du filtre, en décibels.</p>
+<p>Resonance of the filter, in dB.</p>
 
 <p class="var">Line filter selectivity</p>
-<p>Sélectivité (Q) du filtre résonant.</p>
+<p>Selectivity (Q) of the resonant filter.</p>
 
 <p class="var">Line distortion amount</p>
-<p>Taux de distorsion de la chaîne de réinjection, en pourcentage.</p>
+<p>Distortion amount in the feedback chain, percent.</p>
 
 <p class="var">Line distortion foldback</p>
-<p>Courbure de la distorsion.
-Change la répartition des harmoniques créées par la distorsion.</p>
+<p>Shape of the distortion.
+Changes the harmonic content created by the distortion.</p>
 
 <p class="var">Line high shelf frequency</p>
-<p>Fréquence de coupure du filtre plateau haut, post-distorsion.</p>
+<p>High-shelf filter cutoff frequency, applied after the distortion.</p>
 
 <p class="var">Line high shelf level</p>
-<p>Niveau du filtre plateau haut, en dB.
-Permet d’atténuer les harmoniques du haut du spectre créées par la
-distorsion.</p>
+<p>Level of the high shelf, dB.
+Can damp the harsh frequencies created by the distortion.</p>
 
 <p class="var">Line frequency shifting</p>
-<p>Décalage en Hz du translateur de fréquences.
-0&#8239;Hz donne un effet neutre.</p>
+<p>Shifting frequency for the frequency shifter, in Hz.
+0Hz is neutral (no shifting).</p>
 
 <p class="var">Line reverb mix</p>
-<p>Proportion de signal réverbéré qui rentre dans la ligne à retard,
-en pourcentage.</p>
+<p>Amount of reverberated signal entering the delay line, in precent.</p>
 
 <p class="var">Line reverb decay</p>
-<p>Paramètre influant sur le temps de réverbération.
-Plus le paramètre est élevé, plus la réverbération est longue.</p>
+<p>Parameter related to the reverberation time.
+The higher, the longer the reverberation.</p>
 
 <p class="var">Line reverb damp</p>
-<p>Influe sur l’atténuation des hautes fréquences dans la queue de la
-réverbération.
-À 100&#8239;%, l’atténuation est maximale.
-Ce paramètre raccourcit implicitement le temps de réverbération.</p>
+<p>Damp the high frequencies in the reverberation tail.
+At 100%, the damping is maximum.
+This parameter shorten the actual reverberation time.</p>
 
 
 
