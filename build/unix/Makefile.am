@@ -421,8 +421,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
         ../../src/mfx/dsp/rspl/Cst.h \
-        ../../src/mfx/dsp/rspl/DecWrapper.h \
-        ../../src/mfx/dsp/rspl/DecWrapper.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorFir.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorHermite43.cpp \
