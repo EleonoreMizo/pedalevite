@@ -5,6 +5,7 @@
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
 #include "mfx/doc/Setup.h"
+#include "mfx/dsp/ana/FreqFast.h"
 #include "mfx/dsp/dly/BbdLine.h"
 #include "mfx/dsp/ctrl/lfo/LfoModule.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
@@ -26,6 +27,8 @@
 #include "mfx/pi/nzcl/NoiseChlorine.h"
 #include "mfx/pi/nzcl/NoiseChlorineDesc.h"
 #include "mfx/pi/nzcl/Param.h"
+#include "mfx/pi/osdet/OnsetDetect.h"
+#include "mfx/pi/osdet/OnsetDetectDesc.h"
 #include "mfx/pi/peq/Param.h"
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/peq/PEqType.h"
@@ -359,6 +362,7 @@ int	generate_test_signal (double &sample_freq, std::vector <std::vector <float> 
 #if 1
 
 	ret_val = load_wav ("../../../src/test/samples/guitar-01.wav", chn_arr, sample_freq);
+//	ret_val = load_wav ("../../../src/test/samples/guitar-02.wav", chn_arr, sample_freq);
 
 #else
 
@@ -530,7 +534,11 @@ int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o
 		_buf_src_ptr_list [chn] = &_buf_list [buf_idx] [0];
 		++ buf_idx;
 	}
-	_proc_info._src_arr = &_buf_src_ptr_list [0];
+	_proc_info._src_arr = 0;
+	if (nbr_chn_i > 0)
+	{
+		_proc_info._src_arr = &_buf_src_ptr_list [0];
+	}
 	_proc_info._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN ] = nbr_chn_i;
 
 	for (int chn = 0; chn < nbr_chn_o * nbr_o; ++chn)
@@ -539,7 +547,11 @@ int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o
 		_buf_dst_ptr_list [chn] = &_buf_list [buf_idx] [0];
 		++ buf_idx;
 	}
-	_proc_info._dst_arr = &_buf_dst_ptr_list [0];
+	_proc_info._dst_arr = 0;
+	if (nbr_chn_o > 0)
+	{
+		_proc_info._dst_arr = &_buf_dst_ptr_list [0];
+	}
 	_proc_info._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT] = nbr_chn_o;
 
 	for (int chn = 0; chn < nbr_s; ++chn)
@@ -1469,6 +1481,103 @@ int	test_delay2 ()
 
 
 
+int test_osdet ()
+{
+	static const int  nbr_chn = 1;
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr (nbr_chn);
+
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+
+	if (ret_val == 0)
+	{
+		const size_t   len = chn_arr [0].size ();
+		mfx::pi::osdet::OnsetDetect plugin;
+		const int      max_block_size = 64;
+		int            latency = 0;
+		PiProc         pi_proc;
+		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::osdet::OnsetDetectDesc));
+		pi_proc.setup (plugin, nbr_chn, 0, sample_freq, max_block_size, latency);
+		size_t         pos = 0;
+//		float * const* dst_arr = pi_proc.use_buf_list_dst ();
+		float * const* sig_arr = pi_proc.use_buf_list_sig ();
+		float * const* src_arr = pi_proc.use_buf_list_src ();
+		mfx::piapi::PluginInterface::ProcInfo &   proc_info = pi_proc.use_proc_info ();
+		pi_proc.reset_param ();
+		do
+		{
+			const int      block_len =
+				int (std::min (len - pos, size_t (max_block_size)));
+
+			proc_info._nbr_spl = block_len;
+		
+			for (int chn = 0; chn < nbr_chn; ++chn)
+			{
+				memcpy (
+					src_arr [chn],
+					&chn_arr [chn] [pos],
+					block_len * sizeof (src_arr [chn] [0])
+				);
+			}
+			plugin.process_block (proc_info);
+			for (int k = 0; k < block_len; ++k)
+			{
+				chn_arr [0] [pos + k] = sig_arr [0] [0] - sig_arr [1] [0];
+			}
+
+			pi_proc.reset_param ();
+			pos += block_len;
+		}
+		while (pos < len);
+
+		ret_val = save_wav ("results/osdet0.wav", chn_arr, sample_freq, 1);
+	}
+
+	return ret_val;
+}
+
+
+
+int	test_freqfast ()
+{
+	static const int  nbr_chn = 1;
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr (nbr_chn);
+
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+
+	if (ret_val == 0)
+	{
+		const size_t   len = chn_arr [0].size ();
+		mfx::dsp::ana::FreqFast analyser;
+		const int      max_block_size = 64;
+
+		analyser.set_sample_freq (sample_freq);
+
+		size_t         pos = 0;
+		double         phase = 0;
+		do
+		{
+			const int      block_len =
+				int (std::min (len - pos, size_t (max_block_size)));
+			const float    freq = analyser.process_block (&chn_arr [0] [pos], block_len);
+			for (int k = 0; k < block_len; ++k)
+			{
+				chn_arr [0] [pos + k] = float (sin (phase * 2 * fstb::PI / sample_freq));
+				phase += freq;
+			}
+			pos += block_len;
+		}
+		while (pos < len);
+
+		ret_val = save_wav ("results/freqfast0.wav", chn_arr, sample_freq, 1);
+	}
+
+	return ret_val;
+}
+
+
+
 int main (int argc, char *argv [])
 {
 	mfx::dsp::mix::Generic::setup ();
@@ -1507,8 +1616,16 @@ int main (int argc, char *argv [])
 	test_bbd_line ();
 #endif
 
-#if 1
+#if 0
 	test_delay2 ();
+#endif
+
+#if 0
+	test_osdet ();
+#endif
+
+#if 0
+	test_freqfast ();
 #endif
 
 
