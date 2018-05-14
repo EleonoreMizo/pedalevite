@@ -111,11 +111,13 @@ protected:
 
 private:
 
-	static const size_t  _storage_size = 256;
+	static const size_t  _storage_size = 256; // Real storage size is reduced by _storage_alig - 1
+	static const size_t  _storage_alig = 16;
 	typedef std::array <uint8_t, _storage_size> OscStorage;
 
 	typedef std::unique_ptr <OscStepSeq> StepSeqUPtr;
 
+	OscInterface * get_aligned_osc () const;
 	inline const OscInterface &
 	               use_osc () const;
 	inline OscInterface &

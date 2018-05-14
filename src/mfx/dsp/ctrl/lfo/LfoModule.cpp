@@ -41,6 +41,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cmath>
+#include <cstdint>
 
 
 
@@ -73,7 +74,7 @@ LfoModule::LfoModule ()
 ,	_smooth (0)
 ,	_type (Type_INVALID)
 ,	_step_seq_uptr ()
-,	_osc_ptr (reinterpret_cast <OscInterface *> (&_osc [0]))
+,	_osc_ptr (get_aligned_osc ())
 ,	_snh_flag (false)
 ,	_smooth_flag (false)
 ,	_snh_pos (0)
@@ -87,7 +88,7 @@ LfoModule::LfoModule ()
 		var = 0;
 	}
 
-	::new (&_osc [0]) OscSine;
+	::new (get_aligned_osc ()) OscSine;
 	_type = Type_SINE;
 
 	set_sample_freq (44100);
@@ -237,8 +238,8 @@ void	LfoModule::set_type (Type type)
 
 #define mfx_dsp_ctrl_lfo_LfoModule_BUILD(c, T, a) \
 		case	c: \
-			static_assert (sizeof (T) <= sizeof (_osc), "Storage size"); \
-			::new (&_osc [0]) T a; \
+			static_assert (sizeof (T) <= sizeof (_osc) - _storage_alig + 1, "Storage size"); \
+			::new (get_aligned_osc ()) T a; \
 			break;
 
 		// Build new oscillator
@@ -271,7 +272,7 @@ void	LfoModule::set_type (Type type)
 		}
 		else
 		{
-			_osc_ptr = reinterpret_cast <OscInterface *> (&_osc [0]);
+			_osc_ptr = get_aligned_osc ();
 		}
 		use_osc ().set_sample_freq (_sample_freq);
 		apply_osc_settings ();
@@ -403,6 +404,16 @@ void	LfoModule::clear_buffers ()
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+OscInterface *	LfoModule::get_aligned_osc () const
+{
+	const intptr_t   base = reinterpret_cast <intptr_t> (&_osc [0]);
+	const intptr_t   alig = (base + _storage_alig - 1) & ~(_storage_alig - 1);
+
+	return reinterpret_cast <OscInterface *> (alig);
+}
 
 
 
