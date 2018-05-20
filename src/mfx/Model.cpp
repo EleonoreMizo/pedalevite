@@ -501,8 +501,6 @@ void	Model::activate_preset (int preset_index)
 	{
 		_obs_ptr->activate_preset (preset_index);
 	}
-
-	add_default_ctrl (-1);
 }
 
 
