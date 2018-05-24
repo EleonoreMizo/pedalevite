@@ -143,7 +143,6 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			switch (node_id)
 			{
-			case Entry_TEMPO_I:
 			case Entry_TEMPO_F:
 				{
 					double         bpm = _view_ptr->get_tempo ();
@@ -152,6 +151,7 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 				}
 				break;
 			case Entry_CLICK:
+			case Entry_TEMPO_I:
 				{
 					const bool     click_flag = _view_ptr->is_click_active ();
 					_model_ptr->set_click (! click_flag);
