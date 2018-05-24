@@ -303,7 +303,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 
-	ing            pos   = 0;
+	int            pos   = 0;
 	do
 	{
 		const auto     x = V128Src::load (src_ptr + pos);
