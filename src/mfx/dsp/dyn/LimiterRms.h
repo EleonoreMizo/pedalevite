@@ -61,7 +61,7 @@ public:
 	fstb_FORCEINLINE float
 	               process_sample (float x);
 
-	void           process_block (float dst_ptr [], const float src_ptr [], long nbr_spl);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           clear_buffers ();
 	inline void    apply_volume (float gain);
 

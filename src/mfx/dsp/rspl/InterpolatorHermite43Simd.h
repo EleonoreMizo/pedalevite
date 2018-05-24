@@ -48,8 +48,8 @@ class InterpolatorHermite43Simd
 
 public:
 
-						InterpolatorHermite43Simd ();
-	virtual			~InterpolatorHermite43Simd () {}
+	               InterpolatorHermite43Simd ();
+	virtual        ~InterpolatorHermite43Simd () {}
 
 
 
@@ -58,13 +58,13 @@ public:
 protected:
 
 	// InterpolatorInterface
-	virtual void	do_set_ovrspl_l2 (int ovrspl_l2);
-	virtual long	do_get_impulse_len () const;
+	virtual void   do_set_ovrspl_l2 (int ovrspl_l2);
+	virtual int    do_get_impulse_len () const;
 	virtual fstb::FixedPoint
-						do_get_group_delay () const;
+	               do_get_group_delay () const;
 
-	virtual void	do_start (int nbr_chn);
-	virtual long	do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
+	virtual void   do_start (int nbr_chn);
+	virtual int    do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
 	virtual float  do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate);
 
 
@@ -73,9 +73,9 @@ protected:
 
 private:
 
-	static const int  IMPULSE_LEN	= 4;
+	static const int IMPULSE_LEN	= 4;
 
-	int				_nbr_chn;
+	int            _nbr_chn;
 
 
 
@@ -83,11 +83,11 @@ private:
 
 private:
 
-						InterpolatorHermite43Simd (const InterpolatorHermite43Simd &other);
+	               InterpolatorHermite43Simd (const InterpolatorHermite43Simd &other);
 	InterpolatorHermite43Simd &
-						operator = (const InterpolatorHermite43Simd &other);
-	bool				operator == (const InterpolatorHermite43Simd &other) const;
-	bool				operator != (const InterpolatorHermite43Simd &other) const;
+	               operator = (const InterpolatorHermite43Simd &other);
+	bool           operator == (const InterpolatorHermite43Simd &other) const;
+	bool           operator != (const InterpolatorHermite43Simd &other) const;
 
 };	// class InterpolatorHermite43Simd
 
@@ -99,7 +99,7 @@ private:
 
 
 
-//#include	"mfx/dsp/rspl/InterpolatorHermite43Simd.hpp"
+//#include "mfx/dsp/rspl/InterpolatorHermite43Simd.hpp"
 
 
 

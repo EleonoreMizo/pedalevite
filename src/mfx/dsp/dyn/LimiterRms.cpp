@@ -81,7 +81,7 @@ void	LimiterRms::set_level (float l)
 
 
 
-void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], long nbr_spl)
+void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);

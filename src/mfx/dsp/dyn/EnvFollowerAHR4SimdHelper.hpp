@@ -178,7 +178,7 @@ fstb::ToolsSimd::VectF32	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_sa
 // Input data must contain only positive values!
 // Can work in-place.
 template <class VD, class VS, class VP, int ORD>
-void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl)
+void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl)
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -200,7 +200,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd
 	mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_LOAD (7)
 	mfx_dsp_dyn_EnvFollowerAHR4SimdHelper_LOAD (8)
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
 		const auto     state0 = V128Src::load_f32 (in_ptr + pos);
@@ -267,7 +267,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block (fstb::ToolsSimd
 // Input data must contain only positive values!
 // Can work in-place.
 template <class VD, class VS, class VP, int ORD>
-void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dest::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -280,7 +280,7 @@ void	EnvFollowerAHR4SimdHelper <VD, VS, VP, ORD>::process_block_1_chn (float out
 	}
 	float          hold_c = _hold_counter [0];
 
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
 		state [0] = in_ptr [pos];

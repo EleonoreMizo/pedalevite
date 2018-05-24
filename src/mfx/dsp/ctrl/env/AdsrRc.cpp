@@ -259,7 +259,7 @@ void	AdsrRc::process_block (float data [], int nbr_spl)
 		else
 		{
 			assert (_cur_seg_ptr != 0);
-			const long     work_len = std::min (
+			const int      work_len = std::min (
 				nbr_spl - pos,
 				_cur_seg_ptr->get_nbr_rem_spl ()
 			);
@@ -287,7 +287,7 @@ void	AdsrRc::skip_block (int nbr_spl)
 		else
 		{
 			assert (_cur_seg_ptr != 0);
-			const long		work_len = std::min (
+			const int      work_len = std::min (
 				nbr_spl - pos,
 				_cur_seg_ptr->get_nbr_rem_spl ()
 			);

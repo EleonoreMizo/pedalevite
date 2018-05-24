@@ -199,7 +199,7 @@ int	Compex::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
 
-	const long		buf_len = (max_buf_len + 3) & -4;
+	const int      buf_len = (max_buf_len + 3) & ~3;
 	_buf_tmp.resize (buf_len);
 
 	_sample_freq = float (sample_freq);
@@ -420,7 +420,7 @@ float	Compex::compute_env_coef (float t) const
 
 
 
-void	Compex::process_block_part (float * const out_ptr_arr [], const float * const in_ptr_arr [], const float * const sc_ptr_arr [], long pos_beg, long pos_end)
+void	Compex::process_block_part (float * const out_ptr_arr [], const float * const in_ptr_arr [], const float * const sc_ptr_arr [], int pos_beg, int pos_end)
 {
 	const float * const *	analyse_ptr_arr =
 		(_use_side_chain_flag) ? sc_ptr_arr : in_ptr_arr;
@@ -435,13 +435,13 @@ void	Compex::process_block_part (float * const out_ptr_arr [], const float * con
 	);
 
 	float *        tmp_ptr = &_buf_tmp [0];
-	const long     nbr_spl = pos_end - pos_beg;
+	const int      nbr_spl = pos_end - pos_beg;
 	_env_fol_xptr->process_block_1_chn (tmp_ptr, tmp_ptr, nbr_spl);
 	_smoother_xptr->process_block_serial_immediate (tmp_ptr, tmp_ptr, nbr_spl);
 	conv_env_to_log (nbr_spl);
 
-	const long     pos_block_end = (nbr_spl + 3) & -4L;
-	long           pos = 0;
+	const int      pos_block_end = (nbr_spl + 3) & ~3;
+	int            pos = 0;
 
 	// Special case for the first group of sample: we store the gain change.
 	{
@@ -481,12 +481,12 @@ void	Compex::process_block_part (float * const out_ptr_arr [], const float * con
 
 
 
-void	Compex::conv_env_to_log (long nbr_spl)
+void	Compex::conv_env_to_log (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 
-	const long     block_bnd = nbr_spl & -4;
-	long           pos       = 0;
+	const int      block_bnd = nbr_spl & ~3;
+	int            pos       = 0;
 	while (pos < block_bnd)
 	{
 		fstb::ToolsSimd::VectF32   val =
@@ -503,7 +503,7 @@ void	Compex::conv_env_to_log (long nbr_spl)
 		++ pos;
 	}
 
-	const long     clean_end = (nbr_spl + 3) & -4;
+	const int      clean_end = (nbr_spl + 3) & ~3;
 	while (pos < clean_end)
 	{
 		_buf_tmp [pos] = 0;

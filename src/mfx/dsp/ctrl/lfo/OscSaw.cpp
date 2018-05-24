@@ -119,7 +119,7 @@ bool	OscSaw::do_is_using_variation (int /*param*/) const
 
 
 
-void	OscSaw::do_tick (long nbr_spl)
+void	OscSaw::do_tick (int nbr_spl)
 {
 	_phase_gen.tick (nbr_spl);
 }

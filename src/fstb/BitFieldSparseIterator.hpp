@@ -47,7 +47,7 @@ BitFieldSparseIterator::BitFieldSparseIterator (BitFieldSparse &bfs)
 
 
 
-void	BitFieldSparseIterator::start (long pos_start, long pos_end)
+void	BitFieldSparseIterator::start (int pos_start, int pos_end)
 {
 	assert (pos_start >= 0);
 	assert (pos_end < _bfs.get_nbr_elt ());
@@ -84,7 +84,7 @@ void	BitFieldSparseIterator::iterate ()
 {
 	assert (is_rem_elt ());
 
-	const long		new_pos = _bit_index + 1;
+	const int      new_pos = _bit_index + 1;
 	if (new_pos >= _pos_end)
 	{
 		_bit_index = -1;
@@ -97,9 +97,9 @@ void	BitFieldSparseIterator::iterate ()
 
 
 
-long	BitFieldSparseIterator::get_bit_index () const
+int	BitFieldSparseIterator::get_bit_index () const
 {
-	return (_bit_index);
+	return _bit_index;
 }
 
 

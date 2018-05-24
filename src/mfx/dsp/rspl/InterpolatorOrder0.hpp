@@ -48,7 +48,7 @@ void	InterpolatorOrder0::do_set_ovrspl_l2 (int ovrspl_l2)
 
 
 
-long	InterpolatorOrder0::do_get_impulse_len () const
+int	InterpolatorOrder0::do_get_impulse_len () const
 {
 	return _impulse_len;
 }
@@ -69,22 +69,22 @@ void	InterpolatorOrder0::do_start (int nbr_chn)
 
 
 
-long	InterpolatorOrder0::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorOrder0::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
 {
-	const long     pos_dest_old = pos_dest;
-	const long		src_limit    = end_src - (_impulse_len - 1);
-	long				pos_src_int  = pos_src.get_int_val ();
+	const int      pos_dest_old = pos_dest;
+	const int      src_limit    = end_src - (_impulse_len - 1);
+	int            pos_src_int  = pos_src.get_int_val ();
 
-	const float *	src_ptr      = src_ptr_arr [0];
-	float *			dest_ptr     = dest_ptr_arr [0];
+	const float *  src_ptr      = src_ptr_arr [0];
+	float *        dest_ptr     = dest_ptr_arr [0];
 
 	if (   rate_step.get_val_int64 () == 0
 	    && rate.get_int_val () == 1
 	    && rate.get_frac_val () == 0)
 	{
-		const long     max_len_dst = end_dest  - pos_dest;
-		const long     max_len_src = src_limit - pos_src_int;
-		const long		len = std::min (max_len_dst, max_len_src);
+		const int      max_len_dst = end_dest  - pos_dest;
+		const int      max_len_src = src_limit - pos_src_int;
+		const int      len         = std::min (max_len_dst, max_len_src);
 		memcpy (
 			dest_ptr + pos_dest,
 			src_ptr + pos_src_int,
@@ -109,7 +109,7 @@ long	InterpolatorOrder0::do_process_block (float * const dest_ptr_arr [], const 
 		       && pos_src_int >= beg_src);
 	}
 
-	return (pos_dest - pos_dest_old);
+	return pos_dest - pos_dest_old;
 }
 
 

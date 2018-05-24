@@ -84,12 +84,12 @@ public:
 	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const;
 
 	inline bool    is_ramping () const;
-	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl);
-	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], long nbr_spl);
-	void           process_block_serial_latency (float out_ptr [], const float in_ptr [], long nbr_spl);
-	void           process_block_serial_immediate (float out_ptr [], const float in_ptr [], long nbr_spl);
-	void           process_block_2x2_latency (float out_ptr [], const float in_ptr [], long nbr_spl);
-	void           process_block_2x2_immediate (float out_ptr [], const float in_ptr [], long nbr_spl);
+	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl);
+	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl);
 
 	void           clear_buffers ();
 	void           clear_buffers_one (int biq);
@@ -106,7 +106,7 @@ protected:
 
 private:
 
-	void           handle_ramp_post (long nbr_spl);
+	void           handle_ramp_post (int nbr_spl);
 
 	BiqSimd        _biq;
 

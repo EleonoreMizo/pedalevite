@@ -173,7 +173,7 @@ void	ParamStateSet::process_block (int nbr_spl)
 	fstb::BitFieldSparseIterator it (_change_flag_arr);
 	for (it.start (); it.is_rem_elt (); it.iterate ())
 	{
-		const long     index = it.get_bit_index ();
+		const int      index = it.get_bit_index ();
 		ParamState &   state = _state_arr [index];
 		state.tick (nbr_spl);
 		if (! state.is_ramping ())

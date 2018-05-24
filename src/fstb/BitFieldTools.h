@@ -55,21 +55,21 @@ public:
 
    typedef  T  GroupType;
 
-	static long		calculate_nbr_groups (long nbr_elt);
+	static int     calculate_nbr_groups (int nbr_elt);
    static inline void
-                  calculate_group_and_pos (long &group, int &gpos, long pos);
+                  calculate_group_and_pos (int &group, int &gpos, int pos);
    static inline void
-                  calculate_group_and_mask (long &group, GroupType &mask, long pos);
+                  calculate_group_and_mask (int &group, GroupType &mask, int pos);
 
-   static bool    get_bit (const GroupType bit_arr [], long pos);
-   static void    set_bit (GroupType bit_arr [], long pos, bool flag);
-   static void    clear_bit (GroupType bit_arr [], long pos);
-   static void    fill_bit (GroupType bit_arr [], long pos);
+   static bool    get_bit (const GroupType bit_arr [], int pos);
+   static void    set_bit (GroupType bit_arr [], int pos, bool flag);
+   static void    clear_bit (GroupType bit_arr [], int pos);
+   static void    fill_bit (GroupType bit_arr [], int pos);
 
-   static void    activate_range (GroupType bit_arr [], long pos, long nbr_elt);
-   static void    deactivate_range (GroupType bit_arr [], long pos, long nbr_elt);
+   static void    activate_range (GroupType bit_arr [], int pos, int nbr_elt);
+   static void    deactivate_range (GroupType bit_arr [], int pos, int nbr_elt);
 
-   static long    get_next_bit_set_from (const GroupType bit_arr [], long pos, long length);
+   static int     get_next_bit_set_from (const GroupType bit_arr [], int pos, int length);
 
 
 

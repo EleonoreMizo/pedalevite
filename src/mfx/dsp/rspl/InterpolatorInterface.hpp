@@ -57,12 +57,12 @@ void	InterpolatorInterface::set_ovrspl_l2 (int ovrspl_l2)
 
 // Number of required samples, starting from the operational position (pos_src
 // in process_block). The filter implementation is mostly anti-causal.
-long	InterpolatorInterface::get_impulse_len () const
+int	InterpolatorInterface::get_impulse_len () const
 {
-	const long		len = do_get_impulse_len ();
+	const int      len = do_get_impulse_len ();
 	assert (len >= 1);
 
-	return (len);
+	return len;
 }
 
 
@@ -80,7 +80,7 @@ fstb::FixedPoint	InterpolatorInterface::get_group_delay () const
 	const fstb::FixedPoint	group_delay = do_get_group_delay ();
 	assert (group_delay.get_int_val () >= -1);
 
-	return (group_delay);
+	return group_delay;
 }
 
 
@@ -104,7 +104,7 @@ void	InterpolatorInterface::start (int nbr_chn)
 // - negative rate: same principle. The next position will be right before
 // beg_src.
 // Returns the number of processed destination samples (> 0).
-long	InterpolatorInterface::process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorInterface::process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
 {
 	assert (dest_ptr_arr != 0);
 	assert (dest_ptr_arr [0] != 0);
@@ -114,7 +114,7 @@ long	InterpolatorInterface::process_block (float * const dest_ptr_arr [], const 
 	assert (pos_src.get_int_val () < end_src - get_impulse_len () + 1);
 	assert (pos_dest < end_dest);
 
-	const long		nbr_processed_spl = do_process_block (
+	const int      nbr_processed_spl = do_process_block (
 		dest_ptr_arr,
 		src_ptr_arr,
 		pos_dest,
@@ -136,7 +136,7 @@ long	InterpolatorInterface::process_block (float * const dest_ptr_arr [], const 
 	assert (last_pos_src.get_int_val () < end_src - get_impulse_len () + 1);
 #endif
 
-	return (nbr_processed_spl);
+	return nbr_processed_spl;
 }
 
 
@@ -150,7 +150,7 @@ float	InterpolatorInterface::process_sample (const float src_ptr [], fstb::Fixed
 
 
 
-fstb::FixedPoint	InterpolatorInterface::integrate_rate (long len, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step)
+fstb::FixedPoint	InterpolatorInterface::integrate_rate (int len, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step)
 {
 	assert (len >= 0);
 
@@ -160,7 +160,7 @@ fstb::FixedPoint	InterpolatorInterface::integrate_rate (long len, const fstb::Fi
 	integ.add (rate);
 	integ.mul_int (len);
 
-	return (integ);
+	return integ;
 }
 
 

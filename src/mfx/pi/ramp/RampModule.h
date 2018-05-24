@@ -57,7 +57,7 @@ public:
 	void           set_type (CurveType type);
 	void           set_snh (double ratio);
 	void           set_smooth (double ratio);
-	void           tick (long nbr_spl);
+	void           tick (int nbr_spl);
 	double         get_val () const;
 	double         get_phase () const;
 	void           clear_buffers ();
@@ -77,7 +77,7 @@ private:
 	void           update_step ();
 	void           update_snh ();
 	void           update_smooth ();
-	inline void    tick_sub (long nbr_spl);
+	inline void    tick_sub (int nbr_spl);
 	float          get_raw_val () const;
 
 	template <int P, int D>

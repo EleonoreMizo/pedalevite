@@ -62,16 +62,16 @@ void	InterpolatorLerp::do_set_ovrspl_l2 (int ovrspl_l2)
 
 
 
-long	InterpolatorLerp::do_get_impulse_len () const
+int	InterpolatorLerp::do_get_impulse_len () const
 {
-	return (IMPULSE_LEN);
+	return IMPULSE_LEN;
 }
 
 
 
 fstb::FixedPoint	InterpolatorLerp::do_get_group_delay () const
 {
-	return (fstb::FixedPoint (0));
+	return fstb::FixedPoint (0);
 }
 
 
@@ -83,18 +83,18 @@ void	InterpolatorLerp::do_start (int nbr_chn)
 
 
 
-long	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
 {
 	const fstb::FixedPoint  pos_src_old (pos_src);
 	const fstb::FixedPoint  rate_old (rate);
-	const long		pos_dest_old = pos_dest;
+	const int      pos_dest_old = pos_dest;
 
-	const long		src_limit   = end_src - IMPULSE_LEN + 1;
-	long				pos_src_int = pos_src.get_int_val ();
+	const int      src_limit   = end_src - IMPULSE_LEN + 1;
+	int            pos_src_int = pos_src.get_int_val ();
 
 	{
-		const float *	src_ptr  = src_ptr_arr [0];
-		float *			dest_ptr = dest_ptr_arr [0];
+		const float *  src_ptr  = src_ptr_arr [0];
+		float *        dest_ptr = dest_ptr_arr [0];
 
 		do
 		{
@@ -105,7 +105,7 @@ long	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const fl
 			dest_ptr [pos_dest] = out;
 
 			pos_src += rate;
-			rate += rate_step;
+			rate    += rate_step;
 			++ pos_dest;
 
 			pos_src_int = pos_src.get_int_val ();
@@ -114,7 +114,7 @@ long	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const fl
 		       && pos_src_int < src_limit
 		       && pos_src_int >= beg_src);
 	}
-	const long		stop_pos = pos_dest;
+	const int      stop_pos = pos_dest;
 
 	for (int chn = 1; chn < _nbr_chn; ++chn)
 	{
@@ -134,13 +134,13 @@ long	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const fl
 			dest_ptr [pos_dest] = out;
 
 			pos_src += rate;
-			rate += rate_step;
+			rate    += rate_step;
 			++ pos_dest;
 		}
 		while (pos_dest < stop_pos);
 	}
 
-	return (stop_pos - pos_dest_old);
+	return stop_pos - pos_dest_old;
 }
 
 

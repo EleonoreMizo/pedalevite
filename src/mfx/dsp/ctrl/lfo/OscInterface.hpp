@@ -135,7 +135,7 @@ bool	OscInterface::is_using_variation (int param) const
 
 
 
-void	OscInterface::tick (long nbr_spl)
+void	OscInterface::tick (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 

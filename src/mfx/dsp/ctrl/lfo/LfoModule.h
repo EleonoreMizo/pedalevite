@@ -125,7 +125,7 @@ private:
 	void           apply_osc_settings ();
 	void           update_snh ();
 	void           update_smooth ();
-	inline void    tick_sub (long nbr_spl);
+	inline void    tick_sub (int nbr_spl);
 
 	OscStorage     _osc;
 

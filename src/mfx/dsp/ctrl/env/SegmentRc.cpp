@@ -86,7 +86,7 @@ void	SegmentRc::setup (float final_val, float mult, float end_thr)
 
 // Duration: force duration (samples) of the section. Useful when start and
 // target values are close and prone to numeric roundoff errors.
-void	SegmentRc::setup (float final_val, float mult, float end_thr, long duration)
+void	SegmentRc::setup (float final_val, float mult, float end_thr, int duration)
 {
    assert (duration >= 0);
 
@@ -218,7 +218,7 @@ void	SegmentRc::compute_nbr_rem_spl ()
 {
 	if (_mult >= 1)
 	{
-		_nbr_rem_spl = LONG_MAX;
+		_nbr_rem_spl = INT_MAX;
 	}
 	else if (_raw_val == 0)
    {

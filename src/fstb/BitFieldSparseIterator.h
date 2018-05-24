@@ -47,11 +47,11 @@ public:
 	               BitFieldSparseIterator (BitFieldSparse &bfs);
 	virtual        ~BitFieldSparseIterator () = default;
 
-	inline void		start (long pos_start = 0, long pos_end = -1);
-	inline bool		is_rem_elt () const;
-	inline void		iterate ();
+	inline void    start (int pos_start = 0, int pos_end = -1);
+	inline bool    is_rem_elt () const;
+	inline void    iterate ();
 
-	inline long		get_bit_index () const;
+	inline int     get_bit_index () const;
 
 
 
@@ -67,8 +67,8 @@ private:
 
 	BitFieldSparse &
 	               _bfs;
-	long           _bit_index; // Negative: terminated
-	long           _pos_end;
+	int            _bit_index; // Negative: terminated
+	int            _pos_end;
 
 
 

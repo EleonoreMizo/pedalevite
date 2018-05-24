@@ -502,7 +502,7 @@ void	LfoModule::update_smooth ()
 
 
 
-void	LfoModule::tick_sub (long nbr_spl)
+void	LfoModule::tick_sub (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 

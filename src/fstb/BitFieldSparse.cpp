@@ -53,7 +53,7 @@ BitFieldSparse::BitFieldSparse ()
 
 
 
-BitFieldSparse::BitFieldSparse (long nbr_elt)
+BitFieldSparse::BitFieldSparse (int nbr_elt)
 :	_lvl_arr ()
 {
 	assert (nbr_elt >= 0);
@@ -64,13 +64,13 @@ BitFieldSparse::BitFieldSparse (long nbr_elt)
 
 
 // All bits are cleared
-void	BitFieldSparse::set_nbr_elt (long nbr_elt)
+void	BitFieldSparse::set_nbr_elt (int nbr_elt)
 {
 	assert (nbr_elt >= 0);
 
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
-	long				nbr_elt_l2 = 0;
+	int            nbr_elt_l2 = 0;
 	if (nbr_elt > 0)
 	{
 		nbr_elt_l2 = get_next_pow_2 (uint32_t (nbr_elt));
@@ -89,7 +89,7 @@ void	BitFieldSparse::set_nbr_elt (long nbr_elt)
 
 			lvl._nbr_elt = nbr_elt;
 
-			long				nbr_groups = 0;
+			int            nbr_groups = 0;
 			if (nbr_elt > 0)
 			{
 				nbr_groups = Tools::calculate_nbr_groups (nbr_elt);
@@ -108,17 +108,15 @@ void	BitFieldSparse::set_nbr_elt (long nbr_elt)
 
 
 
-long	BitFieldSparse::get_nbr_elt () const
+int	BitFieldSparse::get_nbr_elt () const
 {
-	return (_lvl_arr [0]._nbr_elt);
+	return _lvl_arr [0]._nbr_elt;
 }
 
 
 
 void	BitFieldSparse::clear ()
 {
-	using namespace std;
-
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
 	const int		nbr_lvl = _lvl_arr.size ();
@@ -128,7 +126,7 @@ void	BitFieldSparse::clear ()
 
 		if (lvl._nbr_elt > 0)
 		{
-			const long		nbr_groups = Tools::calculate_nbr_groups (lvl._nbr_elt);
+			const int      nbr_groups = Tools::calculate_nbr_groups (lvl._nbr_elt);
 			memset (
 				&lvl._group_arr [0],
 				0,
@@ -160,23 +158,23 @@ void	BitFieldSparse::fill ()
 
 
 // Throws: Nothing
-bool	BitFieldSparse::get_bit (long pos) const
+bool	BitFieldSparse::get_bit (int pos) const
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
 
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
-	const BfLevel&	lvl = _lvl_arr [0];
-	const bool		bit = Tools::get_bit (&lvl._group_arr [0], pos);
+	const BfLevel& lvl = _lvl_arr [0];
+	const bool     bit = Tools::get_bit (&lvl._group_arr [0], pos);
 
-	return (bit);
+	return bit;
 }
 
 
 
 // Throws: Nothing
-void	BitFieldSparse::set_bit (long pos, bool flag)
+void	BitFieldSparse::set_bit (int pos, bool flag)
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -194,19 +192,19 @@ void	BitFieldSparse::set_bit (long pos, bool flag)
 
 
 // Throws: Nothing
-void	BitFieldSparse::clear_bit (long pos)
+void	BitFieldSparse::clear_bit (int pos)
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
 
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
-	const int		nbr_lvl = _lvl_arr.size ();
+	const int      nbr_lvl = _lvl_arr.size ();
 	for (int lvl_index = 0; lvl_index < nbr_lvl; ++lvl_index)
 	{
-		BfLevel &		lvl = _lvl_arr [lvl_index];
+		BfLevel &      lvl = _lvl_arr [lvl_index];
 
-		long           group;
+		int            group;
 		GroupType      mask;
 		Tools::calculate_group_and_mask (group, mask, pos);
 
@@ -228,7 +226,7 @@ void	BitFieldSparse::clear_bit (long pos)
 
 
 // Throws: Nothing
-void	BitFieldSparse::fill_bit (long pos)
+void	BitFieldSparse::fill_bit (int pos)
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -240,7 +238,7 @@ void	BitFieldSparse::fill_bit (long pos)
 	{
 		BfLevel &		lvl = _lvl_arr [lvl_index];
 
-		long           group;
+		int            group;
 		GroupType      mask;
 		Tools::calculate_group_and_mask (group, mask, pos);
 
@@ -261,7 +259,7 @@ void	BitFieldSparse::fill_bit (long pos)
 
 
 // Throws: Nothing
-void	BitFieldSparse::activate_range (long pos, long nbr_elt)
+void	BitFieldSparse::activate_range (int pos, int nbr_elt)
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -277,7 +275,7 @@ void	BitFieldSparse::activate_range (long pos, long nbr_elt)
 
 
 // Throws: Nothing
-void	BitFieldSparse::deactivate_range (long pos, long nbr_elt)
+void	BitFieldSparse::deactivate_range (int pos, int nbr_elt)
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -295,7 +293,7 @@ void	BitFieldSparse::deactivate_range (long pos, long nbr_elt)
 // Returns Err_NOT_FOUND if not found
 // If found, returns something in [pos, stop_pos[.
 // Throws: Nothing
-long	BitFieldSparse::get_next_bit_set_from (long pos, long stop_pos) const
+int	BitFieldSparse::get_next_bit_set_from (int pos, int stop_pos) const
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_elt ());
@@ -306,26 +304,26 @@ long	BitFieldSparse::get_next_bit_set_from (long pos, long stop_pos) const
 		stop_pos = get_nbr_elt ();
 	}
 
-	const long		on_pos = get_next_bit_set_from_rec (0, pos, stop_pos);
+	const int      on_pos = get_next_bit_set_from_rec (0, pos, stop_pos);
 
-	return (on_pos);
+	return on_pos;
 }
 
 
 
 bool	BitFieldSparse::has_a_bit_set () const
 {
-	bool				bit_flag = false;
+	bool           bit_flag = false;
 
 	if (get_nbr_elt () > 0)
 	{
-		const int		last_lvl_index = _lvl_arr.size () - 1;
-		const BfLevel&	last_lvl = _lvl_arr [last_lvl_index];
+		const int      last_lvl_index = _lvl_arr.size () - 1;
+		const BfLevel& last_lvl       = _lvl_arr [last_lvl_index];
 		assert (last_lvl._group_arr.size () == 1);
 		bit_flag = (last_lvl._group_arr [0] != 0);
 	}
 
-	return (bit_flag);
+	return bit_flag;
 }
 
 
@@ -338,7 +336,7 @@ bool	BitFieldSparse::has_a_bit_set () const
 
 
 
-long	BitFieldSparse::get_next_bit_set_from_rec (int lvl_index, long pos, long stop) const
+int	BitFieldSparse::get_next_bit_set_from_rec (int lvl_index, int pos, int stop) const
 {
 	assert (lvl_index >= 0);
 	assert (lvl_index < int (_lvl_arr.size ()));
@@ -353,10 +351,10 @@ long	BitFieldSparse::get_next_bit_set_from_rec (int lvl_index, long pos, long st
 	if (lvl_index < int (_lvl_arr.size ()) - 1)
 	{
 		// Finishes the current group to be ready to start the search on the next level
-		const long		group_end = (pos + BITDEPTH - 1) & -BITDEPTH;
+		const int      group_end = (pos + BITDEPTH - 1) & ~(BITDEPTH - 1);
 		if (pos < group_end)
 		{
-			const long		local_stop = std::min (group_end, stop);
+			const int      local_stop = std::min (group_end, stop);
 			pos = Tools::get_next_bit_set_from (
 				&lvl._group_arr [0],
 				pos,
@@ -369,24 +367,24 @@ long	BitFieldSparse::get_next_bit_set_from_rec (int lvl_index, long pos, long st
 			}
 			else
 			{
-				return (pos);	// Could be "found" or "not found"
+				return pos; // Could be "found" or "not found"
 			}
 		}
 
 		// Searches on the next level
 		int		      gpos;
-		long           group_start;
+		int            group_start;
 		Tools::calculate_group_and_pos (group_start, gpos, pos);
 		assert (gpos == 0);
-		const long		group_stop = Tools::calculate_nbr_groups (stop);
-		const long		group = get_next_bit_set_from_rec (
+		const int      group_stop = Tools::calculate_nbr_groups (stop);
+		const int      group     = get_next_bit_set_from_rec (
 			lvl_index + 1,
 			group_start,
 			group_stop
 		);
 		if (group < 0)
 		{
-			return (Err_NOT_FOUND);
+			return Err_NOT_FOUND;
 		}
 
 		pos = group << BITDEPTH_L2;
@@ -396,7 +394,7 @@ long	BitFieldSparse::get_next_bit_set_from_rec (int lvl_index, long pos, long st
 	// Searches on this level
 	pos = Tools::get_next_bit_set_from (&lvl._group_arr [0], pos, stop);
 
-	return (pos);
+	return pos;
 }
 
 

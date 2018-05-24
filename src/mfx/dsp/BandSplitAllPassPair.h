@@ -54,8 +54,8 @@ class BandSplitAllPassPair
 
 public:
 
-	typedef void (* AddSubProto) (float out_1_ptr [], float out_2_ptr [], long nbr_spl);
-	typedef void (* VolumeProto) (float out_ptr [], const float in_ptr [], long nbr_spl, float vol);
+	typedef void (* AddSubProto) (float out_1_ptr [], float out_2_ptr [], int nbr_spl);
+	typedef void (* VolumeProto) (float out_ptr [], const float in_ptr [], int nbr_spl, float vol);
 
 	typedef AP0 ApFilter0;
 	typedef AP1 ApFilter1;

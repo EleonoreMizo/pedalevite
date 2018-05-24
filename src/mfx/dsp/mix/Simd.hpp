@@ -55,7 +55,7 @@ namespace mix
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_1_v (float data_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::scale_1_v (float data_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
@@ -67,8 +67,8 @@ void	Simd <VD, VS>::scale_1_v (float data_ptr [], long nbr_spl, float vol)
 
 	else if (vol != 1.0f)
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 
@@ -92,7 +92,7 @@ void	Simd <VD, VS>::scale_1_v (float data_ptr [], long nbr_spl, float vol)
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
@@ -101,8 +101,8 @@ void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], long nbr_spl, float s_vol, f
 	fstb::ToolsSimd::VectF32   vec_step;
 	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -129,7 +129,7 @@ void	Simd <VD, VS>::scale_1_vlr (float data_ptr [], long nbr_spl, float s_vol, f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_1_vlrauto (float data_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::scale_1_vlrauto (float data_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -144,7 +144,7 @@ void	Simd <VD, VS>::scale_1_vlrauto (float data_ptr [], long nbr_spl, float s_vo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_2_v (float data_1_ptr [], float data_2_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (data_1_ptr));
 	assert (V128Dst::check_ptr (data_2_ptr));
@@ -159,8 +159,8 @@ void	Simd <VD, VS>::scale_2_v (float data_1_ptr [], float data_2_ptr [], long nb
 	{
 		auto			vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 		
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		while (pos < nbr_loop)
 		{
@@ -191,7 +191,7 @@ void	Simd <VD, VS>::scale_2_v (float data_1_ptr [], float data_2_ptr [], long nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (data_1_ptr));
 	assert (V128Dst::check_ptr (data_2_ptr));
@@ -201,8 +201,8 @@ void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], long 
 	fstb::ToolsSimd::VectF32   vec_step;
 	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -234,7 +234,7 @@ void	Simd <VD, VS>::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], long 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -258,7 +258,7 @@ void	Simd <VD, VS>::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], l
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -270,8 +270,8 @@ void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], long nbr_
 
 #else
 
-	const long			nbr_loop = nbr_spl >> 2;
-	long					pos = 0;
+	const int			nbr_loop = nbr_spl >> 2;
+	int					pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -297,7 +297,7 @@ void	Simd <VD, VS>::copy_1_1 (float out_ptr [], const float in_ptr [], long nbr_
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_1_v (float out_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -315,8 +315,8 @@ void	Simd <VD, VS>::copy_1_1_v (float out_ptr [], const float in_ptr [], long nb
 
 	else
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 
@@ -346,7 +346,7 @@ void	Simd <VD, VS>::copy_1_1_v (float out_ptr [], const float in_ptr [], long nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -356,8 +356,8 @@ void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], long 
 	fstb::ToolsSimd::VectF32   vec_step;
 	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -386,7 +386,7 @@ void	Simd <VD, VS>::copy_1_1_vlr (float out_ptr [], const float in_ptr [], long 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -401,7 +401,7 @@ void	Simd <VD, VS>::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], l
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -415,8 +415,8 @@ void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const floa
 
 #else
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -446,7 +446,7 @@ void	Simd <VD, VS>::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const floa
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -466,8 +466,8 @@ void	Simd <VD, VS>::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 
 	else
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 
@@ -500,7 +500,7 @@ void	Simd <VD, VS>::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -511,8 +511,8 @@ void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 	fstb::ToolsSimd::VectF32   vec_step;
 	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 	
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -544,7 +544,7 @@ void	Simd <VD, VS>::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -559,15 +559,15 @@ void	Simd <VD, VS>::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -596,7 +596,7 @@ void	Simd <VD, VS>::copy_2_1 (float out_ptr [], const float in_1_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -615,8 +615,8 @@ void	Simd <VD, VS>::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const
 
 	else
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 
@@ -650,7 +650,7 @@ void	Simd <VD, VS>::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -661,8 +661,8 @@ void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], con
 	fstb::ToolsSimd::VectF32   vec_step;
 	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -695,7 +695,7 @@ void	Simd <VD, VS>::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -710,7 +710,7 @@ void	Simd <VD, VS>::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -725,8 +725,8 @@ void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const floa
 
 #else
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -759,7 +759,7 @@ void	Simd <VD, VS>::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const floa
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -780,8 +780,8 @@ void	Simd <VD, VS>::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 
 	else
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 
@@ -818,7 +818,7 @@ void	Simd <VD, VS>::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -830,8 +830,8 @@ void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 	fstb::ToolsSimd::VectF32   vec_step;
 	fstb::ToolsSimd::start_lerp (vec_vol, vec_step, s_vol, e_vol, nbr_spl);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -867,7 +867,7 @@ void	Simd <VD, VS>::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -890,15 +890,15 @@ void	Simd <VD, VS>::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float vol_l, float vol_r)
+void	Simd <VD, VS>::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vol_l_vec = fstb::ToolsSimd::set1_f32 (vol_l);
 	const auto	vol_r_vec = fstb::ToolsSimd::set1_f32 (vol_r);
@@ -933,7 +933,7 @@ void	Simd <VD, VS>::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], c
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -948,8 +948,8 @@ void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [],
 	fstb::ToolsSimd::VectF32   vec_step_r;
 	fstb::ToolsSimd::start_lerp (vec_vol_r, vec_step_r, s_vol_r, e_vol_r, nbr_spl);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 
 	while (pos < nbr_loop)
 	{
@@ -985,7 +985,7 @@ void	Simd <VD, VS>::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Simd <VD, VS>::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
 {
 	if (e_vol_l == s_vol_l && e_vol_r == s_vol_r)
 	{
@@ -1008,15 +1008,15 @@ void	Simd <VD, VS>::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float xf)
+void	Simd <VD, VS>::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	xf_vec = fstb::ToolsSimd::set1_f32 (xf);
 	
@@ -1050,7 +1050,7 @@ void	Simd <VD, VS>::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf)
+void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1061,8 +1061,8 @@ void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [
 	fstb::ToolsSimd::VectF32   vec_step;
 	fstb::ToolsSimd::start_lerp (vec_xf, vec_step, s_xf, e_xf, nbr_spl);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -1096,7 +1096,7 @@ void	Simd <VD, VS>::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_xf, float e_xf)
+void	Simd <VD, VS>::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf)
 {
 	if (e_xf == s_xf)
 	{
@@ -1111,7 +1111,7 @@ void	Simd <VD, VS>::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_p
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1119,8 +1119,8 @@ void	Simd <VD, VS>::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], c
 	assert (V128Src::check_ptr (in_3_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -1162,7 +1162,7 @@ void	Simd <VD, VS>::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], c
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &vol)
+void	Simd <VD, VS>::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -1170,8 +1170,8 @@ void	Simd <VD, VS>::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], cons
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 	
-	const long nbr_loop = nbr_spl >> 2;
-	long pos = 0;
+	const int nbr_loop = nbr_spl >> 2;
+	int pos = 0;
 	
 	const float &	vol_l2l = vol.get_l2l ();
 	const float &	vol_r2l = vol.get_r2l ();
@@ -1219,7 +1219,7 @@ void	Simd <VD, VS>::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], cons
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -1249,8 +1249,8 @@ void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], co
 	auto        vec_vol_r2r = fstb::ToolsSimd::set1_f32 (s_vol.get_r2r ());
 	fstb::ToolsSimd::mac (vec_vol_r2r, vec_step_r2r, c0123);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -1301,7 +1301,7 @@ void	Simd <VD, VS>::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Simd <VD, VS>::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -1324,14 +1324,14 @@ void	Simd <VD, VS>::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr []
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2i (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 	
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -1361,14 +1361,14 @@ void	Simd <VD, VS>::copy_1_2i (float out_ptr [], const float in_ptr [], long nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2i_v (float out_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 
 	const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 	
@@ -1402,14 +1402,14 @@ void	Simd <VD, VS>::copy_1_2i_v (float out_ptr [], const float in_ptr [], long n
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -1447,7 +1447,7 @@ void	Simd <VD, VS>::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], long
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -1462,15 +1462,15 @@ void	Simd <VD, VS>::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -1503,15 +1503,15 @@ void	Simd <VD, VS>::copy_2_2i (float out_ptr [], const float in_1_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 	
@@ -1549,15 +1549,15 @@ void	Simd <VD, VS>::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], cons
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -1599,7 +1599,7 @@ void	Simd <VD, VS>::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -1614,7 +1614,7 @@ void	Simd <VD, VS>::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr []
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -1623,7 +1623,7 @@ void	Simd <VD, VS>::copy_4_4i (float out_ptr [], const float in_1_ptr [], const 
 	assert (V128Src::check_ptr (in_4_ptr));
 	assert (nbr_spl > 0);
 
-	for (long nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
+	for (int nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
 	{
 		// We start with:
 		auto           a1 = V128Src::load_f32 (in_1_ptr);	// A1 B1 C1 D1
@@ -1662,14 +1662,14 @@ void	Simd <VD, VS>::copy_4_4i (float out_ptr [], const float in_1_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	for (long nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
+	for (int nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
 	{
 		// We start with:
 		const auto	i1 = V128Src::load_f32 (in_1_ptr);	// A1 B1 C1 D1
@@ -1718,14 +1718,14 @@ void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_1 (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 	
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -1755,14 +1755,14 @@ void	Simd <VD, VS>::copy_2i_1 (float out_ptr [], const float in_ptr [], long nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_1_v (float out_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 	
@@ -1796,14 +1796,14 @@ void	Simd <VD, VS>::copy_2i_1_v (float out_ptr [], const float in_ptr [], long n
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -1841,7 +1841,7 @@ void	Simd <VD, VS>::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], long
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -1856,15 +1856,15 @@ void	Simd <VD, VS>::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -1896,15 +1896,15 @@ void	Simd <VD, VS>::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const flo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 	
@@ -1941,15 +1941,15 @@ void	Simd <VD, VS>::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -1990,7 +1990,7 @@ void	Simd <VD, VS>::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -2005,13 +2005,13 @@ void	Simd <VD, VS>::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], c
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_4i_1 (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	for (long nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
+	for (int nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
 	{
 		// We start with:
 		auto       a1 = V128Src::load_f32 (in_ptr     );
@@ -2043,7 +2043,7 @@ void	Simd <VD, VS>::copy_4i_1 (float out_ptr [], const float in_ptr [], long nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2052,7 +2052,7 @@ void	Simd <VD, VS>::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	for (long nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
+	for (int nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
 	{
 		// We start with:
 		auto           a1 = V128Src::load_f32 (in_ptr     );	// A1 A2 A3 A4
@@ -2091,7 +2091,7 @@ void	Simd <VD, VS>::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2099,7 +2099,7 @@ void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const fl
 	assert (nbr_spl > 0);
 
 
-	for (long nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
+	for (int nbr_loop = nbr_spl >> 2; nbr_loop > 0; --nbr_loop)
 	{
 		// We start with:
 		auto           a1 = V128Src::load_f32 (in_ptr     );	// A1 A2 xx xx
@@ -2161,14 +2161,14 @@ void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_1 (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -2195,7 +2195,7 @@ void	Simd <VD, VS>::mix_1_1 (float out_ptr [], const float in_ptr [], long nbr_s
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_1_v (float out_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
@@ -2208,8 +2208,8 @@ void	Simd <VD, VS>::mix_1_1_v (float out_ptr [], const float in_ptr [], long nbr
 
 	else if (vol != 0.0f)
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 		
@@ -2241,14 +2241,14 @@ void	Simd <VD, VS>::mix_1_1_v (float out_ptr [], const float in_ptr [], long nbr
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_1_vlr (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -2283,7 +2283,7 @@ void	Simd <VD, VS>::mix_1_1_vlr (float out_ptr [], const float in_ptr [], long n
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -2298,15 +2298,15 @@ void	Simd <VD, VS>::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], lo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -2338,7 +2338,7 @@ void	Simd <VD, VS>::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2352,8 +2352,8 @@ void	Simd <VD, VS>::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const flo
 
 	else if (vol != 0.0f)
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 		
@@ -2390,15 +2390,15 @@ void	Simd <VD, VS>::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const flo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -2438,7 +2438,7 @@ void	Simd <VD, VS>::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -2453,15 +2453,15 @@ void	Simd <VD, VS>::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -2492,7 +2492,7 @@ void	Simd <VD, VS>::mix_2_1 (float out_ptr [], const float in_1_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
@@ -2506,8 +2506,8 @@ void	Simd <VD, VS>::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const 
 
 	else if (vol != 0.0f)
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 		
@@ -2544,15 +2544,15 @@ void	Simd <VD, VS>::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -2592,7 +2592,7 @@ void	Simd <VD, VS>::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], cons
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -2607,7 +2607,7 @@ void	Simd <VD, VS>::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2615,8 +2615,8 @@ void	Simd <VD, VS>::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -2651,7 +2651,7 @@ void	Simd <VD, VS>::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2666,8 +2666,8 @@ void	Simd <VD, VS>::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const flo
 
 	else if (vol != 0.0f)
 	{
-		const long		nbr_loop = nbr_spl >> 2;
-		long				pos = 0;
+		const int		nbr_loop = nbr_spl >> 2;
+		int				pos = 0;
 		
 		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 		
@@ -2708,7 +2708,7 @@ void	Simd <VD, VS>::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const flo
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2716,8 +2716,8 @@ void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -2761,7 +2761,7 @@ void	Simd <VD, VS>::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -2784,15 +2784,15 @@ void	Simd <VD, VS>::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float vol_l, float vol_r)
+void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vol_l_vec = fstb::ToolsSimd::set1_f32 (vol_l);
 	const auto	vol_r_vec = fstb::ToolsSimd::set1_f32 (vol_r);
@@ -2834,7 +2834,7 @@ void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
 {
 	assert (out_1_ptr != 0);
 	assert (out_2_ptr != 0);
@@ -2849,8 +2849,8 @@ void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], 
 	fstb::ToolsSimd::VectF32   vec_step_r;
 	fstb::ToolsSimd::start_lerp (vec_vol_r, vec_step_r, s_vol_r, e_vol_r, nbr_spl);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -2893,7 +2893,7 @@ void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
+void	Simd <VD, VS>::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
 {
 	if (e_vol_l == s_vol_l && e_vol_r == s_vol_r)
 	{
@@ -2916,7 +2916,7 @@ void	Simd <VD, VS>::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &vol)
+void	Simd <VD, VS>::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -2924,8 +2924,8 @@ void	Simd <VD, VS>::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const float &	vol_l2l = vol.get_l2l ();
 	const float &	vol_r2l = vol.get_r2l ();
@@ -2977,7 +2977,7 @@ void	Simd <VD, VS>::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -3007,8 +3007,8 @@ void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], con
 	auto        vec_vol_r2r = fstb::ToolsSimd::set1_f32 (s_vol.get_r2r ());
 	fstb::ToolsSimd::mac (vec_vol_r2r, vec_step_r2r, c0123);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -3062,7 +3062,7 @@ void	Simd <VD, VS>::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
+void	Simd <VD, VS>::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -3085,14 +3085,14 @@ void	Simd <VD, VS>::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2i (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -3125,14 +3125,14 @@ void	Simd <VD, VS>::mix_1_2i (float out_ptr [], const float in_ptr [], long nbr_
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2i_v (float out_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 	
@@ -3169,14 +3169,14 @@ void	Simd <VD, VS>::mix_1_2i_v (float out_ptr [], const float in_ptr [], long nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -3217,7 +3217,7 @@ void	Simd <VD, VS>::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], long 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -3232,15 +3232,15 @@ void	Simd <VD, VS>::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], l
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -3276,15 +3276,15 @@ void	Simd <VD, VS>::mix_2_2i (float out_ptr [], const float in_1_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 	
@@ -3325,15 +3325,15 @@ void	Simd <VD, VS>::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long     nbr_loop = nbr_spl >> 2;
-	long           pos = 0;
+	const int     nbr_loop = nbr_spl >> 2;
+	int           pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -3378,7 +3378,7 @@ void	Simd <VD, VS>::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], con
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -3401,14 +3401,14 @@ void	Simd <VD, VS>::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [],
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_1 (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -3440,14 +3440,14 @@ void	Simd <VD, VS>::mix_2i_1 (float out_ptr [], const float in_ptr [], long nbr_
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_1_v (float out_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 	
@@ -3483,14 +3483,14 @@ void	Simd <VD, VS>::mix_2i_1_v (float out_ptr [], const float in_ptr [], long nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -3530,7 +3530,7 @@ void	Simd <VD, VS>::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], long 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -3545,15 +3545,15 @@ void	Simd <VD, VS>::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], l
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -3589,15 +3589,15 @@ void	Simd <VD, VS>::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const floa
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float vol)
+void	Simd <VD, VS>::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 
 	const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 	
@@ -3638,15 +3638,15 @@ void	Simd <VD, VS>::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 
 	fstb::ToolsSimd::VectF32   vec_vol;
 	fstb::ToolsSimd::VectF32   vec_step;
@@ -3691,7 +3691,7 @@ void	Simd <VD, VS>::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl, float s_vol, float e_vol)
+void	Simd <VD, VS>::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
 	if (e_vol == s_vol)
 	{
@@ -3714,15 +3714,15 @@ void	Simd <VD, VS>::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], co
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_1_ptr));
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	while (pos < nbr_loop)
 	{
@@ -3760,14 +3760,14 @@ void	Simd <VD, VS>::mult_1_1 (float out_ptr [], const float in_1_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mult_ip_1_1 (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 	
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -3794,15 +3794,15 @@ void	Simd <VD, VS>::mult_ip_1_1 (float out_ptr [], const float in_ptr [], long n
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -3835,7 +3835,7 @@ void	Simd <VD, VS>::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
@@ -3843,8 +3843,8 @@ void	Simd <VD, VS>::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const f
 	assert (V128Src::check_ptr (in_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 		
 	while (pos < nbr_loop)
 	{
@@ -3885,7 +3885,7 @@ void	Simd <VD, VS>::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const f
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::clear (float out_ptr [], long nbr_spl)
+void	Simd <VD, VS>::clear (float out_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (nbr_spl > 0);
@@ -3896,13 +3896,13 @@ void	Simd <VD, VS>::clear (float out_ptr [], long nbr_spl)
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::fill (float out_ptr [], long nbr_spl, float val)
+void	Simd <VD, VS>::fill (float out_ptr [], int nbr_spl, float val)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 4;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 4;
+	int				pos = 0;
 
 	const auto	vec_val = fstb::ToolsSimd::set1_f32 (val);
 	
@@ -3930,13 +3930,13 @@ void	Simd <VD, VS>::fill (float out_ptr [], long nbr_spl, float val)
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::fill_lr (float out_ptr [], long nbr_spl, float s_val, float e_val)
+void	Simd <VD, VS>::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e_val)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (nbr_spl > 0);
 	
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 
 	const float		step = (e_val - s_val) / nbr_spl;
 	
@@ -3970,7 +3970,7 @@ void	Simd <VD, VS>::fill_lr (float out_ptr [], long nbr_spl, float s_val, float 
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::fill_lrauto (float out_ptr [], long nbr_spl, float s_val, float e_val)
+void	Simd <VD, VS>::fill_lrauto (float out_ptr [], int nbr_spl, float s_val, float e_val)
 {
 	if (e_val == s_val)
 	{
@@ -3985,13 +3985,13 @@ void	Simd <VD, VS>::fill_lrauto (float out_ptr [], long nbr_spl, float s_val, fl
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::add_cst_1_1 (float out_ptr [], long nbr_spl, float val)
+void	Simd <VD, VS>::add_cst_1_1 (float out_ptr [], int nbr_spl, float val)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vec_val = fstb::ToolsSimd::set1_f32 (val);
 	
@@ -4018,14 +4018,14 @@ void	Simd <VD, VS>::add_cst_1_1 (float out_ptr [], long nbr_spl, float val)
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], long nbr_spl, float val)
+void	Simd <VD, VS>::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	vec_val = fstb::ToolsSimd::set1_f32 (val);
 	
@@ -4057,14 +4057,14 @@ void	Simd <VD, VS>::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], long nb
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::linop_cst_1_1 (float out_ptr [], const float in_ptr [], long nbr_spl, float mul_val, float add_val)
+void	Simd <VD, VS>::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val)
 {
 	assert (V128Dst::check_ptr (out_ptr));
 	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	mul_val_vec = fstb::ToolsSimd::set1_f32 (mul_val);
 	const auto	add_val_vec = fstb::ToolsSimd::set1_f32 (add_val);
@@ -4096,13 +4096,13 @@ void	Simd <VD, VS>::linop_cst_1_1 (float out_ptr [], const float in_ptr [], long
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::linop_cst_ip_1 (float data_ptr [], long nbr_spl, float mul_val, float add_val)
+void	Simd <VD, VS>::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_val, float add_val)
 {
 	assert (V128Dst::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 	
 	const auto	mul_val_vec = fstb::ToolsSimd::set1_f32 (mul_val);
 	const auto	add_val_vec = fstb::ToolsSimd::set1_f32 (add_val);
@@ -4132,14 +4132,14 @@ void	Simd <VD, VS>::linop_cst_ip_1 (float data_ptr [], long nbr_spl, float mul_v
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], long nbr_spl)
+void	Simd <VD, VS>::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (out_1_ptr));
 	assert (V128Dst::check_ptr (out_2_ptr));
 	assert (nbr_spl > 0);
 
-	const long		nbr_loop = nbr_spl >> 2;
-	long				pos = 0;
+	const int		nbr_loop = nbr_spl >> 2;
+	int				pos = 0;
 
 	while (pos < nbr_loop)
 	{
@@ -4168,7 +4168,7 @@ void	Simd <VD, VS>::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], long
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val)
+void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val)
 {
 	static const int  max_nbr_chn = 64;
 	assert (out_ptr != 0);
@@ -4179,8 +4179,8 @@ void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_pt
 	assert (nbr_chn <= max_nbr_chn);
 
 	const auto     init_val_v = fstb::ToolsSimd::set1_f32 (init_val);
-	const long     end        = nbr_spl & -8L;
-	long           pos        = 0;
+	const int     end        = nbr_spl & -8L;
+	int           pos        = 0;
 	if (nbr_chn == 1)
 	{
 		const float *  c0_ptr = src_ptr_arr [0];
@@ -4261,7 +4261,7 @@ void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_pt
 
 
 template <class VD, class VS>
-void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], long nbr_spl, int nbr_chn, float init_val, float vol)
+void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol)
 {
 	static const int  max_nbr_chn = 64;
 	assert (out_ptr != 0);
@@ -4273,8 +4273,8 @@ void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_
 
 	const auto     init_val_v = fstb::ToolsSimd::set1_f32 (init_val);
 	const auto     vol_v      = fstb::ToolsSimd::set1_f32 (vol);
-	const long     end        = nbr_spl & -8L;
-	long           pos        = 0;
+	const int     end        = nbr_spl & -8L;
+	int           pos        = 0;
 	if (nbr_chn == 1)
 	{
 		const float *  c0_ptr = src_ptr_arr [0];

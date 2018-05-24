@@ -60,9 +60,9 @@ public:
 	fstb_FORCEINLINE float
 	               process_sample (float x);
 
-	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
-	float          analyse_block (const float data_ptr [], long nbr_spl);
-	float          analyse_block_cst (float x, long nbr_spl);
+	void           process_block (float out_ptr [], const float in_ptr [], int nbr_spl);
+	float          analyse_block (const float data_ptr [], int nbr_spl);
+	float          analyse_block_cst (float x, int nbr_spl);
 	inline float   get_state () const;
 
 	void           clear_buffers ();

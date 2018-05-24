@@ -98,7 +98,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_ramp_time (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 
-	const long     ramp_len_old = _ramp_len;
+	const int      ramp_len_old = _ramp_len;
 	if (nbr_spl != ramp_len_old)
 	{
 		_ramp_len = int (nbr_spl);
@@ -467,15 +467,15 @@ bool	Biquad4SimdMorph <VD, VS, VP>::is_ramping () const
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl)
 {
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
-		long           work_len = nbr_spl - pos;
+		int            work_len = nbr_spl - pos;
 		if (_nbr_rem_spl > 0)
 		{
-			work_len = std::min (work_len, long (_nbr_rem_spl));
+			work_len = std::min (work_len, _nbr_rem_spl);
 			_biq.process_block_parallel (
 				out_ptr + pos,
 				in_ptr + pos,
@@ -502,15 +502,15 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::Vec
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
-		long           work_len = nbr_spl - pos;
+		int            work_len = nbr_spl - pos;
 		if (_nbr_rem_spl > 0)
 		{
-			work_len = std::min (work_len, long (_nbr_rem_spl));
+			work_len = std::min (work_len, _nbr_rem_spl);
 			_biq.process_block_parallel (
 				out_ptr + pos,
 				in_ptr + pos,
@@ -537,15 +537,15 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::Vec
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_latency (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
-		long           work_len = nbr_spl - pos;
+		int            work_len = nbr_spl - pos;
 		if (_nbr_rem_spl > 0)
 		{
-			work_len = std::min (work_len, long (_nbr_rem_spl));
+			work_len = std::min (work_len, _nbr_rem_spl);
 			_biq.process_block_serial_latency (
 				out_ptr + pos,
 				in_ptr + pos,
@@ -572,15 +572,15 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_latency (float out_ptr 
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_immediate (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
-		long           work_len = nbr_spl - pos;
+		int            work_len = nbr_spl - pos;
 		if (_nbr_rem_spl > 0)
 		{
-			work_len = std::min (work_len, long (_nbr_rem_spl));
+			work_len = std::min (work_len, _nbr_rem_spl);
 			_biq.process_block_serial_immediate (
 				out_ptr + pos,
 				in_ptr + pos,
@@ -607,15 +607,15 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_serial_immediate (float out_pt
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_latency (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
-		long           work_len = nbr_spl - pos;
+		int            work_len = nbr_spl - pos;
 		if (_nbr_rem_spl > 0)
 		{
-			work_len = std::min (work_len, long (_nbr_rem_spl));
+			work_len = std::min (work_len, _nbr_rem_spl);
 			_biq.process_block_2x2_latency (
 				out_ptr + pos * 2,
 				in_ptr + pos * 2,
@@ -642,15 +642,15 @@ void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_latency (float out_ptr [],
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
-		long           work_len = nbr_spl - pos;
+		int            work_len = nbr_spl - pos;
 		if (_nbr_rem_spl > 0)
 		{
-			work_len = std::min (work_len, long (_nbr_rem_spl));
+			work_len = std::min (work_len, _nbr_rem_spl);
 			_biq.process_block_2x2_immediate (
 				out_ptr + pos * 2,
 				in_ptr + pos * 2,
@@ -720,7 +720,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::clear_buffers_one (int biq)
 
 
 template <class VD, class VS, class VP>
-void	Biquad4SimdMorph <VD, VS, VP>::handle_ramp_post (long nbr_spl)
+void	Biquad4SimdMorph <VD, VS, VP>::handle_ramp_post (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 	assert (_nbr_rem_spl <= 0 || nbr_spl <= _nbr_rem_spl);

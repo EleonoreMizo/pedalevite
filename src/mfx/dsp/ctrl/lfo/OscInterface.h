@@ -67,7 +67,7 @@ public:
 	inline void    set_polarity (bool unipolar_flag);
 	inline void    set_variation (int param, double val);
 	inline bool    is_using_variation (int param) const;
-	inline void    tick (long nbr_spl);
+	inline void    tick (int nbr_spl);
 	inline double  get_val () const;
 	inline double  get_phase () const;
 	inline void    clear_buffers ();
@@ -88,7 +88,7 @@ protected:
 	virtual void   do_set_polarity (bool unipolar_flag) = 0;
 	virtual void   do_set_variation (int param, double val) = 0;
 	virtual bool   do_is_using_variation (int param) const = 0;
-	virtual void   do_tick (long nbr_spl) = 0;
+	virtual void   do_tick (int nbr_spl) = 0;
 	virtual double do_get_val () const = 0;
 	virtual double do_get_phase () const = 0;
 	virtual void   do_clear_buffers () = 0;

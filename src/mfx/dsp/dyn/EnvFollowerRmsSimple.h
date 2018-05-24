@@ -60,13 +60,13 @@ public:
 	fstb_FORCEINLINE float
 	               process_sample_no_sqrt (float x);
 
-	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
-	void           process_block_no_sqrt (float out_ptr [], const float in_ptr [], long nbr_spl);
-	void           process_block_raw (float out_ptr [], const float in_ptr [], long nbr_spl);
-	float          analyse_block (const float data_ptr [], long nbr_spl);
-	float          analyse_block_no_sqrt (const float data_ptr [], long nbr_spl);
-	float          analyse_block_raw (const float data_ptr [], long nbr_spl);
-	float          analyse_block_raw_cst (float x2, long nbr_spl);
+	void           process_block (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_no_sqrt (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_raw (float out_ptr [], const float in_ptr [], int nbr_spl);
+	float          analyse_block (const float data_ptr [], int nbr_spl);
+	float          analyse_block_no_sqrt (const float data_ptr [], int nbr_spl);
+	float          analyse_block_raw (const float data_ptr [], int nbr_spl);
+	float          analyse_block_raw_cst (float x2, int nbr_spl);
 	inline float   get_state_no_sqrt () const;
 
 	void           clear_buffers ();

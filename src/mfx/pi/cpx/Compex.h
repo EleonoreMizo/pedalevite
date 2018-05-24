@@ -117,8 +117,8 @@ private:
 	void           update_param_vol_curves_ss ();
 	float          compute_env_coef (float t) const;
 
-	void           process_block_part (float * const out_ptr_arr [], const float * const in_ptr_arr [], const float * const sc_ptr_arr [], long pos_beg, long pos_end);
-	void           conv_env_to_log (long nbr_spl);
+	void           process_block_part (float * const out_ptr_arr [], const float * const in_ptr_arr [], const float * const sc_ptr_arr [], int pos_beg, int pos_end);
+	void           conv_env_to_log (int nbr_spl);
 	template <bool store_flag>
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
 	               compute_gain (const fstb::ToolsSimd::VectF32 env_2l2);

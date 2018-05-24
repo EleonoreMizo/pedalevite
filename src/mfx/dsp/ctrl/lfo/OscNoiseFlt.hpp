@@ -153,7 +153,7 @@ bool	OscNoiseFlt <ORDER>::do_is_using_variation (int /*param*/) const
 
 
 template <int ORDER>
-void	OscNoiseFlt <ORDER>::do_tick (long nbr_spl)
+void	OscNoiseFlt <ORDER>::do_tick (int nbr_spl)
 {
 	_phase_gen.tick (nbr_spl);
 

@@ -98,7 +98,7 @@ protected:
 
 private:
 
-	static const long _dry_buf_len = 1024; // Samples
+	static const int _dry_buf_len = 1024; // Samples
 
 	enum TmpBufType
 	{

@@ -116,7 +116,7 @@ bool	OscSine::do_is_using_variation (int /*param*/) const
 
 
 
-void	OscSine::do_tick (long nbr_spl)
+void	OscSine::do_tick (int nbr_spl)
 {
 	_phase_gen.tick (nbr_spl);
 }

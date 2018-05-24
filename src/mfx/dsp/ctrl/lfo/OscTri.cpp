@@ -119,7 +119,7 @@ bool	OscTri::do_is_using_variation (int /*param*/) const
 
 
 
-void	OscTri::do_tick (long nbr_spl)
+void	OscTri::do_tick (int nbr_spl)
 {
 	_phase_gen.tick (nbr_spl);
 }

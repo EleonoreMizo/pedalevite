@@ -564,7 +564,7 @@ void	PhasedVoice::process_block_cfc (float * const dst_ptr_arr [_nbr_chn_out], c
 	const float    fdbk_level_step = (_fdbk_level - _fdbk_lvl_old) / nbr_spl;
 	_fdbk_lvl_cur = _fdbk_lvl_old;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
 		const float    cos_a = buf_c_ptr [pos];
@@ -615,7 +615,7 @@ void	PhasedVoice::process_block_vfc (float * const dst_ptr_arr [_nbr_chn_out], c
 	const float    fdbk_col_c_end = _fdbk_col_c;
 	const float    fdbk_col_s_end = _fdbk_col_s;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
 		const float    cos_a = buf_c_ptr [pos];

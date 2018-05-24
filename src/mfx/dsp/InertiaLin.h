@@ -59,7 +59,7 @@ public:
 	inline void		force_val (double val);	// No inertia
 	inline double	get_val () const;
 	inline double	get_target_val () const;
-	inline void		tick (long nbr_spl);
+	inline void		tick (int nbr_spl);
 	inline bool		is_ramping () const;
 	inline double	get_step () const;
    inline void    stop ();

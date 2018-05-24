@@ -89,8 +89,8 @@ float	EnvFollowerPeak::get_state () const
 void	EnvFollowerPeak::process_sample_internal (float &state, float x) const
 {
 	const float    xa    = fabs (x);
-	const float		delta = xa - state;
-	const float		coef  = (delta >= 0) ? _coef_a : _coef_r;
+	const float    delta = xa - state;
+	const float    coef  = (delta >= 0) ? _coef_a : _coef_r;
 	state += delta * coef;
 
 	assert (state >= 0);

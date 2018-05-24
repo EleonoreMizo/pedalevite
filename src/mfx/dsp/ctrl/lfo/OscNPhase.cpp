@@ -154,7 +154,7 @@ bool	OscNPhase::do_is_using_variation (int param) const
 
 
 
-void	OscNPhase::do_tick (long nbr_spl)
+void	OscNPhase::do_tick (int nbr_spl)
 {
 	_phase += _step * nbr_spl;
 	if (_phase >= 1)

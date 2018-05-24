@@ -16,7 +16,7 @@ Template parameters:
 - IP: Interpolator-convolver. Should have the following members:
 	enum IP::PHASE_LEN
 	float IP::interpolate (const float data_ptr [], archi::UInt32 frac_pos);
-	void IP::interpolate_multi_chn (float * const out_ptr_arr [], long out_offset, const float * const in_ptr_arr [], long in_offset, archi::UInt32 frac_pos, int nbr_chn);
+	void IP::interpolate_multi_chn (float * const out_ptr_arr [], int out_offset, const float * const in_ptr_arr [], int in_offset, archi::UInt32 frac_pos, int nbr_chn);
 
 *Tab=3***********************************************************************/
 
@@ -35,8 +35,8 @@ Template parameters:
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/FixedPoint.h"
-#include	"mfx/dsp/rspl/InterpolatorInterface.h"
-#include	"mfx/dsp/rspl/SnhTool.h"
+#include "mfx/dsp/rspl/InterpolatorInterface.h"
+#include "mfx/dsp/rspl/SnhTool.h"
 
 
 
@@ -58,17 +58,17 @@ class InterpolatorFir
 
 public:
 
-	typedef	IT	Convolver;
+	typedef IT Convolver;
 
-	static const int  PHASE_LEN = Convolver::PHASE_LEN;
+	static const int PHASE_LEN = Convolver::PHASE_LEN;
 
-						InterpolatorFir ();
-	virtual			~InterpolatorFir () {}
+	               InterpolatorFir ();
+	virtual        ~InterpolatorFir () {}
 
-	void				set_convolver (IT &convolver);
-	void				set_group_delay (double grp_dly);
+	void           set_convolver (IT &convolver);
+	void           set_group_delay (double grp_dly);
 
-	bool				is_ready () const;
+	bool           is_ready () const;
 
 
 
@@ -77,13 +77,13 @@ public:
 protected:
 
 	// InterpolatorInterface
-	virtual void	do_set_ovrspl_l2 (int ovrspl_l2);
-	virtual long	do_get_impulse_len () const;
+	virtual void   do_set_ovrspl_l2 (int ovrspl_l2);
+	virtual int    do_get_impulse_len () const;
 	virtual fstb::FixedPoint
-						do_get_group_delay () const;
+	               do_get_group_delay () const;
 
-	virtual void	do_start (int nbr_chn);
-	virtual long	do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
+	virtual void   do_start (int nbr_chn);
+	virtual int    do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
 	virtual float  do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate);
 
 
@@ -92,18 +92,18 @@ protected:
 
 private:
 
-	long				process_block_multi_chn (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
-	long				process_block_mono (float dest_ptr [], const float src_ptr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
+	int            process_block_multi_chn (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
+	int            process_block_mono (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
 
-	long				process_block_multi_chn_sparse (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index);
-	long				process_block_mono_sparse (float dest_ptr [], const float src_ptr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index);
+	int            process_block_multi_chn_sparse (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index);
+	int            process_block_mono_sparse (float dest_ptr [], const float src_ptr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, int hold_time, int rep_index);
 
-	SnhTool			_snh_tool;
+	SnhTool        _snh_tool;
 	fstb::FixedPoint
-						_grp_dly;
-	Convolver *		_conv_ptr;	// 0 = not initialised
-	int				_nbr_chn;
-	int				_ovrspl_l2;	// Log base 2 of the oversampling. >= 0.
+	               _grp_dly;
+	Convolver *    _conv_ptr;  // 0 = not initialised
+	int            _nbr_chn;
+	int            _ovrspl_l2; // Log base 2 of the oversampling. >= 0.
 
 
 
@@ -111,11 +111,11 @@ private:
 
 private:
 
-						InterpolatorFir (const InterpolatorFir &other);
+	               InterpolatorFir (const InterpolatorFir &other);
 	InterpolatorFir &
-						operator = (const InterpolatorFir &other);
-	bool				operator == (const InterpolatorFir &other);
-	bool				operator != (const InterpolatorFir &other);
+	               operator = (const InterpolatorFir &other);
+	bool           operator == (const InterpolatorFir &other);
+	bool           operator != (const InterpolatorFir &other);
 
 };	// class InterpolatorFir
 
@@ -127,7 +127,7 @@ private:
 
 
 
-#include	"mfx/dsp/rspl/InterpolatorFir.hpp"
+#include "mfx/dsp/rspl/InterpolatorFir.hpp"
 
 
 

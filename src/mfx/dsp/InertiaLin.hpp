@@ -253,7 +253,7 @@ Throws: Nothing.
 ==============================================================================
 */
 
-void	InertiaLin::tick (long nbr_spl)
+void	InertiaLin::tick (int nbr_spl)
 {
 	assert (nbr_spl >= 0);
 

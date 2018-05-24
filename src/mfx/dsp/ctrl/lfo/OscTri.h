@@ -74,7 +74,7 @@ protected:
 	virtual void   do_set_polarity (bool unipolar_flag);
 	virtual void   do_set_variation (int param, double val);
 	virtual bool   do_is_using_variation (int param) const;
-	virtual void   do_tick (long nbr_spl);
+	virtual void   do_tick (int nbr_spl);
 	virtual double do_get_val () const;
 	virtual double do_get_phase () const;
 	virtual void   do_clear_buffers ();

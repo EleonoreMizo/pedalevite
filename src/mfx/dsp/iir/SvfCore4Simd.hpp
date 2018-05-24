@@ -286,7 +286,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_inc (
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], long nbr_spl)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl)
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -303,7 +303,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 
-	long           pos   = 0;
+	ing            pos   = 0;
 	do
 	{
 		const auto     x = V128Src::load (src_ptr + pos);
@@ -324,7 +324,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [])
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [])
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -340,7 +340,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 
-	long           pos   = 0;
+	int            pos   = 0;
 	do
 	{
 		const auto     x  = V128Src::load_f32 (src_ptr + pos);
@@ -365,7 +365,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr [])
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr [])
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -380,7 +380,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 
-	long           pos   = 0;
+	int            pos   = 0;
 	do
 	{
 		const auto     x  = V128Src::load_f32 (src_ptr + pos);
@@ -410,7 +410,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
 {
 	assert (V128Dst::check_ptr (dst_ptr));
 	assert (V128Src::check_ptr (src_ptr));
@@ -427,7 +427,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 
 	const auto     ic1eq = V128Par::load_f32 (_data._ic1eq);
 	const auto     ic2eq = V128Par::load_f32 (_data._ic2eq);
 
-	long           pos   = 0;
+	int            pos   = 0;
 	do
 	{
 		const auto     x  = V128Src::load_f32 (src_ptr + pos);
@@ -553,7 +553,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_lat_i
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], long nbr_spl)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -572,7 +572,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 	auto           y     = V128Par::load_f32 (_data._y    );
 
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
 		auto           x = fstb::ToolsSimd::loadu_2f32 (src_ptr + pos * 2);
@@ -597,7 +597,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [])
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [])
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -615,7 +615,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 	auto           y     = V128Par::load_f32 (_data._y    );
 
 
-	long           pos   = 0;
+	int            pos   = 0;
 	do
 	{
 		auto           x = fstb::ToolsSimd::loadu_2f32 (src_ptr + pos * 2);
@@ -644,7 +644,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr [])
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr [])
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -660,7 +660,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	long				pos   = 0;
+	int            pos   = 0;
 	do
 	{
 		auto           x = fstb::ToolsSimd::loadu_2f32 (src_ptr + pos * 2);
@@ -694,7 +694,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -712,7 +712,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_lat (float dst_ptr [], con
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	long           pos   = 0;
+	int            pos   = 0;
 	do
 	{
 		auto           x = fstb::ToolsSimd::loadu_2f32 (src_ptr + pos * 2);
@@ -779,7 +779,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_2x2_imm (
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], const float src_ptr [], long nbr_spl)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -788,7 +788,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], con
 	// We could tune this value. Lower bound is _latency_2x2 + 1.
 	if (nbr_spl < _latency_2x2 + 1)
 	{
-		long           pos = 0;
+		int            pos = 0;
 		do
 		{
 			const auto     x = fstb::ToolsSimd::loadu_2f32 (src_ptr + pos * 2);
@@ -814,7 +814,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], const float src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -823,7 +823,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm (float dst_ptr [], con
 	// We could tune this value. Lower bound is _latency_2x2 + 1.
 	if (nbr_spl < _latency_2x2 + 1)
 	{
-		long				pos = 0;
+		int            pos = 0;
 		do
 		{
 			const auto     x = fstb::ToolsSimd::loadu_2f32 (src_ptr + pos * 2);
@@ -955,7 +955,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat_inc (float x_s, cons
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], long nbr_spl)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -973,7 +973,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
 		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
@@ -997,7 +997,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [])
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [])
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1014,7 +1014,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
 		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
@@ -1042,7 +1042,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr [])
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr [], const fstb::ToolsSimd::VectF32 v0m_ptr [], const fstb::ToolsSimd::VectF32 v1m_ptr [], const fstb::ToolsSimd::VectF32 v2m_ptr [])
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1058,7 +1058,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
 		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
@@ -1091,7 +1091,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1109,7 +1109,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], con
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
 	auto           y     = V128Par::load_f32 (_data._y    );
 
-	long           pos = 0;
+	int            pos = 0;
 	do
 	{
 		const auto     x = fstb::ToolsSimd::Shift <0>::insert (y, src_ptr [pos]);
@@ -1172,7 +1172,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_imm (float x_s, const fs
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], const float src_ptr [], long nbr_spl)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1181,7 +1181,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], con
 	// We could tune this value. Lower bound is LATENCY_SERIAL + 1.
 	if (nbr_spl < _latency_serial + 1)
 	{
-		long           pos = 0;
+		int            pos = 0;
 		do
 		{
 			dst_ptr [pos] = process_sample_ser_imm (src_ptr [pos]);
@@ -1205,7 +1205,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], con
 
 
 template <class VD, class VS, class VP, class MX>
-void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], const float src_ptr [], long nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
+void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
 {
 	assert (dst_ptr != 0);
 	assert (src_ptr != 0);
@@ -1214,7 +1214,7 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], con
 	// We could tune this value. Lower bound is LATENCY_SERIAL + 1.
 	if (nbr_spl < _latency_serial + 1)
 	{
-		long           pos = 0;
+		int            pos = 0;
 		do
 		{
 			dst_ptr [pos] = process_sample_ser_imm (

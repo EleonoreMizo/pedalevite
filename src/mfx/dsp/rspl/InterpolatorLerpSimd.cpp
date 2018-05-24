@@ -64,16 +64,16 @@ void	InterpolatorLerpSimd::do_set_ovrspl_l2 (int ovrspl_l2)
 
 
 
-long	InterpolatorLerpSimd::do_get_impulse_len () const
+int	InterpolatorLerpSimd::do_get_impulse_len () const
 {
-	return (IMPULSE_LEN);
+	return IMPULSE_LEN;
 }
 
 
 
 fstb::FixedPoint	InterpolatorLerpSimd::do_get_group_delay () const
 {
-	return (fstb::FixedPoint (0));
+	return fstb::FixedPoint (0);
 }
 
 
@@ -85,43 +85,43 @@ void	InterpolatorLerpSimd::do_start (int nbr_chn)
 
 
 
-long	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
+int	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
 {
 	typedef	float	Buffer [4];
 	fstb_TYPEDEF_ALIGN (16, Buffer, BufAlign);
 
-	BufAlign			in_0_arr;
-	BufAlign			in_1_arr;
-	BufAlign			q_arr;
-	long				pos_src_arr [4];
+	BufAlign       in_0_arr;
+	BufAlign       in_1_arr;
+	BufAlign       q_arr;
+	int            pos_src_arr [4];
 
-	const long		pos_dest_old = pos_dest;
-	const long		src_limit = end_src - IMPULSE_LEN + 1;
+	const int      pos_dest_old = pos_dest;
+	const int      src_limit = end_src - IMPULSE_LEN + 1;
 
-	bool				cont_flag = true;
+	bool           cont_flag = true;
 	do
 	{
-		q_arr [0] = pos_src.get_frac_val_flt ();
+		q_arr [0]       = pos_src.get_frac_val_flt ();
 		pos_src_arr [0] = pos_src.get_int_val ();
 		pos_src += rate;
-		rate += rate_step;
+		rate    += rate_step;
 
-		q_arr [1] = pos_src.get_frac_val_flt ();
+		q_arr [1]       = pos_src.get_frac_val_flt ();
 		pos_src_arr [1] = pos_src.get_int_val ();
 		pos_src += rate;
-		rate += rate_step;
+		rate    += rate_step;
 
-		q_arr [2] = pos_src.get_frac_val_flt ();
+		q_arr [2]       = pos_src.get_frac_val_flt ();
 		pos_src_arr [2] = pos_src.get_int_val ();
 		pos_src += rate;
-		rate += rate_step;
+		rate    += rate_step;
 
-		q_arr [3] = pos_src.get_frac_val_flt ();
+		q_arr [3]       = pos_src.get_frac_val_flt ();
 		pos_src_arr [3] = pos_src.get_int_val ();
 		pos_src += rate;
-		rate += rate_step;
+		rate    += rate_step;
 
-		long				pos_src_int = pos_src.get_int_val ();
+		int            pos_src_int = pos_src.get_int_val ();
 
 		if (   pos_dest + 4 >= end_dest
 		    || pos_src_int >= src_limit
@@ -129,7 +129,7 @@ long	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], cons
 		{
 			cont_flag = false;
 
-			int				last_valid = 3;
+			int            last_valid = 3;
 			while (   pos_dest + last_valid >= end_dest
 			       || pos_src_arr [last_valid] >= src_limit
 			       || pos_src_arr [last_valid] < beg_src)
@@ -138,21 +138,21 @@ long	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], cons
 				assert (last_valid >= 0);
 			}
 
-			int				valid_index = 0;
+			int            valid_index = 0;
 			do
 			{
-				const float		q = q_arr [valid_index];
+				const float    q = q_arr [valid_index];
 				pos_src_int = pos_src_arr [valid_index];
 
-				int				chn_cnt = 0;
+				int            chn_cnt = 0;
 				do
 				{
-					const float *	src_ptr = src_ptr_arr [chn_cnt];
-					float *			dest_ptr = dest_ptr_arr [chn_cnt];
+					const float *  src_ptr = src_ptr_arr [chn_cnt];
+					float *        dest_ptr = dest_ptr_arr [chn_cnt];
 
-					const float		in_0 = src_ptr [pos_src_int    ];
-					const float		in_1 = src_ptr [pos_src_int + 1];
-					const float		out = in_0 + q * (in_1 - in_0);
+					const float    in_0 = src_ptr [pos_src_int    ];
+					const float    in_1 = src_ptr [pos_src_int + 1];
+					const float    out  = in_0 + q * (in_1 - in_0);
 					dest_ptr [pos_dest] = out;
 
 					++ chn_cnt;
@@ -167,27 +167,27 @@ long	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], cons
 
 		else
 		{
-			const auto     q = fstb::ToolsSimd::load_f32 (q_arr);
+			const auto     q       = fstb::ToolsSimd::load_f32 (q_arr);
 
-			int				chn_cnt = 0;
+			int            chn_cnt = 0;
 			do
 			{
-				const float *	src_ptr = src_ptr_arr [chn_cnt];
-				float *			dest_ptr = dest_ptr_arr [chn_cnt];
+				const float *  src_ptr  = src_ptr_arr [chn_cnt];
+				float *        dest_ptr = dest_ptr_arr [chn_cnt];
 
-				pos_src_int = pos_src_arr [0];
+				pos_src_int  = pos_src_arr [0];
 				in_0_arr [0] = src_ptr [pos_src_int    ];
 				in_1_arr [0] = src_ptr [pos_src_int + 1];
 
-				pos_src_int = pos_src_arr [1];
+				pos_src_int  = pos_src_arr [1];
 				in_0_arr [1] = src_ptr [pos_src_int    ];
 				in_1_arr [1] = src_ptr [pos_src_int + 1];
 
-				pos_src_int = pos_src_arr [2];
+				pos_src_int  = pos_src_arr [2];
 				in_0_arr [2] = src_ptr [pos_src_int    ];
 				in_1_arr [2] = src_ptr [pos_src_int + 1];
 
-				pos_src_int = pos_src_arr [3];
+				pos_src_int  = pos_src_arr [3];
 				in_0_arr [3] = src_ptr [pos_src_int    ];
 				in_1_arr [3] = src_ptr [pos_src_int + 1];
 
@@ -208,7 +208,7 @@ long	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], cons
 	}
 	while (cont_flag);
 
-	return (pos_dest - pos_dest_old);
+	return pos_dest - pos_dest_old;
 }
 
 

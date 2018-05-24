@@ -142,7 +142,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, long max_nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) const
+void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, int max_nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) const
 {
 	assert (&hold_time != 0);
 	assert (&rep_index != 0);
@@ -236,23 +236,23 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::process_data (float * const data_ptr_arr [], long nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step)
+void	SnhTool::process_data (float * const data_ptr_arr [], int nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step)
 {
 	assert (data_ptr_arr != 0);
 	assert (data_ptr_arr [0] != 0);
 	assert (nbr_spl > 0);
 	assert (rate.get_val_int64 () > 0);
 
-	bool				need_trans_flag = false;
-	int				ht_new;
-	long				pos = 0;
+	bool           need_trans_flag = false;
+	int            ht_new;
+	int            pos = 0;
 	do
 	{
 		// First, terminates the transition, if any.
 		if (_rem_spl > 0)
 		{
-			const long		rem_len = nbr_spl - pos;
-			const long		work_len = std::min (rem_len, _rem_spl);
+			const int      rem_len  = nbr_spl - pos;
+			const int      work_len = std::min (rem_len, _rem_spl);
 			process_data_interpolate (data_ptr_arr, pos, pos + work_len);
 			pos += work_len;
 		}
@@ -270,8 +270,8 @@ void	SnhTool::process_data (float * const data_ptr_arr [], long nbr_spl, const f
 		// Advances up to the next block in steady state, or up to the end
 		if (_rem_spl == 0)
 		{
-			const long		rem_len = nbr_spl - pos;
-			long				work_len = rem_len;
+			const int      rem_len  = nbr_spl - pos;
+			int            work_len = rem_len;
 			if (need_trans_flag)
 			{
 				if (_rep_index == 0)
@@ -280,7 +280,7 @@ void	SnhTool::process_data (float * const data_ptr_arr [], long nbr_spl, const f
 				}
 				else
 				{
-					const long		rem_block_len = _hold_time - _rep_index;
+					const int      rem_block_len = _hold_time - _rep_index;
 					work_len = std::min (work_len, rem_block_len);
 				}
 			}
@@ -298,8 +298,8 @@ void	SnhTool::process_data (float * const data_ptr_arr [], long nbr_spl, const f
 			assert (_rep_index == 0);
 			_sub_index = 0;
 
-			int				ht_max;
-			int				ht_min;
+			int            ht_max;
+			int            ht_min;
 			fstb::sort_2_elt (ht_min, ht_max, _hold_time, ht_new);
 			_rem_spl = FADE_LEN;
 			if (ht_max == _hold_time)
@@ -367,7 +367,7 @@ Throws: Nothing
 ==============================================================================
 */
 
-void	SnhTool::adjust_rate_param (long &pos_dest, fstb::FixedPoint &pos_src, fstb::FixedPoint &rate, fstb::FixedPoint &rate_step, int hold_time, int rep_index)
+void	SnhTool::adjust_rate_param (int &pos_dest, fstb::FixedPoint &pos_src, fstb::FixedPoint &rate, fstb::FixedPoint &rate_step, int hold_time, int rep_index)
 {
 	assert (&pos_dest != 0);
 	assert (&pos_src != 0);
@@ -432,7 +432,7 @@ Substitued variable values:
 
 
 
-void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], long pos_beg, long pos_end)
+void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (_rem_spl == 0);
 	assert (data_ptr_arr != 0);
@@ -444,8 +444,8 @@ void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], long pos
 		// Finishes the current hold block
 		if (_rep_index > 0)
 		{
-			const long		block_end = std::min (
-				long (pos_beg + _hold_time - _rep_index),
+			const int      block_end = std::min (
+				pos_beg + _hold_time - _rep_index,
 				pos_end
 			);
 			process_data_steady_state_naive (data_ptr_arr, pos_beg, block_end);
@@ -455,10 +455,10 @@ void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], long pos
 		if (pos_beg < pos_end)
 		{
 			// Full hold blocks
-			const long		nbr_blocks = (pos_end - pos_beg) / _hold_time;
+			const int      nbr_blocks = (pos_end - pos_beg) / _hold_time;
 			if (nbr_blocks > 0)
 			{
-				const long		block_end = pos_beg + nbr_blocks * _hold_time;
+				const int      block_end = pos_beg + nbr_blocks * _hold_time;
 				process_data_steady_state_block (data_ptr_arr, pos_beg, block_end);
 				pos_beg = block_end;
 			}
@@ -474,24 +474,24 @@ void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], long pos
 
 
 
-void	SnhTool::process_data_steady_state_naive (float * const data_ptr_arr [], long pos_beg, long pos_end)
+void	SnhTool::process_data_steady_state_naive (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (_rem_spl == 0);
 	assert (data_ptr_arr != 0);
 	assert (pos_beg >= 0);
 	assert (pos_end > pos_beg);
 
-	int				rep_index;
+	int            rep_index;
 
-	int				chn_cnt = 0;
+	int            chn_cnt = 0;
 	do
 	{
-		ChnState &		chn_state = _chn_state_arr [chn_cnt];
-		float *			data_ptr = data_ptr_arr [chn_cnt];
+		ChnState &     chn_state = _chn_state_arr [chn_cnt];
+		float *        data_ptr = data_ptr_arr [chn_cnt];
 
 		rep_index = _rep_index;
 
-		long				pos = pos_beg;
+		int            pos = pos_beg;
 		do
 		{
 			if (rep_index == 0)
@@ -522,7 +522,7 @@ void	SnhTool::process_data_steady_state_naive (float * const data_ptr_arr [], lo
 
 
 
-void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], long pos_beg, long pos_end)
+void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (_rem_spl == 0);
 	assert (_rep_index == 0);
@@ -532,16 +532,16 @@ void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], lo
 	assert (pos_end > pos_beg);
 	assert ((pos_end - pos_beg) % _hold_time == 0);
 
-	int				chn_cnt = 0;
+	int            chn_cnt = 0;
 	do
 	{
-		ChnState &		chn_state = _chn_state_arr [chn_cnt];
-		float *			data_ptr = data_ptr_arr [chn_cnt];
+		ChnState &     chn_state = _chn_state_arr [chn_cnt];
+		float *        data_ptr = data_ptr_arr [chn_cnt];
 
-		long				pos = pos_beg;
+		int            pos = pos_beg;
 		do
 		{
-			const long		block_end = pos + _hold_time;
+			const int      block_end = pos + _hold_time;
 
 			chn_state._hold_val = data_ptr [pos];
 			++ pos;
@@ -562,22 +562,22 @@ void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], lo
 
 
 
-void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], long pos_beg, long pos_end)
+void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (data_ptr_arr != 0);
 	assert (pos_beg >= 0);
 	assert (pos_beg < pos_end);
 
-	const long		nbr_spl = pos_end - pos_beg;
+	const int      nbr_spl = pos_end - pos_beg;
 	assert (nbr_spl <= _rem_spl);
 
-	const long		block_len = _hold_time * _nbr_sub;
+	const int      block_len = _hold_time * _nbr_sub;
 
 	// Finishes the current hold block
 	if (_rep_index > 0 || _sub_index > 0)
 	{
-		const long		block_end = std::min (
-			long (pos_beg + block_len - _sub_index * _hold_time - _rep_index),
+		const int       block_end = std::min (
+			pos_beg + block_len - _sub_index * _hold_time - _rep_index,
 			pos_end
 		);
 		process_data_interpolate_naive (data_ptr_arr, pos_beg, block_end);
@@ -587,10 +587,10 @@ void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], long pos_
 	if (pos_beg < pos_end)
 	{
 		// Full hold blocks
-		const long		nbr_blocks = (pos_end - pos_beg) / block_len;
+		const int      nbr_blocks = (pos_end - pos_beg) / block_len;
 		if (nbr_blocks > 0)
 		{
-			const long		block_end = pos_beg + nbr_blocks * block_len;
+			const int      block_end = pos_beg + nbr_blocks * block_len;
 			process_data_interpolate_block (data_ptr_arr, pos_beg, block_end);
 			pos_beg = block_end;
 		}
@@ -613,7 +613,7 @@ void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], long pos_
 
 
 
-void	SnhTool::process_data_interpolate_naive (float * const data_ptr_arr [], long pos_beg, long pos_end)
+void	SnhTool::process_data_interpolate_naive (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (data_ptr_arr != 0);
 	assert (pos_beg >= 0);
@@ -635,7 +635,7 @@ void	SnhTool::process_data_interpolate_naive (float * const data_ptr_arr [], lon
 
 		float				dif = chn_state._hold_val - chn_state._hold_val_max;
 
-		long				pos = pos_beg;
+		int            pos = pos_beg;
 		do
 		{
 			if (rep_index == 0)
@@ -677,7 +677,7 @@ void	SnhTool::process_data_interpolate_naive (float * const data_ptr_arr [], lon
 
 
 
-void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], long pos_beg, long pos_end)
+void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (_rep_index == 0);
 	assert (_sub_index == 0);
@@ -687,26 +687,26 @@ void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], lon
 	assert (pos_end > pos_beg);
 	assert ((pos_end - pos_beg) % (_hold_time * _nbr_sub) == 0);
 
-	const long		block_len = _hold_time * _nbr_sub;
-	float				interp_val;
+	const int      block_len = _hold_time * _nbr_sub;
+	float          interp_val;
 
-	int				chn_cnt = 0;
+	int            chn_cnt = 0;
 	do
 	{
-		ChnState &		chn_state = _chn_state_arr [chn_cnt];
-		float *			data_ptr = data_ptr_arr [chn_cnt];
+		ChnState &     chn_state = _chn_state_arr [chn_cnt];
+		float *        data_ptr = data_ptr_arr [chn_cnt];
 
 		interp_val = _interp_val;
 
-		long				pos = pos_beg;
+		int            pos = pos_beg;
 		do
 		{
-			const long		block_end = pos + block_len;
+			const int      block_end = pos + block_len;
 
 			chn_state._hold_val_max = data_ptr [pos];
 
 			{
-				const long		sub_block_end = pos + _hold_time;
+				const int      sub_block_end = pos + _hold_time;
 				do
 				{
 					data_ptr [pos] = chn_state._hold_val_max;
@@ -719,9 +719,9 @@ void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], lon
 			do
 			{
 				chn_state._hold_val = data_ptr [pos];
-				const float		dif = chn_state._hold_val - chn_state._hold_val_max;
+				const float    dif = chn_state._hold_val - chn_state._hold_val_max;
 
-				const long		sub_block_end = pos + _hold_time;
+				const int      sub_block_end = pos + _hold_time;
 				do
 				{
 					data_ptr [pos] = chn_state._hold_val_max + interp_val * dif;
@@ -764,7 +764,7 @@ int	SnhTool::compute_hold_time (const fstb::FixedPoint &rate, int ovrspl_l2)
 		}
 	}
 
-	return (1 << k);
+	return 1 << k;
 }
 
 

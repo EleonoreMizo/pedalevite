@@ -89,8 +89,8 @@ public:
 
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
 	               process_sample (const fstb::ToolsSimd::VectF32 &in);
-	void           process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], long nbr_spl);
-	void           process_block_1_chn (float out_ptr [], const float in_ptr [], long nbr_spl);
+	void           process_block (fstb::ToolsSimd::VectF32 out_ptr [], const fstb::ToolsSimd::VectF32 in_ptr [], int nbr_spl);
+	void           process_block_1_chn (float out_ptr [], const float in_ptr [], int nbr_spl);
 
 	void           clear_buffers ();
 

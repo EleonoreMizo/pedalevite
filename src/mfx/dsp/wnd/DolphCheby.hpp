@@ -81,11 +81,11 @@ void	DolphCheby <T>::do_make_win (T data_ptr [], int len)
 
 	data_ptr [     0] = T (0);
 	data_ptr [center] = T (1);
-	for (long k = 0; k <= m; ++k)
+	for (int k = 0; k <= m; ++k)
 	{
 		const double   theta_k = theta_mul * k;
 		double         s       = 0;
-		for (long p = 1; p <= m; ++p)
+		for (int p = 1; p <= m; ++p)
 		{
 			const double	theta_p = theta_mul * p;
 			const double	t_2p    = cheby_poly (x_0 * cos (theta_p * 0.5), m * 2);

@@ -121,11 +121,11 @@ void	Ultraspherical <T>::do_make_win (T data_ptr [], int len)
 	const double   offset = ((len & 1) == 0) ?     0.5 : 0.0;
 	const int      end    = ((len & 1) == 0) ? (m - 1) :   m;
 	double         scale  = 1;
-	for (long n = 0; n <= end; ++n)
+	for (int n = 0; n <= end; ++n)
 	{
 		const double   cos_mult_2 = cos_mult_1 * 2 * (n + offset);
 		double         sum        = c_arr [0];
-		for (long s = 1; s <= m; ++s)
+		for (int s = 1; s <= m; ++s)
 		{
 			const double	p = c_arr [s] * cos (s * cos_mult_2);
 			sum += p;

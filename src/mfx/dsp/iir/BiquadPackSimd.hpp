@@ -158,7 +158,7 @@ Throws: memory allocation exceptions.
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::set_buf_len (long nbr_spl)
+void	BiquadPackSimd <VD, VS>::set_buf_len (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 
@@ -181,7 +181,7 @@ Throws: Nothing.
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::set_ramp_time (long nbr_spl)
+void	BiquadPackSimd <VD, VS>::set_ramp_time (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 
@@ -374,7 +374,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], long pos_beg, long pos_end)
+void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (out_ptr_arr != 0);
 	assert (in_ptr_arr != 0);
@@ -382,7 +382,7 @@ void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const
 
 	if (_nbr_stages == 0)
 	{
-		const long     nbr_spl = pos_end - pos_beg;
+		const int      nbr_spl = pos_end - pos_beg;
 		for (int chn = 0; chn < _nbr_chn; ++chn)
 		{
 			const float *  in_ptr = in_ptr_arr [chn] + pos_beg;
@@ -440,7 +440,7 @@ Throws: Nothing
 */
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float in_ptr [], long pos_beg, long pos_end)
+void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end)
 {
 	assert (out_ptr_arr != 0);
 	assert (in_ptr != 0);
@@ -449,7 +449,7 @@ void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const
 	if (_nbr_stages == 0)
 	{
 		const float *  src_ptr = in_ptr + pos_beg;
-		const long     nbr_spl = pos_end - pos_beg;
+		const int      nbr_spl = pos_end - pos_beg;
 		for (int chn = 0; chn < _nbr_chn; ++chn)
 		{
 			float	*        out_ptr = out_ptr_arr [chn] + pos_beg;
@@ -668,18 +668,18 @@ void	BiquadPackSimd <VD, VS>::load_info (int nbr_stages, int nbr_chn)
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr [], const float * const in_ptr_arr [], long pos_beg, long pos_end, bool mono_source_flag)
+void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end, bool mono_source_flag)
 {
 	int            pack_index = 0;
 	for (int chn_base = 0; chn_base < _nbr_chn; chn_base += 4)
 	{
 		const int      pack_beg = pack_index;
 
-		long           block_pos = pos_beg;
+		int            block_pos = pos_beg;
 		do
 		{
 			pack_index = pack_beg;
-			long           block_len = pos_end - block_pos;
+			int            block_len = pos_end - block_pos;
 			block_len = std::min (block_len, _buf_len);
 
 			const int      nbr_end_chn = _nbr_chn - chn_base;
@@ -773,7 +773,7 @@ void	BiquadPackSimd <VD, VS>::process_block_parallel (float * const out_ptr_arr 
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr [], const float * const in_ptr_arr [], long pos_beg, long pos_end)
+void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
 	int            pack_index = 0;
 	for (int chn = 0; chn < _nbr_chn; ++chn)
@@ -791,7 +791,7 @@ void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr []
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr [], const float in_ptr [], long pos_beg, long pos_end)
+void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end)
 {
 	int            pack_index = 0;
 	for (int chn = 0; chn < _nbr_chn; ++chn)
@@ -809,7 +809,7 @@ void	BiquadPackSimd <VD, VS>::process_block_serial (float * const out_ptr_arr []
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_serial_one_chn (float out_ptr [], const float in_ptr [], long pos_beg, long pos_end, int &pack_index)
+void	BiquadPackSimd <VD, VS>::process_block_serial_one_chn (float out_ptr [], const float in_ptr [], int pos_beg, int pos_end, int &pack_index)
 {
 	const float *  src_ptr = in_ptr;
 	const int      group_end = pack_index + _group_size;
@@ -831,15 +831,15 @@ void	BiquadPackSimd <VD, VS>::process_block_serial_one_chn (float out_ptr [], co
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], const float * const in_ptr_arr [], long pos_beg, long pos_end)
+void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (_nbr_packs == 1);
 
 	Pack4 &        pack = _pack_list [0];
-	long           pos = pos_beg;
+	int            pos  = pos_beg;
 	do
 	{
-		long           work_len = pos_end - pos;
+		int            work_len = pos_end - pos;
 		work_len = std::min (work_len, _buf_len);
 
 		// Interleaving
@@ -879,7 +879,7 @@ void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], c
 
 
 template <class VD, class VS>
-void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], const float in_ptr [], long pos_beg, long pos_end)
+void	BiquadPackSimd <VD, VS>::process_block_2x2 (float * const out_ptr_arr [], const float in_ptr [], int pos_beg, int pos_end)
 {
 	const float * const in_ptr_arr [2] = { in_ptr, in_ptr };
 	process_block_2x2 (out_ptr_arr, in_ptr_arr, pos_beg, pos_end);

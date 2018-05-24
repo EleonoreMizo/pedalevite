@@ -42,9 +42,7 @@ namespace dyn
 
 float	EnvFollowerRmsSimple::process_sample (float x)
 {
-	using namespace std;
-
-	const float		y = process_sample_no_sqrt (x);
+	const float    y = process_sample_no_sqrt (x);
 
 	return (static_cast <float> (sqrt (y)));
 }
@@ -115,7 +113,7 @@ void	EnvFollowerRmsSimple::process_sample_internal (float &state, float x) const
 
 void	EnvFollowerRmsSimple::process_sample_internal_no_sq (float &state, float x2) const
 {
-	const float		delta = x2 - state;
+	const float    delta = x2 - state;
 	state += delta * _coef;
 
 	assert (state >= 0);

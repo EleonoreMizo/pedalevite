@@ -156,7 +156,7 @@ bool	OscStepSeq::do_is_using_variation (int /*param*/) const
 
 
 
-void	OscStepSeq::do_tick (long nbr_spl)
+void	OscStepSeq::do_tick (int nbr_spl)
 {
 	_phase_gen.tick (nbr_spl);
 }

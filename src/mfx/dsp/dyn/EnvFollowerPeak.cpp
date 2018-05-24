@@ -102,18 +102,18 @@ void	EnvFollowerPeak::set_time_rel (float t)
 
 
 
-void	EnvFollowerPeak::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	EnvFollowerPeak::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (out_ptr != 0);
 	assert (in_ptr != 0);
 	assert (nbr_spl > 0);
 
-	float				state = _state;
+	float          state = _state;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
-		const float		x = in_ptr [pos];
+		const float    x = in_ptr [pos];
 		process_sample_internal (state, x);
 		out_ptr [pos] = state;
 
@@ -126,17 +126,17 @@ void	EnvFollowerPeak::process_block (float out_ptr [], const float in_ptr [], lo
 
 
 
-float	EnvFollowerPeak::analyse_block (const float data_ptr [], long nbr_spl)
+float	EnvFollowerPeak::analyse_block (const float data_ptr [], int nbr_spl)
 {
 	assert (data_ptr != 0);
 	assert (nbr_spl > 0);
 
-	float				state = _state;
+	float          state = _state;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
-		const float		x = data_ptr [pos];
+		const float    x = data_ptr [pos];
 		process_sample_internal (state, x);
 
 		++ pos;
@@ -150,13 +150,13 @@ float	EnvFollowerPeak::analyse_block (const float data_ptr [], long nbr_spl)
 
 
 
-float	EnvFollowerPeak::analyse_block_cst (float x, long nbr_spl)
+float	EnvFollowerPeak::analyse_block_cst (float x, int nbr_spl)
 {
 	assert (nbr_spl > 0);
 
 	const float    xa    = fabs (x);
-	const float		delta = xa - _state;
-	const float		coef  = (delta >= 0) ? _coef_a : _coef_r;
+	const float    delta = xa - _state;
+	const float    coef  = (delta >= 0) ? _coef_a : _coef_r;
 
 	float          coef_block;
 	if (nbr_spl < 100000)

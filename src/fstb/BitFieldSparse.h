@@ -47,27 +47,27 @@ public:
 
 
 	               BitFieldSparse ();
-	explicit       BitFieldSparse (long nbr_elt);
+	explicit       BitFieldSparse (int nbr_elt);
 	               BitFieldSparse (const BitFieldSparse &other) = default;
 	virtual        ~BitFieldSparse ()                           = default;
 
 	BitFieldSparse &
 	               operator = (const BitFieldSparse &other)     = default;
 
-	void           set_nbr_elt (long nbr_elt);
-	long           get_nbr_elt () const;
+	void           set_nbr_elt (int nbr_elt);
+	int            get_nbr_elt () const;
 	void           clear ();
 	void           fill ();
 
-   bool           get_bit (long pos) const;
-   void           set_bit (long pos, bool flag);
-   void           clear_bit (long pos);
-   void           fill_bit (long pos);
+   bool           get_bit (int pos) const;
+   void           set_bit (int pos, bool flag);
+   void           clear_bit (int pos);
+   void           fill_bit (int pos);
 
-   void           activate_range (long pos, long nbr_elt);
-   void           deactivate_range (long pos, long nbr_elt);
+   void           activate_range (int pos, int nbr_elt);
+   void           deactivate_range (int pos, int nbr_elt);
 
-   long           get_next_bit_set_from (long pos, long stop_pos = -1) const;
+   int            get_next_bit_set_from (int pos, int stop_pos = -1) const;
 	bool           has_a_bit_set () const;
 
 
@@ -82,24 +82,24 @@ protected:
 
 private:
 
-   enum {         BITDEPTH_L2 = 5 };	// 32 bits
-   enum {         BITDEPTH = 1 << BITDEPTH_L2 };
+   enum {         BITDEPTH_L2 = 5 };  // 32 bits
+   enum {         BITDEPTH    = 1 << BITDEPTH_L2 };
 
-	typedef	unsigned long	GroupType;
+	typedef	uint32_t	GroupType;
 
 	class BfLevel
 	{
 	public:
-		typedef	std::vector <GroupType>	GroupArray;
-		GroupArray		_group_arr;
-		long				_nbr_elt;
+		typedef std::vector <GroupType> GroupArray;
+		GroupArray     _group_arr;
+		int            _nbr_elt;
 	};
 
-	typedef	std::vector <BfLevel>	LevelArray;
+	typedef std::vector <BfLevel> LevelArray;
 
-	long				get_next_bit_set_from_rec (int lvl_index, long start, long stop) const;
+	int            get_next_bit_set_from_rec (int lvl_index, int start, int stop) const;
 
-	LevelArray		_lvl_arr;
+	LevelArray     _lvl_arr;
 
 
 

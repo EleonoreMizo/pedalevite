@@ -74,7 +74,7 @@ public:
 
 	AddProc &      use_add_proc ();
 
-	void           prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, long pos_beg, long pos_end);
+	void           prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end);
 
 
 

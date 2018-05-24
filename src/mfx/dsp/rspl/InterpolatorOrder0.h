@@ -60,15 +60,15 @@ protected:
 	// InterpolatorInterface
 	inline virtual void
 	               do_set_ovrspl_l2 (int ovrspl_l2);
-	inline virtual long
+	inline virtual int
 	               do_get_impulse_len () const;
 	inline virtual fstb::FixedPoint
 	               do_get_group_delay () const;
 
 	inline virtual void
 	               do_start (int nbr_chn);
-	inline virtual long
-	               do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], long pos_dest, fstb::FixedPoint pos_src, long end_dest, long beg_src, long end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
+	inline virtual int
+	               do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
 	inline virtual float
 	               do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate);
 

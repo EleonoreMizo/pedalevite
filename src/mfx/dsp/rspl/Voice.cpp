@@ -106,7 +106,7 @@ const InterpolatorInterface &	Voice::use_interpolator () const
 
 
 
-void	Voice::set_tmp_buf (float *buf_ptr, long len)
+void	Voice::set_tmp_buf (float *buf_ptr, int len)
 {
 	assert (buf_ptr != 0);
 	assert (len > 0);
@@ -300,7 +300,7 @@ bool	Voice::is_running_backward () const
 
 
 
-void	Voice::process_block (float *out_ptr_arr [], long nbr_spl)
+void	Voice::process_block (float *out_ptr_arr [], int nbr_spl)
 {
 	assert (is_active ());
 	assert (_interp_ptr != 0);
@@ -309,7 +309,7 @@ void	Voice::process_block (float *out_ptr_arr [], long nbr_spl)
 	assert (nbr_spl > 0);
 	assert (_rate.get_val_int64 () + _rate_step.get_val_int64 () * nbr_spl > 0);
 
-	long				dest_pos = 0;
+	int            dest_pos = 0;
 
 	check_finished (out_ptr_arr, dest_pos, nbr_spl);
 
@@ -321,7 +321,7 @@ void	Voice::process_block (float *out_ptr_arr [], long nbr_spl)
 
 	while (dest_pos < nbr_spl)
 	{
-		const long		rem_len = nbr_spl - dest_pos;
+		const int      rem_len = nbr_spl - dest_pos;
 
 		// Computes the required buffer length. We don't take the loops into
 		// account here, so it's just an upper limit for the next segment, which
@@ -334,10 +334,10 @@ void	Voice::process_block (float *out_ptr_arr [], long nbr_spl)
 		dist += ext;
 
 		// Number of required samples
-		const long		nbr_req_spl = dist.get_int_val () + _imp_len;
+		const int      nbr_req_spl = dist.get_int_val () + _imp_len;
 
 		// Number of fetched samples is limited by the buffer size
-		const long		nbr_fetch_spl = std::min (nbr_req_spl, _room_for_lin_src);
+		const int      nbr_fetch_spl = std::min (nbr_req_spl, _room_for_lin_src);
 
 		// Linearise data
 		linearise_sample (nbr_fetch_spl);
@@ -345,7 +345,7 @@ void	Voice::process_block (float *out_ptr_arr [], long nbr_spl)
 		// Interpolates
 		fstb::FixedPoint	cur_pos_rel (0, _pos_frac);
 
-		const long		dest_len = _interp_ptr->process_block (
+		const int      dest_len = _interp_ptr->process_block (
 			&out_ptr_arr [0],
 			const_cast <const float **> (&src_ptr_arr [0]),
 			dest_pos,
@@ -363,7 +363,7 @@ void	Voice::process_block (float *out_ptr_arr [], long nbr_spl)
 		stride.add_frac (_pos_frac);
 
 		_pos_frac = stride.get_frac_val ();
-		const long		stride_int = stride.get_int_val ();
+		const int      stride_int = stride.get_int_val ();
 		advance_cursor_pos (_pos_int, _pbk_dir, stride_int);
 
 		fstb::FixedPoint	rs (_rate_step);
@@ -379,8 +379,8 @@ void	Voice::process_block (float *out_ptr_arr [], long nbr_spl)
 	// Handles fade in or out
 	if (_fade_rem_spl > 0)
 	{
-		const long		fade_len = std::min (_fade_rem_spl, nbr_spl);
-		const float		fade_end_val = _fade_val + _fade_step * fade_len;
+		const int      fade_len = std::min (_fade_rem_spl, nbr_spl);
+		const float    fade_end_val = _fade_val + _fade_step * fade_len;
 
 		for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
 		{
@@ -397,7 +397,7 @@ void	Voice::process_block (float *out_ptr_arr [], long nbr_spl)
 
 		if (_stopped_flag && fade_len < nbr_spl)
 		{
-			const long		silence_len = nbr_spl - fade_len;
+			const int      silence_len = nbr_spl - fade_len;
 			for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
 			{
 				mix::Generic::clear (
@@ -463,7 +463,7 @@ void	Voice::fade_to (float val)
 	{
 		const double	fade_time_spl = _fade_time * _sample_freq;
 		_fade_rem_spl = fstb::conv_int_fast (fade_time_spl);
-		_fade_rem_spl = std::max (_fade_rem_spl, 1L);
+		_fade_rem_spl = std::max (_fade_rem_spl, 1);
 
 		const float		dif = val - _fade_val;
 		_fade_step = dif / _fade_rem_spl;
@@ -483,25 +483,25 @@ void	Voice::update_tmp_buf_info ()
 
 // nbr_spl = number of source samples to fetch
 // If the loop cursors are fractionnal, the linearisation is approximative.
-void	Voice::linearise_sample (long nbr_spl)
+void	Voice::linearise_sample (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 
-	long           offset  = 0;
+	int            offset  = 0;
 	int64_t        cur_pos = _pos_int;
 	int            cur_dir = _pbk_dir;
 
 	// If we start out of the sample, we generate silence
 	if (cur_pos < 0 || cur_pos >= _in_len)
 	{
-		long				clear_len = nbr_spl;
+		int            clear_len = nbr_spl;
 
 		const int      dir_01   = (1 - cur_dir) >> 1;
 		const int64_t  stop_pos = _in_len * dir_01;
 		const int64_t  dif      = (stop_pos - cur_pos) * cur_dir;
 		if (dif > 0)
 		{
-			clear_len = std::min (clear_len, static_cast <long> (dif));
+			clear_len = std::min (clear_len, int (dif));
 		}
 
 		for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
@@ -521,8 +521,8 @@ void	Voice::linearise_sample (long nbr_spl)
 		int64_t        stop_pos;
 		const bool     loop_flag = compute_next_stop (stop_pos, cur_pos, cur_dir);
 
-		const long     rem_len   = nbr_spl - offset;
-		const long     len       = collect_source_spl (
+		const int      rem_len   = nbr_spl - offset;
+		const int      len       = collect_source_spl (
 			offset,
 			rem_len,
 			cur_dir,
@@ -534,7 +534,7 @@ void	Voice::linearise_sample (long nbr_spl)
 
 		// If we generated less samples than the maximum, we have reached
 		// the stop position (loop or file end).
-		const long	clear_len = rem_len - len;
+		const int      clear_len = rem_len - len;
 		if (clear_len > 0)
 		{
 			// Loop: updates position and playback direction
@@ -612,7 +612,7 @@ bool	Voice::compute_next_stop (int64_t &stop_pos, int64_t cur_pos, int dir) cons
 
 
 
-long	Voice::collect_source_spl (long offset, long max_len, int cur_dir, int64_t pos, int64_t stop_pos)
+int	Voice::collect_source_spl (int offset, int max_len, int cur_dir, int64_t pos, int64_t stop_pos)
 {
 	assert (offset >= 0);
 	assert (max_len > 0);
@@ -649,22 +649,22 @@ long	Voice::collect_source_spl (long offset, long max_len, int cur_dir, int64_t 
 		ptr_arr [chn_cnt] = _tmp_buf_ptr + offset + chn_cnt * _room_for_lin_src;
 	}
 
-	const long		len_long = static_cast <long> (len);
+	const int      len_int = int (len);
 
 	_data_provider_ptr->get_data (
 		&ptr_arr [0],
 		beg,
-		len_long,
+		len_int,
 		(cur_dir < 0)
 	);
 
-	return (len_long);
+	return (len_int);
 }
 
 
 
 // pos can be < 0 or >= _in_len if there is no loop to stop the cursor.
-void	Voice::advance_cursor_pos (int64_t &pos, int &dir, long stride) const
+void	Voice::advance_cursor_pos (int64_t &pos, int &dir, int stride) const
 {
 	assert (&pos != 0);
 	assert (&dir != 0);
@@ -730,7 +730,7 @@ void	Voice::advance_cursor_pos (int64_t &pos, int &dir, long stride) const
 
 
 
-void	Voice::check_finished (float *out_ptr_arr [], long &dest_pos, long nbr_spl)
+void	Voice::check_finished (float *out_ptr_arr [], int &dest_pos, int nbr_spl)
 {
 	assert (&dest_pos != 0);
 	assert (dest_pos >= 0);
@@ -740,7 +740,7 @@ void	Voice::check_finished (float *out_ptr_arr [], long &dest_pos, long nbr_spl)
 	if (   (_pbk_dir < 0 && _pos_int < 0)
 	    || (_pbk_dir > 0 && _pos_int >= _in_len))
 	{
-		const long		silence_len = nbr_spl - dest_pos;
+		const int      silence_len = nbr_spl - dest_pos;
 
 		if (silence_len > 0)
 		{

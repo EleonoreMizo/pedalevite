@@ -53,7 +53,7 @@ typename SCPower <AP>::AddProc &	SCPower <AP>::use_add_proc ()
 // The pos_beg position in the input buffer corresponds to the 0 position in
 // the output buffer.
 template <class AP>
-void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, long pos_beg, long pos_end)
+void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end)
 {
 	assert (fstb::DataAlign <true>::check_ptr (out_ptr));
 	assert (chn_ptr_arr != 0);
@@ -68,9 +68,9 @@ void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_
 	const auto     not_zero = fstb::ToolsSimd::set1_f32 (not_zero_flt);
 
 	// Processes blocks
-	const long     nbr_spl       = pos_end - pos_beg;
-	const long     pos_end_block = pos_beg + (nbr_spl & -16L);
-	long           pos           = pos_beg;
+	const int      nbr_spl       = pos_end - pos_beg;
+	const int      pos_end_block = pos_beg + (nbr_spl & ~15);
+	int            pos           = pos_beg;
 	while (pos < pos_end_block)
 	{
 		auto           s_0 = not_zero;

@@ -144,7 +144,7 @@ void	RampModule::set_smooth (double ratio)
 
 
 
-void	RampModule::tick (long nbr_spl)
+void	RampModule::tick (int nbr_spl)
 {
 	int            work_len = nbr_spl;
 	if (_snh_flag)
@@ -281,7 +281,7 @@ void	RampModule::update_smooth ()
 
 
 
-void	RampModule::tick_sub (long nbr_spl)
+void	RampModule::tick_sub (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 

@@ -102,18 +102,18 @@ void	EnvFollowerRms::set_time_rel (float t)
 
 
 
-void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (out_ptr != 0);
 	assert (in_ptr != 0);
 	assert (nbr_spl > 0);
 
-	float				state = _state;
+	float          state = _state;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
-		const float		x = in_ptr [pos];
+		const float    x = in_ptr [pos];
 		process_sample_internal (state, x);
 		out_ptr [pos] = float (sqrt (state));
 
@@ -126,18 +126,18 @@ void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], lon
 
 
 
-void	EnvFollowerRms::process_block_no_sqrt (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	EnvFollowerRms::process_block_no_sqrt (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (out_ptr != 0);
 	assert (in_ptr != 0);
 	assert (nbr_spl > 0);
 
-	float				state = _state;
+	float          state = _state;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
-		const float		x = in_ptr [pos];
+		const float    x = in_ptr [pos];
 		process_sample_internal (state, x);
 		out_ptr [pos] = state;
 
@@ -152,15 +152,15 @@ void	EnvFollowerRms::process_block_no_sqrt (float out_ptr [], const float in_ptr
 
 // Input is not squared
 // Output is not square-rooted
-void	EnvFollowerRms::process_block_raw (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	EnvFollowerRms::process_block_raw (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (out_ptr != 0);
 	assert (in_ptr != 0);
 	assert (nbr_spl > 0);
 
-	float				state = _state;
+	float          state = _state;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
 		const float		x2 = in_ptr [pos];
@@ -177,17 +177,17 @@ void	EnvFollowerRms::process_block_raw (float out_ptr [], const float in_ptr [],
 
 
 
-float	EnvFollowerRms::analyse_block (const float data_ptr [], long nbr_spl)
+float	EnvFollowerRms::analyse_block (const float data_ptr [], int nbr_spl)
 {
 	assert (data_ptr != 0);
 	assert (nbr_spl > 0);
 
-	float				state = _state;
+	float          state = _state;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
-		const float		x = data_ptr [pos];
+		const float    x = data_ptr [pos];
 		process_sample_internal (state, x);
 
 		++ pos;
@@ -203,17 +203,17 @@ float	EnvFollowerRms::analyse_block (const float data_ptr [], long nbr_spl)
 
 // Input is not squared
 // Output is not square-rooted
-float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], long nbr_spl)
+float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], int nbr_spl)
 {
 	assert (data_ptr != 0);
 	assert (nbr_spl > 0);
 
-	float				state = _state;
+	float          state = _state;
 
-	long				pos = 0;
+	int            pos = 0;
 	do
 	{
-		const float		x2 = data_ptr [pos];
+		const float    x2 = data_ptr [pos];
 		assert (x2 >= 0);
 		process_sample_internal_no_sq (state, x2);
 
@@ -230,13 +230,13 @@ float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], long nbr_spl)
 
 // Input is not squared
 // Output is not square-rooted
-float	EnvFollowerRms::analyse_block_raw_cst (float x2, long nbr_spl)
+float	EnvFollowerRms::analyse_block_raw_cst (float x2, int nbr_spl)
 {
 	assert (x2 >= 0);
 	assert (nbr_spl > 0);
 
-	const float		delta = x2 - _state;
-	const float		coef  = (delta >= 0) ? _coef_a : _coef_r;
+	const float    delta = x2 - _state;
+	const float    coef  = (delta >= 0) ? _coef_a : _coef_r;
 
 	float          coef_block;
 	if (nbr_spl < 100000)

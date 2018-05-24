@@ -107,7 +107,7 @@ private:
 
 		BandParam      _param;                    // Cached parameters
 
-		long           _neutral_duration =  0;    // Time elapsed (samples) since a band is considered as neutral. If == _neutral_time, band is removed from the pack.
+		int            _neutral_duration =  0;    // Time elapsed (samples) since a band is considered as neutral. If == _neutral_time, band is removed from the pack.
 		int            _stage_index      = -1;    // Stage index in the biquad pack. -1: deactivated.
 		fstb::util::NotificationFlagCascadeSingle
 		               _change_flag;

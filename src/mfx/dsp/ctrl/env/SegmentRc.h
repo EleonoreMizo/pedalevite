@@ -53,7 +53,7 @@ public:
 	SegmentRc &    operator = (const SegmentRc &other) = default;
 
 	void           setup (float final_val, float mult, float end_thr);
-	void           setup (float final_val, float mult, float end_thr, long duration);
+	void           setup (float final_val, float mult, float end_thr, int duration);
 	void           setup_and_set_val (float final_val, float mult, float end_thr, float val);
 	void           set_val (float val);
 	inline float   get_val () const;
