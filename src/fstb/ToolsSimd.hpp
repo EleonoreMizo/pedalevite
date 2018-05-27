@@ -765,11 +765,13 @@ ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3)
 		_mm_set_epi32 (m3, m2, m1, m0)
 	));
 #elif fstb_IS (ARCHI, ARM)
-	int32x4_t      v01 = vdup_n_s32 (m0);
-	int32x4_t      v23 = vdup_n_s32 (m2);
-	v01 = vset_lane_s32 (m1, v01, 1);
-	v23 = vset_lane_s32 (m3, v23, 1);
-	return vreinterpretq_s32_f32 (vnegq_s32 (vcombine_s32 (v01, v23)));
+	float32x2_t    v01 = vdup_n_f32 (m0);
+	float32x2_t    v23 = vdup_n_f32 (m2);
+	v01 = vset_lane_f32 (m1, v01, 1);
+	v23 = vset_lane_f32 (m3, v23, 1);
+	return vreinterpretq_f32_s32 (vnegq_s32 (vreinterpretq_s32_f32 (
+		vcombine_f32 (v01, v23)
+	)));
 #endif
 #else // Safer but slower version
 #if fstb_IS (ARCHI, X86)
@@ -778,12 +780,15 @@ ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3)
 		_mm_set1_epi32 (1)
 	));
 #elif fstb_IS (ARCHI, ARM)
-	int32x4_t      v01 = vdup_n_s32 (!m0);
-	int32x4_t      v23 = vdup_n_s32 (!m2);
-	v01 = vset_lane_s32 (!m1, v01, 1);
-	v23 = vset_lane_s32 (!m3, v23, 1);
+	float32x2_t    v01 = vdup_n_f32 (!m0);
+	float32x2_t    v23 = vdup_n_f32 (!m2);
+	v01 = vset_lane_f32 (!m1, v01, 1);
+	v23 = vset_lane_f32 (!m3, v23, 1);
 	const auto     one  = vdupq_n_s32 (1);
-	return vreinterpretq_s32_f32 (vsubq_s32 (vcombine_s32 (v01, v23), one));
+	return vreinterpretq_f32_s32 (vsubq_s32 (
+		vreinterpretq_s32_f32 (vcombine_f32 (v01, v23)),
+		one
+	));
 #endif // ff_arch_CPU
 #endif // Versions
 }
