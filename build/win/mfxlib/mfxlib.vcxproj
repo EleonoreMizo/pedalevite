@@ -387,6 +387,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\Compander.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR1LrSimdHelper.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR1LrSimdHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.h" />

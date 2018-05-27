@@ -321,6 +321,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/RingBufVectorizer.hpp \
         ../../src/mfx/dsp/dyn/Compander.cpp \
         ../../src/mfx/dsp/dyn/Compander.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerAHR1LrSimdHelper.h.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerAHR1LrSimdHelper.h.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.h \

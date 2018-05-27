@@ -407,6 +407,45 @@ ToolsSimd::VectF32	ToolsSimd::max_f32 (VectF32 lhs, VectF32 rhs)
 
 
 
+float	ToolsSimd::sum_h_flt (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	v = _mm_add_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
+	return _mm_cvtss_f32 (_mm_add_ss (v, _mm_shuffle_ps (v, v, 1)));
+#elif fstb_IS (ARCHI, ARM)
+	float32x2_t    v2 = vadd_f32 (vget_high_f32 (v), vget_low_f32 (v));
+	return vget_lane_f32 (vpadd_f32 (v2, v2), 0);
+#endif // ff_arch_CPU
+}
+
+
+
+float	ToolsSimd::min_h_flt (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	v = _mm_min_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
+	return _mm_cvtss_f32 (_mm_min_ss (v, _mm_shuffle_ps (v, v, 1)));
+#elif fstb_IS (ARCHI, ARM)
+	float32x2_t    v2 = vmin_f32 (vget_high_f32 (v), vget_low_f32 (v));
+	return vget_lane_f32 (vpmin_f32 (v2, v2), 0);
+#endif // ff_arch_CPU
+}
+
+
+
+float	ToolsSimd::max_h_flt (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	v = _mm_max_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
+	return _mm_cvtss_f32 (_mm_max_ss (v, _mm_shuffle_ps (v, v, 1)));
+#elif fstb_IS (ARCHI, ARM)
+	float32x2_t    v2 = vmax_f32 (vget_high_f32 (v), vget_low_f32 (v));
+	return vget_lane_f32 (vpmax_f32 (v2, v2), 0);
+#endif // ff_arch_CPU
+}
+
+
+
 ToolsSimd::VectF32	ToolsSimd::round (VectF32 v)
 {
 #if fstb_IS (ARCHI, X86)
@@ -619,19 +658,6 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 
 
 
-float	ToolsSimd::sum_h_flt (VectF32 v)
-{
-#if fstb_IS (ARCHI, X86)
-	v = _mm_add_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
-	return _mm_cvtss_f32 (_mm_add_ss (v, _mm_shuffle_ps (v, v, 1)));
-#elif fstb_IS (ARCHI, ARM)
-	float32x2_t    v2 = vadd_f32 (vget_high_f32 (v), vget_low_f32 (v));
-	return vget_lane_f32 (vpadd_f32 (v2, v2), 0);
-#endif // ff_arch_CPU
-}
-
-
-
 ToolsSimd::VectF32	ToolsSimd::select (VectF32 cond, VectF32 v_t, VectF32 v_f)
 {
 #if fstb_IS (ARCHI, X86)
@@ -728,6 +754,39 @@ bool	ToolsSimd::or_h (VectF32 cond)
 }
 
 
+
+// "true" must be 1 and nothing else.
+ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3)
+{
+#if 1 // Fast version
+#if fstb_IS (ARCHI, X86)
+	return _mm_castsi128_ps (_mm_sub_epi32 (
+		_mm_setzero_si128 (),
+		_mm_set_epi32 (m3, m2, m1, m0)
+	));
+#elif fstb_IS (ARCHI, ARM)
+	int32x4_t      v01 = vdup_n_s32 (m0);
+	int32x4_t      v23 = vdup_n_s32 (m2);
+	v01 = vset_lane_s32 (m1, v01, 1);
+	v23 = vset_lane_s32 (m3, v23, 1);
+	return vreinterpretq_s32_f32 (vnegq_s32 (vcombine_s32 (v01, v23)));
+#endif
+#else // Safer but slower version
+#if fstb_IS (ARCHI, X86)
+	return _mm_castsi128_ps (_mm_sub_epi32 (
+		_mm_set_epi32 (!m3, !m2, !m1, !m0),
+		_mm_set1_epi32 (1)
+	));
+#elif fstb_IS (ARCHI, ARM)
+	int32x4_t      v01 = vdup_n_s32 (!m0);
+	int32x4_t      v23 = vdup_n_s32 (!m2);
+	v01 = vset_lane_s32 (!m1, v01, 1);
+	v23 = vset_lane_s32 (!m3, v23, 1);
+	const auto     one  = vdupq_n_s32 (1);
+	return vreinterpretq_s32_f32 (vsubq_s32 (vcombine_s32 (v01, v23), one));
+#endif // ff_arch_CPU
+#endif // Versions
+}
 
 // p1[1 0] p0[1 0]
 ToolsSimd::VectF32	ToolsSimd::interleave_2f32_lo (VectF32 p0, VectF32 p1)

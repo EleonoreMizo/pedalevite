@@ -103,6 +103,26 @@ protected:
 
 private:
 
+	typedef	float	VectFloat4 [4];
+	fstb_TYPEDEF_ALIGN (16, VectFloat4, VectFloat4Aligned);
+
+	fstb_FORCEINLINE void
+	               check_and_reset (fstb::ToolsSimd::VectF32 &hold_state, int nbr_spl);
+	fstb_FORCEINLINE static bool
+	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in);
+
+	VectFloat4Aligned
+	               _state [ORD];
+	VectFloat4Aligned                   // Mask. 0 = release, 0xFF..F = hold
+	               _hold_state;
+	VectFloat4Aligned                   // Mask. 0 = to be reset, 0xFF..F = keep holding
+	               _reset_mask;
+	float          _coef_atk;
+	float          _coef_rls;
+	int            _hold_time;
+	int            _hold_t_q;
+	int            _hold_counter;       // Samples. >= _hold_t_q: reset
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

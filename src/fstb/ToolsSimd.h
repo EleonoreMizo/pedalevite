@@ -145,6 +145,10 @@ public:
 	               max_f32 (VectF32 lhs, VectF32 rhs);
 	static inline float
 	               sum_h_flt (VectF32 v);
+	static inline float
+	               min_h_flt (VectF32 v);
+	static inline float
+	               max_h_flt (VectF32 v);
 	static inline VectF32
 	               round (VectF32 v);
 	static inline VectF32
@@ -178,6 +182,8 @@ public:
 	               and_h (VectF32 cond);
 	static inline bool
 	               or_h (VectF32 cond);
+	static inline VectF32
+	               set_mask_f32 (bool m0, bool m1, bool m2, bool m3);
 
 	static inline VectF32
 	               interleave_2f32_lo (VectF32 p0, VectF32 p1);
