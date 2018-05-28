@@ -131,6 +131,7 @@ private:
 	               use_ctrl_link (const doc::CtrlLinkSet &cls) const;
 	EvtProp        change_something (int node_id, int dir);
 	void           change_source (int dir);
+	void           change_step (int dir);
 	void           change_curve (int dir);
 	void           change_u2b ();
 	void           change_val (int mm, int step_index, int dir);

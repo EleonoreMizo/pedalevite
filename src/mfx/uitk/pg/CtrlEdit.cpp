@@ -639,6 +639,11 @@ MsgHandlerInterface::EvtProp	CtrlEdit::change_something (int node_id, int dir)
 		change_source (dir);
 		ret_val = EvtProp_CATCH;
 	}
+	else if (node_id == Entry_STEP_REL)
+	{
+		change_step (dir);
+		ret_val = EvtProp_CATCH;
+	}
 	else if (node_id == Entry_CURVE)
 	{
 		change_curve (dir);
@@ -726,6 +731,51 @@ void	CtrlEdit::change_source (int dir)
 					create_source (csn_index);
 			}
 		}
+	}
+
+	const int      slot_id = _loc_edit._slot_id;
+	const PiType   type    = _loc_edit._pi_type;
+	const int      index   = _loc_edit._param_index;
+	_model_ptr->set_param_ctrl (slot_id, type, index, cls);
+}
+
+
+
+void	CtrlEdit::change_step (int dir)
+{
+	doc::CtrlLinkSet  cls (_cls);
+	doc::CtrlLink &   cl (use_ctrl_link (cls));
+
+	if (cl._step <= 0)
+	{
+		cl._step = 1.0f / 20;
+	}
+	else
+	{
+		const int      nbr_steps = fstb::round_int (1.0 / cl._step);
+		static const int  step_list_size = 24;
+		static const std::array <int, step_list_size>   step_list =
+		{{
+			1, 2, 3, 4, 5, 6, 7, 8, 9,
+			10, 12, 16,
+			20, 24, 32,
+			40, 48, 64,
+			80, 96, 128,
+			160, 192, 256
+		}};
+		assert (dir == 1 || dir == -1);
+		int            nbr_steps_new = -1;
+		for (int cnt = 0; cnt < step_list_size && nbr_steps_new <= 0; ++cnt)
+		{
+			const int   index = dir * cnt + (step_list_size - 1) * ((1 - dir) >> 1);
+			const int   val   = step_list [index];
+			if (val * dir > nbr_steps * dir || cnt == step_list_size - 1)
+			{
+				nbr_steps_new = val;
+			}
+		}
+		assert (nbr_steps_new > 0);
+		cl._step = 1.0f / nbr_steps_new;
 	}
 
 	const int      slot_id = _loc_edit._slot_id;
