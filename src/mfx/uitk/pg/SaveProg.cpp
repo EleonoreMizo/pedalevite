@@ -259,6 +259,16 @@ void	SaveProg::do_set_preset_name (std::string name)
 
 
 
+void	SaveProg::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+{
+	if (bank_index == _save_bank_index)
+	{
+		update_display ();
+	}
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

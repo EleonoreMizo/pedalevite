@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
 #include "mfx/piapi/PluginDescInterface.h"
+#include "mfx/ui/Font.h"
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NText.h"
@@ -1051,6 +1052,81 @@ void	Tools::print_param_action (std::string &model_name, std::string &param_name
 			fstb::snprintf4all (txt_0, sizeof (txt_0), "%d", param._index);
 			param_name = txt_0;
 		}
+	}
+}
+
+
+
+void	Tools::create_bank_list (TxtArray &bank_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w, bool chk_cur_flag)
+{
+	const int      h_m   = fnt.get_char_h ();
+	const doc::Setup &   setup = view.use_setup ();
+	const int      bank_index_cur = view.get_bank_index ();
+	for (int bank_index = 0; bank_index < Cst::_nbr_banks; ++bank_index)
+	{
+		const int      node_id = bank_index;
+		TxtSPtr        name_sptr (new NText (node_id));
+
+		char           txt_0 [255+1];
+		const doc::Bank & bank = setup._bank_arr [bank_index];
+
+		if (chk_cur_flag)
+		{
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0),
+				"%s %02d %s",
+				(bank_index == bank_index_cur) ? "\xE2\x9C\x93" : " ",   // U+2713 CHECK MARK
+				bank_index,
+				bank._name.c_str ()
+			);
+		}
+		else
+		{
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), "%02d %s", bank_index, bank._name.c_str ()
+			);
+		}
+
+		name_sptr->set_font (fnt);
+		name_sptr->set_text (txt_0);
+		name_sptr->set_coord (Vec2d (0, y + bank_index * h_m));
+		name_sptr->set_frame (Vec2d (w, 0), Vec2d ());
+
+		bank_list.push_back (name_sptr);
+		menu.push_back (name_sptr);
+		PageMgrInterface::add_nav (nav_list, node_id);
+	}
+}
+
+
+
+void	Tools::create_prog_list (TxtArray &prog_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w)
+{
+	const int      h_m   = fnt.get_char_h ();
+	const doc::Setup &   setup = view.use_setup ();
+	const int      bank_index  = view.get_bank_index ();
+	const doc::Bank &    bank  = setup._bank_arr [bank_index];
+
+	for (int prog_index = 0; prog_index < Cst::_nbr_presets_per_bank; ++prog_index)
+	{
+		const int      node_id = prog_index;
+		TxtSPtr        name_sptr (new NText (node_id));
+
+		char           txt_0 [255+1];
+		const doc::Preset &  preset = bank._preset_arr [prog_index];
+
+		fstb::snprintf4all (
+			txt_0, sizeof (txt_0), "%02d %s", prog_index, preset._name.c_str ()
+		);
+
+		name_sptr->set_font (fnt);
+		name_sptr->set_text (txt_0);
+		name_sptr->set_coord (Vec2d (0, y + prog_index * h_m));
+		name_sptr->set_frame (Vec2d (w, 0), Vec2d ());
+
+		prog_list.push_back (name_sptr);
+		menu.push_back (name_sptr);
+		PageMgrInterface::add_nav (nav_list, node_id);
 	}
 }
 

@@ -465,6 +465,31 @@ void	Model::set_preset_name (std::string name)
 
 
 
+void	Model::set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+{
+	assert (bank_index >= 0);
+	assert (bank_index < Cst::_nbr_banks);
+	assert (preset_index >= 0);
+	assert (preset_index < Cst::_nbr_presets_per_bank);
+
+	_setup._bank_arr [preset_index]._preset_arr [preset_index] = preset;
+
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_preset (bank_index, preset_index, preset);
+	}
+
+	if (   _edit_flag
+	    && _edit_preset_flag
+	    && bank_index   == _bank_index
+	    && preset_index == _preset_index)
+	{
+		activate_preset (_preset_index);
+	}
+}
+
+
+
 void	Model::activate_preset (int preset_index)
 {
 	assert (preset_index >= 0);

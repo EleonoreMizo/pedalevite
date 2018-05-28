@@ -64,6 +64,8 @@
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/uitk/ParentInterface.h"
 #include "mfx/uitk/pg/BankMenu.h"
+#include "mfx/uitk/pg/BankOrga.h"
+#include "mfx/uitk/pg/BankMove.h"
 #include "mfx/uitk/pg/CurProg.h"
 #include "mfx/uitk/pg/CtrlEdit.h"
 #include "mfx/uitk/pg/CtrlProg.h"
@@ -90,6 +92,7 @@
 #include "mfx/uitk/pg/PedalEditCycle.h"
 #include "mfx/uitk/pg/PedalEditGroup.h"
 #include "mfx/uitk/pg/PedalEditStep.h"
+#include "mfx/uitk/pg/ProgMove.h"
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/pg/SaveProg.h"
 #include "mfx/uitk/pg/SettingsOther.h"
@@ -340,6 +343,12 @@ public:
 	               _page_menu_presets;
 	mfx::uitk::pg::ListPresets
 	               _page_list_presets;
+	mfx::uitk::pg::BankOrga
+	               _page_bank_orga;
+	mfx::uitk::pg::BankMove
+	               _page_bank_move;
+	mfx::uitk::pg::ProgMove
+	               _page_prog_move;
 
 	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
 	               ~Context ();
@@ -450,6 +459,9 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_page_settings_other (_page_switcher)
 ,	_page_menu_presets (_page_switcher, _loc_edit)
 ,	_page_list_presets (_page_switcher, _loc_edit)
+,	_page_bank_orga (_page_switcher, _loc_edit_pedal)
+,	_page_bank_move (_page_switcher)
+,	_page_prog_move (_page_switcher)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
@@ -597,6 +609,9 @@ fprintf (stderr, "Reading ESC button...\n");
 	_page_switcher.add_page (mfx::uitk::pg::PageType_SETTINGS_OTHER   , _page_settings_other   );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_PRESETS     , _page_menu_presets     );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_LIST_PRESETS     , _page_list_presets     );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_BANK_ORGA        , _page_bank_orga        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_BANK_MOVE        , _page_bank_move        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PROG_MOVE        , _page_prog_move        );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

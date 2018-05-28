@@ -374,6 +374,14 @@ void	View::do_set_preset_name (std::string name)
 
 
 
+void	View::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+{
+	_setup._bank_arr [bank_index]._preset_arr [preset_index] = preset;
+	mfx_View_PROPAGATE (set_preset (bank_index, preset_index, preset));
+}
+
+
+
 void	View::do_activate_preset (int index)
 {
 	_preset_index = index;

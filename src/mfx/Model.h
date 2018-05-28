@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ChnMode.h"
 #include "mfx/ModelObserverInterface.h"
 
+#include <array>
 #include <map>
 
 
@@ -81,6 +82,15 @@ class Model
 
 public:
 
+	enum BankType
+	{
+		BankType_PRE = 0,
+		BankType_POST,
+		BankType_STD,
+
+		BankType_NBR_ELT
+	};
+
 	explicit       Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device, FileIOInterface &file_io);
 	virtual        ~Model ();
 
@@ -110,6 +120,7 @@ public:
 	void           select_bank (int index);
 	void           set_bank_name (std::string name);
 	void           set_preset_name (std::string name);
+	void           set_preset (int bank_index, int preset_index, const doc::Preset &preset);
 	void           activate_preset (int preset_index);
 	void           store_preset (int preset_index, int bank_index);
 	void           set_chn_mode (ChnMode mode);

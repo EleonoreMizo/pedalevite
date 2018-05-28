@@ -104,6 +104,7 @@ public:
 	void           select_bank (int index);
 	void           set_bank_name (std::string name);
 	void           set_preset_name (std::string name);
+	void           set_preset (int bank_index, int preset_index, const doc::Preset &preset);
 	void           activate_preset (int index);
 	void           store_preset (int preset_index, int bank_index);
 	void           set_chn_mode (ChnMode mode);
@@ -148,6 +149,7 @@ protected:
 	virtual void   do_select_bank (int index) = 0;
 	virtual void   do_set_bank_name (std::string name) = 0;
 	virtual void   do_set_preset_name (std::string name) = 0;
+	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset) = 0;
 	virtual void   do_activate_preset (int index) = 0;
 	virtual void   do_store_preset (int preset_index, int bank_index) = 0;
 	virtual void   do_set_chn_mode (ChnMode mode) = 0;

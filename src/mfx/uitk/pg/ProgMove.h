@@ -1,7 +1,9 @@
 /*****************************************************************************
 
-        SaveProg.h
-        Author: Laurent de Soras, 2016
+        ProgMove.h
+        Author: Laurent de Soras, 2018
+
+Use call_page() to access this page
 
 --- Legal stuff ---
 
@@ -16,8 +18,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_SaveProg_HEADER_INCLUDED)
-#define mfx_uitk_pg_SaveProg_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_ProgMove_HEADER_INCLUDED)
+#define mfx_uitk_pg_ProgMove_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,17 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
-#include "mfx/uitk/PageMgrInterface.h"
-#include "mfx/Cst.h"
-
-#include <array>
-#include <memory>
-#include <string>
-#include <vector>
 
 
 
@@ -46,6 +40,7 @@ namespace mfx
 namespace uitk
 {
 
+class PageMgrInterface;
 class PageSwitcher;
 
 namespace pg
@@ -53,7 +48,7 @@ namespace pg
 
 
 
-class SaveProg
+class ProgMove
 :	public PageInterface
 {
 
@@ -61,8 +56,8 @@ class SaveProg
 
 public:
 
-	explicit       SaveProg (PageSwitcher &page_switcher);
-	virtual        ~SaveProg () = default;
+	explicit       ProgMove (PageSwitcher &page_switcher);
+	virtual        ~ProgMove () = default;
 
 
 
@@ -79,8 +74,10 @@ protected:
 	               do_handle_evt (const NodeEvt &evt);
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
+	virtual void   do_select_bank (int index);
 	virtual void   do_set_preset_name (std::string name);
 	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset);
+	virtual void   do_store_preset (int preset_index, int bank_index);
 
 
 
@@ -90,23 +87,25 @@ private:
 
 	enum State
 	{
-		State_NORMAL = 0,
-		State_EDIT_NAME
+		State_SEL = 0,
+		State_MOV,
+
+		State_NBR_ELT
 	};
 
 	enum Entry
 	{
-		Entry_WINDOW    = 1000,
-		Entry_BANK,
-		Entry_PROG_LIST
+		Entry_WINDOW = 1000,
+		Entry_TITLE
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::array <TxtSPtr, Cst::_nbr_presets_per_bank> TxtArray;
+	typedef std::vector <TxtSPtr> TxtArray;
 
 	void           update_display ();
-	EvtProp        change_bank (int dir);
+	EvtProp        move_prog (int index_new);
+	void           save_if_req ();
 
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
@@ -117,15 +116,13 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains 1 entry (current bank) + the program list
-	TxtSPtr        _bank_sptr;
+	WinSPtr        _menu_sptr;    // Contains a few entries (selectable) + the program list
+	TxtSPtr        _title_sptr;
 	TxtArray       _prog_list;
-
-	State          _state;
-	int            _save_bank_index;
-	int            _save_preset_index;
-	EditText::Param
-	               _name_param;
+	State          _state;        // Prog selection or move
+	bool           _moving_flag;  // Set during a move operation
+	bool           _moved_flag;   // The program has been moved, the document needs to be saved to disk at exit
+	int            _prog_index;   // Previous program location
 
 
 
@@ -133,13 +130,14 @@ private:
 
 private:
 
-	               SaveProg ()                               = delete;
-	               SaveProg (const SaveProg &other)          = delete;
-	SaveProg &     operator = (const SaveProg &other)        = delete;
-	bool           operator == (const SaveProg &other) const = delete;
-	bool           operator != (const SaveProg &other) const = delete;
+	               ProgMove ()                               = delete;
+	               ProgMove (const ProgMove &other)    = delete;
+	ProgMove &
+	               operator = (const ProgMove &other)        = delete;
+	bool           operator == (const ProgMove &other) const = delete;
+	bool           operator != (const ProgMove &other) const = delete;
 
-}; // class SaveProg
+}; // class ProgMove
 
 
 
@@ -149,11 +147,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/SaveProg.hpp"
+//#include "mfx/uitk/pg/ProgMove.hpp"
 
 
 
-#endif   // mfx_uitk_pg_SaveProg_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_ProgMove_HEADER_INCLUDED
 
 
 

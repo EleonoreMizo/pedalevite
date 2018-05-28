@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/uitk/pg/BankMenu.h"
+#include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -60,14 +61,17 @@ BankMenu::BankMenu (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 ,	_page_size ()
 ,	_fnt_ptr (0)
 ,	_menu_sptr (new NWindow (Entry_WINDOW))
+,	_orga_sptr (new NText (  Entry_ORGANIZE))
 ,	_import_sptr (new NText (Entry_IMPORT))
 ,	_export_sptr (new NText (Entry_EXPORT))
 ,	_layout_sptr (new NText (Entry_LAYOUT))
 ,	_bank_list ()
 {
+	_orga_sptr  ->set_text ("Organize\xE2\x80\xA6");
 	_import_sptr->set_text ("Import bank\xE2\x80\xA6");
 	_export_sptr->set_text ("Export bank\xE2\x80\xA6");
 	_layout_sptr->set_text ("Pedal layout\xE2\x80\xA6");
+	_orga_sptr  ->set_justification (0.5f, 0.0f, false);
 	_import_sptr->set_justification (0.5f, 0.0f, false);
 	_export_sptr->set_justification (0.5f, 0.0f, false);
 	_layout_sptr->set_justification (0.5f, 0.0f, false);
@@ -87,6 +91,7 @@ void	BankMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
 
+	_orga_sptr  ->set_font (*_fnt_ptr);
 	_import_sptr->set_font (*_fnt_ptr);
 	_export_sptr->set_font (*_fnt_ptr);
 	_layout_sptr->set_font (*_fnt_ptr);
@@ -98,10 +103,12 @@ void	BankMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
 
-	_import_sptr->set_coord (Vec2d (x_mid, 0 * h_m));
-	_export_sptr->set_coord (Vec2d (x_mid, 1 * h_m));
-	_layout_sptr->set_coord (Vec2d (x_mid, 2 * h_m));
+	_orga_sptr  ->set_coord (Vec2d (x_mid, 0 * h_m));
+	_import_sptr->set_coord (Vec2d (x_mid, 1 * h_m));
+	_export_sptr->set_coord (Vec2d (x_mid, 2 * h_m));
+	_layout_sptr->set_coord (Vec2d (x_mid, 3 * h_m));
 
+	_orga_sptr  ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_import_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_export_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_layout_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -136,7 +143,11 @@ MsgHandlerInterface::EvtProp	BankMenu::do_handle_evt (const NodeEvt &evt)
 		{
 		case Button_S:
 			ret_val = EvtProp_CATCH;
-			if (node_id == Entry_IMPORT)
+			if (node_id == Entry_ORGANIZE)
+			{
+				_page_switcher.switch_to (PageType_BANK_ORGA, 0);
+			}
+			else if (node_id == Entry_IMPORT)
 			{
 				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
 				/*** To do ***/
@@ -211,6 +222,9 @@ void	BankMenu::update_display ()
 	_menu_sptr->clear_all_nodes ();
 	PageMgrInterface::NavLocList  nav_list;
 
+	_menu_sptr->push_back (_orga_sptr);
+	PageMgrInterface::add_nav (nav_list, Entry_ORGANIZE);
+
 	_menu_sptr->push_back (_import_sptr);
 	PageMgrInterface::add_nav (nav_list, Entry_IMPORT);
 
@@ -220,33 +234,10 @@ void	BankMenu::update_display ()
 	_menu_sptr->push_back (_layout_sptr);
 	PageMgrInterface::add_nav (nav_list, Entry_LAYOUT);
 
-	const doc::Setup &   setup = _view_ptr->use_setup ();
-	const int      bank_index_cur = _view_ptr->get_bank_index ();
-	for (int bank_index = 0; bank_index < Cst::_nbr_banks; ++bank_index)
-	{
-		const int      node_id = bank_index;
-		TxtSPtr        name_sptr (new NText (node_id));
-
-		char           txt_0 [255+1];
-		const doc::Bank & bank = setup._bank_arr [bank_index];
-
-		fstb::snprintf4all (
-			txt_0, sizeof (txt_0),
-			"%s %02d %s",
-			(bank_index == bank_index_cur) ? "\xE2\x9C\x93" : " ",   // U+2713 CHECK MARK
-			bank_index,
-			bank._name.c_str ()
-		);
-
-		name_sptr->set_font (*_fnt_ptr);
-		name_sptr->set_text (txt_0);
-		name_sptr->set_coord (Vec2d (0, (bank_index + 3) * h_m));
-		name_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-
-		_bank_list.push_back (name_sptr);
-		_menu_sptr->push_back (name_sptr);
-		PageMgrInterface::add_nav (nav_list, node_id);
-	}
+	Tools::create_bank_list (
+		_bank_list, *_menu_sptr, nav_list, *_view_ptr, *_fnt_ptr,
+		4 * h_m, scr_w, true
+	);
 
 	_page_ptr->set_nav_layout (nav_list);
 

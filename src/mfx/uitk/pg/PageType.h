@@ -73,6 +73,9 @@ enum PageType
 	PageType_SETTINGS_OTHER,
 	PageType_MENU_PRESETS,
 	PageType_LIST_PRESETS,
+	PageType_BANK_ORGA,
+	PageType_BANK_MOVE,
+	PageType_PROG_MOVE,
 
 	PageType_NBR_ELT
 

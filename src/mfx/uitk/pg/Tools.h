@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/uitk/pg/PedalConf.h"
 #include "mfx/uitk/MsgHandlerInterface.h"
+#include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/PiType.h"
 
 #include <string>
@@ -61,6 +62,7 @@ namespace piapi
 namespace uitk
 {
 
+class ContainerInterface;
 class NText;
 
 namespace pg
@@ -76,6 +78,9 @@ class Tools
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
+
+	typedef std::shared_ptr <NText> TxtSPtr;
+	typedef std::vector <TxtSPtr> TxtArray;
 
 	class NodeEntry
 	{
@@ -118,6 +123,9 @@ public:
 	static std::string
 	               find_fx_type_in_preset (const std::string &label, const doc::Preset &preset);
 	static void    print_param_action (std::string &model_name, std::string &param_name, const doc::ActionParam &param, const Model &model, const View &view);
+
+	static void    create_bank_list (TxtArray &bank_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w, bool chk_cur_flag);
+	static void    create_prog_list (TxtArray &prog_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w);
 
 
 

@@ -761,6 +761,8 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\PageSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\ParentInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\BankMenu.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\BankMove.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\BankOrga.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlEdit.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlProg.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlSrcNamed.h" />
@@ -790,6 +792,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditStep.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditCycle.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditGroup.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgMove.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Question.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SaveProg.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SettingsOther.h" />
@@ -1110,6 +1113,8 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\PageSwitcher.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\ParentInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\BankMenu.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\BankMove.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\BankOrga.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlEdit.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlProg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlSrcNamed.cpp" />
@@ -1137,6 +1142,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditStep.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditCycle.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditGroup.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgMove.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Question.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SaveProg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SettingsOther.cpp" />

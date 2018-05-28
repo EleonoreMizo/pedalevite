@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        SaveProg.h
-        Author: Laurent de Soras, 2016
+        BankOrga.h
+        Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_SaveProg_HEADER_INCLUDED)
-#define mfx_uitk_pg_SaveProg_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_BankOrga_HEADER_INCLUDED)
+#define mfx_uitk_pg_BankOrga_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,17 +27,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/EditText.h"
+#include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/NText.h"
-#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
-#include "mfx/Cst.h"
-
-#include <array>
-#include <memory>
-#include <string>
-#include <vector>
 
 
 
@@ -53,7 +46,7 @@ namespace pg
 
 
 
-class SaveProg
+class BankOrga
 :	public PageInterface
 {
 
@@ -61,8 +54,8 @@ class SaveProg
 
 public:
 
-	explicit       SaveProg (PageSwitcher &page_switcher);
-	virtual        ~SaveProg () = default;
+	explicit       BankOrga (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
+	virtual        ~BankOrga () = default;
 
 
 
@@ -78,54 +71,33 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
-	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_preset_name (std::string name);
-	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset);
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	enum State
-	{
-		State_NORMAL = 0,
-		State_EDIT_NAME
-	};
-
 	enum Entry
 	{
-		Entry_WINDOW    = 1000,
-		Entry_BANK,
-		Entry_PROG_LIST
+		Entry_MV_BANK = 0,
+		Entry_MV_PROG,
+
+		Entry_NBR_ELT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
-	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::array <TxtSPtr, Cst::_nbr_presets_per_bank> TxtArray;
-
-	void           update_display ();
-	EvtProp        change_bank (int dir);
 
 	PageSwitcher & _page_switcher;
-	Model *        _model_ptr;    // 0 = not connected
-	const View *   _view_ptr;     // 0 = not connected
+	PedalEditContext &
+	               _pedal_ctx;
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains 1 entry (current bank) + the program list
-	TxtSPtr        _bank_sptr;
-	TxtArray       _prog_list;
-
-	State          _state;
-	int            _save_bank_index;
-	int            _save_preset_index;
-	EditText::Param
-	               _name_param;
+	TxtSPtr        _mv_bank_sptr;
+	TxtSPtr        _mv_prog_sptr;
 
 
 
@@ -133,13 +105,13 @@ private:
 
 private:
 
-	               SaveProg ()                               = delete;
-	               SaveProg (const SaveProg &other)          = delete;
-	SaveProg &     operator = (const SaveProg &other)        = delete;
-	bool           operator == (const SaveProg &other) const = delete;
-	bool           operator != (const SaveProg &other) const = delete;
+	               BankOrga ()                               = delete;
+	               BankOrga (const BankOrga &other)          = delete;
+	BankOrga &     operator = (const BankOrga &other)        = delete;
+	bool           operator == (const BankOrga &other) const = delete;
+	bool           operator != (const BankOrga &other) const = delete;
 
-}; // class SaveProg
+}; // class BankOrga
 
 
 
@@ -149,11 +121,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/SaveProg.hpp"
+//#include "mfx/uitk/pg/BankOrga.hpp"
 
 
 
-#endif   // mfx_uitk_pg_SaveProg_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_BankOrga_HEADER_INCLUDED
 
 
 

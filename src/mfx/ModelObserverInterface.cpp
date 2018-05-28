@@ -140,6 +140,18 @@ void	ModelObserverInterface::set_preset_name (std::string name)
 
 
 
+void	ModelObserverInterface::set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+{
+	assert (bank_index >= 0);
+	assert (bank_index < Cst::_nbr_banks);
+	assert (preset_index >= 0);
+	assert (preset_index < Cst::_nbr_presets_per_bank);
+
+	do_set_preset (bank_index, preset_index, preset);
+}
+
+
+
 // set_slot_info_for_current_preset to be called later
 void	ModelObserverInterface::activate_preset (int preset)
 {

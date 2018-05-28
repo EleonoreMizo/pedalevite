@@ -816,6 +816,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputType.h \
         ../../src/mfx/uitk/pg/BankMenu.cpp \
         ../../src/mfx/uitk/pg/BankMenu.h \
+        ../../src/mfx/uitk/pg/BankMove.cpp \
+        ../../src/mfx/uitk/pg/BankMove.h \
+        ../../src/mfx/uitk/pg/BankOrga.cpp \
+        ../../src/mfx/uitk/pg/BankOrga.h \
         ../../src/mfx/uitk/pg/CtrlEdit.cpp \
         ../../src/mfx/uitk/pg/CtrlEdit.h \
         ../../src/mfx/uitk/pg/CtrlProg.cpp \
@@ -872,6 +876,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/PedalEditCycle.h \
         ../../src/mfx/uitk/pg/PedalEditStep.cpp \
         ../../src/mfx/uitk/pg/PedalEditStep.h \
+        ../../src/mfx/uitk/pg/ProgMove.cpp \
+        ../../src/mfx/uitk/pg/ProgMove.h \
         ../../src/mfx/uitk/pg/Question.cpp \
         ../../src/mfx/uitk/pg/Question.h \
         ../../src/mfx/uitk/pg/SaveProg.cpp \

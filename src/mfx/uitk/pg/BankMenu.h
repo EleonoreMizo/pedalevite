@@ -86,9 +86,10 @@ private:
 	enum Entry
 	{
 		Entry_WINDOW = 1000,
+		Entry_ORGANIZE,
 		Entry_IMPORT,
 		Entry_EXPORT,
-		Entry_LAYOUT,
+		Entry_LAYOUT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -109,6 +110,7 @@ private:
 	               _fnt_ptr;
 
 	WinSPtr        _menu_sptr;    // Contains a few entries (selectable) + the bank list
+	TxtSPtr        _orga_sptr;
 	TxtSPtr        _import_sptr;
 	TxtSPtr        _export_sptr;
 	TxtSPtr        _layout_sptr;
