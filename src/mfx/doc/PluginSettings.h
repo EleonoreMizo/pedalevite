@@ -76,7 +76,7 @@ public:
 	               use_pres_if_tempo_ctrl (int index);
 
 	void           ser_write (SerWInterface &ser) const;
-	void           ser_read (SerRInterface &ser);
+	void           ser_read (SerRInterface &ser, std::string model_id);
 
 	bool           is_similar (const PluginSettings &other) const;
 

@@ -218,7 +218,7 @@ void	PluginSettings::ser_write (SerWInterface &ser) const
 
 
 
-void	PluginSettings::ser_read (SerRInterface &ser)
+void	PluginSettings::ser_read (SerRInterface &ser, std::string model_id)
 {
 	ser.begin_list ();
 

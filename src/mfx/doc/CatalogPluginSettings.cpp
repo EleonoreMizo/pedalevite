@@ -99,7 +99,7 @@ void	CatalogPluginSettings::ser_write (SerWInterface &ser) const
 
 
 
-void	CatalogPluginSettings::ser_read (SerRInterface &ser)
+void	CatalogPluginSettings::ser_read (SerRInterface &ser, std::string pi_model)
 {
 	ser.begin_list ();
 
@@ -121,8 +121,8 @@ void	CatalogPluginSettings::ser_read (SerRInterface &ser)
 		_cell_arr [index] = CellSPtr (new Cell);
 		Cell &         cell = *(_cell_arr [index]);
 		ser.read (cell._name);
-		cell._main.ser_read (ser);
-		cell._mixer.ser_read (ser);
+		cell._main.ser_read (ser, pi_model);
+		cell._mixer.ser_read (ser, Cst::_plugin_mix);
 
 		ser.end_list ();
 	}

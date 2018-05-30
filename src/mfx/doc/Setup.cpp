@@ -120,7 +120,7 @@ void	Setup::ser_read (SerRInterface &ser)
 			std::string    pi_model;
 			ser.read (pi_model);
 			CatalogPluginSettings & cat = _map_plugin_settings [pi_model];
-			cat.ser_read (ser);
+			cat.ser_read (ser, pi_model);
 			ser.end_list ();
 		}
 

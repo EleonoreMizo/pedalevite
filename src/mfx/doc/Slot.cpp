@@ -190,7 +190,7 @@ void	Slot::ser_read (SerRInterface &ser)
 
 	ser.read (_pi_model);
 	ser.read (_label);
-	_settings_mixer.ser_read (ser);
+	_settings_mixer.ser_read (ser, Cst::_plugin_mix);
 
 	int            nbr_elt;
 	ser.begin_list (nbr_elt);
@@ -201,7 +201,7 @@ void	Slot::ser_read (SerRInterface &ser)
 
 		std::string    model_id;
 		ser.read (model_id);
-		_settings_all [model_id].ser_read (ser);
+		_settings_all [model_id].ser_read (ser, model_id);
 
 		ser.end_list ();
 	}

@@ -68,7 +68,7 @@ public:
 	bool           is_empty () const;
 	bool           is_preset_existing (int index) const;
 	void           ser_write (SerWInterface &ser) const;
-	void           ser_read (SerRInterface &ser);
+	void           ser_read (SerRInterface &ser, std::string pi_model);
 	void           trim_array ();
 	void           add_settings (int index, const Cell &cell);
 	void           remove_settings (int index);
