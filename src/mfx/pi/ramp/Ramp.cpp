@@ -61,6 +61,7 @@ Ramp::Ramp ()
 ,	_param_change_flag_pos ()
 ,	_ramp ()
 ,	_amp (1)
+,	_pause_flag (false)
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
@@ -72,6 +73,8 @@ Ramp::Ramp ()
 	_state_set.set_val_nat (desc_set, Param_SMOOTH, 0);
 	_state_set.set_val_nat (desc_set, Param_DIR   , 0);
 	_state_set.set_val_nat (desc_set, Param_POS   , 0);
+	_state_set.set_val_nat (desc_set, Param_DELAY , 0);
+	_state_set.set_val_nat (desc_set, Param_STATE , 0);
 
 	_state_set.add_observer (Param_TIME  , _param_change_flag_base);
 	_state_set.add_observer (Param_AMP   , _param_change_flag_base);
@@ -80,6 +83,8 @@ Ramp::Ramp ()
 	_state_set.add_observer (Param_SMOOTH, _param_change_flag_shape);
 	_state_set.add_observer (Param_DIR   , _param_change_flag_shape);
 	_state_set.add_observer (Param_POS   , _param_change_flag_pos);
+	_state_set.add_observer (Param_DELAY , _param_change_flag_base);
+	_state_set.add_observer (Param_STATE , _param_change_flag_base);
 
 	_param_change_flag_base .add_observer (_param_change_flag);
 	_param_change_flag_shape.add_observer (_param_change_flag);
@@ -161,7 +166,10 @@ void	Ramp::do_process_block (ProcInfo &proc)
 	// Parameters
 	update_param (false);
 
-	_ramp.tick (proc._nbr_spl);
+	if (! _pause_flag)
+	{
+		_ramp.tick (proc._nbr_spl);
+	}
 }
 
 
@@ -192,6 +200,11 @@ void	Ramp::update_param (bool force_flag)
 				_state_set.get_val_tgt_nat (Param_CURVE)
 			));
 			_ramp.set_type (curve);
+
+			const double   dly = _state_set.get_val_tgt_nat (Param_DELAY);
+			_ramp.set_initial_delay (dly);
+
+			_pause_flag = (_state_set.get_val_tgt_nat (Param_STATE) >= 0.5f);
 		}
 		if (_param_change_flag_pos (true) || force_flag)
 		{

@@ -96,6 +96,7 @@ private:
 
 	RampModule     _ramp;
 	float          _amp;
+	bool           _pause_flag;
 
 
 

@@ -51,6 +51,7 @@ public:
 	virtual        ~RampModule () = default;
 
 	void           set_sample_freq (double sample_freq);
+	void           set_initial_delay (double t);
 	void           set_period (double per);
 	void           set_phase (double phase);
 	void           set_sign (bool inv_flag);
@@ -75,6 +76,7 @@ protected:
 private:
 
 	void           update_step ();
+	void           update_delay ();
 	void           update_snh ();
 	void           update_smooth ();
 	inline void    tick_sub (int nbr_spl);
@@ -87,6 +89,7 @@ private:
 
 	// Real parameters
 	double         _sample_freq;		// Hz, > 0
+	double         _delay;           // s, >= 0
 	double         _period;				// s, > 0
 	bool           _inv_flag;
 	double         _snh_ratio;       // ratio relative to _period, >= 0. 0 = no Sample & Hold
@@ -94,9 +97,12 @@ private:
 	CurveType      _type;            // -1 = no oscillator constructed
 
 	// Internal variables
+	int            _pos_delay;
+	int            _delay_spl;
 	double         _pos;
 	double         _step;
 
+	bool           _delay_flag;
 	bool           _snh_flag;
 	bool           _smooth_flag;
 

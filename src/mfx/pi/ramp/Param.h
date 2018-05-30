@@ -48,6 +48,8 @@ enum Param
 	Param_SMOOTH,
 	Param_DIR,
 	Param_POS,
+	Param_DELAY,
+	Param_STATE,
 
 	Param_NBR_ELT
 

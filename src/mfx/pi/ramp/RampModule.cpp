@@ -49,13 +49,17 @@ namespace ramp
 
 RampModule::RampModule ()
 :	_sample_freq (-1)
+,	_delay (0)
 ,	_period (1)
 ,	_inv_flag (false)
 ,	_snh_ratio (0)
 ,	_smooth (0)
 ,	_type (CurveType_LINEAR)
+,	_pos_delay (0)
+,	_delay_spl (0)
 ,	_pos (0)
 ,	_step (0)
+,	_delay_flag (true)
 ,	_snh_flag (false)
 ,	_smooth_flag (false)
 ,	_snh_pos (0)
@@ -77,8 +81,19 @@ void	RampModule::set_sample_freq (double sample_freq)
 {
 	_sample_freq = sample_freq;
 	update_step ();
+	update_delay ();
 	update_snh ();
 	update_smooth ();
+}
+
+
+
+void	RampModule::set_initial_delay (double t)
+{
+	assert (t >= 0);
+
+	_delay = t;
+	update_delay ();
 }
 
 
@@ -100,9 +115,11 @@ void	RampModule::set_phase (double phase)
 	assert (phase >= 0);
 	assert (phase < 1);
 
-	_pos       = phase;
-	_snh_pos   = phase;
-	_snh_state = get_raw_val ();
+	_delay_flag = (phase <= 0);
+	_pos_delay  = 0;
+	_pos        = phase;
+	_snh_pos    = phase;
+	_snh_state  = get_raw_val ();
 }
 
 
@@ -146,27 +163,44 @@ void	RampModule::set_smooth (double ratio)
 
 void	RampModule::tick (int nbr_spl)
 {
-	int            work_len = nbr_spl;
-	if (_snh_flag)
+	if (_delay_flag)
 	{
-		// Compute the S&H position at the end of this block
-		const double   end_snh_pos     = _snh_pos + _snh_step * nbr_spl;
-		const int      end_snh_pos_int = fstb::floor_int (end_snh_pos);
-
-		// If it is triggered at least once during the block
-		if (end_snh_pos_int > 0)
+		const int      work_len = std::min (_delay_spl - _pos_delay, nbr_spl);
+		if (work_len > 0)
 		{
-			const int      spl_before_last_snh =
-				fstb::ceil_int ((end_snh_pos_int - _snh_pos) / _snh_step);
-			work_len = spl_before_last_snh;
+			nbr_spl -= work_len;
+			_pos_delay += work_len;
+		}
+		if (_pos_delay >= _delay_spl)
+		{
+			_delay_flag = false;
 		}
 	}
-	tick_sub (work_len);
 
-	const int      rem_len = nbr_spl - work_len;
-	if (rem_len > 0)
+	if (nbr_spl > 0)
 	{
-		tick_sub (rem_len);
+		int            work_len = nbr_spl;
+		if (_snh_flag)
+		{
+			// Compute the S&H position at the end of this block
+			const double   end_snh_pos     = _snh_pos + _snh_step * nbr_spl;
+			const int      end_snh_pos_int = fstb::floor_int (end_snh_pos);
+
+			// If it is triggered at least once during the block
+			if (end_snh_pos_int > 0)
+			{
+				const int      spl_before_last_snh =
+					fstb::ceil_int ((end_snh_pos_int - _snh_pos) / _snh_step);
+				work_len = spl_before_last_snh;
+			}
+		}
+		tick_sub (work_len);
+
+		const int      rem_len = nbr_spl - work_len;
+		if (rem_len > 0)
+		{
+			tick_sub (rem_len);
+		}
 	}
 }
 
@@ -226,6 +260,13 @@ void	RampModule::clear_buffers ()
 void	RampModule::update_step ()
 {
 	_step = 1.0 / (_period * _sample_freq);
+}
+
+
+
+void	RampModule::update_delay ()
+{
+	_delay_spl = fstb::round_int (_delay * _sample_freq);
 }
 
 

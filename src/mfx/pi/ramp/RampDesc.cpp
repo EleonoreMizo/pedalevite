@@ -24,9 +24,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/ramp/CurveType.h"
 #include "mfx/pi/ramp/RampDesc.h"
 #include "mfx/pi/ramp/Param.h"
@@ -51,6 +53,8 @@ namespace ramp
 RampDesc::RampDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
+	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
+
 	// Time
 	param::TplLog *   log_ptr = new param::TplLog (
 		0.1, 1000,
@@ -129,6 +133,32 @@ RampDesc::RampDesc ()
 	);
 	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
 	_desc_set.add_glob (Param_POS, lin_ptr);
+
+	// Initial delay
+	TplPll *       pll_ptr = new TplPll (
+		0, 1000,
+		"Initial delay\nDelay\nD",
+		"s",
+		param::HelperDispNum::Preset_FLOAT_STD,
+		0,
+		"%7.3f"
+	);
+	pll_ptr->use_mapper ().set_first_value (     0.0);
+	pll_ptr->use_mapper ().add_segment (0.2 ,    1.0, false);
+	pll_ptr->use_mapper ().add_segment (0.6 ,   10.0, true);
+	pll_ptr->use_mapper ().add_segment (1.0 , 1000.0, true );
+	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+	_desc_set.add_glob (Param_DELAY, pll_ptr);
+
+	// State
+	enu_ptr = new param::TplEnum (
+		"Running\nPause",
+		"State\nS",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_STATE, enu_ptr);
 }
 
 

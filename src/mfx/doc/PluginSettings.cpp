@@ -263,6 +263,18 @@ void	PluginSettings::ser_read (SerRInterface &ser, std::string model_id)
 	ser.end_list ();
 
 	ser.end_list ();
+
+	// Version adaptation
+	const int      version = ser.get_doc_version ();
+	if (model_id == "ramp")
+	{
+		if (version < 7)
+		{
+			assert (_param_list.size () == 7);
+			_param_list.push_back (0); // Initial delay
+			_param_list.push_back (0); // State
+		}
+	}
 }
 
 
