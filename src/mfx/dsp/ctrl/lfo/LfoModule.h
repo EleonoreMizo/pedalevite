@@ -112,7 +112,8 @@ protected:
 private:
 
 	static const size_t  _storage_size = 256; // Real storage size is reduced by _storage_alig - 1
-	static const size_t  _storage_alig = 16;
+	static const size_t  _storage_alig =  16;
+	static const int     _smooth_order =   3; // Smoothing order, > 0. 1 is responsive, 3 is smoother
 	typedef std::array <uint8_t, _storage_size> OscStorage;
 
 	typedef std::unique_ptr <OscStepSeq> StepSeqUPtr;
@@ -153,7 +154,8 @@ private:
 	double         _snh_step;			// Step per sample
 	double         _snh_state;
 
-	double         _smooth_state;
+	std::array <double, _smooth_order>
+	               _smooth_state_arr;
 	double         _smooth_spl_coef;	// Smoothing LPF coefficient, per sample. ^n for n samples.
 
 

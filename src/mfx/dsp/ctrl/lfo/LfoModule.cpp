@@ -80,12 +80,16 @@ LfoModule::LfoModule ()
 ,	_snh_pos (0)
 ,	_snh_step (0)
 ,	_snh_state (0)
-,	_smooth_state (0)
+,	_smooth_state_arr ()
 ,	_smooth_spl_coef (0)
 {
-	for (auto & var : _variation_arr)
+	for (auto &var : _variation_arr)
 	{
 		var = 0;
+	}
+	for (auto &state : _smooth_state_arr)
+	{
+		state = 0;
 	}
 
 	::new (get_aligned_osc ()) OscSine;
@@ -366,7 +370,7 @@ double	LfoModule::get_val () const
 	double         val;
 	if (_smooth_flag)
 	{
-		val = _smooth_state;
+		val = _smooth_state_arr [_smooth_order - 1];
 	}
 	else if (_snh_flag)
 	{
@@ -393,8 +397,12 @@ void	LfoModule::clear_buffers ()
 {
 	use_osc ().clear_buffers ();
 	const double   raw_val = use_osc ().get_val ();
+	_snh_pos      = 0;
 	_snh_state    = raw_val;
-	_smooth_state = raw_val;
+	for (auto &state : _smooth_state_arr)
+	{
+		state = raw_val;
+	}
 }
 
 
@@ -487,12 +495,23 @@ void	LfoModule::update_smooth ()
 		// Turn it on : initialize the state
 		if (! _smooth_flag)
 		{
-			_smooth_state = _snh_flag ? _snh_state : use_osc ().get_val ();
+			const double   smstate = _snh_flag ? _snh_state : use_osc ().get_val ();
+			for (auto &state : _smooth_state_arr)
+			{
+				state = smstate;
+			}
 		}
 
 		// exp (-4) ~= 0.018, this means we reach 98 % of the final amplitude
 		// after t_spl.
-		const float    t_spl = float (_period * _smooth * _sample_freq);
+		float          t_spl = float (_period * _smooth * _sample_freq);
+		if (_smooth_order > 1)
+		{
+			// Compensates the time constant for orders > 1 so the final value
+			// reaches 90% of the final amplitude at the same time whatever the
+			// order (same formula as in dyn::EnvHelper::compensate_order ()).
+			t_spl *= 3.0f / (_smooth_order * 2 + 1);
+		}
 //		_smooth_spl_coef = exp (-4.0f / t_spl);
       // +0.1f to avoid too low numbers at the input of fast_exp2
 		_smooth_spl_coef = fstb::Approx::exp2 (-5.75f / (t_spl + 0.1f));
@@ -514,10 +533,16 @@ void	LfoModule::tick_sub (int nbr_spl)
 	// but we can't do much better without sample per sample processing.
 	if (_smooth_flag)
 	{
-		const double   src = _snh_flag ? _snh_state : use_osc ().get_val ();
+		double         src = _snh_flag ? _snh_state : use_osc ().get_val ();
 		const double   k   = fstb::ipowp (_smooth_spl_coef, nbr_spl);
 		const double   a   = 1 - k;
-		_smooth_state += a * (src - _smooth_state);
+		for (int st_cnt = 0; st_cnt < _smooth_order; ++st_cnt)
+		{
+			double         cur = _smooth_state_arr [st_cnt];
+			cur += a * (src - cur);
+			_smooth_state_arr [st_cnt] = cur;
+			src                        = cur;
+		}
 	}
 
 	if (_snh_flag)
