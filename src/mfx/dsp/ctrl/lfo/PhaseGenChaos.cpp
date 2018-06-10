@@ -101,6 +101,7 @@ void	PhaseGenChaos::clear_buffers ()
 	_ramp_pos    = 0;
 	_phase_shift = 0;
 	_retrig_pos  = 0;
+	_rand_gen.seed (_rand_gen.default_seed);
 }
 
 
