@@ -127,6 +127,9 @@ public:
 	static void    create_bank_list (TxtArray &bank_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w, bool chk_cur_flag);
 	static void    create_prog_list (TxtArray &prog_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w);
 
+	static void    draw_curve (std::vector <int32_t> y_arr, uint8_t *disp_ptr, int height, int stride);
+	static void    complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height, int stride);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

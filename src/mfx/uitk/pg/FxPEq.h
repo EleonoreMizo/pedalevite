@@ -136,7 +136,6 @@ private:
 	void           display_graduations (float f_beg, float f_end, int nbr_freq);
 	int            conv_freq_to_x (float f, float f_beg, float f_end, int nbr_freq) const;
 	int            conv_db_to_y (float db, int pix_h) const;
-	void           complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height, int stride);
 	void           change_param (int dir);
 
 	PageSwitcher & _page_switcher;

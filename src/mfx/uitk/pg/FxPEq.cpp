@@ -266,22 +266,7 @@ void	FxPEq::update_display ()
 		std::vector <int32_t>   y_arr = compute_y_pos (lvl_arr, height);
 
 		// Draws the curve
-		for (int x = 0; x < nbr_freq; ++x)
-		{
-			int            y = y_arr [x];
-			if (y >= 0 && y < height)
-			{
-				disp_ptr [y * stride + x] = 255;
-			}
-			if (x > 0)
-			{
-				complete_v_seg (disp_ptr, x, y, y_arr [x - 1], height, stride);
-			}
-			if (x < nbr_freq - 1)
-			{
-				complete_v_seg (disp_ptr, x, y, y_arr [x + 1], height, stride);
-			}
-		}
+		Tools::draw_curve (y_arr, disp_ptr, height, stride);
 	}
 
 	// Graduations
@@ -744,30 +729,6 @@ std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, 
 	}
 
 	return std::move (y_arr);
-}
-
-
-
-void	FxPEq::complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height, int stride)
-{
-	if (std::abs (yn - y) > 1)
-	{
-		int            r_cst = (y > yn) ? 1 : -1;
-		int            y_mid = (yn + y + r_cst) / 2;
-		if (y_mid < y)
-		{
-			std::swap (y, y_mid);
-		}
-		if (y_mid >= 0 && y < height)
-		{
-			y     = fstb::limit (y    , 0, height - 1);
-			y_mid = fstb::limit (y_mid, 0, height - 1);
-			for (int yy = y; yy <= y_mid; ++yy)
-			{
-				disp_ptr [yy * stride + x] = 255;
-			}
-		}
-	}
 }
 
 

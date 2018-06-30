@@ -61,6 +61,7 @@ namespace pg
 
 // val is a normalized value
 // val = -1: use the settings content
+// width in pixels
 void	Tools::set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_id, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag)
 {
 	assert (val <= 1);
@@ -1127,6 +1128,53 @@ void	Tools::create_prog_list (TxtArray &prog_list, ContainerInterface &menu, Pag
 		prog_list.push_back (name_sptr);
 		menu.push_back (name_sptr);
 		PageMgrInterface::add_nav (nav_list, node_id);
+	}
+}
+
+
+
+void	Tools::draw_curve (std::vector <int32_t> y_arr, uint8_t *disp_ptr, int height, int stride)
+{
+	const int      width = int (y_arr.size ());
+	for (int x = 0; x < width; ++x)
+	{
+		int            y = y_arr [x];
+		if (y >= 0 && y < height)
+		{
+			disp_ptr [y * stride + x] = 255;
+		}
+		if (x > 0)
+		{
+			complete_v_seg (disp_ptr, x, y, y_arr [x - 1], height, stride);
+		}
+		if (x < width - 1)
+		{
+			complete_v_seg (disp_ptr, x, y, y_arr [x + 1], height, stride);
+		}
+	}
+}
+
+
+
+void	Tools::complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height, int stride)
+{
+	if (std::abs (yn - y) > 1)
+	{
+		int            r_cst = (y > yn) ? 1 : -1;
+		int            y_mid = (yn + y + r_cst) / 2;
+		if (y_mid < y)
+		{
+			std::swap (y, y_mid);
+		}
+		if (y_mid >= 0 && y < height)
+		{
+			y     = fstb::limit (y    , 0, height - 1);
+			y_mid = fstb::limit (y_mid, 0, height - 1);
+			for (int yy = y; yy <= y_mid; ++yy)
+			{
+				disp_ptr [yy * stride + x] = 255;
+			}
+		}
 	}
 }
 
