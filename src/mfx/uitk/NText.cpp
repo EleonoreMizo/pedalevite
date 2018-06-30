@@ -127,6 +127,13 @@ void	NText::set_text (std::string txt)
 
 
 
+std::string	NText::get_text () const
+{
+	return _txt;
+}
+
+
+
 void	NText::set_font (const ui::Font &fnt)
 {
 	const Rect     zone_old (get_bounding_box () + get_coord ());

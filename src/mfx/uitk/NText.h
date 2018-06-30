@@ -66,6 +66,7 @@ public:
 
 	void           set_frame (Vec2d size_min, Vec2d margin);
 	void           set_text (std::string txt);
+	std::string    get_text () const;
 	void           set_font (const ui::Font &fnt);
 	void           set_mag (int x, int y);
 	void           set_justification (float x, float y, bool baseline_flag);
