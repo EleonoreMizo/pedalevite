@@ -276,6 +276,11 @@ void	ParamList::check_gui (const std::string &pi_model)
 			}
 		}
 	}
+	else if (pi_model == "lfo1")
+	{
+		_gui_flag = true;
+		_gui_page = PageType_FX_LFO;
+	}
 }
 
 

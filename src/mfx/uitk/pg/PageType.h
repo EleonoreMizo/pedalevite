@@ -76,6 +76,7 @@ enum PageType
 	PageType_BANK_ORGA,
 	PageType_BANK_MOVE,
 	PageType_PROG_MOVE,
+	PageType_FX_LFO,
 
 	PageType_NBR_ELT
 

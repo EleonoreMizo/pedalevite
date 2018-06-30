@@ -77,7 +77,7 @@ LfoDesc::LfoDesc ()
 	// Waveform
 	param::TplEnum *  enu_ptr = new param::TplEnum (
 		"Sine\nTriangle\nSquare\nSaw\nParabola\nBiphase\nN-Phase\nVarislope\nNoise",
-		"W\nWavef\nWaveform",
+		"W\nWf\nWavef\nWaveform",
 		"",
 		0,
 		"%s"
@@ -110,7 +110,7 @@ LfoDesc::LfoDesc ()
 	// Chaos amount
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"C\nChaos\nChaos Amt\nChaos amount",
+		"C\nKos\nChaos\nChaos Amt\nChaos amount",
 		"%",
 		0,
 		"%5.1f"
@@ -143,7 +143,7 @@ LfoDesc::LfoDesc ()
 	// Sign
 	enu_ptr = new param::TplEnum (
 		"Normal\nInvert",
-		"Si\nSign",
+		"Si\nSig\nSign",
 		"",
 		0,
 		"%s"
@@ -153,7 +153,7 @@ LfoDesc::LfoDesc ()
 	// Polarity
 	enu_ptr = new param::TplEnum (
 		"Bipolar\nUnipolar",
-		"Po\nPolar\nPolarity",
+		"Po\nPol\nPolar\nPolarity",
 		"",
 		0,
 		"%s"
@@ -185,7 +185,7 @@ LfoDesc::LfoDesc ()
 	// Phase set
 	lin_ptr = new param::TplLin (
 		0, 1,
-		"PS\nPh set\nPhase set",
+		"PS\nPhS\nPh set\nPhase set",
 		"deg",
 		0,
 		"%3.0f"

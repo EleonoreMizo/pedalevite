@@ -772,6 +772,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditProg.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditText.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\EndMsg.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\FxLfo.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\FxPEq.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Levels.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ListPresets.h" />
@@ -1124,6 +1125,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditProg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditText.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\EndMsg.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\FxLfo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\FxPEq.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Levels.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ListPresets.cpp" />

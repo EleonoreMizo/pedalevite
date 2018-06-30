@@ -2391,6 +2391,9 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgMove.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\FxLfo.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3318,6 +3321,9 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgMove.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\FxLfo.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
