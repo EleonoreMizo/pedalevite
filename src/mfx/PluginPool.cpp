@@ -144,6 +144,7 @@ void	PluginPool::release (int index)
 	{
 		slot._details._pi_uptr.reset ();
 		slot._details._param_arr.clear ();
+		slot._details._param_mod_arr.clear ();
 		slot._state = SharedRscState_FREE;
 		-- _nbr_plugins;
 	}
@@ -213,6 +214,20 @@ PluginPool::PluginDetails &	PluginPool::use_plugin (int index)
 
 
 
+const PluginPool::PluginDetails &	PluginPool::use_plugin (int index) const
+{
+	assert (index >= 0);
+	assert (index < Cst::_max_nbr_plugins);
+
+	const PluginSlot &   slot = _pi_arr [index];
+	assert (slot._state != SharedRscState_FREE);
+	assert (slot._details._pi_uptr.get () != 0);
+
+	return slot._details;
+}
+
+
+
 SharedRscState	PluginPool::get_state (int index)
 {
 	assert (index >= 0);
@@ -258,6 +273,7 @@ int	PluginPool::add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc
 			const int      nbr_param =
 				desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
 			slot._details._param_arr.resize (nbr_param);
+			slot._details._param_mod_arr.resize (nbr_param);
 			slot._details._param_update.set_nbr_elt (nbr_param);
 			slot._details._param_update_from_audio.clear ();
 			slot._details._param_update_from_audio.resize (nbr_param, false);
@@ -271,6 +287,7 @@ int	PluginPool::add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc
 						0
 					)
 				);
+				slot._details._param_arr [param_index] = -1;
 			}
 
 			slot._details._pi_uptr.swap (pi_uptr);

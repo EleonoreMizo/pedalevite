@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/NBitmap.h"
 #include "mfx/uitk/NText.h"
+#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
 
@@ -96,7 +97,8 @@ private:
 
 	enum Entry
 	{
-		Entry_SRC = 0,
+		Entry_WINDOW = 1000,
+		Entry_SRC,
 		Entry_STEP_REL,
 		Entry_LABEL_MIN,
 		Entry_VAL_MIN,
@@ -104,13 +106,15 @@ private:
 		Entry_LABEL_MAX = Entry_STEP_MIN + _nbr_steps,
 		Entry_VAL_MAX,
 		Entry_STEP_MAX,
-		Entry_CURVE   = Entry_STEP_MAX + _nbr_steps,
+		Entry_VAL_MOD = Entry_STEP_MAX + _nbr_steps,
+		Entry_CURVE,
 		Entry_CONV_U2B,
 		Entry_MOD_MIN,
 		Entry_MOD_MAX,
 		Entry_CURVE_GFX
 	};
 
+	typedef std::shared_ptr <NWindow> WinSPtr;
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NBitmap> BitmapSPtr;
 
@@ -124,6 +128,7 @@ private:
 	};
 
 	void           update_display ();
+	void           update_cur_mod_val ();
 	void           update_ctrl_link ();
 	doc::CtrlLink &
 	               use_ctrl_link (doc::CtrlLinkSet &cls) const;
@@ -154,14 +159,16 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
+	WinSPtr        _win_sptr;
 	TxtSPtr        _src_sptr;
 	TxtSPtr        _step_rel_sptr;
 	std::array <MinMax, 2>
 	               _minmax;
+	TxtSPtr        _val_mod_sptr;
 	TxtSPtr        _curve_sptr;
 	BitmapSPtr     _curve_gfx_sptr;
 	TxtSPtr        _u2b_sptr;
-	std::array <TxtSPtr, 2>
+	std::array <TxtSPtr, 2>       // Labels and values for "min" and "max"
 	               _mod_minmax_arr;
 
 	int            _step_index;

@@ -160,6 +160,7 @@ public:
 	               get_model_desc (std::string model_id) const;
 	std::chrono::microseconds
 	               get_cur_date () const;
+	float          get_param_val_mod (int slot_id, PiType type, int index) const;
 
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;

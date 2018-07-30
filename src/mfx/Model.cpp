@@ -1242,6 +1242,32 @@ std::chrono::microseconds	Model::get_cur_date () const
 
 
 
+// Gets the final parameter value, after modulation.
+float	Model::get_param_val_mod (int slot_id, PiType type, int index) const
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	const auto     it_id_map = _pi_id_map.find (slot_id);
+	assert (it_id_map != _pi_id_map.end ());
+	const int      pi_id     = it_id_map->second._pi_id_arr [type];
+	assert (pi_id >= 0);
+
+	const PluginPool::PluginDetails &   details =
+		_central.use_pi_pool ().use_plugin (pi_id);
+	float          val = details._param_mod_arr [index];
+	if (val < 0)
+	{
+		val = details._param_arr [index];
+	}
+
+	return val;
+}
+
+
+
 void	Model::add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
 {
 	assert (! model.empty ());

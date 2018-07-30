@@ -64,9 +64,11 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_fnt_ptr (0)
+,	_win_sptr (     new NWindow (Entry_WINDOW))
 ,	_src_sptr (     new NText (Entry_SRC     ))
 ,	_step_rel_sptr (new NText (Entry_STEP_REL))
 ,	_minmax ()
+,	_val_mod_sptr ( new NText (Entry_VAL_MOD))
 ,	_curve_sptr (   new NText (Entry_CURVE   ))
 ,	_curve_gfx_sptr (new NBitmap (Entry_CURVE_GFX))
 ,	_u2b_sptr (     new NText (Entry_CONV_U2B))
@@ -147,17 +149,21 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
 
+	_win_sptr->set_size (_page_size, Vec2d ());
+	_win_sptr->set_disp_pos (Vec2d ());
+
 	_curve_gfx_sptr->set_size (_page_size);
 
-	_curve_gfx_sptr->set_coord (Vec2d (0,       0));
-	_src_sptr      ->set_coord (Vec2d (0, h_m * 0));
-	_step_rel_sptr ->set_coord (Vec2d (0, h_m * 1));
-	_curve_sptr    ->set_coord (Vec2d (0, h_m * 6));
-	_u2b_sptr      ->set_coord (Vec2d (0, h_m * 7));
+	_curve_gfx_sptr->set_coord (Vec2d (0, 0      ));
+	_src_sptr      ->set_coord (Vec2d (0, 0 * h_m));
+	_step_rel_sptr ->set_coord (Vec2d (0, 1 * h_m));
+	_val_mod_sptr  ->set_coord (Vec2d (0, 6 * h_m));
+	_curve_sptr    ->set_coord (Vec2d (0, 7 * h_m));
+	_u2b_sptr      ->set_coord (Vec2d (0, 8 * h_m));
 
-	_page_ptr->push_back (_curve_gfx_sptr);
-	_page_ptr->push_back (_src_sptr      );
-	_page_ptr->push_back (_step_rel_sptr );
+	_win_sptr->push_back (_curve_gfx_sptr);
+	_win_sptr->push_back (_src_sptr      );
+	_win_sptr->push_back (_step_rel_sptr );
 
 	std::array <int, _nbr_steps>  width_arr;
 	int            total_w = 0;
@@ -177,30 +183,32 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		const int      y      = h_m * (2 + mm * 2);
 		_minmax [mm]._label_sptr->set_font (*_fnt_ptr);
 		_minmax [mm]._label_sptr->set_coord (Vec2d (0, y));
-		_page_ptr->push_back (_minmax [mm]._label_sptr);
+		_win_sptr->push_back (_minmax [mm]._label_sptr);
 		const int      lbl_w  =
 			_minmax [mm]._label_sptr->get_bounding_box ().get_size () [0];
 		_val_unit_w = _page_size [0] - lbl_w;
 		_minmax [mm]._val_unit_sptr->set_font (*_fnt_ptr);
 		_minmax [mm]._val_unit_sptr->set_coord (Vec2d (lbl_w, y));
-		_page_ptr->push_back (_minmax [mm]._val_unit_sptr);
+		_win_sptr->push_back (_minmax [mm]._val_unit_sptr);
 		int            x_step = 0;
 		for (size_t k = 0; k < _nbr_steps; ++k)
 		{
 			_minmax [mm]._step_sptr_arr [k]->set_coord (Vec2d (x_step, y + h_m));
-			_page_ptr->push_back (_minmax [mm]._step_sptr_arr [k]);
+			_win_sptr->push_back (_minmax [mm]._step_sptr_arr [k]);
 			x_step += dist + width_arr [k];
 		}
 	}
+	_val_mod_sptr->set_font (*_fnt_ptr);
+	_win_sptr->push_back (_val_mod_sptr);
 	for (int mm = 0; mm < int (_mod_minmax_arr.size ()); ++mm)
 	{
 		_mod_minmax_arr [mm]->set_font (*_fnt_ptr);
 		_mod_minmax_arr [mm]->set_coord (Vec2d (0, (4 + mm) * h_m));
-		_page_ptr->push_back (_mod_minmax_arr [mm]);
+		_win_sptr->push_back (_mod_minmax_arr [mm]);
 	}
 
-	_page_ptr->push_back (_curve_sptr);
-	_page_ptr->push_back (_u2b_sptr  );
+	_win_sptr->push_back (_curve_sptr);
+	_win_sptr->push_back (_u2b_sptr  );
 
 	_src_unknown_flag = false;
 	if (_loc_edit._ctrl_index >= 0)
@@ -212,15 +220,18 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		_src_unknown      = _ctrl_link._source;
 	}
 
+	_page_ptr->push_back (_win_sptr);
+
 	update_display ();
 	_page_ptr->jump_to (Entry_SRC);
+	_page_ptr->set_timer (Entry_WINDOW, true);
 }
 
 
 
 void	CtrlEdit::do_disconnect ()
 {
-	// Nothing
+	_page_ptr->set_timer (Entry_WINDOW, false);
 }
 
 
@@ -231,7 +242,17 @@ MsgHandlerInterface::EvtProp	CtrlEdit::do_handle_evt (const NodeEvt &evt)
 
 	const int      node_id = evt.get_target ();
 
-	if (evt.is_cursor ())
+	if (evt.is_timer ())
+	{
+		const bool     active_flag = (_loc_edit._ctrl_index >= 0);
+
+		if (active_flag && ! _curve_mode_flag)
+		{
+			update_cur_mod_val ();
+		}
+	}
+
+	else if (evt.is_cursor ())
 	{
 		if (evt.get_cursor () == NodeEvt::Curs_ENTER)
 		{
@@ -376,6 +397,7 @@ void	CtrlEdit::update_display ()
 	const bool     active_flag = (_loc_edit._ctrl_index >= 0);
 
 	const int      scr_w = _page_size [0];
+	const int      h_m   = _fnt_ptr->get_char_h ();
 
 	_curve_gfx_sptr->show (active_flag && _curve_mode_flag);
 
@@ -389,8 +411,9 @@ void	CtrlEdit::update_display ()
 		csn_ports.end ()
 	);
 
-	_src_sptr     ->show (active_flag && ! _curve_mode_flag);
+	_src_sptr     ->show (               ! _curve_mode_flag);
 	_step_rel_sptr->show (active_flag && ! _curve_mode_flag);
+	_val_mod_sptr ->show (active_flag && ! _curve_mode_flag);
 	_curve_sptr   ->show (active_flag                      );
 	_u2b_sptr     ->show (active_flag && ! _curve_mode_flag);
 
@@ -505,6 +528,7 @@ void	CtrlEdit::update_display ()
 		}
 		else
 		{
+			// Min/max
 			for (size_t k = 0; k < _nbr_steps; ++k)
 			{
 				_minmax [1]._step_sptr_arr [k]->show (false);
@@ -521,6 +545,8 @@ void	CtrlEdit::update_display ()
 
 			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 			const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+			std::string    val_str;
+			std::string    unit;
 			const doc::PluginSettings &   settings =
 				slot.use_settings (_loc_edit._pi_type);
 			const float    val_cur = settings._param_list [_loc_edit._param_index];
@@ -530,8 +556,6 @@ void	CtrlEdit::update_display ()
 					val_cur + (mm * 2 - 1) * _ctrl_link._amp,
 					0.0f, 1.0f
 				);
-				std::string    val_str;
-				std::string    unit;
 				Tools::print_param_with_pres (
 					val_str, unit,
 					*_model_ptr, *_view_ptr, preset, _loc_edit._slot_id,
@@ -543,6 +567,9 @@ void	CtrlEdit::update_display ()
 				_mod_minmax_arr [mm]->show (! _curve_mode_flag);
 			}
 		}
+
+		// Current final (modulated) value
+		update_cur_mod_val ();
 
 		std::string       curve_name =
 			ControlCurve_get_name (_ctrl_link._curve);
@@ -577,7 +604,29 @@ void	CtrlEdit::update_display ()
 
 	_page_ptr->set_nav_layout (nav_list);
 
-	_page_ptr->invalidate (Rect (Vec2d (0, 0), _page_size));
+	_win_sptr->invalidate_all ();
+}
+
+
+
+void	CtrlEdit::update_cur_mod_val ()
+{
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+	std::string    val_str;
+	std::string    unit;
+	const float    val_mod = _model_ptr->get_param_val_mod (
+		_loc_edit._slot_id,
+		_loc_edit._pi_type,
+		_loc_edit._param_index
+	);
+	Tools::print_param_with_pres (
+		val_str, unit,
+		*_model_ptr, *_view_ptr, preset, _loc_edit._slot_id,
+		_loc_edit._pi_type, _loc_edit._param_index, val_mod
+	);
+	std::string    txt = "Final: " + val_str + " " + unit;
+	_val_mod_sptr->set_text (txt);
 }
 
 

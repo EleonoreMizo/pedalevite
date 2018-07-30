@@ -67,8 +67,10 @@ public:
 		PluginUPtr     _pi_uptr;
 		const piapi::PluginDescInterface *
 		               _desc_ptr = 0;
-		std::vector <float>              // Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
+		std::vector <float>     // Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
 		               _param_arr;
+		std::vector <float>     // Final value of modulated parameters. Negative if not available. Only for ParamCateg_GLOBAL. Read-only for non-audio threads. Only indicative, there is no guarantee of validity.
+		               _param_mod_arr;
 		// Audio thread only
 		fstb::BitFieldSparse             // Same remark. Managed by the audio thread only.
 		               _param_update;
@@ -94,6 +96,8 @@ public:
 	const piapi::PluginDescInterface &
 	               get_model_desc (std::string model_id) const;
 	PluginDetails& use_plugin (int index);
+	const PluginDetails &
+	               use_plugin (int index) const;
 	SharedRscState get_state (int index);
 
 

@@ -758,11 +758,13 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::P
 			if (ctrl_it == map_param_ctrl.end ())
 			{
 				val = details._param_arr [index];
+				details._param_mod_arr [index] = -1;
 			}
 			else
 			{
 				ControlledParam & ctrl = *(ctrl_it->second);
 				val = ctrl.compute_final_val (_pi_pool);
+				details._param_mod_arr [index] = val;
 			}
 
 			// Adds a parameter event
