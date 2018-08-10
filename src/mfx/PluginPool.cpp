@@ -287,7 +287,7 @@ int	PluginPool::add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc
 						0
 					)
 				);
-				slot._details._param_arr [param_index] = -1;
+				slot._details._param_mod_arr [param_index] = -1;
 			}
 
 			slot._details._pi_uptr.swap (pi_uptr);
