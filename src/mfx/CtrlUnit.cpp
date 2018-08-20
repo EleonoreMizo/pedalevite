@@ -54,7 +54,73 @@ CtrlUnit::CtrlUnit (const doc::CtrlLink &other, bool abs_flag)
 ,	_amp (other._amp)
 ,	_notch_list (other._notch_list)
 {
-	// Nothing
+	set_clip (
+		other._clip_flag,
+		other._clip_src_beg, other._clip_src_end,
+		other._clip_dst_beg, other._clip_dst_end
+	);
+}
+
+
+
+void	CtrlUnit::set_clip (bool enable_flag, float src_beg, float src_end, float dst_beg, float dst_end)
+{
+	assert (! enable_flag || src_beg < src_end);
+	assert (! enable_flag || dst_beg < dst_end);
+
+	_clip_flag     = enable_flag;
+	_clip_src_beg  = src_beg;
+	_clip_src_end  = src_end;
+	_clip_dst_beg  = dst_beg;
+	_clip_dst_end  = dst_end;
+
+	if (_clip_flag)
+	{
+		_clip_mul =
+			  (_clip_dst_end - _clip_dst_beg)
+			/ (_clip_src_end - _clip_src_beg);
+		_clip_add = _clip_dst_beg - _clip_src_beg * _clip_mul;
+	}
+	else
+	{
+		_clip_mul = 1;
+		_clip_add = 0;
+	}
+}
+
+
+
+bool	CtrlUnit::is_src_clipped () const
+{
+	return _clip_flag;
+}
+
+
+
+float	CtrlUnit::get_src_beg () const
+{
+	return _clip_src_beg;
+}
+
+
+
+float	CtrlUnit::get_src_end () const
+{
+	return _clip_src_end;
+}
+
+
+
+float	CtrlUnit::get_dst_beg () const
+{
+	return _clip_dst_beg;
+}
+
+
+
+float	CtrlUnit::get_dst_end () const
+{
+	return _clip_dst_end;
 }
 
 
@@ -72,6 +138,16 @@ void	CtrlUnit::update_internal_val (float val_nrm)
 
 	// Inverse curve
 	mod_val = ControlCurve_apply_curve (mod_val, _curve, true);
+
+	// Inverse clip mapping
+	if (_clip_flag)
+	{
+		mod_val -= _clip_add;
+		if (_clip_mul != 0)
+		{
+			mod_val /= _clip_mul;
+		}
+	}
 
 	_val = mod_val;
 }
@@ -103,6 +179,13 @@ float	CtrlUnit::evaluate (float param_val) const
 	if (_u2b_flag)
 	{
 		mod_val = mod_val * 2 - 1;
+	}
+
+	if (_clip_flag)
+	{
+		mod_val = fstb::limit (mod_val, _clip_src_beg, _clip_src_end);
+		mod_val *= _clip_mul;
+		mod_val += _clip_add;
 	}
 
 	mod_val  = ControlCurve_apply_curve (mod_val, _curve, false);

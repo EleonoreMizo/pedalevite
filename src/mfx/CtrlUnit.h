@@ -57,13 +57,20 @@ public:
 	virtual        ~CtrlUnit ()                       = default;
 	CtrlUnit &     operator = (const CtrlUnit &other) = default;
 
+	void           set_clip (bool enable_flag, float src_beg, float src_end, float dst_beg, float dst_end);
+	bool           is_src_clipped () const;
+	float          get_src_beg () const;
+	float          get_src_end () const;
+	float          get_dst_beg () const;
+	float          get_dst_end () const;
+
 	void           update_abs_val (float raw_val);
 	void           update_internal_val (float val_nrm);
 	float          evaluate (float param_val) const;
 
 	ControlSource  _source;
 	float          _step     = float (Cst::_step_param);  // For relative modes (incremental encoders). > 0
-	float          _val      = 0;       // Absolute controller value (-1...1). Values from relative encoders are always unipolar (0...1).
+	float          _val      = 0;       // Absolute controller value, bipolar, and not limited if it is the output of a signal processor. Values from relative encoders are always unipolar (0...1).
 
 	ControlCurve   _curve    = ControlCurve_LINEAR;
 	bool           _u2b_flag = false;   // Unipolar to bipolar conversion (0...1 -> -1...1)
@@ -88,6 +95,15 @@ private:
 
 	static float   apply_curve (float val, ControlCurve curve, bool invert_flag);
 	static double  invert_s1 (double val);
+
+	bool           _clip_flag     = false;
+	float          _clip_src_beg  = -1; // Minimum value from the modulator source
+	float          _clip_src_end  =  1; // Maximum value from the modulator source. beg < end
+	float          _clip_dst_beg  = -1; // Value on which src_beg is mapped
+	float          _clip_dst_end  =  1; // Value on which src_end is mapped. beg < end
+
+	float          _clip_mul      =  1; // Cached value. y = x * mul + add
+	float          _clip_add      =  0; // Cached value
 
 
 

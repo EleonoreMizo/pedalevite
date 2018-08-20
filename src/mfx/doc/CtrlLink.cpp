@@ -50,6 +50,8 @@ namespace doc
 
 void	CtrlLink::ser_write (SerWInterface &ser) const
 {
+	const int      doc_ver = Cst::_format_version;
+
 	ser.begin_list ();
 
 	_source.ser_write (ser);
@@ -58,6 +60,15 @@ void	CtrlLink::ser_write (SerWInterface &ser) const
 	ser.write (_base);
 	ser.write (_amp);
 	ser.write (_u2b_flag);
+
+	if (doc_ver >= 8)
+	{
+		ser.write (_clip_flag   );
+		ser.write (_clip_src_beg);
+		ser.write (_clip_src_end);
+		ser.write (_clip_dst_beg);
+		ser.write (_clip_dst_end);
+	}
 
 	ser.begin_list ();
 	for (const auto &n : _notch_list)
@@ -73,6 +84,8 @@ void	CtrlLink::ser_write (SerWInterface &ser) const
 
 void	CtrlLink::ser_read (SerRInterface &ser)
 {
+	const int      doc_ver = ser.get_doc_version ();
+
 	ser.begin_list ();
 
 	_source.ser_read (ser);
@@ -81,6 +94,15 @@ void	CtrlLink::ser_read (SerRInterface &ser)
 	ser.read (_base);
 	ser.read (_amp);
 	ser.read (_u2b_flag);
+
+	if (doc_ver >= 8)
+	{
+		ser.read (_clip_flag   );
+		ser.read (_clip_src_beg);
+		ser.read (_clip_src_end);
+		ser.read (_clip_dst_beg);
+		ser.read (_clip_dst_end);
+	}
 
 	int            nbr_elt;
 	ser.begin_list (nbr_elt);
@@ -108,6 +130,15 @@ bool	CtrlLink::is_similar (const CtrlLink &other) const
 	same_flag &= fstb::is_eq (_step, other._step, tol);
 	same_flag &= fstb::is_eq (_base, other._base, tol);
 	same_flag &= fstb::is_eq (_amp , other._amp , tol);
+
+	same_flag &= (_clip_flag == other._clip_flag);
+	if (_clip_flag && same_flag)
+	{
+		same_flag &= fstb::is_eq (_clip_src_beg, other._clip_src_beg, tol);
+		same_flag &= fstb::is_eq (_clip_src_end, other._clip_src_end, tol);
+		same_flag &= fstb::is_eq (_clip_dst_beg, other._clip_dst_beg, tol);
+		same_flag &= fstb::is_eq (_clip_dst_end, other._clip_dst_end, tol);
+	}
 
 	const size_t   nbr_n = _notch_list.size ();
 	same_flag &= (nbr_n == other._notch_list.size ());

@@ -71,6 +71,12 @@ public:
 	float          _amp      = 1;       // Normalized scale, for all modes. Can be negative.
 	bool           _u2b_flag = false;   // Unipolar to bipolar conversion (0...1 -> -1...1)
 
+	bool           _clip_flag     = false;
+	float          _clip_src_beg  = -1; // Minimum value from the modulator source
+	float          _clip_src_end  =  1; // Maximum value from the modulator source. beg < end
+	float          _clip_dst_beg  = -1; // Value on which src_beg is mapped
+	float          _clip_dst_end  =  1; // Value on which src_end is mapped. beg < end
+
 	std::set <float>                    // Normalized values. Applies on the final value
 	               _notch_list;
 

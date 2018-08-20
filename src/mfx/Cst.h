@@ -44,7 +44,7 @@ class Cst
 
 public:
 
-	static const int  _format_version  =   7;
+	static const int  _format_version  =   8;
 
 	static const int  _nbr_pedals      =  12;
 	static const int  _nbr_presets_per_bank = 16;
