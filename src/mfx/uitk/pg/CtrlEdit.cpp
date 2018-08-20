@@ -397,7 +397,6 @@ void	CtrlEdit::update_display ()
 	const bool     active_flag = (_loc_edit._ctrl_index >= 0);
 
 	const int      scr_w = _page_size [0];
-	const int      h_m   = _fnt_ptr->get_char_h ();
 
 	_curve_gfx_sptr->show (active_flag && _curve_mode_flag);
 
@@ -612,7 +611,6 @@ void	CtrlEdit::update_display ()
 void	CtrlEdit::update_cur_mod_val ()
 {
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
 	std::string    val_str;
 	std::string    unit;
 	const float    val_mod = _model_ptr->get_param_val_mod (

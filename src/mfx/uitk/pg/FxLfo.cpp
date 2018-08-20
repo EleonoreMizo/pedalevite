@@ -230,8 +230,6 @@ void	FxLfo::update_display ()
 		const doc::PluginSettings &   settings = it_settings->second;
 		const piapi::PluginDescInterface &   desc =
 			_model_ptr->get_model_desc (slot._pi_model);
-		const piapi::PluginDescInterface &   desc_mix =
-			_model_ptr->get_model_desc (Cst::_plugin_mix);
 
 		const int      nbr_param = desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
 		_nbr_param = Param_BASE + nbr_param;
@@ -420,7 +418,6 @@ std::vector <int32_t>	FxLfo::build_values (int nbr_steps, int h)
 
 	std::array <float, _proc_blk_size>  buf_sig;
 	std::array <float *, 1> sig_arr = {{ &buf_sig [0] }};
-	std::array <int, piapi::PluginInterface::Dir_NBR_ELT> nbr_chn_arr = {{ 0, 0 }};
 	piapi::PluginInterface::ProcInfo proc_info;
 	proc_info._byp_arr     = 0;
 	proc_info._byp_state   = piapi::PluginInterface::BypassState_IGNORE;
