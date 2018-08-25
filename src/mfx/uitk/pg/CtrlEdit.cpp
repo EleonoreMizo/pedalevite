@@ -68,13 +68,20 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_src_sptr (     new NText (Entry_SRC     ))
 ,	_step_rel_sptr (new NText (Entry_STEP_REL))
 ,	_minmax ()
-,	_val_mod_sptr ( new NText (Entry_VAL_MOD))
+,	_val_mod_sptr ( new NText (Entry_VAL_MOD ))
 ,	_curve_sptr (   new NText (Entry_CURVE   ))
 ,	_curve_gfx_sptr (new NBitmap (Entry_CURVE_GFX))
 ,	_u2b_sptr (     new NText (Entry_CONV_U2B))
 ,	_mod_minmax_arr ({{
-		TxtSPtr (    new NText (Entry_MOD_MIN)),
-		TxtSPtr (    new NText (Entry_MOD_MAX))
+		TxtSPtr (    new NText (Entry_MOD_MIN )),
+		TxtSPtr (    new NText (Entry_MOD_MAX ))
+	}})
+,	_clip_sptr (    new NText (Entry_CLIP    ))
+,	_clip_val_sptr_arr ({{
+		TxtSPtr (    new NText (Entry_CLIP_S_B)),
+		TxtSPtr (    new NText (Entry_CLIP_S_E)),
+		TxtSPtr (    new NText (Entry_CLIP_D_B)),
+		TxtSPtr (    new NText (Entry_CLIP_D_E))
 	}})
 ,	_step_index (0)
 ,	_val_unit_w (0)
@@ -220,6 +227,17 @@ void	CtrlEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		_src_unknown      = _ctrl_link._source;
 	}
 
+	_clip_sptr->set_font (*_fnt_ptr);
+	_clip_sptr->set_coord (Vec2d (0, 9 * h_m));
+	_win_sptr->push_back (_clip_sptr);
+	for (int index = 0; index < int (_clip_val_sptr_arr.size ()); ++index)
+	{
+		auto &      caption_sptr = _clip_val_sptr_arr [index];
+		caption_sptr->set_font (*_fnt_ptr);
+		caption_sptr->set_coord (Vec2d (0, (10 + index) * h_m));
+		_win_sptr->push_back (caption_sptr);
+	}
+
 	_page_ptr->push_back (_win_sptr);
 
 	update_display ();
@@ -284,6 +302,11 @@ MsgHandlerInterface::EvtProp	CtrlEdit::do_handle_evt (const NodeEvt &evt)
 			{
 				_curve_mode_flag = ! _curve_mode_flag;
 				update_display ();
+				ret_val = EvtProp_CATCH;
+			}
+			else if (node_id == Entry_CLIP)
+			{
+				change_clip ();
 				ret_val = EvtProp_CATCH;
 			}
 			break;
@@ -415,6 +438,7 @@ void	CtrlEdit::update_display ()
 	_val_mod_sptr ->show (active_flag && ! _curve_mode_flag);
 	_curve_sptr   ->show (active_flag                      );
 	_u2b_sptr     ->show (active_flag && ! _curve_mode_flag);
+	_clip_sptr    ->show (active_flag);
 
 	PageMgrInterface::NavLocList  nav_list (1);
 	nav_list [0]._node_id = Entry_SRC;
@@ -431,6 +455,10 @@ void	CtrlEdit::update_display ()
 	for (auto &mmm_sptr : _mod_minmax_arr)
 	{
 		mmm_sptr->show (false);
+	}
+	for (auto &cl_sptr : _clip_val_sptr_arr)
+	{
+		cl_sptr->show (false);
 	}
 
 	std::string    src_txt ("Src  : ");
@@ -598,6 +626,31 @@ void	CtrlEdit::update_display ()
 		{
 			draw_curve (*_curve_gfx_sptr, _ctrl_link._curve);
 		}
+
+		// Source clipping
+		std::string    clip_txt  = "Clip : ";
+		clip_txt += (_ctrl_link._clip_flag) ? "On" : "Off";
+		_clip_sptr->set_text (clip_txt);
+		PageMgrInterface::add_nav (nav_list, Entry_CLIP);
+
+		if (_ctrl_link._clip_flag)
+		{
+			for (int index = 0; index < int (_clip_val_sptr_arr.size ()); ++index)
+			{
+				auto &         caption_sptr = _clip_val_sptr_arr [index];
+				const EntryDesc & edesc     = _clip_desc_arr [index];
+				std::string    txt          = edesc._txt_0;
+				const float    val          = use_clip_val (_ctrl_link, index);
+				txt += ": ";
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "%+7.2f %%", val * 100
+				);
+				txt += txt_0;
+				caption_sptr->set_text (txt);
+				caption_sptr->show (true);
+				PageMgrInterface::add_nav (nav_list, edesc._entry);
+			}
+		}
 	}
 	_src_sptr->set_text (src_txt);
 
@@ -701,6 +754,12 @@ MsgHandlerInterface::EvtProp	CtrlEdit::change_something (int node_id, int dir)
 		change_u2b ();
 		ret_val = EvtProp_CATCH;
 	}
+	else if (node_id >= Entry_CLIP_S_B && node_id <= Entry_CLIP_D_E)
+	{
+		change_clip_val (node_id - Entry_CLIP_S_B, dir);
+		ret_val = EvtProp_CATCH;
+	}
+
 	else
 	{
 		for (int mm = 0
@@ -902,6 +961,46 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 
 
 
+void	CtrlEdit::change_clip ()
+{
+	doc::CtrlLinkSet  cls (_cls);
+	doc::CtrlLink &   cl (use_ctrl_link (cls));
+
+	cl._clip_flag = ! cl._clip_flag;
+
+	const int      slot_id = _loc_edit._slot_id;
+	const PiType   type    = _loc_edit._pi_type;
+	const int      index   = _loc_edit._param_index;
+	_model_ptr->set_param_ctrl (slot_id, type, index, cls);
+}
+
+
+
+void	CtrlEdit::change_clip_val (int clip_index, int dir)
+{
+	doc::CtrlLinkSet  cls (_cls);
+	doc::CtrlLink &   cl (use_ctrl_link (cls));
+
+	float          val   = use_clip_val (cl, clip_index);
+	int            val_i = fstb::round_int (val * 100);
+	val_i += dir;
+	val = val_i / 100.0f;
+	val = fstb::limit (val, -4.0f, 4.0f);
+
+	if (check_new_clip_val (cl, clip_index, val))
+	{
+		use_clip_val (cl, clip_index) = val;
+
+		const int      slot_id    = _loc_edit._slot_id;
+		const PiType   type       = _loc_edit._pi_type;
+		const int      index      = _loc_edit._param_index;
+
+		_model_ptr->set_param_ctrl (slot_id, type, index, cls);
+	}
+}
+
+
+
 // -2: unknown (_src_unknown)
 // -1: empty
 // 0 to N-1: from _csn_list_full
@@ -1031,6 +1130,58 @@ void	CtrlEdit::draw_curve (NBitmap &gfx, ControlCurve curve)
 
 
 
+float &	CtrlEdit::use_clip_val (doc::CtrlLink &cl, int index)
+{
+	// Scott Meyers, Effective C++ (3rd edition),
+	// Item 3 "Use const whenever possible", p. 23,
+	// "Avoid Duplication in const and Non-const Member Function"
+	return const_cast <float &> (
+		use_clip_val (static_cast <const doc::CtrlLink &> (cl), index)
+	);
+}
+
+
+
+const float &	CtrlEdit::use_clip_val (const doc::CtrlLink &cl, int index)
+{
+	assert (index >= 0);
+	assert (index < 4);
+
+	switch (index)
+	{
+	case 0: return cl._clip_src_beg;
+	case 1: return cl._clip_src_end;
+	case 2: return cl._clip_dst_beg;
+	case 3: return cl._clip_dst_end;
+	default: assert (false); break;
+	}
+
+	return cl._clip_src_beg; // Keeps the compiler happy
+}
+
+
+
+bool	CtrlEdit::check_new_clip_val (const doc::CtrlLink &cl, int index, float val)
+{
+	assert (index >= 0);
+	assert (index < 4);
+
+	static const float   margin = 1e-3f;
+
+	switch (index)
+	{
+	case 0: return (cl._clip_src_end - val >= margin);
+	case 1: return (val - cl._clip_src_beg >= margin);
+	case 2: return (cl._clip_dst_end - val >= margin);
+	case 3: return (val - cl._clip_dst_beg >= margin);
+	default: assert (false); break;
+	}
+
+	return false;  // Keeps the compiler happy
+}
+
+
+
 const std::array <CtrlEdit::Entry, 2>	CtrlEdit::_id_label_arr =
 {{ Entry_LABEL_MIN, Entry_LABEL_MAX }};
 
@@ -1040,6 +1191,13 @@ const std::array <CtrlEdit::Entry, 2>	CtrlEdit::_id_val_arr   =
 const std::array <CtrlEdit::Entry, 2>	CtrlEdit::_id_step_arr  =
 {{ Entry_STEP_MIN , Entry_STEP_MAX  }};
 
+const std::array <CtrlEdit::EntryDesc, 4>	CtrlEdit::_clip_desc_arr =
+{{
+	{ Entry_CLIP_S_B, "Src \xE2\x86\x90" },   // LEFTWARDS ARROW U+2190
+	{ Entry_CLIP_S_E, "Src \xE2\x86\x92" },   // RIGHTWARDS ARROW U+2192
+	{ Entry_CLIP_D_B, "Dest\xE2\x86\x93" },   // DOWNWARDS ARROW U+2193
+	{ Entry_CLIP_D_E, "Dest\xE2\x86\x91" }    // UPWARDS ARROW U+2191
+}};
 
 
 }  // namespace pg

@@ -111,7 +111,12 @@ private:
 		Entry_CONV_U2B,
 		Entry_MOD_MIN,
 		Entry_MOD_MAX,
-		Entry_CURVE_GFX
+		Entry_CURVE_GFX,
+		Entry_CLIP,
+		Entry_CLIP_S_B,
+		Entry_CLIP_S_E,
+		Entry_CLIP_D_B,
+		Entry_CLIP_D_E
 	};
 
 	typedef std::shared_ptr <NWindow> WinSPtr;
@@ -127,6 +132,13 @@ private:
 		               _step_sptr_arr;
 	};
 
+	class EntryDesc
+	{
+	public:
+		Entry          _entry;
+		const char *   _txt_0;
+	};
+
 	void           update_display ();
 	void           update_cur_mod_val ();
 	void           update_ctrl_link ();
@@ -140,12 +152,18 @@ private:
 	void           change_curve (int dir);
 	void           change_u2b ();
 	void           change_val (int mm, int step_index, int dir);
+	void           change_clip ();
+	void           change_clip_val (int clip_index, int dir);
 	int            find_next_source (int dir) const;
 	doc::CtrlLinkSet::LinkSPtr
 	               create_controller (int csn_index) const;
 	ControlSource  create_source (int csn_index) const;
 
 	static void    draw_curve (NBitmap &gfx, ControlCurve curve);
+	static float & use_clip_val (doc::CtrlLink &cl, int index);
+	static const float &
+	               use_clip_val (const doc::CtrlLink &cl, int index);
+	static bool    check_new_clip_val (const doc::CtrlLink &cl, int index, float val);
 
 	const std::vector <CtrlSrcNamed> &
 	               _csn_list_base;
@@ -170,6 +188,9 @@ private:
 	TxtSPtr        _u2b_sptr;
 	std::array <TxtSPtr, 2>       // Labels and values for "min" and "max"
 	               _mod_minmax_arr;
+	TxtSPtr        _clip_sptr;
+	std::array <TxtSPtr, 4>       // src_beg, src_end, dst_beg, dst_end
+	               _clip_val_sptr_arr;
 
 	int            _step_index;
 	int            _val_unit_w;
@@ -181,6 +202,8 @@ private:
 	               _id_val_arr;
 	static const std::array <Entry, 2>
 	               _id_step_arr;
+	static const std::array <EntryDesc, 4>
+	               _clip_desc_arr;
 
 	// Cached data
 	std::vector <CtrlSrcNamed>
