@@ -521,7 +521,8 @@ On peut revenir à <a href="#screen-param-edit">l’édition du paramètre</a> a
 
 <h4><a id="screen-control-edit"></a>Édition d’un contrôleur</h4>
 
-<div class="pic"><img src="control-edit.png" /></div>
+<div class="pic"><img src="control-edit1.png" /></div>
+<div class="pic"><img src="control-edit2.png" /></div>
 <p>Cet écran permet de régler un contrôleur, direct ou de modulation.
 Un contrôleur direct nécessite deux valeurs de paramètre&#8239;:
 une valeur pour la position basse du contrôleur, et une valeur pour
@@ -555,6 +556,11 @@ On peut la régler à l’aide des flèches horizontales.</p>
 modulation.
 Elles se manipulent exactement comme dans
 <a href="#screen-param-edit">l’édition d’un paramètre</a>.</p>
+<p><span class="ui">Final</span> indique la valeur finale du paramètre une
+fois modulé.
+Si le paramètre est modulé par plusieurs source, la valeur finale prend en
+compte la contribution de l’ensemble des modulation, pas seulement de celle
+qui est en cours d’édition.</p>
 <p><span class="ui">Curve</span> permet de sélectionner la courbe à appliquer
 à la source.
 Cette courbe permet de changer la sensibilité du contrôleur en fonction des
@@ -593,6 +599,20 @@ Cela permet de placer la valeur neutre de la modulation au milieu de la course
 du contrôleur.
 On peut sélectionner <span class="ui">Bipolar</span> ou
 <span class="ui">Unipolar</span> avec les flèches horizontales.</p>
+<p><span class="ui">Clip</span> permet de restreindre l’intervalle utile de
+la source.
+L’intérêt principal de cette fonction est de pouvoir assigner leur propre plage
+de variation à différents paramètres contrôlés par une même source et obtenir
+ainsi des effets de seuil.
+<span class="ui">Clip</span> agit après la fonction
+<span class="ui">Range</span>.
+<span class="ui">Src&larr;</span> et <span class="ui">Src&rarr;</span> donnent
+les bornes de la source entre lesquelles la modulation est prise en compte.
+Ces bornes sont réaffectées à de nouvelles valeurs données par
+<span class="ui">Dest&darr;</span> et <span class="ui">Dest&uarr;</span>.
+Les modulations entre les bornes sont intérpolées linéairement.
+Toute modulation hors de ces bornes est réassignée à
+<span class="ui">Dest&darr;</span> ou <span class="ui">Dest&uarr;</span>.</p>
 <p>On sort de cet écran en pressant <span class="key">Esc</span>.
 Les modifications sont prises en compte en temps réel, il n’y donc pas de
 validation particulière à effectuer.</p>
@@ -2125,7 +2145,19 @@ En inverse, la sortie passe de 1 à 0.</p>
 
 <p class="var">Set position</p>
 <p>Fixe le point courant dans la transition, en pourcentage de progression.
-Elle peut alors recommencer si elle était déjà achevée.</p>
+Elle peut alors recommencer si elle était déjà achevée.
+S’il y a besoin de recommencer la transition depuis les début et qu’un temps
+de retard (<var>Initial delay</var>) a été activé mais qu’il ne doit pas être
+rejoué, fixer la position à une valeur très légèrement au-dessus de 0. </p>
+
+<p class="var">Initial delay</p>
+<p>Durée d’attente en secondes avant laquelle la transition ne commence
+effectivement.
+Cette éventuelle phase de retard est rejouée quand la position courante est
+fixée à 0 exactement.</p>
+
+<p class="var">State</p>
+<p>Permet de mettre la transition en pause.</p>
 
 
 
@@ -2135,6 +2167,10 @@ Elle peut alors recommencer si elle était déjà achevée.</p>
 de contrôle puisqu’il ne traite aucun signal audio, ni en entrée ni en sortie.
 Son but est de créer un signal oscillant afin d’appliquer une modulation à un
 ou plusieurs paramètres d’un autre effet.</p>
+<p>L’effet de LFO dispose d’un affichage graphique, montrant un ou plusieurs
+cycles de la forme d’onde courante.
+Le premier paramètre de l’éditeur graphique est le nombre de cycles affichés.
+Il est suivi de tous les paramètres habituels du LFO.</p>
 
 <p class="var">Speed</p>
 <p>Fréquence des oscillations, en Hz.</p>
@@ -2280,6 +2316,12 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r14, 2018-08-26</b></p>
+<ul>
+<li>Mise à jour pour refléter les changements récents (Ramp, LFO, édition de
+modulations).</li>
+</ul>
 
 <p><b>r13, 2018-05-28</b></p>
 <ul>

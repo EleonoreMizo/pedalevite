@@ -507,7 +507,8 @@ with the <span class="key">Esc</span> key.</p>
 
 <h4><a id="screen-control-edit"></a>Controller Edit</h4>
 
-<div class="pic"><img src="control-edit.png" /></div>
+<div class="pic"><img src="control-edit1.png" /></div>
+<div class="pic"><img src="control-edit2.png" /></div>
 <p>One can setup a controller (direct link or modulation) on this screen.
 A direct link controller requires two parameter values:
 a value for the controller’s low position, and another for the high position.
@@ -536,6 +537,10 @@ It can be set with the horizontal arrows.</p>
 They depend on the controller type.
 They are changed exactly like in the <a href="#screen-param-edit">Parameter
 Edit</a> screen.</p>
+<p><span class="ui">Final</span> indicates the final, modulated parameter
+value.
+If the parameter is modulated by multiple source, the final value reflects
+the contribution of all the modulations, not the edited one only.</p>
 <p><span class="ui">Curve</span> selects the curve to apply on the source.
 It changes the controller sensitivity depending on the value ranges.
 It can be set with the horizontal arrows.</p>
@@ -571,6 +576,18 @@ This allows putting the neutral modulation value in the middle of the
 controller course.
 One can select <span class="ui">Bipolar</span> or
 <span class="ui">Unipolar</span> with the horizontal arrows.</p>
+<p><span class="ui">Clip</span> restricts the source range.
+The main purpose is to assign their own variation range to different 
+parameters controlled by a unique source, thus achieving threshold effects.
+<span class="ui">Clip</span> is processed after the
+<span class="ui">Range</span> function.
+<span class="ui">Src&larr;</span> and <span class="ui">Src&rarr;</span> clip
+the modulation source range.
+These bounds are mapped to new vanues given by
+<span class="ui">Dest&darr;</span> and <span class="ui">Dest&uarr;</span>.
+Input values in this raneg are linearly interpolated.
+Modulations out of this range are clipped to
+<span class="ui">Dest&darr;</span> or <span class="ui">Dest&uarr;</span>.</p>
 <p><span class="key">Esc</span> exits the screen.
 Modification are immediately taken into account in real time, there is no
 specific validation to do.</p>
@@ -2033,7 +2050,16 @@ Inverted, it is from 1 to 0.</p>
 
 <p class="var">Set position</p>
 <p>Sets the current point in the transition, as a percentage of progression.
-So it can be restarted if it was already completed.</p>
+So it can be restarted if it was already completed.
+If you put an initial delay and want to restart the ramp immediately, set the
+position slightly above 0.</p>
+
+<p class="var">Initial delay</p>
+<p>Time in seconds before the ramp kicks in after.
+The delay phase is started again when the position is set to exactly 0.</p>
+
+<p class="var">State</p>
+<p>This parameter is meant to pause the transition.</p>
 
 
 
@@ -2043,6 +2069,10 @@ So it can be restarted if it was already completed.</p>
 since it does not process any audio signals, either input or output.
 Its purpose is to create an oscillating signal in order to modulate one or
 more parameters from another effect.</p>
+<p>The LFO effect has a graphic display, showing one or more cycle of the
+current waveform.
+The first parameter in the graphic editor is the number of cycles shown.
+It is followed by the standard LFO parameters.</p>
 
 <p class="var">Speed</p>
 <p>Oscillation frequency, en Hz.</p>
@@ -2180,6 +2210,12 @@ phase.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r14, 2018-08-26</b></p>
+<ul>
+<li>Updated the documentation to reflect the recent changes (Ramp, LFO,
+modulation editing).</li>
+</ul>
 
 <p><b>r13, 2018-05-28</b></p>
 <ul>
