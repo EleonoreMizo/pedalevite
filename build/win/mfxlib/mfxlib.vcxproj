@@ -554,6 +554,8 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Disto2x.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoStage.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Param.h" />
@@ -987,6 +989,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2x.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.cpp" />

@@ -518,6 +518,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dist2/Disto2x.h \
         ../../src/mfx/pi/dist2/Disto2xDesc.cpp \
         ../../src/mfx/pi/dist2/Disto2xDesc.h \
+        ../../src/mfx/pi/dist2/DistoDspAttract.cpp \
+        ../../src/mfx/pi/dist2/DistoDspAttract.h \
+        ../../src/mfx/pi/dist2/DistoDspAttract.hpp \
         ../../src/mfx/pi/dist2/DistoStage.cpp \
         ../../src/mfx/pi/dist2/DistoStage.h \
         ../../src/mfx/pi/dist2/FreqSplitter.cpp \

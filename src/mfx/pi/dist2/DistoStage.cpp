@@ -98,6 +98,7 @@ void	DistoStage::reset (double sample_freq, int max_block_size)
 	for (auto &chn : _chn_arr)
 	{
 		chn._porridge_limiter.set_sample_freq (sample_freq);
+		chn._attractor.set_sample_freq (sample_freq);
 	}
 
 	clear_buffers ();
@@ -253,6 +254,7 @@ void	DistoStage::clear_buffers ()
 		chn._ds.clear_buffers ();
 		chn._slew_rate_val = 0;
 		chn._porridge_limiter.clear_buffers ();
+		chn._attractor.clear_buffers ();
 	}
 
 	set_next_block ();
@@ -412,6 +414,15 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		break;
 	case Type_PORRIDGE:
 		chn._porridge_limiter.process_block (dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_SMARTE1:
+		distort_block_shaper (_shaper_smarte1, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_SMARTE2:
+		distort_block_shaper (_shaper_smarte2, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_ATTRACT:
+		chn._attractor.process_block (dst_ptr, src_ptr, nbr_spl);
 		break;
 
 	default:
@@ -604,6 +615,8 @@ DistoStage::ShaperPuncher2	DistoStage::_shaper_puncher2;
 DistoStage::ShaperPuncher3	DistoStage::_shaper_puncher3;
 DistoStage::ShaperOvershoot	DistoStage::_shaper_overshoot;
 DistoStage::ShaperLopsided	DistoStage::_shaper_lopsided;
+DistoStage::ShaperSmartE1	DistoStage::_shaper_smarte1;
+DistoStage::ShaperSmartE2	DistoStage::_shaper_smarte2;
 
 const float	DistoStage::_asym1_m_9  = 1.f / 9;
 const float	DistoStage::_asym1_m_2  = 1.f / 2;

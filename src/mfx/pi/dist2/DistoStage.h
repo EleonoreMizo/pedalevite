@@ -37,6 +37,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
 #include "mfx/dsp/shape/FncFiniteAsym.h"
+#include "mfx/pi/dist2/DistoDspAttract.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
@@ -82,6 +83,9 @@ public:
 		Type_SLEWRATE,
 		Type_LOPSIDED,
 		Type_PORRIDGE,
+		Type_SMARTE1,
+		Type_SMARTE2,
+		Type_ATTRACT,
 
 		Type_NBR_ELT
 	};
@@ -135,6 +139,8 @@ private:
 		float          _slew_rate_val = 0;
 		dsp::dyn::LimiterRms
 		               _porridge_limiter;
+		DistoDspAttract
+		               _attractor;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
@@ -217,6 +223,24 @@ private:
 		}
 	};
 
+	// Minimum input range: [-8; +8]
+	template <int B>
+	class FncSmartE
+	{
+		static_assert ((B >= 1), "");
+	public:
+		double         operator () (double x)
+		{
+			const double   a    = -0.86;  // Range: [-0.86, 2.1]
+			const double   xabs = fabs (x);
+			const double   bx   = B * x;
+			const double   num  = bx * (xabs + a);
+			const double   den  = bx * x + xabs * (a - 1) + 1;
+
+			return num / den;
+		}
+	};
+
 	class FncLopsided
 	{
 	public:
@@ -234,6 +258,11 @@ private:
 	template <class FNC>
 	using ShaperStd = dsp::shape::FncFiniteAsym <
 		-20, 20, FNC, 2
+	>;
+
+	template <class FNC>
+	using ShaperRes = dsp::shape::FncFiniteAsym <
+		-16, 16, FNC, 4
 	>;
 
 	template <class FNC>
@@ -257,6 +286,8 @@ private:
 	typedef ShaperShort <FncPuncherA> ShaperPuncher3;
 	typedef ShaperShort <FncOvershoot> ShaperOvershoot;
 	typedef ShaperShort <FncLopsided> ShaperLopsided;
+	typedef ShaperRes <FncSmartE <1> > ShaperSmartE1;
+	typedef ShaperShort <FncSmartE <2> > ShaperSmartE2;
 
 	void           init_coef ();
 	void           set_next_block ();
@@ -312,6 +343,10 @@ private:
 	               _shaper_overshoot;
 	static ShaperLopsided
 	               _shaper_lopsided;
+	static ShaperSmartE1
+	               _shaper_smarte1;
+	static ShaperSmartE2
+	               _shaper_smarte2;
 
 	static const float
 	               _asym1_m_9;

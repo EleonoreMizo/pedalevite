@@ -2406,6 +2406,12 @@
     <ClInclude Include="..\..\..\src\fstb\lang\fnc.hpp">
       <Filter>fstb\lang</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.h">
+      <Filter>mfx\pi\dist2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.hpp">
+      <Filter>mfx\pi\dist2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3337,6 +3343,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\FxLfo.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.cpp">
+      <Filter>mfx\pi\dist2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
