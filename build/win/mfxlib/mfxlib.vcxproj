@@ -177,6 +177,9 @@
     <ClInclude Include="..\..\..\src\fstb\FixedPoint.hpp" />
     <ClInclude Include="..\..\..\src\fstb\fnc.h" />
     <ClInclude Include="..\..\..\src\fstb\fnc.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\lang\fnc.h" />
+    <ClInclude Include="..\..\..\src\fstb\lang\fnc.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\lang\NonConst.h" />
     <ClInclude Include="..\..\..\src\fstb\SingleObj.h" />
     <ClInclude Include="..\..\..\src\fstb\SingleObj.hpp" />
     <ClInclude Include="..\..\..\src\fstb\ToolsAvx2.h" />

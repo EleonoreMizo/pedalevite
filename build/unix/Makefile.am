@@ -61,6 +61,9 @@ pedalevite_SOURCES = \
         ../../src/ffft/FFTRealUseTrigo.hpp \
         ../../src/ffft/OscSinCos.h \
         ../../src/ffft/OscSinCos.hpp \
+        ../../src/fstb/lang/fnc.h \
+        ../../src/fstb/lang/fnc.hpp \
+        ../../src/fstb/lang/NonConst.h \
         ../../src/fstb/txt/neutral/ConvDigit.h \
         ../../src/fstb/txt/neutral/ConvDigit.hpp \
         ../../src/fstb/txt/neutral/fnc.cpp \

@@ -220,6 +220,9 @@
     <Filter Include="mfx\dsp\wnd">
       <UniqueIdentifier>{edba3398-b3a6-48ea-b456-8401798ca898}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fstb\lang">
+      <UniqueIdentifier>{7a6a36c2-589d-4dd6-afba-d42a29a0a7f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2393,6 +2396,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\FxLfo.h">
       <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\lang\NonConst.h">
+      <Filter>fstb\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\lang\fnc.h">
+      <Filter>fstb\lang</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\lang\fnc.hpp">
+      <Filter>fstb\lang</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
