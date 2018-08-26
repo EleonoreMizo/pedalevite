@@ -95,6 +95,11 @@ void	DistoStage::reset (double sample_freq, int max_block_size)
 	// Let pass a sine of 100 Hz at 0 dB
 	_slew_rate_limit = 100 * _inv_fs;
 
+	for (auto &chn : _chn_arr)
+	{
+		chn._porridge_limiter.set_sample_freq (sample_freq);
+	}
+
 	clear_buffers ();
 }
 
@@ -247,6 +252,7 @@ void	DistoStage::clear_buffers ()
 		chn._us.clear_buffers ();
 		chn._ds.clear_buffers ();
 		chn._slew_rate_val = 0;
+		chn._porridge_limiter.clear_buffers ();
 	}
 
 	set_next_block ();

@@ -213,7 +213,7 @@ private:
 			const double   num = a - b - (1 / fstb::EXP1) + 1;
 			const double   den = a + b;
 
-			return (num / den);
+			return num / den;
 		}
 	};
 
