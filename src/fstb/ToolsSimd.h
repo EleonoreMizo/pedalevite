@@ -196,6 +196,8 @@ public:
 	               or_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectS32
 	               or_s32 (VectS32 lhs, VectS32 rhs);
+	static inline VectF32
+	               xor_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectS32
 	               xor_s32 (VectS32 lhs, VectS32 rhs);
 	static inline bool

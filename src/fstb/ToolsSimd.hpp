@@ -810,7 +810,21 @@ ToolsSimd::VectS32	ToolsSimd::or_s32 (VectS32 lhs, VectS32 rhs)
 #if fstb_IS (ARCHI, X86)
 	return _mm_or_si128 (lhs, rhs);
 #elif fstb_IS (ARCHI, ARM)
-	return vorq_s32 (lhs, rhs);
+	return vorrq_s32 (lhs, rhs);
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::xor_f32 (VectF32 lhs, VectF32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_xor_ps (lhs, rhs);
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_f32_u32 (veorq_u32 (
+		vreinterpretq_u32_f32 (lhs),
+		vreinterpretq_u32_f32 (rhs)
+	));
 #endif // ff_arch_CPU
 }
 
