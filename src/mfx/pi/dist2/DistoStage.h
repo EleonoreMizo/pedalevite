@@ -88,6 +88,9 @@ public:
 		Type_SMARTE2,
 		Type_ATTRACT,
 		Type_RANDWALK,
+		Type_SQRT,
+		Type_BELT,
+		Type_BADMOOD,
 
 		Type_NBR_ELT
 	};
@@ -147,6 +150,15 @@ private:
 		               _random_walk;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
+
+	class FncTanh
+	{
+	public:
+		double         operator () (double x)
+		{
+			return tanh (x);
+		}
+	};
 
 	class FncAtan
 	{
@@ -283,6 +295,7 @@ private:
 		-8, 8, FNC, 4
 	>;
 
+	typedef ShaperShort <FncTanh> ShaperTanh;
 	typedef ShaperStd <FncAtan> ShaperAtan;
 	typedef ShaperLong <FncDiodeClipper> ShaperDiode;
 	typedef ShaperStd <FncProgClipper <
@@ -317,6 +330,9 @@ private:
 	void           distort_block_hardclip (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_bitcrush (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_slewrate_limit (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_sqrt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_belt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_badmood (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	ChannelArray   _chn_arr;
 	float          _sample_freq;
@@ -341,6 +357,8 @@ private:
 	static std::array <double, _nbr_coef_21>
 	               _coef_21;
 
+	static ShaperTanh
+	               _shaper_tanh;
 	static ShaperAtan
 	               _shaper_atan;
 	static ShaperDiode

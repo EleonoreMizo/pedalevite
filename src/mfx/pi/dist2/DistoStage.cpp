@@ -428,6 +428,15 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		distort_block_shaper (_shaper_atan, dst_ptr, src_ptr, nbr_spl);
 		chn._random_walk.process_block (dst_ptr, dst_ptr, nbr_spl);
 		break;
+	case Type_SQRT:
+		distort_block_sqrt (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_BELT:
+		distort_block_belt (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_BADMOOD:
+		distort_block_badmood (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
 
 	default:
 		assert (false);
@@ -607,10 +616,78 @@ void	DistoStage::distort_block_slewrate_limit (Channel &chn, float dst_ptr [], c
 
 
 
+void	DistoStage::distort_block_sqrt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     exp_mask = fstb::ToolsSimd::set1_s32 ( 0x7F800000);
+	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 ( 0x00800000);
+	const auto     exp_add  = fstb::ToolsSimd::set1_s32 ( 0x3F800000 >> 1);
+	const auto     sign_fix = fstb::ToolsSimd::set1_s32 (~0x40000000);
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
+		auto           exp_int = fstb::ToolsSimd::and_s32 (x_int, exp_mask);
+		auto           cond    = fstb::ToolsSimd::cmp_gt_s32 (exp_int, exp_lsb);
+		x_int >>= 1;
+		x_int   = fstb::ToolsSimd::and_s32 (x_int, sign_fix);
+		x_int  += exp_add;
+		x_int   = fstb::ToolsSimd::and_s32 (x_int, cond);
+		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
+	}
+}
+
+
+
+void	DistoStage::distort_block_belt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (0x7F800000);
+	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (0x00800000);
+	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (0x3F800000 >> 1);
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
+		auto           exp_int = fstb::ToolsSimd::and_s32 (x_int, exp_mask);
+		auto           cond    = fstb::ToolsSimd::cmp_gt_s32 (exp_int, exp_lsb);
+		x_int    -= exp_int;
+		exp_int >>= 1;
+		exp_int  += exp_add;
+		x_int    += exp_int;
+		x_int     = fstb::ToolsSimd::and_s32 (x_int, cond);
+		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
+	}
+}
+
+
+
+// Very interesting sound variations when changing the cutoff frequency
+// of the input HPF
+void	DistoStage::distort_block_badmood (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (0x7F800000);
+	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (0x00800000);
+	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (0x3F800000 >> 1);
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
+		auto           exp_int = fstb::ToolsSimd::and_s32 (x_int, exp_mask);
+		auto           rem     = fstb::ToolsSimd::and_s32 (x_int, exp_lsb);
+		auto           cond    = fstb::ToolsSimd::cmp_gt_s32 (exp_int, exp_lsb);
+		x_int    -= exp_int;
+		exp_int >>= 1;
+		exp_int  += exp_add;
+		x_int    += exp_int;
+		x_int     = fstb::ToolsSimd::xor_s32 (x_int, rem << 8);
+		x_int     = fstb::ToolsSimd::and_s32 (x_int, cond);
+		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
+	}
+}
+
+
+
 bool	DistoStage::_coef_init_flag = false;
 std::array <double, DistoStage::_nbr_coef_42>	DistoStage::_coef_42;
 std::array <double, DistoStage::_nbr_coef_21>	DistoStage::_coef_21;
 
+DistoStage::ShaperTanh	DistoStage::_shaper_tanh;
 DistoStage::ShaperAtan	DistoStage::_shaper_atan;
 DistoStage::ShaperDiode	DistoStage::_shaper_diode_clipper;
 DistoStage::ShaperProg1	DistoStage::_shaper_prog1;
