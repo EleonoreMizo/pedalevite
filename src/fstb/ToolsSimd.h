@@ -82,8 +82,14 @@ public:
 	static inline VectF32
 	               load_f32 (const MEM *ptr);
 	template <typename MEM>
+	static inline VectS32
+	               load_s32 (const MEM *ptr);
+	template <typename MEM>
 	static inline void
 	               store_f32 (MEM *ptr, VectF32 v);
+	template <typename MEM>
+	static inline void
+	               store_s32 (MEM *ptr, VectS32 v);
 	template <typename MEM>
 	static inline void
 	               store_f32_part (MEM *ptr, VectF32 v, int n);
@@ -119,8 +125,12 @@ public:
 
 	static inline VectF32
 	               set_f32_zero ();
+	static inline VectS32
+	               set_s32_zero ();
 	static inline VectF32
 	               set1_f32 (float a);
+	static inline VectS32
+	               set1_s32 (int32_t a);
 	static inline VectF32
 	               set_f32 (float a0, float a1, float a2, float a3);
 	static inline VectF32
@@ -172,12 +182,22 @@ public:
 	               select (VectF32 cond, VectF32 v_t, VectF32 v_f);
 	static inline VectF32
 	               cmp_gt_f32 (VectF32 lhs, VectF32 rhs);
+	static inline VectS32
+	               cmp_gt_s32 (VectS32 lhs, VectS32 rhs);
 	static inline VectF32
 	               cmp_lt_f32 (VectF32 lhs, VectF32 rhs);
+	static inline VectS32
+	               cmp_lt_s32 (VectS32 lhs, VectS32 rhs);
 	static inline VectF32
 	               and_f32 (VectF32 lhs, VectF32 rhs);
+	static inline VectS32
+	               and_s32 (VectS32 lhs, VectS32 rhs);
 	static inline VectF32
 	               or_f32 (VectF32 lhs, VectF32 rhs);
+	static inline VectS32
+	               or_s32 (VectS32 lhs, VectS32 rhs);
+	static inline VectS32
+	               xor_s32 (VectS32 lhs, VectS32 rhs);
 	static inline bool
 	               and_h (VectF32 cond);
 	static inline bool
@@ -323,6 +343,18 @@ inline fstb::ToolsSimd::VectF32 & operator *= (fstb::ToolsSimd::VectF32 &lhs, fs
 inline fstb::ToolsSimd::VectF32 operator + (fstb::ToolsSimd::VectF32 lhs, fstb::ToolsSimd::VectF32 rhs);
 inline fstb::ToolsSimd::VectF32 operator - (fstb::ToolsSimd::VectF32 lhs, fstb::ToolsSimd::VectF32 rhs);
 inline fstb::ToolsSimd::VectF32 operator * (fstb::ToolsSimd::VectF32 lhs, fstb::ToolsSimd::VectF32 rhs);
+
+inline fstb::ToolsSimd::VectS32 & operator += (fstb::ToolsSimd::VectS32 &lhs, fstb::ToolsSimd::VectS32 rhs);
+inline fstb::ToolsSimd::VectS32 & operator -= (fstb::ToolsSimd::VectS32 &lhs, fstb::ToolsSimd::VectS32 rhs);
+inline fstb::ToolsSimd::VectS32 & operator *= (fstb::ToolsSimd::VectS32 &lhs, fstb::ToolsSimd::VectS32 rhs);
+inline fstb::ToolsSimd::VectS32 & operator >>= (fstb::ToolsSimd::VectS32 &x, int scalar);
+inline fstb::ToolsSimd::VectS32 & operator <<= (fstb::ToolsSimd::VectS32 &x, int scalar);
+
+inline fstb::ToolsSimd::VectS32 operator + (fstb::ToolsSimd::VectS32 lhs, fstb::ToolsSimd::VectS32 rhs);
+inline fstb::ToolsSimd::VectS32 operator - (fstb::ToolsSimd::VectS32 lhs, fstb::ToolsSimd::VectS32 rhs);
+inline fstb::ToolsSimd::VectS32 operator * (fstb::ToolsSimd::VectS32 lhs, fstb::ToolsSimd::VectS32 rhs);
+inline fstb::ToolsSimd::VectS32 operator >> (fstb::ToolsSimd::VectS32 x, int scalar);
+inline fstb::ToolsSimd::VectS32 operator << (fstb::ToolsSimd::VectS32 x, int scalar);
 
 #endif // MSVC
 
