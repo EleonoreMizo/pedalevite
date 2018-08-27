@@ -424,6 +424,10 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 	case Type_ATTRACT:
 		chn._attractor.process_block (dst_ptr, src_ptr, nbr_spl);
 		break;
+	case Type_RANDWALK:
+		distort_block_shaper (_shaper_atan, dst_ptr, src_ptr, nbr_spl);
+		chn._random_walk.process_block (dst_ptr, dst_ptr, nbr_spl);
+		break;
 
 	default:
 		assert (false);
@@ -607,6 +611,7 @@ bool	DistoStage::_coef_init_flag = false;
 std::array <double, DistoStage::_nbr_coef_42>	DistoStage::_coef_42;
 std::array <double, DistoStage::_nbr_coef_21>	DistoStage::_coef_21;
 
+DistoStage::ShaperAtan	DistoStage::_shaper_atan;
 DistoStage::ShaperDiode	DistoStage::_shaper_diode_clipper;
 DistoStage::ShaperProg1	DistoStage::_shaper_prog1;
 DistoStage::ShaperProg2	DistoStage::_shaper_prog2;

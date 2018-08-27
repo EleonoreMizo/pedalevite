@@ -255,7 +255,7 @@ void	Disto2xDesc::register_stage (int stage, int base)
 		2,
 		"Arcsinh\nAsym 1\nProg 1\nProg 2\nProg 3\nSudden\nHardclip\nPuncher 1"
 		"\nPuncher 2\nPuncher 3\nOvershoot\nBitcrush\nSlew rate\nLopsided\nPorridge\nSmartE1"
-		"\nSmartE2\nAttract",
+		"\nSmartE2\nAttract\nRandWalk",
 		"Stage %d distortion type\nStage %d disto type\nStage %d type\nS%d type",
 		"",
 		stage,

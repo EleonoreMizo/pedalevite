@@ -2412,6 +2412,18 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.hpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\GaussFast.h">
+      <Filter>mfx\dsp\nz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\GaussFast.hpp">
+      <Filter>mfx\dsp\nz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.h">
+      <Filter>mfx\pi\dist2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.hpp">
+      <Filter>mfx\pi\dist2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3345,6 +3357,9 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.cpp">
+      <Filter>mfx\pi\dist2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.cpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClCompile>
   </ItemGroup>

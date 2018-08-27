@@ -418,6 +418,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/mix/Generic.h \
         ../../src/mfx/dsp/mix/Simd.h \
         ../../src/mfx/dsp/mix/Simd.hpp \
+        ../../src/mfx/dsp/nz/GaussFast.h \
+        ../../src/mfx/dsp/nz/GaussFast.hpp \
         ../../src/mfx/dsp/nz/WhiteFast.cpp \
         ../../src/mfx/dsp/nz/WhiteFast.h \
         ../../src/mfx/dsp/nz/WhiteFast.hpp \
@@ -521,6 +523,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dist2/DistoDspAttract.cpp \
         ../../src/mfx/pi/dist2/DistoDspAttract.h \
         ../../src/mfx/pi/dist2/DistoDspAttract.hpp \
+        ../../src/mfx/pi/dist2/DistoDspRandWalk.cpp \
+        ../../src/mfx/pi/dist2/DistoDspRandWalk.h \
+        ../../src/mfx/pi/dist2/DistoDspRandWalk.hpp \
         ../../src/mfx/pi/dist2/DistoStage.cpp \
         ../../src/mfx/pi/dist2/DistoStage.h \
         ../../src/mfx/pi/dist2/FreqSplitter.cpp \

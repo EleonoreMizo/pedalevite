@@ -471,6 +471,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Generic.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Simd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Simd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\GaussFast.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\GaussFast.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.h" />
@@ -556,6 +558,8 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoStage.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Param.h" />
@@ -990,6 +994,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2x.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.cpp" />

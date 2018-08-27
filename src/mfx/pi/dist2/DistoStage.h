@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
 #include "mfx/dsp/shape/FncFiniteAsym.h"
 #include "mfx/pi/dist2/DistoDspAttract.h"
+#include "mfx/pi/dist2/DistoDspRandWalk.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
@@ -86,6 +87,7 @@ public:
 		Type_SMARTE1,
 		Type_SMARTE2,
 		Type_ATTRACT,
+		Type_RANDWALK,
 
 		Type_NBR_ELT
 	};
@@ -141,8 +143,19 @@ private:
 		               _porridge_limiter;
 		DistoDspAttract
 		               _attractor;
+		DistoDspRandWalk
+		               _random_walk;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
+
+	class FncAtan
+	{
+	public:
+		double         operator () (double x)
+		{
+			return (2 / fstb::PI) * atan (fstb::PI * 0.5 * x);
+		}
+	};
 
 	class FncDiodeClipper
 	{
@@ -270,6 +283,7 @@ private:
 		-8, 8, FNC, 4
 	>;
 
+	typedef ShaperStd <FncAtan> ShaperAtan;
 	typedef ShaperLong <FncDiodeClipper> ShaperDiode;
 	typedef ShaperStd <FncProgClipper <
 		std::ratio < 2, 4>,
@@ -327,6 +341,8 @@ private:
 	static std::array <double, _nbr_coef_21>
 	               _coef_21;
 
+	static ShaperAtan
+	               _shaper_atan;
 	static ShaperDiode
 	               _shaper_diode_clipper;
 	static ShaperProg1
