@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
 #include "mfx/dsp/shape/FncFiniteAsym.h"
 #include "mfx/pi/dist2/DistoDspAttract.h"
+#include "mfx/pi/dist2/DistoDspBounce.h"
 #include "mfx/pi/dist2/DistoDspRandWalk.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -91,6 +92,7 @@ public:
 		Type_SQRT,
 		Type_BELT,
 		Type_BADMOOD,
+		Type_BOUNCE,
 
 		Type_NBR_ELT
 	};
@@ -148,6 +150,7 @@ private:
 		               _attractor;
 		DistoDspRandWalk
 		               _random_walk;
+		DistoDspBounce _bounce;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 

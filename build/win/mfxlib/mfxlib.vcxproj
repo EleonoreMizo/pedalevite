@@ -558,6 +558,8 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoStage.h" />
@@ -994,6 +996,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2x.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp" />

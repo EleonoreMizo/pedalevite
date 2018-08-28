@@ -101,6 +101,7 @@ void	DistoStage::reset (double sample_freq, int max_block_size)
 		chn._porridge_limiter.set_sample_freq (fs_ovr);
 		chn._attractor.set_sample_freq (fs_ovr);
 		chn._random_walk.set_sample_freq (fs_ovr);
+		chn._bounce.set_sample_freq (fs_ovr);
 	}
 
 	clear_buffers ();
@@ -258,6 +259,7 @@ void	DistoStage::clear_buffers ()
 		chn._porridge_limiter.clear_buffers ();
 		chn._attractor.clear_buffers ();
 		chn._random_walk.clear_buffers ();
+		chn._bounce.clear_buffers ();
 	}
 
 	set_next_block ();
@@ -439,6 +441,10 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		break;
 	case Type_BADMOOD:
 		distort_block_badmood (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_BOUNCE:
+		chn._bounce.process_block (dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_shaper_tanh, dst_ptr, dst_ptr, nbr_spl);
 		break;
 
 	default:

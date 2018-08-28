@@ -2424,6 +2424,12 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.hpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.h">
+      <Filter>mfx\pi\dist2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.hpp">
+      <Filter>mfx\pi\dist2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3360,6 +3366,9 @@
       <Filter>mfx\pi\dist2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.cpp">
+      <Filter>mfx\pi\dist2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.cpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClCompile>
   </ItemGroup>

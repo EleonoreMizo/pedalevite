@@ -523,6 +523,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dist2/DistoDspAttract.cpp \
         ../../src/mfx/pi/dist2/DistoDspAttract.h \
         ../../src/mfx/pi/dist2/DistoDspAttract.hpp \
+        ../../src/mfx/pi/dist2/DistoDspBounce.cpp \
+        ../../src/mfx/pi/dist2/DistoDspBounce.h \
+        ../../src/mfx/pi/dist2/DistoDspBounce.hpp \
         ../../src/mfx/pi/dist2/DistoDspRandWalk.cpp \
         ../../src/mfx/pi/dist2/DistoDspRandWalk.h \
         ../../src/mfx/pi/dist2/DistoDspRandWalk.hpp \
