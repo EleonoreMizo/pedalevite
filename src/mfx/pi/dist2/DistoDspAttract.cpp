@@ -51,6 +51,7 @@ DistoDspAttract::DistoDspAttract ()
 ,	_mad_flag (false)
 ,	_sign (1)
 ,	_speed (0)
+,	_speed_lim_min (1.0f / 256)
 ,	_ratio_f (1)
 ,	_cur_val (0)
 ,	_env ()
@@ -64,9 +65,10 @@ void	DistoDspAttract::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
-	_sample_freq = float (sample_freq);
+	_sample_freq   = float (sample_freq);
 	_env.set_sample_freq (sample_freq);
-	_ratio_f = float (44100.f / sample_freq);
+	_ratio_f       = float (44100.f / sample_freq);
+	_speed_lim_min = float (44100.0 / (256 * sample_freq));
 }
 
 

@@ -24,6 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/Approx.h"
 
+#include <algorithm>
+
 #include <cassert>
 #include <cmath>
 
@@ -72,10 +74,9 @@ void	DistoDspAttract::attract (float x, float env_val)
 		const float    f    = std::copysign (1.0f / 16, dist);
 
 		_speed += f * _ratio_f;
-		const float    speed_limit = fstb::limit (
+		const float    speed_limit = std::max (
 			fstb::Approx::log2 (env_val) * 0.25f - 1,
-			1.0f / 256,
-			1.0f / 16
+			_speed_lim_min
 		);
 		assert (speed_limit > 0);
 		_speed = fstb::limit (_speed, -speed_limit, speed_limit);

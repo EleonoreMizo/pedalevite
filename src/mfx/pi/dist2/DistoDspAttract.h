@@ -95,6 +95,7 @@ private:
 	bool           _mad_flag;	// Mode
 	float          _sign;		// for Mad mode
 	float          _speed;		// for Mad mode
+	float          _speed_lim_min;
 	float          _ratio_f;	// 44100 / sample_freq
 
 	float          _cur_val;	// Output

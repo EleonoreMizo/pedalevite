@@ -87,18 +87,20 @@ void	DistoStage::reset (double sample_freq, int max_block_size)
 
 	_sample_freq = float (      sample_freq);
 	_inv_fs      = float (1.0 / sample_freq);
+	const float    fs_ovr = _sample_freq * _ovrspl;
 
 	const int      mbs_align = (max_block_size + 3) & -4;
 	_buf_x1.resize (mbs_align);
 	_buf_ovr.resize (mbs_align * _ovrspl);
 
 	// Let pass a sine of 100 Hz at 0 dB
-	_slew_rate_limit = 100 * _inv_fs;
+	_slew_rate_limit = float (100 * 2 * fstb::PI / fs_ovr);
 
 	for (auto &chn : _chn_arr)
 	{
-		chn._porridge_limiter.set_sample_freq (sample_freq);
-		chn._attractor.set_sample_freq (sample_freq);
+		chn._porridge_limiter.set_sample_freq (fs_ovr);
+		chn._attractor.set_sample_freq (fs_ovr);
+		chn._random_walk.set_sample_freq (fs_ovr);
 	}
 
 	clear_buffers ();
@@ -255,6 +257,7 @@ void	DistoStage::clear_buffers ()
 		chn._slew_rate_val = 0;
 		chn._porridge_limiter.clear_buffers ();
 		chn._attractor.clear_buffers ();
+		chn._random_walk.clear_buffers ();
 	}
 
 	set_next_block ();
