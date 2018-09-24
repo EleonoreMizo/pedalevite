@@ -547,9 +547,21 @@ fprintf (stderr, "r EBADFD\n");
 				{
 					fprintf (stderr, "r cannot recover from dropout\n");
 				}
-				else if (loop_count % 100 == 0)
+				else
 				{
-					fprintf (stderr, "r %d dropouts\n", loop_count);
+					int            m = 100;
+					if (loop_count > 100000)
+					{
+						m = 100000;
+					}
+					else if (loop_count > 1000)
+					{
+						m = 1000;
+					}
+					if (loop_count % m == 0)
+					{
+						fprintf (stderr, "r %d dropouts\n", loop_count);
+					}
 				}
 			}
 			else if (ret_val == -ESTRPIPE)
@@ -616,9 +628,21 @@ fprintf (stderr, "w EBADFD\n");
 				{
 					fprintf (stderr, "w cannot recover from dropout\n");
 				}
-				else if (loop_count % 100 == 0)
+				else
 				{
-					fprintf (stderr, "w %d dropouts\n", loop_count);
+					int            m = 100;
+					if (loop_count > 100000)
+					{
+						m = 100000;
+					}
+					else if (loop_count > 1000)
+					{
+						m = 1000;
+					}
+					if (loop_count % m == 0)
+					{
+						fprintf (stderr, "w %d dropouts\n", loop_count);
+					}
 				}
 			}
 			else if (ret_val == -ESTRPIPE)
