@@ -31,11 +31,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageInterface.h"
 
 #include <memory>
+#include <set>
 
 
 
 namespace mfx
 {
+
+class ControlSource;
 
 namespace adrv
 {
@@ -91,6 +94,22 @@ protected:
 
 private:
 
+	enum Entry
+	{
+		Entry_PROG_IDX = 0,
+		Entry_PROG_NAME,
+		Entry_BANK_IDX,
+		Entry_BANK_NAME,
+		Entry_FX_NAME,
+		Entry_PARAM_UNIT,
+		Entry_PARAM_NAME,
+		Entry_PARAM_VAL,
+		Entry_MOD_LIST,
+		Entry_IP,
+
+		Entry_NBR_ELT
+	};
+
 	static const int  _mag_prog_nbr = 2;
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -100,6 +119,8 @@ private:
 	void           i_set_bank_name (std::string name);
 	void           i_set_prog_name (std::string name);
 	void           i_set_param (bool show_flag, int slot_id, int index, float val, PiType type);
+	void           i_show_mod_list ();
+	void           add_mod_source (std::set <ControlSource> &src_list, const ControlSource &src);
 
 	static std::string
 	               get_ip_address ();
@@ -122,6 +143,7 @@ private:
 	TxtSPtr        _param_unit_sptr;
 	TxtSPtr        _param_name_sptr;
 	TxtSPtr        _param_val_sptr;
+	TxtSPtr        _modlist_sptr;
 	TxtSPtr        _ip_sptr;
 	int            _size_max_bank_name;
 

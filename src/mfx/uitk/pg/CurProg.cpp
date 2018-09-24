@@ -36,6 +36,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/ui/UserInputType.h"
+#include "mfx/ControlSource.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
 
@@ -55,6 +57,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #else
 	#error Unsupported operating system
 #endif
+
+#include <vector>
 
 #include <cassert>
 
@@ -93,15 +97,16 @@ CurProg::CurProg (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_ip_addr ()
-,	_prog_nbr_sptr (  new NText (0))
-,	_prog_name_sptr ( new NText (1))
-,	_bank_nbr_sptr (  new NText (2))
-,	_bank_name_sptr ( new NText (3))
-,	_fx_name_sptr (   new NText (4))
-,	_param_unit_sptr (new NText (5))
-,	_param_name_sptr (new NText (6))
-,	_param_val_sptr ( new NText (7))
-,	_ip_sptr (        new NText (8))
+,	_prog_nbr_sptr (  new NText (Entry_PROG_IDX))
+,	_prog_name_sptr ( new NText (Entry_PROG_NAME))
+,	_bank_nbr_sptr (  new NText (Entry_BANK_IDX))
+,	_bank_name_sptr ( new NText (Entry_BANK_NAME))
+,	_fx_name_sptr (   new NText (Entry_FX_NAME))
+,	_param_unit_sptr (new NText (Entry_PARAM_UNIT))
+,	_param_name_sptr (new NText (Entry_PARAM_NAME))
+,	_param_val_sptr ( new NText (Entry_PARAM_VAL))
+,	_modlist_sptr (   new NText (Entry_MOD_LIST))
+,	_ip_sptr (        new NText (Entry_IP))
 ,	_size_max_bank_name (0)
 ,	_bank_index (0)
 ,	_preset_index (0)
@@ -152,6 +157,7 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	_param_unit_sptr->set_font (fnt._s);
 	_param_name_sptr->set_font (fnt._s);
 	_param_val_sptr->set_font (fnt._s);
+	_modlist_sptr->set_font (fnt._s);
 	_ip_sptr->set_font (fnt._m);
 
 	const int      bl_s  = fnt._s.get_baseline ();
@@ -174,6 +180,7 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	_param_name_sptr->set_coord (Vec2d (0, y_fx));
 	_param_unit_sptr->set_coord (Vec2d (_page_size [0], y_fx + h_s));
 	_param_val_sptr->set_coord (Vec2d (_page_size [0], y_fx));
+	_modlist_sptr->set_coord (Vec2d (0, y_fx + h_s));
 	_ip_sptr->set_coord (Vec2d (x_mid, _page_size [1]));
 
 	_page_ptr->push_back (_bank_nbr_sptr);
@@ -184,6 +191,7 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	_page_ptr->push_back (_param_unit_sptr);
 	_page_ptr->push_back (_param_name_sptr);
 	_page_ptr->push_back (_param_val_sptr);
+	_page_ptr->push_back (_modlist_sptr);
 	_page_ptr->push_back (_ip_sptr);
 
 	const int      bank_index   = _view_ptr->get_bank_index ();
@@ -195,6 +203,7 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 	i_set_bank_name (setup._bank_arr [bank_index]._name);
 	i_set_prog_name (preset._name);
 	i_set_param (false, 0, 0, 0, PiType (0));
+	i_show_mod_list ();
 
 	_esc_count = 0;
 }
@@ -264,6 +273,7 @@ void	CurProg::do_set_tempo (double bpm)
 {
 	_tempo_date = _model_ptr->get_cur_date ();
 
+	_modlist_sptr->set_text ("");
 	_fx_name_sptr->set_text ("");
 	_param_unit_sptr->set_text ("BPM");
 	_param_name_sptr->set_text ("Tempo");
@@ -306,6 +316,7 @@ void	CurProg::do_activate_preset (int index)
 		i_set_prog_name (_view_ptr->use_preset_cur ()._name);
 	}
 	i_set_param (false, 0, 0, 0, PiType (0));
+	i_show_mod_list ();
 }
 
 
@@ -379,12 +390,109 @@ void	CurProg::i_set_param (bool show_flag, int slot_id, int index, float val, Pi
 	}
 	else
 	{
+		_modlist_sptr->set_text ("");
 		Tools::set_param_text (
 			*_model_ptr, *_view_ptr, _page_size [0], index, val, slot_id, type,
 			_param_name_sptr.get (), *_param_val_sptr,
 			_param_unit_sptr.get (), _fx_name_sptr.get (),
 			false
 		);
+	}
+}
+
+
+
+void	CurProg::i_show_mod_list ()
+{
+	if (_view_ptr != 0)
+	{
+		const mfx::doc::Preset &   cur = _view_ptr->use_preset_cur ();
+
+		std::set <ControlSource>   src_list;
+
+		// Retrieves all unique modulation sources
+		std::vector <int> slot_list (cur.build_ordered_node_list (true));
+		for (int slot_id : slot_list)
+		{
+			const doc::Slot &   slot = cur.use_slot (slot_id);
+			for (int type = 0; type < PiType_NBR_ELT; ++type)
+			{
+				const doc::PluginSettings & settings =
+					slot.use_settings (static_cast <PiType> (type));
+				for (auto &cls : settings._map_param_ctrl)
+				{
+					if (! cls.second.is_empty ())
+					{
+						if (cls.second._bind_sptr.get () != 0)
+						{
+							add_mod_source (src_list, cls.second._bind_sptr->_source);
+						}
+						for (auto &cl_sptr : cls.second._mod_arr)
+						{
+							if (cl_sptr.get () != 0)
+							{
+								add_mod_source (src_list, cl_sptr->_source);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Prints the list
+		ui::UserInputType type_cur = ui::UserInputType_UNDEFINED;
+		std::string    txt;
+		char           txt_0 [255];
+		for (auto &src : src_list)
+		{
+			ui::UserInputType    type = ui::UserInputType (src._type);
+			if (type != type_cur)
+			{
+				type_cur = type;
+				if (! txt.empty ())
+				{
+					txt += " ";
+				}
+				switch (type)
+				{
+				case ui::UserInputType_SW:
+					txt += "FSw";
+					break;
+				case ui::UserInputType_POT:
+					txt += "Pdl";
+					break;
+				case ui::UserInputType_ROTENC:
+					txt += "Pot";
+					break;
+				default:
+					txt += "\?\?\?";
+					assert (false);
+					break;
+				}
+			}
+
+			fstb::snprintf4all (txt_0, sizeof (txt_0), " %d", src._index);
+			txt += txt_0;
+		}
+		
+		_modlist_sptr->set_text (txt);
+
+		_fx_name_sptr->set_text ("");
+		_param_unit_sptr->set_text ("");
+		_param_name_sptr->set_text ("");
+		_param_val_sptr->set_text ("");
+	}
+}
+
+
+
+void CurProg::add_mod_source (std::set <ControlSource> &src_list, const ControlSource &src)
+{
+	assert (src.is_valid ());
+
+	if (src.is_physical ())
+	{
+		src_list.insert (src);
 	}
 }
 

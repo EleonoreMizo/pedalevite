@@ -22,7 +22,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/ui/UserInputType.h"
+
 #include <cassert>
+
 
 
 
@@ -62,6 +65,13 @@ bool	ControlSource::is_relative () const
 bool	ControlSource::is_bipolar () const
 {
 	return (_type == ControllerType_FX_SIG);
+}
+
+
+
+bool	ControlSource::is_physical () const
+{
+	return (_type < ui::UserInputType_NBR_ELT);
 }
 
 
