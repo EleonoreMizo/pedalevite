@@ -71,7 +71,7 @@ bool	ControlSource::is_bipolar () const
 
 bool	ControlSource::is_physical () const
 {
-	return (_type < ui::UserInputType_NBR_ELT);
+	return (_type < static_cast <ControllerType> (ui::UserInputType_NBR_ELT));
 }
 
 
