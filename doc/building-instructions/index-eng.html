@@ -992,7 +992,9 @@ sudo insserv -r x11-common</pre>
 sudo dpkg --purge rsyslog</pre>
 <p>Change the location of the DHCP leases:</p>
 <pre class="term">sudo rm -rf /var/lib/dhcp/
+sudo rm -rf /var/lib/dhcpcd5/
 sudo ln -s /tmp /var/lib/dhcp
+sudo ln -s /tmp /var/lib/dhcpcd5
 sudo rm /etc/resolv.conf
 sudo ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf</pre>
 <p>Replace some <code>var</code> subfolders with symbolic links on the

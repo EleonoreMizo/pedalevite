@@ -1127,7 +1127,9 @@ sudo insserv -r x11-common</pre>
 sudo dpkg --purge rsyslog</pre>
 <p>Changer la place des baux DHCP&#8239;:</p>
 <pre class="term">sudo rm -rf /var/lib/dhcp/
+sudo rm -rf /var/lib/dhcpcd5/
 sudo ln -s /tmp /var/lib/dhcp
+sudo ln -s /tmp /var/lib/dhcpcd5
 sudo rm /etc/resolv.conf
 sudo ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf</pre>
 <p>Remplacer certains sous-répertoires de <code>var</code> par des liens
