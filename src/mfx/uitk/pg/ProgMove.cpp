@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/View.h"
 
 #include <cassert>
+#include <cstdlib>
 
 
 
@@ -248,6 +249,8 @@ MsgHandlerInterface::EvtProp	ProgMove::move_prog (int index_new)
 {
 	if (_prog_index >= 0 && index_new != _prog_index)
 	{
+		assert (abs (index_new - _prog_index) <= 1);
+
 		_moving_flag = true;
 
 		const doc::Setup &   setup      = _view_ptr->use_setup ();
