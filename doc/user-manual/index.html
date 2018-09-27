@@ -51,6 +51,7 @@
 	<li><a href="#fx-freeverb">Freeverb — Réverbération</a></li>
 	<li><a href="#fx-freq-shift">Frequency Shifter — Translateur de fréquences</a></li>
 	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Trémolo bi-bande</a></li>
+	<li><a href="#fx-hypercomb">Hypercomb — Filtre en peigne polyphonique</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix — Adaptation d’impédance d’entrée</a></li>
 	<li><a href="#fx-nzbl">Noise Bleach — Barrière anti-bruit</a></li>
 	<li><a href="#fx-nzcl">Noise Chlorine — Barrière anti-bruit</a></li>
@@ -1377,6 +1378,65 @@ Phase set</p>
 
 
 
+<h3><a id="fx-hypercomb"></a>Hypercomb — Filtre en peigne polyphonique</h3>
+
+<p>Cet effet apporte une texture reverbérante métallique, comme si le son
+passait dans un tuyau.
+Il ainsi doté d’une tonalité distincte, qu’il est possible d’accorder sur une
+ou plusieurs notes (jusqu’à 8).</p>
+<p>Chaque voie est en outre dotée d’un filtre au sein de sa boucle de
+feedback.
+Celui-ci peut résonner (avec la possibilité d’entrer en auto-oscillation)
+ainsi que couper les hautes fréquence.</p>
+
+<p class="var">Tune</p>
+<p>Transposition des notes des voies, en demi-tons.</p>
+
+<p class="var">Duration</p>
+<p>Durée approximative de la queue réverbrante de chaque voie (atténuation
+RT60, temps d’atténuation de &minus;60&#8239;dB).</p>
+
+<p class="var">Volume</p>
+<p>Volume global des voies, en dB.</p>
+
+<p class="var">Filter frequency</p>
+<p>Fréquence de coupure du filtre.
+Elle concerne autant le pic résonnant que le haut plateau.</p>
+
+<p class="var">Filter resonance</p>
+<p>Résonance du filtre.
+Poussée suffisamment haut, la voie entre en auto-oscillation.
+Quand la résonance est activée, le temps indiqué par le paramètre
+<var>Duration</var> devient plus approximatif.</p>
+
+<p class="var">Filter damping</p>
+<p>Taux d’atténuation des hautes fréquences, au-dessus de la
+fréquence de coupure indiquée par <var>Filter frequency</var>.</p>
+
+<p class="var">Voice 1–8 polarity</p>
+<p>Polarité de la réinjection du peigne de la voie concernée.
+Ce paramètre peut prendre trois valeurs&#8239;:</p>
+<table>
+<tr><td><span class="ui">Off</span></td><td>La voie est désactivée.</td></tr>
+<tr><td><span class="ui">Pos</span></td><td>Réinjection positive. Ce mode donne un son relativement clair.</td></tr>
+<tr><td><span class="ui">Neg</span></td><td>Réinjection négative. L’effet «&#8239;note&#8239;» est moins prononcé qu’en positif.</td></tr>
+</table>
+
+<p class="var">Voice 1–8 note</p>
+<p>Hauteur de la note prise par la voie, sur une échelle en demi-tons.</p>
+
+<p class="var">Voice 1–8 finetune</p>
+<p>Ajustement en cents de la hauteur de la note.</p>
+
+<p class="var">Voice 1–8 duration multiplier</p>
+<p>Multiplicateur de la durée donnée par <var>Duration</var>.
+Ce paramètre permet d’affecter des durées différentes à chaque note.</p>
+
+<p class="var">Voice 1–8 gain</p>
+<p>Volume relatif de la voie, en dB.</p>
+
+
+
 <h3><a id="fx-imp-fix"></a>Input Impedance Fix — Adaptation d’impédance d’entrée</h3>
 
 <p>Cet effet permet de corriger en quelque sorte l’impédance d’entrée de la
@@ -2316,6 +2376,11 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r15, 2018-09-27</b></p>
+<ul>
+<li>Ajout de l’effet Hypercomb.</li>
+</ul>
 
 <p><b>r14, 2018-08-26</b></p>
 <ul>

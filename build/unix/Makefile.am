@@ -377,6 +377,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/iir/DesignEq2p.hpp \
         ../../src/mfx/dsp/iir/Downsampler4xSimd.h \
         ../../src/mfx/dsp/iir/Downsampler4xSimd.hpp \
+        ../../src/mfx/dsp/iir/FilterComb.h \
+        ../../src/mfx/dsp/iir/FilterComb.hpp \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \
@@ -428,6 +430,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
         ../../src/mfx/dsp/rspl/Cst.h \
+        ../../src/mfx/dsp/rspl/InterpFirMakerHermite4.h \
+        ../../src/mfx/dsp/rspl/InterpFirMakerHermite4.hpp \
+        ../../src/mfx/dsp/rspl/InterpFirMakerLagrange4.h \
+        ../../src/mfx/dsp/rspl/InterpFirMakerLagrange4.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorFir.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorHermite43.cpp \
@@ -485,6 +491,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/wnd/WndInterface.hpp \
         ../../src/mfx/dsp/BandSplitAllPassPair.h \
         ../../src/mfx/dsp/BandSplitAllPassPair.hpp \
+        ../../src/mfx/dsp/FilterBypass.h \
+        ../../src/mfx/dsp/FilterCascade.h \
+        ../../src/mfx/dsp/FilterCascade.hpp \
         ../../src/mfx/dsp/FilterCascadeIdEven.h \
         ../../src/mfx/dsp/FilterCascadeIdEven.hpp \
         ../../src/mfx/dsp/FilterCascadeIdOdd.h \
@@ -619,6 +628,14 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/fv/FreeverbDesc.cpp \
         ../../src/mfx/pi/fv/FreeverbDesc.h \
         ../../src/mfx/pi/fv/Param.h \
+        ../../src/mfx/pi/hcomb/Cst.h \
+        ../../src/mfx/pi/hcomb/HyperComb.cpp \
+        ../../src/mfx/pi/hcomb/HyperComb.h \
+        ../../src/mfx/pi/hcomb/HyperCombDesc.cpp \
+        ../../src/mfx/pi/hcomb/HyperCombDesc.h \
+        ../../src/mfx/pi/hcomb/Param.h \
+        ../../src/mfx/pi/hcomb/Voice.cpp \
+        ../../src/mfx/pi/hcomb/Voice.h \
         ../../src/mfx/pi/iifix/IIFix.cpp \
         ../../src/mfx/pi/iifix/IIFix.h \
         ../../src/mfx/pi/iifix/IIFixDesc.cpp \

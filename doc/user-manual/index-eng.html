@@ -51,6 +51,7 @@
 	<li><a href="#fx-freeverb">Freeverb — Reverberation</a></li>
 	<li><a href="#fx-freq-shift">Frequency Shifter</a></li>
 	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Two-band tremolo</a></li>
+	<li><a href="#fx-hypercomb">Hypercomb — Polyphonic comb filter</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix</a></li>
 	<li><a href="#fx-nzbl">Noise Bleach — Noise gate</a></li>
 	<li><a href="#fx-nzcl">Noise Chlorine — Noise gate</a></li>
@@ -1316,6 +1317,63 @@ Phase set</p>
 
 
 
+<h3><a id="fx-hypercomb"></a>Hypercomb — Polyphonic comb filter</h3>
+
+<p>This effects adds a metallic reverberating texture, as if the sound was
+played through a pipe.
+Thus, it becomes pitched, and it is possible to tune the pitch on one or more
+notes (up to 8).</p>
+<p>Additionally, each voice has a filter within its feedback loop.
+It can resonate (allowing self-oscillation) and cut the high frequencies.</p>
+
+<p class="var">Tune</p>
+<p>Global transpose for all the voices, in semitones.</p>
+
+<p class="var">Duration</p>
+<p>Approximate duration of the reverberating tail.
+This is the time to reach &minus;60dB (RT60).</p>
+
+<p class="var">Volume</p>
+<p>Global voice volume, in dB.</p>
+
+<p class="var">Filter frequency</p>
+<p>Filter cutoff frequency.
+It affects the resonant peak as well as the high shelf.</p>
+
+<p class="var">Filter resonance</p>
+<p>Peak resonance amount.
+When set high, the voice self-oscillates.
+When the resonance is active, the time given by the <var>Duration</var>
+parameter becomes more approximate.</p>
+
+<p class="var">Filter damping</p>
+<p>Damping level for the high frequencies, above <var>Filter
+frequency</var>.</p>
+
+<p class="var">Voice 1–8 polarity</p>
+<p>Comb feedback polarity for the given voice.
+This parameter can take three values:</p>
+<table>
+<tr><td><span class="ui">Off</span></td><td>Voice is deactivated (mute).</td></tr>
+<tr><td><span class="ui">Pos</span></td><td>Positive feedback. This mode gives a clear and bright sound.</td></tr>
+<tr><td><span class="ui">Neg</span></td><td>Negative feedback. The pitched effect is less pronounced.</td></tr>
+</table>
+
+<p class="var">Voice 1–8 note</p>
+<p>Pitch of the comb, selected as a note.</p>
+
+<p class="var">Voice 1–8 finetune</p>
+<p>Finetuning of the comb pitch, in cents.</p>
+
+<p class="var">Voice 1–8 duration multiplier</p>
+<p>Multiplier for the duration given by <var>Duration</var>.
+This parameter allows different durations for each voice.</p>
+
+<p class="var">Voice 1–8 gain</p>
+<p>Relative voice volume, in dB.</p>
+
+
+
 <h3><a id="fx-imp-fix"></a>Input Impedance Fix</h3>
 
 <p>This effect allows to correct the input impedance of the sound card, which
@@ -2210,6 +2268,11 @@ phase.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r15, 2018-09-27</b></p>
+<ul>
+<li>Added the Hypercomb effect.</li>
+</ul>
 
 <p><b>r14, 2018-08-26</b></p>
 <ul>

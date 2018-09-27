@@ -110,7 +110,6 @@ private:
 
 private:
 
-	               DelayLineFracFir4Base ()                                   = delete;
 	               DelayLineFracFir4Base (const DelayLineFracFir4Base &other) = delete;
 	DelayLineFracFir4Base &
 	               operator = (const DelayLineFracFir4Base &other)            = delete;

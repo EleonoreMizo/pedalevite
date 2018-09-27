@@ -223,6 +223,9 @@
     <Filter Include="fstb\lang">
       <UniqueIdentifier>{7a6a36c2-589d-4dd6-afba-d42a29a0a7f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\hcomb">
+      <UniqueIdentifier>{73cc70dd-b66f-4323-9ded-fda81e4153db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2430,6 +2433,48 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.hpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\hcomb\Param.h">
+      <Filter>mfx\pi\hcomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\hcomb\HyperComb.h">
+      <Filter>mfx\pi\hcomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\hcomb\HyperCombDesc.h">
+      <Filter>mfx\pi\hcomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\hcomb\Cst.h">
+      <Filter>mfx\pi\hcomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\hcomb\Voice.h">
+      <Filter>mfx\pi\hcomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerLagrange4.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerLagrange4.hpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerHermite4.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerHermite4.hpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\FilterBypass.h">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\FilterComb.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\FilterComb.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascade.h">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascade.hpp">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3370,6 +3415,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.cpp">
       <Filter>mfx\pi\dist2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\hcomb\HyperComb.cpp">
+      <Filter>mfx\pi\hcomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\hcomb\HyperCombDesc.cpp">
+      <Filter>mfx\pi\hcomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\hcomb\Voice.cpp">
+      <Filter>mfx\pi\hcomb</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

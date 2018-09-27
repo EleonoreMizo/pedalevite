@@ -54,6 +54,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/flancho/FlanchoDesc.h"
 #include "mfx/pi/fv/Freeverb.h"
 #include "mfx/pi/fv/FreeverbDesc.h"
+#include "mfx/pi/hcomb/HyperComb.h"
+#include "mfx/pi/hcomb/HyperCombDesc.h"
 #include "mfx/pi/iifix/IIFix.h"
 #include "mfx/pi/iifix/IIFixDesc.h"
 #include "mfx/pi/lfo1/Lfo.h"
@@ -145,6 +147,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::pidet::PitchDetectDesc , mfx::pi::pidet::PitchDetect      >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::osdet::OnsetDetectDesc , mfx::pi::osdet::OnsetDetect      >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::syn0::Synth0Desc       , mfx::pi::syn0::Synth0            >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::hcomb::HyperCombDesc   , mfx::pi::hcomb::HyperComb        >::create ()
 		};
 
 		fact_list = l;
