@@ -1515,7 +1515,16 @@ fstb::ToolsSimd::VectS32 &	operator -= (fstb::ToolsSimd::VectS32 &lhs, fstb::Too
 fstb::ToolsSimd::VectS32 &	operator *= (fstb::ToolsSimd::VectS32 &lhs, fstb::ToolsSimd::VectS32 rhs)
 {
 #if fstb_IS (ARCHI, X86)
-	lhs = _mm_mul_epi32 (lhs, rhs);
+	// mullo_epi32
+	// Code of this function shamelessly borrowed from tp7
+	// https://github.com/tp7/masktools/blob/16bit/masktools/common/simd.h
+	const __m128i  lhs13  = _mm_shuffle_epi32 (lhs, 0xF5);       // (-,a3,-,a1)
+	const __m128i  rhs13  = _mm_shuffle_epi32 (rhs, 0xF5);       // (-,b3,-,b1)
+	const __m128i  prod02 = _mm_mul_epu32 (lhs, rhs);            // (-,a2*b2,-,a0*b0)
+	const __m128i  prod13 = _mm_mul_epu32 (lhs13, rhs13);        // (-,a3*b3,-,a1*b1)
+	const __m128i  prod01 = _mm_unpacklo_epi32 (prod02, prod13); // (-,-,a1*b1,a0*b0)
+	const __m128i  prod23 = _mm_unpackhi_epi32 (prod02, prod13); // (-,-,a3*b3,a2*b2)
+	lhs                   = _mm_unpacklo_epi64 (prod01 ,prod23); // (ab3,ab2,ab1,ab0)
 #elif fstb_IS (ARCHI, ARM)
 	lhs = vmulq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
@@ -1575,7 +1584,7 @@ fstb::ToolsSimd::VectS32 operator - (fstb::ToolsSimd::VectS32 lhs, fstb::ToolsSi
 fstb::ToolsSimd::VectS32 operator * (fstb::ToolsSimd::VectS32 lhs, fstb::ToolsSimd::VectS32 rhs)
 {
 #if fstb_IS (ARCHI, X86)
-	return _mm_mul_epi32 (lhs, rhs);
+	return lhs *= rhs;
 #elif fstb_IS (ARCHI, ARM)
 	return vmulq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
