@@ -93,6 +93,9 @@ public:
 		Type_BELT,
 		Type_BADMOOD,
 		Type_BOUNCE,
+		Type_LIGHT1,
+		Type_LIGHT2,
+		Type_LIGHT3,
 
 		Type_NBR_ELT
 	};
@@ -336,6 +339,9 @@ private:
 	void           distort_block_sqrt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_belt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           distort_block_badmood (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_light1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_light2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           distort_block_light3 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	ChannelArray   _chn_arr;
 	float          _sample_freq;

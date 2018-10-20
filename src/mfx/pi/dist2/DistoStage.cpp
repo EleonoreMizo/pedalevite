@@ -446,6 +446,15 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		chn._bounce.process_block (dst_ptr, src_ptr, nbr_spl);
 		distort_block_shaper (_shaper_tanh, dst_ptr, dst_ptr, nbr_spl);
 		break;
+	case Type_LIGHT1:
+		distort_block_light1 (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_LIGHT2:
+		distort_block_light2 (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_LIGHT3:
+		distort_block_light3 (chn, dst_ptr, src_ptr, nbr_spl);
+		break;
 
 	default:
 		assert (false);
@@ -625,6 +634,7 @@ void	DistoStage::distort_block_slewrate_limit (Channel &chn, float dst_ptr [], c
 
 
 
+// Piece-wise linear approximation of a signed square root
 void	DistoStage::distort_block_sqrt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	const auto     exp_mask = fstb::ToolsSimd::set1_s32 ( 0x7F800000);
@@ -686,6 +696,76 @@ void	DistoStage::distort_block_badmood (Channel &chn, float dst_ptr [], const fl
 		x_int    += exp_int;
 		x_int     = fstb::ToolsSimd::xor_s32 (x_int, rem << 8);
 		x_int     = fstb::ToolsSimd::and_s32 (x_int, cond);
+		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
+	}
+}
+
+
+
+void	DistoStage::distort_block_light1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     mnt_mask = fstb::ToolsSimd::set1_s32 (0x007FFFFF); // 23 bits
+	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
+		auto           mnt_int = fstb::ToolsSimd::and_s32 (x_int, mnt_mask);
+
+		// m^2
+		mnt_int >>= 23 - 15; // 0:15
+		mnt_int *= mnt_int;  // 0:30
+		mnt_int >>= 30 - 23; // 0:23
+		assert (! fstb::ToolsSimd::or_h (fstb::ToolsSimd::cmp_lt_s32 (mnt_int, fstb::ToolsSimd::set_s32_zero ())));
+
+		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
+		x_int = fstb::ToolsSimd::or_s32 (x_int, mnt_int);
+		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
+	}
+}
+
+
+
+void	DistoStage::distort_block_light2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     mnt_mask = fstb::ToolsSimd::set1_s32 (0x007FFFFF); // 23 bits
+	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
+	// 6.75 is the exact value but rounding errors bring negative results
+	const auto     a        = fstb::ToolsSimd::set1_s32 (int (
+		6.74f * (1 << (23 - 18))
+	));
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
+		auto           mnt_int = fstb::ToolsSimd::and_s32 (x_int, mnt_mask);
+
+		// m - a * (m - m^2)^2 
+		auto           m  = mnt_int;
+		m >>= 23 - 15;       // 0:15
+		auto           m2 = m * m;    // 0:30
+		m2 >>= 30 - 15;      // 0:15
+		auto           mx = m - m2;   // 0:15
+		mx *= mx;            // 0:30
+		mx >>= 30 - 18;      // 0:18
+		mx *= a;             // 0:23
+		mnt_int -= mx;       // 0:23
+		assert (! fstb::ToolsSimd::or_h (fstb::ToolsSimd::cmp_lt_s32 (mnt_int, fstb::ToolsSimd::set_s32_zero ())));
+
+		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
+		x_int = fstb::ToolsSimd::or_s32 (x_int, mnt_int);
+		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
+	}
+}
+
+
+
+void	DistoStage::distort_block_light3 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
+	for (int pos = 0; pos < nbr_spl; pos += 4)
+	{
+		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
+		// Clears the mantissa
+		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
 		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
 	}
 }
