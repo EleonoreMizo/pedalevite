@@ -203,7 +203,11 @@ public:
 	static inline bool
 	               and_h (VectF32 cond);
 	static inline bool
+	               and_h (VectS32 cond);
+	static inline bool
 	               or_h (VectF32 cond);
+	static inline bool
+	               or_h (VectS32 cond);
 	static inline VectF32
 	               set_mask_f32 (bool m0, bool m1, bool m2, bool m3);
 

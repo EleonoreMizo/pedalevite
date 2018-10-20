@@ -875,6 +875,40 @@ bool	ToolsSimd::or_h (VectF32 cond)
 
 
 
+// Works only with well-formed condition results (tested bits depends on the implementation).
+// For each scalar, true = all bits set, false = all bits cleared
+bool	ToolsSimd::and_h (VectS32 cond)
+{
+#if fstb_IS (ARCHI, X86)
+	return (_mm_movemask_epi8 (cond) == 0xFFFF);
+#elif fstb_IS (ARCHI, ARM)
+	const uint32x2_t  tmp = vreinterpret_u32_u16 (
+		vqmovn_u32 (vreinterpretq_u32_s32 (cond))
+	);
+	return (   vget_lane_u32 (tmp, 0) == 0xFFFFFFFFU
+	        && vget_lane_u32 (tmp, 1) == 0xFFFFFFFFU);
+#endif // ff_arch_CPU
+}
+
+
+
+// Works only with well-formed condition results (tested bits depends on the implementation).
+// For each scalar, true = all bits set, false = all bits cleared
+bool	ToolsSimd::or_h (VectS32 cond)
+{
+#if fstb_IS (ARCHI, X86)
+	return (_mm_movemask_epi8 (cond) != 0);
+#elif fstb_IS (ARCHI, ARM)
+	const uint32x2_t  tmp = vreinterpret_u32_u16 (
+		vqmovn_u32 (vreinterpretq_u32_s32 (cond))
+	);
+	return (   vget_lane_u32 (tmp, 0) != 0
+	        || vget_lane_u32 (tmp, 1) != 0);
+#endif // ff_arch_CPU
+}
+
+
+
 // "true" must be 1 and nothing else.
 ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3)
 {
