@@ -89,7 +89,7 @@ HyperComb::HyperComb ()
 	_param_change_flag_misc.add_observer (_param_change_flag);
 
 	static const std::array <float, Cst::_nbr_voices>  note_arr =
-	{{ 60, 64, 67, 71, 72, 74, 79, 84 }};
+	{{ 48, 52, 55, 59, 60, 62, 67, 72 }};
 
 	for (int index = 0; index < Cst::_nbr_voices; ++index)
 	{
