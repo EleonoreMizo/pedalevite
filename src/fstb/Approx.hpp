@@ -111,6 +111,20 @@ void	Approx::cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSim
 // x in [-1 ; 1]
 // Max error: 2.411e-8
 // Original formula
+float	Approx::sin_rbj_halfpi (float x)
+{
+	const float   a  =  0.0001530302f;
+	const float   b  = -0.0046768800f;
+	const float   c  =  0.0796915849f;
+	const float   d  = -0.6459640619f;
+	const float   e  =  1.5707963268f;
+	const float   x2 = x * x;
+
+	return (((((a * x2 + b) * x2 + c) * x2 + d) * x2) + e) * x;
+}
+
+
+
 ToolsSimd::VectF32	Approx::sin_rbj_halfpi (ToolsSimd::VectF32 x)
 {
 	const auto    a  = ToolsSimd::set1_f32 ( 0.0001530302f);
