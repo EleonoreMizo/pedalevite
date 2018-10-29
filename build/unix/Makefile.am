@@ -422,6 +422,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/mix/Simd.hpp \
         ../../src/mfx/dsp/nz/GaussFast.h \
         ../../src/mfx/dsp/nz/GaussFast.hpp \
+	../../src/mfx/dsp/nz/PinkShade.cpp \
+	../../src/mfx/dsp/nz/PinkShade.h \
+	../../src/mfx/dsp/nz/PinkShade.hpp \
         ../../src/mfx/dsp/nz/WhiteFast.cpp \
         ../../src/mfx/dsp/nz/WhiteFast.h \
         ../../src/mfx/dsp/nz/WhiteFast.hpp \

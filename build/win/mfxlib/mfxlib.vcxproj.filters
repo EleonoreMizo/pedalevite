@@ -2475,6 +2475,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascade.hpp">
       <Filter>mfx\dsp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\PinkShade.h">
+      <Filter>mfx\dsp\nz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\PinkShade.hpp">
+      <Filter>mfx\dsp\nz</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3424,6 +3430,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\hcomb\Voice.cpp">
       <Filter>mfx\pi\hcomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\nz\PinkShade.cpp">
+      <Filter>mfx\dsp\nz</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
