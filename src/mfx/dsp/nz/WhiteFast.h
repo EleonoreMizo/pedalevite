@@ -52,6 +52,7 @@ public:
 	               WhiteFast (const WhiteFast &other)  = default;
 	WhiteFast &    operator = (const WhiteFast &other) = default;
 
+	void           set_seed (uint32_t seed);
 	void           set_rough_level (float lvl);
 	inline float   process_sample ();
 	void           process_block (float dst_ptr [], int nbr_spl);

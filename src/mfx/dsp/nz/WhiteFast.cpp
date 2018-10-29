@@ -43,6 +43,13 @@ namespace nz
 
 
 
+void	WhiteFast::set_seed (uint32_t seed)
+{
+	_state = seed & _mm;
+}
+
+
+
 void	WhiteFast::set_rough_level (float lvl)
 {
 	assert (lvl > 0);
