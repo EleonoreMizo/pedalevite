@@ -64,6 +64,7 @@
 	<li><a href="#fx-sgirlz">SiemensGirlz — Creative delay</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator</a></li>
+	<li><a href="#fx-testgen">Test Generator — Test signal generator</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
@@ -1983,6 +1984,42 @@ a guitar amp.</p>
 
 
 
+<h3><a id="fx-testgen"></a>Test Generator — Test signal generator</h3>
+
+<p class="var">State</p>
+<p>Activates or deactivates the generator.</p>
+
+<p class="var">Type</p>
+<p>The current test signal:</p>
+<table>
+<tr><td><span class="ui">Pink noise </span></td><td>Pink noise (&minus;3dB/oct) covering 12 octaves</td></tr>
+<tr><td><span class="ui">White noise</span></td><td>White noise</td></tr>
+<tr><td><span class="ui">Tone       </span></td><td>Single fixed sine tone</td></tr>
+<tr><td><span class="ui">Sweep      </span></td><td>Sine tone sweeping across the whole spectrum</td></tr>
+<tr><td><span class="ui">Pulse      </span></td><td>Broadband impulse</td></tr>
+</table>
+
+<p class="var">Level</p>
+<p>Nominal level of the output signal</p>
+
+<p class="var">Noise correlation</p>
+<p>For multichannel noise output, selects a correlated (duplicated mono)
+or uncorrelated source.</p>
+
+<p class="var">Tone frequency</p>
+<p>Frequency in Hz of the fixe tone signal.</p>
+
+<p class="var">Sweep duration</p>
+<p>Duration of a frequency sweep in seconds.</p>
+
+<p class="var">Pause</p>
+<p>Pause duration between two seeps or imulses.
+When set to 0, the sweep and impulses stop repeating.
+To restart the signal, manually change the activation or the signal
+type parameters.</p>
+
+
+
 <h3><a id="fx-tremolo"></a>Tremolo</h3>
 
 <p>The tremolo effect is a kind of oscillating volume, modulated in amplitude by an LFO.</p>
@@ -2268,6 +2305,11 @@ phase.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r16, 2018-10-29</b></p>
+<ul>
+<li>Added the Test Generator.</li>
+</ul>
 
 <p><b>r15, 2018-09-27</b></p>
 <ul>

@@ -82,6 +82,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/syn0/Synth0Desc.h"
 #include "mfx/pi/spkem/SpeakerEmu.h"
 #include "mfx/pi/spkem/SpeakerEmuDesc.h"
+#include "mfx/pi/testgen/TestGen.h"
+#include "mfx/pi/testgen/TestGenDesc.h"
 #include "mfx/pi/tost/ToStereo.h"
 #include "mfx/pi/tost/ToStereoDesc.h"
 #include "mfx/pi/trem1/Tremolo.h"
@@ -148,6 +150,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::osdet::OnsetDetectDesc , mfx::pi::osdet::OnsetDetect      >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::syn0::Synth0Desc       , mfx::pi::syn0::Synth0            >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::hcomb::HyperCombDesc   , mfx::pi::hcomb::HyperComb        >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::testgen::TestGenDesc   , mfx::pi::testgen::TestGen        >::create ()
 		};
 
 		fact_list = l;

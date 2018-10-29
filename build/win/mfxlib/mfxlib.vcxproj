@@ -701,6 +701,13 @@
     <ClInclude Include="..\..\..\src\mfx\pi\syn0\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\syn0\Synth0.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\syn0\Synth0Desc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\testgen\LoopPause.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\testgen\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\testgen\SweepDur.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\testgen\TestGen.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\testgen\TestGenDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\testgen\ToneFreq.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\testgen\Type.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereo.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\tremh\HarmTrem.h" />
@@ -1103,6 +1110,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\syn0\Synth0.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\syn0\Synth0Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\testgen\TestGen.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\testgen\TestGenDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTrem.cpp" />

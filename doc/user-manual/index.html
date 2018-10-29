@@ -64,6 +64,7 @@
 	<li><a href="#fx-sgirlz">SiemensGirlz — Écho créatif</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
+	<li><a href="#fx-testgen">Test Generator — Générateur de tonalités de test</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
@@ -2078,6 +2079,44 @@ et l’autre cananl sur un ampli de guitare.</p>
 
 
 
+<h3><a id="fx-testgen"></a>Test Generator — Générateur de tonalités de test</h3>
+
+<p class="var">State</p>
+<p>Active ou désactive le générateur.</p>
+
+<p class="var">Type</p>
+<p>Le signal de test:</p>
+<table>
+<tr><td><span class="ui">Pink noise </span></td><td>Bruit rose (&minus;3&#8239;dB/octave) couvrant 12 octaves</td></tr>
+<tr><td><span class="ui">White noise</span></td><td>Bruit blanc</td></tr>
+<tr><td><span class="ui">Tone       </span></td><td>Onde sinusoïdale fixe</td></tr>
+<tr><td><span class="ui">Sweep      </span></td><td>Balayage progressif du spectre par une onde sinusoïdale</td></tr>
+<tr><td><span class="ui">Pulse      </span></td><td>Impulsion large bande</td></tr>
+</table>
+
+<p class="var">Level</p>
+<p>Niveau nominal du signal généré.</p>
+
+<p class="var">Noise correlation</p>
+<p>Dans le cas de bruit généré sur plusieurs canaux, ce paramètre premet de
+choisir s’il est correlé (tous les canaux reproduisent la même source) ou
+décorrelé (source de bruit indépendantes).</p>
+
+<p class="var">Tone frequency</p>
+<p>Fréquence en Hz de la tonalité fixe.</p>
+
+<p class="var">Sweep duration</p>
+<p>Durée d’un balayage fréquentiel en secondes.</p>
+
+<p class="var">Pause</p>
+<p>Temps de pause en secondes entre deux balayages ou impulsions.
+À 0, les balayages et impulsions ne se répètent pas.
+Il faut alors changer manuellement le type de test ou l’activation du
+générateur pour relancer le signal.</p>
+
+
+
+
 <h3><a id="fx-tremolo"></a>Tremolo</h3>
 
 <p>L’effet de trémolo est une sorte de volume oscillant,
@@ -2376,6 +2415,11 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r16, 2018-10-29</b></p>
+<ul>
+<li>Ajout du générateur de sigaux de test.</li>
+</ul>
 
 <p><b>r15, 2018-09-27</b></p>
 <ul>

@@ -35,6 +35,9 @@
 #include "mfx/pi/phase1/Param.h"
 #include "mfx/pi/phase1/Phaser.h"
 #include "mfx/pi/phase1/PhaserDesc.h"
+#include "mfx/pi/testgen/TestGen.h"
+#include "mfx/pi/testgen/TestGenDesc.h"
+#include "mfx/pi/testgen/Param.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/FileIOInterface.h"
 #include "test/EPSPlot.h"
@@ -622,6 +625,64 @@ float * const *	PiProc::use_buf_list_sig () const
 	return (_buf_sig_ptr_list.empty ()) ? 0 : &_buf_sig_ptr_list [0];
 }
 
+
+
+int	test_testgen ()
+{
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr;
+
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+
+	if (ret_val == 0)
+	{
+		const size_t   len = chn_arr [0].size ();
+		mfx::pi::testgen::TestGen  plugin;
+		const int      max_block_size = 64;
+		int            latency = 0;
+		PiProc         pi_proc;
+		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::testgen::TestGenDesc));
+		pi_proc.setup (plugin, 1, 1, sample_freq, max_block_size, latency);
+		size_t         pos = 0;
+		std::array <float *, 1> dst_arr = {{ pi_proc.use_buf_list_dst () [0] }};
+		std::array <float *, 1> src_arr = {{ pi_proc.use_buf_list_src () [0] }};
+		mfx::piapi::PluginInterface::ProcInfo &   proc_info = pi_proc.use_proc_info ();
+		pi_proc.reset_param ();
+		pi_proc.set_param_nat (mfx::pi::testgen::Param_STATE, 1);
+		pi_proc.set_param_nat (mfx::pi::testgen::Param_LVL  , 0.9375);
+		pi_proc.set_param_nat (mfx::pi::testgen::Param_TYPE , mfx::pi::testgen::Type_SWEEP);
+		do
+		{
+			const int      block_len =
+				int (std::min (len - pos, size_t (max_block_size)));
+
+			proc_info._nbr_spl = block_len;
+		
+			memcpy (
+				src_arr [0],
+				&chn_arr [0] [pos],
+				block_len * sizeof (src_arr [0] [0])
+			);
+
+			plugin.process_block (proc_info);
+			pi_proc.reset_param ();
+
+			memcpy (
+				&chn_arr [0] [pos],
+				dst_arr [0],
+				block_len * sizeof (chn_arr [0] [pos])
+			);
+
+			proc_info._nbr_evt = 0;
+			pos += block_len;
+		}
+		while (pos < len);
+
+		ret_val = save_wav ("results/testgensweep0.wav", chn_arr, sample_freq, 1);
+	}
+
+	return ret_val;
+}
 
 
 int	test_disto ()
@@ -1583,6 +1644,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 1
+	test_testgen ();
+#endif
 
 #if 0
 	test_disto ();

@@ -760,6 +760,15 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/syn0/Synth0.h \
         ../../src/mfx/pi/syn0/Synth0Desc.cpp \
         ../../src/mfx/pi/syn0/Synth0Desc.h \
+        ../../src/mfx/pi/testgen/LoopPause.h \
+        ../../src/mfx/pi/testgen/Param.h \
+        ../../src/mfx/pi/testgen/SweepDur.h \
+        ../../src/mfx/pi/testgen/TestGen.cpp \
+        ../../src/mfx/pi/testgen/TestGen.h \
+        ../../src/mfx/pi/testgen/TestGenDesc.cpp \
+        ../../src/mfx/pi/testgen/TestGenDesc.h \
+        ../../src/mfx/pi/testgen/ToneFreq.h \
+        ../../src/mfx/pi/testgen/Type.h \
         ../../src/mfx/pi/tost/ToStereo.cpp \
         ../../src/mfx/pi/tost/ToStereo.h \
         ../../src/mfx/pi/tost/ToStereoDesc.cpp \
