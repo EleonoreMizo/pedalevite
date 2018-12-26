@@ -1,0 +1,12 @@
+// support for old hosts not looking for VSTPluginMain
+
+// here we make a little patch to ensure that main_macho is
+// defined in both intel & ppc part of the binary for linking
+//#if (TARGET_API_MAC_CARBON && __ppc__)
+#if (TARGET_API_MAC_CARBON)
+VST_EXPORT AEffect* main_macho (audioMasterCallback audioMaster) { return VSTPluginMain (audioMaster); }
+#elif WIN32
+VST_EXPORT AEffect* MAIN (audioMasterCallback audioMaster) { return VSTPluginMain (audioMaster); }
+#elif BEOS
+VST_EXPORT AEffect* main_plugin (audioMasterCallback audioMaster) { return VSTPluginMain (audioMaster); }
+#endif

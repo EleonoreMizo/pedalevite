@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="vstsdk24">
+      <UniqueIdentifier>{9d176393-5257-4849-be14-c2ce16fd4fed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vstsdk24\pluginterfaces">
+      <UniqueIdentifier>{65af54d6-affa-45fd-ae9e-3dc3aee2eb9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vstsdk24\pluginterfaces\vst2.x">
+      <UniqueIdentifier>{4b9ce50b-0d0a-4dfc-9601-58e81a82fa68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vstsdk24\public.sdk">
+      <UniqueIdentifier>{144f3e8e-ccb8-47b3-b4eb-c525cd2a15a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vstsdk24\public.sdk\source">
+      <UniqueIdentifier>{9db2480e-b595-4d3e-a812-49d3973e19ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vstsdk24\public.sdk\source\vst2.x">
+      <UniqueIdentifier>{e6fdf3a5-46d6-40a0-a71a-f29d0aa2b49f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="piapi2vst">
+      <UniqueIdentifier>{721600f1-1645-4802-934b-ce115a7448ad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\vstsdk24\pluginterfaces\vst2.x\aeffect.h">
+      <Filter>vstsdk24\pluginterfaces\vst2.x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\vstsdk24\pluginterfaces\vst2.x\aeffectx.h">
+      <Filter>vstsdk24\pluginterfaces\vst2.x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\vstsdk24\pluginterfaces\vst2.x\vstfxstore.h">
+      <Filter>vstsdk24\pluginterfaces\vst2.x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\vstsdk24\public.sdk\source\vst2.x\aeffeditor.h">
+      <Filter>vstsdk24\public.sdk\source\vst2.x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\vstsdk24\public.sdk\source\vst2.x\audioeffect.h">
+      <Filter>vstsdk24\public.sdk\source\vst2.x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\vstsdk24\public.sdk\source\vst2.x\audioeffectx.h">
+      <Filter>vstsdk24\public.sdk\source\vst2.x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\piapi2vst\PlugWrap.h">
+      <Filter>piapi2vst</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\vstsdk24\public.sdk\source\vst2.x\audioeffect.cpp">
+      <Filter>vstsdk24\public.sdk\source\vst2.x</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\vstsdk24\public.sdk\source\vst2.x\audioeffectx.cpp">
+      <Filter>vstsdk24\public.sdk\source\vst2.x</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\piapi2vst\PlugWrap.cpp">
+      <Filter>piapi2vst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\vstsdk24\public.sdk\source\vst2.x\vstplugmain.cpp">
+      <Filter>vstsdk24\public.sdk\source\vst2.x</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
