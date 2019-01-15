@@ -40,3 +40,4 @@ doc/internal/
 doc/pcb*/*.bak
 doc/pcb*/*-bak
 doc/pcb*/*.bck
+build/win/.vs/
