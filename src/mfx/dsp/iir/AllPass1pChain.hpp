@@ -132,6 +132,27 @@ float	AllPass1pChain::process_sample (float x)
 
 
 
+// Uses the provided coefficient for all the stages
+float	AllPass1pChain::process_sample_coef (float x, float b0)
+{
+	if (_stage_arr.size() > 0)
+	{
+		float          mx = _mem_x;
+		_mem_x = x;
+
+		for (auto &stage : _stage_arr)
+		{
+			x = b0 * (x - stage._mem_y) + mx;
+			mx = stage._mem_y;
+			stage._mem_y = x;
+		}
+	}
+
+	return x;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

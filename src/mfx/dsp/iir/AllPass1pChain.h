@@ -64,6 +64,7 @@ public:
 	inline void    set_state (int idx, float mem);
 
 	inline float   process_sample (float x);
+	inline float   process_sample_coef (float x, float b0);
 
 	void           clear_buffers ();
 

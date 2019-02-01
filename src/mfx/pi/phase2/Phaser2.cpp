@@ -238,49 +238,71 @@ void	Phaser2::do_process_block (ProcInfo &proc)
 		}
 	}
 
-	const int      nbr_spl  = proc._nbr_spl;
+	assert(_fdbk_pos <= _nbr_stages);
+	const int      nbr_spl = proc._nbr_spl;
+	int            pos_blk = 0;
+	float          b0_cur = _chn_arr [0]._apf.get_coef (0);
 
-	// Parameters
-	const float    mix_beg   = _mix;
-	_state_set.process_block (nbr_spl);
-	update_param (false);
-	_lfo.tick (nbr_spl);
-	const float    mix_end   = _mix;
-	const float    lfo_end   = (1 + float (_lfo.get_val ())) * 0.5f;
-
-	// Signal processing
-	const float    f0        = fstb::Approx::exp2 (
-		fstb::lerp (_freq_min_l2, _freq_max_l2, lfo_end)
-	);
-	update_filter (f0);
-	assert (_fdbk_pos <= _nbr_stages);
-	for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
+	do
 	{
-		Channel &      chn      = _chn_arr [chn_index];
-		const float *  src_ptr  = proc._src_arr [chn_index];
-		float *        dst_ptr  = &_buf [0];
-		const float    fdbk_g   = _feedback;
-		float          fdbk_val = chn._fdbk;
-		for (int pos = 0; pos < nbr_spl; ++pos)
-		{
-			float          x = src_ptr [pos];
-			x += fdbk_val * fdbk_g;
-			float          y = chn._apf.process_sample (x);
-			y = saturate (y);
-			dst_ptr [pos] = y;
-			fdbk_val      = chn._apf.get_state (_fdbk_pos);
-		}
-		chn._fdbk = fdbk_val;
+		int            len_blk = _int_block_size;
+		len_blk = std::min (len_blk, nbr_spl - pos_blk);
 
-		dsp::mix::Align::copy_xfade_2_1_vlrauto (
-			proc._dst_arr [chn_index],
-			src_ptr,
-			dst_ptr,
-			nbr_spl,
-			mix_beg,
-			mix_end
+		// Parameters
+		const float    mix_beg = _mix;
+		_state_set.process_block (len_blk);
+		update_param (false);
+		_lfo.tick (len_blk);
+		const float    mix_end = _mix;
+		const float    lfo_end = (1 + float (_lfo.get_val ())) * 0.5f;
+
+		// Signal processing
+		const float    f0      = fstb::Approx::exp2 (
+			fstb::lerp (_freq_min_l2, _freq_max_l2, lfo_end)
 		);
+		const float    b0_new  = compute_coef (f0);
+
+		float          b0_step = 1.0f / _int_block_size;
+		if (len_blk != _int_block_size)
+		{
+			b0_step = 1.0f / len_blk;
+		}
+		b0_step *= b0_new - b0_cur;
+
+		for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
+		{
+			Channel &      chn      = _chn_arr [chn_index];
+			const float *  src_ptr  = proc._src_arr [chn_index] + pos_blk;
+			float *        dst_ptr  = &_buf [0];
+			const float    fdbk_g   = _feedback;
+			float          fdbk_val = chn._fdbk;
+			for (int pos = 0; pos < len_blk; ++pos)
+			{
+				float          x = src_ptr [pos];
+				x += fdbk_val * fdbk_g;
+				float          y = chn._apf.process_sample_coef (x, b0_cur);
+				y = saturate (y);
+				dst_ptr [pos] = y;
+				fdbk_val      = chn._apf.get_state (_fdbk_pos);
+				b0_cur += b0_step;
+			}
+			chn._fdbk = fdbk_val;
+
+			dsp::mix::Align::copy_xfade_2_1_vlrauto (
+				proc._dst_arr [chn_index] + pos_blk,
+				src_ptr,
+				dst_ptr,
+				len_blk,
+				mix_beg,
+				mix_end
+			);
+		}
+
+		pos_blk += len_blk;
 	}
+	while (pos_blk < nbr_spl);
+
+	update_filter (b0_cur);
 
 	// Duplicates the remaining output channels
 	for (int chn_index = nbr_chn_proc; chn_index < nbr_chn_dst; ++chn_index)
@@ -407,23 +429,31 @@ void	Phaser2::update_param (bool force_flag)
 
 
 
-void	Phaser2::update_filter (float f0)
+float	Phaser2::compute_coef (float f0)
 {
-	assert (_inv_fs > 0);
-	assert (f0 > 0);
+	assert(_inv_fs > 0);
+	assert(f0 > 0);
 
 	static const float   b_s [2] = { 1, -1 };
 	static const float   a_s [2] = { 1,  1 };
 	float                b_z [2];
 	float                a_z [2];
-	const float          k       =
-		dsp::iir::TransSZBilin::compute_k_approx (f0 * _inv_fs);
-	dsp::iir::TransSZBilin::map_s_to_z_one_pole_approx (
+	const float          k =
+		dsp::iir::TransSZBilin::compute_k_approx(f0 * _inv_fs);
+	dsp::iir::TransSZBilin::map_s_to_z_one_pole_approx(
 		b_z, a_z, b_s, a_s, k
 	);
+
+	return b_z [0];
+}
+
+
+
+void	Phaser2::update_filter (float b0)
+{
 	for (auto &chn : _chn_arr)
 	{
-		chn._apf.set_coef_all (b_z [0]);
+		chn._apf.set_coef_all (b0);
 	}
 }
 

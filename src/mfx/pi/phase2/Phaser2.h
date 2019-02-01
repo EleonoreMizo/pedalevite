@@ -80,6 +80,9 @@ protected:
 
 private:
 
+	static const int  _int_block_size = 64;  // Maximum internal block size, samples
+	static_assert ((_int_block_size & 3) == 0, "Block size must be multiple of 4");
+
 	class Channel
 	{
 	public:
@@ -92,7 +95,8 @@ private:
 
 	void           clear_buffers ();
 	void           update_param (bool force_flag);
-	void           update_filter (float f0);
+	float          compute_coef (float f0);
+	void           update_filter (float b0);
 	void           set_fdbk_pos (int pos);
 
 	static inline float
