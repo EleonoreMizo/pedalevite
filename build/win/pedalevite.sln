@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pedalevite", "pedalevite\pedalevite.vcxproj", "{4ECD73F9-7BF9-4B6F-95F0-F671660588AA}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -36,6 +36,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pv_phase2", "pvvst\pv_phase
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pv_dist2", "pvvst\pv_dist2\pv_dist2.vcxproj", "{0FD6FFF8-A01C-4499-9A09-0BAEF3690633}"
+	ProjectSection(ProjectDependencies) = postProject
+		{163F412F-8097-4D8B-B6A1-97B9A7356C76} = {163F412F-8097-4D8B-B6A1-97B9A7356C76}
+		{3A8EC9DB-9E71-4330-9682-52D6CAA05578} = {3A8EC9DB-9E71-4330-9682-52D6CAA05578}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pv_dly1", "pvvst\pv_dly1\pv_dly1.vcxproj", "{52629D48-A95C-498F-A3ED-25A39E5E3EF1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{163F412F-8097-4D8B-B6A1-97B9A7356C76} = {163F412F-8097-4D8B-B6A1-97B9A7356C76}
+		{3A8EC9DB-9E71-4330-9682-52D6CAA05578} = {3A8EC9DB-9E71-4330-9682-52D6CAA05578}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pv_dly2", "pvvst\pv_dly2\pv_dly2.vcxproj", "{B455866C-A2DE-4899-A6DB-DD64F6835574}"
 	ProjectSection(ProjectDependencies) = postProject
 		{163F412F-8097-4D8B-B6A1-97B9A7356C76} = {163F412F-8097-4D8B-B6A1-97B9A7356C76}
 		{3A8EC9DB-9E71-4330-9682-52D6CAA05578} = {3A8EC9DB-9E71-4330-9682-52D6CAA05578}
@@ -79,6 +91,14 @@ Global
 		{0FD6FFF8-A01C-4499-9A09-0BAEF3690633}.Debug|Win32.Build.0 = Debug|Win32
 		{0FD6FFF8-A01C-4499-9A09-0BAEF3690633}.Release|Win32.ActiveCfg = Release|Win32
 		{0FD6FFF8-A01C-4499-9A09-0BAEF3690633}.Release|Win32.Build.0 = Release|Win32
+		{52629D48-A95C-498F-A3ED-25A39E5E3EF1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{52629D48-A95C-498F-A3ED-25A39E5E3EF1}.Debug|Win32.Build.0 = Debug|Win32
+		{52629D48-A95C-498F-A3ED-25A39E5E3EF1}.Release|Win32.ActiveCfg = Release|Win32
+		{52629D48-A95C-498F-A3ED-25A39E5E3EF1}.Release|Win32.Build.0 = Release|Win32
+		{B455866C-A2DE-4899-A6DB-DD64F6835574}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B455866C-A2DE-4899-A6DB-DD64F6835574}.Debug|Win32.Build.0 = Debug|Win32
+		{B455866C-A2DE-4899-A6DB-DD64F6835574}.Release|Win32.ActiveCfg = Release|Win32
+		{B455866C-A2DE-4899-A6DB-DD64F6835574}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
