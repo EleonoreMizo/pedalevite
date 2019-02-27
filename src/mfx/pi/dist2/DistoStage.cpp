@@ -455,6 +455,18 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 	case Type_LIGHT3:
 		distort_block_light3 (chn, dst_ptr, src_ptr, nbr_spl);
 		break;
+	case Type_TANH:
+		distort_block_shaper (_shaper_tanh, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_TANHLIN:
+		distort_block_shaper (_shaper_tanhlin, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_BREAK:
+		distort_block_shaper (_shaper_break, dst_ptr, src_ptr, nbr_spl);
+		break;
+	case Type_ASYM2:
+		distort_block_shaper (_shaper_asym2, dst_ptr, src_ptr, nbr_spl);
+		break;
 
 	default:
 		assert (false);
@@ -788,9 +800,13 @@ DistoStage::ShaperOvershoot	DistoStage::_shaper_overshoot;
 DistoStage::ShaperLopsided	DistoStage::_shaper_lopsided;
 DistoStage::ShaperSmartE1	DistoStage::_shaper_smarte1;
 DistoStage::ShaperSmartE2	DistoStage::_shaper_smarte2;
+DistoStage::ShaperTanhLin	DistoStage::_shaper_tanhlin;
+DistoStage::ShaperBreak	DistoStage::_shaper_break;
+DistoStage::ShaperAsym2	DistoStage::_shaper_asym2;
 
-const float	DistoStage::_asym1_m_9  = 1.f / 9;
-const float	DistoStage::_asym1_m_2  = 1.f / 2;
+const float	DistoStage::_asym1_m_9 = 1.f / 9;
+const float	DistoStage::_asym1_m_2 = 1.f / 2;
+
 
 
 }  // namespace dist2

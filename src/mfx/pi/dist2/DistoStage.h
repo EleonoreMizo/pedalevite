@@ -96,6 +96,10 @@ public:
 		Type_LIGHT1,
 		Type_LIGHT2,
 		Type_LIGHT3,
+		Type_TANH,
+		Type_TANHLIN,
+		Type_BREAK,
+		Type_ASYM2,
 
 		Type_NBR_ELT
 	};
@@ -157,6 +161,27 @@ private:
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
+	// Insert a linear segment at 0 in an existing shaper
+	// Shaper is assumed to reach unity at high input values (abs. val.)
+	// F: shaper function, C1 at 0, F(0) = 0 and F'(0) = 1
+	// R: amplitude of the linear part, as a std::ratio template
+	template <typename F, typename R>
+	class FncLin0
+	{
+		static_assert (R::num >= 0, "");
+		static_assert (R::den > 0, "");
+		static_assert (R::num < R::den, "");
+	public:
+		double         operator () (double x)
+		{
+			F              f;
+			const double   r  = double (R::num) / double (R::den);
+			const double   xl = fstb::limit (x, -r, r);
+			const double   xs = (x - xl) / (1 - r);
+			return (1 - r) * f (xs) + xl;
+		}
+	};
+
 	class FncTanh
 	{
 	public:
@@ -184,10 +209,35 @@ private:
 		}
 	};
 
+	class FncBreakBase
+	{
+	public:
+		double         operator () (double x)
+		{
+			const double   f1 = tanh (x);
+			const double   f2 = x / (1 + abs (x));
+			return (f1 + f2) * 0.5;
+		}
+	};
+
 	// A, B and C are std::ratio templates
+	// A controls the first shaper (closest to 0, fastest curve, slope 1).
+	// The smaller A, the longer the first shaper.
+	// A in [0 ; 1]
+	// B controls the second shaper (slowest curve, from the end of the first
+	// shaper up to saturation)
+	// The higher B, the slowest the curve
+	// B should be > 0
+	// C is the amount of additional ripples at 0.
 	template <typename A, typename B, typename C>
 	class FncProgClipper
 	{
+		static_assert (A::num >= 0, "");
+		static_assert (A::den > 0, "");
+		static_assert (A::num <= A::den, "");
+		static_assert (B::num >= 0, "");
+		static_assert (B::den > 0, "");
+		static_assert (C::den != 0, "");
 	public:
 		double         operator () (double x)
 		{
@@ -281,6 +331,24 @@ private:
 		}
 	};
 
+	// Minimum input range: [-256; +8]
+	// https://www.musicdsp.org/en/latest/Effects/86-waveshaper-gloubi-boulga.html
+	class FncAsym2
+	{
+	public:
+		double         operator () (double x)
+		{
+			x *= 2.0 / 3.0;
+			const double   a = 1 + exp (-0.75 * sqrt (fabs (x)));
+//			const double   n = exp (x) - exp (-a * x);
+//			const double   d = exp (x) + exp (-x);
+			const double   e = exp (x);
+			const double   n = e * (e - exp (x * a));
+			const double   d = e * e + 1;
+			return n / d;
+		}
+	};
+
 	template <class FNC>
 	using ShaperLong = dsp::shape::FncFiniteAsym <
 		-256, 256, FNC
@@ -301,10 +369,16 @@ private:
 		-8, 8, FNC, 4
 	>;
 
-	typedef ShaperShort <FncTanh> ShaperTanh;
-	typedef ShaperStd <FncAtan> ShaperAtan;
-	typedef ShaperLong <FncDiodeClipper> ShaperDiode;
-	typedef ShaperStd <FncProgClipper <
+	typedef ShaperShort <FncTanh         > ShaperTanh;
+	typedef ShaperShort <FncLin0 <
+		FncTanh, std::ratio <1, 2>
+	> > ShaperTanhLin;
+	typedef ShaperShort <FncLin0 <
+		FncBreakBase, std::ratio <3, 4>
+	> > ShaperBreak;
+	typedef ShaperStd <  FncAtan         > ShaperAtan;
+	typedef ShaperLong < FncDiodeClipper > ShaperDiode;
+	typedef ShaperStd <  FncProgClipper <
 		std::ratio < 2, 4>,
 		std::ratio < 4, 1>,
 		std::ratio < 2, 1>
@@ -314,13 +388,16 @@ private:
 		std::ratio <10, 1>,
 		std::ratio < 0, 1>
 	> > ShaperProg2;
-	typedef ShaperStd <FncPuncherB <0> > ShaperPuncher1;
-	typedef ShaperStd <FncPuncherB <1> > ShaperPuncher2;
-	typedef ShaperShort <FncPuncherA> ShaperPuncher3;
-	typedef ShaperShort <FncOvershoot> ShaperOvershoot;
-	typedef ShaperShort <FncLopsided> ShaperLopsided;
-	typedef ShaperRes <FncSmartE <1> > ShaperSmartE1;
-	typedef ShaperShort <FncSmartE <2> > ShaperSmartE2;
+	typedef ShaperStd <  FncPuncherB <0> > ShaperPuncher1;
+	typedef ShaperStd <  FncPuncherB <1> > ShaperPuncher2;
+	typedef ShaperShort <FncPuncherA     > ShaperPuncher3;
+	typedef ShaperShort <FncOvershoot    > ShaperOvershoot;
+	typedef ShaperShort <FncLopsided     > ShaperLopsided;
+	typedef ShaperRes <  FncSmartE <1>   > ShaperSmartE1;
+	typedef ShaperShort <FncSmartE <2>   > ShaperSmartE2;
+	typedef dsp::shape::FncFiniteAsym <
+		-256, 8, FncAsym2, 2
+	> ShaperAsym2;
 
 	void           init_coef ();
 	void           set_next_block ();
@@ -390,6 +467,12 @@ private:
 	               _shaper_smarte1;
 	static ShaperSmartE2
 	               _shaper_smarte2;
+	static ShaperTanhLin
+	               _shaper_tanhlin;
+	static ShaperBreak
+	               _shaper_break;
+	static ShaperAsym2
+	               _shaper_asym2;
 
 	static const float
 	               _asym1_m_9;
