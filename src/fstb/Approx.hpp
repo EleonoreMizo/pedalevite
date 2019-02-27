@@ -121,6 +121,18 @@ float	Approx::sin_rbj_halfpi (float x)
 	const float   x2 = x * x;
 
 	return (((((a * x2 + b) * x2 + c) * x2 + d) * x2) + e) * x;
+
+	// Other coefficients found by Ollie Niemitalo
+	// Constaints: f(0) = 0, f(1) = 1, f'(1) = 0, odd-symmetry
+	// https://dsp.stackexchange.com/questions/46629/finding-polynomial-approximations-of-a-sine-wave/46761#46761
+	// 5th order, continuous derivative, peak harmonic distortion -78.99 dB
+	//	   1.569778813, -0.6395576276, 0.06977881382
+	// 7th order, continuous derivative, peak harmonic distortion -123.8368 dB
+	//    1.570781972, -0.6458482979, 0.07935067784, -0.004284352588
+	// 5th order, peak harmonic distortion -92.6 dB
+	//    1.570034357, -0.6425216143, 0.07248725712
+	// 7th order, peak harmonic distortion -133.627 dB
+	//    1.5707953785726114835, -0.64590724797262922190, 0.079473610232926783079, -0.0043617408329090447344
 }
 
 
