@@ -471,13 +471,34 @@ void	Phaser2::set_fdbk_pos (int pos)
 float   Phaser2::saturate (float x)
 {
 	const float    bias = 0.1f;
-
 	x += bias;
+
+#if 1 // Smoother version
+
+	// Coefficients found by Andrew Simper, Music-DSP mailing list, 2013-11-05
+	const float    li =   15.f /      8.f;
+	const float    a3 = -128.f /    675.f;
+	const float    a5 = 4096.f / 253125.f;
+
+	x = fstb::limit (x, -li, li);
+	const float    x2 = x * x;
+	const float    b2 = bias * bias;
+	x += ((a5 * x2) + a3) * x2;
+	x -= ((a5 * b2) + a3) * b2 + bias;
+
+#else // Old version, just C1
+
+	// f (x) = x * (1 - x^p / (1 + p)) with p positive even integer
+
 	x = fstb::limit (x, -1.0f, 1.0f);
 	const float    x2 = x  * x;
 	const float    x4 = x2 * x2;
-	x  =    x * (1 -                        x4 * 0.2f);
-	x -= bias * (1 - bias * bias * bias * bias * 0.2f);
+	const float    b4 = bias * bias * bias * bias;
+	const float    a5 = 1.f / (1 + 4);
+	x  =    x * (1 - a5 * x4);
+	x -= bias * (1 - a5 * b4);
+
+#endif
 
 	return x;
 }
