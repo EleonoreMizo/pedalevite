@@ -280,8 +280,8 @@ void	Phaser2::do_process_block (ProcInfo &proc)
 			{
 				float          x = src_ptr [pos];
 				x += fdbk_val * fdbk_g;
+				x  = saturate (x);
 				float          y = chn._apf.process_sample_coef (x, b0_cur);
-				y = saturate (y);
 				dst_ptr [pos] = y;
 				fdbk_val      = chn._apf.get_state (_fdbk_pos);
 				b0_cur += b0_step;
