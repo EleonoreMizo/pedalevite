@@ -76,6 +76,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/phase2/Phaser2Desc.h"
 #include "mfx/pi/pidet/PitchDetect.h"
 #include "mfx/pi/pidet/PitchDetectDesc.h"
+#include "mfx/pi/psh1/PitchShift1.h"
+#include "mfx/pi/psh1/PitchShift1Desc.h"
 #include "mfx/pi/ramp/Ramp.h"
 #include "mfx/pi/ramp/RampDesc.h"
 #include "mfx/pi/syn0/Synth0.h"
@@ -151,6 +153,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::syn0::Synth0Desc       , mfx::pi::syn0::Synth0            >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::hcomb::HyperCombDesc   , mfx::pi::hcomb::HyperComb        >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::testgen::TestGenDesc   , mfx::pi::testgen::TestGen        >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::psh1::PitchShift1Desc  , mfx::pi::psh1::PitchShift1       >::create ()
 		};
 
 		fact_list = l;

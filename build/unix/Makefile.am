@@ -742,6 +742,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/pidet/PitchDetect.h \
         ../../src/mfx/pi/pidet/PitchDetectDesc.cpp \
         ../../src/mfx/pi/pidet/PitchDetectDesc.h \
+        ../../src/mfx/pi/psh1/Cst.h \
+        ../../src/mfx/pi/psh1/Param.h \
+        ../../src/mfx/pi/psh1/PitchShift1.cpp \
+        ../../src/mfx/pi/psh1/PitchShift1.h \
+        ../../src/mfx/pi/psh1/PitchShift1Desc.cpp \
+        ../../src/mfx/pi/psh1/PitchShift1Desc.h \
         ../../src/mfx/pi/spkem/Param.h \
         ../../src/mfx/pi/spkem/SpeakerEmu.cpp \
         ../../src/mfx/pi/spkem/SpeakerEmu.h \

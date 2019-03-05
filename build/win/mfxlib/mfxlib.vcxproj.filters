@@ -229,6 +229,9 @@
     <Filter Include="mfx\pi\testgen">
       <UniqueIdentifier>{3368705a-7363-4ce7-8564-47a34d927e61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\psh1">
+      <UniqueIdentifier>{a50953e4-5788-4a68-a171-3211dde4ea75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2502,8 +2505,20 @@
     <ClInclude Include="..\..\..\src\mfx\pi\testgen\LoopPause.h">
       <Filter>mfx\pi\testgen</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\psh1\Param.h">
+      <Filter>mfx\pi\psh1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\psh1\PitchShift1.h">
+      <Filter>mfx\pi\psh1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\psh1\PitchShift1Desc.h">
+      <Filter>mfx\pi\psh1</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.h">
       <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\psh1\Cst.h">
+      <Filter>mfx\pi\psh1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3460,6 +3475,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\testgen\TestGenDesc.cpp">
       <Filter>mfx\pi\testgen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\psh1\PitchShift1.cpp">
+      <Filter>mfx\pi\psh1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\psh1\PitchShift1Desc.cpp">
+      <Filter>mfx\pi\psh1</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp">
       <Filter>mfx\dsp\wnd</Filter>
