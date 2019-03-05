@@ -2130,9 +2130,6 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.hpp">
       <Filter>mfx\dsp\ctrl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dly2\XFadeShape.h">
-      <Filter>mfx\pi\dly2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReaderPitch.h">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
@@ -2504,6 +2501,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\testgen\LoopPause.h">
       <Filter>mfx\pi\testgen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.h">
+      <Filter>mfx\dsp\wnd</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3350,9 +3350,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampModule.cpp">
       <Filter>mfx\pi\ramp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dly2\XFadeShape.cpp">
-      <Filter>mfx\pi\dly2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbCore.cpp">
       <Filter>mfx\pi\fv</Filter>
     </ClCompile>
@@ -3463,6 +3460,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\testgen\TestGenDesc.cpp">
       <Filter>mfx\pi\testgen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp">
+      <Filter>mfx\dsp\wnd</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

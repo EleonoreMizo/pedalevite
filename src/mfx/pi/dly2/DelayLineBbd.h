@@ -35,7 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dly2/Eq.h"
 #include "mfx/pi/dly2/FilterType.h"
 #include "mfx/pi/dly2/FxSection.h"
-#include "mfx/pi/dly2/XFadeShape.h"
+#include "mfx/dsp/wnd/XFadeShape.h"
 
 #include <vector>
 
@@ -147,7 +147,8 @@ private:
 	int            _xfade_pos;          // > 0: cross-fading between _xfade_dly_old et _xfade_dly_new
 	float          _xfade_dly_old;      // Samples
 
-	XFadeShape     _xfade_shape;
+	dsp::wnd::XFadeShape
+	               _xfade_shape;
 
 	static const float
 	               _speed_limit;        // Absolute reading speed threshold for resampling/crossfading

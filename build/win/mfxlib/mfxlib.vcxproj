@@ -540,6 +540,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Ultraspherical.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.h" />
     <ClInclude Include="..\..\..\src\mfx\FileIOInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\FileIOPi3.h" />
     <ClInclude Include="..\..\..\src\mfx\FileIOWindows.h" />
@@ -597,7 +598,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\StageTaps.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\TapUnit.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\dly2\XFadeShape.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\DistTone.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\Param.h" />
@@ -1003,6 +1003,7 @@
       <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOPi3.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -1042,7 +1043,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\FxSection.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\StageTaps.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\TapUnit.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\dly2\XFadeShape.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistTone.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\envf\Cst.cpp" />

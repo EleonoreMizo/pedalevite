@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dly2_XFadeShape_HEADER_INCLUDED)
-#define mfx_pi_dly2_XFadeShape_HEADER_INCLUDED
+#if ! defined (mfx_dsp_wnd_XFadeShape_HEADER_INCLUDED)
+#define mfx_dsp_wnd_XFadeShape_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -35,9 +35,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dly2
+namespace wnd
 {
 
 
@@ -96,17 +96,17 @@ private:
 
 
 
-}  // namespace dly2
-}  // namespace pi
+}  // namespace wnd
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/dly2/XFadeShape.hpp"
+//#include "mfx/dsp/wnd/XFadeShape.hpp"
 
 
 
-#endif   // mfx_pi_dly2_XFadeShape_HEADER_INCLUDED
+#endif   // mfx_dsp_wnd_XFadeShape_HEADER_INCLUDED
 
 
 

@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/Approx.h"
 #include "fstb/fnc.h"
 #include "fstb/ToolsSimd.h"
-#include "mfx/pi/dly2/XFadeShape.h"
+#include "mfx/dsp/wnd/XFadeShape.h"
 
 #include <cassert>
 
@@ -35,9 +35,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dly2
+namespace wnd
 {
 
 
@@ -144,8 +144,8 @@ void	XFadeShape::make_shape ()
 
 
 
-}  // namespace dly2
-}  // namespace pi
+}  // namespace wnd
+}  // namespace dsp
 }  // namespace mfx
 
 

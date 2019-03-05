@@ -492,6 +492,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/wnd/Ultraspherical.hpp \
         ../../src/mfx/dsp/wnd/WndInterface.h \
         ../../src/mfx/dsp/wnd/WndInterface.hpp \
+        ../../src/mfx/dsp/wnd/XFadeShape.cpp \
+        ../../src/mfx/dsp/wnd/XFadeShape.h \
         ../../src/mfx/dsp/BandSplitAllPassPair.h \
         ../../src/mfx/dsp/BandSplitAllPassPair.hpp \
         ../../src/mfx/dsp/FilterBypass.h \
@@ -581,8 +583,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dly2/StageTaps.h \
         ../../src/mfx/pi/dly2/TapUnit.cpp \
         ../../src/mfx/pi/dly2/TapUnit.h \
-        ../../src/mfx/pi/dly2/XFadeShape.cpp \
-        ../../src/mfx/pi/dly2/XFadeShape.h \
         ../../src/mfx/pi/dtone1/DistTone.cpp \
         ../../src/mfx/pi/dtone1/DistTone.h \
         ../../src/mfx/pi/dtone1/DistToneDesc.cpp \

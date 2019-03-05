@@ -31,9 +31,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/dly/DelayLine.h"
 #include "mfx/dsp/dly/DelayLineReaderPitch.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
+#include "mfx/dsp/wnd/XFadeShape.h"
 #include "mfx/pi/dly2/Cst.h"
 #include "mfx/pi/dly2/Eq.h"
-#include "mfx/pi/dly2/XFadeShape.h"
 
 #include <array>
 
@@ -154,8 +154,10 @@ private:
 	               _delay_arr;
 	mfx::dsp::rspl::InterpolatorHermite43
 	               _interp;             // Common for all reading heads because stateless
-	XFadeShape     _xfade_shape_normal;
-	XFadeShape     _xfade_shape_pitchshift;
+	dsp::wnd::XFadeShape
+	               _xfade_shape_normal;
+	dsp::wnd::XFadeShape
+	               _xfade_shape_pitchshift;
 	float          _min_dly_time;       // s, > 0. 0 = not initialized
 
 	static const dsp::ctrl::Ramp _ramp_one;
