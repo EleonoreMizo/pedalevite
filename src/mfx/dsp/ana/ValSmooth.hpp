@@ -95,7 +95,7 @@ T	ValSmooth <T, NV>::get_raw_val () const
 template <typename T, int NV>
 void	ValSmooth <T, NV>::clear_buffers ()
 {
-	_val_smth = _val_last
+	_val_smth = _val_last;
 }
 
 
