@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
-#include "mfx/dsp/ana/FreqYin.h"
+#include "mfx/dsp/ana/FreqAmGha.h"
 #include "mfx/pi/pidet/PitchDetectDesc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
@@ -108,7 +108,7 @@ private:
 	BufPrevSpl     _buf_prev_spl;       // Buffer containing the last samples of the previous frame that were not downsampled
 	int            _nbr_spl_in_buf;     // Number of samples contained in the buffer
 	int            _sub_spl;            // Downsampling ratio. Currently 8 or 16 only
-	dsp::ana::FreqYin
+	dsp::ana::FreqAmGha
 	               _analyser;
 	float          _freq;               // Hz. 0 = not found
 	float          _last_valid_output;

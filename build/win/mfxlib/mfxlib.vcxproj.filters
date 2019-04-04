@@ -2520,6 +2520,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\psh1\Cst.h">
       <Filter>mfx\pi\psh1</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqAmGha.h">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\ValSmooth.h">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\ValSmooth.hpp">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3484,6 +3493,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp">
       <Filter>mfx\dsp\wnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqAmGha.cpp">
+      <Filter>mfx\dsp\ana</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

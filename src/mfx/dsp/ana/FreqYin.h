@@ -9,6 +9,11 @@ YIN, a fundamental frequency estimator for speech and music,
 Acoustical Society of America, 2002
 Implemented up to step 5.
 
+Note: this implementation has significant latency in the detection.
+The frequencies are tested one after each other, one per input sample, so
+it may take one full cycle (depending on freq_bot) to get the frequency
+update.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to

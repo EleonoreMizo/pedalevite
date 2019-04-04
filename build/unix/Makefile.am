@@ -264,8 +264,12 @@ pedalevite_SOURCES = \
         ../../src/mfx/doc/Slot.h \
         ../../src/mfx/dsp/ana/FreqFast.cpp \
         ../../src/mfx/dsp/ana/FreqFast.h \
+        ../../src/mfx/dsp/ana/FreqAmGha.cpp \
+        ../../src/mfx/dsp/ana/FreqAmGha.h \
         ../../src/mfx/dsp/ana/FreqYin.cpp \
         ../../src/mfx/dsp/ana/FreqYin.h \
+        ../../src/mfx/dsp/ana/ValSmooth.h \
+        ../../src/mfx/dsp/ana/ValSmooth.hpp \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.cpp \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.h \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.hpp \
