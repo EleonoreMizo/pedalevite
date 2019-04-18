@@ -28,6 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
+#include <utility>
+
 #include <cassert>
 
 
@@ -88,6 +90,8 @@ void	PedalboardLayout::ser_write (SerWInterface &ser) const
 
 void	PedalboardLayout::ser_read (SerRInterface &ser)
 {
+	const int      version = ser.get_doc_version ();
+
 	ser.begin_list ();
 
 	int            nbr_elt;
@@ -105,6 +109,16 @@ void	PedalboardLayout::ser_read (SerRInterface &ser)
 		for (auto &p : _pedal_arr)
 		{
 			p.ser_read (ser);
+		}
+		if (version < 9)
+		{
+			// From version 9, pedal rows have been swapped so the first pedal
+			// is now on the lowest row (closest to the player).
+			const int   row_len = int (_pedal_arr.size () / 2);
+			for (int col = 0; col < row_len; ++col)
+			{
+				std::swap (_pedal_arr [col], _pedal_arr [col + row_len]);
+			}
 		}
 	}
 	ser.end_list ();

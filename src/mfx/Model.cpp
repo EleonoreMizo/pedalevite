@@ -63,8 +63,8 @@ namespace mfx
 
 const std::array <int, Cst::_nbr_pedals>	Model::_pedal_to_switch_map =
 {{
-	2, 3, 4, 5, 6, 7, 8, 9,
-	14, 15, 16, 17
+	8, 9, 14, 15, 16, 17,
+	2, 3, 4, 5, 6, 7
 }};
 
 
