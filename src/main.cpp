@@ -11,6 +11,8 @@
 #endif
 
 #define MAIN_USE_ST7920
+
+// No I/O, audio only. Useful to debug soundcard-related problems.
 #undef MAIN_USE_VOID
 
 #undef MAIN_GENERATE_FACTORY_PRESETS
@@ -109,15 +111,6 @@
 #include "mfx/WorldAudio.h"
 
 #if fstb_IS (SYS, LINUX)
- #if defined (MAIN_USE_ST7920)
-	#include "mfx/ui/DisplayPi3St7920.h"
- #else
-	#include "mfx/ui/DisplayPi3Pcd8544.h"
- #endif
-	#include "mfx/ui/LedPi3.h"
-	#include "mfx/ui/UserInputPi3.h"
-	#include "mfx/FileIOPi3.h"
-
 	#if (MAIN_API == MAIN_API_JACK)
 		#include "mfx/adrv/DJack.h"
 	#elif (MAIN_API == MAIN_API_ALSA)
@@ -126,10 +119,23 @@
 		#include "mfx/adrv/DManual.h"
 	#else
 		#error Wrong MAIN_API value
-	#endif
+	#endif // MAIN_API
+	#include "mfx/FileIOPi3.h"
+
+ #if ! defined (MAIN_USE_VOID)
+  #if defined (MAIN_USE_ST7920)
+	#include "mfx/ui/DisplayPi3St7920.h"
+  #else
+	#include "mfx/ui/DisplayPi3Pcd8544.h"
+  #endif
+	#include "mfx/ui/LedPi3.h"
+	#include "mfx/ui/UserInputPi3.h"
+
 	#include <wiringPi.h>
 	#include <wiringPiI2C.h>
 	#include <wiringPiSPI.h>
+ #endif // MAIN_USE_VOID
+
 	#include <arpa/inet.h>
 	#include <net/if.h>
 	#include <netinet/in.h>
@@ -1406,7 +1412,8 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 			}
 		}
 
-#if ! fstb_IS (SYS, LINUX) // Pollutes the logs when run in init.d
+// Pollutes the logs when run in init.d
+#if defined (MAIN_USE_VOID) || ! fstb_IS (SYS, LINUX)
 		const float  usage_max  = meters._dsp_use._peak;
 		const float  usage_avg  = meters._dsp_use._rms;
 		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
@@ -1585,7 +1592,7 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 	MAIN_prog_init ();
 #endif
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_IS (SYS, LINUX) && ! defined (MAIN_USE_VOID)
 	::wiringPiSetupPhys ();
 
 	::pinMode (22, INPUT);
