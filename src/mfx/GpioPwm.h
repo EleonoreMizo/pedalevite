@@ -108,7 +108,7 @@ private:
 		};
 
 		int            init_virtbase ();
-		int            init_ctrl_data ();
+		int            init_ctrl_data (uint32_t periph_base_addr);
 		DmaCtrlBlock & use_cb ();
 		uint32_t       mem_virt_to_phys (void *virt_ptr);
 
@@ -145,6 +145,7 @@ private:
 	                map_periph (uint32_t base, uint32_t len);
 
 	int            _granularity = 10;   // Granularity in microseconds
+	uint32_t       _periph_base_addr = 0x3F000000;  // 0x20000000 on Pi 1.
 	volatile uint32_t *
 						_reg_pwm = 0;
 	volatile uint32_t *
@@ -161,8 +162,7 @@ private:
 
 	static const int  MEM_FLAGS  = 0x04;               // 0x0C for Pi 1.
 
-	// Peripheral base addresses
-	static const uint32_t   VIRT_BASE   = 0x3F000000;  // 0x20000000 for Pi 1.
+	// Base addresses
 	static const uint32_t   PHYS_BASE   = 0x7E000000;
 
 	// Memory Addresses

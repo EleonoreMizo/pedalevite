@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/GpioPwm.h"
 
+#include <bcm_host.h>
 #include <mailbox.h>
 
 #include <sys/mman.h>
@@ -55,9 +56,10 @@ namespace mfx
 
 GpioPwm::GpioPwm (int granularity)
 :	_granularity (granularity)
-,	_reg_pwm (map_periph (VIRT_BASE + PWM_OFS, PWM_LEN))
-,	_reg_clk (map_periph (VIRT_BASE + CLK_OFS, CLK_LEN))
-,	_reg_gpio (map_periph (VIRT_BASE + GPIO_OFS, GPIO_LEN))
+,	_periph_base_addr (::bcm_host_get_peripheral_address ())
+,	_reg_pwm (map_periph (_periph_base_addr + PWM_OFS, PWM_LEN))
+,	_reg_clk (map_periph (_periph_base_addr + CLK_OFS, CLK_LEN))
+,	_reg_gpio (map_periph (_periph_base_addr + GPIO_OFS, GPIO_LEN))
 {
 	_reg_pwm [PWM_CTL    ] = 0;
 	::delayMicroseconds (10);
@@ -120,7 +122,7 @@ int	GpioPwm::init_chn (int chn, int subcycle_time)
 		channel._mbox.init (channel._nbr_pages * 4096, MEM_FLAGS);
 	if (ret_val == 0)
 	{
-		ret_val = channel.init_ctrl_data ();
+		ret_val = channel.init_ctrl_data (_periph_base_addr);
 	}
 
 	return ret_val;
@@ -209,14 +211,16 @@ uint32_t *	GpioPwm::map_periph (uint32_t base, uint32_t len)
 
 
 // Initialize control block for this channel
-int	GpioPwm::Channel::init_ctrl_data ()
+int	GpioPwm::Channel::init_ctrl_data (uint32_t periph_base_addr)
 {
+	assert (periph_base_addr != 0);
+
 	int            ret_val = 0;
 
 	DmaCtrlBlock * cb0_ptr     = &use_cb ();
 	uint32_t *     sample_ptr  = reinterpret_cast <uint32_t *> (_mbox._virt_ptr);
 
-	_dma_reg_ptr = map_periph (VIRT_BASE + DMA_OFS, DMA_LEN);
+	_dma_reg_ptr = map_periph (periph_base_addr + DMA_OFS, DMA_LEN);
 	if (_dma_reg_ptr == 0)
 	{
 		ret_val = -1;
