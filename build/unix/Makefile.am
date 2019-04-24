@@ -1,8 +1,8 @@
 warningflags = -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wshadow
-includeflags = -I$(srcdir)/../../src
+includeflags = -I$(srcdir)/../../src -I/opt/vc/include
 commonflags = $(MFLAGS) $(warningflags) $(includeflags)
 AM_CXXFLAGS = -std=c++11 $(commonflags)
-AM_LDFLAGS  = `pkg-config --cflags --libs jack` -lbcm_host -lasound -lwiringPi -lpthread $(PLUGINLDFLAGS)
+AM_LDFLAGS  = `pkg-config --cflags --libs jack` -lbcm_host -lasound -lwiringPi -lpthread -L/opt/vc/lib $(PLUGINLDFLAGS)
 
 bin_PROGRAMS = pedalevite
 
