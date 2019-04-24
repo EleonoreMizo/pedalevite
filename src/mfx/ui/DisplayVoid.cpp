@@ -87,6 +87,13 @@ void	DisplayVoid::do_refresh (int /*x*/, int /*y*/, int /*w*/, int /*h*/)
 
 
 
+void   DisplayVoid::do_force_reset ()
+{
+	// Nothing
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

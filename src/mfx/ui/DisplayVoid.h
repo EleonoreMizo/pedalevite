@@ -50,8 +50,8 @@ class DisplayVoid
 
 public:
 
-	static const int  _scr_w = 84;
-	static const int  _scr_h = 48;
+	static const int  _scr_w = 128;
+	static const int  _scr_h = 64;
 
 	               DisplayVoid ()  = default;
 	virtual        ~DisplayVoid () = default;
@@ -72,6 +72,7 @@ protected:
 	               do_use_screen_buf () const;
 
 	virtual void   do_refresh (int x, int y, int w, int h);
+	virtual void   do_force_reset ();
 
 
 
