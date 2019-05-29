@@ -285,8 +285,9 @@ private:
 			const double   a  = ((1.5 + N) * fstb::PI - z) / (z * z);
 			const double   xx = fstb::limit (x, -m, +m);
 			const double   u  = log (fabs (xx) + 1);
+			const double   f  = sin ((a * u + 1) * u);
 
-			return std::copysign (sin ((a * u + 1) * u), x);
+			return (x < 0) ? -f : f;
 		}
 	};
 
@@ -343,7 +344,7 @@ private:
 //			const double   n = exp (x) - exp (-a * x);
 //			const double   d = exp (x) + exp (-x);
 			const double   e = exp (x);
-			const double   n = e * (e - exp (x * a));
+			const double   n = e * (e - exp (-x * a));
 			const double   d = e * e + 1;
 			return n / d;
 		}
