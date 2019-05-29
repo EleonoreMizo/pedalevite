@@ -947,6 +947,64 @@ ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3)
 #endif // Versions
 }
 
+
+
+int	ToolsSimd::count_bits (VectS32 x)
+{
+#if fstb_IS (ARCHI, X86)
+	// https://stackoverflow.com/questions/17354971/fast-counting-the-number-of-set-bits-in-m128i-register
+	static const __m128i  popcount_mask1 = _mm_set1_epi8 (0x77);
+	static const __m128i  popcount_mask2 = _mm_set1_epi8 (0x0F);
+	// Count bits in each 4-bit field.
+	__m128i        n = _mm_srli_epi64(x, 1);
+	n = _mm_and_si128 (popcount_mask1, n);
+	x = _mm_sub_epi8 (x, n);
+	n = _mm_srli_epi64 (n, 1);
+	n = _mm_and_si128 (popcount_mask1, n);
+	x = _mm_sub_epi8 (x, n);
+	n = _mm_srli_epi64 (n, 1);
+	n = _mm_and_si128 (popcount_mask1, n);
+	n = _mm_sub_epi8 (x, n);
+	n = _mm_add_epi8 (n, _mm_srli_epi16 (n, 4));
+	n = _mm_and_si128 (popcount_mask2, n);
+	// Counts the number of bits in the low and high 64-bit parts
+	n = _mm_sad_epu8 (n, _mm_setzero_si128 ());
+	// Counts the number of bits in the whole 128-bit register
+	n = _mm_add_epi32 (n, _mm_unpackhi_epi64 (n, n));
+	return _mm_cvtsi128_si32 (n);
+#elif fstb_IS (ARCHI, ARM)
+	const uint8x16_t  cnt_8  = vcntq_u8 (vreinterpretq_u8_s32 (x));
+	const uint16x8_t  cnt_16 = vpaddlq_u8 (cnt_8);
+	const uint32x4_t  cnt_32 = vpaddlq_u16 (cnt_16);
+	const uint64x2_t  cnt_64 = vpaddlq_u32 (cnt_32);
+	const int32x4_t   cnt_s  = vreinterpretq_s32_u64 (cnt_64);
+	return vgetq_lane_s32 (cnt_s, 0) + vgetq_lane_s32 (cnt_s, 2);
+#endif // ff_arch_CPU
+}
+
+
+
+// Assumes x is a result of a comparison, with all bits the same
+// in each 32-bit element.
+unsigned int	ToolsSimd::movemask_f32 (VectF32 x)
+{
+#if fstb_IS (ARCHI, X86)
+	return (unsigned int) (_mm_movemask_ps (x));
+#elif fstb_IS (ARCHI, ARM)
+	uint64x2_t     tmp1 =
+		vreinterpretq_u64_f32 (x); // ddd...ddd ccc...ccc bbb...bbb aaa...aaa
+	tmp1 = vshrq_n_u64 (tmp1);    // 000...00d ddd...ddc 000...00b bbb...bba
+	uint64x1_t     tmp2 = vsli_n_u64 (
+		vget_high_u64 (tmp1),
+		vget_low_u64 (tmp1),
+		2
+	);
+	return (vget_lane_u32 (vreinterpret_u32_u64 (tmp2), 0) & 0xF);
+#endif // ff_arch_CPU
+}
+
+
+
 // p1[1 0] p0[1 0]
 ToolsSimd::VectF32	ToolsSimd::interleave_2f32_lo (VectF32 p0, VectF32 p1)
 {

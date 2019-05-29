@@ -210,6 +210,10 @@ public:
 	               or_h (VectS32 cond);
 	static inline VectF32
 	               set_mask_f32 (bool m0, bool m1, bool m2, bool m3);
+	static inline int
+	               count_bits (VectS32 x);
+	static inline unsigned int
+	               movemask_f32 (VectF32 x);
 
 	static inline VectF32
 	               interleave_2f32_lo (VectF32 p0, VectF32 p1);
