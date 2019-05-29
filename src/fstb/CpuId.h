@@ -69,6 +69,9 @@ public:
 	bool           _avx512f_flag = false;
 	bool           _f16c_flag    = false;  // Half-precision FP
 	bool           _cx16_flag    = false;  // CMPXCHG16B
+	bool           _abm_flag     = false;  // POPCNT + LZCNT
+	bool           _bmi1_flag    = false;  // Bit Manipulation Instruction Set
+	bool           _bmi2_flag    = false;
 
 
 

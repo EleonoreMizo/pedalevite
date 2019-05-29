@@ -52,7 +52,7 @@ CpuId::CpuId ()
 	unsigned int   ecx;
 	unsigned int   edx;
 
-	// Basic features
+	// Processor Info and Feature Bits
 	call_cpuid (0x00000001, eax, ebx, ecx, edx);
 
 	_mmx_flag     = ((edx & (1L << 23)) != 0);
@@ -64,14 +64,18 @@ CpuId::CpuId ()
 	_fma3_flag    = ((ecx & (1L << 16)) != 0);
 	_sse41_flag   = ((ecx & (1L << 19)) != 0);
 	_sse42_flag   = ((ecx & (1L << 20)) != 0);
+	_abm_flag     = ((ecx & (1L << 23)) != 0);
 	_avx_flag     = ((ecx & (1L << 28)) != 0);
 	_f16c_flag    = ((ecx & (1L << 29)) != 0);
 
+	// Extended Features
 	call_cpuid (0x00000007, eax, ebx, ecx, edx);
+	_bmi1_flag    = ((ebx & (1L <<  3)) != 0);
 	_avx2_flag    = ((ebx & (1L <<  5)) != 0);
+	_bmi2_flag    = ((ebx & (1L <<  8)) != 0);
 	_avx512f_flag = ((ebx & (1L << 16)) != 0);
 
-	// Extended features
+	// Extended Processor Info and Feature Bits
 	call_cpuid (0x80000000, eax, ebx, ecx, edx);
 	if (eax >= 0x80000001)
 	{
