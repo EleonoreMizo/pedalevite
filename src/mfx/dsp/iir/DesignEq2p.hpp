@@ -368,9 +368,25 @@ void	DesignEq2p::make_band_pass (T bs [3], T as [3], T q)
 
 
 
-// Make sure to set az [0]
+/*
+==============================================================================
+Name: compute_group_delay
+Description:
+	Computes the group delay for a second-order digital section at a given
+	frequency.
+Input parameters:
+	- bz: Num. of the equation in the Z plane, index is the power of 1/z.
+	- az: Denom. of the equation in the Z plane. az [0] must be set.
+	- sample_freq: sampling frequency, Hz. > 0
+	- f0: frequency at which the group delay should be evaluated.
+		Hz, in ]0 ; sample_freq[
+Returns: The group delay, in samples. >= 0.
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename T>
-static double  DesignEq2p::compute_group_delay (const T bz [3], const T az [3], double sample_freq, double f0)
+double	DesignEq2p::compute_group_delay (const T bz [3], const T az [3], double sample_freq, double f0)
 {
 	assert (bz != 0);
 	assert (az != 0);

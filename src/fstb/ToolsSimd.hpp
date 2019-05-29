@@ -992,8 +992,8 @@ unsigned int	ToolsSimd::movemask_f32 (VectF32 x)
 	return (unsigned int) (_mm_movemask_ps (x));
 #elif fstb_IS (ARCHI, ARM)
 	uint64x2_t     tmp1 =
-		vreinterpretq_u64_f32 (x); // ddd...ddd ccc...ccc bbb...bbb aaa...aaa
-	tmp1 = vshrq_n_u64 (tmp1);    // 000...00d ddd...ddc 000...00b bbb...bba
+		vreinterpretq_u64_f32 (x);    // ddd...ddd ccc...ccc bbb...bbb aaa...aaa
+	tmp1 = vshrq_n_u64 (tmp1, 31);   // 000...00d ddd...ddc 000...00b bbb...bba
 	uint64x1_t     tmp2 = vsli_n_u64 (
 		vget_high_u64 (tmp1),
 		vget_low_u64 (tmp1),
