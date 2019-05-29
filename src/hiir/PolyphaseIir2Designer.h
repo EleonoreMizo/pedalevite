@@ -6,21 +6,21 @@
 Compute coefficients for 2-path polyphase IIR filter, half-band filter or
 Pi/2 phaser.
 
-                        -2
-               a     + z
-         N/2-1  2k+1
-A0 (z) = Prod  ------------
-         k = 0           -2
-               1 + a    z
-                    2k+1
+                      -2
+               a   + z
+         N/2-1  2k
+A0 (z) = Prod  ----------
+         k = 0         -2
+               1 + a  z
+                    2k
 
-                             -2
-                      a   + z
-          -1 (N-1)/2   2k
-A1 (z) = z  . Prod   ----------
-              k = 0           -2
-                      1 + a  z
-                           2k
+                              -2
+                     a     + z
+          -1 (N-1)/2  2k+1
+A1 (z) = z  . Prod   ------------
+              k = 0            -2
+                     1 + a    z
+                          2k+1
 
         1
 H (z) = - (A0 (z) + A1 (z))
@@ -34,16 +34,17 @@ Sum and difference of A0 and A1 have a Pi/2 phase difference.
 
 References:
 
-*	Polyphase Two-Path Filter Designer in Java
-	Artur Krukowski
+*	Artur Krukowski
+	Polyphase Two-Path Filter Designer in Java
 	http://www.cmsa.wmin.ac.uk/~artur/Poly.html
 
-*	Digital Signal Processing Schemes for Efficient Interpolation and Decimation
-	Valenzuela and Constantinides
+*	R.A. Valenzuela, A.G. Constantinides
+	Digital Signal Processing Schemes for Efficient Interpolation and Decimation
 	IEE Proceedings, Dec 1983
 
-*	A Hilbert-Transformer Frequency Shifter for Audio
-	Scott Wardle
+*	Scott Wardle
+	A Hilbert-Transformer Frequency Shifter for Audio
+	International Conference on Digital Audio Effects (DAFx) 1998
 	http://www.iua.upf.es/dafx98/papers/WAR19.PS
 
 --- Legal stuff ---
@@ -90,6 +91,9 @@ public:
 	static int		compute_coefs (double coef_arr [], double attenuation, double transition);
 	static void		compute_coefs_spec_order_tbw (double coef_arr [], int nbr_coefs, double transition);
 
+	static double  compute_phase_delay (double a, double f_fs);
+	static double  compute_group_delay (double a, double f_fs, bool ph_flag);
+	static double  compute_group_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag);
 
 
 

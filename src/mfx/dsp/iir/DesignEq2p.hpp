@@ -22,6 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <cassert>
 #include <cmath>
 
@@ -362,6 +364,44 @@ void	DesignEq2p::make_band_pass (T bs [3], T as [3], T q)
 	as [0] = 1;
 	as [1] = 1 / q;
 	as [2] = 1;
+}
+
+
+
+// Make sure to set az [0]
+template <typename T>
+static double  DesignEq2p::compute_group_delay (const T bz [3], const T az [3], double sample_freq, double f0)
+{
+	assert (bz != 0);
+	assert (az != 0);
+	assert (az [0] != 0);
+	assert (sample_freq > 0);
+	assert (f0 > 0);
+	assert (f0 < sample_freq * 0.5f);
+
+	const double   w  = 2 * fstb::PI * f0 / sample_freq;
+	const double   c1 = cos (    w);
+	const double   c2 = cos (2 * w);
+
+	const T        b0 = bz [0];
+	const T        b1 = bz [1];
+	const T        b2 = bz [2];
+	const T        a0 = az [0];
+	const T        a1 = az [1];
+	const T        a2 = az [2];
+
+	const double   mb   = 2 * b0 * b2 * c2 + b1 * b1 + b2 * b2;
+	const double   ma   = 2 * a0 * a2 * c2 + a1 * a1 + a2 * a2;
+	const double   num1 = b1 * (b0 + 3 * b2) * c1 + mb + b2 * b2;
+	const double   den1 = b0 * b0 + 2 * b1 * (b0 + b2) * c1 + mb;
+	const double   num2 = a1 * (a0 + 3 * a2) * c1 + ma + a2 * a2;
+	const double   den2 = a0 * a0 + 2 * a1 * (a0 + a2) * c1 + ma;
+	assert (den1 != 0);
+	assert (den2 != 0);
+	const double   gd   = num1 / den1 - num2 / den2;
+	assert (gd >= 0);
+
+	return gd;
 }
 
 

@@ -79,6 +79,9 @@ public:
 	static std::complex <double>  compute_butter_pole (int order, int biq);
 	static double  compute_butter_coef_a1 (int order, int biq);
 
+	template <typename T>
+	static double  compute_group_delay (const T bz [3], const T az [3], double sample_freq, double f0);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

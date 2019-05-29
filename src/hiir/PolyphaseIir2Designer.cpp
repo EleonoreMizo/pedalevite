@@ -188,6 +188,101 @@ void	PolyphaseIir2Designer::compute_coefs_spec_order_tbw (double coef_arr [], in
 
 
 
+/*
+==============================================================================
+Name: compute_phase_delay
+Description:
+	Computes the phase delay introduced by a single filtering unit at a
+	specified frequency.
+	The delay is given for a constant sampling rate between input and output.
+Input parameters:
+	- a: coefficient for the cell, [0 ; 1]
+	- f_fs: frequency relative to the sampling rate, [0 ; 0.5].
+Returns:
+	The phase delay in samples, >= 0.
+Throws: Nothing
+==============================================================================
+*/
+
+double	PolyphaseIir2Designer::compute_phase_delay (double a, double f_fs)
+{
+	assert (a >= 0);
+	assert (a <= 1);
+	assert (f_fs >= 0);
+	assert (f_fs < 0.5);
+
+	const double   w  = 2 * hiir::PI * f_fs;
+	const double   c  = cos (w);
+	const double   s  = sin (w);
+	const double   x  = a + c + a * (c * (a + c) + s * s);
+	const double   y  = a * a * s - s;
+	double         ph = atan2 (y, x);
+	if (ph < 0)
+	{
+		ph += 2 * hiir::PI;
+	}
+	const double   dly = ph / w;
+
+	return dly;
+}
+
+
+
+/*
+==============================================================================
+Name: compute_group_delay
+Description:
+	Computes the group delay introduced by a single filtering unit at a
+	specified frequency.
+	The delay is given for a constant sampling rate between input and output.
+	To compute the group delay of a complete filter, add the group delays
+	of all the units in A0 (z).
+Input parameters:
+	- a: coefficient for the cell, [0 ; 1]
+	- f_fs: frequency relative to the sampling rate, [0 ; 0.5].
+	- ph_flag: filtering unit is used in pi/2-phaser mode, in the form
+		(a - z^-2) / (1 - az^-2)
+Returns:
+	The group delay in samples, >= 0.
+Throws: Nothing
+==============================================================================
+*/
+
+double	PolyphaseIir2Designer::compute_group_delay (double a, double f_fs, bool ph_flag)
+{
+	assert (a >= 0);
+	assert (a <= 1);
+	assert (f_fs >= 0);
+	assert (f_fs < 0.5);
+
+	const double   w   = 2 * hiir::PI * f_fs;
+	const double   a2  = a * a;
+	const double   sig = (ph_flag) ? -2 : 2;
+	const double   dly = 2 * (1 - a2) / (a2 + sig * a * cos (2 * w) + 1);
+
+	return dly;
+}
+
+
+
+double	PolyphaseIir2Designer::compute_group_delay (const double coef_arr [], int nbr_coefs, double f_fs, bool ph_flag)
+{
+	assert (nbr_coefs > 0);
+	assert (f_fs >= 0);
+	assert (f_fs < 0.5);
+
+	double         dly_total = 0;
+	for (int k = 0; k < nbr_coefs; ++k)
+	{
+		const double   dly = compute_group_delay (coef_arr [k], f_fs, ph_flag);
+		dly_total += dly;
+	}
+
+	return dly_total;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -202,8 +297,6 @@ void	PolyphaseIir2Designer::compute_transition_param (double &k, double &q, doub
 	assert (&q != 0);
 	assert (transition > 0);
 	assert (transition < 0.5);
-
-	using namespace std;
 
 	k = tan ((1 - transition * 2) * hiir::PI / 4);
 	k *= k;
@@ -223,8 +316,6 @@ int	PolyphaseIir2Designer::compute_order (double attenuation, double q)
 {
 	assert (attenuation > 0);
 	assert (q > 0);
-
-	using namespace std;
 
 	const double	attn_p2 = pow (10.0, -attenuation / 10);
 	const double	a = attn_p2 / (1 - attn_p2);
@@ -249,8 +340,6 @@ double	PolyphaseIir2Designer::compute_atten (double q, int order)
 	assert (order > 0);
 	assert ((order & 1) == 1);
 
-	using namespace std;
-
 	const double	a = 4 * exp (order * 0.5 * log (q));
 	assert (a != -1.0);
 	const double	attn_p2 = a / (1 + a);
@@ -266,8 +355,6 @@ double	PolyphaseIir2Designer::compute_coef (int index, double k, double q, int o
 {
 	assert (index >= 0);
 	assert (index * 2 < order);
-
-	using namespace std;
 
 	const int		c = index + 1;
 	const double	num = compute_acc_num (q, order, c) * pow (q, 0.25);
@@ -287,8 +374,6 @@ double	PolyphaseIir2Designer::compute_acc_num (double q, int order, int c)
 {
 	assert (c >= 1);
 	assert (c < order * 2);
-
-	using namespace std;
 
 	int				i = 0;
 	int				j = 1;
@@ -314,8 +399,6 @@ double	PolyphaseIir2Designer::compute_acc_den (double q, int order, int c)
 {
 	assert (c >= 1);
 	assert (c < order * 2);
-
-	using namespace std;
 
 	int				i = 1;
 	int				j = -1;
