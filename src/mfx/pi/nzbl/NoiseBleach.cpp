@@ -124,9 +124,16 @@ int	NoiseBleach::do_reset (double sample_freq, int max_buf_len, int &latency)
 		buf.resize (mbs_alig);
 	}
 
+	bool           lat_flag = true;
 	for (auto &chn : _chn_arr)
 	{
-		chn._filter_bank.reset (sample_freq, max_buf_len);
+		double         latency_f = (lat_flag) ? 0 : -1;
+		chn._filter_bank.reset (sample_freq, max_buf_len, latency_f);
+		if (lat_flag)
+		{
+			latency  = fstb::round_int (latency_f);
+			lat_flag = false;
+		}
 	}
 
 	_param_change_flag_misc.set ();

@@ -106,7 +106,10 @@ void	FreqSplitter::update_filter ()
 	assert (_inv_fs      > 0);
 	assert (_split_freq  > 0);
 
-	// Filter design
+	// Filter design           ka     , kb
+	// Butterworth -30 dB/oct: 0.61804, 1.0
+	// Steep with ripples:     0.35   , 0.99
+	// Compromise:             0.5    , 1.0
 	const float		ka = 0.61804f;
 	const float		kb = 1.0f;
 	const float		x1 = ka + kb;

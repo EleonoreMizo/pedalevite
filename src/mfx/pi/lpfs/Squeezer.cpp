@@ -151,6 +151,17 @@ int	Squeezer::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
+	const double   f_fs   = 1000.0 / sample_freq;
+	const double   dly_42 = hiir::PolyphaseIir2Designer::compute_group_delay (
+		coef_42, _nbr_coef_42, f_fs * 0.25f, false
+	);
+	const double   dly_21 = hiir::PolyphaseIir2Designer::compute_group_delay (
+		coef_21, _nbr_coef_21, f_fs * 0.5f , false
+	);
+	latency = fstb::round_int (
+		2 * (0.5f * dly_21 + 0.25f * dly_42) / sample_freq
+	);
+
 	return Err_OK;
 }
 

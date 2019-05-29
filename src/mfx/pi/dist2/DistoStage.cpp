@@ -80,7 +80,7 @@ DistoStage::DistoStage ()
 
 
 
-void	DistoStage::reset (double sample_freq, int max_block_size)
+void	DistoStage::reset (double sample_freq, int max_block_size, double &latency)
 {
 	assert (sample_freq > 0);
 	assert (max_block_size > 0);
@@ -105,6 +105,15 @@ void	DistoStage::reset (double sample_freq, int max_block_size)
 	}
 
 	clear_buffers ();
+
+	const double   f_fs   = 1000.0 / sample_freq;
+	const double   dly_42 = hiir::PolyphaseIir2Designer::compute_group_delay (
+		&_coef_42 [0], _nbr_coef_42, f_fs * 0.25f, false
+	);
+	const double   dly_21 = hiir::PolyphaseIir2Designer::compute_group_delay (
+		&_coef_21 [0], _nbr_coef_21, f_fs * 0.5f , false
+	);
+	latency = _inv_fs * (0.5f * dly_21 + 0.25f * dly_42) * 2;
 }
 
 

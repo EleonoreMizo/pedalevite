@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/freqsh/FrequencyShifter.h"
 #include "mfx/pi/freqsh/Param.h"
@@ -91,13 +92,14 @@ double	FrequencyShifter::do_get_param_val (piapi::ParamCateg categ, int index, i
 
 int	FrequencyShifter::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
-	latency = 0;
 	_sample_freq = float (sample_freq);
 
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 
-	_freq_shift.reset (sample_freq, max_buf_len);
+	double         latency_f = 0;
+	_freq_shift.reset (sample_freq, max_buf_len, latency_f);
+	latency = fstb::round_int (latency_f);
 
 	_state = State_ACTIVE;
 

@@ -28,13 +28,12 @@ HPi/LPi are the filters at the i-th frequency between band i and i + 1.
 Pi is the processing for the i-th band.
 
 Because the bands are filtered multiple times, the actual filter slopes
-become steeper accross the bands. Therefore the need for a steep slope
-asymptotically is much reduced for the core filters. It's possible to
-focus on the direct neighbourhood of the cutoff frequencies despite lower
-asymptotical performances. We use here Thiele filters (modified LR filters)
-with a coefficient of 0.65. With such a setting, single performances are 
-poorly balanced but these filters become interesting when grouped in the
-bank.
+become steeper accross the bands. Therefore the need for an asymptotically
+steep slope is much reduced for the core filters. It's possible to focus on
+the direct neighbourhood of the cutoff frequencies despite lower asymptotical
+performances. We use here Thiele filters (modified L-R filters) with a
+coefficient of 0.65. With such a setting, their single performances are
+poorly balanced but these filters become interesting when grouped in the bank.
 
 --- Legal stuff ---
 
@@ -92,7 +91,7 @@ public:
 	               FilterBank ();
 	virtual        ~FilterBank () = default;
 
-	void           reset (double sample_freq, int max_buf_len);
+	void           reset (double sample_freq, int max_buf_len, double &latency);
 	void           set_level (int band_idx, float lvl);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           clear_buffers ();

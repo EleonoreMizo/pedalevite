@@ -3,6 +3,11 @@
         FreqSplitter.h
         Author: Laurent de Soras, 2016
 
+The group delay depends on the splitting frequency. Approximate figures:
+GD(<fsplit) is close to fs / (fsplit * 2) samples
+GD(~fsplit) doubles relatively to GD(~DC)
+GD(>fsplit) gets down quickly to almost 0.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to

@@ -59,7 +59,7 @@ public:
 	               FreqShiftCore ();
 	virtual        ~FreqShiftCore () = default;
 
-	void           reset (double sample_freq, int max_buf_len);
+	void           reset (double sample_freq, int max_buf_len, double &latency);
 	void           set_freq (float f);
 	bool           is_active () const;
 	void           process_block (float * const dst_ptr_arr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
@@ -122,6 +122,7 @@ private:
 	float          _step_angle;         // Radians
 
 	BufArray       _buf_arr;
+	double         _coef_list [_nbr_coef];
 
 
 

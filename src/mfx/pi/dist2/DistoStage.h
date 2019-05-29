@@ -107,7 +107,7 @@ public:
 	               DistoStage ();
 	virtual        ~DistoStage () = default;
 
-	void           reset (double sample_freq, int max_block_size);
+	void           reset (double sample_freq, int max_block_size, double &latency);
 	void           set_hpf_pre_cutoff (float f);
 	void           set_lpf_post_cutoff (float f);
 	void           set_bias (float bias);

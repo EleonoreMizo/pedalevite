@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/Approx.h"
+#include "fstb/fnc.h"
 #include "fstb/ToolsSimd.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
@@ -168,7 +169,7 @@ double	Disto2x::do_get_param_val (piapi::ParamCateg categ, int index, int note_i
 
 int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
-	latency = 0;
+	double         latency_f = 0;
 
 	_sample_freq = float (sample_freq);
 	_inv_fs      = float (1 / sample_freq);
@@ -209,8 +210,11 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_proc->_freq_split.set_sample_freq (sample_freq);
 	for (auto &stage : _proc->_stage_arr)
 	{
-		stage.reset (sample_freq, max_buf_len);
+		double         stage_lat = 0;
+		stage.reset (sample_freq, max_buf_len, stage_lat);
 		stage.set_bias_freq (500);
+
+		latency_f += stage_lat;
 	}
 
 	_env_pre.set_sample_freq (sample_freq);
@@ -225,6 +229,8 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 	clear_buffers ();
 
 	_state = State_ACTIVE;
+
+	latency = fstb::round_int (latency_f);
 
 	return Err_OK;
 }

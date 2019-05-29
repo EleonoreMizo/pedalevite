@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/dsp/iir/DesignEq2p.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/nzbl/FilterBank.h"
@@ -62,10 +63,14 @@ FilterBank::FilterBank ()
 
 
 
-void	FilterBank::reset (double sample_freq, int max_buf_len)
+// Does not compute the latency if latency < 0 as input
+void	FilterBank::reset (double sample_freq, int max_buf_len, double &latency)
 {
 	assert (sample_freq > 0);
 	assert (max_buf_len > 0);
+
+	const bool     lat_flag = (latency >= 0);
+	latency = 0;
 
 	_sample_freq = float (    sample_freq);
 	_inv_fs      = float (1 / sample_freq);
@@ -100,6 +105,8 @@ void	FilterBank::reset (double sample_freq, int max_buf_len)
 	static const float   bh0s [3] = { 0, 0, 1 };
 	static const float   bh1s [3] = { k, 0, 1 };
 
+	const double         f_lat = 700;   // Base frequency for latency evaluation. Hz
+
 	for (int split_cnt = 0; split_cnt < _nbr_split; ++split_cnt)
 	{
 		Split &        split = _split_arr [split_cnt];
@@ -125,6 +132,22 @@ void	FilterBank::reset (double sample_freq, int max_buf_len)
 		split._main.set_z_eq_one (1, bz, az);
 		dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bh1s, as, kf);
 		split._main.set_z_eq_one (3, bz, az);
+
+		if (lat_flag)
+		{
+			// Evaluates the group delay
+			// Uses the HPs or LPs depending on the tested frequency
+			const int      ofs = (f0 < f_lat) ? 1 : 0;
+			for (int stage = 0; stage < 2; ++stage)
+			{
+				split._main.get_z_eq_one (ofs + stage * 2, bz, az);
+				az [0] = 1;
+				const double      gd = dsp::iir::DesignEq2p::compute_group_delay (
+					bz, az, sample_freq, f_lat
+				);
+				latency += gd;
+			}
+		}
 	}
 
 	clear_buffers ();

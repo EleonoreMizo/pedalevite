@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "fstb/ToolsSimd.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
@@ -105,8 +106,6 @@ double	DistoSimple::do_get_param_val (piapi::ParamCateg categ, int index, int no
 
 int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
-	latency = 0;
-
 	_sample_freq = float (sample_freq);
 	_inv_fs      = float (1 / sample_freq);
 	_state_set.set_sample_freq (sample_freq);
@@ -121,6 +120,15 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
 		coef_21, _nbr_coef_21, 1.0 / 100
 	);
+
+	const double   f_fs   = 1000.0 / sample_freq;
+	const double   dly_42 = hiir::PolyphaseIir2Designer::compute_group_delay (
+		coef_42, _nbr_coef_42, f_fs * 0.25f, false
+	);
+	const double   dly_21 = hiir::PolyphaseIir2Designer::compute_group_delay (
+		coef_21, _nbr_coef_21, f_fs * 0.5f , false
+	);
+	latency = fstb::round_int (_inv_fs * (0.5f * dly_21 + 0.25f * dly_42) * 2);
 
 	static const float   b_s [3] = { 1, 0, 0 };
 	static const float   a_s [3] = { 1, float (fstb::SQRT2), 1 };

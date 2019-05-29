@@ -114,7 +114,9 @@ void	FxSection::reset (double sample_freq, int max_buf_len)
 	_inv_fs          = float (1 / sample_freq);
 
 	_disto.set_sample_freq (sample_freq);
-	_freq_shift.reset (sample_freq, max_buf_len);
+	double         latency;
+	_freq_shift.reset (sample_freq, max_buf_len, latency);
+	/*** To do: compensate the latency in the delay line ***/
 
 	_param_change_flag_filter.set ();
 	_param_change_flag_dist  .set ();
