@@ -165,6 +165,7 @@ private:
 	// Shaper is assumed to reach unity at high input values (abs. val.)
 	// F: shaper function, C1 at 0, F(0) = 0 and F'(0) = 1
 	// R: amplitude of the linear part, as a std::ratio template
+	// https://www.desmos.com/calculator/96rydakrcg
 	template <typename F, typename R>
 	class FncLin0
 	{
@@ -209,6 +210,7 @@ private:
 		}
 	};
 
+	// https://www.desmos.com/calculator/rl9itfoxsh
 	class FncBreakBase
 	{
 	public:
@@ -229,6 +231,7 @@ private:
 	// The higher B, the slowest the curve
 	// B should be > 0
 	// C is the amount of additional ripples at 0.
+	// https://www.desmos.com/calculator/2abzjtlqhq
 	template <typename A, typename B, typename C>
 	class FncProgClipper
 	{
@@ -273,6 +276,7 @@ private:
 	};
 
 	// Minimum input range: [-20; +20]
+	// https://www.desmos.com/calculator/2y1tw4wque
 	template <int N>
 	class FncPuncherB
 	{
@@ -291,6 +295,7 @@ private:
 		}
 	};
 
+	// https://www.desmos.com/calculator/jwefh0phns
 	class FncOvershoot
 	{
 	public:
@@ -306,6 +311,7 @@ private:
 	};
 
 	// Minimum input range: [-8; +8]
+	// https://www.desmos.com/calculator/iv27lizdcd
 	template <int B>
 	class FncSmartE
 	{
@@ -323,6 +329,7 @@ private:
 		}
 	};
 
+	// https://www.desmos.com/calculator/4wwhgcvzoi
 	class FncLopsided
 	{
 	public:
@@ -334,6 +341,7 @@ private:
 
 	// Minimum input range: [-256; +8]
 	// https://www.musicdsp.org/en/latest/Effects/86-waveshaper-gloubi-boulga.html
+	// https://www.desmos.com/calculator/1ewo3vxqmy
 	class FncAsym2
 	{
 	public:
