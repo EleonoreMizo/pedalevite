@@ -197,7 +197,7 @@ bool	MapPiecewiseLinLog::is_ok () const
 void	MapPiecewiseLinLog::gen_log (int nbr_seg, double logbase)
 {
 	assert (nbr_seg >= 2);
-	assert (logbase > 1);
+	assert (logbase > 1 || _val_min != 0);
 	assert (_val_min >= 0);
 
 	double         vmin    = _val_min;
