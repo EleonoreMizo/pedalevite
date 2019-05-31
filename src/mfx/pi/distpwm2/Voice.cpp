@@ -164,6 +164,7 @@ float	Voice::process_sample ()
 
 	default:
 		assert (false);
+		val = 0; // Set val to keep the compiler happy
 		break;
 	}
 
