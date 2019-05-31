@@ -55,6 +55,7 @@ public:
 	virtual        ~TplEnum () = default;
 
 	void           set_flags (int32_t flags);
+	int            get_nbr_elt () const;
 
 
 

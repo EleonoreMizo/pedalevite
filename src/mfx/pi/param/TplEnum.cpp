@@ -106,6 +106,13 @@ void	TplEnum::set_flags (int32_t flags)
 
 
 
+int	TplEnum::get_nbr_elt () const
+{
+	return int (_name_list.size ());
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
