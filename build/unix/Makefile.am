@@ -559,6 +559,16 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/distpwm/DistoPwmDesc.cpp \
         ../../src/mfx/pi/distpwm/DistoPwmDesc.h \
         ../../src/mfx/pi/distpwm/Param.h \
+        ../../src/mfx/pi/distpwm2/DistoPwm2.cpp \
+        ../../src/mfx/pi/distpwm2/DistoPwm2.h \
+        ../../src/mfx/pi/distpwm2/DistoPwm2Desc.cpp \
+        ../../src/mfx/pi/distpwm2/DistoPwm2Desc.h \
+        ../../src/mfx/pi/distpwm2/OscType.h \
+        ../../src/mfx/pi/distpwm2/Param.h \
+        ../../src/mfx/pi/distpwm2/PreFilterType.h \
+        ../../src/mfx/pi/distpwm2/PulseType.h \
+        ../../src/mfx/pi/distpwm2/Voice.cpp \
+        ../../src/mfx/pi/distpwm2/Voice.h \
         ../../src/mfx/pi/dly1/Cst.h \
         ../../src/mfx/pi/dly1/Delay.cpp \
         ../../src/mfx/pi/dly1/Delay.h \

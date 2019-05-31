@@ -581,6 +581,13 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2Desc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\OscType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\PreFilterType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\PulseType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\Voice.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm\DistoPwmDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm\Param.h" />
@@ -1037,6 +1044,9 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\Voice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwmDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay.cpp" />

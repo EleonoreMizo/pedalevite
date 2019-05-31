@@ -232,6 +232,9 @@
     <Filter Include="mfx\pi\psh1">
       <UniqueIdentifier>{a50953e4-5788-4a68-a171-3211dde4ea75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\distpwm2">
+      <UniqueIdentifier>{3df3ea7a-3d31-443a-972e-d4462e7b4cec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2529,6 +2532,27 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\ValSmooth.hpp">
       <Filter>mfx\dsp\ana</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.h">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2Desc.h">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\Param.h">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\PreFilterType.h">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\OscType.h">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\Voice.h">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\PulseType.h">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3496,6 +3520,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqAmGha.cpp">
       <Filter>mfx\dsp\ana</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.cpp">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2Desc.cpp">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\Voice.cpp">
+      <Filter>mfx\pi\distpwm2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
