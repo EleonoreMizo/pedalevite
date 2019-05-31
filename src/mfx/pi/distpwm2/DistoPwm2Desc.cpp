@@ -28,8 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/distpwm2/PreFilterType.h"
 #include "mfx/pi/distpwm2/PulseType.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
+#include "mfx/pi/param/MapSq.h"
 #include "mfx/pi/param/TplEnum.h"
-#include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplMapped.h"
 
 #include <cassert>
@@ -149,6 +149,7 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 	assert (! name_t.empty ());
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
+	typedef param::TplMapped <param::MapSq <false> > TplSq;
 
 	// Pulse type
 	const std::string name_pulse =
@@ -168,15 +169,15 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		+ name_s + " level\n"
 		+ name_s + " lvl\n"
 		+ name_t + "L";
-	param::TplLin *   lin_ptr = new param::TplLin (
+	TplSq *        sq_ptr = new TplSq (
 		0.0, 1.0,
 		name_lvl.c_str (),
 		"dB",
+		param::HelperDispNum::Preset_DB,
 		0,
 		"%+5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_DB);
-	_desc_set.add_glob (base + ParamOsc_LVL, lin_ptr);
+	_desc_set.add_glob (base + ParamOsc_LVL, sq_ptr);
 
 	// Pulse frequency
 	const std::string name_pw =
