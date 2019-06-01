@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/DataAlign.h"
 #include "fstb/SingleObj.h"
 #include "mfx/dsp/dyn/EnvFollowerPeak.h"
+#include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/dsp/iir/Biquad4Simd.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/InertiaLin.h"
@@ -142,6 +143,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 	void           update_prefilter ();
+	inline bool    has_vol_proc () const;
+	void           square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
 
 	State          _state;
 
@@ -154,6 +157,8 @@ private:
 	               _param_change_flag;
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_misc;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_vol;
 	std::array <fstb::util::NotificationFlagCascadeSingle, OscType_NBR_ELT>
 	               _param_change_flag_osc_arr;
 
@@ -165,6 +170,16 @@ private:
 	BufAlign       _buf_tmp;
 	BufMixArray    _buf_mix_arr;
 	bool           _peak_det_flag;      // Detection method. True = peak, false = Zero-crossing
+
+	float          _density;
+	float          _sust_lvl;
+	float          _gate_lvl;
+	dsp::dyn::EnvFollowerRms
+	               _env_pre;
+	dsp::dyn::EnvFollowerRms
+	               _env_post;
+	float          _fixgain_cur;
+	float          _fixgain_old;
 
 
 

@@ -63,6 +63,7 @@ DistoPwm2::DistoPwm2 ()
 ,	_inv_fs (0)
 ,	_param_change_flag ()
 ,	_param_change_flag_misc ()
+,	_param_change_flag_vol ()
 ,	_param_change_flag_osc_arr ()
 ,	_filter_in ()
 ,	_chn_arr ()
@@ -72,19 +73,37 @@ DistoPwm2::DistoPwm2 ()
 ,	_buf_tmp ()
 ,	_buf_mix_arr ()
 ,	_peak_det_flag (true)
+,	_density (1)
+,	_sust_lvl (0)
+,	_gate_lvl (0)
+,	_env_pre ()
+,	_env_post ()
+,	_fixgain_cur (1)
+,	_fixgain_old (1)
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_LPF, PreFilterType_MILD);
-	_state_set.set_val_nat (desc_set, Param_DET, DetectionMethod_ZX);
-	_state_set.set_val_nat (desc_set, Param_THR, 1e-4);
+	_state_set.set_val_nat (desc_set, Param_LPF , PreFilterType_MILD);
+	_state_set.set_val_nat (desc_set, Param_DET , DetectionMethod_ZX);
+	_state_set.set_val_nat (desc_set, Param_THR , 1e-4);
+	_state_set.set_val_nat (desc_set, Param_DENS,    1);
+	_state_set.set_val_nat (desc_set, Param_SUST,    0);
+	_state_set.set_val_nat (desc_set, Param_GATE, 1e-4);
 
-	_state_set.add_observer (Param_LPF, _param_change_flag_misc);
-	_state_set.add_observer (Param_DET, _param_change_flag_misc);
-	_state_set.add_observer (Param_THR, _param_change_flag_misc);
+	_state_set.add_observer (Param_LPF , _param_change_flag_misc);
+	_state_set.add_observer (Param_DET , _param_change_flag_misc);
+	_state_set.add_observer (Param_THR , _param_change_flag_misc);
+	_state_set.add_observer (Param_DENS, _param_change_flag_vol);
+	_state_set.add_observer (Param_SUST, _param_change_flag_vol);
+	_state_set.add_observer (Param_GATE, _param_change_flag_vol);
+
+	_state_set.set_ramp_time (Param_DENS, 0.010);
+	_state_set.set_ramp_time (Param_SUST, 0.010);
+	_state_set.set_ramp_time (Param_GATE, 0.010);
 
 	_param_change_flag_misc.add_observer (_param_change_flag);
+	_param_change_flag_vol.add_observer (_param_change_flag);
 
 	for (int osc = 0; osc < OscType_NBR_ELT; ++osc)
 	{
@@ -102,6 +121,9 @@ DistoPwm2::DistoPwm2 ()
 
 		pcf_voice.add_observer (_param_change_flag);
 	}
+
+	_env_pre.set_times (0.001f, 0.050f);
+	_env_post.set_times (0.001f, 0.050f);
 
 	dsp::mix::Align::setup ();
 }
@@ -178,6 +200,10 @@ int	DistoPwm2::do_reset (double sample_freq, int max_buf_len, int &latency)
 		}
 	}
 
+	_env_pre.set_sample_freq (sample_freq);
+	_env_post.set_sample_freq (sample_freq);
+	_fixgain_cur = 1;
+
 	update_param (true);
 
 	clear_buffers ();
@@ -198,12 +224,12 @@ void	DistoPwm2::do_clean_quick ()
 
 void	DistoPwm2::do_process_block (ProcInfo &proc)
 {
-	const int      nbr_chn_in =
+	const int      nbr_chn_src =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_out =
+	const int      nbr_chn_dst =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
-	assert (nbr_chn_in <= nbr_chn_out);
-	const int      nbr_chn_proc = std::min (nbr_chn_in, nbr_chn_out);
+	assert (nbr_chn_src <= nbr_chn_dst);
+	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -223,6 +249,16 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 
 	// Signal processing
 	const int      nbr_spl = proc._nbr_spl;
+
+	// Envelope detection
+	float          lvl_pre_sq = 1;
+	if (has_vol_proc ())
+	{
+		square_block (
+			_buf_tmp.data (), proc._src_arr, nbr_spl, nbr_chn_src
+		);
+		lvl_pre_sq = _env_pre.analyse_block_raw (_buf_tmp.data (), nbr_spl);
+	}
 
 	// Interleave samples for low-pass filtering
 	const int      chn_aux = (nbr_chn_proc == 2) ? 1 : 0;
@@ -395,8 +431,53 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 		chn._hpf_out.process_block (dst_ptr, src_ptr, proc._nbr_spl);
 	}
 
+	// Volume processing
+	_fixgain_cur = 1;
+	if (has_vol_proc ())
+	{
+		// Envelope detection
+		square_block (
+			_buf_tmp.data (), proc._dst_arr, nbr_spl, nbr_chn_src
+		);
+		float          lvl_post_sq =
+			_env_post.analyse_block_raw (_buf_tmp.data (), nbr_spl);
+
+		// Fix gain calculation
+		const auto     lvl_sq   =
+			fstb::ToolsSimd::set_2f32 (lvl_pre_sq, lvl_post_sq);
+		const auto     lvl      = fstb::ToolsSimd::sqrt (lvl_sq);
+		const float    lvl_pre  = fstb::ToolsSimd::Shift <0>::extract (lvl);
+		const float    lvl_post = fstb::ToolsSimd::Shift <1>::extract (lvl);
+		const float    lvl_lim  = 2; // Limiter
+
+		assert (lvl_post > 0);
+		const float    lvl_post_inv = 1.0f / lvl_post;
+		const float    lvl_t = std::max (lvl_pre, _sust_lvl);      // Modified input level doesn't go below the threshold
+		const float    r  = std::min (lvl_t * lvl_post_inv, 1.0f); // Amplification factor to reach the modified input level
+		float          gd = pow (r, 1 - _density);                 // Moderated by the density
+		if (_gate_lvl > 0 && lvl_pre < _gate_lvl)
+		{
+			float          gain_red = lvl_pre / _gate_lvl;
+			gain_red *= gain_red; // Gate ratio: 4
+			gain_red *= gain_red;
+			gd       *= gain_red;
+		}
+		_fixgain_cur  = std::min (gd, lvl_lim * lvl_post_inv);
+	}
+
+	// Fix gain
+	if (_fixgain_cur != 1 || _fixgain_old != 1)
+	{
+		for (int chn = 0; chn < nbr_chn_src; ++chn)
+		{
+			dsp::mix::Align::scale_1_vlrauto (
+				proc._dst_arr [chn], nbr_spl, _fixgain_old, _fixgain_cur
+			);
+		}
+	}
+
 	// Duplicates the remaining output channels
-	for (int chn_index = 0; chn_index < nbr_chn_out; ++chn_index)
+	for (int chn_index = nbr_chn_proc; chn_index < nbr_chn_dst; ++chn_index)
 	{
 		dsp::mix::Align::copy_1_1 (
 			proc._dst_arr [chn_index],
@@ -404,6 +485,8 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 			proc._nbr_spl
 		);
 	}
+
+	_fixgain_old = _fixgain_cur;
 }
 
 
@@ -519,6 +602,38 @@ void	DistoPwm2::update_prefilter ()
 
 	_filter_in->set_z_eq_one (2, b3_z, a3_z);
 	_filter_in->set_z_eq_one (3, b3_z, a3_z);
+}
+
+
+
+bool	DistoPwm2::has_vol_proc () const
+{
+	return (_density < 1 || _gate_lvl > 0);
+}
+
+
+
+void	DistoPwm2::square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn)
+{
+	static const float   not_zero = 1e-30f;	// -600 dB
+	if (nbr_chn == 1)
+	{
+		dsp::mix::Align::sum_square_n_1 (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero
+		);
+	}
+	else if (nbr_chn == 2)
+	{
+		dsp::mix::Align::sum_square_n_1_v (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 0.5f
+		);
+	}
+	else
+	{
+		dsp::mix::Align::sum_square_n_1_v (
+			dst_ptr, src_ptr_arr, nbr_spl, nbr_chn, not_zero, 1.0f / nbr_chn
+		);
+	}
 }
 
 
