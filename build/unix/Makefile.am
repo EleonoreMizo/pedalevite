@@ -559,6 +559,7 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/distpwm/DistoPwmDesc.cpp \
         ../../src/mfx/pi/distpwm/DistoPwmDesc.h \
         ../../src/mfx/pi/distpwm/Param.h \
+        ../../src/mfx/pi/distpwm2/DetectionMethod.h \
         ../../src/mfx/pi/distpwm2/DistoPwm2.cpp \
         ../../src/mfx/pi/distpwm2/DistoPwm2.h \
         ../../src/mfx/pi/distpwm2/DistoPwm2Desc.cpp \

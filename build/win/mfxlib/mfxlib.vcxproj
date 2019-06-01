@@ -581,6 +581,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DetectionMethod.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\OscType.h" />

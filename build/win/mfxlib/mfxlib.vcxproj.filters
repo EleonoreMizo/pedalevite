@@ -2553,6 +2553,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\PulseType.h">
       <Filter>mfx\pi\distpwm2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DetectionMethod.h">
+      <Filter>mfx\pi\distpwm2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

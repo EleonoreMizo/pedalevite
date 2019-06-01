@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        Param.h
-        Author: Laurent de Soras, 2016
+        DetectionMethod.h
+        Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_distpwm2_Param_HEADER_INCLUDED)
-#define mfx_pi_distpwm2_Param_HEADER_INCLUDED
+#if ! defined (mfx_pi_distpwm2_DetectionMethod_HEADER_INCLUDED)
+#define mfx_pi_distpwm2_DetectionMethod_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -26,8 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#include "mfx/pi/distpwm2/OscType.h"
 
 
 
@@ -40,29 +38,15 @@ namespace distpwm2
 
 
 
-enum ParamOsc
+enum DetectionMethod
 {
-	ParamOsc_PULSE = 0,
-	ParamOsc_LVL,
-	ParamOsc_PF,
 
-	ParamOsc_NBR_ELT
-};
+	DetectionMethod_ZX = 0,
+	DetectionMethod_PEAK,
 
-enum Param
-{
-	Param_LPF  = 0,
-	Param_DET,
-	Param_THR,
-	Param_OSC_BASE,
-	Param_OSC_STD  = Param_OSC_BASE + OscType_STD  * ParamOsc_NBR_ELT,
-	Param_OSC_OCT  = Param_OSC_BASE + OscType_OCT  * ParamOsc_NBR_ELT,
-	Param_OSC_SUB1 = Param_OSC_BASE + OscType_SUB1 * ParamOsc_NBR_ELT,
-	Param_OSC_SUB2 = Param_OSC_BASE + OscType_SUB2 * ParamOsc_NBR_ELT,
+	DetectionMethod_NBR_ELT
 
-	Param_NBR_ELT  = Param_OSC_BASE + OscType_NBR_ELT * ParamOsc_NBR_ELT
-
-}; // enum Param
+}; // enum DetectionMethod
 
 
 
@@ -72,11 +56,11 @@ enum Param
 
 
 
-//#include "mfx/pi/distpwm2/Param.hpp"
+//#include "mfx/pi/distpwm2/DetectionMethod.hpp"
 
 
 
-#endif   // mfx_pi_distpwm2_Param_HEADER_INCLUDED
+#endif   // mfx_pi_distpwm2_DetectionMethod_HEADER_INCLUDED
 
 
 

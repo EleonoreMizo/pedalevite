@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/pi/distpwm2/DetectionMethod.h"
 #include "mfx/pi/distpwm2/DistoPwm2Desc.h"
 #include "mfx/pi/distpwm2/PreFilterType.h"
 #include "mfx/pi/distpwm2/PulseType.h"
@@ -60,6 +61,13 @@ DistoPwm2Desc::DistoPwm2Desc ()
 	);
 	assert (enu_ptr->get_nbr_elt () == PreFilterType_NBR_ELT);
 	_desc_set.add_glob (Param_LPF, enu_ptr);
+
+	// Detection method
+	enu_ptr = new param::TplEnum (
+		"0-X\nPeak", "Detection method\nDetection\nDetect\nDet", ""
+	);
+	assert (enu_ptr->get_nbr_elt () == DetectionMethod_NBR_ELT);
+	_desc_set.add_glob (Param_DET, enu_ptr);
 
 	// Threshold
 	TplPll *       pll_ptr = new TplPll (

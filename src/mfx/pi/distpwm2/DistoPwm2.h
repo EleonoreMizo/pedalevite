@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
 #include "fstb/SingleObj.h"
+#include "mfx/dsp/dyn/EnvFollowerPeak.h"
 #include "mfx/dsp/iir/Biquad4Simd.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/InertiaLin.h"
@@ -107,6 +108,21 @@ private:
 	};
 	typedef std::array <VoiceInfo, OscType_NBR_ELT> VoiceArray;
 
+	class PeakAnalyser
+	{
+	public:
+		class PeakUnipolar
+		{
+		public:
+			dsp::dyn::EnvFollowerPeak
+			               _env;
+			std::array <float, 2>   // Previous output samples from the envelope follower
+			               _mem;
+		};
+		std::array <PeakUnipolar, 2>  // Positive, Negative
+		               _env_bip;
+	};
+
 	class Channel
 	{
 	public:
@@ -117,8 +133,8 @@ private:
 		dsp::iir::OnePole
 		               _hpf_out;
 		VoiceProcArray _voice_arr;
-
-		int            _period_cnt = 0;  // Increased at each zero-crossing
+		PeakAnalyser   _peak_analyser;
+		int            _zx_idx     = 0;  // Increased at each zero-crossing
 		float          _spl_prev   = 0;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
@@ -137,7 +153,7 @@ private:
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 	fstb::util::NotificationFlagCascadeSingle
-						_param_change_flag_misc;
+	               _param_change_flag_misc;
 	std::array <fstb::util::NotificationFlagCascadeSingle, OscType_NBR_ELT>
 	               _param_change_flag_osc_arr;
 
@@ -148,6 +164,7 @@ private:
 	float          _threshold;
 	BufAlign       _buf_tmp;
 	BufMixArray    _buf_mix_arr;
+	bool           _peak_det_flag;      // Detection method. True = peak, false = Zero-crossing
 
 
 

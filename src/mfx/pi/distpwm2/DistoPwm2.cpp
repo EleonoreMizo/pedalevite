@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
+#include "mfx/pi/distpwm2/DetectionMethod.h"
 #include "mfx/pi/distpwm2/DistoPwm2.h"
 #include "mfx/pi/distpwm2/Param.h"
 #include "mfx/pi/distpwm2/PreFilterType.h"
@@ -70,14 +71,17 @@ DistoPwm2::DistoPwm2 ()
 ,	_threshold (1e-4f)
 ,	_buf_tmp ()
 ,	_buf_mix_arr ()
+,	_peak_det_flag (true)
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
 	_state_set.set_val_nat (desc_set, Param_LPF, PreFilterType_MILD);
+	_state_set.set_val_nat (desc_set, Param_DET, DetectionMethod_ZX);
 	_state_set.set_val_nat (desc_set, Param_THR, 1e-4);
 
 	_state_set.add_observer (Param_LPF, _param_change_flag_misc);
+	_state_set.add_observer (Param_DET, _param_change_flag_misc);
 	_state_set.add_observer (Param_THR, _param_change_flag_misc);
 
 	_param_change_flag_misc.add_observer (_param_change_flag);
@@ -165,6 +169,14 @@ int	DistoPwm2::do_reset (double sample_freq, int max_buf_len, int &latency)
 	{
 		buf.resize (mbl_align);
 	}
+	for (auto &chn : _chn_arr)
+	{
+		for (auto &unip : chn._peak_analyser._env_bip)
+		{
+			unip._env.set_sample_freq (sample_freq);
+			unip._env.set_times (0.05e-3f, 5e-3f);
+		}
+	}
 
 	update_param (true);
 
@@ -215,7 +227,7 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 	// Interleave samples for low-pass filtering
 	const int      chn_aux = (nbr_chn_proc == 2) ? 1 : 0;
 	dsp::mix::Align::copy_2_2i (
-		&_buf_tmp [0],
+		_buf_tmp.data (),
 		proc._src_arr [0],
 		proc._src_arr [chn_aux],
 		nbr_spl
@@ -223,8 +235,8 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 
 	// Low-pass pre-filtering
 	_filter_in->process_block_2x2_latency (
-		&_buf_tmp [0],
-		&_buf_tmp [0],
+		_buf_tmp.data (),
+		_buf_tmp.data (),
 		nbr_spl
 	);
 
@@ -240,44 +252,89 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 	// Zero-crossing detection and main voice generation
 	for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
 	{
-		float *        tmp_ptr = &_buf_tmp [chn_index]; // 2 interleaved channels
-		Channel &      chn     = _chn_arr [chn_index];
+		float *        tmp_ptr  = &_buf_tmp [chn_index]; // 2 interleaved channels
+		Channel &      chn      = _chn_arr [chn_index];
+		float *        dst_ptr  = _buf_mix_arr [chn_index].data ();
+		bool           mix_flag = false;
 
 		for (int pos = 0; pos < nbr_spl; ++pos)
 		{
 			const float    x = tmp_ptr [pos * 2];
-			const bool     positive_flag = ((chn._period_cnt & 1) != 0);
+			const bool     positive_flag = ((chn._zx_idx & 1) != 0);
 			bool           trig_flag     = false;
-			if (   (  positive_flag && x <= -_threshold)
-			    || (! positive_flag && x >= +_threshold))
+			if (_peak_det_flag)
 			{
-				trig_flag       = true;
-				++ chn._period_cnt;
+				std::array <std::array <float, 3>, 2> env_res_arr;
+				std::array <float, 2>   env_inp = {{
+					(x < 0) ? 0 : x, (x < 0) ? -x : 0
+				}};
+				for (int env_cnt = 0; env_cnt < 2; ++env_cnt)
+				{
+					auto &         pu = chn._peak_analyser._env_bip [env_cnt];
+					env_res_arr [env_cnt] [0] = pu._mem [0];
+					env_res_arr [env_cnt] [1] = pu._mem [1];
+					env_res_arr [env_cnt] [2] =
+						pu._env.process_sample (env_inp [env_cnt]);
+				}
+
+				if (   (   positive_flag
+				        && env_res_arr [0] [0] < env_res_arr [0] [1]
+				        && env_res_arr [0] [2] < env_res_arr [0] [1])
+				    || (   ! positive_flag
+				        && env_res_arr [1] [0] < env_res_arr [1] [1]
+				        && env_res_arr [1] [2] < env_res_arr [1] [1])
+				)
+				{
+					trig_flag = true;
+					++ chn._zx_idx;
+				}
+				for (int env_cnt = 0; env_cnt < 2; ++env_cnt)
+				{
+					auto &         pu = chn._peak_analyser._env_bip [env_cnt];
+					pu._mem [0] = env_res_arr [env_cnt] [1];
+					pu._mem [1] = env_res_arr [env_cnt] [2];
+				}
+			}
+			else
+			{
+				if (   (  positive_flag && x <= -_threshold)
+				    || (! positive_flag && x >= +_threshold))
+				{
+					trig_flag = true;
+					++ chn._zx_idx;
+				}
 			}
 
 			if (trig_flag)
 			{
-				// We need these checks because everything could go wrong when
-				// _threshold is changing.
 				float          zc_pos = 0;
-				if (x != chn._spl_prev)
+				if (_peak_det_flag)
 				{
-					zc_pos = fstb::limit (
-						(x - std::copysign (_threshold, x)) / (x - chn._spl_prev),
-						0.f,
-						0.99999f
-					);
+					/*** To do ***/
+				}
+				else
+				{
+					// We need these checks because everything could go wrong when
+					// _threshold is changing.
+					if (x != chn._spl_prev)
+					{
+						zc_pos = fstb::limit (
+							(x - std::copysign (_threshold, x)) / (x - chn._spl_prev),
+							0.f,
+							0.99999f
+						);
+					}
 				}
 				chn._voice_arr [OscType_OCT ].sync (zc_pos);
-				if ((chn._period_cnt & 1) == 0)
+				if ((chn._zx_idx & 1) == 0)
 				{
 					chn._voice_arr [OscType_STD ].sync (zc_pos);
 				}
-				if ((chn._period_cnt & 3) == 1)
+				if ((chn._zx_idx & 3) == 1)
 				{
 					chn._voice_arr [OscType_SUB1].sync (zc_pos);
 				}
-				if ((chn._period_cnt & 7) == 3)
+				if ((chn._zx_idx & 7) == 3)
 				{
 					chn._voice_arr [OscType_SUB2].sync (zc_pos);
 				}
@@ -293,14 +350,12 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 			chn._spl_prev = x;
 		}
 
-		float *        dst_ptr = &_buf_mix_arr [chn_index] [0];
-		bool           mix_flag = false;
 		for (int vc_index = 0; vc_index < OscType_NBR_ELT; ++vc_index)
 		{
 			VoiceInfo &    vcinf = _voice_arr [vc_index];
 			if (vcinf._active_flag)
 			{
-				const float *  src_ptr = &vcinf._buf_gen [0];
+				const float *  src_ptr = vcinf._buf_gen.data ();
 				if (mix_flag)
 				{
 					dsp::mix::Align::mix_1_1_vlrauto (
@@ -335,7 +390,7 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 	for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
 	{
 		Channel &      chn     = _chn_arr [chn_index];
-		const float *  src_ptr = &_buf_mix_arr [chn_index] [0];
+		const float *  src_ptr = _buf_mix_arr [chn_index].data ();
 		float *        dst_ptr = proc._dst_arr [chn_index];
 		chn._hpf_out.process_block (dst_ptr, src_ptr, proc._nbr_spl);
 	}
@@ -367,8 +422,16 @@ void	DistoPwm2::clear_buffers ()
 		{
 			voice.clear_buffers ();
 		}
-		chn._period_cnt = 0;
-		chn._spl_prev   = 0;
+		for (auto &pu : chn._peak_analyser._env_bip)
+		{
+			pu._env.clear_buffers ();
+			for (auto &val : pu._mem)
+			{
+				val = 0;
+			}
+		}
+		chn._zx_idx   = 0;
+		chn._spl_prev = 0;
 	}
 	for (auto &vcinf : _voice_arr)
 	{
@@ -388,6 +451,9 @@ void	DistoPwm2::update_param (bool force_flag)
 			_prefilter = PreFilterType (fstb::round_int (
 				_state_set.get_val_tgt_nat (Param_LPF)
 			));
+			_peak_det_flag = (DetectionMethod (fstb::round_int (
+				_state_set.get_val_tgt_nat (Param_DET)
+			)) == DetectionMethod_PEAK);
 			_threshold = float (_state_set.get_val_tgt_nat (Param_THR));
 
 			update_prefilter ();
@@ -426,6 +492,7 @@ void	DistoPwm2::update_param (bool force_flag)
 
 void	DistoPwm2::update_prefilter ()
 {
+	const float    f_hpf    =   5;
 	float          f_lpf    = 500;
 	float          b3_s [3] = { 1, 2, 1 };
 	float          a3_s [3] = { 1, 2, 1 };
@@ -436,7 +503,7 @@ void	DistoPwm2::update_prefilter ()
 		{
 			f_lpf = 50;
 		}
-		const float    f_rel_inv = f_lpf / 5.f;
+		const float    f_rel_inv = f_lpf / f_hpf;
 		b3_s [0] = 0;
 		b3_s [1] = f_rel_inv;
 		b3_s [2] = 0;
