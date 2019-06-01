@@ -143,6 +143,8 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 	void           update_prefilter ();
+	inline bool    detect_zero_cross (Channel &chn, float x, bool positive_flag);
+	inline bool    detect_peak (Channel &chn, float x, bool positive_flag);
 	inline bool    has_vol_proc () const;
 	void           square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
 

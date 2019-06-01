@@ -288,11 +288,11 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 	// Zero-crossing detection and main voice generation
 	for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
 	{
-		float *        tmp_ptr  = &_buf_tmp [chn_index]; // 2 interleaved channels
 		Channel &      chn      = _chn_arr [chn_index];
 		float *        dst_ptr  = _buf_mix_arr [chn_index].data ();
 		bool           mix_flag = false;
 
+		float *        tmp_ptr  = &_buf_tmp [chn_index]; // 2 interleaved channels
 		for (int pos = 0; pos < nbr_spl; ++pos)
 		{
 			const float    x = tmp_ptr [pos * 2];
@@ -300,60 +300,23 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 			bool           trig_flag     = false;
 			if (_peak_det_flag)
 			{
-				std::array <std::array <float, 3>, 2> env_res_arr;
-				std::array <float, 2>   env_inp = {{
-					(x < 0) ? 0 : x, (x < 0) ? -x : 0
-				}};
-				for (int env_cnt = 0; env_cnt < 2; ++env_cnt)
-				{
-					auto &         pu = chn._peak_analyser._env_bip [env_cnt];
-					env_res_arr [env_cnt] [0] = pu._mem [0];
-					env_res_arr [env_cnt] [1] = pu._mem [1];
-					env_res_arr [env_cnt] [2] =
-						pu._env.process_sample (env_inp [env_cnt]);
-				}
-
-				if (   (   positive_flag
-				        && env_res_arr [0] [0] < env_res_arr [0] [1]
-				        && env_res_arr [0] [2] < env_res_arr [0] [1])
-				    || (   ! positive_flag
-				        && env_res_arr [1] [0] < env_res_arr [1] [1]
-				        && env_res_arr [1] [2] < env_res_arr [1] [1])
-				)
-				{
-					trig_flag = true;
-					++ chn._zx_idx;
-				}
-				for (int env_cnt = 0; env_cnt < 2; ++env_cnt)
-				{
-					auto &         pu = chn._peak_analyser._env_bip [env_cnt];
-					pu._mem [0] = env_res_arr [env_cnt] [1];
-					pu._mem [1] = env_res_arr [env_cnt] [2];
-				}
+				trig_flag = detect_peak (chn, x, positive_flag);
 			}
 			else
 			{
-				if (   (  positive_flag && x <= -_threshold)
-				    || (! positive_flag && x >= +_threshold))
-				{
-					trig_flag = true;
-					++ chn._zx_idx;
-				}
+				trig_flag = detect_zero_cross (chn, x, positive_flag);
 			}
 
 			if (trig_flag)
 			{
 				float          zc_pos = 0;
-				if (_peak_det_flag)
+				if (! _peak_det_flag)
 				{
-					/*** To do ***/
-				}
-				else
-				{
-					// We need these checks because everything could go wrong when
-					// _threshold is changing.
+					// Sub-sample accurracy only with the ZX method
 					if (x != chn._spl_prev)
 					{
+						// We need to limit the result because everything could go
+						// wrong when _threshold is changing.
 						zc_pos = fstb::limit (
 							(x - std::copysign (_threshold, x)) / (x - chn._spl_prev),
 							0.f,
@@ -614,6 +577,62 @@ void	DistoPwm2::update_prefilter ()
 
 	_filter_in->set_z_eq_one (2, b3_z, a3_z);
 	_filter_in->set_z_eq_one (3, b3_z, a3_z);
+}
+
+
+
+bool	DistoPwm2::detect_zero_cross (Channel &chn, float x, bool positive_flag)
+{
+	bool           trig_flag = false;
+
+	if (   (  positive_flag && x <= -_threshold)
+	    || (! positive_flag && x >= +_threshold))
+	{
+		trig_flag = true;
+		++ chn._zx_idx;
+	}
+
+	return trig_flag;
+}
+
+
+
+bool	DistoPwm2::detect_peak (Channel &chn, float x, bool positive_flag)
+{
+	bool           trig_flag = false;
+
+	std::array <std::array <float, 3>, 2> env_res_arr;
+	std::array <float, 2>   env_inp = {{
+		(x < 0) ? 0 : x, (x < 0) ? -x : 0
+	}};
+	for (int env_cnt = 0; env_cnt < 2; ++env_cnt)
+	{
+		auto &         pu = chn._peak_analyser._env_bip [env_cnt];
+		env_res_arr [env_cnt] [0] = pu._mem [0];
+		env_res_arr [env_cnt] [1] = pu._mem [1];
+		env_res_arr [env_cnt] [2] =
+			pu._env.process_sample (env_inp [env_cnt]);
+	}
+
+	if (   (   positive_flag
+				&& env_res_arr [0] [0] < env_res_arr [0] [1]
+				&& env_res_arr [0] [2] < env_res_arr [0] [1])
+			|| (   ! positive_flag
+				&& env_res_arr [1] [0] < env_res_arr [1] [1]
+				&& env_res_arr [1] [2] < env_res_arr [1] [1])
+	)
+	{
+		trig_flag = true;
+		++ chn._zx_idx;
+	}
+	for (int env_cnt = 0; env_cnt < 2; ++env_cnt)
+	{
+		auto &         pu = chn._peak_analyser._env_bip [env_cnt];
+		pu._mem [0] = env_res_arr [env_cnt] [1];
+		pu._mem [1] = env_res_arr [env_cnt] [2];
+	}
+
+	return trig_flag;
 }
 
 
