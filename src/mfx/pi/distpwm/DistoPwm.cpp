@@ -149,12 +149,12 @@ void	DistoPwm::do_clean_quick ()
 
 void	DistoPwm::do_process_block (ProcInfo &proc)
 {
-	const int      nbr_chn_in =
+	const int      nbr_chn_src =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_out =
+	const int      nbr_chn_dst =
 		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
-	assert (nbr_chn_in <= nbr_chn_out);
-	const int      nbr_chn_proc = std::min (nbr_chn_in, nbr_chn_out);
+	assert (nbr_chn_src <= nbr_chn_dst);
+	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -222,7 +222,7 @@ void	DistoPwm::do_process_block (ProcInfo &proc)
 	}
 
 	// Duplicates the remaining output channels
-	for (int chn_index = 0; chn_index < nbr_chn_out; ++chn_index)
+	for (int chn_index = nbr_chn_proc; chn_index < nbr_chn_dst; ++chn_index)
 	{
 		dsp::mix::Align::copy_1_1 (
 			proc._dst_arr [chn_index],
