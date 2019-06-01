@@ -521,6 +521,7 @@ void	DistoPwm2::clear_buffers ()
 		vcinf._active_flag = false;
 		vcinf._vol.clear_buffers ();
 	}
+	_fixgain_old = _fixgain_cur;
 }
 
 
@@ -540,6 +541,16 @@ void	DistoPwm2::update_param (bool force_flag)
 			_threshold = float (_state_set.get_val_tgt_nat (Param_THR));
 
 			update_prefilter ();
+		}
+
+		if (_param_change_flag_vol (true) || force_flag)
+		{
+			_density  =
+				float (_state_set.get_val_end_nat (Param_DENS));
+			_sust_lvl =
+				float (_state_set.get_val_end_nat (Param_SUST));
+			_gate_lvl =
+				float (_state_set.get_val_end_nat (Param_GATE));
 		}
 
 		for (int vc_index = 0; vc_index < OscType_NBR_ELT; ++vc_index)
