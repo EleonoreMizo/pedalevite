@@ -458,7 +458,8 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 		if (_gate_lvl > 0 && lvl_pre < _gate_lvl)
 		{
 			float          gain_red = lvl_pre / _gate_lvl;
-			gain_red *= gain_red; // Gate ratio: 4
+			gain_red *= gain_red; // Gate ratio: 8
+			gain_red *= gain_red;
 			gain_red *= gain_red;
 			gd       *= gain_red;
 		}
