@@ -61,6 +61,7 @@
 	<li><a href="#fx-phaserht">Phaser HT</a></li>
 	<li><a href="#fx-pitchdetector">Pitch Detector — Détecteur de hauteur de note</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
+	<li><a href="#fx-distpwm2">Pulse Width Modulation Distortion 2</a></li>
 	<li><a href="#fx-sgirlz">SiemensGirlz — Écho créatif</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
@@ -1821,6 +1822,109 @@ dans les aigus, et plus le volume apparent diminue.</p>
 
 
 
+<h3><a id="fx-distpwm2"></a>Pulse Width Modulation Distortion 2</h3>
+
+<p>Cet effet est une amélioration de PWM Distortion 1.
+Il génère des ondes sur plusieurs octaves, offre plusieurs formes d’onde
+et un contrôle de l’enveloppe de volume avec contrôle de sustain et de
+<i><span lang="en">gate</span></i>.</p>
+<p>Il y a quatre voix, ou oscillateurs (ou encore octaves)&#8239;:</p>
+<table>
+<tr><td><span class="ui">Standard</span></td><td>C’est la voix normale,
+les impulsions sont générées sur les fronts montants.</td></tr>
+<tr><td><span class="ui">Double</span></td><td>Les impulsions sont générées
+sur les fronts montants et descendants.
+En revanche, le résultat ne donne pas vraiment une montée d’octave.</td></tr>
+<tr><td><span class="ui">Sub 1</span></td><td>Les impulsions sont générées
+tous les 2 fronts montants, abaissant la tonalité d’une octave.</td></tr>
+<tr><td><span class="ui">Sub 2</span></td><td>Les impulsions sont générées
+tous les 4 fronts montants, abaissant la tonalité de deux octaves.</td></tr>
+</table>
+
+<p class="var">Pre-filter</p>
+L’entrée est filtrée par une combinaison de passe-bas et passe-haut afin de
+contenir un excès d’harmoniques qui peuvent être gênant et de retirer la
+composantes continue.
+Ce paramètre permet de sélectionner la force du filtrage.
+Un filtrage fort donne une onde plus pure, mais le sustain peut être raccourci
+sur les notes les plus hautes.<p>
+<table>
+<tr><td><span class="ui">Weak</span></td><td>LPF 2 pôles à 1500&#8239;Hz</td></tr>
+<tr><td><span class="ui">Mild</span></td><td>LPF supplémentaire à 500&#8239;Hz et HPF à 5&#8239;Hz</td></tr>
+<tr><td><span class="ui">Strong</span></td><td>La fréquence de coupure du LPF
+supplémentaire est abaissée à 50&#8239;Hz</td></tr>
+</table>
+
+<p class="var">Detection method</p>
+Sélectionne la méthode utilisée pour détecter les fronts d’onde et déclancher
+les impulsions correspondantes.<p>
+<table>
+<tr><td><span class="ui">0-X</span></td><td>La méthode des intersections avec
+zéro donne un contenu riche, en particulier avec les accords, mais est assez
+sensible aux sauts d’octaves.</td></tr>
+<tr><td><span class="ui">Peak</span></td><td>La méthode des pics sonne plus
+comme un détecteur de <i><span lang="en">pitch</span></i> monophonique.
+Elle donne un résultat clair et stable.
+Cependant, elle introduit parfois de petites coupures dans le son, et les
+accords sonnent de manière plus pauvre.</td></tr>
+</table>
+
+<p class="var">Threshold</p>
+Ce paramètre ne concerne que la méthode des intersections avec zéro.
+Il fixe le niveau (en dB) à franchir pour détecter un front d’onde.
+Plus le niveau est bas, plus la durée du sustain sera longue, mais plus le
+dispositif sera sensible au bruit résiduel.
+Signalons aussi que l’utilisation d’un filtre d’entrée fort peut nécessiter de
+descendre ce niveau.<p>
+
+<p class="var">Density</p>
+Permet d’ajuster le volume de la sortie à celui de l’entrée.
+Une valeur nulle compense totalement le volume, et la valeur maximale
+laisse la distorsion telle quelle.
+Cela donne des sons un peu plus percussifs mais moins naturels.<p>
+
+<p class="var">Sustain level</p>
+Quand le volume est compensé par <var>Density</var>, ce paramèter fixe un
+niveau (en dB) en dessous duquel le volume cesse d’être réduit.
+C’est utile pour récupérer les attaques du son original tout en préservant
+le sustain d’une distorsion à gain élevé.<p>
+
+<p class="var">Gate level</p>
+Niveau d’entrée en dB en dessous duquel le son est coupé.
+Cela permet d’éviter les craquement intempestifs qui apparaissent quand le son
+d’entrée s’affaiblit et fait place au bruit de fond.<p>
+
+<p class="var">Pulse type</p>
+Selectionne pour la voix choisie le type d’impulsion généré quand un front
+est détecté sur le signal d’entrée.
+Les impulsion simples sonnent comme de la synthèse PWM, et les ondes continues
+comme des oscillateurs sync.<p>
+<table>
+<tr><td><span class="ui">Rect</span></td><td>C’est la forme d’onde d’origine,
+une simple impulsion carrée.
+Elle a un son riche et puissant.</td></tr>
+<tr><td><span class="ui">Ramp</span></td><td>Une simple dent de scie montante.
+Son contenu harmonique est riche.</td></tr>
+<tr><td><span class="ui">Cycle</span></td><td>Une simple oscillation
+sinusoïdale.
+Son contenu harmonique est faible et donne un son plus doux.</td></tr>
+<tr><td><span class="ui">Sine</span></td><td>Une forme d’onde sinusoïdale continue.</td></tr>
+<tr><td><span class="ui">Saw</span></td><td>Une onde en dents de scie continue.</td></tr>
+</table>
+
+<p class="var">Level</p>
+Volume de la voix, en dB.<p>
+
+<p class="var">Pulse frequency</p>
+<p>Fréquence de l’impulsion de la voix, en Hz.
+C’est l’équivalent inversé de deux fois la durée d’impulsion dans l’effet
+PWM Distortion original.
+Plus la durée est courte, plus le spectre du son est chargé en particulier
+dans les aigus, et pour les impulsions simples, plus le volume apparent
+diminue.</p>
+
+
+
 <h3><a id="fx-sgirlz"></a>SiemensGirlz — Écho créatif</h3>
 
 <p>SiemensGirlz est un effet d’écho créatif relativement complexe permettant
@@ -2415,6 +2519,11 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r17, 2019-06-02</b></p>
+<ul>
+<li>Ajout de l’effet Pulse Width Modulation Distortion 2.</li>
+</ul>
 
 <p><b>r16, 2018-10-29</b></p>
 <ul>

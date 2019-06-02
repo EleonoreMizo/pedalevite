@@ -61,6 +61,7 @@
 	<li><a href="#fx-phaserht">Phaser HT</a></li>
 	<li><a href="#fx-pitchdetector">Pitch Detector</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
+	<li><a href="#fx-distpwm2">Pulse Width Modulation Distortion 2</a></li>
 	<li><a href="#fx-sgirlz">SiemensGirlz — Creative delay</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator</a></li>
@@ -1737,11 +1738,104 @@ which gives the sound a “PWM oscillator” color, like with a synthesizer.</p>
 <p class="var">Pulse width</p>
 <p>Pulse duration, in milliseconds.
 The shorter the duration, the more filled the sound spectrum is, especially
-in high frequencies, and the lower the apparent volume.</p>
+in high frequencies, and the lower the apparent volume.
+The parameter is automatically mapped to the expression pedal.</p>
 
 
 
-<h3><a id="fx-sgirlz"></a>SiemensGirlz — Écho créatif</h3>
+<h3><a id="fx-distpwm2"></a>Pulse Width Modulation Distortion 2</h3>
+
+<p>This effect is an improvement over the PWM Distortion 1.
+It generates waves for multiple octaves, offers serveral waveforms and an
+envelope control with sustain and gate settings.</p>
+<p>There are 4 voices, or oscillators (or octaves):</p>
+<table>
+<tr><td><span class="ui">Standard</span></td><td>This is the normal channel,
+pulse are generated on rising edges.</td></tr>
+<tr><td><span class="ui">Double</span></td><td>Pulse are generated on rising
+and falling edges, but this is not exactly an octave-doubler.</td></tr>
+<tr><td><span class="ui">Sub 1</span></td><td>Pulse are generated every 2
+rising edges, lowering the tone from one octave.</td></tr>
+<tr><td><span class="ui">Sub 2</span></td><td>Pulse are generated every 4
+rising edges, lowering the tone from two octaves.</td></tr>
+</table>
+
+<p class="var">Pre-filter</p>
+There is a combination of low-pass and high-pass filters at the input to tame
+harmonics and remove DC components.
+This parameters allows to select the stength of the filtering.
+With strong filtering, the resulting wave is cleaner, but sustain may be
+shorter on the higher notes.<p>
+<table>
+<tr><td><span class="ui">Weak</span></td><td>2-pole low-pass filtering at 1.5kHz</td></tr>
+<tr><td><span class="ui">Mild</span></td><td>Additional LPF at 500Hz and 5Hz HPF</td></tr>
+<tr><td><span class="ui">Strong</span></td><td>Additional LPF cutoff frequency
+is lowered to 50Hz</td></tr>
+</table>
+
+<p class="var">Detection method</p>
+Selects which method is used to detect the edges and trigger the pulses.<p>
+<table>
+<tr><td><span class="ui">0-X</span></td><td>The zero-crossing method gives a
+rich content, especially with chords, but is quite sensitive to octave
+errors.</td></tr>
+<tr><td><span class="ui">Peak</span></td><td>The peak method sounds more like
+a monophonic pitch tracking and is very clean and stable.
+However sometimes it may output short gaps of silence, and sounds poor on
+chords.</td></tr>
+</table>
+
+<p class="var">Threshold</p>
+For the zero-crossing detection method, it sets the level (in dB) to cross to
+detect a wave edge.
+The lower, the longer the sustain, but the more sensitive to noise.
+Using a strong pre-filter may require to lower the threshold.<p>
+
+<p class="var">Density</p>
+Adjusts the output volume to the input volume.
+A null value totally compensates the volume, and 100% keeps the distortion
+untouched.
+A low value gives more percussive and less natural sounds.<p>
+
+<p class="var">Sustain level</p>
+When the volume is compensated by the <var>Density</var> parameter, it
+sets a level (in dB) below which the volume stops reducing.
+It is useful to keep only the attacks from the original sound while keeping
+the sustain of a high-gain distortion.<p>
+
+<p class="var">Gate level</p>
+Level in dB below which the output sound is cut.
+This helps to counter clicks and pops appearing when the input volume is
+low and dominated by noise.<p>
+
+<p class="var">Pulse type</p>
+For a give oscillator, selects which type of waveform is triggered when an
+edge is detected in the input.
+Singles pulses sound like PWM synthesis, whereas continuous waveform sound
+like sync-oscillators.<p>
+<table>
+<tr><td><span class="ui">Rect</span></td><td>This is the original waveform,
+just a single square pulse. It has a powerful sound a rich harmonic content.</td></tr>
+<tr><td><span class="ui">Ramp</span></td><td>A single rising sawtooth.</td></tr>
+<tr><td><span class="ui">Cycle</span></td><td>A single sine-like cycle.
+Harmonic content is low, it gives a softer sound.</td></tr>
+<tr><td><span class="ui">Sine</span></td><td>A continuous sine-like waveform.</td></tr>
+<tr><td><span class="ui">Saw</span></td><td>A continuous sawtooth waveform.</td></tr>
+</table>
+
+<p class="var">Level</p>
+Volume in dB of the selected oscillator.<p>
+
+<p class="var">Pulse frequency</p>
+<p>Pulse frequency of the selected oscillator, in Hz (equivalent to twice
+the pulse duration in the original PWM Distortion).
+The highest the frequency, the more filled the sound spectrum is, especially
+in the high part of the spectrum, but the lower the apparent volume with
+single pulses.</p>
+
+
+
+<h3><a id="fx-sgirlz"></a>SiemensGirlz — Creative delay</h3>
 
 <p>SiemensGirlz is a relatively complex creative delay effect for obtaining a wide variety of sounds, especially when the parameters are modulated by LFOs.</p>
 <pThe sound passes through 4 taps, kind of simple echoes without repetition.
@@ -2305,6 +2399,11 @@ phase.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r17, 2019-06-02</b></p>
+<ul>
+<li>Added the Pulse Width Modulation Distortion 2 effect.</li>
+</ul>
 
 <p><b>r16, 2018-10-29</b></p>
 <ul>
