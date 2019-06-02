@@ -576,6 +576,11 @@ void	Central::set_tempo (float bpm)
 
 void	Central::process_queue_audio_to_cmd ()
 {
+	const std::chrono::microseconds  timeout (150 * 1000);
+	std::chrono::microseconds        t_beg = get_cur_date ();
+
+	int            a2c_cnt          = 0;
+	bool           discard_a2c_flag = false;
 	conc::LockFreeCell <Msg> * cell_ptr = 0;
 	do
 	{
@@ -614,7 +619,21 @@ void	Central::process_queue_audio_to_cmd ()
 			{
 				if (_cb_ptr != 0)
 				{
-					_cb_ptr->process_msg_audio_to_cmd (cell_ptr->_val);
+					if (! discard_a2c_flag)
+					{
+						_cb_ptr->process_msg_audio_to_cmd (cell_ptr->_val);
+
+						// Every 64 events, we check if we are not overwhelmed
+						++ a2c_cnt;
+						if ((a2c_cnt & 63) == 0)
+						{
+							const std::chrono::microseconds   t_now = get_cur_date ();
+							if (t_now - t_beg > timeout)
+							{
+								discard_a2c_flag = true;
+							}
+						}
+					}
 				}
 			}
 
