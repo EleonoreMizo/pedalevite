@@ -483,11 +483,12 @@ void	CtrlEdit::update_display ()
 
 		const std::string src_name_multilabel =
 			Tools::find_ctrl_name (_ctrl_link._source, _csn_list_full);
-		const std::string src_name = pi::param::Tools::print_name_bestfit (
-			scr_w, src_name_multilabel.c_str (),
-			*_src_sptr, &NText::get_char_width
+		src_txt = pi::param::Tools::join_strings_multi (
+			src_name_multilabel.c_str (), '\n', src_txt, ""
 		);
-		src_txt += src_name;
+		src_txt = pi::param::Tools::print_name_bestfit (
+			scr_w, src_txt.c_str (), *_src_sptr, &NText::get_char_width
+		);
 
 		char           txt_0 [127+1];
 
