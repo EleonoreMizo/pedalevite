@@ -2556,6 +2556,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DetectionMethod.h">
       <Filter>mfx\pi\distpwm2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqPeak.h">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3532,6 +3535,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\Voice.cpp">
       <Filter>mfx\pi\distpwm2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqPeak.cpp">
+      <Filter>mfx\dsp\ana</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

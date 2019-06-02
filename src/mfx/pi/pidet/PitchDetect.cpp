@@ -59,7 +59,7 @@ PitchDetect::PitchDetect ()
 ,	_param_change_flag ()
 ,	_buf_prev_spl ()
 ,	_nbr_spl_in_buf (0)
-,	_sub_spl (8)
+,	_sub_spl (1)
 ,	_analyser ()
 ,	_freq (0)
 ,	_last_valid_output (0)
@@ -78,6 +78,7 @@ PitchDetect::PitchDetect ()
 	_state_set.add_observer (Param_FREQ_MAX, _param_change_flag);
 
 	_analyser.set_smoothing (0.5f, 0.0f);
+	_analyser.set_threshold (1e-4f); /*** To do: make it a parameter ***/
 }
 
 
@@ -156,35 +157,83 @@ void	PitchDetect::do_process_block (ProcInfo &proc)
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Signal processing
 
-	// Downsampling with buffering
-	const float *  spl_ptr = proc._src_arr [0];
-	const int      nbr_spl = proc._nbr_spl;
-	int            pos     = 0;
-	int            pos_sub = 0;
-	if (_nbr_spl_in_buf > 0)
+	if (_sub_spl == 1)
 	{
-		if (_nbr_spl_in_buf + nbr_spl - pos >= _sub_spl)
+		_freq = _analyser.process_block (proc._src_arr [0], proc._nbr_spl);
+	}
+
+	else
+	{
+		// Downsampling with buffering
+		const float *  spl_ptr = proc._src_arr [0];
+		const int      nbr_spl = proc._nbr_spl;
+		int            pos     = 0;
+		int            pos_sub = 0;
+		if (_nbr_spl_in_buf > 0)
 		{
-			float          sum     = 0;
-			int            buf_pos = 0;
-			do
+			if (_nbr_spl_in_buf + nbr_spl - pos >= _sub_spl)
 			{
-				sum += _buf_prev_spl [buf_pos];
-				++ buf_pos;
+				float          sum     = 0;
+				int            buf_pos = 0;
+				do
+				{
+					sum += _buf_prev_spl [buf_pos];
+					++ buf_pos;
+				}
+				while (buf_pos < _nbr_spl_in_buf);
+				do
+				{
+					sum += spl_ptr [pos - _nbr_spl_in_buf + buf_pos];
+					++ buf_pos;
+				}
+				while (buf_pos < _sub_spl);
+				_buffer [pos_sub] = sum;
+				++ pos_sub;
+				pos += _sub_spl - _nbr_spl_in_buf;
+				_nbr_spl_in_buf = 0;
 			}
-			while (buf_pos < _nbr_spl_in_buf);
-			do
+			else
 			{
-				sum += spl_ptr [pos - _nbr_spl_in_buf + buf_pos];
-				++ buf_pos;
+				do
+				{
+					_buf_prev_spl [_nbr_spl_in_buf] = spl_ptr [pos];
+					++ _nbr_spl_in_buf;
+					++ pos;
+				}
+				while (pos < nbr_spl);
+				assert (_nbr_spl_in_buf < _sub_spl);
 			}
-			while (buf_pos < _sub_spl);
-			_buffer [pos_sub] = sum;
-			++ pos_sub;
-			pos += _sub_spl - _nbr_spl_in_buf;
-			_nbr_spl_in_buf = 0;
+		}
+		const int      nbr_sub_full = (nbr_spl - pos) / _sub_spl;
+		const int      end_sub      = pos_sub + nbr_sub_full;
+		if (_sub_spl == 16)
+		{
+			while (pos_sub < end_sub)
+			{
+				auto           s0 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos     );
+				auto           s1 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  4);
+				auto           s2 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  8);
+				auto           s3 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos + 12);
+				auto           s  = (s0 + s1) + (s2 + s3);
+				_buffer [pos_sub] = fstb::ToolsSimd::sum_h_flt (s);
+				pos += 16;
+				++ pos_sub;
+			}
 		}
 		else
+		{
+			assert (_sub_spl == 8);
+			while (pos_sub < end_sub)
+			{
+				auto           s0 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos     );
+				auto           s1 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  4);
+				auto           s  = s0 + s1;
+				_buffer [pos_sub] = fstb::ToolsSimd::sum_h_flt (s);
+				pos += 8;
+				++ pos_sub;
+			}
+		}
+		if (pos < nbr_spl)
 		{
 			do
 			{
@@ -195,50 +244,10 @@ void	PitchDetect::do_process_block (ProcInfo &proc)
 			while (pos < nbr_spl);
 			assert (_nbr_spl_in_buf < _sub_spl);
 		}
-	}
-	const int      nbr_sub_full = (nbr_spl - pos) / _sub_spl;
-	const int      end_sub      = pos_sub + nbr_sub_full;
-	if (_sub_spl == 16)
-	{
-		while (pos_sub < end_sub)
-		{
-			auto           s0 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos     );
-			auto           s1 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  4);
-			auto           s2 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  8);
-			auto           s3 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos + 12);
-			auto           s  = (s0 + s1) + (s2 + s3);
-			_buffer [pos_sub] = fstb::ToolsSimd::sum_h_flt (s);
-			pos += 16;
-			++ pos_sub;
-		}
-	}
-	else
-	{
-		assert (_sub_spl == 8);
-		while (pos_sub < end_sub)
-		{
-			auto           s0 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos     );
-			auto           s1 = fstb::ToolsSimd::loadu_f32 (spl_ptr + pos +  4);
-			auto           s  = s0 + s1;
-			_buffer [pos_sub] = fstb::ToolsSimd::sum_h_flt (s);
-			pos += 8;
-			++ pos_sub;
-		}
-	}
-	if (pos < nbr_spl)
-	{
-		do
-		{
-			_buf_prev_spl [_nbr_spl_in_buf] = spl_ptr [pos];
-			++ _nbr_spl_in_buf;
-			++ pos;
-		}
-		while (pos < nbr_spl);
-		assert (_nbr_spl_in_buf < _sub_spl);
-	}
 
-	// Pitch detection
-	_freq = _analyser.process_block (&_buffer [0], pos_sub);
+		// Pitch detection
+		_freq = _analyser.process_block (&_buffer [0], pos_sub);
+	}
 
 	switch (_output_type)
 	{

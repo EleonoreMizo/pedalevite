@@ -349,6 +349,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\Slot.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqAmGha.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqFast.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqPeak.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\ValSmooth.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\ValSmooth.hpp" />
@@ -965,6 +966,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\Slot.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqAmGha.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqFast.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqPeak.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.cpp" />
