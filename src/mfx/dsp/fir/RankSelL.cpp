@@ -355,6 +355,7 @@ int	RankSelL::find_ni (int rank)
 // Debugging stuff
 void	RankSelL::check_ok ()
 {
+#if ! defined (NDEBUG)
 	const int      len = int (_node_list.size ());
 	assert (len > 0);
 	assert (_ni_first != _nil);
@@ -387,6 +388,7 @@ void	RankSelL::check_ok ()
 	}
 	assert (ni_fw == _nil);
 	assert (ni_bk == _nil);
+#endif
 }
 
 
