@@ -421,6 +421,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdEven.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdOdd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdOdd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelL.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelA.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.h" />
@@ -993,6 +995,8 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\RankSelL.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\RankSelA.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass2p.cpp" />

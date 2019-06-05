@@ -235,6 +235,9 @@
     <Filter Include="mfx\pi\distpwm2">
       <UniqueIdentifier>{3df3ea7a-3d31-443a-972e-d4462e7b4cec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\fir">
+      <UniqueIdentifier>{75cb4543-cb98-4a96-bd55-0ba9e6126a5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2559,6 +2562,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqPeak.h">
       <Filter>mfx\dsp\ana</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelA.h">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelL.h">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3538,6 +3547,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqPeak.cpp">
       <Filter>mfx\dsp\ana</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\RankSelA.cpp">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\RankSelL.cpp">
+      <Filter>mfx\dsp\fir</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

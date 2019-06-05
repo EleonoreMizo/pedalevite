@@ -8,8 +8,11 @@
 #include "mfx/dsp/ana/FreqFast.h"
 #include "mfx/dsp/dly/BbdLine.h"
 #include "mfx/dsp/ctrl/lfo/LfoModule.h"
+#include "mfx/dsp/dyn/EnvFollowerAHR1LrSimdHelper.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 #include "mfx/dsp/dyn/EnvHelper.h"
+#include "mfx/dsp/fir/RankSelA.h"
+#include "mfx/dsp/fir/RankSelL.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Generic.h"
@@ -291,7 +294,7 @@ int save_wav (const char *filename_0, const std::vector <std::vector <float> > &
 	WavFmt         fmt { { 'f', 'm', 't', ' ' } };
 	fmt._chunk_size        = offsetof (WavFmt, _size) - header_len;
 	fmt._format_tag        = WavFormat_IEEE_FLOAT;
-	fmt._channels          = int (chn_arr.size ());
+	fmt._channels          = uint16_t (chn_arr.size ());
 	fmt._samples_per_sec   = uint32_t (floor (sample_freq + 0.5f));
 	fmt._block_align       = sizeof (float) * nbr_chn;
 	fmt._avg_bytes_per_sec = fmt._block_align * fmt._samples_per_sec;
@@ -1639,6 +1642,123 @@ int	test_freqfast ()
 
 
 
+int	test_envelope_detector ()
+{
+	static const int  nbr_chn = 1;
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr (nbr_chn);
+
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+
+	if (ret_val == 0)
+	{
+		static const int  order = 2;
+		const size_t   len = chn_arr [0].size ();
+		mfx::dsp::dyn::EnvFollowerAHR1LrSimdHelper <fstb::DataAlign <false>, order> env_hlp;
+		const int      max_block_size = 64;
+
+		env_hlp.set_atk_coef (float (
+			mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (
+				mfx::dsp::dyn::EnvHelper::compensate_order (0.001f, order),
+				sample_freq
+			)
+		));
+		env_hlp.set_rls_coef (float (
+			mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (
+				mfx::dsp::dyn::EnvHelper::compensate_order (0.100f, order),
+				sample_freq
+			)
+		));
+		env_hlp.set_hold_time (fstb::round_int (sample_freq * 0.030));
+
+		size_t         pos = 0;
+		double         phase = 0;
+		do
+		{
+#if 1
+			const int      block_len =
+				int (std::min (len - pos, size_t (max_block_size)));
+			mfx::dsp::mix::Generic::mult_ip_1_1 (&chn_arr [0] [pos], &chn_arr [0] [pos], block_len);
+			env_hlp.process_block (&chn_arr [0] [pos], &chn_arr [0] [pos], block_len);
+			for (size_t p2 = pos; p2 < pos + block_len; ++p2)
+			{
+				chn_arr [0] [p2] = sqrt (chn_arr [0] [p2]);
+			}
+#else
+			const int      block_len = 1;
+			const float    x  = chn_arr [0] [pos];
+			const float    y2 = env_hlp.process_sample (x * x);
+			chn_arr [0] [pos] = sqrt (y2);
+#endif
+
+			pos += block_len;
+		}
+		while (pos < len);
+
+		ret_val = save_wav ("results/envdet0.wav", chn_arr, sample_freq, 1);
+	}
+
+	return ret_val;
+}
+
+
+
+int	test_median_filter ()
+{
+	const int      med_len = 63;
+	const int      rank    = med_len / 2;
+	std::vector <float> med_buf (med_len);
+	mfx::dsp::fir::RankSelA	med_flt_a;
+	mfx::dsp::fir::RankSelL	med_flt_l;
+
+	med_flt_a.set_len (med_len, 0);
+	med_flt_l.set_len (med_len, 0);
+
+	double         sample_freq;
+	std::vector <std::vector <float> >  chn_arr;
+
+	int            ret_val = generate_test_signal (sample_freq, chn_arr);
+	if (ret_val == 0)
+	{
+		const size_t   len     = chn_arr [0].size ();
+		const float *  src_ptr = chn_arr [0].data ();
+		for (size_t pos = 0; pos < len && ret_val == 0; ++pos)
+		{
+			// Naive median filter (reference)
+			for (size_t idx = 0; idx < med_len; ++idx)
+			{
+				if (idx > pos)
+				{
+					med_buf [idx] = 0;
+				}
+				else
+				{
+					med_buf [idx] = src_ptr [pos - idx];
+				}
+			}
+			std::sort (med_buf.begin (), med_buf.end ());
+			const float    med_ref = med_buf [rank];
+			const float    med_a   = med_flt_a.process_sample (src_ptr [pos]);
+			const float    med_l   = med_flt_l.process_sample (src_ptr [pos]);
+
+			if (med_a != med_ref)
+			{
+				assert (false);
+				ret_val = -1;
+			}
+			if (med_l != med_ref)
+			{
+				assert (false);
+				ret_val = -1;
+			}
+		}
+	}
+
+	return ret_val;
+}
+
+
+
 int main (int argc, char *argv [])
 {
 	mfx::dsp::mix::Generic::setup ();
@@ -1646,53 +1766,65 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
-	test_testgen ();
+	if (ret_val == 0) ret_val = test_median_filter ();
 #endif
 
 #if 0
-	test_disto ();
+	if (ret_val == 0) ret_val = test_testgen ();
 #endif
 
 #if 0
-	test_phaser ();
+	if (ret_val == 0) ret_val = test_disto ();
 #endif
 
 #if 0
-	test_noise_chlorine ();
+	if (ret_val == 0) ret_val = test_phaser ();
 #endif
 
 #if 0
-	test_noise_bleach ();
+	if (ret_val == 0) ret_val = test_noise_chlorine ();
 #endif
 
 #if 0
-	draw_all_lfos ();
+	if (ret_val == 0) ret_val = test_noise_bleach ();
 #endif
 
 #if 0
-	test_transients ();
+	if (ret_val == 0) ret_val = draw_all_lfos ();
 #endif
 
 #if 0
-	patch_setup_file ();
+	if (ret_val == 0) ret_val = test_transients ();
 #endif
 
 #if 0
-	test_bbd_line ();
+	if (ret_val == 0) ret_val = patch_setup_file ();
 #endif
 
 #if 0
-	test_delay2 ();
+	if (ret_val == 0) ret_val = test_bbd_line ();
 #endif
 
 #if 0
-	test_osdet ();
+	if (ret_val == 0) ret_val = test_delay2 ();
 #endif
 
 #if 0
-	test_freqfast ();
+	if (ret_val == 0) ret_val = test_osdet ();
 #endif
 
+#if 0
+	if (ret_val == 0) ret_val = test_freqfast ();
+#endif
+
+#if 0
+	if (ret_val == 0) ret_val = test_envelope_detector ();
+#endif
+
+	if (ret_val == 0)
+	{
+		printf ("Everything is OK.\n");
+	}
 
 	return ret_val;
 }
