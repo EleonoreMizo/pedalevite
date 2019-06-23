@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         fnc.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 

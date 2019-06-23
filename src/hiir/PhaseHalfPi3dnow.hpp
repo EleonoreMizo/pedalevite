@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         PhaseHalfPi3dnow.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -27,11 +27,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageProc3dnow.h"
+#include "hiir/StageProc3dnow.h"
 
-#include	<mm3dnow.h>
+#include <mm3dnow.h>
 
-#include	<cassert>
+#include <cassert>
 
 
 
@@ -98,10 +98,9 @@ void	PhaseHalfPi3dnow <NC>::set_coefs (const double coef_arr [])
    {
 	   for (int i = 0; i < NBR_COEFS; ++i)
 	   {
-		   const int		stage = (i / STAGE_WIDTH) + 1;
-		   const int		pos = (i ^ 1) & (STAGE_WIDTH - 1);
-		   _filter [phase] [stage]._coefs.m64_f32 [pos] =
-			   static_cast <float> (coef_arr [i]);
+		   const int      stage = (i / STAGE_WIDTH) + 1;
+		   const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
+		   _filter [phase] [stage]._coefs.m64_f32 [pos] = float (coef_arr [i]);
 	   }
    }
 }
@@ -125,26 +124,23 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-   assert (&out_0 != 0);
-   assert (&out_1 != 0);
+	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]) };
 
-	enum {	CURR_CELL	=  NBR_STAGES * sizeof (_filter [0] [0])	};
-
-	StageData3dnow *	filter_ptr = &_filter [_phase] [0];
-   __m64          result;
+	StageData3dnow *  filter_ptr = &_filter [_phase] [0];
+   __m64           result;
 
    result.m64_f32 [0] = _prev;
    result.m64_f32 [1] = input;
 
 	__asm
 	{
-		mov				edx, filter_ptr
-		movq				mm0, result
+		mov            edx, filter_ptr
+		movq           mm0, result
 	}
 	StageProc3dnow <NBR_STAGES>::process_sample_neg ();
 	__asm
 	{
-		movq				[edx + CURR_CELL + 1*8], mm0
+		movq           [edx + CURR_CELL + 1*8], mm0
 
 		femms
 	}
@@ -152,7 +148,7 @@ void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float in
    out_0 = filter_ptr [NBR_STAGES]._mem.m64_f32 [1];
    out_1 = filter_ptr [NBR_STAGES]._mem.m64_f32 [0];
 
-	_prev = input;
+	_prev  = input;
 	_phase = 1 - _phase;
 }
 
@@ -191,7 +187,7 @@ void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [
 	assert (out_0_ptr + nbr_spl <= out_1_ptr || out_1_ptr + nbr_spl <= out_0_ptr);
 	assert (nbr_spl > 0);
 
-	long				pos = 0;
+	long           pos = 0;
 	if (_phase == 1)
 	{
 		process_sample (out_0_ptr [0], out_1_ptr [0], in_ptr [0]);
@@ -202,54 +198,54 @@ void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [
    {
       float          prev = _prev;
 
-	   enum {	CURR_CELL	=  NBR_STAGES * sizeof (_filter [0] [0])	};
+	   enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]) };
 
-	   StageData3dnow *	filter_ptr = &_filter [0] [0];
-	   StageData3dnow *	filter2_ptr = &_filter [1] [0];
+	   StageData3dnow *  filter_ptr = &_filter [0] [0];
+	   StageData3dnow *  filter2_ptr = &_filter [1] [0];
 
       __asm
 	   {
          push           ebx
 
-		   mov				esi, in_ptr
-		   mov				edi, out_0_ptr
+		   mov            esi, in_ptr
+		   mov            edi, out_0_ptr
          mov            ecx, out_1_ptr
-		   mov				eax, nbr_spl
-		   mov				edx, filter_ptr
+		   mov            eax, nbr_spl
+		   mov            edx, filter_ptr
          mov            ebx, filter2_ptr
-		   lea				esi, [esi + eax*4]
-		   lea				edi, [edi + eax*4 - 4]
-		   lea				ecx, [ecx + eax*4 - 4]
-		   neg				eax
+		   lea            esi, [esi + eax*4]
+		   lea            edi, [edi + eax*4 - 4]
+		   lea            ecx, [ecx + eax*4 - 4]
+		   neg            eax
          add            eax, pos
          movd           mm0, prev
 
 	   loop_sample:
 
-		   movd				mm3, [esi + eax*4]
+		   movd           mm3, [esi + eax*4]
          punpckldq      mm0, mm3
 	   }
 #if defined (_MSC_VER) && ! defined (NDEBUG)
-	   __asm push			eax
-	   __asm push			ecx
+	   __asm push        eax
+	   __asm push        ecx
 #endif
 	   StageProc3dnow <NBR_STAGES>::process_sample_neg ();
 #if defined (_MSC_VER) && ! defined (NDEBUG)
-	   __asm pop			ecx
-	   __asm pop			eax
+	   __asm pop         ecx
+	   __asm pop         eax
 #endif
 	   __asm
 	   {
-		   inc				eax
-		   movq				[edx + CURR_CELL + 1*8], mm0
+		   inc            eax
+		   movq           [edx + CURR_CELL + 1*8], mm0
          xchg           edx, ebx
-		   movd				[ecx + eax*4], mm0
+		   movd           [ecx + eax*4], mm0
          punpckhdq      mm0, mm0
-		   movd				[edi + eax*4], mm0
+		   movd           [edi + eax*4], mm0
 
          movq           mm0, mm3
 
-		   jl					loop_sample
+		   jl             loop_sample
 
          movd           prev, mm3
 
@@ -258,7 +254,7 @@ void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [
 	   }
 
       _phase = (nbr_spl - pos) & 1;
-      _prev = prev;
+      _prev  = prev;
    }
 }
 
@@ -301,11 +297,11 @@ void	PhaseHalfPi3dnow <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_PhaseHalfPi3dnow_CODEHEADER_INCLUDED
+#endif   // hiir_PhaseHalfPi3dnow_CODEHEADER_INCLUDED
 
 #undef hiir_PhaseHalfPi3dnow_CURRENT_CODEHEADER
 

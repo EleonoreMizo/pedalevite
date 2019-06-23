@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageData3dnow.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -16,7 +16,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_StageData3dnow_HEADER_INCLUDED)
-#define	hiir_StageData3dnow_HEADER_INCLUDED
+#define hiir_StageData3dnow_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	<mm3dnow.h>
+#include <mm3dnow.h>
 
 
 
@@ -40,18 +40,18 @@ class StageData3dnow
 {
 
 public:
-	__m64				_coefs;	// Coefficients are inverted, by pair: a_{2n+1}, a_{2n}
-	__m64				_mem;		// Output of the stage (y)
+	__m64          _coefs;  // Coefficients are inverted, by pair: a_{2n+1}, a_{2n}
+	__m64          _mem;    // Output of the stage (y)
 
-};	// class StageData3dnow
-
-
-
-}	// namespace hiir
+}; // class StageData3dnow
 
 
 
-#endif	// hiir_StageData3dnow_HEADER_INCLUDED
+}  // namespace hiir
+
+
+
+#endif   // hiir_StageData3dnow_HEADER_INCLUDED
 
 
 

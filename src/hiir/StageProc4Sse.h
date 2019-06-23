@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageProc4Sse.h
-        Copyright (c) 2015 Laurent de Soras
+        Author: Laurent de Soras, 2015
 
 Template parameters:
 	- REMAINING: Number of remaining coefficients to process, >= 0
@@ -18,8 +18,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (hiir_StageProc_HEADER_INCLUDED)
-#define	hiir_StageProc_HEADER_INCLUDED
+#if ! defined (hiir_StageProc4Sse_HEADER_INCLUDED)
+#define hiir_StageProc4Sse_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -47,8 +47,7 @@ template <int REMAINING>
 class StageProc4Sse
 {
 
-	// Template parameter check, not used
-	typedef	int	ChkTpl1 [(REMAINING >= 0) ? 1 : -1];
+	static_assert ((REMAINING >= 0), "REMAINING must be >= 0");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -78,16 +77,17 @@ private:
 private:
 
 	               StageProc4Sse ();
-	               StageProc4Sse (const StageProc4Sse &other);
-	StageProc4Sse& operator = (const StageProc4Sse &other);
-	bool           operator == (const StageProc4Sse &other);
-	bool           operator != (const StageProc4Sse &other);
+	               StageProc4Sse (const StageProc4Sse <REMAINING> &other);
+	StageProc4Sse <REMAINING> &
+						operator = (const StageProc4Sse <REMAINING> &other);
+	bool           operator == (const StageProc4Sse <REMAINING> &other);
+	bool           operator != (const StageProc4Sse <REMAINING> &other);
 
-};	// class StageProc4Sse
+}; // class StageProc4Sse
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
@@ -95,7 +95,7 @@ private:
 
 
 
-#endif	// hiir_StageProc_HEADER_INCLUDED
+#endif   // hiir_StageProc4Sse_HEADER_INCLUDED
 
 
 

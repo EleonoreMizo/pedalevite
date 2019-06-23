@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         PhaseHalfPiSse.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,20 +18,20 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_PhaseHalfPiSse_CURRENT_CODEHEADER)
 	#error Recursive inclusion of PhaseHalfPiSse code header.
 #endif
-#define	hiir_PhaseHalfPiSse_CURRENT_CODEHEADER
+#define hiir_PhaseHalfPiSse_CURRENT_CODEHEADER
 
 #if ! defined (hiir_PhaseHalfPiSse_CODEHEADER_INCLUDED)
-#define	hiir_PhaseHalfPiSse_CODEHEADER_INCLUDED
+#define hiir_PhaseHalfPiSse_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageProcSse.h"
+#include "hiir/StageProcSse.h"
 
-#include	<mmintrin.h>
+#include <mmintrin.h>
 
-#include	<cassert>
+#include <cassert>
 
 
 
@@ -68,7 +68,7 @@ PhaseHalfPiSse <NC>::PhaseHalfPiSse ()
 		}
 		if ((NBR_COEFS & 1) != 0)
 		{
-			const int		pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
+			const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
 			_filter [phase] [NBR_STAGES]._coef [pos] = 1;
 		}
 	}
@@ -101,10 +101,9 @@ void	PhaseHalfPiSse <NC>::set_coefs (const double coef_arr [])
    {
 		for (int i = 0; i < NBR_COEFS; ++i)
 		{
-			const int		stage = (i / STAGE_WIDTH) + 1;
-			const int		pos = (i ^ 1) & (STAGE_WIDTH - 1);
-			_filter [phase] [stage]._coef [pos] =
-				static_cast <float> (coef_arr [i]);
+			const int      stage = (i / STAGE_WIDTH) + 1;
+			const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
+			_filter [phase] [stage]._coef [pos] = float (coef_arr [i]);
 		}
 	}
 }
@@ -128,18 +127,15 @@ Throws: Nothing
 template <int NC>
 hiir_FORCEINLINE void	PhaseHalfPiSse <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-   assert (&out_0 != 0);
-   assert (&out_1 != 0);
+	StageDataSse * filter_ptr = &_filter [_phase] [0];
 
-	StageDataSse *	filter_ptr = &_filter [_phase] [0];
+	const __m128   spl_in  = _mm_load_ss (&input);
+	const __m128   prev    = _mm_load_ss (&_prev);
+	const __m128   comb    = _mm_unpacklo_ps (prev, spl_in);
+	const __m128   spl_mid = _mm_load_ps (filter_ptr [NBR_STAGES]._mem);
+	__m128         y       = _mm_shuffle_ps (comb, spl_mid, 0x44);
 
-	const __m128	spl_in = _mm_load_ss (&input);
-	const __m128	prev = _mm_load_ss (&_prev);
-	const __m128	comb = _mm_unpacklo_ps (prev, spl_in);
-	const __m128	spl_mid = _mm_load_ps (filter_ptr [NBR_STAGES]._mem);
-	__m128			y = _mm_shuffle_ps (comb, spl_mid, 0x44);
-
-	__m128			mem = _mm_load_ps (filter_ptr [0]._mem);
+	__m128         mem     = _mm_load_ps (filter_ptr [0]._mem);
 
 	StageProcSse <NBR_STAGES>::process_sample_neg (&filter_ptr [0], y, mem);
 
@@ -151,7 +147,7 @@ hiir_FORCEINLINE void	PhaseHalfPiSse <NC>::process_sample (float &out_0, float &
 	y = _mm_shuffle_ps (y, y, 0xE2);
 	_mm_store_ss (&out_1, y);
 
-	_prev = input;
+	_prev  = input;
 	_phase = 1 - _phase;
 }
 
@@ -185,7 +181,7 @@ void	PhaseHalfPiSse <NC>::process_block (float out_0_ptr [], float out_1_ptr [],
 	assert (out_0_ptr + nbr_spl <= out_1_ptr || out_1_ptr + nbr_spl <= out_0_ptr);
 	assert (nbr_spl > 0);
 
-	long				pos = 0;
+	long           pos = 0;
 	do
 	{
 		process_sample (out_0_ptr [pos], out_1_ptr [pos], in_ptr [pos]);
@@ -231,11 +227,11 @@ void	PhaseHalfPiSse <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_PhaseHalfPiSse_CODEHEADER_INCLUDED
+#endif   // hiir_PhaseHalfPiSse_CODEHEADER_INCLUDED
 
 #undef hiir_PhaseHalfPiSse_CURRENT_CODEHEADER
 

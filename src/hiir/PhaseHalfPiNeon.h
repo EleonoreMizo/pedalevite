@@ -106,8 +106,8 @@ private:
 
 private:
 
-	bool           operator == (const PhaseHalfPiNeon &other) const = delete;
-	bool           operator != (const PhaseHalfPiNeon &other) const = delete;
+	bool           operator == (const PhaseHalfPiNeon <NC> &other) const = delete;
+	bool           operator != (const PhaseHalfPiNeon <NC> &other) const = delete;
 
 }; // class PhaseHalfPiNeon
 

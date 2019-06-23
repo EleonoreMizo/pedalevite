@@ -37,7 +37,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageDataNeon.h"
+#include "hiir/StageDataNeon.h"
 
 #include <array>
 
@@ -58,7 +58,7 @@ class Upsampler2xNeon
 
 public:
 
-	enum {			NBR_COEFS	= NC	};
+	enum {         NBR_COEFS = NC };
 
 	               Upsampler2xNeon ();
 	               Upsampler2xNeon (const Upsampler2xNeon &other)   = default;
@@ -95,8 +95,8 @@ private:
 
 private:
 
-	bool           operator == (const Upsampler2xNeon &other) const = delete;
-	bool           operator != (const Upsampler2xNeon &other) const = delete;
+	bool           operator == (const Upsampler2xNeon <NC> &other) const = delete;
+	bool           operator != (const Upsampler2xNeon <NC> &other) const = delete;
 
 }; // class Upsampler2xNeon
 

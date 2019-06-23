@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Downsampler2x3dnow.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,10 +18,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_Downsampler2x3dnow_CURRENT_CODEHEADER)
 	#error Recursive inclusion of Downsampler2x3dnow code header.
 #endif
-#define	hiir_Downsampler2x3dnow_CURRENT_CODEHEADER
+#define hiir_Downsampler2x3dnow_CURRENT_CODEHEADER
 
 #if ! defined (hiir_Downsampler2x3dnow_CODEHEADER_INCLUDED)
-#define	hiir_Downsampler2x3dnow_CODEHEADER_INCLUDED
+#define hiir_Downsampler2x3dnow_CODEHEADER_INCLUDED
 
 
 
@@ -97,8 +97,7 @@ void	Downsampler2x3dnow <NC>::set_coefs (const double coef_arr [])
 	{
 		const int      stage = (i / STAGE_WIDTH) + 1;
 		const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coefs.m64_f32 [pos] =
-			static_cast <float> (coef_arr [i]);
+		_filter [stage]._coefs.m64_f32 [pos] = float (coef_arr [i]);
 	}
 }
 
@@ -144,7 +143,7 @@ float	Downsampler2x3dnow <NC>::process_sample (const float in_ptr [2])
 		femms
 	}
 
-	return (result);
+	return result;
 }
 
 
@@ -305,8 +304,6 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x3dnow <NC>::process_sample_split (float &low, float &high, const float in_ptr [2])
 {
-	assert (&low != 0);
-	assert (&high != 0);
 	assert (in_ptr != 0);
 
 	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
@@ -338,7 +335,7 @@ void	Downsampler2x3dnow <NC>::process_sample_split (float &low, float &high, con
 	// Result storing could be optimized on Athlon with:
 	// pfmul + pfpnacc + movd + punpckhdq + movd (not tested)
 
-	return (result);
+	return result;
 }
 
 
@@ -459,11 +456,11 @@ void	Downsampler2x3dnow <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_Downsampler2x3dnow_CODEHEADER_INCLUDED
+#endif   // hiir_Downsampler2x3dnow_CODEHEADER_INCLUDED
 
 #undef hiir_Downsampler2x3dnow_CURRENT_CODEHEADER
 

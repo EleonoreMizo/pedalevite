@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Downsampler2x4Sse.hpp
-        Copyright (c) 2015 Laurent de Soras
+        Author: Laurent de Soras, 2015
 
 --- Legal stuff ---
 
@@ -237,9 +237,6 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Sse <NC>::process_sample_split (__m128 &low, __m128 &high, __m128 in_0, __m128 in_1)
 {
-	assert (&low != 0);
-	assert (&high != 0);
-
 	__m128         spl_0 = in_1;
 	__m128         spl_1 = in_0;
 

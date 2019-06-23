@@ -102,9 +102,6 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x4Neon <NC>::process_sample (float32x4_t &out_0, float32x4_t &out_1, float32x4_t input)
 {
-	assert (&out_0 != 0);
-	assert (&out_1 != 0);
-
 	float32x4_t    even = input;
 	float32x4_t    odd  = input;
 	StageProc4Neon <NBR_COEFS>::process_sample_pos (
@@ -147,16 +144,20 @@ void	Upsampler2x4Neon <NC>::process_block (float out_ptr [], const float in_ptr 
 	long           pos = 0;
 	do
 	{
+		const float32x4_t src = vreinterpretq_f32_u8 (
+			vld1q_u8 (reinterpret_cast <const uint8_t *> (in_ptr + pos * 4))
+		);
 		float32x4_t       dst_0;
 		float32x4_t       dst_1;
-		const float32x4_t src = vreinterpretq_f32_u8 (
-			*reinterpret_cast <const uint8x16_t *> (in_ptr + pos * 4)
-		);
 		process_sample (dst_0, dst_1, src);
-		*reinterpret_cast <uint8x16_t *> (out_ptr + pos * 8    ) =
-			vreinterpretq_u8_f32 (dst_0);
-		*reinterpret_cast <uint8x16_t *> (out_ptr + pos * 8 + 4) =
-			vreinterpretq_u8_f32 (dst_1);
+		vst1q_u8 (
+			reinterpret_cast <uint8_t *> (out_ptr + pos * 8    ),
+			vreinterpretq_u8_f32 (dst_0)
+		);
+		vst1q_u8 (
+			reinterpret_cast <uint8_t *> (out_ptr + pos * 8 + 4),
+			vreinterpretq_u8_f32 (dst_1)
+		);
 		++ pos;
 	}
 	while (pos < nbr_spl);

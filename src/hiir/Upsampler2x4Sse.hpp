@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2x4Sse.hpp
-        Copyright (c) 2015 Laurent de Soras
+        Author: Laurent de Soras, 2015
 
 --- Legal stuff ---
 
@@ -22,9 +22,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageProc4Sse.h"
+#include "hiir/StageProc4Sse.h"
 
-#include	<cassert>
+#include <cassert>
 
 
 
@@ -102,9 +102,6 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x4Sse <NC>::process_sample (__m128 &out_0, __m128 &out_1, __m128 input)
 {
-	assert (&out_0 != 0);
-	assert (&out_1 != 0);
-
 	__m128         even = input;
 	__m128         odd  = input;
 	StageProc4Sse <NBR_COEFS>::process_sample_pos (

@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2xFpu.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -85,7 +85,7 @@ void	Upsampler2xFpu <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_coef [i] = static_cast <float> (coef_arr [i]);
+		_coef [i] = float (coef_arr [i]);
 	}
 }
 
@@ -108,9 +108,6 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xFpu <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	assert (&out_0 != 0);
-	assert (&out_1 != 0);
-
 	float          even = input;
 	float          odd  = input;
 	StageProcFpu <NBR_COEFS>::process_sample_pos (
@@ -195,11 +192,11 @@ void	Upsampler2xFpu <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_Upsampler2xFpu_CODEHEADER_INCLUDED
+#endif   // hiir_Upsampler2xFpu_CODEHEADER_INCLUDED
 
 #undef hiir_Upsampler2xFpu_CURRENT_CODEHEADER
 

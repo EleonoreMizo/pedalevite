@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2x3dnow.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,7 +18,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_Upsampler2x3dnow_CURRENT_CODEHEADER)
 	#error Recursive inclusion of Upsampler2x3dnow code header.
 #endif
-#define	hiir_Upsampler2x3dnow_CURRENT_CODEHEADER
+#define hiir_Upsampler2x3dnow_CURRENT_CODEHEADER
 
 #if ! defined (hiir_Upsampler2x3dnow_CODEHEADER_INCLUDED)
 #define	hiir_Upsampler2x3dnow_CODEHEADER_INCLUDED
@@ -27,11 +27,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageProc3dnow.h"
+#include "hiir/StageProc3dnow.h"
 
-#include	<mm3dnow.h>
+#include <mm3dnow.h>
 
-#include	<cassert>
+#include <cassert>
 
 
 
@@ -91,10 +91,9 @@ void	Upsampler2x3dnow <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int		stage = (i / STAGE_WIDTH) + 1;
-		const int		pos = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coefs.m64_f32 [pos] =
-			static_cast <float> (coef_arr [i]);
+		const int      stage = (i / STAGE_WIDTH) + 1;
+		const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
+		_filter [stage]._coefs.m64_f32 [pos] = float (coef_arr [i]);
 	}
 }
 
@@ -117,24 +116,21 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	assert (&out_0 != 0);
-	assert (&out_1 != 0);
+	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
 
-	enum {	CURR_CELL	=  NBR_STAGES * sizeof (_filter [0])	};
-
-	StageData3dnow *	filter_ptr = &_filter [0];
+	StageData3dnow *  filter_ptr = &_filter [0];
    __m64          result;
 
 	__asm
 	{
-		movd				mm0, input
-		mov				edx, filter_ptr
+		movd           mm0, input
+		mov            edx, filter_ptr
       punpckldq      mm0, mm0
 	}
 	StageProc3dnow <NBR_STAGES>::process_sample_pos ();
 	__asm
 	{
-		movq				[edx + CURR_CELL + 1*8], mm0
+		movq           [edx + CURR_CELL + 1*8], mm0
 
 		femms
 	}
@@ -168,41 +164,41 @@ void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr 
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	enum {	CURR_CELL	=  NBR_STAGES * sizeof (_filter [0])	};
+	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
 
-	StageData3dnow *	filter_ptr = &_filter [0];
+	StageData3dnow *  filter_ptr = &_filter [0];
 
 	__asm
 	{
-		mov				esi, in_ptr
-		mov				edi, out_ptr
-		mov				eax, nbr_spl
-		mov				edx, filter_ptr
-		lea				esi, [esi + eax*4]
-		lea				edi, [edi + eax*8 - 8]
-		neg				eax
+		mov            esi, in_ptr
+		mov            edi, out_ptr
+		mov            eax, nbr_spl
+		mov            edx, filter_ptr
+		lea            esi, [esi + eax*4]
+		lea            edi, [edi + eax*8 - 8]
+		neg            eax
 
 	loop_sample:
 
-		movd				mm0, [esi + eax*4]
+		movd           mm0, [esi + eax*4]
       punpckldq      mm0, mm0
 	}
 #if defined (_MSC_VER) && ! defined (NDEBUG)
-	__asm push			eax
+	__asm push        eax
 #endif
 	StageProc3dnow <NBR_STAGES>::process_sample_pos ();
 #if defined (_MSC_VER) && ! defined (NDEBUG)
-	__asm pop			eax
+	__asm pop         eax
 #endif
 	__asm
 	{
-		inc				eax
-		movq				[edx + CURR_CELL + 1*8], mm0
-		movd				[edi + eax*8 + 4], mm0
+		inc            eax
+		movq           [edx + CURR_CELL + 1*8], mm0
+		movd           [edi + eax*8 + 4], mm0
       punpckhdq      mm0, mm0
-		movd				[edi + eax*8    ], mm0
+		movd           [edi + eax*8    ], mm0
 
-		jl					loop_sample
+		jl             loop_sample
 
 		femms
 	}
@@ -217,63 +213,63 @@ void	Upsampler2x3dnow <8>::process_block (float out_ptr [], const float in_ptr [
 
 	__asm
 	{
-		mov				esi, in_ptr
-		mov				edi, out_ptr
-		mov				eax, nbr_spl
-		lea				esi, [esi + eax*4]
-		lea				edi, [edi + eax*8 - 8]
-		neg				eax
-		mov				edx, filter_ptr
+		mov            esi, in_ptr
+		mov            edi, out_ptr
+		mov            eax, nbr_spl
+		lea            esi, [esi + eax*4]
+		lea            edi, [edi + eax*8 - 8]
+		neg            eax
+		mov            edx, filter_ptr
 
-		movq				mm2, [edx + 0*16 + 1*8]
-		movq				mm3, [edx + 1*16 + 1*8]
-		movq				mm4, [edx + 2*16 + 1*8]
-		movq				mm5, [edx + 3*16 + 1*8]
-		movq				mm6, [edx + 4*16 + 1*8]
+		movq           mm2, [edx + 0*16 + 1*8]
+		movq           mm3, [edx + 1*16 + 1*8]
+		movq           mm4, [edx + 2*16 + 1*8]
+		movq           mm5, [edx + 3*16 + 1*8]
+		movq           mm6, [edx + 4*16 + 1*8]
 
 	loop_sample:
 
-		movd				mm0, [esi + eax*4]
+		movd           mm0, [esi + eax*4]
       punpckldq      mm0, mm0
 
-		movq				mm1, mm2
-		movq				mm2, mm0
-		pfsub				mm0, mm3
-		pfmul				mm0, [edx + 1*16 + 0*8]
-		inc				eax
-		pfadd				mm0, mm1
+		movq           mm1, mm2
+		movq           mm2, mm0
+		pfsub          mm0, mm3
+		pfmul          mm0, [edx + 1*16 + 0*8]
+		inc            eax
+		pfadd          mm0, mm1
 
-		movq				mm1, mm3
-		movq				mm3, mm0
-		pfsub				mm0, mm4
-		pfmul				mm0, [edx + 2*16 + 0*8]
-		pfadd				mm0, mm1
+		movq           mm1, mm3
+		movq           mm3, mm0
+		pfsub          mm0, mm4
+		pfmul          mm0, [edx + 2*16 + 0*8]
+		pfadd          mm0, mm1
 
-		movq				mm1, mm4
-		movq				mm4, mm0
-		pfsub				mm0, mm5
-		pfmul				mm0, [edx + 3*16 + 0*8]
-		pfadd				mm0, mm1
+		movq           mm1, mm4
+		movq           mm4, mm0
+		pfsub          mm0, mm5
+		pfmul          mm0, [edx + 3*16 + 0*8]
+		pfadd          mm0, mm1
 
-		movq				mm1, mm5
-		movq				mm5, mm0
-		pfsub				mm0, mm6
-		pfmul				mm0, [edx + 4*16 + 0*8]
-		pfadd				mm0, mm1
+		movq           mm1, mm5
+		movq           mm5, mm0
+		pfsub          mm0, mm6
+		pfmul          mm0, [edx + 4*16 + 0*8]
+		pfadd          mm0, mm1
 
-		movq				mm6, mm0
+		movq           mm6, mm0
 
-		movd				[edi + eax*8 + 4], mm0
+		movd           [edi + eax*8 + 4], mm0
       punpckhdq      mm0, mm0
-		movd				[edi + eax*8    ], mm0
+		movd           [edi + eax*8    ], mm0
 
-		jl					loop_sample
+		jl             loop_sample
 
-		movq				[edx + 0*16 + 1*8], mm2
-		movq				[edx + 1*16 + 1*8], mm3
-		movq				[edx + 2*16 + 1*8], mm4
-		movq				[edx + 3*16 + 1*8], mm5
-		movq				[edx + 4*16 + 1*8], mm6
+		movq           [edx + 0*16 + 1*8], mm2
+		movq           [edx + 1*16 + 1*8], mm3
+		movq           [edx + 2*16 + 1*8], mm4
+		movq           [edx + 3*16 + 1*8], mm5
+		movq           [edx + 4*16 + 1*8], mm6
 
 		femms
 	}
@@ -311,11 +307,11 @@ void	Upsampler2x3dnow <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_Upsampler2x3dnow_CODEHEADER_INCLUDED
+#endif   // hiir_Upsampler2x3dnow_CODEHEADER_INCLUDED
 
 #undef hiir_Upsampler2x3dnow_CURRENT_CODEHEADER
 

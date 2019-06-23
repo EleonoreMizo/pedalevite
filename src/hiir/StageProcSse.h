@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageProcSse.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 Template parameters:
 	- CUR: index of the coefficient to process, >= 0
@@ -19,7 +19,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_StageProcSse_HEADER_INCLUDED)
-#define	hiir_StageProcSse_HEADER_INCLUDED
+#define hiir_StageProcSse_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -30,7 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/def.h"
+#include "hiir/def.h"
 
 #include <xmmintrin.h>
 
@@ -47,17 +47,16 @@ template <int CUR>
 class StageProcSse
 {
 
-	// Template parameter check, not used
-	typedef	int	ChkTpl1 [(CUR >= 0) ? 1 : -1];
+	static_assert ((CUR >= 0), "CUR must be >= 0");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
 	static hiir_FORCEINLINE void
-						process_sample_pos (StageDataSse *stage_ptr, __m128 &y, __m128 &mem);
+	               process_sample_pos (StageDataSse *stage_ptr, __m128 &y, __m128 &mem);
 	static hiir_FORCEINLINE void
-						process_sample_neg (StageDataSse *stage_ptr, __m128 &y, __m128 &mem);
+	               process_sample_neg (StageDataSse *stage_ptr, __m128 &y, __m128 &mem);
 
 
 
@@ -79,25 +78,26 @@ private:
 
 private:
 
-						StageProcSse ();
-						StageProcSse (const StageProcSse &other);
-	StageProcSse &	operator = (const StageProcSse &other);
-	bool				operator == (const StageProcSse &other);
-	bool				operator != (const StageProcSse &other);
+	               StageProcSse ();
+	               StageProcSse (const StageProcSse <CUR> &other);
+	StageProcSse <CUR> &
+	               operator = (const StageProcSse <CUR> &other);
+	bool           operator == (const StageProcSse <CUR> &other);
+	bool           operator != (const StageProcSse <CUR> &other);
 
-};	// class StageProcSse
-
-
-
-}	// namespace hiir
+}; // class StageProcSse
 
 
 
-#include	"hiir/StageProcSse.hpp"
+}  // namespace hiir
 
 
 
-#endif	// hiir_StageProcSse_HEADER_INCLUDED
+#include "hiir/StageProcSse.hpp"
+
+
+
+#endif   // hiir_StageProcSse_HEADER_INCLUDED
 
 
 

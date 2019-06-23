@@ -22,11 +22,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageProcNeon.h"
+#include "hiir/StageProcNeon.h"
 
-#include	<arm_neon.h>
+#include <arm_neon.h>
 
-#include	<cassert>
+#include <cassert>
 
 
 
@@ -56,7 +56,7 @@ Upsampler2xNeon <NC>::Upsampler2xNeon ()
 	}
 	if ((NBR_COEFS & 1) != 0)
 	{
-		const int		pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
+		const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
 		_filter [NBR_STAGES]._coef [pos] = 1;
 	}
 
@@ -86,9 +86,9 @@ void	Upsampler2xNeon <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int		stage = (i / STAGE_WIDTH) + 1;
-		const int		pos = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = static_cast <float> (coef_arr [i]);
+		const int      stage = (i / STAGE_WIDTH) + 1;
+		const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
+		_filter [stage]._coef [pos] = float (coef_arr [i]);
 	}
 }
 
@@ -111,9 +111,6 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xNeon <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	assert (&out_0 != 0);
-	assert (&out_1 != 0);
-
 	const float32x2_t spl_in = vdup_n_f32 (input);
 	const float32x2_t spl_mid = vget_low_f32 (_filter [NBR_STAGES]._mem4);
 	float32x4_t       y       = vcombine_f32 (spl_in, spl_mid);
@@ -151,7 +148,7 @@ void	Upsampler2xNeon <NC>::process_block (float out_ptr [], const float in_ptr [
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	long				pos = 0;
+	long           pos = 0;
 	do
 	{
 		process_sample (out_ptr [pos * 2], out_ptr [pos * 2 + 1], in_ptr [pos]);

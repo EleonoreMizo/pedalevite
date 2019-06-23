@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageProcFpu.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,10 +18,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_StageProc_CURRENT_CODEHEADER)
 	#error Recursive inclusion of StageProcFpu code header.
 #endif
-#define	hiir_StageProc_CURRENT_CODEHEADER
+#define hiir_StageProc_CURRENT_CODEHEADER
 
 #if ! defined (hiir_StageProc_CODEHEADER_INCLUDED)
-#define	hiir_StageProc_CODEHEADER_INCLUDED
+#define hiir_StageProc_CODEHEADER_INCLUDED
 
 
 
@@ -45,11 +45,11 @@ namespace hiir
 template <>
 hiir_FORCEINLINE void	StageProcFpu <1>::process_sample_pos (const int nbr_coefs, float &spl_0, float &/*spl_1*/, const float coef [], float x [], float y [])
 {
-	const int		last = nbr_coefs - 1;
-	const float		temp = (spl_0 - y [last]) * coef [last] + x [last];
+	const int      last = nbr_coefs - 1;
+	const float    temp = (spl_0 - y [last]) * coef [last] + x [last];
 	x [last] = spl_0;
 	y [last] = temp;
-	spl_0 = temp;
+	spl_0    = temp;
 }
 
 
@@ -65,11 +65,11 @@ hiir_FORCEINLINE void	StageProcFpu <0>::process_sample_pos (const int /*nbr_coef
 template <int REMAINING>
 void	StageProcFpu <REMAINING>::process_sample_pos (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y [])
 {
-	const int		cnt = nbr_coefs - REMAINING;
+	const int      cnt    = nbr_coefs - REMAINING;
 
-	const float		temp_0 =
+	const float    temp_0 =
 		(spl_0 - y [cnt + 0]) * coef [cnt + 0] + x [cnt + 0];
-	const float		temp_1 =
+	const float    temp_1 =
 		(spl_1 - y [cnt + 1]) * coef [cnt + 1] + x [cnt + 1];
 
 	x [cnt + 0] = spl_0;
@@ -78,8 +78,8 @@ void	StageProcFpu <REMAINING>::process_sample_pos (const int nbr_coefs, float &s
 	y [cnt + 0] = temp_0;
 	y [cnt + 1] = temp_1;
 
-	spl_0 = temp_0;
-	spl_1 = temp_1;
+	spl_0       = temp_0;
+	spl_1       = temp_1;
 
 	StageProcFpu <REMAINING - 2>::process_sample_pos (
 		nbr_coefs,
@@ -96,11 +96,11 @@ void	StageProcFpu <REMAINING>::process_sample_pos (const int nbr_coefs, float &s
 template <>
 hiir_FORCEINLINE void	StageProcFpu <1>::process_sample_neg (const int nbr_coefs, float &spl_0, float &/*spl_1*/, const float coef [], float x [], float y [])
 {
-	const int		last = nbr_coefs - 1;
-	const float		temp = (spl_0 + y [last]) * coef [last] - x [last];
+	const int      last = nbr_coefs - 1;
+	const float    temp = (spl_0 + y [last]) * coef [last] - x [last];
 	x [last] = spl_0;
 	y [last] = temp;
-	spl_0 = temp;
+	spl_0    = temp;
 }
 
 
@@ -116,11 +116,11 @@ hiir_FORCEINLINE void	StageProcFpu <0>::process_sample_neg (const int /*nbr_coef
 template <int REMAINING>
 void	StageProcFpu <REMAINING>::process_sample_neg (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y [])
 {
-	const int		cnt = nbr_coefs - REMAINING;
+	const int      cnt    = nbr_coefs - REMAINING;
 
-	const float		temp_0 =
+	const float    temp_0 =
 		(spl_0 + y [cnt + 0]) * coef [cnt + 0] - x [cnt + 0];
-	const float		temp_1 =
+	const float    temp_1 =
 		(spl_1 + y [cnt + 1]) * coef [cnt + 1] - x [cnt + 1];
 
 	x [cnt + 0] = spl_0;
@@ -129,8 +129,8 @@ void	StageProcFpu <REMAINING>::process_sample_neg (const int nbr_coefs, float &s
 	y [cnt + 0] = temp_0;
 	y [cnt + 1] = temp_1;
 
-	spl_0 = temp_0;
-	spl_1 = temp_1;
+	spl_0       = temp_0;
+	spl_1       = temp_1;
 
 	StageProcFpu <REMAINING - 2>::process_sample_neg (
 		nbr_coefs,
@@ -152,11 +152,11 @@ void	StageProcFpu <REMAINING>::process_sample_neg (const int nbr_coefs, float &s
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_StageProc_CODEHEADER_INCLUDED
+#endif   // hiir_StageProc_CODEHEADER_INCLUDED
 
 #undef hiir_StageProc_CURRENT_CODEHEADER
 

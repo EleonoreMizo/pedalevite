@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Downsampler2x3dnow.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 Downsamples by a factor 2 the input signal, using 3DNow! instruction set.
 
@@ -21,7 +21,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_Downsampler2x3dnow_HEADER_INCLUDED)
-#define	hiir_Downsampler2x3dnow_HEADER_INCLUDED
+#define hiir_Downsampler2x3dnow_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -95,14 +95,14 @@ private:
 
 private:
 
-	bool           operator == (const Downsampler2x3dnow &other);
-	bool           operator != (const Downsampler2x3dnow &other);
+	bool           operator == (const Downsampler2x3dnow <NC> &other);
+	bool           operator != (const Downsampler2x3dnow <NC> &other);
 
-};	// class Downsampler2x3dnow
+}; // class Downsampler2x3dnow
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
@@ -110,7 +110,7 @@ private:
 
 
 
-#endif	// hiir_Downsampler2x3dnow_HEADER_INCLUDED
+#endif   // hiir_Downsampler2x3dnow_HEADER_INCLUDED
 
 
 

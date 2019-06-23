@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageProcSse.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,16 +18,16 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_StageProcSse_CURRENT_CODEHEADER)
 	#error Recursive inclusion of StageProcSse code header.
 #endif
-#define	hiir_StageProcSse_CURRENT_CODEHEADER
+#define hiir_StageProcSse_CURRENT_CODEHEADER
 
 #if ! defined (hiir_StageProcSse_CODEHEADER_INCLUDED)
-#define	hiir_StageProcSse_CODEHEADER_INCLUDED
+#define hiir_StageProcSse_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageDataSse.h"
+#include "hiir/StageDataSse.h"
 
 #if defined (_MSC_VER)
 	#pragma inline_depth (255)
@@ -49,14 +49,14 @@ void	StageProcSse <CUR>::process_sample_pos (StageDataSse *stage_ptr, __m128 &y,
 {
 	StageProcSse <CUR - 1>::process_sample_pos (stage_ptr, y, mem);
 
-	const __m128	x = mem;
+	const __m128   x    = mem;
 	_mm_store_ps (stage_ptr [PREV]._mem, y);
 
 	mem = _mm_load_ps (stage_ptr [CUR]._mem);
-	y = _mm_sub_ps (y, mem);
-	const __m128	coef = _mm_load_ps (stage_ptr [CUR]._coef);
-	y = _mm_mul_ps (y, coef);
-	y = _mm_add_ps (y, x);
+	y   = _mm_sub_ps (y, mem);
+	const __m128   coef = _mm_load_ps (stage_ptr [CUR]._coef);
+	y   = _mm_mul_ps (y, coef);
+	y   = _mm_add_ps (y, x);
 }
 
 template <>
@@ -72,14 +72,14 @@ void	StageProcSse <CUR>::process_sample_neg (StageDataSse *stage_ptr, __m128 &y,
 {
 	StageProcSse <CUR - 1>::process_sample_neg (stage_ptr, y, mem);
 
-	const __m128	x = mem;
+	const __m128   x    = mem;
 	_mm_store_ps (stage_ptr [PREV]._mem, y);
 
 	mem = _mm_load_ps (stage_ptr [CUR]._mem);
-	y = _mm_add_ps (y, mem);
-	const __m128	coef = _mm_load_ps (stage_ptr [CUR]._coef);
-	y = _mm_mul_ps (y, coef);
-	y = _mm_sub_ps (y, x);
+	y   = _mm_add_ps (y, mem);
+	const __m128   coef = _mm_load_ps (stage_ptr [CUR]._coef);
+	y   = _mm_mul_ps (y, coef);
+	y   = _mm_sub_ps (y, x);
 }
 
 template <>
@@ -98,11 +98,11 @@ hiir_FORCEINLINE void	StageProcSse <0>::process_sample_neg (StageDataSse * /* st
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_StageProcSse_CODEHEADER_INCLUDED
+#endif   // hiir_StageProcSse_CODEHEADER_INCLUDED
 
 #undef hiir_StageProcSse_CURRENT_CODEHEADER
 

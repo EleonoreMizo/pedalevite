@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Downsampler2xSse.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,10 +18,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_Downsampler2xSse_CURRENT_CODEHEADER)
 	#error Recursive inclusion of Downsampler2xSse code header.
 #endif
-#define	hiir_Downsampler2xSse_CURRENT_CODEHEADER
+#define hiir_Downsampler2xSse_CURRENT_CODEHEADER
 
 #if ! defined (hiir_Downsampler2xSse_CODEHEADER_INCLUDED)
-#define	hiir_Downsampler2xSse_CODEHEADER_INCLUDED
+#define hiir_Downsampler2xSse_CODEHEADER_INCLUDED
 
 
 
@@ -96,7 +96,7 @@ void	Downsampler2xSse <NC>::set_coefs (const double coef_arr [])
 	{
 		const int      stage = (i / STAGE_WIDTH) + 1;
 		const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = static_cast <float> (coef_arr [i]);
+		_filter [stage]._coef [pos] = float (coef_arr [i]);
 	}
 }
 
@@ -202,8 +202,6 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2xSse <NC>::process_sample_split (float &low, float &high, const float in_ptr [2])
 {
-	assert (&low != 0);
-	assert (&high != 0);
 	assert (in_ptr != 0);
 
 	// Combines two input samples and two mid-processing data
@@ -311,11 +309,11 @@ void	Downsampler2xSse <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_Downsampler2xSse_CODEHEADER_INCLUDED
+#endif   // hiir_Downsampler2xSse_CODEHEADER_INCLUDED
 
 #undef hiir_Downsampler2xSse_CURRENT_CODEHEADER
 

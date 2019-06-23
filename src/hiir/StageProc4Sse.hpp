@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageProc4Sse.hpp
-        Copyright (c) 2015 Laurent de Soras
+        Author: Laurent de Soras, 2015
 
 --- Legal stuff ---
 
@@ -15,13 +15,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (hiir_StageProc_CURRENT_CODEHEADER)
+#if defined (hiir_StageProc4Sse_CURRENT_CODEHEADER)
 	#error Recursive inclusion of StageProc4Sse code header.
 #endif
-#define	hiir_StageProc_CURRENT_CODEHEADER
+#define hiir_StageProc4Sse_CURRENT_CODEHEADER
 
-#if ! defined (hiir_StageProc_CODEHEADER_INCLUDED)
-#define	hiir_StageProc_CODEHEADER_INCLUDED
+#if ! defined (hiir_StageProc4Sse_CODEHEADER_INCLUDED)
+#define hiir_StageProc4Sse_CODEHEADER_INCLUDED
 
 
 
@@ -49,7 +49,7 @@ namespace hiir
 template <>
 hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2 - 1;
+	const int      cnt   = nbr_coefs + 2 - 1;
 
 	const __m128   tmp_0 = _mm_add_ps (
 		_mm_mul_ps (
@@ -71,7 +71,7 @@ hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_pos (const int nbr_coefs
 template <>
 hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2;
+	const int      cnt = nbr_coefs + 2;
 
 	_mm_store_ps (stage_arr [cnt - 2]._mem, spl_0);
 	_mm_store_ps (stage_arr [cnt - 1]._mem, spl_1);
@@ -82,7 +82,7 @@ hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_pos (const int nbr_coefs
 template <int REMAINING>
 void	StageProc4Sse <REMAINING>::process_sample_pos (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2 - REMAINING;
+	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
 	const __m128   tmp_0 = _mm_add_ps (
 		_mm_mul_ps (
@@ -118,7 +118,7 @@ void	StageProc4Sse <REMAINING>::process_sample_pos (const int nbr_coefs, __m128 
 template <>
 hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2 - 1;
+	const int      cnt   = nbr_coefs + 2 - 1;
 
 	const __m128   tmp_0 = _mm_sub_ps (
 		_mm_mul_ps (
@@ -140,7 +140,7 @@ hiir_FORCEINLINE void	StageProc4Sse <1>::process_sample_neg (const int nbr_coefs
 template <>
 hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2;
+	const int      cnt = nbr_coefs + 2;
 
 	_mm_store_ps (stage_arr [cnt - 2]._mem, spl_0);
 	_mm_store_ps (stage_arr [cnt - 1]._mem, spl_1);
@@ -151,7 +151,7 @@ hiir_FORCEINLINE void	StageProc4Sse <0>::process_sample_neg (const int nbr_coefs
 template <int REMAINING>
 void	StageProc4Sse <REMAINING>::process_sample_neg (const int nbr_coefs, __m128 &spl_0, __m128 &spl_1, StageDataSse *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2 - REMAINING;
+	const int      cnt   = nbr_coefs + 2 - REMAINING;
 
 	const __m128   tmp_0 = _mm_sub_ps (
 		_mm_mul_ps (
@@ -192,13 +192,13 @@ void	StageProc4Sse <REMAINING>::process_sample_neg (const int nbr_coefs, __m128 
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_StageProc_CODEHEADER_INCLUDED
+#endif   // hiir_StageProc4Sse_CODEHEADER_INCLUDED
 
-#undef hiir_StageProc_CURRENT_CODEHEADER
+#undef hiir_StageProc4Sse_CURRENT_CODEHEADER
 
 
 

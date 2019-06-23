@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         fnc.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,10 +18,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_fnc_CURRENT_CODEHEADER)
 	#error Recursive inclusion of fnc code header.
 #endif
-#define	hiir_fnc_CURRENT_CODEHEADER
+#define hiir_fnc_CURRENT_CODEHEADER
 
 #if ! defined (hiir_fnc_CODEHEADER_INCLUDED)
-#define	hiir_fnc_CODEHEADER_INCLUDED
+#define hiir_fnc_CODEHEADER_INCLUDED
 
 
 
@@ -29,8 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cmath>
-
-namespace std { }
 
 
 
@@ -41,18 +39,14 @@ namespace hiir
 
 int	round_int (double x)
 {
-	using namespace std;
-
-	return (static_cast <int> (floor (x + 0.5)));
+	return int (floor (x + 0.5));
 }
 
 
 
 int	ceil_int (double x)
 {
-	using namespace std;
-
-	return (static_cast <int> (ceil (x)));
+	return int (ceil (x));
 }
 
 
@@ -73,16 +67,16 @@ T	ipowp (T x, long n)
 		x *= x;
 	}
 
-	return (z);
+	return z;
 }
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_fnc_CODEHEADER_INCLUDED
+#endif   // hiir_fnc_CODEHEADER_INCLUDED
 
 #undef hiir_fnc_CURRENT_CODEHEADER
 

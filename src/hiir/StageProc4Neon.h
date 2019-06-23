@@ -73,13 +73,13 @@ private:
 
 private:
 
-	               StageProc4Neon ()                               = delete;
-	               StageProc4Neon (const StageProc4Neon &other)    = delete;
-	               ~StageProc4Neon ()                              = delete;
-	StageProc4Neon &
-	               operator = (const StageProc4Neon &other)        = delete;
-	bool           operator == (const StageProc4Neon &other) const = delete;
-	bool           operator != (const StageProc4Neon &other) const = delete;
+	               StageProc4Neon ()                                           = delete;
+	               StageProc4Neon (const StageProc4Neon <REMAINING> &other)    = delete;
+	               ~StageProc4Neon ()                                          = delete;
+	StageProc4Neon <REMAINING> &
+	               operator = (const StageProc4Neon <REMAINING> &other)        = delete;
+	bool           operator == (const StageProc4Neon <REMAINING> &other) const = delete;
+	bool           operator != (const StageProc4Neon <REMAINING> &other) const = delete;
 
 }; // class StageProc4Neon
 

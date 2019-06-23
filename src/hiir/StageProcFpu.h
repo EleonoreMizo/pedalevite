@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageProcFpu.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 Template parameters:
 	- REMAINING: Number of remaining coefficients to process, >= 0
@@ -19,7 +19,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_StageProc_HEADER_INCLUDED)
-#define	hiir_StageProc_HEADER_INCLUDED
+#define hiir_StageProc_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -30,7 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/def.h"
+#include "hiir/def.h"
 
 
 
@@ -43,17 +43,16 @@ template <int REMAINING>
 class StageProcFpu
 {
 
-	// Template parameter check, not used
-	typedef	int	ChkTpl1 [(REMAINING >= 0) ? 1 : -1];
+	static_assert ((REMAINING >= 0), "REMAINING must be >= 0");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
 	static hiir_FORCEINLINE void
-						process_sample_pos (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y []);
+	               process_sample_pos (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y []);
 	static hiir_FORCEINLINE void
-						process_sample_neg (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y []);
+	               process_sample_neg (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y []);
 
 
 
@@ -73,25 +72,26 @@ private:
 
 private:
 
-						StageProcFpu ();
-						StageProcFpu (const StageProcFpu &other);
-	StageProcFpu &	operator = (const StageProcFpu &other);
-	bool				operator == (const StageProcFpu &other);
-	bool				operator != (const StageProcFpu &other);
+	               StageProcFpu ();
+	               StageProcFpu (const StageProcFpu <REMAINING> &other);
+	StageProcFpu <REMAINING> &
+	               operator = (const StageProcFpu <REMAINING> &other);
+	bool           operator == (const StageProcFpu <REMAINING> &other);
+	bool           operator != (const StageProcFpu <REMAINING> &other);
 
-};	// class StageProcFpu
-
-
-
-}	// namespace hiir
+}; // class StageProcFpu
 
 
 
-#include	"hiir/StageProcFpu.hpp"
+}  // namespace hiir
 
 
 
-#endif	// hiir_StageProc_HEADER_INCLUDED
+#include "hiir/StageProcFpu.hpp"
+
+
+
+#endif   // hiir_StageProc_HEADER_INCLUDED
 
 
 

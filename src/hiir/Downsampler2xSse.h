@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Downsampler2xSse.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 Downsamples by a factor 2 the input signal, using SSE instruction set.
 
@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_Downsampler2xSse_HEADER_INCLUDED)
-#define	hiir_Downsampler2xSse_HEADER_INCLUDED
+#define hiir_Downsampler2xSse_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -59,7 +59,7 @@ class Downsampler2xSse
 
 public:
 
-	enum {         NBR_COEFS = NC	};
+	enum {         NBR_COEFS = NC };
 
 	               Downsampler2xSse ();
 	               Downsampler2xSse (const Downsampler2xSse &other) = default;
@@ -104,14 +104,14 @@ private:
 
 private:
 
-	bool           operator == (const Downsampler2xSse &other) = delete;
-	bool           operator != (const Downsampler2xSse &other) = delete;
+	bool           operator == (const Downsampler2xSse <NC> &other) = delete;
+	bool           operator != (const Downsampler2xSse <NC> &other) = delete;
 
-};	// class Downsampler2xSse
+}; // class Downsampler2xSse
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
@@ -119,7 +119,7 @@ private:
 
 
 
-#endif	// hiir_Downsampler2xSse_HEADER_INCLUDED
+#endif   // hiir_Downsampler2xSse_HEADER_INCLUDED
 
 
 

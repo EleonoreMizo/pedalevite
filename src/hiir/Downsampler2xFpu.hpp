@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Downsampler2xFpu.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,10 +18,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_Downsampler2xFpu_CURRENT_CODEHEADER)
 	#error Recursive inclusion of Downsampler2xFpu code header.
 #endif
-#define	hiir_Downsampler2xFpu_CURRENT_CODEHEADER
+#define hiir_Downsampler2xFpu_CURRENT_CODEHEADER
 
 #if ! defined (hiir_Downsampler2xFpu_CODEHEADER_INCLUDED)
-#define	hiir_Downsampler2xFpu_CODEHEADER_INCLUDED
+#define hiir_Downsampler2xFpu_CODEHEADER_INCLUDED
 
 
 
@@ -85,7 +85,7 @@ void	Downsampler2xFpu <NC>::set_coefs (const double coef_arr [])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_coef [i] = static_cast <float> (coef_arr [i]);
+		_coef [i] = float (coef_arr [i]);
 	}
 }
 
@@ -113,7 +113,7 @@ float	Downsampler2xFpu <NC>::process_sample (const float in_ptr [2])
 
 	#if defined (_MSC_VER)
 		#pragma inline_depth (255)
-	#endif	// _MSC_VER
+	#endif   // _MSC_VER
 
 	StageProcFpu <NBR_COEFS>::process_sample_pos (
 		NBR_COEFS,
@@ -124,7 +124,7 @@ float	Downsampler2xFpu <NC>::process_sample (const float in_ptr [2])
 		&_y [0]
 	);
 
-	return (0.5f * (spl_0 + spl_1));
+	return 0.5f * (spl_0 + spl_1);
 }
 
 
@@ -186,8 +186,6 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2xFpu <NC>::process_sample_split (float &low, float &high, const float in_ptr [2])
 {
-	assert (&low != 0);
-	assert (&high != 0);
 	assert (in_ptr != 0);
 
 	float          spl_0 = in_ptr [1];
@@ -206,8 +204,8 @@ void	Downsampler2xFpu <NC>::process_sample_split (float &low, float &high, const
 		&_y [0]
 	);
 
-	low = (spl_0 + spl_1) * 0.5f;
-	high = spl_0 - low;  // (spl_0 - spl_1) * 0.5f;
+	low  = (spl_0 + spl_1) * 0.5f;
+	high =  spl_0 - low; // (spl_0 - spl_1) * 0.5f;
 }
 
 
@@ -292,11 +290,11 @@ void	Downsampler2xFpu <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_Downsampler2xFpu_CODEHEADER_INCLUDED
+#endif   // hiir_Downsampler2xFpu_CODEHEADER_INCLUDED
 
 #undef hiir_Downsampler2xFpu_CURRENT_CODEHEADER
 

@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2xSse.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 Upsamples by a factor 2 the input signal, using SSE instruction set.
 
@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_Upsampler2xSse_HEADER_INCLUDED)
-#define	hiir_Upsampler2xSse_HEADER_INCLUDED
+#define hiir_Upsampler2xSse_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -37,9 +37,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageDataSse.h"
+#include "hiir/StageDataSse.h"
 
-#include	<xmmintrin.h>
+#include <xmmintrin.h>
 
 #include <array>
 
@@ -60,9 +60,9 @@ class Upsampler2xSse
 
 public:
 
-	enum {			NBR_COEFS	= NC	};
+	enum {         NBR_COEFS = NC };
 
-						Upsampler2xSse ();
+	               Upsampler2xSse ();
 	               Upsampler2xSse (const Upsampler2xSse &other)   = default;
 	Upsampler2xSse &
 	               operator = (const Upsampler2xSse &other)       = default;
@@ -87,7 +87,7 @@ private:
 	enum {         STAGE_WIDTH = 4 };
 	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH };
 
-	typedef	std::array <StageDataSse, NBR_STAGES + 1>	Filter;	// Stage 0 contains only input memory
+	typedef std::array <StageDataSse, NBR_STAGES + 1> Filter;   // Stage 0 contains only input memory
 
 	Filter         _filter;    // Should be the first member (thus easier to align)
 
@@ -97,22 +97,22 @@ private:
 
 private:
 
-	bool				operator == (const Upsampler2xSse &other) const = delete;
-	bool				operator != (const Upsampler2xSse &other) const = delete;
+	bool           operator == (const Upsampler2xSse <NC> &other) const = delete;
+	bool           operator != (const Upsampler2xSse <NC> &other) const = delete;
 
 };	// class Upsampler2xSse
 
 
 
-}	// namespace hiir
+} // namespace hiir
 
 
 
-#include	"hiir/Upsampler2xSse.hpp"
+#include "hiir/Upsampler2xSse.hpp"
 
 
 
-#endif	// hiir_Upsampler2xSse_HEADER_INCLUDED
+#endif // hiir_Upsampler2xSse_HEADER_INCLUDED
 
 
 

@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         PolyphaseIir2Designer.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 Compute coefficients for 2-path polyphase IIR filter, half-band filter or
 Pi/2 phaser.
@@ -60,7 +60,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_PolyphaseIir2Designer_HEADER_INCLUDED)
-#define	hiir_PolyphaseIir2Designer_HEADER_INCLUDED
+#define hiir_PolyphaseIir2Designer_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -85,11 +85,11 @@ class PolyphaseIir2Designer
 
 public:
 
-	static int		compute_nbr_coefs_from_proto (double attenuation, double transition);
-	static double	compute_atten_from_order_tbw (int nbr_coefs, double transition);
+	static int     compute_nbr_coefs_from_proto (double attenuation, double transition);
+	static double  compute_atten_from_order_tbw (int nbr_coefs, double transition);
 
-	static int		compute_coefs (double coef_arr [], double attenuation, double transition);
-	static void		compute_coefs_spec_order_tbw (double coef_arr [], int nbr_coefs, double transition);
+	static int     compute_coefs (double coef_arr [], double attenuation, double transition);
+	static void    compute_coefs_spec_order_tbw (double coef_arr [], int nbr_coefs, double transition);
 
 	static double  compute_phase_delay (double a, double f_fs);
 	static double  compute_group_delay (double a, double f_fs, bool ph_flag);
@@ -107,12 +107,12 @@ protected:
 
 private:
 
-	static void		compute_transition_param (double &k, double &q, double transition);
-	static int		compute_order (double attenuation, double q);
-	static double	compute_atten (double q, int order);
-	static double	compute_coef (int index, double k, double q, int order);
-	static double	compute_acc_num (double q, int order, int c);
-	static double	compute_acc_den (double q, int order, int c);
+	static void    compute_transition_param (double &k, double &q, double transition);
+	static int     compute_order (double attenuation, double q);
+	static double  compute_atten (double q, int order);
+	static double  compute_coef (int index, double k, double q, int order);
+	static double  compute_acc_num (double q, int order, int c);
+	static double  compute_acc_den (double q, int order, int c);
 
 
 
@@ -120,23 +120,23 @@ private:
 
 private:
 
-						PolyphaseIir2Designer ();
-						~PolyphaseIir2Designer ();
-						PolyphaseIir2Designer (const PolyphaseIir2Designer &other);
+	               PolyphaseIir2Designer ();
+	               ~PolyphaseIir2Designer ();
+	               PolyphaseIir2Designer (const PolyphaseIir2Designer &other);
 	PolyphaseIir2Designer &
-						operator = (const PolyphaseIir2Designer &other);
-	bool				operator == (const PolyphaseIir2Designer &other);
-	bool				operator != (const PolyphaseIir2Designer &other);
+	               operator = (const PolyphaseIir2Designer &other);
+	bool           operator == (const PolyphaseIir2Designer &other);
+	bool           operator != (const PolyphaseIir2Designer &other);
 
-};	// class PolyphaseIir2Designer
-
-
-
-}	// namespace hiir
+}; // class PolyphaseIir2Designer
 
 
 
-#endif	// hiir_PolyphaseIir2Designer_HEADER_INCLUDED
+}  // namespace hiir
+
+
+
+#endif   // hiir_PolyphaseIir2Designer_HEADER_INCLUDED
 
 
 

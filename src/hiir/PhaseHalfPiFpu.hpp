@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         PhaseHalfPiFpu.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,10 +18,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_PhaseHalfPiFpu_CURRENT_CODEHEADER)
 	#error Recursive inclusion of PhaseHalfPiFpu code header.
 #endif
-#define	hiir_PhaseHalfPiFpu_CURRENT_CODEHEADER
+#define hiir_PhaseHalfPiFpu_CURRENT_CODEHEADER
 
 #if ! defined (hiir_PhaseHalfPiFpu_CODEHEADER_INCLUDED)
-#define	hiir_PhaseHalfPiFpu_CODEHEADER_INCLUDED
+#define hiir_PhaseHalfPiFpu_CODEHEADER_INCLUDED
 
 
 
@@ -84,7 +84,7 @@ void	PhaseHalfPiFpu <NC>::set_coefs (const double coef_arr [])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_coef [i] = static_cast <float> (coef_arr [i]);
+		_coef [i] = float (coef_arr [i]);
 	}
 }
 
@@ -107,15 +107,12 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPiFpu <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-   assert (&out_0 != 0);
-   assert (&out_1 != 0);
-
-	out_0 = input;		// Even coefs
-	out_1 = _prev;		// Odd coefs
+	out_0 = input;   // Even coefs
+	out_1 = _prev;   // Odd coefs
 
 	#if defined (_MSC_VER)
 		#pragma inline_depth (255)
-	#endif	// _MSC_VER
+	#endif   // _MSC_VER
 
 	StageProcFpu <NBR_COEFS>::process_sample_neg (
 		NBR_COEFS,
@@ -126,7 +123,7 @@ void	PhaseHalfPiFpu <NC>::process_sample (float &out_0, float &out_1, float inpu
 		&_mem [_phase]._y [0]
 	);
 
-	_prev = input;
+	_prev  = input;
 	_phase = 1 - _phase;
 }
 
@@ -160,17 +157,17 @@ void	PhaseHalfPiFpu <NC>::process_block (float out_0_ptr [], float out_1_ptr [],
 	assert (out_0_ptr + nbr_spl <= out_1_ptr || out_1_ptr + nbr_spl <= out_0_ptr);
 	assert (nbr_spl > 0);
 
-	long				pos = 0;
+	long           pos = 0;
 	if (_phase == 1)
 	{
 		process_sample (out_0_ptr [0], out_1_ptr [0], in_ptr [0]);
 		++ pos;
 	}
 
-	const long		end = ((nbr_spl - pos) & -NBR_PHASES) + pos;
+	const long     end = ((nbr_spl - pos) & -NBR_PHASES) + pos;
 	while (pos < end)
 	{
-		const float		input_0 = in_ptr [pos];
+		const float    input_0 = in_ptr [pos];
 		out_0_ptr [pos] = input_0;
 		out_1_ptr [pos] = _prev;
 		StageProcFpu <NBR_COEFS>::process_sample_neg (
@@ -182,7 +179,7 @@ void	PhaseHalfPiFpu <NC>::process_block (float out_0_ptr [], float out_1_ptr [],
 			&_mem [0]._y [0]
 		);
 
-		const float		input_1 = in_ptr [pos + 1];
+		const float    input_1 = in_ptr [pos + 1];
 		out_0_ptr [pos + 1] = input_1;
 		out_1_ptr [pos + 1] = input_0;	// _prev
 		StageProcFpu <NBR_COEFS>::process_sample_neg (
@@ -229,7 +226,7 @@ void	PhaseHalfPiFpu <NC>::clear_buffers ()
 		}
 	}
 
-	_prev = 0;
+	_prev  = 0;
 	_phase = 0;
 }
 
@@ -243,11 +240,11 @@ void	PhaseHalfPiFpu <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_PhaseHalfPiFpu_CODEHEADER_INCLUDED
+#endif   // hiir_PhaseHalfPiFpu_CODEHEADER_INCLUDED
 
 #undef hiir_PhaseHalfPiFpu_CURRENT_CODEHEADER
 

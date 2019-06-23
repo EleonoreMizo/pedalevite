@@ -104,8 +104,8 @@ private:
 
 private:
 
-	bool           operator == (const Downsampler2xNeon &other) const = delete;
-	bool           operator != (const Downsampler2xNeon &other) const = delete;
+	bool           operator == (const Downsampler2xNeon <NC> &other) const = delete;
+	bool           operator != (const Downsampler2xNeon <NC> &other) const = delete;
 
 }; // class Downsampler2xNeon
 

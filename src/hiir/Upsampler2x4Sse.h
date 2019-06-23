@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2x4Sse.h
-        Copyright (c) 2015 Laurent de Soras
+        Author: Laurent de Soras, 2015
 
 Upsamples vectors of 4 float by a factor 2 the input signal, using the SSE
 instruction set.
@@ -91,8 +91,8 @@ private:
 
 private:
 
-	bool           operator == (const Upsampler2x4Sse &other) const;
-	bool           operator != (const Upsampler2x4Sse &other) const;
+	bool           operator == (const Upsampler2x4Sse <NC> &other) const;
+	bool           operator != (const Upsampler2x4Sse <NC> &other) const;
 
 }; // class Upsampler2x4Sse
 

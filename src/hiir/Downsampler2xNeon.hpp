@@ -88,7 +88,7 @@ void	Downsampler2xNeon <NC>::set_coefs (const double coef_arr [])
 	{
 		const int      stage = (i / STAGE_WIDTH) + 1;
 		const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = static_cast <float> (coef_arr [i]);
+		_filter [stage]._coef [pos] = float (coef_arr [i]);
 	}
 }
 
@@ -190,8 +190,6 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2xNeon <NC>::process_sample_split (float &low, float &high, const float in_ptr [2])
 {
-	assert (&low != 0);
-	assert (&high != 0);
 	assert (in_ptr != 0);
 
 	// Combines two input samples and two mid-processing data
@@ -210,7 +208,7 @@ void	Downsampler2xNeon <NC>::process_sample_split (float &low, float &high, cons
 	const float       out_0  = vgetq_lane_f32 (y, 3);
 	const float       out_1  = vgetq_lane_f32 (y, 2);
 	low  = (out_0 + out_1) * 0.5f;
-	high = out_0 - low;
+	high =  out_0 - low;
 }
 
 

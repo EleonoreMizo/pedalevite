@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2x3dnow.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 Upsamples by a factor 2 the input signal, using 3DNow! instruction set.
 
@@ -21,7 +21,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_Upsampler2x3dnow_HEADER_INCLUDED)
-#define	hiir_Upsampler2x3dnow_HEADER_INCLUDED
+#define hiir_Upsampler2x3dnow_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -32,7 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageData3dnow.h"
+#include "hiir/StageData3dnow.h"
 
 #include <array>
 
@@ -53,14 +53,14 @@ class Upsampler2x3dnow
 
 public:
 
-	enum {			NBR_COEFS	= NC	};
+	enum {         NBR_COEFS = NC };
 
-						Upsampler2x3dnow ();
+	               Upsampler2x3dnow ();
 
-	void				set_coefs (const double coef_arr [NBR_COEFS]);
-	inline void		process_sample (float &out_0, float &out_1, float input);
-	void				process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
-	void				clear_buffers ();
+	void           set_coefs (const double coef_arr [NBR_COEFS]);
+	inline void    process_sample (float &out_0, float &out_1, float input);
+	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
+	void           clear_buffers ();
 
 
 
@@ -74,12 +74,12 @@ protected:
 
 private:
 
-	enum {			STAGE_WIDTH	= 2	};
-	enum {			NBR_STAGES = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH	};
+	enum {         STAGE_WIDTH = 2 };
+	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH };
 
-	typedef	std::array <StageData3dnow, NBR_STAGES + 1>	Filter;	// Stage 0 contains only input memory
+	typedef std::array <StageData3dnow, NBR_STAGES + 1> Filter; // Stage 0 contains only input memory
 
-	Filter			_filter;		// Should be the first member (thus easier to align)
+	Filter         _filter;    // Should be the first member (thus easier to align)
 
 
 
@@ -87,22 +87,22 @@ private:
 
 private:
 
-	bool				operator == (const Upsampler2x3dnow &other);
-	bool				operator != (const Upsampler2x3dnow &other);
+	bool           operator == (const Upsampler2x3dnow <NC> &other);
+	bool           operator != (const Upsampler2x3dnow <NC> &other);
 
-};	// class Upsampler2x3dnow
-
-
-
-}	// namespace hiir
+}; // class Upsampler2x3dnow
 
 
 
-#include	"hiir/Upsampler2x3dnow.hpp"
+}  // namespace hiir
 
 
 
-#endif	// hiir_Upsampler2x3dnow_HEADER_INCLUDED
+#include "hiir/Upsampler2x3dnow.hpp"
+
+
+
+#endif   // hiir_Upsampler2x3dnow_HEADER_INCLUDED
 
 
 

@@ -103,10 +103,12 @@ float32x4_t	Downsampler2x4Neon <NC>::process_sample (const float in_ptr [8])
 {
 	assert (in_ptr != 0);
 
-	const float32x4_t in_0 =
-		vreinterpretq_f32_u8 (*reinterpret_cast <const uint8x16_t *> (in_ptr    ));
-	const float32x4_t in_1 =
-		vreinterpretq_f32_u8 (*reinterpret_cast <const uint8x16_t *> (in_ptr + 4));
+	const float32x4_t in_0 = vreinterpretq_f32_u8 (
+		vld1q_u8 (reinterpret_cast <const uint8_t *> (in_ptr    ))
+	);
+	const float32x4_t in_1 = vreinterpretq_f32_u8 (
+		vld1q_u8 (reinterpret_cast <const uint8_t *> (in_ptr + 4))
+	);
 
 	return process_sample (in_0, in_1);
 }
@@ -174,8 +176,10 @@ void	Downsampler2x4Neon <NC>::process_block (float out_ptr [], const float in_pt
 	do
 	{
 		const float32x4_t val = process_sample (in_ptr + pos * 8);
-		*reinterpret_cast <uint8x16_t *> (out_ptr + pos * 4) =
-			vreinterpretq_u8_f32 (val);
+		vst1q_u8 (
+			reinterpret_cast <uint8_t *> (out_ptr + pos * 4),
+			vreinterpretq_u8_f32 (val)
+		);
 		++ pos;
 	}
 	while (pos < nbr_spl);
@@ -242,9 +246,6 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Neon <NC>::process_sample_split (float32x4_t &low, float32x4_t &high, float32x4_t in_0, float32x4_t in_1)
 {
-	assert (&low != 0);
-	assert (&high != 0);
-
 	float32x4_t    spl_0 = in_1;
 	float32x4_t    spl_1 = in_0;
 

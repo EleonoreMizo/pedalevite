@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         PhaseHalfPiSse.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 From the input signal, generates two signals with a pi/2 phase shift, using
 SSE instruction set.
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_PhaseHalfPiSse_HEADER_INCLUDED)
-#define	hiir_PhaseHalfPiSse_HEADER_INCLUDED
+#define hiir_PhaseHalfPiSse_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -38,10 +38,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/def.h"
+#include "hiir/def.h"
 #include "hiir/StageDataSse.h"
 
-#include	<xmmintrin.h>
+#include <xmmintrin.h>
 
 #include <array>
 
@@ -62,17 +62,17 @@ class PhaseHalfPiSse
 
 public:
 
-	enum {			NBR_COEFS	= NC	};
+	enum {         NBR_COEFS = NC };
 
-						PhaseHalfPiSse ();
+	               PhaseHalfPiSse ();
 
-	void				set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []);
 
 	hiir_FORCEINLINE void
-						process_sample (float &out_0, float &out_1, float input);
-	void				process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (float &out_0, float &out_1, float input);
+	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
 
-	void				clear_buffers ();
+	void           clear_buffers ();
 
 
 
@@ -86,16 +86,16 @@ protected:
 
 private:
 
-	enum {			STAGE_WIDTH	= 4	};
-	enum {			NBR_STAGES	= (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH	};
-	enum {			NBR_PHASES	= 2	};
+	enum {         STAGE_WIDTH = 4 };
+	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH };
+	enum {         NBR_PHASES  = 2 };
 
-	typedef	std::array <StageDataSse, NBR_STAGES + 1>	Filter;	// Stage 0 contains only input memory
-   typedef  std::array <Filter, NBR_PHASES> FilterBiPhase;
+	typedef std::array <StageDataSse, NBR_STAGES + 1> Filter;   // Stage 0 contains only input memory
+   typedef std::array <Filter, NBR_PHASES> FilterBiPhase;
 
-	FilterBiPhase	_filter;		// Should be the first member (thus easier to align)
-	float				_prev;
-	int				_phase;		// 0 or 1
+	FilterBiPhase  _filter; // Should be the first member (thus easier to align)
+	float          _prev;
+	int            _phase;  // 0 or 1
 
 
 
@@ -103,22 +103,22 @@ private:
 
 private:
 
-	bool				operator == (const PhaseHalfPiSse &other);
-	bool				operator != (const PhaseHalfPiSse &other);
+	bool           operator == (const PhaseHalfPiSse <NC> &other);
+	bool           operator != (const PhaseHalfPiSse <NC> &other);
 
-};	// class PhaseHalfPiSse
-
-
-
-}	// namespace hiir
+}; // class PhaseHalfPiSse
 
 
 
-#include	"hiir/PhaseHalfPiSse.hpp"
+}  // namespace hiir
 
 
 
-#endif	// hiir_PhaseHalfPiSse_HEADER_INCLUDED
+#include "hiir/PhaseHalfPiSse.hpp"
+
+
+
+#endif   // hiir_PhaseHalfPiSse_HEADER_INCLUDED
 
 
 

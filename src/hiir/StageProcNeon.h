@@ -30,7 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/def.h"
+#include "hiir/def.h"
 
 
 
@@ -45,14 +45,16 @@ template <int CUR>
 class StageProcNeon
 {
 
+	static_assert ((CUR >= 0), "CUR must be >= 0");
+
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
 	static hiir_FORCEINLINE void
-						process_sample_pos (StageDataNeon *stage_ptr, float32x4_t &y, float32x4_t &mem);
+	               process_sample_pos (StageDataNeon *stage_ptr, float32x4_t &y, float32x4_t &mem);
 	static hiir_FORCEINLINE void
-						process_sample_neg (StageDataNeon *stage_ptr, float32x4_t &y, float32x4_t &mem);
+	               process_sample_neg (StageDataNeon *stage_ptr, float32x4_t &y, float32x4_t &mem);
 
 
 
@@ -74,13 +76,13 @@ private:
 
 private:
 
-	               StageProcNeon ()                               = delete;
-	               StageProcNeon (const StageProcNeon &other)     = delete;
-	               ~StageProcNeon ()                              = delete;
+	               StageProcNeon ()                                     = delete;
+	               StageProcNeon (const StageProcNeon <CUR> &other)     = delete;
+	               ~StageProcNeon ()                                    = delete;
 	StageProcNeon &
-	               operator = (const StageProcNeon &other)        = delete;
-	bool           operator == (const StageProcNeon &other) const = delete;
-	bool           operator != (const StageProcNeon &other) const = delete;
+	               operator = (const StageProcNeon <CUR> &other)        = delete;
+	bool           operator == (const StageProcNeon <CUR> &other) const = delete;
+	bool           operator != (const StageProcNeon <CUR> &other) const = delete;
 
 }; // class StageProcNeon
 

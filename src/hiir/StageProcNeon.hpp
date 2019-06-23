@@ -22,7 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageDataNeon.h"
+#include "hiir/StageDataNeon.h"
 
 
 
@@ -40,11 +40,11 @@ void	StageProcNeon <CUR>::process_sample_pos (StageDataNeon *stage_ptr, float32x
 {
 	StageProcNeon <CUR - 1>::process_sample_pos (stage_ptr, y, mem);
 
-	const float32x4_t x = mem;
+	const float32x4_t x    = mem;
 	stage_ptr [PREV]._mem4 = y;
 
 	mem = stage_ptr [CUR]._mem4;
-	y = vmlaq_f32 (x, y - mem, stage_ptr [CUR]._coef4);
+	y   = vmlaq_f32 (x, y - mem, stage_ptr [CUR]._coef4);
 }
 
 template <>
@@ -64,9 +64,9 @@ void	StageProcNeon <CUR>::process_sample_neg (StageDataNeon *stage_ptr, float32x
 	stage_ptr [PREV]._mem4 = y;
 
 	mem = stage_ptr [CUR]._mem4;
-	y += mem;
-	y *= stage_ptr [CUR]._coef4;
-	y -= x;
+	y  += mem;
+	y  *= stage_ptr [CUR]._coef4;
+	y  -= x;
 }
 
 template <>

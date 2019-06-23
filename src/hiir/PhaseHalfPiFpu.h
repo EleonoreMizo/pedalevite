@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         PhaseHalfPiFpu.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 From the input signal, generates two signals with a pi/2 phase shift, using
 FPU.
@@ -22,7 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_PhaseHalfPiFpu_HEADER_INCLUDED)
-#define	hiir_PhaseHalfPiFpu_HEADER_INCLUDED
+#define hiir_PhaseHalfPiFpu_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -33,7 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/def.h"
+#include "hiir/def.h"
 
 #include <array>
 
@@ -54,17 +54,17 @@ class PhaseHalfPiFpu
 
 public:
 
-	enum {			NBR_COEFS	= NC	};
+	enum {         NBR_COEFS = NC };
 
-						PhaseHalfPiFpu ();
+	               PhaseHalfPiFpu ();
 
-	void				set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []);
 
 	hiir_FORCEINLINE void
-						process_sample (float &out_0, float &out_1, float input);
-	void				process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (float &out_0, float &out_1, float input);
+	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
 
-	void				clear_buffers ();
+	void           clear_buffers ();
 
 
 
@@ -78,23 +78,23 @@ protected:
 
 private:
 
-	enum {			NBR_PHASES	= 2	};
+	enum {         NBR_PHASES = 2 };
 
-	typedef	std::array <float, NBR_COEFS>	HyperGluar;
+	typedef std::array <float, NBR_COEFS> HyperGluar;
 
 	class Memory
 	{
 	public:
-		HyperGluar		_x;
-		HyperGluar		_y;
+		HyperGluar     _x;
+		HyperGluar     _y;
 	};
 
 	typedef	std::array <Memory, NBR_PHASES>	MemoryBiPhase;
 
-	HyperGluar		_coef;
-	MemoryBiPhase	_mem;
-	float				_prev;
-	int				_phase;			// 0 or 1
+	HyperGluar     _coef;
+	MemoryBiPhase  _mem;
+	float          _prev;
+	int            _phase;			// 0 or 1
 
 
 
@@ -102,22 +102,22 @@ private:
 
 private:
 
-	bool				operator == (const PhaseHalfPiFpu &other);
-	bool				operator != (const PhaseHalfPiFpu &other);
+	bool           operator == (const PhaseHalfPiFpu <NC> &other);
+	bool           operator != (const PhaseHalfPiFpu <NC> &other);
 
-};	// class PhaseHalfPiFpu
-
-
-
-}	// namespace hiir
+}; // class PhaseHalfPiFpu
 
 
 
-#include	"hiir/PhaseHalfPiFpu.hpp"
+}  // namespace hiir
 
 
 
-#endif	// hiir_PhaseHalfPiFpu_HEADER_INCLUDED
+#include "hiir/PhaseHalfPiFpu.hpp"
+
+
+
+#endif   // hiir_PhaseHalfPiFpu_HEADER_INCLUDED
 
 
 

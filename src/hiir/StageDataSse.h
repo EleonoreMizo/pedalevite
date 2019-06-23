@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageDataSse.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -16,7 +16,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_StageDataSse_HEADER_INCLUDED)
-#define	hiir_StageDataSse_HEADER_INCLUDED
+#define hiir_StageDataSse_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	<xmmintrin.h>
+#include <xmmintrin.h>
 
 
 
@@ -52,15 +52,15 @@ public:
 		float          _mem [4];   // y of the stage
 	};
 
-};	// class StageDataSse
+}; // class StageDataSse
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_StageDataSse_HEADER_INCLUDED
+#endif   // hiir_StageDataSse_HEADER_INCLUDED
 
 
 

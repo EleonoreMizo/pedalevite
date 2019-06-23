@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         PhaseHalfPi3dnow.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 From the input signal, generates two signals with a pi/2 phase shift, using
 3DNow! instruction set.
@@ -22,7 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_PhaseHalfPi3dnow_HEADER_INCLUDED)
-#define	hiir_PhaseHalfPi3dnow_HEADER_INCLUDED
+#define hiir_PhaseHalfPi3dnow_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -33,7 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/def.h"
+#include "hiir/def.h"
 #include "hiir/StageData3dnow.h"
 
 #include <array>
@@ -55,17 +55,17 @@ class PhaseHalfPi3dnow
 
 public:
 
-	enum {			NBR_COEFS	= NC	};
+	enum {         NBR_COEFS = NC };
 
-						PhaseHalfPi3dnow ();
+	               PhaseHalfPi3dnow ();
 
-	void				set_coefs (const double coef_arr []);
+	void           set_coefs (const double coef_arr []);
 
 	hiir_FORCEINLINE void
-						process_sample (float &out_0, float &out_1, float input);
-	void				process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
+	               process_sample (float &out_0, float &out_1, float input);
+	void           process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl);
 
-	void				clear_buffers ();
+	void           clear_buffers ();
 
 
 
@@ -79,16 +79,16 @@ protected:
 
 private:
 
-	enum {			STAGE_WIDTH	= 2	};
-	enum {			NBR_STAGES	= (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH	};
-	enum {			NBR_PHASES	= 2	};
+	enum {         STAGE_WIDTH = 2 };
+	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH };
+	enum {         NBR_PHASES  = 2 };
 
 	typedef	std::array <StageData3dnow, NBR_STAGES + 1>	Filter;	// Stage 0 contains only input memory
    typedef  std::array <Filter, NBR_PHASES> FilterBiPhase;
 
-	FilterBiPhase	_filter;		// Should be the first member (thus easier to align)
-	float				_prev;
-	int				_phase;		// 0 or 1
+	FilterBiPhase  _filter; // Should be the first member (thus easier to align)
+	float          _prev;
+	int            _phase;  // 0 or 1
 
 
 
@@ -96,22 +96,22 @@ private:
 
 private:
 
-	bool				operator == (const PhaseHalfPi3dnow &other);
-	bool				operator != (const PhaseHalfPi3dnow &other);
+	bool           operator == (const PhaseHalfPi3dnow <NC> &other);
+	bool           operator != (const PhaseHalfPi3dnow <NC> &other);
 
-};	// class PhaseHalfPi3dnow
-
-
-
-}	// namespace hiir
+}; // class PhaseHalfPi3dnow
 
 
 
-#include	"hiir/PhaseHalfPi3dnow.hpp"
+}  // namespace hiir
 
 
 
-#endif	// hiir_PhaseHalfPi3dnow_HEADER_INCLUDED
+#include "hiir/PhaseHalfPi3dnow.hpp"
+
+
+
+#endif   // hiir_PhaseHalfPi3dnow_HEADER_INCLUDED
 
 
 

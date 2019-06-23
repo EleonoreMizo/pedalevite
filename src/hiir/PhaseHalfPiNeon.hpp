@@ -58,7 +58,7 @@ PhaseHalfPiNeon <NC>::PhaseHalfPiNeon ()
 		}
 		if ((NBR_COEFS & 1) != 0)
 		{
-			const int		pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
+			const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
 			_filter [phase] [NBR_STAGES]._coef [pos] = 1;
 		}
 	}
@@ -91,10 +91,9 @@ void	PhaseHalfPiNeon <NC>::set_coefs (const double coef_arr [])
    {
 		for (int i = 0; i < NBR_COEFS; ++i)
 		{
-			const int		stage = (i / STAGE_WIDTH) + 1;
-			const int		pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-			_filter [phase] [stage]._coef [pos] =
-				static_cast <float> (coef_arr [i]);
+			const int      stage = (i / STAGE_WIDTH) + 1;
+			const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
+			_filter [phase] [stage]._coef [pos] = float (coef_arr [i]);
 		}
 	}
 }
@@ -118,9 +117,6 @@ Throws: Nothing
 template <int NC>
 hiir_FORCEINLINE void	PhaseHalfPiNeon <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-   assert (&out_0 != 0);
-   assert (&out_1 != 0);
-
 	StageDataNeon *   filter_ptr = &_filter [_phase] [0];
 
 	const float32x2_t comb    = vset_lane_f32 (input, vdup_n_f32 (_prev), 1);
@@ -168,7 +164,7 @@ void	PhaseHalfPiNeon <NC>::process_block (float out_0_ptr [], float out_1_ptr []
 	assert (out_0_ptr + nbr_spl <= out_1_ptr || out_1_ptr + nbr_spl <= out_0_ptr);
 	assert (nbr_spl > 0);
 
-	long				pos = 0;
+	long           pos = 0;
 	do
 	{
 		process_sample (out_0_ptr [pos], out_1_ptr [pos], in_ptr [pos]);

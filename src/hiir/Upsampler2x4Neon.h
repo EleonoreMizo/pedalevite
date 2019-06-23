@@ -92,8 +92,8 @@ private:
 
 private:
 
-	bool           operator == (const Upsampler2x4Neon &other) const = delete;
-	bool           operator != (const Upsampler2x4Neon &other) const = delete;
+	bool           operator == (const Upsampler2x4Neon <NC> &other) const = delete;
+	bool           operator != (const Upsampler2x4Neon <NC> &other) const = delete;
 
 }; // class Upsampler2x4Neon
 

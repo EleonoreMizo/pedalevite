@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         StageProc3dnow.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2015
 
 --- Legal stuff ---
 
@@ -18,16 +18,16 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_StageProc3dnow_CURRENT_CODEHEADER)
 	#error Recursive inclusion of StageProc3dnow code header.
 #endif
-#define	hiir_StageProc3dnow_CURRENT_CODEHEADER
+#define hiir_StageProc3dnow_CURRENT_CODEHEADER
 
 #if ! defined (hiir_StageProc3dnow_CODEHEADER_INCLUDED)
-#define	hiir_StageProc3dnow_CODEHEADER_INCLUDED
+#define hiir_StageProc3dnow_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageData3dnow.h"
+#include "hiir/StageData3dnow.h"
 
 #if defined (_MSC_VER)
 	#pragma inline_depth (255)
@@ -56,17 +56,17 @@ void	StageProc3dnow <CUR>::process_sample_pos ()
 {
 	StageProc3dnow <CUR - 1>::process_sample_pos ();
 
-	enum {	PREV_CELL	= (CUR - 1) * sizeof (StageData3dnow)	};
-	enum {	CURR_CELL	=  CUR      * sizeof (StageData3dnow)	};
+	enum { PREV_CELL = (CUR - 1) * sizeof (StageData3dnow) };
+	enum { CURR_CELL =  CUR      * sizeof (StageData3dnow) };
 
 	__asm
 	{
-		movq				mm1, [edx + PREV_CELL + 1*8]
-		movq				[edx + PREV_CELL + 1*8], mm0
+		movq           mm1, [edx + PREV_CELL + 1*8]
+		movq           [edx + PREV_CELL + 1*8], mm0
 
-		pfsub				mm0, [edx + CURR_CELL + 1*8]
-		pfmul				mm0, [edx + CURR_CELL + 0*8]
-		pfadd				mm0, mm1
+		pfsub          mm0, [edx + CURR_CELL + 1*8]
+		pfmul          mm0, [edx + CURR_CELL + 0*8]
+		pfadd          mm0, mm1
 	}
 }
 
@@ -83,17 +83,17 @@ void	StageProc3dnow <CUR>::process_sample_neg ()
 {
 	StageProc3dnow <CUR - 1>::process_sample_neg ();
 
-	enum {	PREV_CELL	= (CUR - 1) * sizeof (StageData3dnow)	};
-	enum {	CURR_CELL	=  CUR      * sizeof (StageData3dnow)	};
+	enum { PREV_CELL = (CUR - 1) * sizeof (StageData3dnow) };
+	enum { CURR_CELL =  CUR      * sizeof (StageData3dnow) };
 
 	__asm
 	{
-		movq				mm1, [edx + PREV_CELL + 1*8]
-		movq				[edx + PREV_CELL + 1*8], mm0
+		movq           mm1, [edx + PREV_CELL + 1*8]
+		movq           [edx + PREV_CELL + 1*8], mm0
 
-		pfadd				mm0, [edx + CURR_CELL + 1*8]
-		pfmul				mm0, [edx + CURR_CELL + 0*8]
-		pfsub				mm0, mm1
+		pfadd          mm0, [edx + CURR_CELL + 1*8]
+		pfmul          mm0, [edx + CURR_CELL + 0*8]
+		pfsub          mm0, mm1
 	}
 }
 
@@ -119,11 +119,11 @@ hiir_FORCEINLINE void	StageProc3dnow <0>::process_sample_neg ()
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_StageProc3dnow_CODEHEADER_INCLUDED
+#endif   // hiir_StageProc3dnow_CODEHEADER_INCLUDED
 
 #undef hiir_StageProc3dnow_CURRENT_CODEHEADER
 

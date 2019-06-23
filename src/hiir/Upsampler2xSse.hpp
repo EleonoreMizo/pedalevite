@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2xSse.hpp
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -18,20 +18,20 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if defined (hiir_Upsampler2xSse_CURRENT_CODEHEADER)
 	#error Recursive inclusion of Upsampler2xSse code header.
 #endif
-#define	hiir_Upsampler2xSse_CURRENT_CODEHEADER
+#define hiir_Upsampler2xSse_CURRENT_CODEHEADER
 
 #if ! defined (hiir_Upsampler2xSse_CODEHEADER_INCLUDED)
-#define	hiir_Upsampler2xSse_CODEHEADER_INCLUDED
+#define hiir_Upsampler2xSse_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"hiir/StageProcSse.h"
+#include "hiir/StageProcSse.h"
 
-#include	<xmmintrin.h>
+#include <xmmintrin.h>
 
-#include	<cassert>
+#include <cassert>
 
 
 
@@ -64,7 +64,7 @@ Upsampler2xSse <NC>::Upsampler2xSse ()
 	}
 	if ((NBR_COEFS & 1) != 0)
 	{
-		const int		pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
+		const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
 		_filter [NBR_STAGES]._coef [pos] = 1;
 	}
 
@@ -94,9 +94,9 @@ void	Upsampler2xSse <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int		stage = (i / STAGE_WIDTH) + 1;
-		const int		pos = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = static_cast <float> (coef_arr [i]);
+		const int      stage = (i / STAGE_WIDTH) + 1;
+		const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
+		_filter [stage]._coef [pos] = float (coef_arr [i]);
 	}
 }
 
@@ -119,14 +119,11 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xSse <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	assert (&out_0 != 0);
-	assert (&out_1 != 0);
+	const __m128   spl_in  = _mm_set_ss (input);
+	const __m128   spl_mid = _mm_load_ps (_filter [NBR_STAGES]._mem);
+	__m128         y       = _mm_shuffle_ps (spl_in, spl_mid, 0x40);
 
-	const __m128	spl_in  = _mm_set_ss (input);
-	const __m128	spl_mid = _mm_load_ps (_filter [NBR_STAGES]._mem);
-	__m128			y = _mm_shuffle_ps (spl_in, spl_mid, 0x40);
-
-	__m128			mem = _mm_load_ps (_filter [0]._mem);
+	__m128         mem     = _mm_load_ps (_filter [0]._mem);
 
 	StageProcSse <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
 
@@ -164,7 +161,7 @@ void	Upsampler2xSse <NC>::process_block (float out_ptr [], const float in_ptr []
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	long				pos = 0;
+	long           pos = 0;
 	do
 	{
 		process_sample (out_ptr [pos * 2], out_ptr [pos * 2 + 1], in_ptr [pos]);
@@ -207,11 +204,11 @@ void	Upsampler2xSse <NC>::clear_buffers ()
 
 
 
-}	// namespace hiir
+} // namespace hiir
 
 
 
-#endif	// hiir_Upsampler2xSse_CODEHEADER_INCLUDED
+#endif // hiir_Upsampler2xSse_CODEHEADER_INCLUDED
 
 #undef hiir_Upsampler2xSse_CURRENT_CODEHEADER
 

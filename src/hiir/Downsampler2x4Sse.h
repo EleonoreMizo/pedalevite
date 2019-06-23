@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Downsampler2x4Sse.h
-        Copyright (c) 2015 Laurent de Soras
+        Author: Laurent de Soras, 2015
 
 Downsamples vectors of 4 float by a factor 2 the input signal, using SSE
 instruction set.
@@ -101,8 +101,8 @@ private:
 
 private:
 
-	bool           operator == (const Downsampler2x4Sse &other) const;
-	bool           operator != (const Downsampler2x4Sse &other) const;
+	bool           operator == (const Downsampler2x4Sse <NC> &other) const;
+	bool           operator != (const Downsampler2x4Sse <NC> &other) const;
 
 }; // class Downsampler2x4Sse
 

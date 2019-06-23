@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         def.h
-        Copyright (c) 2005 Laurent de Soras
+        Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
 
@@ -16,7 +16,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #if ! defined (hiir_def_HEADER_INCLUDED)
-#define	hiir_def_HEADER_INCLUDED
+#define hiir_def_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -40,21 +40,21 @@ const double	PI = 3.1415926535897932384626433832795;
 
 #if defined (_MSC_VER)
 
-	#define	hiir_FORCEINLINE	__forceinline
+	#define hiir_FORCEINLINE __forceinline
 
 #else
 
-	#define	hiir_FORCEINLINE	inline
+	#define hiir_FORCEINLINE inline
 
 #endif
 
 
 
-}	// namespace hiir
+}  // namespace hiir
 
 
 
-#endif	// hiir_def_HEADER_INCLUDED
+#endif   // hiir_def_HEADER_INCLUDED
 
 
 

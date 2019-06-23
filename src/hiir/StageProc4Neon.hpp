@@ -38,7 +38,7 @@ namespace hiir
 template <>
 inline void	StageProc4Neon <1>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2 - 1;
+	const int      cnt = nbr_coefs + 2 - 1;
 
 	const float32x4_t tmp_0 = vmlaq_f32 (
 		        stage_arr [cnt - 2]._mem4,
@@ -58,7 +58,7 @@ inline void	StageProc4Neon <1>::process_sample_pos (const int nbr_coefs, float32
 template <>
 inline void	StageProc4Neon <0>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2;
+	const int      cnt = nbr_coefs + 2;
 
 	stage_arr [cnt - 2]._mem4 = spl_0;
 	stage_arr [cnt - 1]._mem4 = spl_1;
@@ -69,7 +69,7 @@ inline void	StageProc4Neon <0>::process_sample_pos (const int nbr_coefs, float32
 template <int REMAINING>
 void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2 - REMAINING;
+	const int      cnt = nbr_coefs + 2 - REMAINING;
 
 	const float32x4_t tmp_0 = vmlaq_f32 (
 		        stage_arr [cnt - 2]._mem4,
@@ -101,7 +101,7 @@ void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float3
 template <>
 inline void	StageProc4Neon <1>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2 - 1;
+	const int      cnt = nbr_coefs + 2 - 1;
 
 	float32x4_t tmp_0 = spl_0;
 	tmp_0 += stage_arr [cnt    ]._mem4;
@@ -118,7 +118,7 @@ inline void	StageProc4Neon <1>::process_sample_neg (const int nbr_coefs, float32
 template <>
 inline void	StageProc4Neon <0>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2;
+	const int      cnt = nbr_coefs + 2;
 
 	stage_arr [cnt - 2]._mem4 = spl_0;
 	stage_arr [cnt - 1]._mem4 = spl_1;
@@ -127,7 +127,7 @@ inline void	StageProc4Neon <0>::process_sample_neg (const int nbr_coefs, float32
 template <int REMAINING>
 void	StageProc4Neon <REMAINING>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
 {
-	const int		cnt = nbr_coefs + 2 - REMAINING;
+	const int      cnt = nbr_coefs + 2 - REMAINING;
 
 	float32x4_t tmp_0 = spl_0;
 	tmp_0 += stage_arr [cnt    ]._mem4;
