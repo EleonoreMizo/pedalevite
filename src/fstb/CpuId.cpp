@@ -83,6 +83,7 @@ CpuId::CpuId ()
 		_isse_flag    = ((edx & (1L << 22)) != 0) || _sse_flag;
 		_sse4a_flag   = ((ecx & (1L <<  6)) != 0);
 		_fma4_flag    = ((ecx & (1L << 16)) != 0);
+		_3dnow_flag   = ((ecx & (1L << 31)) != 0);
 	}
 
 #endif

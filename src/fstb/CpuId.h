@@ -54,6 +54,7 @@ public:
 #endif
 
 	bool           _mmx_flag     = false;
+	bool           _3dnow_flag   = false;
 	bool           _isse_flag    = false;
 	bool           _sse_flag     = false;
 	bool           _sse2_flag    = false;
