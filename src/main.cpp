@@ -1335,7 +1335,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 	const int      recovery_limit  = 10;
 	const int      recovery_limit2 = 50; // For the restart
 	int            restart_count   =  0;
-	int            restart_limit   =  3;
+	int            restart_limit   = 32;
 
 	while (ret_val == 0 && ! ctx._quit_flag)
 	{
