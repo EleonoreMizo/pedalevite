@@ -915,6 +915,7 @@ case "$1" in
     start)
 	echo "Starting Pedale Vite"
 	/opt/pedalevite/bin/pedalevite &
+	echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 	;;
     stop)
 	echo "Stopping Pedale Vite"
