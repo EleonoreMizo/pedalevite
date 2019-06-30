@@ -2568,6 +2568,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelL.h">
       <Filter>mfx\dsp\fir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\MovingSum.h">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\MovingSum.hpp">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

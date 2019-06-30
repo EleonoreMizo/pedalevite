@@ -421,6 +421,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdEven.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdOdd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\FilterCascadeIdOdd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\MovingSum.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\MovingSum.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelL.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelA.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.h" />

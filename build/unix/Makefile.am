@@ -356,6 +356,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.h \
         ../../src/mfx/dsp/dly/SCPower.h \
         ../../src/mfx/dsp/dly/SCPower.hpp \
+        ../../src/mfx/dsp/fir/MovingSum.h \
+        ../../src/mfx/dsp/fir/MovingSum.hpp \
         ../../src/mfx/dsp/fir/RankSelA.cpp \
         ../../src/mfx/dsp/fir/RankSelA.h \
         ../../src/mfx/dsp/fir/RankSelL.cpp \
