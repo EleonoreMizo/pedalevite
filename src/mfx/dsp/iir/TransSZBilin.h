@@ -77,7 +77,12 @@ public:
 	static void    map_s_to_z_one_pole_approx (float z_eq_b [2], float z_eq_a [2], const float s_eq_b [2], const float s_eq_a [2], float k);
 	static void    map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 z_eq_a [2], const fstb::ToolsSimd::VectF32 s_eq_b [2], const fstb::ToolsSimd::VectF32 s_eq_a [2], fstb::ToolsSimd::VectF32 k);
 	static void    map_s_to_z_ap1_approx (float z_eq_b [2], float k);
+	static void    map_s_to_z_ap1_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 k);
+	static float   map_s_to_z_ap1_approx_b0 (float k);
+	static fstb::ToolsSimd::VectF32
+	               map_s_to_z_ap1_approx_b0 (fstb::ToolsSimd::VectF32 k);
 	static void    map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float k);
+	static void    map_s_to_z_ap2_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 s_eq_b1, fstb::ToolsSimd::VectF32 k);
 
 
 

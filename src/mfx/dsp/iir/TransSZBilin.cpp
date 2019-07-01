@@ -311,6 +311,22 @@ void	TransSZBilin::map_s_to_z_one_pole_approx (fstb::ToolsSimd::VectF32 z_eq_b [
 
 void	TransSZBilin::map_s_to_z_ap1_approx (float z_eq_b [2], float k)
 {
+	z_eq_b [0] = map_s_to_z_ap1_approx_b0 (k);
+	z_eq_b [1] = 1;
+}
+
+
+
+void	TransSZBilin::map_s_to_z_ap1_approx (fstb::ToolsSimd::VectF32 z_eq_b [2], fstb::ToolsSimd::VectF32 k)
+{
+	fstb::ToolsSimd::store_f32 (&z_eq_b [0], map_s_to_z_ap1_approx_b0 (k));
+	fstb::ToolsSimd::store_f32 (&z_eq_b [1], fstb::ToolsSimd::set1_f32 (1));
+}
+
+
+
+float	TransSZBilin::map_s_to_z_ap1_approx_b0 (float k)
+{
 	const float    a1z = 1 - k;
 	const float    a0z = 1 + k;
 
@@ -319,15 +335,34 @@ void	TransSZBilin::map_s_to_z_ap1_approx (float z_eq_b [2], float k)
 	const auto     mult =
 		fstb::ToolsSimd::rcp_approx2 (fstb::ToolsSimd::set1_f32 (a0z));
 	const float    m1 = fstb::ToolsSimd::Shift <0>::extract (mult);
-	z_eq_b [0] = float (a1z * m1);
-	z_eq_b [1] = 1;
+	const float    b0 = a1z * m1;
+
+	return b0;
+}
+
+
+
+fstb::ToolsSimd::VectF32	TransSZBilin::map_s_to_z_ap1_approx_b0 (fstb::ToolsSimd::VectF32 k)
+{
+	const auto     one = fstb::ToolsSimd::set1_f32 (1);
+	const auto     a1z = one - k;
+	const auto     a0z = one + k;
+
+	// IIR coefficients
+	assert (fstb::ToolsSimd::and_h (
+		fstb::ToolsSimd::cmp_ne_f32 (a0z, fstb::ToolsSimd::set_f32_zero ())
+	));
+	const auto     mult = fstb::ToolsSimd::rcp_approx2 (a0z);
+	const auto     b0   = a1z * mult;
+	
+	return b0;
 }
 
 
 
 void	TransSZBilin::map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float k)
 {
-	const float    kk = k*k;
+	const float    kk  = k * k;
 
 	const float    a1k = s_eq_b1 * k;
 	const float    a2kk_plus_a0 = kk + 1;
@@ -344,6 +379,32 @@ void	TransSZBilin::map_s_to_z_ap2_approx (float z_eq_b [3], float s_eq_b1, float
 	z_eq_b [0] = fstb::ToolsSimd::Shift <0>::extract (z_eq);
 	z_eq_b [1] = fstb::ToolsSimd::Shift <1>::extract (z_eq);;
 	z_eq_b [2] = 1;
+}
+
+
+
+void	TransSZBilin::map_s_to_z_ap2_approx (fstb::ToolsSimd::VectF32 z_eq_b [3], fstb::ToolsSimd::VectF32 s_eq_b1, fstb::ToolsSimd::VectF32 k)
+{
+	const auto     one = fstb::ToolsSimd::set1_f32 (1);
+	const auto     kk  = k * k;
+
+	const auto     a1k = s_eq_b1 * k;
+	const auto     a2kk_plus_a0 = kk + one;
+	const auto     a0z = a2kk_plus_a0 + a1k;
+	const auto     a2z = a2kk_plus_a0 - a1k;
+	const auto     a1zh = one - kk;
+	const auto     a1z = a1zh + a1zh;
+
+	// IIR coefficients
+	assert (fstb::ToolsSimd::and_h (
+		fstb::ToolsSimd::cmp_ne_f32 (a0z, fstb::ToolsSimd::set_f32_zero ())
+	));
+	const auto     mult = fstb::ToolsSimd::rcp_approx2 (a0z);
+	const auto     b0   = a2z * mult;
+	const auto     b1   = a1z * mult;
+	fstb::ToolsSimd::store_f32 (&z_eq_b [0], b0 );
+	fstb::ToolsSimd::store_f32 (&z_eq_b [1], b1 );
+	fstb::ToolsSimd::store_f32 (&z_eq_b [2], one);
 }
 
 
