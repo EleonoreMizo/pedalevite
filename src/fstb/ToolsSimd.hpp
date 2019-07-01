@@ -766,6 +766,51 @@ ToolsSimd::VectS32	ToolsSimd::cmp_lt_s32 (VectS32 lhs, VectS32 rhs)
 
 
 
+ToolsSimd::VectF32	ToolsSimd::cmp_eq_f32 (VectF32 lhs, VectF32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_cmpeq_ps (lhs, rhs);
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_f32_u32 (vceqq_f32 (lhs, rhs));
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectS32	ToolsSimd::cmp_eq_s32 (VectS32 lhs, VectS32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_cmpeq_epi32 (lhs, rhs);
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_s32_u32 (vceqq_s32 (lhs, rhs));
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::cmp_ne_f32 (VectF32 lhs, VectF32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_cmpneq_ps (lhs, rhs);
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_f32_u32 (vmvnq_u32 (vceqq_f32 (lhs, rhs)));
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectS32	ToolsSimd::cmp_ne_s32 (VectS32 lhs, VectS32 rhs)
+{
+#if fstb_IS (ARCHI, X86)
+	const auto     eq = _mm_cmpeq_epi32 (lhs, rhs);
+	return _mm_xor_si128 (eq, _mm_set1_epi32 (-1));
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_s32_u32 (vmvnq_u32 (vceqq_s32 (lhs, rhs)));
+#endif // ff_arch_CPU
+}
+
+
+
 ToolsSimd::VectF32	ToolsSimd::and_f32 (VectF32 lhs, VectF32 rhs)
 {
 #if fstb_IS (ARCHI, X86)

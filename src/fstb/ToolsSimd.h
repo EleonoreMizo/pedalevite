@@ -189,6 +189,14 @@ public:
 	static inline VectS32
 	               cmp_lt_s32 (VectS32 lhs, VectS32 rhs);
 	static inline VectF32
+	               cmp_eq_f32 (VectF32 lhs, VectF32 rhs);
+	static inline VectS32
+	               cmp_eq_s32 (VectS32 lhs, VectS32 rhs);
+	static inline VectF32
+	               cmp_ne_f32 (VectF32 lhs, VectF32 rhs);
+	static inline VectS32
+	               cmp_ne_s32 (VectS32 lhs, VectS32 rhs);
+	static inline VectF32
 	               and_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectS32
 	               and_s32 (VectS32 lhs, VectS32 rhs);
