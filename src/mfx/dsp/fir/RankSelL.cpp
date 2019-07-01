@@ -54,16 +54,19 @@ void	RankSelL::reserve (int len)
 
 
 // x = filling value
-// Content is lost
-// rank is reset to the middle element
+// If the length is actually changed, content is lost and rank is reset to
+// the middle element
 void	RankSelL::set_len (int len, float x)
 {
 	assert (len > 0);
 
-	_node_list.resize (len);
-	_rank = len >> 1;
+	if (len != int (_node_list.size ()))
+	{
+		_node_list.resize (len);
+		_rank = len >> 1;
 
-	fill (x);
+		fill (x);
+	}
 }
 
 
@@ -73,7 +76,11 @@ void	RankSelL::set_rank (int rank)
 	assert (rank >= 0);
 	assert (rank < int (_node_list.size ()));
 
-	_rank = rank;
+	if (rank != _rank)
+	{
+		_rank    = rank;
+		_ni_rank = find_ni (rank);
+	}
 }
 
 
