@@ -29,13 +29,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#include "hiir/Downsampler2xFpu.h"
 #if fstb_IS (ARCHI, X86)
 	#include "hiir/Downsampler2xSse.h"
 #elif fstb_IS (ARCHI, ARM)
 	#include "hiir/Downsampler2xNeon.h"
-#else
-	#include "hiir/Downsampler2xFpu.h"
 #endif
+
+#include <type_traits>
 
 
 
@@ -82,11 +83,27 @@ private:
 	static const int  _buf_len = 64;
 
 #if fstb_IS (ARCHI, X86)
-	typedef hiir::Downsampler2xSse <NC42> Dwnspl42;
-	typedef hiir::Downsampler2xSse <NC21> Dwnspl21;
+	using Dwnspl42 = typename std::conditional <
+		(NC42 >= 12)
+	,	hiir::Downsampler2xSse <NC42>
+	,	hiir::Downsampler2xFpu <NC42>
+	>::type;
+	using Dwnspl21 = typename std::conditional <
+		(NC21 >= 12)
+	,	hiir::Downsampler2xSse <NC21>
+	,	hiir::Downsampler2xFpu <NC21>
+	>::type;
 #elif fstb_IS (ARCHI, ARM)
-	typedef hiir::Downsampler2xNeon <NC42> Dwnspl42;
-	typedef hiir::Downsampler2xNeon <NC21> Dwnspl21;
+	using Dwnspl42 = typename std::conditional <
+		(NC42 >= 12)
+	,	hiir::Downsampler2xNeon <NC42>
+	,	hiir::Downsampler2xFpu <NC42>
+	>::type;
+	using Dwnspl21 = typename std::conditional <
+		(NC21 >= 12)
+	,	hiir::Downsampler2xNeon <NC21>
+	,	hiir::Downsampler2xFpu <NC21>
+	>::type;
 #else
 	typedef hiir::Downsampler2xFpu <NC42> Dwnspl42;
 	typedef hiir::Downsampler2xFpu <NC21> Dwnspl21;

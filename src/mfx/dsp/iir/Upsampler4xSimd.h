@@ -29,13 +29,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#include "hiir/Upsampler2xFpu.h"
 #if fstb_IS (ARCHI, X86)
 	#include "hiir/Upsampler2xSse.h"
 #elif fstb_IS (ARCHI, ARM)
 	#include "hiir/Upsampler2xNeon.h"
-#else
-	#include "hiir/Upsampler2xFpu.h"
 #endif
+
+#include <type_traits>
 
 
 
@@ -79,11 +80,27 @@ protected:
 private:
 
 #if fstb_IS (ARCHI, X86)
-	typedef hiir::Upsampler2xSse <NC42> Upspl42;
-	typedef hiir::Upsampler2xSse <NC21> Upspl21;
+	using Upspl42 = typename std::conditional <
+		(NC42 >= 12)
+	,	hiir::Upsampler2xSse <NC42>
+	,	hiir::Upsampler2xFpu <NC42>
+	>::type;
+	using Upspl21 = typename std::conditional <
+		(NC21 >= 12)
+	,	hiir::Upsampler2xSse <NC21>
+	,	hiir::Upsampler2xFpu <NC21>
+	>::type;
 #elif fstb_IS (ARCHI, ARM)
-	typedef hiir::Upsampler2xNeon <NC42> Upspl42;
-	typedef hiir::Upsampler2xNeon <NC21> Upspl21;
+	using Upspl42 = typename std::conditional <
+		(NC42 >= 12)
+	,	hiir::Upsampler2xNeon <NC42>
+	,	hiir::Upsampler2xFpu <NC42>
+	>::type;
+	using Upspl21 = typename std::conditional <
+		(NC21 >= 12)
+	,	hiir::Upsampler2xNeon <NC21>
+	,	hiir::Upsampler2xFpu <NC21>
+	>::type;
 #else
 	typedef hiir::Upsampler2xFpu <NC42> Upspl42;
 	typedef hiir::Upsampler2xFpu <NC21> Upspl21;
