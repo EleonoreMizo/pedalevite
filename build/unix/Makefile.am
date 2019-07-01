@@ -325,6 +325,9 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/DelayLineReaderPitch.hpp \
         ../../src/mfx/dsp/dly/DelayLineReadInterface.cpp \
         ../../src/mfx/dsp/dly/DelayLineReadInterface.h \
+        ../../src/mfx/dsp/dly/DelaySimple.cpp \
+        ../../src/mfx/dsp/dly/DelaySimple.h \
+        ../../src/mfx/dsp/dly/DelaySimple.hpp \
         ../../src/mfx/dsp/dly/RingBufVectorizer.cpp \
         ../../src/mfx/dsp/dly/RingBufVectorizer.h \
         ../../src/mfx/dsp/dly/RingBufVectorizer.hpp \
