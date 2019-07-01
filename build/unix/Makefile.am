@@ -702,6 +702,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/osdet/OnsetDetect.h \
         ../../src/mfx/pi/osdet/OnsetDetectDesc.cpp \
         ../../src/mfx/pi/osdet/OnsetDetectDesc.h \
+        ../../src/mfx/pi/osdet2/Param.h \
+        ../../src/mfx/pi/osdet2/OnsetDetect2.cpp \
+        ../../src/mfx/pi/osdet2/OnsetDetect2.h \
+        ../../src/mfx/pi/osdet2/OnsetDetect2Desc.cpp \
+        ../../src/mfx/pi/osdet2/OnsetDetect2Desc.h \
         ../../src/mfx/pi/peq/BandParam.cpp \
         ../../src/mfx/pi/peq/BandParam.h \
         ../../src/mfx/pi/peq/PEq.h \
