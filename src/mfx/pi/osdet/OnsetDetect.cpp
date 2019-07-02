@@ -71,10 +71,9 @@ OnsetDetect::OnsetDetect ()
 ,	_env_os ()
 ,	_dly_vol ()
 ,	_dly_os ()
-,	_interp ()
 ,	_velo_clip_flag (true)
-,	_atk_thr (1e-2f)
-,	_atk_ratio (1.5f)
+,	_atk_thr (2e-3f)
+,	_atk_ratio (1.35f)
 ,	_rls_thr (1e-3f)
 ,	_rls_ratio (1.414f)
 ,	_last_count (0)
@@ -87,8 +86,8 @@ OnsetDetect::OnsetDetect ()
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
 	_state_set.set_val_nat (desc_set, Param_VELO_CLIP, 1);
-	_state_set.set_val_nat (desc_set, Param_ATK_THR  , 1e-2);
-	_state_set.set_val_nat (desc_set, Param_ATK_RATIO, 1.5);
+	_state_set.set_val_nat (desc_set, Param_ATK_THR  , 2e-3);
+	_state_set.set_val_nat (desc_set, Param_ATK_RATIO, 1.35);
 	_state_set.set_val_nat (desc_set, Param_RLS_THR  , 1e-3);
 	_state_set.set_val_nat (desc_set, Param_RLS_RATIO, 1.414);
 
@@ -97,9 +96,6 @@ OnsetDetect::OnsetDetect ()
 	_state_set.add_observer (Param_ATK_RATIO, _param_change_flag);
 	_state_set.add_observer (Param_RLS_THR  , _param_change_flag);
 	_state_set.add_observer (Param_RLS_RATIO, _param_change_flag);
-
-	_dly_vol.set_interpolator (_interp);
-	_dly_os.set_interpolator (_interp);
 }
 
 
@@ -141,20 +137,38 @@ int	OnsetDetect::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_buf_old_os.resize (mbs_align);
 	_buf_tmp.resize (mbs_align);
 
+#if 1
+	const float    f      = 3500;
+	const float    q      = 2;
+	const float    r      = 2;
+	const float    g      = 2.875f;
+	const float    v      = 0.028f;
+	const float    bs [3] = { g * v, g * (r + 1) / q, g };
+	const float    as [3] = {     1,           1 / q, 1 };
+#else
+	// Old version
+	const float    f      = 1000;
 	const float    bs [3] = { 0, 0, 4 };
 	const float    as [3] = { 1, 3, 1 };
+#endif
 	float          bz [3];
 	float          az [3];
 	mfx::dsp::iir::TransSZBilin::map_s_to_z (
-		bz, az, bs, as, 1000, sample_freq
+		bz, az, bs, as, f, sample_freq
 	);
 	_prefilter.set_z_eq (bz, az);
 
 	_env_os.set_times (0.003f, 0.030f);
-	_dly_vol.set_max_delay_time (float (0.100 + max_buf_len / sample_freq));
-	_dly_vol.set_sample_freq (sample_freq, 1);
-	_dly_os.set_max_delay_time (float (0.100 + max_buf_len / sample_freq));
-	_dly_os.set_sample_freq (sample_freq, 1);
+	const float    dly_max_s   = 0.100f;
+	const float    dly_vol_s   = 0.080f;
+	const float    dly_os_s    = 0.015f;
+	const int      dly_max_spl = fstb::round_int (sample_freq * dly_max_s);
+	const int      dly_vol_spl = fstb::round_int (sample_freq * dly_vol_s);
+	const int      dly_os_spl  = fstb::round_int (sample_freq * dly_os_s);
+	_dly_vol.setup (dly_max_spl, max_buf_len);
+	_dly_vol.set_delay (dly_vol_spl);
+	_dly_os.setup (dly_max_spl, max_buf_len);
+	_dly_os.set_delay (dly_os_spl);
 	_last_delay = fstb::round_int (0.020f * sample_freq);
 
 	_param_change_flag.set ();
@@ -201,19 +215,21 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 	const int      nbr_spl = proc._nbr_spl;
 
 	_env_vol.process_block_no_sqrt (
-		&_buf_env_vol [0], proc._src_arr [0], nbr_spl
+		_buf_env_vol.data (), proc._src_arr [0], nbr_spl
 	);
-	_dly_vol.push_block (&_buf_env_vol [0], nbr_spl);
-	_dly_vol.read_block (&_buf_old_vol [0], nbr_spl, 0.080f, 0.080f, -nbr_spl);
+	_dly_vol.process_block (
+		_buf_old_vol.data (), _buf_env_vol.data (), nbr_spl
+	);
 
 	// Emphasis high-mid frequencies and lowers the bass frequencies
-	_prefilter.process_block (&_buf_tmp [0], proc._src_arr [0], nbr_spl);
+	_prefilter.process_block (_buf_tmp.data (), proc._src_arr [0], nbr_spl);
 
 	_env_os.process_block (
-		&_buf_env_os [0], &_buf_tmp [0], nbr_spl
+		_buf_env_os.data (), _buf_tmp.data (), nbr_spl
 	);
-	_dly_os.push_block (&_buf_env_os [0], nbr_spl);
-	_dly_os.read_block (&_buf_old_os [0], nbr_spl, 0.015f, 0.015f, -nbr_spl);
+	_dly_os.process_block (
+		_buf_old_os.data (), _buf_env_os.data (), nbr_spl
+	);
 
 	float          ret_onset  = 0;
 	float          ret_offset = 0;
@@ -226,7 +242,7 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 		const float    env_os_old = _buf_old_os [pos];
 		if (_last_count > 0)
 		{
-			_last_count -= nbr_spl;
+			-- _last_count;
 		}
 		else
 		{
@@ -234,12 +250,8 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 			    && vol2_cur > _atk_thr * _atk_thr)
 			{
 				ret_onset   = float (sqrt (vol2_cur));
-				if (_velo_clip_flag)
-				{
-					ret_onset = std::min (ret_onset, 1.0f);
-				}
 				_note_flag  = true;
-				_last_count = _last_delay - nbr_spl;
+				_last_count = _last_delay;
 			}
 		}
 
@@ -252,6 +264,11 @@ void	OnsetDetect::do_process_block (ProcInfo &proc)
 				_note_flag = false;
 			}
 		}
+	}
+
+	if (_velo_clip_flag)
+	{
+		ret_onset = std::min (ret_onset, 1.0f);
 	}
 
 	proc._sig_arr [0] [0] = ret_onset;

@@ -3,9 +3,6 @@
         OnsetDetect.h
         Author: Laurent de Soras, 2018
 
-Inspired by OnsetsDS by Dan Stowell
-http://onsetsds.sourceforge.net/
-
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -33,11 +30,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/ToolsSimd.h"
-#include "mfx/dsp/dly/DelayLine.h"
+#include "mfx/dsp/dly/DelaySimple.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/dsp/dyn/EnvFollowerPeak.h"
 #include "mfx/dsp/iir/Biquad.h"
-#include "mfx/dsp/rspl/InterpolatorOrder0.h"
 #include "mfx/pi/osdet/OnsetDetectDesc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
@@ -112,12 +108,10 @@ private:
 	               _env_vol;
 	dsp::dyn::EnvFollowerPeak
 	               _env_os;
-	dsp::dly::DelayLine
+	dsp::dly::DelaySimple
 	               _dly_vol;
-	dsp::dly::DelayLine
+	dsp::dly::DelaySimple
 	               _dly_os;
-	dsp::rspl::InterpolatorOrder0
-	               _interp;
 
 	bool           _velo_clip_flag;
 	float          _atk_thr;
@@ -125,9 +119,9 @@ private:
 	float          _rls_thr;
 	float          _rls_ratio;
 
-	int            _last_count;
-	int            _last_delay;
-	bool           _note_flag;
+	int            _last_count;         // Number of samples to wait before testing the next Note On
+	int            _last_delay;         // Minimum number of samples between two Note On events. Avoids erroneous fast retrig (false positive)
+	bool           _note_flag;          // Indicates a note is currently running (last event was a Note On)
 
 
 
