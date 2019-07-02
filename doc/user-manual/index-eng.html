@@ -39,6 +39,7 @@
 </li>
 <li class="tcont"><a href="#effect-list">Available effects</a>
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#fx-distapf">All-Pass Distortion</a></li>
 	<li><a href="#fx-colorme">Color Me — Vocal filter</a></li>
 	<li><a href="#fx-compex">CompEx — Dynamics compressor/expander</a></li>
 	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
@@ -759,6 +760,24 @@ The error in cent is also given on the display.</p>
 
 
 <h2><a id="effect-list"></a>IV.&emsp;Available effects</h2>
+
+
+
+<h3><a id="fx-distapf"></a>All-Pass Distortion</h3>
+
+<p>A distortion based on the modulation of an all-pass filter.
+Unlike saturation-based distortions, it produces extra-harmonics without
+affecting the volume.
+The overall result sounds between a light overdrive and a broken fuzz.</p>
+
+<p class="var">Gain</p>
+<p>Gain of the modulator, in dB.
+The more gain, the more harmonic are produced.</p>
+
+<p class="var">Slew-rate limiting</p>
+<p>This parameter limits the highest frequencies in the modulation signal,
+reducing harsh tones.
+The lower the rate, the softer the tones.</p>
 
 
 
@@ -2399,6 +2418,11 @@ phase.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r18, 2019-07-02</b></p>
+<ul>
+<li>Added the All-Pass Distortion effect.</li>
+</ul>
 
 <p><b>r17, 2019-06-02</b></p>
 <ul>

@@ -241,6 +241,9 @@
     <Filter Include="mfx\pi\osdet2">
       <UniqueIdentifier>{d12680b0-26f5-4492-b17e-22738195ec2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\distapf">
+      <UniqueIdentifier>{9a7b4206-8a00-4365-a8ff-91d33176e2bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2592,6 +2595,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelaySimple.hpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distapf\DistApf.h">
+      <Filter>mfx\pi\distapf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distapf\DistApfDesc.h">
+      <Filter>mfx\pi\distapf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\distapf\Param.h">
+      <Filter>mfx\pi\distapf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3586,6 +3598,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelaySimple.cpp">
       <Filter>mfx\dsp\dly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApf.cpp">
+      <Filter>mfx\pi\distapf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApfDesc.cpp">
+      <Filter>mfx\pi\distapf</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

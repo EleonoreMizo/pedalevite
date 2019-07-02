@@ -565,6 +565,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/dist2/Param.h \
         ../../src/mfx/pi/dist2/TransientAnalyser.cpp \
         ../../src/mfx/pi/dist2/TransientAnalyser.h \
+        ../../src/mfx/pi/distapf/DistApf.cpp \
+        ../../src/mfx/pi/distapf/DistApf.h \
+        ../../src/mfx/pi/distapf/DistApfDesc.cpp \
+        ../../src/mfx/pi/distapf/DistApfDesc.h \
+        ../../src/mfx/pi/distapf/Param.h \
         ../../src/mfx/pi/distpwm/DistoPwm.cpp \
         ../../src/mfx/pi/distpwm/DistoPwm.h \
         ../../src/mfx/pi/distpwm/DistoPwmDesc.cpp \
