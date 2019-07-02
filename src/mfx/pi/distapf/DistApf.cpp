@@ -3,6 +3,16 @@
         DistApf.cpp
         Author: Laurent de Soras, 2019
 
+Approximation of the bilinear transform for 1st-order all-pass filter
+coefficients:
+u         = pi * f0 / fs
+k_inv     = tan (u)
+b0_real   = (k_inv - 1) / (k_inv + 1)
+q         = u - pi / 4
+b0_approx = q + 0.3345 * q^3 + 0.121 * q^5 + 0.0884 * q^7
+Relative error < 0.9e-4
+Polynomial found manually, could be refined, esp. near f0 = 0.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -167,17 +177,6 @@ void	DistApf::do_process_block (ProcInfo &proc)
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Audio processing
 
-/*
-Approximation of the bilinear transform for 1st-order all-pass filter
-coefficients
-u         = pi * f0 / fs
-k_inv     = tan (u)
-b0_real   = (k_inv - 1) / (k_inv + 1)
-q         = u - pi / 4
-b0_approx = q + 0.3345 * q^3 + 0.121 * q^5 + 0.0884 * q^7
-Relative error < 0.9e-4
-Polynomial found manually, could be refined, esp. near f0 = 0.
-*/
 	const auto     mapa    = fstb::ToolsSimd::set1_f32 (_map_a);
 	const auto     mapb    = fstb::ToolsSimd::set1_f32 (_map_b);
 	const auto     fmin    = fstb::ToolsSimd::set1_f32 (_f_min);
@@ -185,6 +184,8 @@ Polynomial found manually, could be refined, esp. near f0 = 0.
 	const auto     c7      = fstb::ToolsSimd::set1_f32 (0.0884f);
 	const auto     c5      = fstb::ToolsSimd::set1_f32 (0.1210f);
 	const auto     c3      = fstb::ToolsSimd::set1_f32 (0.3345f);
+	const auto     limn    = fstb::ToolsSimd::set1_f32 (-0.95f);
+	const auto     limp    = fstb::ToolsSimd::set1_f32 (+0.95f);
 	float * const  tmp_ptr = _buf_tmp.data ();
 
 	for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
@@ -225,13 +226,15 @@ Polynomial found manually, could be refined, esp. near f0 = 0.
 			b0 += c3;
 			b0 *= f3;
 			b0 += f;
+			b0 = fstb::ToolsSimd::min_f32 (b0, limp);
+			b0 = fstb::ToolsSimd::max_f32 (b0, limn);
 			fstb::ToolsSimd::store_f32 (tmp_ptr + pos, b0);
 		}
 
 		for (int pos = 0; pos < nbr_spl; ++pos)
 		{
 			const float    x  = src_ptr [pos];
-			const float    b0 = _buf_tmp [pos];
+			const float    b0 = tmp_ptr [pos];
 
 #else // Reference code
 
