@@ -175,16 +175,23 @@ void	TransSZBilin::map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs)
 
 	// s to z bilinear transform
 	const double   inv_k = prewarp_freq (f0, fs);
+#if 1
+
+	// IIR coefficients
+	assert (! fstb::is_null (inv_k + 1));
+	z_eq_b [0] = TZ ((inv_k - 1) / (inv_k + 1));
+#else // Reference code
 	assert (! fstb::is_null (inv_k));
 	const double   k = 1 / inv_k;
 
 	const double   a1z = 1 - k;
 	const double   a0z = 1 + k;
-
+ 
 	// IIR coefficients
 	assert (! fstb::is_null (a0z));
-	z_eq_b [0] = float (a1z / a0z);
-	z_eq_b [1] = 1;
+	z_eq_b [0] = TZ (a1z / a0z);
+#endif
+	z_eq_b [1] = TZ (1);
 }
 
 
@@ -197,6 +204,15 @@ void	TransSZBilin::map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double 
 
 	// s to z bilinear transform
 	const double   inv_k = prewarp_freq (f0, fs);
+#if 1
+	const double   inv_kk = inv_k * inv_k;
+
+	const double   b1ik = s_eq_b1 * inv_k;
+	const double   one_plus_ikk2 = 1 + inv_kk;
+	const double   a0z = one_plus_ikk2 + b1ik;
+	const double   a2z = one_plus_ikk2 - b1ik;
+	const double   a1z = 2 * (inv_kk - 1);
+#else // Reference code
 	assert (! fstb::is_null (inv_k));
 	const double   k = 1 / inv_k;
 	const double   kk = k*k;
@@ -206,6 +222,7 @@ void	TransSZBilin::map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double 
 	const double   a0z = a2kk_plus_a0 + a1k;
 	const double   a2z = a2kk_plus_a0 - a1k;
 	const double   a1z = 2 * (1 - kk);
+#endif
 
 	// IIR coefficients
 	assert (! fstb::is_null (a0z));
