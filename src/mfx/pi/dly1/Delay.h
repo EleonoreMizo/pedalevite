@@ -29,8 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
+#include "mfx/dsp/ctrl/InertiaLin.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
-#include "mfx/dsp/InertiaLin.h"
 #include "mfx/pi/dly1/Cst.h"
 #include "mfx/pi/dly1/DelayChn.h"
 #include "mfx/pi/dly1/DelayDesc.h"
@@ -117,15 +117,15 @@ private:
 	ChnArray       _chn_arr;
 	std::vector <float>						// For the channel processors. Size = TMP_ZONE_LEN
 	               _tmp_chn_buf;
-	std::array <std::vector <float>, Cst::_nbr_lines>	// Mixing buffer. Size = TMP_ZONE_LEN
+	std::array <std::vector <float>, Cst::_nbr_lines>  // Mixing buffer. Size = TMP_ZONE_LEN
 	               _tmp_buf_arr;
-	std::array <dsp::InertiaLin, Cst::_nbr_lines>		// Feedback level. Natural value
+	std::array <dsp::ctrl::InertiaLin, Cst::_nbr_lines>   // Feedback level. Natural value
 	               _gain_fdbk_arr;
-	dsp::InertiaLin
+	dsp::ctrl::InertiaLin
 	               _cross_fdbk;
-	dsp::InertiaLin
+	dsp::ctrl::InertiaLin
 	               _lvl_in;
-	dsp::InertiaLin
+	dsp::ctrl::InertiaLin
 	               _lvl_out;
 	std::array <float, Cst::_nbr_lines>
 	               _delay_time_arr;

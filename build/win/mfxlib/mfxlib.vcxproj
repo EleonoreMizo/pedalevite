@@ -360,6 +360,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrSeg.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\InertiaLin.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\InertiaLin.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.hpp" />
@@ -479,8 +481,6 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\TransSZMatched.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.hpp" />
-    <ClInclude Include="..\..\..\src\mfx\dsp\InertiaLin.h" />
-    <ClInclude Include="..\..\..\src\mfx\dsp\InertiaLin.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Align.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Fpu.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\mix\Generic.h" />

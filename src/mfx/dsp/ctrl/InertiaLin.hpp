@@ -15,8 +15,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (mfx_dsp_InertiaLin_CODEHEADER_INCLUDED)
-#define mfx_dsp_InertiaLin_CODEHEADER_INCLUDED
+#if ! defined (mfx_dsp_ctrl_InertiaLin_CODEHEADER_INCLUDED)
+#define mfx_dsp_ctrl_InertiaLin_CODEHEADER_INCLUDED
 
 
 
@@ -30,6 +30,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 namespace dsp
+{
+namespace ctrl
 {
 
 
@@ -338,12 +340,13 @@ void	InertiaLin::clear_buffers ()
 
 
 
+}  // namespace ctrl
 }  // namespace dsp
 }  // namespace mfx
 
 
 
-#endif   // mfx_dsp_InertiaLin_CODEHEADER_INCLUDED
+#endif   // mfx_dsp_ctrl_InertiaLin_CODEHEADER_INCLUDED
 
 
 

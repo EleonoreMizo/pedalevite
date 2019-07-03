@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/util/NotificationFlagCascadeMulti.h"
-#include "mfx/dsp/InertiaLin.h"
+#include "mfx/dsp/ctrl/InertiaLin.h"
 
 
 
@@ -92,7 +92,7 @@ private:
 	double         _val_beg_nrm;        // Current value, normalized, beginning of the block
 	double         _val_end_nrm;        // Current value, normalized, end of the block
 
-	mfx::dsp::InertiaLin                // Final target value, normalized (0-1)
+	mfx::dsp::ctrl::InertiaLin          // Final target value, normalized (0-1)
 	               _smooth;
 
 	fstb::util::NotificationFlagCascadeMulti

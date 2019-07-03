@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_InertiaLin_HEADER_INCLUDED)
-#define mfx_dsp_InertiaLin_HEADER_INCLUDED
+#if ! defined (mfx_dsp_ctrl_InertiaLin_HEADER_INCLUDED)
+#define mfx_dsp_ctrl_InertiaLin_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -32,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 namespace dsp
+{
+namespace ctrl
 {
 
 
@@ -98,16 +100,17 @@ private:
 
 
 
+}  // namespace ctrl
 }  // namespace dsp
 }  // namespace mfx
 
 
 
-#include "mfx/dsp/InertiaLin.hpp"
+#include "mfx/dsp/ctrl/InertiaLin.hpp"
 
 
 
-#endif   // mfx_dsp_InertiaLin_HEADER_INCLUDED
+#endif   // mfx_dsp_ctrl_InertiaLin_HEADER_INCLUDED
 
 
 

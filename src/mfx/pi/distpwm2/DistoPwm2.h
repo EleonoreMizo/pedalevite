@@ -32,11 +32,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
 #include "fstb/SingleObj.h"
+#include "mfx/dsp/ctrl/InertiaLin.h"
 #include "mfx/dsp/dyn/EnvFollowerPeak.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/dsp/iir/Biquad4Simd.h"
 #include "mfx/dsp/iir/OnePole.h"
-#include "mfx/dsp/InertiaLin.h"
 #include "mfx/pi/distpwm2/DistoPwm2Desc.h"
 #include "mfx/pi/distpwm2/PreFilterType.h"
 #include "mfx/pi/distpwm2/Voice.h"
@@ -101,8 +101,8 @@ private:
 	{
 	public:
 		BufAlign       _buf_gen;
-		dsp::InertiaLin
-		               _vol         = dsp::InertiaLin (0);
+		dsp::ctrl::InertiaLin
+		               _vol         = dsp::ctrl::InertiaLin (0);
 		bool           _active_flag = false;
 		float          _vol_beg     = 0;
 		float          _vol_end     = 0;

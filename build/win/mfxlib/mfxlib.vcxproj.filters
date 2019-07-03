@@ -666,12 +666,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ParamState.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\InertiaLin.h">
-      <Filter>mfx\dsp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\InertiaLin.hpp">
-      <Filter>mfx\dsp</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSq.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
@@ -2603,6 +2597,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\distapf\Param.h">
       <Filter>mfx\pi\distapf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\InertiaLin.h">
+      <Filter>mfx\dsp\ctrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\InertiaLin.hpp">
+      <Filter>mfx\dsp\ctrl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

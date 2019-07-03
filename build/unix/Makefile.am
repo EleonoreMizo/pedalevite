@@ -307,6 +307,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/ctrl/lfo/PhaseGen.hpp \
         ../../src/mfx/dsp/ctrl/lfo/PhaseGenChaos.cpp \
         ../../src/mfx/dsp/ctrl/lfo/PhaseGenChaos.h \
+        ../../src/mfx/dsp/ctrl/InertiaLin.h \
+        ../../src/mfx/dsp/ctrl/InertiaLin.hpp \
         ../../src/mfx/dsp/ctrl/Ramp.h \
         ../../src/mfx/dsp/ctrl/Ramp.hpp \
         ../../src/mfx/dsp/dly/BbdLine.cpp \
@@ -518,8 +520,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/FilterCascadeIdEven.hpp \
         ../../src/mfx/dsp/FilterCascadeIdOdd.h \
         ../../src/mfx/dsp/FilterCascadeIdOdd.hpp \
-        ../../src/mfx/dsp/InertiaLin.h \
-        ../../src/mfx/dsp/InertiaLin.hpp \
         ../../src/mfx/dsp/SplDataRetrievalInterface.cpp \
         ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
