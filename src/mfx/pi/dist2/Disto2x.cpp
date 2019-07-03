@@ -176,7 +176,7 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 
-	const int      mbs_align = (max_buf_len + 3) & -4;
+	const int      mbs_align = (max_buf_len + 3) & ~3;
 	_buf_trans_atk.resize (mbs_align);
 	_buf_trans_sus.resize (mbs_align);
 	_buf_rms_pre.resize (mbs_align);
