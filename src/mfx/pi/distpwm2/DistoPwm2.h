@@ -24,9 +24,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #endif
 
 
-#define mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
-
-
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -35,9 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
 #include "fstb/SingleObj.h"
-#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
 #include "fstb/ToolsSimd.h"
-#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 #include "mfx/dsp/ctrl/InertiaLin.h"
 #include "mfx/dsp/dyn/EnvFollowerPeak.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
@@ -130,7 +125,6 @@ private:
 		               _env_bip;
 	};
 
-#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
 	class ZeroCross
 	{
 	public:
@@ -139,7 +133,6 @@ private:
 		float          _frac;      // Distance of the ZX from the current sample, in samples. [0 ; 1[
 	};
 	typedef std::vector <ZeroCross> ZeroCrossArray;
-#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 
 	class Channel
 	{
@@ -152,9 +145,7 @@ private:
 		               _hpf_out;
 		VoiceProcArray _voice_arr;
 		PeakAnalyser   _peak_analyser;
-#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
 		ZeroCrossArray _zx_history;
-#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 		int            _zx_idx     = 0;  // Increased at each zero-crossing
 		float          _spl_prev   = 0;
 	};
@@ -165,10 +156,8 @@ private:
 	void           update_prefilter ();
 	inline bool    detect_zero_cross (Channel &chn, float x, bool positive_flag);
 	inline bool    detect_peak (Channel &chn, float x, bool positive_flag);
-#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
 	void           detect_zero_cross_block (int chn_index, int nbr_spl);
 	void           add_zc (Channel &chn, int pos, float x0, float x1);
-#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 	inline bool    has_vol_proc () const;
 	void           square_block (float dst_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn);
 

@@ -198,9 +198,7 @@ int	DistoPwm2::do_reset (double sample_freq, int max_buf_len, int &latency)
 			unip._env.set_sample_freq (sample_freq);
 			unip._env.set_times (0.05e-3f, 5e-3f);
 		}
-#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
 		chn._zx_history.reserve (max_buf_len);
-#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 	}
 
 	_env_pre.set_sample_freq (sample_freq);
@@ -295,8 +293,6 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 		float *        dst_ptr  = _buf_mix_arr [chn_index].data ();
 		bool           mix_flag = false;
 
-#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
-
 		// Detects zero-crossings and evaluates their exact position
 		detect_zero_cross_block (chn_index, nbr_spl);
 
@@ -369,97 +365,6 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 				}
 			}
 		}
-
-#else // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
-
-		float *        tmp_ptr  = &_buf_tmp [chn_index]; // 2 interleaved channels
-		for (int pos = 0; pos < nbr_spl; ++pos)
-		{
-			const float    x = tmp_ptr [pos * 2];
-			const bool     positive_flag = ((chn._zx_idx & 1) != 0);
-			bool           trig_flag     = false;
-			if (_peak_det_flag)
-			{
-				trig_flag = detect_peak (chn, x, positive_flag);
-			}
-			else
-			{
-				trig_flag = detect_zero_cross (chn, x, positive_flag);
-			}
-
-			if (trig_flag)
-			{
-				float          zc_pos = 0;
-				if (! _peak_det_flag)
-				{
-					// Sub-sample accurracy only with the ZX method
-					if (x != chn._spl_prev)
-					{
-						// We need to limit the result because everything could go
-						// wrong when _threshold is changing.
-						zc_pos = fstb::limit (
-							(x - std::copysign (_threshold, x)) / (x - chn._spl_prev),
-							0.f,
-							0.99999f
-						);
-					}
-				}
-				chn._voice_arr [OscType_OCT ].sync (zc_pos);
-				if ((chn._zx_idx & 1) == 0)
-				{
-					chn._voice_arr [OscType_STD ].sync (zc_pos);
-				}
-				if ((chn._zx_idx & 3) == 1)
-				{
-					chn._voice_arr [OscType_SUB1].sync (zc_pos);
-				}
-				if ((chn._zx_idx & 7) == 3)
-				{
-					chn._voice_arr [OscType_SUB2].sync (zc_pos);
-				}
-			}
-
-			for (int vc_index = 0; vc_index < OscType_NBR_ELT; ++vc_index)
-			{
-				Voice &        voice = chn._voice_arr [vc_index];
-				VoiceInfo &    vcinf = _voice_arr [vc_index];
-				vcinf._buf_gen [pos] = voice.process_sample ();
-			}
-
-			chn._spl_prev = x;
-		}
-
-		for (int vc_index = 0; vc_index < OscType_NBR_ELT; ++vc_index)
-		{
-			VoiceInfo &    vcinf = _voice_arr [vc_index];
-			if (vcinf._active_flag)
-			{
-				const float *  src_ptr = vcinf._buf_gen.data ();
-				if (mix_flag)
-				{
-					dsp::mix::Align::mix_1_1_vlrauto (
-						dst_ptr,
-						src_ptr,
-						nbr_spl,
-						vcinf._vol_beg,
-						vcinf._vol_end
-					);
-				}
-				else
-				{
-					dsp::mix::Align::copy_1_1_vlrauto (
-						dst_ptr,
-						src_ptr,
-						nbr_spl,
-						vcinf._vol_beg,
-						vcinf._vol_end
-					);
-					mix_flag = true;
-				}
-			}
-		}
-
-#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 
 		if (! mix_flag)
 		{
@@ -719,10 +624,6 @@ bool	DistoPwm2::detect_peak (Channel &chn, float x, bool positive_flag)
 
 
 
-#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
-
-
-
 void	DistoPwm2::detect_zero_cross_block (int chn_index, int nbr_spl)
 {
 	assert (nbr_spl > 0);
@@ -766,10 +667,6 @@ void	DistoPwm2::add_zc (Channel &chn, int pos, float x0, float x1)
 
 	++ chn._zx_idx;
 }
-
-
-
-#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 
 
 

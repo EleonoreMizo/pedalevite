@@ -251,7 +251,6 @@ void	Voice::process_block_rect (float dst_ptr [], int nbr_spl)
 		{
 			int            work_len = -fstb::floor_int (dif);
 			work_len = std::min (work_len, nbr_spl - pos);
-			const int      stop_pos = pos + work_len;
 			dsp::mix::Generic::fill (dst_ptr + pos, work_len, _lvl);
 			pos += work_len;
 			_dur_cycle += work_len;
