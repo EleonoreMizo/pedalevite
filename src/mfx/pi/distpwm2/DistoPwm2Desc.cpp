@@ -70,6 +70,18 @@ DistoPwm2Desc::DistoPwm2Desc ()
 	assert (enu_ptr->get_nbr_elt () == DetectionMethod_NBR_ELT);
 	_desc_set.add_glob (Param_DET, enu_ptr);
 
+	// Threshold
+	TplPll *       pll_ptr = new TplPll (
+		1e-6, 1e-4,
+		"Detection threshold\nThreshold\nThresh\nThr",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+4.0f"
+	);
+	pll_ptr->use_mapper ().gen_log (4);
+	_desc_set.add_glob (Param_THR, pll_ptr);
+
 	// Density
 	param::TplLin *   lin_ptr = new param::TplLin (
 		0, 1,
@@ -82,7 +94,7 @@ DistoPwm2Desc::DistoPwm2Desc ()
 	_desc_set.add_glob (Param_DENS, lin_ptr);
 
 	// Sustain level
-	TplPll *       pll_ptr = new TplPll (
+	pll_ptr = new TplPll (
 		0, 1,
 		"Sustain level\nSustain lvl\nSustain\nSust\nSus",
 		"dB",
@@ -104,18 +116,6 @@ DistoPwm2Desc::DistoPwm2Desc ()
 	);
 	pll_ptr->use_mapper ().gen_log (8);
 	_desc_set.add_glob (Param_GATE, pll_ptr);
-
-	// Threshold
-	pll_ptr = new TplPll (
-		1e-6, 1e-4,
-		"Detection threshold\nThreshold\nThresh\nThr",
-		"dB",
-		param::HelperDispNum::Preset_DB,
-		0,
-		"%+4.0f"
-	);
-	pll_ptr->use_mapper ().gen_log (4);
-	_desc_set.add_glob (Param_THR, pll_ptr);
 
 	init_osc (Param_OSC_STD , "Standard", "Std" , "St");
 	init_osc (Param_OSC_OCT , "Double"  , "Dbl" , "Db");

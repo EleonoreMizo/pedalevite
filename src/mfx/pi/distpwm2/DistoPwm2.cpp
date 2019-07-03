@@ -198,6 +198,9 @@ int	DistoPwm2::do_reset (double sample_freq, int max_buf_len, int &latency)
 			unip._env.set_sample_freq (sample_freq);
 			unip._env.set_times (0.05e-3f, 5e-3f);
 		}
+#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
+		chn._zx_history.reserve (max_buf_len);
+#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 	}
 
 	_env_pre.set_sample_freq (sample_freq);
@@ -292,6 +295,83 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 		float *        dst_ptr  = _buf_mix_arr [chn_index].data ();
 		bool           mix_flag = false;
 
+#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
+
+		// Detects zero-crossings and evaluates their exact position
+		detect_zero_cross_block (chn_index, nbr_spl);
+
+		// Generates data for all active channels
+		const int      nbr_zx = int (chn._zx_history.size ());
+		static const int  per_arr [OscType_NBR_ELT] = { 2, 1, 4, 8 };
+		for (int vc_index = 0; vc_index < OscType_NBR_ELT; ++ vc_index)
+		{
+			VoiceInfo &    vcinf  = _voice_arr [vc_index];
+			if (vcinf._active_flag)
+			{
+				// Audio generation
+				Voice &        voice  = chn._voice_arr [vc_index];
+				const int      per    = per_arr [vc_index];
+				const int      per_m  = per - 1;
+				const int      per_v  = per_m >> 1;
+				int            zx_idx = 0;
+				int            pos    = 0;
+				do
+				{
+					int            stop_pos    = nbr_spl;
+					int            zx_idx_sync = -1;
+					while (zx_idx < nbr_zx && stop_pos == nbr_spl)
+					{
+						const ZeroCross & zx = chn._zx_history [zx_idx];
+						if ((zx._zx_idx & per_m) == per_v)
+						{
+							stop_pos    = zx._pos;
+							zx_idx_sync = zx_idx;
+						}
+						++ zx_idx;
+					}
+
+					const int      step_size = stop_pos - pos;
+					if (step_size > 0)
+					{
+						voice.process_block (&vcinf._buf_gen [pos], step_size);
+						pos += step_size;
+					}
+
+					if (zx_idx_sync >= 0)
+					{
+						voice.sync (chn._zx_history [zx_idx_sync]._frac);
+					}
+				}
+				while (pos < nbr_spl);
+
+				// Mixing
+				const float *  src_ptr = vcinf._buf_gen.data ();
+				if (mix_flag)
+				{
+					dsp::mix::Align::mix_1_1_vlrauto (
+						dst_ptr,
+						src_ptr,
+						nbr_spl,
+						vcinf._vol_beg,
+						vcinf._vol_end
+					);
+				}
+				else
+				{
+					dsp::mix::Align::copy_1_1_vlrauto (
+						dst_ptr,
+						src_ptr,
+						nbr_spl,
+						vcinf._vol_beg,
+						vcinf._vol_end
+					);
+					mix_flag = true;
+				}
+			}
+		}
+
+#else // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
+
 		float *        tmp_ptr  = &_buf_tmp [chn_index]; // 2 interleaved channels
 		for (int pos = 0; pos < nbr_spl; ++pos)
 		{
@@ -378,6 +458,8 @@ void	DistoPwm2::do_process_block (ProcInfo &proc)
 				}
 			}
 		}
+
+#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 
 		if (! mix_flag)
 		{
@@ -634,6 +716,60 @@ bool	DistoPwm2::detect_peak (Channel &chn, float x, bool positive_flag)
 
 	return trig_flag;
 }
+
+
+
+#if defined (mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST)
+
+
+
+void	DistoPwm2::detect_zero_cross_block (int chn_index, int nbr_spl)
+{
+	assert (nbr_spl > 0);
+
+	Channel &      chn      = _chn_arr [chn_index];
+	float *        tmp_ptr  = &_buf_tmp [chn_index]; // 2 interleaved channels
+	chn._zx_history.clear ();
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		const float    x = tmp_ptr [pos * 2];
+		const bool     positive_flag = ((chn._zx_idx & 1) != 0);
+		if (positive_flag && x <= -_threshold)
+		{
+			add_zc (chn, pos, -chn._spl_prev, -x);
+		}
+		else if (! positive_flag && x >= _threshold)
+		{
+			add_zc (chn, pos, chn._spl_prev, x);
+		}
+
+		chn._spl_prev = x;
+	}
+}
+
+
+
+void	DistoPwm2::add_zc (Channel &chn, int pos, float x0, float x1)
+{
+	assert (pos >= 0);
+	assert (x1  >= _threshold);
+
+	const size_t   nbr_zx = chn._zx_history.size ();
+	chn._zx_history.resize (nbr_zx + 1);
+	ZeroCross &    zx = chn._zx_history.back ();
+	zx._pos    = pos;
+	zx._zx_idx = chn._zx_idx;
+
+	// We need to limit the result because everything could go wrong when
+	// _threshold is changing.
+	zx._frac   = fstb::limit ((x1 - _threshold) / (x1 - x0), 0.f, 0.99999f);
+
+	++ chn._zx_idx;
+}
+
+
+
+#endif // mfx_pi_distpwm2_DistoPwm2_OPTIM_TEST
 
 
 

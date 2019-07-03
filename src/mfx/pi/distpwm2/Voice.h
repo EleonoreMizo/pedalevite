@@ -47,7 +47,7 @@ class Voice
 
 public:
 
-	               Voice ()  = default;
+	explicit       Voice ();
 	virtual        ~Voice () = default;
 
 	void           set_pulse_type (PulseType type);
@@ -55,6 +55,7 @@ public:
 
 	void           sync (float age_frac);
 	float          process_sample ();
+	void           process_block (float dst_ptr [], int nbr_spl);
 
 	void           clear_buffers ();
 
@@ -70,6 +71,14 @@ protected:
 
 private:
 
+	static const int  _fade_len = 50; // Fadeout length, in pulse duration
+
+	void           process_block_rect (float dst_ptr [], int nbr_spl);
+	void           process_block_ramp (float dst_ptr [], int nbr_spl);
+	void           process_block_cycle (float dst_ptr [], int nbr_spl);
+	void           process_block_sine (float dst_ptr [], int nbr_spl);
+	void           process_block_saw (float dst_ptr [], int nbr_spl);
+
 	static inline float
 	               gen_wf (float pos);
 	static inline float
@@ -77,11 +86,11 @@ private:
 	static inline float
 	               gen_poly (float x);
 
-	const float    _lvl       = 0.125f; // Pulse amplitude
-	PulseType      _pt        = PulseType_RECT;
-	float          _pw        = 100; // Pulse duration or half a period, samples, > 1
-	float          _pw_inv    = 1 / _pw;
-	float          _dur_cycle = 0;   // Cycle duration at the current sample, in samples
+	const float    _lvl;       // Pulse amplitude
+	PulseType      _pt;
+	float          _pw;        // Pulse duration or half a period, samples, > 1
+	float          _pw_inv;    // 1 / _pw
+	float          _dur_cycle; // Cycle duration at the current sample, in samples
 
 
 
