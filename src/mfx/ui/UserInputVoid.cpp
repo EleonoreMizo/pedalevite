@@ -27,6 +27,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/UserInputVoid.h"
 
 #include <cassert>
+#if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+#include <ctime>
+#endif
 
 
 
@@ -93,9 +96,25 @@ void	UserInputVoid::do_return_cell (MsgCell &/*cell*/)
 
 std::chrono::microseconds	UserInputVoid::do_get_cur_date () const
 {
+#if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+
+	timespec       tp;
+	clock_gettime (CLOCK_REALTIME, &tp);
+
+	const long     ns_mul = 1000L * 1000L * 1000L;
+	const auto     ns     = std::chrono::nanoseconds (
+		int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec
+	);
+
+	return std::chrono::duration_cast <std::chrono::microseconds> (ns);
+
+#else
+
 	return std::chrono::duration_cast <std::chrono::microseconds> (
 		_clk.now ().time_since_epoch ()
 	);
+
+#endif
 }
 
 
