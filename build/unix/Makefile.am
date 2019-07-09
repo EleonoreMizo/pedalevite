@@ -886,6 +886,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/DisplayPi3Pcd8544.h \
         ../../src/mfx/ui/DisplayPi3St7920.cpp \
         ../../src/mfx/ui/DisplayPi3St7920.h \
+        ../../src/mfx/ui/DisplayVoid.cpp \
+        ../../src/mfx/ui/DisplayVoid.h \
         ../../src/mfx/ui/Font.cpp \
         ../../src/mfx/ui/Font.h \
         ../../src/mfx/ui/FontDataDefault.cpp \
@@ -894,6 +896,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/LedInterface.h \
         ../../src/mfx/ui/LedPi3.cpp \
         ../../src/mfx/ui/LedPi3.h \
+        ../../src/mfx/ui/LedVoid.cpp \
+        ../../src/mfx/ui/LedVoid.h \
         ../../src/mfx/ui/RotEnc.cpp \
         ../../src/mfx/ui/RotEnc.h \
         ../../src/mfx/ui/TimeShareCbInterface.cpp \
@@ -907,6 +911,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ui/UserInputPi3.cpp \
         ../../src/mfx/ui/UserInputPi3.h \
         ../../src/mfx/ui/UserInputType.h \
+        ../../src/mfx/ui/UserInputVoid.cpp \
+        ../../src/mfx/ui/UserInputVoid.h \
         ../../src/mfx/uitk/pg/BankMenu.cpp \
         ../../src/mfx/uitk/pg/BankMenu.h \
         ../../src/mfx/uitk/pg/BankMove.cpp \
