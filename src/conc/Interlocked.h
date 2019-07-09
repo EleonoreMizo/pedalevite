@@ -57,7 +57,11 @@ public:
 
 #if defined (conc_HAS_CAS_128)
 
- #if defined (_MSC_VER)
+ #if defined (__linux__)
+
+	typedef	__uint128_t	Data128;
+
+ #else
 
 	class Data128
 	{
@@ -70,10 +74,6 @@ public:
 		uint64_t       _data [2];
 	};
 	static_assert ((sizeof (Data128) == 16), "");
-
- #else
-
-	typedef	__uint128_t	Data128;
 
  #endif
 

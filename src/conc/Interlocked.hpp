@@ -243,39 +243,6 @@ void	Interlocked::swap (Data128 &old, volatile Data128 &dest, const Data128 &exc
 {
 	assert (is_ptr_aligned_nz (&dest));
 
-#if defined (__APPLE__)
-
-	Data128 *         old_ptr  = &old;
-	volatile Data128* dest_ptr = &dest;
-	const Data128 *   excg_ptr = &excg;
-
-	asm volatile ( 
-	"	mov				 %[excg], %%r9			\n"
-
-	"	push				%%rbx						\n"
-	"	mov				%[dest], %%rsi			\n"
-	"	movq				(%%r9), %%rbx			\n"
-	"	mov				8(%%r9), %%rcx			\n"
-
-	"cas_loop%=:	\n"
-	"	mov				(%%rsi), %%rax			\n"
-	"	mov				8(%%rsi), %%rdx		\n"
-	"	lock cmpxchg16b	(%%rsi)				\n"
-	"	jnz				cas_loop%=				\n"
-
-	"	mov				 %[old], %%r10			\n"
-	"	movq				%%rax, (%%r10)			\n"
-	"	movq				%%rdx, 8(%%r10)		\n"
-	"	pop				%%rbx						\n"
-	: 
-	: [excg] "m" (excg_ptr)
-	, [old]  "m" (old_ptr)
-	, [dest] "m" (dest_ptr)
-	: "rsi", "rax", "rcx", "rdx", "r9", "r10"
-	);
-
-#else
-
 	Data128        tmp;
 	do
 	{
@@ -283,8 +250,6 @@ void	Interlocked::swap (Data128 &old, volatile Data128 &dest, const Data128 &exc
 		cas (tmp, dest, excg, old);
 	}
 	while (tmp != old);
-
-#endif
 }
 
 
@@ -295,32 +260,15 @@ void	Interlocked::cas (Data128 &old, volatile Data128 &dest, const Data128 &excg
 
 #if defined (__APPLE__) || (defined (__CYGWIN__) && conc_WORD_SIZE == 64)
 
-	Data128 *         old_ptr  = &old;
-	volatile Data128* dest_ptr = &dest;
-	const Data128 *   excg_ptr = &excg;
-	const Data128 *   comp_ptr = &comp;
-
-	asm volatile (
-	"	mov              %[comp], %%r8   \n"
-	"	mov              %[excg], %%r9   \n"
-	"	mov              %[old],  %%r10  \n"
-	"	mov              %[dest], %%rsi  \n"
-	
-	"	push             %%rbx           \n"
-	"	movq             (%%r8),  %%rax  \n"
-	"	movq            8(%%r8),  %%rdx  \n"
-	"	movq             (%%r9),  %%rbx  \n"
-	"	movq            8(%%r9),  %%rcx  \n"
-	"	lock cmpxchg16b (%%rsi)          \n"
-	"	movq             %%rax,  (%%r10) \n"
-	"	movq             %%rdx, 8(%%r10) \n"
-	"	pop              %%rbx           \n"
-	:
-	: [old]  "m" (old_ptr)
-	, [dest] "m" (dest_ptr)
-	, [excg] "m" (excg_ptr)
-	, [comp] "m" (comp_ptr)
-	: "rsi", "rax", "rcx", "rdx", "r8", "r9", "r10"
+	old = comp;
+	__asm__ __volatile__
+	(
+	"	lock cmpxchg16b %1"
+	:	"+A" (old)
+	,	"+m" (*&dest)
+	:	"b" (int64_t (excg      ))
+	,	"c" (int64_t (excg >> 64))
+	:	"cc"
 	);
 
 #elif defined (_WIN32) || defined (WIN32) || defined (__WIN32__) || defined (__CYGWIN__) || defined (__CYGWIN32__)
