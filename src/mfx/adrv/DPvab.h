@@ -193,13 +193,13 @@ private:
 
 #if defined (mfx_adrv_DPvab_TEST)
 		std::atomic <bool>
-		               _quit_flag = false;
+		               _quit_flag = { false };
 		mutable std::atomic <uint32_t>
-		               _gpio_state = 0;
+		               _gpio_state = { 0 };
 		mutable std::atomic <uint32_t>          // GPIO ports open for reading (from the CPU PoV)
-		               _gpio_read = 0;
+		               _gpio_read = { 0 };
 		mutable std::atomic <uint32_t>          // GPIO ports open for writing (from the CPU PoV)
-		               _gpio_write = 0;
+		               _gpio_write = { 0 };
 		const int      _hclk_dur = 100;         // Half-clock time, ms
 		std::thread    _test_thread;
 #else
