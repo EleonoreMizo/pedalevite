@@ -23,11 +23,13 @@
 #define MAIN_API_ALSA   2
 #define MAIN_API_ASIO   3
 #define MAIN_API_MANUAL 4
+#define MAIN_API_PVAB   5
 #if 0 // For debugging complex audio things
 	#define MAIN_API MAIN_API_MANUAL
 #elif fstb_IS (SYS, LINUX)
 //	#define MAIN_API MAIN_API_JACK
 	#define MAIN_API MAIN_API_ALSA
+//	#define MAIN_API MAIN_API_PVAB
 #else
 	#define MAIN_API MAIN_API_ASIO
 #endif
@@ -119,6 +121,8 @@
 		#include "mfx/adrv/DAlsa.h"
 	#elif (MAIN_API == MAIN_API_MANUAL)
 		#include "mfx/adrv/DManual.h"
+	#elif (MAIN_API == MAIN_API_PVAB)
+		#include "mfx/adrv/DPvab.h"
 	#else
 		#error Wrong MAIN_API value
 	#endif // MAIN_API
@@ -1634,6 +1638,8 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 	chn_idx_in = 2;
 #elif (MAIN_API == MAIN_API_MANUAL)
 	mfx::adrv::DManual   snd_drv;
+#elif (MAIN_API == MAIN_API_PVAB)
+	mfx::adrv::DPvab  snd_drv;
 #else
 	#error
 #endif

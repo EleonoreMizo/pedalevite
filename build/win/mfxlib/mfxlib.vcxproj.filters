@@ -2538,6 +2538,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\ValSmooth.hpp">
       <Filter>mfx\dsp\ana</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\adrv\DPvab.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.h">
       <Filter>mfx\pi\distpwm2</Filter>
     </ClInclude>
@@ -3589,6 +3592,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqAmGha.cpp">
       <Filter>mfx\dsp\ana</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\adrv\DPvab.cpp">
+      <Filter>mfx\adrv</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.cpp">
       <Filter>mfx\pi\distpwm2</Filter>
