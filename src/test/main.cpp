@@ -17,7 +17,7 @@
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/nz/WhiteFast.h"
-#include	"mfx/dsp/rspl/InterpolatorHermite43.h"
+#include "mfx/dsp/rspl/InterpolatorHermite43.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist1/Param.h"

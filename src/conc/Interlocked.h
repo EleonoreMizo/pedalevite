@@ -66,7 +66,7 @@ public:
 		               operator == (const Data128 & other) const;
 		conc_FORCEINLINE bool
 		               operator != (const Data128 & other) const;
-							
+
 		uint64_t       _data [2];
 	};
 	static_assert ((sizeof (Data128) == 16), "");
