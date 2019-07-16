@@ -2604,6 +2604,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\InertiaLin.hpp">
       <Filter>mfx\dsp\ctrl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\Lfo.hpp">
+      <Filter>mfx\pi\lfo1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.hpp">
+      <Filter>mfx\pi\lfo1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3221,12 +3227,6 @@
     <ClCompile Include="..\..\..\src\mfx\doc\Routing.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\Lfo.cpp">
-      <Filter>mfx\pi\lfo1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp">
-      <Filter>mfx\pi\lfo1</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlProg.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
@@ -3604,6 +3604,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApfDesc.cpp">
       <Filter>mfx\pi\distapf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp">
+      <Filter>mfx\pi\lfo1</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

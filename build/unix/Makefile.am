@@ -675,10 +675,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/pi/iifix/IIFixDesc.cpp \
         ../../src/mfx/pi/iifix/IIFixDesc.h \
         ../../src/mfx/pi/iifix/Param.h \
-        ../../src/mfx/pi/lfo1/Lfo.cpp \
         ../../src/mfx/pi/lfo1/Lfo.h \
+        ../../src/mfx/pi/lfo1/Lfo.hpp \
         ../../src/mfx/pi/lfo1/LfoDesc.cpp \
         ../../src/mfx/pi/lfo1/LfoDesc.h \
+        ../../src/mfx/pi/lfo1/LfoDesc.hpp \
         ../../src/mfx/pi/lfo1/LfoType.h \
         ../../src/mfx/pi/lfo1/Param.h \
         ../../src/mfx/pi/lpfs/Param.h \

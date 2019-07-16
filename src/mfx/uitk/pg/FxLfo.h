@@ -144,7 +144,8 @@ private:
 	int            _nbr_cycles_idx;  // Position within _nbr_cycles_arr, must be valid
 	int            _prec_idx;     // Precision for modifying parameters, [0 ; 3]
 
-	pi::lfo1::Lfo  _lfo;
+	pi::lfo1::Lfo <false>
+	               _lfo;
 	std::vector <piapi::EventTs>
 	               _evt_list;
 

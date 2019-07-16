@@ -41,6 +41,7 @@ namespace lfo1
 
 
 
+template <bool SLOW>
 class LfoDesc
 :	public piapi::PluginDescInterface
 {
@@ -85,10 +86,11 @@ private:
 
 private:
 
-	               LfoDesc (const LfoDesc &other)           = delete;
-	LfoDesc &      operator = (const LfoDesc &other)        = delete;
-	bool           operator == (const LfoDesc &other) const = delete;
-	bool           operator != (const LfoDesc &other) const = delete;
+	               LfoDesc (const LfoDesc <SLOW> &other)           = delete;
+	LfoDesc <SLOW> &
+	               operator = (const LfoDesc <SLOW> &other)        = delete;
+	bool           operator == (const LfoDesc <SLOW> &other) const = delete;
+	bool           operator != (const LfoDesc <SLOW> &other) const = delete;
 
 }; // class LfoDesc
 
@@ -100,7 +102,7 @@ private:
 
 
 
-//#include "mfx/pi/lfo1/LfoDesc.hpp"
+#include "mfx/pi/lfo1/LfoDesc.hpp"
 
 
 

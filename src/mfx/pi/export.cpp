@@ -139,7 +139,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::peq::PEqDesc <16>       , mfx::pi::peq::PEq <16>            >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::phase1::PhaserDesc      , mfx::pi::phase1::Phaser           >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::lpfs::SqueezerDesc      , mfx::pi::lpfs::Squeezer           >::create ()
-		,	mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc           , mfx::pi::lfo1::Lfo                >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc <false>   , mfx::pi::lfo1::Lfo <false>        >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::envf::EnvFollowDesc     , mfx::pi::envf::EnvFollow          >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::dist2::Disto2xDesc      , mfx::pi::dist2::Disto2x           >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::spkem::SpeakerEmuDesc   , mfx::pi::spkem::SpeakerEmu        >::create ()
@@ -163,6 +163,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::distpwm2::DistoPwm2Desc , mfx::pi::distpwm2::DistoPwm2      >::create ()
 //		,	mfx::piapi::FactoryTpl <mfx::pi::osdet2::OnsetDetect2Desc, mfx::pi::osdet2::OnsetDetect2     >::create () // Does not work well enough
 		,	mfx::piapi::FactoryTpl <mfx::pi::distapf::DistApfDesc    , mfx::pi::distapf::DistApf         >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc <true>    , mfx::pi::lfo1::Lfo <true>         >::create ()
 		};
 
 		fact_list = l;

@@ -45,6 +45,7 @@ namespace lfo1
 
 
 
+template <bool SLOW>
 class Lfo
 :	public piapi::PluginInterface
 {
@@ -80,7 +81,7 @@ private:
 
 	State          _state;
 
-	LfoDesc        _desc;
+	LfoDesc <SLOW> _desc;
 	ParamStateSet  _state_set;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 
@@ -107,10 +108,10 @@ private:
 
 private:
 
-	               Lfo (const Lfo &other)               = delete;
-	Lfo &          operator = (const Lfo &other)        = delete;
-	bool           operator == (const Lfo &other) const = delete;
-	bool           operator != (const Lfo &other) const = delete;
+	               Lfo <SLOW> (const Lfo <SLOW> &other)        = delete;
+	Lfo <SLOW> &   operator = (const Lfo <SLOW> &other)        = delete;
+	bool           operator == (const Lfo <SLOW> &other) const = delete;
+	bool           operator != (const Lfo <SLOW> &other) const = delete;
 
 }; // class Lfo
 
@@ -122,7 +123,7 @@ private:
 
 
 
-//#include "mfx/pi/lfo1/Lfo.hpp"
+#include "mfx/pi/lfo1/Lfo.hpp"
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Lfo.cpp
+        Lfo.hpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -15,17 +15,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
+#if ! defined (mfx_pi_lfo1_Lfo_CODEHEADER_INCLUDED)
+#define mfx_pi_lfo1_Lfo_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
-#include "mfx/pi/lfo1/Lfo.h"
 #include "mfx/pi/lfo1/LfoType.h"
 #include "mfx/pi/lfo1/Param.h"
 #include "mfx/piapi/EventParam.h"
@@ -50,7 +47,8 @@ namespace lfo1
 
 
 
-Lfo::Lfo ()
+template <bool SLOW>
+Lfo <SLOW>::Lfo ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
@@ -108,14 +106,16 @@ Lfo::Lfo ()
 
 
 
-piapi::PluginInterface::State	Lfo::do_get_state () const
+template <bool SLOW>
+piapi::PluginInterface::State	Lfo <SLOW>::do_get_state () const
 {
 	return _state;
 }
 
 
 
-double	Lfo::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
+template <bool SLOW>
+double	Lfo <SLOW>::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
 	assert (categ == piapi::ParamCateg_GLOBAL);
 
@@ -124,7 +124,8 @@ double	Lfo::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) c
 
 
 
-int	Lfo::do_reset (double sample_freq, int max_buf_len, int &latency)
+template <bool SLOW>
+int	Lfo <SLOW>::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
 
@@ -151,14 +152,16 @@ int	Lfo::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	Lfo::do_clean_quick ()
+template <bool SLOW>
+void	Lfo <SLOW>::do_clean_quick ()
 {
 	clear_buffers ();
 }
 
 
 
-void	Lfo::do_process_block (ProcInfo &proc)
+template <bool SLOW>
+void	Lfo <SLOW>::do_process_block (ProcInfo &proc)
 {
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -188,19 +191,29 @@ void	Lfo::do_process_block (ProcInfo &proc)
 
 
 
-void	Lfo::clear_buffers ()
+template <bool SLOW>
+void	Lfo <SLOW>::clear_buffers ()
 {
 	_lfo.clear_buffers ();
 }
 
 
 
-void	Lfo::update_param (bool force_flag)
+template <bool SLOW>
+void	Lfo <SLOW>::update_param (bool force_flag)
 {
 	if (_param_change_flag_base (true) || force_flag)
 	{
-		const double  spd = _state_set.get_val_tgt_nat (Param_SPEED);
-		_lfo.set_period (1.0 / spd);
+		if (SLOW)
+		{
+			const double   per = _state_set.get_val_tgt_nat (Param_SPEED);
+			_lfo.set_period (per);
+		}
+		else
+		{
+			const double   spd = _state_set.get_val_tgt_nat (Param_SPEED);
+			_lfo.set_period (1.0 / spd);
+		}
 		_amp = float (_state_set.get_val_tgt_nat (Param_AMP));
 	}
 	if (_param_change_flag_phase (true) || force_flag)
@@ -269,6 +282,10 @@ void	Lfo::update_param (bool force_flag)
 }  // namespace lfo1
 }  // namespace pi
 }  // namespace mfx
+
+
+
+#endif   // mfx_pi_lfo1_Lfo_CODEHEADER_INCLUDED
 
 
 

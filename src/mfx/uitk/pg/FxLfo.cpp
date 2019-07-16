@@ -229,7 +229,7 @@ void	FxLfo::update_display ()
 	{
 		const doc::PluginSettings &   settings = it_settings->second;
 		const piapi::PluginDescInterface &   desc =
-			_model_ptr->get_model_desc (slot._pi_model);
+			_model_ptr->get_model_desc ("lfo1"); // Forces standard LFO description
 
 		const int      nbr_param = desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
 		_nbr_param = Param_BASE + nbr_param;

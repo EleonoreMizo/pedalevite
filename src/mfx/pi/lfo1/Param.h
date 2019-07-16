@@ -41,7 +41,7 @@ namespace lfo1
 enum Param
 {
 
-	Param_SPEED = 0,
+	Param_SPEED = 0,  // Speed (normal mode) or Period (slow mode)
 	Param_AMP,
 	Param_WAVEFORM,
 	Param_SNH,

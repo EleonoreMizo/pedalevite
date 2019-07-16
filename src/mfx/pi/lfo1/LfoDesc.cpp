@@ -24,12 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/param/TplEnum.h"
-#include "mfx/pi/param/TplLin.h"
-#include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/lfo1/LfoDesc.h"
-#include "mfx/pi/lfo1/LfoType.h"
-#include "mfx/pi/lfo1/Param.h"
 
 #include <cassert>
 
@@ -48,206 +43,34 @@ namespace lfo1
 
 
 
-LfoDesc::LfoDesc ()
-:	_desc_set (Param_NBR_ELT, 0)
-{
-	// Speed
-	param::TplLog *   log_ptr = new param::TplLog (
-		0.01, 100,
-		"Sp\nSpd\nSpeed",
-		"Hz",
-		param::HelperDispNum::Preset_FLOAT_STD,
-		0,
-		"%7.3f"
-	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_SPEED, log_ptr);
-
-	// Amplitude
-	param::TplLin *   lin_ptr = new param::TplLin (
-		0, 1,
-		"A\nAmp\nAmplitude",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_AMP, lin_ptr);
-
-	// Waveform
-	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Sine\nTriangle\nSquare\nSaw\nParabola\nBiphase\nN-Phase\nVarislope\nNoise",
-		"W\nWf\nWavef\nWaveform",
-		"",
-		0,
-		"%s"
-	);
-	_desc_set.add_glob (Param_WAVEFORM, enu_ptr);
-	assert (enu_ptr->get_nat_max () == LfoType_NBR_ELT - 1);
-
-	// Sample and hold
-	lin_ptr = new param::TplLin (
-		0, 1,
-		"SnH\nSplHold\nSample & hold\nSample and hold",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SNH, lin_ptr);
-
-	// Smoothing
-	lin_ptr = new param::TplLin (
-		0, 1,
-		"Sm\nSmooth\nSmoothing",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SMOOTH, lin_ptr);
-
-	// Chaos amount
-	lin_ptr = new param::TplLin (
-		0, 1,
-		"C\nKos\nChaos\nChaos Amt\nChaos amount",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_CHAOS, lin_ptr);
-
-	// Phase distortion amount
-	lin_ptr = new param::TplLin (
-		0, 1,
-		"PDA\nPhDistA\nPhDistAmt\nPhase dist amt\nPhase dist amount\nPhase distortion amount",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_PH_DIST_AMT, lin_ptr);
-
-	// Phase distortion offset
-	lin_ptr = new param::TplLin (
-		0, 1,
-		"PDO\nPhDistO\nPhDistOfs\nPhase dist ofs\nPhase dist offset\nPhase distortion offset",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_PH_DIST_OFS, lin_ptr);
-
-	// Sign
-	enu_ptr = new param::TplEnum (
-		"Normal\nInvert",
-		"Si\nSig\nSign",
-		"",
-		0,
-		"%s"
-	);
-	_desc_set.add_glob (Param_SIGN, enu_ptr);
-
-	// Polarity
-	enu_ptr = new param::TplEnum (
-		"Bipolar\nUnipolar",
-		"Po\nPol\nPolar\nPolarity",
-		"",
-		0,
-		"%s"
-	);
-	_desc_set.add_glob (Param_POLARITY, enu_ptr);
-
-	// Variation 1
-	lin_ptr = new param::TplLin (
-		0, 1,
-		"V1\nVar 1\nVariation 1",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_VAR1, lin_ptr);
-
-	// Variation 2
-	lin_ptr = new param::TplLin (
-		0, 1,
-		"V2\nVar 2\nVariation 2",
-		"%",
-		0,
-		"%5.1f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_VAR2, lin_ptr);
-
-	// Phase set
-	lin_ptr = new param::TplLin (
-		0, 1,
-		"PS\nPhS\nPh set\nPhase set",
-		"deg",
-		0,
-		"%3.0f"
-	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	lin_ptr->use_disp_num ().set_scale (360);
-	_desc_set.add_glob (Param_PHASE_SET, lin_ptr);
-}
-
-
-
-ParamDescSet &	LfoDesc::use_desc_set ()
-{
-	return _desc_set;
-}
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
-std::string	LfoDesc::do_get_unique_id () const
+template <>
+std::string	LfoDesc <false>::do_get_unique_id () const
 {
 	return "lfo1";
 }
 
+template <>
+std::string	LfoDesc <true>::do_get_unique_id () const
+{
+	return "lfo1slow";
+}
 
 
-std::string	LfoDesc::do_get_name () const
+
+template <>
+std::string	LfoDesc <false>::do_get_name () const
 {
 	return "LFO";
 }
 
-
-
-void	LfoDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
+template <>
+std::string	LfoDesc <true>::do_get_name () const
 {
-	nbr_i = 0;
-	nbr_o = 0;
-	nbr_s = 1;
-}
-
-
-
-bool	LfoDesc::do_prefer_stereo () const
-{
-	return false;
-}
-
-
-
-int	LfoDesc::do_get_nbr_param (piapi::ParamCateg categ) const
-{
-	return _desc_set.get_nbr_param (categ);
-}
-
-
-
-const piapi::ParamDescInterface &	LfoDesc::do_get_param_info (piapi::ParamCateg categ, int index) const
-{
-	return _desc_set.use_param (categ, index);
+	return "LFO Slow\nLFO S";
 }
 
 
