@@ -474,6 +474,7 @@ void	DPvab::GpioAccess::set_fake_bit (int gpio, int val)
 
 void	DPvab::GpioAccess::print_gpio () const
 {
+#if 0 // Very verbose...
 	const uint32_t state = _gpio_state;
 	printf ("GPIO  - ");
 	for (int pos = 0; pos < 32; ++pos)
@@ -485,6 +486,7 @@ void	DPvab::GpioAccess::print_gpio () const
 		);
 	}
 	printf ("\n");
+#endif
 }
 
 
@@ -641,7 +643,7 @@ void	DPvab::main_loop ()
 			++ _buf_pos;
 			if (_buf_pos >= _block_size * _nbr_chn)
 			{
-				_buf_pos = _lrclk_cur; // Makes sure we restart on the right channel
+				_buf_pos = 1 - _lrclk_cur; // Makes sure we restart on the right channel
 				buf_idx  = 1 - buf_idx;
 				_cur_buf = buf_idx;
 
@@ -649,6 +651,7 @@ void	DPvab::main_loop ()
 				_proc_now_flag = true;
 				_blk_proc_cv.notify_one ();
 			}
+			assert ((_buf_pos & 1) == 1 - _lrclk_cur);
 
 			// Reads the sample to be sent
 			const int      pos_o   =
