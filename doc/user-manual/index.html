@@ -70,6 +70,7 @@
 	<li><a href="#fx-tremolo">Tremolo</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
+	<li><a href="#fx-adsr">ADSR — Enveloppe de contrôle</a></li>
 	<li><a href="#fx-ramp">Control ramp — Transition de paramètre</a></li>
 	<li><a href="#fx-lfo">LFO — Oscillateur basse fréquence</a></li>
 	</ol>
@@ -2316,6 +2317,82 @@ Ce paramètre est relié par défaut à la pédale d’expression.</p>
 
 
 
+<h3><a id="fx-adsr"></a>ADSR — Enveloppe de contrôle</h3>
+
+<p>Cet effet n’est disponible que dans la catégorie des générateurs de signaux
+de contrôle puisqu’il ne traite aucun signal audio, ni en entrée ni en sortie.
+Il génère une enveloppe ADSR en fonction des paramètres qui lui sont
+fournis.</p>
+<p>Une enveloppe ADSR est généralement utilisée pour contrôler l’évolution
+d’un paramètre de synthèse sonore pendant la durée d’une note&#8239;:
+volume, ouverture de filtre, etc.
+Elle est décomposée 4 sections qui s’enchaînent l’une après l’autre&#8239;:</p>
+<ul>
+<li><span class="ui">Attack</span>&#8239;: c’est la montée, l’enveloppe passe
+de 0 à sa valeur nominale (100&#8239;%) lors du début d’une note
+(<i><span lang="en">Note On</span></i>).</li>
+<li><span class="ui">Decay</span>&#8239;: petit déclin à la fin de la montée.
+Cette section amène l’enveloppe vers sa valeur de maintien.</li>
+<li><span class="ui">Sustain</span>&#8239;: cette section contrôle l’évolution
+de l’enveloppe quand la note est tenue.
+L’enveloppe retombe alors doucement vers 0 à une vitesse programmée par le
+temps de maintien.
+Quand il est infini, l’enveloppe garde une valeur fixe jusqu’au prochain
+événement de note.</li>
+<li><span class="ui">Release</span>&#8239;: l’enveloppe peut débrayer sur cette
+section de rétablissement à tout moment, dès que la note jouée se termine
+(<i><span lang="en">Note Off</span></i>).
+Elle permet la redescente plus ou moins progressive de l’enveloppe vers
+0.</li>
+</ul>
+<p>La forme de chaque section d’enveloppe est de type «&#8239;(dé)charge
+RC&#8239;», imitant les enveloppes ADSR des synthétiseurs analogiques.</p>
+<p>Habituellement, on associe les paramètres <var>Trigger On</var> et
+<var>Trigger Off</var> à des événements extéreurs.</p>
+
+<p class="var">Trigger On</p>
+<p>Quand ce paramètre est mis à une valeur différente de 0, un événement
+<i><span lang="en">Note On</span></i> est fourni au générateur
+d’enveloppe.
+La valeur du paramètre donne également la vélocité de la note.</p>
+
+<p class="var">Trigger Off</p>
+<p>Quand ce paramètre est mis à une valeur différente de 0, un événement
+<i><span lang="en">Note Off</span></i> est fourni au générateur
+d’enveloppe.</p>
+
+<p class="var">Velocity sensitivity</p>
+<p>Ce paramètre indique à quel point l’enveloppe suit la vélocité de la note
+donnée par <var>Trigger On</var>.
+À 0&#8239;%, la vélocité est totalement ignorée.
+À 100&#8239;%, la vélocité est prise en compte totalement.</p>
+
+<p class="var">Attack time</p>
+<p>Temps d’attaque (montée) de l’enveloppe, en secondes.</p>
+
+<p class="var">Decay time</p>
+<p>Temps de déclin (après la montée) vers le niveau de maintien,
+en secondes.</p>
+
+<p class="var">Sustain time</p>
+<p>Temps de maintien durant l’activité de la note, en secondes.
+Le temps de maintien donne la durée pendant laquelle l’enveloppe retombe vers
+0, juste après la partie déclin.
+Si le paramètre est &ge;&#8239;255, le temps de maintien est considéré comme
+infini et l’enveloppe ne redescend que sur un <i><span lang="en">Note
+Off</span></i>.</p>
+
+<p class="var">Sustain level</p>
+<p>Niveau de maintien, atteint à la fin de la partie déclin.
+Peut éventuellement être négatif.</p>
+
+<p class="var">Release time</p>
+<p>Temps de rétablissement vers 0, en secondes.
+Cette partie de l’enveloppe est activée quand un <i><span lang="en">Note
+Off</span></i> est fourni au générateur.</p>
+
+
+
 <h3><a id="fx-ramp"></a>Control ramp — Transition de paramètre</h3>
 
 <p>Cet effet n’est disponible que dans la catégorie des générateurs de signaux
@@ -2546,6 +2623,11 @@ courante.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r20, 2019-07-17</b></p>
+<ul>
+<li>Ajout de l’effet d’ADSR.</li>
+</ul>
 
 <p><b>r19, 2019-07-16</b></p>
 <ul>

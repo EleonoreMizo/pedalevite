@@ -244,6 +244,9 @@
     <Filter Include="mfx\pi\distapf">
       <UniqueIdentifier>{9a7b4206-8a00-4365-a8ff-91d33176e2bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\adsr">
+      <UniqueIdentifier>{27d9eb86-a37d-43a3-ac83-12da41516573}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2610,6 +2613,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.hpp">
       <Filter>mfx\pi\lfo1</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.h">
+      <Filter>mfx\pi\adsr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.h">
+      <Filter>mfx\pi\adsr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\adsr\Param.h">
+      <Filter>mfx\pi\adsr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3607,6 +3619,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp">
       <Filter>mfx\pi\lfo1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp">
+      <Filter>mfx\pi\adsr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.cpp">
+      <Filter>mfx\pi\adsr</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

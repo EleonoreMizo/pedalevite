@@ -566,6 +566,9 @@
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.hpp" />
     <ClInclude Include="..\..\..\src\mfx\PedalLoc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\adsr\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\click\Click.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\click\ClickDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\click\Param.h" />
@@ -1050,6 +1053,8 @@
     <ClCompile Include="..\..\..\src\mfx\MeterResultSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\Model.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\Click.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\ClickDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\colorme\ColorMe.cpp" />

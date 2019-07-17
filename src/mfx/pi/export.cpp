@@ -26,6 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/Err.h"
 #include "mfx/piapi/FactoryTpl.h"
+#include "mfx/pi/adsr/EnvAdsr.h"
+#include "mfx/pi/adsr/EnvAdsrDesc.h"
 #include "mfx/pi/click/Click.h"
 #include "mfx/pi/click/ClickDesc.h"
 #include "mfx/pi/colorme/ColorMe.h"
@@ -164,6 +166,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 //		,	mfx::piapi::FactoryTpl <mfx::pi::osdet2::OnsetDetect2Desc, mfx::pi::osdet2::OnsetDetect2     >::create () // Does not work well enough
 		,	mfx::piapi::FactoryTpl <mfx::pi::distapf::DistApfDesc    , mfx::pi::distapf::DistApf         >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc <true>    , mfx::pi::lfo1::Lfo <true>         >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::adsr::EnvAdsrDesc       , mfx::pi::adsr::EnvAdsr            >::create ()
 		};
 
 		fact_list = l;

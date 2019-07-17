@@ -524,6 +524,11 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
+        ../../src/mfx/pi/adsr/EnvAdsr.cpp \
+        ../../src/mfx/pi/adsr/EnvAdsr.h \
+        ../../src/mfx/pi/adsr/EnvAdsrDesc.cpp \
+        ../../src/mfx/pi/adsr/EnvAdsrDesc.h \
+        ../../src/mfx/pi/adsr/Param.h \
         ../../src/mfx/pi/click/Click.cpp \
         ../../src/mfx/pi/click/Click.h \
         ../../src/mfx/pi/click/ClickDesc.cpp \

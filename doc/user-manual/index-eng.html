@@ -70,6 +70,7 @@
 	<li><a href="#fx-tremolo">Tremolo</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
+	<li><a href="#fx-adsr">ADSR — Control envelope</a></li>
 	<li><a href="#fx-ramp">Control ramp — Parameter transition</a></li>
 	<li><a href="#fx-lfo">LFO — Low frequency oscillator</a></li>
 	</ol>
@@ -2205,6 +2206,72 @@ This parameter is linked by default to the expression pedal.</p>
 
 
 
+<h3><a id="fx-adsr"></a>ADSR — Control envelope</h3>
+
+<p>This effect is only available in the control signal generator category
+since it does not process any audio signals, either input or output.
+It generates an ADSR envelope, following some control parameters.</p>
+<p>An ADSR is often used to control the evolution of an audio synthesis
+parameter during a note: volume, filter cutoff, etc.
+It is composed of 4 segments, played one after another:</p>
+<ul>
+<li><span class="ui">Attack</span>: the envelope rises from 0 to its nominal
+value (100%) after the note beginning (Note On).</li>
+<li><span class="ui">Decay</span>: occurs after the attack section.
+It leads the envelope to its sustain value.</li>
+<li><span class="ui">Sustain</span>: this section controls the envelope
+evolution when the note is hold.
+The envelope drops slowly to 0 at a speed programmed by the sustain time.
+When the latter is infinite, the envelope holds the sustain value until a
+new note event occurs.</li>
+<li><span class="ui">Release</span>: The envelope can run this section at
+any time, as soon as the played note is stopped (Note Off).
+This section allows the envelope to return to 0 at a controlled speed.</li>
+</ul>
+<p>The shape of each segement is of “RC load” type, mimicing the analogue
+synthesisers envelopes.</p>
+<p>Usually, <var>Trigger On</var> and <var>Trigger Off</var>are mapped on
+external events.</p>
+
+<p class="var">Trigger On</p>
+<p>When this parameter is set to a non-null value, the envelope generator
+is fed with a Note On event.
+The parameter value also gives the note velocity.</p>
+
+<p class="var">Trigger Off</p>
+<p>When this parameter is set to a non-null value, the envelope generator
+is fed with a Note Off event.</p>
+
+<p class="var">Velocity sensitivity</p>
+<p>This indicates a which point the envelope follows the note velocity
+given by the <var>Trigger On</var> parameter.
+At 0%, velocity is ignored.
+At 100%, the envelope is fully scaled with the velocity.</p>
+
+<p class="var">Attack time</p>
+<p>Attack time, in seconds.</p>
+
+<p class="var">Decay time</p>
+<p>Decay time, in seconds.</p>
+
+<p class="var">Sustain time</p>
+<p>Sustain time when the note is hold, in seconds.
+Indicates how long the envelope takes to fall down to 0 after the decay
+section.
+If the parameter is &ge;&nbsp;255, the sustain time is considered as infinite
+and the envelope drops only on a Note Off event.</p>
+
+<p class="var">Sustain level</p>
+<p>Sustain level, reached after the decay section.
+Can be negative or greater than 1 in absolute value.</p>
+
+<p class="var">Release time</p>
+<p>Release time to 0, in seconds.
+This section is run when a Note Off event is sent to the envelope
+generator.</p>
+
+
+
 <h3><a id="fx-ramp"></a>Control ramp — Parameter transition</h3>
 
 <p>This effect is only available in the control signal generator category
@@ -2426,6 +2493,11 @@ phase.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r20, 2019-07-17</b></p>
+<ul>
+<li>Added the ADSR effect.</li>
+</ul>
 
 <p><b>r19, 2019-07-16</b></p>
 <ul>
