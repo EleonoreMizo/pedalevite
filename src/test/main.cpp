@@ -1809,11 +1809,11 @@ int main (int argc, char *argv [])
 
 	int            ret_val = 0;
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = test_median_filter ();
 #endif
 
-#if 0
+#if 1
 	if (ret_val == 0) ret_val = test_adrv_dpvab ();
 #endif
 
