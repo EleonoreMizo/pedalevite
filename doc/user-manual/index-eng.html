@@ -1335,7 +1335,7 @@ Be careful, if the sound goes back to mono later, the effect is lost.</p>
 distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
 Phase set</p>
 <p>These parameters are identical to the ones from the
-<a href="fx-lfo">LFO</a>.</p>
+<a href="#fx-lfo">LFO</a>.</p>
 
 
 
@@ -1448,7 +1448,7 @@ It consists of a series of notch filters that reject the target signal only
 below a certain threshold.
 For example the 50 or 60Hz from the mains and its harmonics.
 But it can also be used as a broadband noise filter as a cheap alternative to
-<a href="fx-nzbl">Noise Bleach</a>.</p>
+<a href="#fx-nzbl">Noise Bleach</a>.</p>
 
 <p>To adjust the device, you need the noise without any other “useful” sound.
 Start by setting the global level to &minus;100dB.
@@ -1560,7 +1560,7 @@ No effect on the high- and low-pass filters.</p>
 <p class="var">Band 1/2/3/4 Bypass</p>
 <p>Deactivate a single band.</p>
 
-<h4>Édition graphique</h4>
+<h4>Graphic editing</h4>
 
 <p>You can also adjust the equalizer settings with an immediate graphical
 preview.</p>
@@ -1611,7 +1611,7 @@ for coloring the sound.</p>
 distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
 Phase set</p>
 <p>These parameters are identical to the ones from the
-<a href="fx-lfo">LFO</a>.</p>
+<a href="#fx-lfo">LFO</a>.</p>
 
 
 
@@ -2484,6 +2484,19 @@ The value 360 does not cause any change.
 This is useful when you want to apply a preset without changing the current
 phase.</p>
 
+<h4>Graphic editing</h4>
+
+<p>You can also adjust the LFO settings with an immediate graphical 
+preview of the waveform.
+The parameters can be scrolled as usual, they are displayed one by one at
+the bottom left.
+The very first parameter <span class="ui">Cycles</span> indicates how
+many oscillation cycles have to be displayed.</p>
+<p>The dots at the bottom right give the precision of the changes obtained
+with the <span class="keya">←</span> and <span class="keya">→</span> keys.
+This precision can be changed with <span class="keya">Select</span>.
+<span class="keya">Esc</span> to go back to the main parameter screen.</p>
+
 
 
 <h2><a id="troubleshooting"></a>V.&emsp;Troubleshooting</h2>
@@ -2493,6 +2506,12 @@ phase.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r21, 2019-07-18</b></p>
+<ul>
+<li>Added graphical editing for the LFO.</li>
+<li>Fixed broken hypertext links.</li>
+</ul>
 
 <p><b>r20, 2019-07-17</b></p>
 <ul>
