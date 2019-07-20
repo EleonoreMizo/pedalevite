@@ -12,6 +12,12 @@ If bit n is 0 it is reserved for GPU use.
 In addition channels 0 and 2 are used by the ARM software."
 joan, https://www.raspberrypi.org/forums/viewtopic.php?f=32&t=86339
 
+Update 2019-07-20:
+- Channel 4 does not work anymore.
+- /sys/module/dma/parameters/dmachans does not exist any more.
+These changes are probably related to the Pi 4 release. This needs more
+investigation.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
