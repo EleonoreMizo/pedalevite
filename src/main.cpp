@@ -479,7 +479,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_page_prog_move (_page_switcher)
 ,	_page_fx_lfo (_page_switcher, _loc_edit)
 ,	_page_menu_backup (_page_switcher)
-,	_page_edit_date (_page_switcher)
+,	_page_edit_date (_page_switcher, _cmd_line)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.

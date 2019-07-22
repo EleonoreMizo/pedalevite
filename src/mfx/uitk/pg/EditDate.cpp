@@ -31,6 +31,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
+#include "mfx/CmdLine.h"
+
+#if fstb_IS (SYS, LINUX)
+#include <unistd.h>
+#endif
 
 #include <cassert>
 #if fstb_IS (SYS, LINUX)
@@ -51,8 +56,9 @@ namespace pg
 
 
 
-EditDate::EditDate (PageSwitcher &page_switcher)
+EditDate::EditDate (PageSwitcher &page_switcher, const CmdLine &cmd_line)
 :	_page_switcher (page_switcher)
+,	_cmd_line (cmd_line)
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_fnt_l_ptr (0)
@@ -148,6 +154,13 @@ void	EditDate::do_disconnect ()
 		);
 		system (txt_0);
 		_change_flag = false;
+
+		// Changing the date breaks many time-based functions, especially the
+		// sleep-related commands. So restarting the program immediately is a
+		// lesser evil.
+		char * const * argv = _cmd_line.use_argv ();
+		char * const * envp = _cmd_line.use_envp ();
+		execve (argv [0], argv, envp);
 	}
 
 #endif

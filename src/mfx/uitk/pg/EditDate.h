@@ -38,6 +38,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+class CmdLine;
+
 namespace uitk
 {
 
@@ -56,7 +59,7 @@ class EditDate
 
 public:
 
-	explicit       EditDate (PageSwitcher &page_switcher);
+	explicit       EditDate (PageSwitcher &page_switcher, const CmdLine &cmd_line);
 	virtual        ~EditDate () = default;
 
 
@@ -99,6 +102,7 @@ private:
 	void           change_entry (int node_id, int dir);
 
 	PageSwitcher & _page_switcher;
+	const CmdLine& _cmd_line;
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
