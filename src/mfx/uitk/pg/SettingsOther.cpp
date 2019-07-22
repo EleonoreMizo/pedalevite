@@ -62,10 +62,13 @@ SettingsOther::SettingsOther (PageSwitcher &page_switcher)
 ,	_page_size ()
 ,	_tempo_i_sptr (TxtSPtr (new NText (Entry_TEMPO_I)))
 ,	_tempo_f_sptr (TxtSPtr (new NText (Entry_TEMPO_F)))
-,	_click_sptr (TxtSPtr (new NText (Entry_CLICK)))
-,	_save_sptr ( TxtSPtr (new NText (Entry_SAVE)))
+,	_click_sptr (  TxtSPtr (new NText (Entry_CLICK  )))
+,	_save_sptr (   TxtSPtr (new NText (Entry_SAVE   )))
+,	_backup_sptr ( TxtSPtr (new NText (Entry_BACKUP )))
+,	_msg_arg ()
 {
 	_save_sptr->set_text ("Save settings");
+	_backup_sptr->set_text ("Backup\xE2\x80\xA6");
 }
 
 
@@ -89,25 +92,30 @@ void	SettingsOther::do_connect (Model &model, const View &view, PageMgrInterface
 	_tempo_f_sptr->set_font (fnt._m);
 	_click_sptr  ->set_font (fnt._m);
 	_save_sptr   ->set_font (fnt._m);
+	_backup_sptr ->set_font (fnt._m);
 
 	_tempo_i_sptr->set_coord (Vec2d ( 0      , 0 * h_m    ));
 	_tempo_f_sptr->set_coord (Vec2d (11 * w_m, 0 * h_m    ));
 	_click_sptr  ->set_coord (Vec2d ( 0      , 1 * h_m    ));
 	_save_sptr   ->set_coord (Vec2d ( 0      , 5 * h_m / 2));
+	_backup_sptr ->set_coord (Vec2d ( 0      , 7 * h_m / 2));
 
 	_click_sptr  ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
 	_save_sptr   ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
+	_backup_sptr ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
 
 	_page_ptr->push_back (_tempo_i_sptr);
 	_page_ptr->push_back (_tempo_f_sptr);
 	_page_ptr->push_back (_click_sptr  );
 	_page_ptr->push_back (_save_sptr   );
+	_page_ptr->push_back (_backup_sptr );
 
 	PageMgrInterface::NavLocList  nav_list;
 	PageMgrInterface::add_nav (nav_list, Entry_TEMPO_I);
 	PageMgrInterface::add_nav (nav_list, Entry_TEMPO_F);
 	PageMgrInterface::add_nav (nav_list, Entry_CLICK  );
 	PageMgrInterface::add_nav (nav_list, Entry_SAVE   );
+	PageMgrInterface::add_nav (nav_list, Entry_BACKUP );
 	page.set_nav_layout (nav_list);
 
 	refresh_display ();
@@ -162,10 +170,19 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 					const int      ret_val_loc = _model_ptr->save_to_disk ();
 					if (ret_val_loc != 0)
 					{
-						/*** To do ***/
 						assert (false);
+						_msg_arg._title = "SOMETHING FAILED.";
+						_msg_arg._choice_arr.clear ();
+						_msg_arg._choice_arr.push_back ("Well, OK\xE2\x80\xA6");
+						_msg_arg._selection = 0;
+						_msg_arg._check_set.clear ();
+						_msg_arg._ok_flag = false;
+						_page_switcher.call_page (PageType_QUESTION, &_msg_arg, node_id);
 					}
 				}
+				break;
+			case Entry_BACKUP:
+				_page_switcher.call_page (PageType_MENU_BACKUP, 0, node_id);
 				break;
 			default:
 				ret_val = EvtProp_PASS;

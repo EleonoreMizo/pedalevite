@@ -919,6 +919,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.h \
         ../../src/mfx/uitk/pg/CurProg.cpp \
         ../../src/mfx/uitk/pg/CurProg.h \
+        ../../src/mfx/uitk/pg/EditDate.cpp \
+        ../../src/mfx/uitk/pg/EditDate.h \
         ../../src/mfx/uitk/pg/EditFxId.cpp \
         ../../src/mfx/uitk/pg/EditFxId.h \
         ../../src/mfx/uitk/pg/EditLabel.cpp \
@@ -937,6 +939,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/Levels.h \
         ../../src/mfx/uitk/pg/ListPresets.cpp \
         ../../src/mfx/uitk/pg/ListPresets.h \
+        ../../src/mfx/uitk/pg/MenuBackup.cpp \
+        ../../src/mfx/uitk/pg/MenuBackup.h \
         ../../src/mfx/uitk/pg/MenuMain.cpp \
         ../../src/mfx/uitk/pg/MenuMain.h \
         ../../src/mfx/uitk/pg/MenuPresets.cpp \

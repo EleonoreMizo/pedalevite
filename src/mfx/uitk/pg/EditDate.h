@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        SettingsOther.h
-        Author: Laurent de Soras, 2016
+        EditDate.h
+        Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_SettingsOther_HEADER_INCLUDED)
-#define mfx_uitk_pg_SettingsOther_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_EditDate_HEADER_INCLUDED)
+#define mfx_uitk_pg_EditDate_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,16 +27,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
-#include "mfx/uitk/PageMgrInterface.h"
-#include "mfx/Cst.h"
-#include "mfx/Dir.h"
 
-#include <array>
 #include <memory>
-#include <vector>
+
+#include <ctime>
 
 
 
@@ -52,7 +48,7 @@ namespace pg
 
 
 
-class SettingsOther
+class EditDate
 :	public PageInterface
 {
 
@@ -60,8 +56,8 @@ class SettingsOther
 
 public:
 
-	explicit       SettingsOther (PageSwitcher &page_switcher);
-	virtual        ~SettingsOther () = default;
+	explicit       EditDate (PageSwitcher &page_switcher);
+	virtual        ~EditDate () = default;
 
 
 
@@ -77,10 +73,6 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
-	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_tempo (double bpm);
-	virtual void   do_set_click (bool click_flag);
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -89,32 +81,40 @@ private:
 
 	enum Entry
 	{
-		Entry_TEMPO_I = 1000,
-		Entry_TEMPO_F,
-		Entry_CLICK,
-		Entry_SAVE,
-		Entry_BACKUP
+		Entry_T = 0,
+		Entry_Y,
+		Entry_M,
+		Entry_D,
+		Entry_H,
+		Entry_MIN,
+		Entry_SEC,
+
+		Entry_NBR_ELT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 
-	void           refresh_display ();
-	EvtProp        change_tempo (double delta);
+	void           update_display ();
+	void           update_field (NText &label, const char format_0 [], const tm &utc);
+	void           update_text (NText &label, const std::string &txt);
+	void           change_entry (int node_id, int dir);
 
 	PageSwitcher & _page_switcher;
-	Model *        _model_ptr;    // 0 = not connected
-	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
+	const ui::Font *              // 0 = not connected
+	               _fnt_l_ptr;
+	const ui::Font *              // 0 = not connected
+	               _fnt_ptr;
 
-	TxtSPtr        _tempo_i_sptr;
-	TxtSPtr        _tempo_f_sptr;
-	TxtSPtr        _click_sptr;
-	TxtSPtr        _save_sptr;
-	TxtSPtr        _backup_sptr;
-
-	Question::QArg _msg_arg;
+	TxtSPtr        _title_sptr;
+	TxtSPtr        _year_sptr;
+	TxtSPtr        _month_sptr;
+	TxtSPtr        _day_sptr;
+	TxtSPtr        _hour_sptr;
+	TxtSPtr        _minute_sptr;
+	TxtSPtr        _second_sptr;
 
 
 
@@ -122,13 +122,13 @@ private:
 
 private:
 
-	               SettingsOther ()                               = delete;
-	               SettingsOther (const SettingsOther &other)     = delete;
-	SettingsOther& operator = (const SettingsOther &other)        = delete;
-	bool           operator == (const SettingsOther &other) const = delete;
-	bool           operator != (const SettingsOther &other) const = delete;
+	               EditDate ()                               = delete;
+	               EditDate (const EditDate &other)          = delete;
+	EditDate &     operator = (const EditDate &other)        = delete;
+	bool           operator == (const EditDate &other) const = delete;
+	bool           operator != (const EditDate &other) const = delete;
 
-}; // class SettingsOther
+}; // class EditDate
 
 
 
@@ -138,11 +138,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/SettingsOther.hpp"
+//#include "mfx/uitk/pg/EditDate.hpp"
 
 
 
-#endif   // mfx_uitk_pg_SettingsOther_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_EditDate_HEADER_INCLUDED
 
 
 

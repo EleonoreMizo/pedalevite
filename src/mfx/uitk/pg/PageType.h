@@ -77,6 +77,8 @@ enum PageType
 	PageType_BANK_MOVE,
 	PageType_PROG_MOVE,
 	PageType_FX_LFO,
+	PageType_MENU_BACKUP,
+	PageType_EDIT_DATE,
 
 	PageType_NBR_ELT
 

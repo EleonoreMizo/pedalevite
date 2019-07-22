@@ -71,6 +71,7 @@
 #include "mfx/uitk/pg/CurProg.h"
 #include "mfx/uitk/pg/CtrlEdit.h"
 #include "mfx/uitk/pg/CtrlProg.h"
+#include "mfx/uitk/pg/EditDate.h"
 #include "mfx/uitk/pg/EditFxId.h"
 #include "mfx/uitk/pg/EditLabel.h"
 #include "mfx/uitk/pg/EditProg.h"
@@ -80,6 +81,7 @@
 #include "mfx/uitk/pg/FxPEq.h"
 #include "mfx/uitk/pg/Levels.h"
 #include "mfx/uitk/pg/ListPresets.h"
+#include "mfx/uitk/pg/MenuBackup.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/pg/MenuPresets.h"
 #include "mfx/uitk/pg/MenuSlot.h"
@@ -358,6 +360,10 @@ public:
 	               _page_prog_move;
 	mfx::uitk::pg::FxLfo
 	               _page_fx_lfo;
+	mfx::uitk::pg::MenuBackup
+	               _page_menu_backup;
+	mfx::uitk::pg::EditDate
+	               _page_edit_date;
 
 	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
 	               ~Context ();
@@ -472,6 +478,8 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_page_bank_move (_page_switcher)
 ,	_page_prog_move (_page_switcher)
 ,	_page_fx_lfo (_page_switcher, _loc_edit)
+,	_page_menu_backup (_page_switcher)
+,	_page_edit_date (_page_switcher)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
@@ -623,6 +631,8 @@ fprintf (stderr, "Reading ESC button...\n");
 	_page_switcher.add_page (mfx::uitk::pg::PageType_BANK_MOVE        , _page_bank_move        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_PROG_MOVE        , _page_prog_move        );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_FX_LFO           , _page_fx_lfo           );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_BACKUP      , _page_menu_backup      );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_DATE        , _page_edit_date        );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

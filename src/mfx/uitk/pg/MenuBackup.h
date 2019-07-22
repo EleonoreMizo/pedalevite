@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        SettingsOther.h
-        Author: Laurent de Soras, 2016
+        MenuBackup.h
+        Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_SettingsOther_HEADER_INCLUDED)
-#define mfx_uitk_pg_SettingsOther_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_MenuBackup_HEADER_INCLUDED)
+#define mfx_uitk_pg_MenuBackup_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,16 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
-#include "mfx/uitk/PageMgrInterface.h"
-#include "mfx/Cst.h"
-#include "mfx/Dir.h"
-
-#include <array>
-#include <memory>
-#include <vector>
 
 
 
@@ -52,7 +44,7 @@ namespace pg
 
 
 
-class SettingsOther
+class MenuBackup
 :	public PageInterface
 {
 
@@ -60,8 +52,8 @@ class SettingsOther
 
 public:
 
-	explicit       SettingsOther (PageSwitcher &page_switcher);
-	virtual        ~SettingsOther () = default;
+	explicit       MenuBackup (PageSwitcher &page_switcher);
+	virtual        ~MenuBackup () = default;
 
 
 
@@ -77,10 +69,6 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
-	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_tempo (double bpm);
-	virtual void   do_set_click (bool click_flag);
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -89,17 +77,13 @@ private:
 
 	enum Entry
 	{
-		Entry_TEMPO_I = 1000,
-		Entry_TEMPO_F,
-		Entry_CLICK,
+		Entry_DATE = 0,
 		Entry_SAVE,
-		Entry_BACKUP
+		Entry_RESTORE,
+		Entry_EXPORT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
-
-	void           refresh_display ();
-	EvtProp        change_tempo (double delta);
 
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
@@ -107,14 +91,13 @@ private:
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
+	const ui::Font *              // 0 = not connected
+	               _fnt_ptr;
 
-	TxtSPtr        _tempo_i_sptr;
-	TxtSPtr        _tempo_f_sptr;
-	TxtSPtr        _click_sptr;
+	TxtSPtr        _date_sptr;
 	TxtSPtr        _save_sptr;
-	TxtSPtr        _backup_sptr;
-
-	Question::QArg _msg_arg;
+	TxtSPtr        _restore_sptr;
+	TxtSPtr        _export_sptr;
 
 
 
@@ -122,13 +105,13 @@ private:
 
 private:
 
-	               SettingsOther ()                               = delete;
-	               SettingsOther (const SettingsOther &other)     = delete;
-	SettingsOther& operator = (const SettingsOther &other)        = delete;
-	bool           operator == (const SettingsOther &other) const = delete;
-	bool           operator != (const SettingsOther &other) const = delete;
+	               MenuBackup ()                               = delete;
+	               MenuBackup (const MenuBackup &other)        = delete;
+	MenuBackup &   operator = (const MenuBackup &other)        = delete;
+	bool           operator == (const MenuBackup &other) const = delete;
+	bool           operator != (const MenuBackup &other) const = delete;
 
-}; // class SettingsOther
+}; // class MenuBackup
 
 
 
@@ -138,11 +121,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/SettingsOther.hpp"
+//#include "mfx/uitk/pg/MenuBackup.hpp"
 
 
 
-#endif   // mfx_uitk_pg_SettingsOther_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_MenuBackup_HEADER_INCLUDED
 
 
 
