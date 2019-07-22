@@ -549,8 +549,8 @@ fprintf (stderr, "r EBADFD\n");
 				}
 				else
 				{
-					int            m = 100;
-					if (loop_count > 1000)
+					int            m = 2000;
+					if (loop_count > 10000)
 					{
 						m = 100000;
 					}
@@ -626,8 +626,8 @@ fprintf (stderr, "w EBADFD\n");
 				}
 				else
 				{
-					int            m = 100;
-					if (loop_count > 1000)
+					int            m = 2000;
+					if (loop_count > 10000)
 					{
 						m = 100000;
 					}
