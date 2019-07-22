@@ -156,8 +156,6 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 			case Entry_SAVE:
 #if fstb_IS (SYS, LINUX)
 				{
-					assert (_config_dir.find (' ') == std::string::npos);
-					assert (_config_current.find (' ') == std::string::npos);
 					std::string    cmd ("sudo ");
 					cmd += Cst::_rw_cmd_script_pathname;
 					cmd += " cp \'";
@@ -187,19 +185,21 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 			case Entry_EXPORT:
 #if fstb_IS (SYS, LINUX)
 				{
-					assert (_config_dir.find (' ') == std::string::npos);
-					assert (_config_current.find (' ') == std::string::npos);
-					system ("sudo mount -t vfat /dev/sda1 /mnt/sda1");
-					std::string    cmd ("sudo cp \'");
-					cmd += Cst::_config_dir;
-					cmd += "/";
-					cmd += Cst::_config_current;
-					cmd += "\' \'";
-					cmd += "/mnt/sda1/";
-					cmd += make_backup_filename ();
-					cmd += "\'";
-					const int      ret_sc = system (cmd.c_str ());
-					system ("sudo umount /mnt/sda1");
+					int            ret_sc =
+						system ("sudo mount -t vfat /dev/sda1 /mnt/sda1");
+					if (ret_sc1 == 0)
+					{
+						std::string    cmd ("sudo cp \'");
+						cmd += Cst::_config_dir;
+						cmd += "/";
+						cmd += Cst::_config_current;
+						cmd += "\' \'";
+						cmd += "/mnt/sda1/";
+						cmd += make_backup_filename ();
+						cmd += "\'";
+						ret_sc = system (cmd.c_str ());
+						system ("sudo umount /mnt/sda1");
+					}
 					Question::msg_box (
 						"Saved to USB",
 						(ret_sc == 0) ? "OK" : "Failed",
