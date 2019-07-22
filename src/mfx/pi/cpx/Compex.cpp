@@ -143,7 +143,8 @@ Compex::Compex ()
 ,	_ratio_lo (1)
 ,	_knee_coef_arr ({{ 0, 1, 0 }})
 ,	_knee_th_abs (-0.5f)
-,	_sc_power ()
+,	_sc_power_1 ()
+,	_sc_power_2 ()
 ,	_buf_tmp ()
 ,	_cur_gain (0)
 {
@@ -254,8 +255,6 @@ void	Compex::do_process_block (ProcInfo &proc)
 	int            pos = 0;
 	do
 	{
-		// We need this intermediate varaible because for some reason GCC
-		// fails to link when _update_resol is directly used in std::min.
 		const int      max_len  = _update_resol;
 		const int      work_len = std::min (proc._nbr_spl - pos, max_len);
 
@@ -283,18 +282,31 @@ void	Compex::do_process_block (ProcInfo &proc)
 
 
 
-float	Compex::AddProc::process_scalar (float in)
+template <int NC>
+float	Compex::AddProc <NC>::process_scalar (float in)
 {
 	return (in);
 }
 
+template <>
+float	Compex::AddProc <2>::process_scalar (float in)
+{
+	return (in * 0.5f);
+}
 
 
-fstb::ToolsSimd::VectF32	Compex::AddProc::process_vect (const fstb::ToolsSimd::VectF32 &in)
+
+template <int NC>
+fstb::ToolsSimd::VectF32	Compex::AddProc <NC>::process_vect (const fstb::ToolsSimd::VectF32 &in)
 {
 	return (in);
 }
 
+template <>
+fstb::ToolsSimd::VectF32	Compex::AddProc <2>::process_vect (const fstb::ToolsSimd::VectF32 &in)
+{
+	return (in * fstb::ToolsSimd::set1_f32 (0.5f));
+}
 
 
 void	Compex::clear_buffers ()
@@ -426,13 +438,27 @@ void	Compex::process_block_part (float * const out_ptr_arr [], const float * con
 		(_use_side_chain_flag) ? sc_ptr_arr : in_ptr_arr;
 	int            nbr_chn_analyse = _nbr_chn_ana;
 
-	_sc_power.prepare_env_input (
-		&_buf_tmp [0],
-		analyse_ptr_arr,
-		nbr_chn_analyse,
-		pos_beg,
-		pos_end
-	);
+	if (nbr_chn_analyse == 2)
+	{
+		_sc_power_2.prepare_env_input (
+			&_buf_tmp [0],
+			analyse_ptr_arr,
+			nbr_chn_analyse,
+			pos_beg,
+			pos_end
+		);
+	}
+	else
+	{
+		// Works also for nbr_chn_analyse > 2, but scans only the first channel.
+		_sc_power_1.prepare_env_input (
+			&_buf_tmp [0],
+			analyse_ptr_arr,
+			1,
+			pos_beg,
+			pos_end
+		);
+	}
 
 	float *        tmp_ptr = &_buf_tmp [0];
 	const int      nbr_spl = pos_end - pos_beg;

@@ -102,6 +102,7 @@ private:
 		fstb::DataAlign <true>
 	> Smoother;
 
+	template <int NC>
 	class AddProc
 	{
 	public:
@@ -154,8 +155,10 @@ private:
 	               _knee_coef_arr;
 	float          _knee_th_abs;        // knee_lvl(dB) * 0.5 / 6.0206. * 0.5 because it's a radius.
 
-	dsp::dyn::SCPower <AddProc>
-	               _sc_power;
+	dsp::dyn::SCPower <AddProc <1> >
+	               _sc_power_1;
+	dsp::dyn::SCPower <AddProc <2> >
+	               _sc_power_2;
 	SplBuf         _buf_tmp;
 	float          _cur_gain;           // Stored as log2.
 
