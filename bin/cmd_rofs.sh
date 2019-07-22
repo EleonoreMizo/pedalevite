@@ -8,5 +8,6 @@ fi
 fsro=`mount | grep " / " | grep -c "(ro[),]"`
 if [ $fsro != "0" ]; then mount -o remount,rw / ; fi
 "$@"
+res=$?
 if [ $fsro != "0" ]; then mount -o remount,ro / ; fi
-
+exit $res
