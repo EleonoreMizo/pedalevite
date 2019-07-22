@@ -92,8 +92,8 @@ void	MenuBackup::do_connect (Model &model, const View &view, PageMgrInterface &p
 
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
-	const int      x_mid =  _page_size [0]      >> 1;
-	const int      w_sel = (_page_size [0] * 3) >> 2;
+	const int      x_mid =  scr_w      >> 1;
+	const int      w_sel = (scr_w * 3) >> 2;
 
 	_date_sptr   ->set_font (*_fnt_ptr);
 	_save_sptr   ->set_font (*_fnt_ptr);
