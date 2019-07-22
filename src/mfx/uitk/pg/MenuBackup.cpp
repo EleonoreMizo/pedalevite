@@ -62,6 +62,7 @@ MenuBackup::MenuBackup (PageSwitcher &page_switcher)
 ,	_save_sptr (   new NText (Entry_SAVE   ))
 ,	_restore_sptr (new NText (Entry_RESTORE))
 ,	_export_sptr ( new NText (Entry_EXPORT ))
+,	_msg_arg ()
 {
 	_date_sptr   ->set_justification (0.5f, 0, false);
 	_save_sptr   ->set_justification (0.5f, 0, false);
@@ -167,7 +168,12 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 					cmd += "/";
 					cmd += Cst::_config_current;
 					cmd += ".bak-`date +%Y-%m-%d-%H%M`";
-					system (cmd.c_str ());
+					const int      ret_sc = system (cmd.c_str ());
+					Question::msg_box (
+						"Saved backup",
+						(ret_sc == 0) ? "OK" : "Failed",
+						_msg_arg, _page_switcher, node_id
+					);
 				}
 #else // fstb_IS (SYS, LINUX)
 				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
@@ -191,8 +197,13 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 					cmd += "/mnt/sda1/";
 					cmd += Cst::_config_current;
 					cmd += ".bak-`date +%Y-%m-%d-%H%M`";
-					system (cmd.c_str ());
+					const int      ret_sc = system (cmd.c_str ());
 					system ("sudo umount /mnt/sda1");
+					Question::msg_box (
+						"Saved to USB",
+						(ret_sc == 0) ? "OK" : "Failed",
+						_msg_arg, _page_switcher, node_id
+					);
 				}
 #else // fstb_IS (SYS, LINUX)
 				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);

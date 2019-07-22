@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
 
@@ -98,6 +99,10 @@ private:
 	TxtSPtr        _save_sptr;
 	TxtSPtr        _restore_sptr;
 	TxtSPtr        _export_sptr;
+
+	Question::QArg _msg_arg;
+
+
 
 
 
