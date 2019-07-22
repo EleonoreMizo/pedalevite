@@ -75,6 +75,8 @@ public:
 	explicit       Question (PageSwitcher &page_switcher);
 	virtual        ~Question () = default;
 
+	static void    msg_box (std::string title, std::string msg_ok, QArg &arg, PageSwitcher &ps, int node_id = -1);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

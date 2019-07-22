@@ -66,6 +66,19 @@ Question::Question (PageSwitcher &page_switcher)
 
 
 
+void	Question::msg_box (std::string title, std::string msg_ok, QArg &arg, PageSwitcher &ps, int node_id)
+{
+	arg._title = title;
+	arg._choice_arr.clear ();
+	arg._choice_arr.push_back (msg_ok);
+	arg._selection = 0;
+	arg._check_set.clear ();
+	arg._ok_flag = false;
+	ps.call_page (PageType_QUESTION, &arg, node_id);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

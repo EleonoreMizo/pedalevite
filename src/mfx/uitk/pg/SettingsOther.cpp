@@ -171,13 +171,10 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 					if (ret_val_loc != 0)
 					{
 						assert (false);
-						_msg_arg._title = "SOMETHING FAILED.";
-						_msg_arg._choice_arr.clear ();
-						_msg_arg._choice_arr.push_back ("Well, OK\xE2\x80\xA6");
-						_msg_arg._selection = 0;
-						_msg_arg._check_set.clear ();
-						_msg_arg._ok_flag = false;
-						_page_switcher.call_page (PageType_QUESTION, &_msg_arg, node_id);
+						Question::msg_box (
+							"SOMETHING FAILED.", "Well, OK\xE2\x80\xA6",
+							_msg_arg, _page_switcher, node_id
+						);
 					}
 				}
 				break;
