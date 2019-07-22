@@ -260,6 +260,10 @@ void	EditDate::change_entry (int node_id, int dir)
 	_utc.tm_hour = (_utc.tm_hour + 24) % 24;
 	_utc.tm_min  = (_utc.tm_min  + 60) % 60;
 	_utc.tm_sec  = (_utc.tm_sec  + 60) % 60;
+
+	_change_flag = true;
+
+	update_display ();
 }
 
 
