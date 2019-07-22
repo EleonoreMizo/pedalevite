@@ -96,7 +96,6 @@ private:
 
 	void           update_display ();
 	void           update_field (NText &label, const char format_0 [], const tm &utc);
-	void           update_text (NText &label, const std::string &txt);
 	void           change_entry (int node_id, int dir);
 
 	PageSwitcher & _page_switcher;
@@ -114,7 +113,8 @@ private:
 	TxtSPtr        _day_sptr;
 	TxtSPtr        _hour_sptr;
 	TxtSPtr        _minute_sptr;
-	TxtSPtr        _second_sptr;
+	tm             _utc;
+	bool           _change_flag;
 
 
 

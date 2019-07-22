@@ -63,7 +63,7 @@ EditDate::EditDate (PageSwitcher &page_switcher)
 ,	_day_sptr (   new NText (Entry_D  ))
 ,	_hour_sptr (  new NText (Entry_H  ))
 ,	_minute_sptr (new NText (Entry_MIN))
-,	_second_sptr (new NText (Entry_SEC))
+,	_change_flag (false)
 {
 	_title_sptr->set_text ("UTC date + time");
 	_title_sptr->set_justification (0.5f, 0, false);
@@ -82,6 +82,11 @@ void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_fnt_l_ptr = &fnt._l;
 	_fnt_ptr   = &fnt._m;
 
+	time_t         timer;
+	time (&timer);
+	_utc         = *gmtime (&timer);
+	_change_flag = false;
+
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
 
@@ -91,7 +96,6 @@ void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_day_sptr   ->set_font (*_fnt_ptr);
 	_hour_sptr  ->set_font (*_fnt_ptr);
 	_minute_sptr->set_font (*_fnt_ptr);
-	_second_sptr->set_font (*_fnt_ptr);
 
 	_title_sptr ->set_coord (Vec2d (scr_w >> 1, 0));
 	_year_sptr  ->set_coord (Vec2d (0, h_m * 2));
@@ -99,14 +103,12 @@ void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_day_sptr   ->set_coord (Vec2d (0, h_m * 4));
 	_hour_sptr  ->set_coord (Vec2d (0, h_m * 5));
 	_minute_sptr->set_coord (Vec2d (0, h_m * 6));
-	_second_sptr->set_coord (Vec2d (0, h_m * 7));
 
 	_year_sptr  ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_month_sptr ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_day_sptr   ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_hour_sptr  ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_minute_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_second_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
 	_page_ptr->push_back (_title_sptr );
 	_page_ptr->push_back (_year_sptr  );
@@ -114,7 +116,6 @@ void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr->push_back (_day_sptr   );
 	_page_ptr->push_back (_hour_sptr  );
 	_page_ptr->push_back (_minute_sptr);
-	_page_ptr->push_back (_second_sptr);
 
 #if fstb_IS (SYS, LINUX)
 
@@ -124,21 +125,32 @@ void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	PageMgrInterface::add_nav (nav_list, Entry_D  );
 	PageMgrInterface::add_nav (nav_list, Entry_H  );
 	PageMgrInterface::add_nav (nav_list, Entry_MIN);
-	PageMgrInterface::add_nav (nav_list, Entry_SEC);
 	_page_ptr->set_nav_layout (nav_list);
 
 #endif
 
 	update_display ();
-
-	_page_ptr->set_timer (Entry_SEC, true);
 }
 
 
 
 void	EditDate::do_disconnect ()
 {
-	_page_ptr->set_timer (Entry_SEC, false);
+#if fstb_IS (SYS, LINUX)
+
+	if (_change_flag)
+	{
+		// Sets the new date
+		char           txt_0 [255+1];
+		strftime (txt_0, sizeof (txt_0),
+			"sudo date --utc -s \"%Y-%m-%d %H:%M:%S\"",
+			&_utc
+		);
+		system (txt_0);
+		_change_flag = false;
+	}
+
+#endif
 }
 
 
@@ -185,16 +197,11 @@ MsgHandlerInterface::EvtProp	EditDate::do_handle_evt (const NodeEvt &evt)
 
 void	EditDate::update_display ()
 {
-	time_t         timer;
-	time (&timer);
-	const tm       utc (*gmtime (&timer));
-
-	update_field (*_year_sptr  , "Year  : %Y"   , utc);
-	update_field (*_month_sptr , "Month : %m %b", utc);
-	update_field (*_day_sptr   , "Day   : %d %a", utc);
-	update_field (*_hour_sptr  , "Hour  : %H"   , utc);
-	update_field (*_minute_sptr, "Minute: %M"   , utc);
-	update_field (*_second_sptr, "Second: %S"   , utc);
+	update_field (*_year_sptr  , "Year  : %Y"   , _utc);
+	update_field (*_month_sptr , "Month : %m %b", _utc);
+	update_field (*_day_sptr   , "Day   : %d %a", _utc);
+	update_field (*_hour_sptr  , "Hour  : %H"   , _utc);
+	update_field (*_minute_sptr, "Minute: %M"   , _utc);
 }
 
 
@@ -205,85 +212,54 @@ void	EditDate::update_field (NText &label, const char format_0 [], const tm &utc
 
 	char           txt_0 [255+1];
 	strftime (txt_0, sizeof (txt_0), format_0, &utc);
-	update_text (label, txt_0);
-}
-
-
-
-void	EditDate::update_text (NText &label, const std::string &txt)
-{
-	if (label.get_text () != txt)
-	{
-		label.set_text (txt);
-	}
+	label.set_text (txt_0);
 }
 
 
 
 void	EditDate::change_entry (int node_id, int dir)
 {
-	time_t         timer;
-	time (&timer);
-	tm             utc (*gmtime (&timer));
-
 	switch (node_id)
 	{
 	case Entry_Y:
-		utc.tm_year += dir;
+		_utc.tm_year += dir;
 		break;
 	case Entry_M:
-		utc.tm_mon  += dir;
+		_utc.tm_mon  += dir;
 		break;
 	case Entry_D:
-		utc.tm_mday += dir;
+		_utc.tm_mday += dir;
 		break;
 	case Entry_H:
-		utc.tm_hour += dir;
+		_utc.tm_hour += dir;
 		break;
 	case Entry_MIN:
-		utc.tm_min  += dir;
+		_utc.tm_min  += dir;
 		break;
 	case Entry_SEC:
-		utc.tm_sec  += dir;
+		_utc.tm_sec  += dir;
 		break;
 	}
 
 	// Checks consistency
-	utc.tm_year = fstb::limit (utc.tm_year, 1984, 2099);
-	const bool     mul004_flag = ((utc.tm_year %   4) == 0);
-	const bool     mul100_flag = ((utc.tm_year % 100) == 0);
-	const bool     mul400_flag = ((utc.tm_year % 400) == 0);
-	utc.tm_mon  = (utc.tm_mon + 12) % 12;
+	_utc.tm_year = fstb::limit (_utc.tm_year, 84, 2099 - 1900);
+	const bool     mul004_flag = ((_utc.tm_year %   4) == 0);
+	const bool     mul100_flag = ((_utc.tm_year % 100) == 0);
+	const bool     mul400_flag = ((_utc.tm_year % 400) == 0);
+	_utc.tm_mon  = (_utc.tm_mon + 12) % 12;
 	static const int  dpm_arr [12] =
 	{
 		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 	};
-	int            dpm_cur = dpm_arr [utc.tm_mon];
-	if (utc.tm_mon == 1 && mul004_flag && (! mul100_flag || mul400_flag))
+	int            dpm_cur = dpm_arr [_utc.tm_mon];
+	if (_utc.tm_mon == 1 && mul004_flag && (! mul100_flag || mul400_flag))
 	{
 		++ dpm_cur;
 	}
-	utc.tm_mday = (utc.tm_mday + dpm_cur) % dpm_cur;
-	utc.tm_hour = (utc.tm_hour + 24) % 24;
-	utc.tm_min  = (utc.tm_min  + 60) % 60;
-	utc.tm_sec  = (utc.tm_sec  + 60) % 60;
-
-#if fstb_IS (SYS, LINUX)
-
-	// Sets the new date
-	char           txt_0 [255+1];
-	strftime (txt_0, sizeof (txt_0),
-		"sudo date --utc %m%d%H%M%Y.%S",
-		&utc
-	);
-	system (txt_0);
-	update_display ();
-
-#else
-
-	_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
-
-#endif
+	_utc.tm_mday = (_utc.tm_mday - 1 + dpm_cur) % dpm_cur + 1;
+	_utc.tm_hour = (_utc.tm_hour + 24) % 24;
+	_utc.tm_min  = (_utc.tm_min  + 60) % 60;
+	_utc.tm_sec  = (_utc.tm_sec  + 60) % 60;
 }
 
 
