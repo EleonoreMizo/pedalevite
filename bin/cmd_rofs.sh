@@ -7,6 +7,6 @@ fi
 
 fsro=`mount | grep " / " | grep -c "(ro[),]"`
 if [ $fsro != "0" ]; then mount -o remount,rw / ; fi
-mv "$@"
+"$@"
 if [ $fsro != "0" ]; then mount -o remount,ro / ; fi
 

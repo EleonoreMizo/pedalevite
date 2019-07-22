@@ -75,12 +75,9 @@ int	FileIOPi3::do_write_txt_file (const std::string &pathname, const std::string
 	if (ret_val == 0)
 	{
 		std::string    cmd = "sudo ";
-#if 1
-		cmd += Cst::_copy_script_pathname;
-#else
-		cmd += "mv";
-#endif
-		cmd += " \'";
+		cmd += Cst::_rw_cmd_script_pathname;
+		cmd += " ";
+		cmd += "mv \'";
 		cmd += pathname_tmp;
 		cmd += "\' \'";
 		cmd += pathname;

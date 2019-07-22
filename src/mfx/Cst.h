@@ -113,7 +113,7 @@ public:
 	static const std::string
 	               _config_dir;
 	static const std::string
-	               _copy_script_pathname;
+	               _rw_cmd_script_pathname;
 
 
 
