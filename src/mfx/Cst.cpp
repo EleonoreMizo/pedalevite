@@ -63,11 +63,11 @@ const std::string	Cst::_plugin_tuner   = "\?tuner";
 
 const std::string	Cst::_empty_preset_name = "<Empty preset>";
 
-const std::string	Cst::_config_current = "current";      // Filename. Should not contain spaces
+const std::string	Cst::_config_current = "current";
 const std::string	Cst::_config_factory = "factory-default";
 const std::string	Cst::_config_dir     =
 #if fstb_IS (SYS, LINUX)
-	"/opt/pedalevite/etc/config"; // Should not contain spaces
+	"/opt/pedalevite/etc/config";
 #else
 	"../../../etc/config";
 #endif

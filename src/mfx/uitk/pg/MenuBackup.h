@@ -86,6 +86,9 @@ private:
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 
+	static std::string
+	               make_backup_filename ();
+
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
@@ -101,8 +104,6 @@ private:
 	TxtSPtr        _export_sptr;
 
 	Question::QArg _msg_arg;
-
-
 
 
 

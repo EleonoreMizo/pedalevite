@@ -35,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <cassert>
 #if fstb_IS (SYS, LINUX)
 #include <cstdlib>
+#include <ctime>
 #endif
 
 
@@ -159,15 +160,15 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 					assert (_config_current.find (' ') == std::string::npos);
 					std::string    cmd ("sudo ");
 					cmd += Cst::_rw_cmd_script_pathname;
-					cmd += " cp ";
+					cmd += " cp \'";
 					cmd += Cst::_config_dir;
 					cmd += "/";
 					cmd += Cst::_config_current;
-					cmd += " ";
+					cmd += "\' \'";
 					cmd += Cst::_config_dir;
 					cmd += "/";
-					cmd += Cst::_config_current;
-					cmd += ".bak-`date +%Y-%m-%d-%H%M`";
+					cmd += make_backup_filename ();
+					cmd += "\'";
 					const int      ret_sc = system (cmd.c_str ());
 					Question::msg_box (
 						"Saved backup",
@@ -189,14 +190,14 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 					assert (_config_dir.find (' ') == std::string::npos);
 					assert (_config_current.find (' ') == std::string::npos);
 					system ("sudo mount -t vfat /dev/sda1 /mnt/sda1");
-					std::string    cmd ("sudo cp ");
+					std::string    cmd ("sudo cp \'");
 					cmd += Cst::_config_dir;
 					cmd += "/";
 					cmd += Cst::_config_current;
-					cmd += " ";
+					cmd += "\' \'";
 					cmd += "/mnt/sda1/";
-					cmd += Cst::_config_current;
-					cmd += ".bak-`date +%Y-%m-%d-%H%M`";
+					cmd += make_backup_filename ();
+					cmd += "\'";
 					const int      ret_sc = system (cmd.c_str ());
 					system ("sudo umount /mnt/sda1");
 					Question::msg_box (
@@ -230,6 +231,23 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+std::string	MenuBackup::make_backup_filename ()
+{
+	std::string    fname = Cst::_config_current;
+
+	time_t         timer;
+	time (&timer);
+	tm             utc (*gmtime (&timer));
+
+	char           txt_0 [255+1];
+	strftime (txt_0, sizeof (txt_0), ".bak-%Y-%m-%d-%H%M", &utc);
+	fname += txt_0;
+
+	return fname;
+}
 
 
 
