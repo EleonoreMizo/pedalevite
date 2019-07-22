@@ -187,7 +187,7 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 				{
 					int            ret_sc =
 						system ("sudo mount -t vfat /dev/sda1 /mnt/sda1");
-					if (ret_sc1 == 0)
+					if (ret_sc == 0)
 					{
 						std::string    cmd ("sudo cp \'");
 						cmd += Cst::_config_dir;
