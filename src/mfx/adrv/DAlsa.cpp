@@ -281,7 +281,7 @@ void	DAlsa::do_restart ()
 		::snd_pcm_close (_handle_arr [dir]);
 	}
 
-	std::this_thread::sleep_for (std::chrono::milliseconds (200));
+	std::this_thread::sleep_for (std::chrono::milliseconds (100));
 
 	double         sample_freq;
 	int            max_block_size;
@@ -293,6 +293,9 @@ void	DAlsa::do_restart ()
 		_chn_base_arr [Dir_IN ],
 		_chn_base_arr [Dir_OUT]
 	);
+
+	std::this_thread::sleep_for (std::chrono::milliseconds (100));
+
 	do_start ();
 }
 
