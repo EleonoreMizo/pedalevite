@@ -97,6 +97,7 @@
 #include "mfx/uitk/pg/PedalEditCycle.h"
 #include "mfx/uitk/pg/PedalEditGroup.h"
 #include "mfx/uitk/pg/PedalEditStep.h"
+#include "mfx/uitk/pg/ProgCatalog.h"
 #include "mfx/uitk/pg/ProgMove.h"
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/pg/SaveProg.h"
@@ -364,6 +365,8 @@ public:
 	               _page_menu_backup;
 	mfx::uitk::pg::EditDate
 	               _page_edit_date;
+	mfx::uitk::pg::ProgCatalog
+	               _page_prog_catalog;
 
 	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
 	               ~Context ();
@@ -480,6 +483,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_page_fx_lfo (_page_switcher, _loc_edit)
 ,	_page_menu_backup (_page_switcher)
 ,	_page_edit_date (_page_switcher, _cmd_line)
+,	_page_prog_catalog (_page_switcher)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
@@ -633,6 +637,7 @@ fprintf (stderr, "Reading ESC button...\n");
 	_page_switcher.add_page (mfx::uitk::pg::PageType_FX_LFO           , _page_fx_lfo           );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_BACKUP      , _page_menu_backup      );
 	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_DATE        , _page_edit_date        );
+	_page_switcher.add_page (mfx::uitk::pg::PageType_PROG_CATALOG     , _page_prog_catalog     );
 
 	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }

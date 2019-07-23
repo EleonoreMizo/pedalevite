@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        BankOrga.h
-        Author: Laurent de Soras, 2018
+        ProgCatalog.h
+        Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_BankOrga_HEADER_INCLUDED)
-#define mfx_uitk_pg_BankOrga_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_ProgCatalog_HEADER_INCLUDED)
+#define mfx_uitk_pg_ProgCatalog_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,10 +27,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/PedalEditContext.h"
 #include "mfx/uitk/NText.h"
+#include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
-#include "mfx/uitk/PageMgrInterface.h"
+#include "mfx/UniqueProgList.h"
+
+#include <memory>
+#include <vector>
 
 
 
@@ -46,7 +49,7 @@ namespace pg
 
 
 
-class BankOrga
+class ProgCatalog
 :	public PageInterface
 {
 
@@ -54,8 +57,8 @@ class BankOrga
 
 public:
 
-	explicit       BankOrga (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
-	virtual        ~BankOrga () = default;
+	explicit       ProgCatalog (PageSwitcher &page_switcher);
+	virtual        ~ProgCatalog () = default;
 
 
 
@@ -79,27 +82,34 @@ private:
 
 	enum Entry
 	{
-		Entry_MV_BANK = 0,
-		Entry_MV_PROG,
-		Entry_PROG_CAT,
+		Entry_BASE   = 0,
+		Entry_WINDOW = 1000000,
 
 		Entry_NBR_ELT
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
+	typedef std::shared_ptr <NWindow> WinSPtr;
+	typedef std::vector <TxtSPtr> TxtArray;
+
+	bool           is_valid_prog (int node_id) const;
+	int            conv_node_id_to_index (int node_id) const;
+	int            conv_index_to_node_id (int index) const;
 
 	PageSwitcher & _page_switcher;
-	PedalEditContext &
-	               _pedal_ctx;
+	Model *        _model_ptr;    // 0 = not connected
+	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	TxtSPtr        _mv_bank_sptr;
-	TxtSPtr        _mv_prog_sptr;
-	TxtSPtr        _prog_cat_sptr;
+	WinSPtr        _menu_sptr;    // Contains only the program list at the moment
+	TxtArray       _prog_list;
+	UniqueProgList::ProgList
+	               _prog_coord_list;
+	int            _active_node_id;
 
 
 
@@ -107,13 +117,13 @@ private:
 
 private:
 
-	               BankOrga ()                               = delete;
-	               BankOrga (const BankOrga &other)          = delete;
-	BankOrga &     operator = (const BankOrga &other)        = delete;
-	bool           operator == (const BankOrga &other) const = delete;
-	bool           operator != (const BankOrga &other) const = delete;
+	               ProgCatalog ()                               = delete;
+	               ProgCatalog (const ProgCatalog &other)       = delete;
+	ProgCatalog &  operator = (const ProgCatalog &other)        = delete;
+	bool           operator == (const ProgCatalog &other) const = delete;
+	bool           operator != (const ProgCatalog &other) const = delete;
 
-}; // class BankOrga
+}; // class ProgCatalog
 
 
 
@@ -123,11 +133,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/BankOrga.hpp"
+//#include "mfx/uitk/pg/ProgCatalog.hpp"
 
 
 
-#endif   // mfx_uitk_pg_BankOrga_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_ProgCatalog_HEADER_INCLUDED
 
 
 

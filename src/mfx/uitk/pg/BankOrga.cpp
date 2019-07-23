@@ -53,14 +53,17 @@ BankOrga::BankOrga (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 ,	_page_ptr (0)
 ,	_page_size ()
 ,	_fnt_ptr (0)
-,	_mv_bank_sptr (new NText (Entry_MV_BANK))
-,	_mv_prog_sptr (new NText (Entry_MV_PROG))
+,	_mv_bank_sptr ( new NText (Entry_MV_BANK ))
+,	_mv_prog_sptr ( new NText (Entry_MV_PROG ))
+,	_prog_cat_sptr (new NText (Entry_PROG_CAT))
 {
-	_mv_bank_sptr->set_justification (0.5f, 0, false);
-	_mv_prog_sptr->set_justification (0.5f, 0, false);
+	_mv_bank_sptr ->set_justification (0.5f, 0, false);
+	_mv_prog_sptr ->set_justification (0.5f, 0, false);
+	_prog_cat_sptr->set_justification (0.5f, 0, false);
 
-	_mv_bank_sptr->set_text ("Move banks\xE2\x80\xA6");
-	_mv_prog_sptr->set_text ("Move programs\xE2\x80\xA6");
+	_mv_bank_sptr ->set_text ("Move banks\xE2\x80\xA6");
+	_mv_prog_sptr ->set_text ("Move programs\xE2\x80\xA6");
+	_prog_cat_sptr->set_text ("Prog catalog");
 }
 
 
@@ -75,25 +78,30 @@ void	BankOrga::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
 
-	_mv_bank_sptr->set_font (fnt._m);
-	_mv_prog_sptr->set_font (fnt._m);
+	_mv_bank_sptr ->set_font (fnt._m);
+	_mv_prog_sptr ->set_font (fnt._m);
+	_prog_cat_sptr->set_font (fnt._m);
 
 	const int      x_mid =  _page_size [0]      >> 1;
 	const int      w_sel = (_page_size [0] * 3) >> 2;
 	const int      h_m   = fnt._m.get_char_h ();
 
-	_mv_bank_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
-	_mv_prog_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
+	_mv_bank_sptr ->set_frame (Vec2d (w_sel, 0), Vec2d ());
+	_mv_prog_sptr ->set_frame (Vec2d (w_sel, 0), Vec2d ());
+	_prog_cat_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());
 
-	_mv_bank_sptr->set_coord (Vec2d (x_mid, h_m * 0));
-	_mv_prog_sptr->set_coord (Vec2d (x_mid, h_m * 1));
+	_mv_bank_sptr ->set_coord (Vec2d (x_mid, h_m * 0));
+	_mv_prog_sptr ->set_coord (Vec2d (x_mid, h_m * 1));
+	_prog_cat_sptr->set_coord (Vec2d (x_mid, h_m * 2));
 
-	_page_ptr->push_back (_mv_bank_sptr);
-	_page_ptr->push_back (_mv_prog_sptr);
+	_page_ptr->push_back (_mv_bank_sptr );
+	_page_ptr->push_back (_mv_prog_sptr );
+	_page_ptr->push_back (_prog_cat_sptr);
 
 	PageMgrInterface::NavLocList  nav_list;
-	page.add_nav (nav_list, Entry_MV_BANK);
-	page.add_nav (nav_list, Entry_MV_PROG);
+	page.add_nav (nav_list, Entry_MV_BANK );
+	page.add_nav (nav_list, Entry_MV_PROG );
+	page.add_nav (nav_list, Entry_PROG_CAT);
 	page.set_nav_layout (nav_list);
 	page.jump_to (nav_list [0]._node_id);
 }
@@ -127,6 +135,9 @@ MsgHandlerInterface::EvtProp	BankOrga::do_handle_evt (const NodeEvt &evt)
 				break;
 			case Entry_MV_PROG:
 				_page_switcher.call_page (PageType_PROG_MOVE, 0, node_id);
+				break;
+			case Entry_PROG_CAT:
+				_page_switcher.call_page (PageType_PROG_CATALOG, 0, node_id);
 				break;
 			default:
 				ret_val = EvtProp_PASS;

@@ -79,6 +79,7 @@ enum PageType
 	PageType_FX_LFO,
 	PageType_MENU_BACKUP,
 	PageType_EDIT_DATE,
+	PageType_PROG_CATALOG,
 
 	PageType_NBR_ELT
 

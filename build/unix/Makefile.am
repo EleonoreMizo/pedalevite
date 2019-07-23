@@ -973,6 +973,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/uitk/pg/PedalEditCycle.h \
         ../../src/mfx/uitk/pg/PedalEditStep.cpp \
         ../../src/mfx/uitk/pg/PedalEditStep.h \
+        ../../src/mfx/uitk/pg/ProgCatalog.cpp \
+        ../../src/mfx/uitk/pg/ProgCatalog.h \
         ../../src/mfx/uitk/pg/ProgMove.cpp \
         ../../src/mfx/uitk/pg/ProgMove.h \
         ../../src/mfx/uitk/pg/Question.cpp \
@@ -1063,6 +1065,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/SharedRscState.h \
         ../../src/mfx/ToolsParam.cpp \
         ../../src/mfx/ToolsParam.h \
+        ../../src/mfx/UniqueProgList.cpp \
+        ../../src/mfx/UniqueProgList.h \
         ../../src/mfx/View.cpp \
         ../../src/mfx/View.h \
         ../../src/mfx/WorldAudio.cpp \

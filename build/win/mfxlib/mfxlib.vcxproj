@@ -862,6 +862,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditStep.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditCycle.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\PedalEditGroup.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgCatalog.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgMove.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Question.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SaveProg.h" />
@@ -890,6 +891,7 @@
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputPi3.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputType.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputVoid.h" />
+    <ClInclude Include="..\..\..\src\mfx\UniqueProgList.h" />
     <ClInclude Include="..\..\..\src\mfx\View.h" />
     <ClInclude Include="..\..\..\src\mfx\WorldAudio.h" />
   </ItemGroup>
@@ -1245,6 +1247,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditStep.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditCycle.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalEditGroup.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgCatalog.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgMove.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Question.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SaveProg.cpp" />
@@ -1282,6 +1285,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\UserInputVoid.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\UniqueProgList.cpp" />
     <ClCompile Include="..\..\..\src\mfx\View.cpp" />
     <ClCompile Include="..\..\..\src\mfx\WorldAudio.cpp" />
   </ItemGroup>
