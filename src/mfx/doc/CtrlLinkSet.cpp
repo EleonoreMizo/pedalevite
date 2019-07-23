@@ -76,12 +76,18 @@ bool	CtrlLinkSet::is_empty () const
 
 bool	CtrlLinkSet::is_similar (const CtrlLinkSet &other) const
 {
-	bool           same_flag = (_bind_sptr->is_similar (*other._bind_sptr));
-	const size_t   nbr_mod   = _mod_arr.size ();
+	const bool     bind_l_flag = (      _bind_sptr.get () != 0);
+	const bool     bind_r_flag = (other._bind_sptr.get () != 0);
+	bool           same_flag = (bind_l_flag == bind_r_flag);
+	if (bind_l_flag && bind_r_flag)
+	{
+		same_flag &= _bind_sptr->is_similar (*other._bind_sptr);
+	}
+	const size_t   nbr_mod = _mod_arr.size ();
 	same_flag &= (nbr_mod == other._mod_arr.size ());
 	for (size_t index = 0; index < nbr_mod && same_flag; ++index)
 	{
-		same_flag = (_mod_arr [index]->is_similar (*(other._mod_arr [index])));
+		same_flag = _mod_arr [index]->is_similar (*(other._mod_arr [index]));
 	}
 
 	return same_flag;

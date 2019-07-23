@@ -317,7 +317,7 @@ bool	PluginSettings::is_similar (const PluginSettings &other) const
 	if (same_flag)
 	{
 		auto           it_1 = _map_param_ctrl.begin ();
-		auto           it_2 = _map_param_ctrl.end ();
+		auto           it_2 = other._map_param_ctrl.begin ();
 		while (same_flag && it_1 != _map_param_ctrl.end ())
 		{
 			same_flag = (
@@ -335,7 +335,7 @@ bool	PluginSettings::is_similar (const PluginSettings &other) const
 	if (same_flag)
 	{
 		auto           it_1 = _map_param_pres.begin ();
-		auto           it_2 = _map_param_pres.end ();
+		auto           it_2 = other._map_param_pres.begin ();
 		while (same_flag && it_1 != _map_param_pres.end ())
 		{
 			same_flag = (
