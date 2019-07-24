@@ -90,8 +90,9 @@ void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	time_t         timer;
 	time (&timer);
-	_utc         = *gmtime (&timer);
-	_change_flag = false;
+	_utc              = *gmtime (&timer);
+	_change_flag      = false;
+	_time_change_flag = false;
 
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
@@ -136,16 +137,30 @@ void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &pag
 #endif
 
 	update_display ();
+	_page_ptr->set_timer (Entry_T, true);
 }
 
 
 
 void	EditDate::do_disconnect ()
 {
+	_page_ptr->set_timer (Entry_T, false);
+
 #if fstb_IS (SYS, LINUX)
 
 	if (_change_flag)
 	{
+		// Merges changed time and current time
+		time_t         timer;
+		time (&timer);
+		tm             now_utc (*gmtime (&timer));
+		if (! _time_change_flag)
+		{
+			_utc.tm_hour = now_utc.tm_hour;
+			_utc.tm_min  = now_utc.tm_min;
+		}
+		_utc.tm_sec = now_utc.tm_sec;
+
 		// Sets the new date
 		char           txt_0 [255+1];
 		strftime (txt_0, sizeof (txt_0),
@@ -176,7 +191,20 @@ MsgHandlerInterface::EvtProp	EditDate::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_timer ())
 	{
-		update_display ();
+		if (_time_change_flag)
+		{
+			_page_ptr->set_timer (Entry_T, false);
+		}
+		else
+		{
+			time_t         timer;
+			time (&timer);
+			tm             now_utc (*gmtime (&timer));
+			_utc.tm_hour = now_utc.tm_hour;
+			_utc.tm_min  = now_utc.tm_min;
+			_utc.tm_sec  = now_utc.tm_sec;
+			refresh_time ();
+		}
 	}
 
 	else if (evt.is_button_ex ())
@@ -213,6 +241,13 @@ void	EditDate::update_display ()
 	update_field (*_year_sptr  , "Year  : %Y"   , _utc);
 	update_field (*_month_sptr , "Month : %m %b", _utc);
 	update_field (*_day_sptr   , "Day   : %d %a", _utc);
+	refresh_time ();
+}
+
+
+
+void	EditDate::refresh_time ()
+{
 	update_field (*_hour_sptr  , "Hour  : %H"   , _utc);
 	update_field (*_minute_sptr, "Minute: %M"   , _utc);
 }
@@ -245,12 +280,11 @@ void	EditDate::change_entry (int node_id, int dir)
 		break;
 	case Entry_H:
 		_utc.tm_hour += dir;
+		_time_change_flag = true;
 		break;
 	case Entry_MIN:
 		_utc.tm_min  += dir;
-		break;
-	case Entry_SEC:
-		_utc.tm_sec  += dir;
+		_time_change_flag = true;
 		break;
 	}
 

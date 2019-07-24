@@ -90,7 +90,6 @@ private:
 		Entry_D,
 		Entry_H,
 		Entry_MIN,
-		Entry_SEC,
 
 		Entry_NBR_ELT
 	};
@@ -98,6 +97,7 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	void           update_display ();
+	void           refresh_time ();
 	void           update_field (NText &label, const char format_0 [], const tm &utc);
 	void           change_entry (int node_id, int dir);
 
@@ -119,6 +119,7 @@ private:
 	TxtSPtr        _minute_sptr;
 	tm             _utc;
 	bool           _change_flag;
+	bool           _time_change_flag;
 
 
 
