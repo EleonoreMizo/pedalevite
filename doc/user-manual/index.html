@@ -667,15 +667,55 @@ pédalier qui change l’état du bypass de tout plug-in nommé
 
 <div class="pic"><img src="bank-orga.png" /></div>
 
+<p>Ce menu permet d’accéder à différentes opérations permettant d’organiser
+les banques et programmes.</p>
+<p><span class="ui">Move banks…</span> permet de déplacer les banques les unes
+par rapport aux autres.</p>
+<p><span class="ui">Move programs…</span> permet de réagencer les programmes
+au sein de la banque courante.</p>
+<p><span class="ui">Program catalog</span> donne accès à une liste complète de
+tous les programmes de toutes les banques.</p>
+
 <h4><a id="screen-banks-move-bank"></a>Déplacer des banques</h4>
 
 <div class="pic"><img src="bank-move-1.png" /></div>
+
+<p>À l’aide des flèches verticales, commencer par choisir une banque à
+déplacer, <span class="key">Select</span> pour valider ou
+<span class="key">Esc</span> pour revenir au menu précédent.</p>
+
 <div class="pic"><img src="bank-move-2.png" /></div>
+
+<p>Une fois la banque choisie, utiliser les flèches verticale pour déplacer
+cette banque.
+<span class="key">Select</span> pour valider le dépalcement ou
+<span class="key">Esc</span> pour annuler et revenir au menu précédent.</p>
 
 <h4><a id="screen-banks-move-prog"></a>Déplacer des programmes</h4>
 
 <div class="pic"><img src="prog-move-1.png" /></div>
+
+<p>À l’aide des flèches verticales, commencer par choisir un programme à
+déplacer, <span class="key">Select</span> pour valider ou
+<span class="key">Esc</span> pour revenir au menu précédent.</p>
+
 <div class="pic"><img src="prog-move-2.png" /></div>
+
+<p>Une fois le programme choisi, utiliser les flèches verticale pour le
+déplacer.
+<span class="key">Select</span> pour valider le dépalcement ou
+<span class="key">Esc</span> pour annuler et revenir au menu précédent.</p>
+
+<h4><a id="screen-banks-prog-cat"></a>Catalogue de programmes</h4>
+
+<p>Cette page liste tous les programmes de toutes les banques, en éliminant
+les doublons et les programmes vides.
+Le premier programme de la liste est activé dès l’entrée sur la page.
+Utiliser les flèches verticales pour naviguer dans la liste&#8239;; les
+programmes s’activent automatiquement au passage.
+<span class="key">Esc</span> pour ressortir.
+À ce moment, la banque et le programme courant sont positionnés sur le
+dernier programme choisi.</p>
 
 <h3><a id="screen-pedalboard-config"></a>Configuration du pédalier</h3>
 
@@ -766,6 +806,61 @@ peut redémarrer le moteur audio en pressant sur
 <h3><a id="screen-othersettings"></a>Réglages divers</h3>
 
 <div class="pic"><img src="other-settings.png" /></div>
+
+<p><span class="ui">Tempo</span> permet de régler le tempo, en noires à la
+minute.
+Il est possible d’en régler la partie entière et la partie décimale.
+Appuyer sur <span class="key">Select</span> en éditant la partie décimale
+arrondit le tempo à l’entier le plus proche.</p>
+<p><span class="ui">Click</span> active ou désactive le métronome, qui
+s’appuie sur le réglage de tempo.
+Pour le moment, la seule signature temporelle disponible est réduite au
+4/4.</p>
+<p><span class="ui">Save settings</span> sauvegarde immédiatement l’ensemble
+des réglages courants.
+En effet, la plupart des modifications n’ayant pas trait aux programmes
+ne sont pas sauvegardées automatiquement.
+Elles le sont avec la modification de programme suivante.
+Elles peuvent être sauvées explicitement en sélectionnant cette entrée de
+menu.</p>
+<p><span class="ui">Backup…</span> renvoie vers le menu des copies de
+sauvegarde.</p>
+
+<h4><a id="screen-backup"></a>Copies de sauvegarde</h4>
+
+<div class="pic"><img src="backup-menu.png" /></div>
+
+<p>Avant d’effectuer une copie de sauvegarde, vous devez vous assurer la date
+est correctement réglée, sous peine de ne plus vous y retrouver dans un
+horodatage incohérent.</p>
+<p>L’écran accessible par <span class="ui">Set date…</span> permet de régler
+la date et l’heure courante.
+En effet, l’ordinateur interne n’a pas forcément de système pour mémoriser la
+date entre deux mises sous tension, il peut donc être nécessaire de la régler
+avant de faire une copie de sauvegarde.
+Cependant si la machine est reliée à internet dès son démarrage, la date est
+automatiquement mise à jour.</p>
+<p><em>Important&#8239;:</em> la date et l’heure sont en UTC (temps coordonné
+universel, anciennement GMT) et non en heure locale.</p>
+<p>Une fois dans l’écran de réglage, utiliser les flèches verticales pour
+sélectionner le champ à éditer, et les flèches horizontales pour modifier
+ledit champ.
+La date est mise à jour de manière effective dès qu’on sort de l’écran par
+<span class="key">Esc</span> ou <span class="key">Select</span>.
+Pour des raisons techniques, le programme de Pédale Vite est redémarré après
+un changement de date, et toute modification non sauvegardée sera perdue.</p>
+
+<div class="pic"><img src="backup-date.png" /></div>
+
+<p><span class="ui">Save backup now</span> sauvegarde les réglages.
+Le fichier est sauvegardé dans le même répertoire que les réglages principaux
+(à savoir <code>/opt/pedalevite/etc/config/</code>), avec la date et l’heure
+accolées au nom.</p>
+<p><span class="ui">Restore backup…</span> est encore en chantier.</p>
+<p><span class="ui">Export to USB stick</span> permet d’effectuer la copie
+de sauvegarde, horodatée, sur clé USB.
+Celle-ci est automatiquement montée (<code>/mnt/sda1</code>, FAT32) et démontée lors
+de la sauvegarde.</p>
 
 
 
@@ -2638,6 +2733,12 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r22, 2019-07-24</b></p>
+<ul>
+<li>Mise à jour des écrans sur l’organisation des banques et sur les réglages
+divers.</li>
+</ul>
 
 <p><b>r21, 2019-07-18</b></p>
 <ul>

@@ -639,15 +639,53 @@ state of any effect called “distortion”.</p>
 
 <div class="pic"><img src="bank-orga.png" /></div>
 
+<p>This menu gives access to several operations allowing to organize banks and
+programs.</p>
+<p><span class="ui">Move banks…</span> is for moving banks within the bank
+list.</p>
+<p><span class="ui">Move programs…</span> is for moving programs within the
+current bank.</p>
+<p><span class="ui">Program catalog</span> gives accès to a complete list of
+all the programs from all the banks.</p>
+
 <h4><a id="screen-banks-move-bank"></a>Move banks</h4>
 
 <div class="pic"><img src="bank-move-1.png" /></div>
+
+<p>First, with the vertical arrows, select a bank to move.
+<span class="key">Select</span> to validate or
+<span class="key">Esc</span> to return to the previous menu.</p>
+
 <div class="pic"><img src="bank-move-2.png" /></div>
+
+<p>Once the bank is selected, use the vertical arrows to move this bank.
+<span class="key">Select</span> to validate the move or
+<span class="key">Esc</span> to cancel and return to the previous menu.</p>
 
 <h4><a id="screen-banks-move-prog"></a>Move programs</h4>
 
 <div class="pic"><img src="prog-move-1.png" /></div>
+
+<p>First, with the vertical arrows, select a program to move.
+<span class="key">Select</span> to validate or
+<span class="key">Esc</span> to return to the previous menu.</p>
+
 <div class="pic"><img src="prog-move-2.png" /></div>
+
+<p>Once the program is selected, use the vertical arrows to move it.
+<span class="key">Select</span> to validate the move or
+<span class="key">Esc</span> to cancel and return to the previous menu.</p>
+
+<h4><a id="screen-banks-prog-cat"></a>Program catalog</h4>
+
+<p>This page lists all the programs from all the banks, without duplicates
+nor empty programs.
+The first program of the list is activated when entering the page.
+Use the vertical arrows to browse.
+Programs are automatically activated when browsed through.
+<span class="key">Esc</span> to return to the previous menu.
+Upon return, the current bank and current program reflect the last browsed
+program from the list.</p>
 
 <h3><a id="screen-pedalboard-config"></a>Pedalboard configuration</h3>
 
@@ -732,6 +770,57 @@ can be restarted by pressing on <span class="key">Select</span>.</p>
 <h3><a id="screen-othersettings"></a>Other settings</h3>
 
 <div class="pic"><img src="other-settings.png" /></div>
+
+<p><span class="ui">Tempo</span> sets the tempo in quarter notes per minute.
+It is possible to set the integer part or the fractional part of the
+tempo.
+Pressing <span class="key">Select</span> on the fractional part rounds
+the tempo to the nearest integer.</p>
+<p><span class="ui">Click</span> activates or deactivates the click, based
+on the tempo setting.
+At the moment, the time signature is restricted to 4/4.</p>
+<p><span class="ui">Save settings</span> immediately saves the current
+settings.
+Indeed, most non-program modifications (for example the stereo mode or the
+output level) are not saved automatically.
+They are saved with the next program modifications or explicitely by selecting
+this menu entry.</p>
+<p><span class="ui">Backup…</span> enters the backup menu.</p>
+
+<h4><a id="screen-backup"></a>Backup menu</h4>
+
+<div class="pic"><img src="backup-menu.png" /></div>
+
+<p>Before doing a backup copy, you must ensure that the date is correctly set,
+with the risk of being confused by an inconsistent timestamping.</p>
+<p>The screen accessed with <span class="ui">Set date…</span> may be used to
+set the current date and time.
+Indeed, the internal computer does not have a system to keep the time between
+two sessions.
+So it may be necessary to set the date before doing a backup copy of the
+settings.
+However, if the machine is connected to the internet during startup, the date
+is automatically updated.</p>
+<p><em>Nota bene:</em> time and date are UTC (coordinated universal time),
+not the local time.</p>
+<p>In this screen, use the vertical arrows to select the field to edit,
+and the horizontal arrows to modify the values.
+The date is automatically updated when exiting the screen with
+<span class="key">Esc</span> or <span class="key">Select</span>.
+Because of technical reasons, the program is restarted after a date
+modification, so any unsaved change may be lost.</p>
+
+<div class="pic"><img src="backup-date.png" /></div>
+
+<p><span class="ui">Save backup now</span> does a backup copy.
+The file is saved in the same directory as the main settings (namely
+<code>/opt/pedalevite/etc/config/</code>), with the current date and time
+following its name.</p>
+<p><span class="ui">Restore backup…</span> is still under construction.</p>
+<p><span class="ui">Export to USB stick</span> saves the backup on an external
+USB drive.
+It is automatically mounted (<code>/mnt/sda1</code>, FAT32) and unmounted during
+the backup.</p>
 
 
 
@@ -2506,6 +2595,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r22, 2019-07-24</b></p>
+<ul>
+<li>Updated the bank organisation and the other settings screens.</li>
+</ul>
 
 <p><b>r21, 2019-07-18</b></p>
 <ul>
