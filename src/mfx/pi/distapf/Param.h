@@ -43,6 +43,7 @@ enum Param
 
 	Param_GAIN = 0,
 	Param_SRL,
+	Param_OVRS,
 	Param_NBR_ELT
 
 }; // enum Param

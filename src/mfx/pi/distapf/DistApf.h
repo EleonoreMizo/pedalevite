@@ -9,8 +9,11 @@ Coefficient-modulated first-order allpass filter as distortion effect,
 Proceedings of the 11th International Conference on Digital Audio Effects
 (DAFx-08), 2008
 
+Here, the modulator sets the center frequency of the analogue all-pass filter,
+hence modulating the coefficient of the digital APF is a way which is less
+dependent of the sampling rate.
+
 TO DO:
-- Oversampling (x2 or x4?) to avoid aliasing
 - Option to side-chain the modulation signal
 
 --- Legal stuff ---
@@ -38,7 +41,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/util/NotificationFlag.h"
+#include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
+#include "mfx/dsp/iir/Downsampler4xSimd.h"
+#include "mfx/dsp/iir/Upsampler4xSimd.h"
 #include "mfx/pi/distapf/DistApfDesc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
@@ -87,8 +93,11 @@ protected:
 
 private:
 
-	static const int  _freq_min =   500;   // Minimum frequency, Hz
-	static const int  _freq_max = 21550;
+	static const int  _freq_min     =   500;  // Minimum frequency, Hz
+	static const int  _freq_max     = 21550;
+	static const int  _ovrspl_ratio = 4;
+	static const int  _nbr_coef_42  = 3;
+	static const int  _nbr_coef_21  = 8;
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
@@ -98,12 +107,19 @@ private:
 		float          _srl_state = 0;
 		float          _apf_mem_x = 0;
 		float          _apf_mem_y = 0;
+		dsp::iir::Upsampler4xSimd <_nbr_coef_42, _nbr_coef_21>
+		               _ovrspl_up;
+		dsp::iir::Downsampler4xSimd <_nbr_coef_42, _nbr_coef_21>
+		               _ovrspl_dw;
 	};
 
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
 	void           update_param (bool force_flag = false);
+	void           update_freq ();
 	void           clear_buffers ();
+
+	static void    init_coef ();
 
 	State          _state;
 
@@ -112,19 +128,30 @@ private:
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_misc;
+	fstb::util::NotificationFlagCascadeSingle
+	               _param_change_flag_ovrspl;
 
 	float          _sample_freq;
 	float          _inv_fs;
 	ChannelArray   _chn_arr;
 	BufAlign       _buf_tmp;
+	BufAlign       _buf_ovr;
 
 	float          _gain;
 	float          _map_a;
 	float          _map_b;
-	float          _f_min;
-	float          _f_max;
 	float          _freq_scale;
+	float          _srl_scale; // Hz -> units/sample
 	float          _srl;
+	bool           _ovrspl_flag;
+
+	static bool    _coef_init_flag;
+	static std::array <double, _nbr_coef_42>
+	               _coef_42;
+	static std::array <double, _nbr_coef_21>
+	               _coef_21;
 
 
 

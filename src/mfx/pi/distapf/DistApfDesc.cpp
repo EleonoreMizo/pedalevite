@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/distapf/Param.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/pi/param/TplEnum.h"
 
 #include <cassert>
 
@@ -53,27 +54,37 @@ DistApfDesc::DistApfDesc ()
 
 	// Gain
 	TplPll *       pll_ptr = new TplPll (
-		1, 10000,
+		1, 1024,
 		"Gain\nG",
 		"db",
 		param::HelperDispNum::Preset_DB,
 		0,
 		"%5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8);
+	pll_ptr->use_mapper ().gen_log (10);
 	_desc_set.add_glob (Param_GAIN, pll_ptr);
 
 	// Slew rate limiting
 	pll_ptr = new TplPll (
-		10, 40,
+		250, 16000,
 		"Slew rate limiting\nSlew rate limit\nSlew rate lim\nSlew rate\nSRL",
-		"kHz",
+		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
-		"%5.1f"
+		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (8);
+	pll_ptr->use_mapper ().gen_log (6);
 	_desc_set.add_glob (Param_SRL, pll_ptr);
+
+	// Oversampling rate
+	param::TplEnum *  enu_ptr = new param::TplEnum (
+		"\xC3\x97" "1\n" "\xC3\x97" "4", // U+00D7 multiplication sign (UTF-8 C3 97)
+		"Oversampling rate\nOversampling\nOversamp\nOvrspl\nOvrs\nOS",
+		"",
+		0,
+		"%s"
+	);
+	_desc_set.add_glob (Param_OVRS, enu_ptr);
 }
 
 
