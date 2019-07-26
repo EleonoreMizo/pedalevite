@@ -351,11 +351,8 @@ void	DistApf::update_freq ()
 		fs_inv *= 1.0f / float (_ovrspl_ratio);
 	}
 
-	_srl_scale = fs_inv;
-
+	_srl_scale  = fs_inv;
 	_freq_scale = float (fstb::PI) * fs_inv;
-	const float    freq_max_lim =
-		std::min (float (_freq_max), fs * 0.499f);
 }
 
 
