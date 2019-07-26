@@ -139,7 +139,8 @@ private:
 	BufAlign       _buf_tmp;
 	BufAlign       _buf_ovr;
 
-	float          _gain;
+	float          _gain_cur;
+	float          _gain_old;
 	float          _map_a;
 	float          _map_b;
 	float          _freq_scale;

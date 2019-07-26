@@ -74,7 +74,8 @@ DistApf::DistApf ()
 ,	_chn_arr ()
 ,	_buf_tmp ()
 ,	_buf_ovr ()
-,	_gain (1)
+,	_gain_cur (1)
+,	_gain_old (_gain_cur)
 ,	_map_a (0)
 ,	_map_b (0)
 ,	_freq_scale (0)
@@ -96,6 +97,8 @@ DistApf::DistApf ()
 
 	_param_change_flag_misc.add_observer (_param_change_flag);
 	_param_change_flag_ovrspl.add_observer (_param_change_flag);
+
+	_state_set.set_ramp_time (Param_GAIN, 0.010);
 
 	init_coef ();
 	for (auto &chn : _chn_arr)
@@ -194,7 +197,6 @@ void	DistApf::do_process_block (ProcInfo &proc)
 	const auto     c3      = fstb::ToolsSimd::set1_f32 (0.3345f);
 	const auto     limn    = fstb::ToolsSimd::set1_f32 (-0.999f);
 	const auto     limp    = fstb::ToolsSimd::set1_f32 (+0.999f);
-	const auto     gain    = fstb::ToolsSimd::set1_f32 (_gain);
 	float * const  tmp_ptr = _buf_tmp.data ();
 
 	int            nbr_spl_proc = nbr_spl;
@@ -202,6 +204,12 @@ void	DistApf::do_process_block (ProcInfo &proc)
 	{
 		nbr_spl_proc *= _ovrspl_ratio;
 	}
+
+	fstb::ToolsSimd::VectF32   gain_beg;
+	fstb::ToolsSimd::VectF32   gain_step;
+	fstb::ToolsSimd::start_lerp (
+		gain_beg, gain_step, _gain_old, _gain_cur, nbr_spl_proc
+	);
 
 	for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
 	{
@@ -221,6 +229,7 @@ void	DistApf::do_process_block (ProcInfo &proc)
 		}
 
 		// Modulator: gain and clipping
+		auto           gain = gain_beg;
 		for (int pos = 0; pos < nbr_spl_proc; pos += 4)
 		{
 			auto           f = fstb::ToolsSimd::load_f32 (src_ptr + pos);
@@ -228,6 +237,7 @@ void	DistApf::do_process_block (ProcInfo &proc)
 			f  = fstb::ToolsSimd::min_f32 (f, fmax);
 			f  = fstb::ToolsSimd::max_f32 (f, fmin);
 			fstb::ToolsSimd::store_f32 (tmp_ptr + pos, f);
+			gain += gain_step;
 		}
 
 		// Modulator: slew rate limiting
@@ -297,6 +307,8 @@ void	DistApf::do_process_block (ProcInfo &proc)
 		}
 	}
 
+	_gain_old = _gain_cur;
+
 	// Additional output channels
 	for (int chn_cnt = nbr_chn_src; chn_cnt < nbr_chn_dst; ++chn_cnt)
 	{
@@ -326,7 +338,7 @@ void	DistApf::update_param (bool force_flag)
 
 		if (_param_change_flag_misc (true) || force_flag)
 		{
-			_gain  = float (_state_set.get_val_end_nat (Param_GAIN));
+			_gain_cur = float (_state_set.get_val_end_nat (Param_GAIN));
 
 			_map_a = (_freq_max - _freq_min) * _freq_scale;
 			_map_b =   _freq_scale * (_freq_min + (_freq_max - _freq_min) * 0.5f)
@@ -367,6 +379,7 @@ void	DistApf::clear_buffers ()
 		chn._ovrspl_up.clear_buffers ();
 		chn._ovrspl_dw.clear_buffers ();
 	}
+	_gain_old = _gain_cur;
 }
 
 
