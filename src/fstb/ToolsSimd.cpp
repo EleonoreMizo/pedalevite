@@ -54,14 +54,39 @@ namespace fstb
 
 const float	ToolsSimd::_inv_table_4 [_inv_table_4_len] =
 {
-	fstb_ToolsSimd_INV4 (0x00, 1), fstb_ToolsSimd_INV4 (0x10, 0),
-	fstb_ToolsSimd_INV4 (0x20, 0), fstb_ToolsSimd_INV4 (0x30, 0),
-	fstb_ToolsSimd_INV4 (0x40, 0), fstb_ToolsSimd_INV4 (0x50, 0),
-	fstb_ToolsSimd_INV4 (0x60, 0), fstb_ToolsSimd_INV4 (0x70, 0),
-	fstb_ToolsSimd_INV4 (0x80, 0), fstb_ToolsSimd_INV4 (0x90, 0),
-	fstb_ToolsSimd_INV4 (0xA0, 0), fstb_ToolsSimd_INV4 (0xB0, 0),
-	fstb_ToolsSimd_INV4 (0xC0, 0), fstb_ToolsSimd_INV4 (0xD0, 0),
-	fstb_ToolsSimd_INV4 (0xE0, 0), fstb_ToolsSimd_INV4 (0xF0, 0)
+	fstb_ToolsSimd_INV4 (0x000, 1), fstb_ToolsSimd_INV4 (0x010, 0),
+	fstb_ToolsSimd_INV4 (0x020, 0), fstb_ToolsSimd_INV4 (0x030, 0),
+	fstb_ToolsSimd_INV4 (0x040, 0), fstb_ToolsSimd_INV4 (0x050, 0),
+	fstb_ToolsSimd_INV4 (0x060, 0), fstb_ToolsSimd_INV4 (0x070, 0),
+	fstb_ToolsSimd_INV4 (0x080, 0), fstb_ToolsSimd_INV4 (0x090, 0),
+	fstb_ToolsSimd_INV4 (0x0A0, 0), fstb_ToolsSimd_INV4 (0x0B0, 0),
+	fstb_ToolsSimd_INV4 (0x0C0, 0), fstb_ToolsSimd_INV4 (0x0D0, 0),
+	fstb_ToolsSimd_INV4 (0x0E0, 0), fstb_ToolsSimd_INV4 (0x0F0, 0),
+	fstb_ToolsSimd_INV4 (0x100, 0), fstb_ToolsSimd_INV4 (0x110, 0),
+	fstb_ToolsSimd_INV4 (0x120, 0), fstb_ToolsSimd_INV4 (0x130, 0),
+	fstb_ToolsSimd_INV4 (0x140, 0), fstb_ToolsSimd_INV4 (0x150, 0),
+	fstb_ToolsSimd_INV4 (0x160, 0), fstb_ToolsSimd_INV4 (0x170, 0),
+	fstb_ToolsSimd_INV4 (0x180, 0), fstb_ToolsSimd_INV4 (0x190, 0),
+	fstb_ToolsSimd_INV4 (0x1A0, 0), fstb_ToolsSimd_INV4 (0x1B0, 0),
+	fstb_ToolsSimd_INV4 (0x1C0, 0), fstb_ToolsSimd_INV4 (0x1D0, 0),
+	fstb_ToolsSimd_INV4 (0x1E0, 0), fstb_ToolsSimd_INV4 (0x1F0, 0),
+	fstb_ToolsSimd_INV4 (0x200, 0), fstb_ToolsSimd_INV4 (0x210, 0),
+	fstb_ToolsSimd_INV4 (0x220, 0), fstb_ToolsSimd_INV4 (0x230, 0),
+	fstb_ToolsSimd_INV4 (0x240, 0), fstb_ToolsSimd_INV4 (0x250, 0),
+	fstb_ToolsSimd_INV4 (0x260, 0), fstb_ToolsSimd_INV4 (0x270, 0),
+	fstb_ToolsSimd_INV4 (0x280, 0), fstb_ToolsSimd_INV4 (0x290, 0),
+	fstb_ToolsSimd_INV4 (0x2A0, 0), fstb_ToolsSimd_INV4 (0x2B0, 0),
+	fstb_ToolsSimd_INV4 (0x2C0, 0), fstb_ToolsSimd_INV4 (0x2D0, 0),
+	fstb_ToolsSimd_INV4 (0x2E0, 0), fstb_ToolsSimd_INV4 (0x2F0, 0),
+	fstb_ToolsSimd_INV4 (0x300, 0), fstb_ToolsSimd_INV4 (0x310, 0),
+	fstb_ToolsSimd_INV4 (0x320, 0), fstb_ToolsSimd_INV4 (0x330, 0),
+	fstb_ToolsSimd_INV4 (0x340, 0), fstb_ToolsSimd_INV4 (0x350, 0),
+	fstb_ToolsSimd_INV4 (0x360, 0), fstb_ToolsSimd_INV4 (0x370, 0),
+	fstb_ToolsSimd_INV4 (0x380, 0), fstb_ToolsSimd_INV4 (0x390, 0),
+	fstb_ToolsSimd_INV4 (0x3A0, 0), fstb_ToolsSimd_INV4 (0x3B0, 0),
+	fstb_ToolsSimd_INV4 (0x3C0, 0), fstb_ToolsSimd_INV4 (0x3D0, 0),
+	fstb_ToolsSimd_INV4 (0x3E0, 0), fstb_ToolsSimd_INV4 (0x3F0, 0),
+	4.0f / 0x400
 };
 
 #undef fstb_ToolsSimd_INV4

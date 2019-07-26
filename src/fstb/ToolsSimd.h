@@ -298,7 +298,7 @@ protected:
 private:
 
 	static const int
-	               _inv_table_4_len = 256;
+	               _inv_table_4_len = 1024+1;
 	static const float
 	               _inv_table_4 [_inv_table_4_len];
 
