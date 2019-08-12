@@ -140,7 +140,7 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	_proc_date_end = date_cur;
 	_proc_date_beg = date_cur;
 	_period_now    = 1;
-	_rate_expected = float (sample_freq / (max_block_size * 1000000));
+	_rate_expected = float (sample_freq / (int64_t (max_block_size) * 1000000));
 
 	_fade_chnmap   = 0;
 }
@@ -181,7 +181,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 		_proc_analyser.process_sample (ratio);
 		_meter_result._dsp_use._peak = float (_proc_analyser.get_peak_hold ());
 		_meter_result._dsp_use._rms  = float (_proc_analyser.get_rms ());
-		_period_now = float (dur_proc.count ()) * _rate_expected;
+		_period_now = float (dur_tot.count ()) * _rate_expected;
 	}
 	_proc_date_beg = date_beg;
 

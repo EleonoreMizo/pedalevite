@@ -694,6 +694,12 @@ void	DPvab::main_loop ()
 			bit_w = (_content_w >> _bit_pos) & 1;
 		}
 		_gpio.write (_pin_dout, bit_w);
+
+		if (_syncerr_flag)
+		{
+			_cb_ptr->notify_dropout ();
+			_syncerr_flag = false;
+		}
 	}
 
 	_proc_ex_flag = true;

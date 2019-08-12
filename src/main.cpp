@@ -13,7 +13,7 @@
 #define MAIN_USE_ST7920
 
 // No I/O, audio only. Useful to debug soundcard-related problems.
-#undef MAIN_USE_VOID
+#define MAIN_USE_VOID
 
 #undef MAIN_GENERATE_FACTORY_PRESETS
 
@@ -28,8 +28,8 @@
 	#define MAIN_API MAIN_API_MANUAL
 #elif fstb_IS (SYS, LINUX)
 //	#define MAIN_API MAIN_API_JACK
-	#define MAIN_API MAIN_API_ALSA
-//	#define MAIN_API MAIN_API_PVAB
+//	#define MAIN_API MAIN_API_ALSA
+	#define MAIN_API MAIN_API_PVAB
 #else
 	#define MAIN_API MAIN_API_ASIO
 #endif
@@ -1442,7 +1442,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 		{
 			fstb::snprintf4all (
 				cpu_0, sizeof (cpu_0),
-				"Time usage: %6.2f %% / %6.2f %%, Speed: %6.2 %%",
+				"Time usage: %6.2f %% / %6.2f %%, Speed: %6.2f %%",
 				usage_avg * 100, usage_max * 100, 100 / period_now
 			);
 		}
