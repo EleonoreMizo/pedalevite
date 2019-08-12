@@ -178,17 +178,30 @@ int	DPvab::do_start ()
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
 
 	// Mode control 2: sets CPEN and PDN
-	write_reg (0x07, 0x03);
+	write_reg (0x07, _mc2_ctrl_port | _mc2_power_down);
 
-	// Setup
-	write_reg (0x01, (1 << 3) + 1); // Master mode and I2S for DAC
-	write_reg (0x06, 1 << 4);       // I2S for ADC
+	// Setup -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Master mode and I2S for DAC
+	// Table 9, p. 29:  MCLK=Input, Master Mode, Single Speed,
+	// MCLK/LRCK = 256, SCLK/LRCK = 64: ratio1 = 0, ratio0 = 0
+	write_reg (0x01, _mc1_single | _mc1_master | _mc1_fmt_i2s);
 
-	// Actually 85 us required
-	std::this_thread::sleep_for (std::chrono::milliseconds (1));
+	write_reg (0x02, _dacc_deemph_none);
+
+	write_reg (0x03, _mix_soft_r | _mix_atapi_l_to_l | _mix_atapi_r_to_r);
+
+	write_reg (0x04, 0);
+	write_reg (0x05, 0);
+
+	// I2S for ADC
+	write_reg (0x06, _adcc_fmt_i2s);
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 	// Clears the PDN bit for startup
-	write_reg (0x07, 0x02);
+	write_reg (0x07, _mc2_ctrl_port);
+
+	// Actually only 85 us are required
+	std::this_thread::sleep_for (std::chrono::milliseconds (1));
 
 #else  // mfx_adrv_DPvab_CTRL_PORT_MODE
 
