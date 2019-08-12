@@ -153,6 +153,13 @@ MeterResultSet &	Model::use_meters ()
 
 
 
+float	Model::get_audio_period_ratio () const
+{
+	return _central.get_audio_period_ratio ();
+}
+
+
+
 // obs_ptr can be 0 to remove the observer.
 void	Model::set_observer (ModelObserverInterface *obs_ptr)
 {

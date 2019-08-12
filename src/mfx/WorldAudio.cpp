@@ -63,6 +63,8 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQu
 ,	_ctx_ptr (0)
 ,	_lvl_meter ()
 ,	_meter_result ()
+,	_period_now (1)
+,	_rate_expected (44100.f / (64 * 1000000))
 ,	_evt_arr ()
 ,	_evt_ptr_arr ()
 ,	_tempo_new (0)
@@ -137,6 +139,8 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	const std::chrono::microseconds  date_cur (_input_device.get_cur_date ());
 	_proc_date_end = date_cur;
 	_proc_date_beg = date_cur;
+	_period_now    = 1;
+	_rate_expected = float (sample_freq / (max_block_size * 1000000));
 
 	_fade_chnmap   = 0;
 }
@@ -146,6 +150,13 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 MeterResultSet &	WorldAudio::use_meters ()
 {
 	return _meter_result;
+}
+
+
+
+float	WorldAudio::get_audio_period_ratio () const
+{
+	return _period_now;
 }
 
 
@@ -170,6 +181,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 		_proc_analyser.process_sample (ratio);
 		_meter_result._dsp_use._peak = float (_proc_analyser.get_peak_hold ());
 		_meter_result._dsp_use._rms  = float (_proc_analyser.get_rms ());
+		_period_now = float (dur_proc.count ()) * _rate_expected;
 	}
 	_proc_date_beg = date_beg;
 

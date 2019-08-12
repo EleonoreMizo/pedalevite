@@ -168,6 +168,13 @@ MeterResultSet &	Central::use_meters ()
 
 
 
+float	Central::get_audio_period_ratio () const
+{
+	return _audio.get_audio_period_ratio ();
+}
+
+
+
 void	Central::commit ()
 {
 	if (_new_sptr.get () != 0)

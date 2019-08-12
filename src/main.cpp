@@ -1436,13 +1436,14 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 #if defined (MAIN_USE_VOID) || ! fstb_IS (SYS, LINUX)
 		const float  usage_max  = meters._dsp_use._peak;
 		const float  usage_avg  = meters._dsp_use._rms;
+		const float  period_now = ctx._model.get_audio_period_ratio ();
 		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
 		if (usage_max >= 0 && usage_avg >= 0)
 		{
 			fstb::snprintf4all (
 				cpu_0, sizeof (cpu_0),
-				"Time usage: %6.2f %% / %6.2f %%",
-				usage_avg * 100, usage_max * 100
+				"Time usage: %6.2f %% / %6.2f %%, Speed: %6.2 %%",
+				usage_avg * 100, usage_max * 100, 100 / period_now
 			);
 		}
 
