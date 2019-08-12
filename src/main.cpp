@@ -15,8 +15,6 @@
 // No I/O, audio only. Useful to debug soundcard-related problems.
 #undef MAIN_USE_VOID
 
-#undef MAIN_GENERATE_FACTORY_PRESETS
-
 #include "fstb/def.h"
 
 #define MAIN_API_JACK   1
@@ -37,12 +35,6 @@
 #include "mfx/adrv/CbInterface.h"
 #include "mfx/adrv/DriverInterface.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/doc/ActionBank.h"
-#include "mfx/doc/ActionParam.h"
-#include "mfx/doc/ActionPreset.h"
-#include "mfx/doc/ActionTempo.h"
-#include "mfx/doc/ActionToggleTuner.h"
-#include "mfx/doc/FxId.h"
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
 #include "mfx/pi/dist1/Param.h"
@@ -57,57 +49,16 @@
 #include "mfx/pi/trem1/Waveform.h"
 #include "mfx/pi/wah1/Param.h"
 #include "mfx/piapi/EventTs.h"
-#include "mfx/ui/Font.h"
 #include "mfx/ui/FontDataDefault.h"
 #include "mfx/ui/TimeShareThread.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
-#include "mfx/uitk/Page.h"
-#include "mfx/uitk/PageSwitcher.h"
 #include "mfx/uitk/ParentInterface.h"
-#include "mfx/uitk/pg/BankMenu.h"
-#include "mfx/uitk/pg/BankOrga.h"
-#include "mfx/uitk/pg/BankMove.h"
-#include "mfx/uitk/pg/CurProg.h"
-#include "mfx/uitk/pg/CtrlEdit.h"
-#include "mfx/uitk/pg/CtrlProg.h"
-#include "mfx/uitk/pg/EditDate.h"
-#include "mfx/uitk/pg/EditFxId.h"
-#include "mfx/uitk/pg/EditLabel.h"
-#include "mfx/uitk/pg/EditProg.h"
-#include "mfx/uitk/pg/EditText.h"
-#include "mfx/uitk/pg/EndMsg.h"
-#include "mfx/uitk/pg/FxLfo.h"
-#include "mfx/uitk/pg/FxPEq.h"
-#include "mfx/uitk/pg/Levels.h"
-#include "mfx/uitk/pg/ListPresets.h"
-#include "mfx/uitk/pg/MenuBackup.h"
-#include "mfx/uitk/pg/MenuMain.h"
-#include "mfx/uitk/pg/MenuPresets.h"
-#include "mfx/uitk/pg/MenuSlot.h"
-#include "mfx/uitk/pg/MoveFx.h"
-#include "mfx/uitk/pg/NotYet.h"
-#include "mfx/uitk/pg/PageType.h"
-#include "mfx/uitk/pg/ParamControllers.h"
-#include "mfx/uitk/pg/ParamEdit.h"
-#include "mfx/uitk/pg/ParamList.h"
-#include "mfx/uitk/pg/PedalActionType.h"
-#include "mfx/uitk/pg/PedalboardConfig.h"
-#include "mfx/uitk/pg/PedalEditAction.h"
-#include "mfx/uitk/pg/PedalEditCycle.h"
-#include "mfx/uitk/pg/PedalEditGroup.h"
-#include "mfx/uitk/pg/PedalEditStep.h"
-#include "mfx/uitk/pg/ProgCatalog.h"
-#include "mfx/uitk/pg/ProgMove.h"
-#include "mfx/uitk/pg/Question.h"
-#include "mfx/uitk/pg/SaveProg.h"
-#include "mfx/uitk/pg/SettingsOther.h"
-#include "mfx/uitk/pg/Tuner.h"
 #include "mfx/CmdLine.h"
-#include "mfx/LocEdit.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverDefault.h"
 #include "mfx/MsgQueue.h"
+#include "mfx/PageSet.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
 #include "mfx/View.h"
@@ -270,103 +221,12 @@ public:
 #endif
 
 	mfx::Model     _model;
-	std::vector <std::string>           // Audio plug-ins, at least 1 audio in and 1 audio out
-	               _pi_aud_type_list;
-	std::vector <std::string>           // Signal generators, (0 in or 0 out) and at least 1 signal output
-	               _pi_sig_type_list;
 	std::vector <mfx::uitk::pg::CtrlSrcNamed>
 	               _csn_list;
 
 	// View
 	mfx::View      _view;
-	mfx::ui::Font  _fnt_8x12;
-	mfx::ui::Font  _fnt_6x8;
-	mfx::ui::Font  _fnt_6x6;
-	mfx::ui::Font  _fnt_4x6;
-
-	mfx::uitk::Rect
-	               _inval_rect;
-	mfx::LocEdit   _loc_edit;
-	mfx::uitk::pg::PedalEditContext
-	               _loc_edit_pedal;
-	mfx::uitk::Page
-	               _page_mgr;
-	mfx::uitk::PageSwitcher
-	               _page_switcher;
-	mfx::uitk::pg::CurProg
-	               _page_cur_prog;
-	mfx::uitk::pg::Tuner
-	               _page_tuner;
-	mfx::uitk::pg::MenuMain
-	               _page_menu_main;
-	mfx::uitk::pg::EditProg
-	               _page_edit_prog;
-	mfx::uitk::pg::ParamList
-	               _page_param_list;
-	mfx::uitk::pg::ParamEdit
-	               _page_param_edit;
-	mfx::uitk::pg::NotYet
-	               _page_not_yet;
-	mfx::uitk::pg::Question
-	               _page_question;
-	mfx::uitk::pg::ParamControllers
-	               _page_param_controllers;
-	mfx::uitk::pg::CtrlEdit
-	               _page_ctrl_edit;
-	mfx::uitk::pg::MenuSlot
-	               _page_menu_slot;
-	mfx::uitk::pg::EditText
-	               _page_edit_text;
-	mfx::uitk::pg::SaveProg
-	               _page_save_prog;
-	mfx::uitk::pg::EndMsg
-	               _page_end_msg;
-	mfx::uitk::pg::Levels
-	               _page_levels;
-	mfx::uitk::pg::PedalboardConfig
-	               _page_pedalboard_config;
-	mfx::uitk::pg::PedalActionType
-	               _page_pedal_action_type;
-	mfx::uitk::pg::CtrlProg
-	               _page_ctrl_prog;
-	mfx::uitk::pg::BankMenu
-	               _page_bank_menu;
-	mfx::uitk::pg::MoveFx
-	               _page_move_fx;
-	mfx::uitk::pg::PedalEditGroup
-	               _page_pedal_edit_group;
-	mfx::uitk::pg::PedalEditCycle
-	               _page_pedal_edit_cycle;
-	mfx::uitk::pg::PedalEditStep
-	               _page_pedal_edit_step;
-	mfx::uitk::pg::PedalEditAction
-	               _page_pedal_edit_action;
-	mfx::uitk::pg::EditLabel
-	               _page_edit_label;
-	mfx::uitk::pg::EditFxId
-	               _page_edit_fxid;
-	mfx::uitk::pg::FxPEq
-	               _page_fx_peq;
-	mfx::uitk::pg::SettingsOther
-	               _page_settings_other;
-	mfx::uitk::pg::MenuPresets
-	               _page_menu_presets;
-	mfx::uitk::pg::ListPresets
-	               _page_list_presets;
-	mfx::uitk::pg::BankOrga
-	               _page_bank_orga;
-	mfx::uitk::pg::BankMove
-	               _page_bank_move;
-	mfx::uitk::pg::ProgMove
-	               _page_prog_move;
-	mfx::uitk::pg::FxLfo
-	               _page_fx_lfo;
-	mfx::uitk::pg::MenuBackup
-	               _page_menu_backup;
-	mfx::uitk::pg::EditDate
-	               _page_edit_date;
-	mfx::uitk::pg::ProgCatalog
-	               _page_prog_catalog;
+	mfx::PageSet   _page_set;
 
 	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
 	               ~Context ();
@@ -379,10 +239,7 @@ protected:
 	virtual void   do_notify_dropout ();
 	virtual void   do_request_exit ();
 private:
-	void           list_plugins (std::vector <std::string> &pi_aud_type_list, std::vector <std::string> &pi_sig_type_list) const;
 	static void    init_empty_bank (mfx::doc::Bank &bank);
-	static void    create_default_bank (mfx::doc::Bank &bank);
-	static void    create_default_layout (mfx::doc::PedalboardLayout &layout);
 };
 
 Context::Context (mfx::adrv::DriverInterface &snd_drv)
@@ -413,8 +270,6 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 #endif
 ,	_file_io (_leds)
 ,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input, _file_io)
-,	_pi_aud_type_list ()
-,	_pi_sig_type_list ()
 ,	_csn_list ({
 		{ mfx::ControllerType_POT   ,  0, "Expression 0" },
 		{ mfx::ControllerType_POT   ,  1, "Expression 1" },
@@ -438,52 +293,10 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 		{ mfx::ControllerType_SW    , 17, "Footsw 11"    }
 	})
 ,	_view ()
-,	_fnt_8x12 ()
-,	_fnt_6x8 ()
-,	_fnt_6x6 ()
-,	_fnt_4x6 ()
-,	_inval_rect ()
-,	_loc_edit ()
-,	_loc_edit_pedal ()
-,	_page_mgr (_model, _view, _display, _queue_input_to_gui, _user_input, _fnt_4x6, _fnt_6x6, _fnt_6x8, _fnt_8x12)
-,	_page_switcher (_page_mgr)
-,	_page_cur_prog (_page_switcher, snd_drv)
-,	_page_tuner (_page_switcher, _leds)
-,	_page_menu_main (_page_switcher, _loc_edit_pedal)
-,	_page_edit_prog (_page_switcher, _loc_edit, _pi_aud_type_list, _pi_sig_type_list)
-,	_page_param_list (_page_switcher, _loc_edit)
-,	_page_param_edit (_page_switcher, _loc_edit)
-,	_page_not_yet (_page_switcher)
-,	_page_question (_page_switcher)
-,	_page_param_controllers (_page_switcher, _loc_edit, _csn_list)
-,	_page_ctrl_edit (_page_switcher, _loc_edit, _csn_list)
-,	_page_menu_slot (_page_switcher, _loc_edit, _pi_aud_type_list, _pi_sig_type_list)
-,	_page_edit_text (_page_switcher)
-,	_page_save_prog (_page_switcher)
-,	_page_end_msg (_cmd_line)
-,	_page_levels (_page_switcher, snd_drv)
-,	_page_pedalboard_config (_page_switcher, _loc_edit_pedal)
-,	_page_pedal_action_type (_page_switcher, _loc_edit_pedal)
-,	_page_ctrl_prog (_page_switcher, _loc_edit_pedal)
-,	_page_bank_menu (_page_switcher, _loc_edit_pedal)
-,	_page_move_fx (_page_switcher, _loc_edit)
-,	_page_pedal_edit_group (_page_switcher, _loc_edit_pedal)
-,	_page_pedal_edit_cycle (_page_switcher, _loc_edit_pedal)
-,	_page_pedal_edit_step (_page_switcher, _loc_edit_pedal)
-,	_page_pedal_edit_action (_page_switcher, _loc_edit_pedal)
-,	_page_edit_label (_page_switcher)
-,	_page_edit_fxid (_page_switcher, _pi_aud_type_list, _pi_sig_type_list)
-,	_page_fx_peq (_page_switcher, _loc_edit)
-,	_page_settings_other (_page_switcher)
-,	_page_menu_presets (_page_switcher, _loc_edit)
-,	_page_list_presets (_page_switcher, _loc_edit)
-,	_page_bank_orga (_page_switcher, _loc_edit_pedal)
-,	_page_bank_move (_page_switcher)
-,	_page_prog_move (_page_switcher)
-,	_page_fx_lfo (_page_switcher, _loc_edit)
-,	_page_menu_backup (_page_switcher)
-,	_page_edit_date (_page_switcher, _cmd_line)
-,	_page_prog_catalog (_page_switcher)
+,	_page_set (
+		_model, _view, _display, _queue_input_to_gui, _user_input, _leds, _cmd_line,
+		snd_drv, _csn_list
+	)
 {
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
@@ -517,75 +330,28 @@ fprintf (stderr, "Reading ESC button...\n");
 	}
 	while (cell_ptr != 0 && scan_flag);
 
-	mfx::ui::FontDataDefault::make_08x12 (_fnt_8x12);
-	mfx::ui::FontDataDefault::make_06x08 (_fnt_6x8);
-	mfx::ui::FontDataDefault::make_06x06 (_fnt_6x6);
-	mfx::ui::FontDataDefault::make_04x06 (_fnt_4x6);
-
-	// Assigns input devices
-	/*** To do: build a common table in mfx::Cst for all assignments ***/
-	for (int type = 0; type < mfx::ui::UserInputType_NBR_ELT; ++type)
-	{
-		const int      nbr_param = _user_input.get_nbr_param (
-			static_cast <mfx::ui::UserInputType> (type)
-		);
-		for (int index = 0; index < nbr_param; ++index)
-		{
-			mfx::ui::UserInputInterface::MsgQueue * queue_ptr =
-				&_queue_input_to_cmd;
-			if (type == mfx::ui::UserInputType_POT)
-			{
-				queue_ptr = &_queue_input_to_audio;
-			}
-			if (type == mfx::ui::UserInputType_ROTENC)
-			{
-				if (index < 5)
-				{
-					queue_ptr = &_queue_input_to_audio;
-				}
-				else
-				{
-					queue_ptr = &_queue_input_to_gui;
-				}
-			}
-			if (   type == mfx::ui::UserInputType_SW
-			    && (index == 0 || index == 1 || (index >= 10 && index < 14) || index == 18 || index == 19))
-			{
-				queue_ptr = &_queue_input_to_gui;
-			}
-			_user_input.set_msg_recipient (
-				static_cast <mfx::ui::UserInputType> (type),
-				index, queue_ptr
-			);
-		}
-	}
+	// Assigns message queues to input devices
+	_user_input.assign_queues_to_input_dev (
+		_queue_input_to_cmd,
+		_queue_input_to_gui,
+		_queue_input_to_audio
+	);
 
 	// Lists public plug-ins
-	list_plugins (_pi_aud_type_list, _pi_sig_type_list);
+	_page_set.list_plugins ();
 
 	_model.set_observer (&_view);
 	_view.add_observer (*this);
-
-#if defined (MAIN_GENERATE_FACTORY_PRESETS)
-
-	mfx::doc::Bank bank;
-	create_default_bank (bank);
-
-	mfx::doc::PedalboardLayout layout;
-	create_default_layout (layout);
-
-	_model.set_pedalboard_layout (layout);
-	_model.set_bank (0, bank);
-	_model.select_bank (0);
-	_model.activate_preset (0);
-
-#else  // MAIN_GENERATE_FACTORY_PRESETS
 
 	const int      ret_val = _model.load_from_disk ();
 	if (ret_val != 0)
 	{
 
-		/*** To do ***/
+		/*** To do: error message? ***/
+
+		mfx::doc::PedalboardLayout layout;
+		layout.set_default_conf ();
+		_model.set_pedalboard_layout (layout);
 
 		mfx::doc::Bank bank;
 		init_empty_bank (bank);
@@ -597,49 +363,34 @@ fprintf (stderr, "Reading ESC button...\n");
 		_model.activate_preset (0);
 	}
 
-#endif // MAIN_GENERATE_FACTORY_PRESETS
+#if 0
+	{
+		// Serialization consistency test
+		mfx::doc::SerWText ser_w;
+		ser_w.clear ();
+		_view.use_setup ().ser_write (ser_w);
+		ser_w.terminate ();
+		const std::string result = ser_w.use_content ();
+
+		mfx::doc::SerRText ser_r;
+		ser_r.start (result);
+		std::unique_ptr <mfx::doc::Setup> sss_uptr (new mfx::doc::Setup);
+		sss_uptr->ser_read (ser_r);
+		ser_r.terminate ();
+
+		ser_w.clear ();
+		_view.use_setup ().ser_write (ser_w);
+		ser_w.terminate ();
+		const std::string result2 = ser_w.use_content ();
+
+		assert (result == result2);
+	}
+#endif
 
 //	_model.set_chn_mode (mfx::ChnMode_1M_1S);
 
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CUR_PROG         , _page_cur_prog         );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_TUNER            , _page_tuner            );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_MAIN        , _page_menu_main        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_PROG        , _page_edit_prog        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_LIST       , _page_param_list       );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_EDIT       , _page_param_edit       );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_NOT_YET          , _page_not_yet          );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_QUESTION         , _page_question         );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PARAM_CONTROLLERS, _page_param_controllers);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_EDIT        , _page_ctrl_edit        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_SLOT        , _page_menu_slot        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_TEXT        , _page_edit_text        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_SAVE_PROG        , _page_save_prog        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_END_MSG          , _page_end_msg          );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_LEVELS           , _page_levels           );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDALBOARD_CONFIG, _page_pedalboard_config);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_ACTION_TYPE, _page_pedal_action_type);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_CTRL_PROG        , _page_ctrl_prog        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_BANK_MENU        , _page_bank_menu        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MOVE_FX          , _page_move_fx          );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_EDIT_GROUP , _page_pedal_edit_group );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_EDIT_CYCLE , _page_pedal_edit_cycle );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_EDIT_STEP  , _page_pedal_edit_step  );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PEDAL_EDIT_ACTION, _page_pedal_edit_action);
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_LABEL       , _page_edit_label       );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_FXID        , _page_edit_fxid        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_FX_PEQ           , _page_fx_peq           );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_SETTINGS_OTHER   , _page_settings_other   );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_PRESETS     , _page_menu_presets     );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_LIST_PRESETS     , _page_list_presets     );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_BANK_ORGA        , _page_bank_orga        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_BANK_MOVE        , _page_bank_move        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PROG_MOVE        , _page_prog_move        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_FX_LFO           , _page_fx_lfo           );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_MENU_BACKUP      , _page_menu_backup      );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_EDIT_DATE        , _page_edit_date        );
-	_page_switcher.add_page (mfx::uitk::pg::PageType_PROG_CATALOG     , _page_prog_catalog     );
-
-	_page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
+	mfx::uitk::PageSwitcher &  page_switcher = _page_set.use_page_switcher ();
+	page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
 }
 
 
@@ -664,10 +415,13 @@ void	Context::do_set_tuner (bool active_flag)
 {
 	if (active_flag)
 	{
-		_page_switcher.call_page (
+		mfx::uitk::PageSwitcher &  page_switcher =
+			_page_set.use_page_switcher ();
+		mfx::uitk::Page & page_mgr = _page_set.use_page_mgr ();
+		page_switcher.call_page (
 			mfx::uitk::pg::PageType_TUNER,
 			0,
-			_page_mgr.get_cursor_node ()
+			page_mgr.get_cursor_node ()
 		);
 	}
 }
@@ -696,644 +450,12 @@ void	Context::do_request_exit ()
 
 
 
-void	Context::list_plugins (std::vector <std::string> &pi_aud_type_list, std::vector <std::string> &pi_sig_type_list) const
-{
-	pi_aud_type_list.clear ();
-	pi_sig_type_list.clear ();
-	std::vector <std::string> pi_list = _model.list_plugin_models ();
-	std::map <std::string, std::string> pi_aud_map;
-	std::map <std::string, std::string> pi_sig_map;
-	for (std::string model_id : pi_list)
-	{
-		if (model_id [0] != '\?')
-		{
-			const mfx::piapi::PluginDescInterface &   desc =
-				_model.get_model_desc (model_id);
-
-			int            nbr_i = 1;
-			int            nbr_o = 1;
-			int            nbr_s = 0;
-			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
-
-			std::string    name_all = desc.get_name ();
-			std::string    name     = mfx::pi::param::Tools::extract_longest_str (
-				name_all.c_str (), '\n'
-			);
-
-			if (nbr_i > 0 && (nbr_o > 0 || nbr_s > 0))
-			{
-				pi_aud_map [name] = model_id;
-			}
-			else if (nbr_s > 0)
-			{
-				pi_sig_map [name] = model_id;
-			}
-		}
-	}
-	for (auto &node : pi_aud_map)
-	{
-		pi_aud_type_list.push_back (node.second);
-	}
-	for (auto &node : pi_sig_map)
-	{
-		pi_sig_type_list.push_back (node.second);
-	}
-}
-
-
-
 void	Context::init_empty_bank (mfx::doc::Bank &bank)
 {
 	for (auto &preset : bank._preset_arr)
 	{
 		preset._name = mfx::Cst::_empty_preset_name;
 	}
-}
-
-
-
-void	Context::create_default_bank (mfx::doc::Bank &bank)
-{
-	init_empty_bank (bank);
-	bank._name = "Cr\xC3\xA9" "dit Usurier";
-	{
-		mfx::doc::Preset& preset   = bank._preset_arr [0];
-		preset._name = "Basic disto";
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Imp fix";
-			slot_ptr->_pi_model = "iifix";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = { 0.5f, 0.5f };
-		}
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Disto 1";
-			slot_ptr->_pi_model = "dist1";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = { 0.25f, 0.75f, 0.65f };
-
-			mfx::doc::CtrlLinkSet cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
-			cls._bind_sptr->_source._index = 0;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 0;
-			cls._bind_sptr->_step          = 0.02f;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_HPF_FREQ] = cls;
-
-			{
-				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
-				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
-				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
-				for (int i = 0; i < 2; ++i)
-				{
-					static const float val_arr [2] = { 1, 0 };
-					const float        val = val_arr [i];
-					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
-					);
-					cycle._cycle.push_back (action_arr);
-				}
-			}
-		}
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Tone 1";
-			slot_ptr->_pi_model = "dtone1";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = { 0.5f, 0.5f, 0.40f };
-
-			mfx::doc::CtrlLinkSet cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 1;
-			cls._bind_sptr->_step          = 0.02f;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::dtone1::Param_TONE] = cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 2;
-			cls._bind_sptr->_step          = 0.02f;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::dtone1::Param_MID] = cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 3;
-			cls._bind_sptr->_step          = 0.02f;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::dtone1::Param_CENTER] = cls;
-
-			{
-				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
-				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
-				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
-				for (int i = 0; i < 2; ++i)
-				{
-					static const float val_arr [2] = { 1, 0 };
-					const float        val = val_arr [i];
-					cycle._cycle [i].push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
-					));
-				}
-			}
-		}
-	}
-	{
-		mfx::doc::Preset& preset   = bank._preset_arr [1];
-		preset._name = "Tremolisto";
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Imp fix";
-			slot_ptr->_pi_model = "iifix";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = { 0.5f, 0.5f };
-		}
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Disto 1";
-			slot_ptr->_pi_model = "dist1";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = { 0.375f, 0.75f, 0.65f };
-
-			{
-				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
-				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
-				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
-				for (int i = 0; i < 2; ++i)
-				{
-					static const float val_arr [2] = { 1, 0 };
-					const float        val = val_arr [i];
-					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
-					);
-					cycle._cycle.push_back (action_arr);
-				}
-			}
-		}
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Tremolo";
-			slot_ptr->_pi_model = "tremolo1";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = std::vector <float> ({
-				0.45f, 0.31f, 0, 0.75f, 0.5f
-			});
-
-			mfx::doc::CtrlLinkSet cls;
-			mfx::doc::ParamPresentation pres;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
-			cls._bind_sptr->_source._index = 0;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::trem1::Param_AMT] = cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 0;
-			cls._bind_sptr->_step          = 0.02f;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::trem1::Param_FREQ] = cls;
-
-			pres._disp_mode = mfx::doc::ParamPresentation::DispMode_BEATS;
-			pres._ref_beats = 0.25f;
-			pi_settings._map_param_pres [mfx::pi::trem1::Param_FREQ] = pres;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 1;
-			cls._bind_sptr->_step          = 1.0f / (mfx::pi::trem1::Waveform_NBR_ELT - 1);
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::trem1::Param_WF] = cls;
-		}
-	}
-	{
-		mfx::doc::Preset& preset   = bank._preset_arr [2];
-		preset._name = "Ouah-ouah";
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Imp fix";
-			slot_ptr->_pi_model = "iifix";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = { 0.5f, 0.5f };
-		}
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Wah";
-			slot_ptr->_pi_model = "wah1";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = std::vector <float> ({
-				0.5f, 1.0f/3
-			});
-
-			mfx::doc::CtrlLinkSet cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
-			cls._bind_sptr->_source._index = 0;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0.35f;	// Limits the range to the CryBaby's
-			cls._bind_sptr->_amp           = 0.75f - cls._bind_sptr->_base;
-			pi_settings._map_param_ctrl [mfx::pi::wah1::Param_FREQ] = cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 0;
-			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::wah1::Param_Q] = cls;
-
-#if 0
-			mfx::doc::ParamPresentation pp;
-			pp._disp_mode = mfx::doc::ParamPresentation::DispMode_NOTE;
-			pi_settings._map_param_pres [mfx::pi::wah1::Param_FREQ] = pp;
-#endif
-		}
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Disto 1";
-			slot_ptr->_pi_model = "dist1";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			mfx::doc::CtrlLinkSet cls;
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 1;
-			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls;
-
-			pi_settings._param_list = { 0.50f, 0.75f, 0.65f };
-
-			{
-				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
-				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
-				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
-				for (int i = 0; i < 2; ++i)
-				{
-					static const float val_arr [2] = { 1, 0 };
-					const float        val = val_arr [i];
-					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
-					);
-					cycle._cycle.push_back (action_arr);
-				}
-			}
-		}
-	}
-	{
-		mfx::doc::Preset& preset   = bank._preset_arr [3];
-		preset._name = "Inharmonic";
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Imp fix";
-			slot_ptr->_pi_model = "iifix";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			pi_settings._param_list = { 0.5f, 0.5f };
-		}
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "FreqShift";
-			slot_ptr->_pi_model = "freqshift1";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-
-			mfx::doc::CtrlLinkSet cls;
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls._bind_sptr->_source._index = 0;
-			cls._bind_sptr->_step          = float (mfx::Cst::_step_param);
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0;
-			cls._bind_sptr->_amp           = 1;
-			slot_ptr->_settings_mixer._map_param_ctrl [mfx::pi::dwm::Param_WET] = cls;
-
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-			pi_settings._param_list = std::vector <float> ({
-				0.5f
-			});
-
-			cls._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_POT);
-			cls._bind_sptr->_source._index = 0;
-			cls._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls._bind_sptr->_u2b_flag      = false;
-			cls._bind_sptr->_base          = 0.5f;   // More accuracy on the useful range
-			cls._bind_sptr->_amp           = 1.0f - cls._bind_sptr->_base;
-			{
-				mfx::pi::freqsh::FreqShiftDesc dummy;
-				const mfx::piapi::ParamDescInterface & dd = dummy.get_param_info (
-					mfx::piapi::ParamCateg_GLOBAL,
-					mfx::pi::freqsh::Param_FREQ
-				);
-				for (int oct = 2; oct < 7; ++oct)
-				{
-					std::array <int, 2> note_arr = {{ 0, 7 }};
-					for (size_t n = 0; n < note_arr.size (); ++n)
-					{
-						const int      note = oct * 12 + note_arr [n];
-						const double   freq = 440 * pow (2, (note - 69) / 12.0);
-						const double   nrm  = dd.conv_nat_to_nrm (freq);
-						cls._bind_sptr->_notch_list.insert (float (nrm));
-					}
-				}
-			}
-			pi_settings._map_param_ctrl [mfx::pi::freqsh::Param_FREQ] = cls;
-		}
-		{
-			mfx::doc::Slot *  slot_ptr = new mfx::doc::Slot;
-			preset._routing._chain.push_back (preset.gen_slot_id ());
-			preset._slot_map [preset._routing._chain.back ()] = mfx::doc::Preset::SlotSPtr (slot_ptr);
-			slot_ptr->_label    = "Disto 1";
-			slot_ptr->_pi_model = "dist1";
-			slot_ptr->_settings_mixer._param_list =
-				std::vector <float> ({ 0, 1, mfx::pi::dwm::DryWetDesc::_gain_neutral });
-			mfx::doc::PluginSettings & pi_settings =
-				slot_ptr->_settings_all [slot_ptr->_pi_model];
-
-			mfx::doc::CtrlLinkSet cls_main;
-			cls_main._bind_sptr = mfx::doc::CtrlLinkSet::LinkSPtr (new mfx::doc::CtrlLink);
-			cls_main._bind_sptr->_source._type  = mfx::ControllerType (mfx::ui::UserInputType_ROTENC);
-			cls_main._bind_sptr->_source._index = 1;
-			cls_main._bind_sptr->_step          = float (mfx::Cst::_step_param);
-			cls_main._bind_sptr->_curve         = mfx::ControlCurve_LINEAR;
-			cls_main._bind_sptr->_u2b_flag      = false;
-			cls_main._bind_sptr->_base          = 0;
-			cls_main._bind_sptr->_amp           = 1;
-			pi_settings._map_param_ctrl [mfx::pi::dist1::Param_GAIN] = cls_main;
-
-			pi_settings._param_list = { 0.50f, 0.75f, 0.65f };
-
-			{
-				mfx::doc::PedalActionCycle &  cycle =
-					preset._layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
-				const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, slot_ptr->_label, mfx::PiType_MIX);
-				mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
-				for (int i = 0; i < 2; ++i)
-				{
-					static const float val_arr [2] = { 1, 0 };
-					const float        val = val_arr [i];
-					action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-						new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
-					);
-					cycle._cycle.push_back (action_arr);
-				}
-			}
-		}
-	}
-
-#if 0
-	// Serialization consistency test
-	mfx::doc::SerWText ser_w;
-	ser_w.clear ();
-	_view.use_setup ().ser_write (ser_w);
-	ser_w.terminate ();
-	const std::string result = ser_w.use_content ();
-
-	mfx::doc::SerRText ser_r;
-	ser_r.start (result);
-	std::unique_ptr <mfx::doc::Setup> sss_uptr (new mfx::doc::Setup);
-	sss_uptr->ser_read (ser_r);
-	ser_r.terminate ();
-
-	ser_w.clear ();
-	_view.use_setup ().ser_write (ser_w);
-	ser_w.terminate ();
-	const std::string result2 = ser_w.use_content ();
-
-	assert (result == result2);
-#endif
-}
-
-
-
-void	Context::create_default_layout (mfx::doc::PedalboardLayout &layout)
-{
-#if 1
-
-	// Presets
-	for (int p = 0; p < 7; ++p)
-	{
-		const int      pedal = (p < 4) ? p + 1 : p + 3;
-		mfx::doc::PedalActionCycle &  cycle =
-			layout._pedal_arr [pedal]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionPreset (false, p)
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-
-	// Tuner
-	{
-		mfx::doc::PedalActionCycle &  cycle =
-			layout._pedal_arr [5]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionToggleTuner
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-
-	// Tempo
-	{
-		mfx::doc::PedalActionCycle &  cycle =
-			layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionTempo
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-
-	// Prog-/Bank-, Prog+/Bank+
-	{
-		for (int p = 0; p < 2; ++p)
-		{
-			mfx::doc::PedalActionGroup &  group = layout._pedal_arr [p * 6];
-			const int      d = (p == 0) ? -1 : +1;
-			{
-				mfx::doc::PedalActionCycle &  cycle =
-					group._action_arr [mfx::doc::ActionTrigger_RELEASE];
-				mfx::doc::PedalActionCycle::ActionArray   action_arr;
-				action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-					new mfx::doc::ActionPreset (true, d)
-				));
-				cycle._cycle.push_back (action_arr);
-			}
-			{
-				mfx::doc::PedalActionCycle &  cycle =
-					group._action_arr [mfx::doc::ActionTrigger_HOLD];
-				mfx::doc::PedalActionCycle::ActionArray   action_arr;
-				action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-					new mfx::doc::ActionBank (true, d)
-				));
-				cycle._cycle.push_back (action_arr);
-			}
-		}
-	}
-
-
-#else // Old
-
-	for (int p = 0; p < 9; ++p)
-	{
-		const int      pedal = (p < 5) ? p : p + 1;
-		mfx::doc::PedalActionCycle &  cycle =
-			layout._pedal_arr [pedal]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionPreset (false, p)
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-	{
-		mfx::doc::PedalActionCycle &  cycle =
-			layout._pedal_arr [5]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionToggleTuner
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-	{
-		mfx::doc::PedalActionCycle &  cycle =
-			layout._pedal_arr [11]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		mfx::doc::PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (mfx::doc::PedalActionCycle::ActionSPtr (
-			new mfx::doc::ActionTempo
-		));
-		cycle._cycle.push_back (action_arr);
-	}
-
-#endif
-
-#if 0 // Test code
-	{
-		mfx::doc::PedalActionCycle &  cycle =
-			layout._pedal_arr [10]._action_arr [mfx::doc::ActionTrigger_PRESS];
-		const mfx::doc::FxId    fx_id (mfx::doc::FxId::LocType_LABEL, "Disto 1", mfx::PiType_MIX);
-		mfx::doc::PedalActionCycle::ActionArray   action_arr (1);
-		for (int i = 0; i < 2; ++i)
-		{
-			static const float val_arr [2] = { 1, 0 };
-			const float        val = val_arr [i];
-			action_arr [0] = mfx::doc::PedalActionCycle::ActionSPtr (
-				new mfx::doc::ActionParam (fx_id, mfx::pi::dwm::Param_BYPASS, val)
-			);
-			cycle._cycle.push_back (action_arr);
-		}
-	}
-#endif
 }
 
 
@@ -1445,7 +567,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 		fflush (stderr);
 #endif
 
-		ctx._page_mgr.process_messages ();
+		ctx._page_set.use_page_mgr ().process_messages ();
 
 		bool wait_flag = true;
 

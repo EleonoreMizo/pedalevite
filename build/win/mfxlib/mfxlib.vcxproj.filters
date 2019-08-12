@@ -2634,6 +2634,9 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgCatalog.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\PageSet.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3649,6 +3652,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgCatalog.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\PageSet.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

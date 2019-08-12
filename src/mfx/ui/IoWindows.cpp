@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/ui/IoWindows.h"
+#include "mfx/Cst.h"
 
 #include <stdexcept>
 
@@ -192,9 +193,9 @@ void	IoWindows::do_set_led (int index, float val)
 
 
 
-int	IoWindows::do_get_nbr_param (UserInputType type) const
+int	IoWindows::do_get_nbr_param (UserInputType /*type*/) const
 {
-	return 64;
+	return Cst::_max_input_param;
 }
 
 

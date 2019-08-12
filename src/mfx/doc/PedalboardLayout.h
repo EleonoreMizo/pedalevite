@@ -63,6 +63,8 @@ public:
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
+	void           set_default_conf ();
+
 	std::array <PedalActionGroup, Cst::_nbr_pedals>
 	               _pedal_arr;
 

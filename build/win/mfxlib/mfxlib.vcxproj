@@ -563,6 +563,7 @@
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\Msg.h" />
     <ClInclude Include="..\..\..\src\mfx\MsgQueue.h" />
+    <ClInclude Include="..\..\..\src\mfx\PageSet.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.hpp" />
     <ClInclude Include="..\..\..\src\mfx\PedalLoc.h" />
@@ -1057,6 +1058,7 @@
     <ClCompile Include="..\..\..\src\mfx\MeterResultSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\Model.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\PageSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\Click.cpp" />

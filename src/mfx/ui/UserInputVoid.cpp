@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/UserInputVoid.h"
+#include "mfx/Cst.h"
 
 #include <cassert>
 
@@ -72,7 +73,7 @@ void	UserInputVoid::send_message (std::chrono::microseconds date, UserInputType 
 
 int	UserInputVoid::do_get_nbr_param (UserInputType /*type*/) const
 {
-	return (64);
+	return Cst::_max_input_param;
 }
 
 

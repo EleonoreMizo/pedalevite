@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/Cst.h"
 
 #include <cassert>
 
@@ -48,6 +49,7 @@ int	UserInputInterface::get_nbr_param (UserInputType type) const
 
 	const int      nbr_param = do_get_nbr_param (type);
 	assert (nbr_param >= 0);
+	assert (nbr_param <= Cst::_max_input_param);
 
 	return nbr_param;
 }
@@ -78,6 +80,37 @@ void	UserInputInterface::return_cell (MsgCell &cell)
 std::chrono::microseconds	UserInputInterface::get_cur_date () const
 {
 	return do_get_cur_date ();
+}
+
+
+
+void	UserInputInterface::assign_queues_to_input_dev (MsgQueue &queue_cmd, MsgQueue &queue_gui, MsgQueue &queue_audio)
+{
+	for (int type = 0; type < UserInputType_NBR_ELT; ++type)
+	{
+		const int      nbr_param = get_nbr_param (
+			static_cast <UserInputType> (type)
+		);
+		for (int index = 0; index < nbr_param; ++index)
+		{
+			MsgQueue *     queue_ptr = &queue_cmd;
+			switch (Cst::_queue_type_arr [type] [index])
+			{
+			case Cst::UserInputQueueType_GUI:
+				queue_ptr = &queue_gui;
+				break;
+			case Cst::UserInputQueueType_AUDIO:
+				queue_ptr = &queue_audio;
+				break;
+			case Cst::UserInputQueueType_CMD:
+			default:
+				break;
+			}
+			set_msg_recipient (
+				static_cast <UserInputType> (type), index, queue_ptr
+			);
+		}
+	}
 }
 
 

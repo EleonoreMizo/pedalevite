@@ -61,6 +61,9 @@ public:
 	std::chrono::microseconds
 	               get_cur_date () const;
 
+	// Utility functions
+	void           assign_queues_to_input_dev (MsgQueue &queue_cmd, MsgQueue &queue_gui, MsgQueue &queue_audio);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

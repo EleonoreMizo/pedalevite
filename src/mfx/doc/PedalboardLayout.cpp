@@ -27,6 +27,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/PedalboardLayout.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
+#include "mfx/doc/ActionBank.h"
+#include "mfx/doc/ActionPreset.h"
+#include "mfx/doc/ActionTempo.h"
+#include "mfx/doc/ActionToggleTuner.h"
 
 #include <utility>
 
@@ -124,6 +128,73 @@ void	PedalboardLayout::ser_read (SerRInterface &ser)
 	ser.end_list ();
 
 	ser.end_list ();
+}
+
+
+
+void	PedalboardLayout::set_default_conf ()
+{
+	// Presets
+	for (int p = 0; p < 7; ++p)
+	{
+		const int      pedal = (p < 4) ? p + 1 : p + 3;
+		PedalActionCycle &  cycle =
+			_pedal_arr [pedal]._action_arr [ActionTrigger_PRESS];
+		PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (PedalActionCycle::ActionSPtr (
+			new ActionPreset (false, p)
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+
+	// Tuner
+	{
+		PedalActionCycle &  cycle =
+			_pedal_arr [5]._action_arr [ActionTrigger_PRESS];
+		PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (PedalActionCycle::ActionSPtr (
+			new ActionToggleTuner
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+
+	// Tempo
+	{
+		PedalActionCycle &  cycle =
+			_pedal_arr [11]._action_arr [ActionTrigger_PRESS];
+		PedalActionCycle::ActionArray   action_arr;
+		action_arr.push_back (PedalActionCycle::ActionSPtr (
+			new ActionTempo
+		));
+		cycle._cycle.push_back (action_arr);
+	}
+
+	// Prog-/Bank-, Prog+/Bank+
+	{
+		for (int p = 0; p < 2; ++p)
+		{
+			PedalActionGroup &  group = _pedal_arr [p * 6];
+			const int      d = (p == 0) ? -1 : +1;
+			{
+				PedalActionCycle &  cycle =
+					group._action_arr [ActionTrigger_RELEASE];
+				PedalActionCycle::ActionArray   action_arr;
+				action_arr.push_back (PedalActionCycle::ActionSPtr (
+					new ActionPreset (true, d)
+				));
+				cycle._cycle.push_back (action_arr);
+			}
+			{
+				PedalActionCycle &  cycle =
+					group._action_arr [ActionTrigger_HOLD];
+				PedalActionCycle::ActionArray   action_arr;
+				action_arr.push_back (PedalActionCycle::ActionSPtr (
+					new ActionBank (true, d)
+				));
+				cycle._cycle.push_back (action_arr);
+			}
+		}
+	}
 }
 
 

@@ -73,6 +73,63 @@ const std::string	Cst::_config_dir     =
 #endif
 const std::string	Cst::_rw_cmd_script_pathname = "/opt/pedalevite/bin/cmd_rofs.sh";
 
+const Cst::QueueTypeArray	Cst::_queue_type_arr =
+{{
+	// UserInputType_SW
+	{{
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_CMD  , UserInputQueueType_CMD  ,
+		UserInputQueueType_CMD  , UserInputQueueType_CMD  ,
+		UserInputQueueType_CMD  , UserInputQueueType_CMD  ,
+
+		UserInputQueueType_CMD  , UserInputQueueType_CMD  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_CMD  , UserInputQueueType_CMD  ,
+
+		UserInputQueueType_CMD  , UserInputQueueType_CMD  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_CMD  , UserInputQueueType_CMD  ,
+		UserInputQueueType_CMD  , UserInputQueueType_CMD
+	}},
+
+	// UserInputType_POT
+	{{
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO
+	}},
+
+	// UserInputType_ROTENC
+	{{
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_AUDIO,
+		UserInputQueueType_AUDIO, UserInputQueueType_GUI  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI  ,
+		UserInputQueueType_GUI  , UserInputQueueType_GUI
+	}}
+}};
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
