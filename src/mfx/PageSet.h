@@ -88,7 +88,7 @@ class PageSet
 
 public:
 
-	explicit       PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, const CmdLine &cmd_line, adrv::DriverInterface &snd_drv, const std::vector <uitk::pg::CtrlSrcNamed> &csn_list);
+	explicit       PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, const CmdLine &cmd_line, adrv::DriverInterface &snd_drv);
 	virtual        ~PageSet () = default;
 
 	void           list_plugins ();
@@ -120,6 +120,8 @@ private:
 	               _pi_aud_type_list;
 	std::vector <std::string>  // Signal generators, (0 in or 0 out) and at least 1 signal output
 	               _pi_sig_type_list;
+	std::vector <uitk::pg::CtrlSrcNamed>
+	               _csn_list;
 
 	LocEdit        _loc_edit;
 	uitk::pg::PedalEditContext

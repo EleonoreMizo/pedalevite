@@ -41,7 +41,7 @@ namespace mfx
 
 
 
-PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, const CmdLine &cmd_line, adrv::DriverInterface &snd_drv, const std::vector <uitk::pg::CtrlSrcNamed> &csn_list)
+PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, const CmdLine &cmd_line, adrv::DriverInterface &snd_drv)
 :	_model (model)
 ,	_fnt_8x12 ()
 ,	_fnt_6x8 ()
@@ -49,6 +49,28 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_fnt_4x6 ()
 ,	_pi_aud_type_list ()
 ,	_pi_sig_type_list ()
+,	_csn_list ({
+		{ ControllerType_POT   ,  0, "Expression 0" },
+		{ ControllerType_POT   ,  1, "Expression 1" },
+		{ ControllerType_POT   ,  2, "Expression 2" },
+		{ ControllerType_ROTENC,  0, "Knob 0"       },
+		{ ControllerType_ROTENC,  1, "Knob 1"       },
+		{ ControllerType_ROTENC,  2, "Knob 2"       },
+		{ ControllerType_ROTENC,  3, "Knob 3"       },
+		{ ControllerType_ROTENC,  4, "Knob 4"       },
+		{ ControllerType_SW    ,  2, "Footsw 0"     },
+		{ ControllerType_SW    ,  3, "Footsw 1"     },
+		{ ControllerType_SW    ,  4, "Footsw 2"     },
+		{ ControllerType_SW    ,  5, "Footsw 3"     },
+		{ ControllerType_SW    ,  6, "Footsw 4"     },
+		{ ControllerType_SW    ,  7, "Footsw 5"     },
+		{ ControllerType_SW    ,  8, "Footsw 6"     },
+		{ ControllerType_SW    ,  9, "Footsw 7"     },
+		{ ControllerType_SW    , 14, "Footsw 8"     },
+		{ ControllerType_SW    , 15, "Footsw 9"     },
+		{ ControllerType_SW    , 16, "Footsw 10"    },
+		{ ControllerType_SW    , 17, "Footsw 11"    }
+	})
 ,	_loc_edit ()
 ,	_loc_edit_pedal ()
 ,	_page_mgr (model, view, display, queue_input_to_gui, input_device, _fnt_4x6, _fnt_6x6, _fnt_6x8, _fnt_8x12)
@@ -61,8 +83,8 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_param_edit (_page_switcher, _loc_edit)
 ,	_page_not_yet (_page_switcher)
 ,	_page_question (_page_switcher)
-,	_page_param_controllers (_page_switcher, _loc_edit, csn_list)
-,	_page_ctrl_edit (_page_switcher, _loc_edit, csn_list)
+,	_page_param_controllers (_page_switcher, _loc_edit, _csn_list)
+,	_page_ctrl_edit (_page_switcher, _loc_edit, _csn_list)
 ,	_page_menu_slot (_page_switcher, _loc_edit, _pi_aud_type_list, _pi_sig_type_list)
 ,	_page_edit_text (_page_switcher)
 ,	_page_save_prog (_page_switcher)

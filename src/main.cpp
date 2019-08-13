@@ -221,8 +221,6 @@ public:
 #endif
 
 	mfx::Model     _model;
-	std::vector <mfx::uitk::pg::CtrlSrcNamed>
-	               _csn_list;
 
 	// View
 	mfx::View      _view;
@@ -270,32 +268,10 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 #endif
 ,	_file_io (_leds)
 ,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input, _file_io)
-,	_csn_list ({
-		{ mfx::ControllerType_POT   ,  0, "Expression 0" },
-		{ mfx::ControllerType_POT   ,  1, "Expression 1" },
-		{ mfx::ControllerType_POT   ,  2, "Expression 2" },
-		{ mfx::ControllerType_ROTENC,  0, "Knob 0"       },
-		{ mfx::ControllerType_ROTENC,  1, "Knob 1"       },
-		{ mfx::ControllerType_ROTENC,  2, "Knob 2"       },
-		{ mfx::ControllerType_ROTENC,  3, "Knob 3"       },
-		{ mfx::ControllerType_ROTENC,  4, "Knob 4"       },
-		{ mfx::ControllerType_SW    ,  2, "Footsw 0"     },
-		{ mfx::ControllerType_SW    ,  3, "Footsw 1"     },
-		{ mfx::ControllerType_SW    ,  4, "Footsw 2"     },
-		{ mfx::ControllerType_SW    ,  5, "Footsw 3"     },
-		{ mfx::ControllerType_SW    ,  6, "Footsw 4"     },
-		{ mfx::ControllerType_SW    ,  7, "Footsw 5"     },
-		{ mfx::ControllerType_SW    ,  8, "Footsw 6"     },
-		{ mfx::ControllerType_SW    ,  9, "Footsw 7"     },
-		{ mfx::ControllerType_SW    , 14, "Footsw 8"     },
-		{ mfx::ControllerType_SW    , 15, "Footsw 9"     },
-		{ mfx::ControllerType_SW    , 16, "Footsw 10"    },
-		{ mfx::ControllerType_SW    , 17, "Footsw 11"    }
-	})
 ,	_view ()
 ,	_page_set (
 		_model, _view, _display, _queue_input_to_gui, _user_input, _leds, _cmd_line,
-		snd_drv, _csn_list
+		snd_drv
 	)
 {
 	// First, scans the input queue to check if the ESC button
