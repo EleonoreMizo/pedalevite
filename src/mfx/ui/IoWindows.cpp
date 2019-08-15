@@ -31,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/IoWindows.h"
 #include "mfx/Cst.h"
 
+#include <Windowsx.h>
+
 #include <stdexcept>
 
 #include <cassert>
@@ -60,6 +62,8 @@ IoWindows::IoWindows (volatile bool &quit_request_flag)
 ,	_msg_pool ()
 ,	_recip_list ()
 ,	_clock_freq (0)
+,	_pressed_sw_ptr (nullptr)
+,	_sw_states (0)
 ,	_quit_request_flag (quit_request_flag)
 ,	_quit_flag ()
 ,	_msg_loop_thread (&IoWindows::main_loop, this)
@@ -236,7 +240,7 @@ const wchar_t	IoWindows::_window_class_name_0 [] =
 
 const IoWindows::ScanEntry	IoWindows::_scan_table [] =
 {
-	// Pedals, top row (6) 
+	// Pedals, top row (6)
 	{ true , 0x10      , UserInputType_SW    ,  2,  0 }, // A
 	{ true , 0x11      , UserInputType_SW    ,  3,  0 }, // Z
 	{ true , 0x12      , UserInputType_SW    ,  4,  0 }, // E
@@ -293,6 +297,32 @@ const IoWindows::ScanEntry	IoWindows::_scan_table [] =
 	{ false, VK_NUMPAD9, UserInputType_POT   ,  0,  9 }
 };
 
+const IoWindows::SwLoc	IoWindows::_switch_pos_table [] =
+{
+	// Pedals, top row (6)
+	{  2, SwType_FOOT, 0, 0 },
+	{  3, SwType_FOOT, 1, 0 },
+	{  4, SwType_FOOT, 2, 0 },
+	{  5, SwType_FOOT, 3, 0 },
+	{  6, SwType_FOOT, 4, 0 },
+	{  7, SwType_FOOT, 5, 0 },
+
+	// Pedals, bottom row (6)
+	{  8, SwType_FOOT, 0, 1 },
+	{  9, SwType_FOOT, 1, 1 },
+	{ 14, SwType_FOOT, 2, 1 },
+	{ 15, SwType_FOOT, 3, 1 },
+	{ 16, SwType_FOOT, 4, 1 },
+	{ 17, SwType_FOOT, 5, 1 },
+
+	// Panel buttons
+	{  0, SwType_CTRL, 0, 0 }, // Enter (main)
+	{  1, SwType_CTRL, 2, 0 }, // Esc
+	{ 10, SwType_CTRL, 1, 0 }, // Up
+	{ 11, SwType_CTRL, 1, 1 }, // Down
+	{ 12, SwType_CTRL, 0, 1 }, // Left
+	{ 13, SwType_CTRL, 2, 1 }  // Right
+};
 
 
 void	IoWindows::main_loop ()
@@ -456,6 +486,19 @@ void	IoWindows::init_bitmap (int w, int h)
 		def_proc_flag = process_key (hwnd, wparam, lparam, false);
 		break;
 
+	case WM_LBUTTONDOWN:
+		def_proc_flag = process_lbuttondown (hwnd, wparam, lparam);
+		break;
+
+	case WM_LBUTTONUP:
+		def_proc_flag = process_lbuttonup (hwnd, wparam, lparam);
+		break;
+
+	case WM_CAPTURECHANGED:
+		release_mouse_pressed_sw ();
+		def_proc_flag = false;
+		break;
+
 	case MsgCustom_REDRAW:
 		def_proc_flag = process_redraw (hwnd, wparam, lparam);
 		break;
@@ -463,6 +506,11 @@ void	IoWindows::init_bitmap (int w, int h)
 	case MsgCustom_LED:
 		def_proc_flag = process_led (hwnd, wparam, lparam);
 		break;
+
+	case MsgCustom_SWITCH:
+		def_proc_flag = process_switch (hwnd, wparam);
+		break;
+
 	default:
 		def_proc_flag = true;
 		break;
@@ -512,6 +560,30 @@ bool	IoWindows::process_led (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 
 
 
+bool	IoWindows::process_switch (::HWND hwnd, ::WPARAM wparam)
+{
+	const int      index = wparam;
+	const SwLoc *  loc_ptr = find_sw_from_index (index);
+	if (loc_ptr == nullptr)
+	{
+		assert (false);
+	}
+	else
+	{
+		int            sw_x;
+		int            sw_y;
+		compute_sw_coord (sw_x, sw_y, loc_ptr->_type, loc_ptr->_x, loc_ptr->_y);
+
+		const ::WPARAM wparam_r = ( sw_y << 16) +  sw_x;
+		const ::LPARAM lparam_r = (_sw_h << 16) + _sw_w;
+		::PostMessageW (_main_win, MsgCustom_REDRAW, wparam_r, lparam_r);
+	}
+
+	return false;
+}
+
+
+
 bool	IoWindows::process_paint (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 {
 	if (hwnd != _main_win)
@@ -533,6 +605,7 @@ bool	IoWindows::process_paint (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 	{
 		redraw_led (x1, y1, x2, y2, led_cnt);
 	}
+	redraw_sw_all (x1, y1, x2, y2);
 
 	::HDC          context = ::CreateCompatibleDC (0);
 	::HGDIOBJ      old_obj = ::SelectObject (context, _bitmap);
@@ -569,14 +642,13 @@ bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool
 
 	if (se_ptr != 0)
 	{
-		::LARGE_INTEGER   d;
-		::QueryPerformanceCounter (&d);
-		const int64_t     date = d.QuadPart;
+		const int64_t     date = get_date ();
 
 		if (se_ptr->_type == UserInputType_SW)
 		{
 			if (! (down_flag && prev_flag))
 			{
+				update_sw_state (se_ptr->_index, down_flag);
 				const float    val = (down_flag) ? 1.f : 0.f;
 				enqueue_val (date, se_ptr->_type, se_ptr->_index, val);
 			}
@@ -604,6 +676,35 @@ bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool
 	}
 
 	return true;
+}
+
+
+
+bool	IoWindows::process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
+{
+	::SetFocus (hwnd);
+	::SetCapture (hwnd);
+
+	const int      mx = GET_X_LPARAM (lparam);
+	const int      my = GET_Y_LPARAM (lparam);
+	const SwLoc *  sw_loc_ptr = find_sw_from_coord (mx, my);
+	if (sw_loc_ptr != 0)
+	{
+		release_mouse_pressed_sw ();
+		enqueue_sw_msg (sw_loc_ptr->_index, true);
+		_pressed_sw_ptr = sw_loc_ptr;
+	}
+
+	return false;
+}
+
+
+
+bool	IoWindows::process_lbuttonup (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
+{
+	::ReleaseCapture ();
+
+	return false;
 }
 
 
@@ -693,11 +794,11 @@ void	IoWindows::redraw_main_screen (int x1, int y1, int x2, int y2)
 
 void	IoWindows::redraw_led (int x1, int y1, int x2, int y2, int led_cnt)
 {
-#if 1
+#if 1 // Fixed size
 	const int      led_w  = _led_h;
 	const int      led_x1 = led_cnt * led_w;
 	const int      led_x2 = led_x1 + led_w;
-#else
+#else // Fills all the screen width
 	const int      led_x1 =  led_cnt      * _disp_w / _nbr_led;
 	const int      led_x2 = (led_cnt + 1) * _disp_w / _nbr_led;
 	const int      led_w  = led_x2 - led_x1;
@@ -760,6 +861,237 @@ void	IoWindows::redraw_led (int x1, int y1, int x2, int y2, int led_cnt)
 
 
 
+void	IoWindows::redraw_sw_all (int x1, int y1, int x2, int y2)
+{
+	const int      nbr_sw =
+		int (sizeof (_switch_pos_table) / sizeof (_switch_pos_table [0]));
+	for (int sw_cnt = 0; sw_cnt < nbr_sw; ++sw_cnt)
+	{
+		const SwLoc &  loc     = _switch_pos_table [sw_cnt];
+		const bool     on_flag = is_sw_pressed (loc._index);
+		redraw_sw (x1, y1, x2, y2, loc._type, loc._x, loc._y, on_flag);
+	}
+}
+
+
+
+void	IoWindows::redraw_sw (int x1, int y1, int x2, int y2, SwType type, int pos_x, int pos_y, bool on_flag)
+{
+	int            sw_x;
+	int            sw_y;
+	compute_sw_coord (sw_x, sw_y, type, pos_x, pos_y);
+
+	const int      sw_end_x = sw_x + _sw_w;
+	const int      sw_end_y = sw_y + _sw_h;
+
+	x1 = std::max (x1, sw_x    );
+	x2 = std::min (x2, sw_end_x);
+	y1 = std::max (y1, sw_y    );
+	y2 = std::min (y2, sw_end_y);
+
+	if (x1 < x2 && y1 < y2)
+	{
+		static const uint8_t c_outl = 130;
+		static const uint8_t c_outs =  70;
+		static const uint8_t c_fill = 100;
+
+		const uint8_t  c_oul = (on_flag) ? 255 - c_outl : c_outl;
+		const uint8_t  c_ous = (on_flag) ? 255 - c_outs : c_outs;
+		const uint8_t  c_fil = (on_flag) ? 255 - c_fill : c_fill;
+		const PixArgb  p_oul = { c_oul, c_oul, c_oul, 255 };
+		const PixArgb  p_ous = { c_ous, c_ous, c_ous, 255 };
+		const PixArgb  p_fil = { c_fil, c_fil, c_fil, 255 };
+
+		draw_line_h (
+			sw_x, sw_y            , _sw_w    , p_oul, x1, y1, x2, y2
+		);
+		draw_line_h (
+			sw_x, sw_end_y - 1    , _sw_w    , p_ous, x1, y1, x2, y2
+		);
+		draw_line_v (
+			sw_x        , sw_y + 1, _sw_h - 2, p_oul, x1, y1, x2, y2
+		);
+		draw_line_v (
+			sw_end_x - 1, sw_y + 1, _sw_h - 2, p_ous, x1, y1, x2, y2
+		);
+
+		fill_block (
+			sw_x + 1, sw_y + 1, _sw_w - 2, _sw_h - 2, p_fil, x1, y1, x2, y2
+		);
+	}
+}
+
+
+
+void	IoWindows::draw_line_h (int xo, int yo, int l, const PixArgb &c, int x1, int y1, int x2, int y2)
+{
+	if (yo >= y1 && yo < y2)
+	{
+		int            xe = xo + l;
+		xo = std::max (xo, x1);
+		xe = std::min (xe, x2);
+		if (xo < xe)
+		{
+			PixArgb *      dst_ptr = &_bitmap_data_ptr [yo * _disp_w];
+			for (int x = xo; x < xe; ++x)
+			{
+				dst_ptr [x] = c;
+			}
+		}
+	}
+}
+
+
+
+void	IoWindows::draw_line_v (int xo, int yo, int l, const PixArgb &c, int x1, int y1, int x2, int y2)
+{
+	if (xo >= x1 && xo < x2)
+	{
+		int            ye = yo + l;
+		yo = std::max (yo, y1);
+		ye = std::min (ye, y2);
+		if (yo < ye)
+		{
+			PixArgb *      dst_ptr = &_bitmap_data_ptr [0];
+			for (int y = yo; y < ye; ++y)
+			{
+				dst_ptr [y * _disp_w + xo] = c;
+			}
+		}
+	}
+}
+
+
+
+void	IoWindows::fill_block (int xo, int yo, int w, int h, const PixArgb &c, int x1, int y1, int x2, int y2)
+{
+	int            xe = xo + w;
+	int            ye = yo + h;
+	xo = std::max (xo, x1);
+	xe = std::min (xe, x2);
+	yo = std::max (yo, y1);
+	ye = std::min (ye, y2);
+	if (xo < xe && yo < ye)
+	{
+		for (int y = yo; y < ye; ++y)
+		{
+			PixArgb *      dst_ptr = &_bitmap_data_ptr [y * _disp_w];
+			for (int x = xo; x < xe; ++x)
+			{
+				dst_ptr [x] = c;
+			}
+		}
+	}
+}
+
+
+
+const IoWindows::SwLoc *  IoWindows::find_sw_from_coord (int x, int y) const
+{
+	const SwLoc *  loc_ptr = nullptr;
+
+	if (y >= _sw_y && y < _sw_y + _sw_h_tot)
+	{
+		const int      nbr_sw =
+			int (sizeof (_switch_pos_table) / sizeof (_switch_pos_table [0]));
+		for (int sw_cnt = 0; sw_cnt < nbr_sw && loc_ptr == 0; ++sw_cnt)
+		{
+			const SwLoc &  loc = _switch_pos_table [sw_cnt];
+			int            sw_x;
+			int            sw_y;
+			compute_sw_coord (sw_x, sw_y, loc._type, loc._x, loc._y);
+			if (   x >= sw_x && x < sw_x + _sw_w
+			    && y >= sw_y && y < sw_y + _sw_h)
+			{
+				loc_ptr = &loc;
+			}
+		}
+	}
+
+	return loc_ptr;
+}
+
+
+
+const IoWindows::SwLoc *	IoWindows::find_sw_from_index (int index) const
+{
+	const SwLoc *  loc_ptr = nullptr;
+	const int      nbr_sw  =
+		int (sizeof (_switch_pos_table) / sizeof (_switch_pos_table [0]));
+	for (int sw_cnt = 0; sw_cnt < nbr_sw && loc_ptr == 0; ++sw_cnt)
+	{
+		const SwLoc &  loc = _switch_pos_table [sw_cnt];
+		if (loc._index == index)
+		{
+			loc_ptr = &loc;
+		}
+	}
+
+	return loc_ptr;
+}
+
+
+
+void	IoWindows::compute_sw_coord (int &x, int &y, SwType type, int col, int row) const
+{
+	const int      sw_x_base =
+		  (type == SwType_CTRL)
+		? _sw_w * _nbr_fsw_col + _sw_gap
+		: 0;
+	x = sw_x_base + col * _sw_w;
+	y = _sw_y     + row * _sw_h;
+}
+
+
+
+void	IoWindows::release_mouse_pressed_sw ()
+{
+	if (_pressed_sw_ptr != nullptr)
+	{
+		enqueue_sw_msg (_pressed_sw_ptr->_index, false);
+		_pressed_sw_ptr = nullptr;
+	}
+}
+
+
+
+void	IoWindows::enqueue_sw_msg (int index, bool on_flag)
+{
+	update_sw_state (index, on_flag);
+	const int64_t  date = get_date ();
+	const float    val  = (on_flag) ? 1.f : 0.f;
+	enqueue_val (date, UserInputType_SW, index, val);
+}
+
+
+
+void	IoWindows::update_sw_state (int index, bool on_flag)
+{
+	const uint64_t mask = uint64_t (1) << index;
+	if (on_flag)
+	{
+		_sw_states |= mask;
+	}
+	else
+	{
+		_sw_states &= ~mask;
+	}
+
+	const ::WPARAM wparam = index;
+	::PostMessageW (_main_win, MsgCustom_SWITCH, wparam, 0);
+}
+
+
+
+bool	IoWindows::is_sw_pressed (int index) const
+{
+	const uint64_t mask = uint64_t (1) << index;
+
+	return ((_sw_states & mask) != 0);
+}
+
+
+
 ::LRESULT CALLBACK	IoWindows::winproc_static (::HWND hwnd, ::UINT message, ::WPARAM wparam, ::LPARAM lparam)
 {
 	::LRESULT      ret_val = 0;
@@ -775,6 +1107,17 @@ void	IoWindows::redraw_led (int x1, int y1, int x2, int y2, int led_cnt)
 	}
 
 	return ret_val;
+}
+
+
+
+int64_t	IoWindows::get_date ()
+{
+	::LARGE_INTEGER   d;
+	::QueryPerformanceCounter (&d);
+	const int64_t     date = d.QuadPart;
+
+	return date;
 }
 
 

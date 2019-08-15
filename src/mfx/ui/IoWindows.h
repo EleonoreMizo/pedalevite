@@ -103,7 +103,8 @@ private:
 	enum MsgCustom
 	{
 		MsgCustom_REDRAW = WM_APP,
-		MsgCustom_LED
+		MsgCustom_LED,
+		MsgCustom_SWITCH
 	};
 
 	class PixArgb
@@ -125,17 +126,51 @@ private:
 		int            _dir;
 	};
 
+	enum SwType
+	{
+		SwType_FOOT = 0,
+		SwType_CTRL,
+
+		SwType_NBR_ELT
+	};
+
+	class SwLoc
+	{
+	public:
+		int            _index;
+		SwType         _type;
+		int            _x;
+		int            _y;
+	};
+
 	static const int  _scr_w     = 128;
 	static const int  _scr_h     =  64;
 	static const int  _scr_s     = _scr_w;
 	static const int  _nbr_led   = 3;
+	static const int  _nbr_fsw_row = 2; // Two rows of 6 footswitches
+	static const int  _nbr_fsw_col = 6;
+	static const int  _nbr_but_row = 2; // Two rows of 3 buttons for the UI
+	static const int  _nbr_but_col = 3;
 	static const int  _zoom      = 4;
 
-	static const int  _max_led_h = 32;
+	static const int  _led_h_max = 32;
 	static const int  _led_h_tmp = _scr_h * _zoom / 2;
-	static const int  _led_h     = (_led_h_tmp < _max_led_h) ? _led_h_tmp : _max_led_h;
+	static const int  _led_h     = (_led_h_tmp < _led_h_max) ? _led_h_tmp : _led_h_max;
+	static const int  _led_y     = _scr_h * _zoom;
+
+	static const int  _sw_gap    = 16;  // Between the two groups of switches
+	static const int  _sw_l_max  = 32;
+	static const int  _sw_l_tmp  =
+		(_scr_w * _zoom - _sw_gap) / (_nbr_fsw_col + _nbr_but_col);
+	static const int  _sw_l      = (_sw_l_tmp < _sw_l_max) ? _sw_l_tmp : _sw_l_max;
+	static const int  _sw_w      = _sw_l;
+	static const int  _sw_h      = _sw_l;
+	static const int  _sw_r_max  = (_nbr_fsw_row < _nbr_but_row) ? _nbr_but_row : _nbr_fsw_row;
+	static const int  _sw_h_tot  = _sw_r_max * _sw_h;
+	static const int  _sw_y      = _led_y + _led_h;
+
 	static const int  _disp_w    = _scr_w * _zoom;
-	static const int  _disp_h    = _scr_h * _zoom + _led_h;
+	static const int  _disp_h    = _scr_h * _zoom + _led_h + _sw_h_tot;
 
 	typedef std::array <uint8_t, _scr_s * _scr_h> ScreenBuffer;
 
@@ -150,14 +185,30 @@ private:
 	::LRESULT      winproc (::HWND hwnd, ::UINT message, ::WPARAM wparam, ::LPARAM lparam);
 	bool           process_redraw (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
 	bool           process_led (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
+	bool           process_switch (::HWND hwnd, ::WPARAM wparam);
 	bool           process_paint (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
 	bool           process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool down_flag);
+	bool           process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
+	bool           process_lbuttonup (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
 	void           enqueue_val (int64_t date, UserInputType type, int index, float val);
 	void           redraw_main_screen (int x1, int y1, int x2, int y2);
 	void           redraw_led (int x1, int y1, int x2, int y2, int led_cnt);
+	void           redraw_sw_all (int x1, int y1, int x2, int y2);
+	void           redraw_sw (int x1, int y1, int x2, int y2, SwType type, int pos_x, int pos_y, bool on_flag);
+	void           draw_line_h (int xo, int yo, int l, const PixArgb & c, int x1, int y1, int x2, int y2);
+	void           draw_line_v (int xo, int yo, int l, const PixArgb & c, int x1, int y1, int x2, int y2);
+	void           fill_block (int xo, int yo, int w, int h, const PixArgb & c, int x1, int y1, int x2, int y2);
+	const SwLoc *  find_sw_from_coord (int x, int y) const;
+	const SwLoc *  find_sw_from_index (int index) const;
+	void           compute_sw_coord (int &x, int &y, SwType type, int col, int row) const;
+	void           release_mouse_pressed_sw ();
+	void           enqueue_sw_msg (int index, bool on_flag);
+	void           update_sw_state (int index, bool on_flag);
+	bool           is_sw_pressed (int index) const;
 
 	static ::LRESULT CALLBACK
 	               winproc_static (::HWND hwnd, ::UINT message, ::WPARAM wparam, ::LPARAM lparam);
+	static int64_t get_date ();
 
 	ScreenBuffer   _screen_buf;
 	::HWND         _main_win;
@@ -171,6 +222,8 @@ private:
 	MsgPool        _msg_pool;
 	RecipientList  _recip_list;
 	int64_t        _clock_freq; // Hz
+	const SwLoc *  _pressed_sw_ptr;    // Current switch pressed with the mouse. 0 when no switch is pressed.
+	uint64_t       _sw_states;        // Each bit = current switch state (mouse or keyboard)
 
 	volatile bool& _quit_request_flag; // Application is requested to quit
 
@@ -181,6 +234,8 @@ private:
 	               _window_class_name_0 [];
 	static const ScanEntry
 	               _scan_table [];
+	static const SwLoc
+	               _switch_pos_table [];
 
 
 
