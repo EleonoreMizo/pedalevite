@@ -1051,8 +1051,6 @@ pedalevite_SOURCES = \
         ../../src/mfx/ModelObserverDefault.h \
         ../../src/mfx/ModelObserverInterface.cpp \
         ../../src/mfx/ModelObserverInterface.h \
-        ../../src/mfx/Msg.h \
-        ../../src/mfx/MsgQueue.h \
         ../../src/mfx/PageSet.cpp \
         ../../src/mfx/PageSet.h \
         ../../src/mfx/ParamCoord.h \
@@ -1071,6 +1069,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/UniqueProgList.h \
         ../../src/mfx/View.cpp \
         ../../src/mfx/View.h \
+        ../../src/mfx/WaMsg.h \
+        ../../src/mfx/WaMsgQueue.h \
         ../../src/mfx/WorldAudio.cpp \
         ../../src/mfx/WorldAudio.h \
         ../../src/mailbox.c \

@@ -32,7 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
-class Msg;
+class WaMsg;
 
 namespace cmd
 {
@@ -48,7 +48,7 @@ public:
 
 	virtual        ~CentralCbInterface () = default;
 
-	void           process_msg_audio_to_cmd (const Msg &msg);
+	void           process_msg_audio_to_cmd (const WaMsg &msg);
 
 
 
@@ -56,7 +56,7 @@ public:
 
 protected:
 
-	virtual void   do_process_msg_audio_to_cmd (const Msg &msg) = 0;
+	virtual void   do_process_msg_audio_to_cmd (const WaMsg &msg) = 0;
 
 
 

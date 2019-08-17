@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MsgQueue.h
+        WaMsgQueue.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_MsgQueue_HEADER_INCLUDED)
-#define mfx_MsgQueue_HEADER_INCLUDED
+#if ! defined (mfx_WaMsgQueue_HEADER_INCLUDED)
+#define mfx_WaMsgQueue_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,8 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/Msg.h"
 #include "conc/LockFreeQueue.h"
+#include "mfx/WaMsg.h"
 
 
 
@@ -37,7 +37,7 @@ namespace mfx
 
 
 
-typedef conc::LockFreeQueue <Msg> MsgQueue;
+typedef conc::LockFreeQueue <WaMsg> WaMsgQueue;
 
 
 
@@ -45,11 +45,11 @@ typedef conc::LockFreeQueue <Msg> MsgQueue;
 
 
 
-//#include "mfx/MsgQueue.hpp"
+//#include "mfx/WaMsgQueue.hpp"
 
 
 
-#endif   // mfx_MsgQueue_HEADER_INCLUDED
+#endif   // mfx_WaMsgQueue_HEADER_INCLUDED
 
 
 

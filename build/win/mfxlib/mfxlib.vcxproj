@@ -561,8 +561,8 @@
     <ClInclude Include="..\..\..\src\mfx\Model.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
-    <ClInclude Include="..\..\..\src\mfx\Msg.h" />
-    <ClInclude Include="..\..\..\src\mfx\MsgQueue.h" />
+    <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
+    <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h" />
     <ClInclude Include="..\..\..\src\mfx\PageSet.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.h" />
     <ClInclude Include="..\..\..\src\mfx\ParamCoord.hpp" />

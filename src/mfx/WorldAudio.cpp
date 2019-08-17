@@ -29,10 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/Cst.h"
 #include "mfx/Dir.h"
-#include "mfx/Msg.h"
-#include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
+#include "mfx/WaMsg.h"
 #include "mfx/WorldAudio.h"
 
 #include <algorithm>
@@ -51,7 +50,7 @@ namespace mfx
 
 
 
-WorldAudio::WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQueue &queue_to_cmd, ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device, conc::CellPool <Msg> &msg_pool_cmd)
+WorldAudio::WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaMsgQueue &queue_to_cmd, ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device, conc::CellPool <WaMsg> &msg_pool_cmd)
 :	_pi_pool (plugin_pool)
 ,	_queue_from_cmd (queue_from_cmd)
 ,	_queue_to_cmd (queue_to_cmd)
@@ -270,14 +269,14 @@ void	WorldAudio::reset_plugin (int pi_id)
 
 void	WorldAudio::collect_msg_cmd (bool proc_flag)
 {
-	conc::LockFreeCell <Msg> * cell_ptr = 0;
+	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
 	do
 	{
 		cell_ptr = _queue_from_cmd.dequeue ();
 		if (cell_ptr != 0)
 		{
 			// Reply to our own messages
-			if (cell_ptr->_val._sender == Msg::Sender_AUDIO)
+			if (cell_ptr->_val._sender == WaMsg::Sender_AUDIO)
 			{
 				// Nothing more here
 				_msg_pool_cmd.return_cell (*cell_ptr);
@@ -290,20 +289,20 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 
 				switch (cell_ptr->_val._type)
 				{
-				case Msg::Type_CTX:
+				case WaMsg::Type_CTX:
 					if (proc_flag)
 					{
 						handle_msg_ctx (cell_ptr->_val._content._ctx);
 					}
 					break;
-				case Msg::Type_PARAM:
+				case WaMsg::Type_PARAM:
 					if (proc_flag)
 					{
 						handle_msg_param (cell_ptr->_val._content._param);
 					}
 					ret_flag = false;
 					break;
-				case Msg::Type_TEMPO:
+				case WaMsg::Type_TEMPO:
 					if (proc_flag)
 					{
 						handle_msg_tempo (cell_ptr->_val._content._tempo);
@@ -423,12 +422,12 @@ void	WorldAudio::handle_controller (const ControlSource &controller, float val_r
 				details._param_arr [index] = base_val;
 				details._param_update_from_audio [index] = true;
 
-				conc::LockFreeCell <Msg> * cell_ptr =
+				conc::LockFreeCell <WaMsg> * cell_ptr =
 					_msg_pool_cmd.take_cell (true);
 				if (cell_ptr != 0)
 				{
-					cell_ptr->_val._sender                    = Msg::Sender_AUDIO;
-					cell_ptr->_val._type                      = Msg::Type_PARAM;
+					cell_ptr->_val._sender                    = WaMsg::Sender_AUDIO;
+					cell_ptr->_val._type                      = WaMsg::Type_PARAM;
 					cell_ptr->_val._content._param._plugin_id = pi_id;
 					cell_ptr->_val._content._param._index     = index;
 					cell_ptr->_val._content._param._val       = base_val;
@@ -907,7 +906,7 @@ void	WorldAudio::handle_signals (piapi::PluginInterface::ProcInfo &proc_info, co
 
 
 
-void	WorldAudio::handle_msg_ctx (Msg::Ctx &msg)
+void	WorldAudio::handle_msg_ctx (WaMsg::Ctx &msg)
 {
 	std::swap (_ctx_ptr, msg._ctx_ptr);
 	_fade_chnmap = msg._fade_chnmap;
@@ -918,7 +917,7 @@ void	WorldAudio::handle_msg_ctx (Msg::Ctx &msg)
 
 
 
-void	WorldAudio::handle_msg_param (Msg::Param &msg)
+void	WorldAudio::handle_msg_param (WaMsg::Param &msg)
 {
 	const int      index = msg._index;
 	PluginPool::PluginDetails &   details =
@@ -930,7 +929,7 @@ void	WorldAudio::handle_msg_param (Msg::Param &msg)
 
 
 
-void	WorldAudio::handle_msg_tempo (Msg::Tempo &msg)
+void	WorldAudio::handle_msg_tempo (WaMsg::Tempo &msg)
 {
 	if (msg._bpm == 0)
 	{

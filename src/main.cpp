@@ -57,11 +57,11 @@
 #include "mfx/CmdLine.h"
 #include "mfx/Model.h"
 #include "mfx/ModelObserverDefault.h"
-#include "mfx/MsgQueue.h"
 #include "mfx/PageSet.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
 #include "mfx/View.h"
+#include "mfx/WaMsgQueue.h"
 #include "mfx/WorldAudio.h"
 
 #if fstb_IS (SYS, LINUX)

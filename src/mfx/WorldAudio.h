@@ -43,7 +43,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/dyn/MeterRmsPeakHold4Simd.h"
 #include "mfx/Cst.h"
 #include "mfx/MeterResultSet.h"
-#include "mfx/MsgQueue.h"
+#include "mfx/WaMsgQueue.h"
 #include "piapi/EventTs.h"
 
 #include <atomic>
@@ -65,7 +65,7 @@ class WorldAudio
 
 public:
 
-	explicit       WorldAudio (PluginPool &plugin_pool, MsgQueue &queue_from_cmd, MsgQueue &queue_to_cmd, ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device, conc::CellPool <Msg> &msg_pool_cmd);
+	explicit       WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaMsgQueue &queue_to_cmd, ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device, conc::CellPool <WaMsg> &msg_pool_cmd);
 	virtual        ~WorldAudio ();
 
 	void           set_process_info (double sample_freq, int max_block_size);
@@ -128,22 +128,22 @@ private:
 	void           prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node, bool use_byp_as_src_flag);
 	void           handle_signals (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node);
 
-	void           handle_msg_ctx (Msg::Ctx &msg);
-	void           handle_msg_param (Msg::Param &msg);
-	void           handle_msg_tempo (Msg::Tempo &msg);
+	void           handle_msg_ctx (WaMsg::Ctx &msg);
+	void           handle_msg_param (WaMsg::Param &msg);
+	void           handle_msg_tempo (WaMsg::Tempo &msg);
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	void           store_data (const float src_ptr [], int nbr_spl);
 	static int     save_wav (const char *filename_0, const std::vector <AlignedZone > &chn_arr, double sample_freq, float scale = 1);
 #endif
 	PluginPool &   _pi_pool;
-	MsgQueue &     _queue_from_cmd;
-	MsgQueue &     _queue_to_cmd;
+	WaMsgQueue &   _queue_from_cmd;
+	WaMsgQueue &   _queue_to_cmd;
 	ui::UserInputInterface::MsgQueue &
 	               _queue_from_input;
 	ui::UserInputInterface &
 	               _input_device;
-	conc::CellPool <Msg> &
+	conc::CellPool <WaMsg> &
 	               _msg_pool_cmd;
 
 	int            _max_block_size;

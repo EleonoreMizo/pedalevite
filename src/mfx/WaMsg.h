@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Msg.h
+        WaMsg.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_Msg_HEADER_INCLUDED)
-#define mfx_Msg_HEADER_INCLUDED
+#if ! defined (mfx_WaMsg_HEADER_INCLUDED)
+#define mfx_WaMsg_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,7 +36,7 @@ namespace mfx
 
 class ProcessingContext;
 
-class Msg
+class WaMsg
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -93,10 +93,10 @@ public:
 		Tempo          _tempo;
 	};
 
-	               Msg ()                        = default;
-	               Msg (const Msg &other)        = default;
-	virtual        ~Msg ()                       = default;
-	Msg &          operator = (const Msg &other) = default;
+	               WaMsg ()                        = default;
+	               WaMsg (const WaMsg &other)      = default;
+	virtual        ~WaMsg ()                       = default;
+	WaMsg &        operator = (const WaMsg &other) = default;
 
 	Sender         _sender = Sender_INVALID;  // Original sender. To know if a message should be recycled.
 	Type           _type   = Type_INVALID;
@@ -121,10 +121,10 @@ private:
 
 private:
 
-	bool           operator == (const Msg &other) const = delete;
-	bool           operator != (const Msg &other) const = delete;
+	bool           operator == (const WaMsg &other) const = delete;
+	bool           operator != (const WaMsg &other) const = delete;
 
-}; // class Msg
+}; // class WaMsg
 
 
 
@@ -132,11 +132,11 @@ private:
 
 
 
-//#include "mfx/Msg.hpp"
+//#include "mfx/WaMsg.hpp"
 
 
 
-#endif   // mfx_Msg_HEADER_INCLUDED
+#endif   // mfx_WaMsg_HEADER_INCLUDED
 
 
 

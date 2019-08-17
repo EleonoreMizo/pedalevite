@@ -753,12 +753,6 @@
     <ClInclude Include="..\..\..\src\mfx\Cst.h">
       <Filter>mfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\Msg.h">
-      <Filter>mfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\MsgQueue.h">
-      <Filter>mfx</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\ControllerType.h">
       <Filter>mfx</Filter>
     </ClInclude>
@@ -2635,6 +2629,12 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\PageSet.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\WaMsg.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h">
       <Filter>mfx</Filter>
     </ClInclude>
   </ItemGroup>

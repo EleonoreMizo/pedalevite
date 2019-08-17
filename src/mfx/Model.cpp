@@ -1374,9 +1374,9 @@ void	Model::load_plugin_settings (int slot_id, PiType type, const doc::PluginSet
 
 
 
-void	Model::do_process_msg_audio_to_cmd (const Msg &msg)
+void	Model::do_process_msg_audio_to_cmd (const WaMsg &msg)
 {
-	if (msg._type == Msg::Type_PARAM)
+	if (msg._type == WaMsg::Type_PARAM)
 	{
 		const int      pi_id = msg._content._param._plugin_id;
 		const int      index = msg._content._param._index;

@@ -34,9 +34,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/PluginState.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/ChnMode.h"
-#include "mfx/MsgQueue.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
+#include "mfx/WaMsgQueue.h"
 #include "mfx/WorldAudio.h"
 
 #include <array>
@@ -175,21 +175,21 @@ private:
 	void           remove_plugin (int pos, PiType type);
 	void           create_routing ();
 	void           create_mod_maps ();
-	void				add_controller (ProcessingContext &ctx, const doc::CtrlLink &link, std::shared_ptr <ControlledParam> &ctrl_param_sptr, bool abs_flag);
-	void           create_param_msg (std::vector <conc::LockFreeCell <Msg> *> &msg_list);
-	conc::LockFreeCell <Msg> *
+	void           add_controller (ProcessingContext &ctx, const doc::CtrlLink &link, std::shared_ptr <ControlledParam> &ctrl_param_sptr, bool abs_flag);
+	void           create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_list);
+	conc::LockFreeCell <WaMsg> *
 	               make_param_msg (int pi_id, int index, float val);
 	void           check_and_get_default_settings (piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model);
 
-	conc::CellPool <Msg>
+	conc::CellPool <WaMsg>
 						_msg_pool;
 
 	ui::UserInputInterface &
 	               _input_device;
 	ui::UserInputInterface::MsgQueue &
 	               _queue_input_to_audio;
-	MsgQueue       _queue_cmd_to_audio;
-	MsgQueue       _queue_audio_to_cmd;
+	WaMsgQueue     _queue_cmd_to_audio;
+	WaMsgQueue     _queue_audio_to_cmd;
 	PluginPool     _plugin_pool;
 	WorldAudio     _audio;
 	DefaultMap     _default_map;

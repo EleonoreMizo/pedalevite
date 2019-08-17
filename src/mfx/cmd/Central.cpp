@@ -111,7 +111,7 @@ Central::~Central ()
 	}
 
 	// Flushes the cmd -> audio queue
-	conc::LockFreeCell <Msg> * cell_ptr = 0;
+	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
 	do
 	{
 		cell_ptr = _queue_cmd_to_audio.dequeue ();
@@ -179,10 +179,10 @@ void	Central::commit ()
 		create_mod_maps ();
 		_new_sptr->_ctx_sptr->_master_vol = _new_sptr->_master_vol;
 
-		std::vector <conc::LockFreeCell <Msg> *>  msg_list (1);
+		std::vector <conc::LockFreeCell <WaMsg> *>  msg_list (1);
 		msg_list [0] = _msg_pool.take_cell (true);
-		msg_list [0]->_val._sender = Msg::Sender_CMD;
-		msg_list [0]->_val._type   = Msg::Type_CTX;
+		msg_list [0]->_val._sender = WaMsg::Sender_CMD;
+		msg_list [0]->_val._type   = WaMsg::Type_CTX;
 		msg_list [0]->_val._content._ctx._ctx_ptr = _new_sptr->_ctx_sptr.get ();
 		if (doc._smooth_transition_flag)
 		{
@@ -553,7 +553,7 @@ void	Central::set_param (int pi_id, int index, float val)
 	assert (val >= 0);
 	assert (val <= 1);
 
-	conc::LockFreeCell <Msg> * cell_ptr = make_param_msg (pi_id, index, val);
+	conc::LockFreeCell <WaMsg> *  cell_ptr = make_param_msg (pi_id, index, val);
 	_queue_cmd_to_audio.enqueue (*cell_ptr);
 }
 
@@ -563,10 +563,10 @@ void	Central::set_tempo (float bpm)
 {
 	assert (bpm > 0);
 
-	conc::LockFreeCell <Msg> * cell_ptr =
+	conc::LockFreeCell <WaMsg> * cell_ptr =
 		_msg_pool.take_cell (true);
-	cell_ptr->_val._sender              = Msg::Sender_CMD;
-	cell_ptr->_val._type                = Msg::Type_TEMPO;
+	cell_ptr->_val._sender              = WaMsg::Sender_CMD;
+	cell_ptr->_val._type                = WaMsg::Type_TEMPO;
 	cell_ptr->_val._content._tempo._bpm = bpm;
 
 	_queue_cmd_to_audio.enqueue (*cell_ptr);
@@ -581,15 +581,15 @@ void	Central::process_queue_audio_to_cmd ()
 
 	int            a2c_cnt          = 0;
 	bool           discard_a2c_flag = false;
-	conc::LockFreeCell <Msg> * cell_ptr = 0;
+	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
 	do
 	{
 		cell_ptr = _queue_audio_to_cmd.dequeue ();
 		if (cell_ptr != 0)
 		{
-			if (cell_ptr->_val._sender == Msg::Sender_CMD)
+			if (cell_ptr->_val._sender == WaMsg::Sender_CMD)
 			{
-				if (cell_ptr->_val._type == Msg::Type_CTX)
+				if (cell_ptr->_val._type == WaMsg::Type_CTX)
 				{
 					const ProcessingContext *  ctx_ptr =
 						cell_ptr->_val._content._ctx._ctx_ptr;
@@ -1225,7 +1225,7 @@ void	Central::add_controller (ProcessingContext &ctx, const doc::CtrlLink &link,
 
 
 // Appends messages to msg_list
-void	Central::create_param_msg (std::vector <conc::LockFreeCell <Msg> *> &msg_list)
+void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_list)
 {
 	assert (_new_sptr.get () != 0);
 	assert (_new_sptr->_ctx_sptr.get () != 0);
@@ -1244,7 +1244,7 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <Msg> *> &msg_li
 			const int      nbr_param = int (plug._param_list.size ());
 			for (int index = 0; index < nbr_param; ++index)
 			{
-				conc::LockFreeCell <Msg> * msg_ptr =
+				conc::LockFreeCell <WaMsg> *  msg_ptr =
 					make_param_msg (plug._pi_id, index, plug._param_list [index]);
 				msg_list.push_back (msg_ptr);
 			}
@@ -1256,12 +1256,12 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <Msg> *> &msg_li
 
 
 
-conc::LockFreeCell <Msg> *	Central::make_param_msg (int pi_id, int index, float val)
+conc::LockFreeCell <WaMsg> *	Central::make_param_msg (int pi_id, int index, float val)
 {
-	conc::LockFreeCell <Msg> * cell_ptr =
+	conc::LockFreeCell <WaMsg> * cell_ptr =
 		_msg_pool.take_cell (true);
-	cell_ptr->_val._sender = Msg::Sender_CMD;
-	cell_ptr->_val._type   = Msg::Type_PARAM;
+	cell_ptr->_val._sender = WaMsg::Sender_CMD;
+	cell_ptr->_val._type   = WaMsg::Type_PARAM;
 	cell_ptr->_val._content._param._plugin_id = pi_id;
 	cell_ptr->_val._content._param._index     = index;
 	cell_ptr->_val._content._param._val       = val;

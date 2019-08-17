@@ -41,7 +41,7 @@ namespace cmd
 
 
 
-void	CentralCbInterface::process_msg_audio_to_cmd (const Msg &msg)
+void	CentralCbInterface::process_msg_audio_to_cmd (const WaMsg &msg)
 {
 	do_process_msg_audio_to_cmd (msg);
 }
