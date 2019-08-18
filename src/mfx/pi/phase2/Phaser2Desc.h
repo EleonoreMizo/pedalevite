@@ -85,8 +85,8 @@ private:
 
 private:
 
-	               Phaser2Desc (const Phaser2Desc &other)      = delete;
-	Phaser2Desc & operator = (const Phaser2Desc &other)        = delete;
+	               Phaser2Desc (const Phaser2Desc &other)       = delete;
+	Phaser2Desc &  operator = (const Phaser2Desc &other)        = delete;
 	bool           operator == (const Phaser2Desc &other) const = delete;
 	bool           operator != (const Phaser2Desc &other) const = delete;
 

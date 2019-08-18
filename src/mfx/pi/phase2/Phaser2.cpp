@@ -238,7 +238,7 @@ void	Phaser2::do_process_block (ProcInfo &proc)
 		}
 	}
 
-	assert(_fdbk_pos <= _nbr_stages);
+	assert (_fdbk_pos <= _nbr_stages);
 	const int      nbr_spl = proc._nbr_spl;
 	int            pos_blk = 0;
 	float          b0_cur = _chn_arr [0]._apf.get_coef (0);
@@ -433,20 +433,15 @@ void	Phaser2::update_param (bool force_flag)
 
 float	Phaser2::compute_coef (float f0)
 {
-	assert(_inv_fs > 0);
-	assert(f0 > 0);
+	assert (_inv_fs > 0);
+	assert (f0 > 0);
 
-	static const float   b_s [2] = { 1, -1 };
-	static const float   a_s [2] = { 1,  1 };
-	float                b_z [2];
-	float                a_z [2];
-	const float          k =
-		dsp::iir::TransSZBilin::compute_k_approx(f0 * _inv_fs);
-	dsp::iir::TransSZBilin::map_s_to_z_one_pole_approx(
-		b_z, a_z, b_s, a_s, k
-	);
+	const float          k  =
+		dsp::iir::TransSZBilin::compute_k_approx (f0 * _inv_fs);
+	const float          b0 =
+		dsp::iir::TransSZBilin::map_s_to_z_ap1_approx_b0 (k);
 
-	return b_z [0];
+	return b0;
 }
 
 
