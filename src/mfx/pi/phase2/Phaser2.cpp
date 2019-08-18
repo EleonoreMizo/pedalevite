@@ -268,6 +268,7 @@ void	Phaser2::do_process_block (ProcInfo &proc)
 			b0_step = 1.0f / len_blk;
 		}
 		b0_step *= b0_new - b0_cur;
+		const float    b0_save = b0_cur;
 
 		for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
 		{
@@ -276,6 +277,7 @@ void	Phaser2::do_process_block (ProcInfo &proc)
 			float *        dst_ptr  = &_buf [0];
 			const float    fdbk_g   = _feedback;
 			float          fdbk_val = chn._fdbk;
+			b0_cur = b0_save;
 			for (int pos = 0; pos < len_blk; ++pos)
 			{
 				float          x = src_ptr [pos];
