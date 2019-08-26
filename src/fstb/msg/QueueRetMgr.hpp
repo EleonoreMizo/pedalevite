@@ -88,7 +88,7 @@ void	QueueRetMgr <M>::kill_ret_queue (QueueSPtr &queue_sptr)
 	flush_ret_queue (*queue_sptr);
 
 	std::lock_guard <std::mutex>  lock (_queue_list_mtx);
-	QueueList::iterator  it = find_queue (*queue_sptr);
+	typename QueueList::iterator  it = find_queue (*queue_sptr);
 	_queue_list.erase (it);
 	queue_sptr.reset ();
 }
@@ -153,21 +153,14 @@ void	QueueRetMgr <M>::flush_ret_queue (Queue &queue)
 template <class M>
 typename QueueRetMgr <M>::QueueList::iterator	QueueRetMgr <M>::find_queue (Queue &queue)
 {
-	QueueList::iterator it = _queue_list.begin ();
-	bool           found_flag = false;
-	while (it != _queue_list.end () && ! found_flag)
-	{
-		if (it->get () == &queue)
+	return std::find_if (
+		_queue_list.begin (),
+		_queue_list.end (),
+		[&queue] (const QueueSPtr &q_sptr)
 		{
-			found_flag = true;
+			return (q_sptr.get () == &queue);
 		}
-		else
-		{
-			++it;
-		}
-	}
-
-	return it;
+	);
 }
 
 

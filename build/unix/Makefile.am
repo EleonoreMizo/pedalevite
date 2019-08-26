@@ -339,8 +339,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/RingBufVectorizer.hpp \
         ../../src/mfx/dsp/dyn/Compander.cpp \
         ../../src/mfx/dsp/dyn/Compander.h \
-        ../../src/mfx/dsp/dyn/EnvFollowerAHR1LrSimdHelper.h.h \
-        ../../src/mfx/dsp/dyn/EnvFollowerAHR1LrSimdHelper.h.hpp \
+        ../../src/mfx/dsp/dyn/EnvFollowerAHR1LrSimdHelper.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerAHR1LrSimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.h \
@@ -1056,8 +1056,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/ModelMsgCmdAsync.h \
         ../../src/mfx/ModelMsgCmdCbInterface.cpp \
         ../../src/mfx/ModelMsgCmdCbInterface.h \
-        ../../src/mfx/ModelMsgCmdConfLdSv.h.cpp \
-        ../../src/mfx/ModelMsgCmdConfLdSv.h.h \
+        ../../src/mfx/ModelMsgCmdConfLdSv.cpp \
+        ../../src/mfx/ModelMsgCmdConfLdSv.h \
         ../../src/mfx/ModelMsgCmdInterface.cpp \
         ../../src/mfx/ModelMsgCmdInterface.h \
         ../../src/mfx/ModelObserverDefault.h \
