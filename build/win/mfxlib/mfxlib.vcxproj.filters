@@ -2652,6 +2652,18 @@
     <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.hpp">
       <Filter>fstb\msg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdAsync.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdInterface.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdConfLdSv.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdCbInterface.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3669,6 +3681,18 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\PageSet.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdAsync.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdInterface.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdConfLdSv.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdCbInterface.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>

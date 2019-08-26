@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/msg/MsgRet.h"
+#include "fstb/msg/QueueRetMgr.h"
 #include "mfx/cmd/Central.h"
 #include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/Bank.h"
@@ -36,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/Setup.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/ChnMode.h"
+#include "mfx/ModelMsgCmdAsync.h"
 #include "mfx/ModelObserverInterface.h"
 
 #include <array>
@@ -91,8 +94,12 @@ public:
 		BankType_NBR_ELT
 	};
 
+	typedef fstb::msg::QueueRetMgr <fstb::msg::MsgRet <ModelMsgCmdAsync> > CmdAsyncMgr;
+
 	explicit       Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device, FileIOInterface &file_io);
 	virtual        ~Model ();
+
+	CmdAsyncMgr &  use_async_cmd ();
 
 	// Audio
 	void           set_process_info (double sample_freq, int max_block_size);
@@ -109,7 +116,9 @@ public:
 	void           process_messages (); // Call this regularly
 
 	int            save_to_disk ();
+	int            save_to_disk (std::string pathname);
 	int            load_from_disk ();
+	int            load_from_disk (std::string pathname);
 
 	void           set_edit_mode (bool edit_flag);
 	void           set_save_mode (doc::Setup::SaveMode mode);
@@ -281,6 +290,7 @@ private:
 	void           add_default_ctrl (int selected_slot_id = -1);
 	void           clear_signal_port (int port_id, bool req_exist_flag);
 	void           apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings, bool ctrl_flag, bool pres_flag);
+	void           process_async_cmd ();
 
 	cmd::Central   _central;
 	double         _sample_freq;        // Hz. 0 = not set
@@ -318,6 +328,7 @@ private:
 	               _queue_input_to_cmd;
 	ModelObserverInterface *            // Can be 0.
 	               _obs_ptr;
+	CmdAsyncMgr    _async_cmd;
 	const int      _dummy_mix_id;
 	std::chrono::microseconds
 	               _tempo_last_ts;      // Timestamp of the last tempo pedal action

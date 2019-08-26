@@ -1052,6 +1052,14 @@ pedalevite_SOURCES = \
         ../../src/mfx/MeterResultSet.h \
         ../../src/mfx/Model.cpp \
         ../../src/mfx/Model.h \
+        ../../src/mfx/ModelMsgCmdAsync.cpp \
+        ../../src/mfx/ModelMsgCmdAsync.h \
+        ../../src/mfx/ModelMsgCmdCbInterface.cpp \
+        ../../src/mfx/ModelMsgCmdCbInterface.h \
+        ../../src/mfx/ModelMsgCmdConfLdSv.h.cpp \
+        ../../src/mfx/ModelMsgCmdConfLdSv.h.h \
+        ../../src/mfx/ModelMsgCmdInterface.cpp \
+        ../../src/mfx/ModelMsgCmdInterface.h \
         ../../src/mfx/ModelObserverDefault.h \
         ../../src/mfx/ModelObserverInterface.cpp \
         ../../src/mfx/ModelObserverInterface.h \

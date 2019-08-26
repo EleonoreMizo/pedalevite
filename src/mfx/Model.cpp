@@ -41,6 +41,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerWText.h"
 #include "mfx/FileIOInterface.h"
 #include "mfx/Model.h"
+#include "mfx/ModelMsgCmdConfLdSv.h"
 #include "mfx/ModelObserverInterface.h"
 #include "mfx/PedalLoc.h"
 #include "mfx/ToolsParam.h"
@@ -91,6 +92,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_input_device (input_device)
 ,	_queue_input_to_cmd (queue_input_to_cmd)
 ,	_obs_ptr (0)
+,	_async_cmd ()
 ,	_dummy_mix_id (_central.get_dummy_mix_id ())
 ,	_tempo_last_ts (_central.get_cur_date () - Cst::_tempo_detection_max * 2)
 ,	_tempo (Cst::_tempo_ref)
@@ -101,6 +103,7 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 {
 	_click_slot._pi_model = "\?click";
 	_central.set_callback (this);
+	_async_cmd.use_pool ().expand_to (64);
 }
 
 
@@ -118,6 +121,13 @@ Model::~Model ()
 		}
 	}
 	while (cell_ptr != 0);
+}
+
+
+
+Model::CmdAsyncMgr &	Model::use_async_cmd ()
+{
+	return _async_cmd;
 }
 
 
@@ -193,12 +203,26 @@ void	Model::process_messages ()
 		const float    freq = _tuner_ptr->get_freq ();
 		_obs_ptr->set_tuner_freq (freq);
 	}
+
+	// Asynchronious commands
+	process_async_cmd ();
 }
 
 
 
 int	Model::save_to_disk ()
 {
+	const std::string pathname = Cst::_config_dir + "/" + Cst::_config_current;
+
+	return save_to_disk (pathname);
+}
+
+
+
+int	Model::save_to_disk (std::string pathname)
+{
+	assert (! pathname.empty ());
+
 	int            ret_val = 0;
 
 	doc::SerWText  ser_w;
@@ -208,7 +232,6 @@ int	Model::save_to_disk ()
 	if (ret_val == 0)
 	{
 		const std::string content = ser_w.use_content ();
-		std::string    pathname = Cst::_config_dir + "/" + Cst::_config_current;
 		ret_val = _file_io.write_txt_file (pathname, content);
 	}
 
@@ -219,56 +242,65 @@ int	Model::save_to_disk ()
 
 int	Model::load_from_disk ()
 {
-	int            ret_val = 0;
+	const std::string pathname = Cst::_config_dir + "/" + Cst::_config_current;
+
+	return load_from_disk (pathname);
+}
+
+
+
+int	Model::load_from_disk (std::string pathname)
+{
+	assert (! pathname.empty ());
 
 	std::string    content;
+	int            ret_val = _file_io.read_txt_file (pathname, content);
 
-	std::string    pathname = Cst::_config_dir + "/" + Cst::_config_current;
-	ret_val = _file_io.read_txt_file (pathname, content);
-
+	std::unique_ptr <doc::Setup> sss_uptr;
 	if (ret_val == 0)
 	{
 		doc::SerRText  ser_r;
 		ser_r.start (content);
-		std::unique_ptr <doc::Setup> sss_uptr (new doc::Setup);
+		sss_uptr = std::unique_ptr <doc::Setup> (new doc::Setup);
 		sss_uptr->ser_read (ser_r);
 		ret_val = ser_r.terminate ();
-		if (ret_val == 0)
-		{
-			const int      nbr_banks = int (sss_uptr->_bank_arr.size ());
-			assert (nbr_banks == Cst::_nbr_banks);
+	}
 
-			set_setup_name (sss_uptr->_name);
-			set_pedalboard_layout (sss_uptr->_layout);
-			set_save_mode (sss_uptr->_save_mode);
-			for (int bank_cnt = 0; bank_cnt < nbr_banks; ++bank_cnt)
+	if (ret_val == 0)
+	{
+		const int      nbr_banks = int (sss_uptr->_bank_arr.size ());
+		assert (nbr_banks == Cst::_nbr_banks);
+
+		set_setup_name (sss_uptr->_name);
+		set_pedalboard_layout (sss_uptr->_layout);
+		set_save_mode (sss_uptr->_save_mode);
+		for (int bank_cnt = 0; bank_cnt < nbr_banks; ++bank_cnt)
+		{
+			set_bank (bank_cnt, sss_uptr->_bank_arr [bank_cnt]);
+		}
+		clear_all_settings ();
+		for (const auto &node_cat : sss_uptr->_map_plugin_settings)
+		{
+			const std::string &  model = node_cat.first;
+			const doc::CatalogPluginSettings &  cat = node_cat.second;
+			const int      nbr_elt = int (cat._cell_arr.size ());
+			for (int index = 0; index < nbr_elt; ++index)
 			{
-				set_bank (bank_cnt, sss_uptr->_bank_arr [bank_cnt]);
-			}
-			clear_all_settings ();
-			for (const auto &node_cat : sss_uptr->_map_plugin_settings)
-			{
-				const std::string &  model = node_cat.first;
-				const doc::CatalogPluginSettings &  cat = node_cat.second;
-				const int      nbr_elt = int (cat._cell_arr.size ());
-				for (int index = 0; index < nbr_elt; ++index)
+				if (cat._cell_arr [index].get () != 0)
 				{
-					if (cat._cell_arr [index].get () != 0)
-					{
-						const doc::CatalogPluginSettings::Cell &  cell =
-							*(cat._cell_arr [index]);
-						add_settings (
-							model, index, cell._name, cell._main, cell._mixer
-						);
-					}
+					const doc::CatalogPluginSettings::Cell &  cell =
+						*(cat._cell_arr [index]);
+					add_settings (
+						model, index, cell._name, cell._main, cell._mixer
+					);
 				}
 			}
-			set_chn_mode (sss_uptr->_chn_mode);
-			set_master_vol (sss_uptr->_master_vol);
-
-			select_bank (0);
-			activate_preset (0);
 		}
+		set_chn_mode (sss_uptr->_chn_mode);
+		set_master_vol (sss_uptr->_master_vol);
+
+		select_bank (0);
+		activate_preset (0);
 	}
 
 	return ret_val;
@@ -3131,6 +3163,23 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 			push_set_param_pres (slot_id, type, index, 0);
 		}
 	}
+}
+
+
+
+void	Model::process_async_cmd ()
+{
+	CmdAsyncMgr::CellType * cell_ptr = nullptr;
+	do
+	{
+		cell_ptr = _async_cmd.dequeue ();
+		if (cell_ptr != nullptr)
+		{
+			cell_ptr->_val._content._msg_sptr->process (*this);
+			cell_ptr->_val.ret ();
+		}
+	}
+	while (cell_ptr != nullptr);
 }
 
 

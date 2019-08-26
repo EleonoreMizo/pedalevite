@@ -563,6 +563,10 @@
     <ClInclude Include="..\..\..\src\mfx\MeterResult.h" />
     <ClInclude Include="..\..\..\src\mfx\MeterResultSet.h" />
     <ClInclude Include="..\..\..\src\mfx\Model.h" />
+    <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdAsync.h" />
+    <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdCbInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdConfLdSv.h" />
+    <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
@@ -1061,6 +1065,10 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\MeterResultSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\Model.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdAsync.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdCbInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdConfLdSv.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\PageSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp" />
