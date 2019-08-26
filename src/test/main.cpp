@@ -1,4 +1,6 @@
 
+#include "fstb/msg/MsgRet.h"
+#include "fstb/msg/QueueRetMgr.h"
 #include "fstb/def.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
@@ -1759,6 +1761,103 @@ int	test_median_filter ()
 
 
 
+class QueueRetData
+{
+public:
+	void           set_data (int val)
+	{
+		assert (val > 0);
+		_dat = val;
+	}
+	int            get_data () const
+	{
+		assert (_dat > 0);
+		return _dat;
+	}
+	void           clear ()
+	{
+		if (_dat != 0)
+		{
+			_dat = 0;
+			++ _nbr_clr;
+		}
+	}
+	~QueueRetData ()
+	{
+		clear ();
+	}
+	static int     _nbr_clr;
+private:
+	int            _dat = 0;
+};
+int QueueRetData::_nbr_clr = 0;
+
+int	test_queue_ret ()
+{
+	int            ret_val = 0;
+
+	fstb::msg::QueueRetMgr <fstb::msg::MsgRet <QueueRetData> > queue_mgr;
+
+	const int      idx_base = 1;
+	int            idx_s = idx_base;
+	int            idx_r = idx_s;
+	const int      nbr_a = 1000;
+	QueueRetData::_nbr_clr = 0;
+
+	auto           q_sptr = queue_mgr.create_new_ret_queue ();
+	for (int i = 0; i < nbr_a && ret_val == 0; ++i)
+	{
+		auto           cell_ptr = queue_mgr.use_pool ().take_cell (true);
+		cell_ptr->_val._content.set_data (idx_s);
+		queue_mgr.enqueue (*cell_ptr, *q_sptr);
+		++ idx_s;
+
+		if ((i & 7) == 5)
+		{
+			queue_mgr.flush_ret_queue (*q_sptr);
+		}
+
+		cell_ptr = 0;
+		do
+		{
+			cell_ptr = queue_mgr.dequeue ();
+			if (cell_ptr != 0)
+			{
+				const int      val = cell_ptr->_val._content.get_data ();
+				if (val != idx_r)
+				{
+					printf (
+						"QueueRetMgr: wrong order (received %d, expected %d).\n",
+						val, idx_r
+					);
+					ret_val = -1;
+				}
+				cell_ptr->_val.ret ();
+				++ idx_r;
+			}
+		}
+		while (cell_ptr != 0);
+
+	}
+	queue_mgr.flush_ret_queue (*q_sptr);
+	queue_mgr.kill_ret_queue (q_sptr);
+
+	if (idx_s != idx_r || idx_r != idx_base + nbr_a)
+	{
+		printf ("QueueRetMgr: messages lost.\n");
+		ret_val = -1;
+	}
+	if (QueueRetData::_nbr_clr != nbr_a)
+	{
+		printf ("QueueRetMgr: failed to deallocate all message's resources.\n");
+		ret_val = -1;
+	}
+
+	return ret_val;
+}
+
+
+
 int main (int argc, char *argv [])
 {
 	mfx::dsp::mix::Generic::setup ();
@@ -1766,6 +1865,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = test_queue_ret ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = test_median_filter ();
 #endif
 

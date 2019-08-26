@@ -64,6 +64,10 @@ pedalevite_SOURCES = \
         ../../src/fstb/lang/fnc.h \
         ../../src/fstb/lang/fnc.hpp \
         ../../src/fstb/lang/NonConst.h \
+        ../../src/fstb/msg/MsgRet.h \
+        ../../src/fstb/msg/MsgRet.hpp \
+        ../../src/fstb/msg/QueueRetMgr.h \
+        ../../src/fstb/msg/QueueRetMgr.hpp \
         ../../src/fstb/txt/neutral/ConvDigit.h \
         ../../src/fstb/txt/neutral/ConvDigit.hpp \
         ../../src/fstb/txt/neutral/fnc.cpp \

@@ -247,6 +247,9 @@
     <Filter Include="mfx\pi\adsr">
       <UniqueIdentifier>{27d9eb86-a37d-43a3-ac83-12da41516573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fstb\msg">
+      <UniqueIdentifier>{22740a9b-5ff1-469f-94b1-956aff8ee136}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2636,6 +2639,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h">
       <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\msg\MsgRet.h">
+      <Filter>fstb\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\msg\MsgRet.hpp">
+      <Filter>fstb\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.h">
+      <Filter>fstb\msg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.hpp">
+      <Filter>fstb\msg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
