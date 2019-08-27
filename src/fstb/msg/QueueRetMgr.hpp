@@ -22,6 +22,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <algorithm>
+
+#include <cassert>
+
 
 
 namespace fstb
@@ -38,8 +42,6 @@ namespace msg
 template <class M>
 QueueRetMgr <M>::~QueueRetMgr ()
 {
-	std::lock_guard <std::mutex>  lock (_queue_list_mtx);
-
 	// Client should ensure that all queues are flushed and all cells are
 	// returned to the pool before the object is destructed. This code is only
 	// here for minimal consistency and may do wrong things, because cell's
