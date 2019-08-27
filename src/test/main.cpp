@@ -1809,7 +1809,7 @@ int	test_queue_ret ()
 	{
 		auto           cell_ptr = queue_mgr.use_pool ().take_cell (true);
 		cell_ptr->_val._content.set_data (idx_s);
-		queue_mgr.enqueue (*cell_ptr, *q_sptr);
+		queue_mgr.enqueue (*cell_ptr, q_sptr);
 		++ idx_s;
 
 		if ((i & 7) == 5)

@@ -25,7 +25,7 @@ while (...)
 {
 	cell_ptr = mgr.use_pool ().take_cell ();
 	cell_ptr->_val._content.set_something ()
-	mgr.enqueue (*cell_ptr, *q_sptr);
+	mgr.enqueue (*cell_ptr, q_sptr);
 	...
 	mgr.flush_ret_queue (*q_sptr);
 }
@@ -97,10 +97,10 @@ class QueueRetMgr
 
 public:
 
-	typedef conc::LockFreeCell <M> CellType;
+	typedef typename M::CellType CellType;
+	typedef typename M::QueueType Queue;
+	typedef typename M::QueueSPtr QueueSPtr;
 	typedef conc::CellPool <M> Pool;
-	typedef conc::LockFreeQueue <M> Queue;
-	typedef std::shared_ptr <Queue> QueueSPtr;
 
 	               QueueRetMgr () = default;
 	virtual        ~QueueRetMgr ();
@@ -110,7 +110,7 @@ public:
 	Pool &         use_pool ();
 
 	// Forward
-	void           enqueue (CellType &cell, Queue &ret_queue);
+	void           enqueue (CellType &cell, QueueSPtr &ret_queue_sptr);
 	CellType *     dequeue ();
 
 	// Return

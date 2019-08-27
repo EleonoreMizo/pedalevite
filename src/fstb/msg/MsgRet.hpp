@@ -46,12 +46,13 @@ void	MsgRet <T>::clear ()
 
 
 template <class T>
-void	MsgRet <T>::set_ret_queue (QueueType &ret_queue, CellType &cell)
+void	MsgRet <T>::set_ret_queue (QueueSPtr ret_queue_sptr, CellType &cell)
 {
-	assert (_ret_queue_ptr == nullptr);
-	assert (&cell._val     == this);
+	assert (_ret_queue_sptr.get () == nullptr);
+	assert (ret_queue_sptr.get ()  != nullptr);
+	assert (&cell._val             == this);
 
-	_ret_queue_ptr = &ret_queue;
+	_ret_queue_sptr = ret_queue_sptr;
 	_cell_ptr      = &cell;
 }
 
@@ -60,12 +61,20 @@ void	MsgRet <T>::set_ret_queue (QueueType &ret_queue, CellType &cell)
 template <class T>
 void	MsgRet <T>::ret ()
 {
-	assert (_ret_queue_ptr != nullptr);
-	assert (_cell_ptr      != nullptr);
+	assert (_ret_queue_sptr.get () != nullptr);
+	assert (_cell_ptr              != nullptr);
 
-	QueueType *    tmp_ptr = _ret_queue_ptr;
-	_ret_queue_ptr = 0;
-	tmp_ptr->enqueue (*_cell_ptr);
+	QueueSPtr      tmp_sptr = _ret_queue_sptr;
+	_ret_queue_sptr.reset ();
+	tmp_sptr->enqueue (*_cell_ptr);
+}
+
+
+
+template <class T>
+bool	MsgRet <T>::is_attached_to_queue () const
+{
+	return (_ret_queue_sptr.get () != 0);
 }
 
 

@@ -34,6 +34,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "conc/LockFreeQueue.h"
 
+#include <memory>
+
 
 
 namespace fstb
@@ -54,6 +56,7 @@ public:
 	typedef T ContentType;
 	typedef conc::LockFreeQueue <MsgRet <T> > QueueType;
 	typedef conc::LockFreeCell <MsgRet <T> > CellType;
+	typedef std::shared_ptr <QueueType> QueueSPtr;
 
 	               MsgRet ()                            = default;
 	               MsgRet (const MsgRet <T> &other)     = default;
@@ -61,8 +64,9 @@ public:
 	MsgRet <T> &   operator = (const MsgRet <T> &other) = default;
 
 	void           clear ();
-	void           set_ret_queue (QueueType &ret_queue, CellType &cell);
+	void           set_ret_queue (QueueSPtr ret_queue_sptr, CellType &cell);
 	void           ret ();
+	bool           is_attached_to_queue () const;
 
 	T              _content;
 
@@ -78,10 +82,9 @@ protected:
 
 private:
 
-	QueueType * volatile
-	               _ret_queue_ptr = nullptr;
+	QueueSPtr      _ret_queue_sptr;
 	CellType * volatile
-	               _cell_ptr      = nullptr;
+	               _cell_ptr = nullptr;
 
 
 

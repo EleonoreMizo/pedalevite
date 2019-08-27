@@ -52,7 +52,6 @@ QueueRetMgr <M>::~QueueRetMgr ()
 		cell_ptr = _queue_fwd.dequeue ();
 		if (cell_ptr != 0)
 		{
-			/*** To do: make sure that the return queue still exists. ***/
 			cell_ptr->_val.ret ();
 		}
 	}
@@ -92,6 +91,11 @@ void	QueueRetMgr <M>::kill_ret_queue (QueueSPtr &queue_sptr)
 	std::lock_guard <std::mutex>  lock (_queue_list_mtx);
 	typename QueueList::iterator  it = find_queue (*queue_sptr);
 	_queue_list.erase (it);
+
+	// At this point, queue_sptr should be the unique owner of the queue.
+	// If it isn't, it means that other external shared pointers still manage
+	// it or that sent messages weren't returned to the queue.
+	assert (queue_sptr.unique ());
 	queue_sptr.reset ();
 }
 
@@ -106,11 +110,11 @@ typename QueueRetMgr <M>::Pool &	QueueRetMgr <M>::use_pool ()
 
 
 template <class M>
-void	QueueRetMgr <M>::enqueue (CellType &cell, Queue &ret_queue)
+void	QueueRetMgr <M>::enqueue (CellType &cell, QueueSPtr &ret_queue_sptr)
 {
-	assert (find_queue (ret_queue) != _queue_list.end ());
+	assert (find_queue (*ret_queue_sptr) != _queue_list.end ());
 
-	cell._val.set_ret_queue (ret_queue, cell);
+	cell._val.set_ret_queue (ret_queue_sptr, cell);
 	_queue_fwd.enqueue (cell);
 }
 
@@ -136,6 +140,7 @@ void	QueueRetMgr <M>::flush_ret_queue (Queue &queue)
 		if (cell_ptr != 0)
 		{
 			cell_ptr->_val.clear ();
+			assert (! cell_ptr->_val.is_attached_to_queue ());
 			_pool.return_cell (*cell_ptr);
 		}
 	}
