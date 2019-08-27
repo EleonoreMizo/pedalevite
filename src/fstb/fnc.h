@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <string>
 
 #include <cstdint>
+#include <cstdio>
 
 
 
@@ -79,6 +80,7 @@ inline T       lerp (T v0, T v1, T p);
 void           conv_to_lower_case (std::string &str);
 
 int            snprintf4all (char *out_0, size_t size, const char *format_0, ...);
+FILE *         fopen_utf8 (const char *filename_0, const char *mode_0);
 
 template <typename T>
 inline bool    is_ptr_align_nz (const T *ptr, int a = 16);

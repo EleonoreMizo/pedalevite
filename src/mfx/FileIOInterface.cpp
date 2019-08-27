@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/FileIOInterface.h"
 
 #include <cassert>
@@ -65,7 +66,7 @@ int	FileIOInterface::write_txt_file_direct (const std::string &pathname, const s
 	FILE *         f_ptr = 0;
 	if (ret_val == Err_OK)
 	{
-		f_ptr = fopen (pathname.c_str (), "w");
+		f_ptr = fstb::fopen_utf8 (pathname.c_str (), "w");
 		if (f_ptr == 0)
 		{
 			ret_val = Err_CANNOT_OPEN;
@@ -101,7 +102,7 @@ int	FileIOInterface::read_txt_file_direct (const std::string &pathname, std::str
 	FILE *         f_ptr = 0;
 	if (ret_val == Err_OK)
 	{
-		f_ptr = fopen (pathname.c_str (), "r");
+		f_ptr = fstb::fopen_utf8 (pathname.c_str (), "r");
 		if (f_ptr == 0)
 		{
 			ret_val = Err_CANNOT_OPEN;

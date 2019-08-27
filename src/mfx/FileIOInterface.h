@@ -73,6 +73,7 @@ protected:
 	virtual int    do_read_txt_file (const std::string &pathname, std::string &content) = 0;
 
 
+
 }; // class FileIOInterface
 
 

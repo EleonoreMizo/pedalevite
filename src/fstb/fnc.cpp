@@ -24,6 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#if defined (_MSC_VER)
+	#include "fstb/txt/Conv.h"
+	#include "fstb/Err.h"
+#endif
 #include "fstb/fnc.h"
 
 #include <cassert>
@@ -78,6 +82,31 @@ int	snprintf4all (char *out_0, size_t size, const char *format_0, ...)
 	va_end (ap);
 
 	return cnt;
+}
+
+
+
+FILE *	fopen_utf8 (const char *filename_0, const char *mode_0)
+{
+	FILE *         f_ptr = 0;
+
+#if defined (_MSC_VER)
+
+	std::basic_string <wchar_t>   filename_utf16;
+	std::basic_string <wchar_t>   mode_utf16;
+	if (   fstb::txt::Conv::utf8_to_utf16 (filename_utf16, filename_0) == fstb::Err_OK
+	    && fstb::txt::Conv::utf8_to_utf16 (mode_utf16    , mode_0    ) == fstb::Err_OK)
+	{
+		f_ptr = _wfopen (filename_utf16.c_str (), mode_utf16.c_str ());
+	}
+
+#else
+
+	f_ptr = fopen (filename_0, mode_0);
+
+#endif
+
+	return f_ptr;
 }
 
 
