@@ -192,6 +192,9 @@
     <ClInclude Include="..\..\..\src\fstb\ToolsSimd.hpp" />
     <ClInclude Include="..\..\..\src\fstb\ToolsSse2.h" />
     <ClInclude Include="..\..\..\src\fstb\ToolsSse2.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\Char16.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\Conv.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\Conv.hpp" />
     <ClInclude Include="..\..\..\src\fstb\txt\neutral\ConvDigit.h" />
     <ClInclude Include="..\..\..\src\fstb\txt\neutral\ConvDigit.hpp" />
     <ClInclude Include="..\..\..\src\fstb\txt\neutral\fnc.h" />
@@ -220,6 +223,10 @@
     <ClInclude Include="..\..\..\src\fstb\txt\unicode\WordBreakProp.h" />
     <ClInclude Include="..\..\..\src\fstb\txt\unicode\WordBreakPropTableNext.h" />
     <ClInclude Include="..\..\..\src\fstb\txt\unicode\WordBreakPropTablePrev.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf16\Codec16.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf16\Codec16.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf16\def.h" />
+    <ClInclude Include="..\..\..\src\fstb\txt\utf16\utf16_fnc.h" />
     <ClInclude Include="..\..\..\src\fstb\txt\utf8\Codec8.h" />
     <ClInclude Include="..\..\..\src\fstb\txt\utf8\ConvNum.h" />
     <ClInclude Include="..\..\..\src\fstb\txt\utf8\def.h" />
@@ -933,6 +940,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\txt\unicode\unicode.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\txt\utf16\utf16_fnc.cpp" />
     <ClCompile Include="..\..\..\src\fstb\txt\utf8\Codec8.cpp" />
     <ClCompile Include="..\..\..\src\fstb\txt\utf8\ConvNum.cpp" />
     <ClCompile Include="..\..\..\src\fstb\txt\utf8\def.cpp" />

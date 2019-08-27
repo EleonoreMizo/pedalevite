@@ -110,6 +110,14 @@ pedalevite_SOURCES = \
         ../../src/fstb/txt/utf8/def.h \
         ../../src/fstb/txt/utf8/fnc.cpp \
         ../../src/fstb/txt/utf8/fnc.h \
+        ../../src/fstb/txt/utf16/Codec16.h \
+        ../../src/fstb/txt/utf16/Codec16.hpp \
+        ../../src/fstb/txt/utf16/def.h \
+        ../../src/fstb/txt/utf16/utf16_fnc.cpp \
+        ../../src/fstb/txt/utf16/utf16_fnc.h \
+        ../../src/fstb/txt/Char16.h \
+        ../../src/fstb/txt/Conv.h \
+        ../../src/fstb/txt/Conv.hpp \
         ../../src/fstb/util/NotificationFlag.h \
         ../../src/fstb/util/NotificationFlag.hpp \
         ../../src/fstb/util/NotificationFlagCascadeMixin.h \

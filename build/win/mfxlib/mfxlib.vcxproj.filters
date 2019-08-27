@@ -250,6 +250,9 @@
     <Filter Include="fstb\msg">
       <UniqueIdentifier>{22740a9b-5ff1-469f-94b1-956aff8ee136}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fstb\txt\utf16">
+      <UniqueIdentifier>{3102acff-da6f-4c61-9654-b7120c4b69cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2664,6 +2667,27 @@
     <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdCbInterface.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\txt\Char16.h">
+      <Filter>fstb\txt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\txt\utf16\Codec16.h">
+      <Filter>fstb\txt\utf16</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\txt\utf16\Codec16.hpp">
+      <Filter>fstb\txt\utf16</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\txt\utf16\def.h">
+      <Filter>fstb\txt\utf16</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\txt\utf16\utf16_fnc.h">
+      <Filter>fstb\txt\utf16</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\txt\Conv.h">
+      <Filter>fstb\txt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\txt\Conv.hpp">
+      <Filter>fstb\txt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3694,6 +3718,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdCbInterface.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\txt\utf16\utf16_fnc.cpp">
+      <Filter>fstb\txt\utf16</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
