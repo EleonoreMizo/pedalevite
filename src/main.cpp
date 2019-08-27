@@ -274,6 +274,10 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 		snd_drv
 	)
 {
+#if ! fstb_IS (SYS, LINUX)
+	_all_io.set_model (_model);
+#endif
+
 	// First, scans the input queue to check if the ESC button
 	// is pressed. If it is the case, we request exiting the program.
 	_user_input.set_msg_recipient (

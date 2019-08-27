@@ -31,9 +31,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #define NOMINMAX
 
 #include "conc/CellPool.h"
+#include "fstb/msg/MsgRet.h"
 #include "mfx/ui/DisplayInterface.h"
 #include "mfx/ui/LedInterface.h"
 #include "mfx/ui/UserInputInterface.h"
+#include "mfx/ModelMsgCmdAsync.h"
+#include "mfx/ModelMsgCmdCbInterface.h"
 
 #include <Windows.h>
 
@@ -47,6 +50,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+class Model;
+
 namespace ui
 {
 
@@ -56,6 +62,7 @@ class IoWindows
 :	public DisplayInterface
 ,	public LedInterface
 ,	public UserInputInterface
+,	public ModelMsgCmdCbInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -64,6 +71,8 @@ public:
 
 	explicit       IoWindows (volatile bool &quit_request_flag);
 	virtual        ~IoWindows ();
+
+	void           set_model (Model &model);
 
 
 
@@ -93,6 +102,9 @@ protected:
 	virtual void   do_return_cell (MsgCell &cell);
 	virtual std::chrono::microseconds
 	               do_get_cur_date () const;
+
+	// ModelMsgCmdCbInterface
+	virtual void   do_notify_model_error_code (int ret_val);
 
 
 
@@ -143,6 +155,17 @@ private:
 		int            _y;
 	};
 
+	// Load/Save config
+	enum Lsc
+	{
+		Lsc_INVALID = -1,
+
+		Lsc_LOAD = 0,
+		Lsc_SAVE,
+
+		Lsc_NBR_ELT
+	};
+
 	static const int  _scr_w     = 128;
 	static const int  _scr_h     =  64;
 	static const int  _scr_s     = _scr_w;
@@ -151,6 +174,7 @@ private:
 	static const int  _nbr_fsw_col = 6;
 	static const int  _nbr_but_row = 2; // Two rows of 3 buttons for the UI
 	static const int  _nbr_but_col = 3;
+	static const int  _nbr_lsc_row = 2; // Two rows for load/save config
 	static const int  _zoom      = 4;
 
 	static const int  _led_h_max = 32;
@@ -161,13 +185,18 @@ private:
 	static const int  _sw_gap    = 16;  // Between the two groups of switches
 	static const int  _sw_l_max  = 32;
 	static const int  _sw_l_tmp  =
-		(_scr_w * _zoom - _sw_gap) / (_nbr_fsw_col + _nbr_but_col);
+		(_scr_w * _zoom - _sw_gap * 2) / (_nbr_fsw_col + _nbr_but_col + _nbr_lsc_row);
 	static const int  _sw_l      = (_sw_l_tmp < _sw_l_max) ? _sw_l_tmp : _sw_l_max;
 	static const int  _sw_w      = _sw_l;
 	static const int  _sw_h      = _sw_l;
 	static const int  _sw_r_max  = (_nbr_fsw_row < _nbr_but_row) ? _nbr_but_row : _nbr_fsw_row;
 	static const int  _sw_h_tot  = _sw_r_max * _sw_h;
 	static const int  _sw_y      = _led_y + _led_h;
+
+	static const int  _lsc_x     = _sw_w * (_nbr_fsw_col + _nbr_but_col) + _sw_gap * 2;
+	static const int  _lsc_y     = _sw_y;
+	static const int  _lsc_w     = _sw_w;
+	static const int  _lsc_h     = _sw_h;
 
 	static const int  _disp_w    = _scr_w * _zoom;
 	static const int  _disp_h    = _scr_h * _zoom + _led_h + _sw_h_tot;
@@ -178,6 +207,8 @@ private:
 
 	typedef std::vector <MsgQueue *> QueueArray;
 	typedef std::array <QueueArray, UserInputType_NBR_ELT> RecipientList;
+
+	typedef typename fstb::msg::MsgRet <ModelMsgCmdAsync>::QueueSPtr RetQueueSPtr;
 
 	void           main_loop ();
 	void           resize_win (int w, int h);
@@ -194,13 +225,16 @@ private:
 	void           redraw_main_screen (int x1, int y1, int x2, int y2);
 	void           redraw_led (int x1, int y1, int x2, int y2, int led_cnt);
 	void           redraw_sw_all (int x1, int y1, int x2, int y2);
-	void           redraw_sw (int x1, int y1, int x2, int y2, SwType type, int pos_x, int pos_y, bool on_flag);
+	void           redraw_lsc_all (int x1, int y1, int x2, int y2);
+	void           redraw_button (int x1, int y1, int x2, int y2, int sw_x, int sw_y, bool on_flag);
 	void           draw_line_h (int xo, int yo, int l, const PixArgb & c, int x1, int y1, int x2, int y2);
 	void           draw_line_v (int xo, int yo, int l, const PixArgb & c, int x1, int y1, int x2, int y2);
 	void           fill_block (int xo, int yo, int w, int h, const PixArgb & c, int x1, int y1, int x2, int y2);
 	const SwLoc *  find_sw_from_coord (int x, int y) const;
 	const SwLoc *  find_sw_from_index (int index) const;
 	void           compute_sw_coord (int &x, int &y, SwType type, int col, int row) const;
+	Lsc            find_lsc_from_coord (int x, int y) const;
+	void           compute_lsc_coord (int &x, int &y, Lsc type) const;
 	void           release_mouse_pressed_sw ();
 	void           enqueue_sw_msg (int index, bool on_flag);
 	void           update_sw_state (int index, bool on_flag);
@@ -209,6 +243,10 @@ private:
 	static ::LRESULT CALLBACK
 	               winproc_static (::HWND hwnd, ::UINT message, ::WPARAM wparam, ::LPARAM lparam);
 	static int64_t get_date ();
+	static int     select_file (std::string &pathname, bool save_flag, std::string title);
+
+	Model *        _model_ptr;         // Should be set
+	RetQueueSPtr   _ret_queue_sptr;
 
 	ScreenBuffer   _screen_buf;
 	::HWND         _main_win;
