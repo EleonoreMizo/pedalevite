@@ -48,7 +48,7 @@ bool	truncate (std::string & str, std::string::size_type buf_len_byte = std::str
 int	conv_to_lower_case (std::string &dest, const char src_0 [], const std::string::size_type max_sz = std::string::npos);
 int	conv_to_upper_case (std::string &dest, const char src_0 [], const std::string::size_type max_sz = std::string::npos);
 
-int	strstr_ci (const char str_0 [], const char *subset_0, long &subset_pos);
+int	strstr_ci (const char str_0 [], const char subset_0 [], long &subset_pos);
 
 
 
