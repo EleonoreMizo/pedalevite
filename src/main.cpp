@@ -2,7 +2,7 @@
 // Running jack: sudo jackd -P70 -p16 -t2000 -dalsa -p64 -n3 -r44100 -s &
 //
 // -march=armv8-a doesn't work with std::thread on this GCC version,
-// see last comment of bug #42734 on gcc.gnu.org 
+// see the Jonathan Wakely's comment (2015-10-05) for bug #42734 on gcc.gnu.org 
 
 
 #if defined (WIN32) || defined (_WIN32) || defined (__CYGWIN__)
