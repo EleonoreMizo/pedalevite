@@ -4,7 +4,7 @@
         Author: Laurent de Soras, 2018
 
 Function fits in the following constraints:
-- Asymetric
+- Asymmetric
 - Bounded
 - Monotonic
 - Continuous C1
@@ -12,7 +12,8 @@ Function fits in the following constraints:
 - Output range is roughly scaled in [-1.8 ; +0.3]
 - f(0) = 0
 - Slope is 1 at 0
-The function is very asymetrical (strong hot biasing)
+The function is very asymmetrical (strong hot biasing)
+Curve: https://www.desmos.com/calculator/vdcy3npihw
 
 --- Legal stuff ---
 

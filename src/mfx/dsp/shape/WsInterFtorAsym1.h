@@ -4,7 +4,7 @@
         Author: Laurent de Soras, 2018
 
 Function fits in the following constraints:
-- Asymetric
+- Asymmetric
 - Bounded
 - Monotonic
 - Continuous C1
@@ -14,7 +14,7 @@ Function fits in the following constraints:
 - The (0, 0) point is located to the point where the slope is maximum.
 - Slope is 1 at 0
 Cold biasing
-Curve: https://www.desmos.com/calculator/0t17c4wxzz
+Curve: https://www.desmos.com/calculator/vdcy3npihw
 
 --- Legal stuff ---
 
