@@ -465,6 +465,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/nz/WhiteFast.hpp \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.h \
+        ../../src/mfx/dsp/osc/OscSinCosStable.h \
+        ../../src/mfx/dsp/osc/OscSinCosStable.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
         ../../src/mfx/dsp/rspl/Cst.h \

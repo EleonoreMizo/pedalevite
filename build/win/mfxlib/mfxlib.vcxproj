@@ -509,6 +509,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerHermite4.h" />
