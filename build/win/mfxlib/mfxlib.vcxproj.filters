@@ -2733,6 +2733,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\Remez.h">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\RemezPoint.h">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3775,6 +3781,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\DenormStop.cpp">
       <Filter>mfx\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\Remez.cpp">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\RemezPoint.cpp">
+      <Filter>mfx\dsp\fir</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

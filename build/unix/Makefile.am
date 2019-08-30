@@ -385,6 +385,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/fir/RankSelA.h \
         ../../src/mfx/dsp/fir/RankSelL.cpp \
         ../../src/mfx/dsp/fir/RankSelL.h \
+        ../../src/mfx/dsp/fir/Remez.cpp \
+        ../../src/mfx/dsp/fir/Remez.h \
+        ../../src/mfx/dsp/fir/RemezPoint.cpp \
+        ../../src/mfx/dsp/fir/RemezPoint.h \
         ../../src/mfx/dsp/iir/AllPass1p.cpp \
         ../../src/mfx/dsp/iir/AllPass1p.h \
         ../../src/mfx/dsp/iir/AllPass1p.hpp \

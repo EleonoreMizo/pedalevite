@@ -445,6 +445,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\MovingSum.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelL.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelA.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\Remez.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\RemezPoint.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.h" />
@@ -1052,6 +1054,8 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\MeterRmsPeakHold4Simd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\fir\RankSelL.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\fir\RankSelA.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\Remez.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\RemezPoint.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass2p.cpp" />
