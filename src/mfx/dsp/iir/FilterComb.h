@@ -35,6 +35,8 @@ functions:
 	OP::OP ();
 	float OP::process_sample (float sample);
 
+- AL is a standard allocator for the internal buffer.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to

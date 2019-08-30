@@ -335,6 +335,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dly/DelayLine.h \
         ../../src/mfx/dsp/dly/DelayLineData.h \
         ../../src/mfx/dsp/dly/DelayLineData.hpp \
+        ../../src/mfx/dsp/dly/DelayLineFracFir4.h \
+        ../../src/mfx/dsp/dly/DelayLineFracFir4.hpp \
         ../../src/mfx/dsp/dly/DelayLineFracFir4Base.h \
         ../../src/mfx/dsp/dly/DelayLineFracFir4Base.hpp \
         ../../src/mfx/dsp/dly/DelayLineReader.cpp \

@@ -4,7 +4,8 @@
 - **`BbdLineReadable`**: same as above, but implements `DelayLineReadInterface`.
 - **`DelayLine`**: classic digital delay line implementing `DelayLineReadInterface`.
 - **`DelayLineData`**: template class for delay storage and addressing (masking, loop unrolling…)
-- **`DelayLineFracFir4Base`**: fractional delay line using a 4-tap FIR as interpolator.
+- **`DelayLineFracFir4Base`**: Core processor of a fractional delay line using a 4-tap FIR as interpolator.
+- **`DelayLineFracFir4`**: Ready-to-use fractional delay line using a 4-tap FIR as interpolator.
 - **`DelayLineReader`**: Class for reading a delay line accessed with a `DelayLineReadInterface`. Handles slow and fast delay time changes, with interpolation and crossfade, respectively.
 - **`DelayLineReaderPitch`**: Same as above, with optional basic pitch shifting.
 - **`DelayLineReadInterface`**: An interface for reading a delay line, with random access and resampling, and maximum length estimation for block processing (needed when the line is fed back).

@@ -400,6 +400,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLine.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineData.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineData.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4Base.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.h" />
