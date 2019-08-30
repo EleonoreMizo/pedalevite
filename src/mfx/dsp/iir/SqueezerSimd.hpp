@@ -335,11 +335,11 @@ void	SqueezerSimd <BR, LFOP>::update_internal_variables_fast (float &r, float &g
 
 	const float    f = freq / fs;
 
-	r = reso * (6 * 2) / (2 + f * (6 + f * (5 + f * 8)));
+	r = reso * (5.5f * 2) / (2 + f * (6 + f * (5 + f * 8)));
 
 	const float    k = float (1 / fstb::Approx::tan_taylor5 (f * fstb::PI));
-	g = 1 / (1 + k);
-	p = (1 - k) * g;
+	g = 1 / (1 + k);  /*** To do: direct polynomial approx from f. See pi::distapf::DistApf ***/
+	p = (1 - k) * g;  /*** To do: direct polynomial approx from f. Note: p = 2g - 1 ***/
 
 	assert (f <= 0.25);
 	const float    f_025 = f - 0.25f;
