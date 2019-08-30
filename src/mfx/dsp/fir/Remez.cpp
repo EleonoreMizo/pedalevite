@@ -107,16 +107,22 @@ int	Remez::compute_coefs (double coef_list_ptr [], int len, const RemezSpec &spe
 	const int      nbr_bands = int (spec.size ());
 	int            gridsize = 0;
 	{
+#if ! defined (NDEBUG)
 		double         prev_freq = 0;
+#endif // NDEBUG
 		for (int i = 0; i < nbr_bands; ++i)
 		{
 			const double   lower_freq = spec [i].get_lower_freq ();
 			const double   upper_freq = spec [i].get_upper_freq ();
 			const double   freq_dif   = upper_freq - lower_freq;
 			assert (freq_dif >= 0);
+#if ! defined (NDEBUG)
 			assert (upper_freq >= prev_freq);
+#endif // NDEBUG
 			gridsize += fstb::round_int ((2 * r * GRID_DENSITY) * freq_dif);
+#if ! defined (NDEBUG)
 			prev_freq = upper_freq;
+#endif // NDEBUG
 		}
 	}
 	if (symmetry == Symmetry_NEG)
@@ -649,17 +655,17 @@ void	Remez::search (int r, int gridsize)
 		int            l        = 0;
 		bool           alt_flag = true;
 		{
-			for (int j = 1; j < k && alt_flag; ++j)
+			for (int m = 1; m < k && alt_flag; ++m)
 			{
-				if (fabs (_e [found_ext [j]]) < fabs (_e [found_ext [l]]))
+				if (fabs (_e [found_ext [m]]) < fabs (_e [found_ext [l]]))
 				{
-					l = j;	// New smallest error.
+					l = m;	// New smallest error.
 				}
-				if (up && _e [found_ext [j]] < 0.0)
+				if (up && _e [found_ext [m]] < 0.0)
 				{
 					up = false;	// Switch to a minima
 				}
-				else if (! up && _e [found_ext [j]] > 0.0)
+				else if (! up && _e [found_ext [m]] > 0.0)
 				{
 					up = true;	// Switch to a maxima
 				}
