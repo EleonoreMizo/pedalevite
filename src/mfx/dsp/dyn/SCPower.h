@@ -88,6 +88,10 @@ protected:
 
 private:
 
+	void           prepare_env_input_1chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end);
+	void           prepare_env_input_2chn (float out_ptr [], const float * const chn_ptr_arr [], int pos_beg, int pos_end);
+	void           prepare_env_input_nchn (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end);
+
 	AddProc        _add_proc;
 
 
