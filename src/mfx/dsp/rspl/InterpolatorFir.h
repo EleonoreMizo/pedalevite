@@ -3,6 +3,14 @@
         InterpolatorFir.h
         Author: Laurent de Soras, 2016
 
+Template parameters:
+
+- IP: Interpolator-convolver, for example InterpFirPolyphase.
+	Should have the following members:
+	static const int IP::PHASE_LEN
+	float IP::interpolate (const float data_ptr [], uint32_t frac_pos);
+	void IP::interpolate_multi_chn (float * const out_ptr_arr [], int out_offset, const float * const in_ptr_arr [], int in_offset, uint32_t frac_pos, int nbr_chn);
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -10,13 +18,6 @@ the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
 http://sam.zoy.org/wtfpl/COPYING for more details.
-
-Template parameters:
-
-- IP: Interpolator-convolver. Should have the following members:
-	enum IP::PHASE_LEN
-	float IP::interpolate (const float data_ptr [], archi::UInt32 frac_pos);
-	void IP::interpolate_multi_chn (float * const out_ptr_arr [], int out_offset, const float * const in_ptr_arr [], int in_offset, archi::UInt32 frac_pos, int nbr_chn);
 
 *Tab=3***********************************************************************/
 

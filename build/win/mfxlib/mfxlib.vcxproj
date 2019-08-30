@@ -515,6 +515,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerHermite4.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerLagrange4.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerLagrange4.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirPolyphase.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirPolyphase.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorFir.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorFir.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43.h" />
@@ -525,6 +527,10 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerpSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorOrder0.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorOrder0.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseFpu.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseFpu.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\SnhTool.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Voice.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym.h" />

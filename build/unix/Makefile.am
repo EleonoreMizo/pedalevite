@@ -472,6 +472,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/rspl/InterpFirMakerHermite4.hpp \
         ../../src/mfx/dsp/rspl/InterpFirMakerLagrange4.h \
         ../../src/mfx/dsp/rspl/InterpFirMakerLagrange4.hpp \
+        ../../src/mfx/dsp/rspl/InterpFirPolyphase.h \
+        ../../src/mfx/dsp/rspl/InterpFirPolyphase.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorFir.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorHermite43.cpp \
@@ -487,6 +489,10 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/rspl/InterpolatorLerpSimd.h \
         ../../src/mfx/dsp/rspl/InterpolatorOrder0.h \
         ../../src/mfx/dsp/rspl/InterpolatorOrder0.hpp \
+        ../../src/mfx/dsp/rspl/InterpPhaseFpu.h \
+        ../../src/mfx/dsp/rspl/InterpPhaseFpu.hpp \
+        ../../src/mfx/dsp/rspl/InterpPhaseSimd.h \
+        ../../src/mfx/dsp/rspl/InterpPhaseSimd.hpp \
         ../../src/mfx/dsp/rspl/SnhTool.cpp \
         ../../src/mfx/dsp/rspl/SnhTool.h \
         ../../src/mfx/dsp/rspl/Voice.cpp \

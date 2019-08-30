@@ -2703,6 +2703,24 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\DenormStop.h">
       <Filter>mfx\dsp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirPolyphase.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirPolyphase.hpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseFpu.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseFpu.hpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseSimd.h">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseSimd.hpp">
+      <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
