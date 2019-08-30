@@ -2688,6 +2688,9 @@
     <ClInclude Include="..\..\..\src\fstb\txt\Conv.hpp">
       <Filter>fstb\txt</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\ClipDetect.h">
+      <Filter>mfx\dsp\ana</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3721,6 +3724,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\txt\utf16\utf16_fnc.cpp">
       <Filter>fstb\txt\utf16</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\ClipDetect.cpp">
+      <Filter>mfx\dsp\ana</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
