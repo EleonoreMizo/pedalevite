@@ -608,7 +608,7 @@ void	FlanchoChn::update_shape ()
 // small range around 0.
 // When _wf_shape is close to 1 or -1, we put the waveshaper knee of
 // the correspounding polarity at the center of the input range, so the
-// symetric shape of the input signal turns into an asymetric shape.
+// symmetric shape of the input signal turns into an asymmetric shape.
 // Therefore the minimum input level keeps staying close to 0, and the
 // maximum input level becomes close to the waveshaper maximum input
 // level.

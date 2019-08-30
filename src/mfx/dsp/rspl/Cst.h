@@ -46,7 +46,7 @@ class Cst
 public:
 
 	// Maximum number of simultaneously processed channels (per voice)
-	static const int  MAX_NBR_CHN	= 3;
+	static const int  MAX_NBR_CHN	= 32;
 
 
 
