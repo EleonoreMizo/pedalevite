@@ -2721,6 +2721,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpPhaseSimd.hpp">
       <Filter>mfx\dsp\rspl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym2d.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym2d.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

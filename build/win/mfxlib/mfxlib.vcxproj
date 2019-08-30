@@ -535,6 +535,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Voice.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym2d.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym2d.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturateBipolar.h" />

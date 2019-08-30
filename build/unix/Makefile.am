@@ -499,6 +499,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/rspl/Voice.h \
         ../../src/mfx/dsp/shape/FncFiniteAsym.h \
         ../../src/mfx/dsp/shape/FncFiniteAsym.hpp \
+        ../../src/mfx/dsp/shape/FncFiniteAsym2d.h \
+        ../../src/mfx/dsp/shape/FncFiniteAsym2d.hpp \
         ../../src/mfx/dsp/shape/Poly3L1Bias.h \
         ../../src/mfx/dsp/shape/Poly3L1Bias.hpp \
         ../../src/mfx/dsp/shape/MapSaturate.h \
