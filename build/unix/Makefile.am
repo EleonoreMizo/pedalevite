@@ -323,6 +323,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/ctrl/lfo/PhaseGenChaos.h \
         ../../src/mfx/dsp/ctrl/InertiaLin.h \
         ../../src/mfx/dsp/ctrl/InertiaLin.hpp \
+        ../../src/mfx/dsp/ctrl/InertiaRc.cpp \
+        ../../src/mfx/dsp/ctrl/InertiaRc.h \
         ../../src/mfx/dsp/ctrl/Ramp.h \
         ../../src/mfx/dsp/ctrl/Ramp.hpp \
         ../../src/mfx/dsp/dly/BbdLine.cpp \

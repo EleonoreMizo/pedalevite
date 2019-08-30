@@ -71,7 +71,7 @@ Input parameters:
       otherwise get_nbr_rem_spl() will return 0.
 	- mult: Recursive multiplier applied at each sample, for exponential
 		calculation. Should be in ]-1 ; 1], 1 is for infinite duration.
-	- end_threshold: Level between the exponential 0 and the final value.
+	- end_thr: Level between the exponential 0 and the final value.
 		Must be > 0 because true 0 can't be reached.
 Throws: Nothing
 ==============================================================================

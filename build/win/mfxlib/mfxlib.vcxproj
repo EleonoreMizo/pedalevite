@@ -374,6 +374,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\InertiaLin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\InertiaLin.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\InertiaRc.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscInterface.hpp" />
@@ -1010,6 +1011,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\AdsrRc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\env\SegmentRc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\InertiaRc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\LfoModule.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscNPhase.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscSaw.cpp" />
