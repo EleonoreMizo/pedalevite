@@ -5,6 +5,11 @@
 
 This object must be aligned on 16-byte boundaries!
 
+Algorithm from:
+Jorg Arndt, "Matters Computational", chapter 21.3.2 (Fast Transforms / The
+Fourier transform / Saving trigonometric computations / Recursive generation)
+http://www.jjj.de/fxt/fxtpage.html#fxtbook
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
