@@ -2700,6 +2700,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineFracFir4.hpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\DenormStop.h">
+      <Filter>mfx\dsp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3739,6 +3742,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\InertiaRc.cpp">
       <Filter>mfx\dsp\ctrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\DenormStop.cpp">
+      <Filter>mfx\dsp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

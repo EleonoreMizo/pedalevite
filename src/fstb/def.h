@@ -185,6 +185,11 @@ const long double SQRT2   = 1.4142135623730950488016887242097L;
 const      double TWOP32  = 256.0 * 256 * 256 * 256;
 const      double TWOPM32 = 1.0 / TWOP32;
 
+const      float  ANTI_DENORMAL_F32     = 1e-20f;
+const      double ANTI_DENORMAL_F64     = 1e-290;
+const      float  ANTI_DENORMAL_F32_CUB = 1e-10f;  // Anti-denormal for float numbers aimed to be raised to the power of 2 or 3.
+const      double ANTI_DENORMAL_F64_CUB = 1e-100;
+
 
 
 }	// namespace fstb

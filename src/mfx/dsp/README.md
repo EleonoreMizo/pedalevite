@@ -25,15 +25,18 @@ The **`dsp`** lib depends on several other libraries:
 
 ## Unsorted classes
 
-- `BandSplitAllPassPair`: A template agregator to split a signal into two bands, using the sum and difference of a complentary pair of all-pass filters
+- **`BandSplitAllPassPair`**: A template agregator to split a signal into two bands, using the sum and difference of a complentary pair of all-pass filters
 
 
-- `FilterCascade`: A template to cascade up to 4 filters from different classes. They rely on a `float process_sample(float)` function.
-- `FilterBypass`: A do-nothing filter
-- `FilterCascadeIdEven`: A template to cascade several filters from the same class
-- `FilterCascadeIdOdd`: Same as `FilterCascadeIdEven`, but with one more filter from another class
+- **`DenormStop`**: Functions to prevent denormal numbers to appear and significantly slow down the processing.
 
 
-- `SplDataRetrievalInterface`: An interface to abstract the random access to potentially large sample data
+- **`FilterCascade`**: A template to cascade up to 4 filters from different classes. They rely on a `float process_sample(float)` function.
+- **`FilterBypass`**: A do-nothing filter
+- **`FilterCascadeIdEven`**: A template to cascade several filters from the same class
+- **`FilterCascadeIdOdd`**: Same as `FilterCascadeIdEven`, but with one more filter from another class
 
-- `StereoLevel`: a simple 2×2 matrix to handle 2-channel levels
+
+- **`SplDataRetrievalInterface`**: An interface to abstract the random access to potentially large sample data
+
+- **`StereoLevel`**: a simple 2×2 matrix to handle 2-channel levels

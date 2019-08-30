@@ -531,6 +531,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/wnd/XFadeShape.h \
         ../../src/mfx/dsp/BandSplitAllPassPair.h \
         ../../src/mfx/dsp/BandSplitAllPassPair.hpp \
+        ../../src/mfx/dsp/DenormStop.cpp \
+        ../../src/mfx/dsp/DenormStop.h \
         ../../src/mfx/dsp/FilterBypass.h \
         ../../src/mfx/dsp/FilterCascade.h \
         ../../src/mfx/dsp/FilterCascade.hpp \
