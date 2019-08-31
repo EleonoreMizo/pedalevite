@@ -2745,6 +2745,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\SineQPoly3.hpp">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\SweepingSin.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3793,6 +3796,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\fir\RemezPoint.cpp">
       <Filter>mfx\dsp\fir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\osc\SweepingSin.cpp">
+      <Filter>mfx\dsp\osc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

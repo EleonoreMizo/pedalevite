@@ -514,6 +514,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\SweepingSin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerHermite4.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerHermite4.hpp" />
@@ -1075,6 +1076,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\nz\WhiteFast.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\osc\SweepingSin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43Simd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorInterface.cpp" />

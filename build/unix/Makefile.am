@@ -473,6 +473,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/osc/OscSinCosStable.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
+        ../../src/mfx/dsp/osc/SweepingSin.cpp \
+        ../../src/mfx/dsp/osc/SweepingSin.h \
         ../../src/mfx/dsp/rspl/Cst.h \
         ../../src/mfx/dsp/rspl/InterpFirMakerHermite4.h \
         ../../src/mfx/dsp/rspl/InterpFirMakerHermite4.hpp \
