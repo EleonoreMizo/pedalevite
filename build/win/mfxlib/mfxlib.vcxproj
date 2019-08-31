@@ -517,6 +517,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\SweepingSin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetableData.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetableData.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetableMipMapper.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetableMipMapper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetablePolyphaseData.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetablePolyphaseData.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Cst.h" />

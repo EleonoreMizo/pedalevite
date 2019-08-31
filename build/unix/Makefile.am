@@ -477,6 +477,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/osc/SweepingSin.h \
         ../../src/mfx/dsp/osc/WavetableData.h \
         ../../src/mfx/dsp/osc/WavetableData.hpp \
+        ../../src/mfx/dsp/osc/WavetableMipMapper.h \
+        ../../src/mfx/dsp/osc/WavetableMipMapper.hpp \
         ../../src/mfx/dsp/osc/WavetablePolyphaseData.h \
         ../../src/mfx/dsp/osc/WavetablePolyphaseData.hpp \
         ../../src/mfx/dsp/rspl/Cst.h \
