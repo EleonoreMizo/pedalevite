@@ -40,6 +40,8 @@ namespace fstb
 
 
 template <class T>
+inline int     sgn (T x);
+template <class T>
 inline T       limit (T x, T mi, T ma);
 template <class T>
 inline void    sort_2_elt (T &mi, T &ma, T a, T b);

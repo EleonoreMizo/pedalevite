@@ -24,6 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#if defined (_MSC_VER)
+	#include <intrin.h>
+#endif
+
 #include <cmath>
 
 
@@ -292,6 +296,108 @@ float	Approx::exp2 (float val)
 	assert (val >= 0);
 
 	return (val);
+}
+
+
+
+/*
+==============================================================================
+Name: fast_partial_exp2_int_16_to_int_32
+Description:
+	Compute a fixed-point approximation of the following function :
+	[0 ; 1[ -> [0.5 ; 1[
+	  f : x -> 2^(x-1)
+	The approximation uses the following polynomial :
+	f(x) = (((x+1)^2) + 2) / 6
+Input parameters :
+	- val: Unsigned linear input, Fixed-point 0:16 data. Integer part
+		is automatically discarded.
+Returns: Unsigned exponential output, fixed-point 0:32 data, range is
+	[0x80000000 ; 0xFFFFFFFF]
+Throws: Nothing
+==============================================================================
+*/
+
+uint32_t	Approx::fast_partial_exp2_int_16_to_int_32 (int val)
+{
+	const uint32_t c0 = 0x80000000U;
+	const uint32_t c1 = 2863311531U;
+	const uint32_t c2 = 1431655766U;
+
+	uint32_t       result;
+
+#if defined (_MSC_VER)
+
+	result   = val;
+	result <<= 15;
+	result  |= c0;
+	result   = uint32_t (__emulu (result, result) >> 32);
+	result   = uint32_t (__emulu (result,     c1) >> 32);
+	result  += c2;
+
+#else
+
+	const int      resol = 16;
+	const uint32_t mask  = (1 << resol) - 1;
+
+	val &= mask;
+	int64_t        step_64 (val + (1 << resol));
+	step_64 *= step_64;
+	step_64 *= (1 << (62 - (resol + 1) * 2)) / 3 + 1820;
+	result = uint32_t (step_64 >> (62 - 32 - 1));
+	result += c2;
+
+#endif
+
+	assert ((result & 0x80000000U) != 0);
+
+	return result;
+}
+
+
+
+// Way more accurate (error < 8e-5 -> ~0.08 cent)
+// Polynomial approximation by Olli Niemitalo
+// y = (((1/150 * x + 2/75) * x + 3/25) * x + 26/75) * x + 0.5
+uint32_t	Approx::fast_partial_exp2_int_16_to_int_32_4th (int val)
+{
+	const uint32_t c0 = 0x80000000U;
+	const uint32_t c1 = 0x58BF258C;
+	const uint32_t c2 = 0x1EB851EB;
+	const uint32_t c3 = 0x06D3A06D;
+	const uint32_t c4 = 0x01B4E81B;
+
+	uint32_t       result;
+
+#if defined (_MSC_VER)
+
+	const uint32_t x_32 = uint32_t (val) << 16;
+	result  = uint32_t (__emulu (c4,     x_32) >> 32);
+	result += c3;
+	result  = uint32_t (__emulu (result, x_32) >> 32);
+	result += c2;
+	result  = uint32_t (__emulu (result, x_32) >> 32);
+	result += c1;
+	result  = uint32_t (__emulu (result, x_32) >> 32);
+	result += c0;
+
+#else
+
+	const uint32_t x_32 = uint32_t (val) << 16;
+	result  = uint32_t ((c4 * uint64_t (x_32)) >> 32);
+	result += c3;
+	result  = uint32_t ((result * uint64_t (x_32)) >> 32);
+	result += c2;
+	result  = uint32_t ((result * uint64_t (x_32)) >> 32);
+	result += c1;
+	result  = uint32_t ((result * uint64_t (x_32)) >> 32);
+	result += c0;
+
+#endif
+
+	assert ((result & 0x80000000U) != 0);
+
+	return (result);
 }
 
 

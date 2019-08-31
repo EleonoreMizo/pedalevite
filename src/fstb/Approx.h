@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/ToolsSimd.h"
 
+#include <cstdint>
+
 
 
 namespace fstb
@@ -71,6 +73,12 @@ public:
 	               log2 (float val);
 	static inline float
 	               exp2 (float val);
+
+	static inline uint32_t
+	               fast_partial_exp2_int_16_to_int_32 (int val);
+	static inline uint32_t
+	               fast_partial_exp2_int_16_to_int_32_4th (int val);
+
 
 	static inline float
 	               tan_taylor5 (float x);

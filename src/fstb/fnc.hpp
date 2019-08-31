@@ -53,6 +53,14 @@ namespace fstb
 
 
 template <class T>
+int	sgn (T x)
+{
+	return (x < T (0) ? -1 : x > T (0) ? 1 : 0);
+}
+
+
+
+template <class T>
 T	limit (T x, T mi, T ma)
 {
 	return ((x < mi) ? mi : ((x > ma) ? ma : x));
