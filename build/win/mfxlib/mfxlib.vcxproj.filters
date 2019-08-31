@@ -2739,6 +2739,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\RemezPoint.h">
       <Filter>mfx\dsp\fir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\SineQPoly3.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\SineQPoly3.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

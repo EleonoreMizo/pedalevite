@@ -513,6 +513,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/shape/MapSaturate.hpp \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.h \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.hpp \
+        ../../src/mfx/dsp/shape/SineQPoly3.h \
+        ../../src/mfx/dsp/shape/SineQPoly3.hpp \
         ../../src/mfx/dsp/shape/WsInterFtorAsym1.h \
         ../../src/mfx/dsp/shape/WsInterFtorAsym1.hpp \
         ../../src/mfx/dsp/shape/WsInterFtorAsym2.h \
