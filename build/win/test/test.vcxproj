@@ -93,15 +93,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\test\Axis.cpp" />
+    <ClCompile Include="..\..\..\src\test\BufferFiller.cpp" />
     <ClCompile Include="..\..\..\src\test\GraphPrim.cpp" />
     <ClCompile Include="..\..\..\src\test\Gridaxis.cpp" />
     <ClCompile Include="..\..\..\src\test\main.cpp" />
+    <ClCompile Include="..\..\..\src\test\TimerAccurate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\test\Axis.h" />
+    <ClInclude Include="..\..\..\src\test\BufferFiller.h" />
     <ClInclude Include="..\..\..\src\test\EPSPlot.h" />
     <ClInclude Include="..\..\..\src\test\GraphPrim.h" />
     <ClInclude Include="..\..\..\src\test\Gridaxis.h" />
+    <ClInclude Include="..\..\..\src\test\TestInterpPhase.h" />
+    <ClInclude Include="..\..\..\src\test\TestInterpPhase.hpp" />
+    <ClInclude Include="..\..\..\src\test\TimerAccurate.h" />
+    <ClInclude Include="..\..\..\src\test\TimerAccurate.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,6 +20,8 @@
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/nz/WhiteFast.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
+#include "mfx/dsp/rspl/InterpPhaseFpu.h"
+#include "mfx/dsp/rspl/InterpPhaseSimd.h"
 #include "mfx/pi/dist1/DistoSimple.h"
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist1/Param.h"
@@ -45,6 +47,7 @@
 #include "mfx/pi/testgen/Param.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/FileIOInterface.h"
+#include "TestInterpPhase.h"
 #include "test/EPSPlot.h"
 #include "test/Gridaxis.h"
 
@@ -1865,6 +1868,15 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseFpu <4>, 6>::perform_test ();
+	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseSimd <4>, 6>::perform_test ();
+	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseFpu <12>, 6>::perform_test ();
+	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseSimd <12>, 6>::perform_test ();
+	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseFpu <64>, 6>::perform_test ();
+	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseSimd <64>, 6>::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = test_queue_ret ();
 #endif
 
