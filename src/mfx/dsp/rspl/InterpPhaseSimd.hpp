@@ -56,7 +56,7 @@ public:
 
 
 template <int REM>
-inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const archi::Vect128 &q_v, const float imp_ptr [], const float dif_ptr [])
+inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr [])
 {
 	const int      offset = (nbr_blocks - REM) * 4;
 	auto           tmp    = fstb::ToolsSimd::load_f32 (&imp_ptr [offset]);

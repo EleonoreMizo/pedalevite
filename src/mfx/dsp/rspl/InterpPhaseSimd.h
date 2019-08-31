@@ -61,7 +61,7 @@ public:
 	static const int  PHASE_LEN_V128 = (PHASE_LEN + 3) >> 2; // Vectors
 	static const int  ARRAY_LEN      = PHASE_LEN_V128 * 4;
 
-	typedef alignas (16) std::array <float, ARRAY_LEN> BufferUnaligned;
+	typedef std::array <float, ARRAY_LEN> BufferUnaligned;
 	fstb_TYPEDEF_ALIGN (16, BufferUnaligned, Buffer);
 
 	               InterpPhaseSimd ()  = default;
@@ -89,7 +89,7 @@ private:
 
 	static const int  CHK_IMPULSE_NOT_SET = 12345;
 
-	Buffer         _imp = Buffer {{ CHK_IMPULSE_NOT_SET }}; // Impulse
+	Buffer         _imp = Buffer {{ float (CHK_IMPULSE_NOT_SET) }}; // Impulse
 	Buffer         _dif; // Difference between next impulse and current impulse
 
 

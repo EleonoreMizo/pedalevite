@@ -155,7 +155,6 @@ void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float out_ptr [], con
 	phase.precompute_impulse (impulse, q);
 
 	for (int chn_index = 0; chn_index < nbr_chn; ++ chn_index)
-	do
 	{
 		*out_ptr = phase.convolve (in_ptr, impulse);
 

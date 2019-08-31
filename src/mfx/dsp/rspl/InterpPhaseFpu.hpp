@@ -194,7 +194,6 @@ void	InterpPhaseFpu <PL>::set_data (int pos, float imp, float dif)
 template <int PL>
 void	InterpPhaseFpu <PL>::precompute_impulse (Buffer &imp, float q) const
 {
-	assert (imp != 0);
 	assert (q >= 0);
 	assert (q <= 1);
 
@@ -207,7 +206,6 @@ template <int PL>
 float	InterpPhaseFpu <PL>::convolve (const float data_ptr [], const Buffer &imp) const
 {
 	assert (data_ptr != 0);
-	assert (imp != 0);
 
 	float          c_0;
 	float          c_1;

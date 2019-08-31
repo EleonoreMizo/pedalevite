@@ -85,7 +85,7 @@ private:
 
 	static const int  CHK_IMPULSE_NOT_SET = 12345;
 
-	Buffer         _imp = Buffer {{ CHK_IMPULSE_NOT_SET }}; // Impulse
+	Buffer         _imp = Buffer {{ float (CHK_IMPULSE_NOT_SET) }}; // Impulse
 	Buffer         _dif; // Difference between next impulse and current impulse
 
 
