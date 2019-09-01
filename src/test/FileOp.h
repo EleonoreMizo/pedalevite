@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <vector>
 
+#include <cstdint>
+
 
 
 class FileOp

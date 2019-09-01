@@ -24,9 +24,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "FileOp.h"
+#include "test/FileOp.h"
 
 #include <cassert>
+#include <climits>
+#include <cmath>
+#include <cstddef>
 #include <cstdio>
 
 
