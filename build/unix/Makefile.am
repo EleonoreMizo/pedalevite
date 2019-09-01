@@ -379,8 +379,6 @@ commonsrc = \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.h \
         ../../src/mfx/dsp/dly/SCPower.h \
         ../../src/mfx/dsp/dly/SCPower.hpp \
-        ../../src/mfx/dsp/fir/ConvolverFft.cpp \
-        ../../src/mfx/dsp/fir/ConvolverFft.h \
         ../../src/mfx/dsp/fir/MovingSum.h \
         ../../src/mfx/dsp/fir/MovingSum.hpp \
         ../../src/mfx/dsp/fir/RankSelA.cpp \
@@ -469,23 +467,12 @@ commonsrc = \
         ../../src/mfx/dsp/nz/WhiteFast.cpp \
         ../../src/mfx/dsp/nz/WhiteFast.h \
         ../../src/mfx/dsp/nz/WhiteFast.hpp \
-        ../../src/mfx/dsp/osc/OscSample.h \
-        ../../src/mfx/dsp/osc/OscSample.hpp \
-        ../../src/mfx/dsp/osc/OscSampleSyncFade.h \
-        ../../src/mfx/dsp/osc/OscSampleSyncFade.hpp \
-        ../../src/mfx/dsp/osc/OscSampleSyncHard.h \
-        ../../src/mfx/dsp/osc/OscSampleSyncHard.hpp \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.h \
         ../../src/mfx/dsp/osc/OscSinCosStable.h \
         ../../src/mfx/dsp/osc/OscSinCosStable.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
-        ../../src/mfx/dsp/osc/SampleData.h \
-        ../../src/mfx/dsp/osc/SampleData.hpp \
-        ../../src/mfx/dsp/osc/SampleDataTplPar.h \
-        ../../src/mfx/dsp/osc/SampleMipMapper.h \
-        ../../src/mfx/dsp/osc/SampleMipMapper.hpp \
         ../../src/mfx/dsp/osc/SweepingSin.cpp \
         ../../src/mfx/dsp/osc/SweepingSin.h \
         ../../src/mfx/dsp/osc/WavetableData.h \
@@ -501,8 +488,6 @@ commonsrc = \
         ../../src/mfx/dsp/rspl/InterpFirMakerLagrange4.hpp \
         ../../src/mfx/dsp/rspl/InterpFirPolyphase.h \
         ../../src/mfx/dsp/rspl/InterpFirPolyphase.hpp \
-        ../../src/mfx/dsp/rspl/InterpFtor.h \
-        ../../src/mfx/dsp/rspl/InterpFtor.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorFir.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorHermite43.cpp \
