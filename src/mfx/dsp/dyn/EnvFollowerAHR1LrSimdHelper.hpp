@@ -180,7 +180,6 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], con
 	assert (nbr_spl > 0);
 
 	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
-	const auto     one    = fstb::ToolsSimd::set1_f32 (1);
 	const auto     coef_a = fstb::ToolsSimd::set1_f32 (_coef_atk);
 	const auto     coef_r = fstb::ToolsSimd::set1_f32 (_coef_rls);
 

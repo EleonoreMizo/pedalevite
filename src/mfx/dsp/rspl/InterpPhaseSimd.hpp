@@ -171,7 +171,7 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], const Buffer &imp
 	// First vector
 	const auto     val   = fstb::ToolsSimd::loadu_f32 (&data_ptr [0]);
 	const auto     pulse = fstb::ToolsSimd::load_f32 (&imp [0]);
-	auto           sum_v = _mm_mul_ps (val, pulse);
+	auto           sum_v = val * pulse;
 
 	// Other vectors
 	InterpPhaseSimd_Util <PHASE_LEN_V128 - 1>::sum_rec (
@@ -204,7 +204,7 @@ float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const
 	const auto     dif = fstb::ToolsSimd::load_f32 (&_dif [0]);
 	const auto     val = fstb::ToolsSimd::loadu_f32 (&data_ptr [0]);
 	fstb::ToolsSimd::mac (tmp, dif, q_v);
-	sum_v = _mm_mul_ps (val, tmp);
+	sum_v = val * tmp;
 
 	// Other vectors
 	InterpPhaseSimd_Util <PHASE_LEN_V128 - 1>::sum_rec (

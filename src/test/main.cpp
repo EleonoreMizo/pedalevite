@@ -597,9 +597,9 @@ void	PiProc::set_param_nat (int index, double val_nat)
 	evt._evt._param._val   = float (val_nrm);
 	_evt_list.push_back (evt);
 	_evt_ptr_list.clear ();
-	for (const auto &evt : _evt_list)
+	for (const auto &evt_p : _evt_list)
 	{
-		_evt_ptr_list.push_back (&evt);
+		_evt_ptr_list.push_back (&evt_p);
 	}
 	_proc_info._evt_arr = &_evt_ptr_list [0];
 	_proc_info._nbr_evt = int (_evt_ptr_list.size ());
@@ -981,7 +981,6 @@ int	test_transients ()
 		const int      buf_len = 256;
 		BufAlign       buf_src (buf_len);
 		BufAlign       buf_dst (buf_len);
-		size_t         buf_pos = 0;
 		dst_arr.resize (4);
 		for (auto &chn : dst_arr)
 		{
@@ -1677,7 +1676,6 @@ int	test_envelope_detector ()
 		env_hlp.set_hold_time (fstb::round_int (sample_freq * 0.030));
 
 		size_t         pos = 0;
-		double         phase = 0;
 		do
 		{
 #if 1

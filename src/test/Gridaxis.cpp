@@ -371,13 +371,13 @@ void	Gridaxis::render_point_set (const double x_arr [], const double y_arr [], l
 
 		case	DotStyle_SQUARE:
 			{
-				const PsCoord	x_conv [4] = { vx - 2, vx + 2, vx + 2, vx - 2 };
-				const PsCoord	y_conv [4] = { vy - 2, vy - 2, vy + 2, vy + 2 };
+				const PsCoord	x_conv2 [4] = { vx - 2, vx + 2, vx + 2, vx - 2 };
+				const PsCoord	y_conv2 [4] = { vy - 2, vy - 2, vy + 2, vy + 2 };
 				const bool		save_closepath_flag = _plot_ptr->is_path_closed ();
 				_plot_ptr->set_close_path (true);
 				_plot_ptr->drawLines (
-					&x_conv [0],
-					&y_conv [0],
+					&x_conv2 [0],
+					&y_conv2 [0],
 					4,
 					0.02f,
 					_x,

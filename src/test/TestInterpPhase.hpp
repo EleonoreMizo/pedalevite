@@ -25,8 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/rspl/InterpFirPolyphase.h"
-#include "BufferFiller.h"
-#include "TimerAccurate.h"
+#include "test/BufferFiller.h"
+#include "test/TimerAccurate.h"
 
 #include <array>
 #include <typeinfo>
@@ -122,9 +122,11 @@ int	TestInterpPhase <T, NPL2>::perform_test_performance ()
 	const int      MAX_BUF_LEN  = 1024;
 	const int      MAX_CHN      = 4;
 	const int      CHN_STRIDE   = 20;
-	const int      MAX_DEST_LEN = MAX_BUF_LEN - MAX_CHN * CHN_STRIDE;
 	const int      dest_len     = 64;	// <= MAX_DEST_LEN
+#if ! defined (NDEBUG)
+	const int      MAX_DEST_LEN = MAX_BUF_LEN - MAX_CHN * CHN_STRIDE;
 	assert (dest_len < MAX_DEST_LEN);
+#endif // NDEBUG
 
 	const int64_t  read_step (0x89ABCDEFUL);	// Close to 0.5 on a 32-bit scale
 	int64_t        read_pos (0);
