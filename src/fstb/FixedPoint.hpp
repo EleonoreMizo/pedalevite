@@ -109,21 +109,21 @@ void	FixedPoint::set_val (int32_t int_val, uint32_t frac_val)
 
 int64_t	FixedPoint::get_val_int64 () const
 {
-	return (_val._all);
+	return _val._all;
 }
 
 
 
 double	FixedPoint::get_val_dbl () const
 {
-	return (_val._msw + get_frac_val_dbl ());
+	return _val._msw + get_frac_val_dbl ();
 }
 
 
 
 float	FixedPoint::get_val_flt () const
 {
-	return (_val._msw + get_frac_val_flt ());
+	return _val._msw + get_frac_val_flt ();
 }
 
 
@@ -137,7 +137,7 @@ void	FixedPoint::set_int_val (int32_t int_val)
 
 int32_t	FixedPoint::get_int_val () const
 {
-	return (_val._msw);
+	return _val._msw;
 }
 
 
@@ -145,9 +145,9 @@ int32_t	FixedPoint::get_int_val () const
 int32_t	FixedPoint::get_round () const
 {
 	Fixed3232      temp (_val);
-	temp._all += 0x80000000UL;
+	temp._all += 0x80000000U;
 
-	return (temp._msw);
+	return temp._msw;
 }
 
 
@@ -155,9 +155,9 @@ int32_t	FixedPoint::get_round () const
 int32_t	FixedPoint::get_ceil () const
 {
 	Fixed3232      temp (_val);
-	temp._all += 0xFFFFFFFFUL;
+	temp._all += 0xFFFFFFFFU;
 
-	return (temp._msw);
+	return temp._msw;
 }
 
 
@@ -171,21 +171,21 @@ void	FixedPoint::set_frac_val (uint32_t frac_val)
 
 double	FixedPoint::get_frac_val_dbl () const
 {
-	return (_val._lsw * double (fstb::TWOPM32));
+	return _val._lsw * double (fstb::TWOPM32);
 }
 
 
 
 float	FixedPoint::get_frac_val_flt () const
 {
-	return (float (_val._lsw * fstb::TWOPM32));
+	return float (_val._lsw * fstb::TWOPM32);
 }
 
 
 
 uint32_t	FixedPoint::get_frac_val () const
 {
-	return (_val._lsw);
+	return _val._lsw;
 }
 
 
@@ -293,7 +293,16 @@ FixedPoint &	FixedPoint::operator += (const FixedPoint &other)
 {
 	add (other);
 
-	return (*this);
+	return *this;
+}
+
+
+
+FixedPoint &	FixedPoint::operator += (int32_t int_val)
+{
+	add_int (int_val);
+
+	return *this;
 }
 
 
@@ -347,7 +356,16 @@ FixedPoint &	FixedPoint::operator -= (const FixedPoint &other)
 {
 	sub (other);
 
-	return (*this);
+	return *this;
+}
+
+
+
+FixedPoint &	FixedPoint::operator -= (int32_t int_val)
+{
+	sub_int (int_val);
+
+	return *this;
 }
 
 
@@ -392,7 +410,7 @@ FixedPoint &	FixedPoint::operator <<= (int nbr_bits)
 {
 	shift_left (nbr_bits);
 
-	return (*this);
+	return *this;
 }
 
 
@@ -401,7 +419,7 @@ FixedPoint &	FixedPoint::operator >>= (int nbr_bits)
 {
 	shift_right (nbr_bits);
 
-	return (*this);
+	return *this;
 }
 
 
@@ -431,42 +449,42 @@ void	FixedPoint::mul_flt (double val)
 
 bool	operator == (const FixedPoint &left, const FixedPoint &right)
 {
-	return (left._val._all == right._val._all);
+	return left._val._all == right._val._all;
 }
 
 
 
 bool	operator != (const FixedPoint &left, const FixedPoint &right)
 {
-	return (left._val._all != right._val._all);
+	return left._val._all != right._val._all;
 }
 
 
 
 bool	operator < (const FixedPoint &left, const FixedPoint &right)
 {
-	return (left._val._all < right._val._all);
+	return left._val._all < right._val._all;
 }
 
 
 
 bool	operator <= (const FixedPoint &left, const FixedPoint &right)
 {
-	return (left._val._all <= right._val._all);
+	return left._val._all <= right._val._all;
 }
 
 
 
 bool	operator > (const FixedPoint &left, const FixedPoint &right)
 {
-	return (left._val._all > right._val._all);
+	return left._val._all > right._val._all;
 }
 
 
 
 bool	operator >= (const FixedPoint &left, const FixedPoint &right)
 {
-	return (left._val._all >= right._val._all);
+	return left._val._all >= right._val._all;
 }
 
 

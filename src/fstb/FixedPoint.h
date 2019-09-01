@@ -97,6 +97,8 @@ public:
 	inline void    add_frac (uint32_t frac_val, int32_t and_val);
 	inline FixedPoint &
 	               operator += (const FixedPoint &other);
+	inline FixedPoint &
+	               operator += (int32_t int_val);
 
 	inline void    sub (const FixedPoint &val);
 	inline void    sub (const FixedPoint &val, int32_t and_val);
@@ -106,6 +108,8 @@ public:
 	inline void    sub_frac (uint32_t frac_val, int32_t and_val);
 	inline FixedPoint &
 	               operator -= (const FixedPoint &other);
+	inline FixedPoint &
+	               operator -= (int32_t int_val);
 
 	inline void    shift (int nbr_bits);
 	inline void    shift_left (int nbr_bits);
