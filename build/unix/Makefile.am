@@ -469,6 +469,12 @@ commonsrc = \
         ../../src/mfx/dsp/nz/WhiteFast.cpp \
         ../../src/mfx/dsp/nz/WhiteFast.h \
         ../../src/mfx/dsp/nz/WhiteFast.hpp \
+        ../../src/mfx/dsp/osc/OscSample.h \
+        ../../src/mfx/dsp/osc/OscSample.hpp \
+        ../../src/mfx/dsp/osc/OscSampleSyncFade.h \
+        ../../src/mfx/dsp/osc/OscSampleSyncFade.hpp \
+        ../../src/mfx/dsp/osc/OscSampleSyncHard.h \
+        ../../src/mfx/dsp/osc/OscSampleSyncHard.hpp \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.h \
         ../../src/mfx/dsp/osc/OscSinCosStable.h \
@@ -1160,6 +1166,12 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
+        ../../src/test/TestOscSample.cpp \
+        ../../src/test/TestOscSample.h \
+        ../../src/test/TestOscSampleSyncFade.cpp \
+        ../../src/test/TestOscSampleSyncFade.h \
+        ../../src/test/TestOscSampleSyncHard.cpp \
+        ../../src/test/TestOscSampleSyncHard.h \
         ../../src/test/TestRemez.cpp \
         ../../src/test/TestRemez.h \
         ../../src/test/TestSampleMipMapper.cpp \

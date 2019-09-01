@@ -511,6 +511,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\PinkShade.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSample.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSample.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSampleSyncFade.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSampleSyncFade.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSampleSyncHard.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSampleSyncHard.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSinCosStable.hpp" />

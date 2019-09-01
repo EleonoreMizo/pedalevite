@@ -54,6 +54,9 @@
 #include "test/TestConvolverFft.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
+#include "test/TestOscSample.h"
+#include "test/TestOscSampleSyncFade.h"
+#include "test/TestOscSampleSyncHard.h"
 #include "test/TestRemez.h"
 #include "test/TestSampleMipMapper.h"
 
@@ -1622,6 +1625,18 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestOscSampleSyncFade::perform_test ();
+#endif
+
+#if 1
+	if (ret_val == 0) ret_val = TestOscSampleSyncHard::perform_test ();
+#endif
+
+#if 1
+	if (ret_val == 0) ret_val = TestOscSample::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestSampleMipMapper::perform_test ();
 #endif
 

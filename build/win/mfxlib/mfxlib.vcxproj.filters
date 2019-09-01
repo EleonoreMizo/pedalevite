@@ -2766,6 +2766,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetableMipMapper.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSample.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSample.hpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleData.h">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
@@ -2789,6 +2795,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFtor.hpp">
       <Filter>mfx\dsp\rspl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSampleSyncFade.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSampleSyncFade.hpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSampleSyncHard.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSampleSyncHard.hpp">
+      <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WpdGen.h">
       <Filter>mfx\dsp\osc</Filter>
