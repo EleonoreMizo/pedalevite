@@ -1137,8 +1137,6 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/BufferFiller.cpp \
         ../../src/test/BufferFiller.h \
         ../../src/test/EPSPlot.h \
-        ../../src/test/FileOp.cpp \
-        ../../src/test/FileOp.h \
         ../../src/test/GraphPrim.cpp \
         ../../src/test/GraphPrim.h \
         ../../src/test/Gridaxis.cpp \
