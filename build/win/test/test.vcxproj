@@ -94,6 +94,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\test\Axis.cpp" />
     <ClCompile Include="..\..\..\src\test\BufferFiller.cpp" />
+    <ClCompile Include="..\..\..\src\test\FileOp.cpp" />
     <ClCompile Include="..\..\..\src\test\GraphPrim.cpp" />
     <ClCompile Include="..\..\..\src\test\Gridaxis.cpp" />
     <ClCompile Include="..\..\..\src\test\main.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="..\..\..\src\test\Axis.h" />
     <ClInclude Include="..\..\..\src\test\BufferFiller.h" />
     <ClInclude Include="..\..\..\src\test\EPSPlot.h" />
+    <ClInclude Include="..\..\..\src\test\FileOp.h" />
     <ClInclude Include="..\..\..\src\test\GraphPrim.h" />
     <ClInclude Include="..\..\..\src\test\Gridaxis.h" />
     <ClInclude Include="..\..\..\src\test\TestInterpPhase.h" />
