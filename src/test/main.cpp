@@ -53,6 +53,7 @@
 #include "test/Gridaxis.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
+#include "test/TestRemez.h"
 
 #include <algorithm>
 #include <array>
@@ -1619,10 +1620,14 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestRemez::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestInterpFtor::perform_test ();
 #endif
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = test_osc_sin_cos_stable_simd ();
 #endif
 

@@ -1151,6 +1151,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
+        ../../src/test/TestRemez.cpp \
+        ../../src/test/TestRemez.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \

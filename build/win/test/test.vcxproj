@@ -99,6 +99,7 @@
     <ClCompile Include="..\..\..\src\test\Gridaxis.cpp" />
     <ClCompile Include="..\..\..\src\test\main.cpp" />
     <ClCompile Include="..\..\..\src\test\TestInterpFtor.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestRemez.cpp" />
     <ClCompile Include="..\..\..\src\test\TimerAccurate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +112,7 @@
     <ClInclude Include="..\..\..\src\test\TestInterpFtor.h" />
     <ClInclude Include="..\..\..\src\test\TestInterpPhase.h" />
     <ClInclude Include="..\..\..\src\test\TestInterpPhase.hpp" />
+    <ClInclude Include="..\..\..\src\test\TestRemez.h" />
     <ClInclude Include="..\..\..\src\test\TimerAccurate.h" />
     <ClInclude Include="..\..\..\src\test\TimerAccurate.hpp" />
   </ItemGroup>
