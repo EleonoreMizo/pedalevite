@@ -475,6 +475,11 @@ commonsrc = \
         ../../src/mfx/dsp/osc/OscSinCosStable.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
+        ../../src/mfx/dsp/osc/SampleData.h \
+        ../../src/mfx/dsp/osc/SampleData.hpp \
+        ../../src/mfx/dsp/osc/SampleDataTplPar.h \
+        ../../src/mfx/dsp/osc/SampleMipMapper.h \
+        ../../src/mfx/dsp/osc/SampleMipMapper.hpp \
         ../../src/mfx/dsp/osc/SweepingSin.cpp \
         ../../src/mfx/dsp/osc/SweepingSin.h \
         ../../src/mfx/dsp/osc/WavetableData.h \
@@ -1157,6 +1162,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpPhase.hpp \
         ../../src/test/TestRemez.cpp \
         ../../src/test/TestRemez.h \
+        ../../src/test/TestSampleMipMapper.cpp \
+        ../../src/test/TestSampleMipMapper.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \

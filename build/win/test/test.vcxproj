@@ -101,6 +101,7 @@
     <ClCompile Include="..\..\..\src\test\TestConvolverFft.cpp" />
     <ClCompile Include="..\..\..\src\test\TestInterpFtor.cpp" />
     <ClCompile Include="..\..\..\src\test\TestRemez.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestSampleMipMapper.cpp" />
     <ClCompile Include="..\..\..\src\test\TimerAccurate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,7 @@
     <ClInclude Include="..\..\..\src\test\TestInterpPhase.h" />
     <ClInclude Include="..\..\..\src\test\TestInterpPhase.hpp" />
     <ClInclude Include="..\..\..\src\test\TestRemez.h" />
+    <ClInclude Include="..\..\..\src\test\TestSampleMipMapper.h" />
     <ClInclude Include="..\..\..\src\test\TimerAccurate.h" />
     <ClInclude Include="..\..\..\src\test\TimerAccurate.hpp" />
   </ItemGroup>

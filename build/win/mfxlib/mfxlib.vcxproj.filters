@@ -2766,6 +2766,21 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetableMipMapper.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleData.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleData.hpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleDataTplPar.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleMipMapper.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleMipMapper.hpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\ConvolverFft.h">
       <Filter>mfx\dsp\fir</Filter>
     </ClInclude>
