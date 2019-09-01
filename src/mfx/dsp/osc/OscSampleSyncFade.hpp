@@ -607,7 +607,6 @@ void	OscSampleSyncFade <OSC>::check_and_handle_sync_point ()
 		assert ((int64_t (-2) >> 1) == -1);
 
 		// Calculate oscillator phase for the next generated sample
-		const int      resol = 20;
 		const float    phase_inc_flt =
 			_spl_to_next_sync.get_val_flt () * _wave_freq_spl.get_val_flt ();
 		const fstb::FixedPoint	phase_inc (phase_inc_flt);

@@ -115,9 +115,9 @@ const typename WavetablePolyphaseData <PLEN, NPL2, DT>::DataType *	WavetablePoly
 template <int PLEN, int NPL2, typename DT>
 void	WavetablePolyphaseData <PLEN, NPL2, DT>::clear_table (int phase)
 {
-	for (auto &phase : _data_arr)
+	for (auto &ph_dat : _data_arr)
 	{
-		memset (&phase [0], 0, PHASE_LEN * sizeof (phase [0]));
+		memset (&ph_dat [0], 0, PHASE_LEN * sizeof (ph_dat [0]));
 	}
 }
 
