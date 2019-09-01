@@ -320,13 +320,14 @@ Throws: Nothing
 
 uint32_t	Approx::fast_partial_exp2_int_16_to_int_32 (int val)
 {
-	const uint32_t c0 = 0x80000000U;
-	const uint32_t c1 = 2863311531U;
 	const uint32_t c2 = 1431655766U;
 
 	uint32_t       result;
 
 #if defined (_MSC_VER)
+
+	const uint32_t c0 = 0x80000000U;
+	const uint32_t c1 = 2863311531U;
 
 	result   = val;
 	result <<= 15;
