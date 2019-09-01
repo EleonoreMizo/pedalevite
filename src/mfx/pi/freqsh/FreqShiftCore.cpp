@@ -130,8 +130,8 @@ void	FreqShiftCore::process_block (float * const dst_ptr_arr [], const float * c
 		);
 
 		_ali->_chn_arr [c]._ssb.process_block (
-			&_buf_arr [Buf_PHC] [0],
 			&_buf_arr [Buf_PHS] [0],
+			&_buf_arr [Buf_PHC] [0],
 			&_buf_arr [Buf_AAF] [0],
 			nbr_spl
 		);
