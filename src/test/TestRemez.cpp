@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "test/TimerAccurate.h"
 
 #include <cassert>
+#include <cstdio>
 
 
 
