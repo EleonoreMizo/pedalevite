@@ -4,9 +4,9 @@ commonflags = $(MFLAGS) $(warningflags) $(includeflags)
 AM_CXXFLAGS = -std=c++11 $(commonflags)
 AM_LDFLAGS  = `pkg-config --cflags --libs jack` -lbcm_host -lasound -lwiringPi -lpthread -L/opt/vc/lib $(PLUGINLDFLAGS)
 
-bin_PROGRAMS = pedalevite
+bin_PROGRAMS = pedalevite mfxtest
 
-pedalevite_SOURCES = \
+commonsrc = \
         ../../src/conc/AioAdd.h \
         ../../src/conc/AioAdd.hpp \
         ../../src/conc/AioMax.h \
@@ -379,6 +379,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.h \
         ../../src/mfx/dsp/dly/SCPower.h \
         ../../src/mfx/dsp/dly/SCPower.hpp \
+        ../../src/mfx/dsp/fir/ConvolverFft.cpp \
+        ../../src/mfx/dsp/fir/ConvolverFft.h \
         ../../src/mfx/dsp/fir/MovingSum.h \
         ../../src/mfx/dsp/fir/MovingSum.hpp \
         ../../src/mfx/dsp/fir/RankSelA.cpp \
@@ -467,12 +469,23 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/nz/WhiteFast.cpp \
         ../../src/mfx/dsp/nz/WhiteFast.h \
         ../../src/mfx/dsp/nz/WhiteFast.hpp \
+        ../../src/mfx/dsp/osc/OscSample.h \
+        ../../src/mfx/dsp/osc/OscSample.hpp \
+        ../../src/mfx/dsp/osc/OscSampleSyncFade.h \
+        ../../src/mfx/dsp/osc/OscSampleSyncFade.hpp \
+        ../../src/mfx/dsp/osc/OscSampleSyncHard.h \
+        ../../src/mfx/dsp/osc/OscSampleSyncHard.hpp \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosEulerSimd.h \
         ../../src/mfx/dsp/osc/OscSinCosStable.h \
         ../../src/mfx/dsp/osc/OscSinCosStable.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
+        ../../src/mfx/dsp/osc/SampleData.h \
+        ../../src/mfx/dsp/osc/SampleData.hpp \
+        ../../src/mfx/dsp/osc/SampleDataTplPar.h \
+        ../../src/mfx/dsp/osc/SampleMipMapper.h \
+        ../../src/mfx/dsp/osc/SampleMipMapper.hpp \
         ../../src/mfx/dsp/osc/SweepingSin.cpp \
         ../../src/mfx/dsp/osc/SweepingSin.h \
         ../../src/mfx/dsp/osc/WavetableData.h \
@@ -488,6 +501,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/dsp/rspl/InterpFirMakerLagrange4.hpp \
         ../../src/mfx/dsp/rspl/InterpFirPolyphase.h \
         ../../src/mfx/dsp/rspl/InterpFirPolyphase.hpp \
+        ../../src/mfx/dsp/rspl/InterpFtor.h \
+        ../../src/mfx/dsp/rspl/InterpFtor.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorFir.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorHermite43.cpp \
@@ -1126,5 +1141,26 @@ pedalevite_SOURCES = \
         ../../src/mfx/WorldAudio.cpp \
         ../../src/mfx/WorldAudio.h \
         ../../src/mailbox.c \
-        ../../src/mailbox.h \
+        ../../src/mailbox.h
+
+pedalevite_SOURCES = $(commonsrc) \
         ../../src/main.cpp
+
+mfxtest_SOURCES = $(commonsrc) \
+        ../../src/test/Axis.cpp \
+        ../../src/test/Axis.h \
+        ../../src/test/BufferFiller.cpp \
+        ../../src/test/BufferFiller.h \
+        ../../src/test/EPSPlot.h \
+        ../../src/test/FileOp.cpp \
+        ../../src/test/FileOp.h \
+        ../../src/test/GraphPrim.cpp \
+        ../../src/test/GraphPrim.h \
+        ../../src/test/Gridaxis.cpp \
+        ../../src/test/Gridaxis.h \
+        ../../src/test/TestInterpPhase.h \
+        ../../src/test/TestInterpPhase.hpp \
+        ../../src/test/TimerAccurate.cpp \
+        ../../src/test/TimerAccurate.h \
+        ../../src/test/TimerAccurate.hpp \
+        ../../src/test/main.cpp
