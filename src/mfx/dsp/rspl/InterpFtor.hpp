@@ -24,6 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#if fstb_IS (ARCHI, ARM)
+	#include <arm_neon.h>
+#endif
+
 #include <cassert>
 
 
