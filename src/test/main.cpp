@@ -19,6 +19,7 @@
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/nz/WhiteFast.h"
+#include "mfx/dsp/osc/OscSinCosStableSimd.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
 #include "mfx/dsp/rspl/InterpPhaseFpu.h"
 #include "mfx/dsp/rspl/InterpPhaseSimd.h"
@@ -50,6 +51,7 @@
 #include "test/EPSPlot.h"
 #include "test/FileOp.h"
 #include "test/Gridaxis.h"
+#include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
 
 #include <algorithm>
@@ -1558,6 +1560,58 @@ int	test_queue_ret ()
 
 
 
+int test_osc_sin_cos_stable_simd ()
+{
+	int            ret_val = 0;
+
+	printf ("Testing OscSinCosStableSimd...\n");
+
+	float          step = 1e-3f;
+	const float    tol  = 1e-5f;
+	mfx::dsp::osc::OscSinCosStableSimd   osc;
+
+	const int      len_vec = 10000;
+	const int      len     = len_vec * 4;
+	std::vector <float>  cos_arr (len);
+	std::vector <float>  sin_arr (len);
+
+	osc.clear_buffers ();
+	osc.set_step (step);
+	osc.process_block (&cos_arr [0], &sin_arr [0], len_vec);
+
+	double         err_sum = 0;
+	float          err_max = 0;
+	for (int pos = 0; pos < len && ret_val == 0; ++pos)
+	{
+		const double   angle = pos * step;
+		const float    c     = float (cos (angle));
+		const float    s     = float (sin (angle));
+
+		const float    dif_c = fabs (cos_arr [pos] - c);
+		const float    dif_s = fabs (sin_arr [pos] - s);
+
+		if (dif_c > tol || dif_s > tol)
+		{
+			printf ("Error at position %d\n", pos);
+			ret_val = -1;
+		}
+
+		err_sum += dif_c + dif_s;
+		err_max = std::max (err_max, dif_c);
+		err_max = std::max (err_max, dif_s);
+	}
+
+	if (ret_val == 0)
+	{
+		const double   err = err_sum / (len * 2);
+		printf ("Average error: %g. Maximum: %g\n", err, err_max);
+	}
+
+	return ret_val;
+}
+
+
+
 int main (int argc, char *argv [])
 {
 	mfx::dsp::mix::Generic::setup ();
@@ -1565,6 +1619,14 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestInterpFtor::perform_test ();
+#endif
+
+#if 1
+	if (ret_val == 0) ret_val = test_osc_sin_cos_stable_simd ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseFpu <4>, 6>::perform_test ();
 	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseSimd <4>, 6>::perform_test ();
 	if (ret_val == 0) ret_val = TestInterpPhase <mfx::dsp::rspl::InterpPhaseFpu <12>, 6>::perform_test ();

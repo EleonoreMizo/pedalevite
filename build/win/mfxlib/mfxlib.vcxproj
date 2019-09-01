@@ -530,6 +530,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerLagrange4.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirPolyphase.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirPolyphase.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFtor.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFtor.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorFir.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorFir.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43.h" />

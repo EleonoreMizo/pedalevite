@@ -490,6 +490,8 @@ commonsrc = \
         ../../src/mfx/dsp/rspl/InterpFirMakerLagrange4.hpp \
         ../../src/mfx/dsp/rspl/InterpFirPolyphase.h \
         ../../src/mfx/dsp/rspl/InterpFirPolyphase.hpp \
+        ../../src/mfx/dsp/rspl/InterpFtor.h \
+        ../../src/mfx/dsp/rspl/InterpFtor.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorFir.h \
         ../../src/mfx/dsp/rspl/InterpolatorFir.hpp \
         ../../src/mfx/dsp/rspl/InterpolatorHermite43.cpp \
