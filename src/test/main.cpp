@@ -51,6 +51,7 @@
 #include "test/EPSPlot.h"
 #include "test/FileOp.h"
 #include "test/Gridaxis.h"
+#include "test/TestConvolverFft.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
 #include "test/TestRemez.h"
@@ -1620,6 +1621,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestConvolverFft::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestRemez::perform_test ();
 #endif
 

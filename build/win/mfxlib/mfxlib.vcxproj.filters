@@ -2766,6 +2766,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetableMipMapper.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\ConvolverFft.h">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFtor.h">
       <Filter>mfx\dsp\rspl</Filter>
     </ClInclude>
@@ -3829,6 +3832,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\osc\SweepingSin.cpp">
       <Filter>mfx\dsp\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\fir\ConvolverFft.cpp">
+      <Filter>mfx\dsp\fir</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -379,6 +379,8 @@ commonsrc = \
         ../../src/mfx/dsp/dyn/MeterRmsPeakHold4Simd.h \
         ../../src/mfx/dsp/dly/SCPower.h \
         ../../src/mfx/dsp/dly/SCPower.hpp \
+        ../../src/mfx/dsp/fir/ConvolverFft.cpp \
+        ../../src/mfx/dsp/fir/ConvolverFft.h \
         ../../src/mfx/dsp/fir/MovingSum.h \
         ../../src/mfx/dsp/fir/MovingSum.hpp \
         ../../src/mfx/dsp/fir/RankSelA.cpp \
@@ -1147,6 +1149,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/GraphPrim.h \
         ../../src/test/Gridaxis.cpp \
         ../../src/test/Gridaxis.h \
+        ../../src/test/TestConvolverFft.cpp \
+        ../../src/test/TestConvolverFft.h \
         ../../src/test/TestInterpFtor.cpp \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
