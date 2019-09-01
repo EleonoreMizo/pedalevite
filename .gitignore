@@ -31,6 +31,8 @@ missing
 .deps
 .dirstamp
 build/unix/pedalevite
+build/unix/mfxtest
+build/unix/results/
 **/test/results/
 art/*.h
 etc/config/current*
