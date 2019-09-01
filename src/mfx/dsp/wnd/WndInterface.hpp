@@ -39,6 +39,9 @@ namespace wnd
 
 
 
+// Center of the window is exactly at (len - 1) / 2.
+// The array does not include the bounds of the window (+/-1), which means
+// that usually data_ptr [0] and data_ptr [len - 1] are not null.
 template <class T>
 void	WndInterface <T>::make_win (T data_ptr [], int len)
 {

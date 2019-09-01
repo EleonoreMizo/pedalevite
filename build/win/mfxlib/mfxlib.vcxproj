@@ -521,6 +521,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetableMipMapper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetablePolyphaseData.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WavetablePolyphaseData.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\WpdGen.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\WpdGen.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerHermite4.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\rspl\InterpFirMakerHermite4.hpp" />

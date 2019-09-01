@@ -481,6 +481,8 @@ commonsrc = \
         ../../src/mfx/dsp/osc/WavetableMipMapper.hpp \
         ../../src/mfx/dsp/osc/WavetablePolyphaseData.h \
         ../../src/mfx/dsp/osc/WavetablePolyphaseData.hpp \
+        ../../src/mfx/dsp/osc/WpdGen.h \
+        ../../src/mfx/dsp/osc/WpdGen.hpp \
         ../../src/mfx/dsp/rspl/Cst.h \
         ../../src/mfx/dsp/rspl/InterpFirMakerHermite4.h \
         ../../src/mfx/dsp/rspl/InterpFirMakerHermite4.hpp \
