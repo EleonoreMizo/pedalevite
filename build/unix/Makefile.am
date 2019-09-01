@@ -1147,6 +1147,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/GraphPrim.h \
         ../../src/test/Gridaxis.cpp \
         ../../src/test/Gridaxis.h \
+        ../../src/test/TestInterpFtor.cpp \
+        ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
         ../../src/test/TimerAccurate.cpp \
