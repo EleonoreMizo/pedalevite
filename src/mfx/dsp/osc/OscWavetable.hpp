@@ -51,8 +51,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::reset_phase ()
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::reset_phase ()
 {
 	_pos.clear ();
 }
@@ -71,8 +71,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_phase_flt (float phase)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_phase_flt (float phase)
 {
 	assert (phase >= 0);
 	assert (phase < 1);
@@ -94,8 +94,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-float	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::get_phase_flt () const
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+float	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_flt () const
 {
 	assert (_cur_table_len > 0);
 
@@ -116,8 +116,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_phase_int (uint32_t phase)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_phase_int (uint32_t phase)
 {
 	assert (_cur_table_len > 0);
 
@@ -137,8 +137,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-uint32_t	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::get_phase_int () const
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+uint32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_int () const
 {
 	assert (_cur_table_len > 0);
 
@@ -161,16 +161,16 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_base_pitch (int32_t pitch)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_base_pitch (int32_t pitch)
 {
 	_base_pitch = pitch;
 }
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-int32_t	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::get_base_pitch () const
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+int32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_base_pitch () const
 {
 	return _base_pitch;
 }
@@ -188,8 +188,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_pitch (int32_t pitch)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_pitch (int32_t pitch)
 {
 	assert (pitch < _base_pitch);
 
@@ -232,8 +232,8 @@ void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_pitch (int32_t pitc
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-int32_t	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::get_pitch () const
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+int32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_pitch () const
 {
 	return _pitch;
 }
@@ -254,8 +254,8 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_pitch_no_table_update (int32_t pitch)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_pitch_no_table_update (int32_t pitch)
 {
 	const int      rel_pitch = pitch - _base_pitch;
 	int            table     =
@@ -279,8 +279,8 @@ void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_pitch_no_table_upda
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_wavetable (const WavetableDataType &wavetable)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_wavetable (const WavetableDataType &wavetable)
 {
 	assert (&wavetable != 0);
 
@@ -289,8 +289,8 @@ void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::set_wavetable (const Wa
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-const typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::WavetableDataType &	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::use_wavetable () const
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+const typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableDataType &	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_wavetable () const
 {
 	assert (_wavetable_ptr != 0);
 
@@ -299,8 +299,8 @@ const typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::WavetableData
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::get_sample_at_phase_flt (float phase)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample_at_phase_flt (float phase)
 {
 	assert (_wavetable_ptr != 0);
 	assert (_cur_table_len > 0);
@@ -317,8 +317,8 @@ typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	OscWavetab
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::get_sample_at_phase_int (uint32_t phase)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample_at_phase_int (uint32_t phase)
 {
 	assert (_wavetable_ptr != 0);
 	assert (_cur_table_len > 0);
@@ -334,8 +334,8 @@ typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	OscWavetab
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::get_cur_sample () const
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_cur_sample () const
 {
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
 	const float    frac_pos   = _pos.get_frac_val_flt ();
@@ -347,8 +347,8 @@ typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	OscWavetab
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::process_sample ()
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_sample ()
 {
 	const DataType val = get_cur_sample ();
 	_pos.add (_step, _cur_table_mask);
@@ -358,8 +358,8 @@ typename OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	OscWavetab
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::process_block (typename OscWavetable::DataType dest_ptr [], int nbr_spl)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_block (typename OscWavetable::DataType dest_ptr [], int nbr_spl)
 {
 	assert (_wavetable_ptr != 0);
 	assert (nbr_spl > 0);
@@ -376,8 +376,8 @@ void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::process_block (typename
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::process_block_mix (typename OscWavetable::DataType dest_ptr [], int nbr_spl)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_block_mix (typename OscWavetable::DataType dest_ptr [], int nbr_spl)
 {
 	assert (_wavetable_ptr != 0);
 	assert (nbr_spl > 0);
@@ -394,8 +394,8 @@ void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::process_block_mix (type
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::skip_block (int nbr_spl)
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::skip_block (int nbr_spl)
 {
 	assert (_wavetable_ptr != 0);
 	assert (nbr_spl > 0);
@@ -409,8 +409,8 @@ void	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::skip_block (int nbr_spl
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-int32_t	OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST>::conv_freq_to_pitch (float freq, float fs) const
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+int32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::conv_freq_to_pitch (float freq, float fs) const
 {
 	assert (freq > 0);
 	assert (fs > 0);

@@ -39,8 +39,8 @@ namespace osc
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::WavetableData ()
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableData ()
 :	_data ()
 {
 	// Build tables. Not a big deal if it's done more than once...
@@ -49,8 +49,8 @@ WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::WavetableData ()
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::set_sample (int table, int pos, DataType val)
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_sample (int table, int pos, DataType val)
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -62,8 +62,8 @@ void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::set_sample (int table, int
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::get_sample (int table, int pos) const
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample (int table, int pos) const
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -75,8 +75,8 @@ typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType	WavetableData
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType *	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::use_table (int table)
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType *	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_table (int table)
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -86,8 +86,8 @@ typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType *	WavetableDa
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-const typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType *	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::use_table (int table) const
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+const typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType *	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_table (int table) const
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -97,8 +97,8 @@ const typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::DataType *	Wavet
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::update_table_unroll (int table)
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::update_table_unroll (int table)
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -121,8 +121,8 @@ void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::update_table_unroll (int t
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::update_all_tables_unroll ()
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::update_all_tables_unroll ()
 {
 	const int      nbr_tables = get_nbr_tables ();
 	for (int table = 0; table < nbr_tables; ++table)
@@ -133,8 +133,8 @@ void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::update_all_tables_unroll (
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::clear_table (int table)
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::clear_table (int table)
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -149,16 +149,16 @@ void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::clear_table (int table)
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::get_nbr_tables ()
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_nbr_tables ()
 {
 	return MAX_SIZE_LOG2 + 1;
 }
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::get_table_len (int table)
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_len (int table)
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -168,8 +168,8 @@ int	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::get_table_len (int table)
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::get_table_len_log2 (int table)
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_len_log2 (int table)
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
@@ -179,13 +179,24 @@ int	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::get_table_len_log2 (int tab
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-int	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::get_table_mask (int table)
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_mask (int table)
 {
 	assert (table >= 0);
 	assert (table <= MAX_SIZE_LOG2);
 
 	return get_table_len (table) - 1;
+}
+
+
+
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+int	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_table_ovr_log2 (int table)
+{
+	assert (table >= 0);
+	assert (table <= MAX_SIZE_LOG2);
+
+	return _table_ovr_log2 [table];
 }
 
 
@@ -198,20 +209,25 @@ int	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::get_table_mask (int table)
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::build_table_index ()
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::build_table_index ()
 {
 	int            index      = DATA_ARR_SIZE;
 
 	const int      nbr_tables = get_nbr_tables ();
 	for (int table = 0; table < nbr_tables; ++table)
 	{
-		const int      table_size_l2 =
-			(table < MIN_SIZE_LOG2) ? MIN_SIZE_LOG2 : table;
+		const int      table_size_l2 = fstb::limit (
+			table + OVRSPL_LOG2,
+			int (MIN_SIZE_LOG2),
+			int (MAX_SIZE_LOG2)
+		);
 		const int      table_size = 1L << table_size_l2;
 
 		_table_size_log2 [table] = table_size_l2;
 		_table_size [table]      = table_size;
+		_table_ovr_log2 [table]  = table_size_l2 - table;
+
 		index                   -= table_size + UNROLL_POST;
 		_table_index [table]     = index;
 		index                   -= UNROLL_PRE;
@@ -222,14 +238,17 @@ void	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::build_table_index ()
 
 
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::TableInfArray	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::_table_index;
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::TableInfArray	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::_table_index;
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::TableInfArray	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::_table_size;
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::TableInfArray	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::_table_size;
 
-template <int MAXSL2, int MINSL2, typename DT, int UPRE, int UPOST>
-typename WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::TableInfArray	WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST>::_table_size_log2;
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::TableInfArray	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::_table_size_log2;
+
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::TableInfArray	WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::_table_ovr_log2;
 
 
 

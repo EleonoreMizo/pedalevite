@@ -44,7 +44,7 @@ namespace osc
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, typename DT = float, int UPRE = 1, int UPOST = 3>
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT = float, int UPRE = 1, int UPOST = 3>
 class OscWavetable
 {
 
@@ -52,9 +52,9 @@ class OscWavetable
 
 public:
 
-	typedef OscWavetable <IF, MAXSL2, MINSL2, DT, UPRE, UPOST> ThisType;
+	typedef OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST> ThisType;
 	typedef IF InterpFtor;
-	typedef WavetableData <MAXSL2, MINSL2, DT, UPRE, UPOST> WavetableDataType;
+	typedef WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST> WavetableDataType;
 	typedef typename WavetableDataType::DataType DataType;
 
 	static const int  PITCH_FRAC_BITS = 16;

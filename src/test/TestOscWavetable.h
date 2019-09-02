@@ -55,7 +55,7 @@ private:
 
 	typedef mfx::dsp::osc::OscWavetable <
 		mfx::dsp::rspl::InterpFtor::CubicHermite,
-		12, 6,
+		12, 6, 3,
 		float,
 		1, 3
 	> OscType;

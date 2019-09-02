@@ -3,10 +3,14 @@
         WavetableData.h
         Author: Laurent de Soras, 2019
 
+Tables may be oversampled; the oversampling is constrained by the minimum and
+maximum sizes of a wavetable.
+
 Template parameters:
 
 - MAXSL2: log2 of the maximum size of the wavetable
-- MINSL2: log2 of the minimum size of the wavetable, >= 0, <= MAXSL2
+- MINSL2: log2 of the minimum size of the wavetable, [0 ; MAXSL2]
+- OVRL2: log2 of the data oversampling, [0 ; MINSL2] 
 - DT: type of stored data
 - UPRE: number of unrolled samples at the begining of each wave, >= 0
 - UPOST: number of unrolled samples at the end of each wave, >= 0
@@ -50,13 +54,15 @@ namespace osc
 
 
 
-template <int MAXSL2, int MINSL2, typename DT = float, int UPRE = 1, int UPOST = 3>
+template <int MAXSL2, int MINSL2, int OVRL2, typename DT = float, int UPRE = 1, int UPOST = 3>
 class WavetableData
 {
 	static_assert (MAXSL2 >= 0, "");
 	static_assert (MAXSL2 <= 16, "");
 	static_assert (MINSL2 >= 0, "");
 	static_assert (MINSL2 <= MAXSL2, "");
+	static_assert (OVRL2 >= 0, "");
+	static_assert (OVRL2 <= MAXSL2 - MINSL2, "");
 	static_assert (UPRE >= 0, "");
 	static_assert (UPOST >= 0, "");
 
@@ -68,6 +74,8 @@ public:
 	static const int  MAX_SIZE      = 1 << MAX_SIZE_LOG2;
 	static const int  MIN_SIZE_LOG2 = MINSL2;
 	static const int  MIN_SIZE      = 1 << MIN_SIZE_LOG2;
+	static const int  OVRSPL_LOG2   = OVRL2;
+	static const int  OVRSPL        = 1 << OVRSPL_LOG2;
 	static const int  UNROLL_PRE    = UPRE;
 	static const int  UNROLL_POST   = UPOST;
 
@@ -96,6 +104,8 @@ public:
 	               get_table_len_log2 (int table);
 	static inline int
 	               get_table_mask (int table);
+	static inline int
+	               get_table_ovr_log2 (int table);
 
 
 
@@ -109,21 +119,30 @@ protected:
 
 private:
 
-	// Wavetables between MIN_SIZE_LOG2 and MAX_SIZE_LOG2 are 2^k-sample big.
+	// Wavetables from MAX_SIZE_LOG2-OVRSPL_LOG2 to MAX_SIZE_LOG2 are
+	// of constant size
+	static const int  UPPER_WT_SIZE = (1 << MAX_SIZE_LOG2) * OVRSPL_LOG2;
+
+	// Wavetables between MIN_SIZE_LOG2-OVRSPL_LOG2 and MAX_SIZE_LOG2-OVRSPL_LOG2 are
+	// 2^k-sample big.
 	// Total size of these tables  :
 	// size = sum (2^k, k=a..b)
 	//      = 2^a * sum (2^k, k=0..b-a)
 	//      = 2^a * (2^(b-a+1) - 1)
-	static const int  UPPER_WT_SIZE = ((2 << (MAX_SIZE_LOG2 - MIN_SIZE_LOG2)) - 1) << MIN_SIZE_LOG2;
+	static const int  OVR_WT_SIZE =
+		((2 << (MAX_SIZE_LOG2 - MIN_SIZE_LOG2)) - 1) << MIN_SIZE_LOG2;
 
-	// Wavetables between 0 and MIN_SIZE_LOG2 are 2^MIN_SIZE_LOG2-sample big
-	static const int  LOWER_WT_SIZE = (1 << MIN_SIZE_LOG2) * MIN_SIZE_LOG2;
+	// Wavetables between 0 and MIN_SIZE_LOG2-OVRSPL_LOG2 are 2^MIN_SIZE_LOG2-sample big
+	static const int  LOWER_WT_SIZE =
+		(1 << MIN_SIZE_LOG2) * (MIN_SIZE_LOG2 - OVRSPL_LOG2);
 
 	// Add UNROLL_PRE and UNROLL_POST samples for every tables
-	static const int  UNROLL_WT_SIZE = (MAX_SIZE_LOG2 + 1) * (UNROLL_PRE + UNROLL_POST);
+	static const int  UNROLL_WT_SIZE =
+		(MAX_SIZE_LOG2 + 1) * (UNROLL_PRE + UNROLL_POST);
 
 	// Total size of all tables
-	static const int  DATA_ARR_SIZE	= UPPER_WT_SIZE + LOWER_WT_SIZE + UNROLL_WT_SIZE;
+	static const int  DATA_ARR_SIZE	=
+		UPPER_WT_SIZE + OVR_WT_SIZE + LOWER_WT_SIZE + UNROLL_WT_SIZE;
 
 	typedef std::array <DataType, DATA_ARR_SIZE> TableData;
 	typedef std::array <int, MAX_SIZE_LOG2 + 1> TableInfArray;
@@ -138,6 +157,8 @@ private:
 	               _table_size;
 	static TableInfArray                // Log base 2 of table sizes
 	               _table_size_log2;
+	static TableInfArray                // Log base 2 of table acutal oversampling
+	               _table_ovr_log2;
 
 
 
