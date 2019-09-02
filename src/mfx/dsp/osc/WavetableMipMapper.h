@@ -76,7 +76,7 @@ private:
 
 	typedef ffft::FFTRealFixLen <WavetableDataType::MAX_SIZE_LOG2> FftType;
 	typedef std::shared_ptr <FftType> FftSPtr;
-	typedef std::vector <FftType::DataType> TmpBuffer;
+	typedef std::vector <typename FftType::DataType> TmpBuffer;
 
 	FftSPtr        _fft_sptr = FftSPtr (new FftType);
 	TmpBuffer      _bins     = TmpBuffer (WavetableDataType::MAX_SIZE);

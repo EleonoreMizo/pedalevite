@@ -77,7 +77,7 @@ public:
 	               ~WavetableData () = default;
 
 	inline void    set_sample (int table, int pos, DataType val);
-	archi_FORCEINLINE DataType
+	fstb_FORCEINLINE DataType
 	               get_sample (int table, int pos) const;
 	inline DataType *
 	               use_table (int table);
@@ -109,9 +109,6 @@ protected:
 
 private:
 
-	typedef std::array <DataType, DATA_ARR_SIZE> TableData;
-	typedef std::array <int, MAX_SIZE_LOG2 + 1> TableInfArray;
-
 	// Wavetables between MIN_SIZE_LOG2 and MAX_SIZE_LOG2 are 2^k-sample big.
 	// Total size of these tables  :
 	// size = sum (2^k, k=a..b)
@@ -128,13 +125,19 @@ private:
 	// Total size of all tables
 	static const int  DATA_ARR_SIZE	= UPPER_WT_SIZE + LOWER_WT_SIZE + UNROLL_WT_SIZE;
 
+	typedef std::array <DataType, DATA_ARR_SIZE> TableData;
+	typedef std::array <int, MAX_SIZE_LOG2 + 1> TableInfArray;
+
 	static void    build_table_index ();
 
 	TableData      _data;
 
-	TableInfArray  _table_index;        // Table index in the data array
-	TableInfArray  _table_size;         // Table sizes
-	TableInfArray  _table_size_log2;    // Log base 2 of table sizes
+	static TableInfArray                // Table index in the data array
+	               _table_index;
+	static TableInfArray                // Table sizes
+	               _table_size;
+	static TableInfArray                // Log base 2 of table sizes
+	               _table_size_log2;
 
 
 
