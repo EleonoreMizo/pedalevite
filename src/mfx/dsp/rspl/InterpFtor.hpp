@@ -101,9 +101,9 @@ int32_t	InterpFtor::Linear::operator () (uint32_t frac_pos, const int16_t data [
 
 	const int32_t     x0 = data [0];
 	const int32_t     x1 = data [1];
-	const int16x4_t   d  = vdup_n_s32 (x1 - x0);
-	const int16x4_t   f  = vdup_n_s32 (int32_t (frac_pos >> 1));
-	const int16x4_t   r  = vqrdmulh_s32 (d, f);
+	const int32x2_t   d  = vdup_n_s32 (x1 - x0);
+	const int32x2_t   f  = vdup_n_s32 (int32_t (frac_pos >> 1));
+	const int32x2_t   r  = vqrdmulh_s32 (d, f);
 
 	return vget_lane_s32 (r, 0) + x0;
 

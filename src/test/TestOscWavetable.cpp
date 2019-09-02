@@ -62,7 +62,7 @@ int	TestOscWavetable::perform_test ()
 	> OscTypeInt16;
 
 	int            ret_val = 0;
-	
+
 	if (ret_val == 0)
 	{
 		ret_val = test_valid <OscTypeFloat> ();
@@ -101,11 +101,11 @@ int	TestOscWavetable::test_valid ()
 {
 	typedef O OscType;
 	typedef typename OscType::DataType DataType;
-	
+
 	std::vector <float>  result_m;
 
 	OscType        osc;
-	OscType::WavetableDataType wt;
+	typename OscType::WavetableDataType wt;
 	configure_osc (osc, wt);
 	const int      base_pitch = osc.get_base_pitch ();
 
@@ -159,7 +159,7 @@ void	TestOscWavetable::test_speed ()
 	const int      nbr_blocks = 65536;
 
 	OscType        osc;
-	OscType::WavetableDataType	wt;
+	typename OscType::WavetableDataType wt;
 	configure_osc (osc, wt);
 	osc.set_pitch (osc.conv_freq_to_pitch (1000, 44100));
 
@@ -225,7 +225,8 @@ void	TestOscWavetable::configure_osc (O &osc, typename O::WavetableDataType &wt)
 	}
 
 	// Mipmapping
-	mfx::dsp::osc::WavetableMipMapper <OscType::WavetableDataType> mipmapper;
+	typedef typename OscType::WavetableDataType  WavetableDataType;
+	mfx::dsp::osc::WavetableMipMapper <WavetableDataType> mipmapper;
 	mipmapper.build_mipmaps (wt);
 
 	osc.set_wavetable (wt);
@@ -273,7 +274,7 @@ void	TestOscWavetable::add_result (std::vector <float> &result_m, const std::vec
 	std::for_each (
 		data.begin (),
 		data.end (),
-		[&] (const auto val)
+		[&] (const typename O::DataType val)
 		{
 			result_m.push_back (float (val) * scale_inv);
 		}
