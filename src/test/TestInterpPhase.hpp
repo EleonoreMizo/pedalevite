@@ -48,7 +48,7 @@ int	TestInterpPhase <T, NPL2>::perform_test ()
 
 	const std::string class_name =
 		fstb::lang::type_name <InterpPhaseUnaligned> ().to_str ();
-	printf ("Testing %s...\n", class_name_0);
+	printf ("Testing %s...\n", class_name.c_str ());
 
 	if (ret_val == 0)
 	{

@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "test/TimerAccurate.h"
 
 #include <limits>
+#include <typeinfo>
 #include <vector>
 
 #include <cassert>
@@ -140,7 +141,7 @@ int	TestOscWavetable::test_valid ()
 	add_result <O> (result_m, data);
 
 	std::string filename = "results/oscwavetable";
-	filename += fstb::lang::type_name <DataType> ().to_str ();
+	filename += typeid (DataType).name ();
 	filename += "0.wav";
 	FileOp::save_wav (filename.c_str (), result_m, 44100, 0.5f);
 
