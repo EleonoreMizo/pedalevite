@@ -56,6 +56,10 @@ public:
 		static const int  DATA_POST = 0;
 		fstb_FORCEINLINE float
 		               operator () (float frac_pos, const float data []) const;
+		fstb_FORCEINLINE float
+		               operator () (uint32_t frac_pos, const float data []) const;
+		fstb_FORCEINLINE int32_t
+		               operator () (uint32_t frac_pos, const int16_t data []) const;
 	};
 
 	class Linear
@@ -65,6 +69,10 @@ public:
 		static const int  DATA_POST = 1;
 		fstb_FORCEINLINE float
 		               operator () (float frac_pos, const float data []) const;
+		fstb_FORCEINLINE float
+		               operator () (uint32_t frac_pos, const float data []) const;
+		fstb_FORCEINLINE int32_t
+		               operator () (uint32_t frac_pos, const int16_t data []) const;
 	};
 
 	class CubicHermite

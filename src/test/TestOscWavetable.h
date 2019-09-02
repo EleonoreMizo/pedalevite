@@ -53,18 +53,20 @@ protected:
 
 private:
 
-	typedef mfx::dsp::osc::OscWavetable <
-		mfx::dsp::rspl::InterpFtor::CubicHermite,
-		12, 6, 3,
-		float,
-		1, 3
-	> OscType;
-
-	enum {			BASE_PITCH = 16L << OscType::PITCH_FRAC_BITS	};
-
+	template <typename O>
 	static int		test_valid ();
+
+	template <typename O>
 	static void		test_speed ();
-	static void		configure_osc (OscType &osc, typename OscType::WavetableDataType &wt);
+
+	template <typename O>
+	static void		configure_osc (O &osc, typename O::WavetableDataType &wt);
+
+	template <typename O>
+	static float   get_data_scale ();
+
+	template <typename O>
+	static void    add_result (std::vector <float> &result_m, const std::vector <typename O::DataType> &data);
 
 
 

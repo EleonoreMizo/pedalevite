@@ -31,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "test/TestOscWavetable.h"
 #include "test/TimerAccurate.h"
 
+#include <limits>
+#include <typeinfo>
 #include <vector>
 
 #include <cassert>
@@ -45,11 +47,40 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 int	TestOscWavetable::perform_test ()
 {
-	int            ret_val = test_valid ();
+	typedef mfx::dsp::osc::OscWavetable <
+		mfx::dsp::rspl::InterpFtor::CubicHermite,
+		12, 6, 3,
+		float,
+		1, 3
+	> OscTypeFloat;
+
+	typedef mfx::dsp::osc::OscWavetable <
+		mfx::dsp::rspl::InterpFtor::CubicHermite,
+		12, 6, 3,
+		int16_t,
+		1, 3
+	> OscTypeInt16;
+
+	int            ret_val = 0;
+	
+	if (ret_val == 0)
+	{
+		ret_val = test_valid <OscTypeFloat> ();
+	}
 
 	if (ret_val == 0)
 	{
-		test_speed ();
+		test_speed <OscTypeFloat> ();
+	}
+
+	if (ret_val == 0)
+	{
+		ret_val = test_valid <OscTypeInt16> ();
+	}
+
+	if (ret_val == 0)
+	{
+		test_speed <OscTypeInt16> ();
 	}
 
 	return (ret_val);
@@ -65,23 +96,28 @@ int	TestOscWavetable::perform_test ()
 
 
 
+template <typename O>
 int	TestOscWavetable::test_valid ()
 {
+	typedef O OscType;
+	typedef typename OscType::DataType DataType;
+	
 	std::vector <float>  result_m;
 
 	OscType        osc;
 	OscType::WavetableDataType wt;
 	configure_osc (osc, wt);
+	const int      base_pitch = osc.get_base_pitch ();
 
 	const int      sample_freq = 44100;
-	const int      block_len   = 256;
+	const int      block_len   = 64;
 	const int      len         = (sample_freq * 16) & ~(block_len - 1);
 	assert (len % block_len == 0);
-	std::vector <float>  data (len);
+	std::vector <DataType>  data (len);
 
 	const int      nbr_oct = 10;
 	const float    mult    = float (nbr_oct << OscType::PITCH_FRAC_BITS) / len;
-	const int32_t  offset  = BASE_PITCH - (nbr_oct << OscType::PITCH_FRAC_BITS);
+	const int32_t  offset  = base_pitch - (nbr_oct << OscType::PITCH_FRAC_BITS);
 	for (int pos = 0; pos < len; pos += block_len)
 	{
 		const int32_t  pitch = offset + fstb::floor_int (pos * mult);
@@ -89,7 +125,7 @@ int	TestOscWavetable::test_valid ()
 		osc.process_block (&data [pos], block_len);
 	}
 
-	result_m.insert (result_m.end (), data.begin (), data.end ());
+	add_result <O> (result_m, data);
 
 	for (int pos = 0; pos < len; pos += block_len)
 	{
@@ -101,17 +137,24 @@ int	TestOscWavetable::test_valid ()
 		osc.process_block (&data [pos], block_len);
 	}
 
-	result_m.insert (result_m.end (), data.begin (), data.end ());
+	add_result <O> (result_m, data);
 
-	FileOp::save_wav ("results/oscwavetable0.wav", result_m, 44100, 0.5f);
+	std::string filename = "results/oscwavetable";
+	filename += typeid (DataType).name ();
+	filename += "0.wav";
+	FileOp::save_wav (filename.c_str (), result_m, 44100, 0.5f);
 
 	return 0;
 }
 
 
 
+template <typename O>
 void	TestOscWavetable::test_speed ()
 {
+	typedef O OscType;
+	typedef typename OscType::DataType DataType;
+
 	const int      block_len  = 256;
 	const int      nbr_blocks = 65536;
 
@@ -120,10 +163,10 @@ void	TestOscWavetable::test_speed ()
 	configure_osc (osc, wt);
 	osc.set_pitch (osc.conv_freq_to_pitch (1000, 44100));
 
-	std::vector <float>   dest (block_len);
-	float *        dest_ptr = &dest [0];
+	std::vector <DataType>   dest (block_len);
+	DataType *     dest_ptr = &dest [0];
 
-	printf ("OscWavetable speed test...\n");
+	printf ("%s speed test...\n", typeid (OscType).name ());
 
 	TimerAccurate  tim;
 	double         acc_dummy = 0;
@@ -135,7 +178,7 @@ void	TestOscWavetable::test_speed ()
 		osc.process_block (dest_ptr, block_len);
 
 		// Prevents the optimizer to remove all the loops
-		acc_dummy += dest_ptr [block_len - 1];
+		acc_dummy += double (dest_ptr [block_len - 1]);
 	}
 	tim.stop ();
 
@@ -147,29 +190,36 @@ void	TestOscWavetable::test_speed ()
 
 
 
-void	TestOscWavetable::configure_osc (OscType &osc, OscType::WavetableDataType &wt)
+template <typename O>
+void	TestOscWavetable::configure_osc (O &osc, typename O::WavetableDataType &wt)
 {
 	assert (&osc != 0);
 	assert (&wt != 0);
+
+	typedef O OscType;
+	typedef typename OscType::DataType DataType;
+
+	const float    scale = get_data_scale <OscType> ();
 
 	// Wavetable generation
 	const int      last_table = wt.get_nbr_tables () - 1;
 	const int      table_len  = wt.get_table_len (last_table);
 	for (long pos = 0; pos < table_len; ++pos)
 	{
+
 #if 1
 		// Saw
 		wt.set_sample (
 			last_table,
 			(pos - table_len / 4) & (table_len - 1),
-			(float (pos * 2) / table_len) - 1
+			DataType (((float (pos * 2) / table_len) - 1) * scale)
 		);
 #else
 		// Sine
 		wt.set_sample (
 			last_table,
 			pos,
-			cos (pos * (2 * basic::PI) / table_len)
+			DataType (cos (pos * (2 * basic::PI) / table_len) * scale)
 		);
 #endif
 	}
@@ -179,7 +229,55 @@ void	TestOscWavetable::configure_osc (OscType &osc, OscType::WavetableDataType &
 	mipmapper.build_mipmaps (wt);
 
 	osc.set_wavetable (wt);
-	osc.set_base_pitch (BASE_PITCH);
+	osc.set_base_pitch (16 << OscType::PITCH_FRAC_BITS);
+}
+
+
+
+template <typename T, bool INT_FLAG>
+class TestOscWavetable_GetNumScale
+{
+public:
+	static float   get () { return 1.f; }
+};
+
+template <typename T>
+class TestOscWavetable_GetNumScale <T, true>
+{
+public:
+	static float   get ()
+	{
+		return float (T (1) << (std::numeric_limits <T>::digits - 1));
+	}
+};
+
+template <typename O>
+float	TestOscWavetable::get_data_scale ()
+{
+	typedef O OscType;
+	typedef typename OscType::DataType DataType;
+
+	return TestOscWavetable_GetNumScale <
+		DataType,
+		std::numeric_limits <DataType>::is_integer
+	>::get ();
+}
+
+
+
+template <typename O>
+void	TestOscWavetable::add_result (std::vector <float> &result_m, const std::vector <typename O::DataType> &data)
+{
+	const float    scale = get_data_scale <O> ();
+	const float    scale_inv = 1.0f / scale;
+	std::for_each (
+		data.begin (),
+		data.end (),
+		[&] (const auto val)
+		{
+			result_m.push_back (float (val) * scale_inv);
+		}
+	);
 }
 
 

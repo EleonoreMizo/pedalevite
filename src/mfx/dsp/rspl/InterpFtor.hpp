@@ -45,13 +45,29 @@ namespace rspl
 
 
 
-float	InterpFtor::Hold::operator () (float frac_pos, const float data []) const
+float	InterpFtor::Hold::operator () (float /*frac_pos*/, const float data []) const
 {
-	assert (frac_pos >= 0);
-	assert (frac_pos <= 1);
 	assert (data != 0);
 
-	return (data [0]);
+	return data [0];
+}
+
+
+
+float	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const float data []) const
+{
+	assert (data != 0);
+
+	return data [0];
+}
+
+
+
+int32_t	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const int16_t data []) const
+{
+	assert (data != 0);
+
+	return data [0];
 }
 
 
@@ -62,7 +78,46 @@ float	InterpFtor::Linear::operator () (float frac_pos, const float data []) cons
 	assert (frac_pos <= 1);
 	assert (data != 0);
 
-	return (data [0] + (data [1] - data [0]) * frac_pos);
+	return data [0] + (data [1] - data [0]) * frac_pos;
+}
+
+
+
+float	InterpFtor::Linear::operator () (uint32_t frac_pos, const float data []) const
+{
+	return operator () (frac_pos * float (fstb::TWOPM32), data);
+}
+
+
+
+// Result is still on a signed 16-bit scale
+int32_t	InterpFtor::Linear::operator () (uint32_t frac_pos, const int16_t data []) const
+{
+	assert (frac_pos >= 0);
+	assert (frac_pos <= 1);
+	assert (data != 0);
+
+#if fstb_IS (ARCHI, ARM)
+
+	const int32_t     x0 = data [0];
+	const int32_t     x1 = data [1];
+	const int16x4_t   d  = vdup_n_s32 (x1 - x0);
+	const int16x4_t   f  = vdup_n_s32 (int32_t (frac_pos >> 1));
+	const int16x4_t   r  = vqrdmulh_s32 (d, f);
+
+	return vget_lane_s32 (r, 0) + x0;
+
+#else
+
+	// Unoptimized fallback. Probably slow as hell
+	const int32_t  x0  = data [0];
+	const int32_t  x1  = data [1];
+	const int32_t  dif = x1 - x0;
+	const int32_t  y   = int32_t ((int64_t (frac_pos) * int64_t (dif)) >> 32);
+
+	return y + x0;
+
+#endif
 }
 
 
@@ -148,10 +203,12 @@ int32_t	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const int16_t 
 
 	// Maybe we could find an optimisation using Estrin's scheme ?
 	//   a * f^3 + b * f^2 + c * f + x0
-	// = (a * f^2 + c) * f + (b * f^2 + x0)
+	//    = (a * f^2 + c) * f + (b * f^2 + x0)
+	// or = (a * f + b) * f^2 + (c * f + x0)
 
 #else
 
+	// Unoptimized fallback. Probably slow as hell
 	const int32_t  c  = x1 - xm1;
 	const int32_t  a  = 3 * (x0 - x1) + (x2 - xm1);
 	const int32_t  b  = ((xm1 - x0) << 2) + ((c - a) << 1);

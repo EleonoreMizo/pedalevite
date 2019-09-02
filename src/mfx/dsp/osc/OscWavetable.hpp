@@ -312,7 +312,7 @@ typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	Osc
 	const float    frac_pos   = phase_wt - int_pos;
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
 
-	return _interpolator (frac_pos, &src_ptr [int_pos]);
+	return DataType (_interpolator (frac_pos, &src_ptr [int_pos]));
 }
 
 
@@ -329,7 +329,7 @@ typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	Osc
 	const float    frac_pos   = (phase << shift) * mult;
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
 
-	return _interpolator (frac_pos, &src_ptr [int_pos]);
+	return DataType (_interpolator (frac_pos, &src_ptr [int_pos]));
 }
 
 
@@ -338,9 +338,10 @@ template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE,
 typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_cur_sample () const
 {
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
-	const float    frac_pos   = _pos.get_frac_val_flt ();
+	const uint32_t frac_pos   = _pos.get_frac_val ();
 	const int      int_pos    = _pos.get_int_val ();
-	const DataType val        = _interpolator (frac_pos, &src_ptr [int_pos]);
+	const DataType val        =
+		DataType (_interpolator (frac_pos, &src_ptr [int_pos]));
 
 	return val;
 }
@@ -367,9 +368,10 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_block (t
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		const float    frac_pos = _pos.get_frac_val_flt ();
+		const uint32_t frac_pos = _pos.get_frac_val ();
 		const int      int_pos  = _pos.get_int_val ();
-		dest_ptr [pos] = _interpolator (frac_pos, &src_ptr [int_pos]);
+		dest_ptr [pos] =
+			DataType (_interpolator (frac_pos, &src_ptr [int_pos]));
 		_pos.add (_step, _cur_table_mask);
 	}
 }
@@ -385,9 +387,10 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_block_mi
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		const float    frac_pos = _pos.get_frac_val_flt ();
+		const uint32_t frac_pos = _pos.get_frac_val ();
 		const int      int_pos  = _pos.get_int_val ();
-		dest_ptr [pos] += _interpolator (frac_pos, &src_ptr [int_pos]);
+		dest_ptr [pos] +=
+			DataType (_interpolator (frac_pos, &src_ptr [int_pos]));
 		_pos.add (_step, _cur_table_mask);
 	}
 }
