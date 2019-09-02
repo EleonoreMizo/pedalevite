@@ -22,6 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/lang/type_name.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/rspl/InterpFirPolyphase.h"
@@ -29,7 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "test/TimerAccurate.h"
 
 #include <array>
-#include <typeinfo>
 
 #include <cassert>
 #include <cstdint>
@@ -46,7 +46,8 @@ int	TestInterpPhase <T, NPL2>::perform_test ()
 {
 	int            ret_val = 0;
 
-	const char *   class_name_0 = typeid (InterpPhaseUnaligned).name ();
+	const std::string class_name =
+		fstb::lang::type_name <InterpPhaseUnaligned> ().to_str ();
 	printf ("Testing %s...\n", class_name_0);
 
 	if (ret_val == 0)
@@ -60,11 +61,11 @@ int	TestInterpPhase <T, NPL2>::perform_test ()
 
    if (ret_val == 0)
    {
-   	printf ("%s tested successfully.\n", class_name_0);
+   	printf ("%s tested successfully.\n", class_name.c_str ());
    }
    else
    {
-      printf ("%s test failed (%d).\n", class_name_0, ret_val);
+      printf ("%s test failed (%d).\n", class_name.c_str (), ret_val);
    }
    printf ("\n");
 

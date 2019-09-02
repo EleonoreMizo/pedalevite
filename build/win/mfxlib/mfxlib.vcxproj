@@ -180,6 +180,7 @@
     <ClInclude Include="..\..\..\src\fstb\lang\fnc.h" />
     <ClInclude Include="..\..\..\src\fstb\lang\fnc.hpp" />
     <ClInclude Include="..\..\..\src\fstb\lang\NonConst.h" />
+    <ClInclude Include="..\..\..\src\fstb\lang\type_name.h" />
     <ClInclude Include="..\..\..\src\fstb\msg\MsgRet.h" />
     <ClInclude Include="..\..\..\src\fstb\msg\MsgRet.hpp" />
     <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.h" />

@@ -64,6 +64,7 @@ commonsrc = \
         ../../src/fstb/lang/fnc.h \
         ../../src/fstb/lang/fnc.hpp \
         ../../src/fstb/lang/NonConst.h \
+        ../../src/fstb/lang/type_name.h \
         ../../src/fstb/msg/MsgRet.h \
         ../../src/fstb/msg/MsgRet.hpp \
         ../../src/fstb/msg/QueueRetMgr.h \

@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/lang/type_name.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/osc/WavetableMipMapper.h"
@@ -32,7 +33,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "test/TimerAccurate.h"
 
 #include <limits>
-#include <typeinfo>
 #include <vector>
 
 #include <cassert>
@@ -140,7 +140,7 @@ int	TestOscWavetable::test_valid ()
 	add_result <O> (result_m, data);
 
 	std::string filename = "results/oscwavetable";
-	filename += typeid (DataType).name ();
+	filename += fstb::lang::type_name <DataType> ().to_str ();
 	filename += "0.wav";
 	FileOp::save_wav (filename.c_str (), result_m, 44100, 0.5f);
 
@@ -166,7 +166,10 @@ void	TestOscWavetable::test_speed ()
 	std::vector <DataType>   dest (block_len);
 	DataType *     dest_ptr = &dest [0];
 
-	printf ("%s speed test...\n", typeid (OscType).name ());
+	printf (
+		"%s speed test...\n",
+		fstb::lang::type_name <OscType> ().to_str ().c_str ()
+	);
 
 	TimerAccurate  tim;
 	double         acc_dummy = 0;
