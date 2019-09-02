@@ -481,6 +481,8 @@ commonsrc = \
         ../../src/mfx/dsp/osc/OscSinCosStable.hpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.cpp \
         ../../src/mfx/dsp/osc/OscSinCosStableSimd.h \
+        ../../src/mfx/dsp/osc/OscWavetable.h \
+        ../../src/mfx/dsp/osc/OscWavetable.hpp \
         ../../src/mfx/dsp/osc/SampleData.h \
         ../../src/mfx/dsp/osc/SampleData.hpp \
         ../../src/mfx/dsp/osc/SampleDataTplPar.h \
@@ -1172,6 +1174,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestOscSampleSyncFade.h \
         ../../src/test/TestOscSampleSyncHard.cpp \
         ../../src/test/TestOscSampleSyncHard.h \
+        ../../src/test/TestOscWavetable.cpp \
+        ../../src/test/TestOscWavetable.h \
         ../../src/test/TestRemez.cpp \
         ../../src/test/TestRemez.h \
         ../../src/test/TestSampleMipMapper.cpp \

@@ -2814,6 +2814,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\WpdGen.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetable.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetable.hpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
