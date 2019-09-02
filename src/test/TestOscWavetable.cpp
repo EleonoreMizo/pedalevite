@@ -102,12 +102,29 @@ int	TestOscWavetable::test_valid ()
 {
 	typedef O OscType;
 	typedef typename OscType::DataType DataType;
+	typedef typename OscType::WavetableDataType WtType;
+
+	printf (
+		"Testing %s...\n",
+		fstb::lang::type_name <OscType> ().to_str ().c_str ()
+	);
 
 	std::vector <float>  result_m;
 
 	OscType        osc;
-	typename OscType::WavetableDataType wt;
+	WtType         wt;
 	configure_osc (osc, wt);
+
+	int            table_len_spl = 0;
+	for (int t_idx = 0; t_idx < wt.get_nbr_tables (); ++t_idx)
+	{
+		table_len_spl += wt.get_table_len (t_idx);
+		table_len_spl += WtType::UNROLL_PRE;
+		table_len_spl += WtType::UNROLL_POST;
+	}
+	const int      table_len_bytes = table_len_spl * sizeof (DataType);
+	printf ("Total wavetable size: %d bytes.\n", table_len_bytes);
+
 	const int      base_pitch = osc.get_base_pitch ();
 
 	const int      sample_freq = 44100;
@@ -128,6 +145,15 @@ int	TestOscWavetable::test_valid ()
 
 	add_result <O> (result_m, data);
 
+	for (int pos = 0; pos < len; ++ pos)
+	{
+		const int32_t  pitch = offset + fstb::floor_int (pos * mult);
+		osc.set_pitch (pitch);
+		data [pos] = osc.process_sample ();
+	}
+
+	add_result <O> (result_m, data);
+
 	for (int pos = 0; pos < len; pos += block_len)
 	{
 		const double	freq  =
@@ -144,6 +170,8 @@ int	TestOscWavetable::test_valid ()
 	filename += typeid (DataType).name ();
 	filename += "0.wav";
 	FileOp::save_wav (filename.c_str (), result_m, 44100, 0.5f);
+
+	printf ("Done.\n");
 
 	return 0;
 }
@@ -168,7 +196,7 @@ void	TestOscWavetable::test_speed ()
 	DataType *     dest_ptr = &dest [0];
 
 	printf (
-		"%s speed test...\n",
+		"Speed test for %s...\n",
 		fstb::lang::type_name <OscType> ().to_str ().c_str ()
 	);
 
@@ -189,7 +217,7 @@ void	TestOscWavetable::test_speed ()
 	double	      spl_per_s = tim.get_best_rate (block_len * nbr_blocks);
 	spl_per_s += fstb::limit (acc_dummy, -1e-300, 1e-300); // Anti-optimizer trick
 	const double   mega_sps  = spl_per_s / 1000000.0;
-	printf ("Speed: %12.3f Mspl/s.\n", mega_sps);
+	printf ("Speed: %12.3f Mspl/s.\n\n", mega_sps);
 }
 
 
