@@ -3,12 +3,29 @@
         WavetableData.h
         Author: Laurent de Soras, 2019
 
-Tables may be oversampled; the oversampling is constrained by the minimum and
-maximum sizes of a wavetable.
+Storage for a full waveform cycle with all its mip-maps. This waveform is
+intended to be used within an oscillator class (OscWavetable for example) to
+provide an alias-free continuous output at any frequency.
+
+Each mip-map corresponds to an octave. The topmost octave starts at the
+Nyquist frequency. Usually, tables are critically sampled and the topmost
+table is 1-sample long. But they also may be oversampled; the oversampling
+is constrained by the maximum size of a wavetable. On the other hand, the
+oversampling may be forced for the highest-pitched tables by setting a minimum
+table size. These three parameters (min size, max size and oversampling)
+guarantee the highest possible quality with a minimum footprint, therefore
+a low cache spilling.
+
+Moreover, tables can have "unrolling" margins, so the oscillator does not
+have to wrap a pointer during the interpolation of the samples located on
+the side.
+
+It's up to the client application to fill the wavetable and to generate all
+its mip-maps.
 
 Template parameters:
 
-- MAXSL2: log2 of the maximum size of the wavetable
+- MAXSL2: log2 of the maximum size of the wavetable, [0 ; 16]
 - MINSL2: log2 of the minimum size of the wavetable, [0 ; MAXSL2]
 - OVRL2: log2 of the data oversampling, [0 ; MINSL2] 
 - DT: type of stored data
@@ -62,7 +79,7 @@ class WavetableData
 	static_assert (MINSL2 >= 0, "");
 	static_assert (MINSL2 <= MAXSL2, "");
 	static_assert (OVRL2 >= 0, "");
-	static_assert (OVRL2 <= MAXSL2 - MINSL2, "");
+	static_assert (OVRL2 <= MINSL2, "");
 	static_assert (UPRE >= 0, "");
 	static_assert (UPOST >= 0, "");
 

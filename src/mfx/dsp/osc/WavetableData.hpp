@@ -43,7 +43,7 @@ template <int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
 WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableData ()
 :	_data ()
 {
-	// Build tables. Not a big deal if it's done more than once...
+	// Build table index. Not a big deal if it's done more than once...
 	build_table_index ();
 }
 
