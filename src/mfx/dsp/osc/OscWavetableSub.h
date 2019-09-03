@@ -145,7 +145,7 @@ private:
 	int32_t        _pitch              = 0;
 
 	// Phase between positive and negative components
-	int32_t        _rel_phase          = -1 << 31;
+	int32_t        _rel_phase          = 0x80000000;
 
 	// Compensates DC offset after subtraction
 	DataType       _dc_fixer           = 0;
