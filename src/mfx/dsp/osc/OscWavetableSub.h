@@ -3,12 +3,12 @@
         OscWavetableSub.h
         Author: Laurent de Soras, 2019
 
-Oscillator with "subtractor" option. Two waveforms with a variable phase
+Oscillator with a "subtraction" option. Two waveforms with a variable phase
 shift are subtracted from each other. For example, with identical saw
 waveforms, one can obtain a rectangle waveform with PWM (pulse width
 modulation). The oscillator works more or less the same as OscWavetable.
 
-This oscillator is meant to be oversampled. Indead, the top octave of the
+This oscillator is meant to be oversampled. Indeed, the top octave of the
 spectrum may not be filled with all the harmonics, depending on the pitch.
 It will also contain aliasing caused by the slow rolloff (and first sidelobes)
 of the interpolator frequency response. Usually, oversampling it twice is

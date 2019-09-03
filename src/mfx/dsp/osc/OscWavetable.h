@@ -3,7 +3,7 @@
         OscWavetable.h
         Author: Laurent de Soras, 2019
 
-This oscillator is meant to be oversampled. Indead, the top octave of the
+This oscillator is meant to be oversampled. Indeed, the top octave of the
 spectrum may not be filled with all the harmonics, depending on the pitch.
 It will also contain aliasing caused by the slow rolloff (and first sidelobes)
 of the interpolator frequency response. Usually, oversampling it twice is
