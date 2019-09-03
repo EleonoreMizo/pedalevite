@@ -42,107 +42,22 @@ namespace osc
 
 
 
-/*
-==============================================================================
-Name: reset_phase
-Description:
-	Sets the phase to 0.
-Throws: Nothing
-==============================================================================
-*/
-
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::reset_phase ()
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_wavetable (const WavetableDataType &wavetable)
 {
-	_pos.clear ();
+	assert (&wavetable != 0);
+
+	_wavetable_ptr = &wavetable;
 }
 
 
 
-/*
-==============================================================================
-Name: set_phase_flt
-Description:
-	Sets the phase. There is no trick to prevent the oscillator from aliasing.
-	You may use OscWavetableSync instead.
-Input parameters:
-	- phase: New phase, in range [0 ; 1[.
-Throws: Nothing
-==============================================================================
-*/
-
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_phase_flt (float phase)
+const typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableDataType &	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_wavetable () const
 {
-	assert (phase >= 0);
-	assert (phase < 1);
-	assert (_cur_table_len > 0);
+	assert (_wavetable_ptr != 0);
 
-	_pos.set_val (phase * _cur_table_len);
-}
-
-
-
-/*
-==============================================================================
-Name: get_phase_flt
-Description:
-	Gets the current phase.
-Returns:
-	Current phase, ranging in [0 ; 1[. May be 1.0 because of the rounding.
-Throws: Nothing
-==============================================================================
-*/
-
-template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-float	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_flt () const
-{
-	assert (_cur_table_len > 0);
-
-	return _pos.get_val_flt () / _cur_table_len;
-}
-
-
-
-/*
-==============================================================================
-Name: set_phase_int
-Description:
-	Sets the phase. There is no trick to prevent the oscillator from aliasing.
-	You may use OscWavetableSync instead.
-Input parameters:
-	- phase: New phase, in range [0 ; 0xFFFFFFFF[
-Throws: Nothing
-==============================================================================
-*/
-
-template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_phase_int (uint32_t phase)
-{
-	assert (_cur_table_len > 0);
-
-	_pos.set_val (0, phase);
-	_pos <<= _cur_table_len_log2;
-}
-
-
-
-/*
-==============================================================================
-Name: get_phase_int
-Description:
-	Gets the current phase.
-Returns: Current phase, ranging in [0 ; 0xFFFFFFFF[.
-Throws: Nothing
-==============================================================================
-*/
-
-template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-uint32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_int () const
-{
-	assert (_cur_table_len > 0);
-
-	return uint32_t (_pos.get_val_int64 () >> _cur_table_len_log2);
+	return *_wavetable_ptr;
 }
 
 
@@ -279,28 +194,113 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_pitch_no_tab
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_wavetable (const WavetableDataType &wavetable)
-{
-	assert (&wavetable != 0);
+/*
+==============================================================================
+Name: reset_phase
+Description:
+	Sets the phase to 0.
+Throws: Nothing
+==============================================================================
+*/
 
-	_wavetable_ptr = &wavetable;
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::reset_phase ()
+{
+	_pos.clear ();
+}
+
+
+
+/*
+==============================================================================
+Name: set_phase_flt
+Description:
+	Sets the phase. There is no trick to prevent the oscillator from aliasing.
+	You may use OscWavetableSync instead.
+Input parameters:
+	- phase: New phase, in range [0 ; 1[.
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_phase_flt (float phase)
+{
+	assert (phase >= 0);
+	assert (phase < 1);
+	assert (_cur_table_len > 0);
+
+	_pos.set_val (phase * _cur_table_len);
+}
+
+
+
+/*
+==============================================================================
+Name: get_phase_flt
+Description:
+	Gets the current phase.
+Returns:
+	Current phase, ranging in [0 ; 1[. May be 1.0 because of the rounding.
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+float	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_flt () const
+{
+	assert (_cur_table_len > 0);
+
+	return _pos.get_val_flt () / _cur_table_len;
+}
+
+
+
+/*
+==============================================================================
+Name: set_phase_int
+Description:
+	Sets the phase. There is no trick to prevent the oscillator from aliasing.
+	You may use OscWavetableSync instead.
+Input parameters:
+	- phase: New phase, in range [0 ; 0xFFFFFFFF[
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_phase_int (uint32_t phase)
+{
+	assert (_cur_table_len > 0);
+
+	_pos.set_val (0, phase);
+	_pos <<= _cur_table_len_log2;
+}
+
+
+
+/*
+==============================================================================
+Name: get_phase_int
+Description:
+	Gets the current phase.
+Returns: Current phase, ranging in [0 ; 0xFFFFFFFF[.
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+uint32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_int () const
+{
+	assert (_cur_table_len > 0);
+
+	return uint32_t (_pos.get_val_int64 () >> _cur_table_len_log2);
 }
 
 
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-const typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableDataType &	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_wavetable () const
-{
-	assert (_wavetable_ptr != 0);
-
-	return *_wavetable_ptr;
-}
-
-
-
-template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample_at_phase_flt (float phase)
+typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample_at_phase_flt (float phase) const
 {
 	assert (_wavetable_ptr != 0);
 	assert (_cur_table_len > 0);
@@ -318,7 +318,7 @@ typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	Osc
 
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample_at_phase_int (uint32_t phase)
+typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample_at_phase_int (uint32_t phase) const
 {
 	assert (_wavetable_ptr != 0);
 	assert (_cur_table_len > 0);

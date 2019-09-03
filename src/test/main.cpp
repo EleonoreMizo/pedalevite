@@ -58,6 +58,7 @@
 #include "test/TestOscSampleSyncFade.h"
 #include "test/TestOscSampleSyncHard.h"
 #include "test/TestOscWavetable.h"
+#include "test/TestOscWavetableSub.h"
 #include "test/TestRemez.h"
 #include "test/TestSampleMipMapper.h"
 
@@ -1626,6 +1627,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestOscWavetableSub::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestOscWavetable::perform_test ();
 #endif
 

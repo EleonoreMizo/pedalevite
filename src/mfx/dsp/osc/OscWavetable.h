@@ -3,6 +3,16 @@
         OscWavetable.h
         Author: Laurent de Soras, 2019
 
+This oscillator is meant to be oversampled. Indead, the top octave of the
+spectrum may not be filled with all the harmonics, depending on the pitch.
+It will also contain aliasing caused by the slow rolloff (and first sidelobes)
+of the interpolator frequency response. Usually, oversampling it twice is
+enough.
+
+When generating the wavetable with DT as an integer type, make sure that there
+is enough headroom for the interpolation overshoots. Limiting the waveform
+amplitude to half the maximum absolute value of the type is safe.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -64,13 +74,9 @@ public:
 	virtual        ~OscWavetable ()                         = default;
 	OscWavetable & operator = (const OscWavetable &other)   = default;
 
-	void           reset_phase ();
-	void           set_phase_flt (float phase);
-	fstb_FORCEINLINE float
-	               get_phase_flt () const;
-	void           set_phase_int (uint32_t phase);
-	fstb_FORCEINLINE uint32_t
-	               get_phase_int () const;
+	void           set_wavetable (const WavetableDataType &wavetable);
+	const WavetableDataType &
+	               use_wavetable () const;
 
 	inline void    set_base_pitch (int32_t pitch);
 	inline int32_t get_base_pitch () const;
@@ -80,12 +86,16 @@ public:
 	fstb_FORCEINLINE void
 	               set_pitch_no_table_update (int32_t pitch);
 
-	void           set_wavetable (const WavetableDataType &wavetable);
-	const WavetableDataType &
-	               use_wavetable () const;
+	void           reset_phase ();
+	void           set_phase_flt (float phase);
+	fstb_FORCEINLINE float
+	               get_phase_flt () const;
+	void           set_phase_int (uint32_t phase);
+	fstb_FORCEINLINE uint32_t
+	               get_phase_int () const;
 
-	DataType       get_sample_at_phase_flt (float phase);
-	DataType       get_sample_at_phase_int (uint32_t phase);
+	DataType       get_sample_at_phase_flt (float phase) const;
+	DataType       get_sample_at_phase_int (uint32_t phase) const;
 	fstb_FORCEINLINE DataType
 	               get_cur_sample () const;
 	fstb_FORCEINLINE DataType
@@ -109,7 +119,10 @@ protected:
 
 private:
 
+	// Pitch value for Nyquist frequency.
 	int32_t        _base_pitch         = 0;
+
+	// Current pitch. 0x10000 = +1 octave.
 	int32_t        _pitch              = 0;
 
 	// Selected table, depend on the pitch
@@ -119,7 +132,7 @@ private:
 	int            _cur_table_len_log2 = 0;
 
 	// Length of selected table. 0 = not initialized
-	int            _cur_table_len      = 0;
+	int            _cur_table_len      = 1;
 
 	int            _cur_table_mask     = 0;
 

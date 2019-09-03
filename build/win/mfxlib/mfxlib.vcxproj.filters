@@ -2823,6 +2823,12 @@
     <ClInclude Include="..\..\..\src\fstb\lang\type_name.h">
       <Filter>fstb\lang</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSub.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSub.hpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
