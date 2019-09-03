@@ -48,18 +48,20 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 int	TestOscWavetableSub::perform_test ()
 {
+	typedef mfx::dsp::rspl::InterpFtor::CubicHermite Interpolator;
+
 	typedef mfx::dsp::osc::OscWavetableSub <
-		mfx::dsp::rspl::InterpFtor::CubicHermite,
+		Interpolator,
 		12, 6, 3,
 		float,
-		1, 3
+		Interpolator::DATA_PRE, Interpolator::DATA_POST
 	> OscTypeFloat;
 
 	typedef mfx::dsp::osc::OscWavetableSub <
-		mfx::dsp::rspl::InterpFtor::CubicHermite,
+		Interpolator,
 		12, 6, 3,
 		int16_t,
-		1, 3
+		Interpolator::DATA_PRE, Interpolator::DATA_POST
 	> OscTypeInt16;
 
 	int            ret_val = 0;
@@ -274,7 +276,6 @@ void	TestOscWavetableSub::configure_osc (O &osc, typename O::WavetableDataType &
 	const int      table_len  = wt.get_table_len (last_table);
 	for (int pos = 0; pos < table_len; ++pos)
 	{
-
 #if 1
 		// Saw
 		wt.set_sample (
@@ -288,7 +289,7 @@ void	TestOscWavetableSub::configure_osc (O &osc, typename O::WavetableDataType &
 		wt.set_sample (
 			last_table,
 			pos,
-			DataType ((4 * p * p) * scale)
+			DataType ((8 * p * p - 1) * scale)
 		);
 #endif
 	}

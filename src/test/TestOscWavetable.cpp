@@ -48,18 +48,20 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 int	TestOscWavetable::perform_test ()
 {
+	typedef mfx::dsp::rspl::InterpFtor::CubicHermite Interpolator;
+
 	typedef mfx::dsp::osc::OscWavetable <
-		mfx::dsp::rspl::InterpFtor::CubicHermite,
+		Interpolator,
 		12, 6, 3,
 		float,
-		1, 3
+		Interpolator::DATA_PRE, Interpolator::DATA_POST
 	> OscTypeFloat;
 
 	typedef mfx::dsp::osc::OscWavetable <
-		mfx::dsp::rspl::InterpFtor::CubicHermite,
+		Interpolator,
 		12, 6, 3,
 		int16_t,
-		1, 3
+		Interpolator::DATA_PRE, Interpolator::DATA_POST
 	> OscTypeInt16;
 
 	int            ret_val = 0;
