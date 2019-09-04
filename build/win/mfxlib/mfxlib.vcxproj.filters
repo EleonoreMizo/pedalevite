@@ -2829,6 +2829,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSub.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\Scale.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\Scale.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

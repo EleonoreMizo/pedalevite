@@ -158,6 +158,8 @@ commonsrc = \
         ../../src/fstb/fnc.cpp \
         ../../src/fstb/fnc.h \
         ../../src/fstb/fnc.hpp \
+        ../../src/fstb/Scale.h \
+        ../../src/fstb/Scale.hpp \
         ../../src/fstb/SingleObj.h \
         ../../src/fstb/SingleObj.hpp \
         ../../src/fstb/ToolsSimd.cpp \

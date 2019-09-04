@@ -185,6 +185,8 @@
     <ClInclude Include="..\..\..\src\fstb\msg\MsgRet.hpp" />
     <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.h" />
     <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\Scale.h" />
+    <ClInclude Include="..\..\..\src\fstb\Scale.hpp" />
     <ClInclude Include="..\..\..\src\fstb\SingleObj.h" />
     <ClInclude Include="..\..\..\src\fstb\SingleObj.hpp" />
     <ClInclude Include="..\..\..\src\fstb\ToolsAvx2.h" />

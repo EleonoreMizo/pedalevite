@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/Scale.h"
 
 #if fstb_IS (ARCHI, ARM)
 	#include <arm_neon.h>
@@ -215,9 +216,10 @@ int32_t	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const int16_t 
 
 	int32_t        v  = a << 2;
 	int32_t        f  = int32_t (frac_pos >> 1);
-	v = int32_t ((int64_t (v) * int64_t (f)) >> 32) + b;
-	v = int32_t ((int64_t (v) * int64_t (f)) >> 32) + c;
-	v = int32_t ((int64_t (v) * int64_t (f)) >> 32) + x0;
+	v = fstb::Scale <32>::mul (v, f) + b;
+	v = fstb::Scale <32>::mul (v, f) + c;
+	v = fstb::Scale <32>::mul (v, f) + x0;
+
 
 	return v;
 
