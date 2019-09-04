@@ -84,7 +84,7 @@ class Scale_Internal <T, LL2, true>
 public:
 	static fstb_FORCEINLINE T mul (T a, T b)
 	{
-		typedef Scale_Int2x <T>::Ty T2;
+		typedef typename Scale_Int2x <T>::Ty T2;
 		return T ((T2 (a) * T2 (b)) >> LL2);
 	}
 };
