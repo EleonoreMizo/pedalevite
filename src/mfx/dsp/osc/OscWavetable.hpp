@@ -42,8 +42,24 @@ namespace osc
 
 
 
+/*
+==============================================================================
+Name: set_wavetable
+Description:
+	Links the oscillator to a wavetable. The wavetable should be filled by
+	the caller. This can be done before or after the call to this function, but
+	before any call to sample-generating functions.
+	This is a mandatory call before using the oscillator.
+Input parameters:
+	- wavetable: the wavetable.
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_wavetable (const WavetableDataType &wavetable)
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::set_wavetable (const WavetableDataType &wavetable)
 {
 	assert (&wavetable != 0);
 
@@ -52,8 +68,22 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_wavetable (c
 
 
 
+/*
+==============================================================================
+Name: use_wavetable
+Description:
+	Returns the attached wavetable. A wavetable must have been set previously.
+Returns: A reference on the wavetable.
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-const typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::WavetableDataType &	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::use_wavetable () const
+const typename OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::WavetableDataType &	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::use_wavetable () const
 {
 	assert (_wavetable_ptr != 0);
 
@@ -69,6 +99,11 @@ Description:
 	Sets the reference pitch value for the highest possible output frequency
 	(= Nyquist). Pitch is logarithmic: each 1 << PITCH_FRAC_BITS more is one
 	octave up.
+	The current pitch nor generation parameter are not updated, so the
+	oscillator may be in an invalid state after a call to this function.
+	The caller must ensure that the current pitch is set to a legal value after
+	having set the reference and before calling any	other function.
+	Default pitch is 0.
 Input parameters:
 	- pitch: reference pitch. There is almost no constraint on its value, as
 		it is just a reference.
@@ -77,15 +112,30 @@ Throws: Nothing
 */
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_base_pitch (int32_t pitch)
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::set_base_pitch (int32_t pitch)
 {
 	_base_pitch = pitch;
 }
 
 
 
+/*
+==============================================================================
+Name: get_base_pitch
+Description:
+	Returns the reference pitch value. It is defaulted to 0 if it has never
+	been set previously.
+Returns: The reference pitch value
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-int32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_base_pitch () const
+int32_t	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::get_base_pitch () const
 {
 	return _base_pitch;
 }
@@ -96,15 +146,22 @@ int32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_base_pitc
 ==============================================================================
 Name: set_pitch
 Description:
-	Sets the current oscillator pitch.
+	Sets the current oscillator pitch. The reference pitch value is the Nyquist
+	frequency. When 1 << PITCH_FRAC_BITS is subtracted to the pitch, the
+	corresponding frequency is decreased by one octave.
 Input parameters:
 	- pitch: pitch to set. Should be less than the reference pitch.
 Throws: Nothing
+Returns:
+	The fractional part of the frequency (2 ^ pitch_frac), on a 32-bit scale
+	(0x80000000 to 0xFFFFFFFF).
 ==============================================================================
 */
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_pitch (int32_t pitch)
+uint32_t	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::set_pitch (int32_t pitch)
 {
 	assert (pitch < _base_pitch);
 
@@ -116,7 +173,7 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_pitch (int32
 	// 0x0000 => step = 0.5, 0xFFFF => step ~ 1
 	// [1;2] -> [1;2].
 	// We need 16 bits of fractionnal pitch
-	assert (PITCH_FRAC_BITS == 16);
+	static_assert (PITCH_FRAC_BITS == 16, "");
 	const uint32_t pre_step (
 		fstb::Approx::fast_partial_exp2_int_16_to_int_32_4th (rel_pitch)
 	);
@@ -143,12 +200,26 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_pitch (int32
 	_step.set_val_int64 (step_64);
 
 	assert (_pos.get_int_val () < _cur_table_len);
+
+	return pre_step;
 }
 
 
 
+/*
+==============================================================================
+Name: get_pitch
+Description:
+	Returns the current pitch.
+Returns: The pitch
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-int32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_pitch () const
+int32_t	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::get_pitch () const
 {
 	return _pitch;
 }
@@ -170,7 +241,9 @@ Throws: Nothing
 */
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_pitch_no_table_update (int32_t pitch)
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::set_pitch_no_table_update (int32_t pitch)
 {
 	const int      rel_pitch = pitch - _base_pitch;
 	int            table     =
@@ -198,15 +271,65 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_pitch_no_tab
 ==============================================================================
 Name: reset_phase
 Description:
-	Sets the phase to 0.
+	Sets the current phase to 0. Nothing is done to prevent aliasing during
+	this operation.
 Throws: Nothing
 ==============================================================================
 */
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::reset_phase ()
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::reset_phase ()
 {
 	_pos.clear ();
+}
+
+
+
+/*
+==============================================================================
+Name: set_phase
+Description:
+	Sets the phase. There is no trick to prevent the oscillator from aliasing.
+	You may use OscWavetableSyncHard if you need an alias-free sync oscillator.
+Input parameters:
+	- phase: New phase, in range [0 ; 0xFFFFFFFF]
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::set_phase (uint32_t phase)
+{
+	assert (_cur_table_len > 0);
+
+	_pos.set_val (0, phase);
+	_pos <<= _cur_table_len_log2;
+}
+
+
+
+/*
+==============================================================================
+Name: get_phase
+Description:
+	Gets the current phase.
+Returns: Current phase, ranging in [0 ; 0xFFFFFFFF].
+Throws: Nothing
+==============================================================================
+*/
+
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+uint32_t	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::get_phase () const
+{
+	assert (_cur_table_len > 0);
+
+	return uint32_t (_pos.get_val_int64 () >> _cur_table_len_log2);
 }
 
 
@@ -224,7 +347,9 @@ Throws: Nothing
 */
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_phase_flt (float phase)
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::set_phase_flt (float phase)
 {
 	assert (phase >= 0);
 	assert (phase < 1);
@@ -247,7 +372,9 @@ Throws: Nothing
 */
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-float	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_flt () const
+float	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::get_phase_flt () const
 {
 	assert (_cur_table_len > 0);
 
@@ -258,49 +385,55 @@ float	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_flt (
 
 /*
 ==============================================================================
-Name: set_phase_int
+Name: get_sample_at_phase
 Description:
-	Sets the phase. There is no trick to prevent the oscillator from aliasing.
-	You may use OscWavetableSync instead.
+	Computes the output sample for a given phase. The interpolator needs to be
+	stateless to make the function work correctly.
 Input parameters:
-	- phase: New phase, in range [0 ; 0xFFFFFFFF[
+	- phase: The phase to pick, in fraction of cycle scaled to 1 << 32.
+Returns: The oscillator output value
 Throws: Nothing
 ==============================================================================
 */
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::set_phase_int (uint32_t phase)
+typename OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::DataType	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::get_sample_at_phase (uint32_t phase) const
 {
+	assert (_wavetable_ptr != 0);
 	assert (_cur_table_len > 0);
 
-	_pos.set_val (0, phase);
-	_pos <<= _cur_table_len_log2;
+	const int      shift      = _cur_table_len_log2;
+	const uint32_t frac_pos   = phase <<       shift;
+	const int      int_pos    = phase >> (32 - shift);
+	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
+
+	return DataType (_interpolator (frac_pos, &src_ptr [int_pos]));
 }
 
 
 
 /*
 ==============================================================================
-Name: get_phase_int
+Name: get_sample_at_phase_flt
 Description:
-	Gets the current phase.
-Returns: Current phase, ranging in [0 ; 0xFFFFFFFF[.
+	Same as get_sample_at_phase(), but the provided phase is in [0 ; 1[
+Input parameters:
+	- phase: The phase to pick, in cycle [0 ; 1[.
+Returns: The oscillator output value
 Throws: Nothing
 ==============================================================================
 */
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-uint32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_phase_int () const
-{
-	assert (_cur_table_len > 0);
-
-	return uint32_t (_pos.get_val_int64 () >> _cur_table_len_log2);
-}
-
-
-
-template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample_at_phase_flt (float phase) const
+typename OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::DataType	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::get_sample_at_phase_flt (float phase) const
 {
 	assert (_wavetable_ptr != 0);
 	assert (_cur_table_len > 0);
@@ -317,16 +450,27 @@ typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	Osc
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_sample_at_phase_int (uint32_t phase) const
-{
-	assert (_wavetable_ptr != 0);
-	assert (_cur_table_len > 0);
+/*
+==============================================================================
+Name: get_cur_sample
+Description:
+	Returns the sample for the current phase. It is the same value as the one
+	returned by process_sample(), but the current oscillator phase is not
+	updated.
+Returns: The output value
+Throws: Nothing
+==============================================================================
+*/
 
-	const int      shift      = _cur_table_len_log2;
-	const float    mult       = float (fstb::TWOPM32);
-	const int      int_pos    = phase >> (32 - shift);
-	const float    frac_pos   = (phase << shift) * mult;
+template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
+typename OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::DataType	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::get_cur_sample () const
+{
+	const uint32_t frac_pos   = _pos.get_frac_val ();
+	const int      int_pos    = _pos.get_int_val ();
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
 
 	return DataType (_interpolator (frac_pos, &src_ptr [int_pos]));
@@ -334,22 +478,22 @@ typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	Osc
 
 
 
-template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::get_cur_sample () const
-{
-	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
-	const uint32_t frac_pos   = _pos.get_frac_val ();
-	const int      int_pos    = _pos.get_int_val ();
-	const DataType val        =
-		DataType (_interpolator (frac_pos, &src_ptr [int_pos]));
-
-	return val;
-}
-
-
+/*
+==============================================================================
+Name: process_sample
+Description:
+	Outputs a sample and updates the oscillator state.
+Returns: the oscillator output
+Throws: Nothing
+==============================================================================
+*/
 
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_sample ()
+typename OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::DataType	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::process_sample ()
 {
 	const DataType val = get_cur_sample ();
 	_pos.add (_step, _cur_table_mask);
@@ -359,11 +503,27 @@ typename OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::DataType	Osc
 
 
 
+/*
+==============================================================================
+Name: process_block
+Description:
+	Outputs a block of samples and updates the oscillator state.
+Input parameters:
+	- nbr_spl: Number of samples to output. > 0.
+Output parameters:
+	- dest_ptr: Pointer on the output buffer. Not null.
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_block (typename OscWavetable::DataType dest_ptr [], int nbr_spl)
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::process_block (DataType dest_ptr [], int nbr_spl)
 {
 	assert (_wavetable_ptr != 0);
 	assert (nbr_spl > 0);
+	assert (dest_ptr != 0);
 
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -378,8 +538,25 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_block (t
 
 
 
+/*
+==============================================================================
+Name: process_block_mix
+Description:
+	Outputs a block of samples, add it to the provided buffer and updates the
+	oscillator state.
+Input parameters:
+	- nbr_spl: Number of samples to output. > 0.
+Input/output parameters:
+	- dest_ptr: Pointer on the buffer, containing valid samples on input.
+		Not null.
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_block_mix (typename OscWavetable::DataType dest_ptr [], int nbr_spl)
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::process_block_mix (DataType dest_ptr [], int nbr_spl)
 {
 	assert (_wavetable_ptr != 0);
 	assert (nbr_spl > 0);
@@ -397,8 +574,21 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::process_block_mi
 
 
 
+/*
+==============================================================================
+Name: skip_block
+Description:
+	Updates the oscillator state without generating any sample data.
+Input parameters:
+	- nbr_spl: Number of samples to skip, > 0
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::skip_block (int nbr_spl)
+void	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::skip_block (int nbr_spl)
 {
 	assert (_wavetable_ptr != 0);
 	assert (nbr_spl > 0);
@@ -412,8 +602,24 @@ void	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::skip_block (int 
 
 
 
+/*
+==============================================================================
+Name: conv_freq_to_pitch
+Description:
+	Utility function converting a frequency and a sampling rate into a pitch
+	value usable in set_pitch().
+Input parameters:
+	- freq: Oscillator frequency, Hz, ]0 ; Fs / 2[
+	- fs: Sampling rate, Hz, > 0.
+Returns: The computed pitch
+Throws: Nothing
+==============================================================================
+*/
+
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT, int UPRE, int UPOST>
-int32_t	OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST>::conv_freq_to_pitch (float freq, float fs) const
+int32_t	OscWavetable <
+	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
+>::conv_freq_to_pitch (float freq, float fs) const
 {
 	assert (freq > 0);
 	assert (fs > 0);

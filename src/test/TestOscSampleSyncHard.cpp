@@ -105,6 +105,14 @@ int	TestOscSampleSyncHard::perform_test ()
 		-0x00000, +0x00000   // Slave pitch
 	);
 
+	// Static
+	perform_test_internal (
+		osc, result_m, 44100*2, block_len,
+		0x40, 0,             // Sync pos
+		+0xD9A19, +0xD9A19,  // Master pitch
+		+0x32345, +0x32345   // Slave pitch
+	);
+
 	perform_test_internal (
 		osc, result_m, 44100*2, block_len,
 		0, 1.0f / 16,			// Sync pos

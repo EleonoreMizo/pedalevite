@@ -474,7 +474,7 @@ void	OscSampleSyncFade <OSC>::update_master_pitch ()
 	const int      rel_pitch = _base_pitch - _master_pitch;
 
 	// Convert pitch into linear period
-	assert (Oscillator::PITCH_FRAC_BITS == 16);
+	static_assert (Oscillator::PITCH_FRAC_BITS == 16, "");
 	uint32_t       frac_part =
 		fstb::Approx::fast_partial_exp2_int_16_to_int_32_4th (rel_pitch);
 
@@ -484,7 +484,9 @@ void	OscSampleSyncFade <OSC>::update_master_pitch ()
 
 	// Compute the new step
 	const float    period_flt = _period.get_val_flt ();
-	_fade_step = OscSampleSyncFade_ScaleHelper <CalcDataType>::invert_float_and_scale (period_flt);
+	_fade_step = OscSampleSyncFade_ScaleHelper <
+		CalcDataType
+	>::invert_float_and_scale (period_flt);
 
 	// Adjust the number of remaining samples before next sync
 	assert (old_period_flt > 0);
@@ -604,7 +606,7 @@ void	OscSampleSyncFade <OSC>::check_and_handle_sync_point ()
 		_cur_osc = NBR_OSC-1 - old_osc;
 
 		// We need that >> keeps the sign
-		assert ((int64_t (-2) >> 1) == -1);
+		static_assert ((int64_t (-2) >> 1) == -1, "");
 
 		// Calculate oscillator phase for the next generated sample
 		const float    phase_inc_flt =

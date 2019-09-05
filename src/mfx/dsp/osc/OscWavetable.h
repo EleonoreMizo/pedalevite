@@ -57,6 +57,8 @@ namespace osc
 template <typename IF, int MAXSL2, int MINSL2, int OVRL2, typename DT = float, int UPRE = 1, int UPOST = 3>
 class OscWavetable
 {
+	static_assert (UPRE >= 0, "");
+	static_assert (UPOST >= 0, "");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -65,7 +67,7 @@ public:
 	typedef OscWavetable <IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST> ThisType;
 	typedef IF InterpFtor;
 	typedef WavetableData <MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST> WavetableDataType;
-	typedef typename WavetableDataType::DataType DataType;
+	typedef DT DataType;
 
 	static const int  PITCH_FRAC_BITS = 16;
 
@@ -80,22 +82,22 @@ public:
 
 	inline void    set_base_pitch (int32_t pitch);
 	inline int32_t get_base_pitch () const;
-	fstb_FORCEINLINE void
+	fstb_FORCEINLINE uint32_t
 	               set_pitch (int32_t pitch);
 	inline int32_t get_pitch () const;
 	fstb_FORCEINLINE void
 	               set_pitch_no_table_update (int32_t pitch);
 
 	void           reset_phase ();
+	void           set_phase (uint32_t phase);
+	fstb_FORCEINLINE uint32_t
+	               get_phase () const;
 	void           set_phase_flt (float phase);
 	fstb_FORCEINLINE float
 	               get_phase_flt () const;
-	void           set_phase_int (uint32_t phase);
-	fstb_FORCEINLINE uint32_t
-	               get_phase_int () const;
 
+	DataType       get_sample_at_phase (uint32_t phase) const;
 	DataType       get_sample_at_phase_flt (float phase) const;
-	DataType       get_sample_at_phase_int (uint32_t phase) const;
 	fstb_FORCEINLINE DataType
 	               get_cur_sample () const;
 	fstb_FORCEINLINE DataType

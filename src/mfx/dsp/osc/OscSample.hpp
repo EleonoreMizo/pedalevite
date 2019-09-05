@@ -167,7 +167,7 @@ void	OscSample <SD, IF, CDT>::set_pitch (int32_t pitch)
 	// 0x0000 => step = 0.5, 0xFFFF => step ~ 1
 	// [1;2] -> [1;2]: f(x) = (x^2)/3 + 2/3. Max error: ~4 cents
 	// We need 16 bits of fractionnal pitch
-	assert (PITCH_FRAC_BITS == 16);
+	static_assert (PITCH_FRAC_BITS == 16, "");
 	const uint32_t pre_step (
 		fstb::Approx::fast_partial_exp2_int_16_to_int_32_4th (pitch_frac)
 	);

@@ -62,9 +62,6 @@ OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::OscSampleSyncHard ()
 ,	_buffer ()
 ,	_buf_pos (0)
 {
-	assert (PHASE_LEN <= 1024);
-	assert ((PHASE_LEN & 1) == 0);
-
 	clear_buffers ();
 }
 
@@ -448,7 +445,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::update_master_pitch ()
 {
 	const int      rel_pitch = _base_pitch - _master_pitch;
 
-	assert (Oscillator::PITCH_FRAC_BITS == 16);
+	static_assert (Oscillator::PITCH_FRAC_BITS == 16, "");
 	uint32_t       frac_part =
 		fstb::Approx::fast_partial_exp2_int_16_to_int_32_4th (rel_pitch);
 
@@ -569,7 +566,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::check_and_handle_sync_point ()
 	if (_spl_to_next_sync.get_ceil () == 0)
 	{
 		// We need that >> keeps the sign
-		assert ((int64_t (-2) >> 1) == -1);
+		static_assert ((int64_t (-2) >> 1) == -1, "");
 
 		// Calculate oscillator phase for the next generated sample
 		const float    phase_inc_flt =

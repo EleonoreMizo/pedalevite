@@ -131,7 +131,7 @@ It has two outputs:
 
 Note that there can be a DC offset, depending on the waveforms and the phase difference.
 You can remove it with a simple high-pass filter like `dsp::iir::DcKiller1p`.
-Or you can use some explicit computed value with the argument `dc_fixer` when setting the phase difference.
+Or you can use some explicit computed value with the `dc_fixer` argument when setting the phase difference.
 This allows fast response to waveform changes and preserves all the bass frequencies.
 If you do the second way for achieving phase difference modulation, be sure to adjust the parameters at the sample rate to avoid zipper noise.
 

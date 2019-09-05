@@ -142,7 +142,7 @@ int	TestOscWavetableSub::test_valid ()
 	const int      nbr_oct = 10;
 	const float    mult    = float (nbr_oct << OscType::PITCH_FRAC_BITS) / len;
 	const int32_t  offset  = base_pitch - (nbr_oct << OscType::PITCH_FRAC_BITS);
-	osc.set_rel_phase_int (0x40000000, 0);
+	osc.set_phase_rel (0x40000000, 0);
 	for (int pos = 0; pos < len; pos += block_len)
 	{
 		const int32_t  pitch = offset + fstb::floor_int (pos * mult);
@@ -154,30 +154,27 @@ int	TestOscWavetableSub::test_valid ()
 	add_result <O> (result_m, data_sub);
 
 	// Frequency sweep (sample)
-	osc.set_rel_phase_int (0x40000000, 0);
+	osc.set_phase_rel (0x40000000, 0);
 	for (int pos = 0; pos < len; ++ pos)
 	{
 		const int32_t  pitch = offset + fstb::floor_int (pos * mult);
-#if 0
 		osc.set_pitch (pitch);
-		osc.process_sample (data_pos [pos], data_neg [pos]);
-#else
-		osc.process_sample_fm (data_pos [pos], data_sub [pos], pitch);
-#endif
+		osc.process_sample (data_pos [pos], data_sub [pos]);
 	}
 
 	add_result <O> (result_m, data_pos);
 	add_result <O> (result_m, data_sub);
 
 	// Deep vibrato (sample)
-	osc.set_rel_phase_int (0x40000000, 0);
+	osc.set_phase_rel (0x40000000, 0);
 	for (int pos = 0; pos < len_s; ++pos)
 	{
 		const double	freq  =
 			1000 * exp (cos (pos * 2 * fstb::PI * 3 / sample_freq) * 1);
 		const int32_t  pitch =
 			osc.conv_freq_to_pitch (float (freq), float (sample_freq));
-		osc.process_sample_fm (data_pos [pos], data_sub [pos], pitch);
+		osc.set_pitch (pitch);
+		osc.process_sample (data_pos [pos], data_sub [pos]);
 	}
 
 	add_result <O> (result_m, data_pos, len_s);
@@ -194,8 +191,8 @@ int	TestOscWavetableSub::test_valid ()
 		uint32_t       rel_phase = 0;
 		for (int pos = 0; pos < len; ++pos)
 		{
-			osc.set_rel_phase_int (rel_phase, 0);
-			osc.process_sample (data_pos [pos], data_sub [pos]);
+			osc.set_phase_rel (rel_phase, 0);
+			data_sub [pos] = osc.process_sample ();
 			rel_phase += phase_step;
 		}
 
@@ -281,11 +278,11 @@ void	TestOscWavetableSub::configure_osc (O &osc, typename O::WavetableDataType &
 		wt.set_sample (
 			last_table,
 			(pos - table_len / 4) & (table_len - 1),
-			DataType (((float (pos * 2) / table_len) - 1) * scale)
+			DataType (((float (pos * 2 + 1) / table_len) - 1) * scale)
 		);
 #else
 		// Parabola
-		const float    p = float (pos) / table_len - 0.5f;
+		const float    p = (float (pos)) / table_len - 0.5f;
 		wt.set_sample (
 			last_table,
 			pos,

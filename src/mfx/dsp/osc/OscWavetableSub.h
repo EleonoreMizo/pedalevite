@@ -81,13 +81,17 @@ public:
 	OscWavetableSub &
 	               operator = (const OscWavetableSub &other)      = default;
 
+	void           set_wavetable (const WavetableDataType &wavetable);
+	const WavetableDataType &
+	               use_wavetable () const;
+
 	void           set_wavetables (const WavetableDataType &wavetable_pos, const WavetableDataType &wavetable_neg);
 	const WavetableDataType &
 	               use_wavetable (int number) const;
 
 	inline void    set_base_pitch (int32_t pitch);
 	inline int32_t get_base_pitch () const;
-	fstb_FORCEINLINE void
+	fstb_FORCEINLINE uint32_t
 	               set_pitch (int32_t pitch);
 	fstb_FORCEINLINE void
 	               set_pitch (int32_t pitch, uint32_t pre_step, int table);
@@ -95,21 +99,26 @@ public:
 
 	void           reset_phase ();
 	fstb_FORCEINLINE void
-	               set_phase_int (uint32_t phase);
+	               set_phase (uint32_t phase);
 	fstb_FORCEINLINE uint32_t
-	               get_phase_int () const;
+	               get_phase () const;
 
 	fstb_FORCEINLINE void
-	               set_rel_phase_int (uint32_t rel_phase, DataType dc_fixer);
+	               set_phase_rel (uint32_t rel_phase, DataType dc_fixer = 0);
 	fstb_FORCEINLINE uint32_t
-	               get_rel_phase_int () const;
+	               get_phase_rel () const;
 
+	fstb_FORCEINLINE DataType
+	               get_sample_at_phase (uint32_t phase) const;
 	fstb_FORCEINLINE void
 	               get_sample_at_phase (DataType &ref_data, DataType &sub_data, uint32_t phase) const;
+	fstb_FORCEINLINE DataType
+	               process_sample ();
 	fstb_FORCEINLINE void
 	               process_sample (DataType &ref_data, DataType &sub_data);
-	void           process_sample_fm (DataType &ref_data, DataType &sub_data, int32_t new_pitch);
+	void           process_block (DataType sub_data_ptr [], int nbr_spl);
 	void           process_block (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl);
+	void           process_block_mix (DataType sub_data_ptr [], int nbr_spl);
 	void           process_block_mix (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl);
 
 	// Convenience function
@@ -133,6 +142,8 @@ private:
 	               sync_sub_phase ();
 	fstb_FORCEINLINE void
 	               sync_sub_phase (const fstb::FixedPoint &position_pos, fstb::FixedPoint &position_neg) const;
+	fstb_FORCEINLINE DataType
+	               generate_sample (const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const;
 	fstb_FORCEINLINE void
 	               generate_sample (DataType &ref_data, DataType &sub_data, const fstb::FixedPoint &position_pos, const fstb::FixedPoint &position_neg, const DataType * const src_pos_ptr, const DataType * const src_neg_ptr) const;
 	fstb_FORCEINLINE void

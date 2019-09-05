@@ -27,7 +27,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/lang/type_name.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
+#include "mfx/dsp/osc/OscWavetable.h"
 #include "mfx/dsp/osc/WavetableMipMapper.h"
+#include "mfx/dsp/rspl/InterpFtor.h"
 #include "test/FileOp.h"
 #include "test/TestOscWavetable.h"
 #include "test/TimerAccurate.h"
@@ -246,7 +248,7 @@ void	TestOscWavetable::configure_osc (O &osc, typename O::WavetableDataType &wt)
 		wt.set_sample (
 			last_table,
 			(pos - table_len / 4) & (table_len - 1),
-			DataType (((float (pos * 2) / table_len) - 1) * scale)
+			DataType (((float (pos * 2 + 1) / table_len) - 1) * scale)
 		);
 #else
 		// Sine

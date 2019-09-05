@@ -2829,6 +2829,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSub.hpp">
       <Filter>mfx\dsp\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSyncHard.h">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSyncHard.hpp">
+      <Filter>mfx\dsp\osc</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\fstb\Scale.h">
       <Filter>fstb</Filter>
     </ClInclude>

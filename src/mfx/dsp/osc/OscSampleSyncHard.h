@@ -157,6 +157,9 @@ private:
 	static const int  BUF_MASK       = BUF_SIZE - 1;
 	static const int  PHASE_MASK     = AntialiasedStep::NBR_PHASES - 1;
 
+	static_assert (PHASE_LEN <= 1024, "");
+	static_assert ((PHASE_LEN & 1) == 0, "");
+
 	typedef std::array <CalcDataType, BUF_SIZE> Buffer;
 
 	void           update_master_pitch ();

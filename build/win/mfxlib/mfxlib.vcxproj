@@ -528,6 +528,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetable.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSub.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSub.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSyncHard.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscWavetableSyncHard.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleData.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleData.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\SampleMipMapper.h" />

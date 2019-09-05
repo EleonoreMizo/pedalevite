@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TestOscWavetable.h
+        TestOscWavetableSyncHard.h
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (TestOscWavetable_HEADER_INCLUDED)
-#define TestOscWavetable_HEADER_INCLUDED
+#if ! defined (TestOscWavetableSyncHard_HEADER_INCLUDED)
+#define TestOscWavetableSyncHard_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-class TestOscWavetable
+class TestOscWavetableSyncHard
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -56,14 +56,17 @@ private:
 	template <typename O>
 	static void		test_speed ();
 
+	template <typename O, typename V>
+	static void    test_sweep (O &osc, V &result_m, int len, int block_len, int32_t pitch_beg, int32_t pitch_end, int32_t pitch_slave_beg, int32_t pitch_slave_end, uint32_t sync_pos);
+
 	template <typename O>
-	static void		configure_osc (O &osc, typename O::WavetableDataType &wt);
+	static void		configure_osc (O &osc, typename O::WavetableDataType &wt, typename O::AntialiasedStep &st);
 
 	template <typename O>
 	static float   get_data_scale ();
 
 	template <typename O>
-	static void    add_result (std::vector <float> &result_m, const std::vector <typename O::DataType> &data);
+	static void    add_result (std::vector <float> &result_m, const std::vector <typename O::DataType> &data, size_t len = 0);
 
 
 
@@ -71,23 +74,23 @@ private:
 
 private:
 
-	               TestOscWavetable ()                               = delete;
-	               TestOscWavetable (const TestOscWavetable &other)  = delete;
-	virtual        ~TestOscWavetable ()                              = delete;
-	TestOscWavetable &
-	               operator = (const TestOscWavetable &other)        = delete;
-	bool           operator == (const TestOscWavetable &other) const = delete;
-	bool           operator != (const TestOscWavetable &other) const = delete;
+	               TestOscWavetableSyncHard ()                               = delete;
+	               TestOscWavetableSyncHard (const TestOscWavetableSyncHard &other) = delete;
+	virtual        ~TestOscWavetableSyncHard ()                              = delete;
+	TestOscWavetableSyncHard &
+	               operator = (const TestOscWavetableSyncHard &other)        = delete;
+	bool           operator == (const TestOscWavetableSyncHard &other) const = delete;
+	bool           operator != (const TestOscWavetableSyncHard &other) const = delete;
 
-}; // class TestOscWavetable
-
-
-
-//#include "test/TestOscWavetable.hpp"
+}; // class TestOscWavetableSyncHard
 
 
 
-#endif   // TestOscWavetable_HEADER_INCLUDED
+//#include "test/TestOscWavetableSyncHard.hpp"
+
+
+
+#endif   // TestOscWavetableSyncHard_HEADER_INCLUDED
 
 
 
