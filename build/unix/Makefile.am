@@ -394,6 +394,8 @@ commonsrc = \
         ../../src/mfx/dsp/fir/Remez.h \
         ../../src/mfx/dsp/fir/RemezPoint.cpp \
         ../../src/mfx/dsp/fir/RemezPoint.h \
+        ../../src/mfx/dsp/fir/SlidingOp.h \
+        ../../src/mfx/dsp/fir/SlidingOp.hpp \
         ../../src/mfx/dsp/iir/AllPass1p.cpp \
         ../../src/mfx/dsp/iir/AllPass1p.h \
         ../../src/mfx/dsp/iir/AllPass1p.hpp \
@@ -1191,6 +1193,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestRemez.h \
         ../../src/test/TestSampleMipMapper.cpp \
         ../../src/test/TestSampleMipMapper.h \
+        ../../src/test/TestSlidingOp.cpp \
+        ../../src/test/TestSlidingOp.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \
