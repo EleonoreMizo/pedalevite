@@ -55,9 +55,9 @@ template <typename T, typename OP>
 SlidingOp <T, OP>::SlidingOp ()
 :	_lvl_arr ()
 ,	_pos_w (0)
-,	_op ()
 ,	_len (0)
 ,	_nbr_avail (0)
+,	_op ()
 {
 	set_length (1);
 }
