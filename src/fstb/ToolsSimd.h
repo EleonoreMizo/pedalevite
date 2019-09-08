@@ -145,10 +145,16 @@ public:
 	               extract_2f32 (float &a0, float &a1, VectF32 v);
 	static inline void
 	               spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v);
+
+
 	static inline void
 	               mac (VectF32 &s, VectF32 a, VectF32 b);
 	static inline void
 	               msu (VectF32 &s, VectF32 a, VectF32 b);
+	static inline VectF32
+	               fmadd (VectF32 x, VectF32 a, VectF32 b);
+	static inline VectF32
+	               fmsub (VectF32 x, VectF32 a, VectF32 b);
 	static inline VectF32
 	               min_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectF32
@@ -172,11 +178,17 @@ public:
 	static inline VectF32
 	               rcp_approx2 (VectF32 v);
 	static inline VectF32
+	               div_approx (VectF32 n, VectF32 d);
+	static inline VectF32
+	               div_approx2 (VectF32 n, VectF32 d);
+	static inline VectF32
 	               sqrt (VectF32 v);
 	static inline VectF32
 	               sqrt_approx (VectF32 v);
 	static inline VectF32
 	               rsqrt_approx (VectF32 v);
+	static inline VectF32
+	               rsqrt_approx2 (VectF32 v);
 	static inline VectF32
 	               log2_approx (VectF32 v);
 	static inline VectF32

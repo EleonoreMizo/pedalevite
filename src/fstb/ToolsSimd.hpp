@@ -436,6 +436,28 @@ void	ToolsSimd::msu (VectF32 &s, VectF32 a, VectF32 b)
 
 
 
+ToolsSimd::VectF32	ToolsSimd::fmadd (VectF32 x, VectF32 a, VectF32 b)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_add_ps (_mm_mul_ps (x, a), b);
+#elif fstb_IS (ARCHI, ARM)
+	return vmlaq_f32 (b, x, a);
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::fmsub (VectF32 x, VectF32 a, VectF32 b)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_sub_ps (_mm_mul_ps (x, a), b);
+#elif fstb_IS (ARCHI, ARM)
+	return vmlsq_f32 (b, x, a);
+#endif // ff_arch_CPU
+}
+
+
+
 ToolsSimd::VectF32	ToolsSimd::min_f32 (VectF32 lhs, VectF32 rhs)
 {
 #if fstb_IS (ARCHI, X86)
@@ -575,6 +597,29 @@ ToolsSimd::VectF32	ToolsSimd::rcp_approx2 (VectF32 v)
 
 
 
+ToolsSimd::VectF32	ToolsSimd::div_approx (VectF32 n, VectF32 d)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_div_ps (n, d);
+#elif fstb_IS (ARCHI, ARM)
+	return n * rcp_approx (d);
+#endif // ff_arch_CPU
+}
+
+
+
+// With more accuracy
+ToolsSimd::VectF32	ToolsSimd::div_approx2 (VectF32 n, VectF32 d)
+{
+#if fstb_IS (ARCHI, X86)
+	return _mm_div_ps (n, d);
+#elif fstb_IS (ARCHI, ARM)
+	return n * rcp_approx2 (d);
+#endif // ff_arch_CPU
+}
+
+
+
 ToolsSimd::VectF32	ToolsSimd::sqrt (VectF32 v)
 {
 #if fstb_IS (ARCHI, X86)
@@ -627,6 +672,22 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx (VectF32 v)
 	return _mm_rsqrt_ps (v);
 #elif fstb_IS (ARCHI, ARM)
 	float32x4_t    rs = vrsqrteq_f32 (v);
+	rs *= vrsqrtsq_f32 (rs * v, rs);
+	return rs;
+#endif // ff_arch_CPU
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::rsqrt_approx2 (VectF32 v)
+{
+#if fstb_IS (ARCHI, X86)
+	__m128         rs = _mm_rsqrt_ps (v);
+	rs = _mm_set1_ps (0.5f) * rs * (_mm_set1_ps (3) - v * rs * rs);
+	return rs;
+#elif fstb_IS (ARCHI, ARM)
+	float32x4_t    rs = vrsqrteq_f32 (v);
+	rs *= vrsqrtsq_f32 (rs * v, rs);
 	rs *= vrsqrtsq_f32 (rs * v, rs);
 	return rs;
 #endif // ff_arch_CPU
