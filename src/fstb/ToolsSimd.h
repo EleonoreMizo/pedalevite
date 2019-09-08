@@ -164,6 +164,10 @@ public:
 	static inline VectF32
 	               abs (VectF32 v);
 	static inline VectF32
+	               signbit (VectF32 v);
+	static inline VectF32
+	               signbit_mask_f32 ();
+	static inline VectF32
 	               rcp_approx (VectF32 v);
 	static inline VectF32
 	               rcp_approx2 (VectF32 v);
