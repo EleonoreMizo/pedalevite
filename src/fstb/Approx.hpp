@@ -513,7 +513,7 @@ float	Approx::tanh_2dat (float x)
 	const float    max_val = 7.7539052963256836f;
 
 	const float    s   = x;
-	x = std::min (fabs (x), max_val);
+	x = std::min (float (fabs (x)), max_val);
 	const float    x2  = x * x;
 	const float    xs  = (s < 0) ? -x : x;
 	float          num = (((     n3  * x2 + n2) * x2 + n1) * x2 + n0) * xs;
