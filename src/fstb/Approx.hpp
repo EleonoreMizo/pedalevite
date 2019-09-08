@@ -189,7 +189,7 @@ float	Approx::sin_nick (float x)
 {
 	const float    b = float ( 4 /  fstb::PI);
 	const float    c = float (-4 / (fstb::PI * fstb::PI));
-	const float    d = 0.22401f;
+	const float    d = 0.224008f;
 
 	const float    y = b * x + c * x * fabs (x);
 	const float    z = d * (y * fabs (y) - y) + y;
@@ -201,7 +201,7 @@ ToolsSimd::VectF32	Approx::sin_nick (ToolsSimd::VectF32 x)
 {
 	const auto     b = ToolsSimd::set1_f32 (float ( 4 /  fstb::PI));
 	const auto     c = ToolsSimd::set1_f32 (float (-4 / (fstb::PI * fstb::PI)));
-	const auto     d = ToolsSimd::set1_f32 (0.22401f);
+	const auto     d = ToolsSimd::set1_f32 (0.224008f);
 
 	const auto     y = b * x + c * x * ToolsSimd::abs (x);
 	const auto     z = d * (y * ToolsSimd::abs (y) - y) + y;
@@ -218,7 +218,7 @@ float	Approx::sin_nick_2pi (float x)
 {
 	const float    b =   8;
 	const float    c = -16;
-	const float    d =   0.22401f;
+	const float    d =   0.224008f;
 
 	const float    y = b * x + c * x * fabs (x);
 	const float    z = d * (y * fabs (y) - y) + y;
@@ -230,7 +230,7 @@ ToolsSimd::VectF32	Approx::sin_nick_2pi (ToolsSimd::VectF32 x)
 {
 	const auto     b = ToolsSimd::set1_f32 (  8);
 	const auto     c = ToolsSimd::set1_f32 (-16);
-	const auto     d = ToolsSimd::set1_f32 (  0.22401f);
+	const auto     d = ToolsSimd::set1_f32 (  0.224008f);
 
 	const auto     y = b * x + c * x * ToolsSimd::abs (x);
 	const auto     z = d * (y * ToolsSimd::abs (y) - y) + y;
