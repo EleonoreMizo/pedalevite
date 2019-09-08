@@ -53,7 +53,7 @@ namespace fstb
 
 
 template <class T>
-int	sgn (T x)
+constexpr int	sgn (T x)
 {
 	return (x < T (0) ? -1 : x > T (0) ? 1 : 0);
 }
@@ -61,7 +61,7 @@ int	sgn (T x)
 
 
 template <class T>
-T	limit (T x, T mi, T ma)
+constexpr T	limit (T x, T mi, T ma)
 {
 	return ((x < mi) ? mi : ((x > ma) ? ma : x));
 }
@@ -69,7 +69,7 @@ T	limit (T x, T mi, T ma)
 
 
 template <class T>
-void	sort_2_elt (T &mi, T &ma, T a, T b)
+constexpr void	sort_2_elt (T &mi, T &ma, T a, T b)
 {
 	if (a < b)
 	{
@@ -86,7 +86,7 @@ void	sort_2_elt (T &mi, T &ma, T a, T b)
 
 
 template <class T>
-bool	is_pow_2 (T x)
+constexpr bool	is_pow_2 (T x)
 {
 	return ((x & -x) == x);
 }
@@ -649,25 +649,25 @@ class fnc_ShiftGeneric
 {
 public:
 	static_assert (S < int (sizeof (T) * CHAR_BIT), "Shift too large");
-	static T sh (T x) { return (x << S); }
+	static constexpr T sh (T x) { return (x << S); }
 };
 template <class T, int S>
 class fnc_ShiftGeneric <T, S, false>
 {
 public:
 	static_assert (S < int (sizeof (T) * CHAR_BIT), "Shift too large");
-	static T sh (T x) { return (x >> S); }
+	static constexpr T sh (T x) { return (x >> S); }
 };
 
 template <class T, int S>
-T	sshift_l (T x)
+constexpr T	sshift_l (T x)
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
 	return (fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S > 0)>::sh (x));
 }
 
 template <class T, int S>
-T	sshift_r (T x)
+constexpr T	sshift_r (T x)
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
 	return (fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S < 0)>::sh (x));
@@ -805,7 +805,7 @@ T	rcp_uint (int x)
 
 
 template <class T>
-T	lerp (T v0, T v1, T p)
+constexpr T	lerp (T v0, T v1, T p)
 {
 	return v0 + p * (v1 - v0);
 }
