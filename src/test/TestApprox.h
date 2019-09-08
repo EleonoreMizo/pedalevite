@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        BufferFiller.h
+        TestApprox.h
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -9,15 +9,15 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
 #pragma once
-#if ! defined (BufferFiller_HEADER_INCLUDED)
-#define BufferFiller_HEADER_INCLUDED
+#if ! defined (TestApprox_HEADER_INCLUDED)
+#define TestApprox_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -29,16 +29,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-class BufferFiller
+class TestApprox
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static void    gen_rnd_non_zero (float buf_ptr [], int nbr_spl);
-	static void    gen_rnd_positive (float buf_ptr [], int nbr_spl);
-	static void    gen_rnd_scaled (float buf_ptr [], int nbr_spl, float min_val, float max_val);
+	static int     perform_test ();
 
 
 
@@ -52,28 +50,35 @@ protected:
 
 private:
 
+	template <typename T, int ILL2>
+	class TestFnc
+	{
+	public:
+		template <typename OP, typename S>
+		static void    test_op1 (OP &op, const char name_0 [], S min_val, S max_val);
+	};
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	               BufferFiller ()                               = delete;
-	               BufferFiller (const BufferFiller &other)      = delete;
-	virtual        ~BufferFiller ()                              = delete;
-	BufferFiller & operator = (const BufferFiller &other)        = delete;
-	bool           operator == (const BufferFiller &other) const = delete;
-	bool           operator != (const BufferFiller &other) const = delete;
+	               TestApprox ()                               = delete;
+	               TestApprox (const TestApprox &other)        = delete;
+	virtual        ~TestApprox ()                              = delete;
+	TestApprox &   operator = (const TestApprox &other)        = delete;
+	bool           operator == (const TestApprox &other) const = delete;
+	bool           operator != (const TestApprox &other) const = delete;
 
-}; // class BufferFiller
-
-
-
-//#include "BufferFiller.hpp"
+}; // class TestApprox
 
 
 
-#endif   // BufferFiller_HEADER_INCLUDED
+//#include "test/TestApprox.hpp"
+
+
+
+#endif   // TestApprox_HEADER_INCLUDED
 
 
 

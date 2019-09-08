@@ -68,6 +68,22 @@ void	BufferFiller::gen_rnd_positive (float buf_ptr [], int nbr_spl)
 
 
 
+void	BufferFiller::gen_rnd_scaled (float buf_ptr [], int nbr_spl, float min_val, float max_val)
+{
+	assert (buf_ptr != 0);
+	assert (nbr_spl > 0);
+	assert (min_val <= max_val);
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		const int      rnd = rand ();
+		buf_ptr [pos] =
+			min_val + float (rnd & 0xFFFF) * (max_val - min_val) / 0x10000;
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

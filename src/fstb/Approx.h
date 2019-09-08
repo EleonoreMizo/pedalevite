@@ -79,9 +79,10 @@ public:
 	static inline uint32_t
 	               fast_partial_exp2_int_16_to_int_32_4th (int val);
 
-
 	static inline float
 	               tan_taylor5 (float x);
+	static inline ToolsSimd::VectF32
+	               tan_taylor5 (ToolsSimd::VectF32 x);
 	static inline float
 	               tan_mystran (float x);
 	static inline ToolsSimd::VectF32

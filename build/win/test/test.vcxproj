@@ -98,6 +98,9 @@
     <ClCompile Include="..\..\..\src\test\GraphPrim.cpp" />
     <ClCompile Include="..\..\..\src\test\Gridaxis.cpp" />
     <ClCompile Include="..\..\..\src\test\main.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestApprox.cpp">
+      <AssemblerOutput Condition="'$(Configuration)'=='Release'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\test\TestConvolverFft.cpp" />
     <ClCompile Include="..\..\..\src\test\TestInterpFtor.cpp" />
     <ClCompile Include="..\..\..\src\test\TestOscSample.cpp" />
@@ -118,6 +121,7 @@
     <ClInclude Include="..\..\..\src\test\FileOp.h" />
     <ClInclude Include="..\..\..\src\test\GraphPrim.h" />
     <ClInclude Include="..\..\..\src\test\Gridaxis.h" />
+    <ClInclude Include="..\..\..\src\test\TestApprox.h" />
     <ClInclude Include="..\..\..\src\test\TestConvolverFft.h" />
     <ClInclude Include="..\..\..\src\test\TestInterpFtor.h" />
     <ClInclude Include="..\..\..\src\test\TestInterpPhase.h" />

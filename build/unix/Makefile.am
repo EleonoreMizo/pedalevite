@@ -1171,6 +1171,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/GraphPrim.h \
         ../../src/test/Gridaxis.cpp \
         ../../src/test/Gridaxis.h \
+        ../../src/test/TestApprox.cpp \
+        ../../src/test/TestApprox.h \
         ../../src/test/TestConvolverFft.cpp \
         ../../src/test/TestConvolverFft.h \
         ../../src/test/TestInterpFtor.cpp \

@@ -417,6 +417,16 @@ float	Approx::tan_taylor5 (float x)
 	return ((c_5 * x_2 + c_3) * x_2 + c_1) * x;
 }
 
+ToolsSimd::VectF32	Approx::tan_taylor5 (ToolsSimd::VectF32 x)
+{
+	const auto     x_2 = x * x;
+	const auto     c_1 = fstb::ToolsSimd::set1_f32 (1        );
+	const auto     c_3 = fstb::ToolsSimd::set1_f32 (1.0f / 3 );
+	const auto     c_5 = fstb::ToolsSimd::set1_f32 (2.0f / 15);
+
+	return ((c_5 * x_2 + c_3) * x_2 + c_1) * x;
+}
+
 
 
 // Formula by mystran
