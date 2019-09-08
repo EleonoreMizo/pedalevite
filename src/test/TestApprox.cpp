@@ -278,7 +278,7 @@ template <typename T, typename S>
 static inline T conv_t_to_s (S x) { return static_cast <T> (x); };
 
 template <>
-static inline float conv_t_to_s (fstb::ToolsSimd::VectF32 x)
+inline float conv_t_to_s (fstb::ToolsSimd::VectF32 x)
 {
 	return fstb::ToolsSimd::Shift <0>::extract (x);
 };
@@ -286,7 +286,7 @@ static inline float conv_t_to_s (fstb::ToolsSimd::VectF32 x)
 
 template <typename T, int ILL2>
 template <typename OP, typename S>
-void	TestApprox::TestFnc <T, ILL2>::test_op1 (OP &op, const char name_0 [], S min_val, S max_val)
+void	TestApprox::TestFnc <T, ILL2>::test_op1 (const OP &op, const char name_0 [], S min_val, S max_val)
 {
 	constexpr int  nbr_blocks = 10000;
 	constexpr int  block_len_s = 64;
@@ -317,23 +317,23 @@ void	TestApprox::TestFnc <T, ILL2>::test_op1 (OP &op, const char name_0 [], S mi
 		{
 			T              a [interleave];
 
-			              a [0] = src_arr [pos    ];
-			if (ILL2 > 0) a [1] = src_arr [pos + 1];
-			if (ILL2 > 1) a [2] = src_arr [pos + 2];
-			if (ILL2 > 1) a [3] = src_arr [pos + 3];
-			if (ILL2 > 2) a [4] = src_arr [pos + 4];
-			if (ILL2 > 2) a [5] = src_arr [pos + 5];
-			if (ILL2 > 2) a [6] = src_arr [pos + 6];
-			if (ILL2 > 2) a [7] = src_arr [pos + 7];
+			if (true    ) { a [0] = src_arr [pos    ]; }
+			if (ILL2 > 0) { a [1] = src_arr [pos + 1]; }
+			if (ILL2 > 1) { a [2] = src_arr [pos + 2]; }
+			if (ILL2 > 1) { a [3] = src_arr [pos + 3]; }
+			if (ILL2 > 2) { a [4] = src_arr [pos + 4]; }
+			if (ILL2 > 2) { a [5] = src_arr [pos + 5]; }
+			if (ILL2 > 2) { a [6] = src_arr [pos + 6]; }
+			if (ILL2 > 2) { a [7] = src_arr [pos + 7]; }
 			
-			              dst_arr [pos    ] = op (a [0]);
-			if (ILL2 > 0) dst_arr [pos + 1] = op (a [1]);
-			if (ILL2 > 1) dst_arr [pos + 2] = op (a [2]);
-			if (ILL2 > 1) dst_arr [pos + 3] = op (a [3]);
-			if (ILL2 > 2) dst_arr [pos + 4] = op (a [4]);
-			if (ILL2 > 2) dst_arr [pos + 5] = op (a [5]);
-			if (ILL2 > 2) dst_arr [pos + 6] = op (a [6]);
-			if (ILL2 > 2) dst_arr [pos + 7] = op (a [7]);
+			if (true    ) { dst_arr [pos    ] = op (a [0]); }
+			if (ILL2 > 0) { dst_arr [pos + 1] = op (a [1]); }
+			if (ILL2 > 1) { dst_arr [pos + 2] = op (a [2]); }
+			if (ILL2 > 1) { dst_arr [pos + 3] = op (a [3]); }
+			if (ILL2 > 2) { dst_arr [pos + 4] = op (a [4]); }
+			if (ILL2 > 2) { dst_arr [pos + 5] = op (a [5]); }
+			if (ILL2 > 2) { dst_arr [pos + 6] = op (a [6]); }
+			if (ILL2 > 2) { dst_arr [pos + 7] = op (a [7]); }
 		}
 		dummy_val += conv_t_to_s <S> (src_arr [block_len - 1]);
 	}

@@ -55,7 +55,7 @@ private:
 	{
 	public:
 		template <typename OP, typename S>
-		static void    test_op1 (OP &op, const char name_0 [], S min_val, S max_val);
+		static void    test_op1 (const OP &op, const char name_0 [], S min_val, S max_val);
 	};
 
 
