@@ -82,6 +82,19 @@ public:
 
 	static inline float
 	               tan_taylor5 (float x);
+	static inline float
+	               tan_mystran (float x);
+	static inline ToolsSimd::VectF32
+	               tan_mystran (ToolsSimd::VectF32 x);
+
+	static inline float
+	               tanh_mystran (float x);
+	static inline ToolsSimd::VectF32
+	               tanh_mystran (ToolsSimd::VectF32 x);
+	static inline float
+	               tanh_2dat (float x);
+	static inline ToolsSimd::VectF32
+	               tanh_2dat (ToolsSimd::VectF32 x);
 
 
 

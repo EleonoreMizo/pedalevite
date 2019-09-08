@@ -406,6 +406,7 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32_4th (int val)
 // Errors:
 // below 0.01% up to pi/8
 // below 1.33% up to pi/4
+// https://www.desmos.com/calculator/6ghwlhxumj
 float	Approx::tan_taylor5 (float x)
 {
 	const float    x_2 = x * x;
@@ -414,6 +415,142 @@ float	Approx::tan_taylor5 (float x)
 	const float    c_5 = 2.0f / 15;
 
 	return ((c_5 * x_2 + c_3) * x_2 + c_1) * x;
+}
+
+
+
+// Formula by mystran
+// https://www.kvraudio.com/forum/viewtopic.php?p=7491289#p7491289
+// tan x = sin (x) / cos (x)
+//       = sin (x) / sqrt (1 - sin (x) ^ 2)
+// https://www.desmos.com/calculator/6ghwlhxumj
+float	Approx::tan_mystran (float x)
+{
+	const float    c1 =  1;
+	const float    c3 = -1.f / 6;
+	const float    c5 =  1.f / 120;
+	const float    c7 = -1.f / 5040;
+
+	const float    x2 = x * x;
+	const float    s  = (((c7 * x2 + c5) * x2 + c3) * x2 + c1) * x;
+	const float    c  = sqrt (1 - s * s);
+
+	return s / c;
+}
+
+ToolsSimd::VectF32	Approx::tan_mystran (ToolsSimd::VectF32 x)
+{
+	const auto     c1 = fstb::ToolsSimd::set1_f32 ( 1         );
+	const auto     c3 = fstb::ToolsSimd::set1_f32 (-1.f / 6   );
+	const auto     c5 = fstb::ToolsSimd::set1_f32 ( 1.f / 120 );
+	const auto     c7 = fstb::ToolsSimd::set1_f32 (-1.f / 5040);
+
+	const auto     x2 = x * x;
+	auto           s  = c7;
+	s  = fstb::ToolsSimd::fmadd (s, x2, c5);
+	s  = fstb::ToolsSimd::fmadd (s, x2, c3);
+	s  = fstb::ToolsSimd::fmadd (s, x2, c1);
+	s *= x;
+
+	return s * fstb::ToolsSimd::rsqrt_approx2 (c1 - s * s);
+}
+
+
+
+// Formula by mystran
+// https://www.kvraudio.com/forum/viewtopic.php?f=33&t=521377
+// s (x) = x / sqrt (1 + x^2)
+// h3 (x) = s (x + 0.183 * x^3)
+// Max error: 3.64e-3
+// https://www.desmos.com/calculator/sjxol8khaz
+float	Approx::tanh_mystran (float x)
+{
+	const float    p   = 0.183f;
+
+	// x <- x + 0.183 * x^3
+	float          x2 = x * x;
+	x += x * x2 * p;
+
+	// x <- x / sqrt (1 + x^2)
+	x2 = x * x;
+	x /= sqrt (1 + x2);
+
+	return x;
+}
+
+ToolsSimd::VectF32	Approx::tanh_mystran (ToolsSimd::VectF32 x)
+{
+	const auto     p   = fstb::ToolsSimd::set1_f32 (0.183f);
+	const auto     one = fstb::ToolsSimd::set1_f32 (1.0f);
+
+	// x <- x + 0.183 * x^3
+	auto           x2 = x * x;
+	x += x * x2 * p;
+
+	// x <- x / sqrt (1 + x^2)
+	x2 = x * x;
+	x *= fstb::ToolsSimd::rsqrt_approx2 (one + x2);
+
+	return x;
+}
+
+
+
+// Formula by 2DaT
+// https://www.kvraudio.com/forum/viewtopic.php?p=7503081#p7503081
+// Max error: 3.14e-6
+// https://www.desmos.com/calculator/sjxol8khaz
+float	Approx::tanh_2dat (float x)
+{
+	const float    n0      = 4.351839500e+06f;
+	const float    n1      = 5.605646250e+05f;
+	const float    n2      = 1.263485352e+04f;
+	const float    n3      = 4.751771164e+01f;
+	const float    d0      = n0;
+	const float    d1      = 2.011170000e+06f;
+	const float    d2      = 1.027901563e+05f;
+	const float    d3      = 1.009453430e+03f;
+	const float    max_val = 7.7539052963256836f;
+
+	const float    s   = x;
+	x = std::min (fabs (x), max_val);
+	const float    x2  = x * x;
+	const float    xs  = (s < 0) ? -x : x;
+	float          num = (((     n3  * x2 + n2) * x2 + n1) * x2 + n0) * xs;
+	const float    den = (((x2 + d3) * x2 + d2) * x2 + d1) * x2 + d0;
+
+	return num / den;
+}
+
+ToolsSimd::VectF32	Approx::tanh_2dat (ToolsSimd::VectF32 x)
+{
+	const auto     n0      = fstb::ToolsSimd::set1_f32 (4.351839500e+06f);
+	const auto     n1      = fstb::ToolsSimd::set1_f32 (5.605646250e+05f);
+	const auto     n2      = fstb::ToolsSimd::set1_f32 (1.263485352e+04f);
+	const auto     n3      = fstb::ToolsSimd::set1_f32 (4.751771164e+01f);
+	const auto     d0      = n0;
+	const auto     d1      = fstb::ToolsSimd::set1_f32 (2.011170000e+06f);
+	const auto     d2      = fstb::ToolsSimd::set1_f32 (1.027901563e+05f);
+	const auto     d3      = fstb::ToolsSimd::set1_f32 (1.009453430e+03f);
+	const auto     max_val = fstb::ToolsSimd::set1_f32 (7.7539052963256836f);
+
+	const auto     s   = fstb::ToolsSimd::signbit (x);
+	x = fstb::ToolsSimd::abs (x);
+	x = fstb::ToolsSimd::min_f32 (x, max_val);
+	const auto     x2  = x * x;
+	const auto     xs  = fstb::ToolsSimd::xor_f32 (x, s);
+	auto           num = n3;
+	num  = fstb::ToolsSimd::fmadd (num, x2, n2);
+	num  = fstb::ToolsSimd::fmadd (num, x2, n1);
+	num  = fstb::ToolsSimd::fmadd (num, x2, n0);
+	num *= xs;
+	auto           den = d3;
+	den *= x2;
+	den  = fstb::ToolsSimd::fmadd (den, x2, d2);
+	den  = fstb::ToolsSimd::fmadd (den, x2, d1);
+	den  = fstb::ToolsSimd::fmadd (den, x2, d0);
+
+	return fstb::ToolsSimd::div_approx2 (num, den);
 }
 
 
