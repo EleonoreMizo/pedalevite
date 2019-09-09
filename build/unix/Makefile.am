@@ -952,6 +952,8 @@ commonsrc = \
         ../../src/mfx/piapi/PluginState.h \
         ../../src/mfx/ui/DisplayInterface.cpp \
         ../../src/mfx/ui/DisplayInterface.h \
+        ../../src/mfx/ui/DisplayLinuxFrameBuf.cpp \
+        ../../src/mfx/ui/DisplayLinuxFrameBuf.h \
         ../../src/mfx/ui/DisplayPi3Pcd8544.cpp \
         ../../src/mfx/ui/DisplayPi3Pcd8544.h \
         ../../src/mfx/ui/DisplayPi3St7920.cpp \

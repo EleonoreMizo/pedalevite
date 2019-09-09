@@ -629,6 +629,7 @@
     <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\DisplayLinuxFrameBuf.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h" />
     <ClInclude Include="..\..\..\src\mfx\PageSet.h" />
@@ -1343,6 +1344,9 @@
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\DisplayLinuxFrameBuf.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayPi3Pcd8544.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>

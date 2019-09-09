@@ -2847,6 +2847,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingOp.hpp">
       <Filter>mfx\dsp\fir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\ui\DisplayLinuxFrameBuf.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3901,6 +3904,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\fir\ConvolverFft.cpp">
       <Filter>mfx\dsp\fir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ui\DisplayLinuxFrameBuf.cpp">
+      <Filter>mfx\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
