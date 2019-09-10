@@ -204,6 +204,7 @@ private:
 		inline void    set (int gpio) const;
 		inline void    write (int gpio, int val) const;
 		inline int     read (int gpio) const;
+		inline int     read_cached (int gpio) const;
 		inline void    pull (int gpio, Pull p) const;
 #if defined (mfx_adrv_DPvab_TEST)
 		void           run ();
@@ -266,6 +267,7 @@ private:
 		uint32_t       _periph_addr;            // 0x3F000000 on Pi 3, 0x20000000 on Pi 1
 		volatile uint32_t *
 		               _gpio_ptr;
+		uint32_t       _last_read;
 #endif
 
 		static inline void

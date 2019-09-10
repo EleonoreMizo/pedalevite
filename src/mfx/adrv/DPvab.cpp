@@ -272,6 +272,7 @@ DPvab::GpioAccess::GpioAccess ()
 #if ! defined (mfx_adrv_DPvab_TEST)
 :	_periph_addr (::bcm_host_get_peripheral_address ())
 ,	_gpio_ptr (map_periph (_periph_addr + _ofs_gpio, _len_gpio))
+,	_last_read (0)
 #endif // mfx_adrv_DPvab_TEST
 {
 	// Nothing
@@ -364,10 +365,19 @@ int	DPvab::GpioAccess::read (int gpio) const
 	assert (gpio < _nbr_gpio);
 
 #if defined (mfx_adrv_DPvab_TEST)
-	return (_gpio_state >> gpio) & 1;
+	_last_read = _gpio_state;
 #else  // mfx_adrv_DPvab_TEST
-	return (_gpio_ptr [_ofs_reg_lvl] >> gpio) & 1;
+	_last_read = _gpio_ptr [_ofs_reg_lvl];
 #endif // mfx_adrv_DPvab_TEST
+
+	return read_cached (gpio);
+}
+
+
+
+int	DPvab::GpioAccess::read_cached (int gpio) const
+{
+	return (_last_read >> gpio) & 1;
 }
 
 
@@ -581,8 +591,8 @@ void	DPvab::main_loop ()
 //		printf ("CPU   - Rising edge\n");
 #endif // mfx_adrv_DPvab_TEST
 
-		const int      lrck = _gpio.read (_pin_lrck);
-		const int      val  = _gpio.read (_pin_din );
+		const int      lrck = _gpio.read_cached (_pin_lrck);
+		const int      val  = _gpio.read_cached (_pin_din );
 
 		// Checks LRCK and updates counters
 		if (lrck != _lrclk_cur)
