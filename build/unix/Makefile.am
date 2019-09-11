@@ -191,8 +191,8 @@ pedalevite_SOURCES = \
         ../../src/mfx/adrv/DJack.h \
         ../../src/mfx/adrv/DManual.cpp \
         ../../src/mfx/adrv/DManual.h \
-        ../../src/mfx/adrv/DPvab.cpp \
-        ../../src/mfx/adrv/DPvab.h \
+        ../../src/mfx/adrv/DPvabDirect.cpp \
+        ../../src/mfx/adrv/DPvabDirect.h \
         ../../src/mfx/adrv/DriverInterface.cpp \
         ../../src/mfx/adrv/DriverInterface.h \
         ../../src/mfx/cmd/BufAlloc.cpp \

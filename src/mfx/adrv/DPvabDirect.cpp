@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DPvab.cpp
+        DPvabDirect.cpp
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -23,25 +23,25 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 // Enables use of SIMD instructions in the buffer conversion and copy
-#define mfx_adrv_DPvab_USE_SIMD
+#define mfx_adrv_DPvabDirect_USE_SIMD
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
-#if defined (mfx_adrv_DPvab_USE_SIMD)
+#if defined (mfx_adrv_DPvabDirect_USE_SIMD)
 	#include "fstb/ToolsSimd.h"
 #endif
 #include "mfx/adrv/CbInterface.h"
-#include "mfx/adrv/DPvab.h"
+#include "mfx/adrv/DPvabDirect.h"
 
-#if ! defined (mfx_adrv_DPvab_TEST)
+#if ! defined (mfx_adrv_DPvabDirect_TEST)
 
-	#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+	#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
 		#include <wiringPi.h>
 		#include <wiringPiI2C.h>
-	#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 	#include <bcm_host.h>
 
@@ -51,7 +51,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 	#include <sched.h>
 	#include <unistd.h>
 
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 #include <chrono>
 #include <stdexcept>
@@ -73,7 +73,7 @@ namespace adrv
 
 
 
-DPvab::DPvab ()
+DPvabDirect::DPvabDirect ()
 :	_gpio ()
 ,	_cb_ptr (0)
 ,	_lrclk_cur (0)
@@ -95,16 +95,16 @@ DPvab::DPvab ()
 ,	_blk_proc_mtx ()
 ,	_blk_proc_cv ()
 ,	_state (State_STOP)
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvabDirect_TEST)
 ,	_i2c_hnd (::wiringPiI2CSetup (_i2c_addr))
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE, mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE, mfx_adrv_DPvabDirect_TEST
 {
 	// Nothing
 }
 
 
 
-DPvab::~DPvab ()
+DPvabDirect::~DPvabDirect ()
 {
 	if (_thread_main.joinable ())
 	{
@@ -112,13 +112,13 @@ DPvab::~DPvab ()
 		_thread_main.join ();
 	}
 
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvabDirect_TEST)
 	if (_i2c_hnd != -1)
 	{
 		close (_i2c_hnd);
 		_i2c_hnd = -1;
 	}
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE, mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE, mfx_adrv_DPvabDirect_TEST
 }
 
 
@@ -127,7 +127,7 @@ DPvab::~DPvab ()
 
 
 
-int	DPvab::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
+int	DPvabDirect::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
 {
 	assert (chn_idx_in == 0);
 	assert (chn_idx_out == 0);
@@ -156,7 +156,7 @@ int	DPvab::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 
 
 
-int	DPvab::do_start ()
+int	DPvabDirect::do_start ()
 {
 	int            ret_val = 0;
 
@@ -173,9 +173,9 @@ int	DPvab::do_start ()
 
 	_gpio.write (_pin_rst, 1);
 
-#if ! defined (mfx_adrv_DPvab_TEST)
+#if ! defined (mfx_adrv_DPvabDirect_TEST)
 
-	#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+	#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
 
 	// If MCLK is internally generated, waits for for it
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
@@ -206,23 +206,23 @@ int	DPvab::do_start ()
 	// Actually only 85 us are required
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
 
-	#else  // mfx_adrv_DPvab_CTRL_PORT_MODE
+	#else  // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 	// Waits 10 ms so we make sure we are in stand-alone mode
 	std::this_thread::sleep_for (std::chrono::milliseconds (10));
 
-	#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 	// Initializes threads and stuff
 	_exit_flag   = false;
-	_thread_main = std::thread (&DPvab::main_loop, this);
-#if defined (mfx_adrv_DPvab_TEST)
+	_thread_main = std::thread (&DPvabDirect::main_loop, this);
+#if defined (mfx_adrv_DPvabDirect_TEST)
 	_gpio.run ();
-#else // mfx_adrv_DPvab_TEST
+#else // mfx_adrv_DPvabDirect_TEST
 	set_thread_priority (_thread_main, 0);
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 	if (ret_val == 0)
 	{
@@ -234,7 +234,7 @@ int	DPvab::do_start ()
 
 
 
-int	DPvab::do_stop ()
+int	DPvabDirect::do_stop ()
 {
 	int            ret_val = 0;
 
@@ -242,9 +242,9 @@ int	DPvab::do_stop ()
 	{
 		_exit_flag = true;
 		_thread_main.join ();
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 		_gpio.stop ();
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 	}
 
 	_state = State_STOP;
@@ -254,7 +254,7 @@ int	DPvab::do_stop ()
 
 
 
-void	DPvab::do_restart ()
+void	DPvabDirect::do_restart ()
 {
 	do_stop ();
 	do_start ();
@@ -262,7 +262,7 @@ void	DPvab::do_restart ()
 
 
 
-std::string	DPvab::do_get_last_error () const
+std::string	DPvabDirect::do_get_last_error () const
 {
 	return "";
 }
@@ -273,12 +273,12 @@ std::string	DPvab::do_get_last_error () const
 
 
 
-DPvab::GpioAccess::GpioAccess ()
-#if ! defined (mfx_adrv_DPvab_TEST)
+DPvabDirect::GpioAccess::GpioAccess ()
+#if ! defined (mfx_adrv_DPvabDirect_TEST)
 :	_periph_addr (::bcm_host_get_peripheral_address ())
 ,	_gpio_ptr (map_periph (_periph_addr + _ofs_gpio, _len_gpio))
 ,	_last_read (0)
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 {
 	// Nothing
 }
@@ -286,16 +286,16 @@ DPvab::GpioAccess::GpioAccess ()
 
 
 // This function requires atomic compare-and-swap to be thread-safe.
-void	DPvab::GpioAccess::set_fnc (int gpio, PinFnc fnc) const
+void	DPvabDirect::GpioAccess::set_fnc (int gpio, PinFnc fnc) const
 {
 	assert (fnc >= 0);
 	assert (fnc < PinFnc_NBR_ELT);
 
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 	const uint32_t mask = uint32_t (1) << gpio;
 	_gpio_read  = (_gpio_read  & ~mask) | ((fnc == PinFnc_IN ) ? mask : 0);
 	_gpio_write = (_gpio_write & ~mask) | ((fnc == PinFnc_OUT) ? mask : 0);
-#else // mfx_adrv_DPvab_TEST
+#else // mfx_adrv_DPvabDirect_TEST
 	int            ofs_reg;
 	int            shf_bit;
 	find_addr_fnc (ofs_reg, shf_bit, gpio);
@@ -306,48 +306,48 @@ void	DPvab::GpioAccess::set_fnc (int gpio, PinFnc fnc) const
 	val &= ~(msk_base << shf_bit);
 	val |= uint32_t (fnc) << shf_bit;
 	_gpio_ptr [ofs_reg] = val;
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 }
 
 
 
-void	DPvab::GpioAccess::clear (int gpio) const
+void	DPvabDirect::GpioAccess::clear (int gpio) const
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
 
 	const uint32_t mask = uint32_t (1) << gpio;
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 	if ((_gpio_write & mask) != 0)
 	{
 		_gpio_state.fetch_and (~mask);
 	}
-#else // mfx_adrv_DPvab_TEST
+#else // mfx_adrv_DPvabDirect_TEST
 	_gpio_ptr [_ofs_reg_clr] = mask;
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 }
 
 
 
-void	DPvab::GpioAccess::set (int gpio) const
+void	DPvabDirect::GpioAccess::set (int gpio) const
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
 
 	const uint32_t mask = uint32_t (1) << gpio;
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 	if ((_gpio_write & mask) != 0)
 	{
 		_gpio_state.fetch_or (mask);
 	}
-#else  // mfx_adrv_DPvab_TEST
+#else  // mfx_adrv_DPvabDirect_TEST
 	_gpio_ptr [_ofs_reg_set] = mask;
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 }
 
 
 
-void	DPvab::GpioAccess::write (int gpio, int val) const
+void	DPvabDirect::GpioAccess::write (int gpio, int val) const
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -364,30 +364,30 @@ void	DPvab::GpioAccess::write (int gpio, int val) const
 
 
 
-int	DPvab::GpioAccess::read (int gpio) const
+int	DPvabDirect::GpioAccess::read (int gpio) const
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
 
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 	_last_read = _gpio_state;
-#else  // mfx_adrv_DPvab_TEST
+#else  // mfx_adrv_DPvabDirect_TEST
 	_last_read = _gpio_ptr [_ofs_reg_lvl];
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 	return read_cached (gpio);
 }
 
 
 
-int	DPvab::GpioAccess::read_cached (int gpio) const
+int	DPvabDirect::GpioAccess::read_cached (int gpio) const
 {
 	return (_last_read >> gpio) & 1;
 }
 
 
 
-void	DPvab::GpioAccess::pull (int gpio, Pull p) const
+void	DPvabDirect::GpioAccess::pull (int gpio, Pull p) const
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -397,7 +397,7 @@ void	DPvab::GpioAccess::pull (int gpio, Pull p) const
 	// At least 150 cycles
 	const std::chrono::microseconds  wait_time (10);
 
-#if ! defined (mfx_adrv_DPvab_TEST)
+#if ! defined (mfx_adrv_DPvabDirect_TEST)
 	const uint32_t mask = uint32_t (1) << gpio;
 	_gpio_ptr [_ofs_reg_pull] = uint32_t (p);
 	std::this_thread::sleep_for (wait_time);
@@ -405,26 +405,26 @@ void	DPvab::GpioAccess::pull (int gpio, Pull p) const
 	std::this_thread::sleep_for (wait_time);
 	_gpio_ptr [_ofs_reg_pull] = uint32_t (Pull_NONE);
 	_gpio_ptr [_ofs_reg_pclk] &= ~mask;
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 }
 
 
 
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 
-void	DPvab::GpioAccess::run ()
+void	DPvabDirect::GpioAccess::run ()
 {
 	_quit_flag = false;
-	_test_thread = std::thread (&DPvab::GpioAccess::fake_data_loop, this);
+	_test_thread = std::thread (&DPvabDirect::GpioAccess::fake_data_loop, this);
 }
 
-void	DPvab::GpioAccess::stop ()
+void	DPvabDirect::GpioAccess::stop ()
 {
 	_quit_flag = true;
 	_test_thread.join ();
 }
 
-void	DPvab::GpioAccess::fake_data_loop ()
+void	DPvabDirect::GpioAccess::fake_data_loop ()
 {
 	printf ("Device Event   Pos Chn Data\n");
 
@@ -437,10 +437,10 @@ void	DPvab::GpioAccess::fake_data_loop ()
 	while (! _quit_flag)
 	{
 		for (int chn = 0
-		;	chn < DPvab::_nbr_chn && ! _quit_flag
+		;	chn < DPvabDirect::_nbr_chn && ! _quit_flag
 		;	++ chn)
 		{
-			set_fake_bit (DPvab::_pin_lrck, chn);
+			set_fake_bit (DPvabDirect::_pin_lrck, chn);
 
 			// Fake signal generation
 			const int      d   = 5;
@@ -458,13 +458,13 @@ void	DPvab::GpioAccess::fake_data_loop ()
 
 
 			for (int pos_clk = 0
-			;	pos_clk < DPvab::_bits_per_chn && ! _quit_flag
+			;	pos_clk < DPvabDirect::_bits_per_chn && ! _quit_flag
 			;	++ pos_clk)
 			{
 				if (pos_clk == 1)
 				{
 					val_sent = val_24;
-					pos_bit  = DPvab::_resol - 1;
+					pos_bit  = DPvabDirect::_resol - 1;
 				}
 
 				int            data_bit = 0;
@@ -473,13 +473,13 @@ void	DPvab::GpioAccess::fake_data_loop ()
 					data_bit = (val_sent >> pos_bit) & 1;
 				}
 
-				set_fake_bit (DPvab::_pin_bclk, 0);
-				set_fake_bit (DPvab::_pin_din, data_bit);
+				set_fake_bit (DPvabDirect::_pin_bclk, 0);
+				set_fake_bit (DPvabDirect::_pin_din, data_bit);
 
 				print_gpio ();
 				std::this_thread::sleep_for (std::chrono::milliseconds (_hclk_dur));
 
-				set_fake_bit (DPvab::_pin_bclk, 1);
+				set_fake_bit (DPvabDirect::_pin_bclk, 1);
 
 				print_gpio ();
 				std::this_thread::sleep_for (std::chrono::milliseconds (_hclk_dur));
@@ -492,7 +492,7 @@ void	DPvab::GpioAccess::fake_data_loop ()
 	}
 }
 
-void	DPvab::GpioAccess::set_fake_bit (int gpio, int val)
+void	DPvabDirect::GpioAccess::set_fake_bit (int gpio, int val)
 {
 	const uint32_t mask = uint32_t (1) << gpio;
 	if ((_gpio_read & mask) != 0)
@@ -508,7 +508,7 @@ void	DPvab::GpioAccess::set_fake_bit (int gpio, int val)
 	}
 }
 
-void	DPvab::GpioAccess::print_gpio () const
+void	DPvabDirect::GpioAccess::print_gpio () const
 {
 #if 0 // Very verbose...
 	const uint32_t state = _gpio_state;
@@ -527,12 +527,12 @@ void	DPvab::GpioAccess::print_gpio () const
 
 
 
-#else // mfx_adrv_DPvab_TEST
+#else // mfx_adrv_DPvabDirect_TEST
 
 
 
 // Duplicated from GpioPwm::map_periph ()
-volatile uint32_t *	DPvab::GpioAccess::map_periph (uint32_t base, uint32_t len)
+volatile uint32_t *	DPvabDirect::GpioAccess::map_periph (uint32_t base, uint32_t len)
 {
 	int            fd = open ("/dev/mem", O_RDWR | O_SYNC);
 	if (fd < 0)
@@ -554,11 +554,11 @@ volatile uint32_t *	DPvab::GpioAccess::map_periph (uint32_t base, uint32_t len)
 
 
 
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 
 
-void	DPvab::GpioAccess::find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio)
+void	DPvabDirect::GpioAccess::find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio)
 {
 	assert (gpio >= 0);
 	assert (gpio < _nbr_gpio);
@@ -571,7 +571,7 @@ void	DPvab::GpioAccess::find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio)
 
 
 
-void	DPvab::main_loop ()
+void	DPvabDirect::main_loop ()
 {
 	_lrclk_cur     = 0;
 	_btclk_cur     = 0;
@@ -586,10 +586,10 @@ void	DPvab::main_loop ()
 
 	_proc_ex_flag  = false;
 	_proc_now_flag = false;
-	std::thread    thread_proc (&DPvab::proc_loop, this);
-#if ! defined (mfx_adrv_DPvab_TEST)
+	std::thread    thread_proc (&DPvabDirect::proc_loop, this);
+#if ! defined (mfx_adrv_DPvabDirect_TEST)
 	set_thread_priority (thread_proc, -4);
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 	// Clears integer buffers
 	memset (&_buf_int_i [0], 0, sizeof (_buf_int_i [0]) * _buf_int_i.size ());
@@ -599,10 +599,10 @@ void	DPvab::main_loop ()
 	{
 		// Rising edge
 		sync_to_bclk_edge (+1);
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 		std::this_thread::sleep_for (std::chrono::milliseconds (5));
 //		printf ("CPU   - Rising edge\n");
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 		const int      lrck = _gpio.read_cached (_pin_lrck);
 		const int      val  = _gpio.read_cached (_pin_din );
@@ -640,9 +640,9 @@ void	DPvab::main_loop ()
 					_buf_pos &= ~1;
 				}
 
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 				printf ("CPU    Synchronized\n");
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 			}
 		}
 		else
@@ -684,7 +684,7 @@ void	DPvab::main_loop ()
 			const int      pos_i   =
 				buf_idx * _block_size_a * _nbr_chn + _buf_pos;
 			_buf_int_i [pos_i] = _content_r;
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 			printf (
 				"CPU    Receive %03d  %d                    %s0x%06X\n",
 				_buf_pos >> 1,
@@ -693,7 +693,7 @@ void	DPvab::main_loop ()
 				_content_r & ((1 << _resol) - 1)
 			);
 
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 			// Updates buffer-related counters
 			++ _buf_pos;
@@ -723,7 +723,7 @@ void	DPvab::main_loop ()
 			const int      pos_o   =
 				buf_idx * _block_size_a * _nbr_chn + _buf_pos;
 			_content_w = _buf_int_o [pos_o];
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 			printf (
 				"CPU    Send    %03d  %d                                      %s0x%06X\n",
 				_buf_pos >> 1,
@@ -731,7 +731,7 @@ void	DPvab::main_loop ()
 				((_buf_pos & 1) == 1) ? "         " : "",
 				_content_w & ((1 << _resol) - 1)
 			);
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 		}
 
 		// Data to be written after the falling edge
@@ -743,10 +743,10 @@ void	DPvab::main_loop ()
 
 		// Falling edge
 		sync_to_bclk_edge (-1);
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 		std::this_thread::sleep_for (std::chrono::milliseconds (5));
 //		printf ("CPU   - Falling edge\n");
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 		// Writes data
 		_gpio.write (_pin_dout, bit_w);
@@ -770,7 +770,7 @@ void	DPvab::main_loop ()
 // dir:
 // +1: rising edge
 // -1: falling edge
-void	DPvab::sync_to_bclk_edge (int dir)
+void	DPvabDirect::sync_to_bclk_edge (int dir)
 {
 	assert (dir == 1 || dir == -1);
 
@@ -797,7 +797,7 @@ void	DPvab::sync_to_bclk_edge (int dir)
 
 
 
-void	DPvab::proc_loop ()
+void	DPvabDirect::proc_loop ()
 {
 	std::unique_lock <std::mutex> lock (_blk_proc_mtx);
 
@@ -816,12 +816,12 @@ void	DPvab::proc_loop ()
 	const float    scale_i = 1.0f / scale_o;
 	const float    max_flt = (scale_o - 1) * scale_i;
 
-#if defined (mfx_adrv_DPvab_USE_SIMD)
+#if defined (mfx_adrv_DPvabDirect_USE_SIMD)
 	const auto     sc_o_v = fstb::ToolsSimd::set1_f32 (scale_o);
 	const auto     sc_i_v = fstb::ToolsSimd::set1_f32 (scale_i);
 	const auto     maxf_v = fstb::ToolsSimd::set1_f32 (max_flt);
 	const auto     mone_v = fstb::ToolsSimd::set1_f32 (-1);
-#endif // mfx_adrv_DPvab_USE_SIMD
+#endif // mfx_adrv_DPvabDirect_USE_SIMD
 
 	float *        buf_flt_i_ptr = &_buf_flt_i [0];
 	float *        buf_flt_o_ptr = &_buf_flt_o [0];
@@ -848,7 +848,7 @@ void	DPvab::proc_loop ()
 		int32_t *      buf_int_o_ptr = &_buf_int_o [ofs];
 
 		// Copies acquired data to input buffer
-#if defined (mfx_adrv_DPvab_USE_SIMD)
+#if defined (mfx_adrv_DPvabDirect_USE_SIMD)
 		for (int pos = 0; pos < _block_size; pos += 4)
 		{
 			const auto     x0_int =
@@ -869,7 +869,7 @@ void	DPvab::proc_loop ()
 				buf_flt_i_ptr + _block_size_a + pos, xr_flt
 			);
 		}
-#else // mfx_adrv_DPvab_USE_SIMD
+#else // mfx_adrv_DPvabDirect_USE_SIMD
 		for (int pos = 0; pos < _block_size; ++pos)
 		{
 			const int32_t  xl_int = buf_int_i_ptr [pos * 2    ];
@@ -879,13 +879,13 @@ void	DPvab::proc_loop ()
 			buf_flt_i_ptr [                pos] = xl_flt;
 			buf_flt_i_ptr [_block_size_a + pos] = xr_flt;
 		}
-#endif // mfx_adrv_DPvab_USE_SIMD
+#endif // mfx_adrv_DPvabDirect_USE_SIMD
 
 		// Processing
 		_cb_ptr->process_block (dst_arr, src_arr, _block_size);
 
 		// Copies produced data to the output buffer
-#if defined (mfx_adrv_DPvab_USE_SIMD)
+#if defined (mfx_adrv_DPvabDirect_USE_SIMD)
 		for (int pos = 0; pos < _block_size; pos += 4)
 		{
 			auto           xl_flt =
@@ -906,7 +906,7 @@ void	DPvab::proc_loop ()
 			fstb::ToolsSimd::store_s32 (buf_int_o_ptr + pos * 2    , x0_int);
 			fstb::ToolsSimd::store_s32 (buf_int_o_ptr + pos * 2 + 4, x1_int);
 		}
-#else // mfx_adrv_DPvab_USE_SIMD
+#else // mfx_adrv_DPvabDirect_USE_SIMD
 		for (int pos = 0; pos < _block_size; ++pos)
 		{
 			float          xl_flt = buf_flt_o_ptr [                pos];
@@ -920,19 +920,19 @@ void	DPvab::proc_loop ()
 			buf_int_o_ptr [pos * 2    ] = xl_int;
 			buf_int_o_ptr [pos * 2 + 1] = xr_int;
 		}
-#endif // mfx_adrv_DPvab_USE_SIMD
+#endif // mfx_adrv_DPvabDirect_USE_SIMD
 	}
 }
 
 
 
-#if ! defined (mfx_adrv_DPvab_TEST)
+#if ! defined (mfx_adrv_DPvabDirect_TEST)
 
-	#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+	#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
 
 
 
-void	DPvab::write_reg (uint8_t reg, uint8_t val)
+void	DPvabDirect::write_reg (uint8_t reg, uint8_t val)
 {
 	assert (_i2c_hnd != -1);
 
@@ -941,11 +941,11 @@ void	DPvab::write_reg (uint8_t reg, uint8_t val)
 
 
 
-	#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 
 
-int	DPvab::set_thread_priority (std::thread &thrd, int prio_below_max)
+int	DPvabDirect::set_thread_priority (std::thread &thrd, int prio_below_max)
 {
 	assert (prio_below_max <= 0);
 
@@ -987,7 +987,7 @@ int	DPvab::set_thread_priority (std::thread &thrd, int prio_below_max)
 
 
 
-#endif // mfx_adrv_DPvab_TEST
+#endif // mfx_adrv_DPvabDirect_TEST
 
 
 
@@ -996,7 +996,7 @@ int	DPvab::set_thread_priority (std::thread &thrd, int prio_below_max)
 
 
 
-#undef mfx_adrv_DPvab_USE_SIMD
+#undef mfx_adrv_DPvabDirect_USE_SIMD
 
 
 

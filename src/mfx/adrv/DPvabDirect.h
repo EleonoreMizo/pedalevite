@@ -1,9 +1,24 @@
 /*****************************************************************************
 
-        DPvab.h
+        DPvabDirect.h
         Author: Laurent de Soras, 2019
 
 Driver for the Pedale Vite Audio Board
+Uses explicit pin reading/writing
+
+This driver doesn't work satisfactorily enough. The thread is often inter-
+rupted and loses synchronisation, causing glitches in input and output audio
+signals. Moreover, the GPIO timings read on a scope look too tight to be
+really safe.
+
+It would be necessary to use a dedicated interface on the SoC, like the
+PCM/I2S one (BCM2835 doc, chap. 8, p. 119).
+
+It may be possible to use raw DMA transfers, but synchronisation looks
+complicated.
+
+However this driver would probably work on a faster system and a real-time
+kernel.
 
 --- Legal stuff ---
 
@@ -18,8 +33,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_adrv_DPvab_HEADER_INCLUDED)
-#define mfx_adrv_DPvab_HEADER_INCLUDED
+#if ! defined (mfx_adrv_DPvabDirect_HEADER_INCLUDED)
+#define mfx_adrv_DPvabDirect_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,11 +42,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#undef mfx_adrv_DPvab_TEST
+#undef mfx_adrv_DPvabDirect_TEST
 
 // It's better to make the Control Port Mode as default. Stand-alone mode
 // has issues because some stuffs cannot be changed once the codec is started.
-#define mfx_adrv_DPvab_CTRL_PORT_MODE
+#define mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 
 
@@ -57,7 +72,7 @@ namespace adrv
 
 
 
-class DPvab
+class DPvabDirect
 :	public DriverInterface
 {
 
@@ -69,15 +84,15 @@ public:
 	static const int  _bits_per_chn = 32; // Transmitted bits (meaningful + padding)
 	static const int  _resol        = 24; // Number of meaningful bits.
 	static const int  _transfer_lag =  1; // I2S data is one clock cycle after the LRCLK edge. >= 0
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 	static const int  _block_size   =  4; // Buffer size in samples, for processing
 #else
 	static const int  _block_size   = 64; // Buffer size in samples, for processing
 #endif
 	static const int  _fs_code      =  1; // Sampling rate: 0 = 48 kHz, 1 = 44.1 kHz
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
 	static const int  _i2c_addr     = 0x10 + 0;
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 	// GPIO pins (BCM numbering, not WiringPi)
 	static const int  _pin_rst      =  5; // W - Reset pin (0 = reset, 1 = working)
@@ -87,8 +102,8 @@ public:
 	static const int  _pin_din      = 20; // R - I2S data input (codec to cpu)
 	static const int  _pin_dout     = 21; // W - I2S data output (cpu to codec)
 
-	               DPvab ();
-	virtual        ~DPvab ();
+	               DPvabDirect ();
+	virtual        ~DPvabDirect ();
 
 
 
@@ -207,12 +222,12 @@ private:
 		inline int     read (int gpio) const;
 		inline int     read_cached (int gpio) const;
 		inline void    pull (int gpio, Pull p) const;
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 		void           run ();
 		void           stop ();
 #endif
 	private:
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 		void           fake_data_loop ();
 		void           set_fake_bit (int gpio, int val);
 		void           print_gpio () const;
@@ -253,7 +268,7 @@ private:
 		               _ofs_reg_pclk = 38;
 		static const int  _fnc_field_size = 3;
 
-#if defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_TEST)
 		std::atomic <bool>
 		               _quit_flag = { false };
 		mutable std::atomic <uint32_t>
@@ -291,10 +306,10 @@ private:
 	inline void    sync_to_bclk_edge (int dir);
 	void           proc_loop ();
 
-#if ! defined (mfx_adrv_DPvab_TEST)
-	#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+#if ! defined (mfx_adrv_DPvabDirect_TEST)
+	#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
 	void           write_reg (uint8_t reg, uint8_t val);
-	#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 	static int     set_thread_priority (std::thread &thrd, int prio_below_max);
 #endif
@@ -339,9 +354,9 @@ private:
 
 	State          _state;
 
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvab_TEST)
+#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvabDirect_TEST)
 	int            _i2c_hnd;
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
 
 
 
@@ -349,12 +364,12 @@ private:
 
 private:
 
-	               DPvab (const DPvab &other)             = delete;
-	DPvab &        operator = (const DPvab &other)        = delete;
-	bool           operator == (const DPvab &other) const = delete;
-	bool           operator != (const DPvab &other) const = delete;
+	               DPvabDirect (const DPvabDirect &other)             = delete;
+	DPvabDirect &        operator = (const DPvabDirect &other)        = delete;
+	bool           operator == (const DPvabDirect &other) const = delete;
+	bool           operator != (const DPvabDirect &other) const = delete;
 
-}; // class DPvab
+}; // class DPvabDirect
 
 
 
@@ -363,11 +378,11 @@ private:
 
 
 
-//#include "mfx/adrv/DPvab.hpp"
+//#include "mfx/adrv/DPvabDirect.hpp"
 
 
 
-#endif   // mfx_adrv_DPvab_HEADER_INCLUDED
+#endif   // mfx_adrv_DPvabDirect_HEADER_INCLUDED
 
 
 
