@@ -67,7 +67,8 @@ public:
 
 	static const int  _nbr_chn      =  2;
 	static const int  _bits_per_chn = 32; // Transmitted bits (meaningful + padding)
-	static const int  _resol        = 24; // Number of meaningful bits
+	static const int  _resol        = 24; // Number of meaningful bits.
+	static const int  _transfer_lag =  1; // I2S data is one clock cycle after the LRCLK edge. >= 0
 #if defined (mfx_adrv_DPvab_TEST)
 	static const int  _block_size   =  4; // Buffer size in samples, for processing
 #else
@@ -267,8 +268,9 @@ private:
 		uint32_t       _periph_addr;            // 0x3F000000 on Pi 3, 0x20000000 on Pi 1
 		volatile uint32_t *
 		               _gpio_ptr;
-		uint32_t       _last_read;
 #endif
+		mutable uint32_t
+		               _last_read;
 
 		static inline void
 		               find_addr_fnc (int &ofs_reg, int &shf_bit, int gpio);
@@ -289,11 +291,11 @@ private:
 	inline void    sync_to_bclk_edge (int dir);
 	void           proc_loop ();
 
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
-	void           write_reg (uint8_t reg, uint8_t val);
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
-
 #if ! defined (mfx_adrv_DPvab_TEST)
+	#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+	void           write_reg (uint8_t reg, uint8_t val);
+	#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+
 	static int     set_thread_priority (std::thread &thrd, int prio_below_max);
 #endif
 
@@ -304,9 +306,9 @@ private:
 	int            _lrclk_cur;    // Channel, current state of the LRCK pin
 	int            _btclk_cur;    // Current state of the BCLK pin
 	int            _clk_cnt;      // Current clock index after LRCK transition,
-	                              // starting from 0. Actual content lags one
-	                              // clock behind the LRCK edge.
-	int            _bit_pos;      // Position of the bit being written or read. Negative = done.
+	                              // starting from 0. Actual content lags _transfer_lag
+	                              // clocks behind the LRCK edge.
+	int            _bit_pos;      // Position of the bit being written or read. Should be < _resol. Negative = done.
 	int            _buf_pos;      // Word position within the buffers (samples)
 	int32_t        _content_r;    // Content being read. Bits are introduced
 	                              // from the right up to _resol.
@@ -337,7 +339,7 @@ private:
 
 	State          _state;
 
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvab_TEST)
 	int            _i2c_hnd;
 #endif // mfx_adrv_DPvab_CTRL_PORT_MODE
 

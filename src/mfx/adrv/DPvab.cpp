@@ -31,24 +31,26 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #if defined (mfx_adrv_DPvab_USE_SIMD)
- #include "fstb/ToolsSimd.h"
+	#include "fstb/ToolsSimd.h"
 #endif
 #include "mfx/adrv/CbInterface.h"
 #include "mfx/adrv/DPvab.h"
 
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
-
 #if ! defined (mfx_adrv_DPvab_TEST)
-#include <bcm_host.h>
 
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <pthread.h>
-#include <sched.h>
-#include <unistd.h>
+	#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+		#include <wiringPi.h>
+		#include <wiringPiI2C.h>
+	#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+
+	#include <bcm_host.h>
+
+	#include <sys/mman.h>
+	#include <fcntl.h>
+	#include <pthread.h>
+	#include <sched.h>
+	#include <unistd.h>
+
 #endif // mfx_adrv_DPvab_TEST
 
 #include <chrono>
@@ -93,12 +95,11 @@ DPvab::DPvab ()
 ,	_blk_proc_mtx ()
 ,	_blk_proc_cv ()
 ,	_state (State_STOP)
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvab_TEST)
 ,	_i2c_hnd (::wiringPiI2CSetup (_i2c_addr))
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+#endif // mfx_adrv_DPvab_CTRL_PORT_MODE, mfx_adrv_DPvab_TEST
 {
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+	// Nothing
 }
 
 
@@ -111,13 +112,13 @@ DPvab::~DPvab ()
 		_thread_main.join ();
 	}
 
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvab_TEST)
 	if (_i2c_hnd != -1)
 	{
 		close (_i2c_hnd);
 		_i2c_hnd = -1;
 	}
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+#endif // mfx_adrv_DPvab_CTRL_PORT_MODE, mfx_adrv_DPvab_TEST
 }
 
 
@@ -172,7 +173,9 @@ int	DPvab::do_start ()
 
 	_gpio.write (_pin_rst, 1);
 
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+#if ! defined (mfx_adrv_DPvab_TEST)
+
+	#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
 
 	// If MCLK is internally generated, waits for for it
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
@@ -203,12 +206,14 @@ int	DPvab::do_start ()
 	// Actually only 85 us are required
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
 
-#else  // mfx_adrv_DPvab_CTRL_PORT_MODE
+	#else  // mfx_adrv_DPvab_CTRL_PORT_MODE
 
 	// Waits 10 ms so we make sure we are in stand-alone mode
 	std::this_thread::sleep_for (std::chrono::milliseconds (10));
 
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+	#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
+
+#endif // mfx_adrv_DPvab_TEST
 
 	// Initializes threads and stuff
 	_exit_flag   = false;
@@ -421,6 +426,8 @@ void	DPvab::GpioAccess::stop ()
 
 void	DPvab::GpioAccess::fake_data_loop ()
 {
+	printf ("Device Event   Pos Chn Data\n");
+
 	_gpio_state.fetch_and (~_gpio_read);
 
 	int            pos_sig  = 0;
@@ -442,7 +449,13 @@ void	DPvab::GpioAccess::fake_data_loop ()
 			const int      tri = std::abs (2 * d - std::abs (d - u)) - d;
 			const int32_t  val_24 = tri * 0x111111;
 
-			printf ("BOARD - Chn %d, sending: 0x%06X\n", chn, val_24);
+			printf (
+				"BOARD  Send         %d  %s0x%06X\n",
+				chn,
+				(chn == 1) ? "         " : "",
+				val_24
+			);
+
 
 			for (int pos_clk = 0
 			;	pos_clk < DPvab::_bits_per_chn && ! _quit_flag
@@ -454,13 +467,13 @@ void	DPvab::GpioAccess::fake_data_loop ()
 					pos_bit  = DPvab::_resol - 1;
 				}
 
-				set_fake_bit (DPvab::_pin_bclk, 0);
-
 				int            data_bit = 0;
 				if (pos_bit >= 0)
 				{
 					data_bit = (val_sent >> pos_bit) & 1;
 				}
+
+				set_fake_bit (DPvab::_pin_bclk, 0);
 				set_fake_bit (DPvab::_pin_din, data_bit);
 
 				print_gpio ();
@@ -562,7 +575,7 @@ void	DPvab::main_loop ()
 {
 	_lrclk_cur     = 0;
 	_btclk_cur     = 0;
-	_clk_cnt       = 2;  // During resync, _clk_cnt and _bit_pos are not consistent (on purpose)
+	_clk_cnt       = 0;
 	_bit_pos       = -1;
 	_buf_pos       = 0;
 	_content_r     = 0;
@@ -605,6 +618,32 @@ void	DPvab::main_loop ()
 
 			_clk_cnt   = 0;
 			_lrclk_cur = lrck;
+			_bit_pos = _resol - 1 - _clk_cnt + _transfer_lag;
+			if (_bit_pos >= _resol)
+			{
+				_bit_pos -= _bits_per_chn;
+			}
+
+			if (_resync_flag && _lrclk_cur == 0)
+			{
+				// Sync done, real stuff can begin
+				_resync_flag = false;
+				if (_transfer_lag > 0)
+				{
+					// Buffer position has not been updated yet so we have to set
+					// the current buffer position to its "previous" place, the
+					// R channel.
+					_buf_pos |= 1;
+				}
+				else
+				{
+					_buf_pos &= ~1;
+				}
+
+#if defined (mfx_adrv_DPvab_TEST)
+				printf ("CPU    Synchronized\n");
+#endif // mfx_adrv_DPvab_TEST
+			}
 		}
 		else
 		{
@@ -615,25 +654,7 @@ void	DPvab::main_loop ()
 			{
 				_syncerr_flag = true;
 			}
-
-			if (_clk_cnt == 1) // One clock lag
-			{
-				_bit_pos = _resol;
-
-				if (_resync_flag && _lrclk_cur == 0)
-				{
-					// Sync done, real stuff can begin
-					_resync_flag = false;
-					_buf_pos     = 0;
-
-#if defined (mfx_adrv_DPvab_TEST)
-					printf ("CPU   - Synchronized.\n");
-#endif // mfx_adrv_DPvab_TEST
-				}
-			}
 		}
-
-		-- _bit_pos;
 
 		// Reads data
 		if (_bit_pos == _resol - 1)
@@ -641,13 +662,21 @@ void	DPvab::main_loop ()
 			// If MSB is 1, fills _content_r with 1s to ensure correct sign.
 			_content_r = -val;
 		}
-		else
+		else if (_bit_pos < _resol - 1 && _bit_pos >= 0)
 		{
 			_content_r = (_content_r << 1) + val;
 		}
 
+		// Next bit
+		-- _bit_pos;
+		if (_bit_pos < _resol - _bits_per_chn)
+		{
+			_bit_pos += _bits_per_chn;
+		}
+		assert (_bit_pos < _resol);
+
 		// Buffer stuff and signaling
-		if (_bit_pos == 0 && ! _resync_flag)
+		if (_bit_pos == _resol - 1 && ! _resync_flag)
 		{
 			int            buf_idx = _cur_buf;
 
@@ -657,16 +686,30 @@ void	DPvab::main_loop ()
 			_buf_int_i [pos_i] = _content_r;
 #if defined (mfx_adrv_DPvab_TEST)
 			printf (
-				"CPU   - Pos %02d, chn %d, acquired sample: 0x%06X\n",
-				_buf_pos >> 1, _buf_pos & 1, _content_r
+				"CPU    Receive %03d  %d                    %s0x%06X\n",
+				_buf_pos >> 1,
+				_buf_pos & 1,
+				((_buf_pos & 1) == 1) ? "         " : "",
+				_content_r & ((1 << _resol) - 1)
 			);
+
 #endif // mfx_adrv_DPvab_TEST
 
 			// Updates buffer-related counters
 			++ _buf_pos;
 			if (_buf_pos >= _block_size * _nbr_chn)
 			{
-				_buf_pos = 1 - _lrclk_cur; // Makes sure we restart on the right channel
+				if (_transfer_lag < 1)
+				{
+					// The LRCLK signal will be updated at the next clock, so we
+					// have to consider its cached value as the previous channel
+					// state.
+					_buf_pos = 1 - _lrclk_cur;
+				}
+				else
+				{
+					_buf_pos = _lrclk_cur;
+				}
 				buf_idx  = 1 - buf_idx;
 				_cur_buf = buf_idx;
 
@@ -674,7 +717,7 @@ void	DPvab::main_loop ()
 				_proc_now_flag = true;
 				_blk_proc_cv.notify_one ();
 			}
-			assert ((_buf_pos & 1) == 1 - _lrclk_cur);
+			assert ((_buf_pos & 1) == (_lrclk_cur ^ ((_transfer_lag < 1) ? 1 : 0)));
 
 			// Reads the sample to be sent
 			const int      pos_o   =
@@ -682,12 +725,20 @@ void	DPvab::main_loop ()
 			_content_w = _buf_int_o [pos_o];
 #if defined (mfx_adrv_DPvab_TEST)
 			printf (
-				"CPU   - Pos %02d, chn %d, sample being sent: 0x%06X\n",
-				_buf_pos >> 1, _buf_pos & 1, _content_w
+				"CPU    Send    %03d  %d                                      %s0x%06X\n",
+				_buf_pos >> 1,
+				_buf_pos & 1,
+				((_buf_pos & 1) == 1) ? "         " : "",
+				_content_w & ((1 << _resol) - 1)
 			);
 #endif // mfx_adrv_DPvab_TEST
+		}
 
-			_bit_pos   = -1; // Stop any transfer. We'll wait for the sync.
+		// Data to be written after the falling edge
+		int            bit_w   = 0;
+		if (_bit_pos >= 0 && _bit_pos < _resol)
+		{
+			bit_w = (_content_w >> _bit_pos) & 1;
 		}
 
 		// Falling edge
@@ -698,11 +749,6 @@ void	DPvab::main_loop ()
 #endif // mfx_adrv_DPvab_TEST
 
 		// Writes data
-		int            bit_w = 0;
-		if (_bit_pos >= 0 && _bit_pos < _resol)
-		{
-			bit_w = (_content_w >> _bit_pos) & 1;
-		}
 		_gpio.write (_pin_dout, bit_w);
 
 		if (_syncerr_flag)
@@ -880,7 +926,9 @@ void	DPvab::proc_loop ()
 
 
 
-#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
+#if ! defined (mfx_adrv_DPvab_TEST)
+
+	#if defined (mfx_adrv_DPvab_CTRL_PORT_MODE)
 
 
 
@@ -893,11 +941,7 @@ void	DPvab::write_reg (uint8_t reg, uint8_t val)
 
 
 
-#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
-
-
-
-#if ! defined (mfx_adrv_DPvab_TEST)
+	#endif // mfx_adrv_DPvab_CTRL_PORT_MODE
 
 
 
