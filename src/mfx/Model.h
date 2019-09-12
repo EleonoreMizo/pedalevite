@@ -107,6 +107,7 @@ public:
 	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	MeterResultSet &
 	               use_meters ();
+	float          get_audio_period_ratio () const;
 
 	// Regular commands
 	void           set_observer (ModelObserverInterface *obs_ptr);

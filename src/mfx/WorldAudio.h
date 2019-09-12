@@ -49,6 +49,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <atomic>
 #include <vector>
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -74,6 +76,7 @@ public:
 
 	MeterResultSet &
 	               use_meters ();
+	float          get_audio_period_ratio () const;
 
 
 
@@ -157,6 +160,8 @@ private:
 
 	LevelMeter     _lvl_meter;
 	MeterResultSet _meter_result;       // This structure can be accessed from any thread
+	volatile float _period_now;         // Ratio of the actual time / expected time between two calls. Useful to dectect a driver lag or sync errors
+	float          _rate_expected;      // 1e-6 * Fs / block size
 
 	EventArray     _evt_arr;            // Preallocated
 	EventPtrList   _evt_ptr_arr;        // Preallocated

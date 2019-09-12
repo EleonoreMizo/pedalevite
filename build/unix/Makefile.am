@@ -206,6 +206,8 @@ commonsrc = \
         ../../src/mfx/adrv/DJack.h \
         ../../src/mfx/adrv/DManual.cpp \
         ../../src/mfx/adrv/DManual.h \
+        ../../src/mfx/adrv/DPvabDirect.cpp \
+        ../../src/mfx/adrv/DPvabDirect.h \
         ../../src/mfx/adrv/DriverInterface.cpp \
         ../../src/mfx/adrv/DriverInterface.h \
         ../../src/mfx/cmd/BufAlloc.cpp \
@@ -958,6 +960,8 @@ commonsrc = \
         ../../src/mfx/ui/DisplayPi3Pcd8544.h \
         ../../src/mfx/ui/DisplayPi3St7920.cpp \
         ../../src/mfx/ui/DisplayPi3St7920.h \
+        ../../src/mfx/ui/DisplayVoid.cpp \
+        ../../src/mfx/ui/DisplayVoid.h \
         ../../src/mfx/ui/Font.cpp \
         ../../src/mfx/ui/Font.h \
         ../../src/mfx/ui/FontDataDefault.cpp \
@@ -966,6 +970,8 @@ commonsrc = \
         ../../src/mfx/ui/LedInterface.h \
         ../../src/mfx/ui/LedPi3.cpp \
         ../../src/mfx/ui/LedPi3.h \
+        ../../src/mfx/ui/LedVoid.cpp \
+        ../../src/mfx/ui/LedVoid.h \
         ../../src/mfx/ui/RotEnc.cpp \
         ../../src/mfx/ui/RotEnc.h \
         ../../src/mfx/ui/TimeShareCbInterface.cpp \
@@ -979,6 +985,8 @@ commonsrc = \
         ../../src/mfx/ui/UserInputPi3.cpp \
         ../../src/mfx/ui/UserInputPi3.h \
         ../../src/mfx/ui/UserInputType.h \
+        ../../src/mfx/ui/UserInputVoid.cpp \
+        ../../src/mfx/ui/UserInputVoid.h \
         ../../src/mfx/uitk/pg/BankMenu.cpp \
         ../../src/mfx/uitk/pg/BankMenu.h \
         ../../src/mfx/uitk/pg/BankMove.cpp \

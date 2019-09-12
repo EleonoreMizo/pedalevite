@@ -2631,6 +2631,9 @@
     <ClInclude Include="..\..\..\src\mfx\UniqueProgList.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\adrv\DPvabDirect.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgCatalog.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
@@ -3862,6 +3865,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\UniqueProgList.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\adrv\DPvabDirect.cpp">
+      <Filter>mfx\adrv</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgCatalog.cpp">
       <Filter>mfx\uitk\pg</Filter>

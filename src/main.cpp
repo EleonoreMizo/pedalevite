@@ -21,11 +21,13 @@
 #define MAIN_API_ALSA   2
 #define MAIN_API_ASIO   3
 #define MAIN_API_MANUAL 4
+#define MAIN_API_PVAB   5
 #if 0 // For debugging complex audio things
 	#define MAIN_API MAIN_API_MANUAL
 #elif fstb_IS (SYS, LINUX)
 //	#define MAIN_API MAIN_API_JACK
 	#define MAIN_API MAIN_API_ALSA
+//	#define MAIN_API MAIN_API_PVAB
 #else
 	#define MAIN_API MAIN_API_ASIO
 #endif
@@ -71,6 +73,8 @@
 		#include "mfx/adrv/DAlsa.h"
 	#elif (MAIN_API == MAIN_API_MANUAL)
 		#include "mfx/adrv/DManual.h"
+	#elif (MAIN_API == MAIN_API_PVAB)
+		#include "mfx/adrv/DPvabDirect.h"
 	#else
 		#error Wrong MAIN_API value
 	#endif // MAIN_API
@@ -371,6 +375,12 @@ fprintf (stderr, "Reading ESC button...\n");
 
 	mfx::uitk::PageSwitcher &  page_switcher = _page_set.use_page_switcher ();
 	page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
+
+/**********************************************************************************************************************************************************************************************************************************/
+// Debugging code
+//	_model.select_bank (2);
+//	_model.activate_preset (3);
+/**********************************************************************************************************************************************************************************************************************************/
 }
 
 
@@ -533,13 +543,14 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 #if defined (MAIN_USE_VOID) || ! fstb_IS (SYS, LINUX)
 		const float  usage_max  = meters._dsp_use._peak;
 		const float  usage_avg  = meters._dsp_use._rms;
+		const float  period_now = ctx._model.get_audio_period_ratio ();
 		char         cpu_0 [127+1] = "Time usage: ------ % / ------ %";
 		if (usage_max >= 0 && usage_avg >= 0)
 		{
 			fstb::snprintf4all (
 				cpu_0, sizeof (cpu_0),
-				"Time usage: %6.2f %% / %6.2f %%",
-				usage_avg * 100, usage_max * 100
+				"Time usage: %6.2f %% / %6.2f %%, Speed: %6.2f %%",
+				usage_avg * 100, usage_max * 100, 100 / period_now
 			);
 		}
 
@@ -741,6 +752,8 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 	chn_idx_in = 2;
 #elif (MAIN_API == MAIN_API_MANUAL)
 	mfx::adrv::DManual   snd_drv;
+#elif (MAIN_API == MAIN_API_PVAB)
+	mfx::adrv::DPvabDirect  snd_drv;
 #else
 	#error
 #endif

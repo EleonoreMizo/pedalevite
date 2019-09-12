@@ -1,9 +1,14 @@
 
+#include "fstb/def.h"
+
 #include "fstb/msg/MsgRet.h"
 #include "fstb/msg/QueueRetMgr.h"
-#include "fstb/def.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
+#if fstb_IS (SYS, LINUX)
+	#include "mfx/adrv/CbInterface.h"
+	#include "mfx/adrv/DPvabDirect.h"
+#endif
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
 #include "mfx/doc/Setup.h"
@@ -1418,6 +1423,52 @@ int	test_envelope_detector ()
 
 
 
+#if fstb_IS (SYS, LINUX)
+
+class CbDPvabDirect
+:	public mfx::adrv::CbInterface
+{
+public:
+	CbDPvabDirect () = default;
+	virtual ~CbDPvabDirect () = default;
+protected:
+	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
+	{
+		// Copies input to output
+		mfx::dsp::mix::Generic::copy_2_2 (
+			dst_arr [0], dst_arr [1], src_arr [0], src_arr [1], nbr_spl
+		);
+	}
+	virtual void   do_notify_dropout ()
+	{
+		// Nothing
+	}
+	virtual void   do_request_exit ()
+	{
+		// Nothing
+	}
+};
+
+int	test_adrv_dpvab ()
+{
+	mfx::adrv::DPvabDirect  pvab;
+	CbDPvabDirect           cb;
+
+	double            sample_freq;
+	int               max_block_size;
+	pvab.init (sample_freq, max_block_size, cb, 0, 0, 0);
+
+	pvab.start ();
+	std::this_thread::sleep_for (std::chrono::seconds (600));
+	pvab.stop ();
+
+	return 0;
+}
+
+#endif // LINUX
+
+
+
 int	test_median_filter ()
 {
 	const int      med_len = 63;
@@ -1629,7 +1680,7 @@ int main (int argc, char *argv [])
 
 	int            ret_val = 0;
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
 #endif
 
@@ -1696,6 +1747,12 @@ int main (int argc, char *argv [])
 
 #if 0
 	if (ret_val == 0) ret_val = test_median_filter ();
+#endif
+
+#if 0
+	#if fstb_IS (SYS, LINUX)
+	if (ret_val == 0) ret_val = test_adrv_dpvab ();
+	#endif
 #endif
 
 #if 0
