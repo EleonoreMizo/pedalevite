@@ -610,6 +610,9 @@ commonsrc = \
         ../../src/mfx/hw/GpioPwm.h \
         ../../src/mfx/hw/LedPi3.cpp \
         ../../src/mfx/hw/LedPi3.h \
+        ../../src/mfx/hw/MmapPtr.cpp \
+        ../../src/mfx/hw/MmapPtr.h \
+        ../../src/mfx/hw/MmapPtr.hpp \
         ../../src/mfx/hw/UserInputPi3.cpp \
         ../../src/mfx/hw/UserInputPi3.h \
         ../../src/mfx/pi/adsr/EnvAdsr.cpp \

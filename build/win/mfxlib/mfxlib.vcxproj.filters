@@ -2856,6 +2856,12 @@
     <ClInclude Include="..\..\..\src\mfx\hw\UserInputPi3.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.hpp">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3915,6 +3921,9 @@
       <Filter>mfx\hw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\UserInputPi3.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\MmapPtr.cpp">
       <Filter>mfx\hw</Filter>
     </ClCompile>
   </ItemGroup>
