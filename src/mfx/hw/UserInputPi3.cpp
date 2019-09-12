@@ -143,10 +143,10 @@ UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
 	}
 
 	_msg_pool.expand_to (256);
-	for (int i = 0; i < UserInputType_NBR_ELT; ++i)
+	for (int i = 0; i < ui::UserInputType_NBR_ELT; ++i)
 	{
 		const int      nbr_dev =
-			do_get_nbr_param (static_cast <UserInputType> (i));
+			do_get_nbr_param (static_cast <ui::UserInputType> (i));
 		_recip_list [i].resize (nbr_dev, 0);
 	}
 
@@ -422,7 +422,7 @@ void	UserInputPi3::handle_switch (int index, bool flag, std::chrono::nanoseconds
 
 void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, std::chrono::nanoseconds cur_time)
 {
-	RotEnc &       re  = _rotenc_state_arr [index];
+	ui::RotEnc &   re  = _rotenc_state_arr [index];
 	const int      dir = _rotenc_arr [index]._dir_mul;
 	const int      inc = re.set_new_state (f0, f1) * dir;
 	if (inc != 0)
