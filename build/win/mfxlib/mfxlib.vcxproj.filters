@@ -2844,6 +2844,12 @@
     <ClInclude Include="..\..\..\src\mfx\hw\FileIOWindows.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\GpioAccess.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\GpioAccess.hpp">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\hw\GpioPwm.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
@@ -3909,6 +3915,9 @@
       <Filter>mfx\hw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\FileIOWindows.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\GpioAccess.cpp">
       <Filter>mfx\hw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\GpioPwm.cpp">
