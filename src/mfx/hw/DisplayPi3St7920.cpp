@@ -56,7 +56,7 @@ namespace hw
 // ::pinMode (_pin_rst, OUTPUT);
 // ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-DisplayPi3St7920::DisplayPi3St7920 (TimeShareThread &thread_spi)
+DisplayPi3St7920::DisplayPi3St7920 (ui::TimeShareThread &thread_spi)
 :	_thread_spi (thread_spi)
 ,	_state (State_INIT)
 ,	_screen_buf ()

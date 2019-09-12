@@ -39,12 +39,16 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+namespace ui
+{
+	class TimeShareThread;
+}
+
 namespace hw
 {
 
 
-
-class TimeShareThread;
 
 class DisplayPi3St7920
 :	public ui::DisplayInterface
@@ -55,7 +59,7 @@ class DisplayPi3St7920
 
 public:
 
-	explicit       DisplayPi3St7920 (TimeShareThread &thread_spi);
+	explicit       DisplayPi3St7920 (ui::TimeShareThread &thread_spi);
 	virtual        ~DisplayPi3St7920 ();
 
 	static const int  _scr_w    = 128;
@@ -206,7 +210,7 @@ private:
 	void           send_line_prologue (int x, int y, SpiBuffer &spibuf, int &spipos);
 	void           send_line_epilogue ();
 
-	TimeShareThread &
+	ui::TimeShareThread &
 	               _thread_spi;
 	volatile State _state;
 
