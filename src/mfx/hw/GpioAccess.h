@@ -29,6 +29,8 @@ http://www.wtfpl.net/ for more details.
 
 #include "mfx/hw/MmapPtr.h"
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -80,7 +82,7 @@ public:
 	inline void    write (int gpio, int val) const;
 	inline int     read (int gpio) const;
 	inline int     read_cached (int gpio) const;
-	inline void    pull (int gpio, Pull p) const;
+	void           pull (int gpio, Pull p) const;
 
 
 

@@ -26,6 +26,13 @@ http://www.wtfpl.net/ for more details.
 
 #include "mfx/hw/GpioAccess.h"
 
+#include <bcm_host.h>
+
+#include <fcntl.h>
+
+#include <chrono>
+#include <thread>
+
 #include <cassert>
 
 
@@ -68,6 +75,27 @@ void	GpioAccess::set_fnc (int gpio, PinFnc fnc) const
 	val &= ~(msk_base << shf_bit);
 	val |= uint32_t (fnc) << shf_bit;
 	_gpio_ptr [ofs_reg] = val;
+}
+
+
+
+void	GpioAccess::pull (int gpio, Pull p) const
+{
+	assert (gpio >= 0);
+	assert (gpio < _nbr_gpio);
+	assert (p >= 0);
+	assert (p < Pull_NBR_ELT);
+
+	// At least 150 cycles
+	const std::chrono::microseconds  wait_time (10);
+
+	const uint32_t mask = uint32_t (1) << gpio;
+	_gpio_ptr [_ofs_reg_pull] = uint32_t (p);
+	std::this_thread::sleep_for (wait_time);
+	_gpio_ptr [_ofs_reg_pclk] |= mask;
+	std::this_thread::sleep_for (wait_time);
+	_gpio_ptr [_ofs_reg_pull] = uint32_t (Pull_NONE);
+	_gpio_ptr [_ofs_reg_pclk] &= ~mask;
 }
 
 
