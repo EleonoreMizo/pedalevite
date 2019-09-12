@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_UserInputPi3_HEADER_INCLUDED)
-#define mfx_ui_UserInputPi3_HEADER_INCLUDED
+#if ! defined (mfx_hw_UserInputPi3_HEADER_INCLUDED)
+#define mfx_hw_UserInputPi3_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -42,16 +42,20 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
 namespace ui
+{
+class TimeShareThread;
+}
+
+namespace hw
 {
 
 
 
-class TimeShareThread;
-
 class UserInputPi3
-:	public UserInputInterface
-,	public TimeShareCbInterface
+:	public ui::UserInputInterface
+,	public ui::TimeShareCbInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -105,7 +109,7 @@ public:
 
 	static const int  _pot_arr [Cst::_nbr_pot];
 
-	explicit       UserInputPi3 (TimeShareThread &thread_spi);
+	explicit       UserInputPi3 (ui::TimeShareThread &thread_spi);
 	virtual        ~UserInputPi3 ();
 
 
@@ -115,8 +119,8 @@ public:
 protected:
 
 	// UserInputInterface
-	virtual int    do_get_nbr_param (UserInputType type) const;
-	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
+	virtual int    do_get_nbr_param (ui::UserInputType type) const;
+	virtual void   do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr);
 	virtual void   do_return_cell (MsgCell &cell);
 	virtual std::chrono::microseconds
 	               do_get_cur_date () const;
@@ -189,11 +193,11 @@ private:
 	};
 	typedef std::array <PotState, _nbr_adc> PotStateArray;
 
-	typedef std::array <RotEnc, Cst::RotEnc_NBR_ELT>   RotEncStateArray;
+	typedef std::array <ui::RotEnc, Cst::RotEnc_NBR_ELT>   RotEncStateArray;
 
-	typedef conc::CellPool <UserInputMsg> MsgPool;
+	typedef conc::CellPool <ui::UserInputMsg> MsgPool;
 	typedef std::vector <MsgQueue *> QueueArray;
-	typedef std::array <QueueArray, UserInputType_NBR_ELT> RecipientList;
+	typedef std::array <QueueArray, ui::UserInputType_NBR_ELT> RecipientList;
 
 	void           close_everything ();
 	void           polling_loop ();
@@ -201,12 +205,12 @@ private:
 	void           handle_switch (int index, bool flag, std::chrono::nanoseconds cur_time);
 	void           handle_rotenc (int index, bool f0, bool f1, std::chrono::nanoseconds cur_time);
 	void           handle_pot (int index, int val, std::chrono::nanoseconds cur_time);
-	void           enqueue_val (std::chrono::nanoseconds date, UserInputType type, int index, float val);
+	void           enqueue_val (std::chrono::nanoseconds date, ui::UserInputType type, int index, float val);
 	int            read_adc (int port, int chn);
 	std::chrono::nanoseconds
 	               read_clock_ns () const;
 
-	TimeShareThread &
+	ui::TimeShareThread &
 	               _thread_spi;
 	std::array <int, _nbr_dev_23017>
 	               _hnd_23017_arr;      // MCP23017: Port expander

@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/DisplayPi3St7920.h"
+#include "mfx/hw/DisplayPi3St7920.h"
 #include "mfx/ui/TimeShareThread.h"
 
 #include <wiringPi.h>
@@ -42,7 +42,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+namespace hw
 {
 
 
@@ -493,7 +493,7 @@ void	DisplayPi3St7920::send_line_epilogue ()
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 

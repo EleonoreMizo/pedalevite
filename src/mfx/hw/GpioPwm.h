@@ -31,8 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_GpioPwm_HEADER_INCLUDED)
-#define mfx_GpioPwm_HEADER_INCLUDED
+#if ! defined (mfx_hw_GpioPwm_HEADER_INCLUDED)
+#define mfx_hw_GpioPwm_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -49,6 +49,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 namespace mfx
+{
+namespace hw
 {
 
 
@@ -234,15 +236,16 @@ private:
 
 
 
+}  // namespace hw
 }  // namespace mfx
 
 
 
-//#include "mfx/GpioPwm.hpp"
+//#include "mfx/hw/GpioPwm.hpp"
 
 
 
-#endif   // mfx_GpioPwm_HEADER_INCLUDED
+#endif   // mfx_hw_GpioPwm_HEADER_INCLUDED
 
 
 

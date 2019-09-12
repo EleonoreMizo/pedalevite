@@ -24,8 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/hw/UserInputPi3.h"
 #include "mfx/ui/TimeShareThread.h"
-#include "mfx/ui/UserInputPi3.h"
 
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
@@ -45,7 +45,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+namespace hw
 {
 
 
@@ -114,7 +114,7 @@ const int UserInputPi3::_pot_arr [Cst::_nbr_pot] =
 // ::pinMode (_pin_rst, OUTPUT);
 // ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-UserInputPi3::UserInputPi3 (TimeShareThread &thread_spi)
+UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
 :	_thread_spi (thread_spi)
 ,	_hnd_23017_arr ()
 ,	_hnd_3008 (::wiringPiSPISetup (_spi_port, _spi_rate))
@@ -182,19 +182,19 @@ UserInputPi3::~UserInputPi3 ()
 
 
 
-int	UserInputPi3::do_get_nbr_param (UserInputType type) const
+int	UserInputPi3::do_get_nbr_param (ui::UserInputType type) const
 {
 	int            nbr = 0;
 
-	if (type == UserInputType_POT)
+	if (type == ui::UserInputType_POT)
 	{
 		nbr = Cst::_nbr_pot;
 	}
-	else if (type == UserInputType_SW)
+	else if (type == ui::UserInputType_SW)
 	{
 		nbr = _nbr_switches;
 	}
-	else if (type == UserInputType_ROTENC)
+	else if (type == ui::UserInputType_ROTENC)
 	{
 		nbr = Cst::RotEnc_NBR_ELT;
 	}
@@ -204,7 +204,7 @@ int	UserInputPi3::do_get_nbr_param (UserInputType type) const
 
 
 
-void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr)
+void	UserInputPi3::do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr)
 {
 	const bool     send_flag =
 		(queue_ptr != 0 &&_recip_list [type] [index] != queue_ptr);
@@ -215,7 +215,7 @@ void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue
 	{
 		switch (type)
 		{
-		case UserInputType_SW:
+		case ui::UserInputType_SW:
 			{
 				// Creates an event only if the switch is ON (assumes OFF by default).
 				const SwitchState &  state = _switch_state_arr [index];
@@ -223,14 +223,14 @@ void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue
 				{
 					enqueue_val (
 						state._time_last,
-						UserInputType_SW,
+						ui::UserInputType_SW,
 						index,
 						(state._flag) ? 1 : 0
 					);
 				}
 			}
 			break;
-		case UserInputType_POT:
+		case ui::UserInputType_POT:
 			{
 				const PotState &  state = _pot_state_arr [index];
 				if (state.is_set ())
@@ -240,7 +240,7 @@ void	UserInputPi3::do_set_msg_recipient (UserInputType type, int index, MsgQueue
 					const std::chrono::nanoseconds   cur_time (read_clock_ns ());
 					enqueue_val (
 						cur_time,
-						UserInputType_POT,
+						ui::UserInputType_POT,
 						index,
 						val_flt
 					);
@@ -408,7 +408,7 @@ void	UserInputPi3::handle_switch (int index, bool flag, std::chrono::nanoseconds
 	{
 		sw._flag      = flag;
 		sw._time_last = cur_time;
-		enqueue_val (cur_time, UserInputType_SW, index, (flag) ? 1 : 0);
+		enqueue_val (cur_time, ui::UserInputType_SW, index, (flag) ? 1 : 0);
 	}
 	else if (! sw.is_set ())
 	{
@@ -427,7 +427,7 @@ void	UserInputPi3::handle_rotenc (int index, bool f0, bool f1, std::chrono::nano
 	const int      inc = re.set_new_state (f0, f1) * dir;
 	if (inc != 0)
 	{
-		enqueue_val (cur_time, UserInputType_ROTENC, index, inc);
+		enqueue_val (cur_time, ui::UserInputType_ROTENC, index, inc);
 	}
 }
 
@@ -467,14 +467,14 @@ void	UserInputPi3::handle_pot (int index, int val, std::chrono::nanoseconds cur_
 	if (new_flag)
 	{
 		const float    val_flt = val * (1.0f / ((1 << _res_adc) - 1));
-		enqueue_val (cur_time, UserInputType_POT, index, val_flt);
+		enqueue_val (cur_time, ui::UserInputType_POT, index, val_flt);
 	}
 }
 
 
 
 // date is in nanoseconds
-void	UserInputPi3::enqueue_val (std::chrono::nanoseconds date, UserInputType type, int index, float val)
+void	UserInputPi3::enqueue_val (std::chrono::nanoseconds date, ui::UserInputType type, int index, float val)
 {
 	MsgQueue *     queue_ptr = _recip_list [type] [index];
 	if (queue_ptr != 0)
@@ -562,7 +562,7 @@ bool	UserInputPi3::SwitchState::is_set () const
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 

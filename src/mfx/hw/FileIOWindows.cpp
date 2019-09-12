@@ -24,14 +24,16 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/hw/FileIOWindows.h"
 #include "mfx/ui/LedInterface.h"
-#include "mfx/FileIOWindows.h"
 
 #include <cassert>
 
 
 
 namespace mfx
+{
+namespace hw
 {
 
 
@@ -74,6 +76,7 @@ int	FileIOWindows::do_read_txt_file (const std::string &pathname, std::string &c
 
 
 
+}  // namespace hw
 }  // namespace mfx
 
 

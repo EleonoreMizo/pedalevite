@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_DisplayPi3Pcd8544_HEADER_INCLUDED)
-#define mfx_ui_DisplayPi3Pcd8544_HEADER_INCLUDED
+#if ! defined (mfx_hw_DisplayPi3Pcd8544_HEADER_INCLUDED)
+#define mfx_hw_DisplayPi3Pcd8544_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -39,23 +39,27 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
 namespace ui
+{
+	class TimeShareThread;
+}
+
+namespace hw
 {
 
 
 
-class TimeShareThread;
-
 class DisplayPi3Pcd8544
-:	public DisplayInterface
-,	public TimeShareCbInterface
+:	public ui::DisplayInterface
+,	public ui::TimeShareCbInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	explicit       DisplayPi3Pcd8544 (TimeShareThread &thread_spi);
+	explicit       DisplayPi3Pcd8544 (ui::TimeShareThread &thread_spi);
 	virtual        ~DisplayPi3Pcd8544 ();
 
 	static const int  _scr_w    = 84;
@@ -74,7 +78,7 @@ public:
 
 protected:
 
-	// DisplayInterface
+	// ui::DisplayInterface
 	virtual int    do_get_width () const;
 	virtual int    do_get_height () const;
 	virtual int    do_get_stride () const;
@@ -86,7 +90,7 @@ protected:
 	virtual void   do_refresh (int x, int y, int w, int h);
 	virtual void   do_force_reset ();
 
-	// TimeShareCbInterface
+	// ui::TimeShareCbInterface
 	virtual bool   do_process_timeshare_op ();
 
 
@@ -154,7 +158,7 @@ private:
 
 	void           send_to_display (int x, int y, int w, int h);
 
-	TimeShareThread &
+	ui::TimeShareThread &
 	               _thread_spi;
 	volatile State _state;
 
@@ -182,16 +186,16 @@ private:
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/DisplayPi3Pcd8544.hpp"
+//#include "mfx/hw/DisplayPi3Pcd8544.hpp"
 
 
 
-#endif   // mfx_ui_DisplayPi3Pcd8544_HEADER_INCLUDED
+#endif   // mfx_hw_DisplayPi3Pcd8544_HEADER_INCLUDED
 
 
 

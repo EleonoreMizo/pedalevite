@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FileIOWindows.h
+        FileIOPi3.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_FileIOWindows_HEADER_INCLUDED)
-#define mfx_FileIOWindows_HEADER_INCLUDED
+#if ! defined (mfx_hw_FileIOPi3_HEADER_INCLUDED)
+#define mfx_hw_FileIOPi3_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -34,16 +34,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
-
-
 namespace ui
 {
 	class LedInterface;
 }
 
+namespace hw
+{
 
 
-class FileIOWindows
+
+class FileIOPi3
 :	public FileIOInterface
 {
 
@@ -51,8 +52,8 @@ class FileIOWindows
 
 public:
 
-	explicit       FileIOWindows (ui::LedInterface &led);
-	virtual        ~FileIOWindows () = default;
+	explicit       FileIOPi3 (ui::LedInterface &led);
+	virtual        ~FileIOPi3 () = default;
 
 
 
@@ -79,26 +80,26 @@ private:
 
 private:
 
-	               FileIOWindows ()                               = delete;
-	               FileIOWindows (const FileIOWindows &other)     = delete;
-	FileIOWindows &
-	               operator = (const FileIOWindows &other)        = delete;
-	bool           operator == (const FileIOWindows &other) const = delete;
-	bool           operator != (const FileIOWindows &other) const = delete;
+	               FileIOPi3 ()                               = delete;
+	               FileIOPi3 (const FileIOPi3 &other)         = delete;
+	FileIOPi3 &    operator = (const FileIOPi3 &other)        = delete;
+	bool           operator == (const FileIOPi3 &other) const = delete;
+	bool           operator != (const FileIOPi3 &other) const = delete;
 
-}; // class FileIOWindows
-
+}; // class FileIOPi3
 
 
+
+}  // namespace hw
 }  // namespace mfx
 
 
 
-//#include "mfx/FileIOWindows.hpp"
+//#include "mfx/hw/FileIOPi3.hpp"
 
 
 
-#endif   // mfx_FileIOWindows_HEADER_INCLUDED
+#endif   // mfx_hw_FileIOPi3_HEADER_INCLUDED
 
 
 

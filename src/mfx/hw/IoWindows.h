@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_IoWindows_HEADER_INCLUDED)
-#define mfx_ui_IoWindows_HEADER_INCLUDED
+#if ! defined (mfx_hw_IoWindows_HEADER_INCLUDED)
+#define mfx_hw_IoWindows_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -53,15 +53,15 @@ namespace mfx
 
 class Model;
 
-namespace ui
+namespace hw
 {
 
 
 
 class IoWindows
-:	public DisplayInterface
-,	public LedInterface
-,	public UserInputInterface
+:	public ui::DisplayInterface
+,	public ui::LedInterface
+,	public ui::UserInputInterface
 ,	public ModelMsgCmdCbInterface
 {
 
@@ -80,7 +80,7 @@ public:
 
 protected:
 
-	// DisplayInterface
+	// ui::DisplayInterface
 	virtual int    do_get_width () const;
 	virtual int    do_get_height () const;
 	virtual int    do_get_stride () const;
@@ -92,13 +92,13 @@ protected:
 	virtual void   do_refresh (int x, int y, int w, int h);
 	virtual void   do_force_reset ();
 
-	// LedInterface
+	// ui::LedInterface
 	virtual int    do_get_nbr_led () const;
 	virtual void   do_set_led (int index, float val);
 
-	// UserInputInterface
-	virtual int    do_get_nbr_param (UserInputType type) const;
-	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
+	// ui::UserInputInterface
+	virtual int    do_get_nbr_param (ui::UserInputType type) const;
+	virtual void   do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr);
 	virtual void   do_return_cell (MsgCell &cell);
 	virtual std::chrono::microseconds
 	               do_get_cur_date () const;
@@ -133,7 +133,8 @@ private:
 	public:
 		bool           _scan_flag;
 		int            _code;
-		UserInputType  _type;
+		ui::UserInputType
+		               _type;
 		int            _index;
 		int            _dir;
 	};
@@ -203,10 +204,10 @@ private:
 
 	typedef std::array <uint8_t, _scr_s * _scr_h> ScreenBuffer;
 
-	typedef conc::CellPool <UserInputMsg> MsgPool;
+	typedef conc::CellPool <ui::UserInputMsg> MsgPool;
 
 	typedef std::vector <MsgQueue *> QueueArray;
-	typedef std::array <QueueArray, UserInputType_NBR_ELT> RecipientList;
+	typedef std::array <QueueArray, ui::UserInputType_NBR_ELT> RecipientList;
 
 	typedef typename fstb::msg::MsgRet <ModelMsgCmdAsync>::QueueSPtr RetQueueSPtr;
 
@@ -221,7 +222,7 @@ private:
 	bool           process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool down_flag);
 	bool           process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
 	bool           process_lbuttonup (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam);
-	void           enqueue_val (int64_t date, UserInputType type, int index, float val);
+	void           enqueue_val (int64_t date, ui::UserInputType type, int index, float val);
 	void           redraw_main_screen (int x1, int y1, int x2, int y2);
 	void           redraw_led (int x1, int y1, int x2, int y2, int led_cnt);
 	void           redraw_sw_all (int x1, int y1, int x2, int y2);
@@ -291,16 +292,16 @@ private:
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/IoWindows.hpp"
+//#include "mfx/hw/IoWindows.hpp"
 
 
 
-#endif   // mfx_ui_IoWindows_HEADER_INCLUDED
+#endif   // mfx_hw_IoWindows_HEADER_INCLUDED
 
 
 

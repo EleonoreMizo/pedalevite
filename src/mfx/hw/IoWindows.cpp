@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/txt/Conv.h"
 #include "fstb/fnc.h"
-#include "mfx/ui/IoWindows.h"
+#include "mfx/hw/IoWindows.h"
 #include "mfx/Cst.h"
 #include "mfx/Model.h"
 #include "mfx/ModelMsgCmdConfLdSv.h"
@@ -47,7 +47,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+namespace hw
 {
 
 
@@ -79,10 +79,10 @@ IoWindows::IoWindows (volatile bool &quit_request_flag)
 	}
 
 	_msg_pool.expand_to (256);
-	for (int i = 0; i < UserInputType_NBR_ELT; ++i)
+	for (int i = 0; i < ui::UserInputType_NBR_ELT; ++i)
 	{
 		const int      nbr_dev =
-			do_get_nbr_param (static_cast <UserInputType> (i));
+			do_get_nbr_param (static_cast <ui::UserInputType> (i));
 		_recip_list [i].resize (nbr_dev, 0);
 	}
 
@@ -211,14 +211,14 @@ void	IoWindows::do_set_led (int index, float val)
 
 
 
-int	IoWindows::do_get_nbr_param (UserInputType /*type*/) const
+int	IoWindows::do_get_nbr_param (ui::UserInputType /*type*/) const
 {
 	return Cst::_max_input_param;
 }
 
 
 
-void	IoWindows::do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr)
+void	IoWindows::do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr)
 {
 	_recip_list [type] [index] = queue_ptr;
 }
@@ -270,60 +270,60 @@ const wchar_t	IoWindows::_window_class_name_0 [] =
 const IoWindows::ScanEntry	IoWindows::_scan_table [] =
 {
 	// Pedals, top row (6)
-	{ true , 0x10      , UserInputType_SW    ,  2,  0 }, // A
-	{ true , 0x11      , UserInputType_SW    ,  3,  0 }, // Z
-	{ true , 0x12      , UserInputType_SW    ,  4,  0 }, // E
-	{ true , 0x13      , UserInputType_SW    ,  5,  0 }, // R
-	{ true , 0x14      , UserInputType_SW    ,  6,  0 }, // T
-	{ true , 0x15      , UserInputType_SW    ,  7,  0 }, // Y
+	{ true , 0x10      , ui::UserInputType_SW    ,  2,  0 }, // A
+	{ true , 0x11      , ui::UserInputType_SW    ,  3,  0 }, // Z
+	{ true , 0x12      , ui::UserInputType_SW    ,  4,  0 }, // E
+	{ true , 0x13      , ui::UserInputType_SW    ,  5,  0 }, // R
+	{ true , 0x14      , ui::UserInputType_SW    ,  6,  0 }, // T
+	{ true , 0x15      , ui::UserInputType_SW    ,  7,  0 }, // Y
 
 	// Pedals, bottom row (6)
-	{ true , 0x1E      , UserInputType_SW    ,  8,  0 }, // Q
-	{ true , 0x1F      , UserInputType_SW    ,  9,  0 }, // S
-	{ true , 0x20      , UserInputType_SW    , 14,  0 }, // D
-	{ true , 0x21      , UserInputType_SW    , 15,  0 }, // F
-	{ true , 0x22      , UserInputType_SW    , 16,  0 }, // G
-	{ true , 0x23      , UserInputType_SW    , 17,  0 }, // H
+	{ true , 0x1E      , ui::UserInputType_SW    ,  8,  0 }, // Q
+	{ true , 0x1F      , ui::UserInputType_SW    ,  9,  0 }, // S
+	{ true , 0x20      , ui::UserInputType_SW    , 14,  0 }, // D
+	{ true , 0x21      , ui::UserInputType_SW    , 15,  0 }, // F
+	{ true , 0x22      , ui::UserInputType_SW    , 16,  0 }, // G
+	{ true , 0x23      , ui::UserInputType_SW    , 17,  0 }, // H
 
 	// Rotary encoders with push button (2)
-	{ true , 0x2C      , UserInputType_ROTENC,  5, -1 }, // W
-	{ true , 0x2D      , UserInputType_ROTENC,  5, +1 }, // X
-	{ true , 0x2E      , UserInputType_SW    , 18,  0 }, // C
-	{ true , 0x2F      , UserInputType_ROTENC,  6, -1 }, // V
-	{ true , 0x30      , UserInputType_ROTENC,  6, +1 }, // B
-	{ true , 0x31      , UserInputType_SW    , 19,  0 }, // N
+	{ true , 0x2C      , ui::UserInputType_ROTENC,  5, -1 }, // W
+	{ true , 0x2D      , ui::UserInputType_ROTENC,  5, +1 }, // X
+	{ true , 0x2E      , ui::UserInputType_SW    , 18,  0 }, // C
+	{ true , 0x2F      , ui::UserInputType_ROTENC,  6, -1 }, // V
+	{ true , 0x30      , ui::UserInputType_ROTENC,  6, +1 }, // B
+	{ true , 0x31      , ui::UserInputType_SW    , 19,  0 }, // N
 
 	// Common rotary encoders
-	{ false, 0x31      , UserInputType_ROTENC,  0, -1 }, // 1
-	{ false, 0x32      , UserInputType_ROTENC,  0, +1 }, // 2
-	{ false, 0x33      , UserInputType_ROTENC,  1, -1 }, // 3
-	{ false, 0x34      , UserInputType_ROTENC,  1, +1 }, // 4
-	{ false, 0x35      , UserInputType_ROTENC,  2, -1 }, // 5
-	{ false, 0x36      , UserInputType_ROTENC,  2, +1 }, // 6
-	{ false, 0x37      , UserInputType_ROTENC,  3, -1 }, // 7
-	{ false, 0x38      , UserInputType_ROTENC,  3, +1 }, // 8
-	{ false, 0x39      , UserInputType_ROTENC,  4, -1 }, // 9
-	{ false, 0x30      , UserInputType_ROTENC,  4, +1 }, // 0
+	{ false, 0x31      , ui::UserInputType_ROTENC,  0, -1 }, // 1
+	{ false, 0x32      , ui::UserInputType_ROTENC,  0, +1 }, // 2
+	{ false, 0x33      , ui::UserInputType_ROTENC,  1, -1 }, // 3
+	{ false, 0x34      , ui::UserInputType_ROTENC,  1, +1 }, // 4
+	{ false, 0x35      , ui::UserInputType_ROTENC,  2, -1 }, // 5
+	{ false, 0x36      , ui::UserInputType_ROTENC,  2, +1 }, // 6
+	{ false, 0x37      , ui::UserInputType_ROTENC,  3, -1 }, // 7
+	{ false, 0x38      , ui::UserInputType_ROTENC,  3, +1 }, // 8
+	{ false, 0x39      , ui::UserInputType_ROTENC,  4, -1 }, // 9
+	{ false, 0x30      , ui::UserInputType_ROTENC,  4, +1 }, // 0
 
 	// Panel buttons
-	{ false, VK_RETURN , UserInputType_SW    ,  0,  0 }, // Enter (main)
-	{ false, VK_ESCAPE , UserInputType_SW    ,  1,  0 }, // Esc
-	{ false, VK_UP     , UserInputType_SW    , 10,  0 }, // Up
-	{ false, VK_DOWN   , UserInputType_SW    , 11,  0 }, // Down
-	{ false, VK_LEFT   , UserInputType_SW    , 12,  0 }, // Left
-	{ false, VK_RIGHT  , UserInputType_SW    , 13,  0 }, // Right
+	{ false, VK_RETURN , ui::UserInputType_SW    ,  0,  0 }, // Enter (main)
+	{ false, VK_ESCAPE , ui::UserInputType_SW    ,  1,  0 }, // Esc
+	{ false, VK_UP     , ui::UserInputType_SW    , 10,  0 }, // Up
+	{ false, VK_DOWN   , ui::UserInputType_SW    , 11,  0 }, // Down
+	{ false, VK_LEFT   , ui::UserInputType_SW    , 12,  0 }, // Left
+	{ false, VK_RIGHT  , ui::UserInputType_SW    , 13,  0 }, // Right
 
 	// Expression pedal position
-	{ false, VK_NUMPAD0, UserInputType_POT   ,  0,  0 },
-	{ false, VK_NUMPAD1, UserInputType_POT   ,  0,  1 },
-	{ false, VK_NUMPAD2, UserInputType_POT   ,  0,  2 },
-	{ false, VK_NUMPAD3, UserInputType_POT   ,  0,  3 },
-	{ false, VK_NUMPAD4, UserInputType_POT   ,  0,  4 },
-	{ false, VK_NUMPAD5, UserInputType_POT   ,  0,  5 },
-	{ false, VK_NUMPAD6, UserInputType_POT   ,  0,  6 },
-	{ false, VK_NUMPAD7, UserInputType_POT   ,  0,  7 },
-	{ false, VK_NUMPAD8, UserInputType_POT   ,  0,  8 },
-	{ false, VK_NUMPAD9, UserInputType_POT   ,  0,  9 }
+	{ false, VK_NUMPAD0, ui::UserInputType_POT   ,  0,  0 },
+	{ false, VK_NUMPAD1, ui::UserInputType_POT   ,  0,  1 },
+	{ false, VK_NUMPAD2, ui::UserInputType_POT   ,  0,  2 },
+	{ false, VK_NUMPAD3, ui::UserInputType_POT   ,  0,  3 },
+	{ false, VK_NUMPAD4, ui::UserInputType_POT   ,  0,  4 },
+	{ false, VK_NUMPAD5, ui::UserInputType_POT   ,  0,  5 },
+	{ false, VK_NUMPAD6, ui::UserInputType_POT   ,  0,  6 },
+	{ false, VK_NUMPAD7, ui::UserInputType_POT   ,  0,  7 },
+	{ false, VK_NUMPAD8, ui::UserInputType_POT   ,  0,  8 },
+	{ false, VK_NUMPAD9, ui::UserInputType_POT   ,  0,  9 }
 };
 
 const IoWindows::SwLoc	IoWindows::_switch_pos_table [] =
@@ -680,7 +680,7 @@ bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool
 	{
 		const int64_t     date = get_date ();
 
-		if (se_ptr->_type == UserInputType_SW)
+		if (se_ptr->_type == ui::UserInputType_SW)
 		{
 			if (! (down_flag && prev_flag))
 			{
@@ -689,7 +689,7 @@ bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool
 				enqueue_val (date, se_ptr->_type, se_ptr->_index, val);
 			}
 		}
-		else if (se_ptr->_type == UserInputType_POT)
+		else if (se_ptr->_type == ui::UserInputType_POT)
 		{
 			if (down_flag && ! prev_flag)
 			{
@@ -697,7 +697,7 @@ bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool
 				enqueue_val (date, se_ptr->_type, se_ptr->_index, val);
 			}
 		}
-		else if (se_ptr->_type == UserInputType_ROTENC)
+		else if (se_ptr->_type == ui::UserInputType_ROTENC)
 		{
 			if (down_flag)
 			{
@@ -777,7 +777,7 @@ bool	IoWindows::process_lbuttonup (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam
 
 
 // date in _clock_freq
-void	IoWindows::enqueue_val (int64_t date, UserInputType type, int index, float val)
+void	IoWindows::enqueue_val (int64_t date, ui::UserInputType type, int index, float val)
 {
 	MsgQueue *     queue_ptr = _recip_list [type] [index];
 	if (queue_ptr != 0)
@@ -1171,7 +1171,7 @@ void	IoWindows::enqueue_sw_msg (int index, bool on_flag)
 	update_sw_state (index, on_flag);
 	const int64_t  date = get_date ();
 	const float    val  = (on_flag) ? 1.f : 0.f;
-	enqueue_val (date, UserInputType_SW, index, val);
+	enqueue_val (date, ui::UserInputType_SW, index, val);
 }
 
 
@@ -1315,7 +1315,7 @@ int	IoWindows::select_file (std::string &pathname, bool save_flag, std::string t
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 

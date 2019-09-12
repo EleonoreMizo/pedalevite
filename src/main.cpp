@@ -78,16 +78,16 @@
 	#else
 		#error Wrong MAIN_API value
 	#endif // MAIN_API
-	#include "mfx/FileIOPi3.h"
+	#include "mfx/hw/FileIOPi3.h"
 
  #if ! defined (MAIN_USE_VOID)
   #if defined (MAIN_USE_ST7920)
-	#include "mfx/ui/DisplayPi3St7920.h"
+	#include "mfx/hw/DisplayPi3St7920.h"
   #else
-	#include "mfx/ui/DisplayPi3Pcd8544.h"
+	#include "mfx/hw/DisplayPi3Pcd8544.h"
   #endif
-	#include "mfx/ui/LedPi3.h"
-	#include "mfx/ui/UserInputPi3.h"
+	#include "mfx/hw/LedPi3.h"
+	#include "mfx/hw/UserInputPi3.h"
 
 	#include <wiringPi.h>
 	#include <wiringPiI2C.h>
@@ -104,8 +104,8 @@
 	#include <signal.h>
 
 #elif fstb_IS (SYS, WIN)
-	#include "mfx/ui/IoWindows.h"
-	#include "mfx/FileIOWindows.h"
+	#include "mfx/hw/FileIOWindows.h"
+	#include "mfx/hw/IoWindows.h"
 
 	#if (MAIN_API == MAIN_API_ASIO)
 		#include "mfx/adrv/DAsio.h"
@@ -198,17 +198,17 @@ public:
 	               _leds;
 #elif fstb_IS (SYS, LINUX)
  #if defined (MAIN_USE_ST7920)
-	mfx::ui::DisplayPi3St7920
+	mfx::hw::DisplayPi3St7920
  #else
-	mfx::ui::DisplayPi3Pcd8544
+	mfx::hw::DisplayPi3Pcd8544
  #endif
 	               _display;
-	mfx::ui::UserInputPi3
+	mfx::hw::UserInputPi3
 	               _user_input;
-	mfx::ui::LedPi3
+	mfx::hw::LedPi3
 	               _leds;
 #else
-	mfx::ui::IoWindows
+	mfx::hw::IoWindows
 	               _all_io;
 	mfx::ui::DisplayInterface &
 	               _display;
@@ -218,9 +218,10 @@ public:
 	               _leds;
 #endif
 #if fstb_IS (SYS, LINUX)
-	mfx::FileIOPi3 _file_io;
+	mfx::hw::FileIOPi3
+	               _file_io;
 #else
-	mfx::FileIOWindows
+	mfx::hw::FileIOWindows
 	               _file_io;
 #endif
 

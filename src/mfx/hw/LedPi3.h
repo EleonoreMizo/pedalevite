@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_LedPi3_HEADER_INCLUDED)
-#define mfx_ui_LedPi3_HEADER_INCLUDED
+#if ! defined (mfx_hw_LedPi3_HEADER_INCLUDED)
+#define mfx_hw_LedPi3_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,8 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/hw/GpioPwm.h"
 #include "mfx/ui/LedInterface.h"
-#include "mfx/GpioPwm.h"
 
 #include <array>
 #include <thread>
@@ -37,13 +37,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+namespace hw
 {
 
 
 
 class LedPi3
-:	public LedInterface
+:	public ui::LedInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -108,16 +108,16 @@ private:
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/LedPi3.hpp"
+//#include "mfx/hw/LedPi3.hpp"
 
 
 
-#endif   // mfx_ui_LedPi3_HEADER_INCLUDED
+#endif   // mfx_hw_LedPi3_HEADER_INCLUDED
 
 
 

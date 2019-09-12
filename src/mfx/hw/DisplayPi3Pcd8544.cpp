@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ui/DisplayPi3Pcd8544.h"
+#include "mfx/hw/DisplayPi3Pcd8544.h"
 #include "mfx/ui/TimeShareThread.h"
 
 #include <wiringPi.h>
@@ -42,7 +42,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+namespace hw
 {
 
 
@@ -56,7 +56,7 @@ namespace ui
 // ::pinMode (_pin_rst, OUTPUT);
 // ::digitalWrite (_pin_rst, LOW);  ::delay (100);
 // ::digitalWrite (_pin_rst, HIGH); ::delay (1);
-DisplayPi3Pcd8544::DisplayPi3Pcd8544 (TimeShareThread &thread_spi)
+DisplayPi3Pcd8544::DisplayPi3Pcd8544 (ui::TimeShareThread &thread_spi)
 :	_thread_spi (thread_spi)
 ,	_state (State_INIT)
 ,	_screen_buf ()
@@ -324,7 +324,7 @@ void	DisplayPi3Pcd8544::send_to_display (int x, int y, int w, int h)
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 

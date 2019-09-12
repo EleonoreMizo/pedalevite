@@ -253,6 +253,9 @@
     <Filter Include="fstb\txt\utf16">
       <UniqueIdentifier>{3102acff-da6f-4c61-9654-b7120c4b69cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\hw">
+      <UniqueIdentifier>{24662344-e1d5-4373-88f7-f30f21c827c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -453,9 +456,6 @@
     <ClInclude Include="..\..\..\src\mfx\ui\DisplayInterface.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\ui\DisplayPi3Pcd8544.h">
-      <Filter>mfx\ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputInterface.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
@@ -465,17 +465,8 @@
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputType.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\ui\UserInputPi3.h">
-      <Filter>mfx\ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\ui\LedInterface.h">
       <Filter>mfx\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\ui\LedPi3.h">
-      <Filter>mfx\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\GpioPwm.h">
-      <Filter>mfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\piapi\EventTransport.h">
       <Filter>mfx\piapi</Filter>
@@ -825,9 +816,6 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\CentralCbInterface.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\ui\DisplayPi3St7920.h">
-      <Filter>mfx\ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\ui\TimeShareCbInterface.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
@@ -1076,9 +1064,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\hiir\PhaseHalfPiNeon.hpp">
       <Filter>hiir</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\ui\IoWindows.h">
-      <Filter>mfx\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\asiosdk2\common\asio.h">
       <Filter>asiosdk2\common</Filter>
@@ -1681,12 +1666,6 @@
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\FileIOInterface.h">
-      <Filter>mfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\FileIOPi3.h">
-      <Filter>mfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\FileIOWindows.h">
       <Filter>mfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Upsampler4xSimd.h">
@@ -2850,8 +2829,32 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingOp.hpp">
       <Filter>mfx\dsp\fir</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\ui\DisplayLinuxFrameBuf.h">
-      <Filter>mfx\ui</Filter>
+    <ClInclude Include="..\..\..\src\mfx\hw\DisplayLinuxFrameBuf.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\DisplayPi3Pcd8544.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\DisplayPi3St7920.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\FileIOPi3.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\FileIOWindows.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\GpioPwm.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\IoWindows.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\LedPi3.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\UserInputPi3.h">
+      <Filter>mfx\hw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2876,23 +2879,11 @@
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayInterface.cpp">
       <Filter>mfx\ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ui\DisplayPi3Pcd8544.cpp">
-      <Filter>mfx\ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\UserInputInterface.cpp">
-      <Filter>mfx\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ui\UserInputPi3.cpp">
       <Filter>mfx\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\LedInterface.cpp">
       <Filter>mfx\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ui\LedPi3.cpp">
-      <Filter>mfx\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\GpioPwm.cpp">
-      <Filter>mfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\UserInputMsg.cpp">
       <Filter>mfx\ui</Filter>
@@ -2996,9 +2987,6 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\CentralCbInterface.cpp">
       <Filter>mfx\cmd</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ui\DisplayPi3St7920.cpp">
-      <Filter>mfx\ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\TimeShareCbInterface.cpp">
       <Filter>mfx\ui</Filter>
     </ClCompile>
@@ -3064,9 +3052,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\hiir\PolyphaseIir2Designer.cpp">
       <Filter>hiir</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ui\IoWindows.cpp">
-      <Filter>mfx\ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\asiosdk2\common\asio.cpp">
       <Filter>asiosdk2\common</Filter>
@@ -3426,12 +3411,6 @@
       <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp">
-      <Filter>mfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\FileIOPi3.cpp">
-      <Filter>mfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\FileIOWindows.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\PedalboardConfig.cpp">
@@ -3911,8 +3890,32 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\fir\ConvolverFft.cpp">
       <Filter>mfx\dsp\fir</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ui\DisplayLinuxFrameBuf.cpp">
-      <Filter>mfx\ui</Filter>
+    <ClCompile Include="..\..\..\src\mfx\hw\DisplayLinuxFrameBuf.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\DisplayPi3Pcd8544.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\DisplayPi3St7920.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\FileIOPi3.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\FileIOWindows.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\GpioPwm.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\IoWindows.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\LedPi3.cpp">
+      <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\UserInputPi3.cpp">
+      <Filter>mfx\hw</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

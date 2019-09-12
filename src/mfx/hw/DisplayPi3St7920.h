@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_DisplayPi3St7920_HEADER_INCLUDED)
-#define mfx_ui_DisplayPi3St7920_HEADER_INCLUDED
+#if ! defined (mfx_hw_DisplayPi3St7920_HEADER_INCLUDED)
+#define mfx_hw_DisplayPi3St7920_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -39,7 +39,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace ui
+namespace hw
 {
 
 
@@ -47,8 +47,8 @@ namespace ui
 class TimeShareThread;
 
 class DisplayPi3St7920
-:	public DisplayInterface
-,	public TimeShareCbInterface
+:	public ui::DisplayInterface
+,	public ui::TimeShareCbInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -240,16 +240,16 @@ private:
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/DisplayPi3St7920.hpp"
+//#include "mfx/hw/DisplayPi3St7920.hpp"
 
 
 
-#endif   // mfx_ui_DisplayPi3St7920_HEADER_INCLUDED
+#endif   // mfx_hw_DisplayPi3St7920_HEADER_INCLUDED
 
 
 

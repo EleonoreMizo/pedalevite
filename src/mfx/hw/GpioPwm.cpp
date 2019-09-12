@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/GpioPwm.h"
+#include "mfx/hw/GpioPwm.h"
 
 #include <bcm_host.h>
 #include <mailbox.h>
@@ -47,6 +47,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+namespace hw
+{
+
 
 
 
@@ -686,6 +689,7 @@ uint32_t	GpioPwm::Channel::_gpio_init = 0;
 
 
 
+}  // namespace hw
 }  // namespace mfx
 
 

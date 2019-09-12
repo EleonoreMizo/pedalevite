@@ -598,6 +598,20 @@ commonsrc = \
         ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
+        ../../src/mfx/hw/DisplayLinuxFrameBuf.cpp \
+        ../../src/mfx/hw/DisplayLinuxFrameBuf.h \
+        ../../src/mfx/hw/DisplayPi3Pcd8544.cpp \
+        ../../src/mfx/hw/DisplayPi3Pcd8544.h \
+        ../../src/mfx/hw/DisplayPi3St7920.cpp \
+        ../../src/mfx/hw/DisplayPi3St7920.h \
+        ../../src/mfx/hw/FileIOPi3.cpp \
+        ../../src/mfx/hw/FileIOPi3.h \
+        ../../src/mfx/hw/GpioPwm.cpp \
+        ../../src/mfx/hw/GpioPwm.h \
+        ../../src/mfx/hw/LedPi3.cpp \
+        ../../src/mfx/hw/LedPi3.h \
+        ../../src/mfx/hw/UserInputPi3.cpp \
+        ../../src/mfx/hw/UserInputPi3.h \
         ../../src/mfx/pi/adsr/EnvAdsr.cpp \
         ../../src/mfx/pi/adsr/EnvAdsr.h \
         ../../src/mfx/pi/adsr/EnvAdsrDesc.cpp \
@@ -954,12 +968,6 @@ commonsrc = \
         ../../src/mfx/piapi/PluginState.h \
         ../../src/mfx/ui/DisplayInterface.cpp \
         ../../src/mfx/ui/DisplayInterface.h \
-        ../../src/mfx/ui/DisplayLinuxFrameBuf.cpp \
-        ../../src/mfx/ui/DisplayLinuxFrameBuf.h \
-        ../../src/mfx/ui/DisplayPi3Pcd8544.cpp \
-        ../../src/mfx/ui/DisplayPi3Pcd8544.h \
-        ../../src/mfx/ui/DisplayPi3St7920.cpp \
-        ../../src/mfx/ui/DisplayPi3St7920.h \
         ../../src/mfx/ui/DisplayVoid.cpp \
         ../../src/mfx/ui/DisplayVoid.h \
         ../../src/mfx/ui/Font.cpp \
@@ -968,8 +976,6 @@ commonsrc = \
         ../../src/mfx/ui/FontDataDefault.h \
         ../../src/mfx/ui/LedInterface.cpp \
         ../../src/mfx/ui/LedInterface.h \
-        ../../src/mfx/ui/LedPi3.cpp \
-        ../../src/mfx/ui/LedPi3.h \
         ../../src/mfx/ui/LedVoid.cpp \
         ../../src/mfx/ui/LedVoid.h \
         ../../src/mfx/ui/RotEnc.cpp \
@@ -982,8 +988,6 @@ commonsrc = \
         ../../src/mfx/ui/UserInputInterface.h \
         ../../src/mfx/ui/UserInputMsg.cpp \
         ../../src/mfx/ui/UserInputMsg.h \
-        ../../src/mfx/ui/UserInputPi3.cpp \
-        ../../src/mfx/ui/UserInputPi3.h \
         ../../src/mfx/ui/UserInputType.h \
         ../../src/mfx/ui/UserInputVoid.cpp \
         ../../src/mfx/ui/UserInputVoid.h \
@@ -1120,10 +1124,6 @@ commonsrc = \
         ../../src/mfx/CtrlUnit.h \
         ../../src/mfx/FileIOInterface.cpp \
         ../../src/mfx/FileIOInterface.h \
-        ../../src/mfx/FileIOPi3.cpp \
-        ../../src/mfx/FileIOPi3.h \
-        ../../src/mfx/GpioPwm.cpp \
-        ../../src/mfx/GpioPwm.h \
         ../../src/mfx/LocEdit.h \
         ../../src/mfx/MeterResult.h \
         ../../src/mfx/MeterResultSet.cpp \

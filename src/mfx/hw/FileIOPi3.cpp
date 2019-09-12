@@ -25,8 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/LedInterface.h"
+#include "mfx/hw/FileIOPi3.h"
 #include "mfx/Cst.h"
-#include "mfx/FileIOPi3.h"
 
 #include <cassert>
 #include <cstdio>
@@ -35,6 +35,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 namespace mfx
+{
+namespace hw
 {
 
 
@@ -104,6 +106,7 @@ int	FileIOPi3::do_read_txt_file (const std::string &pathname, std::string &conte
 
 
 
+}  // namespace hw
 }  // namespace mfx
 
 

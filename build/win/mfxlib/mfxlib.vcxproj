@@ -617,9 +617,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.h" />
     <ClInclude Include="..\..\..\src\mfx\FileIOInterface.h" />
-    <ClInclude Include="..\..\..\src\mfx\FileIOPi3.h" />
-    <ClInclude Include="..\..\..\src\mfx\FileIOWindows.h" />
-    <ClInclude Include="..\..\..\src\mfx\GpioPwm.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\DisplayLinuxFrameBuf.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\DisplayPi3Pcd8544.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\DisplayPi3St7920.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\FileIOPi3.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\FileIOWindows.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\GpioPwm.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\IoWindows.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\LedPi3.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\UserInputPi3.h" />
     <ClInclude Include="..\..\..\src\mfx\LocEdit.h" />
     <ClInclude Include="..\..\..\src\mfx\MeterResult.h" />
     <ClInclude Include="..\..\..\src\mfx\MeterResultSet.h" />
@@ -630,7 +636,6 @@
     <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
-    <ClInclude Include="..\..\..\src\mfx\ui\DisplayLinuxFrameBuf.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h" />
     <ClInclude Include="..\..\..\src\mfx\PageSet.h" />
@@ -945,21 +950,16 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\Vec2d.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\Vec2d.hpp" />
     <ClInclude Include="..\..\..\src\mfx\ui\DisplayInterface.h" />
-    <ClInclude Include="..\..\..\src\mfx\ui\DisplayPi3Pcd8544.h" />
-    <ClInclude Include="..\..\..\src\mfx\ui\DisplayPi3St7920.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\DisplayVoid.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\Font.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\FontDataDefault.h" />
-    <ClInclude Include="..\..\..\src\mfx\ui\IoWindows.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\LedInterface.h" />
-    <ClInclude Include="..\..\..\src\mfx\ui\LedPi3.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\LedVoid.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\RotEnc.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\TimeShareCbInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\TimeShareThread.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputMsg.h" />
-    <ClInclude Include="..\..\..\src\mfx\ui\UserInputPi3.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputType.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\UserInputVoid.h" />
     <ClInclude Include="..\..\..\src\mfx\UniqueProgList.h" />
@@ -1129,11 +1129,27 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\FileIOPi3.cpp">
+    <ClCompile Include="..\..\..\src\mfx\hw\DisplayLinuxFrameBuf.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\FileIOWindows.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\GpioPwm.cpp">
+    <ClCompile Include="..\..\..\src\mfx\hw\DisplayPi3Pcd8544.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\DisplayPi3St7920.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\FileIOPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\FileIOWindows.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\hw\GpioPwm.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\IoWindows.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\hw\LedPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\UserInputPi3.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\MeterResultSet.cpp" />
@@ -1348,32 +1364,16 @@
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayInterface.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\ui\DisplayLinuxFrameBuf.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ui\DisplayPi3Pcd8544.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\ui\DisplayPi3St7920.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayVoid.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\Font.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\FontDataDefault.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\ui\IoWindows.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\LedInterface.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\ui\LedPi3.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\LedVoid.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\RotEnc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\TimeShareCbInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\TimeShareThread.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\UserInputInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\UserInputMsg.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\ui\UserInputPi3.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\UserInputVoid.cpp" />
     <ClCompile Include="..\..\..\src\mfx\UniqueProgList.cpp" />
     <ClCompile Include="..\..\..\src\mfx\View.cpp" />

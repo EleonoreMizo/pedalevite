@@ -29,7 +29,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "mfx/ui/DisplayLinuxFrameBuf.h"
+#include "mfx/hw/DisplayLinuxFrameBuf.h"
 
 #if fstb_IS (ARCHI, X86)
 	#include <emmintrin.h>
@@ -54,7 +54,7 @@ http://www.wtfpl.net/ for more details.
 
 namespace mfx
 {
-namespace ui
+namespace hw
 {
 
 
@@ -347,7 +347,7 @@ void	DisplayLinuxFrameBuf::clean_up ()
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 

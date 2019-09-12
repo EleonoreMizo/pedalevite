@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_ui_DisplayLinuxFrameBuf_HEADER_INCLUDED)
-#define mfx_ui_DisplayLinuxFrameBuf_HEADER_INCLUDED
+#if ! defined (mfx_hw_DisplayLinuxFrameBuf_HEADER_INCLUDED)
+#define mfx_hw_DisplayLinuxFrameBuf_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -38,13 +38,13 @@ http://www.wtfpl.net/ for more details.
 
 namespace mfx
 {
-namespace ui
+namespace hw
 {
 
 
 
 class DisplayLinuxFrameBuf
-:	public DisplayInterface
+:	public ui::DisplayInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -116,16 +116,16 @@ private:
 
 
 
-}  // namespace ui
+}  // namespace hw
 }  // namespace mfx
 
 
 
-//#include "mfx/ui/DisplayLinuxFrameBuf.hpp"
+//#include "mfx/hw/DisplayLinuxFrameBuf.hpp"
 
 
 
-#endif   // mfx_ui_DisplayLinuxFrameBuf_HEADER_INCLUDED
+#endif   // mfx_hw_DisplayLinuxFrameBuf_HEADER_INCLUDED
 
 
 
