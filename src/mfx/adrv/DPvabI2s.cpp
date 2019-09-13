@@ -43,6 +43,8 @@ http://www.wtfpl.net/ for more details.
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 
+#include <fcntl.h>
+
 #include <chrono>
 #include <thread>
 
@@ -63,7 +65,7 @@ namespace adrv
 
 DPvabI2s::DPvabI2s ()
 :	_periph_base_addr (::bcm_host_get_peripheral_address ())
-,	_pcm_mptr (_periph_base_addr + _pcm_ofs, _pcm_len, "/dev/mem", O_RDWR | O_SYNC)
+,	_pcm_mptr (_periph_base_addr + hw::bcm2837pcm::_pcm_ofs, hw::bcm2837pcm::_pcm_len, "/dev/mem", O_RDWR | O_SYNC)
 ,	_gpio ()
 ,	_i2c_hnd (::wiringPiI2CSetup (_i2c_addr))
 ,	_cb_ptr (nullptr)
@@ -250,14 +252,14 @@ void	DPvabI2s::main_loop ()
 		| _cs_a_rxthr_one
 		| _cs_a_txthr_ful1
 		| _cs_a_en;
-	_pcm_mptr.at [_cs_a] =
+	_pcm_mptr.at (_cs_a) =
 		  status_mask
 		| _cs_a_rxerr
 		| _cs_a_txerr
 		| _cs_a_rxclr
 		| _cs_a_txclr
 		| _cs_a_en;
-	_pcm_mptr.at [_mode_a] =
+	_pcm_mptr.at (_mode_a) =
 		  _mode_a_clkm
 		| _mode_a_clki
 		| _mode_a_fsm
@@ -269,31 +271,31 @@ void	DPvabI2s::main_loop ()
 		| ((((_resol - 8) & 0x10) != 0) ? _xc_a_wex : 0);
 	const uint32_t chn_conf_l = chn_conf_base | (0             << _xc_a_pos);
 	const uint32_t chn_conf_r = chn_conf_base | (_bits_per_chn << _xc_a_pos);
-	_pcm_mptr.at [_rxc_a] =
+	_pcm_mptr.at (_rxc_a) =
 		  (chn_conf_l << _xc_a_ch1)
 		| (chn_conf_r << _xc_a_ch2);
-	_pcm_mptr.at [_txc_a] =
+	_pcm_mptr.at (_txc_a) =
 		  (chn_conf_l << _xc_a_ch1)
 		| (chn_conf_r << _xc_a_ch2);
-	_pcm_mptr.at [_dreq_a] =
+	_pcm_mptr.at (_dreq_a) =
 		  (0x10 << _dreq_a_tx_panic)
 		| (0x30 << _dreq_a_rx_panic)
 		| (0x30 << _dreq_a_tx      )
 		| (0x20 << _dreq_a_rx      );
-	_pcm_mptr.at [_inten_a] = 0;
-	_pcm_mptr.at [_intstc_a] =
+	_pcm_mptr.at (_inten_a) = 0;
+	_pcm_mptr.at (_intstc_a) =
 		  _intstc_a_rxerr
 		| _intstc_a_rxerr
 		| _intstc_a_rxr
 		| _intstc_a_rxw;
-	_pcm_mptr.at [_gray] = 0;
+	_pcm_mptr.at (_gray) = 0;
 
 	// Start
 	status_mask |= _cs_a_txon | _cs_a_rxon;
-	_pcm_mptr.at [_cs_a] = status_mask | _cs_a_sync;
+	_pcm_mptr.at (_cs_a) = status_mask | _cs_a_sync;
 
 	// Waits for the sync bit, so the FIFO are actually cleared
-	while ((_pcm_mptr.at [_cs_a] & _cs_a_sync) != 0 && ! _exit_flag)
+	while ((_pcm_mptr.at (_cs_a) & _cs_a_sync) != 0 && ! _exit_flag)
 	{
 		continue;
 	}
@@ -305,7 +307,7 @@ void	DPvabI2s::main_loop ()
 	{
 		for (int chn = 0; chn < _nbr_chn; ++chn)
 		{
-			_pcm_mptr.at [_fifo_a] = 0;
+			_pcm_mptr.at (_fifo_a) = 0;
 		}
 	}
 
@@ -316,14 +318,14 @@ void	DPvabI2s::main_loop ()
 	bool           sync_err_flag = false;
 	while (! _exit_flag)
 	{
-		uint32_t       status = _pcm_mptr.at [_cs_a];
+		uint32_t       status = _pcm_mptr.at (_cs_a);
 
 		if ((status & _cs_a_rxerr) != 0 || (status & _cs_a_txerr) != 0)
 		{
 			sync_err_flag = true;
 
 			// Clears error at the PCM interface level
-			_pcm_mptr.at [_cs_a] = status_mask | _cs_a_rxerr | _cs_a_txerr;
+			_pcm_mptr.at (_cs_a) = status_mask | _cs_a_rxerr | _cs_a_txerr;
 		}
 
 		// Possible L/R sync errors, skips a frame to fix them
@@ -331,11 +333,11 @@ void	DPvabI2s::main_loop ()
 		{
 			if ((status & _cs_a_rxsync) == 0)
 			{
-				dummy = _pcm_mptr.at [_fifo_a];
+				dummy = _pcm_mptr.at (_fifo_a);
 			}
 			if ((status & _cs_a_txsync) == 0)
 			{
-				_pcm_mptr.at [_fifo_a] = 0;
+				_pcm_mptr.at (_fifo_a) = 0;
 			}
 			sync_err_flag = true;
 		}
@@ -348,10 +350,10 @@ void	DPvabI2s::main_loop ()
 				(buf_idx * _block_size_a + buf_pos) * _nbr_chn + chn_pos;
 
 			// Read to the input buffer
-			_buf_int_i [pos]       = _pcm_mptr.at [_fifo_a];
+			_buf_int_i [pos]       = _pcm_mptr.at (_fifo_a);
 
 			// Write from the output buffer
-			_pcm_mptr.at [_fifo_a] = _buf_int_o [pos];
+			_pcm_mptr.at (_fifo_a) = _buf_int_o [pos];
 
 			// Next sample
 			++ chn_pos;
@@ -383,7 +385,7 @@ void	DPvabI2s::main_loop ()
 	_blk_proc_cv.notify_one ();
 
 	// Disables the PCM interface
-	_pcm_mptr.at [_cs_a] = 0;
+	_pcm_mptr.at (_cs_a) = 0;
 
 	// Waits for the processing thread to terminate
 	thread_proc.join ();

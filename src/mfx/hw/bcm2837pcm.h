@@ -121,7 +121,7 @@ static const int        _dreq_a_rx       =       0; // 7 bits - RX Request Level
 
 // INTEN_A (p. 135)
 static const uint32_t   _inten_a_rxerr = 1 <<  3; // RX Error Interrupt
-static const uint32_t   _inten_a_rxerr = 1 <<  2; // TX Error Interrupt
+static const uint32_t   _inten_a_txerr = 1 <<  2; // TX Error Interrupt
 static const uint32_t   _inten_a_rxr   = 1 <<  1; // RX Read Interrupt Enable
 static const uint32_t   _inten_a_rxw   = 1 <<  0; // TX Write Interrupt Enable
 
