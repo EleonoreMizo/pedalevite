@@ -55,12 +55,12 @@ public:
 	{
 		PinFnc_IN = 0,
 		PinFnc_OUT,
-		PinFnc_ALT_5,
-		PinFnc_ALT_4,
-		PinFnc_ALT_0,
-		PinFnc_ALT_1,
-		PinFnc_ALT_2,
-		PinFnc_ALT_3,
+		PinFnc_ALT5,
+		PinFnc_ALT4,
+		PinFnc_ALT0,
+		PinFnc_ALT1,
+		PinFnc_ALT2,
+		PinFnc_ALT3,
 
 		PinFnc_NBR_ELT,
 	};

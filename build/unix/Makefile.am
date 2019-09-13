@@ -598,6 +598,8 @@ commonsrc = \
         ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
+        ../../src/mfx/hw/bcm2837pcm.h \
+        ../../src/mfx/hw/cs4272.h \
         ../../src/mfx/hw/DisplayLinuxFrameBuf.cpp \
         ../../src/mfx/hw/DisplayLinuxFrameBuf.h \
         ../../src/mfx/hw/DisplayPi3Pcd8544.cpp \
@@ -616,6 +618,8 @@ commonsrc = \
         ../../src/mfx/hw/MmapPtr.cpp \
         ../../src/mfx/hw/MmapPtr.h \
         ../../src/mfx/hw/MmapPtr.hpp \
+        ../../src/mfx/hw/ThreadLinux.cpp \
+        ../../src/mfx/hw/ThreadLinux.h \
         ../../src/mfx/hw/UserInputPi3.cpp \
         ../../src/mfx/hw/UserInputPi3.h \
         ../../src/mfx/pi/adsr/EnvAdsr.cpp \

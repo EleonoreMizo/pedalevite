@@ -617,6 +617,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.h" />
     <ClInclude Include="..\..\..\src\mfx\FileIOInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\bcm2837pcm.h" />
+    <ClInclude Include="..\..\..\src\mfx\hw\cs4272.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\DisplayLinuxFrameBuf.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\DisplayPi3Pcd8544.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\DisplayPi3St7920.h" />
@@ -629,6 +631,7 @@
     <ClInclude Include="..\..\..\src\mfx\hw\LedPi3.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\hw\ThreadLinux.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\UserInputPi3.h" />
     <ClInclude Include="..\..\..\src\mfx\LocEdit.h" />
     <ClInclude Include="..\..\..\src\mfx\MeterResult.h" />
@@ -1157,6 +1160,9 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\MmapPtr.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\ThreadLinux.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\UserInputPi3.cpp">

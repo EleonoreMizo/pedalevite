@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MmapPtr.h
+        ThreadLinux.h
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_hw_MmapPtr_HEADER_INCLUDED)
-#define mfx_hw_MmapPtr_HEADER_INCLUDED
+#if ! defined (mfx_hw_ThreadLinux_HEADER_INCLUDED)
+#define mfx_hw_ThreadLinux_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,7 +27,9 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <cstdint>
+#include <thread>
+
+#include <cstdio>
 
 
 
@@ -38,26 +40,14 @@ namespace hw
 
 
 
-class MmapPtr
+class ThreadLinux
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	explicit       MmapPtr (uint32_t base, uint32_t len, const char dev_0 [], int flags);
-	               ~MmapPtr ();
-
-	inline volatile uint32_t *
-	               get () const;
-	inline volatile uint32_t *
-	               operator -> () const;
-	inline volatile uint32_t &
-	               operator * () const;
-	inline volatile const uint32_t &
-	               at (uint32_t ofs_byte) const;
-	inline volatile uint32_t &
-	               at (uint32_t ofs_byte);
+	static int     set_priority (std::thread &thrd, int prio_below_max, FILE *err_msg_ptr);
 
 
 
@@ -71,23 +61,20 @@ protected:
 
 private:
 
-	volatile uint32_t *
-	               _ptr;
-	uint32_t       _len;
-
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	               MmapPtr ()                               = delete;
-	               MmapPtr (const MmapPtr &other)           = delete;
-	MmapPtr &      operator = (const MmapPtr &other)        = delete;
-	bool           operator == (const MmapPtr &other) const = delete;
-	bool           operator != (const MmapPtr &other) const = delete;
+	               ThreadLinux ()                               = delete;
+	               ThreadLinux (const ThreadLinux &other)       = delete;
+	virtual        ~ThreadLinux ()                              = delete;
+	ThreadLinux &  operator = (const ThreadLinux &other)        = delete;
+	bool           operator == (const ThreadLinux &other) const = delete;
+	bool           operator != (const ThreadLinux &other) const = delete;
 
-}; // class MmapPtr
+}; // class ThreadLinux
 
 
 
@@ -96,11 +83,11 @@ private:
 
 
 
-#include "mfx/hw/MmapPtr.hpp"
+//#include "mfx/hw/ThreadLinux.hpp"
 
 
 
-#endif   // mfx_hw_MmapPtr_HEADER_INCLUDED
+#endif   // mfx_hw_ThreadLinux_HEADER_INCLUDED
 
 
 

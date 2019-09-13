@@ -37,28 +37,28 @@ namespace hw
 
 
 
-uint32_t *	MmapPtr::get () const
+volatile uint32_t *	MmapPtr::get () const
 {
 	return _ptr;
 }
 
 
 
-uint32_t *	MmapPtr::operator -> () const
+volatile uint32_t *	MmapPtr::operator -> () const
 {
 	return _ptr;
 }
 
 
 
-uint32_t &	MmapPtr::operator * () const
+volatile uint32_t &	MmapPtr::operator * () const
 {
 	return *_ptr;
 }
 
 
 
-const uint32_t &	MmapPtr::at (uint32_t ofs_byte) const
+const volatile uint32_t &	MmapPtr::at (uint32_t ofs_byte) const
 {
 	assert ((ofs_byte & 3) == 0);
 	assert (ofs_byte < _len);
@@ -68,7 +68,7 @@ const uint32_t &	MmapPtr::at (uint32_t ofs_byte) const
 
 
 
-uint32_t &	MmapPtr::at (uint32_t ofs_byte)
+volatile uint32_t &	MmapPtr::at (uint32_t ofs_byte)
 {
 	assert ((ofs_byte & 3) == 0);
 	assert (ofs_byte < _len);

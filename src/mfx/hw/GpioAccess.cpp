@@ -51,7 +51,7 @@ namespace hw
 GpioAccess::GpioAccess ()
 :	_periph_addr (::bcm_host_get_peripheral_address ())
 ,	_gpio_mptr (_periph_addr + _ofs_gpio, _len_gpio, "/dev/mem", O_RDWR | O_SYNC)
-,	_gpio_ptr (reinterpret_cast <volatile uint32_t *> (_gpio_mptr.get ()))
+,	_gpio_ptr (_gpio_mptr.get ())
 ,	_last_read (0)
 {
 	// Nothing

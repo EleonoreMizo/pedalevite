@@ -125,63 +125,6 @@ protected:
 
 private:
 
-	// 01: Mode Control 1
-	static const int  _mc1_single       = 0 << 6;
-	static const int  _mc1_double       = 2 << 6;
-	static const int  _mc1_quad         = 3 << 6;
-	static const int  _mc1_r1           = 1 << 5;
-	static const int  _mc1_r0           = 1 << 4;
-	static const int  _mc1_master       = 1 << 3;
-	static const int  _mc1_fmt_left     = 0;
-	static const int  _mc1_fmt_i2s      = 1;
-	static const int  _mc1_fmt_r16      = 2;
-	static const int  _mc1_fmt_r24      = 3;
-	static const int  _mc1_fmt_r20      = 4;
-	static const int  _mc1_fmt_r18      = 5;
-
-	// 02: DAC Control
-	static const int  _dacc_amute       = 1 << 7;
-	static const int  _dacc_flt_slow    = 1 << 6;
-	static const int  _dacc_deemph_none = 0 << 4;
-	static const int  _dacc_deemph_44_1 = 1 << 4;
-	static const int  _dacc_deemph_48   = 2 << 4;
-	static const int  _dacc_deemph_32   = 3 << 4;
-	static const int  _dacc_volramp_up  = 1 << 3;
-	static const int  _dacc_volramp_dw  = 1 << 2;
-	static const int  _dacc_polarity_a  = 1 << 1;
-	static const int  _dacc_polarity_b  = 1 << 0;
-
-	// 03: DAC Volume & Mixing Control
-	static const int  _mix_b_eq_a       = 1 << 6;
-	static const int  _mix_soft_r       = 1 << 5;
-	static const int  _mix_zero_x       = 1 << 4;
-	static const int  _mix_atapi_l_to_l = 1 << 3;
-	static const int  _mix_atapi_r_to_l = 1 << 2;
-	static const int  _mix_atapi_l_to_r = 1 << 1;
-	static const int  _mix_atapi_r_to_r = 1 << 0;
-
-	// 04: DAC Channel A Volume Control
-	static const int  _vol_a_mute       = 1 << 7;
-
-	// 05: DAC Channel B Volume Control
-	static const int  _vol_b_mute       = 1 << 7;
-
-	// 06: ADC Control
-	static const int  _adcc_dither16    = 1 << 5;
-	static const int  _adcc_fmt_left    = 0 << 4;
-	static const int  _adcc_fmt_i2s     = 1 << 4;
-	static const int  _adcc_mute_a      = 1 << 3;
-	static const int  _adcc_mute_b      = 1 << 2;
-	static const int  _adcc_no_hpf_a    = 1 << 1;
-	static const int  _adcc_no_hpf_b    = 1 << 0;
-
-	// 07: Mode Control 2
-	static const int  _mc2_loopback     = 1 << 4;
-	static const int  _mc2_sync_mute_ab = 1 << 3;
-	static const int  _mc2_freeze       = 1 << 2;
-	static const int  _mc2_ctrl_port    = 1 << 1;
-	static const int  _mc2_power_down   = 0 << 1;
-
 	typedef std::vector <int32_t, fstb::AllocAlign <float, 16> > BufIntAlign;
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufFltAlign;
 
@@ -310,8 +253,6 @@ private:
 	#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
 	void           write_reg (uint8_t reg, uint8_t val);
 	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
-
-	static int     set_thread_priority (std::thread &thrd, int prio_below_max);
 #endif
 
 	GpioAccess     _gpio;
@@ -364,8 +305,8 @@ private:
 
 private:
 
-	               DPvabDirect (const DPvabDirect &other)             = delete;
-	DPvabDirect &        operator = (const DPvabDirect &other)        = delete;
+	               DPvabDirect (const DPvabDirect &other)       = delete;
+	DPvabDirect &  operator = (const DPvabDirect &other)        = delete;
 	bool           operator == (const DPvabDirect &other) const = delete;
 	bool           operator != (const DPvabDirect &other) const = delete;
 

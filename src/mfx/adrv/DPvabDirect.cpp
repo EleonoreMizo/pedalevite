@@ -35,6 +35,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #endif
 #include "mfx/adrv/CbInterface.h"
 #include "mfx/adrv/DPvabDirect.h"
+#if ! defined (mfx_adrv_DPvabDirect_TEST)
+	#include "mfx/hw/ThreadLinux.h"
+	#if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE)
+		#include "mfx/hw/cs4272.h"
+	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
+#endif
 
 #if ! defined (mfx_adrv_DPvabDirect_TEST)
 
@@ -47,8 +53,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 	#include <sys/mman.h>
 	#include <fcntl.h>
-	#include <pthread.h>
-	#include <sched.h>
 	#include <unistd.h>
 
 #endif // mfx_adrv_DPvabDirect_TEST
@@ -85,6 +89,7 @@ DPvabDirect::DPvabDirect ()
 ,	_timeout_flag (0)
 ,	_resync_flag (false)
 ,	_exit_flag (false)
+,	_proc_ex_flag (false)
 ,	_syncerr_flag (false)
 ,	_cur_buf (0)
 ,	_buf_int_i (_block_size_a * _nbr_chn * 2)
@@ -94,6 +99,7 @@ DPvabDirect::DPvabDirect ()
 ,	_thread_main ()
 ,	_blk_proc_mtx ()
 ,	_blk_proc_cv ()
+,	_proc_now_flag (false)
 ,	_state (State_STOP)
 #if defined (mfx_adrv_DPvabDirect_CTRL_PORT_MODE) && ! defined (mfx_adrv_DPvabDirect_TEST)
 ,	_i2c_hnd (::wiringPiI2CSetup (_i2c_addr))
@@ -180,6 +186,8 @@ int	DPvabDirect::do_start ()
 	// If MCLK is internally generated, waits for for it
 	std::this_thread::sleep_for (std::chrono::milliseconds (1));
 
+	using namespace hw::cs4272;
+
 	// Mode control 2: sets CPEN and PDN
 	write_reg (0x07, _mc2_ctrl_port | _mc2_power_down);
 
@@ -221,7 +229,7 @@ int	DPvabDirect::do_start ()
 #if defined (mfx_adrv_DPvabDirect_TEST)
 	_gpio.run ();
 #else // mfx_adrv_DPvabDirect_TEST
-	set_thread_priority (_thread_main, 0);
+	hw::ThreadLinux::set_priority (_thread_main, 0, nullptr);
 #endif // mfx_adrv_DPvabDirect_TEST
 
 	if (ret_val == 0)
@@ -588,7 +596,7 @@ void	DPvabDirect::main_loop ()
 	_proc_now_flag = false;
 	std::thread    thread_proc (&DPvabDirect::proc_loop, this);
 #if ! defined (mfx_adrv_DPvabDirect_TEST)
-	set_thread_priority (thread_proc, -4);
+	hw::ThreadLinux::set_priority (thread_proc, -4, nullptr);
 #endif // mfx_adrv_DPvabDirect_TEST
 
 	// Clears integer buffers
@@ -942,48 +950,6 @@ void	DPvabDirect::write_reg (uint8_t reg, uint8_t val)
 
 
 	#endif // mfx_adrv_DPvabDirect_CTRL_PORT_MODE
-
-
-
-int	DPvabDirect::set_thread_priority (std::thread &thrd, int prio_below_max)
-{
-	assert (prio_below_max <= 0);
-
-	int            ret_val = 0;
-
-	const int      policy   = SCHED_FIFO;
-	int            max_prio = 0;
-	if (ret_val == 0)
-	{
-		max_prio = ::sched_get_priority_max (policy);
-		if (max_prio < 0)
-		{
-			ret_val = max_prio;
-			fprintf (
-				stderr,
-				"Error: cannot retrieve the maximum priority value.\n"
-			);
-		}
-	}
-	if (ret_val == 0)
-	{
-		::sched_param  tparam;
-		memset (&tparam, 0, sizeof (tparam));
-		tparam.sched_priority = max_prio + prio_below_max;
-
-		ret_val = ::pthread_setschedparam (
-			thrd.native_handle (),
-			policy,
-			&tparam
-		);
-		if (ret_val != 0)
-		{
-			fprintf (stderr, "Error: cannot set thread priority.\n");
-		}
-	}
-
-	return ret_val;
-}
 
 
 

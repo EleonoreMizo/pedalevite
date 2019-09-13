@@ -27,9 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/adrv/CbInterface.h"
 #include "mfx/adrv/DAlsa.h"
+#include "mfx/hw/ThreadLinux.h"
 
-#include <pthread.h>
-#include <sched.h>
 #include <signal.h>
 
 #include <chrono>
@@ -188,38 +187,11 @@ int	DAlsa::do_start ()
 		}
 	}
 
-	const int      policy   = SCHED_FIFO;
-	int            max_prio = 0;
 	if (ret_val == 0)
 	{
 		_quit_flag    = false;
 		_thread_audio = std::thread (&DAlsa::process_audio, this);
-
-		max_prio = ::sched_get_priority_max (policy);
-		if (max_prio < 0)
-		{
-			ret_val = max_prio;
-			fprintf (
-				stderr,
-				"Error: cannot retrieve the maximum priority value.\n"
-			);
-		}
-	}
-	if (ret_val == 0)
-	{
-		::sched_param  tparam;
-		memset (&tparam, 0, sizeof (tparam));
-		tparam.sched_priority = max_prio - 1;
-
-		ret_val = ::pthread_setschedparam (
-			_thread_audio.native_handle (),
-			policy,
-			&tparam
-		);
-		if (ret_val != 0)
-		{
-			fprintf (stderr, "Error: cannot set thread priority.\n");
-		}
+		ret_val = hw::ThreadLinux::set_priority (_thread_audio, -1, stderr);
 	}
 
 	if (ret_val == 0)
