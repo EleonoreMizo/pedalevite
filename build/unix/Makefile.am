@@ -208,6 +208,8 @@ commonsrc = \
         ../../src/mfx/adrv/DManual.h \
         ../../src/mfx/adrv/DPvabDirect.cpp \
         ../../src/mfx/adrv/DPvabDirect.h \
+        ../../src/mfx/adrv/DPvabI2s.cpp \
+        ../../src/mfx/adrv/DPvabI2s.h \
         ../../src/mfx/adrv/DriverInterface.cpp \
         ../../src/mfx/adrv/DriverInterface.h \
         ../../src/mfx/cmd/BufAlloc.cpp \

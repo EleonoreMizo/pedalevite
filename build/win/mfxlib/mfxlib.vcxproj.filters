@@ -2868,6 +2868,9 @@
     <ClInclude Include="..\..\..\src\mfx\hw\MmapPtr.hpp">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\adrv\DPvabI2s.h">
+      <Filter>mfx\adrv</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\hw\ThreadLinux.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
@@ -3943,6 +3946,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\MmapPtr.cpp">
       <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\adrv\DPvabI2s.cpp">
+      <Filter>mfx\adrv</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\ThreadLinux.cpp">
       <Filter>mfx\hw</Filter>
