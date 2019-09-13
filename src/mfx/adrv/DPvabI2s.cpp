@@ -285,9 +285,9 @@ void	DPvabI2s::main_loop ()
 	_pcm_mptr.at (_inten_a) = 0;
 	_pcm_mptr.at (_intstc_a) =
 		  _intstc_a_rxerr
-		| _intstc_a_rxerr
+		| _intstc_a_txerr
 		| _intstc_a_rxr
-		| _intstc_a_rxw;
+		| _intstc_a_txw;
 	_pcm_mptr.at (_gray) = 0;
 
 	// Start
@@ -333,7 +333,7 @@ void	DPvabI2s::main_loop ()
 		{
 			if ((status & _cs_a_rxsync) == 0)
 			{
-				dummy = _pcm_mptr.at (_fifo_a);
+				dummy += _pcm_mptr.at (_fifo_a);
 			}
 			if ((status & _cs_a_txsync) == 0)
 			{
