@@ -123,13 +123,13 @@ static const int        _dreq_a_rx       =       0; // 7 bits - RX Request Level
 static const uint32_t   _inten_a_rxerr = 1 <<  3; // RX Error Interrupt
 static const uint32_t   _inten_a_txerr = 1 <<  2; // TX Error Interrupt
 static const uint32_t   _inten_a_rxr   = 1 <<  1; // RX Read Interrupt Enable
-static const uint32_t   _inten_a_rxw   = 1 <<  0; // TX Write Interrupt Enable
+static const uint32_t   _inten_a_txw   = 1 <<  0; // TX Write Interrupt Enable
 
 // INTSTC_A (p. 136)
 static const uint32_t   _intstc_a_rxerr = 1 <<  3; // RX Error Interrupt Status/Clear
-static const uint32_t   _intstc_a_rxerr = 1 <<  2; // TX Error Interrupt Status/Clear
+static const uint32_t   _intstc_a_txerr = 1 <<  2; // TX Error Interrupt Status/Clear
 static const uint32_t   _intstc_a_rxr   = 1 <<  1; // RX Read Interrupt Status/Clear
-static const uint32_t   _intstc_a_rxw   = 1 <<  0; // TX Write Interrupt Status/Clear
+static const uint32_t   _intstc_a_txw   = 1 <<  0; // TX Write Interrupt Status/Clear
 
 // GRAY (p. 136)
 static const int        _gray_rxfifolevel =      16; // 6 bits - The Current level of the RXFIFO
