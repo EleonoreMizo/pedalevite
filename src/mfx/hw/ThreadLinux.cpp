@@ -30,6 +30,7 @@ http://www.wtfpl.net/ for more details.
 #include <sched.h>
 
 #include <cassert>
+#include <cstring>
 
 
 

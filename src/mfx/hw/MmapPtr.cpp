@@ -80,7 +80,7 @@ MmapPtr::~MmapPtr ()
 {
 	if (_len > 0)
 	{
-		munmap (_ptr, _len);
+		munmap (const_cast <uint32_t *> (_ptr), _len);
 	}
 
 	_ptr = nullptr;
