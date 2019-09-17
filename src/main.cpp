@@ -26,8 +26,8 @@
 	#define MAIN_API MAIN_API_MANUAL
 #elif fstb_IS (SYS, LINUX)
 //	#define MAIN_API MAIN_API_JACK
-//	#define MAIN_API MAIN_API_ALSA
-	#define MAIN_API MAIN_API_PVAB
+	#define MAIN_API MAIN_API_ALSA
+//	#define MAIN_API MAIN_API_PVAB
 #else
 	#define MAIN_API MAIN_API_ASIO
 #endif
