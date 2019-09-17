@@ -248,29 +248,26 @@ void	DPvabI2s::main_loop ()
 
 	// Sets up the I2S interface
 	uint32_t       status_mask =
-		  _cs_a_rxsex
+		  _cs_a_stby
+		| _cs_a_rxsex
 		| _cs_a_rxthr_one
 		| _cs_a_txthr_ful1
-		| _cs_a_en;
-	_pcm_mptr.at (_cs_a) =
-		  status_mask
-		| _cs_a_rxerr
-		| _cs_a_txerr
-		| _cs_a_rxclr
-		| _cs_a_txclr
 		| _cs_a_en;
 	_pcm_mptr.at (_mode_a) =
 		  _mode_a_clkm
 		| _mode_a_clki
 		| _mode_a_fsm
-		| ((_bits_per_chn * 2) << _mode_a_flen )
-		| ( _bits_per_chn      << _mode_a_fslen);
+		| _mode_a_fsi
+		| ((_bits_per_chn * 2 - 1) << _mode_a_flen )
+		| ( _bits_per_chn          << _mode_a_fslen);
 	const uint32_t chn_conf_base =
 		  _xc_a_en
 		| (( (_resol - 8) & 0x0F) << _xc_a_wid)
 		| ((((_resol - 8) & 0x10) != 0) ? _xc_a_wex : 0);
-	const uint32_t chn_conf_l = chn_conf_base | (0             << _xc_a_pos);
-	const uint32_t chn_conf_r = chn_conf_base | (_bits_per_chn << _xc_a_pos);
+	const uint32_t chn_conf_l =
+		chn_conf_base | ( _transfer_lag                  << _xc_a_pos);
+	const uint32_t chn_conf_r =
+		chn_conf_base | ((_transfer_lag + _bits_per_chn) << _xc_a_pos);
 	_pcm_mptr.at (_rxc_a) =
 		  (chn_conf_l << _xc_a_ch1)
 		| (chn_conf_r << _xc_a_ch2);
@@ -290,15 +287,26 @@ void	DPvabI2s::main_loop ()
 		| _intstc_a_txw;
 	_pcm_mptr.at (_gray) = 0;
 
-	// Start
-	status_mask |= _cs_a_txon | _cs_a_rxon;
-	_pcm_mptr.at (_cs_a) = status_mask | _cs_a_sync;
+	// Clears the FIFOs and errors, enables the PCM clock
+	_pcm_mptr.at (_cs_a) =
+		  status_mask
+		| _cs_a_sync
+		| _cs_a_rxerr
+		| _cs_a_txerr
+		| _cs_a_rxclr
+		| _cs_a_txclr;
 
-	// Waits for the sync bit, so the FIFO are actually cleared
+	// The FIFO requires 2 clock cycles before being cleared.
+#if 1
+	// Wait for 1 ms, which should be much more than 2 clock cycles.
+	std::this_thread::sleep_for (std::chrono::milliseconds (1));
+#else /*** To do: this does not seem to work. Check what's wrong. ***/
+	// Waits for the sync bit, so the FIFOs are actually cleared
 	while ((_pcm_mptr.at (_cs_a) & _cs_a_sync) != 0 && ! _exit_flag)
 	{
 		continue;
 	}
+#endif
 
 	// Writes a few samples in advance
 	// Less samples = shorter latency
@@ -311,10 +319,16 @@ void	DPvabI2s::main_loop ()
 		}
 	}
 
+	// Start
+	status_mask |= _cs_a_txon | _cs_a_rxon;
+	_pcm_mptr.at (_cs_a) = status_mask;
+
 	int            buf_idx       = _cur_buf;
 	int            buf_pos       = 0;
 	int            chn_pos       = 0;
+#if 0
 	uint32_t       dummy         = 0;
+#endif
 	bool           sync_err_flag = false;
 	while (! _exit_flag)
 	{
@@ -328,19 +342,22 @@ void	DPvabI2s::main_loop ()
 			_pcm_mptr.at (_cs_a) = status_mask | _cs_a_rxerr | _cs_a_txerr;
 		}
 
+#if 0 /*** To do: this test does not work, we have to check exactly why. ***/
 		// Possible L/R sync errors, skips a frame to fix them
 		if (chn_pos == 0)
 		{
 			if ((status & _cs_a_rxsync) == 0)
 			{
 				dummy += _pcm_mptr.at (_fifo_a);
+				sync_err_flag = true;
 			}
 			if ((status & _cs_a_txsync) == 0)
 			{
 				_pcm_mptr.at (_fifo_a) = 0;
+				sync_err_flag = true;
 			}
-			sync_err_flag = true;
 		}
+#endif
 
 		// Can we read/write something ?
 		if (   (status & _cs_a_rxr) != 0
@@ -364,6 +381,7 @@ void	DPvabI2s::main_loop ()
 
 				if (buf_pos >= _block_size)
 				{
+					buf_pos  = 0;
 					buf_idx  = 1 - buf_idx;
 					_cur_buf = buf_idx;
 

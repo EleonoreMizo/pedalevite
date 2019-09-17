@@ -26,8 +26,8 @@
 	#define MAIN_API MAIN_API_MANUAL
 #elif fstb_IS (SYS, LINUX)
 //	#define MAIN_API MAIN_API_JACK
-	#define MAIN_API MAIN_API_ALSA
-//	#define MAIN_API MAIN_API_PVAB
+//	#define MAIN_API MAIN_API_ALSA
+	#define MAIN_API MAIN_API_PVAB
 #else
 	#define MAIN_API MAIN_API_ASIO
 #endif
@@ -74,7 +74,7 @@
 	#elif (MAIN_API == MAIN_API_MANUAL)
 		#include "mfx/adrv/DManual.h"
 	#elif (MAIN_API == MAIN_API_PVAB)
-		#include "mfx/adrv/DPvabDirect.h"
+		#include "mfx/adrv/DPvabI2s.h"
 	#else
 		#error Wrong MAIN_API value
 	#endif // MAIN_API
@@ -754,7 +754,7 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 #elif (MAIN_API == MAIN_API_MANUAL)
 	mfx::adrv::DManual   snd_drv;
 #elif (MAIN_API == MAIN_API_PVAB)
-	mfx::adrv::DPvabDirect  snd_drv;
+	mfx::adrv::DPvabI2s  snd_drv;
 #else
 	#error
 #endif
