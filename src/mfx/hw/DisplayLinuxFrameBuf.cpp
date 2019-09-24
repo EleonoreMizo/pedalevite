@@ -41,6 +41,7 @@ http://www.wtfpl.net/ for more details.
 
 #include <sys/ioctl.h>
 #include <sys/mman.h>
+#include <linux/kd.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -65,6 +66,7 @@ namespace hw
 
 DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 :	_dev_name (dev_name)
+,	_tty_fd (open ("/dev/tty0", O_RDWR))
 ,	_fb_fd (open (dev_name.c_str (), O_RDWR))
 ,	_info_fix ()
 ,	_info_var ()
@@ -81,11 +83,27 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 
 	try
 	{
+		if (_tty_fd == -1)
+		{
+			throw std::system_error (
+				std::error_code (errno, std::system_category ()),
+				"Cannot open tty"
+			);
+		}
+
 		if (_fb_fd == -1)
 		{
 			throw std::system_error (
 				std::error_code (errno, std::system_category ()),
-				"Cannot open the framebuffer."
+				"Cannot open the framebuffer"
+			);
+		}
+
+		if (ioctl (_tty_fd, KDSETMODE, KD_GRAPHICS) < 0)
+		{
+			throw std::system_error (
+				std::error_code (errno, std::system_category ()),
+				"Cannot set tty to graphic mode"
 			);
 		}
 
@@ -93,7 +111,7 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 		{
 			throw std::system_error (
 				std::error_code (errno, std::system_category ()),
-				"Cannot get screen info (fixed)."
+				"Cannot get screen info (fixed)"
 			);
 		}
 
@@ -101,7 +119,7 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 		{
 			throw std::system_error (
 				std::error_code (errno, std::system_category ()),
-				"Cannot get screen info (variable)."
+				"Cannot get screen info (variable)"
 			);
 		}
 
@@ -113,7 +131,7 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 		{
 			throw std::system_error (
 				std::error_code (errno, std::system_category ()),
-				"Cannot mmap the frame buffer."
+				"Cannot mmap the frame buffer"
 			);
 		}
 
@@ -135,12 +153,12 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 
 		if (_info_var.nonstd != 0)
 		{
-			throw std::runtime_error ("Non standard pixel format");
+			throw std::runtime_error ("Non standard pixel format.");
 		}
 
 		if (_info_var.bits_per_pixel != 32)
 		{
-			throw std::runtime_error ("Unsupported pixel bitdepth");
+			throw std::runtime_error ("Unsupported pixel bitdepth.");
 		}
 		const int      bytes_per_pix = 4;
 
@@ -154,7 +172,7 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 		    || (_info_var.blue.offset  & 3) != 0
 		    ||  _info_var.blue.msb_right    != 0)
 		{
-			throw std::runtime_error ("Unsupported pixel arrangement");
+			throw std::runtime_error ("Unsupported pixel arrangement.");
 		}
 
 		// Gets the resolution information
@@ -342,6 +360,16 @@ void	DisplayLinuxFrameBuf::clean_up ()
 	{
 		close (_fb_fd);
 		_fb_fd = -1;
+	}
+
+	if (_tty_fd != -1)
+	{
+		// Don't bother to check the result. Text mode will be restored upon
+		// program termination anyway.
+		ioctl (_tty_fd, KDSETMODE, KD_TEXT);
+
+		close (_tty_fd);
+		_tty_fd = -1;
 	}
 }
 

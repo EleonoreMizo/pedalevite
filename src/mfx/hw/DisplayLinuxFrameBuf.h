@@ -83,7 +83,8 @@ private:
 	void           clean_up ();
 
 	std::string    _dev_name;  // Linux output device. For example "/dev/fb0". -1 if not open or failed
-	int            _fb_fd;     // File descriptor
+	int            _tty_fd;    // File descriptor for the console
+	int            _fb_fd;     // File descriptor for the framebuffer
 	::fb_fix_screeninfo
 	               _info_fix;
 	::fb_var_screeninfo
