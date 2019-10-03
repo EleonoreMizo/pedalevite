@@ -78,9 +78,14 @@ protected:
 
 private:
 
+	static const int  _zoom = 1;
+
 	typedef std::vector <uint8_t> FrameBufInt;
 
 	void           clean_up ();
+	void           refresh_z1 (int x, int y, int w, int h);
+	void           refresh_z4 (int x, int y, int w, int h);
+	void           refresh_zn (int x, int y, int w, int h);
 
 	std::string    _dev_name;  // Linux output device. For example "/dev/fb0". -1 if not open or failed
 	int            _tty_fd;    // File descriptor for the console
@@ -94,8 +99,10 @@ private:
 	uint8_t *      _pix_fb_ptr;// Pointer on the top-left pixel (system FB)
 	int            _stride_s;  // Stride for the system framebuffer, in bytes.
 
-	int            _disp_w;    // Width
-	int            _disp_h;    // Height
+	int            _true_w;    // Width in pixels
+	int            _true_h;    // Height in pixels
+	int            _disp_w;    // Width in zoomed pixels
+	int            _disp_h;    // Height in zoomed pixels
 
 	FrameBufInt    _fb_int;    // Internal frame buffer
 	int            _stride_i;  // Stride for the internal framebuffer, in bytes

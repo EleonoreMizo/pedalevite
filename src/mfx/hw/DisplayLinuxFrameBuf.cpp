@@ -74,6 +74,8 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 ,	_map_len (0)
 ,	_pix_fb_ptr (0)
 ,	_stride_s (0)
+,	_true_w (0)
+,	_true_h (0)
 ,	_disp_w (0)
 ,	_disp_h (0)
 ,	_fb_int ()
@@ -176,9 +178,11 @@ DisplayLinuxFrameBuf::DisplayLinuxFrameBuf (std::string dev_name)
 		}
 
 		// Gets the resolution information
-		_disp_w = _info_var.xres;
-		_disp_h = _info_var.yres;
-		_stride_s = _info_fix.line_length;
+		_true_w     = _info_var.xres;
+		_true_h     = _info_var.yres;
+		_disp_w     = _true_w / _zoom;
+		_disp_h     = _true_h / _zoom;
+		_stride_s   = _info_fix.line_length;
 		_pix_fb_ptr =
 			  _mm_fb_ptr
 			+ _info_var.yoffset * _stride_s
@@ -246,92 +250,25 @@ const uint8_t *	DisplayLinuxFrameBuf::do_use_screen_buf () const
 
 void	DisplayLinuxFrameBuf::do_refresh (int x, int y, int w, int h)
 {
-	constexpr int  bypp_l2 = 2; // log2 (bytes_per_pixels)
-
 	x = std::max (x, 0);
 	y = std::max (y, 0);
 	w = std::min (w, _disp_w - x);
 	h = std::min (h, _disp_h - y);
 
-	const uint8_t *   src_ptr = _fb_int.data () + y * _stride_i + x;
-	uint8_t *      dst_ptr = _pix_fb_ptr + y * _stride_s + (x << bypp_l2);
-	const int      w32 = w & ~31;
-
-	for (int py = 0; py < h; ++py)
+	if (w > 0 && h > 0)
 	{
-		uint32_t *     dpix_ptr = reinterpret_cast <uint32_t *> (dst_ptr);
-
-		// Starts with chunks of 32 pixels
-		for (int px = 0; px < w32; px += 32)
+		if (_zoom == 1)
 		{
-#if fstb_IS (ARCHI, X86)
-
-			const auto  m0015 = _mm_loadu_si128 (
-				reinterpret_cast <const __m128i *> (src_ptr + px     )
-			);
-			const auto  m1631 = _mm_loadu_si128 (
-				reinterpret_cast <const __m128i *> (src_ptr + px + 16)
-			);
-
-			const auto  d0007 = _mm_unpacklo_epi8 (m0015, m0015);
-			const auto  d0815 = _mm_unpackhi_epi8 (m0015, m0015);
-			const auto  d1623 = _mm_unpacklo_epi8 (m1631, m1631);
-			const auto  d2431 = _mm_unpackhi_epi8 (m1631, m1631);
-
-			const auto  d0003 = _mm_unpacklo_epi16 (d0007, d0007);
-			const auto  d0407 = _mm_unpackhi_epi16 (d0007, d0007);
-			const auto  d0811 = _mm_unpacklo_epi16 (d0815, d0815);
-			const auto  d1215 = _mm_unpackhi_epi16 (d0815, d0815);
-			const auto  d1619 = _mm_unpacklo_epi16 (d1623, d1623);
-			const auto  d2023 = _mm_unpackhi_epi16 (d1623, d1623);
-			const auto  d2427 = _mm_unpacklo_epi16 (d2431, d2431);
-			const auto  d2831 = _mm_unpackhi_epi16 (d2431, d2431);
-
-			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px +  0), d0003);
-			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px +  4), d0407);
-			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px +  8), d0811);
-			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 12), d1215);
-			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 16), d1619);
-			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 20), d2023);
-			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 24), d2427);
-			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 28), d2831);
-
-#else
-
-			const auto  m0015 = vld1q_u8 (src_ptr + px     );
-			const auto  m1631 = vld1q_u8 (src_ptr + px + 16);
-
-			const auto  d0015 = vzipq_u8 (m0015, m0015);
-			const auto  d1631 = vzipq_u8 (m1631, m1631);
-
-			const auto  d0007 = vzipq_u8 (d0015.val [0], d0015.val [0]);
-			const auto  d0815 = vzipq_u8 (d0015.val [1], d0015.val [1]);
-			const auto  d1623 = vzipq_u8 (d1631.val [0], d1631.val [0]);
-			const auto  d2431 = vzipq_u8 (d1631.val [1], d1631.val [1]);
-
-			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px +  0), d0007.val [0]);
-			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px +  4), d0007.val [1]);
-			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px +  8), d0815.val [0]);
-			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 12), d0815.val [1]);
-			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 16), d1623.val [0]);
-			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 20), d1623.val [1]);
-			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 24), d2431.val [0]);
-			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 28), d2431.val [1]);
-
-#endif
+			refresh_z1 (x, y, w, h);
 		}
-
-		// The pixel per pixel
-		for (int px = w32; px < w; ++px)
+		else if (_zoom == 4)
 		{
-			const int      v    = src_ptr [px];
-			uint32_t       rgba = v | (v << 8);
-			rgba = rgba | (rgba << 16);
-			dpix_ptr [px] = rgba;
+			refresh_z4 (x, y, w, h);
 		}
-
-		src_ptr += _stride_i;
-		dst_ptr += _stride_s;
+		else
+		{
+			refresh_zn (x, y, w, h);
+		}
 	}
 }
 
@@ -370,6 +307,183 @@ void	DisplayLinuxFrameBuf::clean_up ()
 
 		close (_tty_fd);
 		_tty_fd = -1;
+	}
+}
+
+
+
+void	DisplayLinuxFrameBuf::refresh_z1 (int x, int y, int w, int h)
+{
+	constexpr int  bypp_l2 = 2; // log2 (bytes_per_pixels)
+
+	const uint8_t* src_ptr = _fb_int.data () + y * _stride_i +  x;
+	uint8_t *      dst_ptr = _pix_fb_ptr     + y * _stride_s + (x << bypp_l2);
+#if fstb_IS (ARCHI, X86) || fstb_IS (ARCHI, ARM)
+	const int      w32     = w & ~31;
+#else
+	const int      w32     = 0;
+#endif
+
+	for (int py = 0; py < h; ++py)
+	{
+		uint32_t *     dpix_ptr = reinterpret_cast <uint32_t *> (dst_ptr);
+
+		// Starts with chunks of 32 pixels
+#if fstb_IS (ARCHI, X86)
+
+		for (int px = 0; px < w32; px += 32)
+		{
+			const auto  m0015 = _mm_loadu_si128 (
+				reinterpret_cast <const __m128i *> (src_ptr + px     )
+			);
+			const auto  m1631 = _mm_loadu_si128 (
+				reinterpret_cast <const __m128i *> (src_ptr + px + 16)
+			);
+
+			const auto  d0007 = _mm_unpacklo_epi8 (m0015, m0015);
+			const auto  d0815 = _mm_unpackhi_epi8 (m0015, m0015);
+			const auto  d1623 = _mm_unpacklo_epi8 (m1631, m1631);
+			const auto  d2431 = _mm_unpackhi_epi8 (m1631, m1631);
+
+			const auto  d0003 = _mm_unpacklo_epi16 (d0007, d0007);
+			const auto  d0407 = _mm_unpackhi_epi16 (d0007, d0007);
+			const auto  d0811 = _mm_unpacklo_epi16 (d0815, d0815);
+			const auto  d1215 = _mm_unpackhi_epi16 (d0815, d0815);
+			const auto  d1619 = _mm_unpacklo_epi16 (d1623, d1623);
+			const auto  d2023 = _mm_unpackhi_epi16 (d1623, d1623);
+			const auto  d2427 = _mm_unpacklo_epi16 (d2431, d2431);
+			const auto  d2831 = _mm_unpackhi_epi16 (d2431, d2431);
+
+			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px +  0), d0003);
+			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px +  4), d0407);
+			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px +  8), d0811);
+			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 12), d1215);
+			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 16), d1619);
+			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 20), d2023);
+			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 24), d2427);
+			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 28), d2831);
+		}
+
+#elif fstb_IS (ARCHI, ARM)
+
+		for (int px = 0; px < w32; px += 32)
+		{
+			const auto  m0015 = vld1q_u8 (src_ptr + px     );
+			const auto  m1631 = vld1q_u8 (src_ptr + px + 16);
+
+			const auto  d0015 = vzipq_u8 (m0015, m0015);
+			const auto  d1631 = vzipq_u8 (m1631, m1631);
+
+			const auto  d0007 = vzipq_u8 (d0015.val [0], d0015.val [0]);
+			const auto  d0815 = vzipq_u8 (d0015.val [1], d0015.val [1]);
+			const auto  d1623 = vzipq_u8 (d1631.val [0], d1631.val [0]);
+			const auto  d2431 = vzipq_u8 (d1631.val [1], d1631.val [1]);
+
+			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px +  0), d0007.val [0]);
+			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px +  4), d0007.val [1]);
+			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px +  8), d0815.val [0]);
+			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 12), d0815.val [1]);
+			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 16), d1623.val [0]);
+			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 20), d1623.val [1]);
+			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 24), d2431.val [0]);
+			vst1q_u8 (reinterpret_cast <uint8_t *> (dpix_ptr + px + 28), d2431.val [1]);
+		}
+
+#endif
+
+		// Then pixel per pixel
+		for (int px = w32; px < w; ++px)
+		{
+			const int      v    = src_ptr [px];
+			uint32_t       rgba = v | (v << 8);
+			rgba = rgba | (rgba << 16);
+			dpix_ptr [px] = rgba;
+		}
+
+		src_ptr += _stride_i;
+		dst_ptr += _stride_s;
+	}
+}
+
+
+
+void	DisplayLinuxFrameBuf::refresh_z4 (int x, int y, int w, int h)
+{
+	assert (_zoom == 4);
+	assert (_disp_w * _zoom <= _true_w);
+	assert (_disp_h * _zoom <= _true_h);
+
+#if ! fstb_IS (ARCHI, ARM)
+
+	refresh_zn (x, y, w, h);
+
+#else
+
+	constexpr int  bypp_l2 = 2; // log2 (bytes_per_pixels)
+
+	const uint8_t* src_ptr = _fb_int.data () + y * _stride_i +  x;
+	uint8_t *      dst_ptr =
+		  _pix_fb_ptr
+		+   y * _zoom * _stride_s
+		+ ((x * _zoom) << bypp_l2);
+
+	for (int py = 0; py < h; ++py)
+	{
+		for (int px = 0; px < w; ++px)
+		{
+			const uint8_t  v        = src_ptr [px];
+			const auto     rgba4    = vdupq_n_u8 (v);
+			uint8_t *      dst2_ptr = dst_ptr + ((px * _zoom) << bypp_l2);
+			for (int py2 = 0; py2 < _zoom; ++py2)
+			{
+				vst1q_u8 (dst2_ptr, rgba4);
+				dst2_ptr += _stride_s;
+			}
+		}
+
+		src_ptr += _stride_i;
+		dst_ptr += _stride_s * _zoom;
+	}
+
+#endif
+}
+
+
+
+void	DisplayLinuxFrameBuf::refresh_zn (int x, int y, int w, int h)
+{
+	assert (_disp_w * _zoom <= _true_w);
+	assert (_disp_h * _zoom <= _true_h);
+
+	constexpr int  bypp_l2 = 2; // log2 (bytes_per_pixels)
+
+	const uint8_t* src_ptr = _fb_int.data () + y * _stride_i +  x;
+	uint8_t *      dst_ptr =
+		  _pix_fb_ptr
+		+   y * _zoom * _stride_s
+		+ ((x * _zoom) << bypp_l2);
+
+	for (int py = 0; py < h; ++py)
+	{
+		for (int px = 0; px < w; ++px)
+		{
+			const int      v    = src_ptr [px];
+			uint32_t       rgba = v | (v << 8);
+			rgba = rgba | (rgba << 16);
+			uint8_t *      dst2_ptr = dst_ptr + ((px * _zoom) << bypp_l2);
+			for (int py2 = 0; py2 < _zoom; ++py2)
+			{
+				uint32_t *     dpix_ptr = reinterpret_cast <uint32_t *> (dst2_ptr);
+				for (int px2 = 0; px2 < _zoom; ++px2)
+				{
+					dpix_ptr [px2] = rgba;
+				}
+				dst2_ptr += _stride_s;
+			}
+		}
+
+		src_ptr += _stride_i;
+		dst_ptr += _stride_s * _zoom;
 	}
 }
 
