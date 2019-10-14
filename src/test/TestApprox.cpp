@@ -45,7 +45,7 @@ int	TestApprox::perform_test ()
 {
 	int            ret_val = 0;
 
-	constexpr float   pi_f = float (fstb::PI);
+	const float    pi_f = float (fstb::PI);
 	typedef fstb::ToolsSimd::VectF32 VectF32;
 
 	TestFnc <float, 0>::test_op1 (
@@ -288,12 +288,12 @@ template <typename T, int ILL2>
 template <typename OP, typename S>
 void	TestApprox::TestFnc <T, ILL2>::test_op1 (const OP &op, const char name_0 [], S min_val, S max_val)
 {
-	constexpr int  nbr_blocks = 10000;
-	constexpr int  block_len_s = 64;
-	constexpr int  s_per_t = sizeof (T) / sizeof (S);
+	const int      nbr_blocks = 10000;
+	const int      block_len_s = 64;
+	const int      s_per_t = sizeof (T) / sizeof (S);
 	static_assert ((block_len_s % s_per_t) == 0, "");
-	constexpr int  block_len  = block_len_s / s_per_t;
-	constexpr int  interleave = 1 << ILL2;
+	const int      block_len  = block_len_s / s_per_t;
+	const int      interleave = 1 << ILL2;
 	static_assert ((block_len % interleave) == 0, "");
 
 	typedef std::vector <T, fstb::AllocAlign <T, 64> > Buffer;

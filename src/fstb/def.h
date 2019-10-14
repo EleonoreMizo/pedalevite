@@ -174,21 +174,21 @@ namespace fstb
 
 
 
-constexpr long double PI      = 3.1415926535897932384626433832795L;
-constexpr long double LN2     = 0.69314718055994530941723212145818L;
-constexpr long double LN10    = 2.3025850929940456840179914546844L;
-constexpr long double LOG10_2 = 0.30102999566398119521373889472449L;
-constexpr long double LOG2_E  = 1.0  / LN2;
-constexpr long double LOG2_10 = LN10 / LN2;
-constexpr long double	EXP1    = 2.7182818284590452353602874713527L;
-constexpr long double SQRT2   = 1.4142135623730950488016887242097L;
-constexpr      double TWOP32  = 256.0 * 256 * 256 * 256;
-constexpr      double TWOPM32 = 1.0 / TWOP32;
+const long double PI      = 3.1415926535897932384626433832795L;
+const long double LN2     = 0.69314718055994530941723212145818L;
+const long double LN10    = 2.3025850929940456840179914546844L;
+const long double LOG10_2 = 0.30102999566398119521373889472449L;
+const long double LOG2_E  = 1.0  / LN2;
+const long double LOG2_10 = LN10 / LN2;
+const long double	EXP1    = 2.7182818284590452353602874713527L;
+const long double SQRT2   = 1.4142135623730950488016887242097L;
+const      double TWOP32  = 256.0 * 256 * 256 * 256;
+const      double TWOPM32 = 1.0 / TWOP32;
 
-constexpr      float  ANTI_DENORMAL_F32     = 1e-20f;
-constexpr      double ANTI_DENORMAL_F64     = 1e-290;
-constexpr      float  ANTI_DENORMAL_F32_CUB = 1e-10f;  // Anti-denormal for float numbers aimed to be raised to the power of 2 or 3.
-constexpr      double ANTI_DENORMAL_F64_CUB = 1e-100;
+const      float  ANTI_DENORMAL_F32     = 1e-20f;
+const      double ANTI_DENORMAL_F64     = 1e-290;
+const      float  ANTI_DENORMAL_F32_CUB = 1e-10f;  // Anti-denormal for float numbers aimed to be raised to the power of 2 or 3.
+const      double ANTI_DENORMAL_F64_CUB = 1e-100;
 
 
 

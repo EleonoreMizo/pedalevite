@@ -59,11 +59,11 @@ FreqShiftCore::FreqShiftCore ()
 ,	_coef_list ()
 {
 	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
-		_coef_list, _nbr_coef, 1 / 1000.0
+		_coef_list.data (), _nbr_coef, 1 / 1000.0
 	);
 	for (auto &chn : _ali->_chn_arr)
 	{
-		chn._ssb.set_coefs (_coef_list);
+		chn._ssb.set_coefs (_coef_list.data ());
 	}
 }
 
@@ -83,7 +83,7 @@ void	FreqShiftCore::reset (double sample_freq, int max_buf_len, double &latency)
 	}
 
 	latency = hiir::PolyphaseIir2Designer::compute_group_delay (
-		_coef_list, _nbr_coef, 1000 * _inv_fs, true
+		_coef_list.data (), _nbr_coef, 1000 * _inv_fs, true
 	);
 
 	clear_buffers ();

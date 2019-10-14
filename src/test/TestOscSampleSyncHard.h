@@ -69,7 +69,7 @@ private:
 
 	typedef mfx::dsp::osc::OscSampleSyncHard <InternalOscType, 16, 8> OscType;
 
-	typedef typename OscType::AntialiasedStep Steptable;
+	typedef OscType::AntialiasedStep Steptable;
 
 	static void    perform_test_internal (OscType &osc, std::vector <float> &result_m, int dest_len, int block_len, int sync_pos_start, float sync_pos_speed, int master_pitch_start, int master_pitch_end, int slave_pitch_start, int slave_pitch_end);
 	static void    perform_test_internal_2 (OscType &osc, std::vector <OscType::CalcDataType> &dest, int dest_len, int block_len, int sync_pos_start, float sync_pos_speed, int master_pitch_start, int master_pitch_end, int slave_pitch_start, int slave_pitch_end);

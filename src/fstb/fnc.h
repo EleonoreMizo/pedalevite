@@ -40,44 +40,44 @@ namespace fstb
 
 
 template <class T>
-inline constexpr int     sgn (T x);
+inline int     sgn (T x);
 template <class T>
-inline constexpr T       limit (T x, T mi, T ma);
+inline T       limit (T x, T mi, T ma);
 template <class T>
-inline constexpr void    sort_2_elt (T &mi,T &ma, T a, T b);
+inline void    sort_2_elt (T &mi,T &ma, T a, T b);
 template <class T>
-inline constexpr bool    is_pow_2 (T x);
-inline double            round (double x);
-inline int               round_int (double x);
-inline int64_t           round_int64 (double x);
-inline int               floor_int (double x);
-inline int64_t           floor_int64 (double x);
-inline int               ceil_int (double x);
+inline bool    is_pow_2 (T x);
+inline double  round (double x);
+inline int     round_int (double x);
+inline int64_t round_int64 (double x);
+inline int     floor_int (double x);
+inline int64_t floor_int64 (double x);
+inline int     ceil_int (double x);
 template <class T>
-inline int               conv_int_fast (T x);
+inline int     conv_int_fast (T x);
 template <class T>
-inline bool              is_null (T val, T eps = T (1e-9));
+inline bool    is_null (T val, T eps = T (1e-9));
 template <class T>
-inline bool              is_eq (T v1, T v2, T eps = T (1e-9));
+inline bool    is_eq (T v1, T v2, T eps = T (1e-9));
 template <class T>
-inline bool              is_eq_rel (T v1, T v2, T tol = T (1e-6));
-inline int               get_prev_pow_2 (uint32_t x);
-inline int               get_next_pow_2 (uint32_t x);
-inline double            sinc (double x);
-inline double            pseudo_exp (double x, double c);
-inline double            pseudo_log (double y, double c);
+inline bool    is_eq_rel (T v1, T v2, T tol = T (1e-6));
+inline int     get_prev_pow_2 (uint32_t x);
+inline int     get_next_pow_2 (uint32_t x);
+inline double  sinc (double x);
+inline double  pseudo_exp (double x, double c);
+inline double  pseudo_log (double y, double c);
 template <class T, int S>
-inline constexpr T       sshift_l (T x);
+inline T       sshift_l (T x);
 template <class T, int S>
-inline constexpr T       sshift_r (T x);
+inline T       sshift_r (T x);
 template <class T, class U>
-inline T                 ipow (T x, U n);
+inline T       ipow (T x, U n);
 template <class T, class U>
-inline T                 ipowp (T x, U n);
+inline T       ipowp (T x, U n);
 template <class T>
-inline T                 rcp_uint (int x);
+inline T       rcp_uint (int x);
 template <class T>
-inline constexpr T       lerp (T v0, T v1, T p);
+inline T       lerp (T v0, T v1, T p);
 
 void           conv_to_lower_case (std::string &str);
 

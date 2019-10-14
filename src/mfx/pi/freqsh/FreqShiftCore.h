@@ -122,7 +122,8 @@ private:
 	float          _step_angle;         // Radians
 
 	BufArray       _buf_arr;
-	double         _coef_list [_nbr_coef];
+	std::array <double, _nbr_coef>
+	               _coef_list;
 
 
 

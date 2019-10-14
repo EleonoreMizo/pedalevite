@@ -42,7 +42,7 @@ class TimerAccurate
 
 public:
 
-	using MaxResClock = typename std::conditional <
+	using MaxResClock = std::conditional <
 		std::ratio_less <
 			std::chrono::system_clock::period,
 			std::chrono::steady_clock::period

@@ -314,7 +314,7 @@ void	DisplayLinuxFrameBuf::clean_up ()
 
 void	DisplayLinuxFrameBuf::refresh_z1 (int x, int y, int w, int h)
 {
-	constexpr int  bypp_l2 = 2; // log2 (bytes_per_pixels)
+	const int      bypp_l2 = 2; // log2 (bytes_per_pixels)
 
 	const uint8_t* src_ptr = _fb_int.data () + y * _stride_i +  x;
 	uint8_t *      dst_ptr = _pix_fb_ptr     + y * _stride_s + (x << bypp_l2);
@@ -419,7 +419,7 @@ void	DisplayLinuxFrameBuf::refresh_z4 (int x, int y, int w, int h)
 
 #else
 
-	constexpr int  bypp_l2 = 2; // log2 (bytes_per_pixels)
+	const int      bypp_l2 = 2; // log2 (bytes_per_pixels)
 
 	const uint8_t* src_ptr = _fb_int.data () + y * _stride_i +  x;
 	uint8_t *      dst_ptr =
@@ -455,7 +455,7 @@ void	DisplayLinuxFrameBuf::refresh_zn (int x, int y, int w, int h)
 	assert (_disp_w * _zoom <= _true_w);
 	assert (_disp_h * _zoom <= _true_h);
 
-	constexpr int  bypp_l2 = 2; // log2 (bytes_per_pixels)
+	const int      bypp_l2 = 2; // log2 (bytes_per_pixels)
 
 	const uint8_t* src_ptr = _fb_int.data () + y * _stride_i +  x;
 	uint8_t *      dst_ptr =
