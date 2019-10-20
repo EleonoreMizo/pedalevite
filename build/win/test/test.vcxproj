@@ -115,6 +115,9 @@
     <ClCompile Include="..\..\..\src\test\TestRemez.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSampleMipMapper.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSlidingOp.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestUserInputPi3.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\test\TimerAccurate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +143,7 @@
     <ClInclude Include="..\..\..\src\test\TestRemez.h" />
     <ClInclude Include="..\..\..\src\test\TestSampleMipMapper.h" />
     <ClInclude Include="..\..\..\src\test\TestSlidingOp.h" />
+    <ClInclude Include="..\..\..\src\test\TestUserInputPi3.h" />
     <ClInclude Include="..\..\..\src\test\TimerAccurate.h" />
     <ClInclude Include="..\..\..\src\test\TimerAccurate.hpp" />
   </ItemGroup>

@@ -1224,6 +1224,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSampleMipMapper.h \
         ../../src/test/TestSlidingOp.cpp \
         ../../src/test/TestSlidingOp.h \
+        ../../src/test/TestUserInputPi3.cpp \
+        ../../src/test/TestUserInputPi3.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \
