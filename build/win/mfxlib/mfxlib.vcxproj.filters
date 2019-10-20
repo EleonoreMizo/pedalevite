@@ -2880,6 +2880,9 @@
     <ClInclude Include="..\..\..\src\mfx\hw\cs4272.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\mcp23017.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

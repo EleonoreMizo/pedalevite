@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/hw/mcp23017.h"
 #include "mfx/hw/UserInputPi3.h"
 #include "mfx/ui/TimeShareThread.h"
 
@@ -152,10 +153,14 @@ UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
 
 	for (int p = 0; p < _nbr_dev_23017; ++p)
 	{
-		::wiringPiI2CWriteReg8 (_hnd_23017_arr [p], Cmd23017_IOCONA, IOCon_MIRROR);
+		::wiringPiI2CWriteReg8 (
+			_hnd_23017_arr [p], mcp23017::cmd_iocona, mcp23017::iocon_mirror
+		);
 
 		// All the pins are set in read mode.
-		::wiringPiI2CWriteReg16 (_hnd_23017_arr [p], Cmd23017_IODIRA, 0xFFFF);
+		::wiringPiI2CWriteReg16 (
+			_hnd_23017_arr [p], mcp23017::cmd_iodira, 0xFFFF
+		);
 	}
 
 	// Initial read
@@ -359,7 +364,7 @@ void	UserInputPi3::read_data (bool low_freq_flag)
 	for (int p = 0; p < _nbr_dev_23017; ++p)
 	{
 		InputState     dev_state = InputState (
-			::wiringPiI2CReadReg16 (_hnd_23017_arr [p], Cmd23017_GPIOA)
+			::wiringPiI2CReadReg16 (_hnd_23017_arr [p], mcp23017::cmd_gpioa)
 		);
 		dev_state ^= mask;
 		input_state_arr [BinSrc_PORT_EXP] |= dev_state << (p * _nbr_sw_23017);

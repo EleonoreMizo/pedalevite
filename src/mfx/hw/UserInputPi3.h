@@ -134,44 +134,6 @@ protected:
 
 private:
 
-	// MCP23017 registers
-	// IOCON.BANK = 0
-	enum Cmd23017 : uint8_t
-	{
-		Cmd23017_IODIRA = 0x00,
-		Cmd23017_IODIRB,
-		Cmd23017_IPOLA,
-		Cmd23017_IPOLB,
-		Cmd23017_GPINTENA,
-		Cmd23017_GPINTENB,
-		Cmd23017_DEFVALA,
-		Cmd23017_DEFVALB,
-		Cmd23017_INTCONA,
-		Cmd23017_INTCONB,
-		Cmd23017_IOCONA,
-		Cmd23017_IOCONB,
-		Cmd23017_GPPUA,
-		Cmd23017_GPPUB,
-		Cmd23017_INTFA,
-		Cmd23017_INTFB,
-		Cmd23017_INTCAPA,
-		Cmd23017_INTCAPB,
-		Cmd23017_GPIOA,
-		Cmd23017_GPIOB,
-		Cmd23017_OLATA,
-		Cmd23017_OLATB
-	};
-	enum IOCon : uint8_t
-	{
-		IOCon_BANK   = 0x80,
-		IOCon_MIRROR = 0x40,
-		IOCon_SEQOP  = 0x20,
-		IOCon_DISSLW = 0x10,
-		IOCon_HAEN   = 0x08,
-		IOCon_ODR    = 0x04,
-		IOCon_INTPOL = 0x02
-	};
-
 	class SwitchState
 	{
 	public:
