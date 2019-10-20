@@ -70,6 +70,7 @@
 	#include "mfx/adrv/CbInterface.h"
 	#include "mfx/adrv/DPvabDirect.h"
 	#include "test/TestDisplayFrameBufSimple.h"
+	#include "test/TestLedSimple.h"
 #endif
 
 #include <algorithm>
@@ -1681,6 +1682,12 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 1
+	#if fstb_IS (SYS, LINUX)
+	if (ret_val == 0) ret_val = TestLedSimple::perform_test ();
+	#endif
+#endif
 
 #if 1
 	#if fstb_IS (SYS, LINUX)

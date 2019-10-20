@@ -1203,6 +1203,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
+        ../../src/test/TestLedSimple.cpp \
+        ../../src/test/TestLedSimple.h \
         ../../src/test/TestOscSample.cpp \
         ../../src/test/TestOscSample.h \
         ../../src/test/TestOscSampleSyncFade.cpp \

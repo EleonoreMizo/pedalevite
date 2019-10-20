@@ -72,9 +72,9 @@ int	TestDisplayFrameBufSimple::perform_test ()
 
 	for (int a = 0; a < nbr_frames; ++a)
 	{
-		for (int y = 0; y < vinfo.yres; ++y)
+		for (int y = 0; y < int (vinfo.yres); ++y)
 		{
-			for (int x = 0; x < vinfo.xres; ++x)
+			for (int x = 0; x < int (vinfo.xres); ++x)
 			{
 				uint32_t c = 0x00000000;
 				if (((x + y + a) & 255) == 0)
