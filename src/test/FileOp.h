@@ -58,14 +58,14 @@ private:
 
 	struct WavRiff
 	{
-		char           _chunk_id [4];  // "RIFF"
+		char           _chunk_id [4] = { 'R', 'I', 'F', 'F' };  // "RIFF"
 		uint32_t       _chunk_size;
-		char           _wave_id [4];   // "WAVE"
+		char           _wave_id [4] = { 'W', 'A', 'V', 'E' };   // "WAVE"
 	};
 
 	struct WavFmt
 	{
-		char           _chunk_id [4];  // "fmt "
+		char           _chunk_id [4] = { 'f', 'm', 't', ' ' };  // "fmt "
 		uint32_t       _chunk_size;
 		int16_t        _format_tag;
 		uint16_t       _channels;
@@ -82,7 +82,7 @@ private:
 
 	struct WavData
 	{
-		char           _chunk_id [4];  // "data"
+		char           _chunk_id [4] = {'d', 'a', 't', 'a' };  // "data"
 		uint32_t       _chunk_size;
 	};
 

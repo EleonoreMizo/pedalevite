@@ -125,7 +125,7 @@ protected:
 
 private:
 
-	typedef std::vector <int32_t, fstb::AllocAlign <float, 16> > BufIntAlign;
+	typedef std::vector <int32_t, fstb::AllocAlign <int32_t, 16> > BufIntAlign;
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufFltAlign;
 
 	class GpioAccess

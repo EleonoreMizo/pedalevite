@@ -240,7 +240,7 @@ int	FileOp::save_wav (const char *filename_0, const std::vector <std::vector <fl
 #endif // NDEBUG
 	const int      header_len = 8;
 
-	WavFmt         fmt { { 'f', 'm', 't', ' ' } };
+	WavFmt         fmt;
 	fmt._chunk_size        = offsetof (WavFmt, _size) - header_len;
 	fmt._format_tag        = WavFormat_IEEE_FLOAT;
 	fmt._channels          = uint16_t (chn_arr.size ());
@@ -249,11 +249,11 @@ int	FileOp::save_wav (const char *filename_0, const std::vector <std::vector <fl
 	fmt._avg_bytes_per_sec = fmt._block_align * fmt._samples_per_sec;
 	fmt._bits_per_sample   = sizeof (float) * CHAR_BIT;
 
-	WavData        data { { 'd', 'a', 't', 'a' } };
+	WavData        data;
 	data._chunk_size = fmt._block_align * nbr_spl;
 	assert ((data._chunk_size & 1) == 0);
 
-	WavRiff        riff { { 'R', 'I', 'F', 'F' }, 0, { 'W', 'A', 'V', 'E' } };
+	WavRiff        riff;
 	riff._chunk_size = 4 + header_len * 2 + fmt._chunk_size + data._chunk_size;
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -

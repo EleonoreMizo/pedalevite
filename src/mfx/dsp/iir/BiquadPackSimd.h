@@ -118,7 +118,7 @@ private:
 		fstb::DataAlign <true>,
 		fstb::DataAlign <true>
 	>					Pack4;
-	typedef std::vector <Pack4, fstb::AllocAlign <float, 16> > PackList;
+	typedef std::vector <Pack4, fstb::AllocAlign <Pack4, 16> > PackList;
 
 	class BiqInfo
 	{

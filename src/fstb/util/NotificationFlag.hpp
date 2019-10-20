@@ -47,7 +47,7 @@ NotificationFlag::NotificationFlag (bool state_flag)
 
 
 
-void	NotificationFlag::do_update (ObservableInterface &subject)
+void	NotificationFlag::do_update (ObservableInterface &/*subject*/)
 {
 	set ();
 }

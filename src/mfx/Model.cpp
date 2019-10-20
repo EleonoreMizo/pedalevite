@@ -2198,7 +2198,7 @@ void	Model::process_action_preset (const doc::ActionPreset &action)
 
 
 
-void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
+void	Model::process_action_toggle_fx (const doc::ActionToggleFx &/*action*/)
 {
 
 	/*** To do ***/
@@ -2207,14 +2207,14 @@ void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
 
 
 
-void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
+void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &/*action*/)
 {
 	set_tuner (! _tuner_flag);
 }
 
 
 
-void	Model::process_action_tempo_tap (const doc::ActionTempo &action, std::chrono::microseconds ts)
+void	Model::process_action_tempo_tap (const doc::ActionTempo &/*action*/, std::chrono::microseconds ts)
 {
 	const std::chrono::microseconds  dist = ts - _tempo_last_ts;
 	if (   dist <= Cst::_tempo_detection_max
@@ -2604,7 +2604,7 @@ bool	Model::set_preset_param (doc::Preset &preset, doc::Preset::SlotMap::iterato
 
 
 
-void	Model::set_preset_ctrl (doc::Preset &preset, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	Model::set_preset_ctrl (doc::Preset &/*preset*/, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
 	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);

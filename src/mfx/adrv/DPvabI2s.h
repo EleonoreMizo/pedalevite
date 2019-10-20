@@ -98,7 +98,7 @@ protected:
 
 private:
 
-	typedef std::vector <int32_t, fstb::AllocAlign <float, 16> > BufIntAlign;
+	typedef std::vector <int32_t, fstb::AllocAlign <int32_t, 16> > BufIntAlign;
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufFltAlign;
 
 	static const int  _block_size_a = (_block_size + 3) & ~3; // Aligned block size

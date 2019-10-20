@@ -47,7 +47,7 @@ NotificationFlagCascadeMixin::NotificationFlagCascadeMixin (bool state_flag)
 
 
 
-void	NotificationFlagCascadeMixin::do_update (ObservableInterface &subject)
+void	NotificationFlagCascadeMixin::do_update (ObservableInterface &/*subject*/)
 {
 	set ();
 }
