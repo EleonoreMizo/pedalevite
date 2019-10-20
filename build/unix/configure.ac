@@ -20,7 +20,8 @@ AS_CASE(
         [i?86],   [BITS="32" X86="true"],
         [x86_64], [BITS="64" X86="true"],
         [powerpc*], [PPC="true"],
-        [arm*], [ARM="true"]
+        [arm*], [BITS="32" ARM="true"],
+	[aarch64*], [BITS="64" ARM="true"]
 )
 
 AS_CASE(

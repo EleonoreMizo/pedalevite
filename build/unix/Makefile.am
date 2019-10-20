@@ -2,7 +2,7 @@ warningflags = -Wall -Wextra -Wno-psabi -Wno-unused-parameter -Wno-expansion-to-
 includeflags = -I$(srcdir)/../../src -I/opt/vc/include
 commonflags = $(MFLAGS) $(warningflags) $(includeflags)
 AM_CXXFLAGS = -std=c++11 $(commonflags)
-AM_LDFLAGS  = `pkg-config --cflags --libs jack` -lbcm_host -lasound -lwiringPi -lpthread -L/opt/vc/lib $(PLUGINLDFLAGS)
+AM_LDFLAGS  = `pkg-config --cflags --libs jack` -latomic -lbcm_host -lasound -lwiringPi -lpthread -L/opt/vc/lib $(PLUGINLDFLAGS)
 
 bin_PROGRAMS = pedalevite mfxtest
 
