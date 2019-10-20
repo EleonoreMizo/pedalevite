@@ -25,7 +25,6 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/hw/UserInputPi3.h"
-#include "mfx/ui/MsgQueue.h"
 #include "mfx/ui/TimeShareThread.h"
 #include "test/TestUserInputPi3.h"
 
@@ -45,7 +44,7 @@ int	TestUserInputPi3::perform_test ()
 
 	const int      pin_rst = 18;
 
-	::wiringPiSetupPhys ()
+	::wiringPiSetupPhys ();
 	::pinMode (pin_rst, OUTPUT);
 	::digitalWrite (pin_rst, LOW);
 	::delay (100);
