@@ -1197,6 +1197,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestApprox.h \
         ../../src/test/TestConvolverFft.cpp \
         ../../src/test/TestConvolverFft.h \
+        ../../src/test/TestDisplayFrameBufSimple.cpp \
+        ../../src/test/TestDisplayFrameBufSimple.h \
         ../../src/test/TestInterpFtor.cpp \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \

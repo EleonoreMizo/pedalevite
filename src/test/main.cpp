@@ -5,10 +5,6 @@
 #include "fstb/msg/QueueRetMgr.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
-#if fstb_IS (SYS, LINUX)
-	#include "mfx/adrv/CbInterface.h"
-	#include "mfx/adrv/DPvabDirect.h"
-#endif
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
 #include "mfx/doc/Setup.h"
@@ -69,6 +65,12 @@
 #include "test/TestRemez.h"
 #include "test/TestSampleMipMapper.h"
 #include "test/TestSlidingOp.h"
+
+#if fstb_IS (SYS, LINUX)
+	#include "mfx/adrv/CbInterface.h"
+	#include "mfx/adrv/DPvabDirect.h"
+	#include "test/TestDisplayFrameBufSimple.h"
+#endif
 
 #include <algorithm>
 #include <array>
@@ -1679,6 +1681,12 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 1
+	#if fstb_IS (SYS, LINUX)
+	if (ret_val == 0) ret_val = TestDisplayFrameBufSimple::perform_test ();
+	#endif
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
