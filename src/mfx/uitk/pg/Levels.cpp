@@ -119,11 +119,12 @@ void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	_dir_arr [Dir_IN ]._vum_sptr->set_coord (Vec2d (0,  0 + h_m));
 	_dir_arr [Dir_OUT]._lab_sptr->set_coord (Vec2d (0, 28));
 	_dir_arr [Dir_OUT]._vum_sptr->set_coord (Vec2d (0, 28 + h_m));
-	_lvl_sptr->set_coord (Vec2d (_page_size [0], 28));
+	_lvl_sptr->set_coord (Vec2d (_meter_audio_w, 28));
 	_chn_sptr->set_coord (Vec2d (0, _page_size [1]));
-	_dsp_txt_sptr->set_coord (_page_size - Vec2d (_meter_dsp_w, 0));
-	_dsp_sptr->set_coord (_page_size - Vec2d (_meter_dsp_w, _meter_dsp_h));
-	_dsp_val_sptr->set_coord (_page_size - Vec2d (1, 1));
+	const Vec2d    dsp_pos (_meter_audio_w, _page_size [1]);
+	_dsp_txt_sptr->set_coord (dsp_pos - Vec2d (_meter_dsp_w, 0));
+	_dsp_sptr->set_coord (dsp_pos - Vec2d (_meter_dsp_w, _meter_dsp_h));
+	_dsp_val_sptr->set_coord (dsp_pos - Vec2d (1, 1));
 
 	_page_ptr->push_back (_dir_arr [Dir_IN ]._lab_sptr);
 	_page_ptr->push_back (_dir_arr [Dir_IN ]._vum_sptr);
