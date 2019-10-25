@@ -78,7 +78,7 @@ protected:
 
 private:
 
-	static const int  _zoom = 1;
+	static const int  _zoom = 4;
 
 	typedef std::vector <uint8_t> FrameBufInt;
 

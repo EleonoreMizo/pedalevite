@@ -1,4 +1,4 @@
-AC_INIT([pedalevite], [r1], [http://ldesoras.free.fr/doc/articles/pedale-vite/pedale-vite.html], [pedalevite], [http://ldesoras.free.fr/doc/articles/pedale-vite/pedale-vite.html])
+AC_INIT([pedalevite], [r1], [http://pedalevite.fr], [pedalevite], [http://pedalevite.fr])
 
 : ${CXXFLAGS=""}
 
@@ -10,6 +10,11 @@ AC_PROG_CC([g++])
 
 AC_CANONICAL_HOST
 
+AS_IF(
+        [test "x$pv_version" != "x2"],
+        [pv_version=1]
+)
+AC_DEFINE_UNQUOTED([PV_VERSION], [($pv_version)], [Pedale Vite version. 1 or 2.])
 
 X86="false"
 PPC="false"
@@ -56,7 +61,13 @@ AS_IF(
 AS_IF(
       [test "x$ARM" = "xtrue"],
       [
-       MFLAGS="-mfloat-abi=hard -mfpu=neon -mtune=cortex-a53 -ftree-vectorize"
+       rpi_version=`cat /sys/firmware/devicetree/base/model | awk '{print $3}'`
+       AC_DEFINE_UNQUOTED([PV_RPI_VER_MAJOR], [$rpi_version], [Raspberry Pi version number (3 or 4).])
+       AS_IF(
+           [test "x$rpi_version" = "x4"],
+           [MFLAGS="-mfloat-abi=hard -mfpu=neon -ftree-vectorize -mtune=cortex-a72 -march=armv8-a+crc+simd"],
+           [MFLAGS="-mfloat-abi=hard -mfpu=neon -ftree-vectorize -mtune=cortex-a53"]
+       )
        AC_SUBST([MFLAGS])
       ]
 )

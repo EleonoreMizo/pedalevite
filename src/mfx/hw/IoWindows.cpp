@@ -808,17 +808,17 @@ void	IoWindows::redraw_main_screen (int x1, int y1, int x2, int y2)
 	const int      yd2 = (y2 + _zoom - 1) / _zoom;
 
 	PixArgb        bkg;
-	bkg._r = 0;
-	bkg._g = 0;
-	bkg._b = 255;
+	bkg._r = (_col_bkg >> 16) & 255;
+	bkg._g = (_col_bkg >>  8) & 255;
+	bkg._b =  _col_bkg        & 255;
 	PixArgb        black;
-	black._r = 32;
-	black._g = 0;
-	black._b = 192;
+	black._r = (_col_min >> 16) & 255;
+	black._g = (_col_min >>  8) & 255;
+	black._b =  _col_min        & 255;
 	PixArgb        w_dif;
-	w_dif._r = 255 - black._r;
-	w_dif._g = 255 - black._g;
-	w_dif._b = 255 - black._b;
+	w_dif._r = ((_col_max >> 16) & 255) - black._r;
+	w_dif._g = ((_col_max >>  8) & 255) - black._g;
+	w_dif._b = ( _col_max        & 255) - black._b;
 
 	if (xd1 < _scr_w && yd1 < _scr_h)
 	{

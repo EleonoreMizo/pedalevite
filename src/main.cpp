@@ -5,29 +5,46 @@
 // see the Jonathan Wakely's comment (2015-10-05) for bug #42734 on gcc.gnu.org 
 
 
+
+#if ! defined (PV_VERSION)
+	#error PV_VERSION should be defined.
+#endif
+
+
+
 #if defined (WIN32) || defined (_WIN32) || defined (__CYGWIN__)
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 #endif
-
-#define MAIN_USE_ST7920
 
 // No I/O, audio only. Useful to debug soundcard-related problems.
 #undef MAIN_USE_VOID
 
 #include "fstb/def.h"
 
-#define MAIN_API_JACK   1
-#define MAIN_API_ALSA   2
-#define MAIN_API_ASIO   3
-#define MAIN_API_MANUAL 4
-#define MAIN_API_PVAB   5
+#define MAIN_DISP_ST7920  (1)
+#define MAIN_DISP_PCD8544 (2)
+#define MAIN_DISP_LINUXFB (3)
+#if (PV_VERSION == 2)
+	#define MAIN_DISP MAIN_DISP_LINUXFB
+#else
+	#define MAIN_DISP MAIN_DISP_ST7920
+#endif
+
+#define MAIN_API_JACK   (1)
+#define MAIN_API_ALSA   (2)
+#define MAIN_API_ASIO   (3)
+#define MAIN_API_MANUAL (4)
+#define MAIN_API_PVAB   (5)
 #if 0 // For debugging complex audio things
 	#define MAIN_API MAIN_API_MANUAL
 #elif fstb_IS (SYS, LINUX)
-//	#define MAIN_API MAIN_API_JACK
-	#define MAIN_API MAIN_API_ALSA
-//	#define MAIN_API MAIN_API_PVAB
+	#if (PV_VERSION == 2)
+		#define MAIN_API MAIN_API_PVAB
+	#else
+//		#define MAIN_API MAIN_API_JACK
+		#define MAIN_API MAIN_API_ALSA
+	#endif
 #else
 	#define MAIN_API MAIN_API_ASIO
 #endif
@@ -81,10 +98,12 @@
 	#include "mfx/hw/FileIOPi3.h"
 
  #if ! defined (MAIN_USE_VOID)
-  #if defined (MAIN_USE_ST7920)
-	#include "mfx/hw/DisplayPi3St7920.h"
-  #else
+  #if MAIN_DISP == MAIN_DISP_LINUXFB
+	#include "mfx/hw/DisplayLinuxFrameBuf.h"
+  #elif MAIN_DISP == MAIN_DISP_PCD8544
 	#include "mfx/hw/DisplayPi3Pcd8544.h"
+  #else
+	#include "mfx/hw/DisplayPi3St7920.h"
   #endif
 	#include "mfx/hw/LedPi3.h"
 	#include "mfx/hw/UserInputPi3.h"
@@ -197,10 +216,12 @@ public:
 	mfx::ui::LedVoid
 	               _leds;
 #elif fstb_IS (SYS, LINUX)
- #if defined (MAIN_USE_ST7920)
-	mfx::hw::DisplayPi3St7920
- #else
+ #if (MAIN_DISP == MAIN_DISP_LINUXFB)
+	mfx::hw::DisplayLinuxFrameBuf
+ #elif (MAIN_DISP == MAIN_DISP_PCD8544)
 	mfx::hw::DisplayPi3Pcd8544
+ #else
+	mfx::hw::DisplayPi3St7920
  #endif
 	               _display;
 	mfx::hw::UserInputPi3
@@ -262,7 +283,11 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_user_input ()
 ,	_leds ()
 #elif fstb_IS (SYS, LINUX)
+ #if (MAIN_DISP == MAIN_DISP_LINUXFB)
+,	_display ("/dev/fb0")
+ #else // MAIN_DISP
 ,	_display (_thread_spi)
+ #endif // MAIN_DISP
 ,	_user_input (_thread_spi)
 ,	_leds ()
 #else

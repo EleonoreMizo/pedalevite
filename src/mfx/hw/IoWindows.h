@@ -25,6 +25,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+#if ! defined (PV_VERSION)
+	#error PV_VERSION should be defined.
+#endif
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #define WIN32_LEAN_AND_MEAN
@@ -167,8 +173,19 @@ private:
 		Lsc_NBR_ELT
 	};
 
+#if (PV_VERSION == 2)
+	static const int  _scr_w     = 800 / 4;
+	static const int  _scr_h     = 480 / 4;
+	static const int  _col_bkg   = 0x000000; // 0xRRGGBB
+	static const int  _col_min   = 0x000000;
+	static const int  _col_max   = 0xFFFFFF;
+#else // PV_VERSION
 	static const int  _scr_w     = 128;
 	static const int  _scr_h     =  64;
+	static const int  _col_bkg   = 0x0000FF; // 0xRRGGBB
+	static const int  _col_min   = 0x2000C0;
+	static const int  _col_max   = 0xFFFFFF;
+#endif // PV_VERSION
 	static const int  _scr_s     = _scr_w;
 	static const int  _nbr_led   = 3;
 	static const int  _nbr_fsw_row = 2; // Two rows of 6 footswitches

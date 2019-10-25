@@ -22,6 +22,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+#if ! defined (PV_VERSION)
+	#error PV_VERSION should be defined.
+#endif
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/hw/mcp23017.h"
@@ -94,14 +100,23 @@ const UserInputPi3::SwitchSrc	UserInputPi3::_switch_arr [_nbr_switches] =
 
 const UserInputPi3::RotEncSrc	UserInputPi3::_rotenc_arr [Cst::RotEnc_NBR_ELT] =
 {
-	{ BinSrc_PORT_EXP, 0x10, 0x11, -1 },
-	{ BinSrc_PORT_EXP, 0x12, 0x13, -1 },
-	{ BinSrc_PORT_EXP, 0x14, 0x15, -1 },
-	{ BinSrc_PORT_EXP, 0x16, 0x17, -1 },
-	{ BinSrc_PORT_EXP, 0x18, 0x19, -1 },
+#if (PV_VERSION == 1)
+	// Rotary encoder wiring was inverted in Pedale Vite v1
+	#define mfx_hw_UserInputPi3_ROTENC_DIR (-1)
+#else
+	#define mfx_hw_UserInputPi3_ROTENC_DIR (+1)
+#endif
 
-	{ BinSrc_PORT_EXP, 0x1A, 0x1B, -1 },
-	{ BinSrc_PORT_EXP, 0x1D, 0x1E, -1 }
+	{ BinSrc_PORT_EXP, 0x10, 0x11, mfx_hw_UserInputPi3_ROTENC_DIR },
+	{ BinSrc_PORT_EXP, 0x12, 0x13, mfx_hw_UserInputPi3_ROTENC_DIR },
+	{ BinSrc_PORT_EXP, 0x14, 0x15, mfx_hw_UserInputPi3_ROTENC_DIR },
+	{ BinSrc_PORT_EXP, 0x16, 0x17, mfx_hw_UserInputPi3_ROTENC_DIR },
+	{ BinSrc_PORT_EXP, 0x18, 0x19, mfx_hw_UserInputPi3_ROTENC_DIR },
+
+	{ BinSrc_PORT_EXP, 0x1A, 0x1B, mfx_hw_UserInputPi3_ROTENC_DIR },
+	{ BinSrc_PORT_EXP, 0x1D, 0x1E, mfx_hw_UserInputPi3_ROTENC_DIR }
+
+#undef mfx_hw_UserInputPi3_ROTENC_DIR
 };
 
 const int UserInputPi3::_pot_arr [Cst::_nbr_pot] =
@@ -128,6 +143,11 @@ UserInputPi3::UserInputPi3 (ui::TimeShareThread &thread_spi)
 ,	_polling_thread ()
 ,	_polling_count (0)
 {
+	for (int i = 0; i < _nbr_sw_gpio; ++i)
+	{
+		::pinMode  (_gpio_pin_arr [i], INPUT);
+	}
+
 	for (int p = 0; p < _nbr_dev_23017; ++p)
 	{
 		_hnd_23017_arr [p] = ::wiringPiI2CSetup (_i2c_dev_23017_arr [p]);

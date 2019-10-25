@@ -75,7 +75,7 @@ public:
 	virtual void   do_remove_plugin (int /*slot_id*/) {}
 	virtual void   do_set_plugin_mono (int /*slot_id*/, bool /*mono_flag*/) {}
 	virtual void   do_set_plugin_reset (int /*slot_id*/, bool /*reset_flag*/) {}
-	virtual void   do_set_param_pres (int /*slot_id*/, PiType /*type*/, int /*index*/, const doc::ParamPresentation */*pres_ptr*/) {}
+	virtual void   do_set_param_pres (int /*slot_id*/, PiType /*type*/, int /*index*/, const doc::ParamPresentation * /*pres_ptr*/) {}
 	virtual void   do_set_param_ctrl (int /*slot_id*/, PiType /*type*/, int /*index*/, const doc::CtrlLinkSet &/*cls*/) {}
 	virtual void   do_override_param_ctrl (int /*slot_id*/, PiType /*type*/, int /*index*/, int /*rotenc_index*/) {}
 	virtual void   do_set_signal_port (int /*port_id*/, const doc::SignalPort &/*port*/) {}
