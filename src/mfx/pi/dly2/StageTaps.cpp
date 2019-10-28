@@ -151,6 +151,11 @@ void	StageTaps::clear_buffers ()
 			chn._eq.clear_buffers ();
 		}
 	}
+
+	for (auto &dly : _delay_arr)
+	{
+		dly.clear_buffers ();
+	}
 }
 
 
