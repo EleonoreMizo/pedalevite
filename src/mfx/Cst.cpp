@@ -61,7 +61,7 @@ const double	Cst::_step_param = 0.05;
 const std::string	Cst::_plugin_mix     = "\?drywetmix";
 const std::string	Cst::_plugin_tuner   = "\?tuner";
 
-const std::string	Cst::_empty_preset_name = "<Empty preset>";
+const std::string	Cst::_empty_preset_name = "<Empty prog>";
 
 const std::string	Cst::_config_current = "current";
 const std::string	Cst::_config_factory = "factory-default";
