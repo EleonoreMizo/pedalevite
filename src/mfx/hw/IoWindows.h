@@ -179,12 +179,14 @@ private:
 	static const int  _col_bkg   = 0x000000; // 0xRRGGBB
 	static const int  _col_min   = 0x000000;
 	static const int  _col_max   = 0xFFFFFF;
+	static const int  _zoom      = 2;
 #else // PV_VERSION
 	static const int  _scr_w     = 128;
 	static const int  _scr_h     =  64;
 	static const int  _col_bkg   = 0x0000FF; // 0xRRGGBB
 	static const int  _col_min   = 0x2000C0;
 	static const int  _col_max   = 0xFFFFFF;
+	static const int  _zoom      = 4;
 #endif // PV_VERSION
 	static const int  _scr_s     = _scr_w;
 	static const int  _nbr_led   = 3;
@@ -193,7 +195,6 @@ private:
 	static const int  _nbr_but_row = 2; // Two rows of 3 buttons for the UI
 	static const int  _nbr_but_col = 3;
 	static const int  _nbr_lsc_row = 2; // Two rows for load/save config
-	static const int  _zoom      = 4;
 
 	static const int  _led_h_max = 32;
 	static const int  _led_h_tmp = _scr_h * _zoom / 2;

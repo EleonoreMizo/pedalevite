@@ -107,12 +107,14 @@ const UserInputPi3::RotEncSrc	UserInputPi3::_rotenc_arr [Cst::RotEnc_NBR_ELT] =
 	#define mfx_hw_UserInputPi3_ROTENC_DIR (+1)
 #endif
 
+	// Parameters
 	{ BinSrc_PORT_EXP, 0x10, 0x11, mfx_hw_UserInputPi3_ROTENC_DIR },
 	{ BinSrc_PORT_EXP, 0x12, 0x13, mfx_hw_UserInputPi3_ROTENC_DIR },
 	{ BinSrc_PORT_EXP, 0x14, 0x15, mfx_hw_UserInputPi3_ROTENC_DIR },
 	{ BinSrc_PORT_EXP, 0x16, 0x17, mfx_hw_UserInputPi3_ROTENC_DIR },
 	{ BinSrc_PORT_EXP, 0x18, 0x19, mfx_hw_UserInputPi3_ROTENC_DIR },
 
+	// Navigation
 	{ BinSrc_PORT_EXP, 0x1A, 0x1B, mfx_hw_UserInputPi3_ROTENC_DIR },
 	{ BinSrc_PORT_EXP, 0x1D, 0x1E, mfx_hw_UserInputPi3_ROTENC_DIR }
 
