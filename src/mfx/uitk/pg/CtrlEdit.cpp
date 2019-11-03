@@ -438,7 +438,7 @@ void	CtrlEdit::update_display ()
 	_val_mod_sptr ->show (active_flag && ! _curve_mode_flag);
 	_curve_sptr   ->show (active_flag                      );
 	_u2b_sptr     ->show (active_flag && ! _curve_mode_flag);
-	_clip_sptr    ->show (active_flag);
+	_clip_sptr    ->show (active_flag && ! _curve_mode_flag);
 
 	PageMgrInterface::NavLocList  nav_list (1);
 	nav_list [0]._node_id = Entry_SRC;
@@ -648,7 +648,7 @@ void	CtrlEdit::update_display ()
 				);
 				txt += txt_0;
 				caption_sptr->set_text (txt);
-				caption_sptr->show (true);
+				caption_sptr->show (! _curve_mode_flag);
 				PageMgrInterface::add_nav (nav_list, edesc._entry);
 			}
 		}
