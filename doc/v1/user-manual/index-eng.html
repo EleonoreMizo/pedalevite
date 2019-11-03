@@ -1,0 +1,2726 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pédale Vite&nbsp;&mdash;&nbsp;multi-FX pedalboard for guitar and bass&nbsp;&mdash;&nbsp;User manual</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body><div class="global">
+
+<h1>Pédale Vite&nbsp;&mdash;&nbsp;User manual</h1>
+
+<h2>Content</h2>
+
+<ol style="list-style-type:upper-roman;">
+<li class="tcont"><a href="#intro">Introduction</a></li>
+<li class="tcont"><a href="#usage">Usage</a>
+	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#description">Hardware description</a></li>
+	<li><a href="#startup">Startup</a></li>
+	<li><a href="#calibration">Calibration</a></li>
+	<li><a href="#baby-steps">First steps</a></li>
+	</ol>
+</li>
+<li class="tcont"><a href="#reference">Reference</a>
+	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#concept">Concepts</a></li>
+	<li><a href="#leds">LEDS</a></li>
+	<li><a href="#screen-main">Main screens</a></li>
+	<li><a href="#screen-prog-edit">Editing a program</a></li>
+	<li><a href="#screen-banks">Program banks</a></li>
+	<li><a href="#screen-pedalboard-config">Pedalboard configuration</a></li>
+	<li><a href="#screen-levels">Volume and levels</a></li>
+	<li><a href="#screen-othersettings">Other settings</a></li>
+	<li><a href="#screen-tuner">Tuner</a></li>
+	<li><a href="#screen-restart">Restart</a></li>
+	</ol>
+</li>
+<li class="tcont"><a href="#effect-list">Available effects</a>
+	<ol style="list-style-type:decimal; margin-top:0.5em;">
+	<li><a href="#fx-distapf">All-Pass Distortion</a></li>
+	<li><a href="#fx-colorme">Color Me — Vocal filter</a></li>
+	<li><a href="#fx-compex">CompEx — Dynamics compressor/expander</a></li>
+	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
+	<li><a href="#fx-delay">Delay — Stereo delay</a></li>
+	<li><a href="#fx-disto-tone">Distortion Tone Stage</a></li>
+	<li><a href="#fx-disto2x">Double Distortion</a></li>
+	<li><a href="#fx-env-fol">Envelope Follower</a></li>
+	<li><a href="#fx-filter-squeezer">Filter Squeezer — Distorted resonant filter</a></li>
+	<li><a href="#fx-flancho">FlanCho — Chorus and flanger</a></li>
+	<li><a href="#fx-freeverb">Freeverb — Reverberation</a></li>
+	<li><a href="#fx-freq-shift">Frequency Shifter</a></li>
+	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Two-band tremolo</a></li>
+	<li><a href="#fx-hypercomb">Hypercomb — Polyphonic comb filter</a></li>
+	<li><a href="#fx-imp-fix">Input Impedance Fix</a></li>
+	<li><a href="#fx-nzbl">Noise Bleach — Noise gate</a></li>
+	<li><a href="#fx-nzcl">Noise Chlorine — Noise gate</a></li>
+	<li><a href="#fx-onsetdetector">Onset detector</a></li>
+	<li><a href="#fx-peq">Parametric Equalizer</a></li>
+	<li><a href="#fx-phaserap">Phaser AP</a></li>
+	<li><a href="#fx-phaserht">Phaser HT</a></li>
+	<li><a href="#fx-pitchdetector">Pitch Detector</a></li>
+	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
+	<li><a href="#fx-distpwm2">Pulse Width Modulation Distortion 2</a></li>
+	<li><a href="#fx-sgirlz">SiemensGirlz — Creative delay</a></li>
+	<li><a href="#fx-disto">Simple Distortion</a></li>
+	<li><a href="#fx-speaker-emu">Speaker Emulator</a></li>
+	<li><a href="#fx-testgen">Test Generator — Test signal generator</a></li>
+	<li><a href="#fx-tremolo">Tremolo</a></li>
+	<li><a href="#fx-wah">Wah-wah</a></li>
+	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
+	<li><a href="#fx-adsr">ADSR — Control envelope</a></li>
+	<li><a href="#fx-ramp">Control ramp — Parameter transition</a></li>
+	<li><a href="#fx-lfo">LFO — Low frequency oscillator</a></li>
+	</ol>
+</li>
+<li class="tcont"><a href="#troubleshooting">Troubleshooting</a></li>
+<li class="tcont"><a href="#changelog">Change log</a></li>
+</ol>
+
+
+
+<h2><a id="intro"></a>I.&emsp;Introduction</h2>
+
+<p><i>Pédale Vite</i> is a DIY multi-effect pedalboard for guitar.
+This manual explains how to use the pedalboard once assembled and functional.</p>
+
+
+
+<h2><a id="usage"></a>II.&emsp;Usage</h2>
+
+
+
+<h3><a id="description"></a>Hardware description</h3>
+
+<h4>Back panel</h4>
+
+<ol style="list-style-type:decimal;">
+<li>Rasberry Pi 3 USB and Ethernet ports</li>
+<li>Jacks for expression pedals<li>
+<li>Power switch</li>
+<li>220–240V power lead</li>
+<li>Audio output to amplifier or mixing desk</li>
+<li>Headphone plug, stereo jack</li>
+<li>Guitar audio input</li>
+</ol>
+<div class="pic"><a href="panel-rear.png"><img src="panel-rear-small.png" /></a></div>
+<p>Access to the Pi is not required during normal operation and is for
+maintenance only.</p>
+<p>The first expression pedal is on the left hand side of the panel, and
+therefore on the right hand side when facing the pedalboard.</p>
+<p>All jacks are unbalanced ¼” (mono signal), except for the headphone jack 
+which is stereo.</p>
+<p>Les canaux gauches et droits des entrées et des sorties sont inversés
+afin qu’ils soient dans le bon ordre quand on se place devant le pédalier.
+Les entrées font environ 500&#8239;kΩ d’impédance.
+Utiliser le canal gauche pour brancher la guitare ou tout autre signal
+mono.
+Quand le pédalier est configuré en mono, les deux sorties diffusent le même
+signal.
+
+The left and right channels of the inputs and outputs are inverted so that
+they are in the right order when standing in front of the pedalboard.
+The input impedance is about 500kΩ.
+Use the left channel to connect the guitar or any other mono signal.
+When the pedalboard is set to mono, both outputs send the same signal.</p>
+
+<h4>Front panel</h4>
+
+<ol style="list-style-type:decimal;" start="8">
+<li>Effect control knob</li>
+<li>Display</li>
+<li>Navigation knobs</li>
+<li>Navigation buttons</li>
+<li>Control LED, their use depends on the context.</li>
+<li>Two rows of six footswitches to change the effects.</li>
+</ol>
+<div class="pic"><a href="panel-top.png"><img src="panel-top-small.png" /></a></div>
+<p>The navigation buttons are arranged as follows.
+Top row&#8239;:
+Select/validate (<span class="key">Select</span>), top arrow
+(<span class="keya">↑</span>), cancel/escape
+(<span class="key">Esc</span>).
+Bottom row&#8239;: left arrow (<span class="keya">←</span>),
+down arrow (<span class="keya">↓</span>),
+right arrow (<span class="keya">→</span>).</p>
+<p>Navigation knobs are usually redundant with navigation buttons.
+The left one allows to move vertically, and the right one to move horizontally
+or to change a value.</p>
+
+
+
+<h3><a id="startup"></a>Startup</h3>
+
+<div class="pic"><a href="how-to-plug.png"><img src="how-to-plug-small.png" /></a></div>
+<ol style="list-style-type:decimal;">
+<li>Connect the power lead (4).</li>
+<li>Plug the guitar on the left input (7).</li>
+<li>Plug the left output (5) on an amplifier.</li>
+<li>Switch on the pedalboard (3).</li>
+</ol>
+<p>After less than ten seconds, the display should show the current program,
+called “Bypass”.</p>
+<div class="pic"><img src="current-program-bypass.png" /></div>
+<ol style="list-style-type:decimal;" start="5">
+<li>Switch on the amplifier.</li>
+<li>Ply.</li>
+</ol>
+<p>Sound is too loud? Too quiet? You don’t hear anything?
+Please report to the <a href="#calibration">calibration</a> section.</p>
+<p>To stop, perform operations in reverse order:
+switch off the amplifier, switch off the pedalboard and unplug it.</p>
+<p>Note: it is not recommended to have the amplifier running while the
+pedalboard is switched on or off.</p>
+
+
+
+<h3><a id="calibration"></a>Calibration</h3>
+
+<p>In order for the pedalboard to give optimum results, it must be calibrated,
+especially the input and output levels.
+The goal is to have as strong an input level as possible without the incoming
+guitar signal saturating at that point.
+Then, if you play on an amp, you have to go out at a level similar to the
+guitar plugged in directly.</p>
+<p>Unfortunately, there is no practical adjustment for calibration outside the
+enclosure.
+It is therefore necessary to venture inside the machine.</p>
+<p>Turn off the pedalboard and turn it over.
+Remove the 8 screws holding the base with a Phillips screwdriver.
+Lift up the base, the sound card is attached to it.
+Be careful not to unplug or pull out any cables.
+Place the base close to the housing.</p>
+<p>The audio interface is attached on the inner side.
+Plug and turn on the pedalboard, still open.
+Avoid putting fingers on the power cables.
+It is up to you to find an effective method of handling the case, as you will
+have to manipulate the knobs and check the front panel to adjust the audio
+interface.
+Placing and securing the enclosure on the edge should allow this without too
+much hassle.</p>
+<p>Press the <span class="key">Select</span> button, scroll down to the
+Volume & Levels menu, and press <span class="key">Select</span> again.</p>
+<div class="pic"><img src="main-menu-levels.png" /></div>
+<p>This takes you to the level control screen.
+The upper meter shows the input levels, the middle one the output levels.
+The levels to be considered (peaks) are given by the small strokes moving
+to the right of the solid bars (RMS).</p>
+<div class="pic"><img src="levels.png" /></div>
+
+<h4>Input level</h4>
+
+<p>Play as hard as possible.
+Input level should never exceed 0dB, and rarely go above &minus;6dB.
+However it should be as high as possible.</p>
+<p>Input level is set at the minimum by default, which is fine for an
+electric guitar plugged directly to the pedalboard, given the audio
+interface.
+Anyway, it may be required to adjust it.</p>
+<p>Turn the input 1 knob (left) on the audio interface until the level
+looks correct.
+Then set the same level on the input 2.</p>
+
+<h4>Niveau de sortie</h4>
+
+<p>Once we are done with the input level, we can set the output level.
+Make sure the “Bypass” program is activated, so the guitar input goes
+directly to the output without any modification.</p>
+<p>The output volume should be set to 0dB in the
+<a href="#screen-levels">Volume and levels</a> screen.
+If it is not the case, go to the Output volume settings with the vertical
+arrows.
+Change the volume with the horizontal arrows.</p>
+<p>Then set the output level on the audio interface in order to get the
+same sound as with a guitar plugged directly to the amplifier.
+An AB/Y box is a great help for this.
+If you don’t have one, you can plug alternatively the guitar on the
+pedalboard and on the amplifier to compare the volumes.</p>
+<p>Finally, you can set the headphone volume, which doesn’t require
+anything else than your taste and ears.</p>
+<p>Now, switch off the pedalboard and put back the base.
+Make sure that wires don’t suffer from the operation and that everything
+fits together without forcing on the enclosure content.</p>
+<p>Plug the pedalboard and switch it on.
+Check that everything is still OK.</p>
+
+
+
+<h3><a id="baby-steps"></a>First steps</h3>
+
+<p>&hellip;</p>
+
+
+
+<h2><a id="reference"></a>III.&emsp;Reference</h2>
+
+
+
+<h3><a id="concept"></a>Concept</h3>
+
+<p>Effects on the pedalboard are organized in <dfn>programs</dfn>.
+A program is made of an effect chain and some settings to control the effects
+from footswitches, pedals and knobs, the <dfn>controllers</dfn>.</p>
+<p>Programs are grouped in <dfn>banks</dfn>.
+Each bank is made of 16 programs, and the pedalboard contains 64 banks.
+The pedalboard makes easy the navigation between the programs of a single
+bank.</p>
+<p>A program is made of an effect chain.
+For each effect, it is possible to set its volume, the mix between the
+input signal and the output signal, and to bypass the processing.</p>
+
+
+
+<h3><a id="leds"></a>LEDs</h3>
+
+<p>There are three LEDs on the pedalboard, a green one surrounded by
+two red ones.
+Their meaning depends on the context, on the activated function.
+Usually they should be off, excepted when using the tuner.</p>
+
+<h4>Normal operations</h4>
+
+<div class="picr"><img src="led-1.png" /></div>
+<p>The leftmost red LED indicates that the output sound clips.
+You should lower the main volume or the volume of one of the activated
+effects.</p>
+<div class="picr"><img src="led-2.png" /></div>
+<p>The green LED indicates that the pedalboard is performing a write operation
+on the internal drive (the SD card).
+Such an operation is usually quick, anyway make sure not to switch off the
+pedalboard at this moment.
+The memory card is delicate and could be damaged.</p>
+<div class="picr"><img src="led-3.png" /></div>
+<p>The rightmost red LED indicates that the processing unit is overloaded.
+There are too much simultaneous effects, or they have too complex settings,
+and the sound cannot be produced on time.
+It is suitable to recall a simpler program, or to change the effect parameters
+to reduce the load.
+It can also be a temporary overload, in which case there is nothing special
+to do.
+The sound should come back and the LED turn off.</p>
+<div class="picr"><img src="led-123.png" /></div>
+<p>However, if the overload lasts, the audio engine gives up its recovery
+attempt.
+This state is indicated with all the three LEDs lit.
+In this case, a simpler program should be activated and the audio engine
+restarted manually.
+This can be obtained by pressing <span class="key">Esc</span> three times
+on the main screen.</p>
+
+
+<h4>Tuner</h4>
+
+<p>In tuner mode, the LEDs indicates the rightness of the played note.
+The leftmost LED indicates that the note is too low, and the rightmost
+one that the note is too high.</p>
+<p>When the played note is right, the green LED is lit.</p>
+
+
+
+<h3><a id="screen-main"></a>Main screens</h3>
+
+<h4>Current program and information</h4>
+
+<p>This is the startup screen.
+This is also the one on the top of the menu hierarchy.
+If you get lost, just press <span class="key">Esc</span> one or more times to
+get back here.</p>
+<div class="pic"><img src="prog-cur.png" /></div>
+<p>Several important information are displayed here:
+On the top, the current program and bank.
+On the middle, the controllers used by the program or the last modified parameter.
+On the bottom, the Raspberry Pi IP address, if it is available.
+Indeed it is required to connect on the machine with SSH for maintenance
+operations.</p>
+<p>The <span class="key">Esc</span> key in this screen activates some other
+functions.
+They depends how many times the key is pressed:</p>
+<ol style="list-style-type:decimal;">
+<li>Updates the display, particularly the IP address.</li>
+<li>Resets the display hardware.</li>
+<li>Resets the audio engine.</li>
+</ol>
+
+<h4>Main menu</h4>
+
+<div class="pic"><img src="main-menu-levels.png" /></div>
+<p>This screen is reached by pressing <span class="key">Select</span> in the
+current program screen.
+It can be exited with <span class="key">Esc</span>.
+Navigation is done with <span class="keya">↑</span> and
+<span class="keya">↓</span>.
+<span class="key">Select</span> opens the page highlighted with the cursor.</p>
+<table>
+<tr><td><span class="ui">Edit program</span></td><td><a href="#screen-prog-edit">Editing a program</a></tr></td>
+<tr><td><span class="ui">Banks</span></td><td>Access to <a href="#screen-banks">Program Banks</a></tr></td>
+<tr><td><span class="ui">Pedal layout</span></td><td><a href="#screen-pedalboard-config">Pedalboard Configuration</a></tr></td>
+<tr><td><span class="ui">Volume &amp; levels</span></td><td>Access to <a href="#screen-levels">Volumes and Levels</a></tr></td>
+<tr><td><span class="ui">Other settings</span></td><td><a href="#screen-othersettings">Other Settings</a></tr></td>
+<tr><td><span class="ui">Tuner</span></td><td><a href="#screen-tuner">Tuner</a></tr></td>
+<tr><td><span class="ui">Restart</span></td><td><a href="#screen-restart">Restart</a> options</tr></td>
+</table>
+
+
+
+<h3><a id="screen-prog-edit"></a>Editing a program</h3>
+
+<h4><a id="screen-fx-chain"></a>Effect chain</h4>
+
+<div class="pic"><img src="prog-edit.png" /></div>
+
+<p>This is the main page to edit a program.
+Navigations is done with the <span class="keya">↑</span> and
+<span class="keya">↓</span> keys.
+<span class="key">Select</span> enters the highlighted object
+et <span class="key">Esc</span> gets back to the current program screen.</p>
+<p>The first line is the program name, which can be edited.</p>
+<p><span class="ui">Controllers…</span> gives access to the player/program
+interactions.</p>
+<p><a href="#screen-prog-save"><span class="ui">Save to…</span></a>
+saves the currently edited program.</p>
+<p>The following list is the effect chain, in processing order.
+Each line is a distinct effet.
+<span class="ui">&lt;Empty&gt;</span> indicates that there is no effect
+on the line and <span class="ui">&lt;End&gt;</span> terminates the list.
+A line written in bold indicates that at least one controller applies on
+the effect.</p>
+<p>The effect on the highlighted line (including
+<span class="ui">&lt;Empty&gt;</span> and <span class="ui">&lt;End&gt;</span>)
+can be changed with <span class="keya">←</span> and
+<span class="keya">→</span>.
+These keys sweep all the available effects.
+If <span class="ui">&lt;End&gt;</span> is replaced with an effect, a new
+empty line is automatically inserted after.
+In return, it is possible to remove the effect from the last line.
+<span class="key">Select</span> gives access to <a href="#screen-fx-setup">the
+effect configuration</a>.</p>
+<p>Finally, the last list shows the effects that don’t need audio to work,
+like the LFOs for example.</p>
+<p>Configurations and parameters are memorized for each kind of effect.
+If the effect type is changed by mistake, settings are kept and applied
+back when the initial effect is restored.
+It’s also possible to try several effects by adjusting their parameters
+and comparing them without hasle.</p>
+<p>Also, an effect of a new kind generally appears with the same configuration
+it had during its previous instantiation.
+To restart from default settings, one can use <span class="ui">Reset</span>
+from the <a href="#screen-fx-setup">Effect Configuration</a>.</p>
+
+<h4><a id="screen-prog-save"></a>Save Program</h4>
+
+<p>When a program is saved, the program list from the current bank is
+displayed.</p>
+
+<div class="pic"><img src="prog-list.png" /></div>
+
+<p>The very first line indicates the bank where the program will be saved.
+It is possible to change the bank with the horizontal arrows.</p>
+<p>The program slot where the settings shall be overwritten is chosen with
+<span class="key">Select</span>.
+The bold line indicates the active program.
+It is the default selection.
+<span class="key">Esc</span> cancels the operation and gets back to
+<a href="#screen-fx-chain">the effect chain</a>.</p>
+<p>Once the saving location is validated, one can type the the program
+name.</p>
+<div class="pic"><img src="prog-save.png" /></div>
+<p>The screen title reminds the storage location.
+The name correspounding to active settings is pre-filled.
+One can modify it by navigating in the list of characters.
+<span class="key">Select</span> validates the highlighted character or action.
+<span class="key">Esc</span> cancels the operation and gets back to the
+<a href="#screen-fx-chain">effect chain</a>.</p>
+<table>
+<tr><td><span class="ui">OK</span></td><td>Validates the choice and does the data saving. The green LED lights up shortly during this time.</tr></td>
+<tr><td><span class="ui">CANCEL</span></td><td>Cancels the operation.</tr></td>
+<tr><td><span class="ui">SPC</span></td><td>Insert a space at the carret location.</li>
+<tr><td><span class="ui">DEL</span></td><td>Delete the character at the left of the carret.</tr></td>
+<tr><td><span class="ui">←</span> and <span class="ui">→</span></td><td>Move the carret.</tr></td>
+</table>
+
+<h4>Parameter list</h4>
+
+<div class="pic"><img src="param-list.png" /></div>
+
+<p>The first line <span class="ui">FX setup…</span> jumps to the
+<a href="#screen-fx-setup">Effect Configuration</a> screen.
+For some effects, there can be a second line
+<span class="ui">Graphic editing…</span> to edit the parameters using a
+graphic representation.
+It’s the case for <a href="#fx-peq">PEq</a> for example.</p>
+<p>The following three lines are common to all the effects and deal with the
+mixing parameters.
+The value is on the right of the parameter.
+The following lines are specific to the effect.
+A parameter written in bold indicates that it is modulated by at least one
+controller.</p>
+<p>One can change the selected parameter with the horizontal arrows, and
+enter the 
+<a href="#screen-param-edit">Parameter Edit</a> screen (more accurate values,
+controllers…) with <span class="key">Select</span>.</p>
+
+<p class="var">Bypass</p>
+<p>Deactivate the effect when set to <span class="ui">On</span>.</p>
+
+<p class="var">Effect mix</p>
+<p>Mixes the effect output with its input.
+The parameters indicates the output ratio, in percent.</p>
+
+<p class="var">Volume</p>
+<p>Adjustment output volume, in dB.
+This parameters helps to homogenize the volume, within the effect chain
+and between the different programs.
+This volume is applied before the input/output mix.</p>
+
+<h4><a id="screen-param-edit"></a>Parameter Edit</h4>
+
+<div class="pic"><img src="param-edit.png" /></div>
+<p>The name, the value and possibly the unit of the parameter are indicated
+on the top.</p>
+<p>One can change the parameter value using four scale factors (the dots)
+and the horizontal arrows.</p>
+<p>The <span class="ui">Controllers…</span> line allows to
+<a href="#screen-control-choice">chose</a> the direct links and modulations
+for the parameters by pressing <span class="key">Select</span>.
+Bold face indicates that at least one controller is attached to the parameter.
+The last line is about time parameters.
+It indicates (if relevant) if the parameters follows the tempo or if it is
+independant from it.</p>
+
+<h4><a id="screen-control-choice"></a>Controller Choice</h4>
+
+<div class="pic"><img src="controllers.png" /></div>
+<p>Two types of controllers can be selected here:</p>
+<ul>
+<li><span class="ui">Direct link</span>: the controller drives directly the
+parameter value.
+There is at most one per parameter.</li>
+<li><span class="ui">Modulations</span>: it’s a list of additive controllers
+modulating the value.
+There can be several of them and their order isn’t important.</li>
+</ul>
+<p>One can navigate using the vertical arrows and go to the
+<a href="#screen-control-edit">Controller Edit</a> screen with
+<span class="key">Select</span>.
+A line <span class="ui">&lt;Empty&gt;</span> indicates that there is no
+controller attached here.
+It is always there at the end of the modulation list to allow adding a new one.
+One can go back to the <a href="#screen-param-edit">Parameter Edit</a> screen
+with the <span class="key">Esc</span> key.</p>
+
+<h4><a id="screen-control-edit"></a>Controller Edit</h4>
+
+<div class="pic"><img src="control-edit1.png" /></div>
+<div class="pic"><img src="control-edit2.png" /></div>
+<p>One can setup a controller (direct link or modulation) on this screen.
+A direct link controller requires two parameter values:
+a value for the controller’s low position, and another for the high position.
+The parameter will take all the values between these bounds.
+By default, the minimum and maximum parameter values are used.</p>
+<p>A modulation controller requires only one setting, its depth, in percent
+of the parameter range.</p>
+<p>The first line <span class="ui">Src</span> indicates the controller source.
+One can chose it by cycling within the list using the horizontal arrows.
+The available sources are the following ones:</p>
+<table>
+<tr><td colspan="2"><span class="ui">&lt;Empty/Delete&gt;</span></td><td>Only for editing. Indicates that there is no controller or it is to be deleted.</td></tr>
+<tr><td><span class="ui">Expression</span></td><td>0–2</td><td>Expression pedals.</td></tr>
+<tr><td><span class="ui">Knob</span></td><td>0–4</td><td>Rotary encoders.</td></tr>
+<tr><td><span class="ui">Footsw</span></td><td>0–11</td><td>Footswitches.</td></tr>
+</table>
+<p>There can be other modulation sources, depending on the program configuration:
+LFOs, envelope followers…
+These sources appear first on the list.</p>
+<p><span class="ui">Step</span> is only for rotary encoders.
+It selects its sensitivity.
+The fractional value indicates the fraction of the parameter range between two
+consecutive steps.
+It can be set with the horizontal arrows.</p>
+<p>Below, there are the bounding values.
+They depend on the controller type.
+They are changed exactly like in the <a href="#screen-param-edit">Parameter
+Edit</a> screen.</p>
+<p><span class="ui">Final</span> indicates the final, modulated parameter
+value.
+If the parameter is modulated by multiple source, the final value reflects
+the contribution of all the modulations, not the edited one only.</p>
+<p><span class="ui">Curve</span> selects the curve to apply on the source.
+It changes the controller sensitivity depending on the value ranges.
+It can be set with the horizontal arrows.</p>
+<table>
+<tr><td><span class="ui">Linear</span></td><td>Neutral curve, default.</td></tr>
+<tr><td><span class="ui">Square</span></td><td>Parabolic curve. Accuracy in the low range, sensitivity in the high range.</td></tr>
+<tr><td><span class="ui">Cubic</span></td><td>Like <span class="ui">Square</span>, but more pronounced.</td></tr>
+<tr><td><span class="ui">Sq inv</span></td><td>Saturated curve. It is the opposite of <span class="ui">Square</span>: high range is accurate, and low range is sensitive.</td></tr>
+<tr><td><span class="ui">Cb inv</span></td><td>Like the previous one, but more pronounced.</td></tr>
+<tr><td><span class="ui">S 1</span></td><td>Accuracy in the bottom and top ranges, sensitivity in the mid range.</td></tr>
+<tr><td><span class="ui">S 2</span></td><td>Same as <span class="ui">S 1</span>, but more pronounced.</td></tr>
+<tr><td><span class="ui">Flat 1</span></td><td>Mid range is accurate, and bottom and top ranges are sensitive.</td></tr>
+<tr><td><span class="ui">Flat 2</span></td><td>Like <span class="ui">Flat 1</span>, but more pronounced.</td></tr>
+<tr><td><span class="ui">Prog 1</span></td><td rowspan="4">Several curves with more or less progressive slopes.</td></tr>
+<tr><td><span class="ui">Prog 2</span></td></tr>
+<tr><td><span class="ui">Prog 3</span></td></tr>
+<tr><td><span class="ui">Prog 4</span></td></tr>
+<tr><td><span class="ui">Sat 1</span></td><td rowspan="4">Several curves with more or less saturated slopes.</td></tr>
+<tr><td><span class="ui">Sat 2</span></td></tr>
+<tr><td><span class="ui">Sat 3</span></td></tr>
+<tr><td><span class="ui">Sat 4</span></td></tr>
+</table>
+<p>The curve graphic can be shown with
+<span class="key">Select</span>.</p>
+<div class="pic"><img src="control-edit-curve.png" /></div>
+<p><span class="ui">Range</span> is used only on modulation with some specific
+sources only.
+It can convert a unipolar signal (posivite values only) into a bipolar signal
+(positive and negative values).
+The signal shape is preserved, the value range is just stretched down to the
+negative range.
+This allows putting the neutral modulation value in the middle of the
+controller course.
+One can select <span class="ui">Bipolar</span> or
+<span class="ui">Unipolar</span> with the horizontal arrows.</p>
+<p><span class="ui">Clip</span> restricts the source range.
+The main purpose is to assign their own variation range to different 
+parameters controlled by a unique source, thus achieving threshold effects.
+<span class="ui">Clip</span> is processed after the
+<span class="ui">Range</span> function.
+<span class="ui">Src&larr;</span> and <span class="ui">Src&rarr;</span> clip
+the modulation source range.
+These bounds are mapped to new vanues given by
+<span class="ui">Dest&darr;</span> and <span class="ui">Dest&uarr;</span>.
+Input values in this raneg are linearly interpolated.
+Modulations out of this range are clipped to
+<span class="ui">Dest&darr;</span> or <span class="ui">Dest&uarr;</span>.</p>
+<p><span class="key">Esc</span> exits the screen.
+Modification are immediately taken into account in real time, there is no
+specific validation to do.</p>
+
+<h4><a id="screen-fx-setup"></a>Effect Configuration</h4>
+
+<div class="pic"><img src="fx-setup.png" /></div>
+<p>The first line indicates the effect type, which can be changed with the
+horizontal arrows.</p>
+<p><span class="ui">Insert before</span> adds an empty block in the chain
+before the selected effect.
+This empty block becomes the current effect and is immediately editable.</p>
+<p><span class="ui">Move…</span> moves the effect within the chain.
+After having pressed on <span class="key">Select</span>, the chain appears and
+it is possible to move the effect with the vertical arrows.
+Changes are immediately effective.
+<span class="key">Select</span> or <span class="key">Esc</span> to exit.</p>
+<p><span class="ui">Presets…</span> is still a work in progress…</p>
+<p><span class="ui">Reset</span> restores the default parameters.</p>
+<p><span class="ui">Chan</span> is useful for effects that can convert a
+mono signal to stereo (chorus, delay…)
+<span class="ui">Auto</span> selects the stereo, which will be
+effective only with a global stereo output.
+<span class="ui">prefer mono</span> keeps the mono signal in all the cases.
+If the input signal is already stereo, it keeps stereo, whatever the selected
+option.
+Use <span class="key">Select</span> to change the settings.</p>
+<p><span class="ui">State</span> indicates if the effect memory must be cleaned
+(<span class="ui">fresh</span>) when the program is activated, or kept from the
+previous use (<span class="ui">keep</span>).
+Cleaning the memory may have an impact on the response time but should be
+light.</p>
+<p><span class="ui">Name</span> is the name of the effect instance.
+It can be used to identify it with global-range pedals and controllers, not
+depending on the program.
+For example, you can have a pedalboard-range footswitch to change the bypass
+state of any effect called “distortion”.</p>
+
+<h3><a id="screen-banks"></a>Program banks</h3>
+
+<div class="pic"><img src="bank-menu.png" /></div>
+
+<h4><a id="screen-banks-orga"></a>Organize banks and programs</h4>
+
+<div class="pic"><img src="bank-orga.png" /></div>
+
+<p>This menu gives access to several operations allowing to organize banks and
+programs.</p>
+<p><span class="ui">Move banks…</span> is for moving banks within the bank
+list.</p>
+<p><span class="ui">Move programs…</span> is for moving programs within the
+current bank.</p>
+<p><span class="ui">Program catalog</span> gives accès to a complete list of
+all the programs from all the banks.</p>
+
+<h4><a id="screen-banks-move-bank"></a>Move banks</h4>
+
+<div class="pic"><img src="bank-move-1.png" /></div>
+
+<p>First, with the vertical arrows, select a bank to move.
+<span class="key">Select</span> to validate or
+<span class="key">Esc</span> to return to the previous menu.</p>
+
+<div class="pic"><img src="bank-move-2.png" /></div>
+
+<p>Once the bank is selected, use the vertical arrows to move this bank.
+<span class="key">Select</span> to validate the move or
+<span class="key">Esc</span> to cancel and return to the previous menu.</p>
+
+<h4><a id="screen-banks-move-prog"></a>Move programs</h4>
+
+<div class="pic"><img src="prog-move-1.png" /></div>
+
+<p>First, with the vertical arrows, select a program to move.
+<span class="key">Select</span> to validate or
+<span class="key">Esc</span> to return to the previous menu.</p>
+
+<div class="pic"><img src="prog-move-2.png" /></div>
+
+<p>Once the program is selected, use the vertical arrows to move it.
+<span class="key">Select</span> to validate the move or
+<span class="key">Esc</span> to cancel and return to the previous menu.</p>
+
+<h4><a id="screen-banks-prog-cat"></a>Program catalog</h4>
+
+<p>This page lists all the programs from all the banks, without duplicates
+nor empty programs.
+The first program of the list is activated when entering the page.
+Use the vertical arrows to browse.
+Programs are automatically activated when browsed through.
+<span class="key">Esc</span> to return to the previous menu.
+Upon return, the current bank and current program reflect the last browsed
+program from the list.</p>
+
+<h3><a id="screen-pedalboard-config"></a>Pedalboard configuration</h3>
+
+<p>This part is used to adjust the action of each footswitch at the global
+level.
+It is also possible to adjust these settings at the bank and program level,
+the menus are identical and the configured actions overlap.</p>
+
+<div class="pic"><img src="pedalboard-layout.png" /></div>
+<p>The list above allows you to see at a glance what each footswitch does.
+The twelve footswitches are numbered in two rows: first the top (farthest),
+from 1 to 6 from left to right, then the bottom (the closest) from 7 to 12.
+Use the vertical arrows to navigate and
+<span class="key">Select</span> to edit a footswitch.</p>
+
+<div class="pic"><img src="pedalboard-layout-pedal-menu.png" /></div>
+<p>In this menu, <span class="ui">Full edit…</span> allows editing the content
+of the footswitch and <span class="ui">Clear/empty</span> to reset it.
+The other functions are not implemented yet.</p>
+
+<div class="pic"><img src="pedalboard-layout-pedal-fulledit.png" /></div>
+<p>The menu above gives access to the three footswitch trigger modes and
+indicates whether or not this mode is used.
+The modes are the following:</p>
+<table>
+<tr><td><span class="ui">Press</span></td><td>Immediate action when pressed</td></tr>
+<tr><td><span class="ui">Hold</span></td><td>Action after having hold it pressed for about 2 seconds</td></tr>
+<tr><td><span class="ui">Release</span></td><td>Action when the footswitch is released</td></tr>
+</table>
+<p>The three modes can be used simultaneously to obtain different functions
+from the same footswitch.
+However when <span class="ui">Hold</span> is used, it is recommended to move
+the <span class="ui">Press</span> content to <span class="ui">Release</span>
+in order to avoid unwanted aliasing.</p>
+<p>There is no automatic repeat like on a computer keyboard.
+A new action is triggered only after the footswitch state is actually
+changed.</p>
+
+<div class="pic"><img src="pedalboard-layout-cycle.png" /></div>
+<p>Each triggering mode is linked to a cycle made of one or more
+<span class="ui">Step</span>s.
+When the footswitch is triggerred, a cycle step is activated, and the next
+trigger will activate the next step in the cycle, until the cycle is finished
+and starts again.</p>
+<p>In a majority of cases, cycles only have one steps.
+On the other hand, the <span class="ui">Hold</span> and
+<span class="ui">Release</span> modes accept only one step.</p>
+
+<div class="pic"><img src="pedalboard-layout-step.png" /></div>
+<p>The menu above allows you to modify a step.
+A step consists of one or more actions that will be carried out simultaneously
+when the step is activated.</p>
+
+
+
+<h3><a id="screen-levels"></a>Volume and levels</h3>
+
+<div class="pic"><img src="levels.png" /></div>
+<p>This screen shows and controls the levels.
+The bars indicate the input and output volumes.
+When a bar is split, it means that the signal is stereo.
+This is always the case for the input, even if only the left channel is taken
+into account in the effect chain.
+The small 
+The small line indicates the level of the peaks with a stationary time of 2s,
+and the solid bar the RMS volume.</p>
+<p>The <span class="ui">DSP</span> bar indicates the CPU resources eaten by
+the audio processing.
+The hatched part is the average load, and the solid part the peaks.
+They should stay as low as possible and never touch the right part of the
+gauge, otherwise clicks and sound loss may occur.</p>
+<p>It is possible to set the <span class="ui">Output</span> volume
+with the horizontal arrows.</p>
+<p>The symbols at the left of the <span class="ui">DSP</span> gauge indicate
+if the input and output are mono (one circle) or stereo (two interlaced
+circles).</p>
+<p>When the cursor is on the <span class="ui">DSP</span>, the audio engine
+can be restarted by pressing on <span class="key">Select</span>.</p>
+
+
+
+<h3><a id="screen-othersettings"></a>Other settings</h3>
+
+<div class="pic"><img src="other-settings.png" /></div>
+
+<p><span class="ui">Tempo</span> sets the tempo in quarter notes per minute.
+It is possible to set the integer part or the fractional part of the
+tempo.
+Pressing <span class="key">Select</span> on the fractional part rounds
+the tempo to the nearest integer.</p>
+<p><span class="ui">Click</span> activates or deactivates the click, based
+on the tempo setting.
+At the moment, the time signature is restricted to 4/4.</p>
+<p><span class="ui">Save settings</span> immediately saves the current
+settings.
+Indeed, most non-program modifications (for example the stereo mode or the
+output level) are not saved automatically.
+They are saved with the next program modifications or explicitely by selecting
+this menu entry.</p>
+<p><span class="ui">Backup…</span> enters the backup menu.</p>
+
+<h4><a id="screen-backup"></a>Backup menu</h4>
+
+<div class="pic"><img src="backup-menu.png" /></div>
+
+<p>Before doing a backup copy, you must ensure that the date is correctly set,
+with the risk of being confused by an inconsistent timestamping.</p>
+<p>The screen accessed with <span class="ui">Set date…</span> may be used to
+set the current date and time.
+Indeed, the internal computer does not have a system to keep the time between
+two sessions.
+So it may be necessary to set the date before doing a backup copy of the
+settings.
+However, if the machine is connected to the internet during startup, the date
+is automatically updated.</p>
+<p><em>Nota bene:</em> time and date are UTC (coordinated universal time),
+not the local time.</p>
+<p>In this screen, use the vertical arrows to select the field to edit,
+and the horizontal arrows to modify the values.
+The date is automatically updated when exiting the screen with
+<span class="key">Esc</span> or <span class="key">Select</span>.
+Because of technical reasons, the program is restarted after a date
+modification, so any unsaved change may be lost.</p>
+
+<div class="pic"><img src="backup-date.png" /></div>
+
+<p><span class="ui">Save backup now</span> does a backup copy.
+The file is saved in the same directory as the main settings (namely
+<code>/opt/pedalevite/etc/config/</code>), with the current date and time
+following its name.</p>
+<p><span class="ui">Restore backup…</span> is still under construction.</p>
+<p><span class="ui">Export to USB stick</span> saves the backup on an external
+USB drive.
+It is automatically mounted (<code>/mnt/sda1</code>, FAT32) and unmounted during
+the backup.</p>
+
+
+
+<h3><a id="screen-tuner"></a>Tuner</h3>
+
+<p>Several tuning types can be selected with the horizontal arrows:</p>
+<table>
+<tr><td><span class="ui">Guitar</span></td><td>E A<sub>110</sub> D G B E, default setting</td></tr>
+<tr><td><span class="ui">Bass</span></td><td>E A<sub>55</sub> D G</td></tr>
+<tr><td><span class="ui">Chromatic</span></td><td>All the notes of the chromatic scale</td></tr>
+</table>
+<p>The closest detected note in the selected scale is displayed.
+The LEDs show if the tuning is right or not.
+The error in cent is also given on the display.</p>
+
+
+<h3><a id="screen-restart"></a>Restart</h3>
+
+<div class="pic"><img src="restart.png" /></div>
+<ul>
+<li><span class="ui">Cancel</span> comes back to the main screen.</li>
+<li><span class="ui">Restart</span> restarts the application, which can be useful in case of peristent glitch or bug. The current program state is lost.</li>
+<li><span class="ui">Reboot</span> reboot the operating system. The operation lasts about ten seconds. Warning, the audio interface may issue loud clicks. Please lower your amplifier volume(s) before proceeding.</li>
+<li><span class="ui">Shutdown</span> prepares the machine for a manual shutdown. It is not necessary to use this option each time you want to shutdown the pedalboard; this is mainly a maintenance operation.</li>
+</ul>
+<p><span class="key">Esc</span> exits the screen.</p>
+
+
+<h2><a id="effect-list"></a>IV.&emsp;Available effects</h2>
+
+
+
+<h3><a id="fx-distapf"></a>All-Pass Distortion</h3>
+
+<p>A distortion based on the modulation of an all-pass filter.
+Unlike saturation-based distortions, it produces extra-harmonics without
+affecting the volume.
+The overall result sounds between a light overdrive and a broken fuzz.</p>
+
+<p class="var">Gain</p>
+<p>Gain of the modulator, in dB.
+The more gain, the more harmonic are produced.</p>
+
+<p class="var">Slew-rate limiting</p>
+<p>This parameter limits the highest frequencies in the modulation signal,
+reducing harsh tones.
+The lower the rate, the softer the tones.</p>
+
+
+
+<h3><a id="fx-colorme"></a>Color Me — Vocal filter</h3>
+
+<p>Color Me sculpts the sound spectrum with formants (resonant bumps centered
+around characteristic frequencies),
+giving a vocal color.
+A series of two to four vowels is chosen from a dozen.
+The main parameter is used to make the transition between the selected vowels,
+giving a sound tending towards one or the other.</p>
+<p>Note: with very accentuated settings, it can be judicious to make follow
+the effect with a compressor in order to limit too strong resonances.</p>
+
+<p class="var">Vowel morphing</p>
+<p>This parameter controls the transition between the selected vowels.
+It is assigned by default to a free controller.</p>
+
+<p class="var">Formant resonance</p>
+<p>Each formant is modeled by a bell filter.
+This parameter is used to adjust the resonance of this filter.</p>
+
+<p class="var">Formant selectivity</p>
+<p>Used to control the selectivity (Q) of the formant filter.
+It is often best to vary it in conjunction with
+<var>Formant resonance</var>.</p>
+
+<p class="var">Formant transpose</p>
+<p>Allows to shift the formants by more or less one octave.
+This shift reflects the size of the emulated vocal apparatus and
+influences the timbre of the synthetic voice, giving something from Jabba the
+Hutt to Mickey Mouse.</p>
+
+<p class="var">Number of formants</p>
+<p>Only two formants make it possible to identify a vowel but the resulting
+sound is somewhat weird.
+A third formant gives more clarity and realism.
+This parameter allows you to choose between two or three.</p>
+
+<p class="var">Number of vowels</p>
+<p>Number of voyels transformed by the <var>Vowel morphing</var>.</p>
+
+<p class="var">Vowel 1, 2, 3, 4 type</p>
+<p>Vowel type.
+The vowels of the following list are taken from the French language.</p>
+<table>
+<tr><th>Vowel</th><th>Phonetic</th></tr>
+<tr><td><span class="ui">i</span></td><td>i</td></tr>
+<tr><td><span class="ui">é</span></td><td>e</td></tr>
+<tr><td><span class="ui">è</span></td><td>ɛ</td></tr>
+<tr><td><span class="ui">a</span></td><td>a</td></tr>
+<tr><td><span class="ui">u</span></td><td>y</td></tr>
+<tr><td><span class="ui">eu</span></td><td>ø</td></tr>
+<tr><td><span class="ui">œ</span></td><td>œ</td></tr>
+<tr><td><span class="ui">ou</span></td><td>u</td></tr>
+<tr><td><span class="ui">au</span></td><td>o</td></tr>
+<tr><td><span class="ui">o</span></td><td>ɔ</td></tr>
+</table>
+
+<p class="var">Vowel 1, 2, 3, 4 set</p>
+<p>There is three sets of vowels, formant frequencies coming from different
+studies.
+This parameter selects the set and allows to get some variations on a give
+vowel.</p>
+<table>
+<tr><td><span class="ui">Call</span></td><td>Calliope (Tubach, 1989)</td></tr>
+<tr><td><span class="ui">GD</span></td><td>Groupe Didactique (Landron, 2011), Paris area speakers</td></tr>
+<tr><td><span class="ui">G&amp;A</span></td><td>Gendrot and Adda-Decker (2005), radio voices</td></tr>
+</table>
+
+
+
+<h3><a id="fx-compex"></a>CompEx — Dynamics compressor/expander</h3>
+
+<p>CompEx is a relatively simple dynamic processor and can do compression
+and expansion.</p>
+<p>First, set a threshold level.
+The for each range above or below this level, one can select if the dynamics
+will be increased or reduced.
+Generally “above” is more interesting for compression. “Below” can be used
+for gates.</p>
+
+<p class="var">Ratio High</p>
+<p>Dynamic amplification rate above the threshold.
+If the rate is less than 1, the effect is a compressor.
+If it is greater than 1, it’s an expander.
+In this case the settings are sensitive and the result can be difficult
+to control.</p>
+
+<p class="var">Ratio Low</p>
+<p>Dynamic amplification rate below the threshold.
+Use a value greater than 1 to get a gate.</p>
+
+<p class="var">Threshold</p>
+<p>The threshold level.
+The lower, the more the <var>Ratio High</var> effect is pronounced.</p>
+
+<p class="var">Attack time</p>
+<p>Attack time for the volume envelope detection, in ms.
+The lower, the quicker the effect reacts to dymanic changes.</p>
+
+<p class="var">Release time</p>
+<p>Release time for the volume envelope detection.
+Generally greater than the attack time by one order of magnitude.</p>
+
+<p class="var">Make-up gain</p>
+<p>Output volume.
+Although volume compensation is automatically based on the <var>Ratio
+High</var> value, manual adjustments are sometimes necessary.</p>
+
+<p class="var">Knee shape</p>
+<p>The threshold level is actually a range where the dynamic processing
+changes progressively from the <var>Ratio Low</var> to the <var>Ratio
+High</var>.
+This parameter indicates the depth of the range.</p>
+
+
+
+<h3><a id="fx-convert-stereo"></a>Convert To Stereo</h3>
+
+<p>It’s not really an effect, it’s a device to help changing a mono source
+to stereo.
+The setting in the <a href="#screen-fx-setup">effect configuration</a>
+is overriding the effect.
+So please ensure that you are in <span class="ui">Auto</span>.</p>
+
+
+
+<h3><a id="fx-delay"></a>Delay — Stereo delay</h3>
+
+<p>A classic stereo echo effect.
+It can generate a stereo signal from a mono input.</p>
+<p>There are actually two independant delay lines, one for each channel.
+For each line, one can set the delay time, its output level, the feedback
+level and the feedback filtering (low- or high-pass).
+By default, both lines are linked together and use the parameters from the
+left line.</p>
+<p>It is also possible to cross the line feedbacks.</p>
+
+<p class="var">Input mix level</p>
+<p>Dry level copied to the output.</p>
+
+<p class="var">Delay mix level</p>
+<p>Level of the delayed signal.</p>
+
+<p class="var">Time L/R</p>
+<p>Delay time for the left and right lines.</p>
+
+<p class="var">Feedback L/R</p>
+<p>Level of the output signal fed back into the lines.
+When the level is 0, there is only one echo.
+When it is close to 100%, the echo is repeated almost infinitely.</p>
+
+<p class="var">Filter L/R</p>
+<p>Filtering of the line feedback.
+When the rate is negative, the filter is a low-pass one.
+When it is positive, the filter is a high-pass one.
+The parameter is directly linked to the cutoff frequency.
+The higher in absolute value, the stronger is the filtering.</p>
+
+<p class="var">Channel link</p>
+<p>Links the right channel to the left one.</p>
+
+<p class="var">Ping-pong</p>
+<p>Cross-feedback level.
+At 0%, both lines are independant.
+At 100%, the lines are completely crossed, giving the illusion that
+the sound reflects from left to right and from right to left.</p>
+
+
+
+<h3><a id="fx-disto-tone"></a>Distortion Tone Stage</h3>
+
+<p>This is a standard tone stack often found in distortion pedals, like
+the DS-1 or Big Muff Pi.
+It completes a pure distortion stage.
+It is easier to setup than a complete parameteric equalizer.
+It achieves a balance between the bass and the treble.</p>
+<p>This kind of filter generally has a dip in the mids.
+Here, it has been modified to add a mid level to change the filtering shape.
+It is also possible to chose the filtering center frequency, which can be
+used to mimic the settings of most pedals using this tone stack.</p>
+
+<p class="var">Tone</p>
+<p>Balances between the basses (low values) and trebles (high values).
+50% is balanced.</p>
+
+<p class="var">Mid boost</p>
+<p>Amplifies (positive values) or cut (negative values) the mid frequencies.
+At 0, mids are neutral.
+For the original circuit tone, use a value near &minus;75%.</p>
+
+<p class="var">Mid frequency</p>
+<p>Selects the center frequency.</p>
+
+
+
+<h3><a id="fx-disto2x"></a>Double Distortion</h3>
+
+<p>This is a two-stage distortion.
+Each stage is made of a low-cut filter, a bias, the distortion itself and
+finally a high-cut filter.<p>
+<p>But first, the sound is cut into two frequency bands.
+The low band is not modified, and the high band is distorted.</p>
+<p>It has also a system to adapt the volumes depending on the dynamics
+and to modify the gain depending on the transients.<p>
+
+
+<p class="var">Crossover freq</p>
+<p>This is the frequency for the first split.
+Thus, it is possible to let the lowest components unaltered for more
+dynamics and clarity.</p>
+
+<p class="var">LPF freq</p>
+<p>Frequency for the initial low-pass filter (2nd order).</p>
+
+<p class="var">Attack gain mod</p>
+<p>This parameter sets how the attack transients modify the gain.
+A positive value increases the gain on attacks, and a negative one reduces
+it.</p>
+
+<p class="var">Sustain gain mod</p>
+<p>Sets how a release modifies the gain,
+to prolongate or reduce the note sustain.
+A positive value increases the gain when the note fades out.</p>
+
+<p class="var">Stage 1/2 HPF freq</p>
+<p>Cutoff frequency of the high-pass filter for stages 1 and 2.</p>
+
+<p class="var">Stage 1/2 Bias</p>
+<p>Bias for the stages 1 et 2.
+When the bias is increased in absolute value, the distortion becomes more
+asymetric and favor the even harmonics.
+But beware, when the bias is too high, the signal can be cut, which gives
+an effect of defective circuit.</p>
+
+<p class="var">Stage 1/2 Type</p>
+<p>Type of distortion for each stage.</p>
+
+<p class="var">Stage 1/2 Gain</p>
+<p>Distortion gain for each stage.</p>
+
+<p class="var">Stage 1/2 LPF freq</p>
+<p>Cutoff frequency of the low-pass filter applied after the distortion of
+each stage.
+This filter attenuates the harsh frequencies generated by the signal
+shaping.</p>
+
+<p class="var">Stage 1–2 mix</p>
+<p>Mixes both stage outputs in the output signal.
+The percentage is related to the second stage.</p>
+
+<p class="var">Low band mix</p>
+<p>Ratio fo the clean low band in the output.</p>
+
+<p class="var">Density</p>
+<p>Adjusts the output volume to the input volume.
+A null value totally compensates the volume, and 100% keeps the distortion
+untouched.
+A low value gives more percussive and less natural sounds.</p>
+
+<p class="var">Threshold</p>
+<p>Threshold below which the volume is not reduced by the <var>Density</var>
+parameter.</p>
+
+
+
+<h3><a id="fx-env-fol"></a>Envelope Follower</h3>
+
+<p>This effect is not an audio effect but a controller working by analysing
+the incoming sound.
+It can be inserted at any point in the processing chain, it will not modify
+the sound.</p>
+<p>The envelope follower detects the instantaneous sound volume and turns
+it into a control signal.</p>
+
+<p class="var">Attack time</p>
+<p>Detection attack time.
+This is the speed at which the envelope follows volume increases.</p>
+
+<p class="var">Release time</p>
+<p>Detection release time.
+This is the speed at which the envelope follows volume decreases.</p>
+
+<p class="var">Hold time</p>
+<p>Time during which the detector holds its value after an attack, before
+releasing.</p>
+
+<p class="var">Gain</p>
+<p>Multiplier applied to the control signal.</p>
+
+<p class="var">Threshold</p>
+<p>Threshold below which the output of the detector keeps quiet.
+In logarithmic mode, the threshold is used as a floor value, with a minimum
+of &minus;60dB.</p>
+
+<p class="var">Mode</p>
+<p>Selects how the volume is turned into a control signal.
+In linear mode, the raw volume value is directly used.
+In logarithmic mode, this is a decibel value.
+The range is set by the <var>Threshold</var> parameter.</p>
+
+<p class="var">Clip envelope</p>
+<p>Indicates that the control signal is limited to a maximum of 1.</p>
+
+<p class="var">Clip source</p>
+<p>Sets the level below which the source signal is clipped.
+This parameters helps to neutralize the strongest attacks when the release
+time is significant, limiting the induced delay between the actual peak
+end and the envelope release.
+When the parameter is set to the maximum, the clipping is deactivated.</p>
+
+<p class="var">Low-cut frequency</p>
+<p>Cutoff frequency for the low-cut filter.
+This filter decreases the influence of the bass frequencies in the
+detection, giving an envelope more reactive to guitar strums.
+When set to the minimum, the filter is deactivated.</p>
+
+
+
+<h3><a id="fx-filter-squeezer"></a>Filter Squeezer — Distorted resonant filter</h3>
+
+<p>This is a very specific filter.
+It is based on the famous Moog 4-pole low-pass filter, and heavily
+modified.</p>
+<p>It gives a sound ranging from something warm and vintage to something very
+fuzzy via a defective radio or a feedback interference.
+Some sounds are comparable to those obtained with the Fuzz Factory.</p>
+
+<p class="var">Frequency</p>
+<p>Filter cutoff frequency.
+This parameter is automatically assigned to the expression pedal.</p>
+
+<p class="var">Resonance</p>
+<p>Resonance of the filter, occurring slightly below the cutoff frequency.
+The highest values put the filter in self-oscillation.</p>
+
+<p class="var">Color</p>
+<p>The color setting influences the destructive and fuzz aspect of the
+filter.</p>
+
+<p class="var">Drive</p>
+<p>Adjusts the input level.
+The filter being very sensitive to the input signal volume, one can obtain
+very varied sonority by changing this parameter.
+The inverse gain is applied at output, limited between &minus;12 and 0dB.
+It can also be wise to place in front of a compressor with strong settings
+to obtain something somewhat predictable and reproducible.</p>
+
+<p class="var">Foldback</p>
+<p>Activates different types of internal distortion.</p>
+
+
+
+<h3><a id="fx-flancho"></a>FlanCho — Chorus and flanger</h3>
+
+<p>It is a relatively classical chorus/flanger.
+It can generate a stereo signal from a mono input.</p>
+<p>The effect works by adding a slightly delayed version of itself to the main
+signal.
+The delay continuously varies which creates tone fluctuations.</p>
+<p>The chorus is characterized by a significant delay time (around 20ms) and a
+low depth.
+For a flanger, a high depth, a short delay time and a minimum feedback are
+preferable.</p>
+
+<p class="var">Speed</p>
+<p>Speed of the oscillations of the delay time.</p>
+
+<p class="var">Depth</p>
+<p>Amplitude of the oscillations of the delay time.
+At most, these vary between 0 or almost <var>Delay</var>&times;2.
+The tonal change is then very pronounced.</p>
+
+<p class="var">Delay</p>
+<p>Average delay time.</p>
+
+<p class="var">Feedback</p>
+<p>Feedback ratio of the delayed signal.
+Values close to 100% can alter significantly the volume.
+Negative values give a more metallic sound than the positive ones.</p>
+
+<p class="var">Waveform type</p>
+<p>Shape of the oscillations for the delay time.</p>
+<table>
+<tr><td><span class="ui">Sine</span></td><td></td></tr>
+<tr><td><span class="ui">Triangle</span></td><td></td></tr>
+<tr><td><span class="ui">Parabola</span></td><td>Parabola</td></tr>
+<tr><td><span class="ui">Inv.para</span></td><td>Inverse parabola</td></tr>
+<tr><td><span class="ui">Ramp up</span></td><td></td></tr>
+<tr><td><span class="ui">Ramp down</span></td><td></td></tr>
+<tr><td><span class="ui">Random</span></td><td>Sine with random variations</td></tr>
+</table>
+
+<p class="var">Waveform shape</p>
+<p>How the waveforme is deformed.
+At 0%, it keeps the orignal shape.
+Otherwise, it is saturated by the bottom or by the top.
+It emphasise the longest or shortest time delays.</p>
+
+<p class="var">Number of voices</p>
+<p>It is possible to have 1 to 4 chorus/flanger voices simultaneously,
+for a more or less thick sound.
+The delay oscillations of each voice are not synchronized with the
+others.</p>
+
+<p class="var">Phase set</p>
+<p>Allows the phase of oscillations to be set manually, in degrees.
+This parameter allows on the one hand to act on the tone of the effect by
+associating for example a pedal (expression or not).
+On the other hand, it provides reproducible sound.
+Indeed, when the program is activated, the phase is automatically set to the
+value given by this parameter.</p>
+
+<p class="var">Dry input</p>
+<p>Indicates that the input signal is mixed with the output signal.
+If we want a ratio different of 50–50%, one can put this parameter on
+<span class="ui">Off</span> and use the <var>Effect mix</var> parameter.
+When the original signal is totally missing and there is no feedback,
+the obtained effect is a vibrato.</p>
+
+<p class="var">Mix mode</p>
+<p>Select whether the delayed signal is added to or subtracted from the
+original signal.
+<span class="ui">Add</span> causes an amplification of the low frequencies
+with a very short delay time, whereas <span class="ui">Sub</span> cuts
+them.</p>
+
+<p class="var">Oversampling rate</p>
+<p>Oversampling rate for the processing.
+When set to <span class="ui">&times;4</span>, shortest delay time can be
+achieved (a tenth of microseconds) when <var>Depth</var> is close to 100%,
+which can be useful for devastating flangers.
+However, it eats more CPU resource.</p>
+
+
+
+<h3><a id="fx-freeverb"></a>Freeverb — Reverberation</h3>
+
+<p>This effect implements
+<a href="https://ccrma.stanford.edu/~jos/pasp/Freeverb.html">Freeverb</a>,
+a Schroeder reverberator which coefficients have been carefully tweaked.
+It has been designed by Jezar at Dreampoint and released in the public domain.
+The effect is able to generate a stereo signal.</p>
+
+<p class="var">Reflectivity</p>
+<p>This parameter is the reverberation time.
+The higher, the more reflective are the simulated walls, and the longer the
+reverberation.
+This time is also dependent on the <var>Damping</var>.</p>
+
+<p class="var">Damping</p>
+<p>Specifies at which point the high frequencies are attenuated during the
+reverberation.</p>
+
+<p class="var">Level wet</p>
+<p>Level of the reverberated signal in the effect output.</p>
+
+<p class="var">Level dry</p>
+<p>Level of the original signal in the effect outpout.</p>
+
+<p class="var">Width</p>
+<p>Stereo spread of the effect.
+At 0%, the reverberation is completely mono, and completely stereo at 100%.
+Note: both channels are always processed independantly, like two mono
+reverberations.
+The parameter only controls the output mixing.</p>
+
+<p class="var">Mode</p>
+<p>When the mode <span class="ui">Freeze</span> is activated, the input
+of the reverberation is cut and the reverberated sound is frozen.
+It can be interresting to link this parameter to a footswitch.</p>
+
+<p class="var">Low cut</p>
+<p>Cutoff frequency of the low-cut filter on the reverberation output.</p>
+
+<p class="var">High cut</p>
+<p>Cutoff frequency of the high-cut filter on the reverberation output.</p>
+
+
+
+<h3><a id="fx-freq-shift"></a>Frequency Shifter</h3>
+
+<p>This is a pretty simple effect that shifts all the frequencies of the sound.
+As the frequencies are added and not multiplied, the harmonic ratios are lost
+and the sound becomes atonal or inharmonic, approaching a bell sound.
+However, when the shift frequency falls on a specific note, some linked notes
+(octave, fifth, quarte...) start to sound right again and take a very special
+color.</p>
+<p>The frequency translator looks like the ring modulator, but it does not
+reflect the spectral image as is the case for the latter.</p>
+
+<p class="var">Frequency</p>
+<p>Shiftig frequency, in Hz.
+It can be negative or positive.</p>
+
+
+
+<h3><a id="fx-tremolo-harm"></a>Harmonic Tremolo — Two-band tremolo</h3>
+
+<p>This is a variation of the <a href="#fx-tremolo">tremolo</a>
+effect found in old Fender Brownface amplifiers.
+The sound is divided into two bands, bass and treble.
+The two bands are modulated in amplitude by two opposite signals from the LFO.
+The sound alternates between treble and bass.</p>
+
+<p class="var">Speed</p>
+<p>Oscillation speed, in Hz.</p>
+
+<p class="var">Amount</p>
+<p>Amount of oscillations.
+At 100%, the modulated sound is silent on the lowest part of the LFO.
+It is possible to go far beyond this value in order to create a harder effect,
+sounding like a gate.</p>
+
+<p class="var">Bass</p>
+<p>Amplitude of the LFO signal used to modulate the bass frequencies.
+At 0, the sound is not modulated.</p>
+
+<p class="var">Treble</p>
+<p>Amplitude of the LFO signal used to modulate the treble.
+At 0, the sound is not modulated.
+The best results are obtained when the amplitudes of the bass and treble
+are of opposite signs.</p>
+
+<p class="var">Cutoff frequency</p>
+<p>Split frequency between the bass and the treble, in Hz.</p>
+
+<p class="var">Gain saturation</p>
+<p>Indicates to what extent the positive parts of the LFO should be saturated
+in order to avoid exaggerated volume rise when <var>Amount</var> takes high
+values.</p>
+
+<p class="var">Bias</p>
+<p>Offset to apply to the values generated by the LFO to shift its curve in
+the low or high amplitudes.
+This creates a more or less dense sound, especially when <var>Amount</var> is
+high.
+In this case, the tremolo behaves like a gate and this parameter allows to set
+its opening time.</p>
+
+<p class="var">Tone</p>
+<p>Allows you to adjust the ratio between bass and treble.
+Negative values reduce high frequencies and positive values reduce low
+frequencies.</p>
+
+<p class="var">Stereo</p>
+<p>When the effect output is stereo, this parameter widens the stereo image,
+especially when the source is mono.
+Modulation is done with an opposite sign on both channels.
+Be careful, if the sound goes back to mono later, the effect is lost.</p>
+
+<p class="var">Waveform, Sample and hold, Smoothing, Chaos amount, Phase
+distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
+Phase set</p>
+<p>These parameters are identical to the ones from the
+<a href="#fx-lfo">LFO</a>.</p>
+
+
+
+<h3><a id="fx-hypercomb"></a>Hypercomb — Polyphonic comb filter</h3>
+
+<p>This effects adds a metallic reverberating texture, as if the sound was
+played through a pipe.
+Thus, it becomes pitched, and it is possible to tune the pitch on one or more
+notes (up to 8).</p>
+<p>Additionally, each voice has a filter within its feedback loop.
+It can resonate (allowing self-oscillation) and cut the high frequencies.</p>
+
+<p class="var">Tune</p>
+<p>Global transpose for all the voices, in semitones.</p>
+
+<p class="var">Duration</p>
+<p>Approximate duration of the reverberating tail.
+This is the time to reach &minus;60dB (RT60).</p>
+
+<p class="var">Volume</p>
+<p>Global voice volume, in dB.</p>
+
+<p class="var">Filter frequency</p>
+<p>Filter cutoff frequency.
+It affects the resonant peak as well as the high shelf.</p>
+
+<p class="var">Filter resonance</p>
+<p>Peak resonance amount.
+When set high, the voice self-oscillates.
+When the resonance is active, the time given by the <var>Duration</var>
+parameter becomes more approximate.</p>
+
+<p class="var">Filter damping</p>
+<p>Damping level for the high frequencies, above <var>Filter
+frequency</var>.</p>
+
+<p class="var">Voice 1–8 polarity</p>
+<p>Comb feedback polarity for the given voice.
+This parameter can take three values:</p>
+<table>
+<tr><td><span class="ui">Off</span></td><td>Voice is deactivated (mute).</td></tr>
+<tr><td><span class="ui">Pos</span></td><td>Positive feedback. This mode gives a clear and bright sound.</td></tr>
+<tr><td><span class="ui">Neg</span></td><td>Negative feedback. The pitched effect is less pronounced.</td></tr>
+</table>
+
+<p class="var">Voice 1–8 note</p>
+<p>Pitch of the comb, selected as a note.</p>
+
+<p class="var">Voice 1–8 finetune</p>
+<p>Finetuning of the comb pitch, in cents.</p>
+
+<p class="var">Voice 1–8 duration multiplier</p>
+<p>Multiplier for the duration given by <var>Duration</var>.
+This parameter allows different durations for each voice.</p>
+
+<p class="var">Voice 1–8 gain</p>
+<p>Relative voice volume, in dB.</p>
+
+
+
+<h3><a id="fx-imp-fix"></a>Input Impedance Fix</h3>
+
+<p>This effect allows to correct the input impedance of the sound card, which
+can be a bit low, resulting in a slight attenuation of the treble.
+It is a simple first-order linear high-shelf filter.</p>
+<p>The effect should be calibrated using an amp with a setting as transparent
+as possible (clear sound, no equalization).
+Then we compare the sound of the guitar directly connected with the one coming
+from the pedalboard with just this effect.</p>
+
+<p class="var">Cutoff frequency</p>
+<p>Cutoff frequency.</p>
+
+<p class="var">Level</p>
+<p>Treble amplification level.</p>
+
+
+
+<h3><a id="fx-nzbl"></a>Noise Bleach — Noise gate</h3>
+
+<p>Noise Bleach is a kind of noise gate.
+It splits the input signal spectrum into adjacent frequency bands covering the
+entire audible spectrum.
+The sound on each band passes only if it is above a certain threshold.</p>
+<p>To adjust the device, you need the noise without any other “useful” sound.
+Start by setting the global level to &minus;100dB.
+Then, for each band, gradually raise its threshold.
+Stop when sound changes and noise is actually removed.
+Do not go further, this would be harmful for the audio content.</p>
+<p>Repeat on as many bands as necessary.
+If required, balance the global level with the single band levels.</p>
+
+<p class="var">Global level</p>
+<p>This is the overall filter rejection level, to be adapted according to the
+noise level.
+All filter levels are scaled according to this parameter.
+Usual values are in the &minus;100dB range.</p>
+
+<p class="var">Band x-y level</p>
+<p>Relative filter threshold for the specified frequency range, in dB.
+At &minus;&infin;, the band filter is disabled.</p>
+
+
+
+<h3><a id="fx-nzcl"></a>Noise Chlorine — Noise gate</h3>
+
+<p>Noise Chlorine is a kind of noise gate, similar to
+<a href="#fx-nzbl">Noise Bleach</a>.
+It consists of a series of notch filters that reject the target signal only
+below a certain threshold.
+For example the 50 or 60Hz from the mains and its harmonics.
+But it can also be used as a broadband noise filter as a cheap alternative to
+<a href="#fx-nzbl">Noise Bleach</a>.</p>
+
+<p>To adjust the device, you need the noise without any other “useful” sound.
+Start by setting the global level to &minus;100dB.
+Then, for each band, select a frequency (intuitively).
+We can start with a selectivity of 0.5 which is broad enough to start
+with.</p>
+<p>Gradually raise the band threshold.
+Stop when sound changes and noise is actually removed.
+Do not go further, this would be harmful for the audio content.
+Then adjust the frequency and selectivity as needed.
+If the noise is spread over a large part of the spectrum, the selectivity can
+be kept low by spacing all bands by one octave.</p>
+<p>Repeat on as many bands as necessary.
+If required, balance the global level with the single band levels.</p>
+
+<p class="var">Global level</p>
+<p>This is the overall filter rejection level, to be adapted according to the
+noise level.
+All notch filter levels are scaled according to this parameter.
+Usual values are in the &minus;100dB range.</p>
+
+<p class="var">Notch 1–8 frequency</p>
+<p>Notch filter cutoff frequency, in Hz.</p>
+
+<p class="var">Notch 1–8 selectivity (Q)</p>
+<p>Filter selectivity.
+The higher the selectivity, the thinner the filtered band.</p>
+
+<p class="var">Notch 1–8 level</p>
+<p>Relative filter threshold for the specified frequency range, in dB.
+At &minus;&infin;, the band filter is disabled.</p>
+
+
+
+<h3><a id="fx-onsetdetector"></a>Onset detector</h3>
+
+<p>This effect is not an audio effect but a controller working by analysing
+the incoming sound.
+It can be inserted at any point in the processing chain, it will not modify
+the sound.</p>
+<p>It can detect the beginning and the end of notes or chords and turn this
+information into a control signal to modulate other effets.
+It is actually very simple and can handle only one note or chord at a
+time.
+Actually, it’s more a strum and silence detector.</p>
+<p>There are two output signals:</p>
+<ol style="list-style-type:decimal;">
+<li>Attack signal.
+Takes a value &gt; 0 if an attack is detected, 0 otherwise.
+The value is related to the detected velocity.</li>
+<li>Release signal.
+1 if a release is detected, 0 otherwise.</li>
+</ol>
+<p>Note: the detector can exhibit a few milliseconds of latency.</p>
+
+<p class="var">Velocity clipping</p>
+<p>Indicates if the detected note velocity should be clipped to a maximum of
+1.</p>
+
+<p class="var">Attack threshold</p>
+<p>Minimum level for an attack to be detected, in dB.
+The lower, the more sensitive.</p>
+
+<p class="var">Attack ratio</p>
+<p>Volume increase to detect an attack, in percent.
+The lower, the more sensitive, but can lead to more false triggers.</p>
+
+<p class="var">Release threshold</p>
+<p>Maximum level for a release to be detected, in dB.
+The higher, the more sensitive.</p>
+
+<p class="var">Release ratio</p>
+<p>Volume decrease to detect a release, in percent.
+The lower, the more sensitive, but can lead to unexpected note ends.</p>
+
+
+
+<h3><a id="fx-peq"></a>Parametric Equalizer</h3>
+
+<p>It is a classic 4-, 8- or 16-band parametric equalizer (depending on the
+selected option).
+Each band is made of a second-order filter.</p>
+
+<p class="var">Band 1/2/3/4 Type</p>
+<p>Filter type for the band:</p>
+<table>
+<tr><td><span class="ui">Peak</span></td><td>Bell curve. Boosts or cuts the area around the frequency.</td></tr>
+<tr><td><span class="ui">Low&nbsp;shelf</span></td><td>Low-frequency shelf. The reference frequency is the middle of the transition between the main part and the shelf.</td></tr>
+<tr><td><span class="ui">High&nbsp;Pass</span></td><td>High-pass filter</td></tr>
+<tr><td><span class="ui">High&nbsp;shelf</span></td><td>High-frequency shelf</td></tr>
+<tr><td><span class="ui">Low&nbsp;Pass</span></td><td>Low-pass filter</td></tr>
+</table>
+
+<p class="var">Band 1/2/3/4 Frequency</p>
+<p>Band refrence frequency.</p>
+
+<p class="var">Band 1/2/3/4 Q</p>
+<p>Band selectivity or quality factor.
+For the bell filter, the higher <var>Q</var>, the thinner the bell.
+For shelves, the higher <var>Q</var>, the steeper the slope.
+But if <var>Q</var>&gt;0.71, a resonance and a notch start to show at both
+ends of the shelves.
+Same with the high- and low-pass filters, with a resonance only.</p>
+
+<p class="var">Band 1/2/3/4 Gain</p>
+<p>Gain of the bell or shelf
+No effect on the high- and low-pass filters.</p>
+
+<p class="var">Band 1/2/3/4 Bypass</p>
+<p>Deactivate a single band.</p>
+
+<h4>Graphic editing</h4>
+
+<p>You can also adjust the equalizer settings with an immediate graphical
+preview.</p>
+<div class="pic"><img src="fx-gui-peq.png" /></div>
+<p>The parameters can be scrolled as usual, they are displayed one by one at
+the bottom left.
+The very first parameter <span class="ui">R</span> gives the display vertical
+scale, in dB.</p>
+<p>The dots at the bottom right give the precision of the changes obtained
+with the <span class="keya">←</span> and <span class="keya">→</span> keys.
+This precision can be changed with <span class="keya">Select</span>.
+<span class="keya">Esc</span> to go back to the main parameter screen.</p>
+
+
+
+<h3><a id="fx-phaserap"></a>Phaser AP</h3>
+
+<p>Classic phaser, made of a cascade of all-pass filters with feedback.</p>
+
+<p class="var">Speed</p>
+<p>Oscillation speed.</p>
+
+<p class="var">Mix</p>
+<p>Ratio of phased signal in the final mix.</p>
+
+<p class="var">Feedback</p>
+<p>Amount of feedback from the phased signal.
+The higher the feedback, the more pronounced the effect.</p>
+
+<p class="var">Number of stages</p>
+<p>Order for the phasing filter.</p>
+
+<p class="var">Minimum frequency</p>
+<p>Minimum cutoff frequency for the phasing filter, in Hz.
+The oscillator make the filter cutoff frequency vary between the minimum and
+maximum frequencies.</p>
+
+<p class="var">Maximum frequency</p>
+<p>Maximum cutoff frequency for the phasing filter, in Hz.
+By putting the maximum frequency at the same value as the minimum frequency,
+it is possible to stop the oscillation and to use the phaser as fixed filter
+for coloring the sound.</p>
+
+<p class="var">Feedback source</p>
+<p>Number of the stage from which the feedback signal is taken.</p>
+
+<p class="var">Waveform, Sample and hold, Smoothing, Chaos amount, Phase
+distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
+Phase set</p>
+<p>These parameters are identical to the ones from the
+<a href="#fx-lfo">LFO</a>.</p>
+
+
+
+<h3><a id="fx-phaserht"></a>Phaser HT</h3>
+
+<p>This modulation effect works a little differently from phasers
+but uses the same principles.
+However, it has a very typical sound.
+It can generate a stereo signal from a mono input.</p>
+<p>An optional band-pass filter allows the selection of a range of
+frequencies to be kept from the phased sound.
+This essentially makes it possible to limit the low frequencies when the
+settings are a bit strong.</p>
+<p>It is also possible to obtain a “barberpole phaser” effect, which gives the
+impression of having tones that go up or down endlessly.<p>
+
+<p class="var">Speed</p>
+<p>Oscillation speed.</p>
+
+<p class="var">Depth</p>
+<p>This is the number of stage of the phaser, amongst
+<span class="ui">4</span>, <span class="ui">8</span>,
+<span class="ui">16</span> et <span class="ui">32</span>.
+The number of stages changes the general sound color.
+The larger, the greater the number of notches.</p>
+
+<p class="var">Feedback level</p>
+<p>Amount of signal fed back to the phaser input.
+This feedback is saturated, so it may be interesting to push the input signal
+level a little to enrich the result.</p>
+
+<p class="var">Feedback color</p>
+<p>Changes the feedback tone color.</p>
+
+<p class="var">Phase mix</p>
+<p>Amount of phase-shifted signal added to the original signal.
+Adding both is what produces the phasing effect.
+This effect is maximum at 50%.</p>
+
+<p class="var">Phase offset</p>
+<p>This parameter allows the phase of the oscillations to be moved relative to
+its natural cycle.</p>
+
+<p class="var">Phase set</p>
+<p>Manually sets the phase of oscillations, in degrees.
+It is interesting to modulate this parameter with an external LFO in frozen
+mode.
+It gives an oscillating effect closer to a conventional phaser.</p>
+
+<p class="var">Hold</p>
+<p>Freezes the phaser oscillations.</p>
+
+<p class="var">BPF freq</p>
+<p>Middle band-pass filter frequency, for the phased signal.</p>
+
+<p class="var">BPF selectivity</p>
+<p>Selects more or less accurately a band of frequencies with the band-pass
+filter.
+When this parameter is minimum, the filtering is deactivated.</p>
+
+<p class="var">Direction</p>
+<p>Direction of the oscillations on the left channel.
+<span class="ui">Down</span> makes the notches go down,
+and <span class="ui">Up</span> makes them go up.</p>
+
+<p class="var">Mono phase mix</p>
+<p>Specifies how the phase-shifted signal should be mixed with the main signal
+when the output is mono.
+<span class="ui">Left</span> uses only one of both signals, leading to a tone
+going always in the same direction indicated by <var>Direction</var>.
+<span class="ui">Mixed</span> mixes both signals going up and down, producing
+a kind of oscillation.</p>
+
+<p class="var">Stereo phase mix</p>
+<p>Indicates how the phased signal should be processed when the effect output
+is stereo.</p>
+<table>
+<tr><td><span class="ui">Spat&nbsp;mix</span></td><td>Input channels are mixed before being phased.
+The spectral notches in the left and right channels sweep in opposite directions, which gives a strong stereo image, including with a mono input signal.</td></tr>
+<tr><td><span class="ui">Spat&nbsp;sep</span></td><td>Like <span class="ui">Spat mix</span>, but the input channels are processed independently.</td></tr>
+<tr><td><span class="ui">Bi-mono</span></td><td>Left and right channels are processed independantly and use the <var>Mono phase mix</var> setting to specify the direction of the notch sweeps.</td></tr>
+</table>
+
+<p class="var">All-pass delay</p>
+<p>This parameter allows to introduce a kind of complementary micro-delay in
+the phase-shifted signal.
+This increases the number of sweeping notches in the spectrum.
+The spectral distribution of these notches is guided by the <var>All-pass
+coefficient</var> value.</p>
+
+<p class="var">All-pass coefficient</p>
+<p>Coefficient of the phase-shift filters used to achieve a micro-delay.
+At 0, the filter behaves like a pure delay.
+A negative value groups the notches on the bottom of the spectrum, and a
+positive value on the top.
+When the coefficient is &minus;0.5, with a delay of about 700µs and a low
+value for <var>Depth</var>, the notch distribution is almost harmonic, which
+makes it possible to obtain an audio illusion similar to the
+Sherpard-Risset.</p>
+
+
+
+<h3><a id="fx-pitchdetector"></a>Pitch Detector</h3>
+
+<p>This effect is not an audio effect but a controller working by analysing
+the incoming sound.
+It can be inserted at any point in the processing chain, it will not modify
+the sound.</p>
+<p>The pitch detector can retrieve the pitch of the played note and turn it
+into a control signal to modulate other effects.
+It work only on monophonic, pitched sounds.
+Chords and non-pitched sounds are not supported.</p>
+
+<p class="var">Minimum frequency</p>
+<p>Minimum detected frequency, in Hz.
+Any note below this frequency will be ignored.
+This parameter impacts the processing power taken by the effect.</p>
+
+<p class="var">Maximum frequency</p>
+<p>Fréquence maximum de détection, en Hz.
+Any note above this frequency will be ignored.</p>
+
+<p class="var">Output type</p>
+<p>Indicates how the detected note is formated.</p>
+<table>
+<tr><td><span class="ui">Pitch</span></td><td>The note is given in octave.
+0 is the Middle C and &minus;10 indicates that the detection has failed.</td></tr>
+<tr><td><span class="ui">Freq</span></td><td>The note is given in kHz
+(kilohertz).
+When the detection fails, it outputs the frequency of the last known note.
+If there isn’t any last known note, the signal is 0.</td></tr>
+</table>
+
+
+
+<h3><a id="fx-distpwm"></a>Pulse Width Modulation Distortion</h3>
+
+<p>This is an almost infinite-gain distortion, the output signal is
+rectangular.
+Only the rising wave fronts are taken from the input signal.
+Downward wave fronts are generated automatically after a fixed period of time,
+which gives the sound a “PWM oscillator” color, like with a synthesizer.</p>
+
+<p class="var">Pulse width</p>
+<p>Pulse duration, in milliseconds.
+The shorter the duration, the more filled the sound spectrum is, especially
+in high frequencies, and the lower the apparent volume.
+The parameter is automatically mapped to the expression pedal.</p>
+
+
+
+<h3><a id="fx-distpwm2"></a>Pulse Width Modulation Distortion 2</h3>
+
+<p>This effect is an improvement over the PWM Distortion 1.
+It generates waves for multiple octaves, offers serveral waveforms and an
+envelope control with sustain and gate settings.</p>
+<p>There are 4 voices, or oscillators (or octaves):</p>
+<table>
+<tr><td><span class="ui">Standard</span></td><td>This is the normal channel,
+pulse are generated on rising edges.</td></tr>
+<tr><td><span class="ui">Double</span></td><td>Pulse are generated on rising
+and falling edges, but this is not exactly an octave-doubler.</td></tr>
+<tr><td><span class="ui">Sub 1</span></td><td>Pulse are generated every 2
+rising edges, lowering the tone from one octave.</td></tr>
+<tr><td><span class="ui">Sub 2</span></td><td>Pulse are generated every 4
+rising edges, lowering the tone from two octaves.</td></tr>
+</table>
+
+<p class="var">Pre-filter</p>
+There is a combination of low-pass and high-pass filters at the input to tame
+harmonics and remove DC components.
+This parameters allows to select the stength of the filtering.
+With strong filtering, the resulting wave is cleaner, but sustain may be
+shorter on the higher notes.<p>
+<table>
+<tr><td><span class="ui">Weak</span></td><td>2-pole low-pass filtering at 1.5kHz</td></tr>
+<tr><td><span class="ui">Mild</span></td><td>Additional LPF at 500Hz and 5Hz HPF</td></tr>
+<tr><td><span class="ui">Strong</span></td><td>Additional LPF cutoff frequency
+is lowered to 50Hz</td></tr>
+</table>
+
+<p class="var">Detection method</p>
+Selects which method is used to detect the edges and trigger the pulses.<p>
+<table>
+<tr><td><span class="ui">0-X</span></td><td>The zero-crossing method gives a
+rich content, especially with chords, but is quite sensitive to octave
+errors.</td></tr>
+<tr><td><span class="ui">Peak</span></td><td>The peak method sounds more like
+a monophonic pitch tracking and is very clean and stable.
+However sometimes it may output short gaps of silence, and sounds poor on
+chords.</td></tr>
+</table>
+
+<p class="var">Threshold</p>
+For the zero-crossing detection method, it sets the level (in dB) to cross to
+detect a wave edge.
+The lower, the longer the sustain, but the more sensitive to noise.
+Using a strong pre-filter may require to lower the threshold.<p>
+
+<p class="var">Density</p>
+Adjusts the output volume to the input volume.
+A null value totally compensates the volume, and 100% keeps the distortion
+untouched.
+A low value gives more percussive and less natural sounds.<p>
+
+<p class="var">Sustain level</p>
+When the volume is compensated by the <var>Density</var> parameter, it
+sets a level (in dB) below which the volume stops reducing.
+It is useful to keep only the attacks from the original sound while keeping
+the sustain of a high-gain distortion.<p>
+
+<p class="var">Gate level</p>
+Level in dB below which the output sound is cut.
+This helps to counter clicks and pops appearing when the input volume is
+low and dominated by noise.<p>
+
+<p class="var">Pulse type</p>
+For a give oscillator, selects which type of waveform is triggered when an
+edge is detected in the input.
+Singles pulses sound like PWM synthesis, whereas continuous waveform sound
+like sync-oscillators.<p>
+<table>
+<tr><td><span class="ui">Rect</span></td><td>This is the original waveform,
+just a single square pulse. It has a powerful sound a rich harmonic content.</td></tr>
+<tr><td><span class="ui">Ramp</span></td><td>A single rising sawtooth.</td></tr>
+<tr><td><span class="ui">Cycle</span></td><td>A single sine-like cycle.
+Harmonic content is low, it gives a softer sound.</td></tr>
+<tr><td><span class="ui">Sine</span></td><td>A continuous sine-like waveform.</td></tr>
+<tr><td><span class="ui">Saw</span></td><td>A continuous sawtooth waveform.</td></tr>
+</table>
+
+<p class="var">Level</p>
+Volume in dB of the selected oscillator.<p>
+
+<p class="var">Pulse frequency</p>
+<p>Pulse frequency of the selected oscillator, in Hz (equivalent to twice
+the pulse duration in the original PWM Distortion).
+The highest the frequency, the more filled the sound spectrum is, especially
+in the high part of the spectrum, but the lower the apparent volume with
+single pulses.</p>
+
+
+
+<h3><a id="fx-sgirlz"></a>SiemensGirlz — Creative delay</h3>
+
+<p>SiemensGirlz is a relatively complex creative delay effect for obtaining a wide variety of sounds, especially when the parameters are modulated by LFOs.</p>
+<pThe sound passes through 4 taps, kind of simple echoes without repetition.
+The four taps and the original signal feed a reverb.
+This reverberated signal enters one or two feedback delay lines.
+Effects can be applied to the delayed signal and fed back.
+The feedback of the two lines can also cross.</p>
+<p>The delay line effects are as follows, in this order:</p>
+<ul>
+<li>Resonant filter</li>
+<li>Distortion</li>
+<li>High-shelf filter</li>
+<li>Frequency shifter</li>
+</ul>
+<p>In addition, a ducking system attenuates or mutes the output of the
+feedback lines according to the volume of the input, for example to improve
+the clarity of the original sound while keeping the delay effect when the
+input is silent.</p>
+
+<h4>General parameters</h4>
+
+<p class="var">Tap gain in</p>
+<p>Amount of source signal that passes through all taps, in percent.
+Once automated, this parameter allows to cut or reactivate the input of the taps.</p>
+
+<p class="var">Tap global volume</p>
+<p>General volume of all taps in the final mix, in dB.</p>
+
+<p class="var">Dry volume</p>
+<p>Original sound volume in the final mix, in dB.</p>
+
+<p class="var">Dry spread</p>
+<p>Distribution of the original sound in the two delay lines.
+At 0%, the sound goes in the first line exclusively, and at 100%, in the
+second line.
+The parameter has no effect when only one line is activated.</p>
+
+<p class="var">Freeze lines</p>
+<p>Cuts the input of the lines and increases their feedback level to 100%.
+This freezes the delay lines, repeating their content infinitely.
+The sound continues to be gradually altered by the line effects.</p>
+
+<p class="var">Number of feedback lines</p>
+<p>Number of feedback delay lines, 0, 1 ou 2.</p>
+
+<p class="var">Cross-freedback</p>
+<p>Cross-feedback level.
+At 0%, each line is independent.
+At 100%, the lines swap their feedback signal.</p>
+
+<p class="var">Ducking sensitivity</p>
+<p>The ducking reference sensitivity, in decibels.
+When ducking is activated on a line, the line is switched off when the volume
+of the input signal exceeds a certain threshold.
+This parameter sets the latter.</p>
+
+<p class="var">Ducking time</p>
+<p>Time constant for the volume analyzer.
+It indicates the attack time.
+The release time is automatically deducted.</p>
+
+<h4>Tap parameters</h4>
+
+<p class="var">Tap input gain</p>
+<p>Input tap level, in percent.</p>
+
+<p class="var">Tap spread</p>
+<p>Distribution of the tap output in the two delay lines.
+The parameter works as <var>Dry spread</var>.</p>
+
+<p class="var">Tap delay time, base</p>
+<p>Main tap delay time, in milliseconds.</p>
+
+<p class="var">Tap delay time, relative</p>
+<p>Multiplier on the main delay time.
+The mapping of this parameter is linear, which make easier the creation
+of special effects by automating it.</p>
+
+<p class="var">Tap pitch</p>
+<p>Tap pitch shifting, in semi-tones.
+This is done by internally producing two alternately overlapping resampled
+taps.
+Requires a minimum delay on the tap to be effective.</p>
+
+<p class="var">Tap low-cut frequency</p>
+<p>Cutoff frequency of the low-cut filter applied between the tap output and
+the final mix.</p>
+
+<p class="var">Tap high-cut frequency</p>
+<p>Cutoff frequency of the high-cut filter applied between the tap output and
+the final mix.</p>
+
+<p class="var">Tap pan</p>
+<p>Panoramic balance for the tap output in the final mix.</p>
+
+<h4>Feedback delay line parameters</h4>
+
+<p class="var">Line input gain</p>
+<p>Line input gain, percent.</p>
+
+<p class="var">Line delay time, base</p>
+<p>Main line delay time, milliseconds.</p>
+
+<p class="var">Line delay time, relative</p>
+<p>Multiplier on the main delay time.
+The mapping of this parameter is linear, which make easier the creation
+of special effects by automating it.</p>
+
+<p class="var">Line speed</p>
+<p>Speed of the BBD (bucket brigade device) emulator, in percent.
+Delay times specified in the previous parameters are valid when the parameter
+is set to 100%.
+When the line is faster, delay times become sorter.
+They become longer when the line goes slower.
+Change the line speed makes possible to achieve characteristic pitch
+effects.</p>
+
+<p class="var">Line pitch</p>
+<p>Line pitch shifting, in semi-tones.</p>
+
+<p class="var">Line feedback</p>
+<p>Line feedback level, percent.
+The higher, the longer the echoes repeat.</p>
+
+<p class="var">Line low-cut frequency</p>
+<p>Cutoff frequency of the low-cut filter applied between the line output and
+the final mix.</p>
+
+<p class="var">Line high-cut frequency</p>
+<p>Cutoff frequency of the high-cut filter applied between the line output and
+the final mix.</p>
+
+<p class="var">Line pan</p>
+<p>Panoramic balance for the line output in the final mix.</p>
+
+<p class="var">Line volume</p>
+<p>Line output volume in the final mix.</p>
+
+<p class="var">Line ducking amount</p>
+<p>Ducking amount applied to the delay line.
+The effect depends on the <var>Ducking sensitivity</var> and the <var>Ducking
+time</var> parameters.</p>
+
+<p class="var">Line filter type</p>
+<p>Type of resonant filter used in the feedback processing chain.</p>
+<table>
+<tr><td><span class="ui">PK</span></td><td>Bell filter</td></tr>
+<tr><td><span class="ui">LP</span></td><td>Low-pass filter</td></tr>
+<tr><td><span class="ui">BP</span></td><td>Band-pass filter</td></tr>
+<tr><td><span class="ui">HP</span></td><td>High-pass filter</td></tr>
+</table>
+
+<p class="var">Line filter frequency</p>
+<p>Cutoff frequency of the resonant filter, in Hz.</p>
+
+<p class="var">Line filter resonance</p>
+<p>Resonance of the filter, in dB.</p>
+
+<p class="var">Line filter selectivity</p>
+<p>Selectivity (Q) of the resonant filter.</p>
+
+<p class="var">Line distortion amount</p>
+<p>Distortion amount in the feedback chain, percent.</p>
+
+<p class="var">Line distortion foldback</p>
+<p>Shape of the distortion.
+Changes the harmonic content created by the distortion.</p>
+
+<p class="var">Line high shelf frequency</p>
+<p>High-shelf filter cutoff frequency, applied after the distortion.</p>
+
+<p class="var">Line high shelf level</p>
+<p>Level of the high shelf, dB.
+Can damp the harsh frequencies created by the distortion.</p>
+
+<p class="var">Line frequency shifting</p>
+<p>Shifting frequency for the frequency shifter, in Hz.
+0Hz is neutral (no shifting).</p>
+
+<p class="var">Line reverb mix</p>
+<p>Amount of reverberated signal entering the delay line, in precent.</p>
+
+<p class="var">Line reverb decay</p>
+<p>Parameter related to the reverberation time.
+The higher, the longer the reverberation.</p>
+
+<p class="var">Line reverb damp</p>
+<p>Damp the high frequencies in the reverberation tail.
+At 100%, the damping is maximum.
+This parameter shorten the actual reverberation time.</p>
+
+
+
+<h3><a id="fx-disto"></a>Simple Distortion</h3>
+
+<p>It is a quite simple asymmetric saturation, with a high-pass filter at the input in order to remove DC and to clean up a little the bass.</p>
+
+<p class="var">Distortion gain</p>
+<p>Distortion gain in dB.</p>
+
+<p class="var">HPF frequency</p>
+<p>Input low-cut filter cutoff frequency, in Hz.</p>
+
+<p class="var">Bias</p>
+<p>Polarization bias.
+Increasing the bias allows a more asymmetrical distortion and thus favours
+even harmonics.
+Beware, a too high bias tends to cut the signal and gives the impression of a
+defective circuit.</p>
+
+
+
+<h3><a id="fx-speaker-emu"></a>Speaker Emulator</h3>
+
+<p class="var">Type</p>
+<p>Selects a type of emulation among those proposed.
+Mid and Treble tone controls only work for the type
+<span class="ui">0</span>.</p>
+
+<p class="var">Mid level</p>
+<p>Level of the mid-high bump.</p>
+
+<p class="var">Mid frequency</p>
+<p>Frequency of the mid-high bump.</p>
+
+<p class="var">Treble level</p>
+<p>Level of the treble.</p>
+
+<p class="var">Treble frequency</p>
+<p>Frequency separating the treble drop from the mid-high bump.</p>
+
+<p class="var">Comb level</p>
+<p>Level of the comb filter.
+Helps to make the spectral shape a bit more complex.</p>
+
+<p class="var">Channels</p>
+<p>Indicates on which channels the emulation applies.
+Can be used to direct a channel on a mixing desk and another one on
+a guitar amp.</p>
+
+
+
+<h3><a id="fx-testgen"></a>Test Generator — Test signal generator</h3>
+
+<p class="var">State</p>
+<p>Activates or deactivates the generator.</p>
+
+<p class="var">Type</p>
+<p>The current test signal:</p>
+<table>
+<tr><td><span class="ui">Pink noise </span></td><td>Pink noise (&minus;3dB/oct) covering 12 octaves</td></tr>
+<tr><td><span class="ui">White noise</span></td><td>White noise</td></tr>
+<tr><td><span class="ui">Tone       </span></td><td>Single fixed sine tone</td></tr>
+<tr><td><span class="ui">Sweep      </span></td><td>Sine tone sweeping across the whole spectrum</td></tr>
+<tr><td><span class="ui">Pulse      </span></td><td>Broadband impulse</td></tr>
+</table>
+
+<p class="var">Level</p>
+<p>Nominal level of the output signal</p>
+
+<p class="var">Noise correlation</p>
+<p>For multichannel noise output, selects a correlated (duplicated mono)
+or uncorrelated source.</p>
+
+<p class="var">Tone frequency</p>
+<p>Frequency in Hz of the fixe tone signal.</p>
+
+<p class="var">Sweep duration</p>
+<p>Duration of a frequency sweep in seconds.</p>
+
+<p class="var">Pause</p>
+<p>Pause duration between two seeps or imulses.
+When set to 0, the sweep and impulses stop repeating.
+To restart the signal, manually change the activation or the signal
+type parameters.</p>
+
+
+
+<h3><a id="fx-tremolo"></a>Tremolo</h3>
+
+<p>The tremolo effect is a kind of oscillating volume, modulated in amplitude by an LFO.</p>
+
+<p class="var">Speed</p>
+<p>Oscillation speed, in Hz.</p>
+
+<p class="var">Amount</p>
+<p>Amount of oscillations.
+At 100%, the signal is silent on the lowest LFO values.
+It is possible to go far beyond this value in order to create a harder effect,
+sounding like a gate.</p>
+
+<p class="var">Waveform</p>
+<p>LFO waveform:</p>
+<table>
+<tr><td><span class="ui">Sine    </span></td><td></td></tr>
+<tr><td><span class="ui">Square  </span></td><td></td></tr>
+<tr><td><span class="ui">Triangle</span></td><td></td></tr>
+<tr><td><span class="ui">Saw Up  </span></td><td></td></tr>
+<tr><td><span class="ui">Saw Down</span></td><td></td></tr>
+</table>
+
+<p class="var">Gain saturation</p>
+<p>Indicates to what extent the positive parts of the LFO should be saturated
+in order to avoid exaggerated volume rise when <var>Amount</var> is high.</p>
+
+<p class="var">Bias</p>
+<p>Offset to apply to the value generated by the LFO in order to move its curve
+in the low or high amplitudes.
+This creates a more or less dense sound, especially when <var>Amount</var> is
+high.
+In this case, the tremolo behaves like a gate and this parameter allows to set
+its opening time.</p>
+
+
+
+<h3><a id="fx-wah"></a>Wah-wah</h3>
+
+<p>It is a wah-wah effect more or less modelled on the Cry Baby pedal.
+The range for the cutoff frequencies has been extended, which makes it
+possible to obtain a devastating sound in the low frequencies.</p>
+
+<p class="var">Frequency</p>
+<p>Filter cutoff frequency.
+This parameter is linked by default to the expression pedal.
+To get the sound of a classic wah pedal, reduce the interval to about
+400–1600Hz.</p>
+
+<p class="var">Selectivity</p>
+<p>Filter resonance.
+The higher the value, the more coloured the filter, generating a distinct
+tone.</p>
+
+
+
+<h3><a id="fx-wah2"></a>Wah-wah (Cry Baby)</h3>
+
+<p>This effect is a precise emulation of different Cry Baby wah-wah models.
+The modeling of these pedals and the resulting algorithm were written by
+<a href="http://cackleberrypines.net/transmogrifox/src/bela/inductor_wah_C_src">Transmogrifox</a>.</p>
+
+<p class="var">Position</p>
+<p>Position of the pedal, which corresponds to the cutoff frequency of the
+filter.
+This parameter is linked by default to the expression pedal.</p>
+
+<p class="var">Type</p>
+<p>Selects the Cry Baby model.</p>
+
+
+
+<h3><a id="fx-adsr"></a>ADSR — Control envelope</h3>
+
+<p>This effect is only available in the control signal generator category
+since it does not process any audio signals, either input or output.
+It generates an ADSR envelope, following some control parameters.</p>
+<p>An ADSR is often used to control the evolution of an audio synthesis
+parameter during a note: volume, filter cutoff, etc.
+It is composed of 4 segments, played one after another:</p>
+<ul>
+<li><span class="ui">Attack</span>: the envelope rises from 0 to its nominal
+value (100%) after the note beginning (Note On).</li>
+<li><span class="ui">Decay</span>: occurs after the attack section.
+It leads the envelope to its sustain value.</li>
+<li><span class="ui">Sustain</span>: this section controls the envelope
+evolution when the note is hold.
+The envelope drops slowly to 0 at a speed programmed by the sustain time.
+When the latter is infinite, the envelope holds the sustain value until a
+new note event occurs.</li>
+<li><span class="ui">Release</span>: The envelope can run this section at
+any time, as soon as the played note is stopped (Note Off).
+This section allows the envelope to return to 0 at a controlled speed.</li>
+</ul>
+<p>The shape of each segement is of “RC load” type, mimicing the analogue
+synthesisers envelopes.</p>
+<p>Usually, <var>Trigger On</var> and <var>Trigger Off</var>are mapped on
+external events.</p>
+
+<p class="var">Trigger On</p>
+<p>When this parameter is set to a non-null value, the envelope generator
+is fed with a Note On event.
+The parameter value also gives the note velocity.</p>
+
+<p class="var">Trigger Off</p>
+<p>When this parameter is set to a non-null value, the envelope generator
+is fed with a Note Off event.</p>
+
+<p class="var">Velocity sensitivity</p>
+<p>This indicates a which point the envelope follows the note velocity
+given by the <var>Trigger On</var> parameter.
+At 0%, velocity is ignored.
+At 100%, the envelope is fully scaled with the velocity.</p>
+
+<p class="var">Attack time</p>
+<p>Attack time, in seconds.</p>
+
+<p class="var">Decay time</p>
+<p>Decay time, in seconds.</p>
+
+<p class="var">Sustain time</p>
+<p>Sustain time when the note is hold, in seconds.
+Indicates how long the envelope takes to fall down to 0 after the decay
+section.
+If the parameter is &ge;&nbsp;255, the sustain time is considered as infinite
+and the envelope drops only on a Note Off event.</p>
+
+<p class="var">Sustain level</p>
+<p>Sustain level, reached after the decay section.
+Can be negative or greater than 1 in absolute value.</p>
+
+<p class="var">Release time</p>
+<p>Release time to 0, in seconds.
+This section is run when a Note Off event is sent to the envelope
+generator.</p>
+
+
+
+<h3><a id="fx-ramp"></a>Control ramp — Parameter transition</h3>
+
+<p>This effect is only available in the control signal generator category
+since it does not process any audio signals, either input or output.
+Its purpose is to create a signal that gradually changes from 0 to 1 or 1 to
+0.</p>
+<p>The transition is initiated as soon as the effect is activated.
+However, it can be restarted at any time by setting the <var>Set position</var>
+parameter.</p>
+
+<p class="var">Time</p>
+<p>Transition duration, in seconds.</p>
+
+<p class="var">Amplitude</p>
+<p>Transition amplitude, in %.</p>
+
+<p class="var">Curve</p>
+<p>Transition curve.</p>
+<table>
+<tr><th>Curve</th><th>Description</th></tr>
+<tr><td><span class="ui">Linear</span></td><td>Smooth transition</td></tr>
+<tr><td><span class="ui">Acc&nbsp;1</span></td><td rowspan="4">Slow at the beginning, faster at the end</td></tr>
+<tr><td><span class="ui">Acc&nbsp;2</span></td></tr>
+<tr><td><span class="ui">Acc&nbsp;3</span></td></tr>
+<tr><td><span class="ui">Acc&nbsp;4</span></td></tr>
+<tr><td><span class="ui">Sat&nbsp;1</span></td><td rowspan="4">Fast at the beginning, slower at the end</td></tr>
+<tr><td><span class="ui">Sat&nbsp;2</span></td></tr>
+<tr><td><span class="ui">Sat&nbsp;3</span></td></tr>
+<tr><td><span class="ui">Sat&nbsp;4</span></td></tr>
+<tr><td><span class="ui">Fast&nbsp;1</span></td><td rowspan="2">Fast at the middle</td></tr>
+<tr><td><span class="ui">Fast&nbsp;2</span></td></tr>
+<tr><td><span class="ui">Slow&nbsp;1</span></td><td rowspan="2">Slow at the middle</td></tr>
+<tr><td><span class="ui">Slow&nbsp;2</span></td></tr>
+</table>
+
+<p class="var">Sample and hold</p>
+<p>This parameter adds steps to the transition curve by regularly blocking its
+value for a short period.
+It is expressed as a ratio between the blocked period and the total transition
+time.</p>
+
+<p class="var">Smoothing</p>
+<p>Parameter that softens abrupt transitions.
+It determines the ratio between the rise time and the transition time.
+This parameter is made to work with <var>Sample and hold</var>.</p>
+
+<p class="var">Direction</p>
+<p>Gives the transition direction.
+Standard direction is from 0 to 1.
+Inverted, it is from 1 to 0.</p>
+
+<p class="var">Set position</p>
+<p>Sets the current point in the transition, as a percentage of progression.
+So it can be restarted if it was already completed.
+If you put an initial delay and want to restart the ramp immediately, set the
+position slightly above 0.</p>
+
+<p class="var">Initial delay</p>
+<p>Time in seconds before the ramp kicks in after.
+The delay phase is started again when the position is set to exactly 0.</p>
+
+<p class="var">State</p>
+<p>This parameter is meant to pause the transition.</p>
+
+
+
+<h3><a id="fx-lfo"></a>LFO — Low frequency oscillator</h3>
+
+<p>This effect is only available in the control signal generator category
+since it does not process any audio signals, either input or output.
+Its purpose is to create an oscillating signal in order to modulate one or
+more parameters from another effect.</p>
+<p>The LFO effect has a graphic display, showing one or more cycle of the
+current waveform.
+The first parameter in the graphic editor is the number of cycles shown.
+It is followed by the standard LFO parameters.</p>
+<p>The LFO is available in two flavours: the normal one and the slow one.
+The slow version can achieve very slow ocillation durations, over a quarter
+of an hour.</p>
+
+<p class="var">Speed</p>
+<p>Oscillation frequency, in Hz.
+This is the time setting for the normal LFO</p>
+
+<p class="var">Period</p>
+<p>Oscillation period, in seconds.
+This is the time setting for the slow LFO.</p>
+
+<p class="var">Amplitude</p>
+<p>Oscillation amplitude, percent.</p>
+
+<p class="var">Waveform</p>
+<p>Waveform generated by the LFO.
+Each form is described below:</p>
+
+<ul><li><span class="ui">Sine</span></li></ul>
+<div class="pic"><img src="lfo-sine.png" /></div>
+
+<ul><li><span class="ui">Triangle</span></li></ul>
+<div class="pic"><img src="lfo-triangle.png" /></div>
+
+<ul><li><span class="ui">Square</span></li></ul>
+<div class="pic"><img src="lfo-square.png" /></div>
+
+<ul><li><span class="ui">Saw</span></li></ul>
+<div class="pic"><img src="lfo-saw.png" /></div>
+
+<ul><li><span class="ui">Parabola</span></li></ul>
+<div class="pic"><img src="lfo-parabola.png" /></div>
+
+<ul><li><span class="ui">Biphase</span></li></ul>
+<p>This form regularly alternates between two out-of-phase sines.
+It is controlled by two additional parameters:</p>
+<table>
+<tr><td><var>Variation&nbsp;1</var></td><td>Time</td><td>Controls how an elementary period is split.</td></tr>
+<tr><td><var>Variation&nbsp;2</var></td><td>Phase</td><td>Phase between the two subwaves.</td></tr>
+</table>
+<p>16 parts, phase quadrature:</p>
+<div class="pic"><img src="lfo-biphase-050-025.png" /></div>
+<p>32 parts, slight dephasing:</p>
+<div class="pic"><img src="lfo-biphase-0625-003125.png" /></div>
+
+<ul><li><span class="ui">N-Phase</span></li></ul>
+<p>This form is an extension of the <span class="ui">Biphase</span>,
+consisting of a variable number of out-of-phase sines.
+The LFO moves regularly from one phase to the next one, each in turn.
+The phases of the subwave are fixed and evenly distributed.
+Therefore the phase shift depends on the number of phases.</p>
+<table>
+<tr><td><var>Variation&nbsp;1</var></td><td>Time</td><td>Controls how an elementary period is split.</td></tr>
+<tr><td><var>Variation&nbsp;2</var></td><td>Phase</td><td>Number of phases.</td></tr>
+</table>
+<p>28 parts, 2 phases:</p>
+<div class="pic"><img src="lfo-nphase-060-000.png" /></div>
+<p>16 parts, 3 phases:</p>
+<div class="pic"><img src="lfo-nphase-050-015.png" /></div>
+
+<ul><li><span class="ui">Varislope</span></li></ul>
+<p>It is a wave that can embody different shapes located between the square,
+the triangle and the sawtooth.
+The precise shape can be controlled using the two auxiliary parameters.</p>
+<table>
+<tr><td><var>Variation&nbsp;1</var></td><td>Time</td><td>Determines the time position of the first extremum of the curve relative to the entire period.</td></tr>
+<tr><td><var>Variation&nbsp;2</var></td><td>Shape</td><td>Shape of the transitio between two extrema.</td></tr>
+</table>
+<p>Time&nbsp;=&nbsp;25%, Shape&nbsp;=&nbsp;0%:</p>
+<div class="pic"><img src="lfo-varislope-025-000.png" /></div>
+<p>Time&nbsp;=&nbsp;25%, Shape&nbsp;=&nbsp;50%:</p>
+<div class="pic"><img src="lfo-varislope-025-050.png" /></div>
+<p>Time&nbsp;=&nbsp;25%, Shape varying from 0 to 100%:</p>
+<div class="pic"><img src="lfo-varislope-025-morph.png" /></div>
+
+<ul><li><span class="ui">Noise</span></li></ul>
+<p>This is white noise filtered by a low pass at 12dB/octave, whose cutoff
+frequency depends on the <var>Speed</var> parameter.</p>
+<div class="pic"><img src="lfo-noise.png" /></div>
+
+<p class="var">Sample and hold</p>
+<p>This parameter creates steps in the LFO curve by regularly blocking its value for a short period.
+It determines the ratio between the blocking period and the main oscillation period.</p>
+<div class="pic"><img src="lfo-sine-snh.png" /></div>
+
+<p class="var">Smoothing</p>
+<p>Parameter that softens abrupt transitions in the waveform.
+It determines the ratio between the rise time and the main oscillation period.</p>
+<div class="pic"><img src="lfo-square-smooth.png" /></div>
+
+<p class="var">Chaos amount</p>
+<p>This parameter introduces a chaotic element in the oscillations.
+It randomly accelerates or slows down the oscillator, ensuring that it always
+falls back on its feet so that the overall rhythm is maintained.
+It's a very simple way to add a little life to an oscillation.
+Below the same phase distortion applied to two waveforms:</p>
+<div class="pic"><img src="lfo-sine-chaos.png" /></div>
+<div class="pic"><img src="lfo-saw-chaos.png" /></div>
+
+<p class="var">Phase dist amount</p>
+<p>Phase distorsion.
+This parameter is used to move the time position of the middle of the waveform.
+It corresponds to a pulse width setting.
+Here, on a sine:</p>
+<div class="pic"><img src="lfo-sine-phdist-025-000.png" /></div>
+
+<p class="var">Phase dist offset</p>
+<p>Parameter that allows to change the fixed points as well as the one moved
+in the phase distortion.
+Below, the same deformation as previously by moving the point located at 3/4
+(lower part of the wave):</p>
+<div class="pic"><img src="lfo-sine-phdist-025-025.png" /></div>
+
+<p class="var">Sign</p>
+<p>Invert the LFO sign.
+It is used, for example, to transform a rising sawtooth into a descending
+one:</p>
+<div class="pic"><img src="lfo-saw-inv.png" /></div>
+
+<p class="var">Polarity</p>
+<p>Switching to unipolar.
+This parameter moves up and compresses the curve so that the bottom is at zero.
+This mode can simplify the modulation rate settings because the minimum of the
+LFO corresponds to the basic value of the modulated parameter.</p>
+<div class="pic"><img src="lfo-square-uni.png" /></div>
+
+<p class="var">Variation 1, Variation 2</p>
+<p>The meaning of these two parameters depends on the selected waveform.</p>
+
+<p class="var">Phase set</p>
+<p>Manually sets the phase of the LFO, in degrees.
+The value 360 does not cause any change.
+This is useful when you want to apply a preset without changing the current
+phase.</p>
+
+<h4>Graphic editing</h4>
+
+<p>You can also adjust the LFO settings with an immediate graphical 
+preview of the waveform.
+The parameters can be scrolled as usual, they are displayed one by one at
+the bottom left.
+The very first parameter <span class="ui">Cycles</span> indicates how
+many oscillation cycles have to be displayed.</p>
+<p>The dots at the bottom right give the precision of the changes obtained
+with the <span class="keya">←</span> and <span class="keya">→</span> keys.
+This precision can be changed with <span class="keya">Select</span>.
+<span class="keya">Esc</span> to go back to the main parameter screen.</p>
+
+
+
+<h2><a id="troubleshooting"></a>V.&emsp;Troubleshooting</h2>
+
+<p>Coming soon… (or not?)</p>
+
+
+
+<h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r22, 2019-07-24</b></p>
+<ul>
+<li>Updated the bank organisation and the other settings screens.</li>
+</ul>
+
+<p><b>r21, 2019-07-18</b></p>
+<ul>
+<li>Added graphical editing for the LFO.</li>
+<li>Fixed broken hypertext links.</li>
+</ul>
+
+<p><b>r20, 2019-07-17</b></p>
+<ul>
+<li>Added the ADSR effect.</li>
+</ul>
+
+<p><b>r19, 2019-07-16</b></p>
+<ul>
+<li>The LFO now comes in two flavours, the normal one and the slow one.</li>
+</ul>
+
+<p><b>r18, 2019-07-02</b></p>
+<ul>
+<li>Added the All-Pass Distortion effect.</li>
+</ul>
+
+<p><b>r17, 2019-06-02</b></p>
+<ul>
+<li>Added the Pulse Width Modulation Distortion 2 effect.</li>
+</ul>
+
+<p><b>r16, 2018-10-29</b></p>
+<ul>
+<li>Added the Test Generator.</li>
+</ul>
+
+<p><b>r15, 2018-09-27</b></p>
+<ul>
+<li>Added the Hypercomb effect.</li>
+</ul>
+
+<p><b>r14, 2018-08-26</b></p>
+<ul>
+<li>Updated the documentation to reflect the recent changes (Ramp, LFO,
+modulation editing).</li>
+</ul>
+
+<p><b>r13, 2018-05-28</b></p>
+<ul>
+<li>Added the bank organizing screens.</li>
+</ul>
+
+<p><b>r12, 2018-04-03</b></p>
+<ul>
+<li>Added the Onset Detector effect.</li>
+<li>Updated available modulation curves.</li>
+<li>Updated user interface screens.</li>
+</ul>
+
+<p><b>r11, 2018-03-22</b></p>
+<ul>
+<li>Added the Pitch Detector effect.</li>
+</ul>
+
+<p><b>r10, 2017-08-01</b></p>
+<ul>
+<li>Added the Phaser AP effect.</li>
+</ul>
+
+<p><b>r9, 2017-07-17</b></p>
+<ul>
+<li>Added the Color Me effect.</li>
+<li>Updated several user interface screens.</li>
+</ul>
+
+<p><b>r8, 2017-06-14</b></p>
+<ul>
+<li>Added the SiemensGirlz effect.</li>
+</ul>
+
+<p><b>r7, 2017-04-24</b></p>
+<ul>
+<li>Added the Ramp effect.</li>
+</ul>
+
+<p><b>r6, 2017-04-22</b></p>
+<ul>
+<li>Added new parameters to the envelope detector.</li>
+<li>Added a second wah effect.</li>
+</ul>
+
+<p><b>r5, 2017-02-11</b></p>
+<ul>
+<li>Moved the notch part of Noise Bleach into a second effect named Noise Chlorine.</li>
+</ul>
+
+<p><b>r4, 2017-02-11</b></p>
+<ul>
+<li>Added continuous band filtering to Noise Bleach.</li>
+</ul>
+
+<p><b>r3, 2017-02-07</b></p>
+<ul>
+<li>Added fiver parameters to the phase.</li>
+</ul>
+
+<p><b>r2, 2017-02-05</b></p>
+<ul>
+<li>Added the Noise bleach effect.</li>
+</ul>
+
+<p><b>r1, 2017-01-28</b></p>
+<ul>
+<li>Added the Harmonic tremolo effect.</li>
+</ul>
+
+<p><b>r0, 2016-11-29</b></p>
+<ul>
+<li>First document release.</li>
+</ul>
+
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
+</div></body>
+</html>
+
+

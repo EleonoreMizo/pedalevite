@@ -1,0 +1,37 @@
+﻿https://www.embeddedrelated.com/showthread/lpc2000/36610-1.php
+http://forum.hobbycomponents.com/viewtopic.php?f=75&t=1395
+
+
+
+Connectique :
+1	VSS	GND
+2	VDD	5 V
+3	V0		Contrast (pot GND-VDD)
+4	RS	x	Chip Select
+5	R/W	x	Data
+6	E	x	Clock
+7	DB0
+8	DB1
+9	DB2
+10	DB3
+11	DB4
+12	DB5
+13	DB6
+14	DB7
+15	PSB	GND	Parallel/Serial
+16	(NC)
+17	RST	x	Reset
+18	VOUT
+19	BLA	5 V	Back light alim
+20	BLK	GND	Back light (switch GND/NC) -> 0 = on
+
+
+Some versions of this LCD are shipped with the PSB (parallel/serial select) pin shorted to VDD by a 0 ohm resistor fitted to R9 on the back of the LCD. This fixes the LCD in parallel mode. If this resistor is fitted and you wish to use the LCD in serial mode you will either need to move the resistor to R10 or completely remove it and ground the PSD pin.
+
+What persuaded me to make the leap was when I found the solder jumpers that connect Vss and K, Vdd and A and PSB to Vss (or Vdd for parallel operation). Made sense that the Led accepted 5v if the jumpers are there. 
+
+Hi I'm new to this site and just would like to point out that on the 12864ZW model R9 is actually a 27Kohm resistor and not a 0ohm jumper. To put it into serial mode you don't have to remove it like on the 12864B model, you can just connect pin PSB to ground and it will work in serial mode
+
+Latest version I got just from mail (12864ZW written on back) doesn't seem to require any modifications, only solder jumper on small selector "S / P". Three point selector/solder pad thing. Working well currently with Raspberry Pi 3. MOSI + SCK (R/W & E) to GPIO, CS (RS) tied directly to VDD on board and seems to work well.
+
+R10 is 0ohm, removing it backlight stops working, at least thru BLA/BLK pins.

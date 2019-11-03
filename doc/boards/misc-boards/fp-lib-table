@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name pedalevite)(type KiCad)(uri "$(KIPRJMOD)/../kicad-lib/pedalevite.pretty")(options "")(descr ""))
+)

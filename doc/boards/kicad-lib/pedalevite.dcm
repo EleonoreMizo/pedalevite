@@ -1,0 +1,51 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP CS4271
+D 24-Bit, 192 kHz Stereo Audio CODEC, TSSOP-28
+K ADC DAC 24bit
+F https://www.cirrus.com/cn/pubs/proDatasheet/CS4271_F1.pdf
+$ENDCMP
+#
+$CMP CS4272
+D 24-Bit, 192 kHz Stereo Audio CODEC, TSSOP-28
+K ADC DAC 24bit
+F https://www.cirrus.com/cn/pubs/proDatasheet/CS4272_F1.pdf
+$ENDCMP
+#
+$CMP INA103
+D Low Noise, Low Distortion Instrumentation Amplifier
+F http://www.ti.com/lit/gpn/ina103
+$ENDCMP
+#
+$CMP INA111
+D High Speed FET-Input Instrumentation Amplifier
+K High Speed FET-Input Instrumentation Amplifier
+F www.ti.com/lit/ds/symlink/ina111.pdf
+$ENDCMP
+#
+$CMP L4931CZ33
+D Very low 3.3V drop voltage regulators
+F http://www.st.com/resource/en/datasheet/l4931.pdf
+$ENDCMP
+#
+$CMP MK2703B
+D PLL audio clock synthesizer
+F http://www.idt.com/document/dst/mk2703b-datasheet
+$ENDCMP
+#
+$CMP NCJ9FI
+D 3 pole XLR female receptacle with 1/4" switching stereo jack
+F http://www.neutrik-france.com/fr/jacks/jacks/combo-i-series/ncj9fi-s
+$ENDCMP
+#
+$CMP SW_DPDT_x2
+D Switch, dual pole double throw, separate symbols
+K switch dual-pole double-throw DPDT spdt ON-ON
+$ENDCMP
+#
+$CMP Transformer_1P_2S_2x6
+D Transformer, single primary, dual secondary, 12 pins
+K transformer coil magnet
+$ENDCMP
+#
+#End Doc Library

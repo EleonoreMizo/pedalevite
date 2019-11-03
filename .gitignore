@@ -37,9 +37,12 @@ build/unix/results/
 art/*.h
 etc/config/current*
 legacy/
-doc/exported/
 doc/internal/
-doc/pcb*/*.bak
-doc/pcb*/*-bak
-doc/pcb*/*.bck
+doc/v1/exported/
+doc/v1/pcb*/*.bak
+doc/v1/pcb*/*-bak
+doc/v1/pcb*/*.bck
+doc/boards/*/*.bak
+doc/boards/*/*-bak
+doc/boards/*/*.bck
 build/win/.vs/

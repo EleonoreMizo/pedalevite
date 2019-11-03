@@ -3,13 +3,13 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Pédale Vite&nbsp;&mdash;&nbsp;multi-FX pedalboard for guitar and bass&nbsp;&mdash;&nbsp;Building instructions</title>
+<title>Pédale Vite v2&nbsp;&mdash;&nbsp;multi-FX pedalboard for guitar and bass&nbsp;&mdash;&nbsp;Building instructions</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body><div class="global">
 
-<h1>Pédale Vite&nbsp;&mdash;&nbsp;Building instructions</h1>
+<h1>Pédale Vite v2&nbsp;&mdash;&nbsp;Building instructions</h1>
 
 <h2>Table of content</h2>
 
@@ -32,14 +32,12 @@
 <li class="tcont"><a href="#softwareinstall">Software setup</a>
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
 	<li><a href="#soft-prepare">Preparing the system</a></li>
-	<li><a href="#soft-startup">Startup and base configuration</a></li>
-	<li><a href="#soft-update">System update</a></li>
-	<li><a href="#soft-install-aud">Installing the audio interface</a></li>
+	<li><a href="#soft-startup">Startup and system update</a></li>
+	<li><a href="#soft-baseconf">Basic configuration</a></li>
+	<li><a href="#soft-opt-startup">Boot time optimisation</a></li>
 	<li><a href="#soft-install-dep">Software dependencies</a></li>
 	<li><a href="#soft-install-app">Installing Pédale Vite</a></li>
 	<li><a href="#soft-autorun">Pédale Vite autostart</a></li>
-	<li><a href="#soft-opt-startup">Boot time optimisation</a></li>
-	<li><a href="#soft-skip-noobs">NOOBS removal</a></li>
 	<li><a href="#soft-ro">Read-only operating system and other optimisations</a></li>
 	</ol>
 </li>
@@ -58,16 +56,20 @@
 <p><i>Pédale Vite</i> is a DIY (“do it yourself”) multi-effect pedalboard for
 guitar and bass.
 This manual decribes how to build it and install all required components.</p>
-<p>I want to make it clear, this project is within reach of everyone.
+<p>I want to make it clear, this project is quite complex moderately difficult
+but within reach of everyone.
 One does not need to be a DIY genius.
 One does not need to be dexterous.
 No specific ability is required.
-All used skills (soldering, drilling…) are easy and quick to learn.</p>
+All used skills (soldering, drilling…) are not trivial but they are easy and
+quick to learn.</p>
 <p>However the realisation requires a significant amount of work,
 count about ten days of work.
 This is approximately the time I’ve spend to build Pédale Vite.
 And I’m far from being well organised and dexterous.
 I’m pretty sure seasoned people could halve this time without hassle.</p>
+<p>It is advised to start by reading the full instructions before beginning,
+in order to have a better view of the operations.</p>
 
 
 
@@ -76,7 +78,7 @@ I’m pretty sure seasoned people could halve this time without hassle.</p>
 <p>The  <a href="https://github.com/EleonoreMizo/pedalevite/">project’s GitHub
 repository</a> contains all the required files.</p>
 <ul>
-<li><code>.fzz</code> schematics open with <a href="http://fritzing.org/">Fritzing</a>, v0.9.3 here.</li>
+<li><code>.pro</code> schematics open with <a href="http://kicad-pcb.org/">KiCAD</a>, v4.0.6 here.</li>
 <li><code>.dfx</code> drawings open with <a href="http://librecad.org/">LibreCAD</a>, v2.1.1 here.</li>
 <li><code>.ods</code> spreadsheets open with <a href="https://www.libreoffice.org/">LibreOffice</a> or <a href="https://www.openoffice.org/">OpenOffice</a>.</li>
 </ul>
@@ -91,34 +93,31 @@ repository</a> contains all the required files.</p>
 <a href="https://github.com/EleonoreMizo/pedalevite/tree/master/doc"><code>doc</code></a>
 folder in the repository.</p>
 <ul>
-<li><code>schematics.fzz</code> contains electronic schematics as well as
-implementation maps for the components on the prototyping boards.</li>
-<li><code>drawing-panel.dxf</code> shows how to drill the plate for the front
-panel.</li>
-<li><code>drawing-pi-mount.dxf</code> is a wooden stand for the Raspberry
-Pi 3.
-Attach it on the inside with small flat angle brackets.</li>
+<li>The <code>boards</code> folder contains KiCAD electronic schematics as
+well as the PCB layouts for all the boards.</li>
+<li><code>drawing-panel.dxf</code> shows how to drill the plates for the
+enclosure.</li>
 <li><code>cables.ods</code> show how to build and connect the cables.
 Each pair of letters indicates matching pins for a single wire.</li>
 </ul>
 <p>These drawings are not exhaustive.
-For example, cables for the audio interface or power cords are missing.
+For example, cables for the Pi powering or power cords are missing.
 However these parts are quite simple and don’t need detailed instructions.</p>
 
 
 
 <h3><a id="req-material"></a>Materials</h3>
 
-<p>The bill of materials is in <code>doc/parts.ods</code> on the repository.
-These are the parts used in the prototype.
-It also shows an indicative price without tax (from the shop where each
-component was bought), with quantity constraints.
+<p>The bill of materials is in <code>doc/bom.ods</code> on the repository.
+It shows quantity, quality and physical constraints, as well as an indicative
+price without tax (from the shop where each component was bought).
 It’s possible to cut down the price on several components.
-For example no need for these expensive Neutrik jack plugs for internal
-connections.</p>
-<p>It’s possible to use other materials, as long as they are compatible or
-adjustable to the existing design.
-For your information, all the resistors are ¼W, mostly because of their size
+Some of the parts I used are leftovers from other projects or were bought in
+unnecessary large quantities here.
+It is possible to optimise this point.
+It’s also possible to use other materials, as long as they are compatible or
+adjustable to the existing design.</p>
+<p>For your information, all the resistors are ¼W, mostly because of their size
 on the board.</p>
 
 
@@ -127,7 +126,7 @@ on the board.</p>
 
 <ul>
 <li>Drawing pencil, or better a mechanical pencil, to draw through the holes of a prototyping board</li>
-<li>Fine compass or any other tools for drawing circles of diameter 10, 12 and 14mm.</li>
+<li>Fine compass or any other tools for drawing circles of diameter 10, 11, 12 and 24mm (if using a non-stepped unibit).</li>
 <li>Ruller</li>
 <li>Protractor</li>
 <li>Chisel</li>
@@ -139,19 +138,18 @@ on the board.</p>
 <li>A pair of clamps</li>
 <li>Disposable woodboards (from pallets for example) to use as drilling stand or helper.</li>
 <li>Drill, or a drill press if possible</li>
-<li>Ordinary drill bits, 2 and 3mm</li>
-<li>Drill bit for wood, 5mm</li>
-<li>Drill bits for steel, 3 and 7mm</li>
-<li>Reamer for steel, to drill 10, 12 and 14mm holes</li>
+<li>Drill bit for wood, 2mm</li>
+<li>Drill bits, unibit or hole saws to cut steel at diameters of 3, 4, 5, 7, 10, 11, 12 and 24&#8239;mm</li>
+<li>Center punch or sharp, pointed screw</li>
 <li>Small multi-usage handheld tool (Dremel, Proxxon…) with cutting ability</li>
 <li>Cutting discs for steel (if possible in both small and large diameters)</li>
 <li>Cutting oil</li>
-<li>Set of spanners: 5, 10, 13 and 14mm</li>
+<li>Set of spanners: 5, 5.5, 6, 10, 13 and 14mm</li>
 <li>Flat screwdriver</li>
-<li>Cross-head screwdriver (PH2)</li>
+<li>Cross-head screwdriver (PH2 and possibly PH1)</li>
 <li>Hammer</li>
 <li>Thermoregulated soldering iron (50W or more) with its stand</li>
-<li>Solder 1mm with flow</li>
+<li>Solder 0.5mm and 1mm with flow</li>
 <li>Desoldering pump and possibly desoldering bread</li>
 <li>Third hand</li>
 <li>Vice</li>
@@ -160,13 +158,15 @@ on the board.</p>
 <li>Tweezers</li>
 <li>Cutting pliers for component legs</li>
 <li>Crimping tool for small terminals (the <a href="http://www.engineer.jp/en/products/pa09e.html">PA-09</a> from Engineer are great)</li>
+<li>Crimping tool for Faston 250 terminals</li>
 <li>Stripping tool for small section wires</li>
-<li>Tools required to produce a thin and small board from a larger piece of wood</li>
+<li>Insulating adhesive tape<li>
 <li>Gloves</li>
 <li>Safety glasses</li>
 <li>Respirator, to protect against dust</li>
 <li>Fan or something to suck or repulse toxic releases from soldering</li>
 <li>Multimeter (to measure resistance or test contacts)</li>
+<li>Oscilloscope (optional but handy)</li>
 <li>Marker pens or painting with fine paintbrushes</li>
 </ul>
 
@@ -189,14 +189,24 @@ tool.
 Use a plank as a guide for the tool so you can cut as straight as possible.
 Spray cutting oil on the line to avoid heating and save the cutting discs.
 If you’ve never done it before, it’s recommended to practice on a scrape
-before.
-Once the plate is cut, deburr with a file and slightly round the corners.</p>
-<p>Then cut a groove with the cutting disc on the future fold, on the
-inside.
-The groove depth shall be about half the metal thickness.
-Use a plank as a guide here too, the straightness is particularly
-important.</p>
-<p>Draw some marks for the drilling and cutting, referring to the drawings.
+before.</p>
+<p>Cut the following panels:</p>
+<ul>
+<li>Top: 520×250mm²</li>
+<li>Back: 520×70mm²</li>
+<li>Front: 520×30mm²</li>
+<li>Bottom: 520×253mm²</li>
+<li>Sides: [30–70]×250mm² (rectangle trapeze)</li>
+</ul>
+<p>Note: front and bottom panels can be made of aluminium instead of
+steel.</p>
+<p>Once the panels are cut, deburr with a file and slightly round the
+corners.</p>
+<p>Important: operations are done on the inside of each panel.
+The drawings are all inside views.</p>
+<p>Draw some marks for the drilling and cutting, referring to the drawings
+(<code>Panels</code> layer).
+Mark the centers with the center punch.
 Use the compass to delimit the holes which will be drilled with the reamer.
 Drill these ones first, with cutting oil.
 Stop drilling when the reamer reaches the hole outline.
@@ -204,135 +214,125 @@ Get the component and try to fit it in the hole, and drill slightly more if
 required.</p>
 <p>Deburr the hole with a dedicated reamer or use a cutting disc to eliminate
 the excess of metal.</p>
-<p>Cut two corner pieces that will be used as lining for the panel
-(see the figure below).
-Reduce their length from 3–4mm in each direction (especially the bottom),
-because the fold will be slightly more than a right angle.</p>
-<p>Clamp the corner pieces with the plate and drill their common
-holes simultaneously.
-If it’s too difficult because of the clamp jaws being not long enough,
-it’s better to do it before cutting the corner piece.
-Once a hole it drilled, you can screw it to secure the alignment.</p>
+<p>Cut two 520mm pieces from the corner piece.
+They will join the top panel with the bottom and front pannels.
+The smallest part of the L will be on top and the longest will be vertical.
+If required, file the top part of one of the pieces to make room for the
+display screws.</p>
+<figure>
+  <a href="display-outside.jpg"><img src="display-outside-small.jpg" /></a>
+  <figcaption>More room for the screws.
+Actually it wasn’t really necessary.</figcaption>
+</figure>
+<p>Cut two 250mm corner pieces that will be used as lining for the panel.
+One of them is stepped over by the audio board; make sure there will be no
+contact when everything is in place.
+If so, remove some matter off the corner piece with a file or a cutting
+disc.</p>
+<p>Clamp the latter corner pieces with the plate and drill their common
+holes simultaneously.</p>
 <p>Drill the remaining holes and deburr if necessary.
-Some holes depend on the actual material you could gather (power socket
-and switch, square brackets for the Pi mounting board, etc.)
+The small holes without indicated diameters one the drawings are 3mm wide.
+The position and diameter of some holes depend on the actual material you
+could gather (power socket and switch, connectors, etc.)
 Don’t blindly follow the drawings, check what you really need and
 adjust if required.</p>
+<p>The LED holes have a 5&#8239;mm diameter.
+It is possible to enlarge them slightly to 6&#8239;mm while shifting down
+the center from half a millimeter.
+This allows the LEDs to be brought down to the enclosure surface while
+being still visible even at high incidence.</p>
+<figure>
+  <a href="led-detail.jpg"><img src="led-detail-small.jpg" /></a>
+  <figcaption>My LED holes are pushed even further and are slightly oval.</figcaption>
+</figure>
+<p>Nota bene: the holes to screws the side stands and pillars are slighty
+shifted at the corners so the screws can cross without colliding.</p>
+<figure>
+  <a href="unaligned-screws.jpg"><img src="unaligned-screws-small.jpg" /></a>
+  <figcaption>Screws unalignment, front panel.</figcaption>
+</figure>
+<p>It may be easier to leave aside the holes going through the long corner
+pieces.
+They will be drilled once these pieces are put on the assembly.</p>
 <p>Cut the rectangle zone.
-Start drilling the corners with a small bit (3mm is OK), this will ease
-joining the cuts.
+Start drilling the corners with a small bit (3mm is OK, at 1.5mm from each
+corner), this will ease joining the cuts.
 Then cut the lines with a small disc.
-Deburr.</p>
-<p>Pictures with some elements mounted:</p>
-<div class="pic"><a href="panel-flat-outside.jpg"><img src="panel-flat-outside-small.jpg" /></a></div>
-<div class="pic"><a href="panel-flat-inside.jpg"><img src="panel-flat-inside-small.jpg" /></a></div>
-
-<h4>Folding</h4>
-
-<p>Obviously, the most simple solution is to find a real folding machine.
-Professional metal workers can do it too.
-Otherwise, we can quickly make a very simple folding tool.</p>
-<p>The plate (without anything mounted) will be sandwiched between two
-devices.</p>
-<p>On the inside, we can use a scrape from the corner piece, which should
-be long enough.
-The most simple way is to use the angle as a pivot, even if we need to
-do one fold with an angle greater than 90°.</p>
-<p>On the outside, put a thick plank or a rigid piece of metal.
-The plank stops at the fold groove position.</p>
-<p>Clamp everything on the workbench, the border to be folded exceeding
-the table, the groove facing the floor.</p>
-<p>Take a small but thick planck and put it on the border, as close as
-possible to the fold.
-Hit it regularly with a heavy hammer, travelling back and forth on the plate
-so the fold remainss balanced.
-The fold must be angular, try to avoid rounding the plate.</p>
-<p>You should set the angle to 9° over or below the right angle, depending
-on the side.
-No need to be very accurate on the angle, because the plate will be screwed on
-the side stands which will give its definitive shape.</p>
-<p>I had a small crack on one of the fold because the groove was probably
-a bit deep.
-It’s not very important because everything will be screwed but you should
-deburr it if it happens.</p>
+Deburr and square the angles with a rectangular file.</p>
 
 <h4>Side stands</h4>
 
-<p>Take a 18- or 20mm-thick plank (max).
+<p>Take a 18- to 20mm-thick plank (max).
 Cut two trapezoidal shapes, 250mm on the side with both right angles, and
-80 and 120mm on the adjacent sides.
-You can check that the opposite side is about 253mm.</p>
-<p>Insert the two pieces on the side of the enclosure and screw them with 2.5
-or 3mm screws, not too long.
-Use 7 screws per mount.<p>
-<p>Once this is done, we can build the center pillars.
-They will support the linings made with the corner pieces.
-First, screw the latters to the plate.
+30 and 70mm on the adjacent sides.
+You can check that the opposite side is about 253mm.
+The right angles are on the top.
+Please refer to the drawings (<code>Structure</code> layer) for the
+dimensions and locations.</p>
+<p>With a wood saw and a chisel, cut the windows for the Pi connectors and the
+gain controls of the audio board.</p>
+<figure>
+  <a href="connectors-rpi4.jpg"><img src="connectors-rpi4-small.jpg" /></a>
+  <figcaption>Window for the Pi connectors.</figcaption>
+</figure>
+<p>Then drill and screw the metal plates on the inside.</p>
+<p>Screw the front, back and top panels on these wood pieces.
+Use 3mm screws, not too long.<p>
+<p>Put the long corner piece on the angles and hold them tight.
+Drill the holes through the corner pieces, the panels and the wood pieces
+with a 2mm drill.
+Then drill the metal parts only with a 3mm drill.</p>
+<p>It is possible to drill all the holes through the corner pieces, even the
+pillar ones.
+Add the last side stand screws.
+Add short metal screws (8–10mm) with nuts and washers to hold the corner piece
+against the top panel.</p>
+
+<h4>Center pillars</h4>
+
+<p>The center pillars will support the linings made with the corner pieces.
+First, screw the latters to the plate if it is not already done.
 Then cut the pillars of 20mm square section in wood, preferably a strong
 variety.
 One can take the offcut from the previous planks.</p>
-<p>For each pillar, cut one end at an angle of 9°.
-The approximative lengths are about 80 and 120mm but the exact lengths depend
-on the corner piece thickness.
-Cut a bit too long, stick the pillar at its position, mark the second end
-with a pen and cut a the right length.
-You can add a small margin (1mm) for finetuning with a file.</p>
-<p>Check for each pillar that it will not be in the way of the lining
-screws nor any other device not attached yet, especially the display.
-If it is the case, remove some matter with a saw or a chisel.</p>
-<p>Depending on the density of the wood, you probably will have to
-drill the holes for the screws first.
-Take a thin enough bit, for example 2mm for a 2,5mm screw.</p>
-<p>Once everything is done, one can finetune with a file the height of each
-pillar so all of them are on the same plane.</p>
-<div class="pic"><a href="box-empty-inside.jpg"><img src="box-empty-inside-small.jpg" /></a></div>
-<div class="pic"><a href="box-empty-top.jpg"><img src="box-empty-top-small.jpg" /></a></div>
-<p>Then, the baptism of fire: put the enclosure on the floor and stay on it.
+<p>The vertical shape of each pillar is a trapeze (side view).
+The angle (9°) is located at the bottom.
+The length difference is about 3mm.
+Cut a pair of pillars of 30 and 33mm for the front, and another pair of 67 and
+70mm for the back.
+Subtract the corner piece thickness from these lengths.
+Anyway you can also add about half a millimeter which will be trimmed later
+with a file.</p>
+<p>Hold the pillars on the assembly, drill the holes and add screws.
+Put the assembly on the floor, and check it is not wobbly.
+If it is, trim the pillar excess with a file.</p>
+<p>Then, the baptism of fire: put the assembled enclosure on the floor and
+stay on it.
 It should not bend nor give any sign of weakness.</p>
-
-<h4>Stand for the Pi</h4>
-
-<p>Cut a thin plank according to the <code>drawing-pi-mount</code> drawing.
-The concave part can be started with a saw for the two lateral sides and
-finished with a chisel on the long side.</p>
-<p>The flat angle brackets are intended to attach the stand parallel to the
-floor on the back side of the enclosure.
-The Pi is mount on the recto and the brackets on the verso.
-The exact bracket positionning depends on what you have got.
-Make sure that there is room enough for the LED board, its connection cable,
-and the top footswitch row.</p>
-<p>Important note: because the brackets are facing the top of the enclosure,
-they are behind the stand when you work on it and there is little room to put
-the hands or tools.
-So they are difficult to screw.
-You probably will have to operate in several steps, first to loosely screw
-the nuts to the bolts, the to tighten them.
-And make sure you haven't forgotten anything requiring to disassemble the
-stand.
-It is also possible to attach the brackets on the same side as the Pi
-to ease this step, however you will have to widen the stand and move the
-brackets in order to avoid the access window on the rear panel.</p>
 
 
 
 <h3><a id="build-elec"></a>Electronics</h3>
 
-<h4>Prototyping board cutting</h4>
+<h4>The boards</h4>
 
-<p>Cut the prototyping boards in order to obtain the following pieces:</p>
+<p>The main board, audio board and 2&times;15V AC to DC converter boards are
+PCBs that you can make manufacture with the Gerber files contained in the
+<code>doc/boards</code> subfolders.</p>
+<p>The other boards are obtained by cutting the following rectangles in the
+prototyping boards:</p>
 <ul>
-<li>24&times;24 full holes, &nbsp;&nbsp;63,5&times;63,5mm², main board</li>
-<li>38&times;30 full holes, &nbsp;&nbsp;99,1&times;78,7mm², switch board</li>
-<li>47&times;19 full holes, 121,9&times;50,8&#8239;mm², rotary encoder board</li>
-<li>21&times;&nbsp;&nbsp;7 full holes, &nbsp;&nbsp;55,9&times;20,3mm², LED board</li>
-<li>16&times;&nbsp;&nbsp;5 full holes, &nbsp;&nbsp;43,2&times;15,2mm², display fix board</li>
-<li>18&times;&nbsp;&nbsp;4 full holes, &nbsp;&nbsp;48,3&times;12,7mm², board to mount rotary encoders for navigation</li>
-<li>48&times;&nbsp;&nbsp;3 full holes, 124,5&times;10,2mm², board to mount rotary encoders for parameter control</li>
-<li>16&times;&nbsp;&nbsp;6 full holes, &nbsp;&nbsp;43,2&times;17,8mm², power supply filtering board (optional)</li>
+<li>19&times;18 full holes, &nbsp;&nbsp;48.3&times;45.7mm², 5V power board</li>
+<li>20&times;13 full holes, &nbsp;&nbsp;50.8&times;33.0mm², navigation switch board</li>
+<li>18&times;&nbsp;&nbsp;4 full holes, &nbsp;&nbsp;45.7&times;10.1mm², LED board</li>
+<li>18&times;&nbsp;&nbsp;4 full holes, &nbsp;&nbsp;45.7&times;10.1mm², board to mount rotary encoders for navigation</li>
+<li>48&times;&nbsp;&nbsp;3 full holes, 121,9&times;&nbsp;&nbsp;7.6mm², board to mount rotary encoders for parameter control</li>
 </ul>
 <p>Standard prototyping boards contain 61&times;38 holes.
-Therefore it’s possible to extract the main board and the switch board from
-a first one, and the other boards from a second one.</p>
+Therefore it’s possible to extract all the boards from the same board.
+It is possible to use a veroboard or a matrix board, the latter being easier
+for the circuits to be implemented here.</p>
 <p>To cut the board, a metal saw does the job well.
 Fasten the board on a workbench with a vice or a clamp,
 between two wood boards to avoid damaging it.
@@ -341,22 +341,115 @@ the existing holes.</p>
 <p>Drill the mounting holes at the four corners with a 3mm drill.
 Without drill press, it’s better to use an existing hole as a guide.
 Locate each drilled hole at the middle of a 3&times;3 pad square, free of
-any conductive function.</p>
+any conductive function (check
+<code>doc/boards/misc-boards/misc-boards.kicad_pcb</code>).</p>
 <p>When the LED board is cut, build its mounting device before soldering the
 components.
 Just see below.</p>
-<div class="pic"><a href="board-placement.jpg"><img src="board-placement-small.jpg" /></a></div>
 
-<h4>Soldering</h4>
+<h4>Soldering the PCBs</h4>
 
-<p>On the component side, put first all the connectors and sockets without
-soldering them.
+<h5>Main board</h5>
+
+<p>Solder the components in order of height.
+First the flat resistors, then all the ceramic capacitors located out of IC
+sockets.</p>
+<p>Then check that the internal capacitors can fit inside the sockets without
+any problems.
+If necessary, file the plastic of the sockets so that everything fits in
+correctly without forcing.
+It is possible to tilt the capacitors or slightly offset them, up to a certain
+limit.</p>
+<p>Then solder the sockets, then the internal capacitors.
+Then the vertical resistors, then the transistors.
+Finally, the HE10, Dupont and NSK254 connectors.</p>
+<p>Do not immediately place the IC in their holders, there are checks to be
+done beforehand, see below.</p>
+
+<h5>Audio board</h5>
+
+<p>This board requires some attention.
+Indeed, there are two surface mounted technology (SMT) components, the CS4272
+codec and the MK2703 clock.
+The CS4272 is particularly delicate since it is a TSSOP, with very thin legs
+(0.63mm pitch).
+These two components must be soldered first.
+You will need thin soldering wire (0.5mm), and depending on your visual
+acuity, perhaps a magnifying glass or a microscope.
+Very good lighting is necessary in all cases.</p>
+<p>There are various soldering techniques for this type of component,
+generally involving first soldering two legs to immobilize the part, then
+soldering the rest.
+There are many photo or video tutorials for manual soldering of SMT chips.
+The solder flood technique works relatively well, but requires a minimum of
+practice to be executed cleanly and efficiently.
+Feel free to practice beforehand on adapter boards with cheap IC that can be
+sacrificed without regret.
+Otherwise, go back to the simplest technique, leg by leg.
+The biggest risk is to pour solder under the chip, behind the legs and bridge
+them without possibility of going back.
+In case of a problem, it is almost impossible to unsolder the chip without
+damaging it (mechanically or thermally) and start again, unless you have a
+suitable hot air gun.</p>
+<p>If you do not feel confident enough for the operation, entrust it to an
+experienced or professional person.
+However, it is not that difficult, this board was my first TSSOP chip
+soldering experience and it works very well.</p>
+<figure>
+  <a href="board-audio.jpg"><img src="board-audio-small.jpg" /></a>
+  <figcaption>The audio board.</figcaption>
+</figure>
+<p>After soldering the SMT chips, the components are soldered in their order
+of height: small 1N4448-like diodes, resistors, larger Schottky-like diodes,
+ceramic capacitors, integrated circuit holders, film capacitors, Dupont
+connectors and sockets for transistors and regulators, inductors, choke, and
+finally, in no predefined order, electrolytic capacitors, 5V regulator, NSK254
+power supply connector.</p>
+<p>The Q1-Q3 transistors, D9 voltage reference and IC4 regulator are mounted
+on a single-row round-pin socket rather than soldered directly (this is
+optional).</p>
+<p>Put the quartz in this list according to its actual size, but before
+soldering it, make sure there is a gap between the component and the PCB.
+You can insert a piece of cardboard to ensure the gap and remove it once the
+soldering is complete.
+Be careful not to overheat it, it could burn.</p>
+<p>Tilt the inductors of each channel to form a mutual right angle.</p>
+<p>When everything is soldered, fasten the thermal dissipator to IC3.</p>
+<p>Finally, insert a jumper on JP1 to select the least significant bit of the
+board I²C address.
+Put it between pins 2 et 3 for the address 0, expected by the software
+part.</p>
+<figure>
+  <a href="board-audio-jumper-i2c.jpg"><img src="board-audio-jumper-i2c-small.jpg" /></a>
+  <figcaption>I²C address selection with JP1.</figcaption>
+</figure>
+<p>As with the main board, do not place the chips in their sockets
+immediately.</p>
+
+<h5>15V AC to DC board</h5>
+
+<p>Nothing much to say about this board supplying power for the audio board.
+Don’t forget to fasten the thermal dissipators on the voltage regulators.
+L1 and L2 coils have to be bent to form a mutual right angle.</p>
+<figure>
+  <a href="board-2x15vacdc.jpg"><img src="board-2x15vacdc-small.jpg" /></a>
+  <figcaption>±15V rectification and filtering. Ignore the model of the diodes
+in the bridge, it’s not the same as the one in the BOM list.</figcaption>
+</figure>
+
+<h4>Soldering the prototyping boards</h4>
+
+<p>For all the boards: on the component side, first place the main components
+without soldering them, with the help of the PCB drawings.
 Draw their outline with a lead pencil.
-This will ease the placing of the other components.
-Check the distances between all the sockets with the help of the layout
-diagram.</p>
-<p>Solder first the circuit wires (the grey cables on the diagram) on the
-copper side.
+This will ease the placing of the other components.</p>
+
+<h5>Making tracks</h5>
+
+<p>To connect the components on a matrix board, it may be necessary to create
+tracks on the copper side.
+These tracks appear in green on the drawings (<code>B.Cu</code>,
+back copper layer in KiCAD/Pcbnew).
 To help, capture a screenshot of the diagram (seen from the component side)
 and mirror it horizontally with a graphic software (Gimp, Photoshop…)
 This gives a wiring diagram with the correct orientation.</p>
@@ -383,18 +476,12 @@ It can be necessary to move aside from the center of the pads to make room
 for the component legs.</p>
 <p>Solder at the ends and at the angles.
 Add soldering joints on the longest segments, to consolidate.</p>
-<p>Next, solder the components, sorted by ascending height.
-First resistors, diodes, IC sockets, capacitors then the various connectors.
-When possible, put the female case on the connectors.
-This give a stable support thus making easier the positioning and
-soldering.</p>
-<p>Add solering bridges where they are necessary, to join track ends or
-neighbour component legs.
-Try to limit the bridge size, because long bridges are made of a lot of
-solder and are difficult to heat.
-This is particularly important if you have to fix something later or add a new
-connection.</p>
-<p>Next, solder insulated wires, on the component side.
+<p>When soldering components, you will have to add a small bridge to link
+the track to the component leg.</p>
+
+<h5>Wires on the components sides</h5>
+
+<p>Some boards require wires on the component side.
 Strip the insulation on 2–3mm.
 Wedge it in the hole with a crocodile clip.
 Don’t bite the wire near the soldering point.
@@ -406,49 +493,100 @@ as possible.
 This is necessary to avoid short circuits with several wires close to each
 other.</p>
 
-<h4>Connection checks</h4>
+<h5>5V power board</h5>
 
-<p>Before attaching the circuits, the connections must be checked.
-Use a multimeter in diode test mode or ohm-meter mode.
-It’s important to do it before mounting the IC on their sockets, because
-these IC may have internal contacts which will distort the results.
-Or worse, they could be damaged by the test.</p>
-<p>You need a table summing up all the pins of all the connectors.
-For each of them, check the following:</p>
-<ul>
-<li>For each ground pin, check that no other pin is in contact, excepted
-other ground pins.</li>
-<li>Same for the power pins.
-However we still got connections with other pins, for example when a pull-up
-resistor is located between them.
-Check that this case is justified (buttons), and that the resistance value
-is correct.</li>
-<li>For each adjacent pin, check that there is no contact between them,
-or that the obtained resistance is consistent with what is expected.</li>
-<li>Check that all neighbour lumps of solder are not bridging.</li>
-<li>Check that the GPIO-like pins are consistent on the sockets and on
-the connectors.</li>
-<li>Touch soldered jumper wires when testing them to check that the
-connection doesn’t move.</li>
-</ul>
-<p>These tests don’t guarantee that things will be running smoothly,
-however they help to detect a lot of potential short circuits.</p>
+<p>Solder the terminals and then the power supply unit.
+Connect the legs by soldering bare copper wires or by laying large solder
+bridges.
+Refer to the PCB diagram to place these tracks.</p>
+<p>Some tracks and pins (J501 and pins 1 and 2 of the power block) carry mains
+voltages.
+It will be necessary to carefully scrape the copper around these tracks over
+at least one pad (2.5mm wide) to avoid any possibility of short circuiting.
+A mini drill with a small rounded cutter is perfect for this job.
+Bonus: cover these tracks and pins with varnish.</p>
+<p>Also, pay attention to the mounting holes.
+Ensure that nuts, washers and spacers remain far enough away from the mains
+tracks.</p>
 
-<h4>LED board</h4>
+<h5>Navigation switch board</h5>
+
+<p>On this board, the switches are on the copper side and the connector on the
+component side.
+There are two possible approaches.
+The first is to use the copper on the board to make certain connections, such
+as ground.
+This option is relatively simple if you use a Veroboard instead of a matrix
+board; just cut the tracks in the right places.
+This is the solution I chose because I had got rests of Veroboard.
+In the case of a matrix board, tracks must be formed by adding bare copper
+wires or solder bridges.
+These conductive elements will then lie under the switches.
+Ensure that the switches, once in place, rest in a stable and horizontal
+position on the tracks.
+In addition, care should be taken to leave open holes to insert the legs of
+these switches, which can be complicated.</p>
+<p>The second option is to wire everything on the component side with
+insulated wires.
+In this case, start with the elements near the connector, as the wiring will
+become quite dense there.</p>
+<p>Solder the switches row by row, one by one, from the above.
+Soldering between two switches can be a little tricky, be careful not to melt
+the plastic while walking around with the iron.
+Make sure that the switches are firmly attached to the board when soldering.
+Indeed, they will have to cope with high and regular pressures, and this must
+not stress the solder joints.</p>
+<p>It is not necessary to connect all the legs.
+Each switch has four legs, they are connected two by two internally,
+constituting two unique poles.
+You can solder and connect just one leg of each pole.
+Depending on the connection solution chosen, solder the cables as you go
+along, or after soldering all the switches.
+It is up to you to evaluate what will be the most practical to do.
+On the connector, there are only two ground legs for the six switches, so you
+will need to make derivations.</p>
+<figure>
+  <a href="board-nav-switches.jpg"><img src="board-nav-switches-small.jpg" /></a>
+  <figcaption>Navigation switch board, component side.<br />
+Here, a strip board (Veroboard) has been used to simplify the wiring.<br />
+Wires are soldered on both side for practical reasons.</figcaption>
+</figure>
+
+<h5>Rotary encoder boards</h5>
+
+<p>Like the navigation switches, encoders are solered on the copper side.
+Ideally, the encoders should be fastened first on the front panel then
+soldered on the board.
+However the gap between the encoders and the panel is small, which is not
+handy.</p>
+<p>If it’s too complicated, solder the component as best as you can, check
+with the panel and fix them if necessary.
+You can even enlarge slightly the holes with a round file.</p>
+<p>Connect the connectors to the encoders using solder bridges.
+For the two navigation encoders with switches, add insulated wires on the
+component side to connect the connector legs to both terminals of the
+switch.</p>
+<figure>
+  <a href="board-rot-enc-param.jpg"><img src="board-rot-enc-param-small.jpg" /></a>
+  <figcaption>Rotary encoders for parameters</figcaption>
+</figure>
+<figure>
+  <a href="board-rot-enc-nav.jpg"><img src="board-rot-enc-nav-small.jpg" /></a>
+  <figcaption>Rotary encoders for navigation</figcaption>
+</figure>
+
+<h5>LED board</h5>
 
 <p>The LED board is somewhat special because it has component on both sides
 and requires a stand.</p>
 <p>The stand supports the LEDs.
-It is directly exposed on the front panel.
-Because of the LED size, it must be a board about 2mm thick.
+It lies just under the front panel.
+Because of the LED size I used (compact ones), my board was about 2mm thick.
+For higher, standard LEDs, 3–5mm is fine.
 It can be in wood, plastic or any other material.
-Here I just took an oat log, cut and split at the right size.
-For the last split which requires accuracy, I used a cooking knife instead
-of an axe.
-I hit it with a hammer, with a small piece of wood between to avoid
-damaging the back of the blade.
 There is no specific size for the stand, just fully cover the circuit board,
-but don’t hesitate to make it larger.</p>
+but don’t hesitate to make it larger.
+Just watch it will not collide with other items in the enclosure.</p>
 <p>When the stand is ready, tie the board to it with a clamp, on the copper
 size.
 Drill the mounting holes on both elements, so they are correctly aligned.
@@ -471,31 +609,49 @@ Make sure the screws are long enough, counting the panel thickness, nuts and
 washers.</p>
 <p>Make sure the LED are aligned before solering them.
 Once done, disassemble the board to solder the other components.</p>
+<figure>
+  <a href="led-board.jpg"><img src="led-board-small.jpg" /></a>
+  <figcaption>Assembly made for a Pédale Vite prototype</figcaption>
+</figure>
+<figure>
+  <a href="led-board-mounted.jpg"><img src="led-board-mounted-small.jpg" /></a>
+  <figcaption>LED board, mounted.</figcaption>
+</figure>
 
-<h4>Rotary encoder board</h4>
+<h4>Connection checks</h4>
 
-<p>Like the LEDs, encoders are solered on the copper side.
-Ideally, the encoders should be fastened first on the front panel then
-soldered on the board.
-However the gap between the encoders and the panel is small, which is not
-handy.</p>
-<p>If it’s too complicated, solder the component as best as you can, check
-with the panel and fix them if necessary.
-You can even enlarge slightly the holes with a round file.</p>
-
-<h4>Display fix board</h4>
-
-<p>The board is very compact.
-Before soldering, check that the socket for the AND gates and the 3-pin HE-14
-connenctor (male and female parts together) are not interfering too much.
-If required, slightly file the socket to make room for the connector.
-It’s also possible to solder the connector in an oblique way.
-In this case make sure there is enough room for the nut… and the wrench to
-fasten it!</p>
+<p>Before attaching the ICs, the connections must be checked.
+Use a multimeter in diode test mode or ohm-meter mode.
+It’s important to do it before mounting the IC on their sockets, because
+these IC may have internal contacts which will distort the results.
+Or worse, they could be damaged by the test.</p>
+<p>You need a table summing up all the pins of all the connectors.
+For each of them, check the following:</p>
+<ul>
+<li>For each ground pin, check that no other pin is in contact, excepted
+other ground pins.</li>
+<li>Same for the power pins.
+Check on the IC sockets that the power pins are actually connected.
+However we still got connections with other pins, for example when a pull-up
+resistor is located between them.
+Check that this case is justified (buttons), and that the resistance value
+is correct.</li>
+<li>For each adjacent pin, check that there is no contact between them,
+or that the obtained resistance is consistent with what is expected.</li>
+<li>Check that all neighbour lumps of solder are not bridging.</li>
+<li>Check that the GPIO-like pins are consistent on the sockets and on
+the connectors.</li>
+<li>Touch soldered jumper wires when testing them to check that the
+connection doesn’t move.</li>
+</ul>
+<p>These tests don’t guarantee that things will be running smoothly,
+however they help to detect a lot of potential short circuits.</p>
+<p>Once the check is done, ICs can be fit into their supports.</p>
 
 <h4>Wiring</h4>
 
-<p>To connect the Pi and the main board, an old IDE cable does the job well.
+<p>To connect the Pi and the main board, an old IDE cable does the job well;
+it is basically a 40-pin HE10 cable.
 Sometimes the connection is keyed and one of the hole is sealed.
 Just drill it with the tip of a knife or scissors, the female part of the
 connector should be there.
@@ -506,22 +662,161 @@ Regarding the orientation, the wire which is on the SD-card side on the Pi
 must land on the left side on the main card.</p>
 <p>For the other cables, check the spreadsheet indicating the connections
 (each letter identifies a wire), the connector types, and the cable
-lengths.</p>
+lengths.
+Some cables have crossed wires.</p>
+<p>You can twist the cables, this is handy and sometimes makes them more
+immunte to noise.
+However, the more the cable is twisted, the shorter it becomes.</p>
 <p>Some connectors are keyed, make sure that the female part has the same
 orientation as the male part.
-On the other hand, HE-14 connectors are not keyed.
+On the other hand, Dupont connectors are not keyed.
 You must be careful during the connection.
 You can put a painted mark on both male and female parts to match them
 more easily.</p>
-<p>The display cable is a bit special: four plugs are interconnected because
-of the patch board.
-The plug on the main board requires a small jumper wire to connect
-V<sub>CC</sub> on the +5V instead of the +3.3V.
-On the display side, use two 8-pin plugs and put them to both ends of the
-large male connector.</p>
 <p>Buttons and footswitches share a few ground wires.
 Prepare the cables by crimping them on one side only.
 They will be soldered and connected later.</p>
+
+<h5>Audio wiring and ground</h5>
+
+<p>All the audio connections should be done with shielded cables, the shield
+being tied to the ground.
+Cables with two wires but not shielded (like the gain pot or pads) should be
+twisted.
+More generally, use as shortest wire as possible, to minimise exposure to
+noise.</p>
+<p>To prevent ground loops and their induced buzz, the ground should be
+wired in a star topology, and at worst, in a tree.
+The links between different ground sections should be unique, otherwise
+a ground loop is formed.</p>
+<p>In Pédale Vite, ground is arranged in the following manner:</p>
+<ul>
+<li>The audio board has two independant ground planes.
+One for the analogue part, the other one for the digital part.
+These two grounds should be connected at a single point, the JP2 jumper.</li>
+<li>Tha analogue ground should be connected to the outside only by the first
+audio input (left), more specifically the jack part of the jack-XLR combo.
+The ground wires from all other connectors should be connected only to
+one end.
+But at least one end is required to make the shielding work.</li>
+<li>Ground from the other audio connectors are connected to the enclosure,
+either naturally in the case of non-insulated jacks (audio output),
+either by soldering the ground lug to the lug in contact with the enclosure
+in the case of isolated combos.
+This is also true for the combo XLR part from the first input.</li>
+<li>All power supply units are isolated and should not cause any explicit
+link to the ground or earth.</li>
+<li>The earth coming from the mains is tied to the enclosure, and consequently
+to the common ground.
+Ideally, one should run a wire to plug the earth directly on the ground of the
+first audio connector to get an explicit star topology.
+However the back panel from the enclosure is conductive enough to be
+considered as a ground plane and the earth wire can be connected on one of the
+screws fastening the mains plug.</li>
+<li>All the panels from the enclosure should be electrically connected.
+It is possible that the aluminium corner pieces are anodised, so they are not
+conductive.
+Therefore the link should be secured with terminals attached to the screws
+and wires.
+A groove should be cut in the bottom of one of the center pillar to fit a
+terminal that will be hold by the screw of a leg.</li>
+<li>The main board ground is linked to the Pi one by the 40-pin connector.
+This ground is propagated to the display and to the digital ground plane of 
+the audio board.
+Switches use the main board ground but are isolated.</li>
+<li>However the jacks for the expression pedals make contact with the back
+panel.
+Solder only one end of their ground wire.</li>
+<li>Custom boards and the Pi boards have isolated mounting holes, so their
+ground is not directly linked to the enclosure.
+Unfortunately, this is not the case with the display.
+Therefore, it will be necessary to cut its ground plane at the level of each
+“ear” containing the mounting holes, on both sides of the PCB.
+Use a sharp tool or the corner of a file.
+Check with a multimeter that each ear is actually insulated.</li>
+<li>The display has two ground connections with the Pi.
+One directly with the HDMI cable, the other one with the female GPIO port.
+Pins from this port are connected to the Pi via the main board for the
+touchscreen signals.
+There is a ground wire here, so maybe it should not be connected when the HDMI
+port is connected.</li>
+<li>On the audio board, both analogue and digital grounds are not explicitely
+connected.
+It is possible to connect them with a jumper on JP2, located near the power
+supply connector.
+Once all elements are installed in the enclosure (see below), check with a
+multimeter that there is a stable and strong contact between both JP2 pins
+(the small capacitor for HF removal may perturbate the measure).
+If there is, leave JP2 alone, but you should investigate why there is a
+contact.
+If there is not, and that should be the case, add a jumper.</li>
+</ul>
+<p>All these considerations should give a loop-free ground.</p>
+<figure>
+  <a href="ground-path.png"><img src="ground-path-small.png" style="border: #E0E0E0; border-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" /></a>
+  <figcaption>Ground map (bold lines).</figcaption>
+</figure>
+<figure>
+  <a href="connectors-audio-in.jpg"><img src="connectors-audio-in-small.jpg" /></a>
+  <a href="connectors-audio-out.jpg"><img src="connectors-audio-out-small.jpg" /></a>
+  <figcaption>Audio input (left) and output (right) connectors.<br />
+Please ignore the resistors soldered here for an experiment.</figcaption>
+</figure>
+<figure>
+  <a href="board-audio-jumper-gnd.jpg"><img src="board-audio-jumper-gnd-small.jpg" /></a>
+  <figcaption>Connection of the analogue and digital grounds with JP2 on the
+audio board.</figcaption>
+</figure>
+<figure>
+  <a href="enclosure-shielding-1.jpg"><img src="enclosure-shielding-1-small.jpg" /></a>
+  <a href="enclosure-shielding-2.jpg"><img src="enclosure-shielding-2-small.jpg" /></a><br />
+  <a href="enclosure-shielding-3.jpg"><img src="enclosure-shielding-3-small.jpg" /></a>
+  <a href="enclosure-shielding-4.jpg"><img src="enclosure-shielding-4-small.jpg" /></a><br />
+  <a href="enclosure-shielding-5.jpg"><img src="enclosure-shielding-5-small.jpg" /></a>
+  <a href="enclosure-shielding-6.jpg"><img src="enclosure-shielding-6-small.jpg" /></a><br />
+  <figcaption>Interconnection of the enclosure plates.</figcaption>
+</figure>
+<figure>
+  <a href="connectors-expression-pedals.jpg"><img src="connectors-expression-pedals-small.jpg" /></a>
+  <figcaption>Expression pedal connectors.</figcaption>
+</figure>
+<figure>
+  <a href="display-ground-1.jpg"><img src="display-ground-1-small.jpg" /></a>
+  <a href="display-ground-2.jpg"><img src="display-ground-2-small.jpg" /></a>
+  <figcaption>Mounting holes isolated from the ground on the display
+board.</figcaption>
+</figure>
+
+<h5>Pi power supply</h5>
+
+<p>Raspberry Pi 4 can be powered by a USB-C plug or the GPIO port.
+We will power it with the USB-C, the ribbon cable connected to the GPIO being
+not strong enough to convey the required 3&#8239;A.</p>
+<p>Because it is very difficult to find a naked USB-C plug, we are going to
+use a USB-A to USB-C powering cord and cut it.
+We just need about 15cm from the USB-C plug.</p>
+<p>Now we should identify the wires.
+Get the other part of the cable, ending with the USB-A plug, because this plug
+is bigger and it will be easier to check its pins.
+<a href="https://en.wikipedia.org/wiki/USB#/media/File:USB.svg">From the
+front</a>, the connector pins being turned upwards, the negative power pin is
+located at the far left, and the positive one at the far right.
+Also, it is very likely that the shield is connected to the negative pin.
+For the +5V pin, check the continuity between each wire and the pin.
+Do not trust the insulation colors.</p>
+<p>One both wires are found, strip the insulator on 3&#8239;mm.
+If you got the tools, crimp them with small cylindrical terminals, because
+these wires are thin and may move in the terminal blocks.
+If not, strip more insulator and fold the copper in order to get more
+material.
+Fold the other wires against the main cable and attach them with insulated
+adhesive tape.</p>
+<p>Finally, connect the cable to the terminal blocks according to the
+polarity.</p>
+<figure>
+  <a href="board-5v-wires.jpg"><img src="board-5v-wires-small.jpg" /></a>
+  <figcaption>Pi power supply. The 5V cable is the white one.</figcaption>
+</figure>
 
 
 
@@ -530,28 +825,102 @@ They will be soldered and connected later.</p>
 <h4>First assembly</h4>
 
 <p>Most parts can now be screwed to the enclosure:
-boards, plugs, switches…</p>
-<div class="pic"><a href="box-boards-only-inside.jpg"><img src="box-boards-only-inside-small.jpg" /></a></div>
-<p>Screwing the Pi mounting board can be difficult.
-Use large screws in order to put the nuts when the board is tilted.
-Fasten the nuts only when all the screws are set.
-If required, temporarily disassemble the lateral panel on the enclosure if
-it gets in the way.</p>
-<p>It’s also recommened not to put the two top-right footswitches, located
-under the Pi mounting board.
-Indeed, soldering the wires will be pretty hard with the mounting board over
-them.</p>
-<div class="pic"><a href="box-top.jpg"><img src="box-top-small.jpg" /></a></div>
-<div class="pic"><a href="box-rear.jpg"><img src="box-rear-small.jpg" /></a></div>
-<p>Note that the Pi is sligthly behind the back panel, and that two of the
-four USB ports are not reachable.
-This is on purpose, in order to keep the USB cable for the soundcard in the
-enclosure and to prevent any unwanted removal.</p>
+boards, plugs, switches…
+Because the Pi is very close to the top panel and its PCB is quite flexible,
+it will be necessary to cut the legs from the USB and RJ45 connectors, which
+are longer than the other through-hole components.
+The micro-SD card drive is quite high too.
+It is connected to the ground so it is not a real problem, but we want to
+avoid ground loops.
+To be safe, line the Pi location on the panel with insulating adhesive
+tape.</p>
+<figure>
+  <a href="enclosure-inside-boards-only.jpg"><img src="enclosure-inside-boards-only-small.jpg" /></a>
+  <figcaption>Enclosure inside, no cables, no Pi.</figcaption>
+</figure>
+<p>Put some insulating tape on the corner piece below the audio board,
+too.</p>
+<p>Also, it will be necessary to put some insulating tape on the bottom metal
+sheet, in front of the transformer screw.
+Indeed, if there were a conductive loop going through the torus, it would be
+equivalent to a short-circuited turn, and would endanger the transformer.</p>
+<figure>
+  <a href="transformer-insulation.jpg"><img src="transformer-insulation-small.jpg" /></a>
+  <figcaption>Insulation to protect the transformer screw on the bottom plate.</figcaption>
+</figure>
+<p>Speaking about the transformer, I estimated necessary to add a large washer
+on its mounting screw, to avoid plate deformation under the transformer
+weight.</p>
+<figure>
+  <a href="transformer-washer.jpg"><img src="transformer-washer-small.jpg" /></a>
+  <figcaption>Washer stiffening the plate part holding the
+transformer.</figcaption>
+</figure>
+<p>Heights of the struts for each board:</p>
+<ul>
+<li>LEDs: 5–10mm</li>
+<li>Navigation switches: 10mm</li>
+<li>Display: 4mm</li>
+<li>5V PSU: 5mm</li>
+<li>Raspberry Pi 4: 3mm</li>
+<li>Audio board: 12–13mm</li>
+<li>Main board: 5mm</li>
+<li>2×15V AC→DC: 5mm</li>
+</ul>
+<p>At this step, it is probably advised to mount the Pi only temporarily.
+Indeed, access to the SD card will be required when installing the software.
+When everything will be mounted, it will be difficult to access it.</p>
 
-<h4>Soldering the switches</h4>
+<h4>Mains cables</h4>
+
+<p>First, insert a fuse in its support, along with a spare one in the
+second slot.
+Check with a multimeter how the C14 socket and the switch are
+wired.</p>
+<p>Use stranded wires designed for power supply.
+Before soldering anything, don’t forget to pass the wires through the
+insulated sleeves protecting the plugs.
+Use enough cable to make sure that these sleeves can be moved back when
+soldering.</p>
+<p>There are several cables to build: two for the line and neutral between the
+socket and the switch, one between the earth and the enclosure, and two
+between the switch and the 5V module.
+The 15V transformer has its own wires, which should be connected at the
+output of the switch too.
+Therefore the switch lugs should connect two wires each, one going to the 5V
+module, the other one to the 15V transformer.</p>
+<p>If you have got the tools to crimp Faston terminals, cut the wires to the
+required size and crimp them.
+Don’t forget to crimp both cables on the same terminal for the switch
+lugs.</p>
+<p>Once the terminals are crimped, add a insulating box.
+It may be necessary to slightly bend the male lugs on the C14 and switch block
+to prevent any contact with the bottom part of the enclosure.</p>
+<figure>
+  <a href="cables-mains.jpg"><img src="cables-mains-small.jpg" /></a>
+  <figcaption>Mains wiring using insulated Faston terminals.</figcaption>
+</figure>
+<p>Without Faston terminals, the wires should be soldered.
+Before soldering, don’t forget to put two or three heat-shrinkable tubes per
+solder joint to avoid letting conductive parts exposed (with the exception of
+the earth wire).</p>
+<p>Fasten both outputs from the transformer in the terminal blocks of the 15V
+board.
+These two outputs should be wired in series with the same polarity.
+On the board, both central terminal blocks are wired together.
+In case of doubt, check the transformer with a multimeter.
+If the voltage in series is very small, invert one of the transformer
+outputs.</p>
+<figure>
+  <a href="board-2x15vacdc.jpg"><img src="board-2x15vacdc-small2.jpg" /></a>
+  <figcaption>2&times;15V transformer secundary connected to the AC to DC
+board</figcaption>
+</figure>
+
+<h4>Soldering the footswitches</h4>
 
 <p>There is less ground wires out of the connectors than signal wires.
-Four for the footswitches and two for the user interface buttons.
+Four for the footswitches.
 Just solder the ground wires to the closest switches and daisy-chain
 it to the switches nearby.</p>
 <p>Footswitches requires some attention, if xPDT are used.
@@ -560,7 +929,8 @@ mark on the enclosure).
 The common pin (for the ground) is on the center, that’s all we know.
 Check with a multimeter what is the pin shored when the switch is held
 down.</p>
-<p>Also, depending on the model you got, the plastic box may be quite
+<p>The footswitch model included in the list is a robust one.
+However, depending on the model you got, the plastic box may be quite
 sensitive to heat and could melt easily.
 If one of the pin just slightly moves during soldering, the contact may be
 damaged.
@@ -568,165 +938,87 @@ If it happens on DPDT switches, you can desolder it and try the other path.
 Always check the contact with a multimeter once both pins are soldered.</p>
 <p>When all footswitch wires are soldered, they can be grouped by
 connector.</p>
-<div class="pic"><a href="box-cables1-inside.jpg"><img src="box-cables1-inside-small.jpg" /></a></div>
+<figure>
+  <a href="footswitch-wiring.jpg"><img src="footswitch-wiring-small.jpg" /></a>
+  <figcaption>Connecting the footswitches.</figcaption>
+</figure>
 
-<h4>Soldering the power cables</h4>
+<h4>Last adjustments and enclosure closing</h4>
 
-<p>Use stranded wires designed for power supply.
-Before soldering anything, don’t forget to pass the wires through the
-insulated sleeves protecting the plugs.
-Use enough cable to make sure that these sleeves can be moved back when
-soldering.</p>
-<p>Connect the earth (middle pin) on the C14 female socket to a terminal
-screwed to the enclosure.</p>
-<p>Connect a female power plug to a 2-conductor cable of about 50cm.
-This plug will be connected to the Pi power supply.
-The cable must be long enough to detach the base (on which the power supply
-will be attached) from the enclosure while keeping everything connected.
-Solder one of the wire to the C14 socket, and the other one to the power
-switch (again, check the pins first).</p>
-<p>Derivates another female power plug from this first plug with a 15-cm
-cable.
-It will power the supply for the audio interface.</p>
-<p>Finally, connect the switch to the C14 socket using the remaining pins.</p>
-<p>Screw the C14 socket and the power switch to the enclosure and put the
-insulated sleeves.
-You can use a small zip tie to maintain them if required.</p>
-<div class="pic"><a href="box-inside-power-cables.jpg"><img src="box-inside-power-cables-small.jpg" /></a></div>
-
-<h4>Soldering the audio cables</h4>
-
-<p>Initially, I wanted to use balanced plugs and wires to take advantage of
-the balanced inputs, but finally I only used unbalanced wiring.</p>
-<p>Cut 4 70cm mono cables and a stereo cable of the same length (for the
-headphones).
-Cables could be shorter, but I keep the same requirement as the power cable
-for the audio interface: the enclosure must be open with everything
-connected.</p>
-<p>Solder a male jack plug to each of these cables.</p>
-<p>After soldering, check the contact on both ends of each wire, and the
-(infinite) resistance between all the conductors.</p>
-<p>Solder the female sockets, check them.
-Fasten the cables to the enclosure as close as possible to the sockets, so
-moving the cables does not damage the solder joints.</p>
-<div class="pic"><a href="box-inside-audio-cables.jpg"><img src="box-inside-audio-cables-small.jpg" /></a></div>
-<p>Note: I used high-quaity cables and male plugs.
-I think it was not necessary.
-Cables are thick and not very flexible, which makes things more complicated.
-Moreover, a placement error on the audio interface forced me to use
-right-angle plugs, and this was not necessary again.
-Conversely, I regret not having used high-quality female sockets everywhere.
-Mines don’t hold the male plugs very well and are prone to rotate.</p>
-<p>Finally, solder the cables for the expression pedals.</p>
-<div class="pic"><a href="box-inside-all-cables.jpg"><img src="box-inside-all-cables-small.jpg" /></a></div>
-
-<h4>Internal USB cable</h4>
-
-<p>It is possible to build a USB cable with a right-angle male connector
-which stick as close as possible to the Pi.
-We left a gap between the Pi and the back panel for this purpose.
-This prevents the USB cable to make a loop out of the enclosure, while
-keeping the Pi close to the panel.</p>
-<div class="pic"><a href="usb-cable-plugged.jpg"><img src="usb-cable-plugged-small.jpg" /></a></div>
-<p>Cut a standard USB cable.
-You need about 50cm between the cut and the USB-B plug (on the audio interface
-side).</p>
-<p>The plug I used is designed to be soldered directly on a PCB not on a
-cable.
-We have two choices: solder the wire directly to the pins and insulate them
-with heat shrink tubes (or just insulated tape), or build a small board
-to obtain something stronger.
-We opted for the latter.</p>
-<p>We use a small bit of prototyping board.
-Because the pins are not spaced from 1/10’, we cannot put them dirctly in the
-holes.
-Instead, we will pass the insulated wires through them (see below).
-Keep a piece of board 4-hole long and 1 hole and a bit more wide.
-Cut it in order to fit the board between the two metal strips on the
-bottom side of the plug.</p>
-<p>There are two plastic wedges on this side.
-Drill the board with cisors tip or a small drill to make them fit.</p>
-<p>Pass the wire inside the 4 holes.
-Solder them as close as possible to the plug, giving them a
-right-angle orientation.
-The order is: red, white, green, black when the plug is seen from
-behind, internal contacts turned up and solederd wire turned down.
-Check the connections with a multimeter.</p>
-<p>Squeeze the board to the plug to press the wires and hold it by
-bending the metal strips.
-Cut the pins as short as possible to shorten the overall plug length.</p>
-<p>Finally, solder the cable screen to the plug.</p>
-<p>During the assembly, make sure that the copper on the board don’t
-make contact between the wires.
-You can remove all the copper to make sure and keep only the fiber
-glass board.</p>
-<div class="pic"><a href="usb-cable-plugged2.jpg"><img src="usb-cable-plugged2-small.jpg" /></a></div>
-
-<h4>Power supply for the audio interface</h4>
-
-<p>Build a cable with three parts the following way:</p>
-<p>First part is the power supply whose plug has been cut.
-Strip the wires.</p>
-<p>Second part, the input, is made of the USB-B female socket.
-Cut a 4&times;4 square of prototyping board.
-This square must be hold between the socket strips.
-Pass 3 wires in the holes.
-A black wire for the ground, and white and green wires for data.
-(<a href="https://en.wikipedia.org/wiki/USB">layout</a>, for
-reference).
-Place the wire close to the pins and go out from the sides.
-The wires are wedged between the board and the socket.</p>
-<div class="pic"><a href="audio-power-cable-usb-socket.png"><img src="audio-power-cable-usb-socket-small.png" /></a></div>
-<p>The blue square locates the socket pins.
-Once bent, the strips maintain the assembly.
-Solder wires and pins.
-Make solder bridges to join both.</p>
-<p>The third part is the male USB-B plug.
-Solder data wires.
-Solder the positive wire from the power supply to the +5V on the plug.
-Solder the negative wire from the power supply and the black wire from
-the socket to the ground one the plug.</p>
-<p>Protect everything with heat shrink or insulated tape.
-This assembly is inserted between the main USB cable and the audio
-interface.</p>
-<p>Possibly: add an RC filter (not described here) if the power supply is too
-cheap.</p>
-
-<h4>Base of the enclosure</h4>
-
-<p>The base must support the audio interface, both power supplies
-and possibly a RC filter.
-Cut a 520&times;250&times;10mm³ wood board.</p>
-<p>First choose an oritentation (what it top, bottom, left, right…)
-Wedge the board under the enclosure with clamps and drill 8 holes with a thin
-drill (2mm), one in each foot and two in each side panel.
-Make sure not to bump into the screws holding the metal sheet.
-Screw everything for reference then remove the base for the next steps.</p>
-<p>Put the audio interface.
-Make room for the cables; plug them when you place the interface.
-As said previously, my own eveluation was bad and I had to use specific
-plugs.</p>
-<p>Put its power supply too.
-I planned to fix the supply and the power plug which is at a right angle.</p>
-<p>Draw on the base the shape of the audio interface and the power supply with
-a pencil.
-Drill holes to pass zip ties which will hold the devices.
-To do so, drill a couple of small holes distant of a few millimeters.
-Remove the remaining parts between the holes with any suitable tool
-(screewdriver, thin cisel…)
-Work on both sides simultaneously to avoid taking away the bottom wood layer
-when reaching the other side.</p>
-<div class="pic"><a href="box-bot-inside.jpg"><img src="box-bot-inside-small.jpg" /></a></div>
-<p><i>The picture above doesn’t show the second power supply nor the RC
-filter, not built yet at the moment of the shoot.</i></p>
-<p>Fasten the zip ties.
-You will need at least two of them for each loop around the audio interface.
-The second power supply can be attached to the first one with duct tape.
-The RC filter can be screwed on the base, near the audio interface.</p>
-<p>Calibrate the audio interface (gain and volume knobs) before closing
-the box.</p>
-<p>For the enclosure feets, you can use specific rubber parts fitting on the
-screws.</p>
+<p>Add the remaining cables.
+All of them.</p>
+<figure>
+  <a href="board-main.jpg"><img src="board-main-small.jpg" /></a>
+  <figcaption>Main board, hyperconnected.<br >
+Don’t pay attention to the inversion of the blue and green wires on the audio
+board connector.
+There was a mistake in this board version.</figcaption>
+</figure>
+<figure>
+  <a href="board-audio-output.jpg"><img src="board-audio-output-small.jpg" /></a>
+  <figcaption>Output connectors on the audio board.
+The balanced output is on the 1–2–3 part.</figcaption>
+</figure>
+<p>Personnally, I haven’t included the gain potentiometer and switches for the
+audio board because I don’t need it at the moment.
+Instead, I used jumpers to select the microphone level instead of the
+line level at the XLR input and set the global gain with a simple
+resistor.</p>
+<figure>
+  <a href="connectors-missing-gain-pad.jpg"><img src="connectors-missing-gain-pad-small.jpg" /></a>
+  <figcaption>Lazyness wins. No controls for the gains (yet).</figcaption>
+</figure>
+<p>For a given input gain, the resistance in ohms is given by the following
+formula:</p>
+<p>R&nbsp;=&nbsp;2000&nbsp;/&nbsp;(G<sub>lin</sub>&nbsp;&minus;&nbsp;1)&nbsp;=&nbsp;2000&nbsp;/&nbsp;(10<sup>G<sub>dB</sub>/20</sup>&nbsp;&minus;&nbsp;1)</p>
+<p>Where G<sub>lin</sub> is the linear gain and G<sub>dB</sub> the same gain
+expressed in decibels.
+To obtain a unit gain, an infinite resistance is needed, so the <code>Gain
+pot</code> connectors should be left empty.
+Practically, it is probably more advised not to go over 10&#8239;kΩ to avoid
+brining too much thermal noise in.</p>
+<p>To hold the resistor, crimp its two legs in Dupont female terminals, put them
+in a box and use it as a jumper.</p>
+<figure>
+  <a href="resistor-jumper.jpg"><img src="resistor-jumper-small.jpg" /></a>
+  <figcaption>Resistor in a Dupont box.</figcaption>
+</figure>
+<figure>
+  <a href="board-audio-input.jpg"><img src="board-audio-input-small.jpg" /></a>
+  <figcaption>Input connectors on the audio board.
+Mic level is selected with two jumpers, some switch slots have been left empty
+and a resistor replaces the gain pot on the first input.</figcaption>
+</figure>
+<figure>
+  <a href="pedalevite-open.jpg"><img src="pedalevite-open-small.jpg" /></a>
+  <figcaption>Enclosure content is ready.
+Anyway on this version, the touchscreen wiring is missing.</figcaption>
+</figure>
+<p>When everything is ready and the enclosure can be closed, adjust the ground
+terminal for the bottom plate so it lies just on the plliar screew hole.
+Put the plate.
+Insert 40mm screws in the rubber legs and screw them in the pillars and side
+stands without forcing.
+The rubber legs just should stop spinning freely, don’t tighten the screws
+more.
+Be careful with the screws (ore more exactly the screw treads in the holes)
+because it is possible that you will have to open and close the enclosure many
+times for final adjustments and later, maintenance.
+Actually I advise not to close the enclosure until the pedalboard is fully
+operational, and to remove the Pi for software install.</p>
+<figure>
+  <a href="enclosure-legs.jpg"><img src="enclosure-legs-small.jpg" /></a>
+  <figcaption>Eight legs for a single enclosure.</figcaption>
+</figure>
+<figure>
+  <a href="enclosure-back.jpg"><img src="enclosure-back-small.jpg" /></a>
+  <figcaption>Pédale Vite from the back.</figcaption>
+</figure>
+<p>During your tests, if you realize that you inverted some footswitches,
+switches, rotary encoder directions or other things, it is still possible to
+invert them back.
+Either on the hardware side by swapping some wires within a connector, either
+on the software.</p>
 
 
 
@@ -742,13 +1034,10 @@ I will try later to do it to simplify the task.</p>
 <h3><a id="soft-prepare"></a>Preparing the system</h3>
 
 <p>Download
-<a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian</a>, light
-version.
-Minimum recommended version is from 2017-11-29 (Stretch).
-Recent Jessie-based Raspbian should work too, with minor installation changes.
-No need to use NOOBS because we will have to remove it later.
-Anyway this remains technically possible.</p>
-<p>Unpack somewhere the <code>.img</code> file contained in the archive.</p>
+<a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian</a>,
+<strong>light version</strong>.
+Minimum recommended version is from 2019-09-26 (Buster).
+Unpack somewhere the <code>.img</code> file contained in the archive.</p>
 
 <p>First format the card, if not previously done:</p>
 <ul>
@@ -773,11 +1062,16 @@ file (its content doesn’t care) named <code>ssh</code>.</p>
 
 <p>The system is now ready to be run for the first time.
 Remove the micro-SD car from the computer and insert it in the Pi socket.
-Plug it to the network and to the power supply.</p>
+This can be tricky if your Pi is already in the enclosure, because the SD-card
+reader is not accessed easily.
+In this case, hold the card at the very end of small pliers and introduce it
+gently below the Pi board.</p>
+<p>Plug the Pi to the network and to the power supply if it is not mounted
+yet.</p>
 
 
 
-<h3><a id="soft-startup"></a>Startup and base configuration</h3>
+<h3><a id="soft-startup"></a>Startup and system update</h3>
 
 <p>Start up the Pi, wait for the system to load and SSH to run.
 Normally, the Pi is allocated an IP address with DHCP.
@@ -787,6 +1081,28 @@ start up and use the local terminal.</p>
 <p>Log in with the default identifiers (<code>pi</code> /
 <code>raspberry</code>).</p>
 
+<p>If required, you can set your language and keyboard preferences
+(optional):</p>
+<pre class="term">sudo raspi-config</pre>
+<p>Select <code>4. Localisation Options</code> and set your
+language and keyboard preferences.
+Finally, hit the left arrow to select <code>Finish</code>.
+No need to reboot once it is done, we’ll do it a bit later.</p>
+
+<p>Now, update the system:</p>
+<pre class="term">sudo apt-get -y update
+sudo apt-get -y dist-upgrade</pre>
+<p>This will take a while.
+Sometimes, a information message will block the operation.
+Scroll down and quit the text viewing program to continue.</p>
+
+<p>We can reboot now:</p>
+<pre class="term">sudo shutdown -r now</pre>
+
+
+
+<h3><a id="soft-baseconf"></a>Basic configuration</h3>
+
 <p>Let’s begin with some settings.
 We’ll need to activate the SPI and I²C interfaces to communicate with our
 components.</p>
@@ -795,60 +1111,50 @@ components.</p>
 follows:</p>
 <pre class="term">dtparam=i2c_arm=on
 dtparam=spi=on
-#dtparam=audio=on</pre>
+#dtparam=audio=on
+#dtoverlay=vc4-fkms-v3d</pre>
 <p>Therefore the default audio device is removed.
-This is important because it simplifies our audio interface installation.
+The last line is written in different locations, make sure to comment them all.
+Add the following lines in the <code>[all]</code> section at the end:</p>
+<pre class="term"># Disable rainbow image at boot
+disable_splash=1
+
+# Waveshare 4 inch HDMI LCD
+hdmi_group=2
+hdmi_mode=87
+hdmi_timings=480 0 40 10 80 800 0 13 3 32 0 0 0 60 0 32000000 3
+disable_overscan=1
+framebuffer_priority=2
+dtoverlay=ads7846,cs=1,penirq=12,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150,xmin=200,xmax=3900,ymin=200,ymax=3900
+display_hdmi_rotate=1
+
+# No Bluetooth, no WiFi
+dtoverlay=disable-bt
+dtoverlay=disable-wifi</pre>
+<p>Beware, the instruction <code>dtoverlay=ads7846…ymax=3900</code> fits on a
+single line.
+<code>Ctrl+X</code> to save and quit.
 Then, we ask to load the I2C module during boot:</p>
 <pre class="term">sudo nano /etc/modules</pre>
 <p>Add the following lines at the end of the file:</p>
 <pre class="term">i2c-bcm2708
 i2c-dev</pre>
-<p>We now ask to boot to the command line to avoid loading the graphical
-interface subsystem:</p>
-<pre class="term">sudo systemctl set-default multi-user.target
-sudo ln -fs /lib/systemd/system/getty@.service \
-/etc/systemd/system/getty.target.wants/getty@tty1.service</pre>
-<p>Now you can set your language and keyboard preferences (optional):</p>
-<pre class="term">sudo raspi-config</pre>
-<p>Select <code>4. Localisation Options</code> and set your
-language and keyboard preferences.
-Finally, hit the left arrow to select <code>Finish</code>.
-Reboot if the program requires it:</p>
-<pre class="term">sudo shutdown -r now</pre>
 
 
 
-<h3><a id="soft-update"></a>System update</h3>
+<h3><a id="soft-opt-startup"></a>Boot time optimisation</h3>
 
-<p>Update the system:</p>
-<pre class="term">sudo apt-get -y update
-sudo apt-get -y dist-upgrade</pre>
-<p>This will take a while.
-Sometimes, a information message will block the operation.
-Scroll down and quit the text viewing program to continue.
-No need to reboot once it is done, we’ll do it a bit later.</p>
-
-
-
-<h3><a id="soft-install-aud"></a>Installing the audio interface</h3>
-
-<p>Plug the interface.
-Open a console and type:</p>
-<pre class="term">aplay -l</pre>
-<p>The USB interface should be on the list.
-Then, edit:</p>
-<pre class="term">sudo nano /lib/modprobe.d/aliases.conf</pre>
-<p>Comment the line lowering the priority of USB interfaces:</p>
-<pre class="term">#options snd-usb-audio index=-2</pre>
-<p>Reboot to validate the parameters.</p>
-<pre class="term">sudo shutdown -r now</pre>
-<p>Log in again and type:</p>
-<pre class="term">cat /proc/asound/modules</pre>
-<p>The list should show the USB audio in position 0.
-Find somewhere a wav file and import it on the Pi (with a USB key for example).
-Plug the audio output, then type:</p>
-<pre class="term">aplay -v -D plughw:0,0 file.wav</pre>
-<p>The sound should play fine, without any glitch.</p>
+<p>Edit the file:</p>
+<pre class="term">sudo nano /etc/modprobe.d/raspi-blacklist.conf</pre>
+<p>Add the following lines to deactivate WiFi and Bluetooth&#8239;:</p>
+<pre class="term">#wifi
+blacklist brcmfmac
+blacklist brcmutil
+#bluetooth
+blacklist btbcm
+blacklist hci_uart</pre>
+<p>Then type:</p>
+<pre class="term">sudo apt-get remove -y --purge pi-bluetooth</pre>
 
 
 
@@ -856,11 +1162,19 @@ Plug the audio output, then type:</p>
 
 <p>Install git, Jack2, ALSA and autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev
-sudo apt-get -y install git git-core autoconf insserv</pre>
-<p>wiringPi has its own installing procedure:</p>
-<pre class="term">git clone git://git.drogon.net/wiringPi
-cd wiringPi
-./build</pre>
+sudo apt-get -y install git git-core autoconf</pre>
+
+<p>WiringPi should be in the standard system distribution, but the included
+version may not support the Pi 4 correctly.
+Type&#8239;:</p>
+<pre class="term">gpio -v</pre>
+<p>If the command cannot be found or if the displayed version is earlier than
+2.52, the latest version should be manally installed&#8239;:</p>
+<pre class="term">cd /tmp
+wget https://project-downloads.drogon.net/wiringpi-latest.deb
+sudo dpkg -i wiringpi-latest.deb
+gpio -v</pre>
+<p>Again, check that the version is 2.52 or later.</p>
 
 
 
@@ -874,7 +1188,7 @@ git clone https://github.com/EleonoreMizo/pedalevite.git</pre>
 <p>Compile:</p>
 <pre class="term">cd pedalevite/build/unix
 ./autogen.sh
-./configure-release
+./configure-v2-release
 make -j4</pre>
 <p>Check that everything succeeded and that there is an executable file
 <code>pedalevite</code> in the current directory.
@@ -883,8 +1197,8 @@ files:</p>
 <pre class="term">sudo mkdir -p /opt/pedalevite/bin /opt/pedalevite/etc/config
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
 sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh</pre>
-<p>The Pi can now be inserted in the enclosure and connected to all the
-required cards and peripherals (see the building instructions).
+<p>The Pi can possibly be connected to all the required cards and peripherals
+(see the building instructions).
 Once done, run Pédale Vite for a quick check:</p>
 <pre class="term">sudo /opt/pedalevite/bin/pedalevite</pre>
 <p>The program should run normally.
@@ -914,18 +1228,19 @@ fi
 
 case "$1" in
     start)
-	echo "Starting Pedale Vite"
-	/opt/pedalevite/bin/pedalevite &
-	echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-	;;
+        echo "Starting Pedale Vite"
+        /opt/pedalevite/bin/pedalevite &
+        echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        systemctl stop getty@tty1.service
+        ;;
     stop)
-	echo "Stopping Pedale Vite"
-	killall pedalevite
-	;;
+        echo "Stopping Pedale Vite"
+        killall pedalevite
+        ;;
     *)
-	echo "Usage: /etc/init.d/pedalevite start|stop"
-	exit 1
-	;;
+        echo "Usage: /etc/init.d/pedalevite start|stop"
+        exit 1
+        ;;
 esac
 
 exit 0</pre>
@@ -938,133 +1253,74 @@ It can be run immediately, too:</p>
 
 
 
-<h3><a id="soft-opt-startup"></a>Boot time optimisation</h3>
-
-<p>Edit the file:</p>
-<pre class="term">sudo nano /etc/modprobe.d/raspi-blacklist.conf</pre>
-<p>Add the following lines to deactivate WiFi and Bluetooth&#8239;:</p>
-<pre class="term">#wifi
-blacklist brcmfmac
-blacklist brcmutil
-#bluetooth
-blacklist btbcm
-blacklist hci_uart</pre>
-
-
-
-<h3><a id="soft-skip-noobs"></a>NOOBS removal</h3>
-
-<p>If you installed Raspian directly as we recommended, you can skip this
-part.
-Otherwise, you should remove NOOBS which is the main item slowing down the
-boot.</p>
-<pre class="term">sudo fdisk -l</pre>
-<p>Find the NOOBS partition number.
-Usually it is #1, 1GB in FAT16.
-Find the number of the other bood partition, in FAT32.
-Usually it is #6, preceding the large Linux partition which covers most of
-the drive.</p>
-<p>Mount the NOOBS partition:</p>
-<pre class="term">sudo mkdir /mnt/noobs
-sudo mount /dev/mmcblk0p1 /mnt/noobs</pre>
-<p>Create or modify <code>autoboot.txt</code>&#8239;:
-<pre class="term">nano /mnt/noobs/autoboot.txt</pre>
-<p>Add the following line, possibly replacing the 6 with the desired
-partition number:</p>
-<pre class="term">boot_partition=6</pre>
-<p>Reboot to check that everything is fine.</p>
-
-
-
 <h3><a id="soft-ro"></a>Read-only operating system and other optimisations</h3>
 
 <p>This part should be done with care in order not to let the system enter
-an inconsistent state.
-Let’s start by removing tasks that are not required nor adapted to read-only
+an inconsistent state.</p>
+
+<h4>Script to enable the write mode back</h4>
+
+<p>First, add a little helper script to switch the filesystem back in read-write
+mode.
+You will need to manually execute this script each time you need to update
+something, compile or any other operation requiring disk write.</p>
+<pre class="term">cd ~
+nano fs-rw.sh</pre>
+<p>Add to this new file:</p>
+<pre class="term">#!/bin/sh
+sudo mount -o remount,rw /
+sudo mount -o remount,rw /boot</pre>
+<p>Give it the execution permissions:</p>
+<pre class="term">chmod +x ./fs-rw.sh</pre>
+
+<h4>Main course</h4>
+
+<p>Let’s remove tasks that are not required nor adapted to read-only
 operations:</p>
-<pre class="term">sudo apt-get -y remove --purge wolfram-engine triggerhappy pi-bluetooth
-sudo apt-get -y remove --purge cron anacron logrotate dbus dphys-swapfile</pre>
-<p>Remove the X-server and related:</p>
-<pre class="term">sudo apt-get -y remove --purge xserver-common lightdm
-sudo insserv -r x11-common</pre>
-<p>Remove the now useless dependencies:</p>
-<pre class="term">sudo apt-get -y autoremove --purge</pre>
-<p>Install busybox syslog instead of rsyslog&#8239;:</p>
-<pre class="term">sudo apt-get -y install busybox-syslogd
+<pre class="term">sudo apt-get remove -y --force-yes --purge triggerhappy logrotate \
+    dphys-swapfile fake-hwclock
+sudo apt-get -y --force-yes autoremove --purge</pre>
+<p>Replace log management with busybox (use logread if needed):</p>
+<pre class="term">sudo apt-get -y --force-yes install ntp busybox-syslogd
 sudo dpkg --purge rsyslog</pre>
-<p>Change the location of the DHCP leases:</p>
-<pre class="term">sudo rm -rf /var/lib/dhcp/
-sudo rm -rf /var/lib/dhcpcd5/
-sudo ln -s /tmp /var/lib/dhcp
-sudo ln -s /tmp /var/lib/dhcpcd5
-sudo rm /etc/resolv.conf
-sudo ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf</pre>
+
+<p>Edit the boot parameters:</p>
+<pre class="term">sudo nano /boot/cmdline.txt</pre>
+<p>Add <code>fastboot noswap ro logo.nologo</code> at the very end of the line:</p>
+<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fastboot noswap ro logo.nologo</span></pre>
+
 <p>Replace some <code>var</code> subfolders with symbolic links on the
 RAM-disk:</p>
-<pre class="term">sudo rm -rf /var/lib/dhcp/ /var/run /var/spool /var/lock
-sudo ln -s /tmp /var/lib/dhcp/
-sudo ln -s /tmp /var/run
+<pre class="term">sudo rm -rf /var/spool
 sudo ln -s /tmp /var/spool
-sudo ln -s /tmp /var/lock
-sudo rm /var/lib/systemd/random-seed
-sudo ln -s /tmp/random-seed /var/lib/systemd/random-seed
-sudo rmdir /run/sshd
-sudo ln -s /tmp /run/sshd</pre>
-<p>Create or edit the <code>/tmp/random-seed</code> file at reboot:</p>
-<pre class="term">sudo nano /lib/systemd/system/systemd-random-seed.service</pre>
-<p>Add a <code>ExecStartPre</code> line in
-<code>[Services]</code>&#8239;:</p>
-<pre class="term">[Service]
-Type=oneshot
-RemainAfterExit=yes
-<span class="termhl">ExecStartPre=/bin/echo "" &gt;/tmp/random-seed</span>
-ExecStart=/lib/systemd/systemd-random-seed load
-ExecStop=/lib/systemd/systemd-random-seed save</pre>
-<p>Other details:</p>
-<pre class="term">sudo nano /etc/init.d/checkroot.sh</pre>
-<p>If the file exists, comment the <code>do_start</code> in the
-<code>case</code> block at the end of the file:</p>
-<pre class="term">case "$1" in
-  start|"")
-        <span class="termhl">#</span>do_start
-        ;;
-  restart|reload|force-reload)</pre>
-<pre class="term">sudo nano /etc/init.d/checkfs.sh</pre>
-<p>Same, comment the <code>do_start</code> at the end if the file exists.</p>
-<pre class="term">sudo nano /etc/init.d/checkroot-bootclean.sh</pre>
-<p>Comment the <code>rm</code> and the <code>clean_all</code> in the
-<code>case start</code> if the file exists</p>
-<pre class="term">sudo insserv -r bootlogs
-sudo insserv -r alsa-utils
-sudo insserv -r console-setup
-sudo insserv -r fake-hwclock</pre>
-<p>It’s not important if several of the commands above fail (“no such file or
-directory”).</p>
-<pre class="term">sudo nano /etc/systemd/system/dhcpcd5.service</pre>
-<p>The file may also be called <code>dhcpcd5</code>.
-Modify it to put the <code>PIDFile</code> in
-<code>/var</code>&#8239;:</p>
-<pre class="term">[Service]
-Type=forking
-PIDFile=<span class="termhl">/var</span>/run/dhcpcd.pid
-ExecStart=/sbin/dhcpcd -q -b
-ExecStop=/sbin/dhcpcd -x</pre>
+sudo rm -rf /var/lib/lightdm /var/cache/lightdm
+sudo ln -s /tmp /var/lib/lightdm
+sudo ln -s /tmp /var/cache/lightdm</pre>
+
+<p>Edot var.conf:</p>
+<pre class="term">sudo nano /usr/lib/tmpfiles.d/var.conf</pre>
+<p>Replace the spool permission <code>0755</code> with
+<code>1777</code>:</p>
+<pre class="term">d /var/spool <span class="termhl">1777</span> - - -</pre>
+
+<p>Move <code>dhcpd.resolv.conf</code> to <code>tmpfs</code>:</p>
+<pre class="term">sudo touch /tmp/dhcpcd.resolv.conf
+sudo rm /etc/resolv.conf
+sudo ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf</pre>
+
+<p>Edit <code>fstab</code>:</p>
 <pre class="term">sudo nano /etc/fstab</pre>
 <p>Add <code>,ro</code> after the defaults for the disk patitions:</p>
 <pre class="term">proc            /proc           proc    defaults             0       0
 /dev/mmcblk0p1  /boot           vfat    defaults<span class="termhl">,ro</span>          0       2
 /dev/mmcblk0p2  /               ext4    defaults<span class="termhl">,ro</span>,noatime  0       1</pre>
 <p>These lines may also start with <code>PARTUUID=</code>.
-<code>mmcblk0p1</code> and <code>2</code> will be replaced by
-<code>6</code> or <code>7</code> in case of a NOOBS install.
 Also add the lines:</p>
 <pre class="term">tmpfs           /tmp            tmpfs   nosuid,nodev         0       0
 tmpfs           /var/log        tmpfs   nosuid,nodev         0       0
 tmpfs           /var/tmp        tmpfs   nosuid,nodev         0       0</pre>
-<pre class="term">sudo nano /boot/cmdline.txt</pre>
-<p>Add <code>fastboot noswap ro</code> at the very end of the line:</p>
-<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait fastboot noswap ro</pre>
-<p><code>mmcblk0p1</code> can change as well, depending on NOOBS.</p>
+
+<p>Edit <code>rc.local</code>:</p>
 <pre class="term">sudo nano /etc/rc.local</pre>
 <p>Add the <code>chmod</code> before the <code>exit 0</code>:</p>
 <pre class="term">  printf "My IP address is %s\n" "$_IP"
@@ -1072,34 +1328,16 @@ fi
 
 <span class="termhl">chmod g+w,o+w /tmp</span>
 exit 0</pre>
-<p>To automatically switch to read-only mode when logging off,
+
+<p>Optional: to automatically switch to read-only mode when logging off,
 edit or create the <code>bash.bash_logout</code> file:</p>
 <pre class="term">sudo nano /etc/bash.bash_logout</pre>
 <p>Add the following lines at the end:</p>
 <pre class="term">mount -o remount,ro /
 mount -o remount,ro /boot</pre>
-<p>Notifies the changes to <code>systemd</code>:</p>
-<pre class="term">sudo systemctl daemon-reload</pre>
+
 <p>Reboot.
 Pédale Vite is now functional.</p>
-<p>Note: if you haven’t changed the <code>pi</code> account password, the
-warning script (<code>/etc/profile.d/sshpasswd.sh</code>) will crash on every
-log-in and will display:</p>
-<pre class="term">Failed to get D-Bus connection: No such file or directory</pre>
-<p>However this doesn’t cause any problem and it’s possible to remove the
-faulty <code>service ssh status</code> lines from the script.</p>
-<p>There is now some tips to know to facilitate maintenance.
-Indeed, the system is not writable anymore.
-If any modification should be done, one can restore the writing access with
-this command:</p>
-<pre class="term">sudo mount -o remount,rw /</pre>
-<p>Replacing <code>rw</code> with <code>ro</code> restores the read-only
-access.
-By the way, some operations require to have a write access on
-<code>/boot</code> too, for example the system update with
-<code>apt-get dist-upgrade</code>.
-One should run this command too:</p>
-<pre class="term">sudo mount -o remount,rw /boot</pre>
 
 
 
@@ -1114,11 +1352,20 @@ One should run this command too:</p>
 <p>Despite the hardware being important in Pédale Vite,
 this is primarily a software project.
 This part describes briefly the program architecture and what is required
-to know to adapt it easily to hardware modifications.</p>
+to know to adapt it easily to hardware modifications.
+To update the code:</p>
+<pre class="term">chmod +x ./fs-rw.sh</pre>
+<p>Don’t forget beforehand to set the filesystem as read-write:</p>
+<pre class="term">~/fs-rw.sh</pre>
+
+
 
 <h4>Compiling</h4>
 
 <p>Project files are located in the <code>pedalevite/build</code> folder.</p>
+
+<h5>Linux</h5>
+
 <p>The <code>unix</code> subfolder contains what is required to to compile
 on the Pi and for the Pi.
 <code>Makefile.am</code> is the file to be modified to add source files.
@@ -1126,6 +1373,9 @@ on the Pi and for the Pi.
 compilation configuration.
 Running <code>make -j4</code> compiles the project.
 See also the software part from the building instructions.</p>
+
+<h5>Windows</h5>
+
 <p><code>win</code> contains the projects for Visual Studio 2013.
 Source code is organized according to seveal categories:</p>
 <ul>
@@ -1152,11 +1402,11 @@ near the end of <code>pedalevite/src/main.cpp</code>:</p>
 #else</pre>
 <p>The emulation uses the following keys:</p>
 <table>
-<tr><td><span class="key">A Z E R T Y</span> ou <span class="key">Q W E R T Y</span></td><td>Pedals 0 to 5, upper row</td></tr>
-<tr><td><span class="key">Q S D F G H</span> ou <span class="key">A S D F G H</span></td><td>Pedals 6 to 11, lower row</td></tr>
+<tr><td><span class="key">A Z E R T Y</span> or <span class="key">Q W E R T Y</span></td><td>Pedals 0 to 5, upper row</td></tr>
+<tr><td><span class="key">Q S D F G H</span> or <span class="key">A S D F G H</span></td><td>Pedals 6 to 11, lower row</td></tr>
 <tr><td><span class="key">0 1 2</span>… <span class="key">8 9</span> on the numeric keypad</td><td>Several values for the expression pedal #0</td></tr>
 <tr><td><span class="key">1 2</span>,<br /><span class="key">3 4</span>,<br />… …,<br /><span class="key">9 0</span></td><td>&minus;1 and +1 from the 5 generic incremental encoders</td></tr>
-<tr><td><span class="key">W X C</span> ou <span class="key">Z X C</span> et<br /><span class="key">V B N</span></td><td>&minus;1, +1 and button for the 2 incremental encoders used for navigation</td></tr>
+<tr><td><span class="key">W X C</span> or <span class="key">Z X C</span> et<br /><span class="key">V B N</span></td><td>&minus;1, +1 and button for the 2 incremental encoders used for navigation</td></tr>
 <tr><td><span class="key">Return</span></td><td><span class="key">Select</span> from the user interface</td></tr>
 <tr><td><span class="key">Esc</span></td><td><span class="key">Esc</span> from the user interface</td></tr>
 <tr><td>Arrows</td><td>Arrows from the user interface</td></tr>
@@ -1197,7 +1447,7 @@ The <code>etc/config/current</code> save file is directly generated and read
 by the serialising interface.</p>
 <p>The audio drivers are located in <code>mfx::adrv</code>.
 The main part of the platform-specific code is located in
-<code>mfx::ui</code>.
+<code>mfx::hw</code>.
 Switch polarty, order, GPIO pin numbers, speed of the communication protocols
 and all other hardware details can be changed in these classes.</p>
 <p>The user interface is made of pages in <code>mfx::uitk::pg</code>.
@@ -1247,16 +1497,12 @@ the Pi and used <i>in-situ</i> by the Windows emulator.</p>
 there are a lot of ways to cut down the price or simplify the building.
 Here are a few topics I could imagine.</p>
 
-<h4>External audio interface</h4>
+<h4>External USB audio interface</h4>
 
 <p>There would be some advantages to put the audio interface out of the
 perdalboard:</p>
 <ul>
-<li>Reduce the pedalboard height.
-Indeed, fitting the current audio interface in the enclosure requires the
-latter to be quite tall.</li>
-<li>Reduce cost by removing the internal wiring (audio and custom USB).
-This could be more than 40€ saved on the parts used for the prototype.</li>
+<li>Reduce cost by removing the internal audio board and wiring.</li>
 <li>Building is simplified for the same reasons.</li>
 <li>Direct access to the audiobox front panel for calibration.</li>
 <li>Allows changing the audio interface model without taking into account
@@ -1267,56 +1513,30 @@ geometrical constraints.</li>
 <li>More parts to carry around and to plug.</li>
 <li>Even more complex to plug if we replace the USB powering by our own
 power supply.</li>
-<li>Audio connections are frozen (cannot replace jack outputs with XLR).</li>
+<li>Software configuration must be changed to use the ALSA drivers.</li>
 </ul>
+
+<h4>Simplification of the internal audio board</h4>
+
+<p>It is possible to get rid of the mic preamps if they aren’t needed at all.
+It is even possible to get rid of the second input channel.
+This reduce significantly the amount of components on the board.</p>
 
 <h4>Cheaper parts</h4>
 
 <p>Price can be optimized by choosing cheaper part suppliers.
 It requires spending more time and energy comparing prices and part
 specifications.</p>
-<p>There is a significant possible price cut with the internal audio
-connections if we choose the keep the audio interface within the enclosure.
-No need to use Neutrik jack or premium audio cable.
-The cheapest ones should be OK, the biggest requirement being probably the
-shield quality for the input cables.</p>
+<p>For example the audio connectors could use cheaper TR jacks instead of
+Neutrik jack-XLR combos and TRS jacks.</p>
 <p>However I think it would be clumsy to try to save on the footwitches.
 Robustness of these parts is essential.</p>
 
 <h4>Rotary encoder removal</h4>
 
 <p>In the current configuration, I use them not as often as I imagined it.
-I think we can do without them.</p>
-<p>Less connections, less costs and a full board less.
-This is about 25€ saved.</p>
-
-<h4>Single PCB</h4>
-
-<p>The PCB version is certainly an effective way to simplify the building.
-No track to build on the prototyping boards, less cables and less mounting
-holes.
-However the PCB being double-layered with fine details (0.4mm vias), it
-seems difficult to DIY.</p>
-<p>For a grouped production, even at a small scale, there should be some
-kind of financial advantage.</p>
-<p>Schematics remain the same, socket connectors too, excepted two of
-them.</p>
-<ul>
-<li>Display connector.
-One ground wire is missing, which can be replaced by soldering a bridge
-on the display board, for example the one connecting BLK (pin 20) to VSS/GND
-(pin 1).
-See the schematics for the remaining pinout of this connector.</li>
-<li>The LED system is simplified: only the +3,3V and the three signals are
-kept on the connector.
-See the schematics for the pinout.
-The LED board should be adapted, because it only the LEDs remain.</li>
-</ul>
-<p>The PCB is mounted verticaly on the middle of the enclosure, instead of the
-switch board.
-It just fits below the display.
-All the required files (KiCAD sources and Gerber exports) are in the Git
-repository, located under the <code>doc/pcb-v1_1</code> folder.</p>
+I think we can do without them.
+This is less connections and less costs.</p>
 
 <h4>Pull-up resistors</h4>
 
@@ -1328,18 +1548,7 @@ job.
 The code to change to activate these internal resistors is negligible.
 Debouncing is already doubled in software and this shouldn’t require any
 change.</p>
-<p>Cost cut is small but building simplification is significant.
-One should pack everything related to contacts in a single board.</p>
-
-<h4>Soldering bridges for the display</h4>
-
-<p>The current display is a 12864ZW.
-I wasnt’t aware of it first, but the 12864ZW has some soldering pads on its
-PCB allowing to activated some functionalities.
-Theses custom bridges can link some pins of the main connector to the ground
-or the power trace.
-This could have been useful to activate the backlight or the serial protocol
-without additional wires.</p>
+<p>Cost cut is small but building simplification is significant.</p>
 
 <h4>Reducing the number of connectors</h4>
 
@@ -1352,13 +1561,18 @@ control and maintenance more complicated.</p>
 to cut pieces of a ribbon cable.
 A meter (or slightly more) of 40-wire multicoloured ribbon should be enough
 for the whole pedalboard.
-Be careful with the wires which may be a bit too thin for the HE-14
+Be careful with the wires which may be a bit too thin for the Dupont
 connectors, they probably should be replaced with more suitable
 connectors.</p>
 
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r2, 2019-11-02</b></p>
+<ul>
+<li>Pédale Vite is upgraded to version 2.</li>
+</ul>
 
 <p><b>r1, 2017-09-24</b></p>
 <ul>

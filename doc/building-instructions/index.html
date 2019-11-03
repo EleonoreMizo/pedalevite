@@ -3,13 +3,13 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Pédale Vite&nbsp;&mdash;&nbsp;pédalier multi-effet pour guitare et basse&nbsp;&mdash;&nbsp;Instructions de montage</title>
+<title>Pédale Vite v2&nbsp;&mdash;&nbsp;pédalier multi-effet pour guitare et basse&nbsp;&mdash;&nbsp;Instructions de montage</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body><div class="global">
 
-<h1>Pédale Vite&nbsp;&mdash;&nbsp;Instructions de montage</h1>
+<h1>Pédale Vite v2&nbsp;&mdash;&nbsp;Instructions de montage</h1>
 
 <h2>Table des matières</h2>
 
@@ -32,14 +32,12 @@
 <li class="tcont"><a href="#softwareinstall">Installation logicielle</a>
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
 	<li><a href="#soft-prepare">Préparation du système</a></li>
-	<li><a href="#soft-startup">Démarrage et configuration de base</a></li>
-	<li><a href="#soft-update">Mise à jour système</a></li>
-	<li><a href="#soft-install-aud">Installation de la carte son</a></li>
+	<li><a href="#soft-startup">Démarrage et mise à jour système</a></li>
+	<li><a href="#soft-baseconf">Configuration de base</a></li>
+	<li><a href="#soft-opt-startup">Optimisation du temps de démarrage</a></li>
 	<li><a href="#soft-install-dep">Installation des dépendances logicielles</a></li>
 	<li><a href="#soft-install-app">Installation de Pédale Vite</a></li>
 	<li><a href="#soft-autorun">Démarrage automatique de Pédale Vite</a></li>
-	<li><a href="#soft-opt-startup">Optimisation du temps de démarrage</a></li>
-	<li><a href="#soft-skip-noobs">Retrait de NOOBS</a></li>
 	<li><a href="#soft-ro">Passage du système en lecture seule et autres optimisations</a></li>
 	</ol>
 </li>
@@ -59,17 +57,24 @@
 soi-même (DIY, <i><span lang="en">do it yourself</span></i>).
 Ce manuel détaille comment réaliser le montage et installer toutes les
 composantes nécessaires à son fonctionnement.</p>
-<p>Je tiens à préciser que ce projet est à la portée de tout le monde.
+<p>Ce projet est relativement complexe et modérément difficile, mais à la
+portée de tout le monde.
 Il n’est pas nécessaire d’avoir le bricolage dans le sang.
 Il ne nécessite pas d’adresse ou de compétence particulière.
-Toutes les techniques utilisées (soudure, perçage, etc.) s’apprennent
-relativement rapidement.</p>
+Les techniques utilisées (soudure, perçage, etc.) ne s’improvisent pas mais
+s’apprennent relativement rapidement.</p>
 <p>Cependant la réalisation est relativement prenante et nécessite une dizaine
 de jours de travail environ.
 C’est approximativement le temps que j’ai passé au montage.
 Je suis loin d’être très organisé et encore moins adroit de mes dix doigts.
 Je suis sûr qu’une personne un peu bricoleuse peut réduire ce temps de
 moitié.</p>
+<p>Il est préférable de lire les instructions dans leur intégralité avant
+de commencer, afin de se faire une idée plus précises des opérations et de
+leur ordre.
+Il n’y a pas beaucoup d’illustrations des étapes intermédiaires du montage,
+mais celles illustrant le pédalier (presque) fini devraient suffir à se faire
+une idée plus précise des placements et de la logique d’assemblage.</p>
 
 
 
@@ -79,7 +84,7 @@ moitié.</p>
 <a href="https://github.com/EleonoreMizo/pedalevite/">dépôt GitHub</a> du
 projet.</p>
 <ul>
-<li>Les schémas en <code>.fzz</code> s’ouvrent avec <a href="http://fritzing.org/">Fritzing</a>, utilisé ici en version 0.9.3.</li>
+<li>Les schémas en <code>.pro</code> s’ouvrent avec <a href="http://kicad-pcb.org/">KiCAD</a>, utilisé ici en version 4.0.6.</li>
 <li>Les dessins en <code>.dfx</code> s’ouvrent avec <a href="http://librecad.org/">LibreCAD</a>, utilisé ici en version 2.1.1.</li>
 <li>Les feuilles de calcul <code>.ods</code> s’ouvrent avec <a href="https://www.libreoffice.org/">LibreOffice</a> ou <a href="https://www.openoffice.org/">OpenOffice</a>.</li>
 </ul>
@@ -94,19 +99,17 @@ projet.</p>
 <a href="https://github.com/EleonoreMizo/pedalevite/tree/master/doc"><code>doc</code></a>
 du dépôt.</p>
 <ul>
-<li><code>schematics.fzz</code> contient les schémas électroniques ainsi que
-les plans d’implantation des composants sur les cartes de prototypage.</li>
-<li><code>drawing-panel.dxf</code> donne le plan de perçage de la feuille
-métallique composant la façade.</li>
-<li><code>drawing-pi-mount.dxf</code> est un support en bois pour le Raspberry
-Pi 3.
-Le fixer sur la face intérieure de la façade au moyen de petites équerres.</li>
+<li>Le dossier <code>boards</code> contient les schémas électroniques (KiCAD)
+ainsi que les plans des ciruits imprimés des différentes cartes.</li>
+<li><code>drawing-panel.dxf</code> donne le plan de perçage des feuilles
+métalliques composant le boîtier.</li>
 <li><code>cables.ods</code> fournit le plan de câblage.
-Chaque paire de lettre indique les broches à relier ensemble.</li>
+Chaque paire de lettre indique les broches à relier ensemble au moyen d’un fil
+électrique.</li>
 </ul>
 <p>Ces plans ne sont pas exhaustifs.
-Par exemple, je n’ai pas encore fait figurer les câbles reliant la carte son
-à la façade, ou les câbles secteur.
+Par exemple, je n’ai pas encore fait figurer les câbles reliant le Pi à son
+alimentation, ou les câbles secteur.
 Toutefois ce sont des parties relativement simples qui ne nécessitent pas
 d’instruction détaillées.</p>
 
@@ -114,17 +117,20 @@ d’instruction détaillées.</p>
 
 <h3><a id="req-material"></a>Matériaux</h3>
 
-<p>La liste des matériaux utilisés dans le prototype présenté se trouve dans le
-fichier <code>doc/parts.ods</code> du dépôt.
-Un prix hors taxes indicatif est donné pour chaque composant, assorti des
-containtes de quantité.
-D’ailleurs en terme de prix, il est possible d’optimiser un certain nombre de
-choses, par exemple inutile de prendre les coûteuses prises jack Neutrik pour
-la connectique interne.</p>
-<p>Il est tout à fait possible de prendre d’autres matériaux, pourvu qu’ils
-soient compatibles ou adaptables.
-Pour information, les résistances utilisées sont toutes des ¼&#8239;W,
-essentiellement pour des raisons d’encombrement sur le circuit.</p>
+<p>La liste des matériaux utilisésse trouve dans le fichier
+<code>doc/bom.ods</code> du dépôt.
+Les composants sont décrits en fonction de leurs contraintes physiques et
+qualitatives, assortis des d’un prix hors taxes indicatif.
+D’ailleurs, en terme de prix, il est possible d’optimiser un certain nombre de
+choses.
+Certaines pièces sont issues de mes stocks venant de projets précédents et
+peuvent avoir été achetées par lots surnuméraires.
+En cherchant, on peut trouver des lots en quantités plus adéquates.
+Il est tout à fait possible de prendre d’autres matériaux, pourvu qu’ils
+soient compatibles ou adaptables.</p>
+<p>Pour information, les résistances utilisées sont toutes des ¼&#8239;W de
+6,2&#8239;mm de long au maximum, essentiellement pour des raisons
+d’encombrement sur le circuit.</p>
 
 
 
@@ -132,31 +138,30 @@ essentiellement pour des raisons d’encombrement sur le circuit.</p>
 
 <ul>
 <li>Crayon à papier ou mieux, porte-mine pour pouvoir tracer à travers un trou de plaque</li>
-<li>Compas de précision ou forme permettant de tracer des cercles de 10, 12 et 14&#8239;mm de diamètre</li>
+<li>Compas de précision ou forme permettant de tracer des cercles de 10, 11, 12 et 24&#8239;mm de diamètre si on utilise une fraise conique sans étage</li>
 <li>Réglet gradué</li>
 <li>Rapporteur</li>
 <li>Ciseau à bois</li>
 <li>Scie à bois</li>
 <li>Scie à métaux</li>
 <li>Lime à métaux, plate</li>
-<li>Lime à métaux à section arrondie et aussi fine que possible (3–5&#8239;mm)</li>
+<li>Lime à métaux à section arrondie («&#8239;queue de rat&#8239;») et aussi fine que possible (3–5&#8239;mm)</li>
 <li>Établi</li>
 <li>Paire de serre-joints</li>
 <li>Planches jetables (récupération de palette) pour support de perçage, guides, etc.</li>
 <li>Perceuse, si possible sur colonne</li>
-<li>Mèches ordinaires 2 et 3&#8239;mm</li>
-<li>Mèche bois 5&#8239;mm</li>
-<li>Mèches pour acier 3 et 7&#8239;mm</li>
-<li>Fraise pour acier perçant aux diamètres de 10, 12 et 14&#8239;mm</li>
+<li>Mèche bois 2&#8239;mm</li>
+<li>Mèches, cloches ou fraises coniques pour percer du 3, 4, 5, 7, 10, 11, 12 et 24&#8239;mm de diamètre dans de l’acier</li>
+<li>Pointeau ou vis pointue</li>
 <li>Mini-perceuse type Dremel</li>
 <li>Disques de tronçonnage pour acier (si possible plusieurs, petits et grands diamètres)</li>
 <li>Huile de coupe</li>
-<li>Jeu de clés plates ou éventuellement à pipe&#8239;: 5, 10, 13 et 14&#8239;mm</li>
+<li>Jeu de clés plates ou éventuellement à pipe&#8239;: 5, 5.5, 6, 10, 13 et 14&#8239;mm</li>
 <li>Tournevis plat</li>
-<li>Tournevis cruciforme ordinaire (PH2)</li>
+<li>Tournevis cruciforme ordinaire (PH2 et possiblement PH1)</li>
 <li>Marteau</li>
 <li>Fer à souder thermorégulé avec porte-fer (50&#8239;W mini)</li>
-<li>Fil de soudure 1&#8239;mm avec flux</li>
+<li>Fil de soudure 0.5&#8239;mm et 1&#8239;mm avec flux</li>
 <li>Pompe à soudure et éventuellement de la tresse à déssouder</li>
 <li>Troisième main</li>
 <li>Étau</li>
@@ -165,17 +170,26 @@ essentiellement pour des raisons d’encombrement sur le circuit.</p>
 <li>Pinces brucelles</li>
 <li>Pinces à couper les pattes de composants (pinces coupantes ordinaires O.K. mais moins pratiques)</li>
 <li>Pinces à sertir les petites cosses (les <a href="http://www.engineer.jp/en/products/pa09e.html">PA-09</a> de chez Engineer sont très bien)</li>
+<li>Pinces à sertir les cosses Faston 250</li>
 <li>Outil à dénuder de petit calibre</li>
-<li>De quoi produire une planchette de bois assez fine à partir d’un morceau de bois brut (scie à bois, hachette à enclume, couteau de cuisine, marteau, de quoi poncer)</li>
+<li>Ruban adhésif isolant («&#8239;Scotch d’électricien&#8239;»)</li>
 <li>Gants</li>
 <li>Lunettes de protection contre les projections</li>
 <li>Masque respiratoire contre la poussière</li>
 <li>Multimètre (mesure de résistance ou de contact)</li>
+<li>Oscilloscope (facultatif mais pratique)</li>
 <li>Markers pas trop gros clairs et foncés ou tubes de peinture avec pinceau fin</li>
 </ul>
 
-<p>L’outillage à lui seul peut revenir assez cher.
-N’hésitez pas à vous faire prêter le matériel, ou à faire un achat collectif.</p>
+<p>Cette liste n’est pas complètement exhaustive, n’y figurent pas tous les
+petits outils ou matériaux pouvant servir de leviers, cales ou de martyrs
+durant le montage.
+Ils peuvent être improvisés sur place en fonction de ce dont vous disposez et
+de vos habitudes ou techniques de bricolage.
+L’outillage à lui seul peut revenir assez cher.
+N’hésitez pas à vous faire prêter le matériel, ou à faire des achats
+collectif.</p>
+
 
 
 <h2><a id="stepbystepbuilding"></a>III.&emsp;Montage pas à pas</h2>
@@ -186,215 +200,330 @@ N’hésitez pas à vous faire prêter le matériel, ou à faire un achat collec
 
 <h4>Usinage</h4>
 
-<p>Découper la plaque de métal avec un disque de tronçonnage monté sur la
-mini-perceuse.
-Utiliser une planche comme guide pour appuyer l’axe de la perçeuse afin de
-couper aussi droit que possible.
+<p>En premier lieu, protégez-vous le visage, les yeux et les mains avec
+les lunettes et les gants.
+Le masque sert aussi à se protéger contre l’inhalation des poussières.
+Si possible, portez des vêtements couvrants.</p>
+<p>Découper la plaque de métal avec la scie à métaux ou avec un disque de
+tronçonnage monté sur la mini-perceuse.
+Dans ce dernier cas, utiliser une planche comme guide pour appuyer l’axe de
+l’outil afin de couper aussi droit que possible.
 Asperger la ligne de coupe d’huile de coupe afin d’éviter les échauffements
-et d’économiser les disques de tronçonnage.
-Une fois la plaque coupée aux bonnes dimensions, ébavurer avec une lime de
+et d’économiser les disques de tronçonnage.</p>
+<p>Les plaques sont à découper aux dimensions suivantes&#8239;:</p>
+<ul>
+<li>Façade (dessus)&#8239;: 520&#8239;×&#8239;250&#8239;mm²</li>
+<li>Face arrière&#8239;: 520&#8239;×&#8239;70&#8239;mm²</li>
+<li>Face avant&#8239;: 520&#8239;×&#8239;30&#8239;mm²</li>
+<li>Dessous&#8239;: 520&#8239;×&#8239;253&#8239;mm²</li>
+<li>Côtés: [30–70]×250mm² (trapèze rectangle)</li>
+</ul>
+<p>Note&#8239;: la face avant et le dessous peuvent être en aluminium car elles
+nécessitent moins de robustesse.</p>
+<p>Une fois les panneaux coupés aux bonnes dimensions, ébavurer avec une lime de
 façon à arrondir les bords dans le sens de l’épaisseur.</p>
-<p>Toujours avec les disques de tronçonnage, rainurer la plaque au niveau des
-futures pliures, sur la face intérieure.
-Entailler environ la moitié de l’épaisseur.
-Comme pour la découpe, utiliser une planche comme guide.</p>
+<p>Important&#8239;: toutes les opérations se font sur la face intérieur de chaque
+panneau.
+Les plans sont tous des vues de l’intérieur.</p>
 <p>Tracer ensuite les repères des perçages et découpes en fonction des plans.
-Tracer le contour des trous à fraiser à l’aide d’un compas.
+Tracer le contour des trous à percer à la fraise conique à l’aide d’un compas.
+Marquer le centre des trous avec un pointeau ou une vis bien pointue.
 Procéder ensuite au perçage.
-On pourra commencer par les plus gros trous, qui seront percés à la fraise.
-Là aussi, utiliser l’huile de coupe.
-Arrêter la découpe quand on dépasse les contours tracés.
+Pour les trous les plus gros, il peut être intéressant de faire un avant-trou
+afin de bien guider la mèche ou la fraise.
+Utiliser l’huile de coupe.
+Avec la fraise conique, arrêter la découpe quand on dépasse les contours tracés.
 Se munir de la pièce à faire rentrer dans le trou et essayer.
-Remettre un coup de fraise si c’est trop juste.</p>
+Remettre un coup de fraise si c’est trop juste, ou limer.</p>
 <p>Une fois les plus gros trous faits, ébavurer avec une fraise spéciale ou
 utiliser la mini-perceuse avec un disque de tronçonnage pour découper le métal
 qui dépasse.</p>
-<p>Découper les deux cornières qui serviront de renforts dans le sens de la
-profondeur, en déduisant 3–4&#8239;mm dans chaque sens (mais surtout sur la
-partie du fond) pour laisser de la place à la pliure de la plaque
-principale.</p>
-<p>Serrer ensemble chaque cornière avec la plaque.
-Percer d’un coup les trous traversant les deux.
-Si l’opération est trop difficile (serre-joints pas assez longs), il vaut
-mieux laisser la cornière entière, attacher l’extrémité qui dépasse et
-percer le trou le plus près de l’attache.
-Une fois ceci fait, boulonner ce trou pour donner une meilleure accroche
-et percer les autres.
-Couper la cornière une fois les trous percés.</p>
+<p>Découper deux morceaux de 520&#8239;mm dans la cornière.
+Ils viendront faire la jonction aux angles supérieurs du boîtier.
+La partie la plus courte du L sera sur le dessus et la plus longue verticale.
+Si nécessaire, ronger la partie supérieure d’une des cornières avec la queue
+de rat afin de laisser la place pour les deux vis de l’écran.</p>
+<figure>
+  <a href="display-outside.jpg"><img src="display-outside-small.jpg" /></a>
+  <figcaption>De la place pour les vis.
+En fait ce n’était pas vraiment nécessaire.</figcaption>
+</figure>
+<p>Découper deux autres morceaux de cornière de 250&#8239;mm qui serviront de
+renforts dans le sens de la profondeur.
+Une des cornière est enjambée par la carte son.
+Veiller à ce que celle-ci ne rentre pas en contact une fois en place.
+Il sera peut-être nécessaire de découper un morceau&#8239;; utiliser pour
+cela une lime si la quantité de matière à retirer est peu importante, sinon un
+disque de tronçonnage.</p>
+<p>Serrer ensemble ces deux cornières de renfort avec la plaque.
+Percer d’un coup les trous traversant les deux.</p>
 <p>Percer les trous restants à la perceuse et ébavurer au besoin.
+Sur le schéma, les petits trous sans diamètre indiqué font 3&#8239;mm de
+diamètre.
 Certains trous de fixation dépendent du matériel précis dont vous
-disposez&#8239;: support du Pi, prise et interrupteur secteur, etc.
+disposez&#8239;: connecteurs, prise et interrupteur secteur, etc.
 Vérifiez que les trous donnés sont cohérent avec vos matéraux, ajustez-les
 le cas échéant.</p>
+<p>Les trous des LED sont calibrés à 5&#8239;mm.
+Il est possible de les agrandir un peu à 6&#8239;mm tout en les descendant
+d’un demi-millimètre.
+Cela permet de descendre la LED à la surface du boîtier tout en la rendant
+rendant visible même sous incidence élevée.</p>
+<figure>
+  <a href="led-detail.jpg"><img src="led-detail-small.jpg" /></a>
+  <figcaption>Mes trous de LED vont encore plus loin et sont légèrement ovales.</figcaption>
+</figure>
+<p>Nota bene: les trous pour fixer les montants latéraux et les piliers sont
+légèrement décalés aux angles afin que les vis puissent se croiser plutôt
+que se rentrer dedans.
+Les trous en bas des piliers sont clairement excentrés.</p>
+<figure>
+  <a href="unaligned-screws.jpg"><img src="unaligned-screws-small.jpg" /></a>
+  <figcaption>Vis non-alignées, face avant.</figcaption>
+</figure>
+<p>Il peut être plus pratique de laisser de côté les trous qui traverseront les
+cornière longitudinales.
+Ils seront percés une fois les cornière placés sur le montage.</p>
 <p>Découper les zones rectangulaires.
-Commencer par percer les coins avec une mèche de 3&#8239;mm.
+Il peut être plus pratique de commencer par percer les coins avec une mèche
+de 3&#8239;mm, à 1,5&#8239;mm de chaque coin.
 Cette étape facilite la jonction des découpes.
 Couper les bords avec un disque de tronçonnage de petit diamètre.
-Enfin, limer les bords pour les arrondir.</p>
-<p>Illustrations avec quelques éléments montés dessus&#8239;:</p>
-<div class="pic"><a href="panel-flat-outside.jpg"><img src="panel-flat-outside-small.jpg" /></a></div>
-<div class="pic"><a href="panel-flat-inside.jpg"><img src="panel-flat-inside-small.jpg" /></a></div>
-
-<h4>Pliage</h4>
-
-<p>Le plus simple c’est de trouver une plieuse à tôle, ou de le faire faire
-par un professionnel du métal.
-Sinon, il est possible de se faire une plieuse improvisée.</p>
-<p>La plaque, nue, sera prise en sandwitch entre deux dispositifs.</p>
-<p>Côté intérieur de la pliure, on pourra utiliser la chute de la cornière
-(elle doit être de la bonne dimension).
-Le plus simple est d’utiliser l’angle comme pivot, bien qu’on ait besoin
-de faire un angle supérieur à 90&#8239;° sur une des pliures.</p>
-<p>Côté extérieur, il faut une planche épaisse ou une pièce de métal plate
-et bien rigide.
-La planche s’arrêtera pile au niveau de la pliure.</p>
-<p>Serrer le montage contre l’établi à l’aide de serre-joints.</p>
-<p>Prendre ensuite une planche, l’appliquer sur le bord à plier contre la
-pliure, et taper dessus avec un marteau de chantier aussi près que possible
-de la pliure.
-Il faut que la pliure soit franche et éviter d’arrondir la plaque.
-Taper en faisant des aller et retours sur toute la largeur de la plaque pour
-éviter de la déformer en pliant d’un coup une extrémité mais pas l’autre.</p>
-<p>L’angle à obtenir est de 9&#8239;° en plus ou en moins de l’angle droit,
-en fonction du côté plié.
-La précision de l’angle n’est pas très importante car la plaque sera vissée
-sur les supports latéraux qui lui donneront sa forme définitive.
-On peut éventuellement finir la pliure supérieure à l’angle droit en retournant
-la plaque toujours posée sur le bord l’établi et passant la cornière au-dessus.
-Au lieu de présenter son angle à la pliure, on la posera sur la plaque en
-«&#8239;accent circonflexe&#8239;», un de ses bord au contact de la pliure.
-Serrer avec des serre-joints et continuer le pliage.</p>
-<p>J’ai eu une petite cassure sur une des pliures, la raignure étant peut-être
-un peu trop profonde à cet endroit.
-Ce n’est pas très grave, puisque chaque bord sera vissé aux support latéraux.
-Donner un petit coup de lime pour éviter les bords coupants, mais éviter au
-possible d’agrandir la cassure lors des manipulations.</p>
+Enfin, limer les bords pour les arrondir et remettre les angles au carré.</p>
 
 <h4>Supports latéraux</h4>
 
-<p>Prendre une planche d’environ 20&#8239;mm d’épaisseur, mais pas plus.
-Celle que j’ai récupérée fait 18&#8239;mm en contre-plaqué ce qui convient
-très bien.
+<p>Prendre une planche de 18&#8239;mm d’épaisseur, 20&#8239;mm tout au plus.
 Découper deux formes en trapèze rectangle de 250&#8239;mm de long et de
-largeurs 80 et 120&#8239;mm.
-On peut vérifier que le dernier bord fait bien 253&#8239;mm.</p>
-<p>Insérer les deux formes sur les côtés de la boîte et les fixer avec
-des vis à bois auto-perforantes de 2,5 ou 3&#8239;mm, pas trop longues.
-Utiliser 7 vis par montant.<p>
-<p>Une fois ceci fait, on peut passer aux piliers centraux.
-Ils vont servir d’appui aux deux renforts fabriqués à partir des cornières.
-Commencer par visser ces derniers à la plaque.
-Découper ensuite des piliers de 20&#8239;mm de section carrée dans du bois
+largeurs 30 et 70&#8239;mm.
+On peut vérifier que le dernier bord fait bien 253&#8239;mm.
+Les angles droits sont sur le dessus du pédalier.</p>
+<p>À l’aide d’une scie et de ciseaux à bois, découper sur les montants
+les trous pour faire passer les connecteurs du Pi ainsi que les contrôles
+de gain de la carte son.
+Se référer aux plans pour les placements, layer <code>Structure</code>.</p>
+<figure>
+  <a href="connectors-rpi4.jpg"><img src="connectors-rpi4-small.jpg" /></a>
+  <figcaption>Ouverture pour laisser passer les connecteurs du Pi.</figcaption>
+</figure>
+<p>Percer ensuite les plaques métalliques latérales, positionnées côté
+intérieur, et les visser.</p>
+<p>Visser sur les deux formes latérales les panneaux du dessus, avant et
+arrière.
+Utiliser des vis à bois de 3&#8239;mm, pas trop longues.
+Elles peuvent être auto-perforantes ou simples.
+Dans ce cas, il vaut mieux prépercer les trous avec une mèche de 2&#8239;mm.
+Placer la plaque sur les montants afin de repérer précisément les-dits trous.<p>
+<p>Placer les deux cornières longitudinales aux angles, et bien les plaquer
+avec des serre-joint.
+Percer les trous traversant les cornières, les plaque et le bois avec une
+mèche de 2&#8239;mm.
+Repasser sur le métal uniquement avec une mèche de 3.</p>
+<p>Il est possible de percer tous les trous des cornières, même ceux qui
+tiendront les piliers centraux.
+Ajouter les dernières vis des montants, ainsi que de courtes vis (8 à
+10&#8239;mm) avec écrou et rondelle pour attacher la plaque du dessus aux
+cornières.</p>
+
+<h4>Piliers centraux</h4>
+
+<p>Les piliers centraux vont servir d’appui aux deux renforts fabriqués à
+partir des cornières.
+Commencer par visser ces derniers à la plaque du dessus si ce n’est pas encore
+fait.
+Découper ensuite des piliers de 18 à 20&#8239;mm de section carrée dans du bois
 solide.
-On peut éventuellement reprendre des chutes de la planche ayant servi
-aux supports latéraux.
-Personnellement j’ai utilisé des morceaux de bois de chauffage (du chêne s’il
-vous plaît) en les fendant grossièrement dans le sens de la longueur de façon
-à avoir les fibres orientées verticalement.
-Le contre-plaqué aurait pu suffire, mais j’ai préféré opter pour quelque chose
-d’aussi solide que possible.</p>
-<p>Biseauter à 9&#8239;° une des extrémités de chacun des quatre piliers.
-C’est celle qui sera en contact avec la partie supérieure du boîtier.
-Les longueurs exactes tournent autour de 8 et 12&#8239;cm mais dépendent de
-l’épaisseur de la cornière utilisée.
-Couper trop long, mettre en place le pilier, faire une marque à la position
-désirée et finalement recouper à la bonne taille.
-Se donner tout de même un petit millimètre de marge pour un ajustement
-ultérieur.</p>
-<p>Pour chaque pilier, vérifier qu’il ne va pas être gêné par les vis des
-renforts, ou qu’il ne vas pas gêner à son tour la pose d’une plaque, en
-particulier l’écran.
-Si c’est le cas, retrancher un peu de matière à l’aide de la scie ou d’un
-ciseau à bois.</p>
-<p>En fonction de la solidité du bois utilisé, on peut visser directement ou
-prépercer les trous à la perceuse (indispensable sur mes morceaux en chêne).
-Dans ce cas, prendre une mèche suffisamment fine, par exemple 2&#8239;mm si
-la vis fait 2,5&#8239;mm de section.</p>
-<p>Une fois tout en place, on peut ajuster à la lime la hauteur de chaque
-pilier afin que tout repose parfaitement à plat.</p>
-<div class="pic"><a href="box-empty-inside.jpg"><img src="box-empty-inside-small.jpg" /></a></div>
-<div class="pic"><a href="box-empty-top.jpg"><img src="box-empty-top-small.jpg" /></a></div>
+On peut pafaitement reprendre des chutes de la planche ayant servi
+aux supports latéraux.</p>
+<p>La forme verticale des piliers (vus de côté) est légèrement trapézoidale.
+La forme biseautée (9°) se trouve du côté du sol, la différence de longueur
+entre les deux faces est d’environ 3&#8239;mm.</p>
+<p>Couper deux piliers de 30 et 33&#8239;mm pour la face avant, et deux
+piliers de 67 et 70&#8239;mm pour la face arrière.
+Déduire de ces longueurs l’épaisseur de la cornière, de façon à ce que les
+montants et les piliers arrivent au même niveau.
+D’un autre côté, ne pas hésiter à allonger d’un demi-millimètre cette
+longueur, quitte à la réajuster à la rappe plus tard, en situation.</p>
+<p>Placer chaque pilier sur le montage, percer le trou dans le bois et
+visser.
+Poser ensuite à plat le montage et vérifier qu’il n’est pas bancal.
+Limer au besoin les pieds un peu trop longs.</p>
 <p>Ensuite, l’épreuve du feu&#8239;: poser le boîtier au sol et monter dessus.
 Il ne doit pas se déformer ou donner des signes de faiblesse.</p>
-
-<h4>Support du Pi</h4>
-
-<p>Découper une plaque de bois peu épaisse selon le plan
-<code>drawing-pi-mount</code>.
-La partie à évider peut être abordée à la scie pour les deux bords latéraux
-et finie au ciseau à bois sur le côté long.</p>
-<p>Les équerres servent à fixer la plaque parallèlement au sol sur la face
-arrière du boîtier.
-Le Pi est fixé d’un côté et les équerres de l’autre.
-La positions de fixation des équerres dépendent évidemment de celles dont
-vous disposez.
-Veillez à laisser de la place pour la plaque des LED et son câble de connexion,
-ainsi que pour les interrupteurs au pied.</p>
-<p>Note importante&#8239;: Comme les équerres sont positionnées du côté de la
-face supérieur du boîtier, la fixation du support est difficle.
-Il est possible de fixer les équerres sur la même face que le Pi (côté sol)
-pour faciliter le montage ultérieur, mais il faut prévoir d’élargir la plaque
-et repousser l’équerre afin que les trous ne soient pas pile sur le bord de la
-fenêtre d’accès au Pi.
-Et dans ce cas, veilleur à ce que la plaque n’empêche pas l’accès au
-connecteur de la plaque des LED.</p>
 
 
 
 <h3><a id="build-elec"></a>Électronique</h3>
 
-<h4>Découpage des cartes</h4>
+<h4>Les cartes</h4>
 
-<p>Découper les plaque de prototypage afin d’obtenir les cartes suivante&#8239;:</p>
+<p>Les cartes principale, carte audio et convertisseur
+2&#8239;&times;&#8239;15&#8239;V sont des PCB que vous pouvez faire fabriquer
+à l’aide des fichiers Gerber situés dans les sous-répertoires de
+<code>doc/boards</code>.
+Il est aussi possible de récupérer des restes de mes plaques à prix
+coûtant, me contacter directement si vous êtes intéressé·e.</p>
+<p>Pour les autres cartes, découper les rectangles suivants dans la plaque de
+prototypage&#8239;:</p>
 <ul>
-<li>24&#8239;&times;&#8239;24 trous entiers, soit &nbsp;&nbsp;63,5&#8239;&times;&#8239;63,5&#8239;mm², carte principale</li>
-<li>38&#8239;&times;&#8239;30 trous entiers, soit &nbsp;&nbsp;99,1&#8239;&times;&#8239;78,7&#8239;mm², carte des pédales et interrupteurs</li>
-<li>47&#8239;&times;&#8239;19 trous entiers, soit 121,9&#8239;&times;&#8239;50,8&#8239;mm², carte des codeurs incrémentaux</li>
-<li>21&#8239;&times;&#8239;&nbsp;&nbsp;7 trous entiers, soit &nbsp;&nbsp;55,9&#8239;&times;&#8239;20,3&#8239;mm², carte des diodes</li>
-<li>16&#8239;&times;&#8239;&nbsp;&nbsp;5 trous entiers, soit &nbsp;&nbsp;43,2&#8239;&times;&#8239;15,2&#8239;mm², carte de patch pour l’écran</li>
-<li>18&#8239;&times;&#8239;&nbsp;&nbsp;4 trous entiers, soit &nbsp;&nbsp;48,3&#8239;&times;&#8239;12,7&#8239;mm², carte des codeurs incrémentaux de navigation</li>
-<li>48&#8239;&times;&#8239;&nbsp;&nbsp;3 trous entiers, soit 124,5&#8239;&times;&#8239;10,2&#8239;mm², carte des codeurs incrémentaux de contrôle</li>
-<li>16&#8239;&times;&#8239;&nbsp;&nbsp;6 trous entiers, soit &nbsp;&nbsp;43,2&#8239;&times;&#8239;17,8&#8239;mm², carte du filtre de l’alimentation audio (optionnel)</li>
+<li>19&#8239;&times;&#8239;18 trous entiers, soit &nbsp;&nbsp;48,3&#8239;&times;&#8239;45,7&#8239;mm², carte de l’alimentation 5&#8239;V</li>
+<li>20&#8239;&times;&#8239;13 trous entiers, soit &nbsp;&nbsp;50,8&#8239;&times;&#8239;33,0&#8239;mm², carte des boutons de navigation</li>
+<li>18&#8239;&times;&#8239;&nbsp;&nbsp;4 trous entiers, soit &nbsp;&nbsp;45,7&#8239;&times;&#8239;10,1&#8239;mm², carte des diodes</li>
+<li>18&#8239;&times;&#8239;&nbsp;&nbsp;4 trous entiers, soit &nbsp;&nbsp;45,7&#8239;&times;&#8239;10,1&#8239;mm², carte des codeurs incrémentaux de navigation</li>
+<li>48&#8239;&times;&#8239;&nbsp;&nbsp;3 trous entiers, soit 121,9&#8239;&times;&#8239;&nbsp;&nbsp;7,6&#8239;mm², carte des codeurs incrémentaux de paramètres</li>
 </ul>
 <p>Les plaque de prototypage standard font 61 trous sur 38.
-Il est donc possible d’extraire la carte principale et celle des interrupteurs
-d’une première plaque, et toutes les autres d’une seconde plaque.</p>
+Il est donc possible d’extraire toutes les cartes d’une seule plaque.
+On peut prendre des plaques à bandes ou à pastilles, ces dernières étant
+probablement plus pratiques pour les circuits à réaliser.</p>
 <p>On peut utiliser une simple scie à métaux, qui fait très bien l’affaire.
 Immobiliser la plaque sur un établi avec un étau ou un serre-joint,
 en la coinçant entre deux planchettes de bois pour ne pas l’abîmer.
 La découpe se fera au milieu d’une rangée de pastilles, pour profiter
 des trous existants.</p>
-<p>Percer des trous de fixation aux quatre coins à l’aide d’une mèche de 3 mm.
+<p>Percer des trous de fixation aux endroits indiqués sur le fichier de PCB
+(<code>doc/boards/misc-boards/misc-boards.kicad_pcb</code>) à l’aide d’une
+mèche de 3&#8239;mm.
 Sans perceuse à colonne, il est préférable de percer au centre d’une pastille,
-là ou un petit trou fait office de guide.
+là ou le petit trou fait office de guide.
 Chaque trou sera fait au milieu d’un carré de 3&#8239;&times;&#8239;3
 pastilles, sur lesquelles aucun câblage ne pourra être fait.</p>
 <p>Après le découpage de la carte des LED, il faut fabriquer le support avant
 de souder les composants.
 Voir plus bas.</p>
-<div class="pic"><a href="board-placement.jpg"><img src="board-placement-small.jpg" /></a></div>
+<p>Il est aussi possible de faire graver ces cartes sous forme de PCB en
+extrayant et exportant les PCB «&#8239;secondaires&#8239;» de
+<code>doc/boards/main-board</code>.
+Toutefois ces cartes sont très simples et je ne pense pas qu’il soit
+intéressant de les faire fabriquer.</p>
 
-<h4>Soudure des cartes</h4>
+<h4>Soudure des PCB</h4>
 
-<p>Côté composants, commencer par placer sans les souder tous les connecteurs
-et supports tulipe de cirtuits intégrés.
+<h5>Carte principale</h5>
+
+<p>Souder les composants par ordre de hauteur.
+D’abord les résistances à plat, puis tous les condensateurs céramique situés
+hors des supports à circuits intégrés.</p>
+<p>Vérifier ensuite que les supports et les condensateurs internes peuvent
+cohabiter sans problème.
+Le cas échéant, raboter à la lime le plastique des supports afin que tout
+rentre correctement sans forcer.
+Il est possible d’incliner les condensateurs ou de les déporter légèrement,
+jusqu’à une certaine limite.</p>
+<p>Souder ensuite les supports, puis les condensateurs internes.
+Ensuite les résistances verticales, puis les transistors.
+Viennent enfin les connecteurs HE10, Dupont et NSK254.</p>
+<p>Ne posez pas tout de suite les puces dans leur support, il y des
+vérifications à faire avant, voir plus bas.</p>
+
+<h5>Carte audio</h5>
+
+<p>Cette carte demande une certaine attention.
+En effet, il y a deux composants montés en surface (CMS), le codec CS4272 et
+l’horloge MK2703.
+Le CS4272 est particulièrement délicat puisqu’il s’agit d’un boîtier TSSOP,
+aux pattes très fines (0,63&#8239;mm de pas).
+Ces deux composants sont à souder en premier.
+Il vous faudra du fil à soudure fin (0,5&#8239;mm), et en fonction de votre
+acuité visuelle, peut-être une loupe ou un microscope.
+Un très bon éclairage est nécessaire dans tous les cas.</p>
+<p>Il existe diverses techniques de soudure de ce type de composant,
+impliquant généralement de commencer par souder deux pattes pour immobiliser
+la pièce, puis de souder le reste.
+Il existe de nombreux guides en photo ou vidéo pour la soudure manuelle de
+puces CMS.
+La technique par innondation de soudure marche relativement bien, mais demande
+un minimum de pratique pour être propre et efficace.
+N’hésitez pas à vous entraîner au préalable sur des plaques-adaptateurs avec
+des puces bon marché qui pourront être sacrifiées sans regret.
+Sinon revenez à la technique la plus simple, patte par patte.
+Le plus gros risque est de faire couler de la soudure sous la puce, derrière
+les pattes et de les court-circuiter sans qu’il ne soit possible de revenir en
+arrière.
+En cas de problème, il est quasiment impossible de déssouder la puce sans
+l’endommager (mécaniquement ou thermiquement) et de recommencer, sauf si vous
+disposez d’un pistolet à air chaud adapté.</p>
+<p>Si vous ne vous sentez pas suffisamment en confiance pour l’opération,
+confiez-la à une personne expérimentée ou professionnelle.
+Toutefois, ce n’est pas si difficile, cette carte fut ma première expérience
+de soudure de puce TSSOP et elle fonctionne très bien.</p>
+<figure>
+  <a href="board-audio.jpg"><img src="board-audio-small.jpg" /></a>
+  <figcaption>La carte audio complètement montée et branchée.</figcaption>
+</figure>
+<p>Après avoir soudé les puces CMS, on soude les composants dans leur ordre de
+hauteur&#8239;: les petites diodes type 1N4448, les résistances, les diodes
+plus grosses type Schottky, les condensateurs céramique, les supports de
+circuits intégrés, les condensateurs film, les connecteurs Dupont et supports
+tulipe pour transistors et régulateurs, les selfs, la ferrite, et finalement
+sans ordre prédéfini, les condensateurs électrolytiques, le régulateur
+5&#8239;V, le connecteur NSK254 de l’alimentation.</p>
+<p>Placez le quartz dans cette liste en fonction de sa taille, mais avant de
+souder celui-ci, assurez-vous qu’il y a un espace entre le composant et le
+PCB.
+Vous pouvez intercaler un morceau de carton pour assurer l’écart et le
+retirer une fois la soudure effectuée.
+Attention à ne pas le faire trop chauffer, il pourrait brûler.</p>
+<p>Les transistors Q1–Q3, la référence de tension D9 et le régulateur IC4
+sont montés sur support tulipe plutôt que soudés directement.</p>
+<p>Positionner les self de façon à ce qu’elles soient à moitié debout, l’une
+en face de l’autre pour chaque canal d’entrée, formant un angle droit.</p>
+<p>Une fois que tout est soudé, fixer le radiateur sur IC3.<p>
+<p>Enfin, insérer un cavalier sur JP1 pour sélectionner le bit de poids faible
+de l’adresse I²C de la carte.
+Le mettre entre les broches 2 et 3 pour l’adresse 0, attendue par la partie
+logicielle.</p>
+<figure>
+  <a href="board-audio-jumper-i2c.jpg"><img src="board-audio-jumper-i2c-small.jpg" /></a>
+  <figcaption>Sélection de l’adresse I²C avec JP1.</figcaption>
+</figure>
+<p>Comme pour la carte principale, ne pas placer tout de suite les puces dans
+leur support.</p>
+
+<h5>Carte de conversion 15&#8239;V alternatifs vers continu</h5>
+
+<p>Pas grand-chose à dire sur cette carte qui alimente la partie analogique de
+la carte son.
+Ne pas oublier de fixer les radiateurs sur les régulateurs de tension.
+Les self L1 et L2 sont à incliner de façon à ce qu’elles forment un angle à
+90°.</p>
+<figure>
+  <a href="board-2x15vacdc.jpg"><img src="board-2x15vacdc-small.jpg" /></a>
+  <figcaption>Redressement des ±15&#8239;V. Ne pas prêter attention aux diodes
+du pont qui ne sont pas du modèle indiqué sur la liste.</figcaption>
+</figure>
+
+<h4>Soudure des plaques de prototypage</h4>
+
+<p>Pour toutes les cartes&#8239;: côté composants, commencer par placer sans
+les souder les principaux composants à l’aide du schéma PCB.
 En marquer le tour au crayon à papier.
-On obtient ainsi des repères pour le placement des autres composants.
-Vérifier les distances entre tous les supports à l’aide du schéma.</p>
-<p>Souder tout d’abord les fils de connexion sur circuit (en gris dans le
-schéma), côté cuivre.
+On obtient ainsi des repères pour les placements.</p>
+
+<h5>Création des pistes</h5>
+
+<p>Pour connecter les composants entre eux sur une plaque à pastilles, il peut
+être nécessaire de créer des pistes, côté cuivre.
+Ces pistes apparaissent sur les schémas en vert (calque <code>B.Cu</code>,
+<span lang="en"><i>back copper layer</i></span> dans KiCAD/Pcbnew).
 Pour m’aider, j’ai pris une capture d’écran du schéma de montage, qu’on voit
 habituellement côté composants.
 Avec un éditeur d’images, je l’ai retournée en miroir dans le sens horizontal
 afin d’avoir le plan de câblage dans le bon sens.</p>
-<p>Pour créer un fil de connexion, dérouler un peu de câble nu pré-étamé.
+<p>Pour créer la piste, on peut utiliser des ponts avec de la soudure, ou
+prendre du fil de cuivre nu.
+Dans ce cas utiliser plutôt du fil monobrin, préférablement étamé, ce sera
+plus facile.
+On peut aussi réutiliser des chutes de pattes de composants, ce qui est
+sûrement la solution la plus judicieuse ici.</p>
+<p>Avec du fil monobrin, dérouler un peu de câble.
 Tirer dessus avec une pince d’une main et la bobine dans l’autre main jusqu’à
 ce qu’une légère élongation se fasse sentir&#8239;; arrêter immédiatement pour
 éviter de rompre le fil.
 Il devrait alors être bien droit.
 En couper un peu plus que la longueur désirée.</p>
-<p>Pour le poser, partir de la pastille libre la plus proche, faisant partie
-du trajet.
+<p>Pour le poser le fil de piste, partir de la pastille libre la plus proche,
+faisant partie du trajet.
 À l’aide d’une pince, plier l’extrémité du fil sur 1 ou 2&#8239;mm de façon à
 faire un petit crochet qui rentrera dans le trou d’extrémité.
 Plier ensuite le fil pour effectuer le chemin désiré.
@@ -413,23 +542,15 @@ sans compter qu’il n’y aura peut-être pas assez de place pour les deux.</p>
 <p>Souder aux extrémités et aux angles.
 Rajouter des points de soudure sur les portions un peu longues, pour
 consolider.</p>
-<p>Souder ensuite les composants, en les classant par taille et en commençant
-par les plus bas.
-D’abord les résistances, les supports de puces, les condensateurs, puis
-divers connecteurs.
-Pour les connecteurs à broches, placer dessus l’embout femelle destiné à la
-connexion.
-Cela évitera de faire frotter les broches et donnera un appui plus stable au
-montage.</p>
-<p>Rajouter les ponts de soudure nécessaires à la jointure des pistes et des
-pattes qui devraient être connectés.
-Essayer de limiter la taille des ponts, car plus ceux-ci sont grands, plus ils
-seront difficile à chauffer s’il faut refaire une soudure ou rajouter une
-connexion.</p>
-<p>Souder ensuite les fils de connexion avec isolant qui seront placés côté
+<p>Lors de la soudure des composants, il faudra faire un petit pont pour
+relier la piste à la patte du composant.</p>
+
+<h5>Fils de connexion côté composants</h5>
+
+<p>Certaines plaques ont besoin d’avoir des fils de connection, côté
 composants.
-Les dénuder sur 2–3&#8239;mm auparavant.
-Coincer les fils dans la plaque avec une pince crocodile.
+Prendre du fil isolé et le dénuder sur 2–3&#8239;mm auparavant.
+Coincer le fil dans la plaque avec une pince crocodile.
 Ne pas mordre directement à l’emplacement de la soudure.
 Faire plutôt une sorte de U renversé en plaquant le fil un peu plus loin et
 en le faisant rentrer verticalement.
@@ -442,20 +563,165 @@ Cette méthode permet d’avoir la gaine qui descend aussi bas que possible, ce
 qui est nécessaire pour éviter les court-circuits entre plusieurs fils plantés
 les uns à côté des autres.</p>
 
+<h5>Carte d’alimentation 5&#8239;V</h5>
+
+<p>Souder les borniers puis le bloc d’alimentation.
+Relier les pattes en soudant des fils de cuivre nu ou en posant de grands
+ponts de soudure.
+Se référer au schéma de PCB pour placer ces pistes.</p>
+<p>Certaines pistes et broches (J501 et les broches 1 et 2 du bloc) véhiculent
+des tensions secteurs.
+Il sera nécessaire de gratter soigneusement le cuivre autour de ces pistes sur
+au moins une pastille de large (2,5&#8239;mm) afin d’éviter toute possibilité
+de court-circuit.
+Une mini-perceuse munie d’une petite fraise arrondie est parfaite pour ce
+travail.
+Bonus&#8239;: recouvrir ces pistes et broches de vernis.</p>
+<p>De même, faire attention aux trous de montage.
+Veiller à ce que les écrous, rondelles et entretoises restent suffisamment
+éloignées des pistes secteur.</p>
+
+<h5>Carte des boutons de navigation</h5>
+
+<p>Sur cette carte, les boutons sont sur le côté cuivre et le connecteur côté
+composants.
+Il y a deux approches possibles.
+La première consiste à utiliser le cuivre de la carte pour y faire certaines
+connexions, la masse par exemple.
+Cette option est relativement simple si on utilise une Veroboard plutôt qu’une
+plaque à pastilles&#8239;; il suffit de couper les pistes aux bons endroits.
+C’est la solution que j’ai retenue car je disposais de chutes de Veroboard.
+Dans le cas d’une plaque à pastilles, il faut constituer des pistes en
+ajoutant du fil de cuivre nu ou des ponts de soudure.
+Ces éléments conducteurs vont alors se retrouver sous les boutons.
+Veiller à ce que les boutons, une fois en place, reposent de manière stable
+et horizontale sur les pistes.
+De plus, il faudra veiller à laisser des trous ouverts pour insérer les pattes
+de ces boutons, ce qui peut être compliqué.</p>
+<p>La deuxième option consiste à tout câbler côté composants avec du fil
+isolé.
+Dans ce cas, commencer avec les éléments près du connecteur, car le câblage va
+devenir assez dense à cet endroit.</p>
+<p>Souder les boutons rangée par rangée, un par un, par le dessus.
+Souder entre deux boutons peut être un peu délicat, faire attention à ne pas
+faire fondre le plastique en baladant le fer.
+Veillez à ce que les boutons soient bien plaqués à la carte lors de la
+soudure.
+En effet, ils vont devoir encaisser des pressions importantes et régulières,
+et cela ne doit pas faire travailler les soudures.</p>
+<p>Il n’est pas nécessaire de relier toutes les pattes.
+Chaque bouton en a quatre, elles sont reliées deux à deux en interne,
+constituant deux uniques pôles.
+Il suffit de souder et de connecter une patte de chaque pôle.
+En fonction de la solution de connexion retenue, souder les câbles au fur et
+à mesure, ou après soudure de l’ensemble des boutons.
+À vous d’évaluer ce qui va être le plus pratique à faire.
+Sur le connecteur, il n’y a que deux pattes de masse pour les six boutons,
+il vous faudra donc faire des dérivations.</p>
+<figure>
+  <a href="board-nav-switches.jpg"><img src="board-nav-switches-small.jpg" /></a>
+  <figcaption>Carte des boutons de navigation, côté composants.<br />
+Ici, une plaque à bandes (Veroboard) a été utilisée pour simplifier le
+câblage.<br />
+Les fils sont soudés des deux côtés pour des raisons pratiques.</figcaption>
+</figure>
+
+<h5>Cartes des codeurs incrémentaux</h5>
+
+<p>Comme pour les boutons, la soudure des codeurs se fait côté cuivre.
+Idéalement il faudrait fixer les codeurs sur la plaque de façade et les souder
+une fois en place.
+On s’assure ainsi que le positionnement est bon par rapport au perçage.
+Cependant l’espace entre les codeurs et la plaque est réduit, ce qui peut
+rendre la manipulation ardue.</p>
+<p>S’il est trop compliqué de faire ainsi, souder les composants au mieux,
+puis vérifier le placement sur la façade.
+Si nécessaire, agrandir avec une lime de section arrondie les trous qui
+nécessitent un réajustement.</p>
+<p>Faire la liaison entre les connecteurs et les codeurs à l’aide de ponts
+de soudure.
+Pour les deux codeurs à boutons, ajouter côté composants des fils isolés
+reliant le connecteur aux deux bornes de l’interrupteur.</p>
+<figure>
+  <a href="board-rot-enc-param.jpg"><img src="board-rot-enc-param-small.jpg" /></a>
+  <figcaption>Codeurs incrémentaux, paramètres</figcaption>
+</figure>
+<figure>
+  <a href="board-rot-enc-nav.jpg"><img src="board-rot-enc-nav-small.jpg" /></a>
+  <figcaption>Codeurs incrémentaux, navigation</figcaption>
+</figure>
+
+<h5>Carte des LED</h5>
+
+<p>La carte des LED est un peu spécifique car d’une part elle est double
+face et d’autre part elle est accompagnée d’un support.</p>
+<p>Le support sert à retenir les LED.
+Il est plaqué contre la façade, par le dessous.
+Compte tenu des dimensions des LED que j’ai utilisées, le support doit être
+une plaque d’environ 2&#8239;mm d’épaisseur.
+Ici, j’ai pris un reste d’aluminium de 2,5&#8239;mm.
+Cependant ces LED au format plat semblent difficiles à trouver aujourd’hui.
+Si les vôtres sont plus hautes (c’est le cas des LED standard), on peut
+prendre une plaque de 3–5&#8239;mm.
+L’essentiel, c’est que les LED ne dépassent pas du boîtier, ou à peine.
+Elle peut être en bois, en plastique ou dans n’importe quel autre matériau
+suffisamment robuste.
+Ses dimensions doivent correspondre à peu près à celle de la carte.
+Elle peut être plus grande, mais il faudra veiller à ce qu’elle ne rentre
+pas en collision avec un autre élément du boîtier.</p>
+<p>Une fois le support prêt, attacher la carte dessus avec un serre-joint,
+le côté cuivre.
+Percer les trous de fixation.
+Ce procédé garantit que les trous seront bien en face les uns des autres.
+Puis, en maintenant carte et support attachés, marquer sur ce dernier à l’aide
+d’une mine les trous dans lesquels seront placées les pattes des LED.</p>
+<p>Détacher le support et marquer le centre de chaque LED.
+Percer les trous d’accueil de ces LED, d’un diamètre de 5&#8239;mm.
+Il faut être précis car en terme d’esthétique, le moindre écart va être
+visible.
+Vérifier ensuite l’alignement avant et après perçage avec le panneau du dessus
+du boîtier.</p>
+<p>On passe ensuite les LED sur le circuit, toujours sans les souder.
+On assemble tout&#8239;: la plaque dans laquelle on coince la tête des LED,
+le circuit qui leur tient les pattes, et les boulons avec leur entretoise
+qui maintiennent les deux supports à distance suffisante.</p>
+<p>Il faut choisir les entretoises pour laisser de la place entre le circuit
+et la base de la tête des LED.
+En effet, les LED sont fixées côté pastilles, et à moins d’avoir une plaque
+double face, il faudra souder de ce côté, entre la plaque et les têtes.
+Des entretoises de 5&#8239;mm conviennent bien, mais on peut aussi en
+prendre de 10&#8239;mm si la soudure par l’intérieur semble trop difficile.
+Au besoin, ajuster la hauteur avec des rondelles.
+S’assurer également de disposer de vis de longueur suffisante, en comptant
+les épaisseurs du panneau et des diverses rondelles.</p>
+<p>Bien aligner les LED avant de les souder.
+Une fois les LED fixées, on peut démonter la plaque.
+Souder les pistes et le reste des composants.
+On peut aussi faire les opérations dans l’ordre inverse, ça n’a pas vraiment
+d’importance.</p>
+<figure>
+  <a href="led-board.jpg"><img src="led-board-small.jpg" /></a>
+  <figcaption>Montage ayant servi au prototype de Pédale Vite</figcaption>
+</figure>
+<figure>
+  <a href="led-board-mounted.jpg"><img src="led-board-mounted-small.jpg" /></a>
+  <figcaption>Carte LED, montée.</figcaption>
+</figure>
+
 <h4>Test des connexions</h4>
 
 <p>Avant de fixer les circuits intégré, il faut tester les connexions.
 Utiliser un multimètre en mode testeur de fils ou ohm-mètre.
 C’est important de le faire avant de fixer les circuits ingégrés ou les
 connecteurs, parce que les circuits peuvent avoir des contacts internes qui
-vont venir fausser les mesures, ou pire, pourraient être endommagés par la
-tension imposée par le testeur.</p>
+vont venir fausser les mesures.</p>
 <p>Avoir devant soi un plan récapitulant les broches de chaque connecteur.
 Pour chacun d’entre eux, vérifier les choses suivantes&#8239;:</p>
 <ul>
 <li>Pour chaque broche de masse, vérifier qu’aucune autre broche n’est en
 contact avec elle, sauf peut-être d’autres broches de masse.</li>
-<li>Idem pour les broches d’alimentation.
+<li>Idem pour les broches d’alimentation, vérifier sur les supports des
+circuits intégrés que ces broches aboutissent bien.
 On retrouvera tout de même des connexions avec d’autres broches
 via les résistances de tirage (<span lang="en"><i>pull-up</i></span>).
 Vérifier que ça arrive sur les boutons, et vérifier les résistances
@@ -472,83 +738,19 @@ que la connexion ne bouge pas.</li>
 <p>Ces tests ne donnent certainement pas une garantie de fonctionnement,
 mais s’ils sont fait rigoureuseuement, permettent de débusquer la grande
 majorité des erreurs et minimisent les risques de court-circuit.</p>
-
-<h4>Carte des LED</h4>
-
-<p>La carte des LED est un peu spécifique car d’une part elle est double
-face et d’autre part elle est accompagnée d’un support.</p>
-<p>Le support sert à retenir les LED.
-C’est lui qui est exposé sur la façade.
-Compte tenu des dimensions des LED, le support doit être une plaque d’environ
-2&#8239;mm d’épaisseur.
-Elle peut être en bois, en plastique ou dans n’importe quel autre matériau
-suffisamment robuste.
-Ici, j’ai pris une bûche de bois chauffage, du chêne.
-Je l’ai coupée puis fendue aux bonnes dimensions.
-Pour la dernière refente pour laquelle le résultat doit être assez précis,
-j’ai utilisé un couteau de cuisine au lieu de la hachette comme coin.
-Je l’ai enfoncé en tapant dessus avec un marteau.
-En terme de dimensions, il faut au moins que la plaque soit couverte, et ne
-pas hésiter à en mettre un peu plus, en particulier dans le sens de la
-largeur.</p>
-<p>Une fois le support prêt, attacher la carte dessus avec un serre-joint,
-le côté cuivre.
-Percer les trous de fixation.
-Ce procédé garantit que les trous seront bien en face les uns des autres.
-Puis, en maintenant carte et support attachés, marquer sur ce dernier à l’aide
-d’une mine les trous dans lesquels seront placées les pattes des LED.</p>
-<p>Détacher le support et marquer le centre de chaque LED.
-Percer les trous d’accueil de ces LED, d’un diamètre de 5&#8239;mm.
-Il faut être précis car en terme d’esthétique, le moindre écart va être
-visible.</p>
-<p>On passe ensuite les LED sur le circuit, toujours sans les souder.
-On assemble tout&#8239;: la plaque dans laquelle on coince la tête des LED,
-le circuit qui leur tient les pattes, et les boulons avec leur entretoise
-qui maintiennent les deux supports à distance suffisante.</p>
-<p>Il faut choisir les entretoises pour laisser de la place entre le circuit
-et la base de la tête des LED.
-En effet, les LED sont fixées côté pastilles, et à moins d’avoir une plaque
-double face, il faudra souder de ce côté, entre la plaque et les têtes.
-Des entretoise d’un centimètre devraient convenir.
-Au besoin, ajuster la hauteur avec des rondelles.
-S’assurer également de disposer de vis de longueur suffisante, en comptant
-les épaisseurs du panneau et des diverses rondelles.</p>
-<p>Bien aligner les LED avant de les souder.
-Une fois les LED fixées, on peut démonter la plaque et souder le reste des
-composants.
-On peut aussi faire les opérations dans l’ordre inverse, ça n’a pas vraiment
-d’importance.</p>
-
-<h4>Carte des codeurs incrémentaux</h4>
-
-<p>Comme pour les LED, la soudure des codeurs se fait côté cuivre.
-Idéalement il faudrait fixer les codeurs sur la plaque de façade et les souder
-une fois en place.
-On s’assure ainsi que le positionnement est bon par rapport au perçage.
-Cependant l’espace entre les codeurs et la plaque est réduit, ce qui peut
-rendre la manipulation ardue.</p>
-<p>S’il est trop compliqué de faire ainsi, souder les composants au mieux,
-puis vérifier le placement sur la façade.
-Si nécessaire, agrandir avec une lime de section arrondie les trous qui
-nécessitent un réajustement.</p>
-
-<h4>Carte de patch de l’écran</h4>
-
-<p>La carte est très compacte.
-Avant soudure, vérifier que le support des portes AND et que le connecteur
-HE-14 trois broches (socle mâle avec son boîtier femelle) n’interfèrent pas
-trop.
-Limer au besoin le support afin de dégager de la place pour le connecteur.
-Il est possible de souder le connecteur de manière légèrement oblique,
-en veillant cependant à laisser suffisamment de place pour le boulonnage
-de la vis de fixation de la plaque.
-Il doit y avoir des l’espace pour tourner la clé et pas uniquement pour placer
-le boulon&#8239;!</p>
+<p>Une fois les vérifications effectuées, on peut insérer les circuits
+intégrés.
+Sur ceux en boîtiers DIP, les pattes ne sont pas tout à fait verticales
+et ne rentrent pas telles quelles dans les supports.
+Il faudra donc achever de les plier.
+Cela peut être fait patte par patte, ou d’un seul coup en prenant le
+composant dans un étau à l’horizontal et en serrant très
+précautionneusement les mors pour rendre les pattes bien droites.</p>
 
 <h4>Câblage</h4>
 
 <p>Pour relier le Pi et la carte principale, on peut prendre une nappe IDE
-à l’ancienne.
+à l’ancienne, qui sont des HE10 de 40 broches.
 Il y a souvent un détrompeur qui bouche un des trous, il suffit de le percer
 avec une pointe type couteau ou ciseaux.
 La broche femelle apparaît derrière.
@@ -563,22 +765,177 @@ indique la première broche).</p>
 <p>Pour les autres câblages, se reporter à la feuille de calcul qui indique
 qui est connecté avec qui (chaque lettre identifie un fil), avec quel type de
 connecteur, et quelle longueur de câble est nécessaire.</p>
+<p>Vous pouvez entortiller les câbles à plusieurs conducteurs.
+Attention cependant, plus l’entortillement est prononcé, plus le câble se
+raccourcit.</p>
 <p>Certains connecteurs disposent de détrompeurs, il convient donc de faire
 attention à ce que la partie femelle soit orientée de la même façon que la
 partie mâle.
-En revanche, les connecteurs HE-14 ne sont pas orientés, et c’est au
+En revanche, les connecteurs Dupont ne sont pas orientés, et c’est au
 branchement qu’il faut faire attention à l’orientation.
 Peindre une tache de couleur sur un des angles de chaque connecteur mâle
 et femelle afin de faire la correspondance facilement.</p>
-<p>Le câblage de l’écran est spécifique, puisque quatre prises sont
-interconnectées, à cause de la carte de patch.
-La prise sur la carte principal nécessite un petit cavalier pour connecter
-V<sub>CC</sub> sur le 5&#8239;V (plutôt que le 3,3&#8239;V).
-Côté écran, utiliser deux connecteurs de 8 broches et les placer aux deux
-extrémités du connecteur mâle de l’écran.</p>
+<p>Certains câbles peuvent avoir des fils qui se croisent, faire bien
+attention au brochage.</p>
+<p>Le câblage de l’écran est spécifique, puisque trois prises sont
+interconnectées.</p>
 <p>Les boutons et pédales partagent quelques fils de masse.
 Préparer les câbles en les sertissant d’un seul côté.
 Ils seront soudés et connectés plus tard.</p>
+
+<h5>Câblage audio et masses</h5>
+
+<p>Les connexions audio doivent utiliser du câble blindé à double conducteur,
+en plus du blindage.
+Le blindage doit être relié à la masse (voir plus bas).
+Les câbles multi-conducteurs qui n’ont pas de masse, comme ceux des
+potentiomètres de gain, doivent êtres entortillés.
+De manière générale, utiliser un câblage aussi court que possible afin
+de limiter l’exposition aux parasites.</p>
+<p>Pour éviter les boucles de masses et les ronflettes induites, les masses
+des circuits sont câblées en étoile, ou au pire, en arborescence.
+Les liaisons entre différentes «&#8239;sections&#8239;» de masse doivent être
+uniques.
+Sinon, cela forme des boucles.</p>
+<p>Dans Pédale Vite, les masses sont organisées de la façon
+suivantes&#8239;:</p>
+<ul>
+<li>La carte audio dispose de deux plans de masse indépendants.
+L’une correspond au circuit analogique, l’autre au circuit numérique.
+Ces deux masses ne devraient être connectées qu’en un seul point, le
+cavalier JP2.</li>
+<li>La masse de la partie analogique doit être connectée à l’extérieur
+uniquement par la première entrée (gauche) de la partie jack du combo
+jack-XLR.
+Les fils de masse de tous les autres connecteurs doivent être débranchés à
+une de leur extrémité.
+Ils doivent cependant y rester connectés en un point, car la liaison à la
+masse assure l’efficacité du blindage.</li>
+<li>Les masses des autres connecteurs audio sont connectées au chassis,
+soit naturellement dans le cas des prises jack non-isolées, soit en soudant
+la broche de masse à la broche en contact avec le chassis dans le cas des
+combo en plastique.
+Ceci est aussi valable pour la partie XLR du combo de la première entrée.</li>
+<li>Toutes les alimentations sont isolées et n’induisent pas de liaison
+explicite à la masse ou à la terre.</li>
+<li>La terre venant de la prise secteur est reliée au chassis, et donc à
+la masse.
+Idéalement il faudrait faire courir un fil allant se brancher sur la masse
+de première entrée audio afin de respecter la topologie en étoile, mais
+on peut considérer que la façade arrière du boîtier comme un plan de masse,
+elle est suffisament conductrice.
+On pourra donc connecter la terre au boîtier au niveau de l’une des vis de
+la prise secteur, via une cosse.</li>
+<li>Les différents panneaux du boîtier doivent être interconnectés.
+Il est possible que les cornières en aluminium soient anodisées, et donc
+isolantes.
+Il faudra donc assurer la liaison entre tous les panneaux avec du fil et des
+cosses insérées sur les vis, coincées par les écrous.
+Il faudra éventuellement creuser un des piliers centraux afin de faire passer
+la cosse qui fera contact avec la plaque du dessous.</li>
+<li>La masse de la carte principale est reliée à celle du Pi par le connecteur
+40 broches.
+Cette masse est propagée à l’écran et à la partie numérique de la carte
+son.
+Les commutateurs sont isolés.</li>
+<li>Ne souder qu’une des extrémités des fils de masse des connecteurs jack des
+pédales d’expression, car ils sont déjà reliés à la masse globale par le
+boîtier.</li>
+<li>Les cartes dont les plans sont livrés ici ainsi que celle du Pi sont
+isolées au niveau des trous de fixation, ce qui ne provoque pas de liaison
+entre masse et boîtier.
+Ce n’est malheureusement pas le cas de l’écran.
+Il sera donc nécessaire de couper le plan de masse au niveau de chaque
+«&#8239;oreille&#8239;» de fixation, des deux côtés du PCB.
+Utiliser pour cela un cutter bien affûté ou l’angle d’une lime.
+Vérifier au multimètre que chaque oreille se retrouve bien isolée.</li>
+<li>L’écran a une double connexion avec le Pi&#8239; une directement par le
+câble HDMI, qui véhicule une masse, et l’autre par les câbles d’alimentation
+et de signaux pour le capteur tactile (via la carte principale).
+Là aussi une masse est véhiculée, il est préférable de ne pas la
+connecter.</li>
+<li>Sur la carte son, les deux masses analogique et numérique ne sont pas
+explicitement reliées.
+Il est possible de le faire avec un cavalier au niveau de JP2, situé près du
+connecteur d’alimentation.
+Une fois que tous les éléments seront installés dans le boîtier (voir plus
+bas), tester avec un multimètre le contact entre les deux broches de JP2.
+S’il n’existe aucun contact stable (il y a tout de même un condensateur
+d’évacuation des hautes fréquences qui peut perturber le multimètre) — et ce
+devrait être le cas, ajouter le cavalier.
+Sinon, laisser JP2 sans cavalier.</li>
+</ul>
+<p>Ces considérations devraient permettre d’obtenir une masse sans boucle.</p>
+<figure>
+  <a href="ground-path.png"><img src="ground-path-small.png" style="border: #E0E0E0; border-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;" /></a>
+  <figcaption>Carte des masses (traits gras).</figcaption>
+</figure>
+<figure>
+  <a href="connectors-audio-in.jpg"><img src="connectors-audio-in-small.jpg" /></a>
+  <a href="connectors-audio-out.jpg"><img src="connectors-audio-out-small.jpg" /></a>
+  <figcaption>Connecteurs audio d’entrée (gauche) et de sortie (droite).<br />
+Ne pas faire attention aux résistances qui ont été soudées par goût de
+l’expérimentation.</figcaption>
+</figure>
+<figure>
+  <a href="board-audio-jumper-gnd.jpg"><img src="board-audio-jumper-gnd-small.jpg" /></a>
+  <figcaption>Connexion des masses analogique et numérique avec JP2 sur la
+carte audio.</figcaption>
+</figure>
+<figure>
+  <a href="enclosure-shielding-1.jpg"><img src="enclosure-shielding-1-small.jpg" /></a>
+  <a href="enclosure-shielding-2.jpg"><img src="enclosure-shielding-2-small.jpg" /></a><br />
+  <a href="enclosure-shielding-3.jpg"><img src="enclosure-shielding-3-small.jpg" /></a>
+  <a href="enclosure-shielding-4.jpg"><img src="enclosure-shielding-4-small.jpg" /></a><br />
+  <a href="enclosure-shielding-5.jpg"><img src="enclosure-shielding-5-small.jpg" /></a>
+  <a href="enclosure-shielding-6.jpg"><img src="enclosure-shielding-6-small.jpg" /></a><br />
+  <figcaption>Interconnexion des plaques du boîtier.</figcaption>
+</figure>
+<figure>
+  <a href="connectors-expression-pedals.jpg"><img src="connectors-expression-pedals-small.jpg" /></a>
+  <figcaption>Connecteurs des pédales d’expression.</figcaption>
+</figure>
+<figure>
+  <a href="display-ground-1.jpg"><img src="display-ground-1-small.jpg" /></a>
+  <a href="display-ground-2.jpg"><img src="display-ground-2-small.jpg" /></a>
+  <figcaption>Trous de montage violemment isolés de la masse du circuit de
+l’écran.</figcaption>
+</figure>
+
+<h5>Alimentation du Pi</h5>
+
+<p>Le Raspberry Pi 4 s’alimente par une prise USB-C ou par le GPIO.
+Nous allons l’alimenter par l’USB-C, la nappe reliant le GPIO n’étant
+probablement pas suffisamment robuste pour véhiculer les 3&#8239;A nécessaires
+à son fonctionnement.</p>
+<p>Étant donné qu’il est très difficile de trouver une fiche USB-C à câbler
+soi-même, nous allons prendre un cordon d’alimentation USB-A vers USB-C et le
+couper.
+Il suffit de conserver une quinzaine de cm depuis la prise USB-C.</p>
+<p>Il s’agit ensuite d’identifier les conducteurs.
+Récupérer l’autre morceau du câble, celui qui se termine par la prise USB-A,
+car cette prise est plus grosse et il sera plus aisé d’en tester les broches.
+<a href="https://en.wikipedia.org/wiki/USB#/media/File:USB.svg">Vu de
+face</a>, les broches du connecteur orientées vers le haut, le pôle négatif
+de l’alimentation se trouve tout à gauche, et le positif tout à droite.
+En premier lieu, il y a de grandes chances que le blindage soit relié au pôle
+négatif.
+Pour le pôle +5&#8239;V, tester la continuité entre chaque fil et la broche.
+Ne pas se fier à la couleur des isolants.</p>
+<p>Une fois que les deux fils sont repérés, les dénuder sur 3&#8239;mm.
+Les sertir de petits embouts de câblage si vous avez le matériel nécessaire,
+car ces fils sont souvent assez fins et risquent de mal tenir dans les
+borniers.
+Sinon, dénudez plus de fils et faite un pliage avec le conducteur de façon
+à avoir plus de matière.
+Replier les éventuels autres fils le long du câble et les y attacher avec du
+ruban adhésif isolant.</p>
+<p>Enfin, connecter le câble au bornier de la carte 5&#8239;V en respectant
+la polarité.</p>
+<figure>
+  <a href="board-5v-wires.jpg"><img src="board-5v-wires-small.jpg" /></a>
+  <figcaption>Alimentation du Pi. Le câble 5&#8239;V est en blanc.</figcaption>
+</figure>
 
 
 
@@ -587,23 +944,101 @@ Ils seront soudés et connectés plus tard.</p>
 <h4>Premier assemblage</h4>
 
 <p>On peut maintenant fixer au boîtier la plupart des éléments&#8239;:
-cartes, prises, interrupteurs…</p>
-<div class="pic"><a href="box-boards-only-inside.jpg"><img src="box-boards-only-inside-small.jpg" /></a></div>
-<p>La fixation du support du Pi peut être délicate.
-Utiliser de grandes vis de façon à pouvoir y mettre les écrous avec la plaque
-encore inclinée, ce qui permet de passer les doigts.
-Ne serrer qu’une fois que toutes les vis sont posées.
-Au besoin, démonter provisoirement le montant latéral s’il est trop gênant.</p>
-<p>D’autre part il est conseillé de ne pas fixer tout de suite les deux
-interrupteurs au pied en haut à droite, sous la plaque du Pi.
-En effet la soudure des câbles y seront très difficile avec le support par
-dessus.</p>
-<div class="pic"><a href="box-top.jpg"><img src="box-top-small.jpg" /></a></div>
-<div class="pic"><a href="box-rear.jpg"><img src="box-rear-small.jpg" /></a></div>
-<p>On remarque que le Pi est un peu en retrait par rapport au boîtier, et que
-deux des quatre ports USB sont inaccessibles.
-C’est fait exprès, pour que le câble USB de la carte son reste dans le boîtier
-et qu’on ne puisse pas la débrancher par erreur.</p>
+cartes, prises, interrupteurs…
+Comme le Pi est positionné très près du panneau du dessus et que son PCB est
+relativement flexible, il est nécessaire de couper à ras les pattes de ses
+connecteurs USB et RJ45, qui sont plus proéminents que le reste.
+Le lecteur de carte micro-SD est également proeminent.
+Son enveloppe est reliée à la masse et ne pose donc pas de problème, mais
+elle risque de provoquer une boucle de masse si elle rentre en contact.
+Pour éviter tout risque, tapisser l’endroit qui accueillera le Pi avec du
+ruban adhésif isolant.</p>
+<figure>
+  <a href="enclosure-inside-boards-only.jpg"><img src="enclosure-inside-boards-only-small.jpg" /></a>
+  <figcaption>Intérieur du boîtier sans cablage ni Pi.</figcaption>
+</figure>
+<p>Dans le même ordre d’idée, il faudra recouvrir d’isolant la partie de la
+cornière située juste en-dessous de la carte son.</p>
+<p>De même, il sera nécessaire de recouvrir d’isolant la plaque du dessous
+au niveau du transformateur torique.
+En effet, s’il se formait une boucle conductrice traversant le tore, ce serait
+l’équivalent d’une spire en court-circuit et cela peut mettre en danger le
+transformateur.</p>
+<figure>
+  <a href="transformer-insulation.jpg"><img src="transformer-insulation-small.jpg" /></a>
+  <figcaption>Isolation de protection de la vis du transformateur, sur la
+plaque du fond.</figcaption>
+</figure>
+<p>En parlant de transformateur, j’ai jugé nécessaire d’ajouter une grosse
+rondelle sur la vis d’attache, pour éviter qu’un jour celle-ci ne traverse la
+plaque sous le poids du transfo.</p>
+<figure>
+  <a href="transformer-washer.jpg"><img src="transformer-washer-small.jpg" /></a>
+  <figcaption>Rondelle pour rigidifier la partie de la plaque soutenant le
+transformateur.</figcaption>
+</figure>
+<p>Hauteur des entretoises nécessaires pour chaque carte&#8239;:</p>
+<ul>
+<li>LEDs&#8239;: 5–10&#8239;mm</li>
+<li>Boutons de navigation&#8239;: 10&#8239;mm</li>
+<li>Écran&#8239;: 4&#8239;mm</li>
+<li>Alimentation 5V&#8239;: 5&#8239;mm</li>
+<li>Raspberry Pi 4&#8239;: 3&#8239;mm</li>
+<li>Carte son&#8239;: 12–13&#8239;mm</li>
+<li>Carte principale&#8239;: 5&#8239;mm</li>
+<li>2&#8239;×&#8239;15&#8239;V AC → DC&#8239;: 5&#8239;mm</li>
+</ul>
+<p>Il est sans doute préférable de ne pas monter le Pi définitivement à cette
+étape.
+En effet, pour installer le logiciel il sera nécessaire d’accéder à la carte
+SD qui deviendra difficilement accessible une fois que tout sera monté.</p>
+
+<h4>Câbles d’alimentation</h4>
+
+<p>Glisser préalablement un fusible dans la cartouche, plus un de rechange.
+Commencer par vérifier avec un multimètre le brochage de la prise secteur
+et de l’interrupteur.
+Il s’agit d’établir qui est en contact avec qui et dans quelle position.</p>
+<p>Pour cette partie, prendre du câble électrique multibrin conçu pour le
+secteur.
+Les puissances véhiculées ne sont pas très fortes, mais il faut tout de même
+une épaisseure minimale d’isolant.</p>
+<p>Il y a plusieurs câbles à réaliser&#8239;: deux pour relier la phase et
+le neutre entre la prise et l’interrupteur, un pour relier la terre au
+boîtier, et deux pour relier l’interrupteur au module d’alimentation
+5&#8239;V.
+Le transformateur 15&#8239;V dispose déjà de ses câbles, qui devront être
+branchés sur l’interrupteur également.
+Les broches sortant de l’interrupteur devront donc accueillir deux
+câbles en dérivation, l’un vers le module 5&#8239;V, l’autre vers le
+transformateur.</p>
+<p>Si vous disposez du matériel permettant de sertir des cosses Faston,
+couper les câbles aux dimensions requises et les sertir.
+Ne pas oublier de prendre les deux câbles dans la cosse pour les sorties
+d’interrupteur.</p>
+<p>Une fois les cosses attachées, ajouter un boîtier isolant.
+Il pourra être nécessaire de légèrement plier les bornes mâles pour éviter
+de toucher le fond du boîtier.</p>
+<figure>
+  <a href="cables-mains.jpg"><img src="cables-mains-small.jpg" /></a>
+  <figcaption>Câblage secteur avec cosses Faston isolées.</figcaption>
+</figure>
+<p>Sans cosses Faston, il faudra souder les câbles.
+Penser à glisser avant soudure deux voire trois morceaux de gaine
+thermo-rétractable par contact soudé afin de ne pas laisser exposé de
+conducteur secteur (sauf terre).</p>
+<p>Fixer les deux sorties du transformateur dans les borniers de la carte
+15&#8239;V.
+Ces deux sorties doivent être branchées en série et avec la même polarité.
+Sur le circuit, les deux borniers centraux sont connectées ensemble.
+En cas de doute, tester le transformateur avec un multimètre.
+Si la tension en série est nulle ou presque, inverser un des deux
+circuits.</p>
+<figure>
+  <a href="board-2x15vacdc.jpg"><img src="board-2x15vacdc-small2.jpg" /></a>
+  <figcaption>Secondaire du transformateur 2&#8239;&times;&#8239;15&#8239;V
+connecté à la carte de rectification 2&#8239;×&#8239;15&#8239;V.</figcaption>
+</figure>
 
 <h4>Soudure des câbles des interrupteurs</h4>
 
@@ -635,225 +1070,88 @@ Tester une nouvelle fois au multimètre le fonctionnement de l’interrupteur
 une fois les soudures correctement effectuées.</p>
 <p>Quand tous les fils des interrupteurs sont soudés, on peut les
 regrouper par connecteur.</p>
-<div class="pic"><a href="box-cables1-inside.jpg"><img src="box-cables1-inside-small.jpg" /></a></div>
+<figure>
+  <a href="footswitch-wiring.jpg"><img src="footswitch-wiring-small.jpg" /></a>
+  <figcaption>Connexion des commutateurs au pied.</figcaption>
+</figure>
 
-<h4>Soudure des câbles d’alimentation</h4>
+<h4>Derniers ajustements et fermeture</h4>
 
-<p>Pour cette partie, prendre du câble électrique multibrin conçu pour le
-secteur.
-Les puissances véhiculées ne sont pas très fortes, mais il faut tout de même
-une épaisseure minimale d’isolant.</p>
-<p>Avant de souder quoi que ce soit, ne pas oublier de passer les fils dans
-les manchons isolants des prises.
-Prendre à chaque fois une longueur de fil suffisante pour que les manchons
-puissent être suffisamment reculés afin de ne pas gêner l’accès à la zone à
-souder.</p>
-<p>Relier la terre (broche du milieu) du connecteur secteur C14 femelle à une
-cosse vissée au boîtier.</p>
-<p>Connecter une prise secteur femelle à un câble à deux conducteurs de
-50&#8239;cm environ.
-Cette prise servira à brancher le transformateur du Pi.
-Le câble doit être assez long pour que le socle sur lequel sera accorché
-le transfo puisse être posé à côté du boîtier tout en restant connecté.
-L’un des conducteur sera soudé à l’une des bornes de la prise C14, et l’autre
-à l’interrupteur (vérifier d’abord les broches qui font contact).</p>
-<p>Faire une dérivation à partir de cette prise femelle vers une deuxième
-prise femelle, avec un câble d’une quinzaine de centimètres.
-Cette deuxième prise alimentera le transformateur destiné à la carte
-audio.</p>
-<p>Enfin, relier l’interrupteur au connecteur C14 par les broches
-restantes.</p>
-<p>Fixer prise et interrupteur au boîtier et glisser les manchons sur les
-parties à protéger.
-Si ceux-ci ne tiennent pas bien en place, on peut les coincer autour du fil à
-l’aide d’un petit collier de serrage en plastique.</p>
-<div class="pic"><a href="box-inside-power-cables.jpg"><img src="box-inside-power-cables-small.jpg" /></a></div>
-
-<h4>Soudure des câbles audio</h4>
-
-<p>J’avais commencé par prendre une connectique stéréo pour bénéficier des
-entrées symétriques de ma carte, mais au final je me suis ravisé et n’ai
-installé de la stéréo que pour le casque.
-Pour du symétrique il vaudrait mieux passer en XLR, ou utiliser une prise
-mixte jack/XLR comme c’est le cas sur la carte son.
-Ce sera peut-être l’objet d’un chantier ultérieur.</p>
-<p>Couper 4 câbles audio mono de 70&#8239;cm et un câble stéréo de même
-longueur.
-Les câbles pourraient être moins longs, mais la contrainte est la même que
-celle du câble du transformateur, il faut pouvoir poser le socle à côté
-du boîtier avec l’ensemble maintenu connecté.</p>
-<p>Souder une prise jack mâle à chacun de ces câbles.
-Dénuder le fil et le souder selon les instructions données par le
-constructeur.</p>
-<p>Selon la qualité de la prise, la soudure peut être délicate.
-La masse de métal à chauffer est possiblement importante, et il y a un
-risque que la chaleur se transmette long des fils et fasse fondre l’isolant
-de manière plus ou moins imperceptible.
-Après chaque soudure, toujours tester la résistance qu’il y a entre les
-différents conducteurs du câble.
-Il ne doit y avoir absolument aucun contact (résistance infinie).
-Si ce n’est pas le cas, vérifier qu’une éventuelle couche plus ou moins
-conductrice située autour de l’isolant central a bien été retirée.
-Tester au multimètre.
-S’il y a toujours un contact, couper le fil et refaire la soudure.</p>
-<p>Souder ensuite les prises femelles avec les mêmes précautions.
-Afin d’éviter de faire travailler les soudures des prises femelles,
-attacher fermement les câbles au boîtier au plus près en imaginant leur trajet
-vers la carte une fois la boîtier refermé.
-Utiliser pour cela des passe-câbles adhésifs.</p>
-<div class="pic"><a href="box-inside-audio-cables.jpg"><img src="box-inside-audio-cables-small.jpg" /></a></div>
-<p>Note&#8239;: j’ai pris des câbles et des jacks mâles de très bonne qualité.
-Je pense en fin de compte que ce n’était pas nécessaire.
-Les câbles sont épais et peu flexibles, ce qui complique leur soudure et leur
-placement, sans compter le surplus d’encombrement.
-De même, les prises jack sont excessivement longues.
-De plus une erreur de placement de la carte audio sur le fond m’a forcé à
-utiliser des prises coudées pour les entrées, alors que j’aurais pu m’en
-passer sans aucun problème.
-À l’inverse je regrette de ne pas avoir pris de bonnes Neutrik partout pour
-les prises femelles.
-Les miennes manquaient de points d’accroche et ont tendance à pivoter,
-compliquant leur vissage et risquant d’occasionner des contacts intempestifs.</p>
-<p>Il reste finalement la soudure des câbles des pédales d’expression.
-Cela ne devrait pas poser de problème.</p>
-<div class="pic"><a href="box-inside-all-cables.jpg"><img src="box-inside-all-cables-small.jpg" /></a></div>
-
-<h4>Câble USB interne</h4>
-
-<p>On peut réaliser un câble USB avec un connecteur mâle à angle droit qui
-colle au plus près possible du Pi.
-Nous avons laissé un peu de distance entre le Pi et le trou de la façade
-arrière à cet effet.
-Ceci permet d’éviter d’avoir un câble USB qui fasse une boucle dépassant hors
-du boîtier, tout en gardant le Pi relativement près de la façade.</p>
-<div class="pic"><a href="usb-cable-plugged.jpg"><img src="usb-cable-plugged-small.jpg" /></a></div>
-<p>Couper un câble USB standard.
-Il faut une bonne cinquantaine de centimètres entre la coupure et la prise
-USB-B (côté carte son).</p>
-<p>La prise utilisée est conçue pour être soudée directement sur un PCB et non
-à un câble.
-On peut soit souder les fils directement aux broches et enrouler chacune
-d’adhésif d’élecricien ou de gaine thermo-rétractable pour les isoler, soit
-fabriquer un petit montage pour arriver à quelque chose de plus solide.
-C’est cette deuxième option qui a été retenue.</p>
-<p>On va utiliser un petit morceau d’epoxy venant d’une chute de plaque de
-prototypage.
-Les broches n’étant pas au format 1/10<sup>e</sup> de pouce, on ne peut pas
-les glisser directement dans les trous.
-À la place, on va y faire passer les fils avec leur isolant.
-Ne garder que 3–4&#8239;mm de large (un trou et un peu plus), et couper
-en longueur de quoi faire tenir 4 trous.
-Ajuster la découpe de façon à ce que la plaque puisse se loger entre les
-deux languettes du plat de la prise et se caler sur son extrémité (hors
-broches).</p>
-<p>Sur ce plat figurent deux picots.
-Creuser dans la plaque epoxy les trous pour les accueillir à l’aide d’une
-pointe de ciseaux ou d’une mèche très fine (1&#8239;mm).</p>
-<p>Passer les fils dans les 4 trous.
-Les souder au plus près de la prise en leur donnant une direction
-perpendiculaire.
-Ordre&#8239;: rouge, blanc, vert, noir quand on regarde la prise de
-derrière, contacteurs internes vers le haut et fils orientés vers le bas.
-Tester les connexions avec un multimètre.</p>
-<p>Serrer la plaque pour prendre les fils en sandwich et la maintenir en
-position en rabattant les languettes avec une pince.
-Couper les broches aussi ras que possible de façon à diminuer la longueur de
-la prise.</p>
-<p>Finalement, souder la tresse de blindage à la prise.</p>
-<p>Dans le montage, faire bien attention à ce que le cuivre de la plaque
-epoxy ne fasse pas de court-circuit entre les différents signaux.
-Au besoin, gratter les pastilles qui ne sont de toute façon pas utilisées.</p>
-<div class="pic"><a href="usb-cable-plugged2.jpg"><img src="usb-cable-plugged2-small.jpg" /></a></div>
-
-<h4>Alimentation de la carte audio</h4>
-
-<p>Fabriquer un bout de câble à trois branches de la façon
+<p>Finir de brancher les câbles. Tous.</p>
+<figure>
+  <a href="board-main.jpg"><img src="board-main-small.jpg" /></a>
+  <figcaption>Carte principale, hyper-branchée.<br >
+Ne pas faire attention à l’inversion des fils bleu et vert sur le connecteur
+audio.
+Il y avait une erreur dans le prototype de la carte.</figcaption>
+</figure>
+<figure>
+  <a href="board-audio-output.jpg"><img src="board-audio-output-small.jpg" /></a>
+  <figcaption>Connecteurs de sortie sur la carte audio.
+La sortie symétrique utilise la partie 1–2–3.</figcaption>
+</figure>
+<p>Personnellement, je n’ai pas monté les potentiomètres et boutons de gain de
+la carte son car je n’en ai pas besoin pour l’instant.
+À la place, j’ai utilisé des cavaliers pour sélectionner le niveau microphone
+plutôt que ligne sur la prise XLR, et fixé le gain global avec une
+résistance.</p>
+<figure>
+  <a href="connectors-missing-gain-pad.jpg"><img src="connectors-missing-gain-pad-small.jpg" /></a>
+  <figcaption>La paresse l’emporta.
+Pas (encore) de bouton pour les gains.</figcaption>
+</figure>
+<p>Pour un gain d’entrée voulu, la résistance en ohms est donné par la formule
 suivante&#8239;:</p>
-<p>La première branche, c’est le chargeur dont la prise a été coupée.
-Dénuder les fils.</p>
-<p>La seconde, l’entrée, est constituée du connecteur femelle USB-B (embase).
-Couper un petit carré de 4&#8239;&times;&#8239;4 trous dans une plaque de
-prototypage.
-Ce carré doit pouvoir être maintenu par les pattes de fixation de l’embase.
-Passer trois fils dans ce carré&#8239;
-Un noir pour la masse, et un blanc et un vert pour les données
-(<a href="https://en.wikipedia.org/wiki/USB">plan de connexion</a> pour
-référence).
-Les fils sont placés à côté des broches et ressortent par le côté.
-Ils sont ainsi coincés entre la fiche et le carré quand on soude les
-deux ensemble.</p>
-<div class="pic"><a href="audio-power-cable-usb-socket.png"><img src="audio-power-cable-usb-socket-small.png" /></a></div>
-<p>Le carré bleu indique où doivent être placées les broches de l’embase.
-Une fois repliées, les pattes de fixation de cette embase permettent de
-maintenir l’assemblage compressé.
-Souder câbles et broches.
-Faire des ponts de soudure entre câbles et broches adjascentes.</p>
-<p>La troisième est la prise USB-B mâle.
-Souder les deux fils de données ainsi que le fil rouge du chargeur
-(positif) au +5&#8239;V.
-La masse récupère un assemblage du fil noir du chargeur (négatif) et
-du fil noir issu de l’embase femelle.</p>
-<p>Envelopper le tout de ruban adhésif d’électricien ou de la gaine
-thermo-rétractable pour le protéger.
-Le montage s’intercale entre le câble de liaison USB et la carte audio.</p>
-<p>Éventuellement&#8239;: intercaler le filtre RC d’alimentation entre
-ce montage et le chargeur (non décrit ici).
-La nécessité du dispositif dépend de la qualité de l’alimentation.
-Laisser assez de câble de part et d’autre pour pouvoir être relativement
-libre dans le placement du filtre sur le socle.</p>
-
-<h4>Socle</h4>
-
-<p>Le socle doit supporter la carte audio, les deux transformateurs et
-eventuellement le filtre d’alimentation.
-Découper une plaque de bois de
-520&#8239;&times;&#8239;250&#8239;&times;&#8239;10&#8239;mm³.</p>
-<p>Commencer par noter une orientation sur le socle.
-Coincer la plaque sur le boîtier avec des serre-joints et prépercer
-8 trous à l’aide d’une mèche fine (2&#8239;mm), un trou dans chaque
-pied et deux sur chaque panneau latéral.
-Faire attention à ne pas croiser les vis qui servent à tenir la plaque.
-Visser l’ensemble pour marquer l’empreinte puis redévisser le socle
-pour la suite.</p>
-<p>Placer ensuite la carte son, à la louche mais pas trop.
-Il faut qu’il ait la place pour les câbles, ceux-ci doivent
-donc être branchés lors du placement.
-N’ayant pas encore soudé mes câbles à ce moment, j’ai mal évalué
-la place nécessaire et j’ai dû prendre des prises coudées.</p>
-<p>Placer de la même manière le transformateur.
-J’ai prévu une fixation sur le transfo et une autre perpendiculaire
-sur la prise secteur femelle.</p>
-<p>Marquer au crayon la base de la carte son et du transformateur.
-Percer des trous dans le socle pour faire passer les colliers
-de serrage qui serviront à accrocher les deux appareils.
-Pour cela, percer des paires de trous étroits distants de quelques
-millimètres.
-Défoncer ensuite les fines parties de bois entre chaque paire avec un
-tournevis plat, un ciseau fin ou tout autre outil approprié.
-Le faire progressivement en alternant les deux côtés pour éviter de ressortir
-en emportant toute la couche supérieure.</p>
-<div class="pic"><a href="box-bot-inside.jpg"><img src="box-bot-inside-small.jpg" /></a></div>
-<p><i>La photo ci-dessus ne montre ni le deuxième transformateur ni le
-filtre, pas encore réalisés au moment de la prise.</i></p>
-<p>Fixer ensuite les colliers de serrage.
-Il en faudra au moins deux pour chaque boucle enserrant la carte son.
-Le second transformateur peut être attaché au premier avec un ruban adhésif.
-Le filtre de l’alimentation peut être vissé sur le socle à côté de la carte
-son.</p>
-<p>Il est recommandé de calibrer la carte son (régler les boutons, cf.
-manuel d’utilisation) avant de tout refermer.</p>
-<p>Pour faire les pieds, l’idéal est d’avoir des gommes spécifiquement
-faites pour cela, qui s’intercalent entre les vis et le socle.
-Sinon on peut envisager une solution plus rustique.
-Pour chaque pied, prendre deux joints de goulot de bouteille en caoutchouc.
-Placer dessus une rondelle qui retient la vis et qui couvre une partie
-seulement du joint.
-Insérer la vis et serrer, fermement mais sans forcer.
-Le joint du dessus doit prendre une forme conique sous la pression et
-dépasser la tête de vis.
-J’ai utilisé ce système en première approche et le résultat n’est que
-moyennement concluant, les têtes de vis frottant encore un peu sur le sol,
-l’adhérence restant encore relativement faible sur un sol lisse.</p>
+<p>R&nbsp;=&nbsp;2000&nbsp;/&nbsp;(G<sub>lin</sub>&nbsp;&minus;&nbsp;1)&nbsp;=&nbsp;2000&nbsp;/&nbsp;(10<sup>G<sub>dB</sub>/20</sup>&nbsp;&minus;&nbsp;1)</p>
+<p>Où G<sub>lin</sub> représente le gain linéaire et G<sub>dB</sub> le même
+gain exprimé en décibels.
+Pour un gain unitaire, il faudrait une résistance infinie et donc laisser les
+connecteurs <code>Gain pot</code> sans rien dessus.
+Dans la pratique, il est plus judicieux de ne pas dépasser 10&#8239;kΩ afin
+de ne pas introduire trop de bruit thermique.</p>
+<p>Pour fixer la résistance, il suffit de sertir ses deux pattes avec des
+fiches femelle Dupont et de les introduire dans un boîtier.</p>
+<figure>
+  <a href="resistor-jumper.jpg"><img src="resistor-jumper-small.jpg" /></a>
+  <figcaption>Résistance dans un boîtier Dupont.</figcaption>
+</figure>
+<figure>
+  <a href="board-audio-input.jpg"><img src="board-audio-input-small.jpg" /></a>
+  <figcaption>Connecteurs d’entrée sur la carte audio.
+Le niveau micro est sélectionné avec deux cavaliers, les emplacements pour les
+commutateurs d’atténuation ont été laissés vides, et une résistance remplace
+le potentiomètre de gain sur la première entrée.</figcaption>
+</figure>
+<figure>
+  <a href="pedalevite-open.jpg"><img src="pedalevite-open-small.jpg" /></a>
+  <figcaption>L’intérieur est fin prêt.
+Sur cette version, il manque quand même le câblage de l’écran tactile.</figcaption>
+</figure>
+<p>Quand tout est prêt et que le boîtier peut être fermé, ajuster la cosse
+de masse de la plaque du fond pour qu’elle tombe au-dessus (ou
+en-dessous&#8239;?) du trou dans le pilier.
+Poser la plaque.
+Insérer des vis de 40&#8239;mm dans les pieds en gomme et les visser sur dans
+les piliers et les angles sans trop forcer.
+Le pied en gomme ne doit plus être libre de tourner, n’allez pas au-delà.
+Soyez soigneux avec ces vis (ou plutôt les pas de vis des trous) car il est
+possible que vous ayiez à les enlever et les remettre de nombreuses fois pour
+faire les derniers ajustements et plus tard, de la maintenance.
+Je vous conseille d’ailleurs de ne pas fermer le boîtier tant que le pédalier
+n’est pas parfaitement opérationnel, et de retirer le Pi pour l’installation
+logicielle.</p>
+<figure>
+  <a href="enclosure-legs.jpg"><img src="enclosure-legs-small.jpg" /></a>
+  <figcaption>Huit pieds pour un boîtier.</figcaption>
+</figure>
+<figure>
+  <a href="enclosure-back.jpg"><img src="enclosure-back-small.jpg" /></a>
+  <figcaption>Arrière de Pédale Vite.</figcaption>
+</figure>
+<p>Si au cours de vos tests vous vous rendez compte que vous avez inversé des
+pédales, des boutons, des sens de rotation des codeurs incrémentaux, il est
+toujours possible de les inverser soit au niveau des câbles (il est facile de
+substituer deux fils sur un connecteur), soit au niveau du logiciel.</p>
 
 
 
@@ -870,16 +1168,11 @@ somme de travail.</p>
 <h3><a id="soft-prepare"></a>Préparation du système</h3>
 
 <p>Télécharger
-<a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian</a> en
-version Lite.
-La version minimum recommandée est datée du 2017-11-29 (Stretch).
-Les versions récentes de Jessie doivent également fonctionner, moyennant
-probablement quelques modifications mineures dans la procédure d’installation.
-Inutile de passer par NOOBS car nous devrons de toute façon nous en débarasser
-ultérieurement.
-Mais cela reste techniquement possible.</p>
-<p>Décompresser quelque part le fichier <code>.img</code> contenu dans
- l’archive.</p>
+<a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian</a> <strong>en
+version Lite</strong>.
+La version minimum recommandée est datée du 2019-09-26 (Buster).
+Décompresser quelque part le fichier <code>.img</code> contenu dans
+l’archive.</p>
 
 <p>Commencer par formater la carte, si ce n’est pas déjà fait&#8239;:</p>
 <ul>
@@ -905,11 +1198,17 @@ vierge (son contenu n’a pas d’importance) intitulé <code>ssh</code>.</p>
 
 <p>Le système est maintenant prêt à être lancé pour la première fois.
 Retirer la carte Micro-SD de la machine et l’insérer dans le lecteur du Pi.
-Brancher une prise réseau et l’alimentation.</p>
+Cette étape peut être difficile si le Pi est déjà monté dans le boîtier.
+Si c’est le cas, tenir la carte à l’envers à la toute extrémité d’une paire de
+fines pinces à long bec.
+S’armer de patience et faire glisser la carte délicatement en la collant
+contre le PCB du Pi, par le dessous.
+Veiller à ne pas endommager la carte.</p>
+<p>Une fois ceci fait, brancher une prise réseau et l’alimentation.</p>
 
 
 
-<h3><a id="soft-startup"></a>Démarrage et configuration de base</h3>
+<h3><a id="soft-startup"></a>Démarrage et mise à jour du système</h3>
 
 <p>Allumer le Pi, attendre un peu que le système se charge et que SSH se mette
 en route.
@@ -920,70 +1219,83 @@ premier démarrage et commencer depuis le terminal local.</p>
 <p>Se loguer avec les identifiants de base (<code>pi</code> /
 <code>raspberry</code>).</p>
 
-<p>Commençons par faire quelques réglages.
-On va avoir besoin d’activer les interfaces SPI et I2C pour
-communiquer avec les différents composants nécessaires.</p>
-<pre class="term">sudo nano /boot/config.txt</pre>
-<p>Modifier les lignes suivantes en les commentant ou décommentant comme
-suit&#8239;:</p>
-<pre class="term">dtparam=i2c_arm=on
-dtparam=spi=on
-#dtparam=audio=on</pre>
-<p>Donc on vire le son par défaut au passage.
-C’est important parce que ça simplifie beaucoup l’installation de notre
-carte.
-Puis on demande de charger le module I2C lors du boot&#8239;:</p>
-<pre class="term">sudo nano /etc/modules</pre>
-<p>Ajouter les lignes suivantes à la fin du fichier&#8239;:</p>
-<pre class="term">i2c-bcm2708
-i2c-dev</pre>
-<p>Ensuite on peut changer les préférences de boot pour ne pas avoir le système
-graphique&#8239;:</p>
-<pre class="term">sudo systemctl set-default multi-user.target
-sudo ln -fs /lib/systemd/system/getty@.service \
-/etc/systemd/system/getty.target.wants/getty@tty1.service</pre>
-<p>En option, on peut régler les préférences de langue et de clavier&#8239;:</p>
+<p>Si nécessaire, on peut commencer par régler les préférences de langue et de
+clavier&#8239;:</p>
 <pre class="term">sudo raspi-config</pre>
 <p>Sélectionner <code>4. Localisation Options</code> et
 régler les préférences voulues.
 Finalement, flèche gauche pour sélectionner <code>Finish</code>.
-Redémarrer si le programme l’indique comme étant nécessaire:</p>
-<pre class="term">sudo shutdown -r now</pre>
-
-
-
-<h3><a id="soft-update"></a>Mise à jour système</h3>
+Inutile de redémarrer tout de suite même si les messages de la console vous
+le conseillent.</p>
 
 <p>Ensuite, mettre à jour le système&#8239;:</p>
 <pre class="term">sudo apt-get -y update
 sudo apt-get -y dist-upgrade</pre>
 <p>L’opération va prendre un peu de temps, allez donc faire quelques
 <a href="http://george-abitbol.fr/v/722d9335">exercices isométriques</a> en
-attendant.
-Inutile de redémarrer tout de suite même si les messages de la console vous
-le conseillent.</p>
-
-
-
-<h3><a id="soft-install-aud"></a>Installation de la carte son</h3>
-
-<p>Brancher la carte.
-Ouvrir un terminal et taper&#8239;:</p>
-<pre class="term">aplay -l</pre>
-<p>La carte son USB doit y être listée.
-Ensuite éditer&#8239;:</p>
-<pre class="term">sudo nano /lib/modprobe.d/aliases.conf</pre>
-<p>Commenter la ligne qui met en retrait les cartes USB&#8239;:</p>
-<pre class="term">#options snd-usb-audio index=-2</pre>
-<p>Redémarrer pour que les paramètres soient pris en compte.</p>
+attendant.</p>
+<p>Maintenant, on peut redémarrer:</p>
 <pre class="term">sudo shutdown -r now</pre>
-<p>Se reconnecter et taper&#8239;:</p>
-<pre class="term">cat /proc/asound/modules</pre>
-<p>La liste doit montrer l’USB audio en position 0.
-Récupérer un fichier wav quelque part (via une clé USB par exemple).
-Brancher la sortie de la carte son, puis&#8239;:</p>
-<pre class="term">aplay -v -D plughw:0,0 fichier.wav</pre>
-<p>Le son doit jouer correctement, sans craquement.</p>
+
+
+
+<h3><a id="soft-baseconf"></a>Configuration de base</h3>
+
+<p>Commençons par faire quelques réglages.
+On va avoir besoin d’activer les interfaces SPI et I2C pour
+communiquer avec les différents composants nécessaires.</p>
+<pre class="term">sudo nano /boot/config.txt</pre>
+<p>Modifier les lignes suivantes en les commentant ou décommentant comme
+suit en ajoutant ou retirant caractère <code>#</code> en début de
+ligne&#8239;:</p>
+<pre class="term">dtparam=i2c_arm=on
+dtparam=spi=on
+#dtparam=audio=on
+#dtoverlay=vc4-fkms-v3d</pre>
+<p>Donc on vire le son par défaut au passage.
+La dernière ligne se retrouve à plusieurs endroit, faites en sorte qu’elle
+soit commentée partout.
+Ajouter les lignes suivantes dans la section <code>[all]</code> tout à la
+fin&#8239;:</p>
+<pre class="term"># Disable rainbow image at boot
+disable_splash=1
+
+# Waveshare 4 inch HDMI LCD
+hdmi_group=2
+hdmi_mode=87
+hdmi_timings=480 0 40 10 80 800 0 13 3 32 0 0 0 60 0 32000000 3
+disable_overscan=1
+framebuffer_priority=2
+dtoverlay=ads7846,cs=1,penirq=12,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150,xmin=200,xmax=3900,ymin=200,ymax=3900
+display_hdmi_rotate=1
+
+# No Bluetooth, no WiFi
+dtoverlay=disable-bt
+dtoverlay=disable-wifi</pre>
+<p>Attention, l’instruction <code>dtoverlay=ads7846…ymax=3900</code> tient sur
+une seule ligne.
+<code>Ctrl+X</code> pour sauver et quitter.
+Ensuite on demande de charger le module I2C lors du boot&#8239;:</p>
+<pre class="term">sudo nano /etc/modules</pre>
+<p>Ajouter les lignes suivantes à la fin du fichier&#8239;:</p>
+<pre class="term">i2c-bcm2708
+i2c-dev</pre>
+
+
+
+<h3><a id="soft-opt-startup"></a>Optimisation du temps de démarrage</h3>
+
+<p>Éditer le fichier&#8239;:</p>
+<pre class="term">sudo nano /etc/modprobe.d/raspi-blacklist.conf</pre>
+<p>Ajouter les lignes suivantes pour désactiver WiFi et Bluetooth&#8239;:</p>
+<pre class="term">#wifi
+blacklist brcmfmac
+blacklist brcmutil
+#bluetooth
+blacklist btbcm
+blacklist hci_uart</pre>
+<p>Puis tapez:</p>
+<pre class="term">sudo apt-get remove -y --purge pi-bluetooth</pre>
 
 
 
@@ -991,11 +1303,19 @@ Brancher la sortie de la carte son, puis&#8239;:</p>
 
 <p>Installer git, Jack2, ALSA et autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev
-sudo apt-get -y install git git-core autoconf insserv</pre>
-<p>wiringPi passe par un autre mode d’installation&#8239;:</p>
-<pre class="term">git clone git://git.drogon.net/wiringPi
-cd wiringPi
-./build</pre>
+sudo apt-get -y install git git-core autoconf</pre>
+<p>En principe wiringPi est maintenant livré en standard, mais la version
+incluse dans le système ne supporte pas forcément correctement le Pi 4.
+Taper&#8239;:</p>
+<pre class="term">gpio -v</pre>
+<p>Si la commande ne peut être trouvée ou que la version indiquée est
+antérieure à 2.52, il faut installer manuellement la dernière
+version&#8239;:</p>
+<pre class="term">cd /tmp
+wget https://project-downloads.drogon.net/wiringpi-latest.deb
+sudo dpkg -i wiringpi-latest.deb
+gpio -v</pre>
+<p>Encore une fois, s’assurer que la version est bien 2.52 ou postérieure.</p>
 
 
 
@@ -1009,7 +1329,7 @@ git clone https://github.com/EleonoreMizo/pedalevite.git</pre>
 <p>Compilation&#8239;:</p>
 <pre class="term">cd pedalevite/build/unix
 ./autogen.sh
-./configure-release
+./configure-v2-release
 make -j4</pre>
 <p>Vérifier que tout s’est bien passé et qu’il y a un exécutable
 <code>pedalevite</code> dans le répertoire courant.
@@ -1018,8 +1338,8 @@ fichiers&#8239;:</p>
 <pre class="term">sudo mkdir -p /opt/pedalevite/bin /opt/pedalevite/etc/config
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
 sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh</pre>
-<p>Le Pi peut maintenant être inséré dans son boîtier et connecté à toutes
-les cartes et périphériques nécessaires (cf. les instructions de montage).
+<p>Le Pi peut éventuellement être connecté à toutes les cartes et
+périphériques nécessaires (cf. les instructions de montage).
 Une fois ceci fait, on peut lancer Pédale Vite pour tester&#8239;:</p>
 <pre class="term">sudo /opt/pedalevite/bin/pedalevite</pre>
 <p>Le programme doit se mettre en route et tourner normalement.
@@ -1049,18 +1369,19 @@ fi
 
 case "$1" in
     start)
-	echo "Starting Pedale Vite"
-	/opt/pedalevite/bin/pedalevite &
-	echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-	;;
+        echo "Starting Pedale Vite"
+        /opt/pedalevite/bin/pedalevite &
+        echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        systemctl stop getty@tty1.service
+        ;;
     stop)
-	echo "Stopping Pedale Vite"
-	killall pedalevite
-	;;
+        echo "Stopping Pedale Vite"
+        killall pedalevite
+        ;;
     *)
-	echo "Usage: /etc/init.d/pedalevite start|stop"
-	exit 1
-	;;
+        echo "Usage: /etc/init.d/pedalevite start|stop"
+        exit 1
+        ;;
 esac
 
 exit 0</pre>
@@ -1073,135 +1394,76 @@ Il peut être lancé immédiatement&#8239;:</p>
 
 
 
-<h3><a id="soft-opt-startup"></a>Optimisation du temps de démarrage</h3>
-
-<p>Éditer le fichier&#8239;:</p>
-<pre class="term">sudo nano /etc/modprobe.d/raspi-blacklist.conf</pre>
-<p>Ajouter les lignes suivantes pour désactiver WiFi et Bluetooth&#8239;:</p>
-<pre class="term">#wifi
-blacklist brcmfmac
-blacklist brcmutil
-#bluetooth
-blacklist btbcm
-blacklist hci_uart</pre>
-
-
-
-<h3><a id="soft-skip-noobs"></a>Retrait de NOOBS</h3>
-
-<p>Si vous avez installé Raspbian directement, comme conseillé, vous pouvez
-sauter cette partie.
-Sinon, il nous faut retirer NOOBS qui est le principal retardateur du
-démarrage.</p>
-<pre class="term">sudo fdisk -l</pre>
-<p>Repérer le numéro de la partition de NOOBS.
-C’est habituellement la numéro 1, 1&#8239;Go en FAT16.
-Repérer ensuite le numéro de l’autre partition de boot, en FAT32.
-C’est habituellement la numéro 6, précédant la grosse partition Linux qui
-couvre le reste du disque.</p>
-<p>Monter la partition NOOBS&#8239;:</p>
-<pre class="term">sudo mkdir /mnt/noobs
-sudo mount /dev/mmcblk0p1 /mnt/noobs</pre>
-<p>Ajouter <code>autoboot.txt</code>&#8239;:
-<pre class="term">nano /mnt/noobs/autoboot.txt</pre>
-<p>Y écrire la ligne suivante, en remplaçant éventuellement 6 par le numéro de
-la partition voulue&#8239;:</p>
-<pre class="term">boot_partition=6</pre>
-<p>Redémarrer pour tester que tout fonctionne bien.</p>
-
-
-
 <h3><a id="soft-ro"></a>Passage du système en lecture seule et autres optimisations</h3>
 
 <p>Cette partie doit être traitée consciencieusement afin de ne pas laisser le
-système dans un état incohérent.
-Commencer par retirer les choses qui ne sont pas nécessaire ni même adaptées
-à des opérations en lecture seule&#8239;:</p>
-<pre class="term">sudo apt-get -y remove --purge wolfram-engine triggerhappy pi-bluetooth
-sudo apt-get -y remove --purge cron anacron logrotate dbus dphys-swapfile</pre>
-<p>Retirer le serveur X et compagnie&#8239;:</p>
-<pre class="term">sudo apt-get -y remove --purge xserver-common lightdm
-sudo insserv -r x11-common</pre>
-<p>Retirer les dépendances devenues inutiles&#8239;:</p>
-<pre class="term">sudo apt-get -y autoremove --purge</pre>
+système dans un état incohérent.</p>
+
+<h4>Script de retour au mode lecture-écriture</h4>
+
+<p>Commencer par ajouter un petit script qui permettra de revenir facilement à
+un système en lecture et écriture par la suite.
+L’exécution manuelle de ce script sera impérative avant toute mise à jour,
+compilation ou autres opérations de maintenance nécessitant un accès en
+écriture au disque.</p>
+<pre class="term">cd ~
+nano fs-rw.sh</pre>
+<p>Ajouter dans ce nouveau fichier&#8239;:</p>
+<pre class="term">#!/bin/sh
+sudo mount -o remount,rw /
+sudo mount -o remount,rw /boot</pre>
+<p>Lui donner les permissions d’exécution&#8239;:</p>
+<pre class="term">chmod +x ./fs-rw.sh</pre>
+
+<h4>Plat principal</h4>
+
+<p>Retirer les choses qui ne sont pas nécessaire ni même adaptées
+à des opérations en lecture seule:</p>
+<pre class="term">sudo apt-get remove -y --force-yes --purge triggerhappy logrotate \
+    dphys-swapfile fake-hwclock
+sudo apt-get -y --force-yes autoremove --purge</pre>
 <p>Installer busybox syslog à la place de rsyslog&#8239;:</p>
-<pre class="term">sudo apt-get -y install busybox-syslogd
+<pre class="term">sudo apt-get -y --force-yes install ntp busybox-syslogd
 sudo dpkg --purge rsyslog</pre>
-<p>Changer la place des baux DHCP&#8239;:</p>
-<pre class="term">sudo rm -rf /var/lib/dhcp/
-sudo rm -rf /var/lib/dhcpcd5/
-sudo ln -s /tmp /var/lib/dhcp
-sudo ln -s /tmp /var/lib/dhcpcd5
-sudo rm /etc/resolv.conf
-sudo ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf</pre>
+
+<p>On édite les paramètres de boot&#8239;:</p>
+<pre class="term">sudo nano /boot/cmdline.txt</pre>
+<p>Ajouter <code>fastboot noswap ro logo.nologo</code> tout à la fin de la ligne&#8239;:</p>
+<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fastboot noswap ro logo.nologo</span></pre>
+
 <p>Remplacer certains sous-répertoires de <code>var</code> par des liens
 symboliques sur le lecteur RAM&#8239;:</p>
-<pre class="term">sudo rm -rf /var/lib/dhcp/ /var/run /var/spool /var/lock
-sudo ln -s /tmp /var/lib/dhcp/
-sudo ln -s /tmp /var/run
+<pre class="term">sudo rm -rf /var/spool
 sudo ln -s /tmp /var/spool
-sudo ln -s /tmp /var/lock
-sudo rm /var/lib/systemd/random-seed
-sudo ln -s /tmp/random-seed /var/lib/systemd/random-seed
-sudo rmdir /run/sshd
-sudo ln -s /tmp /run/sshd</pre>
-<p>Créer ou éditer le fichier <code>/tmp/random-seed</code> au démarrage&#8239;:</p>
-<pre class="term">sudo nano /lib/systemd/system/systemd-random-seed.service</pre>
-<p>Ajouter la ligne <code>ExecStartPre</code> dans
-<code>[Services]</code>&#8239;:</p>
-<pre class="term">[Service]
-Type=oneshot
-RemainAfterExit=yes
-<span class="termhl">ExecStartPre=/bin/echo "" &gt;/tmp/random-seed</span>
-ExecStart=/lib/systemd/systemd-random-seed load
-ExecStop=/lib/systemd/systemd-random-seed save</pre>
-<p>Autres détails&#8239;:</p>
-<pre class="term">sudo nano /etc/init.d/checkroot.sh</pre>
-<p>Si le fichier existe, commenter le <code>do_start</code> dans le bloc
-<code>case</code> à la fin du fichier&#8239;:</p>
-<pre class="term">case "$1" in
-  start|"")
-        <span class="termhl">#</span>do_start
-        ;;
-  restart|reload|force-reload)</pre>
-<pre class="term">sudo nano /etc/init.d/checkfs.sh</pre>
-<p>Idem, commenter le <code>do_start</code> à la fin si le fichier existe</p>
-<pre class="term">sudo nano /etc/init.d/checkroot-bootclean.sh</pre>
-<p>Toujours si le fichier existe, commenter le <code>rm</code> et le
-<code>clean_all</code> dans le <code>case start</code></p>
-<pre class="term">sudo insserv -r bootlogs
-sudo insserv -r alsa-utils
-sudo insserv -r console-setup
-sudo insserv -r fake-hwclock</pre>
-<p>Cela n’a pas d’importance qu’une ou plusieurs des commandes ci-dessus
-échouent.</p>
-<pre class="term">sudo nano /etc/systemd/system/dhcpcd5.service</pre>
-<p>Le fichier peut aussi être appelé <code>dhcpcd5</code>.
-Le modifier pour placer le <code>PIDFile</code> dans
-<code>/var</code>&#8239;:</p>
-<pre class="term">[Service]
-Type=forking
-PIDFile=<span class="termhl">/var</span>/run/dhcpcd.pid
-ExecStart=/sbin/dhcpcd -q -b
-ExecStop=/sbin/dhcpcd -x</pre>
+sudo rm -rf /var/lib/lightdm /var/cache/lightdm
+sudo ln -s /tmp /var/lib/lightdm
+sudo ln -s /tmp /var/cache/lightdm</pre>
+
+<p>Éditer var.conf&#8239;:</p>
+<pre class="term">sudo nano /usr/lib/tmpfiles.d/var.conf</pre>
+<p>Remplacer la permission du spool <code>0755</code> par
+<code>1777</code>&#8239;:</p>
+<pre class="term">d /var/spool <span class="termhl">1777</span> - - -</pre>
+
+<p>Déplacer <code>dhcpd.resolv.conf</code> dans <code>tmpfs</code>&#8239;:</p>
+<pre class="term">sudo touch /tmp/dhcpcd.resolv.conf
+sudo rm /etc/resolv.conf
+sudo ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf</pre>
+
+<p>Éditer <code>fstab</code>&#8239;:</p>
 <pre class="term">sudo nano /etc/fstab</pre>
 <p>Ajouter <code>,ro</code> après les defaults pour les partitions du
 disque&#8239;:</p>
 <pre class="term">proc            /proc           proc    defaults             0       0
 /dev/mmcblk0p1  /boot           vfat    defaults<span class="termhl">,ro</span>          0       2
 /dev/mmcblk0p2  /               ext4    defaults<span class="termhl">,ro</span>,noatime  0       1</pre>
-<p><code>mmcblk0p1</code> et <code>2</code> seront remplacés par
-<code>6</code> et <code>7</code> dans le cas d’une installation NOOBS.
-Il se peut aussi que ces lignes commencent par <code>PARTUUID=</code>.
+<p>Il se peut que ces lignes commencent par <code>PARTUUID=</code>.
 Ajouter également les ligne&#8239;:</p>
 <pre class="term">tmpfs           /tmp            tmpfs   nosuid,nodev         0       0
 tmpfs           /var/log        tmpfs   nosuid,nodev         0       0
 tmpfs           /var/tmp        tmpfs   nosuid,nodev         0       0</pre>
-<pre class="term">sudo nano /boot/cmdline.txt</pre>
-<p>Ajouter <code>fastboot noswap ro</code> tout à la fin de la ligne&#8239;:</p>
-<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait fastboot noswap ro</pre>
-<p>De même, <code>mmcblk0p1</code> peut changer en fonction de la présence de
-NOOBS.</p>
+
+<p>Éditer <code>rc.local</code>&#8239;:</p>
 <pre class="term">sudo nano /etc/rc.local</pre>
 <p>Ajouter le <code>chmod</code> avant le <code>exit 0</code>&#8239;:</p>
 <pre class="term">  printf "My IP address is %s\n" "$_IP"
@@ -1209,37 +1471,16 @@ fi
 
 <span class="termhl">chmod g+w,o+w /tmp</span>
 exit 0</pre>
-<p>Pour rebasculer automatiquement en lecture seule quand on se
-déconnecte, éditer ou créer le fichier&#8239;:</p>
+
+<p>Facultatif&#8239;: pour rebasculer automatiquement en lecture seule quand
+on se déconnecte, éditer ou créer le fichier&#8239;:</p>
 <pre class="term">sudo nano /etc/bash.bash_logout</pre>
 <p>Ajouter les lignes suivantes à la fin&#8239;:</p>
 <pre class="term">mount -o remount,ro /
 mount -o remount,ro /boot</pre>
-<p>Signaler les changements à <code>systemd</code>&#8239;:</p>
-<pre class="term">sudo systemctl daemon-reload</pre>
+
 <p>Redémarrer.
 Pédale Vite est à présent opérationnel.</p>
-<p>Note&#8239;: si vous n’avez pas changé le mot de passe du compte
-<code>pi</code>, le script d’avertissement
-(<code>/etc/profile.d/sshpasswd.sh</code>) va planter lors de chaque login
-en affichant&#8239;:</p>
-<pre class="term">Failed to get D-Bus connection: No such file or directory</pre>
-<p>Cela ne pose cependant aucun problème et il est possible de retirer du
-script les lignes contenant l’instruction fautive
-<code>service ssh status</code>.</p>
-<p>Il y a maintenant quelques petits trucs à savoir afin de faciliter les
-opérations de maintenance.
-En effet, le système n’est maintenant plus accessible en écriture.
-Si une quelconque modification doit être faite, on peut réactiver l’accès en
-écriture à l’aide de cette commande&#8239;:</p>
-<pre class="term">sudo mount -o remount,rw /</pre>
-<p>Remplacer <code>rw</code> par <code>ro</code> permet de repasser le système
-en lecture seule.
-Par ailleurs certaines opérations nécessitent également d’avoir
-<code>/boot</code> en écriture, comme par exemple la mise à jour du système
-par <code>apt-get dist-upgrade</code>.
-Il faut alors exécuter cette commande en plus&#8239;:</p>
-<pre class="term">sudo mount -o remount,rw /boot</pre>
 
 
 
@@ -1255,9 +1496,15 @@ Il faut alors exécuter cette commande en plus&#8239;:</p>
 il s’agit quand même essentiellement d’un projet logiciel.
 Cette partie décrit succintement l’architecture du programme ainsi que ce
 qu’il faut savoir pour l’adapter facilement à des modifications du 
-matériel.</p>
+matériel.
+Pour mettre à jour le code&#8239;:</p>
+<pre class="term">chmod +x ./fs-rw.sh</pre>
+<p>Sans oublier auparavant de passer le système en lecture-écriture avec&#8239;:</p>
+<pre class="term">~/fs-rw.sh</pre>
 
 <h4>Compilation</h4>
+
+<h5>Linux</h5>
 
 <p>Les fichiers de projet se trouvent dans le répertoire
 <code>pedalevite/build</code>.</p>
@@ -1265,11 +1512,14 @@ matériel.</p>
 sur le Pi et à destination du Pi.
 <code>Makefile.am</code> est le fichier à modifier pour ajouter les fichiers
 source.
-<code>configure-debug</code> et <code>configure-release</code> permettent de
-choisir la configuration de compilation.
+<code>configure-v2-debug</code> et <code>configure-v2-release</code>
+permettent de choisir la configuration de compilation.
 Un coup de <code>make -j4</code> recompile le projet.
 Voir aussi les instructions d’installation logicielle.</p>
-<p><code>win</code> contient les projets pour Visual Studio 2013.
+
+<h5>Windows</h5>
+
+<p><code>win</code> contient les projets pour Visual Studio 2017.
 Les sources sont divisées en plusieurs catégories&#8239;:</p>
 <ul>
 <li><code>mfxlib</code> est un projet regroupant la plupart des sources
@@ -1345,7 +1595,7 @@ Le fichier de sauvegarde <code>etc/config/current</code> est directement
 généré et lu par l’interface de sérialisation.</p>
 <p>Les différents drivers audio se trouvent dans <code>mfx::adrv</code>.
 Le gros du code spécifique à la plate-forme se trouve dans
-<code>mfx::ui</code>.
+<code>mfx::hw</code>.
 C’est dans ces classes qu’on peut changer la polartié des interrupteurs,
 leur ordre, les numéros de broche GPIO, la vitesse des interfaces de
 communication et tout autre détail relevant du matériel.</p>
@@ -1404,12 +1654,12 @@ par l’émulateur Windows.</p>
 nombreuses façons de réduire les coûts ou de simplifier le montage.
 Voici quelques unes de celles qui me sont passées par la tête.</p>
 
-<h4>Carte son à l’extérieur</h4>
+<h4>Carte son USB à l’extérieur</h4>
 
 <p>Il y a de nombreux avantages&#8239;:</p>
 <ul>
-<li>Amincissement du pédalier. En effet, une grande partie de la hauteur nécessaire vient du besoin de faire tenir la carte son dans le boîtier.</li>
-<li>Réduction des coûts par la suppression de la connectique audio interne et du câble USB personnalisé. Mine de rien, c’est plus de 40&#8239;€ HT économisés par rapport aux matériaux utilisés dans le prototype.</li>
+<li>Réduction des coûts par la suppression de la carte et de la connectique
+audio interne.</li>
 <li>Simplification du montage pour les mêmes raisons.</li>
 <li>Accès direct aux réglages en façade pour calibration.</li>
 <li>Permet de changer de modèle de carte son sans se prendre la tête sur des questions géométriques.</li>
@@ -1418,8 +1668,15 @@ Voici quelques unes de celles qui me sont passées par la tête.</p>
 <ul>
 <li>Plus d’éléments à trimbaler, connexions plus complexes lors de l’utilisation.</li>
 <li>Complexité encore ajoutée si on alimente séparément la carte au lieu d’utiliser l’USB.</li>
-<li>Ne permet pas de faire évoluer la connectique (prises mixtes XLR/jack).</li>
+<li>Il faut un peu changer la configuration logicielle (drivers ALSA).</li>
 </ul>
+
+<h4>Simplification de la carte son interne</h4>
+
+<p>Il est tout à fait possible de se passer des préamplificateurs micro si on
+sait qu’on ne va pas en avoir l’usage, voire de se passer complètement du
+deuxième canal d’entrée.
+Cela diminue significativement le nombre de composants sur la carte.</p>
 
 <h4>Matériaux moins coûteux</h4>
 
@@ -1427,11 +1684,9 @@ Voici quelques unes de celles qui me sont passées par la tête.</p>
 avantageux.
 Ça demande de faire une recherche un peu exhaustive et de vérifier la
 compatibilité des pièces si celles-ci diffèrent de celles suggérées.</p>
-<p>Il y a une réduction significative de coûts à faire avec la connectique
-audio interne, si on choisit de garder la carte son à l’intérieur.
-Inutile de prendre des prises jack Neutrik et du câble de première qualité.
-L’entrée de gamme devrait suffire, à condition que le blindage soit correct,
-surtout pour les câbles d’entrée.</p>
+<p>Par exemple, la connectique audio pourrait utiliser des jack TR (mono)
+d’entrée de gamme au lieu des combo jack/XLR Neutrik et des prises jack
+TRS (stéréo).</p>
 <p>Par contre je pense qu’il serait maladroit d’essayer d’économiser sur les
 interrupteurs au pied.
 La solidité de ces composants est primordiale.</p>
@@ -1440,44 +1695,8 @@ La solidité de ces composants est primordiale.</p>
 
 <p>Dans la configuration actuelle, je ne les utilise pas aussi souvent que je
 l’imaginais. 
-Je pense qu’on peut s’en passer sans problème.</p>
-<p>Ça fait de la connectique, des coûts et une carte en moins.
-On doit pouvoir se passer de la deuxième plaque de prototypage.
-Le gain tourne autour de 25&#8239;€ HT</p>
-
-<h4>Carte unique en PCB</h4>
-
-<p>Utiliser la version PCB de Pédale Vite est certainement un moyen efficace
-d’en simplifier le montage.
-On gagne sur le tracé des pistes, on fait sauter plusieurs câbles de liaison
-et il y a moins de trous à percer sur la plaque de métal.
-Par contre le PCB en l’état est double face et assez précis (vias de
-0,4&#8239;mm), il me semble difficile de le réaliser en DIY.
-Il faudra passer par une entreprise de gravure ou en changer la
-conception pour utiliser une insolation artisanale.</p>
-<p>Pour une production groupée, même à petite échelle, il doit y avoir un
-intérêt en terme budgétaire.
-Celui-ci reste tout de même à évaluer pour une production strictement
-individuelle.</p>
-<p>L’électronique est identique à celle utilisée sur les cartes proto.
-Les connecteurs également, à part deux d’entre eux.</p>
-<ul>
-<li>Le connecteur de l’écran.
-Il lui manque un des fils de masse, qui peut facilement être remplacé par la
-soudure d’un pont sur le circuit de l’écran, par exemple celui reliant BLK
-(broche 20) à VSS/GND (broche 1).
-Se reporter au schéma pour le reste du brochage de ce connecteur.</li>
-<li>Le système des diodes est simplifié&#8239;: il ne reste que le
-+3,3&#8239;V et les trois signaux sur le connecteur.
-Là aussi, se reporter au schéma pour le brochage.
-La plaque des diodes doit être adaptée en conséquence, puisqu’il ne
-reste plus que lesdites diodes.</li>
-</ul>
-<p>La plaque se fixe au milieu, à la place de la carte des interrupteurs, dans
-le sens de la hauteur.
-Elle tient tout juste sous l’écran.
-Tous les fichiers nécessaires (sources KiCAD et exports Gerber) sont dans le
-dépôt Git dans <code>doc/pcb-v1_1</code>.</p>
+Je pense qu’on peut s’en passer sans problème.
+Cela fait de la connectique et des coûts en moins.</p>
 
 <h4>Substitution des résistances de tirage</h4>
 
@@ -1492,20 +1711,7 @@ Le lissage des rebonds est déjà doublé en software et ne devrait pas
 nécessiter de changement.</p>
 <p>Il y a peu à gagner en terme de coûts, les résistances et condensateurs
 céramiques étant bon marché.
-Cependant la simplification des circuits est significative.
-On doit pouvoir faire tenir tout ce qui a trait aux contacts dans une seule
-carte.</p>
-
-<h4>Utilisation des ponts sur l’écran</h4>
-
-<p>L’écran utilisé est un 12864ZW.
-Je ne l’ai appris que plus tard, mais celui-ci dispose de plusieurs passages
-sur son PCB permettant d’activer certaines fonctionnalités en y déposant un
-pont de soudure.
-Ces ponts relient à la masse ou à la tension d’alimentation diverses broches
-du connecteur principal.
-Ça aurait été utile pour activer le rétro-éclairage ou le protocole série sans
-avoir à rajouter manuellement les broches et les cables qui allaient avec.</p>
+Cependant la simplification des circuits est significative.</p>
 
 <h4>Réduction du nombre de connecteurs</h4>
 
@@ -1521,12 +1727,17 @@ d’avoir des groupes de fils déjà solidaires.
 Un bon mètre de nappe multicolore 40 fils devrait suffire pour l’ensemble du
 montage.
 Attention tout de même, le diamètre du fil de nappe est souvent assez
-faible et peut être limite pour le brochage HE-14.
+faible et peut être limite pour le brochage Dupont.
 Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r2, 2019-11-02</b></p>
+<ul>
+<li>Passage à la version 2 de Pédale Vite.</li>
+</ul>
 
 <p><b>r1, 2017-09-24</b></p>
 <ul>

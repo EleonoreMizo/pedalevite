@@ -3,13 +3,13 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Pédale Vite&nbsp;&mdash;&nbsp;multi-FX pedalboard for guitar and bass&nbsp;&mdash;&nbsp;User manual</title>
+<title>Pédale Vite v2&nbsp;&mdash;&nbsp;multi-FX pedalboard for guitar and bass&nbsp;&mdash;&nbsp;User manual</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body><div class="global">
 
-<h1>Pédale Vite&nbsp;&mdash;&nbsp;User manual</h1>
+<h1>Pédale Vite v2&nbsp;&mdash;&nbsp;User manual</h1>
 
 <h2>Content</h2>
 
@@ -97,33 +97,21 @@ This manual explains how to use the pedalboard once assembled and functional.</p
 <h4>Back panel</h4>
 
 <ol style="list-style-type:decimal;">
-<li>Rasberry Pi 3 USB and Ethernet ports</li>
-<li>Jacks for expression pedals<li>
-<li>Power switch</li>
-<li>220–240V power lead</li>
-<li>Audio output to amplifier or mixing desk</li>
-<li>Headphone plug, stereo jack</li>
 <li>Guitar audio input</li>
+<li>Audio output to amplifier or mixing desk</li>
+<li>Jacks for expression pedals</li>
+<li>Fuse holder</li>
+<li>220–240V power lead</li>
+<li>Power switch</li>
 </ol>
 <div class="pic"><a href="panel-rear.png"><img src="panel-rear-small.png" /></a></div>
-<p>Access to the Pi is not required during normal operation and is for
-maintenance only.</p>
 <p>The first expression pedal is on the left hand side of the panel, and
-therefore on the right hand side when facing the pedalboard.</p>
-<p>All jacks are unbalanced ¼” (mono signal), except for the headphone jack 
-which is stereo.</p>
-<p>Les canaux gauches et droits des entrées et des sorties sont inversés
-afin qu’ils soient dans le bon ordre quand on se place devant le pédalier.
-Les entrées font environ 500&#8239;kΩ d’impédance.
-Utiliser le canal gauche pour brancher la guitare ou tout autre signal
-mono.
-Quand le pédalier est configuré en mono, les deux sorties diffusent le même
-signal.
-
-The left and right channels of the inputs and outputs are inverted so that
-they are in the right order when standing in front of the pedalboard.
-The input impedance is about 500kΩ.
-Use the left channel to connect the guitar or any other mono signal.
+therefore on the right hand side when facing the pedalboard.
+Same for the audio inputs and outputs.</p>
+<p>All jacks are balanced ¼”.</p>
+<p>Impedences of the audio inputs are above 2MΩ for the jacks, 2.2kΩ for the
+XLR.
+Use the first channel to connect the guitar or any other mono signal.
 When the pedalboard is set to mono, both outputs send the same signal.</p>
 
 <h4>Front panel</h4>
@@ -161,11 +149,11 @@ or to change a value.</p>
 <li>Switch on the pedalboard (3).</li>
 </ol>
 <p>After less than ten seconds, the display should show the current program,
-called “Bypass”.</p>
+called <span class="ui">&lt;Empty prog&gt;</span>, a simple bypass.</p>
 <div class="pic"><img src="current-program-bypass.png" /></div>
 <ol style="list-style-type:decimal;" start="5">
 <li>Switch on the amplifier.</li>
-<li>Ply.</li>
+<li>Play.</li>
 </ol>
 <p>Sound is too loud? Too quiet? You don’t hear anything?
 Please report to the <a href="#calibration">calibration</a> section.</p>
@@ -184,24 +172,9 @@ The goal is to have as strong an input level as possible without the incoming
 guitar signal saturating at that point.
 Then, if you play on an amp, you have to go out at a level similar to the
 guitar plugged in directly.</p>
-<p>Unfortunately, there is no practical adjustment for calibration outside the
-enclosure.
-It is therefore necessary to venture inside the machine.</p>
-<p>Turn off the pedalboard and turn it over.
-Remove the 8 screws holding the base with a Phillips screwdriver.
-Lift up the base, the sound card is attached to it.
-Be careful not to unplug or pull out any cables.
-Place the base close to the housing.</p>
-<p>The audio interface is attached on the inner side.
-Plug and turn on the pedalboard, still open.
-Avoid putting fingers on the power cables.
-It is up to you to find an effective method of handling the case, as you will
-have to manipulate the knobs and check the front panel to adjust the audio
-interface.
-Placing and securing the enclosure on the edge should allow this without too
-much hassle.</p>
 <p>Press the <span class="key">Select</span> button, scroll down to the
-Volume & Levels menu, and press <span class="key">Select</span> again.</p>
+<span class="ui">Volume &amp; Levels</span> menu, and press
+<span class="key">Select</span> again.</p>
 <div class="pic"><img src="main-menu-levels.png" /></div>
 <p>This takes you to the level control screen.
 The upper meter shows the input levels, the middle one the output levels.
@@ -215,35 +188,24 @@ to the right of the solid bars (RMS).</p>
 Input level should never exceed 0dB, and rarely go above &minus;6dB.
 However it should be as high as possible.</p>
 <p>Input level is set at the minimum by default, which is fine for an
-electric guitar plugged directly to the pedalboard, given the audio
-interface.
-Anyway, it may be required to adjust it.</p>
-<p>Turn the input 1 knob (left) on the audio interface until the level
-looks correct.
+electric guitar plugged directly to the pedalboard.
+Anyway, it may be required to adjust it, for example if your guitar has a too
+low output.</p>
+<p>Turn the input 1 gain knob until the level looks correct.
 Then set the same level on the input 2.</p>
 
-<h4>Niveau de sortie</h4>
+<h4>Output level</h4>
 
 <p>Once we are done with the input level, we can set the output level.
-Make sure the “Bypass” program is activated, so the guitar input goes
+Make sure an empty program (“Bypass”) is activated, so the guitar input goes
 directly to the output without any modification.</p>
-<p>The output volume should be set to 0dB in the
-<a href="#screen-levels">Volume and levels</a> screen.
-If it is not the case, go to the Output volume settings with the vertical
-arrows.
+<p>Go to the Output volume settings with the vertical arrows.
 Change the volume with the horizontal arrows.</p>
 <p>Then set the output level on the audio interface in order to get the
 same sound as with a guitar plugged directly to the amplifier.
 An AB/Y box is a great help for this.
 If you don’t have one, you can plug alternatively the guitar on the
 pedalboard and on the amplifier to compare the volumes.</p>
-<p>Finally, you can set the headphone volume, which doesn’t require
-anything else than your taste and ears.</p>
-<p>Now, switch off the pedalboard and put back the base.
-Make sure that wires don’t suffer from the operation and that everything
-fits together without forcing on the enclosure content.</p>
-<p>Plug the pedalboard and switch it on.
-Check that everything is still OK.</p>
 
 
 
@@ -2595,6 +2557,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r23, 2019-11-02</b></p>
+<ul>
+<li>Adapted the manual for Pédale Vite version 2.</li>
+</ul>
 
 <p><b>r22, 2019-07-24</b></p>
 <ul>

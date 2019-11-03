@@ -1,0 +1,7 @@
+screenshots.xcf :
+
+– Crop
+– Export to OpenRaster (.ora) format
+– Rename the .ora to .zip
+– Extract
+– Use a spreasheet to turn the .xml index into a rename batch
