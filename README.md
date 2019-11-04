@@ -1,6 +1,6 @@
 **Pédale Vite** is a DIY multi-FX pedalboard for guitar, bass or any other electric instrument.
 
-It is based on a Raspberry Pi 3 and a USB soundcard (the Presonus Audiobox USB).
+It is based on a Raspberry Pi 4 and uses a custom audio board.
 
 ![Pédale Vite](http://ldesoras.free.fr/doc/articles/pedale-vite/pedalevite2-overview-small.jpg)
 
