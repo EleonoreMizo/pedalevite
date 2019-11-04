@@ -2,7 +2,7 @@
 
 It is based on a Raspberry Pi 3 and a USB soundcard (the Presonus Audiobox USB).
 
-![Pédale Vite](http://ldesoras.free.fr/doc/articles/pedale-vite/pedalevite-overview-small.jpg)
+![Pédale Vite](http://ldesoras.free.fr/doc/articles/pedale-vite/pedalevite2-overview-small.jpg)
 
 Key features:
 
