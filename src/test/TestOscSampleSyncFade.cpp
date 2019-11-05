@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "test/FileOp.h"
+#include "mfx/FileOpWav.h"
 #include "test/TestOscSampleSyncFade.h"
 #include "test/TimerAccurate.h"
 
@@ -126,7 +126,9 @@ int	TestOscSampleSyncFade::perform_test ()
 		}
 	}
 
-	FileOp::save_wav ("results/oscsamplesyncfade0.wav", result_m, 44100, 0.5f);
+	mfx::FileOpWav::save (
+		"results/oscsamplesyncfade0.wav", result_m, 44100, 0.5f
+	);
 
 	printf ("done.\n");
 

@@ -616,6 +616,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.h" />
     <ClInclude Include="..\..\..\src\mfx\FileIOInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\FileOpWav.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\bcm2837pcm.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\cs4272.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\DisplayLinuxFrameBuf.h" />
@@ -1139,6 +1140,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\FileOpWav.cpp" />
     <ClCompile Include="..\..\..\src\mfx\hw\DisplayLinuxFrameBuf.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>

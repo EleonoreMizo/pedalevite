@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FileOp.cpp
+        FileOpWav.cpp
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -9,7 +9,7 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
@@ -24,13 +24,22 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "test/FileOp.h"
+#include "fstb/fnc.h"
+#include "mfx/dsp/mix/Generic.h"
+#include "mfx/FileOpWav.h"
+
+#include <array>
 
 #include <cassert>
 #include <climits>
 #include <cmath>
 #include <cstddef>
-#include <cstdio>
+
+
+
+
+namespace mfx
+{
 
 
 
@@ -38,7 +47,117 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-int	FileOp::load_wav (const char *filename_0, std::vector <std::vector <float> > &chn_arr, double &sample_freq)
+FileOpWav::~FileOpWav ()
+{
+	if (_f_ptr != 0)
+	{
+		close_file ();
+	}
+}
+
+
+
+// Creates a new empty wav file, to be populated with write_data ().
+// Then call close_file () when you're done.
+int	FileOpWav::create_save (const char *filename_0, int nbr_chn, double sample_freq)
+{
+	assert (_f_ptr == 0);
+
+	int            ret_val = 0;
+
+	_f_ptr = fstb::fopen_utf8 (filename_0, "wb");
+	if (_f_ptr == 0)
+	{
+		ret_val = -1;
+	}
+	else
+	{
+		_nbr_chn     = nbr_chn;
+		_sample_freq = sample_freq;
+		_len         = 0;
+
+		ret_val = write_headers (_f_ptr, _nbr_chn, _len, _sample_freq);
+	}
+
+	return ret_val;
+}
+
+
+
+int	FileOpWav::write_data (const float * const chn_arr [], int nbr_spl)
+{
+	assert (chn_arr != 0);
+	assert (nbr_spl > 0);
+
+	int            ret_val = 0;
+	
+	if (_f_ptr == 0)
+	{
+		ret_val = -1;
+		assert (false);
+	}
+
+	if (ret_val == 0)
+	{
+		std::array <float, _tmp_buf_len> tmp_buf;
+
+		int            pos = 0;
+		do
+		{
+			const int      work_len =
+				std::min (nbr_spl - pos, int (_tmp_buf_len));
+
+			for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
+			{
+				assert (chn_arr [chn_cnt] != 0);
+				mfx::dsp::mix::Generic::copy_1_ni1 (
+					&tmp_buf [chn_cnt], chn_arr [chn_cnt], work_len, _nbr_chn
+				);
+			}
+		
+			const size_t   write_len   = _nbr_chn * work_len;
+			const size_t   written_len =
+				fwrite (&tmp_buf [0], sizeof (tmp_buf [0]), write_len, _f_ptr);
+			if (written_len != write_len)
+			{
+				ret_val = -1;
+			}
+			else
+			{
+				_len += work_len;
+				pos  += work_len;
+			}
+		}
+		while (pos < nbr_spl && ret_val == 0);
+	}
+
+	return ret_val;
+}
+
+
+
+int	FileOpWav::close_file ()
+{
+	int            ret_val = 0;
+
+	if (_f_ptr == 0)
+	{
+		ret_val = -1;
+		assert (false);
+	}
+	else
+	{
+		ret_val = write_headers (_f_ptr, _nbr_chn, _len, _sample_freq);
+		fclose (_f_ptr);
+		_f_ptr = 0;
+	}
+
+	return ret_val;
+}
+
+
+
+int	FileOpWav::load (const char *filename_0, std::vector <std::vector <float> > &chn_arr, double &sample_freq)
 {
 	int            ret_val = 0;
 
@@ -48,7 +167,7 @@ int	FileOp::load_wav (const char *filename_0, std::vector <std::vector <float> >
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Loads the file into memory
 
-	FILE *         f_ptr = fopen (filename_0, "rb");
+	FILE *         f_ptr = fstb::fopen_utf8 (filename_0, "rb");
 	if (f_ptr == 0)
 	{
 		ret_val = -1;
@@ -211,24 +330,21 @@ int	FileOp::load_wav (const char *filename_0, std::vector <std::vector <float> >
 
 
 
-int	FileOp::save_wav (const char *filename_0, const std::vector <float> &chn, double sample_freq, float scale)
+int	FileOpWav::save (const char *filename_0, const std::vector <float> &chn, double sample_freq, float scale)
 {
 	const std::vector <std::vector <float> >  chn_arr (1, chn);
 
-	return save_wav (filename_0, chn_arr, sample_freq, scale);
+	return save (filename_0, chn_arr, sample_freq, scale);
 }
 
 
 
-int	FileOp::save_wav (const char *filename_0, const std::vector <std::vector <float> > &chn_arr, double sample_freq, float scale)
+int	FileOpWav::save (const char *filename_0, const std::vector <std::vector <float> > &chn_arr, double sample_freq, float scale)
 {
 	assert (! chn_arr.empty ());
 	assert (sample_freq > 0);
 
 	int            ret_val = 0;
-
-	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-	// Prepares the chunks
 
 	const size_t   nbr_spl = chn_arr [0].size ();
 	const int      nbr_chn = int (chn_arr.size ());
@@ -238,28 +354,8 @@ int	FileOp::save_wav (const char *filename_0, const std::vector <std::vector <fl
 		assert (chn.size () == nbr_spl);
 	}
 #endif // NDEBUG
-	const int      header_len = 8;
 
-	WavFmt         fmt;
-	fmt._chunk_size        = offsetof (WavFmt, _size) - header_len;
-	fmt._format_tag        = WavFormat_IEEE_FLOAT;
-	fmt._channels          = uint16_t (chn_arr.size ());
-	fmt._samples_per_sec   = uint32_t (floor (sample_freq + 0.5f));
-	fmt._block_align       = sizeof (float) * nbr_chn;
-	fmt._avg_bytes_per_sec = fmt._block_align * fmt._samples_per_sec;
-	fmt._bits_per_sample   = sizeof (float) * CHAR_BIT;
-
-	WavData        data;
-	data._chunk_size = fmt._block_align * nbr_spl;
-	assert ((data._chunk_size & 1) == 0);
-
-	WavRiff        riff;
-	riff._chunk_size = 4 + header_len * 2 + fmt._chunk_size + data._chunk_size;
-
-	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-	// Writes the file
-
-	FILE *         f_ptr = fopen (filename_0, "wb");
+	FILE *         f_ptr = fstb::fopen_utf8 (filename_0, "wb");
 	if (f_ptr == 0)
 	{
 		ret_val = -1;
@@ -267,25 +363,9 @@ int	FileOp::save_wav (const char *filename_0, const std::vector <std::vector <fl
 
 	if (ret_val == 0)
 	{
-		if (fwrite (&riff, header_len + 4, 1, f_ptr) != 1)
-		{
-			ret_val = -1;
-		}
+		ret_val = write_headers (f_ptr, nbr_chn, nbr_spl, sample_freq);
 	}
-	if (ret_val == 0)
-	{
-		if (fwrite (&fmt, header_len + fmt._chunk_size, 1, f_ptr) != 1)
-		{
-			ret_val = -1;
-		}
-	}
-	if (ret_val == 0)
-	{
-		if (fwrite (&data, header_len, 1, f_ptr) != 1)
-		{
-			ret_val = -1;
-		}
-	}
+
 	std::vector <float> tmp (nbr_chn);
 	for (size_t pos = 0; pos < nbr_spl && ret_val == 0; ++pos)
 	{
@@ -315,6 +395,74 @@ int	FileOp::save_wav (const char *filename_0, const std::vector <std::vector <fl
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+int	FileOpWav::write_headers (FILE * f_ptr, int nbr_chn, size_t nbr_spl, double sample_freq)
+{
+	assert (f_ptr != 0);
+	assert (nbr_chn > 0);
+	assert (nbr_spl >= 0);
+	assert (sample_freq > 0);
+
+	int            ret_val = 0;
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Prepares the chunks
+
+	const int      header_len = 8;
+
+	WavFmt         fmt;
+	fmt._chunk_size        = offsetof (WavFmt, _size) - header_len;
+	fmt._format_tag        = WavFormat_IEEE_FLOAT;
+	fmt._channels          = uint16_t (nbr_chn);
+	fmt._samples_per_sec   = uint32_t (floor (sample_freq + 0.5f));
+	fmt._block_align       = sizeof (float) * nbr_chn;
+	fmt._avg_bytes_per_sec = fmt._block_align * fmt._samples_per_sec;
+	fmt._bits_per_sample   = sizeof (float) * CHAR_BIT;
+
+	WavData        data;
+	data._chunk_size = fmt._block_align * nbr_spl;
+	assert ((data._chunk_size & 1) == 0);
+
+	WavRiff        riff;
+	riff._chunk_size = 4 + header_len * 2 + fmt._chunk_size + data._chunk_size;
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Writes the file
+
+	if (ret_val == 0)
+	{
+		ret_val = fseek (f_ptr, 0, SEEK_SET);
+	}
+	if (ret_val == 0)
+	{
+		if (fwrite (&riff, header_len + 4, 1, f_ptr) != 1)
+		{
+			ret_val = -1;
+		}
+	}
+	if (ret_val == 0)
+	{
+		if (fwrite (&fmt, header_len + fmt._chunk_size, 1, f_ptr) != 1)
+		{
+			ret_val = -1;
+		}
+	}
+	if (ret_val == 0)
+	{
+		if (fwrite (&data, header_len, 1, f_ptr) != 1)
+		{
+			ret_val = -1;
+		}
+	}
+
+	return ret_val;
+}
+
+
+
+}  // namespace mfx
 
 
 

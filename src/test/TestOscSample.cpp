@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/dsp/osc/OscSample.h"
 #include "mfx/dsp/rspl/InterpFtor.h"
-#include "test/FileOp.h"
+#include "mfx/FileOpWav.h"
 #include "test/TestOscSample.h"
 #include "test/TestSampleMipMapper.h"
 #include "test/TimerAccurate.h"
@@ -101,7 +101,7 @@ int	TestOscSample::perform_test ()
 		dest.push_back (dest_int [pos] * (1.0f / 0x8000));
 	}
 
-	FileOp::save_wav ("results/oscsample0.wav", dest, 44100, 0.5f);
+	mfx::FileOpWav::save ("results/oscsample0.wav", dest, 44100, 0.5f);
 
 	return 0;
 }

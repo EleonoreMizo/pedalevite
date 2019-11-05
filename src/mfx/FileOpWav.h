@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FileOp.h
+        FileOpWav.h
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -9,15 +9,15 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
 #pragma once
-#if ! defined (FileOp_HEADER_INCLUDED)
-#define FileOp_HEADER_INCLUDED
+#if ! defined (mfx_FileOpWav_HEADER_INCLUDED)
+#define mfx_FileOpWav_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -30,19 +30,32 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <vector>
 
 #include <cstdint>
+#include <cstdio>
 
 
 
-class FileOp
+namespace mfx
+{
+
+
+
+class FileOpWav
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static int     load_wav (const char *filename_0, std::vector <std::vector <float> > &chn_arr, double &sample_freq);
-	static int     save_wav (const char *filename_0, const std::vector <float> &chn, double sample_freq, float scale = 1);
-	static int     save_wav (const char *filename_0, const std::vector <std::vector <float> > &chn_arr, double sample_freq, float scale = 1);
+	               FileOpWav () = default;
+	virtual        ~FileOpWav ();
+
+	int            create_save (const char *filename_0, int nbr_chn, double sample_freq);
+	int            write_data (const float * const chn_arr [], int nbr_spl);
+	int            close_file ();
+
+	static int     load (const char *filename_0, std::vector <std::vector <float> > &chn_arr, double &sample_freq);
+	static int     save (const char *filename_0, const std::vector <float> &chn, double sample_freq, float scale = 1);
+	static int     save (const char *filename_0, const std::vector <std::vector <float> > &chn_arr, double sample_freq, float scale = 1);
 
 
 
@@ -55,6 +68,8 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	static const int  _tmp_buf_len = 1024; // In single samples
 
 	struct WavRiff
 	{
@@ -95,28 +110,37 @@ private:
  		WavFormat_EXTENSIBLE = 0xFFFE
 	};
 
+	static int     write_headers (FILE * f_ptr, int nbr_chn, size_t nbr_spl, double sample_freq);
+
+	FILE *         _f_ptr         = 0; // 0 if not open
+	int            _nbr_chn       = 0;
+	double         _sample_freq   = 0;
+	size_t         _len           = 0;
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	               FileOp ()                               = delete;
-	               FileOp (const FileOp &other)            = delete;
-	virtual        ~FileOp ()                              = delete;
-	FileOp &       operator = (const FileOp &other)        = delete;
-	bool           operator == (const FileOp &other) const = delete;
-	bool           operator != (const FileOp &other) const = delete;
+	               FileOpWav (const FileOpWav &other)         = delete;
+	FileOpWav &    operator = (const FileOpWav &other)        = delete;
+	bool           operator == (const FileOpWav &other) const = delete;
+	bool           operator != (const FileOpWav &other) const = delete;
 
-}; // class FileOp
+}; // class FileOpWav
 
 
 
-//#include "FileOp.hpp"
+}  // namespace mfx
 
 
 
-#endif   // FileOp_HEADER_INCLUDED
+//#include "mfx/FileOpWav.hpp"
+
+
+
+#endif   // mfx_FileOpWav_HEADER_INCLUDED
 
 
 

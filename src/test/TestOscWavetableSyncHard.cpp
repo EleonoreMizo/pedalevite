@@ -34,7 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/rspl/InterpFtor.h"
 #include "mfx/dsp/wnd/Generic.h"
 #include "mfx/dsp/wnd/CoefGenBHMinLobe.h"
-#include "test/FileOp.h"
+#include "mfx/FileOpWav.h"
 #include "test/TestOscWavetableSyncHard.h"
 #include "test/TimerAccurate.h"
 
@@ -250,7 +250,7 @@ int	TestOscWavetableSyncHard::test_valid ()
 	std::string filename = "results/oscwavetablesynchard";
 	filename += typeid (DataType).name ();
 	filename += "0.wav";
-	FileOp::save_wav (filename.c_str (), result_m, 44100, 0.5f);
+	mfx::FileOpWav::save (filename.c_str (), result_m, 44100, 0.5f);
 
 	printf ("Done.\n");
 

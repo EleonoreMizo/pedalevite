@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/osc/WavetableMipMapper.h"
-#include "test/FileOp.h"
+#include "mfx/FileOpWav.h"
 #include "test/TestOscWavetableSub.h"
 #include "test/TimerAccurate.h"
 
@@ -202,7 +202,7 @@ int	TestOscWavetableSub::test_valid ()
 	std::string filename = "results/oscwavetablesub";
 	filename += typeid (DataType).name ();
 	filename += "0.wav";
-	FileOp::save_wav (filename.c_str (), result_m, 44100, 0.5f);
+	mfx::FileOpWav::save (filename.c_str (), result_m, 44100, 0.5f);
 
 	printf ("Done.\n");
 

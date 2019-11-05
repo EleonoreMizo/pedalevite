@@ -2883,6 +2883,9 @@
     <ClInclude Include="..\..\..\src\mfx\hw\mcp23017.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\FileOpWav.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3955,6 +3958,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\ThreadLinux.cpp">
       <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\FileOpWav.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

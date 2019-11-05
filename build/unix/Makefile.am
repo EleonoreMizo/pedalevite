@@ -1137,6 +1137,8 @@ commonsrc = \
         ../../src/mfx/CtrlUnit.h \
         ../../src/mfx/FileIOInterface.cpp \
         ../../src/mfx/FileIOInterface.h \
+        ../../src/mfx/FileOpWav.cpp \
+        ../../src/mfx/FileOpWav.h \
         ../../src/mfx/LocEdit.h \
         ../../src/mfx/MeterResult.h \
         ../../src/mfx/MeterResultSet.cpp \
@@ -1188,8 +1190,6 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/BufferFiller.cpp \
         ../../src/test/BufferFiller.h \
         ../../src/test/EPSPlot.h \
-        ../../src/test/FileOp.cpp \
-        ../../src/test/FileOp.h \
         ../../src/test/GraphPrim.cpp \
         ../../src/test/GraphPrim.h \
         ../../src/test/Gridaxis.cpp \

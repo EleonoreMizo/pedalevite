@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/osc/WpdGen.h"
 #include "mfx/dsp/wnd/Generic.h"
 #include "mfx/dsp/wnd/CoefGenBHMinLobe.h"
-#include "test/FileOp.h"
+#include "mfx/FileOpWav.h"
 #include "test/TestOscSampleSyncHard.h"
 #include "test/TimerAccurate.h"
 
@@ -71,7 +71,9 @@ int	TestOscSampleSyncHard::perform_test ()
 	{
 		blep_data [pos] = steptable.get_sample (pos) * (1.f / scale);
 	}
-	FileOp::save_wav ("results/oscsamplesynchard_blep.wav", blep_data, 44100, 1.0f);
+	mfx::FileOpWav::save_wav (
+		"results/oscsamplesynchard_blep.wav", blep_data, 44100, 1.0f
+	);
 #endif
 
 	osc.set_sample_data (tsmm.use_sample_data ());
@@ -152,7 +154,9 @@ int	TestOscSampleSyncHard::perform_test ()
 		}
 	}
 
-	FileOp::save_wav ("results/oscsamplesynchard0.wav", result_m, 44100, 0.5f);
+	mfx::FileOpWav::save (
+		"results/oscsamplesynchard0.wav", result_m, 44100, 0.5f
+	);
 
 	printf ("done.\n");
 

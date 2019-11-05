@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/dsp/fir/ConvolverFft.h"
-#include "test/FileOp.h"
+#include "mfx/FileOpWav.h"
 #include "test/TestConvolverFft.h"
 
 #include <algorithm>
@@ -134,7 +134,9 @@ int	TestConvolverFft::perform_test ()
 
 	std::vector <std::vector <float> > file_content = { src, dest };
 	file_content [0].resize (dest.size (), 0);
-	FileOp::save_wav ("results/convolverfft0.wav", file_content, 44100, 0.5);
+	mfx::FileOpWav::save (
+		"results/convolverfft0.wav", file_content, 44100, 0.5
+	);
 
 	return 0;
 }

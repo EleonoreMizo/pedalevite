@@ -49,8 +49,8 @@
 #include "mfx/pi/testgen/Param.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/FileIOInterface.h"
+#include "mfx/FileOpWav.h"
 #include "test/EPSPlot.h"
-#include "test/FileOp.h"
 #include "test/Gridaxis.h"
 #include "test/TestApprox.h"
 #include "test/TestConvolverFft.h"
@@ -93,8 +93,8 @@ int	generate_test_signal (double &sample_freq, std::vector <std::vector <float> 
 
 #if 1
 
-	ret_val = FileOp::load_wav ("../../../src/test/samples/guitar-01.wav", chn_arr, sample_freq);
-//	ret_val = FileOp::load_wav ("../../../src/test/samples/guitar-02.wav", chn_arr, sample_freq);
+	ret_val = mfx::FileOpWav::load ("../../../src/test/samples/guitar-01.wav", chn_arr, sample_freq);
+//	ret_val = mfx::FileOpWav::load ("../../../src/test/samples/guitar-02.wav", chn_arr, sample_freq);
 
 #else
 
@@ -407,7 +407,9 @@ int	test_testgen ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/testgensweep0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/testgensweep0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -464,7 +466,9 @@ int	test_disto ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/t0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/t0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -530,7 +534,9 @@ int	test_phaser ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/phaser0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/phaser0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -600,7 +606,9 @@ int	test_noise_chlorine ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/noisechlorine0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/noisechlorine0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -668,7 +676,9 @@ int	test_noise_bleach ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/noisebleach0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/noisebleach0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -755,7 +765,9 @@ int	test_transients ()
 			}
 		}
 
-		ret_val = FileOp::save_wav ("results/transients-envelopes.wav", dst_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/transients-envelopes.wav", dst_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -1181,7 +1193,9 @@ int	test_bbd_line ()
 			block_pos += block_len;
 		}
 
-		ret_val = FileOp::save_wav ("results/bbdline0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/bbdline0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	if (ret_val == 0)
@@ -1262,7 +1276,9 @@ int	test_delay2 ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/delay20.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/delay20.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -1319,7 +1335,9 @@ int test_osdet ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/osdet0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/osdet0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -1359,7 +1377,9 @@ int	test_freqfast ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/freqfast0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/freqfast0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -1419,7 +1439,9 @@ int	test_envelope_detector ()
 		}
 		while (pos < len);
 
-		ret_val = FileOp::save_wav ("results/envdet0.wav", chn_arr, sample_freq, 1);
+		ret_val = mfx::FileOpWav::save (
+			"results/envdet0.wav", chn_arr, sample_freq, 1
+		);
 	}
 
 	return ret_val;
@@ -1678,6 +1700,45 @@ int test_osc_sin_cos_stable_simd ()
 
 
 
+int	test_file_write_fs_ro ()
+{
+	std::string    pathname = "results/test_file_write_fs_ro.txt";
+	std::string    content  = "This is a test.\n";
+
+	std::string    pathname_tmp ("/tmp");
+	const size_t   last_delim = pathname.rfind ('/');
+	if (last_delim == std::string::npos)
+	{
+		pathname_tmp += "/";
+		pathname_tmp += pathname;
+	}
+	else
+	{
+		pathname_tmp += pathname.substr (last_delim);
+	}
+
+	const int      ret_val = mfx::FileIOInterface::write_txt_file_direct (
+		pathname_tmp, content
+	);
+	if (ret_val == 0)
+	{
+		std::string    cmd = "sudo ";
+		cmd += mfx::Cst::_rw_cmd_script_pathname;
+		cmd += " ";
+		cmd += "mv \'";
+		cmd += pathname_tmp;
+		cmd += "\' \'";
+		cmd += pathname;
+		cmd += "\'";
+
+		system (cmd.c_str ());
+	}
+
+	return ret_val;
+}
+
+
+
 int main (int argc, char *argv [])
 {
 	mfx::dsp::mix::Generic::setup ();
@@ -1685,6 +1746,12 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	#if fstb_IS (SYS, LINUX)
+	if (ret_val == 0) ret_val = test_file_write_fs_ro ();
+	#endif
+#endif
+
+#if 0
 	#if fstb_IS (SYS, LINUX)
 	if (ret_val == 0) ret_val = TestUserInputPi3::perform_test ();
 	#endif

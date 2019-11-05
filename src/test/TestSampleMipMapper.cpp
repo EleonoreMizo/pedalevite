@@ -26,8 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #include "fstb/fnc.h"
+#include "mfx/FileOpWav.h"
 #include "test/TestSampleMipMapper.h"
-#include "test/FileOp.h"
 
 #include <cassert>
 
@@ -87,7 +87,9 @@ int	TestSampleMipMapper::perform_test ()
 		}
 	}
 
-	FileOp::save_wav ("results/samplemipmapper0.wav", result_m, 44100, 0.5f);
+	mfx::FileOpWav::save (
+		"results/samplemipmapper0.wav", result_m, 44100, 0.5f
+	);
 
 	return 0;
 }
