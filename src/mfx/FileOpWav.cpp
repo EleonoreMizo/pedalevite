@@ -236,6 +236,13 @@ bool	FileOpWav::is_open () const
 
 
 
+size_t	FileOpWav::get_size_frames () const
+{
+	return _len;
+}
+
+
+
 int	FileOpWav::load (const char *filename_0, std::vector <std::vector <float> > &chn_arr, double &sample_freq)
 {
 	int            ret_val = 0;

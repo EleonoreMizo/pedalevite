@@ -171,6 +171,13 @@ bool	RecD2d::is_recording () const
 
 
 
+size_t	RecD2d::get_size_frames () const
+{
+	return _file_writer.get_size_frames ();
+}
+
+
+
 void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
 {
 	assert (chn_arr != 0);

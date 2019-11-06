@@ -88,10 +88,13 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	void           update_display ();
+	void           update_rec_time ();
 	void           toggle_rec (int node_id);
 	void           change_limit (int dir);
 	std::string    build_rec_pathname () const;
 	std::string    print_duration (int minutes) const;
+	int            conv_frames_to_min (uint64_t nbr_frames) const;
+	int            conv_bytes_to_min (uint64_t nbr_bytes) const;
 
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
@@ -108,6 +111,7 @@ private:
 
 	int            _time_limit;   // Minutes
 	int            _disk_avail;   // Minutes. 0 = unknown
+	int            _prev_refresh; // Previous ten of second of the current date, for the refresh of the display. -1: not fetched yet
 
 	Question::QArg _msg_arg;
 

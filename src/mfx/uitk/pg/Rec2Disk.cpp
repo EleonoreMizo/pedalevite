@@ -46,6 +46,7 @@ http://www.wtfpl.net/ for more details.
 
 #include <cassert>
 #include <climits>
+#include <ctime>
 
 
 
@@ -74,6 +75,7 @@ Rec2Disk::Rec2Disk (PageSwitcher &page_switcher)
 ,	_avail_sptr (  new NText (Entry_AVAIL  ))
 ,	_time_limit (30)
 ,	_disk_avail (0)
+,	_prev_refresh (-1)
 ,	_msg_arg ()
 {
 	// Nothing
@@ -109,20 +111,15 @@ void	Rec2Disk::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr->push_back (_max_dur_sptr);
 	_page_ptr->push_back (_avail_sptr  );
 
-	PageMgrInterface::NavLocList  nav_list;
-	NavLoc         nav;
-	PageMgrInterface::add_nav (nav_list, Entry_REC    );
-	PageMgrInterface::add_nav (nav_list, Entry_MAX_DUR);
-	_page_ptr->set_nav_layout (nav_list);
-
 	update_display ();
+	_page_ptr->set_timer (Entry_REC, true);
 }
 
 
 
 void	Rec2Disk::do_disconnect ()
 {
-	// Nothing
+	_page_ptr->set_timer (Entry_REC, false);
 }
 
 
@@ -133,7 +130,21 @@ MsgHandlerInterface::EvtProp	Rec2Disk::do_handle_evt (const NodeEvt &evt)
 
 	const int      node_id = evt.get_target ();
 
-	if (evt.is_button_ex ())
+	if (evt.is_timer ())
+	{
+		time_t         timer;
+		time (&timer);
+		tm             utc (*gmtime (&timer));
+		const int      rate    = 10; // Updates every 10 seconds
+		const int      current = utc.tm_sec / rate;
+		if (current != _prev_refresh)
+		{
+			_prev_refresh = current;
+			update_rec_time ();
+		}
+	}
+
+	else if (evt.is_button_ex ())
 	{
 		const Button   but = evt.get_button_ex ();
 		switch (but)
@@ -186,6 +197,14 @@ void	Rec2Disk::update_display ()
 {
 	const bool     rec_flag = _model_ptr->is_d2d_recording ();
 
+	PageMgrInterface::NavLocList  nav_list;
+	NavLoc         nav;
+	PageMgrInterface::add_nav (nav_list, Entry_REC);
+	if (! rec_flag)
+	{
+		PageMgrInterface::add_nav (nav_list, Entry_MAX_DUR);
+	}
+
 #if fstb_IS (SYS, LINUX)
 
 	uint64_t       bytes_avail = 0;
@@ -212,7 +231,6 @@ void	Rec2Disk::update_display ()
 
 	if (bytes_avail > 0)
 	{
-		const double   fs     = _model_ptr->get_sample_freq ();
 		const uint64_t margin = 100 * uint64_t (1024 * 1024);
 		if (bytes_avail < margin)
 		{
@@ -220,22 +238,16 @@ void	Rec2Disk::update_display ()
 		}
 		else
 		{
-			const int      byte_per_s =
-				  fstb::round_int (fs)
-				* (sizeof (float) * CHAR_BIT / 8)
-				* (Cst::_nbr_chn_in + Cst::_nbr_chn_out);
-			_disk_avail = (bytes_avail - margin) / (byte_per_s * 60);
+			_disk_avail = conv_bytes_to_min (bytes_avail - margin);
 		}
 		_time_limit = std::min (_time_limit, _disk_avail);
 	}
 
 #endif // LINUX
 
-	std::string    txt;
+	update_rec_time ();
 
-	txt = "Record: ";
-	txt += (rec_flag) ? "ON" : "Off";
-	_rec_sptr->set_text (txt);
+	std::string    txt;
 
 	txt = "Limit : ";
 	txt += print_duration (_time_limit);
@@ -251,6 +263,28 @@ void	Rec2Disk::update_display ()
 		txt += "Unknown";
 	}
 	_avail_sptr->set_text (txt);
+
+	_page_ptr->set_nav_layout (nav_list);
+}
+
+
+
+void	Rec2Disk::update_rec_time ()
+{
+	const bool     rec_flag = _model_ptr->is_d2d_recording ();
+	std::string    txt ("Record: ");
+	if (rec_flag)
+	{
+		txt += "ON ";
+		const uint64_t nbr_frames = _model_ptr->get_d2d_size_frames ();
+		const int      rec_dur    = conv_frames_to_min (nbr_frames);
+		txt += print_duration (rec_dur);
+	}
+	else
+	{
+		txt += "Off";
+	}
+	_rec_sptr->set_text (txt);
 }
 
 
@@ -347,6 +381,29 @@ std::string	Rec2Disk::print_duration (int minutes) const
 	fstb::snprintf4all (txt_0, sizeof (txt_0), "%2dh%02d", dur_h, dur_m);
 
 	return txt_0;
+}
+
+
+
+int	Rec2Disk::conv_frames_to_min (uint64_t nbr_frames) const
+{
+	const int      frames_per_s =
+		fstb::round_int (_model_ptr->get_sample_freq ());
+	uint64_t       nbr_minutes  = nbr_frames / (frames_per_s * 60);
+	nbr_minutes = std::min (nbr_minutes, uint64_t (INT_MAX));
+
+	return int (nbr_minutes);
+}
+
+
+
+int	Rec2Disk::conv_bytes_to_min (uint64_t nbr_bytes) const
+{
+	const int      nbr_chn         = Cst::_nbr_chn_in + Cst::_nbr_chn_out;
+	const int      bytes_per_frame = (sizeof (float) * CHAR_BIT / 8) * nbr_chn;
+	const uint64_t nbr_frames      = nbr_bytes / bytes_per_frame;
+
+	return conv_frames_to_min (nbr_frames);
 }
 
 

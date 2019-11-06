@@ -740,6 +740,13 @@ bool	Central::is_d2d_recording () const
 
 
 
+size_t	Central::get_d2d_size_frames () const
+{
+	return _d2d_rec.get_size_frames ();
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

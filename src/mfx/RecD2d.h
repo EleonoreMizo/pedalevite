@@ -57,6 +57,7 @@ public:
 	int            close_file ();
 	int            process_messages ();
 	bool           is_recording () const;
+	size_t         get_size_frames () const;
 
 	// RT thread
 	void           write_data (const float * const chn_arr [], int nbr_spl);
