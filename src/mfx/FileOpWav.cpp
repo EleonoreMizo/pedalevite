@@ -423,8 +423,6 @@ int	FileOpWav::save (const char *filename_0, const std::vector <std::vector <flo
 	assert (! chn_arr.empty ());
 	assert (sample_freq > 0);
 
-	int            ret_val = 0;
-
 	const size_t   nbr_spl = chn_arr [0].size ();
 	const int      nbr_chn = int (chn_arr.size ());
 
