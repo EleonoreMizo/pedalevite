@@ -188,10 +188,10 @@ void	Rec2Disk::update_display ()
 
 #if fstb_IS (SYS, LINUX)
 
-	int            bytes_avail = 0;
+	uint64_t       bytes_avail = 0;
 	if (! rec_flag)
 	{
-		std::string    pathname   = build_rec_pathname ();
+		std::string    pathname   = Cst::_audiodump_dir;
 		uint64_t       free_bytes = 0;
 		uint64_t       file_bytes = 0;
 		struct statvfs res_free;
@@ -200,24 +200,32 @@ void	Rec2Disk::update_display ()
 		if (ret_val == 0)
 		{
 			free_bytes = uint64_t (res_free.f_bsize) * res_free.f_bfree;
+			pathname   = build_rec_pathname ();
 			ret_val    = stat (pathname.c_str (), &res_file);
 		}
 		if (ret_val == 0)
 		{
 			file_bytes  = res_file.st_size;
-			bytes_avail = free_bytes + file_bytes;
 		}
+		bytes_avail = free_bytes + file_bytes;
 	}
 
 	if (bytes_avail > 0)
 	{
-		const double   fs         = _model_ptr->get_sample_freq ();
-		const uint64_t margin     = 100 * uint64_t (1024 * 1024);
-		const int      byte_per_s =
-			  fstb::round_int (fs)
-			* (sizeof (float) * CHAR_BIT / 8)
-			* (Cst::_nbr_chn_in + Cst::_nbr_chn_out);
-		_disk_avail = (_disk_avail - margin) / (byte_per_s * 60);
+		const double   fs     = _model_ptr->get_sample_freq ();
+		const uint64_t margin = 100 * uint64_t (1024 * 1024);
+		if (bytes_avail < margin)
+		{
+			_disk_avail = 5;
+		}
+		else
+		{
+			const int      byte_per_s =
+				  fstb::round_int (fs)
+				* (sizeof (float) * CHAR_BIT / 8)
+				* (Cst::_nbr_chn_in + Cst::_nbr_chn_out);
+			_disk_avail = (bytes_avail - margin) / (byte_per_s * 60);
+		}
 		_time_limit = std::min (_time_limit, _disk_avail);
 	}
 
