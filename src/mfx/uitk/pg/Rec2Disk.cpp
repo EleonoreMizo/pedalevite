@@ -36,6 +36,10 @@ http://www.wtfpl.net/ for more details.
 
 #if fstb_IS (SYS, LINUX)
 #include <sys/statvfs.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #endif // LINUX
 
 #include <algorithm>
@@ -91,8 +95,7 @@ void	Rec2Disk::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_page_ptr->clear_all_nodes ();
 
-	const int      scr_w = _page_size [0];
-	const int      h_m   = _fnt_ptr->get_char_h ();
+	const int      h_m = _fnt_ptr->get_char_h ();
 
 	_rec_sptr    ->set_font (*_fnt_ptr);
 	_max_dur_sptr->set_font (*_fnt_ptr);
@@ -182,7 +185,6 @@ MsgHandlerInterface::EvtProp	Rec2Disk::do_handle_evt (const NodeEvt &evt)
 void	Rec2Disk::update_display ()
 {
 	const bool     rec_flag = _model_ptr->is_d2d_recording ();
-	int            min_tot  = 0;
 
 #if fstb_IS (SYS, LINUX)
 
@@ -216,7 +218,7 @@ void	Rec2Disk::update_display ()
 			* (sizeof (float) * CHAR_BIT / 8)
 			* (Cst::_nbr_chn_in + Cst::_nbr_chn_out);
 		_disk_avail = (_disk_avail - margin) / (byte_per_s * 60);
-		_time_limit = std::min (_time_limit, _disk_avail)
+		_time_limit = std::min (_time_limit, _disk_avail);
 	}
 
 #endif // LINUX
