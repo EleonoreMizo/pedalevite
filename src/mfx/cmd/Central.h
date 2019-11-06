@@ -34,8 +34,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/PluginState.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/ChnMode.h"
+#include "mfx/Cst.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
+#include "mfx/RecD2d.h"
 #include "mfx/WaMsgQueue.h"
 #include "mfx/WorldAudio.h"
 
@@ -125,6 +127,10 @@ public:
 	const piapi::PluginState &
 	               use_default_settings (std::string model) const;
 
+	int            start_d2d_rec (const char pathname_0 [], size_t max_len);
+	int            stop_d2d_rec ();
+	bool           is_d2d_recording () const;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -205,6 +211,11 @@ private:
 
 	int            _dummy_mix_id;
 
+	RecD2d         _d2d_rec;
+	std::array <std::vector <float>, Cst::_nbr_chn_in + Cst::_nbr_chn_out>
+	               _d2d_buf_arr;  // Input channels first, then output channels
+	std::array <const float *, Cst::_nbr_chn_in + Cst::_nbr_chn_out>
+	               _d2d_buf_ptr_arr;
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

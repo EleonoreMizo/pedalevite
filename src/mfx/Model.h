@@ -172,6 +172,10 @@ public:
 	               get_cur_date () const;
 	float          get_param_val_mod (int slot_id, PiType type, int index) const;
 
+	int            start_d2d_rec (const char pathname_0 [], size_t max_len);
+	int            stop_d2d_rec ();
+	bool           is_d2d_recording () const;
+
 	static const std::array <int, Cst::_nbr_pedals> // [Pedal number] = Input switch index
 	               _pedal_to_switch_map;
 

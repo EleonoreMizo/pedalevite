@@ -28,6 +28,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/FileOpWav.h"
 
+#include <algorithm>
 #include <array>
 
 #include <cassert>
@@ -59,9 +60,9 @@ FileOpWav::~FileOpWav ()
 
 // Creates a new empty wav file, to be populated with write_data ().
 // Then call close_file () when you're done.
-int	FileOpWav::create_save (const char *filename_0, int nbr_chn, double sample_freq)
+int	FileOpWav::create_save (const char *filename_0, int nbr_chn, double sample_freq, size_t max_len)
 {
-	assert (_f_ptr == 0);
+	assert (! is_open ());
 
 	int            ret_val = 0;
 
@@ -72,11 +73,15 @@ int	FileOpWav::create_save (const char *filename_0, int nbr_chn, double sample_f
 	}
 	else
 	{
+		_max_len     = max_len;
 		_nbr_chn     = nbr_chn;
 		_sample_freq = sample_freq;
 		_len         = 0;
+		_pos         = 0;
+		_max_nbr_frm = _tmp_buf_len / nbr_chn;
 
 		ret_val = write_headers (_f_ptr, _nbr_chn, _len, _sample_freq);
+		_data_beg = ftell (_f_ptr);
 	}
 
 	return ret_val;
@@ -91,13 +96,13 @@ int	FileOpWav::write_data (const float * const chn_arr [], int nbr_spl)
 
 	int            ret_val = 0;
 	
-	if (_f_ptr == 0)
+	if (! is_open ())
 	{
 		ret_val = -1;
 		assert (false);
 	}
 
-	if (ret_val == 0)
+	else
 	{
 		std::array <float, _tmp_buf_len> tmp_buf;
 
@@ -105,30 +110,97 @@ int	FileOpWav::write_data (const float * const chn_arr [], int nbr_spl)
 		do
 		{
 			const int      work_len =
-				std::min (nbr_spl - pos, int (_tmp_buf_len));
-
-			for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
+				std::min (nbr_spl - pos, _max_nbr_frm);
+			if (_pos + work_len > _max_len)
 			{
-				assert (chn_arr [chn_cnt] != 0);
-				mfx::dsp::mix::Generic::copy_1_ni1 (
-					&tmp_buf [chn_cnt], chn_arr [chn_cnt], work_len, _nbr_chn
-				);
+				ret_val = fseek (_f_ptr, _data_beg, SEEK_SET);
+				_pos = 0;
 			}
+
+			if (ret_val == 0)
+			{
+				if (_nbr_chn == 2)
+				{
+					dsp::mix::Generic::copy_2_2i (
+						&tmp_buf [0], chn_arr [0] + pos, chn_arr [1] + pos, work_len
+					);
+				}
+				else
+				{
+					for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
+					{
+						assert (chn_arr [chn_cnt] != 0);
+						dsp::mix::Generic::copy_1_ni1 (
+							&tmp_buf [chn_cnt],
+							chn_arr [chn_cnt] + pos,
+							work_len,
+							_nbr_chn
+						);
+					}
+				}
 		
-			const size_t   write_len   = _nbr_chn * work_len;
-			const size_t   written_len =
-				fwrite (&tmp_buf [0], sizeof (tmp_buf [0]), write_len, _f_ptr);
+				const size_t   write_len   = _nbr_chn * work_len;
+				const size_t   written_len = fwrite (
+					&tmp_buf [0], sizeof (tmp_buf [0]), write_len, _f_ptr
+				);
+				if (written_len != write_len)
+				{
+					ret_val = -1;
+				}
+				else
+				{
+					_pos += work_len;
+					_len  = std::max (_len, _pos);
+					pos  += work_len;
+				}
+			}
+		}
+		while (pos < nbr_spl && ret_val == 0);
+	}
+
+	return ret_val;
+}
+
+
+
+// Interleaved data. nbr_spl = number of multichannel frames
+int	FileOpWav::write_data (const float frame_arr_ptr [], int nbr_spl)
+{
+	assert (frame_arr_ptr != 0);
+	assert (nbr_spl > 0);
+
+	int            ret_val = 0;
+
+	if (! is_open ())
+	{
+		ret_val = -1;
+		assert (false);
+	}
+
+	else
+	{
+		if (_pos + nbr_spl > _max_len)
+		{
+			ret_val = fseek (_f_ptr, _data_beg, SEEK_SET);
+			_pos = 0;
+		}
+
+		if (ret_val == 0)
+		{
+			const size_t   write_len   = _nbr_chn * nbr_spl;
+			const size_t   written_len = fwrite (
+				&frame_arr_ptr [0], sizeof (frame_arr_ptr [0]), write_len, _f_ptr
+			);
 			if (written_len != write_len)
 			{
 				ret_val = -1;
 			}
 			else
 			{
-				_len += work_len;
-				pos  += work_len;
+				_pos += nbr_spl;
+				_len  = std::max (_len, _pos);
 			}
 		}
-		while (pos < nbr_spl && ret_val == 0);
 	}
 
 	return ret_val;
@@ -140,7 +212,7 @@ int	FileOpWav::close_file ()
 {
 	int            ret_val = 0;
 
-	if (_f_ptr == 0)
+	if (! is_open ())
 	{
 		ret_val = -1;
 		assert (false);
@@ -153,6 +225,13 @@ int	FileOpWav::close_file ()
 	}
 
 	return ret_val;
+}
+
+
+
+bool	FileOpWav::is_open () const
+{
+	return (_f_ptr != 0);
 }
 
 
@@ -332,9 +411,9 @@ int	FileOpWav::load (const char *filename_0, std::vector <std::vector <float> > 
 
 int	FileOpWav::save (const char *filename_0, const std::vector <float> &chn, double sample_freq, float scale)
 {
-	const std::vector <std::vector <float> >  chn_arr (1, chn);
+	const float * const chn_arr [1] = { chn.data () };
 
-	return save (filename_0, chn_arr, sample_freq, scale);
+	return save (filename_0, chn_arr, chn.size (), 1, sample_freq, scale);
 }
 
 
@@ -348,12 +427,30 @@ int	FileOpWav::save (const char *filename_0, const std::vector <std::vector <flo
 
 	const size_t   nbr_spl = chn_arr [0].size ();
 	const int      nbr_chn = int (chn_arr.size ());
-#if ! defined (NDEBUG)
+
+	std::vector <const float *> chn_ptr_arr;
 	for (auto &chn : chn_arr)
 	{
 		assert (chn.size () == nbr_spl);
+		chn_ptr_arr.push_back (chn.data ());
 	}
-#endif // NDEBUG
+
+	return save (
+		filename_0, chn_ptr_arr.data (), nbr_spl, nbr_chn, sample_freq, scale
+	);
+}
+
+
+
+int	FileOpWav::save (const char *filename_0, const float * const chn_arr [], size_t nbr_spl, int nbr_chn, double sample_freq, float scale)
+{
+	assert (filename_0 != 0);
+	assert (chn_arr != 0);
+	assert (nbr_chn > 0);
+	assert (nbr_spl >= 0);
+	assert (sample_freq > 0);
+
+	int            ret_val = 0;
 
 	FILE *         f_ptr = fstb::fopen_utf8 (filename_0, "wb");
 	if (f_ptr == 0)

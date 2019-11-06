@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        SettingsOther.h
-        Author: Laurent de Soras, 2016
+        Rec2Disk.h
+        Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
 
@@ -9,15 +9,15 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_SettingsOther_HEADER_INCLUDED)
-#define mfx_uitk_pg_SettingsOther_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_Rec2Disk_HEADER_INCLUDED)
+#define mfx_uitk_pg_Rec2Disk_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -30,13 +30,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
-#include "mfx/uitk/PageMgrInterface.h"
-#include "mfx/Cst.h"
-#include "mfx/Dir.h"
 
-#include <array>
-#include <memory>
-#include <vector>
+#include <cstdint>
 
 
 
@@ -52,7 +47,7 @@ namespace pg
 
 
 
-class SettingsOther
+class Rec2Disk
 :	public PageInterface
 {
 
@@ -60,8 +55,8 @@ class SettingsOther
 
 public:
 
-	explicit       SettingsOther (PageSwitcher &page_switcher);
-	virtual        ~SettingsOther () = default;
+	explicit       Rec2Disk (PageSwitcher &page_switcher);
+	virtual        ~Rec2Disk () = default;
 
 
 
@@ -77,10 +72,6 @@ protected:
 	virtual EvtProp
 	               do_handle_evt (const NodeEvt &evt);
 
-	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_tempo (double bpm);
-	virtual void   do_set_click (bool click_flag);
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -89,18 +80,18 @@ private:
 
 	enum Entry
 	{
-		Entry_TEMPO_I = 1000,
-		Entry_TEMPO_F,
-		Entry_CLICK,
-		Entry_SAVE,
-		Entry_BACKUP,
-		Entry_RECORD
+		Entry_REC = 0,
+		Entry_MAX_DUR,
+		Entry_AVAIL
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 
-	void           refresh_display ();
-	EvtProp        change_tempo (double delta);
+	void           update_display ();
+	void           toggle_rec (int node_id);
+	void           change_limit (int dir);
+	std::string    build_rec_pathname () const;
+	std::string    print_duration (int minutes) const;
 
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected
@@ -108,13 +99,15 @@ private:
 	PageMgrInterface *            // 0 = not connected
 	               _page_ptr;
 	Vec2d          _page_size;
+	const ui::Font *              // 0 = not connected
+	               _fnt_ptr;
 
-	TxtSPtr        _tempo_i_sptr;
-	TxtSPtr        _tempo_f_sptr;
-	TxtSPtr        _click_sptr;
-	TxtSPtr        _save_sptr;
-	TxtSPtr        _backup_sptr;
-	TxtSPtr        _record_sptr;
+	TxtSPtr        _rec_sptr;
+	TxtSPtr        _max_dur_sptr;
+	TxtSPtr        _avail_sptr;
+
+	int            _time_limit;   // Minutes
+	int            _disk_avail;   // Minutes. 0 = unknown
 
 	Question::QArg _msg_arg;
 
@@ -124,13 +117,13 @@ private:
 
 private:
 
-	               SettingsOther ()                               = delete;
-	               SettingsOther (const SettingsOther &other)     = delete;
-	SettingsOther& operator = (const SettingsOther &other)        = delete;
-	bool           operator == (const SettingsOther &other) const = delete;
-	bool           operator != (const SettingsOther &other) const = delete;
+	               Rec2Disk ()                               = delete;
+	               Rec2Disk (const Rec2Disk &other)          = delete;
+	Rec2Disk &     operator = (const Rec2Disk &other)        = delete;
+	bool           operator == (const Rec2Disk &other) const = delete;
+	bool           operator != (const Rec2Disk &other) const = delete;
 
-}; // class SettingsOther
+}; // class Rec2Disk
 
 
 
@@ -140,11 +133,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/SettingsOther.hpp"
+//#include "mfx/uitk/pg/Rec2Disk.hpp"
 
 
 
-#endif   // mfx_uitk_pg_SettingsOther_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_Rec2Disk_HEADER_INCLUDED
 
 
 

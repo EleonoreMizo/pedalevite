@@ -644,6 +644,8 @@
     <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h" />
     <ClInclude Include="..\..\..\src\mfx\PageSet.h" />
@@ -1294,6 +1296,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\RecD2d.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginDescInterface.cpp" />
@@ -1374,6 +1377,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgCatalog.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgMove.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Question.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SaveProg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SettingsOther.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools.cpp">

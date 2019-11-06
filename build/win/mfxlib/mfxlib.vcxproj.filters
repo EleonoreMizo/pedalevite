@@ -2886,6 +2886,12 @@
     <ClInclude Include="..\..\..\src\mfx\FileOpWav.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\RecD2d.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3961,6 +3967,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\FileOpWav.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\RecD2d.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.cpp">
+      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

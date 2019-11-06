@@ -137,7 +137,6 @@ private:
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	void           store_data (const float src_ptr [], int nbr_spl);
-	static int     save_wav (const char *filename_0, const std::vector <AlignedZone > &chn_arr, double sample_freq, float scale = 1);
 #endif
 	PluginPool &   _pi_pool;
 	WaMsgQueue &   _queue_from_cmd;
@@ -184,9 +183,9 @@ private:
 #if defined (mfx_WorldAudio_BUF_REC)
 	static const int  _max_rec_duration = 30;   // Seconds. Records to disk once time elapsed.
 	bool           _data_rec_flag;
-	std::vector <AlignedZone>
+	std::vector <AlignedZone>           // One buffer per recorded channel (in/intermediate/out)
 	               _data_rec_arr;
-	volatile size_t
+	volatile size_t                     // Current buffer being recorded. Reset at the beginning of each audio block.
 	               _data_rec_cur_buf;
 	volatile size_t
 	               _data_rec_pos;       // Recording position in samples. Reset to 0 when the recording is saved to disk.

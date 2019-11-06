@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/Cst.h"
 #include "mfx/Dir.h"
+#include "mfx/FileOpWav.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
 #include "mfx/WaMsg.h"
@@ -351,7 +352,20 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 		}
 		if (! _data_rec_arr.empty ())
 		{
-			save_wav ("audiodump.wav", _data_rec_arr, _sample_freq, 1);
+			std::vector <const float *> buf_arr;
+			for (auto &buf_vec : _data_rec_arr)
+			{
+				buf_arr.push_back (buf_vec.data ());
+			}
+
+			FileOpWav::save (
+				"audiodump.wav",
+				buf_arr.data (),
+				_data_rec_len,
+				int (buf_arr.size ()),
+				_sample_freq,
+				1
+			);
 		}
 		_data_rec_pos = 0;
 	}
@@ -984,133 +998,6 @@ void	WorldAudio::store_data (const float src_ptr [], int nbr_spl)
 	>::copy_1_1 (&zone [_data_rec_pos], src_ptr, int (work_len));
 
 	++ _data_rec_cur_buf;
-}
-
-
-
-int	WorldAudio::save_wav (const char *filename_0, const std::vector <AlignedZone > &chn_arr, double sample_freq, float scale)
-{
-	assert (! chn_arr.empty ());
-	assert (sample_freq > 0);
-
-	struct WavRiff
-	{
-		char           _chunk_id [4];  // "RIFF"
-		uint32_t       _chunk_size;
-		char           _wave_id [4];   // "WAVE"
-	};
-
-	struct WavFmt
-	{
-		char           _chunk_id [4];  // "fmt "
-		uint32_t       _chunk_size;
-		int16_t        _format_tag;
-		uint16_t       _channels;
-		uint32_t       _samples_per_sec;
-		uint32_t       _avg_bytes_per_sec;
-		uint16_t       _block_align;
-		uint16_t       _bits_per_sample;
-
-		uint16_t       _size;
-		uint16_t       _valid_bits_per_sample;
-		uint32_t       _channel_mask;
-		uint8_t        _subformat [16];
-	};
-
-	struct WavData
-	{
-		char           _chunk_id [4];  // "data"
-		uint32_t       _chunk_size;
-	};
-
-	enum WavFormat : uint16_t
-	{
- 		WavFormat_PCM        = 0x0001,
- 		WavFormat_IEEE_FLOAT = 0x0003,
- 		WavFormat_ALAW		   = 0x0006,
- 		WavFormat_MULAW	   = 0x0007,
- 		WavFormat_EXTENSIBLE = 0xFFFE
-	};
-
-	int            ret_val = 0;
-
-	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-	// Prepares the chunks
-
-	const size_t   nbr_spl = chn_arr [0].size ();
-	const int      nbr_chn = int (chn_arr.size ());
-	for (auto &chn : chn_arr)
-	{
-		assert (chn.size () == nbr_spl);
-	}
-	const int      header_len = 8;
-
-	WavFmt         fmt { { 'f', 'm', 't', ' ' } };
-	fmt._chunk_size        = offsetof (WavFmt, _size) - header_len;
-	fmt._format_tag        = WavFormat_IEEE_FLOAT;
-	fmt._channels          = int (chn_arr.size ());
-	fmt._samples_per_sec   = uint32_t (floor (sample_freq + 0.5f));
-	fmt._block_align       = sizeof (float) * nbr_chn;
-	fmt._avg_bytes_per_sec = fmt._block_align * fmt._samples_per_sec;
-	fmt._bits_per_sample   = sizeof (float) * CHAR_BIT;
-
-	WavData        data { { 'd', 'a', 't', 'a' } };
-	data._chunk_size = fmt._block_align * nbr_spl;
-	assert ((data._chunk_size & 1) == 0);
-
-	WavRiff        riff { { 'R', 'I', 'F', 'F' }, 0, { 'W', 'A', 'V', 'E' } };
-	riff._chunk_size = 4 + header_len * 2 + fmt._chunk_size + data._chunk_size;
-
-	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-	// Writes the file
-
-	FILE *         f_ptr = fopen (filename_0, "wb");
-	if (f_ptr == 0)
-	{
-		ret_val = -1;
-	}
-
-	if (ret_val == 0)
-	{
-		if (fwrite (&riff, header_len + 4, 1, f_ptr) != 1)
-		{
-			ret_val = -1;
-		}
-	}
-	if (ret_val == 0)
-	{
-		if (fwrite (&fmt, header_len + fmt._chunk_size, 1, f_ptr) != 1)
-		{
-			ret_val = -1;
-		}
-	}
-	if (ret_val == 0)
-	{
-		if (fwrite (&data, header_len, 1, f_ptr) != 1)
-		{
-			ret_val = -1;
-		}
-	}
-	std::vector <float> tmp (nbr_chn);
-	for (size_t pos = 0; pos < nbr_spl && ret_val == 0; ++pos)
-	{
-		for (int chn = 0; chn < nbr_chn; ++chn)
-		{
-			tmp [chn] = chn_arr [chn] [pos] * scale;
-		}
-		if (fwrite (&tmp [0], sizeof (tmp [0]), nbr_chn, f_ptr) != size_t (nbr_chn))
-		{
-			ret_val = -1;
-		}
-	}
-
-	if (f_ptr != 0)
-	{
-		fclose (f_ptr);
-		f_ptr = 0;
-	}
-
-	return ret_val;
 }
 
 

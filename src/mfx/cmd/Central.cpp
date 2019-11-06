@@ -31,7 +31,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/CtrlLinkSet.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/piapi/PluginInterface.h"
-#include "mfx/Cst.h"
 
 #include <algorithm>
 #include <array>
@@ -76,6 +75,8 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 ,	_new_sptr ()
 ,	_ctx_trash ()
 ,	_dummy_mix_id (-1)
+,	_d2d_rec ()
+,	_d2d_buf_arr ()
 {
 	_msg_pool.expand_to (1024);
 
@@ -150,6 +151,10 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 		ret_val = ret_val; // -Wunused-variable
 	}
 	_audio.set_process_info (sample_freq, max_block_size);
+	for (auto &buf : _d2d_buf_arr)
+	{
+		buf.resize (max_block_size);
+	}
 }
 
 
@@ -157,6 +162,19 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 void	Central::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
 	_audio.process_block (dst_arr, src_arr, nbr_spl);
+
+	if (_d2d_rec.is_recording ())
+	{
+		for (int chn = 0; chn < Cst::_nbr_chn_in; ++chn)
+		{
+			_d2d_buf_ptr_arr [chn] = src_arr [chn];
+		}
+		for (int chn = 0; chn < Cst::_nbr_chn_out; ++chn)
+		{
+			_d2d_buf_ptr_arr [Cst::_nbr_chn_in + chn] = dst_arr [chn];
+		}
+		_d2d_rec.write_data (_d2d_buf_ptr_arr.data (), nbr_spl);
+	}
 }
 
 
@@ -648,6 +666,8 @@ void	Central::process_queue_audio_to_cmd ()
 		}
 	}
 	while (cell_ptr != 0);
+
+	_d2d_rec.process_messages ();
 }
 
 
@@ -688,6 +708,34 @@ const piapi::PluginState &	Central::use_default_settings (std::string model) con
 	assert (it != _default_map.end ());
 
 	return it->second;
+}
+
+
+
+int	Central::start_d2d_rec (const char pathname_0 [], size_t max_len)
+{
+	assert (! is_d2d_recording ());
+	assert (pathname_0 != 0);
+
+	return _d2d_rec.create_file (
+		pathname_0, Cst::_nbr_chn_in + Cst::_nbr_chn_out, _sample_freq, max_len
+	);
+}
+
+
+
+int	Central::stop_d2d_rec ()
+{
+	assert (is_d2d_recording ());
+
+	return _d2d_rec.close_file ();
+}
+
+
+
+bool	Central::is_d2d_recording () const
+{
+	return _d2d_rec.is_recording ();
 }
 
 

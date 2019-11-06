@@ -64,6 +64,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/ProgCatalog.h"
 #include "mfx/uitk/pg/ProgMove.h"
 #include "mfx/uitk/pg/Question.h"
+#include "mfx/uitk/pg/Rec2Disk.h"
 #include "mfx/uitk/pg/SaveProg.h"
 #include "mfx/uitk/pg/SettingsOther.h"
 #include "mfx/uitk/pg/Tuner.h"
@@ -204,6 +205,8 @@ private:
 	               _page_edit_date;
 	uitk::pg::ProgCatalog
 	               _page_prog_catalog;
+	uitk::pg::Rec2Disk
+	               _page_rec2disk;
 
 
 

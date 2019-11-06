@@ -112,6 +112,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_menu_backup (_page_switcher)
 ,	_page_edit_date (_page_switcher, cmd_line)
 ,	_page_prog_catalog (_page_switcher)
+,	_page_rec2disk (_page_switcher)
 {
 	ui::FontDataDefault::make_08x12 (_fnt_8x12);
 	ui::FontDataDefault::make_06x08 (_fnt_6x8);
@@ -155,6 +156,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 	_page_switcher.add_page (uitk::pg::PageType_MENU_BACKUP      , _page_menu_backup      );
 	_page_switcher.add_page (uitk::pg::PageType_EDIT_DATE        , _page_edit_date        );
 	_page_switcher.add_page (uitk::pg::PageType_PROG_CATALOG     , _page_prog_catalog     );
+	_page_switcher.add_page (uitk::pg::PageType_REC2DISK         , _page_rec2disk         );
 }
 
 

@@ -34,6 +34,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+#if fstb_IS (SYS, LINUX)
+#define mfx_Cst_ROOT_DIR "/opt/pedalevite/"
+#else
+#define mfx_Cst_ROOT_DIR "../../../"
+#endif
+
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -65,13 +71,10 @@ const std::string	Cst::_empty_preset_name = "<Empty prog>";
 
 const std::string	Cst::_config_current = "current";
 const std::string	Cst::_config_factory = "factory-default";
-const std::string	Cst::_config_dir     =
-#if fstb_IS (SYS, LINUX)
-	"/opt/pedalevite/etc/config";
-#else
-	"../../../etc/config";
-#endif
-const std::string	Cst::_rw_cmd_script_pathname = "/opt/pedalevite/bin/cmd_rofs.sh";
+const std::string	Cst::_config_dir     = mfx_Cst_ROOT_DIR "etc/config";
+const std::string	Cst::_audiodump_dir  = mfx_Cst_ROOT_DIR "var/audiodump";
+const std::string	Cst::_d2d_file       = "raw-in-out.wav";
+const std::string	Cst::_rw_cmd_script_pathname = mfx_Cst_ROOT_DIR "bin/cmd_rofs.sh";
 
 const Cst::QueueTypeArray	Cst::_queue_type_arr =
 {{
@@ -137,6 +140,10 @@ const Cst::QueueTypeArray	Cst::_queue_type_arr =
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+#undef mfx_Cst_ROOT_DIR
 
 
 

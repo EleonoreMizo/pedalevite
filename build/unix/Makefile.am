@@ -1078,6 +1078,8 @@ commonsrc = \
         ../../src/mfx/uitk/pg/ProgMove.h \
         ../../src/mfx/uitk/pg/Question.cpp \
         ../../src/mfx/uitk/pg/Question.h \
+        ../../src/mfx/uitk/pg/Rec2Disk.cpp \
+        ../../src/mfx/uitk/pg/Rec2Disk.h \
         ../../src/mfx/uitk/pg/SaveProg.cpp \
         ../../src/mfx/uitk/pg/SaveProg.h \
         ../../src/mfx/uitk/pg/SettingsOther.cpp \
@@ -1167,6 +1169,8 @@ commonsrc = \
         ../../src/mfx/ProcessingContext.h \
         ../../src/mfx/ProcessingContextNode.cpp \
         ../../src/mfx/ProcessingContextNode.h \
+        ../../src/mfx/RecD2d.cpp \
+        ../../src/mfx/RecD2d.h \
         ../../src/mfx/SharedRscState.h \
         ../../src/mfx/ToolsParam.cpp \
         ../../src/mfx/ToolsParam.h \

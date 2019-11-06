@@ -110,6 +110,11 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 
 Model::~Model ()
 {
+	if (is_d2d_recording ())
+	{
+		stop_d2d_rec ();
+	}
+
 	// Flush the queue
 	ui::UserInputInterface::MsgCell * cell_ptr = 0;
 	do
@@ -1260,53 +1265,6 @@ void	Model::clear_all_signal_ports_for_slot (int slot_id)
 
 
 
-std::vector <std::string>	Model::list_plugin_models () const
-{
-	return _central.use_pi_pool ().list_models ();
-}
-
-
-
-const piapi::PluginDescInterface &	Model::get_model_desc (std::string model_id) const
-{
-	return _central.use_pi_pool ().get_model_desc (model_id);
-}
-
-
-
-std::chrono::microseconds	Model::get_cur_date () const
-{
-	return _central.get_cur_date ();
-}
-
-
-
-// Gets the final parameter value, after modulation.
-float	Model::get_param_val_mod (int slot_id, PiType type, int index) const
-{
-	assert (! _preset_cur.is_slot_empty (slot_id));
-	assert (type >= 0);
-	assert (type < PiType_NBR_ELT);
-	assert (index >= 0);
-
-	const auto     it_id_map = _pi_id_map.find (slot_id);
-	assert (it_id_map != _pi_id_map.end ());
-	const int      pi_id     = it_id_map->second._pi_id_arr [type];
-	assert (pi_id >= 0);
-
-	const PluginPool::PluginDetails &   details =
-		_central.use_pi_pool ().use_plugin (pi_id);
-	float          val = details._param_mod_arr [index];
-	if (val < 0)
-	{
-		val = details._param_arr [index];
-	}
-
-	return val;
-}
-
-
-
 void	Model::add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
 {
 	assert (! model.empty ());
@@ -1405,6 +1363,74 @@ void	Model::load_plugin_settings (int slot_id, PiType type, const doc::PluginSet
 		set_plugin_mono (slot_id, settings._force_mono_flag);
 		set_plugin_reset (slot_id, settings._force_reset_flag);
 	}
+}
+
+
+
+std::vector <std::string>	Model::list_plugin_models () const
+{
+	return _central.use_pi_pool ().list_models ();
+}
+
+
+
+const piapi::PluginDescInterface &	Model::get_model_desc (std::string model_id) const
+{
+	return _central.use_pi_pool ().get_model_desc (model_id);
+}
+
+
+
+std::chrono::microseconds	Model::get_cur_date () const
+{
+	return _central.get_cur_date ();
+}
+
+
+
+// Gets the final parameter value, after modulation.
+float	Model::get_param_val_mod (int slot_id, PiType type, int index) const
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	const auto     it_id_map = _pi_id_map.find (slot_id);
+	assert (it_id_map != _pi_id_map.end ());
+	const int      pi_id     = it_id_map->second._pi_id_arr [type];
+	assert (pi_id >= 0);
+
+	const PluginPool::PluginDetails &   details =
+		_central.use_pi_pool ().use_plugin (pi_id);
+	float          val = details._param_mod_arr [index];
+	if (val < 0)
+	{
+		val = details._param_arr [index];
+	}
+
+	return val;
+}
+
+
+
+int	Model::start_d2d_rec (const char pathname_0 [], size_t max_len)
+{
+	return _central.start_d2d_rec (pathname_0, max_len);
+}
+
+
+
+int	Model::stop_d2d_rec ()
+{
+	return _central.stop_d2d_rec ();
+}
+
+
+
+bool	Model::is_d2d_recording () const
+{
+	return _central.is_d2d_recording ();
 }
 
 
