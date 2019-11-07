@@ -914,13 +914,17 @@ fi
 
 case "$1" in
     start)
-	echo "Starting Pedale Vite"
+        echo "Mounting Pedale Vite directory as R/W..."
+	mount --bind /opt/pedalevite/ /opt/pedalevite/
+	mount -o remount,rw /opt/pedalevite/
+	echo "Starting Pedale Vite..."
 	/opt/pedalevite/bin/pedalevite &
 	echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 	;;
     stop)
 	echo "Stopping Pedale Vite"
 	killall pedalevite
+        umount /opt/pedalevite/
 	;;
     *)
 	echo "Usage: /etc/init.d/pedalevite start|stop"
@@ -1359,6 +1363,12 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r2, 2019-11-07</b></p>
+<ul>
+<li>Updated the autostart script to set the /opt/pedalevite subdirectory in
+R/W mode.</li>
+</ul>
 
 <p><b>r1, 2017-09-24</b></p>
 <ul>

@@ -1194,7 +1194,9 @@ make -j4</pre>
 <code>pedalevite</code> in the current directory.
 Then install the software in its dedicated folder, as well as some other
 files:</p>
-<pre class="term">sudo mkdir -p /opt/pedalevite/bin /opt/pedalevite/etc/config
+<pre class="term">sudo mkdir -p /opt/pedalevite/bin
+sudo mkdir -p /opt/pedalevite/etc/config
+sudo mkdir -p /opt/pedalevite/var/audiodump
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
 sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh</pre>
 <p>The Pi can possibly be connected to all the required cards and peripherals
@@ -1228,14 +1230,18 @@ fi
 
 case "$1" in
     start)
-        echo "Starting Pedale Vite"
+        echo "Mounting Pedale Vite directory as R/W..."
+	mount --bind /opt/pedalevite/ /opt/pedalevite/
+	mount -o remount,rw /opt/pedalevite/
+        echo "Starting Pedale Vite..."
         /opt/pedalevite/bin/pedalevite &
         echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
         systemctl stop getty@tty1.service
         ;;
     stop)
-        echo "Stopping Pedale Vite"
+        echo "Stopping Pedale Vite..."
         killall pedalevite
+        umount /opt/pedalevite/
         ;;
     *)
         echo "Usage: /etc/init.d/pedalevite start|stop"
@@ -1568,6 +1574,12 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r3, 2019-11-07</b></p>
+<ul>
+<li>Updated the autostart script to set the /opt/pedalevite subdirectory in
+R/W mode.</li>
+</ul>
 
 <p><b>r2, 2019-11-02</b></p>
 <ul>

@@ -1049,12 +1049,16 @@ fi
 
 case "$1" in
     start)
-	echo "Starting Pedale Vite"
+        echo "Mounting Pedale Vite directory as R/W..."
+	mount --bind /opt/pedalevite/ /opt/pedalevite/
+	mount -o remount,rw /opt/pedalevite/
+	echo "Starting Pedale Vite..."
 	/opt/pedalevite/bin/pedalevite &
 	echo -n performance | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 	;;
     stop)
 	echo "Stopping Pedale Vite"
+        umount /opt/pedalevite/
 	killall pedalevite
 	;;
     *)
@@ -1527,6 +1531,12 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r2, 2019-11-07</b></p>
+<ul>
+<li>Mise à jour du script de démarrage automatique pour passer le
+sous-répertoire /opt/pedalevite en lecture-écriture.</li>
+</ul>
 
 <p><b>r1, 2017-09-24</b></p>
 <ul>

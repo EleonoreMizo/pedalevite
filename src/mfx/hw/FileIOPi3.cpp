@@ -28,6 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/hw/FileIOPi3.h"
 #include "mfx/Cst.h"
 
+#include <sys/statvfs.h>
+
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
@@ -59,8 +61,6 @@ FileIOPi3::FileIOPi3 (ui::LedInterface &led)
 
 int	FileIOPi3::do_write_txt_file (const std::string &pathname, const std::string &content)
 {
-	_led.set_led (1, 1.0f);
-
 	std::string    pathname_tmp ("/tmp");
 	const size_t   last_delim = pathname.rfind ('/');
 	if (last_delim == std::string::npos)
@@ -73,12 +73,32 @@ int	FileIOPi3::do_write_txt_file (const std::string &pathname, const std::string
 		pathname_tmp += pathname.substr (last_delim);
 	}
 
+	// Checks if the file will be written in a R/W directory
+	bool           dir_ro_flag = true;
+	if (   last_delim != std::string::npos
+	    && last_delim > 0
+	    && pathname [0] == '/')   // Makes sure the path is absolute
+	{
+		std::string    path = pathname.substr (0, last_delim);
+		struct statvfs result;
+		const int      ret_val_stat = statvfs (path.c_str (), &result);
+		if (ret_val_stat == 0 && (result.f_flag & ST_RDONLY) == 0)
+		{
+			dir_ro_flag = false;
+		}
+	}
+
+	_led.set_led (1, 1.0f);
+
 	const int      ret_val = write_txt_file_direct (pathname_tmp, content);
 	if (ret_val == 0)
 	{
 		std::string    cmd = "sudo ";
-		cmd += Cst::_rw_cmd_script_pathname;
-		cmd += " ";
+		if (dir_ro_flag)
+		{
+			cmd += Cst::_rw_cmd_script_pathname;
+			cmd += " ";
+		}
 		cmd += "mv \'";
 		cmd += pathname_tmp;
 		cmd += "\' \'";
