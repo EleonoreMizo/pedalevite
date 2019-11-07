@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
 #include "mfx/Cst.h"
+#include "mfx/Model.h"
 
 #include <cassert>
 #if fstb_IS (SYS, LINUX)
@@ -156,18 +157,10 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 			case Entry_SAVE:
 #if fstb_IS (SYS, LINUX)
 				{
-					std::string    cmd ("sudo ");
-					cmd += Cst::_rw_cmd_script_pathname;
-					cmd += " cp \'";
-					cmd += Cst::_config_dir;
-					cmd += "/";
-					cmd += Cst::_config_current;
-					cmd += "\' \'";
-					cmd += Cst::_config_dir;
-					cmd += "/";
-					cmd += make_backup_filename ();
-					cmd += "\'";
-					const int      ret_sc = system (cmd.c_str ());
+					std::string    pathname (Cst::_config_dir);
+					pathname += '/';
+					pathname += make_backup_filename ();
+					const int      ret_sc = _model_ptr->save_to_disk (pathname);
 					Question::msg_box (
 						"Saved backup",
 						(ret_sc == 0) ? "OK" : "Failed",
@@ -189,15 +182,9 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 						system ("sudo mount -t vfat /dev/sda1 /mnt/sda1");
 					if (ret_sc == 0)
 					{
-						std::string    cmd ("sudo cp \'");
-						cmd += Cst::_config_dir;
-						cmd += "/";
-						cmd += Cst::_config_current;
-						cmd += "\' \'";
-						cmd += "/mnt/sda1/";
-						cmd += make_backup_filename ();
-						cmd += "\'";
-						ret_sc = system (cmd.c_str ());
+						std::string    pathname ("/mnt/sda1/");
+						pathname += make_backup_filename ();
+						ret_sc = _model_ptr->save_to_disk (pathname);
 						system ("sudo umount /mnt/sda1");
 					}
 					Question::msg_box (
