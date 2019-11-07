@@ -9,5 +9,5 @@ fsro=`mount | grep " / " | grep -c "(ro[),]"`
 if [ $fsro != "0" ]; then mount -o remount,rw / ; fi
 "$@"
 res=$?
-if [ $fsro != "0" ]; then ( mount -o remount,ro / & ) ; fi
+if [ $fsro != "0" ]; then ( ( mount -o remount,ro / ; mount -o remount,rw /opt/pedalevite/ ) & ) ; fi
 exit $res
