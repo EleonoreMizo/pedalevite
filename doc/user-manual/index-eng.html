@@ -763,8 +763,8 @@ So it may be necessary to set the date before doing a backup copy of the
 settings.
 However, if the machine is connected to the internet during startup, the date
 is automatically updated.</p>
-<p><em>Nota bene:</em> time and date are UTC (coordinated universal time),
-not the local time.</p>
+<p><strong>Important:</strong> time and date are UTC (coordinated universal
+time), not the local time.</p>
 <p>In this screen, use the vertical arrows to select the field to edit,
 and the horizontal arrows to modify the values.
 The date is automatically updated when exiting the screen with
@@ -783,6 +783,36 @@ following its name.</p>
 USB drive.
 It is automatically mounted (<code>/mnt/sda1</code>, FAT32) and unmounted during
 the backup.</p>
+
+<h4><a id="screen-record"></a>Record</h4>
+
+<div class="pic"><img src="record-to-disk.png" /></div>
+<p>This feature records both the raw audio input and output.
+The audio is recorded in a unique file,
+<code>/opt/pedalevite/var/audiodump/raw-in-out.wav</code>.
+This is a 32-bit floating point WAV file.
+There are 4 channels, two for the input, and two for the output, whatever the
+stereo settings in the <span class="ui">Volume and levels</span> page.
+The file is overwritten at the beginning of each recording.</p>
+<p><span class="ui">Record</span> starts and stops the recording, with the
+<span class="key">Select</span> key.
+The current recording duration is displayed between parenthesis.</p>
+<p><span class="ui">Limit</span> sets the maximum file size.
+Use the horizontal arrows to modify the duration.
+When the specified time is elapsed, the recording head goes back to the
+beginning of the file, in a cyclic way.
+It is not possible to change the limit once the recording is started.
+It is not possible to use all the available disk space.
+About 100MB are left free.</p>
+<p><span class="ui">Avail</span> shows the maximum available recording
+duration, depending on the disk capacity.</p>
+<p><strong>Important:</strong> the program write to the disk all over the
+recording course.
+To preserve the SD card, do not switch the power off nor unplug Pédale Vite
+during the recording.
+Before, explicitely terminate the current recording or use one of the entries
+in the <span class="ui">Restart</span> menu to shut down Pédale Vite
+gracefully.</p>
 
 
 
@@ -2557,6 +2587,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r24, 2019-11-09</b></p>
+<ul>
+<li>Added the audio recording page.</li>
+</ul>
 
 <p><b>r23, 2019-11-02</b></p>
 <ul>

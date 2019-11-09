@@ -811,7 +811,7 @@ date entre deux mises sous tension, il peut donc être nécessaire de la régler
 avant de faire une copie de sauvegarde.
 Cependant si la machine est reliée à internet dès son démarrage, la date est
 automatiquement mise à jour.</p>
-<p><em>Important&#8239;:</em> la date et l’heure sont en UTC (temps coordonné
+<p><strong>Important&#8239;:</strong> la date et l’heure sont en UTC (temps coordonné
 universel, anciennement GMT) et non en heure locale.</p>
 <p>Une fois dans l’écran de réglage, utiliser les flèches verticales pour
 sélectionner le champ à éditer, et les flèches horizontales pour modifier
@@ -832,6 +832,40 @@ accolées au nom.</p>
 de sauvegarde, horodatée, sur clé USB.
 Celle-ci est automatiquement montée (<code>/mnt/sda1</code>, FAT32) et démontée lors
 de la sauvegarde.</p>
+
+<h4><a id="screen-record"></a>Enregistrement</h4>
+
+<div class="pic"><img src="record-to-disk.png" /></div>
+<p>Cette partie permet d’enregistrer à la fois l’entrée et la sortie audio de
+Pédale Vite.
+L’enregistrement se fait dans un fichier unique,
+<code>/opt/pedalevite/var/audiodump/raw-in-out.wav</code>.
+Le fichier est au format WAV, les données en virgule flottante 32 bits.
+Il est constitué de 4 canaux, les deux premiers pour les entrées, les deux
+suivants pour les sorties, quel que soit le réglage de stéréo spécifié dans
+<span class="ui">Volume and levels</span>.
+Le fichier est écrasé au début de chaque nouvel enregistrement.</p>
+<p><span class="ui">Record</span> permet de démarrer ou arrêter
+l’enregistrement à l’aide de <span class="key">Select</span>.
+La durée de l’enregistrement en cours est affichée entre parenthèses.</p>
+<p><span class="ui">Limit</span> permet de donner une limite de taille au
+fichier.
+Utiliser les flèches horizontales pour modifier cette durée.
+Quand la durée indiquée est dépassée, la tête d’écriture revient au début
+du fichier, de manière cyclique.
+Il n’est plus possible de changer la limite une fois l’enregistrement
+lancé.
+Il n’est pas non plus possible d’utiliser tout l’espace disque disponible.
+Environ 100&#8239;Mo sont systématiquement laissés libres.</p>
+<p><span class="ui">Avail</span> indique quelle durée il est possible
+d’enregistrer, compte tenu des capacités du disque.</p>
+<p><strong>Important&#8239;:</strong> le programme effectue des accès disque
+en écriture tout au long de l’enregistrement.
+Pour préserver la carte SD, veiller à ne pas éteindre ou débrancher Pédale 
+Vite pendant l’enregistrement.
+Avant d’éteindre la machine, terminer explicitement l’enregistrement en cours
+ou utiliser une des options du menu <span class="ui">Restart</span> pour la
+redémarrer ou l’arrêter proprement.</p>
 
 
 
@@ -2704,6 +2738,12 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r24, 2019-11-09</b></p>
+<ul>
+<li>Ajout de la page permettant d’enregistrer le son passant dans Pédale
+Vite.</li>
+</ul>
 
 <p><b>r23, 2019-11-02</b></p>
 <ul>
