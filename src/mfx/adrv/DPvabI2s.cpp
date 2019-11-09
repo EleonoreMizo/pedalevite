@@ -535,6 +535,12 @@ void	DPvabI2s::proc_loop ()
 			buf_int_o_ptr [pos * 2 + 1] = xr_int;
 		}
 #endif // mfx_adrv_DPvabI2s_USE_SIMD
+
+		if (_proc_now_flag)
+		{
+			// We must be late
+			_cb_ptr->notify_dropout ();
+		}
 	}
 }
 
