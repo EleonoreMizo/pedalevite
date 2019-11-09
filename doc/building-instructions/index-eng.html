@@ -1287,7 +1287,7 @@ operations:</p>
     dphys-swapfile fake-hwclock
 sudo apt-get -y --force-yes autoremove --purge</pre>
 <p>Replace log management with busybox (use logread if needed):</p>
-<pre class="term">sudo apt-get -y --force-yes install ntp busybox-syslogd
+<pre class="term">sudo apt-get -y --force-yes install busybox-syslogd
 sudo dpkg --purge rsyslog</pre>
 
 <p>Edit the boot parameters:</p>
@@ -1335,6 +1335,11 @@ fi
 <span class="termhl">chmod g+w,o+w /tmp</span>
 exit 0</pre>
 
+<p>Prevents the automatic system updates:</p>
+<pre class="term">sudo systemctl disable apt-daily.timer
+sudo systemctl disable apt-daily-upgrade.timer
+sudo systemctl disable man-db.timer</pre>
+
 <p>Optional: to automatically switch to read-only mode when logging off,
 edit or create the <code>bash.bash_logout</code> file:</p>
 <pre class="term">sudo nano /etc/bash.bash_logout</pre>
@@ -1352,6 +1357,36 @@ Pédale Vite is now functional.</p>
 <h3><a id="troubleshooting"></a>Tests and troubleshooting</h3>
 
 <p>To do…</p>
+
+<h4>Known issues</h4>
+
+<h5>When connected to the Internet, the date is not updated even if timesyncd is active</h5>
+
+<p>Sometimes the timesyncd services cannot synchronise to NTP servers.
+Check with:</p>
+<pre class="term">timedatectl status</pre>
+<p><code>NTP service</code> shoud be <code>active</code> but
+<code>System clock synchronized</code> may be set to <code>no</code>.
+In this case, check:</p>
+<pre class="term">timedatectl timesync-status</pre>
+<p>Reports:</p>
+<pre class="term">       Server: (null) (3.debian.pool.ntp.org)
+Poll interval: 0 (min: 32s; max 34min 8s)
+ Packet count: 0</pre>
+<p>This may be an issue with the DNS server, which does not resolve the NTP
+servers for some reason.
+Try by setting explicitely the DNS:</p>
+<pre class="term">sudo mount -o remount,rw /
+sudo rm /etc/resolv.conf
+sudo nano /etc/resolv.conf</pre>
+<p>Add the following lines (you can put here any working DNS server
+address):</p>
+<pre class="term">domain home
+nameserver 1.1.1.1
+nameserver 1.0.0.1</pre>
+<p>Reboot or restart the services.</p>
+
+
 
 <h3><a id="source-code"></a>Source code</h3>
 
@@ -1574,6 +1609,12 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r4, 2019-11-09</b></p>
+<ul>
+<li>Fixed date synchronisation issues when setting the filesystem access in
+read-only.</li>
+</ul>
 
 <p><b>r3, 2019-11-07</b></p>
 <ul>

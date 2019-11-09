@@ -1335,7 +1335,9 @@ make -j4</pre>
 <code>pedalevite</code> dans le répertoire courant.
 On installe ensuite le logiciel dans son répertoire, ainsi que quelques autres
 fichiers&#8239;:</p>
-<pre class="term">sudo mkdir -p /opt/pedalevite/bin /opt/pedalevite/etc/config
+<pre class="term">sudo mkdir -p /opt/pedalevite/bin
+sudo mkdir -p /opt/pedalevite/etc/config
+sudo mkdir -p /opt/pedalevite/var/audiodump
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
 sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh</pre>
 <p>Le Pi peut éventuellement être connecté à toutes les cartes et
@@ -1427,7 +1429,7 @@ sudo mount -o remount,rw /boot</pre>
     dphys-swapfile fake-hwclock
 sudo apt-get -y --force-yes autoremove --purge</pre>
 <p>Installer busybox syslog à la place de rsyslog&#8239;:</p>
-<pre class="term">sudo apt-get -y --force-yes install ntp busybox-syslogd
+<pre class="term">sudo apt-get -y --force-yes install busybox-syslogd
 sudo dpkg --purge rsyslog</pre>
 
 <p>On édite les paramètres de boot&#8239;:</p>
@@ -1476,6 +1478,11 @@ fi
 <span class="termhl">chmod g+w,o+w /tmp</span>
 exit 0</pre>
 
+<p>Retirer les tentatives de mise à jour automatiques&#8239;:</p>
+<pre class="term">sudo systemctl disable apt-daily.timer
+sudo systemctl disable apt-daily-upgrade.timer
+sudo systemctl disable man-db.timer</pre>
+
 <p>Facultatif&#8239;: pour rebasculer automatiquement en lecture seule quand
 on se déconnecte, éditer ou créer le fichier&#8239;:</p>
 <pre class="term">sudo nano /etc/bash.bash_logout</pre>
@@ -1493,6 +1500,38 @@ Pédale Vite est à présent opérationnel.</p>
 <h3><a id="troubleshooting"></a>Tests et dépannage</h3>
 
 <p>À venir…</p>
+
+<h4>Problèmes connus</h4>
+
+<h5>La date n’est pas mise à jour quand la machine est connectée à internet</h5>
+
+<p>Quand bien même correctement configuré, <code>timesyncd</code> peut avoir
+des difficultés à se connecter à un serveurs NTP.
+Vérifier avec&#8239;:</p>
+<pre class="term">timedatectl status</pre>
+<p><code>NTP service</code> doit être sur <code>active</code>, mais
+<code>System clock synchronized</code> peut donner un <code>no</code>,
+ce qui indique un problème d’accès aux serveurs NTP.
+Dans ce cas&#8239;:</p>
+<pre class="term">timedatectl timesync-status</pre>
+<p>indique&#8239;:</p>
+<pre class="term">       Server: (null) (3.debian.pool.ntp.org)
+Poll interval: 0 (min: 32s; max 34min 8s)
+ Packet count: 0</pre>
+<p>Cela peut venir d’un problème avec les serveurs DNS (par exemple ceux
+attribués par défaut par le fournisseur d’accès internet) qui ne résolvent pas
+les adresses de serveurs NTP, pour je ne sais quelles raisons.
+On peut essayer de fixer d’autres DNS explicitement:</p>
+<pre class="term">sudo mount -o remount,rw /
+sudo rm /etc/resolv.conf
+sudo nano /etc/resolv.conf</pre>
+<p>Ajouter les lignes suivantes.
+Vous pouvez y mettre n’importe quelle adresse de serveur DNS qui
+fonctionne&#8239;:</p>
+<pre class="term">domain home
+nameserver 80.67.169.12
+nameserver 80.67.169.40</pre>
+<p>Redémarrer la machine ou seulement les services adéquats.</p>
 
 <h3><a id="source-code"></a>Code source</h3>
 
@@ -1737,6 +1776,12 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r4, 2019-11-09</b></p>
+<ul>
+<li>Résolution de problèmes de dates lors de la mise en lecture seule du
+système de fichiers.</li>
+</ul>
 
 <p><b>r3, 2019-11-07</b></p>
 <ul>
