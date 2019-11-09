@@ -1019,6 +1019,14 @@ switches, rotary encoder directions or other things, it is still possible to
 invert them back.
 Either on the hardware side by swapping some wires within a connector, either
 on the software.</p>
+<p>Note: The Pi 4 is known to overheat easily.
+When the load is important, the clock speed is reduced to thermally protect
+the CPU.
+However Pédale Vite does not use all the available processing power.
+The internal temperature stays always below 65°C, given tests done at a 17°C
+ambient temperature and an important load, reaching the stability limit (90%).
+One can extrapolate that there is no risk of thermal throttling up to 40°C.
+So no additional cooling system (active or passive) is required.</p>
 
 
 
@@ -1139,6 +1147,9 @@ Then, we ask to load the I2C module during boot:</p>
 <p>Add the following lines at the end of the file:</p>
 <pre class="term">i2c-bcm2708
 i2c-dev</pre>
+<p>Prepare a mounting point for a USB drive:</p>
+<pre class="term">sudo mkdir /mnt/sda1
+sudo chmod 775 /mnt/sda1</pre>
 
 
 
@@ -1335,7 +1346,7 @@ fi
 <span class="termhl">chmod g+w,o+w /tmp</span>
 exit 0</pre>
 
-<p>Prevents the automatic system updates:</p>
+<p>Prevent the automatic system updates:</p>
 <pre class="term">sudo systemctl disable apt-daily.timer
 sudo systemctl disable apt-daily-upgrade.timer
 sudo systemctl disable man-db.timer</pre>

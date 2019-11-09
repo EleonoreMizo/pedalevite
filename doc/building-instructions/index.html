@@ -1152,6 +1152,18 @@ logicielle.</p>
 pédales, des boutons, des sens de rotation des codeurs incrémentaux, il est
 toujours possible de les inverser soit au niveau des câbles (il est facile de
 substituer deux fils sur un connecteur), soit au niveau du logiciel.</p>
+<p>Note&#8239;: le Pi 4 est connu pour chauffer beaucoup.
+En cas de charge de calcul trop importante, des dispositifs internes de
+protection thermique peuvent s’activer et réduire sa vitesse.
+Dans le cas de Pédale Vite, toute la puissance du processeur n’est pas
+utilisée.
+En pratique, la température interne reste toujours en dessous de 65&#8239;°C,
+selon des tests effectués à 17&#8239;°C de température ambiante avec une
+charge très importante, à la limite de la stabilité (90&#8239;% d’occupation).
+On peut extrapoler que jusqu’à 40&#8239;°C, il n’y a pratiquement aucun risque
+que le Pi ne ralentisse sa cadence pour se préserver.
+Il n’y a donc pas besoin de dispositif de refroidissement supplémentaire
+(dissipateurs ou ventilateurs).</p>
 
 
 
@@ -1280,6 +1292,10 @@ Ensuite on demande de charger le module I2C lors du boot&#8239;:</p>
 <p>Ajouter les lignes suivantes à la fin du fichier&#8239;:</p>
 <pre class="term">i2c-bcm2708
 i2c-dev</pre>
+<p>On peut préparer le terrain pour le branchement d’un éventuel système de
+stockage USB&#8239;:</p>
+<pre class="term">sudo mkdir /mnt/sda1
+sudo chmod 775 /mnt/sda1</pre>
 
 
 
