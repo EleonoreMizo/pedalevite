@@ -398,6 +398,8 @@ commonsrc = \
         ../../src/mfx/dsp/fir/Remez.h \
         ../../src/mfx/dsp/fir/RemezPoint.cpp \
         ../../src/mfx/dsp/fir/RemezPoint.h \
+        ../../src/mfx/dsp/fir/SlidingMax.h \
+        ../../src/mfx/dsp/fir/SlidingMax.hpp \
         ../../src/mfx/dsp/fir/SlidingOp.h \
         ../../src/mfx/dsp/fir/SlidingOp.hpp \
         ../../src/mfx/dsp/iir/AllPass1p.cpp \
@@ -1226,6 +1228,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestRemez.h \
         ../../src/test/TestSampleMipMapper.cpp \
         ../../src/test/TestSampleMipMapper.h \
+        ../../src/test/TestSlidingMax.cpp \
+        ../../src/test/TestSlidingMax.h \
         ../../src/test/TestSlidingOp.cpp \
         ../../src/test/TestSlidingOp.h \
         ../../src/test/TestUserInputPi3.cpp \

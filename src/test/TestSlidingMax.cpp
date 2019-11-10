@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TestSlidingOp.cpp
+        TestSlidingMax.cpp
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -24,8 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/fir/SlidingOp.h"
-#include "test/TestSlidingOp.h"
+#include "mfx/dsp/fir/SlidingMax.h"
+#include "test/TestSlidingMax.h"
 
 #include <algorithm>
 #include <array>
@@ -37,40 +37,25 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-template <typename T>
-struct MaxFtor
-{
-	inline T operator () (const T &a, const T &b) { return std::max (a, b); }
-};
-
-
-
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
-int	TestSlidingOp::perform_test ()
+int	TestSlidingMax::perform_test ()
 {
 	int            ret_val = 0;
 
 	if (ret_val == 0)
 	{
 		ret_val = perform_test_single <
-			mfx::dsp::fir::SlidingOp <int32_t, MaxFtor <int32_t> >
+			mfx::dsp::fir::SlidingMax <int32_t>
 		> ();
 	}
 
 	if (ret_val == 0)
 	{
 		ret_val = perform_test_single <
-			mfx::dsp::fir::SlidingOp <int32_t, std::plus <int32_t> >
-		> ();
-	}
-
-	if (ret_val == 0)
-	{
-		ret_val = perform_test_single <
-			mfx::dsp::fir::SlidingOp <float, MaxFtor <float> >
+			mfx::dsp::fir::SlidingMax <float>
 		> ();
 	}
 
@@ -88,14 +73,12 @@ int	TestSlidingOp::perform_test ()
 
 
 template <class SO>
-int	TestSlidingOp::perform_test_single ()
+int	TestSlidingMax::perform_test_single ()
 {
 	int            ret_val = 0;
 
 	typedef typename SO::DataType DataType;
-	typedef typename SO::Operator Operator;
 	SO             so_proc;
-	Operator       op;
 
 	static const std::array <int, 8> win_len_arr { 1, 2, 3, 4, 27, 16, 53, 2345 };
 	for (int win_len : win_len_arr)
@@ -117,14 +100,12 @@ int	TestSlidingOp::perform_test_single ()
 
 			const int      pos_beg  = std::max (pos - win_len + 1, 0);
 			const int      work_len = pos - pos_beg + 1;
-			const DataType ref = compute_naive_combination (
-				op, &src_arr [pos_beg], work_len
-			);
+			const DataType ref = compute_naive_max (&src_arr [pos_beg], work_len);
 			const DataType tst = so_proc.process_sample (x);
 			if (tst != ref)
 			{
 				assert (false);
-				printf ("TestSlidingOp: error.\n");
+				printf ("TestSlidingMax: error.\n");
 				ret_val = -1;
 			}
 		}
@@ -140,15 +121,15 @@ int	TestSlidingOp::perform_test_single ()
 
 
 
-template <typename T, typename OP>
-T	TestSlidingOp::compute_naive_combination (OP &op, const T src_ptr [], int len)
+template <typename T>
+T	TestSlidingMax::compute_naive_max (const T src_ptr [], int len)
 {
 	assert (len > 0);
 
 	T              x = src_ptr [0];
 	for (int pos = 1; pos < len; ++pos)
 	{
-		x = op (x, src_ptr [pos]);
+		x = std::max (x, src_ptr [pos]);
 	}
 
 	return x;

@@ -2892,6 +2892,12 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingMax.h">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingMax.hpp">
+      <Filter>mfx\dsp\fir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

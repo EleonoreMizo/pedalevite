@@ -451,6 +451,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\RankSelA.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\Remez.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\RemezPoint.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingMax.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingMax.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingOp.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingOp.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass1p.h" />

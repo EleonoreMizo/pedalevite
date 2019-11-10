@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        SlidingOp.hpp
+        SlidingMax.hpp
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -9,20 +9,20 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
-#if ! defined (mfx_dsp_fir_SlidingOp_CODEHEADER_INCLUDED)
-#define mfx_dsp_fir_SlidingOp_CODEHEADER_INCLUDED
+#if ! defined (mfx_dsp_fir_SlidingMax_CODEHEADER_INCLUDED)
+#define mfx_dsp_fir_SlidingMax_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/fnc.h"
+#include <algorithm>
 
 #include <cassert>
 
@@ -47,37 +47,24 @@ Name: ctor
 Description:
 	The object is constructed with a default size of 1, so processing is a
 	pass-through.
-Throws: depends on std::vector and T::T()
+Throws: depends on std::vector
 ==============================================================================
 */
 
-template <typename T, typename OP>
-SlidingOp <T, OP>::SlidingOp ()
-:	_lvl_arr ()
-,	_pos_w (0)
-,	_len (0)
-,	_nbr_avail (0)
-,	_op ()
+template <typename T>
+SlidingMax <T>::SlidingMax ()
+:	_len (0)
+,	_writepos (0)
+,	_scan_pos (0)
+,	_flip_beg (0)
+,	_flip_end (0)
+,	_scan_end (0)
+,	_scan_beg (0)
+,	_inmax (0)
+,	_scanmax (0)
+,	_data ()
 {
 	set_length (1);
-}
-
-
-
-/*
-==============================================================================
-Name: use_ftor
-Description:
-	Gives access to the functor element.
-Returns: the functor object.
-Throws: Nothing
-==============================================================================
-*/
-
-template <typename T, typename OP>
-typename SlidingOp <T, OP>::Operator &	SlidingOp <T, OP>::use_ftor ()
-{
-	return _op;
 }
 
 
@@ -89,29 +76,20 @@ Description:
 	Sets the size of the window. Past samples are lost.
 Input parameters:
 	- len: size of the window, > 0.
-Throws: depends on std::vector and T::T()
+Throws: depends on std::vector
 ==============================================================================
 */
 
-template <typename T, typename OP>
-void	SlidingOp <T, OP>::set_length (int len)
+template <typename T>
+void	SlidingMax <T>::set_length (int len)
 {
 	assert (len > 0);
 
-	_len = len;
+	_len      = len;
+	_flip_beg = ((_len - 1) >> 1) ^ (_len - 1);
+	_flip_end =  (_len + 1) >> 1;
 
-	// Levels have 2 children per parent
-	const int      nbr_lvl = fstb::get_next_pow_2 (len) + 1;
-	_lvl_arr.resize (nbr_lvl);
-
-	int            cur_len = len;
-	for (int lvl_idx = nbr_lvl - 1; lvl_idx >= 0; --lvl_idx)
-	{
-		_lvl_arr [lvl_idx].resize (cur_len);
-		cur_len = (cur_len + 1) >> 1; // Rounded up
-	}
-	assert (cur_len == 1);
-
+	_data.resize (_len);
 	clear_buffers ();
 }
 
@@ -126,11 +104,10 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, typename OP>
-void	SlidingOp <T, OP>::clear_buffers ()
+template <typename T>
+void	SlidingMax <T>::clear_buffers ()
 {
-	_pos_w     = 0;
-	_nbr_avail = 0;
+	fill (std::numeric_limits <DataType>::lowest ());
 }
 
 
@@ -147,19 +124,16 @@ Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, typename OP>
-void	SlidingOp <T, OP>::fill (const DataType &val)
+template <typename T>
+void	SlidingMax <T>::fill (const DataType &val)
 {
-	for (auto &lvl : _lvl_arr)
-	{
-		for (auto &elt : lvl)
-		{
-			elt = val;
-		}
-	}
-
-	_pos_w     = 0;   // Not necessary
-	_nbr_avail = _len;
+	_inmax    = val;
+	_scanmax  = _inmax;
+	std::fill (_data.begin (), _data.end (), _inmax);
+	_writepos = 0;
+	_scan_pos = 0;
+	_scan_end = 0;
+	_scan_beg = (_len - 1) >> 1;
 }
 
 
@@ -168,55 +142,49 @@ void	SlidingOp <T, OP>::fill (const DataType &val)
 ==============================================================================
 Name: process_sample
 Description:
-	Inserts a new sample, shifts the window and computes the operation.
+	Inserts a new sample, shifts the window and computes the max.
 	If there is not enough past samples to fill a full window, the window is
 	shortened to the available samples.
 Input parameters:
 	- x: The new sample
 Returns: the result of the operation on all the operands from the new window.
-Throws: OP::operator () related exceptions
+Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, typename OP>
-typename SlidingOp <T, OP>::DataType	SlidingOp <T, OP>::process_sample (DataType x)
+template <typename T>
+typename SlidingMax <T>::DataType	SlidingMax <T>::process_sample (DataType x)
 {
-	// A new sample arrived
-	if (_nbr_avail < _len)
+	if (_len == 1)
 	{
-		++ _nbr_avail;
+		return x;
 	}
 
-	// Recursive operation through the levels, excepted the first one which is
-	// skipped.
-	int            lvl_idx       = int (_lvl_arr.size ()) - 2;
-	int            pos_lvl_cur   = _pos_w;
-	int            nbr_avail_nxt = _nbr_avail;
-
-	while (lvl_idx >= 0)
+	--_scan_pos;
+	if (_scan_pos >= _scan_end)
 	{
-		Level &        lvl_nxt = _lvl_arr [lvl_idx + 1];
-		lvl_nxt [pos_lvl_cur] = x;
-
-		const int      pos_lvl_nxt = pos_lvl_cur & ~1;
-		pos_lvl_cur >>= 1;
-		if (nbr_avail_nxt - pos_lvl_nxt > 1)
-		{
-			x = _op (lvl_nxt [pos_lvl_nxt], lvl_nxt [pos_lvl_nxt + 1]);
-		}
-
-		nbr_avail_nxt = (nbr_avail_nxt + 1) >> 1; // Rounded up
-		-- lvl_idx;
+		_inmax            = std::max (_inmax, x);
+		_data [_scan_pos] = std::max (_data [_scan_pos], _data [_scan_pos + 1]);
 	}
-
-	// Updates the position for the next upcoming input sample
-	++ _pos_w;
-	if (_pos_w >= _len)
+	else
 	{
-		_pos_w = 0;
+		_scanmax   = _inmax;
+		_inmax     = x;
+		_scan_end  = _scan_end ^ _flip_end;
+		_scan_beg  = _scan_beg ^ _flip_beg;
+		_scan_pos  = _scan_beg;
 	}
+ 
+	_data [_writepos] = x;
+	++ _writepos;
+	if (_writepos >= _len)
+	{
+		_writepos = 0;
+	}
+	const DataType outmax    = _data [_writepos];
+	const DataType movingmax = std::max (_inmax, std::max (_scanmax, outmax));
 
-	return x;
+	return movingmax;
 }
 
 
@@ -226,22 +194,22 @@ typename SlidingOp <T, OP>::DataType	SlidingOp <T, OP>::process_sample (DataType
 Name: process_block
 Description:
 	Inserts new samples and for each sample, shifts the window and computes the
-	operation.
+	max.
 	Can work in-place.
 Input parameters:
 	- src_ptr: Pointer on the input buffer. Not null.
 	- nbr_spl: Number of samples to process. > 0.
 Output parameters:
 	- dst_ptr: Pointer on the preallocated result buffer. Not null.
-Throws: OP::operator () related exceptions
+Throws: Nothing
 ==============================================================================
 */
 
-template <typename T, typename OP>
-void	SlidingOp <T, OP>::process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl)
+template <typename T>
+void	SlidingMax <T>::process_block (DataType dst_ptr [], const DataType src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -266,7 +234,7 @@ void	SlidingOp <T, OP>::process_block (DataType dst_ptr [], const DataType src_p
 
 
 
-#endif   // mfx_dsp_fir_SlidingOp_CODEHEADER_INCLUDED
+#endif   // mfx_dsp_fir_SlidingMax_CODEHEADER_INCLUDED
 
 
 

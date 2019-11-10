@@ -64,6 +64,7 @@
 #include "test/TestOscWavetableSyncHard.h"
 #include "test/TestRemez.h"
 #include "test/TestSampleMipMapper.h"
+#include "test/TestSlidingMax.h"
 #include "test/TestSlidingOp.h"
 
 #if fstb_IS (SYS, LINUX)
@@ -1745,7 +1746,7 @@ int main (int argc, char *argv [])
 
 	int            ret_val = 0;
 
-#if 1
+#if 0
 	#if fstb_IS (SYS, LINUX)
 	if (ret_val == 0) ret_val = test_file_write_fs_ro ();
 	#endif
@@ -1771,6 +1772,10 @@ int main (int argc, char *argv [])
 
 #if 0
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
+#endif
+
+#if 0
+	if (ret_val == 0) ret_val = TestSlidingMax::perform_test ();
 #endif
 
 #if 0
