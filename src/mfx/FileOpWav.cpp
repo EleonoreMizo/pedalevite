@@ -60,7 +60,7 @@ FileOpWav::~FileOpWav ()
 
 // Creates a new empty wav file, to be populated with write_data ().
 // Then call close_file () when you're done.
-int	FileOpWav::create_save (const char *filename_0, int nbr_chn, double sample_freq, size_t max_len)
+int	FileOpWav::create_save (const char *filename_0, int nbr_chn, double sample_freq, int64_t max_len)
 {
 	assert (! is_open ());
 
@@ -236,7 +236,7 @@ bool	FileOpWav::is_open () const
 
 
 
-size_t	FileOpWav::get_size_frames () const
+int64_t	FileOpWav::get_size_frames () const
 {
 	return _len;
 }
@@ -500,7 +500,7 @@ int	FileOpWav::save (const char *filename_0, const float * const chn_arr [], siz
 
 
 
-int	FileOpWav::write_headers (FILE * f_ptr, int nbr_chn, size_t nbr_spl, double sample_freq)
+int	FileOpWav::write_headers (FILE * f_ptr, int nbr_chn, int64_t nbr_spl, double sample_freq)
 {
 	assert (f_ptr != 0);
 	assert (nbr_chn > 0);
@@ -524,7 +524,10 @@ int	FileOpWav::write_headers (FILE * f_ptr, int nbr_chn, size_t nbr_spl, double 
 	fmt._bits_per_sample   = sizeof (float) * CHAR_BIT;
 
 	WavData        data;
-	data._chunk_size = fmt._block_align * nbr_spl;
+	// Value can be wrong here if nbr_spl is very large, but this is a known
+	// issue with WAV files. Most file readers have a flag to ignore the length
+	// specified in the chunks and use the actual file length.
+	data._chunk_size = uint32_t (fmt._block_align * nbr_spl);
 	assert ((data._chunk_size & 1) == 0);
 
 	WavRiff        riff;

@@ -93,8 +93,8 @@ private:
 	void           change_limit (int dir);
 	std::string    build_rec_pathname () const;
 	std::string    print_duration (int minutes) const;
-	int            conv_frames_to_min (uint64_t nbr_frames) const;
-	int            conv_bytes_to_min (uint64_t nbr_bytes) const;
+	int            conv_frames_to_min (int64_t nbr_frames) const;
+	int            conv_bytes_to_min (int64_t nbr_bytes) const;
 
 	PageSwitcher & _page_switcher;
 	Model *        _model_ptr;    // 0 = not connected

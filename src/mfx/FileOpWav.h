@@ -49,12 +49,12 @@ public:
 	               FileOpWav () = default;
 	virtual        ~FileOpWav ();
 
-	int            create_save (const char *filename_0, int nbr_chn, double sample_freq, size_t max_len = ~size_t (0));
+	int            create_save (const char *filename_0, int nbr_chn, double sample_freq, int64_t max_len = INT64_MAX);
 	int            write_data (const float * const chn_arr [], int nbr_spl);
 	int            write_data (const float frame_arr_ptr [], int nbr_spl);
 	int            close_file ();
 	bool           is_open () const;
-	size_t         get_size_frames () const;
+	int64_t        get_size_frames () const;
 
 	static int     load (const char *filename_0, std::vector <std::vector <float> > &chn_arr, double &sample_freq);
 	static int     save (const char *filename_0, const std::vector <float> &chn, double sample_freq, float scale = 1);
@@ -114,14 +114,14 @@ private:
  		WavFormat_EXTENSIBLE = 0xFFFE
 	};
 
-	static int     write_headers (FILE * f_ptr, int nbr_chn, size_t nbr_spl, double sample_freq);
+	static int     write_headers (FILE * f_ptr, int nbr_chn, int64_t nbr_spl, double sample_freq);
 
 	FILE *         _f_ptr         = 0; // 0 if not open
 	int            _nbr_chn       = 0;
 	double         _sample_freq   = 0;
-	size_t         _max_len       = 0; // Sample frames
-	size_t         _len           = 0; // Length of the file, sample frames
-	size_t         _pos           = 0; // Position within the file, sample frames
+	int64_t        _max_len       = 0; // Sample frames
+	int64_t        _len           = 0; // Length of the file, sample frames
+	int64_t        _pos           = 0; // Position within the file, sample frames
 	int            _max_nbr_frm   = 0; // Sample frames, in the temporary buffer
 	long           _data_beg      = 0;
 

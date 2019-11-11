@@ -207,18 +207,18 @@ void	Rec2Disk::update_display ()
 
 #if fstb_IS (SYS, LINUX)
 
-	uint64_t       bytes_avail = 0;
+	int64_t        bytes_avail = 0;
 	if (! rec_flag)
 	{
 		std::string    pathname   = Cst::_audiodump_dir;
-		uint64_t       free_bytes = 0;
-		uint64_t       file_bytes = 0;
+		int64_t        free_bytes = 0;
+		int64_t        file_bytes = 0;
 		struct statvfs res_free;
 		struct stat    res_file;
 		int            ret_val = statvfs (pathname.c_str (), &res_free);
 		if (ret_val == 0)
 		{
-			free_bytes = uint64_t (res_free.f_bsize) * res_free.f_bfree;
+			free_bytes = int64_t (res_free.f_bsize) * res_free.f_bfree;
 			pathname   = build_rec_pathname ();
 			ret_val    = stat (pathname.c_str (), &res_file);
 		}
@@ -231,7 +231,7 @@ void	Rec2Disk::update_display ()
 
 	if (bytes_avail > 0)
 	{
-		const uint64_t margin = 100 * uint64_t (1024 * 1024);
+		const int64_t  margin = 100 * int64_t (1024 * 1024);
 		if (bytes_avail < margin)
 		{
 			_disk_avail = 5;
@@ -276,7 +276,7 @@ void	Rec2Disk::update_rec_time ()
 	if (rec_flag)
 	{
 		txt += "ON ";
-		const uint64_t nbr_frames = _model_ptr->get_d2d_size_frames ();
+		const int64_t  nbr_frames = _model_ptr->get_d2d_size_frames ();
 		const int      rec_dur    = conv_frames_to_min (nbr_frames);
 		txt += print_duration (rec_dur);
 	}
@@ -385,23 +385,23 @@ std::string	Rec2Disk::print_duration (int minutes) const
 
 
 
-int	Rec2Disk::conv_frames_to_min (uint64_t nbr_frames) const
+int	Rec2Disk::conv_frames_to_min (int64_t nbr_frames) const
 {
 	const int      frames_per_s =
 		fstb::round_int (_model_ptr->get_sample_freq ());
-	uint64_t       nbr_minutes  = nbr_frames / (frames_per_s * 60);
-	nbr_minutes = std::min (nbr_minutes, uint64_t (INT_MAX));
+	int64_t        nbr_minutes  = nbr_frames / (frames_per_s * 60);
+	nbr_minutes = std::min (nbr_minutes, int64_t (INT_MAX));
 
 	return int (nbr_minutes);
 }
 
 
 
-int	Rec2Disk::conv_bytes_to_min (uint64_t nbr_bytes) const
+int	Rec2Disk::conv_bytes_to_min (int64_t nbr_bytes) const
 {
 	const int      nbr_chn         = Cst::_nbr_chn_in + Cst::_nbr_chn_out;
 	const int      bytes_per_frame = (sizeof (float) * CHAR_BIT / 8) * nbr_chn;
-	const uint64_t nbr_frames      = nbr_bytes / bytes_per_frame;
+	const int64_t  nbr_frames      = nbr_bytes / bytes_per_frame;
 
 	return conv_frames_to_min (nbr_frames);
 }

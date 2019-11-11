@@ -1435,7 +1435,7 @@ bool	Model::is_d2d_recording () const
 
 
 
-size_t	Model::get_d2d_size_frames () const
+int64_t	Model::get_d2d_size_frames () const
 {
 	return _central.get_d2d_size_frames ();
 }

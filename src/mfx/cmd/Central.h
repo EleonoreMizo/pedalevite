@@ -48,6 +48,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <set>
 #include <vector>
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -130,7 +132,7 @@ public:
 	int            start_d2d_rec (const char pathname_0 [], size_t max_len);
 	int            stop_d2d_rec ();
 	bool           is_d2d_recording () const;
-	size_t         get_d2d_size_frames () const;
+	int64_t        get_d2d_size_frames () const;
 
 
 
