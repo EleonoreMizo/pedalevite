@@ -69,6 +69,18 @@ class GpioPwm
 
 public:
 
+	enum Err
+	{
+		Err_MMAP = -999,
+		Err_MEM_ALLOC,
+		Err_MEM_LOCK,
+		Err_MAPMEM,
+
+		Err_GENERIC = -1,
+
+		Err_OK = 0,
+	};
+
 	static const int  _nbr_dma_chn       = 15;
 	static const int  _min_subcycle_time = 3000; // Microseconds
 

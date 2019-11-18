@@ -42,7 +42,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cstdint>
-#include <cstdio>
 #include <cstring>
 #include <ctime>
 
@@ -117,7 +116,7 @@ int	GpioPwm::init_chn (int chn, int subcycle_time)
 	assert (chn < _nbr_dma_chn);
 	assert (subcycle_time >= _min_subcycle_time);
 
-	int            ret_val = 0;
+	int            ret_val = Err_OK;
 
 	assert (_chn_arr [chn].get () == nullptr);
 
@@ -127,9 +126,17 @@ int	GpioPwm::init_chn (int chn, int subcycle_time)
 			chn, _periph_base_addr, subcycle_time, _granularity
 		));
 	}
+	catch (const Err &err)
+	{
+		ret_val = int (err);
+	}
+	catch (MmapPtr::Error &err)
+	{
+		ret_val = Err_MMAP;
+	}
 	catch (...)
 	{
-		ret_val = -1;
+		ret_val = Err_GENERIC;
 	}
 
 	return ret_val;
@@ -660,19 +667,19 @@ GpioPwm::Channel::MBox::MBox (int size, int mem_flag)
 	{
 		if (_mem_ref == static_cast <unsigned int> (-1))
 		{
-			throw std::runtime_error ("Failed to alloc memory from VideoCore");
+			throw Err_MEM_ALLOC; // Failed to alloc memory from VideoCore
 		}
 		_bus_adr = mem_lock (_handle, _mem_ref);
 		if (_bus_adr == static_cast <unsigned int> (~0))
 		{
-			throw std::runtime_error ("Failed to lock memory");
+			throw Err_MEM_LOCK;  // Failed to lock memory
 		}
 		_virt_ptr = reinterpret_cast <uint8_t *> (
 			mapmem (_bus_adr & 0x3FFFFFFF, _size)
 		);
 		if (_virt_ptr == 0)
 		{
-			throw std::runtime_error ("Cannot use the mailbox interface");
+			throw Err_MAPMEM;   // Cannot use the mailbox interface
 		}
 	}
 	catch (...)
