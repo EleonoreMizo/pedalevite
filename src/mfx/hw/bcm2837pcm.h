@@ -42,9 +42,6 @@ namespace bcm2837pcm
 
 
 
-// Physical base address for the peripherals
-static const uint32_t   _phys_base = 0x7E000000;
-
 // PCM/I2S registers relative to the base address (p. 125)
 static const uint32_t   _pcm_ofs   = 0x00203000;
 static const uint32_t   _pcm_len   = 0x24;

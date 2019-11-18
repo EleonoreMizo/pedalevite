@@ -602,7 +602,12 @@ commonsrc = \
         ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
+        ../../src/mfx/hw/bcm2837.h \
+        ../../src/mfx/hw/bcm2837clk.h \
+        ../../src/mfx/hw/bcm2837dma.h \
+        ../../src/mfx/hw/bcm2837gpio.h \
         ../../src/mfx/hw/bcm2837pcm.h \
+        ../../src/mfx/hw/bcm2837pwm.h \
         ../../src/mfx/hw/cs4272.h \
         ../../src/mfx/hw/DisplayLinuxFrameBuf.cpp \
         ../../src/mfx/hw/DisplayLinuxFrameBuf.h \

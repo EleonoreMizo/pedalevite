@@ -2898,6 +2898,21 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\fir\SlidingMax.hpp">
       <Filter>mfx\dsp\fir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\bcm2837dma.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\bcm2837clk.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\bcm2837gpio.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\bcm2837pwm.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\bcm2837.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
