@@ -28,6 +28,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include <cstdint>
+#include <system_error>
 
 
 
@@ -44,6 +45,12 @@ class MmapPtr
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
+
+	class Error
+	:	public std::system_error
+	{
+		using system_error::system_error;
+	};
 
 	explicit       MmapPtr (uint32_t base, uint32_t len, const char dev_0 [], int flags);
 	               ~MmapPtr ();

@@ -30,8 +30,6 @@ http://www.wtfpl.net/ for more details.
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <stdexcept>
-
 #include <cassert>
 
 
@@ -58,7 +56,7 @@ MmapPtr::MmapPtr (uint32_t base, uint32_t len, const char dev_0 [], int flags)
 	int            fd = open (dev_0, flags);
 	if (fd < 0)
 	{
-		throw std::runtime_error ("Cannot open /dev/mem.\n");
+		throw Error (errno, std::system_category (), "Cannot open memory.\n");
 	}
 
 	void *         v_ptr =
@@ -67,7 +65,7 @@ MmapPtr::MmapPtr (uint32_t base, uint32_t len, const char dev_0 [], int flags)
 
 	if (v_ptr == MAP_FAILED)
 	{
-		throw std::runtime_error ("Cannot map peripheral.");
+		throw Error (errno, std::system_category (), "Cannot map peripheral.");
 	}
 
 	_len = len;
