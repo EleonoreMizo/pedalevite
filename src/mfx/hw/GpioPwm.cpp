@@ -88,12 +88,13 @@ GpioPwm::GpioPwm (int granularity)
 	_reg_pwm.at (bcm2837pwm::_ctl   ) = 0;
 	::delayMicroseconds (10);
 	_reg_clk.at (bcm2837clk::_pwmctl) = // Source = PLLD (500 or 750 MHz)
-		bcm2837clk::_passwd + bcm2837clk::_src_plld;
+		bcm2837clk::_passwd | bcm2837clk::_src_plld;
 	::delayMicroseconds (100);
-	_reg_clk.at (bcm2837clk::_pwmdiv) = bcm2837clk::_passwd | (clk_div << 12);
+	_reg_clk.at (bcm2837clk::_pwmdiv) =
+		bcm2837clk::_passwd | (clk_div << bcm2837clk::_divi);
 	::delayMicroseconds (100);
 	_reg_clk.at (bcm2837clk::_pwmctl) =
-		bcm2837clk::_passwd + bcm2837clk::_src_plld + bcm2837clk::_enab; // Source = PLLD and enable
+		bcm2837clk::_passwd | bcm2837clk::_src_plld | bcm2837clk::_enab; // Source = PLLD and enable
 	::delayMicroseconds (100);
 	_reg_pwm.at (bcm2837pwm::_rng1  ) = _granularity * 10;
 	::delayMicroseconds (10);
@@ -201,8 +202,8 @@ void	GpioPwm::set_pulse (int chn, int pin, int start, int width)
 GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcycle_time, int granularity)
 :	_index (index)
 ,	_dma_reg (
-		periph_base_addr + bcm2837dma::_dma_ofs + _index * bcm2837dma::_dma_chn_inc,
-		bcm2837dma::_dma_len, "/dev/mem", O_RDWR | O_SYNC
+		periph_base_addr + bcm2837dma::_dma_ofs,
+		bcm2837dma::_dma_chn_len, "/dev/mem", O_RDWR | O_SYNC
 	)
 ,	_subcycle_time (subcycle_time)
 ,	_nbr_samples ((_subcycle_time + (granularity >> 1)) / granularity)
@@ -255,12 +256,16 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 	cb_ptr->next = mem_virt_to_phys (cb0_ptr);
 
 	// Initialize the DMA channel 0 (p46, 47)
-	_dma_reg.at (bcm2837dma::_cs       ) = bcm2837dma::_reset;
+	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
+		bcm2837dma::_reset;
 	::delayMicroseconds (10);
-	_dma_reg.at (bcm2837dma::_cs       ) = bcm2837dma::_int | bcm2837dma::_end;
-	_dma_reg.at (bcm2837dma::_conblk_ad) = mem_virt_to_phys (cb0_ptr);
-	_dma_reg.at (bcm2837dma::_debug    ) = bcm2837dma::_all_errors; // Clears errors
-	_dma_reg.at (bcm2837dma::_cs       ) =
+	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
+		bcm2837dma::_int | bcm2837dma::_end;
+	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_conblk_ad) =
+		mem_virt_to_phys (cb0_ptr);
+	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_debug    ) =
+		bcm2837dma::_all_errors; // Clears errors
+	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs       ) =
 		  bcm2837dma::_waitfow
 		| (8 << bcm2837dma::_panic_prio)
 		| (8 << bcm2837dma::_priority)
@@ -274,7 +279,8 @@ GpioPwm::Channel::~Channel ()
 {
 	clear ();
 	::delayMicroseconds (_subcycle_time);
-	_dma_reg.at (bcm2837dma::_cs) = bcm2837dma::_reset;
+	_dma_reg.at (_index * bcm2837dma::_dma_chn_inc + bcm2837dma::_cs) =
+		bcm2837dma::_reset;
 	::delayMicroseconds (10);
 }
 
@@ -650,34 +656,29 @@ GpioPwm::Channel::MBox::MBox (int size, int mem_flag)
 ,	_bus_adr (0)
 ,	_virt_ptr (0)
 {
-	int            ret_val = 0;
-
-	if (_mem_ref == static_cast <unsigned int> (-1))
+	try
 	{
-		printf ("Failed to alloc memory from VideoCore\n");
-		ret_val = -1;
-	}
-	if (ret_val == 0)
-	{
+		if (_mem_ref == static_cast <unsigned int> (-1))
+		{
+			throw std::runtime_error ("Failed to alloc memory from VideoCore");
+		}
 		_bus_adr = mem_lock (_handle, _mem_ref);
 		if (_bus_adr == static_cast <unsigned int> (~0))
 		{
-			mem_free (_handle, _size);
-			printf ("Failed to lock memory\n");
-			ret_val = -1;
+			throw std::runtime_error ("Failed to lock memory");
 		}
-	}
-	if (ret_val == 0)
-	{
 		_virt_ptr = reinterpret_cast <uint8_t *> (
 			mapmem (_bus_adr & 0x3FFFFFFF, _size)
 		);
+		if (_virt_ptr == 0)
+		{
+			throw std::runtime_error ("Cannot use the mailbox interface");
+		}
 	}
-
-	if (_virt_ptr == 0)
+	catch (...)
 	{
 		cleanup ();
-		throw std::runtime_error ("Cannot use the mailbox interface");
+		throw;
 	}
 }
 

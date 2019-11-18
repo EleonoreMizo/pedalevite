@@ -135,7 +135,7 @@ enum Dreq
 	Dreq_UART_TX,
 	Dreq_SD_HOST,
 	Dreq_UART_RX,
-	Dreq_DSI,
+	Dreq_DSI_2,
 	Dreq_SLIMBUS_MCTX,
 	Dreq_HDMI,
 	Dreq_SLIMBUX_MCRX,

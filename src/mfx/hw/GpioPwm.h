@@ -157,8 +157,8 @@ private:
 	typedef std::shared_ptr <Channel> ChannelSPtr;
 	typedef std::array <ChannelSPtr, _nbr_dma_chn> ChannelArray;
 
-	int            _granularity = 10;   // Granularity in microseconds
-	uint32_t       _periph_base_addr = 0;  // Value depends on the Pi version
+	int            _granularity;   // Granularity in microseconds
+	uint32_t       _periph_base_addr;  // Value depends on the Pi version
 	MmapPtr        _reg_pwm;
 	MmapPtr        _reg_clk;
 	MmapPtr        _reg_gpio;
@@ -172,11 +172,11 @@ private:
 	static const int  MEM_FLAGS  = 0x04;               // 0x0C for Pi 1.
 
 	// Bus addresses
-	static const uint32_t   _phys_gpclr0   =
+	static const uint32_t   _bus_gpclr0   =
 		bcm2837::_bus_base + bcm2837gpio::_gpio_ofs + bcm2837gpio::_gpclr;
-	static const uint32_t   _phys_gpset0   =
+	static const uint32_t   _bus_gpset0   =
 		bcm2837::_bus_base + bcm2837gpio::_gpio_ofs + bcm2837gpio::_gpset;
-	static const uint32_t	_phys_fifo_adr =
+	static const uint32_t	_bus_fifo_adr =
 		bcm2837::_bus_base + bcm2837pwm::_pwm_ofs   + bcm2837pwm::_fif1;
 
 
