@@ -379,12 +379,12 @@ void	Levels::draw_audio_meter (const DirInfo &info, int nbr_chn)
 	assert (nbr_chn <= 2);
 	const int      h =
 		  (nbr_chn == 1)
-		? _meter_audio_h - 2
-		: ((_meter_audio_h - 3) >> 1);
+		?   _meter_audio_h - 2 * _scale
+		: ((_meter_audio_h - 3 * _scale) >> 1);
 	for (int chn = 0; chn < nbr_chn; ++chn)
 	{
 		const DirInfo::ChnInfo &   chn_info = info._chn_arr [chn];
-		const int      yb     = 1 + chn * (h + 1);
+		const int      yb     = _scale + chn * (h + _scale);
 		const float    peak_f = conv_level_to_pix (chn_info._lvl_peak);
 		const float    rms_f  = conv_level_to_pix (chn_info._lvl_rms);
 		const int      x_peak = fstb::round_int (peak_f);
@@ -405,7 +405,7 @@ void	Levels::draw_audio_meter (const DirInfo &info, int nbr_chn)
 
 			if (chn_info._clip_flag)
 			{
-				for (int p = _clip_audio_x; p < size [0] - 1; ++p)
+				for (int p = _clip_audio_x; p < size [0] - _scale; ++p)
 				{
 					buf_ptr [ofs + p] = 255;
 				}
@@ -429,15 +429,15 @@ void	Levels::draw_dsp_meter (const MeterResult &meter)
 	}
 
 	const Vec2d    size  = _dsp_sptr->get_bounding_box ().get_size ();
-	const int      bar_w = size [0] - 2;
-	int            pl   = fstb::floor_int (meter._rms * (bar_w - 1));
-	int            pr   = fstb::ceil_int (meter._peak * (bar_w - 1));
+	const int      bar_w = size [0] - 2 * _scale;
+	int            pl   = fstb::floor_int (meter._rms * (bar_w - _scale));
+	int            pr   = fstb::ceil_int (meter._peak * (bar_w - _scale));
 	pr = std::max (pr, pl + 1);
 
-	for (int y = 1; y < size [1] - 1; ++y)
+	for (int y = _scale; y < size [1] - _scale; ++y)
 	{
 		const int      ofs = y * stride;
-		for (int x = 1 + (y & 1); x < pl; x += 2)
+		for (int x = _scale + (y & 1); x < pl; x += 2)
 		{
 			buf_ptr [ofs + x] = 255;
 		}
@@ -460,11 +460,11 @@ float	Levels::conv_level_to_pix (float lvl) const
 	float          x = 0;
 	if (db > -80 && db < -20)
 	{
-		x =      (db - -80.f) * (40 / (80.f - 20.f));
+		x =      (db - -80.f) * (40 * _scale / (80.f - 20.f));
 	}
 	else
 	{
-		x = 40 + (db - -20.f) * (64 / 20.f);
+		x = 40 + (db - -20.f) * (64 * _scale /  20.f        );
 	}
 	x = fstb::limit (x, 0.f, float (_clip_audio_x - 1));
 
