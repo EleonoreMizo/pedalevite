@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/Font.h"
 
 #include <cassert>
+#include <cstring>
 
 
 
