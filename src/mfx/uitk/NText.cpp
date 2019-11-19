@@ -237,7 +237,7 @@ int	NText::get_char_width (char32_t c) const
 	int            len = _font_ptr->get_char_w (c);
 	if (_bold_flag && _space_flag)
 	{
-		++ len;
+		len += _font_ptr->get_bold_shift ();
 	}
 	len *= _mag_arr [0];
 
@@ -363,12 +363,13 @@ void	NText::update_content ()
 		if (_bold_flag)
 		{
 			const int      mag_x    = _mag_arr [0];
+			const int      shift_x  = _font_ptr->get_bold_shift () * mag_x;
 			uint8_t *      buf2_ptr = buf_ptr + stride * margin_y;
 			for (int y = 0; y < h_pix; ++y)
 			{
-				for (int x = margin_x + w_pix - 1; x >= margin_x + mag_x; -- x)
+				for (int x = margin_x + w_pix - 1; x >= margin_x + shift_x; -- x)
 				{
-					buf2_ptr [x] = std::max (buf2_ptr [x], buf2_ptr [x - mag_x]);
+					buf2_ptr [x] = std::max (buf2_ptr [x], buf2_ptr [x - shift_x]);
 				}
 				buf2_ptr += stride;
 			}

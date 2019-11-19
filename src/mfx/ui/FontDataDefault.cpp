@@ -51,7 +51,8 @@ void	FontDataDefault::make_04x06 (Font &fnt)
 		_data_04x06,
 		_mapping_8859_15,
 		5,
-		1
+		1,
+		false, 1, 1
 	);
 	map_extra (fnt);
 }
@@ -68,7 +69,8 @@ void	FontDataDefault::make_06x06 (Font &fnt)
 		_data_06x06,
 		_mapping_8859_15,
 		5,
-		1
+		1,
+		false, 1, 1
 	);
 	map_extra (fnt);
 }
@@ -85,7 +87,8 @@ void	FontDataDefault::make_06x08 (Font &fnt)
 		_data_06x08,
 		_mapping_8859_15,
 		7,
-		1
+		1,
+		false, 1, 1
 	);
 	map_extra (fnt);
 }
@@ -102,7 +105,85 @@ void	FontDataDefault::make_08x12 (Font &fnt)
 		_data_08x12,
 		_mapping_8859_15,
 		10,
-		1
+		1,
+		false, 1, 1
+	);
+	map_extra (fnt);
+}
+
+
+
+// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+// Zoomed fonts
+
+
+
+void	FontDataDefault::make_16x24 (Font &fnt)
+{
+	const int      w = 8;
+	fnt.init (
+		_char_per_table,
+		w, 12,
+		_char_per_row, _char_per_row * w,
+		_data_08x12,
+		_mapping_8859_15,
+		10,
+		1,
+		true, 2, 2
+	);
+	map_extra (fnt);
+}
+
+
+
+void	FontDataDefault::make_24x24 (Font &fnt)
+{
+	const int      w = 6;
+	fnt.init (
+		_char_per_table,
+		w, 6,
+		_char_per_row, _char_per_row * w,
+		_data_06x06,
+		_mapping_8859_15,
+		5,
+		1,
+		true, 4, 4
+	);
+	map_extra (fnt);
+}
+
+
+
+void	FontDataDefault::make_24x32 (Font &fnt)
+{
+	const int      w = 6;
+	fnt.init (
+		_char_per_table,
+		w, 8,
+		_char_per_row, _char_per_row * w,
+		_data_06x08,
+		_mapping_8859_15,
+		7,
+		1,
+		true, 4, 4
+	);
+	map_extra (fnt);
+}
+
+
+
+void	FontDataDefault::make_32x48 (Font &fnt)
+{
+	const int      w = 8;
+	fnt.init (
+		_char_per_table,
+		w, 12,
+		_char_per_row, _char_per_row * w,
+		_data_08x12,
+		_mapping_8859_15,
+		10,
+		1,
+		true, 4, 4
 	);
 	map_extra (fnt);
 }
@@ -119,10 +200,10 @@ void	FontDataDefault::make_08x12 (Font &fnt)
 
 void	FontDataDefault::map_extra (Font &fnt)
 {
-	fnt.add_char (0x2018, '\'');
-	fnt.add_char (0x2019, '\'');
-	fnt.add_char (0x201C, '\"');
-	fnt.add_char (0x201D, '\"');
+	fnt.add_char (0x2018, '\'');  // Left single quotation mark
+	fnt.add_char (0x2019, '\'');  // Right single quotation mark
+	fnt.add_char (0x201C, '\"');  // Left double quotation mark
+	fnt.add_char (0x201D, '\"');  // Right double quotation mark
 }
 
 

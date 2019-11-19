@@ -52,7 +52,7 @@ public:
 	               Font ()  = default;
 	virtual        ~Font () = default;
 
-	void           init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const char32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag = true);
+	void           init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const char32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag = true, int zoom_h = 1, int zoom_v = 1);
 	void           add_char (char32_t ucs4, int index);
 
 	bool           is_ready () const;
@@ -60,6 +60,7 @@ public:
 	int            get_baseline () const;
 	int            get_char_h () const;
 	int            get_char_w (char32_t ucs4 = 32) const;
+	int            get_bold_shift () const;
 
 	void           render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride) const;
 	void           render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag_x, int mag_y) const;
@@ -96,6 +97,7 @@ private:
 	int            _char_per_row = 0;
 	int            _stride       = 0;
 	int            _baseline     = 0;
+	int            _bold_shift   = 0;
 	ZoneArray      _zone_arr;
 	PicData        _data_arr;
 	const uint8_t *_data_ptr     = 0;

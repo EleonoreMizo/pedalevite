@@ -41,7 +41,7 @@ namespace ui
 
 
 
-void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const char32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag)
+void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const char32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag, int zoom_h, int zoom_v)
 {
 	assert (nbr_char > 0);
 	assert (nbr_char <= 0x7FFF);
@@ -55,17 +55,21 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 	assert (baseline <= char_h);
 	assert (max_val > 0);
 	assert (max_val <= 255);
+	assert (zoom_h > 0);
+	assert (zoom_v > 0);
 
-	_nbr_char = nbr_char;
-	_baseline = baseline;
-	if (copy_data_flag || max_val != 255)
+	_nbr_char   = nbr_char;
+	_baseline   = baseline;
+	_bold_shift = zoom_h;
+	if (copy_data_flag || max_val != 255 || zoom_h != 1 || zoom_v != 1)
 	{
-		_char_w       = char_w;
-		_char_h       = char_h;
+		_char_w       = char_w * zoom_h;
+		_char_h       = char_h * zoom_v;
 		_char_per_row = 1;
-		_stride       = char_w;
-		_data_arr.resize (_nbr_char * _stride * char_h);
+		_stride       = char_w * zoom_h;
+		_data_arr.resize (_nbr_char * _stride * _char_h);
 		int            pos_dst = 0;
+
 		for (int c = 0; c < nbr_char; ++c)
 		{
 			const int      row     = c / char_per_row;
@@ -73,15 +77,42 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 			int            pos_src = row * char_h * stride + col * char_w;
 			for (int cy = 0; cy < char_h; ++cy)
 			{
-				for (int cx = 0; cx < char_w; ++cx)
+				if (zoom_h == 1)
 				{
-					_data_arr [pos_dst + cx] =
-						uint8_t (pic_arr [pos_src + cx] * 255 / max_val);
+					for (int cx = 0; cx < char_w; ++cx)
+					{
+						_data_arr [pos_dst + cx] =
+							uint8_t (pic_arr [pos_src + cx] * 255 / max_val);
+					}
 				}
+				else
+				{
+					for (int cx = 0; cx < char_w; ++cx)
+					{
+						const uint8_t  v =
+							uint8_t (pic_arr [pos_src + cx] * 255 / max_val);
+						for (int zx = 0; zx < zoom_h; ++zx)
+						{
+							_data_arr [pos_dst + cx * zoom_h + zx] = v;
+						}
+					}
+				}
+
 				pos_dst += _stride;
 				pos_src +=  stride;
+
+				for (int zy = 1; zy < zoom_v; ++zy)
+				{
+					memcpy (
+						&_data_arr [pos_dst          ],
+						&_data_arr [pos_dst - _stride],
+						_stride * sizeof (_data_arr [0])
+					);
+					pos_dst += _stride;
+				}
 			}
 		}
+
 		_data_ptr     = &_data_arr [0];
 	}
 	else
@@ -163,6 +194,13 @@ int	Font::get_char_h () const
 int	Font::get_char_w (char32_t /*ucs4*/) const
 {
 	return _char_w;
+}
+
+
+
+int	Font::get_bold_shift () const
+{
+	return _bold_shift;
 }
 
 

@@ -52,6 +52,12 @@ public:
 	static void    make_06x08 (Font &fnt);
 	static void    make_08x12 (Font &fnt);
 
+	// Scale 4
+	static void    make_16x24 (Font &fnt);
+	static void    make_24x24 (Font &fnt);
+	static void    make_24x32 (Font &fnt);
+	static void    make_32x48 (Font &fnt);
+
 	virtual        ~FontDataDefault () = default;
 
 

@@ -114,10 +114,17 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_prog_catalog (_page_switcher)
 ,	_page_rec2disk (_page_switcher)
 {
+#if (PV_VERSION == 2)
+	ui::FontDataDefault::make_32x48 (_fnt_8x12);
+	ui::FontDataDefault::make_24x32 (_fnt_6x8);
+	ui::FontDataDefault::make_24x24 (_fnt_6x6);
+	ui::FontDataDefault::make_16x24 (_fnt_4x6);
+#else
 	ui::FontDataDefault::make_08x12 (_fnt_8x12);
 	ui::FontDataDefault::make_06x08 (_fnt_6x8);
 	ui::FontDataDefault::make_06x06 (_fnt_6x6);
 	ui::FontDataDefault::make_04x06 (_fnt_4x6);
+#endif // PV_VERSION
 
 	_page_switcher.add_page (uitk::pg::PageType_CUR_PROG         , _page_cur_prog         );
 	_page_switcher.add_page (uitk::pg::PageType_TUNER            , _page_tuner            );

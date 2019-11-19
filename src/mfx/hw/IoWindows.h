@@ -174,12 +174,12 @@ private:
 	};
 
 #if (PV_VERSION == 2)
-	static const int  _scr_w     = 800 / 4;
-	static const int  _scr_h     = 480 / 4;
+	static const int  _scr_w     = 800;
+	static const int  _scr_h     = 480;
 	static const int  _col_bkg   = 0x000000; // 0xRRGGBB
 	static const int  _col_min   = 0x000000;
 	static const int  _col_max   = 0xFFFFFF;
-	static const int  _zoom      = 2;
+	static const int  _zoom      = 1;
 #else // PV_VERSION
 	static const int  _scr_w     = 128;
 	static const int  _scr_h     =  64;
