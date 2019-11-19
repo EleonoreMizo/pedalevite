@@ -60,7 +60,7 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 	assert (zoom_v > 0);
 
 	_nbr_char   = nbr_char;
-	_baseline   = baseline;
+	_baseline   = zoom_v * baseline;
 	_bold_shift = zoom_h;
 	if (copy_data_flag || max_val != 255 || zoom_h != 1 || zoom_v != 1)
 	{
