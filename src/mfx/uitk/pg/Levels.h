@@ -154,12 +154,18 @@ private:
 	BitmapSPtr     _dsp_sptr;
 	TxtSPtr        _dsp_val_sptr;
 
-	static const int  _meter_audio_w  = 128;
-	static const int  _meter_grad_h   = 7;
-	static const int  _meter_audio_h  = 9;
-	static const int  _meter_dsp_w    = 86;
-	static const int  _meter_dsp_h    = 9;
-	static const int  _clip_audio_x   = 125;
+#if (PV_VERSION == 2)
+	static const int  _scale = 4;
+#else  // PV_VERSION
+	static const int  _scale = 1;
+#endif // PV_VERSION
+
+	static const int  _meter_audio_w  = _scale * 128;
+	static const int  _meter_grad_h   = _scale * 7;
+	static const int  _meter_audio_h  = _scale * 9;
+	static const int  _meter_dsp_w    = _scale * 86;
+	static const int  _meter_dsp_h    = _scale * 9;
+	static const int  _clip_audio_x   = _scale * 125;
 
 	static const uint8_t
 	               _pic_meter_grad [_meter_audio_w * _meter_grad_h];
