@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/wah2/Wah2Desc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <array>
 #include <vector>
@@ -75,7 +76,7 @@ protected:
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
 	virtual void   do_clean_quick ();
-	virtual void   do_process_block (ProcInfo &proc);
+	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
 

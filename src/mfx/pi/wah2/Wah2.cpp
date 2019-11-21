@@ -30,6 +30,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/wah2/Param.h"
 #include "mfx/pi/wah2/Wah2.h"
+#include "mfx/piapi/Dir.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
@@ -134,7 +136,7 @@ int	Wah2::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -146,12 +148,10 @@ void	Wah2::do_clean_quick ()
 
 
 
-void	Wah2::do_process_block (ProcInfo &proc)
+void	Wah2::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_src =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_dst =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
+	const int      nbr_chn_src = proc._nbr_chn_arr [piapi::Dir_IN ];
+	const int      nbr_chn_dst = proc._nbr_chn_arr [piapi::Dir_OUT];
 	assert (nbr_chn_src <= nbr_chn_dst);
 	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 

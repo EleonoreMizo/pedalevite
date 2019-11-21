@@ -30,9 +30,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/testgen/Param.h"
 #include "mfx/pi/testgen/TestGen.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <algorithm>
 
@@ -148,7 +150,7 @@ int	TestGen::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -160,7 +162,7 @@ void	TestGen::do_clean_quick ()
 
 
 
-void	TestGen::do_process_block (ProcInfo &proc)
+void	TestGen::do_process_block (piapi::ProcInfo &proc)
 {
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -206,8 +208,7 @@ void	TestGen::do_process_block (ProcInfo &proc)
 
 	else
 	{
-		const int      nbr_chn =
-			proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
+		const int      nbr_chn = proc._nbr_chn_arr [piapi::Dir_OUT];
 		for (int chn_index = 0; chn_index < nbr_chn; ++chn_index)
 		{
 			dsp::mix::Align::clear (proc._dst_arr [chn_index], proc._nbr_spl);
@@ -302,11 +303,11 @@ void	TestGen::restart_gen ()
 
 
 
-void	TestGen::gen_noise (ProcInfo &proc)
+void	TestGen::gen_noise (piapi::ProcInfo &proc)
 {
 	const int      nbr_chn =
 		  (_multichn_flag)
-		? proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT]
+		? proc._nbr_chn_arr [piapi::Dir_OUT]
 		: 1;
 
 	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
@@ -337,7 +338,7 @@ void	TestGen::gen_noise (ProcInfo &proc)
 
 
 
-void	TestGen::gen_tone (ProcInfo &proc)
+void	TestGen::gen_tone (piapi::ProcInfo &proc)
 {
 	const int      nbr_spl = proc._nbr_spl;
 	float *        dst_ptr = proc._dst_arr [0];
@@ -359,7 +360,7 @@ void	TestGen::gen_tone (ProcInfo &proc)
 
 
 
-void	TestGen::gen_sweep (ProcInfo &proc)
+void	TestGen::gen_sweep (piapi::ProcInfo &proc)
 {
 	handle_pause (proc);
 
@@ -376,7 +377,7 @@ void	TestGen::gen_sweep (ProcInfo &proc)
 
 
 
-void	TestGen::gen_sweep_running (ProcInfo &proc)
+void	TestGen::gen_sweep_running (piapi::ProcInfo &proc)
 {
 	assert (_sweep_pos >= 0);
 	assert (_sweep_pos < _sweep_len);
@@ -443,7 +444,7 @@ void	TestGen::gen_sweep_running (ProcInfo &proc)
 
 
 
-void	TestGen::gen_pulse (ProcInfo &proc)
+void	TestGen::gen_pulse (piapi::ProcInfo &proc)
 {
 	handle_pause (proc);
 
@@ -461,7 +462,7 @@ void	TestGen::gen_pulse (ProcInfo &proc)
 
 
 
-void	TestGen::handle_pause (ProcInfo &proc)
+void	TestGen::handle_pause (piapi::ProcInfo &proc)
 {
 	if (_pause_flag)
 	{
@@ -480,8 +481,7 @@ void	TestGen::handle_pause (ProcInfo &proc)
 	}
 	if (_pause_flag)
 	{
-		const int      nbr_chn =
-			proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
+		const int      nbr_chn = proc._nbr_chn_arr [piapi::Dir_OUT];
 		for (int chn_index = 0; chn_index < nbr_chn; ++chn_index)
 		{
 			dsp::mix::Align::clear (proc._dst_arr [chn_index], proc._nbr_spl);
@@ -491,10 +491,9 @@ void	TestGen::handle_pause (ProcInfo &proc)
 
 
 
-void	TestGen::dup_mono_out (ProcInfo &proc)
+void	TestGen::dup_mono_out (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
+	const int      nbr_chn = proc._nbr_chn_arr [piapi::Dir_OUT];
 	for (int chn_index = 1; chn_index < nbr_chn; ++chn_index)
 	{
 		dsp::mix::Align::copy_1_1 (

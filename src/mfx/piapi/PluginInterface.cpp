@@ -25,7 +25,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include	"mfx/piapi/Err.h"
 #include	"mfx/piapi/PluginInterface.h"
+#include	"mfx/piapi/ProcInfo.h"
 
 #include	<cassert>
 

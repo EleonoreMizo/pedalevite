@@ -2913,6 +2913,18 @@
     <ClInclude Include="..\..\..\src\mfx\hw\bcm2837.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\BypassState.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\Err.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

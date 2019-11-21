@@ -27,9 +27,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/nzbl/NoiseBleach.h"
 #include "mfx/pi/nzbl/Param.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <cassert>
 
@@ -144,7 +146,7 @@ int	NoiseBleach::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -166,11 +168,11 @@ void	NoiseBleach::clear_buffers ()
 
 
 
-void	NoiseBleach::do_process_block (ProcInfo &proc)
+void	NoiseBleach::do_process_block (piapi::ProcInfo &proc)
 {
 	// Channels
-	const int      nbr_chn_src = proc._nbr_chn_arr [Dir_IN ];
-	const int      nbr_chn_dst = proc._nbr_chn_arr [Dir_OUT];
+	const int      nbr_chn_src = proc._nbr_chn_arr [piapi::Dir_IN ];
+	const int      nbr_chn_dst = proc._nbr_chn_arr [piapi::Dir_OUT];
 	assert (nbr_chn_src <= nbr_chn_dst);
 	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 

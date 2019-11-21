@@ -236,7 +236,7 @@ void	FxPEq::update_display ()
 		const piapi::PluginDescInterface &   desc =
 			_model_ptr->get_model_desc (slot._pi_model);
 		const piapi::PluginDescInterface &   desc_mix =
-			_model_ptr->get_model_desc (Cst::_plugin_mix);
+			_model_ptr->get_model_desc (Cst::_plugin_dwm);
 
 		const int      nbr_param = desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
 		_nbr_bands = nbr_param / pi::peq::Param_NBR_ELT;
@@ -399,7 +399,7 @@ void	FxPEq::update_param_txt ()
 	else if (_cur_param == Param_GAIN)
 	{
 		const piapi::PluginDescInterface &   desc_mix =
-			_model_ptr->get_model_desc (Cst::_plugin_mix);
+			_model_ptr->get_model_desc (Cst::_plugin_dwm);
 		const float    gain    = get_param_nat (
 			slot._settings_mixer, desc_mix, pi::dwm::Param_GAIN
 		);

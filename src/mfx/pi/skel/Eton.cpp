@@ -28,9 +28,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/skel/Param.h"
 #include "mfx/pi/skel/Eton.h"
+#include "mfx/piapi/Dir.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <algorithm>
 
@@ -121,7 +124,7 @@ int	Eton::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -133,12 +136,10 @@ void	Eton::do_clean_quick ()
 
 
 
-void	Eton::do_process_block (ProcInfo &proc)
+void	Eton::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_src =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_dst =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
+	const int      nbr_chn_src = proc._nbr_chn_arr [piapi::Dir_IN ];
+	const int      nbr_chn_dst = proc._nbr_chn_arr [piapi::Dir_OUT];
 	assert (nbr_chn_src <= nbr_chn_dst);
 	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 

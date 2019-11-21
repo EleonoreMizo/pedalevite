@@ -27,9 +27,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/pi/dwm/DryWet.h"
 #include "mfx/pi/dwm/Param.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 #include "mfx/dsp/mix/Align.h"
 
 #include <cassert>
@@ -106,7 +108,7 @@ int	DryWet::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -118,7 +120,7 @@ void	DryWet::do_clean_quick ()
 
 
 
-void	DryWet::do_process_block (ProcInfo &proc)
+void	DryWet::do_process_block (piapi::ProcInfo &proc)
 {
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
 	{
@@ -184,12 +186,12 @@ void	DryWet::do_process_block (ProcInfo &proc)
 
 
 
-void	DryWet::copy (const ProcInfo &proc, int chn_ofs, float lvl)
+void	DryWet::copy (const piapi::ProcInfo &proc, int chn_ofs, float lvl)
 {
 	static const int  o_out = 1;
 
-	const int            nbr_in  = proc._nbr_chn_arr [Dir_IN ];
-	const int            nbr_out = proc._nbr_chn_arr [Dir_OUT];
+	const int            nbr_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
+	const int            nbr_out = proc._nbr_chn_arr [piapi::Dir_OUT];
 	assert (nbr_in == nbr_out);
 	const int            vol     = fstb::is_eq (lvl, 1.0f, 1e-3f) ? 0 : 1;
 	const float * const* src_arr = proc._src_arr + chn_ofs * nbr_in;
@@ -242,13 +244,13 @@ void	DryWet::copy (const ProcInfo &proc, int chn_ofs, float lvl)
 
 
 
-void	DryWet::mix (const ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end)
+void	DryWet::mix (const piapi::ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end)
 {
 	static const int  o_in  = 2;
 	static const int  o_out = 0;
 
-	const int            nbr_in  = proc._nbr_chn_arr [Dir_IN ];
-	const int            nbr_out = proc._nbr_chn_arr [Dir_OUT];
+	const int            nbr_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
+	const int            nbr_out = proc._nbr_chn_arr [piapi::Dir_OUT];
 	const float * const* src_arr = proc._src_arr;
 	float       * const* dst_arr = proc._dst_arr;
 	const int            nbr_spl = proc._nbr_spl;

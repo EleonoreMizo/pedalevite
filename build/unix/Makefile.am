@@ -967,6 +967,9 @@ commonsrc = \
         ../../src/mfx/pi/ParamState.h \
         ../../src/mfx/pi/ParamStateSet.cpp \
         ../../src/mfx/pi/ParamStateSet.h \
+        ../../src/mfx/piapi/BypassState.h \
+        ../../src/mfx/piapi/Dir.h \
+        ../../src/mfx/piapi/Err.h \
         ../../src/mfx/piapi/Event.h \
         ../../src/mfx/piapi/EventNoteOff.h \
         ../../src/mfx/piapi/EventNoteOn.h \
@@ -986,6 +989,7 @@ commonsrc = \
         ../../src/mfx/piapi/PluginInterface.cpp \
         ../../src/mfx/piapi/PluginInterface.h \
         ../../src/mfx/piapi/PluginState.h \
+        ../../src/mfx/piapi/ProcInfo.h \
         ../../src/mfx/ui/DisplayInterface.cpp \
         ../../src/mfx/ui/DisplayInterface.h \
         ../../src/mfx/ui/DisplayVoid.cpp \

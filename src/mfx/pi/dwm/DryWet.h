@@ -67,7 +67,7 @@ protected:
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
 	virtual void   do_clean_quick ();
-	virtual void   do_process_block (ProcInfo &proc);
+	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
 
@@ -75,8 +75,8 @@ protected:
 
 private:
 
-	void           copy (const ProcInfo &proc, int chn_ofs, float lvl);
-	void           mix (const ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
+	void           copy (const piapi::ProcInfo &proc, int chn_ofs, float lvl);
+	void           mix (const piapi::ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
 
 	State          _state;
 

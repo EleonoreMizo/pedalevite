@@ -41,10 +41,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold4Simd.h"
+#include "mfx/piapi/EventTs.h"
 #include "mfx/Cst.h"
 #include "mfx/MeterResultSet.h"
 #include "mfx/WaMsgQueue.h"
-#include "piapi/EventTs.h"
 
 #include <atomic>
 #include <vector>
@@ -56,6 +56,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+namespace piapi
+{
+	class ProcInfo;
+}
 
 class PluginPool;
 class ProcessingContext;
@@ -127,9 +131,9 @@ private:
 	void           check_signal_level (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	void           copy_output (float * const * dst_arr, int nbr_spl);
 	void           process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl);
-	void           process_single_plugin (int plugin_id, piapi::PluginInterface::ProcInfo &proc_info);
-	void           prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node, bool use_byp_as_src_flag);
-	void           handle_signals (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node);
+	void           process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info);
+	void           prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContextNode &node, bool use_byp_as_src_flag);
+	void           handle_signals (piapi::ProcInfo &proc_info, const ProcessingContextNode &node);
 
 	void           handle_msg_ctx (WaMsg::Ctx &msg);
 	void           handle_msg_param (WaMsg::Param &msg);

@@ -100,9 +100,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/pi/cpx/Compex.h"
 #include "mfx/pi/cpx/Param.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <algorithm>
 
@@ -216,7 +218,7 @@ int	Compex::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -228,12 +230,10 @@ void	Compex::do_clean_quick ()
 
 
 
-void	Compex::do_process_block (ProcInfo &proc)
+void	Compex::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_in =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_out =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
+	const int      nbr_chn_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
+	const int      nbr_chn_out = proc._nbr_chn_arr [piapi::Dir_OUT];
 
 	_nbr_chn_in  = nbr_chn_in;
 	_nbr_chn_ana = nbr_chn_in;

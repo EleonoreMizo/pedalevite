@@ -75,7 +75,7 @@ protected:
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
 	virtual void   do_clean_quick ();
-	virtual void   do_process_block (ProcInfo &proc);
+	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
 
@@ -97,13 +97,13 @@ private:
 	void           update_param (bool force_flag);
 
 	void           restart_gen ();
-	void           gen_noise (ProcInfo &proc);
-	void           gen_tone (ProcInfo &proc);
-	void           gen_sweep (ProcInfo &proc);
-	void           gen_sweep_running (ProcInfo &proc);
-	void           gen_pulse (ProcInfo &proc);
-	void           handle_pause (ProcInfo &proc);
-	void           dup_mono_out (ProcInfo &proc);
+	void           gen_noise (piapi::ProcInfo &proc);
+	void           gen_tone (piapi::ProcInfo &proc);
+	void           gen_sweep (piapi::ProcInfo &proc);
+	void           gen_sweep_running (piapi::ProcInfo &proc);
+	void           gen_pulse (piapi::ProcInfo &proc);
+	void           handle_pause (piapi::ProcInfo &proc);
+	void           dup_mono_out (piapi::ProcInfo &proc);
 	uint32_t       compute_phase_step (int pos);
 
 	static inline float

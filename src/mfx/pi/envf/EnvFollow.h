@@ -74,7 +74,7 @@ protected:
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
 	virtual void   do_clean_quick ();
-	virtual void   do_process_block (ProcInfo &proc);
+	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
 
@@ -111,7 +111,7 @@ private:
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
 	float          conv_time_to_coef (float t);
-	void           square_block (const ProcInfo &proc);
+	void           square_block (const piapi::ProcInfo &proc);
 	void           clip_block (int nbr_spl);
 
 	State          _state;

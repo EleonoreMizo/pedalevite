@@ -29,8 +29,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/Central.h"
 #include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/CtrlLinkSet.h"
+#include "mfx/piapi/BypassState.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/piapi/PluginInterface.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <algorithm>
 #include <array>
@@ -80,7 +83,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 {
 	_msg_pool.expand_to (1024);
 
-	_dummy_mix_id = _plugin_pool.create (Cst::_plugin_mix);
+	_dummy_mix_id = _plugin_pool.create (Cst::_plugin_dwm);
 }
 
 
@@ -147,7 +150,7 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 		int            latency = 0;
 		int            ret_val =
 			details._pi_uptr->reset (sample_freq, max_block_size, latency);
-		assert (ret_val == piapi::PluginInterface::Err_OK);
+		assert (ret_val == piapi::Err_OK);
 		ret_val = ret_val; // -Wunused-variable
 	}
 	_audio.set_process_info (sample_freq, max_block_size);
@@ -369,7 +372,7 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 				_max_block_size,
 				latency
 			);
-			assert (ret_val == piapi::PluginInterface::Err_OK);
+			assert (ret_val == piapi::Err_OK);
 			ret_val = ret_val; // -Wunused-variable
 		}
 		check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
@@ -397,13 +400,13 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 				evt._evt._param._val     = float (state_ptr->_param_list [index]);
 			}
 
-			piapi::PluginInterface::ProcInfo proc_info;
+			piapi::ProcInfo   proc_info;
 			proc_info._byp_arr   = 0;
-			proc_info._byp_state = piapi::PluginInterface::BypassState_IGNORE;
+			proc_info._byp_state = piapi::BypassState_IGNORE;
 			proc_info._dst_arr   = &dst_ptr_arr [0];
 			proc_info._evt_arr   = (nbr_param > 0) ? &evt_ptr_list [0] : 0;
-			proc_info._nbr_chn_arr [piapi::PluginInterface::Dir_IN ] = 2;
-			proc_info._nbr_chn_arr [piapi::PluginInterface::Dir_OUT] = 2;
+			proc_info._nbr_chn_arr [piapi::Dir_IN ] = 2;
+			proc_info._nbr_chn_arr [piapi::Dir_OUT] = 2;
 			proc_info._nbr_evt   = int (evt_ptr_list.size ());
 			proc_info._nbr_spl   = _max_block_size;
 			proc_info._sig_arr   = &sig_ptr_arr [0];
@@ -426,7 +429,7 @@ void	Central::remove_plugin (int pos)
 // Returns the plug-in Id
 int	Central::set_mixer (int pos)
 {
-	return set_plugin (pos, Cst::_plugin_mix, PiType_MIX, false, true);
+	return set_plugin (pos, Cst::_plugin_dwm, PiType_MIX, false, true);
 }
 
 
@@ -888,7 +891,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 							int            ret_val = details._pi_uptr->reset (
 								_sample_freq, _max_block_size, latency
 							);
-							assert (ret_val == piapi::PluginInterface::Err_OK);
+							assert (ret_val == piapi::Err_OK);
 							ret_val = ret_val; // -Wunused-variable
 						}
 						break;
@@ -911,7 +914,7 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 					_max_block_size,
 					latency
 				);
-				assert (ret_val == piapi::PluginInterface::Err_OK);
+				assert (ret_val == piapi::Err_OK);
 				ret_val = ret_val; // -Wunused-variable
 			}
 			check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);

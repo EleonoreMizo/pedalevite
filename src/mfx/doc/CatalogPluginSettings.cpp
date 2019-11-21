@@ -122,7 +122,7 @@ void	CatalogPluginSettings::ser_read (SerRInterface &ser, std::string pi_model)
 		Cell &         cell = *(_cell_arr [index]);
 		ser.read (cell._name);
 		cell._main.ser_read (ser, pi_model);
-		cell._mixer.ser_read (ser, Cst::_plugin_mix);
+		cell._mixer.ser_read (ser, Cst::_plugin_dwm);
 
 		ser.end_list ();
 	}

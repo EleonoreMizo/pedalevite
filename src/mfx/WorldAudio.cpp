@@ -26,6 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/BitFieldSparseIterator.h"
 #include "fstb/DataAlign.h"
+#include "mfx/piapi/BypassState.h"
+#include "mfx/piapi/ProcInfo.h"
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/Cst.h"
 #include "mfx/Dir.h"
@@ -694,7 +696,7 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 
 void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl)
 {
-	piapi::PluginInterface::ProcInfo proc_info;
+	piapi::ProcInfo   proc_info;
 	BufSrcArr      src_arr;
 	BufDstArr      dst_arr;
 	BufDstArr      byp_arr;
@@ -710,8 +712,8 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 
 	// Main plug-in
 	proc_info._byp_state = (pi_ctx._mixer_flag)
-		? piapi::PluginInterface::BypassState_ASK
-		: piapi::PluginInterface::BypassState_IGNORE;
+		? piapi::BypassState_ASK
+		: piapi::BypassState_IGNORE;
 	prepare_buffers (proc_info, pi_ctx._node_arr [PiType_MAIN], false);
 
 	process_single_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info);
@@ -734,13 +736,13 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	handle_signals (proc_info, pi_ctx._node_arr [PiType_MAIN]);
 
 	const bool       bypass_produced_flag =
-		(proc_info._byp_state == piapi::PluginInterface::BypassState_PRODUCED);
+		(proc_info._byp_state == piapi::BypassState_PRODUCED);
 
 	// Bypass/Mix/Gain
 	/*** To do: Is it the right test? or just pi_ctx._mixer_flag? ***/
 	if (proc_info._byp_state)
 	{
-		proc_info._byp_state = piapi::PluginInterface::BypassState_IGNORE;
+		proc_info._byp_state = piapi::BypassState_IGNORE;
 		prepare_buffers (proc_info, pi_ctx._node_arr [PiType_MIX], bypass_produced_flag);
 
 		process_single_plugin (pi_ctx._node_arr [PiType_MIX]._pi_id, proc_info);
@@ -750,7 +752,7 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 
 
 // Fills the event-related members in proc_info.
-void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::ProcInfo &proc_info)
+void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info)
 {
 	_evt_arr.clear ();
 	_evt_ptr_arr.clear ();
@@ -841,7 +843,7 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::PluginInterface::P
 
 // Content of byp_arr is used for the second half of the source channels
 // if use_byp_as_src_flag is set.
-void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node, bool use_byp_as_src_flag)
+void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContextNode &node, bool use_byp_as_src_flag)
 {
 	const float ** src_arr = const_cast <const float **> (proc_info._src_arr);
 	float **       dst_arr = const_cast <      float **> (proc_info._dst_arr);
@@ -910,7 +912,7 @@ void	WorldAudio::prepare_buffers (piapi::PluginInterface::ProcInfo &proc_info, c
 
 
 
-void	WorldAudio::handle_signals (piapi::PluginInterface::ProcInfo &proc_info, const ProcessingContextNode &node)
+void	WorldAudio::handle_signals (piapi::ProcInfo &proc_info, const ProcessingContextNode &node)
 {
 	for (int sig_pos = 0; sig_pos < node._nbr_sig; ++sig_pos)
 	{

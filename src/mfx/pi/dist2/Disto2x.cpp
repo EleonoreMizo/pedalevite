@@ -32,7 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/dist2/Disto2x.h"
 #include "mfx/pi/dist2/Param.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventTs.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <algorithm>
 
@@ -232,7 +234,7 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	latency = fstb::round_int (latency_f);
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -244,11 +246,11 @@ void	Disto2x::do_clean_quick ()
 
 
 
-void	Disto2x::do_process_block (ProcInfo &proc)
+void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 {
 	// Channels
-	const int      nbr_chn_src = proc._nbr_chn_arr [Dir_IN ];
-	const int      nbr_chn_dst = proc._nbr_chn_arr [Dir_OUT];
+	const int      nbr_chn_src = proc._nbr_chn_arr [piapi::Dir_IN ];
+	const int      nbr_chn_dst = proc._nbr_chn_arr [piapi::Dir_OUT];
 	assert (nbr_chn_src <= nbr_chn_dst);
 
 	// Events

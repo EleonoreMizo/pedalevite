@@ -651,6 +651,10 @@
     <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\BypassState.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\Err.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
