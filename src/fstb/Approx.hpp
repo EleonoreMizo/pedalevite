@@ -554,8 +554,7 @@ ToolsSimd::VectF32	Approx::tanh_2dat (ToolsSimd::VectF32 x)
 	num  = fstb::ToolsSimd::fmadd (num, x2, n1);
 	num  = fstb::ToolsSimd::fmadd (num, x2, n0);
 	num *= xs;
-	auto           den = d3;
-	den *= x2;
+	auto           den = x2 + d3;
 	den  = fstb::ToolsSimd::fmadd (den, x2, d2);
 	den  = fstb::ToolsSimd::fmadd (den, x2, d1);
 	den  = fstb::ToolsSimd::fmadd (den, x2, d0);
