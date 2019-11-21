@@ -118,7 +118,7 @@ signal.</p>
 <p><strong>Important&#8239;:</strong> ne pas brancher la sortie de Pédale Vite
 sur l’entrée d’un appareil (console ou autre) qui aurait son alimentation
 fantôme allumée.
-Cela endommagerait Pédale Vite dont les sorties n’étant pas découplées.</p>
+Cela endommagerait Pédale Vite dont les sorties ne sont pas découplées.</p>
 
 <h4>Face supérieure</h4>
 
@@ -312,7 +312,10 @@ le programme et la banque courantes en haut, les contrôleurs utilisés par
 le programme ou le dernier paramètre modifié au milieu, et l’adresse IP du
 Raspberry Pi en bas, quand elle est disponible.
 En effet il est nécessaire de connaître cette dernière pour se connecter en
-SSH à la machine afin d’effectuer des opérations de maintenance.</p>
+SSH à la machine afin d’effectuer des opérations de maintenance.
+Si vous avez la main sur le serveur DHCP de votre réseau local, vous pouvez
+attribuer à Pédale Vite une adresse IP fixe, ce qui simplifiera ce type
+d’opération.</p>
 <p>La touche <span class="key">Esc</span> dans cet écran permet également
 l’accès à certaines fonctionnalités de nettoyage.
 La fonctionnalité obtenue est fonction du nombre d’appuis
@@ -702,9 +705,9 @@ superposent.</p>
 <div class="pic"><img src="pedalboard-layout.png" /></div>
 <p>La liste ci-dessus permet de d’observer d’un rapide coup d’œil quelles sont
 les actions de chaque pédale.
-Les douze pédales sont numérotées en deux rangées&#8239;: la supérieure
-d’abord (la plus éloignée), de 1 à 6 de gauche à droite, puis l’inférieure (la
-plus proche) de 7 à 12.
+Les douze pédales sont numérotées en deux rangées&#8239;: l’inférieure d’abord
+(la plus proche), de 1 à 6 de gauche à droite, puis la supérieure (la plus
+éloignée) de 7 à 12.
 Utiliser les flèches verticales pour naviguer et
 <span class="key">Select</span> pour éditer une pédale.</p>
 
@@ -747,7 +750,25 @@ D’autre part, les modes <span class="ui">Hold</span> et
 <div class="pic"><img src="pedalboard-layout-step.png" /></div>
 <p>Le menu ci-dessus permet de modifier une étape.
 Une étape est constituée une ou plusieurs actions, qui seront menées
-simultanément lors de l’activation de l’étape.</p>
+simultanément lors de l’activation de l’étape.
+Les actions disponibles sont les suivantes&#8239;:</p>
+<ul>
+<table>
+<tr><td><span class="ui">Bank</span></td><td>Active une banque fixe, ou passe à la précédente ou la suivante.</td></tr>
+<tr><td><span class="ui">Program</span></td><td>Active un programme fixe, ou passe au précédent ou au suivant.</td></tr>
+<tr><td><span class="ui">Tuner toggle</span></td><td>Active ou désactive l’accordeur.</td></tr>
+<tr><td><span class="ui">FX toggle</span></td><td>(pas encore disponible, utiliser à la place <span class="ui">Parameter</span> avec le paramètre de bypass)</td></tr>
+<tr><td><span class="ui">Loop record</span></td><td>(pas encore disponible)</td></tr>
+<tr><td><span class="ui">Loop play/stop</span></td><td>(pas encore disponible)</td></tr>
+<tr><td><span class="ui">Loop undo</span></td><td>(pas encore disponible)</td></tr>
+<tr><td><span class="ui">Parameter</span></td><td>Donne une valeur particulière à un paramètre d’un effet donné. L’effet peut être identifié par son type ou par son nom.</td></tr>
+<tr><td><span class="ui">Tempo tap</span></td><td>En associant cette fonction à une pédale, on peut fixer le tempo en battant le rythme sur ladite pédale.</td></tr>
+<tr><td><span class="ui">Preset</span></td><td>Active un preset pour un effet donné, avec un numéro fixe, ou en passant au précédent ou au suivant. L’effet peut être identifié par son type ou par son nom.</td></tr>
+<tr><td><span class="ui">Event</span></td><td>(pas encore disponible)</td></tr>
+<tr><td><span class="ui">Tempo set</span></td><td>Fixe le tempo à une valeur donnée.</td></tr>
+<tr><td><span class="ui">Click</span></td><td>Active ou désactive le métronome.</td></tr>
+</table>
+</ul>
 
 
 
@@ -821,9 +842,10 @@ universel, anciennement GMT) et non en heure locale.</p>
 sélectionner le champ à éditer, et les flèches horizontales pour modifier
 ledit champ.
 La date est mise à jour de manière effective dès qu’on sort de l’écran par
-<span class="key">Esc</span> ou <span class="key">Select</span>.
-Pour des raisons techniques, le programme de Pédale Vite est redémarré après
-un changement de date, et toute modification non sauvegardée sera perdue.</p>
+<span class="key">Esc</span> ou <span class="key">Select</span>.</p>
+<p><strong>Important&#8239;:</strong> pour des raisons techniques, le
+programme de Pédale Vite est redémarré automatiquement après un changement de
+date, et toute modification non sauvegardée sera perdue.</p>
 
 <div class="pic"><img src="backup-date.png" /></div>
 
@@ -885,7 +907,8 @@ flèches horizontales&#8239;:</p>
 <p>L’écran affiche la note détectée la plus proche dans l’accordage
 sélectionné.
 Les LED permettent de savoir quand l’accordage est bon.
-La déviation en cents est également donnée à l’écran.</p>
+La déviation en cents est également donnée à l’écran, ce qui permet
+éventuellement d’effectuer un accordage micro-tonal.</p>
 
 
 <h3><a id="screen-restart"></a>Redémarrage</h3>
