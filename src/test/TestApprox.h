@@ -51,11 +51,21 @@ protected:
 private:
 
 	template <typename T, int ILL2>
-	class TestFnc
+	class TestFncSpeed
 	{
+		static_assert (ILL2 >= 0, "ILL2 must be in [0 ; 3]");
+		static_assert (ILL2 <= 3, "ILL2 must be in [0 ; 3]");
 	public:
 		template <typename OP, typename S>
 		static void    test_op1 (const OP &op, const char name_0 [], S min_val, S max_val);
+	};
+
+	template <typename T, bool REL_FLAG>
+	class TestFncLogic
+	{
+	public:
+		template <typename OPTST, typename OPREF, typename S>
+		static void    test_op1 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val, S max_val);
 	};
 
 

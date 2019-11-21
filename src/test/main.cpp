@@ -1770,7 +1770,7 @@ int main (int argc, char *argv [])
 	#endif
 #endif
 
-#if 0
+#if 1
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
 #endif
 
