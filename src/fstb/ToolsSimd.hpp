@@ -785,9 +785,9 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v)
 	int32x4_t      spl_exp       = vreinterpretq_s32_f32 (v * multi);
 	spl_exp = spl_exp - vreinterpretq_s32_f32 (one);
 	spl_exp = vandq_s32 (vmvnq_s32 (mantissa_mask), spl_exp);
-	const __m128   spl_mantissa  = vreinterpretq_f32_s32 (x_i - spl_exp);
+	const float32x4_t   spl_mantissa  = vreinterpretq_f32_s32 (x_i - spl_exp);
 	spl_exp = vshrq_n_s32 (spl_exp, 23);
-	const __m128   log2_exponent = vcvtq_f32_s32 (spl_exp);
+	const float32x4_t   log2_exponent = vcvtq_f32_s32 (spl_exp);
 
 #endif // ff_arch_CPU
 

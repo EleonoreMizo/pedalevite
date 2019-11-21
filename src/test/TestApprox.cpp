@@ -448,7 +448,7 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const char name
 			if (ILL2 > 2) { a [5] = src_arr [pos + 5]; }
 			if (ILL2 > 2) { a [6] = src_arr [pos + 6]; }
 			if (ILL2 > 2) { a [7] = src_arr [pos + 7]; }
-			
+
 			if (true    ) { dst_arr [pos    ] = op (a [0]); }
 			if (ILL2 > 0) { dst_arr [pos + 1] = op (a [1]); }
 			if (ILL2 > 1) { dst_arr [pos + 2] = op (a [2]); }
@@ -475,8 +475,6 @@ template <typename T, bool REL_FLAG>
 template <typename OPTST, typename OPREF, typename S>
 void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val, S max_val)
 {
-	const int      s_per_t = sizeof (T) / sizeof (S);
-
 	printf ("Logic test %s... ", name_0);
 	fflush (stdout);
 
