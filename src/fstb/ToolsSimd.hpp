@@ -519,12 +519,19 @@ float	ToolsSimd::max_h_flt (VectF32 v)
 
 
 
+// Assumes "to nearest" rounding mode on x86
 ToolsSimd::VectF32	ToolsSimd::round (VectF32 v)
 {
 #if fstb_IS (ARCHI, X86)
 	return _mm_cvtepi32_ps (_mm_cvtps_epi32 (v));
 #elif fstb_IS (ARCHI, ARM)
-	return vcvtq_f32_s32 (vcvtq_s32_f32 (v));
+	const auto     zero = vdupq_n_f32 ( 0.0f);
+	const auto     m    = vdupq_n_f32 (-0.5f);
+	const auto     p    = vdupq_n_f32 (+0.5f);
+	const auto     gt0  = vcgtq_f32 (v, zero);
+	const auto     u    = vbslq_f32 (gt0, p, m);
+	v = vaddq_f32 (v, u);
+	return v;
 #endif // ff_arch_CPU
 }
 
@@ -697,12 +704,17 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx2 (VectF32 v)
 
 ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
 {
+	const int32_t  log2_sub = 128;
+	const float		coef_a   = -1.f / 3;
+	const float		coef_b   =  2.f;
+	const float		coef_c   = -2.f / 3;
+
 #if fstb_IS (ARCHI, X86)
 
 	// Extracts the exponent (actually log2_int = exponent - 1)
 	__m128i        xi = _mm_castps_si128 (v);
 	xi = _mm_srli_epi32 (xi, 23);
-	const __m128i  l2_sub = _mm_set1_epi32 (_log2_sub);
+	const __m128i  l2_sub = _mm_set1_epi32 (log2_sub);
 	xi = _mm_sub_epi32 (xi, l2_sub);
 	const auto     log2_int = _mm_cvtepi32_ps (xi);
 
@@ -710,14 +722,14 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
 
 	int32x4_t      xi = vreinterpretq_s32_f32 (v);
 	xi = vshrq_n_s32 (xi, 23);
-	const int32x4_t   l2_sub = vdupq_n_s32 (_log2_sub);
+	const int32x4_t   l2_sub = vdupq_n_s32 (log2_sub);
 	xi -= l2_sub;
 	const auto     log2_int = vcvtq_f32_s32 (xi);
 
 #endif // ff_arch_CPU
 
 	// Extracts the multiplicative part in [1 ; 2[
-	const auto     mask_mantissa = set1_f32 (1.1754942e-38f);  // Binary: (1 << 23) - 1
+	const auto     mask_mantissa = set1_f32 (1.17549421e-38f); // Binary: (1 << 23) - 1
 	auto           part          = and_f32 (v, mask_mantissa);
 	const auto     bias          = set1_f32 (1.0f);            // Binary: 127 << 23
 	part = or_f32 (part, bias);
@@ -727,12 +739,12 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
 	// Ensures the C1 continuity over the whole range.
 	// Its exact inverse is:
 	// x = 3 - sqrt (7 - 3*y)
-	const auto     a = set1_f32 (_log2_coef_a);
+	const auto     a = set1_f32 (coef_a);
 	auto           poly = a * part;
-	const auto     b = set1_f32 (_log2_coef_b);
+	const auto     b = set1_f32 (coef_b);
 	poly += b;
 	poly *= part;
-	const auto     c = set1_f32 (_log2_coef_c);
+	const auto     c = set1_f32 (coef_c);
 	poly += c;
 
 	// Sums the components
@@ -743,15 +755,69 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
 
 
 
+// Formula by 2DaT
+// 12-13 ulp
+// https://www.kvraudio.com/forum/viewtopic.php?f=33&t=532048
+ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v)
+{
+	const auto     c0    = set1_f32 (1.011593342e+01f);
+	const auto     c1    = set1_f32 (1.929443550e+01f);
+	const auto     d0    = set1_f32 (2.095932245e+00f);
+	const auto     d1    = set1_f32 (1.266638851e+01f);
+	const auto     d2    = set1_f32 (6.316540241e+00f);
+	const auto     one   = set1_f32 (1.0f);
+	const auto     multi = set1_f32 (1.41421356237f);
+	const auto     mantissa_mask = set1_s32 ((1 << 23) - 1);
+
+#if fstb_IS (ARCHI, X86)
+
+	__m128i        x_i           = _mm_castps_si128 (v);
+	__m128i        spl_exp       = _mm_castps_si128 (v * multi);
+	spl_exp = spl_exp - _mm_castps_si128 (one);
+	spl_exp = _mm_andnot_si128 (mantissa_mask, spl_exp);
+	const __m128   spl_mantissa  = _mm_castsi128_ps (x_i - spl_exp);
+	spl_exp = _mm_srai_epi32 (spl_exp, 23);
+	const __m128   log2_exponent = _mm_cvtepi32_ps (spl_exp);
+
+#elif fstb_IS (ARCHI, ARM)
+
+	const int32x4_t   x_i        = vreinterpretq_s32_f32 (v);
+	int32x4_t      spl_exp       = vreinterpretq_s32_f32 (v * multi);
+	spl_exp = spl_exp - vreinterpretq_s32_f32 (one);
+	spl_exp = vandq_s32 (vmvnq_s32 (mantissa_mask), spl_exp);
+	const __m128   spl_mantissa  = vreinterpretq_f32_s32 (x_i - spl_exp);
+	spl_exp = vshrq_n_s32 (spl_exp, 23);
+	const __m128   log2_exponent = vcvtq_f32_s32 (spl_exp);
+
+#endif // ff_arch_CPU
+
+	auto           num = spl_mantissa + c1;
+	num = fmadd (num, spl_mantissa, c0);
+	num *= spl_mantissa - one;
+
+	auto           den = d2;
+	den = fmadd (den, spl_mantissa, d1);
+	den = fmadd (den, spl_mantissa, d0);
+
+	auto           res = div_approx2 (num, den);
+	res += log2_exponent;
+
+	return res;
+}
+
+
+
 ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 {
+	const int32_t  exp2_add = 127;
+	const float    coef_a   =  1.f / 3;
+	const float    coef_b   =  2.f / 3;
+	const float    coef_c   =  1.f;
 
 	// Separates integer and fractional parts
 #if fstb_IS (ARCHI, X86)
 	const auto     round_toward_m_i = set1_f32 (-0.5f);
-	auto           x    = v + v + round_toward_m_i;
-	auto           xi   = _mm_cvtps_epi32 (x);
-	xi = _mm_srai_epi32 (xi, 1);	// We'll use it later
+	auto           xi        = _mm_cvtps_epi32 (v + round_toward_m_i);
 	const auto     val_floor = _mm_cvtepi32_ps (xi);
 #elif fstb_IS (ARCHI, ARM)
 	const int      round_ofs = 256;
@@ -762,27 +828,27 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 
 	const auto     frac = v - val_floor;
 
-	// Computes the polynomial [0 ; 1[ -> [1 ; 2[
+	// Computes the polynomial [0 ; 1] -> [1 ; 2]
 	// y = 1/3*x^2 + 2/3*x + 1
 	// Ensures the C1 continuity over the whole range.
 	// Its exact inverse is:
 	// x = sqrt (3*y - 2) - 1
-	const auto     a    = set1_f32 (_exp2_coef_a);
+	const auto     a    = set1_f32 (coef_a);
 	auto           poly = a * frac;
-	const auto     b    = set1_f32 (_exp2_coef_b);
+	const auto     b    = set1_f32 (coef_b);
 	poly += b;
 	poly *= frac;
-	const auto     c    = set1_f32 (_exp2_coef_c);
+	const auto     c    = set1_f32 (coef_c);
 	poly += c;
 
 	// Integer part
 #if fstb_IS (ARCHI, X86)
-	const __m128i	e2_add = _mm_set1_epi32 (_exp2_add);
-	xi  = _mm_add_epi32 (xi, e2_add);
+	const __m128i	e2_add = _mm_set1_epi32 (exp2_add);
+	xi += e2_add;
 	xi  = _mm_slli_epi32 (xi, 23);
 	const auto     int_part = _mm_castsi128_ps (xi);
 #elif fstb_IS (ARCHI, ARM)
-	xi += vdupq_n_s32 (_exp2_add);
+	xi += vdupq_n_s32 (exp2_add);
 	xi  = vshlq_n_s32 (xi, 23);
 	const auto     int_part = vreinterpretq_f32_s32 (xi);
 #endif // ff_arch_CPU
@@ -791,6 +857,54 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 
 	return total;
 
+}
+
+
+
+// Formula by 2DaT
+// 3-4 ulp
+// https://www.kvraudio.com/forum/viewtopic.php?p=7161124#p7161124
+ToolsSimd::VectF32	ToolsSimd::exp2_approx2 (VectF32 v)
+{
+	// [-0.5, 0.5] 2^x approx polynomial ~ 2.4 ulp
+	const auto     c0 = set1_f32 (1.000000119e+00f);
+	const auto     c1 = set1_f32 (6.931469440e-01f);
+	const auto     c2 = set1_f32 (2.402212024e-01f);
+	const auto     c3 = set1_f32 (5.550713092e-02f);
+	const auto     c4 = set1_f32 (9.675540961e-03f);
+	const auto     c5 = set1_f32 (1.327647245e-03f);
+
+	// i = round (v)
+	// v = v - i   
+#if fstb_IS (ARCHI, X86)
+	auto           i = _mm_cvtps_epi32 (v);          
+	v -= _mm_cvtepi32_ps (i);
+#elif fstb_IS (ARCHI, ARM)
+	const int      round_ofs = 256;
+	const auto     r = set1_f32 (round_ofs + 0.5f);
+	auto           i = vcvtq_s32_f32 (v + r);
+	i -= set1_s32 (round_ofs);
+	v -= vcvtq_f32_s32 (i);
+#endif // ff_arch_CPU
+
+	// Estrin-Horner evaluation scheme
+	const auto     v2  = v * v;
+	const auto     p23 = fmadd (c3, v, c2);
+	const auto     p01 = fmadd (c1, v, c0);
+	auto           p   = fmadd (c5, v, c4);
+	p = fmadd (p, v2, p23);
+	p = fmadd (p, v2, p01);
+
+	// i << 23
+	// r = (2^i) * (2^v)
+	// directly in floating point exponent
+#if fstb_IS (ARCHI, X86)
+	i = _mm_slli_epi32 (i, 23);
+	return _mm_castsi128_ps (i + _mm_castps_si128 (p));
+#elif fstb_IS (ARCHI, ARM)
+	i = vshlq_n_s32 (i, 23);
+	return vreinterpretq_f32_s32 (i + vreinterpretq_s32_f32 (p));
+#endif // ff_arch_CPU
 }
 
 

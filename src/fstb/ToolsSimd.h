@@ -192,7 +192,11 @@ public:
 	static inline VectF32
 	               log2_approx (VectF32 v);
 	static inline VectF32
+	               log2_approx2 (VectF32 v);
+	static inline VectF32
 	               exp2_approx (VectF32 v);
+	static inline VectF32
+	               exp2_approx2 (VectF32 v);
 
 	static inline VectF32
 	               select (VectF32 cond, VectF32 v_t, VectF32 v_f);
@@ -327,25 +331,6 @@ private:
 	template <typename MEM>
 	static inline VectF32
 	               load_f32_part_n13 (const MEM *ptr, int n);
-
-
-	static const int32_t
-	               _log2_sub;
-	static const float
-	               _log2_coef_a;
-	static const float
-	               _log2_coef_b;
-	static const float
-	               _log2_coef_c;
-
-	static const int32_t
-	               _exp2_add;
-	static const float
-	               _exp2_coef_a;
-	static const float
-	               _exp2_coef_b;
-	static const float
-	               _exp2_coef_c;
 
 
 
