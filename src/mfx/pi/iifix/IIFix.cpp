@@ -145,8 +145,8 @@ void	IIFix::do_process_block (piapi::ProcInfo &proc)
 	}
 
 	// Signal processing
-	const int      nbr_chn = proc._nbr_chn_arr [piapi::Dir_IN];
-	assert (nbr_chn == proc._nbr_chn_arr [piapi::Dir_OUT]);
+	const int      nbr_chn = proc._dir_arr [piapi::Dir_IN]._nbr_chn;
+	assert (nbr_chn == proc._dir_arr [piapi::Dir_OUT]._nbr_chn);
 	for (int chn = 0; chn < nbr_chn; ++chn)
 	{
 		_chn_arr [chn].process_block (

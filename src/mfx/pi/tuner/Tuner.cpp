@@ -121,7 +121,7 @@ void	Tuner::do_process_block (piapi::ProcInfo &proc)
 	}
 	_freq = _analyser.process_block (&_buffer [0], nbr_spl_s);
 
-	for (int chn = 0; chn < proc._nbr_chn_arr [piapi::Dir_OUT]; ++chn)
+	for (int chn = 0; chn < proc._dir_arr [piapi::Dir_OUT]._nbr_chn; ++chn)
 	{
 		dsp::mix::Align::clear (&proc._dst_arr [chn] [0], proc._nbr_spl);
 	}

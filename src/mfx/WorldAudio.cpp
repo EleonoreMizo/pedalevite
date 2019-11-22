@@ -828,7 +828,7 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 	plugin.process_block (proc_info);
 
 	// Checks the output
-	if (proc_info._nbr_chn_arr [Dir_OUT] > 0)
+	if (proc_info._dir_arr [Dir_OUT]._nbr_chn > 0)
 	{
 		const float          val = proc_info._dst_arr [0] [0];
 		static const float   thr = 1e9f;
@@ -906,7 +906,7 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 
 	for (int dir = 0; dir < Dir_NBR_ELT; ++dir)
 	{
-		proc_info._nbr_chn_arr [dir] = node._side_arr [dir]._nbr_chn;
+		proc_info._dir_arr [dir]._nbr_chn = node._side_arr [dir]._nbr_chn;
 	}
 }
 

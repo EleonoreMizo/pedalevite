@@ -225,8 +225,8 @@ void	SpeakerEmu::do_clean_quick ()
 
 void	SpeakerEmu::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
-	const int      nbr_chn_out = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int      nbr_chn_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	assert (nbr_chn_in <= nbr_chn_out);
 	const int      nbr_chn_proc = std::min (nbr_chn_in, nbr_chn_out);
 	if (nbr_chn_proc != _nbr_chn)

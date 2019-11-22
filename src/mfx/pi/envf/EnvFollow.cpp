@@ -322,7 +322,7 @@ float	EnvFollow::conv_time_to_coef (float t)
 
 void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_src = proc._nbr_chn_arr [piapi::Dir_IN ];
+	const int      nbr_chn_src = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
 	const int      nbr_spl     = proc._nbr_spl;
 	float *        dst_ptr = &_buf_src [0];
 

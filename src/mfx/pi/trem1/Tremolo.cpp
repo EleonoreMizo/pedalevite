@@ -221,9 +221,9 @@ void	Tremolo::do_process_block (piapi::ProcInfo &proc)
 	const float    vol_end = fstb::ToolsSimd::Shift <1>::extract (vol);
 
 	// Signal processing
-	if (proc._nbr_chn_arr [piapi::Dir_OUT] > 1)
+	if (proc._dir_arr [piapi::Dir_OUT]._nbr_chn > 1)
 	{	
-		const int      nbr_chn_in = proc._nbr_chn_arr [piapi::Dir_IN ];
+		const int      nbr_chn_in = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
 		dsp::mix::Align::copy_2_2_vlrauto (
 			proc._dst_arr [0],
 			proc._dst_arr [1],

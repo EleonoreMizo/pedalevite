@@ -190,8 +190,8 @@ void	DryWet::copy (const piapi::ProcInfo &proc, int chn_ofs, float lvl)
 {
 	static const int  o_out = 1;
 
-	const int            nbr_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
-	const int            nbr_out = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int            nbr_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int            nbr_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	assert (nbr_in == nbr_out);
 	const int            vol     = fstb::is_eq (lvl, 1.0f, 1e-3f) ? 0 : 1;
 	const float * const* src_arr = proc._src_arr + chn_ofs * nbr_in;
@@ -249,8 +249,8 @@ void	DryWet::mix (const piapi::ProcInfo &proc, float lvl_wet_beg, float lvl_wet_
 	static const int  o_in  = 2;
 	static const int  o_out = 0;
 
-	const int            nbr_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
-	const int            nbr_out = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int            nbr_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int            nbr_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	const float * const* src_arr = proc._src_arr;
 	float       * const* dst_arr = proc._dst_arr;
 	const int            nbr_spl = proc._nbr_spl;

@@ -274,7 +274,7 @@ int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o
 	{
 		_proc_info._src_arr = &_buf_src_ptr_list [0];
 	}
-	_proc_info._nbr_chn_arr [mfx::piapi::Dir_IN ] = nbr_chn_i;
+	_proc_info._dir_arr [mfx::piapi::Dir_IN ]._nbr_chn = nbr_chn_i;
 
 	for (int chn = 0; chn < nbr_chn_o * nbr_o; ++chn)
 	{
@@ -287,7 +287,7 @@ int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o
 	{
 		_proc_info._dst_arr = &_buf_dst_ptr_list [0];
 	}
-	_proc_info._nbr_chn_arr [mfx::piapi::Dir_OUT] = nbr_chn_o;
+	_proc_info._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn = nbr_chn_o;
 
 	for (int chn = 0; chn < nbr_s; ++chn)
 	{

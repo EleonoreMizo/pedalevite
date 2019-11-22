@@ -161,8 +161,8 @@ void	PEq <NB>::do_clean_quick ()
 template <int NB>
 void	PEq <NB>::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
-	const int      nbr_chn_out = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int      nbr_chn_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	if (nbr_chn_out != _nbr_chn)
 	{
 		_nbr_chn = nbr_chn_out;

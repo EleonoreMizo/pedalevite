@@ -141,8 +141,8 @@ void	FrequencyShifter::do_process_block (piapi::ProcInfo &proc)
 	}
 
 	// Signal processing
-	const int      nbr_chn_i = proc._nbr_chn_arr [piapi::Dir_IN ];
-	const int      nbr_chn_o = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int      nbr_chn_i = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_o = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	const int      nbr_chn_p = std::min (nbr_chn_i, nbr_chn_o);
 	_freq_shift.process_block (
 		proc._dst_arr,

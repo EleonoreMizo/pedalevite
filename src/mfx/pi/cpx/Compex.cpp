@@ -232,8 +232,8 @@ void	Compex::do_clean_quick ()
 
 void	Compex::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
-	const int      nbr_chn_out = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int      nbr_chn_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 
 	_nbr_chn_in  = nbr_chn_in;
 	_nbr_chn_ana = nbr_chn_in;

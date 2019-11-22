@@ -30,6 +30,8 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/piapi/BypassState.h"
 #include "mfx/piapi/Dir.h"
 
+#include <array>
+
 
 
 namespace mfx
@@ -48,6 +50,14 @@ class ProcInfo
 
 public:
 
+	class DirInfo
+	{
+	public:
+		int            _nbr_chn  =  1;
+		int            _nbr_pins = -1; // Negative = all pins can be assumed connected
+	};
+	typedef std::array <DirInfo, Dir_NBR_ELT> DirInfoArray;
+
 	               ProcInfo ()                        = default;
 	               ProcInfo (const ProcInfo &other)   = default;
 	virtual        ~ProcInfo ()                       = default;
@@ -62,7 +72,8 @@ public:
 	               _src_arr   = 0;
 	float * const *
 	               _sig_arr   = 0;
-	int            _nbr_chn_arr [Dir_NBR_ELT];
+
+	DirInfoArray   _dir_arr;
 	BypassState    _byp_state = BypassState_IGNORE; // On input and output
 	int            _nbr_spl   = 0;
 	const EventTs * const *

@@ -227,8 +227,8 @@ void	DistoPwm2::do_clean_quick ()
 
 void	DistoPwm2::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_src = proc._nbr_chn_arr [piapi::Dir_IN ];
-	const int      nbr_chn_dst = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int      nbr_chn_src = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_dst = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	assert (nbr_chn_src <= nbr_chn_dst);
 	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 

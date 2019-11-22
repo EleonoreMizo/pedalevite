@@ -169,8 +169,8 @@ void	Freeverb::do_clean_quick ()
 
 void	Freeverb::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_in  = proc._nbr_chn_arr [piapi::Dir_IN ];
-	const int      nbr_chn_out = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int      nbr_chn_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)

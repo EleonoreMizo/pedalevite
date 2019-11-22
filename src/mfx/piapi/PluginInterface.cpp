@@ -93,18 +93,19 @@ void	PluginInterface::clean_quick ()
 void	PluginInterface::process_block (ProcInfo &proc)
 {
 	assert (get_state () == State_ACTIVE);
-	assert (proc._nbr_chn_arr [Dir_OUT] == 0 || proc._dst_arr  != 0);
-	assert (proc._nbr_chn_arr [Dir_OUT] == 0 || fstb::is_ptr_align_nz (proc._dst_arr [0]));
-	assert (proc._byp_state == BypassState_IGNORE || proc._nbr_chn_arr [Dir_OUT] == 0 || proc._byp_arr [0] != 0);
-	assert (proc._byp_state == BypassState_IGNORE || proc._nbr_chn_arr [Dir_OUT] == 0 || fstb::is_ptr_align_nz (proc._byp_arr [0]));
+	assert (proc._dir_arr [Dir_OUT]._nbr_chn == 0 || proc._dst_arr  != 0);
+	assert (proc._dir_arr [Dir_OUT]._nbr_chn == 0 || fstb::is_ptr_align_nz (proc._dst_arr [0]));
+	assert (proc._byp_state == BypassState_IGNORE || proc._dir_arr [Dir_OUT]._nbr_chn == 0 || proc._byp_arr [0] != 0);
+	assert (proc._byp_state == BypassState_IGNORE || proc._dir_arr [Dir_OUT]._nbr_chn == 0 || fstb::is_ptr_align_nz (proc._byp_arr [0]));
 	assert (proc._byp_state == BypassState_IGNORE || proc._byp_state == BypassState_ASK);
-	assert (proc._nbr_chn_arr [Dir_IN ] == 0 || proc._src_arr [0] != 0);
-	assert (proc._nbr_chn_arr [Dir_IN ] == 0 || fstb::is_ptr_align_nz (proc._src_arr [0]));
-	assert (proc._nbr_chn_arr != 0);
-	assert (proc._nbr_chn_arr [Dir_IN ] >= 0);
-	assert (proc._nbr_chn_arr [Dir_IN ] <= _max_nbr_chn);
-	assert (proc._nbr_chn_arr [Dir_OUT] >= 0);
-	assert (proc._nbr_chn_arr [Dir_OUT] <= _max_nbr_chn);
+	assert (proc._dir_arr [Dir_IN ]._nbr_chn == 0 || proc._src_arr [0] != 0);
+	assert (proc._dir_arr [Dir_IN ]._nbr_chn == 0 || fstb::is_ptr_align_nz (proc._src_arr [0]));
+	assert (proc._dir_arr [Dir_IN ]._nbr_chn >= 0);
+	assert (proc._dir_arr [Dir_IN ]._nbr_chn <= _max_nbr_chn);
+	assert (proc._dir_arr [Dir_OUT]._nbr_chn >= 0);
+	assert (proc._dir_arr [Dir_OUT]._nbr_chn <= _max_nbr_chn);
+	assert (proc._dir_arr [Dir_IN ]._nbr_pins <= _max_nbr_pins);
+	assert (proc._dir_arr [Dir_OUT]._nbr_pins <= _max_nbr_pins);
 	assert (proc._nbr_spl > 0);
 	assert (proc._evt_arr != 0 || proc._nbr_evt == 0);
 	assert (proc._nbr_evt >= 0);

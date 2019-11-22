@@ -405,8 +405,8 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 			proc_info._byp_state = piapi::BypassState_IGNORE;
 			proc_info._dst_arr   = &dst_ptr_arr [0];
 			proc_info._evt_arr   = (nbr_param > 0) ? &evt_ptr_list [0] : 0;
-			proc_info._nbr_chn_arr [piapi::Dir_IN ] = 2;
-			proc_info._nbr_chn_arr [piapi::Dir_OUT] = 2;
+			proc_info._dir_arr [piapi::Dir_IN ]._nbr_chn = 2;
+			proc_info._dir_arr [piapi::Dir_OUT]._nbr_chn = 2;
 			proc_info._nbr_evt   = int (evt_ptr_list.size ());
 			proc_info._nbr_spl   = _max_block_size;
 			proc_info._sig_arr   = &sig_ptr_arr [0];

@@ -208,7 +208,7 @@ void	TestGen::do_process_block (piapi::ProcInfo &proc)
 
 	else
 	{
-		const int      nbr_chn = proc._nbr_chn_arr [piapi::Dir_OUT];
+		const int      nbr_chn = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 		for (int chn_index = 0; chn_index < nbr_chn; ++chn_index)
 		{
 			dsp::mix::Align::clear (proc._dst_arr [chn_index], proc._nbr_spl);
@@ -307,7 +307,7 @@ void	TestGen::gen_noise (piapi::ProcInfo &proc)
 {
 	const int      nbr_chn =
 		  (_multichn_flag)
-		? proc._nbr_chn_arr [piapi::Dir_OUT]
+		? proc._dir_arr [piapi::Dir_OUT]._nbr_chn
 		: 1;
 
 	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
@@ -481,7 +481,7 @@ void	TestGen::handle_pause (piapi::ProcInfo &proc)
 	}
 	if (_pause_flag)
 	{
-		const int      nbr_chn = proc._nbr_chn_arr [piapi::Dir_OUT];
+		const int      nbr_chn = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 		for (int chn_index = 0; chn_index < nbr_chn; ++chn_index)
 		{
 			dsp::mix::Align::clear (proc._dst_arr [chn_index], proc._nbr_spl);
@@ -493,7 +493,7 @@ void	TestGen::handle_pause (piapi::ProcInfo &proc)
 
 void	TestGen::dup_mono_out (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn = proc._nbr_chn_arr [piapi::Dir_OUT];
+	const int      nbr_chn = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	for (int chn_index = 1; chn_index < nbr_chn; ++chn_index)
 	{
 		dsp::mix::Align::copy_1_1 (
