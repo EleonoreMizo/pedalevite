@@ -2973,6 +2973,9 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h">
       <Filter>mfx\cmd\lat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\Document.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4084,6 +4087,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp">
       <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\Document.cpp">
+      <Filter>mfx\cmd</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

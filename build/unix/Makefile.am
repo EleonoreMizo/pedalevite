@@ -230,6 +230,8 @@ commonsrc = \
         ../../src/mfx/cmd/Central.h \
         ../../src/mfx/cmd/CentralCbInterface.cpp \
         ../../src/mfx/cmd/CentralCbInterface.h \
+        ../../src/mfx/cmd/Document.cpp \
+        ../../src/mfx/cmd/Document.h \
         ../../src/mfx/cmd/Plugin.h \
         ../../src/mfx/cmd/Slot.h \
         ../../src/mfx/doc/ActionBank.cpp \

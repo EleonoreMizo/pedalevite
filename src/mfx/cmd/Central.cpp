@@ -488,7 +488,7 @@ void	Central::set_pi_state (int pi_id, const std::vector <float> &param_list)
 	assert (pi_id >= 0);
 	assert (int (param_list.size ()) == _plugin_pool.use_plugin (pi_id)._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
 
-	Plugin &       plug = find_plugin (doc, pi_id);
+	Plugin &       plug = doc.find_plugin (pi_id);
 
 	plug._param_list = param_list;
 }
@@ -501,7 +501,7 @@ void	Central::clear_mod (int pi_id)
 
 	assert (pi_id >= 0);
 
-	Plugin &       plug = find_plugin (doc, pi_id);
+	Plugin &       plug = doc.find_plugin (pi_id);
 	plug._ctrl_map.clear ();
 }
 
@@ -515,7 +515,7 @@ void	Central::set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls)
 	assert (index >= 0);
 	assert (index < _plugin_pool.use_plugin (pi_id)._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
 
-	Plugin &       plug = find_plugin (doc, pi_id);
+	Plugin &       plug = doc.find_plugin (pi_id);
 
 	plug._ctrl_map [index] = std::shared_ptr <doc::CtrlLinkSet> (
 		new doc::CtrlLinkSet (cls)
@@ -530,7 +530,7 @@ void	Central::set_sig_source (int pi_id, int sig_pin, int port_id)
 
 	assert (sig_pin >= 0);
 
-	Plugin &       plug = find_plugin (doc, pi_id);
+	Plugin &       plug = doc.find_plugin (pi_id);
 
 	if (sig_pin >= int (plug._sig_port_list.size ()))
 	{
@@ -758,7 +758,7 @@ int64_t	Central::get_d2d_size_frames () const
 
 
 
-Central::Document &	Central::modify ()
+Document &	Central::modify ()
 {
 	if (_new_sptr.get () == 0)
 	{
@@ -774,22 +774,6 @@ Central::Document &	Central::modify ()
 	}
 
 	return *_new_sptr;
-}
-
-
-
-Plugin &	Central::find_plugin (Document &doc, int pi_id)
-{
-	auto           it_loc = doc._map_id_loc.find (pi_id);
-	assert (it_loc != doc._map_id_loc.end ());
-
-	const int      pos  = it_loc->second._slot_pos;
-	const PiType   type = it_loc->second._type;
-
-	Slot &         slot = doc._slot_list [pos];
-	Plugin &       plug = slot._component_arr [type];
-
-	return plug;
 }
 
 
