@@ -262,6 +262,9 @@
     <Filter Include="mfx\pi\dly0">
       <UniqueIdentifier>{bdb91cdf-45d2-42de-a057-bc43899e7508}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\cmd\lat">
+      <UniqueIdentifier>{99c33e30-e740-4bb6-8365-7f18ba802940}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2952,6 +2955,24 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Cst.h">
       <Filter>mfx\pi\dly0</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Algo.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Cnx.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\GraphInterface.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Node.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Tools.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4045,6 +4066,24 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\mix\MixDesc.cpp">
       <Filter>mfx\pi\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Algo.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\GraphInterface.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp">
+      <Filter>mfx\cmd\lat</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

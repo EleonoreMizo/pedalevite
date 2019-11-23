@@ -320,6 +320,12 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\Central.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\BufAlloc.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\CentralCbInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Algo.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Cnx.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\GraphInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Node.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Tools.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Plugin.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Slot.h" />
     <ClInclude Include="..\..\..\src\mfx\ControlCurve.h" />
@@ -1053,6 +1059,12 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\Central.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\BufAlloc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\CentralCbInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Algo.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\GraphInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlSource.cpp" />

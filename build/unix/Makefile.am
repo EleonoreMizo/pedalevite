@@ -212,6 +212,18 @@ commonsrc = \
         ../../src/mfx/adrv/DPvabI2s.h \
         ../../src/mfx/adrv/DriverInterface.cpp \
         ../../src/mfx/adrv/DriverInterface.h \
+        ../../src/mfx/cmd/lat/Algo.cpp \
+        ../../src/mfx/cmd/lat/Algo.h \
+        ../../src/mfx/cmd/lat/Cnx.cpp \
+        ../../src/mfx/cmd/lat/Cnx.h \
+        ../../src/mfx/cmd/lat/GraphInterface.cpp \
+        ../../src/mfx/cmd/lat/GraphInterface.h \
+        ../../src/mfx/cmd/lat/Node.cpp \
+        ../../src/mfx/cmd/lat/Node.h \
+        ../../src/mfx/cmd/lat/Tools.cpp \
+        ../../src/mfx/cmd/lat/Tools.h \
+        ../../src/mfx/cmd/lat/TreeList.cpp \
+        ../../src/mfx/cmd/lat/TreeList.h \
         ../../src/mfx/cmd/BufAlloc.cpp \
         ../../src/mfx/cmd/BufAlloc.h \
         ../../src/mfx/cmd/Central.cpp \
@@ -1230,6 +1242,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
+        ../../src/test/TestLatAlgo.cpp \
+        ../../src/test/TestLatAlgo.h \
         ../../src/test/TestLedSimple.cpp \
         ../../src/test/TestLedSimple.h \
         ../../src/test/TestOscSample.cpp \

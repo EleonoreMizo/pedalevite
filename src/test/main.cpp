@@ -58,6 +58,7 @@
 #include "test/TestConvolverFft.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
+#include "test/TestLatAlgo.h"
 #include "test/TestOscSample.h"
 #include "test/TestOscSampleSyncFade.h"
 #include "test/TestOscSampleSyncHard.h"
@@ -1748,6 +1749,10 @@ int main (int argc, char *argv [])
 
 	int            ret_val = 0;
 
+#if 1
+	if (ret_val == 0) ret_val = TestLatAlgo::perform_test ();
+#endif
+
 #if 0
 	#if fstb_IS (SYS, LINUX)
 	if (ret_val == 0) ret_val = test_file_write_fs_ro ();
@@ -1772,7 +1777,7 @@ int main (int argc, char *argv [])
 	#endif
 #endif
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
 #endif
 
