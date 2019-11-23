@@ -256,6 +256,12 @@
     <Filter Include="mfx\hw">
       <UniqueIdentifier>{24662344-e1d5-4373-88f7-f30f21c827c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\mix">
+      <UniqueIdentifier>{ff1e5cf9-be01-4c8b-94ac-b68493e31970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\dly0">
+      <UniqueIdentifier>{bdb91cdf-45d2-42de-a057-bc43899e7508}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2913,6 +2919,24 @@
     <ClInclude Include="..\..\..\src\mfx\hw\bcm2837.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\mix\Mix.h">
+      <Filter>mfx\pi\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\mix\MixDesc.h">
+      <Filter>mfx\pi\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\mix\Param.h">
+      <Filter>mfx\pi\mix</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h">
       <Filter>mfx\piapi</Filter>
     </ClInclude>
@@ -2924,6 +2948,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\piapi\Err.h">
       <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Cst.h">
+      <Filter>mfx\pi\dly0</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4006,6 +4033,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\Delay.cpp">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\DelayDesc.cpp">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\mix\Mix.cpp">
+      <Filter>mfx\pi\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\mix\MixDesc.cpp">
+      <Filter>mfx\pi\mix</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

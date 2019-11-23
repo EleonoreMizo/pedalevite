@@ -699,6 +699,12 @@ commonsrc = \
         ../../src/mfx/pi/distpwm2/PulseType.h \
         ../../src/mfx/pi/distpwm2/Voice.cpp \
         ../../src/mfx/pi/distpwm2/Voice.h \
+        ../../src/mfx/pi/dly0/Cst.h \
+        ../../src/mfx/pi/dly0/Delay.cpp \
+        ../../src/mfx/pi/dly0/Delay.h \
+        ../../src/mfx/pi/dly0/DelayDesc.cpp \
+        ../../src/mfx/pi/dly0/DelayDesc.h \
+        ../../src/mfx/pi/dly0/Param.h \
         ../../src/mfx/pi/dly1/Cst.h \
         ../../src/mfx/pi/dly1/Delay.cpp \
         ../../src/mfx/pi/dly1/Delay.h \
@@ -800,6 +806,11 @@ commonsrc = \
         ../../src/mfx/pi/lpfs/Squeezer.h \
         ../../src/mfx/pi/lpfs/SqueezerDesc.cpp \
         ../../src/mfx/pi/lpfs/SqueezerDesc.h \
+        ../../src/mfx/pi/mix/Mix.cpp \
+        ../../src/mfx/pi/mix/Mix.h \
+        ../../src/mfx/pi/mix/MixDesc.cpp \
+        ../../src/mfx/pi/mix/MixDesc.h \
+        ../../src/mfx/pi/mix/Param.h \
         ../../src/mfx/pi/nzbl/Cst.h \
         ../../src/mfx/pi/nzbl/FilterBank.cpp \
         ../../src/mfx/pi/nzbl/FilterBank.h \
