@@ -149,7 +149,7 @@ int	TestLatAlgo::test_full ()
 			{ 0, mfx::cmd::lat::Node::Nature_SOURCE },
 			{ 0, mfx::cmd::lat::Node::Nature_SINK   },
 			{ 1, mfx::cmd::lat::Node::Nature_NORMAL },
-			{ -1 }
+			{ -1, mfx::cmd::lat::Node::Nature_NORMAL }
 		},
 		{
 			{ 1, mfx::cmd::lat::Node::Nature_NORMAL },
@@ -158,7 +158,7 @@ int	TestLatAlgo::test_full ()
 			{ 0, mfx::cmd::lat::Node::Nature_SINK   },
 			{ 2, mfx::cmd::lat::Node::Nature_NORMAL },
 			{ 0, mfx::cmd::lat::Node::Nature_NORMAL },
-			{ -1 }
+			{ -1, mfx::cmd::lat::Node::Nature_NORMAL }
 		},
 		{
 			{ 0, mfx::cmd::lat::Node::Nature_NORMAL },
@@ -167,7 +167,7 @@ int	TestLatAlgo::test_full ()
 			{ 1, mfx::cmd::lat::Node::Nature_NORMAL },
 			{ 0, mfx::cmd::lat::Node::Nature_NORMAL },
 			{ 0, mfx::cmd::lat::Node::Nature_NORMAL },
-			{ -1 }
+			{ -1, mfx::cmd::lat::Node::Nature_NORMAL }
 		},
 		{
 			{ 0, mfx::cmd::lat::Node::Nature_NORMAL },
@@ -180,7 +180,7 @@ int	TestLatAlgo::test_full ()
 			{ 1, mfx::cmd::lat::Node::Nature_NORMAL },
 			{ 0, mfx::cmd::lat::Node::Nature_NORMAL },
 			{ 0, mfx::cmd::lat::Node::Nature_NORMAL },
-			{ -1 }
+			{ -1, mfx::cmd::lat::Node::Nature_NORMAL }
 		}
 	};
 	const int      nbr_tests =
@@ -197,7 +197,7 @@ int	TestLatAlgo::test_full ()
 		graph.run ();
 		display_graph (graph);
 
-		printf ("%ld recursive calls.\n", graph.get_bm_nbr_rec_calls ());
+		printf ("%d recursive calls.\n", graph.get_bm_nbr_rec_calls ());
 
 		ret_val = check_graph (graph);
 		if (ret_val != 0)
@@ -217,13 +217,13 @@ int	TestLatAlgo::test_full ()
 
 	if (ret_val == 0)
 	{
-		for (int nbr_tests = 0; nbr_tests < 10 && ret_val == 0; ++nbr_tests)
+		for (int test_cnt = 0; test_cnt < 10 && ret_val == 0; ++test_cnt)
 		{
 			mfx::cmd::lat::Algo  graph;
 			build_graph_random (graph, 100, 150);
 			graph.run ();
 			printf (
-				"%d nodes, %d connexions: %ld recursive calls.\n",
+				"%d nodes, %d connexions: %d recursive calls.\n",
 				graph.get_nbr_nodes (),
 				graph.get_nbr_cnx (),
 				graph.get_bm_nbr_rec_calls ()
@@ -477,7 +477,7 @@ void	TestLatAlgo::display_graph (const mfx::cmd::lat::GraphInterface &graph)
 	{
 		const mfx::cmd::lat::Node &   node = graph.use_node (node_cnt);
 		printf (
-			"%02d: Tree = %01d, TS = %ld, L = %ld, Nat. = %01d\n",
+			"%02d: Tree = %01d, TS = %d, L = %d, Nat. = %01d\n",
 			node_cnt,
 			node.get_tree (),
 			node.get_timestamp (),
@@ -491,7 +491,7 @@ void	TestLatAlgo::display_graph (const mfx::cmd::lat::GraphInterface &graph)
 	{
 		const mfx::cmd::lat::Cnx & cnx = graph.use_cnx (cnx_cnt);
 		printf (
-			"%02d: %02d -> %02d, D = %ld\n",
+			"%02d: %02d -> %02d, D = %d\n",
 			cnx_cnt,
 			cnx.get_node (mfx::piapi::Dir_OUT),
 			cnx.get_node (mfx::piapi::Dir_IN ),

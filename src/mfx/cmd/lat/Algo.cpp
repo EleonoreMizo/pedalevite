@@ -258,8 +258,6 @@ void	Algo::compute_remaining_timestamps (int tree_cnt)
 	assert (tree_cnt >= 0);
    assert (tree_cnt < _tree_list.get_nbr_trees ());
 
-	const int      nbr_nodes = _tree_list.get_nbr_nodes (tree_cnt);
-
 	bool           smth_done_flag;
 	do
 	{
@@ -415,8 +413,6 @@ bool	Algo::compute_timestamp_rec (int node_index, piapi::Dir dir)
 
 				if (next_node.is_timestamp_set ())
 				{
-					const int      next_timestamp =
-						get_timestamp_at (next_node, dir_inv);
 					const int      delay =
 						compute_delay_between (node, next_node, dir);
 					assert (cnx.get_comp_delay () == 0);
