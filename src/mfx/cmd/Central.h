@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/cmd/Document.h"
 #include "mfx/cmd/Plugin.h"
+#include "mfx/cmd/Router.h"
 #include "mfx/cmd/Slot.h"
 #include "mfx/piapi/PluginState.h"
 #include "mfx/ui/UserInputInterface.h"
@@ -183,6 +184,7 @@ private:
 	CentralCbInterface *
 	               _cb_ptr;       // 0 = not set
 
+	Router         _router;
 	DocumentSPtr   _cur_sptr;     // Current state
 	DocumentSPtr   _new_sptr;     // Context being created or modified
 	ContextSet     _ctx_trash;    // Contexts waiting to be finally destroyed.

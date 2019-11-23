@@ -2973,6 +2973,9 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h">
       <Filter>mfx\cmd\lat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\Router.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\cmd\Document.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
@@ -4087,6 +4090,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp">
       <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\Router.cpp">
+      <Filter>mfx\cmd</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\Document.cpp">
       <Filter>mfx\cmd</Filter>

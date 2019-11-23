@@ -328,6 +328,7 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\Tools.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Plugin.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Router.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Slot.h" />
     <ClInclude Include="..\..\..\src\mfx\ControlCurve.h" />
     <ClInclude Include="..\..\..\src\mfx\ControlledParam.h" />
@@ -1067,6 +1068,7 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\Router.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlSource.cpp" />
