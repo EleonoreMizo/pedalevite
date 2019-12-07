@@ -1069,6 +1069,7 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\Plugin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Router.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />

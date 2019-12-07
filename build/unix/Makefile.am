@@ -234,6 +234,7 @@ commonsrc = \
         ../../src/mfx/cmd/DelayInterface.h \
         ../../src/mfx/cmd/Document.cpp \
         ../../src/mfx/cmd/Document.h \
+        ../../src/mfx/cmd/Plugin.cpp \
         ../../src/mfx/cmd/Plugin.h \
         ../../src/mfx/cmd/Router.cpp \
         ../../src/mfx/cmd/Router.h \

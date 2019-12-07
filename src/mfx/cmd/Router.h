@@ -34,8 +34,6 @@ namespace mfx
 
 class PluginPool;
 
-
-
 namespace cmd
 {
 
@@ -53,6 +51,7 @@ public:
 	               Router ()  = default;
 	virtual        ~Router () = default;
 
+	void           set_process_info (double sample_freq, int max_block_size);
 	void           create_routing (Document &doc, PluginPool &plugin_pool);
 
 
@@ -66,6 +65,14 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	void           create_routing_chain (Document &doc, PluginPool &plugin_pool);
+
+	// Sampling rate, Hz. > 0. 0 = not known yet
+	double         _sample_freq    = 0;
+
+	// Maximum processing length, samples. > 0. 0 = not known yet
+	int            _max_block_size = 0;
 
 
 

@@ -46,7 +46,33 @@ namespace cmd
 
 
 
+void	Router::set_process_info (double sample_freq, int max_block_size)
+{
+	assert (sample_freq > 0);
+	assert (max_block_size > 0);
+
+	_sample_freq    = sample_freq;
+	_max_block_size = max_block_size;
+}
+
+
+
 void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
+{
+	create_routing_chain (doc, plugin_pool);
+}
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
 
@@ -112,20 +138,23 @@ void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 				? 2
 				: nbr_chn_in;
 
+			const int      latency   = slot._component_arr [PiType_MAIN]._latency;
+
 			const int      pi_id_mix = slot._component_arr [PiType_MIX]._pi_id;
 
 			// Processing context
 			slot._ctx_index = int (ctx._context_arr.size ());
 			ctx._context_arr.resize (slot._ctx_index + 1);
 			ProcessingContext::PluginContext &  pi_ctx = ctx._context_arr.back ();
-			pi_ctx._mixer_flag  = (pi_id_mix >= 0);
+			pi_ctx._mixer_flag = (pi_id_mix >= 0);
+			ProcessingContextNode & ctx_node_main = pi_ctx._node_arr [PiType_MAIN];
 
 			// Main plug-in
-			pi_ctx._node_arr [PiType_MAIN]._pi_id = pi_id_main;
+			ctx_node_main._pi_id = pi_id_main;
 			ProcessingContextNode::Side & main_side_i =
-				pi_ctx._node_arr [PiType_MAIN]._side_arr [Dir_IN ];
+				ctx_node_main._side_arr [Dir_IN ];
 			ProcessingContextNode::Side & main_side_o =
-				pi_ctx._node_arr [PiType_MAIN]._side_arr [Dir_OUT];
+				ctx_node_main._side_arr [Dir_OUT];
 			int            main_nbr_i = 1;
 			int            main_nbr_o = 1;
 			int            main_nbr_s = 0;
@@ -165,13 +194,13 @@ void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 			}
 
 			// Signals
-			pi_ctx._node_arr [PiType_MAIN]._nbr_sig = main_nbr_s;
+			ctx_node_main._nbr_sig = main_nbr_s;
 			const int      nbr_reg_sig =
 				int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
 			for (int sig = 0; sig < main_nbr_s; ++sig)
 			{
 				ProcessingContextNode::SigInfo & sig_info =
-					pi_ctx._node_arr [PiType_MAIN]._sig_buf_arr [sig];
+					ctx_node_main._sig_buf_arr [sig];
 				sig_info._buf_index  = Cst::BufSpecial_TRASH;
 				sig_info._port_index = -1;
 
@@ -192,19 +221,24 @@ void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 			{
 				assert (slot._gen_audio_flag);
 
-				pi_ctx._node_arr [PiType_MIX]._pi_id = pi_id_mix;
-				ProcessingContextNode::Side & mix_side_i =
-					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_IN ];
-				ProcessingContextNode::Side & mix_side_o =
-					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_OUT];
+				ProcessingContextNode & ctx_node_mix = pi_ctx._node_arr [PiType_MIX];
 
-				pi_ctx._node_arr [PiType_MIX]._nbr_sig = 0;
+				ctx_node_mix._aux_param_flag = true;
+				ctx_node_mix._comp_delay     = latency;
+				ctx_node_mix._pin_mult       = 1;
+
+				ctx_node_mix._pi_id = pi_id_mix;
+				ProcessingContextNode::Side & mix_side_i =
+					ctx_node_mix._side_arr [Dir_IN ];
+				ProcessingContextNode::Side & mix_side_o =
+					ctx_node_mix._side_arr [Dir_OUT];
+
+				ctx_node_mix._nbr_sig = 0;
 
 				// Bypass output for the main plug-in
 				for (int chn = 0; chn < nbr_chn_out * main_nbr_o; ++chn)
 				{
-					pi_ctx._node_arr [PiType_MAIN]._bypass_buf_arr [chn] =
-						buf_alloc.alloc ();
+					ctx_node_main._bypass_buf_arr [chn] = buf_alloc.alloc ();
 				}
 
 				// Dry/wet input
@@ -235,9 +269,7 @@ void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 				// Shift buffers
 				for (int chn = 0; chn < nbr_chn_out * main_nbr_o; ++chn)
 				{
-					buf_alloc.ret (
-						pi_ctx._node_arr [PiType_MAIN]._bypass_buf_arr [chn]
-					);
+					buf_alloc.ret (ctx_node_main._bypass_buf_arr [chn]);
 				}
 				for (int chn = 0; chn < nbr_chn_out; ++chn)
 				{
@@ -281,11 +313,9 @@ void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 
 
 
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
