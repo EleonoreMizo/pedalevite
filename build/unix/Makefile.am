@@ -824,11 +824,6 @@ commonsrc = \
         ../../src/mfx/pi/lpfs/Squeezer.h \
         ../../src/mfx/pi/lpfs/SqueezerDesc.cpp \
         ../../src/mfx/pi/lpfs/SqueezerDesc.h \
-        ../../src/mfx/pi/mix/Mix.cpp \
-        ../../src/mfx/pi/mix/Mix.h \
-        ../../src/mfx/pi/mix/MixDesc.cpp \
-        ../../src/mfx/pi/mix/MixDesc.h \
-        ../../src/mfx/pi/mix/Param.h \
         ../../src/mfx/pi/nzbl/Cst.h \
         ../../src/mfx/pi/nzbl/FilterBank.cpp \
         ../../src/mfx/pi/nzbl/FilterBank.h \

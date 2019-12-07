@@ -86,11 +86,15 @@ public:
 
 	typedef std::array <Side, Dir_NBR_ELT> SideArray;
 
+	typedef std::vector <int> MixInChn; // Buffers to be mixed in a single input channel. At least 2 elements.
+	typedef std::vector <MixInChn> MixInputArray; // All the mixed channels for the audio input
+
 	int            _pi_id;
 	SideArray      _side_arr;
 	BypBufArray    _bypass_buf_arr;  // Starts with -1 if bypass should not be generated.
 	SigBufArray    _sig_buf_arr;
 	int            _nbr_sig;
+	MixInputArray  _mix_in_arr;      // Empty if there is no buffer to mix prior to processing.
 
 	// Indicates we have to update the auxiliary parameters when the context
 	// is switched.

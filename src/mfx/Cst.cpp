@@ -65,7 +65,6 @@ const std::chrono::microseconds	Cst::_key_time_repeat (
 const double	Cst::_step_param = 0.05;
 
 const std::string	Cst::_plugin_dwm     = "\?drywetmix";
-const std::string	Cst::_plugin_mix     = "\?mix";
 const std::string	Cst::_plugin_dly     = "\?delay0";
 const std::string	Cst::_plugin_tuner   = "\?tuner";
 

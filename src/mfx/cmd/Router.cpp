@@ -151,6 +151,9 @@ void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
 
 			// Main plug-in
 			ctx_node_main._pi_id = pi_id_main;
+
+			ctx_node_main._mix_in_arr.clear ();
+
 			ProcessingContextNode::Side & main_side_i =
 				ctx_node_main._side_arr [Dir_IN ];
 			ProcessingContextNode::Side & main_side_o =
@@ -222,6 +225,8 @@ void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
 				assert (slot._gen_audio_flag);
 
 				ProcessingContextNode & ctx_node_mix = pi_ctx._node_arr [PiType_MIX];
+
+				ctx_node_mix._mix_in_arr.clear ();
 
 				ctx_node_mix._aux_param_flag = true;
 				ctx_node_mix._comp_delay     = latency;

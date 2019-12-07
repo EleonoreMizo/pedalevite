@@ -667,9 +667,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\mix\Mix.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\mix\MixDesc.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\mix\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
@@ -1295,8 +1292,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\mix\Mix.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\mix\MixDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.cpp" />

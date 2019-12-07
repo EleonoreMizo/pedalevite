@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/BypassState.h"
 #include "mfx/piapi/ProcInfo.h"
 #include "mfx/dsp/mix/Simd.h"
+#include "mfx/dsp/mix/Align.h"
 #include "mfx/Cst.h"
 #include "mfx/Dir.h"
 #include "mfx/FileOpWav.h"
@@ -520,10 +521,7 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 		fstb::DataAlign <true>,
 		fstb::DataAlign <false>
 	> MixUnalignToAlign;
-	typedef dsp::mix::Simd <
-		fstb::DataAlign <true>,
-		fstb::DataAlign <true>
-	> MixAlign;
+	typedef dsp::mix::Align MixAlign;
 
 	const ProcessingContextNode::Side & side =
 		_ctx_ptr->_interface_ctx._side_arr [Dir_IN];
@@ -753,6 +751,12 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	proc_info._nbr_evt = 0;
 	proc_info._evt_arr = 0;
 
+	// Source mix
+	if (! pi_ctx._node_arr [PiType_MAIN]._mix_in_arr.empty ())
+	{
+		mix_source_channels (pi_ctx._node_arr [PiType_MAIN], nbr_spl);
+	}
+
 	// Main plug-in
 	proc_info._byp_state = (pi_ctx._mixer_flag)
 		? piapi::BypassState_ASK
@@ -878,6 +882,46 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 		if (! std::isfinite (val) || val < -thr || val > thr)
 		{
 			_reset_flag = true;
+		}
+	}
+}
+
+
+
+void	WorldAudio::mix_source_channels (const ProcessingContextNode &node, int nbr_spl)
+{
+	assert (nbr_spl > 0);
+
+	const ProcessingContextNode::Side & side_i = node._side_arr [Dir_IN ];
+	assert (node._mix_in_arr.size () == side_i._nbr_chn_tot);
+
+	for (int chn_dst_cnt = 0; chn_dst_cnt < side_i._nbr_chn_tot; ++chn_dst_cnt)
+	{
+		const ProcessingContextNode::MixInChn &   mix_info =
+			node._mix_in_arr [chn_dst_cnt];
+		const int      nbr_chn_src = int (mix_info.size ());
+		assert (nbr_chn_src >= 2);
+
+		float * const  dst_ptr   = _buf_arr [side_i._buf_arr [chn_dst_cnt]];
+
+		// Mixes two inputs at a time
+		const float *  src_1_ptr = _buf_arr [mix_info [0]];
+		const float *  src_2_ptr = _buf_arr [mix_info [1]];
+		dsp::mix::Align::copy_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
+
+		const int      ncs2 = nbr_chn_src & ~1;
+		for (int chn_src_cnt = 2; chn_src_cnt < ncs2; chn_src_cnt += 2)
+		{
+			src_1_ptr = _buf_arr [mix_info [chn_src_cnt    ]];
+			src_2_ptr = _buf_arr [mix_info [chn_src_cnt + 1]];
+			dsp::mix::Align::mix_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
+		}
+
+		if (ncs2 < nbr_chn_src)
+		{
+			assert (ncs2 == nbr_chn_src - 1);
+			src_1_ptr = _buf_arr [mix_info [ncs2]];
+			dsp::mix::Align::mix_1_1 (dst_ptr, src_1_ptr, nbr_spl);
 		}
 	}
 }
@@ -1038,10 +1082,7 @@ void	WorldAudio::store_data (const float src_ptr [], int nbr_spl)
 
 	const size_t   rem_len  = zone.size () - _data_rec_pos;
 	const size_t   work_len = std::min (size_t (nbr_spl), rem_len);
-	dsp::mix::Simd <
-		fstb::DataAlign <true>,
-		fstb::DataAlign <true>
-	>::copy_1_1 (&zone [_data_rec_pos], src_ptr, int (work_len));
+	dsp::mix::Align::copy_1_1 (&zone [_data_rec_pos], src_ptr, int (work_len));
 
 	++ _data_rec_cur_buf;
 }

@@ -116,8 +116,6 @@ public:
 	static const std::string
 	               _plugin_dly;
 	static const std::string
-	               _plugin_mix;
-	static const std::string
 	               _plugin_tuner;
 
 	static const std::string
