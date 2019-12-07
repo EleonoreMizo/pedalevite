@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Cst.h
+        DelayInterface.h
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dly0_Cst_HEADER_INCLUDED)
-#define mfx_pi_dly0_Cst_HEADER_INCLUDED
+#if ! defined (mfx_cmd_DelayInterface_HEADER_INCLUDED)
+#define mfx_cmd_DelayInterface_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,18 +27,19 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/piapi/PluginInterface.h"
+
 
 
 namespace mfx
 {
-namespace pi
-{
-namespace dly0
+namespace cmd
 {
 
 
 
-class Cst
+class DelayInterface
+:	public piapi::PluginInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -47,46 +48,34 @@ public:
 
 	static const int  _max_dly_spl = 16384;
 
+	virtual        ~DelayInterface () = default;
+
+	void           set_aux_param (int dly_spl, int pin_mult);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 protected:
 
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
+	virtual void   do_set_aux_param (int dly_spl, int pin_mult) = 0;
 
 
 
-/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	               Cst ()                               = delete;
-	               Cst (const Cst &other)               = delete;
-	virtual        ~Cst ()                              = delete;
-	Cst &          operator = (const Cst &other)        = delete;
-	bool           operator == (const Cst &other) const = delete;
-	bool           operator != (const Cst &other) const = delete;
-
-}; // class Cst
+}; // class DelayInterface
 
 
 
-}  // namespace dly0
-}  // namespace pi
+}  // namespace cmd
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/dly0/Cst.hpp"
+//#include "mfx/cmd/DelayInterface.hpp"
 
 
 
-#endif   // mfx_pi_dly0_Cst_HEADER_INCLUDED
+#endif   // mfx_cmd_DelayInterface_HEADER_INCLUDED
 
 
 

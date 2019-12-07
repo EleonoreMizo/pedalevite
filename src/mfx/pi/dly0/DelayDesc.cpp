@@ -24,10 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/dly0/Cst.h"
 #include "mfx/pi/dly0/DelayDesc.h"
 #include "mfx/pi/dly0/Param.h"
-#include "mfx/pi/param/TplInt.h"
 
 #include <cassert>
 
@@ -49,15 +47,7 @@ namespace dly0
 DelayDesc::DelayDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
-	// Delay
-	param::TplInt *   int_ptr = new param::TplInt (
-		0, Cst::_max_dly_spl,
-		"Delay\nDly\nD",
-		"spl",
-		0,
-		"%5.0f"
-	);
-	_desc_set.add_glob (Param_DELAY, int_ptr);
+	// Nothing
 }
 
 

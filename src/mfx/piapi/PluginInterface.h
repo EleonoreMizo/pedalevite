@@ -58,7 +58,7 @@ public:
 	};
 
 	static const int  _max_nbr_chn  =  2;
-	static const int  _max_nbr_pins = 16;
+	static const int  _max_nbr_pins =  4;
 
 	virtual        ~PluginInterface () = default;
 

@@ -41,9 +41,7 @@ namespace dly0
 enum Param
 {
 
-	Param_DELAY = 0,
-
-	Param_NBR_ELT
+	Param_NBR_ELT = 0
 
 }; // enum Param
 

@@ -230,6 +230,8 @@ commonsrc = \
         ../../src/mfx/cmd/Central.h \
         ../../src/mfx/cmd/CentralCbInterface.cpp \
         ../../src/mfx/cmd/CentralCbInterface.h \
+        ../../src/mfx/cmd/DelayInterface.cpp \
+        ../../src/mfx/cmd/DelayInterface.h \
         ../../src/mfx/cmd/Document.cpp \
         ../../src/mfx/cmd/Document.h \
         ../../src/mfx/cmd/Plugin.h \
@@ -715,7 +717,6 @@ commonsrc = \
         ../../src/mfx/pi/distpwm2/PulseType.h \
         ../../src/mfx/pi/distpwm2/Voice.cpp \
         ../../src/mfx/pi/distpwm2/Voice.h \
-        ../../src/mfx/pi/dly0/Cst.h \
         ../../src/mfx/pi/dly0/Delay.cpp \
         ../../src/mfx/pi/dly0/Delay.h \
         ../../src/mfx/pi/dly0/DelayDesc.cpp \

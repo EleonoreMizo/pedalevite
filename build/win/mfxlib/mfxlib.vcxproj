@@ -320,6 +320,7 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\Central.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\BufAlloc.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\CentralCbInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\DelayInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Document.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\Algo.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\Cnx.h" />
@@ -663,7 +664,6 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Err.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
@@ -1061,6 +1061,7 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\Central.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\BufAlloc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\CentralCbInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\DelayInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Document.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Algo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp" />

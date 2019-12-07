@@ -29,10 +29,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
+#include "mfx/cmd/DelayInterface.h"
 #include "mfx/dsp/dly/DelaySimple.h"
 #include "mfx/pi/dly0/DelayDesc.h"
 #include "mfx/pi/ParamStateSet.h"
-#include "mfx/piapi/PluginInterface.h"
 
 #include <array>
 #include <vector>
@@ -49,7 +49,7 @@ namespace dly0
 
 
 class Delay
-:	public piapi::PluginInterface
+:	public cmd::DelayInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -72,6 +72,9 @@ protected:
 	virtual void   do_clean_quick ();
 	virtual void   do_process_block (piapi::ProcInfo &proc);
 
+	// mfx::cmd::DelayInterface
+	virtual void   do_set_aux_param (int dly_spl, int pin_mult);
+
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -87,21 +90,19 @@ private:
 		               _delay;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
+	typedef std::array <ChannelArray, _max_nbr_pins> PinArray;
 
 	void           clear_buffers ();
-	void           update_param (bool force_flag = false);
 
 	State          _state;
 
-	DelayDesc       _desc;
+	DelayDesc      _desc;
 	ParamStateSet  _state_set;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 	float          _inv_fs;             // 1 / _sample_freq
 
-	fstb::util::NotificationFlag
-	               _param_change_flag;
-
-	ChannelArray   _chn_arr;
+	PinArray       _pin_arr;
+	int            _nbr_pins;
 
 
 

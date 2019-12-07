@@ -26,7 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/dly0/Cst.h"
 #include "mfx/pi/dly0/Param.h"
 #include "mfx/pi/dly0/Delay.h"
 #include "mfx/piapi/Err.h"
@@ -61,17 +60,13 @@ Delay::Delay ()
 ,	_state_set ()
 ,	_sample_freq (0)
 ,	_inv_fs (0)
-,	_param_change_flag ()
-,	_chn_arr ()
+,	_pin_arr ()
+,	_nbr_pins (1)
 {
 	dsp::mix::Align::setup ();
 
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
-
-	_state_set.set_val_nat (desc_set, Param_DELAY, 0);
-
-	_state_set.add_observer (Param_DELAY, _param_change_flag);
 }
 
 
@@ -106,14 +101,13 @@ int	Delay::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 
-	for (auto &chn : _chn_arr)
+	for (auto &pin : _pin_arr)
 	{
-		chn._delay.setup (Cst::_max_dly_spl, max_buf_len);
+		for (auto &chn : pin)
+		{
+			chn._delay.setup (_max_dly_spl, max_buf_len);
+		}
 	}
-
-	_param_change_flag.set ();
-
-	update_param (true);
 
 	clear_buffers ();
 
@@ -150,30 +144,49 @@ void	Delay::do_process_block (piapi::ProcInfo &proc)
 		}
 	}
 
-	// Parameters
+	// Parameters (none actually)
 	_state_set.process_block (proc._nbr_spl);
-	update_param ();
 
 	// Signal processing
-	for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
+	for (int pin_index = 0; pin_index < _nbr_pins; ++pin_index)
 	{
-		Channel &      chn = _chn_arr [chn_index];
+		ChannelArray & chn_arr = _pin_arr [pin_index];
+		const int   pin_ofs_dst = pin_index * nbr_chn_dst;
+		const int   pin_ofs_src = pin_index * nbr_chn_src;
 
-		chn._delay.process_block (
-			proc._dst_arr [chn_index],
-			proc._src_arr [chn_index],
-			proc._nbr_spl
-		);
+		for (int chn_index = 0; chn_index < nbr_chn_proc; ++chn_index)
+		{
+			Channel &      chn = chn_arr [chn_index];
+
+			chn._delay.process_block (
+				proc._dst_arr [pin_ofs_dst + chn_index],
+				proc._src_arr [pin_ofs_src + chn_index],
+				proc._nbr_spl
+			);
+		}
+
+		// Duplicates the remaining output channels
+		for (int chn_index = nbr_chn_proc; chn_index < nbr_chn_dst; ++chn_index)
+		{
+			dsp::mix::Align::copy_1_1 (
+				proc._dst_arr [pin_ofs_dst + chn_index],
+				proc._dst_arr [pin_ofs_src            ],
+				proc._nbr_spl
+			);
+		}
 	}
+}
 
-	// Duplicates the remaining output channels
-	for (int chn_index = nbr_chn_proc; chn_index < nbr_chn_dst; ++chn_index)
+
+
+void	Delay::do_set_aux_param (int dly_spl, int pin_mult)
+{
+	for (auto &pin : _pin_arr)
 	{
-		dsp::mix::Align::copy_1_1 (
-			proc._dst_arr [chn_index],
-			proc._dst_arr [0],
-			proc._nbr_spl
-		);
+		for (auto &chn : pin)
+		{
+			chn._delay.set_delay (dly_spl);
+		}
 	}
 }
 
@@ -185,23 +198,11 @@ void	Delay::do_process_block (piapi::ProcInfo &proc)
 
 void	Delay::clear_buffers ()
 {
-	for (auto &chn : _chn_arr)
+	for (auto &pin : _pin_arr)
 	{
-		chn._delay.clear_buffers ();
-	}
-}
-
-
-
-void	Delay::update_param (bool force_flag)
-{
-	if (_param_change_flag (true) || force_flag)
-	{
-		const int      dly =
-			fstb::round_int (_state_set.get_val_tgt_nat (Param_DELAY));
-		for (auto &chn : _chn_arr)
+		for (auto &chn : pin)
 		{
-			chn._delay.set_delay (dly);
+			chn._delay.clear_buffers ();
 		}
 	}
 }

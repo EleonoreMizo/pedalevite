@@ -2952,9 +2952,6 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\Err.h">
       <Filter>mfx\piapi</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Cst.h">
-      <Filter>mfx\pi\dly0</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\Algo.h">
       <Filter>mfx\cmd\lat</Filter>
     </ClInclude>
@@ -2977,6 +2974,9 @@
       <Filter>mfx\cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\cmd\Document.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\DelayInterface.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
   </ItemGroup>
@@ -4095,6 +4095,9 @@
       <Filter>mfx\cmd</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\Document.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\DelayInterface.cpp">
       <Filter>mfx\cmd</Filter>
     </ClCompile>
   </ItemGroup>
