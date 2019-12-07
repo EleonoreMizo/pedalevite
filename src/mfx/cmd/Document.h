@@ -27,7 +27,9 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/cmd/Cnx.h"
 #include "mfx/cmd/Slot.h"
+#include "mfx/cmd/PluginAux.h"
 #include "mfx/ChnMode.h"
 #include "mfx/PiType.h"
 #include "mfx/ProcessingContext.h"
@@ -74,11 +76,26 @@ public:
 	ContextSPtr    _ctx_sptr;
 	std::map <std::string, InstanceMap> // All the existing plug-ins, ordered by model.
 	               _map_model_id;
-	std::map <int, PluginLoc>
+	std::map <int, PluginLoc>           // [plugin_id] = location. Only main/dwm plug-ins, no compensation delay
 	               _map_id_loc;
 	ChnMode        _chn_mode               = ChnMode_1M_1M;
 	float          _master_vol             = 1;
 	bool           _smooth_transition_flag = false;
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+	// Additions for graph routing
+
+	typedef std::vector <Cnx> CnxList;
+	typedef std::vector <PluginAux> PluginAuxList;
+
+	// Structure, part of the data accessed by Central. Should only contain
+	// only SlotType_NORMAL, SlotType_I, SlotType_O
+	CnxList        _cnx_list;
+
+	// Additional data created by the routing, for the audio processing
+
+	// Delay plug-ins
+	PluginAuxList  _plugin_dly_list;
 
 
 

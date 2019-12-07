@@ -320,6 +320,10 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\Central.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\BufAlloc.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\CentralCbInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Cnx.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Cnx.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\CnxEnd.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\CnxEnd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\cmd\DelayInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Document.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\Algo.h" />
@@ -329,6 +333,7 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\Tools.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Plugin.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\PluginAux.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Router.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Slot.h" />
     <ClInclude Include="..\..\..\src\mfx\ControlCurve.h" />
@@ -1067,6 +1072,7 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Plugin.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\PluginAux.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Router.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />

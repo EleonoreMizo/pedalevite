@@ -2964,6 +2964,21 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\Document.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\PluginAux.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\Cnx.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\CnxEnd.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\CnxEnd.hpp">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\Cnx.hpp">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\cmd\DelayInterface.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
@@ -4080,6 +4095,9 @@
       <Filter>mfx\cmd</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\Plugin.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\PluginAux.cpp">
       <Filter>mfx\cmd</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\DelayInterface.cpp">

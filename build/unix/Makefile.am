@@ -230,12 +230,17 @@ commonsrc = \
         ../../src/mfx/cmd/Central.h \
         ../../src/mfx/cmd/CentralCbInterface.cpp \
         ../../src/mfx/cmd/CentralCbInterface.h \
+        ../../src/mfx/cmd/Cnx.h \
+        ../../src/mfx/cmd/Cnx.hpp \
+        ../../src/mfx/cmd/CnxEnd.h \
+        ../../src/mfx/cmd/CnxEnd.hpp \
         ../../src/mfx/cmd/DelayInterface.cpp \
         ../../src/mfx/cmd/DelayInterface.h \
         ../../src/mfx/cmd/Document.cpp \
         ../../src/mfx/cmd/Document.h \
         ../../src/mfx/cmd/Plugin.cpp \
         ../../src/mfx/cmd/Plugin.h \
+        ../../src/mfx/cmd/PluginAux.h \
         ../../src/mfx/cmd/Router.cpp \
         ../../src/mfx/cmd/Router.h \
         ../../src/mfx/cmd/Slot.h \
