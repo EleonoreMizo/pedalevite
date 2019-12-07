@@ -126,6 +126,8 @@ private:
 	void           reset_plugin (int pi_id);
 	void           collect_msg_cmd (bool proc_flag);
 	void           collect_msg_ui (bool proc_flag);
+	void           update_aux_param ();
+	void           update_aux_param_pi (const ProcessingContextNode &node);
 	void           handle_controller (const ControlSource &controller, float val_raw);
 	void           copy_input (const float * const * src_arr, int nbr_spl);
 	void           check_signal_level (float * const * dst_arr, const float * const * src_arr, int nbr_spl);

@@ -45,6 +45,9 @@ ProcessingContextNode::ProcessingContextNode ()
 ,	_bypass_buf_arr ()
 ,	_sig_buf_arr ()
 ,	_nbr_sig (0)
+,	_aux_param_flag (false)
+,	_comp_delay (0)
+,	_pin_mult (1)
 {
 	for (auto & side : _side_arr)
 	{

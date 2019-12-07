@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/BitFieldSparseIterator.h"
 #include "fstb/DataAlign.h"
+#include "mfx/cmd/DelayInterface.h"
 #include "mfx/piapi/BypassState.h"
 #include "mfx/piapi/ProcInfo.h"
 #include "mfx/dsp/mix/Simd.h"
@@ -284,6 +285,8 @@ void	WorldAudio::reset_plugin (int pi_id)
 
 void	WorldAudio::collect_msg_cmd (bool proc_flag)
 {
+	bool           ctx_update_flag = false;
+
 	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
 	do
 	{
@@ -308,6 +311,7 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 					if (proc_flag)
 					{
 						handle_msg_ctx (cell_ptr->_val._content._ctx);
+						ctx_update_flag = true;
 					}
 					break;
 				case WaMsg::Type_PARAM:
@@ -344,6 +348,11 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 		}
 	}
 	while (cell_ptr != 0);
+
+	if (ctx_update_flag)
+	{
+		update_aux_param ();
+	}
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	if (_data_rec_pos >= _data_rec_len)
@@ -398,6 +407,40 @@ void	WorldAudio::collect_msg_ui (bool proc_flag)
 		}
 	}
 	while (cell_ptr != 0);
+}
+
+
+
+void	WorldAudio::update_aux_param ()
+{
+	for (const auto &pi_ctx : _ctx_ptr->_context_arr)
+	{
+		update_aux_param_pi (pi_ctx._node_arr [PiType_MAIN]);
+		if (pi_ctx._mixer_flag)
+		{
+			update_aux_param_pi (pi_ctx._node_arr [PiType_MIX]);
+		}
+	}
+}
+
+
+
+void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node)
+{
+	if (node._aux_param_flag)
+	{
+		PluginPool::PluginDetails &  details = _pi_pool.use_plugin (node._pi_id);
+		cmd::DelayInterface *	delay_ptr =
+			dynamic_cast <cmd::DelayInterface *> (details._pi_uptr.get ());
+		if (delay_ptr == 0)
+		{
+			assert (false);
+		}
+		else
+		{
+			delay_ptr->set_aux_param (node._comp_delay, node._pin_mult);
+		}
+	}
 }
 
 

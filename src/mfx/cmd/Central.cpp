@@ -147,13 +147,15 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 	{
 		PluginPool::PluginDetails &         details  =
 			_plugin_pool.use_plugin (pi_id);
-		int            latency = 0;
-		int            ret_val =
-			details._pi_uptr->reset (sample_freq, max_block_size, latency);
+		details._latency = 0;
+		int            ret_val = details._pi_uptr->reset (
+			sample_freq, max_block_size, details._latency
+		);
 		assert (ret_val == piapi::Err_OK);
 		ret_val = ret_val; // -Wunused-variable
 	}
 	_audio.set_process_info (sample_freq, max_block_size);
+	_router.set_process_info (sample_freq, max_block_size);
 	for (auto &buf : _d2d_buf_arr)
 	{
 		buf.resize (max_block_size);
@@ -366,11 +368,11 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 			_plugin_pool.use_plugin (pi_id);
 		if (_sample_freq > 0)
 		{
-			int            latency = 0;
+			details._latency = 0;
 			int            ret_val = details._pi_uptr->reset (
 				_sample_freq,
 				_max_block_size,
-				latency
+				details._latency
 			);
 			assert (ret_val == piapi::Err_OK);
 			ret_val = ret_val; // -Wunused-variable
@@ -848,6 +850,8 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 			remove_plugin (pos);
 		}
 
+		int            latency = 0;
+
 		// Check if there is a unused plug-in
 		auto           it_inst_map = doc._map_model_id.find (model);
 		if (it_inst_map != doc._map_model_id.end ())
@@ -867,16 +871,22 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 						PluginPool::PluginDetails &   details =
 							_plugin_pool.use_plugin (pi_id);
 						const auto     state = details._pi_uptr->get_state ();
-						if (    _sample_freq > 0
-						    && (   force_reset_flag
-						        || state != piapi::PluginInterface::State_ACTIVE))
+						if (_sample_freq > 0)
 						{
-							int            latency = 0;
-							int            ret_val = details._pi_uptr->reset (
-								_sample_freq, _max_block_size, latency
-							);
-							assert (ret_val == piapi::Err_OK);
-							ret_val = ret_val; // -Wunused-variable
+							if (   force_reset_flag
+							    || state != piapi::PluginInterface::State_ACTIVE)
+							{
+								int            ret_val = details._pi_uptr->reset (
+									_sample_freq, _max_block_size, latency
+								);
+								details._latency = latency;
+								assert (ret_val == piapi::Err_OK);
+								ret_val = ret_val; // -Wunused-variable
+							}
+						}
+						else
+						{
+							latency = details._latency;
 						}
 						break;
 					}
@@ -892,7 +902,6 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 				_plugin_pool.use_plugin (pi_id);
 			if (_sample_freq > 0)
 			{
-				int            latency = 0;
 				int            ret_val = details._pi_uptr->reset (
 					_sample_freq,
 					_max_block_size,
@@ -900,14 +909,16 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 				);
 				assert (ret_val == piapi::Err_OK);
 				ret_val = ret_val; // -Wunused-variable
+				details._latency = latency;
 			}
 			check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
 
 			doc._map_model_id [model] [pi_id] = true;
 		}
 
-		plugin._pi_id = pi_id;
-		plugin._model = model;
+		plugin._pi_id   = pi_id;
+		plugin._model   = model;
+		plugin._latency = latency;
 		doc._map_id_loc [pi_id] = { pos, type };
 	}
 
@@ -947,10 +958,7 @@ void	Central::remove_plugin (int pos, PiType type)
 		doc._map_id_loc.erase (it_loc);
 	}
 
-	plugin._model.clear ();
-	plugin._pi_id = -1;
-	plugin._ctrl_map.clear ();
-	plugin._sig_port_list.clear ();
+	plugin.clear ();
 	doc._slot_list [pos]._force_mono_flag = false;
 }
 
@@ -1062,6 +1070,7 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_
 				break;
 			}
 
+			// Parameters
 			const int      nbr_param = int (plug._param_list.size ());
 			for (int index = 0; index < nbr_param; ++index)
 			{

@@ -198,6 +198,7 @@ private:
 	               _d2d_buf_ptr_arr;
 
 
+
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
