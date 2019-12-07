@@ -61,6 +61,7 @@ Node::Nature	Node::get_nature () const
 
 
 
+// All previous connections are lost
 void	Node::set_nbr_cnx (piapi::Dir dir, int nbr_cnx)
 {
 	assert (dir >= 0);
@@ -92,6 +93,17 @@ void	Node::set_cnx (piapi::Dir dir, int ref_index, int cnx_index)
 	assert (cnx_index >= 0);
 
 	_end_list [dir] [ref_index] = cnx_index;
+}
+
+
+
+void	Node::add_cnx (piapi::Dir dir, int cnx_index)
+{
+	assert (dir >= 0);
+	assert (dir < piapi::Dir_NBR_ELT);
+	assert (cnx_index >= 0);
+
+	_end_list [dir].push_back (cnx_index);
 }
 
 
@@ -155,7 +167,7 @@ bool	Node::is_timestamp_set () const
 
 
 
-void	Node::set_timestamp (long timestamp)
+void	Node::set_timestamp (int timestamp)
 {
 	_timestamp      = timestamp;
    _timestamp_flag = true;
@@ -172,7 +184,7 @@ int	Node::get_timestamp () const
 
 
 
-void	Node::set_latency (long latency)
+void	Node::set_latency (int latency)
 {
 	assert (latency >= 0);
 

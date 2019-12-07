@@ -71,6 +71,7 @@ public:
 	int            get_nbr_cnx (piapi::Dir dir) const;
 
 	void           set_cnx (piapi::Dir dir, int ref_index, int cnx_index);
+	void           add_cnx (piapi::Dir dir, int cnx_index);
 	int            get_cnx (piapi::Dir dir, int ref_index) const;
 
 	bool           is_pure (piapi::Dir dir) const;
@@ -80,10 +81,10 @@ public:
 	int            get_tree () const;
 
 	bool           is_timestamp_set () const;
-	void           set_timestamp (long timestamp);
+	void           set_timestamp (int timestamp);
 	int            get_timestamp () const;
 
-	void				set_latency (long latency);
+	void				set_latency (int latency);
 	int				get_latency () const;
 
 

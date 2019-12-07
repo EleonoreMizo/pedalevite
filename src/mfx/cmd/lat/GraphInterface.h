@@ -3,6 +3,9 @@
         GraphInterface.h
         Author: Laurent de Soras, 2019
 
+While initialising the graph, please don't forget to add the connections to
+the node objects too.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
