@@ -71,7 +71,7 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 		_aligned_malloc (nbr_bytes, ALIG)
 	);
 
-#elif ! defined (__MINGW32__) && ! defined (__MINGW64__)
+#elif ! defined (__MINGW32__) && ! defined (__MINGW64__) && ! defined (__CYGWIN__)
 
 	pointer        zone_ptr = 0;
 	void *         tmp_ptr;
@@ -119,7 +119,7 @@ void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type /*n*/)
 
 		_aligned_free (ptr);
 
-#elif ! defined (__MINGW32__) && ! defined (__MINGW64__)
+#elif ! defined (__MINGW32__) && ! defined (__MINGW64__) && ! defined (__CYGWIN__)
 
 		free (ptr);
 

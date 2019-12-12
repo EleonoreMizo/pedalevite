@@ -100,10 +100,6 @@ int32_t	Interlocked::cas (int32_t volatile &dest, int32_t excg, int32_t comp)
 		::LONG (comp)
 	));
 
-#elif defined (__linux__)
-
-	return (__sync_val_compare_and_swap (&dest, comp, excg));
-
 #elif defined (__APPLE__)
 
 	return (::OSAtomicCompareAndSwap32Barrier (
@@ -111,6 +107,10 @@ int32_t	Interlocked::cas (int32_t volatile &dest, int32_t excg, int32_t comp)
 		excg,
 		const_cast <int32_t *> (reinterpret_cast <int32_t volatile *> (&dest))
 	) ? comp : excg);
+
+#elif defined (__GNUC__)
+
+	return (__sync_val_compare_and_swap (&dest, comp, excg));
 
 #else
 
@@ -209,14 +209,10 @@ int64_t	Interlocked::cas (int64_t volatile &dest, int64_t excg, int64_t comp)
 	, [dest] "m" (dest)
 	, [excg] "m" (excg)
 	, [comp] "m" (comp)
-	: "eax", "ebx", "ecx", "edx", "esi"
+	: "eax", "ebx", "ecx", "edx", "esi", "memory"
 	);
 
 	return (old);
-
-#elif defined (__linux__)
-
-	return (__sync_val_compare_and_swap (&dest, comp, excg));
 
 #elif defined (__APPLE__)
 
@@ -225,6 +221,10 @@ int64_t	Interlocked::cas (int64_t volatile &dest, int64_t excg, int64_t comp)
 		excg, 
 		const_cast <int64_t *> (reinterpret_cast <int64_t volatile *> (&dest))
 	) ? comp : excg);
+
+#elif defined (__GNUC__)
+
+	return (__sync_val_compare_and_swap (&dest, comp, excg));
 
 #else
 
@@ -303,9 +303,13 @@ void	Interlocked::cas (Data128 &old, volatile Data128 &dest, const Data128 &excg
 
 	#endif
 
-#elif defined (__linux__)
+#elif defined (__GNUC__)
 
 	old = __sync_val_compare_and_swap (&dest, comp, excg);
+
+#else
+
+	#error Unknown platform
 
 #endif
 }
