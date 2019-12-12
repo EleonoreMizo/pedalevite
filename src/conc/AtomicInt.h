@@ -127,6 +127,10 @@ private:
 
 #else  // conc_ARCHI
 
+	static_assert (
+		std::atomic <T>::is_lock_free,
+		"Atomic data must be lock-free."
+	);
 	std::atomic<T> _val;
 
 #endif // conc_ARCHI

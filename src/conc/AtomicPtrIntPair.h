@@ -117,6 +117,10 @@ private:
 		ptrdiff_t      _val;
 	};
 
+	static_assert (
+		std::atomic <RealContent>::is_lock_free,
+		"Atomic data must be lock-free."
+	);
 	std::atomic <RealContent>
 	               _data;
 
