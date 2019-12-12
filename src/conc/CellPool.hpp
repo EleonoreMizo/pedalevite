@@ -270,7 +270,7 @@ typename CellPool <T>::CellType *	CellPool <T>::alloc_cells (size_t n)
 	}
 	catch (...)
 	{
-		for (size_t i = count; i > 0; --count)
+		for (size_t i = count; i > 0; --i)
 		{
 			(cell_ptr + i - 1)->~CellType ();
 		}
