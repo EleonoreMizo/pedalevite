@@ -36,7 +36,9 @@ http://www.wtfpl.net/ for more details.
 namespace mfx
 {
 
+class BufAlloc;
 class PluginPool;
+class ProcessingContext;
 
 namespace cmd
 {
@@ -77,16 +79,46 @@ private:
 		int            _cnx_idx = -1;
 	};
 
+	class PinOutInfo
+	{
+	public:
+		int            _dst_count = 0; // Number of connections starting from the output pin
+	};
+	typedef std::vector <PinOutInfo> PinDstInfoNode;
+
+	class NodeInfo
+	{
+	public:
+		bool           _visit_flag  = false;
+		int            _ctx_index   = -1; // Set when visited
+		PinDstInfoNode _pin_dst_list;
+		std::vector <Document::CnxList>   // Per input pin
+		               _cnx_src_list;
+		int            _nbr_chn     =  1; // For the outputs
+	};
+
+	typedef std::vector <NodeInfo> NodeCateg;
+	typedef std::array <NodeCateg, CnxEnd::SlotType_NBR_ELT> NodeCategList;
+
 	void           create_routing_chain (Document &doc, PluginPool &plugin_pool);
 	void           create_routing_graph (Document &doc, PluginPool &plugin_pool);
 	void           make_graph_from_chain (Document &doc);
 	void           add_aux_plugins (Document &doc, PluginPool &plugin_pool);
 	void           prepare_graph_for_latency_analysis (const Document &doc);
-	int            conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx);
+	int            conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx) const;
+	int            conv_io_pin_to_lat_node_index (piapi::Dir dir, int pin) const;
 	void           add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool);
 	PluginAux &    create_plugin_aux (Document &doc, PluginPool &plugin_pool, Document::PluginAuxList &aux_list, std::string model);
 	void           connect_delays (Document &doc);
 	void           create_graph_context (Document &doc, PluginPool &plugin_pool);
+	void           init_node_categ_list (const Document &doc, NodeCategList &categ_list) const;
+	void           allocate_buf_audio_i (Document &doc, BufAlloc &buf_alloc);
+	void           allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list);
+	void           free_buf_audio_i (Document &doc, BufAlloc &buf_alloc);
+	void           free_buf_audio_o (Document &doc, BufAlloc &buf_alloc);
+	void           visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, const Cnx &cnx);
+	void           check_source_nodes (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, NodeInfo &node_info);
+	bool           collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const;
 
 	static void    count_nbr_cnx_per_input_pin (MapCnxPerPin &res_map, const Document::CnxList &graph);
 
@@ -105,9 +137,7 @@ private:
 	// it only contains pins with multiple connections
 	MapCnxPerPin   _cnx_per_pin_in;
 
-	// Same as Document::_cnx_list, but includes delay and mixer plug-ins
-	// When a connection requires both a mixer and a delay, the delay is
-	// inserted first.
+	// Same as Document::_cnx_list, but includes delay plug-ins
 	Document::CnxList
 	               _cnx_list;
 

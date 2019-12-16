@@ -50,6 +50,7 @@ public:
 	               PluginAux ()                        = default;
 	               PluginAux (const PluginAux &other)  = default;
 	virtual        ~PluginAux ()                       = default;
+
 	PluginAux &    operator = (const PluginAux &other) = default;
 
 	void           clear ();
@@ -65,9 +66,6 @@ public:
 	// Compensation delay for the DelayInterface plug-ins. Automatically removed
 	// when setting up ProcessingContextNode (set to 0).
 	int            _comp_delay = 0;
-
-	// Index in ProcessingContext::_context_arr
-	int            _ctx_index = -1;
 
 	// For delay plug-ins only. Indicates on which primary connection (in the
 	// graph without auxiliary plugins) it is inserted.

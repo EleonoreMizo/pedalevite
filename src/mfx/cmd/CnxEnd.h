@@ -50,7 +50,6 @@ public:
 		SlotType_NORMAL = 0,
 		SlotType_IO,   // Input or output depends on the context
 		SlotType_DLY,
-		SlotType_MIX,
 
 		SlotType_NBR_ELT
 	};

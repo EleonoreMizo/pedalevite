@@ -30,6 +30,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/cmd/Cnx.h"
 #include "mfx/cmd/Slot.h"
 #include "mfx/cmd/PluginAux.h"
+#include "mfx/piapi/Dir.h"
 #include "mfx/ChnMode.h"
 #include "mfx/PiType.h"
 #include "mfx/ProcessingContext.h"
@@ -89,7 +90,7 @@ public:
 	typedef std::vector <PluginAux> PluginAuxList;
 
 	// Structure, part of the data accessed by Central. Should only contain
-	// only SlotType_NORMAL, SlotType_I, SlotType_O
+	// only SlotType_NORMAL, SlotType_IO
 	CnxList        _cnx_list;
 
 	// Additional data created by the routing, for the audio processing

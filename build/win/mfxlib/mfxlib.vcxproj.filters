@@ -4103,5 +4103,8 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\DelayInterface.cpp">
       <Filter>mfx\cmd</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ChnMode.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

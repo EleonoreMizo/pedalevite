@@ -526,7 +526,7 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 	const ProcessingContextNode::Side & side =
 		_ctx_ptr->_interface_ctx._side_arr [Dir_IN];
 
-	if (side._nbr_chn == 2)
+	if (side._nbr_chn_tot == 2)
 	{
 		const int      buf_0_index = side._buf_arr [0];
 		const int      buf_1_index = side._buf_arr [1];
@@ -544,7 +544,7 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 	}
 	else
 	{
-		for (int chn = 0; chn < side._nbr_chn; ++chn)
+		for (int chn = 0; chn < side._nbr_chn_tot; ++chn)
 		{
 			const int      buf_index = side._buf_arr [chn];
 			assert (buf_index >= 0);
@@ -573,7 +573,7 @@ https://www.dsprelated.com/showthread/comp.dsp/134663-1.php
 			fstb::floor_int (_sample_freq * 0.0015f),
 			nbr_spl
 		);
-		for (int chn = 0; chn < side._nbr_chn; ++chn)
+		for (int chn = 0; chn < side._nbr_chn_tot; ++chn)
 		{
 			if (((_fade_chnmap >> chn) & 1) != 0)
 			{
@@ -588,7 +588,7 @@ https://www.dsprelated.com/showthread/comp.dsp/134663-1.php
 #if defined (mfx_WorldAudio_BUF_REC)
 	if (_data_rec_flag)
 	{
-		for (int chn = 0; chn < side._nbr_chn; ++chn)
+		for (int chn = 0; chn < side._nbr_chn_tot; ++chn)
 		{
 			const int      buf_index = side._buf_arr [chn];
 			store_data (_buf_arr [buf_index], nbr_spl);
@@ -737,62 +737,78 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 
 void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl)
 {
-	piapi::ProcInfo   proc_info;
-	BufSrcArr      src_arr;
-	BufDstArr      dst_arr;
-	BufDstArr      byp_arr;
-	BufSigArr      sig_arr;
-
-	proc_info._src_arr = &src_arr [0];
-	proc_info._dst_arr = &dst_arr [0];
-	proc_info._byp_arr = &byp_arr [0];
-	proc_info._sig_arr = &sig_arr [0];
-	proc_info._nbr_spl = nbr_spl;
-	proc_info._nbr_evt = 0;
-	proc_info._evt_arr = 0;
-
 	// Source mix
-	if (! pi_ctx._node_arr [PiType_MAIN]._mix_in_arr.empty ())
+	if (! pi_ctx._mix_in_arr.empty ())
 	{
-		mix_source_channels (pi_ctx._node_arr [PiType_MAIN], nbr_spl);
+		mix_source_channels (
+			pi_ctx._node_arr [PiType_MAIN], pi_ctx._mix_in_arr, nbr_spl
+		);
 	}
 
-	// Main plug-in
-	proc_info._byp_state = (pi_ctx._mixer_flag)
-		? piapi::BypassState_ASK
-		: piapi::BypassState_IGNORE;
-	prepare_buffers (proc_info, pi_ctx._node_arr [PiType_MAIN], false);
+	// Plug-in processing
+	if (pi_ctx._node_arr [PiType_MAIN]._pi_id >= 0)
+	{
+		piapi::ProcInfo   proc_info;
+		BufSrcArr      src_arr;
+		BufDstArr      dst_arr;
+		BufDstArr      byp_arr;
+		BufSigArr      sig_arr;
 
-	process_single_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info);
+		proc_info._src_arr = &src_arr [0];
+		proc_info._dst_arr = &dst_arr [0];
+		proc_info._byp_arr = &byp_arr [0];
+		proc_info._sig_arr = &sig_arr [0];
+		proc_info._nbr_spl = nbr_spl;
+		proc_info._nbr_evt = 0;
+		proc_info._evt_arr = 0;
+
+		// Main plug-in
+		proc_info._byp_state = (pi_ctx._mixer_flag)
+			? piapi::BypassState_ASK
+			: piapi::BypassState_IGNORE;
+		prepare_buffers (
+			proc_info,
+			pi_ctx._node_arr [PiType_MAIN],
+			pi_ctx._bypass_buf_arr,
+			false
+		);
+
+		process_single_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info);
 
 #if defined (mfx_WorldAudio_BUF_REC)
-	if (_data_rec_flag)
-	{
-		// Records only the first output pin
-		const int      nbr_chn = proc_info._nbr_chn_arr [Dir_OUT];
-		if (nbr_chn > 0)
+		if (_data_rec_flag)
 		{
-			for (int chn = 0; chn < nbr_chn; ++chn)
+			// Records only the first output pin
+			const int      nbr_chn = proc_info._nbr_chn_arr [Dir_OUT];
+			if (nbr_chn > 0)
 			{
-				store_data (proc_info._dst_arr [chn], proc_info._nbr_spl);
+				for (int chn = 0; chn < nbr_chn; ++chn)
+				{
+					store_data (proc_info._dst_arr [chn], proc_info._nbr_spl);
+				}
 			}
 		}
-	}
 #endif
 
-	handle_signals (proc_info, pi_ctx._node_arr [PiType_MAIN]);
+		handle_signals (proc_info, pi_ctx._node_arr [PiType_MAIN]);
 
-	const bool       bypass_produced_flag =
-		(proc_info._byp_state == piapi::BypassState_PRODUCED);
+		const bool       bypass_produced_flag =
+			(proc_info._byp_state == piapi::BypassState_PRODUCED);
 
-	// Bypass/Mix/Gain
-	/*** To do: Is it the right test? or just pi_ctx._mixer_flag? ***/
-	if (proc_info._byp_state)
-	{
-		proc_info._byp_state = piapi::BypassState_IGNORE;
-		prepare_buffers (proc_info, pi_ctx._node_arr [PiType_MIX], bypass_produced_flag);
+		// Bypass/Mix/Gain
+		/*** To do: Is it the right test? or just pi_ctx._mixer_flag? ***/
+		if (proc_info._byp_state)
+		{
+			proc_info._byp_state = piapi::BypassState_IGNORE;
+			prepare_buffers (
+				proc_info,
+				pi_ctx._node_arr [PiType_MIX],
+				pi_ctx._bypass_buf_arr,
+				bypass_produced_flag
+			);
 
-		process_single_plugin (pi_ctx._node_arr [PiType_MIX]._pi_id, proc_info);
+			process_single_plugin (pi_ctx._node_arr [PiType_MIX]._pi_id, proc_info);
+		}
 	}
 }
 
@@ -801,6 +817,8 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 // Fills the event-related members in proc_info.
 void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info)
 {
+	assert (plugin_id >= 0);
+
 	_evt_arr.clear ();
 	_evt_ptr_arr.clear ();
 
@@ -888,49 +906,55 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 
 
 
-void	WorldAudio::mix_source_channels (const ProcessingContextNode &node, int nbr_spl)
+void	WorldAudio::mix_source_channels (const ProcessingContextNode &node, const ProcessingContext::PluginContext::MixInputArray &mix_in_arr, int nbr_spl)
 {
 	assert (nbr_spl > 0);
 
 	const ProcessingContextNode::Side & side_i = node._side_arr [Dir_IN ];
-	assert (node._mix_in_arr.size () == side_i._nbr_chn_tot);
+	assert (mix_in_arr.size () == side_i._nbr_chn_tot);
 
 	for (int chn_dst_cnt = 0; chn_dst_cnt < side_i._nbr_chn_tot; ++chn_dst_cnt)
 	{
-		const ProcessingContextNode::MixInChn &   mix_info =
-			node._mix_in_arr [chn_dst_cnt];
-		const int      nbr_chn_src = int (mix_info.size ());
-		assert (nbr_chn_src >= 2);
-
-		float * const  dst_ptr   = _buf_arr [side_i._buf_arr [chn_dst_cnt]];
-
-		// Mixes two inputs at a time
-		const float *  src_1_ptr = _buf_arr [mix_info [0]];
-		const float *  src_2_ptr = _buf_arr [mix_info [1]];
-		dsp::mix::Align::copy_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
-
-		const int      ncs2 = nbr_chn_src & ~1;
-		for (int chn_src_cnt = 2; chn_src_cnt < ncs2; chn_src_cnt += 2)
+		const ProcessingContext::PluginContext::MixInChn & mix_info =
+			mix_in_arr [chn_dst_cnt];
+		if (! mix_info.empty ())
 		{
-			src_1_ptr = _buf_arr [mix_info [chn_src_cnt    ]];
-			src_2_ptr = _buf_arr [mix_info [chn_src_cnt + 1]];
-			dsp::mix::Align::mix_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
-		}
+			const int      nbr_chn_src = int (mix_info.size ());
+			assert (nbr_chn_src >= 2);
 
-		if (ncs2 < nbr_chn_src)
-		{
-			assert (ncs2 == nbr_chn_src - 1);
-			src_1_ptr = _buf_arr [mix_info [ncs2]];
-			dsp::mix::Align::mix_1_1 (dst_ptr, src_1_ptr, nbr_spl);
+			float * const  dst_ptr   = _buf_arr [side_i._buf_arr [chn_dst_cnt]];
+
+			// Mixes two inputs at a time
+			const float *  src_1_ptr = _buf_arr [mix_info [0]];
+			const float *  src_2_ptr = _buf_arr [mix_info [1]];
+			dsp::mix::Align::copy_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
+
+			const int      ncs2 = nbr_chn_src & ~1;
+			for (int chn_src_cnt = 2; chn_src_cnt < ncs2; chn_src_cnt += 2)
+			{
+				src_1_ptr = _buf_arr [mix_info [chn_src_cnt    ]];
+				src_2_ptr = _buf_arr [mix_info [chn_src_cnt + 1]];
+				dsp::mix::Align::mix_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
+			}
+
+			if (ncs2 < nbr_chn_src)
+			{
+				assert (ncs2 == nbr_chn_src - 1);
+				src_1_ptr = _buf_arr [mix_info [ncs2]];
+				dsp::mix::Align::mix_1_1 (dst_ptr, src_1_ptr, nbr_spl);
+			}
 		}
 	}
 }
 
 
 
-// Content of byp_arr is used for the second half of the source channels
-// if use_byp_as_src_flag is set.
-void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContextNode &node, bool use_byp_as_src_flag)
+// When use_byp_as_src_flag is set, the content of byp_arr is used for
+// the odd input pins (the bypass pins from the mixer plug-in).
+// By default, for the mixer plug-in, the bypass channels are filled
+// with the input buffers from the main plug-in. However we can
+// explicitely request to use the bypass output, if it was generated.
+void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContextNode &node, const ProcessingContext::PluginContext::BypBufArray &bypass_buf_arr, bool use_byp_as_src_flag)
 {
 	const float ** src_arr = const_cast <const float **> (proc_info._src_arr);
 	float **       dst_arr = const_cast <      float **> (proc_info._dst_arr);
@@ -940,30 +964,45 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 	const ProcessingContextNode::Side & side_i = node._side_arr [Dir_IN ];
 	const ProcessingContextNode::Side & side_o = node._side_arr [Dir_OUT];
 
-	// By default, for the mixer plug-in, the bypass channels are filled
-	// with the input buffers from the main plug-in. However we can
-	// explicitely request to use the bypass output.
-	int           src_end = side_i._nbr_chn_tot;
-	int           nbr_byp = 0;
+	// Sets the input buffers
 	if (use_byp_as_src_flag)
 	{
-		assert ((src_end & 1) == 0);
-		src_end >>= 1;
-		nbr_byp   = src_end;
+		// Make sure we're operating on a dry/wet mix plug-in
+		assert (side_i._nbr_chn_tot == side_o._nbr_chn_tot * 2);
+		assert (side_i._nbr_chn     == side_o._nbr_chn);
+
+		// Uses the bypass buffers for every odd pin
+		const int      nbr_chn_tot = side_o._nbr_chn_tot;
+		for (int chn_ofs = 0; chn_ofs < nbr_chn_tot; chn_ofs += side_i._nbr_chn)
+		{
+			for (int chn = 0; chn < side_i._nbr_chn; ++ chn)
+			{
+				const int      buf_src = side_i._buf_arr [chn_ofs + chn];
+				assert (buf_src >= 0);
+				assert (buf_src < int (_buf_arr.size ()));
+				src_arr [chn_ofs * 2 + chn] =
+					_buf_arr [buf_src];
+
+				const int      buf_byp = bypass_buf_arr [chn_ofs + chn];
+				assert (buf_byp >= 0);
+				assert (buf_byp < int (_buf_arr.size ()));
+				src_arr [chn_ofs * 2 + side_i._nbr_chn + chn] = _buf_arr [buf_byp];
+			}
+		}
+	}
+	else
+	{
+		// Standard input buffers
+		for (int chn = 0; chn < side_i._nbr_chn_tot; ++ chn)
+		{
+			const int      buf_index = side_i._buf_arr [chn];
+			assert (buf_index >= 0);
+			assert (buf_index < int (_buf_arr.size ()));
+			src_arr [chn] = _buf_arr [buf_index];
+		}
 	}
 
-	for (int chn = 0; chn < src_end; ++ chn)
-	{
-		const int      buf_index = side_i._buf_arr [chn];
-		assert (buf_index >= 0);
-		assert (buf_index < int (_buf_arr.size ()));
-		src_arr [chn] = _buf_arr [buf_index];
-	}
-	for (int chn = 0; chn < nbr_byp; ++ chn)
-	{
-		src_arr [src_end + chn] = byp_arr [chn];
-	}
-
+	// Sets the output buffers
 	for (int chn = 0; chn < side_o._nbr_chn_tot; ++ chn)
 	{
 		const int      buf_index = side_o._buf_arr [chn];
@@ -972,17 +1011,19 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 		dst_arr [chn] = _buf_arr [buf_index];
 	}
 
-	if (node._bypass_buf_arr [0] >= 0)
+	// Sets the bypass buffers (for the D/W mix plug-in)
+	if (bypass_buf_arr [0] >= 0)
 	{
 		for (int chn = 0; chn < side_o._nbr_chn_tot; ++ chn)
 		{
-			const int      buf_index = node._bypass_buf_arr [chn];
+			const int      buf_index = bypass_buf_arr [chn];
 			assert (buf_index >= 0);
 			assert (buf_index < int (_buf_arr.size ()));
 			byp_arr [chn] = _buf_arr [buf_index];
 		}
 	}
 
+	// Sets the signal buffers
 	for (int sig = 0; sig < node._nbr_sig; ++sig)
 	{
 		const int      buf_index = node._sig_buf_arr [sig]._buf_index;
@@ -991,6 +1032,7 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 		sig_arr [sig] = _buf_arr [buf_index];
 	}
 
+	// Sets the number of channels
 	for (int dir = 0; dir < Dir_NBR_ELT; ++dir)
 	{
 		proc_info._dir_arr [dir]._nbr_chn = node._side_arr [dir]._nbr_chn;

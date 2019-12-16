@@ -56,8 +56,18 @@ public:
 	public:
 		typedef std::array <ProcessingContextNode, PiType_NBR_ELT> NodeList;
 
+		typedef std::array <
+			int,
+			Cst::_max_nbr_output * piapi::PluginInterface::_max_nbr_chn
+		> BypBufArray;
+
+		typedef std::vector <int> MixInChn; // Buffers to be mixed in a single input channel. At least 2 elements or none.
+		typedef std::vector <MixInChn> MixInputArray; // All the mixed channels for the audio inputs. Size = _node_arr [PiType_MAIN]._side_arr [Dir_IN]._nbr_chn_tot
+
 		NodeList       _node_arr;
 		bool           _mixer_flag = false;
+		MixInputArray  _mix_in_arr;      // Empty if there is no buffer to mix prior to processing.
+		BypBufArray    _bypass_buf_arr = {{ -1 }};  // Starts with -1 if bypass should not be generated. Number of elements: _node_arr [PiType_MAIN]._side_arr [Dir_OUT]._nbr_chn_tot
 	};
 
 	typedef std::vector <PluginContext> PluginCtxArray;
@@ -71,6 +81,8 @@ public:
 
 	ProcessingContextNode        // Initial and final aligned buffers
 	               _interface_ctx;
+	PluginContext::MixInputArray // For the output pins
+	               _interface_mix;
 	PluginCtxArray _context_arr;
 
 	MapParamCtrl   _map_param_ctrl;
@@ -78,6 +90,11 @@ public:
 	MapSourceUnit  _map_src_unit;
 
 	float          _master_vol  = 1;
+
+	/*** To do:
+	Clarify the releation between the number of pins and channels.
+	Curently we assume only a single pin.
+	***/
 	int            _nbr_chn_out = 1;
 
 

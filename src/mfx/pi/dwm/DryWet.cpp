@@ -133,7 +133,6 @@ void	DryWet::do_clean_quick ()
 
 
 
-/*** To do: delay ***/
 // Input pins are interleaved (wet0/dry0/wet1/dry1...)
 void	DryWet::do_process_block (piapi::ProcInfo &proc)
 {

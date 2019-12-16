@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        ProcessingContextNode.cpp
-        Author: Laurent de Soras, 2016
+        ChnMode.cpp
+        Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
 
@@ -9,7 +9,7 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/ProcessingContextNode.h"
+#include "mfx/ChnMode.h"
 
 #include <cassert>
 
@@ -39,52 +39,43 @@ namespace mfx
 
 
 
-ProcessingContextNode::ProcessingContextNode ()
-:	_pi_id (-1)
-,	_side_arr ()
-,	_sig_buf_arr ()
-,	_nbr_sig (0)
-,	_aux_param_flag (false)
-,	_comp_delay (0)
-,	_pin_mult (1)
+// Dir refers to the audio graph, so IN = audio input
+int	ChnMode_get_nbr_chn (ChnMode mode, piapi::Dir dir)
 {
-	for (auto & side : _side_arr)
+	int            nbr_chn = 1;
+
+	if (dir == piapi::Dir_IN)
 	{
-		side._nbr_chn     = 0;
-		side._nbr_chn_tot = 0;
-		for (auto & buf_index : side._buf_arr)
+		switch (mode)
 		{
-			buf_index = -1;
+		case ChnMode_1M_1M:
+		case ChnMode_1M_1S:
+			break;
+		case ChnMode_1S_1S:
+			nbr_chn = 2;
+			break;
+		default:
+			assert (false);
+			break;
 		}
 	}
-}
+	else
+	{
+		switch (mode)
+		{
+		case ChnMode_1M_1M:
+			break;
+		case ChnMode_1M_1S:
+		case ChnMode_1S_1S:
+			nbr_chn = 2;
+			break;
+		default:
+			assert (false);
+			break;
+		}
+	}
 
-
-
-int &	ProcessingContextNode::Side::use_buf (int pin, int chn)
-{
-	assert (pin >= 0);
-	assert (chn >= 0);
-	assert (chn < _nbr_chn);
-
-	const int      index = pin * _nbr_chn + chn;
-	assert (index < _nbr_chn_tot);
-
-	return _buf_arr [index];
-}
-
-
-
-const int &	ProcessingContextNode::Side::use_buf (int pin, int chn) const
-{
-	assert (pin >= 0);
-	assert (chn >= 0);
-	assert (chn < _nbr_chn);
-
-	const int      index = pin * _nbr_chn + chn;
-	assert (index < _nbr_chn_tot);
-
-	return _buf_arr [index];
+	return nbr_chn;
 }
 
 

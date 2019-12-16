@@ -61,15 +61,16 @@ public:
 	void           clear ();
 
 	int            _pi_id   = -1; // -1 = not set
-	int            _latency = 0;  // Internal plug-in latency, in samples.
 	std::string    _model;
-
-	MapParamCtrl   _ctrl_map;
 
 	// If there are settings to apply during the commit. Automatically removed
 	// at the end of the transaction.
 	std::vector <float>
 	               _param_list;
+
+	int            _latency = 0;  // Internal plug-in latency, in samples.
+
+	MapParamCtrl   _ctrl_map;
 
 	// Port index for each signal pin. Vector size can be less than the number
 	// of pins.

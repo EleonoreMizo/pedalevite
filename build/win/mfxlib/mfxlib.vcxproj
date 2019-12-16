@@ -1059,6 +1059,7 @@
     <ClCompile Include="..\..\..\src\mfx\adrv\DJack.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ChnMode.cpp" />
     <ClCompile Include="..\..\..\src\mfx\CmdLine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Central.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\BufAlloc.cpp" />

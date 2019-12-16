@@ -53,8 +53,13 @@ public:
 	void           clear ();
 
 	bool           has_room () const;
-	int            alloc ();
-	void           ret (int buf);
+	int            alloc (int use_count = 1);
+	void           use_more (int buf, int use_count = 1);
+	void           use_more_if_std (int buf, int use_count = 1);
+	void           ret (int buf, int use_count = 1);
+	void           ret_if_std (int buf, int use_count = 1);
+	int            get_use_count (int buf) const;
+	int            get_nbr_alloc_buf () const;
 
 
 
@@ -68,14 +73,23 @@ protected:
 
 private:
 
+	class BufInfo
+	{
+	public:
+		int            _buf_list_pos = -1; // In _buf_list. -1 = reserved
+		int            _use_count    = 0;  // Reference counting
+	};
+
 	int            find_buf_pos (int buf) const;
 
-	// First part contains the used buffers,
+	// First part contains the reserved and used buffers,
 	// second part contains the free buffers
 	std::array <int, Cst::_max_nbr_buf>
 	               _buf_list;
-	const int      _reserved_size;
-	int            _free_index;
+	const int      _reserved_size; // These buffers are allocated forever and cannot be freed
+	int            _free_index;    // >= _reserved_size
+	std::array <BufInfo, Cst::_max_nbr_buf>
+	               _buf_info_list; // Data below _reserved_size is not valid
 
 
 

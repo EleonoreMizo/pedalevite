@@ -58,8 +58,6 @@ public:
 	bool           _force_mono_flag = false;
 	bool           _gen_audio_flag  = true;
 
-	int            _ctx_index       = -1; // Index in ProcessingContext::_context_arr
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

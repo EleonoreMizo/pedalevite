@@ -1161,6 +1161,7 @@ commonsrc = \
         ../../src/mfx/uitk/Rect.hpp \
         ../../src/mfx/uitk/Vec2d.h \
         ../../src/mfx/uitk/Vec2d.hpp \
+        ../../src/mfx/ChnMode.cpp \
         ../../src/mfx/ChnMode.h \
         ../../src/mfx/CmdLine.h \
         ../../src/mfx/CmdLine.cpp \
