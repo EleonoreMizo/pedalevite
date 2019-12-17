@@ -82,22 +82,22 @@ bool	strncpy_0 (char dest_0 [], const char src_0 [], std::string::size_type buf_
 	assert (src_0 != 0);
 	assert (buf_len_byte > 0);
 
-	bool				trunc_flag = true;
+	bool           trunc_flag = true;
 	if (buf_len_byte > 0)
 	{
 		std::string::size_type	pos = 0;
-		bool				cont_flag = true;
+		bool           cont_flag = true;
 		do
 		{
-			const char		c = src_0 [pos];
+			const char     c = src_0 [pos];
 			if (c == '\0')
 			{
 				cont_flag = false;
 			}
 			else
 			{
-				int				char_len;
-				const int		ret_val = Codec8::get_char_seq_len_utf (char_len, c);
+				int            char_len;
+				const int      ret_val = Codec8::get_char_seq_len_utf (char_len, c);
 				if (ret_val != Err_OK)
 				{
 					cont_flag = false;
@@ -106,7 +106,7 @@ bool	strncpy_0 (char dest_0 [], const char src_0 [], std::string::size_type buf_
 
 				else
 				{
-					const std::string::size_type	pos_end = pos + char_len;
+					const std::string::size_type  pos_end = pos + char_len;
 					if (pos_end >= buf_len_byte)
 					{
 						cont_flag = false;
@@ -130,22 +130,22 @@ bool	strncpy_0 (char dest_0 [], const char src_0 [], std::string::size_type buf_
 		dest_0 [pos] = '\0';
 	}
 
-	return (trunc_flag);
+	return trunc_flag;
 }
 
 
 
 bool	strncat_0 (char dest_0 [], const char src_0 [], std::string::size_type buf_len_byte)
 {
-	bool				trunc_flag = true;
+	bool           trunc_flag = true;
 
-	const size_t	len = strlen (dest_0);
+	const size_t   len = strlen (dest_0);
 	if (len < buf_len_byte)
 	{
 		trunc_flag = strncpy_0 (dest_0 + len, src_0, buf_len_byte - len);
 	}
 
-	return (trunc_flag);
+	return trunc_flag;
 }
 
 
@@ -155,7 +155,7 @@ bool	strncat_0 (char dest_0 [], const char src_0 [], std::string::size_type buf_
 // Returns true if the string is modified.
 bool	truncate_0 (char str_0 [], std::string::size_type buf_len_byte)
 {
-	bool				trunc_flag = false;
+	bool           trunc_flag = false;
 
 	std::string::size_type	valid_end_pos = 0;
 	std::string::size_type	pos = 0;
@@ -190,7 +190,7 @@ bool	truncate_0 (char str_0 [], std::string::size_type buf_len_byte)
 		str_0 [valid_end_pos] = '\0';
 	}
 
-	return (trunc_flag);
+	return trunc_flag;
 }
 
 
@@ -203,10 +203,10 @@ Name: truncate
 
 bool truncate (std::string & str, std::string::size_type buf_len_byte)
 {
-	const char * str_0 = str.c_str ();
-	bool trunc_flag = false;
-	std::string::size_type	valid_end_pos = 0;
-	std::string::size_type	pos = 0;
+	const char *   str_0      = str.c_str ();
+	bool           trunc_flag = false;
+	std::string::size_type  valid_end_pos = 0;
+	std::string::size_type  pos           = 0;
 
 	while (pos < buf_len_byte && ! trunc_flag && str_0 [pos] != '\0')
 	{
@@ -239,24 +239,23 @@ bool truncate (std::string & str, std::string::size_type buf_len_byte)
 		str.erase (valid_end_pos, std::string::npos);
 	}
 
-	return (trunc_flag);
+	return trunc_flag;
 }
 
 
 
 int	conv_to_lower_case (std::string &dest, const char src_0 [], const std::string::size_type max_sz)
 {
-	assert (&dest != 0);
 	assert (src_0 != 0);
 
-	int				ret_val = Err_OK;
+	int            ret_val = Err_OK;
 
 	dest.erase (dest.begin (), dest.end ());
 
-	std::string::size_type	pos = 0;
+	std::string::size_type  pos = 0;
 	while (src_0 [pos] != '\0' && pos < max_sz && ret_val == Err_OK)
 	{
-		int				char_len;
+		int            char_len;
 		char32_t       c;
 		ret_val = Codec8::decode_char (c, &src_0 [pos], char_len);
 		if (ret_val == Err_OK)
@@ -281,24 +280,23 @@ int	conv_to_lower_case (std::string &dest, const char src_0 [], const std::strin
 		}
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
 
 int	conv_to_upper_case (std::string &dest, const char src_0 [], const std::string::size_type max_sz)
 {
-	assert (&dest != 0);
 	assert (src_0 != 0);
 
-	int				ret_val = Err_OK;
+	int            ret_val = Err_OK;
 
 	dest.erase (dest.begin (), dest.end ());
 
-	std::string::size_type	pos = 0;
+	std::string::size_type  pos = 0;
 	while (src_0 [pos] != '\0' && pos < max_sz && ret_val == Err_OK)
 	{
-		int				char_len;
+		int            char_len;
 		char32_t       c;
 		ret_val = Codec8::decode_char (c, &src_0 [pos], char_len);
 		if (ret_val == Err_OK)
@@ -323,7 +321,7 @@ int	conv_to_upper_case (std::string &dest, const char src_0 [], const std::strin
 		}
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
@@ -334,17 +332,16 @@ int	strstr_ci (const char str_0 [], const char subset_0 [], long &subset_pos)
 {
 	assert (str_0 != 0);
 	assert (subset_0 != 0);
-	assert (&subset_pos != 0);
 
 	if (subset_0 [0] != '\0')
 	{
-		unicode::PredEq <unicode::ConvCi>	pred;
+		unicode::PredEq <unicode::ConvCi>   pred;
 
 		subset_pos = 0;
 		while (str_0 [subset_pos] != '\0')
 		{
-			long				pos_str = subset_pos;
-			long				pos_sub = 0;
+			long           pos_str = subset_pos;
+			long           pos_sub = 0;
 
 			do
 			{
@@ -397,7 +394,7 @@ int	strstr_ci (const char str_0 [], const char subset_0 [], long &subset_pos)
 		return (Err_NOT_FOUND);
 	}
 
-	return (Err_OK);
+	return Err_OK;
 }
 
 

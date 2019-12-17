@@ -42,7 +42,7 @@ BitFieldSparseIterator::BitFieldSparseIterator (BitFieldSparse &bfs)
 ,	_bit_index (-1)
 ,	_pos_end (0)
 {
-	assert (&bfs != 0);
+	// Nothing
 }
 
 

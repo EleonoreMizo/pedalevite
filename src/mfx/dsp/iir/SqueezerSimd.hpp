@@ -289,10 +289,6 @@ void	SqueezerSimd <BR, LFOP>::clear_buffers ()
 template <bool BR, class LFOP>
 void	SqueezerSimd <BR, LFOP>::update_internal_variables (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso)
 {
-	assert (&r != 0);
-	assert (&g != 0);
-	assert (&p != 0);
-	assert (&out_gain != 0);
 	assert (fs > 0);
 	assert (freq > 0);
 	assert (freq < fs * 0.5f);
@@ -324,10 +320,6 @@ void	SqueezerSimd <BR, LFOP>::update_internal_variables (float &r, float &g, flo
 template <bool BR, class LFOP>
 void	SqueezerSimd <BR, LFOP>::update_internal_variables_fast (float &r, float &g, float &p, float &out_gain, float fs, float freq, float reso)
 {
-	assert (&r != 0);
-	assert (&g != 0);
-	assert (&p != 0);
-	assert (&out_gain != 0);
 	assert (fs > 0);
 	assert (freq > 0);
 	assert (freq < fs * 0.5f);

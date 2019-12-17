@@ -94,8 +94,6 @@ float	InterpFtor::Linear::operator () (uint32_t frac_pos, const float data []) c
 // Result is still on a signed 16-bit scale
 int32_t	InterpFtor::Linear::operator () (uint32_t frac_pos, const int16_t data []) const
 {
-	assert (frac_pos >= 0);
-	assert (frac_pos <= 1);
 	assert (data != 0);
 
 #if fstb_IS (ARCHI, ARM)
@@ -219,7 +217,6 @@ int32_t	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const int16_t 
 	v = fstb::Scale <32>::mul (v, f) + b;
 	v = fstb::Scale <32>::mul (v, f) + c;
 	v = fstb::Scale <32>::mul (v, f) + x0;
-
 
 	return v;
 

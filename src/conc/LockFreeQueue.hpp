@@ -49,8 +49,6 @@ LockFreeQueue <T>::LockFreeQueue ()
 template <class T>
 void	LockFreeQueue <T>::enqueue (CellType &cell)
 {
-	assert (&cell != 0);
-
 	cell._next_ptr = 0;	// set the cell next pointer to NULL
 
 	CellType *     tail_ptr;
@@ -127,7 +125,7 @@ typename LockFreeQueue <T>::CellType *	LockFreeQueue <T>::dequeue ()
 		head_ptr = dequeue ();  // and pop a cell again
 	}
 
-	return (head_ptr);
+	return head_ptr;
 }
 
 

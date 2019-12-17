@@ -141,8 +141,6 @@ float	FilterComb <IM, FP, OP, AL>::get_freq () const
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::set_feedback (float feedback)
 {
-	using namespace std;
-
 	assert (fabs (feedback) <= 1);
 
 	_feedback = feedback;
@@ -254,8 +252,6 @@ void	FilterComb <IM, FP, OP, AL>::process_block_mix (float dest_ptr [], const fl
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::process_block_vff (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback)
 {
-	using namespace std;
-
 	assert (dest_ptr != 0);
 	assert (src_ptr != 0);
 	assert (nbr_spl > 0);
@@ -280,8 +276,6 @@ void	FilterComb <IM, FP, OP, AL>::process_block_vff (float dest_ptr [], const fl
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::process_block_vff_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback)
 {
-	using namespace std;
-
 	assert (dest_ptr != 0);
 	assert (src_ptr != 0);
 	assert (nbr_spl > 0);
@@ -386,7 +380,7 @@ void	FilterComb <IM, FP, OP, AL>::update_feedback ()
 template <typename IM, typename FP, typename OP, typename AL>
 float	FilterComb <IM, FP, OP, AL>::read_sample_without_feedback () const
 {
-	return (_buf.read_sample (&_interp_base [0]));
+	return _buf.read_sample (&_interp_base [0]);
 }
 
 
@@ -394,7 +388,7 @@ float	FilterComb <IM, FP, OP, AL>::read_sample_without_feedback () const
 template <typename IM, typename FP, typename OP, typename AL>
 float	FilterComb <IM, FP, OP, AL>::read_sample_with_feedback () const
 {
-	return (_buf.read_sample (&_interp_final [0]));
+	return _buf.read_sample (&_interp_final [0]);
 }
 
 
@@ -405,7 +399,7 @@ float	FilterComb <IM, FP, OP, AL>::write_in_delay_line (float sample)
 	_buf.write_sample (sample);
 	_buf.step_one_sample ();
 
-	return (sample);
+	return sample;
 }
 
 
@@ -413,9 +407,6 @@ float	FilterComb <IM, FP, OP, AL>::write_in_delay_line (float sample)
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::init_variable_freq_feedback (VariableFreqFeedbackData &data, int nbr_spl, float final_freq, float final_feedback)
 {
-	using namespace std;
-
-	assert (&data != 0);
 	assert (nbr_spl > 0);
 	assert (final_freq >= get_min_freq ());
 	assert (final_freq <= get_max_freq ());
@@ -435,8 +426,6 @@ void	FilterComb <IM, FP, OP, AL>::init_variable_freq_feedback (VariableFreqFeedb
 template <typename IM, typename FP, typename OP, typename AL>
 float	FilterComb <IM, FP, OP, AL>::iterate_variable_freq_feedback (VariableFreqFeedbackData &data, float sample)
 {
-	assert (&data != 0);
-
 	_period_int = fstb::ceil_int (data._cur_period);
 	_buf.set_time (_period_int);
 	const float    d        = _period_int - data._cur_period;
@@ -448,7 +437,7 @@ float	FilterComb <IM, FP, OP, AL>::iterate_variable_freq_feedback (VariableFreqF
 	data._cur_period   += data._period_step;
 	data._cur_feedback += data._feedback_step;
 
-	return (write_in_delay_line (out_val));
+	return write_in_delay_line (out_val);
 }
 
 

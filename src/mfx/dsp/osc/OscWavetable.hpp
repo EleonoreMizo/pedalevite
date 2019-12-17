@@ -61,8 +61,6 @@ void	OscWavetable <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::set_wavetable (const WavetableDataType &wavetable)
 {
-	assert (&wavetable != 0);
-
 	_wavetable_ptr = &wavetable;
 }
 

@@ -452,7 +452,6 @@ int	FileOpWav::save (const char *filename_0, const float * const chn_arr [], siz
 	assert (filename_0 != 0);
 	assert (chn_arr != 0);
 	assert (nbr_chn > 0);
-	assert (nbr_spl >= 0);
 	assert (sample_freq > 0);
 
 	int            ret_val = 0;

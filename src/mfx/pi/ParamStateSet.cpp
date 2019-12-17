@@ -48,7 +48,6 @@ void	ParamStateSet::init (piapi::ParamCateg categ, const ParamDescSet &param_des
 {
 	assert (categ >= 0);
 	assert (categ < piapi::ParamCateg_NBR_ELT);
-	assert (&param_desc_arr != 0);
 
 	_categ = categ;
 	const int      nbr_param = param_desc_arr.get_nbr_param (categ);
@@ -189,7 +188,6 @@ void	ParamStateSet::add_observer (int index, fstb::util::ObserverInterface &obse
 {
 	assert (index >= 0);
 	assert (index < int (_state_arr.size ()));
-	assert (&observer != 0);
 
 	fstb::util::ObservableInterface &   notifier =
 		_state_arr [index].use_notifier ();

@@ -356,9 +356,6 @@ void	TestOscWavetableSyncHard::test_speed ()
 template <typename O>
 void	TestOscWavetableSyncHard::configure_osc (O &osc, typename O::WavetableDataType &wt, typename O::AntialiasedStep &st)
 {
-	assert (&osc != 0);
-	assert (&wt != 0);
-
 	using namespace mfx::dsp;
 
 	typedef O OscType;

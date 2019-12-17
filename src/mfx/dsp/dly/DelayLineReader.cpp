@@ -80,8 +80,6 @@ int	DelayLineReader::get_tmp_buf_len () const
 // Mandatory call
 void	DelayLineReader::set_delay_line (const DelayLineReadInterface &delay_line)
 {
-	assert (&delay_line != 0);
-
 	_delay_line_ptr = &delay_line;
 }
 

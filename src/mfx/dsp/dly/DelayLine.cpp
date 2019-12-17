@@ -53,7 +53,6 @@ namespace dly
 void	DelayLine::set_interpolator (rspl::InterpolatorInterface &interp)
 {
 	assert (mix::Generic::is_ready ());
-	assert (&interp != 0);
 
 	_interp_ptr = &interp;
 

@@ -144,11 +144,7 @@ Throws: Nothing
 
 void	SnhTool::compute_snh_data (int &hold_time, int &rep_index, int max_nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step) const
 {
-	assert (&hold_time != 0);
-	assert (&rep_index != 0);
 	assert (max_nbr_spl > 0);
-	assert (&rate != 0);
-	assert (&rate_step != 0);
 
 	// Optimisation for non-oversampled data
 	if (_ovrspl_l2 == 0)
@@ -369,10 +365,6 @@ Throws: Nothing
 
 void	SnhTool::adjust_rate_param (int &pos_dest, fstb::FixedPoint &pos_src, fstb::FixedPoint &rate, fstb::FixedPoint &rate_step, int hold_time, int rep_index)
 {
-	assert (&pos_dest != 0);
-	assert (&pos_src != 0);
-	assert (&rate != 0);
-	assert (&rate_step != 0);
 	assert (hold_time > 0);
 	assert (rep_index >= 0);
 	assert (rep_index < hold_time);
@@ -745,7 +737,6 @@ void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], int
 
 int	SnhTool::compute_hold_time (const fstb::FixedPoint &rate, int ovrspl_l2)
 {
-	assert (&rate != 0);
 	assert (rate.get_val_int64 () > 0);
 	assert (ovrspl_l2 >= 0);
 

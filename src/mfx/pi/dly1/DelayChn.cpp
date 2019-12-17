@@ -81,7 +81,6 @@ void	DelayChn::set_sample_freq (double sample_freq)
 
 void	DelayChn::init (dsp::rspl::InterpolatorInterface &interp, float *buf_ptr, int buf_len)
 {
-	assert (&interp != 0);
 	assert (buf_ptr != 0);
 	assert (buf_len > 0);
 
@@ -107,7 +106,7 @@ void	DelayChn::set_delay_time (double delay_time, int transition_time)
 
 double	DelayChn::get_delay_time () const
 {
-	return (_delay);
+	return _delay;
 }
 
 
@@ -136,7 +135,7 @@ void	DelayChn::set_filter_freq (double f_lo, double f_hi)
 
 int	DelayChn::get_max_proc_len () const
 {
-	return (_max_proc_len);
+	return _max_proc_len;
 }
 
 

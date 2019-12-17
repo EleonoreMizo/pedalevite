@@ -133,8 +133,6 @@ Throws: Nothing
 template <typename OSC, int STPPLEN, int STPNPL2>
 void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::set_steptable (AntialiasedStep &steptable)
 {
-	assert (&steptable != 0);
-
 	_step_ptr = &steptable;
 }
 

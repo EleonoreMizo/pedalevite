@@ -58,7 +58,6 @@ Throws: Nothing
 template <typename SD, typename IF, typename CDT>
 void	OscSample <SD, IF, CDT>::set_sample_data (const SampleTable &sample_data)
 {
-	assert (&sample_data != 0);
 	assert (sample_data.is_valid ());
 
 	_sample_data = sample_data;

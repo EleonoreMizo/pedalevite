@@ -74,7 +74,6 @@ int	Remez::compute_coefs (double coef_list_ptr [], int len, const RemezSpec &spe
 {
 	assert (coef_list_ptr != 0);
 	assert (len > 0);
-	assert (&spec != 0);
 	assert (spec.size () > 0);
 	assert (type >= 0);
 	assert (type < Type_NBR_ELT);
@@ -251,9 +250,7 @@ int	Remez::compute_coefs (double coef_list_ptr [], int len, const RemezSpec &spe
 
 int	Remez::compute_coefs (CoefList &coef_list, int len, const RemezSpec &spec, Type type)
 {
-	assert (&coef_list != 0);
 	assert (len > 0);
-	assert (&spec != 0);
 	assert (spec.size () > 0);
 	assert (type >= 0);
 	assert (type < Type_NBR_ELT);

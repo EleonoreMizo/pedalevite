@@ -48,7 +48,6 @@ void	WpdGen::build_blep_pure (T &steptable, wnd::WndInterface <double> &win_gen,
 {
 	typedef T Steptable;
 
-	assert (&steptable != 0);
 	assert (sample_scale != 0);
 
 	const int      table_sz = Steptable::TABLE_SIZE;

@@ -66,12 +66,10 @@ Throws: Nothing
 
 long	strstr_ci (const char *s1_0, const char *s2_0)
 {
-	using namespace std;
-
 	long				offset = 0;
 	for ( ; ; )
 	{
-		long				cnt = 0;
+		long           cnt = 0;
 		while (s2_0 [cnt] != '\0')
 		{
 			if (s1_0 [cnt + offset] == '\0')
@@ -112,10 +110,8 @@ Throws: Nothing
 
 bool	strcmp_ci (const char *s1_0, const char *s2_0)
 {
-	using namespace std;
-
-	long				pos = 0;
-	bool				ok_flag = true;
+	long           pos = 0;
+	bool           ok_flag = true;
 	do
 	{
 		ok_flag = (toupper (s1_0 [pos]) == toupper (s2_0 [pos]));
@@ -123,7 +119,7 @@ bool	strcmp_ci (const char *s1_0, const char *s2_0)
 	}
 	while (ok_flag && s1_0 [pos-1] != '\0');
 
-	return (ok_flag);
+	return ok_flag;
 }
 
 
@@ -142,10 +138,10 @@ Throws: ?
 
 std::string	to_lcase (const std::string &txt)
 {
-	std::string		result (txt);
+	std::string    result (txt);
 	to_lcase_inplace (result);
 
-	return (result);
+	return result;
 }
 
 
@@ -164,10 +160,10 @@ Throws: ?
 
 std::string	to_ucase (const std::string &txt)
 {
-	std::string		result (txt);
+	std::string      result (txt);
 	to_ucase_inplace (result);
 
-	return (result);
+	return result;
 }
 
 
@@ -185,9 +181,7 @@ Throws: Nothing
 
 void	to_lcase_inplace (std::string &txt)
 {
-	using namespace std;
-
-	const std::string::size_type	len = txt.length ();
+	const std::string::size_type  len = txt.length ();
 	for (std::string::size_type i = 0; i < len; ++i)
 	{
 		txt [i] = tolower (txt [i]);
@@ -211,9 +205,7 @@ void	to_lcase_inplace (char *txt_0)
 {
 	assert (txt_0 != 0);
 
-	using namespace std;
-
-	const size_t	len = strlen (txt_0);
+	const size_t   len = strlen (txt_0);
 	for (size_t i = 0; i < len; ++i)
 	{
 		txt_0 [i] = tolower (txt_0 [i]);
@@ -235,9 +227,7 @@ Throws: Nothing
 
 void	to_ucase_inplace (std::string &txt)
 {
-	using namespace std;
-
-	const size_t	len = txt.length ();
+	const size_t   len = txt.length ();
 	for (size_t i = 0; i < len; ++i)
 	{
 		txt [i] = toupper (txt [i]);
@@ -261,9 +251,7 @@ void	to_ucase_inplace (char *txt_0)
 {
 	assert (txt_0 != 0);
 
-	using namespace std;
-
-	const size_t	len = strlen (txt_0);
+	const size_t   len = strlen (txt_0);
 	for (size_t i = 0; i < len; ++i)
 	{
 		txt_0 [i] = toupper (txt_0 [i]);
@@ -277,15 +265,15 @@ std::string	trim_spaces (const char *txt_0)
 	assert (txt_0 != 0);
 
 	// Skips spaces at the beginning
-	size_t			pos = 0;
+	size_t         pos = 0;
 	while (txt_0 [pos] != '\0' && isspace (txt_0 [pos]))
 	{
 		++ pos;
 	}
 
 	// Finds the last non-space position
-	const size_t	copy_start_pos = pos;
-	size_t			copy_end_pos = pos;
+	const size_t   copy_start_pos = pos;
+	size_t         copy_end_pos   = pos;
 	while (txt_0 [pos] != '\0')
 	{
 		if (! isspace (txt_0 [pos]))
@@ -296,10 +284,10 @@ std::string	trim_spaces (const char *txt_0)
 		++ pos;
 	}
 
-	const size_t		len = copy_end_pos - copy_start_pos;
-	const std::string	txt (&txt_0 [copy_start_pos], len);
+	const size_t      len = copy_end_pos - copy_start_pos;
+	const std::string txt (&txt_0 [copy_start_pos], len);
 
-	return (txt);
+	return txt;
 }
 
 
@@ -313,21 +301,20 @@ std::string	trim_spaces (const char *txt_0)
 // position (after the last translated character).
 bool	conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long *stop_pos_ptr)
 {
-	assert (&val != 0);
 	assert (txt_0 != 0);
 	assert (base > 0);
 	assert (base <= 'Z' - 'A' + 1 + 10);
 
 	val = 0;
 
-	int				s = 1;
-	long				pos = 0;
+	int            s   = 1;
+	long           pos = 0;
 
 	// Skips whitespaces
-	bool				skip_flag = true;
+	bool           skip_flag = true;
 	do
 	{
-		const char		c = txt_0 [pos];
+		const char     c = txt_0 [pos];
 		if (c == '\0' || ! isspace (c))
 		{
 			skip_flag = false;
@@ -351,8 +338,8 @@ bool	conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long *stop_po
 	}
 
 	// Digits
-	bool				overflow_flag = false;
-	int				nbr_decoded_digits = 0;
+	bool           overflow_flag      = false;
+	int            nbr_decoded_digits = 0;
 	while (ConvDigit::is_digit_from_base (txt_0 [pos], base))
 	{
 		const int64_t  old_val = val;

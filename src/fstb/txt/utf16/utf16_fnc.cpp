@@ -49,7 +49,6 @@ int	strstr_ci (const Char16 str_0 [], const Char16 subset_0 [], long &subset_pos
 {
 	assert (str_0 != 0);
 	assert (subset_0 != 0);
-	assert (&subset_pos != 0);
 
 	if (subset_0 [0] != '\0')
 	{

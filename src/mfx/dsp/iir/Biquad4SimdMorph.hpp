@@ -68,8 +68,6 @@ Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS,
 ,	_prog_b ()
 ,	_prog_a ()*/
 {
-	assert (&other != 0);
-
 	V128Par::store_f32 (_step_b [0]  , V128Par::load_f32 (other._step_b [0]  ));
 	V128Par::store_f32 (_step_b [1]  , V128Par::load_f32 (other._step_b [1]  ));
 	V128Par::store_f32 (_step_b [2]  , V128Par::load_f32 (other._step_b [2]  ));
@@ -131,7 +129,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_ramp_time (int nbr_spl)
 template <class VD, class VS, class VP>
 int	Biquad4SimdMorph <VD, VS, VP>::get_ramp_time () const
 {
-	return (_ramp_len);
+	return _ramp_le;
 }
 
 
@@ -389,7 +387,6 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_ramp (int biq, float b [3], flo
 	assert (b != 0);
 	assert (a != 0);
 
-
 	if (_nbr_rem_spl == 0)
 	{
 		_biq.get_z_eq_one (biq, b, a);
@@ -413,7 +410,6 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_final (int biq, float b [3], fl
 	assert (biq < BiqSimd::_nbr_units);
 	assert (b != 0);
 	assert (a != 0);
-
 
 	if (_nbr_rem_spl == 0)
 	{

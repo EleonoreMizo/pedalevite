@@ -69,8 +69,6 @@ void	ParamState::set_ramp_time (double t)
 
 void	ParamState::set_desc (const piapi::ParamDescInterface &desc)
 {
-	assert (&desc != 0);
-
 	_desc_ptr = &desc;
 }
 

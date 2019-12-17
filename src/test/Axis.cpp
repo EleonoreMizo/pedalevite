@@ -1,23 +1,15 @@
 /*****************************************************************************
 
         Axis.cpp
-        Copyright (c) 2003 Laurent de Soras
+        Author: Laurent de Soras, 2003
 
 --- Legal stuff ---
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+This program is free software. It comes without any warranty, to
+the extent permitted by applicable law. You can redistribute it
+and/or modify it under the terms of the Do What The Fuck You Want
+To Public License, Version 2, as published by Sam Hocevar. See
+http://sam.zoy.org/wtfpl/COPYING for more details.
 
 *Tab=3***********************************************************************/
 
@@ -37,10 +29,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"Axis.h"
+#include "Axis.h"
 
-#include	<cassert>
-#include	<cmath>
+#include <cassert>
+#include <cmath>
 
 
 
@@ -90,7 +82,7 @@ void	Axis::set_scale (double min_val, double max_val)
 	_min_val = min_val;
 	_max_val = max_val;
 
-	keep_coherent ();
+	keep_consistent ();
 }
 
 
@@ -112,7 +104,7 @@ void	Axis::set_log_scale (bool log_flag)
 {
 	_log_flag = log_flag;
 
-	keep_coherent ();
+	keep_consistent ();
 }
 
 
@@ -152,7 +144,7 @@ void	Axis::set_tick_org (double org)
 {
 	_tick_org = org;
 
-	keep_coherent ();
+	keep_consistent ();
 }
 
 
@@ -174,7 +166,7 @@ void	Axis::set_tick_dist (double dist)
 
 	_tick_dist = dist;
 
-	keep_coherent ();
+	keep_consistent ();
 }
 
 
@@ -192,8 +184,6 @@ Throws: std::string related exceptions.
 
 void	Axis::set_name (const std::string &name)
 {
-	assert (&name != 0);
-
 	_name = name;
 }
 
@@ -213,9 +203,6 @@ Throws: Nothing
 
 void	Axis::get_scale (double &min_val, double &max_val) const
 {
-	assert (&min_val != 0);
-	assert (&max_val != 0);
-
 	min_val = _min_val;
 	max_val = _max_val;
 }
@@ -234,7 +221,7 @@ Throws: Nothing
 
 bool	Axis::is_log_scale () const
 {
-	return (_log_flag);
+	return _log_flag;
 }
 
 
@@ -251,7 +238,7 @@ Throws: Nothing
 
 bool	Axis::is_tick_active () const
 {
-	return (_tick_flag);
+	return _tick_flag;
 }
 
 
@@ -268,7 +255,7 @@ Throws: Nothing
 
 double	Axis::get_tick_org () const
 {
-	return (_tick_org);
+	return _tick_org;
 }
 
 
@@ -285,7 +272,7 @@ Throws: Nothing
 
 double	Axis::get_tick_dist () const
 {
-	return (_tick_dist);
+	return _tick_dist;
 }
 
 
@@ -302,7 +289,7 @@ Throws: Nothing
 
 std::string	Axis::get_name () const
 {
-	return (_name);
+	return _name;
 }
 
 
@@ -323,8 +310,6 @@ Throws: Nothing
 
 double	Axis::conv_val_to_pos (double val) const
 {
-	using namespace std;
-
 	double			pos = 0;
 
 	if (_log_flag)
@@ -336,8 +321,8 @@ double	Axis::conv_val_to_pos (double val) const
 		{
 			val = 1e-300;
 		}
-		const double	len_log = log10 (_max_val / _min_val);
-		const double	val_log = log10 (val / _min_val);
+		const double   len_log = log10 (_max_val / _min_val);
+		const double   val_log = log10 (val / _min_val);
 		pos = val_log / len_log;
 	}
 
@@ -346,7 +331,7 @@ double	Axis::conv_val_to_pos (double val) const
 		pos = (val - _min_val) / (_max_val - _min_val);
 	}
 
-	return (pos);
+	return pos;
 }
 
 
@@ -364,9 +349,7 @@ Throws: Nothing
 
 long	Axis::tick_begin () const
 {
-	using namespace std;
-
-	long				it = 0;
+	long           it = 0;
 
 	if (_log_flag)
 	{
@@ -383,7 +366,7 @@ long	Axis::tick_begin () const
 		it = static_cast <long> (ceil (min_pos));
 	}
 
-	return (it);
+	return it;
 }
 
 
@@ -400,9 +383,7 @@ Throws: Nothing
 
 long	Axis::tick_end () const
 {
-	using namespace std;
-
-	long				last_tick = 0;
+	long           last_tick = 0;
 
 	if (_log_flag)
 	{
@@ -419,7 +400,7 @@ long	Axis::tick_end () const
 		last_tick = static_cast <long> (floor (max_pos));
 	}
 
-	return (last_tick + 1);
+	return last_tick + 1;
 }
 
 
@@ -438,9 +419,7 @@ Throws: Nothing
 
 double	Axis::get_tick_val (long it) const
 {
-	using namespace std;
-
-	double			tick_val = 0;
+	double          tick_val = 0;
 
 	if (_log_flag)
 	{
@@ -454,7 +433,7 @@ double	Axis::get_tick_val (long it) const
 		tick_val = _tick_org + _tick_dist * it;
 	}
 
-	return (tick_val);
+	return tick_val;
 }
 
 
@@ -473,7 +452,7 @@ Throws: Nothing
 
 double	Axis::get_tick_pos (long it) const
 {
-	return (conv_val_to_pos (get_tick_val (it)));
+	return conv_val_to_pos (get_tick_val (it));
 }
 
 
@@ -486,7 +465,7 @@ double	Axis::get_tick_pos (long it) const
 
 
 
-void	Axis::keep_coherent ()
+void	Axis::keep_consistent ()
 {
 	if (_log_flag)
 	{

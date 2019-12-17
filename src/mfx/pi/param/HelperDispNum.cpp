@@ -241,7 +241,7 @@ double	HelperDispNum::get_val_min () const
 {
 	assert (is_ok ());
 
-	return (_val_min);
+	return _val_min;
 }
 
 
@@ -250,7 +250,7 @@ double	HelperDispNum::get_val_max () const
 {
 	assert (is_ok ());
 
-	return (_val_max);
+	return _val_max;
 }
 
 
@@ -406,7 +406,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 		fstb::txt::utf8::strncpy_0 (txt_0, tmp_0, max_len + 1);
 	}
 
-	return (Err_OK);
+	return Err_OK;
 }
 
 
@@ -415,7 +415,6 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 {
 	assert (is_ok ());
 	assert (txt_0 != 0);
-	assert (&val != 0);
 
 	int				ret_val = Err_OK;
 
@@ -541,7 +540,7 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 		val = fstb::limit (val, _val_min, _val_max);
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
@@ -558,9 +557,8 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 int	HelperDispNum::detect_note (const char *txt_0, const char * &stop_0) const
 {
 	assert (txt_0 != 0);
-	assert (&stop_0 != 0);
 
-	int				note = -1;
+	int            note = -1;
 
 	// Goes backward to make sure we catch the notes with a sharp.
 	for (int pos = 12-1; pos >= 0 && note < 0; --pos)
@@ -574,33 +572,33 @@ int	HelperDispNum::detect_note (const char *txt_0, const char * &stop_0) const
 		}
 	}
 
-	return (note);
+	return note;
 }
 
 
 
 std::string	HelperDispNum::print_frac (double val, long max_len) const
 {
-	const char *	delim_0 = "/";
-	const long		delim_len = long (strlen (delim_0));
+	const char *   delim_0 = "/";
+	const long     delim_len = long (strlen (delim_0));
 
 	// Separates int and frac values
-	const double	val_abs = fabs (val);
-	long				val_abs_int = fstb::floor_int (val);
-	double			val_abs_frac = val_abs - val_abs_int;
+	const double val_abs = fabs (val);
+	long 	         val_abs_int = fstb::floor_int (val);
+	double         val_abs_frac = val_abs - val_abs_int;
 
 	// Finds the fraction
-	int				num;
-	int				den;
-	bool				retry_flag;
+	int            num;
+	int            den;
+	bool           retry_flag;
 	do
 	{
 		retry_flag = false;
 
-		long				frac_len = max_len;
+		long           frac_len = max_len;
 		if (val_abs_int > 0)
 		{
-			const int		nbr_dgt_int =
+			const int      nbr_dgt_int =
 				1 + fstb::floor_int (log10 (double (val_abs_int)));
 			frac_len -= nbr_dgt_int;
 		}
@@ -621,7 +619,7 @@ std::string	HelperDispNum::print_frac (double val, long max_len) const
 	char           tmp_0 [1023+1];
 
 	// Prints the integer part
-	bool					int_flag = false;
+	bool           int_flag = false;
 	if (val_abs_int > 0 || num == 0)
 	{
 		const long		val_int = (val < 0) ? -val_abs_int : val_abs_int;
@@ -641,48 +639,45 @@ std::string	HelperDispNum::print_frac (double val, long max_len) const
 		result += tmp_0;
 	}
 
-	return (result);
+	return result;
 }
 
 
 
 bool	HelperDispNum::find_infinite (const char *txt_0)
 {
-	bool			inf_flag = false;
-
-	const int		nbr_inf = sizeof (_inf_0_list) / sizeof (_inf_0_list [0]);
+	bool           inf_flag = false;
+	const int      nbr_inf  = sizeof (_inf_0_list) / sizeof (_inf_0_list [0]);
 	for (int k = 0; k < nbr_inf && ! inf_flag; ++k)
 	{
 		const char *	test_0 = strstr (txt_0, _inf_0_list [k]);
 		inf_flag = (test_0 != 0);
 	}
 
-	return (inf_flag);
+	return inf_flag;
 }
 
 
 
 bool	HelperDispNum::find_frac (int &num, int &den, double frac_val, long max_len)
 {
-	assert (&num != 0);
-	assert (&den != 0);
 	assert (frac_val >= 0);
 	assert (frac_val <= 1);	// Should be < 1, but we have to tolerate rounding errors.
 	assert (max_len > 0);
 
-	bool				fit_flag = true;
+	bool           fit_flag = true;
 
 	num = 1;
 	den = 0;
 
 	// Numerator is always lower than denominator.
 	// Logically rounded towards minus infinity.
-	const long		max_len_num = max_len / 2;
-	const long		max_num = fstb::ipowp (
+	const long     max_len_num = max_len / 2;
+	const long     max_num = fstb::ipowp (
 		10L,
 		fstb::limit (max_len_num, 1L, 4L)
 	) - 1;
-	const long		max_den = fstb::ipowp (
+	const long     max_den = fstb::ipowp (
 		10L,
 		fstb::limit (max_len - max_len_num, 1L, 4L)
 	) - 1;
@@ -693,11 +688,11 @@ bool	HelperDispNum::find_frac (int &num, int &den, double frac_val, long max_len
 		fit_flag = false;
 	}
 
-	int				best_num = 0;
-	int				best_den = 1;
-	double			best_err = 1.0;
+	int            best_num = 0;
+	int            best_den = 1;
+	double         best_err = 1.0;
 
-	static const int	den_list [] =
+	static const int  den_list [] =
 	{
 		2, 3,
 		4, 5, 6, 7,
@@ -708,13 +703,13 @@ bool	HelperDispNum::find_frac (int &num, int &den, double frac_val, long max_len
 		128, 192,
 		256
 	};
-	const int		nbr_den = sizeof (den_list) / sizeof (den_list [0]);
+	const int      nbr_den = sizeof (den_list) / sizeof (den_list [0]);
 
-	bool				cont_flag = true;
+	bool           cont_flag = true;
 	for (int den_index = 0; den_index < nbr_den && cont_flag; ++den_index)
 	{
-		const int		tst_den = den_list [den_index];
-		const int		tst_num = fstb::round_int (frac_val * tst_den);
+		const int      tst_den = den_list [den_index];
+		const int      tst_num = fstb::round_int (frac_val * tst_den);
 
 		// We take this solution only if it is displayable.
 		// We can tolerate that the numerator gives a digit to the
@@ -722,8 +717,8 @@ bool	HelperDispNum::find_frac (int &num, int &den, double frac_val, long max_len
 		if (   (tst_num      <= max_num && tst_den <= max_den         )
 		    || (tst_num * 10 <= max_num && tst_den <= max_den * 10 + 9))
 		{
-			const double	exact_tst = double (tst_num) / double (tst_den);
-			const double	err = fabs (frac_val - exact_tst);
+			const double   exact_tst = double (tst_num) / double (tst_den);
+			const double   err = fabs (frac_val - exact_tst);
 			if (err < best_err)
 			{
 				// Avoids both big numerator and denominator
@@ -749,7 +744,7 @@ bool	HelperDispNum::find_frac (int &num, int &den, double frac_val, long max_len
 	num = best_num;
 	den = best_den;
 
-	return (fit_flag);
+	return fit_flag;
 }
 
 
@@ -757,12 +752,11 @@ bool	HelperDispNum::find_frac (int &num, int &den, double frac_val, long max_len
 bool	HelperDispNum::scan_frac (const char txt_0 [], double &val)
 {
 	assert (txt_0 != 0);
-	assert (&val != 0);
 
-	bool				ok_flag = true;
+	bool           ok_flag = true;
 
 	const int      nbr_val = 3;
-	double			res [nbr_val];
+	double         res [nbr_val];
 	const char *   base_0 = txt_0;
 	int            nbr_conv = 0;
 	for (int i = 0; i < nbr_val && *base_0 != '\0'; ++i)
@@ -812,16 +806,16 @@ bool	HelperDispNum::scan_frac (const char txt_0 [], double &val)
 		break;
 	}
 
-	return (ok_flag);
+	return ok_flag;
 }
 
 
 
 bool	HelperDispNum::scan_ratio (const char txt_0 [], double &val, Type type)
 {
-	bool				ok_flag = true;
+	bool           ok_flag = true;
 
-	char				part_0 [2] [63+1];
+	char           part_0 [2] [63+1];
 	const char *   colon_0 = strchr (txt_0, ':');
 	int            nbr_conv = 0;
 	if (colon_0 == 0)
@@ -842,7 +836,7 @@ bool	HelperDispNum::scan_ratio (const char txt_0 [], double &val, Type type)
 	part_0 [0] [sizeof (part_0 [0]) - 1] = '\0';
 	part_0 [1] [sizeof (part_0 [1]) - 1] = '\0';
 
-	int				nbr_parts = 0;
+	int            nbr_parts = 0;
 	if (nbr_conv == 0)
 	{
 		ok_flag = false;
@@ -852,7 +846,7 @@ bool	HelperDispNum::scan_ratio (const char txt_0 [], double &val, Type type)
 		nbr_parts = (nbr_conv == 3) ? 2 : 1;
 	}
 
-	double			part [2] = { 1, 1 };
+	double         part [2] = { 1, 1 };
 	for (int cnt = 0; cnt < nbr_parts && ok_flag; ++cnt)
 	{
 		if (find_infinite (part_0 [cnt]))
@@ -862,9 +856,9 @@ bool	HelperDispNum::scan_ratio (const char txt_0 [], double &val, Type type)
 
 		else
 		{
-			char *			end_ptr;
-			const char *	start_0 = part_0 [cnt];
-			const double	x = strtod (start_0, &end_ptr);
+			char *         end_ptr;
+			const char *   start_0 = part_0 [cnt];
+			const double   x       = strtod (start_0, &end_ptr);
 			if (end_ptr == start_0 || fabs (x) == HUGE_VAL)
 			{
 				ok_flag = false;
@@ -899,7 +893,7 @@ bool	HelperDispNum::scan_ratio (const char txt_0 [], double &val, Type type)
 		}
 	}
 
-	return (ok_flag);
+	return ok_flag;
 }
 
 

@@ -604,7 +604,6 @@ void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::process_block (DataType sub_data_ptr [], int nbr_spl)
 {
-	assert (ref_data_ptr != 0);
 	assert (sub_data_ptr != 0);
 	assert (_wavetable_pos_ptr != 0);
 	assert (_wavetable_neg_ptr != 0);
@@ -648,6 +647,7 @@ void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::process_block (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl)
 {
+	assert (ref_data_ptr != 0);
 	assert (sub_data_ptr != 0);
 	assert (_wavetable_pos_ptr != 0);
 	assert (_wavetable_neg_ptr != 0);

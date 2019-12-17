@@ -53,8 +53,6 @@ int	BitFieldTools <T, DL2>::calculate_nbr_groups (int nbr_elt)
 template <typename T, int DL2>
 void	BitFieldTools <T, DL2>::calculate_group_and_pos (int &group, int &gpos, int pos)
 {
-	assert (&group != 0);
-	assert (&gpos != 0);
 	assert (pos >= 0);
 
 	group = (pos >> BITDEPTH_L2);
@@ -66,8 +64,6 @@ void	BitFieldTools <T, DL2>::calculate_group_and_pos (int &group, int &gpos, int
 template <typename T, int DL2>
 void	BitFieldTools <T, DL2>::calculate_group_and_mask (int &group, GroupType &mask, int pos)
 {
-	assert (&group != 0);
-	assert (&mask != 0);
 	assert (pos >= 0);
 
 	int            gpos;

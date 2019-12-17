@@ -72,7 +72,6 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 ,	_sat_out_a (1)
 ,	_sat_out_b (0)
 {
-	assert (&interp != 0);
 	assert (dly_buf_ptr != 0);
 	assert (dly_buf_len > 0);
 	assert (render_buf_ptr != 0);
@@ -494,14 +493,13 @@ double	FlanchoChn::estimate_base_phase () const
 
 	phase -= floor (phase);
 
-	return (phase);
+	return phase;
 }
 
 
 
 void	FlanchoChn::set_wf_type (dsp::ctrl::lfo::LfoModule &lfo, WfType wf_type)
 {
-	assert (&lfo != 0);
 	assert (wf_type >= 0);
 	assert (wf_type < WfType_NBR_ELT);
 
@@ -558,8 +556,6 @@ void	FlanchoChn::set_wf_type (dsp::ctrl::lfo::LfoModule &lfo, WfType wf_type)
 
 double	FlanchoChn::compute_delay_time (dsp::ctrl::lfo::LfoModule &lfo)
 {
-	assert (&lfo != 0);
-
 	double         lfo_val = lfo.get_val ();
 
 	if (_wf_type != WfType_TRI)
@@ -580,7 +576,7 @@ double	FlanchoChn::compute_delay_time (dsp::ctrl::lfo::LfoModule &lfo)
 	const double   delay_limit = _dly_line.get_min_delay_time ();
 	delay_time = std::max (delay_time, delay_limit);
 
-	return (delay_time);
+	return delay_time;
 }
 
 

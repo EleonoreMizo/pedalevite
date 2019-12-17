@@ -84,7 +84,6 @@ Voice::Voice ()
 void	Voice::set_interpolator (InterpolatorInterface &interp)
 {
 	assert (! is_active ());
-	assert (&interp != 0);
 
 	_interp_ptr = &interp;
 
@@ -156,7 +155,6 @@ bool	Voice::is_active () const
 
 void	Voice::activate (SplDataRetrievalInterface &data_provider, int64_t len, int nbr_chn, double sample_freq)
 {
-	assert (&data_provider != 0);
 	assert (len >= 0);
 	assert (nbr_chn > 0);
 	assert (nbr_chn <= Cst::MAX_NBR_CHN);
@@ -283,8 +281,6 @@ void	Voice::set_playback_pos (int64_t pos_int, uint32_t pos_frac)
 void	Voice::get_playback_pos (int64_t &pos_int, uint32_t &pos_frac) const
 {
 	assert (is_active ());
-	assert (&pos_int != 0);
-	assert (&pos_frac != 0);
 
 	pos_int  = _pos_int;
 	pos_frac = _pos_frac;
@@ -419,9 +415,6 @@ void	Voice::process_block (float *out_ptr_arr [], int nbr_spl)
 
 void	Voice::conv_pos_flt_to_fix (int64_t &pos_int, uint32_t &pos_frac, double pos)
 {
-	assert (&pos_int != 0);
-	assert (&pos_frac != 0);
-
 	const float		uint_scale = 65536.0f * 65536.0f;
 
 	pos_int = fstb::floor_int64 (pos);
@@ -574,7 +567,6 @@ void	Voice::linearise_sample (int nbr_spl)
 // true if it is the loop
 bool	Voice::compute_next_stop (int64_t &stop_pos, int64_t cur_pos, int dir) const
 {
-	assert (&stop_pos != 0);
 	assert (cur_pos >= 0);
 	assert (cur_pos < _in_len);
 	assert (dir == -1 || dir == +1);
@@ -607,7 +599,7 @@ bool	Voice::compute_next_stop (int64_t &stop_pos, int64_t cur_pos, int dir) cons
 		}
 	}
 
-	return (loop_flag);
+	return loop_flag;
 }
 
 
@@ -658,7 +650,7 @@ int	Voice::collect_source_spl (int offset, int max_len, int cur_dir, int64_t pos
 		(cur_dir < 0)
 	);
 
-	return (len_int);
+	return len_int;
 }
 
 
@@ -666,8 +658,6 @@ int	Voice::collect_source_spl (int offset, int max_len, int cur_dir, int64_t pos
 // pos can be < 0 or >= _in_len if there is no loop to stop the cursor.
 void	Voice::advance_cursor_pos (int64_t &pos, int &dir, int stride) const
 {
-	assert (&pos != 0);
-	assert (&dir != 0);
 	assert (dir == +1 || dir == -1);
 	assert (stride >= 0);
 
@@ -732,7 +722,6 @@ void	Voice::advance_cursor_pos (int64_t &pos, int &dir, int stride) const
 
 void	Voice::check_finished (float *out_ptr_arr [], int &dest_pos, int nbr_spl)
 {
-	assert (&dest_pos != 0);
 	assert (dest_pos >= 0);
 	assert (nbr_spl > 0);
 	assert (dest_pos <= nbr_spl);
@@ -765,8 +754,6 @@ void	Voice::check_finished (float *out_ptr_arr [], int &dest_pos, int nbr_spl)
 // Compensation moves the cursor in the direction opposed to dir
 void	Voice::compensate_pos_for_group_delay (int64_t &pos_int, uint32_t &pos_frac, int dir) const
 {
-	assert (&pos_int != 0);
-	assert (&pos_frac != 0);
 	assert (dir == +1 || dir == -1);
 
 	fstb::FixedPoint	comp (_imp_len - 1, 0);
@@ -791,7 +778,7 @@ int	Voice::compute_dir_fix (int dir)
 	assert (dir_fix >= -1);
 	assert (dir_fix <= 0);
 
-	return (dir_fix);
+	return dir_fix;
 }
 
 

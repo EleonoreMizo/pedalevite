@@ -72,23 +72,22 @@ int64_t	ConvNum::conv_str_to_int64 (const char *txt_0, int base)
 // position (after the last translated character).
 bool	ConvNum::conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long *stop_pos_ptr)
 {
-	assert (&val != 0);
 	assert (txt_0 != 0);
 	assert (base > 0);
 	assert (base <= 'Z' - 'A' + 1 + 10);
 
 	val = 0;
 
-	int				s = 1;
-	long				pos = 0;
+	int            s = 1;
+	long           pos = 0;
 
 	// Skips whitespaces
-	bool				skip_flag = true;
+	bool           skip_flag = true;
 	do
 	{
 		char32_t       c;
-		int				char_len;
-		int				ret_val = Codec8::decode_char (c, txt_0 + pos, char_len);
+		int            char_len;
+		int            ret_val = Codec8::decode_char (c, txt_0 + pos, char_len);
 		if (ret_val != Err_OK)
 		{
 			// Will produce a decoding failure later in the function
@@ -100,8 +99,8 @@ bool	ConvNum::conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long
 		}
 		else
 		{
-			const unicode::Categ	categ = unicode::CharData::get_categ (c);
-			const unicode::CategClass	cat_c = unicode::Categ_conv_to_class (categ);
+			const unicode::Categ       categ = unicode::CharData::get_categ (c);
+			const unicode::CategClass  cat_c = unicode::Categ_conv_to_class (categ);
 			if (   cat_c == unicode::CategClass_OTHER
 				 || cat_c == unicode::CategClass_SEPARATOR)
 			{
@@ -127,8 +126,8 @@ bool	ConvNum::conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long
 	}
 
 	// Digits
-	bool				overflow_flag = false;
-	int				nbr_decoded_digits = 0;
+	bool           overflow_flag      = false;
+	int            nbr_decoded_digits = 0;
 	while (neutral::ConvDigit::is_digit_from_base (txt_0 [pos], base))
 	{
 		const int64_t  old_val = val;
@@ -215,7 +214,7 @@ int	ConvNum::conv_int64_to_str (char *txt_0, int64_t val, long max_len, int base
 		txt_0 [nbr_char] = '\0';
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 

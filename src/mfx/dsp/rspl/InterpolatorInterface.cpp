@@ -54,8 +54,6 @@ namespace rspl
 // at exact sample positons (group delay taken into account).
 bool	InterpolatorInterface::test_and_process_trivial_cases (int &nbr_spl_gen, int nbr_chn, float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step, fstb::FixedPoint group_delay)
 {
-	assert (&nbr_spl_gen != 0);
-
 	bool				proc_flag = false;
 
 	if (   rate.get_frac_val () == 0

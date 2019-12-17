@@ -547,8 +547,6 @@ void	BiquadPackSimd <VD, VS>::clear_buffers_one (int stage, int chn)
 template <class VD, class VS>
 void	BiquadPackSimd <VD, VS>::find_biq (int &pack_index, int &biq_index, int stage, int chn) const
 {
-	assert (&pack_index != 0);
-	assert (&biq_index != 0);
 	assert (stage >= 0);
 	assert (stage < _nbr_stages);
 	assert (chn >= 0);
@@ -934,7 +932,7 @@ typename BiquadPackSimd <VD, VS>::ProcConf	BiquadPackSimd <VD, VS>::compute_proc
 		proc_conf = ProcConf_SERIAL;
 	}
 
-	return (proc_conf);
+	return proc_conf;
 }
 
 
@@ -942,9 +940,6 @@ typename BiquadPackSimd <VD, VS>::ProcConf	BiquadPackSimd <VD, VS>::compute_proc
 template <class VD, class VS>
 void	BiquadPackSimd <VD, VS>::compute_config_info (ProcConf &proc_conf, int &nbr_packs, int &group_size, int nbr_stages, int nbr_chn)
 {
-	assert (&proc_conf != 0);
-	assert (&nbr_packs != 0);
-	assert (&group_size != 0);
 	assert (nbr_stages >= 0);
 	assert (nbr_chn >= 0);
 

@@ -63,7 +63,7 @@ float *	DelayLineReaderPitch <TC>::get_tmp_buf_ptr () const
 {
 	assert (_tmp_buf_ptr != 0);
 
-	return (_tmp_buf_ptr);
+	return _tmp_buf_ptr;
 }
 
 
@@ -73,7 +73,7 @@ int	DelayLineReaderPitch <TC>::get_tmp_buf_len () const
 {
 	assert (_tmp_buf_ptr != 0);
 
-	return (_tmp_buf_len);
+	return _tmp_buf_len;
 }
 
 
@@ -82,8 +82,6 @@ int	DelayLineReaderPitch <TC>::get_tmp_buf_len () const
 template <typename TC>
 void	DelayLineReaderPitch <TC>::set_delay_line (const DelayLineReadInterface &delay_line)
 {
-	assert (&delay_line != 0);
-
 	_delay_line_ptr = &delay_line;
 	_dly_min = -1;
 	_dly_max = -1;

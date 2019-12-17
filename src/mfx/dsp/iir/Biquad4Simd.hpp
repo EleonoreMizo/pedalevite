@@ -41,7 +41,7 @@ public:
 	typedef	float	DataType;
 	static fstb_FORCEINLINE fstb::ToolsSimd::VectF32	load (const DataType *ptr)
 	{
-		return (fstb::ToolsSimd::set1_f32 (*ptr));
+		return fstb::ToolsSimd::set1_f32 (*ptr);
 	}
 };
 
@@ -52,7 +52,7 @@ public:
 	typedef	fstb::ToolsSimd::VectF32	DataType;
 	static fstb_FORCEINLINE fstb::ToolsSimd::VectF32	load (const DataType *ptr)
 	{
-		return (VS::load_f32 (ptr));
+		return VS::load_f32 (ptr);
 	}
 };
 
@@ -639,7 +639,6 @@ void	Biquad4Simd_Proc <STP>::process_block_2x2_immediate_post (Biquad4SimdData &
 template <class STP>
 float	Biquad4Simd_Proc <STP>::process_sample_single_stage (Biquad4SimdData &data, float x_s, int stage, int mem_pos, int alt_pos)
 {
-	assert (&data != 0);
 	assert (stage >= 0);
 	assert (stage < (Biquad4Simd <V128Dest, V128Src, V128Par>::_nbr_units));
 	assert (mem_pos >= 0);
@@ -692,7 +691,7 @@ template <class VD, class VS, class VP>
 Biquad4Simd <VD, VS, VP>::Biquad4Simd (const Biquad4Simd <VD, VS, VP> &other)
 :	_data (other._data)
 {
-	assert (&other != 0);
+	// Nothing
 }
 
 
@@ -700,14 +699,12 @@ Biquad4Simd <VD, VS, VP>::Biquad4Simd (const Biquad4Simd <VD, VS, VP> &other)
 template <class VD, class VS, class VP>
 Biquad4Simd <VD, VS, VP> &	Biquad4Simd <VD, VS, VP>::operator = (const Biquad4Simd <VD, VS, VP> &other)
 {
-	assert (&other != 0);
-
 	if (this != &other)
 	{
 		_data = other._data;
 	}
 
-	return (*this);
+	return *this;
 }
 
 
@@ -1017,7 +1014,7 @@ float	Biquad4Simd <VD, VS, VP>::process_sample_serial_latency (float x_s)
 {
 	typedef	Biquad4Simd_Proc <Biquad4Simd_StepOff <VD, VS, VP> >	Proc;
 
-	return (Proc::process_sample_serial_latency (_data, x_s, 0, 0));
+	return Proc::process_sample_serial_latency (_data, x_s, 0, 0);
 }
 
 
@@ -1030,7 +1027,7 @@ float	Biquad4Simd <VD, VS, VP>::process_sample_serial_latency (float x_s, const 
 
 	typedef	Biquad4Simd_Proc <Biquad4Simd_StepOn <VD, VS, VP> >	Proc;
 
-	return (Proc::process_sample_serial_latency (_data, x_s, b_inc, a_inc));
+	return Proc::process_sample_serial_latency (_data, x_s, b_inc, a_inc);
 }
 
 
@@ -1133,7 +1130,7 @@ float	Biquad4Simd <VD, VS, VP>::process_sample_serial_immediate (float x_s)
 
 	_data._mem_pos = alt_pos;
 
-	return (x_s);
+	return x_s;
 }
 
 
@@ -1148,7 +1145,7 @@ float	Biquad4Simd <VD, VS, VP>::process_sample_serial_immediate (float x_s, cons
 
 	Biquad4Simd_StepOn <VD, VS, VP>::step_z_eq (_data, b_inc, a_inc);
 
-	return (y_s);
+	return y_s;
 }
 
 
@@ -1232,7 +1229,7 @@ fstb::ToolsSimd::VectF32	Biquad4Simd <VD, VS, VP>::process_sample_2x2_latency (c
 {
 	typedef	Biquad4Simd_Proc <Biquad4Simd_StepOff <VD, VS, VP> >	Proc;
 
-	return (Proc::process_sample_2x2_latency (_data, x, 0, 0));
+	return Proc::process_sample_2x2_latency (_data, x, 0, 0);
 }
 
 
@@ -1240,13 +1237,12 @@ fstb::ToolsSimd::VectF32	Biquad4Simd <VD, VS, VP>::process_sample_2x2_latency (c
 template <class VD, class VS, class VP>
 fstb::ToolsSimd::VectF32	Biquad4Simd <VD, VS, VP>::process_sample_2x2_latency (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3])
 {
-	assert (&x != 0);
 	assert (V128Par::check_ptr (b_inc));
 	assert (V128Par::check_ptr (a_inc));
 
 	typedef	Biquad4Simd_Proc <Biquad4Simd_StepOn <VD, VS, VP> >	Proc;
 
-	return (Proc::process_sample_2x2_latency (_data, x, b_inc, a_inc));
+	return Proc::process_sample_2x2_latency (_data, x, b_inc, a_inc);
 }
 
 
@@ -1358,7 +1354,7 @@ fstb::ToolsSimd::VectF32	Biquad4Simd <VD, VS, VP>::process_sample_2x2_immediate 
 
 	const auto     y = fstb::ToolsSimd::set_2f32 (x_0, x_1);
 
-	return (y);
+	return y;
 }
 
 

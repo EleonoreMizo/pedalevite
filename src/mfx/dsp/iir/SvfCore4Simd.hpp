@@ -1388,7 +1388,6 @@ void	SvfCore4Simd <VD, VS, VP, MX>::process_block_2x2_imm_post (float dst_ptr []
 template <class VD, class VS, class VP, class MX>
 float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_single_stage (SvfCore4SimdData &data, float x_s, int stage, int stage_y)
 {
-	assert (&data != 0);
 	assert (stage >= 0);
 	assert (stage < SvfCore4SimdData::_nbr_units);
 	assert (stage_y >= 0);
@@ -1407,7 +1406,7 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_single_stage (SvfCore4SimdDa
 		data._v0m [stage], data._v1m [stage], data._v2m [stage]
 	);
 
-	return (data._y [stage_y]);
+	return data._y [stage_y];
 }
 
 
@@ -1429,8 +1428,6 @@ void	SvfCore4Simd <VD, VS, VP, MX>::iterate_parallel (const fstb::ToolsSimd::Vec
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::increment (SvfCore4SimdData &data, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
 {
-	assert (&data != 0);
-
 	auto           g0    = V128Par::load_f32 (data._g0 );
 	auto           g1    = V128Par::load_f32 (data._g1 );
 	auto           g2    = V128Par::load_f32 (data._g2 );

@@ -70,8 +70,6 @@ bool	Codec16 <C16>::is_char_single_word (C16 w)
 template <class C16>
 int	Codec16 <C16>::get_char_seq_len_ucs (int &len, char32_t ucs4)
 {
-	assert (&len != 0);
-
 	int            ret_val = Err_OK;
 
 	len = 1;
@@ -91,7 +89,7 @@ int	Codec16 <C16>::get_char_seq_len_ucs (int &len, char32_t ucs4)
 		ret_val = Err_CHAR_OUT_OF_RANGE;
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
@@ -99,8 +97,6 @@ int	Codec16 <C16>::get_char_seq_len_ucs (int &len, char32_t ucs4)
 template <class C16>
 int	Codec16 <C16>::get_char_seq_len_utf (int &len, C16 utf16_lead_word)
 {
-	assert (&len != 0);
-
 	int            ret_val = Err_OK;
 
 	len = 1;
@@ -121,8 +117,6 @@ int	Codec16 <C16>::get_char_seq_len_utf (int &len, C16 utf16_lead_word)
 template <class C16>
 int	Codec16 <C16>::encode_char (std::basic_string <C16> &utf16, char32_t ucs4)
 {
-	assert (&utf16 != 0);
-
 	C16            temp_0 [MAX_WORD_SEQ_LEN+1];
 	const int      ret_val = encode_char (temp_0, ucs4);
 	if (ret_val == Err_OK)
@@ -155,7 +149,6 @@ template <class C16>
 int	Codec16 <C16>::encode_char (C16 utf16_ptr [], char32_t ucs4, int &len)
 {
 	assert (utf16_ptr != 0);
-	assert (&len != 0);
 
 	int            ret_val = get_char_seq_len_ucs (len, ucs4);
 	if (ret_val == Err_OK)
@@ -182,8 +175,7 @@ int	Codec16 <C16>::encode_char (C16 utf16_ptr [], char32_t ucs4, int &len)
 template <class C16>
 int	Codec16 <C16>::decode_char (char32_t &ucs4, const C16 utf16_ptr [])
 {
-	assert (&ucs4 != 0);
-	assert (&utf16_ptr != 0);
+	assert (utf16_ptr != 0);
 
 	int            dummy_len;
 
@@ -195,9 +187,7 @@ int	Codec16 <C16>::decode_char (char32_t &ucs4, const C16 utf16_ptr [])
 template <class C16>
 int	Codec16 <C16>::decode_char (char32_t &ucs4, const C16 utf16_ptr [], int &len)
 {
-	assert (&ucs4 != 0);
 	assert (utf16_ptr != 0);
-	assert (&len != 0);
 
 	const C16      beg = utf16_ptr [0];
 	int            ret_val = get_char_seq_len_utf (len, beg);

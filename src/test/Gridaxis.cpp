@@ -1,23 +1,15 @@
 /*****************************************************************************
 
         Gridaxis.cpp
-        Copyright (c) 2003 Laurent de Soras
+        Author: Laurent de Soras, 2003
 
 --- Legal stuff ---
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+This program is free software. It comes without any warranty, to
+the extent permitted by applicable law. You can redistribute it
+and/or modify it under the terms of the Do What The Fuck You Want
+To Public License, Version 2, as published by Sam Hocevar. See
+http://sam.zoy.org/wtfpl/COPYING for more details.
 
 *Tab=3***********************************************************************/
 
@@ -119,11 +111,9 @@ Throws: Nothing
 
 void	Gridaxis::set_plot (EPSPlot &plot, float x, float y)
 {
-	assert (&plot != 0);
-
 	_plot_ptr = &plot;
-	_x = x;
-	_y = y;
+	_x        = x;
+	_y        = y;
 
 	_prim.set_plot (plot, x, y);
 }
@@ -167,7 +157,7 @@ Axis &	Gridaxis::use_axis (Direction dir)
 	assert (dir >= 0);
 	assert (dir < Direction_NBR_ELT);
 
-	return (_axis [dir]);
+	return _axis [dir];
 }
 
 
@@ -177,7 +167,7 @@ const Axis &	Gridaxis::use_axis (Direction dir) const
 	assert (dir >= 0);
 	assert (dir < Direction_NBR_ELT);
 
-	return (_axis [dir]);
+	return _axis [dir];
 }
 
 
@@ -195,14 +185,14 @@ Throws: Nothing
 
 GraphPrim &	Gridaxis::use_prim ()
 {
-	return (_prim);
+	return _prim;
 }
 
 
 
 const GraphPrim &	Gridaxis::use_prim () const
 {
-	return (_prim);
+	return _prim;
 }
 
 
@@ -353,23 +343,23 @@ void	Gridaxis::render_point_set (const double x_arr [], const double y_arr [], l
 	assert (y_arr != 0);
 	assert (nbr_points >= 1);
 
-	PsCoordArr		x_conv;
-	PsCoordArr		y_conv;
+	PsCoordArr     x_conv;
+	PsCoordArr     y_conv;
 	convert_coordinates (x_conv, y_conv, x_arr, y_arr, nbr_points);
 
 	for (long pos = 0; pos < nbr_points; ++pos)
 	{
-		const PsCoord	vx = x_conv [pos];
-		const PsCoord	vy = y_conv [pos];
+		const PsCoord  vx = x_conv [pos];
+		const PsCoord  vy = y_conv [pos];
 
 		switch (_dot_style)
 		{
-		case	DotStyle_PLUS:
+		case DotStyle_PLUS:
 			_plot_ptr->drawLine (vx - 2, vy, vx + 2, vy);
 			_plot_ptr->drawLine (vx, vy - 2, vx, vy + 2);
 			break;
 
-		case	DotStyle_SQUARE:
+		case DotStyle_SQUARE:
 			{
 				const PsCoord	x_conv2 [4] = { vx - 2, vx + 2, vx + 2, vx - 2 };
 				const PsCoord	y_conv2 [4] = { vy - 2, vy - 2, vy + 2, vy + 2 };
@@ -419,8 +409,8 @@ void	Gridaxis::put_annotation (double x, double y, const char txt_0 []) const
 
 	convert_coordinates (x, y);
 
-	const double		x_err = 20;
-	const double		y_err = 10;
+	const double   x_err = 20;
+	const double   y_err = 10;
 
 	if (   x >= _x - x_err && x < _x + _w + x_err
 	    && y >= _y - y_err && y < _y + _h + y_err)
@@ -455,8 +445,8 @@ void	Gridaxis::put_annotation_pos (double x, double y, const char txt_0 []) cons
 	x = x * _w + _x;
 	y = y * _h + _y;
 
-	const double		x_err = 20;
-	const double		y_err = 10;
+	const double   x_err = 20;
+	const double   y_err = 10;
 
 	if (   x >= _x - x_err && x < _x + _w + x_err
 	    && y >= _y - y_err && y < _y + _h + y_err)
@@ -495,19 +485,17 @@ void	Gridaxis::conv_nbr_2_str (char txt_0 [], double val)
 
 	else
 	{
-		using namespace std;
-
-		const double	p = log10 (fabs (val)) / 3;
+		const double   p = log10 (fabs (val)) / 3;
 		if (   (p >= -4 && p < -1.0/3)
 		    || (p >=  1 && p < 4+1))
 		{
-			static const char *	mult_0 [] =
+			static const char *  mult_0 [] =
 			{
 				"p", "n", "u", "m",
 				"",
 				"k", "M", "T", "P"
 			};
-			const int	m = static_cast <int> (floor (p));
+			const int   m = static_cast <int> (floor (p));
 			val /= pow (1000.0, static_cast <double> (m));
 			sprintf (txt_0, "%.3g%s", val, mult_0 [m + 4]);
 		}
@@ -540,22 +528,22 @@ void	Gridaxis::render_grid () const
 
 	// Vertical axis (horizontal lines)
 	{
-		const Axis &	axis = use_axis (Direction_V);
+		const Axis &   axis = use_axis (Direction_V);
 		for (long it = axis.tick_begin (); it < axis.tick_end (); ++it)
 		{
-			const double	pos = axis.get_tick_pos (it);
-			const double	line_y = _y + pos * _h;
+			const double   pos    = axis.get_tick_pos (it);
+			const double   line_y = _y + pos * _h;
 			_plot_ptr->drawLine (_x, float (line_y), _x + _w, float (line_y));
 		}
 	}
 
 	// Horizontal axis (vertical lines)
 	{
-		const Axis &	axis = use_axis (Direction_H);
+		const Axis &   axis = use_axis (Direction_H);
 		for (long it = axis.tick_begin (); it < axis.tick_end (); ++it)
 		{
-			const double	pos = axis.get_tick_pos (it);
-			const double	line_x = _x + pos * _w;
+			const double   pos = axis.get_tick_pos (it);
+			const double   line_x = _x + pos * _w;
 			_plot_ptr->drawLine (float (line_x), _y, float (line_x), _y + _h);
 		}
 	}
@@ -572,27 +560,25 @@ void	Gridaxis::render_axis_v () const
 	_plot_ptr->setLineWidth (0.5);
 	_plot_ptr->setNoDash ();
 
-	const Axis &	axis = use_axis (Direction_V);
-	const bool		log_flag = axis.is_log_scale ();
+	const Axis &   axis     = use_axis (Direction_V);
+	const bool     log_flag = axis.is_log_scale ();
 	for (long it = axis.tick_begin (); it < axis.tick_end (); ++it)
 	{
-		using namespace std;
-
-		const double	pos = axis.get_tick_pos (it);
-		const double	line_y = _y + pos * _h;
+		const double   pos = axis.get_tick_pos (it);
+		const double   line_y = _y + pos * _h;
 		_plot_ptr->drawLine (_x, float (line_y), _x - 2, float (line_y));
 
 		bool				print_flag = true;
 		if (log_flag)
 		{
-			const double	tens = floor (static_cast <double> (it) / 9);
-			const long		units = it - static_cast <long> (tens) * 9;
+			const double   tens  = floor (static_cast <double> (it) / 9);
+			const long     units = it - static_cast <long> (tens) * 9;
 			print_flag = (units == 0);
 		}
 		if (print_flag)
 		{
-			const double	val = axis.get_tick_val (it);
-			char				txt_0 [31+1];
+			const double   val = axis.get_tick_val (it);
+			char           txt_0 [31+1];
 			conv_nbr_2_str (txt_0, val);
 			_plot_ptr->drawText (_x - 4, float (line_y), txt_0, 1, 0.5);
 		}
@@ -619,27 +605,25 @@ void	Gridaxis::render_axis_h () const
 	_plot_ptr->setLineWidth (0.5);
 	_plot_ptr->setNoDash ();
 
-	const Axis &	axis = use_axis (Direction_H);
-	const bool		log_flag = axis.is_log_scale ();
+	const Axis &   axis     = use_axis (Direction_H);
+	const bool     log_flag = axis.is_log_scale ();
 	for (long it = axis.tick_begin (); it < axis.tick_end (); ++it)
 	{
-		using namespace std;
-
-		const double	pos = axis.get_tick_pos (it);
-		const double	line_x = _x + pos * _w;
+		const double   pos    = axis.get_tick_pos (it);
+		const double   line_x = _x + pos * _w;
 		_plot_ptr->drawLine (float (line_x), _y, float (line_x), _y - 2);
 
 		bool				print_flag = true;
 		if (log_flag)
 		{
-			const double	tens = floor (static_cast <double> (it) / 9);
-			const long		units = it - static_cast <long> (tens) * 9;
+			const double   tens  = floor (static_cast <double> (it) / 9);
+			const long     units = it - static_cast <long> (tens) * 9;
 			print_flag = (units == 0);
 		}
 		if (print_flag)
 		{
-			const double	val = axis.get_tick_val (it);
-			char				txt_0 [31+1];
+			const double   val = axis.get_tick_val (it);
+			char           txt_0 [31+1];
 			conv_nbr_2_str (txt_0, val);
 			_plot_ptr->drawText (float (line_x), _y - 4, txt_0, 0.5f, 1);
 		}
@@ -658,11 +642,8 @@ void	Gridaxis::render_axis_h () const
 
 void	Gridaxis::convert_coordinates (double &x, double &y) const
 {
-	assert (&x != 0);
-	assert (&y != 0);
-
-	const Axis &	x_axis = use_axis (Direction_H);
-	const Axis &	y_axis = use_axis (Direction_V);
+	const Axis &   x_axis = use_axis (Direction_H);
+	const Axis &   y_axis = use_axis (Direction_V);
 
 	// Into [0 ; 1] range
 	x = x_axis.conv_val_to_pos (x);
@@ -677,8 +658,6 @@ void	Gridaxis::convert_coordinates (double &x, double &y) const
 
 void	Gridaxis::convert_coordinates (PsCoordArr &x_conv, PsCoordArr &y_conv, const double x_arr [], const double y_arr [], long nbr_points) const
 {
-	assert (&x_conv != 0);
-	assert (&y_conv != 0);
 	assert (x_arr != 0);
 	assert (y_arr != 0);
 	assert (nbr_points > 0);
@@ -686,8 +665,8 @@ void	Gridaxis::convert_coordinates (PsCoordArr &x_conv, PsCoordArr &y_conv, cons
 	x_conv.resize (nbr_points);
 	y_conv.resize (nbr_points);
 
-	const Axis &	x_axis = use_axis (Direction_H);
-	const Axis &	y_axis = use_axis (Direction_V);
+	const Axis &   x_axis = use_axis (Direction_H);
+	const Axis &   y_axis = use_axis (Direction_V);
 
 	for (int vtx = 0; vtx < nbr_points; ++vtx)
 	{

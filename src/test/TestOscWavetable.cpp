@@ -229,9 +229,6 @@ void	TestOscWavetable::test_speed ()
 template <typename O>
 void	TestOscWavetable::configure_osc (O &osc, typename O::WavetableDataType &wt)
 {
-	assert (&osc != 0);
-	assert (&wt != 0);
-
 	typedef O OscType;
 	typedef typename OscType::DataType DataType;
 

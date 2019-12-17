@@ -52,7 +52,7 @@ unsigned long	CharDataInfo::compute_internal_sort_code1 () const
 		+ (static_cast <unsigned long> (_residual_stroke_cnt      ) <<  8)
 		+                               _digit;
 
-	return (sort_code);
+	return sort_code;
 }
 
 
@@ -65,39 +65,36 @@ unsigned long	CharDataInfo::compute_internal_sort_code2 () const
 		+ (static_cast <unsigned long> (_line_break_prop    ) <<  8)
 		+                               _word_break_prop;
 
-	return (sort_code);
+	return sort_code;
 }
 
 
 
 bool	operator < (const CharDataInfo &lhs, const CharDataInfo &rhs)
 {
-	assert (&lhs != 0);
-	assert (&rhs != 0);
-
 	const unsigned long	sc1_lhs = lhs.compute_internal_sort_code1 ();
 	const unsigned long	sc1_rhs = rhs.compute_internal_sort_code1 ();
 	if (sc1_lhs < sc1_rhs)
 	{
-		return (true);
+		return true;
 	}
 	else if (sc1_lhs == sc1_rhs)
 	{
 		if (lhs._upper < rhs._upper)
 		{
-			return (true);
+			return true;
 		}
 		else if (lhs._upper == rhs._upper)
 		{
 			if (lhs._lower < rhs._lower)
 			{
-				return (true);
+				return true;
 			}
 			else if (lhs._lower == rhs._lower)
 			{
 				if (lhs._title < rhs._title)
 				{
-					return (true);
+					return true;
 				}
 				else if (lhs._title == rhs._title)
 				{
@@ -105,14 +102,14 @@ bool	operator < (const CharDataInfo &lhs, const CharDataInfo &rhs)
 					const unsigned long	sc2_rhs = rhs.compute_internal_sort_code2 ();
 					if (sc2_lhs < sc2_rhs)
 					{
-						return (true);
+						return true;
 					}
 				}
 			}
 		}
 	}
 
-	return (false);
+	return false;
 }
 
 

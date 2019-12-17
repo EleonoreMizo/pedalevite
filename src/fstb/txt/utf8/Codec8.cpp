@@ -47,7 +47,7 @@ namespace utf8
 
 bool	Codec8::is_valid_utf8_byte (char c)
 {
-	const int		val = static_cast <unsigned char> (c);
+	const int      val = static_cast <unsigned char> (c);
 
 	return (val != 0xC0 && val != 0xC1 && val <= 0xF4);
 }
@@ -56,7 +56,7 @@ bool	Codec8::is_valid_utf8_byte (char c)
 
 bool	Codec8::is_valid_utf8_lead_byte (char c)
 {
-	const int		val = static_cast <unsigned char> (c);
+	const int      val = static_cast <unsigned char> (c);
 
 	return (val < 0x80 || (val >= 0xC2 && val <= 0xF4));
 }
@@ -80,9 +80,7 @@ bool	Codec8::is_char_single_byte (char c)
 // Sets len to 0 if the character is invalid.
 int	Codec8::get_char_seq_len_ucs (int &len, char32_t ucs4)
 {
-	assert (&len != 0);
-
-	int				ret_val = Err_OK;
+	int            ret_val = Err_OK;
 
 	len = 1;
 	if (ucs4 >= 0x80)
@@ -106,7 +104,7 @@ int	Codec8::get_char_seq_len_ucs (int &len, char32_t ucs4)
 		}
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
@@ -114,13 +112,11 @@ int	Codec8::get_char_seq_len_ucs (int &len, char32_t ucs4)
 // Also checks the validity of this first byte
 int	Codec8::get_char_seq_len_utf (int &len, char utf8_lead_byte)
 {
-	assert (&len != 0);
-
-	int				ret_val = Err_OK;
+	int            ret_val = Err_OK;
 
 	len = 1;
 
-	const int		val = static_cast <unsigned char> (utf8_lead_byte);
+	const int      val = static_cast <unsigned char> (utf8_lead_byte);
 	if (val >= 0x80)
 	{
 		if (val < 0xC2 || val > 0xF4)
@@ -149,7 +145,7 @@ int	Codec8::get_char_seq_len_utf (int &len, char utf8_lead_byte)
 		}
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
@@ -173,16 +169,14 @@ Throws: std::string related exception
 
 int	Codec8::encode_char (std::string &utf8, char32_t ucs4)
 {
-	assert (&utf8 != 0);
-
-	char				temp_0 [MAX_BYTE_SEQ_LEN+1];
-	const int		ret_val = encode_char (temp_0, ucs4);
+	char           temp_0 [MAX_BYTE_SEQ_LEN+1];
+	const int      ret_val = encode_char (temp_0, ucs4);
 	if (ret_val == Err_OK)
 	{
 		utf8 = temp_0;
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
@@ -210,13 +204,13 @@ int	Codec8::encode_char (char utf8_0 [], char32_t ucs4)
 {
 	assert (utf8_0 != 0);
 
-	int				len = 0;
-	const int		ret_val = encode_char (utf8_0, ucs4, len);
+	int            len     = 0;
+	const int      ret_val = encode_char (utf8_0, ucs4, len);
 	assert (   (ret_val == Err_OK && len > 0)
 	        || (ret_val != Err_OK && len == 0));
 	utf8_0 [len] = '\0';
 
-	return (ret_val);
+	return ret_val;
 }
 
 
@@ -245,9 +239,8 @@ Throws: Nothing
 int	Codec8::encode_char (char utf8_ptr [], char32_t ucs4, int &len)
 {
 	assert (utf8_ptr != 0);
-	assert (&len != 0);
 
-	int				ret_val = get_char_seq_len_ucs (len, ucs4);
+	int            ret_val = get_char_seq_len_ucs (len, ucs4);
 
 	if (ret_val == Err_OK)
 	{
@@ -281,19 +274,18 @@ int	Codec8::encode_char (char utf8_ptr [], char32_t ucs4, int &len)
 		}
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
 
 int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [])
 {
-	assert (&ucs4 != 0);
 	assert (utf8_ptr != 0);
 
-	int				dummy_len;
+	int            dummy_len;
 
-	return (decode_char (ucs4, utf8_ptr, dummy_len));
+	return decode_char (ucs4, utf8_ptr, dummy_len);
 }
 
 
@@ -301,12 +293,11 @@ int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [])
 // In case of invalid byte sequence, len is set to 0.
 int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [], int &len)
 {
-	assert (&ucs4 != 0);
 	assert (utf8_ptr != 0);
 
 	ucs4 = 0;
 
-	int				ret_val = get_char_seq_len_utf (len, utf8_ptr [0]);
+	int            ret_val = get_char_seq_len_utf (len, utf8_ptr [0]);
 	if (ret_val == Err_OK)
 	{
 		if (len == 1)
@@ -316,12 +307,12 @@ int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [], int &len)
 
 		else
 		{
-			const int		mask_lead = 0x7F >> len;
+			const int      mask_lead = 0x7F >> len;
 			ucs4 = utf8_ptr [0] & mask_lead;
 
 			for (int pos = 1; pos < len && ret_val == Err_OK; ++pos)
 			{
-				const char		x = utf8_ptr [pos];
+				const char     x = utf8_ptr [pos];
 				if (is_valid_utf8_follow_byte (x))
 				{
 					ucs4 <<= 6;
@@ -335,7 +326,7 @@ int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [], int &len)
 		}
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
@@ -346,7 +337,7 @@ int	Codec8::check_char_valid (const char utf8_ptr [])
 
 	char32_t       dummy_ucs4;
 
-	return (decode_char (dummy_ucs4, utf8_ptr));
+	return decode_char (dummy_ucs4, utf8_ptr);
 }
 
 
@@ -355,8 +346,8 @@ int	Codec8::check_string_valid (const char utf8_0 [])
 {
 	assert (utf8_0 != 0);
 
-	int				ret_val = Err_OK;
-	long				pos = 0;
+	int            ret_val = Err_OK;
+	long           pos = 0;
 
 	while (ret_val == Err_OK && utf8_0 [pos] != '\0')
 	{
@@ -368,14 +359,14 @@ int	Codec8::check_string_valid (const char utf8_0 [])
 		pos += len;
 	}
 
-	return (ret_val);
+	return ret_val;
 }
 
 
 
 int	Codec8::check_string_valid (const std::string &utf8)
 {
-	return (check_string_valid (utf8.c_str ()));
+	return check_string_valid (utf8.c_str ());
 }
 
 

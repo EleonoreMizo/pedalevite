@@ -60,7 +60,6 @@ void	TransS::conv_roots_real_to_poly_2 (double poly [3], double k, double root_1
 {
 	assert (poly != 0);
 
-
 	poly [0] = root_1 * root_2 * k;
 	poly [1] = (-root_1 -root_2) * k;
 	poly [2] = k;
@@ -71,7 +70,6 @@ void	TransS::conv_roots_real_to_poly_2 (double poly [3], double k, double root_1
 void	TransS::conv_roots_cplx_to_poly_2 (double poly [3], double k, const Cplx &root)
 {
 	assert (poly != 0);
-	assert (&root != 0);
 
 	const double   rr = root.real ();
 	const double   ri = root.imag ();
@@ -105,9 +103,6 @@ Throws: Nothing
 
 void	TransS::conv_lp_pz_to_pb_pz (Cplx &pz_bp_1, Cplx &pz_bp_2, const Cplx &pz_lp, double bw)
 {
-	assert (&pz_bp_1 != 0);
-	assert (&pz_bp_2 != 0);
-	assert (&pz_lp != 0);
 	assert (bw > 0);
 
 	const Cplx     num_1 = pz_lp * bw;
@@ -182,7 +177,6 @@ void	TransS::conv_lp_ap_to_pb_biq (double b_1 [3], double a_1 [3], double b_2 [3
 	assert (a_1 != 0);
 	assert (b_2 != 0);
 	assert (a_2 != 0);
-	assert (&lp_pole != 0);
 	assert (lp_pole.real () < 0);
 	assert (bw > 0);
 
