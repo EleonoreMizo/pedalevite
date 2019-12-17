@@ -39,10 +39,6 @@ template <class T>
 AtomicPtrIntPair <T>::AtomicPtrIntPair ()
 :	_data ()
 {
-#if (conc_ARCHI == conc_ARCHI_X86)
-	static_assert (sizeof (RealContent) == sizeof (DataType), "");
-#endif // conc_ARCHI
-
 	set (0, 0);
 }
 
@@ -50,7 +46,7 @@ AtomicPtrIntPair <T>::AtomicPtrIntPair ()
 template <class T>
 void	AtomicPtrIntPair <T>::set (T * ptr, ptrdiff_t val)
 {
-#if (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
 	_data._content._ptr = ptr;
 	_data._content._val = val;
@@ -68,7 +64,7 @@ void	AtomicPtrIntPair <T>::set (T * ptr, ptrdiff_t val)
 template <class T>
 void	AtomicPtrIntPair <T>::get (T * &ptr, ptrdiff_t &val) const
 {
-#if (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
 	Combi          res;
 	Combi          old;
@@ -96,7 +92,7 @@ void	AtomicPtrIntPair <T>::get (T * &ptr, ptrdiff_t &val) const
 template <class T>
 T *	AtomicPtrIntPair <T>::get_ptr () const
 {
-#if (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
 	return (_data._content._ptr);
 
@@ -114,7 +110,7 @@ T *	AtomicPtrIntPair <T>::get_ptr () const
 template <class T>
 ptrdiff_t	AtomicPtrIntPair <T>::get_val () const
 {
-#if (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
 	return (_data._content._val);
 
@@ -132,7 +128,7 @@ ptrdiff_t	AtomicPtrIntPair <T>::get_val () const
 template <class T>
 bool	AtomicPtrIntPair <T>::cas2 (T *new_ptr, ptrdiff_t new_val, T *comp_ptr, ptrdiff_t comp_val)
 {
-#if (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
 	Combi          newx;
 	newx._content._ptr = new_ptr;
@@ -167,7 +163,7 @@ bool	AtomicPtrIntPair <T>::cas2 (T *new_ptr, ptrdiff_t new_val, T *comp_ptr, ptr
 
 
 
-#if (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
 template <class T>
 void	AtomicPtrIntPair <T>::cas_combi (Combi &old, Combi &dest, const Combi &excg, const Combi &comp)

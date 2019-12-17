@@ -292,6 +292,10 @@ void	Interlocked::cas (Data128 &old, volatile Data128 &dest, const Data128 &excg
 			reinterpret_cast <int64_t *> (&old)
 		);
 
+	#elif defined (__GNUC__)
+
+		old = __sync_val_compare_and_swap (&dest, comp, excg);
+
 	#else
 
 	::InterlockedCompareExchange128 (

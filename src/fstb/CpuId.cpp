@@ -26,8 +26,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/CpuId.h"
 
-#if defined (_MSC_VER)
-	#include <intrin.h>
+#if (fstb_IS (ARCHI, X86))
+	#if defined (__GNUC__)
+		#include <cpuid.h>
+	#elif defined (_MSC_VER)
+		#include <intrin.h>
+	#endif
 #endif
 
 #include <cassert>
@@ -45,15 +49,19 @@ namespace fstb
 
 CpuId::CpuId ()
 {
-#if (fstb_ARCHI == fstb_ARCHI_X86)
+#if (fstb_IS (ARCHI, X86))
 
 	unsigned int   eax;
 	unsigned int   ebx;
 	unsigned int   ecx;
 	unsigned int   edx;
 
+	// Highest function available
+	call_cpuid (0x00000000, 0, eax, ebx, ecx, edx);
+	const unsigned int   hf_basic = eax;
+
 	// Processor Info and Feature Bits
-	call_cpuid (0x00000001, eax, ebx, ecx, edx);
+	call_cpuid (0x00000001, 0, eax, ebx, ecx, edx);
 
 	_mmx_flag     = ((edx & (1L << 23)) != 0);
 	_sse_flag     = ((edx & (1L << 25)) != 0);
@@ -68,18 +76,22 @@ CpuId::CpuId ()
 	_avx_flag     = ((ecx & (1L << 28)) != 0);
 	_f16c_flag    = ((ecx & (1L << 29)) != 0);
 
-	// Extended Features
-	call_cpuid (0x00000007, eax, ebx, ecx, edx);
-	_bmi1_flag    = ((ebx & (1L <<  3)) != 0);
-	_avx2_flag    = ((ebx & (1L <<  5)) != 0);
-	_bmi2_flag    = ((ebx & (1L <<  8)) != 0);
-	_avx512f_flag = ((ebx & (1L << 16)) != 0);
+	if (hf_basic >= 0x00000007)
+	{
+		// Extended Features
+		call_cpuid (0x00000007, 0, eax, ebx, ecx, edx);
+		_bmi1_flag    = ((ebx & (1L <<  3)) != 0);
+		_avx2_flag    = ((ebx & (1L <<  5)) != 0);
+		_bmi2_flag    = ((ebx & (1L <<  8)) != 0);
+		_avx512f_flag = ((ebx & (1L << 16)) != 0);
+	}
 
 	// Extended Processor Info and Feature Bits
-	call_cpuid (0x80000000, eax, ebx, ecx, edx);
-	if (eax >= 0x80000001)
+	call_cpuid (0x80000000, 0, eax, ebx, ecx, edx);
+	const unsigned int   hf_ext = eax;
+	if (hf_ext >= 0x80000001)
 	{
-		call_cpuid (0x80000001, eax, ebx, ecx, edx);
+		call_cpuid (0x80000001, 0, eax, ebx, ecx, edx);
 		_isse_flag    = ((edx & (1L << 22)) != 0) || _sse_flag;
 		_sse4a_flag   = ((ecx & (1L <<  6)) != 0);
 		_fma4_flag    = ((ecx & (1L << 16)) != 0);
@@ -91,50 +103,22 @@ CpuId::CpuId ()
 
 
 
-#if (fstb_ARCHI == fstb_ARCHI_X86)
+#if (fstb_IS (ARCHI, X86))
 
-void	CpuId::call_cpuid (unsigned int fnc_nbr, unsigned int &v_eax, unsigned int &v_ebx, unsigned int &v_ecx, unsigned int &v_edx)
+void	CpuId::call_cpuid (unsigned int fnc_nbr, unsigned int subfnc_nbr, unsigned int &v_eax, unsigned int &v_ebx, unsigned int &v_ecx, unsigned int &v_edx)
 {
 #if defined (__GNUC__)
 	
-	long           r_eax;
-	long           r_ebx;
-	long           r_ecx;
-	long           r_edx;
-
 	#if defined (__x86_64__)
-
-	__asm__ (
-	   "push %%rbx      \n\t" /* save %rbx */
-		"cpuid           \n\t"
-		"mov %%rbx, %1   \n\t" /* save what cpuid just put in %rbx */
-		"pop %%rbx       \n\t" /* restore the old %rbx */
-	  : "=a"(r_eax), "=r"(r_ebx), "=c"(r_ecx), "=d"(r_edx)
-	  : "a"(fnc_nbr)
-	  : "cc");
-
+	__cpuid_count (fnc_nbr, subfnc_nbr, v_eax, v_ebx, v_ecx, v_edx);
 	#else
-
-	__asm__ (
-		"pushl %%ebx      \n\t" /* save %ebx */
-		"cpuid            \n\t"
-		"movl %%ebx, %1   \n\t" /* save what cpuid just put in %ebx */
-		"popl %%ebx       \n\t" /* restore the old %ebx */
-	  : "=a"(r_eax), "=r"(r_ebx), "=c"(r_ecx), "=d"(r_edx)
-	  : "a"(fnc_nbr)
-	  : "cc");
-
+	__cpuid (fnc_nbr, v_eax, v_ebx, v_ecx, v_edx);
 	#endif
-
-	v_eax = r_eax;
-	v_ebx = r_ebx;
-	v_ecx = r_ecx;
-	v_edx = r_edx;
 
 #elif (_MSC_VER)
 
 	int            cpu_info [4];
-	__cpuid (cpu_info, fnc_nbr);
+	__cpuidex (cpu_info, fnc_nbr, subfnc_nbr);
 	v_eax = cpu_info [0];
 	v_ebx = cpu_info [1];
 	v_ecx = cpu_info [2];

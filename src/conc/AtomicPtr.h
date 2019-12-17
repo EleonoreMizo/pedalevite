@@ -92,10 +92,12 @@ private:
 
 #else  // conc_ARCHI
 
+#if (__cplusplus >= 201703L)
 	static_assert (
-		std::atomic <T *>::is_lock_free,
+		std::atomic <T *>::is_always_lock_free,
 		"Atomic data must be lock-free."
 	);
+#endif
 	std::atomic <T *>
 	               _ptr;
 

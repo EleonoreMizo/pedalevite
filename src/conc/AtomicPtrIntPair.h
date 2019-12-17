@@ -28,11 +28,15 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+#define conc_USE_STD_ATOMIC_128BITS 0
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "conc/def.h"
 
-#if (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 #include "conc/Interlocked.h"
 #else  // conc_ARCHI
 #include <atomic>
@@ -76,16 +80,20 @@ protected:
 
 private:
 
-#if (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
 #if (conc_WORD_SIZE == 64)
 
-	typedef	Interlocked::Data128	DataType;
+#if (! conc_HAS_CAS_128)
+	#error 128-bit CAS is required for AtomicPtrIntPair on 64-bit architectures
+#endif
+
+	typedef typename Interlocked::Data128 DataType;
 	conc_TYPEDEF_ALIGN (16, DataType, DataTypeAlign);
 
 #else		// conc_WORD_SIZE
 
-	typedef	int64_t	DataType;
+	typedef int64_t DataType;
 	conc_TYPEDEF_ALIGN (8, DataType, DataTypeAlign);
 
 #endif	// conc_WORD_SIZE
@@ -94,9 +102,10 @@ private:
 	{
 	public:
 		T * volatile   _ptr;
-		volatile ptrdiff_t
+		volatile intptr_t
 		               _val;
 	};
+	static_assert (sizeof (RealContent) <= sizeof (DataType), "");
 
 	union Combi
 	{
@@ -114,13 +123,15 @@ private:
 	{
 	public:
 		T *            _ptr;
-		ptrdiff_t      _val;
+		intptr_t       _val;
 	};
 
+#if (__cplusplus >= 201703L)
 	static_assert (
-		std::atomic <RealContent>::is_lock_free,
+		std::atomic <RealContent>::is_always_lock_free,
 		"Atomic data must be lock-free."
 	);
+#endif
 	std::atomic <RealContent>
 	               _data;
 

@@ -48,7 +48,7 @@ namespace conc
 
 
 // Native word size, in power of 2 bits
-#if defined (_WIN64) || defined (__64BIT__) || defined (__amd64__) || defined (__x86_64__) || defined (__arm64__) || defined (__arm64)
+#if defined (_WIN64) || defined (__64BIT__) || defined (__amd64__) || defined (__x86_64__) || defined (__aarch64__) || defined (__arm64__) || defined (__arm64)
 	#define conc_WORD_SIZE_L2      6
 	#define conc_WORD_SIZE        64
 	#define conc_WORD_SIZE_BYTE    8
@@ -61,7 +61,7 @@ namespace conc
 
 
 // 128-bit compare and swap
-#if (conc_WORD_SIZE_L2 >= 6) && (conc_ARCHI == conc_ARCHI_X86)
+#if (conc_WORD_SIZE_L2 >= 6) && (conc_ARCHI == conc_ARCHI_X86 || conc_ARCHI == conc_ARCHI_ARM)
 	#define conc_HAS_CAS_128   1
 #endif
 
