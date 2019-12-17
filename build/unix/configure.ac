@@ -85,5 +85,11 @@ AS_IF(
 )
 
 
+
+AC_SUBST([CXXSTD], [$CXXSTD])
+AC_SUBST([LDFLAGS], [$LDFLAGS])
+AM_CONDITIONAL([X86], [test "x$X86" = "xtrue"])
+AM_CONDITIONAL([ARM], [test "x$ARM" = "xtrue"])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
