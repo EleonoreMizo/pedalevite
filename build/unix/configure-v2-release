@@ -1,5 +1,5 @@
 #!/bin/sh
 
-./configure pv_version=2 CXXFLAGS='-O3 -DNDEBUG -g3' CFLAGS='-O3 -DNDEBUG -g3'
+./configure pv_version=2
 make clean
 
