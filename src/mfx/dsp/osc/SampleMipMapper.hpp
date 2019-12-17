@@ -66,9 +66,6 @@ template <class SD>
 int	SampleMipMapper <SD>::build_mipmaps (SampleTable &data, SampleProviderInterface &sample_provider)
 {
 	assert (_buf_size > 0);
-	assert (&data != 0);
-	assert (&sample_provider != 0);
-
 	_data_ptr            = &data;
 	_sample_provider_ptr = &sample_provider;
 
