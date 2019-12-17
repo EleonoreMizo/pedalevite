@@ -1,12 +1,11 @@
 AC_INIT([pedalevite], [r1], [http://pedalevite.fr], [pedalevite], [http://pedalevite.fr])
-
-: ${CXXFLAGS=""}
+AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([foreign no-dist-gzip dist-xz subdir-objects no-define])
 AM_SILENT_RULES([yes])
 
-AC_PROG_CXX([g++])
-AC_PROG_CC([g++])
+AC_PROG_CXX
+AC_PROG_CC([$CXX])
 
 AC_CANONICAL_HOST
 
@@ -41,6 +40,16 @@ AS_CASE(
          )
         ]
 )
+
+
+
+AC_LANG_PUSH([C++])
+AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++17], [CXXSTD="c++17"]))
+AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++11], [CXXSTD="c++11"]))
+AS_IF([test "x$CXXSTD" = "x"], AC_MSG_ERROR([Minimum requirement: C++11]))
+AX_CHECK_COMPILE_FLAG([-Wunused-private-field -Werror], [CXXFLAGS="$CXXFLAGS -Wno-unused-private-field"])
+AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument -Werror], [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"])
+AC_LANG_POP([C++])
 
 AS_IF(
       [test "x$X86" = "xtrue"],

@@ -1,4 +1,6 @@
-warningflags = -Wall -Wextra -Wno-psabi -Wno-unused-parameter -Wno-expansion-to-defined -Wshadow
+ACLOCAL_AMFLAGS = -I m4
+
+warningflags = -Wall -Wextra -Wno-unused-parameter -Wno-expansion-to-defined -Wno-missing-field-initializers -Wshadow
 includeflags = -I$(srcdir)/../../src -I/opt/vc/include
 commonflags = $(MFLAGS) $(warningflags) $(includeflags)
 AM_CXXFLAGS = -std=c++11 $(commonflags)
