@@ -71,23 +71,26 @@ AS_IF(
 
 
 AS_IF(
-      [test "x$ARM" = "xtrue"],
-      [
-       rpi_version=`cat /sys/firmware/devicetree/base/model | awk '{print $3}'`
-       AC_DEFINE_UNQUOTED([PV_RPI_VER_MAJOR], [$rpi_version], [Raspberry Pi version number (3 or 4).])
-       AS_IF(
-           [test "x$rpi_version" = "x4"],
-           [MFLAGS="-mfloat-abi=hard -mfpu=neon -ftree-vectorize -mtune=cortex-a72 -march=armv8-a+crc+simd"],
-           [MFLAGS="-mfloat-abi=hard -mfpu=neon -ftree-vectorize -mtune=cortex-a53"]
-       )
-       AC_SUBST([MFLAGS])
-      ]
+    [test "x$ARM" = "xtrue"],
+    [
+        rpi_version=`cat /sys/firmware/devicetree/base/model | awk '{print $3}'`
+        AC_DEFINE_UNQUOTED([PV_RPI_VER_MAJOR], [$rpi_version], [Raspberry Pi version number (3 or 4).])
+        MFLAGS="$MFLAGS -mfloat-abi=hard -mfpu=neon -ftree-vectorize"
+        AS_IF(
+            [test "x$rpi_version" = "x4"],
+            [MFLAGS="$MFLAGS -mtune=cortex-a72 -march=armv8-a+crc+simd"],
+            [MFLAGS="$MFLAGS -mtune=cortex-a53"]
+        )
+        # GCC 7 emits some warnings about ABI changes when using std::vector
+        AX_CHECK_COMPILE_FLAG([-Wpsabi -Werror], [MFLAGS="$MFLAGS -Wno-psabi"])
+    ]
 )
 
 
 
 AC_SUBST([CXXSTD], [$CXXSTD])
 AC_SUBST([LDFLAGS], [$LDFLAGS])
+AC_SUBST([MFLAGS])
 AM_CONDITIONAL([X86], [test "x$X86" = "xtrue"])
 AM_CONDITIONAL([ARM], [test "x$ARM" = "xtrue"])
 
