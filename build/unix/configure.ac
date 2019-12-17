@@ -51,6 +51,9 @@ AX_CHECK_COMPILE_FLAG([-Wunused-private-field -Werror], [CXXFLAGS="$CXXFLAGS -Wn
 AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument -Werror], [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"])
 AC_LANG_POP([C++])
 
+# It seems that -latomic is needed only for some versions of GCC < 5.3
+AX_CHECK_LINK_FLAG([-latomic], [LDFLAGS="$LDFLAGS -latomic"])
+
 AS_IF(
       [test "x$X86" = "xtrue"],
       [
