@@ -129,7 +129,7 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_ramp_time (int nbr_spl)
 template <class VD, class VS, class VP>
 int	Biquad4SimdMorph <VD, VS, VP>::get_ramp_time () const
 {
-	return _ramp_le;
+	return _ramp_len;
 }
 
 
