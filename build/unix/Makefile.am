@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 warningflags = -Wall -Wextra -Wno-unused-parameter -Wno-expansion-to-defined -Wno-missing-field-initializers -Wshadow
 includeflags = -I$(srcdir)/../../src -I/opt/vc/include
-commonflags = $(MFLAGS) $(warningflags) $(includeflags)
+commoncflags = $(DEBUGCFLAGS) $(MFLAGS) $(warningflags) $(includeflags)
 AM_CXXFLAGS  = -std=$(CXXSTD) $(commoncflags)
 AM_CFLAGS    = $(commoncflags)
 AM_LDFLAGS  = `pkg-config --cflags --libs jack` -lbcm_host -lasound -lwiringPi -lpthread -L/opt/vc/lib $(PLUGINLDFLAGS)
