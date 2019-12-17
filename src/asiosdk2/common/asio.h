@@ -3,7 +3,7 @@
 
 /*
 	Steinberg Audio Stream I/O API
-	(c) 1997 - 2013, Steinberg Media Technologies GmbH
+	(c) 1997 - 2019, Steinberg Media Technologies GmbH
 
 	ASIO Interface Specification v 2.3
 

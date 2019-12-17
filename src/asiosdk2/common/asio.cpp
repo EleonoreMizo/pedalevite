@@ -1,6 +1,6 @@
 /*
 	Steinberg Audio Stream I/O API
-	(c) 1996, Steinberg Soft- und Hardware GmbH
+	(c) 1996 - 2019, Steinberg Soft- und Hardware GmbH
 
 	asio.cpp
 	
