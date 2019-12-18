@@ -47,16 +47,16 @@ FixedPoint::FixedPoint ()
 
 FixedPoint::FixedPoint (int32_t int_val)
 {
-	_val._msw = int_val;
-	_val._lsw = 0;
+	_val._part._msw = int_val;
+	_val._part._lsw = 0;
 }
 
 
 
 FixedPoint::FixedPoint (int32_t int_val, uint32_t frac_val)
 {
-	_val._msw = int_val;
-	_val._lsw = frac_val;
+	_val._part._msw = int_val;
+	_val._part._lsw = frac_val;
 }
 
 
@@ -93,16 +93,16 @@ void	FixedPoint::set_val (double val)
 {
 	const double	uint_scale = fstb::TWOP32;
 
-	_val._msw = fstb::floor_int (val);
-	_val._lsw = uint32_t ((val - _val._msw) * uint_scale);
+	_val._part._msw = fstb::floor_int (val);
+	_val._part._lsw = uint32_t ((val - _val._part._msw) * uint_scale);
 }
 
 
 
 void	FixedPoint::set_val (int32_t int_val, uint32_t frac_val)
 {
-	_val._msw = int_val;
-	_val._lsw = frac_val;
+	_val._part._msw = int_val;
+	_val._part._lsw = frac_val;
 }
 
 
@@ -116,28 +116,28 @@ int64_t	FixedPoint::get_val_int64 () const
 
 double	FixedPoint::get_val_dbl () const
 {
-	return _val._msw + get_frac_val_dbl ();
+	return _val._part._msw + get_frac_val_dbl ();
 }
 
 
 
 float	FixedPoint::get_val_flt () const
 {
-	return _val._msw + get_frac_val_flt ();
+	return _val._part._msw + get_frac_val_flt ();
 }
 
 
 
 void	FixedPoint::set_int_val (int32_t int_val)
 {
-	_val._msw = int_val;
+	_val._part._msw = int_val;
 }
 
 
 
 int32_t	FixedPoint::get_int_val () const
 {
-	return _val._msw;
+	return _val._part._msw;
 }
 
 
@@ -147,7 +147,7 @@ int32_t	FixedPoint::get_round () const
 	Fixed3232      temp (_val);
 	temp._all += 0x80000000U;
 
-	return temp._msw;
+	return temp._part._msw;
 }
 
 
@@ -157,35 +157,35 @@ int32_t	FixedPoint::get_ceil () const
 	Fixed3232      temp (_val);
 	temp._all += 0xFFFFFFFFU;
 
-	return temp._msw;
+	return temp._part._msw;
 }
 
 
 
 void	FixedPoint::set_frac_val (uint32_t frac_val)
 {
-	_val._lsw = frac_val;
+	_val._part._lsw = frac_val;
 }
 
 
 
 double	FixedPoint::get_frac_val_dbl () const
 {
-	return _val._lsw * double (fstb::TWOPM32);
+	return _val._part._lsw * double (fstb::TWOPM32);
 }
 
 
 
 float	FixedPoint::get_frac_val_flt () const
 {
-	return float (_val._lsw * fstb::TWOPM32);
+	return float (_val._part._lsw * fstb::TWOPM32);
 }
 
 
 
 uint32_t	FixedPoint::get_frac_val () const
 {
-	return _val._lsw;
+	return _val._part._lsw;
 }
 
 
@@ -199,7 +199,7 @@ void	FixedPoint::neg ()
 
 void	FixedPoint::abs ()
 {
-	if (_val._msw < 0)
+	if (_val._part._msw < 0)
 	{
 		neg ();
 	}
@@ -212,10 +212,10 @@ void	FixedPoint::bound (int32_t len)
 {
 	assert (len > 0);
 
-	_val._msw %= len;
+	_val._part._msw %= len;
 
-	assert (_val._msw < len);
-	assert (_val._msw > -len);
+	assert (_val._part._msw < len);
+	assert (_val._part._msw > -len);
 }
 
 
@@ -226,20 +226,20 @@ void	FixedPoint::bound_positive (int32_t len)
 	assert (len > 0);
 
 	bound (len);
-	if (_val._msw < 0)
+	if (_val._part._msw < 0)
 	{
-		_val._msw += len;
+		_val._part._msw += len;
 	}
 
-	assert (_val._msw >= 0);
-	assert (_val._msw < len);
+	assert (_val._part._msw >= 0);
+	assert (_val._part._msw < len);
 }
 
 
 
 void	FixedPoint::bound_and (int32_t and_val)
 {
-	_val._msw &= and_val;
+	_val._part._msw &= and_val;
 }
 
 
@@ -261,7 +261,7 @@ void	FixedPoint::add (const FixedPoint &val, int32_t and_val)
 
 void	FixedPoint::add_int (int32_t int_val)
 {
-	_val._msw += int_val;
+	_val._part._msw += int_val;
 }
 
 
@@ -324,7 +324,7 @@ void	FixedPoint::sub (const FixedPoint &val, int32_t and_val)
 
 void	FixedPoint::sub_int (int32_t int_val)
 {
-	_val._msw -= int_val;
+	_val._part._msw -= int_val;
 }
 
 

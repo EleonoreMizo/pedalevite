@@ -139,7 +139,7 @@ private:
 	public:
 		int64_t        _all;
 		struct
-		{;
+		{
 #if fstb_IS (ENDIAN, BIG)
 			int32_t        _msw;
 			uint32_t       _lsw;
@@ -147,7 +147,7 @@ private:
 			uint32_t       _lsw;
 			int32_t	      _msw;
 #endif
-		};
+		}              _part;
 	};
 
 	Fixed3232      _val;
