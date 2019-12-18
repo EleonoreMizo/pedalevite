@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/adrv/CbInterface.h"
 #include "mfx/adrv/DJack.h"

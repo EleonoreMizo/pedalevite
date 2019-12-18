@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #if defined (mfx_adrv_DPvabI2s_USE_SIMD)
 	#include "fstb/ToolsSimd.h"
@@ -105,6 +106,7 @@ DPvabI2s::~DPvabI2s ()
 
 int	DPvabI2s::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
 {
+	fstb::unused (driver_0, chn_idx_in, chn_idx_out);
 	assert (chn_idx_in == 0);
 	assert (chn_idx_out == 0);
 

@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #if defined (mfx_adrv_DPvabDirect_USE_SIMD)
 	#include "fstb/ToolsSimd.h"
@@ -135,6 +136,7 @@ DPvabDirect::~DPvabDirect ()
 
 int	DPvabDirect::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
 {
+	fstb::unused (driver_0, chn_idx_in, chn_idx_out);
 	assert (chn_idx_in == 0);
 	assert (chn_idx_out == 0);
 

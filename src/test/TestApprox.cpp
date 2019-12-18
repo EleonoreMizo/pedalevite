@@ -388,23 +388,23 @@ int	TestApprox::perform_test ()
 
 
 template <typename T, typename S>
-static inline T conv_s_to_t (S x) { return static_cast <T> (x); };
+static inline T conv_s_to_t (S x) { return static_cast <T> (x); }
 
 template <>
 inline fstb::ToolsSimd::VectF32 conv_s_to_t (float x)
 {
 	return fstb::ToolsSimd::set1_f32 (x);
-};
+}
 
 
 template <typename S, typename T>
-static inline S conv_t_to_s (T x) { return static_cast <S> (x); };
+static inline S conv_t_to_s (T x) { return static_cast <S> (x); }
 
 template <>
 inline float conv_t_to_s (fstb::ToolsSimd::VectF32 x)
 {
 	return fstb::ToolsSimd::Shift <0>::extract (x);
-};
+}
 
 
 template <typename T, int ILL2>
