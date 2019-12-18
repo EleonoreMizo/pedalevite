@@ -9,9 +9,10 @@ AC_PROG_CC([$CXX])
 
 AC_CANONICAL_HOST
 
+# Default pv_version is 2
 AS_IF(
-        [test "x$pv_version" != "x2"],
-        [pv_version=1]
+    [test "x$pv_version" != "x1"],
+    [pv_version=2]
 )
 AC_DEFINE_UNQUOTED([PV_VERSION], [($pv_version)], [Pedale Vite version. 1 or 2.])
 
@@ -108,6 +109,8 @@ AS_IF(
     [test "x$ARM" = "xtrue"],
     [
         rpi_version=`cat /sys/firmware/devicetree/base/model | awk '{print $3}'`
+        AS_IF([test "x$rpi_version" = "x"], AC_MSG_ERROR([Not on a Raspberry Pi, or unknown model.]))
+
         AC_DEFINE_UNQUOTED([PV_RPI_VER_MAJOR], [$rpi_version], [Raspberry Pi version number (3 or 4).])
         MFLAGS="$MFLAGS -mfloat-abi=hard -mfpu=neon -ftree-vectorize"
         AS_IF(
