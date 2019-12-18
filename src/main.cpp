@@ -743,11 +743,12 @@ void MAIN_prog_end ()
 
 #if fstb_IS (SYS, LINUX)
 int main (int argc, char *argv [], char *envp [])
+{
 #else
 int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
-#endif
 {
 	fstb::unused (instance, prev_instance, cmdline_0, cmd_show);
+#endif
 
 #if defined (_MSC_VER)
 	MAIN_prog_init ();
