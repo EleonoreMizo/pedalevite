@@ -63,6 +63,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <vector>
 
 #include <cassert>
+#include <cstring>
 
 
 
@@ -527,11 +528,52 @@ std::string CurProg::get_ip_address ()
 	int            ret_val = gethostname (name_0, sizeof (name_0));
 	if (ret_val == 0)
 	{
+#if 1
+		// Recommended method
+		::addrinfo     hints;
+		memset (&hints, 0, sizeof (hints));
+		hints.ai_family   = AF_UNSPEC;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_protocol = IPPROTO_TCP;
+		::addrinfo *   result_ptr = 0;
+		ret_val = getaddrinfo (name_0, "ssh", &hints, &result_ptr);
+		if (ret_val == 0)
+		{
+			while (result_ptr != 0)
+			{
+				if (result_ptr->ai_family == AF_INET)
+				{
+					const sockaddr_in *  ipv4_ptr =
+						reinterpret_cast <const sockaddr_in *> (result_ptr->ai_addr);
+					char           buffer_0 [255+1];
+					const char *   ipv4_0 = inet_ntop (
+						AF_INET,
+						const_cast <void *> (reinterpret_cast <const void *> (
+							&ipv4_ptr->sin_addr
+						)),
+						buffer_0,
+						sizeof (buffer_0)
+					);
+					if (ipv4_0 != 0)
+					{
+						ip_addr = ipv4_0;
+					}
+					result_ptr = 0;
+				}
+				else
+				{
+					result_ptr = result_ptr->ai_next;
+				}
+			}
+		}
+#else
+		// Deprecated method
 		::PHOSTENT     hostinfo = gethostbyname (name_0);
 		if (hostinfo != 0)
 		{
 			ip_addr = inet_ntoa (*(struct in_addr *)(*hostinfo->h_addr_list));
 		}
+#endif
 	}
 	::WSACleanup ();
 
