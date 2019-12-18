@@ -88,7 +88,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_menu_slot (_page_switcher, _loc_edit, _pi_aud_type_list, _pi_sig_type_list)
 ,	_page_edit_text (_page_switcher)
 ,	_page_save_prog (_page_switcher)
-,	_page_end_msg (cmd_line)
+,	_page_end_msg (_page_switcher, cmd_line)
 ,	_page_levels (_page_switcher, snd_drv)
 ,	_page_pedalboard_config (_page_switcher, _loc_edit_pedal)
 ,	_page_pedal_action_type (_page_switcher, _loc_edit_pedal)

@@ -61,8 +61,9 @@ namespace pg
 
 
 
-EndMsg::EndMsg (const CmdLine &cmd_line)
-:	_cmd_line (cmd_line)
+EndMsg::EndMsg (PageSwitcher &page_switcher, const CmdLine &cmd_line)
+:	_page_switcher (page_switcher)
+,	_cmd_line (cmd_line)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)

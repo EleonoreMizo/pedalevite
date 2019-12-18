@@ -46,6 +46,9 @@ class CmdLine;
 
 namespace uitk
 {
+
+class PageSwitcher;
+
 namespace pg
 {
 
@@ -69,7 +72,7 @@ public:
 		EndType_NBR_ELT
 	};
 
-	explicit       EndMsg (const CmdLine &cmd_line);
+	explicit       EndMsg (PageSwitcher &page_switcher, const CmdLine &cmd_line);
 	virtual        ~EndMsg () = default;
 
 
@@ -95,6 +98,7 @@ private:
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
 
+	PageSwitcher & _page_switcher;
 	const CmdLine& _cmd_line;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
