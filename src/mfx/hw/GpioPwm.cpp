@@ -675,7 +675,7 @@ GpioPwm::Channel::MBox::MBox (int size, int mem_flag)
 			throw Err_MEM_LOCK;  // Failed to lock memory
 		}
 		_virt_ptr = reinterpret_cast <uint8_t *> (
-			mapmem (_bus_adr & 0x3FFFFFFF, _size)
+			mapmem (_bus_adr & 0x3FFFFFFF, _size, DEV_MEM)
 		);
 		if (_virt_ptr == 0)
 		{
