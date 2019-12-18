@@ -180,7 +180,7 @@ std::set <std::string>	View::collect_labels (bool cur_preset_flag) const
 
 	assert (labels.find ("") == labels.end ());
 
-	return std::move (labels);
+	return labels;
 }
 
 

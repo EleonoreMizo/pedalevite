@@ -185,7 +185,7 @@ void	MoveFx::update_display ()
 	const std::vector <Tools::NodeEntry>   entry_list =
 		Tools::extract_slot_list (preset, *_model_ptr);
 
-	const int      chain_size = preset._routing._chain.size ();
+	const int      chain_size = int (preset._routing._chain.size ());
 	assert (chain_size <= int (entry_list.size ()));
 	PageMgrInterface::NavLocList nav_list;
 	_menu_sptr->clear_all_nodes ();

@@ -712,7 +712,7 @@ void	Model::remove_slot (int slot_id)
 	const auto     it_cur = std::find (it_beg, it_end, slot_id);
 	if (it_cur != it_end)
 	{
-		const int     index = it_cur - it_beg;
+		const int     index = int (it_cur - it_beg);
 		erase_slot_from_chain (index);
 	}
 
@@ -1681,7 +1681,7 @@ void	Model::apply_settings_normal ()
 
 	// Chain last, other plug-ins before
 	const std::vector <int> onl = _preset_cur.build_ordered_node_list (false);
-	const int      nbr_slots = onl.size ();
+	const int      nbr_slots = int (onl.size ());
 	const int      chain_pos =
 		nbr_slots - int (_preset_cur._routing._chain.size ());
 

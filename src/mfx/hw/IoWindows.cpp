@@ -564,10 +564,10 @@ void	IoWindows::init_bitmap (int w, int h)
 bool	IoWindows::process_redraw (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 {
 	::RECT         rect;
-	rect.left   =  wparam & 65535;
-	rect.top    =  wparam >> 16;
-	rect.right  = (lparam & 65535) + rect.left;
-	rect.bottom = (lparam >> 16  ) + rect.top;
+	rect.left   = ::LONG (wparam & 65535);
+	rect.top    = ::LONG (wparam >> 16  );
+	rect.right  = ::LONG (lparam & 65535) + rect.left;
+	rect.bottom = ::LONG (lparam >> 16  ) + rect.top;
 	::InvalidateRect (_main_win, &rect, FALSE);
 
 	return false;
@@ -577,7 +577,7 @@ bool	IoWindows::process_redraw (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 
 bool	IoWindows::process_led (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 {
-	const int      index = wparam;
+	const int      index = int (wparam);
 	const float    val   = lparam / 65535.f;
 	_led_arr [index] = val;
 
@@ -597,7 +597,7 @@ bool	IoWindows::process_led (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 
 bool	IoWindows::process_switch (::HWND hwnd, ::WPARAM wparam)
 {
-	const int      index = wparam;
+	const int      index = int (wparam);
 	const SwLoc *  loc_ptr = find_sw_from_index (index);
 	if (loc_ptr == nullptr)
 	{
@@ -659,7 +659,7 @@ bool	IoWindows::process_paint (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 
 bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool down_flag)
 {
-	const int      virt      =    wparam;
+	const int      virt      = int (wparam);
 	const int      scan      =   (lparam >> 16) & 255;
 	const bool     prev_flag = (((lparam >> 30) &   1) != 0);
 
@@ -826,8 +826,6 @@ void	IoWindows::redraw_main_screen (int x1, int y1, int x2, int y2)
 		const uint8_t* src_ptr = &_screen_buf [yd1 * _scr_s + xd1];
 		const int      wd      = std::min (xd2, _scr_w) - xd1;
 		const int      hd      = std::min (yd2, _scr_h) - yd1;
-		const int      pix_h   = _zoom - 1;
-		const int      pix_w   = _zoom - 1;
 		for (int y = 0; y < hd; ++y)
 		{
 			for (int yz = 0; yz < _zoom; ++yz)

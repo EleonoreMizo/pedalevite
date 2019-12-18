@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <random>
 
 #include <cassert>
+#include <cstdint>
 #include <cstdio>
 
 

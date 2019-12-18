@@ -154,7 +154,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 		int            w_unit = width;
 		if (group_unit_val_flag)
 		{
-			w_unit -= len_pix;
+			w_unit -= int (len_pix);
 			if (txt_val.back () != ' ' && ! unit.empty () && unit [0] != ' ')
 			{
 				unit = pi::param::Tools::join_strings_multi (
@@ -563,7 +563,7 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 			}
 			else
 			{
-				pi_index = it_type - fx_list.begin ();
+				pi_index = int (it_type - fx_list.begin ());
 			}
 		}
 	}

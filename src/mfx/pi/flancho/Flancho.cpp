@@ -126,9 +126,9 @@ Flancho::Flancho ()
 		chn._fchn_sptr = ChnSPtr (new FlanchoChn (
 			_interp_cubic,
 			&_buf_tmp [0],
-			_buf_tmp.size (),
+			int (_buf_tmp.size ()),
 			&_buf_render [0],
-			_buf_render.size ()
+			int (_buf_render.size ())
 		));
 		chn._fchn_sptr->set_rel_phase (0);
 

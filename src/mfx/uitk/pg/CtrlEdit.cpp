@@ -100,7 +100,7 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 		MinMax &       gork = _minmax [mm];
 
 		std::string    ratio;
-		for (size_t k = 0; k < _nbr_steps; ++k)
+		for (int k = 0; k < _nbr_steps; ++k)
 		{
 			ratio += "\xE2\x9A\xAB";   // MEDIUM BLACK CIRCLE U+26AB
 			gork._step_sptr_arr [k] = TxtSPtr (new NText (_id_step_arr [mm] + k));
@@ -537,7 +537,7 @@ void	CtrlEdit::update_display ()
 			const int      index   = _loc_edit._param_index;
 			for (size_t mm = 0; mm < _minmax.size (); ++mm)
 			{
-				for (size_t k = 0; k < _nbr_steps; ++k)
+				for (int k = 0; k < _nbr_steps; ++k)
 				{
 					_minmax [mm]._step_sptr_arr [k]->show (! _curve_mode_flag);
 					nav_list.resize (nav_list.size () + 1);
@@ -557,7 +557,7 @@ void	CtrlEdit::update_display ()
 		else
 		{
 			// Min/max
-			for (size_t k = 0; k < _nbr_steps; ++k)
+			for (int k = 0; k < _nbr_steps; ++k)
 			{
 				_minmax [1]._step_sptr_arr [k]->show (false);
 				nav_list.resize (nav_list.size () + 1);

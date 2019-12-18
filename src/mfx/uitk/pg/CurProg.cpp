@@ -25,6 +25,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#if fstb_IS (SYS, WIN)
+	#define NOMINMAX
+	#define WIN32_LEAN_AND_MEAN
+#endif
 
 #include "fstb/fnc.h"
 #include "mfx/adrv/DriverInterface.h"
@@ -50,8 +54,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 	#include <sys/ioctl.h>
 	#include <unistd.h>
 #elif fstb_IS (SYS, WIN)
-	#define NOMINMAX
-	#define WIN32_LEAN_AND_MEAN
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
 #else

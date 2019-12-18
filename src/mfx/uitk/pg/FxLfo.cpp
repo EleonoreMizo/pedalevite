@@ -444,7 +444,7 @@ std::vector <int32_t>	FxLfo::build_values (int nbr_steps, int h)
 		y_arr.push_back (y);
 	}
 
-	return std::move (y_arr);
+	return y_arr;
 }
 
 

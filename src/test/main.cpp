@@ -153,7 +153,7 @@ int    generate_test_signal_spikes (double &sample_freq, std::vector <std::vecto
 	for (auto &chn : chn_arr)
 	{
 		chn.resize (len);
-		mfx::dsp::mix::Generic::clear (&chn [0], len);
+		mfx::dsp::mix::Generic::clear (&chn [0], int (len));
 		for (double t = 0; t < duration; t += spike_len)
 		{
 			const size_t   pos = size_t (t * sample_freq);
@@ -182,7 +182,7 @@ int    generate_test_signal_short_sine (double &sample_freq, std::vector <std::v
 	for (auto &chn : chn_arr)
 	{
 		chn.resize (len);
-		mfx::dsp::mix::Generic::clear (&chn [0], len);
+		mfx::dsp::mix::Generic::clear (&chn [0], int (len));
 		for (size_t k = 0; k < len_s; ++k)
 		{
 			float          env = 1;
@@ -963,7 +963,7 @@ int	draw_all_lfos ()
 
 void	patch_setup_file_fix_peq_freq (mfx::doc::PluginSettings &settings, const mfx::piapi::ParamDescInterface &desc_freq, const mfx::piapi::ParamDescInterface &desc_type, const mfx::piapi::ParamDescInterface &desc_gain)
 {
-	const int      nbr_param = settings._param_list.size ();
+	const int      nbr_param = int (settings._param_list.size ());
 	const int      nbr_bands = nbr_param / mfx::pi::peq::Param_NBR_ELT;
 
 	for (int b_cnt = 0; b_cnt < nbr_bands; ++b_cnt)

@@ -75,8 +75,8 @@ void	CatalogPluginSettings::ser_write (SerWInterface &ser) const
 
 	// We need a second level for future extensions (sorting the catalog)
 	ser.begin_list ();
-	const size_t   nbr_settings = _cell_arr.size ();
-	for (size_t index = 0; index < nbr_settings; ++index)
+	const int      nbr_settings = int (_cell_arr.size ());
+	for (int index = 0; index < nbr_settings; ++index)
 	{
 		if (is_preset_existing (index))
 		{

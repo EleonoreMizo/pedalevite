@@ -59,7 +59,7 @@ void	FreqYin::set_sample_freq (double sample_freq)
 #if defined (mfx_dsp_ana_USE_SIMD)
 	win_len_max = (win_len_max + 3) & ~3;
 #endif
-	size_t         buf_len = 1 << int (ceil (log2 (win_len_max * 3)));
+	size_t         buf_len = size_t (1) << int (ceil (log2 (win_len_max * 3)));
 #if defined (mfx_dsp_ana_USE_SIMD)
 	assert ((buf_len & 3) == 0);
 	for (BufAlign &buf : _buf_arr)

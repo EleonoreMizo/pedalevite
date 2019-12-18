@@ -328,7 +328,7 @@ void	EditProg::set_preset_info ()
 
 	_prog_name_sptr->set_text (preset._name);
 
-	const int      nbr_slots = _slot_id_list.size ();
+	const int      nbr_slots = int (_slot_id_list.size ());
 	PageMgrInterface::NavLocList  nav_list (nbr_slots + 5);
 	_slot_list.resize (nbr_slots + 2);
 
@@ -529,7 +529,7 @@ int	EditProg::conv_loc_edit_to_node_id () const
 			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 			const int      chain_size   = int (preset._routing._chain.size ());
 
-			int         pos = it_slot_id - _slot_id_list.begin ();
+			int         pos = int (it_slot_id - _slot_id_list.begin ());
 			if (pos >= chain_size)
 			{
 				++ pos;

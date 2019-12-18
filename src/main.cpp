@@ -12,15 +12,16 @@
 
 
 
-#if defined (WIN32) || defined (_WIN32) || defined (__CYGWIN__)
-	#define WIN32_LEAN_AND_MEAN
-	#define NOMINMAX
-#endif
-
 // No I/O, audio only. Useful to debug soundcard-related problems.
 #undef MAIN_USE_VOID
 
+
+
 #include "fstb/def.h"
+#if fstb_IS (SYS, WIN)
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+#endif
 
 #define MAIN_DISP_ST7920  (1)
 #define MAIN_DISP_PCD8544 (2)

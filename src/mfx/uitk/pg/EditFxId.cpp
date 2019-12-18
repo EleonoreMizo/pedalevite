@@ -162,7 +162,7 @@ void	EditFxId::handle_menu ()
 				);
 				if (it != it_end)
 				{
-					_arg_fx_type._selection = std::distance (it, it_beg);
+					_arg_fx_type._selection = int (std::distance (it, it_beg));
 					_arg_fx_type._check_set.insert (_arg_fx_type._selection);
 				}
 			}

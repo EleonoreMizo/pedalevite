@@ -438,7 +438,12 @@ void	TestApprox::TestFncSpeed <T, ILL2>::test_op1 (const OP &op, const char name
 	{
 		for (int pos = 0; pos < block_len; pos += interleave)
 		{
+#if defined (_MSC_VER) && (fstb_WORD_SIZE == 64)
+			// VS2017 in 64-bit mode breaks on a C4789 error...
+			T              a [8];
+#else
 			T              a [interleave];
+#endif
 
 			if (true    ) { a [0] = src_arr [pos    ]; }
 			if (ILL2 > 0) { a [1] = src_arr [pos + 1]; }

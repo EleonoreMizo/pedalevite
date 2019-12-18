@@ -547,7 +547,7 @@ std::vector <pi::peq::BandParam>	FxPEq::create_bands (const doc::PluginSettings 
 		band.set_bypass (bypass >= 0.5f);
 	}
 
-	return std::move (band_arr);
+	return band_arr;
 }
 
 
@@ -585,7 +585,7 @@ std::vector <FxPEq::Biq>	FxPEq::retrieve_z_eq (const std::vector <pi::peq::BandP
 		}
 	}
 
-	return std::move (biq_arr);
+	return biq_arr;
 }
 
 
@@ -616,7 +616,7 @@ std::vector <float>	FxPEq::create_freq_map (int nbr_freq, float f_beg, float f_e
 		);
 	}
 
-	return std::move (puls_arr);
+	return puls_arr;
 }
 
 
@@ -728,7 +728,7 @@ std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, 
 		fstb::ToolsSimd::storeu_s32_part (&y_arr [f_idx], y, ns);
 	}
 
-	return std::move (y_arr);
+	return y_arr;
 }
 
 

@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "conc/def.h"
+#include "conc/Interlocked.h"
 
 #if defined (conc_HAS_CAS_128)
 #include <emmintrin.h>
@@ -80,7 +81,7 @@ template <>
 class AtomicMem <4>
 {
 public:
-	typedef	__m128i	DataType;
+	typedef Interlocked::Data128 DataType;
 	conc_TYPEDEF_ALIGN (16, DataType, DataTypeAlign);
 
 	conc_FORCEINLINE static DataType

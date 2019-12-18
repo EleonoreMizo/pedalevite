@@ -33,9 +33,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-
 #include "conc/CellPool.h"
 #include "fstb/msg/MsgRet.h"
 #include "mfx/ui/DisplayInterface.h"

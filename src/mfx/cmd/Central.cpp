@@ -328,7 +328,7 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 	if (it_inst_map != doc._map_model_id.end ())
 	{
 		Document::InstanceMap & inst_map = it_inst_map->second;
-		nbr_found = inst_map.size ();
+		nbr_found = int (inst_map.size ());
 	}
 
 	// Creates the remaining plug-ins, if required

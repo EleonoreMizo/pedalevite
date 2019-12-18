@@ -79,7 +79,7 @@ UniqueProgList::ProgList	UniqueProgList::build (const View &view)
 		}
 	}
 
-	return std::move (prog_list);
+	return prog_list;
 }
 
 

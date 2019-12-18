@@ -357,7 +357,7 @@ void	FreqFast::find_freq (int nbr_spl)
 
 void	FreqFast::process_freq (int ts_rel)
 {
-	const size_t   time_p0 = _time_ref + ts_rel;
+	const int32_t  time_p0 = _time_ref + ts_rel;
 	const float    per     = float (time_p0 - _time_p1);
 
 	if (_per_avg <= 0 || is_period_similar (per, _per_avg))

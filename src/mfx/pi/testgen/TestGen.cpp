@@ -37,6 +37,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cstdint>
 
 
 
@@ -100,7 +101,7 @@ TestGen::TestGen ()
 
 	for (auto &chn : _chn_arr)
 	{
-		const int      seed = reinterpret_cast <int> (&chn);
+		const int      seed = int (reinterpret_cast <intptr_t> (&chn));
 		chn._nz_pink.set_seed (seed);
 		chn._nz_white.set_seed (seed);
 	}

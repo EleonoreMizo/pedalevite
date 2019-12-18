@@ -119,7 +119,7 @@ void	BitFieldSparse::clear ()
 {
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
-	const int		nbr_lvl = _lvl_arr.size ();
+	const int		nbr_lvl = int (_lvl_arr.size ());
 	for (int lvl_index = 0; lvl_index < nbr_lvl; ++lvl_index)
 	{
 		BfLevel &		lvl = _lvl_arr [lvl_index];
@@ -143,7 +143,7 @@ void	BitFieldSparse::fill ()
 {
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
-	const int		nbr_lvl = _lvl_arr.size ();
+	const int		nbr_lvl = int (_lvl_arr.size ());
 	for (int lvl_index = 0; lvl_index < nbr_lvl; ++lvl_index)
 	{
 		BfLevel &		lvl = _lvl_arr [lvl_index];
@@ -199,7 +199,7 @@ void	BitFieldSparse::clear_bit (int pos)
 
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
-	const int      nbr_lvl = _lvl_arr.size ();
+	const int      nbr_lvl = int (_lvl_arr.size ());
 	for (int lvl_index = 0; lvl_index < nbr_lvl; ++lvl_index)
 	{
 		BfLevel &      lvl = _lvl_arr [lvl_index];
@@ -233,7 +233,7 @@ void	BitFieldSparse::fill_bit (int pos)
 
 	typedef	BitFieldTools <GroupType, BITDEPTH_L2>	Tools;
 
-	const int		nbr_lvl = _lvl_arr.size ();
+	const int		nbr_lvl = int (_lvl_arr.size ());
 	for (int lvl_index = 0; lvl_index < nbr_lvl; ++lvl_index)
 	{
 		BfLevel &		lvl = _lvl_arr [lvl_index];
@@ -317,7 +317,7 @@ bool	BitFieldSparse::has_a_bit_set () const
 
 	if (get_nbr_elt () > 0)
 	{
-		const int      last_lvl_index = _lvl_arr.size () - 1;
+		const int      last_lvl_index = int (_lvl_arr.size ()) - 1;
 		const BfLevel& last_lvl       = _lvl_arr [last_lvl_index];
 		assert (last_lvl._group_arr.size () == 1);
 		bit_flag = (last_lvl._group_arr [0] != 0);

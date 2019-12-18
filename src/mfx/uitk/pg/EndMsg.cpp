@@ -44,6 +44,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <vector>
 
 #include <cassert>
+#include <cstdint>
 
 
 
@@ -85,7 +86,7 @@ void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
-	_end_type  = EndType (reinterpret_cast <int> (usr_ptr));
+	_end_type  = EndType (reinterpret_cast <intptr_t> (usr_ptr));
 
 	std::string    txt;
 	switch (_end_type)
