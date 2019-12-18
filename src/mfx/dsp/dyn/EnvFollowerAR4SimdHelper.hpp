@@ -88,7 +88,7 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sam
 	const auto     coef_a     = V128Par::load_f32 (_coef_atk);
 	const auto     coef_r     = V128Par::load_f32 (_coef_rls);
 
-	auto           state      = V128Par::load_f32 (_state [0]);
+	auto           state      = in;
 
 	for (int flt = 0; flt < ORD; ++flt)
 	{
