@@ -202,7 +202,7 @@ static LONG createRegPath (HKEY mainkey,const char *szregpath,const char *sznewp
 	char	newregpath[MAX_PATH_LEN];
 	
 	sprintf(newregpath,"%s\\%s",szregpath,sznewpath);
-	if (!(cr = findRegPath(mainkey,newregpath))) {
+	if ((cr = findRegPath(mainkey,newregpath)) == 0) {
 		if ((cr = RegOpenKey(mainkey,szregpath,&hkey)) == ERROR_SUCCESS) {
 			if ((cr = RegCreateKey(hkey,sznewpath,&hksub)) == ERROR_SUCCESS) {
 				RegCloseKey(hksub);

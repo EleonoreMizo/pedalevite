@@ -204,9 +204,9 @@ public:
 
     /* Non delegating unknown implementation */
 
-    STDMETHODIMP NonDelegatingQueryInterface(REFIID, void **);
-    STDMETHODIMP_(ULONG) NonDelegatingAddRef();
-    STDMETHODIMP_(ULONG) NonDelegatingRelease();
+    COM_DECLSPEC_NOTHROW STDMETHODIMP NonDelegatingQueryInterface(REFIID, void **);
+    COM_DECLSPEC_NOTHROW STDMETHODIMP_(ULONG) NonDelegatingAddRef();
+    COM_DECLSPEC_NOTHROW STDMETHODIMP_(ULONG) NonDelegatingRelease();
 
     /* Return an interface pointer to a requesting client
        performing a thread safe AddRef as necessary */

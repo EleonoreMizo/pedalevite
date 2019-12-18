@@ -26,7 +26,7 @@ LONG CBaseObject::m_cObjects = 0;
 
 /* Constructor */
 
-CBaseObject::CBaseObject(TCHAR *pName)
+CBaseObject::CBaseObject(TCHAR * /*pName*/)
 {
     /* Increment the number of active objects */
     InterlockedIncrement(&m_cObjects);
@@ -56,7 +56,7 @@ CBaseObject::~CBaseObject()
 #if defined (_MSC_VER)
 #pragma warning( disable : 4355 4100 )
 #endif
-CUnknown::CUnknown(TCHAR *pName, LPUNKNOWN pUnk, HRESULT *phr) 
+CUnknown::CUnknown(TCHAR *pName, LPUNKNOWN pUnk, HRESULT * /*phr*/)
 : CBaseObject(pName)
 /* Set our pointer to our IUnknown interface.                      */
 /* If we have an outer, use its, otherwise use ours.               */
@@ -81,7 +81,7 @@ CUnknown::CUnknown(TCHAR *pName, LPUNKNOWN pUnk, HRESULT *phr)
 
 /* QueryInterface */
 
-STDMETHODIMP CUnknown::NonDelegatingQueryInterface(REFIID riid, void ** ppv)
+COM_DECLSPEC_NOTHROW STDMETHODIMP CUnknown::NonDelegatingQueryInterface(REFIID riid, void ** ppv)
 {
     CheckPointer(ppv,E_POINTER);
     ValidateReadWritePtr(ppv,sizeof(PVOID));
@@ -112,7 +112,7 @@ template<class T> inline static T max( const T & a, const T & b )
 
 /* AddRef */
 
-STDMETHODIMP_(ULONG) CUnknown::NonDelegatingAddRef()
+COM_DECLSPEC_NOTHROW STDMETHODIMP_(ULONG) CUnknown::NonDelegatingAddRef()
 {
 #if defined (DEBUG)
     LONG lRef =
@@ -130,7 +130,7 @@ STDMETHODIMP_(ULONG) CUnknown::NonDelegatingAddRef()
 
 /* Release */
 
-STDMETHODIMP_(ULONG) CUnknown::NonDelegatingRelease()
+COM_DECLSPEC_NOTHROW STDMETHODIMP_(ULONG) CUnknown::NonDelegatingRelease()
 {
     /* If the reference count drops to zero delete ourselves */
 
