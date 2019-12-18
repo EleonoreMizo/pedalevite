@@ -47,8 +47,6 @@ int	compare (const std::u32string &s1, const std::u32string &s2)
 	int				   ret_val = 0;
 
 	size_t            pos     = 0;
-	const char32_t *  s1_0    = s1.c_str ();
-	const char32_t *  s2_0    = s2.c_str ();
 	const size_t      max_len = std::max (s1.length (), s2.length ());
 	while (ret_val == 0 && pos < max_len)
 	{

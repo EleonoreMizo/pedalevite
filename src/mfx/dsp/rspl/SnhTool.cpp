@@ -745,7 +745,7 @@ int	SnhTool::compute_hold_time (const fstb::FixedPoint &rate, int ovrspl_l2)
 	// - 1 to avoid useless oversampling for rates 1/2, 1/4, 1/8, etc.
 	const int64_t  r = rate.get_val_int64 () - 1;
 
-	if (r <= 0xFFFFFFFFUL)
+	if (r <= int64_t (0xFFFFFFFFUL))
 	{
 		// k = min (ovrspl_l2, 32 - greater bit set in frac_val)
 		uint32_t       frac_val = uint32_t (r);

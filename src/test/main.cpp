@@ -1718,7 +1718,7 @@ int	test_file_write_fs_ro ()
 		pathname_tmp += pathname.substr (last_delim);
 	}
 
-	const int      ret_val = mfx::FileIOInterface::write_txt_file_direct (
+	int            ret_val = mfx::FileIOInterface::write_txt_file_direct (
 		pathname_tmp, content
 	);
 	if (ret_val == 0)
@@ -1732,7 +1732,11 @@ int	test_file_write_fs_ro ()
 		cmd += pathname;
 		cmd += "\'";
 
-		system (cmd.c_str ());
+		const int      ret_val_sys = system (cmd.c_str ());
+		if (ret_val_sys != 0)
+		{
+			ret_val = -1;
+		}
 	}
 
 	return ret_val;

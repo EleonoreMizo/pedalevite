@@ -412,7 +412,7 @@ void	Align::setup_unaligned ()
 	mix_ni1_1               = Generic::mix_ni1_1;
 
 	// Multiply
-	mult_1_1                = mult_1_1;
+	mult_1_1                = Generic::mult_1_1;
 
 	// Multiply, in-place
 	mult_ip_1_1             = Generic::mult_ip_1_1;

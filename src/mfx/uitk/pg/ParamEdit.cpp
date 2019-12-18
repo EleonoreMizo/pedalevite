@@ -263,7 +263,7 @@ void	ParamEdit::update_display ()
 
 
 	_follow_sptr->show (show_sync_flag);
-	int            nbr_entries = 1 + (show_sync_flag) ? 1 : 0;
+	int            nbr_entries = 1 + ((show_sync_flag) ? 1 : 0);
 
 	PageMgrInterface::NavLocList  nav_list (nbr_entries + _nbr_steps);
 	for (int k = 0; k < _nbr_steps; ++k)

@@ -32,8 +32,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Model.h"
 #include "mfx/View.h"
 
-#include <utility>
-
 #include <cassert>
 
 
@@ -90,7 +88,7 @@ void	ProgCatalog::do_connect (Model &model, const View &view, PageMgrInterface &
 	PageMgrInterface::NavLocList  nav_list;
 
 	UniqueProgList upl;
-	_prog_coord_list = std::move (upl.build (view));
+	_prog_coord_list = upl.build (view);
 	const doc::Setup &   setup = view.use_setup ();
 	const size_t   nbr_prog = _prog_coord_list.size ();
 	_prog_list.clear ();

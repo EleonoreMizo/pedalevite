@@ -69,6 +69,8 @@ EndMsg::EndMsg (const CmdLine &cmd_line)
 ,	_page_size ()
 ,	_line_list ()
 ,	_end_type (EndType_NONE)
+,	_action_date (0)
+,	_msg_arg ()
 {
 	// Nothing
 }
@@ -170,23 +172,34 @@ MsgHandlerInterface::EvtProp	EndMsg::do_handle_evt (const NodeEvt &evt)
 		const auto     cur_date = _model_ptr->get_cur_date ();
 		if (cur_date >= _action_date)
 		{
+			int            ret_val_sys = 0;
+
 			switch (_end_type)
 			{
 			case EndType_RESTART:
 				{
 					char * const * argv = _cmd_line.use_argv ();
 					char * const * envp = _cmd_line.use_envp ();
-					execve (argv [0], argv, envp);
+					ret_val_sys = execve (argv [0], argv, envp);
 				}
 				break;
 			case EndType_REBOOT:
-				system ("sudo shutdown -r now");
+				ret_val_sys = system ("sudo shutdown -r now");
 				break;
 			case EndType_SHUTDOWN:
-				system ("sudo shutdown -h now");
+				ret_val_sys = system ("sudo shutdown -h now");
 				break;
 			default:
 				break;
+			}
+
+			if (ret_val_sys != 0)
+			{
+				const int      node_id = evt.get_target ();
+				Question::msg_box (
+					"Command failed.", "Cancel",
+					_msg_arg, _page_switcher, node_id
+				);
 			}
 		}
 #endif

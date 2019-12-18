@@ -50,7 +50,8 @@ public:
 		Err_GENERIC_IO = -999,
 		Err_CANNOT_OPEN,
 		Err_WRITE_ERROR,
-		Err_READ_ERROR
+		Err_READ_ERROR,
+		Err_MOVE_ERROR
 	};
 
 	virtual        ~FileIOInterface () = default;

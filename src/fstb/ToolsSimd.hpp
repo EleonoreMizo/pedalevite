@@ -1501,7 +1501,7 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a)
 	case 1:  aa = vextq_s32 (aa, aa, 3); break;
 	case 2:  aa = vextq_s32 (aa, aa, 2); break;
 	case 3:  aa = vextq_s32 (aa, aa, 1); break;
-	default: aa = aa;
+	default: /* Nothing */               break;
 	}
 	return vreinterpretq_f32_s32 (aa);
 #endif // ff_arch_CPU
@@ -1518,7 +1518,7 @@ float	ToolsSimd::Shift <SHIFT>::extract (VectF32 a)
 	case 1:  a = _mm_shuffle_ps (a, a, 1);	break;
 	case 2:  a = _mm_shuffle_ps (a, a, 2);	break;
 	case 3:  a = _mm_shuffle_ps (a, a, 3);	break;
-	default: a = a;
+	default: /* Nothing */                 break;
 	}
 	return _mm_cvtss_f32 (a);
 #elif fstb_IS (ARCHI, ARM)
@@ -1573,7 +1573,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::rotate (VectS32 a)
 	case 1:  a = vextq_s32 (a, a, 3); break;
 	case 2:  a = vextq_s32 (a, a, 2); break;
 	case 3:  a = vextq_s32 (a, a, 1); break;
-	default: a = a;
+	default: /* Nothing */            break;
 	}
 	return a;
 #endif // ff_arch_CPU
@@ -1590,7 +1590,7 @@ int32_t	ToolsSimd::Shift <SHIFT>::extract (VectS32 a)
 	case 1:  a = _mm_shuffle_epi32 (a, 1);	break;
 	case 2:  a = _mm_shuffle_epi32 (a, 2);	break;
 	case 3:  a = _mm_shuffle_epi32 (a, 3);	break;
-	default: a = a;
+	default: /* Nothing */                 break;
 	}
 	return _mm_cvtsi128_si32 (a);
 #elif fstb_IS (ARCHI, ARM)

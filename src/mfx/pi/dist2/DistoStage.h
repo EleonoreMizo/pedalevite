@@ -217,7 +217,7 @@ private:
 		double         operator () (double x)
 		{
 			const double   f1 = tanh (x);
-			const double   f2 = x / (1 + abs (x));
+			const double   f2 = x / (1 + fabs (x));
 			return (f1 + f2) * 0.5;
 		}
 	};

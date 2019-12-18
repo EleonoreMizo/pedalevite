@@ -9,12 +9,13 @@
 // Use freely. August 2001
 
 // Modifications:
-// LDS = Laurent de Soras <laurent.de.soras@club-internet.fr>
+// LDS = Laurent de Soras - http://ldesoras.free.fr
 // 2003.05.07 - LDS - Added const qualifier to *text in drawLegend().
 // 2003.05.13 - LDS - Fixed gSave/gRestore bug by adding a context stack and tweaking the beginning of the drawText() function
 // 2003.05.17 - LDS - Added flags for automatic area filling and path closing
 // 2005.02.13 - LDS - Fixed printString() to print correctly percent characters
 // 2016.10.09 - LDS - Fixed the headers
+// 2019.12.18 - LDS - Fixed delete []
 
 // A class for writing Encapsulated PostScript figures
 class EPSPlot {
@@ -453,8 +454,8 @@ public:
 			newcount++;
 		}
 		drawLines(newx, newy, newcount);
-		delete newx;
-		delete newy;
+		delete [] newx;
+		delete [] newy;
 	}
 
 	// Draw several connected lines, with top and bottom clipped and optimization

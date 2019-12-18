@@ -90,7 +90,7 @@ int	FileIOPi3::do_write_txt_file (const std::string &pathname, const std::string
 
 	_led.set_led (1, 1.0f);
 
-	const int      ret_val = write_txt_file_direct (pathname_tmp, content);
+	int            ret_val = write_txt_file_direct (pathname_tmp, content);
 	if (ret_val == 0)
 	{
 		std::string    cmd = "sudo ";
@@ -105,7 +105,11 @@ int	FileIOPi3::do_write_txt_file (const std::string &pathname, const std::string
 		cmd += pathname;
 		cmd += "\'";
 	
-		system (cmd.c_str ());
+		const int      ret_val_sys = system (cmd.c_str ());
+		if (ret_val_sys != 0)
+		{
+			ret_val = Err_MOVE_ERROR;
+		}
 	}
 
 	_led.set_led (1, 0);

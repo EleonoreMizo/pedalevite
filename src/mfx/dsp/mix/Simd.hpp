@@ -1692,7 +1692,6 @@ void	Simd <VD, VS>::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const
 		in_1_ptr += 4;
 		in_2_ptr += 4;
 		out_ptr += 8;
-		-- nbr_loop;
 	}
 
 	nbr_spl &= 3;

@@ -29,8 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/UniqueProgList.h"
 #include "mfx/View.h"
 
-#include <utility>
-
 #include <cassert>
 
 

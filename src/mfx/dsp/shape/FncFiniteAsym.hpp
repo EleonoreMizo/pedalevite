@@ -82,7 +82,6 @@ fstb::ToolsSimd::VectF32	FncFiniteAsym <BL, BU, GF, RES>::operator () (fstb::Too
 	const auto     bl   = fstb::ToolsSimd::set1_f32 (float (BL));
 	const auto     bu   = fstb::ToolsSimd::set1_f32 (float (BU));
 	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
-	const auto     ts   = fstb::ToolsSimd::set1_f32 (float (_table_size));
 	x = fstb::ToolsSimd::max_f32 (x, bl);
 	x = fstb::ToolsSimd::min_f32 (x, bu);
 	auto           xo   = x - bl;

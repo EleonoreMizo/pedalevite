@@ -329,7 +329,7 @@ void	DisplayPi3St7920::redraw_part ()
 
 void	DisplayPi3St7920::send_mode (Mode mode)
 {
-	uint8_t        buffer [1] = { mode };
+	uint8_t        buffer [1] = { uint8_t (mode) };
 	::wiringPiSPIDataRW (_spi_port, &buffer [0], sizeof (buffer));
 }
 

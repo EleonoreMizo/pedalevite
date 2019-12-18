@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
 
@@ -106,6 +107,8 @@ private:
 
 	std::chrono::microseconds
 	               _action_date;
+
+	Question::QArg _msg_arg;
 
 
 

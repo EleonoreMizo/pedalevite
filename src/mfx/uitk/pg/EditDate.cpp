@@ -167,7 +167,11 @@ void	EditDate::do_disconnect ()
 			"sudo date --utc -s \"%Y-%m-%d %H:%M:%S\"",
 			&_utc
 		);
-		system (txt_0);
+		const int      ret_val = system (txt_0);
+		if (ret_val != 0)
+		{
+			assert (false);
+		}
 		_change_flag = false;
 
 		// Changing the date breaks many time-based functions, especially the

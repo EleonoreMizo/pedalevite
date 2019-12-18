@@ -145,10 +145,13 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 		PluginPool::PluginDetails &         details  =
 			_plugin_pool.use_plugin (pi_id);
 		int            latency = 0;
+#if ! defined (NDEBUG)
 		int            ret_val =
+#endif
 			details._pi_uptr->reset (sample_freq, max_block_size, latency);
+#if ! defined (NDEBUG)
 		assert (ret_val == piapi::PluginInterface::Err_OK);
-		ret_val = ret_val; // -Wunused-variable
+#endif
 	}
 	_audio.set_process_info (sample_freq, max_block_size);
 	for (auto &buf : _d2d_buf_arr)
@@ -364,13 +367,17 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 		if (_sample_freq > 0)
 		{
 			int            latency = 0;
-			int            ret_val = details._pi_uptr->reset (
-				_sample_freq,
-				_max_block_size,
-				latency
-			);
+#if ! defined (NDEBUG)
+			int            ret_val =
+#endif
+				details._pi_uptr->reset (
+					_sample_freq,
+					_max_block_size,
+					latency
+				);
+#if ! defined (NDEBUG)
 			assert (ret_val == piapi::PluginInterface::Err_OK);
-			ret_val = ret_val; // -Wunused-variable
+#endif
 		}
 		check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
 
@@ -885,11 +892,15 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 						        || state != piapi::PluginInterface::State_ACTIVE))
 						{
 							int            latency = 0;
-							int            ret_val = details._pi_uptr->reset (
-								_sample_freq, _max_block_size, latency
-							);
+#if ! defined (NDEBUG)
+							int            ret_val =
+#endif
+								details._pi_uptr->reset (
+									_sample_freq, _max_block_size, latency
+								);
+#if ! defined (NDEBUG)
 							assert (ret_val == piapi::PluginInterface::Err_OK);
-							ret_val = ret_val; // -Wunused-variable
+#endif
 						}
 						break;
 					}
@@ -906,13 +917,17 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 			if (_sample_freq > 0)
 			{
 				int            latency = 0;
-				int            ret_val = details._pi_uptr->reset (
-					_sample_freq,
-					_max_block_size,
-					latency
-				);
+#if ! defined (NDEBUG)
+				int            ret_val =
+#endif
+					details._pi_uptr->reset (
+						_sample_freq,
+						_max_block_size,
+						latency
+					);
+#if ! defined (NDEBUG)
 				assert (ret_val == piapi::PluginInterface::Err_OK);
-				ret_val = ret_val; // -Wunused-variable
+#endif
 			}
 			check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
 

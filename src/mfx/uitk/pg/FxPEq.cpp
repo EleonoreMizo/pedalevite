@@ -43,7 +43,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/View.h"
 
 #include <algorithm>
-#include <utility>
 
 #include <cassert>
 #include <cstring>
