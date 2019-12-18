@@ -78,6 +78,8 @@ BankMove::BankMove (PageSwitcher &page_switcher)
 
 void	BankMove::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -177,6 +179,8 @@ MsgHandlerInterface::EvtProp	BankMove::do_handle_evt (const NodeEvt &evt)
 
 void	BankMove::do_set_bank (int index, const doc::Bank &bank)
 {
+	fstb::unused (index, bank);
+
 	update_display ();
 }
 
@@ -184,6 +188,8 @@ void	BankMove::do_set_bank (int index, const doc::Bank &bank)
 
 void	BankMove::do_set_bank_name (std::string name)
 {
+	fstb::unused (name);
+
 	update_display ();
 }
 

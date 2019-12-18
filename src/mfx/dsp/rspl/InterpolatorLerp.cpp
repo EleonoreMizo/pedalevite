@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include	"mfx/dsp/rspl/InterpolatorLerp.h"
 
 #include	<cassert>
@@ -57,6 +58,8 @@ InterpolatorLerp::InterpolatorLerp ()
 
 void	InterpolatorLerp::do_set_ovrspl_l2 (int ovrspl_l2)
 {
+	fstb::unused (ovrspl_l2);
+
 	// Nothing
 }
 
@@ -147,6 +150,8 @@ int	InterpolatorLerp::do_process_block (float * const dest_ptr_arr [], const flo
 
 float	InterpolatorLerp::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
 {
+	fstb::unused (rate);
+
 	const int32_t  pos_int = pos_src.get_int_val ();
 	const float    q       = pos_src.get_frac_val_flt ();
 	const float    in_0    = src_ptr [pos_int    ];

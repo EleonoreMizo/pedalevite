@@ -89,6 +89,10 @@ private:
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
+#if defined (_MSC_VER)
+#pragma warning (push)
+#pragma warning (disable : 4324)
+#endif
 	class Proc
 	{
 	public:
@@ -116,6 +120,9 @@ private:
 		               _stage_arr;
 
 	};
+#if defined (_MSC_VER)
+#pragma warning (pop)
+#endif
 	typedef fstb::SingleObj <Proc, fstb::AllocAlign <Proc, 16> > ProcAlign;
 
 	void           update_param (bool force_flag = false);

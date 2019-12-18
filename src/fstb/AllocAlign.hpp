@@ -173,6 +173,8 @@ void	AllocAlign <T, ALIG>::destroy (pointer ptr)
 template <class T, long ALIG>
 bool	AllocAlign <T, ALIG>::operator == (AllocAlign <T, ALIG> const &other)
 {
+	fstb::unused (other);
+
 	return (true);
 }
 

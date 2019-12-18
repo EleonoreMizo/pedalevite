@@ -117,7 +117,7 @@ int	FileIOInterface::read_txt_file_direct (const std::string &pathname, std::str
 			c = fgetc (f_ptr);
 			if (c != EOF)
 			{
-				content += c;
+				content += char (c);
 			}
 		}
 		while (c != EOF);

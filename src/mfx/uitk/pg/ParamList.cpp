@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/param/Tools.h"
@@ -84,6 +85,8 @@ ParamList::ParamList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 void	ParamList::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -205,6 +208,8 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 
 void	ParamList::do_activate_preset (int index)
 {
+	fstb::unused (index);
+
 	_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 }
 
@@ -212,6 +217,8 @@ void	ParamList::do_activate_preset (int index)
 
 void	ParamList::do_set_param (int slot_id, int index, float val, PiType type)
 {
+	fstb::unused (val);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		update_param_txt (type, index);
@@ -232,6 +239,8 @@ void	ParamList::do_remove_plugin (int slot_id)
 
 void	ParamList::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
+	fstb::unused (type, index, cls);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		set_param_info ();

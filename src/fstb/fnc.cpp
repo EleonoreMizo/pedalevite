@@ -50,7 +50,7 @@ void	conv_to_lower_case (std::string &str)
 {
 	for (std::string::size_type p = 0; p < str.length (); ++p)
 	{
-		str [p] = tolower (str [p]);
+		str [p] = char (tolower (str [p]));
 	}
 }
 

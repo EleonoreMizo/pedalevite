@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/uitk/pg/PedalEditGroup.h"
 #include "mfx/uitk/pg/Tools.h"
@@ -76,6 +77,8 @@ PedalEditGroup::PedalEditGroup (PageSwitcher &page_switcher, PedalEditContext &c
 
 void	PedalEditGroup::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -158,6 +161,8 @@ MsgHandlerInterface::EvtProp	PedalEditGroup::do_handle_evt (const NodeEvt &evt)
 
 void	PedalEditGroup::do_set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
+	fstb::unused (layout);
+
 	update_display ();
 }
 
@@ -165,6 +170,8 @@ void	PedalEditGroup::do_set_pedalboard_layout (const doc::PedalboardLayout &layo
 
 void	PedalEditGroup::do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content)
 {
+	fstb::unused (loc, content);
+
 	update_display ();
 }
 

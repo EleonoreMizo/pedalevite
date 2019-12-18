@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
@@ -79,6 +80,8 @@ SaveProg::SaveProg (PageSwitcher &page_switcher)
 
 void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -254,6 +257,8 @@ MsgHandlerInterface::EvtProp	SaveProg::do_handle_evt (const NodeEvt &evt)
 
 void	SaveProg::do_set_preset_name (std::string name)
 {
+	fstb::unused (name);
+
 	update_display ();
 }
 
@@ -261,6 +266,8 @@ void	SaveProg::do_set_preset_name (std::string name)
 
 void	SaveProg::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
 {
+	fstb::unused (preset_index, preset);
+
 	if (bank_index == _save_bank_index)
 	{
 		update_display ();

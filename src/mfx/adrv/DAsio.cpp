@@ -455,6 +455,8 @@ void	DAsio::process_block (long buf_index)
 
 void	DAsio::process_asio (long doubleBufferIndex, ::ASIOBool directProcess)
 {
+	fstb::unused (directProcess);
+
 	_instance_ptr->process_block (doubleBufferIndex);
 }
 
@@ -472,6 +474,8 @@ void	DAsio::samplerate_did_change (::ASIOSampleRate sRate)
 
 long	DAsio::asio_message (long selector, long value, void* message, double* opt)
 {
+	fstb::unused (message, opt);
+
 	long           ret_val = 0;
 
 	switch (selector)

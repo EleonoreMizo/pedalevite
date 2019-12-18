@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/uitk/pg/NotYet.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -71,6 +72,8 @@ NotYet::NotYet (PageSwitcher &page_switcher)
 
 void	NotYet::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (model, usr_ptr);
+
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;

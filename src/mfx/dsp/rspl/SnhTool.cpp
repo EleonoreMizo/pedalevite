@@ -240,8 +240,8 @@ void	SnhTool::process_data (float * const data_ptr_arr [], int nbr_spl, const fs
 	assert (rate.get_val_int64 () > 0);
 
 	bool           need_trans_flag = false;
-	int            ht_new;
-	int            pos = 0;
+	int            ht_new = 0;
+	int            pos    = 0;
 	do
 	{
 		// First, terminates the transition, if any.

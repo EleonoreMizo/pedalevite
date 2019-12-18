@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/txt/unicode/unicode.h"
 #include "fstb/txt/utf8/Codec8.h"
+#include "fstb/def.h"
 #include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -92,6 +93,7 @@ EditText::EditText (PageSwitcher &page_switcher)
 
 void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (model, view);
 	assert (usr_ptr != 0);
 
 	_page_ptr  = &page;

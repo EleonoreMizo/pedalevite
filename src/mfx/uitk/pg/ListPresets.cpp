@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/uitk/pg/ListPresets.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -222,6 +223,8 @@ MsgHandlerInterface::EvtProp	ListPresets::do_handle_evt (const NodeEvt &evt)
 
 void	ListPresets::do_activate_preset (int index)
 {
+	fstb::unused (index);
+
 	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 }
 
@@ -239,6 +242,8 @@ void	ListPresets::do_remove_slot (int slot_id)
 
 void	ListPresets::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
+	fstb::unused (pi_data);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
@@ -259,6 +264,8 @@ void	ListPresets::do_remove_plugin (int slot_id)
 
 void	ListPresets::do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
 {
+	fstb::unused (index, name, s_main, s_mix);
+
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
 	if (model == slot._pi_model)
@@ -271,6 +278,8 @@ void	ListPresets::do_add_settings (std::string model, int index, std::string nam
 
 void	ListPresets::do_remove_settings (std::string model, int index)
 {
+	fstb::unused (index);
+
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
 	if (model == slot._pi_model)

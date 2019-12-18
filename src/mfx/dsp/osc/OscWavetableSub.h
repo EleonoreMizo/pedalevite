@@ -187,6 +187,7 @@ private:
 	InterpFtor     _interpolator;
 
 
+
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:

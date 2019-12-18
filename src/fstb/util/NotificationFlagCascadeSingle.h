@@ -19,10 +19,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #if ! defined (fstb_util_NotificationFlagCascadeSingle_HEADER_INCLUDED)
 #define fstb_util_NotificationFlagCascadeSingle_HEADER_INCLUDED
 
-#if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
-#endif
-
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -38,6 +34,11 @@ namespace util
 {
 
 
+
+#if defined (_MSC_VER)
+	#pragma warning (push)
+	#pragma warning (disable : 4250)
+#endif // inherits via dominance
 
 class NotificationFlagCascadeSingle
 :	public NotificationFlagCascadeMixin
@@ -69,6 +70,10 @@ private:
 private:
 
 }; // class NotificationFlagCascadeSingle
+
+#if defined (_MSC_VER)
+	#pragma warning (pop)
+#endif
 
 
 

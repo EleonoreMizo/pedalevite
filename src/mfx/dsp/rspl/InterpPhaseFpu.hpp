@@ -22,6 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include	<cassert>
 
 
@@ -76,6 +78,7 @@ inline void	InterpPhaseFpu_Util <REM>::sum_start (const int fir_len, float &c_0,
 template <>
 inline void	InterpPhaseFpu_Util <1>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr [])
 {
+	fstb::unused (fir_len);
 	assert (fir_len == 1);
 
 	c_0 = (imp_ptr [0] + dif_ptr [0] * q) * data_ptr [0];
@@ -99,12 +102,15 @@ inline void	InterpPhaseFpu_Util <REM>::sum_rec (const int fir_len, float &c_0, f
 template <>
 inline void	InterpPhaseFpu_Util <1>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr [])
 {
+	fstb::unused (c_1);
+
 	c_0 += (imp_ptr [fir_len-1] + dif_ptr [fir_len-1] * q) * data_ptr [fir_len-1];
 }
 
 template <>
 inline void	InterpPhaseFpu_Util <0>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], float q, const float imp_ptr [], const float dif_ptr [])
 {
+	fstb::unused (fir_len, c_0, c_1, data_ptr, q, imp_ptr, dif_ptr);
 	// Nothing, stops the recursion
 }
 
@@ -120,6 +126,7 @@ inline void	InterpPhaseFpu_Util <REM>::lerp_imp (float q, float lerp_ptr [], con
 template <>
 inline void	InterpPhaseFpu_Util <0>::lerp_imp (float q, float lerp_ptr [], const float imp_ptr [], const float dif_ptr [])
 {
+	fstb::unused (q, lerp_ptr, imp_ptr, dif_ptr);
 	// Nothing, stops the recursion
 }
 
@@ -141,6 +148,7 @@ inline void	InterpPhaseFpu_Util <REM>::sum_start (const int fir_len, float &c_0,
 template <>
 inline void	InterpPhaseFpu_Util <1>::sum_start (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr [])
 {
+	fstb::unused (fir_len);
 	assert (fir_len == 1);
 
 	c_0 = lerp_ptr [0] * data_ptr [0];
@@ -164,12 +172,15 @@ inline void	InterpPhaseFpu_Util <REM>::sum_rec (const int fir_len, float &c_0, f
 template <>
 inline void	InterpPhaseFpu_Util <1>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr [])
 {
+	fstb::unused (c_1);
+
 	c_0 += lerp_ptr [fir_len-1] * data_ptr [fir_len-1];
 }
 
 template <>
 inline void	InterpPhaseFpu_Util <0>::sum_rec (const int fir_len, float &c_0, float &c_1, const float data_ptr [], const float lerp_ptr [])
 {
+	fstb::unused (fir_len, c_0, c_1, data_ptr, lerp_ptr);
 	// Nothing, stops the recursion
 }
 

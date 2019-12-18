@@ -108,6 +108,7 @@ piapi::PluginInterface::State	Wah2::do_get_state () const
 
 double	Wah2::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
+	fstb::unused (categ, note_id);
 	assert (categ == piapi::ParamCateg_GLOBAL);
 
 	return _state_set.use_state (index).get_val_tgt ();
@@ -117,6 +118,8 @@ double	Wah2::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) 
 
 int	Wah2::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
+	fstb::unused (max_buf_len);
+
 	latency = 0;
 
 	_sample_freq = float (    sample_freq);

@@ -61,12 +61,19 @@ public:
 	VectFloat4Aligned
 	               _mem_y [2];    // Ring buffer for output memory
 
+#if defined (_MSC_VER)
+#pragma warning (push)
+#pragma warning (disable : 4324)
+#endif
 	union
 	{
 		int            _mem_pos;   // Write position in ring buffers. 0 or 1.
 		VectFloat4Aligned
 		               _pad;
 	};
+#if defined (_MSC_VER)
+#pragma warning (pop)
+#endif
 
 
 

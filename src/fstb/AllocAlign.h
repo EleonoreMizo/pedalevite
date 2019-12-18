@@ -59,7 +59,7 @@ public:
 	               AllocAlign ()                                  = default;
 	               AllocAlign (AllocAlign <T, ALIG> const &other) = default;
 	template <typename U>
-	               AllocAlign (AllocAlign <U, ALIG> const &other) {}
+	               AllocAlign (AllocAlign <U, ALIG> const &/*other*/) {}
 	               ~AllocAlign ()                                 = default;
 
 	// Address

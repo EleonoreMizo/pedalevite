@@ -466,9 +466,7 @@ int	get_prev_pow_2 (uint32_t x)
 {
 	assert (x > 0);
 
-#if (fstb_ARCHI == fstb_ARCHI_X86)
-
- #if defined (_MSC_VER)
+#if (fstb_ARCHI == fstb_ARCHI_X86) && defined (_MSC_VER)
 
   #if ((_MSC_VER / 100) < 14)
 
@@ -487,33 +485,29 @@ int	get_prev_pow_2 (uint32_t x)
 
   #endif
 
-	return (int (p));
+#else
 
- #endif
+	int            p = -1;
+
+	while ((x & ~(uint32_t (0xFFFF))) != 0)
+	{
+		p += 16;
+		x >>= 16;
+	}
+	while ((x & ~(uint32_t (0xF))) != 0)
+	{
+		p += 4;
+		x >>= 4;
+	}
+	while (x > 0)
+	{
+		++p;
+		x >>= 1;
+	}
 
 #endif
 
-	{
-		int            p = -1;
-
-		while ((x & ~(uint32_t (0xFFFF))) != 0)
-		{
-			p += 16;
-			x >>= 16;
-		}
-		while ((x & ~(uint32_t (0xF))) != 0)
-		{
-			p += 4;
-			x >>= 4;
-		}
-		while (x > 0)
-		{
-			++p;
-			x >>= 1;
-		}
-
-		return (int (p));
-	}
+	return (int (p));
 }
 
 
@@ -535,14 +529,12 @@ int	get_next_pow_2 (uint32_t x)
 {
 	assert (x > 0);
 
-#if (fstb_ARCHI == fstb_ARCHI_X86)
-
- #if defined (_MSC_VER)
+#if (fstb_ARCHI == fstb_ARCHI_X86) && defined (_MSC_VER)
 
   #if ((_MSC_VER / 100) < 14)
 
-	int				p;
 	-- x;
+	int				p;
 
 	if (x == 0)
 	{
@@ -573,34 +565,30 @@ int	get_next_pow_2 (uint32_t x)
 
   #endif
 
-	return (int (p));
+#else
 
- #endif
+	--x;
+	int				p = 0;
+
+	while ((x & ~(uint32_t (0xFFFFL))) != 0)
+	{
+		p += 16;
+		x >>= 16;
+	}
+	while ((x & ~(uint32_t (0xFL))) != 0)
+	{
+		p += 4;
+		x >>= 4;
+	}
+	while (x > 0)
+	{
+		++p;
+		x >>= 1;
+	}
 
 #endif
 
-	{
-		--x;
-		int				p = 0;
-
-		while ((x & ~(uint32_t (0xFFFFL))) != 0)
-		{
-			p += 16;
-			x >>= 16;
-		}
-		while ((x & ~(uint32_t (0xFL))) != 0)
-		{
-			p += 4;
-			x >>= 4;
-		}
-		while (x > 0)
-		{
-			++p;
-			x >>= 1;
-		}
-
-		return (int (p));
-	}
+	return (int (p));
 }
 
 

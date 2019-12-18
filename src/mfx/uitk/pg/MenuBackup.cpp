@@ -85,6 +85,8 @@ MenuBackup::MenuBackup (PageSwitcher &page_switcher)
 
 void	MenuBackup::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;

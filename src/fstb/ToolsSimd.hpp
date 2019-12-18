@@ -1730,6 +1730,11 @@ ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const MEM *ptr, int n)
 		v = Shift <1>::rotate (v);
 		v = Shift <0>::insert (v, f_ptr [0]);
 		break;
+	default:
+		assert (false);
+		// Keeps the compiler happy with (un)initialisation
+		v = set1_f32 (f_ptr [0]);
+		break;
 	}
 #elif fstb_IS (ARCHI, ARM)
 	v = vmovq_n_f32 (f_ptr [0]);

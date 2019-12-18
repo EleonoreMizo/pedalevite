@@ -22,6 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <algorithm>
 
 #include <cstring>
@@ -43,6 +45,7 @@ namespace rspl
 
 void	InterpolatorOrder0::do_set_ovrspl_l2 (int ovrspl_l2)
 {
+	fstb::unused (ovrspl_l2);
 	// Nothing
 }
 
@@ -116,6 +119,8 @@ int	InterpolatorOrder0::do_process_block (float * const dest_ptr_arr [], const f
 
 float	InterpolatorOrder0::do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
 {
+	fstb::unused (rate);
+
 	const int32_t  pos_int = pos_src.get_int_val ();
 
 	return src_ptr [pos_int];

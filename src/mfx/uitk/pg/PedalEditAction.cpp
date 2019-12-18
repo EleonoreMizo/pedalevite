@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionClick.h"
@@ -92,6 +93,8 @@ PedalEditAction::PedalEditAction (PageSwitcher &page_switcher, PedalEditContext 
 
 void	PedalEditAction::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -201,6 +204,8 @@ MsgHandlerInterface::EvtProp	PedalEditAction::do_handle_evt (const NodeEvt &evt)
 
 void	PedalEditAction::do_set_pedalboard_layout (const doc::PedalboardLayout &layout)
 {
+	fstb::unused (layout);
+
 	check_ctx ();
 	update_display ();
 }
@@ -209,6 +214,8 @@ void	PedalEditAction::do_set_pedalboard_layout (const doc::PedalboardLayout &lay
 
 void	PedalEditAction::do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content)
 {
+	fstb::unused (loc, content);
+
 	check_ctx ();
 	update_display ();
 }
@@ -281,7 +288,7 @@ void	PedalEditAction::update_display ()
 		display_preset (nav_list, dynamic_cast <const doc::ActionPreset &> (action));
 		break;
 	case doc::ActionType_TOGGLE_TUNER:
-		display_tuner (nav_list);
+		display_tuner ();
 		break;
 	case doc::ActionType_TOGGLE_FX:
 		display_fx (nav_list, dynamic_cast <const doc::ActionToggleFx &> (action));
@@ -299,7 +306,7 @@ void	PedalEditAction::update_display ()
 		display_param (nav_list, dynamic_cast <const doc::ActionParam &> (action));
 		break;
 	case doc::ActionType_TEMPO:
-		display_tempo_tap (nav_list, dynamic_cast <const doc::ActionTempo &> (action));
+		display_tempo_tap ();
 		break;
 	case doc::ActionType_SETTINGS:
 		display_settings (nav_list, dynamic_cast <const doc::ActionSettings &> (action));
@@ -411,7 +418,7 @@ void	PedalEditAction::display_preset (PageMgrInterface::NavLocList &nav_list, co
 
 
 
-void	PedalEditAction::display_tuner (PageMgrInterface::NavLocList &nav_list)
+void	PedalEditAction::display_tuner ()
 {
 	// Action type
 	_type_sptr->set_text ("Tuner toggle");
@@ -426,6 +433,8 @@ void	PedalEditAction::display_fx (PageMgrInterface::NavLocList &nav_list, const 
 
 
 	/*** To do ***/
+	fstb::unused (nav_list, action);
+
 
 }
 
@@ -436,7 +445,10 @@ void	PedalEditAction::display_loop_rec (PageMgrInterface::NavLocList &nav_list)
 	// Action type
 	_type_sptr->set_text ("Loop record");
 
+
 	/*** To do ***/
+	fstb::unused (nav_list);
+
 
 }
 
@@ -447,7 +459,10 @@ void	PedalEditAction::display_loop_ps (PageMgrInterface::NavLocList &nav_list)
 	// Action type
 	_type_sptr->set_text ("Loop play/stop");
 
+
 	/*** To do ***/
+	fstb::unused (nav_list);
+
 
 }
 
@@ -458,7 +473,10 @@ void	PedalEditAction::display_loop_undo (PageMgrInterface::NavLocList &nav_list)
 	// Action type
 	_type_sptr->set_text ("Loop undo");
 
+
 	/*** To do ***/
+	fstb::unused (nav_list);
+
 
 }
 
@@ -571,7 +589,7 @@ void	PedalEditAction::display_param (PageMgrInterface::NavLocList &nav_list, con
 
 
 
-void	PedalEditAction::display_tempo_tap (PageMgrInterface::NavLocList &nav_list, const doc::ActionTempo &action)
+void	PedalEditAction::display_tempo_tap ()
 {
 	// Action type
 	_type_sptr->set_text ("Tempo tap");
@@ -644,7 +662,10 @@ void	PedalEditAction::display_event (PageMgrInterface::NavLocList &nav_list)
 	// Action type
 	_type_sptr->set_text ("Event");
 
+
 	/*** To do ***/
+	fstb::unused (nav_list);
+
 
 }
 
@@ -779,7 +800,7 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_value (int node_id, int dir
 			ret_val = change_settings (node_id, dir);
 			break;
 		case doc::ActionType_TEMPO_SET:
-			ret_val = change_tempo_set (node_id, dir);
+			ret_val = change_tempo_set (dir);
 			break;
 		case doc::ActionType_CLICK:
 			ret_val = change_click (node_id, dir);
@@ -1192,7 +1213,7 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_settings (int node_id, int 
 
 
 
-MsgHandlerInterface::EvtProp	PedalEditAction::change_tempo_set (int node_id, int dir)
+MsgHandlerInterface::EvtProp	PedalEditAction::change_tempo_set (int dir)
 {
 	doc::PedalActionCycle & cycle =
 		_ctx._content._action_arr [_ctx._trigger];

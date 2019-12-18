@@ -116,7 +116,7 @@ void	CellPool <T>::expand_to (size_t nbr_cells)
 		CellType *     zone_ptr = zone_ptr_ref;
 		if (zone_ptr == 0)
 		{
-			allocate_zone (zone_index, cur_size, zone_ptr_ref);
+			allocate_zone (cur_size, zone_ptr_ref);
 		}
 
 		total_size += cur_size;
@@ -180,11 +180,8 @@ void	CellPool <T>::return_cell (CellType &cell)
 
 
 template <class T>
-void	CellPool <T>::allocate_zone (int zone_index, size_t cur_size, AtomicPtr <CellType> & zone_ptr_ref)
+void	CellPool <T>::allocate_zone (size_t cur_size, AtomicPtr <CellType> & zone_ptr_ref)
 {
-	assert (zone_index >= 0);
-	assert (zone_index < MAX_NBR_ZONES);
-
 	std::lock_guard <std::mutex>  lock (_alloc_mutex);
 
 	CellType *     zone_ptr = alloc_cells (cur_size);

@@ -22,6 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/pi/lfo1/LfoType.h"
 #include "mfx/pi/lfo1/Param.h"
@@ -117,6 +118,7 @@ piapi::PluginInterface::State	Lfo <SLOW>::do_get_state () const
 template <bool SLOW>
 double	Lfo <SLOW>::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
+	fstb::unused (categ, note_id);
 	assert (categ == piapi::ParamCateg_GLOBAL);
 
 	return _state_set.use_state (index).get_val_tgt ();
@@ -127,6 +129,8 @@ double	Lfo <SLOW>::do_get_param_val (piapi::ParamCateg categ, int index, int not
 template <bool SLOW>
 int	Lfo <SLOW>::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
+	fstb::unused (max_buf_len);
+
 	latency = 0;
 
 	_sample_freq = float (sample_freq);

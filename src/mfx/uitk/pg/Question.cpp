@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -85,7 +86,9 @@ void	Question::msg_box (std::string title, std::string msg_ok, QArg &arg, PageSw
 
 void	Question::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (model);
 	assert (usr_ptr != 0);
+
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;

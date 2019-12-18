@@ -96,7 +96,6 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in)
 	auto           x          = fstb::ToolsSimd::set1_f32 (in);
 
 	const auto     zero       = fstb::ToolsSimd::set_f32_zero ();
-	const auto     one        = fstb::ToolsSimd::set1_f32 (1);
 	const auto     coef_a = fstb::ToolsSimd::set1_f32 (_coef_atk);
 	const auto     coef_r = fstb::ToolsSimd::set1_f32 (_coef_rls);
 

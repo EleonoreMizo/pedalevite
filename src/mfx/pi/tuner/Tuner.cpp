@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/tuner/Tuner.h"
 
@@ -64,6 +65,8 @@ piapi::PluginInterface::State	Tuner::do_get_state () const
 
 double	Tuner::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
+	fstb::unused (categ, index, note_id);
+
 	return 0;
 }
 

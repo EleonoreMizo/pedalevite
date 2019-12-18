@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/uitk/pg/EditProg.h"
@@ -98,6 +99,8 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 
 void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -252,6 +255,8 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 
 void	EditProg::do_activate_preset (int index)
 {
+	fstb::unused (index);
+
 	set_preset_info ();
 }
 
@@ -259,6 +264,8 @@ void	EditProg::do_activate_preset (int index)
 
 void	EditProg::do_set_preset_name (std::string name)
 {
+	fstb::unused (name);
+
 	set_preset_info ();
 }
 
@@ -266,6 +273,8 @@ void	EditProg::do_set_preset_name (std::string name)
 
 void	EditProg::do_add_slot (int slot_id)
 {
+	fstb::unused (slot_id);
+
 	set_preset_info ();
 }
 
@@ -273,6 +282,8 @@ void	EditProg::do_add_slot (int slot_id)
 
 void	EditProg::do_remove_slot (int slot_id)
 {
+	fstb::unused (slot_id);
+
 	set_preset_info ();
 }
 
@@ -280,6 +291,8 @@ void	EditProg::do_remove_slot (int slot_id)
 
 void	EditProg::do_insert_slot_in_chain (int index, int slot_id)
 {
+	fstb::unused (index, slot_id);
+
 	set_preset_info ();
 }
 
@@ -287,6 +300,8 @@ void	EditProg::do_insert_slot_in_chain (int index, int slot_id)
 
 void	EditProg::do_erase_slot_from_chain (int index)
 {
+	fstb::unused (index);
+
 	set_preset_info ();
 }
 
@@ -294,6 +309,8 @@ void	EditProg::do_erase_slot_from_chain (int index)
 
 void	EditProg::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
+	fstb::unused (slot_id, pi_data);
+
 	set_preset_info ();
 }
 
@@ -301,6 +318,8 @@ void	EditProg::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 
 void	EditProg::do_remove_plugin (int slot_id)
 {
+	fstb::unused (slot_id);
+
 	set_preset_info ();
 }
 
@@ -308,6 +327,8 @@ void	EditProg::do_remove_plugin (int slot_id)
 
 void	EditProg::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
+	fstb::unused (slot_id, type, index, cls);
+
 	set_preset_info ();
 }
 

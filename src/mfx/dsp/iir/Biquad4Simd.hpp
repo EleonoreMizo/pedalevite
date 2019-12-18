@@ -22,6 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include	<cassert>
 
 
@@ -164,26 +166,30 @@ public:
 template <class VD, class VS, class VP, class LD>
 void	Biquad4Simd_StepOff <VD, VS, VP, LD>::step_z_eq (Biquad4SimdData &data, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3])
 {
+	fstb::unused (data, b_inc, a_inc);
 	// Nothing
 }
 
 template <class VD, class VS, class VP, class LD>
 void	Biquad4Simd_StepOff <VD, VS, VP, LD>::store_result (Biquad4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &b2, fstb::ToolsSimd::VectF32 &a1, fstb::ToolsSimd::VectF32 &a2)
 {
+	fstb::unused (data, b0, b1, b2, a1, a2);
 	// Nothing
 }
 
 template <class VD, class VS, class VP, class LD>
 void	Biquad4Simd_StepOff <VD, VS, VP, LD>::step_z_eq_store_result (Biquad4SimdData &data, fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &b2, fstb::ToolsSimd::VectF32 &a1, fstb::ToolsSimd::VectF32 &a2, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3])
 {
+	fstb::unused (data, b0, b1, b2, a1, a2, b_inc, a_inc);
 	// Nothing
 }
 
 template <class VD, class VS, class VP, class LD>
 void	Biquad4Simd_StepOff <VD, VS, VP, LD>::step_z_eq (fstb::ToolsSimd::VectF32 &b0, fstb::ToolsSimd::VectF32 &b1, fstb::ToolsSimd::VectF32 &b2, fstb::ToolsSimd::VectF32 &a1, fstb::ToolsSimd::VectF32 &a2, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3])
 {
+	fstb::unused (b0, b1, b2, a1, a2, b_inc, a_inc);
 	// Nothing
-};
+}
 
 
 

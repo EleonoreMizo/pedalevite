@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/pi/ramp/CurveType.h"
 #include "mfx/pi/ramp/Param.h"
@@ -106,6 +107,7 @@ piapi::PluginInterface::State	Ramp::do_get_state () const
 
 double	Ramp::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
+	fstb::unused (categ, note_id);
 	assert (categ == piapi::ParamCateg_GLOBAL);
 
 	return _state_set.use_state (index).get_val_tgt ();
@@ -115,6 +117,8 @@ double	Ramp::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) 
 
 int	Ramp::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
+	fstb::unused (max_buf_len);
+
 	latency = 0;
 
 	_sample_freq = float (sample_freq);

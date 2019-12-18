@@ -2231,8 +2231,10 @@ void	Model::process_action_preset (const doc::ActionPreset &action)
 
 
 
-void	Model::process_action_toggle_fx (const doc::ActionToggleFx &/*action*/)
+void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
 {
+	fstb::unused (action);
+
 
 	/*** To do ***/
 
@@ -2240,15 +2242,19 @@ void	Model::process_action_toggle_fx (const doc::ActionToggleFx &/*action*/)
 
 
 
-void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &/*action*/)
+void	Model::process_action_toggle_tuner (const doc::ActionToggleTuner &action)
 {
+	fstb::unused (action);
+
 	set_tuner (! _tuner_flag);
 }
 
 
 
-void	Model::process_action_tempo_tap (const doc::ActionTempo &/*action*/, std::chrono::microseconds ts)
+void	Model::process_action_tempo_tap (const doc::ActionTempo &action, std::chrono::microseconds ts)
 {
+	fstb::unused (action);
+
 	const std::chrono::microseconds  dist = ts - _tempo_last_ts;
 	if (   dist <= Cst::_tempo_detection_max
 	    && dist >= Cst::_tempo_detection_min)
@@ -2637,9 +2643,9 @@ bool	Model::set_preset_param (doc::Preset &preset, doc::Preset::SlotMap::iterato
 
 
 
-void	Model::set_preset_ctrl (doc::Preset &/*preset*/, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	Model::set_preset_ctrl (doc::Preset &preset, int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
-	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+	doc::Slot &    slot = preset.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 	assert (index < int (settings._param_list.size ()));
 
@@ -3083,7 +3089,10 @@ void	Model::clear_signal_port (int port_id, bool req_exist_flag)
 	const auto     it_port = _preset_cur._port_map.find (port_id);
 	if (it_port == _preset_cur._port_map.end ())
 	{
-		assert (! req_exist_flag);
+		if (req_exist_flag)
+		{
+			assert (false);
+		}
 	}
 	else
 	{

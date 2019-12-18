@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/DataAlign.h"
+#include "fstb/def.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
@@ -503,6 +504,8 @@ void	DistoStage::distort_block_shaper (S &shaper, float dst_ptr [], const float 
 // https://www.desmos.com/calculator/jvnwxj1cja
 void	DistoStage::distort_block_asym1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f);
 	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f);
 	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
@@ -540,6 +543,8 @@ void	DistoStage::distort_block_asym1 (Channel &chn, float dst_ptr [], const floa
 // f(x) = x / (abs (x) + 1)
 void	DistoStage::distort_block_rcp1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto        one = fstb::ToolsSimd::set1_f32 (1.0f);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
@@ -563,6 +568,8 @@ void	DistoStage::distort_block_rcp1 (Channel &chn, float dst_ptr [], const float
 // https://www.desmos.com/calculator/xpjn6ut1j8
 void	DistoStage::distort_block_rcp2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto        t   = fstb::ToolsSimd::set1_f32 (0.5f);
 	const auto        two = fstb::ToolsSimd::set1_f32 (2);
 
@@ -584,6 +591,8 @@ void	DistoStage::distort_block_rcp2 (Channel &chn, float dst_ptr [], const float
 
 void	DistoStage::distort_block_hardclip (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
 	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
 
@@ -602,6 +611,8 @@ void	DistoStage::distort_block_hardclip (Channel &chn, float dst_ptr [], const f
 
 void	DistoStage::distort_block_bitcrush (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const float    s = 4;
 	const auto     scale     = fstb::ToolsSimd::set1_f32 (      s);
 	const auto     scale_inv = fstb::ToolsSimd::set1_f32 (1.f / s);
@@ -661,6 +672,8 @@ void	DistoStage::distort_block_slewrate_limit (Channel &chn, float dst_ptr [], c
 // https://www.desmos.com/calculator/n8vtrhf0da
 void	DistoStage::distort_block_sqrt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto     exp_mask = fstb::ToolsSimd::set1_s32 ( 0x7F800000);
 	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 ( 0x00800000);
 	const auto     exp_add  = fstb::ToolsSimd::set1_s32 ( 0x3F800000 >> 1);
@@ -683,6 +696,8 @@ void	DistoStage::distort_block_sqrt (Channel &chn, float dst_ptr [], const float
 // https://www.desmos.com/calculator/n8vtrhf0da
 void	DistoStage::distort_block_belt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (0x7F800000);
 	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (0x00800000);
 	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (0x3F800000 >> 1);
@@ -707,6 +722,8 @@ void	DistoStage::distort_block_belt (Channel &chn, float dst_ptr [], const float
 // https://www.desmos.com/calculator/n8vtrhf0da
 void	DistoStage::distort_block_badmood (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (0x7F800000);
 	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (0x00800000);
 	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (0x3F800000 >> 1);
@@ -731,6 +748,8 @@ void	DistoStage::distort_block_badmood (Channel &chn, float dst_ptr [], const fl
 // https://www.desmos.com/calculator/n8vtrhf0da
 void	DistoStage::distort_block_light1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto     mnt_mask = fstb::ToolsSimd::set1_s32 (0x007FFFFF); // 23 bits
 	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
 	for (int pos = 0; pos < nbr_spl; pos += 4)
@@ -755,6 +774,8 @@ void	DistoStage::distort_block_light1 (Channel &chn, float dst_ptr [], const flo
 // https://www.desmos.com/calculator/n8vtrhf0da
 void	DistoStage::distort_block_light2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto     mnt_mask = fstb::ToolsSimd::set1_s32 (0x007FFFFF); // 23 bits
 	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
 	// 6.75 is the exact value but rounding errors bring negative results
@@ -789,6 +810,8 @@ void	DistoStage::distort_block_light2 (Channel &chn, float dst_ptr [], const flo
 // https://www.desmos.com/calculator/n8vtrhf0da
 void	DistoStage::distort_block_light3 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
+	fstb::unused (chn);
+
 	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{

@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/freqsh/FrequencyShifter.h"
@@ -83,6 +84,7 @@ piapi::PluginInterface::State	FrequencyShifter::do_get_state () const
 
 double	FrequencyShifter::do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const
 {
+	fstb::unused (categ, note_id);
 	assert (categ == piapi::ParamCateg_GLOBAL);
 
 	return _state_set.use_state (index).get_val_tgt ();

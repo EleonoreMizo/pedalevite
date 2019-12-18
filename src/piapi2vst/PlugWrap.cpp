@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/DataAlign.h"
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/pi/param/Tools.h"
@@ -668,8 +669,6 @@ void	PlugWrap::vst_set_param (::AEffect* e, ::VstInt32 index, float value)
 	PlugWrap *     wrapper_ptr = reinterpret_cast <PlugWrap *> (e->object);
 	assert (wrapper_ptr != 0);
 
-	mfx::piapi::PluginInterface & plugin = *(wrapper_ptr->_plugin_aptr);
-
 	EventCell *    cell_ptr = wrapper_ptr->_evt_pool.take_cell ();
 	if (cell_ptr == 0)
 	{
@@ -751,6 +750,8 @@ void	PlugWrap::vst_process_replacing (::AEffect* e, float** inputs, float** outp
 #if defined (_MSC_VER)
 static int __cdecl	piapi2vst_PlugWrap_new_handler_cb (size_t dummy)
 {
+	fstb::unused (dummy);
+
 	throw std::bad_alloc ();
 	return 0;
 }
@@ -761,6 +762,8 @@ static int __cdecl	piapi2vst_PlugWrap_new_handler_cb (size_t dummy)
 #if defined (_MSC_VER) && ! defined (NDEBUG)
 static int	__cdecl	piapi2vst_PlugWrap_debug_alloc_hook_cb (int alloc_type, void *user_data_ptr, size_t size, int block_type, long request_nbr, const unsigned char *filename_0, int line_nbr)
 {
+	fstb::unused (user_data_ptr, size, request_nbr, filename_0, line_nbr);
+
 	if (block_type != _CRT_BLOCK)	// Ignore CRT blocks to prevent infinite recursion
 	{
 		switch (alloc_type)
@@ -788,6 +791,8 @@ static int	__cdecl	piapi2vst_PlugWrap_debug_alloc_hook_cb (int alloc_type, void 
 #if defined (_MSC_VER) && ! defined (NDEBUG)
 static int	__cdecl	piapi2vst_PlugWrap_debug_report_hook_cb (int report_type, char *user_msg_0, int *ret_val_ptr)
 {
+	fstb::unused (user_msg_0);
+
 	*ret_val_ptr = 0;	// 1 to override the CRT default reporting mode
 
 	switch (report_type)

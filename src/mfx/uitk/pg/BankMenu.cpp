@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/uitk/pg/BankMenu.h"
 #include "mfx/uitk/pg/Tools.h"
@@ -85,6 +86,8 @@ BankMenu::BankMenu (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 
 void	BankMenu::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -188,6 +191,8 @@ MsgHandlerInterface::EvtProp	BankMenu::do_handle_evt (const NodeEvt &evt)
 
 void	BankMenu::do_set_bank (int index, const doc::Bank &bank)
 {
+	fstb::unused (index, bank);
+
 	update_display ();
 }
 
@@ -195,6 +200,8 @@ void	BankMenu::do_set_bank (int index, const doc::Bank &bank)
 
 void	BankMenu::do_select_bank (int index)
 {
+	fstb::unused (index);
+
 	update_display ();
 }
 
@@ -202,6 +209,8 @@ void	BankMenu::do_select_bank (int index)
 
 void	BankMenu::do_set_bank_name (std::string name)
 {
+	fstb::unused (name);
+
 	update_display ();
 }
 

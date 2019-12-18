@@ -62,18 +62,16 @@ Throws: Nothing
 
 char	change_case (char c, bool lower_case_flag)
 {
-	using namespace std;
-
 	if (lower_case_flag)
 	{
-		c = tolower (c);
+		c = char (tolower (c));
 	}
 	else
 	{
-		c = toupper (c);
+		c = char (toupper (c));
 	}
 
-	return (c);
+	return c;
 }
 
 

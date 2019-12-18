@@ -1746,6 +1746,8 @@ int	test_file_write_fs_ro ()
 
 int main (int argc, char *argv [])
 {
+	fstb::unused (argc, argv);
+
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;

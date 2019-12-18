@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/tuner/TunerDesc.h"
 #include "mfx/Cst.h"
@@ -89,6 +90,8 @@ bool	TunerDesc::do_prefer_stereo () const
 
 int	TunerDesc::do_get_nbr_param (piapi::ParamCateg categ) const
 {
+	fstb::unused (categ);
+
 	return 0;
 }
 
@@ -96,6 +99,8 @@ int	TunerDesc::do_get_nbr_param (piapi::ParamCateg categ) const
 
 const piapi::ParamDescInterface &	TunerDesc::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
+	fstb::unused (categ, index);
+
 	static const param::TplLin dummy (0, 1, "", "");
 
 	return dummy;

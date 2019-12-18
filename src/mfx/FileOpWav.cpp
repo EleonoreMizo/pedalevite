@@ -518,9 +518,9 @@ int	FileOpWav::write_headers (FILE * f_ptr, int nbr_chn, int64_t nbr_spl, double
 	fmt._format_tag        = WavFormat_IEEE_FLOAT;
 	fmt._channels          = uint16_t (nbr_chn);
 	fmt._samples_per_sec   = uint32_t (floor (sample_freq + 0.5f));
-	fmt._block_align       = int (sizeof (float)) * nbr_chn;
+	fmt._block_align       = uint16_t (sizeof (float) * nbr_chn);
 	fmt._avg_bytes_per_sec = fmt._block_align * fmt._samples_per_sec;
-	fmt._bits_per_sample   = int (sizeof (float)) * CHAR_BIT;
+	fmt._bits_per_sample   = uint16_t (sizeof (float) * CHAR_BIT);
 
 	WavData        data;
 	// Value can be wrong here if nbr_spl is very large, but this is a known

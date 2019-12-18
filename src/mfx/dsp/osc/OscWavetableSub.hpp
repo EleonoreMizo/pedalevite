@@ -852,17 +852,17 @@ void	OscWavetableSub <
 {
 	const uint32_t position_pos_frac = position_pos.get_frac_val ();
 	const int      position_pos_int  = position_pos.get_int_val ();
-	ref_data = _interpolator (
+	ref_data = DataType (_interpolator (
 		position_pos_frac,
 		&src_pos_ptr [position_pos_int]
-	);
+	));
 
 	const uint32_t position_neg_frac = position_neg.get_frac_val ();
 	const int      position_neg_int  = position_neg.get_int_val ();
-	sub_data = ref_data + _dc_fixer - _interpolator (
+	sub_data = ref_data + _dc_fixer - DataType (_interpolator (
 		position_neg_frac,
 		&src_neg_ptr [position_neg_int]
-	);
+	));
 }
 
 

@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/txt/neutral/fnc.h"
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/pi/param/TplPan.h"
@@ -92,6 +93,8 @@ std::string	TplPan::do_get_name (int len) const
 
 std::string	TplPan::do_get_unit (int len) const
 {
+	fstb::unused (len);
+
 	return "%";
 }
 

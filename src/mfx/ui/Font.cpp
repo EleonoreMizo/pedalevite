@@ -159,7 +159,7 @@ void	Font::add_char (char32_t ucs4, int index)
 	}
 
 	const int      loc = ucs4 & _zone_mask;
-	(*zone_ptr) [loc] = index;
+	(*zone_ptr) [loc] = int16_t (index);
 }
 
 

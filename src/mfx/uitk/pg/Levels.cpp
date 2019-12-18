@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/adrv/DriverInterface.h"
 #include "mfx/uitk/pg/Levels.h"
@@ -101,6 +102,8 @@ Levels::Levels (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 
 void	Levels::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -259,6 +262,8 @@ MsgHandlerInterface::EvtProp	Levels::do_handle_evt (const NodeEvt &evt)
 
 void	Levels::do_set_chn_mode (ChnMode mode)
 {
+	fstb::unused (mode);
+
 	refresh_display ();
 }
 
@@ -266,6 +271,8 @@ void	Levels::do_set_chn_mode (ChnMode mode)
 
 void	Levels::do_set_master_vol (float vol)
 {
+	fstb::unused (vol);
+
 	refresh_display ();
 }
 

@@ -88,6 +88,7 @@ template <typename T>
 inline bool    is_ptr_align_nz (const T *ptr, int a = 16);
 
 
+
 }	// namespace fstb
 
 

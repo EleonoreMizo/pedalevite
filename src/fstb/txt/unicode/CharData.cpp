@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/txt/unicode/Categ.h"
 #include "fstb/txt/unicode/CharData.h"
+#include "fstb/def.h"
 
 #include <cassert>
 
@@ -550,6 +551,7 @@ const CharDataInfo &	CharData::use_info (char32_t c)
 
 size_t	CharData::find_complex_line_breaks_default (LineBreakAction action_arr [], const LineBreakProp prop_arr [], LineBreakProp cls, size_t len)
 {
+	fstb::unused (cls);
 	assert (action_arr != 0);
 	assert (prop_arr != 0);
 	assert (len > 0);

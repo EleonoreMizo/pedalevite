@@ -104,7 +104,7 @@ private:
 		size_t         _nbr_elt;
 	};
 
-	void           allocate_zone (int zone_index, size_t cur_size, AtomicPtr <CellType> & zone_ptr_ref);
+	void           allocate_zone (size_t cur_size, AtomicPtr <CellType> & zone_ptr_ref);
 
 	static inline size_t
 	               compute_grown_size (size_t prev_size);

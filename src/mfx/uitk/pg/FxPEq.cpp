@@ -93,6 +93,8 @@ FxPEq::FxPEq (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 void	FxPEq::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -171,6 +173,8 @@ MsgHandlerInterface::EvtProp	FxPEq::do_handle_evt (const NodeEvt &evt)
 
 void	FxPEq::do_activate_preset (int index)
 {
+	fstb::unused (index);
+
 	_page_switcher.switch_to (PageType_EDIT_PROG, 0);
 }
 
@@ -178,6 +182,8 @@ void	FxPEq::do_activate_preset (int index)
 
 void	FxPEq::do_set_param (int slot_id, int index, float val, PiType type)
 {
+	fstb::unused (index, val, type);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();

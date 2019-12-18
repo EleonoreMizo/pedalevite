@@ -209,7 +209,7 @@ int	SerRText::do_read (std::string &s)
 	StrState       state   = StrState_BEG;
 	int            esc_len = 0;
 	char           esc_c   = '\0';
-	char           d;
+	int            d;
 	while (_spos._pos < _content.length () && ! _err_flag && state != StrState_END)
 	{
 		const char     c = _content [_spos._pos];
@@ -263,7 +263,7 @@ int	SerRText::do_read (std::string &s)
 				set_error (_spos, "Wrong hex sequence");
 			}
 			esc_c <<= 4;
-			esc_c += d;
+			esc_c  += char (d);
 			-- esc_len;
 			if (esc_len <= 0 && ! _err_flag)
 			{

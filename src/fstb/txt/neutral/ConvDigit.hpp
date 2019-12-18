@@ -72,7 +72,7 @@ bool	ConvDigit::is_digit_from_base (char c, int base)
 		 || (bm10 > 0 && (   (c >= 'A' && c < 'A' + bm10)
 		                  || (c >= 'a' && c < 'a' + bm10))));
 
-	return (ok_flag);
+	return ok_flag;
 }
 
 
@@ -99,22 +99,21 @@ char	ConvDigit::conv_digit_to_char (int x, bool lower_case_flag)
 	char				c;
 	if (x < 10)
 	{
-		c = x + '0';
+		c = char (x + '0');
 	}
 	else
 	{
-		c = x + 'A' - 10;
 		if (lower_case_flag)
 		{
-			c = x + 'a' - 10;
+			c = char (x + 'a' - 10);
 		}
 		else
 		{
-			c = x + 'A' - 10;
+			c = char (x + 'A' - 10);
 		}
 	}
 
-	return (c);
+	return c;
 }
 
 
@@ -135,9 +134,7 @@ Throws: Nothing
 
 int	ConvDigit::conv_char_to_digit (char c)
 {
-	using namespace std;
-
-	c = toupper (c);
+	c = char (toupper (c));
 
 	assert (   (c >= '0' && c <= '9')
 	        || (c >= 'A' && c <= 'Z'));
@@ -152,7 +149,7 @@ int	ConvDigit::conv_char_to_digit (char c)
 		x = c - 'A' + 10;
 	}
 
-	return (x);
+	return x;
 }
 
 

@@ -83,6 +83,8 @@ EditDate::EditDate (PageSwitcher &page_switcher, const CmdLine &cmd_line)
 
 void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (model, view, usr_ptr);
+
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_l_ptr = &fnt._l;

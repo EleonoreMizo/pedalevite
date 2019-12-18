@@ -22,6 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 
 
@@ -78,6 +79,7 @@ inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::Too
 template <>
 inline void	InterpPhaseSimd_Util <0>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr [])
 {
+	fstb::unused (nbr_blocks, sum_v, data_ptr, q_v, imp_ptr, dif_ptr);
 	// Nothing, stops the recursion
 }
 
@@ -103,6 +105,7 @@ inline void	InterpPhaseSimd_Util <REM>::lerp_imp (float lerp_ptr [], const fstb:
 template <>
 inline void	InterpPhaseSimd_Util <0>::lerp_imp (float lerp_ptr [], const fstb::ToolsSimd::VectF32 &q_v, const float imp_ptr [], const float dif_ptr [])
 {
+	fstb::unused (lerp_ptr, q_v, imp_ptr, dif_ptr);
 	// Nothing, stops the recursion
 }
 
@@ -128,6 +131,7 @@ inline void	InterpPhaseSimd_Util <REM>::sum_rec (const int nbr_blocks, fstb::Too
 template <>
 inline void	InterpPhaseSimd_Util <0>::sum_rec (const int nbr_blocks, fstb::ToolsSimd::VectF32 &sum_v, const float data_ptr [], const float lerp_ptr [])
 {
+	fstb::unused (nbr_blocks, sum_v, data_ptr, lerp_ptr);
 	// Nothing, stops the recursion
 }
 

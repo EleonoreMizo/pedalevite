@@ -184,7 +184,7 @@ void	to_lcase_inplace (std::string &txt)
 	const std::string::size_type  len = txt.length ();
 	for (std::string::size_type i = 0; i < len; ++i)
 	{
-		txt [i] = tolower (txt [i]);
+		txt [i] = char (tolower (txt [i]));
 	}
 }
 
@@ -208,7 +208,7 @@ void	to_lcase_inplace (char *txt_0)
 	const size_t   len = strlen (txt_0);
 	for (size_t i = 0; i < len; ++i)
 	{
-		txt_0 [i] = tolower (txt_0 [i]);
+		txt_0 [i] = char (tolower (txt_0 [i]));
 	}
 }
 
@@ -230,7 +230,7 @@ void	to_ucase_inplace (std::string &txt)
 	const size_t   len = txt.length ();
 	for (size_t i = 0; i < len; ++i)
 	{
-		txt [i] = toupper (txt [i]);
+		txt [i] = char (toupper (txt [i]));
 	}
 }
 
@@ -254,7 +254,7 @@ void	to_ucase_inplace (char *txt_0)
 	const size_t   len = strlen (txt_0);
 	for (size_t i = 0; i < len; ++i)
 	{
-		txt_0 [i] = toupper (txt_0 [i]);
+		txt_0 [i] = char (toupper (txt_0 [i]));
 	}
 }
 

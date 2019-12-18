@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/uitk/ParentInterface.h"
 #include "mfx/uitk/NodeBase.h"
 
@@ -137,6 +138,8 @@ Vec2d	NodeBase::do_get_coord () const
 
 MsgHandlerInterface::EvtProp	NodeBase::do_handle_evt (const NodeEvt &evt)
 {
+	fstb::unused (evt);
+
 	return EvtProp_PASS;
 }
 

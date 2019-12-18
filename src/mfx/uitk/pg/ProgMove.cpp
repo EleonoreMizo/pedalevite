@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/uitk/pg/ProgMove.h"
 #include "mfx/uitk/pg/Tools.h"
@@ -79,6 +80,8 @@ ProgMove::ProgMove (PageSwitcher &page_switcher)
 
 void	ProgMove::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -178,6 +181,8 @@ MsgHandlerInterface::EvtProp	ProgMove::do_handle_evt (const NodeEvt &evt)
 
 void	ProgMove::do_select_bank (int index)
 {
+	fstb::unused (index);
+
 	_page_switcher.return_page ();
 }
 
@@ -185,6 +190,8 @@ void	ProgMove::do_select_bank (int index)
 
 void	ProgMove::do_set_preset_name (std::string name)
 {
+	fstb::unused (name);
+
 	update_display ();
 }
 
@@ -192,6 +199,8 @@ void	ProgMove::do_set_preset_name (std::string name)
 
 void	ProgMove::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
 {
+	fstb::unused (preset_index, preset);
+
 	if (bank_index == _view_ptr->get_bank_index ())
 	{
 		update_display ();
@@ -202,6 +211,8 @@ void	ProgMove::do_set_preset (int bank_index, int preset_index, const doc::Prese
 
 void	ProgMove::do_store_preset (int preset_index, int bank_index)
 {
+	fstb::unused (preset_index);
+
 	if (bank_index < 0 || bank_index == _view_ptr->get_bank_index ())
 	{
 		update_display ();

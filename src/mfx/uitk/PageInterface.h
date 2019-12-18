@@ -64,8 +64,7 @@ public:
 	{
 	public:
 		explicit       FontSet (const ui::Font &fnt_t, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
-		               FontSet (const FontSet &other)    = default;
-		FontSet &      operator = (const FontSet &other) = default;
+		               FontSet (const FontSet &other) = default;
 		const ui::Font &  _t;
 		const ui::Font &  _s;
 		const ui::Font &  _m;

@@ -128,13 +128,13 @@ private:
 	void           hide_all ();
 	void           display_bank (PageMgrInterface::NavLocList &nav_list, const doc::ActionBank &action);
 	void           display_preset (PageMgrInterface::NavLocList &nav_list, const doc::ActionPreset &action);
-	void           display_tuner (PageMgrInterface::NavLocList &nav_list);
+	void           display_tuner ();
 	void           display_fx (PageMgrInterface::NavLocList &nav_list, const doc::ActionToggleFx &action);
 	void           display_loop_rec (PageMgrInterface::NavLocList &nav_list);
 	void           display_loop_ps (PageMgrInterface::NavLocList &nav_list);
 	void           display_loop_undo (PageMgrInterface::NavLocList &nav_list);
 	void           display_param (PageMgrInterface::NavLocList &nav_list, const doc::ActionParam &action);
-	void           display_tempo_tap (PageMgrInterface::NavLocList &nav_list, const doc::ActionTempo &action);
+	void           display_tempo_tap ();
 	void           display_settings (PageMgrInterface::NavLocList &nav_list, const doc::ActionSettings &action);
 	void           display_event (PageMgrInterface::NavLocList &nav_list);
 	void           display_tempo_set (PageMgrInterface::NavLocList &nav_list, const doc::ActionTempoSet &action);
@@ -146,7 +146,7 @@ private:
 	EvtProp        change_preset (int node_id, int dir);
 	EvtProp        change_param (int node_id, int dir);
 	EvtProp        change_settings (int node_id, int dir);
-	EvtProp        change_tempo_set (int node_id, int dir);
+	EvtProp        change_tempo_set (int dir);
 	EvtProp        change_click (int node_id, int dir);
 
 	PageSwitcher & _page_switcher;

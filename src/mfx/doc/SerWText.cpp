@@ -202,7 +202,7 @@ std::string	SerWText::escape_str (std::string s)
 			if (c == '\\' || c == '\"')
 			{
 				esc += "\\";
-				esc += c;
+				esc += char (c);
 			}
 			else
 			{

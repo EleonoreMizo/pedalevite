@@ -91,6 +91,7 @@ size_t	DManual::get_sample_index () const
 
 int	DManual::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
 {
+	fstb::unused (driver_0, chn_idx_in, chn_idx_out);
 	assert (_state == State_LOADED);
 
 	sample_freq     = 44100;

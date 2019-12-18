@@ -22,6 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 
 #include <cassert>
@@ -44,6 +45,7 @@ namespace param
 
 void	MapPseudoLog::config (double val_min, double val_max)
 {
+	fstb::unused (val_min);
 	assert (val_min == 0);
 	assert (val_min < val_max);
 

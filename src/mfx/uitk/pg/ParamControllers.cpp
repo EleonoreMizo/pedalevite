@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/uitk/pg/ParamControllers.h"
 #include "mfx/uitk/pg/Tools.h"
@@ -85,6 +86,7 @@ ParamControllers::ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_ed
 
 void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
 	assert (_loc_edit._slot_id >= 0);
 	assert (_loc_edit._pi_type >= 0);
 	assert (_loc_edit._param_index >= 0);
@@ -191,6 +193,8 @@ MsgHandlerInterface::EvtProp	ParamControllers::do_handle_evt (const NodeEvt &evt
 
 void	ParamControllers::do_activate_preset (int index)
 {
+	fstb::unused (index);
+
 	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 }
 
@@ -208,6 +212,8 @@ void	ParamControllers::do_remove_plugin (int slot_id)
 
 void	ParamControllers::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
+	fstb::unused (cls);
+
 	if (   slot_id == _loc_edit._slot_id
 	    && type    == _loc_edit._pi_type
 	    && index   == _loc_edit._param_index)

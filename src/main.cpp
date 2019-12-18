@@ -173,7 +173,9 @@
 
 
 
+#if fstb_IS (SYS, LINUX) && ! defined (MAIN_USE_VOID)
 static const int  MAIN_pin_reset = 18;
+#endif
 
 
 
@@ -696,8 +698,10 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 
 static int __cdecl	MAIN_new_handler_cb (size_t dummy)
 {
+	fstb::unused (dummy);
+
 	throw std::bad_alloc ();
-	return (0);
+//	return (0);
 }
 void MAIN_prog_init ()
 {
@@ -743,6 +747,8 @@ int main (int argc, char *argv [], char *envp [])
 int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
 #endif
 {
+	fstb::unused (instance, prev_instance, cmdline_0, cmd_show);
+
 #if defined (_MSC_VER)
 	MAIN_prog_init ();
 #endif

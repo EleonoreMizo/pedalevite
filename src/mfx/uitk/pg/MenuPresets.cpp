@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/uitk/pg/MenuPresets.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -98,6 +99,7 @@ MenuPresets::MenuPresets (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 void	MenuPresets::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
 	assert (_loc_edit._slot_id >= 0);
 
 	_model_ptr = &model;
@@ -238,6 +240,8 @@ MsgHandlerInterface::EvtProp	MenuPresets::do_handle_evt (const NodeEvt &evt)
 
 void	MenuPresets::do_activate_preset (int index)
 {
+	fstb::unused (index);
+
 	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 }
 
@@ -255,6 +259,8 @@ void	MenuPresets::do_remove_slot (int slot_id)
 
 void	MenuPresets::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
+	fstb::unused (pi_data);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);

@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/uitk/pg/EndMsg.h"
 #include "mfx/uitk/pg/MenuMain.h"
 #include "mfx/uitk/NodeEvt.h"
@@ -93,6 +94,8 @@ MenuMain::MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 
 void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;

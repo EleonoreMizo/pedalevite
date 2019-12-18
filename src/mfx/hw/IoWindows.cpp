@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #define NOMINMAX
 
 #include "fstb/txt/Conv.h"
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/hw/IoWindows.h"
 #include "mfx/Cst.h"
@@ -71,7 +72,14 @@ IoWindows::IoWindows (volatile bool &quit_request_flag)
 ,	_sw_states (0)
 ,	_quit_request_flag (quit_request_flag)
 ,	_quit_flag ()
+#if defined (_MSC_VER)
+#pragma warning (push)
+#pragma warning (disable : 4355)
+#endif // 'this': used in base member initializer list
 ,	_msg_loop_thread (&IoWindows::main_loop, this)
+#if defined (_MSC_VER)
+#pragma warning (pop)
+#endif
 {
 	for (auto &l : _led_arr)
 	{
@@ -563,6 +571,8 @@ void	IoWindows::init_bitmap (int w, int h)
 
 bool	IoWindows::process_redraw (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 {
+	fstb::unused (hwnd);
+
 	::RECT         rect;
 	rect.left   = ::LONG (wparam & 65535);
 	rect.top    = ::LONG (wparam >> 16  );
@@ -577,6 +587,8 @@ bool	IoWindows::process_redraw (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 
 bool	IoWindows::process_led (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 {
+	fstb::unused (hwnd);
+
 	const int      index = int (wparam);
 	const float    val   = lparam / 65535.f;
 	_led_arr [index] = val;
@@ -597,6 +609,8 @@ bool	IoWindows::process_led (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 
 bool	IoWindows::process_switch (::HWND hwnd, ::WPARAM wparam)
 {
+	fstb::unused (hwnd);
+
 	const int      index = int (wparam);
 	const SwLoc *  loc_ptr = find_sw_from_index (index);
 	if (loc_ptr == nullptr)
@@ -621,6 +635,8 @@ bool	IoWindows::process_switch (::HWND hwnd, ::WPARAM wparam)
 
 bool	IoWindows::process_paint (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 {
+	fstb::unused (wparam, lparam);
+
 	if (hwnd != _main_win)
 	{
 		return true;
@@ -659,6 +675,8 @@ bool	IoWindows::process_paint (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 
 bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool down_flag)
 {
+	fstb::unused (hwnd);
+
 	const int      virt      = int (wparam);
 	const int      scan      =   (lparam >> 16) & 255;
 	const bool     prev_flag = (((lparam >> 30) &   1) != 0);
@@ -718,6 +736,8 @@ bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool
 
 bool	IoWindows::process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 {
+	fstb::unused (wparam);
+
 	::SetFocus (hwnd);
 	::SetCapture (hwnd);
 
@@ -769,6 +789,8 @@ bool	IoWindows::process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lpar
 
 bool	IoWindows::process_lbuttonup (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 {
+	fstb::unused (hwnd, wparam, lparam);
+
 	::ReleaseCapture ();
 
 	return false;

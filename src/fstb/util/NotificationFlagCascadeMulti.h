@@ -39,6 +39,11 @@ namespace util
 
 
 
+#if defined (_MSC_VER)
+	#pragma warning (push)
+	#pragma warning (disable : 4250)
+#endif // inherits via dominance
+
 class NotificationFlagCascadeMulti
 :	public NotificationFlagCascadeMixin
 ,	public virtual ObservableMultiMixin
@@ -69,6 +74,10 @@ private:
 private:
 
 }; // class NotificationFlagCascadeMulti
+
+#if defined (_MSC_VER)
+	#pragma warning (pop)
+#endif
 
 
 

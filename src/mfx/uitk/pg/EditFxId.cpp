@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/uitk/pg/EditFxId.h"
@@ -106,6 +107,8 @@ void	EditFxId::do_disconnect ()
 
 MsgHandlerInterface::EvtProp	EditFxId::do_handle_evt (const NodeEvt &evt)
 {
+	fstb::unused (evt);
+
 	return EvtProp_PASS;
 }
 

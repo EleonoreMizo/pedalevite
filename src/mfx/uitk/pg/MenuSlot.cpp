@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/uitk/pg/MenuSlot.h"
@@ -104,6 +105,8 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 
 void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -321,6 +324,8 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 
 void	MenuSlot::do_activate_preset (int index)
 {
+	fstb::unused (index);
+
 	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 }
 
@@ -339,6 +344,8 @@ void	MenuSlot::do_remove_slot (int slot_id)
 
 void	MenuSlot::do_insert_slot_in_chain (int index, int slot_id)
 {
+	fstb::unused (slot_id);
+
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 
 	if (_loc_edit._slot_id < 0)

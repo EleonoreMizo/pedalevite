@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/uitk/pg/MoveFx.h"
 #include "mfx/uitk/pg/Tools.h"
@@ -75,6 +76,8 @@ MoveFx::MoveFx (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 void	MoveFx::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
+	fstb::unused (usr_ptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
