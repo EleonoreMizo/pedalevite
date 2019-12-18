@@ -15,30 +15,31 @@ AS_IF(
 )
 AC_DEFINE_UNQUOTED([PV_VERSION], [($pv_version)], [Pedale Vite version. 1 or 2.])
 
+AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug], [Compilation options required for debugging. [default=no]]))
+
+
+
 X86="false"
 PPC="false"
 ARM="false"
+WIN="false"
+UNX="false"
+MAC="false"
 
 AS_CASE(
-        [$host_cpu],
-        [i?86],   [BITS="32" X86="true"],
-        [x86_64], [BITS="64" X86="true"],
-        [powerpc*], [PPC="true"],
-        [arm*], [BITS="32" ARM="true"],
-	[aarch64*], [BITS="64" ARM="true"]
+    [$host_cpu],
+    [i?86],     [BITS="32" X86="true"],
+    [x86_64],   [BITS="64" X86="true"],
+    [powerpc*], [          PPC="true"],
+    [arm*],     [BITS="32" ARM="true"],
+    [aarch64*], [BITS="64" ARM="true"]
 )
 
 AS_CASE(
-        [$host_os],
-        [cygwin*|mingw*],
-        [
-         AS_IF(
-               [test "x$BITS" = "x32"],
-               [
-                AC_SUBST([PLUGINLDFLAGS], ["-Wl,--kill-at"])
-               ]
-         )
-        ]
+    [$host_os],
+    [cygwin*|mingw*],                [WIN="true"],
+    [darwin*],                       [MAC="true"],
+    [*linux*|gnu*|dragonfly*|*bsd*], [UNX="true"]
 )
 
 
@@ -51,22 +52,55 @@ AX_CHECK_COMPILE_FLAG([-Wunused-private-field -Werror], [CXXFLAGS="$CXXFLAGS -Wn
 AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument -Werror], [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"])
 AC_LANG_POP([C++])
 
+AX_PTHREAD
+AS_IF(
+    [test "x$UNX" = "xtrue"],
+    [
+        AC_CHECK_LIB([jack], [jack_client_open])
+        AC_CHECK_LIB([asound], [snd_pcm_open])
+        LIBS="$LIBS `pkg-config --cflags --libs jack` -lasound"
+        AS_IF(
+            [test "x$ARM" = "xtrue"],
+            [
+                AC_CHECK_LIB([wiringPi], [wiringPiSetupPhys])
+                LIBS="$LIBS -lwiringPi -lbcm_host"
+                LDFLAGS="$LDFLAGS -L/opt/vc/lib"
+                CXXFLAGS="$CXXFLAGS -I/opt/vc/include"
+            ]
+        )
+    ]
+)
+
 # It seems that -latomic is needed only for some versions of GCC < 5.3
-AX_CHECK_LINK_FLAG([-latomic], [LDFLAGS="$LDFLAGS -latomic"])
+AX_CHECK_LINK_FLAG([-latomic], [LIBS="$LIBS -latomic"])
 
 AS_IF(
-      [test "x$X86" = "xtrue"],
-      [
-       MFLAGS="-mfpmath=sse -msse2"
+    [test "x$enable_debug" = "xyes"],
+    [DEBUGCFLAGS="-O0 -g3 -ggdb"],
+    [DEBUGCFLAGS="-O3 -g3 -DNDEBUG"]
+)
 
-       AS_IF(
-             [test "x$BITS" = "x64"],
-             [
-              MFLAGS="$MFLAGS -mcx16"
-             ]
-       )
-       AC_SUBST([MFLAGS])
-      ]
+AS_IF(
+    [test "x$WIN" = "xtrue"],
+    [
+        LIBS="$LIBS -lws2_32 -lgdi32 -lcomdlg32 -lole32 -loleaut32 -luuid"
+        AS_IF(
+            [test "x$BITS" = "x32"],
+            [
+                PLUGINLDFLAGS="-Wl,--kill-at"
+                STACKREALIGN="-mstackrealign"
+            ]
+        )
+    ]
+)
+
+AS_IF(
+    [test "x$X86" = "xtrue"],
+    [
+        MFLAGS="$MFLAGS -mfpmath=sse -msse2 -Wno-ignored-attributes"
+        # We need this to use CMPXCHG16B for 2x64-bit CAS (compare and swap)
+        AS_IF([test "x$BITS" = "x64"], [MFLAGS="$MFLAGS -mcx16"])
+    ]
 )
 
 
@@ -88,11 +122,17 @@ AS_IF(
 
 
 
-AC_SUBST([CXXSTD], [$CXXSTD])
-AC_SUBST([LDFLAGS], [$LDFLAGS])
+AC_SUBST([CXXSTD])
+AC_SUBST([LDFLAGS])
 AC_SUBST([MFLAGS])
+AC_SUBST([DEBUGCFLAGS])
+AC_SUBST([PLUGINLDFLAGS])
+AC_SUBST([STACKREALIGN])
+
 AM_CONDITIONAL([X86], [test "x$X86" = "xtrue"])
 AM_CONDITIONAL([ARM], [test "x$ARM" = "xtrue"])
+AM_CONDITIONAL([UNX], [test "x$UNX" = "xtrue"])
+AM_CONDITIONAL([WIN], [test "x$WIN" = "xtrue"])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

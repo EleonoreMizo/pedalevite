@@ -1,11 +1,18 @@
 ACLOCAL_AMFLAGS = -I m4
 
 warningflags = -Wall -Wextra -Wno-unused-parameter -Wno-expansion-to-defined -Wno-missing-field-initializers -Wshadow
-includeflags = -I$(srcdir)/../../src -I/opt/vc/include
-commoncflags = $(DEBUGCFLAGS) $(MFLAGS) $(warningflags) $(includeflags)
+includeflags = -I$(srcdir)/../../src
+if WIN
+includeflags += -I$(srcdir)/../../src/asiosdk2/common -I$(srcdir)/../../src/asiosdk2/host -I$(srcdir)/../../src/asiosdk2/host/pc
+endif
+commoncflags = $(DEBUGCFLAGS) $(MFLAGS) $(warningflags) $(includeflags) $(STACKREALIGN) $(PTHREAD_CFLAGS)
 AM_CXXFLAGS  = -std=$(CXXSTD) $(commoncflags)
 AM_CFLAGS    = $(commoncflags)
-AM_LDFLAGS  = `pkg-config --cflags --libs jack` -lbcm_host -lasound -lwiringPi -lpthread -L/opt/vc/lib $(PLUGINLDFLAGS)
+AM_LDFLAGS   = $(PTHREAD_LIBS) $(PLUGINLDFLAGS)
+
+if X86
+AM_CXXFLAGS += -msse2
+endif
 
 bin_PROGRAMS = pedalevite mfxtest
 
@@ -196,23 +203,10 @@ commonsrc = \
 	../../src/hiir/Upsampler2xFpu.hpp \
 	../../src/hiir/Upsampler2xNeon.h \
 	../../src/hiir/Upsampler2xNeon.hpp \
-        ../../src/jack/jack.h \
-        ../../src/jack/systemdeps.h \
-        ../../src/jack/transport.h \
-        ../../src/jack/types.h \
-        ../../src/jack/weakmacros.h \
         ../../src/mfx/adrv/CbInterface.cpp \
         ../../src/mfx/adrv/CbInterface.h \
-        ../../src/mfx/adrv/DAlsa.cpp \
-        ../../src/mfx/adrv/DAlsa.h \
-        ../../src/mfx/adrv/DJack.cpp \
-        ../../src/mfx/adrv/DJack.h \
         ../../src/mfx/adrv/DManual.cpp \
         ../../src/mfx/adrv/DManual.h \
-        ../../src/mfx/adrv/DPvabDirect.cpp \
-        ../../src/mfx/adrv/DPvabDirect.h \
-        ../../src/mfx/adrv/DPvabI2s.cpp \
-        ../../src/mfx/adrv/DPvabI2s.h \
         ../../src/mfx/adrv/DriverInterface.cpp \
         ../../src/mfx/adrv/DriverInterface.h \
         ../../src/mfx/cmd/BufAlloc.cpp \
@@ -605,36 +599,6 @@ commonsrc = \
         ../../src/mfx/dsp/SplDataRetrievalInterface.h \
         ../../src/mfx/dsp/StereoLevel.h \
         ../../src/mfx/dsp/StereoLevel.hpp \
-        ../../src/mfx/hw/bcm2837.h \
-        ../../src/mfx/hw/bcm2837clk.h \
-        ../../src/mfx/hw/bcm2837dma.h \
-        ../../src/mfx/hw/bcm2837gpio.h \
-        ../../src/mfx/hw/bcm2837pcm.h \
-        ../../src/mfx/hw/bcm2837pwm.h \
-        ../../src/mfx/hw/cs4272.h \
-        ../../src/mfx/hw/DisplayLinuxFrameBuf.cpp \
-        ../../src/mfx/hw/DisplayLinuxFrameBuf.h \
-        ../../src/mfx/hw/DisplayPi3Pcd8544.cpp \
-        ../../src/mfx/hw/DisplayPi3Pcd8544.h \
-        ../../src/mfx/hw/DisplayPi3St7920.cpp \
-        ../../src/mfx/hw/DisplayPi3St7920.h \
-        ../../src/mfx/hw/FileIOPi3.cpp \
-        ../../src/mfx/hw/FileIOPi3.h \
-        ../../src/mfx/hw/GpioAccess.cpp \
-        ../../src/mfx/hw/GpioAccess.h \
-        ../../src/mfx/hw/GpioAccess.hpp \
-        ../../src/mfx/hw/GpioPwm.cpp \
-        ../../src/mfx/hw/GpioPwm.h \
-        ../../src/mfx/hw/LedPi3.cpp \
-        ../../src/mfx/hw/LedPi3.h \
-        ../../src/mfx/hw/mcp23017.h \
-        ../../src/mfx/hw/MmapPtr.cpp \
-        ../../src/mfx/hw/MmapPtr.h \
-        ../../src/mfx/hw/MmapPtr.hpp \
-        ../../src/mfx/hw/ThreadLinux.cpp \
-        ../../src/mfx/hw/ThreadLinux.h \
-        ../../src/mfx/hw/UserInputPi3.cpp \
-        ../../src/mfx/hw/UserInputPi3.h \
         ../../src/mfx/pi/adsr/EnvAdsr.cpp \
         ../../src/mfx/pi/adsr/EnvAdsr.h \
         ../../src/mfx/pi/adsr/EnvAdsrDesc.cpp \
@@ -1191,9 +1155,90 @@ commonsrc = \
         ../../src/mfx/WaMsg.h \
         ../../src/mfx/WaMsgQueue.h \
         ../../src/mfx/WorldAudio.cpp \
-        ../../src/mfx/WorldAudio.h \
+        ../../src/mfx/WorldAudio.h
+
+if UNX
+
+commonsrc += \
+        ../../src/jack/jack.h \
+        ../../src/jack/systemdeps.h \
+        ../../src/jack/transport.h \
+        ../../src/jack/types.h \
+        ../../src/jack/weakmacros.h \
+        ../../src/mfx/adrv/DAlsa.cpp \
+        ../../src/mfx/adrv/DAlsa.h \
+        ../../src/mfx/adrv/DJack.cpp \
+        ../../src/mfx/adrv/DJack.h \
+        ../../src/mfx/adrv/DPvabDirect.cpp \
+        ../../src/mfx/adrv/DPvabDirect.h \
+        ../../src/mfx/adrv/DPvabI2s.cpp \
+        ../../src/mfx/adrv/DPvabI2s.h \
+        ../../src/mfx/hw/bcm2837.h \
+        ../../src/mfx/hw/bcm2837clk.h \
+        ../../src/mfx/hw/bcm2837dma.h \
+        ../../src/mfx/hw/bcm2837gpio.h \
+        ../../src/mfx/hw/bcm2837pcm.h \
+        ../../src/mfx/hw/bcm2837pwm.h \
+        ../../src/mfx/hw/cs4272.h \
+        ../../src/mfx/hw/DisplayLinuxFrameBuf.cpp \
+        ../../src/mfx/hw/DisplayLinuxFrameBuf.h \
+        ../../src/mfx/hw/DisplayPi3Pcd8544.cpp \
+        ../../src/mfx/hw/DisplayPi3Pcd8544.h \
+        ../../src/mfx/hw/DisplayPi3St7920.cpp \
+        ../../src/mfx/hw/DisplayPi3St7920.h \
+        ../../src/mfx/hw/FileIOPi3.cpp \
+        ../../src/mfx/hw/FileIOPi3.h \
+        ../../src/mfx/hw/GpioAccess.cpp \
+        ../../src/mfx/hw/GpioAccess.h \
+        ../../src/mfx/hw/GpioAccess.hpp \
+        ../../src/mfx/hw/GpioPwm.cpp \
+        ../../src/mfx/hw/GpioPwm.h \
+        ../../src/mfx/hw/LedPi3.cpp \
+        ../../src/mfx/hw/LedPi3.h \
+        ../../src/mfx/hw/mcp23017.h \
+        ../../src/mfx/hw/MmapPtr.cpp \
+        ../../src/mfx/hw/MmapPtr.h \
+        ../../src/mfx/hw/MmapPtr.hpp \
+        ../../src/mfx/hw/ThreadLinux.cpp \
+        ../../src/mfx/hw/ThreadLinux.h \
+        ../../src/mfx/hw/UserInputPi3.cpp \
+        ../../src/mfx/hw/UserInputPi3.h \
         ../../src/mailbox.c \
         ../../src/mailbox.h
+
+endif
+
+if WIN
+
+asiosdk2 = \
+        ../../src/asiosdk2/common/asio.cpp \
+        ../../src/asiosdk2/common/asio.h \
+        ../../src/asiosdk2/common/asiodrvr.h \
+        ../../src/asiosdk2/common/asiosys.h \
+        ../../src/asiosdk2/common/combase.cpp \
+        ../../src/asiosdk2/common/combase.h \
+        ../../src/asiosdk2/common/debugmessage.cpp \
+        ../../src/asiosdk2/common/iasiodrv.h \
+        ../../src/asiosdk2/common/register.cpp \
+        ../../src/asiosdk2/common/wxdebug.h \
+        ../../src/asiosdk2/host/pc/asiolist.cpp \
+        ../../src/asiosdk2/host/pc/asiolist.h \
+        ../../src/asiosdk2/host/ASIOConvertSamples.cpp \
+        ../../src/asiosdk2/host/ASIOConvertSamples.h \
+        ../../src/asiosdk2/host/asiodrivers.cpp \
+        ../../src/asiosdk2/host/asiodrivers.h \
+        ../../src/asiosdk2/host/ginclude.h
+
+commonsrc += \
+        $(asiosdk2) \
+        ../../src/mfx/adrv/DAsio.cpp \
+        ../../src/mfx/adrv/DAsio.h \
+        ../../src/mfx/hw/FileIOWindows.cpp \
+        ../../src/mfx/hw/FileIOWindows.h \
+        ../../src/mfx/hw/IoWindows.cpp \
+        ../../src/mfx/hw/IoWindows.h
+
+endif
 
 pedalevite_SOURCES = $(commonsrc) \
         ../../src/main.cpp
@@ -1212,14 +1257,10 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestApprox.h \
         ../../src/test/TestConvolverFft.cpp \
         ../../src/test/TestConvolverFft.h \
-        ../../src/test/TestDisplayFrameBufSimple.cpp \
-        ../../src/test/TestDisplayFrameBufSimple.h \
         ../../src/test/TestInterpFtor.cpp \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
-        ../../src/test/TestLedSimple.cpp \
-        ../../src/test/TestLedSimple.h \
         ../../src/test/TestOscSample.cpp \
         ../../src/test/TestOscSample.h \
         ../../src/test/TestOscSampleSyncFade.cpp \
@@ -1240,9 +1281,19 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSlidingMax.h \
         ../../src/test/TestSlidingOp.cpp \
         ../../src/test/TestSlidingOp.h \
-        ../../src/test/TestUserInputPi3.cpp \
-        ../../src/test/TestUserInputPi3.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \
         ../../src/test/main.cpp
+
+if UNX
+
+mfxtest_SOURCES += \
+        ../../src/test/TestLedSimple.cpp \
+        ../../src/test/TestLedSimple.h \
+        ../../src/test/TestDisplayFrameBufSimple.cpp \
+        ../../src/test/TestDisplayFrameBufSimple.h \
+        ../../src/test/TestUserInputPi3.cpp \
+        ../../src/test/TestUserInputPi3.h
+
+endif

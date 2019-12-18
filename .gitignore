@@ -33,6 +33,8 @@ missing
 build/unix/pedalevite
 build/unix/mfxtest
 build/unix/results/
+build/unix/m4/libtool.m4
+build/unix/m4/lt*.m4
 **/test/results/
 art/*.h
 etc/config/current*
@@ -46,3 +48,4 @@ doc/boards/*/*.bak
 doc/boards/*/*-bak
 doc/boards/*/*.bck
 build/win/.vs/
+
