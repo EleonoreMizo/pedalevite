@@ -358,7 +358,7 @@ template <class VD, class VS, class VP>
 void	Biquad4SimdMorph <VD, VS, VP>::neutralise_one (int biq, bool ramp_flag)
 {
 	const float    ab [3] = { 1, 0, 0 };
-	set_z_eq_one (ab, ab, ramp_flag);
+	set_z_eq_one (biq, ab, ab, ramp_flag);
 }
 
 
