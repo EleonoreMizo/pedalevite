@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-warningflags = -Wall -Wextra -Wno-unused-parameter -Wno-expansion-to-defined -Wno-missing-field-initializers -Wshadow
+warningflags = -Wall -Wextra -Wshadow -Wno-expansion-to-defined -Wno-missing-field-initializers
 includeflags = -I$(srcdir)/../../src
 if WIN
 includeflags += -I$(srcdir)/../../src/asiosdk2/common -I$(srcdir)/../../src/asiosdk2/host -I$(srcdir)/../../src/asiosdk2/host/pc
