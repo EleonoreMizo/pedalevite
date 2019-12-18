@@ -79,6 +79,8 @@ DJack::~DJack ()
 
 int	DJack::do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
 {
+	fstb::unused (driver_0);
+
 	int            ret_val = 0;
 
 	_msg_err.clear ();
