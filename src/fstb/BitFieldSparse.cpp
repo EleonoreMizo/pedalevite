@@ -267,9 +267,14 @@ void	BitFieldSparse::activate_range (int pos, int nbr_elt)
 	assert (pos + nbr_elt <= get_nbr_elt ());
 
 
-	/*** To do ***/
-	assert (false);
+	/*** To do: fast implementation ***/
 
+
+	// Naive implementation, in the meantime
+	for (int cnt = 0; cnt < nbr_elt; ++cnt)
+	{
+		fill_bit (pos + cnt);
+	}
 }
 
 
@@ -283,9 +288,14 @@ void	BitFieldSparse::deactivate_range (int pos, int nbr_elt)
 	assert (pos + nbr_elt <= get_nbr_elt ());
 
 
-	/*** To do ***/
-	assert (false);
+	/*** To do: fast implementation ***/
 
+
+	// Naive implementation, in the meantime
+	for (int cnt = 0; cnt < nbr_elt; ++cnt)
+	{
+		clear_bit (pos + cnt);
+	}
 }
 
 
