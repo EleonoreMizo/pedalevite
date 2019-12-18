@@ -623,11 +623,11 @@ void ASIOConvertSamples::shift32(void* buffer, long shiftAmount, long targetByte
 	else if(targetByteWidth == 3)
 	{
 		char* dest = (char*)buffer;
-		long* source = (long*)buffer;
+		long* source2 = (long*)buffer;
 		char* aa = (char*)&a;
 		while(--frames >= 0)
 		{
-			a = *source++;
+			a = *source2++;
 			a <<= shiftAmount;
 #if ASIO_LITTLE_ENDIAN
 			dest[0] = aa[1];	// lsb
@@ -653,7 +653,7 @@ void ASIOConvertSamples::shift32(void* buffer, long shiftAmount, long targetByte
 void ASIOConvertSamples::reverseEndian(void* buffer, long byteWidth, long frames)
 {
 	char* a = (char*)buffer;
-	char* b = a;
+//	char* b = a;
 	char c; 
 	if(byteWidth == 2)
 	{

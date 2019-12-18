@@ -5,7 +5,7 @@ typedef struct keylist
 {
 	HKEY		mainKey;
 	HKEY		subKey;
-	char		*keyname;
+	const char	*keyname;
 	struct keylist	*next;
 } KEYLIST,	*LPKEYLIST;
 
@@ -28,12 +28,12 @@ typedef struct keylist
 LONG RegisterAsioDriver (CLSID,char *,char *,char *,char *);
 LONG UnregisterAsioDriver (CLSID,char *,char *);
 
-static LONG findRegPath (HKEY,char *);
-static LONG createRegPath (HKEY,char *,char *);
-static LONG createRegStringValue (HKEY,char *,char *,char *);
-static LONG getRegString (HKEY,char *,char *,LPVOID,DWORD);
-static LPKEYLIST findAllSubKeys (HKEY,HKEY,DWORD,char *,LPKEYLIST);
-static LONG deleteRegPath (HKEY,char *,char *);
+static LONG findRegPath (HKEY,const char *);
+static LONG createRegPath (HKEY,const char *,const char *);
+static LONG createRegStringValue (HKEY,const char *,const char *,char *);
+static LONG getRegString (HKEY,const char *,const char *,LPVOID,DWORD);
+static LPKEYLIST findAllSubKeys (HKEY,HKEY,DWORD,const char *,LPKEYLIST);
+static LONG deleteRegPath (HKEY,const char *,const char *);
 
 static char	subkeybuf[MAX_PATH_LEN];
 
@@ -179,7 +179,7 @@ LONG UnregisterAsioDriver (CLSID clsid,char *szdllname,char *szregname)
 // ------------------------------------------
 // Local Functions 
 // ------------------------------------------
-static LONG findRegPath (HKEY mainkey,char *szregpath)
+static LONG findRegPath (HKEY mainkey,const char *szregpath)
 {
 	HKEY	hkey;
 	LONG 	cr,rc = -1;
@@ -195,7 +195,7 @@ static LONG findRegPath (HKEY mainkey,char *szregpath)
 	return rc;
 }
 
-static LONG createRegPath (HKEY mainkey,char *szregpath,char *sznewpath)
+static LONG createRegPath (HKEY mainkey,const char *szregpath,const char *sznewpath)
 {
 	HKEY	hkey,hksub;
 	LONG 	cr,rc = -1;
@@ -216,7 +216,7 @@ static LONG createRegPath (HKEY mainkey,char *szregpath,char *sznewpath)
 	return rc;
 }
 
-static LONG createRegStringValue (HKEY mainkey,char *szregpath,char *valname,char *szvalstr)
+static LONG createRegStringValue (HKEY mainkey,const char *szregpath,const char *valname,char *szvalstr)
 {
 	LONG	cr,rc = -1;
 	HKEY	hkey;
@@ -233,7 +233,7 @@ static LONG createRegStringValue (HKEY mainkey,char *szregpath,char *valname,cha
 }
 
 
-static LONG getRegString (HKEY mainkey,char *szregpath,char *valname,LPVOID pval,DWORD vsize)
+static LONG getRegString (HKEY mainkey,const char *szregpath,const char *valname,LPVOID pval,DWORD vsize)
 {
 	HKEY	hkey;
 	LONG 	cr,rc = -1;
@@ -254,7 +254,7 @@ static LONG getRegString (HKEY mainkey,char *szregpath,char *valname,LPVOID pval
 	return rc;
 }
 
-static LPKEYLIST findAllSubKeys (HKEY hkey,HKEY hksub,DWORD index,char *keyname,LPKEYLIST kl)
+static LPKEYLIST findAllSubKeys (HKEY hkey,HKEY hksub,DWORD index,const char *keyname,LPKEYLIST kl)
 {
 	HKEY	hknew = 0;
 	char	*newkey;
@@ -290,7 +290,7 @@ static LPKEYLIST findAllSubKeys (HKEY hkey,HKEY hksub,DWORD index,char *keyname,
 	return kl;
 }
 
-static LONG deleteRegPath (HKEY mainkey,char *szregpath,char *szdelpath)
+static LONG deleteRegPath (HKEY mainkey,const char *szregpath,const char *szdelpath)
 {
 	HKEY		hkey;
 	LONG 		cr,rc = -1;

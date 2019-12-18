@@ -14,7 +14,9 @@
 #include <windows.h>
 #include "wxdebug.h"
 #include "combase.h"
+#if defined (_MSC_VER)
 #pragma warning( disable : 4514 )   // Disable warnings re unused inline functions
+#endif
 
 
 /* Define the static member variable */
@@ -51,14 +53,11 @@ CBaseObject::~CBaseObject()
 /* Constructor */
 
 // We know we use "this" in the initialization list, we also know we don't modify *phr.
-#pragma warning( disable : 4355 4100 ) 
+#if defined (_MSC_VER)
+#pragma warning( disable : 4355 4100 )
+#endif
 CUnknown::CUnknown(TCHAR *pName, LPUNKNOWN pUnk, HRESULT *phr) 
 : CBaseObject(pName)
-/* Start the object with a reference count of zero - when the      */
-/* object is queried for it's first interface this may be          */
-/* incremented depending on whether or not this object is          */
-/* currently being aggregated upon                                 */
-, m_cRef(0)
 /* Set our pointer to our IUnknown interface.                      */
 /* If we have an outer, use its, otherwise use ours.               */
 /* This pointer effectivly points to the owner of                  */
@@ -68,10 +67,17 @@ CUnknown::CUnknown(TCHAR *pName, LPUNKNOWN pUnk, HRESULT *phr)
  /* to pointer to a type from which we inherit.  The second is     */
  /* type-unsafe but works because INonDelegatingUnknown "behaves   */
  /* like" IUnknown. (Only the names on the methods change.)        */
+/* Start the object with a reference count of zero - when the      */
+/* object is queried for it's first interface this may be          */
+/* incremented depending on whether or not this object is          */
+/* currently being aggregated upon                                 */
+, m_cRef(0)
 {
     // Everything we need to do has been done in the initializer list
 }
+#if defined (_MSC_VER)
 #pragma warning( default : 4355 4100 ) 
+#endif
 
 /* QueryInterface */
 
@@ -108,8 +114,13 @@ template<class T> inline static T max( const T & a, const T & b )
 
 STDMETHODIMP_(ULONG) CUnknown::NonDelegatingAddRef()
 {
-    LONG lRef = InterlockedIncrement( &m_cRef );
+#if defined (DEBUG)
+    LONG lRef =
+#endif
+		 InterlockedIncrement( &m_cRef );
+#if defined (DEBUG)
     ASSERT(lRef > 0);
+#endif
     DbgLog((LOG_MEMORY,3,TEXT("    Obj %d ref++ = %d"),
            m_dwCookie, m_cRef));
     return max(ULONG(m_cRef), 1ul);
@@ -179,19 +190,31 @@ BOOL IsEqualObject(IUnknown *pFirst, IUnknown *pSecond)
     */
     LPUNKNOWN pUnknown1;     // Retrieve the IUnknown interface
     LPUNKNOWN pUnknown2;     // Retrieve the other IUnknown interface
+#if defined (DEBUG)
     HRESULT hr;              // General OLE return code
+#endif
 
     ASSERT(pFirst);
     ASSERT(pSecond);
 
     /* See if the IUnknown pointers match */
 
-    hr = pFirst->QueryInterface(IID_IUnknown,(void **) &pUnknown1);
+#if defined (DEBUG)
+    hr =
+#endif
+		 pFirst->QueryInterface(IID_IUnknown,(void **) &pUnknown1);
+#if defined (DEBUG)
     ASSERT(SUCCEEDED(hr));
+#endif
     ASSERT(pUnknown1);
 
-    hr = pSecond->QueryInterface(IID_IUnknown,(void **) &pUnknown2);
+#if defined (DEBUG)
+    hr =
+#endif
+		 pSecond->QueryInterface(IID_IUnknown,(void **) &pUnknown2);
+#if defined (DEBUG)
     ASSERT(SUCCEEDED(hr));
+#endif
     ASSERT(pUnknown2);
 
     /* Release the extra interfaces we hold */
