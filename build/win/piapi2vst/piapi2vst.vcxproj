@@ -97,7 +97,8 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
+      <DisableSpecificWarnings>4127;4505</DisableSpecificWarnings>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_USRDLL;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\vstsdk24;..\..\..\src\vstsdk24\pluginterfaces\vst2.x;..\..\..\src\vstsdk24\public.sdk\source\vst2.x</AdditionalIncludeDirectories>
