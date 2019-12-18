@@ -44,7 +44,7 @@ namespace doc
 
 
 FxId::FxId (LocType loc_type, std::string label, PiType type)
-:	_location_type (LocType_LABEL)
+:	_location_type (loc_type)
 ,	_label_or_model (label)
 ,	_type (type)
 {
