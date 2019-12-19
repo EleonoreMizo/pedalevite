@@ -51,6 +51,7 @@ AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++11], [CXXSTD="c++1
 AS_IF([test "x$CXXSTD" = "x"], AC_MSG_ERROR([Minimum requirement: C++11]))
 AX_CHECK_COMPILE_FLAG([-Wunused-private-field]        , [CXXFLAGS="$CXXFLAGS -Wno-unused-private-field"]        , , [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument], [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"], , [-Werror])
+AX_CHECK_COMPILE_FLAG([-Wexpansion-to-defined]        , [CXXFLAGS="$CXXFLAGS -Wno-expansion-to-defined"]        , , [-Werror])
 AC_LANG_POP([C++])
 
 AX_PTHREAD
