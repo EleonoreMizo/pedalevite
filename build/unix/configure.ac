@@ -49,8 +49,8 @@ AC_LANG_PUSH([C++])
 AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++17], [CXXSTD="c++17"]))
 AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++11], [CXXSTD="c++11"]))
 AS_IF([test "x$CXXSTD" = "x"], AC_MSG_ERROR([Minimum requirement: C++11]))
-AX_CHECK_COMPILE_FLAG([-Wunused-private-field -Werror], [CXXFLAGS="$CXXFLAGS -Wno-unused-private-field"])
-AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument -Werror], [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"])
+AX_CHECK_COMPILE_FLAG([-Wunused-private-field]        , [CXXFLAGS="$CXXFLAGS -Wno-unused-private-field"]        , , [-Werror])
+AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument], [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"], , [-Werror])
 AC_LANG_POP([C++])
 
 AX_PTHREAD
@@ -112,14 +112,22 @@ AS_IF(
         AS_IF([test "x$rpi_version" = "x"], AC_MSG_ERROR([[Not on a Raspberry Pi, or unknown model.]]))
 
         AC_DEFINE_UNQUOTED([PV_RPI_VER_MAJOR], [$rpi_version], [Raspberry Pi version number (3 or 4).])
-        MFLAGS="$MFLAGS -mfloat-abi=hard -mfpu=neon -ftree-vectorize"
+        MFLAGS="$MFLAGS -mfloat-abi=hard -ftree-vectorize"
         AS_IF(
             [test "x$rpi_version" = "x4"],
-            [MFLAGS="$MFLAGS -mtune=cortex-a72 -march=armv8-a+crc+simd"],
-            [MFLAGS="$MFLAGS -mtune=cortex-a53"]
+            [
+                MFLAGS="$MFLAGS -mfpu=neon-fp-armv8 -mtune=cortex-a72"
+                # Clang doesn't support the +crc+simd arch extensions
+		AX_CHECK_COMPILE_FLAG(
+                    [-march=armv8-a+crc+simd],
+                    [CXXFLAGS="$CXXFLAGS -march=armv8-a+crc+simd"],
+                    [CXXFLAGS="$CXXFLAGS -march=armv8-a"]
+                )
+            ],
+            [MFLAGS="$MFLAGS -mfpu=neon -mtune=cortex-a53"]
         )
         # GCC 7 emits some warnings about ABI changes when using std::vector
-        AX_CHECK_COMPILE_FLAG([-Wpsabi -Werror], [MFLAGS="$MFLAGS -Wno-psabi"])
+        AX_CHECK_COMPILE_FLAG([-Wpsabi], [MFLAGS="$MFLAGS -Wno-psabi"], , [-Werror])
     ]
 )
 
