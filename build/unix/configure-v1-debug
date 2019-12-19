@@ -1,4 +1,4 @@
 #!/bin/sh
 
-./configure pv_version=1 --enable-debug
+./configure pv_version=1 --enable-debug "$@"
 make clean

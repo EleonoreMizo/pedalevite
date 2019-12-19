@@ -1,5 +1,5 @@
 #!/bin/sh
 
-./configure pv_version=1
+./configure pv_version=1 "$@"
 make clean
 
