@@ -113,19 +113,19 @@ AS_IF(
         AS_IF([test "x$rpi_version" = "x"], AC_MSG_ERROR([[Not on a Raspberry Pi, or unknown model.]]))
 
         AC_DEFINE_UNQUOTED([PV_RPI_VER_MAJOR], [$rpi_version], [Raspberry Pi version number (3 or 4).])
-        MFLAGS="$MFLAGS -mfloat-abi=hard -ftree-vectorize"
+        MFLAGS="$MFLAGS -mfloat-abi=hard -ftree-vectorize -mfpu=neon-fp-armv8"
         AS_IF(
             [test "x$rpi_version" = "x4"],
             [
-                MFLAGS="$MFLAGS -mfpu=neon-fp-armv8 -mtune=cortex-a72"
+                MFLAGS="$MFLAGS -mtune=cortex-a72"
                 # Clang doesn't support the +crc+simd arch extensions
 		AX_CHECK_COMPILE_FLAG(
                     [-march=armv8-a+crc+simd],
-                    [CXXFLAGS="$CXXFLAGS -march=armv8-a+crc+simd"],
-                    [CXXFLAGS="$CXXFLAGS -march=armv8-a"]
+                    [MFLAGS="$MFLAGS -march=armv8-a+crc+simd"],
+                    [MFLAGS="$MFLAGS -march=armv8-a"]
                 )
             ],
-            [MFLAGS="$MFLAGS -mfpu=neon -mtune=cortex-a53"]
+            [MFLAGS="$MFLAGS -march=armv8-a -mtune=cortex-a53"]
         )
         # GCC 7 emits some warnings about ABI changes when using std::vector
         AX_CHECK_COMPILE_FLAG([-Wpsabi], [MFLAGS="$MFLAGS -Wno-psabi"], , [-Werror])
