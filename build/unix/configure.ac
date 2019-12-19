@@ -5,7 +5,7 @@ AM_INIT_AUTOMAKE([foreign no-dist-gzip dist-xz subdir-objects no-define])
 AM_SILENT_RULES([yes])
 
 AC_PROG_CXX
-AC_PROG_CC([$CXX])
+AC_PROG_CC
 
 AC_CANONICAL_HOST
 

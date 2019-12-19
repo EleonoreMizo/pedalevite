@@ -33,6 +33,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define DEV_MEM     "/dev/mem"
 #define DEV_GPIOMEM "/dev/gpiomem"
 
+#if defined (__cplusplus)
+extern "C" {
+#endif
+
 int mbox_open(void);
 void mbox_close(int file_desc);
 
@@ -47,3 +51,7 @@ void *unmapmem(void *addr, unsigned size);
 unsigned execute_code(int file_desc, unsigned code, unsigned r0, unsigned r1, unsigned r2, unsigned r3, unsigned r4, unsigned r5);
 unsigned execute_qpu(int file_desc, unsigned num_qpus, unsigned control, unsigned noflush, unsigned timeout);
 unsigned qpu_enable(int file_desc, unsigned enable);
+
+#if defined (__cplusplus)
+}
+#endif
