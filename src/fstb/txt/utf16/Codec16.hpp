@@ -83,11 +83,13 @@ int	Codec16 <C16>::get_char_seq_len_ucs (int &len, char32_t ucs4)
 		len = 2;
 	}
 
+#if 0 // char32_t is unsigned
 	if (ucs4 < 0)
 	{
 		len     = 0;
 		ret_val = Err_CHAR_OUT_OF_RANGE;
 	}
+#endif
 
 	return ret_val;
 }

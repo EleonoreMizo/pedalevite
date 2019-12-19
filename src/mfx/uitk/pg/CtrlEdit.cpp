@@ -539,9 +539,9 @@ void	CtrlEdit::update_display ()
 		if (_loc_edit._ctrl_abs_flag)
 		{
 			const std::array <float, 2>   val_arr =
-			{
+			{{
 				_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
-			};
+			}};
 			const PiType   type    = _loc_edit._pi_type;
 			const int      index   = _loc_edit._param_index;
 			for (size_t mm = 0; mm < _minmax.size (); ++mm)
@@ -948,9 +948,9 @@ void	CtrlEdit::change_val (int mm, int step_index, int dir)
 	if (_loc_edit._ctrl_abs_flag)
 	{
 		std::array <double, 2>  val_arr =
-		{
+		{{
 			_ctrl_link._base, _ctrl_link._base + _ctrl_link._amp
-		};
+		}};
 
 		val_arr [mm] = Tools::change_param (
 			val_arr [mm], *_model_ptr, *_view_ptr, slot_id, type,

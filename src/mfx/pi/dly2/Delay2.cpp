@@ -362,9 +362,9 @@ void	Delay2::do_process_block (ProcInfo &proc)
 
 	// Taps
 	std::array <float * const, Cst::_nbr_lines>  buf_tap_arr =
-	{
+	{{
 		&_buf_tap_arr [0] [0], &_buf_tap_arr [1] [0]
-	};
+	}};
 	_taps.process_block (
 		&buf_tap_arr [0],
 		proc._dst_arr,
@@ -430,8 +430,8 @@ void	Delay2::do_process_block (ProcInfo &proc)
 		}
 
 		// Read the content of the lines
-		std::array <float, 2>   fdbk_beg_arr = { 0, 0 };
-		std::array <float, 2>   fdbk_end_arr = { 0, 0 };
+		std::array <float, 2>   fdbk_beg_arr = {{ 0, 0 }};
+		std::array <float, 2>   fdbk_end_arr = {{ 0, 0 }};
 		for (int line_index = 0; line_index < _nbr_lines; ++line_index)
 		{
 			DelayLineBbdPitch &  line = _line_arr [line_index]._delay;

@@ -3124,7 +3124,7 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 
 	const int      nbr_param = int (settings._param_list.size ());
-	const doc::CtrlLinkSet cls_empty;
+	const doc::CtrlLinkSet cls_empty {};
 	auto           it_ctrl   = settings._map_param_ctrl.begin ();
 	auto           it_pres   = settings._map_param_pres.begin ();
 	const auto     it_id_map = _pi_id_map.find (slot_id);

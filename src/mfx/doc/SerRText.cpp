@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <cassert>
 #include <cctype>
+#include <cerrno>
 #include <cstdlib>
 
 

@@ -341,9 +341,9 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 	std::array <BufAlign, 6>  buf_arr;
-	std::array <const float *, 2> src_ptr_arr = { 0, 0 };
-	std::array <      float *, 2> dst_ptr_arr = { 0, 0 };
-	std::array <      float *, 2> sig_ptr_arr = { 0, 0 };
+	std::array <const float *, 2> src_ptr_arr = {{ 0, 0 }};
+	std::array <      float *, 2> dst_ptr_arr = {{ 0, 0 }};
+	std::array <      float *, 2> sig_ptr_arr = {{ 0, 0 }};
 	if (_sample_freq > 0)
 	{
 		const int      mbs_alig = (_max_block_size + 3) & ~3;

@@ -97,7 +97,9 @@ int	TestSlidingOp::perform_test_single ()
 	SO             so_proc;
 	Operator       op;
 
-	static const std::array <int, 8> win_len_arr { 1, 2, 3, 4, 27, 16, 53, 2345 };
+	static const std::array <int, 8> win_len_arr {{
+		1, 2, 3, 4, 27, 16, 53, 2345
+	}};
 	for (int win_len : win_len_arr)
 	{
 		const int      data_len = 10000;

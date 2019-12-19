@@ -564,7 +564,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
 	const int      slot_id      = _loc_edit._slot_id;
 	const doc::Slot & slot      = preset.use_slot (slot_id);
 	
-	const doc::CtrlLinkSet  cls;
+	const doc::CtrlLinkSet  cls {};
 	for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
 	{
 		const PiType   pi_type = static_cast <PiType> (type_cnt);
