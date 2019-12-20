@@ -4,6 +4,9 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign no-dist-gzip dist-xz subdir-objects no-define])
 AM_SILENT_RULES([yes])
 
+: ${CXXFLAGS=""}
+: ${CFLAGS=""}
+
 AC_PROG_CXX
 AC_PROG_CC
 
@@ -17,6 +20,27 @@ AS_IF(
 AC_DEFINE_UNQUOTED([PV_VERSION], [($pv_version)], [Pedale Vite version. 1 or 2.])
 
 AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug], [Compilation options required for debugging. [default=no]]))
+AC_ARG_ENABLE([clang], AS_HELP_STRING([--enable-clang], [Use Clang as compiler along with libc++. [default=no]]))
+
+AS_IF(
+    [test "x$enable_debug" = "xyes"],
+    [
+        DEBUGCFLAGS="-O0 -g3 -ggdb"
+        AC_MSG_NOTICE([Debug mode enabled.])
+    ],
+    [DEBUGCFLAGS="-O3 -g3 -DNDEBUG"]
+)
+
+AS_IF(
+    [test "x$enable_clang" = "xyes"],
+    [
+        CXX="clang++"
+        CC="clang"
+        LD="clang++"
+        EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -stdlib=libc++"
+        AC_MSG_NOTICE([Using clang as compiler.])
+    ]
+)
 
 
 
@@ -49,9 +73,9 @@ AC_LANG_PUSH([C++])
 AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++17], [CXXSTD="c++17"]))
 AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++11], [CXXSTD="c++11"]))
 AS_IF([test "x$CXXSTD" = "x"], AC_MSG_ERROR([Minimum requirement: C++11]))
-AX_CHECK_COMPILE_FLAG([-Wunused-private-field]        , [CXXFLAGS="$CXXFLAGS -Wno-unused-private-field"]        , , [-Werror])
-AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument], [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"], , [-Werror])
-AX_CHECK_COMPILE_FLAG([-Wexpansion-to-defined]        , [CXXFLAGS="$CXXFLAGS -Wno-expansion-to-defined"]        , , [-Werror])
+AX_CHECK_COMPILE_FLAG([-Wunused-private-field]        , [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-unused-private-field"]        , , [-Werror])
+AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument], [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-unused-command-line-argument"], , [-Werror])
+AX_CHECK_COMPILE_FLAG([-Wexpansion-to-defined]        , [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-expansion-to-defined"]        , , [-Werror])
 AC_LANG_POP([C++])
 
 AX_PTHREAD
@@ -67,7 +91,7 @@ AS_IF(
                 AC_CHECK_LIB([wiringPi], [wiringPiSetupPhys])
                 LIBS="$LIBS -lwiringPi -lbcm_host"
                 LDFLAGS="$LDFLAGS -L/opt/vc/lib"
-                CXXFLAGS="$CXXFLAGS -I/opt/vc/include"
+                EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -I/opt/vc/include"
             ]
         )
     ]
@@ -75,12 +99,6 @@ AS_IF(
 
 # It seems that -latomic is needed only for some versions of GCC < 5.3
 AX_CHECK_LINK_FLAG([-latomic], [LIBS="$LIBS -latomic"])
-
-AS_IF(
-    [test "x$enable_debug" = "xyes"],
-    [DEBUGCFLAGS="-O0 -g3 -ggdb"],
-    [DEBUGCFLAGS="-O3 -g3 -DNDEBUG"]
-)
 
 AS_IF(
     [test "x$WIN" = "xtrue"],

@@ -6,7 +6,7 @@ if WIN
 includeflags += -I$(srcdir)/../../src/asiosdk2/common -I$(srcdir)/../../src/asiosdk2/host -I$(srcdir)/../../src/asiosdk2/host/pc
 endif
 commoncflags = $(DEBUGCFLAGS) $(MFLAGS) $(warningflags) $(includeflags) $(STACKREALIGN) $(PTHREAD_CFLAGS)
-AM_CXXFLAGS  = -std=$(CXXSTD) $(commoncflags)
+AM_CXXFLAGS  = -std=$(CXXSTD) $(commoncflags) $(EXTRA_CXXFLAGS)
 AM_CFLAGS    = $(commoncflags)
 AM_LDFLAGS   = $(PTHREAD_LIBS) $(PLUGINLDFLAGS)
 
