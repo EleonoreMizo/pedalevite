@@ -36,6 +36,7 @@
 	<li><a href="#soft-baseconf">Basic configuration</a></li>
 	<li><a href="#soft-opt-startup">Boot time optimisation</a></li>
 	<li><a href="#soft-install-dep">Software dependencies</a></li>
+	<li><a href="#soft-install-clang">Installing Clang (optional)</a></li>
 	<li><a href="#soft-install-app">Installing Pédale Vite</a></li>
 	<li><a href="#soft-autorun">Pédale Vite autostart</a></li>
 	<li><a href="#soft-ro">Read-only operating system and other optimisations</a></li>
@@ -1101,14 +1102,18 @@ language and keyboard preferences.
 Finally, hit the left arrow to select <code>Finish</code>.
 No need to reboot once it is done, we’ll do it a bit later.</p>
 
-<p>Now, update the system:</p>
+<p><strong>Important&#8239;:</strong> from there and until the end of the
+software setup, the Pi will require an internet access.
+Make sure it is available.</p>
+
+<p>Now, update the system&#8239;:</p>
 <pre class="term">sudo apt-get -y update
 sudo apt-get -y dist-upgrade</pre>
 <p>This will take a while.
 Sometimes, a information message will block the operation.
 Scroll down and quit the text viewing program to continue.</p>
 
-<p>We can reboot now:</p>
+<p>We can reboot now&#8239;:</p>
 <pre class="term">sudo shutdown -r now</pre>
 
 
@@ -1193,6 +1198,39 @@ gpio -v</pre>
 
 
 
+<h3><a id="soft-install-clang"></a>Clang installation (optional)</h3>
+
+<p>It is possible to install a recent version of the Clang compilation suite.
+This step is optional, but Clang allows a significant speed-up (about
++25&#8239;%) of the Pédale Vite application, relative to the default GCC
+compiler.
+Here, we’re going to install Clang 9.0.0, the latest version at the time of
+writing, but more recent versions may exist.
+If so, you can replace the <code>9.0.0</code> in the following lines with the
+newer version identifiers.
+Anyway you could also keep Clang 9.0.0 which does perfectly the job.</p>
+<p>Note that Clang requires about 3&#8239;GB on the drive.
+Make sure you’re not going to run short on space.</p>
+<pre class="term">cd ~
+wget http://releases.llvm.org/9.0.0/clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
+tar -xvf clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
+rm clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
+mv clang+llvm-9.0.0-armv7a-linux-gnueabihf clang_9.0.0
+sudo mv clang_9.0.0 /usr/local
+echo 'export PATH=/usr/local/clang_9.0.0/bin:$PATH' >> .bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/clang_9.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
+. .bashrc
+clang++ --version</pre>
+<p>Theoretically, everything should work well, however I encountered some
+issues when running executable files using the bundled libc++, which was not
+found.
+The following lines will fix the problem&#8239;:</p>
+<pre class="term">echo '/usr/local/clang_9.0.0/lib/' > ./clang.conf
+sudo mv ./clang.conf /etc/ld.so.conf.d/
+sudo ldconfig</pre>
+
+
+
 <h3><a id="soft-install-app"></a>Installing Pédale Vite</h3>
 
 <p>First, download the code in <code>~/Documents</code>.</p>
@@ -1200,11 +1238,15 @@ gpio -v</pre>
 mkdir Documents
 cd Documents
 git clone https://github.com/EleonoreMizo/pedalevite.git</pre>
-<p>Compile:</p>
+<p>Setup the project configuration&#8239;:</p>
 <pre class="term">cd pedalevite/build/unix
 ./autogen.sh
-./configure-v2-release
-make -j4</pre>
+./configure-v2-release</pre>
+<p>If Clang was installed at the previous step, replace the last line
+with&#8239;:</p>
+<pre class="term">./configure-v2-release --enable-clang</pre>
+<p>Finally (for all versions), compile it&#8239;:</p>
+<pre class="term">make -j4</pre>
 <p>Check that everything succeeded and that there is an executable file
 <code>pedalevite</code> in the current directory.
 Then install the software in its dedicated folder, as well as some other
@@ -1624,6 +1666,11 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r5, 2019-12-20</b></p>
+<ul>
+<li>Possibility of using Clang to compile Pédale Vite.</li>
+</ul>
 
 <p><b>r4, 2019-11-09</b></p>
 <ul>

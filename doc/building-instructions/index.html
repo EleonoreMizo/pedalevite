@@ -36,6 +36,7 @@
 	<li><a href="#soft-baseconf">Configuration de base</a></li>
 	<li><a href="#soft-opt-startup">Optimisation du temps de démarrage</a></li>
 	<li><a href="#soft-install-dep">Installation des dépendances logicielles</a></li>
+	<li><a href="#soft-install-clang">Installation de Clang (facultatif)</a></li>
 	<li><a href="#soft-install-app">Installation de Pédale Vite</a></li>
 	<li><a href="#soft-autorun">Démarrage automatique de Pédale Vite</a></li>
 	<li><a href="#soft-ro">Passage du système en lecture seule et autres optimisations</a></li>
@@ -1240,7 +1241,10 @@ Finalement, flèche gauche pour sélectionner <code>Finish</code>.
 Inutile de redémarrer tout de suite même si les messages de la console vous
 le conseillent.</p>
 
-<p>Ensuite, mettre à jour le système&#8239;:</p>
+<p><strong>Important&#8239;:</strong> à partir de là, et jusqu’à la fin de
+l’installation, le Pi va nécessiter d’être connecté aux internets.</p>
+
+<p>Mettre à jour le système&#8239;:</p>
 <pre class="term">sudo apt-get -y update
 sudo apt-get -y dist-upgrade</pre>
 <p>L’opération va prendre un peu de temps, allez donc faire quelques
@@ -1335,6 +1339,43 @@ gpio -v</pre>
 
 
 
+<h3><a id="soft-install-clang"></a>Installation de Clang (faculatif)</h3>
+
+<p>Il est possible d’installer une verion récente de la suite de compilation
+Clang.
+Cette étape est facultative, mais Clang permet une accélération substantielle
+(environ +25&#8239;% selon mes mesures) du programme Pédale Vite par rapport à
+GCC, le compilateur installé par défaut.
+Ici, nous allons installer Clang 9.0.0, la dernière version en date, mais il
+est probable que des versions plus récentes soient
+<a href="http://releases.llvm.org">disponibles</a> à l’heure où vous lisez
+ces lignes.
+Si c’est le cas, remplacer les <code>9.0.0</code> dans les lignes suivantes
+par le numéro de version en question.
+Il est aussi possible de rester sur Clang 9.0.0, qui conviendra très bien.</p>
+<p>Vérifier au préalable qu’il y a suffisamment d’espace sur le disque si
+celui-ci est de faible capacité&#8239;: Clang nécessite environ 3&#8239;Go de
+libre.</p>
+<pre class="term">cd ~
+wget http://releases.llvm.org/9.0.0/clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
+tar -xvf clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
+rm clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
+mv clang+llvm-9.0.0-armv7a-linux-gnueabihf clang_9.0.0
+sudo mv clang_9.0.0 /usr/local
+echo 'export PATH=/usr/local/clang_9.0.0/bin:$PATH' >> .bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/clang_9.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
+. .bashrc
+clang++ --version</pre>
+<p>En principe, tout devrait marcher correctement, cependant j’ai eu des
+problèmes à lancer des exécutables utilisant la libc++ intégrée à Clang, qui
+n’était pas trouvée.
+Les lignes suivantes pallieront le problème&#8239;:</p>
+<pre class="term">echo '/usr/local/clang_9.0.0/lib/' > ./clang.conf
+sudo mv ./clang.conf /etc/ld.so.conf.d/
+sudo ldconfig</pre>
+
+
+
 <h3><a id="soft-install-app"></a>Installation de Pédale Vite</h3>
 
 <p>On commence par télécharger le code dans <code>~/Documents</code>.</p>
@@ -1342,11 +1383,15 @@ gpio -v</pre>
 mkdir Documents
 cd Documents
 git clone https://github.com/EleonoreMizo/pedalevite.git</pre>
-<p>Compilation&#8239;:</p>
+<p>Configuration du projet&#8239;:</p>
 <pre class="term">cd pedalevite/build/unix
 ./autogen.sh
-./configure-v2-release
-make -j4</pre>
+./configure-v2-release</pre>
+<p>Si Clang a été installé à l’étape précédente, remplacer la dernière
+ligne par&#8239;:</p>
+<pre class="term">./configure-v2-release --enable-clang</pre>
+<p>Finalement (on reprend le tonc commun), on compile&#8239;:</p>
+<pre class="term">make -j4</pre>
 <p>Vérifier que tout s’est bien passé et qu’il y a un exécutable
 <code>pedalevite</code> dans le répertoire courant.
 On installe ensuite le logiciel dans son répertoire, ainsi que quelques autres
@@ -1792,6 +1837,11 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r5, 2019-12-20</b></p>
+<ul>
+<li>Utilisation possible de Clang pour compiler Pédale Vite.</li>
+</ul>
 
 <p><b>r4, 2019-11-09</b></p>
 <ul>
