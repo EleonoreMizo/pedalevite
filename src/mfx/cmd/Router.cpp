@@ -248,7 +248,7 @@ void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
 					mix_side_i._buf_arr [              chn] = nxt_buf_arr [chn];
 
 					// 2nd pin: main input as default bypass
-					const int       chn_in = std::min (chn, nbr_chn_in - 1);
+					const int       chn_in = clip_channel (chn, nbr_chn_in);
 					const int       buf    = cur_buf_arr [chn_in];
 					mix_side_i._buf_arr [nbr_chn_out + chn] = buf;
 				}
@@ -299,7 +299,7 @@ void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
 	audio_o._nbr_chn_tot = audio_o._nbr_chn;
 	for (int i = 0; i < audio_o._nbr_chn; ++i)
 	{
-		const int      chn_src = std::min (i, nbr_chn_cur - 1);
+		const int      chn_src = clip_channel (i, nbr_chn_cur);
 		audio_o._buf_arr [i] = cur_buf_arr [chn_src];
 	}
 
@@ -701,13 +701,35 @@ void	Router::create_graph_context (Document &doc, PluginPool &plugin_pool)
 	BufAlloc       buf_alloc (Cst::BufSpecial_NBR_ELT);
 	allocate_buf_audio_i (doc, buf_alloc);
 
+	// First, visit all plug-ins without output connection.
+	// These are "analysis" plug-ins not generating any audio data, but
+	// producing signals which may be useful for the other plug-ins.
+	for (int slot_pos = 0
+	;	slot_pos < int (categ_list [CnxEnd::SlotType_NORMAL].size ())
+	;	++ slot_pos)
+	{
+		const NodeInfo &  node_info =
+			categ_list [CnxEnd::SlotType_NORMAL] [slot_pos];
+		if (node_info._pin_dst_list.empty ())
+		{
+			visit_node (
+				doc, plugin_pool, buf_alloc, categ_list,
+				CnxEnd::SlotType_NORMAL, slot_pos
+			);
+		}
+	}
+
+	// Now, starts from the audio output pins
 	for (auto &cnx_pin : categ_list [CnxEnd::SlotType_IO] [0]._cnx_src_list)
 	{
 		for (auto &cnx : cnx_pin)
 		{
 			if (cnx._src._slot_type != CnxEnd::SlotType_IO)
 			{
-				visit_node (doc, plugin_pool, buf_alloc, categ_list, cnx);
+				visit_node (
+					doc, plugin_pool, buf_alloc, categ_list,
+					cnx._src._slot_type, cnx._src._slot_pos
+				);
 			}
 		}
 	}
@@ -717,7 +739,8 @@ void	Router::create_graph_context (Document &doc, PluginPool &plugin_pool)
 	// Deallocates audio input and output buffers (for sanity checks)
 	free_buf_audio_i (doc, buf_alloc);
 	free_buf_audio_o (doc, buf_alloc);
-	assert (buf_alloc.get_nbr_alloc_buf () == 0);
+	assert (   buf_alloc.get_nbr_alloc_buf ()
+	        == count_nbr_signal_buf (doc, categ_list));
 }
 
 
@@ -798,23 +821,26 @@ void	Router::allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const Nod
 	assert (audio_o._nbr_chn_tot <= Cst::_nbr_chn_out);
 	assert (node_info._cnx_src_list.size () == nbr_pins);
 
-	const bool     mix_flag = collects_mix_source_buffers (
+	// Use the source buffers as audio output buffers or allocates some to mix
+	// several inputs
+	collects_mix_source_buffers (
 		ctx, buf_alloc, categ_list, node_info,
 		audio_o, nbr_pins, audio_o._nbr_chn,
 		ctx._interface_mix
 	);
 
-	// Deallocates mix buffers
-	if (mix_flag)
+	// Keeps the destination buffers allocated
+	for (int chn_cnt = 0; chn_cnt < audio_o._nbr_chn_tot; ++chn_cnt)
 	{
-		for (auto &chn : ctx._interface_mix)
-		{
-			for (auto buf : chn)
-			{
-				buf_alloc.ret_if_std (buf);
-			}
-		}
+		buf_alloc.use_more_if_std (audio_o._buf_arr [chn_cnt]);
 	}
+
+	// Deallocates the source buffers
+	free_source_buffers (
+		ctx, buf_alloc, categ_list, node_info,
+		audio_o, nbr_pins, audio_o._nbr_chn,
+		ctx._interface_mix
+	);
 }
 
 
@@ -841,20 +867,19 @@ void	Router::free_buf_audio_o (Document &doc, BufAlloc &buf_alloc)
 
 	for (int chn_cnt = 0; chn_cnt < audio_o._nbr_chn_tot; ++chn_cnt)
 	{
-		buf_alloc.ret (audio_o._buf_arr [chn_cnt]);
+		buf_alloc.ret_if_std (audio_o._buf_arr [chn_cnt]);
 	}
 }
 
 
 
 // Visited node is the source of the connection
-void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, const Cnx &cnx)
+void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, CnxEnd::SlotType slot_type, int slot_pos)
 {
-	assert (   cnx._src._slot_type == CnxEnd::SlotType_NORMAL
-	        || cnx._src._slot_type == CnxEnd::SlotType_DLY);
+	assert (   slot_type == CnxEnd::SlotType_NORMAL
+	        || slot_type == CnxEnd::SlotType_DLY);
 
-	NodeInfo &     node_info =
-		categ_list [cnx._src._slot_type] [cnx._src._slot_pos];
+	NodeInfo &     node_info = categ_list [slot_type] [slot_pos];
 
 	// Node not visited yet ?
 	if (! node_info._visit_flag)
@@ -881,11 +906,11 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		int            main_nbr_o = 1;
 		int            main_nbr_s = 0;
 		bool           gen_audio_flag = false;
-		if (cnx._src._slot_type == CnxEnd::SlotType_DLY)
+		if (slot_type == CnxEnd::SlotType_DLY)
 		{
 			// Delay plug-in
 			assert (nbr_pins_i == nbr_pins_o);
-			PluginAux &    dly = doc._plugin_dly_list [cnx._src._slot_pos];
+			PluginAux &    dly = doc._plugin_dly_list [slot_pos];
 			pi_id_main = dly._pi_id;
 			latency    = dly._comp_delay;
 			dly._comp_delay = 0;
@@ -894,8 +919,8 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		else
 		{
 			// Standard plug-in with its mixer
-			assert (cnx._src._slot_type == CnxEnd::SlotType_NORMAL);
-			const Slot &   slot = doc._slot_list [cnx._src._slot_pos];
+			assert (slot_type == CnxEnd::SlotType_NORMAL);
+			const Slot &   slot = doc._slot_list [slot_pos];
 			pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
 			if (pi_id_main >= 0)
 			{
@@ -983,7 +1008,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 						else
 						{
 							const int      chn_idx =
-								std::min (chn_cnt, main_side_i._nbr_chn - 1);
+								clip_channel (chn_cnt, main_side_i._nbr_chn);
 							buf = main_side_i._buf_arr [chn_idx];
 						}
 						buf_alloc.use_more_if_std (nbr_dst);
@@ -999,10 +1024,9 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 
 		// Signals
 		ctx_node_main._nbr_sig = main_nbr_s;
-		if (   cnx._src._slot_type == CnxEnd::SlotType_NORMAL
-		    && pi_id_main >= 0)
+		if (slot_type == CnxEnd::SlotType_NORMAL && pi_id_main >= 0)
 		{
-			const Slot &   slot = doc._slot_list [cnx._src._slot_pos];
+			const Slot &   slot = doc._slot_list [slot_pos];
 			const int      nbr_reg_sig =
 				int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
 			for (int sig = 0; sig < main_nbr_s; ++sig)
@@ -1071,7 +1095,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 					int               buf = Cst::BufSpecial_SILENCE;
 					if (pin_cnt < nbr_pins_ctx_i)
 					{
-						const int    chn_idx = std::min (chn_cnt, nbr_chn_i - 1);
+						const int    chn_idx = clip_channel (chn_cnt, nbr_chn_i);
 						buf = main_side_i._buf_arr [ofs_chn_i + chn_idx];
 					}
 					mix_side_i._buf_arr [ofs_chn_b + chn_cnt] = buf;
@@ -1105,7 +1129,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 		// At this point, the plug-in is being processed
 
-		if (cnx._src._slot_type == CnxEnd::SlotType_DLY)
+		if (slot_type == CnxEnd::SlotType_DLY)
 		{
 			ctx_node_main._aux_param_flag = true;
 			ctx_node_main._comp_delay     = latency;
@@ -1115,21 +1139,21 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 		// Frees input buffers
 
-		// Main inputs
-		for (int chn_cnt = 0; chn_cnt < main_side_i._nbr_chn_tot; ++chn_cnt)
-		{
-			buf_alloc.ret_if_std (main_side_i._buf_arr [chn_cnt]);
-		}
+		free_source_buffers (
+			ctx, buf_alloc, categ_list, node_info,
+			main_side_i, nbr_pins_ctx_i, nbr_chn_i,
+			pi_ctx._mix_in_arr
+		);
 
-		// Mixed inputs
-		if (mix_flag)
+		if (pi_id_mix >= 0)
 		{
-			for (auto &chn : pi_ctx._mix_in_arr)
+			for (int chn = 0; chn < main_side_o._nbr_chn_tot; ++chn)
 			{
-				for (auto buf : chn)
-				{
-					buf_alloc.ret_if_std (buf);
-				}
+				// Output of the main plug-in
+				buf_alloc.ret (main_side_o._buf_arr [chn]);
+
+				// Bypass output for the main plug-in
+				buf_alloc.ret (pi_ctx._bypass_buf_arr [chn]);
 			}
 		}
 
@@ -1162,7 +1186,10 @@ void	Router::check_source_nodes (Document &doc, const PluginPool &plugin_pool, B
 			// Source is a plug-in: process it
 			else
 			{
-				visit_node (doc, plugin_pool, buf_alloc, categ_list, cnx_src);
+				visit_node (
+					doc, plugin_pool, buf_alloc, categ_list,
+					cnx_src._src._slot_type, cnx_src._src._slot_pos
+				);
 				nbr_chn_src = node_src._nbr_chn;
 			}
 
@@ -1230,12 +1257,10 @@ bool	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_
 						ProcessingContext::PluginContext::MixInChn & mix_in =
 							mix_in_arr [chn_ofs + chn_cnt];
 
-						const int      chn_idx = std::min (chn_cnt, nbr_chn_src - 1);
+						const int      chn_idx = clip_channel (chn_cnt, nbr_chn_src);
 						const int      buf     =
 							src_side_o_ptr->use_buf (cnx_src._src._pin, chn_idx);
 						mix_in.push_back (buf);
-						buf_alloc.use_more_if_std (buf);
-
 						nbr_real_src = std::max (nbr_real_src, int (mix_in.size ()));
 					}
 				}
@@ -1277,6 +1302,80 @@ bool	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_
 
 
 
+void	Router::free_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr)
+{
+	const bool     mix_flag = ! mix_in_arr.empty ();
+
+	for (int pin_cnt = 0; pin_cnt < nbr_pins_ctx; ++pin_cnt)
+	{
+		const int      chn_ofs = pin_cnt * nbr_chn;
+		if (mix_flag && ! mix_in_arr [chn_ofs].empty ())
+		{
+			// Releases the main inputs
+			for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
+			{
+				const int      buf = side._buf_arr [chn_ofs + chn_cnt];
+				buf_alloc.ret_if_std (buf);
+			}
+		}
+
+		// Releases the mixed output pins from the source nodes
+		const Document::CnxList &  cnx_list =
+			node_info._cnx_src_list [pin_cnt];
+		for (auto &cnx_src : cnx_list)
+		{
+			if (cnx_src._src._slot_type != CnxEnd::SlotType_IO)
+			{
+				const NodeInfo &  node_src =
+					categ_list [cnx_src._src._slot_type] [cnx_src._src._slot_pos];
+				const ProcessingContext::PluginContext & pi_ctx_src =
+					ctx._context_arr [node_src._ctx_index];
+				const ProcessingContextNode & ctx_src =
+						(pi_ctx_src._mixer_flag)
+					? pi_ctx_src._node_arr [PiType_MIX ]
+					: pi_ctx_src._node_arr [PiType_MAIN];
+				const ProcessingContextNode::Side & src_side_o =
+					ctx_src._side_arr [Dir_OUT];
+				const int      nbr_chn_src = src_side_o._nbr_chn;
+				const int      chn_ofs_src = cnx_src._src._pin * nbr_chn_src;
+				for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
+				{
+					const int      buf =
+						src_side_o._buf_arr [chn_ofs_src + chn_cnt];
+					buf_alloc.ret_if_std (buf);
+				}
+			}
+		}
+	}
+}
+
+
+
+int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &categ_list) const
+{
+	int            nbr_buf = 0;
+
+	for (int slot_pos = 0
+	;	slot_pos < int (categ_list [CnxEnd::SlotType_NORMAL].size ())
+	;	++ slot_pos)
+	{
+		const NodeInfo &  node_info =
+			categ_list [CnxEnd::SlotType_NORMAL] [slot_pos];
+		const Slot &   slot         = doc._slot_list [slot_pos];
+		const int      pi_id_main   = slot._component_arr [PiType_MAIN]._pi_id;
+		if (pi_id_main >= 0)
+		{
+			const int      nbr_reg_sig =
+				int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
+			nbr_buf += nbr_reg_sig;
+		}
+	}
+
+	return nbr_buf;
+}
+
+
+
 void	Router::count_nbr_cnx_per_input_pin (MapCnxPerPin &res_map, const Document::CnxList &graph)
 {
 	res_map.clear ();
@@ -1302,6 +1401,13 @@ void	Router::count_nbr_cnx_per_input_pin (MapCnxPerPin &res_map, const Document:
 			++ it;
 		}
 	}
+}
+
+
+
+int	Router::clip_channel (int chn_idx, int nbr_chn)
+{
+	return std::min (chn_idx, nbr_chn - 1);
 }
 
 
