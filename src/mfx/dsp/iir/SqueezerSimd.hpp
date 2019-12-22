@@ -186,7 +186,7 @@ float	SqueezerSimd <BR, LFOP>::process_sample (float x)
 	if (BR)
 	{
 		const float    fdbk_i =
-			fstb::conv_int_fast (fdbk * _br_scale_inv) * _br_scale;
+			fstb::trunc_int (fdbk * _br_scale_inv) * _br_scale;
 		fdbk += (fdbk_i - fdbk) * _br_amt;
 	}
 	const float    xp = x - fdbk;
