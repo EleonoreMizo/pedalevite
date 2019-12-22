@@ -66,6 +66,8 @@ void	Router::set_process_info (double sample_freq, int max_block_size)
 void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 {
 #if 0
+	// We still keep the old routing method to be on the safe side
+	// if something goes wrong during the development.
 	create_routing_chain (doc, plugin_pool);
 #else
 	create_routing_graph (doc, plugin_pool);
@@ -905,7 +907,9 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		int            main_nbr_i = 1;
 		int            main_nbr_o = 1;
 		int            main_nbr_s = 0;
+#if ! defined (NDEBUG)
 		bool           gen_audio_flag = false;
+#endif
 		if (slot_type == CnxEnd::SlotType_DLY)
 		{
 			// Delay plug-in
@@ -914,7 +918,9 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 			pi_id_main = dly._pi_id;
 			latency    = dly._comp_delay;
 			dly._comp_delay = 0;
+#if ! defined (NDEBUG)
 			gen_audio_flag  = true;
+#endif
 		}
 		else
 		{
@@ -924,7 +930,9 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 			pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
 			if (pi_id_main >= 0)
 			{
+#if ! defined (NDEBUG)
 				gen_audio_flag = slot._gen_audio_flag;
+#endif
 
 				const piapi::PluginDescInterface &   desc_main =
 					*plugin_pool.use_plugin (pi_id_main)._desc_ptr;
@@ -970,7 +978,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		main_side_i._nbr_chn_tot = nbr_chn_i * nbr_pins_ctx_i;
 		pi_ctx._mix_in_arr.resize (main_side_i._nbr_chn_tot);
 
-		const bool     mix_flag = collects_mix_source_buffers (
+		collects_mix_source_buffers (
 			ctx, buf_alloc, categ_list, node_info,
 			main_side_i, nbr_pins_ctx_i, nbr_chn_i,
 			pi_ctx._mix_in_arr
@@ -1054,7 +1062,9 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 
 		if (pi_id_mix >= 0)
 		{
+#if ! defined (NDEBUG)
 			assert (gen_audio_flag);
+#endif
 			ProcessingContextNode & ctx_node_mix = pi_ctx._node_arr [PiType_MIX];
 
 			ctx_node_mix._aux_param_flag = true;
@@ -1202,7 +1212,7 @@ void	Router::check_source_nodes (Document &doc, const PluginPool &plugin_pool, B
 
 
 
-bool	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const
+void	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const
 {
 	bool           mix_flag = false;
 	const int      nbr_pins_cnx = int (node_info._cnx_src_list.size ());
@@ -1296,8 +1306,6 @@ bool	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_
 	{
 		mix_in_arr.clear ();
 	}
-
-	return mix_flag;
 }
 
 
@@ -1359,10 +1367,8 @@ int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &cate
 	;	slot_pos < int (categ_list [CnxEnd::SlotType_NORMAL].size ())
 	;	++ slot_pos)
 	{
-		const NodeInfo &  node_info =
-			categ_list [CnxEnd::SlotType_NORMAL] [slot_pos];
-		const Slot &   slot         = doc._slot_list [slot_pos];
-		const int      pi_id_main   = slot._component_arr [PiType_MAIN]._pi_id;
+		const Slot &   slot       = doc._slot_list [slot_pos];
+		const int      pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
 		if (pi_id_main >= 0)
 		{
 			const int      nbr_reg_sig =
