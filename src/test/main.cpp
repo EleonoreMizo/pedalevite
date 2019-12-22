@@ -5,6 +5,7 @@
 #include "fstb/msg/QueueRetMgr.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
+#include "fstb/fnc.h"
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
 #include "mfx/doc/Setup.h"
@@ -1744,6 +1745,74 @@ int	test_file_write_fs_ro ()
 
 
 
+int	test_conv_int_fast ()
+{
+	printf ("Testing fstb::conv_int_fast():\n");
+
+	bool           trunc_flag = true;
+	bool           round_flag = true;
+	bool           rnda0_flag = true;
+	bool           rnd20_flag = true;
+	bool           floor_flag = true;
+	for (int k = -8; k <= 8; ++k)
+	{
+		const float    v_flt = k * 0.5f;
+		const int      v_int = fstb::conv_int_fast (v_flt);
+		printf ("%+6.2f -> %+3d\n", v_flt, v_int);
+
+		if (trunc (v_flt) != v_int)
+		{
+			trunc_flag = false;
+		}
+		if (int (floor (v_flt + 0.5f)) != v_int)
+		{
+			round_flag = false;
+		}
+		if (lround (v_flt) != v_int)
+		{
+			rnda0_flag = false;
+		}
+		if (   int (floor (v_flt     + 0.5f)) != v_int
+		    && int (floor (v_flt * 2 + 0.5f)) != v_int * 2 + 1)
+		{
+			rnd20_flag = false;
+		}
+		if (int (floor (v_flt)) != v_int)
+		{
+			floor_flag = false;
+		}
+	}
+	printf ("Mode: ");
+	if (trunc_flag)
+	{
+		printf ("trunc\n");
+	}
+	else if (round_flag)
+	{
+		printf ("exact round\n");
+	}
+	else if (rnda0_flag)
+	{
+		printf ("round and half-way case away from 0\n");
+	}
+	else if (rnd20_flag)
+	{
+		printf ("round and half-way case to the nearest even integer\n");
+	}
+	else if (floor_flag)
+	{
+		printf ("floor\n");
+	}
+	else
+	{
+		printf ("unknown\n");
+	}
+
+	return 0;
+}
+
+
+
 int main (int argc, char *argv [])
 {
 	fstb::unused (argc, argv);
@@ -1751,6 +1820,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 1
+	if (ret_val == 0) ret_val = test_conv_int_fast ();
+#endif
 
 #if 0
 	#if fstb_IS (SYS, LINUX)
@@ -1776,7 +1849,7 @@ int main (int argc, char *argv [])
 	#endif
 #endif
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestApprox::perform_test ();
 #endif
 
