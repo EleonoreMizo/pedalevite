@@ -540,7 +540,7 @@ ToolsSimd::VectF32	ToolsSimd::round (VectF32 v)
 ToolsSimd::VectF32	ToolsSimd::abs (VectF32 v)
 {
 #if fstb_IS (ARCHI, X86)
-	return _mm_andnot_ps (_mm_set1_ps (-0.f), v);
+	return _mm_andnot_ps (signbit_mask_f32 (), v);
 #elif fstb_IS (ARCHI, ARM)
 	return vabsq_f32 (v);
 #endif // ff_arch_CPU
@@ -565,7 +565,8 @@ ToolsSimd::VectF32	ToolsSimd::signbit (VectF32 v)
 ToolsSimd::VectF32	ToolsSimd::signbit_mask_f32 ()
 {
 #if fstb_IS (ARCHI, X86)
-	return _mm_set1_ps (-0.f);
+//	return _mm_set1_ps (-0.f);
+	return _mm_castsi128_ps (_mm_set1_epi32 (0x80000000));
 #elif fstb_IS (ARCHI, ARM)
 	return vreinterpretq_f32_u32 (vdupq_n_u32 (0x80000000U)); 
 #endif // ff_arch_CPU
