@@ -54,6 +54,8 @@ inline int     floor_int (double x);
 inline int64_t floor_int64 (double x);
 inline int     ceil_int (double x);
 template <class T>
+inline int     trunc_int (T x);
+template <class T>
 inline int     conv_int_fast (T x);
 template <class T>
 inline bool    is_null (T val, T eps = T (1e-9));

@@ -358,6 +358,18 @@ int	ceil_int (double x)
 
 
 template <class T>
+int	trunc_int (T x)
+{
+#if (fstb_ARCHI == fstb_ARCHI_X86) && (fstb_WORD_SIZE == 32)
+	return _mm_cvtt_ss2si (_mm_set1_ps (float (x)));
+#else
+	return int (x);
+#endif
+}
+
+
+
+template <class T>
 int	conv_int_fast (T x)
 {
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
