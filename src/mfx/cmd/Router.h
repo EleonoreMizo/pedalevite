@@ -70,8 +70,6 @@ protected:
 
 private:
 
-	typedef std::map <CnxEnd, int> MapCnxPerPin;
-
 	class CnxInfo
 	{
 	public:
@@ -120,9 +118,10 @@ private:
 	void           check_source_nodes (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, NodeInfo &node_info);
 	void           collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const;
 	void           free_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr);
+	const ProcessingContextNode::Side &
+	               use_source_side (const NodeCategList &categ_list, const ProcessingContext &ctx, const Cnx &cnx_src) const;
 	int            count_nbr_signal_buf (const Document &doc, const NodeCategList &categ_list) const;
 
-	static void    count_nbr_cnx_per_input_pin (MapCnxPerPin &res_map, const Document::CnxList &graph);
 	static int     clip_channel (int chn_idx, int nbr_chn);
 
 	// Sampling rate, Hz. > 0. 0 = not known yet
@@ -135,10 +134,6 @@ private:
 	int            _nbr_slots      = 0; // From Document::_slot_list
 	int            _nbr_a_src      = 1; // Number of audio input pins
 	int            _nbr_a_dst      = 1; // Number of audio output pins
-
-	// [input pin] = number of incoming connections. After running the analysis,
-	// it only contains pins with multiple connections
-	MapCnxPerPin   _cnx_per_pin_in;
 
 	// Same as Document::_cnx_list, but includes delay plug-ins
 	Document::CnxList

@@ -341,7 +341,11 @@ void	Router::create_routing_graph (Document &doc, PluginPool &plugin_pool)
 		break;
 	}
 
+	// We probably need to insert additional delays on specific connections
+	// to compensate for the plug-in latencies.
 	add_aux_plugins (doc, plugin_pool);
+
+	// Now we can create the roadmap which will be sent to the audio thread.
 	create_graph_context (doc, plugin_pool);
 }
 
@@ -354,8 +358,11 @@ void	Router::make_graph_from_chain (Document &doc)
 	doc._cnx_list.clear ();
 
 	const int         nbr_slots = int (doc._slot_list.size ());
+
+	// This is the current source for the audio processing
 	int               slot_src  = 0;
 	CnxEnd::SlotType  slot_type = CnxEnd::SlotType_IO;
+
 	for (int slot_pos = 0; slot_pos < nbr_slots; ++slot_pos)
 	{
 		const Slot &   slot = doc._slot_list [slot_pos];
@@ -401,9 +408,6 @@ void	Router::add_aux_plugins (Document &doc, PluginPool &plugin_pool)
 	prepare_graph_for_latency_analysis (doc);
 	_lat_algo.run ();
 
-	// Finds multiple connections to single input pins
-	count_nbr_cnx_per_input_pin (_cnx_per_pin_in, doc._cnx_list);
-
 	// Inserts required plug-ins: delays for latency compensation
 	add_aux_plugins_delays (doc, plugin_pool);
 
@@ -414,6 +418,7 @@ void	Router::add_aux_plugins (Document &doc, PluginPool &plugin_pool)
 
 
 
+// See conv_doc_slot_to_lat_node_index () for the node order in _lat_algo
 void	Router::prepare_graph_for_latency_analysis (const Document &doc)
 {
 	_lat_algo.reset ();
@@ -428,6 +433,7 @@ void	Router::prepare_graph_for_latency_analysis (const Document &doc)
 		const Cnx &    cnx_doc = doc._cnx_list [cnx_pos];
 		lat::Cnx &     cnx_lat = _lat_algo.use_cnx (cnx_pos);
 
+		// What is an input for a node is an output for a connection
 		int            node_idx_src =
 			conv_doc_slot_to_lat_node_index (piapi::Dir_IN , cnx_doc);
 		cnx_lat.set_node (piapi::Dir_OUT, node_idx_src);
@@ -506,7 +512,8 @@ int	Router::conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx) con
 		}
 		break;
 	case CnxEnd::SlotType_DLY:
-		// These kinds of slot shouldn't appear here.
+		// These kinds of slot should not appear here.
+		// They are not inserted yet.
 		assert (false);
 		break;
 	default:
@@ -532,6 +539,9 @@ int	Router::conv_io_pin_to_lat_node_index (piapi::Dir dir, int pin) const
 
 
 
+// When we add delay plug-ins, we should take care to ensure a continuity
+// between the successive configurations. We try to use the same delays
+// in the same connections, so minor changes in the graph are glitch-free.
 void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 {
 	// Lists the connections requiring a compensation delay.
@@ -647,6 +657,9 @@ void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 // It is registred in the Document object as "in use".
 PluginAux &	Router::create_plugin_aux (Document &doc, PluginPool &plugin_pool, Document::PluginAuxList &aux_list, std::string model)
 {
+	// Currently we only support delays as auxiliary plug-ins
+	assert (model == Cst::_plugin_dly);
+
 	aux_list.resize (aux_list.size () + 1);
 	PluginAux &    plug = aux_list.back ();
 
@@ -669,6 +682,7 @@ PluginAux &	Router::create_plugin_aux (Document &doc, PluginPool &plugin_pool, D
 
 
 
+// Generates additional connections to _cnx_list.
 void	Router::connect_delays (Document &doc)
 {
 	const int      nbr_plug = int (doc._plugin_dly_list.size ());
@@ -695,12 +709,26 @@ void	Router::connect_delays (Document &doc)
 
 
 
+/*
+Graph course starts from the sink nodes and traces back recursively up to
+the source nodes. ProcessingContextNode are created during the down-stream
+descent (end of the recursion) so their order correspounds to the processing
+order.
+
+Buffers are allocated on request and deallocated when their use is terminated
+during the graph traversal. Audio input and output buffers should stay
+allocated during the traversal. They are freed only at the end.
+Signal buffers stay allocated too.
+*/
+
 void	Router::create_graph_context (Document &doc, PluginPool &plugin_pool)
 {
 	NodeCategList  categ_list;
 	init_node_categ_list (doc, categ_list);
 
 	BufAlloc       buf_alloc (Cst::BufSpecial_NBR_ELT);
+
+	// Make sure audio input buffers are allocated
 	allocate_buf_audio_i (doc, buf_alloc);
 
 	// First, visit all plug-ins without output connection.
@@ -721,7 +749,7 @@ void	Router::create_graph_context (Document &doc, PluginPool &plugin_pool)
 		}
 	}
 
-	// Now, starts from the audio output pins
+	// Now, starts the traversal from the audio output pins
 	for (auto &cnx_pin : categ_list [CnxEnd::SlotType_IO] [0]._cnx_src_list)
 	{
 		for (auto &cnx : cnx_pin)
@@ -736,6 +764,8 @@ void	Router::create_graph_context (Document &doc, PluginPool &plugin_pool)
 		}
 	}
 
+	// Allocates output buffers if necessary, and add a reference for
+	// all of them to make sure they are kept allocated
 	allocate_buf_audio_o (doc, buf_alloc, categ_list);
 
 	// Deallocates audio input and output buffers (for sanity checks)
@@ -747,6 +777,9 @@ void	Router::create_graph_context (Document &doc, PluginPool &plugin_pool)
 
 
 
+// categ_list is an internal node list, sorted by categories.
+// A node is a plug-in, aux or not, or an audio input or output.
+// Connections are given by _cnx_list.
 void	Router::init_node_categ_list (const Document &doc, NodeCategList &categ_list) const
 {
 	for (auto &categ : categ_list)
@@ -793,6 +826,8 @@ void	Router::init_node_categ_list (const Document &doc, NodeCategList &categ_lis
 
 
 
+// We allocate only buffers we need, given the pin configuration.
+// Mixing or channel replication is handled by WorldAudio.
 void	Router::allocate_buf_audio_i (Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
@@ -810,6 +845,7 @@ void	Router::allocate_buf_audio_i (Document &doc, BufAlloc &buf_alloc)
 
 
 
+// We allocate only buffers we need, given the pin configuration.
 void	Router::allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list)
 {
 	const NodeInfo &  node_info = categ_list [CnxEnd::SlotType_IO] [0];
@@ -831,7 +867,7 @@ void	Router::allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const Nod
 		ctx._interface_mix
 	);
 
-	// Keeps the destination buffers allocated
+	// Keeps all the destination buffers allocated
 	for (int chn_cnt = 0; chn_cnt < audio_o._nbr_chn_tot; ++chn_cnt)
 	{
 		buf_alloc.use_more_if_std (audio_o._buf_arr [chn_cnt]);
@@ -847,6 +883,7 @@ void	Router::allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const Nod
 
 
 
+// Inverse of allocate_buf_audio_i
 void	Router::free_buf_audio_i (Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
@@ -861,6 +898,7 @@ void	Router::free_buf_audio_i (Document &doc, BufAlloc &buf_alloc)
 
 
 
+// Inverse of allocate_buf_audio_o
 void	Router::free_buf_audio_o (Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
@@ -875,7 +913,13 @@ void	Router::free_buf_audio_o (Document &doc, BufAlloc &buf_alloc)
 
 
 
-// Visited node is the source of the connection
+/*
+Recursive traversal of the nodes.
+
+
+There is nothing to do if the node has already been visited, buffers
+are already allocated.
+*/
 void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, CnxEnd::SlotType slot_type, int slot_pos)
 {
 	assert (   slot_type == CnxEnd::SlotType_NORMAL
@@ -886,7 +930,11 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 	// Node not visited yet ?
 	if (! node_info._visit_flag)
 	{
+		// Recursive traversal.
 		// This will update the channel count, for the input
+		// On the output, node_info._nbr_chn will contain the number of input
+		// channels, temporarily. It will be updated later with the number of
+		// output channels.
 		check_source_nodes (doc, plugin_pool, buf_alloc, categ_list, node_info);
 
 		ProcessingContext &  ctx = *doc._ctx_sptr;
@@ -944,12 +992,21 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 				nbr_chn_o  = nbr_chn_i;
 				if (out_st_flag && ! slot._force_mono_flag)
 				{
+					// At this time the number of channels can be only 1 or 2.
+					// So the number of channels for the audio output will
+					// perfectly limit the number of chan for the plug-in output:
+					// Either we stay in mono up to the end, either we go directly
+					// stereo if the audio output is stereo.
 					nbr_chn_o = ChnMode_get_nbr_chn (doc._chn_mode, piapi::Dir_OUT);
 				}
 			}
 		}
+
+		// Now node_info._nbr_chn contains the number of output channels.
 		node_info._nbr_chn = nbr_chn_o;
 
+		// Number of pins used for the buffer allocations, and more specifically
+		// for the size of the buffer lists.
 		const int   nbr_pins_ctx_i = std::max (nbr_pins_i, main_nbr_i);
 		const int   nbr_pins_ctx_o = std::max (nbr_pins_o, main_nbr_o);
 
@@ -963,7 +1020,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 
 		ProcessingContextNode & ctx_node_main = pi_ctx._node_arr [PiType_MAIN];
 		ctx_node_main._pi_id = pi_id_main;
-		pi_ctx._mix_in_arr.clear ();
+		pi_ctx._mix_in_arr.clear (); // Default: no mix
 
 		ProcessingContextNode::Side & main_side_i =
 			ctx_node_main._side_arr [Dir_IN ];
@@ -976,7 +1033,6 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		// Inputs
 		main_side_i._nbr_chn     = (main_nbr_i > 0) ? nbr_chn_i : 0;
 		main_side_i._nbr_chn_tot = nbr_chn_i * nbr_pins_ctx_i;
-		pi_ctx._mix_in_arr.resize (main_side_i._nbr_chn_tot);
 
 		collects_mix_source_buffers (
 			ctx, buf_alloc, categ_list, node_info,
@@ -987,9 +1043,12 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		// Outputs
 		main_side_o._nbr_chn     = (main_nbr_o > 0) ? nbr_chn_o : 0;
 		main_side_o._nbr_chn_tot = nbr_chn_o * nbr_pins_ctx_o;
+
 		for (int pin_cnt = 0; pin_cnt < nbr_pins_ctx_o; ++pin_cnt)
 		{
 			const int      chn_ofs = pin_cnt * nbr_chn_o;
+
+			// Counts the number of destination nodes for this pin
 			int            nbr_dst = 0;
 			if (pi_ctx._mixer_flag)
 			{
@@ -1000,15 +1059,19 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 				nbr_dst = node_info._pin_dst_list [pin_cnt]._dst_count;
 			}
 
+			// Allocates buffers for this pin, depending on various situations.
+			// In case of allocation, we reference them nbr_times. They will be
+			// released each time a destination node is visited during the input
+			// buffer allocation (even if the node is not really using them).
 			for (int chn_cnt = 0; chn_cnt < nbr_chn_o; ++chn_cnt)
 			{
 				int            buf = Cst::BufSpecial_TRASH;
 				if (nbr_dst > 0)
 				{
+					// No plug-in: acts like a bypass on the first input pin by
+					// reporting the buffers on the outputs (no copy needed)
 					if (pi_id_main < 0)
 					{
-						// No plug-in: acts like a bypass on the first input pin
-						// by reporting the buffers (no copy needed)
 						if (main_side_i._nbr_chn == 0)
 						{
 							buf = Cst::BufSpecial_SILENCE;
@@ -1019,11 +1082,20 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 								clip_channel (chn_cnt, main_side_i._nbr_chn);
 							buf = main_side_i._buf_arr [chn_idx];
 						}
-						buf_alloc.use_more_if_std (nbr_dst);
+						buf_alloc.use_more_if_std (buf, nbr_dst);
 					}
+
+					// Ensures first that the pin exists on the plug-in side.
 					else if (pin_cnt < main_nbr_o)
 					{
 						buf = buf_alloc.alloc (nbr_dst);
+					}
+
+					// The pin does not exist on the plug-in but it content may be
+					// used by the destination, so we use a silent buffer here.
+					else
+					{
+						buf = Cst::BufSpecial_SILENCE;
 					}
 				}
 				main_side_o._buf_arr [chn_ofs + chn_cnt] = buf;
@@ -1041,15 +1113,21 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 			{
 				ProcessingContextNode::SigInfo & sig_info =
 					ctx_node_main._sig_buf_arr [sig];
+
+				// Default: signal is not used and goes to trash
 				sig_info._buf_index  = Cst::BufSpecial_TRASH;
 				sig_info._port_index = -1;
 
+				// OK, we may be actually using it.
 				if (sig < nbr_reg_sig)
 				{
 					const int      port_index =
 						slot._component_arr [PiType_MAIN]._sig_port_list [sig];
 					if (port_index >= 0)
 					{
+						// We don't know where the signals are used, so we keep them
+						// allocated during the whole graph traversal. This could be
+						// improved, but this is not necessary now.
 						sig_info._buf_index  = buf_alloc.alloc ();
 						sig_info._port_index = port_index;
 					}
@@ -1067,7 +1145,8 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 #endif
 			ProcessingContextNode & ctx_node_mix = pi_ctx._node_arr [PiType_MIX];
 
-			ctx_node_mix._aux_param_flag = true;
+			// The D/W mixer may need additional configuration and processing.
+			ctx_node_mix._aux_param_flag = (latency > 0 || nbr_pins_o > 1);
 			ctx_node_mix._comp_delay     = latency;
 			ctx_node_mix._pin_mult       = nbr_pins_o;
 
@@ -1079,21 +1158,26 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 
 			ctx_node_mix._nbr_sig = 0;
 
-			// Bypass output for the main plug-in
+			// The main plug-in may generate an additional bypassed output.
+			// Allocates channels for this operation.
 			for (int chn = 0; chn < main_side_o._nbr_chn_tot; ++chn)
 			{
 				pi_ctx._bypass_buf_arr [chn] = buf_alloc.alloc ();
 			}
 
-			// Dry/wet input
-			mix_side_i._nbr_chn     =                  nbr_chn_o;
+			// Dry/wet mixer input
+			// *2 because the number of input pins of the D/W mixer is the double
+			// of the output plug-in pins (wet and dry for each pin)
+			mix_side_i._nbr_chn     =                      nbr_chn_o;
 			mix_side_i._nbr_chn_tot = nbr_pins_ctx_o * 2 * nbr_chn_o;
 			for (int pin_cnt = 0; pin_cnt < nbr_pins_ctx_o; ++pin_cnt)
 			{
 				const int   ofs_chn_i = pin_cnt * nbr_chn_i;
 				const int   ofs_chn_o = pin_cnt * nbr_chn_o;
+
+				// Input pins are interleaved: wet0, dry0, wet1, dry1...
 				const int   ofs_chn_w = pin_cnt * 2 * nbr_chn_o;
-				const int   ofs_chn_b = ofs_chn_w + nbr_chn_o;
+				const int   ofs_chn_d = ofs_chn_w + nbr_chn_o;
 
 				for (int chn_cnt = 0; chn_cnt < nbr_chn_o; ++chn_cnt)
 				{
@@ -1101,18 +1185,23 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 					mix_side_i._buf_arr [ofs_chn_w + chn_cnt] =
 						main_side_o._buf_arr [ofs_chn_o + chn_cnt];
 
-					// 2nd pin of the pair: dry, main input as default bypass
+					// 2nd pin of the pair: dry, main input as default.
+					// The RT thread will use the bypass buffers instead if they
+					// were filled by the main plug-in.
+					// The number of pins may be different for the input and the
+					// output, so we need silence buffers if we run short on input
+					// pins.
 					int               buf = Cst::BufSpecial_SILENCE;
 					if (pin_cnt < nbr_pins_ctx_i)
 					{
 						const int    chn_idx = clip_channel (chn_cnt, nbr_chn_i);
 						buf = main_side_i._buf_arr [ofs_chn_i + chn_idx];
 					}
-					mix_side_i._buf_arr [ofs_chn_b + chn_cnt] = buf;
+					mix_side_i._buf_arr [ofs_chn_d + chn_cnt] = buf;
 				}
 			}
 
-			// Dry/wet output
+			// Dry/wet mixer output
 			mix_side_o._nbr_chn     =                  nbr_chn_o;
 			mix_side_o._nbr_chn_tot = nbr_pins_ctx_o * nbr_chn_o;
 			for (int pin_cnt = 0; pin_cnt < nbr_pins_ctx_o; ++pin_cnt)
@@ -1141,20 +1230,24 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 
 		if (slot_type == CnxEnd::SlotType_DLY)
 		{
+			assert (latency > 0);
 			ctx_node_main._aux_param_flag = true;
 			ctx_node_main._comp_delay     = latency;
 			ctx_node_main._pin_mult       = nbr_pins_ctx_i;
 		}
 
 		// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-		// Frees input buffers
+		// Frees buffers
 
+		// Input buffers for the main plug-in
 		free_source_buffers (
 			ctx, buf_alloc, categ_list, node_info,
 			main_side_i, nbr_pins_ctx_i, nbr_chn_i,
 			pi_ctx._mix_in_arr
 		);
 
+		// Output buffers for the main plug-in in case of dry/wet mixer.
+		// The real output buffers are the d/w mixer ones.
 		if (pi_id_mix >= 0)
 		{
 			for (int chn = 0; chn < main_side_o._nbr_chn_tot; ++chn)
@@ -1239,25 +1332,10 @@ void	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_
 			for (int src_cnt = 0; src_cnt < nbr_src; ++src_cnt)
 			{
 				const Cnx &       cnx_src  = pin_src_arr [src_cnt];
-				const NodeInfo &  node_src =
-					categ_list [cnx_src._src._slot_type] [cnx_src._src._slot_pos];
-				const ProcessingContextNode::Side * src_side_o_ptr = 0;
-				if (cnx_src._src._slot_type == CnxEnd::SlotType_IO)
-				{
-					src_side_o_ptr = &ctx._interface_ctx._side_arr [Dir_IN];
-				}
-				else
-				{
-					assert (node_src._ctx_index >= 0);
-					const ProcessingContext::PluginContext & pi_ctx_src =
-						ctx._context_arr [node_src._ctx_index];
-					const ProcessingContextNode & ctx_src =
-						  (pi_ctx_src._mixer_flag)
-						? pi_ctx_src._node_arr [PiType_MIX ]
-						: pi_ctx_src._node_arr [PiType_MAIN];
-					src_side_o_ptr = &ctx_src._side_arr [Dir_OUT];
-				}
-				const int      nbr_chn_src = src_side_o_ptr->_nbr_chn;
+				const ProcessingContextNode::Side & src_side_o =
+					use_source_side (categ_list, ctx, cnx_src);
+
+				const int      nbr_chn_src = src_side_o._nbr_chn;
 
 				if (nbr_chn_src > 0)
 				{
@@ -1269,7 +1347,7 @@ void	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_
 
 						const int      chn_idx = clip_channel (chn_cnt, nbr_chn_src);
 						const int      buf     =
-							src_side_o_ptr->use_buf (cnx_src._src._pin, chn_idx);
+							src_side_o.use_buf (cnx_src._src._pin, chn_idx);
 						mix_in.push_back (buf);
 						nbr_real_src = std::max (nbr_real_src, int (mix_in.size ()));
 					}
@@ -1334,16 +1412,9 @@ void	Router::free_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, c
 		{
 			if (cnx_src._src._slot_type != CnxEnd::SlotType_IO)
 			{
-				const NodeInfo &  node_src =
-					categ_list [cnx_src._src._slot_type] [cnx_src._src._slot_pos];
-				const ProcessingContext::PluginContext & pi_ctx_src =
-					ctx._context_arr [node_src._ctx_index];
-				const ProcessingContextNode & ctx_src =
-						(pi_ctx_src._mixer_flag)
-					? pi_ctx_src._node_arr [PiType_MIX ]
-					: pi_ctx_src._node_arr [PiType_MAIN];
 				const ProcessingContextNode::Side & src_side_o =
-					ctx_src._side_arr [Dir_OUT];
+					use_source_side (categ_list, ctx, cnx_src);
+
 				const int      nbr_chn_src = src_side_o._nbr_chn;
 				const int      chn_ofs_src = cnx_src._src._pin * nbr_chn_src;
 				for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
@@ -1355,6 +1426,34 @@ void	Router::free_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, c
 			}
 		}
 	}
+}
+
+
+
+const ProcessingContextNode::Side &	Router::use_source_side (const NodeCategList &categ_list, const ProcessingContext &ctx, const Cnx &cnx_src) const
+{
+	const NodeInfo &  node_src =
+		categ_list [cnx_src._src._slot_type] [cnx_src._src._slot_pos];
+	const ProcessingContextNode::Side * src_side_o_ptr = 0;
+
+	if (cnx_src._src._slot_type == CnxEnd::SlotType_IO)
+	{
+		src_side_o_ptr = &ctx._interface_ctx._side_arr [Dir_IN];
+	}
+
+	else
+	{
+		assert (node_src._ctx_index >= 0);
+		const ProcessingContext::PluginContext & pi_ctx_src =
+			ctx._context_arr [node_src._ctx_index];
+		const ProcessingContextNode & ctx_src =
+				(pi_ctx_src._mixer_flag)
+			? pi_ctx_src._node_arr [PiType_MIX ]
+			: pi_ctx_src._node_arr [PiType_MAIN];
+		src_side_o_ptr = &ctx_src._side_arr [Dir_OUT];
+	}
+
+	return *src_side_o_ptr;
 }
 
 
@@ -1378,35 +1477,6 @@ int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &cate
 	}
 
 	return nbr_buf;
-}
-
-
-
-void	Router::count_nbr_cnx_per_input_pin (MapCnxPerPin &res_map, const Document::CnxList &graph)
-{
-	res_map.clear ();
-
-	// Counts all connections
-	for (auto &cnx : graph)
-	{
-		const CnxEnd & pin = cnx._dst;
-		auto           p   = res_map.insert (std::make_pair (pin, 0));
-		++ p.first->second;
-	}
-
-	// Now removes single connections
-	MapCnxPerPin::iterator  it = res_map.begin ();
-	while (it != res_map.end ())
-	{
-		if (it->second <= 1)
-		{
-			it = res_map.erase (it);
-		}
-		else
-		{
-			++ it;
-		}
-	}
 }
 
 
