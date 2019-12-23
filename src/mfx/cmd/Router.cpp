@@ -1478,8 +1478,6 @@ int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &cate
 			int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
 		for (int sig = 0; sig < ctx_node_main._nbr_sig; ++sig)
 		{
-			const ProcessingContextNode::SigInfo & sig_info =
-				ctx_node_main._sig_buf_arr [sig];
 			const int      port_index =
 				slot._component_arr [PiType_MAIN]._sig_port_list [sig];
 			if (sig < nbr_reg_sig && port_index >= 0)
