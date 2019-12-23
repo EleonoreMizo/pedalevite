@@ -1458,21 +1458,34 @@ const ProcessingContextNode::Side &	Router::use_source_side (const NodeCategList
 
 
 
+// This function is used only for debugging purpose.
 int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &categ_list) const
 {
 	int            nbr_buf = 0;
 
-	for (int slot_pos = 0
-	;	slot_pos < int (categ_list [CnxEnd::SlotType_NORMAL].size ())
-	;	++ slot_pos)
+	const ProcessingContext &  ctx = *doc._ctx_sptr;
+	const NodeCateg & categ = categ_list [CnxEnd::SlotType_NORMAL];
+
+	for (int slot_pos = 0; slot_pos < int (categ.size ()); ++ slot_pos)
 	{
-		const Slot &   slot       = doc._slot_list [slot_pos];
-		const int      pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
-		if (pi_id_main >= 0)
+		const NodeInfo &  node_info = categ [slot_pos];
+		assert (node_info._ctx_index >= 0);
+		const ProcessingContext::PluginContext &  pi_ctx =
+			ctx._context_arr [node_info._ctx_index];
+		const ProcessingContextNode & ctx_node_main = pi_ctx._node_arr [PiType_MAIN];
+		const Slot &   slot         = doc._slot_list [slot_pos];
+		const int      nbr_reg_sig  =
+			int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
+		for (int sig = 0; sig < ctx_node_main._nbr_sig; ++sig)
 		{
-			const int      nbr_reg_sig =
-				int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
-			nbr_buf += nbr_reg_sig;
+			const ProcessingContextNode::SigInfo & sig_info =
+				ctx_node_main._sig_buf_arr [sig];
+			const int      port_index =
+				slot._component_arr [PiType_MAIN]._sig_port_list [sig];
+			if (sig < nbr_reg_sig && port_index >= 0)
+			{
+				++ nbr_buf;
+			}
 		}
 	}
 
