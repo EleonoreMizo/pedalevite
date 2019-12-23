@@ -219,7 +219,7 @@ void	Squeezer::do_process_block (ProcInfo &proc)
 			// Drive
 			dsp::mix::Align::copy_1_1_vlrauto (
 				&_buf [0],
-				proc._src_arr [chn_cnt],
+				&proc._src_arr [chn_cnt] [pos],
 				work_len,
 				_drive_gain_old,
 				_drive_gain
@@ -259,7 +259,7 @@ void	Squeezer::do_process_block (ProcInfo &proc)
 
 			// Inverse drive
 			dsp::mix::Align::copy_1_1_vlrauto (
-				proc._dst_arr [chn_cnt],
+				&proc._dst_arr [chn_cnt] [pos],
 				&_buf [0],
 				work_len,
 				_drive_inv_old,
