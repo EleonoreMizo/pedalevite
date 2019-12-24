@@ -353,7 +353,7 @@ void	Router::create_routing_graph (Document &doc, PluginPool &plugin_pool)
 
 // This macro enables a second parallel path (just a single connection) and
 // helps testing mixing features as well as additional compensation delays.
-#undef Router_make_graph_from_chain_TEST 1
+#undef Router_make_graph_from_chain_TEST
 
 // Completes the Document structure to turn the implicit slot chain into
 // a true graph.
