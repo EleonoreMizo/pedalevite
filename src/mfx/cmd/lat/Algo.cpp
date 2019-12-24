@@ -292,7 +292,6 @@ void	Algo::compute_remaining_timestamps ()
 
 bool	Algo::skip_term_nodes_known_timestamps (int &pos, const TermNodeList &tnl)
 {
-	assert (&tnl != 0);
 	assert (pos >= 0);
    assert (pos < tnl._nbr_nodes);
 
@@ -428,7 +427,6 @@ bool	Algo::compute_timestamp_rec (int node_index, piapi::Dir dir)
 
 int	Algo::get_timestamp_at (const Node &node, piapi::Dir dir)
 {
-	assert (&node != 0);
 	assert (node.is_timestamp_set ());
 	assert (dir >= 0);
 	assert (dir < piapi::Dir_NBR_ELT);
@@ -465,9 +463,7 @@ int	Algo::get_biggest_timestamp (long ts_1, long ts_2, piapi::Dir dir)
 
 int	Algo::compute_delay_between (const Node &node_1, const Node &node_2, piapi::Dir node_1_end)
 {
-	assert (&node_1 != 0);
 	assert (node_1.is_timestamp_set ());
-	assert (&node_2 != 0);
 	assert (node_2.is_timestamp_set ());
 	assert (node_1_end >= 0);
 	assert (node_1_end < piapi::Dir_NBR_ELT);

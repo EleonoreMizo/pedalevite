@@ -126,9 +126,6 @@ void	BandSplitAllPassPair <AP0, AP1, VFF>::set_vol_function (VolumeProto vol_ptr
 template <typename AP0, typename AP1, bool VFF>
 void	BandSplitAllPassPair <AP0, AP1, VFF>::split_sample (float &out_1, float &out_2, float sample)
 {
-	assert (&out_1 != 0);
-	assert (&out_2 != 0);
-
 	if (VFF)
 	{
 		sample *= 0.5f;

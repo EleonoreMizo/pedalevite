@@ -51,7 +51,6 @@ namespace lat
 
 int	Tools::get_next_node (const GraphInterface &graph, int node_index, piapi::Dir dir, int ref_index)
 {
-	assert (&graph != 0);
 	assert (node_index >= 0);
 	assert (node_index < graph.get_nbr_nodes ());
 	assert (dir >= 0);
@@ -85,8 +84,6 @@ piapi::Dir	Tools::invert_dir (piapi::Dir dir)
 
 void	Tools::reflect_cnx_on_nodes (GraphInterface &graph)
 {
-	assert (&graph != 0);
-
 	typedef std::array <int, piapi::Dir_NBR_ELT>	NbrCnxPerNode;
 	typedef std::vector <NbrCnxPerNode>          NbrCnxArr;
 

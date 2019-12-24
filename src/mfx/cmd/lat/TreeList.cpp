@@ -48,8 +48,6 @@ namespace lat
 
 void	TreeList::init (GraphInterface &graph)
 {
-	assert (&graph != 0);
-
 	const int      nbr_nodes = graph.get_nbr_nodes ();
 	_info_list.clear ();             // Max nbr trees = nbr nodes
 	_node_list.resize (nbr_nodes);
@@ -149,7 +147,6 @@ TreeList::TreeInfo::TreeInfo (int start_index)
 
 void	TreeList::build_rec (GraphInterface &graph, int node_index, int cur_tree)
 {
-	assert (&graph != 0);
 	assert (node_index >= 0);
    assert (node_index < graph.get_nbr_nodes ());
 	assert (cur_tree >= 0);

@@ -246,7 +246,6 @@ int	TestLatAlgo::test_full ()
 
 void	TestLatAlgo::build_graph (mfx::cmd::lat::Algo &graph, const CnxInfo cnx_info_arr [], const NodeInfo node_info_arr [])
 {
-	assert (&graph != 0);
 	assert (cnx_info_arr != 0);
 
 	// Counts connexions
@@ -346,7 +345,6 @@ void	TestLatAlgo::build_graph (mfx::cmd::lat::Algo &graph, const CnxInfo cnx_inf
 
 void	TestLatAlgo::build_graph_random (mfx::cmd::lat::Algo &graph, int nbr_nodes, int nbr_cnx)
 {
-	assert (&graph != 0);
 	assert (nbr_nodes >= 0);
 	assert (nbr_cnx >= 0);
 	assert (nbr_nodes <= RAND_MAX);
@@ -441,8 +439,6 @@ void	TestLatAlgo::build_graph_random (mfx::cmd::lat::Algo &graph, int nbr_nodes,
 
 void	TestLatAlgo::display_tree_list (const mfx::cmd::lat::TreeList &tree_list)
 {
-	assert (&tree_list != 0);
-
 	const int      nbr_trees = tree_list.get_nbr_trees ();
 	printf ("%d trees:\n", nbr_trees);
 
@@ -467,8 +463,6 @@ void	TestLatAlgo::display_tree_list (const mfx::cmd::lat::TreeList &tree_list)
 
 void	TestLatAlgo::display_graph (const mfx::cmd::lat::GraphInterface &graph)
 {
-	assert (&graph != 0);
-
 	const int      nbr_nodes = graph.get_nbr_nodes ();
 	const int      nbr_cnx   = graph.get_nbr_cnx ();
 
@@ -504,8 +498,6 @@ void	TestLatAlgo::display_graph (const mfx::cmd::lat::GraphInterface &graph)
 
 int	TestLatAlgo::check_graph (const mfx::cmd::lat::GraphInterface &graph)
 {
-	assert (&graph != 0);
-
 	int            ret_val = 0;
 
 	const int      nbr_nodes = graph.get_nbr_nodes ();
@@ -533,10 +525,8 @@ int	TestLatAlgo::check_graph (const mfx::cmd::lat::GraphInterface &graph)
 
 int	TestLatAlgo::check_graph_rec (const mfx::cmd::lat::GraphInterface &graph, int node_index, int cur_ts, std::vector <NodeChk> &nc_arr)
 {
-	assert (&graph != 0);
 	assert (node_index >= 0);
 	assert (node_index < graph.get_nbr_nodes ());
-	assert (&nc_arr != 0);
 
 	int            ret_val = 0;
 
