@@ -160,9 +160,7 @@ int	Squeezer::do_reset (double sample_freq, int max_buf_len, int &latency)
 	const double   dly_21 = hiir::PolyphaseIir2Designer::compute_group_delay (
 		coef_21, _nbr_coef_21, f_fs * 0.5f , false
 	);
-	latency = fstb::round_int (
-		2 * (0.5f * dly_21 + 0.25f * dly_42) / sample_freq
-	);
+	latency = fstb::round_int (2 * (0.5f * dly_21 + 0.25f * dly_42));
 
 	return Err_OK;
 }

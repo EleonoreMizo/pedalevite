@@ -130,7 +130,7 @@ int	DistoSimple::do_reset (double sample_freq, int max_buf_len, int &latency)
 	const double   dly_21 = hiir::PolyphaseIir2Designer::compute_group_delay (
 		coef_21, _nbr_coef_21, f_fs * 0.5f , false
 	);
-	latency = fstb::round_int (_inv_fs * (0.5f * dly_21 + 0.25f * dly_42) * 2);
+	latency = fstb::round_int ((0.5f * dly_21 + 0.25f * dly_42) * 2);
 
 	static const float   b_s [3] = { 1, 0, 0 };
 	static const float   a_s [3] = { 1, float (fstb::SQRT2), 1 };

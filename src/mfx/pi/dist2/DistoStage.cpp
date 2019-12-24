@@ -114,7 +114,7 @@ void	DistoStage::reset (double sample_freq, int max_block_size, double &latency)
 	const double   dly_21 = hiir::PolyphaseIir2Designer::compute_group_delay (
 		&_coef_21 [0], _nbr_coef_21, f_fs * 0.5f , false
 	);
-	latency = _inv_fs * (0.5f * dly_21 + 0.25f * dly_42) * 2;
+	latency = (0.5f * dly_21 + 0.25f * dly_42) * 2;
 }
 
 
