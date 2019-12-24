@@ -64,6 +64,7 @@ public:
 	bool           is_ready () const;
 
 	void           set_delay_time (double delay_time, int transition_time);
+	void           clip_times ();
 	void           read_data (float dest_ptr [], int nbr_spl, int src_pos);
 	bool           is_time_ramping () const;
 	bool           is_time_change_programmed () const;

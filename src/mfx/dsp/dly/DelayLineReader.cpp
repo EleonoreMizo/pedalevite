@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/dly/DelayLineReader.h"
 #include "mfx/dsp/dly/DelayLineReadInterface.h"
@@ -137,6 +138,21 @@ void	DelayLineReader::set_delay_time (double delay_time, int transition_time)
 	{
 		setup_immediate_transition (delay_time, transition_time);
 	}
+}
+
+
+
+// Makes sure everything is right
+void	DelayLineReader::clip_times ()
+{
+	assert (is_ready ());
+	const double   dly_min = _delay_line_ptr->get_min_delay_time ();
+	const double   dly_max = _delay_line_ptr->get_max_delay_time ();
+
+	_time_cur  = fstb::limit (_time_cur , dly_min, dly_max);
+	_time_beg  = fstb::limit (_time_beg , dly_min, dly_max);
+	_time_end  = fstb::limit (_time_end , dly_min, dly_max);
+	_time_prog = fstb::limit (_time_prog, dly_min, dly_max);
 }
 
 
@@ -261,6 +277,7 @@ void	DelayLineReader::clear_buffers ()
 	}
 	_time_cur = _time_end;
 	_time_beg = _time_end;
+	clip_times ();
 	_trans_prog = -1;
 	_trans_pos  = -1;
 }

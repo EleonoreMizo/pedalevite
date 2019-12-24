@@ -151,6 +151,11 @@ void	FlanchoChn::set_sample_freq (double sample_freq, bool fast_flag, dsp::rspl:
 
 	update_max_proc_len ();
 	update_mpl_lfo ();
+
+	for (auto &voice : _voice_arr)
+	{
+		voice._dly_reader.clip_times ();
+	}
 }
 
 
@@ -193,6 +198,8 @@ void	FlanchoChn::set_nbr_voices (int nbr_voices)
 			voice._lfo.set_period (_period);
 
 			update_phase (voice, base_phase);
+
+			voice._dly_reader.clip_times ();
 		}
 	}
 
@@ -469,7 +476,6 @@ void	FlanchoChn::clear_buffers ()
 
 		voice._hpf.clear_buffers ();
 	}
-
 
 	_feedback_old = _feedback;
 }
