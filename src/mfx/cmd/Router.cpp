@@ -351,13 +351,22 @@ void	Router::create_routing_graph (Document &doc, PluginPool &plugin_pool)
 
 
 
+// This macro enables a second parallel path (just a single connection) and
+// helps testing mixing features as well as additional compensation delays.
+#undef Router_make_graph_from_chain_TEST 1
+
 // Completes the Document structure to turn the implicit slot chain into
 // a true graph.
 void	Router::make_graph_from_chain (Document &doc)
 {
 	doc._cnx_list.clear ();
 
-	const int         nbr_slots = int (doc._slot_list.size ());
+	const int      nbr_slots = int (doc._slot_list.size ());
+
+#if defined (Router_make_graph_from_chain_TEST)
+	int            slot_src_test = -1;
+	int            slot_dst_test = -1;
+#endif
 
 	// This is the current source for the audio processing
 	int               slot_src  = 0;
@@ -382,6 +391,16 @@ void	Router::make_graph_from_chain (Document &doc)
 			// The plug-in becomes the new source only if it generates audio
 			if (slot._gen_audio_flag)
 			{
+#if defined (Router_make_graph_from_chain_TEST)
+				if (slot_src_test < 0)
+				{
+					slot_src_test = slot_pos;
+				}
+				else
+				{
+					slot_dst_test = slot_pos;
+				}
+#endif
 				slot_type = CnxEnd::SlotType_NORMAL;
 				slot_src  = slot_pos;
 			}
@@ -397,7 +416,28 @@ void	Router::make_graph_from_chain (Document &doc)
 	cnx._dst._slot_pos  = 0;
 	cnx._dst._pin       = 0;
 	doc._cnx_list.push_back (cnx);
+
+#if defined (Router_make_graph_from_chain_TEST)
+	if (nbr_slots >= 2 && slot_src_test >= 0)
+	{
+		// Adds a connection from the output of the first slot to the audio
+		// output
+		cnx._src._slot_type = CnxEnd::SlotType_NORMAL;
+		cnx._src._slot_pos  = slot_src_test;
+		cnx._src._pin       = 0;
+		if (nbr_slots >= 3 && slot_dst_test >= 0)
+		{
+			// The destination becomes the input of the last slot
+			cnx._dst._slot_type = CnxEnd::SlotType_NORMAL;
+			cnx._dst._slot_pos  = slot_dst_test;
+			cnx._dst._pin       = 0;
+		}
+		doc._cnx_list.push_back (cnx);
+	}
+#endif
 }
+
+#undef Router_make_graph_from_chain_TEST
 
 
 
