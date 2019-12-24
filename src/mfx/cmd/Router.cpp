@@ -568,9 +568,9 @@ void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 	{
 		PluginAux &    plug_dly = doc._plugin_dly_list [dly_idx];
 		const auto     it       = cnx_map.find (plug_dly._cnx);
-		const CnxInfo& cnx_info = it->second;
 		if (it != cnx_map.end ())
 		{
+			const CnxInfo& cnx_info = it->second;
 			plug_dly._cnx_index  = cnx_info._cnx_idx;
 
 			// Updates the delay
@@ -589,7 +589,7 @@ void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 		}
 	}
 
-	// Completes the plug-in by reusing the slots scheduled for removal.
+	// Completes the plug-ins by reusing the slots scheduled for removal.
 	int            scan_pos = 0;
 	auto           it       = cnx_map.begin ();
 	while (scan_pos < nbr_dly && it != cnx_map.end ())
@@ -612,14 +612,12 @@ void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 			// Next connection
 			it = cnx_map.erase (it);
 		}
-		else
-		{
-			++ scan_pos;
-		}
+
+		++ scan_pos;
 	}
 
 	// Schedules the unused plug-ins for removal
-	while (scan_pos < nbr_dly)
+	for ( ; scan_pos < nbr_dly; ++ scan_pos)
 	{
 		PluginAux &    plug_dly = doc._plugin_dly_list [scan_pos];
 		if (! plug_dly._cnx.is_valid ())
@@ -692,7 +690,7 @@ void	Router::connect_delays (Document &doc)
 		if (plug_dly._cnx.is_valid ())
 		{
 			_cnx_list.resize (_cnx_list.size () + 1);
-			Cnx            cnx_ins = _cnx_list.back ();
+			Cnx &          cnx_ins = _cnx_list.back ();
 			Cnx &          cnx_old = _cnx_list [plug_dly._cnx_index];
 
 			cnx_ins._src = cnx_old._src;
