@@ -883,10 +883,10 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 								assert (ret_val == piapi::Err_OK);
 								ret_val = ret_val; // -Wunused-variable
 							}
-						}
-						else
-						{
-							latency = details._latency;
+							else
+							{
+								latency = details._latency;
+							}
 						}
 						break;
 					}
