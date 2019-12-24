@@ -570,7 +570,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
 		const PiType   pi_type = static_cast <PiType> (type_cnt);
 		const std::string pi_model =
 			  (pi_type == PiType_MIX)
-			? Cst::_plugin_mix
+			? Cst::_plugin_dwm
 			: slot._pi_model;
 		const piapi::PluginState & def =
 			_model_ptr->use_default_settings (pi_model);

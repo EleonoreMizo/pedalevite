@@ -42,9 +42,11 @@ namespace mfx
 ProcessingContextNode::ProcessingContextNode ()
 :	_pi_id (-1)
 ,	_side_arr ()
-,	_bypass_buf_arr ()
 ,	_sig_buf_arr ()
 ,	_nbr_sig (0)
+,	_aux_param_flag (false)
+,	_comp_delay (0)
+,	_pin_mult (1)
 {
 	for (auto & side : _side_arr)
 	{
@@ -55,11 +57,34 @@ ProcessingContextNode::ProcessingContextNode ()
 			buf_index = -1;
 		}
 	}
+}
 
-	for (auto & buf_index : _bypass_buf_arr)
-	{
-		buf_index = -1;
-	}
+
+
+int &	ProcessingContextNode::Side::use_buf (int pin, int chn)
+{
+	assert (pin >= 0);
+	assert (chn >= 0);
+	assert (chn < _nbr_chn);
+
+	const int      index = pin * _nbr_chn + chn;
+	assert (index < _nbr_chn_tot);
+
+	return _buf_arr [index];
+}
+
+
+
+const int &	ProcessingContextNode::Side::use_buf (int pin, int chn) const
+{
+	assert (pin >= 0);
+	assert (chn >= 0);
+	assert (chn < _nbr_chn);
+
+	const int      index = pin * _nbr_chn + chn;
+	assert (index < _nbr_chn_tot);
+
+	return _buf_arr [index];
 }
 
 

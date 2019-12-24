@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/piapi/Dir.h"
+
 
 
 namespace mfx
@@ -50,6 +52,10 @@ enum ChnMode
 	ChnMode_NBR_ELT
 
 }; // class ChnMode
+
+
+
+int	ChnMode_get_nbr_chn (ChnMode mode, piapi::Dir dir);
 
 
 

@@ -30,9 +30,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/pidet/Param.h"
 #include "mfx/pi/pidet/PitchDetect.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <cassert>
 
@@ -126,7 +128,7 @@ int	PitchDetect::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -138,7 +140,7 @@ void	PitchDetect::do_clean_quick ()
 
 
 
-void	PitchDetect::do_process_block (ProcInfo &proc)
+void	PitchDetect::do_process_block (piapi::ProcInfo &proc)
 {
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)

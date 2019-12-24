@@ -107,7 +107,7 @@ const float	DryWetDesc::_gain_neutral = 0.75f;
 
 std::string	DryWetDesc::do_get_unique_id () const
 {
-	return Cst::_plugin_mix;
+	return Cst::_plugin_dwm;
 }
 
 

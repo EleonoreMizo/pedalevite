@@ -111,8 +111,10 @@ public:
 		BufSpecial_NBR_ELT
 	};
 
+	static const std::string      // Dry-wet mix
+	               _plugin_dwm;
 	static const std::string
-	               _plugin_mix;
+	               _plugin_dly;
 	static const std::string
 	               _plugin_tuner;
 

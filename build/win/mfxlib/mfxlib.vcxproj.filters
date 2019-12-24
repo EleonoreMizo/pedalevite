@@ -256,6 +256,12 @@
     <Filter Include="mfx\hw">
       <UniqueIdentifier>{24662344-e1d5-4373-88f7-f30f21c827c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\dly0">
+      <UniqueIdentifier>{bdb91cdf-45d2-42de-a057-bc43899e7508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\cmd\lat">
+      <UniqueIdentifier>{99c33e30-e740-4bb6-8365-7f18ba802940}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2913,6 +2919,69 @@
     <ClInclude Include="..\..\..\src\mfx\hw\bcm2837.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\BypassState.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\Err.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Algo.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Cnx.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\GraphInterface.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Node.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Tools.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\Router.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\Document.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\PluginAux.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\Cnx.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\CnxEnd.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\CnxEnd.hpp">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\Cnx.hpp">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\cmd\DelayInterface.h">
+      <Filter>mfx\cmd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3994,6 +4063,48 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\Delay.cpp">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\DelayDesc.cpp">
+      <Filter>mfx\pi\dly0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Algo.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\GraphInterface.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp">
+      <Filter>mfx\cmd\lat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\Router.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\Document.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\Plugin.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\PluginAux.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\DelayInterface.cpp">
+      <Filter>mfx\cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ChnMode.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

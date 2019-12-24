@@ -341,7 +341,21 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\Central.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\BufAlloc.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\CentralCbInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Cnx.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Cnx.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\CnxEnd.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\CnxEnd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\DelayInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Document.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Algo.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Cnx.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\GraphInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Node.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\Tools.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\lat\TreeList.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Plugin.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\PluginAux.h" />
+    <ClInclude Include="..\..\..\src\mfx\cmd\Router.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Slot.h" />
     <ClInclude Include="..\..\..\src\mfx\ControlCurve.h" />
     <ClInclude Include="..\..\..\src\mfx\ControlledParam.h" />
@@ -672,6 +686,13 @@
     <ClInclude Include="..\..\..\src\mfx\ModelMsgCmdInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverDefault.h" />
     <ClInclude Include="..\..\..\src\mfx\ModelObserverInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\BypassState.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\Err.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
@@ -1059,10 +1080,22 @@
     <ClCompile Include="..\..\..\src\mfx\adrv\DJack.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ChnMode.cpp" />
     <ClCompile Include="..\..\..\src\mfx\CmdLine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Central.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\BufAlloc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\CentralCbInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\DelayInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\Document.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Algo.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\GraphInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\Plugin.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\PluginAux.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\Router.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlSource.cpp" />
@@ -1234,9 +1267,23 @@
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\Voice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwmDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\Delay.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)0.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)0.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\DelayDesc.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)0.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)0.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayChn.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\Delay2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\Delay2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\DelayLineBbd.cpp" />

@@ -40,7 +40,7 @@ namespace piapi
 
 
 
-class EventTs;
+class ProcInfo;
 
 class PluginInterface
 {
@@ -57,52 +57,8 @@ public:
 		State_NBR_ELT
 	};
 
-	enum Dir
-	{
-		Dir_IN = 0,
-		Dir_OUT,
-
-		Dir_NBR_ELT
-	};
-
-	enum Err
-	{
-		Err_OK = 0,
-
-		Err_EXCEPTION = -999,
-		Err_MEMORY_ALLOCATION,
-		Err_VALUE_NOT_SUPPORTED
-	};
-
-	enum BypassState
-	{
-		BypassState_IGNORE = 0,
-		BypassState_ASK,
-		BypassState_PRODUCED,
-
-		BypassState_NBR_ELT
-	};
-
-	static const int  _max_nbr_chn = 2;
-
-	class ProcInfo
-	{
-	public:
-		float * const *
-		               _dst_arr   = 0;
-		float * const *
-		               _byp_arr   = 0;
-		const float * const *
-		               _src_arr   = 0;
-		float * const *
-		               _sig_arr   = 0;
-		int            _nbr_chn_arr [Dir_NBR_ELT];
-		BypassState    _byp_state = BypassState_IGNORE; // On input and output
-		int            _nbr_spl   = 0;
-		const EventTs * const *
-		               _evt_arr   = 0;
-		int            _nbr_evt   = 0;
-	};
+	static const int  _max_nbr_chn  =  2;
+	static const int  _max_nbr_pins =  4;
 
 	virtual        ~PluginInterface () = default;
 

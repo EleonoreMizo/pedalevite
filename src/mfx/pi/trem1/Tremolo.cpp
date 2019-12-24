@@ -29,9 +29,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/ToolsSimd.h"
 #include "mfx/pi/trem1/Param.h"
 #include "mfx/pi/trem1/Tremolo.h"
+#include "mfx/piapi/Dir.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 #include "mfx/dsp/mix/Align.h"
 
 #include <cassert>
@@ -122,7 +125,7 @@ int	Tremolo::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -141,7 +144,7 @@ void	Tremolo::clear_buffers ()
 
 
 
-void	Tremolo::do_process_block (ProcInfo &proc)
+void	Tremolo::do_process_block (piapi::ProcInfo &proc)
 {
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -222,10 +225,9 @@ void	Tremolo::do_process_block (ProcInfo &proc)
 	const float    vol_end = fstb::ToolsSimd::Shift <1>::extract (vol);
 
 	// Signal processing
-	if (proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT] > 1)
+	if (proc._dir_arr [piapi::Dir_OUT]._nbr_chn > 1)
 	{	
-		const int      nbr_chn_in =
-			proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
+		const int      nbr_chn_in = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
 		dsp::mix::Align::copy_2_2_vlrauto (
 			proc._dst_arr [0],
 			proc._dst_arr [1],

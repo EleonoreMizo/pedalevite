@@ -27,6 +27,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/tuner/Tuner.h"
+#include "mfx/piapi/Dir.h"
+#include "mfx/piapi/Err.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <cassert>
 
@@ -74,7 +77,7 @@ double	Tuner::do_get_param_val (piapi::ParamCateg categ, int index, int note_id)
 
 int	Tuner::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
-	int            ret_val = Err_OK;
+	int            ret_val = piapi::Err_OK;
 
 	latency = 0;
 
@@ -89,7 +92,7 @@ int	Tuner::do_reset (double sample_freq, int max_buf_len, int &latency)
 	else
 	{
 		assert (false);
-		ret_val = Err_VALUE_NOT_SUPPORTED;
+		ret_val = piapi::Err_VALUE_NOT_SUPPORTED;
 	}
 
 	clear_buffers ();
@@ -106,7 +109,7 @@ void	Tuner::do_clean_quick ()
 
 
 
-void	Tuner::do_process_block (ProcInfo &proc)
+void	Tuner::do_process_block (piapi::ProcInfo &proc)
 {
 	const int      nbr_spl_s = proc._nbr_spl / _sub_spl;
 	const float *  src_ptr   = proc._src_arr [0];
@@ -121,7 +124,7 @@ void	Tuner::do_process_block (ProcInfo &proc)
 	}
 	_freq = _analyser.process_block (&_buffer [0], nbr_spl_s);
 
-	for (int chn = 0; chn < proc._nbr_chn_arr [Dir_OUT]; ++chn)
+	for (int chn = 0; chn < proc._dir_arr [piapi::Dir_OUT]._nbr_chn; ++chn)
 	{
 		dsp::mix::Align::clear (&proc._dst_arr [chn] [0], proc._nbr_spl);
 	}

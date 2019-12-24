@@ -87,7 +87,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 
 	const doc::Slot &    slot     = preset.use_slot (slot_id);
 	const std::string &  pi_model =
-		(type == PiType_MIX) ? Cst::_plugin_mix : slot._pi_model;
+		(type == PiType_MIX) ? Cst::_plugin_dwm : slot._pi_model;
 	const piapi::PluginDescInterface &  desc_pi =
 		model.get_model_desc (pi_model);
 	const piapi::ParamDescInterface &   desc    =
@@ -208,7 +208,7 @@ void	Tools::print_param_with_pres (std::string &val_s, std::string &unit, const 
 {
 	const doc::Slot &    slot     = preset.use_slot (slot_id);
 	const std::string &  pi_model =
-		(type == PiType_MIX) ? Cst::_plugin_mix : slot._pi_model;
+		(type == PiType_MIX) ? Cst::_plugin_dwm : slot._pi_model;
 	const piapi::PluginDescInterface &  desc_pi =
 		model.get_model_desc (pi_model);
 	const piapi::ParamDescInterface &   desc    =
@@ -287,7 +287,7 @@ double	Tools::change_param (double val_nrm, const Model &model, const View &view
 	const doc::PluginSettings & settings = slot.use_settings (type);
 
 	const std::string &  pi_model =
-		(type == PiType_MIX) ? Cst::_plugin_mix : slot._pi_model;
+		(type == PiType_MIX) ? Cst::_plugin_dwm : slot._pi_model;
 	const piapi::PluginDescInterface &  desc_pi =
 		model.get_model_desc (pi_model);
 
@@ -1037,7 +1037,7 @@ void	Tools::print_param_action (std::string &model_name, std::string &param_name
 		}
 
 		const piapi::PluginDescInterface & desc = model.get_model_desc (
-			(param._fx_id._type == PiType_MAIN) ? model_id : Cst::_plugin_mix
+			(param._fx_id._type == PiType_MAIN) ? model_id : Cst::_plugin_dwm
 		);
 		const int      nbr_param =
 			desc.get_nbr_param (piapi::ParamCateg_GLOBAL);

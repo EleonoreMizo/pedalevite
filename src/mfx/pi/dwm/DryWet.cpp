@@ -28,9 +28,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/pi/dwm/DryWet.h"
 #include "mfx/pi/dwm/Param.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 #include "mfx/dsp/mix/Align.h"
 
 #include <cassert>
@@ -56,6 +58,9 @@ DryWet::DryWet ()
 ,	_state_set ()
 ,	_sample_freq (0)
 ,	_param_change_flag ()
+,	_pin_arr ()
+,	_nbr_pins (1)
+,	_dly_spl (0)
 ,	_level_wet (1)
 ,	_level_dry (0)
 {
@@ -108,21 +113,32 @@ int	DryWet::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 
+	for (auto &pin : _pin_arr)
+	{
+		for (auto &chn : pin)
+		{
+			chn._delay.setup (_max_dly_spl, max_buf_len);
+		}
+	}
+
+	clear_buffers ();
+
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
 
 void	DryWet::do_clean_quick ()
 {
-	// Nothing
+	clear_buffers ();
 }
 
 
 
-void	DryWet::do_process_block (ProcInfo &proc)
+// Input pins are interleaved (wet0/dry0/wet1/dry1...)
+void	DryWet::do_process_block (piapi::ProcInfo &proc)
 {
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
 	{
@@ -167,18 +183,37 @@ void	DryWet::do_process_block (ProcInfo &proc)
 		ramp_flag = (lvl_wet_end != lvl_wet_beg || lvl_dry_end != lvl_dry_beg);
 	}
 
-	// Special cases
-	if (! ramp_flag && lvl_dry_end == 0) // Pure wet
+	for (int pin_idx = 0; pin_idx < _nbr_pins; ++pin_idx)
 	{
-		copy (proc, 0, lvl_wet_end);
+		// Special cases
+		if (! ramp_flag && lvl_dry_end == 0) // Pure wet
+		{
+			copy (pin_idx, proc, 0, lvl_wet_end);
+		}
+		else if (! ramp_flag && lvl_wet_end == 0) // Bypass or pure dry
+		{
+			copy (pin_idx, proc, 1, lvl_dry_end);
+		}
+		else // Generic case
+		{
+			mix (pin_idx, proc, lvl_wet_beg, lvl_wet_end, lvl_dry_beg, lvl_dry_end);
+		}
 	}
-	else if (! ramp_flag && lvl_wet_end == 0) // Bypass or pure dry
+}
+
+
+
+void	DryWet::do_set_aux_param (int dly_spl, int pin_mult)
+{
+	_dly_spl  = dly_spl;
+	_nbr_pins = pin_mult;
+
+	for (int pin_cnt = 0; pin_cnt < _nbr_pins; ++pin_cnt)
 	{
-		copy (proc, 1, lvl_dry_end);
-	}
-	else // Generic case
-	{
-		mix (proc, lvl_wet_beg, lvl_wet_end, lvl_dry_beg, lvl_dry_end);
+		for (auto &chn : _pin_arr [pin_cnt])
+		{
+			chn._delay.set_delay (dly_spl);
+		}
 	}
 }
 
@@ -188,54 +223,119 @@ void	DryWet::do_process_block (ProcInfo &proc)
 
 
 
-void	DryWet::copy (const ProcInfo &proc, int chn_ofs, float lvl)
+void	DryWet::clear_buffers ()
+{
+	for (auto &pin : _pin_arr)
+	{
+		for (auto &chn : pin)
+		{
+			chn._delay.clear_buffers ();
+		}
+	}
+}
+
+
+
+void	DryWet::copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float lvl)
 {
 	static const int  o_out = 1;
 
-	const int            nbr_in  = proc._nbr_chn_arr [Dir_IN ];
-	const int            nbr_out = proc._nbr_chn_arr [Dir_OUT];
-	assert (nbr_in == nbr_out);
+	const int            nbr_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int            nbr_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
+	assert (nbr_in == nbr_out); /*** To do: why? ***/
+	const int            pin_ofs_src = pin_idx * nbr_in * 2;
+	const int            pin_ofs_dst = pin_idx * nbr_out;
 	const int            vol     = fstb::is_eq (lvl, 1.0f, 1e-3f) ? 0 : 1;
-	const float * const* src_arr = proc._src_arr + chn_ofs * nbr_in;
-	float       * const* dst_arr = proc._dst_arr;
+	const float * const* src_arr = proc._src_arr + pin_ofs_src + chn_ofs * nbr_in;
+	float       * const* dst_arr = proc._dst_arr + pin_ofs_dst;
 	const int            nbr_spl = proc._nbr_spl;
+
+	if (_dly_spl > 0)
+	{
+		ChannelArray & chn_arr = _pin_arr [pin_idx];
+
+		for (int chn_index = 0; chn_index < nbr_in; ++chn_index)
+		{
+			Channel &      chn = chn_arr [chn_index];
+
+			chn._delay.process_block (
+				dst_arr [chn_index],
+				src_arr [chn_index],
+				nbr_spl
+			);
+		}
+
+		// Dry part, we use the delayed data as source
+		if (chn_ofs == 1)
+		{
+			src_arr = dst_arr;
+		}
+	}
 
 	switch ((nbr_out << o_out) + vol)
 	{
 	// Mono to mono
 	case (1 << o_out) + 0:
-		dsp::mix::Align::copy_1_1 (
-			dst_arr [0],
-			src_arr [0],
-			nbr_spl
-		);
+		if (src_arr != dst_arr)
+		{
+			dsp::mix::Align::copy_1_1 (
+				dst_arr [0],
+				src_arr [0],
+				nbr_spl
+			);
+		}
 		break;
 
 	case (1 << o_out) + 1:
-		dsp::mix::Align::copy_1_1_v (
-			dst_arr [0],
-			src_arr [0],
-			nbr_spl,
-			lvl
-		);
+		if (src_arr != dst_arr)
+		{
+			dsp::mix::Align::copy_1_1_v (
+				dst_arr [0],
+				src_arr [0],
+				nbr_spl,
+				lvl
+			);
+		}
+		else
+		{
+			dsp::mix::Align::scale_1_v (
+				dst_arr [0],
+				nbr_spl,
+				lvl
+			);
+		}
 		break;
 
 	// Stereo to stereo
 	case (2 << o_out) + 0:
-		dsp::mix::Align::copy_2_2 (
-			dst_arr [0], dst_arr [1],
-			src_arr [0], src_arr [1],
-			nbr_spl
-		);
+		if (src_arr != dst_arr)
+		{
+			dsp::mix::Align::copy_2_2 (
+				dst_arr [0], dst_arr [1],
+				src_arr [0], src_arr [1],
+				nbr_spl
+			);
+		}
 		break;
 
 	case (2 << o_out) + 1:
-		dsp::mix::Align::copy_2_2_v (
-			dst_arr [0], dst_arr [1],
-			src_arr [0], src_arr [1],
-			nbr_spl,
-			lvl
-		);
+		if (src_arr != dst_arr)
+		{
+			dsp::mix::Align::copy_2_2_v (
+				dst_arr [0], dst_arr [1],
+				src_arr [0], src_arr [1],
+				nbr_spl,
+				lvl
+			);
+		}
+		else
+		{
+			dsp::mix::Align::scale_2_v (
+				dst_arr [0], dst_arr [1],
+				nbr_spl,
+				lvl
+			);
+		}
 		break;
 
 	default:
@@ -246,66 +346,120 @@ void	DryWet::copy (const ProcInfo &proc, int chn_ofs, float lvl)
 
 
 
-void	DryWet::mix (const ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end)
+void	DryWet::mix (int pin_idx, const piapi::ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end)
 {
 	static const int  o_in  = 2;
 	static const int  o_out = 0;
 
-	const int            nbr_in  = proc._nbr_chn_arr [Dir_IN ];
-	const int            nbr_out = proc._nbr_chn_arr [Dir_OUT];
-	const float * const* src_arr = proc._src_arr;
-	float       * const* dst_arr = proc._dst_arr;
+	const int            nbr_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int            nbr_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
+	const int            pin_ofs_src = pin_idx * nbr_in * 2;
+	const int            pin_ofs_dst = pin_idx * nbr_out;
+	const float * const* wet_arr = proc._src_arr + pin_ofs_src;
+	const float * const* dry_arr = wet_arr + nbr_in;
+	float       * const* dst_arr = proc._dst_arr + pin_ofs_dst;
 	const int            nbr_spl = proc._nbr_spl;
 
-	
+	if (_dly_spl > 0)
+	{
+		ChannelArray & chn_arr = _pin_arr [pin_idx];
+
+		for (int chn_index = 0; chn_index < nbr_in; ++chn_index)
+		{
+			Channel &      chn = chn_arr [chn_index];
+
+			chn._delay.process_block (
+				dst_arr [chn_index],
+				dry_arr [chn_index],
+				nbr_spl
+			);
+		}
+
+		// Dry part, we use the delayed data as source
+		dry_arr = dst_arr;
+	}
+
 	switch ((nbr_in << o_in) + (nbr_out << o_out))
 	{
 	// Mono to mono
 	case (1 << o_in) + (1 << o_out):
-		dsp::mix::Align::copy_1_1_vlrauto (
-			dst_arr [0],
-			src_arr [0],
-			nbr_spl,
-			lvl_wet_beg, lvl_wet_end
-		);
+		if (dst_arr != dry_arr)
+		{
+			dsp::mix::Align::copy_1_1_vlrauto (
+				dst_arr [0],
+				dry_arr [0],
+				nbr_spl,
+				lvl_dry_beg, lvl_dry_end
+			);
+		}
+		else
+		{
+			dsp::mix::Align::scale_1_vlrauto (
+				dst_arr [0],
+				nbr_spl,
+				lvl_dry_beg, lvl_dry_end
+			);
+		}
 		dsp::mix::Align::mix_1_1_vlrauto (
 			dst_arr [0],
-			src_arr [1],
+			wet_arr [0],
 			nbr_spl,
-			lvl_dry_beg, lvl_dry_end
+			lvl_wet_beg, lvl_wet_end
 		);
 		break;
 
 	// Mono to stereo
 	case (1 << o_in) + (2 << o_out):
-		dsp::mix::Align::copy_1_1_vlrauto (
-			dst_arr [0],
-			src_arr [0],
-			nbr_spl,
-			lvl_wet_beg, lvl_wet_end
-		);
+		if (dst_arr != dry_arr)
+		{
+			dsp::mix::Align::copy_1_1_vlrauto (
+				dst_arr [0],
+				dry_arr [0],
+				nbr_spl,
+				lvl_dry_beg, lvl_dry_end
+			);
+		}
+		else
+		{
+			dsp::mix::Align::scale_1_vlrauto (
+				dst_arr [0],
+				nbr_spl,
+				lvl_dry_beg, lvl_dry_end
+			);
+		}
 		dsp::mix::Align::mix_1_1_vlrauto (
 			dst_arr [0],
-			src_arr [1],
+			wet_arr [0],
 			nbr_spl,
-			lvl_dry_beg, lvl_dry_end
+			lvl_wet_beg, lvl_wet_end
 		);
 		dsp::mix::Align::copy_1_1 (dst_arr [1], dst_arr [0], nbr_spl);
 		break;
 
 	// Stereo to stereo
 	case (2 << o_in) + (2 << o_out):
-		dsp::mix::Align::copy_2_2_vlrauto (
-			dst_arr [0], dst_arr [1],
-			src_arr [0+0], src_arr [0+1],
-			nbr_spl,
-			lvl_wet_beg, lvl_wet_end
-		);
+		if (dst_arr != dry_arr)
+		{
+			dsp::mix::Align::copy_2_2_vlrauto (
+				dst_arr [0], dst_arr [1],
+				dry_arr [0], dry_arr [1],
+				nbr_spl,
+				lvl_dry_beg, lvl_dry_end
+			);
+		}
+		else
+		{
+			dsp::mix::Align::scale_2_vlrauto (
+				dst_arr [0], dst_arr [1],
+				nbr_spl,
+				lvl_dry_beg, lvl_dry_end
+			);
+		}
 		dsp::mix::Align::mix_2_2_vlrauto (
 			dst_arr [0], dst_arr [1],
-			src_arr [2+0], src_arr [2+1],
+			wet_arr [0], wet_arr [1],
 			nbr_spl,
-			lvl_dry_beg, lvl_dry_end
+			lvl_wet_beg, lvl_wet_end
 		);
 		break;
 

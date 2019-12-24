@@ -30,9 +30,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/lpfs/Param.h"
 #include "mfx/pi/lpfs/Squeezer.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <algorithm>
 
@@ -162,7 +164,7 @@ int	Squeezer::do_reset (double sample_freq, int max_buf_len, int &latency)
 	);
 	latency = fstb::round_int (2 * (0.5f * dly_21 + 0.25f * dly_42));
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -174,10 +176,10 @@ void	Squeezer::do_clean_quick ()
 
 
 
-void	Squeezer::do_process_block (ProcInfo &proc)
+void	Squeezer::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_src = proc._nbr_chn_arr [Dir_IN ];
-	const int      nbr_chn_dst = proc._nbr_chn_arr [Dir_OUT];
+	const int      nbr_chn_src = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_dst = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	assert (nbr_chn_src <= nbr_chn_dst);
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -

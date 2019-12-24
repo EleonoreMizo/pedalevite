@@ -209,13 +209,37 @@ commonsrc = \
         ../../src/mfx/adrv/DManual.h \
         ../../src/mfx/adrv/DriverInterface.cpp \
         ../../src/mfx/adrv/DriverInterface.h \
+        ../../src/mfx/cmd/lat/Algo.cpp \
+        ../../src/mfx/cmd/lat/Algo.h \
+        ../../src/mfx/cmd/lat/Cnx.cpp \
+        ../../src/mfx/cmd/lat/Cnx.h \
+        ../../src/mfx/cmd/lat/GraphInterface.cpp \
+        ../../src/mfx/cmd/lat/GraphInterface.h \
+        ../../src/mfx/cmd/lat/Node.cpp \
+        ../../src/mfx/cmd/lat/Node.h \
+        ../../src/mfx/cmd/lat/Tools.cpp \
+        ../../src/mfx/cmd/lat/Tools.h \
+        ../../src/mfx/cmd/lat/TreeList.cpp \
+        ../../src/mfx/cmd/lat/TreeList.h \
         ../../src/mfx/cmd/BufAlloc.cpp \
         ../../src/mfx/cmd/BufAlloc.h \
         ../../src/mfx/cmd/Central.cpp \
         ../../src/mfx/cmd/Central.h \
         ../../src/mfx/cmd/CentralCbInterface.cpp \
         ../../src/mfx/cmd/CentralCbInterface.h \
+        ../../src/mfx/cmd/Cnx.h \
+        ../../src/mfx/cmd/Cnx.hpp \
+        ../../src/mfx/cmd/CnxEnd.h \
+        ../../src/mfx/cmd/CnxEnd.hpp \
+        ../../src/mfx/cmd/DelayInterface.cpp \
+        ../../src/mfx/cmd/DelayInterface.h \
+        ../../src/mfx/cmd/Document.cpp \
+        ../../src/mfx/cmd/Document.h \
+        ../../src/mfx/cmd/Plugin.cpp \
         ../../src/mfx/cmd/Plugin.h \
+        ../../src/mfx/cmd/PluginAux.h \
+        ../../src/mfx/cmd/Router.cpp \
+        ../../src/mfx/cmd/Router.h \
         ../../src/mfx/cmd/Slot.h \
         ../../src/mfx/doc/ActionBank.cpp \
         ../../src/mfx/doc/ActionBank.h \
@@ -666,6 +690,11 @@ commonsrc = \
         ../../src/mfx/pi/distpwm2/PulseType.h \
         ../../src/mfx/pi/distpwm2/Voice.cpp \
         ../../src/mfx/pi/distpwm2/Voice.h \
+        ../../src/mfx/pi/dly0/Delay.cpp \
+        ../../src/mfx/pi/dly0/Delay.h \
+        ../../src/mfx/pi/dly0/DelayDesc.cpp \
+        ../../src/mfx/pi/dly0/DelayDesc.h \
+        ../../src/mfx/pi/dly0/Param.h \
         ../../src/mfx/pi/dly1/Cst.h \
         ../../src/mfx/pi/dly1/Delay.cpp \
         ../../src/mfx/pi/dly1/Delay.h \
@@ -934,6 +963,9 @@ commonsrc = \
         ../../src/mfx/pi/ParamState.h \
         ../../src/mfx/pi/ParamStateSet.cpp \
         ../../src/mfx/pi/ParamStateSet.h \
+        ../../src/mfx/piapi/BypassState.h \
+        ../../src/mfx/piapi/Dir.h \
+        ../../src/mfx/piapi/Err.h \
         ../../src/mfx/piapi/Event.h \
         ../../src/mfx/piapi/EventNoteOff.h \
         ../../src/mfx/piapi/EventNoteOn.h \
@@ -953,6 +985,7 @@ commonsrc = \
         ../../src/mfx/piapi/PluginInterface.cpp \
         ../../src/mfx/piapi/PluginInterface.h \
         ../../src/mfx/piapi/PluginState.h \
+        ../../src/mfx/piapi/ProcInfo.h \
         ../../src/mfx/ui/DisplayInterface.cpp \
         ../../src/mfx/ui/DisplayInterface.h \
         ../../src/mfx/ui/DisplayVoid.cpp \
@@ -1095,6 +1128,7 @@ commonsrc = \
         ../../src/mfx/uitk/Rect.hpp \
         ../../src/mfx/uitk/Vec2d.h \
         ../../src/mfx/uitk/Vec2d.hpp \
+        ../../src/mfx/ChnMode.cpp \
         ../../src/mfx/ChnMode.h \
         ../../src/mfx/CmdLine.h \
         ../../src/mfx/CmdLine.cpp \
@@ -1261,6 +1295,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
+        ../../src/test/TestLatAlgo.cpp \
+        ../../src/test/TestLatAlgo.h \
         ../../src/test/TestOscSample.cpp \
         ../../src/test/TestOscSample.h \
         ../../src/test/TestOscSampleSyncFade.cpp \

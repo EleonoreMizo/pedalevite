@@ -31,9 +31,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dly1/Cst.h"
 #include "mfx/pi/dly1/Delay.h"
 #include "mfx/pi/dly1/Param.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <cassert>
 
@@ -73,8 +75,8 @@ Delay::Delay ()
 ,	_delay_time_arr ()
 ,	_link_flag (false)
 ,	_quick_clean_req_flag (false)
-,	_nbr_chn_in (0)
-,	_nbr_chn_out (0)
+,	_nbr_chn_src (0)
+,	_nbr_chn_dst (0)
 {
 	dsp::mix::Generic::setup ();
 
@@ -182,7 +184,7 @@ int	Delay::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -194,19 +196,17 @@ void	Delay::do_clean_quick ()
 
 
 
-void	Delay::do_process_block (ProcInfo &proc)
+void	Delay::do_process_block (piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_in =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_out =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
-	if (nbr_chn_out != _nbr_chn_out)
+	const int      nbr_chn_src = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_dst = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
+	if (nbr_chn_dst != _nbr_chn_dst)
 	{
-		_nbr_chn_out = nbr_chn_out;
+		_nbr_chn_dst = nbr_chn_dst;
 		update_param (true);
 		clear_buffers ();
 	}
-	_nbr_chn_in  = nbr_chn_in;
+	_nbr_chn_src = nbr_chn_src;
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Events
@@ -436,7 +436,7 @@ void	Delay::process_block_part (float * const out_ptr_arr [], const float * cons
 		}
 
 		// Special case for mono + link
-		if (_link_flag && _nbr_chn_out == 1)
+		if (_link_flag && _nbr_chn_dst == 1)
 		{
 			process_block_part_mono_link (
 				out_ptr_arr,
@@ -472,7 +472,7 @@ void	Delay::process_block_part_standard (float * const out_ptr_arr [], const flo
 	const int      nbr_spl = pos_end - pos_beg;
 	assert (nbr_spl <= _tmp_zone_len);
 
-	const int      chn_in_r    = (_nbr_chn_in > 1) ? 1 : 0;
+	const int      chn_in_r    = (_nbr_chn_src > 1) ? 1 : 0;
 
 	std::array <float, Cst::_nbr_lines> fdbk_beg_arr;
 	std::array <float, Cst::_nbr_lines> fdbk_end_arr;
@@ -528,7 +528,7 @@ void	Delay::process_block_part_standard (float * const out_ptr_arr [], const flo
 		nbr_spl
 	);
 
-	if (_nbr_chn_out == 2)
+	if (_nbr_chn_dst == 2)
 	{
 		dsp::mix::Generic::copy_2_2_vlrauto (
 			out_ptr_arr [0] + pos_beg,
@@ -553,14 +553,14 @@ void	Delay::process_block_part_standard (float * const out_ptr_arr [], const flo
 	else
 	{
 		const int      nbr_lines    = Cst::_nbr_lines;
-		const int      nbr_chn_proc = std::max (_nbr_chn_out, nbr_lines);
+		const int      nbr_chn_proc = std::max (_nbr_chn_dst, nbr_lines);
 		int            chn_in_idx   = 0;
-		const int      chn_in_inc   = (_nbr_chn_in  >= Cst::_nbr_lines) ? 1 : 0;
+		const int      chn_in_inc   = (_nbr_chn_src >= Cst::_nbr_lines) ? 1 : 0;
 		int            chn_out_idx  = 0;
-		const int      chn_out_inc  = (_nbr_chn_out >= Cst::_nbr_lines) ? 1 : 0;
+		const int      chn_out_inc  = (_nbr_chn_dst >= Cst::_nbr_lines) ? 1 : 0;
 		for (int chn_cnt = 0; chn_cnt < nbr_chn_proc; ++chn_cnt)
 		{
-			if (chn_cnt < _nbr_chn_out)
+			if (chn_cnt < _nbr_chn_dst)
 			{
 				dsp::mix::Generic::copy_1_1_vlrauto (
 					out_ptr_arr [chn_cnt]   + pos_beg,
@@ -610,7 +610,7 @@ void	Delay::process_block_part_mono_link (float * const out_ptr_arr [], const fl
 	const float    lvl_in_end  = float (_lvl_in.get_val ());
 	float          lvl_out_end =  float (_lvl_out.get_val ());
 
-	if (_nbr_chn_out < Cst::_nbr_lines)
+	if (_nbr_chn_dst < Cst::_nbr_lines)
 	{
 		const float    gain = 1.0f / Cst::_nbr_lines;
 		lvl_out_beg *= gain;

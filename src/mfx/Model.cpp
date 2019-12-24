@@ -1623,7 +1623,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 		}
 	}
 
-	_central.preinstantiate_plugins (Cst::_plugin_mix, max_nbr_slots, 0);
+	_central.preinstantiate_plugins (Cst::_plugin_dwm, max_nbr_slots, 0);
 
 	// Instantiate all the plug-ins
 	for (const auto & node : pi_cnt_bank)

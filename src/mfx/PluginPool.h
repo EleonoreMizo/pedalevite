@@ -67,16 +67,31 @@ public:
 		PluginUPtr     _pi_uptr;
 		const piapi::PluginDescInterface *
 		               _desc_ptr = 0;
-		std::vector <float>     // Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
-		               _param_arr;
-		std::vector <float>     // Final value of modulated parameters. Negative if not available. Only for ParamCateg_GLOBAL. Read-only for non-audio threads. Only indicative, there is no guarantee of validity.
-		               _param_mod_arr;
-		// Audio thread only
-		fstb::BitFieldSparse             // Same remark. Managed by the audio thread only.
-		               _param_update;
-		std::vector <bool>               // Indicates that the latest change comes from the audio thread. Same remark. Audio thread only
-		               _param_update_from_audio;
 
+		// Must be set by the client after each reset()
+		int            _latency  = 0;
+
+		// Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
+		std::vector <float>
+		               _param_arr;
+
+		// Final value of modulated parameters. Negative if not available.
+		// Only for ParamCateg_GLOBAL. Read-only for non-audio threads.
+		// Only indicative, there is no guarantee of validity.
+		std::vector <float>
+		               _param_mod_arr;
+
+		// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+		// Audio thread only
+
+		// Same remark. Managed by the audio thread only.
+		fstb::BitFieldSparse
+		               _param_update;
+
+		// Indicates that the latest change comes from the audio thread.
+		// Same remark. Audio thread only
+		std::vector <bool>
+		               _param_update_from_audio;
 	};
 
 	               PluginPool ();

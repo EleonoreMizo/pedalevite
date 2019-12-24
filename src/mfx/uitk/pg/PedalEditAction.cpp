@@ -539,7 +539,7 @@ void	PedalEditAction::display_param (PageMgrInterface::NavLocList &nav_list, con
 
 	std::string   pi_id =
 		  (action._fx_id._type == PiType_MIX)
-		? Cst::_plugin_mix
+		? Cst::_plugin_dwm
 		: Tools::find_fx_type (action._fx_id, *_view_ptr);
 	if (! pi_id.empty ())
 	{
@@ -1042,7 +1042,7 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_param (int node_id, int dir
 		index += dir;
 
 		const piapi::PluginDescInterface &   pi_desc_mix =
-			_model_ptr->get_model_desc (Cst::_plugin_mix);
+			_model_ptr->get_model_desc (Cst::_plugin_dwm);
 		const int      nbr_param_mix =
 			pi_desc_mix.get_nbr_param (piapi::ParamCateg_GLOBAL);
 		if (index < 0)
@@ -1119,7 +1119,7 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_param (int node_id, int dir
 			bool          done_flag = false;
 			std::string   pi_id =
 				  (action._fx_id._type == PiType_MIX)
-				? Cst::_plugin_mix
+				? Cst::_plugin_dwm
 				: Tools::find_fx_type (action._fx_id, *_view_ptr);
 			if (! pi_id.empty ())
 			{

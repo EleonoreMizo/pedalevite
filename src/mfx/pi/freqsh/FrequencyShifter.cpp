@@ -29,9 +29,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/freqsh/FrequencyShifter.h"
 #include "mfx/pi/freqsh/Param.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <cassert>
 
@@ -105,7 +107,7 @@ int	FrequencyShifter::do_reset (double sample_freq, int max_buf_len, int &latenc
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -117,7 +119,7 @@ void	FrequencyShifter::do_clean_quick ()
 
 
 
-void	FrequencyShifter::do_process_block (ProcInfo &proc)
+void	FrequencyShifter::do_process_block (piapi::ProcInfo &proc)
 {
 	// Events
 	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
@@ -141,10 +143,8 @@ void	FrequencyShifter::do_process_block (ProcInfo &proc)
 	}
 
 	// Signal processing
-	const int      nbr_chn_i =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_IN ];
-	const int      nbr_chn_o =
-		proc._nbr_chn_arr [piapi::PluginInterface::Dir_OUT];
+	const int      nbr_chn_i = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
+	const int      nbr_chn_o = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	const int      nbr_chn_p = std::min (nbr_chn_i, nbr_chn_o);
 	_freq_shift.process_block (
 		proc._dst_arr,

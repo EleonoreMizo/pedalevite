@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/pi/param/Tools.h"
+#include "mfx/piapi/Dir.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/FactoryInterface.h"
 #include "mfx/piapi/ParamDescInterface.h"
@@ -193,8 +194,8 @@ void	PlugWrap::update_max_block_size (int max_block_size)
 void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 {
 	// Checks if pins are mono or stereo
-	_proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN ] = 1;
-	_proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT] = 1;
+	_proc._dir_arr [mfx::piapi::Dir_IN ]._nbr_chn = 1;
+	_proc._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn = 1;
 	if (_nbr_o > 0)
 	{
 		const ::VstIntPtr res_o = _audio_master (
@@ -204,7 +205,7 @@ void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 		);
 		if (res_o == 0)
 		{
-			_proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT] = 2;
+			_proc._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn = 2;
 			if (_nbr_i > 0)
 			{
 				const ::VstIntPtr res_i = _audio_master (
@@ -214,7 +215,7 @@ void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 				);
 				if (res_i == 0)
 				{
-					_proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN] = 2;
+					_proc._dir_arr [mfx::piapi::Dir_IN]._nbr_chn = 2;
 				}
 			}
 		}
@@ -252,8 +253,8 @@ void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 
 	// Copies input sample data to aligned positions
 	const int      nbr_chn_per_pin =
-		_proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_IN];
-	const int      nbr_chn = _nbr_i * nbr_chn_per_pin;
+		_proc._dir_arr [mfx::piapi::Dir_IN]._nbr_chn;
+	const int      nbr_chn         = _nbr_i * nbr_chn_per_pin;
 	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
 	{
 		mfx::dsp::mix::Simd <
@@ -696,7 +697,7 @@ void	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, float** input
 
 	// Mixes output sample data
 	const int      nbr_chn_per_pin =
-		wrapper_ptr->_proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT];
+		wrapper_ptr->_proc._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn;
 	const int      nbr_chn = wrapper_ptr->_nbr_o * nbr_chn_per_pin;
 	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
 	{
@@ -722,7 +723,7 @@ void	PlugWrap::vst_process_replacing (::AEffect* e, float** inputs, float** outp
 
 	// Copies output sample data
 	const int      nbr_chn_per_pin =
-		wrapper_ptr->_proc._nbr_chn_arr [mfx::piapi::PluginInterface::Dir_OUT];
+		wrapper_ptr->_proc._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn;
 	const int      nbr_chn = wrapper_ptr->_nbr_o * nbr_chn_per_pin;
 	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
 	{

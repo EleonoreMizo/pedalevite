@@ -25,12 +25,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
-#include "mfx/cmd/BufAlloc.h"
 #include "mfx/cmd/Central.h"
 #include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/CtrlLinkSet.h"
+#include "mfx/piapi/BypassState.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/piapi/PluginInterface.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <algorithm>
 #include <array>
@@ -71,6 +73,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 ,	_sample_freq (0)
 ,	_max_block_size (0)
 ,	_cb_ptr (0)
+,	_router ()
 ,	_cur_sptr ()
 ,	_new_sptr ()
 ,	_ctx_trash ()
@@ -80,7 +83,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 {
 	_msg_pool.expand_to (1024);
 
-	_dummy_mix_id = _plugin_pool.create (Cst::_plugin_mix);
+	_dummy_mix_id = _plugin_pool.create (Cst::_plugin_dwm);
 }
 
 
@@ -144,16 +147,19 @@ void	Central::set_process_info (double sample_freq, int max_block_size)
 	{
 		PluginPool::PluginDetails &         details  =
 			_plugin_pool.use_plugin (pi_id);
-		int            latency = 0;
+		details._latency = 0;
 #if ! defined (NDEBUG)
 		int            ret_val =
 #endif
-			details._pi_uptr->reset (sample_freq, max_block_size, latency);
+			details._pi_uptr->reset (
+				sample_freq, max_block_size, details._latency
+			);
 #if ! defined (NDEBUG)
-		assert (ret_val == piapi::PluginInterface::Err_OK);
+		assert (ret_val == piapi::Err_OK);
 #endif
 	}
 	_audio.set_process_info (sample_freq, max_block_size);
+	_router.set_process_info (sample_freq, max_block_size);
 	for (auto &buf : _d2d_buf_arr)
 	{
 		buf.resize (max_block_size);
@@ -366,17 +372,17 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 			_plugin_pool.use_plugin (pi_id);
 		if (_sample_freq > 0)
 		{
-			int            latency = 0;
+			details._latency = 0;
 #if ! defined (NDEBUG)
 			int            ret_val =
 #endif
 				details._pi_uptr->reset (
 					_sample_freq,
 					_max_block_size,
-					latency
+					details._latency
 				);
 #if ! defined (NDEBUG)
-			assert (ret_val == piapi::PluginInterface::Err_OK);
+			assert (ret_val == piapi::Err_OK);
 #endif
 		}
 		check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
@@ -404,13 +410,13 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 				evt._evt._param._val     = float (state_ptr->_param_list [index]);
 			}
 
-			piapi::PluginInterface::ProcInfo proc_info;
+			piapi::ProcInfo   proc_info;
 			proc_info._byp_arr   = 0;
-			proc_info._byp_state = piapi::PluginInterface::BypassState_IGNORE;
+			proc_info._byp_state = piapi::BypassState_IGNORE;
 			proc_info._dst_arr   = &dst_ptr_arr [0];
 			proc_info._evt_arr   = (nbr_param > 0) ? &evt_ptr_list [0] : 0;
-			proc_info._nbr_chn_arr [piapi::PluginInterface::Dir_IN ] = 2;
-			proc_info._nbr_chn_arr [piapi::PluginInterface::Dir_OUT] = 2;
+			proc_info._dir_arr [piapi::Dir_IN ]._nbr_chn = 2;
+			proc_info._dir_arr [piapi::Dir_OUT]._nbr_chn = 2;
 			proc_info._nbr_evt   = int (evt_ptr_list.size ());
 			proc_info._nbr_spl   = _max_block_size;
 			proc_info._sig_arr   = &sig_ptr_arr [0];
@@ -433,7 +439,7 @@ void	Central::remove_plugin (int pos)
 // Returns the plug-in Id
 int	Central::set_mixer (int pos)
 {
-	return set_plugin (pos, Cst::_plugin_mix, PiType_MIX, false, true);
+	return set_plugin (pos, Cst::_plugin_dwm, PiType_MIX, false, true);
 }
 
 
@@ -492,7 +498,7 @@ void	Central::set_pi_state (int pi_id, const std::vector <float> &param_list)
 	assert (pi_id >= 0);
 	assert (int (param_list.size ()) == _plugin_pool.use_plugin (pi_id)._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
 
-	Plugin &       plug = find_plugin (doc, pi_id);
+	Plugin &       plug = doc.find_plugin (pi_id);
 
 	plug._param_list = param_list;
 }
@@ -505,7 +511,7 @@ void	Central::clear_mod (int pi_id)
 
 	assert (pi_id >= 0);
 
-	Plugin &       plug = find_plugin (doc, pi_id);
+	Plugin &       plug = doc.find_plugin (pi_id);
 	plug._ctrl_map.clear ();
 }
 
@@ -519,7 +525,7 @@ void	Central::set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls)
 	assert (index >= 0);
 	assert (index < _plugin_pool.use_plugin (pi_id)._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL));
 
-	Plugin &       plug = find_plugin (doc, pi_id);
+	Plugin &       plug = doc.find_plugin (pi_id);
 
 	plug._ctrl_map [index] = std::shared_ptr <doc::CtrlLinkSet> (
 		new doc::CtrlLinkSet (cls)
@@ -534,7 +540,7 @@ void	Central::set_sig_source (int pi_id, int sig_pin, int port_id)
 
 	assert (sig_pin >= 0);
 
-	Plugin &       plug = find_plugin (doc, pi_id);
+	Plugin &       plug = doc.find_plugin (pi_id);
 
 	if (sig_pin >= int (plug._sig_port_list.size ()))
 	{
@@ -762,7 +768,7 @@ int64_t	Central::get_d2d_size_frames () const
 
 
 
-Central::Document &	Central::modify ()
+Document &	Central::modify ()
 {
 	if (_new_sptr.get () == 0)
 	{
@@ -778,22 +784,6 @@ Central::Document &	Central::modify ()
 	}
 
 	return *_new_sptr;
-}
-
-
-
-Plugin &	Central::find_plugin (Document &doc, int pi_id)
-{
-	auto           it_loc = doc._map_id_loc.find (pi_id);
-	assert (it_loc != doc._map_id_loc.end ());
-
-	const int      pos  = it_loc->second._slot_pos;
-	const PiType   type = it_loc->second._type;
-
-	Slot &         slot = doc._slot_list [pos];
-	Plugin &       plug = slot._component_arr [type];
-
-	return plug;
 }
 
 
@@ -868,6 +858,8 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 			remove_plugin (pos);
 		}
 
+		int            latency = 0;
+
 		// Check if there is a unused plug-in
 		auto           it_inst_map = doc._map_model_id.find (model);
 		if (it_inst_map != doc._map_model_id.end ())
@@ -887,20 +879,26 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 						PluginPool::PluginDetails &   details =
 							_plugin_pool.use_plugin (pi_id);
 						const auto     state = details._pi_uptr->get_state ();
-						if (    _sample_freq > 0
-						    && (   force_reset_flag
-						        || state != piapi::PluginInterface::State_ACTIVE))
+						if (_sample_freq > 0)
 						{
-							int            latency = 0;
+							if (   force_reset_flag
+							    || state != piapi::PluginInterface::State_ACTIVE)
+							{
 #if ! defined (NDEBUG)
-							int            ret_val =
+								int            ret_val =
 #endif
-								details._pi_uptr->reset (
-									_sample_freq, _max_block_size, latency
-								);
+									details._pi_uptr->reset (
+										_sample_freq, _max_block_size, latency
+									);
+								details._latency = latency;
 #if ! defined (NDEBUG)
-							assert (ret_val == piapi::PluginInterface::Err_OK);
+								assert (ret_val == piapi::Err_OK);
 #endif
+							}
+							else
+							{
+								latency = details._latency;
+							}
 						}
 						break;
 					}
@@ -916,7 +914,6 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 				_plugin_pool.use_plugin (pi_id);
 			if (_sample_freq > 0)
 			{
-				int            latency = 0;
 #if ! defined (NDEBUG)
 				int            ret_val =
 #endif
@@ -926,16 +923,18 @@ int	Central::set_plugin (int pos, std::string model, PiType type, bool force_res
 						latency
 					);
 #if ! defined (NDEBUG)
-				assert (ret_val == piapi::PluginInterface::Err_OK);
+				assert (ret_val == piapi::Err_OK);
 #endif
+				details._latency = latency;
 			}
 			check_and_get_default_settings (*details._pi_uptr, *details._desc_ptr, model);
 
 			doc._map_model_id [model] [pi_id] = true;
 		}
 
-		plugin._pi_id = pi_id;
-		plugin._model = model;
+		plugin._pi_id   = pi_id;
+		plugin._model   = model;
+		plugin._latency = latency;
 		doc._map_id_loc [pi_id] = { pos, type };
 	}
 
@@ -975,10 +974,7 @@ void	Central::remove_plugin (int pos, PiType type)
 		doc._map_id_loc.erase (it_loc);
 	}
 
-	plugin._model.clear ();
-	plugin._pi_id = -1;
-	plugin._ctrl_map.clear ();
-	plugin._sig_port_list.clear ();
+	plugin.clear ();
 	doc._slot_list [pos]._force_mono_flag = false;
 }
 
@@ -990,235 +986,7 @@ void	Central::create_routing ()
 	assert (_new_sptr->_ctx_sptr.get () != 0);
 
 	Document &           doc = *_new_sptr;
-	ProcessingContext &  ctx = *doc._ctx_sptr;
-
-	// Final number of channels
-	int            nbr_chn_cur   = 1;
-	int            nbr_chn_final = 1;
-	switch (doc._chn_mode)
-	{
-	case ChnMode_1M_1M:
-		nbr_chn_final = 1;
-		break;
-	case ChnMode_1M_1S:
-		nbr_chn_final = 2;
-		break;
-	case ChnMode_1S_1S:
-		nbr_chn_cur   = 2;
-		nbr_chn_final = 2;
-		break;
-	default:
-		assert (false);
-		break;
-	}
-	ctx._nbr_chn_out = nbr_chn_final;
-
-	// Buffers
-	BufAlloc       buf_alloc (Cst::BufSpecial_NBR_ELT);
-
-	std::array <int, piapi::PluginInterface::_max_nbr_chn>   cur_buf_arr;
-	for (auto &b : cur_buf_arr)
-	{
-		b = -1;
-	}
-
-	// Input
-	ProcessingContextNode::Side & audio_i =
-		ctx._interface_ctx._side_arr [Dir_IN ];
-	audio_i._nbr_chn     = Cst::_nbr_chn_in;
-	audio_i._nbr_chn_tot = audio_i._nbr_chn;
-	for (int i = 0; i < audio_i._nbr_chn; ++i)
-	{
-		const int      buf = buf_alloc.alloc ();
-		audio_i._buf_arr [i] = buf;
-	}
-	assert (nbr_chn_cur <= audio_i._nbr_chn);
-	for (int i = 0; i < nbr_chn_cur; ++i)
-	{
-		cur_buf_arr [i] = audio_i._buf_arr [i];
-	}
-
-	// Plug-ins
-	for (Slot & slot : doc._slot_list)
-	{
-		const int      pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
-		if (pi_id_main >= 0)
-		{
-			int            nbr_chn_in      = nbr_chn_cur;
-			const piapi::PluginDescInterface &   desc_main =
-				*_plugin_pool.use_plugin (pi_id_main)._desc_ptr;
-			const bool     out_st_flag     = desc_main.prefer_stereo ();
-			const bool     final_mono_flag = (nbr_chn_final == 1);
-			int            nbr_chn_out     =
-				  (out_st_flag && ! (slot._force_mono_flag || final_mono_flag))
-				? 2
-				: nbr_chn_in;
-
-			const int      pi_id_mix = slot._component_arr [PiType_MIX]._pi_id;
-
-			// Processing context
-			slot._ctx_index = int (ctx._context_arr.size ());
-			ctx._context_arr.resize (slot._ctx_index + 1);
-			ProcessingContext::PluginContext &  pi_ctx = ctx._context_arr.back ();
-			pi_ctx._mixer_flag  = (pi_id_mix >= 0);
-
-			// Main plug-in
-			pi_ctx._node_arr [PiType_MAIN]._pi_id = pi_id_main;
-			ProcessingContextNode::Side & main_side_i =
-				pi_ctx._node_arr [PiType_MAIN]._side_arr [Dir_IN ];
-			ProcessingContextNode::Side & main_side_o =
-				pi_ctx._node_arr [PiType_MAIN]._side_arr [Dir_OUT];
-			int            main_nbr_i = 1;
-			int            main_nbr_o = 1;
-			int            main_nbr_s = 0;
-
-			// Input
-			desc_main.get_nbr_io (main_nbr_i, main_nbr_o, main_nbr_s);
-			main_side_i._nbr_chn     = (main_nbr_i > 0) ? nbr_chn_in : 0;
-			main_side_i._nbr_chn_tot = nbr_chn_in * main_nbr_i;
-			for (int chn = 0; chn < main_side_i._nbr_chn_tot; ++chn)
-			{
-				if (chn < nbr_chn_in)
-				{
-					main_side_i._buf_arr [chn] = cur_buf_arr [chn];
-				}
-				else
-				{
-					main_side_i._buf_arr [chn] = Cst::BufSpecial_SILENCE;
-				}
-			}
-
-			// Output
-			std::array <int, piapi::PluginInterface::_max_nbr_chn>   nxt_buf_arr;
-			main_side_o._nbr_chn     = (main_nbr_o > 0) ? nbr_chn_out : 0;
-			main_side_o._nbr_chn_tot = nbr_chn_out * main_nbr_o;
-			for (int chn = 0; chn < main_side_o._nbr_chn_tot; ++chn)
-			{
-				if (chn < nbr_chn_out && slot._gen_audio_flag)
-				{
-					const int      buf = buf_alloc.alloc ();
-					nxt_buf_arr [chn]          = buf;
-					main_side_o._buf_arr [chn] = buf;
-				}
-				else
-				{
-					main_side_o._buf_arr [chn] = Cst::BufSpecial_TRASH;
-				}
-			}
-
-			// Signals
-			pi_ctx._node_arr [PiType_MAIN]._nbr_sig = main_nbr_s;
-			const int      nbr_reg_sig =
-				int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
-			for (int sig = 0; sig < main_nbr_s; ++sig)
-			{
-				ProcessingContextNode::SigInfo & sig_info =
-					pi_ctx._node_arr [PiType_MAIN]._sig_buf_arr [sig];
-				sig_info._buf_index  = Cst::BufSpecial_TRASH;
-				sig_info._port_index = -1;
-
-				if (sig < nbr_reg_sig)
-				{
-					const int      port_index =
-						slot._component_arr [PiType_MAIN]._sig_port_list [sig];
-					if (port_index >= 0)
-					{
-						sig_info._buf_index  = buf_alloc.alloc ();
-						sig_info._port_index = port_index;
-					}
-				}
-			}
-
-			// With dry/wet mixer
-			if (pi_id_mix >= 0)
-			{
-				assert (slot._gen_audio_flag);
-
-				pi_ctx._node_arr [PiType_MIX]._pi_id = pi_id_mix;
-				ProcessingContextNode::Side & mix_side_i =
-					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_IN ];
-				ProcessingContextNode::Side & mix_side_o =
-					pi_ctx._node_arr [PiType_MIX]._side_arr [Dir_OUT];
-
-				pi_ctx._node_arr [PiType_MIX]._nbr_sig = 0;
-
-				// Bypass output for the main plug-in
-				for (int chn = 0; chn < nbr_chn_out * main_nbr_o; ++chn)
-				{
-					pi_ctx._node_arr [PiType_MAIN]._bypass_buf_arr [chn] =
-						buf_alloc.alloc ();
-				}
-
-				// Dry/wet input
-				mix_side_i._nbr_chn     = nbr_chn_out;
-				mix_side_i._nbr_chn_tot = nbr_chn_out * 2;
-				for (int chn = 0; chn < nbr_chn_out; ++chn)
-				{
-					// 1st pin: main output
-					mix_side_i._buf_arr [              chn] = nxt_buf_arr [chn];
-
-					// 2nd pin: main input as default bypass
-					const int       chn_in = std::min (chn, nbr_chn_in - 1);
-					const int       buf    = cur_buf_arr [chn_in];
-					mix_side_i._buf_arr [nbr_chn_out + chn] = buf;
-				}
-
-				// Dry/wet output
-				std::array <int, piapi::PluginInterface::_max_nbr_chn>   mix_buf_arr;
-				mix_side_o._nbr_chn     = nbr_chn_out;
-				mix_side_o._nbr_chn_tot = nbr_chn_out;
-				for (int chn = 0; chn < nbr_chn_out; ++chn)
-				{
-					const int      buf = buf_alloc.alloc ();
-					mix_buf_arr [chn]         = buf;
-					mix_side_o._buf_arr [chn] = buf;
-				}
-
-				// Shift buffers
-				for (int chn = 0; chn < nbr_chn_out * main_nbr_o; ++chn)
-				{
-					buf_alloc.ret (
-						pi_ctx._node_arr [PiType_MAIN]._bypass_buf_arr [chn]
-					);
-				}
-				for (int chn = 0; chn < nbr_chn_out; ++chn)
-				{
-					buf_alloc.ret (nxt_buf_arr [chn]);
-					nxt_buf_arr [chn] = mix_buf_arr [chn];
-				}
-			}
-
-			// Output buffers become the next input buffers
-			if (slot._gen_audio_flag)
-			{
-				for (int chn = 0; chn < nbr_chn_out; ++chn)
-				{
-					if (chn < nbr_chn_in)
-					{
-						buf_alloc.ret (cur_buf_arr [chn]);
-					}
-					cur_buf_arr [chn] = nxt_buf_arr [chn];
-				}
-				nbr_chn_cur = nbr_chn_out;
-			}
-		}
-	}
-
-	// Output
-	ProcessingContextNode::Side & audio_o =
-		ctx._interface_ctx._side_arr [Dir_OUT];
-	audio_o._nbr_chn     = Cst::_nbr_chn_out;
-	audio_o._nbr_chn_tot = audio_o._nbr_chn;
-	for (int i = 0; i < audio_o._nbr_chn; ++i)
-	{
-		const int      chn_src = std::min (i, nbr_chn_cur - 1);
-		audio_o._buf_arr [i] = cur_buf_arr [chn_src];
-	}
-
-	for (int chn = 0; chn < nbr_chn_cur; ++chn)
-	{
-		buf_alloc.ret (cur_buf_arr [chn]);
-	}
+	_router.create_routing (doc, _plugin_pool);
 }
 
 
@@ -1318,6 +1086,7 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_
 				break;
 			}
 
+			// Parameters
 			const int      nbr_param = int (plug._param_list.size ());
 			for (int index = 0; index < nbr_param; ++index)
 			{

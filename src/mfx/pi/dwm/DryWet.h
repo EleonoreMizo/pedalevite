@@ -30,9 +30,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #define mfx_pi_dwm_DryWet_GAIN_WET_ONLY
 
 #include "fstb/util/NotificationFlag.h"
+#include "mfx/cmd/DelayInterface.h"
+#include "mfx/dsp/dly/DelaySimple.h"
 #include "mfx/pi/dwm/DryWetDesc.h"
 #include "mfx/pi/ParamStateSet.h"
-#include "mfx/piapi/PluginInterface.h"
 
 
 
@@ -46,7 +47,7 @@ namespace dwm
 
 
 class DryWet
-:	public piapi::PluginInterface
+:	public cmd::DelayInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -67,7 +68,10 @@ protected:
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
 	virtual void   do_clean_quick ();
-	virtual void   do_process_block (ProcInfo &proc);
+	virtual void   do_process_block (piapi::ProcInfo &proc);
+
+	// mfx::cmd::DelayInterface
+	virtual void   do_set_aux_param (int dly_spl, int pin_mult);
 
 
 
@@ -75,8 +79,19 @@ protected:
 
 private:
 
-	void           copy (const ProcInfo &proc, int chn_ofs, float lvl);
-	void           mix (const ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
+	class Channel
+	{
+	public:
+		mfx::dsp::dly::DelaySimple
+		               _delay;
+	};
+	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
+	typedef std::array <ChannelArray, _max_nbr_pins> PinArray;
+
+	void           clear_buffers ();
+
+	void           copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float lvl);
+	void           mix (int pin_idx, const piapi::ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
 
 	State          _state;
 
@@ -86,6 +101,10 @@ private:
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;
+
+	PinArray       _pin_arr;
+	int            _nbr_pins;
+	int            _dly_spl;
 
 	float          _level_wet;          // For steady state
 	float          _level_dry;          // For steady state

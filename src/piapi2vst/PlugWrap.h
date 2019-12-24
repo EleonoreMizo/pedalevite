@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/AllocAlign.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/piapi/PluginInterface.h"
+#include "mfx/piapi/ProcInfo.h"
 #include "vstsdk24/pluginterfaces/vst2.x/aeffect.h"
 #include "vstsdk24/pluginterfaces/vst2.x/aeffectx.h"
 
@@ -138,7 +139,7 @@ private:
 	int            _nbr_o;
 	int            _nbr_s;              // Signal pins are always "mono"
 	int            _latency;
-	mfx::piapi::PluginInterface::ProcInfo
+	mfx::piapi::ProcInfo
 	               _proc;
 
 	double         _sample_freq;        // Hz

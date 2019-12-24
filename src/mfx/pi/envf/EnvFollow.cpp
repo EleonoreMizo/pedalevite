@@ -32,9 +32,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/envf/Cst.h"
 #include "mfx/pi/envf/EnvFollow.h"
 #include "mfx/pi/envf/Param.h"
+#include "mfx/piapi/Err.h"
 #include "mfx/piapi/EventParam.h"
 #include "mfx/piapi/EventTs.h"
 #include "mfx/piapi/EventType.h"
+#include "mfx/piapi/ProcInfo.h"
 
 #include <algorithm>
 
@@ -150,7 +152,7 @@ int	EnvFollow::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_state = State_ACTIVE;
 
-	return Err_OK;
+	return piapi::Err_OK;
 }
 
 
@@ -162,7 +164,7 @@ void	EnvFollow::do_clean_quick ()
 
 
 
-void	EnvFollow::do_process_block (ProcInfo &proc)
+void	EnvFollow::do_process_block (piapi::ProcInfo &proc)
 {
 	// Events
 	const int      nbr_evt = proc._nbr_evt;
@@ -319,9 +321,9 @@ float	EnvFollow::conv_time_to_coef (float t)
 
 
 
-void	EnvFollow::square_block (const ProcInfo &proc)
+void	EnvFollow::square_block (const piapi::ProcInfo &proc)
 {
-	const int      nbr_chn_src = proc._nbr_chn_arr [Dir_IN ];
+	const int      nbr_chn_src = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
 	const int      nbr_spl     = proc._nbr_spl;
 	float *        dst_ptr = &_buf_src [0];
 

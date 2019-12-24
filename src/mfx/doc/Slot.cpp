@@ -190,7 +190,7 @@ void	Slot::ser_read (SerRInterface &ser)
 
 	ser.read (_pi_model);
 	ser.read (_label);
-	_settings_mixer.ser_read (ser, Cst::_plugin_mix);
+	_settings_mixer.ser_read (ser, Cst::_plugin_dwm);
 
 	int            nbr_elt;
 	ser.begin_list (nbr_elt);

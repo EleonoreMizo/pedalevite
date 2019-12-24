@@ -29,7 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/cmd/Document.h"
 #include "mfx/cmd/Plugin.h"
+#include "mfx/cmd/Router.h"
 #include "mfx/cmd/Slot.h"
 #include "mfx/piapi/PluginState.h"
 #include "mfx/ui/UserInputInterface.h"
@@ -146,40 +148,14 @@ protected:
 
 private:
 
-	typedef std::shared_ptr <ProcessingContext> ContextSPtr;
-
-	class Document
-	{
-	public:
-		typedef std::map <int, bool> InstanceMap; // [Id] = use
-
-		class PluginLoc
-		{
-		public:
-			int            _slot_pos;
-			PiType         _type;
-		};
-
-		std::vector <Slot>
-		               _slot_list;
-		ContextSPtr    _ctx_sptr;
-		std::map <std::string, InstanceMap>       // All the existing plug-ins, ordered by model.
-		               _map_model_id;
-		std::map <int, PluginLoc>
-		               _map_id_loc;
-		ChnMode        _chn_mode   = ChnMode_1M_1M;
-		float          _master_vol = 1;
-		bool           _smooth_transition_flag = false;
-	};
-
 	typedef std::shared_ptr <Document> DocumentSPtr;
 
+	typedef Document::ContextSPtr ContextSPtr;
 	typedef std::set <ContextSPtr> ContextSet;
 
 	typedef std::map <std::string, piapi::PluginState> DefaultMap;
 
 	Document &     modify ();
-	Plugin &       find_plugin (Document &doc, int pi_id);
 	bool           is_plugin_used_in_audio_thread (int pi_id) const;
 	int            set_plugin (int pos, std::string model, PiType type, bool force_reset_flag, bool gen_audio_flag);
 	void           remove_plugin (int pos, PiType type);
@@ -208,6 +184,7 @@ private:
 	CentralCbInterface *
 	               _cb_ptr;       // 0 = not set
 
+	Router         _router;
 	DocumentSPtr   _cur_sptr;     // Current state
 	DocumentSPtr   _new_sptr;     // Context being created or modified
 	ContextSet     _ctx_trash;    // Contexts waiting to be finally destroyed.
@@ -219,6 +196,7 @@ private:
 	               _d2d_buf_arr;  // Input channels first, then output channels
 	std::array <const float *, Cst::_nbr_chn_in + Cst::_nbr_chn_out>
 	               _d2d_buf_ptr_arr;
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
