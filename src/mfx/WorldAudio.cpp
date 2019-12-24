@@ -655,6 +655,15 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 		fstb::DataAlign <true>
 	> MixAlignToUnalign;
 
+	if (! _ctx_ptr->_interface_mix.empty ())
+	{
+		mix_source_channels (
+			_ctx_ptr->_interface_ctx._side_arr [Dir_OUT],
+			_ctx_ptr->_interface_mix,
+			nbr_spl
+		);
+	}
+
 	const ProcessingContextNode::Side & side =
 		_ctx_ptr->_interface_ctx._side_arr [Dir_OUT];
 
@@ -741,7 +750,9 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 	if (! pi_ctx._mix_in_arr.empty ())
 	{
 		mix_source_channels (
-			pi_ctx._node_arr [PiType_MAIN], pi_ctx._mix_in_arr, nbr_spl
+			pi_ctx._node_arr [PiType_MAIN]._side_arr [Dir_IN],
+			pi_ctx._mix_in_arr,
+			nbr_spl
 		);
 	}
 
@@ -906,14 +917,12 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 
 
 
-void	WorldAudio::mix_source_channels (const ProcessingContextNode &node, const ProcessingContext::PluginContext::MixInputArray &mix_in_arr, int nbr_spl)
+void	WorldAudio::mix_source_channels (const ProcessingContextNode::Side &side, const ProcessingContext::PluginContext::MixInputArray &mix_in_arr, int nbr_spl)
 {
 	assert (nbr_spl > 0);
+	assert (mix_in_arr.size () == side._nbr_chn_tot);
 
-	const ProcessingContextNode::Side & side_i = node._side_arr [Dir_IN ];
-	assert (mix_in_arr.size () == side_i._nbr_chn_tot);
-
-	for (int chn_dst_cnt = 0; chn_dst_cnt < side_i._nbr_chn_tot; ++chn_dst_cnt)
+	for (int chn_dst_cnt = 0; chn_dst_cnt < side._nbr_chn_tot; ++chn_dst_cnt)
 	{
 		const ProcessingContext::PluginContext::MixInChn & mix_info =
 			mix_in_arr [chn_dst_cnt];
@@ -922,18 +931,23 @@ void	WorldAudio::mix_source_channels (const ProcessingContextNode &node, const P
 			const int      nbr_chn_src = int (mix_info.size ());
 			assert (nbr_chn_src >= 2);
 
-			float * const  dst_ptr   = _buf_arr [side_i._buf_arr [chn_dst_cnt]];
+			const int      buf_dst   = side._buf_arr [chn_dst_cnt];
+			float * const  dst_ptr   = _buf_arr [buf_dst];
 
 			// Mixes two inputs at a time
-			const float *  src_1_ptr = _buf_arr [mix_info [0]];
-			const float *  src_2_ptr = _buf_arr [mix_info [1]];
+			int            buf_src_1 = mix_info [0];
+			int            buf_src_2 = mix_info [1];
+			const float *  src_1_ptr = _buf_arr [buf_src_1];
+			const float *  src_2_ptr = _buf_arr [buf_src_2];
 			dsp::mix::Align::copy_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
 
 			const int      ncs2 = nbr_chn_src & ~1;
 			for (int chn_src_cnt = 2; chn_src_cnt < ncs2; chn_src_cnt += 2)
 			{
-				src_1_ptr = _buf_arr [mix_info [chn_src_cnt    ]];
-				src_2_ptr = _buf_arr [mix_info [chn_src_cnt + 1]];
+				buf_src_1 = mix_info [mix_info [chn_src_cnt    ]];
+				buf_src_2 = mix_info [mix_info [chn_src_cnt + 1]];
+				src_1_ptr = _buf_arr [buf_src_1];
+				src_2_ptr = _buf_arr [buf_src_2];
 				dsp::mix::Align::mix_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
 			}
 
