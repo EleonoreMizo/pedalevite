@@ -210,7 +210,8 @@ GpioPwm::Channel::Channel (int index, uint32_t periph_base_addr, uint32_t subcyc
 :	_index (index)
 ,	_dma_reg (
 		periph_base_addr + bcm2837dma::_dma_ofs,
-		bcm2837dma::_dma_chn_len, "/dev/mem", O_RDWR | O_SYNC
+		index * bcm2837dma::_dma_chn_inc + bcm2837dma::_dma_chn_len,
+		"/dev/mem", O_RDWR | O_SYNC
 	)
 ,	_subcycle_time (subcycle_time)
 ,	_nbr_samples ((_subcycle_time + (granularity >> 1)) / granularity)
