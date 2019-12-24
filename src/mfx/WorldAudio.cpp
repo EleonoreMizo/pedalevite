@@ -287,6 +287,7 @@ void	WorldAudio::reset_plugin (int pi_id)
 void	WorldAudio::collect_msg_cmd (bool proc_flag)
 {
 	bool           ctx_update_flag = false;
+	int            nbr_msg = 0;
 
 	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
 	do
@@ -346,9 +347,11 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 					_msg_pool_cmd.return_cell (*cell_ptr);
 				}
 			}
+
+			++ nbr_msg;
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != 0 && nbr_msg < _msg_limit);
 
 	if (ctx_update_flag)
 	{
@@ -389,6 +392,7 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 void	WorldAudio::collect_msg_ui (bool proc_flag)
 {
 	ui::UserInputInterface::MsgCell * cell_ptr = 0;
+	int            nbr_msg = 0;
 	do
 	{
 		cell_ptr = _queue_from_input.dequeue ();
@@ -405,9 +409,11 @@ void	WorldAudio::collect_msg_ui (bool proc_flag)
 			}
 
 			_input_device.return_cell (*cell_ptr);
+
+			++ nbr_msg;
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != 0 && nbr_msg < _msg_limit);
 }
 
 
