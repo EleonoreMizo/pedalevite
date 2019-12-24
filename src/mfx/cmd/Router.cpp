@@ -750,19 +750,8 @@ void	Router::create_graph_context (Document &doc, PluginPool &plugin_pool)
 	}
 
 	// Now, starts the traversal from the audio output pins
-	for (auto &cnx_pin : categ_list [CnxEnd::SlotType_IO] [0]._cnx_src_list)
-	{
-		for (auto &cnx : cnx_pin)
-		{
-			if (cnx._src._slot_type != CnxEnd::SlotType_IO)
-			{
-				visit_node (
-					doc, plugin_pool, buf_alloc, categ_list,
-					cnx._src._slot_type, cnx._src._slot_pos
-				);
-			}
-		}
-	}
+	NodeInfo &     node_info_io = categ_list [CnxEnd::SlotType_IO] [0];
+	check_source_nodes (doc, plugin_pool, buf_alloc, categ_list, node_info_io);
 
 	// Allocates output buffers if necessary, and add a reference for
 	// all of them to make sure they are kept allocated
@@ -859,6 +848,8 @@ void	Router::allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const Nod
 	assert (audio_o._nbr_chn_tot <= Cst::_nbr_chn_out);
 	assert (node_info._cnx_src_list.size () == nbr_pins);
 
+	ctx._interface_mix.clear (); // Default: no mix
+
 	// Use the source buffers as audio output buffers or allocates some to mix
 	// several inputs
 	collects_mix_source_buffers (
@@ -915,11 +906,10 @@ void	Router::free_buf_audio_o (Document &doc, BufAlloc &buf_alloc)
 
 /*
 Recursive traversal of the nodes.
-
-
 There is nothing to do if the node has already been visited, buffers
 are already allocated.
 */
+
 void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, CnxEnd::SlotType slot_type, int slot_pos)
 {
 	assert (   slot_type == CnxEnd::SlotType_NORMAL
