@@ -58,11 +58,6 @@ public:
 	int            _pi_id     = -1;  // Negative = not set
 	std::string    _model;
 
-	// If there are settings to apply during the commit. Automatically removed
-	// at the end of the transaction.
-	std::vector <float>
-	               _param_list;
-
 	// Compensation delay for the DelayInterface plug-ins. Automatically removed
 	// when setting up ProcessingContextNode (set to 0).
 	int            _comp_delay = 0;

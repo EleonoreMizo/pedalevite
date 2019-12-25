@@ -625,7 +625,6 @@ void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 			doc._map_model_id [plug_dly._model] [plug_dly._pi_id] = false;
 			plug_dly._cnx_index = -1;
 			plug_dly._cnx.invalidate ();
-			plug_dly._param_list.clear ();
 		}
 	}
 
@@ -665,7 +664,6 @@ void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 			doc._map_model_id [plug_dly._model] [plug_dly._pi_id] = false;
 			plug_dly._cnx_index = -1;
 			plug_dly._cnx.invalidate ();
-			plug_dly._param_list.clear ();
 		}
 	}
 

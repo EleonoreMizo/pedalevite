@@ -45,7 +45,6 @@ void	PluginAux::clear ()
 {
 	_pi_id = -1;
 	_model.clear ();
-	_param_list.clear ();
 	_cnx.invalidate ();
 }
 
