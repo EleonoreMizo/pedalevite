@@ -95,7 +95,7 @@ protected:
 private:
 
 	static const int  _max_nbr_evt = 1024; // Per plug-ins. This is a soft limit.
-	static const int  _msg_limit   = 64;   // Maximum number of events processed per block, for each queue.
+	static const int  _msg_limit   = 1024; // Maximum number of events processed per block, for each queue.
 
 	typedef std::vector <float, fstb::AllocAlign <float, 64> > AlignedZone;
 	typedef std::array <float *, Cst::_max_nbr_buf> BufferArray;
