@@ -1940,11 +1940,12 @@ void	Model::send_effect_settings (int pi_id, int slot_id, PiType type, const doc
 	const int      nbr_param_check = int (settings._param_list.size ());
 	assert (nbr_param == nbr_param_check); // Most likely a plug-in version mismatch
 	nbr_param = std::min (nbr_param, nbr_param_check); // Just to make sure
-	for (int p_index = 0; p_index < nbr_param; ++p_index)
-	{
-		const float    val = settings._param_list [p_index];
-		_central.set_param (pi_id, p_index, val);
-	}
+
+	std::vector <float>  param_list (
+		settings._param_list.begin (),
+		settings._param_list.begin () + nbr_param
+	);
+	_central.set_pi_state (pi_id, param_list);
 
 	// Modulations and automations
 	if (slot_id >= 0)
