@@ -362,16 +362,21 @@ void	NText::update_content ()
 		// Bold
 		if (_bold_flag)
 		{
-			const int      mag_x    = _mag_arr [0];
-			const int      shift_x  = _font_ptr->get_bold_shift () * mag_x;
-			uint8_t *      buf2_ptr = buf_ptr + stride * margin_y;
-			for (int y = 0; y < h_pix; ++y)
+			int            b_sh     = _font_ptr->get_bold_shift ();
+			const int      nbr_dup  = (b_sh >= 2) ? 2 : 1;
+			for (int dup = 0; dup < nbr_dup; ++dup)
 			{
-				for (int x = margin_x + w_pix - 1; x >= margin_x + shift_x; -- x)
+				const int      mag_x    = _mag_arr [0];
+				const int      shift_x  = b_sh * mag_x * (dup + 1) / nbr_dup;
+				uint8_t *      buf2_ptr = buf_ptr + stride * margin_y;
+				for (int y = 0; y < h_pix; ++y)
 				{
-					buf2_ptr [x] = std::max (buf2_ptr [x], buf2_ptr [x - shift_x]);
+					for (int x = margin_x + w_pix - 1; x >= margin_x + shift_x; -- x)
+					{
+						buf2_ptr [x] = std::max (buf2_ptr [x], buf2_ptr [x - shift_x]);
+					}
+					buf2_ptr += stride;
 				}
-				buf2_ptr += stride;
 			}
 		}
 
