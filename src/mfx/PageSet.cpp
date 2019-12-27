@@ -123,7 +123,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 	if (ret_val == 0)
 	{
 		// DejaVuSansMono-Bold.ttf, 46.0
-		_fnt_8x12.init (
+		ret_val = _fnt_8x12.init (
 			Cst::_font_dir + "/" + "font-48.data",
 			ui::FontMapping8859::_char_per_table,
 			7169, 49,
@@ -134,7 +134,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 	if (ret_val == 0)
 	{
 		// DejaVuSansMono.ttf, 31.0
-		_fnt_6x8.init (
+		ret_val = _fnt_6x8.init (
 			Cst::_font_dir + "/" + "font-32.data",
 			ui::FontMapping8859::_char_per_table,
 			4864, 33,
@@ -142,10 +142,23 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 			25
 		);
 	}
+  #if 1 // This font is sligthly wider, hence more readable.
+	if (ret_val == 0)
+	{
+		// DejaVuSansMono.ttf, 23.0, 1.25
+		ret_val = _fnt_6x6.init (
+			Cst::_font_dir + "/" + "font-24-w125.data",
+			ui::FontMapping8859::_char_per_table,
+			4362, 25,
+			ui::FontMapping8859::_data.data (),
+			18
+		);
+	}
+  #else
 	if (ret_val == 0)
 	{
 		// DejaVuSansMono.ttf, 23.0
-		_fnt_6x6.init (
+		ret_val = _fnt_6x6.init (
 			Cst::_font_dir + "/" + "font-24.data",
 			ui::FontMapping8859::_char_per_table,
 			3584, 25,
@@ -153,10 +166,11 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 			18
 		);
 	}
+  #endif
 	if (ret_val == 0)
 	{
 		// DejaVuSansMono-Bold.ttf, 15.0
-		_fnt_4x6.init (
+		ret_val = _fnt_4x6.init (
 			Cst::_font_dir + "/" + "font-16.data",
 			ui::FontMapping8859::_char_per_table,
 			2312, 17,
