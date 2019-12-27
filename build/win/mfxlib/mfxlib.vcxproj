@@ -695,6 +695,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h" />
+    <ClInclude Include="..\..\..\src\mfx\ui\FontMapping8859.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h" />
     <ClInclude Include="..\..\..\src\mfx\PageSet.h" />
@@ -1467,6 +1468,7 @@
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayVoid.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\Font.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\FontDataDefault.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ui\FontMapping8859.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\LedInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\LedVoid.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\RotEnc.cpp" />

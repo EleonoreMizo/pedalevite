@@ -994,6 +994,8 @@ commonsrc = \
         ../../src/mfx/ui/Font.h \
         ../../src/mfx/ui/FontDataDefault.cpp \
         ../../src/mfx/ui/FontDataDefault.h \
+        ../../src/mfx/ui/FontMapping8859.cpp \
+        ../../src/mfx/ui/FontMapping8859.h \
         ../../src/mfx/ui/LedInterface.cpp \
         ../../src/mfx/ui/LedInterface.h \
         ../../src/mfx/ui/LedVoid.cpp \

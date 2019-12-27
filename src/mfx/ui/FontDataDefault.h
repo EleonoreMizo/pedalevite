@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/ui/Font.h"
+#include "mfx/ui/FontMapping8859.h"
 
 #include <cstdint>
 
@@ -58,8 +59,6 @@ public:
 	static void    make_24x32 (Font &fnt);
 	static void    make_32x48 (Font &fnt);
 
-	virtual        ~FontDataDefault () = default;
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -72,13 +71,10 @@ protected:
 
 private:
 
-	static void    map_extra (Font &fnt);
-
-	static const int  _char_per_table = 256;
+	static const int  _char_per_table = FontMapping8859::_char_per_table;
 	static const int  _char_per_row   = 16;
 
-	static const char32_t
-	               _mapping_8859_15 [_char_per_table];
+	static void    map_extra (Font &fnt);
 
 	static const uint8_t
 	               _data_04x06 [_char_per_table * 4*6];
@@ -97,6 +93,7 @@ private:
 
 	               FontDataDefault ()                               = delete;
 	               FontDataDefault (const FontDataDefault &other)   = delete;
+	virtual        ~FontDataDefault ()                              = delete;
 	FontDataDefault &
 	               operator = (const FontDataDefault &other)        = delete;
 	bool           operator == (const FontDataDefault &other) const = delete;

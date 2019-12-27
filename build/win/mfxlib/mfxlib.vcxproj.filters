@@ -2982,6 +2982,9 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\DelayInterface.h">
       <Filter>mfx\cmd</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\ui\FontMapping8859.h">
+      <Filter>mfx\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4105,6 +4108,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ChnMode.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ui\FontMapping8859.cpp">
+      <Filter>mfx\ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
