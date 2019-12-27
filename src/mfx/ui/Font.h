@@ -31,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <array>
 #include <memory>
 
+#include <string>
+
 #include <cstdint>
 
 
@@ -53,6 +55,7 @@ public:
 	virtual        ~Font () = default;
 
 	void           init (int nbr_char, int char_w, int char_h, int char_per_row, int stride, const uint8_t pic_arr [], const char32_t unicode_arr [], int baseline, int max_val, bool copy_data_flag = true, int zoom_h = 1, int zoom_v = 1);
+	int            init (std::string filename, int nbr_char, int pic_w, int pic_h, const char32_t unicode_arr [], int baseline);
 	void           add_char (char32_t ucs4, int index);
 
 	bool           is_ready () const;
@@ -84,23 +87,32 @@ private:
 	static const int
 	               _not_found    = -1;
 
-	typedef std::array <int16_t, 1 << _zone_bits> Zone;   // _not_found: not assigned
-	typedef std::unique_ptr <Zone> ZoneUPtr;
-	typedef std::vector <ZoneUPtr> ZoneArray;
-	typedef std::vector <uint8_t>  PicData;
+	class GlyphInfo
+	{
+	public:
+		int            _width      = 0; // Width in pixels
+		int            _data_index = 0; // Offset in bytes within _data_ptr
+	};
+
+	typedef std::array <int16_t, 1 << _zone_bits> Zone;   // Glyph index. _not_found: glyph not assigned
+	typedef std::unique_ptr <Zone>  ZoneUPtr;
+	typedef std::vector <ZoneUPtr>  ZoneArray;
+	typedef std::vector <uint8_t>   PicData;
+	typedef std::vector <GlyphInfo> GlyphInfoArray;
 
 	int            get_char_pos (char32_t ucs4) const;
+	int            get_char_pos_no_fail (char32_t ucs4) const;
 
 	int            _nbr_char     = 0;
-	int            _char_w       = 0;
 	int            _char_h       = 0;
-	int            _char_per_row = 0;
 	int            _stride       = 0;
 	int            _baseline     = 0;
 	int            _bold_shift   = 0;
 	ZoneArray      _zone_arr;
 	PicData        _data_arr;
 	const uint8_t *_data_ptr     = 0;
+	bool           _prop_flag    = false;
+	GlyphInfoArray _glyph_arr;
 
 
 

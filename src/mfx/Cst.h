@@ -128,6 +128,8 @@ public:
 	static const std::string
 	               _config_dir;
 	static const std::string
+	               _font_dir;
+	static const std::string
 	               _audiodump_dir;
 	static const std::string
 	               _d2d_file;

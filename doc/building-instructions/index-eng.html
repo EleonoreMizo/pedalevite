@@ -1253,9 +1253,11 @@ Then install the software in its dedicated folder, as well as some other
 files:</p>
 <pre class="term">sudo mkdir -p /opt/pedalevite/bin
 sudo mkdir -p /opt/pedalevite/etc/config
+sudo mkdir -p /opt/pedalevite/etc/font
 sudo mkdir -p /opt/pedalevite/var/audiodump
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
-sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh</pre>
+sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh
+sudo cp ../../etc/font/* /opt/pedalevite/etc/font</pre>
 <p>The Pi can possibly be connected to all the required cards and peripherals
 (see the building instructions).
 Once done, run Pédale Vite for a quick check:</p>

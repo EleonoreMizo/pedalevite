@@ -73,6 +73,7 @@ const std::string	Cst::_empty_preset_name = "<Empty prog>";
 const std::string	Cst::_config_current = "current";
 const std::string	Cst::_config_factory = "factory-default";
 const std::string	Cst::_config_dir     = mfx_Cst_ROOT_DIR "etc/config";
+const std::string	Cst::_font_dir       = mfx_Cst_ROOT_DIR "etc/font";
 const std::string	Cst::_audiodump_dir  = mfx_Cst_ROOT_DIR "var/audiodump";
 const std::string	Cst::_d2d_file       = "raw-in-out.wav";
 const std::string	Cst::_rw_cmd_script_pathname = mfx_Cst_ROOT_DIR "bin/cmd_rofs.sh";

@@ -1398,9 +1398,11 @@ On installe ensuite le logiciel dans son répertoire, ainsi que quelques autres
 fichiers&#8239;:</p>
 <pre class="term">sudo mkdir -p /opt/pedalevite/bin
 sudo mkdir -p /opt/pedalevite/etc/config
+sudo mkdir -p /opt/pedalevite/etc/font
 sudo mkdir -p /opt/pedalevite/var/audiodump
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
-sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh</pre>
+sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh
+sudo cp ../../etc/font/* /opt/pedalevite/etc/font</pre>
 <p>Le Pi peut éventuellement être connecté à toutes les cartes et
 périphériques nécessaires (cf. les instructions de montage).
 Une fois ceci fait, on peut lancer Pédale Vite pour tester&#8239;:</p>

@@ -28,6 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Model.h"
 #include "mfx/PageSet.h"
 
+#include <stdexcept>
+
 #include <cassert>
 
 
@@ -115,11 +117,65 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_rec2disk (_page_switcher)
 {
 #if (PV_VERSION == 2)
+ #if 1
+	// True large fonts with anti-aliasing
+	int            ret_val = 0;
+	if (ret_val == 0)
+	{
+		// DejaVuSansMono-Bold.ttf, 46.0
+		_fnt_8x12.init (
+			Cst::_font_dir + "/" + "font-48.data",
+			ui::FontMapping8859::_char_per_table,
+			7169, 49,
+			ui::FontMapping8859::_data.data (),
+			37
+		);
+	}
+	if (ret_val == 0)
+	{
+		// DejaVuSansMono.ttf, 31.0
+		_fnt_6x8.init (
+			Cst::_font_dir + "/" + "font-32.data",
+			ui::FontMapping8859::_char_per_table,
+			4864, 33,
+			ui::FontMapping8859::_data.data (),
+			25
+		);
+	}
+	if (ret_val == 0)
+	{
+		// DejaVuSansMono.ttf, 23.0
+		_fnt_6x6.init (
+			Cst::_font_dir + "/" + "font-24.data",
+			ui::FontMapping8859::_char_per_table,
+			3584, 25,
+			ui::FontMapping8859::_data.data (),
+			18
+		);
+	}
+	if (ret_val == 0)
+	{
+		// DejaVuSansMono-Bold.ttf, 15.0
+		_fnt_4x6.init (
+			Cst::_font_dir + "/" + "font-16.data",
+			ui::FontMapping8859::_char_per_table,
+			2312, 17,
+			ui::FontMapping8859::_data.data (),
+			12
+		);
+	}
+	if (ret_val != 0)
+	{
+		throw std::runtime_error ("Cannot load font file");
+	}
+ #else
+	// Old zoomed fonts
 	ui::FontDataDefault::make_32x48 (_fnt_8x12);
 	ui::FontDataDefault::make_24x32 (_fnt_6x8);
 	ui::FontDataDefault::make_24x24 (_fnt_6x6);
 	ui::FontDataDefault::make_16x24 (_fnt_4x6);
-#else
+ #endif
+#else // PV_VERSION (1)
 	ui::FontDataDefault::make_08x12 (_fnt_8x12);
 	ui::FontDataDefault::make_06x08 (_fnt_6x8);
 	ui::FontDataDefault::make_06x06 (_fnt_6x6);

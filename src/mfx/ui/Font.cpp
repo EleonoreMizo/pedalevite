@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/ui/Font.h"
 
 #include <cassert>
@@ -62,11 +63,10 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 	_nbr_char   = nbr_char;
 	_baseline   = zoom_v * baseline;
 	_bold_shift = zoom_h;
+	_prop_flag  = false;
 	if (copy_data_flag || max_val != 255 || zoom_h != 1 || zoom_v != 1)
 	{
-		_char_w       = char_w * zoom_h;
 		_char_h       = char_h * zoom_v;
-		_char_per_row = 1;
 		_stride       = char_w * zoom_h;
 		_data_arr.resize (_nbr_char * _stride * _char_h);
 		int            pos_dst = 0;
@@ -114,16 +114,30 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 			}
 		}
 
-		_data_ptr     = &_data_arr [0];
+		_data_ptr    = _data_arr.data ();
+		char_per_row = 1;
 	}
 	else
 	{
-		_char_w       = char_w;
-		_char_h       = char_h;
-		_char_per_row = char_per_row;
-		_stride       = stride;
+		_char_h      = char_h;
+		_stride      = stride;
 		PicData ().swap (_data_arr);
-		_data_ptr     = pic_arr;
+		_data_ptr    = pic_arr;
+	}
+
+	char_w *= zoom_h;
+	char_h *= zoom_v;
+
+	// Fills glyph information
+	GlyphInfo      gi;
+	gi._width = char_w;
+	_glyph_arr.assign (nbr_char, gi);
+	for (int c = 0; c < nbr_char; ++c)
+	{
+		const int      row     = c / char_per_row;
+		const int      col     = c - row * char_per_row;
+		const int      pos_src = row * char_h * _stride + col * char_w;
+		_glyph_arr [c]._data_index = pos_src;
 	}
 
 	// Character mapping
@@ -132,6 +146,129 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 	{
 		add_char (unicode_arr [c], c);
 	}
+}
+
+
+
+/*
+This function takes a raw uncompressed picture file (no header) as input.
+The picture is made of nbr_char characters aligned from left to right.
+There is an extra line at the bottom to indicate the character width.
+This line alternates between 0 and 255 at each character.
+pic_w is the total width of the picture (sum of all character widths), and
+pic_h its height. Therefore the font height is pic_h - 1.
+Pixels are unsigned 8-bit greyscale (0 = transparent, 255 = 100% opaque).
+*/
+
+int	Font::init (std::string filename, int nbr_char, int pic_w, int pic_h, const char32_t unicode_arr [], int baseline)
+{
+	assert (! filename.empty ());
+	assert (nbr_char > 0);
+	assert (nbr_char <= 0x7FFF);
+	assert (pic_w >= nbr_char);
+	assert (pic_h > 1);
+	assert (unicode_arr != 0);
+	assert (baseline > 0);
+	assert (baseline <= pic_h - 1);
+
+	int            ret_val = 0;
+
+	_nbr_char   = nbr_char;
+	_baseline   = baseline;
+	_prop_flag  = true;
+
+	_char_h     = pic_h - 1;
+	_stride     = pic_w;
+	_data_arr.resize (_stride * _char_h);
+	PicData        width_code (_stride);
+
+	// Loads file
+	FILE *         file_ptr = fstb::fopen_utf8 (filename.c_str (), "rb");
+	if (file_ptr == 0)
+	{
+		ret_val = -1;
+	}
+
+	// Main data
+	if (ret_val == 0)
+	{
+		const size_t   len_read = fread (
+			_data_arr.data (),
+			sizeof (_data_arr [0]),
+			_data_arr.size (),
+			file_ptr
+		);
+		if (len_read != _data_arr.size ())
+		{
+			ret_val = -1;
+		}
+	}
+
+	// Additional line indicating the width of each character
+	if (ret_val == 0)
+	{
+		const size_t   len_read = fread (
+			width_code.data (),
+			sizeof (width_code [0]),
+			width_code.size (),
+			file_ptr
+		);
+		if (len_read != width_code.size ())
+		{
+			ret_val = -1;
+		}
+	}
+
+	if (file_ptr != 0)
+	{
+		fclose (file_ptr);
+		file_ptr = 0;
+	}
+
+	// Builds data
+	if (ret_val == 0)
+	{
+		GlyphInfoArray (nbr_char).swap (_glyph_arr);
+
+		int            pos_dst = 0;
+		for (int c = 0; c < nbr_char && pos_dst < _stride; ++c)
+		{
+			// Finds the character length
+			uint8_t        color = width_code [pos_dst];
+			int            width = 0;
+			while (   pos_dst + width < _stride
+			       && width_code [pos_dst + width] == color)
+			{
+				++ width;
+			}
+
+			GlyphInfo &    gi = _glyph_arr [c];
+			gi._width      = width;
+			gi._data_index = pos_dst;
+
+			pos_dst += width;
+		}
+
+		if (pos_dst != _stride)
+		{
+			ret_val = -1;
+		}
+	}
+
+	if (ret_val == 0)
+	{
+		_bold_shift = std::max (pic_w / (nbr_char * 8), 1);
+		_data_ptr   = _data_arr.data ();
+
+		// Character mapping
+		ZoneArray ().swap (_zone_arr);
+		for (int c = 0; c < nbr_char; ++c)
+		{
+			add_char (unicode_arr [c], c);
+		}
+	}
+
+	return ret_val;
 }
 
 
@@ -192,9 +329,14 @@ int	Font::get_char_h () const
 
 
 
-int	Font::get_char_w (char32_t /*ucs4*/) const
+int	Font::get_char_w (char32_t ucs4) const
 {
-	return _char_w;
+	const int      g_idx = get_char_pos_no_fail (ucs4);
+	const GlyphInfo & gl_info = _glyph_arr [g_idx];
+	const int      w     = gl_info._width;
+	assert (w > 0);
+
+	return w;
 }
 
 
@@ -211,18 +353,16 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride) const
 {
 	assert (is_ready ());
 	assert (buf_ptr != 0);
-	assert (dst_stride >= _char_w);
 
-	// Replaces unmapped characters with the one at position 0
-	const int      c       = std::max (get_char_pos (ucs4), 0);
-	const int      row     = c / _char_per_row;
-	const int      col     = c - row * _char_per_row;
-	const int      pos_src = row * _char_h * _stride + col * _char_w;
-	const uint8_t* src_ptr = &_data_ptr [pos_src];
+	const int      c       = get_char_pos_no_fail (ucs4);
+	const GlyphInfo & gi   = _glyph_arr [c];
+	const int      char_w  = gi._width;
+	assert (dst_stride >= char_w);
+	const uint8_t* src_ptr = _data_ptr + gi._data_index;
 
 	for (int y = 0; y < _char_h; ++y)
 	{
-		for (int x = 0; x < _char_w; ++x)
+		for (int x = 0; x < char_w; ++x)
 		{
 			buf_ptr [x] = src_ptr [x];
 		}
@@ -237,7 +377,6 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag
 {
 	assert (is_ready ());
 	assert (buf_ptr != 0);
-	assert (dst_stride >= _char_w);
 	assert (mag_x > 0);
 	assert (mag_y > 0);
 
@@ -247,16 +386,15 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag
 	}
 	else
 	{
-		// Replaces unmapped characters with the one at position 0
-		const int      c       = std::max (get_char_pos (ucs4), 0);
-		const int      row     = c / _char_per_row;
-		const int      col     = c - row * _char_per_row;
-		const int      pos_src = row * _char_h * _stride + col * _char_w;
-		const uint8_t* src_ptr = &_data_ptr [pos_src];
+		const int      c       = get_char_pos_no_fail (ucs4);
+		const GlyphInfo & gi   = _glyph_arr [c];
+		const int      char_w  = gi._width;
+		assert (dst_stride >= char_w);
+		const uint8_t* src_ptr = _data_ptr + gi._data_index;
 
 		for (int y = 0; y < _char_h; ++y)
 		{
-			for (int x = 0; x < _char_w; ++x)
+			for (int x = 0; x < char_w; ++x)
 			{
 				const uint8_t  v      = src_ptr [x];
 				const int      x_base = x * mag_x;
@@ -269,7 +407,7 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag
 			src_ptr += _stride;
 			for (int y2 = 1; y2 < mag_y; ++y2)
 			{
-				for (int x = 0; x < _char_w * mag_x; ++x)
+				for (int x = 0; x < char_w * mag_x; ++x)
 				{
 					buf_ptr [x] = buf_ptr [x - dst_stride];
 				}
@@ -303,6 +441,14 @@ int	Font::get_char_pos (char32_t ucs4) const
 	}
 
 	return pos;
+}
+
+
+
+// Replaces unmapped characters with the one at position 0
+int	Font::get_char_pos_no_fail (char32_t ucs4) const
+{
+	return std::max (get_char_pos (ucs4), 0);
 }
 
 
