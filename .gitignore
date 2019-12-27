@@ -49,4 +49,5 @@ doc/boards/*/*.bak
 doc/boards/*/*-bak
 doc/boards/*/*.bck
 build/win/.vs/
+build/win/fontgen/freetype/
 

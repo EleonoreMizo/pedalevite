@@ -53,6 +53,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pv_dly2", "pvvst\pv_dly2\pv
 		{3A8EC9DB-9E71-4330-9682-52D6CAA05578} = {3A8EC9DB-9E71-4330-9682-52D6CAA05578}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fontgen", "fontgen\fontgen.vcxproj", "{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -141,6 +143,14 @@ Global
 		{B455866C-A2DE-4899-A6DB-DD64F6835574}.Release|Win32.Build.0 = Release|Win32
 		{B455866C-A2DE-4899-A6DB-DD64F6835574}.Release|x64.ActiveCfg = Release|x64
 		{B455866C-A2DE-4899-A6DB-DD64F6835574}.Release|x64.Build.0 = Release|x64
+		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Debug|Win32.Build.0 = Debug|Win32
+		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Debug|x64.ActiveCfg = Debug|x64
+		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Debug|x64.Build.0 = Debug|x64
+		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Release|Win32.ActiveCfg = Release|Win32
+		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Release|Win32.Build.0 = Release|Win32
+		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Release|x64.ActiveCfg = Release|x64
+		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
