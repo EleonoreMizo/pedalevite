@@ -1013,6 +1013,15 @@ commonsrc = \
         ../../src/mfx/ui/UserInputType.h \
         ../../src/mfx/ui/UserInputVoid.cpp \
         ../../src/mfx/ui/UserInputVoid.h \
+        ../../src/mfx/uitk/grap/PrimBox.cpp \
+        ../../src/mfx/uitk/grap/PrimBox.h \
+        ../../src/mfx/uitk/grap/PrimLine.cpp \
+        ../../src/mfx/uitk/grap/PrimLine.h \
+        ../../src/mfx/uitk/grap/RenderCtx.cpp \
+        ../../src/mfx/uitk/grap/RenderCtx.h \
+        ../../src/mfx/uitk/grap/RenderCtx.hpp \
+        ../../src/mfx/uitk/grap/RenderInterface.cpp \
+        ../../src/mfx/uitk/grap/RenderInterface.h \
         ../../src/mfx/uitk/pg/BankMenu.cpp \
         ../../src/mfx/uitk/pg/BankMenu.h \
         ../../src/mfx/uitk/pg/BankMove.cpp \

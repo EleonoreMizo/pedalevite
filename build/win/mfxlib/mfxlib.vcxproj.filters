@@ -262,6 +262,9 @@
     <Filter Include="mfx\cmd\lat">
       <UniqueIdentifier>{99c33e30-e740-4bb6-8365-7f18ba802940}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\uitk\grap">
+      <UniqueIdentifier>{6735df35-d891-478e-a740-9e7b2e148c80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -2985,6 +2988,21 @@
     <ClInclude Include="..\..\..\src\mfx\ui\FontMapping8859.h">
       <Filter>mfx\ui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderCtx.h">
+      <Filter>mfx\uitk\grap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderCtx.hpp">
+      <Filter>mfx\uitk\grap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderInterface.h">
+      <Filter>mfx\uitk\grap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimLine.h">
+      <Filter>mfx\uitk\grap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimBox.h">
+      <Filter>mfx\uitk\grap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4111,6 +4129,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ui\FontMapping8859.cpp">
       <Filter>mfx\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\grap\RenderCtx.cpp">
+      <Filter>mfx\uitk\grap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\grap\RenderInterface.cpp">
+      <Filter>mfx\uitk\grap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\grap\PrimLine.cpp">
+      <Filter>mfx\uitk\grap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\grap\PrimBox.cpp">
+      <Filter>mfx\uitk\grap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
