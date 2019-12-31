@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 
 #include "mfx/cmd/Cnx.h"
 
+#include <string>
 #include <vector>
 
 

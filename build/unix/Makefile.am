@@ -1188,6 +1188,7 @@ commonsrc = \
         ../../src/mfx/PedalLoc.h \
         ../../src/mfx/PluginPool.cpp \
         ../../src/mfx/PluginPool.h \
+        ../../src/mfx/ProcessingContext.cpp \
         ../../src/mfx/ProcessingContext.h \
         ../../src/mfx/ProcessingContextNode.cpp \
         ../../src/mfx/ProcessingContextNode.h \

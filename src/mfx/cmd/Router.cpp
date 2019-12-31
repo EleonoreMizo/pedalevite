@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/Crc32.h"
 #include "mfx/cmd/BufAlloc.h"
 #include "mfx/cmd/Document.h"
 #include "mfx/cmd/Router.h"
@@ -72,6 +73,13 @@ void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 #else
 	create_routing_graph (doc, plugin_pool);
 #endif
+
+	// Checks if the graph has changed since the previous routing
+	fstb::Crc32    crc;
+	doc._ctx_sptr->compute_graph_crc (crc);
+	const uint32_t crc_new = crc.get_val ();
+	doc._ctx_sptr->_graph_changed_flag = (crc_new != _crc_cur);
+	_crc_cur = crc_new;
 }
 
 
@@ -148,6 +156,7 @@ void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
 
 			// Main plug-in
 			ctx_node_main._pi_id = pi_id_main;
+			pi_ctx._pi_model = desc_main.get_name ();
 
 			pi_ctx._mix_in_arr.clear ();
 
@@ -981,6 +990,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		int            main_nbr_i = 1;
 		int            main_nbr_o = 1;
 		int            main_nbr_s = 0;
+		std::string    pi_model;
 #if ! defined (NDEBUG)
 		bool           gen_audio_flag = false;
 #endif
@@ -990,6 +1000,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 			assert (nbr_pins_i == nbr_pins_o);
 			PluginAux &    dly = doc._plugin_dly_list [slot_pos];
 			pi_id_main = dly._pi_id;
+			pi_model   = Cst::_plugin_dly;
 			latency    = dly._comp_delay;
 			dly._comp_delay = 0;
 #if ! defined (NDEBUG)
@@ -1011,6 +1022,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 				const piapi::PluginDescInterface &   desc_main =
 					*plugin_pool.use_plugin (pi_id_main)._desc_ptr;
 				const bool     out_st_flag = desc_main.prefer_stereo ();
+				pi_model = desc_main.get_name ();
 				desc_main.get_nbr_io (main_nbr_i, main_nbr_o, main_nbr_s);
 
 				pi_id_mix  = slot._component_arr [PiType_MIX ]._pi_id;
@@ -1046,6 +1058,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 
 		ProcessingContextNode & ctx_node_main = pi_ctx._node_arr [PiType_MAIN];
 		ctx_node_main._pi_id = pi_id_main;
+		pi_ctx._pi_model     = pi_model;
 		pi_ctx._mix_in_arr.clear (); // Default: no mix
 
 		ProcessingContextNode::Side & main_side_i =

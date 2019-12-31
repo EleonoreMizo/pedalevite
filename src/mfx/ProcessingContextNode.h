@@ -37,6 +37,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+namespace fstb
+{
+	class Crc32;
+}
+
 namespace mfx
 {
 
@@ -48,12 +53,6 @@ class ProcessingContextNode
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	               ProcessingContextNode ();
-	               ProcessingContextNode (const ProcessingContextNode &other) = default;
-	virtual        ~ProcessingContextNode ()                       = default;
-	ProcessingContextNode &
-	               operator = (const ProcessingContextNode &other) = default;
 
 	class Side
 	{
@@ -68,6 +67,8 @@ public:
 
 		int &          use_buf (int pin, int chn);
 		const int &    use_buf (int pin, int chn) const;
+
+		void           compute_graph_crc (fstb::Crc32 &crc) const;
 
 		// The number of pins in this buffer may be larger than the actual
 		// number of pins of the plug-in.
@@ -85,6 +86,14 @@ public:
 	typedef std::array <SigInfo, Cst::_max_nbr_sig> SigBufArray;
 
 	typedef std::array <Side, Dir_NBR_ELT> SideArray;
+
+	               ProcessingContextNode ();
+	               ProcessingContextNode (const ProcessingContextNode &other) = default;
+	virtual        ~ProcessingContextNode ()                       = default;
+	ProcessingContextNode &
+	               operator = (const ProcessingContextNode &other) = default;
+
+	void           compute_graph_crc (fstb::Crc32 &crc) const;
 
 	int            _pi_id;
 	SideArray      _side_arr;

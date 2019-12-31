@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/Crc32.h"
 #include "mfx/ProcessingContextNode.h"
 
 #include <cassert>
@@ -61,6 +62,16 @@ ProcessingContextNode::ProcessingContextNode ()
 
 
 
+void	ProcessingContextNode::compute_graph_crc (fstb::Crc32 &crc) const
+{
+	for (const auto &side : _side_arr)
+	{
+		side.compute_graph_crc (crc);
+	}
+}
+
+
+
 int &	ProcessingContextNode::Side::use_buf (int pin, int chn)
 {
 	assert (pin >= 0);
@@ -85,6 +96,17 @@ const int &	ProcessingContextNode::Side::use_buf (int pin, int chn) const
 	assert (index < _nbr_chn_tot);
 
 	return _buf_arr [index];
+}
+
+
+
+void	ProcessingContextNode::Side::compute_graph_crc (fstb::Crc32 &crc) const
+{
+	for (int chn_cnt = 0; chn_cnt < _nbr_chn_tot; ++chn_cnt)
+	{
+		// The 8 first bits are enough.
+		crc.process_byte (_buf_arr [chn_cnt]);
+	}
 }
 
 

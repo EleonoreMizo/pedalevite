@@ -39,6 +39,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+namespace fstb
+{
+	class Crc32;
+}
+
 namespace mfx
 {
 
@@ -64,6 +69,10 @@ public:
 		typedef std::vector <int> MixInChn; // Buffers to be mixed in a single input channel. At least 2 elements or none.
 		typedef std::vector <MixInChn> MixInputArray; // All the mixed channels for the audio inputs. Size = _node_arr [PiType_MAIN]._side_arr [Dir_IN]._nbr_chn_tot
 
+		void           compute_graph_crc (fstb::Crc32 &crc) const;
+		static void    compute_graph_crc_mix_i (fstb::Crc32 &crc, const MixInputArray &mix_in_arr);
+
+		std::string    _pi_model;        // May be empty if the main plug-in is not set (_pi_id < 0)
 		NodeList       _node_arr;
 		bool           _mixer_flag = false;
 		MixInputArray  _mix_in_arr;      // Empty if there is no buffer to mix prior to processing.
@@ -78,6 +87,8 @@ public:
 
 	               ProcessingContext ()  = default;
 	virtual        ~ProcessingContext () = default;
+
+	void           compute_graph_crc (fstb::Crc32 &crc) const;
 
 	ProcessingContextNode        // Initial and final aligned buffers
 	               _interface_ctx;
@@ -96,6 +107,8 @@ public:
 	Curently we assume only a single pin.
 	***/
 	int            _nbr_chn_out = 1;
+
+	bool           _graph_changed_flag = false;
 
 
 

@@ -139,6 +139,9 @@ private:
 	Document::CnxList
 	               _cnx_list;
 
+	// CRC32 for the graph. Indicates when the routing has changed significantly.
+	uint32_t       _crc_cur        = 0xFFFFFFFF;
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

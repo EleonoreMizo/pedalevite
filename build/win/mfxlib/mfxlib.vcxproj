@@ -1380,6 +1380,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp" />
     <ClCompile Include="..\..\..\src\mfx\RecD2d.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />

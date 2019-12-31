@@ -420,19 +420,23 @@ void	WorldAudio::collect_msg_ui (bool proc_flag)
 
 void	WorldAudio::update_aux_param ()
 {
+	const bool     graph_changed_flag = _ctx_ptr->_graph_changed_flag;
+
 	for (const auto &pi_ctx : _ctx_ptr->_context_arr)
 	{
-		update_aux_param_pi (pi_ctx._node_arr [PiType_MAIN]);
+		update_aux_param_pi (pi_ctx._node_arr [PiType_MAIN], false);
 		if (pi_ctx._mixer_flag)
 		{
-			update_aux_param_pi (pi_ctx._node_arr [PiType_MIX]);
+			update_aux_param_pi (
+				pi_ctx._node_arr [PiType_MIX], graph_changed_flag
+			);
 		}
 	}
 }
 
 
 
-void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node)
+void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node, bool clean_flag)
 {
 	if (node._aux_param_flag)
 	{
@@ -446,6 +450,10 @@ void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node)
 		else
 		{
 			delay_ptr->set_aux_param (node._comp_delay, node._pin_mult);
+		}
+		if (clean_flag)
+		{
+			details._pi_uptr->clean_quick ();
 		}
 	}
 }
