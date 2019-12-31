@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/flancho/Cst.h"
@@ -226,7 +227,7 @@ void	Flancho::do_process_block (piapi::ProcInfo &proc)
 		double         phase_mult = 0;
 		if (nbr_chn_out > 1)
 		{
-			phase_mult = 0.25 / (nbr_chn_out - 1);
+			phase_mult = 0.25 * fstb::rcp_uint <double> (nbr_chn_out - 1);
 		}
 
 		for (int chn_cnt = 0; chn_cnt < nbr_chn_out; ++chn_cnt)
