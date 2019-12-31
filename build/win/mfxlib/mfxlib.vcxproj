@@ -1493,6 +1493,25 @@
     <ClCompile Include="..\..\..\src\mfx\View.cpp" />
     <ClCompile Include="..\..\..\src\mfx\WorldAudio.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\conc\README.md" />
+    <None Include="..\..\..\src\fstb\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\ana\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\ctrl\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\dly\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\dyn\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\fir\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\iir\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\mix\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\nz\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\osc\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\rspl\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\shape\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\spec\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\wnd\README.md" />
+    <None Include="..\..\..\src\mfx\README.md" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

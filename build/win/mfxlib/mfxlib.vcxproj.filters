@@ -4152,4 +4152,57 @@
       <Filter>fstb</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\fstb\README.md">
+      <Filter>fstb</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\README.md">
+      <Filter>mfx</Filter>
+    </None>
+    <None Include="..\..\..\src\conc\README.md">
+      <Filter>conc</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\README.md">
+      <Filter>mfx\dsp</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\ana\README.md">
+      <Filter>mfx\dsp\ana</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\ctrl\README.md">
+      <Filter>mfx\dsp\ctrl</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\dly\README.md">
+      <Filter>mfx\dsp\dly</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\dyn\README.md">
+      <Filter>mfx\dsp\dyn</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\fir\README.md">
+      <Filter>mfx\dsp\fir</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\iir\README.md">
+      <Filter>mfx\dsp\iir</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\mix\README.md">
+      <Filter>mfx\dsp\mix</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\nz\README.md">
+      <Filter>mfx\dsp\nz</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\osc\README.md">
+      <Filter>mfx\dsp\osc</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\rspl\README.md">
+      <Filter>mfx\dsp\rspl</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\shape\README.md">
+      <Filter>mfx\dsp\shape</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\spec\README.md">
+      <Filter>mfx\dsp\spec</Filter>
+    </None>
+    <None Include="..\..\..\src\mfx\dsp\wnd\README.md">
+      <Filter>mfx\dsp\wnd</Filter>
+    </None>
+  </ItemGroup>
 </Project>
