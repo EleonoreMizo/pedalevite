@@ -93,6 +93,7 @@ private:
 	typedef std::array <ChannelArray, _max_nbr_pins> PinArray;
 
 	void           clear_buffers ();
+	void           clear_dly_buf_quick ();
 
 	State          _state;
 
@@ -103,6 +104,10 @@ private:
 
 	PinArray       _pin_arr;
 	int            _nbr_pins;
+	int            _dly_spl;
+
+	// Clearing the delay buffers is requested at the next processing block.
+	bool           _req_clear_flag;
 
 
 

@@ -89,6 +89,7 @@ private:
 	typedef std::array <ChannelArray, _max_nbr_pins> PinArray;
 
 	void           clear_buffers ();
+	void           clear_dly_buf_quick ();
 
 	void           copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float lvl);
 	void           mix (int pin_idx, const piapi::ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
@@ -108,6 +109,9 @@ private:
 
 	float          _level_wet;          // For steady state
 	float          _level_dry;          // For steady state
+
+	// Clearing the delay buffers is requested at the next processing block.
+	bool           _req_clear_flag;
 
 
 

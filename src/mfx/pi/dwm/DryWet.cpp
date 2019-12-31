@@ -132,7 +132,7 @@ int	DryWet::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 void	DryWet::do_clean_quick ()
 {
-	clear_buffers ();
+	_req_clear_flag        = true;
 }
 
 
@@ -153,6 +153,10 @@ void	DryWet::do_process_block (piapi::ProcInfo &proc)
 
 	_state_set.process_block (proc._nbr_spl);
 
+	if (_dly_spl > 0 && _req_clear_flag)
+	{
+		clear_dly_buf_quick ();
+	}
 	float          lvl_wet_beg = _level_wet;
 	float          lvl_wet_end = _level_wet;
 	float          lvl_dry_beg = _level_dry;
@@ -205,6 +209,8 @@ void	DryWet::do_process_block (piapi::ProcInfo &proc)
 
 void	DryWet::do_set_aux_param (int dly_spl, int pin_mult)
 {
+	const int      dly_old = _dly_spl;
+
 	_dly_spl  = dly_spl;
 	_nbr_pins = pin_mult;
 
@@ -214,6 +220,14 @@ void	DryWet::do_set_aux_param (int dly_spl, int pin_mult)
 		{
 			chn._delay.set_delay (dly_spl);
 		}
+	}
+
+	// Delay time has changed: we most likely switched to another effect, or
+	// changed the settings in a way we cannot ensure signal continuity.
+	// Therefore the best thing to do is to clean the delay buffers.
+	if (dly_old != _dly_spl)
+	{
+		_req_clear_flag = true;
 	}
 }
 
@@ -232,6 +246,21 @@ void	DryWet::clear_buffers ()
 			chn._delay.clear_buffers ();
 		}
 	}
+	_req_clear_flag = false;
+}
+
+
+
+void	DryWet::clear_dly_buf_quick ()
+{
+	for (auto &pin : _pin_arr)
+	{
+		for (auto &chn : pin)
+		{
+			chn._delay.clear_buffers_quick ();
+		}
+	}
+	_req_clear_flag = false;
 }
 
 
