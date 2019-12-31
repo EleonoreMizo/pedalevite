@@ -42,7 +42,7 @@ std::string	ParamDescInterface::get_name (int len) const
 {
 	assert (len >= 0);
 
-	const auto      s = do_get_name (len);
+	const std::string s = do_get_name (len);
 	assert (len == 0 || s.length () <= size_t (len));
 
 	return s;
@@ -55,7 +55,7 @@ std::string	ParamDescInterface::get_unit (int len) const
 {
 	assert (len >= 0);
 
-	const auto      s = do_get_unit (len);
+	const std::string s = do_get_unit (len);
 	assert (len == 0 || s.length () <= size_t (len));
 
 	return s;
@@ -65,7 +65,7 @@ std::string	ParamDescInterface::get_unit (int len) const
 
 ParamDescInterface::Range	ParamDescInterface::get_range () const
 {
-	const auto     range = do_get_range ();
+	const Range    range = do_get_range ();
 	assert (range >= 0);
 	assert (range < Range_NBR_ELT);
 
@@ -76,7 +76,7 @@ ParamDescInterface::Range	ParamDescInterface::get_range () const
 
 ParamDescInterface::Categ	ParamDescInterface::get_categ () const
 {
-	auto           categ = do_get_categ ();
+	Categ          categ = do_get_categ ();
 	assert (categ >= 0);
 	assert (categ < Categ_NBR_ELT);
 
@@ -115,7 +115,7 @@ std::string	ParamDescInterface::conv_nat_to_str (double nat, int len) const
 	assert (nat <= do_get_nat_max ());
 	assert (len >= 0);
 
-	const auto      s = do_conv_nat_to_str (nat, len);
+	const std::string s = do_conv_nat_to_str (nat, len);
 	assert (len == 0 || s.length () <= size_t (len));
 
 	return s;
