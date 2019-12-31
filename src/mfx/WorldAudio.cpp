@@ -813,8 +813,7 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 			(proc_info._byp_state == piapi::BypassState_PRODUCED);
 
 		// Bypass/Mix/Gain
-		/*** To do: Is it the right test? or just pi_ctx._mixer_flag? ***/
-		if (proc_info._byp_state)
+		if (pi_ctx._mixer_flag)
 		{
 			proc_info._byp_state = piapi::BypassState_IGNORE;
 			prepare_buffers (
