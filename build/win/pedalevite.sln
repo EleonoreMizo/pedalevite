@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pedalevite", "pedalevite\pedalevite.vcxproj", "{4ECD73F9-7BF9-4B6F-95F0-F671660588AA}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -154,5 +154,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5BFCE38D-8561-4790-B7F1-283CEB24F901}
 	EndGlobalSection
 EndGlobal
