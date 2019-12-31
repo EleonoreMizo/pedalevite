@@ -159,6 +159,9 @@ commonsrc = \
         ../../src/fstb/BitFieldTools.hpp \
         ../../src/fstb/CpuId.cpp \
         ../../src/fstb/CpuId.h \
+        ../../src/fstb/Crc32.cpp \
+        ../../src/fstb/Crc32.h \
+        ../../src/fstb/Crc32.hpp \
         ../../src/fstb/DataAlign.h \
         ../../src/fstb/DataAlign.hpp \
         ../../src/fstb/def.h \

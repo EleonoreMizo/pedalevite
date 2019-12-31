@@ -188,6 +188,8 @@
     <ClInclude Include="..\..\..\src\fstb\BitFieldTools.h" />
     <ClInclude Include="..\..\..\src\fstb\BitFieldTools.hpp" />
     <ClInclude Include="..\..\..\src\fstb\CpuId.h" />
+    <ClInclude Include="..\..\..\src\fstb\Crc32.h" />
+    <ClInclude Include="..\..\..\src\fstb\Crc32.hpp" />
     <ClInclude Include="..\..\..\src\fstb\DataAlign.h" />
     <ClInclude Include="..\..\..\src\fstb\DataAlign.hpp" />
     <ClInclude Include="..\..\..\src\fstb\def.h" />
@@ -1044,6 +1046,7 @@
     <ClCompile Include="..\..\..\src\asiosdk2\host\pc\asiolist.cpp" />
     <ClCompile Include="..\..\..\src\fstb\BitFieldSparse.cpp" />
     <ClCompile Include="..\..\..\src\fstb\CpuId.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\Crc32.cpp" />
     <ClCompile Include="..\..\..\src\fstb\fnc.cpp">
       <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
       <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>

@@ -3003,6 +3003,12 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimBox.h">
       <Filter>mfx\uitk\grap</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\Crc32.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\Crc32.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4141,6 +4147,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\grap\PrimBox.cpp">
       <Filter>mfx\uitk\grap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\Crc32.cpp">
+      <Filter>fstb</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
