@@ -783,12 +783,7 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 		proc_info._byp_state = (pi_ctx._mixer_flag)
 			? piapi::BypassState_ASK
 			: piapi::BypassState_IGNORE;
-		prepare_buffers (
-			proc_info,
-			pi_ctx._node_arr [PiType_MAIN],
-			pi_ctx._bypass_buf_arr,
-			false
-		);
+		prepare_buffers (proc_info, pi_ctx, PiType_MAIN, false);
 
 		process_single_plugin (pi_ctx._node_arr [PiType_MAIN]._pi_id, proc_info);
 
@@ -809,19 +804,14 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 
 		handle_signals (proc_info, pi_ctx._node_arr [PiType_MAIN]);
 
-		const bool       bypass_produced_flag =
-			(proc_info._byp_state == piapi::BypassState_PRODUCED);
-
 		// Bypass/Mix/Gain
 		if (pi_ctx._mixer_flag)
 		{
+			const bool       bypass_produced_flag =
+				(proc_info._byp_state == piapi::BypassState_PRODUCED);
+
 			proc_info._byp_state = piapi::BypassState_IGNORE;
-			prepare_buffers (
-				proc_info,
-				pi_ctx._node_arr [PiType_MIX],
-				pi_ctx._bypass_buf_arr,
-				bypass_produced_flag
-			);
+			prepare_buffers (proc_info, pi_ctx, PiType_MIX, bypass_produced_flag);
 
 			process_single_plugin (pi_ctx._node_arr [PiType_MIX]._pi_id, proc_info);
 		}
@@ -973,15 +963,22 @@ void	WorldAudio::mix_source_channels (const ProcessingContextNode::Side &side, c
 // By default, for the mixer plug-in, the bypass channels are filled
 // with the input buffers from the main plug-in. However we can
 // explicitely request to use the bypass output, if it was generated.
-void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContextNode &node, const ProcessingContext::PluginContext::BypBufArray &bypass_buf_arr, bool use_byp_as_src_flag)
+void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContext::PluginContext &pi_ctx, PiType type, bool use_byp_as_src_flag)
 {
+	assert (type >= 0);
+	assert (type <= PiType_NBR_ELT);
+	assert (! use_byp_as_src_flag || type == PiType_MIX);
+
 	const float ** src_arr = const_cast <const float **> (proc_info._src_arr);
 	float **       dst_arr = const_cast <      float **> (proc_info._dst_arr);
 	float **       byp_arr = const_cast <      float **> (proc_info._byp_arr);
 	float **       sig_arr = const_cast <      float **> (proc_info._sig_arr);
 
+	const ProcessingContextNode & node = pi_ctx._node_arr [type];
 	const ProcessingContextNode::Side & side_i = node._side_arr [Dir_IN ];
 	const ProcessingContextNode::Side & side_o = node._side_arr [Dir_OUT];
+	const ProcessingContext::PluginContext::BypBufArray & bypass_buf_arr =
+		pi_ctx._bypass_buf_arr;
 
 	// Sets the input buffers
 	if (use_byp_as_src_flag)
@@ -1019,6 +1016,21 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 			assert (buf_index < int (_buf_arr.size ()));
 			src_arr [chn] = _buf_arr [buf_index];
 		}
+
+		if (type == PiType_MAIN)
+		{
+			// Sets the bypass buffers (for later use in the D/W mix plug-in)
+			if (bypass_buf_arr [0] >= 0)
+			{
+				for (int chn = 0; chn < side_o._nbr_chn_tot; ++ chn)
+				{
+					const int      buf_index = bypass_buf_arr [chn];
+					assert (buf_index >= 0);
+					assert (buf_index < int (_buf_arr.size ()));
+					byp_arr [chn] = _buf_arr [buf_index];
+				}
+			}
+		}
 	}
 
 	// Sets the output buffers
@@ -1028,18 +1040,6 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 		assert (buf_index >= 0);
 		assert (buf_index < int (_buf_arr.size ()));
 		dst_arr [chn] = _buf_arr [buf_index];
-	}
-
-	// Sets the bypass buffers (for the D/W mix plug-in)
-	if (bypass_buf_arr [0] >= 0)
-	{
-		for (int chn = 0; chn < side_o._nbr_chn_tot; ++ chn)
-		{
-			const int      buf_index = bypass_buf_arr [chn];
-			assert (buf_index >= 0);
-			assert (buf_index < int (_buf_arr.size ()));
-			byp_arr [chn] = _buf_arr [buf_index];
-		}
 	}
 
 	// Sets the signal buffers

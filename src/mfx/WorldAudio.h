@@ -136,7 +136,7 @@ private:
 	void           process_plugin_bundle (const ProcessingContext::PluginContext &pi_ctx, int nbr_spl);
 	void           process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info);
 	void           mix_source_channels (const ProcessingContextNode::Side &side, const ProcessingContext::PluginContext::MixInputArray &mix_in_arr, int nbr_spl);
-	void           prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContextNode &node, const ProcessingContext::PluginContext::BypBufArray &bypass_buf_arr, bool use_byp_as_src_flag);
+	void           prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContext::PluginContext &pi_ctx, PiType type, bool use_byp_as_src_flag);
 	void           handle_signals (piapi::ProcInfo &proc_info, const ProcessingContextNode &node);
 
 	void           handle_msg_ctx (WaMsg::Ctx &msg);
