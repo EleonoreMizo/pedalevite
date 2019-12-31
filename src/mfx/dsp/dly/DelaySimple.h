@@ -57,6 +57,7 @@ public:
 	inline float   process_sample (float x);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           clear_buffers ();
+	void           clear_buffers_quick ();
 
 
 

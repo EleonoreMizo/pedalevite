@@ -108,6 +108,17 @@ void	DelaySimple::clear_buffers ()
 
 
 
+void	DelaySimple::clear_buffers_quick ()
+{
+	if (_dly > 0)
+	{
+		memset (_buf.data (), 0, _dly * sizeof (_buf [0]));
+	}
+	_pos_w = 0;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
