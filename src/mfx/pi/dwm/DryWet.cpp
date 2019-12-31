@@ -133,6 +133,7 @@ int	DryWet::do_reset (double sample_freq, int max_buf_len, int &latency)
 void	DryWet::do_clean_quick ()
 {
 	_req_clear_flag        = true;
+	_req_steady_state_flag = true;
 }
 
 
@@ -151,12 +152,19 @@ void	DryWet::do_process_block (piapi::ProcInfo &proc)
 		}
 	}
 
+	if (_req_steady_state_flag)
+	{
+		_state_set.clear_buffers ();
+		_req_steady_state_flag = false;
+	}
+
 	_state_set.process_block (proc._nbr_spl);
 
 	if (_dly_spl > 0 && _req_clear_flag)
 	{
 		clear_dly_buf_quick ();
 	}
+
 	float          lvl_wet_beg = _level_wet;
 	float          lvl_wet_end = _level_wet;
 	float          lvl_dry_beg = _level_dry;
@@ -165,26 +173,13 @@ void	DryWet::do_process_block (piapi::ProcInfo &proc)
 	bool           ramp_flag   = false;
 	if (_param_change_flag (true))
 	{
-		const float    byp_end =
-			float (_state_set.get_val_end_nat (Param_BYPASS));
-		const float    vol_end  =
-			float (_state_set.get_val_end_nat (Param_GAIN));
-		const float    mix_end  =
-			float (_state_set.get_val_end_nat (Param_WET));
-
-		const float    wet_mix  = mix_end * (1 - byp_end);
-
-		lvl_wet_end =      wet_mix  * vol_end;
-#if defined (mfx_pi_dwm_DryWet_GAIN_WET_ONLY)
-		lvl_dry_end = (1 - wet_mix);
-#else
-		lvl_dry_end = (1 - wet_mix) * vol_end;
-#endif
+		set_dw_param (lvl_dry_beg, lvl_wet_beg, false);
+		set_dw_param (lvl_dry_end, lvl_wet_end, true);
 
 		_level_wet = lvl_wet_end;
 		_level_dry = lvl_dry_end;
 
-		ramp_flag = (lvl_wet_end != lvl_wet_beg || lvl_dry_end != lvl_dry_beg);
+		ramp_flag  = (lvl_wet_end != lvl_wet_beg || lvl_dry_end != lvl_dry_beg);
 	}
 
 	for (int pin_idx = 0; pin_idx < _nbr_pins; ++pin_idx)
@@ -261,6 +256,36 @@ void	DryWet::clear_dly_buf_quick ()
 		}
 	}
 	_req_clear_flag = false;
+}
+
+
+
+void	DryWet::set_dw_param (float &dry, float &wet, bool end_flag) const
+{
+	float          byp;
+	float          vol;
+	float          mix;
+	if (end_flag)
+	{
+		byp = float (_state_set.get_val_end_nat (Param_BYPASS));
+		vol = float (_state_set.get_val_end_nat (Param_GAIN));
+		mix = float (_state_set.get_val_end_nat (Param_WET));
+	}
+	else
+	{
+		byp = float (_state_set.get_val_beg_nat (Param_BYPASS));
+		vol = float (_state_set.get_val_beg_nat (Param_GAIN));
+		mix = float (_state_set.get_val_beg_nat (Param_WET));
+	}
+
+	const float    wet_mix  = mix * (1 - byp);
+
+	wet =      wet_mix  * vol;
+#if defined (mfx_pi_dwm_DryWet_GAIN_WET_ONLY)
+	dry = (1 - wet_mix);
+#else
+	dry = (1 - wet_mix) * vol;
+#endif
 }
 
 

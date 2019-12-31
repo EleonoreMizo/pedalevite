@@ -91,6 +91,7 @@ private:
 	void           clear_buffers ();
 	void           clear_dly_buf_quick ();
 
+	void           set_dw_param (float &dry, float &wet, bool end_flag) const;
 	void           copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float lvl);
 	void           mix (int pin_idx, const piapi::ProcInfo &proc, float lvl_wet_beg, float lvl_wet_end, float lvl_dry_beg, float lvl_dry_end);
 
@@ -112,6 +113,8 @@ private:
 
 	// Clearing the delay buffers is requested at the next processing block.
 	bool           _req_clear_flag;
+
+	bool           _req_steady_state_flag;
 
 
 
