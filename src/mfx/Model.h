@@ -135,6 +135,7 @@ public:
 	void           set_preset (int bank_index, int preset_index, const doc::Preset &preset);
 	void           activate_preset (int preset_index);
 	void           store_preset (int preset_index, int bank_index);
+	void           set_prog_switch_mode (doc::ProgSwitchMode mode);
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
 	void           set_tuner (bool tuner_flag);

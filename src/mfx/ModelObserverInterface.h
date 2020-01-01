@@ -48,6 +48,7 @@ class PedalLoc;
 namespace doc
 {
 	class PedalboardLayout;
+	enum class ProgSwitchMode;
 	class Bank;
 	class CtrlLinkSet;
 }
@@ -107,6 +108,7 @@ public:
 	void           set_preset (int bank_index, int preset_index, const doc::Preset &preset);
 	void           activate_preset (int index);
 	void           store_preset (int preset_index, int bank_index);
+	void           set_prog_switch_mode (doc::ProgSwitchMode mode);
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (float vol);
 	void           set_tuner (bool active_flag);
@@ -152,6 +154,7 @@ protected:
 	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset) = 0;
 	virtual void   do_activate_preset (int index) = 0;
 	virtual void   do_store_preset (int preset_index, int bank_index) = 0;
+	virtual void   do_set_prog_switch_mode (doc::ProgSwitchMode mode) = 0;
 	virtual void   do_set_chn_mode (ChnMode mode) = 0;
 	virtual void   do_set_master_vol (float vol) = 0;
 	virtual void   do_set_tuner (bool active_flag) = 0;

@@ -71,6 +71,7 @@ protected:
 	               do_handle_evt (const NodeEvt &evt);
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
+	virtual void   do_set_prog_switch_mode (doc::ProgSwitchMode mode);
 
 
 
@@ -80,10 +81,14 @@ private:
 
 	enum Entry
 	{
-		Entry_LAYOUT = 1000
+		Entry_LAYOUT = 1000,
+		Entry_SWITCH
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
+
+	void           update_display ();
+	EvtProp        change_switch (int dir);
 
 	PageSwitcher & _page_switcher;
 	PedalEditContext &
@@ -97,6 +102,7 @@ private:
 	               _fnt_ptr;
 
 	TxtSPtr        _layout_sptr;
+	TxtSPtr        _switch_sptr;
 
 
 

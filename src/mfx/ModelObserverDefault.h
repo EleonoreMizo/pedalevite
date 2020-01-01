@@ -59,6 +59,7 @@ public:
 	virtual void   do_set_preset (int /*bank_index*/, int /*preset_index*/, const doc::Preset &/*preset*/) {}
 	virtual void   do_activate_preset (int /*index*/) {}
 	virtual void   do_store_preset (int /*preset_index*/, int /*bank_index*/) {}
+	virtual void   do_set_prog_switch_mode (doc::ProgSwitchMode /*mode*/) {}
 	virtual void   do_set_chn_mode (ChnMode /*mode*/) {}
 	virtual void   do_set_master_vol (float /*vol*/) {}
 	virtual void   do_set_tuner (bool /*active_flag*/) {}

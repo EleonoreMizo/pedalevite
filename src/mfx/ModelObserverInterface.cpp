@@ -175,6 +175,16 @@ void	ModelObserverInterface::store_preset (int preset_index, int bank_index)
 
 
 
+void	ModelObserverInterface::set_prog_switch_mode (doc::ProgSwitchMode mode)
+{
+	assert (int (mode) >= 0);
+	assert (mode < doc::ProgSwitchMode::NBR_ELT);
+
+	do_set_prog_switch_mode (mode);
+}
+
+
+
 void	ModelObserverInterface::set_chn_mode (ChnMode mode)
 {
 	assert (mode >= 0);

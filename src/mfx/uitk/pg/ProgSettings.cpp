@@ -25,6 +25,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
+#include "mfx/doc/Preset.h"
 #include "mfx/uitk/pg/ProgSettings.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -59,9 +61,9 @@ ProgSettings::ProgSettings (PageSwitcher &page_switcher, PedalEditContext &pedal
 ,	_page_size ()
 ,	_fnt_ptr (0)
 ,	_layout_sptr (new NText (Entry_LAYOUT))
+,	_switch_sptr (new NText (Entry_SWITCH))
 {
-	_layout_sptr->set_justification (0.5f, 0, false);
-	_layout_sptr->set_text ("Pedal layout");
+	_layout_sptr->set_text ("Pedal layout\xE2\x80\xA6");
 }
 
 
@@ -81,21 +83,27 @@ void	ProgSettings::do_connect (Model &model, const View &view, PageMgrInterface 
 	_fnt_ptr   = &fnt._m;
 
 	_layout_sptr->set_font (*_fnt_ptr);
+	_switch_sptr->set_font (*_fnt_ptr);
 
 	const int      scr_w = _page_size [0];
-	const int      x_mid =  scr_w >> 1;
 	const int      h_m   = _fnt_ptr->get_char_h ();
 
-	_layout_sptr->set_coord (Vec2d (x_mid, 0 * h_m));
+	_layout_sptr->set_coord (Vec2d (0, 0 * h_m));
+	_switch_sptr->set_coord (Vec2d (0, 1 * h_m));
 
 	_layout_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_switch_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
 	_page_ptr->push_back (_layout_sptr);
+	_page_ptr->push_back (_switch_sptr);
 
 	PageMgrInterface::NavLocList  nav_list;
 	PageMgrInterface::add_nav (nav_list, Entry_LAYOUT);
+	PageMgrInterface::add_nav (nav_list, Entry_SWITCH);
 
 	_page_ptr->set_nav_layout (nav_list);
+
+	update_display ();
 }
 
 
@@ -136,6 +144,18 @@ MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 			_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
 			ret_val = EvtProp_CATCH;
 			break;
+		case Button_L:
+			if (node_id == Entry_SWITCH)
+			{
+				ret_val = change_switch (-1);
+			}
+			break;
+		case Button_R:
+			if (node_id == Entry_SWITCH)
+			{
+				ret_val = change_switch (+1);
+			}
+			break;
 		default:
 			// Nothing
 			break;
@@ -147,7 +167,54 @@ MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 
 
 
+void	ProgSettings::do_set_prog_switch_mode (doc::ProgSwitchMode mode)
+{
+	fstb::unused (mode);
+
+	update_display ();
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	ProgSettings::update_display ()
+{
+	std::string    txt = "Switch: ";
+	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	switch (prog._prog_switch_mode)
+	{
+	case doc::ProgSwitchMode::DIRECT:
+		txt += "Direct";
+		break;
+	case doc::ProgSwitchMode::FADE_OUT_IN:
+		txt += "Fade out+in";
+		break;
+	default:
+		assert (false);
+		break;
+	}
+	_switch_sptr->set_text (txt);
+}
+
+
+
+MsgHandlerInterface::EvtProp	ProgSettings::change_switch (int dir)
+{
+	assert (dir == -1 || dir == +1);
+
+	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	int            mode = int (prog._prog_switch_mode);
+
+	mode += dir;
+	mode = fstb::limit (mode, 0, int (doc::ProgSwitchMode::NBR_ELT) - 1);
+
+	_model_ptr->set_prog_switch_mode (doc::ProgSwitchMode (mode));
+
+	return EvtProp_CATCH;
+}
 
 
 

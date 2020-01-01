@@ -401,6 +401,14 @@ void	View::do_store_preset (int preset_index, int bank_index)
 
 
 
+void	View::do_set_prog_switch_mode (doc::ProgSwitchMode mode)
+{
+	_preset_cur._prog_switch_mode = mode;
+	mfx_View_PROPAGATE (set_prog_switch_mode (mode));
+}
+
+
+
 void	View::do_set_chn_mode (ChnMode mode)
 {
 	_setup._chn_mode = mode;

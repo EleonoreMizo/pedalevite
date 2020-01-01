@@ -593,6 +593,20 @@ void	Model::store_preset (int preset_index, int bank_index)
 
 
 
+void	Model::set_prog_switch_mode (doc::ProgSwitchMode mode)
+{
+	assert (int (mode) >= 0);
+	assert (mode < doc::ProgSwitchMode::NBR_ELT);
+
+	_preset_cur._prog_switch_mode = mode;
+	if (_obs_ptr != 0)
+	{
+		_obs_ptr->set_prog_switch_mode (mode);
+	}
+}
+
+
+
 void	Model::set_chn_mode (ChnMode mode)
 {
 	assert (mode >= 0);
