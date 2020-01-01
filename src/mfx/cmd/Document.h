@@ -30,6 +30,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/cmd/Cnx.h"
 #include "mfx/cmd/Slot.h"
 #include "mfx/cmd/PluginAux.h"
+#include "mfx/doc/ProgSwitchMode.h"
 #include "mfx/piapi/Dir.h"
 #include "mfx/ChnMode.h"
 #include "mfx/PiType.h"
@@ -79,9 +80,10 @@ public:
 	               _map_model_id;
 	std::map <int, PluginLoc>           // [plugin_id] = location. Only main/dwm plug-ins, no compensation delay
 	               _map_id_loc;
-	ChnMode        _chn_mode               = ChnMode_1M_1M;
-	float          _master_vol             = 1;
-	bool           _smooth_transition_flag = false;
+	ChnMode        _chn_mode         = ChnMode_1M_1M;
+	float          _master_vol       = 1;
+	doc::ProgSwitchMode
+	               _prog_switch_mode = doc::ProgSwitchMode::DIRECT;
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Additions for graph routing

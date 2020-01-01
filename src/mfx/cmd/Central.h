@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/Plugin.h"
 #include "mfx/cmd/Router.h"
 #include "mfx/cmd/Slot.h"
+#include "mfx/doc/ProgSwitchMode.h"
 #include "mfx/piapi/PluginState.h"
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/ChnMode.h"
@@ -112,7 +113,7 @@ public:
 	void           set_sig_source (int pi_id, int sig_pin, int port_id);
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
-	void           set_transition (bool smooth_flag);
+	void           set_prog_switch_mode (doc::ProgSwitchMode prog_switch_mode);
 
 	// Immediate operations
 	void           set_param (int pi_id, int index, float val);

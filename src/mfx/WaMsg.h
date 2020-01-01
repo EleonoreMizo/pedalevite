@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/ProgSwitchMode.h"
+
 
 
 namespace mfx
@@ -69,7 +71,8 @@ public:
 	public:
 		const ProcessingContext *	// Forward: the new context, on return: the context to be recycled.
 		               _ctx_ptr;
-		uint64_t       _fade_chnmap;
+		doc::ProgSwitchMode
+		               _prog_switch_mode;
 	};
 
 	class Param

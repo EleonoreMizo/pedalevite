@@ -42,6 +42,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/BufPack.h"
 #include "mfx/Cst.h"
 #include "mfx/MeterResultSet.h"
+#include "mfx/ProgSwitcher.h"
 #include "mfx/WaMsgQueue.h"
 
 #include <atomic>
@@ -92,6 +93,15 @@ protected:
 
 private:
 
+	enum class CellRet
+	{
+		NONE = 0,
+		POOL,
+		CMD,
+
+		NBR_ELT
+	};
+
 	static const int  _max_nbr_evt = 1024; // Per plug-ins. This is a soft limit.
 	static const int  _msg_limit   = 1024; // Maximum number of events processed per block, for each queue.
 
@@ -120,9 +130,9 @@ private:
 
 	void           reset_everything ();
 	void           reset_plugin (int pi_id);
-	void           collect_msg_cmd (bool proc_flag);
+	void           collect_msg_cmd (bool proc_flag, bool ctx_update_flag);
 	void           collect_msg_ui (bool proc_flag);
-	void           update_aux_param ();
+	void           setup_new_context ();
 	void           update_aux_param_pi (const ProcessingContextNode &node, bool clean_flag);
 	void           handle_controller (const ControlSource &controller, float val_raw);
 	void           copy_input (const float * const * src_arr, int nbr_spl);
@@ -134,7 +144,6 @@ private:
 	void           prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContext::PluginContext &pi_ctx, PiType type, bool use_byp_as_src_flag);
 	void           handle_signals (piapi::ProcInfo &proc_info, const ProcessingContextNode &node);
 
-	void           handle_msg_ctx (WaMsg::Ctx &msg);
 	void           handle_msg_param (WaMsg::Param &msg);
 	void           handle_msg_tempo (WaMsg::Tempo &msg);
 
@@ -180,7 +189,8 @@ private:
 	SigResultArray _sig_res_arr;
 
 	bool           _reset_flag;         // Indicates that we should reset all the chain, because something wrong occured.
-	uint64_t       _fade_chnmap;        // Smooth transition needed on these channels during this block (because of program changes)
+
+	ProgSwitcher   _prog_switcher;
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	static const int  _max_rec_duration = 30;   // Seconds. Records to disk once time elapsed.

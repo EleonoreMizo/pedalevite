@@ -218,10 +218,7 @@ void	Central::commit ()
 		msg_list [0]->_val._sender = WaMsg::Sender_CMD;
 		msg_list [0]->_val._type   = WaMsg::Type_CTX;
 		msg_list [0]->_val._content._ctx._ctx_ptr = _new_sptr->_ctx_sptr.get ();
-		if (doc._smooth_transition_flag)
-		{
-			msg_list [0]->_val._content._ctx._fade_chnmap = ~uint64_t (0);
-		}
+		msg_list [0]->_val._content._ctx._prog_switch_mode = doc._prog_switch_mode;
 
 		create_param_msg (msg_list);
 
@@ -574,11 +571,14 @@ void	Central::set_master_vol (double vol)
 
 
 
-void	Central::set_transition (bool smooth_flag)
+void	Central::set_prog_switch_mode (doc::ProgSwitchMode prog_switch_mode)
 {
+	assert (int (prog_switch_mode) >= 0);
+	assert (prog_switch_mode < doc::ProgSwitchMode::NBR_ELT);
+
 	modify ();
 
-	_new_sptr->_smooth_transition_flag = smooth_flag;
+	_new_sptr->_prog_switch_mode = prog_switch_mode;
 }
 
 

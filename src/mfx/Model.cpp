@@ -1674,10 +1674,7 @@ void	Model::apply_settings_normal ()
 	_pi_id_map.clear ();
 	_slot_info.clear ();
 
-	if (_preset_cur._smooth_transition_flag)
-	{
-		_central.set_transition (true);
-	}
+	_central.set_prog_switch_mode (_preset_cur._prog_switch_mode);
 
 	// Chain last, other plug-ins before
 	const std::vector <int> onl = _preset_cur.build_ordered_node_list (false);

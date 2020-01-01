@@ -289,6 +289,7 @@ commonsrc = \
         ../../src/mfx/doc/PluginSettings.h \
         ../../src/mfx/doc/Preset.cpp \
         ../../src/mfx/doc/Preset.h \
+        ../../src/mfx/doc/ProgSwitchMode.h \
         ../../src/mfx/doc/Routing.cpp \
         ../../src/mfx/doc/Routing.h \
         ../../src/mfx/doc/SerRInterface.cpp \
@@ -1195,6 +1196,8 @@ commonsrc = \
         ../../src/mfx/ProcessingContext.h \
         ../../src/mfx/ProcessingContextNode.cpp \
         ../../src/mfx/ProcessingContextNode.h \
+        ../../src/mfx/ProgSwitcher.cpp \
+        ../../src/mfx/ProgSwitcher.h \
         ../../src/mfx/RecD2d.cpp \
         ../../src/mfx/RecD2d.h \
         ../../src/mfx/SharedRscState.h \

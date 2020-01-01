@@ -50,7 +50,7 @@ Preset::Preset (const Preset &other)
 ,	_name (other._name)
 ,	_layout (other._layout)
 ,	_port_map (other._port_map)
-,	_smooth_transition_flag (other._smooth_transition_flag)
+,	_prog_switch_mode (other._prog_switch_mode)
 {
 	duplicate_slot_list ();
 }
@@ -66,7 +66,7 @@ Preset &	Preset::operator = (const Preset &other)
 		_name     = other._name;
 		_layout   = other._layout;
 		_port_map = other._port_map;
-		_smooth_transition_flag = other._smooth_transition_flag;
+		_prog_switch_mode = other._prog_switch_mode;
 		duplicate_slot_list ();
 	}
 
@@ -228,7 +228,7 @@ void	Preset::ser_write (SerWInterface &ser) const
 	ser.begin_list ();
 
 	ser.write (_name);
-	ser.write (_smooth_transition_flag);
+	ser.write (_prog_switch_mode);
 
 	_layout.ser_write (ser);
 
@@ -268,10 +268,10 @@ void	Preset::ser_read (SerRInterface &ser)
 
 	ser.read (_name);
 
-	_smooth_transition_flag = false;
+	_prog_switch_mode = ProgSwitchMode::DIRECT;
 	if (doc_ver >= 6)
 	{
-		ser.read (_smooth_transition_flag);
+		ser.read (_prog_switch_mode);
 	}
 
 	_layout.ser_read (ser);

@@ -3009,6 +3009,12 @@
     <ClInclude Include="..\..\..\src\fstb\Crc32.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\doc\ProgSwitchMode.h">
+      <Filter>mfx\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\BufPack.h">
       <Filter>mfx</Filter>
     </ClInclude>
@@ -4158,6 +4164,9 @@
       <Filter>fstb</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\ProgSwitcher.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\BufPack.cpp">

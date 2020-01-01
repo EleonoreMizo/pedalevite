@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/PedalboardLayout.h"
+#include "mfx/doc/ProgSwitchMode.h"
 #include "mfx/doc/Routing.h"
 #include "mfx/doc/SignalPort.h"
 #include "mfx/doc/Slot.h"
@@ -83,7 +84,7 @@ public:
 	PedalboardLayout
 	               _layout;
 	PortMap        _port_map;
-	bool           _smooth_transition_flag = false;
+	ProgSwitchMode _prog_switch_mode = ProgSwitchMode::DIRECT;
 
 
 

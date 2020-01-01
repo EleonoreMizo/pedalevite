@@ -78,7 +78,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaM
 ,	_proc_analyser ()
 ,	_sig_res_arr ()
 ,	_reset_flag (false)
-,	_fade_chnmap (0)
+,	_prog_switcher (_ctx_ptr, queue_to_cmd, _buf_pack)
 #if defined (mfx_WorldAudio_BUF_REC)
 ,	_data_rec_flag (true)
 ,	_data_rec_arr ()
@@ -97,7 +97,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaM
 WorldAudio::~WorldAudio ()
 {
 	// Flushes the queues
-	collect_msg_cmd (false);
+	collect_msg_cmd (false, false);
 	collect_msg_ui (false);
 }
 
@@ -136,7 +136,7 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	_period_now    = 1;
 	_rate_expected = float (sample_freq / (int64_t (max_block_size) * 1000000));
 
-	_fade_chnmap   = 0;
+	_prog_switcher.reset (sample_freq, max_block_size);
 }
 
 
@@ -179,6 +179,8 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	}
 	_proc_date_beg = date_beg;
 
+	bool           ctx_update_flag = _prog_switcher.frame_beg ();
+
 	// A problem occured...
 	if (_reset_flag)
 	{
@@ -187,7 +189,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	}
 
 	// Collects messages from the command thread
-	collect_msg_cmd (true);
+	collect_msg_cmd (true, ctx_update_flag);
 
 	// Collects messages from the user input thread
 	collect_msg_ui (true);
@@ -274,9 +276,8 @@ void	WorldAudio::reset_plugin (int pi_id)
 
 
 
-void	WorldAudio::collect_msg_cmd (bool proc_flag)
+void	WorldAudio::collect_msg_cmd (bool proc_flag, bool ctx_update_flag)
 {
-	bool           ctx_update_flag = false;
 	int            nbr_msg = 0;
 
 	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
@@ -295,15 +296,22 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 			// Message from the command thread
 			else
 			{
-				bool           ret_flag = true;
+				CellRet        ret_dest = CellRet::CMD;
 
 				switch (cell_ptr->_val._type)
 				{
 				case WaMsg::Type_CTX:
 					if (proc_flag)
 					{
-						handle_msg_ctx (cell_ptr->_val._content._ctx);
-						ctx_update_flag = true;
+						_prog_switcher.handle_msg_ctx (*cell_ptr);
+						if (_prog_switcher.is_ctx_delayed ())
+						{
+							ret_dest = CellRet::NONE;
+						}
+						else
+						{
+							ctx_update_flag = true;
+						}
 					}
 					break;
 				case WaMsg::Type_PARAM:
@@ -311,14 +319,14 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 					{
 						handle_msg_param (cell_ptr->_val._content._param);
 					}
-					ret_flag = false;
+					ret_dest = CellRet::POOL;
 					break;
 				case WaMsg::Type_TEMPO:
 					if (proc_flag)
 					{
 						handle_msg_tempo (cell_ptr->_val._content._tempo);
 					}
-					ret_flag = false;
+					ret_dest = CellRet::POOL;
 					break;
 
 				default:
@@ -328,11 +336,11 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 
 				// Returns the message to the sender so they know it has been
 				// taken into account (if there are resources to free for ex.)
-				if (ret_flag)
+				if (ret_dest == CellRet::CMD)
 				{
 					_queue_to_cmd.enqueue (*cell_ptr);
 				}
-				else
+				else if (ret_dest == CellRet::POOL)
 				{
 					_msg_pool_cmd.return_cell (*cell_ptr);
 				}
@@ -341,11 +349,16 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag)
 			++ nbr_msg;
 		}
 	}
-	while (cell_ptr != 0 && nbr_msg < _msg_limit);
+	while (   cell_ptr != 0
+	       && nbr_msg < _msg_limit
+	       && ! _prog_switcher.is_ctx_delayed ());
+	//        ^ If we just got a FADE_OUT_IN switch mode, we stop right now
+	// processing messages, so the associated parameter changes will occur
+	// after the context switch.
 
 	if (ctx_update_flag)
 	{
-		update_aux_param ();
+		setup_new_context ();
 	}
 
 #if defined (mfx_WorldAudio_BUF_REC)
@@ -408,8 +421,11 @@ void	WorldAudio::collect_msg_ui (bool proc_flag)
 
 
 
-void	WorldAudio::update_aux_param ()
+void	WorldAudio::setup_new_context ()
 {
+	// Automatic tempo refresh (for the new plug-ins)
+	_tempo_new = _tempo_cur;
+
 	const bool     graph_changed_flag = _ctx_ptr->_graph_changed_flag;
 
 	for (const auto &pi_ctx : _ctx_ptr->_context_arr)
@@ -525,7 +541,6 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 		fstb::DataAlign <true>,
 		fstb::DataAlign <false>
 	> MixUnalignToAlign;
-	typedef dsp::mix::Align MixAlign;
 
 	const ProcessingContextNode::Side & side =
 		_ctx_ptr->_interface_ctx._side_arr [Dir_IN];
@@ -552,36 +567,7 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 		}
 	}
 
-	if (_fade_chnmap != 0)
-	{
-
-/*** To do:
-Fading the input is not enough, we should also mix the output with a
-fade out version of the extrapolation of the previous output.
-We can use LPC: build a filter (16 coef?) from the last known output
-samples (buffer them first), filter with LPC the previous buffer, use
-the filter output + a time-reverted version of it to feed the inverse
-LPC filter and keep the second part. Fade it out and mix.
-LPC code:
-https://www.dsprelated.com/showthread/comp.dsp/119064-1.php
-https://www.dsprelated.com/showthread/comp.dsp/134663-1.php
-***/
-
-		const int      fade_len = std::min (
-			fstb::floor_int (_sample_freq * 0.0015f),
-			nbr_spl
-		);
-		for (int chn = 0; chn < side._nbr_chn_tot; ++chn)
-		{
-			if (((_fade_chnmap >> chn) & 1) != 0)
-			{
-				const int      buf_index = side._buf_arr [chn];
-				float *        buf_ptr   = _buf_pack.use (buf_index);
-				MixAlign::scale_1_vlr (buf_ptr, fade_len, 0, 1);
-			}
-		}
-		_fade_chnmap = 0;
-	}
+	_prog_switcher.process_buffers_i (side, nbr_spl);
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	if (_data_rec_flag)
@@ -664,6 +650,8 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 
 	const ProcessingContextNode::Side & side =
 		_ctx_ptr->_interface_ctx._side_arr [Dir_OUT];
+
+	_prog_switcher.process_buffers_o (side, nbr_spl);
 
 	const int      buf_0_index = side._buf_arr [0];
 	const float *  buf_0_ptr   = _buf_pack.use (buf_0_index);
@@ -1053,17 +1041,6 @@ void	WorldAudio::handle_signals (piapi::ProcInfo &proc_info, const ProcessingCon
 			handle_controller (controller, val);
 		}
 	}
-}
-
-
-
-void	WorldAudio::handle_msg_ctx (WaMsg::Ctx &msg)
-{
-	std::swap (_ctx_ptr, msg._ctx_ptr);
-	_fade_chnmap = msg._fade_chnmap;
-
-	// Automatic tempo refresh (for the new plug-ins)
-	_tempo_new = _tempo_cur;
 }
 
 

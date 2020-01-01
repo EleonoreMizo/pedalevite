@@ -392,6 +392,7 @@
     <ClInclude Include="..\..\..\src\mfx\doc\PedalboardLayout.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\PluginSettings.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Preset.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\ProgSwitchMode.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Routing.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SerRInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\SerRText.h" />
@@ -697,6 +698,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimBox.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimLine.h" />
@@ -1384,6 +1386,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ProgSwitcher.cpp" />
     <ClCompile Include="..\..\..\src\mfx\RecD2d.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />
