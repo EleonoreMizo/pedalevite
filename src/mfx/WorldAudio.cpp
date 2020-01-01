@@ -112,17 +112,7 @@ void	WorldAudio::set_process_info (double sample_freq, int max_block_size)
 	_max_block_size = max_block_size;
 	_sample_freq    = float (sample_freq);
 
-	const int      multiple = int (
-		  AlignedZone::allocator_type::ALIGNMENT
-		/ sizeof (AlignedZone::value_type)
-	);
-	assert (fstb::is_pow_2 (multiple));
-	const int      block_align = (max_block_size + multiple - 1) & -multiple;
-	_buf_zone.resize (block_align * Cst::_max_nbr_buf);
-	for (int buf_index = 0; buf_index < Cst::_max_nbr_buf; ++buf_index)
-	{
-		_buf_arr [buf_index] = &_buf_zone [buf_index * block_align];
-	}
+	_buf_pack.set_max_block_size (max_block_size);
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	// Preallocates a few recording buffers
@@ -544,12 +534,8 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 	{
 		const int      buf_0_index = side._buf_arr [0];
 		const int      buf_1_index = side._buf_arr [1];
-		assert (buf_0_index >= 0);
-		assert (buf_0_index < int (_buf_arr.size ()));
-		assert (buf_1_index >= 0);
-		assert (buf_1_index < int (_buf_arr.size ()));
-		float *        buf_0_ptr   = _buf_arr [buf_0_index];
-		float *        buf_1_ptr   = _buf_arr [buf_1_index];
+		float *        buf_0_ptr   = _buf_pack.use (buf_0_index);
+		float *        buf_1_ptr   = _buf_pack.use (buf_1_index);
 		MixUnalignToAlign::copy_2_2 (
 			buf_0_ptr, buf_1_ptr,
 			src_arr [0], src_arr [1],
@@ -561,9 +547,7 @@ void	WorldAudio::copy_input (const float * const * src_arr, int nbr_spl)
 		for (int chn = 0; chn < side._nbr_chn_tot; ++chn)
 		{
 			const int      buf_index = side._buf_arr [chn];
-			assert (buf_index >= 0);
-			assert (buf_index < int (_buf_arr.size ()));
-			float *        buf_ptr   = _buf_arr [buf_index];
+			float *        buf_ptr   = _buf_pack.use (buf_index);
 			MixUnalignToAlign::copy_1_1 (buf_ptr, src_arr [chn], nbr_spl);
 		}
 	}
@@ -592,7 +576,7 @@ https://www.dsprelated.com/showthread/comp.dsp/134663-1.php
 			if (((_fade_chnmap >> chn) & 1) != 0)
 			{
 				const int      buf_index = side._buf_arr [chn];
-				float *        buf_ptr   = _buf_arr [buf_index];
+				float *        buf_ptr   = _buf_pack.use (buf_index);
 				MixAlign::scale_1_vlr (buf_ptr, fade_len, 0, 1);
 			}
 		}
@@ -682,16 +666,12 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 		_ctx_ptr->_interface_ctx._side_arr [Dir_OUT];
 
 	const int      buf_0_index = side._buf_arr [0];
-	const float *  buf_0_ptr   = _buf_arr [buf_0_index];
+	const float *  buf_0_ptr   = _buf_pack.use (buf_0_index);
 
 	if (side._nbr_chn == 2)
 	{
 		const int      buf_1_index = side._buf_arr [1];
-		assert (buf_0_index >= 0);
-		assert (buf_0_index < int (_buf_arr.size ()));
-		assert (buf_1_index >= 0);
-		assert (buf_1_index < int (_buf_arr.size ()));
-		const float *  buf_1_ptr   = _buf_arr [buf_1_index];
+		const float *  buf_1_ptr   = _buf_pack.use (buf_1_index);
 		if (_ctx_ptr->_nbr_chn_out == 2)
 		{
 			MixAlignToUnalign::copy_2_2_v (
@@ -737,9 +717,7 @@ void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 			for (int chn = 0; chn < side._nbr_chn; ++chn)
 			{
 				const int      buf_index = side._buf_arr [chn];
-				assert (buf_index >= 0);
-				assert (buf_index < int (_buf_arr.size ()));
-				const float *  buf_ptr   = _buf_arr [buf_index];
+				const float *  buf_ptr   = _buf_pack.use (buf_index);
 				MixAlignToUnalign::copy_1_1_v (
 					dst_arr [chn],
 					buf_ptr,
@@ -935,13 +913,13 @@ void	WorldAudio::mix_source_channels (const ProcessingContextNode::Side &side, c
 			assert (nbr_chn_src >= 2);
 
 			const int      buf_dst   = side._buf_arr [chn_dst_cnt];
-			float * const  dst_ptr   = _buf_arr [buf_dst];
+			float * const  dst_ptr   = _buf_pack.use (buf_dst);
 
 			// Mixes two inputs at a time
 			int            buf_src_1 = mix_info [0];
 			int            buf_src_2 = mix_info [1];
-			const float *  src_1_ptr = _buf_arr [buf_src_1];
-			const float *  src_2_ptr = _buf_arr [buf_src_2];
+			const float *  src_1_ptr = _buf_pack.use (buf_src_1);
+			const float *  src_2_ptr = _buf_pack.use (buf_src_2);
 			dsp::mix::Align::copy_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
 
 			const int      ncs2 = nbr_chn_src & ~1;
@@ -949,15 +927,15 @@ void	WorldAudio::mix_source_channels (const ProcessingContextNode::Side &side, c
 			{
 				buf_src_1 = mix_info [mix_info [chn_src_cnt    ]];
 				buf_src_2 = mix_info [mix_info [chn_src_cnt + 1]];
-				src_1_ptr = _buf_arr [buf_src_1];
-				src_2_ptr = _buf_arr [buf_src_2];
+				src_1_ptr = _buf_pack.use (buf_src_1);
+				src_2_ptr = _buf_pack.use (buf_src_2);
 				dsp::mix::Align::mix_2_1 (dst_ptr, src_1_ptr, src_2_ptr, nbr_spl);
 			}
 
 			if (ncs2 < nbr_chn_src)
 			{
 				assert (ncs2 == nbr_chn_src - 1);
-				src_1_ptr = _buf_arr [mix_info [ncs2]];
+				src_1_ptr = _buf_pack.use (mix_info [ncs2]);
 				dsp::mix::Align::mix_1_1 (dst_ptr, src_1_ptr, nbr_spl);
 			}
 		}
@@ -1002,15 +980,11 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 			for (int chn = 0; chn < side_i._nbr_chn; ++ chn)
 			{
 				const int      buf_src = side_i._buf_arr [chn_ofs + chn];
-				assert (buf_src >= 0);
-				assert (buf_src < int (_buf_arr.size ()));
-				src_arr [chn_ofs * 2 + chn] =
-					_buf_arr [buf_src];
+				src_arr [chn_ofs * 2 + chn] = _buf_pack.use (buf_src);
 
 				const int      buf_byp = bypass_buf_arr [chn_ofs + chn];
-				assert (buf_byp >= 0);
-				assert (buf_byp < int (_buf_arr.size ()));
-				src_arr [chn_ofs * 2 + side_i._nbr_chn + chn] = _buf_arr [buf_byp];
+				src_arr [chn_ofs * 2 + side_i._nbr_chn + chn] =
+					_buf_pack.use (buf_byp);
 			}
 		}
 	}
@@ -1020,9 +994,7 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 		for (int chn = 0; chn < side_i._nbr_chn_tot; ++ chn)
 		{
 			const int      buf_index = side_i._buf_arr [chn];
-			assert (buf_index >= 0);
-			assert (buf_index < int (_buf_arr.size ()));
-			src_arr [chn] = _buf_arr [buf_index];
+			src_arr [chn] = _buf_pack.use (buf_index);
 		}
 
 		if (type == PiType_MAIN)
@@ -1033,9 +1005,7 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 				for (int chn = 0; chn < side_o._nbr_chn_tot; ++ chn)
 				{
 					const int      buf_index = bypass_buf_arr [chn];
-					assert (buf_index >= 0);
-					assert (buf_index < int (_buf_arr.size ()));
-					byp_arr [chn] = _buf_arr [buf_index];
+					byp_arr [chn] = _buf_pack.use (buf_index);
 				}
 			}
 		}
@@ -1045,18 +1015,14 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 	for (int chn = 0; chn < side_o._nbr_chn_tot; ++ chn)
 	{
 		const int      buf_index = side_o._buf_arr [chn];
-		assert (buf_index >= 0);
-		assert (buf_index < int (_buf_arr.size ()));
-		dst_arr [chn] = _buf_arr [buf_index];
+		dst_arr [chn] = _buf_pack.use (buf_index);
 	}
 
 	// Sets the signal buffers
 	for (int sig = 0; sig < node._nbr_sig; ++sig)
 	{
 		const int      buf_index = node._sig_buf_arr [sig]._buf_index;
-		assert (buf_index >= 0);
-		assert (buf_index < int (_buf_arr.size ()));
-		sig_arr [sig] = _buf_arr [buf_index];
+		sig_arr [sig] = _buf_pack.use (buf_index);
 	}
 
 	// Sets the number of channels

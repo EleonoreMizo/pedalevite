@@ -1142,6 +1142,9 @@ commonsrc = \
         ../../src/mfx/uitk/Rect.hpp \
         ../../src/mfx/uitk/Vec2d.h \
         ../../src/mfx/uitk/Vec2d.hpp \
+        ../../src/mfx/BufPack.cpp \
+        ../../src/mfx/BufPack.h \
+        ../../src/mfx/BufPack.hpp \
         ../../src/mfx/ChnMode.cpp \
         ../../src/mfx/ChnMode.h \
         ../../src/mfx/CmdLine.h \

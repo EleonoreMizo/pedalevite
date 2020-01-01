@@ -3009,6 +3009,12 @@
     <ClInclude Include="..\..\..\src\fstb\Crc32.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\BufPack.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\BufPack.hpp">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4152,6 +4158,9 @@
       <Filter>fstb</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\BufPack.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>

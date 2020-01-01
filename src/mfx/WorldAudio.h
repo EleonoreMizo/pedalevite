@@ -35,13 +35,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "conc/CellPool.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/SingleObj.h"
-#if defined (mfx_WorldAudio_BUF_REC)
-	#include "fstb/BitFieldSparse.h"
-#endif
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold.h"
 #include "mfx/dsp/dyn/MeterRmsPeakHold4Simd.h"
 #include "mfx/piapi/EventTs.h"
+#include "mfx/BufPack.h"
 #include "mfx/Cst.h"
 #include "mfx/MeterResultSet.h"
 #include "mfx/WaMsgQueue.h"
@@ -96,9 +94,6 @@ private:
 
 	static const int  _max_nbr_evt = 1024; // Per plug-ins. This is a soft limit.
 	static const int  _msg_limit   = 1024; // Maximum number of events processed per block, for each queue.
-
-	typedef std::vector <float, fstb::AllocAlign <float, 64> > AlignedZone;
-	typedef std::array <float *, Cst::_max_nbr_buf> BufferArray;
 
 	static_assert (Cst::_max_nbr_input <= Cst::_max_nbr_output * 2, "");
 	typedef std::array <
@@ -159,8 +154,7 @@ private:
 	int            _max_block_size;
 	float          _sample_freq;
 
-	AlignedZone    _buf_zone;
-	BufferArray    _buf_arr;
+	BufPack        _buf_pack;
 
 	const ProcessingContext *
 	               _ctx_ptr;
