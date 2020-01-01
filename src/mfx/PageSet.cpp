@@ -94,7 +94,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_levels (_page_switcher, snd_drv)
 ,	_page_pedalboard_config (_page_switcher, _loc_edit_pedal)
 ,	_page_pedal_action_type (_page_switcher, _loc_edit_pedal)
-,	_page_ctrl_prog (_page_switcher, _loc_edit_pedal)
+,	_page_prog_settings (_page_switcher, _loc_edit_pedal)
 ,	_page_bank_menu (_page_switcher, _loc_edit_pedal)
 ,	_page_move_fx (_page_switcher, _loc_edit)
 ,	_page_pedal_edit_group (_page_switcher, _loc_edit_pedal)
@@ -213,7 +213,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 	_page_switcher.add_page (uitk::pg::PageType_LEVELS           , _page_levels           );
 	_page_switcher.add_page (uitk::pg::PageType_PEDALBOARD_CONFIG, _page_pedalboard_config);
 	_page_switcher.add_page (uitk::pg::PageType_PEDAL_ACTION_TYPE, _page_pedal_action_type);
-	_page_switcher.add_page (uitk::pg::PageType_CTRL_PROG        , _page_ctrl_prog        );
+	_page_switcher.add_page (uitk::pg::PageType_PROG_SETTINGS    , _page_prog_settings    );
 	_page_switcher.add_page (uitk::pg::PageType_BANK_MENU        , _page_bank_menu        );
 	_page_switcher.add_page (uitk::pg::PageType_MOVE_FX          , _page_move_fx          );
 	_page_switcher.add_page (uitk::pg::PageType_PEDAL_EDIT_GROUP , _page_pedal_edit_group );

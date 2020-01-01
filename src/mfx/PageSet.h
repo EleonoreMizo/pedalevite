@@ -33,7 +33,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/BankMove.h"
 #include "mfx/uitk/pg/CurProg.h"
 #include "mfx/uitk/pg/CtrlEdit.h"
-#include "mfx/uitk/pg/CtrlProg.h"
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/pg/EditDate.h"
 #include "mfx/uitk/pg/EditFxId.h"
@@ -63,6 +62,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/PedalEditStep.h"
 #include "mfx/uitk/pg/ProgCatalog.h"
 #include "mfx/uitk/pg/ProgMove.h"
+#include "mfx/uitk/pg/ProgSettings.h"
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/pg/Rec2Disk.h"
 #include "mfx/uitk/pg/SaveProg.h"
@@ -165,8 +165,8 @@ private:
 	               _page_pedalboard_config;
 	uitk::pg::PedalActionType
 	               _page_pedal_action_type;
-	uitk::pg::CtrlProg
-	               _page_ctrl_prog;
+	uitk::pg::ProgSettings
+	               _page_prog_settings;
 	uitk::pg::BankMenu
 	               _page_bank_menu;
 	uitk::pg::MoveFx

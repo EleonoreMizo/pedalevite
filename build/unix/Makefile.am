@@ -1034,8 +1034,6 @@ commonsrc = \
         ../../src/mfx/uitk/pg/BankOrga.h \
         ../../src/mfx/uitk/pg/CtrlEdit.cpp \
         ../../src/mfx/uitk/pg/CtrlEdit.h \
-        ../../src/mfx/uitk/pg/CtrlProg.cpp \
-        ../../src/mfx/uitk/pg/CtrlProg.h \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.cpp \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.h \
         ../../src/mfx/uitk/pg/CurProg.cpp \
@@ -1098,6 +1096,8 @@ commonsrc = \
         ../../src/mfx/uitk/pg/ProgCatalog.h \
         ../../src/mfx/uitk/pg/ProgMove.cpp \
         ../../src/mfx/uitk/pg/ProgMove.h \
+        ../../src/mfx/uitk/pg/ProgSettings.cpp \
+        ../../src/mfx/uitk/pg/ProgSettings.h \
         ../../src/mfx/uitk/pg/Question.cpp \
         ../../src/mfx/uitk/pg/Question.h \
         ../../src/mfx/uitk/pg/Rec2Disk.cpp \

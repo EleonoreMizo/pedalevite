@@ -1785,9 +1785,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\lfo1\Param.h">
       <Filter>mfx\pi\lfo1</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\CtrlProg.h">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLine.h">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
@@ -3021,6 +3018,9 @@
     <ClInclude Include="..\..\..\src\mfx\BufPack.hpp">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgSettings.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3614,9 +3614,6 @@
     <ClCompile Include="..\..\..\src\mfx\doc\Routing.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlProg.cpp">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLine.cpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClCompile>
@@ -4171,6 +4168,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\BufPack.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgSettings.cpp">
+      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -108,7 +108,7 @@ private:
 		Entry_FX_LIST,
 		Entry_MS_LIST,
 		Entry_PROG_NAME,
-		Entry_CONTROLLERS,
+		Entry_SETTINGS,
 		Entry_SAVE
 	};
 
@@ -143,7 +143,7 @@ private:
 	TxtSPtr        _fx_list_sptr;
 	TxtSPtr        _ms_list_sptr;
 	TxtSPtr        _prog_name_sptr;
-	TxtSPtr        _controllers_sptr;
+	TxtSPtr        _settings_sptr;
 	TxtSPtr        _save_sptr;
 	TxtArray       _slot_list;   // Shows N+1+M+1 slots, the last one of each list being the <End> line.
 

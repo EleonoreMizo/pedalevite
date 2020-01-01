@@ -68,7 +68,7 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_fx_list_sptr (new NText (Entry_FX_LIST))
 ,	_ms_list_sptr (new NText (Entry_MS_LIST))
 ,	_prog_name_sptr (new NText (Entry_PROG_NAME))
-,	_controllers_sptr (new NText (Entry_CONTROLLERS))
+,	_settings_sptr (new NText (Entry_SETTINGS))
 ,	_save_sptr (new NText (Entry_SAVE))
 ,	_slot_list ()
 ,	_state (State_NORMAL)
@@ -77,18 +77,18 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_name_param ()
 ,	_slot_id_list ()
 {
-	_prog_name_sptr  ->set_justification (0.5f, 0, false);
-	_controllers_sptr->set_justification (0.5f, 0, false);
-	_save_sptr       ->set_justification (0.5f, 0, false);
-	_fx_list_sptr    ->set_justification (0.5f, 1, false);
-	_ms_list_sptr    ->set_justification (0.5f, 1, false);
-	_controllers_sptr->set_text ("Controllers\xE2\x80\xA6");
-	_save_sptr       ->set_text ("Save to\xE2\x80\xA6");
-	_fx_list_sptr    ->set_text ("-----------------");
-	_ms_list_sptr    ->set_text ("-----------------");
-	_prog_name_sptr  ->set_bold (true, true );
-	_fx_list_sptr    ->set_bold (true, false);
-	_ms_list_sptr    ->set_bold (true, false);
+	_prog_name_sptr->set_justification (0.5f, 0, false);
+	_settings_sptr ->set_justification (0.5f, 0, false);
+	_save_sptr     ->set_justification (0.5f, 0, false);
+	_fx_list_sptr  ->set_justification (0.5f, 1, false);
+	_ms_list_sptr  ->set_justification (0.5f, 1, false);
+	_settings_sptr ->set_text ("Settings\xE2\x80\xA6");
+	_save_sptr     ->set_text ("Save to\xE2\x80\xA6");
+	_fx_list_sptr  ->set_text ("-----------------");
+	_ms_list_sptr  ->set_text ("-----------------");
+	_prog_name_sptr->set_bold (true, true );
+	_fx_list_sptr  ->set_bold (true, false);
+	_ms_list_sptr  ->set_bold (true, false);
 }
 
 
@@ -123,11 +123,11 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	}
 	_state = State_NORMAL;
 
-	_prog_name_sptr  ->set_font (*_fnt_ptr);
-	_controllers_sptr->set_font (*_fnt_ptr);
-	_save_sptr       ->set_font (*_fnt_ptr);
-	_fx_list_sptr    ->set_font (*_fnt_ptr);
-	_ms_list_sptr    ->set_font (*_fnt_ptr);
+	_prog_name_sptr->set_font (*_fnt_ptr);
+	_settings_sptr ->set_font (*_fnt_ptr);
+	_save_sptr     ->set_font (*_fnt_ptr);
+	_fx_list_sptr  ->set_font (*_fnt_ptr);
+	_ms_list_sptr  ->set_font (*_fnt_ptr);
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
@@ -136,14 +136,14 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
 
-	_prog_name_sptr  ->set_coord (Vec2d (x_mid, 0 * h_m));
-	_controllers_sptr->set_coord (Vec2d (x_mid, 1 * h_m));
-	_save_sptr       ->set_coord (Vec2d (x_mid, 2 * h_m));
-	_fx_list_sptr    ->set_coord (Vec2d (x_mid, 4 * h_m));
+	_prog_name_sptr->set_coord (Vec2d (x_mid, 0 * h_m));
+	_settings_sptr ->set_coord (Vec2d (x_mid, 1 * h_m));
+	_save_sptr     ->set_coord (Vec2d (x_mid, 2 * h_m));
+	_fx_list_sptr  ->set_coord (Vec2d (x_mid, 4 * h_m));
 
-	_prog_name_sptr  ->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_controllers_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_save_sptr       ->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_prog_name_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_settings_sptr ->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_save_sptr     ->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
 	_page_ptr->push_back (_menu_sptr);
 
@@ -207,9 +207,9 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 			{
 				_page_switcher.switch_to (PageType_SAVE_PROG, 0);
 			}
-			else if (node_id == Entry_CONTROLLERS)
+			else if (node_id == Entry_SETTINGS)
 			{
-				_page_switcher.switch_to (PageType_CTRL_PROG, 0);
+				_page_switcher.switch_to (PageType_PROG_SETTINGS, 0);
 			}
 			else if (node_id >= 0 && node_id < int (_slot_list.size ()))
 			{
@@ -355,12 +355,12 @@ void	EditProg::set_preset_info ()
 
 	_menu_sptr->clear_all_nodes ();
 	_menu_sptr->push_back (_prog_name_sptr);
-	_menu_sptr->push_back (_controllers_sptr);
+	_menu_sptr->push_back (_settings_sptr);
 	_menu_sptr->push_back (_save_sptr);
 	_menu_sptr->push_back (_fx_list_sptr);
 	_menu_sptr->push_back (_ms_list_sptr);
 	nav_list [0]._node_id = Entry_PROG_NAME;
-	nav_list [1]._node_id = Entry_CONTROLLERS;
+	nav_list [1]._node_id = Entry_SETTINGS;
 	nav_list [2]._node_id = Entry_SAVE;
 
 	const std::vector <Tools::NodeEntry>   entry_list =

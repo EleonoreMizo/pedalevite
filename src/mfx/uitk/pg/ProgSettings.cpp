@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        CtrlProg.cpp
+        ProgSettings.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -25,7 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "mfx/uitk/pg/CtrlProg.h"
+#include "mfx/uitk/pg/ProgSettings.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -50,7 +50,7 @@ namespace pg
 
 
 
-CtrlProg::CtrlProg (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
+ProgSettings::ProgSettings (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 :	_page_switcher (page_switcher)
 ,	_pedal_ctx (pedal_ctx)
 ,	_model_ptr (0)
@@ -70,7 +70,7 @@ CtrlProg::CtrlProg (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 
 
 
-void	CtrlProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
+void	ProgSettings::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (usr_ptr);
 
@@ -100,14 +100,14 @@ void	CtrlProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 
 
-void	CtrlProg::do_disconnect ()
+void	ProgSettings::do_disconnect ()
 {
 	// Nothing
 }
 
 
 
-MsgHandlerInterface::EvtProp	CtrlProg::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -124,7 +124,7 @@ MsgHandlerInterface::EvtProp	CtrlProg::do_handle_evt (const NodeEvt &evt)
 			{
 			case Entry_LAYOUT:
 				_pedal_ctx._type     = PedalEditContext::Type_PRESET;
-				_pedal_ctx._ret_page = pg::PageType_CTRL_PROG;
+				_pedal_ctx._ret_page = pg::PageType_PROG_SETTINGS;
 				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, 0);
 				break;
 			default:

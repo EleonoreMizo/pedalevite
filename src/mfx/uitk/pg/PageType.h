@@ -60,7 +60,7 @@ enum PageType
 	PageType_LEVELS,
 	PageType_PEDALBOARD_CONFIG,
 	PageType_PEDAL_ACTION_TYPE,
-	PageType_CTRL_PROG,
+	PageType_PROG_SETTINGS,
 	PageType_BANK_MENU,
 	PageType_MOVE_FX,
 	PageType_PEDAL_EDIT_GROUP,

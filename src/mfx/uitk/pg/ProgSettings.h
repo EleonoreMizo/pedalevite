@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        CtrlProg.h
+        ProgSettings.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_CtrlProg_HEADER_INCLUDED)
-#define mfx_uitk_pg_CtrlProg_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_ProgSettings_HEADER_INCLUDED)
+#define mfx_uitk_pg_ProgSettings_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -45,7 +45,7 @@ namespace pg
 
 
 
-class CtrlProg
+class ProgSettings
 :	public PageInterface
 {
 
@@ -53,8 +53,8 @@ class CtrlProg
 
 public:
 
-	explicit       CtrlProg (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
-	virtual        ~CtrlProg () = default;
+	explicit       ProgSettings (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
+	virtual        ~ProgSettings () = default;
 
 
 
@@ -104,13 +104,13 @@ private:
 
 private:
 
-	               CtrlProg ()                               = delete;
-	               CtrlProg (const CtrlProg &other)          = delete;
-	CtrlProg &     operator = (const CtrlProg &other)        = delete;
-	bool           operator == (const CtrlProg &other) const = delete;
-	bool           operator != (const CtrlProg &other) const = delete;
+	               ProgSettings ()                               = delete;
+	               ProgSettings (const ProgSettings &other)      = delete;
+	ProgSettings & operator = (const ProgSettings &other)        = delete;
+	bool           operator == (const ProgSettings &other) const = delete;
+	bool           operator != (const ProgSettings &other) const = delete;
 
-}; // class CtrlProg
+}; // class ProgSettings
 
 
 
@@ -120,11 +120,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/CtrlProg.hpp"
+//#include "mfx/uitk/pg/ProgSettings.hpp"
 
 
 
-#endif   // mfx_uitk_pg_CtrlProg_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_ProgSettings_HEADER_INCLUDED
 
 
 
