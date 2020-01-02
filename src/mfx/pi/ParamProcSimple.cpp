@@ -76,8 +76,8 @@ void	ParamProcSimple::handle_msg (piapi::ProcInfo &proc)
 		}
 		else if (evt._type == piapi::EventType_RESET)
 		{
-			_steady_req_flag = evt._evt._reset._param_ramp_flag;
-			_full_reset_flag = evt._evt._reset._full_state_flag;
+			_steady_req_flag |= evt._evt._reset._param_ramp_flag;
+			_full_reset_flag |= evt._evt._reset._full_state_flag;
 		}
 	}
 
