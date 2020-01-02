@@ -58,6 +58,13 @@ float	EnvFollowerRms::process_sample_no_sqrt (float x)
 
 
 
+void	EnvFollowerRms::set_state (float lvl_sq)
+{
+	_state = lvl_sq;
+}
+
+
+
 /*
 ==============================================================================
 Name: apply_volume

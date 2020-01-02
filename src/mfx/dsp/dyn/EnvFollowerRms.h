@@ -72,6 +72,7 @@ public:
 
 	void           clear_buffers ();
 
+	inline void    set_state (float lvl_sq);
 	inline void    apply_volume (float gain);
 
 
