@@ -114,7 +114,7 @@ void	DelaySimple::clear_buffers_quick ()
 	{
 		memset (_buf.data (), 0, _dly * sizeof (_buf [0]));
 	}
-	_pos_w = 0;
+	_pos_w = _dly;
 }
 
 
