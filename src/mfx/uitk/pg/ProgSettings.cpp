@@ -62,8 +62,18 @@ ProgSettings::ProgSettings (PageSwitcher &page_switcher, PedalEditContext &pedal
 ,	_fnt_ptr (0)
 ,	_layout_sptr (new NText (Entry_LAYOUT))
 ,	_switch_sptr (new NText (Entry_SWITCH))
+,	_state (State_NONE)
+,	_arg_fx_state_modes ()
 {
 	_layout_sptr->set_text ("Pedal layout\xE2\x80\xA6");
+
+	_arg_fx_state_modes._title = "Set FX states";
+	_arg_fx_state_modes._choice_arr.assign ({
+		"All \xE2\x86\x92 Keep",   // RIGHTWARDS ARROW U+2192
+		"All \xE2\x86\x92 Fresh",
+		"Cancel"
+	});
+	_arg_fx_state_modes._ok_flag = false;
 }
 
 
@@ -81,6 +91,20 @@ void	ProgSettings::do_connect (Model &model, const View &view, PageMgrInterface 
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
+
+	switch (_state)
+	{
+	case State_NONE:
+		// Nothing
+		break;
+	case State_FXSTATE:
+		change_all_plugin_state_modes ();
+		break;
+	default:
+		assert (false);
+		break;
+	}
+	_state = State_NONE;
 
 	_layout_sptr->set_font (*_fnt_ptr);
 	_switch_sptr->set_font (*_fnt_ptr);
@@ -134,6 +158,13 @@ MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 				_pedal_ctx._type     = PedalEditContext::Type_PRESET;
 				_pedal_ctx._ret_page = pg::PageType_PROG_SETTINGS;
 				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, 0);
+				break;
+			case Entry_SWITCH:
+				_arg_fx_state_modes._selection = int (FxState_CANCEL);
+				_state = State_FXSTATE;
+				_page_switcher.call_page (
+					PageType_QUESTION, &_arg_fx_state_modes, node_id
+				);
 				break;
 			default:
 				ret_val = EvtProp_PASS;
@@ -214,6 +245,46 @@ MsgHandlerInterface::EvtProp	ProgSettings::change_switch (int dir)
 	_model_ptr->set_prog_switch_mode (doc::ProgSwitchMode (mode));
 
 	return EvtProp_CATCH;
+}
+
+
+
+void	ProgSettings::change_all_plugin_state_modes ()
+{
+	if (_arg_fx_state_modes._ok_flag)
+	{
+		switch (_arg_fx_state_modes._selection)
+		{
+		case FxState_KEEP:
+			change_all_plugin_state_modes (false);
+			break;
+		case FxState_FRESH:
+			change_all_plugin_state_modes (true);
+			break;
+		case FxState_CANCEL:
+			// Nothing
+			break;
+		default:
+			assert (false);
+			break;
+		}
+	}
+	_arg_fx_state_modes._ok_flag = false;
+}
+
+
+
+void	ProgSettings::change_all_plugin_state_modes (bool force_reset_flag)
+{
+	const doc::Preset &  prog = _view_ptr->use_preset_cur ();
+	for (auto it = prog._slot_map.begin (); it != prog._slot_map.end (); ++it)
+	{
+		if (! prog.is_slot_empty (it))
+		{
+			const int      slot_id = it->first;
+			_model_ptr->set_plugin_reset (slot_id, force_reset_flag);
+		}
+	}
 }
 
 

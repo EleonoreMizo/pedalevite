@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/pg/PedalEditContext.h"
+#include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/PageInterface.h"
 
@@ -79,16 +80,35 @@ protected:
 
 private:
 
+	enum State
+	{
+		State_NONE = 0,
+		State_FXSTATE,
+
+		State_NBR_ELT
+	};
+
 	enum Entry
 	{
 		Entry_LAYOUT = 1000,
 		Entry_SWITCH
 	};
 
+	enum FxState
+	{
+		FxState_KEEP = 0,
+		FxState_FRESH,
+		FxState_CANCEL,
+
+		FxState_NBR_ELT
+	};
+
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	void           update_display ();
 	EvtProp        change_switch (int dir);
+	void           change_all_plugin_state_modes ();
+	void           change_all_plugin_state_modes (bool force_reset_flag);
 
 	PageSwitcher & _page_switcher;
 	PedalEditContext &
@@ -103,6 +123,9 @@ private:
 
 	TxtSPtr        _layout_sptr;
 	TxtSPtr        _switch_sptr;
+
+	State          _state;
+	Question::QArg _arg_fx_state_modes;
 
 
 
