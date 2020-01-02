@@ -445,6 +445,7 @@ private:
 	Type           _type;
 	BufAlign       _buf_x1;
 	BufAlign       _buf_ovr;
+	bool           _post_clear_flag;
 
 	static bool    _coef_init_flag;
 	static std::array <double, _nbr_coef_42>

@@ -184,6 +184,10 @@ void	TransientAnalyser::process_block (float atk_ptr [], float sus_ptr [], const
 void	TransientAnalyser::clear_buffers ()
 {
 	_env_helper->clear_buffers ();
+	for (auto &chn : _chn_arr)
+	{
+		chn._hpf.clear_buffers ();
+	}
 }
 
 

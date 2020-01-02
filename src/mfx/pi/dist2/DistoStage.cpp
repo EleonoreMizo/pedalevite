@@ -65,6 +65,7 @@ DistoStage::DistoStage ()
 ,	_type (Type_DIODE_CLIPPER)
 ,	_buf_x1 ()
 ,	_buf_ovr ()
+,	_post_clear_flag (true)
 {
 	init_coef ();
 	update_hpf_pre ();
@@ -194,6 +195,12 @@ void	DistoStage::process_block (float * const dst_ptr_arr [], const float * cons
 	assert (nbr_chn > 0);
 	assert (nbr_chn <= _max_nbr_chn);
 
+	if (_post_clear_flag)
+	{
+		set_next_block ();
+		_post_clear_flag = false;
+	}
+
 	const float    bias_beg      = _bias_old;
 	const float    bias_end      = _bias;
 	const float    gain_pre_beg  = _gain_pre_old;
@@ -272,7 +279,7 @@ void	DistoStage::clear_buffers ()
 		chn._bounce.clear_buffers ();
 	}
 
-	set_next_block ();
+	_post_clear_flag = true;
 }
 
 

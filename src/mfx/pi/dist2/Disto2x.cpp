@@ -536,6 +536,9 @@ void	Disto2x::clear_buffers ()
 		stage.clear_buffers ();
 	}
 
+	_env_pre.clear_buffers ();
+	_env_post.clear_buffers ();
+
 	set_next_buffer ();
 }
 
