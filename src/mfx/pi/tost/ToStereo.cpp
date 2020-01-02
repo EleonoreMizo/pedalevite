@@ -54,6 +54,7 @@ ToStereo::ToStereo ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 {
 	dsp::mix::Align::setup ();
 
@@ -88,18 +89,13 @@ int	ToStereo::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	fstb::unused (sample_freq, max_buf_len);
 
+	_param_proc.req_steady ();
+
 	latency = 0;
 
 	_state = State_ACTIVE;
 
 	return piapi::Err_OK;
-}
-
-
-
-void	ToStereo::do_clean_quick ()
-{
-	// Nothing
 }
 
 
@@ -111,16 +107,7 @@ void	ToStereo::do_process_block (piapi::ProcInfo &proc)
 	assert (nbr_chn_in <= nbr_chn_out);
 	
 	// Events
-	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
-	{
-		const piapi::EventTs &  evt = *(proc._evt_arr [evt_cnt]);
-		if (evt._type == piapi::EventType_PARAM)
-		{
-			const piapi::EventParam &  evtp = evt._evt._param;
-			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
-			_state_set.set_val (evtp._index, evtp._val);
-		}
-	}
+	_param_proc.handle_msg (proc);
 
 	for (int chn_dst = 0; chn_dst < nbr_chn_out; ++chn_dst)
 	{

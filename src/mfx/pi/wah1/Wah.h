@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlag.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/wah1/WahDesc.h"
+#include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -67,7 +68,6 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_clean_quick ();
 	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
@@ -87,6 +87,8 @@ private:
 
 	WahDesc        _desc;
 	ParamStateSet  _state_set;
+	ParamProcSimple
+	               _param_proc;
 	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 
 	fstb::util::NotificationFlag

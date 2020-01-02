@@ -97,6 +97,25 @@ void	ParamStateSet::clear_buffers ()
 
 
 
+// Similar to clear_buffers (), but signals only previously ramping parameters
+void	ParamStateSet::set_steady_state ()
+{
+	assert (_categ >= 0);
+
+	const int      nbr_param = int (_state_arr.size ());
+	for (int param_index = 0; param_index < nbr_param; ++param_index)
+	{
+		ParamState &   state = _state_arr [param_index];
+		if (state.is_ramping ())
+		{
+			state.clear_buffers ();
+			_change_flag_arr.fill_bit (param_index);
+		}
+	}
+}
+
+
+
 void	ParamStateSet::set_ramp_time (int index, double t)
 {
 	assert (_categ >= 0);

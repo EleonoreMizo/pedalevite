@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/DelayInterface.h"
 #include "mfx/dsp/dly/DelaySimple.h"
 #include "mfx/pi/dly0/DelayDesc.h"
+#include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 
 #include <array>
@@ -69,7 +70,6 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_clean_quick ();
 	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 	// mfx::cmd::DelayInterface
@@ -99,15 +99,14 @@ private:
 
 	DelayDesc      _desc;
 	ParamStateSet  _state_set;
+	ParamProcSimple
+	               _param_proc;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 	float          _inv_fs;             // 1 / _sample_freq
 
 	PinArray       _pin_arr;
 	int            _nbr_pins;
 	int            _dly_spl;
-
-	// Clearing the delay buffers is requested at the next processing block.
-	bool           _req_clear_flag;
 
 
 

@@ -328,6 +328,13 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag, bool ctx_update_flag)
 					}
 					ret_dest = CellRet::POOL;
 					break;
+				case WaMsg::Type_RESET:
+					if (proc_flag)
+					{
+						handle_msg_reset (cell_ptr->_val._content._reset);
+					}
+					ret_dest = CellRet::POOL;
+					break;
 
 				default:
 					assert (false);
@@ -426,23 +433,19 @@ void	WorldAudio::setup_new_context ()
 	// Automatic tempo refresh (for the new plug-ins)
 	_tempo_new = _tempo_cur;
 
-	const bool     graph_changed_flag = _ctx_ptr->_graph_changed_flag;
-
 	for (const auto &pi_ctx : _ctx_ptr->_context_arr)
 	{
-		update_aux_param_pi (pi_ctx._node_arr [PiType_MAIN], false);
+		update_aux_param_pi (pi_ctx._node_arr [PiType_MAIN]);
 		if (pi_ctx._mixer_flag)
 		{
-			update_aux_param_pi (
-				pi_ctx._node_arr [PiType_MIX], graph_changed_flag
-			);
+			update_aux_param_pi (pi_ctx._node_arr [PiType_MIX]);
 		}
 	}
 }
 
 
 
-void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node, bool clean_flag)
+void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node)
 {
 	if (node._aux_param_flag)
 	{
@@ -456,10 +459,6 @@ void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node, bool cl
 		else
 		{
 			delay_ptr->set_aux_param (node._comp_delay, node._pin_mult);
-		}
-		if (clean_flag)
-		{
-			details._pi_uptr->clean_quick ();
 		}
 	}
 }
@@ -853,6 +852,20 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 		details._param_update.clear ();
 	}
 
+	// Possible plug-in reset
+	if (details._rst_steady_flag || details._rst_full_flag)
+	{
+		piapi::EventTs    evt;
+		evt._timestamp = 0;
+		evt._type      = piapi::EventType_RESET;
+		evt._evt._reset._param_ramp_flag = details._rst_steady_flag;
+		evt._evt._reset._full_state_flag = details._rst_full_flag;
+		_evt_arr.push_back (evt);
+
+		details._rst_steady_flag = false;
+		details._rst_full_flag   = false;
+	}
+
 	// Finalizes the event list
 	proc_info._nbr_evt = int (_evt_arr.size ());
 	if (_evt_arr.empty ())
@@ -1067,6 +1080,16 @@ void	WorldAudio::handle_msg_tempo (WaMsg::Tempo &msg)
 	{
 		_tempo_new = msg._bpm;
 	}
+}
+
+
+
+void	WorldAudio::handle_msg_reset (WaMsg::Reset &msg)
+{
+	PluginPool::PluginDetails &   details =
+		_pi_pool.use_plugin (msg._plugin_id);
+	details._rst_steady_flag |= msg._steady_flag;
+	details._rst_full_flag   |= msg._full_flag;
 }
 
 

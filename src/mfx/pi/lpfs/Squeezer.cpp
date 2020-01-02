@@ -59,6 +59,7 @@ Squeezer::Squeezer ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 ,	_sample_freq (0)
 ,	_param_change_flag ()
 ,	_param_change_flag_freq_reso ()
@@ -152,6 +153,7 @@ int	Squeezer::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	update_param (true);
 	clear_buffers ();
+	_param_proc.req_steady ();
 
 	_state = State_ACTIVE;
 
@@ -169,45 +171,34 @@ int	Squeezer::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	Squeezer::do_clean_quick ()
-{
-	clear_buffers ();
-}
-
-
-
 void	Squeezer::do_process_block (piapi::ProcInfo &proc)
 {
 	const int      nbr_chn_src = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
 	const int      nbr_chn_dst = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
 	assert (nbr_chn_src <= nbr_chn_dst);
 
-	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Events
-	const int      nbr_evt = proc._nbr_evt;
-	for (int index = 0; index < nbr_evt; ++index)
+	_param_proc.handle_msg (proc);
+	bool           reset_flag = _param_proc.is_full_reset ();
+	if (_param_proc.is_req_steady_state ())
 	{
-		const piapi::EventTs &  evt = *(proc._evt_arr [index]);
-		if (evt._type == piapi::EventType_PARAM)
-		{
-			const piapi::EventParam &  evtp = evt._evt._param;
-			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
-			_state_set.set_val (evtp._index, evtp._val);
-		}
+		_drive_gain_old = _drive_gain;
+		_drive_inv_old	 = _drive_inv;
 	}
 
 	int            pos = 0;
 	do
 	{
-		// We need this intermediate varaible because for some reason GCC
-		// fails to link when _update_resol is directly used in std::min.
 		const int      max_len  = _update_resol;
 		const int      work_len = std::min (proc._nbr_spl - pos, max_len);
 
-		// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 		// Parameters
 		_state_set.process_block (work_len);
 		update_param ();
+		if (reset_flag)
+		{
+			clear_buffers ();
+		}
 
 		// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 		// Signal processing

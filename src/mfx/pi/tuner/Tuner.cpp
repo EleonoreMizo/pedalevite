@@ -102,13 +102,6 @@ int	Tuner::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	Tuner::do_clean_quick ()
-{
-	clear_buffers ();
-}
-
-
-
 void	Tuner::do_process_block (piapi::ProcInfo &proc)
 {
 	const int      nbr_spl_s = proc._nbr_spl / _sub_spl;

@@ -963,6 +963,8 @@ commonsrc = \
         ../../src/mfx/pi/ParamMapFdbk.hpp \
         ../../src/mfx/pi/ParamMapFdbkBipolar.h \
         ../../src/mfx/pi/ParamMapFdbkBipolar.hpp \
+        ../../src/mfx/pi/ParamProcSimple.cpp \
+        ../../src/mfx/pi/ParamProcSimple.h \
         ../../src/mfx/pi/ParamState.cpp \
         ../../src/mfx/pi/ParamState.h \
         ../../src/mfx/pi/ParamStateSet.cpp \
@@ -974,6 +976,7 @@ commonsrc = \
         ../../src/mfx/piapi/EventNoteOff.h \
         ../../src/mfx/piapi/EventNoteOn.h \
         ../../src/mfx/piapi/EventParam.h \
+        ../../src/mfx/piapi/EventReset.h \
         ../../src/mfx/piapi/EventTransport.h \
         ../../src/mfx/piapi/EventTs.h \
         ../../src/mfx/piapi/EventType.h \

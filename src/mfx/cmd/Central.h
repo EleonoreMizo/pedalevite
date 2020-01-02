@@ -166,6 +166,8 @@ private:
 	void           create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_list);
 	conc::LockFreeCell <WaMsg> *
 	               make_param_msg (int pi_id, int index, float val);
+	conc::LockFreeCell <WaMsg> *
+	               make_reset_msg (int pi_id, bool steady_flag, bool full_flag);
 	void           check_and_get_default_settings (piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model);
 
 	conc::CellPool <WaMsg>

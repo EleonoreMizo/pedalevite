@@ -694,10 +694,12 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\BypassState.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Err.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\EventReset.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimBox.h" />
@@ -1344,6 +1346,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\osdet2\OnsetDetect2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\osdet\OnsetDetect.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\osdet\OnsetDetectDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\ParamProcSimple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\MapRatio.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\Simple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplEnumEvol.cpp" />

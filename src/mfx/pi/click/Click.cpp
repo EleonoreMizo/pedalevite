@@ -139,13 +139,6 @@ int	Click::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	Click::do_clean_quick ()
-{
-	clear_buffers ();
-}
-
-
-
 void	Click::do_process_block (piapi::ProcInfo &proc)
 {
 	// Channels

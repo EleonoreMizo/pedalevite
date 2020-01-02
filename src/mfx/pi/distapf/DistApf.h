@@ -46,6 +46,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
 #include "mfx/pi/distapf/DistApfDesc.h"
+#include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -84,7 +85,6 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_clean_quick ();
 	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
@@ -125,6 +125,8 @@ private:
 
 	DistApfDesc    _desc;
 	ParamStateSet  _state_set;
+	ParamProcSimple
+	               _param_proc;
 
 	fstb::util::NotificationFlag
 	               _param_change_flag;

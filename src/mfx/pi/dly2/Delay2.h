@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dly2/DelayLineBbdPitch.h"
 #include "mfx/pi/dly2/StageTaps.h"
 #include "mfx/pi/fv/FreeverbCore.h"
+#include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -74,7 +75,6 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_clean_quick ();
 	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
@@ -140,6 +140,8 @@ private:
 
 	Delay2Desc     _desc;
 	ParamStateSet  _state_set;
+	ParamProcSimple
+	               _param_proc;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 	float          _inv_fs;             // 1 / _sample_freq
 
@@ -174,7 +176,6 @@ private:
 	float          _duck_sens;          // Level for the ducking
 	bool           _freeze_flag;
 	bool           _duck_flag;          // Set if at least one of the lines uses the ducking
-	bool           _quick_clean_req_flag;
 
 
 

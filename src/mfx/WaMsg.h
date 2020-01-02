@@ -62,6 +62,7 @@ public:
 		Type_CTX = 0,
 		Type_PARAM,
 		Type_TEMPO,
+		Type_RESET,
 
 		Type_NBR_ELT
 	};
@@ -89,11 +90,20 @@ public:
 		float          _bpm; // 0 = refresh
 	};
 
+	class Reset
+	{
+	public:
+		int            _plugin_id;
+		bool           _steady_flag;
+		bool           _full_flag;
+	};
+
 	union Content
 	{
 		Ctx            _ctx;
 		Param          _param;
 		Tempo          _tempo;
+		Reset          _reset;
 	};
 
 	               WaMsg ()                        = default;

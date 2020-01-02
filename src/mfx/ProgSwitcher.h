@@ -64,12 +64,14 @@ protected:
 
 private:
 
-	void           fade_inout_buf (const ProcessingContextNode::Side &side, int nbr_spl, float vol_beg, float vol_end);
+	void           fade_inout_buf (const ProcessingContextNode::Side &side, int nbr_spl, bool fadeout_flag);
 
 	const ProcessingContext * &
 	               _ctx_ptr;
 	WaMsgQueue &   _queue_to_cmd;
 	BufPack &      _buf_pack;
+
+	int            _fade_len;           // Samples
 
 	doc::ProgSwitchMode
 	               _prog_switch_mode;

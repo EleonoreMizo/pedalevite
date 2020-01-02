@@ -1079,8 +1079,9 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_
 
 	for (Slot & slot : doc._slot_list)
 	{
-		for (Plugin & plug : slot._component_arr)
+		for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
 		{
+			Plugin &          plug = slot._component_arr [type_cnt];
 			if (plug._pi_id < 0)
 			{
 				break;
@@ -1090,12 +1091,26 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_
 			const int      nbr_param = int (plug._param_list.size ());
 			for (int index = 0; index < nbr_param; ++index)
 			{
-				conc::LockFreeCell <WaMsg> *  msg_ptr =
-					make_param_msg (plug._pi_id, index, plug._param_list [index]);
+				conc::LockFreeCell <WaMsg> *  msg_ptr = make_param_msg (
+					plug._pi_id,
+					index,
+					plug._param_list [index]
+				);
 				msg_list.push_back (msg_ptr);
 			}
 
 			plug._param_list.clear ();
+
+			// Reset
+			if (doc._ctx_sptr->_graph_changed_flag)
+			{
+				conc::LockFreeCell <WaMsg> *  msg_ptr = make_reset_msg (
+					plug._pi_id,
+					true,
+					(type_cnt == PiType_MIX)
+				);
+				msg_list.push_back (msg_ptr);
+			}
 		}
 	}
 }
@@ -1111,6 +1126,21 @@ conc::LockFreeCell <WaMsg> *	Central::make_param_msg (int pi_id, int index, floa
 	cell_ptr->_val._content._param._plugin_id = pi_id;
 	cell_ptr->_val._content._param._index     = index;
 	cell_ptr->_val._content._param._val       = val;
+
+	return cell_ptr;
+}
+
+
+
+conc::LockFreeCell <WaMsg> *	Central::make_reset_msg (int pi_id, bool steady_flag, bool full_flag)
+{
+	conc::LockFreeCell <WaMsg> * cell_ptr =
+		_msg_pool.take_cell (true);
+	cell_ptr->_val._sender = WaMsg::Sender_CMD;
+	cell_ptr->_val._type   = WaMsg::Type_RESET;
+	cell_ptr->_val._content._reset._plugin_id   = pi_id;
+	cell_ptr->_val._content._reset._steady_flag = steady_flag;
+	cell_ptr->_val._content._reset._full_flag   = full_flag;
 
 	return cell_ptr;
 }

@@ -55,6 +55,7 @@ Lfo <SLOW>::Lfo ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 ,	_sample_freq (0)
 ,	_param_change_flag ()
 ,	_param_change_flag_base ()
@@ -150,6 +151,7 @@ int	Lfo <SLOW>::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	update_param (true);
 	clear_buffers ();
+	_param_proc.req_steady ();
 
 	_state = State_ACTIVE;
 
@@ -159,34 +161,21 @@ int	Lfo <SLOW>::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 template <bool SLOW>
-void	Lfo <SLOW>::do_clean_quick ()
-{
-	clear_buffers ();
-}
-
-
-
-template <bool SLOW>
 void	Lfo <SLOW>::do_process_block (piapi::ProcInfo &proc)
 {
 	// Events
-	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
+	_param_proc.handle_msg (proc);
+
+	// Parameters
+	update_param (false);
+	if (_param_proc.is_full_reset ())
 	{
-		const piapi::EventTs &  evt = *(proc._evt_arr [evt_cnt]);
-		if (evt._type == piapi::EventType_PARAM)
-		{
-			const piapi::EventParam &  evtp = evt._evt._param;
-			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
-			_state_set.set_val (evtp._index, evtp._val);
-		}
+		clear_buffers ();
 	}
 
 	// Signal
 	const float    val = float (_lfo.get_val ());
 	proc._sig_arr [0] [0] = val * _amp;
-
-	// Parameters
-	update_param (false);
 
 	_lfo.tick (proc._nbr_spl);
 }

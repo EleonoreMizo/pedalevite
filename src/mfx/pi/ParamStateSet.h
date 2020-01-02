@@ -63,6 +63,7 @@ public:
 	void           init (piapi::ParamCateg categ, const ParamDescSet &param_desc_arr);
 	void           set_sample_freq (double fs);
 	void           clear_buffers ();
+	void           set_steady_state ();
 	void           set_ramp_time (int index, double t);
 	void           set_val (int index, double val);
 	void           set_val_nat (const ParamDescSet &param_desc_arr, int index, double val);

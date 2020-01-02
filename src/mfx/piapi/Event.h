@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/EventNoteOn.h"
 #include "mfx/piapi/EventNoteOff.h"
 #include "mfx/piapi/EventParam.h"
+#include "mfx/piapi/EventReset.h"
 #include "mfx/piapi/EventTransport.h"
 
 
@@ -47,6 +48,7 @@ union Event
 	EventNoteOff   _note_off;
 	EventParam     _param;
 	EventTransport _transport;
+	EventReset     _reset;
 };
 
 

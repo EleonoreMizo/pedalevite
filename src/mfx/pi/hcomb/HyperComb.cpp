@@ -55,6 +55,7 @@ HyperComb::HyperComb ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 ,	_sample_freq ()
 ,	_inv_fs ()
 ,	_param_change_flag ()
@@ -175,17 +176,11 @@ int	HyperComb::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	update_param (true);
 	clear_buffers ();
+	_param_proc.req_steady ();
 
 	_state = State_ACTIVE;
 
 	return piapi::Err_OK;
-}
-
-
-
-void	HyperComb::do_clean_quick ()
-{
-	clear_buffers ();
 }
 
 
@@ -215,6 +210,10 @@ void	HyperComb::do_process_block (piapi::ProcInfo &proc)
 	// Parameters
 	_state_set.process_block (nbr_spl);
 	update_param (false);
+	if (_param_proc.is_full_reset ())
+	{
+		clear_buffers ();
+	}
 
 	// Signal
 	std::array <float *, _max_nbr_chn>  buf_arr;

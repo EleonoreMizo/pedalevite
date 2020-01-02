@@ -61,6 +61,7 @@ Phaser2::Phaser2 ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 ,	_sample_freq (0)
 ,	_inv_fs (0)
 ,	_param_change_flag ()
@@ -193,29 +194,11 @@ int	Phaser2::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	update_param (true);
 	clear_buffers ();
+	_param_proc.req_steady ();
 
 	_state = State_ACTIVE;
 
 	return piapi::Err_OK;
-}
-
-
-
-void	Phaser2::do_clean_quick ()
-{
-	clear_buffers ();
-}
-
-
-
-void	Phaser2::clear_buffers ()
-{
-	_lfo.clear_buffers ();
-	for (auto &chn : _chn_arr)
-	{
-		chn._apf.clear_buffers ();
-		chn._fdbk = 0;
-	}
 }
 
 
@@ -229,16 +212,8 @@ void	Phaser2::do_process_block (piapi::ProcInfo &proc)
 	const int      nbr_chn_proc = std::min (nbr_chn_src, nbr_chn_dst);
 
 	// Events
-	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
-	{
-		const piapi::EventTs &  evt = *(proc._evt_arr [evt_cnt]);
-		if (evt._type == piapi::EventType_PARAM)
-		{
-			const piapi::EventParam &  evtp = evt._evt._param;
-			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
-			_state_set.set_val (evtp._index, evtp._val);
-		}
-	}
+	_param_proc.handle_msg (proc);
+	bool           reset_flag = _param_proc.is_full_reset ();
 
 	assert (_fdbk_pos <= _nbr_stages);
 	const int      nbr_spl = proc._nbr_spl;
@@ -254,6 +229,12 @@ void	Phaser2::do_process_block (piapi::ProcInfo &proc)
 		const float    mix_beg = _mix;
 		_state_set.process_block (len_blk);
 		update_param (false);
+		if (reset_flag)
+		{
+			clear_buffers ();
+			reset_flag = false;
+		}
+
 		_lfo.tick (len_blk);
 		const float    mix_end = _mix;
 		const float    lfo_end = (1 + float (_lfo.get_val ())) * 0.5f;
@@ -322,6 +303,18 @@ void	Phaser2::do_process_block (piapi::ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	Phaser2::clear_buffers ()
+{
+	_lfo.clear_buffers ();
+	for (auto &chn : _chn_arr)
+	{
+		chn._apf.clear_buffers ();
+		chn._fdbk = 0;
+	}
+}
 
 
 

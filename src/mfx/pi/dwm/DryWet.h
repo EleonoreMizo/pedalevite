@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/DelayInterface.h"
 #include "mfx/dsp/dly/DelaySimple.h"
 #include "mfx/pi/dwm/DryWetDesc.h"
+#include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 
 
@@ -67,7 +68,6 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_clean_quick ();
 	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 	// mfx::cmd::DelayInterface
@@ -99,6 +99,9 @@ private:
 
 	DryWetDesc     _desc;
 	ParamStateSet  _state_set;
+	ParamProcSimple
+	               _param_proc;
+
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 
 	fstb::util::NotificationFlag
@@ -110,11 +113,6 @@ private:
 
 	float          _level_wet;          // For steady state
 	float          _level_dry;          // For steady state
-
-	// Clearing the delay buffers is requested at the next processing block.
-	bool           _req_clear_flag;
-
-	bool           _req_steady_state_flag;
 
 
 

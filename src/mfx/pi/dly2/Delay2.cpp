@@ -62,6 +62,7 @@ Delay2::Delay2 ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 ,	_sample_freq (0)
 ,	_inv_fs (0)
 ,	_param_change_flag_misc ()
@@ -84,7 +85,6 @@ Delay2::Delay2 ()
 ,	_duck_sens (1)
 ,	_freeze_flag (false)
 ,	_duck_flag (false)
-,	_quick_clean_req_flag (false)
 {
 	dsp::mix::Align::setup ();
 
@@ -295,17 +295,11 @@ int	Delay2::do_reset (double sample_freq, int max_buf_len, int &latency)
 	update_param (true);
 
 	clear_buffers ();
+	_param_proc.req_steady ();
 
 	_state = State_ACTIVE;
 
 	return piapi::Err_OK;
-}
-
-
-
-void	Delay2::do_clean_quick ()
-{
-	_quick_clean_req_flag = true;
 }
 
 
@@ -317,16 +311,7 @@ void	Delay2::do_process_block (piapi::ProcInfo &proc)
 	assert (nbr_chn_src <= nbr_chn_dst);
 
 	// Events
-	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
-	{
-		const piapi::EventTs &  evt = *(proc._evt_arr [evt_cnt]);
-		if (evt._type == piapi::EventType_PARAM)
-		{
-			const piapi::EventParam &  evtp = evt._evt._param;
-			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
-			_state_set.set_val (evtp._index, evtp._val);
-		}
-	}
+	_param_proc.handle_msg (proc);
 
 	// Parameters
 	_state_set.process_block (proc._nbr_spl);
@@ -337,14 +322,17 @@ void	Delay2::do_process_block (piapi::ProcInfo &proc)
 	}
 	update_param ();
 
-	if (_quick_clean_req_flag)
+	if (_param_proc.is_full_reset ())
 	{
 
 		/*** To do: something quicker ***/
 		clear_buffers ();
 
 
-		_quick_clean_req_flag = true;
+	}
+	if (_param_proc.is_req_steady_state ())
+	{
+		_xfdbk_old = _xfdbk_cur;
 	}
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
@@ -524,8 +512,6 @@ void	Delay2::clear_buffers ()
 	_env_duck.clear_buffers ();
 
 	update_duck_state ();
-
-	_quick_clean_req_flag = false;
 }
 
 

@@ -81,15 +81,6 @@ int	PluginInterface::reset (double sample_freq, int max_block_size, int &latency
 
 
 
-void	PluginInterface::clean_quick ()
-{
-	assert (get_state () == State_ACTIVE);
-
-	do_clean_quick ();
-}
-
-
-
 void	PluginInterface::process_block (ProcInfo &proc)
 {
 	assert (get_state () == State_ACTIVE);

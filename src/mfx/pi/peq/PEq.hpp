@@ -55,6 +55,7 @@ PEq <NB>::PEq ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 ,	_sample_freq (0)
 ,	_inv_fs (0)
 ,	_nbr_chn (0)
@@ -144,18 +145,11 @@ int	PEq <NB>::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_nbr_chn      = 0; // Force update
 	_neutral_time = max_buf_len * 2;
 	clear_buffers ();
+	_param_proc.req_steady ();
 
 	_state = State_ACTIVE;
 
 	return piapi::Err_OK;
-}
-
-
-
-template <int NB>
-void	PEq <NB>::do_clean_quick ()
-{
-	clear_buffers ();
 }
 
 
@@ -171,7 +165,7 @@ void	PEq <NB>::do_process_block (piapi::ProcInfo &proc)
 		const int		nbr_stages = count_nbr_stages ();
 		_biq_pack.adapt_config (nbr_stages, _nbr_chn);
 		cook_all_bands ();
-		_biq_pack.clear_buffers ();
+		_param_proc.req_all ();
 	}
 
 	std::array <const float *, _max_nbr_chn> src_chn_arr;
@@ -185,17 +179,11 @@ void	PEq <NB>::do_process_block (piapi::ProcInfo &proc)
 		src_ptr_arr = &src_chn_arr [0];
 	}
 
-	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Events
-	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
+	_param_proc.handle_msg (proc);
+	if (_param_proc.is_full_reset ())
 	{
-		const piapi::EventTs &  evt = *(proc._evt_arr [evt_cnt]);
-		if (evt._type == piapi::EventType_PARAM)
-		{
-			const piapi::EventParam &  evtp = evt._evt._param;
-			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
-			_state_set.set_val (evtp._index, evtp._val);
-		}
+		_biq_pack.clear_buffers ();
 	}
 
 	int            pos = 0;
@@ -299,7 +287,7 @@ void	PEq <NB>::update_param (bool force_flag)
 			}
 		}
 
-		_ramp_flag = true;
+		_ramp_flag = ! _param_proc.is_req_steady_state ();
 	}
 }
 

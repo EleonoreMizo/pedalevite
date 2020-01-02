@@ -61,6 +61,7 @@ EnvFollow::EnvFollow ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 ,	_sample_freq (0)
 ,	_inv_fs (0)
 ,	_param_change_flag ()
@@ -149,6 +150,7 @@ int	EnvFollow::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.clear_buffers ();
 
 	clear_buffers ();
+	_param_proc.req_steady ();
 
 	_state = State_ACTIVE;
 
@@ -157,30 +159,17 @@ int	EnvFollow::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	EnvFollow::do_clean_quick ()
-{
-	clear_buffers ();
-}
-
-
-
 void	EnvFollow::do_process_block (piapi::ProcInfo &proc)
 {
 	// Events
-	const int      nbr_evt = proc._nbr_evt;
-	for (int index = 0; index < nbr_evt; ++index)
-	{
-		const piapi::EventTs &  evt = *(proc._evt_arr [index]);
-		if (evt._type == piapi::EventType_PARAM)
-		{
-			const piapi::EventParam &  evtp = evt._evt._param;
-			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
-			_state_set.set_val (evtp._index, evtp._val);
-		}
-	}
+	_param_proc.handle_msg (proc);
 
 	// Parameters
 	update_param ();
+	if (_param_proc.is_full_reset ())
+	{
+		clear_buffers ();
+	}
 
 	// Signal processing
 	square_block (proc);

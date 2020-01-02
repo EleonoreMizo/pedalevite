@@ -92,6 +92,10 @@ public:
 		// Same remark. Audio thread only
 		std::vector <bool>
 		               _param_update_from_audio;
+
+		// Reset flags. Audio thread only
+		bool           _rst_steady_flag = false;
+		bool           _rst_full_flag   = false;
 	};
 
 	               PluginPool ();

@@ -133,7 +133,7 @@ private:
 	void           collect_msg_cmd (bool proc_flag, bool ctx_update_flag);
 	void           collect_msg_ui (bool proc_flag);
 	void           setup_new_context ();
-	void           update_aux_param_pi (const ProcessingContextNode &node, bool clean_flag);
+	void           update_aux_param_pi (const ProcessingContextNode &node);
 	void           handle_controller (const ControlSource &controller, float val_raw);
 	void           copy_input (const float * const * src_arr, int nbr_spl);
 	void           check_signal_level (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
@@ -146,6 +146,7 @@ private:
 
 	void           handle_msg_param (WaMsg::Param &msg);
 	void           handle_msg_tempo (WaMsg::Tempo &msg);
+	void           handle_msg_reset (WaMsg::Reset &msg);
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	void           store_data (const float src_ptr [], int nbr_spl);

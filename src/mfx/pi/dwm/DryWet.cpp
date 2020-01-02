@@ -56,6 +56,7 @@ DryWet::DryWet ()
 :	_state (State_CREATED)
 ,	_desc ()
 ,	_state_set ()
+,	_param_proc (_state_set)
 ,	_sample_freq (0)
 ,	_param_change_flag ()
 ,	_pin_arr ()
@@ -122,6 +123,7 @@ int	DryWet::do_reset (double sample_freq, int max_buf_len, int &latency)
 	}
 
 	clear_buffers ();
+	_param_proc.req_steady ();
 
 	_state = State_ACTIVE;
 
@@ -130,37 +132,14 @@ int	DryWet::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 
 
-void	DryWet::do_clean_quick ()
-{
-	_req_clear_flag        = true;
-	_req_steady_state_flag = true;
-}
-
-
-
 // Input pins are interleaved (wet0/dry0/wet1/dry1...)
 void	DryWet::do_process_block (piapi::ProcInfo &proc)
 {
-	for (int evt_cnt = 0; evt_cnt < proc._nbr_evt; ++evt_cnt)
-	{
-		const piapi::EventTs &  evt = *(proc._evt_arr [evt_cnt]);
-		if (evt._type == piapi::EventType_PARAM)
-		{
-			const piapi::EventParam &  evtp = evt._evt._param;
-			assert (evtp._categ == piapi::ParamCateg_GLOBAL);
-			_state_set.set_val (evtp._index, evtp._val);
-		}
-	}
-
-	if (_req_steady_state_flag)
-	{
-		_state_set.clear_buffers ();
-		_req_steady_state_flag = false;
-	}
+	_param_proc.handle_msg (proc);
 
 	_state_set.process_block (proc._nbr_spl);
 
-	if (_dly_spl > 0 && _req_clear_flag)
+	if (_param_proc.is_full_reset () && _dly_spl > 0)
 	{
 		clear_dly_buf_quick ();
 	}
@@ -222,7 +201,7 @@ void	DryWet::do_set_aux_param (int dly_spl, int pin_mult)
 	// Therefore the best thing to do is to clean the delay buffers.
 	if (dly_old != _dly_spl)
 	{
-		_req_clear_flag = true;
+		_param_proc.req_all ();
 	}
 }
 
@@ -241,7 +220,6 @@ void	DryWet::clear_buffers ()
 			chn._delay.clear_buffers ();
 		}
 	}
-	_req_clear_flag = false;
 }
 
 
@@ -255,7 +233,6 @@ void	DryWet::clear_dly_buf_quick ()
 			chn._delay.clear_buffers_quick ();
 		}
 	}
-	_req_clear_flag = false;
 }
 
 

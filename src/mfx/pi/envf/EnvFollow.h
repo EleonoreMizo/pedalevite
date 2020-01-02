@@ -35,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/pi/envf/EnvFollowDesc.h"
+#include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -73,7 +74,6 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_clean_quick ();
 	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
@@ -118,6 +118,8 @@ private:
 
 	EnvFollowDesc  _desc;
 	ParamStateSet  _state_set;
+	ParamProcSimple
+	               _param_proc;
 	float          _sample_freq;        // Hz, > 0. <= 0: not initialized
 	float          _inv_fs;
 

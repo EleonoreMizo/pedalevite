@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dly1/Cst.h"
 #include "mfx/pi/dly1/DelayChn.h"
 #include "mfx/pi/dly1/DelayDesc.h"
+#include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -69,7 +70,6 @@ protected:
 	virtual State  do_get_state () const;
 	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
 	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_clean_quick ();
 	virtual void   do_process_block (piapi::ProcInfo &proc);
 
 
@@ -99,6 +99,8 @@ private:
 
 	DelayDesc      _desc;
 	ParamStateSet  _state_set;
+	ParamProcSimple
+	               _param_proc;
 	double         _sample_freq;        // Hz, > 0. <= 0: not initialized
 
 	fstb::util::NotificationFlagCascadeSingle
@@ -130,7 +132,6 @@ private:
 	std::array <float, Cst::_nbr_lines>
 	               _delay_time_arr;
 	bool           _link_flag;
-	bool           _quick_clean_req_flag;
 
 	// Cached
 	int				_nbr_chn_src;        // > 0. 0 = not set

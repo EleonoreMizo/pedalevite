@@ -46,6 +46,7 @@ ProgSwitcher::ProgSwitcher (const ProcessingContext * &ctx_ptr, WaMsgQueue &queu
 :	_ctx_ptr (ctx_ptr)
 ,	_queue_to_cmd (queue_to_cmd)
 ,	_buf_pack (buf_pack)
+,	_fade_len (64)
 ,	_prog_switch_mode (doc::ProgSwitchMode::DIRECT)
 ,	_switch_flag (false)
 ,	_delayed_ctx_msg_ptr (nullptr)
@@ -57,22 +58,25 @@ ProgSwitcher::ProgSwitcher (const ProcessingContext * &ctx_ptr, WaMsgQueue &queu
 
 ProgSwitcher::~ProgSwitcher ()
 {
-
-	/*** To do ***/
-
+	if (_delayed_ctx_msg_ptr != nullptr)
+	{
+		_queue_to_cmd.enqueue (*_delayed_ctx_msg_ptr);
+		_delayed_ctx_msg_ptr = nullptr;
+	}
 }
 
 
 
 void	ProgSwitcher::reset (double sample_freq, int max_block_size)
 {
-	fstb::unused (sample_freq, max_block_size);
+	fstb::unused (max_block_size);
 	assert (_delayed_ctx_msg_ptr == nullptr);
 	assert (sample_freq > 0);
 	assert (max_block_size > 0);
 
 	_prog_switch_mode = doc::ProgSwitchMode::DIRECT;
 	_switch_flag      = false;
+	_fade_len         = fstb::round_int (sample_freq * 0.0015);
 }
 
 
@@ -108,8 +112,7 @@ bool	ProgSwitcher::frame_beg ()
 void	ProgSwitcher::handle_msg_ctx (WaMsgQueue::CellType &cell)
 {
 	// At this point we shouldn't have a programmed switch
-	assert (   _prog_switch_mode != doc::ProgSwitchMode::FADE_OUT_IN
-	        || ! _switch_flag);
+	assert (! is_ctx_delayed ());
 
 	_prog_switch_mode = cell._val._content._ctx._prog_switch_mode;
 	if (_prog_switch_mode == doc::ProgSwitchMode::FADE_OUT_IN)
@@ -144,16 +147,7 @@ void	ProgSwitcher::process_buffers_i (const ProcessingContextNode::Side &side, i
 		break;
 
 	case doc::ProgSwitchMode::FADE_OUT_IN:
-		if (_switch_flag)
-		{
-			// First part: fade out of the old program
-			fade_inout_buf (side, nbr_spl, 1, 0);
-		}
-		else
-		{
-			// Second part: fade in of the new program
-			fade_inout_buf (side, nbr_spl, 0, 1);
-		}
+		fade_inout_buf (side, nbr_spl, _switch_flag);
 		break;
 
 	default:
@@ -189,16 +183,7 @@ void	ProgSwitcher::process_buffers_o (const ProcessingContextNode::Side &side, i
 		break;
 
 	case doc::ProgSwitchMode::FADE_OUT_IN:
-		if (_switch_flag)
-		{
-			// First part: fade out of the old program
-			fade_inout_buf (side, nbr_spl, 1, 0);
-		}
-		else
-		{
-			// Second part: fade in of the new program
-			fade_inout_buf (side, nbr_spl, 0, 1);
-		}
+		fade_inout_buf (side, nbr_spl, _switch_flag);
 		break;
 
 	default:
@@ -217,19 +202,26 @@ void	ProgSwitcher::process_buffers_o (const ProcessingContextNode::Side &side, i
 
 
 
-void	ProgSwitcher::fade_inout_buf (const ProcessingContextNode::Side &side, int nbr_spl, float vol_beg, float vol_end)
+void	ProgSwitcher::fade_inout_buf (const ProcessingContextNode::Side &side, int nbr_spl, bool fadeout_flag)
 {
 	assert (nbr_spl > 0);
-	assert (vol_beg >= 0);
-	assert (vol_beg <= 1);
-	assert (vol_end >= 0);
-	assert (vol_end <= 1);
+
+	const int      work_len = std::min (_fade_len, nbr_spl);
+   int            ofs      = 0;
+	float          vol_beg  = 0;
+	float          vol_end  = 1;
+	if (fadeout_flag)
+	{
+		ofs     = nbr_spl - work_len;
+		vol_beg = 1;
+		vol_end = 0;
+	}
 
 	for (int chn = 0; chn < side._nbr_chn_tot; ++chn)
 	{
 		const int      buf_index = side._buf_arr [chn];
 		float *        buf_ptr   = _buf_pack.use (buf_index);
-		dsp::mix::Align::scale_1_vlr (buf_ptr, nbr_spl, vol_beg, vol_end);
+		dsp::mix::Align::scale_1_vlr (buf_ptr + ofs, work_len, vol_beg, vol_end);
 	}
 }
 

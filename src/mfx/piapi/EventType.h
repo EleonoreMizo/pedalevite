@@ -42,6 +42,7 @@ enum EventType
 	EventType_NOTE_OFF,
 	EventType_PARAM,
 	EventType_TRANSPORT,
+	EventType_RESET,
 
 	EventType_NBR_ELT
 };
