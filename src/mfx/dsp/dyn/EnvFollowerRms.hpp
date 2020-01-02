@@ -82,7 +82,7 @@ void	EnvFollowerRms::apply_volume (float gain)
 {
 	assert (gain >= 0);
 
-	_state *= gain;
+	_state *= gain * gain;
 }
 
 
