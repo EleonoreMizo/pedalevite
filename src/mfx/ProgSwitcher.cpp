@@ -206,15 +206,17 @@ void	ProgSwitcher::fade_inout_buf (const ProcessingContextNode::Side &side, int 
 {
 	assert (nbr_spl > 0);
 
-	const int      work_len = std::min (_fade_len, nbr_spl);
+	int            work_len = std::min (_fade_len, nbr_spl);
    int            ofs      = 0;
 	float          vol_beg  = 0;
 	float          vol_end  = 1;
 	if (fadeout_flag)
 	{
-		ofs     = nbr_spl - work_len;
-		vol_beg = 1;
-		vol_end = 0;
+		ofs      = nbr_spl - work_len;
+		ofs     &= ~3;    // Makes sure the pointer will be properly aligned
+		work_len = nbr_spl - ofs;
+		vol_beg  = 1;
+		vol_end  = 0;
 	}
 
 	for (int chn = 0; chn < side._nbr_chn_tot; ++chn)
