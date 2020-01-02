@@ -108,9 +108,9 @@ void	ParamStateSet::set_steady_state ()
 		ParamState &   state = _state_arr [param_index];
 		if (state.is_ramping ())
 		{
-			state.clear_buffers ();
-			_change_flag_arr.fill_bit (param_index);
+			state.use_notifier ().notify_observers ();
 		}
+		state.clear_buffers ();
 	}
 }
 
@@ -196,7 +196,7 @@ void	ParamStateSet::process_block (int nbr_spl)
 		state.tick (nbr_spl);
 		if (! state.is_ramping ())
 		{
-			_change_flag_arr.set_bit (index, false);
+			_change_flag_arr.clear_bit (index);
 		}
 	}
 }
