@@ -708,6 +708,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderCtx.hpp" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRouting.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\FontMapping8859.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h" />
@@ -1252,6 +1253,7 @@
     <ClCompile Include="..\..\..\src\mfx\hw\UserInputPi3.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\LocEdit.cpp" />
     <ClCompile Include="..\..\..\src\mfx\MeterResultSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\Model.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdAsync.cpp" />
@@ -1478,6 +1480,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgSave.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SettingsOther.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRouting.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools.cpp">
       <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>

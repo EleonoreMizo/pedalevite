@@ -36,6 +36,8 @@ namespace mfx
 
 
 
+class View;
+
 class LocEdit
 {
 
@@ -45,6 +47,8 @@ public:
 
 	               LocEdit ()  = default;
 	virtual        ~LocEdit () = default;
+
+	void           fix_chain_flag (const View &view);
 
 	int            _slot_id       = -1;          // -1 if none
 	PiType         _pi_type       = PiType_MIX;  // Should always be valid

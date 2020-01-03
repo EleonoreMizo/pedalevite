@@ -27,15 +27,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
+#include "mfx/ui/Font.h"
 #include "mfx/uitk/pg/SlotMenu.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
-#include "mfx/ui/Font.h"
 #include "mfx/LocEdit.h"
 #include "mfx/Model.h"
 #include "mfx/View.h"
+
+#include <algorithm>
 
 #include <cassert>
 
@@ -72,7 +74,7 @@ SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_typ_sptr (new NText (Entry_TYPE   ))
 ,	_ins_sptr (new NText (Entry_INSERT ))
 ,	_del_sptr (new NText (Entry_DELETE ))
-,	_mov_sptr (new NText (Entry_MOVE   ))
+,	_rtn_sptr (new NText (Entry_ROUTING))
 ,	_prs_sptr (new NText (Entry_PRESETS))
 ,	_rst_sptr (new NText (Entry_RESET  ))
 ,	_chn_sptr (new NText (Entry_CHN    ))
@@ -81,14 +83,14 @@ SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_label_param ()
 {
 	_del_sptr->set_text ("Delete");
-	_mov_sptr->set_text ("Move\xE2\x80\xA6");
+	_rtn_sptr->set_text ("Routing\xE2\x80\xA6");
 	_prs_sptr->set_text ("Presets\xE2\x80\xA6");
 	_rst_sptr->set_text ("Reset");
 
 	_menu_sptr->push_back (_typ_sptr);
 	_menu_sptr->push_back (_ins_sptr);
 	_menu_sptr->push_back (_del_sptr);
-	_menu_sptr->push_back (_mov_sptr);
+	_menu_sptr->push_back (_rtn_sptr);
 	_menu_sptr->push_back (_prs_sptr);
 	_menu_sptr->push_back (_rst_sptr);
 	_menu_sptr->push_back (_chn_sptr);
@@ -126,7 +128,7 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_state = State_NORMAL;
 
 	// Updates _chain_flag, if possible
-	fix_chain_flag ();
+	_loc_edit.fix_chain_flag (*_view_ptr);
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
@@ -137,7 +139,7 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_typ_sptr->set_font (*_fnt_ptr);
 	_ins_sptr->set_font (*_fnt_ptr);
 	_del_sptr->set_font (*_fnt_ptr);
-	_mov_sptr->set_font (*_fnt_ptr);
+	_rtn_sptr->set_font (*_fnt_ptr);
 	_prs_sptr->set_font (*_fnt_ptr);
 	_rst_sptr->set_font (*_fnt_ptr);
 	_chn_sptr->set_font (*_fnt_ptr);
@@ -147,7 +149,7 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_typ_sptr->set_coord (Vec2d (0, h_m * 0));
 	_ins_sptr->set_coord (Vec2d (0, h_m * 1));
 	_del_sptr->set_coord (Vec2d (0, h_m * 2));
-	_mov_sptr->set_coord (Vec2d (0, h_m * 3));
+	_rtn_sptr->set_coord (Vec2d (0, h_m * 3));
 	_prs_sptr->set_coord (Vec2d (0, h_m * 4));
 	_rst_sptr->set_coord (Vec2d (0, h_m * 5));
 	_chn_sptr->set_coord (Vec2d (0, h_m * 6));
@@ -157,7 +159,7 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_typ_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_ins_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_del_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_mov_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_rtn_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_prs_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_rst_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_chn_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -220,11 +222,8 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 					assert (false);
 				}
 				break;
-			case Entry_MOVE:
-				if (_loc_edit._chain_flag)
-				{
-					_page_switcher.call_page (PageType_SLOT_MOVE, 0, node_id);
-				}
+			case Entry_ROUTING:
+				_page_switcher.switch_to (PageType_SLOT_ROUTING, 0);
 				break;
 			case Entry_PRESETS:
 				_page_switcher.switch_to (PageType_PRESET_MENU, 0);
@@ -388,8 +387,10 @@ void	SlotMenu::do_erase_slot_from_chain (int index)
 
 
 
-void	SlotMenu::do_set_slot_label (int slot_id, std::string /*name*/)
+void	SlotMenu::do_set_slot_label (int slot_id, std::string name)
 {
+	fstb::unused (name);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();
@@ -398,8 +399,10 @@ void	SlotMenu::do_set_slot_label (int slot_id, std::string /*name*/)
 
 
 
-void	SlotMenu::do_set_plugin (int slot_id, const PluginInitData &/*pi_data*/)
+void	SlotMenu::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
+	fstb::unused (pi_data);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();
@@ -468,25 +471,17 @@ void	SlotMenu::update_display ()
 		*_typ_sptr, &NText::get_char_width
 	);
 	_typ_sptr->set_text (txt);
-	nav._node_id = Entry_TYPE;
-	nav_list.push_back (nav);
+	PageMgrInterface::add_nav (nav_list, Entry_TYPE);
 
 	_ins_sptr->set_text (_loc_edit._chain_flag ? "Insert before" : "Insert");
-	nav._node_id = Entry_INSERT;
-	nav_list.push_back (nav);
+	PageMgrInterface::add_nav (nav_list, Entry_INSERT);
 
 	_del_sptr->show (exist_flag);
-	_mov_sptr->show (exist_flag && _loc_edit._chain_flag);
+	_rtn_sptr->show (exist_flag);
 	if (exist_flag)
 	{
-		nav._node_id = Entry_DELETE;
-		nav_list.push_back (nav);
-
-		if (_loc_edit._chain_flag)
-		{
-			nav._node_id = Entry_MOVE;
-			nav_list.push_back (nav);
-		}
+		PageMgrInterface::add_nav (nav_list, Entry_DELETE);
+		PageMgrInterface::add_nav (nav_list, Entry_ROUTING);
 	}
 
 	_prs_sptr->show (full_flag);
@@ -498,11 +493,8 @@ void	SlotMenu::update_display ()
 	{
 		const doc::Slot & slot = preset.use_slot (slot_id);
 
-		nav._node_id = Entry_PRESETS;
-		nav_list.push_back (nav);
-
-		nav._node_id = Entry_RESET;
-		nav_list.push_back (nav);
+		PageMgrInterface::add_nav (nav_list, Entry_PRESETS);
+		PageMgrInterface::add_nav (nav_list, Entry_RESET);
 
 		const doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 		const bool     fm_flag = settings._force_mono_flag;
@@ -511,8 +503,7 @@ void	SlotMenu::update_display ()
 			? "Chan : prefer mono"
 			: "Chan : auto"
 		);
-		nav._node_id = Entry_CHN;
-		nav_list.push_back (nav);
+		PageMgrInterface::add_nav (nav_list, Entry_CHN);
 
 		const bool     fresh_flag = settings._force_reset_flag;
 		_frs_sptr->set_text (
@@ -520,12 +511,10 @@ void	SlotMenu::update_display ()
 			? "State: fresh"
 			: "State: keep"
 		);
-		nav._node_id = Entry_FRESH;
-		nav_list.push_back (nav);
+		PageMgrInterface::add_nav (nav_list, Entry_FRESH);
 
 		_lbl_sptr->set_text ("Name : " + slot._label);
-		nav._node_id = Entry_LABEL;
-		nav_list.push_back (nav);
+		PageMgrInterface::add_nav (nav_list, Entry_LABEL);
 	}
 
 	_page_ptr->set_nav_layout (nav_list);
@@ -549,7 +538,7 @@ MsgHandlerInterface::EvtProp	SlotMenu::change_type (int dir)
 	if (slot_id_new != _loc_edit._slot_id)
 	{
 		_loc_edit._slot_id = slot_id_new;
-		fix_chain_flag ();
+		_loc_edit.fix_chain_flag (*_view_ptr);
 		update_display ();
 	}
 
@@ -590,26 +579,6 @@ MsgHandlerInterface::EvtProp	SlotMenu::reset_plugin ()
 	update_display ();
 
 	return EvtProp_CATCH;
-}
-
-
-
-void	SlotMenu::fix_chain_flag ()
-{
-	if (_loc_edit._slot_id >= 0)
-	{
-		const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
-		const auto           it_slot = preset._slot_map.find (_loc_edit._slot_id);
-		if (it_slot != preset._slot_map.end ())
-		{
-			auto          it = std::find (
-				preset._routing._chain.begin (),
-				preset._routing._chain.end (),
-				_loc_edit._slot_id
-			);
-			_loc_edit._chain_flag = (it != preset._routing._chain.end ());
-		}
-	}
 }
 
 

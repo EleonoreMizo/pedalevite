@@ -115,6 +115,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_edit_date (_page_switcher, cmd_line)
 ,	_page_prog_catalog (_page_switcher)
 ,	_page_rec2disk (_page_switcher)
+,	_page_slot_routing (_page_switcher, _loc_edit)
 {
 #if (PV_VERSION == 2)
  #if 1
@@ -234,6 +235,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 	_page_switcher.add_page (uitk::pg::PageType_EDIT_DATE        , _page_edit_date        );
 	_page_switcher.add_page (uitk::pg::PageType_PROG_CATALOG     , _page_prog_catalog     );
 	_page_switcher.add_page (uitk::pg::PageType_REC2DISK         , _page_rec2disk         );
+	_page_switcher.add_page (uitk::pg::PageType_SLOT_ROUTING     , _page_slot_routing     );
 }
 
 

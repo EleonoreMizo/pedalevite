@@ -178,34 +178,34 @@ commonsrc = \
         ../../src/fstb/ToolsSimd.cpp \
         ../../src/fstb/ToolsSimd.h \
         ../../src/fstb/ToolsSimd.hpp \
-	../../src/hiir/def.h \
-	../../src/hiir/Downsampler2x4Neon.h \
-	../../src/hiir/Downsampler2x4Neon.hpp \
-	../../src/hiir/Downsampler2xFpu.h \
-	../../src/hiir/Downsampler2xFpu.hpp \
-	../../src/hiir/Downsampler2xNeon.h \
-	../../src/hiir/Downsampler2xNeon.hpp \
-	../../src/hiir/fnc.h \
-	../../src/hiir/fnc.hpp \
-	../../src/hiir/PhaseHalfPiFpu.h \
-	../../src/hiir/PhaseHalfPiFpu.hpp \
-	../../src/hiir/PhaseHalfPiNeon.h \
-	../../src/hiir/PhaseHalfPiNeon.hpp \
-	../../src/hiir/PolyphaseIir2Designer.cpp \
-	../../src/hiir/PolyphaseIir2Designer.h \
-	../../src/hiir/StageDataNeon.h \
-	../../src/hiir/StageProc4Neon.h \
-	../../src/hiir/StageProc4Neon.hpp \
-	../../src/hiir/StageProcFpu.h \
-	../../src/hiir/StageProcFpu.hpp \
-	../../src/hiir/StageProcNeon.h \
-	../../src/hiir/StageProcNeon.hpp \
-	../../src/hiir/Upsampler2x4Neon.h \
-	../../src/hiir/Upsampler2x4Neon.hpp \
-	../../src/hiir/Upsampler2xFpu.h \
-	../../src/hiir/Upsampler2xFpu.hpp \
-	../../src/hiir/Upsampler2xNeon.h \
-	../../src/hiir/Upsampler2xNeon.hpp \
+        ../../src/hiir/def.h \
+        ../../src/hiir/Downsampler2x4Neon.h \
+        ../../src/hiir/Downsampler2x4Neon.hpp \
+        ../../src/hiir/Downsampler2xFpu.h \
+        ../../src/hiir/Downsampler2xFpu.hpp \
+        ../../src/hiir/Downsampler2xNeon.h \
+        ../../src/hiir/Downsampler2xNeon.hpp \
+        ../../src/hiir/fnc.h \
+        ../../src/hiir/fnc.hpp \
+        ../../src/hiir/PhaseHalfPiFpu.h \
+        ../../src/hiir/PhaseHalfPiFpu.hpp \
+        ../../src/hiir/PhaseHalfPiNeon.h \
+        ../../src/hiir/PhaseHalfPiNeon.hpp \
+        ../../src/hiir/PolyphaseIir2Designer.cpp \
+        ../../src/hiir/PolyphaseIir2Designer.h \
+        ../../src/hiir/StageDataNeon.h \
+        ../../src/hiir/StageProc4Neon.h \
+        ../../src/hiir/StageProc4Neon.hpp \
+        ../../src/hiir/StageProcFpu.h \
+        ../../src/hiir/StageProcFpu.hpp \
+        ../../src/hiir/StageProcNeon.h \
+        ../../src/hiir/StageProcNeon.hpp \
+        ../../src/hiir/Upsampler2x4Neon.h \
+        ../../src/hiir/Upsampler2x4Neon.hpp \
+        ../../src/hiir/Upsampler2xFpu.h \
+        ../../src/hiir/Upsampler2xFpu.hpp \
+        ../../src/hiir/Upsampler2xNeon.h \
+        ../../src/hiir/Upsampler2xNeon.hpp \
         ../../src/mfx/adrv/CbInterface.cpp \
         ../../src/mfx/adrv/CbInterface.h \
         ../../src/mfx/adrv/DManual.cpp \
@@ -499,9 +499,9 @@ commonsrc = \
         ../../src/mfx/dsp/mix/Simd.hpp \
         ../../src/mfx/dsp/nz/GaussFast.h \
         ../../src/mfx/dsp/nz/GaussFast.hpp \
-	../../src/mfx/dsp/nz/PinkShade.cpp \
-	../../src/mfx/dsp/nz/PinkShade.h \
-	../../src/mfx/dsp/nz/PinkShade.hpp \
+        ../../src/mfx/dsp/nz/PinkShade.cpp \
+        ../../src/mfx/dsp/nz/PinkShade.h \
+        ../../src/mfx/dsp/nz/PinkShade.hpp \
         ../../src/mfx/dsp/nz/WhiteFast.cpp \
         ../../src/mfx/dsp/nz/WhiteFast.h \
         ../../src/mfx/dsp/nz/WhiteFast.hpp \
@@ -1109,6 +1109,8 @@ commonsrc = \
         ../../src/mfx/uitk/pg/SlotMenu.h \
         ../../src/mfx/uitk/pg/SlotMove.cpp \
         ../../src/mfx/uitk/pg/SlotMove.h \
+        ../../src/mfx/uitk/pg/SlotRouting.cpp \
+        ../../src/mfx/uitk/pg/SlotRouting.h \
         ../../src/mfx/uitk/pg/Tools.cpp \
         ../../src/mfx/uitk/pg/Tools.h \
         ../../src/mfx/uitk/pg/Tuner.cpp \
@@ -1170,6 +1172,7 @@ commonsrc = \
         ../../src/mfx/FileIOInterface.h \
         ../../src/mfx/FileOpWav.cpp \
         ../../src/mfx/FileOpWav.h \
+        ../../src/mfx/LocEdit.cpp \
         ../../src/mfx/LocEdit.h \
         ../../src/mfx/MeterResult.h \
         ../../src/mfx/MeterResultSet.cpp \
