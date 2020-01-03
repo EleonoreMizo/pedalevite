@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        ListPresets.cpp
+        PresetList.cpp
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -25,7 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "mfx/uitk/pg/ListPresets.h"
+#include "mfx/uitk/pg/PresetList.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -51,7 +51,7 @@ namespace pg
 
 
 
-ListPresets::ListPresets (PageSwitcher &page_switcher, LocEdit &loc_edit)
+PresetList::PresetList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_model_ptr (0)
@@ -76,7 +76,7 @@ ListPresets::ListPresets (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 
 
-void	ListPresets::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
+void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (_loc_edit._slot_id >= 0);
 	assert (usr_ptr != 0 || _state != State_NORMAL); // Actually we're not sure it cannot happen
@@ -97,7 +97,7 @@ void	ListPresets::do_connect (Model &model, const View &view, PageMgrInterface &
 			{
 			case Action_STORE:
 				store_2 ();
-				_page_switcher.switch_to (pg::PageType_MENU_PRESETS, 0);
+				_page_switcher.switch_to (pg::PageType_PRESET_MENU, 0);
 				return;
 			case Action_RENAME:
 				rename_2 ();
@@ -146,14 +146,14 @@ void	ListPresets::do_connect (Model &model, const View &view, PageMgrInterface &
 
 
 
-void	ListPresets::do_disconnect ()
+void	PresetList::do_disconnect ()
 {
 	// Nothing
 }
 
 
 
-MsgHandlerInterface::EvtProp	ListPresets::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	PresetList::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -182,7 +182,7 @@ MsgHandlerInterface::EvtProp	ListPresets::do_handle_evt (const NodeEvt &evt)
 				}  // And we stay on the list page
 				break;
 			case Action_BROWSE:
-				_page_switcher.switch_to (pg::PageType_MENU_PRESETS, 0);
+				_page_switcher.switch_to (pg::PageType_PRESET_MENU, 0);
 				break;
 			case Action_STORE:
 				store_1 (node_id);
@@ -207,7 +207,7 @@ MsgHandlerInterface::EvtProp	ListPresets::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_MENU_PRESETS, 0);
+			_page_switcher.switch_to (pg::PageType_PRESET_MENU, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -221,48 +221,48 @@ MsgHandlerInterface::EvtProp	ListPresets::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	ListPresets::do_activate_preset (int index)
+void	PresetList::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+	_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 }
 
 
 
-void	ListPresets::do_remove_slot (int slot_id)
+void	PresetList::do_remove_slot (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 	}
 }
 
 
 
-void	ListPresets::do_set_plugin (int slot_id, const PluginInitData &pi_data)
+void	PresetList::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
 	fstb::unused (pi_data);
 
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 	}
 }
 
 
 
-void	ListPresets::do_remove_plugin (int slot_id)
+void	PresetList::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 	}
 }
 
 
 
-void	ListPresets::do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
+void	PresetList::do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix)
 {
 	fstb::unused (index, name, s_main, s_mix);
 
@@ -276,7 +276,7 @@ void	ListPresets::do_add_settings (std::string model, int index, std::string nam
 
 
 
-void	ListPresets::do_remove_settings (std::string model, int index)
+void	PresetList::do_remove_settings (std::string model, int index)
 {
 	fstb::unused (index);
 
@@ -290,7 +290,7 @@ void	ListPresets::do_remove_settings (std::string model, int index)
 
 
 
-void	ListPresets::do_clear_all_settings ()
+void	PresetList::do_clear_all_settings ()
 {
 	update_display ();
 }
@@ -301,7 +301,7 @@ void	ListPresets::do_clear_all_settings ()
 
 
 
-void	ListPresets::update_display ()
+void	PresetList::update_display ()
 {
 	assert (_fnt_ptr != 0);
 
@@ -362,7 +362,7 @@ void	ListPresets::update_display ()
 
 
 
-void	ListPresets::add_entry (int set_idx, std::string name, PageMgrInterface::NavLocList &nav_list, bool same_flag)
+void	PresetList::add_entry (int set_idx, std::string name, PageMgrInterface::NavLocList &nav_list, bool same_flag)
 {
 	const int      scr_w   = _page_size [0];
 	const int      h_m     = _fnt_ptr->get_char_h ();
@@ -385,7 +385,7 @@ void	ListPresets::add_entry (int set_idx, std::string name, PageMgrInterface::Na
 
 
 
-bool	ListPresets::load (int set_idx)
+bool	PresetList::load (int set_idx)
 {
 	bool                 set_flag = false;
 
@@ -415,7 +415,7 @@ bool	ListPresets::load (int set_idx)
 
 
 
-void	ListPresets::store_1 (int set_idx)
+void	PresetList::store_1 (int set_idx)
 {
 	// Gets the name of the previous preset
 	std::string          name;
@@ -453,7 +453,7 @@ void	ListPresets::store_1 (int set_idx)
 
 
 
-void	ListPresets::store_2 ()
+void	PresetList::store_2 ()
 {
 	assert (_state_set_idx >= 0);
 
@@ -471,7 +471,7 @@ void	ListPresets::store_2 ()
 	const int      ret_val = _model_ptr->save_to_disk ();
 	if (ret_val == 0)
 	{
-		_page_switcher.switch_to (pg::PageType_MENU_SLOT, 0);
+		_page_switcher.switch_to (pg::PageType_SLOT_MENU, 0);
 	}
 	else
 	{
@@ -482,7 +482,7 @@ void	ListPresets::store_2 ()
 
 
 
-void	ListPresets::swap (int set_idx)
+void	PresetList::swap (int set_idx)
 {
 	const doc::Setup &   setup    = _view_ptr->use_setup ();
 	const doc::Preset &  preset   = _view_ptr->use_preset_cur ();
@@ -533,7 +533,7 @@ void	ListPresets::swap (int set_idx)
 
 
 
-void	ListPresets::rename_1 (int set_idx)
+void	PresetList::rename_1 (int set_idx)
 {
 	// Gets the name of the preset
 	const doc::Setup &   setup    = _view_ptr->use_setup ();
@@ -569,7 +569,7 @@ void	ListPresets::rename_1 (int set_idx)
 
 
 
-void	ListPresets::rename_2 ()
+void	PresetList::rename_2 ()
 {
 	assert (_state_set_idx >= 0);
 
@@ -613,7 +613,7 @@ void	ListPresets::rename_2 ()
 
 
 
-void	ListPresets::del (int set_idx)
+void	PresetList::del (int set_idx)
 {
 	const doc::Preset &  preset   = _view_ptr->use_preset_cur ();
 	const doc::Slot &    slot     = preset.use_slot (_loc_edit._slot_id);

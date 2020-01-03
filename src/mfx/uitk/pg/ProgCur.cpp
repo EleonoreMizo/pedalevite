@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        CurProg.cpp
+        ProgCur.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -34,7 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/adrv/DriverInterface.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
-#include "mfx/uitk/pg/CurProg.h"
+#include "mfx/uitk/pg/ProgCur.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -92,7 +92,7 @@ Parameter      value
 
     IP address
 */
-CurProg::CurProg (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
+ProgCur::ProgCur (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 :	_page_switcher (page_switcher)
 ,	_snd_drv (snd_drv)
 ,	_model_ptr (0)
@@ -132,7 +132,7 @@ CurProg::CurProg (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 
 
 
-void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
+void	ProgCur::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (usr_ptr);
 
@@ -215,14 +215,14 @@ void	CurProg::do_connect (Model &model, const View &view, PageMgrInterface &page
 
 
 
-void	CurProg::do_disconnect ()
+void	ProgCur::do_disconnect ()
 {
 	// Nothing
 }
 
 
 
-MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	ProgCur::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -274,7 +274,7 @@ MsgHandlerInterface::EvtProp	CurProg::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	CurProg::do_set_tempo (double bpm)
+void	ProgCur::do_set_tempo (double bpm)
 {
 	_tempo_date = _model_ptr->get_cur_date ();
 
@@ -290,7 +290,7 @@ void	CurProg::do_set_tempo (double bpm)
 
 
 
-void	CurProg::do_select_bank (int index)
+void	ProgCur::do_select_bank (int index)
 {
 	i_set_bank_nbr (index);
 	const doc::Setup &   setup = _view_ptr->use_setup ();
@@ -299,21 +299,21 @@ void	CurProg::do_select_bank (int index)
 
 
 
-void	CurProg::do_set_bank_name (std::string name)
+void	ProgCur::do_set_bank_name (std::string name)
 {
 	i_set_bank_name (name);
 }
 
 
 
-void	CurProg::do_set_preset_name (std::string name)
+void	ProgCur::do_set_preset_name (std::string name)
 {
 	i_set_prog_name (name);
 }
 
 
 
-void	CurProg::do_activate_preset (int index)
+void	ProgCur::do_activate_preset (int index)
 {
 	i_set_prog_nbr (index);
 	if (_view_ptr != 0)
@@ -326,7 +326,7 @@ void	CurProg::do_activate_preset (int index)
 
 
 
-void	CurProg::do_set_param (int slot_id, int index, float val, PiType type)
+void	ProgCur::do_set_param (int slot_id, int index, float val, PiType type)
 {
 	const std::chrono::microseconds  cur_date (_model_ptr->get_cur_date ());
 	const std::chrono::microseconds  dist     (cur_date - _tempo_date);
@@ -342,7 +342,7 @@ void	CurProg::do_set_param (int slot_id, int index, float val, PiType type)
 
 
 
-void	CurProg::i_set_bank_nbr (int index)
+void	ProgCur::i_set_bank_nbr (int index)
 {
 	_bank_index = index;
 	char           txt_0 [255+1];
@@ -352,7 +352,7 @@ void	CurProg::i_set_bank_nbr (int index)
 
 
 
-void	CurProg::i_set_prog_nbr (int index)
+void	ProgCur::i_set_prog_nbr (int index)
 {
 	_preset_index = index;
 	char           txt_0 [255+1];
@@ -362,7 +362,7 @@ void	CurProg::i_set_prog_nbr (int index)
 
 
 
-void	CurProg::i_set_bank_name (std::string name)
+void	ProgCur::i_set_bank_name (std::string name)
 {
 	name = pi::param::Tools::print_name_bestfit (
 		_size_max_bank_name, name.c_str (),
@@ -373,7 +373,7 @@ void	CurProg::i_set_bank_name (std::string name)
 
 
 
-void	CurProg::i_set_prog_name (std::string name)
+void	ProgCur::i_set_prog_name (std::string name)
 {
 	name = pi::param::Tools::print_name_bestfit (
 		_page_size [0], name.c_str (),
@@ -384,7 +384,7 @@ void	CurProg::i_set_prog_name (std::string name)
 
 
 
-void	CurProg::i_set_param (bool show_flag, int slot_id, int index, float val, PiType type)
+void	ProgCur::i_set_param (bool show_flag, int slot_id, int index, float val, PiType type)
 {
 	if (! show_flag || _view_ptr == 0)
 	{
@@ -407,7 +407,7 @@ void	CurProg::i_set_param (bool show_flag, int slot_id, int index, float val, Pi
 
 
 
-void	CurProg::i_show_mod_list ()
+void	ProgCur::i_show_mod_list ()
 {
 	if (_view_ptr != 0)
 	{
@@ -491,7 +491,7 @@ void	CurProg::i_show_mod_list ()
 
 
 
-void CurProg::add_mod_source (std::set <ControlSource> &src_list, const ControlSource &src)
+void ProgCur::add_mod_source (std::set <ControlSource> &src_list, const ControlSource &src)
 {
 	assert (src.is_valid ());
 
@@ -503,7 +503,7 @@ void CurProg::add_mod_source (std::set <ControlSource> &src_list, const ControlS
 
 
 
-std::string CurProg::get_ip_address ()
+std::string ProgCur::get_ip_address ()
 {
 	std::string    ip_addr;
 

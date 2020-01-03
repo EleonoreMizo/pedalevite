@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MoveFx.cpp
+        SlotMove.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
-#include "mfx/uitk/pg/MoveFx.h"
+#include "mfx/uitk/pg/SlotMove.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -53,7 +53,7 @@ namespace pg
 
 
 
-MoveFx::MoveFx (PageSwitcher &page_switcher, LocEdit &loc_edit)
+SlotMove::SlotMove (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_model_ptr (0)
@@ -74,7 +74,7 @@ MoveFx::MoveFx (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 
 
-void	MoveFx::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
+void	SlotMove::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (usr_ptr);
 
@@ -96,7 +96,7 @@ void	MoveFx::do_connect (Model &model, const View &view, PageMgrInterface &page,
 
 
 
-void	MoveFx::do_disconnect ()
+void	SlotMove::do_disconnect ()
 {
 	if (_model_ptr != 0)
 	{
@@ -106,7 +106,7 @@ void	MoveFx::do_disconnect ()
 
 
 
-MsgHandlerInterface::EvtProp	MoveFx::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	SlotMove::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -130,7 +130,7 @@ MsgHandlerInterface::EvtProp	MoveFx::do_handle_evt (const NodeEvt &evt)
 		{
 		case Button_S:
 		case Button_E:
-			_page_switcher.switch_to (PageType_MENU_SLOT, 0);
+			_page_switcher.switch_to (PageType_SLOT_MENU, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -144,31 +144,31 @@ MsgHandlerInterface::EvtProp	MoveFx::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	MoveFx::do_activate_preset (int /*index*/)
+void	SlotMove::do_activate_preset (int /*index*/)
 {
-	_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
 }
 
 
 
-void	MoveFx::do_remove_slot (int slot_id)
+void	SlotMove::do_remove_slot (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
 	}
 }
 
 
 
-void	MoveFx::do_insert_slot_in_chain (int /*index*/, int /*slot_id*/)
+void	SlotMove::do_insert_slot_in_chain (int /*index*/, int /*slot_id*/)
 {
 	update_display ();
 }
 
 
 
-void	MoveFx::do_erase_slot_from_chain (int /*index*/)
+void	SlotMove::do_erase_slot_from_chain (int /*index*/)
 {
 	update_display ();
 }
@@ -179,7 +179,7 @@ void	MoveFx::do_erase_slot_from_chain (int /*index*/)
 
 
 
-void	MoveFx::update_display ()
+void	SlotMove::update_display ()
 {
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
@@ -237,7 +237,7 @@ void	MoveFx::update_display ()
 
 
 
-MsgHandlerInterface::EvtProp	MoveFx::move_slot (int pos)
+MsgHandlerInterface::EvtProp	SlotMove::move_slot (int pos)
 {
 	assert (! _moving_flag);
 
@@ -260,7 +260,7 @@ MsgHandlerInterface::EvtProp	MoveFx::move_slot (int pos)
 
 
 // Returns -1 if not in the chain
-int	MoveFx::conv_loc_edit_to_chain_pos () const
+int	SlotMove::conv_loc_edit_to_chain_pos () const
 {
 	int            pos = -1;
 

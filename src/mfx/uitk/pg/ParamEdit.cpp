@@ -216,7 +216,7 @@ void	ParamEdit::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
 }
 
 
@@ -239,7 +239,7 @@ void	ParamEdit::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
 	}
 }
 

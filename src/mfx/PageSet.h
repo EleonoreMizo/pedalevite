@@ -31,24 +31,18 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/BankMenu.h"
 #include "mfx/uitk/pg/BankOrga.h"
 #include "mfx/uitk/pg/BankMove.h"
-#include "mfx/uitk/pg/CurProg.h"
 #include "mfx/uitk/pg/CtrlEdit.h"
 #include "mfx/uitk/pg/CtrlSrcNamed.h"
 #include "mfx/uitk/pg/EditDate.h"
 #include "mfx/uitk/pg/EditFxId.h"
 #include "mfx/uitk/pg/EditLabel.h"
-#include "mfx/uitk/pg/EditProg.h"
 #include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/pg/EndMsg.h"
 #include "mfx/uitk/pg/FxLfo.h"
 #include "mfx/uitk/pg/FxPEq.h"
 #include "mfx/uitk/pg/Levels.h"
-#include "mfx/uitk/pg/ListPresets.h"
 #include "mfx/uitk/pg/MenuBackup.h"
 #include "mfx/uitk/pg/MenuMain.h"
-#include "mfx/uitk/pg/MenuPresets.h"
-#include "mfx/uitk/pg/MenuSlot.h"
-#include "mfx/uitk/pg/MoveFx.h"
 #include "mfx/uitk/pg/NotYet.h"
 #include "mfx/uitk/pg/PageType.h"
 #include "mfx/uitk/pg/ParamControllers.h"
@@ -60,13 +54,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/PedalEditCycle.h"
 #include "mfx/uitk/pg/PedalEditGroup.h"
 #include "mfx/uitk/pg/PedalEditStep.h"
+#include "mfx/uitk/pg/PresetList.h"
+#include "mfx/uitk/pg/PresetMenu.h"
 #include "mfx/uitk/pg/ProgCatalog.h"
+#include "mfx/uitk/pg/ProgCur.h"
+#include "mfx/uitk/pg/ProgEdit.h"
 #include "mfx/uitk/pg/ProgMove.h"
+#include "mfx/uitk/pg/ProgSave.h"
 #include "mfx/uitk/pg/ProgSettings.h"
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/pg/Rec2Disk.h"
-#include "mfx/uitk/pg/SaveProg.h"
 #include "mfx/uitk/pg/SettingsOther.h"
+#include "mfx/uitk/pg/SlotMenu.h"
+#include "mfx/uitk/pg/SlotMove.h"
 #include "mfx/uitk/pg/Tuner.h"
 #include "mfx/uitk/Page.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -131,14 +131,14 @@ private:
 	uitk::Page     _page_mgr;
 	uitk::PageSwitcher
 	               _page_switcher;
-	uitk::pg::CurProg
-	               _page_cur_prog;
+	uitk::pg::ProgCur
+	               _page_prog_cur;
 	uitk::pg::Tuner
 	               _page_tuner;
 	uitk::pg::MenuMain
 	               _page_menu_main;
-	uitk::pg::EditProg
-	               _page_edit_prog;
+	uitk::pg::ProgEdit
+	               _page_prog_edit;
 	uitk::pg::ParamList
 	               _page_param_list;
 	uitk::pg::ParamEdit
@@ -151,12 +151,12 @@ private:
 	               _page_param_controllers;
 	uitk::pg::CtrlEdit
 	               _page_ctrl_edit;
-	uitk::pg::MenuSlot
-	               _page_menu_slot;
+	uitk::pg::SlotMenu
+	               _page_slot_menu;
 	uitk::pg::EditText
 	               _page_edit_text;
-	uitk::pg::SaveProg
-	               _page_save_prog;
+	uitk::pg::ProgSave
+	               _page_prog_save;
 	uitk::pg::EndMsg
 	               _page_end_msg;
 	uitk::pg::Levels
@@ -169,8 +169,8 @@ private:
 	               _page_prog_settings;
 	uitk::pg::BankMenu
 	               _page_bank_menu;
-	uitk::pg::MoveFx
-	               _page_move_fx;
+	uitk::pg::SlotMove
+	               _page_slot_move;
 	uitk::pg::PedalEditGroup
 	               _page_pedal_edit_group;
 	uitk::pg::PedalEditCycle
@@ -187,10 +187,10 @@ private:
 	               _page_fx_peq;
 	uitk::pg::SettingsOther
 	               _page_settings_other;
-	uitk::pg::MenuPresets
-	               _page_menu_presets;
-	uitk::pg::ListPresets
-	               _page_list_presets;
+	uitk::pg::PresetMenu
+	               _page_preset_menu;
+	uitk::pg::PresetList
+	               _page_preset_list;
 	uitk::pg::BankOrga
 	               _page_bank_orga;
 	uitk::pg::BankMove

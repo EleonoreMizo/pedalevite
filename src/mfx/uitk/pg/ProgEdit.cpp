@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        EditProg.cpp
+        ProgEdit.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
-#include "mfx/uitk/pg/EditProg.h"
+#include "mfx/uitk/pg/ProgEdit.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -54,7 +54,7 @@ namespace pg
 
 
 
-EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
+ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
 :	_fx_list (fx_list)
 ,	_ms_list (ms_list)
 ,	_page_switcher (page_switcher)
@@ -97,7 +97,7 @@ EditProg::EditProg (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 
 
 
-void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
+void	ProgEdit::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (usr_ptr);
 
@@ -153,7 +153,7 @@ void	EditProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 
 
-void	EditProg::do_disconnect ()
+void	ProgEdit::do_disconnect ()
 {
 	if (_model_ptr != 0)
 	{
@@ -163,7 +163,7 @@ void	EditProg::do_disconnect ()
 
 
 
-MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -205,7 +205,7 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 			}
 			else if (node_id == Entry_SAVE)
 			{
-				_page_switcher.switch_to (PageType_SAVE_PROG, 0);
+				_page_switcher.switch_to (PageType_PROG_SAVE, 0);
 			}
 			else if (node_id == Entry_SETTINGS)
 			{
@@ -224,7 +224,7 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 				else
 				{
 					// Empty slot
-					_page_switcher.switch_to (PageType_MENU_SLOT, 0);
+					_page_switcher.switch_to (PageType_SLOT_MENU, 0);
 				}
 			}
 			else
@@ -233,7 +233,7 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:
@@ -253,7 +253,7 @@ MsgHandlerInterface::EvtProp	EditProg::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	EditProg::do_activate_preset (int index)
+void	ProgEdit::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
@@ -262,7 +262,7 @@ void	EditProg::do_activate_preset (int index)
 
 
 
-void	EditProg::do_set_preset_name (std::string name)
+void	ProgEdit::do_set_preset_name (std::string name)
 {
 	fstb::unused (name);
 
@@ -271,7 +271,7 @@ void	EditProg::do_set_preset_name (std::string name)
 
 
 
-void	EditProg::do_add_slot (int slot_id)
+void	ProgEdit::do_add_slot (int slot_id)
 {
 	fstb::unused (slot_id);
 
@@ -280,7 +280,7 @@ void	EditProg::do_add_slot (int slot_id)
 
 
 
-void	EditProg::do_remove_slot (int slot_id)
+void	ProgEdit::do_remove_slot (int slot_id)
 {
 	fstb::unused (slot_id);
 
@@ -289,7 +289,7 @@ void	EditProg::do_remove_slot (int slot_id)
 
 
 
-void	EditProg::do_insert_slot_in_chain (int index, int slot_id)
+void	ProgEdit::do_insert_slot_in_chain (int index, int slot_id)
 {
 	fstb::unused (index, slot_id);
 
@@ -298,7 +298,7 @@ void	EditProg::do_insert_slot_in_chain (int index, int slot_id)
 
 
 
-void	EditProg::do_erase_slot_from_chain (int index)
+void	ProgEdit::do_erase_slot_from_chain (int index)
 {
 	fstb::unused (index);
 
@@ -307,7 +307,7 @@ void	EditProg::do_erase_slot_from_chain (int index)
 
 
 
-void	EditProg::do_set_plugin (int slot_id, const PluginInitData &pi_data)
+void	ProgEdit::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
 	fstb::unused (slot_id, pi_data);
 
@@ -316,7 +316,7 @@ void	EditProg::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 
 
 
-void	EditProg::do_remove_plugin (int slot_id)
+void	ProgEdit::do_remove_plugin (int slot_id)
 {
 	fstb::unused (slot_id);
 
@@ -325,7 +325,7 @@ void	EditProg::do_remove_plugin (int slot_id)
 
 
 
-void	EditProg::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
+void	ProgEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls)
 {
 	fstb::unused (slot_id, type, index, cls);
 
@@ -338,7 +338,7 @@ void	EditProg::do_set_param_ctrl (int slot_id, PiType type, int index, const doc
 
 
 
-void	EditProg::set_preset_info ()
+void	ProgEdit::set_preset_info ()
 {
 	assert (_fnt_ptr != 0);
 
@@ -417,7 +417,7 @@ void	EditProg::set_preset_info ()
 
 
 
-void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size)
+void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size)
 {
 	const int      h_m      = _fnt_ptr->get_char_h ();
 	const int      scr_w    = _page_size [0];
@@ -443,7 +443,7 @@ void	EditProg::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, s
 
 
 
-MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
+MsgHandlerInterface::EvtProp	ProgEdit::change_effect (int node_id, int dir)
 {
 	assert (node_id >= 0);
 	assert (dir != 0);
@@ -470,7 +470,7 @@ MsgHandlerInterface::EvtProp	EditProg::change_effect (int node_id, int dir)
 
 
 
-void	EditProg::update_loc_edit (int node_id)
+void	ProgEdit::update_loc_edit (int node_id)
 {
 	_loc_edit._slot_id = conv_node_id_to_slot_id (
 		node_id, _loc_edit._chain_flag
@@ -479,7 +479,7 @@ void	EditProg::update_loc_edit (int node_id)
 
 
 
-void	EditProg::update_rotenc_mapping ()
+void	ProgEdit::update_rotenc_mapping ()
 {
 	assert (_model_ptr != 0);
 	assert (_view_ptr  != 0);
@@ -498,7 +498,7 @@ void	EditProg::update_rotenc_mapping ()
 
 
 
-int	EditProg::conv_node_id_to_slot_id (int node_id) const
+int	ProgEdit::conv_node_id_to_slot_id (int node_id) const
 {
 	bool           chain_flag = true;
 
@@ -507,7 +507,7 @@ int	EditProg::conv_node_id_to_slot_id (int node_id) const
 
 
 
-int	EditProg::conv_node_id_to_slot_id (int node_id, bool &chain_flag) const
+int	ProgEdit::conv_node_id_to_slot_id (int node_id, bool &chain_flag) const
 {
 	int            slot_id = -1;
 
@@ -536,7 +536,7 @@ int	EditProg::conv_node_id_to_slot_id (int node_id, bool &chain_flag) const
 
 
 
-int	EditProg::conv_loc_edit_to_node_id () const
+int	ProgEdit::conv_loc_edit_to_node_id () const
 {
 	if (_loc_edit._slot_id >= 0)
 	{

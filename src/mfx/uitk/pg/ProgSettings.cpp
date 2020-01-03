@@ -172,7 +172,7 @@ MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:

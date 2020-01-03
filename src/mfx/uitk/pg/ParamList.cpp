@@ -157,7 +157,7 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			if (node_id == Entry_FX_SETUP)
 			{
-				_page_switcher.switch_to (PageType_MENU_SLOT, 0);
+				_page_switcher.switch_to (PageType_SLOT_MENU, 0);
 			}
 			else if (node_id == Entry_GUI)
 			{
@@ -186,7 +186,7 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:
@@ -210,7 +210,7 @@ void	ParamList::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
 }
 
 
@@ -231,7 +231,7 @@ void	ParamList::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
 	}
 }
 

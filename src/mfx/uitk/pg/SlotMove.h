@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MoveFx.h
+        SlotMove.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_MoveFx_HEADER_INCLUDED)
-#define mfx_uitk_pg_MoveFx_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_SlotMove_HEADER_INCLUDED)
+#define mfx_uitk_pg_SlotMove_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -52,7 +52,7 @@ namespace pg
 
 
 
-class MoveFx
+class SlotMove
 :	public PageInterface
 {
 
@@ -60,8 +60,8 @@ class MoveFx
 
 public:
 
-	explicit       MoveFx (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~MoveFx () = default;
+	explicit       SlotMove (PageSwitcher &page_switcher, LocEdit &loc_edit);
+	virtual        ~SlotMove () = default;
 
 
 
@@ -117,13 +117,13 @@ private:
 
 private:
 
-	               MoveFx ()                               = delete;
-	               MoveFx (const MoveFx &other)            = delete;
-	MoveFx &       operator = (const MoveFx &other)        = delete;
-	bool           operator == (const MoveFx &other) const = delete;
-	bool           operator != (const MoveFx &other) const = delete;
+	               SlotMove ()                               = delete;
+	               SlotMove (const SlotMove &other)            = delete;
+	SlotMove &       operator = (const SlotMove &other)        = delete;
+	bool           operator == (const SlotMove &other) const = delete;
+	bool           operator != (const SlotMove &other) const = delete;
 
-}; // class MoveFx
+}; // class SlotMove
 
 
 
@@ -133,11 +133,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/MoveFx.hpp"
+//#include "mfx/uitk/pg/SlotMove.hpp"
 
 
 
-#endif   // mfx_uitk_pg_MoveFx_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_SlotMove_HEADER_INCLUDED
 
 
 

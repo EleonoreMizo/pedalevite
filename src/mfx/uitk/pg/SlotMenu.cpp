@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MenuSlot.cpp
+        SlotMenu.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
-#include "mfx/uitk/pg/MenuSlot.h"
+#include "mfx/uitk/pg/SlotMenu.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -54,7 +54,7 @@ namespace pg
 
 
 
-MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
+SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_fx_list (fx_list)
@@ -103,7 +103,7 @@ MenuSlot::MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 
 
 
-void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
+void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (usr_ptr);
 
@@ -171,14 +171,14 @@ void	MenuSlot::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 
 
-void	MenuSlot::do_disconnect ()
+void	SlotMenu::do_disconnect ()
 {
 	// Nothing
 }
 
 
 
-MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -223,11 +223,11 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 			case Entry_MOVE:
 				if (_loc_edit._chain_flag)
 				{
-					_page_switcher.call_page (PageType_MOVE_FX, 0, node_id);
+					_page_switcher.call_page (PageType_SLOT_MOVE, 0, node_id);
 				}
 				break;
 			case Entry_PRESETS:
-				_page_switcher.switch_to (PageType_MENU_PRESETS, 0);
+				_page_switcher.switch_to (PageType_PRESET_MENU, 0);
 				break;
 			case Entry_RESET:
 				ret_val = reset_plugin ();
@@ -291,7 +291,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 			if (   _loc_edit._slot_id < 0
 			    || preset.is_slot_empty (_loc_edit._slot_id))
 			{
-				_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+				_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 			}
 			else
 			{
@@ -322,16 +322,16 @@ MsgHandlerInterface::EvtProp	MenuSlot::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	MenuSlot::do_activate_preset (int index)
+void	SlotMenu::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+	_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 }
 
 
 
-void	MenuSlot::do_remove_slot (int slot_id)
+void	SlotMenu::do_remove_slot (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -342,7 +342,7 @@ void	MenuSlot::do_remove_slot (int slot_id)
 
 
 
-void	MenuSlot::do_insert_slot_in_chain (int index, int slot_id)
+void	SlotMenu::do_insert_slot_in_chain (int index, int slot_id)
 {
 	fstb::unused (slot_id);
 
@@ -365,7 +365,7 @@ void	MenuSlot::do_insert_slot_in_chain (int index, int slot_id)
 
 
 
-void	MenuSlot::do_erase_slot_from_chain (int index)
+void	SlotMenu::do_erase_slot_from_chain (int index)
 {
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	if (std::find (
@@ -388,7 +388,7 @@ void	MenuSlot::do_erase_slot_from_chain (int index)
 
 
 
-void	MenuSlot::do_set_slot_label (int slot_id, std::string /*name*/)
+void	SlotMenu::do_set_slot_label (int slot_id, std::string /*name*/)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -398,7 +398,7 @@ void	MenuSlot::do_set_slot_label (int slot_id, std::string /*name*/)
 
 
 
-void	MenuSlot::do_set_plugin (int slot_id, const PluginInitData &/*pi_data*/)
+void	SlotMenu::do_set_plugin (int slot_id, const PluginInitData &/*pi_data*/)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -408,7 +408,7 @@ void	MenuSlot::do_set_plugin (int slot_id, const PluginInitData &/*pi_data*/)
 
 
 
-void	MenuSlot::do_remove_plugin (int slot_id)
+void	SlotMenu::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -418,7 +418,7 @@ void	MenuSlot::do_remove_plugin (int slot_id)
 
 
 
-void	MenuSlot::do_set_plugin_mono (int slot_id, bool /*mono_flag*/)
+void	SlotMenu::do_set_plugin_mono (int slot_id, bool /*mono_flag*/)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -428,7 +428,7 @@ void	MenuSlot::do_set_plugin_mono (int slot_id, bool /*mono_flag*/)
 
 
 
-void	MenuSlot::do_set_plugin_reset (int slot_id, bool /*reset_flag*/)
+void	SlotMenu::do_set_plugin_reset (int slot_id, bool /*reset_flag*/)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
@@ -442,7 +442,7 @@ void	MenuSlot::do_set_plugin_reset (int slot_id, bool /*reset_flag*/)
 
 
 
-void	MenuSlot::update_display ()
+void	SlotMenu::update_display ()
 {
 	const int      scr_w = _page_size [0];
 
@@ -535,7 +535,7 @@ void	MenuSlot::update_display ()
 
 
 
-MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
+MsgHandlerInterface::EvtProp	SlotMenu::change_type (int dir)
 {
 	const int      slot_id_new = Tools::change_plugin (
 		*_model_ptr,
@@ -558,7 +558,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::change_type (int dir)
 
 
 
-MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
+MsgHandlerInterface::EvtProp	SlotMenu::reset_plugin ()
 {
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	const int      slot_id      = _loc_edit._slot_id;
@@ -594,7 +594,7 @@ MsgHandlerInterface::EvtProp	MenuSlot::reset_plugin ()
 
 
 
-void	MenuSlot::fix_chain_flag ()
+void	SlotMenu::fix_chain_flag ()
 {
 	if (_loc_edit._slot_id >= 0)
 	{

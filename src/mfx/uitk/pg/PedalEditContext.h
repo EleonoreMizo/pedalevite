@@ -87,7 +87,7 @@ public:
 	int            _action_index = -1;
 	doc::PedalActionGroup
 	               _content;
-	PageType       _ret_page     = PageType_CUR_PROG;
+	PageType       _ret_page     = PageType_PROG_CUR;
 
 
 

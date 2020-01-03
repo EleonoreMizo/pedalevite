@@ -1039,16 +1039,12 @@ commonsrc = \
         ../../src/mfx/uitk/pg/CtrlEdit.h \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.cpp \
         ../../src/mfx/uitk/pg/CtrlSrcNamed.h \
-        ../../src/mfx/uitk/pg/CurProg.cpp \
-        ../../src/mfx/uitk/pg/CurProg.h \
         ../../src/mfx/uitk/pg/EditDate.cpp \
         ../../src/mfx/uitk/pg/EditDate.h \
         ../../src/mfx/uitk/pg/EditFxId.cpp \
         ../../src/mfx/uitk/pg/EditFxId.h \
         ../../src/mfx/uitk/pg/EditLabel.cpp \
         ../../src/mfx/uitk/pg/EditLabel.h \
-        ../../src/mfx/uitk/pg/EditProg.cpp \
-        ../../src/mfx/uitk/pg/EditProg.h \
         ../../src/mfx/uitk/pg/EditText.cpp \
         ../../src/mfx/uitk/pg/EditText.h \
         ../../src/mfx/uitk/pg/EndMsg.cpp \
@@ -1059,18 +1055,10 @@ commonsrc = \
         ../../src/mfx/uitk/pg/FxPEq.h \
         ../../src/mfx/uitk/pg/Levels.cpp \
         ../../src/mfx/uitk/pg/Levels.h \
-        ../../src/mfx/uitk/pg/ListPresets.cpp \
-        ../../src/mfx/uitk/pg/ListPresets.h \
         ../../src/mfx/uitk/pg/MenuBackup.cpp \
         ../../src/mfx/uitk/pg/MenuBackup.h \
         ../../src/mfx/uitk/pg/MenuMain.cpp \
         ../../src/mfx/uitk/pg/MenuMain.h \
-        ../../src/mfx/uitk/pg/MenuPresets.cpp \
-        ../../src/mfx/uitk/pg/MenuPresets.h \
-        ../../src/mfx/uitk/pg/MenuSlot.cpp \
-        ../../src/mfx/uitk/pg/MenuSlot.h \
-        ../../src/mfx/uitk/pg/MoveFx.cpp \
-        ../../src/mfx/uitk/pg/MoveFx.h \
         ../../src/mfx/uitk/pg/NotYet.cpp \
         ../../src/mfx/uitk/pg/NotYet.h \
         ../../src/mfx/uitk/pg/PageType.h \
@@ -1095,20 +1083,32 @@ commonsrc = \
         ../../src/mfx/uitk/pg/PedalEditCycle.h \
         ../../src/mfx/uitk/pg/PedalEditStep.cpp \
         ../../src/mfx/uitk/pg/PedalEditStep.h \
+        ../../src/mfx/uitk/pg/PresetList.cpp \
+        ../../src/mfx/uitk/pg/PresetList.h \
+        ../../src/mfx/uitk/pg/PresetMenu.cpp \
+        ../../src/mfx/uitk/pg/PresetMenu.h \
         ../../src/mfx/uitk/pg/ProgCatalog.cpp \
         ../../src/mfx/uitk/pg/ProgCatalog.h \
+        ../../src/mfx/uitk/pg/ProgCur.cpp \
+        ../../src/mfx/uitk/pg/ProgCur.h \
+        ../../src/mfx/uitk/pg/ProgEdit.cpp \
+        ../../src/mfx/uitk/pg/ProgEdit.h \
         ../../src/mfx/uitk/pg/ProgMove.cpp \
         ../../src/mfx/uitk/pg/ProgMove.h \
+        ../../src/mfx/uitk/pg/ProgSave.cpp \
+        ../../src/mfx/uitk/pg/ProgSave.h \
         ../../src/mfx/uitk/pg/ProgSettings.cpp \
         ../../src/mfx/uitk/pg/ProgSettings.h \
         ../../src/mfx/uitk/pg/Question.cpp \
         ../../src/mfx/uitk/pg/Question.h \
         ../../src/mfx/uitk/pg/Rec2Disk.cpp \
         ../../src/mfx/uitk/pg/Rec2Disk.h \
-        ../../src/mfx/uitk/pg/SaveProg.cpp \
-        ../../src/mfx/uitk/pg/SaveProg.h \
         ../../src/mfx/uitk/pg/SettingsOther.cpp \
         ../../src/mfx/uitk/pg/SettingsOther.h \
+        ../../src/mfx/uitk/pg/SlotMenu.cpp \
+        ../../src/mfx/uitk/pg/SlotMenu.h \
+        ../../src/mfx/uitk/pg/SlotMove.cpp \
+        ../../src/mfx/uitk/pg/SlotMove.h \
         ../../src/mfx/uitk/pg/Tools.cpp \
         ../../src/mfx/uitk/pg/Tools.h \
         ../../src/mfx/uitk/pg/Tuner.cpp \

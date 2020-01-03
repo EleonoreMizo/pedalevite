@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        SaveProg.h
+        ProgEdit.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_SaveProg_HEADER_INCLUDED)
-#define mfx_uitk_pg_SaveProg_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_ProgEdit_HEADER_INCLUDED)
+#define mfx_uitk_pg_ProgEdit_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -32,9 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
-#include "mfx/Cst.h"
 
-#include <array>
 #include <memory>
 #include <string>
 #include <vector>
@@ -43,6 +41,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+class LocEdit;
+
 namespace uitk
 {
 
@@ -53,7 +54,7 @@ namespace pg
 
 
 
-class SaveProg
+class ProgEdit
 :	public PageInterface
 {
 
@@ -61,8 +62,8 @@ class SaveProg
 
 public:
 
-	explicit       SaveProg (PageSwitcher &page_switcher);
-	virtual        ~SaveProg () = default;
+	explicit       ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list);
+	virtual        ~ProgEdit () = default;
 
 
 
@@ -79,8 +80,15 @@ protected:
 	               do_handle_evt (const NodeEvt &evt);
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
+	virtual void   do_activate_preset (int index);
 	virtual void   do_set_preset_name (std::string name);
-	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset);
+	virtual void   do_add_slot (int slot_id);
+	virtual void   do_remove_slot (int slot_id);
+	virtual void   do_insert_slot_in_chain (int index, int slot_id);
+	virtual void   do_erase_slot_from_chain (int index);
+	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
+	virtual void   do_remove_plugin (int slot_id);
+	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
 
 
 
@@ -97,18 +105,32 @@ private:
 	enum Entry
 	{
 		Entry_WINDOW    = 1000,
-		Entry_BANK,
-		Entry_PROG_LIST
+		Entry_FX_LIST,
+		Entry_MS_LIST,
+		Entry_PROG_NAME,
+		Entry_SETTINGS,
+		Entry_SAVE
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::array <TxtSPtr, Cst::_nbr_presets_per_bank> TxtArray;
+	typedef std::vector <TxtSPtr> TxtArray;
 
-	void           update_display ();
-	EvtProp        change_bank (int dir);
+	void           set_preset_info ();
+	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size);
+	EvtProp        change_effect (int node_id, int dir);
+	void           update_loc_edit (int node_id);
+	void           update_rotenc_mapping ();
+	int            conv_node_id_to_slot_id (int node_id) const;
+	int            conv_node_id_to_slot_id (int node_id, bool &chain_flag) const;
+	int            conv_loc_edit_to_node_id () const;
 
+	const std::vector <std::string> &
+	               _fx_list;
+	const std::vector <std::string> &
+	               _ms_list;
 	PageSwitcher & _page_switcher;
+	LocEdit &      _loc_edit;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -117,15 +139,21 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains 1 entry (current bank) + the program list
-	TxtSPtr        _bank_sptr;
-	TxtArray       _prog_list;
+	WinSPtr        _menu_sptr;    // Contains 3 entries (2 of them are selectable) + the slot list
+	TxtSPtr        _fx_list_sptr;
+	TxtSPtr        _ms_list_sptr;
+	TxtSPtr        _prog_name_sptr;
+	TxtSPtr        _settings_sptr;
+	TxtSPtr        _save_sptr;
+	TxtArray       _slot_list;   // Shows N+1+M+1 slots, the last one of each list being the <End> line.
 
 	State          _state;
 	int            _save_bank_index;
 	int            _save_preset_index;
 	EditText::Param
 	               _name_param;
+	std::vector <int>             // Ordered list of the edited slots
+	               _slot_id_list;
 
 
 
@@ -133,13 +161,13 @@ private:
 
 private:
 
-	               SaveProg ()                               = delete;
-	               SaveProg (const SaveProg &other)          = delete;
-	SaveProg &     operator = (const SaveProg &other)        = delete;
-	bool           operator == (const SaveProg &other) const = delete;
-	bool           operator != (const SaveProg &other) const = delete;
+	               ProgEdit ()                               = delete;
+	               ProgEdit (const ProgEdit &other)          = delete;
+	ProgEdit &     operator = (const ProgEdit &other)        = delete;
+	bool           operator == (const ProgEdit &other) const = delete;
+	bool           operator != (const ProgEdit &other) const = delete;
 
-}; // class SaveProg
+}; // class ProgEdit
 
 
 
@@ -149,11 +177,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/SaveProg.hpp"
+//#include "mfx/uitk/pg/ProgEdit.hpp"
 
 
 
-#endif   // mfx_uitk_pg_SaveProg_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_ProgEdit_HEADER_INCLUDED
 
 
 

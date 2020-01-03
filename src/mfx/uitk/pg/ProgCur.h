@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        CurProg.h
+        ProgCur.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_CurProg_HEADER_INCLUDED)
-#define mfx_uitk_pg_CurProg_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_ProgCur_HEADER_INCLUDED)
+#define mfx_uitk_pg_ProgCur_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -55,7 +55,7 @@ namespace pg
 
 
 
-class CurProg
+class ProgCur
 :	public PageInterface
 {
 
@@ -63,8 +63,8 @@ class CurProg
 
 public:
 
-	explicit       CurProg (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv);
-	virtual        ~CurProg () = default;
+	explicit       ProgCur (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv);
+	virtual        ~ProgCur () = default;
 
 
 
@@ -160,13 +160,13 @@ private:
 
 private:
 
-	               CurProg ()                               = delete;
-	               CurProg (const CurProg &other)           = delete;
-	CurProg &      operator = (const CurProg &other)        = delete;
-	bool           operator == (const CurProg &other) const = delete;
-	bool           operator != (const CurProg &other) const = delete;
+	               ProgCur ()                               = delete;
+	               ProgCur (const ProgCur &other)           = delete;
+	ProgCur &      operator = (const ProgCur &other)        = delete;
+	bool           operator == (const ProgCur &other) const = delete;
+	bool           operator != (const ProgCur &other) const = delete;
 
-}; // class CurProg
+}; // class ProgCur
 
 
 
@@ -176,11 +176,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/CurProg.hpp"
+//#include "mfx/uitk/pg/ProgCur.hpp"
 
 
 
-#endif   // mfx_uitk_pg_CurProg_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_ProgCur_HEADER_INCLUDED
 
 
 

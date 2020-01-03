@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MenuPresets.cpp
+        PresetMenu.cpp
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -25,7 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "mfx/uitk/pg/MenuPresets.h"
+#include "mfx/uitk/pg/PresetMenu.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -51,7 +51,7 @@ namespace pg
 
 
 
-MenuPresets::MenuPresets (PageSwitcher &page_switcher, LocEdit &loc_edit)
+PresetMenu::PresetMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_model_ptr (0)
@@ -97,7 +97,7 @@ MenuPresets::MenuPresets (PageSwitcher &page_switcher, LocEdit &loc_edit)
 
 
 
-void	MenuPresets::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
+void	PresetMenu::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (usr_ptr);
 	assert (_loc_edit._slot_id >= 0);
@@ -163,14 +163,14 @@ void	MenuPresets::do_connect (Model &model, const View &view, PageMgrInterface &
 
 
 
-void	MenuPresets::do_disconnect ()
+void	PresetMenu::do_disconnect ()
 {
 	// Nothing
 }
 
 
 
-MsgHandlerInterface::EvtProp	MenuPresets::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	PresetMenu::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -187,32 +187,32 @@ MsgHandlerInterface::EvtProp	MenuPresets::do_handle_evt (const NodeEvt &evt)
 			switch (node_id)
 			{
 			case Entry_LOAD:
-				_lp_param._action = ListPresets::Action_LOAD;
-				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
+				_lp_param._action = PresetList::Action_LOAD;
+				_page_switcher.switch_to (pg::PageType_PRESET_LIST, &_lp_param);
 				break;
 			case Entry_BROWSE:
-				_lp_param._action = ListPresets::Action_BROWSE;
-				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
+				_lp_param._action = PresetList::Action_BROWSE;
+				_page_switcher.switch_to (pg::PageType_PRESET_LIST, &_lp_param);
 				break;
 			case Entry_STORE:
-				_lp_param._action = ListPresets::Action_STORE;
-				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
+				_lp_param._action = PresetList::Action_STORE;
+				_page_switcher.switch_to (pg::PageType_PRESET_LIST, &_lp_param);
 				break;
 			case Entry_SWAP:
-				_lp_param._action = ListPresets::Action_SWAP;
-				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
+				_lp_param._action = PresetList::Action_SWAP;
+				_page_switcher.switch_to (pg::PageType_PRESET_LIST, &_lp_param);
 				break;
 			case Entry_RENAME:
-				_lp_param._action = ListPresets::Action_RENAME;
-				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
+				_lp_param._action = PresetList::Action_RENAME;
+				_page_switcher.switch_to (pg::PageType_PRESET_LIST, &_lp_param);
 				break;
 			case Entry_MORPH:
-				_lp_param._action = ListPresets::Action_MORPH;
-				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
+				_lp_param._action = PresetList::Action_MORPH;
+				_page_switcher.switch_to (pg::PageType_PRESET_LIST, &_lp_param);
 				break;
 			case Entry_DELETE:
-				_lp_param._action = ListPresets::Action_DELETE;
-				_page_switcher.switch_to (pg::PageType_LIST_PRESETS, &_lp_param);
+				_lp_param._action = PresetList::Action_DELETE;
+				_page_switcher.switch_to (pg::PageType_PRESET_LIST, &_lp_param);
 				break;
 			case Entry_ORGANIZE:
 				/*** To do ***/
@@ -224,7 +224,7 @@ MsgHandlerInterface::EvtProp	MenuPresets::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_MENU_SLOT, 0);
+			_page_switcher.switch_to (pg::PageType_SLOT_MENU, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -238,42 +238,42 @@ MsgHandlerInterface::EvtProp	MenuPresets::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	MenuPresets::do_activate_preset (int index)
+void	PresetMenu::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+	_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 }
 
 
 
-void	MenuPresets::do_remove_slot (int slot_id)
+void	PresetMenu::do_remove_slot (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 	}
 }
 
 
 
-void	MenuPresets::do_set_plugin (int slot_id, const PluginInitData &pi_data)
+void	PresetMenu::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 {
 	fstb::unused (pi_data);
 
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 	}
 }
 
 
 
-void	MenuPresets::do_remove_plugin (int slot_id)
+void	PresetMenu::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 	}
 }
 

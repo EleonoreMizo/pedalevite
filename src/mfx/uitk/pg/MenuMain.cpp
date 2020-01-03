@@ -211,14 +211,14 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 			switch (evt.get_target ())
 			{
 			case Entry_PROG:
-				_page_switcher.switch_to (PageType_EDIT_PROG, 0);
+				_page_switcher.switch_to (PageType_PROG_EDIT, 0);
 				break;
 			case Entry_BANKS:
 				_page_switcher.switch_to (pg::PageType_BANK_MENU, 0);
 				break;
 			case Entry_LAYOUT:
 				_pedal_ctx._type     = PedalEditContext::Type_GLOBAL;
-				_pedal_ctx._ret_page = PageType_CUR_PROG;
+				_pedal_ctx._ret_page = PageType_PROG_CUR;
 				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, 0);
 				break;
 			case Entry_LEVELS:
@@ -244,7 +244,7 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:

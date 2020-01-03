@@ -403,7 +403,7 @@ fprintf (stderr, "Reading ESC button...\n");
 //	_model.set_chn_mode (mfx::ChnMode_1M_1S);
 
 	mfx::uitk::PageSwitcher &  page_switcher = _page_set.use_page_switcher ();
-	page_switcher.switch_to (mfx::uitk::pg::PageType_CUR_PROG, 0);
+	page_switcher.switch_to (mfx::uitk::pg::PageType_PROG_CUR, 0);
 
 /**********************************************************************************************************************************************************************************************************************************/
 // Debugging code

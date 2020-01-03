@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        SaveProg.cpp
+        ProgSave.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
-#include "mfx/uitk/pg/SaveProg.h"
+#include "mfx/uitk/pg/ProgSave.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -54,7 +54,7 @@ namespace pg
 
 
 
-SaveProg::SaveProg (PageSwitcher &page_switcher)
+ProgSave::ProgSave (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
@@ -78,7 +78,7 @@ SaveProg::SaveProg (PageSwitcher &page_switcher)
 
 
 
-void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
+void	ProgSave::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (usr_ptr);
 
@@ -122,7 +122,7 @@ void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 				assert (false);
 			}
 
-			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
 			return;
 		}
 	}
@@ -163,14 +163,14 @@ void	SaveProg::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 
 
-void	SaveProg::do_disconnect ()
+void	ProgSave::do_disconnect ()
 {
 	// Nothing
 }
 
 
 
-MsgHandlerInterface::EvtProp	SaveProg::do_handle_evt (const NodeEvt &evt)
+MsgHandlerInterface::EvtProp	ProgSave::do_handle_evt (const NodeEvt &evt)
 {
 	EvtProp        ret_val = EvtProp_PASS;
 
@@ -229,7 +229,7 @@ MsgHandlerInterface::EvtProp	SaveProg::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_EDIT_PROG, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:
@@ -255,7 +255,7 @@ MsgHandlerInterface::EvtProp	SaveProg::do_handle_evt (const NodeEvt &evt)
 
 
 
-void	SaveProg::do_set_preset_name (std::string name)
+void	ProgSave::do_set_preset_name (std::string name)
 {
 	fstb::unused (name);
 
@@ -264,7 +264,7 @@ void	SaveProg::do_set_preset_name (std::string name)
 
 
 
-void	SaveProg::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
+void	ProgSave::do_set_preset (int bank_index, int preset_index, const doc::Preset &preset)
 {
 	fstb::unused (preset_index, preset);
 
@@ -280,7 +280,7 @@ void	SaveProg::do_set_preset (int bank_index, int preset_index, const doc::Prese
 
 
 
-void	SaveProg::update_display ()
+void	ProgSave::update_display ()
 {
 	char           txt_0 [255+1];
 
@@ -318,7 +318,7 @@ void	SaveProg::update_display ()
 
 
 
-MsgHandlerInterface::EvtProp	SaveProg::change_bank (int dir)
+MsgHandlerInterface::EvtProp	ProgSave::change_bank (int dir)
 {
 	_save_bank_index += dir;
 	_save_bank_index += Cst::_nbr_banks;

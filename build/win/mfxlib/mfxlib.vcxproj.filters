@@ -1167,9 +1167,6 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\Page.h">
       <Filter>mfx\uitk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\CurProg.h">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\MsgHandlerInterface.h">
       <Filter>mfx\uitk</Filter>
     </ClInclude>
@@ -1198,9 +1195,6 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\MenuMain.h">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditProg.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\ParamList.h">
@@ -1234,9 +1228,6 @@
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\EditText.h">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\MenuSlot.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\piapi\PluginState.h">
@@ -1355,9 +1346,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\hiir\Upsampler2xNeon.hpp">
       <Filter>hiir</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SaveProg.h">
-      <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\CmdLine.h">
       <Filter>mfx</Filter>
@@ -1812,9 +1800,6 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\BankMenu.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\MoveFx.h">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym.h">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
@@ -2146,12 +2131,6 @@
       <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SettingsOther.h">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\MenuPresets.h">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ListPresets.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\colorme\ColorMe.h">
@@ -3027,6 +3006,27 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotMenu.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgCur.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgEdit.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PresetList.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\PresetMenu.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\ProgSave.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotMove.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3290,9 +3290,6 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\Page.cpp">
       <Filter>mfx\uitk</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\CurProg.cpp">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\MsgHandlerInterface.cpp">
       <Filter>mfx\uitk</Filter>
     </ClCompile>
@@ -3315,9 +3312,6 @@
       <Filter>mfx\uitk</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\MenuMain.cpp">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditProg.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\Slot.cpp">
@@ -3357,9 +3351,6 @@
       <Filter>mfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\EditText.cpp">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\MenuSlot.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginDescInterface.cpp">
@@ -3439,9 +3430,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ControlSource.cpp">
       <Filter>mfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SaveProg.cpp">
-      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\CmdLine.cpp">
       <Filter>mfx</Filter>
@@ -3636,9 +3624,6 @@
       <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\BankMenu.cpp">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\MoveFx.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass2p.cpp">
@@ -3852,12 +3837,6 @@
       <Filter>mfx\dsp\ctrl\lfo</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SettingsOther.cpp">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\MenuPresets.cpp">
-      <Filter>mfx\uitk\pg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ListPresets.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\colorme\ColorMe.cpp">
@@ -4180,6 +4159,27 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\ParamProcSimple.cpp">
       <Filter>mfx\pi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotMenu.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgCur.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgEdit.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PresetList.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\PresetMenu.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgSave.cpp">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotMove.cpp">
+      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

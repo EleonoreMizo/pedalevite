@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        ListPresets.h
-        Author: Laurent de Soras, 2017
+        ProgSave.h
+        Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_ListPresets_HEADER_INCLUDED)
-#define mfx_uitk_pg_ListPresets_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_ProgSave_HEADER_INCLUDED)
+#define mfx_uitk_pg_ProgSave_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -32,14 +32,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
+#include "mfx/Cst.h"
+
+#include <array>
+#include <memory>
+#include <string>
+#include <vector>
 
 
 
 namespace mfx
 {
-
-class LocEdit;
-
 namespace uitk
 {
 
@@ -50,7 +53,7 @@ namespace pg
 
 
 
-class ListPresets
+class ProgSave
 :	public PageInterface
 {
 
@@ -58,36 +61,8 @@ class ListPresets
 
 public:
 
-	enum Action
-	{
-		Action_INVALID = -1,
-		Action_LOAD    = 0,
-		Action_BROWSE,
-		Action_STORE,
-		Action_SWAP,
-		Action_RENAME,
-		Action_MORPH,
-		Action_DELETE,
-
-		Action_NBR_ELT
-	};
-
-	class Param
-	{
-	public:
-		Action         _action = Action_INVALID;
-	};
-
-	enum State
-	{
-		State_NORMAL = 0,
-		State_EDIT_NAME,
-
-		State_NBR_ELT
-	};
-
-	explicit       ListPresets (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~ListPresets () = default;
+	explicit       ProgSave (PageSwitcher &page_switcher);
+	virtual        ~ProgSave () = default;
 
 
 
@@ -104,13 +79,8 @@ protected:
 	               do_handle_evt (const NodeEvt &evt);
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
-	virtual void   do_remove_plugin (int slot_id);
-	virtual void   do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
-	virtual void   do_remove_settings (std::string model, int index);
-	virtual void   do_clear_all_settings ();
+	virtual void   do_set_preset_name (std::string name);
+	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset);
 
 
 
@@ -118,28 +88,27 @@ protected:
 
 private:
 
+	enum State
+	{
+		State_NORMAL = 0,
+		State_EDIT_NAME
+	};
+
 	enum Entry
 	{
-		Entry_WINDOW = 1000000
+		Entry_WINDOW    = 1000,
+		Entry_BANK,
+		Entry_PROG_LIST
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
-	typedef std::vector <TxtSPtr> TxtArray;
-	typedef std::map <std::string, int> PosMap;  // [fx_type] = index in the list
+	typedef std::array <TxtSPtr, Cst::_nbr_presets_per_bank> TxtArray;
 
 	void           update_display ();
-	void           add_entry (int set_idx, std::string name, PageMgrInterface::NavLocList &nav_list, bool same_flag);
-	bool           load (int set_idx);
-	void           store_1 (int set_idx);
-	void           store_2 ();
-	void           swap (int set_idx);
-	void           rename_1 (int set_idx);
-	void           rename_2 ();
-	void           del (int set_idx);
+	EvtProp        change_bank (int dir);
 
 	PageSwitcher & _page_switcher;
-	LocEdit &      _loc_edit;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -148,14 +117,15 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
-	WinSPtr        _menu_sptr;    // Contains the preset list
-	TxtArray       _preset_list;
-	PosMap         _preset_pos_map;
-	Action         _action;
+	WinSPtr        _menu_sptr;    // Contains 1 entry (current bank) + the program list
+	TxtSPtr        _bank_sptr;
+	TxtArray       _prog_list;
+
 	State          _state;
+	int            _save_bank_index;
+	int            _save_preset_index;
 	EditText::Param
 	               _name_param;
-	int            _state_set_idx;
 
 
 
@@ -163,13 +133,13 @@ private:
 
 private:
 
-	               ListPresets ()                               = delete;
-	               ListPresets (const ListPresets &other)       = delete;
-	ListPresets &  operator = (const ListPresets &other)        = delete;
-	bool           operator == (const ListPresets &other) const = delete;
-	bool           operator != (const ListPresets &other) const = delete;
+	               ProgSave ()                               = delete;
+	               ProgSave (const ProgSave &other)          = delete;
+	ProgSave &     operator = (const ProgSave &other)        = delete;
+	bool           operator == (const ProgSave &other) const = delete;
+	bool           operator != (const ProgSave &other) const = delete;
 
-}; // class ListPresets
+}; // class ProgSave
 
 
 
@@ -179,11 +149,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/ListPresets.hpp"
+//#include "mfx/uitk/pg/ProgSave.hpp"
 
 
 
-#endif   // mfx_uitk_pg_ListPresets_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_ProgSave_HEADER_INCLUDED
 
 
 

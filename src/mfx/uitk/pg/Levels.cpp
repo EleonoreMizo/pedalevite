@@ -222,7 +222,7 @@ MsgHandlerInterface::EvtProp	Levels::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_CUR_PROG, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:

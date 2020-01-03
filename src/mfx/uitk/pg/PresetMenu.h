@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MenuPresets.h
+        PresetMenu.h
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_MenuPresets_HEADER_INCLUDED)
-#define mfx_uitk_pg_MenuPresets_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_PresetMenu_HEADER_INCLUDED)
+#define mfx_uitk_pg_PresetMenu_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/ListPresets.h"
+#include "mfx/uitk/pg/PresetList.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
@@ -49,7 +49,7 @@ namespace pg
 
 
 
-class MenuPresets
+class PresetMenu
 :	public PageInterface
 {
 
@@ -57,8 +57,8 @@ class MenuPresets
 
 public:
 
-	explicit       MenuPresets (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~MenuPresets () = default;
+	explicit       PresetMenu (PageSwitcher &page_switcher, LocEdit &loc_edit);
+	virtual        ~PresetMenu () = default;
 
 
 
@@ -123,7 +123,7 @@ private:
 	TxtSPtr        _dele_sptr;
 	TxtSPtr        _orga_sptr;
 
-	ListPresets::Param
+	PresetList::Param
 	               _lp_param;
 	int            _node_id_save;
 
@@ -133,13 +133,13 @@ private:
 
 private:
 
-	               MenuPresets ()                               = delete;
-	               MenuPresets (const MenuPresets &other)       = delete;
-	MenuPresets &  operator = (const MenuPresets &other)        = delete;
-	bool           operator == (const MenuPresets &other) const = delete;
-	bool           operator != (const MenuPresets &other) const = delete;
+	               PresetMenu ()                               = delete;
+	               PresetMenu (const PresetMenu &other)        = delete;
+	PresetMenu &   operator = (const PresetMenu &other)        = delete;
+	bool           operator == (const PresetMenu &other) const = delete;
+	bool           operator != (const PresetMenu &other) const = delete;
 
-}; // class MenuPresets
+}; // class PresetMenu
 
 
 
@@ -149,11 +149,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/MenuPresets.hpp"
+//#include "mfx/uitk/pg/PresetMenu.hpp"
 
 
 
-#endif   // mfx_uitk_pg_MenuPresets_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_PresetMenu_HEADER_INCLUDED
 
 
 

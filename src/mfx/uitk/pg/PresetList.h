@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        MenuSlot.h
-        Author: Laurent de Soras, 2016
+        PresetList.h
+        Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_uitk_pg_MenuSlot_HEADER_INCLUDED)
-#define mfx_uitk_pg_MenuSlot_HEADER_INCLUDED
+#if ! defined (mfx_uitk_pg_PresetList_HEADER_INCLUDED)
+#define mfx_uitk_pg_PresetList_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,10 +27,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/uitk/pg/EditLabel.h"
+#include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
+#include "mfx/uitk/PageMgrInterface.h"
 
 
 
@@ -49,7 +50,7 @@ namespace pg
 
 
 
-class MenuSlot
+class PresetList
 :	public PageInterface
 {
 
@@ -57,8 +58,36 @@ class MenuSlot
 
 public:
 
-	explicit       MenuSlot (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list);
-	virtual        ~MenuSlot () = default;
+	enum Action
+	{
+		Action_INVALID = -1,
+		Action_LOAD    = 0,
+		Action_BROWSE,
+		Action_STORE,
+		Action_SWAP,
+		Action_RENAME,
+		Action_MORPH,
+		Action_DELETE,
+
+		Action_NBR_ELT
+	};
+
+	class Param
+	{
+	public:
+		Action         _action = Action_INVALID;
+	};
+
+	enum State
+	{
+		State_NORMAL = 0,
+		State_EDIT_NAME,
+
+		State_NBR_ELT
+	};
+
+	explicit       PresetList (PageSwitcher &page_switcher, LocEdit &loc_edit);
+	virtual        ~PresetList () = default;
 
 
 
@@ -77,13 +106,11 @@ protected:
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
 	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_insert_slot_in_chain (int index, int slot_id);
-	virtual void   do_erase_slot_from_chain (int index);
-	virtual void   do_set_slot_label (int slot_id, std::string name);
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
-	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag);
-	virtual void   do_set_plugin_reset (int slot_id, bool reset_flag);
+	virtual void   do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
+	virtual void   do_remove_settings (std::string model, int index);
+	virtual void   do_clear_all_settings ();
 
 
 
@@ -91,40 +118,28 @@ protected:
 
 private:
 
-	enum State
-	{
-		State_NORMAL = 0,
-		State_EDIT_LABEL
-	};
-
 	enum Entry
 	{
-		Entry_WINDOW = 0,
-		Entry_TYPE,
-		Entry_INSERT,
-		Entry_DELETE,
-		Entry_MOVE,
-		Entry_PRESETS,
-		Entry_RESET,
-		Entry_CHN,
-		Entry_FRESH,
-		Entry_LABEL
+		Entry_WINDOW = 1000000
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
 	typedef std::shared_ptr <NWindow> WinSPtr;
+	typedef std::vector <TxtSPtr> TxtArray;
+	typedef std::map <std::string, int> PosMap;  // [fx_type] = index in the list
 
 	void           update_display ();
-	EvtProp        change_type (int dir);
-	EvtProp        reset_plugin ();
-	void           fix_chain_flag ();
+	void           add_entry (int set_idx, std::string name, PageMgrInterface::NavLocList &nav_list, bool same_flag);
+	bool           load (int set_idx);
+	void           store_1 (int set_idx);
+	void           store_2 ();
+	void           swap (int set_idx);
+	void           rename_1 (int set_idx);
+	void           rename_2 ();
+	void           del (int set_idx);
 
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
-	const std::vector <std::string> &
-	               _fx_list;
-	const std::vector <std::string> &
-	               _ms_list;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected
@@ -133,24 +148,14 @@ private:
 	const ui::Font *              // 0 = not connected
 	               _fnt_ptr;
 
+	WinSPtr        _menu_sptr;    // Contains the preset list
+	TxtArray       _preset_list;
+	PosMap         _preset_pos_map;
+	Action         _action;
 	State          _state;
-	int            _save_bank_index;
-	int            _save_preset_index;
-	int            _save_slot_id;
-
-	WinSPtr        _menu_sptr;
-	TxtSPtr        _typ_sptr;
-	TxtSPtr        _ins_sptr;
-	TxtSPtr        _del_sptr;
-	TxtSPtr        _mov_sptr;
-	TxtSPtr        _prs_sptr;
-	TxtSPtr        _rst_sptr;
-	TxtSPtr        _chn_sptr;
-	TxtSPtr        _frs_sptr;
-	TxtSPtr        _lbl_sptr;
-
-	EditLabel::Param
-	               _label_param;
+	EditText::Param
+	               _name_param;
+	int            _state_set_idx;
 
 
 
@@ -158,13 +163,13 @@ private:
 
 private:
 
-	               MenuSlot ()                               = delete;
-	               MenuSlot (const MenuSlot &other)          = delete;
-	MenuSlot &     operator = (const MenuSlot &other)        = delete;
-	bool           operator == (const MenuSlot &other) const = delete;
-	bool           operator != (const MenuSlot &other) const = delete;
+	               PresetList ()                               = delete;
+	               PresetList (const PresetList &other)        = delete;
+	PresetList &   operator = (const PresetList &other)        = delete;
+	bool           operator == (const PresetList &other) const = delete;
+	bool           operator != (const PresetList &other) const = delete;
 
-}; // class MenuSlot
+}; // class PresetList
 
 
 
@@ -174,11 +179,11 @@ private:
 
 
 
-//#include "mfx/uitk/pg/MenuSlot.hpp"
+//#include "mfx/uitk/pg/PresetList.hpp"
 
 
 
-#endif   // mfx_uitk_pg_MenuSlot_HEADER_INCLUDED
+#endif   // mfx_uitk_pg_PresetList_HEADER_INCLUDED
 
 
 
