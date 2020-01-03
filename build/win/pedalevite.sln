@@ -57,6 +57,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fontgen", "fontgen\fontgen.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{25FDA677-577F-4143-9B0C-963EBA0327F1}"
 	ProjectSection(SolutionItems) = preProject
+		..\unix\configure.ac = ..\unix\configure.ac
+		..\unix\Makefile.am = ..\unix\Makefile.am
 		..\..\src\README.md = ..\..\src\README.md
 	EndProjectSection
 EndProject
