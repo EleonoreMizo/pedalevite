@@ -57,7 +57,7 @@ class SlotMenu
 
 public:
 
-	explicit       SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list);
+	explicit       SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit);
 	virtual        ~SlotMenu () = default;
 
 
@@ -77,8 +77,7 @@ protected:
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
 	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_insert_slot_in_chain (int index, int slot_id);
-	virtual void   do_erase_slot_from_chain (int index);
+	virtual void   do_set_routing (const doc::Routing &routing);
 	virtual void   do_set_slot_label (int slot_id, std::string name);
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
@@ -116,14 +115,15 @@ private:
 
 	void           update_display ();
 	EvtProp        change_type (int dir);
-	EvtProp        reset_plugin ();
+	void           reset_plugin ();
+	void           insert_slot ();
+	void           delete_slot ();
+	void           change_chn_pref ();
+	void           change_state_mode ();
+	void           set_label (int node_id);
 
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
-	const std::vector <std::string> &
-	               _fx_list;
-	const std::vector <std::string> &
-	               _ms_list;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected

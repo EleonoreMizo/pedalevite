@@ -56,11 +56,9 @@ namespace pg
 
 
 
-SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
+SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_fx_list (fx_list)
-,	_ms_list (ms_list)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -128,7 +126,7 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_state = State_NORMAL;
 
 	// Updates _chain_flag, if possible
-	_loc_edit.fix_chain_flag (*_view_ptr);
+	_loc_edit.fix_audio_flag (*_view_ptr, *_model_ptr);
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
@@ -188,8 +186,6 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_button_ex ())
 	{
-		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-
 		const Button   but = evt.get_button_ex ();
 		switch (but)
 		{
@@ -198,29 +194,10 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 			switch (node_id)
 			{
 			case Entry_INSERT:
-				{
-					int            slot_index_new =
-						Tools::find_chain_index (preset, _loc_edit._slot_id);
-					if (slot_index_new < 0)
-					{
-						slot_index_new = int (preset._routing._chain.size ());
-					}
-					const int      slot_id = _model_ptr->add_slot ();
-					if (_loc_edit._chain_flag)
-					{
-						_model_ptr->insert_slot_in_chain (slot_index_new, slot_id);
-					}
-				}
+				insert_slot ();
 				break;
 			case Entry_DELETE:
-				if (_loc_edit._slot_id >= 0)
-				{
-					_model_ptr->remove_slot (_loc_edit._slot_id);
-				}
-				else
-				{
-					assert (false);
-				}
+				delete_slot ();
 				break;
 			case Entry_ROUTING:
 				_page_switcher.switch_to (PageType_SLOT_ROUTING, 0);
@@ -229,57 +206,16 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 				_page_switcher.switch_to (PageType_PRESET_MENU, 0);
 				break;
 			case Entry_RESET:
-				ret_val = reset_plugin ();
+				reset_plugin ();
 				break;
 			case Entry_CHN:
-				if (_loc_edit._slot_id >= 0)
-				{
-					const auto     it_slot =
-						preset._slot_map.find (_loc_edit._slot_id);
-					assert (it_slot != preset._slot_map.end ());
-					if (! preset.is_slot_empty (it_slot))
-					{
-						const doc::Slot & slot = *(it_slot->second);
-						const doc::PluginSettings &   settings =
-							slot.use_settings (PiType_MAIN);
-						bool           fm_flag = settings._force_mono_flag;
-						fm_flag = ! fm_flag;
-						_model_ptr->set_plugin_mono (_loc_edit._slot_id, fm_flag);
-					}
-				}
+				change_chn_pref ();
 				break;
 			case Entry_FRESH:
-				if (_loc_edit._slot_id >= 0)
-				{
-					const auto     it_slot =
-						preset._slot_map.find (_loc_edit._slot_id);
-					assert (it_slot != preset._slot_map.end ());
-					if (! preset.is_slot_empty (it_slot))
-					{
-						const doc::Slot & slot = *(it_slot->second);
-						const doc::PluginSettings &   settings =
-							slot.use_settings (PiType_MAIN);
-						bool           fresh_flag = settings._force_reset_flag;
-						fresh_flag = ! fresh_flag;
-						_model_ptr->set_plugin_reset (_loc_edit._slot_id, fresh_flag);
-					}
-				}
+				change_state_mode ();
 				break;
 			case Entry_LABEL:
-				{
-					assert (_loc_edit._slot_id >= 0);
-					const doc::Slot & slot = preset.use_slot (_loc_edit._slot_id);
-					_label_param._label        = slot._label;
-					_label_param._sep_cur_flag = true;
-					_state                     = State_EDIT_LABEL;
-					_save_bank_index           = _view_ptr->get_bank_index ();
-					_save_preset_index         = _view_ptr->get_preset_index ();
-					_save_slot_id              = _loc_edit._slot_id;
-					_page_switcher.call_page (
-						PageType_EDIT_LABEL, &_label_param, node_id
-					);
-					ret_val = EvtProp_CATCH;
-				}
+				set_label (node_id);
 				break;
 			default:
 				ret_val = EvtProp_PASS;
@@ -287,14 +223,17 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			if (   _loc_edit._slot_id < 0
-			    || preset.is_slot_empty (_loc_edit._slot_id))
 			{
-				_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
-			}
-			else
-			{
-				_page_switcher.switch_to (pg::PageType_PARAM_LIST, 0);
+				const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+				if (   _loc_edit._slot_id < 0
+				    || preset.is_slot_empty (_loc_edit._slot_id))
+				{
+					_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+				}
+				else
+				{
+					_page_switcher.switch_to (pg::PageType_PARAM_LIST, 0);
+				}
 			}
 			ret_val = EvtProp_CATCH;
 			break;
@@ -341,47 +280,8 @@ void	SlotMenu::do_remove_slot (int slot_id)
 
 
 
-void	SlotMenu::do_insert_slot_in_chain (int index, int slot_id)
+void	SlotMenu::do_set_routing (const doc::Routing &/*routing*/)
 {
-	fstb::unused (slot_id);
-
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-
-	if (_loc_edit._slot_id < 0)
-	{
-		_loc_edit._slot_id    = preset._routing._chain.back ();
-		_loc_edit._chain_flag = true;
-		_page_ptr->jump_to (Entry_TYPE);
-	}
-	else if (   index + 1 < int (preset._routing._chain.size ())
-	         && _loc_edit._slot_id == preset._routing._chain [index + 1])
-	{
-		_loc_edit._slot_id    = preset._routing._chain [index];
-		_loc_edit._chain_flag = true;
-	}
-	update_display ();
-}
-
-
-
-void	SlotMenu::do_erase_slot_from_chain (int index)
-{
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	if (std::find (
-		preset._routing._chain.begin (),
-		preset._routing._chain.end (),
-		_loc_edit._slot_id
-	) == preset._routing._chain.end ())
-	{
-		if (index < int (preset._routing._chain.size ()))
-		{
-			_loc_edit._slot_id = preset._routing._chain [index];
-		}
-		else
-		{
-			_loc_edit._slot_id = -1;
-		}
-	}
 	update_display ();
 }
 
@@ -473,7 +373,7 @@ void	SlotMenu::update_display ()
 	_typ_sptr->set_text (txt);
 	PageMgrInterface::add_nav (nav_list, Entry_TYPE);
 
-	_ins_sptr->set_text (_loc_edit._chain_flag ? "Insert before" : "Insert");
+	_ins_sptr->set_text (_loc_edit._audio_flag ? "Insert before" : "Insert");
 	PageMgrInterface::add_nav (nav_list, Entry_INSERT);
 
 	_del_sptr->show (exist_flag);
@@ -526,19 +426,23 @@ void	SlotMenu::update_display ()
 
 MsgHandlerInterface::EvtProp	SlotMenu::change_type (int dir)
 {
+	const std::vector <std::string> &   pi_list =
+		  (_loc_edit._audio_flag)
+		? _view_ptr->use_pi_aud_list ()
+		: _view_ptr->use_pi_sig_list ();
 	const int      slot_id_new = Tools::change_plugin (
 		*_model_ptr,
 		*_view_ptr,
 		_loc_edit._slot_id,
 		dir,
-		(_loc_edit._chain_flag) ? _fx_list : _ms_list,
-		_loc_edit._chain_flag
+		pi_list,
+		_loc_edit._audio_flag
 	);
 
 	if (slot_id_new != _loc_edit._slot_id)
 	{
 		_loc_edit._slot_id = slot_id_new;
-		_loc_edit.fix_chain_flag (*_view_ptr);
+		_loc_edit.fix_audio_flag (*_view_ptr, *_model_ptr);
 		update_display ();
 	}
 
@@ -547,7 +451,7 @@ MsgHandlerInterface::EvtProp	SlotMenu::change_type (int dir)
 
 
 
-MsgHandlerInterface::EvtProp	SlotMenu::reset_plugin ()
+void	SlotMenu::reset_plugin ()
 {
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 	const int      slot_id      = _loc_edit._slot_id;
@@ -577,8 +481,132 @@ MsgHandlerInterface::EvtProp	SlotMenu::reset_plugin ()
 	}
 
 	update_display ();
+}
 
-	return EvtProp_CATCH;
+
+
+void	SlotMenu::insert_slot ()
+{
+	const int      slot_id_new  = _model_ptr->add_slot ();
+	if (_loc_edit._audio_flag)
+	{
+		const int      slot_id_old  = _loc_edit._slot_id;
+		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+		doc::Routing   routing      = preset.use_routing (); // Copy
+		ToolsRouting::insert_slot_before (
+			routing._cnx_audio_set, slot_id_new, slot_id_old
+		);
+		_model_ptr->set_routing (routing);
+	}
+	_loc_edit._slot_id = slot_id_new;
+
+	update_display ();
+}
+
+
+
+void	SlotMenu::delete_slot ()
+{
+	if (_loc_edit._slot_id >= 0)
+	{
+		if (_loc_edit._audio_flag)
+		{
+			// Find the current editing position in the linear audio slot list
+			const auto &   slot_list_aud = _view_ptr->use_slot_list_aud ();
+			int            pos = ToolsRouting::find_linear_index_audio_graph (
+				slot_list_aud, _loc_edit._slot_id
+			);
+
+			// Removes the slot
+			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+			doc::Routing   routing      = preset.use_routing (); // Copy
+			ToolsRouting::disconnect_slot (
+				routing._cnx_audio_set, _loc_edit._slot_id
+			);
+			_model_ptr->set_routing (routing);
+			_model_ptr->remove_slot (_loc_edit._slot_id);
+
+			// Grabs the new slot_id at the saved position
+			if (pos < int (slot_list_aud.size ()))
+			{
+				_loc_edit._slot_id = slot_list_aud [pos];
+			}
+			else
+			{
+				_loc_edit._slot_id = -1;
+			}
+		}
+		else
+		{
+			_model_ptr->remove_slot (_loc_edit._slot_id);
+		}
+	}
+	else
+	{
+		assert (false);
+	}
+
+	update_display ();
+}
+
+
+
+void	SlotMenu::change_chn_pref ()
+{
+	if (_loc_edit._slot_id >= 0)
+	{
+		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+		const auto     it_slot =
+			preset._slot_map.find (_loc_edit._slot_id);
+		assert (it_slot != preset._slot_map.end ());
+		if (! preset.is_slot_empty (it_slot))
+		{
+			const doc::Slot & slot = *(it_slot->second);
+			const doc::PluginSettings &   settings =
+				slot.use_settings (PiType_MAIN);
+			bool           fm_flag = settings._force_mono_flag;
+			fm_flag = ! fm_flag;
+			_model_ptr->set_plugin_mono (_loc_edit._slot_id, fm_flag);
+		}
+	}
+}
+
+
+
+void	SlotMenu::change_state_mode ()
+{
+	if (_loc_edit._slot_id >= 0)
+	{
+		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+		const auto     it_slot =
+			preset._slot_map.find (_loc_edit._slot_id);
+		assert (it_slot != preset._slot_map.end ());
+		if (! preset.is_slot_empty (it_slot))
+		{
+			const doc::Slot & slot = *(it_slot->second);
+			const doc::PluginSettings &   settings =
+				slot.use_settings (PiType_MAIN);
+			bool           fresh_flag = settings._force_reset_flag;
+			fresh_flag = ! fresh_flag;
+			_model_ptr->set_plugin_reset (_loc_edit._slot_id, fresh_flag);
+		}
+	}
+}
+
+
+
+void	SlotMenu::set_label (int node_id)
+{
+	assert (_loc_edit._slot_id >= 0);
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
+	_label_param._label         = slot._label;
+	_label_param._sep_cur_flag  = true;
+	_state                      = State_EDIT_LABEL;
+	_save_bank_index            = _view_ptr->get_bank_index ();
+	_save_preset_index          = _view_ptr->get_preset_index ();
+	_save_slot_id               = _loc_edit._slot_id;
+	_page_switcher.call_page (PageType_EDIT_LABEL, &_label_param, node_id);
 }
 
 

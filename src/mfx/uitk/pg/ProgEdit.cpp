@@ -54,10 +54,8 @@ namespace pg
 
 
 
-ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
-:	_fx_list (fx_list)
-,	_ms_list (ms_list)
-,	_page_switcher (page_switcher)
+ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
+:	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
@@ -76,6 +74,7 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_save_preset_index (-1)
 ,	_name_param ()
 ,	_slot_id_list ()
+,	_audio_list_len (0)
 {
 	_prog_name_sptr->set_justification (0.5f, 0, false);
 	_settings_sptr ->set_justification (0.5f, 0, false);
@@ -84,7 +83,6 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 	_ms_list_sptr  ->set_justification (0.5f, 1, false);
 	_settings_sptr ->set_text ("Settings\xE2\x80\xA6");
 	_save_sptr     ->set_text ("Save to\xE2\x80\xA6");
-	_fx_list_sptr  ->set_text ("-----------------");
 	_ms_list_sptr  ->set_text ("-----------------");
 	_prog_name_sptr->set_bold (true, true );
 	_fx_list_sptr  ->set_bold (true, false);
@@ -289,18 +287,9 @@ void	ProgEdit::do_remove_slot (int slot_id)
 
 
 
-void	ProgEdit::do_insert_slot_in_chain (int index, int slot_id)
+void	ProgEdit::do_set_routing (const doc::Routing &routing)
 {
-	fstb::unused (index, slot_id);
-
-	set_preset_info ();
-}
-
-
-
-void	ProgEdit::do_erase_slot_from_chain (int index)
-{
-	fstb::unused (index);
+	fstb::unused (routing);
 
 	set_preset_info ();
 }
@@ -342,10 +331,10 @@ void	ProgEdit::set_preset_info ()
 {
 	assert (_fnt_ptr != 0);
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	_slot_id_list = preset.build_ordered_node_list (true);
-
+	update_cached_pi_list ();
 	update_rotenc_mapping ();
+
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 
 	_prog_name_sptr->set_text (preset._name);
 
@@ -363,15 +352,14 @@ void	ProgEdit::set_preset_info ()
 	nav_list [1]._node_id = Entry_SETTINGS;
 	nav_list [2]._node_id = Entry_SAVE;
 
-	const std::vector <Tools::NodeEntry>   entry_list =
-		Tools::extract_slot_list (preset, *_model_ptr);
+	std::vector <Tools::NodeEntry>   entry_list;
+	Tools::extract_slot_list (entry_list, preset, *_model_ptr);
 	assert (nbr_slots == int (entry_list.size ()));
-	const int      chain_size = int (preset._routing._chain.size ());
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
 	const int      h_m   = _fnt_ptr->get_char_h ();
-	_ms_list_sptr->set_coord (Vec2d (x_mid, (chain_size + 6) * h_m));
+	_ms_list_sptr->set_coord (Vec2d (x_mid, (_audio_list_len + 6) * h_m));
 
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
@@ -402,13 +390,22 @@ void	ProgEdit::set_preset_info ()
 			}
 		}
 
-		const int      skip     = (slot_index >= chain_size) ? 1 : 0;
+		const int      skip     = (slot_index >= _audio_list_len) ? 1 : 0;
 		const int      pos_list = slot_index + skip;
-		set_slot (nav_list, pos_list, multilabel, ctrl_flag, chain_size);
+		set_slot (nav_list, pos_list, multilabel, ctrl_flag, _audio_list_len);
 	}
 
-	set_slot (nav_list, chain_size   , "<End>", false, chain_size);
-	set_slot (nav_list, nbr_slots + 1, "<End>", false, chain_size);
+	set_slot (nav_list, _audio_list_len, "<End>", false, _audio_list_len);
+	set_slot (nav_list, nbr_slots + 1  , "<End>", false, _audio_list_len);
+
+	if (ToolsRouting::are_audio_io_connected (_view_ptr->use_graph ()))
+	{
+		_fx_list_sptr->set_text ("-----------------");
+	}
+	else
+	{
+		_fx_list_sptr->set_text ("-I/O not linked!-");
+	}
 
 	_page_ptr->set_nav_layout (nav_list);
 
@@ -450,19 +447,23 @@ MsgHandlerInterface::EvtProp	ProgEdit::change_effect (int node_id, int dir)
 
 	_model_ptr->reset_all_overridden_param_ctrl ();
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const int      chain_size   = int (preset._routing._chain.size ());
-	_loc_edit._chain_flag = (node_id <= chain_size);
-	const int      slot_id      = conv_node_id_to_slot_id (node_id);
+	_loc_edit._audio_flag = (node_id <= _audio_list_len);
+
+	const std::vector <std::string> &   pi_list =
+		  (_loc_edit._audio_flag)
+		? _view_ptr->use_pi_aud_list ()
+		: _view_ptr->use_pi_sig_list ();
+	const int      slot_id = conv_node_id_to_slot_id (node_id);
 	Tools::change_plugin (
 		*_model_ptr,
 		*_view_ptr,
 		slot_id,
 		dir,
-		(_loc_edit._chain_flag) ? _fx_list : _ms_list,
-		_loc_edit._chain_flag
+		pi_list,
+		_loc_edit._audio_flag
 	);
 
+	update_cached_pi_list ();
 	update_rotenc_mapping ();
 
 	return EvtProp_CATCH;
@@ -473,8 +474,15 @@ MsgHandlerInterface::EvtProp	ProgEdit::change_effect (int node_id, int dir)
 void	ProgEdit::update_loc_edit (int node_id)
 {
 	_loc_edit._slot_id = conv_node_id_to_slot_id (
-		node_id, _loc_edit._chain_flag
+		node_id, _loc_edit._audio_flag
 	);
+}
+
+
+
+void	ProgEdit::update_cached_pi_list ()
+{
+	_audio_list_len = _view_ptr->build_ordered_node_list (_slot_id_list, true);
 }
 
 
@@ -511,18 +519,15 @@ int	ProgEdit::conv_node_id_to_slot_id (int node_id, bool &chain_flag) const
 {
 	int            slot_id = -1;
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const int      chain_size   = int (preset._routing._chain.size ());
-
-	if (node_id >= 0 && node_id <= chain_size)
+	if (node_id >= 0 && node_id <= _audio_list_len)
 	{
-		if (node_id < chain_size)
+		if (node_id < _audio_list_len)
 		{
 			slot_id = _slot_id_list [node_id];
 		}
 		chain_flag = true;
 	}
-	else if (node_id > chain_size && node_id <= int (_slot_list.size ()) - 1)
+	else if (node_id > _audio_list_len && node_id <= int (_slot_list.size ()) - 1)
 	{
 		if (node_id < int (_slot_list.size ()) - 1)
 		{
@@ -547,11 +552,8 @@ int	ProgEdit::conv_loc_edit_to_node_id () const
 		);
 		if (it_slot_id != _slot_id_list.end ())
 		{
-			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-			const int      chain_size   = int (preset._routing._chain.size ());
-
 			int         pos = int (it_slot_id - _slot_id_list.begin ());
-			if (pos >= chain_size)
+			if (pos >= _audio_list_len)
 			{
 				++ pos;
 			}

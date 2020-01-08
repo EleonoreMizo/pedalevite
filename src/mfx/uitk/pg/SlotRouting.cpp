@@ -86,7 +86,7 @@ void	SlotRouting::do_connect (Model &model, const View &view, PageMgrInterface &
 	_fnt_ptr   = &fnt._m;
 
 	// Updates _chain_flag, if possible
-	_loc_edit.fix_chain_flag (*_view_ptr);
+	_loc_edit.fix_audio_flag (*_view_ptr, *_model_ptr);
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
 	_menu_sptr->set_disp_pos (Vec2d ());
@@ -130,7 +130,7 @@ PageInterface::EvtProp	SlotRouting::do_handle_evt (const NodeEvt &evt)
 			switch (node_id)
 			{
 			case Entry_MOVE:
-				if (_loc_edit._chain_flag)
+				if (_loc_edit._audio_flag)
 				{
 					_page_switcher.call_page (PageType_SLOT_MOVE, 0, node_id);
 				}
@@ -139,6 +139,9 @@ PageInterface::EvtProp	SlotRouting::do_handle_evt (const NodeEvt &evt)
 				ret_val = EvtProp_PASS;
 				break;
 			}
+			break;
+		case Button_E:
+			_page_switcher.switch_to (PageType_SLOT_MENU, 0);
 			break;
 		default:
 			// Nothing
@@ -165,52 +168,16 @@ void	SlotRouting::do_remove_slot (int slot_id)
 	if (slot_id == _loc_edit._slot_id)
 	{
 		_loc_edit._slot_id = -1;
-		update_display ();
+		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
 	}
 }
 
 
 
-void	SlotRouting::do_insert_slot_in_chain (int index, int slot_id)
+void	SlotRouting::do_set_routing (const doc::Routing &routing)
 {
-	fstb::unused (slot_id);
+	fstb::unused (routing);
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-
-	if (_loc_edit._slot_id < 0)
-	{
-		_loc_edit._slot_id    = preset._routing._chain.back ();
-		_loc_edit._chain_flag = true;
-	}
-	else if (   index + 1 < int (preset._routing._chain.size ())
-	         && _loc_edit._slot_id == preset._routing._chain [index + 1])
-	{
-		_loc_edit._slot_id    = preset._routing._chain [index];
-		_loc_edit._chain_flag = true;
-	}
-	update_display ();
-}
-
-
-
-void	SlotRouting::do_erase_slot_from_chain (int index)
-{
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	if (std::find (
-		preset._routing._chain.begin (),
-		preset._routing._chain.end (),
-		_loc_edit._slot_id
-	) == preset._routing._chain.end ())
-	{
-		if (index < int (preset._routing._chain.size ()))
-		{
-			_loc_edit._slot_id = preset._routing._chain [index];
-		}
-		else
-		{
-			_loc_edit._slot_id = -1;
-		}
-	}
 	update_display ();
 }
 
@@ -248,10 +215,10 @@ void	SlotRouting::update_display ()
 
 	const bool     exist_flag = (_loc_edit._slot_id >= 0);
 
-	_mov_sptr->show (exist_flag && _loc_edit._chain_flag);
+	_mov_sptr->show (exist_flag && _loc_edit._audio_flag);
 	if (exist_flag)
 	{
-		if (_loc_edit._chain_flag)
+		if (_loc_edit._audio_flag)
 		{
 			PageMgrInterface::add_nav (nav_list, Entry_MOVE);
 		}

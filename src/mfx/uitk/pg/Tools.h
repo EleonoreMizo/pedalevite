@@ -113,11 +113,10 @@ public:
 	static std::string
 	               conv_pedal_action_to_short_txt (const doc::PedalActionSingleInterface &action, const Model &model, const View &view);
 
-	static std::vector <NodeEntry>
-	               extract_slot_list (const doc::Preset &preset, const Model &model);
+	static int     extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Preset &preset, const Model &model);
 	static std::string
 	               build_slot_name_with_index (const NodeEntry &entry);
-	static int     find_chain_index (const doc::Preset &preset, int slot_id);
+	static int     find_linear_index_audio_graph (const View &view, int slot_id);
 	static std::string
 	               find_fx_type (const doc::FxId &fx_id, const View &view);
 	static std::string

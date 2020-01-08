@@ -62,7 +62,7 @@ class ProgEdit
 
 public:
 
-	explicit       ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list);
+	explicit       ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit);
 	virtual        ~ProgEdit () = default;
 
 
@@ -84,8 +84,7 @@ protected:
 	virtual void   do_set_preset_name (std::string name);
 	virtual void   do_add_slot (int slot_id);
 	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_insert_slot_in_chain (int index, int slot_id);
-	virtual void   do_erase_slot_from_chain (int index);
+	virtual void   do_set_routing (const doc::Routing &routing);
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
 	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
@@ -120,15 +119,12 @@ private:
 	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size);
 	EvtProp        change_effect (int node_id, int dir);
 	void           update_loc_edit (int node_id);
+	void           update_cached_pi_list ();
 	void           update_rotenc_mapping ();
 	int            conv_node_id_to_slot_id (int node_id) const;
 	int            conv_node_id_to_slot_id (int node_id, bool &chain_flag) const;
 	int            conv_loc_edit_to_node_id () const;
 
-	const std::vector <std::string> &
-	               _fx_list;
-	const std::vector <std::string> &
-	               _ms_list;
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
 	Model *        _model_ptr;    // 0 = not connected
@@ -154,6 +150,7 @@ private:
 	               _name_param;
 	std::vector <int>             // Ordered list of the edited slots
 	               _slot_id_list;
+	int            _audio_list_len;  // Cached size of the audio part of the list
 
 
 

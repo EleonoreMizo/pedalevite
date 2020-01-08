@@ -69,8 +69,7 @@ public:
 	virtual void   do_set_param_beats (int /*slot_id*/, int /*index*/, float /*beats*/) {}
 	virtual void   do_add_slot (int /*slot_id*/) {}
 	virtual void   do_remove_slot (int /*slot_id*/) {}
-	virtual void   do_insert_slot_in_chain (int /*index*/, int /*slot_id*/) {}
-	virtual void   do_erase_slot_from_chain (int /*index*/) {}
+	virtual void   do_set_routing (const doc::Routing &/*routing*/) {}
 	virtual void   do_set_slot_label (int /*slot_id*/, std::string /*name*/) {}
 	virtual void   do_set_plugin (int /*slot_id*/, const PluginInitData &/*pi_data*/) {}
 	virtual void   do_remove_plugin (int /*slot_id*/) {}

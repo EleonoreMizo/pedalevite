@@ -63,6 +63,7 @@ namespace doc
 	class ActionTempo;
 	class ActionTempoSet;
 	class FxId;
+	class Routing;
 }
 
 class FileIOInterface;
@@ -112,6 +113,7 @@ public:
 	float          get_audio_period_ratio () const;
 
 	// Regular commands
+	void           create_plugin_lists ();
 	void           set_observer (ModelObserverInterface *obs_ptr);
 	const piapi::PluginState &
 	               use_default_settings (std::string model) const;
@@ -143,8 +145,7 @@ public:
 	void           set_tempo (double bpm);
 	int            add_slot ();
 	void           remove_slot (int slot_id);
-	void           insert_slot_in_chain (int index, int slot_id);
-	void           erase_slot_from_chain (int index);
+	void           set_routing (const doc::Routing &routing);
 	void           set_slot_label (int slot_id, std::string name);
 	void           set_plugin (int slot_id, std::string model);
 	void           remove_plugin (int slot_id);
@@ -169,6 +170,10 @@ public:
 
 	std::vector <std::string>
 	               list_plugin_models () const;
+	const std::vector <std::string> &
+	               use_aud_pi_list () const;
+	const std::vector <std::string> &
+	               use_sig_pi_list () const;
 	const piapi::PluginDescInterface &
 	               get_model_desc (std::string model_id) const;
 	std::chrono::microseconds

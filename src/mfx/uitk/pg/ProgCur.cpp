@@ -409,40 +409,11 @@ void	ProgCur::i_set_param (bool show_flag, int slot_id, int index, float val, Pi
 
 void	ProgCur::i_show_mod_list ()
 {
-	if (_view_ptr != 0)
+	if (_view_ptr != nullptr)
 	{
-		const mfx::doc::Preset &   cur = _view_ptr->use_preset_cur ();
-
-		std::set <ControlSource>   src_list;
-
 		// Retrieves all unique modulation sources
-		std::vector <int> slot_list (cur.build_ordered_node_list (true));
-		for (int slot_id : slot_list)
-		{
-			const doc::Slot &   slot = cur.use_slot (slot_id);
-			for (int type = 0; type < PiType_NBR_ELT; ++type)
-			{
-				const doc::PluginSettings & settings =
-					slot.use_settings (static_cast <PiType> (type));
-				for (auto &cls : settings._map_param_ctrl)
-				{
-					if (! cls.second.is_empty ())
-					{
-						if (cls.second._bind_sptr.get () != 0)
-						{
-							add_mod_source (src_list, cls.second._bind_sptr->_source);
-						}
-						for (auto &cl_sptr : cls.second._mod_arr)
-						{
-							if (cl_sptr.get () != 0)
-							{
-								add_mod_source (src_list, cl_sptr->_source);
-							}
-						}
-					}
-				}
-			}
-		}
+		std::set <ControlSource>   src_list;
+		retrieve_all_unique_mod_src (src_list);
 
 		// Prints the list
 		ui::UserInputType type_cur = ui::UserInputType_UNDEFINED;
@@ -486,6 +457,46 @@ void	ProgCur::i_show_mod_list ()
 		_param_unit_sptr->set_text ("");
 		_param_name_sptr->set_text ("");
 		_param_val_sptr->set_text ("");
+	}
+}
+
+
+
+void	ProgCur::retrieve_all_unique_mod_src (std::set <ControlSource> &src_list) const
+{
+	src_list.clear ();
+
+	const mfx::doc::Preset &   cur = _view_ptr->use_preset_cur ();
+	std::vector <int> slot_list;
+	_view_ptr->build_ordered_node_list (slot_list, true);
+	for (int slot_id : slot_list)
+	{
+		if (! cur.is_slot_empty (slot_id))
+		{
+			const doc::Slot &   slot = cur.use_slot (slot_id);
+			for (int type = 0; type < PiType_NBR_ELT; ++type)
+			{
+				const doc::PluginSettings & settings =
+					slot.use_settings (static_cast <PiType> (type));
+				for (auto &cls : settings._map_param_ctrl)
+				{
+					if (! cls.second.is_empty ())
+					{
+						if (cls.second._bind_sptr.get () != 0)
+						{
+							add_mod_source (src_list, cls.second._bind_sptr->_source);
+						}
+						for (auto &cl_sptr : cls.second._mod_arr)
+						{
+							if (cl_sptr.get () != 0)
+							{
+								add_mod_source (src_list, cl_sptr->_source);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

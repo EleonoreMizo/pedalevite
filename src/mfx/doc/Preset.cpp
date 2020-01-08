@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/Preset.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
+#include "mfx/ToolsRouting.h"
 
 #include <cassert>
 #include <climits>
@@ -46,11 +47,11 @@ namespace doc
 
 Preset::Preset (const Preset &other)
 :	_slot_map (other._slot_map)
-,	_routing (other._routing)
 ,	_name (other._name)
 ,	_layout (other._layout)
 ,	_port_map (other._port_map)
 ,	_prog_switch_mode (other._prog_switch_mode)
+,	_routing (other._routing)
 {
 	duplicate_slot_list ();
 }
@@ -62,11 +63,11 @@ Preset &	Preset::operator = (const Preset &other)
 	if (&other != this)
 	{
 		_slot_map = other._slot_map;
-		_routing  = other._routing;
 		_name     = other._name;
 		_layout   = other._layout;
 		_port_map = other._port_map;
 		_prog_switch_mode = other._prog_switch_mode;
+		_routing  = other._routing;
 		duplicate_slot_list ();
 	}
 
@@ -175,50 +176,55 @@ int	Preset::find_free_port () const
 
 
 
-// Returns a list of slot_id beginning with the chain,
-// followed by the other slots.
-std::vector <int>	Preset::build_ordered_node_list (bool chain_first_flag) const
+bool	Preset::check_new_routing (const Routing &routing) const
 {
-	// Set of the nodes we already inserted into the vector
-	std::set <int> rem_slot_id;
-	for (const auto &node : _slot_map)
+	// Checks that all referenced nodes exist
+	for (const auto &cnx : routing._cnx_audio_set)
 	{
-		rem_slot_id.insert (node.first);
+		if (! cnx.is_valid ())
+		{
+			assert (false);
+			return false;
+		}
+
+		const CnxEnd & cnx_src = cnx.use_src ();
+		if (! check_routing_cnx_audio_end (cnx_src))
+		{
+			return false;
+		}
+
+		const CnxEnd & cnx_dst = cnx.use_dst ();
+		if (! check_routing_cnx_audio_end (cnx_dst))
+		{
+			return false;
+		}
 	}
 
-	// Removes nodes of the main chain
-	for (int rem_id : _routing._chain)
+	// Check loops
+	ToolsRouting::NodeMap   graph;
+	ToolsRouting::build_node_graph (graph, routing._cnx_audio_set);
+	if (ToolsRouting::has_loops (graph))
 	{
-		const auto     it = rem_slot_id.find (rem_id);
-		assert (it != rem_slot_id.end ());
-		rem_slot_id.erase (it);
+		return false;
 	}
 
-	std::vector <int> slot_id_list;
+	return true;
+}
 
-	// Inserts the main chain (first position case)
-	if (chain_first_flag)
-	{
-		slot_id_list = _routing._chain;
-	}
 
-	// Adds all the remaining slots
-	for (int rem_id : rem_slot_id)
-	{
-		slot_id_list.push_back (rem_id);
-	}
 
-	// Inserts the main chain (last position case)
-	if (! chain_first_flag)
-	{
-		slot_id_list.insert (
-			slot_id_list.end (),
-			_routing._chain.begin (),
-			_routing._chain.end ()
-		);
-	}
+void	Preset::set_routing (const Routing &routing)
+{
+	assert (check_new_routing (routing));
 
-	return slot_id_list;
+	_routing = routing;
+}
+
+
+
+const Routing &	Preset::use_routing () const
+{
+	return _routing;
 }
 
 
@@ -313,10 +319,12 @@ void	Preset::ser_read (SerRInterface &ser)
 	else
 	{
 		_routing = Routing ();
+		std::vector <int> chain (nbr_elt);
 		for (int cnt = 0; cnt < nbr_elt; ++ cnt)
 		{
-			_routing._chain.push_back (cnt * inc);
+			chain [cnt] = cnt * inc;
 		}
+		Routing::build_from_audio_chain (_routing._cnx_audio_set, chain);
 	}
 
 	_port_map.clear ();
@@ -341,6 +349,8 @@ void	Preset::ser_read (SerRInterface &ser)
 	}
 
 	ser.end_list ();
+
+	assert (check_new_routing (_routing));
 }
 
 
@@ -362,6 +372,23 @@ void	Preset::duplicate_slot_list ()
 			node.second = SlotSPtr (new Slot (*(node.second)));
 		}
 	}
+}
+
+
+
+bool	Preset::check_routing_cnx_audio_end (const CnxEnd &cnx_end) const
+{
+	if (cnx_end.get_type () == CnxEnd::Type_NORMAL)
+	{
+		const int      slot_id = cnx_end.get_slot_id ();
+		if (_slot_map.find (slot_id) == _slot_map.end ())
+		{
+			assert (false);
+			return false;
+		}
+	}
+
+	return true;
 }
 
 

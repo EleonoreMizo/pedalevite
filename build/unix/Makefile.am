@@ -269,6 +269,12 @@ commonsrc = \
         ../../src/mfx/doc/Bank.h \
         ../../src/mfx/doc/CatalogPluginSettings.cpp \
         ../../src/mfx/doc/CatalogPluginSettings.h \
+        ../../src/mfx/doc/Cnx.cpp \
+        ../../src/mfx/doc/Cnx.h \
+        ../../src/mfx/doc/Cnx.hpp \
+        ../../src/mfx/doc/CnxEnd.cpp \
+        ../../src/mfx/doc/CnxEnd.h \
+        ../../src/mfx/doc/CnxEnd.hpp \
         ../../src/mfx/doc/CtrlLink.cpp \
         ../../src/mfx/doc/CtrlLink.h \
         ../../src/mfx/doc/CtrlLinkSet.cpp \
@@ -1209,6 +1215,9 @@ commonsrc = \
         ../../src/mfx/SharedRscState.h \
         ../../src/mfx/ToolsParam.cpp \
         ../../src/mfx/ToolsParam.h \
+        ../../src/mfx/ToolsRouting.cpp \
+        ../../src/mfx/ToolsRouting.h \
+        ../../src/mfx/ToolsRouting.hpp \
         ../../src/mfx/UniqueProgList.cpp \
         ../../src/mfx/UniqueProgList.h \
         ../../src/mfx/View.cpp \

@@ -80,8 +80,7 @@ protected:
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
 	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_insert_slot_in_chain (int index, int slot_id);
-	virtual void   do_erase_slot_from_chain (int index);
+	virtual void   do_set_routing (const doc::Routing &routing);
 
 
 
@@ -95,7 +94,7 @@ private:
 
 	void           update_display ();
 	EvtProp        move_slot (int pos);
-	int            conv_loc_edit_to_chain_pos () const;
+	int            conv_loc_edit_to_linear_pos () const;
 
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;

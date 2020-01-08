@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/cmd/Central.h"
 #include "mfx/cmd/CentralCbInterface.h"
 #include "mfx/doc/CtrlLinkSet.h"
+#include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/BypassState.h"
 #include "mfx/piapi/Err.h"
 #include "mfx/piapi/PluginDescInterface.h"
@@ -55,7 +56,9 @@ namespace cmd
 
 
 Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device)
-:	_msg_pool ()
+:	_pi_aud_type_list ()
+,	_pi_sig_type_list ()
+,	_msg_pool ()
 ,	_input_device (input_device)
 ,	_queue_input_to_audio (queue_input_to_audio)
 ,	_queue_cmd_to_audio ()
@@ -125,6 +128,52 @@ Central::~Central ()
 		}
 	}
 	while (cell_ptr != 0);
+}
+
+
+
+void	Central::create_plugin_lists ()
+{
+	_pi_aud_type_list.clear ();
+	_pi_sig_type_list.clear ();
+	std::vector <std::string> pi_list = use_pi_pool ().list_models ();
+	std::map <std::string, std::string> pi_aud_map;
+	std::map <std::string, std::string> pi_sig_map;
+	for (std::string model_id : pi_list)
+	{
+		if (model_id [0] != '\?')
+		{
+			const mfx::piapi::PluginDescInterface &   desc =
+				use_pi_pool ().get_model_desc (model_id);
+
+			int            nbr_i = 1;
+			int            nbr_o = 1;
+			int            nbr_s = 0;
+			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
+
+			std::string    name_all = desc.get_name ();
+			std::string    name     = pi::param::Tools::extract_longest_str (
+				name_all.c_str (), '\n'
+			);
+
+			if (nbr_i > 0 || nbr_o > 0)
+			{
+				pi_aud_map [name] = model_id;
+			}
+			else if (nbr_s > 0)
+			{
+				pi_sig_map [name] = model_id;
+			}
+		}
+	}
+	for (auto &node : pi_aud_map)
+	{
+		_pi_aud_type_list.push_back (node.second);
+	}
+	for (auto &node : pi_sig_map)
+	{
+		_pi_sig_type_list.push_back (node.second);
+	}
 }
 
 
@@ -695,6 +744,20 @@ PluginPool &	Central::use_pi_pool ()
 const PluginPool &	Central::use_pi_pool () const
 {
 	return (_plugin_pool);
+}
+
+
+
+const std::vector <std::string> &	Central::use_aud_pi_list () const
+{
+	return _pi_aud_type_list;
+}
+
+
+
+const std::vector <std::string> &	Central::use_sig_pi_list () const
+{
+	return _pi_sig_type_list;
 }
 
 

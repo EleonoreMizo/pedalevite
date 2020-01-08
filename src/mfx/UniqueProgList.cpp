@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/doc/Setup.h"
 #include "mfx/Cst.h"
+#include "mfx/ToolsRouting.h"
 #include "mfx/UniqueProgList.h"
 #include "mfx/View.h"
 
@@ -55,7 +56,7 @@ UniqueProgList::ProgList	UniqueProgList::build (const View &view)
 		for (int prog_cnt = 0; prog_cnt < Cst::_nbr_presets_per_bank; ++prog_cnt)
 		{
 			const doc::Preset &  prog = bank._preset_arr [prog_cnt];
-			if (! prog._slot_map.empty () && ! prog._routing._chain.empty ())
+			if (prog.use_routing ().has_slots ())
 			{
 				bool          eq_flag = false;
 				for (auto &coord : prog_list)
@@ -90,63 +91,35 @@ UniqueProgList::ProgList	UniqueProgList::build (const View &view)
 
 
 
+/*
+Possible strategy:
+
+0. First eliminate neutral slots (empty slot, single-pin i/o) from each
+program. This step is optional.
+
+1. For each program, build a map with [slot] -> slot_id set.
+Requires absolute order on slots.
+We have to handle the case where programs have multiple identical slots (hence
+a set in the map).
+Each slot_id set would contain "similar" slots, not strictly identical to
+allow rounding errors and unsignificant deviations.
+
+2. Try to match slots between both programs through these maps (with the same
+similarity checks) and unify both maps (2 sets of slot_id per entry)
+
+3. Check if all the connections are equivalent in both graphs.
+
+Note (for information, not required here):
+https://en.wikipedia.org/wiki/Graph_isomorphism_problem
+*/
+
 bool	UniqueProgList::is_prog_eq (const doc::Preset &lhs, const doc::Preset &rhs) const
 {
-	const int      nbr_slots_l = int (lhs._routing._chain.size ());
-	const int      nbr_slots_r = int (rhs._routing._chain.size ());
+	
 
-	int            chain_pos_l =  0;
-	int            chain_pos_r =  0;
-	int            slot_id_l   = -1;
-	int            slot_id_r   = -1;
-	while (chain_pos_l < nbr_slots_l || chain_pos_r < nbr_slots_r)
-	{
-		bool           l_flag = false;
-		if (chain_pos_l < nbr_slots_l)
-		{
-			slot_id_l = lhs._routing._chain [chain_pos_l];
-			if (lhs.is_slot_empty (slot_id_l))
-			{
-				++ chain_pos_l;
-			}
-			else
-			{
-				l_flag = true;
-			}
-		}
+	/*** To do ***/
+	assert (false);
 
-		bool            r_flag = false;
-		if (chain_pos_r < nbr_slots_r)
-		{
-			slot_id_r = rhs._routing._chain [chain_pos_r];
-			if (rhs.is_slot_empty (slot_id_r))
-			{
-				++ chain_pos_r;
-			}
-			else
-			{
-				r_flag = true;
-			}
-		}
-
-		if (l_flag && r_flag)
-		{
-			const doc::Slot & slot_l = lhs.use_slot (slot_id_l);
-			const doc::Slot & slot_r = rhs.use_slot (slot_id_r);
-			if (! is_slot_eq (slot_l, slot_r))
-			{
-				return false;
-			}
-
-			++ chain_pos_l;
-			++ chain_pos_r;
-		}
-		else if (   (l_flag && chain_pos_r >= nbr_slots_r)
-		         || (r_flag && chain_pos_l >= nbr_slots_l))
-		{
-			return false;
-		}
-	}
 
 	return true;
 }

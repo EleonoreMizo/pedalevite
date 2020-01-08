@@ -434,8 +434,8 @@ std::vector <CtrlSrcNamed>	Tools::make_port_list (const Model &model, const View
 	std::vector <CtrlSrcNamed> port_list;
 	port_list.reserve (preset._port_map.size ());
 
-	const std::vector <NodeEntry>   entry_list =
-		Tools::extract_slot_list (preset, model);
+	std::vector <NodeEntry>   entry_list;
+	Tools::extract_slot_list (entry_list, preset, model);
 
 	for (const auto &node_port : preset._port_map)
 	{
@@ -527,20 +527,20 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 	assert (dir != 0);
 
 	const doc::Preset &  preset = view.use_preset_cur ();
-	const int      chain_size = int (preset._routing._chain.size ());
+	int            audio_size = int (view.use_slot_list_aud ().size ());
 
 	int            chain_pos = -1;
 	if (chain_flag)
 	{
 		if (slot_id >= 0)
 		{
-			chain_pos = find_chain_index (preset, slot_id);
+			chain_pos = find_linear_index_audio_graph (view, slot_id);
 			assert (chain_pos >= 0);
-			assert (chain_pos <= chain_size);
+			assert (chain_pos <= audio_size);
 		}
 		else
 		{
-			chain_pos = chain_size;
+			chain_pos = audio_size;
 		}
 	}
 
@@ -575,10 +575,17 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 	// We need to add a slot at the end?
 	if (pi_index != nbr_types)
 	{
-		if (chain_flag && chain_pos == chain_size)
+		if (chain_flag && chain_pos == audio_size)
 		{
 			slot_id = model.add_slot ();
-			model.insert_slot_in_chain (chain_size, slot_id);
+
+			doc::Routing   routing = preset.use_routing (); // Makes a copy
+			ToolsRouting::insert_slot_before (
+				routing._cnx_audio_set,
+				slot_id,
+				-1
+			);
+			model.set_routing (routing);
 		}
 		else if (! chain_flag && slot_id < 0)
 		{
@@ -599,17 +606,42 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 	// Last slot needs to be removed?
 	if (pi_index == nbr_types)
 	{
-		if (chain_flag && chain_pos == chain_size - 1)
+		if (chain_flag && chain_pos == audio_size - 1)
 		{
-			int            chain_size_new = chain_size;
+			/*
+			We remove the last slot(s) only if all these conditions are met:
+				- Their output is connected to the audio output
+				- There is only one input on pin #0
+			So the slot can be assumed as neutral in the audio graph.
+			*/
+			bool           del_flag = false;
 			do
 			{
-				-- chain_size_new;
-				const int   rem_slot_id = preset._routing._chain [chain_size_new];
-				model.erase_slot_from_chain (chain_size_new);
-				model.remove_slot (rem_slot_id);
+				const ToolsRouting::NodeMap & graph = view.use_graph ();
+				del_flag = (
+					   preset.is_slot_empty (slot_id)
+					&& ToolsRouting::is_slot_last_and_neutral (graph, slot_id)
+				);
+				if (del_flag)
+				{
+					doc::Routing   routing = preset.use_routing (); // Copy
+					ToolsRouting::disconnect_slot (routing._cnx_audio_set, slot_id);
+					model.set_routing (routing);
+					model.remove_slot (slot_id);
+					const std::vector <int> &  slot_list_aud =
+						view.use_slot_list_aud ();
+					audio_size = int (slot_list_aud.size ());
+					if (audio_size == 0)
+					{
+						slot_id = -1;
+					}
+					else
+					{
+						slot_id = slot_list_aud.back ();
+					}
+				}
 			}
-			while (chain_size_new > 0 && preset.is_slot_empty (preset._routing._chain [chain_size_new - 1]));
+			while (del_flag && slot_id >= 0);
 			slot_id = -1;
 		}
 		else if (! chain_flag)
@@ -844,9 +876,14 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 
 
 
-std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &preset, const Model &model)
+int	Tools::extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Preset &preset, const Model &model)
 {
-	std::vector <int> slot_id_list (preset.build_ordered_node_list (true));
+	slot_list.clear ();
+
+	std::vector <int> slot_id_list;
+	const int     audio_len = ToolsRouting::build_ordered_node_list (
+		slot_id_list, true, preset, model.use_aud_pi_list ()
+	);
 	std::map <std::string, int>   type_map;      // [type   ] = count
 	std::map <int, NodeEntry>     instance_map;  // [slot_id] = data
 
@@ -878,7 +915,6 @@ std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &pres
 		instance_map [slot_id] = entry;
 	}
 
-	std::vector <Tools::NodeEntry>   slot_list;
 	for (auto slot_id : slot_id_list)
 	{
 		NodeEntry &    entry = instance_map [slot_id];
@@ -889,7 +925,7 @@ std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &pres
 		slot_list.push_back (entry);
 	}
 
-	return slot_list;
+	return audio_len;
 }
 
 
@@ -920,21 +956,12 @@ std::string	Tools::build_slot_name_with_index (const NodeEntry &entry)
 
 
 // Returns -1 if not found
-int	Tools::find_chain_index (const doc::Preset &preset, int slot_id)
+int	Tools::find_linear_index_audio_graph (const View &view, int slot_id)
 {
 	assert (slot_id >= 0);
 
-	const int      chain_size = int (preset._routing._chain.size ());
-	int            found_pos  = -1;
-	for (int pos = 0; pos < chain_size && found_pos < 0; ++pos)
-	{
-		if (preset._routing._chain [pos] == slot_id)
-		{
-			found_pos = pos;
-		}
-	}
-
-	return found_pos;
+	const auto &   slot_list_aud = view.use_slot_list_aud ();
+	return ToolsRouting::find_linear_index_audio_graph (slot_list_aud, slot_id);
 }
 
 

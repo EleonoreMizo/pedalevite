@@ -46,6 +46,14 @@ enum Dir
 
 }; // enum Dir
 
+template <Dir D>
+class Dir_Inv
+{
+	static_assert (D == Dir_IN || D == Dir_OUT, "");
+public:
+	static const Dir _dir = Dir (1 - D);
+};
+
 
 
 }  // namespace piapi

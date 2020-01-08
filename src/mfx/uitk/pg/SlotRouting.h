@@ -72,8 +72,7 @@ protected:
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	virtual void   do_activate_preset (int index);
 	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_insert_slot_in_chain (int index, int slot_id);
-	virtual void   do_erase_slot_from_chain (int index);
+	virtual void   do_set_routing (const doc::Routing &routing);
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
 

@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/doc/Setup.h"
+#include "mfx/ToolsRouting.h"
 #include "mfx/ModelObserverInterface.h"
 
 #include <set>
@@ -67,6 +68,7 @@ public:
 
 	void           add_observer (ModelObserverInterface &obs);
 	void           remove_observer (ModelObserverInterface &obs);
+	void           set_pi_lists (const std::vector <std::string> &pi_aud_list, const std::vector <std::string> &pi_sig_list);
 
 	double         get_tempo () const;
 	bool           is_editing () const;
@@ -84,10 +86,20 @@ public:
 	const OverrideMap &
 	               use_param_ctrl_override_map () const;
 
-	int            conv_slot_index_to_id (int slot_index) const;
-
 	std::set <std::string>
 	               collect_labels (bool cur_preset_flag) const;
+
+	const std::vector <std::string> &
+	               use_pi_aud_list () const;
+	const std::vector <std::string> &
+	               use_pi_sig_list () const;
+	const ToolsRouting::NodeMap &
+	               use_graph () const;
+	const std::vector <int> &
+	               use_slot_list_aud () const;
+	const std::vector <int> &
+	               use_slot_list_sig () const;
+	int            build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_first_flag) const;
 
 	static void    update_parameter (doc::Preset &preset, int slot_index, PiType type, int index, float val);
 	static float   get_param_val (const doc::Preset &preset, int slot_id, PiType type, int index);
@@ -122,8 +134,7 @@ protected:
 	virtual void   do_set_param_beats (int slot_id, int index, float beats);
 	virtual void   do_add_slot (int slot_id);
 	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_insert_slot_in_chain (int index, int slot_id);
-	virtual void   do_erase_slot_from_chain (int index);
+	virtual void   do_set_routing (const doc::Routing &routing);
 	virtual void   do_set_slot_label (int slot_id, std::string name);
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
 	virtual void   do_remove_plugin (int slot_id);
@@ -146,11 +157,11 @@ protected:
 private:
 
 	typedef std::set <ModelObserverInterface *> ObsSet;
-	typedef std::set <int> PluginList;
 
 	void           collect_labels (std::set <std::string> &labels, const doc::Preset &preset) const;
 	void           collect_labels (std::set <std::string> &labels, const doc::PedalboardLayout &layout) const;
 	void           collect_labels (std::set <std::string> &labels, const doc::FxId &fx_id) const;
+	void           update_graph_info ();
 
 	ObsSet         _obs_set;
 
@@ -166,8 +177,20 @@ private:
 	doc::Preset    _preset_cur;
 	SlotInfoMap    _slot_info_map;
 	OverrideMap    _override_map;
+	std::vector <std::string>
+	               _pi_aud_list;
+	std::vector <std::string>
+	               _pi_sig_list;
 
-	PluginList     _lookup_list; // Id of the plug-ins we need to collect data after instantiation (number of parameters and other specs)
+	// Computed from the cached data
+	std::set <std::string>
+	               _pi_aud_set;
+	ToolsRouting::NodeMap
+	               _graph;
+	std::vector <int>
+	               _slot_list_aud;
+	std::vector <int>
+	               _slot_list_sig;
 
 
 

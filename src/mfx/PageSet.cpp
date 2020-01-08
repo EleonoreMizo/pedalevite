@@ -49,8 +49,6 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_fnt_6x8 ()
 ,	_fnt_6x6 ()
 ,	_fnt_4x6 ()
-,	_pi_aud_type_list ()
-,	_pi_sig_type_list ()
 ,	_csn_list ({
 		{ ControllerType_POT   ,  0, "Expression 0" },
 		{ ControllerType_POT   ,  1, "Expression 1" },
@@ -80,14 +78,14 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_prog_cur (_page_switcher, snd_drv)
 ,	_page_tuner (_page_switcher, leds)
 ,	_page_menu_main (_page_switcher, _loc_edit_pedal)
-,	_page_prog_edit (_page_switcher, _loc_edit, _pi_aud_type_list, _pi_sig_type_list)
+,	_page_prog_edit (_page_switcher, _loc_edit)
 ,	_page_param_list (_page_switcher, _loc_edit)
 ,	_page_param_edit (_page_switcher, _loc_edit)
 ,	_page_not_yet (_page_switcher)
 ,	_page_question (_page_switcher)
 ,	_page_param_controllers (_page_switcher, _loc_edit, _csn_list)
 ,	_page_ctrl_edit (_page_switcher, _loc_edit, _csn_list)
-,	_page_slot_menu (_page_switcher, _loc_edit, _pi_aud_type_list, _pi_sig_type_list)
+,	_page_slot_menu (_page_switcher, _loc_edit)
 ,	_page_edit_text (_page_switcher)
 ,	_page_prog_save (_page_switcher)
 ,	_page_end_msg (_page_switcher, cmd_line)
@@ -102,7 +100,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_pedal_edit_step (_page_switcher, _loc_edit_pedal)
 ,	_page_pedal_edit_action (_page_switcher, _loc_edit_pedal)
 ,	_page_edit_label (_page_switcher)
-,	_page_edit_fxid (_page_switcher, _pi_aud_type_list, _pi_sig_type_list)
+,	_page_edit_fxid (_page_switcher)
 ,	_page_fx_peq (_page_switcher, _loc_edit)
 ,	_page_settings_other (_page_switcher)
 ,	_page_preset_menu (_page_switcher, _loc_edit)
@@ -236,52 +234,6 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 	_page_switcher.add_page (uitk::pg::PageType_PROG_CATALOG     , _page_prog_catalog     );
 	_page_switcher.add_page (uitk::pg::PageType_REC2DISK         , _page_rec2disk         );
 	_page_switcher.add_page (uitk::pg::PageType_SLOT_ROUTING     , _page_slot_routing     );
-}
-
-
-
-void	PageSet::list_plugins ()
-{
-	_pi_aud_type_list.clear ();
-	_pi_sig_type_list.clear ();
-	std::vector <std::string> pi_list = _model.list_plugin_models ();
-	std::map <std::string, std::string> pi_aud_map;
-	std::map <std::string, std::string> pi_sig_map;
-	for (std::string model_id : pi_list)
-	{
-		if (model_id [0] != '\?')
-		{
-			const mfx::piapi::PluginDescInterface &   desc =
-				_model.get_model_desc (model_id);
-
-			int            nbr_i = 1;
-			int            nbr_o = 1;
-			int            nbr_s = 0;
-			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
-
-			std::string    name_all = desc.get_name ();
-			std::string    name     = mfx::pi::param::Tools::extract_longest_str (
-				name_all.c_str (), '\n'
-			);
-
-			if (nbr_i > 0 && (nbr_o > 0 || nbr_s > 0))
-			{
-				pi_aud_map [name] = model_id;
-			}
-			else if (nbr_s > 0)
-			{
-				pi_sig_map [name] = model_id;
-			}
-		}
-	}
-	for (auto &node : pi_aud_map)
-	{
-		_pi_aud_type_list.push_back (node.second);
-	}
-	for (auto &node : pi_sig_map)
-	{
-		_pi_sig_type_list.push_back (node.second);
-	}
 }
 
 

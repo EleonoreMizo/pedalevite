@@ -68,6 +68,17 @@ void	View::remove_observer (ModelObserverInterface &obs)
 
 
 
+void	View::set_pi_lists (const std::vector <std::string> &pi_aud_list, const std::vector <std::string> &pi_sig_list)
+{
+	_pi_aud_list = pi_aud_list;
+	_pi_sig_list = pi_sig_list;
+
+	_pi_aud_set.clear ();
+	_pi_aud_set.insert (_pi_aud_list.begin (), _pi_aud_list.end ());
+}
+
+
+
 double	View::get_tempo () const
 {
 	return _tempo;
@@ -145,18 +156,6 @@ const View::OverrideMap &	View::use_param_ctrl_override_map () const
 
 
 
-// Allows negative slot_index and returns -1 in this case
-int	View::conv_slot_index_to_id (int slot_index) const
-{
-	assert (slot_index < int (_preset_cur._routing._chain.size ()));
-	return
-		  (slot_index < 0)
-		? -1
-		: _preset_cur._routing._chain [slot_index];
-}
-
-
-
 std::set <std::string>	View::collect_labels (bool cur_preset_flag) const
 {
 	std::set <std::string>  labels;
@@ -181,6 +180,69 @@ std::set <std::string>	View::collect_labels (bool cur_preset_flag) const
 	assert (labels.find ("") == labels.end ());
 
 	return labels;
+}
+
+
+
+const std::vector <std::string> &	View::use_pi_aud_list () const
+{
+	return _pi_aud_list;
+}
+
+
+
+const std::vector <std::string> &	View::use_pi_sig_list () const
+{
+	return _pi_sig_list;
+}
+
+
+
+const ToolsRouting::NodeMap &	View::use_graph () const
+{
+	return _graph;
+}
+
+
+
+const std::vector <int> &	View::use_slot_list_aud () const
+{
+	return _slot_list_aud;
+}
+
+
+
+const std::vector <int> &	View::use_slot_list_sig () const
+{
+	return _slot_list_sig;
+}
+
+
+
+int	View::build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_first_flag) const
+{
+	slot_id_list.clear ();
+
+	int            second_list_pos = 0;
+
+	if (audio_first_flag)
+	{
+		slot_id_list    = _slot_list_aud;
+		second_list_pos = int (slot_id_list.size ());
+		slot_id_list.insert (
+			slot_id_list.end (), _slot_list_sig.begin (), _slot_list_sig.end ()
+		);
+	}
+	else
+	{
+		slot_id_list    = _slot_list_sig;
+		second_list_pos = int (slot_id_list.size ());
+		slot_id_list.insert (
+			slot_id_list.end (), _slot_list_aud.begin (), _slot_list_aud.end ()
+		);
+	}
+
+	return second_list_pos;
 }
 
 
@@ -387,6 +449,7 @@ void	View::do_activate_preset (int index)
 	_preset_index = index;
 	_preset_cur   = _setup._bank_arr [_bank_index]._preset_arr [_preset_index];
 	_slot_info_map.clear ();
+	update_graph_info ();
 	mfx_View_PROPAGATE (activate_preset (index));
 }
 
@@ -412,6 +475,7 @@ void	View::do_set_prog_switch_mode (doc::ProgSwitchMode mode)
 void	View::do_set_chn_mode (ChnMode mode)
 {
 	_setup._chn_mode = mode;
+	update_graph_info ();
 	mfx_View_PROPAGATE (set_chn_mode (mode));
 }
 
@@ -482,6 +546,7 @@ void	View::do_add_slot (int slot_id)
 		doc::Preset::SlotSPtr ()
 	));
 	_slot_info_map.clear ();
+	update_graph_info ();
 
 	mfx_View_PROPAGATE (add_slot (slot_id));
 }
@@ -491,51 +556,25 @@ void	View::do_add_slot (int slot_id)
 void	View::do_remove_slot (int slot_id)
 {
 	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
-	assert (std::find (
-		_preset_cur._routing._chain.begin (),
-		_preset_cur._routing._chain.end (),
-		slot_id
-	) == _preset_cur._routing._chain.end ());
+	assert (! _preset_cur.use_routing ().is_referencing_slot (slot_id));
 
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
 	_preset_cur._slot_map.erase (it_slot);
 	_slot_info_map.clear ();
+	update_graph_info ();
 
 	mfx_View_PROPAGATE (remove_slot (slot_id));
 }
 
 
 
-void	View::do_insert_slot_in_chain (int index, int slot_id)
+void	View::do_set_routing (const doc::Routing &routing)
 {
-	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
-	assert (std::find (
-		_preset_cur._routing._chain.begin (),
-		_preset_cur._routing._chain.end (),
-		slot_id
-	) == _preset_cur._routing._chain.end ());
-	assert (index <= int (_preset_cur._routing._chain.size ()));
+	_preset_cur.set_routing (routing);
+	update_graph_info ();
 
-	_preset_cur._routing._chain.insert (
-		_preset_cur._routing._chain.begin () + index,
-		slot_id
-	);
-
-	mfx_View_PROPAGATE (insert_slot_in_chain (index, slot_id));
-}
-
-
-
-void	View::do_erase_slot_from_chain (int index)
-{
-	assert (index < int (_preset_cur._routing._chain.size ()));
-
-	_preset_cur._routing._chain.erase (
-		_preset_cur._routing._chain.begin () + index
-	);
-
-	mfx_View_PROPAGATE (erase_slot_from_chain (index));
+	mfx_View_PROPAGATE (set_routing (routing));
 }
 
 
@@ -569,6 +608,7 @@ void	View::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 	const int      nbr_param = pi_data._nbr_param_arr [piapi::ParamCateg_GLOBAL];
 	doc::PluginSettings &   settings = slot_sptr->_settings_all [pi_data._model];
 	settings._param_list.resize (nbr_param, 0);
+	update_graph_info ();
 
 	mfx_View_PROPAGATE (set_plugin (slot_id, pi_data));
 }
@@ -584,6 +624,7 @@ void	View::do_remove_plugin (int slot_id)
 	{
 		slot_sptr->_pi_model.clear ();
 	}
+	update_graph_info ();
 
 	mfx_View_PROPAGATE (remove_plugin (slot_id));
 }
@@ -595,6 +636,7 @@ void	View::do_set_plugin_mono (int slot_id, bool mono_flag)
 	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (PiType_MAIN);
 	settings._force_mono_flag = mono_flag;
+	update_graph_info ();
 
 	mfx_View_PROPAGATE (set_plugin_mono (slot_id, mono_flag));
 }
@@ -853,6 +895,23 @@ bool	View::OverrideLoc::operator < (const OverrideLoc &rhs) const
 	}
 
 	return false;
+}
+
+
+
+void	View::update_graph_info ()
+{
+	const doc::Routing::CnxSet &  cnx_set =
+		_preset_cur.use_routing ()._cnx_audio_set;
+	ToolsRouting::build_node_graph (_graph, cnx_set);
+
+	ToolsRouting::build_ordered_node_lists (
+		_slot_list_aud,
+		_slot_list_sig,
+		_preset_cur,
+		_graph,
+		_pi_aud_set
+	);
 }
 
 
