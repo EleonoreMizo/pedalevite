@@ -68,6 +68,7 @@ public:
 
 	bool           is_slot_empty (int slot_id) const;
 	bool           is_slot_empty (SlotMap::const_iterator it) const;
+	bool           is_slot_empty (SlotMap::value_type vt) const;
 	Slot &         use_slot (int slot_id);
 	const Slot &   use_slot (int slot_id) const;
 	int            gen_slot_id () const;

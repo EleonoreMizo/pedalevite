@@ -46,6 +46,88 @@ namespace doc
 
 
 
+bool	PluginSettings::operator == (const PluginSettings &other) const
+{
+	return (
+		   _force_mono_flag  == other._force_mono_flag
+		&& _force_reset_flag == other._force_reset_flag
+		&& _param_list       == other._param_list
+		&& _map_param_ctrl   == other._map_param_ctrl
+		&& _map_param_pres   == other._map_param_pres
+	);
+}
+
+
+
+bool	PluginSettings::operator != (const PluginSettings &other) const
+{
+	return ! (*this == other);
+}
+
+
+
+bool	PluginSettings::is_similar (const PluginSettings &other) const
+{
+	const float    tol = 1e-5f;
+
+	bool           same_flag = true;
+
+	same_flag &= (_force_mono_flag  == other._force_mono_flag );
+	same_flag &= (_force_reset_flag == other._force_reset_flag);
+
+	// Parameters
+	const size_t   nbr_p = _param_list.size ();
+	same_flag &= (nbr_p == other._param_list.size ());
+	for (size_t index = 0; same_flag && index < nbr_p; ++index)
+	{
+		same_flag = fstb::is_eq (
+			_param_list [index],
+			other._param_list [index],
+			tol
+		);
+	}
+
+	// Controllers
+	same_flag &= (_map_param_ctrl.size () == other._map_param_ctrl.size ());
+	if (same_flag)
+	{
+		auto           it_1 = _map_param_ctrl.begin ();
+		auto           it_2 = other._map_param_ctrl.begin ();
+		while (same_flag && it_1 != _map_param_ctrl.end ())
+		{
+			same_flag = (
+				   it_1->first == it_2->first
+				&& it_1->second.is_similar (it_2->second)
+			);
+
+			++ it_1;
+			++ it_2;
+		}
+	}
+
+	// Presentations
+	same_flag &= (_map_param_pres.size () == other._map_param_pres.size ());
+	if (same_flag)
+	{
+		auto           it_1 = _map_param_pres.begin ();
+		auto           it_2 = other._map_param_pres.begin ();
+		while (same_flag && it_1 != _map_param_pres.end ())
+		{
+			same_flag = (
+				   it_1->first == it_2->first
+				&& it_1->second.is_similar (it_2->second)
+			);
+
+			++ it_1;
+			++ it_2;
+		}
+	}
+
+	return same_flag;
+}
+
+
+
 CtrlLinkSet &	PluginSettings::use_ctrl_link_set (int index)
 {
 	assert (index >= 0);
@@ -290,74 +372,40 @@ void	PluginSettings::ser_read (SerRInterface &ser, std::string model_id)
 
 
 
-/*** To do: loose equality. This currently checks the exact equality. ***/
-bool	PluginSettings::is_similar (const PluginSettings &other) const
-{
-	const float    tol = 1e-5f;
-
-	bool           same_flag = true;
-
-	same_flag &= (_force_mono_flag  == other._force_mono_flag );
-	same_flag &= (_force_reset_flag == other._force_reset_flag);
-
-	// Parameters
-	const size_t   nbr_p = _param_list.size ();
-	same_flag &= (nbr_p == other._param_list.size ());
-	for (size_t index = 0; same_flag && index < nbr_p; ++index)
-	{
-		same_flag = fstb::is_eq (
-			_param_list [index],
-			other._param_list [index],
-			tol
-		);
-	}
-
-	// Controllers
-	same_flag &= (_map_param_ctrl.size () == other._map_param_ctrl.size ());
-	if (same_flag)
-	{
-		auto           it_1 = _map_param_ctrl.begin ();
-		auto           it_2 = other._map_param_ctrl.begin ();
-		while (same_flag && it_1 != _map_param_ctrl.end ())
-		{
-			same_flag = (
-				   it_1->first == it_2->first
-				&& it_1->second.is_similar (it_2->second)
-			);
-
-			++ it_1;
-			++ it_2;
-		}
-	}
-
-	// Presentations
-	same_flag &= (_map_param_pres.size () == other._map_param_pres.size ());
-	if (same_flag)
-	{
-		auto           it_1 = _map_param_pres.begin ();
-		auto           it_2 = other._map_param_pres.begin ();
-		while (same_flag && it_1 != _map_param_pres.end ())
-		{
-			same_flag = (
-				   it_1->first == it_2->first
-				&& it_1->second.is_similar (it_2->second)
-			);
-
-			++ it_1;
-			++ it_2;
-		}
-	}
-
-	return same_flag;
-}
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const PluginSettings &lhs, const PluginSettings &rhs)
+{
+	const int      flags_l =
+		lhs._force_mono_flag + (lhs._force_reset_flag << 1);
+	const int      flags_r =
+		rhs._force_mono_flag + (rhs._force_reset_flag << 1);
+	if (flags_l < flags_r) { return true; }
+	else if (flags_l == flags_r)
+	{
+		if (lhs._param_list < rhs._param_list) { return true; }
+		else if (lhs._param_list == rhs._param_list)
+		{
+			if (lhs._map_param_ctrl < rhs._map_param_ctrl) { return true; }
+			else if (lhs._map_param_ctrl == rhs._map_param_ctrl)
+			{
+				return (lhs._map_param_pres < rhs._map_param_pres);
+			}
+		}
+	}
+
+	return false;
+}
 
 
 

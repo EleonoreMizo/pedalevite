@@ -61,6 +61,48 @@ Slot::Slot ()
 
 
 
+bool	Slot::operator == (const Slot &other) const
+{
+	return (
+		   _pi_model       == other._pi_model
+	   && _settings_all   == other._settings_all
+		&& _settings_mixer == other._settings_mixer
+		&& _label          == other._label
+	);
+}
+
+
+
+bool	Slot::operator != (const Slot &other) const
+{
+	return ! (*this == other);
+}
+
+
+
+bool	Slot::is_similar (const Slot &other) const
+{
+	if (_pi_model != other._pi_model)
+	{
+		return false;
+	}
+
+	for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
+	{
+		const PiType   type = PiType (type_cnt);
+		const doc::PluginSettings &   settings_l =       use_settings (type);
+		const doc::PluginSettings &   settings_r = other.use_settings (type);
+		if (! settings_l.is_similar (settings_r))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
+
 bool	Slot::is_empty () const
 {
 	return (_pi_model.empty ());
@@ -217,6 +259,31 @@ void	Slot::ser_read (SerRInterface &ser)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const Slot &lhs, const Slot &rhs)
+{
+	if (lhs._pi_model < rhs._pi_model ) { return true; }
+	else if (lhs._pi_model == rhs._pi_model)
+	{
+		if (lhs._settings_all < rhs._settings_all ) { return true; }
+		else if (lhs._settings_all == rhs._settings_all)
+		{
+			if (lhs._settings_mixer < rhs._settings_mixer ) { return true; }
+			else if (lhs._settings_mixer == rhs._settings_mixer)
+			{
+				return (lhs._label < rhs._label);
+			}
+		}
+	}
+
+	return false;
+}
 
 
 

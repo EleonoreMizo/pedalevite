@@ -58,10 +58,12 @@ public:
 
 	CtrlLink &     operator = (const CtrlLink &other) = default;
 
+	bool           operator == (const CtrlLink &other) const;
+	bool           operator != (const CtrlLink &other) const;
+	bool           is_similar (const CtrlLink &other) const;
+
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
-
-	bool           is_similar (const CtrlLink &other) const;
 
 	ControlSource  _source;
 	float          _step     = float (Cst::_step_param);  // For relative modes (incremental encoders). > 0
@@ -98,10 +100,15 @@ private:
 
 private:
 
-	bool           operator == (const CtrlLink &other) const = delete;
-	bool           operator != (const CtrlLink &other) const = delete;
-
 }; // class CtrlLink
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const CtrlLink &lhs, const CtrlLink &rhs);
 
 
 

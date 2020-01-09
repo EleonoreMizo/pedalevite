@@ -90,8 +90,15 @@ bool	Preset::is_slot_empty (SlotMap::const_iterator it) const
 {
 	assert (it != _slot_map.end ());
 
-	return (   it->second.get () == 0
-	        || it->second->is_empty ());
+	return is_slot_empty (*it);
+}
+
+
+
+bool	Preset::is_slot_empty (SlotMap::value_type vt) const
+{
+	return (   vt.second.get () == 0
+	        || vt.second->is_empty ());
 }
 
 

@@ -59,6 +59,10 @@ public:
 	virtual        ~Slot ()                       = default;
 	Slot &         operator = (const Slot &other) = default;
 
+	bool           operator == (const Slot &other) const;
+	bool           operator != (const Slot &other) const;
+	bool           is_similar (const Slot &other) const;
+
 	bool           is_empty () const;
 	PluginSettings &
 	               use_settings (PiType type);
@@ -96,10 +100,15 @@ private:
 
 private:
 
-	bool           operator == (const Slot &other) const = delete;
-	bool           operator != (const Slot &other) const = delete;
-
 }; // class Slot
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const Slot &lhs, const Slot &rhs);
 
 
 

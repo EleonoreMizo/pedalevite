@@ -48,6 +48,75 @@ namespace doc
 
 
 
+bool	CtrlLink::operator == (const CtrlLink &other) const
+{
+	return (
+		   _source     == other._source
+		&& _curve      == other._curve
+		&& _u2b_flag   == other._u2b_flag
+		&& _step       == other._step
+		&& _base       == other._base
+		&& _amp        == other._amp
+		&& _clip_flag  == other._clip_flag
+		&& (   ! _clip_flag
+		    || (
+		           _clip_src_beg == other._clip_src_beg
+		        && _clip_src_end == other._clip_src_end
+		        && _clip_dst_beg == other._clip_dst_beg
+		        && _clip_dst_end == other._clip_dst_end
+		   ))
+		&& _notch_list == other._notch_list
+	);
+}
+
+
+
+bool	CtrlLink::operator != (const CtrlLink &other) const
+{
+	return ! (*this == other);
+}
+
+
+
+bool	CtrlLink::is_similar (const CtrlLink &other) const
+{
+	const float    tol = 1e-5f;
+
+	bool           same_flag = (_source == other._source);
+	same_flag &= (_curve    == other._curve   );
+	same_flag &= (_u2b_flag == other._u2b_flag);
+	same_flag &= fstb::is_eq (_step, other._step, tol);
+	same_flag &= fstb::is_eq (_base, other._base, tol);
+	same_flag &= fstb::is_eq (_amp , other._amp , tol);
+
+	same_flag &= (_clip_flag == other._clip_flag);
+	if (_clip_flag && same_flag)
+	{
+		same_flag &= fstb::is_eq (_clip_src_beg, other._clip_src_beg, tol);
+		same_flag &= fstb::is_eq (_clip_src_end, other._clip_src_end, tol);
+		same_flag &= fstb::is_eq (_clip_dst_beg, other._clip_dst_beg, tol);
+		same_flag &= fstb::is_eq (_clip_dst_end, other._clip_dst_end, tol);
+	}
+
+	const size_t   nbr_n = _notch_list.size ();
+	same_flag &= (nbr_n == other._notch_list.size ());
+	if (same_flag)
+	{
+		auto           it_1 = _notch_list.begin ();
+		auto           it_2 = other._notch_list.begin ();
+		while (it_1 != _notch_list.end () && same_flag)
+		{
+			same_flag = fstb::is_eq (*it_1, *it_2, tol);
+			++ it_1;
+			++ it_2;
+		}
+	}
+
+	return same_flag;
+}
+
+
+
 void	CtrlLink::ser_write (SerWInterface &ser) const
 {
 	const int      doc_ver = Cst::_format_version;
@@ -120,46 +189,64 @@ void	CtrlLink::ser_read (SerRInterface &ser)
 
 
 
-bool	CtrlLink::is_similar (const CtrlLink &other) const
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const CtrlLink &lhs, const CtrlLink &rhs)
 {
-	const float    tol = 1e-5f;
-
-	bool           same_flag = (_source == other._source);
-	same_flag &= (_curve    == other._curve   );
-	same_flag &= (_u2b_flag == other._u2b_flag);
-	same_flag &= fstb::is_eq (_step, other._step, tol);
-	same_flag &= fstb::is_eq (_base, other._base, tol);
-	same_flag &= fstb::is_eq (_amp , other._amp , tol);
-
-	same_flag &= (_clip_flag == other._clip_flag);
-	if (_clip_flag && same_flag)
+	if (lhs._source < rhs._source) { return true; }
+	else if (lhs._source == rhs._source)
 	{
-		same_flag &= fstb::is_eq (_clip_src_beg, other._clip_src_beg, tol);
-		same_flag &= fstb::is_eq (_clip_src_end, other._clip_src_end, tol);
-		same_flag &= fstb::is_eq (_clip_dst_beg, other._clip_dst_beg, tol);
-		same_flag &= fstb::is_eq (_clip_dst_end, other._clip_dst_end, tol);
-	}
-
-	const size_t   nbr_n = _notch_list.size ();
-	same_flag &= (nbr_n == other._notch_list.size ());
-	if (same_flag)
-	{
-		auto           it_1 = _notch_list.begin ();
-		auto           it_2 = other._notch_list.begin ();
-		while (it_1 != _notch_list.end () && same_flag)
+		if (lhs._step < rhs._step)	{ return true; }
+		else if (lhs._step == rhs._step)
 		{
-			same_flag = fstb::is_eq (*it_1, *it_2, tol);
-			++ it_1;
-			++ it_2;
+			if (lhs._curve < rhs._curve) { return true; }
+			else if (lhs._curve == rhs._curve)
+			{
+				if (lhs._base < rhs._base ) { return true; }
+				else if (lhs._base == rhs._base )
+				{
+					if (lhs._amp < rhs._amp ) { return true; }
+					else if (lhs._amp == rhs._amp )
+					{
+						if (lhs._u2b_flag < rhs._u2b_flag ) { return true; }
+						else if (lhs._u2b_flag == rhs._u2b_flag )
+						{
+							if (lhs._clip_flag < rhs._clip_flag ) { return true; }
+							else if (lhs._clip_flag == rhs._clip_flag )
+							{
+	if (lhs._clip_src_beg < rhs._clip_src_beg ) { return true; }
+	else if (lhs._clip_src_beg == rhs._clip_src_beg )
+	{
+		if (lhs._clip_src_end < rhs._clip_src_end ) { return true; }
+		else if (lhs._clip_src_end == rhs._clip_src_end )
+		{
+			if (lhs._clip_dst_beg < rhs._clip_dst_beg ) { return true; }
+			else if (lhs._clip_dst_beg == rhs._clip_dst_beg )
+			{
+				if (lhs._clip_dst_end < rhs._clip_dst_end ) { return true; }
+				else if (lhs._clip_dst_end == rhs._clip_dst_end )
+				{
+					return (lhs._notch_list < rhs._notch_list);
+				}
+			}
+		}
+	}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
-	return same_flag;
+	return false;
 }
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 

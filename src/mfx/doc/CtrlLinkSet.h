@@ -59,8 +59,11 @@ public:
 	virtual        ~CtrlLinkSet () = default;
 	CtrlLinkSet &  operator = (const CtrlLinkSet &other);
 
-	bool           is_empty () const;
+	bool           operator == (const CtrlLinkSet &other) const;
+	bool           operator != (const CtrlLinkSet &other) const;
 	bool           is_similar (const CtrlLinkSet &other) const;
+
+	bool           is_empty () const;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
@@ -88,10 +91,15 @@ private:
 
 private:
 
-	bool           operator == (const CtrlLinkSet &other) const = delete;
-	bool           operator != (const CtrlLinkSet &other) const = delete;
-
 }; // class CtrlLinkSet
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const CtrlLinkSet &lhs, const CtrlLinkSet &rhs);
 
 
 
