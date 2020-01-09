@@ -67,13 +67,6 @@ void	PageSwitcher::add_page (pg::PageType page_id, PageInterface &page)
 
 void	PageSwitcher::switch_to (pg::PageType page_id, void *usr_ptr)
 {
-	if (! _call_stack.empty ())
-	{
-		/*** To do:
-		Add some signal to notify the pages that their calls were cancelled.
-		***/
-		_call_stack.clear ();
-	}
 	switch_to (page_id, usr_ptr, -1);
 }
 
