@@ -49,6 +49,7 @@ namespace doc
 	class ActionParam;
 	class FxId;
 	class PedalActionGroup;
+	class PedalActionSingleInterface;
 	class PedalboardLayout;
 	class PluginSettings;
 	class Preset;

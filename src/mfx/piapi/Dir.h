@@ -54,6 +54,9 @@ public:
 	static const Dir _dir = Dir (1 - D);
 };
 
+template <typename DT>
+inline Dir Dir_invert (DT d) { return Dir (1 - d); }
+
 
 
 }  // namespace piapi
