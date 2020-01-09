@@ -108,6 +108,7 @@ template <piapi::Dir D>
 CnxEnd &	Cnx::use_end ()
 {
 	static_assert (D < 0 && D >= piapi::Dir_NBR_ELT, "Wrong D value.");
+	return use_src ();
 }
 
 template <>
@@ -128,6 +129,7 @@ template <piapi::Dir D>
 const CnxEnd &	Cnx::use_end () const
 {
 	static_assert (D < 0 && D >= piapi::Dir_NBR_ELT, "Wrong D value.");
+	return use_src ();
 }
 
 template <>
