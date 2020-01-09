@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/pg/EditText.h"
+#include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
@@ -115,7 +116,20 @@ private:
 	typedef std::shared_ptr <NWindow> WinSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
 
+	enum Link
+	{
+		Link_NONE = 0,
+		Link_CHAIN,
+		Link_BRANCH,
+
+		Link_NBR_ELT
+	};
+
 	void           set_preset_info ();
+	std::vector <Link>
+	               find_chain_links (const std::vector <Tools::NodeEntry> &entry_list) const;
+	void           find_chain_links_dir (std::vector <Link> &link_list, int slot_id, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list) const;
+	void           set_link (std::vector <Link> &link_list, int slot_id, Link link, const std::vector <Tools::NodeEntry> &entry_list) const;
 	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size);
 	EvtProp        change_effect (int node_id, int dir);
 	void           update_loc_edit (int node_id);
@@ -151,6 +165,7 @@ private:
 	std::vector <int>             // Ordered list of the edited slots
 	               _slot_id_list;
 	int            _audio_list_len;  // Cached size of the audio part of the list
+	bool           _spi_flag;     // Indicates we're in set_preset_info(); avoids recursion.
 
 
 

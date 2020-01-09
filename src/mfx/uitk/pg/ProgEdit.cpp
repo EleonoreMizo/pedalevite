@@ -28,7 +28,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/uitk/pg/ProgEdit.h"
-#include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -75,6 +74,7 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_name_param ()
 ,	_slot_id_list ()
 ,	_audio_list_len (0)
+,	_spi_flag (false)
 {
 	_prog_name_sptr->set_justification (0.5f, 0, false);
 	_settings_sptr ->set_justification (0.5f, 0, false);
@@ -104,6 +104,8 @@ void	ProgEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
+
+	_spi_flag = false;
 
 	if (_view_ptr->use_setup ()._save_mode != doc::Setup::SaveMode_MANUAL)
 	{
@@ -169,11 +171,19 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_cursor ())
 	{
-		if (   evt.get_cursor () == NodeEvt::Curs_ENTER
-		    && node_id >= 0 && node_id < int (_slot_list.size ()))
+		if (evt.get_cursor () == NodeEvt::Curs_ENTER)
 		{
-			update_loc_edit (node_id);
-			update_rotenc_mapping ();
+		   if (node_id >= 0 && node_id < int (_slot_list.size ()))
+			{
+				update_loc_edit (node_id);
+				update_rotenc_mapping ();
+				set_preset_info ();
+			}
+			else if (node_id >= Entry_WINDOW && _loc_edit._slot_id >= 0)
+			{
+				_loc_edit._slot_id = -1;
+				set_preset_info ();
+			}
 		}
 	}
 
@@ -329,6 +339,13 @@ void	ProgEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc
 
 void	ProgEdit::set_preset_info ()
 {
+	if (_spi_flag)
+	{
+		return;
+	}
+
+	_spi_flag = true;
+
 	assert (_fnt_ptr != 0);
 
 	update_cached_pi_list ();
@@ -355,6 +372,8 @@ void	ProgEdit::set_preset_info ()
 	std::vector <Tools::NodeEntry>   entry_list;
 	Tools::extract_slot_list (entry_list, preset, *_model_ptr);
 	assert (nbr_slots == int (entry_list.size ()));
+
+	const std::vector <Link>   link_list (find_chain_links (entry_list));
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
@@ -390,13 +409,25 @@ void	ProgEdit::set_preset_info ()
 			}
 		}
 
+		const char *   prefix_0 = "  ";
+		switch (link_list [slot_index])
+		{
+		case Link_NONE:   /* Nothing */               break;
+		case Link_CHAIN:  prefix_0 = "\xE2\x9A\xAB "; break; // U+26AB MEDIUM BLACK CIRCLE
+		case Link_BRANCH: prefix_0 = "\xE2\x9A\xAC "; break; // U+26AC MEDIUM SMALL WHITE CIRCLE
+		default:          assert (false);             break;
+		}
+		multilabel = pi::param::Tools::join_strings_multi (
+			multilabel.c_str (), '\n', prefix_0, ""
+		);
+
 		const int      skip     = (slot_index >= _audio_list_len) ? 1 : 0;
 		const int      pos_list = slot_index + skip;
 		set_slot (nav_list, pos_list, multilabel, ctrl_flag, _audio_list_len);
 	}
 
-	set_slot (nav_list, _audio_list_len, "<End>", false, _audio_list_len);
-	set_slot (nav_list, nbr_slots + 1  , "<End>", false, _audio_list_len);
+	set_slot (nav_list, _audio_list_len, "  <End>", false, _audio_list_len);
+	set_slot (nav_list, nbr_slots + 1  , "  <End>", false, _audio_list_len);
 
 	if (ToolsRouting::are_audio_io_connected (_view_ptr->use_graph ()))
 	{
@@ -410,6 +441,109 @@ void	ProgEdit::set_preset_info ()
 	_page_ptr->set_nav_layout (nav_list);
 
 	_menu_sptr->invalidate_all ();
+
+	_spi_flag = false;
+}
+
+
+
+std::vector <ProgEdit::Link>	ProgEdit::find_chain_links (const std::vector <Tools::NodeEntry> &entry_list) const
+{
+	std::vector <ProgEdit::Link>  link_list (entry_list.size (), Link_NONE);
+
+	if (_loc_edit._slot_id >= 0)
+	{
+		const ToolsRouting::NodeMap & graph = _view_ptr->use_graph ();
+		ToolsRouting::NodeMap::const_iterator  it = graph.find (
+			ToolsRouting::Node (doc::CnxEnd::Type_NORMAL, _loc_edit._slot_id)
+		);
+		if (it != graph.end ())
+		{
+			// The starting point
+			set_link (link_list, _loc_edit._slot_id, Link_CHAIN, entry_list);
+
+			for (int dir = 0; dir < piapi::Dir_NBR_ELT; ++dir)
+			{
+				find_chain_links_dir (
+					link_list,
+					_loc_edit._slot_id,
+					piapi::Dir (dir),
+					entry_list
+				);
+			}
+		}
+	}
+
+	return link_list;
+}
+
+
+
+void	ProgEdit::find_chain_links_dir (std::vector <Link> &link_list, int slot_id, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list) const
+{
+	const ToolsRouting::NodeMap & graph = _view_ptr->use_graph ();
+
+	bool        cont_flag = true;
+	do
+	{
+		ToolsRouting::NodeMap::const_iterator  it = graph.find (
+			ToolsRouting::Node (doc::CnxEnd::Type_NORMAL, slot_id)
+		);
+		if (it == graph.end ())
+		{
+			cont_flag = false;
+		}
+		else
+		{
+			std::set <int> slot_id_set;
+			int            nbr_cnx = 0;
+			const auto &   side = it->second [dir];
+			for (auto &pin : side)
+			{
+				for (auto &cnx : pin)
+				{
+					const doc::CnxEnd &  cnx_end = cnx.use_end (dir);
+					const doc::CnxEnd::Type type = cnx_end.get_type ();
+					if (type == doc::CnxEnd::Type_NORMAL)
+					{
+						slot_id = cnx_end.get_slot_id ();
+						slot_id_set.insert (slot_id);
+						++ nbr_cnx;
+					}
+				}
+			}
+
+			Link           link (Link_CHAIN);
+			if (nbr_cnx != 1)
+			{
+				link      = Link_BRANCH;
+				cont_flag = false;
+			}
+
+			for (auto sid_mark : slot_id_set)
+			{
+				set_link (link_list, sid_mark, link, entry_list);
+			}
+		}
+	}
+	while (cont_flag);
+}
+
+
+
+void	ProgEdit::set_link (std::vector <Link> &link_list, int slot_id, Link link, const std::vector <Tools::NodeEntry> &entry_list) const
+{
+	const auto     it = std::find_if (
+		entry_list.begin (),
+		entry_list.end (),
+		[slot_id] (const Tools::NodeEntry &entry)
+		{
+			return (entry._slot_id == slot_id);
+		}
+	);
+	assert (it != entry_list.end ());
+	const int      pos = int (it - entry_list.begin ());
+	link_list [pos] = link;
 }
 
 
