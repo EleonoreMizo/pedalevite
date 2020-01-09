@@ -63,8 +63,19 @@ public:
 	class FontSet
 	{
 	public:
+		enum Type
+		{
+			Type_T = 0,
+			Type_S,
+			Type_M,
+			Type_L,
+
+			Type_NBR_ELT
+		};
+
 		explicit       FontSet (const ui::Font &fnt_t, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
 		               FontSet (const FontSet &other) = default;
+		const ui::Font &  use (Type t) const;
 		const ui::Font &  _t;
 		const ui::Font &  _s;
 		const ui::Font &  _m;

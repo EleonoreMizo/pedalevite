@@ -87,8 +87,8 @@ NNN         bank nbr
 NNN        bank name
    Program name
 
-Effect
 Parameter      value
+Effect          unit
 
     IP address
 */
@@ -116,11 +116,16 @@ ProgCur::ProgCur (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 ,	_tempo_date (INT64_MIN)
 ,	_esc_count (0)
 {
-	_prog_nbr_sptr->set_mag (_mag_prog_nbr, _mag_prog_nbr);
-	_prog_nbr_sptr->set_bold (true, true);
+	_prog_nbr_sptr->set_justification (0, 0, true);
+	_prog_nbr_sptr->set_mag (_mag_pnr_x, _mag_pnr_y);
+	_prog_nbr_sptr->set_bold (_b_pnr, _b_pnr);
 	_prog_name_sptr->set_justification (0.5f, 0, false);
+	_prog_name_sptr->set_mag (_mag_pna, _mag_pna);
+	_prog_name_sptr->set_bold (_b_pna, _b_pna);
 	_bank_nbr_sptr->set_justification (1.0f, 0, true);
+	_bank_nbr_sptr->set_mag (_mag_bnk, _mag_bnk);
 	_bank_name_sptr->set_justification (1.0f, 0, true);
+	_bank_name_sptr->set_mag (_mag_bnk, _mag_bnk);
 	_param_unit_sptr->set_justification (1.0f, 0, false);
 	_param_val_sptr->set_justification (1.0f, 0, false);
 	_ip_sptr->set_justification (0.5f, 1.0f, false);
@@ -154,38 +159,46 @@ void	ProgCur::do_connect (Model &model, const View &view, PageMgrInterface &page
 		_ip_sptr->set_text (_ip_addr);
 	}
 
-	_prog_nbr_sptr->set_font (fnt._m);
-	_prog_name_sptr->set_font (fnt._l);
-	_bank_nbr_sptr->set_font (fnt._s);
-	_bank_name_sptr->set_font (fnt._s);
-	_fx_name_sptr->set_font (fnt._s);
-	_param_unit_sptr->set_font (fnt._s);
-	_param_name_sptr->set_font (fnt._s);
-	_param_val_sptr->set_font (fnt._s);
-	_modlist_sptr->set_font (fnt._s);
+	_prog_nbr_sptr->set_font (fnt.use (_t_pnr));
+	_prog_name_sptr->set_font (fnt.use (_t_pna));
+	_bank_nbr_sptr->set_font (fnt.use (_t_bnk));
+	_bank_name_sptr->set_font (fnt.use (_t_bnk));
+	_fx_name_sptr->set_font (fnt.use (_t_par));
+	_param_unit_sptr->set_font (fnt.use (_t_par));
+	_param_name_sptr->set_font (fnt.use (_t_par));
+	_param_val_sptr->set_font (fnt.use (_t_par));
+	_modlist_sptr->set_font (fnt.use (_t_par));
 	_ip_sptr->set_font (fnt._m);
 
-	const int      bl_s  = fnt._s.get_baseline ();
-	const int      bl_m  = fnt._m.get_baseline ();
-	const int      h_s   = fnt._s.get_char_h ();
-	const int      h_l   = fnt._l.get_char_h ();
+	const int      h_pna  = fnt.use (_t_pna).get_char_h ();
+	const int      bl_pnr = fnt.use (_t_pnr).get_baseline ();
+	const int      h_bnk  = fnt.use (_t_bnk).get_char_h ();
+	const int      bl_bnk = fnt.use (_t_bnk).get_baseline ();
+	const int      h_par  = fnt.use (_t_par).get_char_h ();
 
 	const int      x_mid = _page_size [0] >> 1;
-	const int      y_prg = std::max (bl_m * _mag_prog_nbr, h_s + bl_s );
+	const int      y_prg =
+		std::max (bl_pnr * _mag_pnr_y, (h_bnk + bl_bnk) * _mag_bnk);
 	_size_max_bank_name =
 		_page_size [0] - _prog_nbr_sptr->get_char_width ('0') * 2;
-	const int      y_pna = y_prg + ( h_l      >> 1);
-	const int      y_fx  = y_pna + ((h_l * 3) >> 1);
+	const int      y_pna = y_prg + ((h_pna *  _mag_pna + _gap_pna ) >> 1);
+	const int      y_fx  = y_pna + ((h_pna * (_mag_pna + _gap_par)) >> 1);
 
-	_prog_nbr_sptr->set_coord (Vec2d (0, 0));
+	_prog_nbr_sptr->set_coord (Vec2d (0, y_prg));
 	_prog_name_sptr->set_coord (Vec2d (x_mid, y_pna));
-	_bank_nbr_sptr->set_coord (Vec2d (_page_size [0], y_prg - h_s));
+	_bank_nbr_sptr->set_coord (Vec2d (_page_size [0], y_prg - h_bnk * _mag_bnk));
 	_bank_name_sptr->set_coord (Vec2d (_page_size [0], y_prg));
-	_fx_name_sptr->set_coord (Vec2d (0, y_fx + h_s));
+#if PV_VERSION == 2
+	_fx_name_sptr->set_coord (Vec2d (0, y_fx));
+	_param_name_sptr->set_coord (Vec2d (0, y_fx + h_par));
+	_param_val_sptr->set_coord (Vec2d (_page_size [0], y_fx + h_par));
+#else
+	_fx_name_sptr->set_coord (Vec2d (0, y_fx + h_par));
 	_param_name_sptr->set_coord (Vec2d (0, y_fx));
-	_param_unit_sptr->set_coord (Vec2d (_page_size [0], y_fx + h_s));
 	_param_val_sptr->set_coord (Vec2d (_page_size [0], y_fx));
-	_modlist_sptr->set_coord (Vec2d (0, y_fx + h_s));
+#endif
+	_param_unit_sptr->set_coord (Vec2d (_page_size [0], y_fx + h_par));
+	_modlist_sptr->set_coord (Vec2d (0, y_fx + h_par));
 	_ip_sptr->set_coord (Vec2d (x_mid, _page_size [1]));
 
 	_page_ptr->push_back (_bank_nbr_sptr);
@@ -400,7 +413,11 @@ void	ProgCur::i_set_param (bool show_flag, int slot_id, int index, float val, Pi
 			*_model_ptr, *_view_ptr, _page_size [0], index, val, slot_id, type,
 			_param_name_sptr.get (), *_param_val_sptr,
 			_param_unit_sptr.get (), _fx_name_sptr.get (),
+#if PV_VERSION == 2
+			true
+#else
 			false
+#endif
 		);
 	}
 }
@@ -583,6 +600,44 @@ std::string ProgCur::get_ip_address ()
 
 	return ip_addr;
 }
+
+
+
+#if PV_VERSION == 2
+
+const int	ProgCur::_mag_pnr_x = 3;
+const int	ProgCur::_mag_pnr_y = 3;
+const int	ProgCur::_mag_pna = 2;
+const int	ProgCur::_mag_bnk = 1;
+const int	ProgCur::_gap_pna = 2;
+const int	ProgCur::_gap_par = 4;
+
+const ProgCur::FontSet::Type	ProgCur::_t_pnr = FontSet::Type_L;
+const ProgCur::FontSet::Type	ProgCur::_t_pna = FontSet::Type_M;
+const ProgCur::FontSet::Type	ProgCur::_t_bnk = FontSet::Type_M;
+const ProgCur::FontSet::Type	ProgCur::_t_par = FontSet::Type_M;
+
+const bool	ProgCur::_b_pnr = false;
+const bool	ProgCur::_b_pna = true;
+
+#else // PV_VERSION 1
+
+const int	ProgCur::_mag_pnr_x = 2;
+const int	ProgCur::_mag_pnr_y = 2;
+const int	ProgCur::_mag_pna = 1;
+const int	ProgCur::_mag_bnk = 1;
+const int	ProgCur::_gap_pna = 0;
+const int	ProgCur::_gap_par = 2;
+
+const ProgCur::FontSet::Type	ProgCur::_t_pnr = FontSet::Type_M;
+const ProgCur::FontSet::Type	ProgCur::_t_pna = FontSet::Type_L;
+const ProgCur::FontSet::Type	ProgCur::_t_bnk = FontSet::Type_S;
+const ProgCur::FontSet::Type	ProgCur::_t_par = FontSet::Type_S;
+
+const bool	ProgCur::_b_pnr = true;
+const bool	ProgCur::_b_pna = false;
+
+#endif // PV_VERSION
 
 
 

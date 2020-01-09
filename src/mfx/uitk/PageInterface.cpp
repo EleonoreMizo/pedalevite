@@ -53,6 +53,24 @@ PageInterface::FontSet::FontSet (const ui::Font &fnt_t, const ui::Font &fnt_s, c
 
 
 
+const ui::Font &	PageInterface::FontSet::use (Type t) const
+{
+	switch (t)
+	{
+	case Type_T: return _t;
+	case Type_S: return _s;
+	case Type_M: break;
+	case Type_L: return _l;
+	default:
+		assert (false);
+		break;
+	}
+
+	return _m;
+}
+
+
+
 void	PageInterface::connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (page.get_nbr_nodes () == 0);

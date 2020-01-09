@@ -110,8 +110,6 @@ private:
 		Entry_NBR_ELT
 	};
 
-	static const int  _mag_prog_nbr = 2;
-
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	void           i_set_bank_nbr (int index);
@@ -153,6 +151,22 @@ private:
 	std::chrono::microseconds
 	               _tempo_date;
 	int            _esc_count;
+
+	// Presentation constants
+	static const int  _mag_pnr_x;
+	static const int  _mag_pnr_y;
+	static const int  _mag_pna;
+	static const int  _mag_bnk;
+	static const int  _gap_pna;
+	static const int  _gap_par;
+
+	static const FontSet::Type _t_pnr;
+	static const FontSet::Type _t_pna;
+	static const FontSet::Type _t_bnk;
+	static const FontSet::Type _t_par;
+
+	static const bool _b_pnr;
+	static const bool _b_pna;
 
 
 

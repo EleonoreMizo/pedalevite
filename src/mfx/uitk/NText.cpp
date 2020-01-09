@@ -322,7 +322,7 @@ void	NText::update_content ()
 		);
 		if (_baseline_flag)
 		{
-			_origin [1] = -_font_ptr->get_baseline ();
+			_origin [1] = -_font_ptr->get_baseline () * _mag_arr [1];
 		}
 
 		// Margins from the top-left corner
