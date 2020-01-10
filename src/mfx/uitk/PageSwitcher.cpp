@@ -83,7 +83,6 @@ void	PageSwitcher::call_page (pg::PageType page_id, void *usr_ptr, int node_id)
 
 
 
-// Returns the original node
 void	PageSwitcher::return_page ()
 {
 	assert (! _call_stack.empty ());
@@ -91,6 +90,24 @@ void	PageSwitcher::return_page ()
 	const PagePos        page_pos = _call_stack.back ();
 	_call_stack.pop_back ();
 	switch_to (page_pos._page_id, page_pos._usr_ptr, page_pos._node_id);
+}
+
+
+
+int	PageSwitcher::get_return_node () const
+{
+	int            node_id = -1;
+
+	if (_call_stack.empty ())
+	{
+		assert (false);
+	}
+	else
+	{
+		return _call_stack.back ()._node_id;
+	}
+
+	return node_id;
 }
 
 

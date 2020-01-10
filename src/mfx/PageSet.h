@@ -68,6 +68,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/SlotMenu.h"
 #include "mfx/uitk/pg/SlotMove.h"
 #include "mfx/uitk/pg/SlotRouting.h"
+#include "mfx/uitk/pg/SlotRoutingAction.h"
 #include "mfx/uitk/pg/Tuner.h"
 #include "mfx/uitk/Page.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -93,8 +94,6 @@ public:
 	explicit       PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, const CmdLine &cmd_line, adrv::DriverInterface &snd_drv);
 	virtual        ~PageSet () = default;
 
-	void           list_plugins ();
-
 	uitk::Page &   use_page_mgr ();
 	uitk::PageSwitcher &
 	               use_page_switcher ();
@@ -118,10 +117,6 @@ private:
 	ui::Font       _fnt_6x6;
 	ui::Font       _fnt_4x6;
 
-	std::vector <std::string>  // Audio plug-ins, at least 1 audio in and 1 audio out
-	               _pi_aud_type_list;
-	std::vector <std::string>  // Signal generators, (0 in or 0 out) and at least 1 signal output
-	               _pi_sig_type_list;
 	std::vector <uitk::pg::CtrlSrcNamed>
 	               _csn_list;
 
@@ -210,6 +205,8 @@ private:
 	               _page_rec2disk;
 	uitk::pg::SlotRouting
 	               _page_slot_routing;
+	uitk::pg::SlotRoutingAction
+	               _page_slot_rout_action;
 
 
 

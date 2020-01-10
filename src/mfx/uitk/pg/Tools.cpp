@@ -434,8 +434,8 @@ std::vector <CtrlSrcNamed>	Tools::make_port_list (const Model &model, const View
 	std::vector <CtrlSrcNamed> port_list;
 	port_list.reserve (preset._port_map.size ());
 
-	const std::vector <NodeEntry>   entry_list =
-		Tools::extract_slot_list (preset, model);
+	std::vector <NodeEntry>   entry_list;
+	Tools::extract_slot_list (entry_list, preset, model);
 
 	for (const auto &node_port : preset._port_map)
 	{
@@ -527,20 +527,20 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 	assert (dir != 0);
 
 	const doc::Preset &  preset = view.use_preset_cur ();
-	const int      chain_size = int (preset._routing._chain.size ());
+	int            audio_size = int (view.use_slot_list_aud ().size ());
 
 	int            chain_pos = -1;
 	if (chain_flag)
 	{
 		if (slot_id >= 0)
 		{
-			chain_pos = find_chain_index (preset, slot_id);
+			chain_pos = find_linear_index_audio_graph (view, slot_id);
 			assert (chain_pos >= 0);
-			assert (chain_pos <= chain_size);
+			assert (chain_pos <= audio_size);
 		}
 		else
 		{
-			chain_pos = chain_size;
+			chain_pos = audio_size;
 		}
 	}
 
@@ -575,10 +575,17 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 	// We need to add a slot at the end?
 	if (pi_index != nbr_types)
 	{
-		if (chain_flag && chain_pos == chain_size)
+		if (chain_flag && chain_pos == audio_size)
 		{
 			slot_id = model.add_slot ();
-			model.insert_slot_in_chain (chain_size, slot_id);
+
+			doc::Routing   routing = preset.use_routing (); // Makes a copy
+			ToolsRouting::insert_slot_before (
+				routing._cnx_audio_set,
+				slot_id,
+				-1
+			);
+			model.set_routing (routing);
 		}
 		else if (! chain_flag && slot_id < 0)
 		{
@@ -599,17 +606,42 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 	// Last slot needs to be removed?
 	if (pi_index == nbr_types)
 	{
-		if (chain_flag && chain_pos == chain_size - 1)
+		if (chain_flag && chain_pos == audio_size - 1)
 		{
-			int            chain_size_new = chain_size;
+			/*
+			We remove the last slot(s) only if all these conditions are met:
+				- Their output is connected to the audio output
+				- There is only one input on pin #0
+			So the slot can be assumed as neutral in the audio graph.
+			*/
+			bool           del_flag = false;
 			do
 			{
-				-- chain_size_new;
-				const int   rem_slot_id = preset._routing._chain [chain_size_new];
-				model.erase_slot_from_chain (chain_size_new);
-				model.remove_slot (rem_slot_id);
+				const ToolsRouting::NodeMap & graph = view.use_graph ();
+				del_flag = (
+					   preset.is_slot_empty (slot_id)
+					&& ToolsRouting::is_slot_last_and_neutral (graph, slot_id)
+				);
+				if (del_flag)
+				{
+					doc::Routing   routing = preset.use_routing (); // Copy
+					ToolsRouting::disconnect_slot (routing._cnx_audio_set, slot_id);
+					model.set_routing (routing);
+					model.remove_slot (slot_id);
+					const std::vector <int> &  slot_list_aud =
+						view.use_slot_list_aud ();
+					audio_size = int (slot_list_aud.size ());
+					if (audio_size == 0)
+					{
+						slot_id = -1;
+					}
+					else
+					{
+						slot_id = slot_list_aud.back ();
+					}
+				}
 			}
-			while (chain_size_new > 0 && preset.is_slot_empty (preset._routing._chain [chain_size_new - 1]));
+			while (del_flag && slot_id >= 0);
 			slot_id = -1;
 		}
 		else if (! chain_flag)
@@ -661,6 +693,28 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 			}
 		}
 	}
+}
+
+
+
+// Returns true if data is available (slot not empty)
+// Otherwise data is left as it is
+bool	Tools::get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Preset &prog, Model &model)
+{
+	const bool     exist_flag = ! prog.is_slot_empty (slot_id);
+	if (exist_flag)
+	{
+		const doc::Slot & slot     = prog.use_slot (slot_id);
+		const std::string pi_model = slot._pi_model;
+		const piapi::PluginDescInterface &  pi_desc =
+			model.get_model_desc (pi_model);
+		nbr_i = 1;
+		nbr_o = 1;
+		nbr_s = 0;
+		pi_desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
+	}
+
+	return exist_flag;
 }
 
 
@@ -844,9 +898,14 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 
 
 
-std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &preset, const Model &model)
+int	Tools::extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Preset &preset, const Model &model)
 {
-	std::vector <int> slot_id_list (preset.build_ordered_node_list (true));
+	slot_list.clear ();
+
+	std::vector <int> slot_id_list;
+	const int     audio_len = ToolsRouting::build_ordered_node_list (
+		slot_id_list, true, preset, model.use_aud_pi_list ()
+	);
 	std::map <std::string, int>   type_map;      // [type   ] = count
 	std::map <int, NodeEntry>     instance_map;  // [slot_id] = data
 
@@ -878,7 +937,6 @@ std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &pres
 		instance_map [slot_id] = entry;
 	}
 
-	std::vector <Tools::NodeEntry>   slot_list;
 	for (auto slot_id : slot_id_list)
 	{
 		NodeEntry &    entry = instance_map [slot_id];
@@ -889,7 +947,7 @@ std::vector <Tools::NodeEntry>	Tools::extract_slot_list (const doc::Preset &pres
 		slot_list.push_back (entry);
 	}
 
-	return slot_list;
+	return audio_len;
 }
 
 
@@ -920,21 +978,12 @@ std::string	Tools::build_slot_name_with_index (const NodeEntry &entry)
 
 
 // Returns -1 if not found
-int	Tools::find_chain_index (const doc::Preset &preset, int slot_id)
+int	Tools::find_linear_index_audio_graph (const View &view, int slot_id)
 {
 	assert (slot_id >= 0);
 
-	const int      chain_size = int (preset._routing._chain.size ());
-	int            found_pos  = -1;
-	for (int pos = 0; pos < chain_size && found_pos < 0; ++pos)
-	{
-		if (preset._routing._chain [pos] == slot_id)
-		{
-			found_pos = pos;
-		}
-	}
-
-	return found_pos;
+	const auto &   slot_list_aud = view.use_slot_list_aud ();
+	return ToolsRouting::find_linear_index_audio_graph (slot_list_aud, slot_id);
 }
 
 
@@ -1058,6 +1107,77 @@ void	Tools::print_param_action (std::string &model_name, std::string &param_name
 
 
 
+// nbr_pins == 1: doesn't print the pin index
+// If not known, nbr_pins can be 0.
+void	Tools::print_cnx_name (NText &txtbox, int width, const std::vector <Tools::NodeEntry> &entry_list, piapi::Dir dir, const doc::CnxEnd &cnx_end, const char prefix_0 [], int nbr_pins)
+{
+	assert (width > 0);
+	assert (   cnx_end.get_type () == doc::CnxEnd::Type_IO
+	        || ! entry_list.empty ());
+	assert (dir >= 0);
+	assert (dir < piapi::Dir_NBR_ELT);
+	assert (prefix_0 != 0);
+	assert (nbr_pins >= 0);
+	assert (nbr_pins == 0 || cnx_end.get_pin () < nbr_pins);
+
+	char           txt_0 [255+1];
+
+	const doc::CnxEnd::Type end_type = cnx_end.get_type ();
+	std::string    multilabel;
+	if (end_type == doc::CnxEnd::Type_IO)
+	{
+		multilabel = "Audio ";
+		multilabel += _dir_txt_arr [dir];
+	}
+	else
+	{
+		// Retrieves plug-in name
+		const int      end_slot_id = cnx_end.get_slot_id ();
+		const auto     it_entry    = std::find_if (
+			entry_list.begin (),
+			entry_list.end (),
+			[end_slot_id] (const auto &entry)
+			{
+				return (entry._slot_id == end_slot_id);
+			}
+		);
+		assert (it_entry != entry_list.end ());
+		multilabel = it_entry->_name_multilabel;
+		if (it_entry->_instance_nbr >= 0)
+		{
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), " %d", it_entry->_instance_nbr + 1
+			);
+			multilabel = pi::param::Tools::join_strings_multi (
+				multilabel.c_str (), '\n', "", txt_0
+			);
+		}
+	}
+
+	if (nbr_pins == 1)
+	{
+		txt_0 [0] = '\0';
+	}
+	else
+	{
+		const int      end_pin_idx = cnx_end.get_pin ();
+		fstb::snprintf4all (
+			txt_0, sizeof (txt_0), " - %d", end_pin_idx + 1
+		);
+	}
+	multilabel = pi::param::Tools::join_strings_multi (
+		multilabel.c_str (), '\n', prefix_0, txt_0
+	);
+
+	std::string    txt = pi::param::Tools::print_name_bestfit (
+		width, multilabel.c_str (),
+		txtbox, &NText::get_char_width
+	);
+	txtbox.set_text (txt);
+}
+
+
+
 void	Tools::create_bank_list (TxtArray &bank_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w, bool chk_cur_flag)
 {
 	const int      h_m   = fnt.get_char_h ();
@@ -1177,6 +1297,13 @@ void	Tools::complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height,
 		}
 	}
 }
+
+
+
+std::array <const char *, piapi::Dir_NBR_ELT>	Tools::_dir_txt_arr =
+{{
+	"In", "Out"
+}};
 
 
 

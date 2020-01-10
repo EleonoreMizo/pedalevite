@@ -27,7 +27,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <map>
+#include <set>
 #include <vector>
+
+#include "mfx/doc/Slot.h"
 
 
 
@@ -74,8 +78,15 @@ protected:
 
 private:
 
+	typedef std::set <int> SlotIdSet;
+	typedef std::array <SlotIdSet, 2> SlotIdSetPair;
+	typedef std::map <doc::Slot, SlotIdSet> SlotMap;
+	typedef std::set <SlotIdSetPair> SlotSetPairSet;
+
 	bool           is_prog_eq (const doc::Preset &lhs, const doc::Preset &rhs) const;
-	bool           is_slot_eq (const doc::Slot &lhs, const doc::Slot &rhs) const;
+	void           build_slot_map (SlotMap &slot_map, const doc::Preset &prog) const;
+	bool           merge_slot_maps (SlotSetPairSet &slot_set_pair_set, const SlotMap &slot_map_1, const SlotMap &slot_map_2) const;
+	bool           check_connections (const SlotSetPairSet &slot_set_pair_set, const doc::Preset &lhs, const doc::Preset &rhs) const;
 
 
 

@@ -27,6 +27,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/Cnx.h"
+
+#include <set>
 #include <vector>
 
 
@@ -48,16 +51,22 @@ class Routing
 
 public:
 
+	typedef std::set <Cnx> CnxSet;
+
 	               Routing ()                        = default;
 	               Routing (const Routing &other)    = default;
 	virtual        ~Routing ()                       = default;
 	Routing &      operator = (const Routing &other) = default;
 
+	bool           has_slots () const;
+	bool           is_referencing_slot (int slot_id) const;
+
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
-	std::vector <int>
-	               _chain;
+	static void    build_from_audio_chain (CnxSet &cnx_set, const std::vector <int> &chain);
+
+	CnxSet         _cnx_audio_set;
 
 
 

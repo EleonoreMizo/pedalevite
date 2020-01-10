@@ -26,8 +26,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/doc/Setup.h"
 #include "mfx/Cst.h"
+#include "mfx/ToolsRouting.h"
 #include "mfx/UniqueProgList.h"
 #include "mfx/View.h"
+
+#include <iterator>
 
 #include <cassert>
 
@@ -55,7 +58,7 @@ UniqueProgList::ProgList	UniqueProgList::build (const View &view)
 		for (int prog_cnt = 0; prog_cnt < Cst::_nbr_presets_per_bank; ++prog_cnt)
 		{
 			const doc::Preset &  prog = bank._preset_arr [prog_cnt];
-			if (! prog._slot_map.empty () && ! prog._routing._chain.empty ())
+			if (prog.use_routing ().has_slots ())
 			{
 				bool          eq_flag = false;
 				for (auto &coord : prog_list)
@@ -90,93 +93,175 @@ UniqueProgList::ProgList	UniqueProgList::build (const View &view)
 
 
 
+/*
+Possible strategy:
+
+0. First eliminate neutral slots (empty slot, single-pin i/o) from each
+program. This step is optional.
+
+1. For each program, build a map with [slot] -> slot_id set.
+Requires absolute order on slots.
+We have to handle the case where programs have multiple identical slots (hence
+a set in the map).
+Each slot_id set would contain "similar" slots, not strictly identical to
+allow rounding errors and unsignificant deviations.
+
+2. Try to match slots between both programs through these maps (with the same
+similarity checks) and unify both maps (2 sets of slot_id per entry)
+
+3. Check if all the connections are equivalent in both graphs.
+
+Note (for information, not required here):
+https://en.wikipedia.org/wiki/Graph_isomorphism_problem
+*/
+
 bool	UniqueProgList::is_prog_eq (const doc::Preset &lhs, const doc::Preset &rhs) const
 {
-	const int      nbr_slots_l = int (lhs._routing._chain.size ());
-	const int      nbr_slots_r = int (rhs._routing._chain.size ());
+	SlotMap        slot_map_lhs;
+	SlotMap        slot_map_rhs;
 
-	int            chain_pos_l =  0;
-	int            chain_pos_r =  0;
-	int            slot_id_l   = -1;
-	int            slot_id_r   = -1;
-	while (chain_pos_l < nbr_slots_l || chain_pos_r < nbr_slots_r)
+	// For each program, builds a map with [slot] -> slot_id set.
+	// We have to handle the case where programs have multiple identical slots
+	// (hence a set in the map).
+	// Each slot_id set contains "similar" slots, not strictly identical to
+	// allow rounding errors and unsignificant deviations.
+	build_slot_map (slot_map_lhs, lhs);
+	build_slot_map (slot_map_rhs, rhs);
+
+	// Tries to match slots between both programs through these maps (with
+	// similarity checks) and unifies both maps (2 sets of slot_id per entry)
+	SlotSetPairSet slot_set_pair_set;
+	bool           id_flag =
+		merge_slot_maps (slot_set_pair_set, slot_map_lhs, slot_map_rhs);
+
+	// Checks if all the connections are equivalent in both graphs.
+	if (id_flag)
 	{
-		bool           l_flag = false;
-		if (chain_pos_l < nbr_slots_l)
-		{
-			slot_id_l = lhs._routing._chain [chain_pos_l];
-			if (lhs.is_slot_empty (slot_id_l))
-			{
-				++ chain_pos_l;
-			}
-			else
-			{
-				l_flag = true;
-			}
-		}
-
-		bool            r_flag = false;
-		if (chain_pos_r < nbr_slots_r)
-		{
-			slot_id_r = rhs._routing._chain [chain_pos_r];
-			if (rhs.is_slot_empty (slot_id_r))
-			{
-				++ chain_pos_r;
-			}
-			else
-			{
-				r_flag = true;
-			}
-		}
-
-		if (l_flag && r_flag)
-		{
-			const doc::Slot & slot_l = lhs.use_slot (slot_id_l);
-			const doc::Slot & slot_r = rhs.use_slot (slot_id_r);
-			if (! is_slot_eq (slot_l, slot_r))
-			{
-				return false;
-			}
-
-			++ chain_pos_l;
-			++ chain_pos_r;
-		}
-		else if (   (l_flag && chain_pos_r >= nbr_slots_r)
-		         || (r_flag && chain_pos_l >= nbr_slots_l))
-		{
-			return false;
-		}
+		id_flag = check_connections (slot_set_pair_set, lhs, rhs);
 	}
 
-	return true;
+	if (id_flag)
+	{
+
+
+		/*** To do: what else? _port_map? ***/
+
+
+	}
+
+	return id_flag;
 }
 
 
 
-bool	UniqueProgList::is_slot_eq (const doc::Slot &lhs, const doc::Slot &rhs) const
+void	UniqueProgList::build_slot_map (SlotMap &slot_map, const doc::Preset &prog) const
 {
-	assert (! lhs.is_empty ());
-	assert (! rhs.is_empty ());
+	slot_map.clear ();
 
-	if (lhs._pi_model != rhs._pi_model)
+	for (const auto &vt_slot : prog._slot_map)
 	{
-		return false;
-	}
-
-	for (int type_cnt = 0; type_cnt < PiType_NBR_ELT; ++type_cnt)
-	{
-		const PiType   type = PiType (type_cnt);
-		const doc::PluginSettings &   settings_l =
-			lhs.use_settings (type);
-		const doc::PluginSettings &   settings_r =
-			rhs.use_settings (type);
-		if (! settings_l.is_similar (settings_r))
+		if (! prog.is_slot_empty (vt_slot))
 		{
-			return false;
+			const int         slot_id =  vt_slot.first;
+			const doc::Slot & slot    = *vt_slot.second;
+
+			bool        ins_flag = false;
+			if (! slot_map.empty ())
+			{
+				// Try with the first element >= and the one just <.
+				SlotMap::iterator it = slot_map.lower_bound (slot);
+				if (it != slot_map.end ())
+				{
+					if (it->first.is_similar (slot))
+					{
+						it->second.insert (slot_id);
+						ins_flag = true;
+					}
+				}
+				if (! ins_flag && it != slot_map.begin ())
+				{
+					it = std::prev (it);
+					if (it->first.is_similar (slot))
+					{
+						it->second.insert (slot_id);
+						ins_flag = true;
+					}
+				}
+			}
+			if (! ins_flag)
+			{
+				slot_map [slot].insert (slot_id);
+				ins_flag = true;
+			}
+		}
+	}
+}
+
+
+
+// Returns true is both maps look identical.
+// When returning false, slot_map_m is invalid.
+bool	UniqueProgList::merge_slot_maps (SlotSetPairSet &slot_set_pair_set, const SlotMap &slot_map_1, const SlotMap &slot_map_2) const
+{
+	bool           id_flag = (slot_map_1.size () == slot_map_2.size ());
+
+	slot_set_pair_set.clear ();
+
+	SlotMap::const_iterator it_1 = slot_map_1.begin ();
+	SlotMap::const_iterator it_2 = slot_map_2.begin ();
+	while (id_flag && it_1 != slot_map_1.end ())
+	{
+		if (   ! it_1->first.is_similar (it_2->first)
+		    || it_1->second.size () != it_2->second.size ())
+		{
+			id_flag = false;
+		}
+
+		else
+		{
+			slot_set_pair_set.insert ({{ it_1->second, it_2->second }});
+
+			++ it_1;
+			++ it_2;
 		}
 	}
 
-	return true;
+	return id_flag;
+}
+
+
+
+bool	UniqueProgList::check_connections (const SlotSetPairSet &slot_set_pair_set, const doc::Preset &lhs, const doc::Preset &rhs) const
+{
+	const doc::Routing::CnxSet &  cs_l = lhs.use_routing ()._cnx_audio_set;
+	const doc::Routing::CnxSet &  cs_r = rhs.use_routing ()._cnx_audio_set;
+
+	bool           id_flag = (cs_l.size () == cs_r.size ());
+
+	if (id_flag)
+	{
+		// Builds a more usable map
+		std::map <int, SlotIdSet>  slot_map;
+		for (const auto &ssp : slot_set_pair_set)
+		{
+			for (int slot_id_l : ssp [0])
+			{
+				slot_map [slot_id_l] = ssp [1];
+			}
+		}
+
+		// Check connections
+//		for (const auto &cnx_l : cs_l)
+		{
+
+
+			/*** To do ***/
+
+	
+		}
+	}
+
+	return id_flag;
 }
 
 

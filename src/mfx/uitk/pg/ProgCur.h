@@ -118,8 +118,9 @@ private:
 	void           i_set_prog_name (std::string name);
 	void           i_set_param (bool show_flag, int slot_id, int index, float val, PiType type);
 	void           i_show_mod_list ();
-	void           add_mod_source (std::set <ControlSource> &src_list, const ControlSource &src);
+	void           retrieve_all_unique_mod_src (std::set <ControlSource> &src_list) const;
 
+	static void    add_mod_source (std::set <ControlSource> &src_list, const ControlSource &src);
 	static std::string
 	               get_ip_address ();
 

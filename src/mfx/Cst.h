@@ -47,7 +47,8 @@ class Cst
 
 public:
 
-	static const int  _format_version  =   9;
+	// Saved document format version
+	static const int  _format_version  =  10;
 
 	static const int  _nbr_pedals      =  12;
 	static const int  _nbr_presets_per_bank = 16;

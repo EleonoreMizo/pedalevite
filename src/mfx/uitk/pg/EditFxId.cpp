@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
 #include "mfx/Model.h"
+#include "mfx/View.h"
 
 #include <algorithm>
 
@@ -51,10 +52,8 @@ namespace pg
 
 
 
-EditFxId::EditFxId (PageSwitcher &page_switcher, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
+EditFxId::EditFxId (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_fx_list (fx_list)
-,	_ms_list (ms_list)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
 ,	_page_ptr (0)
@@ -151,8 +150,8 @@ void	EditFxId::handle_menu ()
 		if (_arg_menu._selection == EntryMenu_FX_TYPE)
 		{
 			_arg_fx_type._choice_arr.clear ();
-			add_fx_list (_fx_list);
-			add_fx_list (_ms_list);
+			add_fx_list (_view_ptr->use_pi_aud_list ());
+			add_fx_list (_view_ptr->use_pi_sig_list ());
 			_arg_fx_type._check_set.clear ();
 			_arg_fx_type._selection = 0;
 			if (_param_ptr->_fx_id._location_type == doc::FxId::LocType_CATEGORY)
@@ -202,8 +201,11 @@ void	EditFxId::handle_fx_type ()
 {
 	if (_arg_fx_type._ok_flag)
 	{
+		const std::vector <std::string> &  pi_aud_list =
+			_view_ptr->use_pi_aud_list ();
 		_param_ptr->_fx_id._location_type  = doc::FxId::LocType_CATEGORY;
-		_param_ptr->_fx_id._label_or_model = _fx_list [_arg_fx_type._selection];
+		_param_ptr->_fx_id._label_or_model =
+			pi_aud_list [_arg_fx_type._selection];
 		_param_ptr->_ok_flag               = true;
 		_state = State_NONE;
 		_page_switcher.return_page ();

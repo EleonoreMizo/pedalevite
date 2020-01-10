@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/CnxEnd.h"
+#include "mfx/piapi/Dir.h"
 #include "mfx/uitk/pg/PedalConf.h"
 #include "mfx/uitk/MsgHandlerInterface.h"
 #include "mfx/uitk/PageMgrInterface.h"
@@ -49,6 +51,7 @@ namespace doc
 	class ActionParam;
 	class FxId;
 	class PedalActionGroup;
+	class PedalActionSingleInterface;
 	class PedalboardLayout;
 	class PluginSettings;
 	class Preset;
@@ -105,6 +108,7 @@ public:
 	               make_port_list (const Model &model, const View &view);
 	static int     change_plugin (Model &model, const View &view, int slot_id, int dir, const std::vector <std::string> &fx_list, bool chain_flag);
 	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page);
+	static bool    get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Preset &prog, Model &model);
 
 	static std::string
 	               conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalActionGroup &group, const Model &model, const View &view);
@@ -113,22 +117,25 @@ public:
 	static std::string
 	               conv_pedal_action_to_short_txt (const doc::PedalActionSingleInterface &action, const Model &model, const View &view);
 
-	static std::vector <NodeEntry>
-	               extract_slot_list (const doc::Preset &preset, const Model &model);
+	static int     extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Preset &preset, const Model &model);
 	static std::string
 	               build_slot_name_with_index (const NodeEntry &entry);
-	static int     find_chain_index (const doc::Preset &preset, int slot_id);
+	static int     find_linear_index_audio_graph (const View &view, int slot_id);
 	static std::string
 	               find_fx_type (const doc::FxId &fx_id, const View &view);
 	static std::string
 	               find_fx_type_in_preset (const std::string &label, const doc::Preset &preset);
 	static void    print_param_action (std::string &model_name, std::string &param_name, const doc::ActionParam &param, const Model &model, const View &view);
+	static void    print_cnx_name (NText &txtbox, int width, const std::vector <Tools::NodeEntry> &entry_list, piapi::Dir dir, const doc::CnxEnd &cnx_end, const char prefix_0 [], int nbr_pins);
 
 	static void    create_bank_list (TxtArray &bank_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w, bool chk_cur_flag);
 	static void    create_prog_list (TxtArray &prog_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w);
 
 	static void    draw_curve (std::vector <int32_t> y_arr, uint8_t *disp_ptr, int height, int stride);
 	static void    complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height, int stride);
+
+	static std::array <const char *, piapi::Dir_NBR_ELT>
+	               _dir_txt_arr;
 
 
 

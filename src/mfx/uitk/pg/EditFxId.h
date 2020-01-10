@@ -66,7 +66,7 @@ public:
 		bool           _ok_flag = false; // Output: OK or cancel
 	};
 
-	explicit       EditFxId (PageSwitcher &page_switcher, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list);
+	explicit       EditFxId (PageSwitcher &page_switcher);
 	virtual        ~EditFxId () = default;
 
 
@@ -114,10 +114,6 @@ private:
 	void           add_fx_list (const std::vector <std::string> &fx_list);
 
 	PageSwitcher & _page_switcher;
-	const std::vector <std::string> &
-	               _fx_list;
-	const std::vector <std::string> &
-	               _ms_list;
 	const Model *  _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected

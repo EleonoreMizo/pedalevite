@@ -36,6 +36,7 @@ namespace mfx
 
 
 
+class Model;
 class View;
 
 class LocEdit
@@ -48,14 +49,14 @@ public:
 	               LocEdit ()  = default;
 	virtual        ~LocEdit () = default;
 
-	void           fix_chain_flag (const View &view);
+	void           fix_audio_flag (const View &view, const Model &model);
 
 	int            _slot_id       = -1;          // -1 if none
 	PiType         _pi_type       = PiType_MIX;  // Should always be valid
 	int            _param_index   = -1;          // -1 if none
 	int            _ctrl_index    = -1;          // -1 if none or new. Always 0 for existing direct links
 	bool           _ctrl_abs_flag = true;        // Link or simple modulation
-	bool           _chain_flag    = true;        // When _slot_id is negative, indicates if we should focus on the main processing chain or elsewhere.
+	bool           _audio_flag    = true;        // When _slot_id is negative, indicates if we should focus on the audio processing chain.
 
 
 

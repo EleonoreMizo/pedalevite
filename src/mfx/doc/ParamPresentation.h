@@ -62,10 +62,12 @@ public:
 	ParamPresentation &
 	               operator = (const ParamPresentation &other)        = default;
 
+	bool           operator == (const ParamPresentation &other) const;
+	bool           operator != (const ParamPresentation &other) const;
+	bool           is_similar (const ParamPresentation &other) const;
+
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
-
-	bool           is_similar (const ParamPresentation &other) const;
 
 	DispMode       _disp_mode = DispMode_DEFAULT;
 	float          _ref_beats = -1;  // Parameter time value, in beats. >= 0. May exceed the internal parameter range. Negative = tempo sync not activated for this parameter.
@@ -88,10 +90,15 @@ private:
 
 private:
 
-	bool           operator == (const ParamPresentation &other) const = delete;
-	bool           operator != (const ParamPresentation &other) const = delete;
-
 }; // class ParamPresentation
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const ParamPresentation &lhs, const ParamPresentation &rhs);
 
 
 

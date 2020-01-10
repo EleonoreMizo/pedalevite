@@ -83,6 +83,7 @@ public:
 	explicit       Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device);
 	virtual        ~Central ();
 
+	void           create_plugin_lists ();
 	void           set_callback (CentralCbInterface *cb_ptr);
 
 	// Audio
@@ -126,6 +127,10 @@ public:
 	PluginPool &   use_pi_pool ();
 	const PluginPool &
 	               use_pi_pool () const;
+	const std::vector <std::string> &
+	               use_aud_pi_list () const;
+	const std::vector <std::string> &
+	               use_sig_pi_list () const;
 	std::chrono::microseconds
 	               get_cur_date () const;
 	int            get_dummy_mix_id () const;
@@ -169,6 +174,11 @@ private:
 	conc::LockFreeCell <WaMsg> *
 	               make_reset_msg (int pi_id, bool steady_flag, bool full_flag);
 	void           check_and_get_default_settings (piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model);
+
+	std::vector <std::string>  // Audio plug-ins, at least 1 audio in or 1 audio out
+	               _pi_aud_type_list;
+	std::vector <std::string>  // Signal generators, 0 audio in, 0 audio out, and at least 1 signal output
+	               _pi_sig_type_list;
 
 	conc::CellPool <WaMsg>
 						_msg_pool;

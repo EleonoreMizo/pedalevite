@@ -28,7 +28,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/uitk/pg/ProgEdit.h"
-#include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
@@ -54,10 +53,8 @@ namespace pg
 
 
 
-ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <std::string> &fx_list, const std::vector <std::string> &ms_list)
-:	_fx_list (fx_list)
-,	_ms_list (ms_list)
-,	_page_switcher (page_switcher)
+ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
+:	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
 ,	_model_ptr (0)
 ,	_view_ptr (0)
@@ -76,6 +73,8 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 ,	_save_preset_index (-1)
 ,	_name_param ()
 ,	_slot_id_list ()
+,	_audio_list_len (0)
+,	_spi_flag (false)
 {
 	_prog_name_sptr->set_justification (0.5f, 0, false);
 	_settings_sptr ->set_justification (0.5f, 0, false);
@@ -84,7 +83,6 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 	_ms_list_sptr  ->set_justification (0.5f, 1, false);
 	_settings_sptr ->set_text ("Settings\xE2\x80\xA6");
 	_save_sptr     ->set_text ("Save to\xE2\x80\xA6");
-	_fx_list_sptr  ->set_text ("-----------------");
 	_ms_list_sptr  ->set_text ("-----------------");
 	_prog_name_sptr->set_bold (true, true );
 	_fx_list_sptr  ->set_bold (true, false);
@@ -106,6 +104,8 @@ void	ProgEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
+
+	_spi_flag = false;
 
 	if (_view_ptr->use_setup ()._save_mode != doc::Setup::SaveMode_MANUAL)
 	{
@@ -171,11 +171,19 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_cursor ())
 	{
-		if (   evt.get_cursor () == NodeEvt::Curs_ENTER
-		    && node_id >= 0 && node_id < int (_slot_list.size ()))
+		if (evt.get_cursor () == NodeEvt::Curs_ENTER)
 		{
-			update_loc_edit (node_id);
-			update_rotenc_mapping ();
+		   if (node_id >= 0 && node_id < int (_slot_list.size ()))
+			{
+				update_loc_edit (node_id);
+				update_rotenc_mapping ();
+				set_preset_info ();
+			}
+			else if (node_id >= Entry_WINDOW && _loc_edit._slot_id >= 0)
+			{
+				_loc_edit._slot_id = -1;
+				set_preset_info ();
+			}
 		}
 	}
 
@@ -289,18 +297,9 @@ void	ProgEdit::do_remove_slot (int slot_id)
 
 
 
-void	ProgEdit::do_insert_slot_in_chain (int index, int slot_id)
+void	ProgEdit::do_set_routing (const doc::Routing &routing)
 {
-	fstb::unused (index, slot_id);
-
-	set_preset_info ();
-}
-
-
-
-void	ProgEdit::do_erase_slot_from_chain (int index)
-{
-	fstb::unused (index);
+	fstb::unused (routing);
 
 	set_preset_info ();
 }
@@ -340,12 +339,19 @@ void	ProgEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc
 
 void	ProgEdit::set_preset_info ()
 {
+	if (_spi_flag)
+	{
+		return;
+	}
+
+	_spi_flag = true;
+
 	assert (_fnt_ptr != 0);
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	_slot_id_list = preset.build_ordered_node_list (true);
-
+	update_cached_pi_list ();
 	update_rotenc_mapping ();
+
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
 
 	_prog_name_sptr->set_text (preset._name);
 
@@ -363,15 +369,16 @@ void	ProgEdit::set_preset_info ()
 	nav_list [1]._node_id = Entry_SETTINGS;
 	nav_list [2]._node_id = Entry_SAVE;
 
-	const std::vector <Tools::NodeEntry>   entry_list =
-		Tools::extract_slot_list (preset, *_model_ptr);
+	std::vector <Tools::NodeEntry>   entry_list;
+	Tools::extract_slot_list (entry_list, preset, *_model_ptr);
 	assert (nbr_slots == int (entry_list.size ()));
-	const int      chain_size = int (preset._routing._chain.size ());
+
+	const std::vector <Link>   link_list (find_chain_links (entry_list));
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
 	const int      h_m   = _fnt_ptr->get_char_h ();
-	_ms_list_sptr->set_coord (Vec2d (x_mid, (chain_size + 6) * h_m));
+	_ms_list_sptr->set_coord (Vec2d (x_mid, (_audio_list_len + 6) * h_m));
 
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
@@ -402,17 +409,147 @@ void	ProgEdit::set_preset_info ()
 			}
 		}
 
-		const int      skip     = (slot_index >= chain_size) ? 1 : 0;
+		const char *   prefix_0 = "  ";
+		switch (link_list [slot_index])
+		{
+		case Link_NONE:   /* Nothing */               break;
+		case Link_CHAIN:  prefix_0 = "\xE2\x9A\xAB "; break; // U+26AB MEDIUM BLACK CIRCLE
+		case Link_BRANCH: prefix_0 = "\xE2\x9A\xAC "; break; // U+26AC MEDIUM SMALL WHITE CIRCLE
+		default:          assert (false);             break;
+		}
+		multilabel = pi::param::Tools::join_strings_multi (
+			multilabel.c_str (), '\n', prefix_0, ""
+		);
+
+		const int      skip     = (slot_index >= _audio_list_len) ? 1 : 0;
 		const int      pos_list = slot_index + skip;
-		set_slot (nav_list, pos_list, multilabel, ctrl_flag, chain_size);
+		set_slot (nav_list, pos_list, multilabel, ctrl_flag, _audio_list_len);
 	}
 
-	set_slot (nav_list, chain_size   , "<End>", false, chain_size);
-	set_slot (nav_list, nbr_slots + 1, "<End>", false, chain_size);
+	set_slot (nav_list, _audio_list_len, "  <End>", false, _audio_list_len);
+	set_slot (nav_list, nbr_slots + 1  , "  <End>", false, _audio_list_len);
+
+	if (ToolsRouting::are_audio_io_connected (_view_ptr->use_graph ()))
+	{
+		_fx_list_sptr->set_text ("-----------------");
+	}
+	else
+	{
+		_fx_list_sptr->set_text ("-I/O not linked!-");
+	}
 
 	_page_ptr->set_nav_layout (nav_list);
 
 	_menu_sptr->invalidate_all ();
+
+	_spi_flag = false;
+}
+
+
+
+std::vector <ProgEdit::Link>	ProgEdit::find_chain_links (const std::vector <Tools::NodeEntry> &entry_list) const
+{
+	std::vector <ProgEdit::Link>  link_list (entry_list.size (), Link_NONE);
+
+	if (_loc_edit._slot_id >= 0)
+	{
+		const ToolsRouting::NodeMap & graph = _view_ptr->use_graph ();
+		ToolsRouting::NodeMap::const_iterator  it = graph.find (
+			ToolsRouting::Node (doc::CnxEnd::Type_NORMAL, _loc_edit._slot_id)
+		);
+		if (it != graph.end ())
+		{
+			// The starting point
+			set_link (link_list, _loc_edit._slot_id, Link_CHAIN, entry_list);
+
+			for (int dir = 0; dir < piapi::Dir_NBR_ELT; ++dir)
+			{
+				find_chain_links_dir (
+					link_list,
+					_loc_edit._slot_id,
+					piapi::Dir (dir),
+					entry_list
+				);
+			}
+		}
+	}
+
+	return link_list;
+}
+
+
+
+/*** To do:
+To be decided: should we include in the chain the nodes that merge paths
+(current behaviour) or should we stop the chain at these nodes?
+Actual use-cases will probably tell us on the long term.
+***/
+
+void	ProgEdit::find_chain_links_dir (std::vector <Link> &link_list, int slot_id, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list) const
+{
+	const ToolsRouting::NodeMap & graph = _view_ptr->use_graph ();
+
+	bool        cont_flag = true;
+	do
+	{
+		ToolsRouting::NodeMap::const_iterator  it = graph.find (
+			ToolsRouting::Node (doc::CnxEnd::Type_NORMAL, slot_id)
+		);
+		if (it == graph.end ())
+		{
+			cont_flag = false;
+		}
+		else
+		{
+			std::set <int> slot_id_set;
+			int            nbr_cnx = 0;
+			const auto &   side = it->second [dir];
+			for (auto &pin : side)
+			{
+				for (auto &cnx : pin)
+				{
+					const doc::CnxEnd &  cnx_end = cnx.use_end (dir);
+					const doc::CnxEnd::Type type = cnx_end.get_type ();
+					if (type == doc::CnxEnd::Type_NORMAL)
+					{
+						slot_id = cnx_end.get_slot_id ();
+						slot_id_set.insert (slot_id);
+						++ nbr_cnx;
+					}
+				}
+			}
+
+			Link           link (Link_CHAIN);
+			if (nbr_cnx != 1)
+			{
+				link      = Link_BRANCH;
+				cont_flag = false;
+			}
+
+			for (auto sid_mark : slot_id_set)
+			{
+				set_link (link_list, sid_mark, link, entry_list);
+			}
+		}
+	}
+	while (cont_flag);
+}
+
+
+
+void	ProgEdit::set_link (std::vector <Link> &link_list, int slot_id, Link link, const std::vector <Tools::NodeEntry> &entry_list) const
+{
+	const auto     it = std::find_if (
+		entry_list.begin (),
+		entry_list.end (),
+		[slot_id] (const Tools::NodeEntry &entry)
+		{
+			return (entry._slot_id == slot_id);
+		}
+	);
+	assert (it != entry_list.end ());
+	const int      pos = int (it - entry_list.begin ());
+	link_list [pos] = link;
 }
 
 
@@ -450,19 +587,23 @@ MsgHandlerInterface::EvtProp	ProgEdit::change_effect (int node_id, int dir)
 
 	_model_ptr->reset_all_overridden_param_ctrl ();
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const int      chain_size   = int (preset._routing._chain.size ());
-	_loc_edit._chain_flag = (node_id <= chain_size);
-	const int      slot_id      = conv_node_id_to_slot_id (node_id);
+	_loc_edit._audio_flag = (node_id <= _audio_list_len);
+
+	const std::vector <std::string> &   pi_list =
+		  (_loc_edit._audio_flag)
+		? _view_ptr->use_pi_aud_list ()
+		: _view_ptr->use_pi_sig_list ();
+	const int      slot_id = conv_node_id_to_slot_id (node_id);
 	Tools::change_plugin (
 		*_model_ptr,
 		*_view_ptr,
 		slot_id,
 		dir,
-		(_loc_edit._chain_flag) ? _fx_list : _ms_list,
-		_loc_edit._chain_flag
+		pi_list,
+		_loc_edit._audio_flag
 	);
 
+	update_cached_pi_list ();
 	update_rotenc_mapping ();
 
 	return EvtProp_CATCH;
@@ -473,8 +614,15 @@ MsgHandlerInterface::EvtProp	ProgEdit::change_effect (int node_id, int dir)
 void	ProgEdit::update_loc_edit (int node_id)
 {
 	_loc_edit._slot_id = conv_node_id_to_slot_id (
-		node_id, _loc_edit._chain_flag
+		node_id, _loc_edit._audio_flag
 	);
+}
+
+
+
+void	ProgEdit::update_cached_pi_list ()
+{
+	_audio_list_len = _view_ptr->build_ordered_node_list (_slot_id_list, true);
 }
 
 
@@ -511,18 +659,15 @@ int	ProgEdit::conv_node_id_to_slot_id (int node_id, bool &chain_flag) const
 {
 	int            slot_id = -1;
 
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const int      chain_size   = int (preset._routing._chain.size ());
-
-	if (node_id >= 0 && node_id <= chain_size)
+	if (node_id >= 0 && node_id <= _audio_list_len)
 	{
-		if (node_id < chain_size)
+		if (node_id < _audio_list_len)
 		{
 			slot_id = _slot_id_list [node_id];
 		}
 		chain_flag = true;
 	}
-	else if (node_id > chain_size && node_id <= int (_slot_list.size ()) - 1)
+	else if (node_id > _audio_list_len && node_id <= int (_slot_list.size ()) - 1)
 	{
 		if (node_id < int (_slot_list.size ()) - 1)
 		{
@@ -547,11 +692,8 @@ int	ProgEdit::conv_loc_edit_to_node_id () const
 		);
 		if (it_slot_id != _slot_id_list.end ())
 		{
-			const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-			const int      chain_size   = int (preset._routing._chain.size ());
-
 			int         pos = int (it_slot_id - _slot_id_list.begin ());
-			if (pos >= chain_size)
+			if (pos >= _audio_list_len)
 			{
 				++ pos;
 			}

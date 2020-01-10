@@ -382,6 +382,10 @@
     <ClInclude Include="..\..\..\src\mfx\doc\ActionType.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\Bank.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\CatalogPluginSettings.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\Cnx.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\Cnx.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\doc\CnxEnd.h" />
+    <ClInclude Include="..\..\..\src\mfx\doc\CnxEnd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\doc\CtrlLink.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\CtrlLinkSet.h" />
     <ClInclude Include="..\..\..\src\mfx\doc\FxId.h" />
@@ -702,6 +706,8 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
+    <ClInclude Include="..\..\..\src\mfx\ToolsRouting.h" />
+    <ClInclude Include="..\..\..\src\mfx\ToolsRouting.hpp" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimBox.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimLine.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderCtx.h" />
@@ -709,6 +715,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRouting.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\FontMapping8859.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h" />
@@ -1105,7 +1112,10 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\DelayInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Document.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Algo.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\GraphInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp" />
@@ -1133,6 +1143,11 @@
     <ClCompile Include="..\..\..\src\mfx\doc\ActionTrigger.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Bank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CatalogPluginSettings.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\doc\Cnx.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\CnxEnd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CtrlLink.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CtrlLinkSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\FxId.cpp" />
@@ -1393,6 +1408,7 @@
     <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProgSwitcher.cpp" />
     <ClCompile Include="..\..\..\src\mfx\RecD2d.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\ToolsRouting.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginDescInterface.cpp" />
@@ -1481,6 +1497,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgSave.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SettingsOther.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRouting.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools.cpp">
       <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>

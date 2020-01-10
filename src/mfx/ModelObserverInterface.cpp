@@ -272,21 +272,9 @@ void	ModelObserverInterface::remove_slot (int slot_id)
 
 
 
-void	ModelObserverInterface::insert_slot_in_chain (int index, int slot_id)
+void	ModelObserverInterface::set_routing (const doc::Routing &routing)
 {
-	assert (index >= 0);
-	assert (slot_id >= 0);
-
-	do_insert_slot_in_chain (index, slot_id);
-}
-
-
-
-void	ModelObserverInterface::erase_slot_from_chain (int index)
-{
-	assert (index >= 0);
-
-	do_erase_slot_from_chain (index);
+	do_set_routing (routing);
 }
 
 

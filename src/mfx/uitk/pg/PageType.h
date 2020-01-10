@@ -82,6 +82,7 @@ enum PageType
 	PageType_PROG_CATALOG,
 	PageType_REC2DISK,
 	PageType_SLOT_ROUTING,
+	PageType_SLOT_ROUT_ACTION,
 
 	PageType_NBR_ELT
 

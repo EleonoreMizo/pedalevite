@@ -33,8 +33,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SignalPort.h"
 #include "mfx/doc/Slot.h"
 
-#include <memory>
 #include <map>
+#include <memory>
 #include <vector>
 
 
@@ -68,18 +68,19 @@ public:
 
 	bool           is_slot_empty (int slot_id) const;
 	bool           is_slot_empty (SlotMap::const_iterator it) const;
+	bool           is_slot_empty (SlotMap::value_type vt) const;
 	Slot &         use_slot (int slot_id);
 	const Slot &   use_slot (int slot_id) const;
 	int            gen_slot_id () const;
 	int            find_free_port () const;
-	std::vector <int>
-	               build_ordered_node_list (bool chain_first_flag) const;
+	bool           check_new_routing (const Routing &routing) const;
+	void           set_routing (const Routing &routing);
+	const Routing& use_routing () const;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 
 	SlotMap        _slot_map;
-	Routing        _routing;
 	std::string    _name;
 	PedalboardLayout
 	               _layout;
@@ -99,6 +100,9 @@ protected:
 private:
 
 	void           duplicate_slot_list ();
+	bool           check_routing_cnx_audio_end (const CnxEnd &cnx_end) const;
+
+	Routing        _routing;
 
 
 

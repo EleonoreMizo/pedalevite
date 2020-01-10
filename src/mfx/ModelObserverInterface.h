@@ -118,8 +118,7 @@ public:
 	void           set_param_beats (int slot_id, int index, float beats);
 	void           add_slot (int slot_id);
 	void           remove_slot (int slot_id);
-	void           insert_slot_in_chain (int index, int slot_id);
-	void           erase_slot_from_chain (int index);
+	void           set_routing (const doc::Routing &routing);
 	void           set_slot_label (int slot_id, std::string name);
 	void           set_plugin (int slot_id, const PluginInitData &pi_data);
 	void           remove_plugin (int slot_id);
@@ -164,8 +163,7 @@ protected:
 	virtual void   do_set_param_beats (int slot_index, int index, float beats) = 0;
 	virtual void   do_add_slot (int slot_id) = 0;
 	virtual void   do_remove_slot (int slot_id) = 0;
-	virtual void   do_insert_slot_in_chain (int index, int slot_id) = 0;
-	virtual void   do_erase_slot_from_chain (int index) = 0;
+	virtual void   do_set_routing (const doc::Routing &routing) = 0;
 	virtual void   do_set_slot_label (int slot_id, std::string name) = 0;
 	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data) = 0;
 	virtual void   do_remove_plugin (int slot_id) = 0;

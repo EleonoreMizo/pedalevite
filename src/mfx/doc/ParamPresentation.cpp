@@ -44,6 +44,39 @@ namespace doc
 
 
 
+bool	ParamPresentation::operator == (const ParamPresentation &other) const
+{
+	return (
+		   _disp_mode == other._disp_mode
+		&& _ref_beats == other._ref_beats
+	);
+}
+
+
+
+bool	ParamPresentation::operator != (const ParamPresentation &other) const
+{
+	return ! (*this == other);
+}
+
+
+
+bool	ParamPresentation::is_similar (const ParamPresentation &other) const
+{
+	const float    tol = 1e-5f;
+
+	bool           same_flag = (_disp_mode == other._disp_mode);
+	same_flag &= (_ref_beats * other._ref_beats >= 0);
+	if (same_flag && _ref_beats >= 0)
+	{
+		same_flag = fstb::is_eq_rel (_ref_beats, other._ref_beats, tol);
+	}
+
+	return same_flag;
+}
+
+
+
 void	ParamPresentation::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();
@@ -68,27 +101,28 @@ void	ParamPresentation::ser_read (SerRInterface &ser)
 
 
 
-bool	ParamPresentation::is_similar (const ParamPresentation &other) const
-{
-	const float    tol = 1e-5f;
-
-	bool           same_flag = (_disp_mode == other._disp_mode);
-	same_flag &= (_ref_beats * other._ref_beats >= 0);
-	if (same_flag && _ref_beats >= 0)
-	{
-		same_flag = fstb::is_eq_rel (_ref_beats, other._ref_beats, tol);
-	}
-
-	return same_flag;
-}
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const ParamPresentation &lhs, const ParamPresentation &rhs)
+{
+	if (lhs._disp_mode < rhs._disp_mode) { return true; }
+	else if (lhs._disp_mode == rhs._disp_mode)
+	{
+		return (lhs._ref_beats < rhs._ref_beats);
+	}
+
+	return false;
+}
 
 
 

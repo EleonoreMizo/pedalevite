@@ -25,9 +25,14 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/LocEdit.h"
+#include "mfx/Model.h"
+#include "mfx/ToolsRouting.h"
 #include "mfx/View.h"
 
 #include <algorithm>
+#include <set>
+#include <string>
+#include <vector>
 
 #include <cassert>
 
@@ -42,22 +47,34 @@ namespace mfx
 
 
 
-// When the plug-in type has changed (with possible return or removal from
-// the slot)
-void	LocEdit::fix_chain_flag (const View &view)
+// When _slot_id becomes valid again, the audio flag must be updated.
+void	LocEdit::fix_audio_flag (const View &view, const Model &model)
 {
 	if (_slot_id >= 0)
 	{
-		const doc::Preset &  preset  = view.use_preset_cur ();
-		const auto           it_slot = preset._slot_map.find (_slot_id);
-		if (it_slot != preset._slot_map.end ())
+		const doc::Preset &  prog    = view.use_preset_cur ();
+		const auto           it_slot = prog._slot_map.find (_slot_id);
+		if (it_slot != prog._slot_map.end ())
 		{
-			auto          it = std::find (
-				preset._routing._chain.begin (),
-				preset._routing._chain.end (),
+			ToolsRouting::NodeMap   graph;
+			ToolsRouting::build_node_graph (
+				graph, prog.use_routing ()._cnx_audio_set
+			);
+			const std::vector <std::string> &   aud_pi_list =
+				model.use_aud_pi_list ();
+			std::set <std::string> aud_pi_set;
+			aud_pi_set.insert (aud_pi_list.begin (), aud_pi_list.end ());
+			std::vector <int> list_aud;
+			std::vector <int> list_sig;
+			ToolsRouting::build_ordered_node_lists (
+				list_aud, list_sig, prog, graph, aud_pi_set
+			);
+			const auto     it = std::find (
+				list_aud.begin (),
+				list_aud.end (),
 				_slot_id
 			);
-			_chain_flag = (it != preset._routing._chain.end ());
+			_audio_flag = (it != list_aud.end ());
 		}
 	}
 }

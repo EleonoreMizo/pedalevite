@@ -351,10 +351,11 @@ fprintf (stderr, "Reading ESC button...\n");
 	);
 
 	// Lists public plug-ins
-	_page_set.list_plugins ();
+	_model.create_plugin_lists ();
 
 	_model.set_observer (&_view);
 	_view.add_observer (*this);
+	_view.set_pi_lists (_model.use_aud_pi_list (), _model.use_sig_pi_list ());
 
 	const int      ret_val = _model.load_from_disk ();
 	if (ret_val != 0)

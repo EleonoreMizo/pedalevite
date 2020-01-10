@@ -62,6 +62,10 @@ public:
 	PluginSettings &
 	               operator = (const PluginSettings &other)     = default;
 
+	bool           operator == (const PluginSettings &other) const;
+	bool           operator != (const PluginSettings &other) const;
+	bool           is_similar (const PluginSettings &other) const;
+
 	CtrlLinkSet &  use_ctrl_link_set (int index);
 	const CtrlLinkSet &
 	               use_ctrl_link_set (int index) const;
@@ -77,8 +81,6 @@ public:
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser, std::string model_id);
-
-	bool           is_similar (const PluginSettings &other) const;
 
 	bool           _force_mono_flag  = false;
 	bool           _force_reset_flag = false;
@@ -104,10 +106,15 @@ private:
 
 private:
 
-	bool           operator == (const PluginSettings &other) const = delete;
-	bool           operator != (const PluginSettings &other) const = delete;
-
 }; // class PluginSettings
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const PluginSettings &lhs, const PluginSettings &rhs);
 
 
 

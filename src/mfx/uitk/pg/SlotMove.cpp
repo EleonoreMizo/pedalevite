@@ -161,14 +161,7 @@ void	SlotMove::do_remove_slot (int slot_id)
 
 
 
-void	SlotMove::do_insert_slot_in_chain (int /*index*/, int /*slot_id*/)
-{
-	update_display ();
-}
-
-
-
-void	SlotMove::do_erase_slot_from_chain (int /*index*/)
+void	SlotMove::do_set_routing (const doc::Routing &/*routing*/)
 {
 	update_display ();
 }
@@ -185,21 +178,20 @@ void	SlotMove::update_display ()
 	const int      scr_w = _page_size [0];
 
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const std::vector <Tools::NodeEntry>   entry_list =
-		Tools::extract_slot_list (preset, *_model_ptr);
+	std::vector <Tools::NodeEntry>   entry_list;
+	const int      audio_size =
+		Tools::extract_slot_list (entry_list, preset, *_model_ptr);
+	assert (audio_size <= int (entry_list.size ()));
 
-	const int      chain_size = int (preset._routing._chain.size ());
-	assert (chain_size <= int (entry_list.size ()));
 	PageMgrInterface::NavLocList nav_list;
 	_menu_sptr->clear_all_nodes ();
 	_slot_list.clear ();
 
 	int            pos_sel = -1;
-	for (int pos = 0; pos < chain_size; ++pos)
+	for (int pos = 0; pos < audio_size; ++pos)
 	{
 		const Tools::NodeEntry &   entry = entry_list [pos];
 		const int      slot_id = entry._slot_id;
-		assert (slot_id == preset._routing._chain [pos]);
 		if (slot_id == _loc_edit._slot_id)
 		{
 			pos_sel = pos;
@@ -222,7 +214,7 @@ void	SlotMove::update_display ()
 
 	if (pos_sel >= 0)
 	{
-		for (int pos = 0; pos < chain_size; ++pos)
+		for (int pos = 0; pos < audio_size; ++pos)
 		{
 			PageMgrInterface::add_nav (nav_list, pos);
 		}
@@ -243,12 +235,25 @@ MsgHandlerInterface::EvtProp	SlotMove::move_slot (int pos)
 
 	EvtProp        ret_val = EvtProp_PASS;
 
-	const int      pos_old = conv_loc_edit_to_chain_pos ();
+	const int      pos_old = conv_loc_edit_to_linear_pos ();
 	if (pos_old >= 0 && pos_old != pos)
 	{
 		_moving_flag = true;
-		_model_ptr->erase_slot_from_chain (pos_old);
-		_model_ptr->insert_slot_in_chain (pos, _loc_edit._slot_id);
+
+		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+		doc::Routing   routing      = preset.use_routing (); // Copy
+		const ToolsRouting::NodeMap & graph      = _view_ptr->use_graph ();
+		const std::vector <int> &  slot_list_aud =
+			_view_ptr->use_slot_list_aud ();
+		ToolsRouting::move_slot (
+			routing._cnx_audio_set,
+			_loc_edit._slot_id,
+			pos,
+			slot_list_aud,
+			graph
+		);
+		_model_ptr->set_routing (routing);
+
 		_moving_flag = false;
 
 		ret_val = EvtProp_CATCH;
@@ -259,15 +264,16 @@ MsgHandlerInterface::EvtProp	SlotMove::move_slot (int pos)
 
 
 
-// Returns -1 if not in the chain
-int	SlotMove::conv_loc_edit_to_chain_pos () const
+// Returns -1 if not in the graph
+int	SlotMove::conv_loc_edit_to_linear_pos () const
 {
 	int            pos = -1;
 
 	if (_loc_edit._slot_id >= 0)
 	{
-		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-		pos = Tools::find_chain_index (preset, _loc_edit._slot_id);
+		pos = Tools::find_linear_index_audio_graph (
+			*_view_ptr, _loc_edit._slot_id
+		);
 	}
 
 	return pos;

@@ -45,6 +45,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ModelObserverInterface.h"
 #include "mfx/PedalLoc.h"
 #include "mfx/ToolsParam.h"
+#include "mfx/ToolsRouting.h"
 
 #include <algorithm>
 #include <set>
@@ -171,6 +172,13 @@ MeterResultSet &	Model::use_meters ()
 float	Model::get_audio_period_ratio () const
 {
 	return _central.get_audio_period_ratio ();
+}
+
+
+
+void	Model::create_plugin_lists ()
+{
+	_central.create_plugin_lists ();
 }
 
 
@@ -721,13 +729,27 @@ void	Model::remove_slot (int slot_id)
 	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
 
 	// Removes the slot from the routing
-	const auto     it_beg = _preset_cur._routing._chain.begin ();
-	const auto     it_end = _preset_cur._routing._chain.end ();
-	const auto     it_cur = std::find (it_beg, it_end, slot_id);
-	if (it_cur != it_end)
+	doc::Routing   routing     = _preset_cur.use_routing (); // Makes a copy
+	bool           change_flag = false;
+
+	auto           it     = routing._cnx_audio_set.begin ();
+	const auto     it_end = routing._cnx_audio_set.end ();
+	while (it != it_end)
 	{
-		const int     index = int (it_cur - it_beg);
-		erase_slot_from_chain (index);
+		if (it->has_slot_id (slot_id))
+		{
+			it = routing._cnx_audio_set.erase (it);
+			change_flag = true;
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	if (change_flag)
+	{
+		set_routing (routing);
 	}
 
 	// Kills the plug-in
@@ -748,47 +770,15 @@ void	Model::remove_slot (int slot_id)
 
 
 
-void	Model::insert_slot_in_chain (int index, int slot_id)
+void	Model::set_routing (const doc::Routing &routing)
 {
-	assert (index >= 0);
-	assert (index <= int (_preset_cur._routing._chain.size ()));
-	assert (slot_id >= 0);
-	assert (_preset_cur._slot_map.find (slot_id) != _preset_cur._slot_map.end ());
-	assert (std::find (
-		_preset_cur._routing._chain.begin (),
-		_preset_cur._routing._chain.end (),
-		slot_id
-	) == _preset_cur._routing._chain.end ());
-
-	_preset_cur._routing._chain.insert (
-		_preset_cur._routing._chain.begin () + index,
-		slot_id
-	);
+	_preset_cur.set_routing (routing);
 
 	update_layout ();
 
 	if (_obs_ptr != 0)
 	{
-		_obs_ptr->insert_slot_in_chain (index, slot_id);
-	}
-}
-
-
-
-void	Model::erase_slot_from_chain (int index)
-{
-	assert (index >= 0);
-	assert (index < int (_preset_cur._routing._chain.size ()));
-
-	_preset_cur._routing._chain.erase (
-		_preset_cur._routing._chain.begin () + index
-	);
-
-	update_layout ();
-
-	if (_obs_ptr != 0)
-	{
-		_obs_ptr->erase_slot_from_chain (index);
+		_obs_ptr->set_routing (routing);
 	}
 }
 
@@ -1388,6 +1378,20 @@ std::vector <std::string>	Model::list_plugin_models () const
 
 
 
+const std::vector <std::string> &	Model::use_aud_pi_list () const
+{
+	return _central.use_aud_pi_list ();
+}
+
+
+
+const std::vector <std::string> &	Model::use_sig_pi_list () const
+{
+	return _central.use_sig_pi_list ();
+}
+
+
+
 const piapi::PluginDescInterface &	Model::get_model_desc (std::string model_id) const
 {
 	return _central.use_pi_pool ().get_model_desc (model_id);
@@ -1690,16 +1694,17 @@ void	Model::apply_settings_normal ()
 
 	_central.set_prog_switch_mode (_preset_cur._prog_switch_mode);
 
-	// Chain last, other plug-ins before
-	const std::vector <int> onl = _preset_cur.build_ordered_node_list (false);
+	// Audio graph last, signal plug-ins before
+	std::vector <int> onl;
+	const int      audio_pos = ToolsRouting::build_ordered_node_list (
+		onl, false, _preset_cur, use_aud_pi_list ()
+	);
 	const int      nbr_slots = int (onl.size ());
-	const int      chain_pos =
-		nbr_slots - int (_preset_cur._routing._chain.size ());
 
 	int            slot_index_central = 0;
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
-		const bool     chain_flag = (slot_index >= chain_pos);
+		const bool     audio_flag = (slot_index >= audio_pos);
 		const int      slot_id    = onl [slot_index];
 		auto           it_id_map  =
 			_pi_id_map.insert (std::make_pair (slot_id, SlotPiId ())).first;
@@ -1719,11 +1724,11 @@ void	Model::apply_settings_normal ()
 			int            nbr_o = 1;
 			int            nbr_s = 0;
 			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
-			const bool     gen_audio_flag = (chain_flag && nbr_o > 0);
+			const bool     gen_audio_flag = (audio_flag && nbr_o > 0);
 
 			// Check first if we need a mixer plug-in.
 			// Updates the parameters
-			check_mixer_plugin (slot_id, slot_index_central, chain_flag);
+			check_mixer_plugin (slot_id, slot_index_central, audio_flag);
 
 			// Now the main plug-in
 			int            pi_id = insert_plugin_main (
@@ -2967,7 +2972,10 @@ void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int
 void	Model::add_default_ctrl (int selected_slot_id)
 {
 	// First, lists the slots in the processing order
-	std::vector <int> slot_id_list (_preset_cur.build_ordered_node_list (true));
+	std::vector <int> slot_id_list;
+	ToolsRouting::build_ordered_node_list (
+		slot_id_list, true, _preset_cur, use_aud_pi_list ()
+	);
 
 	std::set <int> used_pot_set;
 

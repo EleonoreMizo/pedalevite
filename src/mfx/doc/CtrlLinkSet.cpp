@@ -67,9 +67,27 @@ CtrlLinkSet &  CtrlLinkSet::operator = (const CtrlLinkSet &other)
 
 
 
-bool	CtrlLinkSet::is_empty () const
+bool	CtrlLinkSet::operator == (const CtrlLinkSet &other) const
 {
-	return (_bind_sptr.get () == 0 && _mod_arr.empty ());
+	if (   bool (_bind_sptr) != bool (other._bind_sptr)
+	    || _mod_arr != other._mod_arr)
+	{
+		return false;
+	}
+	
+	if (_bind_sptr)
+	{
+		return (*_bind_sptr == *other._bind_sptr);
+	}
+
+	return true;
+}
+
+
+
+bool	CtrlLinkSet::operator != (const CtrlLinkSet &other) const
+{
+	return ! (*this == other);
 }
 
 
@@ -91,6 +109,13 @@ bool	CtrlLinkSet::is_similar (const CtrlLinkSet &other) const
 	}
 
 	return same_flag;
+}
+
+
+
+bool	CtrlLinkSet::is_empty () const
+{
+	return (_bind_sptr.get () == 0 && _mod_arr.empty ());
 }
 
 
@@ -172,6 +197,35 @@ void	CtrlLinkSet::duplicate_children ()
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ GLOBAL OPERATORS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+bool	operator < (const CtrlLinkSet &lhs, const CtrlLinkSet &rhs)
+{
+	if (bool (lhs._bind_sptr) < bool (lhs._bind_sptr)) { return true; }
+	else if (bool (lhs._bind_sptr) == bool (lhs._bind_sptr))
+	{
+		if (lhs._bind_sptr)
+		{
+			if (*lhs._bind_sptr < *rhs._bind_sptr)
+			{
+				return true;
+			}
+			else if (*rhs._bind_sptr < *lhs._bind_sptr)
+			{
+				return false;
+			}
+		}
+
+		return (lhs._mod_arr < rhs._mod_arr);
+	}
+
+	return false;
+}
 
 
 
