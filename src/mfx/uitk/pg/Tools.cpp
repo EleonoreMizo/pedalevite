@@ -697,6 +697,28 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 
 
 
+// Returns true if data is available (slot not empty)
+// Otherwise data is left as it is
+bool	Tools::get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Preset &prog, Model &model)
+{
+	const bool     exist_flag = ! prog.is_slot_empty (slot_id);
+	if (exist_flag)
+	{
+		const doc::Slot & slot     = prog.use_slot (slot_id);
+		const std::string pi_model = slot._pi_model;
+		const piapi::PluginDescInterface &  pi_desc =
+			model.get_model_desc (pi_model);
+		nbr_i = 1;
+		nbr_o = 1;
+		nbr_s = 0;
+		pi_desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
+	}
+
+	return exist_flag;
+}
+
+
+
 std::string	Tools::conv_pedal_conf_to_short_txt (PedalConf &conf, const doc::PedalActionGroup &group, const Model &model, const View &view)
 {
 	std::string    txt = "<Complex>";
@@ -1085,6 +1107,77 @@ void	Tools::print_param_action (std::string &model_name, std::string &param_name
 
 
 
+// nbr_pins == 1: doesn't print the pin index
+// If not known, nbr_pins can be 0.
+void	Tools::print_cnx_name (NText &txtbox, int width, const std::vector <Tools::NodeEntry> &entry_list, piapi::Dir dir, const doc::CnxEnd &cnx_end, const char prefix_0 [], int nbr_pins)
+{
+	assert (width > 0);
+	assert (   cnx_end.get_type () == doc::CnxEnd::Type_IO
+	        || ! entry_list.empty ());
+	assert (dir >= 0);
+	assert (dir < piapi::Dir_NBR_ELT);
+	assert (prefix_0 != 0);
+	assert (nbr_pins >= 0);
+	assert (nbr_pins == 0 || cnx_end.get_pin () < nbr_pins);
+
+	char           txt_0 [255+1];
+
+	const doc::CnxEnd::Type end_type = cnx_end.get_type ();
+	std::string    multilabel;
+	if (end_type == doc::CnxEnd::Type_IO)
+	{
+		multilabel = "Audio ";
+		multilabel += _dir_txt_arr [dir];
+	}
+	else
+	{
+		// Retrieves plug-in name
+		const int      end_slot_id = cnx_end.get_slot_id ();
+		const auto     it_entry    = std::find_if (
+			entry_list.begin (),
+			entry_list.end (),
+			[end_slot_id] (const auto &entry)
+			{
+				return (entry._slot_id == end_slot_id);
+			}
+		);
+		assert (it_entry != entry_list.end ());
+		multilabel = it_entry->_name_multilabel;
+		if (it_entry->_instance_nbr >= 0)
+		{
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), " %d", it_entry->_instance_nbr + 1
+			);
+			multilabel = pi::param::Tools::join_strings_multi (
+				multilabel.c_str (), '\n', "", txt_0
+			);
+		}
+	}
+
+	if (nbr_pins == 1)
+	{
+		txt_0 [0] = '\0';
+	}
+	else
+	{
+		const int      end_pin_idx = cnx_end.get_pin ();
+		fstb::snprintf4all (
+			txt_0, sizeof (txt_0), " - %d", end_pin_idx + 1
+		);
+	}
+	multilabel = pi::param::Tools::join_strings_multi (
+		multilabel.c_str (), '\n', prefix_0, txt_0
+	);
+
+	std::string    txt = pi::param::Tools::print_name_bestfit (
+		width, multilabel.c_str (),
+		txtbox, &NText::get_char_width
+	);
+	txtbox.set_text (txt);
+}
+
+
+
 void	Tools::create_bank_list (TxtArray &bank_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w, bool chk_cur_flag)
 {
 	const int      h_m   = fnt.get_char_h ();
@@ -1204,6 +1297,13 @@ void	Tools::complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height,
 		}
 	}
 }
+
+
+
+std::array <const char *, piapi::Dir_NBR_ELT>	Tools::_dir_txt_arr =
+{{
+	"In", "Out"
+}};
 
 
 

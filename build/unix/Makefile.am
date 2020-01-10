@@ -1117,6 +1117,8 @@ commonsrc = \
         ../../src/mfx/uitk/pg/SlotMove.h \
         ../../src/mfx/uitk/pg/SlotRouting.cpp \
         ../../src/mfx/uitk/pg/SlotRouting.h \
+        ../../src/mfx/uitk/pg/SlotRoutingAction.cpp \
+        ../../src/mfx/uitk/pg/SlotRoutingAction.h \
         ../../src/mfx/uitk/pg/Tools.cpp \
         ../../src/mfx/uitk/pg/Tools.h \
         ../../src/mfx/uitk/pg/Tuner.cpp \

@@ -479,6 +479,12 @@ std::vector <ProgEdit::Link>	ProgEdit::find_chain_links (const std::vector <Tool
 
 
 
+/*** To do:
+To be decided: should we include in the chain the nodes that merge paths
+(current behaviour) or should we stop the chain at these nodes?
+Actual use-cases will probably tell us on the long term.
+***/
+
 void	ProgEdit::find_chain_links_dir (std::vector <Link> &link_list, int slot_id, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list) const
 {
 	const ToolsRouting::NodeMap & graph = _view_ptr->use_graph ();

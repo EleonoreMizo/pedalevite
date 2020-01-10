@@ -48,11 +48,7 @@ class Cst
 public:
 
 	// Saved document format version
-#if defined (mfx_GRAPH)
 	static const int  _format_version  =  10;
-#else
-	static const int  _format_version  =   9;
-#endif
 
 	static const int  _nbr_pedals      =  12;
 	static const int  _nbr_presets_per_bank = 16;

@@ -3048,6 +3048,9 @@
     <ClInclude Include="..\..\..\src\mfx\ToolsRouting.hpp">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4216,6 +4219,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\ToolsRouting.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.cpp">
+      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
