@@ -58,7 +58,6 @@ public:
 	virtual        ~ParamState ()                       = default;
 
 	ParamState &   operator = (const ParamState &other) = default;
-	ParamState &   operator = (ParamState &&other)      = default;
 
 	void           set_sample_freq (double fs);
 	void           set_ramp_time (double t);
@@ -108,6 +107,9 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	// This one is required because of NotificationFlagCascadeMulti
+	ParamState &   operator = (ParamState &&other)             = delete;
 
 	bool           operator == (const ParamState &other) const = delete;
 	bool           operator != (const ParamState &other) const = delete;
