@@ -100,8 +100,8 @@ LfoDesc <SLOW>::LfoDesc ()
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_WAVEFORM, enu_sptr);
 	assert (enu_sptr->get_nat_max () == LfoType_NBR_ELT - 1);
+	_desc_set.add_glob (Param_WAVEFORM, enu_sptr);
 
 	// Sample and hold
 	lin_sptr = std::make_shared <param::TplLin> (

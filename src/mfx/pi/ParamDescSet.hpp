@@ -47,7 +47,7 @@ void	ParamDescSet::add (piapi::ParamCateg categ, int index, std::shared_ptr <T> 
 	assert (index >= 0);
 	assert (index < get_nbr_param (categ));
 	assert (sptr.get () != nullptr);
-	assert (_categ_arr [categ] [index].get () != nullptr);
+	assert (_categ_arr [categ] [index].get () == nullptr);
 
 	_categ_arr [categ] [index] =
 		std::static_pointer_cast <piapi::ParamDescInterface> (sptr);

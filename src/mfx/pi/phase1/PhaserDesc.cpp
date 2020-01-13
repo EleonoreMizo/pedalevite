@@ -79,8 +79,8 @@ PhaserDesc::PhaserDesc ()
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_DEPTH, enu_sptr);
 	assert (enu_sptr->get_nat_max () == Cst::_nbr_phase_filters - 1);
+	_desc_set.add_glob (Param_DEPTH, enu_sptr);
 
 	// Feedback Level
 	auto           fbi_sptr = std::make_shared <TplFdbk> (
