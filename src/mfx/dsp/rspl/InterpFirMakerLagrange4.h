@@ -52,9 +52,6 @@ public:
 
 	typedef DT DataType;
 
-	               InterpFirMakerLagrange4 ()  = default;
-	virtual        ~InterpFirMakerLagrange4 () = default;
-
 	inline static void
 	               make_interpolator (DataType fir_ptr [], float pos);
 	inline static int
@@ -80,9 +77,6 @@ private:
 
 private:
 
-	               InterpFirMakerLagrange4 (const InterpFirMakerLagrange4 <DT> &other) = delete;
-	InterpFirMakerLagrange4 <DT> &
-	               operator = (const InterpFirMakerLagrange4 <DT> &other)        = delete;
 	bool           operator == (const InterpFirMakerLagrange4 <DT> &other) const = delete;
 	bool           operator != (const InterpFirMakerLagrange4 <DT> &other) const = delete;
 

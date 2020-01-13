@@ -79,9 +79,11 @@ ActionType	ActionTempo::do_get_type () const
 
 
 
-PedalActionSingleInterface *	ActionTempo::do_duplicate () const
+std::shared_ptr <PedalActionSingleInterface>	ActionTempo::do_duplicate () const
 {
-	return new ActionTempo (*this);
+	return std::static_pointer_cast <PedalActionSingleInterface> (
+		std::make_shared <ActionTempo> (*this)
+	);
 }
 
 

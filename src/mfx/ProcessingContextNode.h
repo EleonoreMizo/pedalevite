@@ -89,7 +89,6 @@ public:
 
 	               ProcessingContextNode ();
 	               ProcessingContextNode (const ProcessingContextNode &other) = default;
-	virtual        ~ProcessingContextNode ()                       = default;
 	ProcessingContextNode &
 	               operator = (const ProcessingContextNode &other) = default;
 

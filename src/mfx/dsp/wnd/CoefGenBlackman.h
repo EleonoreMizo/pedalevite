@@ -45,12 +45,6 @@ class CoefGenBlackman
 
 public:
 
-	               CoefGenBlackman ()                             = default;
-	               CoefGenBlackman (const CoefGenBlackman &other) = default;
-	virtual        ~CoefGenBlackman ()                            = default;
-	CoefGenBlackman &
-	               operator = (const CoefGenBlackman &other)      = default;
-
 	inline double  operator () (double pos) const;
 
 

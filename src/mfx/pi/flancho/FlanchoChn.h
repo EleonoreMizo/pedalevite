@@ -68,7 +68,7 @@ class FlanchoChn
 public:
 
 	explicit       FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_ptr [], int dly_buf_len, float render_buf_ptr [], int render_buf_len);
-	virtual        ~FlanchoChn () = default;
+	               ~FlanchoChn () = default;
 
 	void           set_sample_freq (double sample_freq, bool fast_flag, dsp::rspl::InterpolatorInterface &interp);
 	void           set_rel_phase (double rel_phase);
@@ -124,7 +124,7 @@ private:
 		               _dly_reader;
 		dsp::ctrl::lfo::LfoModule
 		               _lfo;
-		double         _rel_phase; // Relative to the channel phase. 1 is a whole round, but the variable can contain any positive value.
+		double         _rel_phase { 0 }; // Relative to the channel phase. 1 is a whole round, but the variable can contain any positive value.
 		dsp::iir::OnePole
 							_hpf;
 	};
@@ -142,7 +142,7 @@ private:
 
 	double         estimate_base_phase () const;
 	void           set_wf_type (dsp::ctrl::lfo::LfoModule &lfo, WfType wf_type);
-	double         compute_delay_time (dsp::ctrl::lfo::LfoModule &lfo);
+	double         compute_delay_time (const dsp::ctrl::lfo::LfoModule &lfo);
 	void           update_phase (Voice &voice, double base_phase);
 	void           update_shape ();
 	void           update_shaper_data ();
@@ -183,7 +183,9 @@ private:
 
 	               FlanchoChn ()                               = delete;
 	               FlanchoChn (const FlanchoChn &other)        = delete;
+	               FlanchoChn (FlanchoChn &&other)             = delete;
 	FlanchoChn &   operator = (const FlanchoChn &other)        = delete;
+	FlanchoChn &   operator = (FlanchoChn &&other)             = delete;
 	bool           operator == (const FlanchoChn &other) const = delete;
 	bool           operator != (const FlanchoChn &other) const = delete;
 

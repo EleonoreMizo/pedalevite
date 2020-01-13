@@ -60,13 +60,13 @@ namespace pg
 SlotRouting::SlotRouting (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_mov_sptr (new NText (Entry_MOVE   ))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW))
+,	_mov_sptr ( std::make_shared <NText  > (Entry_MOVE  ))
 ,	_side_arr ()
 ,	_action_arg ()
 {
@@ -138,7 +138,7 @@ PageInterface::EvtProp	SlotRouting::do_handle_evt (const NodeEvt &evt)
 			case Entry_MOVE:
 				if (_loc_edit._audio_flag)
 				{
-					_page_switcher.call_page (PageType_SLOT_MOVE, 0, node_id);
+					_page_switcher.call_page (PageType_SLOT_MOVE, nullptr, node_id);
 				}
 				break;
 			default:
@@ -147,7 +147,7 @@ PageInterface::EvtProp	SlotRouting::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (PageType_SLOT_MENU, 0);
+			_page_switcher.switch_to (PageType_SLOT_MENU, nullptr);
 			break;
 		default:
 			// Nothing
@@ -164,7 +164,7 @@ void	SlotRouting::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -174,7 +174,7 @@ void	SlotRouting::do_remove_slot (int slot_id)
 	if (slot_id == _loc_edit._slot_id)
 	{
 		_loc_edit._slot_id = -1;
-		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 	}
 	else
 	{
@@ -307,7 +307,7 @@ void	SlotRouting::list_pin (int &pos_y, PageMgrInterface::NavLocList &nav_list, 
 
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
-	pin._name_sptr = TxtSPtr (new NText (nid_name));
+	pin._name_sptr = std::make_shared <NText> (nid_name);
 	pin._name_sptr->set_font (*_fnt_ptr);
 	pin._name_sptr->set_coord (Vec2d (0, pos_y));
 	pin._name_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -347,7 +347,7 @@ void	SlotRouting::list_pin_cnx (int &pos_y, PageMgrInterface::NavLocList &nav_li
 		Cnx &          cnx_data = pin._cnx_arr [cnx_idx];
 		cnx_data._cnx = *it_cnx;
 		TxtSPtr &      cnx_sptr = cnx_data._label_sptr;
-		cnx_sptr = TxtSPtr (new NText (nid_cnx));
+		cnx_sptr = std::make_shared <NText> (nid_cnx);
 		cnx_sptr->set_font (*_fnt_ptr);
 		cnx_sptr->set_coord (Vec2d (0, pos_y));
 		cnx_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());

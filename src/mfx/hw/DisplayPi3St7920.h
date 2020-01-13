@@ -50,7 +50,7 @@ namespace hw
 
 
 
-class DisplayPi3St7920
+class DisplayPi3St7920 final
 :	public ui::DisplayInterface
 ,	public ui::TimeShareCbInterface
 {
@@ -78,19 +78,17 @@ public:
 protected:
 
 	// DisplayInterface
-	virtual int    do_get_width () const;
-	virtual int    do_get_height () const;
-	virtual int    do_get_stride () const;
-	virtual uint8_t *
-	               do_use_screen_buf ();
-	virtual const uint8_t *
-	               do_use_screen_buf () const;
+	int            do_get_width () const final;
+	int            do_get_height () const final;
+	int            do_get_stride () const final;
+	uint8_t *      do_use_screen_buf () final;
+	const uint8_t* do_use_screen_buf () const final;
 
-	virtual void   do_refresh (int x, int y, int w, int h);
-	virtual void   do_force_reset ();
+	void           do_refresh (int x, int y, int w, int h) final;
+	void           do_force_reset () final;
 
 	// TimeShareCbInterface
-	virtual bool   do_process_timeshare_op ();
+	bool           do_process_timeshare_op () final;
 
 
 
@@ -235,8 +233,11 @@ private:
 
 	               DisplayPi3St7920 ()                               = delete;
 	               DisplayPi3St7920 (const DisplayPi3St7920 &other)  = delete;
+	               DisplayPi3St7920 (DisplayPi3St7920 &&other)       = delete;
 	DisplayPi3St7920 &
 	               operator = (const DisplayPi3St7920 &other)        = delete;
+	DisplayPi3St7920 &
+	               operator = (DisplayPi3St7920 &&other)             = delete;
 	bool           operator == (const DisplayPi3St7920 &other) const = delete;
 	bool           operator != (const DisplayPi3St7920 &other) const = delete;
 

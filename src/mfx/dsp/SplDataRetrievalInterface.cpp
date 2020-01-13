@@ -60,8 +60,8 @@ Throws: Nothing
 
 void	SplDataRetrievalInterface::get_data (float *chn_data_ptr_arr [], int64_t pos, int len, bool invert_flag)
 {
-	assert (chn_data_ptr_arr != 0);
-	assert (chn_data_ptr_arr [0] != 0);
+	assert (chn_data_ptr_arr != nullptr);
+	assert (chn_data_ptr_arr [0] != nullptr);
 	assert (pos >= 0);
 	assert (len > 0);
 

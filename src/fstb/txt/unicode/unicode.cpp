@@ -67,8 +67,8 @@ int	conv_utf8_to_unicode (std::u32string & dest, const char src_0 [])
 	size_t         i   = 0;
 	while ((err == Err_OK) && (src_0 [i] != '\0'))
 	{
-		char32_t       ucs4_char;
-		int           len = 0;
+		char32_t       ucs4_char = 0;
+		int            len       = 0;
 
 		err = utf8::Codec8::decode_char (ucs4_char, &src_0 [i], len);
 		

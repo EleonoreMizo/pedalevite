@@ -48,7 +48,16 @@ public:
 
 	typedef T DataType;
 
-	virtual        ~WndInterface () = default;
+	               WndInterface ()                              = default;
+	               WndInterface (const WndInterface <T> &other) = default;
+	               WndInterface (WndInterface <T> &&other)      = default;
+
+	virtual        ~WndInterface ()                             = default;
+
+	virtual WndInterface <T> &
+	               operator = (const WndInterface <T> &other)   = default;
+	virtual WndInterface <T> &
+	               operator = (WndInterface <T> &&other)        = default;
 
 	void           make_win (T data_ptr [], int len);
 

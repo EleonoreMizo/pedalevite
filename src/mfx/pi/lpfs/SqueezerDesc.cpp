@@ -51,7 +51,7 @@ SqueezerDesc::SqueezerDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Cutoff Frequency
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		20, 20 * 1024,
 		"F\nFreq\nFrequency\nCutoff Frequency",
 		"Hz",
@@ -59,34 +59,38 @@ SqueezerDesc::SqueezerDesc ()
 		0,
 		"%5.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	log_ptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
-	_desc_set.add_glob (Param_FREQ, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	log_sptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
+	_desc_set.add_glob (Param_FREQ, log_sptr);
 
 	// Resonance
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"R\nReso\nResonance",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_RESO, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_RESO, lin_sptr);
 
 	// Color
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"C\nColor",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_COLOR, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_COLOR, lin_sptr);
 
 	// Drive
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1.0 / 8, 32,
 		"D\nDrive",
 		"dB",
@@ -94,17 +98,17 @@ SqueezerDesc::SqueezerDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_DRIVE, log_ptr);
+	_desc_set.add_glob (Param_DRIVE, log_sptr);
 
 	// Type
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Hard\nSoft\nNone",
 		"F\nFold\nFoldback",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_TYPE, enu_ptr);
+	_desc_set.add_glob (Param_TYPE, enu_sptr);
 }
 
 

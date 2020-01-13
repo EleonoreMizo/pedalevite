@@ -56,14 +56,14 @@ DelayChn::DelayChn ()
 ,	_f_lo (5)
 ,	_f_hi (20000)
 ,	_delay (1)
-,	_tmp_ptr (0)
+,	_tmp_ptr (nullptr)
 ,	_tmp_len (0)
 ,	_max_proc_len (0)
 {
 	_dly_line.set_max_delay_time (Cst::_max_delay / 1000.0);
 
 	_dly_reader.set_delay_line (_dly_line);
-	_dly_reader.set_crossfade (256, 0);
+	_dly_reader.set_crossfade (256, nullptr);
 	_dly_reader.set_resampling_range (-4.0, +4.0);
 }
 
@@ -81,7 +81,7 @@ void	DelayChn::set_sample_freq (double sample_freq)
 
 void	DelayChn::init (dsp::rspl::InterpolatorInterface &interp, float *buf_ptr, int buf_len)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (buf_len > 0);
 
 	_tmp_ptr = buf_ptr;
@@ -113,7 +113,7 @@ double	DelayChn::get_delay_time () const
 
 void	DelayChn::restore ()
 {
-	_tmp_ptr = 0;
+	_tmp_ptr = nullptr;
 	_tmp_len = 0;
 }
 
@@ -142,8 +142,8 @@ int	DelayChn::get_max_proc_len () const
 
 void	DelayChn::process_block_read (float dst_ptr [], int nbr_spl)
 {
-	assert (_tmp_ptr != 0);
-	assert (dst_ptr != 0);
+	assert (_tmp_ptr != nullptr);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_proc_len);
 
@@ -155,9 +155,9 @@ void	DelayChn::process_block_read (float dst_ptr [], int nbr_spl)
 
 void	DelayChn::process_block_write (const float src_ptr [], const float fdbk_ptr [], float lvl_beg, float lvl_end, int nbr_spl)
 {
-	assert (_tmp_ptr != 0);
-	assert (src_ptr != 0);
-	assert (fdbk_ptr != 0);
+	assert (_tmp_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (fdbk_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_proc_len);
 

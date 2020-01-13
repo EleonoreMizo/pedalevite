@@ -75,6 +75,8 @@ private:
 
 private:
 
+	               Crc32 (const Crc32 &&other)            = delete;
+	Crc32 &        operator = (const Crc32 &&other)       = delete;
 	bool           operator == (const Crc32 &other) const = delete;
 	bool           operator != (const Crc32 &other) const = delete;
 

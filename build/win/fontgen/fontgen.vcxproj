@@ -52,7 +52,13 @@
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)$(Configuration)$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)$(Configuration)$(Platform)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>../pv-code.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
       <Optimization>Disabled</Optimization>

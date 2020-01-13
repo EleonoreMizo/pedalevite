@@ -57,7 +57,7 @@ NoiseChlorineDesc::NoiseChlorineDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Global level
-	TplPll *   pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		1e-7, 1,
 		"Global level\nGlob level\nGlob lvl\nGLvl",
 		"dB",
@@ -65,10 +65,10 @@ NoiseChlorineDesc::NoiseChlorineDesc ()
 		0,
 		"%+6.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (   1e-7);
-	pll_ptr->use_mapper ().add_segment (0.75,  1e-4, true);
-	pll_ptr->use_mapper ().add_segment (1    , 1   , true);
-	_desc_set.add_glob (Param_LVL, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (   1e-7);
+	pll_sptr->use_mapper ().add_segment (0.75,  1e-4, true);
+	pll_sptr->use_mapper ().add_segment (1    , 1   , true);
+	_desc_set.add_glob (Param_LVL, pll_sptr);
 
 	// Notches
 	for (int index = 0; index < Cst::_nbr_notches; ++index)
@@ -155,7 +155,7 @@ void	NoiseChlorineDesc::add_notch (int index)
 	const int      base = get_base_notch (index);
 
 	// Notch N frequency
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		20, 20480,
 		"Notch %d frequency\nNotch %d freq\nN %d freq\nN%dF",
 		"Hz",
@@ -163,11 +163,11 @@ void	NoiseChlorineDesc::add_notch (int index)
 		index + 1,
 		"%7.1f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamNotch_FREQ, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamNotch_FREQ, log_sptr);
 
 	// Notch N selectivity
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		0.125, 64,
 		"Notch %d selectivity\nNotch %d Q\nN %d Q\nN%dQ",
 		"",
@@ -175,10 +175,10 @@ void	NoiseChlorineDesc::add_notch (int index)
 		index + 1,
 		"%5.2f"
 	);
-	_desc_set.add_glob (base + ParamNotch_Q, log_ptr);
+	_desc_set.add_glob (base + ParamNotch_Q, log_sptr);
 
 	// Notch N level
-	TplPll *   pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0, 16,
 		"Notch %d level\nNotch %d lvl\nN %d lvl\nN%dL",
 		"dB",
@@ -186,10 +186,10 @@ void	NoiseChlorineDesc::add_notch (int index)
 		index + 1,
 		"%+6.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (    0);
-	pll_ptr->use_mapper ().add_segment (0.25,   1.0 / 256, false);
-	pll_ptr->use_mapper ().add_segment (1    , 16        , true );
-	_desc_set.add_glob (base + ParamNotch_LVL, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (    0);
+	pll_sptr->use_mapper ().add_segment (0.25,   1.0 / 256, false);
+	pll_sptr->use_mapper ().add_segment (1    , 16        , true );
+	_desc_set.add_glob (base + ParamNotch_LVL, pll_sptr);
 }
 
 

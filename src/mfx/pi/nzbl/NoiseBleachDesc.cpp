@@ -57,7 +57,7 @@ NoiseBleachDesc::NoiseBleachDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Global level
-	TplPll *   pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		1e-7, 1,
 		"Global level\nGlob level\nGlob lvl\nGLvl",
 		"dB",
@@ -65,10 +65,10 @@ NoiseBleachDesc::NoiseBleachDesc ()
 		0,
 		"%+6.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (   1e-7);
-	pll_ptr->use_mapper ().add_segment (0.75,  1e-4, true);
-	pll_ptr->use_mapper ().add_segment (1    , 1   , true);
-	_desc_set.add_glob (Param_LVL, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (   1e-7);
+	pll_sptr->use_mapper ().add_segment (0.75,  1e-4, true);
+	pll_sptr->use_mapper ().add_segment (1    , 1   , true);
+	_desc_set.add_glob (Param_LVL, pll_sptr);
 
 	// Bands
 	for (int index = 0; index < Cst::_nbr_bands; ++index)
@@ -165,7 +165,7 @@ void	NoiseBleachDesc::add_band (int index)
 	const std::string name  =
 		"Band " + range + " level\nLevel " + range +"\n"
 		"Lvl " + range + "\n" + range + "\nB%dL";
-	TplPll *   pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0, 16,
 		name.c_str (),
 		"dB",
@@ -173,10 +173,10 @@ void	NoiseBleachDesc::add_band (int index)
 		index + 1,
 		"%+6.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (    0);
-	pll_ptr->use_mapper ().add_segment (0.25,   1.0 / 256, false);
-	pll_ptr->use_mapper ().add_segment (1    , 16        , true );
-	_desc_set.add_glob (base + ParamBand_LVL, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (    0);
+	pll_sptr->use_mapper ().add_segment (0.25,   1.0 / 256, false);
+	pll_sptr->use_mapper ().add_segment (1    , 16        , true );
+	_desc_set.add_glob (base + ParamBand_LVL, pll_sptr);
 }
 
 

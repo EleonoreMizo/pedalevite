@@ -139,7 +139,7 @@ float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
-	assert (spl_ptr != 0);
+	assert (spl_ptr != nullptr);
 	assert (nbr_spl >= 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)

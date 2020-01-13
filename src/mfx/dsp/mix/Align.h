@@ -239,6 +239,7 @@ protected:
 private:
 
 	               Align ();
+	               ~Align () = default;
 
 	void           setup_internal ();
 
@@ -258,7 +259,9 @@ private:
 private:
 
 	               Align (const Align &other)             = delete;
+	               Align (Align &&other)                  = delete;
 	Align &        operator = (const Align &other)        = delete;
+	Align &        operator = (Align &&other)             = delete;
 	bool           operator == (const Align &other) const = delete;
 	bool           operator != (const Align &other) const = delete;
 

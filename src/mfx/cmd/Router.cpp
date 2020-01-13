@@ -107,10 +107,7 @@ void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
 	BufAlloc       buf_alloc (Cst::BufSpecial_NBR_ELT);
 
 	std::array <int, piapi::PluginInterface::_max_nbr_chn>   cur_buf_arr;
-	for (auto &b : cur_buf_arr)
-	{
-		b = -1;
-	}
+	cur_buf_arr.fill (-1);
 
 	// Input
 	ProcessingContextNode::Side & audio_i =
@@ -134,12 +131,12 @@ void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
 		const int      pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
 		if (pi_id_main >= 0)
 		{
-			int            nbr_chn_in      = nbr_chn_cur;
+			const int      nbr_chn_in      = nbr_chn_cur;
 			const piapi::PluginDescInterface &   desc_main =
 				*plugin_pool.use_plugin (pi_id_main)._desc_ptr;
 			const bool     out_st_flag     = desc_main.prefer_stereo ();
 			const bool     final_mono_flag = (nbr_chn_final == 1);
-			int            nbr_chn_out     =
+			const int      nbr_chn_out     =
 				  (out_st_flag && ! (slot._force_mono_flag || final_mono_flag))
 				? 2
 				: nbr_chn_in;
@@ -483,11 +480,11 @@ void	Router::prepare_graph_for_latency_analysis (const Document &doc)
 		lat::Cnx &     cnx_lat = _lat_algo.use_cnx (cnx_pos);
 
 		// What is an input for a node is an output for a connection
-		int            node_idx_src =
+		const int      node_idx_src =
 			conv_doc_slot_to_lat_node_index (piapi::Dir_IN , cnx_doc);
 		cnx_lat.set_node (piapi::Dir_OUT, node_idx_src);
 
-		int            node_idx_dst =
+		const int      node_idx_dst =
 			conv_doc_slot_to_lat_node_index (piapi::Dir_OUT, cnx_doc);
 		cnx_lat.set_node (piapi::Dir_IN , node_idx_dst);
 
@@ -714,7 +711,7 @@ PluginAux &	Router::create_plugin_aux (Document &doc, PluginPool &plugin_pool, D
 
 	if (_sample_freq > 0)
 	{
-		PluginPool::PluginDetails &   details =
+		const PluginPool::PluginDetails &   details =
 			plugin_pool.use_plugin (plug._pi_id);
 		int         latency = 0;
 		details._pi_uptr->reset (_sample_freq, _max_block_size, latency);
@@ -766,7 +763,7 @@ allocated during the traversal. They are freed only at the end.
 Signal buffers stay allocated too.
 */
 
-void	Router::create_graph_context (Document &doc, PluginPool &plugin_pool)
+void	Router::create_graph_context (Document &doc, const PluginPool &plugin_pool)
 {
 	NodeCategList  categ_list;
 	init_node_categ_list (doc, categ_list);
@@ -985,7 +982,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 		int            pi_id_main = -1;
 		int            pi_id_mix  = -1;
 		int            latency    =  0;
-		int            nbr_chn_i  = node_info._nbr_chn;
+		const int      nbr_chn_i  = node_info._nbr_chn;
 		int            nbr_chn_o  = nbr_chn_i;
 		int            main_nbr_i = 1;
 		int            main_nbr_o = 1;
@@ -1473,7 +1470,7 @@ const ProcessingContextNode::Side &	Router::use_source_side (const NodeCategList
 {
 	const NodeInfo &  node_src =
 		categ_list [cnx_src._src._slot_type] [cnx_src._src._slot_pos];
-	const ProcessingContextNode::Side * src_side_o_ptr = 0;
+	const ProcessingContextNode::Side * src_side_o_ptr = nullptr;
 
 	if (cnx_src._src._slot_type == CnxEnd::SlotType_IO)
 	{

@@ -52,12 +52,6 @@ class CtrlLink
 
 public:
 
-	               CtrlLink ()                        = default;
-	               CtrlLink (const CtrlLink &other)   = default;
-	virtual        ~CtrlLink ()                       = default;
-
-	CtrlLink &     operator = (const CtrlLink &other) = default;
-
 	bool           operator == (const CtrlLink &other) const;
 	bool           operator != (const CtrlLink &other) const;
 	bool           is_similar (const CtrlLink &other) const;

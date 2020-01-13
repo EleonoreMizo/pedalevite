@@ -52,7 +52,7 @@ int	Phase90Interface::get_nbr_coefs () const
 
 void	Phase90Interface::set_coefs (const double coef_arr [])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	do_set_coefs (coef_arr);
 }
@@ -68,9 +68,9 @@ void	Phase90Interface::clear_buffers ()
 
 void	Phase90Interface::process_block (float dst_0_ptr [], float dst_1_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_0_ptr != 0);
-	assert (dst_1_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_0_ptr != nullptr);
+	assert (dst_1_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	do_process_block (dst_0_ptr, dst_1_ptr, src_ptr, nbr_spl);

@@ -66,7 +66,7 @@ public:
 	public:
 		PluginUPtr     _pi_uptr;
 		const piapi::PluginDescInterface *
-		               _desc_ptr = 0;
+		               _desc_ptr = nullptr;
 
 		// Must be set by the client after each reset()
 		int            _latency  = 0;
@@ -99,7 +99,7 @@ public:
 	};
 
 	               PluginPool ();
-	virtual        ~PluginPool () = default;
+	               ~PluginPool () = default;
 
 	// Command thread
 	int            get_room () const;
@@ -134,7 +134,13 @@ private:
 	class PluginSlot
 	{
 	public:
+		               PluginSlot ()                        = default;
+		               PluginSlot (const PluginSlot &other) = delete;
+		               PluginSlot (PluginSlot &&other)      = delete;
 		               ~PluginSlot ();
+		PluginSlot &   operator = (const PluginSlot &other) = delete;
+		PluginSlot &   operator = (PluginSlot &&other)      = delete;
+
 		PluginDetails  _details;
 		SharedRscState _state = SharedRscState_FREE;
 	};
@@ -158,9 +164,11 @@ private:
 private:
 
 	               PluginPool (const PluginPool &other)        = delete;
+	               PluginPool (const PluginPool &&other)       = delete;
 	PluginPool &   operator = (const PluginPool &other)        = delete;
+	PluginPool &   operator = (PluginPool &&other)             = delete;
 	bool           operator == (const PluginPool &other) const = delete;
-	bool           operator != (const PluginPool &other) const = delete;
+	bool           operator != (PluginPool &other) const       = delete;
 
 }; // class PluginPool
 

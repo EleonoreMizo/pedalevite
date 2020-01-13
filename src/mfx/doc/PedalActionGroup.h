@@ -51,13 +51,6 @@ class PedalActionGroup
 
 public:
 
-	               PedalActionGroup ()                              = default;
-	               PedalActionGroup (const PedalActionGroup &other) = default;
-	virtual        ~PedalActionGroup ()                             = default;
-
-	PedalActionGroup &
-	               operator = (const PedalActionGroup &other)       = default;
-
 	bool           is_empty_default () const;
 
 	void           ser_write (SerWInterface &ser) const;

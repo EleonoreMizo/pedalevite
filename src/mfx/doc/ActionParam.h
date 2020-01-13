@@ -42,7 +42,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionParam
+class ActionParam final
 :	public PedalActionSingleInterface
 {
 
@@ -53,11 +53,16 @@ public:
 	explicit       ActionParam (const FxId &fx_id, int index, float val);
 	explicit       ActionParam (SerRInterface &ser);
 	               ActionParam (const ActionParam &other) = default;
-	virtual        ~ActionParam ()                        = default;
+	               ActionParam (ActionParam &&other)      = default;
+
+	               ~ActionParam ()                        = default;
 
 	ActionParam &  operator = (const ActionParam &other)  = default;
+	ActionParam &  operator = (ActionParam &&other)       = default;
 
-	virtual void   ser_write (SerWInterface &ser) const;
+	// PedalActionSingleInterface
+	void           ser_write (SerWInterface &ser) const final;
+
 	void           ser_read (SerRInterface &ser);
 
 	FxId           _fx_id;
@@ -71,10 +76,9 @@ public:
 protected:
 
 	// PedalActionSingleInterface
-	virtual ActionType
-	               do_get_type () const;
-	virtual PedalActionSingleInterface *
-	               do_duplicate () const;
+	ActionType     do_get_type () const final;
+	std::shared_ptr <PedalActionSingleInterface>
+	               do_duplicate () const final;
 
 
 

@@ -42,16 +42,6 @@ namespace osc
 
 
 
-template <typename OSC, int STPPLEN, int STPNPL2, int STPLVL2>
-OscWavetableSyncHard <
-	OSC, STPPLEN, STPNPL2, STPLVL2
->::OscWavetableSyncHard ()
-{
-	clear_buffers ();
-}
-
-
-
 /*
 ==============================================================================
 Name: use_osc
@@ -533,8 +523,8 @@ void	OscWavetableSyncHard <
 >::process_block (DataType dst_ptr [], int nbr_spl)
 {
 	assert (_spl_to_next_sync.get_ceil () >= 0);
-	assert (_step_ptr != 0);
-	assert (dst_ptr != 0);
+	assert (_step_ptr != nullptr);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            pos = 0;
@@ -619,7 +609,7 @@ void	OscWavetableSyncHard <
 	OSC, STPPLEN, STPNPL2, STPLVL2
 >::generate_block (DataType dst_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const int      BUF_SEL_BIT = BUF_MASK - HALF_BUF_MASK;

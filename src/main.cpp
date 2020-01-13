@@ -256,15 +256,14 @@ public:
 	mfx::PageSet   _page_set;
 
 	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
-	               ~Context ();
 	void           set_proc_info (double sample_freq, int max_block_size);
 protected:
 	// mfx::ModelObserverDefault
-	virtual void   do_set_tuner (bool active_flag);
+	void           do_set_tuner (bool active_flag) final;
 	// mfx::adrv:CbInterface
-	virtual void   do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
-	virtual void   do_notify_dropout ();
-	virtual void   do_request_exit ();
+	void           do_process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl) final;
+	void           do_notify_dropout () final;
+	void           do_request_exit () final;
 private:
 	static void    init_empty_bank (mfx::doc::Bank &bank);
 };
@@ -318,12 +317,12 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 		1 /*** To do: constant ***/,
 		&_queue_input_to_gui
 	);
-	mfx::ui::UserInputInterface::MsgCell * cell_ptr = 0;
+	mfx::ui::UserInputInterface::MsgCell * cell_ptr = nullptr;
 	bool           scan_flag = true;
 	do
 	{
 		cell_ptr = _queue_input_to_gui.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			const mfx::ui::UserInputType  type  = cell_ptr->_val.get_type ();
 			const int                     index = cell_ptr->_val.get_index ();
@@ -341,7 +340,7 @@ fprintf (stderr, "Reading ESC button...\n");
 			_user_input.return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0 && scan_flag);
+	while (cell_ptr != nullptr && scan_flag);
 
 	// Assigns message queues to input devices
 	_user_input.assign_queues_to_input_dev (
@@ -388,7 +387,11 @@ fprintf (stderr, "Reading ESC button...\n");
 
 		mfx::doc::SerRText ser_r;
 		ser_r.start (result);
+#if __cplusplus >= 201402
+		auto sss_uptr (std::make_unique <mfx::doc::Setup> ());
+#else // __cplusplus
 		std::unique_ptr <mfx::doc::Setup> sss_uptr (new mfx::doc::Setup);
+#endif // __cplusplus
 		sss_uptr->ser_read (ser_r);
 		ser_r.terminate ();
 
@@ -404,20 +407,13 @@ fprintf (stderr, "Reading ESC button...\n");
 //	_model.set_chn_mode (mfx::ChnMode_1M_1S);
 
 	mfx::uitk::PageSwitcher &  page_switcher = _page_set.use_page_switcher ();
-	page_switcher.switch_to (mfx::uitk::pg::PageType_PROG_CUR, 0);
+	page_switcher.switch_to (mfx::uitk::pg::PageType_PROG_CUR, nullptr);
 
 /**********************************************************************************************************************************************************************************************************************************/
 // Debugging code
 //	_model.select_bank (2);
 //	_model.activate_preset (3);
 /**********************************************************************************************************************************************************************************************************************************/
-}
-
-
-
-Context::~Context ()
-{
-	// Nothing
 }
 
 
@@ -437,7 +433,7 @@ void	Context::do_set_tuner (bool active_flag)
 	{
 		mfx::uitk::PageSwitcher &  page_switcher =
 			_page_set.use_page_switcher ();
-		mfx::uitk::Page & page_mgr = _page_set.use_page_mgr ();
+		const mfx::uitk::Page & page_mgr = _page_set.use_page_mgr ();
 		page_switcher.call_page (
 			mfx::uitk::pg::PageType_TUNER,
 			0,
@@ -590,7 +586,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 
 		ctx._page_set.use_page_mgr ().process_messages ();
 
-		bool wait_flag = true;
+		bool        wait_flag = true;
 
 #if 1
 
@@ -746,7 +742,7 @@ void MAIN_prog_end ()
 int main (int argc, char *argv [], char *envp [])
 {
 #else
-int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
+int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmdline_0, int cmd_show)
 {
 	fstb::unused (instance, prev_instance, cmdline_0, cmd_show);
 #endif
@@ -794,7 +790,11 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 #endif
 
 
+#if __cplusplus >= 201402
+	auto           ctx_uptr (std::make_unique <Context> (snd_drv));
+#else // __cplusplus
 	std::unique_ptr <Context>  ctx_uptr (new Context (snd_drv));
+#endif // __cplusplus
 	Context &      ctx = *ctx_uptr;
 #if fstb_IS (SYS, LINUX)
 	ctx._cmd_line.set (argc, argv, envp);
@@ -810,7 +810,7 @@ int CALLBACK WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR c
 			sample_freq,
 			max_block_size,
 			ctx,
-			0,
+			nullptr,
 			chn_idx_in,
 			chn_idx_out
 		);

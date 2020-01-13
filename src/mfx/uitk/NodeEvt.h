@@ -71,10 +71,13 @@ public:
 	static NodeEvt create_timer (int target);
 
 	               NodeEvt (const NodeEvt &other)    = default;
-
-	NodeEvt &      operator = (const NodeEvt &other) = default;
+	               NodeEvt (NodeEvt &&other)         = default;
 
 	virtual        ~NodeEvt () = default;
+
+	NodeEvt &      operator = (const NodeEvt &other) = default;
+	NodeEvt &      operator = (NodeEvt &&other)      = default;
+
 
 	int            get_target () const;
 	Type           get_type () const;

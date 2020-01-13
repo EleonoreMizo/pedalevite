@@ -84,12 +84,6 @@ public:
 
 	static const int  PITCH_FRAC_BITS = Oscillator::PITCH_FRAC_BITS;
 
-	               OscSampleSyncHard ();
-	               OscSampleSyncHard (const OscSampleSyncHard &other) = default;
-	virtual        ~OscSampleSyncHard () = default;
-	OscSampleSyncHard &
-	               operator = (const OscSampleSyncHard &other)        = default;
-
 	void           set_sample_data (const SampleTable &sample_data);
 	const SampleTable &
 	               use_sample_data () const;
@@ -180,42 +174,42 @@ private:
 
 	Oscillator     _osc;
 	AntialiasedStep *	         // Antialiased step, symetric data
-	               _step_ptr;
+	               _step_ptr { nullptr };
 
 	// Reference pitch in octaves for Nyquist frequency, 32:16.
-	int32_t        _base_pitch;
+	int32_t        _base_pitch { 0 };
 
 	// Main sync pitch in octaves, 32:16. Used in conjunction with _base_pitch.
-	int32_t        _master_pitch;
+	int32_t        _master_pitch { 0 };
 
 	// Sample distance to the next sync point, relative to the current buffer
 	// r/w pos. >= 0
 	fstb::FixedPoint					
-	               _spl_to_next_sync;
+	               _spl_to_next_sync { 0 };
 
 	// Time in sample between two sync. >= 2
 	fstb::FixedPoint
-	               _period;
+	               _period { 0 };
 
 	// Waveform frequency, samples, relative to the current table.
 	fstb::FixedPoint
-	               _wave_freq_spl;
+	               _wave_freq_spl { 0 };
 
 	// Where the sync occurs in the sample
 	fstb::FixedPoint
-	               _sync_pos;
+	               _sync_pos { 0 };
 
 	// Where the sync occurs in the sample, relative to the current table
 	fstb::FixedPoint
-	               _sync_pos_table;
+	               _sync_pos_table { 0 };
 
 	fstb::FixedPoint
-	               _sync_speed;
+	               _sync_speed { 0 };
 	fstb::FixedPoint
-	               _sync_speed_table;
+	               _sync_speed_table { 0 };
 
-	Buffer         _buffer;			// Buffer for past and new samples
-	int            _buf_pos;		// Writing position
+	Buffer         _buffer {};    // Buffer for past and new samples
+	int            _buf_pos;      // Writing position
 
 
 

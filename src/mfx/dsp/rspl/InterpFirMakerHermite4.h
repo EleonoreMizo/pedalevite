@@ -52,9 +52,6 @@ public:
 
 	typedef DT DataType;
 
-	               InterpFirMakerHermite4 ()  = default;
-	virtual        ~InterpFirMakerHermite4 () = default;
-
 	inline static void
 	               make_interpolator (DataType fir_ptr [], float pos);
 	inline static int
@@ -80,9 +77,6 @@ private:
 
 private:
 
-	               InterpFirMakerHermite4 (const InterpFirMakerHermite4 <DT> &other) = delete;
-	InterpFirMakerHermite4 <DT> &
-	               operator = (const InterpFirMakerHermite4 <DT> &other)        = delete;
 	bool           operator == (const InterpFirMakerHermite4 <DT> &other) const = delete;
 	bool           operator != (const InterpFirMakerHermite4 <DT> &other) const = delete;
 

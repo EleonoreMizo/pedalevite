@@ -56,17 +56,17 @@ namespace pg
 PedalEditCycle::PedalEditCycle (PageSwitcher &page_switcher, PedalEditContext &ctx)
 :	_page_switcher (page_switcher)
 ,	_ctx (ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_title_sptr (      new NText (Entry_TITLE      ))
-,	_inherit_sptr (    new NText (Entry_INHERIT    ))
-,	_overridable_sptr (new NText (Entry_OVERRIDABLE))
-,	_reset_sptr (      new NText (Entry_RESET      ))
-,	_add_sptr (        new NText (Entry_ADD        ))
-,	_menu_sptr (       new NWindow (Entry_WINDOW))
+,	_fnt_ptr (nullptr)
+,	_title_sptr (      std::make_shared <NText  > (Entry_TITLE      ))
+,	_inherit_sptr (    std::make_shared <NText  > (Entry_INHERIT    ))
+,	_overridable_sptr (std::make_shared <NText  > (Entry_OVERRIDABLE))
+,	_reset_sptr (      std::make_shared <NText  > (Entry_RESET      ))
+,	_add_sptr (        std::make_shared <NText  > (Entry_ADD        ))
+,	_menu_sptr (       std::make_shared <NWindow> (Entry_WINDOW     ))
 ,	_step_sptr_arr ()
 {
 	_title_sptr->set_justification (0.5f, 0, false);
@@ -162,15 +162,19 @@ MsgHandlerInterface::EvtProp	PedalEditCycle::do_handle_evt (const NodeEvt &evt)
 			case Entry_ADD:
 				{
 					// Creates and add a non-empty ActionArray
-					doc::PedalActionCycle::ActionSPtr   action_sptr (
-						new doc::ActionPreset (false, 0)
-					);
+					doc::PedalActionCycle::ActionSPtr   action_sptr {
+						std::static_pointer_cast <doc::PedalActionSingleInterface> (
+							std::make_shared <doc::ActionPreset> (false, 0)
+						)
+					};
 					doc::PedalActionCycle::ActionArray  action_arr;
 					action_arr.push_back (action_sptr);
 					cycle._cycle.push_back (action_arr);
 					_ctx._step_index = nbr_steps;
 					update_model ();
-					_page_switcher.call_page (PageType_PEDAL_EDIT_STEP, 0, node_id);
+					_page_switcher.call_page (
+						PageType_PEDAL_EDIT_STEP, nullptr, node_id
+					);
 				}
 				break;
 			default:
@@ -178,7 +182,9 @@ MsgHandlerInterface::EvtProp	PedalEditCycle::do_handle_evt (const NodeEvt &evt)
 				    && node_id <  Entry_STEP_LIST + nbr_steps)
 				{
 					_ctx._step_index = node_id - Entry_STEP_LIST;
-					_page_switcher.call_page (PageType_PEDAL_EDIT_STEP, 0, node_id);
+					_page_switcher.call_page (
+						PageType_PEDAL_EDIT_STEP, nullptr, node_id
+					);
 				}
 				else
 				{
@@ -294,7 +300,7 @@ void	PedalEditCycle::update_display ()
 	for (int step_cnt = 0; step_cnt < nbr_steps; ++step_cnt)
 	{
 		const int      node_id = Entry_STEP_LIST + step_cnt;
-		TxtSPtr        step_sptr (new NText (node_id));
+		TxtSPtr        step_sptr { std::make_shared <NText> (node_id) };
 
 		const doc::PedalActionCycle::ActionArray &   step =
 			cycle._cycle [step_cnt];

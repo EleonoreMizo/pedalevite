@@ -86,13 +86,13 @@ Model::Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInpu
 ,	_edit_preset_flag (false)
 ,	_tuner_flag (false)
 ,	_tuner_pi_id (-1)
-,	_tuner_ptr (0)
+,	_tuner_ptr (nullptr)
 ,	_click_flag (false)
 ,	_click_slot ()
 ,	_file_io (file_io)
 ,	_input_device (input_device)
 ,	_queue_input_to_cmd (queue_input_to_cmd)
-,	_obs_ptr (0)
+,	_obs_ptr (nullptr)
 ,	_async_cmd ()
 ,	_dummy_mix_id (_central.get_dummy_mix_id ())
 ,	_tempo_last_ts (_central.get_cur_date () - Cst::_tempo_detection_max * 2)
@@ -117,16 +117,16 @@ Model::~Model ()
 	}
 
 	// Flush the queue
-	ui::UserInputInterface::MsgCell * cell_ptr = 0;
+	ui::UserInputInterface::MsgCell * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_input_to_cmd.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			_input_device.return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 }
 
 
@@ -218,7 +218,7 @@ void	Model::process_messages ()
 	}
 
 	// Frequency detected by the tuner
-	if (_obs_ptr != 0 && _tuner_flag && _tuner_ptr != 0)
+	if (_obs_ptr != nullptr && _tuner_flag && _tuner_ptr != nullptr)
 	{
 		const float    freq = _tuner_ptr->get_freq ();
 		_obs_ptr->set_tuner_freq (freq);
@@ -281,7 +281,11 @@ int	Model::load_from_disk (std::string pathname)
 	{
 		doc::SerRText  ser_r;
 		ser_r.start (content);
+#if __cplusplus >= 201402
+		sss_uptr = std::make_unique <doc::Setup> ();
+#else // __cplusplus
 		sss_uptr = std::unique_ptr <doc::Setup> (new doc::Setup);
+#endif // __cplusplus
 		sss_uptr->ser_read (ser_r);
 		ret_val = ser_r.terminate ();
 	}
@@ -306,7 +310,7 @@ int	Model::load_from_disk (std::string pathname)
 			const int      nbr_elt = int (cat._cell_arr.size ());
 			for (int index = 0; index < nbr_elt; ++index)
 			{
-				if (cat._cell_arr [index].get () != 0)
+				if (cat._cell_arr [index].get () != nullptr)
 				{
 					const doc::CatalogPluginSettings::Cell &  cell =
 						*(cat._cell_arr [index]);
@@ -332,7 +336,7 @@ void	Model::set_setup_name (std::string name)
 {
 	_setup._name = name;
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_setup_name (name);
 	}
@@ -351,7 +355,7 @@ void	Model::set_edit_mode (bool edit_flag)
 
 		_edit_flag = edit_flag;
 
-		if (_obs_ptr != 0)
+		if (_obs_ptr != nullptr)
 		{
 			_obs_ptr->set_edit_mode (edit_flag);
 		}
@@ -367,7 +371,7 @@ void	Model::set_save_mode (doc::Setup::SaveMode mode)
 
 	_setup._save_mode = mode;
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_save_mode (mode);
 	}
@@ -381,7 +385,7 @@ void	Model::set_pedalboard_layout (const doc::PedalboardLayout &layout)
 
 	update_layout ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_pedalboard_layout (layout);
 	}
@@ -396,7 +400,7 @@ void	Model::set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content
 	assert (loc._pedal_index >= 0);
 	assert (loc._pedal_index < Cst::_nbr_pedals);
 
-	doc::PedalboardLayout * layout_ptr = 0;
+	doc::PedalboardLayout * layout_ptr = nullptr;
 
 	switch (loc._type)
 	{
@@ -427,11 +431,11 @@ void	Model::set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content
 		break;
 	}
 
-	if (layout_ptr != 0)
+	if (layout_ptr != nullptr)
 	{
 		layout_ptr->_pedal_arr [loc._pedal_index] = content;
 		update_layout ();
-		if (_obs_ptr != 0)
+		if (_obs_ptr != nullptr)
 		{
 			_obs_ptr->set_pedal (loc, content);
 		}
@@ -447,7 +451,7 @@ void	Model::set_bank (int index, const doc::Bank &bank)
 
 	_setup._bank_arr [index] = bank;
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_bank (index, bank);
 	}
@@ -481,7 +485,7 @@ void	Model::select_bank (int index)
 
 		preinstantiate_all_plugins_from_bank ();
 
-		if (_obs_ptr != 0)
+		if (_obs_ptr != nullptr)
 		{
 			_obs_ptr->select_bank (index);
 		}
@@ -498,7 +502,7 @@ void	Model::select_bank (int index)
 void	Model::set_bank_name (std::string name)
 {
 	_setup._bank_arr [_bank_index]._name = name;
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_bank_name (name);
 	}
@@ -509,7 +513,7 @@ void	Model::set_bank_name (std::string name)
 void	Model::set_preset_name (std::string name)
 {
 	_preset_cur._name = name;
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_preset_name (name);
 	}
@@ -526,7 +530,7 @@ void	Model::set_preset (int bank_index, int preset_index, const doc::Preset &pre
 
 	_setup._bank_arr [preset_index]._preset_arr [preset_index] = preset;
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_preset (bank_index, preset_index, preset);
 	}
@@ -574,7 +578,7 @@ void	Model::activate_preset (int preset_index)
 		}
 	}
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->activate_preset (preset_index);
 	}
@@ -593,7 +597,7 @@ void	Model::store_preset (int preset_index, int bank_index)
 
 	_setup._bank_arr [bank_index2]._preset_arr [preset_index] = _preset_cur;
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->store_preset (preset_index, bank_index);
 	}
@@ -607,7 +611,7 @@ void	Model::set_prog_switch_mode (doc::ProgSwitchMode mode)
 	assert (mode < doc::ProgSwitchMode::NBR_ELT);
 
 	_preset_cur._prog_switch_mode = mode;
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_prog_switch_mode (mode);
 	}
@@ -624,7 +628,7 @@ void	Model::set_chn_mode (ChnMode mode)
 	_central.set_chn_mode (mode);
 	_central.commit ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_chn_mode (mode);
 	}
@@ -640,7 +644,7 @@ void	Model::set_master_vol (double vol)
 	_central.set_master_vol (vol);
 	_central.commit ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_master_vol (float (vol));
 	}
@@ -653,13 +657,13 @@ void	Model::set_tuner (bool tuner_flag)
 	_tuner_flag = tuner_flag;
 	if (! _tuner_flag)
 	{
-		_tuner_ptr   = 0;
+		_tuner_ptr   = nullptr;
 		_tuner_pi_id = -1;
 	}
 
 	apply_settings ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_tuner (_tuner_flag);
 	}
@@ -673,7 +677,7 @@ void	Model::set_click (bool click_flag)
 
 	apply_settings ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_click (_click_flag);
 	}
@@ -689,7 +693,7 @@ void	Model::set_tempo (double bpm)
 	_tempo = bpm;
 	_central.set_tempo (float (bpm));
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_tempo (bpm);
 	}
@@ -712,7 +716,7 @@ int	Model::add_slot ()
 
 	update_layout ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->add_slot (slot_id);
 	}
@@ -762,7 +766,7 @@ void	Model::remove_slot (int slot_id)
 
 	update_layout ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->remove_slot (slot_id);
 	}
@@ -776,7 +780,7 @@ void	Model::set_routing (const doc::Routing &routing)
 
 	update_layout ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_routing (routing);
 	}
@@ -792,13 +796,13 @@ void	Model::set_slot_label (int slot_id, std::string name)
 	assert (it_slot != _preset_cur._slot_map.end ());
 
 	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
-	if (slot_sptr.get () == 0)
+	if (slot_sptr.get () == nullptr)
 	{
-		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
+		slot_sptr = std::make_shared <doc::Slot> ();
 	}
 	slot_sptr->_label = name;
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_slot_label (slot_id, name);
 	}
@@ -818,15 +822,15 @@ void	Model::set_plugin (int slot_id, std::string model)
 	assert (it_slot != _preset_cur._slot_map.end ());
 
 	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
-	if (slot_sptr.get () == 0)
+	if (slot_sptr.get () == nullptr)
 	{
-		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
+		slot_sptr = std::make_shared <doc::Slot> ();
 	}
 	slot_sptr->_pi_model = model;
 
 	apply_settings ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		ModelObserverInterface::PluginInitData pi_data;
 		fill_pi_init_data (slot_id, pi_data);
@@ -858,15 +862,15 @@ void	Model::remove_plugin (int slot_id)
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
 
-	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
-	if (slot_sptr.get () != 0)
+	const doc::Preset::SlotSPtr & slot_sptr = it_slot->second;
+	if (slot_sptr.get () != nullptr)
 	{
 		slot_sptr->_pi_model.clear ();
 	}
 
 	apply_settings ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->remove_plugin (slot_id);
 	}
@@ -885,7 +889,7 @@ void	Model::set_plugin_mono (int slot_id, bool mono_flag)
 
 	apply_settings ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_plugin_mono (slot_id, mono_flag);
 	}
@@ -903,7 +907,7 @@ void	Model::set_plugin_reset (int slot_id, bool reset_flag)
 
 	apply_settings ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_plugin_reset (slot_id, reset_flag);
 	}
@@ -923,7 +927,7 @@ void	Model::set_param_pres (int slot_id, PiType type, int index, const doc::Para
 
 	apply_settings ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_param_pres (slot_id, type, index, pres_ptr);
 	}
@@ -955,7 +959,7 @@ void	Model::set_param (int slot_id, PiType type, int index, float val)
 		apply_settings (); // pi_id not valid after this
 	}
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_param (slot_id, index, val, type);
 	}
@@ -991,7 +995,7 @@ void	Model::set_param_beats (int slot_id, int index, float beats)
 	// Sets the parameter
 	set_param (slot_id, PiType_MAIN, index, float (val_nrm));
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_param_beats (slot_id, index, beats);
 	}
@@ -1009,7 +1013,7 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 
 	auto           it_id_map = _pi_id_map.find (slot_id);
 	assert (it_id_map != _pi_id_map.end ());
-	int            pi_id = it_id_map->second._pi_id_arr [type];
+	const int      pi_id = it_id_map->second._pi_id_arr [type];
 	assert (pi_id >= 0);
 
 	if (pi_id == _dummy_mix_id)
@@ -1029,7 +1033,7 @@ void	Model::set_param_ctrl (int slot_id, PiType type, int index, const doc::Ctrl
 		_central.commit ();
 	}
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_param_ctrl (slot_id, type, index, cls);
 	}
@@ -1054,7 +1058,7 @@ void	Model::remove_ctrl_src (const ControlSource &src)
 				const PiType   type = static_cast <PiType> (type_cnt);
 				const doc::PluginSettings *   settings_ptr =
 					slot.test_and_get_settings (type);
-				if (settings_ptr != 0)
+				if (settings_ptr != nullptr)
 				{
 					auto           it_cls = settings_ptr->_map_param_ctrl.begin ();
 					while (it_cls != settings_ptr->_map_param_ctrl.end ())
@@ -1066,7 +1070,7 @@ void	Model::remove_ctrl_src (const ControlSource &src)
 						bool           mod_flag = false;
 						const doc::CtrlLinkSet &   cls_tst =
 							it_cls->second;
-						if (   cls_tst._bind_sptr.get () != 0
+						if (   cls_tst._bind_sptr.get () != nullptr
 						    && cls_tst._bind_sptr->_source == src)
 						{
 							mod_flag = true;
@@ -1075,7 +1079,7 @@ void	Model::remove_ctrl_src (const ControlSource &src)
 						{
 							for (const auto &link_sptr : cls_tst._mod_arr)
 							{
-								assert (link_sptr.get () != 0);
+								assert (link_sptr.get () != nullptr);
 								if (link_sptr->_source == src)
 								{
 									mod_flag = true;
@@ -1088,7 +1092,7 @@ void	Model::remove_ctrl_src (const ControlSource &src)
 						if (mod_flag)
 						{
 							doc::CtrlLinkSet  cls = it_cls->second;
-							if (   cls._bind_sptr.get () != 0
+							if (   cls._bind_sptr.get () != nullptr
 								 && cls._bind_sptr->_source == src)
 							{
 								cls._bind_sptr.reset ();
@@ -1131,7 +1135,7 @@ void	Model::override_param_ctrl (int slot_id, PiType type, int index, int rotenc
 
 	auto           it_id_map = _pi_id_map.find (slot_id);
 	assert (it_id_map != _pi_id_map.end ());
-	int            pi_id     = it_id_map->second._pi_id_arr [type];
+	const int      pi_id     = it_id_map->second._pi_id_arr [type];
 	assert (pi_id >= 0);
 
 	const OverrideLoc loc { pi_id, index };
@@ -1153,7 +1157,7 @@ void	Model::override_param_ctrl (int slot_id, PiType type, int index, int rotenc
 		_central.commit ();
 	}
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->override_param_ctrl (slot_id, type, index, rotenc_index);
 	}
@@ -1165,9 +1169,9 @@ void	Model::reset_all_overridden_param_ctrl ()
 {
 	while (! _override_map.empty ())
 	{
-		const OverrideLoc &  loc   = _override_map.begin ()->first;
-		int                  slot_id;
-		PiType               type = PiType_INVALID;
+		const OverrideLoc &  loc     = _override_map.begin ()->first;
+		int                  slot_id = -1;
+		PiType               type    = PiType_INVALID;
 		find_slot_type_cur_preset (slot_id, type, loc._pi_id);
 		if (slot_id >= 0)
 		{
@@ -1235,7 +1239,7 @@ void	Model::set_signal_port (int port_id, const doc::SignalPort &port)
 
 	apply_settings ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->set_signal_port (port_id, port);
 	}
@@ -1281,7 +1285,7 @@ void	Model::add_settings (std::string model, int index, std::string name, const 
 	cell._mixer = s_mix;
 	cat.add_settings (index, cell);
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->add_settings (model, index, name, s_main, s_mix);
 	}
@@ -1300,7 +1304,7 @@ void	Model::remove_settings (std::string model, int index)
 	doc::CatalogPluginSettings &  cat = it_cat->second;
 	cat.remove_settings (index);
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->remove_settings (model, index);
 	}
@@ -1312,7 +1316,7 @@ void	Model::clear_all_settings ()
 {
 	_setup._map_plugin_settings.clear ();
 
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		_obs_ptr->clear_all_settings ();
 	}
@@ -1349,7 +1353,7 @@ void	Model::load_plugin_settings (int slot_id, PiType type, const doc::PluginSet
 	{
 		const int                  index = node_ctrl.first;
 		const doc::CtrlLinkSet &   cls   = node_ctrl.second;
-		set_param_pres (slot_id, type, index, 0);
+		set_param_pres (slot_id, type, index, nullptr);
 		set_param_ctrl (slot_id, type, index, cls);
 	}
 
@@ -1472,8 +1476,8 @@ void	Model::do_process_msg_audio_to_cmd (const WaMsg &msg)
 		const int      index = msg._content._param._index;
 		const float    val   = msg._content._param._val;
 
-		int            slot_id;
-		PiType         type  = PiType_INVALID;
+		int            slot_id = -1;
+		PiType         type    = PiType_INVALID;
 		find_slot_type_cur_preset (slot_id, type, pi_id);
 		if (slot_id >= 0)
 		{
@@ -1485,7 +1489,7 @@ void	Model::do_process_msg_audio_to_cmd (const WaMsg &msg)
 
 			if (ok_flag)
 			{
-				if (_obs_ptr != 0)
+				if (_obs_ptr != nullptr)
 				{
 					_obs_ptr->set_param (slot_id, index, val, type);
 				}
@@ -1498,7 +1502,7 @@ void	Model::do_process_msg_audio_to_cmd (const WaMsg &msg)
 					assert (index < int (settings._param_list.size ()));
 					doc::ParamPresentation *   pres_ptr =
 						settings.use_pres_if_tempo_ctrl (index);
-					if (pres_ptr != 0)
+					if (pres_ptr != nullptr)
 					{
 						const piapi::PluginDescInterface &	pi_desc =
 							get_model_desc (slot._pi_model);
@@ -1510,7 +1514,7 @@ void	Model::do_process_msg_audio_to_cmd (const WaMsg &msg)
 						);
 						pres_ptr->_ref_beats = val_beats;
 
-						if (_obs_ptr != 0)
+						if (_obs_ptr != nullptr)
 						{
 							_obs_ptr->set_param_beats (slot_id, index, val_beats);
 						}
@@ -1600,7 +1604,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 		for (const auto &node : preset._slot_map)
 		{
 			const auto &   slot_sptr = node.second;
-			if (slot_sptr.get () != 0 && ! slot_sptr->is_empty ())
+			if (slot_sptr.get () != nullptr && ! slot_sptr->is_empty ())
 			{
 				const doc::Slot & slot = *slot_sptr;
 				auto           it = pi_cnt_preset.find (slot._pi_model);
@@ -1641,7 +1645,7 @@ void	Model::preinstantiate_all_plugins_from_bank ()
 		}
 	}
 
-	_central.preinstantiate_plugins (Cst::_plugin_dwm, max_nbr_slots, 0);
+	_central.preinstantiate_plugins (Cst::_plugin_dwm, max_nbr_slots, nullptr);
 
 	// Instantiate all the plug-ins
 	for (const auto & node : pi_cnt_bank)
@@ -1678,7 +1682,7 @@ void	Model::apply_settings ()
 	{
 		build_slot_info ();
 
-		if (_obs_ptr != 0)
+		if (_obs_ptr != nullptr)
 		{
 			notify_slot_info ();
 		}
@@ -1731,7 +1735,7 @@ void	Model::apply_settings_normal ()
 			check_mixer_plugin (slot_id, slot_index_central, audio_flag);
 
 			// Now the main plug-in
-			int            pi_id = insert_plugin_main (
+			const int      pi_id = insert_plugin_main (
 				slot, slot_id, it_id_map, slot_index_central, gen_audio_flag
 			);
 
@@ -1789,7 +1793,7 @@ void	Model::apply_settings_tuner ()
 	const PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
 	_tuner_ptr = dynamic_cast <pi::tuner::Tuner *> (details._pi_uptr.get ());
-	assert (_tuner_ptr != 0);
+	assert (_tuner_ptr != nullptr);
 }
 
 
@@ -1858,7 +1862,7 @@ void	Model::check_mixer_plugin (int slot_id, int slot_index_central, int chain_f
 {
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
-	assert (it_slot->second.get () != 0);
+	assert (it_slot->second.get () != nullptr);
 
 	const bool        use_flag =
 		chain_flag && has_mixer_plugin (_preset_cur, slot_id);
@@ -1949,7 +1953,7 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_id)
 void	Model::send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings)
 {
 	// Parameters
-	PluginPool::PluginDetails &   details =
+	const PluginPool::PluginDetails &   details =
 		_central.use_pi_pool ().use_plugin (pi_id);
 	int            nbr_param =
 		details._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
@@ -1978,11 +1982,11 @@ void	Model::send_effect_settings (int pi_id, int slot_id, PiType type, const doc
 
 void	Model::process_msg_ui ()
 {
-	ui::UserInputInterface::MsgCell * cell_ptr = 0;
+	ui::UserInputInterface::MsgCell * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_input_to_cmd.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			const ui::UserInputType type = cell_ptr->_val.get_type ();
 			if (type == ui::UserInputType_SW)
@@ -2011,7 +2015,7 @@ void	Model::process_msg_ui ()
 			_input_device.return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 }
 
 
@@ -2098,7 +2102,7 @@ bool	Model::process_pedal_event (int pedal_index, doc::ActionTrigger trigger)
 
 		for (const auto &action_sptr : action_list)
 		{
-			assert (action_sptr.get () != 0);
+			assert (action_sptr.get () != nullptr);
 			const doc::PedalActionSingleInterface &   action = *action_sptr;
 			process_action (action, state._press_ts);
 		}
@@ -2202,7 +2206,8 @@ void	Model::process_action_param (const doc::ActionParam &action)
 			// At this point we are not sure about the type of a
 			// named plugin, so we have to check the parameter range.
 			PluginPool &   pi_pool   = _central.use_pi_pool ();
-			PluginPool::PluginDetails & details = pi_pool.use_plugin (pi_id);
+			const PluginPool::PluginDetails & details =
+				pi_pool.use_plugin (pi_id);
 			const int      nbr_param =
 				details._desc_ptr->get_nbr_param (piapi::ParamCateg_GLOBAL);
 			if (action._index < nbr_param)
@@ -2382,13 +2387,12 @@ void	Model::build_slot_info ()
 			{
 				const PluginPool::PluginDetails &   details =
 					pi_pool.use_plugin (pi_id);
-				info [type] = ModelObserverInterface::PluginInfoSPtr (
-					new ModelObserverInterface::PluginInfo (
+				info [type] =
+					std::make_shared <ModelObserverInterface::PluginInfo> (
 						*details._pi_uptr,
 						*details._desc_ptr,
 						details._param_arr
-					)
-				);
+					);
 			}
 		}
 
@@ -2400,7 +2404,7 @@ void	Model::build_slot_info ()
 
 void	Model::notify_slot_info ()
 {
-	assert (_obs_ptr != 0);
+	assert (_obs_ptr != nullptr);
 	assert (_slot_info.size () == _pi_id_map.size ());
 
 	_obs_ptr->set_slot_info_for_current_preset (_slot_info);
@@ -2539,7 +2543,7 @@ bool	Model::set_param_pres_pre_commit (int slot_id, PiType type, int index, cons
 	}
 	else
 	{
-		if (pres_ptr == 0)
+		if (pres_ptr == nullptr)
 		{
 			auto           pres_it = settings._map_param_pres.find (index);
 			if (pres_it != settings._map_param_pres.end ())
@@ -2547,7 +2551,7 @@ bool	Model::set_param_pres_pre_commit (int slot_id, PiType type, int index, cons
 				settings._map_param_pres.erase (pres_it);
 			}
 		}
-		else if (pres_ptr != 0)
+		else
 		{
 			settings._map_param_pres [index] = *pres_ptr;
 		}
@@ -2609,10 +2613,10 @@ void	Model::push_set_param_pres (int slot_id, PiType type, int index, const doc:
 	update._update    = ParamUpdate::Update_PRES;
 	update._type      = type;
 	update._index     = index;
-	update._pres_flag = (pres_ptr != 0);
+	update._pres_flag = (pres_ptr != nullptr);
 	auto              it =
 		_param_update_map.insert (std::make_pair (slot_id, update));
-	if (pres_ptr != 0)
+	if (pres_ptr != nullptr)
 	{
 		it->second._pres = *pres_ptr;
 	}
@@ -2734,7 +2738,7 @@ void	Model::commit_cumulated_changes ()
 	}
 
 	// Propagates to the views
-	if (_obs_ptr != 0)
+	if (_obs_ptr != nullptr)
 	{
 		for (const auto &node : _param_update_map)
 		{
@@ -2759,7 +2763,7 @@ void	Model::commit_cumulated_changes ()
 			case ParamUpdate::Update_PRES:
 				_obs_ptr->set_param_pres (
 					slot_id, upd._type, upd._index,
-					(upd._pres_flag) ? &upd._pres : 0
+					(upd._pres_flag) ? &upd._pres : nullptr
 				);
 				break;
 
@@ -2867,7 +2871,7 @@ void	Model::update_param_ctrl (const OverrideLoc &loc)
 {
 	const int      pi_id      = loc._pi_id;
 	const int      index      = loc._index;
-	int            slot_id;
+	int            slot_id    = -1;
 	PiType         type       = PiType_INVALID;
 	find_slot_type_cur_preset (slot_id, type, pi_id);
 
@@ -2910,12 +2914,12 @@ void	Model::set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id
 		doc::CtrlLinkSet  clso (cls);
 
 		// Uses the override only if there is no direct control
-		if (clso._bind_sptr.get () == 0)
+		if (clso._bind_sptr.get () == nullptr)
 		{
 			const int      rotenc_index = it->second;
 
 			// Uses the default values
-			doc::CtrlLinkSet::LinkSPtr link_sptr (new doc::CtrlLink);
+			auto           link_sptr (std::make_shared <doc::CtrlLink> ());
 			link_sptr->_source._type  = ControllerType_ROTENC;
 			link_sptr->_source._index = rotenc_index;
 
@@ -2946,7 +2950,7 @@ void	Model::set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int
 	{
 		const doc::ParamPresentation *   pres_ptr =
 			settings.use_pres_if_tempo_ctrl (index);
-		if (pres_ptr != 0)
+		if (pres_ptr != nullptr)
 		{
 			const piapi::PluginDescInterface &  desc_pi =
 				get_model_desc (slot._pi_model);
@@ -3022,7 +3026,8 @@ void	Model::add_default_ctrl (int selected_slot_id)
 								settings._map_param_ctrl.find (index);
 							if (it_ctrl != settings._map_param_ctrl.end ())
 							{
-								ok_flag = (it_ctrl->second._bind_sptr.get () == 0);
+								ok_flag =
+									(it_ctrl->second._bind_sptr.get () == nullptr);
 							}
 
 							if (ok_flag)
@@ -3039,7 +3044,7 @@ void	Model::add_default_ctrl (int selected_slot_id)
 				for (const auto &node : settings._map_param_ctrl)
 				{
 					const doc::CtrlLinkSet &   cls = node.second;
-					if (cls._bind_sptr.get () != 0)
+					if (cls._bind_sptr.get () != nullptr)
 					{
 						if (cls._bind_sptr->_source._type == ControllerType_POT)
 						{
@@ -3048,7 +3053,7 @@ void	Model::add_default_ctrl (int selected_slot_id)
 					}
 					for (const auto &mod_sptr : cls._mod_arr)
 					{
-						assert (mod_sptr.get () != 0);
+						assert (mod_sptr.get () != nullptr);
 						if (mod_sptr->_source._type == ControllerType_POT)
 						{
 							used_pot_set.insert (mod_sptr->_source._index);
@@ -3085,12 +3090,12 @@ void	Model::add_default_ctrl (int selected_slot_id)
 				settings._map_param_ctrl.find (index);
 			if (it_ctrl != settings._map_param_ctrl.end ())
 			{
-				assert (it_ctrl->second._bind_sptr.get () == 0);
+				assert (it_ctrl->second._bind_sptr.get () == nullptr);
 				cls = it_ctrl->second;
 			}
 
 			// Inserts the controller
-			cls._bind_sptr = doc::CtrlLinkSet::LinkSPtr (new doc::CtrlLink);
+			cls._bind_sptr = std::make_shared <doc::CtrlLink> ();
 			cls._bind_sptr->_source._type  = ControllerType_POT;
 			cls._bind_sptr->_source._index = pot_index;
 
@@ -3127,7 +3132,7 @@ void	Model::clear_signal_port (int port_id, bool req_exist_flag)
 
 		apply_settings ();
 
-		if (_obs_ptr != 0)
+		if (_obs_ptr != nullptr)
 		{
 			_obs_ptr->clear_signal_port (port_id);
 		}
@@ -3176,8 +3181,8 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 					{
 						doc::ParamPresentation *   pres_new_ptr =
 							settings_new.use_pres_if_tempo_ctrl (index);
-						assert (pres_new_ptr != 0);
-						float          val_nrm;
+						assert (pres_new_ptr != nullptr);
+						float          val_nrm = 0;
 						set_param_beats_pre_commit (
 							slot_id,
 							pi_id,
@@ -3228,8 +3233,8 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 		}
 		if (pres_flag && ! pres_set_flag)
 		{
-			set_param_pres_pre_commit (slot_id, type, index, 0);
-			push_set_param_pres (slot_id, type, index, 0);
+			set_param_pres_pre_commit (slot_id, type, index, nullptr);
+			push_set_param_pres (slot_id, type, index, nullptr);
 		}
 	}
 }

@@ -94,7 +94,7 @@ bool	ProgSwitcher::frame_beg ()
 			std::swap (_ctx_ptr, _delayed_ctx_msg_ptr->_val._content._ctx._ctx_ptr);
 			_queue_to_cmd.enqueue (*_delayed_ctx_msg_ptr);
 
-			_delayed_ctx_msg_ptr = 0;
+			_delayed_ctx_msg_ptr = nullptr;
 			_switch_flag         = false;
 			ctx_update_flag      = true;
 		}

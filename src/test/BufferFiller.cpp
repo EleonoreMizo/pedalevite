@@ -38,7 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 // Generates random numbers in ]-1; -0.5[ U ]0.5; 1[
 void	BufferFiller::gen_rnd_non_zero (float buf_ptr [], int nbr_spl)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -56,7 +56,7 @@ void	BufferFiller::gen_rnd_non_zero (float buf_ptr [], int nbr_spl)
 // Generates random numbers in [0; 1[
 void	BufferFiller::gen_rnd_positive (float buf_ptr [], int nbr_spl)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -70,7 +70,7 @@ void	BufferFiller::gen_rnd_positive (float buf_ptr [], int nbr_spl)
 
 void	BufferFiller::gen_rnd_scaled (float buf_ptr [], int nbr_spl, float min_val, float max_val)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (min_val <= max_val);
 

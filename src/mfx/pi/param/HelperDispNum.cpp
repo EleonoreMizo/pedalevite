@@ -192,7 +192,7 @@ void	HelperDispNum::set_preset (Preset preset)
 
 void	HelperDispNum::set_print_format (const char *format_0)
 {
-	assert (format_0 != 0);
+	assert (format_0 != nullptr);
 	assert (format_0 [0] != '\0');
 
 	_print_format = format_0;
@@ -261,7 +261,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 	assert (is_ok ());
 	assert (val >= _val_min);
 	assert (val <= _val_max);
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 	assert (max_len > 0);
 
 	char           tmp_0 [1023+1];
@@ -415,7 +415,7 @@ int	HelperDispNum::conv_to_str (double val, char txt_0 [], long max_len) const
 int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 {
 	assert (is_ok ());
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 
 	int				ret_val = Err_OK;
 
@@ -450,7 +450,7 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 
 		case	Type_INT:
 			{
-				char *            end_0   = 0;
+				char *            end_0   = nullptr;
 				const long long   val_int = strtoll (txt_0, &end_0, 10);
 				if (   end_0 == txt_0
 				    || ((   val_int == LLONG_MAX
@@ -486,7 +486,7 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 					{
 						const long		midi_note = octave * 12 + note;
 						val_p = double (midi_note);
-						char *         cents_0 = end_0;
+						char * const   cents_0 = end_0;
 						long           cents = strtol (cents_0, &end_0, 0);
 						if (end_0 == cents_0)
 						{
@@ -557,7 +557,7 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 // Returns -1 if the note cannot be found.
 int	HelperDispNum::detect_note (const char *txt_0, const char * &stop_0) const
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 
 	int            note = -1;
 
@@ -566,7 +566,7 @@ int	HelperDispNum::detect_note (const char *txt_0, const char * &stop_0) const
 	{
 		const char *		test_0 = _note_0_list [pos];
 		stop_0 = strstr (txt_0, test_0);
-		if (stop_0 != 0)
+		if (stop_0 != nullptr)
 		{
 			stop_0 += strlen (test_0);
 			note = pos;
@@ -589,13 +589,11 @@ std::string	HelperDispNum::print_frac (double val, long max_len) const
 	double         val_abs_frac = val_abs - val_abs_int;
 
 	// Finds the fraction
-	int            num;
-	int            den;
-	bool           retry_flag;
+	int            num        = 0;
+	int            den        = 1;
+	bool           retry_flag = false;
 	do
 	{
-		retry_flag = false;
-
 		long           frac_len = max_len;
 		if (val_abs_int > 0)
 		{
@@ -607,7 +605,11 @@ std::string	HelperDispNum::print_frac (double val, long max_len) const
 
 		find_frac (num, den, val_abs_frac, frac_len);
 
-		if (num >= den)
+		if (num < den)
+		{
+			retry_flag = false;
+		}
+		else
 		{
 			++ val_abs_int;
 			val_abs_frac = 0;
@@ -652,7 +654,7 @@ bool	HelperDispNum::find_infinite (const char *txt_0)
 	for (int k = 0; k < nbr_inf && ! inf_flag; ++k)
 	{
 		const char *	test_0 = strstr (txt_0, _inf_0_list [k]);
-		inf_flag = (test_0 != 0);
+		inf_flag = (test_0 != nullptr);
 	}
 
 	return inf_flag;
@@ -752,7 +754,7 @@ bool	HelperDispNum::find_frac (int &num, int &den, double frac_val, long max_len
 
 bool	HelperDispNum::scan_frac (const char txt_0 [], double &val)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 
 	bool           ok_flag = true;
 
@@ -819,7 +821,7 @@ bool	HelperDispNum::scan_ratio (const char txt_0 [], double &val, Type type)
 	char           part_0 [2] [63+1];
 	const char *   colon_0 = strchr (txt_0, ':');
 	int            nbr_conv = 0;
-	if (colon_0 == 0)
+	if (colon_0 == nullptr)
 	{
 		fstb::txt::utf8::strncpy_0 (part_0 [0], txt_0, sizeof (part_0 [0]));
 		nbr_conv = (part_0 [0] [0] != '\0') ? 1 : 0;
@@ -857,7 +859,7 @@ bool	HelperDispNum::scan_ratio (const char txt_0 [], double &val, Type type)
 
 		else
 		{
-			char *         end_ptr;
+			char *         end_ptr = nullptr;
 			const char *   start_0 = part_0 [cnt];
 			const double   x       = strtod (start_0, &end_ptr);
 			if (end_ptr == start_0 || fabs (x) == HUGE_VAL)

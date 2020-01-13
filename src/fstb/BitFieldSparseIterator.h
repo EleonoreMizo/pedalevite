@@ -45,7 +45,8 @@ public:
 
 	explicit inline
 	               BitFieldSparseIterator (BitFieldSparse &bfs);
-	virtual        ~BitFieldSparseIterator () = default;
+	               BitFieldSparseIterator (const BitFieldSparseIterator &other) = default;
+	               BitFieldSparseIterator (BitFieldSparseIterator &&other)      = default;
 
 	inline void    start (int pos_start = 0, int pos_end = -1);
 	inline bool    is_rem_elt () const;
@@ -77,9 +78,10 @@ private:
 private:
 
 	               BitFieldSparseIterator ()                               = delete;
-	               BitFieldSparseIterator (const BitFieldSparseIterator &other) = delete;
 	BitFieldSparseIterator &
 	               operator = (const BitFieldSparseIterator &other)        = delete;
+	BitFieldSparseIterator &
+	               operator = (BitFieldSparseIterator &&other)             = delete;
 	bool           operator == (const BitFieldSparseIterator &other) const = delete;
 	bool           operator != (const BitFieldSparseIterator &other) const = delete;
 

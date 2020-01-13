@@ -54,8 +54,8 @@ namespace adrv
 
 DAsio::DAsio ()
 :	_state (State_UNLOADED)
-,	_cb_ptr (0)
-,	_drivers_ptr (0)
+,	_cb_ptr (nullptr)
+,	_drivers_ptr (nullptr)
 ,	_driver_index (0)
 ,	_block_size (0)
 ,	_sample_freq (0)
@@ -72,8 +72,8 @@ DAsio::DAsio ()
 ,	_chn_info_arr ()
 ,	_buf_alig ()
 {
-	assert (_instance_ptr == 0);
-	if (_instance_ptr != 0)
+	assert (_instance_ptr == nullptr);
+	if (_instance_ptr != nullptr)
 	{
 		throw std::runtime_error ("mfx::adrv::DAsio already instantiated.");
 	}
@@ -85,7 +85,7 @@ DAsio::DAsio ()
 DAsio::~DAsio ()
 {
 	stop ();
-	_instance_ptr = 0;
+	_instance_ptr = nullptr;
 }
 
 
@@ -98,7 +98,7 @@ int	DAsio::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 {
 	assert (_state == State_UNLOADED);
 	int            ret_val = 0;
-	::ASIOError    err;
+	::ASIOError    err     = ::ASE_OK;
 
 	_msg_err.clear ();
 	sample_freq    = 0;
@@ -123,7 +123,7 @@ int	DAsio::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 		&driver_name_list [0],
 		long (driver_name_list.size ())
 	);
-	if (driver_0 != 0)
+	if (driver_0 != nullptr)
 	{
 		bool           found_flag = false;
 		for (long pos = 0; pos < nbr_drivers && ! found_flag; ++pos)
@@ -165,8 +165,7 @@ int	DAsio::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 	{
 		memset (&_asio_info, 0, sizeof (_asio_info));
 		_asio_info.asioVersion = 2;
-		_asio_info.sysRef      =
-			reinterpret_cast <void *> (::GetDesktopWindow ());
+		_asio_info.sysRef      = ::GetDesktopWindow ();
 		err = ::ASIOInit (&_asio_info);
 		if (err == ::ASE_OK)
 		{
@@ -211,10 +210,10 @@ int	DAsio::do_init (double &sample_freq, int &max_block_size, CbInterface &callb
 	long           buffer_size = 0;
 	if (ret_val == 0)
 	{
-		long           buf_size_min;
-		long           buf_size_max;
-		long           buf_size_pref;
-		long           granularity;
+		long           buf_size_min  = 0;
+		long           buf_size_max  = 0;
+		long           buf_size_pref = 0;
+		long           granularity   = 0;
 		err = ::ASIOGetBufferSize (
 			&buf_size_min,
 			&buf_size_max,
@@ -363,16 +362,16 @@ int	DAsio::do_stop ()
 
 	if (_state == State_LOADED)
 	{
-		if (_drivers_ptr != 0 && asioDrivers != 0)
+		if (_drivers_ptr != nullptr && asioDrivers != nullptr)
 		{
 			_drivers_ptr->removeCurrentDriver ();
 		}
-		if (_drivers_ptr != 0 && asioDrivers != 0)
+		if (_drivers_ptr != nullptr && asioDrivers != nullptr)
 		{
 			delete _drivers_ptr;
 		}
-		asioDrivers  = 0;
-		_drivers_ptr = 0;
+		asioDrivers  = nullptr;
+		_drivers_ptr = nullptr;
 		_state       = State_UNLOADED;
 	}
 
@@ -413,13 +412,13 @@ void	DAsio::process_block (long buf_index)
 		&_buf_alig [buf_alig_sz * 2],
 		&_buf_alig [buf_alig_sz * 3]
 	}};
-	assert (src_arr [_nbr_chn - 1] != 0);
-	assert (dst_arr [_nbr_chn - 1] != 0);
+	assert (src_arr [_nbr_chn - 1] != nullptr);
+	assert (dst_arr [_nbr_chn - 1] != nullptr);
 
 	for (int chn = 0; chn < _nbr_chn; ++chn)
 	{
 		const ::ASIOBufferInfo &   buf_info = _buf_info_arr [Dir_IN ] [chn];
-		const int32_t *   asio_src_ptr = reinterpret_cast <const int32_t *> (
+		const int32_t *   asio_src_ptr = static_cast <const int32_t *> (
 			buf_info.buffers [buf_index]
 		);
 
@@ -434,11 +433,11 @@ void	DAsio::process_block (long buf_index)
 	for (int chn = 0; chn < _nbr_chn; ++chn)
 	{
 		const ::ASIOBufferInfo &   buf_info = _buf_info_arr [Dir_OUT] [chn];
-		int32_t *      asio_dst_ptr = reinterpret_cast <int32_t *> (
+		int32_t *      asio_dst_ptr = static_cast <int32_t *> (
 			buf_info.buffers [buf_index]
 		);
 
-		if (asio_dst_ptr != 0)
+		if (asio_dst_ptr != nullptr)
 		{
 			for (int pos = 0; pos < _block_size; ++pos)
 			{
@@ -520,7 +519,7 @@ long	DAsio::asio_message (long selector, long value, void* message, double* opt)
 
 
 
-DAsio *	DAsio::_instance_ptr = 0;
+DAsio *	DAsio::_instance_ptr = nullptr;
 
 
 

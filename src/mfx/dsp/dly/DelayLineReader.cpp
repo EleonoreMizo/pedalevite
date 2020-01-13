@@ -51,7 +51,7 @@ namespace dly
 // Mandatory call
 void	DelayLineReader::set_tmp_buf (float *buf_ptr, int len)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (len > 0);
 
 	_tmp_buf_ptr = buf_ptr;
@@ -62,7 +62,7 @@ void	DelayLineReader::set_tmp_buf (float *buf_ptr, int len)
 
 float *	DelayLineReader::get_tmp_buf_ptr () const
 {
-	assert (_tmp_buf_ptr != 0);
+	assert (_tmp_buf_ptr != nullptr);
 
 	return (_tmp_buf_ptr);
 }
@@ -71,7 +71,7 @@ float *	DelayLineReader::get_tmp_buf_ptr () const
 
 int	DelayLineReader::get_tmp_buf_len () const
 {
-	assert (_tmp_buf_ptr != 0);
+	assert (_tmp_buf_ptr != nullptr);
 
 	return (_tmp_buf_len);
 }
@@ -110,8 +110,8 @@ void	DelayLineReader::set_crossfade (int nbr_spl, const float shape_ptr [])
 
 bool	DelayLineReader::is_ready () const
 {
-	return (   _delay_line_ptr != 0
-	        && _tmp_buf_ptr != 0);
+	return (   _delay_line_ptr != nullptr
+	        && _tmp_buf_ptr    != nullptr);
 }
 
 
@@ -164,7 +164,7 @@ void	DelayLineReader::clip_times ()
 void	DelayLineReader::read_data (float dest_ptr [], int nbr_spl, int src_pos)
 {
 	assert (is_ready ());
-	assert (dest_ptr != 0);
+	assert (dest_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            dest_pos = 0;
@@ -332,7 +332,7 @@ void	DelayLineReader::apply_crossfade (float dest_ptr [], int nbr_spl, double le
 	assert (_trans_dur == _xfade_dur);
 
 	// Default: linear
-	if (_xfade_shape_ptr == 0)
+	if (_xfade_shape_ptr == nullptr)
 	{
 		// The temporary buffer contains the old delay (fade out)
 		_delay_line_ptr->read_block (

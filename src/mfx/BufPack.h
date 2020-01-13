@@ -43,9 +43,6 @@ class BufPack
 
 public:
 
-	               BufPack ()  = default;
-	virtual        ~BufPack () = default;
-
 	void           set_max_block_size (int max_block_size);
 
 	inline float * use (int buf_idx);
@@ -67,8 +64,8 @@ private:
 	typedef std::vector <float, fstb::AllocAlign <float, 64> > AlignedZone;
 	typedef std::array <float *, Cst::_max_nbr_buf> BufferArray;
 
-	AlignedZone    _buf_zone;
-	BufferArray    _buf_arr;
+	AlignedZone    _buf_zone {};
+	BufferArray    _buf_arr  {};
 
 
 
@@ -76,8 +73,6 @@ private:
 
 private:
 
-	               BufPack (const BufPack &other)           = delete;
-	BufPack &      operator = (const BufPack &other)        = delete;
 	bool           operator == (const BufPack &other) const = delete;
 	bool           operator != (const BufPack &other) const = delete;
 

@@ -47,7 +47,6 @@ public:
 
 	explicit inline
 	               AioSub (T operand);
-	virtual        ~AioSub () = default;
 
 	inline T       operator () (T old_val) const;
 
@@ -73,7 +72,9 @@ private:
 
 	               AioSub ()                                   = delete;
 	               AioSub (const AioSub <T> &other)            = delete;
+	               AioSub (const AioSub <T> &&other)           = delete;
 	AioSub <T> &   operator = (const AioSub <T> &other)        = delete;
+	AioSub <T> &   operator = (const AioSub <T> &&other)       = delete;
 	bool           operator == (const AioSub <T> &other) const = delete;
 	bool           operator != (const AioSub <T> &other) const = delete;
 

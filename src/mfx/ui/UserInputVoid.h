@@ -41,7 +41,7 @@ namespace ui
 
 
 
-class UserInputVoid
+class UserInputVoid final
 :	public UserInputInterface
 {
 
@@ -50,7 +50,7 @@ class UserInputVoid
 public:
 
 	               UserInputVoid ();
-	virtual        ~UserInputVoid () = default;
+	               ~UserInputVoid () = default;
 
 	void           send_message (std::chrono::microseconds date, UserInputType type, int index, float val);
 
@@ -61,11 +61,11 @@ public:
 protected:
 
 	// mfx::ui::UserInputInterface
-	virtual int    do_get_nbr_param (UserInputType type) const;
-	virtual void   do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);
-	virtual void   do_return_cell (MsgCell &cell);
-	virtual std::chrono::microseconds
-	               do_get_cur_date () const;
+	int            do_get_nbr_param (UserInputType type) const final;
+	void           do_set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr) final;
+	void           do_return_cell (MsgCell &cell) final;
+	std::chrono::microseconds
+	               do_get_cur_date () const final;
 
 
 
@@ -89,8 +89,11 @@ private:
 private:
 
 	               UserInputVoid (const UserInputVoid &other)     = delete;
+	               UserInputVoid (UserInputVoid &&other)          = delete;
 	UserInputVoid &
 	               operator = (const UserInputVoid &other)        = delete;
+	UserInputVoid &
+	               operator = (UserInputVoid &&other)             = delete;
 	bool           operator == (const UserInputVoid &other) const = delete;
 	bool           operator != (const UserInputVoid &other) const = delete;
 

@@ -65,12 +65,6 @@ class Ultraspherical
 
 public:
 
-	               Ultraspherical ()                                = default;
-	               Ultraspherical (const Ultraspherical <T> &other) = default;
-	virtual        ~Ultraspherical () = default;
-	Ultraspherical <T> &
-	               operator = (const Ultraspherical <T> &other)     = default;
-
 	void           set_mu (double mu);
 	void           set_x_mu (double x_mu);
 
@@ -84,7 +78,7 @@ public:
 protected:
 
 	// WndInterface
-	virtual void   do_make_win (T data_ptr [], int len);
+	void           do_make_win (T data_ptr [], int len) override;
 
 
 

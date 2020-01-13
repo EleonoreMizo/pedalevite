@@ -110,8 +110,11 @@ private:
 
 	               TimeShareThread ()                               = delete;
 	               TimeShareThread (const TimeShareThread &other)   = delete;
+	               TimeShareThread (TimeShareThread &&other)        = delete;
 	TimeShareThread &
 	               operator = (const TimeShareThread &other)        = delete;
+	TimeShareThread &
+	               operator = (TimeShareThread &&other)             = delete;
 	bool           operator == (const TimeShareThread &other) const = delete;
 	bool           operator != (const TimeShareThread &other) const = delete;
 

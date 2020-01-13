@@ -63,9 +63,12 @@ public:
 	               FxId ()                        = default;
 	explicit       FxId (LocType loc_type, std::string label, PiType type);
 	               FxId (const FxId &other)       = default;
-	virtual        ~FxId ()                       = default;
+	               FxId (FxId &&other)            = default;
+
+	               ~FxId ()                       = default;
 
 	FxId &         operator = (const FxId &other) = default;
+	FxId &         operator = (FxId &&other)      = default;
 
 	bool           operator == (const FxId &other) const;
 	bool           operator != (const FxId &other) const;

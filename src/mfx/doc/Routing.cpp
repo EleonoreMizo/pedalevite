@@ -151,7 +151,7 @@ void	Routing::build_from_audio_chain (CnxSet &cnx_set, const std::vector <int> &
 {
 	CnxEnd         cnx_beg (doc::CnxEnd::Type_IO, 0, 0);
 
-	for (int slot_id : chain)
+	for (const int slot_id : chain)
 	{
 		CnxEnd         cnx_end (doc::CnxEnd::Type_NORMAL, slot_id, 0);
 		cnx_set.insert (Cnx (cnx_beg, cnx_end));

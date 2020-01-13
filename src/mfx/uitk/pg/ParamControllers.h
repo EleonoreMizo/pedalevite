@@ -58,7 +58,7 @@ namespace pg
 
 
 
-class ParamControllers
+class ParamControllers final
 :	public PageInterface
 {
 
@@ -67,7 +67,6 @@ class ParamControllers
 public:
 
 	explicit       ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::vector <CtrlSrcNamed> &csn_list);
-	virtual        ~ParamControllers () = default;
 
 
 
@@ -76,17 +75,16 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_remove_plugin (int slot_id);
-	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	void           do_activate_preset (int index) final;
+	void           do_remove_plugin (int slot_id) final;
+	void           do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls) final;
 
 
 
@@ -142,7 +140,11 @@ private:
 
 	               ParamControllers ()                                = delete;
 	               ParamControllers (const ParamControllers &other)   = delete;
-	ParamControllers &     operator = (const ParamControllers &other) = delete;
+	               ParamControllers (ParamControllers &&other)        = delete;
+	ParamControllers &
+	               operator = (const ParamControllers &other)         = delete;
+	ParamControllers &
+	               operator = ( ParamControllers &&other)             = delete;
 	bool           operator == (const ParamControllers &other) const  = delete;
 	bool           operator != (const ParamControllers &other) const  = delete;
 

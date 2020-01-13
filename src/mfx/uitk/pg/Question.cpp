@@ -53,13 +53,13 @@ namespace pg
 
 Question::Question (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_title_sptr (new NText (Entry_TITLE))
+,	_menu_sptr ( std::make_shared <NWindow> (Entry_WINDOW))
+,	_title_sptr (std::make_shared <NText  > (Entry_TITLE ))
 ,	_choice_list ()
-,	_arg_ptr (0)
+,	_arg_ptr (nullptr)
 {
 	_menu_sptr->set_autoscroll (true);
 	_title_sptr->set_justification (0.5f, 0, false);
@@ -87,12 +87,12 @@ void	Question::msg_box (std::string title, std::string msg_ok, QArg &arg, PageSw
 void	Question::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (model);
-	assert (usr_ptr != 0);
+	assert (usr_ptr != nullptr);
 
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
-	_arg_ptr   = reinterpret_cast <QArg *> (usr_ptr);
+	_arg_ptr   = static_cast <QArg *> (usr_ptr);
 
 	assert (! _arg_ptr->_choice_arr.empty ());
 	assert (_arg_ptr->_selection >= 0);
@@ -131,7 +131,7 @@ void	Question::do_connect (Model &model, const View &view, PageMgrInterface &pag
 			txt = cm_0 + txt;
 		}
 
-		TxtSPtr        choice_sptr (new NText (c_cnt));
+		TxtSPtr        choice_sptr { std::make_shared <NText> (c_cnt) };
 		choice_sptr->set_font (fnt._m);
 		choice_sptr->set_justification (0.5f, 0, false);
 		choice_sptr->set_frame (Vec2d (w_sel, 0), Vec2d ());

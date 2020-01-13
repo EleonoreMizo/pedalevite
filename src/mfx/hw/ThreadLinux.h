@@ -67,10 +67,6 @@ private:
 
 private:
 
-	               ThreadLinux ()                               = delete;
-	               ThreadLinux (const ThreadLinux &other)       = delete;
-	virtual        ~ThreadLinux ()                              = delete;
-	ThreadLinux &  operator = (const ThreadLinux &other)        = delete;
 	bool           operator == (const ThreadLinux &other) const = delete;
 	bool           operator != (const ThreadLinux &other) const = delete;
 

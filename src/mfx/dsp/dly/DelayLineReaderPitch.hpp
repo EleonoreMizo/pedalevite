@@ -49,7 +49,7 @@ namespace dly
 template <typename TC>
 void	DelayLineReaderPitch <TC>::set_tmp_buf (float *buf_ptr, int len)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (len > 0);
 
 	_tmp_buf_ptr = buf_ptr;
@@ -138,8 +138,8 @@ void	DelayLineReaderPitch <TC>::set_crossfade_pitchshift (int nbr_spl, const flo
 template <typename TC>
 bool	DelayLineReaderPitch <TC>::is_ready () const
 {
-	return (   _delay_line_ptr != 0
-	        && _tmp_buf_ptr != 0);
+	return (   _delay_line_ptr != nullptr
+	        && _tmp_buf_ptr    != nullptr);
 }
 
 
@@ -199,7 +199,7 @@ template <typename TC>
 void	DelayLineReaderPitch <TC>::read_data (float dst_ptr [], int nbr_spl, int src_pos)
 {
 	assert (is_ready ());
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (_dly_min < 0)
@@ -220,7 +220,7 @@ void	DelayLineReaderPitch <TC>::read_data (float dst_ptr [], int nbr_spl, int sr
 		work_len = g_cur.clip_block_len (work_len);
 		const bool     xfade_flag = (_xfade_pos >= 0);
 		int            xfade_dur  = 0;
-		const float *  xfade_shape_ptr = 0;
+		const float *  xfade_shape_ptr = nullptr;
 		if (xfade_flag)
 		{
 			xfade_dur       = get_xfade_len ();
@@ -250,7 +250,7 @@ void	DelayLineReaderPitch <TC>::read_data (float dst_ptr [], int nbr_spl, int sr
 			const float    lerp_beg = float (_xfade_pos           ) * inv_dur;
 			const float    lerp_end = float (_xfade_pos + work_len) * inv_dur;
 
-			if (xfade_shape_ptr == 0)
+			if (xfade_shape_ptr == nullptr)
 			{
 				// Default: linear
 				mix::Generic::scale_1_vlr (
@@ -479,7 +479,7 @@ void	DelayLineReaderPitch <TC>::check_and_start_transition ()
 template <typename TC>
 bool	DelayLineReaderPitch <TC>::process_grain (Grain &g, float dest_ptr [], int src_pos, int nbr_spl)
 {
-	assert (dest_ptr != 0);
+	assert (dest_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (g._trans_len <= 0 || nbr_spl <= g._trans_len);
 

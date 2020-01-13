@@ -56,7 +56,7 @@ namespace pg
 
 
 
-class FxPEq
+class FxPEq final
 :	public PageInterface
 {
 
@@ -65,7 +65,6 @@ class FxPEq
 public:
 
 	explicit       FxPEq (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~FxPEq () = default;
 
 
 
@@ -74,17 +73,16 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_set_param (int slot_id, int index, float val, PiType type);
-	virtual void   do_remove_plugin (int slot_id);
+	void           do_activate_preset (int index) final;
+	void           do_set_param (int slot_id, int index, float val, PiType type) final;
+	void           do_remove_plugin (int slot_id) final;
 
 
 
@@ -172,7 +170,9 @@ private:
 
 	               FxPEq ()                               = delete;
 	               FxPEq (const FxPEq &other)             = delete;
+	               FxPEq (FxPEq &&other)                  = delete;
 	FxPEq &        operator = (const FxPEq &other)        = delete;
+	FxPEq &        operator = (FxPEq &&other)             = delete;
 	bool           operator == (const FxPEq &other) const = delete;
 	bool           operator != (const FxPEq &other) const = delete;
 

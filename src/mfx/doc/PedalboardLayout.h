@@ -51,13 +51,6 @@ class PedalboardLayout
 
 public:
 
-	               PedalboardLayout ()                              = default;
-	               PedalboardLayout (const PedalboardLayout &other) = default;
-	virtual        ~PedalboardLayout ()                             = default;
-
-	PedalboardLayout &
-	               operator = (const PedalboardLayout &other)       = default;
-
 	void           merge_layout (const PedalboardLayout &other);
 
 	void           ser_write (SerWInterface &ser) const;

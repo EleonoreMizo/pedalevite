@@ -47,7 +47,7 @@ bool	CatalogPluginSettings::is_empty () const
 {
 	for (const auto &cell_sptr : _cell_arr)
 	{
-		if (cell_sptr.get () != 0)
+		if (cell_sptr.get () != nullptr)
 		{
 			return false;
 		}
@@ -63,7 +63,7 @@ bool	CatalogPluginSettings::is_preset_existing (int index) const
 	return (
 		   index >= 0
 		&& index < int (_cell_arr.size ())
-		&& _cell_arr [index].get () != 0
+		&& _cell_arr [index].get () != nullptr
 	);
 }
 
@@ -118,7 +118,7 @@ void	CatalogPluginSettings::ser_read (SerRInterface &ser, std::string pi_model)
 		{
 			_cell_arr.resize (index + 1);
 		}
-		_cell_arr [index] = CellSPtr (new Cell);
+		_cell_arr [index] = std::make_shared <Cell> ();
 		Cell &         cell = *(_cell_arr [index]);
 		ser.read (cell._name);
 		cell._main.ser_read (ser, pi_model);
@@ -136,7 +136,7 @@ void	CatalogPluginSettings::ser_read (SerRInterface &ser, std::string pi_model)
 
 void	CatalogPluginSettings::trim_array ()
 {
-	while (! _cell_arr.empty () && _cell_arr.back ().get () == 0)
+	while (! _cell_arr.empty () && _cell_arr.back ().get () == nullptr)
 	{
 		_cell_arr.pop_back ();
 	}
@@ -153,9 +153,9 @@ void	CatalogPluginSettings::add_settings (int index, const Cell &cell)
 		_cell_arr.resize (index + 1);
 	}
 
-	if (_cell_arr [index].get () == 0)
+	if (_cell_arr [index].get () == nullptr)
 	{
-		_cell_arr [index] = CellSPtr (new Cell (cell));
+		_cell_arr [index] = std::make_shared <Cell> (cell);
 	}
 	else
 	{

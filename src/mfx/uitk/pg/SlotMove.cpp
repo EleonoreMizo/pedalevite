@@ -56,12 +56,12 @@ namespace pg
 SlotMove::SlotMove (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (1000))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (1000))
 ,	_slot_list ()
 ,	_moving_flag (false)
 {
@@ -98,7 +98,7 @@ void	SlotMove::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 void	SlotMove::do_disconnect ()
 {
-	if (_model_ptr != 0)
+	if (_model_ptr != nullptr)
 	{
 		_model_ptr->reset_all_overridden_param_ctrl ();
 	}
@@ -130,7 +130,7 @@ MsgHandlerInterface::EvtProp	SlotMove::do_handle_evt (const NodeEvt &evt)
 		{
 		case Button_S:
 		case Button_E:
-			_page_switcher.switch_to (PageType_SLOT_MENU, 0);
+			_page_switcher.switch_to (PageType_SLOT_MENU, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -146,7 +146,7 @@ MsgHandlerInterface::EvtProp	SlotMove::do_handle_evt (const NodeEvt &evt)
 
 void	SlotMove::do_activate_preset (int /*index*/)
 {
-	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -155,7 +155,7 @@ void	SlotMove::do_remove_slot (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -198,7 +198,7 @@ void	SlotMove::update_display ()
 		}
 
 		const std::string multilabel (Tools::build_slot_name_with_index (entry));
-		TxtSPtr        entry_sptr (new NText (pos));
+		TxtSPtr        entry_sptr { std::make_shared <NText> (pos) };
 		entry_sptr->set_coord (Vec2d (0, h_m * pos));
 		entry_sptr->set_font (*_fnt_ptr);
 		entry_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());

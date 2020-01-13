@@ -92,7 +92,13 @@ public:
 	typedef AL AllocatorType;
 
 	explicit       FilterComb (const AllocatorType &al = AllocatorType ());
-	virtual        ~FilterComb () = default;
+	               FilterComb (const FilterComb &other) = default;
+	               FilterComb (FilterComb &&other)      = default;
+
+	               ~FilterComb ()                       = default;
+
+	FilterComb &   operator = (const FilterComb &other) = default;
+	FilterComb &   operator = (FilterComb &&other)      = default;
 
 	void           set_sample_freq (float sample_freq);
 	inline float   get_sample_freq () const;
@@ -182,8 +188,6 @@ private:
 
 private:
 
-	               FilterComb (const FilterComb &other)        = delete;
-	FilterComb &   operator = (const FilterComb &other)        = delete;
 	bool           operator == (const FilterComb &other) const = delete;
 	bool           operator != (const FilterComb &other) const = delete;
 

@@ -55,7 +55,7 @@ namespace pg
 
 
 
-class ProgCur
+class ProgCur final
 :	public PageInterface
 {
 
@@ -64,7 +64,6 @@ class ProgCur
 public:
 
 	explicit       ProgCur (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv);
-	virtual        ~ProgCur () = default;
 
 
 
@@ -73,20 +72,19 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_tempo (double bpm);
-	virtual void   do_select_bank (int index);
-	virtual void   do_set_bank_name (std::string name);
-	virtual void   do_set_preset_name (std::string name);
-	virtual void   do_activate_preset (int index);
-	virtual void   do_set_param (int slot_id, int index, float val, PiType type);
+	void           do_set_tempo (double bpm) final;
+	void           do_select_bank (int index) final;
+	void           do_set_bank_name (std::string name) final;
+	void           do_set_preset_name (std::string name) final;
+	void           do_activate_preset (int index) final;
+	void           do_set_param (int slot_id, int index, float val, PiType type) final;
 
 
 
@@ -177,7 +175,9 @@ private:
 
 	               ProgCur ()                               = delete;
 	               ProgCur (const ProgCur &other)           = delete;
+	               ProgCur (ProgCur &&other)                = delete;
 	ProgCur &      operator = (const ProgCur &other)        = delete;
+	ProgCur &      operator = (ProgCur &&other)             = delete;
 	bool           operator == (const ProgCur &other) const = delete;
 	bool           operator != (const ProgCur &other) const = delete;
 

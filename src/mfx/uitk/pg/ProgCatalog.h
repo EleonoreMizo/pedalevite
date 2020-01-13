@@ -49,7 +49,7 @@ namespace pg
 
 
 
-class ProgCatalog
+class ProgCatalog final
 :	public PageInterface
 {
 
@@ -58,7 +58,6 @@ class ProgCatalog
 public:
 
 	explicit       ProgCatalog (PageSwitcher &page_switcher);
-	virtual        ~ProgCatalog () = default;
 
 
 
@@ -67,12 +66,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -119,7 +117,9 @@ private:
 
 	               ProgCatalog ()                               = delete;
 	               ProgCatalog (const ProgCatalog &other)       = delete;
+	               ProgCatalog (ProgCatalog &&other)            = delete;
 	ProgCatalog &  operator = (const ProgCatalog &other)        = delete;
+	ProgCatalog &  operator = (ProgCatalog &&other)             = delete;
 	bool           operator == (const ProgCatalog &other) const = delete;
 	bool           operator != (const ProgCatalog &other) const = delete;
 

@@ -50,19 +50,19 @@ Wah2Desc::Wah2Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Position
-	param::Simple *   sim_ptr = new param::Simple ("Position\nPos");
-	sim_ptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
-	_desc_set.add_glob (Param_POS, sim_ptr);
+	auto           sim_sptr = std::make_shared <param::Simple> ("Position\nPos");
+	sim_sptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
+	_desc_set.add_glob (Param_POS, sim_sptr);
 
 	// Type
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"GCB-95\nV-847\nOriginal\nMcCoy\nVocal\nExtreme",
 		"Type",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_TYPE, enu_ptr);
+	_desc_set.add_glob (Param_TYPE, enu_sptr);
 }
 
 

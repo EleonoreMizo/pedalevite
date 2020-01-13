@@ -51,10 +51,14 @@ class MeterRmsPeakHold4Simd
 public:
 
 	               MeterRmsPeakHold4Simd ();
-	               MeterRmsPeakHold4Simd (const MeterRmsPeakHold4Simd &other)  = default;
-	virtual        ~MeterRmsPeakHold4Simd ()                                   = default;
+	               MeterRmsPeakHold4Simd (const MeterRmsPeakHold4Simd &other) = default;
+	               MeterRmsPeakHold4Simd (MeterRmsPeakHold4Simd &&other) = default;
+	virtual        ~MeterRmsPeakHold4Simd ()                             = default;
+
 	MeterRmsPeakHold4Simd &
-	               operator = (const MeterRmsPeakHold4Simd &other)             = default;
+	               operator = (const MeterRmsPeakHold4Simd &other)       = default;
+	MeterRmsPeakHold4Simd &
+	               operator = (MeterRmsPeakHold4Simd &&other)            = default;
 
 	void           set_sample_freq (double freq);
 	void           set_hold_time_s (double t);
@@ -62,7 +66,7 @@ public:
 	void           set_release_time_s (double t);
 
 	void           clear_buffers ();
-	void           process_block (const float * data_ptr [4], int nbr_spl);
+	void           process_block (const float * const data_ptr [4], int nbr_spl);
 	void           process_sample (fstb::ToolsSimd::VectF32 x);
 	fstb::ToolsSimd::VectF32
 	               get_peak () const;

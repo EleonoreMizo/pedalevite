@@ -52,12 +52,12 @@ namespace pg
 
 ProgCatalog::ProgCatalog (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW))
 ,	_prog_list ()
 ,	_prog_coord_list ()
 ,	_active_node_id (-1)
@@ -99,7 +99,7 @@ void	ProgCatalog::do_connect (Model &model, const View &view, PageMgrInterface &
 	for (size_t pos = 0; pos < nbr_prog; ++pos)
 	{
 		const int      node_id = conv_index_to_node_id (int (pos));
-		TxtSPtr        txt_sptr (new NText (node_id));
+		TxtSPtr        txt_sptr { std::make_shared <NText> (node_id) };
 		const UniqueProgList::ProgCoord &   coord = _prog_coord_list [pos];
 		const doc::Preset &   prog =
 			setup._bank_arr [coord._bank]._preset_arr [coord._prog];

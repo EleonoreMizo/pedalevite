@@ -43,8 +43,8 @@ namespace adrv
 
 int	DriverInterface::init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out)
 {
-	assert (driver_0 == 0 || driver_0 [0] != '\0');
-	assert (chn_idx_in >= 0);
+	assert (driver_0 == nullptr || driver_0 [0] != '\0');
+	assert (chn_idx_in  >= 0);
 	assert (chn_idx_out >= 0);
 
 	const int      ret_val = do_init (

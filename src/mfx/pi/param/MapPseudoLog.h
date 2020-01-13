@@ -45,9 +45,6 @@ class MapPseudoLog
 
 public:
 
-	               MapPseudoLog ()  = default;
-	virtual        ~MapPseudoLog () = default;
-
 	inline void    config (double val_min, double val_max);
 	inline void    set_curvature (double c);
 	inline double  conv_norm_to_nat (double norm) const;
@@ -75,8 +72,6 @@ private:
 
 private:
 
-	               MapPseudoLog (const MapPseudoLog &other)      = delete;
-	MapPseudoLog & operator = (const MapPseudoLog &other)        = delete;
 	bool           operator == (const MapPseudoLog &other) const = delete;
 	bool           operator != (const MapPseudoLog &other) const = delete;
 

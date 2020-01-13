@@ -52,12 +52,6 @@ class Bank
 
 public:
 
-	               Bank ()                        = default;
-	               Bank (const Bank &other)       = default;
-	virtual        ~Bank ()                       = default;
-
-	Bank &         operator = (const Bank &other) = default;
-
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 

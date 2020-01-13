@@ -46,10 +46,12 @@ class NotificationFlag
 
 public:
 
-	               NotificationFlag ()  = default;
+	               NotificationFlag ()                              = default;
 	inline explicit
 	               NotificationFlag (bool state_flag);
-	virtual        ~NotificationFlag () = default;
+	               NotificationFlag (const NotificationFlag &other) = default;
+	NotificationFlag &
+	               operator = (const NotificationFlag &other)       = default;
 
 
 
@@ -58,16 +60,12 @@ public:
 protected:
 
 	// ObserverInterface via NotificationFlagInterface
-	virtual inline void
-	               do_update (ObservableInterface &subject);
+	inline void    do_update (ObservableInterface &subject) override;
 
 	// NotificationFlagInterface
-	virtual inline bool
-	               do_get_state () const;
-	virtual inline void
-	               do_reset ();
-	virtual inline void
-	               do_set ();
+	inline bool    do_get_state () const override;
+	inline void    do_reset () override;
+	inline void    do_set () override;
 
 
 
@@ -83,9 +81,6 @@ private:
 
 private:
 
-	               NotificationFlag (const NotificationFlag &other)  = delete;
-	NotificationFlag &
-	               operator = (const NotificationFlag &other)        = delete;
 	bool           operator == (const NotificationFlag &other) const = delete;
 	bool           operator != (const NotificationFlag &other) const = delete;
 

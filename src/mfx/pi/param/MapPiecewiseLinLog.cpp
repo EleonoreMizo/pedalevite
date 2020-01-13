@@ -38,16 +38,6 @@ namespace param
 
 
 
-MapPiecewiseLinLog::MapPiecewiseLinLog ()
-:	_seg_list ()
-,	_val_min (0)
-,	_val_max (0)
-{
-	// Nothing
-}
-
-
-
 void	MapPiecewiseLinLog::config (double val_min, double val_max)
 {
 	assert (val_min < val_max);

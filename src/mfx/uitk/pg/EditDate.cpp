@@ -59,16 +59,16 @@ namespace pg
 EditDate::EditDate (PageSwitcher &page_switcher, const CmdLine &cmd_line)
 :	_page_switcher (page_switcher)
 ,	_cmd_line (cmd_line)
-,	_page_ptr (0)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_l_ptr (0)
-,	_fnt_ptr (0)
-,	_title_sptr ( new NText (Entry_T  ))
-,	_year_sptr (  new NText (Entry_Y  ))
-,	_month_sptr ( new NText (Entry_M  ))
-,	_day_sptr (   new NText (Entry_D  ))
-,	_hour_sptr (  new NText (Entry_H  ))
-,	_minute_sptr (new NText (Entry_MIN))
+,	_fnt_l_ptr (nullptr)
+,	_fnt_ptr (nullptr)
+,	_title_sptr ( std::make_shared <NText> (Entry_T  ))
+,	_year_sptr (  std::make_shared <NText> (Entry_Y  ))
+,	_month_sptr ( std::make_shared <NText> (Entry_M  ))
+,	_day_sptr (   std::make_shared <NText> (Entry_D  ))
+,	_hour_sptr (  std::make_shared <NText> (Entry_H  ))
+,	_minute_sptr (std::make_shared <NText> (Entry_MIN))
 ,	_change_flag (false)
 {
 	_title_sptr->set_text ("UTC date + time");
@@ -262,7 +262,7 @@ void	EditDate::refresh_time ()
 
 void	EditDate::update_field (NText &label, const char format_0 [], const tm &utc)
 {
-	assert (format_0 != 0);
+	assert (format_0 != nullptr);
 
 	char           txt_0 [255+1];
 	strftime (txt_0, sizeof (txt_0), format_0, &utc);

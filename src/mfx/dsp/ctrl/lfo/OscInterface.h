@@ -55,7 +55,15 @@ public:
 		Variation_NBR_ELT
 	};
 
-	virtual        ~OscInterface () = default;
+	               OscInterface ()                          = default;
+	               OscInterface (const OscInterface &other) = default;
+	               OscInterface (OscInterface &&other)      = default;
+	virtual        ~OscInterface ()                         = default;
+
+	virtual OscInterface &
+	               operator = (const OscInterface &other)   = default;
+	virtual OscInterface &
+	               operator = (OscInterface &&other)        = default;
 
 	inline void    set_sample_freq (double sample_freq);
 	inline void    set_period (double per);

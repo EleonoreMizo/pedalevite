@@ -45,7 +45,15 @@ class SplDataRetrievalInterface
 
 public:
 
-	virtual			~SplDataRetrievalInterface () {}
+	               SplDataRetrievalInterface ()                        = default;
+	               SplDataRetrievalInterface (const SplDataRetrievalInterface &other) = default;
+	               SplDataRetrievalInterface (SplDataRetrievalInterface &&other)      = default;
+	virtual        ~SplDataRetrievalInterface ()                       = default;
+
+	virtual SplDataRetrievalInterface &
+	               operator = (const SplDataRetrievalInterface &other) = default;
+	virtual SplDataRetrievalInterface &
+	               operator = (SplDataRetrievalInterface &&other)      = default;
 
 	void				get_data (float *chn_data_ptr_arr [], int64_t pos, int len, bool invert_flag);
 

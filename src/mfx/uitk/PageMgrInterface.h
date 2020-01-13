@@ -51,8 +51,6 @@ public:
 
 	typedef std::vector <NavLoc> NavLocList;
 
-	virtual        ~PageMgrInterface () = default;
-
 	void           set_nav_layout (const NavLocList &nav_list);
 	void           jump_to (int node_id);
 	void           set_timer (int node_id, bool enable_flag);

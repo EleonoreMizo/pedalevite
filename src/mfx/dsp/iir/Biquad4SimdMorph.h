@@ -60,11 +60,18 @@ public:
 	typedef	Biquad4SimdData::VectFloat4	VectFlt4;
 	typedef	Biquad4SimdData::VectFloat4Aligned	VectFlt4A;
 
-	               Biquad4SimdMorph ();
+	               Biquad4SimdMorph () = default;
 	               Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other);
+	               Biquad4SimdMorph (Biquad4SimdMorph <VD, VS, VP> &&other);
+
+	               ~Biquad4SimdMorph () = default;
 
 	Biquad4SimdMorph <VD, VS, VP> &
-	               operator = (const Biquad4SimdMorph <VD, VS, VP> &other)        = default;
+	               operator = (const Biquad4SimdMorph <VD, VS, VP> &other);
+	Biquad4SimdMorph <VD, VS, VP> &
+	               operator = (Biquad4SimdMorph <VD, VS, VP> &&other);
+
+	void           copy_vectors (const Biquad4SimdMorph <VD, VS, VP> &other);
 
 	void           set_ramp_time (int nbr_spl);
 	inline int     get_ramp_time () const;
@@ -121,9 +128,9 @@ private:
 	VectFlt4A      _tmp_b [3];
 	VectFlt4A      _tmp_a [3];
 
-	int            _nbr_rem_spl;  // Number of remaining samples for the current ramp. 0 = no ramping.
-	int            _ramp_len;     // > 0
-	bool           _prog_flag;    // A ramp is programmed, will follow the current one.
+	int            _nbr_rem_spl = 0;     // Number of remaining samples for the current ramp. 0 = no ramping.
+	int            _ramp_len    = 64;    // > 0
+	bool           _prog_flag   = false; // A ramp is programmed, will follow the current one.
 
 
 

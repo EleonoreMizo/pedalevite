@@ -55,9 +55,13 @@
     <OutDir>$(ProjectDir)$(Configuration)$(Platform)\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)$(Platform)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>../pv-code.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -107,6 +111,7 @@
     <Link>
       <AdditionalDependencies>mfxlib.lib;Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\mfxlib\$(Configuration)$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>

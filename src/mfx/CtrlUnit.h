@@ -111,6 +111,9 @@ private:
 
 private:
 
+	               CtrlUnit (const CtrlUnit &&other)   = delete;
+	CtrlUnit &     operator = (const CtrlUnit &&other) = delete;
+
 }; // class CtrlUnit
 
 

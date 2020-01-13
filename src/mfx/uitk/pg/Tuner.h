@@ -52,7 +52,7 @@ namespace pg
 
 
 
-class Tuner
+class Tuner final
 :	public PageInterface
 {
 
@@ -61,7 +61,6 @@ class Tuner
 public:
 
 	explicit       Tuner (PageSwitcher &page_switcher, ui::LedInterface &led);
-	virtual        ~Tuner () = default;
 
 
 
@@ -70,16 +69,15 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_tuner (bool active_flag);
-	virtual void   do_set_tuner_freq (float freq);
+	void           do_set_tuner (bool active_flag) final;
+	void           do_set_tuner_freq (float freq) final;
 
 
 
@@ -137,7 +135,9 @@ private:
 
 	               Tuner ()                               = delete;
 	               Tuner (const Tuner &other)             = delete;
+	               Tuner (Tuner &&other)                  = delete;
 	Tuner &        operator = (const Tuner &other)        = delete;
+	Tuner &        operator = (Tuner &&other)             = delete;
 	bool           operator == (const Tuner &other) const = delete;
 	bool           operator != (const Tuner &other) const = delete;
 

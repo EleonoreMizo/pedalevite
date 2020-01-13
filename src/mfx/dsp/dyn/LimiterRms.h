@@ -51,9 +51,6 @@ class LimiterRms
 
 public:
 
-	               LimiterRms ();
-	virtual        ~LimiterRms () = default;
-
 	void           set_sample_freq (double fs);
 	void           set_time (float t);
 	void           set_level (float l);
@@ -83,9 +80,9 @@ private:
 
 	dsp::dyn::EnvFollowerRmsSimple
 	               _env;
-	BufAlign       _buf;
-	float          _lvl;
-	float          _lvl_sq;
+	BufAlign       _buf { _tmp_buf_len };
+	float          _lvl    = 1;
+	float          _lvl_sq = 1;
 
 
 
@@ -93,8 +90,6 @@ private:
 
 private:
 
-	               LimiterRms (const LimiterRms &other)        = delete;
-	LimiterRms &   operator = (const LimiterRms &other)        = delete;
 	bool           operator == (const LimiterRms &other) const = delete;
 	bool           operator != (const LimiterRms &other) const = delete;
 

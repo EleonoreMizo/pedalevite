@@ -81,7 +81,7 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2xFpu <NC>::set_coefs (const double coef_arr [])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
@@ -106,7 +106,7 @@ Throws: Nothing
 template <int NC>
 float	Downsampler2xFpu <NC>::process_sample (const float in_ptr [2])
 {
-	assert (in_ptr != 0);
+	assert (in_ptr != nullptr);
 
 	float          spl_0 (in_ptr [1]);
 	float          spl_1 (in_ptr [0]);
@@ -147,8 +147,8 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2xFpu <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (in_ptr != 0);
-	assert (out_ptr != 0);
+	assert (in_ptr != nullptr);
+	assert (out_ptr != nullptr);
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl * 2);
 	assert (nbr_spl > 0);
 

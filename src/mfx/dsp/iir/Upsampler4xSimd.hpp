@@ -51,7 +51,7 @@ void	Upsampler4xSimd <NC42, NC21>::set_coefs (const double coef_42 [NC42], const
 template <int NC42, int NC21>
 void	Upsampler4xSimd <NC42, NC21>::process_sample (float dst_ptr [4], float src)
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 
 	float          buf_x2 [2];
 	_us_21.process_sample (buf_x2 [0] , buf_x2 [1] , src       );
@@ -64,8 +64,8 @@ void	Upsampler4xSimd <NC42, NC21>::process_sample (float dst_ptr [4], float src)
 template <int NC42, int NC21>
 void	Upsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)

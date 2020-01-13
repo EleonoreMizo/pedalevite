@@ -27,11 +27,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"ffft/Array.h"
-#include	"ffft/DynArray.h"
 #include	"ffft/FFTRealFixLenParam.h"
 #include	"ffft/OscSinCos.h"
 
+#include <array>
+#include <vector>
 
 
 namespace ffft
@@ -56,6 +56,12 @@ public:
 	enum {			FFT_LEN		= 1 << FFT_LEN_L2	};
 
 						FFTRealFixLen ();
+						~FFTRealFixLen ()                          = default;
+						FFTRealFixLen (const FFTRealFixLen &other) = default;
+						FFTRealFixLen (FFTRealFixLen &&other)      = default;
+
+	FFTRealFixLen&	operator = (const FFTRealFixLen &other)    = default;
+	FFTRealFixLen&	operator = (FFTRealFixLen &&other)         = default;
 
 	inline long		get_length () const;
 	void				do_fft (DataType f [], const DataType x []);
@@ -92,13 +98,13 @@ private:
 	void				build_trigo_lut ();
 	void				build_trigo_osc ();
 
-	DynArray <DataType>
+	std::vector <DataType>
 						_buffer;
-	DynArray <long>
+	std::vector <long>
 						_br_data;
-	DynArray <DataType>
+	std::vector <DataType>
 						_trigo_data;
-   Array <OscType, TRIGO_OSC_ARR_SIZE>
+   std::array <OscType, TRIGO_OSC_ARR_SIZE>
 						_trigo_osc;
 
 
@@ -107,8 +113,6 @@ private:
 
 private:
 
-						FFTRealFixLen (const FFTRealFixLen &other);
-	FFTRealFixLen&	operator = (const FFTRealFixLen &other);
 	bool				operator == (const FFTRealFixLen &other);
 	bool				operator != (const FFTRealFixLen &other);
 

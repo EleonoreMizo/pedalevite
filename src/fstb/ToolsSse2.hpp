@@ -42,15 +42,15 @@ namespace fstb
 template <class T>
 inline bool	ToolsSse2::check_ptr_align (T *ptr)
 {
-	return (ptr != 0 && (reinterpret_cast <ptrdiff_t> (ptr) & 15) == 0);
+	return (ptr != nullptr && (reinterpret_cast <intptr_t> (ptr) & 15) == 0);
 }
 
 
 
 __m128i	ToolsSse2::load_8_16ml (const void *msb_ptr, const void *lsb_ptr)
 {
-	assert (msb_ptr != 0);
-	assert (lsb_ptr != 0);
+	assert (msb_ptr != nullptr);
+	assert (lsb_ptr != nullptr);
 
 	const __m128i  val_msb = _mm_loadl_epi64 (
 		reinterpret_cast <const __m128i *> (msb_ptr)
@@ -60,43 +60,43 @@ __m128i	ToolsSse2::load_8_16ml (const void *msb_ptr, const void *lsb_ptr)
 	);
 	const __m128i  val = _mm_unpacklo_epi8 (val_lsb, val_msb);
 
-	return (val);
+	return val;
 }
 
 
 
 __m128i	ToolsSse2::load_8_16m (const void *msb_ptr, __m128i zero)
 {
-	assert (msb_ptr != 0);
+	assert (msb_ptr != nullptr);
 
 	const __m128i  val_msb = _mm_loadl_epi64 (
 		reinterpret_cast <const __m128i *> (msb_ptr)
 	);
 	const __m128i  val = _mm_unpacklo_epi8 (zero, val_msb);
 
-	return (val);
+	return val;
 }
 
 
 
 __m128i	ToolsSse2::load_8_16l (const void *lsb_ptr, __m128i zero)
 {
-	assert (lsb_ptr != 0);
+	assert (lsb_ptr != nullptr);
 
 	const __m128i  val_lsb = _mm_loadl_epi64 (
 		reinterpret_cast <const __m128i *> (lsb_ptr)
 	);
 	const __m128i  val = _mm_unpacklo_epi8 (val_lsb, zero);
 
-	return (val);
+	return val;
 }
 
 
 
 __m128i	ToolsSse2::load_8_16ml_partial (const void *msb_ptr, const void *lsb_ptr, int len)
 {
-	assert (msb_ptr != 0);
-	assert (lsb_ptr != 0);
+	assert (msb_ptr != nullptr);
+	assert (lsb_ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 8);
 
@@ -104,35 +104,35 @@ __m128i	ToolsSse2::load_8_16ml_partial (const void *msb_ptr, const void *lsb_ptr
 	const __m128i  val_lsb = load_epi64_partial (lsb_ptr, len);
 	const __m128i  val = _mm_unpacklo_epi8 (val_lsb, val_msb);
 
-	return (val);
+	return val;
 }
 
 
 
 __m128i	ToolsSse2::load_8_16m_partial (const void *msb_ptr, __m128i zero, int len)
 {
-	assert (msb_ptr != 0);
+	assert (msb_ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 8);
 
 	const __m128i  val_msb = load_epi64_partial (msb_ptr, len);
 	const __m128i  val = _mm_unpacklo_epi8 (zero, val_msb);
 
-	return (val);
+	return val;
 }
 
 
 
 __m128i	ToolsSse2::load_8_16l_partial (const void *lsb_ptr, __m128i zero, int len)
 {
-	assert (lsb_ptr != 0);
+	assert (lsb_ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 8);
 
 	const __m128i  val_lsb = load_epi64_partial (lsb_ptr, len);
 	const __m128i  val = _mm_unpacklo_epi8 (val_lsb, zero);
 
-	return (val);
+	return val;
 }
 
 
@@ -140,8 +140,8 @@ __m128i	ToolsSse2::load_8_16l_partial (const void *lsb_ptr, __m128i zero, int le
 // mask_lsb = 0x00FF00FF00FF00FF00FF00FF00FF00FF
 void	ToolsSse2::store_8_16ml (void *msb_ptr, void *lsb_ptr, __m128i val, __m128i mask_lsb)
 {
-	assert (msb_ptr != 0);
-	assert (lsb_ptr != 0);
+	assert (msb_ptr != nullptr);
+	assert (lsb_ptr != nullptr);
 	assert (lsb_ptr != msb_ptr);
 
 	const __m128i  lsb = _mm_and_si128 (mask_lsb, val);
@@ -160,7 +160,7 @@ void	ToolsSse2::store_8_16ml (void *msb_ptr, void *lsb_ptr, __m128i val, __m128i
 // mask_lsb = 0x00FF00FF00FF00FF00FF00FF00FF00FF
 void	ToolsSse2::store_8_16m (void *msb_ptr, __m128i val, __m128i mask_lsb)
 {
-	assert (msb_ptr != 0);
+	assert (msb_ptr != nullptr);
 
 	__m128i        msb = _mm_andnot_si128 (mask_lsb, val);
 	msb = _mm_srli_si128 (msb, 1);
@@ -173,7 +173,7 @@ void	ToolsSse2::store_8_16m (void *msb_ptr, __m128i val, __m128i mask_lsb)
 // mask_lsb = 0x00FF00FF00FF00FF00FF00FF00FF00FF
 void	ToolsSse2::store_8_16l (void *lsb_ptr, __m128i val, __m128i mask_lsb)
 {
-	assert (lsb_ptr != 0);
+	assert (lsb_ptr != nullptr);
 
 	__m128i        lsb = _mm_and_si128 (mask_lsb, val);
 	lsb = _mm_packus_epi16 (lsb, lsb);
@@ -184,8 +184,8 @@ void	ToolsSse2::store_8_16l (void *lsb_ptr, __m128i val, __m128i mask_lsb)
 
 void	ToolsSse2::store_8_16ml_partial (void *msb_ptr, void *lsb_ptr, __m128i val, __m128i mask_lsb, int len)
 {
-	assert (msb_ptr != 0);
-	assert (lsb_ptr != 0);
+	assert (msb_ptr != nullptr);
+	assert (lsb_ptr != nullptr);
 	assert (lsb_ptr != msb_ptr);
 
 	const __m128i  lsb = _mm_and_si128 (mask_lsb, val);
@@ -203,7 +203,7 @@ void	ToolsSse2::store_8_16ml_partial (void *msb_ptr, void *lsb_ptr, __m128i val,
 
 void	ToolsSse2::store_8_16m_partial (void *msb_ptr, __m128i val, __m128i mask_lsb, int len)
 {
-	assert (msb_ptr != 0);
+	assert (msb_ptr != nullptr);
 
 	__m128i        msb = _mm_andnot_si128 (mask_lsb, val);
 	msb = _mm_srli_si128 (msb, 1);
@@ -215,7 +215,7 @@ void	ToolsSse2::store_8_16m_partial (void *msb_ptr, __m128i val, __m128i mask_ls
 
 void	ToolsSse2::store_8_16l_partial (void *lsb_ptr, __m128i val, __m128i mask_lsb, int len)
 {
-	assert (lsb_ptr != 0);
+	assert (lsb_ptr != nullptr);
 
 	__m128i        lsb = _mm_and_si128 (mask_lsb, val);
 	lsb = _mm_packus_epi16 (lsb, lsb);
@@ -226,7 +226,7 @@ void	ToolsSse2::store_8_16l_partial (void *lsb_ptr, __m128i val, __m128i mask_ls
 
 __m128	ToolsSse2::load_ps_partial (const void *ptr, int len)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 4);
 
@@ -234,18 +234,18 @@ __m128	ToolsSse2::load_ps_partial (const void *ptr, int len)
 	while (len > 0)
 	{
 		-- len;
-		tmp_arr [len] = reinterpret_cast <const float *> (ptr) [len];
+		tmp_arr [len] = static_cast <const float *> (ptr) [len];
 	}
 	const __m128   val = _mm_load_ps (tmp_arr);
 
-	return (val);
+	return val;
 }
 
 
 
 __m128i	ToolsSse2::load_si128_partial (const void *ptr, int len)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 16);
 
@@ -253,27 +253,27 @@ __m128i	ToolsSse2::load_si128_partial (const void *ptr, int len)
 	if ((len & 1) != 0)
 	{
 		-- len;
-		tmp = *(reinterpret_cast <const uint8_t *> (ptr) + len);
+		tmp = *(static_cast <const uint8_t *> (ptr) + len);
 	}
 	if ((len & 2) != 0)
 	{
 		len -= 2;
 		tmp <<= 16;
 		const int      ofs = len >> 1;
-		tmp += *(reinterpret_cast <const uint16_t *> (ptr) + ofs);
+		tmp += *(static_cast <const uint16_t *> (ptr) + ofs);
 	}
 	__m128i        val;
 	if (len >= 8)
 	{
-		const int      tmp0 = *(reinterpret_cast <const int32_t *> (ptr)    );
-		const int      tmp1 = *(reinterpret_cast <const int32_t *> (ptr) + 1);
+		const int      tmp0 = *(static_cast <const int32_t *> (ptr)    );
+		const int      tmp1 = *(static_cast <const int32_t *> (ptr) + 1);
 		if (len == 8)
 		{
 			val = _mm_set_epi32 (0, tmp, tmp1, tmp0);
 		}
 		else
 		{
-			const int      tmp2 = *(reinterpret_cast <const int32_t *> (ptr) + 2);
+			const int      tmp2 = *(static_cast <const int32_t *> (ptr) + 2);
 			val = _mm_set_epi32 (tmp, tmp2, tmp1, tmp0);
 		}
 	}
@@ -285,19 +285,19 @@ __m128i	ToolsSse2::load_si128_partial (const void *ptr, int len)
 		}
 		else
 		{
-			const int      tmp0 = *reinterpret_cast <const int32_t *> (ptr);
+			const int      tmp0 = *static_cast <const int32_t *> (ptr);
 			val = _mm_set_epi32 (0, 0, tmp, tmp0);
 		}
 	}
 
-	return (val);
+	return val;
 }
 
 
 
 __m128i	ToolsSse2::load_epi64_partial (const void *ptr, int len)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 8);
 
@@ -305,19 +305,19 @@ __m128i	ToolsSse2::load_epi64_partial (const void *ptr, int len)
 	if ((len & 1) != 0)
 	{
 		-- len;
-		tmp = *(reinterpret_cast <const uint8_t *> (ptr) + len);
+		tmp = *(static_cast <const uint8_t *> (ptr) + len);
 	}
 	if ((len & 2) != 0)
 	{
 		len -= 2;
 		tmp <<= 16;
 		const int      ofs = len >> 1;
-		tmp += *(reinterpret_cast <const uint16_t *> (ptr) + ofs);
+		tmp += *(static_cast <const uint16_t *> (ptr) + ofs);
 	}
 	__m128i        val;
 	if ((len & 4) != 0)
 	{
-		const int      tmp2 = *reinterpret_cast <const int32_t *> (ptr);
+		const int      tmp2 = *static_cast <const int32_t *> (ptr);
 		val = _mm_set_epi32 (0, 0, tmp, tmp2);
 	}
 	else
@@ -325,14 +325,14 @@ __m128i	ToolsSse2::load_epi64_partial (const void *ptr, int len)
 		val = _mm_set_epi32 (0, 0, 0, tmp);
 	}
 
-	return (val);
+	return val;
 }
 
 
 
 void	ToolsSse2::store_ps_partial (void *ptr, __m128 val, int len)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 4);
 
@@ -341,7 +341,7 @@ void	ToolsSse2::store_ps_partial (void *ptr, __m128 val, int len)
 	while (len > 0)
 	{
 		-- len;
-		reinterpret_cast <float *> (ptr) [len] = tmp_arr [len];
+		static_cast <float *> (ptr) [len] = tmp_arr [len];
 	}
 }
 
@@ -349,7 +349,7 @@ void	ToolsSse2::store_ps_partial (void *ptr, __m128 val, int len)
 
 void	ToolsSse2::store_si128_partial (void *ptr, __m128i val, int len)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 16);
 
@@ -365,22 +365,22 @@ void	ToolsSse2::store_si128_partial (void *ptr, __m128i val, int len)
 
 	if ((len & 1) != 0)
 	{
-		*(reinterpret_cast <uint8_t  *> (ptr) + len - 1) = tmp.v08 [len - 1];
+		*(static_cast <uint8_t  *> (ptr) + len - 1) = tmp.v08 [len - 1];
 	}
 	len >>= 1;
 	if ((len & 1) != 0)
 	{
-		*(reinterpret_cast <uint16_t *> (ptr) + len - 1) = tmp.v16 [len - 1];
+		*(static_cast <uint16_t *> (ptr) + len - 1) = tmp.v16 [len - 1];
 	}
 	len >>= 1;
 	if ((len & 1) != 0)
 	{
-		*(reinterpret_cast <uint32_t *> (ptr) + len - 1) = tmp.v32 [len - 1];
+		*(static_cast <uint32_t *> (ptr) + len - 1) = tmp.v32 [len - 1];
 	}
 	len >>= 1;
 	if (len != 0)
 	{
-		* reinterpret_cast <uint64_t *> (ptr)            = tmp.v64 [0      ];
+		* static_cast <uint64_t *> (ptr)            = tmp.v64 [0      ];
 	}
 }
 
@@ -388,7 +388,7 @@ void	ToolsSse2::store_si128_partial (void *ptr, __m128i val, int len)
 
 void	ToolsSse2::store_epi64_partial (void *ptr, __m128i val, int len)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 	assert (len >= 0);
 	assert (len < 8);
 
@@ -397,19 +397,19 @@ void	ToolsSse2::store_epi64_partial (void *ptr, __m128i val, int len)
 	uint64_t       tmp = _mm_cvtsi128_si64 (val);
 	if ((len & 4) != 0)
 	{
-		*reinterpret_cast <uint32_t *> (ptr) = uint32_t (tmp);
-		ptr = reinterpret_cast <uint32_t *> (ptr) + 1;
+		*static_cast <uint32_t *> (ptr) = uint32_t (tmp);
+		ptr = static_cast <uint32_t *> (ptr) + 1;
 		tmp >>= 32;
 	}
 	if ((len & 2) != 0)
 	{
-		*reinterpret_cast <uint16_t *> (ptr) = uint16_t (tmp);
-		ptr = reinterpret_cast <uint16_t *> (ptr) + 1;
+		*static_cast <uint16_t *> (ptr) = uint16_t (tmp);
+		ptr = static_cast <uint16_t *> (ptr) + 1;
 		tmp >>= 16;
 	}
 	if ((len & 1) != 0)
 	{
-		*reinterpret_cast <uint8_t *> (ptr) = uint8_t (tmp);
+		*static_cast <uint8_t *> (ptr) = uint8_t (tmp);
 	}
 
 #else
@@ -425,17 +425,17 @@ void	ToolsSse2::store_epi64_partial (void *ptr, __m128i val, int len)
 
 	if ((len & 1) != 0)
 	{
-		*(reinterpret_cast <uint8_t  *> (ptr) + len - 1) = tmp.v08 [len - 1];
+		*(static_cast <uint8_t  *> (ptr) + len - 1) = tmp.v08 [len - 1];
 	}
 	len >>= 1;
 	if ((len & 1) != 0)
 	{
-		*(reinterpret_cast <uint16_t *> (ptr) + len - 1) = tmp.v16 [len - 1];
+		*(static_cast <uint16_t *> (ptr) + len - 1) = tmp.v16 [len - 1];
 	}
 	len >>= 1;
 	if (len != 0)
 	{
-		*(reinterpret_cast <uint32_t *> (ptr) + len - 1) = tmp.v32 [len - 1];
+		*(static_cast <uint32_t *> (ptr) + len - 1) = tmp.v32 [len - 1];
 	}
 
 #endif
@@ -490,7 +490,7 @@ __m128i	ToolsSse2::mul_s32_s15_s16 (__m128i src0, __m128i src1, __m128i coef)
 
 	const __m128i	res  = _mm_packs_epi32 (sum0, sum1);
 
-	return (res);
+	return res;
 }
 
 
@@ -522,7 +522,7 @@ __m128i	ToolsSse2::mullo_epi32 (const __m128i &a, const __m128i &b)
 	const __m128i  prod23 = _mm_unpackhi_epi32 (prod02, prod13); // (-,-,a3*b3,a2*b2)
 	const __m128i  res    = _mm_unpacklo_epi64 (prod01 ,prod23); // (ab3,ab2,ab1,ab0)
 
-	return (res);
+	return res;
 }
 
 
@@ -566,7 +566,7 @@ __m128i	ToolsSse2::pack_epi16 (__m128i a, __m128i b)
 
 #endif
 
-	return (p);
+	return p;
 }
 
 
@@ -577,7 +577,7 @@ __m128i	ToolsSse2::select (const __m128i &cond, const __m128i &v_t, const __m128
 	const __m128i  cond_0   = _mm_andnot_si128 (cond, v_f);
 	const __m128i  res      = _mm_or_si128 (cond_0, cond_1);
 
-	return (res);
+	return res;
 }
 
 
@@ -588,7 +588,7 @@ __m128	ToolsSse2::select (const __m128 &cond, const __m128 &v_t, const __m128 &v
 	const __m128   cond_0   = _mm_andnot_ps (cond, v_f);
 	const __m128   res      = _mm_or_ps (cond_0, cond_1);
 
-	return (res);
+	return res;
 }
 
 
@@ -597,14 +597,14 @@ __m128i	ToolsSse2::select_16_equ (const __m128i &lhs, const __m128i &rhs, const 
 {
 	const __m128i  cond = _mm_cmpeq_epi16 (lhs, rhs);
 
-	return (ToolsSse2::select (cond, v_t, v_f));
+	return ToolsSse2::select (cond, v_t, v_f);
 }
 
 
 
 __m128i	ToolsSse2::limit_epi16 (const __m128i &x, const __m128i &mi, const __m128i &ma)
 {
-	return (_mm_max_epi16 (_mm_min_epi16 (x, ma), mi));
+	return _mm_max_epi16 (_mm_min_epi16 (x, ma), mi);
 }
 
 
@@ -614,7 +614,7 @@ __m128i	ToolsSse2::abs_dif_epu16 (const __m128i &a, const __m128i &b)
 	const __m128i  p  = _mm_subs_epu16 (a, b);
 	const __m128i  n  = _mm_subs_epu16 (b, a);
 
-	return (_mm_or_si128 (p, n));
+	return _mm_or_si128 (p, n);
 }
 
 
@@ -628,7 +628,7 @@ __m128i	ToolsSse2::abs_dif_epi16 (const __m128i &a, const __m128i &b)
 	const __m128i  au = _mm_xor_si128 (a, mask_s);
 	const __m128i  bu = _mm_xor_si128 (b, mask_s);
 
-	return (abs_dif_epu16 (au, bu));
+	return abs_dif_epu16 (au, bu);
 }
 
 

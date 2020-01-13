@@ -51,12 +51,12 @@ namespace pg
 BankOrga::BankOrga (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 :	_page_switcher (page_switcher)
 ,	_pedal_ctx (pedal_ctx)
-,	_page_ptr (0)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_mv_bank_sptr ( new NText (Entry_MV_BANK ))
-,	_mv_prog_sptr ( new NText (Entry_MV_PROG ))
-,	_prog_cat_sptr (new NText (Entry_PROG_CAT))
+,	_fnt_ptr (nullptr)
+,	_mv_bank_sptr ( std::make_shared <NText> (Entry_MV_BANK ))
+,	_mv_prog_sptr ( std::make_shared <NText> (Entry_MV_PROG ))
+,	_prog_cat_sptr (std::make_shared <NText> (Entry_PROG_CAT))
 {
 	_mv_bank_sptr ->set_justification (0.5f, 0, false);
 	_mv_prog_sptr ->set_justification (0.5f, 0, false);
@@ -134,13 +134,13 @@ MsgHandlerInterface::EvtProp	BankOrga::do_handle_evt (const NodeEvt &evt)
 			switch (evt.get_target ())
 			{
 			case Entry_MV_BANK:
-				_page_switcher.call_page (PageType_BANK_MOVE, 0, node_id);
+				_page_switcher.call_page (PageType_BANK_MOVE, nullptr, node_id);
 				break;
 			case Entry_MV_PROG:
-				_page_switcher.call_page (PageType_PROG_MOVE, 0, node_id);
+				_page_switcher.call_page (PageType_PROG_MOVE, nullptr, node_id);
 				break;
 			case Entry_PROG_CAT:
-				_page_switcher.call_page (PageType_PROG_CATALOG, 0, node_id);
+				_page_switcher.call_page (PageType_PROG_CATALOG, nullptr, node_id);
 				break;
 			default:
 				ret_val = EvtProp_PASS;
@@ -148,7 +148,7 @@ MsgHandlerInterface::EvtProp	BankOrga::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_BANK_MENU, 0);
+			_page_switcher.switch_to (pg::PageType_BANK_MENU, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:

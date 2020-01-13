@@ -37,7 +37,7 @@ template <class T>
 LockFreeStack <T>::LockFreeStack ()
 :	_head_ptr_ptr ()
 {
-	_head_ptr_ptr->set (0, 0);
+	_head_ptr_ptr->set (nullptr, 0);
 }
 
 
@@ -45,8 +45,8 @@ LockFreeStack <T>::LockFreeStack ()
 template <class T>
 void	LockFreeStack <T>::push (CellType &cell)
 {
-	CellType *     head_ptr;
-	ptrdiff_t      count;
+	CellType *     head_ptr = nullptr;
+	ptrdiff_t      count    = 0;
 	do
 	{
 		head_ptr = _head_ptr_ptr->get_ptr ();
@@ -62,26 +62,26 @@ void	LockFreeStack <T>::push (CellType &cell)
 template <class T>
 typename LockFreeStack <T>::CellType *	LockFreeStack <T>::pop ()
 {
-	CellType *     cell_ptr;
+	CellType *     cell_ptr  = nullptr;
 	bool           cont_flag = true;
 	do
 	{
 		cell_ptr = _head_ptr_ptr->get_ptr ();
 
-		if (cell_ptr == 0)
+		if (cell_ptr == nullptr)
 		{
-			cont_flag = false;	// Empty stack.
+			cont_flag = false; // Empty stack.
 		}
 
 		else
 		{
 			const ptrdiff_t   count = _head_ptr_ptr->get_val ();
-			if (cell_ptr != 0)
+			if (cell_ptr != nullptr)
 			{
 				CellType *     next_ptr = cell_ptr->_next_ptr;
 				if (_head_ptr_ptr->cas2 (next_ptr, count + 1, cell_ptr, count))
 				{
-					cell_ptr->_next_ptr = 0;
+					cell_ptr->_next_ptr = nullptr;
 					cont_flag = false;
 				}
 			}

@@ -47,12 +47,6 @@ class ParamMapFdbkBipolar
 
 public:
 
-	               ParamMapFdbkBipolar ()                                 = default;
-	               ParamMapFdbkBipolar (const ParamMapFdbkBipolar &other) = default;
-	virtual			~ParamMapFdbkBipolar ()                                = default;
-	ParamMapFdbkBipolar &
-						operator = (const ParamMapFdbkBipolar &other)          = default;
-
 	inline void    config (double val_min, double val_max);
 	inline double  conv_norm_to_nat (double norm) const;
 	inline double  conv_nat_to_norm (double nat) const;

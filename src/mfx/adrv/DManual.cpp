@@ -45,8 +45,8 @@ namespace adrv
 void	DManual::get_buffers (float * in_ptr_arr [_nbr_chn], const float * out_ptr_arr [_nbr_chn])
 {
 	assert (_state >= State_INIT);
-	assert (in_ptr_arr != 0);
-	assert (out_ptr_arr != 0);
+	assert (in_ptr_arr  != nullptr);
+	assert (out_ptr_arr != nullptr);
 
 	for (int chn = 0; chn < _nbr_chn; ++chn)
 	{

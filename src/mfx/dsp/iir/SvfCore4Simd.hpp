@@ -957,8 +957,8 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_lat_inc (float x_s, cons
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_lat (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const auto     g1    = V128Par::load_f32 (_data._g1   );
@@ -1174,8 +1174,8 @@ float	SvfCore4Simd <VD, VS, VP, MX>::process_sample_ser_imm (float x_s, const fs
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	// We could tune this value. Lower bound is LATENCY_SERIAL + 1.
@@ -1270,7 +1270,7 @@ starting at the 4th sample. src_ptr points on the first sample.
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm_pre (const float src_ptr [])
 {
-	assert (src_ptr != 0);
+	assert (src_ptr != nullptr);
 
 	float				x_s;
 
@@ -1314,7 +1314,7 @@ sample of the block. out_ptr points on sample N-3.
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::process_block_ser_imm_post (float dst_ptr [])
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 
 
 	float          x_s;

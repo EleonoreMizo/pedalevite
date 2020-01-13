@@ -55,12 +55,6 @@ class FilterCascade
 
 public:
 
-	               FilterCascade ()                           = default;
-	               FilterCascade (const FilterCascade &other) = default;
-	               ~FilterCascade ()                          = default;
-	FilterCascade &
-	               operator = (const FilterCascade &other)    = default;
-
 	typedef F1 Filter1Type;
 	typedef F2 Filter2Type;
 	typedef F3 Filter3Type;

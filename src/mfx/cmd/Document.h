@@ -58,7 +58,7 @@ public:
 
 	               Document ()                      = default;
 	               Document (const Document &other) = default;
-	virtual        ~Document ()                     = default;
+	               Document (Document &&other)      = default;
 
 	typedef std::map <int, bool> InstanceMap; // [Id] = use
 
@@ -119,6 +119,7 @@ private:
 private:
 
 	Document &     operator = (const Document &other)        = delete;
+	Document &     operator = (Document &&other)             = delete;
 	bool           operator == (const Document &other) const = delete;
 	bool           operator != (const Document &other) const = delete;
 

@@ -47,9 +47,6 @@ class DelayAllPassSimd
 
 public:
 
-	               DelayAllPassSimd ()  = default;
-	virtual        ~DelayAllPassSimd () = default;
-
 	void           set_delay (int len);
 	void           set_feedback (float coef);
 	void           clear_buffers ();
@@ -77,9 +74,6 @@ private:
 
 private:
 
-	               DelayAllPassSimd (const DelayAllPassSimd &other)  = delete;
-	DelayAllPassSimd &
-	               operator = (const DelayAllPassSimd &other)        = delete;
 	bool           operator == (const DelayAllPassSimd &other) const = delete;
 	bool           operator != (const DelayAllPassSimd &other) const = delete;
 

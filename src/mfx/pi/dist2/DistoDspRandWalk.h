@@ -47,9 +47,6 @@ class DistoDspRandWalk
 
 public:
 
-	               DistoDspRandWalk ()  = default;
-	virtual        ~DistoDspRandWalk () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           clear_buffers ();
 	inline float   process_sample (float x);
@@ -85,9 +82,6 @@ private:
 
 private:
 
-	               DistoDspRandWalk (const DistoDspRandWalk &other)  = delete;
-	DistoDspRandWalk &
-	               operator = (const DistoDspRandWalk &other)        = delete;
 	bool           operator == (const DistoDspRandWalk &other) const = delete;
 	bool           operator != (const DistoDspRandWalk &other) const = delete;
 

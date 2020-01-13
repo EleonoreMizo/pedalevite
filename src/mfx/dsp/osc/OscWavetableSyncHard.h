@@ -99,12 +99,6 @@ public:
 
 	static const int  PITCH_FRAC_BITS = Oscillator::PITCH_FRAC_BITS;
 
-	               OscWavetableSyncHard ();
-	               OscWavetableSyncHard (const OscWavetableSyncHard &other) = default;
-	virtual        ~OscWavetableSyncHard ()                       = default;
-	OscWavetableSyncHard &
-	               operator = (const OscWavetableSyncHard &other) = default;
-
 	Oscillator &   use_osc ();
 	const Oscillator &
 	               use_osc () const;
@@ -200,7 +194,7 @@ private:
 	               _freq_slave         = fstb::FixedPoint (0);
 
 	// Buffers for past and new samples.
-	Buffer         _buffer;
+	Buffer         _buffer             {};
 
 	// Write position within the buffer
 	int            _buf_pos            = 0;

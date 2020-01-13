@@ -234,7 +234,9 @@ private:
 	               ~Fpu ()                              = delete;
 	               Fpu ()                               = delete;
 	               Fpu (const Fpu &other)               = delete;
+	               Fpu (Fpu &&other)                    = delete;
 	Fpu &          operator = (const Fpu &other)        = delete;
+	Fpu &          operator = (Fpu &&other)             = delete;
 	bool           operator == (const Fpu &other) const = delete;
 	bool           operator != (const Fpu &other) const = delete;
 

@@ -52,9 +52,6 @@ class RankSelA
 
 public:
 
-	               RankSelA ()  = default;
-	virtual        ~RankSelA () = default;
-
 	void           reserve (int len);
 	void           set_len (int len, float x = 0);
 	void           set_rank (int rank);
@@ -62,7 +59,7 @@ public:
 
 	float          process_sample (float x);
 	float          get_nth (int rank) const;
-	void           process_block (float dst_ptr [], float src_ptr [], int nbr_spl);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	void           clear_buffers ();
 
@@ -100,8 +97,6 @@ private:
 
 private:
 
-	               RankSelA (const RankSelA &other)          = delete;
-	RankSelA &     operator = (const RankSelA &other)        = delete;
 	bool           operator == (const RankSelA &other) const = delete;
 	bool           operator != (const RankSelA &other) const = delete;
 

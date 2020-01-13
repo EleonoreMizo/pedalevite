@@ -59,8 +59,6 @@ class Phase90Simd
 
 public:
 
-	               Phase90Simd () = default;
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -68,11 +66,11 @@ public:
 protected:
 
 	// mfx::pi::phase1::Phase90Interface
-	virtual int    do_get_nbr_coefs () const;
-	virtual void   do_set_coefs (const double coef_arr []);
-	virtual void   do_clear_buffers ();
-	virtual void   do_process_block (float dst_0_ptr [], float dst_1_ptr [], const float src_ptr [], int nbr_spl);
-	virtual void   do_process_sample (float &dst_0, float &dst_1, float src);
+	int            do_get_nbr_coefs () const override;
+	void           do_set_coefs (const double coef_arr []) override;
+	void           do_clear_buffers () override;
+	void           do_process_block (float dst_0_ptr [], float dst_1_ptr [], const float src_ptr [], int nbr_spl) override;
+	void           do_process_sample (float &dst_0, float &dst_1, float src) override;
 
 
 
@@ -96,8 +94,6 @@ private:
 
 private:
 
-	               Phase90Simd (const Phase90Simd &other)       = delete;
-	Phase90Simd &  operator = (const Phase90Simd &other)        = delete;
 	bool           operator == (const Phase90Simd &other) const = delete;
 	bool           operator != (const Phase90Simd &other) const = delete;
 

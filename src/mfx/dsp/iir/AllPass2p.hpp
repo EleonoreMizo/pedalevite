@@ -95,7 +95,7 @@ float	AllPass2p::process_sample (float x)
 
 float	AllPass2p::process_sample (float x, const float inc_b [2])
 {
-	assert (inc_b != 0);
+	assert (inc_b != nullptr);
 
 	const float    y = process_sample (x);
 	step_z_eq (inc_b);
@@ -115,7 +115,7 @@ float	AllPass2p::process_sample (float x, const float inc_b [2])
 
 void	AllPass2p::step_z_eq (const float inc_b [2])
 {
-	assert (inc_b != 0);
+	assert (inc_b != nullptr);
 
 	_eq_z_b [0] += inc_b [0];
 	_eq_z_b [1] += inc_b [1];

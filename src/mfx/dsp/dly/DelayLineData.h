@@ -53,7 +53,15 @@ public:
 	typedef AL AllocatorType;
 
 	               DelayLineData (const AllocatorType &al = AllocatorType ());
-	virtual        ~DelayLineData () = default;
+	               DelayLineData (const DelayLineData &other);
+	               DelayLineData (DelayLineData &&other) = default;
+
+	               ~DelayLineData ()                     = default;
+
+	DelayLineData &
+	               operator = (const DelayLineData &other);
+	DelayLineData &
+	               operator = (DelayLineData &&other)    = default;
 
 	void           set_extra_len (int nbr_spl);
 	int            get_extra_len () const;
@@ -113,9 +121,6 @@ private:
 
 private:
 
-	               DelayLineData (const DelayLineData &other)     = delete;
-	DelayLineData &
-	               operator = (const DelayLineData &other)        = delete;
 	bool           operator == (const DelayLineData &other) const = delete;
 	bool           operator != (const DelayLineData &other) const = delete;
 

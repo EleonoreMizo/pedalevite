@@ -56,23 +56,23 @@ namespace pg
 ParamEdit::ParamEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_name_sptr (       new NText (Entry_NAME   ))
-,	_val_unit_sptr (   new NText (Entry_VALUNIT))
+,	_fnt_ptr (nullptr)
+,	_name_sptr (       std::make_shared <NText> (Entry_NAME   ))
+,	_val_unit_sptr (   std::make_shared <NText> (Entry_VALUNIT))
 ,	_step_sptr_arr ()
-,	_controllers_sptr (new NText (Entry_CTRL  ))
-,	_follow_sptr (     new NText (Entry_FOLLOW))
+,	_controllers_sptr (std::make_shared <NText> (Entry_CTRL   ))
+,	_follow_sptr (     std::make_shared <NText> (Entry_FOLLOW ))
 ,	_step_index (0)
 {
 	std::string    ratio;
 	for (int k = 0; k < _nbr_steps; ++k)
 	{
 		ratio += "\xE2\x9A\xAB";   // MEDIUM BLACK CIRCLE U+26AB
-		_step_sptr_arr [k] = TxtSPtr (new NText (Entry_STEP + k));
+		_step_sptr_arr [k] = std::make_shared <NText> (Entry_STEP + k);
 		_step_sptr_arr [k]->set_text (" " + ratio + " ");
 	}
 
@@ -179,12 +179,14 @@ MsgHandlerInterface::EvtProp	ParamEdit::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			if (node_id == Entry_CTRL)
 			{
-				_page_switcher.call_page (PageType_PARAM_CONTROLLERS, 0, node_id);
+				_page_switcher.call_page (
+					PageType_PARAM_CONTROLLERS, nullptr, node_id
+				);
 			}
 			else if (node_id == Entry_FOLLOW)
 			{
 				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 			}
 			else
 			{
@@ -192,7 +194,7 @@ MsgHandlerInterface::EvtProp	ParamEdit::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PARAM_LIST, 0);
+			_page_switcher.switch_to (pg::PageType_PARAM_LIST, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:
@@ -216,7 +218,7 @@ void	ParamEdit::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -239,7 +241,7 @@ void	ParamEdit::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 	}
 }
 

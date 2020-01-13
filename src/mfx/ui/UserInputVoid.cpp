@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/ui/UserInputVoid.h"
 #include "mfx/Cst.h"
 
@@ -52,7 +53,7 @@ UserInputVoid::UserInputVoid ()
 	{
 		const int      nbr_dev =
 			do_get_nbr_param (static_cast <UserInputType> (i));
-		_recip_list [i].resize (nbr_dev, 0);
+		_recip_list [i].resize (nbr_dev, nullptr);
 	}
 }
 
@@ -60,10 +61,10 @@ UserInputVoid::UserInputVoid ()
 
 void	UserInputVoid::send_message (std::chrono::microseconds date, UserInputType type, int index, float val)
 {
-	// The cell well be lost but we don't care, this is for debugging.
+	// The cell will be lost but we don't care, this is for debugging.
 	conc::LockFreeCell <UserInputMsg> * cell_ptr =
 		new conc::LockFreeCell <UserInputMsg>;
-	cell_ptr->_next_ptr = 0;
+	cell_ptr->_next_ptr = nullptr;
 	cell_ptr->_val.set (date, type, index, val);
 	_recip_list [type] [index]->enqueue (*cell_ptr);
 }
@@ -74,8 +75,10 @@ void	UserInputVoid::send_message (std::chrono::microseconds date, UserInputType 
 
 
 
-int	UserInputVoid::do_get_nbr_param (UserInputType /*type*/) const
+int	UserInputVoid::do_get_nbr_param (UserInputType type) const
 {
+	fstb::unused (type);
+
 	return Cst::_max_input_param;
 }
 
@@ -88,8 +91,10 @@ void	UserInputVoid::do_set_msg_recipient (UserInputType type, int index, MsgQueu
 
 
 
-void	UserInputVoid::do_return_cell (MsgCell &/*cell*/)
+void	UserInputVoid::do_return_cell (MsgCell &cell)
 {
+	fstb::unused (cell);
+
 	// Nothing
 }
 

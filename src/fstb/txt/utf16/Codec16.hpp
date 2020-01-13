@@ -134,7 +134,7 @@ int	Codec16 <C16>::encode_char (std::basic_string <C16> &utf16, char32_t ucs4)
 template <class C16>
 int	Codec16 <C16>::encode_char (C16 utf16_0 [], char32_t ucs4)
 {
-	assert (utf16_0 != 0);
+	assert (utf16_0 != nullptr);
 
 	int            len = 0;
 	const int      ret_val = encode_char (utf16_0, ucs4, len);
@@ -150,9 +150,9 @@ int	Codec16 <C16>::encode_char (C16 utf16_0 [], char32_t ucs4)
 template <class C16>
 int	Codec16 <C16>::encode_char (C16 utf16_ptr [], char32_t ucs4, int &len)
 {
-	assert (utf16_ptr != 0);
+	assert (utf16_ptr != nullptr);
 
-	int            ret_val = get_char_seq_len_ucs (len, ucs4);
+	const int      ret_val = get_char_seq_len_ucs (len, ucs4);
 	if (ret_val == Err_OK)
 	{
 		if (len == 1)
@@ -177,7 +177,7 @@ int	Codec16 <C16>::encode_char (C16 utf16_ptr [], char32_t ucs4, int &len)
 template <class C16>
 int	Codec16 <C16>::decode_char (char32_t &ucs4, const C16 utf16_ptr [])
 {
-	assert (utf16_ptr != 0);
+	assert (utf16_ptr != nullptr);
 
 	int            dummy_len;
 
@@ -189,7 +189,7 @@ int	Codec16 <C16>::decode_char (char32_t &ucs4, const C16 utf16_ptr [])
 template <class C16>
 int	Codec16 <C16>::decode_char (char32_t &ucs4, const C16 utf16_ptr [], int &len)
 {
-	assert (utf16_ptr != 0);
+	assert (utf16_ptr != nullptr);
 
 	const C16      beg = utf16_ptr [0];
 	int            ret_val = get_char_seq_len_utf (len, beg);

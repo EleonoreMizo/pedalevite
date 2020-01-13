@@ -92,8 +92,11 @@ private:
 private:
 
 	               LockFreeStack (const LockFreeStack <T> &other)     = delete;
+	               LockFreeStack (LockFreeStack <T> &&other)          = delete;
 	LockFreeStack <T> &
 	               operator = (const LockFreeStack <T> &other)        = delete;
+	LockFreeStack <T> &
+	               operator = (LockFreeStack <T> &&other)             = delete;
 	bool           operator == (const LockFreeStack <T> &other) const = delete;
 	bool           operator != (const LockFreeStack <T> &other) const = delete;
 

@@ -54,13 +54,13 @@ namespace pg
 
 BankMove::BankMove (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_title_sptr (new NText ( Entry_TITLE))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW))
+,	_title_sptr (std::make_shared <NText> ( Entry_TITLE ))
 ,	_bank_list ()
 ,	_state (State_SEL)
 ,	_moving_flag (false)
@@ -201,7 +201,7 @@ void	BankMove::do_set_bank_name (std::string name)
 
 void	BankMove::update_display ()
 {
-	assert (_fnt_ptr != 0);
+	assert (_fnt_ptr != nullptr);
 
 	const int      scr_w = _page_size [0];
 
@@ -258,7 +258,7 @@ MsgHandlerInterface::EvtProp	BankMove::move_bank (int index_new)
 
 void	BankMove::save_if_req ()
 {
-	if (_model_ptr != 0 && _moved_flag)
+	if (_model_ptr != nullptr && _moved_flag)
 	{
 		const int      ret_val = _model_ptr->save_to_disk ();
 		if (ret_val != 0)

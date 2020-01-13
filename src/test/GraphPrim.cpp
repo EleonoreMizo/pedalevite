@@ -43,25 +43,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*
 ==============================================================================
-Name: ctor
-Throws: Nothing
-==============================================================================
-*/
-
-GraphPrim::GraphPrim ()
-:	_plot_ptr (0)
-,	_x (0)
-,	_y (0)
-,	_w (0)
-,	_h (0)
-{
-	// Nothing
-}
-
-
-
-/*
-==============================================================================
 Name: set_size
 Description:
 	Sets the size of the drawing zone (rectangular).
@@ -124,7 +105,7 @@ Throws: Nothing
 
 void	GraphPrim::draw_arrow (double x_1, double y_1, double x_2, double y_2) const
 {
-	assert (_plot_ptr != 0);
+	assert (_plot_ptr != nullptr);
 	assert (_w > 0);
 	assert (_h > 0);
 
@@ -181,10 +162,10 @@ Throws: Nothing.
 
 void	GraphPrim::print_legend (const char *txt_0, int level) const
 {
-	assert (_plot_ptr != 0);
+	assert (_plot_ptr != nullptr);
 	assert (_w > 0);
 	assert (_h > 0);
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 
 	const float    offset = (level < 0) ? 0 : _h;
 	_plot_ptr->drawLegend (
@@ -215,7 +196,7 @@ void	GraphPrim::convert_coordinates (double &x, double &y) const
 // In PS coordinates, (x, y) is the arrow vertex, (arrow_cos, arrow_sin) the arrow directing vector
 void	GraphPrim::draw_arrow_head (double x, double y, double arrow_cos, double arrow_sin, double head_size) const
 {
-	assert (_plot_ptr != 0);
+	assert (_plot_ptr != nullptr);
 	assert (fabs (arrow_cos) + fabs (arrow_sin) > 0);
 	assert (head_size > 0);
 

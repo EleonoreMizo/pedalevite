@@ -60,7 +60,7 @@ Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInp
 ,	_disp_size (display.get_width (), display.get_height ())
 ,	_screen (_disp_node_id)
 ,	_zone_inval (Vec2d (), _disp_size)
-,	_content_ptr (0)
+,	_content_ptr (nullptr)
 ,	_nav_list ()
 ,	_curs_pos (-1)
 ,	_curs_id (-1)
@@ -144,7 +144,7 @@ void	Page::clear (bool evt_flag)
 	_nav_list.clear ();
 	_timer_set.clear ();
 
-	if (_content_ptr != 0)
+	if (_content_ptr != nullptr)
 	{
 		if (_curs_id >= 0 && evt_flag)
 		{
@@ -156,7 +156,7 @@ void	Page::clear (bool evt_flag)
 
 		_view.remove_observer (*_content_ptr);
 		_content_ptr->disconnect ();
-		_content_ptr = 0;
+		_content_ptr = nullptr;
 	}
 
 	const int      nbr_nodes = _screen.get_nbr_nodes ();
@@ -310,11 +310,11 @@ void	Page::process_input ()
 {
 	bool           check_hold_flag = true;
 
-	ui::UserInputInterface::MsgCell * cell_ptr = 0;
+	ui::UserInputInterface::MsgCell * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_input_to_gui.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			const ui::UserInputType type  = cell_ptr->_val.get_type ();
 			const int               index = cell_ptr->_val.get_index ();
@@ -387,7 +387,7 @@ void	Page::process_input ()
 			_input_device.return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 
 	// Key repeat
 	if (check_hold_flag && _but_hold != Button_INVALID)
@@ -442,7 +442,7 @@ void	Page::handle_redraw ()
 	// Clips the zone to the physical boundaries of the screen
 	_zone_inval.intersect (Rect (Vec2d (), _disp_size));
 
-	if (! _zone_inval.empty ())
+	if (! _zone_inval.is_empty ())
 	{
 		// Clears the background
 		const int      stride  = _display.get_stride ();
@@ -482,7 +482,7 @@ void	Page::send_button (int node_id, Button but)
 
 
 
-void	Page::send_event (NodeEvt &evt)
+void	Page::send_event (const NodeEvt &evt)
 {
 	MsgHandlerInterface::EvtProp  propag = _content_ptr->handle_evt (evt);
 	if (propag == MsgHandlerInterface::EvtProp_PASS)

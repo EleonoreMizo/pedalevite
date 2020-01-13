@@ -58,11 +58,11 @@ namespace hw
 
 
 IoWindows::IoWindows (volatile bool &quit_request_flag)
-:	_model_ptr (0)
+:	_model_ptr (nullptr)
 ,	_screen_buf ()
-,	_main_win (0)
-,	_bitmap (0)
-,	_bitmap_data_ptr (0)
+,	_main_win (nullptr)
+,	_bitmap (nullptr)
+,	_bitmap_data_ptr (nullptr)
 ,	_led_arr ()
 ,	_pix_table ()
 ,	_msg_pool ()
@@ -91,7 +91,7 @@ IoWindows::IoWindows (volatile bool &quit_request_flag)
 	{
 		const int      nbr_dev =
 			do_get_nbr_param (static_cast <ui::UserInputType> (i));
-		_recip_list [i].resize (nbr_dev, 0);
+		_recip_list [i].resize (nbr_dev, nullptr);
 	}
 
 	::LARGE_INTEGER   freq;
@@ -122,11 +122,11 @@ IoWindows::~IoWindows ()
 		_msg_loop_thread.join ();
 	}
 
-	if (_bitmap != 0)
+	if (_bitmap != nullptr)
 	{
 		::DeleteObject (_bitmap);
-		_bitmap = 0;
-		_bitmap_data_ptr = 0;
+		_bitmap          = nullptr;
+		_bitmap_data_ptr = nullptr;
 	}
 }
 
@@ -364,7 +364,7 @@ const IoWindows::SwLoc	IoWindows::_switch_pos_table [] =
 
 void	IoWindows::main_loop ()
 {
-	::HMODULE      module = ::GetModuleHandleW (0);
+	::HMODULE      module = ::GetModuleHandleW (nullptr);
 
 	::WNDCLASSEXW  wcex;
 	memset (&wcex, 0, sizeof (wcex));
@@ -376,12 +376,12 @@ void	IoWindows::main_loop ()
 	wcex.cbClsExtra	= 0;
 	wcex.cbWndExtra	= 0;
 	wcex.hInstance		= module;
-	wcex.hIcon			= 0;
-	wcex.hCursor		= ::LoadCursor (NULL, IDC_ARROW);
+	wcex.hIcon			= nullptr;
+	wcex.hCursor		= ::LoadCursor (nullptr, IDC_ARROW);
 	wcex.hbrBackground= HBRUSH (COLOR_APPWORKSPACE + 1);
-	wcex.lpszMenuName	= 0;
+	wcex.lpszMenuName	= nullptr;
 	wcex.lpszClassName= _window_class_name_0;
-	wcex.hIconSm		= 0;
+	wcex.hIconSm		= nullptr;
 	::RegisterClassExW (&wcex);	// No check
 
 	_main_win = ::CreateWindowW (
@@ -390,12 +390,12 @@ void	IoWindows::main_loop ()
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 		CW_USEDEFAULT, 0,
 		320, 200,
-		0,
-		0,
+		nullptr,
+		nullptr,
 		module,
-		0
+		nullptr
 	);
-	if (_main_win == 0)
+	if (_main_win == nullptr)
 	{
 		throw std::runtime_error (
 			"Cannot create the window."
@@ -418,7 +418,7 @@ void	IoWindows::main_loop ()
 	while (! _quit_flag)
 	{
 		::MSG          msg;
-		const ::BOOL   gm_res = ::GetMessageW (&msg, 0, 0, 0);
+		const ::BOOL   gm_res = ::GetMessageW (&msg, nullptr, 0, 0);
 		if (gm_res == 0 || gm_res == -1)
 		{
 			_quit_flag         = true;
@@ -433,7 +433,7 @@ void	IoWindows::main_loop ()
 
 	::SetWindowLongPtrW (_main_win, GWLP_USERDATA, 0);
 	::DestroyWindow (_main_win);
-	_main_win = 0;
+	_main_win = nullptr;
 
 	_quit_flag = false;
 }
@@ -559,7 +559,7 @@ void	IoWindows::init_bitmap (int w, int h)
 	}
 
 	/*** To do: move this into a timer callback ***/
-	if (_model_ptr != 0)
+	if (_model_ptr != nullptr)
 	{
 		_model_ptr->use_async_cmd ().flush_ret_queue (*_ret_queue_sptr);
 	}
@@ -659,7 +659,7 @@ bool	IoWindows::process_paint (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam)
 	redraw_sw_all (x1, y1, x2, y2);
 	redraw_lsc_all (x1, y1, x2, y2);
 
-	::HDC          context = ::CreateCompatibleDC (0);
+	::HDC          context = ::CreateCompatibleDC (nullptr);
 	::HGDIOBJ      old_obj = ::SelectObject (context, _bitmap);
 	::BitBlt (hdc, x1, y1, w, h, context, x1, y1, SRCCOPY);
 	::SelectObject (context, old_obj);
@@ -681,10 +681,10 @@ bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool
 	const int      scan      =   (lparam >> 16) & 255;
 	const bool     prev_flag = (((lparam >> 30) &   1) != 0);
 
-	const ScanEntry * se_ptr = 0;
-	const int      nbr_keys =
+	const ScanEntry * se_ptr = nullptr;
+	const int      nbr_keys  =
 		int (sizeof (_scan_table) / sizeof (_scan_table [0]));
-	for (int k = 0; k < nbr_keys && se_ptr == 0; ++ k)
+	for (int k = 0; k < nbr_keys && se_ptr == nullptr; ++ k)
 	{
 		const ScanEntry & se = _scan_table [k];
 		if (   (  se._scan_flag && scan == se._code)
@@ -694,7 +694,7 @@ bool	IoWindows::process_key (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam, bool
 		}
 	}
 
-	if (se_ptr != 0)
+	if (se_ptr != nullptr)
 	{
 		const int64_t     date = get_date ();
 
@@ -744,7 +744,7 @@ bool	IoWindows::process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lpar
 	const int      mx = GET_X_LPARAM (lparam);
 	const int      my = GET_Y_LPARAM (lparam);
 	const SwLoc *  sw_loc_ptr = find_sw_from_coord (mx, my);
-	if (sw_loc_ptr != 0)
+	if (sw_loc_ptr != nullptr)
 	{
 		release_mouse_pressed_sw ();
 		enqueue_sw_msg (sw_loc_ptr->_index, true);
@@ -752,7 +752,7 @@ bool	IoWindows::process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lpar
 	}
 	else
 	{
-		if (_model_ptr == 0)
+		if (_model_ptr == nullptr)
 		{
 			assert (false);
 		}
@@ -770,13 +770,15 @@ bool	IoWindows::process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lpar
 				auto &         cmd_mgr  = _model_ptr->use_async_cmd ();
 				auto *         cell_ptr = cmd_mgr.use_pool ().take_cell (true);
 				cell_ptr->_val._content._msg_sptr =
-					std::shared_ptr <ModelMsgCmdInterface> (new ModelMsgCmdConfLdSv (
-						  (type == Lsc_SAVE)
-						? ModelMsgCmdConfLdSv::Type_SAVE
-						: ModelMsgCmdConfLdSv::Type_LOAD,
-						pathname,
-						this
-				));
+					std::static_pointer_cast <ModelMsgCmdInterface> (
+						std::make_shared <ModelMsgCmdConfLdSv> (
+							  (type == Lsc_SAVE)
+							? ModelMsgCmdConfLdSv::Type_SAVE
+							: ModelMsgCmdConfLdSv::Type_LOAD,
+							pathname,
+							this
+						)
+					);
 				cmd_mgr.enqueue (*cell_ptr, _ret_queue_sptr);
 			}
 		}
@@ -802,10 +804,10 @@ bool	IoWindows::process_lbuttonup (::HWND hwnd, ::WPARAM wparam, ::LPARAM lparam
 void	IoWindows::enqueue_val (int64_t date, ui::UserInputType type, int index, float val)
 {
 	MsgQueue *     queue_ptr = _recip_list [type] [index];
-	if (queue_ptr != 0)
+	if (queue_ptr != nullptr)
 	{
 		MsgCell *      cell_ptr = _msg_pool.take_cell (true);
-		if (cell_ptr == 0)
+		if (cell_ptr == nullptr)
 		{
 			assert (false);
 		}
@@ -1093,7 +1095,7 @@ const IoWindows::SwLoc *  IoWindows::find_sw_from_coord (int x, int y) const
 	{
 		const int      nbr_sw =
 			int (sizeof (_switch_pos_table) / sizeof (_switch_pos_table [0]));
-		for (int sw_cnt = 0; sw_cnt < nbr_sw && loc_ptr == 0; ++sw_cnt)
+		for (int sw_cnt = 0; sw_cnt < nbr_sw && loc_ptr == nullptr; ++sw_cnt)
 		{
 			const SwLoc &  loc = _switch_pos_table [sw_cnt];
 			int            sw_x;
@@ -1117,7 +1119,7 @@ const IoWindows::SwLoc *	IoWindows::find_sw_from_index (int index) const
 	const SwLoc *  loc_ptr = nullptr;
 	const int      nbr_sw  =
 		int (sizeof (_switch_pos_table) / sizeof (_switch_pos_table [0]));
-	for (int sw_cnt = 0; sw_cnt < nbr_sw && loc_ptr == 0; ++sw_cnt)
+	for (int sw_cnt = 0; sw_cnt < nbr_sw && loc_ptr == nullptr; ++sw_cnt)
 	{
 		const SwLoc &  loc = _switch_pos_table [sw_cnt];
 		if (loc._index == index)
@@ -1228,7 +1230,7 @@ bool	IoWindows::is_sw_pressed (int index) const
 	::LRESULT      ret_val = 0;
 	IoWindows *   obj_ptr =
 		reinterpret_cast <IoWindows *> (::GetWindowLongPtrW (hwnd, GWLP_USERDATA));
-	if (obj_ptr == 0)
+	if (obj_ptr == nullptr)
 	{
 		ret_val = ::DefWindowProcW (hwnd, message, wparam, lparam);
 	}
@@ -1279,24 +1281,24 @@ int	IoWindows::select_file (std::string &pathname, bool save_flag, std::string t
 		memset (&ofn, 0, sizeof (ofn));
 		ofn.lStructSize       = sizeof (ofn);  // Specifies the length, in bytes, of the structure.
 		ofn.hwndOwner         = ::GetForegroundWindow (); // Identifies the window that owns the dialog box.
-		ofn.hInstance         = 0;             // If neither flag is set, this member is ignored.
+		ofn.hInstance         = nullptr;       // If neither flag is set, this member is ignored.
 		ofn.lpstrFilter       = &filter_buf [0]; // Pointer to a buffer containing pairs of null-terminated filter strings.
-		ofn.lpstrCustomFilter = 0;             // If this member is NULL, the dialog box does not preserve user-defined filter patterns.
+		ofn.lpstrCustomFilter = nullptr;       // If this member is NULL, the dialog box does not preserve user-defined filter patterns.
 		ofn.nMaxCustFilter    = 0;             // This member is ignored if lpstrCustomFilter is NULL
 		ofn.nFilterIndex      = 1;             // Specifies the index of the currently selected filter in the File Types control.
 		ofn.lpstrFile         = &path_utf16 [0]; // Pointer to a buffer that contains a filename used to initialize the File Name edit control
 		ofn.nMaxFile          = max_pathlen;   // Specifies the size, in bytes (ANSI version) or 16-bit characters (Unicode version), of the buffer pointed to by lpstrFile.
-		ofn.lpstrFileTitle    = 0;             // This member can be NULL.
+		ofn.lpstrFileTitle    = nullptr;       // This member can be NULL.
 		ofn.nMaxFileTitle     = 0;             // This member is ignored if lpstrFileTitle is NULL.
-		ofn.lpstrInitialDir   = 0;             // Pointer to a string that specifies the initial file directory.
+		ofn.lpstrInitialDir   = nullptr;       // Pointer to a string that specifies the initial file directory.
 		ofn.lpstrTitle        = &title_utf16 [0]; // Pointer to a string to be placed in the title bar of the dialog box.
 		ofn.Flags             = OFN_ENABLESIZING | OFN_LONGNAMES;
 		ofn.nFileOffset       = 0;
 		ofn.nFileExtension    = 0;
-		ofn.lpstrDefExt       = 0;
+		ofn.lpstrDefExt       = nullptr;
 		ofn.lCustData         = 0;             // Specifies application-defined data that the system passes to the hook procedure
-		ofn.lpfnHook          = 0;             // This member is ignored unless the Flags member includes the OFN_ENABLEHOOK flag.
-		ofn.lpTemplateName    = 0;             // member is ignored unless the OFN_ENABLETEMPLATE flag is set in the Flags member.
+		ofn.lpfnHook          = nullptr;       // This member is ignored unless the Flags member includes the OFN_ENABLEHOOK flag.
+		ofn.lpTemplateName    = nullptr;       // member is ignored unless the OFN_ENABLETEMPLATE flag is set in the Flags member.
 
 		::BOOL         gfn_ret = 0;
 		if (save_flag)

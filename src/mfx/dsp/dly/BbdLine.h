@@ -76,9 +76,6 @@ public:
 	// Log2 of the minimum BBD speed, <= 0. Impacts data buffer size.
 	static const int  _min_speed_l2  = -4;
 
-	               BbdLine ()  = default;
-	virtual        ~BbdLine () = default;
-
 	void           init (int max_bbd_size, rspl::InterpolatorInterface &interp, int ovrspl_l2);
 	int            get_ovrspl_l2 () const;
 	const rspl::InterpolatorInterface &
@@ -123,7 +120,7 @@ private:
 	TimestampLine  _line_ts;
 
 	rspl::InterpolatorInterface *       // 0: interpolator not set.
-	               _interp_ptr   = 0;
+	               _interp_ptr   = nullptr;
 	DataLine       _line_data;
 
 	float          _speed        = 1;   // Speed of the delay line relative to the in/out stream. In other words, it's a dynamic oversampling factor. Range: ]0 ; +oo[. The higher the speed, the higher the CPU load.
@@ -142,8 +139,6 @@ private:
 
 private:
 
-	               BbdLine (const BbdLine &other)           = delete;
-	BbdLine &      operator = (const BbdLine &other)        = delete;
 	bool           operator == (const BbdLine &other) const = delete;
 	bool           operator != (const BbdLine &other) const = delete;
 

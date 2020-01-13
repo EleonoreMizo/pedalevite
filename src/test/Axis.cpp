@@ -42,27 +42,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*
 ==============================================================================
-Name: ctor
-Throws: std::string related exception
-==============================================================================
-*/
-
-Axis::Axis ()
-:	_min_val (0)
-,	_max_val (10)
-,	_tick_org (0)
-,	_tick_dist (1)
-,	_name ()
-,	_log_flag (false)
-,	_tick_flag (true)
-{
-	// Nothing
-}
-
-
-
-/*
-==============================================================================
 Name: set_scale
 Description:
 	Sets the minimum and maximum of the axis.

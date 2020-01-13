@@ -45,11 +45,6 @@ class PluginState
 
 public:
 
-	               PluginState ()                               = default;
-	               PluginState (const PluginState &other)       = default;
-	virtual        ~PluginState ()                              = default;
-	PluginState &  operator = (const PluginState &other)        = default;
-
 	std::vector <double>
 	               _param_list;
 

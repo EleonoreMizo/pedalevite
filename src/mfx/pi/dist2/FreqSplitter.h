@@ -59,9 +59,6 @@ class FreqSplitter
 
 public:
 
-	               FreqSplitter ()  = default;
-	virtual        ~FreqSplitter () = default;
-
 	void           clear_buffers ();
 	void           set_sample_freq (double sample_freq);
 	void           set_split_freq (float freq);
@@ -101,8 +98,6 @@ private:
 
 private:
 
-	               FreqSplitter (const FreqSplitter &other)      = delete;
-	FreqSplitter & operator = (const FreqSplitter &other)        = delete;
 	bool           operator == (const FreqSplitter &other) const = delete;
 	bool           operator != (const FreqSplitter &other) const = delete;
 

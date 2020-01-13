@@ -71,12 +71,6 @@ public:
 	typedef CDT CalcDataType;
 	typedef typename SD::DataType StorageDataType;
 
-	               OscSample ()                        = default;
-	               OscSample (const OscSample &other)  = default;
-	virtual        ~OscSample ()                       = default;
-
-	OscSample &    operator = (const OscSample &other) = default;
-
 	void           set_sample_data (const SampleTable &sample_data);
 	const SampleTable &
 						use_sample_data () const;
@@ -127,8 +121,10 @@ private:
 	static const int  PITCH_FRAC_MASK  = PITCH_FRAC_RANGE - 1;
 
 	SampleTable    _sample_data;
-	const StorageDataType *          // Current table, updated each time pitch
-	               _table_ptr = 0;   // changes.
+
+	// Current table, updated each time pitch changes.
+	const StorageDataType *
+	               _table_ptr = nullptr;
 
 	// Upper harmonic frequency range, relative to Nyquist. <= 0.
 	// Set the pitch for table-switching. 0 = maximum 1-fold aliasing.

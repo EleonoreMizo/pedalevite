@@ -49,7 +49,7 @@ class Simple
 public:
 
 	explicit       Simple (const char *name_0);
-	virtual        ~Simple () = default;
+	               ~Simple () = default;
 
 
 
@@ -71,7 +71,9 @@ private:
 
 	               Simple ()                               = delete;
 	               Simple (const Simple &other)            = delete;
+	               Simple (Simple &&other)                 = delete;
 	Simple &       operator = (const Simple &other)        = delete;
+	Simple &       operator = (Simple &&other)             = delete;
 	bool           operator == (const Simple &other) const = delete;
 	bool           operator != (const Simple &other) const = delete;
 

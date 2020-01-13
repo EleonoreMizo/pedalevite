@@ -84,7 +84,7 @@ int	TestLatAlgo::test_tree_only ()
    };
 
    mfx::cmd::lat::Algo     graph;
-   build_graph (graph, cnx_info_arr, 0);
+   build_graph (graph, cnx_info_arr, nullptr);
 
    mfx::cmd::lat::TreeList tree_list;
    tree_list.init (graph);
@@ -246,7 +246,7 @@ int	TestLatAlgo::test_full ()
 
 void	TestLatAlgo::build_graph (mfx::cmd::lat::Algo &graph, const CnxInfo cnx_info_arr [], const NodeInfo node_info_arr [])
 {
-	assert (cnx_info_arr != 0);
+	assert (cnx_info_arr != nullptr);
 
 	// Counts connexions
 	int            nbr_cnx = 0;
@@ -257,7 +257,7 @@ void	TestLatAlgo::build_graph (mfx::cmd::lat::Algo &graph, const CnxInfo cnx_inf
 
    // Counts nodes
 	int            nbr_nodes = 0;
-	if (node_info_arr != 0)
+	if (node_info_arr != nullptr)
 	{
 		while (node_info_arr [nbr_nodes]._latency != -1)
 		{
@@ -328,7 +328,7 @@ void	TestLatAlgo::build_graph (mfx::cmd::lat::Algo &graph, const CnxInfo cnx_inf
       }
    }
 
-	if (node_info_arr != 0)
+	if (node_info_arr != nullptr)
 	{
       for (int node_cnt = 0; node_cnt < nbr_nodes; ++node_cnt)
       {
@@ -375,9 +375,9 @@ void	TestLatAlgo::build_graph_random (mfx::cmd::lat::Algo &graph, int nbr_nodes,
 	for (int cnx_cnt = 0; cnx_cnt < nbr_cnx; ++cnx_cnt)
 	{
 		mfx::cmd::lat::Cnx & cnx = graph.use_cnx (cnx_cnt);
-		int            node_src_index;
-		int            node_dst_index;
-		bool           retry_flag;
+		int            node_src_index = -1;
+		int            node_dst_index = -1;
+		bool           retry_flag     = false;
 		do
 		{
 			retry_flag = false;

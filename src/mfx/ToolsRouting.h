@@ -61,7 +61,6 @@ public:
 		explicit       Node (const doc::CnxEnd &cnx_end);
 		               Node ()                        = default;
 		               Node (const Node &other)       = default;
-		virtual        ~Node ()                       = default;
 		Node &         operator = (const Node &other) = default;
 
 		inline bool    operator == (const Node &other) const;

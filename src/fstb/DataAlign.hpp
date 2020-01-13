@@ -56,7 +56,7 @@ void	DataAlign <A>::store_f32 (void *ptr, ToolsSimd::VectF32 v)
 template <>
 inline bool	DataAlign <false>::check_ptr (const void *ptr)
 {
-	return (ptr != 0);
+	return (ptr != nullptr);
 }
 
 template <>

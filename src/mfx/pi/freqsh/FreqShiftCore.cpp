@@ -108,8 +108,8 @@ bool	FreqShiftCore::is_active () const
 
 void	FreqShiftCore::process_block (float * const dst_ptr_arr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn)
 {
-	assert (dst_ptr_arr != 0);
-	assert (src_ptr_arr != 0);
+	assert (dst_ptr_arr != nullptr);
+	assert (src_ptr_arr != nullptr);
 	assert (fstb::DataAlign <true>::check_ptr (dst_ptr_arr [0]));
 	assert (fstb::DataAlign <true>::check_ptr (src_ptr_arr [0]));
 	assert (nbr_spl > 0);

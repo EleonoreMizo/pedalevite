@@ -80,9 +80,9 @@ void	FreqSplitter::process_block (int chn, float dst_l_ptr [], float dst_h_ptr [
 {
 	assert (chn >= 0);
 	assert (chn < int (_band_split_arr.size ()));
-	assert (dst_l_ptr != 0);
-	assert (dst_h_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_l_ptr != nullptr);
+	assert (dst_h_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	BandSplitApp & splitter = _band_split_arr [chn];

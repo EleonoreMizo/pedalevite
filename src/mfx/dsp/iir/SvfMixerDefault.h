@@ -73,11 +73,6 @@ private:
 
 private:
 
-	               SvfMixerDefault ()                               = delete;
-	               SvfMixerDefault (const SvfMixerDefault &other)   = delete;
-	               ~SvfMixerDefault ()                              = delete;
-	SvfMixerDefault &
-	               operator = (const SvfMixerDefault &other)        = delete;
 	bool           operator == (const SvfMixerDefault &other) const = delete;
 	bool           operator != (const SvfMixerDefault &other) const = delete;
 

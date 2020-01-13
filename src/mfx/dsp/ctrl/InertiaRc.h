@@ -49,9 +49,11 @@ public:
 
 	               InertiaRc ();
 	               InertiaRc (const InertiaRc &other)  = default;
+	               InertiaRc (InertiaRc &&other)       = default;
 	virtual        ~InertiaRc ()                       = default;
 
 	InertiaRc &    operator = (const InertiaRc &other) = default;
+	InertiaRc &    operator = (InertiaRc &&other)      = default;
 
 	void           set_sample_freq (float sample_freq);
 	void           set_inertia_time (float t);

@@ -57,18 +57,18 @@ namespace pg
 PedalActionType::PedalActionType (PageSwitcher &page_switcher, PedalEditContext &ctx)
 :	_page_switcher (page_switcher)
 ,	_ctx (ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_title_sptr (    new NText (Entry_TITLE    ))
-,	_title2_sptr (   new NText (Entry_TITLE2   ))
-,	_full_sptr (     new NText (Entry_FULL     ))
-,	_clear_sptr (    new NText (Entry_CLEAR    ))
-,	_push_sptr (     new NText (Entry_PUSH     ))
-,	_momentary_sptr (new NText (Entry_MOMENTARY))
-,	_toggle_sptr (   new NText (Entry_TOGGLE   ))
+,	_fnt_ptr (nullptr)
+,	_title_sptr (    std::make_shared <NText> (Entry_TITLE    ))
+,	_title2_sptr (   std::make_shared <NText> (Entry_TITLE2   ))
+,	_full_sptr (     std::make_shared <NText> (Entry_FULL     ))
+,	_clear_sptr (    std::make_shared <NText> (Entry_CLEAR    ))
+,	_push_sptr (     std::make_shared <NText> (Entry_PUSH     ))
+,	_momentary_sptr (std::make_shared <NText> (Entry_MOMENTARY))
+,	_toggle_sptr (   std::make_shared <NText> (Entry_TOGGLE   ))
 {
 	_title_sptr ->set_justification (0.5f, 0, false);
 	_title2_sptr->set_justification (0.5f, 0, false);
@@ -161,7 +161,9 @@ MsgHandlerInterface::EvtProp	PedalActionType::do_handle_evt (const NodeEvt &evt)
 			switch (node_id)
 			{
 			case Entry_FULL:
-				_page_switcher.call_page (PageType_PEDAL_EDIT_GROUP, 0, node_id);
+				_page_switcher.call_page (
+					PageType_PEDAL_EDIT_GROUP, nullptr, node_id
+				);
 				break;
 			case Entry_CLEAR:
 				_model_ptr->set_pedal (
@@ -170,15 +172,15 @@ MsgHandlerInterface::EvtProp	PedalActionType::do_handle_evt (const NodeEvt &evt)
 				);
 				break;
 			case Entry_PUSH:
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 				/*** To do ***/
 				break;
 			case Entry_MOMENTARY:
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 				/*** To do ***/
 				break;
 			case Entry_TOGGLE:
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 				/*** To do ***/
 				break;
 			default:

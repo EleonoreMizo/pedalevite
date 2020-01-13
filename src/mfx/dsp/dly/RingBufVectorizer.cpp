@@ -67,7 +67,7 @@ void	RingBufVectorizer::set_size (int size)
 	{
 		_pos [curs] = 0;
 	}
-	_len = 0;
+	_len     = 0;
 	_seg_len = 0;
 }
 

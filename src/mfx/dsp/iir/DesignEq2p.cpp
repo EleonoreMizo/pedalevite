@@ -82,8 +82,8 @@ Throws: Nothing
 
 void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double q, double lvl, double f0, double fs)
 {
-	assert (bz != 0);
-	assert (az != 0);
+	assert (bz != nullptr);
+	assert (az != nullptr);
 	assert (q > 0);
 	assert (lvl > 0);
 	assert (f0 > 0);
@@ -139,8 +139,8 @@ Throws: Nothing
 
 void	DesignEq2p::make_nyq_peak (float bz [3], float az [3], double g0, double g, double gb, double w0, double dw)
 {
-	assert (bz != 0);
-	assert (az != 0);
+	assert (bz != nullptr);
+	assert (az != nullptr);
 	assert (g0 >= 0);
 	assert (g > 0);
 	assert (gb > 0);

@@ -126,7 +126,9 @@ private:
 private:
 
 	               CellPool (const CellPool <T> &other)          = delete;
+	               CellPool (CellPool <T> &&other)               = delete;
 	CellPool <T> & operator = (const CellPool <T> &other)        = delete;
+	CellPool <T> & operator = (CellPool <T> &&other)             = delete;
 	bool           operator == (const CellPool <T> &other) const = delete;
 	bool           operator != (const CellPool <T> &other) const = delete;
 

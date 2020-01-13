@@ -56,12 +56,6 @@ public:
 		DispMode_BEATS
 	};
 
-	               ParamPresentation ()                               = default;
-	               ParamPresentation (const ParamPresentation &other) = default;
-	virtual        ~ParamPresentation ()                              = default;
-	ParamPresentation &
-	               operator = (const ParamPresentation &other)        = default;
-
 	bool           operator == (const ParamPresentation &other) const;
 	bool           operator != (const ParamPresentation &other) const;
 	bool           is_similar (const ParamPresentation &other) const;

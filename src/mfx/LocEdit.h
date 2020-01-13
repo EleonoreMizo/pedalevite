@@ -46,8 +46,7 @@ class LocEdit
 
 public:
 
-	               LocEdit ()  = default;
-	virtual        ~LocEdit () = default;
+	               LocEdit () = default;
 
 	void           fix_audio_flag (const View &view, const Model &model);
 
@@ -77,7 +76,9 @@ private:
 private:
 
 	               LocEdit (const LocEdit &other)           = delete;
+	               LocEdit (const LocEdit &&other)          = delete;
 	LocEdit &      operator = (const LocEdit &other)        = delete;
+	LocEdit &      operator = (const LocEdit &&other)       = delete;
 	bool           operator == (const LocEdit &other) const = delete;
 	bool           operator != (const LocEdit &other) const = delete;
 

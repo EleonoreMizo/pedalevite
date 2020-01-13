@@ -47,11 +47,6 @@ class WhiteFast
 
 public:
 
-	               WhiteFast ()                        = default;
-	virtual        ~WhiteFast ()                       = default;
-	               WhiteFast (const WhiteFast &other)  = default;
-	WhiteFast &    operator = (const WhiteFast &other) = default;
-
 	void           set_seed (uint32_t seed);
 	void           set_rough_level (float lvl);
 	inline float   process_sample ();

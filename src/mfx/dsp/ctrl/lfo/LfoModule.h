@@ -165,7 +165,9 @@ private:
 private:
 
 	               LfoModule (const LfoModule &other)         = delete;
+	               LfoModule (LfoModule &&other)              = delete;
 	LfoModule &    operator = (const LfoModule &other)        = delete;
+	LfoModule &    operator = (LfoModule &&other)             = delete;
 	bool           operator == (const LfoModule &other) const = delete;
 	bool           operator != (const LfoModule &other) const = delete;
 

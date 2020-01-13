@@ -47,9 +47,6 @@ class FxDisto
 
 public:
 
-	               FxDisto ()  = default;
-	virtual        ~FxDisto () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           set_amount (float amt);
 	void           set_foldback (float foldback);
@@ -98,8 +95,6 @@ private:
 
 private:
 
-	               FxDisto (const FxDisto &other)           = delete;
-	FxDisto &      operator = (const FxDisto &other)        = delete;
 	bool           operator == (const FxDisto &other) const = delete;
 	bool           operator != (const FxDisto &other) const = delete;
 

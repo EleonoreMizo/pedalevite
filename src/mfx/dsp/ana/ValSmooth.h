@@ -54,12 +54,6 @@ public:
 
 	typedef T ValType;
 
-	               ValSmooth ()                        = default;
-	               ValSmooth (const ValSmooth &other)  = default;
-	virtual        ~ValSmooth ()                       = default;
-
-	ValSmooth &    operator = (const ValSmooth &other) = default;
-
 	inline void    reset (T x = T (NV));
 	inline T       proc_val (T x);
 	inline T       get_val () const;
@@ -80,10 +74,10 @@ protected:
 
 private:
 
-	ValType        _val_last    = ValType (NV);
-	ValType        _val_smth    = ValType (NV);
-	ValType        _resp        = ValType (0.125); // Smoothing coefficient (LERP between the new and accumulated values)
-	ValType        _thr         = ValType (0.02 ); // Smoothing is done only on close values (threshold is relative)
+	ValType        _val_last = ValType (NV);
+	ValType        _val_smth = ValType (NV);
+	ValType        _resp     = ValType (0.125); // Smoothing coefficient (LERP between the new and accumulated values)
+	ValType        _thr      = ValType (0.02 ); // Smoothing is done only on close values (threshold is relative)
 
 
 

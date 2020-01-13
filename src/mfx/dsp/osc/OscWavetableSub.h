@@ -75,12 +75,6 @@ public:
 
 	static const int  PITCH_FRAC_BITS = 16;
 
-	               OscWavetableSub ()                             = default;
-	               OscWavetableSub (const OscWavetableSub &other) = default;
-	virtual        ~OscWavetableSub ()                            = default;
-	OscWavetableSub &
-	               operator = (const OscWavetableSub &other)      = default;
-
 	void           set_wavetable (const WavetableDataType &wavetable);
 	const WavetableDataType &
 	               use_wavetable () const;
@@ -180,9 +174,9 @@ private:
 	               _step               = fstb::FixedPoint (0);
 
 	const WavetableDataType *  // 0 = not initialized
-	               _wavetable_pos_ptr  = 0;
+	               _wavetable_pos_ptr  = nullptr;
 	const WavetableDataType *  // 0 = not initialized
-	               _wavetable_neg_ptr  = 0;
+	               _wavetable_neg_ptr  = nullptr;
 
 	InterpFtor     _interpolator;
 

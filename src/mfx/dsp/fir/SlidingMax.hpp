@@ -43,34 +43,6 @@ namespace fir
 
 /*
 ==============================================================================
-Name: ctor
-Description:
-	The object is constructed with a default size of 1, so processing is a
-	pass-through.
-Throws: depends on std::vector
-==============================================================================
-*/
-
-template <typename T>
-SlidingMax <T>::SlidingMax ()
-:	_len (0)
-,	_writepos (0)
-,	_flip_beg (0)
-,	_flip_end (0)
-,	_scan_pos (0)
-,	_scan_end (0)
-,	_scan_beg (0)
-,	_inmax (0)
-,	_scanmax (0)
-,	_data ()
-{
-	set_length (1);
-}
-
-
-
-/*
-==============================================================================
 Name: set_length
 Description:
 	Sets the size of the window. Past samples are lost.

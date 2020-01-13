@@ -60,6 +60,8 @@ public:
 
 	enum EdType
 	{
+		EdType_INVALID = -1,
+
 		EdType_CNX = 0,
 		EdType_PIN,
 
@@ -69,10 +71,10 @@ public:
 	class Arg
 	{
 	public:
-		EdType         _ed_type ;  // I/-, edit connection or pin
-		piapi::Dir     _dir;       // I/-, edited direction (target is the opposite)
-		doc::Cnx       _cnx;       // I/-, edited connection
-		int            _pin_idx;   // I/-, edited pin
+		EdType         _ed_type = EdType_INVALID;     // I/-, edit connection or pin
+		piapi::Dir     _dir     = piapi::Dir_INVALID; // I/-, edited direction (target is the opposite)
+		doc::Cnx       _cnx;          // I/-, edited connection
+		int            _pin_idx = -1; // I/-, edited pin
 	};
 
 	explicit       SlotRoutingAction (PageSwitcher &page_switcher, LocEdit &loc_edit);

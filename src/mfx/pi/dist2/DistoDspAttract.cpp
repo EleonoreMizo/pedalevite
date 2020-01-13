@@ -43,30 +43,13 @@ namespace dist2
 
 
 
-DistoDspAttract::DistoDspAttract ()
-:	_sample_freq (44100)
-,	_lvl_a ({{ 1, -1 }})
-,	_lvl_b (2.f)
-,	_center_a (0)
-,	_mad_flag (false)
-,	_sign (1)
-,	_speed (0)
-,	_speed_lim_min (1.0f / 256)
-,	_ratio_f (1)
-,	_cur_val (0)
-,	_env ()
-{
-	_env.set_time (1.f);
-}
-
-
-
 void	DistoDspAttract::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
 	_sample_freq   = float (sample_freq);
 	_env.set_sample_freq (sample_freq);
+	_env.set_time (1.f);
 	_ratio_f       = float (44100.f / sample_freq);
 	_speed_lim_min = float (44100.0 / (256 * sample_freq));
 }
@@ -84,8 +67,9 @@ void	DistoDspAttract::clear_buffers ()
 
 void	DistoDspAttract::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (_sample_freq > 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	static const int  max_block_size = 256;

@@ -42,7 +42,7 @@ namespace hw
 
 
 
-class LedPi3
+class LedPi3 final
 :	public ui::LedInterface
 {
 
@@ -63,8 +63,8 @@ public:
 protected:
 
 	// LedInterface
-	virtual int    do_get_nbr_led () const;
-	virtual void   do_set_led (int index, float val);
+	int            do_get_nbr_led () const final;
+	void           do_set_led (int index, float val) final;
 
 
 

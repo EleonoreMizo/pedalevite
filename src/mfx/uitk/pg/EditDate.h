@@ -51,7 +51,7 @@ namespace pg
 
 
 
-class EditDate
+class EditDate final
 :	public PageInterface
 {
 
@@ -60,7 +60,6 @@ class EditDate
 public:
 
 	explicit       EditDate (PageSwitcher &page_switcher, const CmdLine &cmd_line);
-	virtual        ~EditDate () = default;
 
 
 
@@ -69,12 +68,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -129,7 +127,9 @@ private:
 
 	               EditDate ()                               = delete;
 	               EditDate (const EditDate &other)          = delete;
+	               EditDate (EditDate &&other)               = delete;
 	EditDate &     operator = (const EditDate &other)        = delete;
+	EditDate &     operator = (EditDate &&other)             = delete;
 	bool           operator == (const EditDate &other) const = delete;
 	bool           operator != (const EditDate &other) const = delete;
 

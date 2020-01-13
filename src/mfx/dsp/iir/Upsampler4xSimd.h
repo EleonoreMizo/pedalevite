@@ -57,11 +57,6 @@ class Upsampler4xSimd
 
 public:
 
-	               Upsampler4xSimd ()                             = default;
-	               Upsampler4xSimd (const Upsampler4xSimd &other) = default;
-	Upsampler4xSimd &
-	               operator = (const Upsampler4xSimd &other)      = default;
-
 	void           set_coefs (const double coef_42 [NC42], const double coef_21 [NC21]);
 	inline void    process_sample (float dst_ptr [4], float src);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);

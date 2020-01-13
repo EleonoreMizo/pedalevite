@@ -94,9 +94,11 @@ ActionType	ActionPreset::do_get_type () const
 
 
 
-PedalActionSingleInterface *	ActionPreset::do_duplicate () const
+std::shared_ptr <PedalActionSingleInterface>	ActionPreset::do_duplicate () const
 {
-	return new ActionPreset (*this);
+	return std::static_pointer_cast <PedalActionSingleInterface> (
+		std::make_shared <ActionPreset> (*this)
+	);
 }
 
 

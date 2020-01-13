@@ -65,12 +65,12 @@ AdsrRc::AdsrRc ()
 ,	_rls_time (0.100f)
 ,	_cur_val (0)
 ,	_seg (AdsrSeg_NONE)
-,	_cur_seg_ptr (0)
+,	_cur_seg_ptr (nullptr)
 ,	_seg_atk ()
 ,	_seg_dcy ()
 ,	_seg_sus ()
 ,	_seg_rls ()
-,	_seg_ptr_arr ({{ 0, &_seg_atk, &_seg_dcy, &_seg_sus, &_seg_rls }})
+,	_seg_ptr_arr ({{ nullptr, &_seg_atk, &_seg_dcy, &_seg_sus, &_seg_rls }})
 {
 	mix::Generic::setup ();
 	set_sample_freq (44100);
@@ -235,7 +235,7 @@ float	AdsrRc::process_sample ()
 	}
 	else
 	{
-		assert (_cur_seg_ptr != 0);
+		assert (_cur_seg_ptr != nullptr);
 		_cur_val = _cur_seg_ptr->process_sample ();
 		check_and_set_next_seg ();
 	}
@@ -258,7 +258,7 @@ void	AdsrRc::process_block (float data [], int nbr_spl)
 		}
 		else
 		{
-			assert (_cur_seg_ptr != 0);
+			assert (_cur_seg_ptr != nullptr);
 			const int      work_len = std::min (
 				nbr_spl - pos,
 				_cur_seg_ptr->get_nbr_rem_spl ()
@@ -286,7 +286,7 @@ void	AdsrRc::skip_block (int nbr_spl)
 		}
 		else
 		{
-			assert (_cur_seg_ptr != 0);
+			assert (_cur_seg_ptr != nullptr);
 			const int      work_len = std::min (
 				nbr_spl - pos,
 				_cur_seg_ptr->get_nbr_rem_spl ()
@@ -343,12 +343,12 @@ void	AdsrRc::update_dcy_seg ()
 
 void	AdsrRc::check_and_set_next_seg ()
 {
-	while (   _cur_seg_ptr != 0
+	while (   _cur_seg_ptr != nullptr
 	       && _cur_seg_ptr->get_nbr_rem_spl () <= 0)
 	{
 		_seg         = _next_seg [_seg];
 		_cur_seg_ptr = _seg_ptr_arr [_seg];
-		if (_cur_seg_ptr != 0)
+		if (_cur_seg_ptr != nullptr)
 		{
 			_cur_seg_ptr->set_val (_cur_val);
 		}

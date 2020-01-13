@@ -58,9 +58,9 @@ TplLin::TplLin (double val_min, double val_max, const char *name_0, const char *
 ,	_flags (0)
 {
 	assert (val_min < val_max);
-	assert (name_0 != 0);
-	assert (unit_0 != 0);
-	assert (format_0 != 0);
+	assert (name_0 != nullptr);
+	assert (unit_0 != nullptr);
+	assert (format_0 != nullptr);
 
 	_phdn.set_range (val_min, val_max);
 	_phdn.set_print_format (format_0);

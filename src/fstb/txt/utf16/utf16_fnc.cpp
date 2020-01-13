@@ -47,8 +47,8 @@ namespace utf16
 // An empty string is always found at position 0.
 int	strstr_ci (const Char16 str_0 [], const Char16 subset_0 [], long &subset_pos)
 {
-	assert (str_0 != 0);
-	assert (subset_0 != 0);
+	assert (str_0 != nullptr);
+	assert (subset_0 != nullptr);
 
 	if (subset_0 [0] != '\0')
 	{
@@ -62,9 +62,9 @@ int	strstr_ci (const Char16 str_0 [], const Char16 subset_0 [], long &subset_pos
 
 			do
 			{
-				char32_t       c_str;
-				int            c_str_len;
-				int            ret_val =
+				char32_t       c_str     = 0;
+				int            c_str_len = 0;
+				int            ret_val   =
 					Codec16 <Char16>::decode_char (
 					c_str,
 					&str_0 [pos_str],
@@ -76,8 +76,8 @@ int	strstr_ci (const Char16 str_0 [], const Char16 subset_0 [], long &subset_pos
 					return ret_val;
 				}
 
-				char32_t       c_sub;
-				int            c_sub_len;
+				char32_t       c_sub     = 0;
+				int            c_sub_len = 0;
 				ret_val = Codec16 <Char16>::decode_char (
 					c_sub,
 					&subset_0 [pos_sub],

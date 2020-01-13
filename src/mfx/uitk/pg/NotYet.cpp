@@ -52,11 +52,11 @@ namespace pg
 
 NotYet::NotYet (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_notyet_sptr (new NText (0))
-,	_back_sptr (  new NText (1))
+,	_notyet_sptr (std::make_shared <NText> (0))
+,	_back_sptr (  std::make_shared <NText> (1))
 {
 	_notyet_sptr->set_justification (0.5f, 0.5f, false);
 	_back_sptr  ->set_justification (0.5f, 1   , false);

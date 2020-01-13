@@ -71,7 +71,7 @@ EnvFollowDesc::EnvFollowDesc ()
 	}};
 	for (size_t cnt = 0; cnt < info_list.size (); ++ cnt)
 	{
-		TplPsl *       pl_ptr = new TplPsl (
+		auto           pl_sptr = std::make_shared <TplPsl> (
 			0, 100,
 			info_list [cnt]._name_0,
 			"ms",
@@ -79,12 +79,12 @@ EnvFollowDesc::EnvFollowDesc ()
 			0,
 			"%8.1f"
 		);
-		pl_ptr->use_mapper ().set_curvature (4 * fstb::LN10);
-		_desc_set.add_glob (info_list [cnt]._p, pl_ptr);
+		pl_sptr->use_mapper ().set_curvature (4 * fstb::LN10);
+		_desc_set.add_glob (info_list [cnt]._p, pl_sptr);
 	}
 
 	// Gain
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		1, 100,
 		"Gain\nG",
 		"dB",
@@ -92,10 +92,10 @@ EnvFollowDesc::EnvFollowDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_GAIN, log_ptr);
+	_desc_set.add_glob (Param_GAIN, log_sptr);
 
 	// Threshold
-	TplPsl *       pl_ptr = new TplPsl (
+	auto           pl_sptr = std::make_shared <TplPsl> (
 		0, 10,
 		"Threshold\nThresh\nThr\nT",
 		"dB",
@@ -103,30 +103,30 @@ EnvFollowDesc::EnvFollowDesc ()
 		0,
 		"%5.1f"
 	);
-	_desc_set.add_glob (Param_THRESH, pl_ptr);
+	_desc_set.add_glob (Param_THRESH, pl_sptr);
 
 	// Mode
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Linear\nLog",
 		"Mode\nM",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_MODE, enu_ptr);
+	_desc_set.add_glob (Param_MODE, enu_sptr);
 
 	// Clip envelope
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"Clip envelope\nClip env\nClip E\nClpE",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_CLIP_E, enu_ptr);
+	_desc_set.add_glob (Param_CLIP_E, enu_sptr);
 
 	// Clip source
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		0.01, Cst::_clip_max,
 		"Clip source\nClip src\nClip S\nClpS",
 		"dB",
@@ -134,10 +134,10 @@ EnvFollowDesc::EnvFollowDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_CLIP_S, log_ptr);
+	_desc_set.add_glob (Param_CLIP_S, log_sptr);
 
 	// Low-cut frequency
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		Cst::_lc_freq_min, Cst::_lc_freq_min * 1024,
 		"Low-cut frequency\nLow-cut freq\nLC freq\nLCF",
 		"dB",
@@ -145,8 +145,8 @@ EnvFollowDesc::EnvFollowDesc ()
 		0,
 		"%6.1f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_LC_FREQ, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_LC_FREQ, log_sptr);
 }
 
 

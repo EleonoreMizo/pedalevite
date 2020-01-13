@@ -379,7 +379,7 @@ public:
 	}
 	// Set no dash
 	void setNoDash() {
-		setDash(NULL, 0, 0);
+		setDash(nullptr, 0, 0);
 	}
 
 	// Draw a line

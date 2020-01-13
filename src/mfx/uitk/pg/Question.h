@@ -53,7 +53,7 @@ namespace pg
 
 
 
-class Question
+class Question final
 :	public PageInterface
 {
 
@@ -67,13 +67,12 @@ public:
 		std::string    _title;
 		std::vector <std::string>
 		               _choice_arr;
-		int            _selection = 0; // Input/output
-		std::set <int> _check_set;     // Input. Indexes showing check marks
-		bool           _ok_flag;       // Output: choice validated or cancelled
+		int            _selection = 0;      // I/O
+		std::set <int> _check_set;          // I/-. Indexes showing check marks
+		bool           _ok_flag   = false;  // -/O: choice validated or cancelled
 	};
 
 	explicit       Question (PageSwitcher &page_switcher);
-	virtual        ~Question () = default;
 
 	static void    msg_box (std::string title, std::string msg_ok, QArg &arg, PageSwitcher &ps, int node_id = -1);
 
@@ -84,12 +83,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -127,7 +125,9 @@ private:
 
 	               Question ()                               = delete;
 	               Question (const Question &other)          = delete;
+	               Question (Question &&other)               = delete;
 	Question &     operator = (const Question &other)        = delete;
+	Question &     operator = (Question &&other)             = delete;
 	bool           operator == (const Question &other) const = delete;
 	bool           operator != (const Question &other) const = delete;
 

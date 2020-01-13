@@ -63,12 +63,6 @@ class HannPoisson
 
 public:
 
-	               HannPoisson ()                             = default;
-	               HannPoisson (const HannPoisson <T> &other) = default;
-	HannPoisson <T> &
-	virtual        ~HannPoisson ()                            = default;
-	               operator = (const HannPoisson <T> &other)  = default;
-
 	void           set_alpha (double alpha);
 
 
@@ -78,7 +72,7 @@ public:
 protected:
 
 	// WndInterface
-	virtual void   do_make_win (T data_ptr [], int len);
+	void           do_make_win (T data_ptr [], int len) override;
 
 
 

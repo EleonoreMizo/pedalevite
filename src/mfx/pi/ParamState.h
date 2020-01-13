@@ -54,9 +54,11 @@ public:
 
 	               ParamState ();
 	               ParamState (const ParamState &other) = default;
+	               ParamState (ParamState &&other)      = default;
 	virtual        ~ParamState ()                       = default;
 
 	ParamState &   operator = (const ParamState &other) = default;
+	ParamState &   operator = (ParamState &&other)      = default;
 
 	void           set_sample_freq (double fs);
 	void           set_ramp_time (double t);

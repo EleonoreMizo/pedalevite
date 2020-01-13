@@ -72,7 +72,7 @@ Throws: std::vector related exceptions
 
 int	Remez::compute_coefs (double coef_list_ptr [], int len, const RemezSpec &spec, Type type)
 {
-	assert (coef_list_ptr != 0);
+	assert (coef_list_ptr != nullptr);
 	assert (len > 0);
 	assert (spec.size () > 0);
 	assert (type >= 0);

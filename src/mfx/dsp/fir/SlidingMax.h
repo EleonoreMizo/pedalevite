@@ -58,12 +58,6 @@ public:
 
 	typedef T  DataType;
 
-	               SlidingMax ();
-	               SlidingMax (const SlidingMax &other) = default;
-	virtual        ~SlidingMax ()                       = default;
-
-	SlidingMax &   operator = (const SlidingMax &other) = default;
-
 	void           set_length (int len);
 	void           clear_buffers ();
 	void           fill (const DataType &val);
@@ -85,16 +79,16 @@ private:
 
 	typedef std::vector <DataType> Buffer;
 
-	int            _len;
-	int            _writepos;
-	int            _flip_beg;
-	int            _flip_end;
-	int            _scan_pos;
-	int            _scan_end; // 0 or (_len+1)/2
-	int            _scan_beg; // (_len-1)/2 or _len-1
-	DataType       _inmax;
-	DataType       _scanmax;
-	Buffer         _data;
+	int            _len      { 1 };
+	int            _writepos { 0 };
+	int            _flip_beg { 0 };
+	int            _flip_end { 1 };
+	int            _scan_pos { 0 };
+	int            _scan_end { 0 }; // 0 or (_len+1)/2
+	int            _scan_beg { 0 }; // (_len-1)/2 or _len-1
+	DataType       _inmax    { 0 };
+	DataType       _scanmax  { 0 };
+	Buffer         _data     { 1, std::numeric_limits <DataType>::lowest () };
 
 
 

@@ -120,9 +120,9 @@ void	MeterRmsPeakHold4Simd::clear_buffers ()
 
 
 
-void	MeterRmsPeakHold4Simd::process_block (const float * data_ptr [4], int nbr_spl)
+void	MeterRmsPeakHold4Simd::process_block (const float * const data_ptr [4], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (fstb::DataAlign <true>::check_ptr (data_ptr [0]));
 	assert (fstb::DataAlign <true>::check_ptr (data_ptr [1]));
 	assert (fstb::DataAlign <true>::check_ptr (data_ptr [2]));

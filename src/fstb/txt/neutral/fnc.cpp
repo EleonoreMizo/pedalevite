@@ -203,7 +203,7 @@ Throws: Nothing
 
 void	to_lcase_inplace (char *txt_0)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 
 	const size_t   len = strlen (txt_0);
 	for (size_t i = 0; i < len; ++i)
@@ -249,7 +249,7 @@ Throws: Nothing
 
 void	to_ucase_inplace (char *txt_0)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 
 	const size_t   len = strlen (txt_0);
 	for (size_t i = 0; i < len; ++i)
@@ -262,7 +262,7 @@ void	to_ucase_inplace (char *txt_0)
 
 std::string	trim_spaces (const char *txt_0)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 
 	// Skips spaces at the beginning
 	size_t         pos = 0;
@@ -301,7 +301,7 @@ std::string	trim_spaces (const char *txt_0)
 // position (after the last translated character).
 bool	conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long *stop_pos_ptr)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 	assert (base > 0);
 	assert (base <= 'Z' - 'A' + 1 + 10);
 
@@ -369,7 +369,7 @@ bool	conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long *stop_po
 		}
 	}
 
-	if (stop_pos_ptr != 0)
+	if (stop_pos_ptr != nullptr)
 	{
 		*stop_pos_ptr = pos;
 	}

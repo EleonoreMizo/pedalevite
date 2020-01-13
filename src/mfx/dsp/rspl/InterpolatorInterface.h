@@ -47,7 +47,16 @@ class InterpolatorInterface
 
 public:
 
-	virtual        ~InterpolatorInterface () {}
+	               InterpolatorInterface ()                        = default;
+	               InterpolatorInterface (const InterpolatorInterface &other) = default;
+	               InterpolatorInterface (InterpolatorInterface &&other)      = default;
+
+	virtual        ~InterpolatorInterface ()                       = default;
+
+	virtual InterpolatorInterface &
+	               operator = (const InterpolatorInterface &other) = default;
+	virtual InterpolatorInterface &
+	               operator = (InterpolatorInterface &&other)      = default;
 
 	inline void    set_ovrspl_l2 (int ovrspl_l2);
 	inline int     get_impulse_len () const;

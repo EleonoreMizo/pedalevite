@@ -105,7 +105,6 @@ public:
 	};
 
 	               DistoStage ();
-	virtual        ~DistoStage () = default;
 
 	void           reset (double sample_freq, int max_block_size, double &latency);
 	void           set_hpf_pre_cutoff (float f);
@@ -496,7 +495,9 @@ private:
 private:
 
 	               DistoStage (const DistoStage &other)        = delete;
+	               DistoStage (const DistoStage &&other)       = delete;
 	DistoStage &   operator = (const DistoStage &other)        = delete;
+	DistoStage &   operator = (const DistoStage &&other)       = delete;
 	bool           operator == (const DistoStage &other) const = delete;
 	bool           operator != (const DistoStage &other) const = delete;
 

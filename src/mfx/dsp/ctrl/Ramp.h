@@ -49,8 +49,12 @@ public:
 	inline explicit
 	               Ramp (float x);
 	               Ramp (const Ramp &other)       = default;
-	virtual        ~Ramp ()                       = default;
+	               Ramp (Ramp &&other)            = default;
+
+	               ~Ramp ()                       = default;
+
 	Ramp &         operator = (const Ramp &other) = default;
+	Ramp &         operator = (Ramp &&other)      = default;
 
 	inline void    set_time (int nbr_spl, float time_step);
 	inline void    set_val (float x);

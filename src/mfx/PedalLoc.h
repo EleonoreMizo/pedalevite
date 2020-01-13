@@ -53,11 +53,6 @@ public:
 		Type_NBR_ELT
 	};
 
-	               PedalLoc ()                        = default;
-	               PedalLoc (const PedalLoc &other)   = default;
-	virtual        ~PedalLoc ()                       = default;
-	PedalLoc &     operator = (const PedalLoc &other) = default;
-
 	Type           _type         = Type_INVALID;
 	int            _bank_index   = -1;
 	int            _preset_index = -1;

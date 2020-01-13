@@ -141,9 +141,11 @@ void	PedalboardLayout::set_default_conf ()
 		PedalActionCycle &  cycle =
 			_pedal_arr [pedal]._action_arr [ActionTrigger_PRESS];
 		PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (PedalActionCycle::ActionSPtr (
-			new ActionPreset (false, p)
-		));
+		action_arr.push_back (
+			std::static_pointer_cast <PedalActionSingleInterface> (
+				std::make_shared <ActionPreset> (false, p)
+			)
+		);
 		cycle._cycle.push_back (action_arr);
 	}
 
@@ -152,9 +154,11 @@ void	PedalboardLayout::set_default_conf ()
 		PedalActionCycle &  cycle =
 			_pedal_arr [5]._action_arr [ActionTrigger_PRESS];
 		PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (PedalActionCycle::ActionSPtr (
-			new ActionToggleTuner
-		));
+		action_arr.push_back (
+			std::static_pointer_cast <PedalActionSingleInterface> (
+				std::make_shared <ActionToggleTuner> ()
+			)
+		);
 		cycle._cycle.push_back (action_arr);
 	}
 
@@ -163,9 +167,11 @@ void	PedalboardLayout::set_default_conf ()
 		PedalActionCycle &  cycle =
 			_pedal_arr [11]._action_arr [ActionTrigger_PRESS];
 		PedalActionCycle::ActionArray   action_arr;
-		action_arr.push_back (PedalActionCycle::ActionSPtr (
-			new ActionTempo
-		));
+		action_arr.push_back (
+			std::static_pointer_cast <PedalActionSingleInterface> (
+				std::make_shared <ActionTempo> ()
+			)
+		);
 		cycle._cycle.push_back (action_arr);
 	}
 
@@ -179,18 +185,22 @@ void	PedalboardLayout::set_default_conf ()
 				PedalActionCycle &  cycle =
 					group._action_arr [ActionTrigger_RELEASE];
 				PedalActionCycle::ActionArray   action_arr;
-				action_arr.push_back (PedalActionCycle::ActionSPtr (
-					new ActionPreset (true, d)
-				));
+				action_arr.push_back (
+					std::static_pointer_cast <PedalActionSingleInterface> (
+						std::make_shared <ActionPreset> (true, d)
+					)
+				);
 				cycle._cycle.push_back (action_arr);
 			}
 			{
 				PedalActionCycle &  cycle =
 					group._action_arr [ActionTrigger_HOLD];
 				PedalActionCycle::ActionArray   action_arr;
-				action_arr.push_back (PedalActionCycle::ActionSPtr (
-					new ActionBank (true, d)
-				));
+				action_arr.push_back (
+					std::static_pointer_cast <PedalActionSingleInterface> (
+						std::make_shared <ActionBank> (true, d)
+					)
+				);
 				cycle._cycle.push_back (action_arr);
 			}
 		}

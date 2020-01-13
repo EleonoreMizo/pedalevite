@@ -51,21 +51,21 @@ PitchShift1Desc::PitchShift1Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Pitch
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"Pitch\nPtch\nP",
 		"%",
 		0,
 		"%+6.2f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_STD
 	);
-	lin_ptr->use_disp_num ().set_scale (12);
-	_desc_set.add_glob (Param_PITCH, lin_ptr);
+	lin_sptr->use_disp_num ().set_scale (12);
+	_desc_set.add_glob (Param_PITCH, lin_sptr);
 
 	// Window duration
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		Cst::_max_win_size / (1000.0 * 32), Cst::_max_win_size / 1000.0,
 		"Window duration\nWin duration\nWin dur\nW dur\nWD",
 		"ms",
@@ -73,7 +73,7 @@ PitchShift1Desc::PitchShift1Desc ()
 		0,
 		"%5.1f"
 	);
-	_desc_set.add_glob (Param_WIN_DUR, log_ptr);
+	_desc_set.add_glob (Param_WIN_DUR, log_sptr);
 }
 
 

@@ -54,12 +54,6 @@ public:
 		SlotType_NBR_ELT
 	};
 
-	               CnxEnd ()                        = default;
-	               CnxEnd (const CnxEnd &other)     = default;
-	virtual        ~CnxEnd ()                       = default;
-
-	CnxEnd &       operator = (const CnxEnd &other) = default;
-
 	inline bool    operator < (const CnxEnd &other) const;
 	inline bool    operator == (const CnxEnd &other) const;
 	inline bool    operator != (const CnxEnd &other) const;

@@ -57,7 +57,7 @@ FreeverbDesc::FreeverbDesc ()
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
 
 	// Reflectivity
-	TplFdbk *      fdbk_ptr = new TplFdbk (
+	auto           fdbk_sptr = std::make_shared <TplFdbk> (
 		TplFdbk::Mapper::get_nat_min (),
 		TplFdbk::Mapper::get_nat_max (),
 		"Reflectivity\nReflect\nRf",
@@ -66,10 +66,10 @@ FreeverbDesc::FreeverbDesc ()
 		0,
 		"%5.1f"
 	);
-	_desc_set.add_glob (Param_ROOMSIZE, fdbk_ptr);
+	_desc_set.add_glob (Param_ROOMSIZE, fdbk_sptr);
 
 	// Damping
-	fdbk_ptr = new TplFdbk (
+	fdbk_sptr = std::make_shared <TplFdbk> (
 		TplFdbk::Mapper::get_nat_min (),
 		TplFdbk::Mapper::get_nat_max (),
 		"Damping\nDamp\nD",
@@ -78,10 +78,10 @@ FreeverbDesc::FreeverbDesc ()
 		0,
 		"%5.1f"
 	);
-	_desc_set.add_glob (Param_DAMP, fdbk_ptr);
+	_desc_set.add_glob (Param_DAMP, fdbk_sptr);
 
 	// Wet level
-	TplPsl *       pl_ptr = new TplPsl (
+	auto           pl_sptr = std::make_shared <TplPsl> (
 		0, 4,
 		"Level Wet\nLvl Wet\nWet\nWL",
 		"dB",
@@ -89,10 +89,10 @@ FreeverbDesc::FreeverbDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_WET, pl_ptr);
+	_desc_set.add_glob (Param_WET, pl_sptr);
 
 	// Dry level
-	pl_ptr = new TplPsl (
+	pl_sptr = std::make_shared <TplPsl> (
 		0, 1,
 		"Level Dry\nLvl Dry\nDry\nDL",
 		"dB",
@@ -100,31 +100,31 @@ FreeverbDesc::FreeverbDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_DRY, pl_ptr);
+	_desc_set.add_glob (Param_DRY, pl_sptr);
 
 	// Width
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Width\nW",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_WIDTH, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
+	_desc_set.add_glob (Param_WIDTH, lin_sptr);
 
 	// Mode
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Normal\nFreeze",
 		"Mode\nM",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_MODE, enu_ptr);
+	_desc_set.add_glob (Param_MODE, enu_sptr);
 
 	// Low Cut
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		20, 4000,
 		"Low Cut\nLow C\nLC",
 		"Hz",
@@ -132,11 +132,11 @@ FreeverbDesc::FreeverbDesc ()
 		0,
 		"%5.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_LOCUT, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_LOCUT, log_sptr);
 
 	// High Cut
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		500, 20000,
 		"High Cut\nHigh C\nHC",
 		"Hz",
@@ -144,8 +144,8 @@ FreeverbDesc::FreeverbDesc ()
 		0,
 		"%5.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_HICUT, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_HICUT, log_sptr);
 }
 
 

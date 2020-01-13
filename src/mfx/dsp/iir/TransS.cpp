@@ -48,7 +48,7 @@ namespace iir
 
 void	TransS::conv_roots_real_to_poly_1 (double poly [2], double k, double root)
 {
-	assert (poly != 0);
+	assert (poly != nullptr);
 
 	poly [0] = -root * k;
 	poly [1] = k;
@@ -58,7 +58,7 @@ void	TransS::conv_roots_real_to_poly_1 (double poly [2], double k, double root)
 
 void	TransS::conv_roots_real_to_poly_2 (double poly [3], double k, double root_1, double root_2)
 {
-	assert (poly != 0);
+	assert (poly != nullptr);
 
 	poly [0] = root_1 * root_2 * k;
 	poly [1] = (-root_1 -root_2) * k;
@@ -69,7 +69,7 @@ void	TransS::conv_roots_real_to_poly_2 (double poly [3], double k, double root_1
 
 void	TransS::conv_roots_cplx_to_poly_2 (double poly [3], double k, const Cplx &root)
 {
-	assert (poly != 0);
+	assert (poly != nullptr);
 
 	const double   rr = root.real ();
 	const double   ri = root.imag ();
@@ -173,10 +173,10 @@ Throws: Nothing
 
 void	TransS::conv_lp_ap_to_pb_biq (double b_1 [3], double a_1 [3], double b_2 [3], double a_2 [3], const Cplx &lp_pole, double bw)
 {
-	assert (b_1 != 0);
-	assert (a_1 != 0);
-	assert (b_2 != 0);
-	assert (a_2 != 0);
+	assert (b_1 != nullptr);
+	assert (a_1 != nullptr);
+	assert (b_2 != nullptr);
+	assert (a_2 != nullptr);
 	assert (lp_pole.real () < 0);
 	assert (bw > 0);
 

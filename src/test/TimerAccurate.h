@@ -51,9 +51,6 @@ public:
 		std::chrono::steady_clock
 	>::type;
 
-	               TimerAccurate ()  = default;
-	virtual        ~TimerAccurate () = default;
-
 	fstb_FORCEINLINE void
 						reset ();
 	fstb_FORCEINLINE void
@@ -91,9 +88,6 @@ private:
 
 private:
 
-	               TimerAccurate (const TimerAccurate &other)     = delete;
-	TimerAccurate &
-	               operator = (const TimerAccurate &other)        = delete;
 	bool           operator == (const TimerAccurate &other) const = delete;
 	bool           operator != (const TimerAccurate &other) const = delete;
 

@@ -41,11 +41,6 @@ class MeterResult
 
 public:
 
-	               MeterResult ()                         = default;
-	               MeterResult (const MeterResult &other) = default;
-	virtual        ~MeterResult ()                        = default;
-	MeterResult &  operator = (const MeterResult &other)  = default;
-
 	volatile float _peak = 0;
 	volatile float _rms  = 0;
 

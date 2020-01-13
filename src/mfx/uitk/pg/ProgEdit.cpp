@@ -56,17 +56,17 @@ namespace pg
 ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_fx_list_sptr (new NText (Entry_FX_LIST))
-,	_ms_list_sptr (new NText (Entry_MS_LIST))
-,	_prog_name_sptr (new NText (Entry_PROG_NAME))
-,	_settings_sptr (new NText (Entry_SETTINGS))
-,	_save_sptr (new NText (Entry_SAVE))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (     std::make_shared <NWindow> (Entry_WINDOW   ))
+,	_fx_list_sptr (  std::make_shared <NText  > (Entry_FX_LIST  ))
+,	_ms_list_sptr (  std::make_shared <NText  > (Entry_MS_LIST  ))
+,	_prog_name_sptr (std::make_shared <NText  > (Entry_PROG_NAME))
+,	_settings_sptr ( std::make_shared <NText  > (Entry_SETTINGS ))
+,	_save_sptr (     std::make_shared <NText  > (Entry_SAVE     ))
 ,	_slot_list ()
 ,	_state (State_NORMAL)
 ,	_save_bank_index (-1)
@@ -155,7 +155,7 @@ void	ProgEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 void	ProgEdit::do_disconnect ()
 {
-	if (_model_ptr != 0)
+	if (_model_ptr != nullptr)
 	{
 		_model_ptr->reset_all_overridden_param_ctrl ();
 	}
@@ -213,11 +213,11 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 			}
 			else if (node_id == Entry_SAVE)
 			{
-				_page_switcher.switch_to (PageType_PROG_SAVE, 0);
+				_page_switcher.switch_to (PageType_PROG_SAVE, nullptr);
 			}
 			else if (node_id == Entry_SETTINGS)
 			{
-				_page_switcher.switch_to (PageType_PROG_SETTINGS, 0);
+				_page_switcher.switch_to (PageType_PROG_SETTINGS, nullptr);
 			}
 			else if (node_id >= 0 && node_id < int (_slot_list.size ()))
 			{
@@ -227,12 +227,12 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 				{
 					// Full slot
 					update_loc_edit (node_id);
-					_page_switcher.switch_to (PageType_PARAM_LIST, 0);
+					_page_switcher.switch_to (PageType_PARAM_LIST, nullptr);
 				}
 				else
 				{
 					// Empty slot
-					_page_switcher.switch_to (PageType_SLOT_MENU, 0);
+					_page_switcher.switch_to (PageType_SLOT_MENU, nullptr);
 				}
 			}
 			else
@@ -241,7 +241,7 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:
@@ -346,7 +346,7 @@ void	ProgEdit::set_preset_info ()
 
 	_spi_flag = true;
 
-	assert (_fnt_ptr != 0);
+	assert (_fnt_ptr != nullptr);
 
 	update_cached_pi_list ();
 	update_rotenc_mapping ();
@@ -562,7 +562,7 @@ void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, s
 	const int      skip     = (pos_list >= chain_size + 1) ? 1 : 0;
 	const int      pos_menu = pos_list + 4 + skip;
 
-	TxtSPtr        entry_sptr (new NText (pos_list));
+	TxtSPtr        entry_sptr { std::make_shared <NText> (pos_list) };
 	entry_sptr->set_coord (Vec2d (0, h_m * pos_menu));
 	entry_sptr->set_font (*_fnt_ptr);
 	entry_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -629,8 +629,8 @@ void	ProgEdit::update_cached_pi_list ()
 
 void	ProgEdit::update_rotenc_mapping ()
 {
-	assert (_model_ptr != 0);
-	assert (_view_ptr  != 0);
+	assert (_model_ptr != nullptr);
+	assert (_view_ptr  != nullptr);
 
 	if (_loc_edit._slot_id < 0)
 	{

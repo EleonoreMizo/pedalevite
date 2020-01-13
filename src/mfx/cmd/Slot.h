@@ -48,11 +48,6 @@ class Slot
 
 public:
 
-	               Slot ()                        = default;
-	               Slot (const Slot &other)       = default;
-	virtual        ~Slot ()                       = default;
-	Slot &         operator = (const Slot &other) = default;
-
 	std::array <Plugin, PiType_NBR_ELT>
 	               _component_arr;
 	bool           _force_mono_flag = false;

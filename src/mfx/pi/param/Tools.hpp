@@ -94,7 +94,7 @@ template <class T, class U>
 void	Tools::cut_str_bestfit (size_t &pos_utf8, size_t &len_utf8, size_t &len_metric, size_t max_len_metric, const char src_list_0 [], char delimiter, T &metric_obj, U metric_fnc)
 {
 	assert (max_len_metric > 0);
-	assert (src_list_0 != 0);
+	assert (src_list_0 != nullptr);
 
 	pos_utf8   = 0;
 	len_utf8   = 0;

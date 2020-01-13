@@ -51,13 +51,6 @@ class PhaseGenChaos
 
 public:
 
-	               PhaseGenChaos ()                           = default;
-	virtual        ~PhaseGenChaos ()                          = default;
-	               PhaseGenChaos (const PhaseGenChaos &other) = default;
-
-	PhaseGenChaos &
-	               operator = (const PhaseGenChaos &other)    = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           set_period (double per);
 	void           set_phase (double phase);

@@ -64,7 +64,7 @@ Returns: The best string. The label may be truncated if all the provided ones
 std::string	Tools::print_name_bestfit (size_t max_len, const char src_list_0 [])
 {
 	assert (max_len > 0);
-	assert (src_list_0 != 0);
+	assert (src_list_0 != nullptr);
 
 	class MetricUnit { public: size_t eval (char32_t /*c*/) { return 1; } };
 	MetricUnit     met;
@@ -78,7 +78,7 @@ std::string	Tools::print_name_bestfit (size_t max_len, const char src_list_0 [])
 // length into account.
 std::string	Tools::extract_longest_str (const char src_list_0 [], char delimiter)
 {
-	assert (src_list_0 != 0);
+	assert (src_list_0 != nullptr);
 
 	std::string    result;
 
@@ -92,7 +92,7 @@ std::string	Tools::extract_longest_str (const char src_list_0 [], char delimiter
 
 		std::string    name;
 		const char *   delim_0 = strchr (src_list_0 + pos, delimiter);
-		if (delim_0 == 0)
+		if (delim_0 == nullptr)
 		{
 			name = src_list_0 + pos;
 			pos  = strchr (src_list_0 + pos, '\0') - src_list_0;
@@ -116,7 +116,7 @@ std::string	Tools::extract_longest_str (const char src_list_0 [], char delimiter
 
 std::string	Tools::join_strings_multi (const char src_list_0 [], char delimiter, std::string pre, std::string post)
 {
-	assert (src_list_0 != 0);
+	assert (src_list_0 != nullptr);
 
 	std::string    result;
 
@@ -132,7 +132,7 @@ std::string	Tools::join_strings_multi (const char src_list_0 [], char delimiter,
 
 		std::string    name;
 		const char *   delim_0 = strchr (src_list_0 + pos, delimiter);
-		if (delim_0 == 0)
+		if (delim_0 == nullptr)
 		{
 			name = src_list_0 + pos;
 			pos  = strchr (src_list_0 + pos, '\0') - src_list_0;

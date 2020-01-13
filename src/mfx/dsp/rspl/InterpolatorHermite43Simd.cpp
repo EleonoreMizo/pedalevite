@@ -45,14 +45,6 @@ namespace rspl
 
 
 
-InterpolatorHermite43Simd::InterpolatorHermite43Simd ()
-:	_nbr_chn (1)
-{
-	// Nothing
-}
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

@@ -39,7 +39,7 @@ template <class T>
 AtomicPtrIntPair <T>::AtomicPtrIntPair ()
 :	_data ()
 {
-	set (0, 0);
+	set (nullptr, 0);
 }
 
 

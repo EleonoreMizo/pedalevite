@@ -42,7 +42,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionSettings
+class ActionSettings final
 :	public PedalActionSingleInterface
 {
 
@@ -53,12 +53,18 @@ public:
 	explicit       ActionSettings (const FxId &fx_id, bool relative_flag, int val);
 	explicit       ActionSettings (SerRInterface &ser);
 	               ActionSettings (const ActionSettings &other) = default;
-	virtual        ~ActionSettings () = default;
+	               ActionSettings (ActionSettings &&other)      = default;
+
+	               ~ActionSettings () = default;
 
 	ActionSettings &
 	               operator = (const ActionSettings &other)     = default;
+	ActionSettings &
+	               operator = (ActionSettings &&other)          = default;
 
-	virtual void   ser_write (SerWInterface &ser) const;
+	// PedalActionSingleInterface
+	void           ser_write (SerWInterface &ser) const final;
+
 	void           ser_read (SerRInterface &ser);
 
 	FxId           _fx_id;
@@ -72,10 +78,9 @@ public:
 protected:
 
 	// PedalActionSingleInterface
-	virtual ActionType
-	               do_get_type () const;
-	virtual PedalActionSingleInterface *
-	               do_duplicate () const;
+	ActionType     do_get_type () const final;
+	std::shared_ptr <PedalActionSingleInterface>
+	               do_duplicate () const final;
 
 
 

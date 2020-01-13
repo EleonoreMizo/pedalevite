@@ -46,7 +46,7 @@ namespace lat
 
 
 
-class Algo
+class Algo final
 :	public GraphInterface
 {
 
@@ -54,10 +54,14 @@ class Algo
 
 public:
 
-	               Algo ()                        = default;
+	               Algo ()                   = default;
 	               Algo (const Algo &other);
-	virtual        ~Algo ()                       = default;
+	               Algo (Algo &&other)       = default;
+
+	               ~Algo ()                  = default;
+
 	Algo &         operator = (const Algo &other);
+	Algo &         operator = (Algo &&other) = default;
 
 	void           reset ();
    void           set_nbr_elt (int nbr_nodes, int nbr_cnx);
@@ -72,15 +76,13 @@ public:
 protected:
 
    // GraphInterface
-	virtual int    do_get_nbr_nodes () const;
-	virtual Node & do_use_node (int index);
-	virtual const Node &
-	               do_use_node (int index) const;
+	int            do_get_nbr_nodes () const final;
+	Node &         do_use_node (int index) final;
+	const Node &   do_use_node (int index) const final;
 	
-	virtual int    do_get_nbr_cnx () const;
-	virtual Cnx &  do_use_cnx (int index);
-	virtual const Cnx &
-	               do_use_cnx (int index) const;
+	int            do_get_nbr_cnx () const final;
+	Cnx &          do_use_cnx (int index) final;
+	const Cnx &    do_use_cnx (int index) const final;
 
 
 

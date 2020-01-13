@@ -45,7 +45,16 @@ class DelayLineReadInterface
 
 public:
 
-	virtual        ~DelayLineReadInterface () = default;
+	               DelayLineReadInterface ()                        = default;
+	               DelayLineReadInterface (const DelayLineReadInterface &other) = default;
+	               DelayLineReadInterface (DelayLineReadInterface &&other)      = default;
+
+	virtual        ~DelayLineReadInterface ()                       = default;
+
+	virtual DelayLineReadInterface &
+	               operator = (const DelayLineReadInterface &other) = default;
+	virtual DelayLineReadInterface &
+	               operator = (DelayLineReadInterface &&other)      = default;
 
 	double         get_sample_freq () const;
 	int            get_ovrspl_l2 () const;

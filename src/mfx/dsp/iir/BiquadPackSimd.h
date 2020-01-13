@@ -76,7 +76,6 @@ public:
 	typedef	VS	V128Src;
 
 	               BiquadPackSimd ();
-	virtual        ~BiquadPackSimd () = default;
 
 	void           set_config (int nbr_stages, int nbr_chn);
 	void           reserve (int nbr_stages, int nbr_chn);
@@ -166,8 +165,11 @@ private:
 private:
 
 	               BiquadPackSimd (const BiquadPackSimd &other)    = delete;
+	               BiquadPackSimd (const BiquadPackSimd &&other)   = delete;
 	BiquadPackSimd &
 	               operator = (const BiquadPackSimd &other)        = delete;
+	BiquadPackSimd &
+	               operator = (const BiquadPackSimd &&other)       = delete;
 	bool           operator == (const BiquadPackSimd &other) const = delete;
 	bool           operator != (const BiquadPackSimd &other) const = delete;
 

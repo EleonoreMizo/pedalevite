@@ -54,11 +54,11 @@ class ToolsSimd
 
 public:
 
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	typedef __m128i     VectU32;
 	typedef __m128i     VectS32;
 	typedef __m128      VectF32;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	typedef uint32x4_t  VectU32;
 	typedef int32x4_t   VectS32;
 	typedef float32x4_t VectF32;
@@ -338,10 +338,12 @@ private:
 
 private:
 
-	virtual        ~ToolsSimd ()                              = delete;
+	               ~ToolsSimd ()                              = delete;
 	               ToolsSimd ()                               = delete;
 	               ToolsSimd (const ToolsSimd &other)         = delete;
+	               ToolsSimd (const ToolsSimd &&other)        = delete;
 	ToolsSimd &    operator = (const ToolsSimd &other)        = delete;
+	ToolsSimd &    operator = (const ToolsSimd &&other)       = delete;
 	bool           operator == (const ToolsSimd &other) const = delete;
 	bool           operator != (const ToolsSimd &other) const = delete;
 
@@ -353,7 +355,7 @@ private:
 
 
 
-#if fstb_IS (COMPILER, MSVC)
+#if fstb_COMPILER == fstb_COMPILER_MSVC
 
 inline fstb::ToolsSimd::VectF32 & operator += (fstb::ToolsSimd::VectF32 &lhs, fstb::ToolsSimd::VectF32 rhs);
 inline fstb::ToolsSimd::VectF32 & operator -= (fstb::ToolsSimd::VectF32 &lhs, fstb::ToolsSimd::VectF32 rhs);

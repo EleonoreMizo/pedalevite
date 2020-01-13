@@ -44,7 +44,6 @@ public:
 
 	explicit inline
 	               AioMax (T operand);
-	virtual        ~AioMax () = default;
 
 	inline T       operator () (T old_val) const;
 
@@ -70,7 +69,9 @@ private:
 
 	               AioMax ()                                   = delete;
 	               AioMax (const AioMax <T> &other)            = delete;
+	               AioMax (const AioMax <T> &&other)           = delete;
 	AioMax <T> &   operator = (const AioMax <T> &other)        = delete;
+	AioMax <T> &   operator = (const AioMax <T> &&other)       = delete;
 	bool           operator == (const AioMax <T> &other) const = delete;
 	bool           operator != (const AioMax <T> &other) const = delete;
 

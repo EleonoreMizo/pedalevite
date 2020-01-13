@@ -48,9 +48,10 @@ public:
 	               InertiaLin ()                        = default;
 	inline         InertiaLin (double val);
 	               InertiaLin (const InertiaLin &other) = default;
-	virtual        ~InertiaLin ()                       = default;
+	               InertiaLin (InertiaLin &&other)      = default;
 
 	InertiaLin &   operator = (const InertiaLin &other) = default;
+	InertiaLin &   operator = (InertiaLin &&other)      = default;
 
 	inline void		set_inertia_time (double inertia_time);
 	inline void    update_inertia_time (double inertia_time);

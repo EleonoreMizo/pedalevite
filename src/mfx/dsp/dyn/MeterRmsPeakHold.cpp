@@ -119,7 +119,7 @@ void	MeterRmsPeakHold::clear_buffers ()
 
 void	MeterRmsPeakHold::process_block (const float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)

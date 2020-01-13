@@ -38,10 +38,9 @@ namespace fstb
 template <class T, class A>
 SingleObj <T, A>::SingleObj ()
 :	_allo ()
-,	_obj_ptr (0)
+,	_obj_ptr (_allo.allocate (1))
 {
-	_obj_ptr = _allo.allocate (1);
-	if (_obj_ptr == 0)
+	if (_obj_ptr == nullptr)
 	{
 		throw std::bad_alloc ();
 	}
@@ -64,7 +63,7 @@ SingleObj <T, A>::~SingleObj ()
 {
 	_obj_ptr->~T ();
 	_allo.deallocate (_obj_ptr, 1);
-	_obj_ptr = 0;
+	_obj_ptr = nullptr;
 }
 
 
@@ -72,9 +71,9 @@ SingleObj <T, A>::~SingleObj ()
 template <class T, class A>
 T *	SingleObj <T, A>::operator -> () const
 {
-	assert (_obj_ptr != 0);
+	assert (_obj_ptr != nullptr);
 
-	return (_obj_ptr);
+	return _obj_ptr;
 }
 
 
@@ -84,7 +83,7 @@ T &	SingleObj <T, A>::operator * () const
 {
 	assert (_obj_ptr != 0);
 
-	return (*_obj_ptr);
+	return *_obj_ptr;
 }
 
 

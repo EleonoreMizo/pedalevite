@@ -78,8 +78,8 @@ Throws: Nothing
 
 bool	strncpy_0 (char dest_0 [], const char src_0 [], std::string::size_type buf_len_byte)
 {
-	assert (dest_0 != 0);
-	assert (src_0 != 0);
+	assert (dest_0 != nullptr);
+	assert (src_0 != nullptr);
 	assert (buf_len_byte > 0);
 
 	bool           trunc_flag = true;
@@ -246,7 +246,7 @@ bool truncate (std::string & str, std::string::size_type buf_len_byte)
 
 int	conv_to_lower_case (std::string &dest, const char src_0 [], const std::string::size_type max_sz)
 {
-	assert (src_0 != 0);
+	assert (src_0 != nullptr);
 
 	int            ret_val = Err_OK;
 
@@ -287,7 +287,7 @@ int	conv_to_lower_case (std::string &dest, const char src_0 [], const std::strin
 
 int	conv_to_upper_case (std::string &dest, const char src_0 [], const std::string::size_type max_sz)
 {
-	assert (src_0 != 0);
+	assert (src_0 != nullptr);
 
 	int            ret_val = Err_OK;
 
@@ -330,8 +330,8 @@ int	conv_to_upper_case (std::string &dest, const char src_0 [], const std::strin
 // An empty string is always found at position 0.
 int	strstr_ci (const char str_0 [], const char subset_0 [], long &subset_pos)
 {
-	assert (str_0 != 0);
-	assert (subset_0 != 0);
+	assert (str_0 != nullptr);
+	assert (subset_0 != nullptr);
 
 	if (subset_0 [0] != '\0')
 	{

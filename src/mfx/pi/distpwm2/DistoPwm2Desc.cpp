@@ -57,21 +57,21 @@ DistoPwm2Desc::DistoPwm2Desc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Pre-filter
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Weak\nMild\nStrong", "Pre-filter\nFilter\nFlt", ""
 	);
-	assert (enu_ptr->get_nbr_elt () == PreFilterType_NBR_ELT);
-	_desc_set.add_glob (Param_LPF, enu_ptr);
+	assert (enu_sptr->get_nbr_elt () == PreFilterType_NBR_ELT);
+	_desc_set.add_glob (Param_LPF, enu_sptr);
 
 	// Detection method
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"0-X\nPeak", "Detection method\nDetection\nDetect\nDet", ""
 	);
-	assert (enu_ptr->get_nbr_elt () == DetectionMethod_NBR_ELT);
-	_desc_set.add_glob (Param_DET, enu_ptr);
+	assert (enu_sptr->get_nbr_elt () == DetectionMethod_NBR_ELT);
+	_desc_set.add_glob (Param_DET, enu_sptr);
 
 	// Threshold
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		1e-6, 1e-4,
 		"Detection threshold\nThreshold\nThresh\nThr",
 		"dB",
@@ -79,22 +79,24 @@ DistoPwm2Desc::DistoPwm2Desc ()
 		0,
 		"%+4.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	_desc_set.add_glob (Param_THR, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	_desc_set.add_glob (Param_THR, pll_sptr);
 
 	// Density
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Density\nDens",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_DENS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_DENS, lin_sptr);
 
 	// Sustain level
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0, 1,
 		"Sustain level\nSustain lvl\nSustain\nSust\nSus",
 		"dB",
@@ -102,11 +104,11 @@ DistoPwm2Desc::DistoPwm2Desc ()
 		0,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (7, 2);
-	_desc_set.add_glob (Param_SUST, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (7, 2);
+	_desc_set.add_glob (Param_SUST, pll_sptr);
 
 	// Gate level
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1e-4, 0.1,
 		"Gate level\nGate lvl\nGate\nGat",
 		"dB",
@@ -114,8 +116,8 @@ DistoPwm2Desc::DistoPwm2Desc ()
 		0,
 		"%+6.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8);
-	_desc_set.add_glob (Param_GATE, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8);
+	_desc_set.add_glob (Param_GATE, pll_sptr);
 
 	init_osc (Param_OSC_STD , "Standard", "Std" , "St");
 	init_osc (Param_OSC_OCT , "Double"  , "Dbl" , "Db");
@@ -201,11 +203,11 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		+ name_s + " pulse T\n"
 		+ name_s + " pulse\n"
 		+ name_t + "PT";
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Rect\nRamp\nCycle\nSine\nSaw", name_pulse.c_str (), ""
 	);
-	assert (enu_ptr->get_nbr_elt () == PulseType_NBR_ELT);
-	_desc_set.add_glob (base + ParamOsc_PULSE, enu_ptr);
+	assert (enu_sptr->get_nbr_elt () == PulseType_NBR_ELT);
+	_desc_set.add_glob (base + ParamOsc_PULSE, enu_sptr);
 
 	// Level
 	const std::string name_lvl =
@@ -213,7 +215,7 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		+ name_s + " level\n"
 		+ name_s + " lvl\n"
 		+ name_t + "L";
-	TplSq *        sq_ptr = new TplSq (
+	auto           sq_sptr = std::make_shared <TplSq> (
 		0.0, 1.0,
 		name_lvl.c_str (),
 		"dB",
@@ -221,7 +223,7 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (base + ParamOsc_LVL, sq_ptr);
+	_desc_set.add_glob (base + ParamOsc_LVL, sq_sptr);
 
 	// Pulse frequency
 	const std::string name_pw =
@@ -230,7 +232,7 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		+ name_s + " P freq\n"
 		+ name_s + " PF\n"
 		+ name_t + "PF";
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		20.0, 20.0 * 1024,
 		name_pw.c_str (),
 		"Hz",
@@ -238,8 +240,8 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		0,
 		"%7.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (10);
-	_desc_set.add_glob (base + ParamOsc_PF, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (10);
+	_desc_set.add_glob (base + ParamOsc_PF, pll_sptr);
 }
 
 

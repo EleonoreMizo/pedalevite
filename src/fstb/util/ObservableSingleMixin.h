@@ -46,12 +46,6 @@ class ObservableSingleMixin
 
 public:
 
-	               ObservableSingleMixin ()  = default;
-	               ObservableSingleMixin (const ObservableSingleMixin &other) = default;
-	virtual        ~ObservableSingleMixin () = default;
-	ObservableSingleMixin &
-	               operator = (const ObservableSingleMixin &other) = default;
-
 	inline void    remove_single_observer ();
 
 
@@ -61,12 +55,9 @@ public:
 protected:
 
 	// ObservableInterface
-	virtual inline void
-						do_add_observer (ObserverInterface &observer);
-	virtual inline void
-						do_remove_observer (ObserverInterface &observer);
-	virtual inline void
-						do_notify_observers ();
+	inline void    do_add_observer (ObserverInterface &observer) override;
+	inline void    do_remove_observer (ObserverInterface &observer) override;
+	inline void    do_notify_observers () override;
 
 
 
@@ -74,8 +65,8 @@ protected:
 
 private:
 
-	ObserverInterface *           // 0 = no observer
-						_observer_ptr = 0;
+	ObserverInterface *                 // nullptr = no observer
+	               _observer_ptr = nullptr;
 
 
 

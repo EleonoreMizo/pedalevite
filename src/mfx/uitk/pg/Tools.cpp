@@ -71,7 +71,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	if (param_unit_ptr == 0 && group_unit_val_flag)
+	if (param_unit_ptr == nullptr && group_unit_val_flag)
 	{
 		param_unit_ptr = &param_val;
 	}
@@ -93,9 +93,9 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	const piapi::ParamDescInterface &   desc    =
 		desc_pi.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
 
-	size_t         pos_utf8;
-	size_t         len_utf8;
-	size_t         len_pix;
+	size_t         pos_utf8        = 0;
+	size_t         len_utf8        = 0;
+	size_t         len_pix         = 0;
 	size_t         rem_pix_fx_name = width;
 
 	// Get value & unit
@@ -138,7 +138,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	txt_val = val_s.substr (pos_utf8, len_utf8);
 
 	// Name
-	if (param_name_ptr != 0)
+	if (param_name_ptr != nullptr)
 	{
 		std::string    name = desc.get_name (0);
 		name = pi::param::Tools::print_name_bestfit (
@@ -149,7 +149,7 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	}
 
 	// Unit
-	if (param_unit_ptr != 0)
+	if (param_unit_ptr != nullptr)
 	{
 		int            w_unit = width;
 		if (group_unit_val_flag)
@@ -181,13 +181,13 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 	else
 	{
 		param_val.set_text (txt_val);
-		if (param_unit_ptr != 0)
+		if (param_unit_ptr != nullptr)
 		{
 			param_unit_ptr->set_text (txt_unit);
 		}
 	}
 
-	if (fx_name_ptr != 0)
+	if (fx_name_ptr != nullptr)
 	{
 		// Displays the main plug-in name, never the dry/wet mixer
 		const piapi::PluginDescInterface &  desc_pi_main =
@@ -249,7 +249,7 @@ MsgHandlerInterface::EvtProp	Tools::change_param (Model &model, const View &view
 			settings.use_pres_if_tempo_ctrl (index);
 
 		// Uses beats
-		if (pres_ptr != 0)
+		if (pres_ptr != nullptr)
 		{
 			const double   tempo = view.get_tempo ();
 			const piapi::PluginDescInterface &  desc_pi =
@@ -312,7 +312,7 @@ double	Tools::change_param (double val_nrm, const View &view, const piapi::Plugi
 		// Uses a notch list
 		const std::set <float> *   notch_list_ptr =
 			settings.find_notch_list (index);
-		if (notch_list_ptr != 0)
+		if (notch_list_ptr != nullptr)
 		{
 			const auto     it_notch = ToolsParam::advance_to_notch (
 				float (val_nrm), *notch_list_ptr, dir
@@ -326,7 +326,7 @@ double	Tools::change_param (double val_nrm, const View &view, const piapi::Plugi
 			// Check if we can use the beat mode
 			const doc::ParamPresentation *   pres_ptr =
 				settings.use_pres_if_tempo_ctrl (index);
-			if (pres_ptr != 0 && desc.get_nat_min () >= 0)
+			if (pres_ptr != nullptr && desc.get_nat_min () >= 0)
 			{
 				const double   tempo     = view.get_tempo ();
 				double         val_beats = ToolsParam::conv_nrm_to_beats (
@@ -1116,7 +1116,7 @@ void	Tools::print_cnx_name (NText &txtbox, int width, const std::vector <Tools::
 	        || ! entry_list.empty ());
 	assert (dir >= 0);
 	assert (dir < piapi::Dir_NBR_ELT);
-	assert (prefix_0 != 0);
+	assert (prefix_0 != nullptr);
 	assert (nbr_pins >= 0);
 	assert (nbr_pins == 0 || cnx_end.get_pin () < nbr_pins);
 
@@ -1136,7 +1136,7 @@ void	Tools::print_cnx_name (NText &txtbox, int width, const std::vector <Tools::
 		const auto     it_entry    = std::find_if (
 			entry_list.begin (),
 			entry_list.end (),
-			[end_slot_id] (const auto &entry)
+			[end_slot_id] (const NodeEntry &entry)
 			{
 				return (entry._slot_id == end_slot_id);
 			}
@@ -1467,7 +1467,7 @@ bool	Tools::is_pedal_simple_action (const doc::PedalActionGroup &group, const Mo
 
 	// Finds candidate actions
 	bool           other_flag = false;
-	const doc::PedalActionSingleInterface *   action_ptr = 0;
+	const doc::PedalActionSingleInterface *   action_ptr = nullptr;
 	for (int trig_cnt = 0; trig_cnt < doc::ActionTrigger_NBR_ELT; ++trig_cnt)
 	{
 		const doc::PedalActionCycle & cycle = group._action_arr [trig_cnt];
@@ -1502,7 +1502,7 @@ bool	Tools::is_pedal_simple_action (const doc::PedalActionGroup &group, const Mo
 
 	// Checks actions
 	bool           ok_flag = false;
-	if (action_ptr != 0 && ! other_flag)
+	if (action_ptr != nullptr && ! other_flag)
 	{
 		name    = conv_pedal_action_to_short_txt (*action_ptr, model, view);
 		ok_flag = true;
@@ -1521,7 +1521,7 @@ bool	Tools::is_pedal_momentary_button (const doc::PedalActionGroup &group, const
 	bool           other_flag = false;
 	// Press, release
 	std::array <const doc::PedalActionSingleInterface *, 2>  action_ptr_arr =
-	{{ 0, 0 }};
+	{{ nullptr, nullptr }};
 	for (int trig_cnt = 0; trig_cnt < doc::ActionTrigger_NBR_ELT; ++trig_cnt)
 	{
 		const doc::PedalActionCycle & cycle = group._action_arr [trig_cnt];
@@ -1559,8 +1559,8 @@ bool	Tools::is_pedal_momentary_button (const doc::PedalActionGroup &group, const
 
 	// Checks actions
 	bool           ok_flag = false;
-	if (   action_ptr_arr [0] != 0
-	    && action_ptr_arr [1] != 0
+	if (   action_ptr_arr [0] != nullptr
+	    && action_ptr_arr [1] != nullptr
 	    && ! other_flag)
 	{
 		const doc::ActionType   type_0 = action_ptr_arr [0]->get_type ();
@@ -1596,7 +1596,7 @@ bool	Tools::is_pedal_toggle (const doc::PedalActionGroup &group, const Model &mo
 	bool           other_flag = false;
 	// For each cycle
 	std::array <const doc::PedalActionSingleInterface *, 2>  action_ptr_arr =
-	{{ 0, 0 }};
+	{{ nullptr, nullptr }};
 	for (int trig_cnt = 0; trig_cnt < doc::ActionTrigger_NBR_ELT; ++trig_cnt)
 	{
 		const doc::PedalActionCycle & cycle = group._action_arr [trig_cnt];
@@ -1634,8 +1634,8 @@ bool	Tools::is_pedal_toggle (const doc::PedalActionGroup &group, const Model &mo
 
 	// Checks actions
 	bool           ok_flag = false;
-	if (   action_ptr_arr [0] != 0
-	    && action_ptr_arr [1] != 0
+	if (   action_ptr_arr [0] != nullptr
+	    && action_ptr_arr [1] != nullptr
 	    && ! other_flag)
 	{
 		const doc::ActionType   type_0 = action_ptr_arr [0]->get_type ();

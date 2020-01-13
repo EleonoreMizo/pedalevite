@@ -39,7 +39,7 @@ namespace mfx
 
 class ModelMsgCmdCbInterface;
 
-class ModelMsgCmdConfLdSv
+class ModelMsgCmdConfLdSv final
 :	public ModelMsgCmdInterface
 {
 
@@ -56,7 +56,6 @@ public:
 	};
 
 	explicit       ModelMsgCmdConfLdSv (Type type, std::string pathname, ModelMsgCmdCbInterface *cb_ptr);
-	virtual        ~ModelMsgCmdConfLdSv () = default;
 
 
 
@@ -65,8 +64,8 @@ public:
 protected:
 
 	// ModelMsgCmdInterface
-	virtual void   do_process (Model &model);
-	virtual void   do_clear ();
+	void           do_process (Model &model) final;
+	void           do_clear () final;
 
 
 
@@ -86,10 +85,13 @@ private:
 
 private:
 
-	               ModelMsgCmdConfLdSv ()                               = default;
-	               ModelMsgCmdConfLdSv (const ModelMsgCmdConfLdSv &other) = default;
+	               ModelMsgCmdConfLdSv ()                               = delete;
+	               ModelMsgCmdConfLdSv (const ModelMsgCmdConfLdSv &other) = delete;
+	               ModelMsgCmdConfLdSv (ModelMsgCmdConfLdSv &&other)    = delete;
 	ModelMsgCmdConfLdSv &
-	               operator = (const ModelMsgCmdConfLdSv &other)        = default;
+	               operator = (const ModelMsgCmdConfLdSv &other)        = delete;
+	ModelMsgCmdConfLdSv &
+	               operator = (ModelMsgCmdConfLdSv &&other)             = delete;
 	bool           operator == (const ModelMsgCmdConfLdSv &other) const = delete;
 	bool           operator != (const ModelMsgCmdConfLdSv &other) const = delete;
 

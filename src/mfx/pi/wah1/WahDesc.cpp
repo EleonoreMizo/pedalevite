@@ -50,7 +50,7 @@ WahDesc::WahDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Frequency
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		120, 120 * 32,
 		"Frequency\nFreq",
 		"Hz",
@@ -58,12 +58,12 @@ WahDesc::WahDesc ()
 		0,
 		"%6.1f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	log_ptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
-	_desc_set.add_glob (Param_FREQ, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	log_sptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
+	_desc_set.add_glob (Param_FREQ, log_sptr);
 
 	// Base Q
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1, 32,
 		"Selectivity\nQ",
 		"",
@@ -71,7 +71,7 @@ WahDesc::WahDesc ()
 		0,
 		"%4.1f"
 	);
-	_desc_set.add_glob (Param_Q, log_ptr);
+	_desc_set.add_glob (Param_Q, log_sptr);
 }
 
 

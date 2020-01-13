@@ -81,7 +81,7 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xFpu <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{

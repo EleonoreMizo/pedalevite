@@ -52,12 +52,6 @@ public:
 	typedef std::shared_ptr <doc::CtrlLinkSet> CtrlLinkSetSPtr;
 	typedef std::map <int, CtrlLinkSetSPtr> MapParamCtrl;
 
-	               Plugin ()                        = default;
-	               Plugin (const Plugin &other)     = default;
-	virtual        ~Plugin ()                       = default;
-
-	Plugin &       operator = (const Plugin &other) = default;
-
 	void           clear ();
 
 	int            _pi_id   = -1; // -1 = not set

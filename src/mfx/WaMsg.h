@@ -106,14 +106,9 @@ public:
 		Reset          _reset;
 	};
 
-	               WaMsg ()                        = default;
-	               WaMsg (const WaMsg &other)      = default;
-	virtual        ~WaMsg ()                       = default;
-	WaMsg &        operator = (const WaMsg &other) = default;
-
 	Sender         _sender = Sender_INVALID;  // Original sender. To know if a message should be recycled.
 	Type           _type   = Type_INVALID;
-	Content        _content;
+	Content        _content {};
 
 
 

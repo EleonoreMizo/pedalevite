@@ -50,7 +50,7 @@ namespace dly2
 DelayLineBbdPitch::DelayLineBbdPitch ()
 :	_sample_freq (0)
 ,	_inv_fs (0)
-,	_buf_zone_ptr (0)
+,	_buf_zone_ptr (nullptr)
 ,	_buf_len (0)
 ,	_interp ()
 ,	_bbd ()
@@ -358,7 +358,7 @@ void	DelayLineBbdPitch::read_line (float dst_ptr [], int nbr_spl, float &f_beg, 
 		work_len = g_cur.clip_block_len (work_len);
 		const bool     xfade_flag = (_xfade_pos >= 0);
 		int            xfade_dur  = 0;
-		const float *  xfade_shape_ptr = 0;
+		const float *  xfade_shape_ptr = nullptr;
 		if (xfade_flag)
 		{
 			xfade_dur       = get_xfade_len ();
@@ -388,7 +388,7 @@ void	DelayLineBbdPitch::read_line (float dst_ptr [], int nbr_spl, float &f_beg, 
 			const float    lerp_beg = float (_xfade_pos           ) * inv_dur;
 			const float    lerp_end = float (_xfade_pos + work_len) * inv_dur;
 
-			if (xfade_shape_ptr == 0)
+			if (xfade_shape_ptr == nullptr)
 			{
 				// Default: linear
 				dsp::mix::Generic::scale_1_vlr (
@@ -611,7 +611,7 @@ int	DelayLineBbdPitch::Grain::clip_block_len (int len) const
 
 float *	DelayLineBbdPitch::use_buf (Buf buf) const
 {
-	assert (_buf_zone_ptr != 0);
+	assert (_buf_zone_ptr != nullptr);
 	assert (buf >= 0);
 	assert (buf < Buf_NBR_ELT);
 
@@ -757,7 +757,7 @@ void	DelayLineBbdPitch::check_and_start_transition ()
 // Returns true if the ramp is terminated
 bool	DelayLineBbdPitch::process_grain (Grain &g, float dest_ptr [], int src_pos, int nbr_spl)
 {
-	assert (dest_ptr != 0);
+	assert (dest_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (g._trans_len <= 0 || nbr_spl <= g._trans_len);
 

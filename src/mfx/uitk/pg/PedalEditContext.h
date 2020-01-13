@@ -69,12 +69,6 @@ public:
 	};
 
 
-	               PedalEditContext ()                              = default;
-	               PedalEditContext (const PedalEditContext &other) = default;
-	virtual        ~PedalEditContext ()                             = default;
-	PedalEditContext &
-	               operator = (const PedalEditContext &other)       = default;
-
 	const doc::PedalboardLayout &
 	               use_layout (const View &view) const;
 	PedalLoc       conv_to_loc (const View &view) const;

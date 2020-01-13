@@ -45,29 +45,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*
 ==============================================================================
-Name: ctor
-Throws: std::vector related exception
-==============================================================================
-*/
-
-Gridaxis::Gridaxis ()
-:	_axis ()
-,	_prim ()
-,	_plot_ptr (0)
-,	_dot_style (DotStyle_SQUARE)
-,	_x (0)
-,	_y (0)
-,	_w (-1)
-,	_h (-1)
-,	_grid_flag (true)
-{
-	// Nothing
-}
-
-
-
-/*
-==============================================================================
 Name: set_size
 Description:
 	Sets the size of the graph.
@@ -209,7 +186,7 @@ Throws: std::vector related exceptions.
 
 void	Gridaxis::render_background () const
 {
-	assert (_plot_ptr != 0);
+	assert (_plot_ptr != nullptr);
 
 	_plot_ptr->gSave ();
 
@@ -253,7 +230,7 @@ Throws: Nothing
 
 void	Gridaxis::draw_line (double x_1, double y_1, double x_2, double y_2) const
 {
-	assert (_plot_ptr != 0);
+	assert (_plot_ptr != nullptr);
 
 	const double	x_arr [2] = { x_1, x_2 };
 	const double	y_arr [2] = { y_1, y_2 };
@@ -300,9 +277,9 @@ Throws: std::vector related exceptions
 
 void	Gridaxis::render_curve (const double x_arr [], const double y_arr [], long nbr_points) const
 {
-	assert (_plot_ptr != 0);
-	assert (x_arr != 0);
-	assert (y_arr != 0);
+	assert (_plot_ptr != nullptr);
+	assert (x_arr != nullptr);
+	assert (y_arr != nullptr);
 	assert (nbr_points >= 2);
 
 	PsCoordArr		x_conv;
@@ -338,9 +315,9 @@ Throws: std::vector related exceptions
 
 void	Gridaxis::render_point_set (const double x_arr [], const double y_arr [], long nbr_points) const
 {
-	assert (_plot_ptr != 0);
-	assert (x_arr != 0);
-	assert (y_arr != 0);
+	assert (_plot_ptr != nullptr);
+	assert (x_arr != nullptr);
+	assert (y_arr != nullptr);
 	assert (nbr_points >= 1);
 
 	PsCoordArr     x_conv;
@@ -404,8 +381,8 @@ Throws: std::vector related exceptions
 
 void	Gridaxis::put_annotation (double x, double y, const char txt_0 []) const
 {
-	assert (_plot_ptr != 0);
-	assert (txt_0 != 0);
+	assert (_plot_ptr != nullptr);
+	assert (txt_0 != nullptr);
 
 	convert_coordinates (x, y);
 
@@ -438,8 +415,8 @@ Throws: std::vector related exceptions
 
 void	Gridaxis::put_annotation_pos (double x, double y, const char txt_0 []) const
 {
-	assert (_plot_ptr != 0);
-	assert (txt_0 != 0);
+	assert (_plot_ptr != nullptr);
+	assert (txt_0 != nullptr);
 
 	// Into PS coordinates
 	x = x * _w + _x;
@@ -475,7 +452,7 @@ Throws: Nothing
 
 void	Gridaxis::conv_nbr_2_str (char txt_0 [], double val)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 
 	if (val == 0)
 	{
@@ -520,7 +497,7 @@ void	Gridaxis::conv_nbr_2_str (char txt_0 [], double val)
 
 void	Gridaxis::render_grid () const
 {
-	assert (_plot_ptr != 0);
+	assert (_plot_ptr != nullptr);
 
 	_plot_ptr->setLineCap (0);
 	_plot_ptr->setLineWidth (0.25);
@@ -553,7 +530,7 @@ void	Gridaxis::render_grid () const
 
 void	Gridaxis::render_axis_v () const
 {
-	assert (_plot_ptr != 0);
+	assert (_plot_ptr != nullptr);
 
 	_plot_ptr->setLineCap (0);
 	_plot_ptr->setFontSize (8);
@@ -598,7 +575,7 @@ void	Gridaxis::render_axis_v () const
 
 void	Gridaxis::render_axis_h () const
 {
-	assert (_plot_ptr != 0);
+	assert (_plot_ptr != nullptr);
 
 	_plot_ptr->setLineCap (0);
 	_plot_ptr->setFontSize (8);
@@ -658,8 +635,8 @@ void	Gridaxis::convert_coordinates (double &x, double &y) const
 
 void	Gridaxis::convert_coordinates (PsCoordArr &x_conv, PsCoordArr &y_conv, const double x_arr [], const double y_arr [], long nbr_points) const
 {
-	assert (x_arr != 0);
-	assert (y_arr != 0);
+	assert (x_arr != nullptr);
+	assert (y_arr != nullptr);
 	assert (nbr_points > 0);
 
 	x_conv.resize (nbr_points);

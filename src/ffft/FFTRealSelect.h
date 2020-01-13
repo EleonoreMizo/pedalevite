@@ -52,13 +52,6 @@ public:
 
 private:
 
-						FFTRealSelect ();
-						~FFTRealSelect ();
-						FFTRealSelect (const FFTRealSelect &other);
-	FFTRealSelect&	operator = (const FFTRealSelect &other);
-	bool				operator == (const FFTRealSelect &other);
-	bool				operator != (const FFTRealSelect &other);
-
 };	// class FFTRealSelect
 
 

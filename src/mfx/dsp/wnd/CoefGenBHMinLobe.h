@@ -56,12 +56,6 @@ class CoefGenBHMinLobe
 
 public:
 
-	               CoefGenBHMinLobe ()                              = default;
-	               CoefGenBHMinLobe (const CoefGenBHMinLobe &other) = default;
-	virtual        ~CoefGenBHMinLobe ()                             = default;
-	CoefGenBHMinLobe &
-	               operator = (const CoefGenBHMinLobe &other)       = default;
-
 	inline double  operator () (double pos) const;
 
 

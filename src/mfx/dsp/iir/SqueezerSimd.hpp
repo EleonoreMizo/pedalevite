@@ -220,8 +220,8 @@ float	SqueezerSimd <BR, LFOP>::process_sample (float x)
 template <bool BR, class LFOP>
 void	SqueezerSimd <BR, LFOP>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int index = 0; index < nbr_spl; ++index)
@@ -235,7 +235,7 @@ void	SqueezerSimd <BR, LFOP>::process_block (float dst_ptr [], const float src_p
 template <bool BR, class LFOP>
 void	SqueezerSimd <BR, LFOP>::process_block (float spl_ptr [], int nbr_spl)
 {
-	assert (spl_ptr != 0);
+	assert (spl_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int index = 0; index < nbr_spl; ++index)
@@ -249,9 +249,9 @@ void	SqueezerSimd <BR, LFOP>::process_block (float spl_ptr [], int nbr_spl)
 template <bool BR, class LFOP>
 void	SqueezerSimd <BR, LFOP>::process_block_fm (float dst_ptr [], const float src_ptr [], const float freq_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
-	assert (freq_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (freq_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int index = 0; index < nbr_spl; ++index)

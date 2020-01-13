@@ -50,7 +50,7 @@ namespace hw
 
 
 
-class DisplayPi3Pcd8544
+class DisplayPi3Pcd8544 final
 :	public ui::DisplayInterface
 ,	public ui::TimeShareCbInterface
 {
@@ -79,19 +79,17 @@ public:
 protected:
 
 	// ui::DisplayInterface
-	virtual int    do_get_width () const;
-	virtual int    do_get_height () const;
-	virtual int    do_get_stride () const;
-	virtual uint8_t *
-	               do_use_screen_buf ();
-	virtual const uint8_t *
-	               do_use_screen_buf () const;
+	int            do_get_width () const final;
+	int            do_get_height () const final;
+	int            do_get_stride () const final;
+	uint8_t *      do_use_screen_buf () final;
+	const uint8_t* do_use_screen_buf () const final;
 
-	virtual void   do_refresh (int x, int y, int w, int h);
-	virtual void   do_force_reset ();
+	void           do_refresh (int x, int y, int w, int h) final;
+	void           do_force_reset () final;
 
 	// ui::TimeShareCbInterface
-	virtual bool   do_process_timeshare_op ();
+	bool           do_process_timeshare_op () final;
 
 
 
@@ -177,8 +175,11 @@ private:
 
 	               DisplayPi3Pcd8544 ()                               = delete;
 	               DisplayPi3Pcd8544 (const DisplayPi3Pcd8544 &other) = delete;
+	               DisplayPi3Pcd8544 (DisplayPi3Pcd8544 &&other)      = delete;
 	DisplayPi3Pcd8544 &
 	               operator = (const DisplayPi3Pcd8544 &other)        = delete;
+	DisplayPi3Pcd8544 &
+	               operator = (DisplayPi3Pcd8544 &&other)             = delete;
 	bool           operator == (const DisplayPi3Pcd8544 &other) const = delete;
 	bool           operator != (const DisplayPi3Pcd8544 &other) const = delete;
 

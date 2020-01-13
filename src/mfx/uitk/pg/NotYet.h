@@ -47,7 +47,7 @@ namespace pg
 
 
 // Switch with call_page()
-class NotYet
+class NotYet final
 :	public PageInterface
 {
 
@@ -56,7 +56,6 @@ class NotYet
 public:
 
 	explicit       NotYet (PageSwitcher &page_switcher);
-	virtual        ~NotYet () = default;
 
 
 
@@ -65,12 +64,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -97,7 +95,9 @@ private:
 
 	               NotYet ()                               = delete;
 	               NotYet (const NotYet &other)            = delete;
+	               NotYet (NotYet &&other)                 = delete;
 	NotYet &       operator = (const NotYet &other)        = delete;
+	NotYet &       operator = (NotYet &&other)             = delete;
 	bool           operator == (const NotYet &other) const = delete;
 	bool           operator != (const NotYet &other) const = delete;
 

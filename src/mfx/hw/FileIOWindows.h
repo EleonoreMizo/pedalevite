@@ -44,7 +44,7 @@ namespace hw
 
 
 
-class FileIOWindows
+class FileIOWindows final
 :	public FileIOInterface
 {
 
@@ -53,7 +53,6 @@ class FileIOWindows
 public:
 
 	explicit       FileIOWindows (ui::LedInterface &led);
-	virtual        ~FileIOWindows () = default;
 
 
 
@@ -62,8 +61,8 @@ public:
 protected:
 
 	// mfx::FileIOInterface
-	virtual int    do_write_txt_file (const std::string &pathname, const std::string &content);
-	virtual int    do_read_txt_file (const std::string &pathname, std::string &content);
+	int            do_write_txt_file (const std::string &pathname, const std::string &content) final;
+	int            do_read_txt_file (const std::string &pathname, std::string &content) final;
 
 
 

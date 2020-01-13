@@ -46,8 +46,6 @@ public:
 
 	typedef	T	DataType;
 
-						OscSinCos ();
-
 	ffft_FORCEINLINE void
 						set_step (double angle_rad);
 
@@ -72,10 +70,10 @@ protected:
 
 private:
 
-	DataType			_pos_cos;		// Current phase expressed with sin and cos. [-1 ; 1]
-	DataType			_pos_sin;		// -
-	DataType			_step_cos;		// Phase increment per step, [-1 ; 1]
-	DataType			_step_sin;		// -
+	DataType       _pos_cos  { 1 };  // Current phase expressed with sin and cos. [-1 ; 1]
+	DataType       _pos_sin  { 0 };  // -
+	DataType       _step_cos { 1 };  // Phase increment per step, [-1 ; 1]
+	DataType       _step_sin { 0 };  // -
 
 
 
@@ -83,10 +81,8 @@ private:
 
 private:
 
-						OscSinCos (const OscSinCos &other);
-	OscSinCos &		operator = (const OscSinCos &other);
-	bool				operator == (const OscSinCos &other);
-	bool				operator != (const OscSinCos &other);
+	bool           operator == (const OscSinCos &other) const = delete;
+	bool           operator != (const OscSinCos &other) const = delete;
 
 };	// class OscSinCos
 

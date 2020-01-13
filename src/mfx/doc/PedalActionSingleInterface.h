@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/doc/ActionType.h"
 
+#include <memory>
+
 
 
 namespace mfx
@@ -47,10 +49,17 @@ class PedalActionSingleInterface
 
 public:
 
-	virtual        ~PedalActionSingleInterface () = default;
+	               PedalActionSingleInterface ()                        = default;
+	               PedalActionSingleInterface (const PedalActionSingleInterface &other) = default;
+	               PedalActionSingleInterface (PedalActionSingleInterface &&other)      = default;
+	virtual        ~PedalActionSingleInterface ()                       = default;
+	virtual PedalActionSingleInterface &
+	               operator = (const PedalActionSingleInterface &other) = default;
+	virtual PedalActionSingleInterface &
+	               operator = (PedalActionSingleInterface &&other)      = default;
 
 	ActionType     get_type () const;
-	PedalActionSingleInterface *
+	std::shared_ptr <PedalActionSingleInterface>
 	               duplicate () const;
 
 	virtual void   ser_write (SerWInterface &ser) const = 0;
@@ -63,7 +72,7 @@ protected:
 
 	virtual ActionType
 	               do_get_type () const = 0;
-	virtual PedalActionSingleInterface *
+	virtual std::shared_ptr <PedalActionSingleInterface>
 	               do_duplicate () const = 0;
 
 

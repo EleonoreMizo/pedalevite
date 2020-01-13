@@ -55,7 +55,13 @@ public:
 	static const int  _max_nbr_chn = 2;
 
 	               FreeverbCore ();
-	virtual        ~FreeverbCore () = default;
+	               FreeverbCore (const FreeverbCore &other) = default;
+	               FreeverbCore (FreeverbCore &&other)      = default;
+
+	               ~FreeverbCore ()                         = default;
+
+	FreeverbCore & operator = (const FreeverbCore &other)   = default;
+	FreeverbCore & operator = (FreeverbCore &&other)        = default;
 
 	void           reset (double sample_freq, int max_buf_len);
 	void           set_reflectivity (float fdbk);
@@ -117,8 +123,6 @@ private:
 
 private:
 
-	               FreeverbCore (const FreeverbCore &other)      = delete;
-	FreeverbCore & operator = (const FreeverbCore &other)        = delete;
 	bool           operator == (const FreeverbCore &other) const = delete;
 	bool           operator != (const FreeverbCore &other) const = delete;
 

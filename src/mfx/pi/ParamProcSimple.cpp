@@ -56,7 +56,7 @@ ParamProcSimple::ParamProcSimple (ParamStateSet &state_set)
 
 
 
-void	ParamProcSimple::handle_msg (piapi::ProcInfo &proc)
+void	ParamProcSimple::handle_msg (const piapi::ProcInfo &proc)
 {
 	_steady_req_flag = _nxt_steady_req_flag;
 	_full_reset_flag = _nxt_full_reset_flag;

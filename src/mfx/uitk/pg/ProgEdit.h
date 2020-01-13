@@ -55,7 +55,7 @@ namespace pg
 
 
 
-class ProgEdit
+class ProgEdit final
 :	public PageInterface
 {
 
@@ -64,7 +64,6 @@ class ProgEdit
 public:
 
 	explicit       ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~ProgEdit () = default;
 
 
 
@@ -73,22 +72,21 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_set_preset_name (std::string name);
-	virtual void   do_add_slot (int slot_id);
-	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_set_routing (const doc::Routing &routing);
-	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
-	virtual void   do_remove_plugin (int slot_id);
-	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
+	void           do_activate_preset (int index) final;
+	void           do_set_preset_name (std::string name) final;
+	void           do_add_slot (int slot_id) final;
+	void           do_remove_slot (int slot_id) final;
+	void           do_set_routing (const doc::Routing &routing) final;
+	void           do_set_plugin (int slot_id, const PluginInitData &pi_data) final;
+	void           do_remove_plugin (int slot_id) final;
+	void           do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls) final;
 
 
 
@@ -175,7 +173,9 @@ private:
 
 	               ProgEdit ()                               = delete;
 	               ProgEdit (const ProgEdit &other)          = delete;
+	               ProgEdit (ProgEdit &&other)               = delete;
 	ProgEdit &     operator = (const ProgEdit &other)        = delete;
+	ProgEdit &     operator = (ProgEdit &&other)             = delete;
 	bool           operator == (const ProgEdit &other) const = delete;
 	bool           operator != (const ProgEdit &other) const = delete;
 

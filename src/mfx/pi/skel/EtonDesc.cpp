@@ -49,7 +49,7 @@ EtonDesc::EtonDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// XYZ
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.125, 8,
 		"Level\nLvl",
 		"dB",
@@ -57,7 +57,7 @@ EtonDesc::EtonDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_XYZ, log_ptr);
+	_desc_set.add_glob (Param_XYZ, log_sptr);
 }
 
 

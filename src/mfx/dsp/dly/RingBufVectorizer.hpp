@@ -50,6 +50,9 @@ Throws: Nothing
 
 RingBufVectorizer::RingBufVectorizer (int size)
 :	_size (size)
+,	_pos ()
+,	_len ()
+,	_seg_len ()
 ,	_nbr_curs (0)
 {
 	assert (size > 0);
@@ -69,7 +72,7 @@ Throws: Nothing
 
 int	RingBufVectorizer::get_size () const
 {
-	return (_size);
+	return _size;
 }
 
 
@@ -110,7 +113,7 @@ int	RingBufVectorizer::get_seg_len () const
 	assert (_nbr_curs > 0);
 	assert (_seg_len > 0);
 
-	return (_seg_len);
+	return _seg_len;
 }
 
 
@@ -132,7 +135,7 @@ int	RingBufVectorizer::get_curs_pos (int curs) const
 	assert (_nbr_curs > 0);
 	assert (curs < _nbr_curs);
 
-	return (_pos [curs]);
+	return _pos [curs];
 }
 
 

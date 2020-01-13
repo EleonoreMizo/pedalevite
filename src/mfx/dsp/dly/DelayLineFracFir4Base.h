@@ -56,7 +56,15 @@ public:
 	typedef AL AllocatorType;
 
 	explicit			DelayLineFracFir4Base (const AllocatorType &al = AllocatorType ());
-	//virtual        ~DelayLineFracFir4Base () = default;
+	               DelayLineFracFir4Base (const DelayLineFracFir4Base &other) = default;
+	               DelayLineFracFir4Base (DelayLineFracFir4Base &&other)      = default;
+
+	               ~DelayLineFracFir4Base ()                       = default;
+
+	DelayLineFracFir4Base &
+	               operator = (const DelayLineFracFir4Base &other) = default;
+	DelayLineFracFir4Base &
+	               operator = (DelayLineFracFir4Base &&other)      = default;
 
 	void           set_max_time (long max_delay_time);
 	inline long    get_max_time () const;
@@ -110,9 +118,6 @@ private:
 
 private:
 
-	               DelayLineFracFir4Base (const DelayLineFracFir4Base &other) = delete;
-	DelayLineFracFir4Base &
-	               operator = (const DelayLineFracFir4Base &other)            = delete;
 	bool           operator == (const DelayLineFracFir4Base &other) const     = delete;
 	bool           operator != (const DelayLineFracFir4Base &other) const     = delete;
 

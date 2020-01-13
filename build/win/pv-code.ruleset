@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Pédale Vite" Description="Custom mix of C++ Core Guidelines Check Rules + Microsoft Native Recommended Rules.  Some annoying and pedantic warnings removed." ToolsVersion="16.0">
+  <Include Path="NativeRecommendedRules.ruleset" Action="Default" />
+  <Include Path="CppCoreCheckRules.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.Analyzers.NativeCodeAnalysis" RuleNamespace="Microsoft.Rules.Native">
+    <Rule Id="C26429" Action="None" /><!-- Symbol is never tested for nullness, it can be marked as gsl::not_null. -->
+    <Rule Id="C26439" Action="None" /><!-- This kind of function may not throw. Declare it 'noexcept'. -->
+    <Rule Id="C26440" Action="None" /><!-- Function can be declared 'noexcept'. -->
+    <Rule Id="C26446" Action="None" /><!-- Prefer to use gsl::at() instead of unchecked subscript operator. -->
+    <Rule Id="C26447" Action="None" /><!-- The function is declared noexcept but calls a function that may throw exceptions. -->
+    <Rule Id="C26451" Action="None" /><!-- Warning C26451: Arithmetic overflow: Using operator '%operator%' on a %size1% byte value and then casting the result to a %size2% byte value. Cast the value to the wider type before calling operator '%operator%' to avoid overflow -->
+    <Rule Id="C26455" Action="None" /><!-- Default constructor may not throw. Delacre it 'noexcept' (f.6). -->
+    <Rule Id="C26472" Action="None" /><!-- Don't use a static_cast for arithmetic conversions. Use brace initialization, gsl::narrow_cast or gsl::narrow (type.1). -->
+    <Rule Id="C26473" Action="None" /><!-- Don't cast between pointer types where the source type and the target type are the same. -->
+    <Rule Id="C26475" Action="None" /><!-- Do not use function style C-casts. -->
+    <Rule Id="C26476" Action="None" /><!-- std::variant provides a type-safe alternative to union and should be preferred in modern code. -->
+    <Rule Id="C26481" Action="None" /><!-- Don't use pointer arithmetic. Use span instead (bounds.1). -->
+    <Rule Id="C26482" Action="None" /><!-- Only index into arrays using constant expressions. -->
+    <Rule Id="C26485" Action="None" /><!-- No array to pointer decay. -->
+    <Rule Id="C26490" Action="None" /><!-- Don't use reinterpret_cast. -->
+    <Rule Id="C26492" Action="None" /><!-- Don't use const_cast to cast away const or volatile (type.3). -->
+    <Rule Id="C26493" Action="None" /><!-- Don't use C-style casts. -->
+    <Rule Id="C26496" Action="None" /><!-- The variable '%variable%' is assigned only once, mark it as const. -->
+    <Rule Id="C26497" Action="None" /><!-- This function %function% could be marked constexpr if compile-time evaluation is desired. -->
+    <Rule Id="C26812" Action="None" /><!-- The enum type %type% is unscoped. Prefer 'enum class' over 'enum' (Enum.3) -->
+    <Rule Id="C26814" Action="None" /><!-- The const variable '%variable%' can be computed at compile time. Consider using constexpr (con.5) -->
+  </Rules>
+</RuleSet>

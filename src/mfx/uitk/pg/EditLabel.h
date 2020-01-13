@@ -52,7 +52,7 @@ namespace pg
 
 
 
-class EditLabel
+class EditLabel final
 :	public PageInterface
 {
 
@@ -69,7 +69,6 @@ public:
 	};
 
 	explicit       EditLabel (PageSwitcher &page_switcher);
-	virtual        ~EditLabel () = default;
 
 
 
@@ -78,12 +77,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -135,7 +133,9 @@ private:
 
 	               EditLabel ()                               = delete;
 	               EditLabel (const EditLabel &other)         = delete;
+	               EditLabel (EditLabel &&other)              = delete;
 	EditLabel &    operator = (const EditLabel &other)        = delete;
+	EditLabel &    operator = (EditLabel &&other)             = delete;
 	bool           operator == (const EditLabel &other) const = delete;
 	bool           operator != (const EditLabel &other) const = delete;
 

@@ -61,9 +61,6 @@ public:
 	typedef DT DataType;
 	typedef ST SumType;
 
-	               MovingSum ()  = default;
-	virtual        ~MovingSum () = default;
-
 	void           set_win_len (int len);
 
 	inline SumType process_sample (DataType x);
@@ -96,9 +93,6 @@ private:
 
 private:
 
-	               MovingSum (const MovingSum <DT, ST> &other)         = delete;
-	MovingSum <DT, ST> &
-	               operator = (const MovingSum <DT, ST> &other)        = delete;
 	bool           operator == (const MovingSum <DT, ST> &other) const = delete;
 	bool           operator != (const MovingSum <DT, ST> &other) const = delete;
 

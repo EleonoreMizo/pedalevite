@@ -106,8 +106,11 @@ private:
 private:
 
 	               FncFiniteAsym (const FncFiniteAsym <BL, BU, GF, RES> &other)     = delete;
+	               FncFiniteAsym (FncFiniteAsym <BL, BU, GF, RES> &&other)          = delete;
 	FncFiniteAsym <BL, BU, GF, RES> &
 	               operator = (const FncFiniteAsym <BL, BU, GF, RES> &other)        = delete;
+	FncFiniteAsym <BL, BU, GF, RES> &
+	               operator = (FncFiniteAsym <BL, BU, GF, RES> &&other)             = delete;
 	bool           operator == (const FncFiniteAsym <BL, BU, GF, RES> &other) const = delete;
 	bool           operator != (const FncFiniteAsym <BL, BU, GF, RES> &other) const = delete;
 

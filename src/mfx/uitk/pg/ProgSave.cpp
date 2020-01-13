@@ -56,13 +56,13 @@ namespace pg
 
 ProgSave::ProgSave (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_bank_sptr (new NText (  Entry_BANK))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW))
+,	_bank_sptr (std::make_shared <NText  > (Entry_BANK  ))
 ,	_prog_list ()
 ,	_state (State_NORMAL)
 ,	_save_bank_index (-1)
@@ -122,7 +122,7 @@ void	ProgSave::do_connect (Model &model, const View &view, PageMgrInterface &pag
 				assert (false);
 			}
 
-			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, nullptr);
 			return;
 		}
 	}
@@ -146,7 +146,7 @@ void	ProgSave::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	for (int p = 0; p < int (_prog_list.size ()); ++p)
 	{
-		_prog_list [p] = TxtSPtr (new NText (Entry_PROG_LIST + p));
+		_prog_list [p] = std::make_shared <NText> (Entry_PROG_LIST + p);
 		_prog_list [p]->set_font (*_fnt_ptr);
 		_prog_list [p]->set_coord (Vec2d (0, h_m * (p + 1)));
 		_prog_list [p]->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -229,7 +229,7 @@ MsgHandlerInterface::EvtProp	ProgSave::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:

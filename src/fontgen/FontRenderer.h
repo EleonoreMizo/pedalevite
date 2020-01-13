@@ -39,7 +39,7 @@ class FontRenderer
 public:
 
 	explicit       FontRenderer (std::string filename, double size_pt, double scale_h = 1.0);
-	virtual        ~FontRenderer ();
+	               ~FontRenderer ();
 
 	int            export_to_raw (std::string filename);
 
@@ -85,11 +85,13 @@ private:
 
 private:
 
-	               FontRenderer ()                          = delete;
-	               FontRenderer (const FontRenderer &other) = delete;
-	FontRenderer & operator = (const FontRenderer &other)   = delete;
-	bool           operator == (const FontRenderer &other)  = delete;
-	bool           operator != (const FontRenderer &other)  = delete;
+	               FontRenderer ()                           = delete;
+	               FontRenderer (const FontRenderer &other)  = delete;
+	               FontRenderer (FontRenderer &&other)       = delete;
+	FontRenderer & operator = (const FontRenderer &other)    = delete;
+	FontRenderer & operator = (FontRenderer &&other)         = delete;
+	bool           operator == (const FontRenderer &other)   = delete;
+	bool           operator != (const FontRenderer &other)   = delete;
 
 };	// class FontRenderer
 

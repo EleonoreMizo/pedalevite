@@ -45,11 +45,6 @@ class ClipDetect
 
 public:
 
-	               ClipDetect ()                        = default;
-	               ClipDetect (const ClipDetect &other) = default;
-	virtual        ~ClipDetect ()                       = default;
-	ClipDetect &   operator = (const ClipDetect &other) = default;
-
 	void           set_clip_val (float val);
 	void           set_clip_val (float val_min, float val_max);
 	bool           process_sample (float x) const;

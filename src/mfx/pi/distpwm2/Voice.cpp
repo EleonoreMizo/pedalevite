@@ -94,7 +94,7 @@ void	Voice::sync (float age_frac)
 
 float	Voice::process_sample ()
 {
-	float          val;
+	float          val = 0;
 
 	switch (_pt)
 	{
@@ -143,7 +143,6 @@ float	Voice::process_sample ()
 
 	case PulseType_CYCLE:
 		{
-			val = 0;
 			const float    pos = _dur_cycle * _pw_inv;
 			if (pos < 2)
 			{
@@ -178,7 +177,6 @@ float	Voice::process_sample ()
 
 	default:
 		assert (false);
-		val = 0; // Set val to keep the compiler happy
 		break;
 	}
 
@@ -191,7 +189,7 @@ float	Voice::process_sample ()
 
 void	Voice::process_block (float dst_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	switch (_pt)
@@ -389,19 +387,10 @@ float	Voice::gen_wf (float pos)
 	assert (pos >= 0);
 	assert (pos <= 2);
 
-	float          val;
-	if (pos < 0.5f)
-	{
-		val = gen_poly (pos * 2);
-	}
-	else if (pos < 1.5f)
-	{
-		val = 2 * gen_poly (1.5f - pos) - 1;
-	}
-	else
-	{
-		val = gen_poly (pos * 2 - 3) - 1;
-	}
+	const float    val =
+		  (pos < 0.5f) ? gen_poly (pos * 2)
+		: (pos < 1.5f) ? 2 * gen_poly (1.5f - pos) - 1
+		:                gen_poly (pos * 2 - 3) - 1;
 
 	return val;
 }
@@ -412,7 +401,7 @@ float	Voice::gen_wf_multi (float pos)
 {
 	assert (pos >= 0);
 
-	float          val;
+	float          val = 0;
 	if (pos < 0.5f)
 	{
 		val = gen_poly (pos * 2);

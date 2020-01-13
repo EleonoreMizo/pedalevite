@@ -115,8 +115,11 @@ private:
 private:
 
 	               LockFreeQueue (const LockFreeQueue <T> &other)     = delete;
+	               LockFreeQueue (LockFreeQueue <T> &&other)          = delete;
 	LockFreeQueue <T> &
 	               operator = (const LockFreeQueue <T> &other)        = delete;
+	LockFreeQueue <T> &
+	               operator = (LockFreeQueue <T> &&other)             = delete;
 	bool           operator == (const LockFreeQueue <T> &other) const = delete;
 	bool           operator != (const LockFreeQueue <T> &other) const = delete;
 

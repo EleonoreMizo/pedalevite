@@ -57,11 +57,6 @@ class Downsampler4xSimd
 
 public:
 
-	               Downsampler4xSimd ()                               = default;
-	               Downsampler4xSimd (const Downsampler4xSimd &other) = default;
-	Downsampler4xSimd &
-	               operator = (const Downsampler4xSimd &other)        = default;
-
 	void           set_coefs (const double coef_42 [NC42], const double coef_21 [NC21]);
 	inline float   process_sample (const float src_ptr [4]);
 	void           process_block (float data_ptr [], int nbr_spl);

@@ -534,8 +534,8 @@ typename OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::process_sample ()
 {
-	assert (_wavetable_pos_ptr != 0);
-	assert (_wavetable_neg_ptr != 0);
+	assert (_wavetable_pos_ptr != nullptr);
+	assert (_wavetable_neg_ptr != nullptr);
 
 	const DataType *  src_pos_ptr = _wavetable_pos_ptr->use_table (_cur_table);
 	const DataType *  src_neg_ptr = _wavetable_neg_ptr->use_table (_cur_table);
@@ -569,8 +569,8 @@ void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::process_sample (DataType &ref_data, DataType &sub_data)
 {
-	assert (_wavetable_pos_ptr != 0);
-	assert (_wavetable_neg_ptr != 0);
+	assert (_wavetable_pos_ptr != nullptr);
+	assert (_wavetable_neg_ptr != nullptr);
 
 	const DataType *  src_pos_ptr = _wavetable_pos_ptr->use_table (_cur_table);
 	const DataType *  src_neg_ptr = _wavetable_neg_ptr->use_table (_cur_table);
@@ -647,10 +647,10 @@ void	OscWavetableSub <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::process_block (DataType ref_data_ptr [], DataType sub_data_ptr [], int nbr_spl)
 {
-	assert (ref_data_ptr != 0);
-	assert (sub_data_ptr != 0);
-	assert (_wavetable_pos_ptr != 0);
-	assert (_wavetable_neg_ptr != 0);
+	assert (ref_data_ptr != nullptr);
+	assert (sub_data_ptr != nullptr);
+	assert (_wavetable_pos_ptr != nullptr);
+	assert (_wavetable_neg_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const DataType *  src_pos_ptr = _wavetable_pos_ptr->use_table (_cur_table);

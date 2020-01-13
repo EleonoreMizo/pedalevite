@@ -80,9 +80,6 @@ public:
 	static const int PHASE_LEN   = InterpPhase::PHASE_LEN;
 	static const int IMPULSE_LEN = NBR_PHASES * PHASE_LEN;
 
-	               InterpFirPolyphase ()  = default;
-	               ~InterpFirPolyphase () = default;
-
 	void				set_impulse (const double impulse_ptr [IMPULSE_LEN]);
 	fstb_FORCEINLINE float
 	               interpolate (const float data_ptr [], uint32_t frac_pos) const;
@@ -115,9 +112,6 @@ private:
 
 private:
 
-	               InterpFirPolyphase (const InterpFirPolyphase &other) = delete;
-	InterpFirPolyphase &
-	               operator = (const InterpFirPolyphase &other)        = delete;
 	bool           operator == (const InterpFirPolyphase &other) const = delete;
 	bool           operator != (const InterpFirPolyphase &other) const = delete;
 

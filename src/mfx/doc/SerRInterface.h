@@ -48,7 +48,15 @@ class SerRInterface
 
 public:
 
-	virtual        ~SerRInterface () = default;
+	               SerRInterface ()                           = default;
+	               SerRInterface (const SerRInterface &other) = default;
+	               SerRInterface (SerRInterface &&other)      = default;
+	virtual        ~SerRInterface ()                          = default;
+
+	virtual SerRInterface &
+	               operator = (const SerRInterface &other)    = default;
+	virtual SerRInterface &
+	               operator = (SerRInterface &&other)         = default;
 
 	int            begin_list (int &nbr_elt);
 	int            end_list ();

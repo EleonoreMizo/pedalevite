@@ -44,8 +44,8 @@ BandSplitAllPassPair <AP0, AP1, VFF>::BandSplitAllPassPair ()
 :	_filter_0 ()
 ,	_filter_1 ()
 ,	_filter_fix ()
-,	_add_sub_ptr (0)
-,	_vol_ptr (0)
+,	_add_sub_ptr (nullptr)
+,	_vol_ptr (nullptr)
 {
 	mix::Generic::setup ();
 
@@ -144,9 +144,9 @@ void	BandSplitAllPassPair <AP0, AP1, VFF>::split_sample (float &out_1, float &ou
 template <typename AP0, typename AP1, bool VFF>
 void	BandSplitAllPassPair <AP0, AP1, VFF>::split_block (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (VFF)

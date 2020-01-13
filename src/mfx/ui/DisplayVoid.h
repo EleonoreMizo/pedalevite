@@ -42,7 +42,7 @@ namespace ui
 
 
 
-class DisplayVoid
+class DisplayVoid final
 :	public DisplayInterface
 {
 
@@ -53,9 +53,6 @@ public:
 	static const int  _scr_w = 128;
 	static const int  _scr_h = 64;
 
-	               DisplayVoid ()  = default;
-	virtual        ~DisplayVoid () = default;
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -63,16 +60,14 @@ public:
 protected:
 
 	// mfx::ui::DisplayInterface
-	virtual int    do_get_width () const;
-	virtual int    do_get_height () const;
-	virtual int    do_get_stride () const;
-	virtual uint8_t *
-	               do_use_screen_buf ();
-	virtual const uint8_t *
-	               do_use_screen_buf () const;
+	int            do_get_width () const final;
+	int            do_get_height () const final;
+	int            do_get_stride () const final;
+	uint8_t *      do_use_screen_buf () final;
+	const uint8_t* do_use_screen_buf () const final;
 
-	virtual void   do_refresh (int x, int y, int w, int h);
-	virtual void   do_force_reset ();
+	void           do_refresh (int x, int y, int w, int h) final;
+	void           do_force_reset () final;
 
 
 
@@ -84,14 +79,10 @@ private:
 	               _buffer;
 
 
+
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	               DisplayVoid (const DisplayVoid &other)       = delete;
-	DisplayVoid &  operator = (const DisplayVoid &other)        = delete;
-	bool           operator == (const DisplayVoid &other) const = delete;
-	bool           operator != (const DisplayVoid &other) const = delete;
 
 }; // class DisplayVoid
 

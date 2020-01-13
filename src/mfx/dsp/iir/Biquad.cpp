@@ -71,8 +71,8 @@ Throws: Nothing
 
 void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	// If we're not on an even boudary, we process a single sample.
@@ -93,12 +93,8 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	int            index = 0;
 	if (half_nbr_spl > 0)
 	{
-		float          mem_x [2];
-		float          mem_y [2];
-		mem_x [0] = _mem_x [0];
-		mem_x [1] = _mem_x [1];
-		mem_y [0] = _mem_y [0];
-		mem_y [1] = _mem_y [1];
+		float          mem_x [2] { _mem_x [0], _mem_x [1] };
+		float          mem_y [2] { _mem_y [0], _mem_y [1] };
 
 		do
 		{
@@ -146,11 +142,11 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float inc_b [3], const float inc_a [3])
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
-	assert (inc_b != 0);
-	assert (inc_a != 0);
+	assert (inc_b != nullptr);
+	assert (inc_a != nullptr);
 
 	// If we're not on an even boudary, we process a single sample.
 	if (_mem_pos != 0)
@@ -170,12 +166,8 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	int            index = 0;
 	if (half_nbr_spl > 0)
 	{
-		float				mem_x [2];
-		float				mem_y [2];
-		mem_x [0] = _mem_x [0];
-		mem_x [1] = _mem_x [1];
-		mem_y [0] = _mem_y [0];
-		mem_y [1] = _mem_y [1];
+		float          mem_x [2] { _mem_x [0], _mem_x [1] };
+		float          mem_y [2] { _mem_y [0], _mem_y [1] };
 
 		do
 		{
@@ -226,8 +218,8 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, std::function <float (float)> shaper)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	// If we're not on an even boudary, we process a single sample.
@@ -248,12 +240,8 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	int            index = 0;
 	if (half_nbr_spl > 0)
 	{
-		float          mem_x [2];
-		float          mem_y [2];
-		mem_x [0] = _mem_x [0];
-		mem_x [1] = _mem_x [1];
-		mem_y [0] = _mem_y [0];
-		mem_y [1] = _mem_y [1];
+		float          mem_x [2] { _mem_x [0], _mem_x [1] };
+		float          mem_y [2] { _mem_y [0], _mem_y [1] };
 
 		do
 		{

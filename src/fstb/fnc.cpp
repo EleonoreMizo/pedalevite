@@ -88,14 +88,15 @@ int	snprintf4all (char *out_0, size_t size, const char *format_0, ...)
 
 FILE *	fopen_utf8 (const char *filename_0, const char *mode_0)
 {
-	FILE *         f_ptr = 0;
+	FILE *         f_ptr = nullptr;
 
 #if defined (_MSC_VER)
 
 	std::basic_string <wchar_t>   filename_utf16;
 	std::basic_string <wchar_t>   mode_utf16;
-	if (   fstb::txt::Conv::utf8_to_utf16 (filename_utf16, filename_0) == fstb::Err_OK
-	    && fstb::txt::Conv::utf8_to_utf16 (mode_utf16    , mode_0    ) == fstb::Err_OK)
+	using fstb::txt::Conv;
+	if (   Conv::utf8_to_utf16 (filename_utf16, filename_0) == fstb::Err_OK
+	    && Conv::utf8_to_utf16 (mode_utf16    , mode_0    ) == fstb::Err_OK)
 	{
 		f_ptr = _wfopen (filename_utf16.c_str (), mode_utf16.c_str ());
 	}

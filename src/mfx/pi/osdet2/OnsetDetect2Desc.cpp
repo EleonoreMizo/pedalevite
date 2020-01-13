@@ -55,17 +55,17 @@ OnsetDetect2Desc::OnsetDetect2Desc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Velocity clipping
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"Velocity clipping",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_VELO_CLIP, enu_ptr);
+	_desc_set.add_glob (Param_VELO_CLIP, enu_sptr);
 
 	// High-pass filter cutoff frequency
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		40, 4000,
 		"High-pass filter cutoff frequency\nHigh-pass filter frequency"
 		"\nHigh-pass frequency\nHigh-pass freq\nHP freq\nHP",
@@ -74,12 +74,12 @@ OnsetDetect2Desc::OnsetDetect2Desc ()
 		0,
 		"%4.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_HP, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_HP, pll_sptr);
 
 	// Low-pass filter 1 cutoff frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		10, 100,
 		"Low-pass filter 1 cutoff frequency\nLow-pass filter 1 frequency"
 		"\nLow-pass 1 frequency\nLow-pass 1 freq\nLP1 freq\nLP1",
@@ -88,12 +88,12 @@ OnsetDetect2Desc::OnsetDetect2Desc ()
 		0,
 		"%5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_LP1, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_LP1, pll_sptr);
 
 	// Low-pass filter 2 cutoff frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		10, 100,
 		"Low-pass filter 2 cutoff frequency\nLow-pass filter 2 frequency"
 		"\nLow-pass 2 frequency\nLow-pass 2 freq\nLP1 freq\nLP2",
@@ -102,20 +102,22 @@ OnsetDetect2Desc::OnsetDetect2Desc ()
 		0,
 		"%5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_LP2, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_LP2, pll_sptr);
 
 	// a
-	param::TplInt* int_ptr = new param::TplInt (32, 159, "a", "spl", 0, "%3.0f");
-	_desc_set.add_glob (Param_A, int_ptr);
+	auto           int_sptr = std::make_shared <param::TplInt> (
+		32, 159, "a", "spl", 0, "%3.0f"
+	);
+	_desc_set.add_glob (Param_A, int_sptr);
 
 	// b
-	int_ptr = new param::TplInt (0, 15, "b", "spl", 0, "%3.0f");
-	_desc_set.add_glob (Param_B, int_ptr);
+	int_sptr = std::make_shared <param::TplInt> (0, 15, "b", "spl", 0, "%3.0f");
+	_desc_set.add_glob (Param_B, int_sptr);
 
 	// Beta
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1.0/256, 1,
 		"Beta",
 		"",
@@ -123,20 +125,20 @@ OnsetDetect2Desc::OnsetDetect2Desc ()
 		0,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_BETA, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_BETA, pll_sptr);
 
 	// Lambda
-	param::Simple *   sim_ptr = new param::Simple ("Lambda\nLmbd");
-	_desc_set.add_glob (Param_LAMBDA, sim_ptr);
+	auto           sim_sptr = std::make_shared <param::Simple> ("Lambda\nLmbd");
+	_desc_set.add_glob (Param_LAMBDA, sim_sptr);
 
 	// Alpha
-	sim_ptr = new param::Simple ("Alpha\nAlph");
-	_desc_set.add_glob (Param_ALPHA, sim_ptr);
+	sim_sptr = std::make_shared <param::Simple> ("Alpha\nAlph");
+	_desc_set.add_glob (Param_ALPHA, sim_sptr);
 
 	// Release threshold
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1e-4, 1e-1,
 		"Release threshold\nRelease thr\nRls thr\nRT",
 		"dB",
@@ -144,11 +146,11 @@ OnsetDetect2Desc::OnsetDetect2Desc ()
 		0,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (6);
-	_desc_set.add_glob (Param_RLS_THR, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (6);
+	_desc_set.add_glob (Param_RLS_THR, pll_sptr);
 
 	// Release ratio
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1, 8,
 		"Release ratio\nRls ratio\nRls R\nRR",
 		"%",
@@ -156,8 +158,8 @@ OnsetDetect2Desc::OnsetDetect2Desc ()
 		0,
 		"%3.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (6);
-	_desc_set.add_glob (Param_RLS_RATIO, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (6);
+	_desc_set.add_glob (Param_RLS_RATIO, pll_sptr);
 
 }
 

@@ -140,7 +140,7 @@ void	BitFieldTools <T, DL2>::fill_bit (GroupType bit_arr [], int pos)
 template <typename T, int DL2>
 void	BitFieldTools <T, DL2>::activate_range (GroupType bit_arr [], int pos, int nbr_elt)
 {
-	assert (bit_arr != 0);
+	assert (bit_arr != nullptr);
 	assert (pos >= 0);
 	assert (nbr_elt > 0);
 
@@ -153,18 +153,17 @@ void	BitFieldTools <T, DL2>::activate_range (GroupType bit_arr [], int pos, int 
 	int            end_gpos;
 	calculate_group_and_pos (end_group, end_gpos, end_pos);
 
-	GroupType      mask;
-
 	if (beg_group == end_group)
 	{
-		mask = (GroupType (2) << end_gpos) - (GroupType (1) << beg_gpos);
+		const GroupType   mask =
+			(GroupType (2) << end_gpos) - (GroupType (1) << beg_gpos);
 		bit_arr [beg_group] |= mask;
 	}
 
 	else
 	{
 		// Beginning
-		mask = (~GroupType (0)) << beg_gpos;
+		GroupType      mask = (~GroupType (0)) << beg_gpos;
 		bit_arr [beg_group] |= mask;
 
 		// Middle
@@ -229,7 +228,7 @@ void	BitFieldTools <T, DL2>::deactivate_range (GroupType bit_arr [], int pos, in
 template <typename T, int DL2>
 int	BitFieldTools <T, DL2>::get_next_bit_set_from (const GroupType bit_arr [], int pos, int length)
 {
-	assert (bit_arr != 0);
+	assert (bit_arr != nullptr);
 	assert (pos >= 0);
 	assert (pos < length);
 

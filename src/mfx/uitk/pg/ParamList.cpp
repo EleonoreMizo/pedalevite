@@ -60,14 +60,14 @@ namespace pg
 ParamList::ParamList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_fx_setup_sptr (new NText (Entry_FX_SETUP))
-,	_gui_sptr (     new NText (Entry_GUI))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (    std::make_shared <NWindow> (Entry_WINDOW  ))
+,	_fx_setup_sptr (std::make_shared <NText  > (Entry_FX_SETUP))
+,	_gui_sptr (     std::make_shared <NText  > (Entry_GUI     ))
 ,	_param_list ()
 ,	_mixer_flag (true)
 ,	_gui_flag (false)
@@ -157,13 +157,13 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			if (node_id == Entry_FX_SETUP)
 			{
-				_page_switcher.switch_to (PageType_SLOT_MENU, 0);
+				_page_switcher.switch_to (PageType_SLOT_MENU, nullptr);
 			}
 			else if (node_id == Entry_GUI)
 			{
 				if (_gui_flag)
 				{
-					_page_switcher.switch_to (_gui_page, 0);
+					_page_switcher.switch_to (_gui_page, nullptr);
 				}
 				else
 				{
@@ -176,7 +176,7 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 				update_loc_edit (node_id);
 				if (_loc_edit._param_index >= 0)
 				{
-					_page_switcher.switch_to (pg::PageType_PARAM_EDIT, 0);
+					_page_switcher.switch_to (pg::PageType_PARAM_EDIT, nullptr);
 				}
 			}
 			else
@@ -186,7 +186,7 @@ MsgHandlerInterface::EvtProp	ParamList::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:
@@ -210,7 +210,7 @@ void	ParamList::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -231,7 +231,7 @@ void	ParamList::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -296,7 +296,7 @@ void	ParamList::check_gui (const std::string &pi_model)
 
 void	ParamList::set_param_info ()
 {
-	assert (_fnt_ptr != 0);
+	assert (_fnt_ptr != nullptr);
 
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];
@@ -307,7 +307,7 @@ void	ParamList::set_param_info ()
 
 	check_gui (slot._pi_model);
 
-	const doc::PluginSettings *   settings_main_ptr = 0;
+	const doc::PluginSettings *   settings_main_ptr = nullptr;
 	auto           it_settings = slot._settings_all.find (slot._pi_model);
 	_mixer_flag = true;
 	if (it_settings != slot._settings_all.end ())
@@ -333,8 +333,10 @@ void	ParamList::set_param_info ()
 	}};
 	const std::array <int, PiType_NBR_ELT> nbr_param_arr =
 	{{
-		(_mixer_flag) ? int (slot._settings_mixer._param_list.size ()) : 0,
-		(settings_main_ptr != 0) ? int (settings_main_ptr->_param_list.size ()) : 0
+		(_mixer_flag)
+		? int (slot._settings_mixer._param_list.size ()) : 0,
+		(settings_main_ptr != nullptr)
+		? int (settings_main_ptr->_param_list.size ())   : 0
 	}};
 	const int      nbr_param_tot = nbr_param_arr [0] + nbr_param_arr [1];
 
@@ -369,7 +371,7 @@ void	ParamList::set_param_info ()
 		for (int index = 0; index < nbr_param; ++index)
 		{
 			bool           ctrl_flag = false;
-			if (settings_ptr_arr [type_cnt] != 0)
+			if (settings_ptr_arr [type_cnt] != nullptr)
 			{
 				ctrl_flag = settings_ptr_arr [type_cnt]->has_ctrl (index);
 			}
@@ -380,13 +382,13 @@ void	ParamList::set_param_info ()
 #endif
 			const int      node_id  = param_pos * 2;
 
-			TxtSPtr        name_sptr (new NText (node_id));
+			TxtSPtr        name_sptr { std::make_shared <NText> (node_id) };
 			name_sptr->set_coord (Vec2d (0, h_m * pos_disp));
 			name_sptr->set_font (*_fnt_ptr);
 			name_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 			name_sptr->set_bold (ctrl_flag, true);
 
-			TxtSPtr        val_sptr (new NText (node_id + 1));
+			TxtSPtr        val_sptr { std::make_shared <NText> (node_id + 1) };
 			val_sptr->set_coord (Vec2d (scr_w, h_m * pos_disp));
 			val_sptr->set_font (*_fnt_ptr);
 			val_sptr->set_justification (1, 0, false);

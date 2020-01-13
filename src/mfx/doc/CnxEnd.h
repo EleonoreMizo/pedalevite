@@ -55,8 +55,12 @@ public:
 	explicit       CnxEnd (Type type, int slot_id, int pin);
 	               CnxEnd ()                        = default;
 	               CnxEnd (const CnxEnd &other)     = default;
-	virtual        ~CnxEnd ()                       = default;
+	               CnxEnd (CnxEnd &&other)          = default;
+
+	               ~CnxEnd ()                       = default;
+
 	CnxEnd &       operator = (const CnxEnd &other) = default;
+	CnxEnd &       operator = (CnxEnd &&other)      = default;
 
 	inline bool    operator == (const CnxEnd &other) const;
 	inline bool    operator != (const CnxEnd &other) const;

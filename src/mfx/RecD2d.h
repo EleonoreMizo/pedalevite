@@ -101,7 +101,7 @@ private:
 	volatile bool  _write_flag     = false;
 	FileOpWav      _file_writer;
 	typename D2dQueue::CellType * volatile
-	               _cell_ptr       = 0;
+	               _cell_ptr       = nullptr;
 	int            _nbr_chn        = 0;
 	std::vector <float>
 	               _buf_disk;
@@ -114,7 +114,9 @@ private:
 private:
 
 	               RecD2d (const RecD2d &other)            = delete;
+	               RecD2d (RecD2d &&other)                 = delete;
 	RecD2d &       operator = (const RecD2d &other)        = delete;
+	RecD2d &       operator = (RecD2d &&other)             = delete;
 	bool           operator == (const RecD2d &other) const = delete;
 	bool           operator != (const RecD2d &other) const = delete;
 

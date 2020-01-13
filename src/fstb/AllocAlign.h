@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <memory>
 
 #include <cstddef>
+#include <cstdint>
 
 
 
@@ -56,11 +57,11 @@ public:
 	typedef	size_t	size_type;
 	typedef	ptrdiff_t	difference_type;
 
-	               AllocAlign ()                                  = default;
-	               AllocAlign (AllocAlign <T, ALIG> const &other) = default;
+	               AllocAlign ()                                   = default;
+	               AllocAlign (AllocAlign <T, ALIG> const &other)  = default;
 	template <typename U>
 	               AllocAlign (AllocAlign <U, ALIG> const &/*other*/) {}
-	               ~AllocAlign ()                                 = default;
+	               ~AllocAlign ()                                  = default;
 
 	// Address
 	inline pointer address (reference r);
@@ -68,7 +69,7 @@ public:
 	               address (const_reference r);
 
 	// Memory allocation
-	inline pointer allocate (size_type n, typename std::allocator <void>::const_pointer ptr = 0);
+	inline pointer allocate (size_type n, typename std::allocator <void>::const_pointer ptr = nullptr);
 	inline void    deallocate (pointer p, size_type n);
 
 	// Size

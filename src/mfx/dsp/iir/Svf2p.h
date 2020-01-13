@@ -61,9 +61,12 @@ public:
 
 	               Svf2p ();
 	               Svf2p (const Svf2p &other)      = default;
+	               Svf2p (Svf2p &&other)           = default;
+
 	virtual        ~Svf2p ()                       = default;
 
 	Svf2p &        operator = (const Svf2p &other) = default;
+	Svf2p &        operator = (Svf2p &&other)      = default;
 
 	// Input
 	inline void    set_sample_freq (float fs);

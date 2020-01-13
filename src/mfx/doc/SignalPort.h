@@ -47,10 +47,12 @@ class SignalPort
 public:
 
 	               SignalPort ()                        = default;
-	virtual        ~SignalPort ()                       = default;
+	               ~SignalPort ()                       = default;
 	               SignalPort (const SignalPort &other) = default;
+	               SignalPort (SignalPort &&other)      = default;
 
 	SignalPort &   operator = (const SignalPort &other) = default;
+	SignalPort &   operator = (SignalPort &&other)      = default;
 
 	bool           operator == (const SignalPort &other) const;
 	bool           operator != (const SignalPort &other) const;

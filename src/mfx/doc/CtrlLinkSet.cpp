@@ -28,6 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
+#include <utility>
+
 #include <cassert>
 
 
@@ -52,6 +54,15 @@ CtrlLinkSet::CtrlLinkSet (const CtrlLinkSet &other)
 
 
 
+CtrlLinkSet::CtrlLinkSet (CtrlLinkSet &&other)
+:	_bind_sptr (std::move (other._bind_sptr))
+,	_mod_arr (std::move (other._mod_arr))
+{
+	// Nothing
+}
+
+
+
 CtrlLinkSet &  CtrlLinkSet::operator = (const CtrlLinkSet &other)
 {
 	if (this != &other)
@@ -60,6 +71,19 @@ CtrlLinkSet &  CtrlLinkSet::operator = (const CtrlLinkSet &other)
 		_mod_arr   = other._mod_arr;
 
 		duplicate_children ();
+	}
+
+	return *this;
+}
+
+
+
+CtrlLinkSet &	CtrlLinkSet::operator = (CtrlLinkSet &&other)
+{
+	if (this != &other)
+	{
+		_bind_sptr = std::move (other._bind_sptr);
+		_mod_arr   = std::move (other._mod_arr);
 	}
 
 	return *this;
@@ -94,8 +118,8 @@ bool	CtrlLinkSet::operator != (const CtrlLinkSet &other) const
 
 bool	CtrlLinkSet::is_similar (const CtrlLinkSet &other) const
 {
-	const bool     bind_l_flag = (      _bind_sptr.get () != 0);
-	const bool     bind_r_flag = (other._bind_sptr.get () != 0);
+	const bool     bind_l_flag = (      _bind_sptr.get () != nullptr);
+	const bool     bind_r_flag = (other._bind_sptr.get () != nullptr);
 	bool           same_flag = (bind_l_flag == bind_r_flag);
 	if (bind_l_flag && bind_r_flag)
 	{
@@ -115,7 +139,7 @@ bool	CtrlLinkSet::is_similar (const CtrlLinkSet &other) const
 
 bool	CtrlLinkSet::is_empty () const
 {
-	return (_bind_sptr.get () == 0 && _mod_arr.empty ());
+	return (_bind_sptr.get () == nullptr && _mod_arr.empty ());
 }
 
 
@@ -125,7 +149,7 @@ void	CtrlLinkSet::ser_write (SerWInterface &ser) const
 	ser.begin_list ();
 
 	ser.begin_list ();
-	if (_bind_sptr.get () != 0)
+	if (_bind_sptr.get () != nullptr)
 	{
 		_bind_sptr->ser_write (ser);
 	}
@@ -151,7 +175,7 @@ void	CtrlLinkSet::ser_read (SerRInterface &ser)
 	ser.begin_list (nbr_elt);
 	if (nbr_elt == 1)
 	{
-		_bind_sptr = LinkSPtr (new CtrlLink);
+		_bind_sptr = std::make_shared <CtrlLink> ();
 		_bind_sptr->ser_read (ser);
 	}
 	else
@@ -165,7 +189,7 @@ void	CtrlLinkSet::ser_read (SerRInterface &ser)
 	_mod_arr.resize (nbr_elt);
 	for (auto &l_sptr : _mod_arr)
 	{
-		l_sptr = LinkSPtr (new CtrlLink);;
+		l_sptr = std::make_shared <CtrlLink> ();
 		l_sptr->ser_read (ser);
 	}
 	ser.end_list ();
@@ -181,15 +205,15 @@ void	CtrlLinkSet::ser_read (SerRInterface &ser)
 
 void	CtrlLinkSet::duplicate_children ()
 {
-	if (_bind_sptr.get () != 0)
+	if (_bind_sptr.get () != nullptr)
 	{
-		_bind_sptr = LinkSPtr (new CtrlLink (*_bind_sptr));
+		_bind_sptr = std::make_shared <CtrlLink> (*_bind_sptr);
 	}
 	for (auto &mod_sptr :_mod_arr)
 	{
-		if (mod_sptr.get () != 0)
+		if (mod_sptr.get () != nullptr)
 		{
-			mod_sptr = LinkSPtr (new CtrlLink (*mod_sptr));
+			mod_sptr = std::make_shared <CtrlLink> (*mod_sptr);
 		}
 	}
 }

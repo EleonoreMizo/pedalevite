@@ -56,12 +56,6 @@ public:
 	static const int  _min_order =  1;
 	static const int  _max_order = 10;
 
-	               CosineSum ()                            = default;
-	virtual        ~CosineSum ()                           = default;
-	               CosineSum (const CosineSum <T> &other)  = default;
-	CosineSum <T> &
-	               operator = (const CosineSum <T> &other) = default;
-
 	void           set_order (int order);
 
 	/*** To do: information retrieval ***/
@@ -73,7 +67,7 @@ public:
 protected:
 
 	// WndInterface
-	virtual void   do_make_win (T data_ptr [], int len);
+	void           do_make_win (T data_ptr [], int len) override;
 
 
 

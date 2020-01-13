@@ -58,17 +58,17 @@ HyperCombDesc::HyperCombDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Tune
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-12, 12,
 		"Tune",
 		"semitones",
 		0,
 		"%+6.2f"
 	);
-	_desc_set.add_glob (Param_TUNE, lin_ptr);
+	_desc_set.add_glob (Param_TUNE, lin_sptr);
 
 	// Duration
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0.01, 100,
 		"Duration\nDur",
 		"s",
@@ -76,12 +76,12 @@ HyperCombDesc::HyperCombDesc ()
 		0,
 		"%7.2f"
 	);
-	pll_ptr->use_mapper ().gen_log (8);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
-	_desc_set.add_glob (Param_TIME, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+	_desc_set.add_glob (Param_TIME, pll_sptr);
 
 	// Volume
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0.01, 1,
 		"Volume\nVol",
 		"dB",
@@ -89,11 +89,11 @@ HyperCombDesc::HyperCombDesc ()
 		0,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	_desc_set.add_glob (Param_VOLUME, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	_desc_set.add_glob (Param_VOLUME, pll_sptr);
 
 	// Filter frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		20, 20480,
 		"Filter frequency\nFilter freq\nFlt freq\nFFreq\nFreq\nFF",
 		"Hz",
@@ -101,21 +101,21 @@ HyperCombDesc::HyperCombDesc ()
 		0,
 		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (10);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FLT_FREQ, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (10);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_FLT_FREQ, pll_sptr);
 
 	// Filter resonance
-	param::Simple *   sim_ptr = new param::Simple (
+	auto           sim_sptr = std::make_shared <param::Simple> (
 		"Filter resonance\nFilter reso\nflt reso\nFReso\nReso\nFR"
 	);
-	_desc_set.add_glob (Param_FLT_RESO, sim_ptr);
+	_desc_set.add_glob (Param_FLT_RESO, sim_sptr);
 
 	// Filter damping
-	sim_ptr = new param::Simple (
+	sim_sptr = std::make_shared <param::Simple> (
 		"Filter damping\nDamping\nFDamp\nDamp\nFD"
 	);
-	_desc_set.add_glob (Param_FLT_DAMP, sim_ptr);
+	_desc_set.add_glob (Param_FLT_DAMP, sim_sptr);
 
 	// Voices
 	for (int index = 0; index < Cst::_nbr_voices; ++index)
@@ -205,41 +205,43 @@ void	HyperCombDesc::add_voice (int index)
 	const int      base = get_base_voice (index);
 
 	// Polarity
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nPos\nNeg",
 		"Voice %d polarity\nV%d polarity\nV%d pol\nV%dP",
 		"",
 		index,
 		"%s"
 	);
-	_desc_set.add_glob (base + ParamVoice_POLARITY, enu_ptr);
+	_desc_set.add_glob (base + ParamVoice_POLARITY, enu_sptr);
 
 	// Note
-	param::TplInt *   int_ptr = new param::TplInt (
+	auto           int_sptr = std::make_shared <param::TplInt> (
 		12, 92,
 		"Voice %d note\nV%d note\nV%dN",
 		"",
 		index,
 		"%.0f"
 	);
-	int_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_MIDI_NOTE);
-	_desc_set.add_glob (base + ParamVoice_NOTE, int_ptr);
+	int_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_MIDI_NOTE
+	);
+	_desc_set.add_glob (base + ParamVoice_NOTE, int_sptr);
 
 	// Finetune
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-1, +1,
 		"Voice %d finetune\nV%d finetune\nV%d ftune\nV%dFT",
 		"cents",
 		index,
 		"%.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (base + ParamVoice_FINETUNE, lin_ptr);
+	_desc_set.add_glob (base + ParamVoice_FINETUNE, lin_sptr);
 
 	// Duration multiplier
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0.1, 10,
 		"Voice %d duration multiplier\nVoice %d dur mult\nVoice %d dur\nV%d dur\nV%dD",
 		"",
@@ -247,11 +249,11 @@ void	HyperCombDesc::add_voice (int index)
 		index,
 		"%6.3f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	_desc_set.add_glob (base + ParamVoice_TIME_MULT, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	_desc_set.add_glob (base + ParamVoice_TIME_MULT, pll_sptr);
 
 	// Gain
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0.1, 10,
 		"Voice %d gain\nV%d gain\nV%dG",
 		"dB",
@@ -259,8 +261,8 @@ void	HyperCombDesc::add_voice (int index)
 		index,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	_desc_set.add_glob (base + ParamVoice_GAIN, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	_desc_set.add_glob (base + ParamVoice_GAIN, pll_sptr);
 }
 
 

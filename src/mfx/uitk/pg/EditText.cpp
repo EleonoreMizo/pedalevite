@@ -54,19 +54,20 @@ namespace pg
 
 EditText::EditText (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_page_ptr (0)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_curs_sptr (new NBitmap (Entry_CURS))
-,	_title_sptr ( new NText (Entry_TITLE ))
-,	_text_sptr (  new NText (Entry_TEXT  ))
-,	_ok_sptr (    new NText (Entry_OK    ))
-,	_cancel_sptr (new NText (Entry_CANCEL))
-,	_space_sptr ( new NText (Entry_SPACE ))
-,	_del_sptr (   new NText (Entry_DEL   ))
-,	_left_sptr (  new NText (Entry_LEFT  ))
-,	_right_sptr ( new NText (Entry_RIGHT ))
+,	_fnt_ptr (nullptr)
+,	_param_ptr (nullptr)
+,	_menu_sptr (  std::make_shared <NWindow> (Entry_WINDOW))
+,	_curs_sptr (  std::make_shared <NBitmap> (Entry_CURS  ))
+,	_title_sptr ( std::make_shared <NText  > (Entry_TITLE ))
+,	_text_sptr (  std::make_shared <NText  > (Entry_TEXT  ))
+,	_ok_sptr (    std::make_shared <NText  > (Entry_OK    ))
+,	_cancel_sptr (std::make_shared <NText  > (Entry_CANCEL))
+,	_space_sptr ( std::make_shared <NText  > (Entry_SPACE ))
+,	_del_sptr (   std::make_shared <NText  > (Entry_DEL   ))
+,	_left_sptr (  std::make_shared <NText  > (Entry_LEFT  ))
+,	_right_sptr ( std::make_shared <NText  > (Entry_RIGHT ))
 ,	_char_list ()
 ,	_curs_pos (0)
 ,	_curs_blink_flag (true)
@@ -94,12 +95,12 @@ EditText::EditText (PageSwitcher &page_switcher)
 void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (model, view);
-	assert (usr_ptr != 0);
+	assert (usr_ptr != nullptr);
 
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
-	_param_ptr = reinterpret_cast <Param *> (usr_ptr);
+	_param_ptr = static_cast <Param *> (usr_ptr);
 
 	_param_ptr->_ok_flag = false;
 
@@ -179,7 +180,7 @@ void	EditText::do_connect (Model &model, const View &view, PageMgrInterface &pag
 			else
 			{
 				row.push_back (node_id);
-				TxtSPtr        char_sptr (new NText (node_id));
+				TxtSPtr        char_sptr { std::make_shared <NText> (node_id) };
 				char_sptr->set_font (*_fnt_ptr);
 				char_sptr->set_coord (Vec2d (px, py));
 				std::string    str_c;

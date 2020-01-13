@@ -53,7 +53,7 @@ DistApfDesc::DistApfDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Gain
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		1, 1024,
 		"Gain\nG",
 		"db",
@@ -61,11 +61,11 @@ DistApfDesc::DistApfDesc ()
 		0,
 		"%5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (10);
-	_desc_set.add_glob (Param_GAIN, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (10);
+	_desc_set.add_glob (Param_GAIN, pll_sptr);
 
 	// Slew rate limiting
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		250, 16000,
 		"Slew rate limiting\nSlew rate limit\nSlew rate lim\nSlew rate\nSRL",
 		"Hz",
@@ -73,18 +73,18 @@ DistApfDesc::DistApfDesc ()
 		0,
 		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (6);
-	_desc_set.add_glob (Param_SRL, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (6);
+	_desc_set.add_glob (Param_SRL, pll_sptr);
 
 	// Oversampling rate
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"\xC3\x97" "1\n" "\xC3\x97" "4", // U+00D7 multiplication sign (UTF-8 C3 97)
 		"Oversampling rate\nOversampling\nOversamp\nOvrspl\nOvrs\nOS",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_OVRS, enu_ptr);
+	_desc_set.add_glob (Param_OVRS, enu_sptr);
 }
 
 

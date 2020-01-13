@@ -52,7 +52,7 @@ FreqShiftDesc::FreqShiftDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Frequency
-	TplPll *   pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		-_max_freq, _max_freq,
 		"Frequency\nFreq",
 		"Hz",
@@ -60,12 +60,12 @@ FreqShiftDesc::FreqShiftDesc ()
 		0,
 		"%+7.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (-_max_freq);
-	pll_ptr->use_mapper ().add_segment (0.4, -0.004 * _max_freq, true);
-	pll_ptr->use_mapper ().add_segment (0.6,  0.004 * _max_freq, false);
-	pll_ptr->use_mapper ().add_segment (1.0,          _max_freq, true);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FREQ, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (-_max_freq);
+	pll_sptr->use_mapper ().add_segment (0.4, -0.004 * _max_freq, true);
+	pll_sptr->use_mapper ().add_segment (0.6,  0.004 * _max_freq, false);
+	pll_sptr->use_mapper ().add_segment (1.0,          _max_freq, true);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_FREQ, pll_sptr);
 }
 
 

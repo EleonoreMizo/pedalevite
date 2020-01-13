@@ -45,7 +45,15 @@ class SerWInterface
 
 public:
 
-	virtual        ~SerWInterface () = default;
+	               SerWInterface ()                           = default;
+	               SerWInterface (const SerWInterface &other) = default;
+	               SerWInterface (SerWInterface &&other)      = default;
+	virtual        ~SerWInterface ()                          = default;
+
+	virtual SerWInterface &
+	               operator = (const SerWInterface &other)    = default;
+	virtual SerWInterface &
+	               operator = (SerWInterface &&other)         = default;
 
 	void           begin_list ();
 	void           end_list ();

@@ -116,7 +116,7 @@ void	SegmentRc::set_val (float val)
 
 void	SegmentRc::process_block (float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float    offset   = _offset;

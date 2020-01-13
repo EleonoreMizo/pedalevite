@@ -54,7 +54,15 @@ public:
 	static const int  _nbr_units    = 1 << _nbr_units_l2;
 
 	               OscSinCosEulerSimd ();
-	virtual        ~OscSinCosEulerSimd () = default;
+	               OscSinCosEulerSimd (const OscSinCosEulerSimd &other) = default;
+	               OscSinCosEulerSimd (OscSinCosEulerSimd &&other) = default;
+
+	               ~OscSinCosEulerSimd ()                          = default;
+
+	OscSinCosEulerSimd &
+	               operator = (const OscSinCosEulerSimd &other)    = default;
+	OscSinCosEulerSimd &
+	               operator = (OscSinCosEulerSimd &&other)         = default;
 
 	void           set_phase (float phase);
 	void           set_step (float step);
@@ -96,9 +104,6 @@ private:
 
 private:
 
-	               OscSinCosEulerSimd (const OscSinCosEulerSimd &other) = delete;
-	OscSinCosEulerSimd &
-	               operator = (const OscSinCosEulerSimd &other)        = delete;
 	bool           operator == (const OscSinCosEulerSimd &other) const = delete;
 	bool           operator != (const OscSinCosEulerSimd &other) const = delete;
 

@@ -80,7 +80,7 @@ void	DelayLine::set_interpolator (rspl::InterpolatorInterface &interp)
 
 const rspl::InterpolatorInterface &	DelayLine::use_interpolator () const
 {
-	assert (_interp_ptr != 0);
+	assert (_interp_ptr != nullptr);
 
 	return (*_interp_ptr);
 }
@@ -98,7 +98,7 @@ void	DelayLine::set_sample_freq (double sample_freq, int ovrspl_l2)
 
 	_line_data.set_sample_freq (sample_freq);
 
-	if (_interp_ptr != 0)
+	if (_interp_ptr != nullptr)
 	{
 		_interp_ptr->set_ovrspl_l2 (_ovrspl_l2);
 
@@ -150,7 +150,7 @@ void	DelayLine::clear_buffers ()
 void	DelayLine::push_block (const float src_ptr [], int nbr_spl)
 {
 	assert (is_ready ());
-	assert (src_ptr != 0);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _line_data.get_len () - _imp_len);
 
@@ -283,7 +283,7 @@ int	DelayLine::do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) co
 void	DelayLine::do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const
 {
 	assert (is_ready ());
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (dly_beg - pos_in_block / _sample_freq >= _min_dly_time);
 	assert (dly_beg <= _max_dly_time);

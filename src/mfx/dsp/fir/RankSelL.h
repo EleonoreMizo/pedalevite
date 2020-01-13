@@ -51,9 +51,6 @@ class RankSelL
 
 public:
 
-	               RankSelL ()  = default;
-	virtual        ~RankSelL () = default;
-
 	void           reserve (int len);
 	void           set_len (int len, float x = 0);
 	void           set_rank (int rank);
@@ -61,7 +58,7 @@ public:
 
 	float          process_sample (float x);
 	float          get_nth (int rank) const;
-	void           process_block (float dst_ptr [], float src_ptr [], int nbr_spl);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	void           clear_buffers ();
 
@@ -105,8 +102,6 @@ private:
 
 private:
 
-	               RankSelL (const RankSelL &other)          = delete;
-	RankSelL &     operator = (const RankSelL &other)        = delete;
 	bool           operator == (const RankSelL &other) const = delete;
 	bool           operator != (const RankSelL &other) const = delete;
 

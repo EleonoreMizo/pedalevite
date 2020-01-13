@@ -57,17 +57,17 @@ namespace pg
 PedalEditStep::PedalEditStep (PageSwitcher &page_switcher, PedalEditContext &ctx)
 :	_page_switcher (page_switcher)
 ,	_ctx (ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_title_sptr (new NText (Entry_TITLE  ))
-,	_add_sptr (  new NText (Entry_ADD    ))
-,	_up_sptr (   new NText (Entry_UP     ))
-,	_down_sptr ( new NText (Entry_DOWN   ))
-,	_del_sptr (  new NText (Entry_DELETE ))
-,	_menu_sptr (new NWindow (Entry_WINDOW))
+,	_fnt_ptr (nullptr)
+,	_title_sptr (std::make_shared <NText  > (Entry_TITLE ))
+,	_add_sptr (  std::make_shared <NText  > (Entry_ADD   ))
+,	_up_sptr (   std::make_shared <NText  > (Entry_UP    ))
+,	_down_sptr ( std::make_shared <NText  > (Entry_DOWN  ))
+,	_del_sptr (  std::make_shared <NText  > (Entry_DELETE))
+,	_menu_sptr ( std::make_shared <NWindow> (Entry_WINDOW))
 ,	_action_sptr_arr ()
 {
 	_title_sptr->set_justification (0.5f, 0, false);
@@ -181,9 +181,11 @@ MsgHandlerInterface::EvtProp	PedalEditStep::do_handle_evt (const NodeEvt &evt)
 			case Entry_ADD:
 				{
 					// Creates and add a non-empty action
-					doc::PedalActionCycle::ActionSPtr   action_sptr (
-						new doc::ActionPreset (false, 0)
-					);
+					doc::PedalActionCycle::ActionSPtr   action_sptr {
+						std::static_pointer_cast <doc::PedalActionSingleInterface> (
+							std::make_shared <doc::ActionPreset> (false, 0)
+						)
+					};
 					step.push_back (action_sptr);
 					_ctx._action_index = nbr_actions;
 					update_model ();
@@ -348,9 +350,9 @@ void	PedalEditStep::update_display ()
 		for (int action_cnt = 0; action_cnt < nbr_actions; ++action_cnt)
 		{
 			const int      node_id = Entry_ACTION_LIST + action_cnt;
-			TxtSPtr        action_sptr (new NText (node_id));
+			TxtSPtr        action_sptr { std::make_shared <NText> (node_id) };
 
-			assert (step [action_cnt].get () != 0);
+			assert (step [action_cnt].get () != nullptr);
 			const doc::PedalActionSingleInterface &   action = *(step [action_cnt]);
 
 			const std::string desc = Tools::conv_pedal_action_to_short_txt (

@@ -50,8 +50,12 @@ public:
 	explicit       Cnx (const CnxEnd &src, const CnxEnd &dst);
 	               Cnx ()                        = default;
 	               Cnx (const Cnx &other)        = default;
-	virtual        ~Cnx ()                       = default;
+	               Cnx (Cnx &&other)             = default;
+
+	               ~Cnx ()                       = default;
+
 	Cnx &          operator = (const Cnx &other) = default;
+	Cnx &          operator = (Cnx &&other)      = default;
 
 	inline bool    operator == (const Cnx &other) const;
 	inline bool    operator != (const Cnx &other) const;

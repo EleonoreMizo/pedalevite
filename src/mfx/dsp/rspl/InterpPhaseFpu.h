@@ -60,9 +60,6 @@ public:
 
 	typedef std::array <float, PHASE_LEN> Buffer;
 
-	               InterpPhaseFpu ()  = default;
-	               ~InterpPhaseFpu () = default;
-
 	inline void    set_data (int pos, float imp, float dif);
 	fstb_FORCEINLINE void
 	               precompute_impulse (Buffer &imp, float q) const;

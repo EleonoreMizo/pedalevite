@@ -56,7 +56,7 @@ namespace cpx
 
 
 
-class Compex
+class Compex final
 :	public piapi::PluginInterface
 {
 
@@ -65,7 +65,6 @@ class Compex
 public:
 
 	               Compex ();
-	virtual        ~Compex () = default;
 
 
 
@@ -74,10 +73,10 @@ public:
 protected:
 
 	// mfx::piapi::PluginInterface
-	virtual State  do_get_state () const;
-	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
-	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_process_block (piapi::ProcInfo &proc);
+	State          do_get_state () const final;
+	double         do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const final;
+	int            do_reset (double sample_freq, int max_buf_len, int &latency) final;
+	void           do_process_block (piapi::ProcInfo &proc) final;
 
 
 

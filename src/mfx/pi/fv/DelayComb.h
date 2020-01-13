@@ -47,9 +47,6 @@ class DelayComb
 
 public:
 
-	               DelayComb ()  = default;
-	virtual        ~DelayComb () = default;
-
 	void           set_delay (int len);
 	void           set_feedback (float coef);
 	void           set_damp (float damp);
@@ -83,8 +80,6 @@ private:
 
 private:
 
-	               DelayComb (const DelayComb &other)         = delete;
-	DelayComb &    operator = (const DelayComb &other)        = delete;
 	bool           operator == (const DelayComb &other) const = delete;
 	bool           operator != (const DelayComb &other) const = delete;
 

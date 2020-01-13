@@ -53,10 +53,15 @@ AtomicPtr <T>::AtomicPtr ()
 
 template <class T>
 AtomicPtr <T>::AtomicPtr (T *ptr)
+#if (conc_ARCHI == conc_ARCHI_X86)
+:	_ptr ()
+#else  // conc_ARCHI
 :	_ptr (ptr)
+#endif // conc_ARCHI
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
 	assert (is_ptr_aligned_nz ((const void *) (&_ptr), sizeof (_ptr)));
+	_ptr._void_ptr = ptr;
 #endif // conc_ARCHI
 }
 
@@ -146,9 +151,9 @@ template <class T>
 T *	AtomicPtr <T>::read_ptr () const
 {
 #if (conc_ARCHI == conc_ARCHI_X86)
-	return (static_cast <T *> (_ptr._t_ptr));
+	return _ptr._t_ptr;
 #else  // conc_ARCHI
-	return (_ptr.load ());
+	return _ptr.load ();
 #endif // conc_ARCHI
 }
 

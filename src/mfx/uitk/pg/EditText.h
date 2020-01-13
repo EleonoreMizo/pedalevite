@@ -49,7 +49,7 @@ namespace pg
 
 
 
-class EditText
+class EditText final
 :	public PageInterface
 {
 
@@ -66,7 +66,6 @@ public:
 	};
 
 	explicit       EditText (PageSwitcher &page_switcher);
-	virtual        ~EditText () = default;
 
 
 
@@ -75,12 +74,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -161,7 +159,9 @@ private:
 
 	               EditText ()                               = delete;
 	               EditText (const EditText &other)          = delete;
+	               EditText (EditText &&other)               = delete;
 	EditText &     operator = (const EditText &other)        = delete;
+	EditText &     operator = (EditText &&other)             = delete;
 	bool           operator == (const EditText &other) const = delete;
 	bool           operator != (const EditText &other) const = delete;
 

@@ -60,11 +60,13 @@ public:
 	typedef std::map <int, SlotSPtr> SlotMap; // [slot_id] = SlotSPtr
 	typedef std::map <int, SignalPort> PortMap; // [port_index] = SignalPort
 
-	               Preset ()  = default;
+	               Preset ()                   = default;
 	               Preset (const Preset &other);
-	virtual        ~Preset () = default;
+	               Preset (Preset &&other)     = default;
+	               ~Preset ()                  = default;
 
 	Preset &       operator = (const Preset &other);
+	Preset &       operator = (Preset &&other) = default;
 
 	bool           is_slot_empty (int slot_id) const;
 	bool           is_slot_empty (SlotMap::const_iterator it) const;

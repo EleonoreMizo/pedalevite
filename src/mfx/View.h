@@ -63,8 +63,7 @@ public:
 	};
 	typedef std::map <OverrideLoc, int> OverrideMap;
 
-	               View ()  = default;
-	virtual        ~View () = default;
+	               View () = default;
 
 	void           add_observer (ModelObserverInterface &obs);
 	void           remove_observer (ModelObserverInterface &obs);
@@ -111,44 +110,44 @@ public:
 protected:
 
 	// mfx::ModelObserverInterface
-	virtual void   do_set_tempo (double bpm);
-	virtual void   do_set_edit_mode (bool edit_flag);
-	virtual void   do_set_save_mode (doc::Setup::SaveMode mode);
-	virtual void   do_set_setup_name (std::string name);
-	virtual void   do_set_pedalboard_layout (const doc::PedalboardLayout &layout);
-	virtual void   do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content);
-	virtual void   do_set_bank (int index, const doc::Bank &bank);
-	virtual void   do_select_bank (int index);
-	virtual void   do_set_bank_name (std::string name);
-	virtual void   do_set_preset_name (std::string name);
-	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset);
-	virtual void   do_activate_preset (int index);
-	virtual void   do_store_preset (int preset_index, int bank_index);
-	virtual void   do_set_prog_switch_mode (doc::ProgSwitchMode mode);
-	virtual void   do_set_chn_mode (ChnMode mode);
-	virtual void   do_set_master_vol (float vol);
-	virtual void   do_set_tuner (bool active_flag);
-	virtual void   do_set_tuner_freq (float freq);
-	virtual void   do_set_slot_info_for_current_preset (const SlotInfoMap &info_map);
-	virtual void   do_set_param (int slot_id, int index, float val, PiType type);
-	virtual void   do_set_param_beats (int slot_id, int index, float beats);
-	virtual void   do_add_slot (int slot_id);
-	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_set_routing (const doc::Routing &routing);
-	virtual void   do_set_slot_label (int slot_id, std::string name);
-	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
-	virtual void   do_remove_plugin (int slot_id);
-	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag);
-	virtual void   do_set_plugin_reset (int slot_id, bool reset_flag);
-	virtual void   do_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr);
-	virtual void   do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls);
-	virtual void   do_override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index);
-	virtual void   do_set_signal_port (int port_id, const doc::SignalPort &port);
-	virtual void   do_clear_signal_port (int port_id);
-	virtual void   do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix);
-	virtual void   do_remove_settings (std::string model, int index);
-	virtual void   do_clear_all_settings ();
-	virtual void   do_set_click (bool click_flag);
+	void           do_set_tempo (double bpm) override;
+	void           do_set_edit_mode (bool edit_flag) override;
+	void           do_set_save_mode (doc::Setup::SaveMode mode) override;
+	void           do_set_setup_name (std::string name) override;
+	void           do_set_pedalboard_layout (const doc::PedalboardLayout &layout) override;
+	void           do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content) override;
+	void           do_set_bank (int index, const doc::Bank &bank) override;
+	void           do_select_bank (int index) override;
+	void           do_set_bank_name (std::string name) override;
+	void           do_set_preset_name (std::string name) override;
+	void           do_set_preset (int bank_index, int preset_index, const doc::Preset &preset) override;
+	void           do_activate_preset (int index) override;
+	void           do_store_preset (int preset_index, int bank_index) override;
+	void           do_set_prog_switch_mode (doc::ProgSwitchMode mode) override;
+	void           do_set_chn_mode (ChnMode mode) override;
+	void           do_set_master_vol (float vol) override;
+	void           do_set_tuner (bool active_flag) override;
+	void           do_set_tuner_freq (float freq) override;
+	void           do_set_slot_info_for_current_preset (const SlotInfoMap &info_map) override;
+	void           do_set_param (int slot_id, int index, float val, PiType type) override;
+	void           do_set_param_beats (int slot_id, int index, float beats) override;
+	void           do_add_slot (int slot_id) override;
+	void           do_remove_slot (int slot_id) override;
+	void           do_set_routing (const doc::Routing &routing) override;
+	void           do_set_slot_label (int slot_id, std::string name) override;
+	void           do_set_plugin (int slot_id, const PluginInitData &pi_data) override;
+	void           do_remove_plugin (int slot_id) override;
+	void           do_set_plugin_mono (int slot_id, bool mono_flag) override;
+	void           do_set_plugin_reset (int slot_id, bool reset_flag) override;
+	void           do_set_param_pres (int slot_id, PiType type, int index, const doc::ParamPresentation *pres_ptr) override;
+	void           do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls) override;
+	void           do_override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index) override;
+	void           do_set_signal_port (int port_id, const doc::SignalPort &port) override;
+	void           do_clear_signal_port (int port_id) override;
+	void           do_add_settings (std::string model, int index, std::string name, const doc::PluginSettings &s_main, const doc::PluginSettings &s_mix) override;
+	void           do_remove_settings (std::string model, int index) override;
+	void           do_clear_all_settings () override;
+	void           do_set_click (bool click_flag) override;
 
 
 

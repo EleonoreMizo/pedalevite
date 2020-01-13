@@ -96,9 +96,11 @@ ActionType	ActionTempoSet::do_get_type () const
 
 
 
-PedalActionSingleInterface *	ActionTempoSet::do_duplicate () const
+std::shared_ptr <PedalActionSingleInterface>	ActionTempoSet::do_duplicate () const
 {
-	return new ActionTempoSet (*this);
+	return std::static_pointer_cast <PedalActionSingleInterface> (
+		std::make_shared <ActionTempoSet> (*this)
+	);
 }
 
 

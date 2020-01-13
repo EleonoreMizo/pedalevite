@@ -103,7 +103,7 @@ double	round (double x)
 int	round_int (double x)
 {
 	assert (x <= double (INT_MAX));
-	assert (x >= double (INT_MIN));
+	assert (x >= static_cast <double> (INT_MIN));
 
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 
@@ -190,7 +190,7 @@ int64_t round_int64 (double x)
 int	floor_int (double x)
 {
 	assert (x <= double (INT_MAX));
-	assert (x >= double (INT_MIN));
+	assert (x >= static_cast <double> (INT_MIN));
 
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 
@@ -222,7 +222,6 @@ int	floor_int (double x)
 
   #endif
 
-	using namespace std;
 	assert (i == int (floor (x)) || fabs (i - x) < 1e-10);
 
 	return (i);
@@ -279,7 +278,7 @@ int64_t	floor_int64 (double x)
 int	ceil_int (double x)
 {
 	assert (x <= double (INT_MAX));
-	assert (x >= double (INT_MIN));
+	assert (x >= static_cast <double> (INT_MIN));
 
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 
@@ -335,7 +334,6 @@ int	ceil_int (double x)
 	:	//"st"
 	);
 
-	using namespace std;
 	assert (-i == int (ceil (x)) || fabs (-i - x) < 1e-10);
 
 	return (-i);
@@ -812,22 +810,22 @@ T	lerp (T v0, T v1, T p)
 
 
 
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
 template <typename T>
 bool	is_ptr_align_nz (const T *ptr, int a)
 {
 	assert (a > 0);
 	assert (is_pow_2 (a));
 
-	return (ptr != 0 && (reinterpret_cast <intptr_t> (ptr) & (a - 1)) == 0);
+	return (ptr != nullptr && (reinterpret_cast <intptr_t> (ptr) & (a - 1)) == 0);
 }
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 

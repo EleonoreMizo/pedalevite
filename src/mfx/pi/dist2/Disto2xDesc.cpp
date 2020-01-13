@@ -63,7 +63,7 @@ Disto2xDesc::Disto2xDesc ()
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 
 	// Crossover frequency
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		5, 20480,
 		"Crossover frequency\nCrossover freq\nCrossover\nXover",
 		"Hz",
@@ -71,11 +71,11 @@ Disto2xDesc::Disto2xDesc ()
 		0,
 		"%5.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_XOVER, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_XOVER, log_sptr);
 
 	// Input LPF cutoff frequency
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		20, 20480,
 		"Input low-pass filter cutoff frequency\nInput LPF frequency\nLPF freq\nLPF",
 		"Hz",
@@ -83,11 +83,11 @@ Disto2xDesc::Disto2xDesc ()
 		0,
 		"%5.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_PRE_LPF, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_PRE_LPF, log_sptr);
 
 	// Attack gain modifier
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1.0 / 16, 16,
 		"Attack gain modifier\nAttack gain mod\nAttack gain\nAtk gain\nAtk G",
 		"dB",
@@ -95,10 +95,10 @@ Disto2xDesc::Disto2xDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_DYN_ATK, log_ptr);
+	_desc_set.add_glob (Param_DYN_ATK, log_sptr);
 
 	// Sustain gain modifier
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1.0 / 16, 16,
 		"Sustain gain modifier\nSustain gain mod\nSustain gain\nSus gain\nSus G",
 		"dB",
@@ -106,13 +106,13 @@ Disto2xDesc::Disto2xDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_DYN_RLS, log_ptr);
+	_desc_set.add_glob (Param_DYN_RLS, log_sptr);
 
 	register_stage (1, Param_S1_BASE);
 	register_stage (2, Param_S2_BASE);
 
 	// Stage 1-2 mix
-	TplMix *       mix_ptr = new TplMix (
+	auto           mix_sptr = std::make_shared <TplMix> (
 			0, 1,
 			"Stage 1-2 Mix\nS12 Mix",
 			"%",
@@ -120,14 +120,14 @@ Disto2xDesc::Disto2xDesc ()
 			0,
 			"%5.1f"
 		);
-	mix_ptr->use_mapper ().config (
-		mix_ptr->get_nat_min (),
-		mix_ptr->get_nat_max ()
+	mix_sptr->use_mapper ().config (
+		mix_sptr->get_nat_min (),
+		mix_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_S12_MIX, mix_ptr);
+	_desc_set.add_glob (Param_S12_MIX, mix_sptr);
 
 	// Low band gain
-	mix_ptr = new TplMix (
+	mix_sptr = std::make_shared <TplMix> (
 		0, 1,
 		"Low band mix\nLow mix\nL Mix",
 		"%",
@@ -135,25 +135,27 @@ Disto2xDesc::Disto2xDesc ()
 		0,
 		"%5.1f"
 	);
-	mix_ptr->use_mapper ().config (
-		mix_ptr->get_nat_min (),
-		mix_ptr->get_nat_max ()
+	mix_sptr->use_mapper ().config (
+		mix_sptr->get_nat_min (),
+		mix_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_LB_MIX, mix_ptr);
+	_desc_set.add_glob (Param_LB_MIX, mix_sptr);
 
 	// Density
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Density\nDens",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_DENSITY, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_DENSITY, lin_sptr);
 
 	// Threshold
-	TplPsl *       pl_ptr = new TplPsl (
+	auto           pl_sptr = std::make_shared <TplPsl> (
 		0, 1,
 		"Threshold\nThresh\nThr",
 		"dB",
@@ -161,7 +163,7 @@ Disto2xDesc::Disto2xDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_THRESH, pl_ptr);
+	_desc_set.add_glob (Param_THRESH, pl_sptr);
 }
 
 
@@ -228,30 +230,34 @@ const piapi::ParamDescInterface &	Disto2xDesc::do_get_param_info (piapi::ParamCa
 void	Disto2xDesc::register_stage (int stage, int base)
 {
 	// HPF Cutoff frequency
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		3, 3000,
-		"Stage %d input high-pass filter cutoff frequency\nStage %d input HPF frequency\nStage %d HPF cutoff frequency\nStage %d HPF frequency\nStage %d HPF freq\nStage %d HPF\nS%d HPF",
+		"Stage %d input high-pass filter cutoff frequency"
+		"\nStage %d input HPF frequency\nStage %d HPF cutoff frequency"
+		"\nStage %d HPF frequency\nStage %d HPF freq\nStage %d HPF\nS%d HPF",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		stage,
 		"%4.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamStage_HPF_PRE, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamStage_HPF_PRE, log_sptr);
 
 	// Bias
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"Stage %d Bias\nS%d Bias",
 		"%",
 		stage,
 		"%+6.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (base + ParamStage_BIAS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (base + ParamStage_BIAS, lin_sptr);
 
 	// Type
-	param::TplEnumEvol * enu_ptr = new param::TplEnumEvol (
+	auto           enu_sptr = std::make_shared <param::TplEnumEvol> (
 		2,
 		"Arcsinh\nAsym 1\nProg 1\nProg 2\nProg 3\nSudden\nHardclip\nPuncher 1"
 		"\nPuncher 2\nPuncher 3\nOvershoot\nBitcrush\nSlew rate\nLopsided\nPorridge\nSmartE 1"
@@ -262,11 +268,11 @@ void	Disto2xDesc::register_stage (int stage, int base)
 		stage,
 		"%s"
 	);
-	assert (enu_ptr->get_nat_max () == DistoStage::Type_NBR_ELT - 1);
-	_desc_set.add_glob (base + ParamStage_TYPE, enu_ptr);
+	assert (enu_sptr->get_nat_max () == DistoStage::Type_NBR_ELT - 1);
+	_desc_set.add_glob (base + ParamStage_TYPE, enu_sptr);
 
 	// Gain
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		double (_gain_min), double (_gain_max),
 		"Stage %d Distortion Gain\nStage %d Gain\nS%d Gain",
 		"dB",
@@ -274,10 +280,10 @@ void	Disto2xDesc::register_stage (int stage, int base)
 		stage,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (base + ParamStage_GAIN, log_ptr);
+	_desc_set.add_glob (base + ParamStage_GAIN, log_sptr);
 
 	// LPF Cutoff frequency
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		20, 20480,
 		"Stage %d output low-pass filter cutoff frequency\nStage %d output LPF frequency\nStage %d LPF cutoff frequency\nStage %d LPF frequency\nStage %d LPF freq\nStage %d LPF\nS%d LPF",
 		"Hz",
@@ -285,8 +291,8 @@ void	Disto2xDesc::register_stage (int stage, int base)
 		stage,
 		"%5.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamStage_LPF_POST, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamStage_LPF_POST, log_sptr);
 }
 
 

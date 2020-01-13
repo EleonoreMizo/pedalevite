@@ -79,9 +79,11 @@ ActionType	ActionToggleTuner::do_get_type () const
 
 
 
-PedalActionSingleInterface *	ActionToggleTuner::do_duplicate () const
+std::shared_ptr <PedalActionSingleInterface>	ActionToggleTuner::do_duplicate () const
 {
-	return new ActionToggleTuner (*this);
+	return std::static_pointer_cast <PedalActionSingleInterface> (
+		std::make_shared <ActionToggleTuner> (*this)
+	);
 }
 
 

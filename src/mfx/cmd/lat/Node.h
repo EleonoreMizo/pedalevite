@@ -59,11 +59,6 @@ public:
 		Nature_NBR_ELT
 	};
 
-	               Node ()                        = default;
-	               Node (const Node &other)       = default;
-	virtual        ~Node ()                       = default;
-	Node &         operator = (const Node &other) = default;
-
 	void           set_nature (Nature nature);
 	Nature         get_nature () const;
 

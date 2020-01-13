@@ -57,9 +57,6 @@ class ParamStateSet
 
 public:
 
-	               ParamStateSet ()  = default;
-	virtual        ~ParamStateSet () = default;
-
 	void           init (piapi::ParamCateg categ, const ParamDescSet &param_desc_arr);
 	void           set_sample_freq (double fs);
 	void           clear_buffers ();
@@ -106,9 +103,6 @@ private:
 
 private:
 
-	               ParamStateSet (const ParamStateSet &other)     = delete;
-	ParamStateSet &
-	               operator = (const ParamStateSet &other)        = delete;
 	bool           operator == (const ParamStateSet &other) const = delete;
 	bool           operator != (const ParamStateSet &other) const = delete;
 

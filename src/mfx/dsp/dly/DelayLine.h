@@ -50,16 +50,13 @@ namespace dly
 
 
 
-class DelayLine
+class DelayLine final
 :	public DelayLineReadInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	               DelayLine ()  = default;
-	virtual        ~DelayLine () = default;
 
 	void           set_interpolator (rspl::InterpolatorInterface &interp);
 	const rspl::InterpolatorInterface &
@@ -82,13 +79,13 @@ public:
 protected:
 
 	// DelayLineReadInterface
-	virtual double do_get_sample_freq () const;
-	virtual int    do_get_ovrspl_l2 () const;
-	virtual double do_get_min_delay_time () const;
-	virtual double do_get_max_delay_time () const;
-	virtual int    do_estimate_max_one_shot_proc_w_feedback (double min_dly_time) const;
-	virtual void   do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const;
-	virtual float  do_read_sample (float dly) const;
+	double         do_get_sample_freq () const final;
+	int            do_get_ovrspl_l2 () const final;
+	double         do_get_min_delay_time () const final;
+	double         do_get_max_delay_time () const final;
+	int            do_estimate_max_one_shot_proc_w_feedback (double min_delay_time) const final;
+	void           do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const final;
+	float          do_read_sample (float delay) const final;
 
 
 
@@ -96,10 +93,8 @@ protected:
 
 private:
 
-	int            compute_margin () const;
-
 	rspl::InterpolatorInterface *          // 0: interpolator not set.
-	               _interp_ptr   = 0;
+	               _interp_ptr   = nullptr;
 	int            _imp_len      = 1;      // Impulse length, samples. > 0
 	fstb::FixedPoint                       // Group delay, samples. [0 ; _imp_len - 1]
 	               _group_dly    = fstb::FixedPoint (0);
@@ -119,8 +114,6 @@ private:
 
 private:
 
-	               DelayLine (const DelayLine &other)         = delete;
-	DelayLine &    operator = (const DelayLine &other)        = delete;
 	bool           operator == (const DelayLine &other) const = delete;
 	bool           operator != (const DelayLine &other) const = delete;
 

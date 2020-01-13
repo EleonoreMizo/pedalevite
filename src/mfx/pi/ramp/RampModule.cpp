@@ -209,19 +209,10 @@ void	RampModule::tick (int nbr_spl)
 double	RampModule::get_val () const
 {
 	// Source: smooth, S&H or direct
-	double         val;
-	if (_smooth_flag)
-	{
-		val = _smooth_state;
-	}
-	else if (_snh_flag)
-	{
-		val = _snh_state;
-	}
-	else
-	{
-		val = get_raw_val ();
-	}
+	double         val =
+		  (_smooth_flag) ? _smooth_state
+		: (_snh_flag)    ? _snh_state
+		:                  get_raw_val ();
 
 	if (_inv_flag)
 	{

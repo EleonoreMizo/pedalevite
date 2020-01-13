@@ -70,15 +70,15 @@ namespace pg
 PedalEditAction::PedalEditAction (PageSwitcher &page_switcher, PedalEditContext &ctx)
 :	_page_switcher (page_switcher)
 ,	_ctx (ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_type_sptr (    new NText (Entry_TYPE))
-,	_index_sptr (   new NText (Entry_INDEX))
-,	_value_sptr (   new NText (Entry_VALUE))
-,	_label_sptr (   new NText (Entry_LABEL))
+,	_fnt_ptr (nullptr)
+,	_type_sptr ( std::make_shared <NText> (Entry_TYPE ))
+,	_index_sptr (std::make_shared <NText> (Entry_INDEX))
+,	_value_sptr (std::make_shared <NText> (Entry_VALUE))
+,	_label_sptr (std::make_shared <NText> (Entry_LABEL))
 ,	_state (State_NORMAL)
 ,	_arg_edit_fxid ()
 {
@@ -641,7 +641,7 @@ void	PedalEditAction::display_settings (PageMgrInterface::NavLocList &nav_list, 
 			{
 				const doc::CatalogPluginSettings::CellSPtr & cell_sptr =
 					catalog._cell_arr [action._val];
-				if (cell_sptr.get () != 0)
+				if (cell_sptr.get () != nullptr)
 				{
 					std::string    name = "Name  : ";
 					name += cell_sptr->_name;
@@ -865,48 +865,58 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 		switch (action_type)
 		{
 		case doc::ActionType_BANK:
-			action_sptr = doc::PedalActionCycle::ActionSPtr (
-				new doc::ActionBank (false, 0)
-			);
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionBank> (false, 0)
+				);
 			break;
 		case doc::ActionType_PRESET:
-			action_sptr = doc::PedalActionCycle::ActionSPtr (
-				new doc::ActionPreset (false, 0)
-			);
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionPreset> (false, 0)
+				);
 			break;
 		case doc::ActionType_TOGGLE_TUNER:
-			action_sptr = doc::PedalActionCycle::ActionSPtr (
-				new doc::ActionToggleTuner
-			);
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionToggleTuner> ()
+				);
 			break;
 		case doc::ActionType_PARAM:
-			action_sptr = doc::PedalActionCycle::ActionSPtr (
-				new doc::ActionParam (doc::FxId (
-					doc::FxId::LocType_LABEL, "X", PiType_MIX
-				), pi::dwm::Param_BYPASS, 0)
-			);
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionParam> (doc::FxId (
+						doc::FxId::LocType_LABEL, "X", PiType_MIX
+					), pi::dwm::Param_BYPASS, 0.f)
+				);
 			break;
 		case doc::ActionType_TEMPO:
-			action_sptr = doc::PedalActionCycle::ActionSPtr (
-				new doc::ActionTempo
-			);
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionTempo> ()
+				);
 			break;
 		case doc::ActionType_SETTINGS:
-			action_sptr = doc::PedalActionCycle::ActionSPtr (
-				new doc::ActionSettings (doc::FxId (
-					doc::FxId::LocType_LABEL, "X", PiType_MAIN
-				), false, 0)
-			);
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionSettings> (doc::FxId (
+						doc::FxId::LocType_LABEL, "X", PiType_MAIN
+					), false, 0)
+				);
 			break;
 		case doc::ActionType_TEMPO_SET:
-			action_sptr = doc::PedalActionCycle::ActionSPtr (
-				new doc::ActionTempoSet (120)
-			);
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionTempoSet> (120)
+				);
 			break;
 		case doc::ActionType_CLICK:
-			action_sptr = doc::PedalActionCycle::ActionSPtr (
-				new doc::ActionClick (doc::ActionClick::Mode_TOGGLE, false)
-			);
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionClick> (
+						doc::ActionClick::Mode_TOGGLE, false
+					)
+				);
 			break;
 		default:
 			assert (false);

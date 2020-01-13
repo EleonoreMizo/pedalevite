@@ -120,8 +120,8 @@ float	Compander::process_sample (float x)
 void	Compander::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (_state == Type_EXP)

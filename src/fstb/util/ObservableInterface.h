@@ -45,7 +45,15 @@ class ObservableInterface
 
 public:
 
-	virtual        ~ObservableInterface () = default;
+	               ObservableInterface ()                        = default;
+	               ObservableInterface (const ObservableInterface &other) = default;
+	               ObservableInterface (ObservableInterface &&other)      = default;
+	virtual        ~ObservableInterface ()                       = default;
+
+	virtual ObservableInterface &
+	               operator = (const ObservableInterface &other) = default;
+	virtual ObservableInterface &
+	               operator = (ObservableInterface &&other)      = default;
 
 	inline void		add_observer (ObserverInterface &observer);
 	inline void		remove_observer (ObserverInterface &observer);

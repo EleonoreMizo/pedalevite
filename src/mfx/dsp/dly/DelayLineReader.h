@@ -49,9 +49,6 @@ class DelayLineReader
 
 public:
 
-	               DelayLineReader ()  = default;
-	virtual        ~DelayLineReader () = default;
-
 	void           set_tmp_buf (float *buf_ptr, int len);
 	float *        get_tmp_buf_ptr () const;
 	int            get_tmp_buf_len () const;
@@ -86,11 +83,11 @@ private:
 	void           apply_crossfade (float dest_ptr [], int nbr_spl, double lerp_pos_end, int src_pos);
 
 	const DelayLineReadInterface *
-	               _delay_line_ptr  =  0;  // 0 = not initialised.
+	               _delay_line_ptr  =  nullptr; // 0 = not initialised.
 
-	const float *  _xfade_shape_ptr =  0; // 0 = not set.
+	const float *  _xfade_shape_ptr =  nullptr; // 0 = not set.
 
-	float *        _tmp_buf_ptr     =  0;  // 0: not set.
+	float *        _tmp_buf_ptr     =  nullptr; // 0: not set.
 	int            _tmp_buf_len     =  0;  // samples, > 0
 
 	double         _rate_inf   = -2;    // Out of the rate range, we crossfade instead
@@ -111,9 +108,6 @@ private:
 
 private:
 
-	               DelayLineReader (const DelayLineReader &other)   = delete;
-	DelayLineReader &
-	               operator = (const DelayLineReader &other)        = delete;
 	bool           operator == (const DelayLineReader &other) const = delete;
 	bool           operator != (const DelayLineReader &other) const = delete;
 

@@ -2835,9 +2835,9 @@ void	Simd <VD, VS>::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], co
 template <class VD, class VS>
 void	Simd <VD, VS>::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (V128Dst::check_ptr (out_1_ptr));
+	assert (V128Dst::check_ptr (out_2_ptr));
+	assert (V128Src::check_ptr (in_ptr));
 	assert (nbr_spl > 0);
 
 	fstb::ToolsSimd::VectF32   vec_vol_l;
@@ -4170,9 +4170,9 @@ template <class VD, class VS>
 void	Simd <VD, VS>::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val)
 {
 	static const int  max_nbr_chn = 64;
-	assert (out_ptr != 0);
-	assert (src_ptr_arr != 0);
-	assert (src_ptr_arr [0] != 0);
+	assert (out_ptr != nullptr);
+	assert (src_ptr_arr != nullptr);
+	assert (src_ptr_arr [0] != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_chn > 0);
 	assert (nbr_chn <= max_nbr_chn);
@@ -4263,9 +4263,9 @@ template <class VD, class VS>
 void	Simd <VD, VS>::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol)
 {
 	static const int  max_nbr_chn = 64;
-	assert (out_ptr != 0);
-	assert (src_ptr_arr != 0);
-	assert (src_ptr_arr [0] != 0);
+	assert (out_ptr != nullptr);
+	assert (src_ptr_arr != nullptr);
+	assert (src_ptr_arr [0] != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_chn > 0);
 	assert (nbr_chn <= max_nbr_chn);

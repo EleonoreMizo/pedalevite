@@ -47,7 +47,12 @@ public:
 
 	explicit       RenderCtx (uint8_t *buf_ptr, const Vec2d &sz, int stride);
 	               RenderCtx (const RenderCtx &other)  = default;
+	               RenderCtx (RenderCtx &&other)       = default;
+
 	virtual        ~RenderCtx ()                       = default;
+
+	RenderCtx &    operator = (const RenderCtx &other) = default;
+	RenderCtx &    operator = (RenderCtx &&other)      = default;
 
 	inline uint8_t *
 	               use_buf ();
@@ -77,9 +82,9 @@ protected:
 
 private:
 
-	uint8_t *const _buf_ptr;
-	const Vec2d    _sz;
-	const int      _stride;
+	uint8_t *      _buf_ptr;
+	Vec2d          _sz;
+	int            _stride;
 
 
 
@@ -88,7 +93,6 @@ private:
 private:
 
 	               RenderCtx ()                               = delete;
-	RenderCtx &    operator = (const RenderCtx &other)        = delete;
 	bool           operator == (const RenderCtx &other) const = delete;
 	bool           operator != (const RenderCtx &other) const = delete;
 

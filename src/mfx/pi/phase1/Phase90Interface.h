@@ -45,7 +45,16 @@ class Phase90Interface
 
 public:
 
-	virtual        ~Phase90Interface () = default;
+	               Phase90Interface ()                              = default;
+	               Phase90Interface (const Phase90Interface &other) = default;
+	               Phase90Interface (Phase90Interface &&other)      = default;
+
+	virtual        ~Phase90Interface ()                             = default;
+
+	virtual Phase90Interface &
+	               operator = (const Phase90Interface &other)       = default;
+	virtual Phase90Interface &
+	               operator = (Phase90Interface &&other)            = default;
 
 	int            get_nbr_coefs () const;
 	void           set_coefs (const double coef_arr []);

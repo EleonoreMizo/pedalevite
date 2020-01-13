@@ -76,9 +76,11 @@ ActionType	ActionToggleFx::do_get_type () const
 
 
 
-PedalActionSingleInterface *	ActionToggleFx::do_duplicate () const
+std::shared_ptr <PedalActionSingleInterface>	ActionToggleFx::do_duplicate () const
 {
-	return new ActionToggleFx (*this);
+	return std::static_pointer_cast <PedalActionSingleInterface> (
+		std::make_shared <ActionToggleFx> (*this)
+	);
 }
 
 

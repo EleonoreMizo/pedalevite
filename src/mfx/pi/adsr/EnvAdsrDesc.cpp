@@ -53,40 +53,46 @@ EnvAdsrDesc::EnvAdsrDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Trigger On
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Trigger on\nTrig on\nOn",
 		"%",
 		0,
 		"%3.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_TRIG_ON, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_TRIG_ON, lin_sptr);
 
 	// Trigger Off
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Trigger off\nTrig off\nOff",
 		"%",
 		0,
 		"%3.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_TRIG_OFF, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_TRIG_OFF, lin_sptr);
 
 	// Velocity sensitivity
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Velocity sensitivity\nVelo sensitivity\nVelo sens\nVel sns\nVelS\nVS",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_VELO_SENS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_VELO_SENS, lin_sptr);
 
 	// Attack time
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		1.0 / 1024, 64,
 		"Attack time\nAtk time\nAtk T\nAtkT\nAT",
 		"s",
@@ -94,12 +100,12 @@ EnvAdsrDesc::EnvAdsrDesc ()
 		0,
 		"%6.3f"
 	);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ::Categ_TIME_S);
-	pll_ptr->use_mapper ().gen_log (8);
-	_desc_set.add_glob (Param_ATK_T, pll_ptr);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ::Categ_TIME_S);
+	pll_sptr->use_mapper ().gen_log (8);
+	_desc_set.add_glob (Param_ATK_T, pll_sptr);
 
 	// Decay time
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1.0 / 1024, 64,
 		"Decay time\nDcy time\nDcy T\nDcyT\nDT",
 		"s",
@@ -107,12 +113,12 @@ EnvAdsrDesc::EnvAdsrDesc ()
 		0,
 		"%6.3f"
 	);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ::Categ_TIME_S);
-	pll_ptr->use_mapper ().gen_log (8);
-	_desc_set.add_glob (Param_DCY_T, pll_ptr);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ::Categ_TIME_S);
+	pll_sptr->use_mapper ().gen_log (8);
+	_desc_set.add_glob (Param_DCY_T, pll_sptr);
 
 	// Sustain time
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1.0 / 256, 256,
 		"Sustain time\nSus time\nSus T\nSusT\nST",
 		"s",
@@ -120,23 +126,25 @@ EnvAdsrDesc::EnvAdsrDesc ()
 		0,
 		"%7.3f"
 	);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ::Categ_TIME_S);
-	pll_ptr->use_mapper ().gen_log (8);
-	_desc_set.add_glob (Param_SUS_T, pll_ptr);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ::Categ_TIME_S);
+	pll_sptr->use_mapper ().gen_log (8);
+	_desc_set.add_glob (Param_SUS_T, pll_sptr);
 
 	// Sustain level
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-2, 2,
 		"Sustain level\nSus level\nSus lvl\nSus L\nSusL\nSL",
 		"%",
 		0,
 		"%+6.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SUS_L, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_SUS_L, lin_sptr);
 
 	// Release time
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1.0 / 256, 256,
 		"Release time\nRls time\nRls T\nRlsT\nRT",
 		"s",
@@ -144,9 +152,9 @@ EnvAdsrDesc::EnvAdsrDesc ()
 		0,
 		"%7.3f"
 	);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ::Categ_TIME_S);
-	pll_ptr->use_mapper ().gen_log (8);
-	_desc_set.add_glob (Param_RLS_T, pll_ptr);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ::Categ_TIME_S);
+	pll_sptr->use_mapper ().gen_log (8);
+	_desc_set.add_glob (Param_RLS_T, pll_sptr);
 }
 
 

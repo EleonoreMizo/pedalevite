@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Cst.h"
 
 #include <algorithm>
+#include <utility>
 
 #include <cassert>
 
@@ -67,9 +68,20 @@ PedalActionCycle::PedalActionCycle ()
 
 PedalActionCycle::PedalActionCycle (const PedalActionCycle &other)
 :	_cycle (duplicate_actions (other._cycle))
-,	_inherit_flag (true)
-,	_overridable_flag (true)
+,	_inherit_flag (other._inherit_flag)
+,	_overridable_flag (other._overridable_flag)
 ,	_reset_on_pc_flag (other._reset_on_pc_flag)
+{
+	// Nothing
+}
+
+
+
+PedalActionCycle::PedalActionCycle (PedalActionCycle &&other)
+:	_cycle (std::move (other._cycle))
+,	_inherit_flag (std::move (other._inherit_flag))
+,	_overridable_flag (std::move (other._overridable_flag))
+,	_reset_on_pc_flag (std::move (other._reset_on_pc_flag))
 {
 	// Nothing
 }
@@ -84,6 +96,21 @@ PedalActionCycle &	PedalActionCycle::operator = (const PedalActionCycle &other)
 		_inherit_flag     = other._inherit_flag;
 		_overridable_flag = other._overridable_flag;
 		_reset_on_pc_flag = other._reset_on_pc_flag;
+	}
+
+	return *this;
+}
+
+
+
+PedalActionCycle &	PedalActionCycle::operator = (PedalActionCycle &&other)
+{
+	if (&other != this)
+	{
+		_cycle            = std::move (other._cycle);
+		_inherit_flag     = std::move (other._inherit_flag);
+		_overridable_flag = std::move (other._overridable_flag);
+		_reset_on_pc_flag = std::move (other._reset_on_pc_flag);
 	}
 
 	return *this;
@@ -208,28 +235,28 @@ void	PedalActionCycle::ser_read (SerRInterface &ser)
 			switch (type)
 			{
 			case ActionType_PRESET:
-				a_sptr = ActionSPtr (new ActionPreset (ser));
+				a_sptr = std::make_shared <ActionPreset> (ser);
 				break;
 			case ActionType_TOGGLE_TUNER:
-				a_sptr = ActionSPtr (new ActionToggleTuner (ser));
+				a_sptr = std::make_shared <ActionToggleTuner> (ser);
 				break;
 			case ActionType_PARAM:
-				a_sptr = ActionSPtr (new ActionParam (ser));
+				a_sptr = std::make_shared <ActionParam> (ser);
 				break;
 			case ActionType_TEMPO:
-				a_sptr = ActionSPtr (new ActionTempo (ser));
+				a_sptr = std::make_shared <ActionTempo> (ser);
 				break;
 			case ActionType_BANK:
-				a_sptr = ActionSPtr (new ActionBank (ser));
+				a_sptr = std::make_shared <ActionBank> (ser);
 				break;
 			case ActionType_SETTINGS:
-				a_sptr = ActionSPtr (new ActionSettings (ser));
+				a_sptr = std::make_shared <ActionSettings> (ser);
 				break;
 			case ActionType_TEMPO_SET:
-				a_sptr = ActionSPtr (new ActionTempoSet (ser));
+				a_sptr = std::make_shared <ActionTempoSet> (ser);
 				break;
 			case ActionType_CLICK:
-				a_sptr = ActionSPtr (new ActionClick (ser));
+				a_sptr = std::make_shared <ActionClick> (ser);
 				break;
 
 			case ActionType_TOGGLE_FX:
@@ -268,7 +295,7 @@ PedalActionCycle::ActionCycle	PedalActionCycle::duplicate_actions (const ActionC
 		ActionArray    array_new;
 		for (ActionSPtr action_sptr : action_arr)
 		{
-			if (action_sptr.get () == 0)
+			if (action_sptr.get () == nullptr)
 			{
 				assert (false);
 			}

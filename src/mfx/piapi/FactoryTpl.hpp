@@ -40,7 +40,9 @@ namespace piapi
 template <class DSC, class PI>
 std::shared_ptr <FactoryInterface>	FactoryTpl <DSC, PI>::create ()
 {
-	return std::shared_ptr <FactoryInterface> (new FactoryTpl <DSC, PI>);
+	return std::static_pointer_cast <FactoryInterface> (
+		std::make_shared <FactoryTpl <DSC, PI> > ()
+	);
 }
 
 
@@ -60,7 +62,7 @@ const PluginDescInterface &	FactoryTpl <DSC, PI>::do_describe ()
 template <class DSC, class PI>
 PluginInterface *	FactoryTpl <DSC, PI>::do_create ()
 {
-	PluginInterface * pi_ptr = 0;
+	PluginInterface * pi_ptr = nullptr;
 	try
 	{
 		pi_ptr = new PI;
@@ -68,7 +70,7 @@ PluginInterface *	FactoryTpl <DSC, PI>::do_create ()
 	catch (...)
 	{
 		assert (false);
-		pi_ptr = 0;
+		pi_ptr = nullptr;
 	}
 
 	return pi_ptr;

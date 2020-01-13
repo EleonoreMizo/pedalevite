@@ -66,15 +66,15 @@ namespace pg
 FxPEq::FxPEq (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_t_ptr (0)
-,	_fnt_s_ptr (0)
-,	_cur_param_sptr ( new NText (Entry_PARAM))
-,	_prec_sptr (      new NText (Entry_PREC ))
-,	_content_sptr (new NBitmap (Entry_CONTENT))
+,	_fnt_t_ptr (nullptr)
+,	_fnt_s_ptr (nullptr)
+,	_cur_param_sptr (std::make_shared <NText  > (Entry_PARAM  ))
+,	_prec_sptr (     std::make_shared <NText  > (Entry_PREC   ))
+,	_content_sptr (  std::make_shared <NBitmap> (Entry_CONTENT))
 ,	_legend_sptr_arr ()
 ,	_cur_param (Param_RANGE)
 ,	_nbr_param (Param_BAND_BASE)
@@ -141,7 +141,7 @@ MsgHandlerInterface::EvtProp	FxPEq::do_handle_evt (const NodeEvt &evt)
 			update_param_txt ();
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PARAM_LIST, 0);
+			_page_switcher.switch_to (pg::PageType_PARAM_LIST, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_U:
@@ -175,7 +175,7 @@ void	FxPEq::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -196,7 +196,7 @@ void	FxPEq::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -326,7 +326,7 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 				disp_ptr [y * stride + x] = 255;
 			}
 
-			TxtSPtr        txt_sptr (new NText (node_id));
+			TxtSPtr        txt_sptr { std::make_shared <NText> (node_id) };
 			txt_sptr->set_justification (0.5f, 0, false);
 			txt_sptr->set_font (*_fnt_t_ptr);
 			txt_sptr->set_coord (Vec2d (x, 3));
@@ -366,7 +366,7 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 				"%+.0f", db
 			);
 
-			TxtSPtr        txt_sptr (new NText (node_id));
+			TxtSPtr        txt_sptr { std::make_shared <NText> (node_id) };
 			txt_sptr->set_justification (1, 1, false);
 			txt_sptr->set_font (*_fnt_t_ptr);
 			txt_sptr->set_coord (Vec2d (nbr_freq, y));

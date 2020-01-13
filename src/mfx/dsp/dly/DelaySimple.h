@@ -47,9 +47,6 @@ class DelaySimple
 
 public:
 
-	               DelaySimple ()  = default;
-	virtual        ~DelaySimple () = default;
-
 	// Mandatory call
 	void           setup (int max_dly, int max_block_len);
 
@@ -90,8 +87,6 @@ private:
 
 private:
 
-	               DelaySimple (const DelaySimple &other)       = delete;
-	DelaySimple &  operator = (const DelaySimple &other)        = delete;
 	bool           operator == (const DelaySimple &other) const = delete;
 	bool           operator != (const DelaySimple &other) const = delete;
 

@@ -75,14 +75,13 @@ public:
 
 		explicit       FontSet (const ui::Font &fnt_t, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
 		               FontSet (const FontSet &other) = default;
+		               FontSet (FontSet &&other)      = default;
 		const ui::Font &  use (Type t) const;
 		const ui::Font &  _t;
 		const ui::Font &  _s;
 		const ui::Font &  _m;
 		const ui::Font &  _l;
 	};
-
-	virtual        ~PageInterface () = default;
 
 	void           connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
 	void           disconnect ();

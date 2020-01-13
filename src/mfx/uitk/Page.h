@@ -66,7 +66,7 @@ public:
 	static const int  _disp_node_id = 666999;
 
 	explicit       Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, const ui::Font &fnt_t, const ui::Font &fnt_s, const ui::Font &fnt_m, const ui::Font &fnt_l);
-	virtual        ~Page ();
+	               ~Page ();
 
 	void           set_page_content (PageInterface &content, void *usr_ptr);
 	const PageInterface *
@@ -83,23 +83,22 @@ public:
 protected:
 
 	// mfx::uitk::PageMgrInterface
-	virtual void   do_set_nav_layout (const NavLocList &nav_list);
-	virtual void   do_jump_to (int node_id);
-	virtual void   do_set_timer (int node_id, bool enable_flag);
-	virtual void   do_reset_display ();
+	void           do_set_nav_layout (const NavLocList &nav_list) override;
+	void           do_jump_to (int node_id) override;
+	void           do_set_timer (int node_id, bool enable_flag) override;
+	void           do_reset_display () override;
 
 	// mfx::uitk::ParentInterface via mfx::uitk::PageMgrInterface
-	virtual Vec2d  do_get_coord_abs () const;
-	virtual void   do_invalidate (const Rect &zone);
+	Vec2d          do_get_coord_abs () const override;
+	void           do_invalidate (const Rect &zone) override;
 
 	// mfx::uitk::ContainerInterface via mfx::uitk::PageMgrInterface
-	virtual void   do_push_back (NodeSPtr node_sptr);
-	virtual void   do_set_node (int pos, NodeSPtr node_sptr);
-	virtual void   do_insert (int pos, NodeSPtr node_sptr);
-	virtual void   do_erase (int pos);
-	virtual int    do_get_nbr_nodes () const;
-	virtual NodeSPtr
-	               do_use_node (int pos);
+	void           do_push_back (NodeSPtr node_sptr) override;
+	void           do_set_node (int pos, NodeSPtr node_sptr) override;
+	void           do_insert (int pos, NodeSPtr node_sptr) override;
+	void           do_erase (int pos) override;
+	int            do_get_nbr_nodes () const override;
+	NodeSPtr       do_use_node (int pos) override;
 
 
 
@@ -117,7 +116,7 @@ private:
 	void           process_input ();
 	void           handle_redraw ();
 	void           send_button (int node_id, Button but);
-	void           send_event (NodeEvt &evt);
+	void           send_event (const NodeEvt &evt);
 	int            find_nav_node (int node_id) const;
 	bool           check_curs (bool send_msg_flag);
 	bool           process_nav (Button but);
@@ -156,15 +155,15 @@ private:
 
 
 
-
-
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
 	               Page ()                               = delete;
 	               Page (const Page &other)              = delete;
+	               Page (Page &&other)                   = delete;
 	Page &         operator = (const Page &other)        = delete;
+	Page &         operator = (Page &&other)             = delete;
 	bool           operator == (const Page &other) const = delete;
 	bool           operator != (const Page &other) const = delete;
 

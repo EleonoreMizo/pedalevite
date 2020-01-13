@@ -110,10 +110,6 @@ private:
 
 private:
 
-	               MapSaturate ()                               = delete;
-	               MapSaturate (const MapSaturate &other)       = delete;
-	virtual        ~MapSaturate ()                              = delete;
-	MapSaturate &  operator = (const MapSaturate &other)        = delete;
 	bool           operator == (const MapSaturate &other) const = delete;
 	bool           operator != (const MapSaturate &other) const = delete;
 

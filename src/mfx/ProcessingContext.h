@@ -86,7 +86,6 @@ public:
 	typedef std::multimap <ControlSource, std::shared_ptr <CtrlUnit> > MapSourceUnit;
 
 	               ProcessingContext ()  = default;
-	virtual        ~ProcessingContext () = default;
 
 	void           compute_graph_crc (fstb::Crc32 &crc) const;
 
@@ -128,11 +127,14 @@ private:
 
 private:
 
-	               ProcessingContext (const ProcessingContext &other) = delete;
+	               ProcessingContext (const ProcessingContext &other)  = delete;
+	               ProcessingContext (const ProcessingContext &&other) = delete;
 	ProcessingContext &
-	               operator = (const ProcessingContext &other)        = delete;
-	bool           operator == (const ProcessingContext &other) const = delete;
-	bool           operator != (const ProcessingContext &other) const = delete;
+	               operator = (const ProcessingContext &other)         = delete;
+	ProcessingContext &
+	               operator = (const ProcessingContext &&other)        = delete;
+	bool           operator == (const ProcessingContext &other) const  = delete;
+	bool           operator != (const ProcessingContext &other) const  = delete;
 
 }; // class ProcessingContext
 

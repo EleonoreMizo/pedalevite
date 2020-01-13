@@ -110,7 +110,7 @@ public:
 	Pool &         use_pool ();
 
 	// Forward
-	void           enqueue (CellType &cell, QueueSPtr &ret_queue_sptr);
+	void           enqueue (CellType &cell, QueueSPtr ret_queue_sptr);
 	CellType *     dequeue ();
 
 	// Return
@@ -145,7 +145,9 @@ private:
 private:
 
 	               QueueRetMgr (const QueueRetMgr &other)       = delete;
+	               QueueRetMgr (const QueueRetMgr &&other)      = delete;
 	QueueRetMgr &  operator = (const QueueRetMgr &other)        = delete;
+	QueueRetMgr &  operator = (const QueueRetMgr &&other)       = delete;
 	bool           operator == (const QueueRetMgr &other) const = delete;
 	bool           operator != (const QueueRetMgr &other) const = delete;
 

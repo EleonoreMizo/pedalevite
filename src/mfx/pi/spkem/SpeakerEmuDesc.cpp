@@ -51,17 +51,17 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Type
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"0\n1A\n1B",
 		"Type",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_TYPE, enu_ptr);
+	_desc_set.add_glob (Param_TYPE, enu_sptr);
 
 	// Mid level
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		1, 4,
 		"Mid level\nMid lvl\nM Lvl",
 		"dB",
@@ -69,10 +69,10 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_MID_LVL, log_ptr);
+	_desc_set.add_glob (Param_MID_LVL, log_sptr);
 
 	// Mid Frequency
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1500, 3000,
 		"Mid frequency\nMid freq\nM freq",
 		"Hz",
@@ -80,11 +80,11 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 		0,
 		"%4.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_MID_FREQ, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_MID_FREQ, log_sptr);
 
 	// Treble level
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		0.001, 0.1,
 		"Treble level\nTreble lvl\nT Lvl",
 		"dB",
@@ -92,10 +92,10 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_TREBLE_LVL, log_ptr);
+	_desc_set.add_glob (Param_TREBLE_LVL, log_sptr);
 
 	// Treble Frequency
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		4000, 8000,
 		"Treble frequency\nTreble freq\nT freq",
 		"Hz",
@@ -103,30 +103,32 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 		0,
 		"%4.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_TREBLE_FREQ, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_TREBLE_FREQ, log_sptr);
 
 	// Comb level
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 0.5,
 		"Comb level\nComb lvl\nC Lvl",
 		"%",
 		0,
 		"%4.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_COMB_LVL, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_COMB_LVL, lin_sptr);
 
 	// Channels
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"All\nLeft\nRight",
 		"Channels\nChn",
 		"",
 		0,
 		"%s"
 	);
-	assert (enu_ptr->get_nat_max () == Channels_NBR_ELT - 1);
-	_desc_set.add_glob (Param_CHANNELS, enu_ptr);
+	assert (enu_sptr->get_nat_max () == Channels_NBR_ELT - 1);
+	_desc_set.add_glob (Param_CHANNELS, enu_sptr);
 }
 
 

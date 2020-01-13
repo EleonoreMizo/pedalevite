@@ -48,7 +48,7 @@ class ConvNum
 public:
 
 	static int64_t conv_str_to_int64 (const char *txt_0, int base = 10);
-	static bool    conv_str_to_int64 (int64_t &val, const char *txt_0, int base = 10, long *stop_pos_ptr = 0);
+	static bool    conv_str_to_int64 (int64_t &val, const char *txt_0, int base = 10, long *stop_pos_ptr = nullptr);
 	static int     conv_int64_to_str (char *txt_0, int64_t val, long max_len, int base = 10);
 
 

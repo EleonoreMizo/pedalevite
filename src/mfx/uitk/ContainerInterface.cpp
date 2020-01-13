@@ -43,7 +43,7 @@ namespace uitk
 
 void	ContainerInterface::push_back (NodeSPtr node_sptr)
 {
-	assert (node_sptr.get () != 0);
+	assert (node_sptr.get () != nullptr);
 
 	do_push_back (node_sptr);
 }
@@ -54,7 +54,7 @@ void	ContainerInterface::set_node (int pos, NodeSPtr node_sptr)
 {
 	assert (pos >= 0);
 	assert (pos < get_nbr_nodes ());
-	assert (node_sptr.get () != 0);
+	assert (node_sptr.get () != nullptr);
 
 	do_set_node (pos, node_sptr);
 }
@@ -66,7 +66,7 @@ void	ContainerInterface::insert (int pos, NodeSPtr node_sptr)
 {
 	assert (pos >= 0);
 	assert (pos <= get_nbr_nodes ());
-	assert (node_sptr.get () != 0);
+	assert (node_sptr.get () != nullptr);
 
 	do_insert (pos, node_sptr);
 }

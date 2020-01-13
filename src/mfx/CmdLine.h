@@ -41,9 +41,6 @@ class CmdLine
 
 public:
 
-	               CmdLine ()  = default;
-	virtual        ~CmdLine () = default;
-
 	void           set (int argc, char *argv [], char *envp [] = 0);
 	int            get_argc () const;
 	char * const * use_argv () const;
@@ -62,8 +59,8 @@ protected:
 private:
 
 	int            _argc = 0;
-	char **        _argv = 0;  // First member is the filename, last is 0.
-	char **        _envp = 0;  // Last member is 0.
+	char **        _argv = nullptr;  // First member is the filename, last is 0.
+	char **        _envp = nullptr;  // Last member is 0.
 
 
 
@@ -71,8 +68,6 @@ private:
 
 private:
 
-	               CmdLine (const CmdLine &other)           = delete;
-	CmdLine &      operator = (const CmdLine &other)        = delete;
 	bool           operator == (const CmdLine &other) const = delete;
 	bool           operator != (const CmdLine &other) const = delete;
 

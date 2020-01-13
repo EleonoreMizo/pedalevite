@@ -251,10 +251,12 @@ private:
 
 private:
 
-	virtual        ~Simd ()                              = delete;
+	               ~Simd ()                              = delete;
 	               Simd ()                               = delete;
 	               Simd (const Simd &other)              = delete;
+	               Simd (Simd &&other)                   = delete;
 	Simd &         operator = (const Simd &other)        = delete;
+	Simd &         operator = (Simd &&other)             = delete;
 	bool           operator == (const Simd &other) const = delete;
 	bool           operator != (const Simd &other) const = delete;
 

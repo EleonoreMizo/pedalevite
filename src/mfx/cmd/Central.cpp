@@ -75,7 +75,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 ,	_default_map ()
 ,	_sample_freq (0)
 ,	_max_block_size (0)
-,	_cb_ptr (0)
+,	_cb_ptr (nullptr)
 ,	_router ()
 ,	_cur_sptr ()
 ,	_new_sptr ()
@@ -83,6 +83,7 @@ Central::Central (ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::Us
 ,	_dummy_mix_id (-1)
 ,	_d2d_rec ()
 ,	_d2d_buf_arr ()
+,	_d2d_buf_ptr_arr ({{ 0 }})
 {
 	_msg_pool.expand_to (1024);
 
@@ -96,11 +97,11 @@ Central::~Central ()
 	rollback ();
 
 	// Flushes the audio -> cmd queue
-	_cb_ptr = 0;
+	_cb_ptr = nullptr;
 	process_queue_audio_to_cmd	();
 
 	// Deinstantiate the plug-ins
-	if (_cur_sptr.get () != 0)
+	if (_cur_sptr.get () != nullptr)
 	{
 		std::vector <int> pi_list;
 
@@ -118,16 +119,16 @@ Central::~Central ()
 	}
 
 	// Flushes the cmd -> audio queue
-	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
+	conc::LockFreeCell <WaMsg> * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_cmd_to_audio.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			_msg_pool.return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 }
 
 
@@ -253,10 +254,10 @@ float	Central::get_audio_period_ratio () const
 
 void	Central::commit ()
 {
-	if (_new_sptr.get () != 0)
+	if (_new_sptr.get () != nullptr)
 	{
 		Document &     doc = *_new_sptr;
-		doc._ctx_sptr = ContextSPtr (new ProcessingContext);
+		doc._ctx_sptr = std::make_shared <ProcessingContext> ();
 
 		create_routing ();
 		create_mod_maps ();
@@ -276,7 +277,7 @@ void	Central::commit ()
 			_queue_cmd_to_audio.enqueue (*cell_ptr);
 		}
 
-		if (_cur_sptr.get () != 0)
+		if (_cur_sptr.get () != nullptr)
 		{
 			_ctx_trash.insert (_cur_sptr->_ctx_sptr);
 		}
@@ -393,9 +394,9 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 	std::array <BufAlign, 6>  buf_arr;
-	std::array <const float *, 2> src_ptr_arr = {{ 0, 0 }};
-	std::array <      float *, 2> dst_ptr_arr = {{ 0, 0 }};
-	std::array <      float *, 2> sig_ptr_arr = {{ 0, 0 }};
+	std::array <const float *, 2> src_ptr_arr = {{ nullptr, nullptr }};
+	std::array <      float *, 2> dst_ptr_arr = {{ nullptr, nullptr }};
+	std::array <      float *, 2> sig_ptr_arr = {{ nullptr, nullptr }};
 	if (_sample_freq > 0)
 	{
 		const int      mbs_alig = (_max_block_size + 3) & ~3;
@@ -437,7 +438,7 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 		doc._map_model_id [model] [pi_id] = false;
 
 		// Sets the requested plug-in state by processing a sample buffer
-		if (state_ptr != 0 && _sample_freq > 0)
+		if (state_ptr != nullptr && _sample_freq > 0)
 		{
 			const int      nbr_param = int (state_ptr->_param_list.size ());
 			evt_list.resize (nbr_param);
@@ -457,10 +458,10 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 			}
 
 			piapi::ProcInfo   proc_info;
-			proc_info._byp_arr   = 0;
+			proc_info._byp_arr   = nullptr;
 			proc_info._byp_state = piapi::BypassState_IGNORE;
 			proc_info._dst_arr   = &dst_ptr_arr [0];
-			proc_info._evt_arr   = (nbr_param > 0) ? &evt_ptr_list [0] : 0;
+			proc_info._evt_arr   = (nbr_param > 0) ? &evt_ptr_list [0] : nullptr;
 			proc_info._dir_arr [piapi::Dir_IN ]._nbr_chn = 2;
 			proc_info._dir_arr [piapi::Dir_OUT]._nbr_chn = 2;
 			proc_info._nbr_evt   = int (evt_ptr_list.size ());
@@ -518,12 +519,12 @@ int	Central::find_pi (int pi_id)
 	int            pos     = -1;
 
 	Document *     doc_ptr = _new_sptr.get ();
-	if (doc_ptr == 0)
+	if (doc_ptr == nullptr)
 	{
 		doc_ptr = _cur_sptr.get ();
 	}
 
-	if (doc_ptr != 0)
+	if (doc_ptr != nullptr)
 	{
 		auto           it_loc = doc_ptr->_map_id_loc.find (pi_id);
 		if (it_loc != doc_ptr->_map_id_loc.end ())
@@ -573,9 +574,7 @@ void	Central::set_mod (int pi_id, int index, const doc::CtrlLinkSet &cls)
 
 	Plugin &       plug = doc.find_plugin (pi_id);
 
-	plug._ctrl_map [index] = std::shared_ptr <doc::CtrlLinkSet> (
-		new doc::CtrlLinkSet (cls)
-	);
+	plug._ctrl_map [index] = std::make_shared <doc::CtrlLinkSet> (cls);
 }
 
 
@@ -668,11 +667,11 @@ void	Central::process_queue_audio_to_cmd ()
 
 	int            a2c_cnt          = 0;
 	bool           discard_a2c_flag = false;
-	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
+	conc::LockFreeCell <WaMsg> * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_audio_to_cmd.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			if (cell_ptr->_val._sender == WaMsg::Sender_CMD)
 			{
@@ -680,7 +679,7 @@ void	Central::process_queue_audio_to_cmd ()
 				{
 					const ProcessingContext *  ctx_ptr =
 						cell_ptr->_val._content._ctx._ctx_ptr;
-					if (ctx_ptr != 0)
+					if (ctx_ptr != nullptr)
 					{
 						auto           it = std::find_if (
 							_ctx_trash.begin (),
@@ -704,7 +703,7 @@ void	Central::process_queue_audio_to_cmd ()
 
 			else
 			{
-				if (_cb_ptr != 0)
+				if (_cb_ptr != nullptr)
 				{
 					if (! discard_a2c_flag)
 					{
@@ -727,7 +726,7 @@ void	Central::process_queue_audio_to_cmd ()
 			_msg_pool.return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 
 	_d2d_rec.process_messages ();
 }
@@ -791,7 +790,7 @@ const piapi::PluginState &	Central::use_default_settings (std::string model) con
 int	Central::start_d2d_rec (const char pathname_0 [], size_t max_len)
 {
 	assert (! is_d2d_recording ());
-	assert (pathname_0 != 0);
+	assert (pathname_0 != nullptr);
 
 	return _d2d_rec.create_file (
 		pathname_0, Cst::_nbr_chn_in + Cst::_nbr_chn_out, _sample_freq, max_len
@@ -833,15 +832,15 @@ int64_t	Central::get_d2d_size_frames () const
 
 Document &	Central::modify ()
 {
-	if (_new_sptr.get () == 0)
+	if (_new_sptr.get () == nullptr)
 	{
-		if (_cur_sptr.get () == 0)
+		if (_cur_sptr.get () == nullptr)
 		{
-			_new_sptr = DocumentSPtr (new Document);
+			_new_sptr = std::make_shared <Document> ();
 		}
 		else
 		{
-			_new_sptr = DocumentSPtr (new Document (*_cur_sptr));
+			_new_sptr = std::make_shared <Document> (*_cur_sptr);
 		}
 		_new_sptr->_ctx_sptr.reset (); // Will be set during commit.
 	}
@@ -1045,8 +1044,8 @@ void	Central::remove_plugin (int pos, PiType type)
 
 void	Central::create_routing ()
 {
-	assert (_new_sptr.get () != 0);
-	assert (_new_sptr->_ctx_sptr.get () != 0);
+	assert (_new_sptr.get ()            != nullptr);
+	assert (_new_sptr->_ctx_sptr.get () != nullptr);
 
 	Document &           doc = *_new_sptr;
 	_router.create_routing (doc, _plugin_pool);
@@ -1056,8 +1055,8 @@ void	Central::create_routing ()
 
 void	Central::create_mod_maps ()
 {
-	assert (_new_sptr.get () != 0);
-	assert (_new_sptr->_ctx_sptr.get () != 0);
+	assert (_new_sptr.get ()            != nullptr);
+	assert (_new_sptr->_ctx_sptr.get () != nullptr);
 
 	Document &           doc = *_new_sptr;
 	ProcessingContext &  ctx = *doc._ctx_sptr;
@@ -1081,11 +1080,10 @@ void	Central::create_mod_maps ()
 				const doc::CtrlLinkSet &   cls   = *ctrl_node.second;
 
 				const ParamCoord           coord (plug._pi_id, index);
-				std::shared_ptr <ControlledParam>   ctrl_param_sptr (
-					new ControlledParam (coord)
-				);
+				auto                       ctrl_param_sptr {
+					std::make_shared <ControlledParam> (coord) };
 
-				if (cls._bind_sptr.get () != 0)
+				if (cls._bind_sptr.get () != nullptr)
 				{
 					const doc::CtrlLink &   link = *cls._bind_sptr;
 					add_controller (ctx, link, ctrl_param_sptr, true);
@@ -1103,10 +1101,10 @@ void	Central::create_mod_maps ()
 
 
 
-void	Central::add_controller (ProcessingContext &ctx, const doc::CtrlLink &link, std::shared_ptr <ControlledParam> &ctrl_param_sptr, bool abs_flag)
+void	Central::add_controller (ProcessingContext &ctx, const doc::CtrlLink &link, std::shared_ptr <ControlledParam> ctrl_param_sptr, bool abs_flag)
 {
 	const ParamCoord &   coord = ctrl_param_sptr->use_coord ();
-	std::shared_ptr <CtrlUnit> unit_sptr (new CtrlUnit (link, abs_flag));
+	auto           unit_sptr { std::make_shared <CtrlUnit> (link, abs_flag) };
 
 	// For direct-link initialises the internal value from
 	// the current public value.
@@ -1135,8 +1133,8 @@ void	Central::add_controller (ProcessingContext &ctx, const doc::CtrlLink &link,
 // Appends messages to msg_list
 void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_list)
 {
-	assert (_new_sptr.get () != 0);
-	assert (_new_sptr->_ctx_sptr.get () != 0);
+	assert (_new_sptr.get ()            != nullptr);
+	assert (_new_sptr->_ctx_sptr.get () != nullptr);
 
 	Document &           doc = *_new_sptr;
 
@@ -1210,7 +1208,7 @@ conc::LockFreeCell <WaMsg> *	Central::make_reset_msg (int pi_id, bool steady_fla
 
 
 
-void	Central::check_and_get_default_settings (piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model)
+void	Central::check_and_get_default_settings (const piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model)
 {
 	auto           it = _default_map.find (model);
 	if (it == _default_map.end ())

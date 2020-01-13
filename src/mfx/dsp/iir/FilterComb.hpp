@@ -221,8 +221,8 @@ float	FilterComb <IM, FP, OP, AL>::process_sample (float sample)
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::process_block (float dest_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dest_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dest_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -236,8 +236,8 @@ void	FilterComb <IM, FP, OP, AL>::process_block (float dest_ptr [], const float 
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::process_block_mix (float dest_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dest_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dest_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -252,8 +252,8 @@ void	FilterComb <IM, FP, OP, AL>::process_block_mix (float dest_ptr [], const fl
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::process_block_vff (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback)
 {
-	assert (dest_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dest_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (final_freq >= get_min_freq ());
 	assert (final_freq <= get_max_freq ());
@@ -276,8 +276,8 @@ void	FilterComb <IM, FP, OP, AL>::process_block_vff (float dest_ptr [], const fl
 template <typename IM, typename FP, typename OP, typename AL>
 void	FilterComb <IM, FP, OP, AL>::process_block_vff_mix (float dest_ptr [], const float src_ptr [], int nbr_spl, float final_freq, float final_feedback)
 {
-	assert (dest_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dest_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (final_freq >= get_min_freq ());
 	assert (final_freq <= get_max_freq ());

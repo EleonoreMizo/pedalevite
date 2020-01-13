@@ -53,7 +53,7 @@ namespace pg
 
 
 
-class ProgSave
+class ProgSave final
 :	public PageInterface
 {
 
@@ -62,7 +62,6 @@ class ProgSave
 public:
 
 	explicit       ProgSave (PageSwitcher &page_switcher);
-	virtual        ~ProgSave () = default;
 
 
 
@@ -71,16 +70,15 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_preset_name (std::string name);
-	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset);
+	void           do_set_preset_name (std::string name) final;
+	void           do_set_preset (int bank_index, int preset_index, const doc::Preset &preset) final;
 
 
 
@@ -135,7 +133,9 @@ private:
 
 	               ProgSave ()                               = delete;
 	               ProgSave (const ProgSave &other)          = delete;
+	               ProgSave (ProgSave &&other)               = delete;
 	ProgSave &     operator = (const ProgSave &other)        = delete;
+	ProgSave &     operator = (ProgSave &&other)             = delete;
 	bool           operator == (const ProgSave &other) const = delete;
 	bool           operator != (const ProgSave &other) const = delete;
 

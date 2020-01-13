@@ -51,7 +51,14 @@ class GraphInterface
 
 public:
 
-	virtual        ~GraphInterface () = default;
+	               GraphInterface ()                            = default;
+	               GraphInterface (const GraphInterface &other) = default;
+	               GraphInterface (GraphInterface &&other)      = default;
+	virtual        ~GraphInterface ()                           = default;
+	virtual GraphInterface &
+	               operator = (const GraphInterface &other)     = default;
+	virtual GraphInterface &
+	               operator = (GraphInterface &&other)          = default;
 
 	int            get_nbr_nodes () const;
 	Node &         use_node (int index);

@@ -41,7 +41,7 @@ namespace dist2
 
 
 
-class Disto2xDesc
+class Disto2xDesc final
 :	public piapi::PluginDescInterface
 {
 
@@ -53,7 +53,6 @@ public:
 	static const double  _gain_max;
 
 	               Disto2xDesc ();
-	virtual        ~Disto2xDesc () = default;
 
 	ParamDescSet & use_desc_set ();
 
@@ -64,15 +63,13 @@ public:
 protected:
 
 	// mfx::piapi::PluginDescInterface
-	virtual std::string
-	               do_get_unique_id () const;
-	virtual std::string
-	               do_get_name () const;
-	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const;
-	virtual bool   do_prefer_stereo () const;
-	virtual int    do_get_nbr_param (piapi::ParamCateg categ) const;
-	virtual const piapi::ParamDescInterface &
-	               do_get_param_info (piapi::ParamCateg categ, int index) const;
+	std::string    do_get_unique_id () const final;
+	std::string    do_get_name () const final;
+	void           do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const final;
+	bool           do_prefer_stereo () const final;
+	int            do_get_nbr_param (piapi::ParamCateg categ) const final;
+	const piapi::ParamDescInterface &
+	               do_get_param_info (piapi::ParamCateg categ, int index) const final;
 
 
 

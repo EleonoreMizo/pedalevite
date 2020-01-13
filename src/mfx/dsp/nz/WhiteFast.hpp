@@ -54,8 +54,9 @@ float	WhiteFast::process_sample ()
 
 float	WhiteFast::gen_new_val (uint32_t &state)
 {
-	Mixed          res;
 	state  = (state * _a + _c) & _mm;
+
+	Mixed          res;
 	res._i = ((state << 1) & _mant_and) | _exp_or;
 
 	return res._f;

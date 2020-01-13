@@ -62,7 +62,7 @@ Phaser2Desc::Phaser2Desc ()
 	typedef param::TplMapped <ParamMapFdbkBipolar> TplFdbk;
 
 	// Speed
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.01, 100,
 		"Sp\nSpd\nSpeed",
 		"Hz",
@@ -70,11 +70,11 @@ Phaser2Desc::Phaser2Desc ()
 		0,
 		"%7.3f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_SPEED, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_SPEED, log_sptr);
 
 	// Mix
-	TplMaps *      maps_ptr = new TplMaps (
+	auto           maps_sptr = std::make_shared <TplMaps> (
 		0, 1,
 		"Phase Mix\nPh Mix\nMix\nM",
 		"%",
@@ -82,14 +82,14 @@ Phaser2Desc::Phaser2Desc ()
 		0,
 		"%5.1f"
 	);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
+	maps_sptr->use_mapper ().config (
+		maps_sptr->get_nat_min (),
+		maps_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_MIX, maps_ptr);
+	_desc_set.add_glob (Param_MIX, maps_sptr);
 
 	// Feedback
-	TplFdbk *      fbi_ptr = new TplFdbk (
+	auto           fbi_sptr = std::make_shared <TplFdbk> (
 		TplFdbk::Mapper::get_nat_min (),
 		TplFdbk::Mapper::get_nat_max (),
 		"Feedback level\nFdbk level\nFeedback\nFdbk\nF",
@@ -98,21 +98,21 @@ Phaser2Desc::Phaser2Desc ()
 		0,
 		"%+6.1f"
 	);
-	_desc_set.add_glob (Param_FEEDBACK, fbi_ptr);
+	_desc_set.add_glob (Param_FEEDBACK, fbi_sptr);
 
 	// Number of stages
-	param::TplInt *   int_ptr = new param::TplInt (
+	auto           int_sptr = std::make_shared <param::TplInt> (
 		1, 20,
 		"Number of stages\nStages\nStg",
 		"",
 		0,
 		"%.0f"
 	);
-	int_ptr->use_disp_num ().set_scale (2);
-	_desc_set.add_glob (Param_NBR_STAGES, int_ptr);
+	int_sptr->use_disp_num ().set_scale (2);
+	_desc_set.add_glob (Param_NBR_STAGES, int_sptr);
 
 	// Minimum frequency
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		20, 20480,
 		"Minimum frequency\nMin freq\nMinF\nMF",
 		"Hz",
@@ -120,12 +120,12 @@ Phaser2Desc::Phaser2Desc ()
 		0,
 		"%4.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (10);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FREQ_MIN, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (10);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_FREQ_MIN, pll_sptr);
 
 	// Maximum frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		20, 20480,
 		"Maximum frequency\nMax freq\nMaxF\nMF",
 		"Hz",
@@ -133,139 +133,158 @@ Phaser2Desc::Phaser2Desc ()
 		0,
 		"%4.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (10);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FREQ_MAX, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (10);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_FREQ_MAX, pll_sptr);
 
 	// Feedback source
-	int_ptr = new param::TplInt (
+	int_sptr = std::make_shared <param::TplInt> (
 		1, 40,
 		"Feedback source\nFdbk source\nFdbk src\nFSrc\nFS",
 		"",
 		0,
 		"%.0f"
 	);
-	_desc_set.add_glob (Param_FDBK_POS, int_ptr);
+	_desc_set.add_glob (Param_FDBK_POS, int_sptr);
 
 	// Waveform
-	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Sine\nTriangle\nSquare\nSaw\nParabola\nBiphase\nN-Phase\nVarislope\nNoise",
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
+		"Sine\nTriangle\nSquare\nSaw\nParabola\nBiphase\nN-Phase\nVarislope"
+		"\nNoise",
 		"W\nWavef\nWaveform",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_WAVEFORM, enu_ptr);
-	assert (enu_ptr->get_nat_max () == LfoType_NBR_ELT - 1);
+	_desc_set.add_glob (Param_WAVEFORM, enu_sptr);
+	assert (enu_sptr->get_nat_max () == LfoType_NBR_ELT - 1);
 
 	// Sample and hold
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"SnH\nSplHold\nSample & hold\nSample and hold",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SNH, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_SNH, lin_sptr);
 
 	// Smoothing
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Sm\nSmooth\nSmoothing",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SMOOTH, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_SMOOTH, lin_sptr);
 
 	// Chaos amount
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"C\nChaos\nChaos amt\nChaos amount",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_CHAOS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_CHAOS, lin_sptr);
 
 	// Phase distortion amount
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
-		"PDA\nPhDistA\nPhDistAmt\nPhase dist amt\nPhase dist amount\nPhase distortion amount",
+		"PDA\nPhDistA\nPhDistAmt\nPhase dist amt\nPhase dist amount"
+		"\nPhase distortion amount",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_PH_DIST_AMT, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_PH_DIST_AMT, lin_sptr);
 
 	// Phase distortion offset
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
-		"PDO\nPhDistO\nPhDistOfs\nPhase dist ofs\nPhase dist offset\nPhase distortion offset",
+		"PDO\nPhDistO\nPhDistOfs\nPhase dist ofs\nPhase dist offset"
+		"\nPhase distortion offset",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_PH_DIST_OFS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_PH_DIST_OFS, lin_sptr);
 
 	// Sign
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Normal\nInvert",
 		"Si\nSign",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_SIGN, enu_ptr);
+	_desc_set.add_glob (Param_SIGN, enu_sptr);
 
 	// Polarity
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Bipolar\nUnipolar",
 		"Po\nPolar\nPolarity",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_POLARITY, enu_ptr);
+	_desc_set.add_glob (Param_POLARITY, enu_sptr);
 
 	// Variation 1
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"V1\nVar 1\nVariation 1",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_VAR1, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_VAR1, lin_sptr);
 
 	// Variation 2
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"V2\nVar 2\nVariation 2",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_VAR2, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_VAR2, lin_sptr);
 
 	// Phase set
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"PS\nPh set\nPhase set",
 		"deg",
 		0,
 		"%3.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	lin_ptr->use_disp_num ().set_scale (360);
-	_desc_set.add_glob (Param_PHASE_SET, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_STD
+	);
+	lin_sptr->use_disp_num ().set_scale (360);
+	_desc_set.add_glob (Param_PHASE_SET, lin_sptr);
 }
 
 

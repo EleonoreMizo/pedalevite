@@ -54,7 +54,7 @@ public:
 	typedef	T	ValueType;
 
 	AtomicPtr <LockFreeCell <T> >
-	               _next_ptr;
+	               _next_ptr { nullptr };
 	T              _val;
 
 

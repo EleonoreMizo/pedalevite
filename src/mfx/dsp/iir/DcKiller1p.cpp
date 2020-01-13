@@ -71,8 +71,8 @@ void	DcKiller1p::set_cutoff_freq (float f0)
 void	DcKiller1p::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	_filter.process_block (dst_ptr, src_ptr, nbr_spl);

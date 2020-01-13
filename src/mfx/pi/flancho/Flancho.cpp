@@ -128,13 +128,13 @@ Flancho::Flancho ()
 	for (int chn_cnt = 0; chn_cnt < _max_nbr_chn; ++chn_cnt)
 	{
 		Channel &      chn = _chn_arr [chn_cnt];
-		chn._fchn_sptr = ChnSPtr (new FlanchoChn (
+		chn._fchn_sptr = std::make_shared <FlanchoChn> (
 			_interp_cubic,
 			&_buf_tmp [0],
 			int (_buf_tmp.size ()),
 			&_buf_render [0],
 			int (_buf_render.size ())
-		));
+		);
 		chn._fchn_sptr->set_rel_phase (0);
 
 		chn._us.set_coefs (&_coef_42 [0], &_coef_21 [0]);

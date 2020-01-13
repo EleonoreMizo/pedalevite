@@ -47,7 +47,7 @@ SampleData <SDTP>::SampleData ()
 ,	_table_len_arr ()
 {
 	_table_ptr_arr.fill (nullptr);
-	_table_ptr_arr.fill (0);
+	_table_len_arr.fill (0);
 }
 
 
@@ -59,7 +59,7 @@ bool	SampleData <SDTP>::is_valid () const
 	for (int table = 0; table < NBR_TABLES && valid_flag; ++table)
 	{
 		valid_flag = (   _table_len_arr [table] > 0
-		              && _table_ptr_arr [table] != 0);
+		              && _table_ptr_arr [table] != nullptr);
 	}
 
 	return valid_flag;
@@ -100,7 +100,7 @@ void	SampleData <SDTP>::set_table_base_address (int table, DataType *data_ptr)
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 
 	_table_ptr_arr [table] = data_ptr + UNROLL_PRE;
 }
@@ -152,7 +152,7 @@ typename SampleData <SDTP>::DataType *	SampleData <SDTP>::use_table (int table)
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
-	assert (_table_ptr_arr [table] != 0);
+	assert (_table_ptr_arr [table] != nullptr);
 
 	return _table_ptr_arr [table];
 }
@@ -164,7 +164,7 @@ const typename SampleData <SDTP>::DataType *	SampleData <SDTP>::use_table (int t
 {
 	assert (table >= 0);
 	assert (table < NBR_TABLES);
-	assert (_table_ptr_arr [table] != 0);
+	assert (_table_ptr_arr [table] != nullptr);
 
 	return _table_ptr_arr [table];
 }

@@ -74,7 +74,7 @@ void	NodeBase::set_coord (Vec2d pos)
 	_coord = pos;
 	const Rect     zone_new (bbox + _coord);
 
-	if (_parent_ptr != 0)
+	if (_parent_ptr != nullptr)
 	{
 		_parent_ptr->invalidate (zone_old);
 		_parent_ptr->invalidate (zone_new);
@@ -86,7 +86,7 @@ void	NodeBase::set_coord (Vec2d pos)
 void	NodeBase::invalidate_all ()
 {
 	ParentInterface * parent_ptr = get_parent ();
-	if (parent_ptr != 0)
+	if (parent_ptr != nullptr)
 	{
 		Rect           zone (do_get_bounding_box ());
 		zone += get_coord ();

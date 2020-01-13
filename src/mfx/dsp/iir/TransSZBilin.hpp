@@ -93,10 +93,10 @@ Throws: Nothing
 template <class TS, class TZ>
 void	TransSZBilin::map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs)
 {
-	assert (z_eq_b != 0);
-	assert (z_eq_a != 0);
-	assert (s_eq_b != 0);
-	assert (s_eq_a != 0);
+	assert (z_eq_b != nullptr);
+	assert (z_eq_a != nullptr);
+	assert (s_eq_b != nullptr);
+	assert (s_eq_a != nullptr);
 
 	// s to z bilinear transform
 	const double   inv_k = prewarp_freq (f0, fs);
@@ -136,10 +136,10 @@ void	TransSZBilin::map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3]
 template <class TS, class TZ>
 void	TransSZBilin::map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s_eq_b [2], const TS s_eq_a [2], double f0, double fs)
 {
-	assert (z_eq_b != 0);
-	assert (z_eq_a != 0);
-	assert (s_eq_b != 0);
-	assert (s_eq_a != 0);
+	assert (z_eq_b != nullptr);
+	assert (z_eq_a != nullptr);
+	assert (s_eq_b != nullptr);
+	assert (s_eq_a != nullptr);
 
 	// s to z bilinear transform
 	const double   inv_k = prewarp_freq (f0, fs);
@@ -171,7 +171,7 @@ void	TransSZBilin::map_s_to_z_one_pole (TZ z_eq_b [2], TZ z_eq_a [2], const TS s
 template <class TS, class TZ>
 void	TransSZBilin::map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs)
 {
-	assert (z_eq_b != 0);
+	assert (z_eq_b != nullptr);
 
 	// s to z bilinear transform
 	const double   inv_k = prewarp_freq (f0, fs);
@@ -200,7 +200,7 @@ void	TransSZBilin::map_s_to_z_ap1 (TZ z_eq_b [2], double f0, double fs)
 template <class TS, class TZ>
 void	TransSZBilin::map_s_to_z_ap2 (TZ z_eq_b [3], TS s_eq_b1, double f0, double fs)
 {
-	assert (z_eq_b != 0);
+	assert (z_eq_b != nullptr);
 
 	// s to z bilinear transform
 	const double   inv_k = prewarp_freq (f0, fs);
@@ -268,10 +268,10 @@ as2 = (az0 - az1 + az2) * 0.25 / (k * k)
 template <class TS, class TZ>
 void	TransSZBilin::map_z_to_s (TS s_eq_b [3], TS s_eq_a [3], const TZ z_eq_b [3], const TZ z_eq_a [3], double f0, double fs)
 {
-	assert (z_eq_b != 0);
-	assert (z_eq_a != 0);
-	assert (s_eq_b != 0);
-	assert (s_eq_a != 0);
+	assert (z_eq_b != nullptr);
+	assert (z_eq_a != nullptr);
+	assert (s_eq_b != nullptr);
+	assert (s_eq_a != nullptr);
 
 	const double   inv_k = prewarp_freq (f0, fs);
 	assert (! fstb::is_null (inv_k));
@@ -291,10 +291,10 @@ void	TransSZBilin::map_z_to_s (TS s_eq_b [3], TS s_eq_a [3], const TZ z_eq_b [3]
 template <class TS, class TZ>
 void	TransSZBilin::map_z_to_s_one_pole (TS s_eq_b [2], TS s_eq_a [2], const TZ z_eq_b [2], const TZ z_eq_a [2], double f0, double fs)
 {
-	assert (z_eq_b != 0);
-	assert (z_eq_a != 0);
-	assert (s_eq_b != 0);
-	assert (s_eq_a != 0);
+	assert (z_eq_b != nullptr);
+	assert (z_eq_a != nullptr);
+	assert (s_eq_b != nullptr);
+	assert (s_eq_a != nullptr);
 
 	const double   inv_k = prewarp_freq (f0, fs);
 	assert (! fstb::is_null (inv_k));

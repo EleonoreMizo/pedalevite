@@ -61,7 +61,6 @@ public:
 	typedef AP1 ApFilter1;
 
 	               BandSplitAllPassPair ();
-	virtual        ~BandSplitAllPassPair () = default;
 
 	ApFilter0 &    use_filter_0 ();
 	const ApFilter0 &
@@ -110,9 +109,12 @@ private:
 
 private:
 
-	               BandSplitAllPassPair (const BandSplitAllPassPair &other) = delete;
+	               BandSplitAllPassPair (const BandSplitAllPassPair &other)  = delete;
+	               BandSplitAllPassPair (const BandSplitAllPassPair &&other) = delete;
 	BandSplitAllPassPair &
 	               operator = (const BandSplitAllPassPair &other)        = delete;
+	BandSplitAllPassPair &
+	               operator = (const BandSplitAllPassPair &&other)       = delete;
 	bool           operator == (const BandSplitAllPassPair &other) const = delete;
 	bool           operator != (const BandSplitAllPassPair &other) const = delete;
 

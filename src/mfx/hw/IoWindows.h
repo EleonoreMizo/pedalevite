@@ -61,7 +61,7 @@ namespace hw
 
 
 
-class IoWindows
+class IoWindows final
 :	public ui::DisplayInterface
 ,	public ui::LedInterface
 ,	public ui::UserInputInterface
@@ -73,7 +73,7 @@ class IoWindows
 public:
 
 	explicit       IoWindows (volatile bool &quit_request_flag);
-	virtual        ~IoWindows ();
+	               ~IoWindows ();
 
 	void           set_model (Model &model);
 
@@ -84,30 +84,29 @@ public:
 protected:
 
 	// ui::DisplayInterface
-	virtual int    do_get_width () const;
-	virtual int    do_get_height () const;
-	virtual int    do_get_stride () const;
-	virtual uint8_t *
-	               do_use_screen_buf ();
-	virtual const uint8_t *
-	               do_use_screen_buf () const;
+	int            do_get_width () const final;
+	int            do_get_height () const final;
+	int            do_get_stride () const final;
+	uint8_t *      do_use_screen_buf () final;
+	const uint8_t *
+	               do_use_screen_buf () const final;
 
-	virtual void   do_refresh (int x, int y, int w, int h);
-	virtual void   do_force_reset ();
+	void           do_refresh (int x, int y, int w, int h) final;
+	void           do_force_reset () final;
 
 	// ui::LedInterface
-	virtual int    do_get_nbr_led () const;
-	virtual void   do_set_led (int index, float val);
+	int            do_get_nbr_led () const final;
+	void           do_set_led (int index, float val) final;
 
 	// ui::UserInputInterface
-	virtual int    do_get_nbr_param (ui::UserInputType type) const;
-	virtual void   do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr);
-	virtual void   do_return_cell (MsgCell &cell);
-	virtual std::chrono::microseconds
-	               do_get_cur_date () const;
+	int            do_get_nbr_param (ui::UserInputType type) const final;
+	void           do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr) final;
+	void           do_return_cell (MsgCell &cell) final;
+	std::chrono::microseconds
+	               do_get_cur_date () const final;
 
 	// ModelMsgCmdCbInterface
-	virtual void   do_notify_model_error_code (int ret_val);
+	void           do_notify_model_error_code (int ret_val) final;
 
 
 
@@ -299,7 +298,9 @@ private:
 
 	               IoWindows ()                               = delete;
 	               IoWindows (const IoWindows &other)         = delete;
+	               IoWindows (IoWindows &&other)              = delete;
 	IoWindows &    operator = (const IoWindows &other)        = delete;
+	IoWindows &    operator = (IoWindows &&other)             = delete;
 	bool           operator == (const IoWindows &other) const = delete;
 	bool           operator != (const IoWindows &other) const = delete;
 

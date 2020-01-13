@@ -71,7 +71,7 @@ class WorldAudio
 public:
 
 	explicit       WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaMsgQueue &queue_to_cmd, ui::UserInputInterface::MsgQueue &queue_from_input, ui::UserInputInterface &input_device, conc::CellPool <WaMsg> &msg_pool_cmd);
-	virtual        ~WorldAudio ();
+	               ~WorldAudio ();
 
 	void           set_process_info (double sample_freq, int max_block_size);
 
@@ -142,11 +142,11 @@ private:
 	void           process_single_plugin (int plugin_id, piapi::ProcInfo &proc_info);
 	void           mix_source_channels (const ProcessingContextNode::Side &side, const ProcessingContext::PluginContext::MixInputArray &mix_in_arr, int nbr_spl);
 	void           prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingContext::PluginContext &pi_ctx, PiType type, bool use_byp_as_src_flag);
-	void           handle_signals (piapi::ProcInfo &proc_info, const ProcessingContextNode &node);
+	void           handle_signals (const piapi::ProcInfo &proc_info, const ProcessingContextNode &node);
 
-	void           handle_msg_param (WaMsg::Param &msg);
-	void           handle_msg_tempo (WaMsg::Tempo &msg);
-	void           handle_msg_reset (WaMsg::Reset &msg);
+	void           handle_msg_param (const WaMsg::Param &msg);
+	void           handle_msg_tempo (const WaMsg::Tempo &msg);
+	void           handle_msg_reset (const WaMsg::Reset &msg);
 
 #if defined (mfx_WorldAudio_BUF_REC)
 	void           store_data (const float src_ptr [], int nbr_spl);
@@ -213,7 +213,9 @@ private:
 
 	               WorldAudio ()                               = delete;
 	               WorldAudio (const WorldAudio &other)        = delete;
+	               WorldAudio (WorldAudio &&other)             = delete;
 	WorldAudio &   operator = (const WorldAudio &other)        = delete;
+	WorldAudio &   operator = (WorldAudio &&other)             = delete;
 	bool           operator == (const WorldAudio &other) const = delete;
 	bool           operator != (const WorldAudio &other) const = delete;
 

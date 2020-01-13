@@ -61,7 +61,7 @@ FlanchoDesc::FlanchoDesc ()
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
 
 	// Speed
-	TplPll *   pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0.01, 1000,
 		"Speed",
 		"Hz",
@@ -69,25 +69,27 @@ FlanchoDesc::FlanchoDesc ()
 		0,
 		"%7.3f"
 	);
-	pll_ptr->use_mapper ().set_first_value (     0.01);
-	pll_ptr->use_mapper ().add_segment (0.75,   10, true);
-	pll_ptr->use_mapper ().add_segment (1   , 1000, true);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_SPEED, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (     0.01);
+	pll_sptr->use_mapper ().add_segment (0.75,   10, true);
+	pll_sptr->use_mapper ().add_segment (1   , 1000, true);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_SPEED, pll_sptr);
 
 	// Depth
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"D\nDpt\nDepth",
 		"%",
 		0,
 		"%5.2f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_DEPTH, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_DEPTH, lin_sptr);
 
 	// Delay
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		Cst::_delay_min / 1e6, Cst::_delay_max / 1e6,
 		"D\nDly\nDelay",
 		"ms",
@@ -95,11 +97,11 @@ FlanchoDesc::FlanchoDesc ()
 		0,
 		"%5.2f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
-	_desc_set.add_glob (Param_DELAY, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+	_desc_set.add_glob (Param_DELAY, log_sptr);
 
 	// Feedback
-	TplFdbk *      fbi_ptr = new TplFdbk (
+	auto           fbi_sptr = std::make_shared <TplFdbk> (
 		TplFdbk::Mapper::get_nat_min (),
 		TplFdbk::Mapper::get_nat_max (),
 		"F\nFdbk\nFeedback",
@@ -108,41 +110,41 @@ FlanchoDesc::FlanchoDesc ()
 		0,
 		"%+6.1f"
 	);
-	_desc_set.add_glob (Param_FDBK, fbi_ptr);
+	_desc_set.add_glob (Param_FDBK, fbi_sptr);
 
 	// Waveform Type
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Sine\nTriangle\nParabola\nInv.para\nRamp up\nRamp down\nRandom",
 		"T\nWf.T\nWaveform\nWaveform type",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_WF_TYPE, enu_ptr);
+	_desc_set.add_glob (Param_WF_TYPE, enu_sptr);
 
 	// Waveform Shape
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"S\nWf.S\nShape\nWaveform shape",
 		"%",
 		0,
 		"%+6.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_WF_SHAPE, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
+	_desc_set.add_glob (Param_WF_SHAPE, lin_sptr);
 
 	// Number of voices
-	param::TplInt *   int_ptr = new param::TplInt (
+	auto           int_sptr = std::make_shared <param::TplInt> (
 		1, Cst::_max_nbr_voices,
 		"#\nVc#\nNumber of voices",
 		"",
 		0,
 		"%1.0f"
 	);
-	_desc_set.add_glob (Param_NBR_VOICES, int_ptr);
+	_desc_set.add_glob (Param_NBR_VOICES, int_sptr);
 
 	// Mix
-	TplMaps *      maps_ptr = new TplMaps (
+	auto           maps_sptr = std::make_shared <TplMaps> (
 		0, 1,
 		"M\nMix",
 		"%",
@@ -150,43 +152,43 @@ FlanchoDesc::FlanchoDesc ()
 		0,
 		"%5.1f"
 	);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
+	maps_sptr->use_mapper ().config (
+		maps_sptr->get_nat_min (),
+		maps_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_MIX, maps_ptr);
+	_desc_set.add_glob (Param_MIX, maps_sptr);
 
 	// Phase set
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"P\nPh.Set\nPhase set",
 		"deg",
 		0,
 		"%3.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	lin_ptr->use_disp_num ().set_scale (360);
-	_desc_set.add_glob (Param_PHASE_SET, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
+	lin_sptr->use_disp_num ().set_scale (360);
+	_desc_set.add_glob (Param_PHASE_SET, lin_sptr);
 
 	// Negative
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Add\nSub",
 		"M\nMix\nMix Mode",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_NEGATIVE, enu_ptr);
+	_desc_set.add_glob (Param_NEGATIVE, enu_sptr);
 
 	// Oversampling
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"\xC3\x97" "1\n" "\xC3\x97" "4", // U+00D7 multiplication sign (UTF-8 C3 97)
 		"O\nOvr\nOvrspl\nOversamp\nOversampling\nOversampling rate",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_OVRSPL, enu_ptr);
+	_desc_set.add_glob (Param_OVRSPL, enu_sptr);
 }
 
 

@@ -55,18 +55,18 @@ namespace pg
 MenuMain::MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 :	_page_switcher (page_switcher)
 ,	_pedal_ctx (pedal_ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
 ,	_state (State_NORMAL)
-,	_edit_prog_sptr (  new NText (Entry_PROG  ))
-,	_edit_bank_sptr (  new NText (Entry_BANKS ))
-,	_edit_layout_sptr (new NText (Entry_LAYOUT))
-,	_edit_levels_sptr (new NText (Entry_LEVELS))
-,	_settings_sptr    (new NText (Entry_SETTINGS))
-,	_tuner_sptr (      new NText (Entry_TUNER ))
-,	_reboot_sptr (     new NText (Entry_REBOOT))
+,	_edit_prog_sptr (  std::make_shared <NText> (Entry_PROG  ))
+,	_edit_bank_sptr (  std::make_shared <NText> (Entry_BANKS ))
+,	_edit_layout_sptr (std::make_shared <NText> (Entry_LAYOUT))
+,	_edit_levels_sptr (std::make_shared <NText> (Entry_LEVELS))
+,	_settings_sptr    (std::make_shared <NText> (Entry_SETTINGS))
+,	_tuner_sptr (      std::make_shared <NText> (Entry_TUNER ))
+,	_reboot_sptr (     std::make_shared <NText> (Entry_REBOOT))
 ,	_reboot_arg ()
 {
 	_edit_prog_sptr  ->set_justification (0.5f, 0, false);
@@ -131,7 +131,7 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 				break;
 			}
 #else
-			_page_switcher.call_page (PageType_NOT_YET, 0, -1);
+			_page_switcher.call_page (PageType_NOT_YET, nullptr, -1);
 #endif
 		}
 	}
@@ -211,21 +211,21 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 			switch (evt.get_target ())
 			{
 			case Entry_PROG:
-				_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+				_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 				break;
 			case Entry_BANKS:
-				_page_switcher.switch_to (pg::PageType_BANK_MENU, 0);
+				_page_switcher.switch_to (pg::PageType_BANK_MENU, nullptr);
 				break;
 			case Entry_LAYOUT:
 				_pedal_ctx._type     = PedalEditContext::Type_GLOBAL;
 				_pedal_ctx._ret_page = PageType_PROG_CUR;
-				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, 0);
+				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, nullptr);
 				break;
 			case Entry_LEVELS:
-				_page_switcher.switch_to (PageType_LEVELS, 0);
+				_page_switcher.switch_to (PageType_LEVELS, nullptr);
 				break;
 			case Entry_SETTINGS:
-				_page_switcher.switch_to (PageType_SETTINGS_OTHER, 0);
+				_page_switcher.switch_to (PageType_SETTINGS_OTHER, nullptr);
 				break;
 			case Entry_REBOOT:
 				_reboot_arg._title      = "RESTART";
@@ -244,7 +244,7 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:

@@ -54,7 +54,16 @@ public:
 	// Use fstb_EXPORT() to export the function
 	typedef int (fstb_CDECL * EnumFactoriesPtr) (std::vector <std::shared_ptr <FactoryInterface> > &fact_list);
 
-	virtual        ~FactoryInterface () = default;
+	               FactoryInterface ()                              = default;
+	               FactoryInterface (const FactoryInterface &other) = default;
+	               FactoryInterface (FactoryInterface &&other)      = default;
+
+	virtual        ~FactoryInterface ()                             = default;
+
+	virtual FactoryInterface &
+	               operator = (const FactoryInterface &other)       = default;
+	virtual FactoryInterface &
+	               operator = (FactoryInterface &&other)            = default;
 
 	const PluginDescInterface &
 	               describe ();

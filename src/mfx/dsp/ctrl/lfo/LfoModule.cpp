@@ -312,9 +312,13 @@ void	LfoModule::set_step_seq (bool flag)
 	{
 		_step_seq_uptr.reset ();
 	}
-	else if (_step_seq_uptr.get () == 0)
+	else if (_step_seq_uptr.get () == nullptr)
 	{
+#if __cplusplus >= 201402
+		_step_seq_uptr = std::make_unique <OscStepSeq> ();
+#else // __cplusplus
 		_step_seq_uptr = StepSeqUPtr (new OscStepSeq);
+#endif // __cplusplus
 	}
 }
 
@@ -322,7 +326,7 @@ void	LfoModule::set_step_seq (bool flag)
 
 bool	LfoModule::has_step_seq () const
 {
-	return (_step_seq_uptr.get () != 0);
+	return (_step_seq_uptr.get () != nullptr);
 }
 
 
@@ -367,19 +371,10 @@ void	LfoModule::tick (int nbr_spl)
 double	LfoModule::get_val () const
 {
 	// Source: smooth, S&H or direct
-	double         val;
-	if (_smooth_flag)
-	{
-		val = _smooth_state_arr [_smooth_order - 1];
-	}
-	else if (_snh_flag)
-	{
-		val = _snh_state;
-	}
-	else
-	{
-		val = use_osc ().get_val ();
-	}
+	const double     val =
+		  (_smooth_flag) ? _smooth_state_arr [_smooth_order - 1]
+		: (_snh_flag)    ? _snh_state
+		:                  use_osc ().get_val ();
 
 	return val;
 }

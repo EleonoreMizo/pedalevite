@@ -86,9 +86,6 @@ public:
 		Err_CANNOT_CONVERT_VALUE = -1000
 	};
 
-	               HelperDispNum ()  = default;
-	virtual        ~HelperDispNum () = default;
-
 	void           set_type (Type type);
 	void           set_log (bool flag);
 	void           set_preset (Preset preset);
@@ -144,9 +141,6 @@ private:
 
 private:
 
-	               HelperDispNum (const HelperDispNum &other)     = delete;
-	HelperDispNum &
-	               operator = (const HelperDispNum &other)        = delete;
 	bool           operator == (const HelperDispNum &other) const = delete;
 	bool           operator != (const HelperDispNum &other) const = delete;
 

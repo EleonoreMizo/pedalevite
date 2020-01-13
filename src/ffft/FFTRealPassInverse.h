@@ -75,13 +75,6 @@ private:
 
 private:
 
-						FFTRealPassInverse ();
-						FFTRealPassInverse (const FFTRealPassInverse &other);
-	FFTRealPassInverse &
-						operator = (const FFTRealPassInverse &other);
-	bool				operator == (const FFTRealPassInverse &other);
-	bool				operator != (const FFTRealPassInverse &other);
-
 };	// class FFTRealPassInverse
 
 

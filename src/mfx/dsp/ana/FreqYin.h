@@ -66,9 +66,6 @@ class FreqYin
 
 public:
 
-	               FreqYin ()  = default;
-	virtual        ~FreqYin () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           set_freq_bot (float f);
 	void           set_freq_top (float f);
@@ -127,8 +124,6 @@ private:
 
 private:
 
-	               FreqYin (const FreqYin &other)           = delete;
-	FreqYin &      operator = (const FreqYin &other)        = delete;
 	bool           operator == (const FreqYin &other) const = delete;
 	bool           operator != (const FreqYin &other) const = delete;
 

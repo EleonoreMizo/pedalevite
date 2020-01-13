@@ -49,7 +49,7 @@ namespace pg
 
 
 
-class SlotMenu
+class SlotMenu final
 :	public PageInterface
 {
 
@@ -58,7 +58,6 @@ class SlotMenu
 public:
 
 	explicit       SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~SlotMenu () = default;
 
 
 
@@ -67,22 +66,21 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_set_routing (const doc::Routing &routing);
-	virtual void   do_set_slot_label (int slot_id, std::string name);
-	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
-	virtual void   do_remove_plugin (int slot_id);
-	virtual void   do_set_plugin_mono (int slot_id, bool mono_flag);
-	virtual void   do_set_plugin_reset (int slot_id, bool reset_flag);
+	void           do_activate_preset (int index) final;
+	void           do_remove_slot (int slot_id) final;
+	void           do_set_routing (const doc::Routing &routing) final;
+	void           do_set_slot_label (int slot_id, std::string name) final;
+	void           do_set_plugin (int slot_id, const PluginInitData &pi_data) final;
+	void           do_remove_plugin (int slot_id) final;
+	void           do_set_plugin_mono (int slot_id, bool mono_flag) final;
+	void           do_set_plugin_reset (int slot_id, bool reset_flag) final;
 
 
 
@@ -159,7 +157,9 @@ private:
 
 	               SlotMenu ()                               = delete;
 	               SlotMenu (const SlotMenu &other)          = delete;
+	               SlotMenu (SlotMenu &&other)               = delete;
 	SlotMenu &     operator = (const SlotMenu &other)        = delete;
+	SlotMenu &     operator = (SlotMenu &&other)             = delete;
 	bool           operator == (const SlotMenu &other) const = delete;
 	bool           operator != (const SlotMenu &other) const = delete;
 

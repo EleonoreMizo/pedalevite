@@ -40,7 +40,7 @@ namespace doc
 
 
 
-class SerWText
+class SerWText final
 :	public SerWInterface
 {
 
@@ -51,8 +51,7 @@ public:
 	static const int
 	               _max_list_level = 100;
 
-	               SerWText ()  = default;
-	virtual        ~SerWText () = default;
+	               SerWText () = default;
 
 	void           clear ();
 	int            terminate ();
@@ -69,11 +68,11 @@ public:
 protected:
 
 	// doc::mfx::SerWInterface
-	virtual void   do_begin_list ();
-	virtual void   do_end_list ();
-	virtual void   do_write (float x);
-	virtual void   do_write (double x);
-	virtual void   do_write (std::string s);
+	void          do_begin_list () final;
+	void          do_end_list () final;
+	void          do_write (float x) final;
+	void          do_write (double x) final;
+	void          do_write (std::string s) final;
 
 
 
@@ -101,7 +100,9 @@ private:
 private:
 
 	               SerWText (const SerWText &other)          = delete;
+	               SerWText (const SerWText &&other)         = delete;
 	SerWText &     operator = (const SerWText &other)        = delete;
+	SerWText &     operator = (const SerWText &&other)       = delete;
 	bool           operator == (const SerWText &other) const = delete;
 	bool           operator != (const SerWText &other) const = delete;
 

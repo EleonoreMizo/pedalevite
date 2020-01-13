@@ -55,7 +55,7 @@ TplPan::TplPan (const char *name_0, int group_index)
 ,	_name ()
 ,	_flags (0)
 {
-	assert (name_0 != 0);
+	assert (name_0 != nullptr);
 
 	char           txt_0 [1023+1];
 	fstb::snprintf4all (txt_0, sizeof (txt_0), name_0,
@@ -204,7 +204,7 @@ bool	TplPan::do_conv_str_to_nat (double &nat, const std::string &txt) const
 
 double	TplPan::do_conv_nrm_to_nat (double nrm) const
 {
-	double         nat;
+	double         nat = 0;
 
 	if (nrm < 0.375f)
 	{
@@ -240,7 +240,7 @@ double	TplPan::do_conv_nrm_to_nat (double nrm) const
 
 double	TplPan::do_conv_nat_to_nrm (double nat) const
 {
-	double         nrm;
+	double         nrm = 0;
 
 	if (nat < -0.5f)
 	{

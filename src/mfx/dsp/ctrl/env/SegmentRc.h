@@ -49,8 +49,11 @@ public:
 
 	               SegmentRc ()                        = default;
 	               SegmentRc (const SegmentRc &other)  = default;
+	               SegmentRc (SegmentRc &&other)       = default;
 	virtual        ~SegmentRc ()                       = default;
+
 	SegmentRc &    operator = (const SegmentRc &other) = default;
+	SegmentRc &    operator = (SegmentRc &&other)      = default;
 
 	void           setup (float final_val, float mult, float end_thr);
 	void           setup (float final_val, float mult, float end_thr, int duration);

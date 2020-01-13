@@ -48,7 +48,7 @@ namespace rspl
 
 float	InterpFtor::Hold::operator () (float /*frac_pos*/, const float data []) const
 {
-	assert (data != 0);
+	assert (data != nullptr);
 
 	return data [0];
 }
@@ -57,7 +57,7 @@ float	InterpFtor::Hold::operator () (float /*frac_pos*/, const float data []) co
 
 float	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const float data []) const
 {
-	assert (data != 0);
+	assert (data != nullptr);
 
 	return data [0];
 }
@@ -66,7 +66,7 @@ float	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const float data [])
 
 int32_t	InterpFtor::Hold::operator () (uint32_t /*frac_pos*/, const int16_t data []) const
 {
-	assert (data != 0);
+	assert (data != nullptr);
 
 	return data [0];
 }
@@ -77,7 +77,7 @@ float	InterpFtor::Linear::operator () (float frac_pos, const float data []) cons
 {
 	assert (frac_pos >= 0);
 	assert (frac_pos <= 1);
-	assert (data != 0);
+	assert (data != nullptr);
 
 	return data [0] + (data [1] - data [0]) * frac_pos;
 }
@@ -94,7 +94,7 @@ float	InterpFtor::Linear::operator () (uint32_t frac_pos, const float data []) c
 // Result is still on a signed 16-bit scale
 int32_t	InterpFtor::Linear::operator () (uint32_t frac_pos, const int16_t data []) const
 {
-	assert (data != 0);
+	assert (data != nullptr);
 
 #if fstb_IS (ARCHI, ARM)
 
@@ -125,7 +125,7 @@ float	InterpFtor::CubicHermite::operator () (float frac_pos, const float data []
 {
 	assert (frac_pos >= 0);
 	assert (frac_pos <= 1);
-	assert (data != 0);
+	assert (data != nullptr);
 
 	const float    xm1 = data [-1];
 	const float    x0  = data [ 0];

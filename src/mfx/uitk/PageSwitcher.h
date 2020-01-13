@@ -101,7 +101,9 @@ private:
 
 	               PageSwitcher ()                               = delete;
 	               PageSwitcher (const PageSwitcher &other)      = delete;
+	               PageSwitcher (PageSwitcher &&other)           = delete;
 	PageSwitcher & operator = (const PageSwitcher &other)        = delete;
+	PageSwitcher & operator = (PageSwitcher &&other)             = delete;
 	bool           operator == (const PageSwitcher &other) const = delete;
 	bool           operator != (const PageSwitcher &other) const = delete;
 

@@ -47,9 +47,6 @@ class MapRatio
 
 public:
 
-	               MapRatio ()  = default;
-	virtual        ~MapRatio () = default;
-
 	void           config (double val_min, double val_max);
 	double         conv_norm_to_nat (double norm) const;
 	double         conv_nat_to_norm (double nat) const;
@@ -82,8 +79,6 @@ private:
 
 private:
 
-	               MapRatio (const MapRatio &other)          = delete;
-	MapRatio &     operator = (const MapRatio &other)        = delete;
 	bool           operator == (const MapRatio &other) const = delete;
 	bool           operator != (const MapRatio &other) const = delete;
 

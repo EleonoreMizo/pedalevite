@@ -52,9 +52,6 @@ class FreqPeak
 
 public:
 
-	               FreqPeak ()  = default;
-	virtual        ~FreqPeak () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           set_freq_bot (float f);
 	void           set_freq_top (float f);
@@ -85,10 +82,10 @@ private:
 		dyn::EnvFollowerPeak
 		               _env;
 		std::array <float, 3>   // Last input values. 0 = oldest
-		               _mem_x;
+		               _mem_x { 0, 0, 0};
 		std::array <float, 3>   // Last envelope values. 0 = oldest
-		               _mem_y;
-		float          _peak_age;  // Last peak age in samples. Large value: no peak found
+		               _mem_y { 0, 0, 0};
+		float          _peak_age { 1e9f }; // Last peak age in samples. Large value: no peak found
 	};
 
 	void           update_input_filter ();
@@ -122,8 +119,6 @@ private:
 
 private:
 
-	               FreqPeak (const FreqPeak &other)          = delete;
-	FreqPeak &     operator = (const FreqPeak &other)        = delete;
 	bool           operator == (const FreqPeak &other) const = delete;
 	bool           operator != (const FreqPeak &other) const = delete;
 

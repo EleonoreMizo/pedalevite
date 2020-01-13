@@ -49,7 +49,7 @@ namespace pg
 
 
 
-class PresetMenu
+class PresetMenu final
 :	public PageInterface
 {
 
@@ -58,7 +58,6 @@ class PresetMenu
 public:
 
 	explicit       PresetMenu (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~PresetMenu () = default;
 
 
 
@@ -67,18 +66,17 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_remove_slot (int slot_id);
-	virtual void   do_set_plugin (int slot_id, const PluginInitData &pi_data);
-	virtual void   do_remove_plugin (int slot_id);
+	void           do_activate_preset (int index) final;
+	void           do_remove_slot (int slot_id) final;
+	void           do_set_plugin (int slot_id, const PluginInitData &pi_data) final;
+	void           do_remove_plugin (int slot_id) final;
 
 
 
@@ -135,7 +133,9 @@ private:
 
 	               PresetMenu ()                               = delete;
 	               PresetMenu (const PresetMenu &other)        = delete;
+	               PresetMenu (PresetMenu &&other)             = delete;
 	PresetMenu &   operator = (const PresetMenu &other)        = delete;
+	PresetMenu &   operator = (PresetMenu &&other)             = delete;
 	bool           operator == (const PresetMenu &other) const = delete;
 	bool           operator != (const PresetMenu &other) const = delete;
 

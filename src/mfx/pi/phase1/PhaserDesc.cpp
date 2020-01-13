@@ -60,7 +60,7 @@ PhaserDesc::PhaserDesc ()
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
 
 	// Speed
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.01, 100,
 		"S\nSpd\nSpeed",
 		"Hz",
@@ -68,22 +68,22 @@ PhaserDesc::PhaserDesc ()
 		0,
 		"%7.3f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_SPEED, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_SPEED, log_sptr);
 
 	// Depth
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"4\n8\n16\n32",
 		"D\nDpt\nDepth",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_DEPTH, enu_ptr);
-	assert (enu_ptr->get_nat_max () == Cst::_nbr_phase_filters - 1);
+	_desc_set.add_glob (Param_DEPTH, enu_sptr);
+	assert (enu_sptr->get_nat_max () == Cst::_nbr_phase_filters - 1);
 
 	// Feedback Level
-	TplFdbk *      fbi_ptr = new TplFdbk (
+	auto           fbi_sptr = std::make_shared <TplFdbk> (
 		TplFdbk::Mapper::get_nat_min (),
 		TplFdbk::Mapper::get_nat_max (),
 		"F\nFdbk\nFdbk Lvl\nFdbk Level\nFeedback Level",
@@ -92,22 +92,24 @@ PhaserDesc::PhaserDesc ()
 		0,
 		"%5.1f"
 	);
-	_desc_set.add_glob (Param_FDBK_LEVEL, fbi_ptr);
+	_desc_set.add_glob (Param_FDBK_LEVEL, fbi_sptr);
 
 	// Feedback Color
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"C\nCol\nFdbk Col\nFdbk Color\nFeedback Color",
 		"%",
 		0,
 		"%3.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	lin_ptr->use_disp_num ().set_scale (360);
-	_desc_set.add_glob (Param_FDBK_COLOR, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_STD
+	);
+	lin_sptr->use_disp_num ().set_scale (360);
+	_desc_set.add_glob (Param_FDBK_COLOR, lin_sptr);
 
 	// Phase Mix
-	TplMaps *      maps_ptr = new TplMaps (
+	auto           maps_sptr = std::make_shared <TplMaps> (
 		0, 1,
 		"M\nMix\nPh Mix\nPhase Mix",
 		"%",
@@ -115,48 +117,52 @@ PhaserDesc::PhaserDesc ()
 		0,
 		"%5.1f"
 	);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
+	maps_sptr->use_mapper ().config (
+		maps_sptr->get_nat_min (),
+		maps_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_PHASE_MIX, maps_ptr);
+	_desc_set.add_glob (Param_PHASE_MIX, maps_sptr);
 
 	// Phase Offset
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"PO\nPh.Ofs\nOffset\nPhase Offset",
 		"%",
 		0,
 		"%+5.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	lin_ptr->use_disp_num ().set_scale (360);
-	_desc_set.add_glob (Param_MANUAL, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_STD
+	);
+	lin_sptr->use_disp_num ().set_scale (360);
+	_desc_set.add_glob (Param_MANUAL, lin_sptr);
 
 	// Phase Set
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"P\nPh.Set\nPhase Set",
 		"deg",
 		0,
 		"%3.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	lin_ptr->use_disp_num ().set_scale (360);
-	_desc_set.add_glob (Param_PHASE_SET, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_STD
+	);
+	lin_sptr->use_disp_num ().set_scale (360);
+	_desc_set.add_glob (Param_PHASE_SET, lin_sptr);
 
 	// Hold
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"H\nHold",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_HOLD, enu_ptr);
+	_desc_set.add_glob (Param_HOLD, enu_sptr);
 
 	// Band-Pass Filter Cutoff Frequency
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		40, 10240,
 		"F\nFreq\nBPF F\nBPF Freq\nBand-Pass Filter Cutoff Frequency",
 		"Hz",
@@ -164,11 +170,11 @@ PhaserDesc::PhaserDesc ()
 		0,
 		"%6.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_BPF_CUTOFF, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_BPF_CUTOFF, log_sptr);
 
 	// Band-Pass Filter Selectivity
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		0.1, 10,
 		"Q\nBPF Q\nBPF Selectivity\nBand-Pass Filter Selectivity",
 		"",
@@ -176,59 +182,61 @@ PhaserDesc::PhaserDesc ()
 		0,
 		"%4.1f"
 	);
-	_desc_set.add_glob (Param_BPF_Q, log_ptr);
+	_desc_set.add_glob (Param_BPF_Q, log_sptr);
 
 	// Direction
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Down\nUp",
 		"Direction\nDir\nD",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_DIR, enu_ptr);
+	_desc_set.add_glob (Param_DIR, enu_sptr);
 
 	// Mono phase mix
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Left\nMixed",
 		"Mono phase mix\nMono mix\nMono\nM",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_OP_MONO, enu_ptr);
+	_desc_set.add_glob (Param_OP_MONO, enu_sptr);
 	
 	// Stereo phase mix
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Spat mix\nSpat sep\nBi-mono",
 		"Stereo phase mix\nStereo mix\nStereo\nS",
 		"",
 		0,
 		"%s"
 	);
-	assert (enu_ptr->get_nat_max () == StereoOut_NBR_ELT - 1);
-	_desc_set.add_glob (Param_OP_STEREO, enu_ptr);
+	assert (enu_sptr->get_nat_max () == StereoOut_NBR_ELT - 1);
+	_desc_set.add_glob (Param_OP_STEREO, enu_sptr);
 
 	// All-pass delay
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, Cst::_max_apf_delay_time,
 		"All-pass delay\nAllP delay\nAP delay\nAP dly\nD",
 		"us",
 		0,
 		"%4.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_MICRO);
-	_desc_set.add_glob (Param_AP_DELAY, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_MICRO
+	);
+	_desc_set.add_glob (Param_AP_DELAY, lin_sptr);
 
 	// All-pass coefficient
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-0.5, 0.5,
 		"All-pass coefficient\nAll-pass coef\nAllP coef\nAP coef\nC",
 		"",
 		0,
 		"%+5.2f"
 	);
-	_desc_set.add_glob (Param_AP_COEF, lin_ptr);
+	_desc_set.add_glob (Param_AP_COEF, lin_sptr);
 }
 
 

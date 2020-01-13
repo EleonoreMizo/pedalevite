@@ -48,7 +48,7 @@ namespace pg
 
 
 
-class BankMove
+class BankMove final
 :	public PageInterface
 {
 
@@ -57,7 +57,6 @@ class BankMove
 public:
 
 	explicit       BankMove (PageSwitcher &page_switcher);
-	virtual        ~BankMove () = default;
 
 
 
@@ -66,16 +65,15 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_bank (int index, const doc::Bank &bank);
-	virtual void   do_set_bank_name (std::string name);
+	void           do_set_bank (int index, const doc::Bank &bank) final;
+	void           do_set_bank_name (std::string name) final;
 
 
 
@@ -129,9 +127,10 @@ private:
 private:
 
 	               BankMove ()                               = delete;
-	               BankMove (const BankMove &other)    = delete;
-	BankMove &
-	               operator = (const BankMove &other)        = delete;
+	               BankMove (const BankMove &other)          = delete;
+	               BankMove (BankMove &&other)               = delete;
+	BankMove &     operator = (const BankMove &other)        = delete;
+	BankMove &     operator = (BankMove &&other)             = delete;
 	bool           operator == (const BankMove &other) const = delete;
 	bool           operator != (const BankMove &other) const = delete;
 

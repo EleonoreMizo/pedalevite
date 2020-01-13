@@ -57,9 +57,6 @@ class FxSection
 
 public:
 
-	               FxSection ()  = default;
-	virtual        ~FxSection () = default;
-
 	void           init (int line_index, const ParamDescSet &desc_set, ParamStateSet &state_set);
 	void           reset (double sample_freq, int max_buf_len);
 	void           clear_buffers ();
@@ -83,9 +80,9 @@ private:
 	void           update_shelf ();
 
 	int            _line_index    = -1;
-	ParamStateSet* _state_set_ptr = 0;  // 0 = not initialised
-	const ParamDescSet *                // 0 = not initialised
-	               _desc_set_ptr  = 0;
+	ParamStateSet* _state_set_ptr = nullptr;  // nullptr = not initialised
+	const ParamDescSet *                      // nullptr = not initialised
+	               _desc_set_ptr  = nullptr;
 
 	float          _sample_freq   = 0;  // Hz, > 0. 0 = not initialised
 	float          _inv_fs        = 0;  // 1 / _sample_freq, > 0. 0 = not initialised
@@ -123,8 +120,6 @@ private:
 
 private:
 
-	               FxSection (const FxSection &other)         = delete;
-	FxSection &    operator = (const FxSection &other)        = delete;
 	bool           operator == (const FxSection &other) const = delete;
 	bool           operator != (const FxSection &other) const = delete;
 

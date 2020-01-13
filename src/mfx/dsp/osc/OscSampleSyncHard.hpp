@@ -46,27 +46,6 @@ namespace osc
 
 
 
-template <typename OSC, int STPPLEN, int STPNPL2>
-OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::OscSampleSyncHard ()
-:	_osc ()
-,	_step_ptr (0)
-,	_base_pitch (0)
-,	_master_pitch (0)
-,	_spl_to_next_sync (0)
-,	_period (0)
-,	_wave_freq_spl (0)
-,	_sync_pos (0)
-,	_sync_pos_table (0)
-,	_sync_speed (0)
-,	_sync_speed_table (0)
-,	_buffer ()
-,	_buf_pos (0)
-{
-	clear_buffers ();
-}
-
-
-
 /*
 ==============================================================================
 Name: set_sample_data
@@ -366,11 +345,11 @@ typename OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::CalcDataType	OscSampleSyncHa
 template <typename OSC, int STPPLEN, int STPNPL2>
 void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::process_block (CalcDataType data_ptr [], int nbr_spl)
 {
-	assert (_step_ptr != 0);
+	assert (_step_ptr != nullptr);
 	assert (_period.get_val_dbl () > 0);
 	assert (_wave_freq_spl.get_val_int64 () > 0);
 
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            pos = 0;
@@ -596,7 +575,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::check_and_handle_sync_point ()
 template <typename OSC, int STPPLEN, int STPNPL2>
 void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::add_step (CalcDataType step_amplitude)
 {
-	assert (_step_ptr != 0);
+	assert (_step_ptr != nullptr);
 	assert (_spl_to_next_sync.get_ceil () == 0);
 
 	const int      shift_int32_to_phase = 32 - AntialiasedStep::NBR_PHASES_LOG2;

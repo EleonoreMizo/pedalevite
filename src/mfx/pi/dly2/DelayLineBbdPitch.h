@@ -66,7 +66,6 @@ public:
 	};
 
 	               DelayLineBbdPitch ();
-	virtual        ~DelayLineBbdPitch () = default;
 
 	void           init (int line_index, const ParamDescSet &desc_set, ParamStateSet &state_set);
 	void           reset (double sample_freq, int max_block_size, float buf_zone_ptr [], int buf_len);
@@ -127,11 +126,8 @@ private:
 
 	void           check_and_start_transition ();
 	bool           process_grain (Grain &g, float dest_ptr [], int src_pos, int nbr_spl);
-	void           setup_immediate_transition (float delay_time, int transition_time);
 	int            get_xfade_len () const;
 	const float *  use_xfade_shape () const;
-
-	int            _line_index;
 
 	float          _sample_freq;        // Hz, > 0. 0 = not initialised
 	float          _inv_fs;             // 1 / _sample_freq, > 0. 0 = not initialised
@@ -172,8 +168,6 @@ private:
 	               _xfade_shape_sn;
 	dsp::wnd::XFadeShape
 	               _xfade_shape_sp;
-
-	int            _tmp_buf_len;        // samples, > 0
 
 	GrainArray     _grain_arr;
 

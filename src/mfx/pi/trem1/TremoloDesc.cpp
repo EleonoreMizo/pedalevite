@@ -56,7 +56,7 @@ TremoloDesc::TremoloDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Speed
-	TplPll *   pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0.5, 50,
 		"Speed\nSpd",
 		"Hz",
@@ -64,15 +64,15 @@ TremoloDesc::TremoloDesc ()
 		0,
 		"%6.3f"
 	);
-	pll_ptr->use_mapper ().set_first_value (   0.5);
-	pll_ptr->use_mapper ().add_segment (0.25,  4  , true);
-	pll_ptr->use_mapper ().add_segment (0.75 , 10 , false);
-	pll_ptr->use_mapper ().add_segment (1    , 50 , true);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_HZ);
-	_desc_set.add_glob (Param_FREQ, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (   0.5);
+	pll_sptr->use_mapper ().add_segment (0.25,  4  , true);
+	pll_sptr->use_mapper ().add_segment (0.75 , 10 , false);
+	pll_sptr->use_mapper ().add_segment (1    , 50 , true);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_TIME_HZ);
+	_desc_set.add_glob (Param_FREQ, pll_sptr);
 
 	// Amount
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0, 10,
 		"Amount\nAmt",
 		"%",
@@ -80,46 +80,46 @@ TremoloDesc::TremoloDesc ()
 		0,
 		"%6.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (   0);
-	pll_ptr->use_mapper ().add_segment (0.25,  0.25, false);
-	pll_ptr->use_mapper ().add_segment (0.75,  1.5 , true);
-	pll_ptr->use_mapper ().add_segment (1   , 10   , true);
-	_desc_set.add_glob (Param_AMT, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (   0);
+	pll_sptr->use_mapper ().add_segment (0.25,  0.25, false);
+	pll_sptr->use_mapper ().add_segment (0.75,  1.5 , true);
+	pll_sptr->use_mapper ().add_segment (1   , 10   , true);
+	_desc_set.add_glob (Param_AMT, pll_sptr);
 
 	// Waveform
-	param::TplEnum *  enum_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Sine\nSquare\nTriangle\nSaw Up\nSaw Down",
 		"Waveform\nWF",
 		""
 	);
-	assert (enum_ptr->get_nat_max () == Waveform_NBR_ELT - 1);
-	_desc_set.add_glob (Param_WF, enum_ptr);
+	assert (enu_sptr->get_nat_max () == Waveform_NBR_ELT - 1);
+	_desc_set.add_glob (Param_WF, enu_sptr);
 
 	// Gain Saturation
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Gain Staturation\nGain Sat\nGSat",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (Param_GSAT, lin_ptr);
+	_desc_set.add_glob (Param_GSAT, lin_sptr);
 
 	// Bias
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"Bias",
 		"%",
 		0,
 		"%+6.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (Param_BIAS, lin_ptr);
+	_desc_set.add_glob (Param_BIAS, lin_sptr);
 }
 
 

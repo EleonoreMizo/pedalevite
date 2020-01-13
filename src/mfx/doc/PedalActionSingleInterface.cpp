@@ -52,12 +52,12 @@ ActionType	PedalActionSingleInterface::get_type () const
 
 
 
-PedalActionSingleInterface *	PedalActionSingleInterface::duplicate () const
+std::shared_ptr <PedalActionSingleInterface>	PedalActionSingleInterface::duplicate () const
 {
-	PedalActionSingleInterface *  ptr = do_duplicate ();
-	assert (ptr != 0);
+	std::shared_ptr <PedalActionSingleInterface> sptr { do_duplicate () };
+	assert (sptr.get () != nullptr);
 
-	return ptr;
+	return sptr;
 }
 
 

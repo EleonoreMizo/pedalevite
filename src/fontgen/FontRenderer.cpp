@@ -128,11 +128,11 @@ int	FontRenderer::export_to_raw (std::string filename)
 		printf ("*** Error: cannot render the font.\n");
 	}
 
-	FILE *         file_ptr = 0;
+	FILE *         file_ptr = nullptr;
 	if (ret_val == 0)
 	{
 		file_ptr = fopen (filename.c_str (), "wb");
-		if (file_ptr == 0)
+		if (file_ptr == nullptr)
 		{
 			printf ("*** Error: cannot open file \"%s\"\n", filename.c_str ());
 			ret_val = -1;
@@ -155,10 +155,10 @@ int	FontRenderer::export_to_raw (std::string filename)
 		}
 	}
 
-	if (file_ptr != 0)
+	if (file_ptr != nullptr)
 	{
 		fclose (file_ptr);
-		file_ptr = 0;
+		file_ptr = nullptr;
 	}
 
 	if (ret_val == 0)
@@ -340,7 +340,7 @@ int	FontRenderer::find_dimensions ()
 		// Computes maximum character size
 		if (ret_val == 0)
 		{
-			FT_GlyphSlot   slot_ptr = _face->glyph;
+			const FT_GlyphSlot   slot_ptr = _face->glyph;
 			const int      ext_top  = slot_ptr->bitmap_top;
 			const int      ext_bot  = slot_ptr->bitmap.rows - slot_ptr->bitmap_top;
 			_max_top = std::max (_max_top, ext_top);

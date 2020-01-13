@@ -56,9 +56,12 @@ public:
 
 	               NavLoc ();
 	               NavLoc (const NavLoc &other)     = default;
-	virtual        ~NavLoc ()                       = default;
+	               NavLoc (NavLoc &&other)          = default;
+
+	               ~NavLoc ()                       = default;
 
 	NavLoc &       operator = (const NavLoc &other) = default;
+	NavLoc &       operator = (NavLoc &&other)      = default;
 
 	bool           is_valid () const;
 

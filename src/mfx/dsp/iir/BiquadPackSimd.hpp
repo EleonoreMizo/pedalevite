@@ -261,8 +261,8 @@ void	BiquadPackSimd <VD, VS>::set_biquad (int stage, int chn, const float b [3],
 	assert (stage < _nbr_stages);
 	assert (chn >= 0);
 	assert (chn < _nbr_chn);
-	assert (b != 0);
-	assert (a != 0);
+	assert (b != nullptr);
+	assert (a != nullptr);
 
 	int            pack_index;
 	int            biq_index;
@@ -332,8 +332,8 @@ void	BiquadPackSimd <VD, VS>::get_biquad_target (int stage, int chn, float b [3]
 	assert (stage < _nbr_stages);
 	assert (chn >= 0);
 	assert (chn < _nbr_chn);
-	assert (b != 0);
-	assert (a != 0);
+	assert (b != nullptr);
+	assert (a != nullptr);
 
 	int            pack_index;
 	int            biq_index;
@@ -376,8 +376,8 @@ Throws: Nothing
 template <class VD, class VS>
 void	BiquadPackSimd <VD, VS>::process_block (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
-	assert (out_ptr_arr != 0);
-	assert (in_ptr_arr != 0);
+	assert (out_ptr_arr != nullptr);
+	assert (in_ptr_arr != nullptr);
 	assert (pos_end - pos_beg > 0);
 
 	if (_nbr_stages == 0)

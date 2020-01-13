@@ -27,7 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/UserInputMsg.h"
 
 #include <cassert>
-#include <cstdint>
 
 
 
@@ -39,17 +38,6 @@ namespace ui
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-UserInputMsg::UserInputMsg ()
-:	_date (INT64_MIN)
-,	_type (UserInputType_UNDEFINED)
-,	_index (-1)
-,	_val (-1)
-{
-	// Nothing
-}
 
 
 

@@ -38,16 +38,13 @@ namespace ui
 
 
 
-class LedVoid
+class LedVoid final
 :	public LedInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	               LedVoid ()  = default;
-	virtual        ~LedVoid () = default;
 
 
 
@@ -56,8 +53,8 @@ public:
 protected:
 
 	// mfx::ui::LedInterface
-	virtual int    do_get_nbr_led () const;
-	virtual void   do_set_led (int index, float val);
+	int            do_get_nbr_led () const final;
+	void           do_set_led (int index, float val) final;
 
 
 
@@ -70,11 +67,6 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	               LedVoid (const LedVoid &other)           = delete;
-	LedVoid &      operator = (const LedVoid &other)        = delete;
-	bool           operator == (const LedVoid &other) const = delete;
-	bool           operator != (const LedVoid &other) const = delete;
 
 }; // class LedVoid
 

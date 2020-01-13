@@ -95,7 +95,7 @@ PlugWrap::PlugWrap (audioMasterCallback audio_master, mfx::piapi::FactoryInterfa
 	_vst.numOutputs       = _nbr_o * _max_nbr_chn + _nbr_s;
 	_vst.DECLARE_VST_DEPRECATED (ioRatio) = 1.f;
 	_vst.object           = this;
-	_vst.user             = 0;
+	_vst.user             = nullptr;
 	_vst.uniqueID         = gen_vst_id (_desc);
 	_vst.version          = 1;
 	_vst.processReplacing = vst_process_replacing;
@@ -103,7 +103,7 @@ PlugWrap::PlugWrap (audioMasterCallback audio_master, mfx::piapi::FactoryInterfa
 	_vst.flags           |= ::DECLARE_VST_DEPRECATED (effFlagsCanMono);
 
 #if VST_2_4_EXTENSIONS
-	_vst.processDoubleReplacing = 0;
+	_vst.processDoubleReplacing = nullptr;
 #endif
 }
 
@@ -111,16 +111,16 @@ PlugWrap::PlugWrap (audioMasterCallback audio_master, mfx::piapi::FactoryInterfa
 
 PlugWrap::~PlugWrap ()
 {
-	EventCell *    cell_ptr = 0;
+	EventCell *    cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _evt_queue.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			_evt_pool.return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 }
 
 
@@ -135,8 +135,8 @@ PlugWrap::~PlugWrap ()
 
 bool	PlugWrap::EventLt::operator () (mfx::piapi::EventTs * &lhs, mfx::piapi::EventTs * &rhs)
 {
-	assert (&lhs != 0);
-	assert (&rhs != 0);
+	assert (lhs != nullptr);
+	assert (rhs != nullptr);
 
 	return (lhs->_timestamp < rhs->_timestamp);
 }
@@ -152,9 +152,9 @@ void	PlugWrap::update_max_block_size (int max_block_size)
 	_src_arr.resize (_nbr_i * _max_nbr_chn);
 	_dst_arr.resize (_nbr_o * _max_nbr_chn);
 	_sig_arr.resize (_nbr_s);
-	_proc._src_arr = 0;
-	_proc._dst_arr = 0;
-	_proc._sig_arr = 0;
+	_proc._src_arr = nullptr;
+	_proc._dst_arr = nullptr;
+	_proc._sig_arr = nullptr;
 	if (_nbr_i > 0)
 	{
 		_proc._src_arr = &_src_arr [0];
@@ -223,22 +223,22 @@ void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 
 	// Collects and sorts the events
 	int            nbr_evt  = 0;
-	EventCell *    cell_ptr = 0;
+	EventCell *    cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _evt_queue.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			_cell_tmp_arr [nbr_evt] = cell_ptr;
 			_evt_ptr_arr [nbr_evt]  = &cell_ptr->_val;
 			++ nbr_evt;
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 
 	if (nbr_evt == 0)
 	{
-		_proc._evt_arr = 0;
+		_proc._evt_arr = nullptr;
 	}
 	else
 	{
@@ -275,15 +275,15 @@ void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 	for (int evt_cnt = 0; evt_cnt < nbr_evt; ++evt_cnt)
 	{
 		_evt_pool.return_cell (*_cell_tmp_arr [evt_cnt]);
-		_cell_tmp_arr [evt_cnt] = 0;
+		_cell_tmp_arr [evt_cnt] = nullptr;
 	}
 }
 
 
 
-void	PlugWrap::process_vst_events (::VstEvents &evt_list)
+void	PlugWrap::process_vst_events (const ::VstEvents &evt_list)
 {
-	assert (&evt_list != 0);
+	assert (&evt_list != nullptr);
 
 	for (int evt_cnt = 0; evt_cnt < evt_list.numEvents; ++evt_cnt)
 	{
@@ -347,7 +347,7 @@ void	PlugWrap::process_vst_events (::VstEvents &evt_list)
 void	PlugWrap::push_event (const mfx::piapi::EventTs &evt)
 {
 	EventCell *    cell_ptr = _evt_pool.take_cell ();
-	if (cell_ptr == 0)
+	if (cell_ptr == nullptr)
 	{
 		assert (false);
 	}
@@ -433,8 +433,8 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 ::VstIntPtr	PlugWrap::vst_dispatch (::AEffect* e, ::VstInt32 opcode, ::VstInt32 index, ::VstIntPtr value, void* ptr, float opt)
 {
-	PlugWrap *     wrapper_ptr = reinterpret_cast <PlugWrap *> (e->object);
-	assert (wrapper_ptr != 0);
+	PlugWrap *     wrapper_ptr = static_cast <PlugWrap *> (e->object);
+	assert (wrapper_ptr != nullptr);
 
 	mfx::piapi::PluginInterface & plugin = *(wrapper_ptr->_plugin_aptr);
 		
@@ -442,8 +442,8 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 	std::string    txt;
 	std::string    result;
-	double         param_val;
-	double         param_nat;
+	double         param_val = 0;
+	double         param_nat = 0;
 
 	switch (opcode)
 	{
@@ -453,7 +453,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 		break;
 
 	case ::effGetProgramName:
-		strcpy (reinterpret_cast <char *> (ptr), "Default"); 
+		strcpy (static_cast <char *> (ptr), "Default"); 
 		break;
 
 	case ::effGetParamLabel:
@@ -518,7 +518,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 		}
 		break;
 	case ::effProcessEvents:
-		wrapper_ptr->process_vst_events (*reinterpret_cast < ::VstEvents *> (ptr));
+		wrapper_ptr->process_vst_events (*static_cast < ::VstEvents *> (ptr));
 		break;
 
 	case ::effCanBeAutomated:
@@ -531,7 +531,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 	case ::effString2Parameter:
 		if (index >= 0 && index < wrapper_ptr->_vst.numParams)
 		{
-			if (ptr == 0)
+			if (ptr == nullptr)
 			{
 				ret_val = 1;
 			}
@@ -542,7 +542,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 					pi_desc.get_param_info (mfx::piapi::ParamCateg_GLOBAL, index);
 				double         val_nat = 0;
 				const bool     ok_flag = desc.conv_str_to_nat (
-					val_nat, reinterpret_cast <const char *> (ptr)
+					val_nat, static_cast <const char *> (ptr)
 				);
 				if (ok_flag)
 				{
@@ -556,21 +556,21 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 	case ::DECLARE_VST_DEPRECATED (effGetInputProperties):
 		wrapper_ptr->fill_pin_prop (
-			*reinterpret_cast <::VstPinProperties *> (ptr), true, index
+			*static_cast <::VstPinProperties *> (ptr), true, index
 		);
 		ret_val = 1;
 		break;
 
 	case ::DECLARE_VST_DEPRECATED (effGetOutputProperties):
 		wrapper_ptr->fill_pin_prop (
-			*reinterpret_cast <::VstPinProperties *> (ptr), false, index
+			*static_cast <::VstPinProperties *> (ptr), false, index
 		);
 		ret_val = 1;
 		break;
 
 	case ::effGetVendorString:
 		fstb::snprintf4all (
-			reinterpret_cast <char *> (ptr), ::kVstMaxVendorStrLen,
+			static_cast <char *> (ptr), ::kVstMaxVendorStrLen,
 			"%s", "Pedale Vite plug-ins"
 		);
 		ret_val = 1;
@@ -593,7 +593,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 	case ::effCanDo:
 		{
-			const char *   c_ptr = reinterpret_cast <const char *> (ptr);
+			const char *   c_ptr = static_cast <const char *> (ptr);
 			if (   strcmp (c_ptr, "receiveVstEvents"   ) == 0
 			    || strcmp (c_ptr, "receiveVstMidiEvent") == 0
 			    || strcmp (c_ptr, "receiveVstTimeInfo" ) == 0)
@@ -606,7 +606,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 	case ::effGetParameterProperties:
 		{
 			::VstParameterProperties & vst_prop =
-				*reinterpret_cast < ::VstParameterProperties *> (ptr);
+				*static_cast < ::VstParameterProperties *> (ptr);
 			memset (&vst_prop, 0, sizeof (vst_prop));
 			const mfx::piapi::PluginDescInterface &   pi_desc = wrapper_ptr->_desc;
 			const mfx::piapi::ParamDescInterface & desc =
@@ -653,10 +653,11 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 float	PlugWrap::vst_get_param (::AEffect* e, ::VstInt32 index)
 {
-	PlugWrap *     wrapper_ptr = reinterpret_cast <PlugWrap *> (e->object);
-	assert (wrapper_ptr != 0);
+	const PlugWrap * const  wrapper_ptr =
+		static_cast <const PlugWrap *> (e->object);
+	assert (wrapper_ptr != nullptr);
 
-	mfx::piapi::PluginInterface & plugin = *(wrapper_ptr->_plugin_aptr);
+	const mfx::piapi::PluginInterface & plugin = *(wrapper_ptr->_plugin_aptr);
 
 	return float (
 		plugin.get_param_val (mfx::piapi::ParamCateg_GLOBAL, index, 0)
@@ -667,11 +668,11 @@ float	PlugWrap::vst_get_param (::AEffect* e, ::VstInt32 index)
 
 void	PlugWrap::vst_set_param (::AEffect* e, ::VstInt32 index, float value)
 {
-	PlugWrap *     wrapper_ptr = reinterpret_cast <PlugWrap *> (e->object);
-	assert (wrapper_ptr != 0);
+	PlugWrap *  const wrapper_ptr = static_cast <PlugWrap *> (e->object);
+	assert (wrapper_ptr != nullptr);
 
 	EventCell *    cell_ptr = wrapper_ptr->_evt_pool.take_cell ();
-	if (cell_ptr == 0)
+	if (cell_ptr == nullptr)
 	{
 		assert (false);
 	}
@@ -690,8 +691,8 @@ void	PlugWrap::vst_set_param (::AEffect* e, ::VstInt32 index, float value)
 
 void	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames)
 {
-	PlugWrap *     wrapper_ptr = reinterpret_cast <PlugWrap *> (e->object);
-	assert (wrapper_ptr != 0);
+	PlugWrap * const  wrapper_ptr = static_cast <PlugWrap *> (e->object);
+	assert (wrapper_ptr != nullptr);
 
 	wrapper_ptr->process_block (inputs, sampleFrames);
 
@@ -716,8 +717,8 @@ void	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, float** input
 
 void	PlugWrap::vst_process_replacing (::AEffect* e, float** inputs, float** outputs, ::VstInt32 sampleFrames)
 {
-	PlugWrap *     wrapper_ptr = reinterpret_cast <PlugWrap *> (e->object);
-	assert (wrapper_ptr != 0);
+	PlugWrap * const  wrapper_ptr = static_cast <PlugWrap *> (e->object);
+	assert (wrapper_ptr != nullptr);
 
 	wrapper_ptr->process_block (inputs, sampleFrames);
 
@@ -908,13 +909,13 @@ extern "C"
 VST_EXPORT static ::AEffect * piapi2vst_PlugWrap_create_vst (::audioMasterCallback audioMaster)
 {
 	// Get VST Version of the Host
-	if (! audioMaster (0, ::audioMasterVersion, 0, 0, 0, 0))
+	if (! audioMaster (nullptr, ::audioMasterVersion, 0, 0, nullptr, 0))
 	{
-		return 0;  // old version
+		return nullptr;  // old version
 	}
 
 	// Creates the plug-in
-	::AEffect *    vst_ptr = 0;
+	::AEffect *    vst_ptr = nullptr;
 	bool           ok_flag = true;
 
 	try

@@ -52,7 +52,7 @@ LfoDesc <SLOW>::LfoDesc ()
 	if (SLOW)
 	{
 		// Period
-		param::TplLog *   log_ptr = new param::TplLog (
+		auto           log_sptr = std::make_shared <param::TplLog> (
 			0.1, 1000,
 			"Period\nPer\nP",
 			"s",
@@ -60,13 +60,13 @@ LfoDesc <SLOW>::LfoDesc ()
 			0,
 			"%7.2f"
 		);
-		log_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
-		_desc_set.add_glob (Param_SPEED, log_ptr);
+		log_sptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+		_desc_set.add_glob (Param_SPEED, log_sptr);
 	}
 	else
 	{
 		// Speed
-		param::TplLog *   log_ptr = new param::TplLog (
+		auto           log_sptr = std::make_shared <param::TplLog> (
 			0.01, 100,
 			"Sp\nSpd\nSpeed",
 			"Hz",
@@ -74,140 +74,157 @@ LfoDesc <SLOW>::LfoDesc ()
 			0,
 			"%7.3f"
 		);
-		log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-		_desc_set.add_glob (Param_SPEED, log_ptr);
+		log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+		_desc_set.add_glob (Param_SPEED, log_sptr);
 	}
 
 	// Amplitude
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"A\nAmp\nAmplitude",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_AMP, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_AMP, lin_sptr);
 
 	// Waveform
-	param::TplEnum *  enu_ptr = new param::TplEnum (
-		"Sine\nTriangle\nSquare\nSaw\nParabola\nBiphase\nN-Phase\nVarislope\nNoise",
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
+		"Sine\nTriangle\nSquare\nSaw\nParabola\nBiphase\nN-Phase\nVarislope"
+		"\nNoise",
 		"W\nWf\nWavef\nWaveform",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_WAVEFORM, enu_ptr);
-	assert (enu_ptr->get_nat_max () == LfoType_NBR_ELT - 1);
+	_desc_set.add_glob (Param_WAVEFORM, enu_sptr);
+	assert (enu_sptr->get_nat_max () == LfoType_NBR_ELT - 1);
 
 	// Sample and hold
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"SnH\nSplHold\nSample & hold\nSample and hold",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SNH, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_SNH, lin_sptr);
 
 	// Smoothing
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Sm\nSmooth\nSmoothing",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SMOOTH, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_SMOOTH, lin_sptr);
 
 	// Chaos amount
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"C\nKos\nChaos\nChaos Amt\nChaos amount",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_CHAOS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_CHAOS, lin_sptr);
 
 	// Phase distortion amount
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"PDA\nPhDistA\nPhDistAmt\nPhase dist amt\nPhase dist amount\nPhase distortion amount",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_PH_DIST_AMT, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_PH_DIST_AMT, lin_sptr);
 
 	// Phase distortion offset
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"PDO\nPhDistO\nPhDistOfs\nPhase dist ofs\nPhase dist offset\nPhase distortion offset",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_PH_DIST_OFS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_PH_DIST_OFS, lin_sptr);
 
 	// Sign
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Normal\nInvert",
 		"Si\nSig\nSign",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_SIGN, enu_ptr);
+	_desc_set.add_glob (Param_SIGN, enu_sptr);
 
 	// Polarity
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Bipolar\nUnipolar",
 		"Po\nPol\nPolar\nPolarity",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_POLARITY, enu_ptr);
+	_desc_set.add_glob (Param_POLARITY, enu_sptr);
 
 	// Variation 1
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"V1\nVar 1\nVariation 1",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_VAR1, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_VAR1, lin_sptr);
 
 	// Variation 2
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"V2\nVar 2\nVariation 2",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_VAR2, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_VAR2, lin_sptr);
 
 	// Phase set
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"PS\nPhS\nPh set\nPhase set",
 		"deg",
 		0,
 		"%3.0f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	lin_ptr->use_disp_num ().set_scale (360);
-	_desc_set.add_glob (Param_PHASE_SET, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
+	lin_sptr->use_disp_num ().set_scale (360);
+	_desc_set.add_glob (Param_PHASE_SET, lin_sptr);
 }
 
 

@@ -86,14 +86,22 @@ public:
 	public:
 		std::string    _model;
 		std::array <int, Dir_NBR_ELT>
-		               _nbr_io_arr;
-		int            _nbr_sig;       // Number of signal outputs
+		               _nbr_io_arr {{ 0, 0 }};
+		int            _nbr_sig = 0;       // Number of signal outputs
 		std::array <int, piapi::ParamCateg_NBR_ELT>
-		               _nbr_param_arr;
-		bool           _prefer_stereo_flag;
+		               _nbr_param_arr {};
+		bool           _prefer_stereo_flag = false;
 	};
 
-	virtual        ~ModelObserverInterface () = default;
+	               ModelObserverInterface ()                        = default;
+	               ModelObserverInterface (const ModelObserverInterface &other) = default;
+	               ModelObserverInterface (ModelObserverInterface &&other)      = default;
+	virtual        ~ModelObserverInterface ()                       = default;
+
+	virtual ModelObserverInterface &
+	               operator = (const ModelObserverInterface &other) = default;
+	virtual ModelObserverInterface &
+	               operator = (ModelObserverInterface &&other)      = default;
 
 	void           set_tempo (double bpm);
 	void           set_edit_mode (bool edit_flag);

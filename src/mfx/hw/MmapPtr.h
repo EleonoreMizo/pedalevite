@@ -90,7 +90,9 @@ private:
 
 	               MmapPtr ()                               = delete;
 	               MmapPtr (const MmapPtr &other)           = delete;
+	               MmapPtr (MmapPtr &&other)                = delete;
 	MmapPtr &      operator = (const MmapPtr &other)        = delete;
+	MmapPtr &      operator = (MmapPtr &&other)             = delete;
 	bool           operator == (const MmapPtr &other) const = delete;
 	bool           operator != (const MmapPtr &other) const = delete;
 

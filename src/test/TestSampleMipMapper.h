@@ -71,17 +71,17 @@ private:
 	typedef mfx::dsp::osc::SampleMipMapper <SampleDataType> MipMapper;
 	typedef std::vector <StorageType> Buffer;
 
-	class Provider
+	class Provider final
 	:	public MipMapper::SampleProviderInterface
 	{
 	public:
 		               Provider (int size);
 
-		// MipMapper::SampleProviderInterface
-		virtual int    restart (int offset);
-		virtual int    get_block (MipMapper::CalcDataType data_ptr [], int nbr_spl);
-		virtual void   store_block (MipMapper::StorageDataType dest_ptr [], const MipMapper::CalcDataType src_ptr [], int nbr_spl);
-		virtual void   stop ();
+		// SampleMipMapper::SampleProviderInterface
+		int            restart (int offset) final;
+		int            get_block (MipMapper::CalcDataType data_ptr [], int nbr_spl) final;
+		void           store_block (MipMapper::StorageDataType dest_ptr [], const MipMapper::CalcDataType src_ptr [], int nbr_spl) final;
+		void           stop () final;
 	private:
 		int            _size;
 		int            _pos;
@@ -99,8 +99,11 @@ private:
 
 	               TestSampleMipMapper ()                               = delete;
 	               TestSampleMipMapper (const TestSampleMipMapper &other) = delete;
+	               TestSampleMipMapper (TestSampleMipMapper &&other)    = delete;
 	TestSampleMipMapper &
 	               operator = (const TestSampleMipMapper &other)        = delete;
+	TestSampleMipMapper &
+	               operator = (TestSampleMipMapper &&other)             = delete;
 	bool           operator == (const TestSampleMipMapper &other) const = delete;
 	bool           operator != (const TestSampleMipMapper &other) const = delete;
 

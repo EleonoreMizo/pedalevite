@@ -43,7 +43,15 @@ class ModelMsgCmdInterface
 
 public:
 
-	virtual        ~ModelMsgCmdInterface () = default;
+	               ModelMsgCmdInterface ()                        = default;
+	               ModelMsgCmdInterface (const ModelMsgCmdInterface &other) = default;
+	               ModelMsgCmdInterface (ModelMsgCmdInterface &&other)      = default;
+	virtual        ~ModelMsgCmdInterface ()                       = default;
+
+	virtual ModelMsgCmdInterface &
+	               operator = (const ModelMsgCmdInterface &other) = default;
+	virtual ModelMsgCmdInterface &
+	               operator = (ModelMsgCmdInterface &&other)      = default;
 
 	void           process (Model &model);
 	void           clear ();

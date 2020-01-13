@@ -53,7 +53,7 @@ namespace hw
 
 
 
-class UserInputPi3
+class UserInputPi3 final
 :	public ui::UserInputInterface
 ,	public ui::TimeShareCbInterface
 {
@@ -119,14 +119,14 @@ public:
 protected:
 
 	// UserInputInterface
-	virtual int    do_get_nbr_param (ui::UserInputType type) const;
-	virtual void   do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr);
-	virtual void   do_return_cell (MsgCell &cell);
-	virtual std::chrono::microseconds
-	               do_get_cur_date () const;
+	int            do_get_nbr_param (ui::UserInputType type) const final;
+	void           do_set_msg_recipient (ui::UserInputType type, int index, MsgQueue *queue_ptr) final;
+	void           do_return_cell (MsgCell &cell) final;
+	std::chrono::microseconds
+	               do_get_cur_date () const final;
 
 	// TimeShareCbInterface
-	virtual bool   do_process_timeshare_op ();
+	bool           do_process_timeshare_op () final;
 
 
 
@@ -199,7 +199,9 @@ private:
 
 	               UserInputPi3 ()                               = delete;
 	               UserInputPi3 (const UserInputPi3 &other)      = delete;
+	               UserInputPi3 (UserInputPi3 &&other)           = delete;
 	UserInputPi3 & operator = (const UserInputPi3 &other)        = delete;
+	UserInputPi3 & operator = (UserInputPi3 &&other)             = delete;
 	bool           operator == (const UserInputPi3 &other) const = delete;
 	bool           operator != (const UserInputPi3 &other) const = delete;
 

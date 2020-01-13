@@ -47,9 +47,6 @@ class MapPiecewiseLinLog
 
 public:
 
-	               MapPiecewiseLinLog ();
-	virtual        ~MapPiecewiseLinLog () = default;
-
 	void           config (double val_min, double val_max);
 	double         conv_norm_to_nat (double norm) const;
 	double         conv_nat_to_norm (double nat) const;
@@ -89,8 +86,8 @@ private:
 	typedef std::vector <Segment> SegList;
 
 	SegList        _seg_list;
-	double         _val_min;      // Natural value
-	double         _val_max;      // Natural value
+	double         _val_min = 0;  // Natural value
+	double         _val_max = 0;  // Natural value
 
 
 
@@ -99,9 +96,6 @@ private:
 
 private:
 
-	               MapPiecewiseLinLog (const MapPiecewiseLinLog &other) = delete;
-	MapPiecewiseLinLog &
-	               operator = (const MapPiecewiseLinLog &other)         = delete;
 	bool           operator == (const MapPiecewiseLinLog &other) const  = delete;
 	bool           operator != (const MapPiecewiseLinLog &other) const  = delete;
 

@@ -185,10 +185,12 @@ private:
 
 private:
 
-	               Voice (const Voice &other);
-	Voice &        operator = (const Voice &other);
-	bool           operator == (const Voice &other);
-	bool           operator != (const Voice &other);
+	               Voice (const Voice &other)       = delete;
+	               Voice (Voice &&other)            = delete;
+	Voice &        operator = (const Voice &other)  = delete;
+	Voice &        operator = (Voice &&other)       = delete;
+	bool           operator == (const Voice &other) = delete;
+	bool           operator != (const Voice &other) = delete;
 
 };	// class Voice
 

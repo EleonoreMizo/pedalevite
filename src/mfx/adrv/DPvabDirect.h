@@ -72,7 +72,7 @@ namespace adrv
 
 
 
-class DPvabDirect
+class DPvabDirect final
 :	public DriverInterface
 {
 
@@ -112,12 +112,11 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
-	virtual int    do_start ();
-	virtual int    do_stop ();
-	virtual void   do_restart ();
-	virtual std::string
-	               do_get_last_error () const;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
+	int            do_start () final;
+	int            do_stop () final;
+	void           do_restart () final;
+	std::string    do_get_last_error () const final;
 
 
 
@@ -306,7 +305,9 @@ private:
 private:
 
 	               DPvabDirect (const DPvabDirect &other)       = delete;
+	               DPvabDirect (DPvabDirect &&other)            = delete;
 	DPvabDirect &  operator = (const DPvabDirect &other)        = delete;
+	DPvabDirect &  operator = (DPvabDirect &&other)             = delete;
 	bool           operator == (const DPvabDirect &other) const = delete;
 	bool           operator != (const DPvabDirect &other) const = delete;
 

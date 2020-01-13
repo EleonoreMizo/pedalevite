@@ -69,9 +69,6 @@ public:
 
 	typedef AP AddProc;
 
-	               SCPower ()  = default;
-	virtual        ~SCPower () = default;
-
 	AddProc &      use_add_proc ();
 
 	void           prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end);
@@ -100,8 +97,6 @@ private:
 
 private:
 
-	               SCPower (const SCPower <AP> &other)           = delete;
-	SCPower <AP> & operator = (const SCPower <AP> &other)        = delete;
 	bool           operator == (const SCPower <AP> &other) const = delete;
 	bool           operator != (const SCPower <AP> &other) const = delete;
 

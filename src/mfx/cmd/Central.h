@@ -167,13 +167,13 @@ private:
 	void           remove_plugin (int pos, PiType type);
 	void           create_routing ();
 	void           create_mod_maps ();
-	void           add_controller (ProcessingContext &ctx, const doc::CtrlLink &link, std::shared_ptr <ControlledParam> &ctrl_param_sptr, bool abs_flag);
+	void           add_controller (ProcessingContext &ctx, const doc::CtrlLink &link, std::shared_ptr <ControlledParam> ctrl_param_sptr, bool abs_flag);
 	void           create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_list);
 	conc::LockFreeCell <WaMsg> *
 	               make_param_msg (int pi_id, int index, float val);
 	conc::LockFreeCell <WaMsg> *
 	               make_reset_msg (int pi_id, bool steady_flag, bool full_flag);
-	void           check_and_get_default_settings (piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model);
+	void           check_and_get_default_settings (const piapi::PluginInterface &plug, const piapi::PluginDescInterface &desc, std::string model);
 
 	std::vector <std::string>  // Audio plug-ins, at least 1 audio in or 1 audio out
 	               _pi_aud_type_list;
@@ -218,7 +218,9 @@ private:
 
 	               Central ()                               = delete;
 	               Central (const Central &other)           = delete;
+	               Central (const Central &&other)          = delete;
 	Central &      operator = (const Central &other)        = delete;
+	Central &      operator = (const Central &&other)       = delete;
 	bool           operator == (const Central &other) const = delete;
 	bool           operator != (const Central &other) const = delete;
 

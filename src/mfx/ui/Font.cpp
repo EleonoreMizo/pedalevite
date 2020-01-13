@@ -51,8 +51,8 @@ void	Font::init (int nbr_char, int char_w, int char_h, int char_per_row, int str
 	assert (char_h > 0);
 	assert (char_per_row > 0);
 	assert (stride > 0);
-	assert (pic_arr != 0);
-	assert (unicode_arr != 0);
+	assert (pic_arr != nullptr);
+	assert (unicode_arr != nullptr);
 	assert (baseline > 0);
 	assert (baseline <= char_h);
 	assert (max_val > 0);
@@ -167,7 +167,7 @@ int	Font::init (std::string filename, int nbr_char, int pic_w, int pic_h, const 
 	assert (nbr_char <= 0x7FFF);
 	assert (pic_w >= nbr_char);
 	assert (pic_h > 1);
-	assert (unicode_arr != 0);
+	assert (unicode_arr != nullptr);
 	assert (baseline > 0);
 	assert (baseline <= pic_h - 1);
 
@@ -184,7 +184,7 @@ int	Font::init (std::string filename, int nbr_char, int pic_w, int pic_h, const 
 
 	// Loads file
 	FILE *         file_ptr = fstb::fopen_utf8 (filename.c_str (), "rb");
-	if (file_ptr == 0)
+	if (file_ptr == nullptr)
 	{
 		ret_val = -1;
 	}
@@ -219,10 +219,10 @@ int	Font::init (std::string filename, int nbr_char, int pic_w, int pic_h, const 
 		}
 	}
 
-	if (file_ptr != 0)
+	if (file_ptr != nullptr)
 	{
 		fclose (file_ptr);
-		file_ptr = 0;
+		file_ptr = nullptr;
 	}
 
 	// Builds data
@@ -285,10 +285,14 @@ void	Font::add_char (char32_t ucs4, int index)
 		_zone_arr.resize (zone_idx + 1);
 	}
 	Zone *         zone_ptr = _zone_arr [zone_idx].get ();
-	if (zone_ptr == 0)
+	if (zone_ptr == nullptr)
 	{
-		zone_ptr = new Zone;
-		_zone_arr [zone_idx] = ZoneUPtr (zone_ptr);
+#if __cplusplus >= 201402
+		_zone_arr [zone_idx] = std::make_unique <Zone> ();
+#else // __cplusplus
+		_zone_arr [zone_idx] = ZoneUPtr (new Zone);
+#endif // __cplusplus
+		zone_ptr = _zone_arr [zone_idx].get ();
 		for (size_t i = 0; i < zone_ptr->size (); ++i)
 		{
 			(*zone_ptr) [i] = _not_found;
@@ -303,7 +307,7 @@ void	Font::add_char (char32_t ucs4, int index)
 
 bool	Font::is_ready () const
 {
-	return (_data_ptr != 0);
+	return (_data_ptr != nullptr);
 }
 
 
@@ -352,7 +356,7 @@ int	Font::get_bold_shift () const
 void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride) const
 {
 	assert (is_ready ());
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 
 	const int      c       = get_char_pos_no_fail (ucs4);
 	const GlyphInfo & gi   = _glyph_arr [c];
@@ -376,7 +380,7 @@ void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride) const
 void	Font::render_char (uint8_t *buf_ptr, char32_t ucs4, int dst_stride, int mag_x, int mag_y) const
 {
 	assert (is_ready ());
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (mag_x > 0);
 	assert (mag_y > 0);
 

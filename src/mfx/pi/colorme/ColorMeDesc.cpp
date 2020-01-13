@@ -53,14 +53,14 @@ ColorMeDesc::ColorMeDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Vowel morphing
-	param::Simple *   sim_ptr = new param::Simple (
+	auto           sim_sptr = std::make_shared <param::Simple> (
 		"Vowel morphing\nMorphing\nMorph\nMor"
 	);
-	sim_ptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
-	_desc_set.add_glob (Param_VOW_MORPH, sim_ptr);
+	sim_sptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
+	_desc_set.add_glob (Param_VOW_MORPH, sim_sptr);
 
 	// Formant resonance
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		1.0, 100.0,
 		"Formant resonance\nFormant reso\nReso\nRes",
 		"dB",
@@ -68,10 +68,10 @@ ColorMeDesc::ColorMeDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_VOW_RESO, log_ptr);
+	_desc_set.add_glob (Param_VOW_RESO, log_sptr);
 
 	// Formant selectivity
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1.0, 100.0,
 		"Formant selectivity\nFormant Q\nQ",
 		"",
@@ -79,34 +79,36 @@ ColorMeDesc::ColorMeDesc ()
 		0,
 		"%5.1f"
 	);
-	_desc_set.add_glob (Param_VOW_Q, log_ptr);
+	_desc_set.add_glob (Param_VOW_Q, log_sptr);
 
 	// Formant transpose
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-12.0, 12.0,
 		"Formant transpose\nFormant transp\nTranspose\nTransp\nTrn",
 		"semitones",
 		0,
 		"%+5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	_desc_set.add_glob (Param_VOW_TRANSP, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_STD
+	);
+	_desc_set.add_glob (Param_VOW_TRANSP, lin_sptr);
 
 	// Number of formants
-	param::TplInt *   int_ptr = new param::TplInt (
+	auto           int_sptr = std::make_shared <param::TplInt> (
 		2, Cst::_nbr_formants,
 		"Number of formants\nN formants\nFormants\nFrm",
 		""
 	);
-	_desc_set.add_glob (Param_VOW_NBR_FORM, int_ptr);
+	_desc_set.add_glob (Param_VOW_NBR_FORM, int_sptr);
 
 	// Number of vowels
-	int_ptr = new param::TplInt (
+	int_sptr = std::make_shared <param::TplInt> (
 		2, Cst::_nbr_vow_morph,
 		"Number of vowels\nN vowels\nVowels\nVow",
 		""
 	);
-	_desc_set.add_glob (Param_VOW_NBR_VOW, int_ptr);
+	_desc_set.add_glob (Param_VOW_NBR_VOW, int_sptr);
 
 	// Vowels
 	for (int index = 0; index < Cst::_nbr_vow_morph; ++index)
@@ -114,26 +116,26 @@ ColorMeDesc::ColorMeDesc ()
 		const int      base = Param_VOW_LIST + index * ParamVowel_NBR_ELT;
 
 		// Vowel N type
-		param::TplEnum *   enu_ptr = new param::TplEnum (
+		auto           enu_sptr = std::make_shared <param::TplEnum> (
 			"i\n\xC3\xA9\n\xC3\xA8\na\nu\neu\n\xC5\x93\nou\nau\no",
 			"Vowel %d type\nV %d type\nV%dT",
 			"",
 			index + 1,
 			"%s"
 		);
-		assert (enu_ptr->get_nat_max () == Cst::_nbr_vowels - 1);
-		_desc_set.add_glob (base + ParamVowel_TYPE, enu_ptr);
+		assert (enu_sptr->get_nat_max () == Cst::_nbr_vowels - 1);
+		_desc_set.add_glob (base + ParamVowel_TYPE, enu_sptr);
 
 		// Vowel N set
-		enu_ptr = new param::TplEnum (
+		enu_sptr = std::make_shared <param::TplEnum> (
 			"Call\nGD\nG&A",
 			"Vowel %d set\nV %d set\nV%dS",
 			"",
 			index + 1,
 			"%s"
 		);
-		assert (enu_ptr->get_nat_max () == Cst::_nbr_vow_sets - 1);
-		_desc_set.add_glob (base + ParamVowel_SET, enu_ptr);
+		assert (enu_sptr->get_nat_max () == Cst::_nbr_vow_sets - 1);
+		_desc_set.add_glob (base + ParamVowel_SET, enu_sptr);
 	}
 }
 

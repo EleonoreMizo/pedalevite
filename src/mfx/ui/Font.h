@@ -110,7 +110,7 @@ private:
 	int            _bold_shift   = 0;
 	ZoneArray      _zone_arr;
 	PicData        _data_arr;
-	const uint8_t *_data_ptr     = 0;
+	const uint8_t *_data_ptr     = nullptr;
 	bool           _prop_flag    = false;
 	GlyphInfoArray _glyph_arr;
 
@@ -121,7 +121,9 @@ private:
 private:
 
 	               Font (const Font &other)              = delete;
+	               Font (Font &&other)                   = delete;
 	Font &         operator = (const Font &other)        = delete;
+	Font &         operator = (Font &&other)             = delete;
 	bool           operator == (const Font &other) const = delete;
 	bool           operator != (const Font &other) const = delete;
 

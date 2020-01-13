@@ -363,7 +363,7 @@ void	View::do_set_pedalboard_layout (const doc::PedalboardLayout &layout)
 
 void	View::do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content)
 {
-	doc::PedalboardLayout * layout_ptr = 0;
+	doc::PedalboardLayout * layout_ptr = nullptr;
 
 	switch (loc._type)
 	{
@@ -394,7 +394,7 @@ void	View::do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &conte
 		break;
 	}
 
-	if (layout_ptr != 0)
+	if (layout_ptr != nullptr)
 	{
 		layout_ptr->_pedal_arr [loc._pedal_index] = content;
 	}
@@ -584,9 +584,9 @@ void	View::do_set_slot_label (int slot_id, std::string name)
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
 	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
-	if (slot_sptr.get () == 0)
+	if (slot_sptr.get () == nullptr)
 	{
-		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
+		slot_sptr = std::make_shared <doc::Slot> ();
 	}
 	slot_sptr->_label = name;
 
@@ -600,9 +600,9 @@ void	View::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
 	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
-	if (slot_sptr.get () == 0)
+	if (slot_sptr.get () == nullptr)
 	{
-		slot_sptr = doc::Preset::SlotSPtr (new doc::Slot);
+		slot_sptr = std::make_shared <doc::Slot> ();
 	}
 	slot_sptr->_pi_model = pi_data._model;
 	const int      nbr_param = pi_data._nbr_param_arr [piapi::ParamCateg_GLOBAL];
@@ -620,7 +620,7 @@ void	View::do_remove_plugin (int slot_id)
 	auto           it_slot = _preset_cur._slot_map.find (slot_id);
 	assert (it_slot != _preset_cur._slot_map.end ());
 	doc::Preset::SlotSPtr &	slot_sptr = it_slot->second;
-	if (slot_sptr.get () != 0)
+	if (slot_sptr.get () != nullptr)
 	{
 		slot_sptr->_pi_model.clear ();
 	}
@@ -659,7 +659,7 @@ void	View::do_set_param_pres (int slot_id, PiType type, int index, const doc::Pa
 	doc::Slot &    slot = _preset_cur.use_slot (slot_id);
 	doc::PluginSettings &   settings = slot.use_settings (type);
 
-	if (pres_ptr == 0)
+	if (pres_ptr == nullptr)
 	{
 		auto           pres_it = settings._map_param_pres.find (index);
 		if (pres_it != settings._map_param_pres.end ())
@@ -667,7 +667,7 @@ void	View::do_set_param_pres (int slot_id, PiType type, int index, const doc::Pa
 			settings._map_param_pres.erase (pres_it);
 		}
 	}
-	else if (pres_ptr != 0)
+	else if (pres_ptr != nullptr)
 	{
 		settings._map_param_pres [index] = *pres_ptr;
 	}
@@ -788,7 +788,7 @@ void	View::collect_labels (std::set <std::string> &labels, const doc::Preset &pr
 {
 	for (const auto &node_slot : preset._slot_map)
 	{
-		if (node_slot.second.get () != 0)
+		if (node_slot.second.get () != nullptr)
 		{
 			const doc::Slot & slot = *node_slot.second;
 			if (! slot._label.empty ())

@@ -55,8 +55,8 @@ void	FxSection::init (int line_index, const ParamDescSet &desc_set, ParamStateSe
 {
 	assert (line_index >= 0);
 	assert (line_index < Cst::_nbr_lines);
-	assert (_desc_set_ptr  == 0);
-	assert (_state_set_ptr == 0);
+	assert (_desc_set_ptr  == nullptr);
+	assert (_state_set_ptr == nullptr);
 
 	dsp::mix::Align::setup ();
 

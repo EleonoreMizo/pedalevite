@@ -60,7 +60,6 @@ public:
 	typedef	T	Mapper;
 
 	explicit       TplMapped (double val_min, double val_max, const char *name_0, const char *unit_0, HelperDispNum::Preset preset = HelperDispNum::Preset_FLOAT_STD, int group_index = 0, const char *format_0 = "%f");
-	virtual        ~TplMapped () = default;
 
 	void           set_categ (Categ categ);
 
@@ -80,21 +79,17 @@ public:
 protected:
 
 	// mfx::piapi::ParamDescInterface
-	virtual std::string
-	               do_get_name (int len) const;
-	virtual std::string
-	               do_get_unit (int len) const;
-	virtual Range  do_get_range () const;
-	virtual Categ  do_get_categ () const;
-	virtual int32_t
-	               do_get_flags () const;
-	virtual double do_get_nat_min () const;
-	virtual double do_get_nat_max () const;
-	virtual std::string
-	               do_conv_nat_to_str (double nat, int len) const;
-	virtual bool   do_conv_str_to_nat (double &nat, const std::string &txt) const;
-	virtual double do_conv_nrm_to_nat (double nrm) const;
-	virtual double do_conv_nat_to_nrm (double nat) const;
+	std::string    do_get_name (int len) const override;
+	std::string    do_get_unit (int len) const override;
+	Range          do_get_range () const override;
+	Categ          do_get_categ () const override;
+	int32_t        do_get_flags () const override;
+	double do_get_nat_min () const override;
+	double do_get_nat_max () const override;
+	std::string    do_conv_nat_to_str (double nat, int len) const override;
+	bool           do_conv_str_to_nat (double &nat, const std::string &txt) const override;
+	double         do_conv_nrm_to_nat (double nrm) const override;
+	double         do_conv_nat_to_nrm (double nat) const override;
 
 
 
@@ -118,7 +113,9 @@ private:
 
 	               TplMapped ()                               = delete;
 	               TplMapped (const TplMapped &other)         = delete;
+	               TplMapped (const TplMapped &&other)        = delete;
 	TplMapped &    operator = (const TplMapped &other)        = delete;
+	TplMapped &    operator = (const TplMapped &&other)       = delete;
 	bool           operator == (const TplMapped &other) const = delete;
 	bool           operator != (const TplMapped &other) const = delete;
 

@@ -47,9 +47,6 @@ class DelayLineSimple
 
 public:
 
-	               DelayLineSimple ()  = default;
-	virtual        ~DelayLineSimple () = default;
-
 	void           set_delay (int len);
 
 	void           clear_buffers ();
@@ -86,9 +83,6 @@ private:
 
 private:
 
-	               DelayLineSimple (const DelayLineSimple &other)   = delete;
-	DelayLineSimple &
-	               operator = (const DelayLineSimple &other)        = delete;
 	bool           operator == (const DelayLineSimple &other) const = delete;
 	bool           operator != (const DelayLineSimple &other) const = delete;
 

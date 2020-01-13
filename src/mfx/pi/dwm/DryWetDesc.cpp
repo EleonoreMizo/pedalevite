@@ -53,16 +53,16 @@ DryWetDesc::DryWetDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Bypass
-	param::TplEnum *  enum_ptr = new param::TplEnum (
+	auto           enum_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"Bypass",
 		""
 	);
-	_desc_set.add_glob (Param_BYPASS, enum_ptr);
+	_desc_set.add_glob (Param_BYPASS, enum_sptr);
 
 	// Dry/Wet
-	param::TplMapped <param::MapS <false> > * maps_ptr =
-		new param::TplMapped <param::MapS <false> > (
+	auto           maps_sptr =
+		std::make_shared <param::TplMapped <param::MapS <false> > > (
 			0, 1,
 			"Effect mix\nFX mix",
 			"%",
@@ -70,14 +70,14 @@ DryWetDesc::DryWetDesc ()
 			0,
 			"%5.1f"
 		);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
+	maps_sptr->use_mapper ().config (
+		maps_sptr->get_nat_min (),
+		maps_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_WET, maps_ptr);
+	_desc_set.add_glob (Param_WET, maps_sptr);
 
 	// Volume
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		1e-3, 10,
 		"Volume\nVol",
 		"dB",
@@ -85,7 +85,7 @@ DryWetDesc::DryWetDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_GAIN, log_ptr);
+	_desc_set.add_glob (Param_GAIN, log_sptr);
 }
 
 

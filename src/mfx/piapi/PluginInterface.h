@@ -60,7 +60,15 @@ public:
 	static const int  _max_nbr_chn  =  2;
 	static const int  _max_nbr_pins =  4;
 
-	virtual        ~PluginInterface () = default;
+	               PluginInterface ()                             = default;
+	               PluginInterface (const PluginInterface &other) = default;
+	               PluginInterface (PluginInterface &&other)      = default;
+	virtual        ~PluginInterface ()                            = default;
+
+	virtual PluginInterface &
+	               operator = (const PluginInterface &other)      = default;
+	virtual PluginInterface &
+	               operator = (PluginInterface &&other)           = default;
 
 	State          get_state () const;
 	double         get_param_val (ParamCateg categ, int index, int note_id) const;

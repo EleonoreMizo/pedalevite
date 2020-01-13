@@ -117,7 +117,7 @@ void	Notch::clear_buffers ()
 // The source and destination buffer lengths should be aligned too.
 void	Notch::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (_buf_env_ptr != 0);
+	assert (_buf_env_ptr != nullptr);
 	assert (fstb::is_ptr_align_nz (dst_ptr));
 	assert (fstb::is_ptr_align_nz (src_ptr));
 	assert (nbr_spl > 0);

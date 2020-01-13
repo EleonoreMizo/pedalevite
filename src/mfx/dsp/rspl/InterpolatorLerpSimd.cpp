@@ -45,14 +45,6 @@ namespace rspl
 
 
 
-InterpolatorLerpSimd::InterpolatorLerpSimd ()
-:	_nbr_chn (1)
-{
-	// Nothing
-}
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

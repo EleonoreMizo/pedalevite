@@ -58,7 +58,7 @@ float	DenormStop::process_sample (float x)
 
 void	DenormStop::process_block (float buf_ptr [], int nbr_spl)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (nbr_spl <= 2)
@@ -79,7 +79,7 @@ void	DenormStop::process_block (float buf_ptr [], int nbr_spl)
 // 2 interleaved channels
 void	DenormStop::process_block_2chn (float buf_ptr [], int nbr_frames)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (nbr_frames > 0);
 
 	if (nbr_frames <= 2)
@@ -105,7 +105,7 @@ void	DenormStop::process_block_2chn (float buf_ptr [], int nbr_frames)
 // 4 interleaved channels
 void	DenormStop::process_block_4chn (float buf_ptr [], int nbr_frames)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (nbr_frames > 0);
 
 	if (nbr_frames <= 2)

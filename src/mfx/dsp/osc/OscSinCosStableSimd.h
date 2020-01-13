@@ -57,7 +57,6 @@ public:
 	static const int  _nbr_units = 4;
 
 	               OscSinCosStableSimd ();
-	virtual        ~OscSinCosStableSimd () = default;
 
 	void           set_step (float angle_rad);
 
@@ -101,9 +100,12 @@ private:
 
 private:
 
-	               OscSinCosStableSimd (const OscSinCosStableSimd &other) = delete;
+	               OscSinCosStableSimd (const OscSinCosStableSimd &other)  = delete;
+	               OscSinCosStableSimd (const OscSinCosStableSimd &&other) = delete;
 	OscSinCosStableSimd &
 	               operator = (const OscSinCosStableSimd &other)           = delete;
+	OscSinCosStableSimd &
+	               operator = (const OscSinCosStableSimd &&other)          = delete;
 	bool           operator == (const OscSinCosStableSimd &other) const    = delete;
 	bool           operator != (const OscSinCosStableSimd &other) const    = delete;
 

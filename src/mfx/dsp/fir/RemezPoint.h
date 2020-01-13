@@ -58,11 +58,14 @@ class RemezPoint
 
 public:
 
-	               RemezPoint ()                               = default;
-	               RemezPoint (const RemezPoint &other)        = default;
+	               RemezPoint ()                        = default;
 	explicit       RemezPoint (double lower_freq, double upper_freq, double amp, double weight = 1);
-	virtual        ~RemezPoint ()                              = default;
-	RemezPoint &   operator = (const RemezPoint &other)        = default;
+	               RemezPoint (const RemezPoint &other) = default;
+	               RemezPoint (RemezPoint &&other)      = default;
+
+	               ~RemezPoint ()                       = default;
+	RemezPoint &   operator = (const RemezPoint &other) = default;
+	RemezPoint &   operator = (RemezPoint &&other)      = default;
 
 	void           set_lower_freq (double freq);
 	double         get_lower_freq () const;

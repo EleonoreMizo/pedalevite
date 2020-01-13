@@ -104,8 +104,8 @@ void	EnvFollowerRms::set_time_rel (float t)
 
 void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -128,8 +128,8 @@ void	EnvFollowerRms::process_block (float out_ptr [], const float in_ptr [], int
 
 void	EnvFollowerRms::process_block_no_sqrt (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -154,8 +154,8 @@ void	EnvFollowerRms::process_block_no_sqrt (float out_ptr [], const float in_ptr
 // Output is not square-rooted
 void	EnvFollowerRms::process_block_raw (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -179,7 +179,7 @@ void	EnvFollowerRms::process_block_raw (float out_ptr [], const float in_ptr [],
 
 float	EnvFollowerRms::analyse_block (const float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -205,7 +205,7 @@ float	EnvFollowerRms::analyse_block (const float data_ptr [], int nbr_spl)
 // Output is not square-rooted
 float	EnvFollowerRms::analyse_block_raw (const float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -238,15 +238,10 @@ float	EnvFollowerRms::analyse_block_raw_cst (float x2, int nbr_spl)
 	const float    delta = x2 - _state;
 	const float    coef  = (delta >= 0) ? _coef_a : _coef_r;
 
-	float          coef_block;
-	if (nbr_spl < 100000)
-	{
-		coef_block = 1 - fstb::ipowp (1 - coef, nbr_spl);
-	}
-	else
-	{
-		coef_block = float (1 - pow (1 - coef, nbr_spl));
-	}
+	const float    coef_block =
+		  (nbr_spl < 100000)
+		? 1 - fstb::ipowp (1 - coef, nbr_spl)
+		: float (1 - pow (1 - coef, nbr_spl));
 
 	_state += delta * coef_block;
 

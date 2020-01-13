@@ -52,9 +52,12 @@ public:
 						CtrlSrcNamed (ControllerType type, int index, const char *name_0);
 	               CtrlSrcNamed ()                          = default;
 	               CtrlSrcNamed (const CtrlSrcNamed &other) = default;
+	               CtrlSrcNamed (CtrlSrcNamed &&other)      = default;
+
 	virtual        ~CtrlSrcNamed ()                         = default;
 
 	CtrlSrcNamed & operator = (const CtrlSrcNamed &other)   = default;
+	CtrlSrcNamed & operator = (CtrlSrcNamed &&other)        = default;
 
 	ControlSource  _src;
 	std::string    _name;   // '\n'-separated multilabel string

@@ -42,16 +42,13 @@ namespace adrv
 
 
 
-class DManual
+class DManual final
 :	public DriverInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	               DManual ()  = default;
-	virtual        ~DManual () = default;
 
 	void           get_buffers (float * in_ptr_arr [_nbr_chn], const float * out_ptr_arr [_nbr_chn]);
 	void           process_block ();
@@ -64,12 +61,11 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
-	virtual int    do_start ();
-	virtual int    do_stop ();
-	virtual void   do_restart ();
-	virtual std::string
-	               do_get_last_error () const;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
+	int            do_start () final;
+	int            do_stop () final;
+	void           do_restart () final;
+	std::string    do_get_last_error () const final;
 
 
 
@@ -91,7 +87,7 @@ private:
 	State          _state          = State_LOADED;
 	double         _sample_freq    = 0;
 	int            _max_block_size = 0;
-	CbInterface *  _cb_ptr         = 0;
+	CbInterface *  _cb_ptr         = nullptr;
 	std::array <std::array <BufAlign, _nbr_chn>, Dir_NBR_ELT>
 	               _chn_buf_arr;
 	size_t         _sample_index   = 0;
@@ -102,8 +98,6 @@ private:
 
 private:
 
-	               DManual (const DManual &other)           = delete;
-	DManual &      operator = (const DManual &other)        = delete;
 	bool           operator == (const DManual &other) const = delete;
 	bool           operator != (const DManual &other) const = delete;
 

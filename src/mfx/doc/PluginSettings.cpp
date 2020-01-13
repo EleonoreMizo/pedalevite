@@ -184,14 +184,14 @@ const std::set <float> *	PluginSettings::find_notch_list (int index) const
 	assert (index >= 0);
 	assert (index < int (_param_list.size ()));
 
-	const std::set <float> *   notch_list_ptr = 0;
+	const std::set <float> *   notch_list_ptr = nullptr;
 
 	auto           it_cls = _map_param_ctrl.find (index);
 	if (it_cls != _map_param_ctrl.end ())
 	{
 		const doc::CtrlLinkSet &   cls = it_cls->second;
 		for (auto it_cl = cls._mod_arr.rbegin ()
-		;	it_cl != cls._mod_arr.rend () && notch_list_ptr == 0
+		;	it_cl != cls._mod_arr.rend () && notch_list_ptr == nullptr
 		;	++it_cl)
 		{
 			if (! (*it_cl)->_notch_list.empty ())
@@ -199,8 +199,8 @@ const std::set <float> *	PluginSettings::find_notch_list (int index) const
 				notch_list_ptr = &(*it_cl)->_notch_list;
 			}
 		}
-		if (   notch_list_ptr == 0
-		    && cls._bind_sptr.get () != 0
+		if (   notch_list_ptr == nullptr
+		    && cls._bind_sptr.get () != nullptr
 		    && ! cls._bind_sptr->_notch_list.empty ())
 		{
 			notch_list_ptr = &cls._bind_sptr->_notch_list;
@@ -217,7 +217,7 @@ const ParamPresentation *	PluginSettings::use_pres_if_tempo_ctrl (int index) con
 	assert (index >= 0);
 	assert (index < int (_param_list.size ()));
 
-	const ParamPresentation * pres_ptr = 0;
+	const ParamPresentation * pres_ptr = nullptr;
 
 	const auto     it_pres = _map_param_pres.find (index);
 	if (it_pres != _map_param_pres.end ())
@@ -238,7 +238,7 @@ ParamPresentation *	PluginSettings::use_pres_if_tempo_ctrl (int index)
 	assert (index >= 0);
 	assert (index < int (_param_list.size ()));
 
-	ParamPresentation * pres_ptr = 0;
+	ParamPresentation * pres_ptr = nullptr;
 
 	const auto     it_pres = _map_param_pres.find (index);
 	if (it_pres != _map_param_pres.end ())

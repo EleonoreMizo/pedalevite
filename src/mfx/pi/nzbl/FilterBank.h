@@ -89,7 +89,13 @@ public:
 	static const int  _nbr_split = _nbr_bands - 1;
 
 	               FilterBank ();
-	virtual        ~FilterBank () = default;
+	               FilterBank (const FilterBank &other) = default;
+	               FilterBank (FilterBank &&other)      = default;
+
+	               ~FilterBank ()                       = default;
+
+	FilterBank &   operator = (const FilterBank &other) = default;
+	FilterBank &   operator = (FilterBank &&other)      = default;
 
 	void           reset (double sample_freq, int max_buf_len, double &latency);
 	void           set_level (int band_idx, float lvl);
@@ -155,8 +161,6 @@ private:
 
 private:
 
-	               FilterBank (const FilterBank &other)        = delete;
-	FilterBank &   operator = (const FilterBank &other)        = delete;
 	bool           operator == (const FilterBank &other) const = delete;
 	bool           operator != (const FilterBank &other) const = delete;
 

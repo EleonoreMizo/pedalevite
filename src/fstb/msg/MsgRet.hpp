@@ -74,7 +74,7 @@ void	MsgRet <T>::ret ()
 template <class T>
 bool	MsgRet <T>::is_attached_to_queue () const
 {
-	return (_ret_queue_sptr.get () != 0);
+	return (_ret_queue_sptr.get () != nullptr);
 }
 
 

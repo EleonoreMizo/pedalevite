@@ -45,11 +45,6 @@ class CoefGenHann
 
 public:
 
-	               CoefGenHann ()                         = default;
-	               CoefGenHann (const CoefGenHann &other) = default;
-	virtual        ~CoefGenHann ()                        = default;
-	CoefGenHann &  operator = (const CoefGenHann &other)  = default;
-
 	inline double  operator () (double pos) const;
 
 

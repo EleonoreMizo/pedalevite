@@ -83,8 +83,8 @@ float	FilterCascadeIdOdd <F1P, F2P, NBR>::process_sample (float x)
 template <typename F1P, typename F2P, int NBR>
 void	FilterCascadeIdOdd <F1P, F2P, NBR>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl != 0);
 
 	_even.process_block (dst_ptr, src_ptr, nbr_spl);

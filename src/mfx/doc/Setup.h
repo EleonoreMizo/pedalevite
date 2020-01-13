@@ -68,12 +68,6 @@ public:
 	typedef std::array <Bank, Cst::_nbr_banks> BankArray;
 	typedef std::map <std::string, CatalogPluginSettings> CpsMap;
 
-	               Setup ()                               = default;
-	               Setup (const Setup &other)             = default;
-	virtual        ~Setup ()                              = default;
-
-	Setup &        operator = (const Setup &other)        = default;
-
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);
 

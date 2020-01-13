@@ -49,11 +49,6 @@ class PhaseDist
 
 public:
 
-	               PhaseDist ()                        = default;
-	               PhaseDist (const PhaseDist &other)  = default;
-	virtual        ~PhaseDist ()                       = default;
-	PhaseDist &    operator = (const PhaseDist &other) = default;
-
 	inline void    set_phase_dist (double dist);
 	inline void    set_phase_dist_offset (double offset);
 

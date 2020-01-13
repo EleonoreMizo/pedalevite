@@ -50,34 +50,34 @@ DistToneDesc::DistToneDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Tone
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Tone",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (Param_TONE, lin_ptr);
+	_desc_set.add_glob (Param_TONE, lin_sptr);
 
 	// Mid
 	// Internally maps from -0.2 to 1.0, 0.4 being neutral (flat with 50% tone)
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"Mid Boost\nMid",
 		"%",
 		0,
 		"%+6.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (Param_MID, lin_ptr);
+	_desc_set.add_glob (Param_MID, lin_sptr);
 
 	// Center
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		300, 1200,
 		"Mid Frequency\nMid Freq\nMidF",
 		"Hz",
@@ -85,8 +85,8 @@ DistToneDesc::DistToneDesc ()
 		0,
 		"%4.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_CENTER, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_CENTER, log_sptr);
 }
 
 

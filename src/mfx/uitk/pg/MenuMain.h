@@ -48,7 +48,7 @@ namespace pg
 
 
 
-class MenuMain
+class MenuMain final
 :	public PageInterface
 {
 
@@ -57,7 +57,6 @@ class MenuMain
 public:
 
 	explicit       MenuMain (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
-	virtual        ~MenuMain () = default;
 
 
 
@@ -66,12 +65,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -138,7 +136,9 @@ private:
 
 	               MenuMain ()                               = delete;
 	               MenuMain (const MenuMain &other)          = delete;
+	               MenuMain (MenuMain &&other)               = delete;
 	MenuMain &     operator = (const MenuMain &other)        = delete;
+	MenuMain &     operator = (MenuMain &&other)             = delete;
 	bool           operator == (const MenuMain &other) const = delete;
 	bool           operator != (const MenuMain &other) const = delete;
 

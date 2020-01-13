@@ -79,7 +79,6 @@ public:
 	                  _bpf_q_threshold;
 
 	               PhasedVoice ();
-	virtual        ~PhasedVoice () = default;
 
 	void           reset (float sample_freq, int max_buf_len, float *tmp_buf_ptr);
 
@@ -197,7 +196,9 @@ private:
 private:
 
 	               PhasedVoice (const PhasedVoice &other)       = delete;
+	               PhasedVoice (const PhasedVoice &&other)      = delete;
 	PhasedVoice &  operator = (const PhasedVoice &other)        = delete;
+	PhasedVoice &  operator = (const PhasedVoice &&other)       = delete;
 	bool           operator == (const PhasedVoice &other) const = delete;
 	bool           operator != (const PhasedVoice &other) const = delete;
 

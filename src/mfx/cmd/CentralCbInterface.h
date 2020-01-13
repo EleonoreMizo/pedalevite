@@ -46,7 +46,16 @@ class CentralCbInterface
 
 public:
 
-	virtual        ~CentralCbInterface () = default;
+	               CentralCbInterface ()                        = default;
+	               CentralCbInterface (const CentralCbInterface &other) = default;
+	               CentralCbInterface (CentralCbInterface &&other)      = default;
+	virtual        ~CentralCbInterface ()                       = default;
+
+	virtual CentralCbInterface &
+	               operator = (const CentralCbInterface &other) = default;
+	virtual CentralCbInterface &
+	               operator = (CentralCbInterface &&other)      = default;
+
 
 	void           process_msg_audio_to_cmd (const WaMsg &msg);
 

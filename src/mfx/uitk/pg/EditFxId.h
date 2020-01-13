@@ -50,7 +50,7 @@ namespace pg
 
 
 
-class EditFxId
+class EditFxId final
 :	public PageInterface
 {
 
@@ -67,7 +67,6 @@ public:
 	};
 
 	explicit       EditFxId (PageSwitcher &page_switcher);
-	virtual        ~EditFxId () = default;
 
 
 
@@ -76,12 +75,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -137,7 +135,9 @@ private:
 
 	               EditFxId ()                               = delete;
 	               EditFxId (const EditFxId &other)          = delete;
+	               EditFxId (EditFxId &&other)               = delete;
 	EditFxId &     operator = (const EditFxId &other)        = delete;
+	EditFxId &     operator = (EditFxId &&other)             = delete;
 	bool           operator == (const EditFxId &other) const = delete;
 	bool           operator != (const EditFxId &other) const = delete;
 

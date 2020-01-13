@@ -45,7 +45,15 @@ class ObserverInterface
 
 public:
 
-	virtual        ~ObserverInterface () = default;
+	               ObserverInterface ()                          = default;
+	               ObserverInterface (const ObserverInterface &other) = default;
+	               ObserverInterface (ObserverInterface &&other) = default;
+	virtual        ~ObserverInterface ()                         = default;
+
+	virtual ObserverInterface &
+	               operator = (const ObserverInterface &other)   = default;
+	virtual ObserverInterface &
+	               operator = (ObserverInterface &&other)        = default;
 
 	inline void		update (ObservableInterface &subject);
 

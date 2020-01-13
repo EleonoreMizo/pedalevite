@@ -129,7 +129,7 @@ bool	NBitmap::has_cursor () const
 void	NBitmap::do_notify_attachment (ParentInterface *cont_ptr)
 {
 	Inherited::do_notify_attachment (cont_ptr);
-	if (cont_ptr == 0)
+	if (cont_ptr == nullptr)
 	{
 		_cursor_flag = false;
 	}
@@ -152,7 +152,7 @@ void	NBitmap::do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_
 		const Vec2d    node_coord (parent_coord + get_coord ());
 		bitmap_abs += node_coord;
 		bitmap_abs.intersect (clipbox);
-		if (! bitmap_abs.empty ())
+		if (! bitmap_abs.is_empty ())
 		{
 			assert (! _buffer.empty ());
 

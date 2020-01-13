@@ -48,31 +48,32 @@ class NotificationFlagCascadeMixin
 
 public:
 
-	               NotificationFlagCascadeMixin ()  = default;
+	               NotificationFlagCascadeMixin () = default;
 	inline explicit
 	               NotificationFlagCascadeMixin (bool state_flag);
 	               NotificationFlagCascadeMixin (const NotificationFlagCascadeMixin &other) = default;
-	virtual        ~NotificationFlagCascadeMixin () = default;
+	               NotificationFlagCascadeMixin (NotificationFlagCascadeMixin &&other) = default;
+
+	               ~NotificationFlagCascadeMixin () = default;
 
 	NotificationFlagCascadeMixin &
 	               operator = (const NotificationFlagCascadeMixin &other) = default;
+	NotificationFlagCascadeMixin &
+	               operator = (NotificationFlagCascadeMixin &&other) = default;
 
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 protected:
+
 	// ObserverInterface via NotificationFlagInterface
-	virtual inline void
-	               do_update (ObservableInterface &subject);
+	inline void    do_update (ObservableInterface &subject) override;
 
 	// NotificationFlagInterface
-	virtual inline bool
-	               do_get_state () const;
-	virtual inline void
-	               do_reset ();
-	virtual inline void
-	               do_set ();
+	inline bool    do_get_state () const override;
+	inline void    do_reset () override;
+	inline void    do_set () override;
 
 
 

@@ -59,7 +59,7 @@ Throws: Nothing
 template <class C16>
 int	Conv::utf8_to_utf16 (std::basic_string <C16> &utf16, const char utf8_0 [])
 {
-	assert (utf8_0 != 0);
+	assert (utf8_0 != nullptr);
 
 	int            ret_val = Err_OK;
 
@@ -112,7 +112,7 @@ Throws: Nothing
 template <class C16>
 int	Conv::utf16_to_utf8 (std::string &utf8, const C16 utf16_0 [])
 {
-	assert (utf16_0 != 0);
+	assert (utf16_0 != nullptr);
 
 	int            ret_val = Err_OK;
 

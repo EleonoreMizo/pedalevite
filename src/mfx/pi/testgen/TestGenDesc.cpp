@@ -54,28 +54,28 @@ TestGenDesc::TestGenDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// State
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"State\nSt",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_STATE, enu_ptr);
+	_desc_set.add_glob (Param_STATE, enu_sptr);
 
 	// Type
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Pink noise\nWhite noise\nTone\nSweep\nPulse",
 		"Type\nTy",
 		"",
 		0,
 		"%s"
 	);
-	assert (enu_ptr->get_nat_max () == Type_NBR_ELT - 1);
-	_desc_set.add_glob (Param_TYPE, enu_ptr);
+	assert (enu_sptr->get_nat_max () == Type_NBR_ELT - 1);
+	_desc_set.add_glob (Param_TYPE, enu_sptr);
 
 	// Level
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		1e-5, 1,
 		"Level\nLv",
 		"dB",
@@ -83,50 +83,50 @@ TestGenDesc::TestGenDesc ()
 		0,
 		"%+6.1f"
 	);
-	_desc_set.add_glob (Param_LVL, log_ptr);
+	_desc_set.add_glob (Param_LVL, log_sptr);
 
 	// Noise correlation
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Mono\nMulti",
 		"Noise correlation\nNoise correl\nNz cor\nNC",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_NZ_COR, enu_ptr);
+	_desc_set.add_glob (Param_NZ_COR, enu_sptr);
 
 	// Tone frequency
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"30\n40\n50\n100\n500\n1k\n3k\n10k\n15k",
 		"Tone frequency\nTone freq\nTF",
 		"Hz",
 		0,
 		"%s"
 	);
-	assert (enu_ptr->get_nat_max () == ToneFreq_NBR_ELT - 1);
-	_desc_set.add_glob (Param_TONE_FRQ, enu_ptr);
+	assert (enu_sptr->get_nat_max () == ToneFreq_NBR_ELT - 1);
+	_desc_set.add_glob (Param_TONE_FRQ, enu_sptr);
 
 	// Sweep duration
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"6\n15\n30\n60\n180",
 		"Sweep duration\nSweep dur\nSD",
 		"s",
 		0,
 		"%s"
 	);
-	assert (enu_ptr->get_nat_max () == SweepDur_NBR_ELT - 1);
-	_desc_set.add_glob (Param_SWEEP_DUR, enu_ptr);
+	assert (enu_sptr->get_nat_max () == SweepDur_NBR_ELT - 1);
+	_desc_set.add_glob (Param_SWEEP_DUR, enu_sptr);
 
 	// Pause
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"No loop\n1\n3\n10\n30",
 		"Pause\nPa",
 		"s",
 		0,
 		"%s"
 	);
-	assert (enu_ptr->get_nat_max () == LoopPause_NBR_ELT - 1);
-	_desc_set.add_glob (Param_LOOP_PAUSE, enu_ptr);
+	assert (enu_sptr->get_nat_max () == LoopPause_NBR_ELT - 1);
+	_desc_set.add_glob (Param_LOOP_PAUSE, enu_sptr);
 }
 
 

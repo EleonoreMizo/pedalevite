@@ -61,10 +61,13 @@ public:
 	inline explicit
 	               RingBufVectorizer (int size);
 	               RingBufVectorizer (const RingBufVectorizer &other) = default;
+	               RingBufVectorizer (RingBufVectorizer &&other)      = default;
 	virtual        ~RingBufVectorizer ()                              = default;
 
 	RingBufVectorizer &
 	               operator = (const RingBufVectorizer &other)        = default;
+	RingBufVectorizer &
+	               operator = (RingBufVectorizer &&other)             = default;
 
 	void				set_size (int size);
 	inline int     get_size () const;

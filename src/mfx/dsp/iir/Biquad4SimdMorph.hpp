@@ -24,6 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <algorithm>
 
+#include <utility>
+
 #include <cassert>
 
 
@@ -42,31 +44,77 @@ namespace iir
 
 
 template <class VD, class VS, class VP>
-Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph ()
-:	_biq ()
-/*,	_step_b ()
+Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other)
+:	_biq (other._biq)
+,	_step_b ()
 ,	_step_a ()
 ,	_target_b ()
 ,	_target_a ()
 ,	_prog_b ()
-,	_prog_a ()*/
+,	_prog_a ()
+,	_nbr_rem_spl (other._nbr_rem_spl)
+,	_ramp_len (other._ramp_len)
+,	_prog_flag (other._prog_flag)
 {
-	_nbr_rem_spl = 0;
-	_ramp_len    = 64;
-	_prog_flag   = false;
+	copy_vectors (other);
 }
 
 
 
 template <class VD, class VS, class VP>
-Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other)
-:	_biq (other._biq)
-/*,	_step_b ()
+Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (Biquad4SimdMorph <VD, VS, VP> &&other)
+:	_biq (std::move (other._biq))
+,	_step_b ()
 ,	_step_a ()
 ,	_target_b ()
 ,	_target_a ()
 ,	_prog_b ()
-,	_prog_a ()*/
+,	_prog_a ()
+,	_nbr_rem_spl (other._nbr_rem_spl)
+,	_ramp_len (other._ramp_len)
+,	_prog_flag (other._prog_flag)
+{
+	copy_vectors (other);
+}
+
+
+
+template <class VD, class VS, class VP>
+Biquad4SimdMorph <VD, VS, VP> &	Biquad4SimdMorph <VD, VS, VP>::operator = (const Biquad4SimdMorph <VD, VS, VP> &other)
+{
+	if (this != &other)
+	{
+		_biq         = other._biq;
+		_nbr_rem_spl = other._nbr_rem_spl;
+		_ramp_len    = other._ramp_len;
+		_prog_flag   = other._prog_flag;
+		copy_vectors (other);
+	}
+
+	return *this;
+}
+
+
+
+template <class VD, class VS, class VP>
+Biquad4SimdMorph <VD, VS, VP> &	Biquad4SimdMorph <VD, VS, VP>::operator = (Biquad4SimdMorph <VD, VS, VP> &&other)
+{
+	if (this != &other)
+	{
+		_biq         = std::move (other._biq);
+		_nbr_rem_spl = other._nbr_rem_spl;
+		_ramp_len    = other._ramp_len;
+		_prog_flag   = other._prog_flag;
+		copy_vectors (other);
+	}
+
+	return *this;
+}
+
+
+
+template <class VD, class VS, class VP>
+void	Biquad4SimdMorph <VD, VS, VP>::copy_vectors (const Biquad4SimdMorph <VD, VS, VP> &other)
 {
 	V128Par::store_f32 (_step_b [0]  , V128Par::load_f32 (other._step_b [0]  ));
 	V128Par::store_f32 (_step_b [1]  , V128Par::load_f32 (other._step_b [1]  ));
@@ -83,10 +131,6 @@ Biquad4SimdMorph <VD, VS, VP>::Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS,
 	V128Par::store_f32 (_prog_b [2]  , V128Par::load_f32 (other._prog_b [2]  ));
 	V128Par::store_f32 (_prog_a [1]  , V128Par::load_f32 (other._prog_a [1]  ));
 	V128Par::store_f32 (_prog_a [2]  , V128Par::load_f32 (other._prog_a [2]  ));
-
-	_nbr_rem_spl = other._nbr_rem_spl;
-	_ramp_len    = other._ramp_len;
-	_prog_flag   = other._prog_flag;
 }
 
 
@@ -137,8 +181,8 @@ int	Biquad4SimdMorph <VD, VS, VP>::get_ramp_time () const
 template <class VD, class VS, class VP>
 void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq (const VectFlt4 b [3], const VectFlt4 a [3], bool ramp_flag)
 {
-	assert (b != 0);
-	assert (a != 0);
+	assert (b != nullptr);
+	assert (a != nullptr);
 
 	const auto     b0 = fstb::ToolsSimd::loadu_f32 (b [0]);
 	const auto     b1 = fstb::ToolsSimd::loadu_f32 (b [1]);
@@ -230,8 +274,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::set_z_eq_one (int biq, const float b [3], co
 {
 	assert (biq >= 0);
 	assert (biq < BiqSimd::_nbr_units);
-	assert (b != 0);
-	assert (a != 0);
+	assert (b != nullptr);
+	assert (a != nullptr);
 
 	// Immediate change
 	if (! ramp_flag)
@@ -384,8 +428,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_ramp (int biq, float b [3], flo
 {
 	assert (biq >= 0);
 	assert (biq < BiqSimd::_nbr_units);
-	assert (b != 0);
-	assert (a != 0);
+	assert (b != nullptr);
+	assert (a != nullptr);
 
 	if (_nbr_rem_spl == 0)
 	{
@@ -408,8 +452,8 @@ void	Biquad4SimdMorph <VD, VS, VP>::get_z_eq_one_final (int biq, float b [3], fl
 {
 	assert (biq >= 0);
 	assert (biq < BiqSimd::_nbr_units);
-	assert (b != 0);
-	assert (a != 0);
+	assert (b != nullptr);
+	assert (a != nullptr);
 
 	if (_nbr_rem_spl == 0)
 	{

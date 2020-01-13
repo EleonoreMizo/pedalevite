@@ -45,8 +45,15 @@ class SweepingSin
 
 public:
 
+	               SweepingSin ()                         = default;
 	explicit       SweepingSin (double fs, double f1, double f2);
-	virtual        ~SweepingSin () = default;
+	               SweepingSin (const SweepingSin &other) = default;
+	               SweepingSin (SweepingSin &&other)      = default;
+
+	               ~SweepingSin () = default;
+
+	SweepingSin &  operator = (const SweepingSin &other)  = default;
+	SweepingSin &  operator = (SweepingSin &&other)       = default;
 
 	void           generate (float data_ptr [], int nbr_spl);
 	void           generate (float data_ptr [], int nbr_spl, int block_start, int block_len);
@@ -73,9 +80,6 @@ private:
 
 private:
 
-	               SweepingSin ()                               = delete;
-	               SweepingSin (const SweepingSin &other)       = delete;
-	SweepingSin &  operator = (const SweepingSin &other)        = delete;
 	bool           operator == (const SweepingSin &other) const = delete;
 	bool           operator != (const SweepingSin &other) const = delete;
 

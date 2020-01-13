@@ -43,7 +43,7 @@ namespace hw
 
 
 
-class DisplayLinuxFrameBuf
+class DisplayLinuxFrameBuf final
 :	public ui::DisplayInterface
 {
 
@@ -61,16 +61,14 @@ public:
 protected:
 
 	// DisplayInterface
-	virtual int    do_get_width () const;
-	virtual int    do_get_height () const;
-	virtual int    do_get_stride () const;
-	virtual uint8_t *
-	               do_use_screen_buf ();
-	virtual const uint8_t *
-	               do_use_screen_buf () const;
+	int            do_get_width () const final;
+	int            do_get_height () const final;
+	int            do_get_stride () const final;
+	uint8_t *      do_use_screen_buf () final;
+	const uint8_t* do_use_screen_buf () const final;
 
-	virtual void   do_refresh (int x, int y, int w, int h);
-	virtual void   do_force_reset ();
+	void           do_refresh (int x, int y, int w, int h) final;
+	void           do_force_reset () final;
 
 
 
@@ -115,8 +113,11 @@ private:
 
 	               DisplayLinuxFrameBuf ()                               = delete;
 	               DisplayLinuxFrameBuf (const DisplayLinuxFrameBuf &other) = delete;
+	               DisplayLinuxFrameBuf (DisplayLinuxFrameBuf &&other)   = delete;
 	DisplayLinuxFrameBuf &
 	               operator = (const DisplayLinuxFrameBuf &other)        = delete;
+	DisplayLinuxFrameBuf &
+	               operator = (DisplayLinuxFrameBuf &&other)             = delete;
 	bool           operator == (const DisplayLinuxFrameBuf &other) const = delete;
 	bool           operator != (const DisplayLinuxFrameBuf &other) const = delete;
 

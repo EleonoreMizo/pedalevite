@@ -53,7 +53,7 @@ PitchDetectDesc::PitchDetectDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Minimum frequency
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		20, 160,
 		"Minimum frequency\nMin freq\nMinF\nMF",
 		"Hz",
@@ -61,12 +61,12 @@ PitchDetectDesc::PitchDetectDesc ()
 		0,
 		"%4.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FREQ_MIN, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_FREQ_MIN, pll_sptr);
 
 	// Maximum frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		200, 1600,
 		"Maximum frequency\nMax freq\nMaxF\nMF",
 		"Hz",
@@ -74,17 +74,17 @@ PitchDetectDesc::PitchDetectDesc ()
 		0,
 		"%4.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FREQ_MAX, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_FREQ_MAX, pll_sptr);
 
 	// Output type
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Pitch\nFreq",
 		"Output type\nOutput\nOut\nO",
 		""
 	);
-	_desc_set.add_glob (Param_OUTPUT, enu_ptr);
+	_desc_set.add_glob (Param_OUTPUT, enu_sptr);
 }
 
 

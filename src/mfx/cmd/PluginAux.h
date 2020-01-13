@@ -48,12 +48,6 @@ class PluginAux
 
 public:
 
-	               PluginAux ()                        = default;
-	               PluginAux (const PluginAux &other)  = default;
-	virtual        ~PluginAux ()                       = default;
-
-	PluginAux &    operator = (const PluginAux &other) = default;
-
 	void           clear ();
 
 	int            _pi_id     = -1;  // Negative = not set

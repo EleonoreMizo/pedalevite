@@ -48,8 +48,6 @@ public:
 
 	static const int  _max_dly_spl = 16384;
 
-	virtual        ~DelayInterface () = default;
-
 	void           set_aux_param (int dly_spl, int pin_mult);
 
 

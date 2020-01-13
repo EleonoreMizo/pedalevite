@@ -156,7 +156,6 @@ void	InterpPhaseSimd <PL>::set_data (int pos, float imp, float dif)
 template <int PL>
 void	InterpPhaseSimd <PL>::precompute_impulse (Buffer &imp, float q) const
 {
-	assert (&imp != 0);
 	assert (q >= 0);
 	assert (q <= 1);
 
@@ -169,8 +168,7 @@ void	InterpPhaseSimd <PL>::precompute_impulse (Buffer &imp, float q) const
 template <int PL>
 float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], const Buffer &imp) const
 {
-	assert (data_ptr != 0);
-	assert (&imp != 0);
+	assert (data_ptr != nullptr);
 
 	// First vector
 	const auto     val   = fstb::ToolsSimd::loadu_f32 (&data_ptr [0]);
@@ -194,7 +192,7 @@ template <int PL>
 float	InterpPhaseSimd <PL>::convolve (const float data_ptr [], float q) const
 {
 	assert (_imp [0] != CHK_IMPULSE_NOT_SET);
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (q >= 0);
 	assert (q <= 1);
 

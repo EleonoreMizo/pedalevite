@@ -35,6 +35,7 @@ namespace mfx
 
 
 class BufPack;
+
 class ProgSwitcher
 {
 
@@ -43,7 +44,7 @@ class ProgSwitcher
 public:
 
 	explicit       ProgSwitcher (const ProcessingContext * &ctx_ptr, WaMsgQueue &queue_to_cmd, BufPack &buf_pack);
-	virtual        ~ProgSwitcher ();
+	               ~ProgSwitcher ();
 
 	void           reset (double sample_freq, int max_block_size);
 	bool           frame_beg ();
@@ -87,7 +88,9 @@ private:
 
 	               ProgSwitcher ()                               = delete;
 	               ProgSwitcher (const ProgSwitcher &other)      = delete;
+	               ProgSwitcher (ProgSwitcher &&other)           = delete;
 	ProgSwitcher & operator = (const ProgSwitcher &other)        = delete;
+	ProgSwitcher & operator = (ProgSwitcher &&other)             = delete;
 	bool           operator == (const ProgSwitcher &other) const = delete;
 	bool           operator != (const ProgSwitcher &other) const = delete;
 

@@ -58,9 +58,13 @@ public:
 
 	               PluginSettings ()                            = default;
 	               PluginSettings (const PluginSettings &other) = default;
-	virtual        ~PluginSettings ()                           = default;
+	               PluginSettings (PluginSettings &&other)      = default;
+	               ~PluginSettings ()                           = default;
+
 	PluginSettings &
 	               operator = (const PluginSettings &other)     = default;
+	PluginSettings &
+	               operator = (PluginSettings &&other)          = default;
 
 	bool           operator == (const PluginSettings &other) const;
 	bool           operator != (const PluginSettings &other) const;

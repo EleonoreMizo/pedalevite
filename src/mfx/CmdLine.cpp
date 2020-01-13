@@ -42,15 +42,15 @@ namespace mfx
 void	CmdLine::set (int argc, char *argv [], char *envp [])
 {
 	assert (argc > 0);
-	assert (argv != 0);
-	assert (argv [argc - 1] != 0);
-	assert (argv [argc    ] == 0);
+	assert (argv != nullptr);
+	assert (argv [argc - 1] != nullptr);
+	assert (argv [argc    ] == nullptr);
 
 	_argc = argc;
 	_argv = argv;
-	if (envp == 0)
+	if (envp == nullptr)
 	{
-		static char *  n_ptr = 0;
+		static char *  n_ptr = nullptr;
 		_envp = &n_ptr;
 	}
 	else
@@ -65,25 +65,25 @@ int	CmdLine::get_argc () const
 {
 	assert (_argc > 0);
 
-	return (_argc);
+	return _argc;
 }
 
 
 
 char * const *	CmdLine::use_argv () const
 {
-	assert (_argv != 0);
+	assert (_argv != nullptr);
 
-	return (_argv);
+	return _argv;
 }
 
 
 
 char * const *	CmdLine::use_envp () const
 {
-	assert (_envp != 0);
+	assert (_envp != nullptr);
 
-	return (_envp);
+	return _envp;
 }
 
 

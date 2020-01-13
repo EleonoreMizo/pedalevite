@@ -99,7 +99,7 @@ void	FreqAmGha::clear_buffers ()
 
 float	FreqAmGha::process_block (const float spl_ptr [], int nbr_spl)
 {
-	assert (spl_ptr != 0);
+	assert (spl_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	for (int pos = 0; pos < nbr_spl; ++pos)

@@ -47,9 +47,6 @@ class DcKiller1p
 
 public:
 
-	               DcKiller1p ()  = default;
-	virtual        ~DcKiller1p () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           set_cutoff_freq (float f0);
 	inline float   process_sample (float x);
@@ -81,11 +78,6 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	               DcKiller1p (const DcKiller1p &other)        = delete;
-	DcKiller1p &   operator = (const DcKiller1p &other)        = delete;
-	bool           operator == (const DcKiller1p &other) const = delete;
-	bool           operator != (const DcKiller1p &other) const = delete;
 
 }; // class DcKiller1p
 

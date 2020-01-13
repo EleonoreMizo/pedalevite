@@ -52,8 +52,8 @@ namespace osc
 
 template <class SD>
 SampleMipMapper <SD>::SampleMipMapper ()
-:	_data_ptr (0)
-,	_sample_provider_ptr (0)
+:	_data_ptr (nullptr)
+,	_sample_provider_ptr (nullptr)
 ,	_buffer_arr ()
 ,	_buf_size (0)
 {
@@ -137,8 +137,8 @@ int	SampleMipMapper <SD>::build_mipmaps (SampleTable &data, SampleProviderInterf
 	}
 	
 	_sample_provider_ptr->stop ();
-	_sample_provider_ptr = 0;
-	_data_ptr = 0;
+	_sample_provider_ptr = nullptr;
+	_data_ptr            = nullptr;
 
 	return ret_val;
 }
@@ -201,8 +201,8 @@ template <class SD>
 int	SampleMipMapper <SD>::prepare_buffers ()
 {
 	assert (_buf_size > 0);
-	assert (_data_ptr != 0);
-	assert (_sample_provider_ptr != 0);
+	assert (_data_ptr != nullptr);
+	assert (_sample_provider_ptr != nullptr);
 
 	// Request enough samples to build the pre-unrolling data for
 	// the highest table. Initialize buffer data.
@@ -250,8 +250,8 @@ template <class SD>
 void	SampleMipMapper <SD>::check_and_flush_buffer (int table, bool force_flag)
 {
 	assert (_buf_size > 0);
-	assert (_data_ptr != 0);
-	assert (_sample_provider_ptr != 0);
+	assert (_data_ptr != nullptr);
+	assert (_sample_provider_ptr != nullptr);
 
 	assert (table >= 0);
 	assert (table < SampleTable::NBR_TABLES);
@@ -269,8 +269,8 @@ template <class SD>
 void	SampleMipMapper <SD>::flush_buffer (int table)
 {
 	assert (_buf_size > 0);
-	assert (_data_ptr != 0);
-	assert (_sample_provider_ptr != 0);
+	assert (_data_ptr != nullptr);
+	assert (_sample_provider_ptr != nullptr);
 
 	assert (table >= 0);
 	assert (table < SampleTable::NBR_TABLES);
@@ -291,8 +291,8 @@ template <class SD>
 void	SampleMipMapper <SD>::store_data_into_tables (int table)
 {
 	assert (_buf_size > 0);
-	assert (_data_ptr != 0);
-	assert (_sample_provider_ptr != 0);
+	assert (_data_ptr != nullptr);
+	assert (_sample_provider_ptr != nullptr);
 
 	assert (table >= 0);
 	assert (table < SampleTable::NBR_TABLES);

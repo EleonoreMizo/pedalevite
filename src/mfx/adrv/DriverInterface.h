@@ -52,6 +52,7 @@ public:
 
 	static const int  _nbr_chn = 2;
 
+	               DriverInterface ()  = default;
 	virtual        ~DriverInterface () = default;
 
 	int            init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
@@ -77,6 +78,17 @@ protected:
 	               _dir_name_0_arr;
 
 
+
+/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+private:
+
+	               DriverInterface (const DriverInterface &other) = delete;
+	               DriverInterface (DriverInterface &&other)      = delete;
+	DriverInterface &
+	               operator = (const DriverInterface &other)      = delete;
+	DriverInterface &
+	               operator = (DriverInterface &&other)           = delete;
 
 }; // class DriverInterface
 

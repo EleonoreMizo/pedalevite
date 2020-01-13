@@ -44,7 +44,7 @@ namespace dly
 template <typename T, typename AL>
 DelayLineData <T, AL>::DelayLineData (const AllocatorType &al)
 :	_buf (al)
-,	_buf_ptr (0)
+,	_buf_ptr (nullptr)
 ,	_sample_freq (0)
 ,	_max_time (0)
 ,	_unroll_pre (0)
@@ -54,6 +54,49 @@ DelayLineData <T, AL>::DelayLineData (const AllocatorType &al)
 ,	_buf_mask (0)
 {
    // Nothing
+}
+
+
+
+template <typename T, typename AL>
+DelayLineData <T, AL>::DelayLineData (const DelayLineData &other)
+:	_buf (other._buf)
+,	_buf_ptr (nullptr)
+,	_sample_freq (other._sample_freq)
+,	_max_time (other._max_time)
+,	_unroll_pre (other._unroll_pre)
+,	_unroll_post (other._unroll_post)
+,	_extra_len (other._extra_len)
+,	_buf_len (other._buf_len)
+,	_buf_mask (other._buf_mask)
+{
+	if (_buf.size () > size_t { _unroll_pre })
+	{
+		_buf_ptr = &_buf [_unroll_pre];
+	}
+}
+
+
+
+template <typename T, typename AL>
+DelayLineData <T, AL> &	DelayLineData <T, AL>::operator = (const DelayLineData &other)
+{
+	if (this != &other)
+	{
+		_buf         = other._buf;
+		_buf_ptr     = nullptr;
+		_sample_freq = other._sample_freq;
+		_max_time    = other._max_time;
+		_unroll_pre  = other._unroll_pre;
+		_unroll_post = other._unroll_post;
+		_extra_len   = other._extra_len;
+		_buf_len     = other._buf_len;
+		_buf_mask    = other._buf_mask;
+		if (_buf.size () > size_t { _unroll_pre })
+		{
+			_buf_ptr = &_buf [_unroll_pre];
+		}
+	}
 }
 
 
@@ -168,7 +211,7 @@ void	DelayLineData <T, AL>::update_buffer_size ()
 template <typename T, typename AL>
 void	DelayLineData <T, AL>::update_unroll ()
 {
-	assert (_buf_ptr != 0);
+	assert (_buf_ptr != nullptr);
 	update_unroll_pre ();
 	update_unroll_post ();
 }
@@ -178,7 +221,7 @@ void	DelayLineData <T, AL>::update_unroll ()
 template <typename T, typename AL>
 void	DelayLineData <T, AL>::update_unroll_pre ()
 {
-	assert (_buf_ptr != 0);
+	assert (_buf_ptr != nullptr);
 	assert (_unroll_pre <= _buf_len);
 
 	for (int pos = -_unroll_pre; pos < 0; ++pos)
@@ -192,7 +235,7 @@ void	DelayLineData <T, AL>::update_unroll_pre ()
 template <typename T, typename AL>
 void	DelayLineData <T, AL>::update_unroll_post ()
 {
-	assert (_buf_ptr != 0);
+	assert (_buf_ptr != nullptr);
 
 	for (int pos = 0; pos < _unroll_post; ++pos)
 	{
@@ -205,9 +248,9 @@ void	DelayLineData <T, AL>::update_unroll_post ()
 template <typename T, typename AL>
 int	DelayLineData <T, AL>::get_len () const
 {
-	assert (_buf_ptr != 0);
+	assert (_buf_ptr != nullptr);
 
-	return (_buf_len);
+	return _buf_len;
 }
 
 
@@ -215,7 +258,7 @@ int	DelayLineData <T, AL>::get_len () const
 template <typename T, typename AL>
 int	DelayLineData <T, AL>::get_mask () const
 {
-	return (_buf_mask);
+	return _buf_mask;
 }
 
 
@@ -223,9 +266,9 @@ int	DelayLineData <T, AL>::get_mask () const
 template <typename T, typename AL>
 typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buffer ()
 {
-	assert (_buf_ptr != 0);
+	assert (_buf_ptr != nullptr);
 
-	return (_buf_ptr);
+	return _buf_ptr;
 }
 
 
@@ -233,9 +276,9 @@ typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buffer ()
 template <typename T, typename AL>
 const typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buffer () const
 {
-	assert (_buf_ptr != 0);
+	assert (_buf_ptr != nullptr);
 
-	return (_buf_ptr);
+	return _buf_ptr;
 }
 
 
@@ -243,7 +286,7 @@ const typename DelayLineData <T, AL>::ValueType *	DelayLineData <T, AL>::get_buf
 template <typename T, typename AL>
 void	DelayLineData <T, AL>::clear_buffers ()
 {
-	assert (_buf_ptr != 0);
+	assert (_buf_ptr != nullptr);
 
 	const size_t   len = _buf.size ();
 	for (size_t pos = 0; pos < len; ++pos)
@@ -265,7 +308,7 @@ void	DelayLineData <T, AL>::clear_buffers ()
 template <typename T, typename AL>
 void	DelayLineData <T, AL>::invalidate_buf ()
 {
-	_buf_ptr  = 0;
+	_buf_ptr  = nullptr;
 	_buf_len  = 0;
 	_buf_mask = 0;
 }

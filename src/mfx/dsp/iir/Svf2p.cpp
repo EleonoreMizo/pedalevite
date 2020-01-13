@@ -169,8 +169,8 @@ void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float
 	assert (v0m != 0);
 	assert (v1m != 0);
 	assert (v2m != 0);
-	assert (b   != 0);
-	assert (a   != 0);
+	assert (b   != nullptr);
+	assert (a   != nullptr);
 	assert (a [0] != 0);
 	assert (freq > 0);
 	assert (fs > 0);

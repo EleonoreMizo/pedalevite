@@ -98,9 +98,11 @@ ActionType	ActionSettings::do_get_type () const
 
 
 
-PedalActionSingleInterface *	ActionSettings::do_duplicate () const
+std::shared_ptr <PedalActionSingleInterface>	ActionSettings::do_duplicate () const
 {
-	return new ActionSettings (*this);
+	return std::static_pointer_cast <PedalActionSingleInterface> (
+		std::make_shared <ActionSettings> (*this)
+	);
 }
 
 

@@ -40,6 +40,8 @@ namespace iir
 template <typename T>
 inline T	SvfMixerLow::mix (T /*v0*/, T /*v1*/, T v2, T /*v0m*/, T /*v1m*/, T /*v2m*/)
 {
+	fstb::unused (v0, v1, v0m, v1m, v2m);
+
 	return (v2);
 }
 
@@ -48,6 +50,8 @@ inline T	SvfMixerLow::mix (T /*v0*/, T /*v1*/, T v2, T /*v0m*/, T /*v1m*/, T /*v
 template <typename T>
 inline void	SvfMixerLow::inc (T &/*v0m*/, T &/*v1m*/, T &/*v2m*/, T &/*v0mi*/, T &/*v1mi*/, T &/*v2mi*/)
 {
+	fstb::unused (v0m, v1m, v2m, v0mi, v1mi, v2mi);
+
 	// Nothing
 }
 

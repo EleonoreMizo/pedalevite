@@ -50,9 +50,6 @@ class InterpolatorLerpSimd
 
 public:
 
-	               InterpolatorLerpSimd ();
-	virtual        ~InterpolatorLerpSimd () {}
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -60,14 +57,14 @@ public:
 protected:
 
 	// InterpolatorInterface
-	virtual void   do_set_ovrspl_l2 (int ovrspl_l2);
-	virtual int    do_get_impulse_len () const;
-	virtual fstb::FixedPoint
-	               do_get_group_delay () const;
+	void           do_set_ovrspl_l2 (int ovrspl_l2) override;
+	int            do_get_impulse_len () const override;
+	fstb::FixedPoint
+	               do_get_group_delay () const override;
 
-	virtual void   do_start (int nbr_chn);
-	virtual int    do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step);
-	virtual float  do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate);
+	void           do_start (int nbr_chn) override;
+	int            do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step) override;
+	float          do_process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate) override;
 
 
 
@@ -77,7 +74,7 @@ private:
 
 	static const int IMPULSE_LEN = 2;
 
-	int            _nbr_chn;
+	int            _nbr_chn = 1;
 
 
 
@@ -85,11 +82,8 @@ private:
 
 private:
 
-	               InterpolatorLerpSimd (const InterpolatorLerpSimd &other);
-	InterpolatorLerpSimd &
-	               operator = (const InterpolatorLerpSimd &other);
-	bool           operator == (const InterpolatorLerpSimd &other) const;
-	bool           operator != (const InterpolatorLerpSimd &other) const;
+	bool           operator == (const InterpolatorLerpSimd &other) const = delete;
+	bool           operator != (const InterpolatorLerpSimd &other) const = delete;
 
 };	// class InterpolatorLerpSimd
 

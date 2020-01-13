@@ -72,8 +72,11 @@ private:
 private:
 
 	               SingleObj (const SingleObj <T, A> &other)         = delete;
+	               SingleObj (const SingleObj <T, A> &&other)        = delete;
 	SingleObj <T, A> &
 	               operator = (const SingleObj <T, A> &other)        = delete;
+	SingleObj <T, A> &
+	               operator = (const SingleObj <T, A> &&other)       = delete;
 	bool           operator == (const SingleObj <T, A> &other) const = delete;
 	bool           operator != (const SingleObj <T, A> &other) const = delete;
 

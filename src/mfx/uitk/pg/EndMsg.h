@@ -54,7 +54,7 @@ namespace pg
 
 
 
-class EndMsg
+class EndMsg final
 :	public PageInterface
 {
 
@@ -73,7 +73,6 @@ public:
 	};
 
 	explicit       EndMsg (PageSwitcher &page_switcher, const CmdLine &cmd_line);
-	virtual        ~EndMsg () = default;
 
 
 
@@ -82,12 +81,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -122,7 +120,9 @@ private:
 
 	               EndMsg ()                               = delete;
 	               EndMsg (const EndMsg &other)            = delete;
+	               EndMsg (EndMsg &&other)                 = delete;
 	EndMsg &       operator = (const EndMsg &other)        = delete;
+	EndMsg &       operator = (EndMsg &&other)             = delete;
 	bool           operator == (const EndMsg &other) const = delete;
 	bool           operator != (const EndMsg &other) const = delete;
 

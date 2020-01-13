@@ -45,12 +45,6 @@ class Cnx
 
 public:
 
-	               Cnx ()                        = default;
-	               Cnx (const Cnx &other)        = default;
-	virtual        ~Cnx ()                       = default;
-
-	Cnx &          operator = (const Cnx &other) = default;
-
 	inline bool    operator < (const Cnx &other) const;
 	inline bool    operator == (const Cnx &other) const;
 	inline bool    operator != (const Cnx &other) const;
@@ -78,7 +72,6 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
 
 
 

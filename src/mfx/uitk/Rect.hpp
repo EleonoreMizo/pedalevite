@@ -126,7 +126,7 @@ Rect &	Rect::operator -= (const Vec2d &other)
 
 
 
-bool	Rect::empty () const
+bool	Rect::is_empty () const
 {
 	const Rect &   tmp = *this;
 

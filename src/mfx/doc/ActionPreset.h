@@ -41,7 +41,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionPreset
+class ActionPreset final
 :	public PedalActionSingleInterface
 {
 
@@ -52,11 +52,16 @@ public:
 	explicit       ActionPreset (bool relative_flag, int val);
 	explicit       ActionPreset (SerRInterface &ser);
 	               ActionPreset (const ActionPreset &other) = default;
-	virtual        ~ActionPreset ()                         = default;
+	               ActionPreset (ActionPreset &&other)      = default;
+
+	               ~ActionPreset ()                         = default;
 
 	ActionPreset & operator = (const ActionPreset &other)   = default;
+	ActionPreset & operator = (ActionPreset &&other)        = default;
 
-	virtual void   ser_write (SerWInterface &ser) const;
+	// PedalActionSingleInterface
+	void           ser_write (SerWInterface &ser) const final;
+
 	void           ser_read (SerRInterface &ser);
 
 	bool           _relative_flag;
@@ -69,10 +74,9 @@ public:
 protected:
 
 	// PedalActionSingleInterface
-	virtual ActionType
-	               do_get_type () const;
-	virtual PedalActionSingleInterface *
-	               do_duplicate () const;
+	ActionType     do_get_type () const final;
+	std::shared_ptr <PedalActionSingleInterface>
+	               do_duplicate () const final;
 
 
 

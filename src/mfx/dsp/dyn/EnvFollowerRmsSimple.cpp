@@ -26,7 +26,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/fnc.h"
 #include "mfx/dsp/dyn/EnvFollowerRmsSimple.h"
-#include "mfx/dsp/dyn/EnvHelper.h"
 
 #include <cassert>
 #include <cmath>
@@ -43,18 +42,6 @@ namespace dyn
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-EnvFollowerRmsSimple::EnvFollowerRmsSimple ()
-:	_sample_freq (44100)
-,	_time (0)
-,	_state (0)
-,	_coef (1)
-{
-	set_time (0.001f);
-	clear_buffers ();
-}
 
 
 
@@ -80,8 +67,8 @@ void	EnvFollowerRmsSimple::set_time (float t)
 
 void	EnvFollowerRmsSimple::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -104,8 +91,8 @@ void	EnvFollowerRmsSimple::process_block (float out_ptr [], const float in_ptr [
 
 void	EnvFollowerRmsSimple::process_block_no_sqrt (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -130,8 +117,8 @@ void	EnvFollowerRmsSimple::process_block_no_sqrt (float out_ptr [], const float 
 // Output is not square-rooted
 void	EnvFollowerRmsSimple::process_block_raw (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -155,7 +142,7 @@ void	EnvFollowerRmsSimple::process_block_raw (float out_ptr [], const float in_p
 
 float	EnvFollowerRmsSimple::analyse_block (const float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -179,7 +166,7 @@ float	EnvFollowerRmsSimple::analyse_block (const float data_ptr [], int nbr_spl)
 
 float	EnvFollowerRmsSimple::analyse_block_no_sqrt (const float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -205,7 +192,7 @@ float	EnvFollowerRmsSimple::analyse_block_no_sqrt (const float data_ptr [], int 
 // Output is not square-rooted
 float	EnvFollowerRmsSimple::analyse_block_raw (const float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -237,15 +224,10 @@ float	EnvFollowerRmsSimple::analyse_block_raw_cst (float x2, int nbr_spl)
 
 	const float    delta = x2 - _state;
 
-	float          coef_block;
-	if (nbr_spl < 100000)
-	{
-		coef_block = 1 - fstb::ipowp (1 - _coef, nbr_spl);
-	}
-	else
-	{
-		coef_block = float (1 - pow (1 - _coef, nbr_spl));
-	}
+	const float    coef_block =
+		(nbr_spl < 100000)
+		? 1 - fstb::ipowp (1 - _coef, nbr_spl)
+		: float (1 - pow (1 - _coef, nbr_spl));
 
 	_state += delta * coef_block;
 

@@ -64,13 +64,6 @@ private:
 
 private:
 
-						FFTRealFixLenParam ();
-						FFTRealFixLenParam (const FFTRealFixLenParam &other);
-	FFTRealFixLenParam &
-						operator = (const FFTRealFixLenParam &other);
-	bool				operator == (const FFTRealFixLenParam &other);
-	bool				operator != (const FFTRealFixLenParam &other);
-
 };	// class FFTRealFixLenParam
 
 

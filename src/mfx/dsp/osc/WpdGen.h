@@ -68,10 +68,6 @@ private:
 
 private:
 
-	               WpdGen ()                               = delete;
-	               WpdGen (const WpdGen &other)            = delete;
-	virtual        ~WpdGen ()                              = delete;
-	WpdGen &       operator = (const WpdGen &other)        = delete;
 	bool           operator == (const WpdGen &other) const = delete;
 	bool           operator != (const WpdGen &other) const = delete;
 

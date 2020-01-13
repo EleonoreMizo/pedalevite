@@ -55,15 +55,15 @@ namespace pg
 
 MenuBackup::MenuBackup (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_date_sptr (   new NText (Entry_DATE   ))
-,	_save_sptr (   new NText (Entry_SAVE   ))
-,	_restore_sptr (new NText (Entry_RESTORE))
-,	_export_sptr ( new NText (Entry_EXPORT ))
+,	_fnt_ptr (nullptr)
+,	_date_sptr (   std::make_shared <NText> (Entry_DATE   ))
+,	_save_sptr (   std::make_shared <NText> (Entry_SAVE   ))
+,	_restore_sptr (std::make_shared <NText> (Entry_RESTORE))
+,	_export_sptr ( std::make_shared <NText> (Entry_EXPORT ))
 ,	_msg_arg ()
 {
 	_date_sptr   ->set_justification (0.5f, 0, false);
@@ -154,7 +154,7 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 			switch (node_id)
 			{
 			case Entry_DATE:
-				_page_switcher.call_page (PageType_EDIT_DATE, 0, node_id);
+				_page_switcher.call_page (PageType_EDIT_DATE, nullptr, node_id);
 				break;
 			case Entry_SAVE:
 #if fstb_IS (SYS, LINUX)
@@ -170,12 +170,12 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 					);
 				}
 #else // fstb_IS (SYS, LINUX)
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 #endif // fstb_IS (SYS, LINUX)
 				break;
 			case Entry_RESTORE:
 				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 				break;
 			case Entry_EXPORT:
 #if fstb_IS (SYS, LINUX)
@@ -199,7 +199,7 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 					);
 				}
 #else // fstb_IS (SYS, LINUX)
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 #endif // fstb_IS (SYS, LINUX)
 				break;
 			default:

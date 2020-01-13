@@ -52,7 +52,7 @@ DistoPwmDesc::DistoPwmDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Pulse Width
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		2.5e-5, 2.5e-3,
 		"Pulse Width\nPulse W\nPW",
 		"ms",
@@ -60,11 +60,11 @@ DistoPwmDesc::DistoPwmDesc ()
 		0,
 		"%6.2f"
 	);
-	pll_ptr->use_mapper ().set_first_value (2.5e-5);
-	pll_ptr->use_mapper ().add_segment (0.5,  2.5e-4, false);
-	pll_ptr->use_mapper ().add_segment (1.0,  2.5e-3, true);
-	pll_ptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
-	_desc_set.add_glob (Param_PW, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (2.5e-5);
+	pll_sptr->use_mapper ().add_segment (0.5,  2.5e-4, false);
+	pll_sptr->use_mapper ().add_segment (1.0,  2.5e-3, true);
+	pll_sptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
+	_desc_set.add_glob (Param_PW, pll_sptr);
 }
 
 

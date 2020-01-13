@@ -52,7 +52,7 @@ StageTaps::StageTaps ()
 :	_sample_freq (0)
 ,	_max_block_size (0)
 ,	_ramp_time (0)
-,	_tmp_buf_ptr (0)
+,	_tmp_buf_ptr (nullptr)
 ,	_buf_size (0)
 ,	_level_tap_input (1)
 ,	_level_predelay (1)
@@ -341,9 +341,9 @@ void	StageTaps::set_tap_freq_hi (int index, float f)
 void	StageTaps::process_block (float * const line_ptr_arr [Cst::_nbr_lines], float * const dst_ptr_arr [_nbr_chn], const float * const src_ptr_arr [_nbr_chn], int nbr_spl, int nbr_chn_src, int nbr_chn_dst)
 {
 	assert (_sample_freq > 0);
-	assert (line_ptr_arr != 0);
-	assert (dst_ptr_arr != 0);
-	assert (src_ptr_arr != 0);
+	assert (line_ptr_arr != nullptr);
+	assert (dst_ptr_arr != nullptr);
+	assert (src_ptr_arr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_block_size);
 	assert (nbr_chn_src > 0);

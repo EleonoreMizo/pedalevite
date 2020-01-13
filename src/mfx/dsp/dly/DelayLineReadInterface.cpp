@@ -104,7 +104,7 @@ int	DelayLineReadInterface::estimate_max_one_shot_proc_w_feedback (double min_dl
 // Therefore pos_in_block is related to oversampled data, too.
 void	DelayLineReadInterface::read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (dly_beg > 0);
 	assert (dly_end > 0);

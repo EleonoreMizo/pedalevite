@@ -48,7 +48,13 @@ class RampModule
 public:
 
 	               RampModule ();
-	virtual        ~RampModule () = default;
+	               RampModule (const RampModule &other) = default;
+	               RampModule (RampModule &&other)      = default;
+
+	               ~RampModule ()                       = default;
+
+	RampModule &   operator = (const RampModule &other) = default;
+	RampModule &   operator = (RampModule &&other)      = default;
 
 	void           set_sample_freq (double sample_freq);
 	void           set_initial_delay (double t);
@@ -119,8 +125,6 @@ private:
 
 private:
 
-	               RampModule (const RampModule &other)        = delete;
-	RampModule &   operator = (const RampModule &other)        = delete;
 	bool           operator == (const RampModule &other) const = delete;
 	bool           operator != (const RampModule &other) const = delete;
 

@@ -41,7 +41,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionToggleTuner
+class ActionToggleTuner final
 :	public PedalActionSingleInterface
 {
 
@@ -52,12 +52,18 @@ public:
 	               ActionToggleTuner ()                               = default;
 	               ActionToggleTuner (SerRInterface &ser);
 	               ActionToggleTuner (const ActionToggleTuner &other) = default;
-	virtual        ~ActionToggleTuner ()                              = default;
+	               ActionToggleTuner (ActionToggleTuner &&other)      = default;
+
+	               ~ActionToggleTuner ()                              = default;
 
 	ActionToggleTuner &
 	               operator = (const ActionToggleTuner &other)        = default;
+	ActionToggleTuner &
+	               operator = (ActionToggleTuner &&other)             = default;
 
-	virtual void   ser_write (SerWInterface &ser) const;
+	// PedalActionSingleInterface
+	void           ser_write (SerWInterface &ser) const final;
+
 	void           ser_read (SerRInterface &ser);
 
 
@@ -67,10 +73,9 @@ public:
 protected:
 
 	// PedalActionSingleInterface
-	virtual ActionType
-	               do_get_type () const;
-	virtual PedalActionSingleInterface *
-	               do_duplicate () const;
+	ActionType     do_get_type () const final;
+	std::shared_ptr <PedalActionSingleInterface>
+	               do_duplicate () const final;
 
 
 

@@ -51,14 +51,15 @@ namespace pg
 
 EditLabel::EditLabel (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_name_sptr (new NText (Entry_NAME))
-,	_edit_sptr (new NText (Entry_EDIT))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW))
+,	_name_sptr (std::make_shared <NText  > (Entry_NAME  ))
+,	_edit_sptr (std::make_shared <NText  > (Entry_EDIT  ))
 ,	_label_sptr_arr ()
-,	_arg_ptr (0)
+,	_arg_ptr (nullptr)
 ,	_label_arr ()
 ,	_edit_text_arg ()
 ,	_edit_text_flag (false)
@@ -77,13 +78,13 @@ EditLabel::EditLabel (PageSwitcher &page_switcher)
 void	EditLabel::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	fstb::unused (model);
+	assert (usr_ptr != nullptr);
 
-	assert (usr_ptr != 0);
 	_view_ptr  = &view;
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
-	_arg_ptr   = reinterpret_cast <Param *> (usr_ptr);
+	_arg_ptr   = static_cast <Param *> (usr_ptr);
 
 	if (_edit_text_flag)
 	{
@@ -230,7 +231,7 @@ void	EditLabel::add_label_list (PageMgrInterface::NavLocList &nav_list, const st
 	for (const std::string &label : labels)
 	{
 		const int      node_id = node_id_base + label_cnt;
-		TxtSPtr        label_sptr (new NText (node_id));
+		TxtSPtr        label_sptr { std::make_shared <NText> (node_id) };
 		
 		label_sptr->set_font (*_fnt_ptr);
 		label_sptr->set_coord (Vec2d (0, y + label_cnt * h_m));

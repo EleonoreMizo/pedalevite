@@ -57,18 +57,18 @@ ParamControllers::ParamControllers (PageSwitcher &page_switcher, LocEdit &loc_ed
 :	_csn_list_base (csn_list)
 ,	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_link_value_sptr (new NText (Entry_LINK_VALUE))
-,	_link_title_sptr (new NText (Entry_LINK_TITLE))
-,	_mod_title_sptr (new NText (Entry_MOD_TITLE))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (      std::make_shared <NWindow> (Entry_WINDOW    ))
+,	_link_value_sptr (std::make_shared <NText  > (Entry_LINK_VALUE))
+,	_link_title_sptr (std::make_shared <NText  > (Entry_LINK_TITLE))
+,	_mod_title_sptr ( std::make_shared <NText  > (Entry_MOD_TITLE ))
 ,	_mod_list ()
 ,	_csn_list_full (_csn_list_base)
-,	_cls_ptr (0)
+,	_cls_ptr (nullptr)
 {
 	_link_title_sptr->set_text ("Direct link");
 	_mod_title_sptr ->set_text ("Modulations");
@@ -104,7 +104,7 @@ void	ParamControllers::do_connect (Model &model, const View &view, PageMgrInterf
 	auto           it_cls = settings._map_param_ctrl.find (_loc_edit._param_index);
 	if (it_cls == settings._map_param_ctrl.end ())
 	{
-		_cls_ptr = 0;
+		_cls_ptr = nullptr;
 	}
 	else
 	{
@@ -168,7 +168,7 @@ MsgHandlerInterface::EvtProp	ParamControllers::do_handle_evt (const NodeEvt &evt
 			    || (node_id >= 0 && node_id < int (_mod_list.size ())))
 			{
 				update_loc_edit (node_id);
-				_page_switcher.switch_to (PageType_CTRL_EDIT, 0);
+				_page_switcher.switch_to (PageType_CTRL_EDIT, nullptr);
 				ret_val = EvtProp_CATCH;
 			}
 			else
@@ -177,7 +177,7 @@ MsgHandlerInterface::EvtProp	ParamControllers::do_handle_evt (const NodeEvt &evt
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PARAM_EDIT, 0);
+			_page_switcher.switch_to (pg::PageType_PARAM_EDIT, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -195,7 +195,7 @@ void	ParamControllers::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -204,7 +204,7 @@ void	ParamControllers::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -230,7 +230,7 @@ void	ParamControllers::do_set_param_ctrl (int slot_id, PiType type, int index, c
 
 void	ParamControllers::set_controller_info ()
 {
-	assert (_fnt_ptr != 0);
+	assert (_fnt_ptr != nullptr);
 
 	const std::vector <CtrlSrcNamed> csn_ports (
 		Tools::make_port_list (*_model_ptr, *_view_ptr)
@@ -246,9 +246,9 @@ void	ParamControllers::set_controller_info ()
 	const int      h_m       = _fnt_ptr->get_char_h ();
 
 	const int      nbr_mod   =
-		(_cls_ptr != 0) ? int (_cls_ptr->_mod_arr.size ()) : 0;
+		(_cls_ptr != nullptr) ? int (_cls_ptr->_mod_arr.size ()) : 0;
 	const bool     bind_flag =
-		(_cls_ptr != 0 && _cls_ptr->_bind_sptr.get () != 0);
+		(_cls_ptr != nullptr && _cls_ptr->_bind_sptr.get () != nullptr);
 
 	PageMgrInterface::NavLocList  nav_list (1 + nbr_mod + 1);
 	nav_list [0]._node_id = Entry_LINK_VALUE;
@@ -278,7 +278,7 @@ void	ParamControllers::set_controller_info ()
 	_mod_list.resize (nbr_mod + 1);
 	for (int m = 0; m <= nbr_mod; ++m)
 	{
-		TxtSPtr        mod_sptr (new NText (m));
+		TxtSPtr        mod_sptr { std::make_shared <NText> (m) };
 		mod_sptr->set_font (*_fnt_ptr);
 		mod_sptr->set_coord (Vec2d (0, h_m * (m + 4)));
 		mod_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -319,7 +319,9 @@ void	ParamControllers::update_loc_edit (int node_id)
 	{
 		_loc_edit._ctrl_abs_flag = true;
 		_loc_edit._ctrl_index    =
-			(_cls_ptr != 0 && _cls_ptr->_bind_sptr.get () != 0) ? 0 : -1;
+			(   _cls_ptr != nullptr
+			 && _cls_ptr->_bind_sptr.get () != nullptr)
+			? 0 : -1;
 	}
 	else
 	{

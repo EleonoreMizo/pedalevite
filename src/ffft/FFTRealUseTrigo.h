@@ -72,14 +72,6 @@ private:
 
 private:
 
-						FFTRealUseTrigo ();
-						~FFTRealUseTrigo ();
-						FFTRealUseTrigo (const FFTRealUseTrigo &other);
-	FFTRealUseTrigo &
-						operator = (const FFTRealUseTrigo &other);
-	bool				operator == (const FFTRealUseTrigo &other);
-	bool				operator != (const FFTRealUseTrigo &other);
-
 };	// class FFTRealUseTrigo
 
 

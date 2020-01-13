@@ -95,7 +95,7 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPiSse <NC>::set_coefs (const double coef_arr [])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
    for (int phase = 0; phase < NBR_PHASES; ++phase)
    {
@@ -173,9 +173,9 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPiSse <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (out_0_ptr != 0);
-	assert (out_1_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_0_ptr != nullptr);
+	assert (out_1_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (out_0_ptr <= in_ptr || out_0_ptr >= in_ptr + nbr_spl);
 	assert (out_1_ptr <= in_ptr || out_1_ptr >= in_ptr + nbr_spl);
 	assert (out_0_ptr + nbr_spl <= out_1_ptr || out_1_ptr + nbr_spl <= out_0_ptr);

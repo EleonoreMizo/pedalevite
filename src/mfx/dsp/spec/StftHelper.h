@@ -102,8 +102,11 @@ private:
 private:
 
 	               StftHelper (const StftHelper <FFT> &other)        = delete;
+	               StftHelper (StftHelper <FFT> &&other)             = delete;
 	StftHelper <FFT> &
 	               operator = (const StftHelper <FFT> &other)        = delete;
+	StftHelper <FFT> &
+	               operator = (StftHelper <FFT> &&other)             = delete;
 	bool           operator == (const StftHelper <FFT> &other) const = delete;
 	bool           operator != (const StftHelper <FFT> &other) const = delete;
 

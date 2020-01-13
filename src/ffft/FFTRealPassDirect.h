@@ -70,13 +70,6 @@ private:
 
 private:
 
-						FFTRealPassDirect ();
-						FFTRealPassDirect (const FFTRealPassDirect &other);
-	FFTRealPassDirect &
-						operator = (const FFTRealPassDirect &other);
-	bool				operator == (const FFTRealPassDirect &other);
-	bool				operator != (const FFTRealPassDirect &other);
-
 };	// class FFTRealPassDirect
 
 

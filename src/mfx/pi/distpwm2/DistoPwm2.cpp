@@ -586,7 +586,8 @@ bool	DistoPwm2::detect_peak (Channel &chn, float x, bool positive_flag)
 
 	std::array <std::array <float, 3>, 2> env_res_arr;
 	std::array <float, 2>   env_inp = {{
-		(x < 0) ? 0 : x, (x < 0) ? -x : 0
+		(x < 0) ?  0 : x,
+		(x < 0) ? -x : 0
 	}};
 	for (int env_cnt = 0; env_cnt < 2; ++env_cnt)
 	{
@@ -625,7 +626,7 @@ void	DistoPwm2::detect_zero_cross_block (int chn_index, int nbr_spl)
 	assert (nbr_spl > 0);
 
 	Channel &      chn      = _chn_arr [chn_index];
-	float *        tmp_ptr  = &_buf_tmp [chn_index]; // 2 interleaved channels
+	const float *  tmp_ptr  = &_buf_tmp [chn_index]; // 2 interleaved channels
 	chn._zx_history.clear ();
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{

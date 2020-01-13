@@ -45,7 +45,6 @@ public:
 
 	               CpuId ();
 	               CpuId (const CpuId &other)      = default;
-	virtual        ~CpuId ()                       = default;
 
 	CpuId &        operator = (const CpuId &other) = default;
 

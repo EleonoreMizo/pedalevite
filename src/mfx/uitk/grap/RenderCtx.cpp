@@ -48,7 +48,7 @@ RenderCtx::RenderCtx (uint8_t *buf_ptr, const Vec2d &sz, int stride)
 ,	_sz (sz)
 ,	_stride (stride)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (sz [0] > 0);
 	assert (sz [1] > 0);
 	assert (stride >= sz [0]);

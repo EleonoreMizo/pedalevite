@@ -49,7 +49,6 @@ public:
 	               BitFieldSparse ();
 	explicit       BitFieldSparse (int nbr_elt);
 	               BitFieldSparse (const BitFieldSparse &other) = default;
-	virtual        ~BitFieldSparse ()                           = default;
 
 	BitFieldSparse &
 	               operator = (const BitFieldSparse &other)     = default;
@@ -92,7 +91,7 @@ private:
 	public:
 		typedef std::vector <GroupType> GroupArray;
 		GroupArray     _group_arr;
-		int            _nbr_elt;
+		int            _nbr_elt = 0;
 	};
 
 	typedef std::vector <BfLevel> LevelArray;

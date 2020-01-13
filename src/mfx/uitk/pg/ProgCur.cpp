@@ -95,21 +95,21 @@ Effect          unit
 ProgCur::ProgCur (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 :	_page_switcher (page_switcher)
 ,	_snd_drv (snd_drv)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
 ,	_ip_addr ()
-,	_prog_nbr_sptr (  new NText (Entry_PROG_IDX))
-,	_prog_name_sptr ( new NText (Entry_PROG_NAME))
-,	_bank_nbr_sptr (  new NText (Entry_BANK_IDX))
-,	_bank_name_sptr ( new NText (Entry_BANK_NAME))
-,	_fx_name_sptr (   new NText (Entry_FX_NAME))
-,	_param_unit_sptr (new NText (Entry_PARAM_UNIT))
-,	_param_name_sptr (new NText (Entry_PARAM_NAME))
-,	_param_val_sptr ( new NText (Entry_PARAM_VAL))
-,	_modlist_sptr (   new NText (Entry_MOD_LIST))
-,	_ip_sptr (        new NText (Entry_IP))
+,	_prog_nbr_sptr (  std::make_shared <NText> (Entry_PROG_IDX))
+,	_prog_name_sptr ( std::make_shared <NText> (Entry_PROG_NAME))
+,	_bank_nbr_sptr (  std::make_shared <NText> (Entry_BANK_IDX))
+,	_bank_name_sptr ( std::make_shared <NText> (Entry_BANK_NAME))
+,	_fx_name_sptr (   std::make_shared <NText> (Entry_FX_NAME))
+,	_param_unit_sptr (std::make_shared <NText> (Entry_PARAM_UNIT))
+,	_param_name_sptr (std::make_shared <NText> (Entry_PARAM_NAME))
+,	_param_val_sptr ( std::make_shared <NText> (Entry_PARAM_VAL))
+,	_modlist_sptr (   std::make_shared <NText> (Entry_MOD_LIST))
+,	_ip_sptr (        std::make_shared <NText> (Entry_IP))
 ,	_size_max_bank_name (0)
 ,	_bank_index (0)
 ,	_preset_index (0)
@@ -241,24 +241,28 @@ MsgHandlerInterface::EvtProp	ProgCur::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_button_ex ())
 	{
-		const Button   but = evt.get_button_ex ();
-		int            preset_index;
+		const Button   but          = evt.get_button_ex ();
 		switch (but)
 		{
 		case Button_U:
-			preset_index =
-				  (_preset_index + Cst::_nbr_presets_per_bank - 1)
-				% Cst::_nbr_presets_per_bank;
-			_model_ptr->activate_preset (preset_index);
-			ret_val = EvtProp_CATCH;
+			{
+				const int   preset_index =
+					  (_preset_index + Cst::_nbr_presets_per_bank - 1)
+					% Cst::_nbr_presets_per_bank;
+				_model_ptr->activate_preset (preset_index);
+				ret_val = EvtProp_CATCH;
+			}
 			break;
 		case Button_D:
-			preset_index = (_preset_index + 1) % Cst::_nbr_presets_per_bank;
-			_model_ptr->activate_preset (preset_index);
-			ret_val = EvtProp_CATCH;
+			{
+				const int   preset_index =
+					(_preset_index + 1) % Cst::_nbr_presets_per_bank;
+				_model_ptr->activate_preset (preset_index);
+				ret_val = EvtProp_CATCH;
+			}
 			break;
 		case Button_S:
-			_page_switcher.switch_to (pg::PageType_MENU_MAIN, 0);
+			_page_switcher.switch_to (pg::PageType_MENU_MAIN, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_E:
@@ -329,7 +333,7 @@ void	ProgCur::do_set_preset_name (std::string name)
 void	ProgCur::do_activate_preset (int index)
 {
 	i_set_prog_nbr (index);
-	if (_view_ptr != 0)
+	if (_view_ptr != nullptr)
 	{
 		i_set_prog_name (_view_ptr->use_preset_cur ()._name);
 	}
@@ -399,7 +403,7 @@ void	ProgCur::i_set_prog_name (std::string name)
 
 void	ProgCur::i_set_param (bool show_flag, int slot_id, int index, float val, PiType type)
 {
-	if (! show_flag || _view_ptr == 0)
+	if (! show_flag || _view_ptr == nullptr)
 	{
 		_fx_name_sptr->set_text ("");
 		_param_unit_sptr->set_text ("");
@@ -499,13 +503,13 @@ void	ProgCur::retrieve_all_unique_mod_src (std::set <ControlSource> &src_list) c
 				{
 					if (! cls.second.is_empty ())
 					{
-						if (cls.second._bind_sptr.get () != 0)
+						if (cls.second._bind_sptr.get () != nullptr)
 						{
 							add_mod_source (src_list, cls.second._bind_sptr->_source);
 						}
 						for (auto &cl_sptr : cls.second._mod_arr)
 						{
-							if (cl_sptr.get () != 0)
+							if (cl_sptr.get () != nullptr)
 							{
 								add_mod_source (src_list, cl_sptr->_source);
 							}
@@ -565,11 +569,11 @@ std::string ProgCur::get_ip_address ()
 		hints.ai_family   = AF_UNSPEC;
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_protocol = IPPROTO_TCP;
-		::addrinfo *   result_ptr = 0;
+		::addrinfo *   result_ptr = nullptr;
 		ret_val = getaddrinfo (name_0, "ssh", &hints, &result_ptr);
 		if (ret_val == 0)
 		{
-			while (result_ptr != 0)
+			while (result_ptr != nullptr)
 			{
 				if (result_ptr->ai_family == AF_INET)
 				{
@@ -584,11 +588,11 @@ std::string ProgCur::get_ip_address ()
 						buffer_0,
 						sizeof (buffer_0)
 					);
-					if (ipv4_0 != 0)
+					if (ipv4_0 != nullptr)
 					{
 						ip_addr = ipv4_0;
 					}
-					result_ptr = 0;
+					result_ptr = nullptr;
 				}
 				else
 				{

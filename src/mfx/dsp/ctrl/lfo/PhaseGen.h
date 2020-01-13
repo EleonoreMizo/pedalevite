@@ -51,8 +51,11 @@ public:
 
 	inline         PhaseGen ();
 	               PhaseGen (const PhaseGen &other)   = default;
+	               PhaseGen (PhaseGen &&other)        = default;
 	virtual        ~PhaseGen ()                       = default;
+
 	PhaseGen &     operator = (const PhaseGen &other) = default;
+	PhaseGen &     operator = (PhaseGen &&other)      = default;
 
 	inline void    set_sample_freq (double sample_freq);
 	inline void    set_period (double per);

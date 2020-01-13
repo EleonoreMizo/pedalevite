@@ -53,7 +53,16 @@ class NotificationFlagCascadeMulti
 
 public:
 
-	virtual        ~NotificationFlagCascadeMulti () = default;
+	               NotificationFlagCascadeMulti () = default;
+	               NotificationFlagCascadeMulti (const NotificationFlagCascadeMulti &other) = default;
+	               NotificationFlagCascadeMulti (NotificationFlagCascadeMulti &&other) = default;
+
+						~NotificationFlagCascadeMulti () = default;
+
+	NotificationFlagCascadeMulti &
+	               operator = (const NotificationFlagCascadeMulti &other) = default;
+	NotificationFlagCascadeMulti &
+	               operator = (NotificationFlagCascadeMulti &&other);
 
 
 

@@ -48,7 +48,7 @@ namespace pg
 
 
 
-class ProgMove
+class ProgMove final
 :	public PageInterface
 {
 
@@ -57,7 +57,6 @@ class ProgMove
 public:
 
 	explicit       ProgMove (PageSwitcher &page_switcher);
-	virtual        ~ProgMove () = default;
 
 
 
@@ -66,18 +65,17 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_select_bank (int index);
-	virtual void   do_set_preset_name (std::string name);
-	virtual void   do_set_preset (int bank_index, int preset_index, const doc::Preset &preset);
-	virtual void   do_store_preset (int preset_index, int bank_index);
+	void           do_select_bank (int index) final;
+	void           do_set_preset_name (std::string name) final;
+	void           do_set_preset (int bank_index, int preset_index, const doc::Preset &preset) final;
+	void           do_store_preset (int preset_index, int bank_index) final;
 
 
 
@@ -131,9 +129,10 @@ private:
 private:
 
 	               ProgMove ()                               = delete;
-	               ProgMove (const ProgMove &other)    = delete;
-	ProgMove &
-	               operator = (const ProgMove &other)        = delete;
+	               ProgMove (const ProgMove &other)          = delete;
+	               ProgMove (ProgMove &&other)               = delete;
+	ProgMove &     operator = (const ProgMove &other)        = delete;
+	ProgMove &     operator = (ProgMove &&other)             = delete;
 	bool           operator == (const ProgMove &other) const = delete;
 	bool           operator != (const ProgMove &other) const = delete;
 

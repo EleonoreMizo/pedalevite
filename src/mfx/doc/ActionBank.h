@@ -41,7 +41,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionBank
+class ActionBank final
 :	public PedalActionSingleInterface
 {
 
@@ -52,11 +52,15 @@ public:
 	explicit       ActionBank (bool relative_flag, int val);
 	explicit       ActionBank (SerRInterface &ser);
 	               ActionBank (const ActionBank &other) = default;
-	virtual        ~ActionBank ()                       = default;
+	               ActionBank (ActionBank &&other)      = default;
+	               ~ActionBank ()                       = default;
 
 	ActionBank &   operator = (const ActionBank &other) = default;
+	ActionBank &   operator = (ActionBank &&other)      = default;
 
-	virtual void   ser_write (SerWInterface &ser) const;
+	// PedalActionSingleInterface
+	void           ser_write (SerWInterface &ser) const final;
+
 	void           ser_read (SerRInterface &ser);
 
 	bool           _relative_flag;
@@ -69,10 +73,9 @@ public:
 protected:
 
 	// PedalActionSingleInterface
-	virtual ActionType
-	               do_get_type () const;
-	virtual PedalActionSingleInterface *
-	               do_duplicate () const;
+	ActionType     do_get_type () const final;
+	std::shared_ptr <PedalActionSingleInterface>
+	               do_duplicate () const final;
 
 
 

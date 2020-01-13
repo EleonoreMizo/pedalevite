@@ -78,31 +78,31 @@ private:
 	struct WavRiff
 	{
 		char           _chunk_id [4] = { 'R', 'I', 'F', 'F' };  // "RIFF"
-		uint32_t       _chunk_size;
+		uint32_t       _chunk_size = 0;
 		char           _wave_id [4] = { 'W', 'A', 'V', 'E' };   // "WAVE"
 	};
 
 	struct WavFmt
 	{
 		char           _chunk_id [4] = { 'f', 'm', 't', ' ' };  // "fmt "
-		uint32_t       _chunk_size;
-		int16_t        _format_tag;
-		uint16_t       _channels;
-		uint32_t       _samples_per_sec;
-		uint32_t       _avg_bytes_per_sec;
-		uint16_t       _block_align;
-		uint16_t       _bits_per_sample;
+		uint32_t       _chunk_size = 0;
+		int16_t        _format_tag = 0;
+		uint16_t       _channels = 0;
+		uint32_t       _samples_per_sec = 0;
+		uint32_t       _avg_bytes_per_sec = 0;
+		uint16_t       _block_align = 0;
+		uint16_t       _bits_per_sample = 0;
 
-		uint16_t       _size;
-		uint16_t       _valid_bits_per_sample;
-		uint32_t       _channel_mask;
-		uint8_t        _subformat [16];
+		uint16_t       _size = 0;
+		uint16_t       _valid_bits_per_sample = 0;
+		uint32_t       _channel_mask = 0;
+		uint8_t        _subformat [16] = { };
 	};
 
 	struct WavData
 	{
 		char           _chunk_id [4] = {'d', 'a', 't', 'a' };  // "data"
-		uint32_t       _chunk_size;
+		uint32_t       _chunk_size = 0;
 	};
 
 	enum WavFormat : uint16_t
@@ -116,7 +116,7 @@ private:
 
 	static int     write_headers (FILE * f_ptr, int nbr_chn, int64_t nbr_spl, double sample_freq);
 
-	FILE *         _f_ptr         = 0; // 0 if not open
+	FILE *         _f_ptr         = nullptr; // 0 if not open
 	int            _nbr_chn       = 0;
 	double         _sample_freq   = 0;
 	int64_t        _max_len       = 0; // Sample frames
@@ -132,7 +132,9 @@ private:
 private:
 
 	               FileOpWav (const FileOpWav &other)         = delete;
+	               FileOpWav (const FileOpWav &&other)        = delete;
 	FileOpWav &    operator = (const FileOpWav &other)        = delete;
+	FileOpWav &    operator = (const FileOpWav &&other)       = delete;
 	bool           operator == (const FileOpWav &other) const = delete;
 	bool           operator != (const FileOpWav &other) const = delete;
 

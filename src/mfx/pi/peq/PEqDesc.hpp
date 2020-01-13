@@ -56,17 +56,17 @@ PEqDesc <NB>::PEqDesc ()
 		const int      base = compute_param_base (band);
 
 		// Filter Type
-		param::TplEnum *  enu_ptr = new param::TplEnum (
+		auto           enu_sptr = std::make_shared <param::TplEnum> (
 			"Peak\nLow shelf\nHigh Pass\nHigh shelf\nLow Pass",
 			"B%dT\nB%d Type\nBand %d Type",
 			"",
 			band + 1,
 			"%s"
 		);
-		_desc_set.add_glob (base + Param_TYPE, enu_ptr);
+		_desc_set.add_glob (base + Param_TYPE, enu_sptr);
 
 		// Frequency
-		param::TplLog *   log_ptr = new param::TplLog (
+		auto           log_sptr = std::make_shared <param::TplLog> (
 			20, 20 * 1024,
 			"B%dF\nB%d Freq\nBand %d Freq\nBand %d Frequency",
 			"Hz",
@@ -74,14 +74,14 @@ PEqDesc <NB>::PEqDesc ()
 			band + 1,
 			"%5.0f"
 		);
-		log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-		_desc_set.add_glob (base + Param_FREQ, log_ptr);
+		log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+		_desc_set.add_glob (base + Param_FREQ, log_sptr);
 
 		// Quality Factor
 		{
 			const double   val_min =  0.10;
 			const double   val_max = 20.0;
-			TplPll *       pll_ptr = new TplPll (
+			auto           pll_sptr = std::make_shared <TplPll> (
 				val_min, val_max,
 				"B%dQ\nB%d Q\nBand %d Q",
 				"",
@@ -89,19 +89,19 @@ PEqDesc <NB>::PEqDesc ()
 				band + 1,
 				"%5.2f"
 			);
-			pll_ptr->use_mapper ().set_first_value (val_min);
-			pll_ptr->use_mapper ().add_segment (0.125, 0.25   , true);
-			pll_ptr->use_mapper ().add_segment (0.5  , 1.00   , true);
-			pll_ptr->use_mapper ().add_segment (0.875, 5.00   , true);
-			pll_ptr->use_mapper ().add_segment (1.0  , val_max, true);
-			_desc_set.add_glob (base + Param_Q, pll_ptr);
+			pll_sptr->use_mapper ().set_first_value (val_min);
+			pll_sptr->use_mapper ().add_segment (0.125, 0.25   , true);
+			pll_sptr->use_mapper ().add_segment (0.5  , 1.00   , true);
+			pll_sptr->use_mapper ().add_segment (0.875, 5.00   , true);
+			pll_sptr->use_mapper ().add_segment (1.0  , val_max, true);
+			_desc_set.add_glob (base + Param_Q, pll_sptr);
 		}
 
 		// Gain
 		{
 			const double   val_min = 1.0 / (1 << 8);
 			const double   val_max =        1 << 4;
-			TplPll *       pll_ptr = new TplPll (
+			auto           pll_sptr = std::make_shared <TplPll> (
 				val_min, val_max,
 				"B%dG\nB%d Gain\nBand %d Gain",
 				"dB",
@@ -109,23 +109,23 @@ PEqDesc <NB>::PEqDesc ()
 				band + 1,
 				"%+5.1f"
 			);
-			pll_ptr->use_mapper ().set_first_value (val_min);
-			pll_ptr->use_mapper ().add_segment (0.125, 0.25   , true);
-			pll_ptr->use_mapper ().add_segment (0.5  , 1.00   , true);
-			pll_ptr->use_mapper ().add_segment (0.875, 5.00   , true);
-			pll_ptr->use_mapper ().add_segment (1.0  , val_max, true);
-			_desc_set.add_glob (base + Param_GAIN, pll_ptr);
+			pll_sptr->use_mapper ().set_first_value (val_min);
+			pll_sptr->use_mapper ().add_segment (0.125, 0.25   , true);
+			pll_sptr->use_mapper ().add_segment (0.5  , 1.00   , true);
+			pll_sptr->use_mapper ().add_segment (0.875, 5.00   , true);
+			pll_sptr->use_mapper ().add_segment (1.0  , val_max, true);
+			_desc_set.add_glob (base + Param_GAIN, pll_sptr);
 		}
 
 		// Bypass
-		enu_ptr = new param::TplEnum (
+		enu_sptr = std::make_shared <param::TplEnum> (
 			"Off\nOn",
 			"B%dB\nB%d Byp\nB%d Bypass\nBand %d Bypass",
 			"",
 			band + 1,
 			"%s"
 		);
-		_desc_set.add_glob (base + Param_BYPASS, enu_ptr);
+		_desc_set.add_glob (base + Param_BYPASS, enu_sptr);
 	}
 }
 

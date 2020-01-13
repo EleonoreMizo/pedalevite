@@ -47,7 +47,7 @@ namespace pg
 
 
 
-class Rec2Disk
+class Rec2Disk final
 :	public PageInterface
 {
 
@@ -56,7 +56,6 @@ class Rec2Disk
 public:
 
 	explicit       Rec2Disk (PageSwitcher &page_switcher);
-	virtual        ~Rec2Disk () = default;
 
 
 
@@ -65,12 +64,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -123,7 +121,9 @@ private:
 
 	               Rec2Disk ()                               = delete;
 	               Rec2Disk (const Rec2Disk &other)          = delete;
+	               Rec2Disk (Rec2Disk &&other)               = delete;
 	Rec2Disk &     operator = (const Rec2Disk &other)        = delete;
+	Rec2Disk &     operator = (Rec2Disk &&other)             = delete;
 	bool           operator == (const Rec2Disk &other) const = delete;
 	bool           operator != (const Rec2Disk &other) const = delete;
 

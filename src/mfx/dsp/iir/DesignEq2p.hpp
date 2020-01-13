@@ -62,8 +62,8 @@ Throws: Nothing
 template <typename T>
 void	DesignEq2p::make_dc_killer (T bs [3], T as [3])
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 
 	bs [0] = 0;
 	bs [1] = 0;
@@ -95,8 +95,8 @@ Throws: Nothing
 template <typename T>
 void	DesignEq2p::make_3db_shelf_lo (T bs [3], T as [3], T q, T lvl)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 	assert (lvl >= 0);
 
@@ -132,8 +132,8 @@ Throws: Nothing
 template <typename T>
 void	DesignEq2p::make_3db_shelf_hi (T bs [3], T as [3], T q, T lvl)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 	assert (lvl >= 0);
 
@@ -169,8 +169,8 @@ Throws: Nothing
 template <typename T>
 void	DesignEq2p::make_3db_peak (T bs [3], T as [3], T q, T lvl)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 	assert (lvl >= 0);
 
@@ -204,8 +204,8 @@ Throws: Nothing
 template <typename T>
 void	DesignEq2p::make_mid_shelf_lo (T bs [3], T as [3], T q, T lvl)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 	assert (lvl > 0);
 
@@ -243,8 +243,8 @@ Throws: Nothing
 template <typename T>
 void	DesignEq2p::make_mid_shelf_hi (T bs [3], T as [3], T q, T lvl)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 	assert (lvl > 0);
 
@@ -284,8 +284,8 @@ Throws: Nothing
 template <typename T>
 void	DesignEq2p::make_mid_peak (T bs [3], T as [3], T q, T lvl)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 	assert (lvl > 0);
 
@@ -311,8 +311,8 @@ Name: make_low_pass
 template <typename T>
 void	DesignEq2p::make_low_pass (T bs [3], T as [3], T q)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 
 	bs [0] = 1;
@@ -335,8 +335,8 @@ Name: make_hi_pass
 template <typename T>
 void	DesignEq2p::make_hi_pass (T bs [3], T as [3], T q)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 
 	bs [0] = 0;
@@ -353,8 +353,8 @@ void	DesignEq2p::make_hi_pass (T bs [3], T as [3], T q)
 template <typename T>
 void	DesignEq2p::make_band_pass (T bs [3], T as [3], T q)
 {
-	assert (bs != 0);
-	assert (as != 0);
+	assert (bs != nullptr);
+	assert (as != nullptr);
 	assert (q > 0);
 
 	bs [0] = 0;
@@ -388,8 +388,8 @@ Throws: Nothing
 template <typename T>
 double	DesignEq2p::compute_group_delay (const T bz [3], const T az [3], double sample_freq, double f0)
 {
-	assert (bz != 0);
-	assert (az != 0);
+	assert (bz != nullptr);
+	assert (az != nullptr);
 	assert (az [0] != 0);
 	assert (sample_freq > 0);
 	assert (f0 > 0);

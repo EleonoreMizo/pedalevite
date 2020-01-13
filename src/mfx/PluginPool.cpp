@@ -62,7 +62,7 @@ PluginPool::PluginPool ()
 
 	for (auto &sptr : _fact_arr)
 	{
-		if (sptr.get () == 0)
+		if (sptr.get () == nullptr)
 		{
 			throw std::runtime_error (
 				"Pointer to the factory is null"
@@ -104,7 +104,7 @@ int	PluginPool::create (std::string model_id)
 
 		// Creates the plug-in
 		PluginUPtr     pi_uptr (fact.create ());
-		if (pi_uptr.get () == 0)
+		if (pi_uptr.get () == nullptr)
 		{
 			assert (false);
 		}
@@ -207,7 +207,7 @@ PluginPool::PluginDetails &	PluginPool::use_plugin (int index)
 
 	PluginSlot &   slot = _pi_arr [index];
 	assert (slot._state != SharedRscState_FREE);
-	assert (slot._details._pi_uptr.get () != 0);
+	assert (slot._details._pi_uptr.get () != nullptr);
 
 	return slot._details;
 }
@@ -221,7 +221,7 @@ const PluginPool::PluginDetails &	PluginPool::use_plugin (int index) const
 
 	const PluginSlot &   slot = _pi_arr [index];
 	assert (slot._state != SharedRscState_FREE);
-	assert (slot._details._pi_uptr.get () != 0);
+	assert (slot._details._pi_uptr.get () != nullptr);
 
 	return slot._details;
 }
@@ -258,7 +258,7 @@ PluginPool::PluginSlot::~PluginSlot ()
 int	PluginPool::add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc)
 {
 	assert (get_room () > 0);
-	assert (pi_uptr.get () != 0);
+	assert (pi_uptr.get () != nullptr);
 
 	int            found_pos = -1;
 	for (int index = 0; index < Cst::_max_nbr_plugins && found_pos < 0; ++index)
@@ -266,7 +266,7 @@ int	PluginPool::add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc
 		PluginSlot &      slot = _pi_arr [index];
 		if (slot._state == SharedRscState_FREE)
 		{
-			assert (slot._details._pi_uptr.get () == 0);
+			assert (slot._details._pi_uptr.get () == nullptr);
 			slot._state = SharedRscState_INUSE;
 
 			// Parameters
@@ -298,7 +298,7 @@ int	PluginPool::add (PluginUPtr &pi_uptr, const piapi::PluginDescInterface &desc
 		}
 	}
 
-	assert (pi_uptr.get () == 0);
+	assert (pi_uptr.get () == nullptr);
 
 	return found_pos;
 }

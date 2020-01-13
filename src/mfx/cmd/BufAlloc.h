@@ -98,7 +98,9 @@ private:
 private:
 
 	               BufAlloc (const BufAlloc &other)          = delete;
+	               BufAlloc (const BufAlloc &&other)         = delete;
 	BufAlloc &     operator = (const BufAlloc &other)        = delete;
+	BufAlloc &     operator = (const BufAlloc &&other)       = delete;
 	bool           operator == (const BufAlloc &other) const = delete;
 	bool           operator != (const BufAlloc &other) const = delete;
 

@@ -54,12 +54,12 @@ namespace pg
 PresetList::PresetList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW))
 ,	_preset_list ()
 ,	_preset_pos_map ()
 ,	_action (Action_INVALID)
@@ -79,7 +79,8 @@ PresetList::PresetList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
 	assert (_loc_edit._slot_id >= 0);
-	assert (usr_ptr != 0 || _state != State_NORMAL); // Actually we're not sure it cannot happen
+	// Actually we're not sure it cannot happen
+	assert (usr_ptr != nullptr || _state != State_NORMAL);
 
 	_model_ptr = &model;
 	_view_ptr  = &view;
@@ -97,7 +98,7 @@ void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &p
 			{
 			case Action_STORE:
 				store_2 ();
-				_page_switcher.switch_to (pg::PageType_PRESET_MENU, 0);
+				_page_switcher.switch_to (pg::PageType_PRESET_MENU, nullptr);
 				return;
 			case Action_RENAME:
 				rename_2 ();
@@ -112,7 +113,7 @@ void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &p
 	// Direct
 	else
 	{
-		Param &        param = *reinterpret_cast <Param *> (usr_ptr);
+		Param &        param = *static_cast <Param *> (usr_ptr);
 		assert (param._action >= 0);
 		assert (param._action < Action_NBR_ELT);
 		_action        = param._action;
@@ -182,7 +183,7 @@ MsgHandlerInterface::EvtProp	PresetList::do_handle_evt (const NodeEvt &evt)
 				}  // And we stay on the list page
 				break;
 			case Action_BROWSE:
-				_page_switcher.switch_to (pg::PageType_PRESET_MENU, 0);
+				_page_switcher.switch_to (pg::PageType_PRESET_MENU, nullptr);
 				break;
 			case Action_STORE:
 				store_1 (node_id);
@@ -207,7 +208,7 @@ MsgHandlerInterface::EvtProp	PresetList::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PRESET_MENU, 0);
+			_page_switcher.switch_to (pg::PageType_PRESET_MENU, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -225,7 +226,7 @@ void	PresetList::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -234,7 +235,7 @@ void	PresetList::do_remove_slot (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -246,7 +247,7 @@ void	PresetList::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -256,7 +257,7 @@ void	PresetList::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -303,7 +304,7 @@ void	PresetList::do_clear_all_settings ()
 
 void	PresetList::update_display ()
 {
-	assert (_fnt_ptr != 0);
+	assert (_fnt_ptr != nullptr);
 
 	_preset_list.clear ();
 	_menu_sptr->clear_all_nodes ();
@@ -367,7 +368,7 @@ void	PresetList::add_entry (int set_idx, std::string name, PageMgrInterface::Nav
 	const int      scr_w   = _page_size [0];
 	const int      h_m     = _fnt_ptr->get_char_h ();
 	const int      node_id = set_idx;
-	TxtSPtr        preset_sptr (new NText (node_id));
+	TxtSPtr        preset_sptr { std::make_shared <NText> (node_id) };
 	char           txt_0 [255+1];
 	fstb::snprintf4all (
 		txt_0, sizeof (txt_0),
@@ -471,7 +472,7 @@ void	PresetList::store_2 ()
 	const int      ret_val = _model_ptr->save_to_disk ();
 	if (ret_val == 0)
 	{
-		_page_switcher.switch_to (pg::PageType_SLOT_MENU, 0);
+		_page_switcher.switch_to (pg::PageType_SLOT_MENU, nullptr);
 	}
 	else
 	{

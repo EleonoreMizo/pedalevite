@@ -153,7 +153,7 @@ PluginSettings *	Slot::test_and_get_settings (PiType type)
 		return &(it->second);
 	}
 
-	return 0;
+	return nullptr;
 }
 
 
@@ -171,7 +171,7 @@ const PluginSettings *	Slot::test_and_get_settings (PiType type) const
 		return &(it->second);
 	}
 
-	return 0;
+	return nullptr;
 }
 
 

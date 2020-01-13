@@ -46,8 +46,6 @@ class NotificationFlagInterface
 
 public:
 
-	virtual        ~NotificationFlagInterface () = default;
-
 	inline bool		operator () () const;
 	inline bool		operator () (bool autoreset_flag);
 

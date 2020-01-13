@@ -73,11 +73,6 @@ private:
 
 private:
 
-	               SvfMixerPeak ()                               = delete;
-	               SvfMixerPeak (const SvfMixerPeak &other)      = delete;
-	               ~SvfMixerPeak ()                              = delete;
-	SvfMixerPeak &
-	               operator = (const SvfMixerPeak &other)        = delete;
 	bool           operator == (const SvfMixerPeak &other) const = delete;
 	bool           operator != (const SvfMixerPeak &other) const = delete;
 

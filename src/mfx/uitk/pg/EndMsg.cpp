@@ -64,9 +64,9 @@ namespace pg
 EndMsg::EndMsg (PageSwitcher &page_switcher, const CmdLine &cmd_line)
 :	_page_switcher (page_switcher)
 ,	_cmd_line (cmd_line)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
 ,	_line_list ()
 ,	_end_type (EndType_NONE)
@@ -84,7 +84,8 @@ EndMsg::EndMsg (PageSwitcher &page_switcher, const CmdLine &cmd_line)
 
 void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
-	assert (usr_ptr != 0);
+	assert (usr_ptr != nullptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
@@ -138,7 +139,7 @@ void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	const int      y_base    = (_page_size [1] - nbr_lines * h_l) >> 1;
 	for (int l_cnt = 0; l_cnt < nbr_lines; ++l_cnt)
 	{
-		TxtSPtr        line_sptr (new NText (l_cnt));
+		TxtSPtr        line_sptr { std::make_shared <NText> (l_cnt) };
 		line_sptr->set_font (fnt._l);
 		line_sptr->set_justification (0.5f, 0, false);
 		line_sptr->set_frame (Vec2d (_page_size [0], 0), Vec2d ());

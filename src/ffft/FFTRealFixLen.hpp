@@ -74,8 +74,8 @@ long	FFTRealFixLen <LL2>::get_length () const
 template <int LL2>
 void	FFTRealFixLen <LL2>::do_fft (DataType f [], const DataType x [])
 {
-	assert (f != 0);
-	assert (x != 0);
+	assert (f != nullptr);
+	assert (x != nullptr);
 	assert (x != f);
 	assert (FFT_LEN_L2 >= 3);
 
@@ -99,8 +99,8 @@ void	FFTRealFixLen <LL2>::do_fft (DataType f [], const DataType x [])
 template <>
 inline void	FFTRealFixLen <2>::do_fft (DataType f [], const DataType x [])
 {
-	assert (f != 0);
-	assert (x != 0);
+	assert (f != nullptr);
+	assert (x != nullptr);
 	assert (x != f);
 
 	f [1] = x [0] - x [2];
@@ -117,8 +117,8 @@ inline void	FFTRealFixLen <2>::do_fft (DataType f [], const DataType x [])
 template <>
 inline void	FFTRealFixLen <1>::do_fft (DataType f [], const DataType x [])
 {
-	assert (f != 0);
-	assert (x != 0);
+	assert (f != nullptr);
+	assert (x != nullptr);
 	assert (x != f);
 
 	f [0] = x [0] + x [1];
@@ -129,8 +129,8 @@ inline void	FFTRealFixLen <1>::do_fft (DataType f [], const DataType x [])
 template <>
 inline void	FFTRealFixLen <0>::do_fft (DataType f [], const DataType x [])
 {
-	assert (f != 0);
-	assert (x != 0);
+	assert (f != nullptr);
+	assert (x != nullptr);
 
 	f [0] = x [0];
 }
@@ -141,8 +141,8 @@ inline void	FFTRealFixLen <0>::do_fft (DataType f [], const DataType x [])
 template <int LL2>
 void	FFTRealFixLen <LL2>::do_ifft (const DataType f [], DataType x [])
 {
-	assert (f != 0);
-	assert (x != 0);
+	assert (f != nullptr);
+	assert (x != nullptr);
 	assert (x != f);
 	assert (FFT_LEN_L2 >= 3);
 
@@ -170,8 +170,8 @@ void	FFTRealFixLen <LL2>::do_ifft (const DataType f [], DataType x [])
 template <>
 inline void	FFTRealFixLen <2>::do_ifft (const DataType f [], DataType x [])
 {
-	assert (f != 0);
-	assert (x != 0);
+	assert (f != nullptr);
+	assert (x != nullptr);
 	assert (x != f);
 
 	const DataType	b_0 = f [0] + f [2];
@@ -187,8 +187,8 @@ inline void	FFTRealFixLen <2>::do_ifft (const DataType f [], DataType x [])
 template <>
 inline void	FFTRealFixLen <1>::do_ifft (const DataType f [], DataType x [])
 {
-	assert (f != 0);
-	assert (x != 0);
+	assert (f != nullptr);
+	assert (x != nullptr);
 	assert (x != f);
 
 	x [0] = f [0] + f [1];
@@ -199,8 +199,8 @@ inline void	FFTRealFixLen <1>::do_ifft (const DataType f [], DataType x [])
 template <>
 inline void	FFTRealFixLen <0>::do_ifft (const DataType f [], DataType x [])
 {
-	assert (f != 0);
-	assert (x != 0);
+	assert (f != nullptr);
+	assert (x != nullptr);
 	assert (x != f);
 
 	x [0] = f [0];
@@ -212,7 +212,7 @@ inline void	FFTRealFixLen <0>::do_ifft (const DataType f [], DataType x [])
 template <int LL2>
 void	FFTRealFixLen <LL2>::rescale (DataType x []) const
 {
-	assert (x != 0);
+	assert (x != nullptr);
 
 	const DataType	mul = DataType (1.0 / FFT_LEN);
 

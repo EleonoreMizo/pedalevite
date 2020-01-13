@@ -53,7 +53,16 @@ public:
 		EvtProp_NBR_ELT
 	};
 
-	virtual        ~MsgHandlerInterface () = default;
+	               MsgHandlerInterface ()                        = default;
+	               MsgHandlerInterface (const MsgHandlerInterface &other) = default;
+	               MsgHandlerInterface (MsgHandlerInterface &&other)      = default;
+
+	virtual        ~MsgHandlerInterface ()                       = default;
+
+	virtual MsgHandlerInterface &
+	               operator = (const MsgHandlerInterface &other) = default;
+	virtual MsgHandlerInterface &
+	               operator = (MsgHandlerInterface &&other)      = default;
 
 	EvtProp        handle_evt (const NodeEvt &evt);
 

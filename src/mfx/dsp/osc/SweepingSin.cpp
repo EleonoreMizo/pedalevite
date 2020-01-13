@@ -61,7 +61,7 @@ SweepingSin::SweepingSin (double fs, double f1, double f2)
 
 void	SweepingSin::generate (float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
    generate (data_ptr, nbr_spl, 0, nbr_spl);
@@ -71,7 +71,7 @@ void	SweepingSin::generate (float data_ptr [], int nbr_spl)
 
 void	SweepingSin::generate (float data_ptr [], int nbr_spl, int block_start, int block_len)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (block_start >= 0);
 	assert (block_len > 0);

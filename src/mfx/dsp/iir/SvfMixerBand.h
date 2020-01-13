@@ -73,11 +73,6 @@ private:
 
 private:
 
-	               SvfMixerBand ()                               = delete;
-	               SvfMixerBand (const SvfMixerBand &other)      = delete;
-	               ~SvfMixerBand ()                              = delete;
-	SvfMixerBand &
-	               operator = (const SvfMixerBand &other)        = delete;
 	bool           operator == (const SvfMixerBand &other) const = delete;
 	bool           operator != (const SvfMixerBand &other) const = delete;
 

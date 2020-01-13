@@ -98,11 +98,14 @@ private:
 
 private:
 
-	               FncFiniteAsym2d (const FncFiniteAsym2d &other)   = delete;
-	FncFiniteAsym2d &
-	               operator = (const FncFiniteAsym2d &other)        = delete;
-	bool           operator == (const FncFiniteAsym2d &other) const = delete;
-	bool           operator != (const FncFiniteAsym2d &other) const = delete;
+	               FncFiniteAsym2d (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other)   = delete;
+	               FncFiniteAsym2d (FncFiniteAsym2d <XL, XU, YL, YU, GF> &&other)        = delete;
+	FncFiniteAsym2d <XL, XU, YL, YU, GF> &
+	               operator = (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other)        = delete;
+	FncFiniteAsym2d <XL, XU, YL, YU, GF> &
+	               operator = (FncFiniteAsym2d <XL, XU, YL, YU, GF> &&other)             = delete;
+	bool           operator == (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other) const = delete;
+	bool           operator != (const FncFiniteAsym2d <XL, XU, YL, YU, GF> &other) const = delete;
 
 }; // class FncFiniteAsym2d
 

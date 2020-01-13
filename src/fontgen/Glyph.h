@@ -32,7 +32,6 @@ class Glyph
 public:
 
 						Glyph () = default;
-	virtual			~Glyph () = default;
 
 	void				set_size (int w, int h);
 	int				get_width () const;

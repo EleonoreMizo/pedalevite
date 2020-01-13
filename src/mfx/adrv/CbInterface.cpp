@@ -43,8 +43,8 @@ namespace adrv
 
 void	CbInterface::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
-	assert (dst_arr != 0);
-	assert (src_arr != 0);
+	assert (dst_arr != nullptr);
+	assert (src_arr != nullptr);
 	assert (nbr_spl > 0);
 
 	do_process_block (dst_arr, src_arr, nbr_spl);

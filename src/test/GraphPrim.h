@@ -38,9 +38,6 @@ class GraphPrim
 
 public:
 
-	               GraphPrim ();
-	virtual        ~GraphPrim () {}
-
 	void           set_size (float w, float h);
 	void           set_plot (EPSPlot &plot, float x, float y);
 
@@ -64,22 +61,17 @@ private:
 	void           convert_coordinates (double &x, double &y) const;
 	void           draw_arrow_head (double x, double y, double arrow_cos, double arrow_sin, double head_size) const;
 
-	EPSPlot *      _plot_ptr;
-	PsCoord        _x;
-	PsCoord        _y;
-	PsCoord        _w;
-	PsCoord        _h;
+	EPSPlot *      _plot_ptr { nullptr };
+	PsCoord        _x        { 0 };
+	PsCoord        _y        { 0 };
+	PsCoord        _w        { 0 };
+	PsCoord        _h        { 0 };
 
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	               GraphPrim (const GraphPrim &other);
-	GraphPrim &    operator = (const GraphPrim &other);
-	bool           operator == (const GraphPrim &other);
-	bool           operator != (const GraphPrim &other);
 
 };	// class GraphPrim
 

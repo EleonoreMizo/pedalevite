@@ -56,8 +56,11 @@ public:
 
 	               Slot ();
 	               Slot (const Slot &other)       = default;
-	virtual        ~Slot ()                       = default;
+	               Slot (Slot &&other)            = default;
+	               ~Slot ()                       = default;
+
 	Slot &         operator = (const Slot &other) = default;
+	Slot &         operator = (Slot &&other)      = default;
 
 	bool           operator == (const Slot &other) const;
 	bool           operator != (const Slot &other) const;

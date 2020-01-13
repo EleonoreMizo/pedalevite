@@ -243,14 +243,14 @@ private:
 
 void	PiProc::set_desc (DescSPtr desc_sptr)
 {
-	assert (desc_sptr.get () != 0);
+	assert (desc_sptr.get () != nullptr);
 
 	_desc_sptr = desc_sptr;
 }
 
 int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o, double sample_freq, int max_block_size, int &latency)
 {
-	assert (_desc_sptr.get () != 0);
+	assert (_desc_sptr.get () != nullptr);
 	const int      mbs_alig = (max_block_size + 3) & -4;
 	int            nbr_i = 1;
 	int            nbr_o = 1;
@@ -271,7 +271,7 @@ int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o
 		_buf_src_ptr_list [chn] = &_buf_list [buf_idx] [0];
 		++ buf_idx;
 	}
-	_proc_info._src_arr = 0;
+	_proc_info._src_arr = nullptr;
 	if (nbr_chn_i > 0)
 	{
 		_proc_info._src_arr = &_buf_src_ptr_list [0];
@@ -284,7 +284,7 @@ int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o
 		_buf_dst_ptr_list [chn] = &_buf_list [buf_idx] [0];
 		++ buf_idx;
 	}
-	_proc_info._dst_arr = 0;
+	_proc_info._dst_arr = nullptr;
 	if (nbr_chn_o > 0)
 	{
 		_proc_info._dst_arr = &_buf_dst_ptr_list [0];
@@ -297,7 +297,7 @@ int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o
 		_buf_sig_ptr_list [chn] = &_buf_list [buf_idx] [0];
 		++ buf_idx;
 	}
-	_proc_info._sig_arr = (nbr_s <= 0) ? 0 : &_buf_sig_ptr_list [0];
+	_proc_info._sig_arr = (nbr_s <= 0) ? nullptr : &_buf_sig_ptr_list [0];
 
 	latency = 0;
 
@@ -306,7 +306,7 @@ int	PiProc::setup (mfx::piapi::PluginInterface &pi, int nbr_chn_i, int nbr_chn_o
 
 void	PiProc::set_param_nat (int index, double val_nat)
 {
-	assert (_desc_sptr.get () != 0);
+	assert (_desc_sptr.get () != nullptr);
 	assert (_evt_list.size () == _evt_ptr_list.size ());
 	assert (index >= 0);
 	assert (index < _desc_sptr->get_nbr_param (mfx::piapi::ParamCateg_GLOBAL));
@@ -335,7 +335,7 @@ void	PiProc::reset_param ()
 {
 	_evt_list.clear ();
 	_evt_ptr_list.clear ();
-	_proc_info._evt_arr = 0;
+	_proc_info._evt_arr = nullptr;
 	_proc_info._nbr_evt = 0;
 }
 
@@ -356,7 +356,7 @@ float * const *	PiProc::use_buf_list_dst () const
 
 float * const *	PiProc::use_buf_list_sig () const
 {
-	return (_buf_sig_ptr_list.empty ()) ? 0 : &_buf_sig_ptr_list [0];
+	return (_buf_sig_ptr_list.empty ()) ? nullptr : &_buf_sig_ptr_list [0];
 }
 
 
@@ -375,7 +375,11 @@ int	test_testgen ()
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
-		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::testgen::TestGenDesc));
+		pi_proc.set_desc (
+			std::static_pointer_cast <mfx::piapi::PluginDescInterface> (
+				std::make_shared <mfx::pi::testgen::TestGenDesc> ()
+			)
+		);
 		pi_proc.setup (plugin, 1, 1, sample_freq, max_block_size, latency);
 		size_t         pos = 0;
 		std::array <float *, 1> dst_arr = {{ pi_proc.use_buf_list_dst () [0] }};
@@ -435,7 +439,11 @@ int	test_disto ()
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
-		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::dist1::DistoSimpleDesc));
+		pi_proc.set_desc (
+			std::static_pointer_cast <mfx::piapi::PluginDescInterface> (
+				std::make_shared <mfx::pi::dist1::DistoSimpleDesc> ()
+			)
+		);
 		pi_proc.setup (dist, 1, 1, sample_freq, max_block_size, latency);
 		size_t         pos = 0;
 		std::array <float *, 1> dst_arr = {{ pi_proc.use_buf_list_dst () [0] }};
@@ -496,7 +504,11 @@ int	test_phaser ()
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
-		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::phase1::PhaserDesc));
+		pi_proc.set_desc (
+			std::static_pointer_cast <mfx::piapi::PluginDescInterface> (
+				std::make_shared <mfx::pi::phase1::PhaserDesc> ()
+			)
+		);
 		pi_proc.setup (plugin, nbr_chn, nbr_chn, sample_freq, max_block_size, latency);
 		size_t         pos = 0;
 		float * const* dst_arr = pi_proc.use_buf_list_dst ();
@@ -564,7 +576,11 @@ int	test_noise_chlorine ()
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
-		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::nzcl::NoiseChlorineDesc));
+		pi_proc.set_desc (
+			std::static_pointer_cast <mfx::piapi::PluginDescInterface> (
+				std::make_shared <mfx::pi::nzcl::NoiseChlorineDesc> ()
+			)
+		);
 		pi_proc.setup (plugin, nbr_chn, nbr_chn, sample_freq, max_block_size, latency);
 		size_t         pos = 0;
 		float * const* dst_arr = pi_proc.use_buf_list_dst ();
@@ -636,7 +652,11 @@ int	test_noise_bleach ()
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
-		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::nzbl::NoiseBleachDesc));
+		pi_proc.set_desc (
+			std::static_pointer_cast <mfx::piapi::PluginDescInterface> (
+				std::make_shared <mfx::pi::nzbl::NoiseBleachDesc> ()
+			)
+		);
 		pi_proc.setup (plugin, nbr_chn, nbr_chn, sample_freq, max_block_size, latency);
 		size_t         pos = 0;
 		float * const* dst_arr = pi_proc.use_buf_list_dst ();
@@ -1019,7 +1039,11 @@ int	patch_setup_file ()
 	{
 		mfx::doc::SerRText   ser_r;
 		ser_r.start (content);
+#if __cplusplus >= 201402
+		sss_uptr = std::make_unique <mfx::doc::Setup> ();
+#else // __cplusplus
 		sss_uptr = std::unique_ptr <mfx::doc::Setup> (new mfx::doc::Setup);
+#endif // __cplusplus
 		sss_uptr->ser_read (ser_r);
 		ret_val = ser_r.terminate ();
 	}
@@ -1052,14 +1076,14 @@ int	patch_setup_file ()
 			{
 				for (auto &slot_node : preset._slot_map)
 				{
-					if (slot_node.second.get () != 0)
+					if (slot_node.second.get () != nullptr)
 					{
 						auto &         slot = *(slot_node.second);
 						if (slot._pi_model == "peq")
 						{
 						   mfx::doc::PluginSettings * settings_ptr =
 								slot.test_and_get_settings (mfx::PiType_MAIN);
-							if (settings_ptr != 0)
+							if (settings_ptr != nullptr)
 							{
 								patch_setup_file_fix_peq_freq  (
 									*settings_ptr, desc_freq, desc_type, desc_gain
@@ -1076,7 +1100,7 @@ int	patch_setup_file ()
 		{
 			for (auto &settings_sptr : it_peq->second._cell_arr)
 			{
-				if (settings_sptr.get () != 0)
+				if (settings_sptr.get () != nullptr)
 				{
 					patch_setup_file_fix_peq_freq  (
 						settings_sptr->_main, desc_freq, desc_type, desc_gain
@@ -1093,7 +1117,7 @@ int	patch_setup_file ()
 	mfx::doc::SerWText   ser_w;
 	if (ret_val == 0)
 	{
-		assert (sss_uptr.get () != 0);
+		assert (sss_uptr.get () != nullptr);
 		ser_w.clear ();
 		sss_uptr->ser_write (ser_w);
 		ret_val = ser_w.terminate ();
@@ -1233,7 +1257,11 @@ int	test_delay2 ()
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
-		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::dly2::Delay2Desc));
+		pi_proc.set_desc (
+			std::static_pointer_cast <mfx::piapi::PluginDescInterface> (
+				std::make_shared <mfx::pi::dly2::Delay2Desc> ()
+			)
+		);
 		pi_proc.setup (plugin, nbr_chn, nbr_chn, sample_freq, max_block_size, latency);
 		size_t         pos = 0;
 		float * const* dst_arr = pi_proc.use_buf_list_dst ();
@@ -1306,7 +1334,11 @@ int test_osdet ()
 		const int      max_block_size = 64;
 		int            latency = 0;
 		PiProc         pi_proc;
-		pi_proc.set_desc (PiProc::DescSPtr (new mfx::pi::osdet::OnsetDetectDesc));
+		pi_proc.set_desc (
+			std::static_pointer_cast <mfx::piapi::PluginDescInterface> (
+				std::make_shared <mfx::pi::osdet::OnsetDetectDesc> ()
+			)
+		);
 		pi_proc.setup (plugin, nbr_chn, 0, sample_freq, max_block_size, latency);
 		size_t         pos = 0;
 //		float * const* dst_arr = pi_proc.use_buf_list_dst ();
@@ -1603,6 +1635,7 @@ int	test_queue_ret ()
 	for (int i = 0; i < nbr_a && ret_val == 0; ++i)
 	{
 		auto           cell_ptr = queue_mgr.use_pool ().take_cell (true);
+		assert (cell_ptr != nullptr);
 		cell_ptr->_val._content.set_data (idx_s);
 		queue_mgr.enqueue (*cell_ptr, q_sptr);
 		++ idx_s;
@@ -1612,11 +1645,11 @@ int	test_queue_ret ()
 			queue_mgr.flush_ret_queue (*q_sptr);
 		}
 
-		cell_ptr = 0;
+		cell_ptr = nullptr;
 		do
 		{
 			cell_ptr = queue_mgr.dequeue ();
-			if (cell_ptr != 0)
+			if (cell_ptr != nullptr)
 			{
 				const int      val = cell_ptr->_val._content.get_data ();
 				if (val != idx_r)
@@ -1631,7 +1664,7 @@ int	test_queue_ret ()
 				++ idx_r;
 			}
 		}
-		while (cell_ptr != 0);
+		while (cell_ptr != nullptr);
 
 	}
 	queue_mgr.flush_ret_queue (*q_sptr);

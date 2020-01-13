@@ -211,8 +211,8 @@ Throws: Nothing
 
 size_t	CharData::find_line_breaks (LineBreakAction action_arr [], const LineBreakProp prop_arr [], size_t len, FindCplxBreakFnc &find_complex_line_breaks)
 {
-	assert (action_arr != 0);
-	assert (prop_arr != 0);
+	assert (action_arr != nullptr);
+	assert (prop_arr != nullptr);
 	assert (len > 0);
 
 	LineBreakProp	cls = prop_arr [0];
@@ -385,8 +385,8 @@ Throws: Nothing
 
 void	CharData::find_word_breaks (uint8_t action_arr [], const WordBreakProp prop_arr [], size_t len)
 {
-	assert (action_arr != 0);
-	assert (prop_arr != 0);
+	assert (action_arr != nullptr);
+	assert (prop_arr != nullptr);
 	assert (len > 0);
 
 	WordBreakProp	prev_2 = WordBreakProp_OTHER;
@@ -552,8 +552,8 @@ const CharDataInfo &	CharData::use_info (char32_t c)
 size_t	CharData::find_complex_line_breaks_default (LineBreakAction action_arr [], const LineBreakProp prop_arr [], LineBreakProp cls, size_t len)
 {
 	fstb::unused (cls);
-	assert (action_arr != 0);
-	assert (prop_arr != 0);
+	assert (action_arr != nullptr);
+	assert (prop_arr != nullptr);
 	assert (len > 0);
 
 	size_t			ich;

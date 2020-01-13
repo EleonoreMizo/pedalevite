@@ -50,7 +50,7 @@ float	DistoDspBounce::process_sample (float x)
 	if (_pos < x)
 	{
 		_pos = x;
-		bounce (x, speed_max_loc);
+		speed_max_loc = bounce (x);
 	}
 
 	// Also makes it bounce if it goes over the ceiling
@@ -60,7 +60,7 @@ float	DistoDspBounce::process_sample (float x)
 		if (_pos > tunnel_top)
 		{
 			_pos = tunnel_top;
-			bounce (x, speed_max_loc);
+			speed_max_loc = bounce (x);
 		}
 	}
 
@@ -83,7 +83,7 @@ float	DistoDspBounce::process_sample (float x)
 
 
 
-void	DistoDspBounce::bounce (float &val, float &speed_max_loc)
+float	DistoDspBounce::bounce (float val)
 {
 	// Computes the ball speed according to the bounce angle on the curve and
 	// bounce rate.
@@ -92,7 +92,9 @@ void	DistoDspBounce::bounce (float &val, float &speed_max_loc)
 
 	// Prevents ball to elevate with an exagerated velocity, which would get
 	// it down very slowly (and would cut audio by saturation)
-	speed_max_loc = std::max (slope, _speed_max);
+	const float    speed_max_loc = std::max (slope, _speed_max);
+
+	return speed_max_loc;
 }
 
 

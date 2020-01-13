@@ -59,21 +59,21 @@ namespace pg
 Levels::Levels (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv)
 :	_page_switcher (page_switcher)
 ,	_snd_drv (snd_drv)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
 ,	_dir_arr ()
-,	_lvl_sptr (    TxtSPtr (   new NText (  Entry_LVL_OUT)))
-,	_chn_sptr (    TxtSPtr (   new NText (  Entry_CHN)))
-,	_dsp_txt_sptr (TxtSPtr (   new NText (  Entry_DSP_TXT)))
-,	_dsp_sptr (    BitmapSPtr (new NBitmap (Entry_DSP)))
-,	_dsp_val_sptr (TxtSPtr (   new NText (  Entry_DSP_VAL)))
+,	_lvl_sptr (    std::make_shared <NText  > (Entry_LVL_OUT))
+,	_chn_sptr (    std::make_shared <NText  > (Entry_CHN    ))
+,	_dsp_txt_sptr (std::make_shared <NText  > (Entry_DSP_TXT))
+,	_dsp_sptr (    std::make_shared <NBitmap> (Entry_DSP    ))
+,	_dsp_val_sptr (std::make_shared <NText  > (Entry_DSP_VAL))
 {
-	_dir_arr [Dir_IN ]._lab_sptr = TxtSPtr (   new NText (  Entry_LAB_IN));
-	_dir_arr [Dir_IN ]._vum_sptr = BitmapSPtr (new NBitmap (Entry_VUM_IN));
-	_dir_arr [Dir_OUT]._lab_sptr = TxtSPtr (   new NText (  Entry_LAB_OUT));
-	_dir_arr [Dir_OUT]._vum_sptr = BitmapSPtr (new NBitmap (Entry_VUM_OUT));
+	_dir_arr [Dir_IN ]._lab_sptr = std::make_shared <NText  > (Entry_LAB_IN );
+	_dir_arr [Dir_IN ]._vum_sptr = std::make_shared <NBitmap> (Entry_VUM_IN );
+	_dir_arr [Dir_OUT]._lab_sptr = std::make_shared <NText  > (Entry_LAB_OUT);
+	_dir_arr [Dir_OUT]._vum_sptr = std::make_shared <NBitmap> (Entry_VUM_OUT);
 
 	_dir_arr [Dir_IN ]._lab_sptr->set_text ("Input");
 	_dir_arr [Dir_IN ]._vum_sptr->set_size (Vec2d (
@@ -222,7 +222,7 @@ MsgHandlerInterface::EvtProp	Levels::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:

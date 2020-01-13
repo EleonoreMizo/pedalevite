@@ -52,12 +52,6 @@ class DolphCheby
 
 public:
 
-	               DolphCheby ()                            = default;
-	               DolphCheby (const DolphCheby <T> &other) = default;
-	virtual        ~DolphCheby ()                           = default;
-	DolphCheby <T> &
-	               operator = (const DolphCheby <T> &other) = default;
-
 	void           set_ripple_ratio (double r);
 
 
@@ -67,7 +61,7 @@ public:
 protected:
 
 	// WndInterface
-	virtual void   do_make_win (T data_ptr [], int len);
+	void           do_make_win (T data_ptr [], int len) override;
 
 
 

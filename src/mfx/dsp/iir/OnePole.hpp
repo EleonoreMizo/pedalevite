@@ -50,8 +50,8 @@ void	OnePole::neutralise ()
 
 void	OnePole::set_z_eq (const float b [2], const float a [2])
 {
-	assert (b != 0);
-	assert (a != 0);
+	assert (b != nullptr);
+	assert (a != nullptr);
 
 	_eq_z_b [0] = b [0];
 	_eq_z_b [1] = b [1];
@@ -62,8 +62,8 @@ void	OnePole::set_z_eq (const float b [2], const float a [2])
 
 void	OnePole::get_z_eq (float b [2], float a [2]) const
 {
-	assert (b != 0);
-	assert (a != 0);
+	assert (b != nullptr);
+	assert (a != nullptr);
 
 	b [0] = _eq_z_b [0];
 	b [1] = _eq_z_b [1];
@@ -87,8 +87,8 @@ float	OnePole::process_sample (float x)
 
 float	OnePole::process_sample (float x, const float inc_b [2], const float inc_a [2])
 {
-	assert (inc_b != 0);
-	assert (inc_a != 0);
+	assert (inc_b != nullptr);
+	assert (inc_a != nullptr);
 
 	const float    y = process_sample (x);
 	step_z_eq (inc_b, inc_a);
@@ -108,8 +108,8 @@ float	OnePole::process_sample (float x, const float inc_b [2], const float inc_a
 
 void	OnePole::step_z_eq (const float inc_b [2], const float inc_a [2])
 {
-	assert (inc_b != 0);
-	assert (inc_a != 0);
+	assert (inc_b != nullptr);
+	assert (inc_a != nullptr);
 
 	_eq_z_b [0] += inc_b [0];
 	_eq_z_b [1] += inc_b [1];

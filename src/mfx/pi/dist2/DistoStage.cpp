@@ -188,8 +188,8 @@ void	DistoStage::set_gain_post (float g)
 void	DistoStage::process_block (float * const dst_ptr_arr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn)
 {
 	assert (_sample_freq > 0);
-	assert (dst_ptr_arr != 0);
-	assert (src_ptr_arr != 0);
+	assert (dst_ptr_arr != nullptr);
+	assert (src_ptr_arr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= int (_buf_x1.size ()));
 	assert (nbr_chn > 0);

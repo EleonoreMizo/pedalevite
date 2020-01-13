@@ -45,12 +45,6 @@ class ModelMsgCmdAsync
 
 public:
 
-	               ModelMsgCmdAsync ()                              = default;
-	               ModelMsgCmdAsync (const ModelMsgCmdAsync &other) = default;
-	virtual        ~ModelMsgCmdAsync ()                             = default;
-	ModelMsgCmdAsync &
-	               operator = (const ModelMsgCmdAsync &other)       = default;
-
 	// For fstb::MsgRet
 	void           clear ();
 

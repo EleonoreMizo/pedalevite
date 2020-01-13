@@ -64,7 +64,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaM
 ,	_msg_pool_cmd (msg_pool_cmd)
 ,	_max_block_size (0)
 ,	_sample_freq (0)
-,	_ctx_ptr (0)
+,	_ctx_ptr (nullptr)
 ,	_lvl_meter ()
 ,	_meter_result ()
 ,	_period_now (1)
@@ -157,10 +157,10 @@ float	WorldAudio::get_audio_period_ratio () const
 
 void	WorldAudio::process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl)
 {
-	assert (dst_arr != 0);
-	assert (dst_arr [0] != 0);
-	assert (src_arr != 0);
-	assert (src_arr [0] != 0);
+	assert (dst_arr != nullptr);
+	assert (dst_arr [0] != nullptr);
+	assert (src_arr != nullptr);
+	assert (src_arr [0] != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_block_size);
 
@@ -195,7 +195,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	collect_msg_ui (true);
 
 	// Audio processing
-	if (_ctx_ptr != 0)
+	if (_ctx_ptr != nullptr)
 	{
 #if defined (mfx_WorldAudio_BUF_REC)
 		if (_data_rec_flag)
@@ -280,11 +280,11 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag, bool ctx_update_flag)
 {
 	int            nbr_msg = 0;
 
-	conc::LockFreeCell <WaMsg> * cell_ptr = 0;
+	conc::LockFreeCell <WaMsg> * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_from_cmd.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			// Reply to our own messages
 			if (cell_ptr->_val._sender == WaMsg::Sender_AUDIO)
@@ -356,7 +356,7 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag, bool ctx_update_flag)
 			++ nbr_msg;
 		}
 	}
-	while (   cell_ptr != 0
+	while (   cell_ptr != nullptr
 	       && nbr_msg < _msg_limit
 	       && ! _prog_switcher.is_ctx_delayed ());
 	//        ^ If we just got a FADE_OUT_IN switch mode, we stop right now
@@ -401,19 +401,19 @@ void	WorldAudio::collect_msg_cmd (bool proc_flag, bool ctx_update_flag)
 
 void	WorldAudio::collect_msg_ui (bool proc_flag)
 {
-	ui::UserInputInterface::MsgCell * cell_ptr = 0;
+	ui::UserInputInterface::MsgCell * cell_ptr = nullptr;
 	int            nbr_msg = 0;
 	do
 	{
 		cell_ptr = _queue_from_input.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			ControlSource  controller;
 			controller._type       = ControllerType (cell_ptr->_val.get_type ());
 			controller._index      = cell_ptr->_val.get_index ();
 			const float    val_raw = cell_ptr->_val.get_val ();
 
-			if (_ctx_ptr != 0 && proc_flag)
+			if (_ctx_ptr != nullptr && proc_flag)
 			{
 				handle_controller (controller, val_raw);
 			}
@@ -423,7 +423,7 @@ void	WorldAudio::collect_msg_ui (bool proc_flag)
 			++ nbr_msg;
 		}
 	}
-	while (cell_ptr != 0 && nbr_msg < _msg_limit);
+	while (cell_ptr != nullptr && nbr_msg < _msg_limit);
 }
 
 
@@ -452,7 +452,7 @@ void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node)
 		PluginPool::PluginDetails &  details = _pi_pool.use_plugin (node._pi_id);
 		cmd::DelayInterface *	delay_ptr =
 			dynamic_cast <cmd::DelayInterface *> (details._pi_uptr.get ());
-		if (delay_ptr == 0)
+		if (delay_ptr == nullptr)
 		{
 			assert (false);
 		}
@@ -467,7 +467,7 @@ void	WorldAudio::update_aux_param_pi (const ProcessingContextNode &node)
 
 void	WorldAudio::handle_controller (const ControlSource &controller, float val_raw)
 {
-	assert (_ctx_ptr != 0);
+	assert (_ctx_ptr != nullptr);
 
 	// Updates controller unit values
 	const ProcessingContext::MapSourceUnit &  map_src_unit =
@@ -515,7 +515,7 @@ void	WorldAudio::handle_controller (const ControlSource &controller, float val_r
 
 				conc::LockFreeCell <WaMsg> * cell_ptr =
 					_msg_pool_cmd.take_cell (true);
-				if (cell_ptr != 0)
+				if (cell_ptr != nullptr)
 				{
 					cell_ptr->_val._sender                    = WaMsg::Sender_AUDIO;
 					cell_ptr->_val._type                      = WaMsg::Type_PARAM;
@@ -750,7 +750,7 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 		proc_info._sig_arr = &sig_arr [0];
 		proc_info._nbr_spl = nbr_spl;
 		proc_info._nbr_evt = 0;
-		proc_info._evt_arr = 0;
+		proc_info._evt_arr = nullptr;
 
 		// Main plug-in
 		proc_info._byp_state = (pi_ctx._mixer_flag)
@@ -870,7 +870,7 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 	proc_info._nbr_evt = int (_evt_arr.size ());
 	if (_evt_arr.empty ())
 	{
-		proc_info._evt_arr = 0;
+		proc_info._evt_arr = nullptr;
 	}
 	else
 	{
@@ -1035,7 +1035,7 @@ void	WorldAudio::prepare_buffers (piapi::ProcInfo &proc_info, const ProcessingCo
 
 
 
-void	WorldAudio::handle_signals (piapi::ProcInfo &proc_info, const ProcessingContextNode &node)
+void	WorldAudio::handle_signals (const piapi::ProcInfo &proc_info, const ProcessingContextNode &node)
 {
 	for (int sig_pos = 0; sig_pos < node._nbr_sig; ++sig_pos)
 	{
@@ -1044,7 +1044,7 @@ void	WorldAudio::handle_signals (piapi::ProcInfo &proc_info, const ProcessingCon
 		if (sig_info._buf_index >= 0 && sig_info._port_index >= 0)
 		{
 			const float *  buf_ptr = proc_info._sig_arr [sig_pos];
-			assert (buf_ptr != 0);
+			assert (buf_ptr != nullptr);
 			const float    val     = buf_ptr [0];
 			_sig_res_arr [sig_info._port_index] = val;
 
@@ -1058,7 +1058,7 @@ void	WorldAudio::handle_signals (piapi::ProcInfo &proc_info, const ProcessingCon
 
 
 
-void	WorldAudio::handle_msg_param (WaMsg::Param &msg)
+void	WorldAudio::handle_msg_param (const WaMsg::Param &msg)
 {
 	const int      index = msg._index;
 	PluginPool::PluginDetails &   details =
@@ -1070,7 +1070,7 @@ void	WorldAudio::handle_msg_param (WaMsg::Param &msg)
 
 
 
-void	WorldAudio::handle_msg_tempo (WaMsg::Tempo &msg)
+void	WorldAudio::handle_msg_tempo (const WaMsg::Tempo &msg)
 {
 	if (msg._bpm == 0)
 	{
@@ -1084,7 +1084,7 @@ void	WorldAudio::handle_msg_tempo (WaMsg::Tempo &msg)
 
 
 
-void	WorldAudio::handle_msg_reset (WaMsg::Reset &msg)
+void	WorldAudio::handle_msg_reset (const WaMsg::Reset &msg)
 {
 	PluginPool::PluginDetails &   details =
 		_pi_pool.use_plugin (msg._plugin_id);

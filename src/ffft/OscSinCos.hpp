@@ -43,22 +43,8 @@ namespace ffft
 
 
 template <class T>
-OscSinCos <T>::OscSinCos ()
-:	_pos_cos (1)
-,	_pos_sin (0)
-,	_step_cos (1)
-,	_step_sin (0)
-{
-	// Nothing
-}
-
-
-
-template <class T>
 void	OscSinCos <T>::set_step (double angle_rad)
 {
-	using namespace std;
-
 	_step_cos = static_cast <DataType> (cos (angle_rad));
 	_step_sin = static_cast <DataType> (sin (angle_rad));
 }

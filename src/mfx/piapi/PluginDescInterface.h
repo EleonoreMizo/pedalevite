@@ -49,7 +49,16 @@ class PluginDescInterface
 
 public:
 
-	virtual        ~PluginDescInterface () = default;
+	               PluginDescInterface ()                        = default;
+	               PluginDescInterface (const PluginDescInterface &other) = default;
+	               PluginDescInterface (PluginDescInterface &&other)      = default;
+
+	virtual        ~PluginDescInterface ()                       = default;
+
+	virtual PluginDescInterface &
+	               operator = (const PluginDescInterface &other) = default;
+	virtual PluginDescInterface &
+	               operator = (PluginDescInterface &&other)      = default;
 
 	std::string    get_unique_id () const;
 	std::string    get_name () const;

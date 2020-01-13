@@ -81,8 +81,8 @@ typename MovingSum <DT, ST>::SumType	MovingSum <DT, ST>::process_sample (DataTyp
 template <typename DT, typename ST>
 void	MovingSum <DT, ST>::process_block (SumType dst_ptr [], const DataType src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            pos = 0;

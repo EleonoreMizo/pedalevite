@@ -46,9 +46,6 @@ class MapS
 
 public:
 
-	               MapS ()  = default;
-	virtual        ~MapS () = default;
-
 	inline void    config (double val_min, double val_max);
 	inline double  conv_norm_to_nat (double norm) const;
 	inline double  conv_nat_to_norm (double nat) const;
@@ -80,9 +77,6 @@ private:
 
 private:
 
-	               MapS (const MapS <INVFLAG> &other)             = delete;
-	MapS <INVFLAG> &
-	               operator = (const MapS <INVFLAG> &other)        = delete;
 	bool           operator == (const MapS <INVFLAG> &other) const = delete;
 	bool           operator != (const MapS <INVFLAG> &other) const = delete;
 

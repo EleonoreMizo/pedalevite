@@ -51,7 +51,7 @@ public:
 
 	explicit       NWindow (int node_id);
 	               NWindow ()  = default;
-	virtual        ~NWindow () = default;
+	               ~NWindow () = default;
 
 	void           set_size (Vec2d disp, Vec2d virt);
 	void           set_disp_pos (Vec2d pos);
@@ -70,26 +70,24 @@ public:
 protected:
 
 	// mfx::uitk::ContainerInterface
-	virtual void   do_push_back (NodeSPtr node_sptr);
-	virtual void   do_set_node (int pos, NodeSPtr node_sptr);
-	virtual void   do_insert (int pos, NodeSPtr node_sptr);
-	virtual void   do_erase (int pos);
-	virtual int    do_get_nbr_nodes () const;
-	virtual NodeSPtr
-	               do_use_node (int pos);
+	void           do_push_back (NodeSPtr node_sptr) override;
+	void           do_set_node (int pos, NodeSPtr node_sptr) override;
+	void           do_insert (int pos, NodeSPtr node_sptr) override;
+	void           do_erase (int pos) override;
+	int            do_get_nbr_nodes () const override;
+	NodeSPtr       do_use_node (int pos) override;
 
 	// mfx::uitk::ParentInterface via mfx::uitk::ContainerInterface
-	virtual Vec2d  do_get_coord_abs () const;
-	virtual void   do_invalidate (const Rect &zone);
+	Vec2d          do_get_coord_abs () const override;
+	void           do_invalidate (const Rect &zone) override;
 
 	// mfx::uitk::NodeInterface
-	virtual void   do_notify_attachment (ParentInterface *cont_ptr);
-	virtual int    do_get_id () const;
-	virtual Vec2d  do_get_coord () const;
-	virtual Rect   do_get_bounding_box () const;
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
-	virtual void   do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d node_coord);
+	void           do_notify_attachment (ParentInterface *cont_ptr) override;
+	int            do_get_id () const override;
+	Vec2d          do_get_coord () const override;
+	Rect           do_get_bounding_box () const override;
+	EvtProp        do_handle_evt (const NodeEvt &evt) override;
+	void           do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d node_coord) override;
 
 
 
@@ -97,11 +95,11 @@ protected:
 
 private:
 
-	void           keep_node_visible (NodeInterface &node);
+	void           keep_node_visible (const NodeInterface &node);
 
 	int            _node_id        = -1;   // Negative: not set
 	ParentInterface *                      // 0 = not attached.
-	               _parent_ptr     = 0;
+	               _parent_ptr     = nullptr;
 	Vec2d          _coord;
 
 	Vec2d          _size_disp;
@@ -120,7 +118,9 @@ private:
 private:
 
 	               NWindow (const NWindow &other)           = delete;
+	               NWindow (NWindow &&other)                = delete;
 	NWindow &      operator = (const NWindow &other)        = delete;
+	NWindow &      operator = (NWindow &&other)             = delete;
 	bool           operator == (const NWindow &other) const = delete;
 	bool           operator != (const NWindow &other) const = delete;
 

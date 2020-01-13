@@ -66,7 +66,6 @@ public:
 	};
 
 	               DelayLineBbd ();
-	virtual        ~DelayLineBbd () = default;
 
 	void           init (int line_index, const ParamDescSet &desc_set, ParamStateSet &state_set);
 	void           reset (double sample_freq, int max_block_size, float buf_zone_ptr [], int buf_len);
@@ -108,8 +107,6 @@ private:
 
 	float *        use_buf (Buf buf) const;
 	float          find_min_delay_time () const;
-
-	int            _line_index;
 
 	float          _sample_freq;        // Hz, > 0. 0 = not initialised
 	float          _inv_fs;             // 1 / _sample_freq, > 0. 0 = not initialised

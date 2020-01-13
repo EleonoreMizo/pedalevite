@@ -3,8 +3,6 @@
         EnvFollowerRmsSimple.h
         Author: Laurent de Soras, 2016
 
-This class can be inherited but is not polymorph.
-
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -30,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "mfx/dsp/dyn/EnvHelper.h"
 
 
 
@@ -48,9 +47,6 @@ class EnvFollowerRmsSimple
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	               EnvFollowerRmsSimple ();
-	               ~EnvFollowerRmsSimple () = default;
 
 	void           set_sample_freq (double fs);
 	void           set_time (float t);
@@ -93,11 +89,12 @@ private:
 
 	void           update_parameters ();
 
-	float          _sample_freq;	// Hz, > 0
-	float          _time;			// s, >= 0
+	float          _sample_freq = 44100.f;    // Hz, > 0
+	float          _time        =     0.001f; // s, >= 0
 
-	float          _state;			// Sample ^ 2
-	float          _coef;
+	float          _state       = 0;          // Sample ^ 2
+	float          _coef        =
+		float (EnvHelper::compute_env_coef_simple (_time, _sample_freq));
 
 
 
@@ -105,9 +102,6 @@ private:
 
 private:
 
-	               EnvFollowerRmsSimple (const EnvFollowerRmsSimple &other)    = delete;
-	EnvFollowerRmsSimple &
-	               operator = (const EnvFollowerRmsSimple &other)        = delete;
 	bool           operator == (const EnvFollowerRmsSimple &other) const = delete;
 	bool           operator != (const EnvFollowerRmsSimple &other) const = delete;
 

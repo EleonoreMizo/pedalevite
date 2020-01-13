@@ -42,7 +42,7 @@ namespace rspl
 template <typename DT>
 void	InterpFirMakerHermite4 <DT>::make_interpolator (DataType fir_ptr [], float pos)
 {
-	assert (fir_ptr != 0);
+	assert (fir_ptr != nullptr);
 	assert (pos >= 0);
 	assert (pos <= 1);
 

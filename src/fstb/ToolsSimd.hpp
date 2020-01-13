@@ -112,7 +112,7 @@ void	ToolsSimd::store_f32_part (MEM *ptr, VectF32 v, int n)
 template <typename MEM>
 ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const MEM *ptr)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 
 #if fstb_IS (ARCHI, X86)
 	return _mm_loadu_ps (reinterpret_cast <const float *> (ptr));
@@ -143,7 +143,7 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32_part (const MEM *ptr, int n)
 template <typename MEM>
 void	ToolsSimd::storeu_f32 (MEM *ptr, VectF32 v)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 
 #if fstb_IS (ARCHI, X86)
 	_mm_storeu_ps (reinterpret_cast <float *> (ptr), v);
@@ -157,7 +157,7 @@ void	ToolsSimd::storeu_f32 (MEM *ptr, VectF32 v)
 template <typename MEM>
 void	ToolsSimd::storeu_s32 (MEM *ptr, VectS32 v)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 
 #if fstb_IS (ARCHI, X86)
 	_mm_storeu_si128 (reinterpret_cast <__m128i *> (ptr), v);
@@ -208,7 +208,7 @@ void	ToolsSimd::storeu_s32_part (MEM *ptr, VectS32 v, int n)
 template <typename MEM>
 ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const MEM *ptr)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 
 #if fstb_IS (ARCHI, X86)
 	const auto     x_0 = _mm_load_ss (reinterpret_cast <const float *> (ptr)    );
@@ -230,7 +230,7 @@ ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const MEM *ptr)
 template <typename MEM>
 void	ToolsSimd::storeu_2f32 (MEM *ptr, VectF32 v)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 
 #if fstb_IS (ARCHI, X86)
 	_mm_store_ss (reinterpret_cast <float *> (ptr)    , v );
@@ -250,7 +250,7 @@ void	ToolsSimd::storeu_2f32 (MEM *ptr, VectF32 v)
 template <typename MEM>
 void	ToolsSimd::storeu_1f32 (MEM *ptr, VectF32 v)
 {
-	assert (ptr != 0);
+	assert (ptr != nullptr);
 
 #if fstb_IS (ARCHI, X86)
 	_mm_store_ss (reinterpret_cast <float *> (ptr), v);
@@ -1429,15 +1429,10 @@ void	ToolsSimd::start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, floa
 	assert (size > 0);
 
 	const float    dif = val_end - val_beg;
-	float          four_over_size;
-	if (size < _inv_table_4_len)
-	{
-		four_over_size = _inv_table_4 [size];
-	}
-	else
-	{
-		four_over_size = 4.0f / float (size);
-	}
+	const float    four_over_size =
+		  (size < _inv_table_4_len)
+		? _inv_table_4 [size]
+		: 4.0f / float (size);
 	step    = set1_f32 (dif * four_over_size);
 	val_cur = set1_f32 (val_beg);
 	const auto     c0123 = set_f32 (0, 0.25f, 0.5f, 0.75f);

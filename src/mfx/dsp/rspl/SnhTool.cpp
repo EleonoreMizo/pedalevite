@@ -45,23 +45,6 @@ namespace rspl
 
 
 
-SnhTool::SnhTool ()
-:	_chn_state_arr ()
-,	_nbr_chn (1)
-,	_ovrspl_l2 (0)
-,	_hold_time (1)
-,	_rep_index (0)
-,	_interp_val (0)
-,	_interp_step (0)
-,	_rem_spl (0)
-,	_sub_index (0)
-,	_nbr_sub (1)
-{
-	// Nothing
-}
-
-
-
 /*
 ==============================================================================
 Name: set_nbr_chn
@@ -234,8 +217,8 @@ Throws: Nothing
 
 void	SnhTool::process_data (float * const data_ptr_arr [], int nbr_spl, const fstb::FixedPoint &rate, const fstb::FixedPoint &rate_step)
 {
-	assert (data_ptr_arr != 0);
-	assert (data_ptr_arr [0] != 0);
+	assert (data_ptr_arr != nullptr);
+	assert (data_ptr_arr [0] != nullptr);
 	assert (nbr_spl > 0);
 	assert (rate.get_val_int64 () > 0);
 
@@ -427,7 +410,7 @@ Substitued variable values:
 void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (_rem_spl == 0);
-	assert (data_ptr_arr != 0);
+	assert (data_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 	assert (pos_end > pos_beg);
 
@@ -469,13 +452,12 @@ void	SnhTool::process_data_steady_state (float * const data_ptr_arr [], int pos_
 void	SnhTool::process_data_steady_state_naive (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
 	assert (_rem_spl == 0);
-	assert (data_ptr_arr != 0);
+	assert (data_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 	assert (pos_end > pos_beg);
 
-	int            rep_index;
-
-	int            chn_cnt = 0;
+	int            rep_index = 0;
+	int            chn_cnt   = 0;
 	do
 	{
 		ChnState &     chn_state = _chn_state_arr [chn_cnt];
@@ -519,7 +501,7 @@ void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], in
 	assert (_rem_spl == 0);
 	assert (_rep_index == 0);
 	assert (_hold_time > 1);
-	assert (data_ptr_arr != 0);
+	assert (data_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 	assert (pos_end > pos_beg);
 	assert ((pos_end - pos_beg) % _hold_time == 0);
@@ -556,7 +538,7 @@ void	SnhTool::process_data_steady_state_block (float * const data_ptr_arr [], in
 
 void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
-	assert (data_ptr_arr != 0);
+	assert (data_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 	assert (pos_beg < pos_end);
 
@@ -607,15 +589,14 @@ void	SnhTool::process_data_interpolate (float * const data_ptr_arr [], int pos_b
 
 void	SnhTool::process_data_interpolate_naive (float * const data_ptr_arr [], int pos_beg, int pos_end)
 {
-	assert (data_ptr_arr != 0);
+	assert (data_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 	assert (pos_beg < pos_end);
 
-	int				rep_index;
-	int				sub_index;
-	float				interp_val;
-
-	int				chn_cnt = 0;
+	int				rep_index  = 0;
+	int				sub_index  = 0;
+	float				interp_val = 0;
+	int				chn_cnt    = 0;
 	do
 	{
 		ChnState &		chn_state = _chn_state_arr [chn_cnt];
@@ -674,15 +655,14 @@ void	SnhTool::process_data_interpolate_block (float * const data_ptr_arr [], int
 	assert (_rep_index == 0);
 	assert (_sub_index == 0);
 	assert (_nbr_sub > 1);
-	assert (data_ptr_arr != 0);
+	assert (data_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 	assert (pos_end > pos_beg);
 	assert ((pos_end - pos_beg) % (_hold_time * _nbr_sub) == 0);
 
-	const int      block_len = _hold_time * _nbr_sub;
-	float          interp_val;
-
-	int            chn_cnt = 0;
+	const int      block_len  = _hold_time * _nbr_sub;
+	float          interp_val = 0;
+	int            chn_cnt    = 0;
 	do
 	{
 		ChnState &     chn_state = _chn_state_arr [chn_cnt];

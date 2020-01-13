@@ -54,35 +54,6 @@ ParamDescSet::ParamDescSet (int nbr_glob, int nbr_notes)
 
 
 
-void	ParamDescSet::add (piapi::ParamCateg categ, int index, piapi::ParamDescInterface *ptr)
-{
-	assert (categ >= 0);
-	assert (categ < piapi::ParamCateg_NBR_ELT);
-	assert (index >= 0);
-	assert (index < get_nbr_param (categ));
-	assert (ptr != 0);
-	assert (_categ_arr [categ] [index].get () == 0);
-
-	_categ_arr [categ] [index] = ParamSPtr (ptr);
-	-- _nbr_rem_param;
-}
-
-
-
-void	ParamDescSet::add_glob (int index, piapi::ParamDescInterface *ptr)
-{
-	add (piapi::ParamCateg_GLOBAL, index, ptr);
-}
-
-
-
-void	ParamDescSet::add_note (int index, piapi::ParamDescInterface *ptr)
-{
-	add (piapi::ParamCateg_NOTE, index, ptr);
-}
-
-
-
 bool	ParamDescSet::is_ready () const
 {
 	return (_nbr_rem_param == 0);

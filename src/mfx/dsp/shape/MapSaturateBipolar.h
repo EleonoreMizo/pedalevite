@@ -83,11 +83,6 @@ private:
 
 private:
 
-	               MapSaturateBipolar ()                                = delete;
-	               MapSaturateBipolar (const MapSaturateBipolar &other) = delete;
-	virtual        ~MapSaturateBipolar ()                               = delete;
-	MapSaturateBipolar &
-	               operator = (const MapSaturateBipolar &other)         = delete;
 	bool           operator == (const MapSaturateBipolar &other) const  = delete;
 	bool           operator != (const MapSaturateBipolar &other) const  = delete;
 

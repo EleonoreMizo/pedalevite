@@ -53,7 +53,7 @@ Throws: Nothing
 template <class IP, int NPL2>
 void	InterpFirPolyphase <IP, NPL2>::set_impulse (const double impulse_ptr [IMPULSE_LEN])
 {
-	assert (impulse_ptr != 0);
+	assert (impulse_ptr != nullptr);
 
 	double         next_coef_dbl = 0;
 
@@ -96,7 +96,7 @@ Throws: Nothing
 template <class IP, int NPL2>
 float	InterpFirPolyphase <IP, NPL2>::interpolate (const float data_ptr [], uint32_t frac_pos) const
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 
 	float          q;
 	int            phase_index;
@@ -113,8 +113,8 @@ float	InterpFirPolyphase <IP, NPL2>::interpolate (const float data_ptr [], uint3
 template <class IP, int NPL2>
 void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float * const out_ptr_arr [], long out_offset, const float * const in_ptr_arr [], long in_offset, uint32_t frac_pos, int nbr_chn) const
 {
-	assert (out_ptr_arr != 0);
-	assert (in_ptr_arr != 0);
+	assert (out_ptr_arr != nullptr);
+	assert (in_ptr_arr != nullptr);
 	assert (nbr_chn > 0);
 
 	float          q;
@@ -129,7 +129,7 @@ void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float * const out_ptr
 	for (int chn_index = 0; chn_index < nbr_chn; ++ chn_index)
 	{
 		const float *	in_ptr = in_ptr_arr [chn_index];
-		assert (in_ptr != 0);
+		assert (in_ptr != nullptr);
 		const float		value = phase.convolve (in_ptr + in_offset, impulse);
 		float *			out_ptr = out_ptr_arr [chn_index];
 		out_ptr [out_offset] = value;
@@ -141,8 +141,8 @@ void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float * const out_ptr
 template <class IP, int NPL2>
 void	InterpFirPolyphase <IP, NPL2>::interpolate_multi_chn (float out_ptr [], const float in_ptr [], uint32_t frac_pos, int nbr_chn, long chn_stride_in, long chn_stride_out) const
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_chn > 0);
 
 	float          q;

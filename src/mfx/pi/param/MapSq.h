@@ -46,9 +46,6 @@ class MapSq
 
 public:
 
-	               MapSq ()  = default;
-	virtual        ~MapSq () = default;
-
 	inline void    config (double val_min, double val_max);
 	inline double  conv_norm_to_nat (double norm) const;
 	inline double  conv_nat_to_norm (double nat) const;
@@ -75,9 +72,6 @@ private:
 
 private:
 
-	               MapSq (const MapSq <INVFLAG> &other)             = delete;
-	MapSq <INVFLAG> &
-	               operator = (const MapSq <INVFLAG> &other)        = delete;
 	bool           operator == (const MapSq <INVFLAG> &other) const = delete;
 	bool           operator != (const MapSq <INVFLAG> &other) const = delete;
 

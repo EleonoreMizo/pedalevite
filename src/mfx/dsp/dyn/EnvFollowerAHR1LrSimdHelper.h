@@ -79,7 +79,15 @@ public:
 	typedef VP V128Par;
 
 	               EnvFollowerAHR1LrSimdHelper ();
+	               EnvFollowerAHR1LrSimdHelper (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other);
+	               EnvFollowerAHR1LrSimdHelper (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other);
+
 	virtual        ~EnvFollowerAHR1LrSimdHelper () = default;
+
+	EnvFollowerAHR1LrSimdHelper <VP, ORD> &
+	               operator = (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other);
+	EnvFollowerAHR1LrSimdHelper <VP, ORD> &
+	               operator = (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other);
 
 	void           set_atk_coef (float coef);
 	void           set_hold_time (int nbr_spl);
@@ -107,6 +115,8 @@ private:
 	fstb_TYPEDEF_ALIGN (16, VectFloat4, VectFloat4Aligned);
 
 	fstb_FORCEINLINE void
+	               copy_vect_data (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other);
+	fstb_FORCEINLINE void
 	               check_and_reset (fstb::ToolsSimd::VectF32 &hold_state, int nbr_spl);
 	fstb_FORCEINLINE static bool
 	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in);
@@ -129,11 +139,8 @@ private:
 
 private:
 
-	               EnvFollowerAHR1LrSimdHelper (const EnvFollowerAHR1LrSimdHelper &other) = delete;
-	EnvFollowerAHR1LrSimdHelper &
-	               operator = (const EnvFollowerAHR1LrSimdHelper &other)        = delete;
-	bool           operator == (const EnvFollowerAHR1LrSimdHelper &other) const = delete;
-	bool           operator != (const EnvFollowerAHR1LrSimdHelper &other) const = delete;
+	bool           operator == (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) const = delete;
+	bool           operator != (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other) const = delete;
 
 }; // class EnvFollowerAHR1LrSimdHelper
 

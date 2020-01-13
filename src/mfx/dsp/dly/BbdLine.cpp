@@ -83,7 +83,7 @@ void	BbdLine::init (int max_bbd_size, rspl::InterpolatorInterface &interp, int o
 
 const rspl::InterpolatorInterface &	BbdLine::use_interpolator () const
 {
-	assert (_interp_ptr != 0);
+	assert (_interp_ptr != nullptr);
 
 	return *_interp_ptr;
 }
@@ -187,7 +187,7 @@ BBD bin.
 
 void	BbdLine::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (dly_beg >= compute_min_delay ());
 	assert (dly_end >= compute_min_delay ());
@@ -238,7 +238,7 @@ float	BbdLine::read_sample (float dly) const
 
 void	BbdLine::push_block (const float src_ptr [], int nbr_spl)
 {
-	assert (src_ptr != 0);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	push_timestamps (nbr_spl);

@@ -64,9 +64,6 @@ public:
 	typedef std::array <float, ARRAY_LEN> BufferUnaligned;
 	fstb_TYPEDEF_ALIGN (16, BufferUnaligned, Buffer);
 
-	               InterpPhaseSimd ()  = default;
-	               ~InterpPhaseSimd () = default;
-
 	inline void		set_data (int pos, float imp, float dif);
 	fstb_FORCEINLINE void
 						precompute_impulse (Buffer &imp, float q) const;
@@ -98,9 +95,6 @@ private:
 
 private:
 
-	               InterpPhaseSimd (const InterpPhaseSimd &other)   = delete;
-	InterpPhaseSimd &
-	               operator = (const InterpPhaseSimd &other)        = delete;
 	bool           operator == (const InterpPhaseSimd &other) const = delete;
 	bool           operator != (const InterpPhaseSimd &other) const = delete;
 

@@ -46,7 +46,7 @@ namespace pg
 
 
 
-class ProgSettings
+class ProgSettings final
 :	public PageInterface
 {
 
@@ -55,7 +55,6 @@ class ProgSettings
 public:
 
 	explicit       ProgSettings (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx);
-	virtual        ~ProgSettings () = default;
 
 
 
@@ -64,15 +63,14 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_prog_switch_mode (doc::ProgSwitchMode mode);
+	void           do_set_prog_switch_mode (doc::ProgSwitchMode mode) final;
 
 
 
@@ -135,7 +133,9 @@ private:
 
 	               ProgSettings ()                               = delete;
 	               ProgSettings (const ProgSettings &other)      = delete;
+	               ProgSettings (ProgSettings &&other)           = delete;
 	ProgSettings & operator = (const ProgSettings &other)        = delete;
+	ProgSettings & operator = (ProgSettings &&other)             = delete;
 	bool           operator == (const ProgSettings &other) const = delete;
 	bool           operator != (const ProgSettings &other) const = delete;
 

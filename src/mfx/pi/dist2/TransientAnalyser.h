@@ -59,9 +59,6 @@ public:
 
 	static const int  _max_nbr_chn = 8;
 
-	               TransientAnalyser ()  = default;
-	virtual        ~TransientAnalyser () = default;
-
 	void           set_prefilter (bool enable_flag);
 	void           set_epsilon (float eps);
 	void           reset (double sample_freq, int max_block_size);
@@ -116,7 +113,7 @@ private:
 	EnvHelperAlign _env_helper;         // 0 = fast env, 1 = slow env
 	Buffer4        _buf;
 	ChnArray       _chn_arr;
-	BufRefArray    _buf_filter_ref_arr;
+	BufRefArray    _buf_filter_ref_arr {};
 	float          _sample_freq    = 0; // Hz, > 0. 0 = not initialized.
 	int            _max_block_size = 0; // samples, > 0. 0 = not initialized.
 	float          _eps_sq         = 1e-18f;  // Squared epsilon
@@ -128,9 +125,6 @@ private:
 
 private:
 
-	               TransientAnalyser (const TransientAnalyser &other) = delete;
-	TransientAnalyser &
-	               operator = (const TransientAnalyser &other)        = delete;
 	bool           operator == (const TransientAnalyser &other) const = delete;
 	bool           operator != (const TransientAnalyser &other) const = delete;
 

@@ -50,7 +50,7 @@ namespace mfx
 
 FileOpWav::~FileOpWav ()
 {
-	if (_f_ptr != 0)
+	if (_f_ptr != nullptr)
 	{
 		close_file ();
 	}
@@ -67,7 +67,7 @@ int	FileOpWav::create_save (const char *filename_0, int nbr_chn, double sample_f
 	int            ret_val = 0;
 
 	_f_ptr = fstb::fopen_utf8 (filename_0, "wb");
-	if (_f_ptr == 0)
+	if (_f_ptr == nullptr)
 	{
 		ret_val = -1;
 	}
@@ -91,7 +91,7 @@ int	FileOpWav::create_save (const char *filename_0, int nbr_chn, double sample_f
 
 int	FileOpWav::write_data (const float * const chn_arr [], int nbr_spl)
 {
-	assert (chn_arr != 0);
+	assert (chn_arr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            ret_val = 0;
@@ -129,7 +129,7 @@ int	FileOpWav::write_data (const float * const chn_arr [], int nbr_spl)
 				{
 					for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
 					{
-						assert (chn_arr [chn_cnt] != 0);
+						assert (chn_arr [chn_cnt] != nullptr);
 						dsp::mix::Generic::copy_1_ni1 (
 							&tmp_buf [chn_cnt],
 							chn_arr [chn_cnt] + pos,
@@ -166,7 +166,7 @@ int	FileOpWav::write_data (const float * const chn_arr [], int nbr_spl)
 // Interleaved data. nbr_spl = number of multichannel frames
 int	FileOpWav::write_data (const float frame_arr_ptr [], int nbr_spl)
 {
-	assert (frame_arr_ptr != 0);
+	assert (frame_arr_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            ret_val = 0;
@@ -221,7 +221,7 @@ int	FileOpWav::close_file ()
 	{
 		ret_val = write_headers (_f_ptr, _nbr_chn, _len, _sample_freq);
 		fclose (_f_ptr);
-		_f_ptr = 0;
+		_f_ptr = nullptr;
 	}
 
 	return ret_val;
@@ -231,7 +231,7 @@ int	FileOpWav::close_file ()
 
 bool	FileOpWav::is_open () const
 {
-	return (_f_ptr != 0);
+	return (_f_ptr != nullptr);
 }
 
 
@@ -254,7 +254,7 @@ int	FileOpWav::load (const char *filename_0, std::vector <std::vector <float> > 
 	// Loads the file into memory
 
 	FILE *         f_ptr = fstb::fopen_utf8 (filename_0, "rb");
-	if (f_ptr == 0)
+	if (f_ptr == nullptr)
 	{
 		ret_val = -1;
 	}
@@ -272,17 +272,17 @@ int	FileOpWav::load (const char *filename_0, std::vector <std::vector <float> > 
 		}
 	}
 
-	if (f_ptr != 0)
+	if (f_ptr != nullptr)
 	{
 		fclose (f_ptr);
-		f_ptr = 0;
+		f_ptr = nullptr;
 	}
 
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Converts the WAV file
 
 	// Checks the header
-	const WavRiff *   riff_ptr = 0;
+	const WavRiff *   riff_ptr = nullptr;
 	if (ret_val == 0)
 	{
 		riff_ptr = reinterpret_cast <const WavRiff *> (&content [0]);
@@ -336,7 +336,7 @@ int	FileOpWav::load (const char *filename_0, std::vector <std::vector <float> > 
 	}
 
 	// Checks the format
-	const WavFmt * fmt_ptr = 0;
+	const WavFmt * fmt_ptr = nullptr;
 	int            format  = 0;
 	if (ret_val == 0)
 	{
@@ -361,7 +361,7 @@ int	FileOpWav::load (const char *filename_0, std::vector <std::vector <float> > 
 	}
 
 	// Loads and converts the sample data
-	const WavData *   data_ptr = 0;
+	const WavData *   data_ptr = nullptr;
 	if (ret_val == 0)
 	{
 		const int      nbr_chn = fmt_ptr->_channels;
@@ -449,15 +449,15 @@ int	FileOpWav::save (const char *filename_0, const std::vector <std::vector <flo
 
 int	FileOpWav::save (const char *filename_0, const float * const chn_arr [], size_t nbr_spl, int nbr_chn, double sample_freq, float scale)
 {
-	assert (filename_0 != 0);
-	assert (chn_arr != 0);
+	assert (filename_0 != nullptr);
+	assert (chn_arr != nullptr);
 	assert (nbr_chn > 0);
 	assert (sample_freq > 0);
 
 	int            ret_val = 0;
 
 	FILE *         f_ptr = fstb::fopen_utf8 (filename_0, "wb");
-	if (f_ptr == 0)
+	if (f_ptr == nullptr)
 	{
 		ret_val = -1;
 	}
@@ -480,10 +480,10 @@ int	FileOpWav::save (const char *filename_0, const float * const chn_arr [], siz
 		}
 	}
 
-	if (f_ptr != 0)
+	if (f_ptr != nullptr)
 	{
 		fclose (f_ptr);
-		f_ptr = 0;
+		f_ptr = nullptr;
 	}
 
 	return ret_val;
@@ -501,7 +501,7 @@ int	FileOpWav::save (const char *filename_0, const float * const chn_arr [], siz
 
 int	FileOpWav::write_headers (FILE * f_ptr, int nbr_chn, int64_t nbr_spl, double sample_freq)
 {
-	assert (f_ptr != 0);
+	assert (f_ptr != nullptr);
 	assert (nbr_chn > 0);
 	assert (nbr_spl >= 0);
 	assert (sample_freq > 0);

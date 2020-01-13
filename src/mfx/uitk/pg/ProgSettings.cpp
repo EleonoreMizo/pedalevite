@@ -55,13 +55,13 @@ namespace pg
 ProgSettings::ProgSettings (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 :	_page_switcher (page_switcher)
 ,	_pedal_ctx (pedal_ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_layout_sptr (new NText (Entry_LAYOUT))
-,	_switch_sptr (new NText (Entry_SWITCH))
+,	_fnt_ptr (nullptr)
+,	_layout_sptr (std::make_shared <NText> (Entry_LAYOUT))
+,	_switch_sptr (std::make_shared <NText> (Entry_SWITCH))
 ,	_state (State_NONE)
 ,	_arg_fx_state_modes ()
 {
@@ -157,7 +157,7 @@ MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 			case Entry_LAYOUT:
 				_pedal_ctx._type     = PedalEditContext::Type_PRESET;
 				_pedal_ctx._ret_page = pg::PageType_PROG_SETTINGS;
-				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, 0);
+				_page_switcher.switch_to (pg::PageType_PEDALBOARD_CONFIG, nullptr);
 				break;
 			case Entry_SWITCH:
 				_arg_fx_state_modes._selection = int (FxState_CANCEL);
@@ -172,7 +172,7 @@ MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:

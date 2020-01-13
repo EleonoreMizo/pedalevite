@@ -51,7 +51,7 @@ namespace adrv
 
 
 
-class DPvabI2s
+class DPvabI2s final
 :	public DriverInterface
 {
 
@@ -85,12 +85,11 @@ public:
 protected:
 
 	// DriverInterface
-	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
-	virtual int    do_start ();
-	virtual int    do_stop ();
-	virtual void   do_restart ();
-	virtual std::string
-	               do_get_last_error () const;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
+	int            do_start () final;
+	int            do_stop () final;
+	void           do_restart () final;
+	std::string    do_get_last_error () const final;
 
 
 
@@ -153,7 +152,9 @@ private:
 private:
 
 	               DPvabI2s (const DPvabI2s &other)          = delete;
+	               DPvabI2s (DPvabI2s &&other)               = delete;
 	DPvabI2s &     operator = (const DPvabI2s &other)        = delete;
+	DPvabI2s &     operator = (DPvabI2s &&other)             = delete;
 	bool           operator == (const DPvabI2s &other) const = delete;
 	bool           operator != (const DPvabI2s &other) const = delete;
 

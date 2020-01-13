@@ -70,7 +70,7 @@ void	PrimLine::draw (RenderCtx &ctx, int x0, int y0, int x1, int y1, uint8_t c, 
 		const int      sy_buf      = sy * stride;
 		int            err         = dx + dy;
 		uint8_t *      cur_ptr     = &ctx.at (x0, y0);
-		uint8_t *const end_ptr     = &ctx.at (x1, y1);
+		const uint8_t * const end_ptr = &ctx.at (x1, y1);
 		bool           clip_h_flag = (x0 >= 0 && x0 < w);
 		bool           clip_v_flag = (y0 >= 0 && y0 < h);
 
@@ -189,7 +189,7 @@ void	PrimLine::draw_no_clip (RenderCtx &ctx, int x0, int y0, int x1, int y1, uin
 	const int      sy_buf  = (y0 < y1) ? stride : -stride;
 	int            err     = dx + dy;
 	uint8_t *      cur_ptr = &ctx.at (x0, y0);
-	uint8_t *const end_ptr = &ctx.at (x1, y1);
+	const uint8_t * const end_ptr = &ctx.at (x1, y1);
 
 	while (cur_ptr != end_ptr)
 	{

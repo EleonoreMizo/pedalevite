@@ -41,7 +41,16 @@ class ModelMsgCmdCbInterface
 
 public:
 
-	virtual        ~ModelMsgCmdCbInterface () = default;
+	               ModelMsgCmdCbInterface ()                        = default;
+	               ModelMsgCmdCbInterface (const ModelMsgCmdCbInterface &other) = default;
+	               ModelMsgCmdCbInterface (ModelMsgCmdCbInterface &&other)      = default;
+
+	virtual        ~ModelMsgCmdCbInterface ()                       = default;
+
+	virtual ModelMsgCmdCbInterface &
+	               operator = (const ModelMsgCmdCbInterface &other) = default;
+	virtual ModelMsgCmdCbInterface &
+	               operator = (ModelMsgCmdCbInterface &&other)      = default;
 
 	void           notify_model_error_code (int ret_val);
 

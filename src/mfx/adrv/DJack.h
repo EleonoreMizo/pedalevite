@@ -43,7 +43,7 @@ namespace adrv
 
 
 
-class DJack
+class DJack final
 :	public DriverInterface
 {
 
@@ -61,12 +61,11 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
-	virtual int    do_start ();
-	virtual int    do_stop ();
-	virtual void   do_restart ();
-	virtual std::string
-	               do_get_last_error () const;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
+	int            do_start () final;
+	int            do_stop () final;
+	void           do_restart () final;
+	std::string    do_get_last_error () const final;
 
 
 
@@ -104,7 +103,9 @@ private:
 private:
 
 	               DJack (const DJack &other)             = delete;
+	               DJack (DJack &&other)                  = delete;
 	DJack &        operator = (const DJack &other)        = delete;
+	DJack &        operator = (DJack &&other)             = delete;
 	bool           operator == (const DJack &other) const = delete;
 	bool           operator != (const DJack &other) const = delete;
 

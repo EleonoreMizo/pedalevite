@@ -54,18 +54,18 @@ namespace pg
 PedalboardConfig::PedalboardConfig (PageSwitcher &page_switcher, PedalEditContext &ctx)
 :	_page_switcher (page_switcher)
 ,	_ctx (ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW))
 ,	_pedal_list ()
 {
 	for (int ped_cnt = 0; ped_cnt < Cst::_nbr_pedals; ++ped_cnt)
 	{
 		_pedal_list [ped_cnt] =
-			TxtSPtr (new NText (Entry_PEDAL_LIST + ped_cnt));
+			std::make_shared <NText> (Entry_PEDAL_LIST + ped_cnt);
 	}
 }
 
@@ -150,7 +150,7 @@ MsgHandlerInterface::EvtProp	PedalboardConfig::do_handle_evt (const NodeEvt &evt
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (_ctx._ret_page, 0);
+			_page_switcher.switch_to (_ctx._ret_page, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:

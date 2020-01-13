@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "Axis.h"
 #include "GraphPrim.h"
 
+#include <array>
 #include <vector>
 
 
@@ -58,9 +59,6 @@ public:
 
 		DotStyle_NBR_ELT
 	};
-
-	               Gridaxis ();
-	virtual			~Gridaxis () {}
 
 	void           set_size (float w, float h);
 	void           set_plot (EPSPlot &plot, float x, float y);
@@ -103,26 +101,22 @@ private:
 	void           convert_coordinates (double &x, double &y) const;
 	void           convert_coordinates (PsCoordArr &x_conv, PsCoordArr &y_conv, const double x_arr [], const double y_arr [], long nbr_points) const;
 
-	Axis           _axis [Direction_NBR_ELT];
+	std::array <Axis, Direction_NBR_ELT>
+	               _axis;
 	GraphPrim      _prim;
-	EPSPlot *      _plot_ptr;
-	DotStyle       _dot_style;
-	PsCoord        _x;
-	PsCoord        _y;
-	PsCoord        _w;
-	PsCoord        _h;
-	bool           _grid_flag;
+	EPSPlot *      _plot_ptr  { nullptr };
+	DotStyle       _dot_style { DotStyle_SQUARE };
+	PsCoord        _x         { 0 };
+	PsCoord        _y         { 0 };
+	PsCoord        _w         { -1 };
+	PsCoord        _h         { -1 };
+	bool           _grid_flag { true };
 
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	               Gridaxis (const Gridaxis &other);
-	Gridaxis &     operator = (const Gridaxis &other);
-	bool           operator == (const Gridaxis &other);
-	bool           operator != (const Gridaxis &other);
 
 };	// class Gridaxis
 

@@ -48,8 +48,6 @@ class ObservableMultiMixin
 
 public:
 
-	virtual        ~ObservableMultiMixin () = default;
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -57,9 +55,9 @@ public:
 protected:
 
 	// ObservableInterface
-	virtual void	do_add_observer (ObserverInterface &observer);
-	virtual void	do_remove_observer (ObserverInterface &observer);
-	virtual void	do_notify_observers ();
+	void	            do_add_observer (ObserverInterface &observer) override;
+	void	            do_remove_observer (ObserverInterface &observer) override;
+	void	            do_notify_observers () override;
 
 
 

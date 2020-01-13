@@ -50,9 +50,6 @@ class DelayLineReaderPitch
 
 public:
 
-	               DelayLineReaderPitch ()  = default;
-	virtual        ~DelayLineReaderPitch () = default;
-
 	void           set_tmp_buf (float *buf_ptr, int len);
 	float *        get_tmp_buf_ptr () const;
 	int            get_tmp_buf_len () const;
@@ -99,21 +96,20 @@ private:
 
 	void           check_and_start_transition ();
 	bool           process_grain (Grain &g, float dest_ptr [], int src_pos, int nbr_spl);
-	void           setup_immediate_transition (TC delay_time, int transition_time);
 	int            get_xfade_len () const;
 	const float *  use_xfase_shape () const;
 
 	const DelayLineReadInterface *
-	               _delay_line_ptr  =  0;  // 0 = not initialised.
+	               _delay_line_ptr = nullptr; // 0 = not initialised.
 	TC             _dly_min    = -1;    // Min and max delay times, seconds, cached. Negative = not set
 	TC             _dly_max    = -1;
 
 
-	const float *  _xfade_sn_ptr  =  0; // 0 = not set.
-	const float *  _xfade_sp_ptr  =  0; // 0 = not set.
+	const float *  _xfade_sn_ptr  = nullptr; // 0 = not set.
+	const float *  _xfade_sp_ptr  = nullptr; // 0 = not set.
 
-	float *        _tmp_buf_ptr   =  0; // 0: not set.
-	int            _tmp_buf_len   =  0; // samples, > 0
+	float *        _tmp_buf_ptr   = nullptr; // 0: not set.
+	int            _tmp_buf_len   = 0; // samples, > 0
 
 	GrainArray     _grain_arr;
 
@@ -135,9 +131,6 @@ private:
 
 private:
 
-	               DelayLineReaderPitch (const DelayLineReaderPitch <TC> &other) = delete;
-	DelayLineReaderPitch <TC> &
-	               operator = (const DelayLineReaderPitch <TC> &other)        = delete;
 	bool           operator == (const DelayLineReaderPitch <TC> &other) const = delete;
 	bool           operator != (const DelayLineReaderPitch <TC> &other) const = delete;
 

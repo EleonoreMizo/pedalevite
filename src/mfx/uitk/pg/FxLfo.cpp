@@ -66,15 +66,15 @@ namespace pg
 FxLfo::FxLfo (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_t_ptr (0)
-,	_fnt_s_ptr (0)
-,	_cur_param_sptr ( new NText (Entry_PARAM))
-,	_prec_sptr (      new NText (Entry_PREC ))
-,	_content_sptr (new NBitmap (Entry_CONTENT))
+,	_fnt_t_ptr (nullptr)
+,	_fnt_s_ptr (nullptr)
+,	_cur_param_sptr (std::make_shared <NText  > (Entry_PARAM  ))
+,	_prec_sptr (     std::make_shared <NText  > (Entry_PREC   ))
+,	_content_sptr (  std::make_shared <NBitmap> (Entry_CONTENT))
 ,	_cur_param (Param_NBR_CYCLES)
 ,	_nbr_param (Param_BASE)
 ,	_nbr_cycles_idx (0)
@@ -141,7 +141,7 @@ MsgHandlerInterface::EvtProp	FxLfo::do_handle_evt (const NodeEvt &evt)
 			update_param_txt ();
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PARAM_LIST, 0);
+			_page_switcher.switch_to (pg::PageType_PARAM_LIST, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_U:
@@ -175,7 +175,7 @@ void	FxLfo::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -196,7 +196,7 @@ void	FxLfo::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -426,21 +426,21 @@ std::vector <int32_t>	FxLfo::build_values (int nbr_steps, int h)
 	std::array <float, _proc_blk_size>  buf_sig;
 	std::array <float *, 1> sig_arr = {{ &buf_sig [0] }};
 	piapi::ProcInfo proc_info;
-	proc_info._byp_arr     = 0;
+	proc_info._byp_arr     = nullptr;
 	proc_info._byp_state   = piapi::BypassState_IGNORE;
-	proc_info._dst_arr     = 0;
+	proc_info._dst_arr     = nullptr;
 	proc_info._evt_arr     = &evt_ptr_list [0];
 	proc_info._dir_arr [piapi::Dir_IN ]._nbr_chn = 0;
 	proc_info._dir_arr [piapi::Dir_OUT]._nbr_chn = 0;
 	proc_info._nbr_evt     = int (evt_ptr_list.size ());
 	proc_info._nbr_spl     = _proc_blk_size;
 	proc_info._sig_arr     = &sig_arr [0];
-	proc_info._src_arr     = 0;
+	proc_info._src_arr     = nullptr;
 
 	_lfo.process_block (proc_info);
 	int            latency = 0;
 	_lfo.reset (_sample_freq, _proc_blk_size, latency);
-	proc_info._evt_arr = 0;
+	proc_info._evt_arr = nullptr;
 	proc_info._nbr_evt = 0;
 
 	for (int x = 0; x < nbr_steps; ++x)

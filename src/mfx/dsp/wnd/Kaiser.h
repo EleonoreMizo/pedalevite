@@ -49,11 +49,6 @@ class Kaiser
 
 public:
 
-	               Kaiser ()                            = default;
-	               Kaiser (const Kaiser <T> &other)     = default;
-	virtual        ~Kaiser ()                           = default;
-	Kaiser <T> &   operator = (const Kaiser <T> &other) = default;
-
 	void           set_alpha (double alpha);
 
 
@@ -63,7 +58,7 @@ public:
 protected:
 
 	// WndInterface
-	virtual void   do_make_win (T data_ptr [], int len);
+	void           do_make_win (T data_ptr [], int len) override;
 
 
 

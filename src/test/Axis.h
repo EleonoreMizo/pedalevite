@@ -38,9 +38,6 @@ class Axis
 
 public:
 
-	               Axis ();
-	virtual        ~Axis () {}
-
 	void           set_scale (double min_val, double max_val);
 	void           set_log_scale (bool log_flag);
 	void           activate_tick (bool flag);
@@ -78,24 +75,19 @@ private:
 
 	void				keep_consistent ();
 
-	double         _min_val;   // Minimum value (left or bottom)
-	double         _max_val;   // Maximum value (right or top), > _min_val
-	double         _tick_org;  // Ref value for one tick
-	double         _tick_dist; // Value between 2 ticks, only for for linear
+	double         _min_val  {  0 }; // Minimum value (left or bottom)
+	double         _max_val  { 10 }; // Maximum value (right or top), > _min_val
+	double         _tick_org  { 0 }; // Ref value for one tick
+	double         _tick_dist { 1 }; // Value between 2 ticks, only for for linear
 	std::string    _name;
-	bool           _log_flag;  // Log scale
-	bool           _tick_flag; // Tick display
+	bool           _log_flag  { false }; // Log scale
+	bool           _tick_flag { true };  // Tick display
 
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	               Axis (const Axis &other);
-	Axis &         operator = (const Axis &other);
-	bool           operator == (const Axis &other);
-	bool           operator != (const Axis &other);
 
 };	// class Axis
 

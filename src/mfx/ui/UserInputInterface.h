@@ -53,7 +53,16 @@ public:
 	typedef conc::LockFreeCell <UserInputMsg>  MsgCell;
 	typedef conc::LockFreeQueue <UserInputMsg> MsgQueue;
 
-	virtual        ~UserInputInterface () = default;
+	               UserInputInterface ()                           = default;
+	               UserInputInterface (const UserInputInterface &other) = default;
+	               UserInputInterface (UserInputInterface &&other) = default;
+
+	virtual        ~UserInputInterface ()                          = default;
+
+	virtual UserInputInterface &
+	               operator = (const UserInputInterface &other)    = default;
+	virtual UserInputInterface &
+	               operator = (UserInputInterface &&other)         = default;
 
 	int            get_nbr_param (UserInputType type) const;
 	void           set_msg_recipient (UserInputType type, int index, MsgQueue *queue_ptr);

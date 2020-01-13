@@ -68,6 +68,7 @@ Algo &	Algo::operator = (const Algo &other)
 		_cnx_list         = other._cnx_list;
 		_node_list        = other._node_list;
 		_bm_nbr_rec_calls = other._bm_nbr_rec_calls;
+		// Other members are temporary and not copied.
 	}
 
 	return *this;

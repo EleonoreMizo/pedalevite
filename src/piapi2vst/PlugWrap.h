@@ -113,7 +113,7 @@ private:
 
 	void           update_max_block_size (int max_block_size);
 	void           process_block (float** inputs, ::VstInt32 sampleFrames);
-	void           process_vst_events (::VstEvents &evt_list);
+	void           process_vst_events (const ::VstEvents &evt_list);
 	void           push_event (const mfx::piapi::EventTs &evt);
 	void           fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index);
 
@@ -167,7 +167,9 @@ private:
 
 	               PlugWrap ()                               = delete;
 	               PlugWrap (const PlugWrap &other)          = delete;
+	               PlugWrap (const PlugWrap &&other)         = delete;
 	PlugWrap &     operator = (const PlugWrap &other)        = delete;
+	PlugWrap &     operator = (const PlugWrap &&other)       = delete;
 	bool           operator == (const PlugWrap &other) const = delete;
 	bool           operator != (const PlugWrap &other) const = delete;
 

@@ -57,8 +57,12 @@ public:
 
 	               PinkShade ();
 	               PinkShade (const PinkShade &other)  = default;
-	virtual        ~PinkShade ()                       = default;
+	               PinkShade (PinkShade &&other)       = default;
+
+	               ~PinkShade ()                       = default;
+
 	PinkShade &    operator = (const PinkShade &other) = default;
+	PinkShade &    operator = (PinkShade &&other)      = default;
 
 	void           set_seed (int seed);
 	inline float   process_sample ();

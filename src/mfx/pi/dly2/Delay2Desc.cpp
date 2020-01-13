@@ -63,12 +63,13 @@ Delay2Desc::Delay2Desc ()
 	typedef param::TplMapped <param::MapS <false> > TplS;
 
 	// Tap gain in
-	param::Simple *   sim_ptr =
-		new param::Simple ("Tap gain in\nTap G in\nTap in\nTGI");
-	_desc_set.add_glob (ParamLine_GAIN_IN, sim_ptr);
+	auto           sim_sptr = std::make_shared <param::Simple> (
+		"Tap gain in\nTap G in\nTap in\nTGI"
+	);
+	_desc_set.add_glob (ParamLine_GAIN_IN, sim_sptr);
 
 	// Tap global volume
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0, 4,
 		"Tap global volume\nTap glob vol\nTap vol\nTapV\nTV",
 		"dB",
@@ -76,11 +77,11 @@ Delay2Desc::Delay2Desc ()
 		0,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8, 2);
-	_desc_set.add_glob (Param_TAPS_VOL, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8, 2);
+	_desc_set.add_glob (Param_TAPS_VOL, pll_sptr);
 
 	// Dry volume
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0, 4,
 		"Dry volume\nDry vol\nDryV\nDV",
 		"dB",
@@ -88,11 +89,11 @@ Delay2Desc::Delay2Desc ()
 		0,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8, 2);
-	_desc_set.add_glob (Param_DRY_VOL, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8, 2);
+	_desc_set.add_glob (Param_DRY_VOL, pll_sptr);
 
 	// Dry spread
-	TplS *         maps_ptr = new TplS (
+	auto           maps_sptr = std::make_shared <TplS> (
 		-1, 1,
 		"Dry spread\nDry Spr\nDSpr\nDS",
 		"%",
@@ -100,34 +101,35 @@ Delay2Desc::Delay2Desc ()
 		0,
 		"%+6.1f"
 	);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
+	maps_sptr->use_mapper ().config (
+		maps_sptr->get_nat_min (),
+		maps_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_DRY_SPREAD, maps_ptr);
+	_desc_set.add_glob (Param_DRY_SPREAD, maps_sptr);
 
 	// Freeze lines
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"Freeze lines\nFreeze\nFrz",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_FREEZE, enu_ptr);
+	_desc_set.add_glob (Param_FREEZE, enu_sptr);
 
 	// Number of feedback lines
-	param::TplInt *   int_ptr = new param::TplInt (
+	auto           int_sptr = std::make_shared <param::TplInt> (
 		0, Cst::_nbr_lines,
-		"Number of feedback lines\nNb of feedback lines\nFeedback lines\nFdbk lines\nNLines\nNL",
+		"Number of feedback lines\nNb of feedback lines\nFeedback lines"
+		"\nFdbk lines\nNLines\nNL",
 		"",
 		0,
 		"%.0f"
 	);
-	_desc_set.add_glob (Param_NBR_LINES, int_ptr);
+	_desc_set.add_glob (Param_NBR_LINES, int_sptr);
 
 	// Cross-freedback
-	maps_ptr = new TplS (
+	maps_sptr = std::make_shared <TplS> (
 			0, 1,
 			"Ping-pong feedback\nPing-pong\nPiPo\nPP",
 			"%",
@@ -135,14 +137,14 @@ Delay2Desc::Delay2Desc ()
 			0,
 			"%5.1f"
 		);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
+	maps_sptr->use_mapper ().config (
+		maps_sptr->get_nat_min (),
+		maps_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_X_FDBK, maps_ptr);
+	_desc_set.add_glob (Param_X_FDBK, maps_sptr);
 
 	// Ducking sensitivity
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1.0/1024, 1,
 		"Ducking sensitivity\nDuck sensitivity\nDuck sens\nDuck S\nDS",
 		"dB",
@@ -150,11 +152,11 @@ Delay2Desc::Delay2Desc ()
 		0,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (10, 2);
-	_desc_set.add_glob (Param_DUCK_SENS, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (10, 2);
+	_desc_set.add_glob (Param_DUCK_SENS, pll_sptr);
 
 	// Ducking time
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1.0/256, 1,
 		"Ducking time\nDuck time\nDuck T\nDT",
 		"dB",
@@ -162,8 +164,8 @@ Delay2Desc::Delay2Desc ()
 		0,
 		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (8, 2);
-	_desc_set.add_glob (Param_DUCK_TIME, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8, 2);
+	_desc_set.add_glob (Param_DUCK_TIME, pll_sptr);
 
 	// Taps
 	for (int index = 0; index < Cst::_nbr_taps; ++index)
@@ -266,7 +268,7 @@ void	Delay2Desc::init_tap (int index)
 	const int      base = get_tap_base (index);
 
 	// Tap input gain
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0, 4,
 		"Tap %d input gain\nTap %d gain\nT%d gain\nT%dG",
 		"dB",
@@ -274,18 +276,18 @@ void	Delay2Desc::init_tap (int index)
 		index + 1,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8, 2);
-	_desc_set.add_glob (base + ParamTap_GAIN_IN, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8, 2);
+	_desc_set.add_glob (base + ParamTap_GAIN_IN, pll_sptr);
 
 	// Tap spread
-	param::TplPan *   pan_ptr = new param::TplPan (
+	auto           pan_sptr = std::make_shared <param::TplPan> (
 		"Tap %d spread\nTap %d spr\nT%d spr\nT%dS",
 		index + 1
 	);
-	_desc_set.add_glob (base + ParamTap_SPREAD, pan_ptr);
+	_desc_set.add_glob (base + ParamTap_SPREAD, pan_sptr);
 
 	// Tap delay time, base
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0, 4,
 		"Tap %d delay time, base\nTap %d time base\nTap %d time B\nT%d time B\nT%dTB",
 		"ms",
@@ -293,39 +295,39 @@ void	Delay2Desc::init_tap (int index)
 		index + 1,
 		"%6.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (5, 2);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
-	_desc_set.add_glob (base + ParamTap_DLY_BASE, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (5, 2);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+	_desc_set.add_glob (base + ParamTap_DLY_BASE, pll_sptr);
 
 	// Tap delay time, relative
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 4,
 		"Tap %d delay time, relative\nTap %d time rel\nTap %d time R\nT%d time R\nT%dTR",
 		"%",
 		index + 1,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (base + ParamTap_DLY_REL, lin_ptr);
+	_desc_set.add_glob (base + ParamTap_DLY_REL, lin_sptr);
 
 	// Tap pitch
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"Tap %d pitch\nT%d pitch\nT%dP",
 		"%",
 		index + 1,
 		"%+6.2f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_STD
 	);
-	lin_ptr->use_disp_num ().set_scale (12);
-	_desc_set.add_glob (base + ParamTap_PITCH, lin_ptr);
+	lin_sptr->use_disp_num ().set_scale (12);
+	_desc_set.add_glob (base + ParamTap_PITCH, lin_sptr);
 
 	// Tap low-cut frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		Cst::_eq_freq_min, Cst::_eq_freq_min * 1024.0,
 		"Tap %d low-cut frequency\nTap %d low-cut\nTap %d LC\nT%dLC",
 		"Hz",
@@ -333,12 +335,12 @@ void	Delay2Desc::init_tap (int index)
 		index + 1,
 		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (5);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamTap_CUT_LO, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (5);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamTap_CUT_LO, pll_sptr);
 
 	// Tap high-cut frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		Cst::_eq_freq_max / 1024.0, Cst::_eq_freq_max,
 		"Tap %d high-cut frequency\nTap %d high-cut\nTap %d HC\nT%dHC",
 		"Hz",
@@ -346,16 +348,16 @@ void	Delay2Desc::init_tap (int index)
 		index + 1,
 		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (5);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamTap_CUT_HI, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (5);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamTap_CUT_HI, pll_sptr);
 
 	// Tap pan
-	pan_ptr = new param::TplPan (
+	pan_sptr = std::make_shared <param::TplPan> (
 		"Tap %d stereo panning\nTap %d stereo pan\nTap %d pan\nT%dP",
 		index + 1
 	);
-	_desc_set.add_glob (base + ParamTap_PAN, pan_ptr);
+	_desc_set.add_glob (base + ParamTap_PAN, pan_sptr);
 }
 
 
@@ -369,7 +371,7 @@ void	Delay2Desc::init_line (int index)
 	const int      base = get_line_base (index);
 
 	// Line input gain
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0, 16,
 		"Line %d input gain\nLine %d gain\nL%d gain\nL%dG",
 		"dB",
@@ -377,11 +379,11 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8, 2);
-	_desc_set.add_glob (base + ParamLine_GAIN_IN, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8, 2);
+	_desc_set.add_glob (base + ParamLine_GAIN_IN, pll_sptr);
 
 	// Line delay time, base
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1.0/256, 4,
 		"Line %d delay time, base\nLine %d time base\nLine %d time B\nL%d time B\nL%dTB",
 		"ms",
@@ -389,25 +391,25 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%6.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (5);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
-	_desc_set.add_glob (base + ParamLine_DLY_BASE, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (5);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+	_desc_set.add_glob (base + ParamLine_DLY_BASE, pll_sptr);
 
 	// Line delay time, relative
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 4,
 		"Line %d delay time, relative\nLine %d time rel\nLine %d time R\nL%d time R\nL%dTR",
 		"%",
 		index + 1,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (base + ParamLine_DLY_REL, lin_ptr);
+	_desc_set.add_glob (base + ParamLine_DLY_REL, lin_sptr);
 
 	// Line speed
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.25f, Cst::_max_bbd_speed,
 		"Line %d speed\nLine %d spd\nL%d spd\nL%dS",
 		"%",
@@ -415,37 +417,37 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%6.1f"
 	);
-	_desc_set.add_glob (base + ParamLine_DLY_BBD_SPD, log_ptr);
+	_desc_set.add_glob (base + ParamLine_DLY_BBD_SPD, log_sptr);
 
 	// Line pitch
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"Line %d pitch\nL%d pitch\nL%dP",
 		"%",
 		index + 1,
 		"%+6.2f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_STD
 	);
-	lin_ptr->use_disp_num ().set_scale (12);
-	_desc_set.add_glob (base + ParamLine_PITCH, lin_ptr);
+	lin_sptr->use_disp_num ().set_scale (12);
+	_desc_set.add_glob (base + ParamLine_PITCH, lin_sptr);
 
 	// Line feedback
 #if 1
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Line %d feedback\nLine %d fdbk\nL%d fdbk\nL%dF",
 		"%",
 		index + 1,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (base + ParamLine_FDBK, lin_ptr);
+	_desc_set.add_glob (base + ParamLine_FDBK, lin_sptr);
 #else
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0, 4,
 		"Line %d feedback\nLine %d fdbk\nL%d fdbk\nL%dF",
 		"%",
@@ -453,14 +455,14 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%6.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (0);
-	pll_ptr->use_mapper ().add_segment (0.75, 1.0, false);
-	pll_ptr->use_mapper ().add_segment (1.0 , 4.0, true );
-	_desc_set.add_glob (base + ParamLine_FDBK, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (0);
+	pll_sptr->use_mapper ().add_segment (0.75, 1.0, false);
+	pll_sptr->use_mapper ().add_segment (1.0 , 4.0, true );
+	_desc_set.add_glob (base + ParamLine_FDBK, pll_sptr);
 #endif
 
 	// Line low-cut frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		Cst::_eq_freq_min, Cst::_eq_freq_min * 1024.0,
 		"Line %d low-cut frequency\nLine %d low-cut\nLine %d LC\nL%dLC",
 		"Hz",
@@ -468,12 +470,12 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (5);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamLine_CUT_LO, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (5);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamLine_CUT_LO, pll_sptr);
 
 	// Line high-cut frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		Cst::_eq_freq_max / 1024.0, Cst::_eq_freq_max,
 		"Line %d high-cut frequency\nLine %d high-cut\nLine %d HC\nL%dHC",
 		"Hz",
@@ -481,19 +483,19 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (5);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamLine_CUT_HI, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (5);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamLine_CUT_HI, pll_sptr);
 
 	// Line pan
-	param::TplPan *   pan_ptr = new param::TplPan (
+	auto           pan_sptr = std::make_shared <param::TplPan> (
 		"Line %d stereo panning\nLine %d stereo pan\nLine %d pan\nL%dP",
 		index + 1
 	);
-	_desc_set.add_glob (base + ParamLine_PAN, pan_ptr);
+	_desc_set.add_glob (base + ParamLine_PAN, pan_sptr);
 
 	// Line volume
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0, 4,
 		"Line %d volume\nLine %d volume\nLine %d vol\nL%d vol\nL%dV",
 		"dB",
@@ -501,35 +503,35 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().gen_log (8, 2);
-	_desc_set.add_glob (base + ParamLine_VOL, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8, 2);
+	_desc_set.add_glob (base + ParamLine_VOL, pll_sptr);
 
 	// Line ducking amount
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Line %d ducking amount\nLine %d duck amount\nLine %d duck amt\nL%d duck\nL%dDK",
 		"%",
 		index + 1,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (base + ParamLine_DUCK_AMT, lin_ptr);
+	_desc_set.add_glob (base + ParamLine_DUCK_AMT, lin_sptr);
 
 	// Line filter type
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"PK\nLP\nBP\nHP",
 		"Line %d filter type\nL%d filt type\nL%d FType\nL%dFT",
 		"",
 		index + 1,
 		"%s"
 	);
-	assert (enu_ptr->get_nat_max () == FilterType_NBR_ELT - 1);
-	_desc_set.add_glob (base + ParamLine_FX_FLT_T, enu_ptr);
+	assert (enu_sptr->get_nat_max () == FilterType_NBR_ELT - 1);
+	_desc_set.add_glob (base + ParamLine_FX_FLT_T, enu_sptr);
 
 	// Line filter frequency
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		20, 20480,
 		"Line %d filter frequency\nLine %d filt freq\nL%d filt freq\nL%d FFreq\nL%dFF",
 		"Hz",
@@ -537,11 +539,11 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%5.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamLine_FX_FLT_F, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamLine_FX_FLT_F, log_sptr);
 
 	// Line filter resonance
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		1.0 / 16, 16,
 		"Line %d filter resonance\nLine %d filt reso\nL%d filt reso\nL%d FReso\nL%dFR",
 		"dB",
@@ -549,17 +551,17 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%+5.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (pll_ptr->get_nat_min ());
-	pll_ptr->use_mapper ().add_segment (0.10 ,  0.125, false);
-	pll_ptr->use_mapper ().add_segment (0.20 ,  0.25 , false);
-	pll_ptr->use_mapper ().add_segment (0.40 ,  1.0  , false);
-	pll_ptr->use_mapper ().add_segment (0.75 ,  2.0  , false);
-	pll_ptr->use_mapper ().add_segment (0.875,  4.0  , false);
-	pll_ptr->use_mapper ().add_segment (1.00 ,  pll_ptr->get_nat_max (), false);
-	_desc_set.add_glob (base + ParamLine_FX_FLT_R, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (pll_sptr->get_nat_min ());
+	pll_sptr->use_mapper ().add_segment (0.10 ,  0.125, false);
+	pll_sptr->use_mapper ().add_segment (0.20 ,  0.25 , false);
+	pll_sptr->use_mapper ().add_segment (0.40 ,  1.0  , false);
+	pll_sptr->use_mapper ().add_segment (0.75 ,  2.0  , false);
+	pll_sptr->use_mapper ().add_segment (0.875,  4.0  , false);
+	pll_sptr->use_mapper ().add_segment (1.00 ,  pll_sptr->get_nat_max (), false);
+	_desc_set.add_glob (base + ParamLine_FX_FLT_R, pll_sptr);
 
 	// Line filter selectivity
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		0.1, 10,
 		"Line %d filter selectivity\nLine %d filt Q\nL%d filt Q\nL%d FQ",
 		"",
@@ -567,48 +569,52 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%5.2f"
 	);
-	pll_ptr->use_mapper ().gen_log (4);
-	_desc_set.add_glob (base + ParamLine_FX_FLT_Q, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (4);
+	_desc_set.add_glob (base + ParamLine_FX_FLT_Q, pll_sptr);
 
 	// Line filter mix
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Line %d filter mix\nLine %d filt mix\nL%d filt mix\nL%d FM",
 		"dB",
 		index + 1,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (base + ParamLine_FX_FLT_M, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (base + ParamLine_FX_FLT_M, lin_sptr);
 
 	// Line distortion amount
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
-		"Line %d distortion amount\nLine %d dist amt\nLine %d dist a\nL%d dist a\nL%dDA",
+		"Line %d distortion amount\nLine %d dist amt\nLine %d dist a"
+		"\nL%d dist a\nL%dDA",
 		"%",
 		index + 1,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (base + ParamLine_FX_DIST_A, lin_ptr);
+	_desc_set.add_glob (base + ParamLine_FX_DIST_A, lin_sptr);
 
 	// Line distortion foldback
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
-		"Line %d distortion floldback\nLine %d dist fold\nLine %d dist f\nL%d dist f\nL%dDF",
+		"Line %d distortion floldback\nLine %d dist fold\nLine %d dist f"
+		"\nL%d dist f\nL%dDF",
 		"%",
 		index + 1,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (
+	lin_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (base + ParamLine_FX_DIST_F, lin_ptr);
+	_desc_set.add_glob (base + ParamLine_FX_DIST_F, lin_sptr);
 
 	// Line high shelf frequency
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		80, 20480,
 		"Line %d high shelf frequency\nLine %d shelf freq\nLine %d sh freq\nL%dSF",
 		"Hz",
@@ -616,23 +622,23 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%5.0f"
 	);
-	pll_ptr->use_mapper ().gen_log (8);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamLine_FX_SHLF_F, pll_ptr);
+	pll_sptr->use_mapper ().gen_log (8);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamLine_FX_SHLF_F, pll_sptr);
 
 	// Line high shelf level
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Line %d high shelf level\nLine %d shelf level\nLine %d sh lvl\nL%dSL",
 		"dB",
 		index + 1,
 		"%+5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_DB);
-	_desc_set.add_glob (base + ParamLine_FX_SHLF_L, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_DB);
+	_desc_set.add_glob (base + ParamLine_FX_SHLF_L, lin_sptr);
 
 	// Line frequency shifting
-	pll_ptr = new TplPll (
+	pll_sptr = std::make_shared <TplPll> (
 		-Cst::_max_freq_shift, Cst::_max_freq_shift,
 		"Line %d frequency shift\nLine %d freq shift\nLine %d f shift\nL%d f shift\nL%dFS",
 		"Hz",
@@ -640,15 +646,15 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%+7.1f"
 	);
-	pll_ptr->use_mapper ().set_first_value (-Cst::_max_freq_shift);
-	pll_ptr->use_mapper ().add_segment (0.4, -0.004 * Cst::_max_freq_shift, true);
-	pll_ptr->use_mapper ().add_segment (0.6,  0.004 * Cst::_max_freq_shift, false);
-	pll_ptr->use_mapper ().add_segment (1.0,          Cst::_max_freq_shift, true);
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (base + ParamLine_FX_FSH_F, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (-Cst::_max_freq_shift);
+	pll_sptr->use_mapper ().add_segment (0.4, -0.004 * Cst::_max_freq_shift, true);
+	pll_sptr->use_mapper ().add_segment (0.6,  0.004 * Cst::_max_freq_shift, false);
+	pll_sptr->use_mapper ().add_segment (1.0,          Cst::_max_freq_shift, true);
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (base + ParamLine_FX_FSH_F, pll_sptr);
 
 	// Line reverb mix
-	TplMaps *      maps_ptr = new TplMaps (
+	auto           maps_sptr = std::make_shared <TplMaps> (
 		0, 1,
 		"Line %d reverb mix\nLine %d rev mix\nL%d rev mix\nL%dRM",
 		"%",
@@ -656,14 +662,14 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%5.1f"
 	);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
+	maps_sptr->use_mapper ().config (
+		maps_sptr->get_nat_min (),
+		maps_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (base + ParamLine_FX_REV_MX, maps_ptr);
+	_desc_set.add_glob (base + ParamLine_FX_REV_MX, maps_sptr);
 
 	// Line reverb decay
-	TplFdbk *      fdbk_ptr = new TplFdbk (
+	auto           fdbk_sptr = std::make_shared <TplFdbk> (
 		TplFdbk::Mapper::get_nat_min (),
 		TplFdbk::Mapper::get_nat_max (),
 		"Line %d reverb decay\nLine %d rev decay\nLine %d rev dcy\nL%d rev dcy\nL%dRDc",
@@ -672,10 +678,10 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%5.1f"
 	);
-	_desc_set.add_glob (base + ParamLine_FX_REV_DC, fdbk_ptr);
+	_desc_set.add_glob (base + ParamLine_FX_REV_DC, fdbk_sptr);
 
 	// Line reverb damp
-	fdbk_ptr = new TplFdbk (
+	fdbk_sptr = std::make_shared <TplFdbk> (
 		TplFdbk::Mapper::get_nat_min (),
 		TplFdbk::Mapper::get_nat_max (),
 		"Line %d reverb damp\nLine %d rev damp\nL%d rev dmp\nL%dRDa",
@@ -684,7 +690,7 @@ void	Delay2Desc::init_line (int index)
 		index + 1,
 		"%5.1f"
 	);
-	_desc_set.add_glob (base + ParamLine_FX_REV_DA, fdbk_ptr);
+	_desc_set.add_glob (base + ParamLine_FX_REV_DA, fdbk_sptr);
 }
 
 

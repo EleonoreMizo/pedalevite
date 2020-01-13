@@ -65,7 +65,7 @@ public:
 	inline Rect &  operator += (const Vec2d &other);
 	inline Rect &  operator -= (const Vec2d &other);
 
-	inline bool    empty () const;
+	inline bool    is_empty () const;
 
 
 

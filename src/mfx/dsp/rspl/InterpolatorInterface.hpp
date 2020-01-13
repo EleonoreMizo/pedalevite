@@ -106,10 +106,10 @@ void	InterpolatorInterface::start (int nbr_chn)
 // Returns the number of processed destination samples (> 0).
 int	InterpolatorInterface::process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
 {
-	assert (dest_ptr_arr != 0);
-	assert (dest_ptr_arr [0] != 0);
-	assert (src_ptr_arr != 0);
-	assert (src_ptr_arr [0] != 0);
+	assert (dest_ptr_arr != nullptr);
+	assert (dest_ptr_arr [0] != nullptr);
+	assert (src_ptr_arr != nullptr);
+	assert (src_ptr_arr [0] != nullptr);
 	assert (pos_src.get_int_val () >= beg_src);
 	assert (pos_src.get_int_val () < end_src - get_impulse_len () + 1);
 	assert (pos_dest < end_dest);
@@ -143,7 +143,7 @@ int	InterpolatorInterface::process_block (float * const dest_ptr_arr [], const f
 
 float	InterpolatorInterface::process_sample (const float src_ptr [], fstb::FixedPoint pos_src, fstb::FixedPoint rate)
 {
-	assert (src_ptr != 0);
+	assert (src_ptr != nullptr);
 
 	return do_process_sample (src_ptr, pos_src, rate);
 }

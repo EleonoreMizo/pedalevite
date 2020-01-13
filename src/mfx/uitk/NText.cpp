@@ -49,7 +49,7 @@ namespace uitk
 
 NText::NText ()
 :	_txt ()
-,	_font_ptr (0)
+,	_font_ptr (nullptr)
 ,	_frame_size ()
 ,	_margin ()
 ,	_mag_arr ({{ 1, 1 }})
@@ -70,7 +70,7 @@ NText::NText ()
 NText::NText (int node_id)
 :	Inherited (node_id)
 ,	_txt ()
-,	_font_ptr (0)
+,	_font_ptr (nullptr)
 ,	_frame_size ()
 ,	_margin ()
 ,	_mag_arr ({{ 1, 1 }})
@@ -102,7 +102,7 @@ void	NText::set_frame (Vec2d size_max, Vec2d margin)
 	update_content ();
 
 	ParentInterface * parent_ptr = get_parent ();
-	if (parent_ptr != 0)
+	if (parent_ptr != nullptr)
 	{
 		parent_ptr->invalidate (zone_old);
 	}
@@ -119,7 +119,7 @@ void	NText::set_text (std::string txt)
 	update_content ();
 
 	ParentInterface * parent_ptr = get_parent ();
-	if (parent_ptr != 0)
+	if (parent_ptr != nullptr)
 	{
 		parent_ptr->invalidate (zone_old);
 	}
@@ -142,7 +142,7 @@ void	NText::set_font (const ui::Font &fnt)
 	update_content ();
 
 	ParentInterface * parent_ptr = get_parent ();
-	if (parent_ptr != 0)
+	if (parent_ptr != nullptr)
 	{
 		parent_ptr->invalidate (zone_old);
 	}
@@ -162,7 +162,7 @@ void	NText::set_mag (int x, int y)
 	update_content ();
 
 	ParentInterface * parent_ptr = get_parent ();
-	if (parent_ptr != 0)
+	if (parent_ptr != nullptr)
 	{
 		parent_ptr->invalidate (zone_old);
 	}
@@ -185,7 +185,7 @@ void	NText::set_justification (float x, float y, bool baseline_flag)
 	update_content ();
 
 	ParentInterface * parent_ptr = get_parent ();
-	if (parent_ptr != 0)
+	if (parent_ptr != nullptr)
 	{
 		parent_ptr->invalidate (zone_old);
 	}
@@ -203,7 +203,7 @@ void	NText::set_bold (bool bold_flag, bool space_flag)
 	update_content ();
 
 	ParentInterface * parent_ptr = get_parent ();
-	if (parent_ptr != 0)
+	if (parent_ptr != nullptr)
 	{
 		parent_ptr->invalidate (zone_old);
 	}
@@ -232,7 +232,7 @@ void	NText::set_underline (bool underline_flag)
 // In displayed pixels
 int	NText::get_char_width (char32_t c) const
 {
-	assert (_font_ptr != 0);
+	assert (_font_ptr != nullptr);
 
 	int            len = _font_ptr->get_char_w (c);
 	if (_bold_flag && _space_flag)
@@ -299,7 +299,7 @@ void	NText::update_txt_ucs4 ()
 
 void	NText::update_content ()
 {
-	if (_font_ptr == 0 || _txt.empty ())
+	if (_font_ptr == nullptr || _txt.empty ())
 	{
 		set_size (Vec2d ());
 	}

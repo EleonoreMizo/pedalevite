@@ -59,25 +59,25 @@ namespace pg
 SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
+,	_fnt_ptr (nullptr)
 ,	_state (State_NORMAL)
 ,	_save_bank_index (-1)
 ,	_save_preset_index (-1)
 ,	_save_slot_id (-1)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_typ_sptr (new NText (Entry_TYPE   ))
-,	_ins_sptr (new NText (Entry_INSERT ))
-,	_del_sptr (new NText (Entry_DELETE ))
-,	_rtn_sptr (new NText (Entry_ROUTING))
-,	_prs_sptr (new NText (Entry_PRESETS))
-,	_rst_sptr (new NText (Entry_RESET  ))
-,	_chn_sptr (new NText (Entry_CHN    ))
-,	_frs_sptr (new NText (Entry_FRESH  ))
-,	_lbl_sptr (new NText (Entry_LABEL  ))
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW ))
+,	_typ_sptr ( std::make_shared <NText  > (Entry_TYPE   ))
+,	_ins_sptr ( std::make_shared <NText  > (Entry_INSERT ))
+,	_del_sptr ( std::make_shared <NText  > (Entry_DELETE ))
+,	_rtn_sptr ( std::make_shared <NText  > (Entry_ROUTING))
+,	_prs_sptr ( std::make_shared <NText  > (Entry_PRESETS))
+,	_rst_sptr ( std::make_shared <NText  > (Entry_RESET  ))
+,	_chn_sptr ( std::make_shared <NText  > (Entry_CHN    ))
+,	_frs_sptr ( std::make_shared <NText  > (Entry_FRESH  ))
+,	_lbl_sptr ( std::make_shared <NText  > (Entry_LABEL  ))
 ,	_label_param ()
 {
 	_del_sptr->set_text ("Delete");
@@ -200,10 +200,10 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 				delete_slot ();
 				break;
 			case Entry_ROUTING:
-				_page_switcher.switch_to (PageType_SLOT_ROUTING, 0);
+				_page_switcher.switch_to (PageType_SLOT_ROUTING, nullptr);
 				break;
 			case Entry_PRESETS:
-				_page_switcher.switch_to (PageType_PRESET_MENU, 0);
+				_page_switcher.switch_to (PageType_PRESET_MENU, nullptr);
 				break;
 			case Entry_RESET:
 				reset_plugin ();
@@ -228,11 +228,11 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 				if (   _loc_edit._slot_id < 0
 				    || preset.is_slot_empty (_loc_edit._slot_id))
 				{
-					_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+					_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 				}
 				else
 				{
-					_page_switcher.switch_to (pg::PageType_PARAM_LIST, 0);
+					_page_switcher.switch_to (pg::PageType_PARAM_LIST, nullptr);
 				}
 			}
 			ret_val = EvtProp_CATCH;
@@ -264,7 +264,7 @@ void	SlotMenu::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -473,7 +473,7 @@ void	SlotMenu::reset_plugin ()
 			const float    val = float (def._param_list [index]);
 			_model_ptr->set_param (slot_id, pi_type, index, val);
 			_model_ptr->set_param_ctrl (slot_id, pi_type, index, cls);
-			_model_ptr->set_param_pres (slot_id, pi_type, index, 0);
+			_model_ptr->set_param_pres (slot_id, pi_type, index, nullptr);
 		}
 
 		/*** To do: add the default controllers ***/

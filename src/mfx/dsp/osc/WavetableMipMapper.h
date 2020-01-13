@@ -78,9 +78,9 @@ private:
 	typedef std::shared_ptr <FftType> FftSPtr;
 	typedef std::vector <typename FftType::DataType> TmpBuffer;
 
-	FftSPtr        _fft_sptr = FftSPtr (new FftType);
-	TmpBuffer      _bins     = TmpBuffer (WavetableDataType::MAX_SIZE);
-	TmpBuffer      _data     = TmpBuffer (WavetableDataType::MAX_SIZE);
+	FftSPtr        _fft_sptr { std::make_shared <FftType> () };
+	TmpBuffer      _bins     { TmpBuffer (WavetableDataType::MAX_SIZE) };
+	TmpBuffer      _data     { TmpBuffer (WavetableDataType::MAX_SIZE) };
 
 
 
@@ -89,8 +89,11 @@ private:
 private:
 
 	               WavetableMipMapper (const WavetableMipMapper &other) = delete;
+	               WavetableMipMapper (WavetableMipMapper &&other)     = delete;
 	WavetableMipMapper &
 	               operator = (const WavetableMipMapper &other)        = delete;
+	WavetableMipMapper &
+	               operator = (WavetableMipMapper &&other)             = delete;
 	bool           operator == (const WavetableMipMapper &other) const = delete;
 	bool           operator != (const WavetableMipMapper &other) const = delete;
 

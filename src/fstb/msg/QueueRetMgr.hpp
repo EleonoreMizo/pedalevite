@@ -46,16 +46,16 @@ QueueRetMgr <M>::~QueueRetMgr ()
 	// returned to the pool before the object is destructed. This code is only
 	// here for minimal consistency and may do wrong things, because cell's
 	// resources will be freed from a possibly inappropriate thread.
-	CellType *     cell_ptr = 0;
+	CellType *     cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_fwd.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			cell_ptr->_val.ret ();
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 
 	for (auto &q_sptr : _queue_list)
 	{
@@ -71,7 +71,7 @@ typename QueueRetMgr <M>::QueueSPtr	QueueRetMgr <M>::create_new_ret_queue ()
 {
 	std::lock_guard <std::mutex>  lock (_queue_list_mtx);
 
-	QueueSPtr      q_sptr (new Queue);
+	QueueSPtr      q_sptr { std::make_shared <Queue> () };
 	_queue_list.push_back (q_sptr);
 
 	return q_sptr;
@@ -110,7 +110,7 @@ typename QueueRetMgr <M>::Pool &	QueueRetMgr <M>::use_pool ()
 
 
 template <class M>
-void	QueueRetMgr <M>::enqueue (CellType &cell, QueueSPtr &ret_queue_sptr)
+void	QueueRetMgr <M>::enqueue (CellType &cell, QueueSPtr ret_queue_sptr)
 {
 	assert (find_queue (*ret_queue_sptr) != _queue_list.end ());
 
@@ -133,18 +133,18 @@ void	QueueRetMgr <M>::flush_ret_queue (Queue &queue)
 {
 	assert (find_queue (queue) != _queue_list.end ());
 
-	CellType *     cell_ptr = 0;
+	CellType *     cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = queue.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			cell_ptr->_val.clear ();
 			assert (! cell_ptr->_val.is_attached_to_queue ());
 			_pool.return_cell (*cell_ptr);
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 }
 
 

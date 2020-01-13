@@ -55,8 +55,11 @@ public:
 
 	               Routing ()                        = default;
 	               Routing (const Routing &other)    = default;
-	virtual        ~Routing ()                       = default;
+	               Routing (Routing &&other)         = default;
+	               ~Routing ()                       = default;
+
 	Routing &      operator = (const Routing &other) = default;
+	Routing &      operator = (Routing &&other)      = default;
 
 	bool           has_slots () const;
 	bool           is_referencing_slot (int slot_id) const;

@@ -48,9 +48,6 @@ class Notch
 
 public:
 
-	               Notch ()  = default;
-	virtual        ~Notch () = default;
-
 	void           reset (double sample_freq, int max_buf_len, float buf_0_ptr [], float buf_1_ptr []);
 	void           set_freq (float freq);
 	void           set_q (float q);
@@ -90,8 +87,8 @@ private:
 	dsp::dyn::EnvFollowerRms
 	               _env;
 
-	float *        _buf_env_ptr  = 0;      // Aligned to 16 bytes. 0 = not set
-	float *        _buf_bpf_ptr  = 0;      // Aligned to 16 bytes. 0 = not set
+	float *        _buf_env_ptr  = nullptr; // Aligned to 16 bytes. 0 = not set
+	float *        _buf_bpf_ptr  = nullptr; // Aligned to 16 bytes. 0 = not set
 
 
 
@@ -99,8 +96,6 @@ private:
 
 private:
 
-	               Notch (const Notch &other)             = delete;
-	Notch &        operator = (const Notch &other)        = delete;
 	bool           operator == (const Notch &other) const = delete;
 	bool           operator != (const Notch &other) const = delete;
 

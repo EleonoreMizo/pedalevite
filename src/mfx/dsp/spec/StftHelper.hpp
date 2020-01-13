@@ -81,7 +81,7 @@ void	StftHelper <FFT>::set_hop_size (int nbr_spl)
 template <class FFT>
 void	StftHelper <FFT>::set_win (const float win_ptr [FftType::FFT_LEN])
 {
-	if (win_ptr == 0)
+	if (win_ptr == nullptr)
 	{
 		_win.clear ();
 	}
@@ -112,8 +112,8 @@ void	StftHelper <FFT>::clear_buffers ()
 template <class FFT>
 void	StftHelper <FFT>::process_block (const float spl_ptr [], float freq_ptr [FftType::FFT_LEN], int nbr_spl, bool &trans_flag, int &nbr_spl_proc)
 {
-	assert (spl_ptr != 0);
-	assert (freq_ptr != 0);
+	assert (spl_ptr != nullptr);
+	assert (freq_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            work_len = nbr_spl;

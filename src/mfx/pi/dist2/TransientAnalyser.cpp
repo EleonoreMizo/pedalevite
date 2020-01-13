@@ -213,7 +213,7 @@ float	TransientAnalyser::compute_coef (float t) const
 
 void	TransientAnalyser::prefilter_block (const float * const src_ptr_arr [], int nbr_chn, int nbr_spl)
 {
-	assert (src_ptr_arr != 0);
+	assert (src_ptr_arr != nullptr);
 	assert (nbr_chn > 0);
 	assert (nbr_chn <= _max_nbr_chn);
 	assert (nbr_spl > 0);
@@ -221,7 +221,7 @@ void	TransientAnalyser::prefilter_block (const float * const src_ptr_arr [], int
 
 	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
 	{
-		assert (src_ptr_arr [chn_cnt] != 0);
+		assert (src_ptr_arr [chn_cnt] != nullptr);
 
 		Channel &      chn = _chn_arr [chn_cnt];
 		chn._hpf.process_block (

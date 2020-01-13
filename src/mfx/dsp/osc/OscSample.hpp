@@ -306,7 +306,7 @@ typename OscSample <SD, IF, CDT>::CalcDataType	OscSample <SD, IF, CDT>::process_
 template <typename SD, typename IF, typename CDT>
 void	OscSample <SD, IF, CDT>::process_block (CalcDataType data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	// Prepare
@@ -340,7 +340,7 @@ void	OscSample <SD, IF, CDT>::process_block (CalcDataType data_ptr [], int nbr_s
 template <typename SD, typename IF, typename CDT>
 void	OscSample <SD, IF, CDT>::process_block_mix (CalcDataType data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	// Prepare

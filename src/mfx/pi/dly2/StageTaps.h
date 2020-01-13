@@ -70,7 +70,13 @@ public:
 
 
 	               StageTaps ();
-	virtual        ~StageTaps () = default;
+	               StageTaps (const StageTaps &other)  = default;
+	               StageTaps (StageTaps &&other)       = default;
+
+	               ~StageTaps ()                       = default;
+
+	StageTaps &    operator = (const StageTaps &other) = default;
+	StageTaps &    operator = (StageTaps &&other)      = default;
 
 	void           reset (double sample_freq, int max_block_size, float tmp_ptr [], int buf_size);
 	void           clear_buffers ();
@@ -168,8 +174,6 @@ private:
 
 private:
 
-	               StageTaps (const StageTaps &other)         = delete;
-	StageTaps &    operator = (const StageTaps &other)        = delete;
 	bool           operator == (const StageTaps &other) const = delete;
 	bool           operator != (const StageTaps &other) const = delete;
 

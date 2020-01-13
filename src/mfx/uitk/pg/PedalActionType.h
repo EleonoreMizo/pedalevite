@@ -48,7 +48,7 @@ namespace pg
 
 
 
-class PedalActionType
+class PedalActionType final
 :	public PageInterface
 {
 
@@ -57,7 +57,6 @@ class PedalActionType
 public:
 
 	               PedalActionType (PageSwitcher &page_switcher, PedalEditContext &ctx);
-	virtual        ~PedalActionType () = default;
 
 
 
@@ -66,16 +65,15 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_pedalboard_layout (const doc::PedalboardLayout &layout);
-	virtual void   do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content);
+	void           do_set_pedalboard_layout (const doc::PedalboardLayout &layout) final;
+	void           do_set_pedal (const PedalLoc &loc, const doc::PedalActionGroup &content) final;
 
 
 
@@ -130,8 +128,11 @@ private:
 
 	               PedalActionType ()                               = delete;
 	               PedalActionType (const PedalActionType &other)   = delete;
+	               PedalActionType (PedalActionType &&other)        = delete;
 	PedalActionType &
 	               operator = (const PedalActionType &other)        = delete;
+	PedalActionType &
+	               operator = (PedalActionType &&other)             = delete;
 	bool           operator == (const PedalActionType &other) const = delete;
 	bool           operator != (const PedalActionType &other) const = delete;
 

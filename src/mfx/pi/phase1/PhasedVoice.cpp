@@ -88,10 +88,10 @@ PhasedVoice::PhasedVoice ()
 ,	_phase_filter_2 ()
 ,	_phase_filter_3 ()
 ,	_phase_filter_list ()
-,	_phase_filter_ptr (0)
+,	_phase_filter_ptr (nullptr)
 ,	_osc_phase ()
 ,	_fdbk_color_ramper ()
-,	_tmp_buf_ptr (0)
+,	_tmp_buf_ptr (nullptr)
 ,	_max_buf_len (0)
 ,	_buf_size (0)
 ,	_bpf_arr ()
@@ -111,7 +111,7 @@ void	PhasedVoice::reset (float sample_freq, int max_buf_len, float *tmp_buf_ptr)
 {
 	assert (sample_freq > 0);
 	assert (max_buf_len > 0);
-	assert (tmp_buf_ptr != 0);
+	assert (tmp_buf_ptr != nullptr);
 
 	_max_buf_len = max_buf_len;
 	_tmp_buf_ptr = tmp_buf_ptr;
@@ -288,7 +288,7 @@ void	PhasedVoice::process_block (float * const dst_ptr_arr [_nbr_chn_out], const
 {
 	assert (fstb::DataAlign <true>::check_ptr (dst_ptr_arr [0]));
 	assert (fstb::DataAlign <true>::check_ptr (dst_ptr_arr [1]));
-	assert (src_ptr != 0);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (_apf_changed_flag)
@@ -336,7 +336,7 @@ float *	PhasedVoice::use_buf (Buf buf)
 {
 	assert (buf >= 0);
 	assert (buf < Buf_NBR_ELT);
-	assert (_tmp_buf_ptr != 0);
+	assert (_tmp_buf_ptr != nullptr);
 	assert (_buf_size > 0);
 
 	return &_tmp_buf_ptr [_buf_size * buf];
@@ -551,8 +551,8 @@ void	PhasedVoice::process_osc_fdbk_col (int nbr_spl)
 
 void	PhasedVoice::process_block_cfc (float * const dst_ptr_arr [_nbr_chn_out], const float src_ptr [], int nbr_spl)
 {
-	assert (_tmp_buf_ptr != 0);
-	assert (src_ptr != 0);
+	assert (_tmp_buf_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_buf_len);
 
@@ -588,8 +588,8 @@ void	PhasedVoice::process_block_cfc (float * const dst_ptr_arr [_nbr_chn_out], c
 
 void	PhasedVoice::process_block_vfc (float * const dst_ptr_arr [_nbr_chn_out], const float src_ptr [], int nbr_spl)
 {
-	assert (_tmp_buf_ptr != 0);
-	assert (src_ptr != 0);
+	assert (_tmp_buf_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_buf_len);
 

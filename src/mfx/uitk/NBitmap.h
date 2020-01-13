@@ -56,9 +56,12 @@ public:
 	explicit       NBitmap (int node_id);
 	               NBitmap ()                        = default;
 	               NBitmap (const NBitmap &other)    = default;
-	virtual        ~NBitmap ()                       = default;
+	               NBitmap (NBitmap &&other)         = default;
+
+	               ~NBitmap ()                       = default;
 
 	NBitmap &      operator = (const NBitmap &other) = default;
+	NBitmap &      operator = (NBitmap &&other)      = default;
 
 	void           set_size (Vec2d sz);
 	void           show (bool flag);
@@ -75,13 +78,12 @@ public:
 protected:
 
 	// mfx::uitk::NodeInterface via mfx::uitk::NodeBase
-	virtual void   do_notify_attachment (ParentInterface *cont_ptr);
-	virtual Rect   do_get_bounding_box () const;
-	virtual void   do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord);
+	void           do_notify_attachment (ParentInterface *cont_ptr) override;
+	Rect           do_get_bounding_box () const override;
+	void           do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_coord) override;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::NodeBase
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) override;
 
 
 

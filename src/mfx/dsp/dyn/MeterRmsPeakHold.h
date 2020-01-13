@@ -46,10 +46,14 @@ class MeterRmsPeakHold
 public:
 
 	               MeterRmsPeakHold ();
-	               MeterRmsPeakHold (const MeterRmsPeakHold &other)  = default;
-	virtual        ~MeterRmsPeakHold ()                              = default;
+	               MeterRmsPeakHold (const MeterRmsPeakHold &other) = default;
+	               MeterRmsPeakHold (MeterRmsPeakHold &&other)      = default;
+	virtual        ~MeterRmsPeakHold ()                             = default;
+
 	MeterRmsPeakHold &
-	               operator = (const MeterRmsPeakHold &other)        = default;
+	               operator = (const MeterRmsPeakHold &other)       = default;
+	MeterRmsPeakHold &
+	               operator = (MeterRmsPeakHold &&other)            = default;
 
 	void           set_sample_freq (double freq);
 	void           set_hold_time_s (double t);

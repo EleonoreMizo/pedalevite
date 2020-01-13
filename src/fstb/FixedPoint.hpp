@@ -69,6 +69,7 @@ FixedPoint::FixedPoint (double val)
 
 
 FixedPoint::FixedPoint (NoInit dummy)
+:	_val ()
 {
 	// Nothing
 	fstb::unused (dummy);

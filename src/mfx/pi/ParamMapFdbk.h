@@ -45,12 +45,6 @@ class ParamMapFdbk
 
 public:
 
-	               ParamMapFdbk ()                          = default;
-	               ParamMapFdbk (const ParamMapFdbk &other) = default;
-	virtual        ~ParamMapFdbk ()                         = default;
-
-	ParamMapFdbk & operator = (const ParamMapFdbk &other)   = default;
-
 	inline void    config (double val_min, double val_max);
 	inline double  conv_norm_to_nat (double norm) const;
 	inline double  conv_nat_to_norm (double nat) const;

@@ -47,9 +47,6 @@ class FactoryTpl
 
 public:
 
-	               FactoryTpl ()  = default;
-	virtual        ~FactoryTpl () = default;
-
 	static std::shared_ptr <FactoryInterface>
 	               create ();
 
@@ -59,10 +56,10 @@ public:
 protected:
 
 	// mfx::piapi::FactoryInterface
-	virtual const PluginDescInterface &
-	               do_describe ();
-	virtual PluginInterface *
-	               do_create ();
+	const PluginDescInterface &
+	               do_describe () override;
+	PluginInterface *
+	               do_create () override;
 
 
 
@@ -78,8 +75,6 @@ private:
 
 private:
 
-	               FactoryTpl (const FactoryTpl &other)        = delete;
-	FactoryTpl &   operator = (const FactoryTpl &other)        = delete;
 	bool           operator == (const FactoryTpl &other) const = delete;
 	bool           operator != (const FactoryTpl &other) const = delete;
 

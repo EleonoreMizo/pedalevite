@@ -87,7 +87,7 @@ Throws : std::vector exception, only if FFT length changed.
 void	ConvolverFft::set_impulse (int nbr_spl, const DataType impulse_ptr [])
 {
 	assert (nbr_spl > 1);
-	assert (impulse_ptr != 0);
+	assert (impulse_ptr != nullptr);
 
 	_impulse_len = nbr_spl;
 	const int      half_len_p2 = fstb::get_next_pow_2 (_impulse_len - 1);
@@ -99,7 +99,7 @@ void	ConvolverFft::set_impulse (int nbr_spl, const DataType impulse_ptr [])
 	// Reallocations, if required
 	if (_fft_len != old_fft_len)
 	{
-		_fft_sptr = FftSPtr (new FftType (_fft_len));
+		_fft_sptr = std::make_shared <FftType> (_fft_len);
 		_impulse_freq.resize (_fft_len);
 		_input_buf.resize (_fft_len);
 		_temp_buf.resize (_fft_len);

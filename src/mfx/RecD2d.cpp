@@ -49,7 +49,7 @@ RecD2d::~RecD2d ()
 		close_file ();
 	}
 
-	if (_queue_sptr.get () != 0)
+	if (_queue_sptr.get () != nullptr)
 	{
 		if (_cell_ptr != nullptr)
 		{
@@ -70,7 +70,7 @@ int	RecD2d::create_file (const char pathname_0 [], int nbr_chn, double sample_fr
 {
 	assert (! _file_writer.is_open ());
 	assert (! _write_flag);
-	assert (pathname_0 != 0);
+	assert (pathname_0 != nullptr);
 	assert (nbr_chn > 0);
 	assert (sample_freq > 0);
 
@@ -121,11 +121,11 @@ int	RecD2d::process_messages ()
 {
 	int            ret_val = 0;
 
-	D2dQueue::CellType * cell_ptr = 0;
+	D2dQueue::CellType * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_mgr.dequeue ();
-		if (cell_ptr != 0)
+		if (cell_ptr != nullptr)
 		{
 			if (_file_writer.is_open ())
 			{
@@ -157,7 +157,7 @@ int	RecD2d::process_messages ()
 			cell_ptr->_val.ret ();
 		}
 	}
-	while (cell_ptr != 0);
+	while (cell_ptr != nullptr);
 
 	return ret_val;
 }
@@ -180,7 +180,7 @@ int64_t	RecD2d::get_size_frames () const
 
 void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
 {
-	assert (chn_arr != 0);
+	assert (chn_arr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (_write_flag)
@@ -194,6 +194,7 @@ void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
 				// RT-safe in case of cell starvation, but data won't be lost at
 				// this level.
 				_cell_ptr = _queue_mgr.use_pool ().take_cell (true);
+				assert (_cell_ptr != nullptr);
 				_cell_ptr->_val._content._len = 0;
 			}
 			Buffer &       bc = _cell_ptr->_val._content;
@@ -216,7 +217,7 @@ void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
 			{
 				for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
 				{
-					assert (chn_arr [chn_cnt] != 0);
+					assert (chn_arr [chn_cnt] != nullptr);
 					dsp::mix::Generic::copy_1_ni1 (
 						&bc._buf [bc._len * _nbr_chn + chn_cnt],
 						chn_arr [chn_cnt] + pos,

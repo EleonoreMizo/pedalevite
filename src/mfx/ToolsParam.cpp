@@ -171,7 +171,7 @@ std::set <float>::const_iterator	ToolsParam::advance_to_notch (float val, const 
 // Does not replace an existing notch list
 void	ToolsParam::add_beat_notch_list_if_linked (doc::CtrlLinkSet &cls, const piapi::ParamDescInterface &desc, double tempo)
 {
-	if (cls._bind_sptr.get () != 0 && cls._bind_sptr->_notch_list.empty ())
+	if (cls._bind_sptr.get () != nullptr && cls._bind_sptr->_notch_list.empty ())
 	{
 		const double   nat_min = desc.get_nat_min ();
 		const double   nat_max = desc.get_nat_max ();

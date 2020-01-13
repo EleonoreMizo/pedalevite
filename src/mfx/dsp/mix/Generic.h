@@ -237,6 +237,7 @@ protected:
 private:
 
 	               Generic ();
+	               ~Generic () = default;
 
 	void           setup_internal ();
 
@@ -254,7 +255,9 @@ private:
 private:
 
 	               Generic (const Generic &other)           = delete;
+	               Generic (Generic &&other)                = delete;
 	Generic &      operator = (const Generic &other)        = delete;
+	Generic &      operator = (Generic &&other)             = delete;
 	bool           operator == (const Generic &other) const = delete;
 	bool           operator != (const Generic &other) const = delete;
 

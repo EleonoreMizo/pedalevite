@@ -47,7 +47,7 @@ CtrlSrcNamed::CtrlSrcNamed (ControllerType type, int index, const char *name_0)
 :	_src (type, index)
 ,	_name (name_0)
 {
-	assert (name_0 != 0);
+	assert (name_0 != nullptr);
 }
 
 

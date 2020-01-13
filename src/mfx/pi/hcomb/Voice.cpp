@@ -58,7 +58,8 @@ Voice::Voice ()
 ,	_filt_damp (0)
 ,	_max_block_size (256)
 ,	_neg_flag (false)
-,	_tmp_buf_ptr (0)
+,	_tmp_buf_ptr (nullptr)
+,	_inv_fs (1.f / _sample_freq)
 ,	_gain (1)
 ,	_feedback (0)
 ,	_comb_freq (262)
@@ -207,10 +208,10 @@ void	Voice::compute_filt_param (float freq, float reso, float damp, float biq_b_
 	assert (reso <= 1);
 	assert (damp >= 0);
 	assert (damp <= 1);
-	assert (biq_b_z != 0);
-	assert (biq_a_z != 0);
-	assert (shf_b_z != 0);
-	assert (shf_a_z != 0);
+	assert (biq_b_z != nullptr);
+	assert (biq_a_z != nullptr);
+	assert (shf_b_z != nullptr);
+	assert (shf_a_z != nullptr);
 
 	const float    r2      = reso * reso;
 	const float    q_inv   = fstb::Approx::exp2 (r2 * -2);
@@ -256,10 +257,10 @@ void	Voice::set_filt_param (float freq, float reso, float damp, const float biq_
 	assert (reso <= 1);
 	assert (damp >= 0);
 	assert (damp <= 1);
-	assert (biq_b_z != 0);
-	assert (biq_a_z != 0);
-	assert (shf_b_z != 0);
-	assert (shf_a_z != 0);
+	assert (biq_b_z != nullptr);
+	assert (biq_a_z != nullptr);
+	assert (shf_b_z != nullptr);
+	assert (shf_a_z != nullptr);
 
 	_filt_freq       = freq;
 	_filt_reso       = reso;
@@ -272,9 +273,9 @@ void	Voice::set_filt_param (float freq, float reso, float damp, const float biq_
 
 void	Voice::process_block (float * const dst_ptr_arr [_max_nbr_chn], const float * const src_ptr_arr [_max_nbr_chn], int nbr_spl, int nbr_chn)
 {
-	assert (_tmp_buf_ptr != 0);
-	assert (dst_ptr_arr != 0);
-	assert (src_ptr_arr != 0);
+	assert (_tmp_buf_ptr != nullptr);
+	assert (dst_ptr_arr != nullptr);
+	assert (src_ptr_arr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_block_size);
 	assert (nbr_chn > 0);
@@ -291,8 +292,8 @@ void	Voice::process_block (float * const dst_ptr_arr [_max_nbr_chn], const float
 
 	for (int chn = 0; chn < nbr_chn; ++chn)
 	{
-		assert (dst_ptr_arr [chn] != 0);
-		assert (src_ptr_arr [chn] != 0);
+		assert (dst_ptr_arr [chn] != nullptr);
+		assert (src_ptr_arr [chn] != nullptr);
 
 		dsp::mix::Generic::copy_1_1_vlrauto (
 			_tmp_buf_ptr, src_ptr_arr [chn], nbr_spl, _gain_old, _gain

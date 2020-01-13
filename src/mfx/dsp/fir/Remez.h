@@ -66,9 +66,6 @@ public:
 	typedef	std::vector <RemezPoint>	RemezSpec;
 	typedef	std::vector <double>	CoefList;
 
-	               Remez ()  = default;
-	virtual        ~Remez () = default;
-
 	int            compute_coefs (double coef_list_ptr [], int len, const RemezSpec &spec, Type type);
 	int            compute_coefs (CoefList &coef_list, int len, const RemezSpec &spec, Type type);
 	void           free_resources ();
@@ -127,8 +124,6 @@ private:
 
 private:
 
-	               Remez (const Remez &other)             = delete;
-	Remez &        operator = (const Remez &other)        = delete;
 	bool           operator == (const Remez &other) const = delete;
 	bool           operator != (const Remez &other) const = delete;
 

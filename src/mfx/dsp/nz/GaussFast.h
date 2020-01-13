@@ -57,9 +57,6 @@ public:
 
 	static const int  _nbr_it = NIT;
 
-	               GaussFast ()  = default;
-	virtual        ~GaussFast () = default;
-
 	void           set_rough_level (float lvl);
 	inline float   process_sample ();
 
@@ -89,8 +86,6 @@ private:
 
 private:
 
-	               GaussFast (const GaussFast &other)         = delete;
-	GaussFast &    operator = (const GaussFast &other)        = delete;
 	bool           operator == (const GaussFast &other) const = delete;
 	bool           operator != (const GaussFast &other) const = delete;
 

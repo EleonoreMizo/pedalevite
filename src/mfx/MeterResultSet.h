@@ -91,8 +91,11 @@ private:
 private:
 
 	               MeterResultSet (const MeterResultSet &other)    = delete;
+	               MeterResultSet (MeterResultSet &&other)         = delete;
 	MeterResultSet &
 	               operator = (const MeterResultSet &other)        = delete;
+	MeterResultSet &
+	               operator = (MeterResultSet &&other)             = delete;
 	bool           operator == (const MeterResultSet &other) const = delete;
 	bool           operator != (const MeterResultSet &other) const = delete;
 

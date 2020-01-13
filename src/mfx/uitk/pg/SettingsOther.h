@@ -52,7 +52,7 @@ namespace pg
 
 
 
-class SettingsOther
+class SettingsOther final
 :	public PageInterface
 {
 
@@ -61,7 +61,6 @@ class SettingsOther
 public:
 
 	explicit       SettingsOther (PageSwitcher &page_switcher);
-	virtual        ~SettingsOther () = default;
 
 
 
@@ -70,16 +69,15 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_tempo (double bpm);
-	virtual void   do_set_click (bool click_flag);
+	void           do_set_tempo (double bpm) final;
+	void           do_set_click (bool click_flag) final;
 
 
 
@@ -126,7 +124,9 @@ private:
 
 	               SettingsOther ()                               = delete;
 	               SettingsOther (const SettingsOther &other)     = delete;
+	               SettingsOther (SettingsOther &&other)          = delete;
 	SettingsOther& operator = (const SettingsOther &other)        = delete;
+	SettingsOther& operator = (SettingsOther &&other)             = delete;
 	bool           operator == (const SettingsOther &other) const = delete;
 	bool           operator != (const SettingsOther &other) const = delete;
 

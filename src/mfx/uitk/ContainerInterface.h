@@ -51,8 +51,6 @@ public:
 
 	typedef std::shared_ptr <NodeInterface> NodeSPtr;
 
-	virtual        ~ContainerInterface () = default;
-
 	void           push_back (NodeSPtr node_sptr);
 	void           set_node (int pos, NodeSPtr node_sptr);
 	void           insert (int pos, NodeSPtr node_sptr);

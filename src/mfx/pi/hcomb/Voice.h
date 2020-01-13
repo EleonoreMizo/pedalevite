@@ -59,7 +59,13 @@ public:
 	static const int  _note_freq_max = 2000; // Hz
 
 	               Voice ();
-	virtual        ~Voice () = default;
+	               Voice (const Voice &other)      = default;
+	               Voice (Voice &&other)           = default;
+
+	               ~Voice ()                       = default;
+
+	Voice &        operator = (const Voice &other) = default;
+	Voice &        operator = (Voice &&other)      = default;
 
 	void           reset (double sample_freq, int max_block_size, float *tmp_buf_ptr);
 	void           clear_buffers ();
@@ -133,8 +139,6 @@ private:
 
 private:
 
-	               Voice (const Voice &other)             = delete;
-	Voice &        operator = (const Voice &other)        = delete;
 	bool           operator == (const Voice &other) const = delete;
 	bool           operator != (const Voice &other) const = delete;
 

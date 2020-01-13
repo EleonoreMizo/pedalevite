@@ -54,16 +54,16 @@ namespace pg
 PedalEditGroup::PedalEditGroup (PageSwitcher &page_switcher, PedalEditContext &ctx)
 :	_page_switcher (page_switcher)
 ,	_ctx (ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_title_sptr (  new NText (Entry_TITLE  ))
+,	_fnt_ptr (nullptr)
+,	_title_sptr (std::make_shared <NText> (Entry_TITLE  ))
 ,	_trig_sptr_arr ({{
-		TxtSPtr (new NText (Entry_PRESS  ))
-	,	TxtSPtr (new NText (Entry_HOLD   ))
-	,	TxtSPtr (new NText (Entry_RELEASE))
+		TxtSPtr ( std::make_shared <NText> (Entry_PRESS  ))
+	,	TxtSPtr ( std::make_shared <NText> (Entry_HOLD   ))
+	,	TxtSPtr ( std::make_shared <NText> (Entry_RELEASE))
 	}})
 {
 	_title_sptr->set_justification (0.5f, 0, false);
@@ -136,7 +136,9 @@ MsgHandlerInterface::EvtProp	PedalEditGroup::do_handle_evt (const NodeEvt &evt)
 			    && node_id <  Entry_TRIG_BEG + doc::ActionTrigger_NBR_ELT)
 			{
 				_ctx._trigger = doc::ActionTrigger (node_id - Entry_TRIG_BEG);
-				_page_switcher.call_page (PageType_PEDAL_EDIT_CYCLE, 0, node_id);
+				_page_switcher.call_page (
+					PageType_PEDAL_EDIT_CYCLE, nullptr, node_id
+				);
 				ret_val = EvtProp_CATCH;
 			}
 			else

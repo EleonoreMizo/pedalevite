@@ -46,6 +46,7 @@ ParamState::ParamState ()
 ,	_val_end_nrm (0)
 ,	_smooth ()
 ,	_notifier ()
+,	_desc_ptr (nullptr)
 {
 	_smooth.set_inertia_time (0);
 	_smooth.force_val (0);
@@ -76,7 +77,7 @@ void	ParamState::set_desc (const piapi::ParamDescInterface &desc)
 
 const piapi::ParamDescInterface &	ParamState::use_desc () const
 {
-	assert (_desc_ptr != 0);
+	assert (_desc_ptr != nullptr);
 
 	return *_desc_ptr;
 }

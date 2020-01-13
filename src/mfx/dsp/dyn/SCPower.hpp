@@ -43,7 +43,7 @@ namespace dyn
 template <class AP>
 typename SCPower <AP>::AddProc &	SCPower <AP>::use_add_proc ()
 {
-	return (_add_proc);
+	return _add_proc;
 }
 
 
@@ -56,11 +56,11 @@ template <class AP>
 void	SCPower <AP>::prepare_env_input (float out_ptr [], const float * const chn_ptr_arr [], int nbr_chn, int pos_beg, int pos_end)
 {
 	assert (fstb::DataAlign <true>::check_ptr (out_ptr));
-	assert (chn_ptr_arr != 0);
+	assert (chn_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 	assert (pos_beg < pos_end);
-	assert (chn_ptr_arr [0] != 0);
-	assert (chn_ptr_arr [nbr_chn - 1] != 0);
+	assert (chn_ptr_arr [0] != nullptr);
+	assert (chn_ptr_arr [nbr_chn - 1] != nullptr);
 
 	if (nbr_chn == 1)
 	{

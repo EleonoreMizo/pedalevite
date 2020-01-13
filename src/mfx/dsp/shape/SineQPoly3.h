@@ -67,11 +67,6 @@ class SineQPoly3
 
 public:
 
-	               SineQPoly3 ()                        = default;
-	               SineQPoly3 (const SineQPoly3 &other) = default;
-	               ~SineQPoly3 ()                       = default;
-	SineQPoly3 &   operator = (const SineQPoly3 &other) = default;
-
 	fstb_FORCEINLINE T
 	               operator () (T x) const;
 	static fstb_FORCEINLINE T

@@ -67,7 +67,7 @@ void	PinkShade::set_seed (int seed)
 
 void	PinkShade::process_block (float dst_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            pos = 0;
@@ -99,7 +99,7 @@ void	PinkShade::process_block (float dst_ptr [], int nbr_spl)
 
 void	PinkShade::process_block_add (float dst_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            pos = 0;
@@ -132,13 +132,13 @@ void	PinkShade::process_block_add (float dst_ptr [], int nbr_spl)
 // Generates 16 samples
 void	PinkShade::gen_16 (float *dst_ptr)
 {
-	assert (dst_ptr != 0);
+	assert (dst_ptr != nullptr);
 
 	int            inc  = _inc;   // Load old fashioned register variables-
 	int            dec  = _dec;   // as ugly as this might seem, it improves 
 	Combo          accu = _accu;  // the generated code for most compilers
 	int            lfsr = _lfsr;
-	int            bit;
+	int            bit  = 0;
 
 	int            mask = _nmask [_ncnt];
 	++ _ncnt;                     // _ncnt is 8 bit for relaxed modulo

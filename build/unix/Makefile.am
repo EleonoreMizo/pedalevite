@@ -51,11 +51,7 @@ commonsrc = \
         ../../src/conc/ObjFactoryInterface.hpp \
         ../../src/conc/ObjPool.h \
         ../../src/conc/ObjPool.hpp \
-        ../../src/ffft/Array.h \
-        ../../src/ffft/Array.hpp \
         ../../src/ffft/def.h \
-        ../../src/ffft/DynArray.h \
-        ../../src/ffft/DynArray.hpp \
         ../../src/ffft/FFTReal.h \
         ../../src/ffft/FFTReal.hpp \
         ../../src/ffft/FFTRealFixLen.h \
@@ -133,6 +129,7 @@ commonsrc = \
         ../../src/fstb/util/NotificationFlag.hpp \
         ../../src/fstb/util/NotificationFlagCascadeMixin.h \
         ../../src/fstb/util/NotificationFlagCascadeMixin.hpp \
+        ../../src/fstb/util/NotificationFlagCascadeMulti.cpp \
         ../../src/fstb/util/NotificationFlagCascadeMulti.h \
         ../../src/fstb/util/NotificationFlagCascadeSingle.h \
         ../../src/fstb/util/NotificationFlagInterface.h \
@@ -965,6 +962,7 @@ commonsrc = \
         ../../src/mfx/pi/export.h \
         ../../src/mfx/pi/ParamDescSet.cpp \
         ../../src/mfx/pi/ParamDescSet.h \
+        ../../src/mfx/pi/ParamDescSet.hpp \
         ../../src/mfx/pi/ParamMapFdbk.h \
         ../../src/mfx/pi/ParamMapFdbk.hpp \
         ../../src/mfx/pi/ParamMapFdbkBipolar.h \

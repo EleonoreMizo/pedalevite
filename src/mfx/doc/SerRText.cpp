@@ -210,7 +210,6 @@ int	SerRText::do_read (std::string &s)
 	StrState       state   = StrState_BEG;
 	int            esc_len = 0;
 	char           esc_c   = '\0';
-	int            d;
 	while (_spos._pos < _content.length () && ! _err_flag && state != StrState_END)
 	{
 		const char     c = _content [_spos._pos];
@@ -258,18 +257,21 @@ int	SerRText::do_read (std::string &s)
 			}
 			break;
 		case StrState_ESC_HEX:
-			d = fstb::txt::neutral::ConvDigit::conv_char_to_digit (c);
-			if (d >= 16)
 			{
-				set_error (_spos, "Wrong hex sequence");
-			}
-			esc_c <<= 4;
-			esc_c  += char (d);
-			-- esc_len;
-			if (esc_len <= 0 && ! _err_flag)
-			{
-				s += esc_c;
-				state = StrState_CONTENT;
+				const int      d =
+					fstb::txt::neutral::ConvDigit::conv_char_to_digit (c);
+				if (d >= 16)
+				{
+					set_error (_spos, "Wrong hex sequence");
+				}
+				esc_c <<= 4;
+				esc_c  += static_cast <char> (d);
+				-- esc_len;
+				if (esc_len <= 0 && ! _err_flag)
+				{
+					s += esc_c;
+					state = StrState_CONTENT;
+				}
 			}
 			break;
 		case StrState_END:

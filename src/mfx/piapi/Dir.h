@@ -38,6 +38,7 @@ namespace piapi
 
 enum Dir
 {
+	Dir_INVALID = -1,
 
 	Dir_IN = 0,
 	Dir_OUT,

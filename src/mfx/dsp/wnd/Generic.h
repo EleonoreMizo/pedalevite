@@ -58,12 +58,6 @@ public:
 
 	typedef GEN CoefGen;
 
-	               Generic ()                                 = default;
-	               Generic (const Generic <T, GEN> &other)    = default;
-	virtual        ~Generic ()                                = default;
-	Generic <T, GEN> &
-	               operator = (const Generic <T, GEN> &other) = default;
-
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -71,7 +65,7 @@ public:
 protected:
 
 	// WndInterface
-	virtual void   do_make_win (T data_ptr [], int len);
+	void           do_make_win (T data_ptr [], int len) override;
 
 
 

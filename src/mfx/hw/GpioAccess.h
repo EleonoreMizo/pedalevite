@@ -145,7 +145,9 @@ private:
 private:
 
 	               GpioAccess (const GpioAccess &other)        = delete;
+	               GpioAccess (GpioAccess &&other)             = delete;
 	GpioAccess &   operator = (const GpioAccess &other)        = delete;
+	GpioAccess &   operator = (GpioAccess &&other)             = delete;
 	bool           operator == (const GpioAccess &other) const = delete;
 	bool           operator != (const GpioAccess &other) const = delete;
 

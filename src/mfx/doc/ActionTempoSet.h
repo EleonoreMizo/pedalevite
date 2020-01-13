@@ -41,7 +41,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionTempoSet
+class ActionTempoSet final
 :	public PedalActionSingleInterface
 {
 
@@ -52,11 +52,18 @@ public:
 	explicit       ActionTempoSet (double tempo_bpm);
 	explicit       ActionTempoSet (SerRInterface &ser);
 	               ActionTempoSet (const ActionTempoSet &other) = default;
-	virtual        ~ActionTempoSet ()                           = default;
+	               ActionTempoSet (ActionTempoSet &&other)      = default;
+
+	               ~ActionTempoSet ()                           = default;
+
 	ActionTempoSet &
 	               operator = (const ActionTempoSet &other)     = default;
+	ActionTempoSet &
+	               operator = (ActionTempoSet &&other)          = default;
 
-	void           ser_write (SerWInterface &ser) const;
+	// PedalActionSingleInterface
+	void           ser_write (SerWInterface &ser) const final;
+
 	void           ser_read (SerRInterface &ser);
 
 	double         _tempo_bpm;          // BPM, > 0
@@ -68,10 +75,9 @@ public:
 protected:
 
 	// PedalActionSingleInterface
-	virtual ActionType
-	               do_get_type () const;
-	virtual PedalActionSingleInterface *
-	               do_duplicate () const;
+	ActionType     do_get_type () const final;
+	std::shared_ptr <PedalActionSingleInterface>
+	               do_duplicate () const final;
 
 
 

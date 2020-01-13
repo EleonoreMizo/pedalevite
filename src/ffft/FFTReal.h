@@ -28,8 +28,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include	"ffft/def.h"
-#include	"ffft/DynArray.h"
 #include	"ffft/OscSinCos.h"
+
+#include <vector>
 
 
 
@@ -51,7 +52,13 @@ public:
 	typedef	DT	DataType;
 
 	explicit			FFTReal (long length);
-	virtual			~FFTReal () {}
+						FFTReal (const FFTReal &other)    = default;
+						FFTReal (FFTReal &&other)         = default;
+
+	virtual			~FFTReal ()                       = default;
+
+	FFTReal &		operator = (const FFTReal &other) = default;
+	FFTReal &		operator = (FFTReal &&other)      = default;
 
 	long				get_length () const;
 	void				do_fft (DataType f [], const DataType x []) const;
@@ -103,13 +110,13 @@ private:
 
 	const long		_length;
 	const int		_nbr_bits;
-	DynArray <long>
+	std::vector <long>
 						_br_lut;
-	DynArray <DataType>
+	std::vector <DataType>
 						_trigo_lut;
-	mutable DynArray <DataType>
+	mutable std::vector <DataType>
 						_buffer;
-   mutable DynArray <OscType>
+   mutable std::vector <OscType>
 						_trigo_osc;
 
 
@@ -118,11 +125,9 @@ private:
 
 private:
 
-						FFTReal ();
-						FFTReal (const FFTReal &other);
-	FFTReal &		operator = (const FFTReal &other);
-	bool				operator == (const FFTReal &other);
-	bool				operator != (const FFTReal &other);
+						FFTReal ()                         = delete;
+	bool				operator == (const FFTReal &other) = delete;
+	bool				operator != (const FFTReal &other) = delete;
 
 };	// class FFTReal
 

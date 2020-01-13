@@ -39,7 +39,7 @@ namespace util
 
 void	ObservableSingleMixin::remove_single_observer ()
 {
-	_observer_ptr = 0;
+	_observer_ptr = nullptr;
 }
 
 
@@ -68,7 +68,7 @@ void	ObservableSingleMixin::do_remove_observer (ObserverInterface &observer)
 void	ObservableSingleMixin::do_notify_observers ()
 {
 	ObserverInterface *	obs_ptr = _observer_ptr;
-	if (obs_ptr != 0)
+	if (obs_ptr != nullptr)
 	{
 		obs_ptr->update (*this);
 	}

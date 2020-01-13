@@ -31,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <chrono>
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -46,12 +48,6 @@ class UserInputMsg
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	               UserInputMsg ();
-	               UserInputMsg (const UserInputMsg &other) = default;
-	virtual        ~UserInputMsg ()                         = default;
-
-	UserInputMsg & operator = (const UserInputMsg &other)   = default;
 
 	void           set (std::chrono::microseconds date, UserInputType type, int index, float val);
 	std::chrono::microseconds
@@ -75,10 +71,10 @@ protected:
 private:
 
 	std::chrono::microseconds  // Microseconds, reference depends on the emitter
-	               _date;
-	UserInputType  _type;
-	int            _index;
-	float          _val;       // In range [0 ; 1]
+	               _date  { INT64_MIN };
+	UserInputType  _type  = UserInputType_UNDEFINED;
+	int            _index = -1;
+	float          _val   = -1;       // In range [0 ; 1]
 
 
 

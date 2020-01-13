@@ -50,7 +50,13 @@ class DelayChn
 public:
 
 	               DelayChn ();
-	virtual        ~DelayChn () = default;
+	               DelayChn (const DelayChn &other)   = default;
+	               DelayChn (DelayChn &&other)        = default;
+
+	               ~DelayChn ()                       = default;
+
+	DelayChn &     operator = (const DelayChn &other) = default;
+	DelayChn &     operator = (DelayChn &&other)      = default;
 
 	void           set_sample_freq (double sample_freq);
 
@@ -102,8 +108,6 @@ private:
 
 private:
 
-	               DelayChn (const DelayChn &other)          = delete;
-	DelayChn &     operator = (const DelayChn &other)        = delete;
 	bool           operator == (const DelayChn &other) const = delete;
 	bool           operator != (const DelayChn &other) const = delete;
 

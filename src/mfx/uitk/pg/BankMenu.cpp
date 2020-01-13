@@ -56,16 +56,16 @@ namespace pg
 BankMenu::BankMenu (PageSwitcher &page_switcher, PedalEditContext &pedal_ctx)
 :	_page_switcher (page_switcher)
 ,	_pedal_ctx (pedal_ctx)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_orga_sptr (new NText (  Entry_ORGANIZE))
-,	_import_sptr (new NText (Entry_IMPORT))
-,	_export_sptr (new NText (Entry_EXPORT))
-,	_layout_sptr (new NText (Entry_LAYOUT))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW  ))
+,	_orga_sptr (std::make_shared <NText> (  Entry_ORGANIZE))
+,	_import_sptr (std::make_shared <NText> (Entry_IMPORT  ))
+,	_export_sptr (std::make_shared <NText> (Entry_EXPORT  ))
+,	_layout_sptr (std::make_shared <NText> (Entry_LAYOUT  ))
 ,	_bank_list ()
 {
 	_orga_sptr  ->set_text ("Organize\xE2\x80\xA6");
@@ -148,23 +148,23 @@ MsgHandlerInterface::EvtProp	BankMenu::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			if (node_id == Entry_ORGANIZE)
 			{
-				_page_switcher.switch_to (PageType_BANK_ORGA, 0);
+				_page_switcher.switch_to (PageType_BANK_ORGA, nullptr);
 			}
 			else if (node_id == Entry_IMPORT)
 			{
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 				/*** To do ***/
 			}
 			else if (node_id == Entry_EXPORT)
 			{
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 				/*** To do ***/
 			}
 			else if (node_id == Entry_LAYOUT)
 			{
 				_pedal_ctx._type     = PedalEditContext::Type_BANK;
 				_pedal_ctx._ret_page = PageType_BANK_MENU;
-				_page_switcher.switch_to (PageType_PEDALBOARD_CONFIG, 0);
+				_page_switcher.switch_to (PageType_PEDALBOARD_CONFIG, nullptr);
 			}
 			else if (node_id >= 0 && node_id < Cst::_nbr_banks)
 			{
@@ -175,7 +175,7 @@ MsgHandlerInterface::EvtProp	BankMenu::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -222,7 +222,7 @@ void	BankMenu::do_set_bank_name (std::string name)
 
 void	BankMenu::update_display ()
 {
-	assert (_fnt_ptr != 0);
+	assert (_fnt_ptr != nullptr);
 
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	const int      scr_w = _page_size [0];

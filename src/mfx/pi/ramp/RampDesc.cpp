@@ -56,7 +56,7 @@ RampDesc::RampDesc ()
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Time
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.1, 1000,
 		"Time\nT",
 		"s",
@@ -64,22 +64,24 @@ RampDesc::RampDesc ()
 		0,
 		"%7.3f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
-	_desc_set.add_glob (Param_TIME, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+	_desc_set.add_glob (Param_TIME, log_sptr);
 
 	// Amplitude
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-4, 4,
 		"A\nAmp\nAmplitude",
 		"%",
 		0,
 		"%+6.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_AMP, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_AMP, lin_sptr);
 
 	// Curve
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Linear\n"
 		"Acc 1\nAcc 2\nAcc 3\nAcc 4\nSat 1\nSat 2\nSat 3\nSat 4\n"
 		"Fast 1\nFast 2\nSlow 1\nSlow 2",
@@ -88,54 +90,60 @@ RampDesc::RampDesc ()
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_CURVE, enu_ptr);
-	assert (enu_ptr->get_nat_max () == CurveType_NBR_ELT - 1);
+	_desc_set.add_glob (Param_CURVE, enu_sptr);
+	assert (enu_sptr->get_nat_max () == CurveType_NBR_ELT - 1);
 
 	// Sample and hold
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"SnH\nSplHold\nSample & hold\nSample and hold",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SNH, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_SNH, lin_sptr);
 
 	// Smoothing
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Sm\nSmooth\nSmoothing",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_SMOOTH, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_SMOOTH, lin_sptr);
 
 	// Direction
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Normal\nInvert",
 		"Direction\nDir\nD",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_DIR, enu_ptr);
+	_desc_set.add_glob (Param_DIR, enu_sptr);
 
 	// Set position
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Set position\nSet pos\nPos\nP",
 		"%",
 		0,
 		"%5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_STD);
-	_desc_set.add_glob (Param_POS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_STD
+	);
+	_desc_set.add_glob (Param_POS, lin_sptr);
 
 	// Initial delay
-	TplPll *       pll_ptr = new TplPll (
+	auto           pll_sptr = std::make_shared <TplPll> (
 		0, 1000,
 		"Initial delay\nDelay\nD",
 		"s",
@@ -143,22 +151,22 @@ RampDesc::RampDesc ()
 		0,
 		"%7.3f"
 	);
-	pll_ptr->use_mapper ().set_first_value (     0.0);
-	pll_ptr->use_mapper ().add_segment (0.2 ,    1.0, false);
-	pll_ptr->use_mapper ().add_segment (0.6 ,   10.0, true);
-	pll_ptr->use_mapper ().add_segment (1.0 , 1000.0, true );
-	pll_ptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
-	_desc_set.add_glob (Param_DELAY, pll_ptr);
+	pll_sptr->use_mapper ().set_first_value (     0.0);
+	pll_sptr->use_mapper ().add_segment (0.2 ,    1.0, false);
+	pll_sptr->use_mapper ().add_segment (0.6 ,   10.0, true);
+	pll_sptr->use_mapper ().add_segment (1.0 , 1000.0, true );
+	pll_sptr->set_categ (piapi::ParamDescInterface::Categ_TIME_S);
+	_desc_set.add_glob (Param_DELAY, pll_sptr);
 
 	// State
-	enu_ptr = new param::TplEnum (
+	enu_sptr = std::make_shared <param::TplEnum> (
 		"Running\nPause",
 		"State\nS",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_STATE, enu_ptr);
+	_desc_set.add_glob (Param_STATE, enu_sptr);
 }
 
 

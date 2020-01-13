@@ -50,7 +50,7 @@ namespace utf8
 
 int64_t	ConvNum::conv_str_to_int64 (const char *txt_0, int base)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 	assert (base > 0);
 	assert (base <= 'Z' - 'A' + 1 + 10);
 
@@ -72,7 +72,7 @@ int64_t	ConvNum::conv_str_to_int64 (const char *txt_0, int base)
 // position (after the last translated character).
 bool	ConvNum::conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long *stop_pos_ptr)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 	assert (base > 0);
 	assert (base <= 'Z' - 'A' + 1 + 10);
 
@@ -157,7 +157,7 @@ bool	ConvNum::conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long
 		}
 	}
 
-	if (stop_pos_ptr != 0)
+	if (stop_pos_ptr != nullptr)
 	{
 		*stop_pos_ptr = pos;
 	}
@@ -169,7 +169,7 @@ bool	ConvNum::conv_str_to_int64 (int64_t &val, const char *txt_0, int base, long
 
 int	ConvNum::conv_int64_to_str (char *txt_0, int64_t val, long max_len, int base)
 {
-	assert (txt_0 != 0);
+	assert (txt_0 != nullptr);
 	assert (max_len > 0);
 	assert (base > 0);
 	assert (base <= 'Z' - 'A' + 1 + 10);

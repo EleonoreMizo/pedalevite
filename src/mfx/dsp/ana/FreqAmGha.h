@@ -53,9 +53,6 @@ class FreqAmGha
 
 public:
 
-	               FreqAmGha ()  = default;
-	virtual        ~FreqAmGha () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           set_freq_bot (float f);
 	void           set_freq_top (float f);
@@ -116,8 +113,6 @@ private:
 
 private:
 
-	               FreqAmGha (const FreqAmGha &other)         = delete;
-	FreqAmGha &    operator = (const FreqAmGha &other)        = delete;
 	bool           operator == (const FreqAmGha &other) const = delete;
 	bool           operator != (const FreqAmGha &other) const = delete;
 

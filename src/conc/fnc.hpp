@@ -47,7 +47,7 @@ bool	is_ptr_aligned_nz (const T *ptr, int align)
 	assert (align > 0);
 	assert ((align & -align) == align);
 
-	return (ptr != 0 && is_ptr_aligned (ptr, align));
+	return (ptr != nullptr && is_ptr_aligned (ptr, align));
 }
 
 template <class T>

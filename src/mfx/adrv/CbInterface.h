@@ -43,7 +43,16 @@ class CbInterface
 
 public:
 
-	virtual        ~CbInterface () = default;
+	               CbInterface ()                         = default;
+	               CbInterface (const CbInterface &other) = default;
+	               CbInterface (CbInterface &&other)      = default;
+
+	virtual        ~CbInterface ()                        = default;
+
+	virtual CbInterface &
+	               operator = (const CbInterface &other)  = default;
+	virtual CbInterface &
+	               operator = (CbInterface &&other)       = default;
 
 	void           process_block (float * const * dst_arr, const float * const * src_arr, int nbr_spl);
 	void           notify_dropout ();

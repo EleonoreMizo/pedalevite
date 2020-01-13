@@ -45,9 +45,6 @@ class MapLog
 
 public:
 
-	               MapLog ()  = default;
-	virtual        ~MapLog () = default;
-
 	inline void    config (double val_min, double val_max);
 	inline double  conv_norm_to_nat (double norm) const;
 	inline double  conv_nat_to_norm (double nat) const;
@@ -74,8 +71,6 @@ private:
 
 private:
 
-	               MapLog (const MapLog &other)            = delete;
-	MapLog &       operator = (const MapLog &other)        = delete;
 	bool           operator == (const MapLog &other) const = delete;
 	bool           operator != (const MapLog &other) const = delete;
 

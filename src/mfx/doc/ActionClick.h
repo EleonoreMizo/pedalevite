@@ -41,7 +41,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionClick
+class ActionClick final
 :	public PedalActionSingleInterface
 {
 
@@ -60,12 +60,17 @@ public:
 
 	explicit       ActionClick (Mode mode, bool bar_flag);
 	explicit       ActionClick (SerRInterface &ser);
+	               ActionClick (ActionClick &&other)      = default;
 	               ActionClick (const ActionClick &other) = default;
-	virtual        ~ActionClick ()                        = default;
+
+	               ~ActionClick ()                        = default;
 
 	ActionClick &  operator = (const ActionClick &other)  = default;
+	ActionClick &  operator = (ActionClick &&other)       = default;
 
-	virtual void   ser_write (SerWInterface &ser) const;
+	// PedalActionSingleInterface
+	void           ser_write (SerWInterface &ser) const final;
+
 	void           ser_read (SerRInterface &ser);
 
 	Mode           _mode;
@@ -78,10 +83,9 @@ public:
 protected:
 
 	// PedalActionSingleInterface
-	virtual ActionType
-	               do_get_type () const;
-	virtual PedalActionSingleInterface *
-	               do_duplicate () const;
+	ActionType     do_get_type () const final;
+	std::shared_ptr <PedalActionSingleInterface>
+	               do_duplicate () const final;
 
 
 

@@ -63,11 +63,11 @@ int	FileIOInterface::write_txt_file_direct (const std::string &pathname, const s
 {
 	int            ret_val = Err_OK;
 
-	FILE *         f_ptr = 0;
+	FILE *         f_ptr = nullptr;
 	if (ret_val == Err_OK)
 	{
 		f_ptr = fstb::fopen_utf8 (pathname.c_str (), "w");
-		if (f_ptr == 0)
+		if (f_ptr == nullptr)
 		{
 			ret_val = Err_CANNOT_OPEN;
 		}
@@ -82,10 +82,10 @@ int	FileIOInterface::write_txt_file_direct (const std::string &pathname, const s
 		}
 	}
 
-	if (f_ptr != 0)
+	if (f_ptr != nullptr)
 	{
 		fclose (f_ptr);
-		f_ptr = 0;
+		f_ptr = nullptr;
 	}
 
 	return ret_val;
@@ -99,11 +99,11 @@ int	FileIOInterface::read_txt_file_direct (const std::string &pathname, std::str
 
 	content.clear ();
 
-	FILE *         f_ptr = 0;
+	FILE *         f_ptr = nullptr;
 	if (ret_val == Err_OK)
 	{
 		f_ptr = fstb::fopen_utf8 (pathname.c_str (), "r");
-		if (f_ptr == 0)
+		if (f_ptr == nullptr)
 		{
 			ret_val = Err_CANNOT_OPEN;
 		}
@@ -128,10 +128,10 @@ int	FileIOInterface::read_txt_file_direct (const std::string &pathname, std::str
 		}
 	}
 
-	if (f_ptr != 0)
+	if (f_ptr != nullptr)
 	{
 		fclose (f_ptr);
-		f_ptr = 0;
+		f_ptr = nullptr;
 	}
 
 	return ret_val;

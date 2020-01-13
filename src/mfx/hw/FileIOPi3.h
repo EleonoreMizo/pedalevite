@@ -44,7 +44,7 @@ namespace hw
 
 
 
-class FileIOPi3
+class FileIOPi3 final
 :	public FileIOInterface
 {
 
@@ -62,8 +62,8 @@ public:
 protected:
 
 	// mfx::FileIOInterface
-	virtual int    do_write_txt_file (const std::string &pathname, const std::string &content);
-	virtual int    do_read_txt_file (const std::string &pathname, std::string &content);
+	int            do_write_txt_file (const std::string &pathname, const std::string &content) final;
+	int            do_read_txt_file (const std::string &pathname, std::string &content) final;
 
 
 
@@ -82,7 +82,9 @@ private:
 
 	               FileIOPi3 ()                               = delete;
 	               FileIOPi3 (const FileIOPi3 &other)         = delete;
+	               FileIOPi3 (FileIOPi3 &&other)              = delete;
 	FileIOPi3 &    operator = (const FileIOPi3 &other)        = delete;
+	FileIOPi3 &    operator = (FileIOPi3 &&other)             = delete;
 	bool           operator == (const FileIOPi3 &other) const = delete;
 	bool           operator != (const FileIOPi3 &other) const = delete;
 

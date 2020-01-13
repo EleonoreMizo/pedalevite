@@ -45,7 +45,7 @@ namespace pg
 
 
 
-class MenuBackup
+class MenuBackup final
 :	public PageInterface
 {
 
@@ -54,7 +54,6 @@ class MenuBackup
 public:
 
 	explicit       MenuBackup (PageSwitcher &page_switcher);
-	virtual        ~MenuBackup () = default;
 
 
 
@@ -63,12 +62,11 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 
 
@@ -113,7 +111,9 @@ private:
 
 	               MenuBackup ()                               = delete;
 	               MenuBackup (const MenuBackup &other)        = delete;
+	               MenuBackup (MenuBackup &&other)             = delete;
 	MenuBackup &   operator = (const MenuBackup &other)        = delete;
+	MenuBackup &   operator = (MenuBackup &&other)             = delete;
 	bool           operator == (const MenuBackup &other) const = delete;
 	bool           operator != (const MenuBackup &other) const = delete;
 

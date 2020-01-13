@@ -55,7 +55,15 @@ public:
 		BlendMode_NBR_ELT
 	};
 
-	virtual        ~DisplayInterface () = default;
+	               DisplayInterface ()                              = default;
+	               DisplayInterface (const DisplayInterface &other) = default;
+	               DisplayInterface (DisplayInterface &&other)      = default;
+	virtual        ~DisplayInterface ()                             = default;
+
+	virtual DisplayInterface &
+	               operator = (const DisplayInterface &other)       = default;
+	virtual DisplayInterface &
+	               operator = (DisplayInterface &&other)            = default;
 
 	int            get_width () const;
 	int            get_height () const;

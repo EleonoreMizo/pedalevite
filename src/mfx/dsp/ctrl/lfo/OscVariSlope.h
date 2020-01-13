@@ -54,18 +54,13 @@ namespace lfo
 
 
 
-class OscVariSlope
+class OscVariSlope final
 :	public OscInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	               OscVariSlope ()                          = default;
-	               OscVariSlope (const OscVariSlope &other) = default;
-	virtual        ~OscVariSlope ()                         = default;
-	OscVariSlope & operator = (const OscVariSlope &other)   = default;
 
 
 
@@ -74,20 +69,20 @@ public:
 protected:
 
 	// mfx::dsp::ctrl::lfo::OscInterface
-	virtual void   do_set_sample_freq (double sample_freq);
-	virtual void   do_set_period (double per);
-	virtual void   do_set_phase (double phase);
-	virtual void   do_set_chaos (double chaos);
-	virtual void   do_set_phase_dist (double dist);
-	virtual void   do_set_phase_dist_offset (double ofs);
-	virtual void   do_set_sign (bool inv_flag);
-	virtual void   do_set_polarity (bool unipolar_flag);
-	virtual void   do_set_variation (int param, double val);
-	virtual bool   do_is_using_variation (int param) const;
-	virtual void   do_tick (int nbr_spl);
-	virtual double do_get_val () const;
-	virtual double do_get_phase () const;
-	virtual void   do_clear_buffers ();
+	void           do_set_sample_freq (double sample_freq) final;
+	void           do_set_period (double per) final;
+	void           do_set_phase (double phase) final;
+	void           do_set_chaos (double chaos) final;
+	void           do_set_phase_dist (double dist) final;
+	void           do_set_phase_dist_offset (double ofs) final;
+	void           do_set_sign (bool inv_flag) final;
+	void           do_set_polarity (bool unipolar_flag) final;
+	void           do_set_variation (int param, double val) final;
+	bool           do_is_using_variation (int param) const final;
+	void           do_tick (int nbr_spl) final;
+	double         do_get_val () const final;
+	double         do_get_phase () const final;
+	void           do_clear_buffers () final;
 
 
 

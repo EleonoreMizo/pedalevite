@@ -54,15 +54,15 @@ namespace pg
 
 EditFxId::EditFxId (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_state (State_NONE)
 ,	_arg_menu ()
 ,	_arg_fx_type ()
 ,	_arg_label ()
 ,	_chr_per_line (20)
-,	_param_ptr (0)
+,	_param_ptr (nullptr)
 {
 	// Nothing
 }
@@ -75,11 +75,12 @@ EditFxId::EditFxId (PageSwitcher &page_switcher)
 
 void	EditFxId::do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt)
 {
-	assert (usr_ptr != 0);
+	assert (usr_ptr != nullptr);
+
 	_model_ptr = &model;
 	_view_ptr  = &view;
 	_page_ptr  = &page;
-	_param_ptr = reinterpret_cast <Param *> (usr_ptr);
+	_param_ptr = static_cast <Param *> (usr_ptr);
 
 	_chr_per_line = page_size [0] / fnt._m.get_char_w ();
 

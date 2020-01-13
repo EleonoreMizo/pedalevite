@@ -102,15 +102,10 @@ bool	InterpolatorInterface::test_and_process_trivial_cases (int &nbr_spl_gen, in
 			// Any other integer rate
 			else
 			{
-				int            nbr_available_src;
-				if (rate_int < 0)
-				{
-					nbr_available_src = pos_src_int - beg_src + 1;
-				}
-				else
-				{
-					nbr_available_src = end_src - pos_src_int;
-				}
+				const int         nbr_available_src =
+					  (rate_int < 0)
+					? pos_src_int - beg_src + 1
+					: end_src - pos_src_int;
 				const int      nbr_available_dest = nbr_available_src / rate_int;
 				nbr_spl_gen = std::min (nbr_spl_req, nbr_available_dest);
 

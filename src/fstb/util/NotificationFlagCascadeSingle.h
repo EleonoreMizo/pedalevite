@@ -40,7 +40,7 @@ namespace util
 	#pragma warning (disable : 4250)
 #endif // inherits via dominance
 
-class NotificationFlagCascadeSingle
+class NotificationFlagCascadeSingle final
 :	public NotificationFlagCascadeMixin
 ,	public virtual ObservableSingleMixin
 {
@@ -48,8 +48,6 @@ class NotificationFlagCascadeSingle
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
-
-	virtual        ~NotificationFlagCascadeSingle () = default;
 
 
 

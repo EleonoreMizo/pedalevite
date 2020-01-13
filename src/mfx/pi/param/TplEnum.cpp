@@ -62,18 +62,18 @@ TplEnum::TplEnum (const char *val_list_0, const char *name_0, const char *unit_0
 ,	_print_format (format_0)
 ,	_flags (0)
 {
-	assert (val_list_0 != 0);
+	assert (val_list_0 != nullptr);
 	assert (name_0);
 	assert (unit_0);
-	assert (format_0 != 0);
+	assert (format_0 != nullptr);
 
 	const char *	eol_0 = val_list_0;
 	do
 	{
 		const char *	beg_0 = eol_0;
 		eol_0 = strchr (beg_0, '\n');
-		size_t			len;
-		if (eol_0 == 0)
+		size_t			len   = 0;
+		if (eol_0 == nullptr)
 		{
 			len = strlen (beg_0);
 		}
@@ -86,7 +86,7 @@ TplEnum::TplEnum (const char *val_list_0, const char *name_0, const char *unit_0
 		const std::string	val (beg_0, len);
 		_name_list.push_back (val);
 	}
-	while (eol_0 != 0);
+	while (eol_0 != nullptr);
 
 	char           txt_0 [1023+1];
 	fstb::snprintf4all (txt_0, sizeof (txt_0), name_0,
@@ -222,7 +222,9 @@ bool	TplEnum::do_conv_str_to_nat (double &nat, const std::string &txt) const
 	if (ok_flag && ! found_flag)
 	{
 		int64_t        index;
-		if (fstb::txt::utf8::ConvNum::conv_str_to_int64 (index, txt.c_str (), 10, 0))
+		if (fstb::txt::utf8::ConvNum::conv_str_to_int64 (
+			index, txt.c_str (), 10, nullptr
+		))
 		{
 			nat = double (index);
 			if (   nat >= do_get_nat_min ()

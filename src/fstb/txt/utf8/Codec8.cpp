@@ -47,7 +47,7 @@ namespace utf8
 
 bool	Codec8::is_valid_utf8_byte (char c)
 {
-	const int      val = static_cast <unsigned char> (c);
+	const unsigned char  val (c);
 
 	return (val != 0xC0 && val != 0xC1 && val <= 0xF4);
 }
@@ -56,7 +56,7 @@ bool	Codec8::is_valid_utf8_byte (char c)
 
 bool	Codec8::is_valid_utf8_lead_byte (char c)
 {
-	const int      val = static_cast <unsigned char> (c);
+	const unsigned char  val (c);
 
 	return (val < 0x80 || (val >= 0xC2 && val <= 0xF4));
 }
@@ -116,7 +116,7 @@ int	Codec8::get_char_seq_len_utf (int &len, char utf8_lead_byte)
 
 	len = 1;
 
-	const int      val = static_cast <unsigned char> (utf8_lead_byte);
+	const unsigned char  val (utf8_lead_byte);
 	if (val >= 0x80)
 	{
 		if (val < 0xC2 || val > 0xF4)
@@ -202,7 +202,7 @@ Throws: Nothing
 
 int	Codec8::encode_char (char utf8_0 [], char32_t ucs4)
 {
-	assert (utf8_0 != 0);
+	assert (utf8_0 != nullptr);
 
 	int            len     = 0;
 	const int      ret_val = encode_char (utf8_0, ucs4, len);
@@ -238,7 +238,7 @@ Throws: Nothing
 
 int	Codec8::encode_char (char utf8_ptr [], char32_t ucs4, int &len)
 {
-	assert (utf8_ptr != 0);
+	assert (utf8_ptr != nullptr);
 
 	int            ret_val = get_char_seq_len_ucs (len, ucs4);
 
@@ -281,7 +281,7 @@ int	Codec8::encode_char (char utf8_ptr [], char32_t ucs4, int &len)
 
 int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [])
 {
-	assert (utf8_ptr != 0);
+	assert (utf8_ptr != nullptr);
 
 	int            dummy_len;
 
@@ -293,7 +293,7 @@ int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [])
 // In case of invalid byte sequence, len is set to 0.
 int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [], int &len)
 {
-	assert (utf8_ptr != 0);
+	assert (utf8_ptr != nullptr);
 
 	ucs4 = 0;
 
@@ -333,7 +333,7 @@ int	Codec8::decode_char (char32_t &ucs4, const char utf8_ptr [], int &len)
 
 int	Codec8::check_char_valid (const char utf8_ptr [])
 {
-	assert (utf8_ptr != 0);
+	assert (utf8_ptr != nullptr);
 
 	char32_t       dummy_ucs4;
 
@@ -344,10 +344,10 @@ int	Codec8::check_char_valid (const char utf8_ptr [])
 
 int	Codec8::check_string_valid (const char utf8_0 [])
 {
-	assert (utf8_0 != 0);
+	assert (utf8_0 != nullptr);
 
 	int            ret_val = Err_OK;
-	long           pos = 0;
+	long           pos     = 0;
 
 	while (ret_val == Err_OK && utf8_0 [pos] != '\0')
 	{

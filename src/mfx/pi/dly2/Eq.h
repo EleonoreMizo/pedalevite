@@ -47,9 +47,6 @@ class Eq
 
 public:
 
-	               Eq ()  = default;
-	virtual        ~Eq () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           clear_buffers ();
 	void           set_freq_lo (float f);
@@ -85,8 +82,6 @@ private:
 
 private:
 
-	               Eq (const Eq &other)                = delete;
-	Eq &           operator = (const Eq &other)        = delete;
 	bool           operator == (const Eq &other) const = delete;
 	bool           operator != (const Eq &other) const = delete;
 

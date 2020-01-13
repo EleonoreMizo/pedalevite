@@ -49,9 +49,6 @@ class DistoDspAttract
 
 public:
 
-	               DistoDspAttract ();
-	virtual        ~DistoDspAttract () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           clear_buffers ();
 	inline float   process_sample (float x);
@@ -86,19 +83,19 @@ private:
 	static inline float
 						pol_to_val (Polarity polarity);
 
-	float          _sample_freq;
+	float          _sample_freq   = 0;  // Hz. 0 = not set
 
-	BipolarVal		_lvl_a;		// |a| < b
-	float          _lvl_b;		//
-	float          _center_a;	// (_lvl_a [0] + _lvl_a [1]) / 2
+	BipolarVal		_lvl_a {{ 1, -1 }};  // |a| < b
+	float          _lvl_b         = 2.f;
+	float          _center_a      = 0;  // (_lvl_a [0] + _lvl_a [1]) / 2
 
-	bool           _mad_flag;	// Mode
-	float          _sign;		// for Mad mode
-	float          _speed;		// for Mad mode
-	float          _speed_lim_min;
-	float          _ratio_f;	// 44100 / sample_freq
+	bool           _mad_flag      = false; // Mode
+	float          _sign          = 1;  // for Mad mode
+	float          _speed         = 0;  // for Mad mode
+	float          _speed_lim_min = 1.0f / 256;
+	float          _ratio_f       = 1;  // 44100 / sample_freq
 
-	float          _cur_val;	// Output
+	float          _cur_val       = 0;  // Output
 
 	dsp::dyn::EnvFollowerRmsSimple
 	               _env;
@@ -109,9 +106,6 @@ private:
 
 private:
 
-	               DistoDspAttract (const DistoDspAttract &other)   = delete;
-	DistoDspAttract &
-	               operator = (const DistoDspAttract &other)        = delete;
 	bool           operator == (const DistoDspAttract &other) const = delete;
 	bool           operator != (const DistoDspAttract &other) const = delete;
 

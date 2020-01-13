@@ -74,6 +74,14 @@ public:
 	{
 	public:
 		typedef ThisType MipMapperType;
+		               SampleProviderInterface ()  = default;
+		               SampleProviderInterface (const SampleProviderInterface &other) = default;
+		               SampleProviderInterface (SampleProviderInterface &&other)      = default;
+		virtual        ~SampleProviderInterface () = default;
+		SampleProviderInterface &
+		               operator = (const SampleProviderInterface &other) = default;
+		SampleProviderInterface &
+		               operator = (SampleProviderInterface &&other)      = default;
 		virtual int    restart (int offset) = 0;
 		virtual int    get_block (CalcDataType data_ptr [], int nbr_spl) = 0;
 		virtual void   store_block (StorageDataType dest_ptr [], const CalcDataType src_ptr [], int nbr_spl) = 0;
@@ -104,10 +112,10 @@ private:
 	public:
 		fir::ConvolverFft
 		               _filter;
-		int            _buf_pos;   // Start of the buffer relatively to the beginning of the table
-		int            _fill_pos;  // Filling progress indicator
-		int            _beg_pos;   // Start of the buffer, with pre-unrolling
-		int            _end_pos;   // End of the buffer, with post-unrolling
+		int            _buf_pos  { -1 }; // Start of the buffer relatively to the beginning of the table
+		int            _fill_pos { -1 }; // Filling progress indicator
+		int            _beg_pos  { -1 }; // Start of the buffer, with pre-unrolling
+		int            _end_pos  { -1 }; // End of the buffer, with post-unrolling
 	};
 
 	typedef std::array <Layer, SampleTable::NBR_TABLES> BufferArray;
@@ -136,8 +144,11 @@ private:
 private:
 
 	               SampleMipMapper (const SampleMipMapper &other)   = delete;
+	               SampleMipMapper (SampleMipMapper &&other)        = delete;
 	SampleMipMapper &
 	               operator = (const SampleMipMapper &other)        = delete;
+	SampleMipMapper &
+	               operator = (SampleMipMapper &&other)             = delete;
 	bool           operator == (const SampleMipMapper &other) const = delete;
 	bool           operator != (const SampleMipMapper &other) const = delete;
 

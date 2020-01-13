@@ -56,8 +56,11 @@ public:
 
 	               AdsrRc ();
 	               AdsrRc (const AdsrRc &other)     = default;
+	               AdsrRc (AdsrRc &&other)          = default;
 	virtual        ~AdsrRc ()                       = default;
+
 	AdsrRc &       operator = (const AdsrRc &other) = default;
+	AdsrRc &       operator = (AdsrRc &&other)      = default;
 
 	void           set_sample_freq (float fs);
 	void           set_atk_time (float at);

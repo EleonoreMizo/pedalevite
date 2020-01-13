@@ -49,7 +49,7 @@ namespace dly2
 DelayLineBbd::DelayLineBbd ()
 :	_sample_freq (0)
 ,	_inv_fs (0)
-,	_buf_zone_ptr (0)
+,	_buf_zone_ptr (nullptr)
 ,	_buf_len (0)
 ,	_interp ()
 ,	_bbd ()
@@ -481,7 +481,7 @@ void	DelayLineBbd::finish_processing (float * const out_ptr_arr [2], const float
 
 float *	DelayLineBbd::use_buf (Buf buf) const
 {
-	assert (_buf_zone_ptr != 0);
+	assert (_buf_zone_ptr != nullptr);
 	assert (buf >= 0);
 	assert (buf < Buf_NBR_ELT);
 

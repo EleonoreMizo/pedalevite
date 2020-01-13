@@ -60,7 +60,7 @@ namespace pg
 
 
 
-class Levels
+class Levels final
 :	public PageInterface
 {
 
@@ -69,7 +69,6 @@ class Levels
 public:
 
 	explicit       Levels (PageSwitcher &page_switcher, adrv::DriverInterface &snd_drv);
-	virtual        ~Levels () = default;
 
 
 
@@ -78,16 +77,15 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_set_chn_mode (ChnMode mode);
-	virtual void   do_set_master_vol (float vol);
+	void   do_set_chn_mode (ChnMode mode) final;
+	void   do_set_master_vol (float vol) final;
 
 
 
@@ -184,7 +182,9 @@ private:
 
 	               Levels ()                               = delete;
 	               Levels (const Levels &other)            = delete;
+	               Levels (Levels &&other)                 = delete;
 	Levels &       operator = (const Levels &other)        = delete;
+	Levels &       operator = (Levels &&other)             = delete;
 	bool           operator == (const Levels &other) const = delete;
 	bool           operator != (const Levels &other) const = delete;
 

@@ -73,11 +73,6 @@ private:
 
 private:
 
-	               SvfMixerHigh ()                               = delete;
-	               SvfMixerHigh (const SvfMixerHigh &other)      = delete;
-	               ~SvfMixerHigh ()                              = delete;
-	SvfMixerHigh &
-	               operator = (const SvfMixerHigh &other)        = delete;
 	bool           operator == (const SvfMixerHigh &other) const = delete;
 	bool           operator != (const SvfMixerHigh &other) const = delete;
 

@@ -70,7 +70,9 @@ private:
 
 	               AioAdd ()                                   = delete;
 	               AioAdd (const AioAdd <T> &other)            = delete;
+	               AioAdd (const AioAdd <T> &&other)           = delete;
 	AioAdd <T> &   operator = (const AioAdd <T> &other)        = delete;
+	AioAdd <T> &   operator = (const AioAdd <T> &&other)       = delete;
 	bool           operator == (const AioAdd <T> &other) const = delete;
 	bool           operator != (const AioAdd <T> &other) const = delete;
 

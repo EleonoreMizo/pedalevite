@@ -55,7 +55,7 @@ DistoSimpleDesc::DistoSimpleDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Gain
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		double (_gain_min), double (_gain_max),
 		"Distortion Gain\nGain",
 		"dB",
@@ -63,30 +63,33 @@ DistoSimpleDesc::DistoSimpleDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_GAIN, log_ptr);
+	_desc_set.add_glob (Param_GAIN, log_sptr);
 
 	// HPF Cutoff frequency
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		3, 3000,
-		"Input high-pass filter cutoff frequency\nInput HPF Frequency\nHPF Cutoff Frequency\nHPF Frequency\nHPF Freq",
+		"Input high-pass filter cutoff frequency\nInput HPF Frequency"
+		"\nHPF Cutoff Frequency\nHPF Frequency\nHPF Freq",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
 		"%4.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_HPF_FREQ, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_HPF_FREQ, log_sptr);
 
 	// Bias
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		"Bias",
 		"%",
 		0,
 		"%+6.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_FLOAT_PERCENT);
-	_desc_set.add_glob (Param_BIAS, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_BIAS, lin_sptr);
 }
 
 

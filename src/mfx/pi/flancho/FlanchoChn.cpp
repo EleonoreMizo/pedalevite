@@ -72,9 +72,9 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 ,	_sat_out_a (1)
 ,	_sat_out_b (0)
 {
-	assert (dly_buf_ptr != 0);
+	assert (dly_buf_ptr != nullptr);
 	assert (dly_buf_len > 0);
-	assert (render_buf_ptr != 0);
+	assert (render_buf_ptr != nullptr);
 	assert (render_buf_len > 0);
 
 	dsp::mix::Generic::setup ();
@@ -97,7 +97,7 @@ FlanchoChn::FlanchoChn (dsp::rspl::InterpolatorInterface &interp, float dly_buf_
 			_tmp_buf_arr [TmpBufType_DLY_READ]._ptr,
 			_tmp_buf_arr [TmpBufType_DLY_READ]._len
 		);
-		voice._dly_reader.set_crossfade (256, 0);
+		voice._dly_reader.set_crossfade (256, nullptr);
 		voice._dly_reader.set_resampling_range (-4.0, +4.0);
 
 		voice._rel_phase = 2 * pow (5.0 / 7.0, v_cnt);
@@ -319,8 +319,8 @@ void	FlanchoChn::resync (double base_phase)
 void	FlanchoChn::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
 	assert (_max_proc_len > 0);
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const double   fdbk_step  = (_feedback - _feedback_old) / nbr_spl;
@@ -560,7 +560,7 @@ void	FlanchoChn::set_wf_type (dsp::ctrl::lfo::LfoModule &lfo, WfType wf_type)
 
 
 
-double	FlanchoChn::compute_delay_time (dsp::ctrl::lfo::LfoModule &lfo)
+double	FlanchoChn::compute_delay_time (const dsp::ctrl::lfo::LfoModule &lfo)
 {
 	double         lfo_val = lfo.get_val ();
 

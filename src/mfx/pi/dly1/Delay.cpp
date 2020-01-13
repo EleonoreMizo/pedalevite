@@ -399,8 +399,8 @@ void	Delay::update_param_time ()
 
 void	Delay::process_block_part (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
-	assert (out_ptr_arr != 0);
-	assert (in_ptr_arr != 0);
+	assert (out_ptr_arr != nullptr);
+	assert (in_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 	assert (pos_beg < pos_end);
 
@@ -445,8 +445,8 @@ void	Delay::process_block_part (float * const out_ptr_arr [], const float * cons
 
 void	Delay::process_block_part_standard (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
-	assert (out_ptr_arr != 0);
-	assert (in_ptr_arr != 0);
+	assert (out_ptr_arr != nullptr);
+	assert (in_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 
 	const int      nbr_spl = pos_end - pos_beg;
@@ -572,8 +572,8 @@ void	Delay::process_block_part_standard (float * const out_ptr_arr [], const flo
 
 void	Delay::process_block_part_mono_link (float * const out_ptr_arr [], const float * const in_ptr_arr [], int pos_beg, int pos_end)
 {
-	assert (out_ptr_arr != 0);
-	assert (in_ptr_arr != 0);
+	assert (out_ptr_arr != nullptr);
+	assert (in_ptr_arr != nullptr);
 	assert (pos_beg >= 0);
 
 	const int      nbr_spl = pos_end - pos_beg;

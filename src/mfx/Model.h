@@ -80,7 +80,7 @@ namespace tuner
 
 
 
-class Model
+class Model final
 :	public cmd::CentralCbInterface
 {
 
@@ -100,7 +100,7 @@ public:
 	typedef fstb::msg::QueueRetMgr <fstb::msg::MsgRet <ModelMsgCmdAsync> > CmdAsyncMgr;
 
 	explicit       Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device, FileIOInterface &file_io);
-	virtual        ~Model ();
+	               ~Model ();
 
 	CmdAsyncMgr &  use_async_cmd ();
 
@@ -195,7 +195,7 @@ public:
 protected:
 
 	// mfx::cmd::CentralCbInterface
-	virtual void   do_process_msg_audio_to_cmd (const WaMsg &msg);
+	void           do_process_msg_audio_to_cmd (const WaMsg &msg) final;
 
 
 
@@ -365,7 +365,9 @@ private:
 
 	               Model ()                               = delete;
 	               Model (const Model &other)             = delete;
+	               Model (const Model &&other)            = delete;
 	Model &        operator = (const Model &other)        = delete;
+	Model &        operator = (const Model &&other)       = delete;
 	bool           operator == (const Model &other) const = delete;
 	bool           operator != (const Model &other) const = delete;
 

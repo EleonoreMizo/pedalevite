@@ -42,14 +42,14 @@ namespace rspl
 template <typename DT>
 void	InterpFirMakerLagrange4 <DT>::make_interpolator (DataType fir_ptr [], float pos)
 {
-	assert (fir_ptr != 0);
+	assert (fir_ptr != nullptr);
 	assert (pos >= 0);
 	assert (pos <= 1);
 
 	// 3rd order Lagrange interpolator impulse: 8 mul, 3 add, 2 neg.
-	const DataType dm1 = pos - 1;
-	const DataType dp1 = pos + 1;
-	const DataType dm2 = pos - 2;
+	const DataType dm1     = pos - 1;
+	const DataType dp1     = pos + 1;
+	const DataType dm2     = pos - 2;
 	const DataType d_dm1   = static_cast <DataType> ((1.0 / 6) * pos * dm1);
 	const DataType dp1_dm2 = static_cast <DataType> ((1.0 / 2) * dp1 * dm2);
 	fir_ptr [0] = -d_dm1   * dm2;

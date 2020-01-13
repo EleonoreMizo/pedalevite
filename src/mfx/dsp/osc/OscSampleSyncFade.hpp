@@ -45,32 +45,6 @@ namespace osc
 
 
 
-template <typename OSC>
-OscSampleSyncFade <OSC>::OscSampleSyncFade ()
-:	_osc_arr ()
-,	_cur_osc (0)
-,	_base_pitch (0)
-,	_master_pitch (0)
-,	_cur_table_len (0)
-,	_spl_to_next_sync (0)
-,	_period (10000)
-,	_wave_freq_spl (0)
-,	_sync_pos (0)
-,	_sync_pos_table (0)
-,	_sync_speed (0)
-,	_sync_speed_table (0)
-,	_buffer ()
-,	_fade_val_arr ()
-,	_fade_step (0)
-{
-	// We set _period to a quite big number because of the _spl_to_next_sync
-	// adjustment in update_master_pitch()
-
-	clear_buffers ();
-}
-
-
-
 /*
 ==============================================================================
 Name: set_sample_data
@@ -318,7 +292,7 @@ void	OscSampleSyncFade <OSC>::process_block (CalcDataType data_ptr [], int nbr_s
 	assert (_period.get_val_dbl () > 0);
 	assert (_wave_freq_spl.get_val_int64 () > 0);
 
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int            pos = 0;

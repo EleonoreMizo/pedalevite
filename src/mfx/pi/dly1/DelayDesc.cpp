@@ -65,18 +65,18 @@ DelayDesc::DelayDesc ()
 	}
 
 	// Link
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"Link\nChn Link\nChannel Link",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_LINK, enu_ptr);
+	_desc_set.add_glob (Param_LINK, enu_sptr);
 
 	// Cross-freedback
-	param::TplMapped <param::MapS <false> > * maps_ptr =
-		new param::TplMapped <param::MapS <false> > (
+	auto           maps_sptr =
+		std::make_shared <param::TplMapped <param::MapS <false> > > (
 			0, 1,
 			"PP\nPiPo\nPing-pong\nPing-pong feedback",
 			"%",
@@ -84,11 +84,11 @@ DelayDesc::DelayDesc ()
 			0,
 			"%5.1f"
 		);
-	maps_ptr->use_mapper ().config (
-		maps_ptr->get_nat_min (),
-		maps_ptr->get_nat_max ()
+	maps_sptr->use_mapper ().config (
+		maps_sptr->get_nat_min (),
+		maps_sptr->get_nat_max ()
 	);
-	_desc_set.add_glob (Param_X_FDBK, maps_ptr);
+	_desc_set.add_glob (Param_X_FDBK, maps_sptr);
 }
 
 
@@ -160,7 +160,7 @@ void DelayDesc::init_level (bool dry_flag)
 		? "MixI\nMix In\nInput mix\nInput mix level"
 		: "MixD\nMix Dly\nDelay mix\nDelay mix level";
 	const int      index  = (dry_flag) ? Param_LVL_IN : Param_LVL_OUT;
-	TplPsl *       pl_ptr = new TplPsl (
+	auto           pl_sptr = std::make_shared <TplPsl> (
 		0, 10,
 		name_0,
 		"dB",
@@ -168,7 +168,7 @@ void DelayDesc::init_level (bool dry_flag)
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (index, pl_ptr);
+	_desc_set.add_glob (index, pl_sptr);
 }
 
 
@@ -183,7 +183,7 @@ void	DelayDesc::init_time (int chn)
 		? "TL\nTime L\nTime Left"
 		: "TR\nTime R\nTime Right";
 	const Param		index = (chn == 0) ? Param_L_TIME : Param_R_TIME;
-	param::TplLog *   p_ptr = new param::TplLog (
+	auto           p_sptr = std::make_shared <param::TplLog> (
 		1.0 / 64, Cst::_max_delay / 1000.0,
 		name_0,
 		"ms",
@@ -191,7 +191,7 @@ void	DelayDesc::init_time (int chn)
 		0,
 		"%6.1f"
 	);
-	_desc_set.add_glob (index, p_ptr);
+	_desc_set.add_glob (index, p_sptr);
 }
 
 
@@ -206,17 +206,17 @@ void	DelayDesc::init_fdbk (int chn)
 		? "FbkL\nFdbk L\nFeedback L\nFeedback Left"
 		: "FbkR\nFdbk R\nFeedback R\nFeedback Right";
 	const Param		index = (chn == 0) ? Param_L_FDBK : Param_R_FDBK;
-	param::TplLin *   p_ptr = new param::TplLin (
+	auto           p_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		name_0,
 		"%",
 		0,
 		"%5.1f"
 	);
-	p_ptr->use_disp_num ().set_preset (
+	p_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (index, p_ptr);
+	_desc_set.add_glob (index, p_sptr);
 }
 
 
@@ -231,17 +231,17 @@ void	DelayDesc::init_filter (int chn)
 		? "FltL\nFilter L\nFilter Left"
 		: "FltR\nFilter R\nFilter Right";
 	const Param		index = (chn == 0) ? Param_L_FILTER : Param_R_FILTER;
-	param::TplLin *   p_ptr = new param::TplLin (
+	auto           p_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
 		name_0,
 		"%",
 		0,
 		"%+6.1f"
 	);
-	p_ptr->use_disp_num ().set_preset (
+	p_sptr->use_disp_num ().set_preset (
 		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
-	_desc_set.add_glob (index, p_ptr);
+	_desc_set.add_glob (index, p_sptr);
 }
 
 

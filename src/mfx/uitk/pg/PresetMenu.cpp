@@ -54,20 +54,20 @@ namespace pg
 PresetMenu::PresetMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 :	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_menu_sptr (new NWindow (Entry_WINDOW))
-,	_load_sptr (new NText (Entry_LOAD    ))
-,	_brow_sptr (new NText (Entry_BROWSE  ))
-,	_stor_sptr (new NText (Entry_STORE   ))
-,	_swap_sptr (new NText (Entry_SWAP    ))
-,	_renm_sptr (new NText (Entry_RENAME  ))
-,	_mrph_sptr (new NText (Entry_MORPH   ))
-,	_dele_sptr (new NText (Entry_DELETE  ))
-,	_orga_sptr (new NText (Entry_ORGANIZE))
+,	_fnt_ptr (nullptr)
+,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW  ))
+,	_load_sptr (std::make_shared <NText  > (Entry_LOAD    ))
+,	_brow_sptr (std::make_shared <NText  > (Entry_BROWSE  ))
+,	_stor_sptr (std::make_shared <NText  > (Entry_STORE   ))
+,	_swap_sptr (std::make_shared <NText  > (Entry_SWAP    ))
+,	_renm_sptr (std::make_shared <NText  > (Entry_RENAME  ))
+,	_mrph_sptr (std::make_shared <NText  > (Entry_MORPH   ))
+,	_dele_sptr (std::make_shared <NText  > (Entry_DELETE  ))
+,	_orga_sptr (std::make_shared <NText  > (Entry_ORGANIZE))
 ,	_lp_param ()
 ,	_node_id_save (Entry_LOAD)
 {
@@ -216,7 +216,7 @@ MsgHandlerInterface::EvtProp	PresetMenu::do_handle_evt (const NodeEvt &evt)
 				break;
 			case Entry_ORGANIZE:
 				/*** To do ***/
-				_page_switcher.call_page (PageType_NOT_YET, 0, node_id);
+				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 				break;
 			default:
 				ret_val = EvtProp_PASS;
@@ -224,7 +224,7 @@ MsgHandlerInterface::EvtProp	PresetMenu::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_SLOT_MENU, 0);
+			_page_switcher.switch_to (pg::PageType_SLOT_MENU, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		default:
@@ -242,7 +242,7 @@ void	PresetMenu::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -251,7 +251,7 @@ void	PresetMenu::do_remove_slot (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -263,7 +263,7 @@ void	PresetMenu::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -273,7 +273,7 @@ void	PresetMenu::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (pg::PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
 

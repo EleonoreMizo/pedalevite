@@ -41,7 +41,7 @@ namespace dly
 
 
 
-class BbdLineReadable
+class BbdLineReadable final
 :	public DelayLineReadInterface
 {
 
@@ -50,9 +50,6 @@ class BbdLineReadable
 public:
 
 	static const int  _min_speed_l2 = BbdLine::_min_speed_l2;
-
-	               BbdLineReadable ()  = default;
-	virtual        ~BbdLineReadable () = default;
 
 	void           init (int max_bbd_size, double sample_freq, rspl::InterpolatorInterface &interp, int ovrspl_l2);
 	const rspl::InterpolatorInterface &
@@ -73,13 +70,13 @@ public:
 protected:
 
 	// DelayLineReadInterface
-	virtual double do_get_sample_freq () const;
-	virtual int    do_get_ovrspl_l2 () const;
-	virtual double do_get_min_delay_time () const;
-	virtual double do_get_max_delay_time () const;
-	virtual int    do_estimate_max_one_shot_proc_w_feedback (double min_delay_time) const;
-	virtual void   do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const;
-	virtual float  do_read_sample (float delay) const;
+	double         do_get_sample_freq () const final;
+	int            do_get_ovrspl_l2 () const final;
+	double         do_get_min_delay_time () const final;
+	double         do_get_max_delay_time () const final;
+	int            do_estimate_max_one_shot_proc_w_feedback (double min_delay_time) const final;
+	void           do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, double dly_end, int pos_in_block) const final;
+	float          do_read_sample (float delay) const final;
 
 
 
@@ -99,9 +96,6 @@ private:
 
 private:
 
-	               BbdLineReadable (const BbdLineReadable &other)   = delete;
-	BbdLineReadable &
-	               operator = (const BbdLineReadable &other)        = delete;
 	bool           operator == (const BbdLineReadable &other) const = delete;
 	bool           operator != (const BbdLineReadable &other) const = delete;
 

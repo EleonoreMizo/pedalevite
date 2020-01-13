@@ -92,7 +92,6 @@ class PageSet
 public:
 
 	explicit       PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, const CmdLine &cmd_line, adrv::DriverInterface &snd_drv);
-	virtual        ~PageSet () = default;
 
 	uitk::Page &   use_page_mgr ();
 	uitk::PageSwitcher &
@@ -216,7 +215,9 @@ private:
 
 	               PageSet ()                               = delete;
 	               PageSet (const PageSet &other)           = delete;
+	               PageSet (const PageSet &&other)          = delete;
 	PageSet &      operator = (const PageSet &other)        = delete;
+	PageSet &      operator = (const PageSet &&other)       = delete;
 	bool           operator == (const PageSet &other) const = delete;
 	bool           operator != (const PageSet &other) const = delete;
 

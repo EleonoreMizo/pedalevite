@@ -49,34 +49,34 @@ Synth0Desc::Synth0Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Pitch
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-3, 9,
 		"Pitch\nP",
 		"Oct",
 		0,
 		"%+5.2f"
 	);
-	_desc_set.add_glob (Param_PITCH, lin_ptr);
+	_desc_set.add_glob (Param_PITCH, lin_sptr);
 
 	// Trigger On
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Trigger on\nTrig on\nOn",
 		"%",
 		0,
 		"%+6.1f"
 	);
-	_desc_set.add_glob (Param_TRIG_ON, lin_ptr);
+	_desc_set.add_glob (Param_TRIG_ON, lin_sptr);
 
 	// Trigger Off
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"Trigger off\nTrig off\nOff",
 		"%",
 		0,
 		"%+6.1f"
 	);
-	_desc_set.add_glob (Param_TRIG_OFF, lin_ptr);
+	_desc_set.add_glob (Param_TRIG_OFF, lin_sptr);
 }
 
 

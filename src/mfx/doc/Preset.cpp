@@ -97,7 +97,7 @@ bool	Preset::is_slot_empty (SlotMap::const_iterator it) const
 
 bool	Preset::is_slot_empty (SlotMap::value_type vt) const
 {
-	return (   vt.second.get () == 0
+	return (   vt.second.get () == nullptr
 	        || vt.second->is_empty ());
 }
 
@@ -111,7 +111,7 @@ Slot &	Preset::use_slot (int slot_id)
 		assert (false);
 		throw std::logic_error ("Slot does not exist.");
 	}
-	if (it->second.get () == 0)
+	if (it->second.get () == nullptr)
 	{
 		assert (false);
 		throw std::logic_error ("Slot is empty.");
@@ -130,7 +130,7 @@ const Slot &	Preset::use_slot (int slot_id) const
 		assert (false);
 		throw std::logic_error ("Slot does not exist.");
 	}
-	if (it->second.get () == 0)
+	if (it->second.get () == nullptr)
 	{
 		assert (false);
 		throw std::logic_error ("Slot is empty.");
@@ -294,7 +294,7 @@ void	Preset::ser_read (SerRInterface &ser)
 	_slot_map.clear ();
 	for (int cnt = 0; cnt < nbr_elt; ++cnt)
 	{
-		int         slot_id;
+		int         slot_id = -1;
 
 		if (doc_ver < 3)
 		{
@@ -307,7 +307,7 @@ void	Preset::ser_read (SerRInterface &ser)
 			ser.read (slot_id);
 		}
 
-		SlotSPtr    s_sptr = SlotSPtr (new Slot);
+		SlotSPtr    s_sptr { std::make_shared <Slot> () };
 		s_sptr->ser_read (ser);
 
 		_slot_map [slot_id] = s_sptr;
@@ -374,9 +374,9 @@ void	Preset::duplicate_slot_list ()
 {
 	for (auto & node : _slot_map)
 	{
-		if (node.second.get () != 0)
+		if (node.second.get () != nullptr)
 		{
-			node.second = SlotSPtr (new Slot (*(node.second)));
+			node.second = std::make_shared <Slot> (*(node.second));
 		}
 	}
 }

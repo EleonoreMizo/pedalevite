@@ -51,11 +51,13 @@ class ParamDescSet
 public:
 
 	explicit       ParamDescSet (int nbr_glob, int nbr_notes);
-	virtual        ~ParamDescSet () = default;
 
-	void           add (piapi::ParamCateg categ, int index, piapi::ParamDescInterface *ptr);
-	void           add_glob (int index, piapi::ParamDescInterface *ptr);
-	void           add_note (int index, piapi::ParamDescInterface *ptr);
+	template <typename T>
+	void           add (piapi::ParamCateg categ, int index, std::shared_ptr <T> &sptr);
+	template <typename T>
+	void           add_glob (int index, std::shared_ptr <T> &sptr);
+	template <typename T>
+	void           add_note (int index, std::shared_ptr <T> &sptr);
 
 	bool           is_ready () const;
 
@@ -89,8 +91,10 @@ private:
 private:
 
 	               ParamDescSet ()                               = delete;
+	               ParamDescSet (const ParamDescSet &&other)     = delete;
 	               ParamDescSet (const ParamDescSet &other)      = delete;
 	ParamDescSet & operator = (const ParamDescSet &other)        = delete;
+	ParamDescSet & operator = (const ParamDescSet &&other)       = delete;
 	bool           operator == (const ParamDescSet &other) const = delete;
 	bool           operator != (const ParamDescSet &other) const = delete;
 
@@ -103,7 +107,7 @@ private:
 
 
 
-//#include "mfx/pi/ParamDescSet.hpp"
+#include "mfx/pi/ParamDescSet.hpp"
 
 
 

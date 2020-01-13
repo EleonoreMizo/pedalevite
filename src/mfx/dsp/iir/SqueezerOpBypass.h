@@ -47,9 +47,6 @@ class SqueezerOpBypass
 
 public:
 
-	               SqueezerOpBypass ()  = default;
-	virtual        ~SqueezerOpBypass () = default;
-
 	void           config (float /*reso*/, float /*p1*/) {}
 	void           config (fstb::ToolsSimd::VectF32 /*reso*/, fstb::ToolsSimd::VectF32 /*p1*/) {}
 	float          process_sample (float x) { return x; }
@@ -74,9 +71,6 @@ private:
 
 private:
 
-	               SqueezerOpBypass (const SqueezerOpBypass &other)  = delete;
-	SqueezerOpBypass &
-	               operator = (const SqueezerOpBypass &other)        = delete;
 	bool           operator == (const SqueezerOpBypass &other) const = delete;
 	bool           operator != (const SqueezerOpBypass &other) const = delete;
 

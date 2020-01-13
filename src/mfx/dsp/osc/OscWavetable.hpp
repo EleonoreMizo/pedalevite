@@ -401,7 +401,7 @@ typename OscWavetable <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::get_sample_at_phase (uint32_t phase) const
 {
-	assert (_wavetable_ptr != 0);
+	assert (_wavetable_ptr != nullptr);
 	assert (_cur_table_len > 0);
 
 	const int      shift      = _cur_table_len_log2;
@@ -519,9 +519,9 @@ void	OscWavetable <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::process_block (DataType dest_ptr [], int nbr_spl)
 {
-	assert (_wavetable_ptr != 0);
+	assert (_wavetable_ptr != nullptr);
 	assert (nbr_spl > 0);
-	assert (dest_ptr != 0);
+	assert (dest_ptr != nullptr);
 
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);
 	for (int pos = 0; pos < nbr_spl; ++pos)
@@ -556,7 +556,7 @@ void	OscWavetable <
 	IF, MAXSL2, MINSL2, OVRL2, DT, UPRE, UPOST
 >::process_block_mix (DataType dest_ptr [], int nbr_spl)
 {
-	assert (_wavetable_ptr != 0);
+	assert (_wavetable_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const DataType *  src_ptr = _wavetable_ptr->use_table (_cur_table);

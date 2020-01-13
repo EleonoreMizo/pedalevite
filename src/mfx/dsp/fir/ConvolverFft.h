@@ -101,7 +101,9 @@ private:
 private:
 
 	               ConvolverFft (const ConvolverFft &other)      = delete;
+	               ConvolverFft (ConvolverFft &&other)           = delete;
 	ConvolverFft & operator = (const ConvolverFft &other)        = delete;
+	ConvolverFft & operator = (ConvolverFft &&other)             = delete;
 	bool           operator == (const ConvolverFft &other) const = delete;
 	bool           operator != (const ConvolverFft &other) const = delete;
 

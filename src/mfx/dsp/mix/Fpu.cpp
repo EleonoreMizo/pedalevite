@@ -55,7 +55,7 @@ namespace mix
 
 void	Fpu::scale_1_v (float data_ptr [], int nbr_spl, float vol)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 0.0f)
@@ -78,7 +78,7 @@ void	Fpu::scale_1_v (float data_ptr [], int nbr_spl, float vol)
 
 void	Fpu::scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -110,8 +110,8 @@ void	Fpu::scale_1_vlrauto (float data_ptr [], int nbr_spl, float s_vol, float e_
 
 void	Fpu::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float vol)
 {
-	assert (data_1_ptr != 0);
-	assert (data_2_ptr != 0);
+	assert (data_1_ptr != nullptr);
+	assert (data_2_ptr != nullptr);
 
 	if (vol == 0.0f)
 	{
@@ -135,8 +135,8 @@ void	Fpu::scale_2_v (float data_1_ptr [], float data_2_ptr [], int nbr_spl, floa
 
 void	Fpu::scale_2_vlr (float data_1_ptr [], float data_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (data_1_ptr != 0);
-	assert (data_2_ptr != 0);
+	assert (data_1_ptr != nullptr);
+	assert (data_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -177,11 +177,9 @@ void	Fpu::scale_2_vlrauto (float data_1_ptr [], float data_2_ptr [], int nbr_spl
 
 void	Fpu::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (nbr_spl > 0);
-
-	using namespace std;
 
 	memcpy (out_ptr, in_ptr, nbr_spl * sizeof (out_ptr [0]));
 }
@@ -190,8 +188,8 @@ void	Fpu::copy_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 void	Fpu::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 0.0f)
@@ -218,8 +216,8 @@ void	Fpu::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, floa
 
 void	Fpu::copy_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -251,12 +249,10 @@ void	Fpu::copy_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl
 
 void	Fpu::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
-
-	using namespace std;
 
 	memcpy (out_1_ptr, in_ptr, nbr_spl * sizeof (out_1_ptr [0]));
 	memcpy (out_2_ptr, in_ptr, nbr_spl * sizeof (out_2_ptr [0]));
@@ -266,9 +262,9 @@ void	Fpu::copy_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [
 
 void	Fpu::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 0.0f)
@@ -298,9 +294,9 @@ void	Fpu::copy_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr
 
 void	Fpu::copy_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -334,9 +330,9 @@ void	Fpu::copy_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float 
 
 void	Fpu::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -352,9 +348,9 @@ void	Fpu::copy_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_
 
 void	Fpu::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 0.0f)
@@ -381,9 +377,9 @@ void	Fpu::copy_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_
 
 void	Fpu::copy_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -415,13 +411,11 @@ void	Fpu::copy_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const flo
 
 void	Fpu::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
-
-	using namespace std;
 
 	memcpy (out_1_ptr, in_1_ptr, nbr_spl * sizeof (out_1_ptr [0]));
 	memcpy (out_2_ptr, in_2_ptr, nbr_spl * sizeof (out_2_ptr [0]));
@@ -431,10 +425,10 @@ void	Fpu::copy_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr
 
 void	Fpu::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 0.0f)
@@ -465,10 +459,10 @@ void	Fpu::copy_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_p
 
 void	Fpu::copy_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -511,9 +505,9 @@ void	Fpu::copy_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float 
 
 void	Fpu::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -531,9 +525,9 @@ void	Fpu::copy_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float
 
 void	Fpu::copy_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		divisor = 1.0f / nbr_spl;
@@ -580,9 +574,9 @@ void	Fpu::copy_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const
 
 void	Fpu::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float xf)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -600,9 +594,9 @@ void	Fpu::copy_xfade_2_1_v (float out_ptr [], const float in_1_ptr [], const flo
 
 void	Fpu::copy_xfade_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_xf, float e_xf)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_xf - s_xf) / nbr_spl;
@@ -636,10 +630,10 @@ void	Fpu::copy_xfade_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], con
 
 void	Fpu::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
-	assert (in_3_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
+	assert (in_3_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -666,10 +660,10 @@ void	Fpu::copy_xfade_3_1 (float out_ptr [], const float in_1_ptr [], const float
 
 void	Fpu::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -691,10 +685,10 @@ void	Fpu::copy_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in
 
 void	Fpu::copy_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	StereoLevel		vol = s_vol;
@@ -744,8 +738,8 @@ void	Fpu::copy_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const fl
 
 void	Fpu::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -763,8 +757,8 @@ void	Fpu::copy_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 void	Fpu::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -782,8 +776,8 @@ void	Fpu::copy_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, flo
 
 void	Fpu::copy_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -817,9 +811,9 @@ void	Fpu::copy_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_sp
 
 void	Fpu::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -838,9 +832,9 @@ void	Fpu::copy_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2
 
 void	Fpu::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -859,9 +853,9 @@ void	Fpu::copy_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in
 
 void	Fpu::copy_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -896,11 +890,11 @@ void	Fpu::copy_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const fl
 
 void	Fpu::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], const float in_3_ptr [], const float in_4_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
-	assert (in_3_ptr != 0);
-	assert (in_4_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
+	assert (in_3_ptr != nullptr);
+	assert (in_4_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -921,9 +915,9 @@ void	Fpu::copy_4_4i (float out_ptr [], const float in_1_ptr [], const float in_2
 // Content of the channels 3 and 4 is not specified.
 void	Fpu::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -941,8 +935,8 @@ void	Fpu::copy_2_4i2 (float out_ptr [], const float in_1_ptr [], const float in_
 
 void	Fpu::copy_1_ni1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_chn_out > 0);
 
@@ -967,8 +961,8 @@ void	Fpu::copy_1_ni1 (float out_ptr [], const float in_ptr [], int nbr_spl, int 
 
 void	Fpu::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -984,8 +978,8 @@ void	Fpu::copy_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 void	Fpu::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1001,8 +995,8 @@ void	Fpu::copy_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, flo
 
 void	Fpu::copy_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1034,9 +1028,9 @@ void	Fpu::copy_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_sp
 
 void	Fpu::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1055,9 +1049,9 @@ void	Fpu::copy_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr 
 
 void	Fpu::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1076,9 +1070,9 @@ void	Fpu::copy_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_pt
 
 void	Fpu::copy_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1113,8 +1107,8 @@ void	Fpu::copy_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float
 
 void	Fpu::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1136,11 +1130,11 @@ void	Fpu::copy_4i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 void	Fpu::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [], float out_4_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (out_3_ptr != 0);
-	assert (out_4_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (out_3_ptr != nullptr);
+	assert (out_4_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1160,9 +1154,9 @@ void	Fpu::copy_4i_4 (float out_1_ptr [], float out_2_ptr [], float out_3_ptr [],
 
 void	Fpu::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1180,8 +1174,8 @@ void	Fpu::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr
 
 void	Fpu::copy_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_chn_in > 0);
 
@@ -1206,8 +1200,8 @@ void	Fpu::copy_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int 
 
 void	Fpu::copy_nip_mip (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_out, int nbr_chn_in, int nbr_chn_copy)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_chn_out > 0);
 	assert (nbr_chn_in > 0);
@@ -1246,8 +1240,8 @@ void	Fpu::copy_nip_mip (float out_ptr [], const float in_ptr [], int nbr_spl, in
 
 void	Fpu::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1263,8 +1257,8 @@ void	Fpu::mix_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 void	Fpu::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 1.0f)
@@ -1287,8 +1281,8 @@ void	Fpu::mix_1_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float
 
 void	Fpu::mix_1_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1320,9 +1314,9 @@ void	Fpu::mix_1_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl,
 
 void	Fpu::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1340,9 +1334,9 @@ void	Fpu::mix_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr []
 
 void	Fpu::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 1.0f)
@@ -1367,9 +1361,9 @@ void	Fpu::mix_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr 
 
 void	Fpu::mix_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1403,9 +1397,9 @@ void	Fpu::mix_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float i
 
 void	Fpu::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1421,9 +1415,9 @@ void	Fpu::mix_2_1 (float out_ptr [], const float in_1_ptr [], const float in_2_p
 
 void	Fpu::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 1.0f)
@@ -1446,9 +1440,9 @@ void	Fpu::mix_2_1_v (float out_ptr [], const float in_1_ptr [], const float in_2
 
 void	Fpu::mix_2_1_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1480,10 +1474,10 @@ void	Fpu::mix_2_1_vlrauto (float out_ptr [], const float in_1_ptr [], const floa
 
 void	Fpu::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1502,10 +1496,10 @@ void	Fpu::mix_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr 
 
 void	Fpu::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (vol == 1.0f)
@@ -1531,10 +1525,10 @@ void	Fpu::mix_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_pt
 
 void	Fpu::mix_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1577,9 +1571,9 @@ void	Fpu::mix_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float i
 
 void	Fpu::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol_l, float vol_r)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1597,9 +1591,9 @@ void	Fpu::mix_spread_1_2_v (float out_1_ptr [], float out_2_ptr [], const float 
 
 void	Fpu::mix_spread_1_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol_l, float s_vol_r, float e_vol_l, float e_vol_r)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		divisor = 1.0f / nbr_spl;
@@ -1646,10 +1640,10 @@ void	Fpu::mix_spread_1_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const 
 
 void	Fpu::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1671,10 +1665,10 @@ void	Fpu::mix_mat_2_2_v (float out_1_ptr [], float out_2_ptr [], const float in_
 
 void	Fpu::mix_mat_2_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, const StereoLevel &s_vol, const StereoLevel &e_vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	StereoLevel		vol = s_vol;
@@ -1724,8 +1718,8 @@ void	Fpu::mix_mat_2_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const flo
 
 void	Fpu::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1743,8 +1737,8 @@ void	Fpu::mix_1_2i (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 void	Fpu::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1762,8 +1756,8 @@ void	Fpu::mix_1_2i_v (float out_ptr [], const float in_ptr [], int nbr_spl, floa
 
 void	Fpu::mix_1_2i_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1797,9 +1791,9 @@ void	Fpu::mix_1_2i_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl
 
 void	Fpu::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1818,9 +1812,9 @@ void	Fpu::mix_2_2i (float out_ptr [], const float in_1_ptr [], const float in_2_
 
 void	Fpu::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1839,9 +1833,9 @@ void	Fpu::mix_2_2i_v (float out_ptr [], const float in_1_ptr [], const float in_
 
 void	Fpu::mix_2_2i_vlr (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1884,8 +1878,8 @@ void	Fpu::mix_2_2i_vlrauto (float out_ptr [], const float in_1_ptr [], const flo
 
 void	Fpu::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1901,8 +1895,8 @@ void	Fpu::mix_2i_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 void	Fpu::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1918,8 +1912,8 @@ void	Fpu::mix_2i_1_v (float out_ptr [], const float in_ptr [], int nbr_spl, floa
 
 void	Fpu::mix_2i_1_vlr (float out_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -1951,9 +1945,9 @@ void	Fpu::mix_2i_1_vlrauto (float out_ptr [], const float in_ptr [], int nbr_spl
 
 void	Fpu::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1970,9 +1964,9 @@ void	Fpu::mix_2i_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [
 
 void	Fpu::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -1989,9 +1983,9 @@ void	Fpu::mix_2i_2_v (float out_1_ptr [], float out_2_ptr [], const float in_ptr
 
 void	Fpu::mix_2i_2_vlr (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl, float s_vol, float e_vol)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_vol - s_vol) / nbr_spl;
@@ -2024,8 +2018,8 @@ void	Fpu::mix_2i_2_vlrauto (float out_1_ptr [], float out_2_ptr [], const float 
 
 void	Fpu::mix_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int nbr_chn_in)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_chn_in > 0);
 
@@ -2050,9 +2044,9 @@ void	Fpu::mix_ni1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, int n
 
 void	Fpu::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2079,8 +2073,8 @@ void	Fpu::mult_1_1 (float out_ptr [], const float in_1_ptr [], const float in_2_
 
 void	Fpu::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2098,9 +2092,9 @@ void	Fpu::mult_ip_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl)
 
 void	Fpu::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2119,10 +2113,10 @@ void	Fpu::mult_ip_1_2 (float out_1_ptr [], float out_2_ptr [], const float in_pt
 
 void	Fpu::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_ptr [], const float in_2_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
-	assert (in_1_ptr != 0);
-	assert (in_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
+	assert (in_1_ptr != nullptr);
+	assert (in_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2150,7 +2144,7 @@ void	Fpu::mult_ip_2_2 (float out_1_ptr [], float out_2_ptr [], const float in_1_
 
 void	Fpu::clear (float out_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
+	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	using namespace std;
@@ -2162,7 +2156,7 @@ void	Fpu::clear (float out_ptr [], int nbr_spl)
 
 void	Fpu::clear_nim (float out_ptr [], int nbr_spl, int clear_len, int skip_len)
 {
-	assert (out_ptr != 0);
+	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (clear_len > 0);
 	assert (skip_len >= 0);
@@ -2197,7 +2191,7 @@ void	Fpu::clear_nim (float out_ptr [], int nbr_spl, int clear_len, int skip_len)
 
 void	Fpu::fill (float out_ptr [], int nbr_spl, float val)
 {
-	assert (out_ptr != 0);
+	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2213,7 +2207,7 @@ void	Fpu::fill (float out_ptr [], int nbr_spl, float val)
 
 void	Fpu::fill_lr (float out_ptr [], int nbr_spl, float s_val, float e_val)
 {
-	assert (out_ptr != 0);
+	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const float		step = (e_val - s_val) / nbr_spl;
@@ -2245,7 +2239,7 @@ void	Fpu::fill_lrauto (float out_ptr [], int nbr_spl, float s_val, float e_val)
 
 void	Fpu::add_cst_1_1 (float out_ptr [], int nbr_spl, float val)
 {
-	assert (out_ptr != 0);
+	assert (out_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2261,8 +2255,8 @@ void	Fpu::add_cst_1_1 (float out_ptr [], int nbr_spl, float val)
 
 void	Fpu::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl, float val)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2279,8 +2273,8 @@ void	Fpu::add_cst_1_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl, floa
 
 void	Fpu::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, float mul_val, float add_val)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2296,7 +2290,7 @@ void	Fpu::linop_cst_1_1 (float out_ptr [], const float in_ptr [], int nbr_spl, f
 
 void	Fpu::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_val, float add_val)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2312,8 +2306,8 @@ void	Fpu::linop_cst_ip_1 (float data_ptr [], int nbr_spl, float mul_val, float a
 
 void	Fpu::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl)
 {
-	assert (out_1_ptr != 0);
-	assert (out_2_ptr != 0);
+	assert (out_1_ptr != nullptr);
+	assert (out_2_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	int				pos = 0;
@@ -2332,9 +2326,9 @@ void	Fpu::add_sub_ip_2_2 (float out_1_ptr [], float out_2_ptr [], int nbr_spl)
 
 void	Fpu::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val)
 {
-	assert (out_ptr != 0);
-	assert (src_ptr_arr != 0);
-	assert (src_ptr_arr [0] != 0);
+	assert (out_ptr != nullptr);
+	assert (src_ptr_arr != nullptr);
+	assert (src_ptr_arr [0] != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_chn > 0);
 
@@ -2387,8 +2381,8 @@ void	Fpu::sum_square_n_1 (float out_ptr [], const float * const src_ptr_arr [], 
 
 void	Fpu::sum_square_n_1_v (float out_ptr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn, float init_val, float vol)
 {
-	assert (out_ptr != 0);
-	assert (src_ptr_arr != 0);
+	assert (out_ptr != nullptr);
+	assert (src_ptr_arr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_chn > 0);
 

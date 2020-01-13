@@ -65,9 +65,12 @@ public:
 
 	               SlidingOp ();
 	               SlidingOp (const SlidingOp &other)  = default;
+	               SlidingOp (SlidingOp &&other)       = default;
+
 	virtual        ~SlidingOp ()                       = default;
 
 	SlidingOp &    operator = (const SlidingOp &other) = default;
+	SlidingOp &    operator = (SlidingOp &&other)      = default;
 
 	Operator &     use_ftor ();
 	void           set_length (int len);

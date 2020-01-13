@@ -59,12 +59,6 @@ public:
 	typedef std::shared_ptr <Cell> CellSPtr;
 	typedef std::vector <CellSPtr> CellArray;
 
-	virtual        ~CatalogPluginSettings () = default;
-	               CatalogPluginSettings ()  = default;
-	               CatalogPluginSettings (const CatalogPluginSettings &other) = default;
-	CatalogPluginSettings &
-	               operator = (const CatalogPluginSettings &other)            = default;
-
 	bool           is_empty () const;
 	bool           is_preset_existing (int index) const;
 	void           ser_write (SerWInterface &ser) const;

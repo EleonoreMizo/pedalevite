@@ -72,7 +72,16 @@ public:
 		Flags_AUTOLINK = 1 << 0 // Automatic link to a controller (for example, the filter cutoff on a wha effects)
 	};
 
-	virtual        ~ParamDescInterface () {}
+	               ParamDescInterface ()                        = default;
+	               ParamDescInterface (const ParamDescInterface &other) = default;
+	               ParamDescInterface (ParamDescInterface &&other)      = default;
+
+	virtual        ~ParamDescInterface ()                       = default;
+
+	virtual ParamDescInterface &
+	               operator = (const ParamDescInterface &other) = default;
+	virtual ParamDescInterface &
+	               operator = (ParamDescInterface &&other)      = default;
 
 	inline std::string
 	               get_name (int len) const;

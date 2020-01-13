@@ -22,6 +22,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <utility>
+
+#include <cassert>
+
 
 
 namespace mfx
@@ -39,16 +43,84 @@ namespace dyn
 
 template <class VP, int ORD>
 EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper ()
-:/*	_state ()
+:	_state ()
 ,	_hold_state ()
 ,	_reset_mask ()
-,*/	_coef_atk (1)
+,	_coef_atk (1)
 ,	_coef_rls (1)
 ,	_hold_time (0)
 ,	_hold_t_q (0)
 ,	_hold_counter (0)
 {
 	clear_buffers ();
+}
+
+
+
+template <class VP, int ORD>
+EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other)
+:	_state ()
+,	_hold_state ()
+,	_reset_mask ()
+,	_coef_atk (other._coef_atk)
+,	_coef_rls (other._coef_rls)
+,	_hold_time (other._hold_time)
+,	_hold_t_q (other._hold_t_q)
+,	_hold_counter (other._hold_counter)
+{
+	copy_vect_data (other);
+}
+
+
+
+template <class VP, int ORD>
+EnvFollowerAHR1LrSimdHelper <VP, ORD>::EnvFollowerAHR1LrSimdHelper (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other)
+:	_state ()
+,	_hold_state ()
+,	_reset_mask ()
+,	_coef_atk (std::move (other._coef_atk))
+,	_coef_rls (std::move (other._coef_rls))
+,	_hold_time (std::move (other._hold_time))
+,	_hold_t_q (std::move (other._hold_t_q))
+,	_hold_counter (std::move (other._hold_counter))
+{
+	copy_vect_data (other);
+}
+
+
+
+template <class VP, int ORD>
+EnvFollowerAHR1LrSimdHelper <VP, ORD> &	EnvFollowerAHR1LrSimdHelper <VP, ORD>::operator = (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other)
+{
+	if (this != &other)
+	{
+		copy_vect_data (other);
+		_coef_atk     = other._coef_atk;
+		_coef_rls     = other._coef_rls;
+		_hold_time    = other._hold_time;
+		_hold_t_q     = other._hold_t_q;
+		_hold_counter = other._hold_counter;
+	}
+
+	return *this;
+}
+
+
+
+template <class VP, int ORD>
+EnvFollowerAHR1LrSimdHelper <VP, ORD> &	EnvFollowerAHR1LrSimdHelper <VP, ORD>::operator = (EnvFollowerAHR1LrSimdHelper <VP, ORD> &&other)
+{
+	if (this != &other)
+	{
+		copy_vect_data (other);
+		_coef_atk     = std::move (other._coef_atk);
+		_coef_rls     = std::move (other._coef_rls);
+		_hold_time    = std::move (other._hold_time);
+		_hold_t_q     = std::move (other._hold_t_q);
+		_hold_counter = std::move (other._hold_counter);
+	}
+
+	return *this;
 }
 
 
@@ -174,8 +246,8 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in)
 template <class VP, int ORD>
 void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const auto     zero   = fstb::ToolsSimd::set_f32_zero ();
@@ -286,6 +358,19 @@ void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::clear_buffers ()
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <class VP, int ORD>
+void	EnvFollowerAHR1LrSimdHelper <VP, ORD>::copy_vect_data (const EnvFollowerAHR1LrSimdHelper <VP, ORD> &other)
+{
+	for (int flt = 0; flt < ORD; ++flt)
+	{
+		V128Par::store_f32 (_state [flt], V128Par::load_f32 (other._state [flt]));
+	}
+	V128Par::store_f32 (_hold_state, V128Par::load_f32 (other._hold_state));
+	V128Par::store_f32 (_reset_mask, V128Par::load_f32 (other._reset_mask));
+}
 
 
 

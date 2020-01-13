@@ -48,7 +48,7 @@ namespace pg
 
 
 
-class ParamEdit
+class ParamEdit final
 :	public PageInterface
 {
 
@@ -57,7 +57,6 @@ class ParamEdit
 public:
 
 	explicit       ParamEdit (PageSwitcher &page_switcher, LocEdit &loc_edit);
-	virtual        ~ParamEdit () = default;
 
 
 
@@ -66,17 +65,16 @@ public:
 protected:
 
 	// mfx::uitk::PageInterface
-	virtual void   do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt);
-	virtual void   do_disconnect ();
+	void           do_connect (Model &model, const View &view, PageMgrInterface &page, Vec2d page_size, void *usr_ptr, const FontSet &fnt) final;
+	void           do_disconnect () final;
 
 	// mfx::uitk::MsgHandlerInterface via mfx::uitk::PageInterface
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	virtual void   do_activate_preset (int index);
-	virtual void   do_set_param (int slot_id, int index, float val, PiType type);
-	virtual void   do_remove_plugin (int slot_id);
+	void           do_activate_preset (int index) final;
+	void           do_set_param (int slot_id, int index, float val, PiType type) final;
+	void           do_remove_plugin (int slot_id) final;
 
 
 
@@ -128,7 +126,9 @@ private:
 
 	               ParamEdit ()                               = delete;
 	               ParamEdit (const ParamEdit &other)         = delete;
+	               ParamEdit (ParamEdit &&other)              = delete;
 	ParamEdit &    operator = (const ParamEdit &other)        = delete;
+	ParamEdit &    operator = (ParamEdit &&other)             = delete;
 	bool           operator == (const ParamEdit &other) const = delete;
 	bool           operator != (const ParamEdit &other) const = delete;
 

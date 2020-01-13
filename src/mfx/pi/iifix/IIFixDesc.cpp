@@ -49,7 +49,7 @@ IIFixDesc::IIFixDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Center
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		1000, 4000,
 		"Cutoff Frequency\nCutoff Freq\nCutoff",
 		"Hz",
@@ -57,11 +57,11 @@ IIFixDesc::IIFixDesc ()
 		0,
 		"%5.0f"
 	);
-	log_ptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
-	_desc_set.add_glob (Param_FREQ, log_ptr);
+	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
+	_desc_set.add_glob (Param_FREQ, log_sptr);
 
 	// Level
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1, 4,
 		"Level",
 		"dB",
@@ -69,7 +69,7 @@ IIFixDesc::IIFixDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_LEVEL, log_ptr);
+	_desc_set.add_glob (Param_LEVEL, log_sptr);
 }
 
 

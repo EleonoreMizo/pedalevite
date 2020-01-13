@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/lang/fnc.h"
 #include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/pi/param/Tools.h"
@@ -60,29 +61,29 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 :	_csn_list_base (csn_list)
 ,	_page_switcher (page_switcher)
 ,	_loc_edit (loc_edit)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_fnt_ptr (0)
-,	_win_sptr (     new NWindow (Entry_WINDOW))
-,	_src_sptr (     new NText (Entry_SRC     ))
-,	_step_rel_sptr (new NText (Entry_STEP_REL))
+,	_fnt_ptr (nullptr)
+,	_win_sptr (      std::make_shared <NWindow> (Entry_WINDOW   ))
+,	_src_sptr (      std::make_shared <NText  > (Entry_SRC      ))
+,	_step_rel_sptr ( std::make_shared <NText  > (Entry_STEP_REL ))
 ,	_minmax ()
-,	_val_mod_sptr ( new NText (Entry_VAL_MOD ))
-,	_curve_sptr (   new NText (Entry_CURVE   ))
-,	_curve_gfx_sptr (new NBitmap (Entry_CURVE_GFX))
-,	_u2b_sptr (     new NText (Entry_CONV_U2B))
+,	_val_mod_sptr (  std::make_shared <NText  > (Entry_VAL_MOD  ))
+,	_curve_sptr (    std::make_shared <NText  > (Entry_CURVE    ))
+,	_curve_gfx_sptr (std::make_shared <NBitmap> (Entry_CURVE_GFX))
+,	_u2b_sptr (      std::make_shared <NText  > (Entry_CONV_U2B ))
 ,	_mod_minmax_arr ({{
-		TxtSPtr (    new NText (Entry_MOD_MIN )),
-		TxtSPtr (    new NText (Entry_MOD_MAX ))
+		TxtSPtr (     std::make_shared <NText  > (Entry_MOD_MIN  )),
+		TxtSPtr (     std::make_shared <NText  > (Entry_MOD_MAX  ))
 	}})
-,	_clip_sptr (    new NText (Entry_CLIP    ))
+,	_clip_sptr (     std::make_shared <NText  > (Entry_CLIP     ))
 ,	_clip_val_sptr_arr ({{
-		TxtSPtr (    new NText (Entry_CLIP_S_B)),
-		TxtSPtr (    new NText (Entry_CLIP_S_E)),
-		TxtSPtr (    new NText (Entry_CLIP_D_B)),
-		TxtSPtr (    new NText (Entry_CLIP_D_E))
+		TxtSPtr (     std::make_shared <NText  > (Entry_CLIP_S_B )),
+		TxtSPtr (     std::make_shared <NText  > (Entry_CLIP_S_E )),
+		TxtSPtr (     std::make_shared <NText  > (Entry_CLIP_D_B )),
+		TxtSPtr (     std::make_shared <NText  > (Entry_CLIP_D_E ))
 	}})
 ,	_step_index (0)
 ,	_val_unit_w (0)
@@ -104,12 +105,13 @@ CtrlEdit::CtrlEdit (PageSwitcher &page_switcher, LocEdit &loc_edit, const std::v
 		for (int k = 0; k < _nbr_steps; ++k)
 		{
 			ratio += "\xE2\x9A\xAB";   // MEDIUM BLACK CIRCLE U+26AB
-			gork._step_sptr_arr [k] = TxtSPtr (new NText (_id_step_arr [mm] + k));
+			gork._step_sptr_arr [k] =
+				std::make_shared <NText> (_id_step_arr [mm] + k);
 			gork._step_sptr_arr [k]->set_text (" " + ratio + " ");
 		}
 
-		gork._label_sptr    = TxtSPtr (new NText (_id_label_arr [mm]));
-		gork._val_unit_sptr = TxtSPtr (new NText (_id_val_arr [mm]));
+		gork._label_sptr    = std::make_shared <NText> (_id_label_arr [mm]);
+		gork._val_unit_sptr = std::make_shared <NText> (_id_val_arr [mm]);
 	}
 	_minmax [0]._label_sptr->set_text ("Min  : ");
 	_minmax [1]._label_sptr->set_text ("Max  : ");
@@ -321,7 +323,7 @@ MsgHandlerInterface::EvtProp	CtrlEdit::do_handle_evt (const NodeEvt &evt)
 			}
 			else
 			{
-				_page_switcher.switch_to (pg::PageType_PARAM_CONTROLLERS, 0);
+				_page_switcher.switch_to (pg::PageType_PARAM_CONTROLLERS, nullptr);
 			}
 			ret_val = EvtProp_CATCH;
 			break;
@@ -346,7 +348,7 @@ void	CtrlEdit::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
-	_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+	_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 }
 
 
@@ -383,7 +385,7 @@ void	CtrlEdit::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
-		_page_switcher.switch_to (PageType_PROG_EDIT, 0);
+		_page_switcher.switch_to (PageType_PROG_EDIT, nullptr);
 	}
 }
 
@@ -413,7 +415,7 @@ void	CtrlEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc
 		}
 		else
 		{
-			_page_switcher.switch_to (PageType_PARAM_CONTROLLERS, 0);
+			_page_switcher.switch_to (PageType_PARAM_CONTROLLERS, nullptr);
 		}
 	}
 }
@@ -697,12 +699,12 @@ void	CtrlEdit::update_ctrl_link ()
 	assert (_loc_edit._ctrl_index >= 0);
 	if (_loc_edit._ctrl_abs_flag)
 	{
-		assert (_cls._bind_sptr.get () != 0);
+		assert (_cls._bind_sptr.get () != nullptr);
 		_ctrl_link  = *_cls._bind_sptr;
 	}
 	else
 	{
-		assert (_cls._mod_arr [_loc_edit._ctrl_index].get () != 0);
+		assert (_cls._mod_arr [_loc_edit._ctrl_index].get () != nullptr);
 		_ctrl_link  = *(_cls._mod_arr [_loc_edit._ctrl_index]);
 		_ctrl_index = _loc_edit._ctrl_index;
 	}
@@ -715,11 +717,11 @@ doc::CtrlLink &	CtrlEdit::use_ctrl_link (doc::CtrlLinkSet &cls) const
 	assert (_loc_edit._ctrl_index >= 0);
 	if (_loc_edit._ctrl_abs_flag)
 	{
-		assert (cls._bind_sptr.get () != 0);
+		assert (cls._bind_sptr.get () != nullptr);
 		return *cls._bind_sptr;
 	}
 
-	assert (cls._mod_arr [_loc_edit._ctrl_index].get () != 0);
+	assert (cls._mod_arr [_loc_edit._ctrl_index].get () != nullptr);
 	return *(cls._mod_arr [_loc_edit._ctrl_index]);
 }
 
@@ -730,11 +732,11 @@ const doc::CtrlLink &	CtrlEdit::use_ctrl_link (const doc::CtrlLinkSet &cls) cons
 	assert (_loc_edit._ctrl_index >= 0);
 	if (_loc_edit._ctrl_abs_flag)
 	{
-		assert (cls._bind_sptr.get () != 0);
+		assert (cls._bind_sptr.get () != nullptr);
 		return *cls._bind_sptr;
 	}
 
-	assert (cls._mod_arr [_loc_edit._ctrl_index].get () != 0);
+	assert (cls._mod_arr [_loc_edit._ctrl_index].get () != nullptr);
 	return *(cls._mod_arr [_loc_edit._ctrl_index]);
 }
 
@@ -1050,15 +1052,11 @@ doc::CtrlLinkSet::LinkSPtr	CtrlEdit::create_controller (int csn_index) const
 	doc::CtrlLinkSet::LinkSPtr	sptr;
 	if (_ctrl_index >= 0)
 	{
-		sptr = doc::CtrlLinkSet::LinkSPtr (
-			new doc::CtrlLink (_ctrl_link)
-		);
+		sptr = std::make_shared <doc::CtrlLink> (_ctrl_link);
 	}
 	else
 	{
-		sptr = doc::CtrlLinkSet::LinkSPtr (
-			new doc::CtrlLink
-		);
+		sptr = std::make_shared <doc::CtrlLink> ();
 	}
 
 	sptr->_source = create_source (csn_index);

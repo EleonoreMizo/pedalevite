@@ -105,7 +105,7 @@ void	NWindow::set_coord (Vec2d pos)
 	_coord = pos;
 	const Rect     zone_new (bbox + _coord);
 
-	if (_parent_ptr != 0)
+	if (_parent_ptr != nullptr)
 	{
 		_parent_ptr->invalidate (zone_old);
 		_parent_ptr->invalidate (zone_new);
@@ -117,7 +117,7 @@ void	NWindow::set_coord (Vec2d pos)
 void	NWindow::invalidate_all ()
 {
 	ParentInterface * parent_ptr = get_parent ();
-	if (parent_ptr != 0)
+	if (parent_ptr != nullptr)
 	{
 		Rect           zone (do_get_bounding_box ());
 		zone += get_coord ();
@@ -141,7 +141,7 @@ void	NWindow::do_push_back (NodeSPtr node_sptr)
 
 void	NWindow::do_set_node (int pos, NodeSPtr node_sptr)
 {
-	_node_list [pos]->notify_attachment (0);
+	_node_list [pos]->notify_attachment (nullptr);
 	_node_list [pos] = node_sptr;
 	node_sptr->notify_attachment (this);
 }
@@ -158,7 +158,7 @@ void	NWindow::do_insert (int pos, NodeSPtr node_sptr)
 
 void	NWindow::do_erase (int pos)
 {
-	_node_list [pos]->notify_attachment (0);
+	_node_list [pos]->notify_attachment (nullptr);
 	_node_list.erase (_node_list.begin () + pos);
 }
 
@@ -184,7 +184,7 @@ Vec2d	NWindow::do_get_coord_abs () const
 
 	coord -= _pos_virt;
 
-	if (_parent_ptr != 0)
+	if (_parent_ptr != nullptr)
 	{
 		coord += _parent_ptr->get_coord_abs ();
 	}
@@ -196,7 +196,7 @@ Vec2d	NWindow::do_get_coord_abs () const
 
 void	NWindow::do_invalidate (const Rect &zone)
 {
-	if (_parent_ptr != 0)
+	if (_parent_ptr != nullptr)
 	{
 		Rect           zone_parent (zone + _coord - _pos_virt);
 		_parent_ptr->invalidate (zone_parent);
@@ -283,7 +283,7 @@ void	NWindow::do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d parent_
 
 
 
-void	NWindow::keep_node_visible (NodeInterface &node)
+void	NWindow::keep_node_visible (const NodeInterface &node)
 {
 	const Rect     node_box_orig (node.get_bounding_box ());
 

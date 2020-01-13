@@ -42,7 +42,7 @@ namespace doc
 class SerRInterface;
 class SerWInterface;
 
-class ActionToggleFx
+class ActionToggleFx final
 :	public PedalActionSingleInterface
 {
 
@@ -51,12 +51,18 @@ class ActionToggleFx
 public:
 
 	               ActionToggleFx (const ActionToggleFx &other) = default;
-	virtual        ~ActionToggleFx ()                           = default;
+	               ActionToggleFx (ActionToggleFx &&other)      = default;
+
+	               ~ActionToggleFx ()                           = default;
 
 	ActionToggleFx &
 	               operator = (const ActionToggleFx &other)     = default;
+	ActionToggleFx &
+	               operator = (ActionToggleFx &&other)          = default;
 
-	virtual void   ser_write (SerWInterface &ser) const;
+	// PedalActionSingleInterface
+	void           ser_write (SerWInterface &ser) const final;
+
 	void           ser_read (SerRInterface &ser);
 
 	FxId           _fx_id;
@@ -68,10 +74,9 @@ public:
 protected:
 
 	// PedalActionSingleInterface
-	virtual ActionType
-	               do_get_type () const;
-	virtual PedalActionSingleInterface *
-	               do_duplicate () const;
+	ActionType     do_get_type () const final;
+	std::shared_ptr <PedalActionSingleInterface>
+	               do_duplicate () const final;
 
 
 

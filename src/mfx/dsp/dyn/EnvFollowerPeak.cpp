@@ -104,8 +104,8 @@ void	EnvFollowerPeak::set_time_rel (float t)
 
 void	EnvFollowerPeak::process_block (float out_ptr [], const float in_ptr [], int nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -128,7 +128,7 @@ void	EnvFollowerPeak::process_block (float out_ptr [], const float in_ptr [], in
 
 float	EnvFollowerPeak::analyse_block (const float data_ptr [], int nbr_spl)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	float          state = _state;
@@ -158,15 +158,10 @@ float	EnvFollowerPeak::analyse_block_cst (float x, int nbr_spl)
 	const float    delta = xa - _state;
 	const float    coef  = (delta >= 0) ? _coef_a : _coef_r;
 
-	float          coef_block;
-	if (nbr_spl < 100000)
-	{
-		coef_block = 1 - fstb::ipowp (1 - coef, nbr_spl);
-	}
-	else
-	{
-		coef_block = float (1 - pow (1 - coef, nbr_spl));
-	}
+	const float    coef_block =
+		  (nbr_spl < 100000)
+		? 1 - fstb::ipowp (1 - coef, nbr_spl)
+		: float (1 - pow (1 - coef, nbr_spl));
 
 	_state += delta * coef_block;
 

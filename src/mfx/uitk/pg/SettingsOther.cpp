@@ -57,16 +57,16 @@ namespace pg
 
 SettingsOther::SettingsOther (PageSwitcher &page_switcher)
 :	_page_switcher (page_switcher)
-,	_model_ptr (0)
-,	_view_ptr (0)
-,	_page_ptr (0)
+,	_model_ptr (nullptr)
+,	_view_ptr (nullptr)
+,	_page_ptr (nullptr)
 ,	_page_size ()
-,	_tempo_i_sptr (TxtSPtr (new NText (Entry_TEMPO_I)))
-,	_tempo_f_sptr (TxtSPtr (new NText (Entry_TEMPO_F)))
-,	_click_sptr (  TxtSPtr (new NText (Entry_CLICK  )))
-,	_save_sptr (   TxtSPtr (new NText (Entry_SAVE   )))
-,	_backup_sptr ( TxtSPtr (new NText (Entry_BACKUP )))
-,	_record_sptr ( TxtSPtr (new NText (Entry_RECORD )))
+,	_tempo_i_sptr (std::make_shared <NText> (Entry_TEMPO_I))
+,	_tempo_f_sptr (std::make_shared <NText> (Entry_TEMPO_F))
+,	_click_sptr (  std::make_shared <NText> (Entry_CLICK  ))
+,	_save_sptr (   std::make_shared <NText> (Entry_SAVE   ))
+,	_backup_sptr ( std::make_shared <NText> (Entry_BACKUP ))
+,	_record_sptr ( std::make_shared <NText> (Entry_RECORD ))
 ,	_msg_arg ()
 {
 	_save_sptr->set_text ("Save settings");
@@ -189,10 +189,10 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 				}
 				break;
 			case Entry_BACKUP:
-				_page_switcher.call_page (PageType_MENU_BACKUP, 0, node_id);
+				_page_switcher.call_page (PageType_MENU_BACKUP, nullptr, node_id);
 				break;
 			case Entry_RECORD:
-				_page_switcher.call_page (PageType_REC2DISK, 0, node_id);
+				_page_switcher.call_page (PageType_REC2DISK, nullptr, node_id);
 				break;
 			default:
 				ret_val = EvtProp_PASS;
@@ -200,7 +200,7 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 			}
 			break;
 		case Button_E:
-			_page_switcher.switch_to (pg::PageType_PROG_CUR, 0);
+			_page_switcher.switch_to (pg::PageType_PROG_CUR, nullptr);
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_L:
@@ -247,15 +247,19 @@ MsgHandlerInterface::EvtProp	SettingsOther::change_tempo (double delta)
 
 
 
-void	SettingsOther::do_set_tempo (double /*bpm*/)
+void	SettingsOther::do_set_tempo (double bpm)
 {
+	fstb::unused (bpm);
+
 	refresh_display ();
 }
 
 
 
-void	SettingsOther::do_set_click (bool /*click_flag*/)
+void	SettingsOther::do_set_click (bool click_flag)
 {
+	fstb::unused (click_flag);
+
 	refresh_display ();
 }
 

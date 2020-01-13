@@ -50,14 +50,14 @@ namespace rspl
 
 
 Voice::Voice ()
-:	_interp_ptr (0)
+:	_interp_ptr (nullptr)
 ,	_imp_len (1)
 ,	_group_dly (0)
-,	_data_provider_ptr (0)
+,	_data_provider_ptr (nullptr)
 ,	_ovrspl_l2 (0)
 ,	_sample_freq (44100)
 ,	_fade_time (0.005)
-,	_tmp_buf_ptr (0)
+,	_tmp_buf_ptr (nullptr)
 ,	_tmp_buf_len (0)
 ,	_room_for_lin_src (-1)
 ,	_in_fs (44100)
@@ -98,7 +98,7 @@ void	Voice::set_interpolator (InterpolatorInterface &interp)
 
 const InterpolatorInterface &	Voice::use_interpolator () const
 {
-	assert (_interp_ptr != 0);
+	assert (_interp_ptr != nullptr);
 
 	return (*_interp_ptr);
 }
@@ -107,7 +107,7 @@ const InterpolatorInterface &	Voice::use_interpolator () const
 
 void	Voice::set_tmp_buf (float *buf_ptr, int len)
 {
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 	assert (len > 0);
 
 	_tmp_buf_ptr = buf_ptr;
@@ -148,7 +148,7 @@ void	Voice::set_fade_duration (double fade_time)
 
 bool	Voice::is_active () const
 {
-	return (_data_provider_ptr != 0);
+	return (_data_provider_ptr != nullptr);
 }
 
 
@@ -182,7 +182,7 @@ void	Voice::activate (SplDataRetrievalInterface &data_provider, int64_t len, int
 
 void	Voice::deactivate ()
 {
-	_data_provider_ptr = 0;
+	_data_provider_ptr = nullptr;
 }
 
 
@@ -299,9 +299,9 @@ bool	Voice::is_running_backward () const
 void	Voice::process_block (float *out_ptr_arr [], int nbr_spl)
 {
 	assert (is_active ());
-	assert (_interp_ptr != 0);
-	assert (out_ptr_arr != 0);
-	assert (out_ptr_arr [0] != 0);
+	assert (_interp_ptr != nullptr);
+	assert (out_ptr_arr != nullptr);
+	assert (out_ptr_arr [0] != nullptr);
 	assert (nbr_spl > 0);
 	assert (_rate.get_val_int64 () + _rate_step.get_val_int64 () * nbr_spl > 0);
 

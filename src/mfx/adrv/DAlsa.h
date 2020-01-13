@@ -46,7 +46,7 @@ namespace adrv
 
 
 
-class DAlsa
+class DAlsa final
 :	public DriverInterface
 {
 
@@ -67,12 +67,11 @@ public:
 protected:
 
 	// mfx::adrv::DriverInterface
-	virtual int    do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out);
-	virtual int    do_start ();
-	virtual int    do_stop ();
-	virtual void   do_restart ();
-	virtual std::string
-	               do_get_last_error () const;
+	int            do_init (double &sample_freq, int &max_block_size, CbInterface &callback, const char *driver_0, int chn_idx_in, int chn_idx_out) final;
+	int            do_start () final;
+	int            do_stop () final;
+	void           do_restart () final;
+	std::string    do_get_last_error () const final;
 
 
 
@@ -113,7 +112,9 @@ private:
 private:
 
 	               DAlsa (const DAlsa &other)             = delete;
+	               DAlsa (DAlsa &&other)                  = delete;
 	DAlsa &        operator = (const DAlsa &other)        = delete;
+	DAlsa &        operator = (DAlsa &&other)             = delete;
 	bool           operator == (const DAlsa &other) const = delete;
 	bool           operator != (const DAlsa &other) const = delete;
 

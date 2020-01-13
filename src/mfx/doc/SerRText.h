@@ -40,7 +40,7 @@ namespace doc
 
 
 
-class SerRText
+class SerRText final
 :	public SerRInterface
 {
 
@@ -48,8 +48,7 @@ class SerRText
 
 public:
 
-	               SerRText ()  = default;
-	virtual        ~SerRText () = default;
+	               SerRText () = default;
 
 	void           start (std::string content);
 	int            terminate ();
@@ -64,13 +63,13 @@ public:
 protected:
 
 	// mfx::doc::SerRInterface
-	virtual int    do_begin_list (int &nbr_elt);
-	virtual int    do_end_list ();
-	virtual int    do_read (double &x);
-	virtual int    do_read (std::string &s);
+	int            do_begin_list (int &nbr_elt) final;
+	int            do_end_list () final;
+	int            do_read (double &x) final;
+	int            do_read (std::string &s) final;
 
-	virtual void   do_set_doc_version (int vers);
-	virtual int    do_get_doc_version () const;
+	void           do_set_doc_version (int vers) final;
+	int            do_get_doc_version () const final;
 
 
 
@@ -126,7 +125,9 @@ private:
 private:
 
 	               SerRText (const SerRText &other)          = delete;
+	               SerRText (const SerRText &&other)         = delete;
 	SerRText &     operator = (const SerRText &other)        = delete;
+	SerRText &     operator = (const SerRText &&other)       = delete;
 	bool           operator == (const SerRText &other) const = delete;
 	bool           operator != (const SerRText &other) const = delete;
 

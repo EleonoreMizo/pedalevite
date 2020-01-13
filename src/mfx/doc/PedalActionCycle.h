@@ -57,10 +57,13 @@ public:
 
 	               PedalActionCycle ();
 	               PedalActionCycle (const PedalActionCycle &other);
-	virtual        ~PedalActionCycle () = default;
+	               PedalActionCycle (PedalActionCycle &&other);
+	               ~PedalActionCycle () = default;
 
 	PedalActionCycle &
 	               operator = (const PedalActionCycle &other);
+	PedalActionCycle &
+	               operator = (PedalActionCycle &&other);
 
 	bool           is_empty_default () const;
 	void           merge_cycle (const PedalActionCycle &other);

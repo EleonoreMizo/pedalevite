@@ -47,9 +47,6 @@ class BandParam
 
 public:
 
-	               BandParam ()  = default;
-	virtual        ~BandParam () = default;
-
 	void           set_gain (float gain);
 	float          get_gain () const;
 	void           set_freq (float freq);
@@ -87,8 +84,6 @@ private:
 
 private:
 
-	               BandParam (const BandParam &other)         = delete;
-	BandParam &    operator = (const BandParam &other)        = delete;
 	bool           operator == (const BandParam &other) const = delete;
 	bool           operator != (const BandParam &other) const = delete;
 

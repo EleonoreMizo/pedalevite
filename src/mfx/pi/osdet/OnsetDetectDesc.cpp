@@ -51,17 +51,17 @@ OnsetDetectDesc::OnsetDetectDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
 {
 	// Velocity clipping
-	param::TplEnum *  enu_ptr = new param::TplEnum (
+	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
 		"Velocity clipping",
 		"",
 		0,
 		"%s"
 	);
-	_desc_set.add_glob (Param_VELO_CLIP, enu_ptr);
+	_desc_set.add_glob (Param_VELO_CLIP, enu_sptr);
 
 	// Attack threshold
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		1e-4, 1e-1,
 		"Attack threshold\nAttack thr\nAtk thr\nAT",
 		"dB",
@@ -69,10 +69,10 @@ OnsetDetectDesc::OnsetDetectDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_ATK_THR, log_ptr);
+	_desc_set.add_glob (Param_ATK_THR, log_sptr);
 
 	// Attack ratio
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1, 8,
 		"Attack ratio\nAtk ratio\nAtk R\nAR",
 		"%",
@@ -80,10 +80,10 @@ OnsetDetectDesc::OnsetDetectDesc ()
 		0,
 		"%3.0f"
 	);
-	_desc_set.add_glob (Param_ATK_RATIO, log_ptr);
+	_desc_set.add_glob (Param_ATK_RATIO, log_sptr);
 
 	// Release threshold
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1e-4, 1e-1,
 		"Release threshold\nRelease thr\nRls thr\nRT",
 		"dB",
@@ -91,10 +91,10 @@ OnsetDetectDesc::OnsetDetectDesc ()
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (Param_RLS_THR, log_ptr);
+	_desc_set.add_glob (Param_RLS_THR, log_sptr);
 
 	// Release ratio
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		1, 8,
 		"Release ratio\nRls ratio\nRls R\nRR",
 		"%",
@@ -102,7 +102,7 @@ OnsetDetectDesc::OnsetDetectDesc ()
 		0,
 		"%3.0f"
 	);
-	_desc_set.add_glob (Param_RLS_RATIO, log_ptr);
+	_desc_set.add_glob (Param_RLS_RATIO, log_sptr);
 
 }
 

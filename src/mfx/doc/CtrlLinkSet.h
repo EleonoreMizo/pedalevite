@@ -54,10 +54,12 @@ public:
 	typedef std::shared_ptr <CtrlLink> LinkSPtr;
 	typedef std::vector <LinkSPtr> ModArray;
 
-	               CtrlLinkSet ()  = default;
+	               CtrlLinkSet () = default;
 	               CtrlLinkSet (const CtrlLinkSet &other);
-	virtual        ~CtrlLinkSet () = default;
+	               CtrlLinkSet (CtrlLinkSet &&other);
+	               ~CtrlLinkSet () = default;
 	CtrlLinkSet &  operator = (const CtrlLinkSet &other);
+	CtrlLinkSet &  operator = (CtrlLinkSet &&other);
 
 	bool           operator == (const CtrlLinkSet &other) const;
 	bool           operator != (const CtrlLinkSet &other) const;

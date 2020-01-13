@@ -98,9 +98,6 @@ class SnhTool
 
 public:
 
-	               SnhTool ();
-	virtual        ~SnhTool () {}
-
 	void           set_ovrspl (int ovrspl_l2);
 	void           set_nbr_chn (int nbr_chn);
 	int            get_nbr_chn () const;
@@ -134,7 +131,7 @@ private:
 		float          _hold_val_max; // Only used in transitions. Corresponds to _nbr_sub * _hold_time.
 	};
 
-	typedef	std::array <ChnState, Cst::MAX_NBR_CHN>	ChnStateArray;
+	typedef std::array <ChnState, Cst::MAX_NBR_CHN> ChnStateArray;
 
 	void           process_data_steady_state (float * const data_ptr_arr [], int pos_beg, int pos_end);
 	void           process_data_steady_state_naive (float * const data_ptr_arr [], int pos_beg, int pos_end);
@@ -148,19 +145,19 @@ private:
 	               compute_hold_time (const fstb::FixedPoint &rate, int ovrspl_l2);
 
 	ChnStateArray  _chn_state_arr;
-	int            _nbr_chn;
-	int            _ovrspl_l2;
+	int            _nbr_chn     = 1;
+	int            _ovrspl_l2   = 0;
 
-	int            _hold_time;    // Current hold time
-	int            _rep_index;    // [0 ; _hold_time[
+	int            _hold_time   = 1;   // Current hold time
+	int            _rep_index   = 0;   // [0 ; _hold_time[
 
 	// Fade, interpolation between two hold times
-	float          _interp_val;   // 0 = maximum, 1 = minimum
-	float          _interp_step;
-	int            _rem_spl;      // > 0 if fade is active
+	float          _interp_val  = 0;   // 0 = maximum, 1 = minimum
+	float          _interp_step = 0;
+	int            _rem_spl     = 0;   // > 0 if fade is active
 
-	int            _sub_index;    // Actually "sub" is the longest block
-	int            _nbr_sub;
+	int            _sub_index   = 0;   // Actually "sub" is the longest block
+	int            _nbr_sub     = 1;
 
 
 
@@ -168,10 +165,8 @@ private:
 
 private:
 
-	               SnhTool (const SnhTool &other);
-	SnhTool &      operator = (const SnhTool &other);
-	bool           operator == (const SnhTool &other);
-	bool           operator != (const SnhTool &other);
+	bool           operator == (const SnhTool &other) = delete;
+	bool           operator != (const SnhTool &other) = delete;
 
 };	// class SnhTool
 

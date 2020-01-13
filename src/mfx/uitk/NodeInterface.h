@@ -57,8 +57,6 @@ class NodeInterface
 
 public:
 
-	virtual        ~NodeInterface () = default;
-
 	void           notify_attachment (ParentInterface *cont_ptr);
 	int            get_id () const;
 	Vec2d          get_coord () const;

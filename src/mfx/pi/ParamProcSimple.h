@@ -48,9 +48,9 @@ class ParamProcSimple
 public:
 
 	explicit       ParamProcSimple (ParamStateSet &state_set);
-	virtual        ~ParamProcSimple () = default;
+	               ~ParamProcSimple () = default;
 
-	void           handle_msg (piapi::ProcInfo &proc);
+	void           handle_msg (const piapi::ProcInfo &proc);
 	bool           is_req_steady_state () const;
 	bool           is_full_reset () const;
 
@@ -84,8 +84,11 @@ private:
 
 	               ParamProcSimple ()                               = delete;
 	               ParamProcSimple (const ParamProcSimple &other)   = delete;
+	               ParamProcSimple (ParamProcSimple &&other)        = delete;
 	ParamProcSimple &
 	               operator = (const ParamProcSimple &other)        = delete;
+	ParamProcSimple &
+	               operator = (ParamProcSimple &&other)             = delete;
 	bool           operator == (const ParamProcSimple &other) const = delete;
 	bool           operator != (const ParamProcSimple &other) const = delete;
 

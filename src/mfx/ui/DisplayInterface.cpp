@@ -78,7 +78,7 @@ int	DisplayInterface::get_stride () const
 uint8_t *	DisplayInterface::use_screen_buf ()
 {
 	uint8_t *      buf_ptr = do_use_screen_buf ();
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 
 	return buf_ptr;
 }
@@ -88,7 +88,7 @@ uint8_t *	DisplayInterface::use_screen_buf ()
 const uint8_t *	DisplayInterface::use_screen_buf () const
 {
 	const uint8_t *buf_ptr = do_use_screen_buf ();
-	assert (buf_ptr != 0);
+	assert (buf_ptr != nullptr);
 
 	return buf_ptr;
 }

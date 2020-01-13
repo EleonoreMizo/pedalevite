@@ -144,17 +144,11 @@ void	OscVariSlope::do_tick (int nbr_spl)
 
 double	OscVariSlope::do_get_val () const
 {
-	const double	t = _phase_dist.process_phase (_phase_gen.get_phase ());
-	double			val;
-
-	if (t < _var_time)
-	{
-		val = 1 - _slope_0 * t;
-	}
-	else
-	{
-		val = _slope_1 * t + _base_1;
-	}
+	const double	t   = _phase_dist.process_phase (_phase_gen.get_phase ());
+	double			val =
+		  (t < _var_time)
+		? 1 - _slope_0 * t
+		: _slope_1 * t + _base_1;
 
 	if (_inv_flag)
 	{

@@ -55,9 +55,13 @@
     <OutDir>$(ProjectDir)$(Configuration)$(Platform)\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)$(Platform)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>../pv-code.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -156,11 +160,7 @@
     <ClInclude Include="..\..\..\src\conc\ObjFactoryInterface.hpp" />
     <ClInclude Include="..\..\..\src\conc\ObjPool.h" />
     <ClInclude Include="..\..\..\src\conc\ObjPool.hpp" />
-    <ClInclude Include="..\..\..\src\ffft\Array.h" />
-    <ClInclude Include="..\..\..\src\ffft\Array.hpp" />
     <ClInclude Include="..\..\..\src\ffft\def.h" />
-    <ClInclude Include="..\..\..\src\ffft\DynArray.h" />
-    <ClInclude Include="..\..\..\src\ffft\DynArray.hpp" />
     <ClInclude Include="..\..\..\src\ffft\FFTReal.h" />
     <ClInclude Include="..\..\..\src\ffft\FFTReal.hpp" />
     <ClInclude Include="..\..\..\src\ffft\FFTRealFixLen.h" />
@@ -703,6 +703,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
@@ -1086,6 +1087,7 @@
       <XMLDocumentationFileName>$(IntDir)%(Filename)3.xdc</XMLDocumentationFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\util\ObservableMultiMixin.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\util\NotificationFlagCascadeMulti.cpp" />
     <ClCompile Include="..\..\..\src\hiir\PolyphaseIir2Designer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\adrv\CbInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\adrv\DAlsa.cpp">

@@ -49,11 +49,6 @@ class XFadeShape
 
 public:
 
-	               XFadeShape ()                        = default;
-	               XFadeShape (const XFadeShape &other) = default;
-	virtual        ~XFadeShape ()                       = default;
-	XFadeShape &   operator = (const XFadeShape &other) = default;
-
 	void           set_duration (double duration, float fade_ratio = 1);
 	void           set_sample_freq (double sample_freq);
 

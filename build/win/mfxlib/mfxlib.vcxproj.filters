@@ -2217,19 +2217,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\syn0\Synth0Desc.h">
       <Filter>mfx\pi\syn0</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\ffft\Array.h">
-      <Filter>ffft</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\ffft\Array.hpp">
-      <Filter>ffft</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\ffft\def.h">
-      <Filter>ffft</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\ffft\DynArray.h">
-      <Filter>ffft</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\ffft\DynArray.hpp">
       <Filter>ffft</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ffft\FFTReal.h">
@@ -3050,6 +3038,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.h">
       <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp">
+      <Filter>mfx\pi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4222,6 +4213,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\util\NotificationFlagCascadeMulti.cpp">
+      <Filter>fstb\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -51,7 +51,7 @@ namespace phase2
 
 
 
-class Phaser2
+class Phaser2 final
 :	public piapi::PluginInterface
 {
 
@@ -60,7 +60,6 @@ class Phaser2
 public:
 
 	               Phaser2 ();
-	virtual        ~Phaser2 () = default;
 
 
 
@@ -69,10 +68,10 @@ public:
 protected:
 
 	// mfx::piapi::PluginInterface
-	virtual State  do_get_state () const;
-	virtual double do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const;
-	virtual int    do_reset (double sample_freq, int max_buf_len, int &latency);
-	virtual void   do_process_block (piapi::ProcInfo &proc);
+	State          do_get_state () const final;
+	double         do_get_param_val (piapi::ParamCateg categ, int index, int note_id) const final;
+	int            do_reset (double sample_freq, int max_buf_len, int &latency) final;
+	void           do_process_block (piapi::ProcInfo &proc) final;
 
 
 
@@ -88,7 +87,7 @@ private:
 	public:
 		dsp::iir::AllPass1pChain
 		               _apf;
-		float          _fdbk;
+		float          _fdbk = 0;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;

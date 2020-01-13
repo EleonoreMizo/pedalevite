@@ -51,7 +51,7 @@ public:
 
 	typedef std::vector <std::shared_ptr <CtrlUnit> > CtrlUnitList;
 
-	explicit        ControlledParam (const ParamCoord &param);
+	explicit       ControlledParam (const ParamCoord &param);
 	virtual        ~ControlledParam () = default;
 
 	const ParamCoord &
@@ -85,8 +85,11 @@ private:
 
 	               ControlledParam ()                               = delete;
 	               ControlledParam (const ControlledParam &other)   = delete;
+	               ControlledParam (const ControlledParam &&other)  = delete;
 	ControlledParam &
 	               operator = (const ControlledParam &other)        = delete;
+	ControlledParam &
+	               operator = (const ControlledParam &&other)       = delete;
 	bool           operator == (const ControlledParam &other) const = delete;
 	bool           operator != (const ControlledParam &other) const = delete;
 

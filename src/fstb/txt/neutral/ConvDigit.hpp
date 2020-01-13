@@ -96,22 +96,10 @@ char	ConvDigit::conv_digit_to_char (int x, bool lower_case_flag)
 	assert (x >= 0);
 	assert (x <= 'Z' - 'A' + 10);
 
-	char				c;
-	if (x < 10)
-	{
-		c = char (x + '0');
-	}
-	else
-	{
-		if (lower_case_flag)
-		{
-			c = char (x + 'a' - 10);
-		}
-		else
-		{
-			c = char (x + 'A' - 10);
-		}
-	}
+	const char     c =
+		  (x < 10)          ? char (x + '0')
+		: (lower_case_flag) ? char (x + 'a' - 10)
+		:                     char (x + 'A' - 10);
 
 	return c;
 }
@@ -139,15 +127,7 @@ int	ConvDigit::conv_char_to_digit (char c)
 	assert (   (c >= '0' && c <= '9')
 	        || (c >= 'A' && c <= 'Z'));
 
-	int				x;
-	if (c >= '0' && c <= '9')
-	{
-		x = c - '0';
-	}
-	else
-	{
-		x = c - 'A' + 10;
-	}
+	const int      x = (c >= '0' && c <= '9') ? c - '0' : c - 'A' + 10;
 
 	return x;
 }

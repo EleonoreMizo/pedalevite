@@ -52,7 +52,7 @@ class TplEnum
 public:
 
 	explicit       TplEnum (const char *val_list_0, const char *name_0, const char *unit_0, int group_index = 0, const char *format_0 = "%s");
-	virtual        ~TplEnum () = default;
+	               ~TplEnum () = default;
 
 	void           set_flags (int32_t flags);
 	int            get_nbr_elt () const;
@@ -64,21 +64,17 @@ public:
 protected:
 
 	// mfx::piapi::ParamDescInterface
-	virtual std::string
-	               do_get_name (int len) const;
-	virtual std::string
-	               do_get_unit (int len) const;
-	virtual Range  do_get_range () const;
-	virtual Categ  do_get_categ () const;
-	virtual int32_t
-	               do_get_flags () const;
-	virtual double do_get_nat_min () const;
-	virtual double do_get_nat_max () const;
-	virtual std::string
-	               do_conv_nat_to_str (double nat, int len) const;
-	virtual bool   do_conv_str_to_nat (double &nat, const std::string &txt) const;
-	virtual double do_conv_nrm_to_nat (double nrm) const;
-	virtual double do_conv_nat_to_nrm (double nat) const;
+	std::string    do_get_name (int len) const override;
+	std::string    do_get_unit (int len) const override;
+	Range          do_get_range () const override;
+	Categ          do_get_categ () const override;
+	int32_t        do_get_flags () const override;
+	double         do_get_nat_min () const override;
+	double         do_get_nat_max () const override;
+	std::string    do_conv_nat_to_str (double nat, int len) const override;
+	bool           do_conv_str_to_nat (double &nat, const std::string &txt) const override;
+	double         do_conv_nrm_to_nat (double nrm) const override;
+	double         do_conv_nat_to_nrm (double nat) const override;
 
 
 
@@ -103,7 +99,9 @@ private:
 
 	               TplEnum ()                               = delete;
 	               TplEnum (const TplEnum &other)           = delete;
+	               TplEnum (TplEnum &&other)                = delete;
 	TplEnum &      operator = (const TplEnum &other)        = delete;
+	TplEnum &      operator = (TplEnum &&other)             = delete;
 	bool           operator == (const TplEnum &other) const = delete;
 	bool           operator != (const TplEnum &other) const = delete;
 

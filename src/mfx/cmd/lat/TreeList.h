@@ -49,11 +49,6 @@ class TreeList
 
 public:
 
-	               TreeList ()                        = default;
-	               TreeList (const TreeList &other)   = default;
-	virtual        ~TreeList ()                       = default;
-	TreeList &     operator = (const TreeList &other) = default;
-
 	void           init (GraphInterface &graph);
 	void				restore ();
 
@@ -79,7 +74,6 @@ private:
 		explicit       TreeInfo (int start_index);
 		               TreeInfo ()                        = default;
 		               TreeInfo (const TreeInfo &other)   = default;
-		virtual        ~TreeInfo ()                       = default;
 		TreeInfo &     operator = (const TreeInfo &other) = default;
 
 		int            _nbr_nodes   =  0;

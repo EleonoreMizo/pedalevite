@@ -53,9 +53,12 @@ public:
 	explicit       NodeBase (int node_id);
 	               NodeBase ()                        = default;
 	               NodeBase (const NodeBase &other)   = default;
-	virtual        ~NodeBase ()                       = default;
+	               NodeBase (NodeBase &&other)        = default;
+
+	               ~NodeBase ()                       = default;
 
 	NodeBase &     operator = (const NodeBase &other) = default;
+	NodeBase &     operator = (NodeBase &&other)      = default;
 
 	void           set_node_id (int node_id);
 	ParentInterface *
@@ -72,11 +75,10 @@ protected:
 	static void    invert_zone (uint8_t *buf_ptr, int w, int h, int stride);
 
 	// mfx::uitk::NodeInterface (partial)
-	virtual void   do_notify_attachment (ParentInterface *cont_ptr);
-	virtual int    do_get_id () const;
-	virtual Vec2d  do_get_coord () const;
-	virtual EvtProp
-	               do_handle_evt (const NodeEvt &evt);
+	void           do_notify_attachment (ParentInterface *cont_ptr) override;
+	int            do_get_id () const override;
+	Vec2d          do_get_coord () const override;
+	EvtProp        do_handle_evt (const NodeEvt &evt) override;
 
 
 
@@ -86,7 +88,7 @@ private:
 
 	int            _node_id    = -1;    // Negative: not set
 	ParentInterface *                   // 0 = not attached.
-	               _parent_ptr = 0;
+	               _parent_ptr = nullptr;
 	Vec2d          _coord;
 
 

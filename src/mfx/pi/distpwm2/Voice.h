@@ -48,7 +48,13 @@ class Voice
 public:
 
 	explicit       Voice ();
-	virtual        ~Voice () = default;
+	               Voice (const Voice &other)      = default;
+	               Voice (Voice &&other)           = default;
+
+	               ~Voice ()                       = default;
+
+	Voice &        operator = (const Voice &other) = default;
+	Voice &        operator = (Voice &&other)      = default;
 
 	void           set_pulse_type (PulseType type);
 	void           set_pulse_width (float pw);
@@ -86,7 +92,7 @@ private:
 	static inline float
 	               gen_poly (float x);
 
-	const float    _lvl;       // Pulse amplitude
+	float          _lvl;       // Pulse amplitude
 	PulseType      _pt;
 	float          _pw;        // Pulse duration or half a period, samples, > 1
 	float          _pw_inv;    // 1 / _pw
@@ -98,8 +104,6 @@ private:
 
 private:
 
-	               Voice (const Voice &other)             = delete;
-	Voice &        operator = (const Voice &other)        = delete;
 	bool           operator == (const Voice &other) const = delete;
 	bool           operator != (const Voice &other) const = delete;
 

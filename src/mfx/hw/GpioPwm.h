@@ -199,7 +199,9 @@ private:
 
 	               GpioPwm ()                               = delete;
 	               GpioPwm (const GpioPwm &other)           = delete;
+	               GpioPwm (GpioPwm &&other)                = delete;
 	GpioPwm &      operator = (const GpioPwm &other)        = delete;
+	GpioPwm &      operator = (GpioPwm &&other)             = delete;
 	bool           operator == (const GpioPwm &other) const = delete;
 	bool           operator != (const GpioPwm &other) const = delete;
 

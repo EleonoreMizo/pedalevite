@@ -57,7 +57,6 @@ public:
 	static const int  _max_nbr_chn = 2;
 
 	               FreqShiftCore ();
-	virtual        ~FreqShiftCore () = default;
 
 	void           reset (double sample_freq, int max_buf_len, double &latency);
 	void           set_freq (float f);
@@ -132,8 +131,11 @@ private:
 private:
 
 	               FreqShiftCore (const FreqShiftCore &other)     = delete;
+	               FreqShiftCore (const FreqShiftCore &&other)    = delete;
 	FreqShiftCore &
 	               operator = (const FreqShiftCore &other)        = delete;
+	FreqShiftCore &
+	               operator = (const FreqShiftCore &&other)       = delete;
 	bool           operator == (const FreqShiftCore &other) const = delete;
 	bool           operator != (const FreqShiftCore &other) const = delete;
 

@@ -45,7 +45,7 @@ namespace wnd
 template <class T>
 void	WndInterface <T>::make_win (T data_ptr [], int len)
 {
-	assert (data_ptr != 0);
+	assert (data_ptr != nullptr);
 	assert (len > 0);
 
 	do_make_win (data_ptr, len);

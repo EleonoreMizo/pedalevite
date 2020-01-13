@@ -322,14 +322,12 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32 (int val)
 {
 	const uint32_t c2 = 1431655766U;
 
-	uint32_t       result;
-
 #if defined (_MSC_VER)
 
 	const uint32_t c0 = 0x80000000U;
 	const uint32_t c1 = 2863311531U;
 
-	result   = val;
+	uint32_t       result = val;
 	result <<= 15;
 	result  |= c0;
 	result   = uint32_t (__emulu (result, result) >> 32);
@@ -345,7 +343,7 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32 (int val)
 	int64_t        step_64 (val + (1 << resol));
 	step_64 *= step_64;
 	step_64 *= (1 << (62 - (resol + 1) * 2)) / 3 + 1820;
-	result = uint32_t (step_64 >> (62 - 32 - 1));
+	uint32_t       result = uint32_t (step_64 >> (62 - 32 - 1));
 	result += c2;
 
 #endif
@@ -368,12 +366,10 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32_4th (int val)
 	const uint32_t c3 = 0x06D3A06D;
 	const uint32_t c4 = 0x01B4E81B;
 
-	uint32_t       result;
-
 #if defined (_MSC_VER)
 
 	const uint32_t x_32 = uint32_t (val) << 16;
-	result  = uint32_t (__emulu (c4,     x_32) >> 32);
+	uint32_t       result = uint32_t (__emulu (c4,     x_32) >> 32);
 	result += c3;
 	result  = uint32_t (__emulu (result, x_32) >> 32);
 	result += c2;
@@ -385,7 +381,7 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32_4th (int val)
 #else
 
 	const uint32_t x_32 = uint32_t (val) << 16;
-	result  = uint32_t ((c4 * uint64_t (x_32)) >> 32);
+	uint32_t       result  = uint32_t ((c4 * uint64_t (x_32)) >> 32);
 	result += c3;
 	result  = uint32_t ((result * uint64_t (x_32)) >> 32);
 	result += c2;

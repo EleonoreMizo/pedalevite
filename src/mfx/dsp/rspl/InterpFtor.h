@@ -108,8 +108,10 @@ private:
 
 	               InterpFtor ()                               = delete;
 	               InterpFtor (const InterpFtor &other)        = delete;
+	               InterpFtor (const InterpFtor &&other)       = delete;
 	virtual        ~InterpFtor ()                              = delete;
 	InterpFtor &   operator = (const InterpFtor &other)        = delete;
+	InterpFtor &   operator = (const InterpFtor &&other)       = delete;
 	bool           operator == (const InterpFtor &other) const = delete;
 	bool           operator != (const InterpFtor &other) const = delete;
 

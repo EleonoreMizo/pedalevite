@@ -52,9 +52,6 @@ class SqueezerOpDefect
 
 public:
 
-	               SqueezerOpDefect ()  = default;
-	virtual        ~SqueezerOpDefect () = default;
-
 	inline void    config (float reso, float p1);
 	inline float   process_sample (float x);
 
@@ -80,9 +77,6 @@ private:
 
 private:
 
-	               SqueezerOpDefect (const SqueezerOpDefect <HA> &other)  = delete;
-	SqueezerOpDefect <HA> &
-	               operator = (const SqueezerOpDefect <HA> &other)        = delete;
 	bool           operator == (const SqueezerOpDefect <HA> &other) const = delete;
 	bool           operator != (const SqueezerOpDefect <HA> &other) const = delete;
 

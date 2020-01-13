@@ -47,9 +47,6 @@ class DistoDspBounce
 
 public:
 
-	               DistoDspBounce ()  = default;
-	virtual        ~DistoDspBounce () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           clear_buffers ();
 	inline float   process_sample (float x);
@@ -67,8 +64,8 @@ protected:
 
 private:
 
-	fstb_FORCEINLINE void
-	               bounce (float &val, float &speed_max_loc);
+	fstb_FORCEINLINE float
+	               bounce (float val);
 
 	float          _sample_freq   = 44100;
 	float          _pos           = 0;
@@ -85,9 +82,6 @@ private:
 
 private:
 
-	               DistoDspBounce (const DistoDspBounce &other)    = delete;
-	DistoDspBounce &
-	               operator = (const DistoDspBounce &other)        = delete;
 	bool           operator == (const DistoDspBounce &other) const = delete;
 	bool           operator != (const DistoDspBounce &other) const = delete;
 

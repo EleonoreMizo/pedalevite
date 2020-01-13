@@ -45,7 +45,15 @@ class ParentInterface
 
 public:
 
-	virtual        ~ParentInterface () = default;
+	               ParentInterface ()                             = default;
+	               ParentInterface (const ParentInterface &other) = default;
+	               ParentInterface (ParentInterface &&other)      = default;
+	virtual        ~ParentInterface ()                            = default;
+
+	virtual ParentInterface &
+	               operator = (const ParentInterface &other)      = default;
+	virtual ParentInterface &
+	               operator = (ParentInterface &&other)           = default;
 
 	Vec2d          get_coord_abs () const;
 	void           invalidate (const Rect &zone);

@@ -91,8 +91,8 @@ void	Eq::set_freq_hi (float f)
 
 void	Eq::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	if (_dirty_flag)

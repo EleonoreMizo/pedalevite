@@ -61,9 +61,6 @@ class FreqFast
 
 public:
 
-	               FreqFast ()  = default;
-	virtual        ~FreqFast () = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           set_freq_bot (float f);
 	void           set_freq_top (float f);
@@ -133,11 +130,6 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	               FreqFast (const FreqFast &other)          = delete;
-	FreqFast &     operator = (const FreqFast &other)        = delete;
-	bool           operator == (const FreqFast &other) const = delete;
-	bool           operator != (const FreqFast &other) const = delete;
 
 }; // class FreqFast
 

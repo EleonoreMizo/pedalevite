@@ -60,11 +60,6 @@ public:
 		Type_NBR_ELT
 	};
 
-	               Compander ()                        = default;
-	               Compander (const Compander &other)  = default;
-	virtual        ~Compander ()                       = default;
-	Compander &    operator = (const Compander &other) = default;
-
 	void           set_sample_freq (double sample_freq);
 	void           set_type (Type type);
 	void           set_time (float t);

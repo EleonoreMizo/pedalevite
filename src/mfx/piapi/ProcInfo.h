@@ -58,26 +58,20 @@ public:
 	};
 	typedef std::array <DirInfo, Dir_NBR_ELT> DirInfoArray;
 
-	               ProcInfo ()                        = default;
-	               ProcInfo (const ProcInfo &other)   = default;
-	virtual        ~ProcInfo ()                       = default;
-
-	ProcInfo &     operator = (const ProcInfo &other) = default;
-
 	float * const *
-	               _dst_arr   = 0;
+	               _dst_arr   = nullptr;
 	float * const *
-	               _byp_arr   = 0;
+	               _byp_arr   = nullptr;
 	const float * const *
-	               _src_arr   = 0;
+	               _src_arr   = nullptr;
 	float * const *
-	               _sig_arr   = 0;
+	               _sig_arr   = nullptr;
 
 	DirInfoArray   _dir_arr;
 	BypassState    _byp_state = BypassState_IGNORE; // On input and output
 	int            _nbr_spl   = 0;
 	const EventTs * const *
-	               _evt_arr   = 0;
+	               _evt_arr   = nullptr;
 	int            _nbr_evt   = 0;
 
 

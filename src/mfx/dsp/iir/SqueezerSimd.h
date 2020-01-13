@@ -67,10 +67,14 @@ public:
 
 	               SqueezerSimd ();
 	               SqueezerSimd (const SqueezerSimd <BR, LFOP> &other) = default;
-	virtual        ~SqueezerSimd ()                                    = default;
+	               SqueezerSimd (SqueezerSimd <BR, LFOP> &&other)      = default;
+
+	               ~SqueezerSimd ()                                    = default;
 
 	SqueezerSimd <BR, LFOP> &
 	               operator = (const SqueezerSimd <BR, LFOP> &other)   = default;
+	SqueezerSimd <BR, LFOP> &
+	               operator = (SqueezerSimd <BR, LFOP> &&other)        = default;
 
 	inline void    set_sample_freq (float fs);
 	inline void    set_freq (float f0);

@@ -54,7 +54,16 @@ public:
 		Err_MOVE_ERROR
 	};
 
-	virtual        ~FileIOInterface () = default;
+	               FileIOInterface ()                             = default;
+	               FileIOInterface (const FileIOInterface &other) = default;
+	               FileIOInterface (FileIOInterface &&other)      = default;
+
+	virtual        ~FileIOInterface ()                            = default;
+
+	virtual FileIOInterface &
+	               operator = (const FileIOInterface &other)      = default;
+	virtual FileIOInterface &
+	               operator = (FileIOInterface &&other)           = default;
 
 	int            set_fs_write_mode (bool write_flag);
 	int            write_txt_file (const std::string &pathname, const std::string &content);

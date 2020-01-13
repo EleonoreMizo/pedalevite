@@ -58,11 +58,6 @@ public:
 	typedef conc::LockFreeCell <MsgRet <T> > CellType;
 	typedef std::shared_ptr <QueueType> QueueSPtr;
 
-	               MsgRet ()                            = default;
-	               MsgRet (const MsgRet <T> &other)     = default;
-	               ~MsgRet ()                           = default;
-	MsgRet <T> &   operator = (const MsgRet <T> &other) = default;
-
 	void           clear ();
 	void           set_ret_queue (QueueSPtr ret_queue_sptr, CellType &cell);
 	void           ret ();

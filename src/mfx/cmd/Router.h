@@ -52,9 +52,6 @@ class Router
 
 public:
 
-	               Router ()  = default;
-	virtual        ~Router () = default;
-
 	void           set_process_info (double sample_freq, int max_block_size);
 	void           create_routing (Document &doc, PluginPool &plugin_pool);
 
@@ -108,7 +105,7 @@ private:
 	void           add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool);
 	PluginAux &    create_plugin_aux (Document &doc, PluginPool &plugin_pool, Document::PluginAuxList &aux_list, std::string model);
 	void           connect_delays (Document &doc);
-	void           create_graph_context (Document &doc, PluginPool &plugin_pool);
+	void           create_graph_context (Document &doc, const PluginPool &plugin_pool);
 	void           init_node_categ_list (const Document &doc, NodeCategList &categ_list) const;
 	void           allocate_buf_audio_i (Document &doc, BufAlloc &buf_alloc);
 	void           allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list);
@@ -148,8 +145,6 @@ private:
 
 private:
 
-	               Router (const Router &other)            = delete;
-	Router &       operator = (const Router &other)        = delete;
 	bool           operator == (const Router &other) const = delete;
 	bool           operator != (const Router &other) const = delete;
 

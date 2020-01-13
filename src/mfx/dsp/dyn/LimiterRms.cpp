@@ -46,17 +46,6 @@ namespace dyn
 
 
 
-LimiterRms::LimiterRms ()
-:	_env ()
-,	_buf (_tmp_buf_len)
-,	_lvl (1)
-,	_lvl_sq (1)
-{
-	// Nothing
-}
-
-
-
 void	LimiterRms::set_sample_freq (double fs)
 {
 	_env.set_sample_freq (fs);
@@ -83,8 +72,8 @@ void	LimiterRms::set_level (float l)
 
 void	LimiterRms::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (dst_ptr != 0);
-	assert (src_ptr != 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	const auto     lvl4    = fstb::ToolsSimd::set1_f32 (_lvl);

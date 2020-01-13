@@ -61,8 +61,16 @@ public:
 	};
 	typedef std::vector <ProgCoord> ProgList;
 
-	               UniqueProgList ()  = default;
-	virtual        ~UniqueProgList () = default;
+	               UniqueProgList ()                            = default;
+	               UniqueProgList (const UniqueProgList &other) = default;
+	               UniqueProgList (UniqueProgList &&other)      = default;
+
+	               ~UniqueProgList ()                           = default;
+
+	UniqueProgList &
+	               operator = (const UniqueProgList &other)     = default;
+	UniqueProgList &
+	               operator = (UniqueProgList &&other)          = default;
 
 	ProgList       build (const View &view);
 
@@ -94,9 +102,6 @@ private:
 
 private:
 
-	               UniqueProgList (const UniqueProgList &other)    = delete;
-	UniqueProgList &
-	               operator = (const UniqueProgList &other)        = delete;
 	bool           operator == (const UniqueProgList &other) const = delete;
 	bool           operator != (const UniqueProgList &other) const = delete;
 

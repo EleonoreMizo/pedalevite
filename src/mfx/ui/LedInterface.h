@@ -43,7 +43,16 @@ class LedInterface
 
 public:
 
-	virtual        ~LedInterface () = default;
+	               LedInterface ()                          = default;
+	               LedInterface (const LedInterface &other) = default;
+	               LedInterface (LedInterface &&other)      = default;
+
+	virtual        ~LedInterface ()                         = default;
+
+	virtual LedInterface &
+	               operator = (const LedInterface &other)   = default;
+	virtual LedInterface &
+	               operator = (LedInterface &&other)        = default;
 
 	int            get_nbr_led () const;
 	void           set_led (int index, float val);

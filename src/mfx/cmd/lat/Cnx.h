@@ -49,11 +49,6 @@ class Cnx
 
 public:
 
-	               Cnx ()                               = default;
-	               Cnx (const Cnx &other)               = default;
-	virtual        ~Cnx ()                              = default;
-	Cnx &          operator = (const Cnx &other)        = default;
-
 	void           set_node (piapi::Dir dir, int node_index);
 	int            get_node (piapi::Dir dir) const;
 

@@ -55,7 +55,7 @@ CompexDesc::CompexDesc ()
 
 	// Ratio, Low
 	// Actually it's the inverse of the displayed ratio (0 = flat)
-	TplRat *          rat_ptr = new TplRat (
+	auto           rat_sptr = std::make_shared <TplRat> (
 		1.0 / (1 << 4), 1 << 2,
 		"RL\nRLo\nR.Low\nRatio Low\nRatio below threshold",
 		"",
@@ -63,11 +63,11 @@ CompexDesc::CompexDesc ()
 		0,
 		"%.1f"
 	);
-	_desc_set.add_glob (Param_RATIO_L, rat_ptr);
+	_desc_set.add_glob (Param_RATIO_L, rat_sptr);
 
 	// Ratio, High
 	// Actually it's the inverse of the displayed ratio (0 = flat)
-	rat_ptr = new TplRat (
+	rat_sptr = std::make_shared <TplRat> (
 		1.0 / (1 << 4), 1 << 2,
 		"RH\nRHi\nR.High\nRatio High\nRatio above threshold",
 		"",
@@ -75,32 +75,36 @@ CompexDesc::CompexDesc ()
 		0,
 		"%.1f"
 	);
-	_desc_set.add_glob (Param_RATIO_H, rat_ptr);
+	_desc_set.add_glob (Param_RATIO_H, rat_sptr);
 
 	// Knee Level
-	param::TplLin *   lin_ptr = new param::TplLin (
+	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-14, +2,	// -84 dB ... +12 dB
 		"Th\nThr\nThres\nThreshold",
 		"dB",
 		0,
 		"%+5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_DB_FROM_LOG2);
-	_desc_set.add_glob (Param_KNEE_LVL, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_DB_FROM_LOG2
+	);
+	_desc_set.add_glob (Param_KNEE_LVL, lin_sptr);
 
 	// Knee Shape
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		0, 2,
 		"KS\nKnSh\nKnee S\nKnee shape",
 		"dB",
 		0,
 		"%4.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_DB_FROM_LOG2);
-	_desc_set.add_glob (Param_KNEE_SHAPE, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_DB_FROM_LOG2
+	);
+	_desc_set.add_glob (Param_KNEE_SHAPE, lin_sptr);
 
 	// Attack Time
-	param::TplLog *   log_ptr = new param::TplLog (
+	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.0001, 0.1,
 		"A\nAtk\nAttack\nAttack Time",
 		"ms",
@@ -108,10 +112,10 @@ CompexDesc::CompexDesc ()
 		0,
 		"%5.1f"
 	);
-	_desc_set.add_glob (Param_ATTACK, log_ptr);
+	_desc_set.add_glob (Param_ATTACK, log_sptr);
 
 	// Release Time
-	log_ptr = new param::TplLog (
+	log_sptr = std::make_shared <param::TplLog> (
 		0.001, 1.0,
 		"R\nRls\nRelease\nRelease Time",
 		"ms",
@@ -119,18 +123,20 @@ CompexDesc::CompexDesc ()
 		0,
 		"%4.1f"
 	);
-	_desc_set.add_glob (Param_RELEASE, log_ptr);
+	_desc_set.add_glob (Param_RELEASE, log_sptr);
 
 	// Makeup Gain
-	lin_ptr = new param::TplLin (
+	lin_sptr = std::make_shared <param::TplLin> (
 		-8, +8, // -48 dB ... +48 dB
 		"G\nGain\nMakeup gain",
 		"dB",
 		0,
 		"%+5.1f"
 	);
-	lin_ptr->use_disp_num ().set_preset (param::HelperDispNum::Preset_DB_FROM_LOG2);
-	_desc_set.add_glob (Param_GAIN, lin_ptr);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_DB_FROM_LOG2
+	);
+	_desc_set.add_glob (Param_GAIN, lin_sptr);
 }
 
 

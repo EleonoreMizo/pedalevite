@@ -60,9 +60,12 @@ public:
 	               NText ();
 	explicit       NText (int node_id);
 	               NText (const NText &other)      = default;
+	               NText (NText &&other)           = default;
+
 	virtual        ~NText ()                       = default;
 
 	NText &        operator = (const NText &other) = default;
+	NText &        operator = (NText &&other)      = default;
 
 	void           set_frame (Vec2d size_min, Vec2d margin);
 	void           set_text (std::string txt);
@@ -83,8 +86,8 @@ public:
 protected:
 
 	// mfx::uitk::NodeInterface via mfx::uitk::NBitmap
-	virtual Rect   do_get_bounding_box () const;
-	virtual void   do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d node_coord);
+	Rect           do_get_bounding_box () const override;
+	void           do_redraw (ui::DisplayInterface &disp, Rect clipbox, Vec2d node_coord) override;
 
 
 

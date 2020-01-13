@@ -82,10 +82,14 @@ public:
 
 	               Biquad4Simd ();
 	               Biquad4Simd (const Biquad4Simd <VD, VS, VP> &other);
+	               Biquad4Simd (Biquad4Simd <VD, VS, VP> &&other);
+
 	               ~Biquad4Simd () = default;
 
 	Biquad4Simd <VD, VS, VP> &
 	               operator = (const Biquad4Simd <VD, VS, VP> &other);
+	Biquad4Simd <VD, VS, VP> &
+	               operator = (Biquad4Simd <VD, VS, VP> &&other);
 
 	void           neutralise ();
 	void           neutralise_one (int biq);
