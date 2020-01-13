@@ -1087,7 +1087,6 @@
       <XMLDocumentationFileName>$(IntDir)%(Filename)3.xdc</XMLDocumentationFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\util\ObservableMultiMixin.cpp" />
-    <ClCompile Include="..\..\..\src\fstb\util\NotificationFlagCascadeMulti.cpp" />
     <ClCompile Include="..\..\..\src\hiir\PolyphaseIir2Designer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\adrv\CbInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\adrv\DAlsa.cpp">

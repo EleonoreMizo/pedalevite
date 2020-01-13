@@ -61,8 +61,6 @@ public:
 
 	NotificationFlagCascadeMulti &
 	               operator = (const NotificationFlagCascadeMulti &other) = default;
-	NotificationFlagCascadeMulti &
-	               operator = (NotificationFlagCascadeMulti &&other);
 
 
 
@@ -81,6 +79,11 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	NotificationFlagCascadeMulti &
+	               operator = (NotificationFlagCascadeMulti &&other)             = delete;
+	bool           operator == (const NotificationFlagCascadeMulti &other) const = delete;
+	bool           operator != (const NotificationFlagCascadeMulti &other) const = delete;
 
 }; // class NotificationFlagCascadeMulti
 

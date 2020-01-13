@@ -58,8 +58,6 @@ public:
 
 	NotificationFlagCascadeMixin &
 	               operator = (const NotificationFlagCascadeMixin &other) = default;
-	NotificationFlagCascadeMixin &
-	               operator = (NotificationFlagCascadeMixin &&other) = default;
 
 
 
@@ -90,6 +88,8 @@ private:
 
 private:
 
+	NotificationFlagCascadeMixin &
+	               operator = (NotificationFlagCascadeMixin &&other)             = delete;
 	bool           operator == (const NotificationFlagCascadeMixin &other) const = delete;
 	bool           operator != (const NotificationFlagCascadeMixin &other) const = delete;
 

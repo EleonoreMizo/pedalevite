@@ -129,7 +129,6 @@ commonsrc = \
         ../../src/fstb/util/NotificationFlag.hpp \
         ../../src/fstb/util/NotificationFlagCascadeMixin.h \
         ../../src/fstb/util/NotificationFlagCascadeMixin.hpp \
-        ../../src/fstb/util/NotificationFlagCascadeMulti.cpp \
         ../../src/fstb/util/NotificationFlagCascadeMulti.h \
         ../../src/fstb/util/NotificationFlagCascadeSingle.h \
         ../../src/fstb/util/NotificationFlagInterface.h \

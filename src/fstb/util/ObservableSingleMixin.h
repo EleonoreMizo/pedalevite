@@ -46,6 +46,15 @@ class ObservableSingleMixin
 
 public:
 
+	               ObservableSingleMixin ()                              = default;
+	               ObservableSingleMixin (const ObservableSingleMixin &other) = default;
+	               ObservableSingleMixin (ObservableSingleMixin &&other) = default;
+
+	               ~ObservableSingleMixin ()                             = default;
+
+	ObservableSingleMixin &
+	               operator = (const ObservableSingleMixin &other)       = default;
+
 	inline void    remove_single_observer ();
 
 
@@ -73,6 +82,9 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	ObservableSingleMixin &
+	               operator = (ObservableSingleMixin &&other) = delete;
 
 }; // class ObservableSingleMixin
 

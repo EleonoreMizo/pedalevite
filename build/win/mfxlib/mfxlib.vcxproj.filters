@@ -4214,9 +4214,6 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\fstb\util\NotificationFlagCascadeMulti.cpp">
-      <Filter>fstb\util</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\fstb\README.md">

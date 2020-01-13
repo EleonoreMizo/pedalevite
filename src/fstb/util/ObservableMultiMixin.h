@@ -48,6 +48,15 @@ class ObservableMultiMixin
 
 public:
 
+	               ObservableMultiMixin ()                             = default;
+	               ObservableMultiMixin (const ObservableMultiMixin &other) = default;
+	               ObservableMultiMixin (ObservableMultiMixin &&other) = default;
+
+	               ~ObservableMultiMixin ()                            = default;
+
+	ObservableMultiMixin &
+	               operator = (const ObservableMultiMixin &other)      = default;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -85,6 +94,9 @@ private:
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	ObservableMultiMixin &
+	               operator = (ObservableMultiMixin &&other) = delete;
 
 }; // class ObservableMultiMixin
 
