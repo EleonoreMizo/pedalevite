@@ -448,9 +448,9 @@ void	Preset::fix_routing_converted_from_chain ()
 					const auto  up_it = std::find_if (
 						_routing._cnx_audio_set.begin (),
 						_routing._cnx_audio_set.end (),
-						[slot_id] (const Cnx &cnx)
+						[slot_id] (const Cnx &up_cnx)
 						{
-							const CnxEnd &    up_dst = cnx.use_dst ();
+							const CnxEnd &    up_dst = up_cnx.use_dst ();
 							return (
 								   up_dst.get_type ()    == CnxEnd::Type_NORMAL
 								&& up_dst.get_slot_id () == slot_id
