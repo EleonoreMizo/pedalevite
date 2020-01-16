@@ -85,11 +85,6 @@ std::string	Tools::extract_longest_str (const char src_list_0 [], char delimiter
 	size_t         pos   = 0;
 	while (src_list_0 [pos] != '\0')
 	{
-		if (! result.empty ())
-		{
-			result.push_back (delimiter);
-		}
-
 		std::string    name;
 		const char *   delim_0 = strchr (src_list_0 + pos, delimiter);
 		if (delim_0 == nullptr)
