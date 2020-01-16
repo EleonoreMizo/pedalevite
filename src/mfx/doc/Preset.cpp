@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerWInterface.h"
 #include "mfx/ToolsRouting.h"
 
+#include <utility>
+
 #include <cassert>
 #include <climits>
 
@@ -183,7 +185,7 @@ int	Preset::find_free_port () const
 
 
 
-bool	Preset::check_new_routing (const Routing &routing) const
+bool	Preset::check_routing (const Routing &routing) const
 {
 	// Checks that all referenced nodes exist
 	for (const auto &cnx : routing._cnx_audio_set)
@@ -222,7 +224,7 @@ bool	Preset::check_new_routing (const Routing &routing) const
 
 void	Preset::set_routing (const Routing &routing)
 {
-	assert (check_new_routing (routing));
+	assert (check_routing (routing));
 
 	_routing = routing;
 }
@@ -357,7 +359,14 @@ void	Preset::ser_read (SerRInterface &ser)
 
 	ser.end_list ();
 
-	assert (check_new_routing (_routing));
+	assert (check_routing (_routing));
+
+	// With old chain routing, we need to fix the converted routing for all
+	// the analysis plug-ins with no output, so the audio chain is not broken.
+	if (doc_ver < 10)
+	{
+		fix_routing_converted_from_chain ();
+	}
 }
 
 
@@ -396,6 +405,89 @@ bool	Preset::check_routing_cnx_audio_end (const CnxEnd &cnx_end) const
 	}
 
 	return true;
+}
+
+
+
+void	Preset::fix_routing_converted_from_chain ()
+{
+	// Finds the slot requiring a fix
+	std::set <int> slot_fix_set;
+	for (SlotMap::const_iterator it = _slot_map.begin ()
+	;	it != _slot_map.end ()
+	;	++it)
+	{
+		if (! is_slot_empty (it))
+		{
+			const std::string pi_model = it->second->_pi_model;
+			if (is_plugin_requiring_routing_fix (pi_model))
+			{
+				slot_fix_set.insert (it->first);
+			}
+		}
+	}
+
+	// Fix the connections
+	if (! slot_fix_set.empty ())
+	{
+		Routing::CnxSet   cnx_set;
+		for (Cnx cnx : _routing._cnx_audio_set)
+		{
+			bool        retry_flag = false;
+			do
+			{
+				retry_flag = false;
+				const CnxEnd & src = cnx.use_src ();
+				const CnxEnd::Type   type = src.get_type ();
+				const int      slot_id = src.get_slot_id ();
+				if (   type == CnxEnd::Type_NORMAL
+					 && slot_fix_set.find (slot_id) != slot_fix_set.end ())
+				{
+					// Connection from a node requiring a fix: uses the upstream
+					// source
+					const auto  up_it = std::find_if (
+						_routing._cnx_audio_set.begin (),
+						_routing._cnx_audio_set.end (),
+						[slot_id] (const Cnx &cnx)
+						{
+							const CnxEnd &    up_dst = cnx.use_dst ();
+							return (
+								   up_dst.get_type ()    == CnxEnd::Type_NORMAL
+								&& up_dst.get_slot_id () == slot_id
+							);
+						}
+					);
+					if (up_it == _routing._cnx_audio_set.end ())
+					{
+						assert (false);
+					}
+					else
+					{
+						cnx.use_src () = up_it->use_src ();
+						retry_flag     = true;
+					}
+				}
+			}
+			while (retry_flag);
+
+			cnx_set.insert (cnx);
+		}
+
+		_routing._cnx_audio_set.swap (cnx_set);
+	}
+}
+
+
+
+// These plug-ins have no audio output and are listed in the audio plug-ins.
+bool	Preset::is_plugin_requiring_routing_fix (const std::string &pi_model)
+{
+	return (
+		   pi_model == "envf"
+		|| pi_model == "osdet"
+		|| pi_model == "osdet2"
+		|| pi_model == "pidet"
+	);
 }
 
 

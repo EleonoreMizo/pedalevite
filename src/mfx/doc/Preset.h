@@ -75,7 +75,7 @@ public:
 	const Slot &   use_slot (int slot_id) const;
 	int            gen_slot_id () const;
 	int            find_free_port () const;
-	bool           check_new_routing (const Routing &routing) const;
+	bool           check_routing (const Routing &routing) const;
 	void           set_routing (const Routing &routing);
 	const Routing& use_routing () const;
 
@@ -103,6 +103,9 @@ private:
 
 	void           duplicate_slot_list ();
 	bool           check_routing_cnx_audio_end (const CnxEnd &cnx_end) const;
+	void           fix_routing_converted_from_chain ();
+
+	static bool    is_plugin_requiring_routing_fix (const std::string &pi_model);
 
 	Routing        _routing;
 
