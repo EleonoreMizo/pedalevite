@@ -386,7 +386,7 @@ void	ProgEdit::set_preset_info ()
 		assert (entry._slot_id == _slot_id_list [slot_index]);
 
 		const int      slot_id    = entry._slot_id;
-		std::string    multilabel = "<Empty>";
+		std::string    multilabel = entry._name_multilabel;
 		bool           ctrl_flag  = false;
 
 		const auto     it_slot    = preset._slot_map.find (slot_id);
@@ -394,19 +394,18 @@ void	ProgEdit::set_preset_info ()
 		if (! entry._type.empty ())
 		{
 			const doc::Slot & slot = *(it_slot->second);
-			multilabel = entry._name_multilabel;
 			ctrl_flag  = slot.has_ctrl ();
+		}
 
-			if (entry._instance_nbr >= 0)
-			{
-				char        txt_0 [127+1];
-				fstb::snprintf4all (
-					txt_0, sizeof (txt_0), " %d", entry._instance_nbr + 1
-				);
-				multilabel = pi::param::Tools::join_strings_multi (
-					multilabel.c_str (), '\n', "", txt_0
-				);
-			}
+		if (entry._instance_nbr >= 0)
+		{
+			char        txt_0 [127+1];
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), " %d", entry._instance_nbr + 1
+			);
+			multilabel = pi::param::Tools::join_strings_multi (
+				multilabel.c_str (), '\n', "", txt_0
+			);
 		}
 
 		const char *   prefix_0 = "  ";

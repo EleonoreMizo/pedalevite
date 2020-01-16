@@ -59,6 +59,7 @@ public:
 	               Document ()                      = default;
 	               Document (const Document &other) = default;
 	               Document (Document &&other)      = default;
+	               ~Document ()                     = default;
 
 	typedef std::map <int, bool> InstanceMap; // [Id] = use
 

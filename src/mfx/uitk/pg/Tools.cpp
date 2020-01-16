@@ -917,22 +917,21 @@ int	Tools::extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Pre
 
 		const int      slot_id = it_slot->first;
 		entry._slot_id = slot_id;
+
 		if (! preset.is_slot_empty (it_slot))
 		{
 			const doc::Slot & slot = *(it_slot->second);
 			entry._type = slot._pi_model;
 
-			auto           it_count = type_map.emplace (std::make_pair (
-				slot._pi_model, 0
-			)).first;
-
-			entry._instance_nbr = it_count->second;
-
-			++ it_count->second;
-
 			const auto &   desc = model.get_model_desc (slot._pi_model);
 			entry._name_multilabel = desc.get_name ();
 		}
+
+		auto           it_count = type_map.emplace (std::make_pair (
+			entry._type, 0
+		)).first;
+		entry._instance_nbr = it_count->second;
+		++ it_count->second;
 
 		instance_map [slot_id] = entry;
 	}
@@ -954,22 +953,17 @@ int	Tools::extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Pre
 
 std::string	Tools::build_slot_name_with_index (const NodeEntry &entry)
 {
-	std::string    multilabel ("<Empty>");
+	std::string    multilabel = entry._name_multilabel;
 
-	if (! entry._type.empty ())
+	if (entry._instance_nbr >= 0)
 	{
-		multilabel = entry._name_multilabel;
-
-		if (entry._instance_nbr >= 0)
-		{
-			char        txt_0 [127+1];
-			fstb::snprintf4all (
-				txt_0, sizeof (txt_0), " %d", entry._instance_nbr + 1
-			);
-			multilabel = pi::param::Tools::join_strings_multi (
-				multilabel.c_str (), '\n', "", txt_0
-			);
-		}
+		char        txt_0 [127+1];
+		fstb::snprintf4all (
+			txt_0, sizeof (txt_0), " %d", entry._instance_nbr + 1
+		);
+		multilabel = pi::param::Tools::join_strings_multi (
+			multilabel.c_str (), '\n', "", txt_0
+		);
 	}
 
 	return multilabel;

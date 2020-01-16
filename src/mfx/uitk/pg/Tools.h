@@ -91,7 +91,7 @@ public:
 		int            _slot_id      = -1;
 		int            _instance_nbr = -1;  // -1 = unique instance
 		std::string    _type;               // Empty string: empty slot
-		std::string    _name_multilabel;
+		std::string    _name_multilabel { "<Empty>" };
 	};
 
 	static void    set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_id, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
