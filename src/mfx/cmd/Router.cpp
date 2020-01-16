@@ -66,13 +66,7 @@ void	Router::set_process_info (double sample_freq, int max_block_size)
 
 void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 {
-#if 0
-	// We still keep the old routing method to be on the safe side
-	// if something goes wrong during the development.
-	create_routing_chain (doc, plugin_pool);
-#else
 	create_routing_graph (doc, plugin_pool);
-#endif
 
 	// Checks if the graph has changed since the previous routing
 	fstb::Crc32    crc;
@@ -92,239 +86,8 @@ void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 
 
 
-void	Router::create_routing_chain (Document &doc, PluginPool &plugin_pool)
-{
-	ProcessingContext &  ctx = *doc._ctx_sptr;
-
-	// Final number of channels
-	int            nbr_chn_cur   =
-		ChnMode_get_nbr_chn (doc._chn_mode, piapi::Dir_IN );
-	const int      nbr_chn_final =
-		ChnMode_get_nbr_chn (doc._chn_mode, piapi::Dir_OUT);
-	ctx._nbr_chn_out = nbr_chn_final;
-
-	// Buffers
-	BufAlloc       buf_alloc (Cst::BufSpecial_NBR_ELT);
-
-	std::array <int, piapi::PluginInterface::_max_nbr_chn>   cur_buf_arr;
-	cur_buf_arr.fill (-1);
-
-	// Input
-	ProcessingContextNode::Side & audio_i =
-		ctx._interface_ctx._side_arr [Dir_IN ];
-	audio_i._nbr_chn     = Cst::_nbr_chn_in;
-	audio_i._nbr_chn_tot = audio_i._nbr_chn;
-	for (int i = 0; i < audio_i._nbr_chn; ++i)
-	{
-		const int      buf = buf_alloc.alloc ();
-		audio_i._buf_arr [i] = buf;
-	}
-	assert (nbr_chn_cur <= audio_i._nbr_chn);
-	for (int i = 0; i < nbr_chn_cur; ++i)
-	{
-		cur_buf_arr [i] = audio_i._buf_arr [i];
-	}
-
-	// Plug-ins
-	for (const Slot & slot : doc._slot_list)
-	{
-		const int      pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
-		if (pi_id_main >= 0)
-		{
-			const int      nbr_chn_in      = nbr_chn_cur;
-			const piapi::PluginDescInterface &   desc_main =
-				*plugin_pool.use_plugin (pi_id_main)._desc_ptr;
-			const bool     out_st_flag     = desc_main.prefer_stereo ();
-			const bool     final_mono_flag = (nbr_chn_final == 1);
-			const int      nbr_chn_out     =
-				  (out_st_flag && ! (slot._force_mono_flag || final_mono_flag))
-				? 2
-				: nbr_chn_in;
-
-			const int      latency   = slot._component_arr [PiType_MAIN]._latency;
-
-			const int      pi_id_mix = slot._component_arr [PiType_MIX]._pi_id;
-
-			// Processing context
-			ctx._context_arr.resize (ctx._context_arr.size () + 1);
-			ProcessingContext::PluginContext &  pi_ctx = ctx._context_arr.back ();
-			pi_ctx._mixer_flag = (pi_id_mix >= 0);
-			ProcessingContextNode & ctx_node_main = pi_ctx._node_arr [PiType_MAIN];
-
-			// Main plug-in
-			ctx_node_main._pi_id = pi_id_main;
-			pi_ctx._pi_model = desc_main.get_name ();
-
-			pi_ctx._mix_in_arr.clear ();
-
-			ProcessingContextNode::Side & main_side_i =
-				ctx_node_main._side_arr [Dir_IN ];
-			ProcessingContextNode::Side & main_side_o =
-				ctx_node_main._side_arr [Dir_OUT];
-			int            main_nbr_i = 1;
-			int            main_nbr_o = 1;
-			int            main_nbr_s = 0;
-
-			// Input
-			desc_main.get_nbr_io (main_nbr_i, main_nbr_o, main_nbr_s);
-			main_side_i._nbr_chn     = (main_nbr_i > 0) ? nbr_chn_in : 0;
-			main_side_i._nbr_chn_tot = nbr_chn_in * main_nbr_i;
-			for (int chn = 0; chn < main_side_i._nbr_chn_tot; ++chn)
-			{
-				if (chn < nbr_chn_in)
-				{
-					main_side_i._buf_arr [chn] = cur_buf_arr [chn];
-				}
-				else
-				{
-					main_side_i._buf_arr [chn] = Cst::BufSpecial_SILENCE;
-				}
-			}
-
-			// Output
-			std::array <int, piapi::PluginInterface::_max_nbr_chn>   nxt_buf_arr;
-			main_side_o._nbr_chn     = (main_nbr_o > 0) ? nbr_chn_out : 0;
-			main_side_o._nbr_chn_tot = nbr_chn_out * main_nbr_o;
-			for (int chn = 0; chn < main_side_o._nbr_chn_tot; ++chn)
-			{
-				if (chn < nbr_chn_out && slot._gen_audio_flag)
-				{
-					const int      buf = buf_alloc.alloc ();
-					nxt_buf_arr [chn]          = buf;
-					main_side_o._buf_arr [chn] = buf;
-				}
-				else
-				{
-					main_side_o._buf_arr [chn] = Cst::BufSpecial_TRASH;
-				}
-			}
-
-			// Signals
-			ctx_node_main._nbr_sig = main_nbr_s;
-			const int      nbr_reg_sig =
-				int (slot._component_arr [PiType_MAIN]._sig_port_list.size ());
-			for (int sig = 0; sig < main_nbr_s; ++sig)
-			{
-				ProcessingContextNode::SigInfo & sig_info =
-					ctx_node_main._sig_buf_arr [sig];
-				sig_info._buf_index  = Cst::BufSpecial_TRASH;
-				sig_info._port_index = -1;
-
-				if (sig < nbr_reg_sig)
-				{
-					const int      port_index =
-						slot._component_arr [PiType_MAIN]._sig_port_list [sig];
-					if (port_index >= 0)
-					{
-						sig_info._buf_index  = buf_alloc.alloc ();
-						sig_info._port_index = port_index;
-					}
-				}
-			}
-
-			// With dry/wet mixer
-			if (pi_id_mix >= 0)
-			{
-				assert (slot._gen_audio_flag);
-
-				ProcessingContextNode & ctx_node_mix = pi_ctx._node_arr [PiType_MIX];
-
-				ctx_node_mix._aux_param_flag = true;
-				ctx_node_mix._comp_delay     = latency;
-				ctx_node_mix._pin_mult       = 1;
-
-				ctx_node_mix._pi_id = pi_id_mix;
-				ProcessingContextNode::Side & mix_side_i =
-					ctx_node_mix._side_arr [Dir_IN ];
-				ProcessingContextNode::Side & mix_side_o =
-					ctx_node_mix._side_arr [Dir_OUT];
-
-				ctx_node_mix._nbr_sig = 0;
-
-				// Bypass output for the main plug-in
-				for (int chn = 0; chn < nbr_chn_out * main_nbr_o; ++chn)
-				{
-					pi_ctx._bypass_buf_arr [chn] = buf_alloc.alloc ();
-				}
-
-				// Dry/wet input
-				mix_side_i._nbr_chn     = nbr_chn_out;
-				mix_side_i._nbr_chn_tot = nbr_chn_out * 2;
-				for (int chn = 0; chn < nbr_chn_out; ++chn)
-				{
-					// 1st pin: main output
-					mix_side_i._buf_arr [              chn] = nxt_buf_arr [chn];
-
-					// 2nd pin: main input as default bypass
-					const int       chn_in = clip_channel (chn, nbr_chn_in);
-					const int       buf    = cur_buf_arr [chn_in];
-					mix_side_i._buf_arr [nbr_chn_out + chn] = buf;
-				}
-
-				// Dry/wet output
-				std::array <int, piapi::PluginInterface::_max_nbr_chn>   mix_buf_arr;
-				mix_side_o._nbr_chn     = nbr_chn_out;
-				mix_side_o._nbr_chn_tot = nbr_chn_out;
-				for (int chn = 0; chn < nbr_chn_out; ++chn)
-				{
-					const int      buf = buf_alloc.alloc ();
-					mix_buf_arr [chn]         = buf;
-					mix_side_o._buf_arr [chn] = buf;
-				}
-
-				// Shift buffers
-				for (int chn = 0; chn < nbr_chn_out * main_nbr_o; ++chn)
-				{
-					buf_alloc.ret (pi_ctx._bypass_buf_arr [chn]);
-				}
-				for (int chn = 0; chn < nbr_chn_out; ++chn)
-				{
-					buf_alloc.ret (nxt_buf_arr [chn]);
-					nxt_buf_arr [chn] = mix_buf_arr [chn];
-				}
-			}
-
-			// Output buffers become the next input buffers
-			if (slot._gen_audio_flag)
-			{
-				for (int chn = 0; chn < nbr_chn_out; ++chn)
-				{
-					if (chn < nbr_chn_in)
-					{
-						buf_alloc.ret (cur_buf_arr [chn]);
-					}
-					cur_buf_arr [chn] = nxt_buf_arr [chn];
-				}
-				nbr_chn_cur = nbr_chn_out;
-			}
-		}
-	}
-
-	// Output
-	ProcessingContextNode::Side & audio_o =
-		ctx._interface_ctx._side_arr [Dir_OUT];
-	audio_o._nbr_chn     = Cst::_nbr_chn_out;
-	audio_o._nbr_chn_tot = audio_o._nbr_chn;
-	for (int i = 0; i < audio_o._nbr_chn; ++i)
-	{
-		const int      chn_src = clip_channel (i, nbr_chn_cur);
-		audio_o._buf_arr [i] = cur_buf_arr [chn_src];
-	}
-
-	for (int chn = 0; chn < nbr_chn_cur; ++chn)
-	{
-		buf_alloc.ret (cur_buf_arr [chn]);
-	}
-}
-
-
-
 void	Router::create_routing_graph (Document &doc, PluginPool &plugin_pool)
 {
-	/*** To do: temporary ***/
-	make_graph_from_chain (doc);
-	/*** To do: temporary ***/
-
 	doc._ctx_sptr->_nbr_chn_out =
 		ChnMode_get_nbr_chn (doc._chn_mode, piapi::Dir_OUT);
 
@@ -354,96 +117,6 @@ void	Router::create_routing_graph (Document &doc, PluginPool &plugin_pool)
 	// Now we can create the roadmap which will be sent to the audio thread.
 	create_graph_context (doc, plugin_pool);
 }
-
-
-
-// This macro enables a second parallel path (just a single connection) and
-// helps testing mixing features as well as additional compensation delays.
-#undef Router_make_graph_from_chain_TEST
-
-// Completes the Document structure to turn the implicit slot chain into
-// a true graph.
-void	Router::make_graph_from_chain (Document &doc)
-{
-	doc._cnx_list.clear ();
-
-	const int      nbr_slots = int (doc._slot_list.size ());
-
-#if defined (Router_make_graph_from_chain_TEST)
-	int            slot_src_test = -1;
-	int            slot_dst_test = -1;
-#endif
-
-	// This is the current source for the audio processing
-	int               slot_src  = 0;
-	CnxEnd::SlotType  slot_type = CnxEnd::SlotType_IO;
-
-	for (int slot_pos = 0; slot_pos < nbr_slots; ++slot_pos)
-	{
-		const Slot &   slot = doc._slot_list [slot_pos];
-		const int      pi_id_main = slot._component_arr [PiType_MAIN]._pi_id;
-		if (pi_id_main >= 0)
-		{
-			// Connects the plug-in to the source
-			Cnx            cnx;
-			cnx._src._slot_type = slot_type;
-			cnx._src._slot_pos  = slot_src;
-			cnx._src._pin       = 0;
-			cnx._dst._slot_type = CnxEnd::SlotType_NORMAL;
-			cnx._dst._slot_pos  = slot_pos;
-			cnx._dst._pin       = 0;
-			doc._cnx_list.push_back (cnx);
-
-			// The plug-in becomes the new source only if it generates audio
-			if (slot._gen_audio_flag)
-			{
-#if defined (Router_make_graph_from_chain_TEST)
-				if (slot_src_test < 0)
-				{
-					slot_src_test = slot_pos;
-				}
-				else
-				{
-					slot_dst_test = slot_pos;
-				}
-#endif
-				slot_type = CnxEnd::SlotType_NORMAL;
-				slot_src  = slot_pos;
-			}
-		}
-	}
-
-	// Last connection to the audio output
-	Cnx            cnx;
-	cnx._src._slot_type = slot_type;
-	cnx._src._slot_pos  = slot_src;
-	cnx._src._pin       = 0;
-	cnx._dst._slot_type = CnxEnd::SlotType_IO;
-	cnx._dst._slot_pos  = 0;
-	cnx._dst._pin       = 0;
-	doc._cnx_list.push_back (cnx);
-
-#if defined (Router_make_graph_from_chain_TEST)
-	if (nbr_slots >= 2 && slot_src_test >= 0)
-	{
-		// Adds a connection from the output of the first slot to the audio
-		// output
-		cnx._src._slot_type = CnxEnd::SlotType_NORMAL;
-		cnx._src._slot_pos  = slot_src_test;
-		cnx._src._pin       = 0;
-		if (nbr_slots >= 3 && slot_dst_test >= 0)
-		{
-			// The destination becomes the input of the last slot
-			cnx._dst._slot_type = CnxEnd::SlotType_NORMAL;
-			cnx._dst._slot_pos  = slot_dst_test;
-			cnx._dst._pin       = 0;
-		}
-		doc._cnx_list.push_back (cnx);
-	}
-#endif
-}
-
-#undef Router_make_graph_from_chain_TEST
 
 
 
@@ -795,6 +468,9 @@ void	Router::create_graph_context (Document &doc, const PluginPool &plugin_pool)
 	NodeInfo &     node_info_io = categ_list [CnxEnd::SlotType_IO] [0];
 	check_source_nodes (doc, plugin_pool, buf_alloc, categ_list, node_info_io);
 
+	// At this point, if the audio output is not connected, its node is empty,
+	// only _nbr_chn is valid.
+
 	// Allocates output buffers if necessary, and add a reference for
 	// all of them to make sure they are kept allocated
 	allocate_buf_audio_o (doc, buf_alloc, categ_list);
@@ -888,7 +564,7 @@ void	Router::allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const Nod
 	audio_o._nbr_chn     = ctx._nbr_chn_out;
 	audio_o._nbr_chn_tot = nbr_pins * audio_o._nbr_chn;
 	assert (audio_o._nbr_chn_tot <= Cst::_nbr_chn_out);
-	assert (int (node_info._cnx_src_list.size ()) == nbr_pins);
+	assert (int (node_info._cnx_src_list.size ()) <= nbr_pins);
 
 	ctx._interface_mix.clear (); // Default: no mix
 
@@ -1019,7 +695,7 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 				const piapi::PluginDescInterface &   desc_main =
 					*plugin_pool.use_plugin (pi_id_main)._desc_ptr;
 				const bool     out_st_flag = desc_main.prefer_stereo ();
-				pi_model = desc_main.get_name ();
+				pi_model = desc_main.get_unique_id ();
 				desc_main.get_nbr_io (main_nbr_i, main_nbr_o, main_nbr_s);
 
 				pi_id_mix  = slot._component_arr [PiType_MIX ]._pi_id;
@@ -1427,6 +1103,7 @@ void	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_
 void	Router::free_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr)
 {
 	const bool     mix_flag = ! mix_in_arr.empty ();
+	const int      nbr_pins_cnx = int (node_info._cnx_src_list.size ());
 
 	for (int pin_cnt = 0; pin_cnt < nbr_pins_ctx; ++pin_cnt)
 	{
@@ -1442,22 +1119,25 @@ void	Router::free_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, c
 		}
 
 		// Releases the mixed output pins from the source nodes
-		const Document::CnxList &  cnx_list =
-			node_info._cnx_src_list [pin_cnt];
-		for (auto &cnx_src : cnx_list)
+		if (pin_cnt < nbr_pins_cnx)
 		{
-			if (cnx_src._src._slot_type != CnxEnd::SlotType_IO)
+			const Document::CnxList &  cnx_list =
+				node_info._cnx_src_list [pin_cnt];
+			for (auto &cnx_src : cnx_list)
 			{
-				const ProcessingContextNode::Side & src_side_o =
-					use_source_side (categ_list, ctx, cnx_src);
-
-				const int      nbr_chn_src = src_side_o._nbr_chn;
-				const int      chn_ofs_src = cnx_src._src._pin * nbr_chn_src;
-				for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
+				if (cnx_src._src._slot_type != CnxEnd::SlotType_IO)
 				{
-					const int      buf =
-						src_side_o._buf_arr [chn_ofs_src + chn_cnt];
-					buf_alloc.ret_if_std (buf);
+					const ProcessingContextNode::Side & src_side_o =
+						use_source_side (categ_list, ctx, cnx_src);
+
+					const int      nbr_chn_src = src_side_o._nbr_chn;
+					const int      chn_ofs_src = cnx_src._src._pin * nbr_chn_src;
+					for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
+					{
+						const int      buf =
+							src_side_o._buf_arr [chn_ofs_src + chn_cnt];
+						buf_alloc.ret_if_std (buf);
+					}
 				}
 			}
 		}

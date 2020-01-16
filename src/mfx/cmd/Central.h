@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/cmd/Cnx.h"
 #include "mfx/cmd/Document.h"
 #include "mfx/cmd/Plugin.h"
 #include "mfx/cmd/Router.h"
@@ -115,6 +116,8 @@ public:
 	void           set_chn_mode (ChnMode mode);
 	void           set_master_vol (double vol);
 	void           set_prog_switch_mode (doc::ProgSwitchMode prog_switch_mode);
+	void           clear_routing ();
+	void           add_cnx (const Cnx &cnx);
 
 	// Immediate operations
 	void           set_param (int pi_id, int index, float val);

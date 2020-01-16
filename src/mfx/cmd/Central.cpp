@@ -631,6 +631,32 @@ void	Central::set_prog_switch_mode (doc::ProgSwitchMode prog_switch_mode)
 
 
 
+void	Central::clear_routing ()
+{
+	modify ();
+
+	_new_sptr->_cnx_list.clear ();
+}
+
+
+
+void	Central::add_cnx (const Cnx &cnx)
+{
+	assert (   cnx.is_valid ());
+	assert (   cnx._src._slot_type != CnxEnd::SlotType_DLY);
+	assert (   cnx._src._slot_type == CnxEnd::SlotType_IO
+	        || cnx._src._slot_pos < int (_new_sptr->_slot_list.size ()));
+	assert (   cnx._dst._slot_type != CnxEnd::SlotType_DLY);
+	assert (   cnx._dst._slot_type == CnxEnd::SlotType_IO
+	        || cnx._dst._slot_pos < int (_new_sptr->_slot_list.size ()));
+
+	modify ();
+
+	_new_sptr->_cnx_list.push_back (cnx);
+}
+
+
+
 void	Central::set_param (int pi_id, int index, float val)
 {
 	assert (pi_id >= 0);

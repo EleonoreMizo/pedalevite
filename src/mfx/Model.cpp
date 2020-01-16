@@ -25,9 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
-#include "mfx/pi/dwm/DryWetDesc.h"
-#include "mfx/pi/dwm/Param.h"
-#include "mfx/pi/tuner/Tuner.h"
+#include "mfx/cmd/Cnx.h"
 #include "mfx/doc/ActionBank.h"
 #include "mfx/doc/ActionClick.h"
 #include "mfx/doc/ActionParam.h"
@@ -39,6 +37,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
+#include "mfx/pi/dwm/DryWetDesc.h"
+#include "mfx/pi/dwm/Param.h"
+#include "mfx/pi/tuner/Tuner.h"
 #include "mfx/FileIOInterface.h"
 #include "mfx/Model.h"
 #include "mfx/ModelMsgCmdConfLdSv.h"
@@ -1695,6 +1696,7 @@ void	Model::apply_settings_normal ()
 {
 	_pi_id_map.clear ();
 	_slot_info.clear ();
+	SlotIdToPosMap slot_pos_map;
 
 	_central.set_prog_switch_mode (_preset_cur._prog_switch_mode);
 
@@ -1705,21 +1707,33 @@ void	Model::apply_settings_normal ()
 	);
 	const int      nbr_slots = int (onl.size ());
 
+	// Adds all plug-ins
 	int            slot_index_central = 0;
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
 		const bool     audio_flag = (slot_index >= audio_pos);
 		const int      slot_id    = onl [slot_index];
+
+		// Fills the map between slot_ids and slot positions in Central
+		slot_pos_map [slot_id] = slot_index_central;
+
 		auto           it_id_map  =
 			_pi_id_map.insert (std::make_pair (slot_id, SlotPiId ())).first;
 		auto           it_slot    = _preset_cur._slot_map.find (slot_id);
 		assert (it_slot != _preset_cur._slot_map.end ());
 
-		// Full slot
-		if (! _preset_cur.is_slot_empty (it_slot))
-		{
-			_central.insert_slot (slot_index_central);
+		// Adds a slot in central
+		_central.insert_slot (slot_index_central);
 
+		// Empty slot
+		if (_preset_cur.is_slot_empty (it_slot))
+		{
+			_central.remove_mixer (slot_index_central);
+		}
+
+		// Full slot
+		else
+		{
 			doc::Slot &	   slot = *(it_slot->second);
 
 			const piapi::PluginDescInterface &	desc =
@@ -1758,14 +1772,20 @@ void	Model::apply_settings_normal ()
 				}
 				_central.set_sig_source (pi_id, sig_index, port_id);
 			}
-
-			++ slot_index_central;
 		}
+
+		++ slot_index_central;
 	}
 
-	// Finally, the click
+	// Makes sure there is no duplicate slot_id
+	assert (int (slot_pos_map.size ()) == nbr_slots);
+
+	// Then the click
+	int            pos_click = -1;
 	if (_click_flag)
 	{
+		pos_click = slot_index_central;
+
 		_central.insert_slot (slot_index_central);
 		_central.remove_mixer (slot_index_central);
 
@@ -1777,6 +1797,22 @@ void	Model::apply_settings_normal ()
 	}
 
 	assert (_preset_cur._slot_map.size () == _pi_id_map.size ());
+
+	// Now, the routing
+	apply_routing (slot_pos_map);
+
+	// Routing for the click
+	if (_click_flag)
+	{
+		cmd::Cnx       cnx;
+		cnx._src._slot_type = cmd::CnxEnd::SlotType_NORMAL;
+		cnx._src._slot_pos  = pos_click;
+		cnx._src._pin       = 0;
+		cnx._dst._slot_type = cmd::CnxEnd::SlotType_IO;
+		cnx._dst._slot_pos  = 0;
+		cnx._dst._pin       = 0;
+		_central.add_cnx (cnx);
+	}
 }
 
 
@@ -1794,6 +1830,30 @@ void	Model::apply_settings_tuner ()
 		_central.use_pi_pool ().use_plugin (_tuner_pi_id);
 	_tuner_ptr = dynamic_cast <pi::tuner::Tuner *> (details._pi_uptr.get ());
 	assert (_tuner_ptr != nullptr);
+
+	// Routing
+	_central.clear_routing ();
+	cmd::Cnx       cnx;
+	cnx._src._slot_type = cmd::CnxEnd::SlotType_IO;
+	cnx._src._slot_pos  = 0;
+	cnx._src._pin       = 0;
+	cnx._dst._slot_type = cmd::CnxEnd::SlotType_NORMAL;
+	cnx._dst._slot_pos  = 0;
+	cnx._dst._pin       = 0;
+	_central.add_cnx (cnx);
+}
+
+
+
+void	Model::apply_routing (const SlotIdToPosMap &pos_map)
+{
+	_central.clear_routing ();
+
+	for (const doc::Cnx &cnx_d : _preset_cur.use_routing ()._cnx_audio_set)
+	{
+		const cmd::Cnx cnx_c { convert_connection (cnx_d, pos_map) };
+		_central.add_cnx (cnx_c);
+	}
 }
 
 
@@ -3254,6 +3314,45 @@ void	Model::process_async_cmd ()
 		}
 	}
 	while (cell_ptr != nullptr);
+}
+
+
+
+cmd::Cnx	Model::convert_connection (const doc::Cnx &cnx_doc, const SlotIdToPosMap &pos_map)
+{
+	assert (cnx_doc.is_valid ());
+
+	cmd::Cnx       cnx;
+
+	convert_cnx_end (cnx._src, cnx_doc.use_src (), pos_map);
+	convert_cnx_end (cnx._dst, cnx_doc.use_dst (), pos_map);
+
+	return cnx;
+}
+
+
+
+void	Model::convert_cnx_end (cmd::CnxEnd &ce_c, const doc::CnxEnd &ce_d, const SlotIdToPosMap &pos_map)
+{
+	if (ce_d.get_type () == doc::CnxEnd::Type_IO)
+	{
+		ce_c._slot_type = cmd::CnxEnd::SlotType_IO;
+		ce_c._slot_pos  = 0;
+		ce_c._pin       = ce_d.get_pin ();
+	}
+	else
+	{
+		assert (ce_d.get_type () == doc::CnxEnd::Type_NORMAL);
+		const int      slot_id = ce_d.get_slot_id ();
+		const SlotIdToPosMap::const_iterator it = pos_map.find (slot_id);
+		assert (it != pos_map.end ());
+		const int      slot_pos = it->second;
+		assert (slot_pos >= 0);
+
+		ce_c._slot_type = cmd::CnxEnd::SlotType_NORMAL;
+		ce_c._slot_pos  = slot_pos;
+		ce_c._pin       = ce_d.get_pin ();
+	}
 }
 
 

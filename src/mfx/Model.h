@@ -51,6 +51,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
+namespace cmd
+{
+	class Cnx;
+	class CnxEnd;
+}
+
 namespace doc
 {
 	class ActionBank;
@@ -257,11 +263,14 @@ private:
 	};
 	typedef std::multimap <int, ParamUpdate> ParamUpdateMap; // [slot_id] = instruction
 
+	typedef std::map <int, int> SlotIdToPosMap; // [slot_id] = slot position with Document
+
 	void           update_layout ();
 	void           preinstantiate_all_plugins_from_bank ();
 	void           apply_settings ();
 	void           apply_settings_normal ();
 	void           apply_settings_tuner ();
+	void           apply_routing (const SlotIdToPosMap &pos_map);
 	int            insert_plugin_main (doc::Slot &slot, int slot_id, PiIdMap::iterator it_id_map, int slot_index_central, bool gen_audio_flag);
 	void           check_mixer_plugin (int slot_id, int slot_index_central, int chain_flag);
 	bool           has_mixer_plugin (const doc::Preset &preset, int slot_id);
@@ -305,6 +314,10 @@ private:
 	void           clear_signal_port (int port_id, bool req_exist_flag);
 	void           apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings, bool ctrl_flag, bool pres_flag);
 	void           process_async_cmd ();
+
+	static cmd::Cnx
+	               convert_connection (const doc::Cnx &cnx_doc, const SlotIdToPosMap &pos_map);
+	static void    convert_cnx_end (cmd::CnxEnd &ce_c, const doc::CnxEnd &ce_d, const SlotIdToPosMap &pos_map);
 
 	cmd::Central   _central;
 	double         _sample_freq;        // Hz. 0 = not set

@@ -84,6 +84,7 @@ private:
 	class NodeInfo
 	{
 	public:
+		// _visit_flag and _ctx_index are not set for the audio I/O node.
 		bool           _visit_flag  = false;
 		int            _ctx_index   = -1; // Set when visited
 		PinDstInfoNode _pin_dst_list;
@@ -95,9 +96,7 @@ private:
 	typedef std::vector <NodeInfo> NodeCateg;
 	typedef std::array <NodeCateg, CnxEnd::SlotType_NBR_ELT> NodeCategList;
 
-	void           create_routing_chain (Document &doc, PluginPool &plugin_pool);
 	void           create_routing_graph (Document &doc, PluginPool &plugin_pool);
-	void           make_graph_from_chain (Document &doc);
 	void           add_aux_plugins (Document &doc, PluginPool &plugin_pool);
 	void           prepare_graph_for_latency_analysis (const Document &doc);
 	int            conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx) const;
