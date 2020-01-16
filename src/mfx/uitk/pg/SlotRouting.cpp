@@ -240,7 +240,7 @@ void	SlotRouting::update_display ()
 		Tools::extract_slot_list (entry_list, prog, *_model_ptr);
 
 		// Finds physical ports of the associated plug-in, if any
-		std::array <int, piapi::Dir_NBR_ELT> nbr_pins_arr_phy = {{ 0, 0 }};
+		std::array <int, piapi::Dir_NBR_ELT> nbr_pins_arr_phy = {{ 1, 1 }};
 		int            nbr_s = 0;
 		const bool     exist_flag = Tools::get_physical_io (
 			nbr_pins_arr_phy [piapi::Dir_IN], nbr_pins_arr_phy [piapi::Dir_OUT],
