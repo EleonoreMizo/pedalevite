@@ -54,6 +54,8 @@ class Algo final
 
 public:
 
+	typedef GraphInterface Inherited;
+
 	               Algo ()                   = default;
 	               Algo (const Algo &other);
 	               Algo (Algo &&other)       = default;

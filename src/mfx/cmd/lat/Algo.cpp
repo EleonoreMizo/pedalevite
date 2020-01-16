@@ -49,7 +49,8 @@ namespace lat
 
 
 Algo::Algo (const Algo &other)
-:	_cnx_list (other._cnx_list)
+:	Inherited (other)
+,	_cnx_list (other._cnx_list)
 ,	_node_list (other._node_list)
 ,	_bm_nbr_rec_calls (other._bm_nbr_rec_calls)
 ,	_tree_list ()          // Temporary, not copied
