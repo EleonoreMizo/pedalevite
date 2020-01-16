@@ -72,7 +72,9 @@ std::string	DelayDesc::do_get_unique_id () const
 
 std::string	DelayDesc::do_get_name () const
 {
-	return "Delay\nDly";
+	return
+		"Compensation delay\nCompens delay\nComp delay"
+		"\nComp dly\nCDelay\nCDly";
 }
 
 

@@ -93,9 +93,6 @@ protected:
 
 private:
 
-	static float   apply_curve (float val, ControlCurve curve, bool invert_flag);
-	static double  invert_s1 (double val);
-
 	bool           _clip_flag     = false;
 	float          _clip_src_beg  = -1; // Minimum value from the modulator source
 	float          _clip_src_end  =  1; // Maximum value from the modulator source. beg < end

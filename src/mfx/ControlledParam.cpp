@@ -52,6 +52,13 @@ ControlledParam::ControlledParam (const ParamCoord &param)
 
 
 
+const ParamCoord &	ControlledParam::use_coord () const
+{
+	return _param;
+}
+
+
+
 ControlledParam::CtrlUnitList & ControlledParam::use_unit_list ()
 {
 	return _ctrl_list;
@@ -59,9 +66,9 @@ ControlledParam::CtrlUnitList & ControlledParam::use_unit_list ()
 
 
 
-const ParamCoord &	ControlledParam::use_coord () const
+const ControlledParam::CtrlUnitList & ControlledParam::use_unit_list () const
 {
-	return _param;
+	return _ctrl_list;
 }
 
 

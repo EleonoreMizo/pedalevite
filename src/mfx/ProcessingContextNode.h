@@ -47,6 +47,8 @@ namespace mfx
 
 
 
+class PluginPool;
+
 class ProcessingContextNode
 {
 
@@ -93,6 +95,7 @@ public:
 	               operator = (const ProcessingContextNode &other) = default;
 
 	void           compute_graph_crc (fstb::Crc32 &crc) const;
+	std::string    dump_as_str (const PluginPool &plugin_pool) const;
 
 	int            _pi_id;
 	SideArray      _side_arr;

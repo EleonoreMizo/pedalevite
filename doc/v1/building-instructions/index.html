@@ -1018,9 +1018,13 @@ logiciel.</p>
 <code>pedalevite</code> dans le répertoire courant.
 On installe ensuite le logiciel dans son répertoire, ainsi que quelques autres
 fichiers&#8239;:</p>
-<pre class="term">sudo mkdir -p /opt/pedalevite/bin /opt/pedalevite/etc/config
+<pre class="term">sudo mkdir -p /opt/pedalevite/bin
+sudo mkdir -p /opt/pedalevite/etc/config
+sudo mkdir -p /opt/pedalevite/etc/font
+sudo mkdir -p /opt/pedalevite/var/audiodump
 sudo cp ./pedalevite /opt/pedalevite/bin/pedalevite
-sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh</pre>
+sudo cp ../../bin/cmd_rofs.sh /opt/pedalevite/bin/cmd_rofs.sh
+sudo cp ../../etc/font/* /opt/pedalevite/etc/font</pre>
 <p>Le Pi peut maintenant être inséré dans son boîtier et connecté à toutes
 les cartes et périphériques nécessaires (cf. les instructions de montage).
 Une fois ceci fait, on peut lancer Pédale Vite pour tester&#8239;:</p>
@@ -1509,7 +1513,7 @@ carte.</p>
 Je ne l’ai appris que plus tard, mais celui-ci dispose de plusieurs passages
 sur son PCB permettant d’activer certaines fonctionnalités en y déposant un
 pont de soudure.
-Ces ponts relient à la masse ou à la tension d’alimentation diverses broches
+Ces ponts relient à la masse ou à la tension d’alimentation diverses broches
 du connecteur principal.
 Ça aurait été utile pour activer le rétro-éclairage ou le protocole série sans
 avoir à rajouter manuellement les broches et les cables qui allaient avec.</p>
@@ -1534,6 +1538,12 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r3, 2020-01-16</b></p>
+<ul>
+<li>Ajout de la création de quelques sous-répertoires lors de l’installation
+logicielle.</li>
+</ul>
 
 <p><b>r2, 2019-11-07</b></p>
 <ul>

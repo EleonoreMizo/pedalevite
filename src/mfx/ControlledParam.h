@@ -57,6 +57,8 @@ public:
 	const ParamCoord &
 	               use_coord () const;
 	CtrlUnitList & use_unit_list ();
+	const CtrlUnitList &
+	               use_unit_list () const;
 
 	void           update_internal_val (float val_nrm);
 	float          compute_final_val (PluginPool &pi_pool) const;

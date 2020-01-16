@@ -133,6 +133,8 @@ public:
 	static const std::string
 	               _audiodump_dir;
 	static const std::string
+	               _log_dir;
+	static const std::string
 	               _d2d_file;
 	static const std::string
 	               _rw_cmd_script_pathname;

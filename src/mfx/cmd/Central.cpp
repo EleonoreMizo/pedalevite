@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/piapi/PluginInterface.h"
 #include "mfx/piapi/ProcInfo.h"
+#include "mfx/FileIOInterface.h"
 
 #include <algorithm>
 #include <array>
@@ -276,6 +277,12 @@ void	Central::commit ()
 		{
 			_queue_cmd_to_audio.enqueue (*cell_ptr);
 		}
+
+#if 1 // Context text dump, for debugging
+		std::string    ctx_txt = doc._ctx_sptr->dump_as_str (_plugin_pool);
+		const std::string pathname = Cst::_log_dir + "/audio-proc-ctx.txt";
+		FileIOInterface::write_txt_file_direct (pathname, ctx_txt);
+#endif
 
 		if (_cur_sptr.get () != nullptr)
 		{

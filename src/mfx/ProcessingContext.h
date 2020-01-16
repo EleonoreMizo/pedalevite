@@ -88,6 +88,7 @@ public:
 	               ProcessingContext ()  = default;
 
 	void           compute_graph_crc (fstb::Crc32 &crc) const;
+	std::string    dump_as_str (const PluginPool &plugin_pool) const;
 
 	ProcessingContextNode        // Initial and final aligned buffers
 	               _interface_ctx;
@@ -120,6 +121,10 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	std::string    dump_input_mix (const PluginContext::MixInputArray &mia) const;
+	std::string    dump_pi_ctx (const PluginContext &pi_ctx, const PluginPool &plugin_pool) const;
+	std::string    dump_ctrl (const PluginPool &plugin_pool) const;
 
 
 

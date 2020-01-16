@@ -38,7 +38,7 @@ build/unix/m4/lt*.m4
 **/test/results/
 art/*.h
 etc/config/current*
-var/audiodump/
+var/
 legacy/
 doc/internal/
 doc/v1/exported/
