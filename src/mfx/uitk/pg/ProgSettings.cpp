@@ -60,12 +60,15 @@ ProgSettings::ProgSettings (PageSwitcher &page_switcher, PedalEditContext &pedal
 ,	_page_ptr (nullptr)
 ,	_page_size ()
 ,	_fnt_ptr (nullptr)
-,	_layout_sptr (std::make_shared <NText> (Entry_LAYOUT))
-,	_switch_sptr (std::make_shared <NText> (Entry_SWITCH))
+,	_layout_sptr (   std::make_shared <NText> (Entry_LAYOUT   ))
+,	_switch_sptr (   std::make_shared <NText> (Entry_SWITCH   ))
+,	_add_slots_sptr (std::make_shared <NText> (Entry_ADD_SLOTS))
 ,	_state (State_NONE)
 ,	_arg_fx_state_modes ()
+,	_arg_add_slots ()
 {
-	_layout_sptr->set_text ("Pedal layout\xE2\x80\xA6");
+	_layout_sptr   ->set_text ("Pedal layout\xE2\x80\xA6");
+	_add_slots_sptr->set_text ("Add FX chain\xE2\x80\xA6");
 
 	_arg_fx_state_modes._title = "Set FX states";
 	_arg_fx_state_modes._choice_arr.assign ({
@@ -74,6 +77,10 @@ ProgSettings::ProgSettings (PageSwitcher &page_switcher, PedalEditContext &pedal
 		"Cancel"
 	});
 	_arg_fx_state_modes._ok_flag = false;
+
+	_arg_add_slots._title   = "FX chain length";
+	_arg_add_slots._choice_arr.assign ({ "Cancel", "1", "2", "3", "4" });
+	_arg_add_slots._ok_flag = false;
 }
 
 
@@ -100,30 +107,38 @@ void	ProgSettings::do_connect (Model &model, const View &view, PageMgrInterface 
 	case State_FXSTATE:
 		change_all_plugin_state_modes ();
 		break;
+	case State_ADDSLOTS:
+		add_slots ();
+		break;
 	default:
 		assert (false);
 		break;
 	}
 	_state = State_NONE;
 
-	_layout_sptr->set_font (*_fnt_ptr);
-	_switch_sptr->set_font (*_fnt_ptr);
+	_layout_sptr   ->set_font (*_fnt_ptr);
+	_switch_sptr   ->set_font (*_fnt_ptr);
+	_add_slots_sptr->set_font (*_fnt_ptr);
 
 	const int      scr_w = _page_size [0];
 	const int      h_m   = _fnt_ptr->get_char_h ();
 
-	_layout_sptr->set_coord (Vec2d (0, 0 * h_m));
-	_switch_sptr->set_coord (Vec2d (0, 1 * h_m));
+	_layout_sptr->   set_coord (Vec2d (0, 0 * h_m));
+	_switch_sptr->   set_coord (Vec2d (0, 1 * h_m));
+	_add_slots_sptr->set_coord (Vec2d (0, 2 * h_m));
 
-	_layout_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_switch_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_layout_sptr   ->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_switch_sptr   ->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_add_slots_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 
-	_page_ptr->push_back (_layout_sptr);
-	_page_ptr->push_back (_switch_sptr);
+	_page_ptr->push_back (_layout_sptr   );
+	_page_ptr->push_back (_switch_sptr   );
+	_page_ptr->push_back (_add_slots_sptr);
 
 	PageMgrInterface::NavLocList  nav_list;
-	PageMgrInterface::add_nav (nav_list, Entry_LAYOUT);
-	PageMgrInterface::add_nav (nav_list, Entry_SWITCH);
+	PageMgrInterface::add_nav (nav_list, Entry_LAYOUT   );
+	PageMgrInterface::add_nav (nav_list, Entry_SWITCH   );
+	PageMgrInterface::add_nav (nav_list, Entry_ADD_SLOTS);
 
 	_page_ptr->set_nav_layout (nav_list);
 
@@ -164,6 +179,13 @@ MsgHandlerInterface::EvtProp	ProgSettings::do_handle_evt (const NodeEvt &evt)
 				_state = State_FXSTATE;
 				_page_switcher.call_page (
 					PageType_QUESTION, &_arg_fx_state_modes, node_id
+				);
+				break;
+			case Entry_ADD_SLOTS:
+				_arg_add_slots._selection = int (AddSlot_CANCEL);
+				_state = State_ADDSLOTS;
+				_page_switcher.call_page (
+					PageType_QUESTION, &_arg_add_slots, node_id
 				);
 				break;
 			default:
@@ -283,6 +305,66 @@ void	ProgSettings::change_all_plugin_state_modes (bool force_reset_flag)
 		{
 			const int      slot_id = it->first;
 			_model_ptr->set_plugin_reset (slot_id, force_reset_flag);
+		}
+	}
+}
+
+
+
+void	ProgSettings::add_slots ()
+{
+	if (   _arg_add_slots._ok_flag
+	    && _arg_add_slots._selection != AddSlot_CANCEL)
+	{
+		const int   chain_len =
+			_arg_add_slots._selection - int (AddSlot_1) + 1;
+
+		int         slot_id_prev = -1;
+		std::set <doc::Cnx>  cnx_set;
+		for (int slot_cnt = 0; slot_cnt < chain_len; ++slot_cnt)
+		{
+			const int      slot_id = _model_ptr->add_slot ();
+			if (slot_id_prev >= 0)
+			{
+				cnx_set.insert (doc::Cnx (
+					doc::CnxEnd (doc::CnxEnd::Type_NORMAL, slot_id_prev, 0),
+					doc::CnxEnd (doc::CnxEnd::Type_NORMAL, slot_id     , 0)
+				));
+			}
+			slot_id_prev = slot_id;
+		}
+
+		const doc::Preset prog = _view_ptr->use_preset_cur ();
+		doc::Routing   routing = prog.use_routing ();
+
+		// We remove direct audio I/O at this point, because there is no way to
+		// remove the connections in the slot/routing options, and this is
+		// generally what we want to do when we add new FX slots.
+		remove_direct_io_cnx (routing);
+
+		routing._cnx_audio_set.insert (cnx_set.begin (), cnx_set.end ());
+		_model_ptr->set_routing (routing);
+	}
+}
+
+
+
+void	ProgSettings::remove_direct_io_cnx (doc::Routing &routing)
+{
+	auto           it     = routing._cnx_audio_set.begin ();
+	const auto     it_end = routing._cnx_audio_set.end ();
+	while (it != it_end)
+	{
+		const doc::CnxEnd &  src = it->use_src ();
+		const doc::CnxEnd &  dst = it->use_dst ();
+		if (   src.get_type () == doc::CnxEnd::Type_IO
+		    && dst.get_type () == doc::CnxEnd::Type_IO)
+		{
+			it = routing._cnx_audio_set.erase (it);
+		}
+		else
+		{
+			++ it;
 		}
 	}
 }

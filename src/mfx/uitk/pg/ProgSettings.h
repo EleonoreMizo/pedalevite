@@ -36,6 +36,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
+
+namespace doc
+{
+	class Routing;
+}
+
 namespace uitk
 {
 
@@ -82,6 +88,7 @@ private:
 	{
 		State_NONE = 0,
 		State_FXSTATE,
+		State_ADDSLOTS,
 
 		State_NBR_ELT
 	};
@@ -89,7 +96,8 @@ private:
 	enum Entry
 	{
 		Entry_LAYOUT = 1000,
-		Entry_SWITCH
+		Entry_SWITCH,
+		Entry_ADD_SLOTS
 	};
 
 	enum FxState
@@ -101,12 +109,20 @@ private:
 		FxState_NBR_ELT
 	};
 
+	enum AddSlot
+	{
+		AddSlot_CANCEL = 0,
+		AddSlot_1
+	};
+
 	typedef std::shared_ptr <NText> TxtSPtr;
 
 	void           update_display ();
 	EvtProp        change_switch (int dir);
 	void           change_all_plugin_state_modes ();
 	void           change_all_plugin_state_modes (bool force_reset_flag);
+	void           add_slots ();
+	void           remove_direct_io_cnx (doc::Routing &routing);
 
 	PageSwitcher & _page_switcher;
 	PedalEditContext &
@@ -121,9 +137,11 @@ private:
 
 	TxtSPtr        _layout_sptr;
 	TxtSPtr        _switch_sptr;
+	TxtSPtr        _add_slots_sptr;
 
 	State          _state;
 	Question::QArg _arg_fx_state_modes;
+	Question::QArg _arg_add_slots;
 
 
 
