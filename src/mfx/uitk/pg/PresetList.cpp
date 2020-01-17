@@ -66,6 +66,7 @@ PresetList::PresetList (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_state (State_NORMAL)
 ,	_name_param ()
 ,	_state_set_idx (-1)
+,	_saved_settings_sptr ()
 {
 	// Nothing
 }
@@ -87,6 +88,9 @@ void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &p
 	_page_ptr  = &page;
 	_page_size = page_size;
 	_fnt_ptr   = &fnt._m;
+
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
 
 	// Back from name prompt
 	if (_state == State_EDIT_NAME)
@@ -118,6 +122,16 @@ void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &p
 		assert (param._action < Action_NBR_ELT);
 		_action        = param._action;
 		_state_set_idx = -1;
+
+		if (_action == Action_BROWSE)
+		{
+			// Saves the previous settings
+			FullSettings   settings {
+				slot.use_settings (PiType_MAIN),
+				slot.use_settings (PiType_MIX )
+			};
+			_saved_settings_sptr = std::make_shared <FullSettings> (settings);
+		}
 	}
 
 	_menu_sptr->set_size (_page_size, Vec2d ());
@@ -128,9 +142,7 @@ void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &p
 	update_display ();
 
 	// Jumps to the selected preset for the current plug-in type
-	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-	const doc::Slot &    slot   = preset.use_slot (_loc_edit._slot_id);
-	auto                 it_pos = _preset_pos_map.find (slot._pi_model);
+	auto           it_pos = _preset_pos_map.find (slot._pi_model);
 	if (it_pos != _preset_pos_map.end ())
 	{
 		assert (! _preset_list.empty ());
@@ -149,7 +161,17 @@ void	PresetList::do_connect (Model &model, const View &view, PageMgrInterface &p
 
 void	PresetList::do_disconnect ()
 {
-	// Nothing
+	if (   _action == Action_BROWSE
+	    && _saved_settings_sptr.get () != nullptr
+	    && _loc_edit._slot_id >= 0)
+	{
+		_model_ptr->load_plugin_settings (
+			_loc_edit._slot_id,
+			(*_saved_settings_sptr) [PiType_MAIN],
+			(*_saved_settings_sptr) [PiType_MIX ]
+		);
+	}
+	_saved_settings_sptr.reset ();
 }
 
 
@@ -183,6 +205,7 @@ MsgHandlerInterface::EvtProp	PresetList::do_handle_evt (const NodeEvt &evt)
 				}  // And we stay on the list page
 				break;
 			case Action_BROWSE:
+				_saved_settings_sptr.reset ();
 				_page_switcher.switch_to (pg::PageType_PRESET_MENU, nullptr);
 				break;
 			case Action_STORE:
@@ -226,6 +249,7 @@ void	PresetList::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
+	_saved_settings_sptr.reset ();
 	_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 }
 
@@ -235,6 +259,7 @@ void	PresetList::do_remove_slot (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
+		_saved_settings_sptr.reset ();
 		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
@@ -247,6 +272,7 @@ void	PresetList::do_set_plugin (int slot_id, const PluginInitData &pi_data)
 
 	if (slot_id == _loc_edit._slot_id)
 	{
+		_saved_settings_sptr.reset ();
 		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
@@ -257,6 +283,7 @@ void	PresetList::do_remove_plugin (int slot_id)
 {
 	if (slot_id == _loc_edit._slot_id)
 	{
+		_saved_settings_sptr.reset ();
 		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }

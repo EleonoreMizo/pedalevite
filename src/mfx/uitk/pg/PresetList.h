@@ -125,6 +125,7 @@ private:
 	typedef std::shared_ptr <NWindow> WinSPtr;
 	typedef std::vector <TxtSPtr> TxtArray;
 	typedef std::map <std::string, int> PosMap;  // [fx_type] = index in the list
+	typedef std::array <doc::PluginSettings, PiType_NBR_ELT> FullSettings;
 
 	void           update_display ();
 	void           add_entry (int set_idx, std::string name, PageMgrInterface::NavLocList &nav_list, bool same_flag);
@@ -153,7 +154,17 @@ private:
 	State          _state;
 	EditText::Param
 	               _name_param;
+
+	// Index of the selected preset. We store it before calling a sub-screen,
+	// so when we are back from this sub-screen, we can do the operation on the
+	// selected settings. < 0: no index stored.
 	int            _state_set_idx;
+
+	// When browsing, we save the original settings here.
+	// When the pointer is empty, it means that the new settings are validated.
+	// Otherwise, we restore them when leaving the screen.
+	std::shared_ptr <FullSettings>
+	               _saved_settings_sptr;
 
 
 

@@ -76,7 +76,7 @@ PresetMenu::PresetMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 	_stor_sptr->set_text ("Store\xE2\x80\xA6");
 	_swap_sptr->set_text ("Swap\xE2\x80\xA6");
 	_renm_sptr->set_text ("Rename\xE2\x80\xA6");
-	_mrph_sptr->set_text ("Morph\xE2\x80\xA6");
+	_mrph_sptr->set_text ("Morph with\xE2\x80\xA6");
 	_dele_sptr->set_text ("Delete\xE2\x80\xA6");
 	_orga_sptr->set_text ("Organize\xE2\x80\xA6");
 	
