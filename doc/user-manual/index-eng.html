@@ -153,7 +153,7 @@ or to change a value.</p>
 </ol>
 <p>After less than ten seconds, the display should show the current program,
 called <span class="ui">&lt;Empty prog&gt;</span>, a simple bypass.</p>
-<div class="pic"><img src="current-program-bypass.png" /></div>
+<div class="pic"><img src="current-program-bypass.png" class="reduce" /></div>
 <ol style="list-style-type:decimal;" start="5">
 <li>Switch on the amplifier.</li>
 <li>Play.</li>
@@ -178,12 +178,12 @@ guitar plugged in directly.</p>
 <p>Press the <span class="key">Select</span> button, scroll down to the
 <span class="ui">Volume &amp; Levels</span> menu, and press
 <span class="key">Select</span> again.</p>
-<div class="pic"><img src="main-menu-levels.png" /></div>
+<div class="pic"><img src="main-menu-levels.png" class="reduce" /></div>
 <p>This takes you to the level control screen.
 The upper meter shows the input levels, the middle one the output levels.
 The levels to be considered (peaks) are given by the small strokes moving
 to the right of the solid bars (RMS).</p>
-<div class="pic"><img src="levels.png" /></div>
+<div class="pic"><img src="levels.png" class="reduce" /></div>
 
 <h4>Input level</h4>
 
@@ -293,7 +293,7 @@ one that the note is too high.</p>
 This is also the one on the top of the menu hierarchy.
 If you get lost, just press <span class="key">Esc</span> one or more times to
 get back here.</p>
-<div class="pic"><img src="prog-cur.png" /></div>
+<div class="pic"><img src="prog-cur.png" class="reduce" /></div>
 <p>Several important information are displayed here:
 On the top, the current program and bank.
 On the middle, the controllers used by the program or the last modified parameter.
@@ -311,7 +311,7 @@ They depends how many times the key is pressed:</p>
 
 <h4>Main menu</h4>
 
-<div class="pic"><img src="main-menu-levels.png" /></div>
+<div class="pic"><img src="main-menu-levels.png" class="reduce" /></div>
 <p>This screen is reached by pressing <span class="key">Select</span> in the
 current program screen.
 It can be exited with <span class="key">Esc</span>.
@@ -319,13 +319,13 @@ Navigation is done with <span class="keya">↑</span> and
 <span class="keya">↓</span>.
 <span class="key">Select</span> opens the page highlighted with the cursor.</p>
 <table>
-<tr><td><span class="ui">Edit program</span></td><td><a href="#screen-prog-edit">Editing a program</a></tr></td>
-<tr><td><span class="ui">Banks</span></td><td>Access to <a href="#screen-banks">Program Banks</a></tr></td>
-<tr><td><span class="ui">Pedal layout</span></td><td><a href="#screen-pedalboard-config">Pedalboard Configuration</a></tr></td>
-<tr><td><span class="ui">Volume &amp; levels</span></td><td>Access to <a href="#screen-levels">Volumes and Levels</a></tr></td>
-<tr><td><span class="ui">Other settings</span></td><td><a href="#screen-othersettings">Other Settings</a></tr></td>
-<tr><td><span class="ui">Tuner</span></td><td><a href="#screen-tuner">Tuner</a></tr></td>
-<tr><td><span class="ui">Restart</span></td><td><a href="#screen-restart">Restart</a> options</tr></td>
+<tr><td><span class="ui">Edit program</span></td><td><a href="#screen-prog-edit">Editing a program</a></td></tr>
+<tr><td><span class="ui">Banks</span></td><td>Access to <a href="#screen-banks">Program Banks</a></td></tr>
+<tr><td><span class="ui">Pedal layout</span></td><td><a href="#screen-pedalboard-config">Pedalboard Configuration</a></td></tr>
+<tr><td><span class="ui">Volume &amp; levels</span></td><td>Access to <a href="#screen-levels">Volumes and Levels</a></td></tr>
+<tr><td><span class="ui">Other settings</span></td><td><a href="#screen-othersettings">Other Settings</a></td></tr>
+<tr><td><span class="ui">Tuner</span></td><td><a href="#screen-tuner">Tuner</a></td></tr>
+<tr><td><span class="ui">Restart</span></td><td><a href="#screen-restart">Restart</a> options</td></tr>
 </table>
 
 
@@ -334,7 +334,7 @@ Navigation is done with <span class="keya">↑</span> and
 
 <h4><a id="screen-fx-chain"></a>Effect chain</h4>
 
-<div class="pic"><img src="prog-edit.png" /></div>
+<div class="pic"><img src="prog-edit.png" class="reduce" /></div>
 
 <p>This is the main page to edit a program.
 Navigations is done with the <span class="keya">↑</span> and
@@ -342,15 +342,27 @@ Navigations is done with the <span class="keya">↑</span> and
 <span class="key">Select</span> enters the highlighted object
 et <span class="key">Esc</span> gets back to the current program screen.</p>
 <p>The first line is the program name, which can be edited.</p>
-<p><span class="ui">Controllers…</span> gives access to the player/program
-interactions.</p>
+<p><span class="ui">Settings…</span> gives access to various program-related
+settings.</p>
 <p><a href="#screen-prog-save"><span class="ui">Save to…</span></a>
 saves the currently edited program.</p>
 <p>The following list is the effect chain, in processing order.
+The sound is processed from the top, down to the bottom of the list.
 Each line is a distinct effet.
 <span class="ui">&lt;Empty&gt;</span> indicates that there is no effect
 on the line and <span class="ui">&lt;End&gt;</span> terminates the list.
-A line written in bold indicates that at least one controller applies on
+Disconnected effects, or effect chains not connected to the audio output are
+located at the end of the list.</p>
+<p>The small discs next to each effects indicate the chain segment in which
+the selected effect is located.
+The displayed segment stops to the first fork in the audio processing&#8239;:
+upstream when several effects are mixed together, and downstream when the
+signal is spread out to several effets.
+Effects involved in these possible forks are indicated with an outlined
+circle.</p>
+<p>When the audio input and output are not linked by any effect chain, a
+warning message is displayed on the top line.</p>
+<p>A line written in bold indicates that at least one controller applies on
 the effect.</p>
 <p>The effect on the highlighted line (including
 <span class="ui">&lt;Empty&gt;</span> and <span class="ui">&lt;End&gt;</span>)
@@ -379,7 +391,7 @@ from the <a href="#screen-fx-setup">Effect Configuration</a>.</p>
 <p>When a program is saved, the program list from the current bank is
 displayed.</p>
 
-<div class="pic"><img src="prog-list.png" /></div>
+<div class="pic"><img src="prog-list.png" class="reduce" /></div>
 
 <p>The very first line indicates the bank where the program will be saved.
 It is possible to change the bank with the horizontal arrows.</p>
@@ -391,7 +403,7 @@ It is the default selection.
 <a href="#screen-fx-chain">the effect chain</a>.</p>
 <p>Once the saving location is validated, one can type the the program
 name.</p>
-<div class="pic"><img src="prog-save.png" /></div>
+<div class="pic"><img src="prog-save.png" class="reduce" /></div>
 <p>The screen title reminds the storage location.
 The name correspounding to active settings is pre-filled.
 One can modify it by navigating in the list of characters.
@@ -399,16 +411,16 @@ One can modify it by navigating in the list of characters.
 <span class="key">Esc</span> cancels the operation and gets back to the
 <a href="#screen-fx-chain">effect chain</a>.</p>
 <table>
-<tr><td><span class="ui">OK</span></td><td>Validates the choice and does the data saving. The green LED lights up shortly during this time.</tr></td>
-<tr><td><span class="ui">CANCEL</span></td><td>Cancels the operation.</tr></td>
+<tr><td><span class="ui">OK</span></td><td>Validates the choice and does the data saving. The green LED lights up shortly during this time.</td></tr>
+<tr><td><span class="ui">CANCEL</span></td><td>Cancels the operation.</td></tr>
 <tr><td><span class="ui">SPC</span></td><td>Insert a space at the carret location.</li>
-<tr><td><span class="ui">DEL</span></td><td>Delete the character at the left of the carret.</tr></td>
-<tr><td><span class="ui">←</span> and <span class="ui">→</span></td><td>Move the carret.</tr></td>
+<tr><td><span class="ui">DEL</span></td><td>Delete the character at the left of the carret.</td></tr>
+<tr><td><span class="ui">←</span> and <span class="ui">→</span></td><td>Move the carret.</td></tr>
 </table>
 
 <h4>Parameter list</h4>
 
-<div class="pic"><img src="param-list.png" /></div>
+<div class="pic"><img src="param-list.png" class="reduce" /></div>
 
 <p>The first line <span class="ui">FX setup…</span> jumps to the
 <a href="#screen-fx-setup">Effect Configuration</a> screen.
@@ -442,7 +454,7 @@ This volume is applied before the input/output mix.</p>
 
 <h4><a id="screen-param-edit"></a>Parameter Edit</h4>
 
-<div class="pic"><img src="param-edit.png" /></div>
+<div class="pic"><img src="param-edit.png" class="reduce" /></div>
 <p>The name, the value and possibly the unit of the parameter are indicated
 on the top.</p>
 <p>One can change the parameter value using four scale factors (the dots)
@@ -457,7 +469,7 @@ independant from it.</p>
 
 <h4><a id="screen-control-choice"></a>Controller Choice</h4>
 
-<div class="pic"><img src="controllers.png" /></div>
+<div class="pic"><img src="controllers.png" class="reduce" /></div>
 <p>Two types of controllers can be selected here:</p>
 <ul>
 <li><span class="ui">Direct link</span>: the controller drives directly the
@@ -478,8 +490,8 @@ with the <span class="key">Esc</span> key.</p>
 
 <h4><a id="screen-control-edit"></a>Controller Edit</h4>
 
-<div class="pic"><img src="control-edit1.png" /></div>
-<div class="pic"><img src="control-edit2.png" /></div>
+<div class="pic"><img src="control-edit1.png" class="reduce" /></div>
+<div class="pic"><img src="control-edit2.png" class="reduce" /></div>
 <p>One can setup a controller (direct link or modulation) on this screen.
 A direct link controller requires two parameter values:
 a value for the controller’s low position, and another for the high position.
@@ -536,7 +548,7 @@ It can be set with the horizontal arrows.</p>
 </table>
 <p>The curve graphic can be shown with
 <span class="key">Select</span>.</p>
-<div class="pic"><img src="control-edit-curve.png" /></div>
+<div class="pic"><img src="control-edit-curve.png" class="reduce" /></div>
 <p><span class="ui">Range</span> is used only on modulation with some specific
 sources only.
 It can convert a unipolar signal (posivite values only) into a bipolar signal
@@ -565,18 +577,17 @@ specific validation to do.</p>
 
 <h4><a id="screen-fx-setup"></a>Effect Configuration</h4>
 
-<div class="pic"><img src="fx-setup.png" /></div>
+<div class="pic"><img src="fx-setup.png" class="reduce" /></div>
 <p>The first line indicates the effect type, which can be changed with the
 horizontal arrows.</p>
 <p><span class="ui">Insert before</span> adds an empty block in the chain
 before the selected effect.
 This empty block becomes the current effect and is immediately editable.</p>
-<p><span class="ui">Move…</span> moves the effect within the chain.
-After having pressed on <span class="key">Select</span>, the chain appears and
-it is possible to move the effect with the vertical arrows.
-Changes are immediately effective.
-<span class="key">Select</span> or <span class="key">Esc</span> to exit.</p>
-<p><span class="ui">Presets…</span> is still a work in progress…</p>
+<p><span class="ui">Routing…</span> reaches a the
+<a href="#screen-fx-routing">routing menu</a> to connect, disconnect and move
+the effect within the audio graph.</p>
+<p><span class="ui">Presets…</span> leads to the
+<a href="#screen-fx-presets">preset</a> menu.</p>
 <p><span class="ui">Reset</span> restores the default parameters.</p>
 <p><span class="ui">Chan</span> is useful for effects that can convert a
 mono signal to stereo (chorus, delay…)
@@ -586,9 +597,9 @@ effective only with a global stereo output.
 If the input signal is already stereo, it keeps stereo, whatever the selected
 option.
 Use <span class="key">Select</span> to change the settings.</p>
-<p><span class="ui">State</span> indicates if the effect memory must be cleaned
-(<span class="ui">fresh</span>) when the program is activated, or kept from the
-previous use (<span class="ui">keep</span>).
+<p><span class="ui">State</span> indicates if the effect memory must be
+cleaned (<span class="ui">fresh</span>) when the program is activated, or kept
+from the previous use (<span class="ui">keep</span>).
 Cleaning the memory may have an impact on the response time but should be
 light.</p>
 <p><span class="ui">Name</span> is the name of the effect instance.
@@ -597,13 +608,71 @@ depending on the program.
 For example, you can have a pedalboard-range footswitch to change the bypass
 state of any effect called “distortion”.</p>
 
+<h4><a id="screen-fx-routing"></a>Routing</h4>
+
+<p>In this screens you can connect ot disconnect the effect to other effects,
+or move it through the audio graph.</p>
+<div class="pic"><img src="fx-routing.png" class="reduce" /></div>
+<p><span class="ui">Move…</span> moves the effect within the chain.
+After having pressed on <span class="key">Select</span>, the chain appears and
+it is possible to move the effect with the vertical arrows.
+Changes are immediately effective.
+<span class="key">Select</span> or <span class="key">Esc</span> to exit.</p>
+<p>The other lines below show the connections to each input and output pin.
+When the target effect has several pins, the pin number is displayed next to
+the connection after an hyphen.</p>
+<p><strong>Note&#8239;:</strong> listed pins can be different of the real pin
+set of the effect.
+It means that some connections may lead to nothing if the effect cannot handle
+them.
+This allows changing easily the effect without destroying the connections each
+time they are incompatible with the new effect.</p>
+<p>Press <span class="key">Select</span> on a pin to add a connection you can
+select in the list.
+Only the new possible connections are shown, the ones not creating loops in
+the audio graph.
+<span class="key">Esc</span> to cancel.</p>
+<div class="pic"><img src="fx-routing-add.png" class="reduce" /></div>
+<p>Press <span class="key">Select</span> on a connection to delete it or to
+replace it by another one from the list.
+<span class="key">Esc</span> to cancel.</p>
+<div class="pic"><img src="fx-routing-edit.png" class="reduce" /></div>
+
+<h4><a id="screen-fx-presets"></a>Presets</h4>
+
+<div class="pic"><img src="fx-preset.png" class="reduce" /></div>
+<p>In this menu you can manage the stored presets for the current effect.</p>
+<table>
+<tr><td><span class="ui">Load…</span></td><td>Loads a stored preset</a></td></tr>
+<tr><td><span class="ui">Browse…</span></td><td>Browse through the stored preset list while automatically loading them</td></tr>
+<tr><td><span class="ui">Store…</span></td><td>Saves the current settings</td></tr>
+<tr><td><span class="ui">Swap…</span></td><td>Exchanges the current settings with a stored preset</td></tr>
+<tr><td><span class="ui">Rename…</span></td><td>Renames a stored preset</td></tr>
+<tr><td><span class="ui">Morph…</span></td><td><em>Not available, work in progress</em></td></tr>
+<tr><td><span class="ui">Delete…</span></td><td>Deletes a stored preset</td></tr>
+<tr><td><span class="ui">Organize…</span></td><td><em>Not available, work in progress</em></td></tr>
+</table>
+<p>Most of these entries lead to the list of the stored presets.
+In this list, press <span class="key">Select</span> to do the selected action
+and come back to the menu.
+Press <span class="key">Esc</span> to cancel the operation.</p>
+<div class="pic"><img src="fx-preset-list.png" class="reduce" /></div>
+<p>In <span class="ui">Browse…</span> mode, the setting change is immediate
+and is updated at each cursor movement.
+These settings are kept when quitting the list with
+<span class="key">Select</span>.
+If you don’t want to keep them, press <span class="key">Esc</span> to quit
+and restore the original settings.</p>
+<p>Save and rename operation lead to another screen for editing the preset
+name.</p>
+
 <h3><a id="screen-banks"></a>Program banks</h3>
 
-<div class="pic"><img src="bank-menu.png" /></div>
+<div class="pic"><img src="bank-menu.png" class="reduce" /></div>
 
 <h4><a id="screen-banks-orga"></a>Organize banks and programs</h4>
 
-<div class="pic"><img src="bank-orga.png" /></div>
+<div class="pic"><img src="bank-orga.png" class="reduce" /></div>
 
 <p>This menu gives access to several operations allowing to organize banks and
 programs.</p>
@@ -616,13 +685,13 @@ all the programs from all the banks.</p>
 
 <h4><a id="screen-banks-move-bank"></a>Move banks</h4>
 
-<div class="pic"><img src="bank-move-1.png" /></div>
+<div class="pic"><img src="bank-move-1.png" class="reduce" /></div>
 
 <p>First, with the vertical arrows, select a bank to move.
 <span class="key">Select</span> to validate or
 <span class="key">Esc</span> to return to the previous menu.</p>
 
-<div class="pic"><img src="bank-move-2.png" /></div>
+<div class="pic"><img src="bank-move-2.png" class="reduce" /></div>
 
 <p>Once the bank is selected, use the vertical arrows to move this bank.
 <span class="key">Select</span> to validate the move or
@@ -630,13 +699,13 @@ all the programs from all the banks.</p>
 
 <h4><a id="screen-banks-move-prog"></a>Move programs</h4>
 
-<div class="pic"><img src="prog-move-1.png" /></div>
+<div class="pic"><img src="prog-move-1.png" class="reduce" /></div>
 
 <p>First, with the vertical arrows, select a program to move.
 <span class="key">Select</span> to validate or
 <span class="key">Esc</span> to return to the previous menu.</p>
 
-<div class="pic"><img src="prog-move-2.png" /></div>
+<div class="pic"><img src="prog-move-2.png" class="reduce" /></div>
 
 <p>Once the program is selected, use the vertical arrows to move it.
 <span class="key">Select</span> to validate the move or
@@ -660,7 +729,7 @@ level.
 It is also possible to adjust these settings at the bank and program level,
 the menus are identical and the configured actions overlap.</p>
 
-<div class="pic"><img src="pedalboard-layout.png" /></div>
+<div class="pic"><img src="pedalboard-layout.png" class="reduce" /></div>
 <p>The list above allows you to see at a glance what each footswitch does.
 The twelve footswitches are numbered in two rows: first the bottom (the
 closest), from 1 to 6 from the left to the right, then the top (farthest) from
@@ -668,12 +737,12 @@ closest), from 1 to 6 from the left to the right, then the top (farthest) from
 Use the vertical arrows to navigate and
 <span class="key">Select</span> to edit a footswitch.</p>
 
-<div class="pic"><img src="pedalboard-layout-pedal-menu.png" /></div>
+<div class="pic"><img src="pedalboard-layout-pedal-menu.png" class="reduce" /></div>
 <p>In this menu, <span class="ui">Full edit…</span> allows editing the content
 of the footswitch and <span class="ui">Clear/empty</span> to reset it.
 The other functions are not implemented yet.</p>
 
-<div class="pic"><img src="pedalboard-layout-pedal-fulledit.png" /></div>
+<div class="pic"><img src="pedalboard-layout-pedal-fulledit.png" class="reduce" /></div>
 <p>The menu above gives access to the three footswitch trigger modes and
 indicates whether or not this mode is used.
 The modes are the following:</p>
@@ -691,7 +760,7 @@ in order to avoid unwanted aliasing.</p>
 A new action is triggered only after the footswitch state is actually
 changed.</p>
 
-<div class="pic"><img src="pedalboard-layout-cycle.png" /></div>
+<div class="pic"><img src="pedalboard-layout-cycle.png" class="reduce" /></div>
 <p>Each triggering mode is linked to a cycle made of one or more
 <span class="ui">Step</span>s.
 When the footswitch is triggerred, a cycle step is activated, and the next
@@ -701,7 +770,7 @@ and starts again.</p>
 On the other hand, the <span class="ui">Hold</span> and
 <span class="ui">Release</span> modes accept only one step.</p>
 
-<div class="pic"><img src="pedalboard-layout-step.png" /></div>
+<div class="pic"><img src="pedalboard-layout-step.png" class="reduce" /></div>
 <p>The menu above allows you to modify a step.
 A step consists of one or more actions that will be carried out simultaneously
 when the step is activated.
@@ -728,7 +797,7 @@ Below are the available actions:</p>
 
 <h3><a id="screen-levels"></a>Volume and levels</h3>
 
-<div class="pic"><img src="levels.png" /></div>
+<div class="pic"><img src="levels.png" class="reduce" /></div>
 <p>This screen shows and controls the levels.
 The bars indicate the input and output volumes.
 When a bar is split, it means that the signal is stereo.
@@ -754,7 +823,7 @@ can be restarted by pressing on <span class="key">Select</span>.</p>
 
 <h3><a id="screen-othersettings"></a>Other settings</h3>
 
-<div class="pic"><img src="other-settings.png" /></div>
+<div class="pic"><img src="other-settings.png" class="reduce" /></div>
 
 <p><span class="ui">Tempo</span> sets the tempo in quarter notes per minute.
 It is possible to set the integer part or the fractional part of the
@@ -774,7 +843,7 @@ this menu entry.</p>
 
 <h4><a id="screen-backup"></a>Backup menu</h4>
 
-<div class="pic"><img src="backup-menu.png" /></div>
+<div class="pic"><img src="backup-menu.png" class="reduce" /></div>
 
 <p>Before doing a backup copy, you must ensure that the date is correctly set,
 with the risk of being confused by an inconsistent timestamping.</p>
@@ -795,7 +864,7 @@ The date is automatically updated when exiting the screen with
 Because of technical reasons, the program is restarted after a date
 modification, so any unsaved change may be lost.</p>
 
-<div class="pic"><img src="backup-date.png" /></div>
+<div class="pic"><img src="backup-date.png" class="reduce" /></div>
 
 <p><span class="ui">Save backup now</span> does a backup copy.
 The file is saved in the same directory as the main settings (namely
@@ -809,7 +878,7 @@ the backup.</p>
 
 <h4><a id="screen-record"></a>Record</h4>
 
-<div class="pic"><img src="record-to-disk.png" /></div>
+<div class="pic"><img src="record-to-disk.png" class="reduce" /></div>
 <p>This feature records both the raw audio input and output.
 The audio is recorded in a unique file,
 <code>/opt/pedalevite/var/audiodump/raw-in-out.wav</code>.
@@ -854,7 +923,7 @@ The error in cent is also given on the display.</p>
 
 <h3><a id="screen-restart"></a>Restart</h3>
 
-<div class="pic"><img src="restart.png" /></div>
+<div class="pic"><img src="restart.png" class="reduce" /></div>
 <ul>
 <li><span class="ui">Cancel</span> comes back to the main screen.</li>
 <li><span class="ui">Restart</span> restarts the application, which can be useful in case of peristent glitch or bug. The current program state is lost.</li>
@@ -1670,7 +1739,7 @@ No effect on the high- and low-pass filters.</p>
 
 <p>You can also adjust the equalizer settings with an immediate graphical
 preview.</p>
-<div class="pic"><img src="fx-gui-peq.png" /></div>
+<div class="pic"><img src="fx-gui-peq.png" class="reduce" /></div>
 <p>The parameters can be scrolled as usual, they are displayed one by one at
 the bottom left.
 The very first parameter <span class="ui">R</span> gives the display vertical
@@ -2595,8 +2664,9 @@ phase.</p>
 <h4>Graphic editing</h4>
 
 <p>You can also adjust the LFO settings with an immediate graphical 
-preview of the waveform.
-The parameters can be scrolled as usual, they are displayed one by one at
+preview of the waveform.</p>
+<div class="pic"><img src="fx-gui-lfo.png" class="reduce" /></div>
+<p>The parameters can be scrolled as usual, they are displayed one by one at
 the bottom left.
 The very first parameter <span class="ui">Cycles</span> indicates how
 many oscillation cycles have to be displayed.</p>
@@ -2614,6 +2684,12 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r25, 2020-01-17</b></p>
+<ul>
+<li>Added routing functionalities, program settings.</li>
+<li>Updated the screenshots.</li>
+</ul>
 
 <p><b>r24, 2019-11-09</b></p>
 <ul>

@@ -103,3 +103,5 @@ tt        { font-family: Courier, mono; font-size: 13px; }
 
 figure { text-align: center; margin: 1em; margin-left: 2em; }
 figcaption { text-align: center; font-style: italic; }
+
+img.reduce { height: auto; width: auto; max-width: 400px; }
