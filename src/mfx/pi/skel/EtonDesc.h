@@ -50,6 +50,7 @@ class EtonDesc final
 public:
 
 	explicit       EtonDesc ();
+	               ~EtonDesc () = default;
 
 	ParamDescSet & use_desc_set ();
 
@@ -83,8 +84,9 @@ private:
 private:
 
 	               EtonDesc (const EtonDesc &other)          = delete;
-	EtonDesc &
-	               operator = (const EtonDesc &other)        = delete;
+	               EtonDesc (EtonDesc &&other)               = delete;
+	EtonDesc &     operator = (const EtonDesc &other)        = delete;
+	EtonDesc &     operator = (EtonDesc &&other)             = delete;
 	bool           operator == (const EtonDesc &other) const = delete;
 	bool           operator != (const EtonDesc &other) const = delete;
 

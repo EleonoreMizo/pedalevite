@@ -57,6 +57,7 @@ class Eton final
 public:
 
 	               Eton ();
+	               ~Eton () = default;
 
 
 
@@ -107,8 +108,10 @@ private:
 
 private:
 
-	               Eton (const Eton &other)        = delete;
-	Eton &   operator = (const Eton &other)        = delete;
+	               Eton (const Eton &other)              = delete;
+	               Eton (Eton &&other)                   = delete;
+	Eton &         operator = (const Eton &other)        = delete;
+	Eton &         operator = (Eton &&other)             = delete;
 	bool           operator == (const Eton &other) const = delete;
 	bool           operator != (const Eton &other) const = delete;
 
