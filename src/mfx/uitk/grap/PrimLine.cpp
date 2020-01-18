@@ -119,6 +119,8 @@ void	PrimLine::draw_h (RenderCtx &ctx, int x0, int y0, int x1, uint8_t c, bool t
 	if (x1 < x0)
 	{
 		std::swap (x1, x0);
+		++ x1;
+		++ x0;
 	}
 	const int      w = ctx.get_w ();
 	const int      h = ctx.get_h ();
@@ -145,6 +147,8 @@ void	PrimLine::draw_v (RenderCtx &ctx, int x0, int y0, int y1, uint8_t c, bool t
 	if (y1 < y0)
 	{
 		std::swap (y1, y0);
+		++ y1;
+		++ y0;
 	}
 	const int      w = ctx.get_w ();
 	const int      h = ctx.get_h ();

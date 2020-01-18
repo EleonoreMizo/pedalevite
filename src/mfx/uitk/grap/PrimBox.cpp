@@ -53,10 +53,10 @@ void	PrimBox::draw_outline (RenderCtx &ctx, int x0, int y0, int w, int h, uint8_
 	assert (w > 0);
 	assert (h > 0);
 
-	PrimLine::draw_h (ctx, x0    , y0    , x0 + w, c, false);
-	PrimLine::draw_v (ctx, x0 + w, y0    , y0 + h, c, false);
-	PrimLine::draw_h (ctx, x0 + w, y0 + h, x0    , c, false);
-	PrimLine::draw_v (ctx, x0    , y0 + h, y0    , c, false);
+	PrimLine::draw_h (ctx, x0        , y0        , x0 + w - 1, c, false);
+	PrimLine::draw_v (ctx, x0 + w - 1, y0        , y0 + h - 1, c, false);
+	PrimLine::draw_h (ctx, x0 + w - 1, y0 + h - 1, x0        , c, false);
+	PrimLine::draw_v (ctx, x0        , y0 + h - 1, y0        , c, false);
 }
 
 
@@ -84,10 +84,17 @@ void	PrimBox::draw_filled (RenderCtx &ctx, int x0, int y0, int w, int h, uint8_t
 		w  = x1 - x0;
 		const int      stride  = ctx.get_stride ();
 		uint8_t *      cur_ptr = &ctx.at (x0, y0);
-		for (int y = y0; y < y1; ++y)
+		if (w == stride)
 		{
-			memset (cur_ptr, c, w);
-			cur_ptr += stride;
+			memset (cur_ptr, c, stride * (y1 - y0));
+		}
+		else
+		{
+			for (int y = y0; y < y1; ++y)
+			{
+				memset (cur_ptr, c, w);
+				cur_ptr += stride;
+			}
 		}
 	}
 }
