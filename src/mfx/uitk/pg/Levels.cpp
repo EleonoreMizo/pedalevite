@@ -473,7 +473,6 @@ void	Levels::draw_audio_meter (const DirInfo &info, int nbr_chn)
 	}
 #endif
 
-	const Vec2d    size  = info._vum_sptr->get_bounding_box ().get_size ();
 	assert (nbr_chn <= 2);
 	const int      h = (_meter_audio_h + (nbr_chn - 1)) / nbr_chn - 2 * _scale;
 	const int      mid_gap  = _meter_audio_h - h * nbr_chn - 2 * _scale;
