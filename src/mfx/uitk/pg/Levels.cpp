@@ -572,20 +572,21 @@ void	Levels::draw_dsp_meter (const MeterResult &meter)
 #endif // PV_VERSION
 	const Vec2d    size  = _dsp_sptr->get_bounding_box ().get_size ();
 	const int      bar_w = size [0] - 2 * _scale;
-	int            pl   = fstb::floor_int (meter._rms * (bar_w - _scale));
-	int            pr   = fstb::ceil_int (meter._peak * (bar_w - _scale));
-	pr = std::max (pr, pl + 1);
+	int            pl   = fstb::floor_int (meter._rms * bar_w);
+	int            pr   = fstb::ceil_int (meter._peak * bar_w);
+	pl = fstb::limit (pl,      1, bar_w - 1);
+	pr = fstb::limit (pr, pl + 1, bar_w    );
 
 #if (PV_VERSION == 2)
 	grap::PrimBox::draw_filled (
 		ctx,
 		_scale, _scale,
-		pl - _scale, _meter_dsp_h - _scale * 2,
+		pl, _meter_dsp_h - _scale * 2,
 		192
 	);
 	grap::PrimBox::draw_filled (
 		ctx,
-		pl, _scale,
+		_scale + pl, _scale,
 		pr - pl, _meter_dsp_h - _scale * 2,
 		255
 	);

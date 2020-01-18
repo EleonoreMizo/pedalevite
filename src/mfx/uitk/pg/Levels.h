@@ -84,8 +84,8 @@ protected:
 	EvtProp        do_handle_evt (const NodeEvt &evt) final;
 
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
-	void   do_set_chn_mode (ChnMode mode) final;
-	void   do_set_master_vol (float vol) final;
+	void           do_set_chn_mode (ChnMode mode) final;
+	void           do_set_master_vol (float vol) final;
 
 
 
