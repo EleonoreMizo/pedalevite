@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/util/NotificationFlag.h"
-#include "mfx/pi/freqsh/FreqShiftCore.h"
+#include "mfx/pi/cdsp/FreqShift.h"
 #include "mfx/pi/freqsh/FreqShiftDesc.h"
 #include "mfx/pi/ParamDescSet.h"
 #include "mfx/pi/ParamProcSimple.h"
@@ -90,7 +90,8 @@ private:
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
-	FreqShiftCore  _freq_shift;
+	cdsp::FreqShift
+	               _freq_shift;
 
 
 

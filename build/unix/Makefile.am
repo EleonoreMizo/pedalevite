@@ -646,8 +646,21 @@ commonsrc = \
         ../../src/mfx/pi/colorme/ColorMeDesc.h \
         ../../src/mfx/pi/colorme/Cst.h \
         ../../src/mfx/pi/colorme/Param.h \
+        ../../src/mfx/pi/cdsp/fv/DelayAllPassSimd.cpp \
+        ../../src/mfx/pi/cdsp/fv/DelayAllPassSimd.h \
+        ../../src/mfx/pi/cdsp/fv/DelayComb.cpp \
+        ../../src/mfx/pi/cdsp/fv/DelayComb.h \
+        ../../src/mfx/pi/cdsp/fv/DelayLineSimple.cpp \
+        ../../src/mfx/pi/cdsp/fv/DelayLineSimple.h \
+        ../../src/mfx/pi/cdsp/fv/DelayLineSimpleMod.cpp \
+        ../../src/mfx/pi/cdsp/fv/DelayLineSimpleMod.h \
+        ../../src/mfx/pi/cdsp/fv/FreeverbCore.cpp \
+        ../../src/mfx/pi/cdsp/fv/FreeverbCore.h \
+        ../../src/mfx/pi/cdsp/FreqShift.cpp \
+        ../../src/mfx/pi/cdsp/FreqShift.h \
         ../../src/mfx/pi/cdsp/FreqSplitter5.cpp \
         ../../src/mfx/pi/cdsp/FreqSplitter5.h \
+        ../../src/mfx/pi/cdsp/PhaseHalfPi.h \
         ../../src/mfx/pi/cpx/Compex.cpp \
         ../../src/mfx/pi/cpx/Compex.h \
         ../../src/mfx/pi/cpx/CompexDesc.cpp \
@@ -758,23 +771,11 @@ commonsrc = \
         ../../src/mfx/pi/flancho/WfType.h \
         ../../src/mfx/pi/freqsh/FrequencyShifter.cpp \
         ../../src/mfx/pi/freqsh/FrequencyShifter.h \
-        ../../src/mfx/pi/freqsh/FreqShiftCore.cpp \
-        ../../src/mfx/pi/freqsh/FreqShiftCore.h \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.cpp \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.h \
         ../../src/mfx/pi/freqsh/Param.h \
-        ../../src/mfx/pi/fv/DelayAllPassSimd.cpp \
-        ../../src/mfx/pi/fv/DelayAllPassSimd.h \
-        ../../src/mfx/pi/fv/DelayComb.cpp \
-        ../../src/mfx/pi/fv/DelayComb.h \
-        ../../src/mfx/pi/fv/DelayLineSimple.cpp \
-        ../../src/mfx/pi/fv/DelayLineSimple.h \
-        ../../src/mfx/pi/fv/DelayLineSimpleMod.cpp \
-        ../../src/mfx/pi/fv/DelayLineSimpleMod.h \
         ../../src/mfx/pi/fv/Freeverb.cpp \
         ../../src/mfx/pi/fv/Freeverb.h \
-        ../../src/mfx/pi/fv/FreeverbCore.cpp \
-        ../../src/mfx/pi/fv/FreeverbCore.h \
         ../../src/mfx/pi/fv/FreeverbDesc.cpp \
         ../../src/mfx/pi/fv/FreeverbDesc.h \
         ../../src/mfx/pi/fv/Param.h \

@@ -33,7 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
 #include "mfx/dsp/iir/Biquad.h"
-#include "mfx/pi/fv/FreeverbCore.h"
+#include "mfx/pi/cdsp/fv/FreeverbCore.h"
 #include "mfx/pi/fv/FreeverbDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -113,7 +113,8 @@ private:
 	fstb::util::NotificationFlagCascadeSingle
 	               _param_change_flag_other;
 
-	FreeverbCore   _fv;
+	cdsp::fv::FreeverbCore
+	               _fv;
 	ChnArray       _chn_arr;
 	float          _src_lvl;
 	float          _dry_lvl;

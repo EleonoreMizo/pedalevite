@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_fv_FreeverbCore_HEADER_INCLUDED)
-#define mfx_pi_fv_FreeverbCore_HEADER_INCLUDED
+#if ! defined (mfx_pi_cdsp_fv_FreeverbCore_HEADER_INCLUDED)
+#define mfx_pi_cdsp_fv_FreeverbCore_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -28,8 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
-#include "mfx/pi/fv/DelayAllPassSimd.h"
-#include "mfx/pi/fv/DelayComb.h"
+#include "mfx/pi/cdsp/fv/DelayAllPassSimd.h"
+#include "mfx/pi/cdsp/fv/DelayComb.h"
 
 #include <array>
 #include <vector>
@@ -39,6 +39,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 namespace pi
+{
+namespace cdsp
 {
 namespace fv
 {
@@ -131,16 +133,17 @@ private:
 
 
 }  // namespace fv
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/fv/FreeverbCore.hpp"
+//#include "mfx/pi/cdsp/fv/FreeverbCore.hpp"
 
 
 
-#endif   // mfx_pi_fv_FreeverbCore_HEADER_INCLUDED
+#endif   // mfx_pi_cdsp_fv_FreeverbCore_HEADER_INCLUDED
 
 
 

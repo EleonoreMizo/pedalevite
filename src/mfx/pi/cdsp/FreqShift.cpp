@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FreqShiftCore.cpp
+        FreqShift.cpp
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/ToolsSimd.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
-#include "mfx/pi/freqsh/FreqShiftCore.h"
+#include "mfx/pi/cdsp/FreqShift.h"
 
 #include <cassert>
 #include <cmath>
@@ -40,7 +40,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace freqsh
+namespace cdsp
 {
 
 
@@ -49,7 +49,7 @@ namespace freqsh
 
 
 
-FreqShiftCore::FreqShiftCore ()
+FreqShift::FreqShift ()
 :	_sample_freq (0)
 ,	_ali ()
 ,	_inv_fs (0)
@@ -69,7 +69,7 @@ FreqShiftCore::FreqShiftCore ()
 
 
 
-void	FreqShiftCore::reset (double sample_freq, int max_buf_len, double &latency)
+void	FreqShift::reset (double sample_freq, int max_buf_len, double &latency)
 {
 	assert (sample_freq > 0);
 	assert (max_buf_len > 0);
@@ -91,7 +91,7 @@ void	FreqShiftCore::reset (double sample_freq, int max_buf_len, double &latency)
 
 
 
-void	FreqShiftCore::set_freq (float f)
+void	FreqShift::set_freq (float f)
 {
 	_freq = f;
 	update_step ();
@@ -99,14 +99,14 @@ void	FreqShiftCore::set_freq (float f)
 
 
 
-bool	FreqShiftCore::is_active () const
+bool	FreqShift::is_active () const
 {
 	return (fabs (_freq) >= 1e-3f);
 }
 
 
 
-void	FreqShiftCore::process_block (float * const dst_ptr_arr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn)
+void	FreqShift::process_block (float * const dst_ptr_arr [], const float * const src_ptr_arr [], int nbr_spl, int nbr_chn)
 {
 	assert (dst_ptr_arr != nullptr);
 	assert (src_ptr_arr != nullptr);
@@ -151,7 +151,7 @@ void	FreqShiftCore::process_block (float * const dst_ptr_arr [], const float * c
 
 
 
-void	FreqShiftCore::clear_buffers ()
+void	FreqShift::clear_buffers ()
 {
 	for (auto &chn : _ali->_chn_arr)
 	{
@@ -171,7 +171,7 @@ void	FreqShiftCore::clear_buffers ()
 
 
 
-void	FreqShiftCore::update_step ()
+void	FreqShift::update_step ()
 {
 	_step_angle = float ((fstb::PI * 2) * _freq / _sample_freq);
 	_ali->_osc.set_step (_step_angle);
@@ -192,7 +192,7 @@ void	FreqShiftCore::update_step ()
 
 
 
-}  // namespace freqsh
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 

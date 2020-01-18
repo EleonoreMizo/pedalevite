@@ -25,7 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
-#include "mfx/pi/fv/DelayLineSimpleMod.h"
+#include "mfx/pi/cdsp/fv/DelayLineSimpleMod.h"
 
 #include <algorithm>
 
@@ -37,6 +37,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 namespace pi
+{
+namespace cdsp
 {
 namespace fv
 {
@@ -174,6 +176,7 @@ int	DelayLineSimpleMod::compute_delay () const
 
 
 }  // namespace fv
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 

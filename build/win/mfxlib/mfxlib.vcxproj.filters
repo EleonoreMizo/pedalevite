@@ -268,6 +268,9 @@
     <Filter Include="mfx\pi\cdsp">
       <UniqueIdentifier>{ea91aef9-e1b3-4d1d-ba86-35c5a0db19d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\cdsp\fv">
+      <UniqueIdentifier>{e9318337-b614-458b-a5c5-ebcf4c9fa333}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1248,9 +1251,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\freqsh\FrequencyShifter.h">
       <Filter>mfx\pi\freqsh</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\freqsh\PhaseHalfPi.h">
-      <Filter>mfx\pi\freqsh</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\tuner\Tuner.h">
       <Filter>mfx\pi\tuner</Filter>
     </ClInclude>
@@ -1630,15 +1630,6 @@
       <Filter>mfx\pi\fv</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\fv\Param.h">
-      <Filter>mfx\pi\fv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayAllPassSimd.h">
-      <Filter>mfx\pi\fv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayLineSimple.h">
-      <Filter>mfx\pi\fv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayComb.h">
       <Filter>mfx\pi\fv</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\peq\PEq.h">
@@ -2117,15 +2108,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReaderPitch.hpp">
       <Filter>mfx\dsp\dly</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\fv\FreeverbCore.h">
-      <Filter>mfx\pi\fv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\freqsh\FreqShiftCore.h">
-      <Filter>mfx\pi\freqsh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\fv\DelayLineSimpleMod.h">
-      <Filter>mfx\pi\fv</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscStepSeq.h">
       <Filter>mfx\dsp\ctrl\lfo</Filter>
@@ -3045,6 +3027,27 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h">
       <Filter>mfx\pi\cdsp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\PhaseHalfPi.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqShift.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayAllPassSimd.h">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayComb.h">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimple.h">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimpleMod.h">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.h">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3575,15 +3578,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbDesc.cpp">
       <Filter>mfx\pi\fv</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayAllPassSimd.cpp">
-      <Filter>mfx\pi\fv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayLineSimple.cpp">
-      <Filter>mfx\pi\fv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayComb.cpp">
-      <Filter>mfx\pi\fv</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
@@ -3838,15 +3832,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\RampModule.cpp">
       <Filter>mfx\pi\ramp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbCore.cpp">
-      <Filter>mfx\pi\fv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\freqsh\FreqShiftCore.cpp">
-      <Filter>mfx\pi\freqsh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\fv\DelayLineSimpleMod.cpp">
-      <Filter>mfx\pi\fv</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscStepSeq.cpp">
       <Filter>mfx\dsp\ctrl\lfo</Filter>
@@ -4216,6 +4201,24 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp">
       <Filter>mfx\pi\cdsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqShift.cpp">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayComb.cpp">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimple.cpp">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimpleMod.cpp">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.cpp">
+      <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayAllPassSimd.cpp">
+      <Filter>mfx\pi\cdsp\fv</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

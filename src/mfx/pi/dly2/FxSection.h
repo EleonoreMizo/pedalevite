@@ -32,9 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/ctrl/Ramp.h"
+#include "mfx/pi/cdsp/FreqShift.h"
 #include "mfx/pi/dly2/FilterType.h"
 #include "mfx/pi/dly2/FxDisto.h"
-#include "mfx/pi/freqsh/FreqShiftCore.h"
 
 
 
@@ -92,7 +92,7 @@ private:
 	FxDisto        _disto;
 	dsp::iir::OnePole
 	               _shelf_hi;
-	freqsh::FreqShiftCore
+	cdsp::FreqShift
 	               _freq_shift;
 
 	fstb::util::NotificationFlag

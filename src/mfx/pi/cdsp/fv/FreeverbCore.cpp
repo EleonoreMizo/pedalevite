@@ -26,7 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/DataAlign.h"
 #include "mfx/dsp/mix/Align.h"
-#include "mfx/pi/fv/FreeverbCore.h"
+#include "mfx/pi/cdsp/fv/FreeverbCore.h"
 
 #include <cassert>
 
@@ -35,6 +35,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 namespace pi
+{
+namespace cdsp
 {
 namespace fv
 {
@@ -233,6 +235,7 @@ const std::array <int, FreeverbCore::_nbr_ap>	FreeverbCore::_ap_len_arr =
 
 
 }  // namespace fv
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 

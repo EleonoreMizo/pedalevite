@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DelayComb.cpp
+        DelayAllPassSimd.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -25,18 +25,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/ToolsSimd.h"
-#include "mfx/pi/fv/DelayComb.h"
+#include "mfx/pi/cdsp/fv/DelayAllPassSimd.h"
 
 #include <algorithm>
 
 #include <cassert>
-#include <cstring>
 
 
 
 namespace mfx
 {
 namespace pi
+{
+namespace cdsp
 {
 namespace fv
 {
@@ -47,51 +48,37 @@ namespace fv
 
 
 
-void	DelayComb::set_delay (int len)
+void	DelayAllPassSimd::set_delay (int len)
 {
 	_delay_line.set_delay (len);
 }
 
 
 
-void	DelayComb::set_feedback (float coef)
+void	DelayAllPassSimd::set_feedback (float coef)
 {
-	assert (coef >= -1);
-	assert (coef <= 1);
+	assert (coef > -1);
+	assert (coef < 1);
 
 	_fdbk = coef;
-	update_fdbkdamp ();
 }
 
 
 
-void	DelayComb::set_damp (float damp)
-{
-	assert (damp >= 0);
-	assert (damp < 1);
-
-	_damp = damp;
-	update_fdbkdamp ();
-}
-
-
-
-void	DelayComb::clear_buffers ()
+void	DelayAllPassSimd::clear_buffers ()
 {
 	_delay_line.clear_buffers ();
-	_mem_y = 0;
 }
 
 
 
-// Can work in-place
-void	DelayComb::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DelayAllPassSimd::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	float          mem_y = _mem_y;
+	const auto     fdbk = fstb::ToolsSimd::set1_f32 (_fdbk);
 
 	int            pos = 0;
 	do
@@ -103,13 +90,26 @@ void	DelayComb::process_block (float dst_ptr [], const float src_ptr [], int nbr
 		const float *  r_ptr        = _delay_line.use_read_data ();
 		float *        w_ptr        = _delay_line.use_write_data ();
 
-		for (int p2 = 0; p2 < work_len; ++p2)
+		const int      n_4          = work_len & -4;
+
+		for (int p2 = 0; p2 < n_4; p2 += 4)
 		{
-			const float   buf = r_ptr [p2];
-			const float   src = src_ptr [p2];
-			mem_y = buf * _fdbkdamp + mem_y * _damp;
-			dst_ptr [p2] = buf;
-			w_ptr [p2]   = mem_y + src;
+			const auto    buf = fstb::ToolsSimd::loadu_f32 (r_ptr   + p2);
+			const auto    src = fstb::ToolsSimd::loadu_f32 (src_ptr + p2);
+			const auto    dst = buf - src;
+			const auto    dly = src + buf * fdbk;
+			fstb::ToolsSimd::storeu_f32 (dst_ptr + p2, dst);
+			fstb::ToolsSimd::storeu_f32 (w_ptr   + p2, dly);
+		}
+
+		for (int p2 = n_4; p2 < work_len; ++p2)
+		{
+			const auto    buf = r_ptr [p2];
+			const auto    src = src_ptr [p2];
+			const auto    dst = buf - src;
+			const auto    dly = src + buf * _fdbk;
+			dst_ptr [p2] = dst;
+			w_ptr [p2] = dly;
 		}
 
 		_delay_line.step (work_len);
@@ -118,8 +118,6 @@ void	DelayComb::process_block (float dst_ptr [], const float src_ptr [], int nbr
 		dst_ptr += work_len;
 	}
 	while (pos < nbr_spl);
-
-	_mem_y = mem_y;
 }
 
 
@@ -132,14 +130,8 @@ void	DelayComb::process_block (float dst_ptr [], const float src_ptr [], int nbr
 
 
 
-void	DelayComb::update_fdbkdamp ()
-{
-	_fdbkdamp = (1 - _damp) * _fdbk;
-}
-
-
-
 }  // namespace fv
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 

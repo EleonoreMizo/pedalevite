@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FreqShiftCore.h
+        FreqShift.h
         Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_freqsh_FreqShiftCore_HEADER_INCLUDED)
-#define mfx_pi_freqsh_FreqShiftCore_HEADER_INCLUDED
+#if ! defined (mfx_pi_cdsp_FreqShift_HEADER_INCLUDED)
+#define mfx_pi_cdsp_FreqShift_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -31,7 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/SingleObj.h"
 #include "mfx/dsp/osc/OscSinCosStableSimd.h"
 #include "mfx/dsp/iir/Biquad.h"
-#include "mfx/pi/freqsh/PhaseHalfPi.h"
+#include "mfx/pi/cdsp/PhaseHalfPi.h"
 
 #include <array>
 #include <vector>
@@ -42,12 +42,12 @@ namespace mfx
 {
 namespace pi
 {
-namespace freqsh
+namespace cdsp
 {
 
 
 
-class FreqShiftCore
+class FreqShift
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -56,7 +56,7 @@ public:
 
 	static const int  _max_nbr_chn = 2;
 
-	               FreqShiftCore ();
+	               FreqShift ();
 
 	void           reset (double sample_freq, int max_buf_len, double &latency);
 	void           set_freq (float f);
@@ -130,30 +130,28 @@ private:
 
 private:
 
-	               FreqShiftCore (const FreqShiftCore &other)     = delete;
-	               FreqShiftCore (const FreqShiftCore &&other)    = delete;
-	FreqShiftCore &
-	               operator = (const FreqShiftCore &other)        = delete;
-	FreqShiftCore &
-	               operator = (const FreqShiftCore &&other)       = delete;
-	bool           operator == (const FreqShiftCore &other) const = delete;
-	bool           operator != (const FreqShiftCore &other) const = delete;
+	               FreqShift (const FreqShift &other)         = delete;
+	               FreqShift (const FreqShift &&other)        = delete;
+	FreqShift &    operator = (const FreqShift &other)        = delete;
+	FreqShift &    operator = (const FreqShift &&other)       = delete;
+	bool           operator == (const FreqShift &other) const = delete;
+	bool           operator != (const FreqShift &other) const = delete;
 
-}; // class FreqShiftCore
+}; // class FreqShift
 
 
 
-}  // namespace freqsh
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/freqsh/FreqShiftCore.hpp"
+//#include "mfx/pi/cdsp/FreqShift.hpp"
 
 
 
-#endif   // mfx_pi_freqsh_FreqShiftCore_HEADER_INCLUDED
+#endif   // mfx_pi_cdsp_FreqShift_HEADER_INCLUDED
 
 
 

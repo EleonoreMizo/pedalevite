@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DelayLineSimple.h
+        DelayComb.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_fv_DelayLineSimple_HEADER_INCLUDED)
-#define mfx_pi_fv_DelayLineSimple_HEADER_INCLUDED
+#if ! defined (mfx_pi_cdsp_fv_DelayComb_HEADER_INCLUDED)
+#define mfx_pi_cdsp_fv_DelayComb_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include <vector>
+#include "mfx/pi/cdsp/fv/DelayLineSimple.h"
 
 
 
@@ -35,12 +35,14 @@ namespace mfx
 {
 namespace pi
 {
+namespace cdsp
+{
 namespace fv
 {
 
 
 
-class DelayLineSimple
+class DelayComb
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -48,13 +50,10 @@ class DelayLineSimple
 public:
 
 	void           set_delay (int len);
-
+	void           set_feedback (float coef);
+	void           set_damp (float damp);
 	void           clear_buffers ();
-
-	int            get_max_rw_len () const;
-	const float *  use_read_data () const;
-	float *        use_write_data ();
-	void           step (int len);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 
 
@@ -68,14 +67,14 @@ protected:
 
 private:
 
-	inline int     compute_read_pos () const;
+	void           update_fdbkdamp ();
 
-	int            _delay      = 0;
-	int            _write_pos  = 0;
-	int            _line_size  = 0;
-	int            _line_mask  = 0;
-	std::vector <float>
-	               _line_data;
+	DelayLineSimple
+	               _delay_line;
+	float          _fdbk        = 0; // in ]-1 ; 1[
+	float          _damp        = 0;
+	float          _fdbkdamp    = 0;
+	float          _mem_y       = 0;
 
 
 
@@ -83,24 +82,25 @@ private:
 
 private:
 
-	bool           operator == (const DelayLineSimple &other) const = delete;
-	bool           operator != (const DelayLineSimple &other) const = delete;
+	bool           operator == (const DelayComb &other) const = delete;
+	bool           operator != (const DelayComb &other) const = delete;
 
-}; // class DelayLineSimple
+}; // class DelayComb
 
 
 
 }  // namespace fv
+}  // namespace cdso
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/fv/DelayLineSimple.hpp"
+//#include "mfx/pi/cdsp/fv/DelayComb.hpp"
 
 
 
-#endif   // mfx_pi_fv_DelayLineSimple_HEADER_INCLUDED
+#endif   // mfx_pi_cdsp_fv_DelayComb_HEADER_INCLUDED
 
 
 

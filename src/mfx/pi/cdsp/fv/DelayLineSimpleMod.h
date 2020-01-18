@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_fv_DelayLineSimpleMod_HEADER_INCLUDED)
-#define mfx_pi_fv_DelayLineSimpleMod_HEADER_INCLUDED
+#if ! defined (mfx_pi_cdsp_fv_DelayLineSimpleMod_HEADER_INCLUDED)
+#define mfx_pi_cdsp_fv_DelayLineSimpleMod_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -34,6 +34,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 namespace pi
+{
+namespace cdsp
 {
 namespace fv
 {
@@ -104,16 +106,17 @@ private:
 
 
 }  // namespace fv
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/fv/DelayLineSimpleMod.hpp"
+//#include "mfx/pi/cdsp/fv/DelayLineSimpleMod.hpp"
 
 
 
-#endif   // mfx_pi_fv_DelayLineSimpleMod_HEADER_INCLUDED
+#endif   // mfx_pi_cdsp_fv_DelayLineSimpleMod_HEADER_INCLUDED
 
 
 
