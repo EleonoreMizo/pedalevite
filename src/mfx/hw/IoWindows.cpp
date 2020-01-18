@@ -759,27 +759,30 @@ bool	IoWindows::process_lbuttondown (::HWND hwnd, ::WPARAM wparam, ::LPARAM lpar
 		else
 		{
 			std::string    pathname;
-			const Lsc      type    = find_lsc_from_coord (mx, my);
-			int            ret_val = select_file (
-				pathname,
-				(type == Lsc_SAVE),
-				(type == Lsc_SAVE) ? "Save config" : "Load config"
-			);
-			if (ret_val == 0)
+			const Lsc      type = find_lsc_from_coord (mx, my);
+			if (type != Lsc_INVALID)
 			{
-				auto &         cmd_mgr  = _model_ptr->use_async_cmd ();
-				auto *         cell_ptr = cmd_mgr.use_pool ().take_cell (true);
-				cell_ptr->_val._content._msg_sptr =
-					std::static_pointer_cast <ModelMsgCmdInterface> (
-						std::make_shared <ModelMsgCmdConfLdSv> (
-							  (type == Lsc_SAVE)
-							? ModelMsgCmdConfLdSv::Type_SAVE
-							: ModelMsgCmdConfLdSv::Type_LOAD,
-							pathname,
-							this
-						)
-					);
-				cmd_mgr.enqueue (*cell_ptr, _ret_queue_sptr);
+				int            ret_val = select_file (
+					pathname,
+					(type == Lsc_SAVE),
+					(type == Lsc_SAVE) ? "Save config" : "Load config"
+				);
+				if (ret_val == 0)
+				{
+					auto &         cmd_mgr  = _model_ptr->use_async_cmd ();
+					auto *         cell_ptr = cmd_mgr.use_pool ().take_cell (true);
+					cell_ptr->_val._content._msg_sptr =
+						std::static_pointer_cast <ModelMsgCmdInterface> (
+							std::make_shared <ModelMsgCmdConfLdSv> (
+								  (type == Lsc_SAVE)
+								? ModelMsgCmdConfLdSv::Type_SAVE
+								: ModelMsgCmdConfLdSv::Type_LOAD,
+								pathname,
+								this
+							)
+						);
+					cmd_mgr.enqueue (*cell_ptr, _ret_queue_sptr);
+				}
 			}
 		}
 	}
