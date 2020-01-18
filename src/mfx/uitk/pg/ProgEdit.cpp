@@ -68,6 +68,7 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_settings_sptr ( std::make_shared <NText  > (Entry_SETTINGS ))
 ,	_save_sptr (     std::make_shared <NText  > (Entry_SAVE     ))
 ,	_slot_list ()
+,	_rout_list ()
 ,	_state (State_NORMAL)
 ,	_save_bank_index (-1)
 ,	_save_preset_index (-1)
@@ -83,7 +84,7 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 	_ms_list_sptr  ->set_justification (0.5f, 1, false);
 	_settings_sptr ->set_text ("Settings\xE2\x80\xA6");
 	_save_sptr     ->set_text ("Save to\xE2\x80\xA6");
-	_ms_list_sptr  ->set_text ("-----------------");
+	_ms_list_sptr  ->set_text ("---------------------");
 	_prog_name_sptr->set_bold (true, true );
 	_fx_list_sptr  ->set_bold (true, false);
 	_ms_list_sptr  ->set_bold (true, false);
@@ -358,6 +359,7 @@ void	ProgEdit::set_preset_info ()
 	const int      nbr_slots = int (_slot_id_list.size ());
 	PageMgrInterface::NavLocList  nav_list (nbr_slots + 5);
 	_slot_list.resize (nbr_slots + 2);
+	_rout_list.resize (nbr_slots + 2);
 
 	_menu_sptr->clear_all_nodes ();
 	_menu_sptr->push_back (_prog_name_sptr);
@@ -408,33 +410,32 @@ void	ProgEdit::set_preset_info ()
 			);
 		}
 
-		const char *   prefix_0 = "  ";
+		const char *   link_0 = "";
 		switch (link_list [slot_index])
 		{
-		case Link_NONE:   /* Nothing */               break;
-		case Link_CHAIN:  prefix_0 = "\xE2\x9A\xAB "; break; // U+26AB MEDIUM BLACK CIRCLE
-		case Link_BRANCH: prefix_0 = "\xE2\x9A\xAC "; break; // U+26AC MEDIUM SMALL WHITE CIRCLE
-		default:          assert (false);             break;
+		case Link_NONE:   /* Nothing */            break;
+		case Link_CHAIN:  link_0 = "\xE2\x9A\xAB"; break; // U+26AB MEDIUM BLACK CIRCLE
+		case Link_BRANCH: link_0 = "\xE2\x9A\xAC"; break; // U+26AC MEDIUM SMALL WHITE CIRCLE
+		default:          assert (false);          break;
 		}
-		multilabel = pi::param::Tools::join_strings_multi (
-			multilabel.c_str (), '\n', prefix_0, ""
-		);
 
 		const int      skip     = (slot_index >= _audio_list_len) ? 1 : 0;
 		const int      pos_list = slot_index + skip;
-		set_slot (nav_list, pos_list, multilabel, ctrl_flag, _audio_list_len);
+		set_slot (
+			nav_list, pos_list, multilabel, link_0, ctrl_flag, _audio_list_len
+		);
 	}
 
-	set_slot (nav_list, _audio_list_len, "  <End>", false, _audio_list_len);
-	set_slot (nav_list, nbr_slots + 1  , "  <End>", false, _audio_list_len);
+	set_slot (nav_list, _audio_list_len, "<End>", "", false, _audio_list_len);
+	set_slot (nav_list, nbr_slots + 1  , "<End>", "", false, _audio_list_len);
 
 	if (ToolsRouting::are_audio_io_connected (_view_ptr->use_graph ()))
 	{
-		_fx_list_sptr->set_text ("-----------------");
+		_fx_list_sptr->set_text ("---------------------");
 	}
 	else
 	{
-		_fx_list_sptr->set_text ("-I/O not linked!-");
+		_fx_list_sptr->set_text ("---I/O not linked!---");
 	}
 
 	_page_ptr->set_nav_layout (nav_list);
@@ -553,18 +554,20 @@ void	ProgEdit::set_link (std::vector <Link> &link_list, int slot_id, Link link, 
 
 
 
-void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size)
+void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, std::string link_txt, bool bold_flag, int chain_size)
 {
+	const int      w_m      = _fnt_ptr->get_char_w ();
 	const int      h_m      = _fnt_ptr->get_char_h ();
 	const int      scr_w    = _page_size [0];
 	const int      pos_nav  = pos_list + 3; // In the nav_list
 	const int      skip     = (pos_list >= chain_size + 1) ? 1 : 0;
 	const int      pos_menu = pos_list + 4 + skip;
 
+	// Main text
 	TxtSPtr        entry_sptr { std::make_shared <NText> (pos_list) };
-	entry_sptr->set_coord (Vec2d (0, h_m * pos_menu));
+	entry_sptr->set_frame (Vec2d (scr_w - w_m, 0), Vec2d (w_m, 0));
+	entry_sptr->set_coord (Vec2d (w_m, h_m * pos_menu));
 	entry_sptr->set_font (*_fnt_ptr);
-	entry_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	entry_sptr->set_bold (bold_flag, true);
 	std::string    txt = pi::param::Tools::print_name_bestfit (
 		scr_w, multilabel.c_str (),
@@ -575,6 +578,23 @@ void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, s
 	nav_list [pos_nav]._node_id = pos_list;
 
 	_menu_sptr->push_back (entry_sptr);
+
+	// Link information
+	if (link_txt.empty ())
+	{
+		_rout_list [pos_list].reset ();
+	}
+	else
+	{
+		TxtSPtr        link_sptr {
+			std::make_shared <NText> (Entry_LINKS + pos_list) };
+		link_sptr->set_coord (Vec2d (0, h_m * pos_menu));
+		link_sptr->set_font (*_fnt_ptr);
+		link_sptr->set_text (link_txt);
+		_rout_list [pos_list] = link_sptr;
+
+		_menu_sptr->push_back (link_sptr);
+	}
 }
 
 

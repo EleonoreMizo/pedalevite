@@ -102,7 +102,8 @@ private:
 
 	enum Entry
 	{
-		Entry_WINDOW    = 1000,
+		Entry_LINKS     = 1000,
+		Entry_WINDOW    = 2000,
 		Entry_FX_LIST,
 		Entry_MS_LIST,
 		Entry_PROG_NAME,
@@ -128,7 +129,7 @@ private:
 	               find_chain_links (const std::vector <Tools::NodeEntry> &entry_list) const;
 	void           find_chain_links_dir (std::vector <Link> &link_list, int slot_id, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list) const;
 	void           set_link (std::vector <Link> &link_list, int slot_id, Link link, const std::vector <Tools::NodeEntry> &entry_list) const;
-	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, bool bold_flag, int chain_size);
+	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, std::string link_txt, bool bold_flag, int chain_size);
 	EvtProp        change_effect (int node_id, int dir);
 	void           update_loc_edit (int node_id);
 	void           update_cached_pi_list ();
@@ -154,6 +155,7 @@ private:
 	TxtSPtr        _settings_sptr;
 	TxtSPtr        _save_sptr;
 	TxtArray       _slot_list;   // Shows N+1+M+1 slots, the last one of each list being the <End> line.
+	TxtArray       _rout_list;   // Link circles in front of N+1+M+1 slots
 
 	State          _state;
 	int            _save_bank_index;
