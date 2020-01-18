@@ -182,9 +182,9 @@ void	SvfCore4Simd <VD, VS, VP, MX>::get_mix_one (int unit, float &v0m, float &v1
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::copy_z_eq (const SvfCore4Simd <VD, VS, VP, MX> &other)
 {
-	V128Par::store_f32 (_data._g0 , V128Par::load_f32 (other._data.g0 ));
-	V128Par::store_f32 (_data._g1 , V128Par::load_f32 (other._data.g1 ));
-	V128Par::store_f32 (_data._g2 , V128Par::load_f32 (other._data.g2 ));
+	V128Par::store_f32 (_data._g0 , V128Par::load_f32 (other._data._g0 ));
+	V128Par::store_f32 (_data._g1 , V128Par::load_f32 (other._data._g1 ));
+	V128Par::store_f32 (_data._g2 , V128Par::load_f32 (other._data._g2 ));
 	V128Par::store_f32 (_data._v0m, V128Par::load_f32 (other._data._v0m));
 	V128Par::store_f32 (_data._v1m, V128Par::load_f32 (other._data._v1m));
 	V128Par::store_f32 (_data._v2m, V128Par::load_f32 (other._data._v2m));

@@ -103,7 +103,7 @@ void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page,
 		break;
 	case EndType_SHUTDOWN:
 		txt =
-			"Shuting down\xE2\x80\xA6\n"
+			"Shutting down\xE2\x80\xA6\n"
 			"Please wait a\n"
 			"few seconds\n"
 			"before turning\n"
