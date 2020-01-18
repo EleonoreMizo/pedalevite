@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FreqSplitter.h
+        FreqSplitter5.h
         Author: Laurent de Soras, 2016
 
 The group delay depends on the splitting frequency. Approximate figures:
@@ -21,8 +21,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dist2_FreqSplitter_HEADER_INCLUDED)
-#define mfx_pi_dist2_FreqSplitter_HEADER_INCLUDED
+#if ! defined (mfx_pi_cdsp_FreqSplitter5_HEADER_INCLUDED)
+#define mfx_pi_cdsp_FreqSplitter5_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -47,12 +47,12 @@ namespace mfx
 {
 namespace pi
 {
-namespace dist2
+namespace cdsp
 {
 
 
 
-class FreqSplitter
+class FreqSplitter5
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -62,7 +62,7 @@ public:
 	void           clear_buffers ();
 	void           set_sample_freq (double sample_freq);
 	void           set_split_freq (float freq);
-	void           copy_z_eq (const FreqSplitter &other);
+	void           copy_z_eq (const FreqSplitter5 &other);
 	void           process_block (int chn, float dst_l_ptr [], float dst_h_ptr [], const float src_ptr [], int nbr_spl);
 
 
@@ -99,24 +99,24 @@ private:
 
 private:
 
-	bool           operator == (const FreqSplitter &other) const = delete;
-	bool           operator != (const FreqSplitter &other) const = delete;
+	bool           operator == (const FreqSplitter5 &other) const = delete;
+	bool           operator != (const FreqSplitter5 &other) const = delete;
 
-}; // class FreqSplitter
+}; // class FreqSplitter5
 
 
 
-}  // namespace dist2
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/dist2/FreqSplitter.hpp"
+//#include "mfx/pi/cdsp/FreqSplitter5.hpp"
 
 
 
-#endif   // mfx_pi_dist2_FreqSplitter_HEADER_INCLUDED
+#endif   // mfx_pi_cdsp_FreqSplitter5_HEADER_INCLUDED
 
 
 

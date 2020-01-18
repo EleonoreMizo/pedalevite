@@ -265,6 +265,9 @@
     <Filter Include="mfx\uitk\grap">
       <UniqueIdentifier>{6735df35-d891-478e-a740-9e7b2e148c80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\cdsp">
+      <UniqueIdentifier>{ea91aef9-e1b3-4d1d-ba86-35c5a0db19d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -1848,9 +1851,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoStage.h">
       <Filter>mfx\pi\dist2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.h">
       <Filter>mfx\pi\dist2</Filter>
     </ClInclude>
@@ -3042,6 +3042,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp">
       <Filter>mfx\pi</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -3656,9 +3659,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.cpp">
       <Filter>mfx\pi\dist2</Filter>
     </ClCompile>
@@ -4213,6 +4213,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp">
+      <Filter>mfx\pi\cdsp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

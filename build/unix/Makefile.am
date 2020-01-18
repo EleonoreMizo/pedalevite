@@ -646,6 +646,8 @@ commonsrc = \
         ../../src/mfx/pi/colorme/ColorMeDesc.h \
         ../../src/mfx/pi/colorme/Cst.h \
         ../../src/mfx/pi/colorme/Param.h \
+        ../../src/mfx/pi/cdsp/FreqSplitter5.cpp \
+        ../../src/mfx/pi/cdsp/FreqSplitter5.h \
         ../../src/mfx/pi/cpx/Compex.cpp \
         ../../src/mfx/pi/cpx/Compex.h \
         ../../src/mfx/pi/cpx/CompexDesc.cpp \
@@ -671,8 +673,6 @@ commonsrc = \
         ../../src/mfx/pi/dist2/DistoDspRandWalk.hpp \
         ../../src/mfx/pi/dist2/DistoStage.cpp \
         ../../src/mfx/pi/dist2/DistoStage.h \
-        ../../src/mfx/pi/dist2/FreqSplitter.cpp \
-        ../../src/mfx/pi/dist2/FreqSplitter.h \
         ../../src/mfx/pi/dist2/Param.h \
         ../../src/mfx/pi/dist2/TransientAnalyser.cpp \
         ../../src/mfx/pi/dist2/TransientAnalyser.h \

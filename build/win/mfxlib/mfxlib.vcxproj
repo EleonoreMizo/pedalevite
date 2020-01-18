@@ -700,6 +700,7 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\Err.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\EventReset.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
@@ -746,7 +747,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoStage.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\distapf\DistApf.h" />
@@ -1280,6 +1280,7 @@
     <ClCompile Include="..\..\..\src\mfx\PageSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\Click.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\ClickDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\colorme\ColorMe.cpp" />
@@ -1292,7 +1293,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\dist2\FreqSplitter.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApf.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApfDesc.cpp" />

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FreqSplitter.cpp
+        FreqSplitter5.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -25,7 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/dsp/iir/TransSZBilin.h"
-#include "mfx/pi/dist2/FreqSplitter.h"
+#include "mfx/pi/cdsp/FreqSplitter5.h"
 
 #include <cassert>
 
@@ -35,7 +35,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace dist2
+namespace cdsp
 {
 
 
@@ -44,7 +44,7 @@ namespace dist2
 
 
 
-void	FreqSplitter::clear_buffers ()
+void	FreqSplitter5::clear_buffers ()
 {
 	for (auto &band : _band_split_arr)
 	{
@@ -54,7 +54,7 @@ void	FreqSplitter::clear_buffers ()
 
 
 
-void	FreqSplitter::set_sample_freq (double sample_freq)
+void	FreqSplitter5::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
@@ -65,7 +65,7 @@ void	FreqSplitter::set_sample_freq (double sample_freq)
 
 
 
-void	FreqSplitter::set_split_freq (float freq)
+void	FreqSplitter5::set_split_freq (float freq)
 {
 	assert (freq > 0);
 	assert (freq < _sample_freq * 0.5f);
@@ -76,7 +76,7 @@ void	FreqSplitter::set_split_freq (float freq)
 
 
 
-void	FreqSplitter::copy_z_eq (const FreqSplitter &other)
+void	FreqSplitter5::copy_z_eq (const FreqSplitter5 &other)
 {
 	assert (_sample_freq > 0);
 	assert (other._sample_freq == _sample_freq);
@@ -100,7 +100,7 @@ void	FreqSplitter::copy_z_eq (const FreqSplitter &other)
 
 
 
-void	FreqSplitter::process_block (int chn, float dst_l_ptr [], float dst_h_ptr [], const float src_ptr [], int nbr_spl)
+void	FreqSplitter5::process_block (int chn, float dst_l_ptr [], float dst_h_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (chn >= 0);
 	assert (chn < int (_band_split_arr.size ()));
@@ -124,7 +124,7 @@ void	FreqSplitter::process_block (int chn, float dst_l_ptr [], float dst_h_ptr [
 
 
 
-void	FreqSplitter::update_filter ()
+void	FreqSplitter5::update_filter ()
 {
 	assert (_sample_freq > 0);
 	assert (_inv_fs      > 0);
@@ -163,7 +163,7 @@ void	FreqSplitter::update_filter ()
 
 
 
-}  // namespace dist2
+}  // namespace cdsp
 }  // namespace pi
 }  // namespace mfx
 
