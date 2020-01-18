@@ -103,8 +103,8 @@ private:
 
 private:
 
-	               IIFix (const IIFix &other)          = delete;
-	IIFix &     operator = (const IIFix &other)        = delete;
+	               IIFix (const IIFix &other)             = delete;
+	IIFix &        operator = (const IIFix &other)        = delete;
 	bool           operator == (const IIFix &other) const = delete;
 	bool           operator != (const IIFix &other) const = delete;
 
