@@ -458,11 +458,7 @@ void	ToolsRouting::find_coverage (std::set <Node> &node_list_u, std::set <Node> 
 
 	NodeMap::const_iterator slot_it =
 		graph.find (Node (doc::CnxEnd::Type_NORMAL, slot_id));
-	if (slot_it == graph.end ())
-	{
-		assert (false);
-	}
-	else
+	if (slot_it != graph.end ())
 	{
 		find_coverage_rec <piapi::Dir_IN > (node_list_u, graph, slot_it);
 		find_coverage_rec <piapi::Dir_OUT> (node_list_d, graph, slot_it);

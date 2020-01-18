@@ -130,7 +130,7 @@ private:
 
 	void           update_display ();
 	void           list_pin (int &pos_y, PageMgrInterface::NavLocList &nav_list, Pin &pin, int pin_idx, int nbr_pins, int nbr_pins_gra, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list, bool exist_flag, bool node_flag, ToolsRouting::NodeMap::const_iterator it_node);
-	void           list_pin_cnx (int &pos_y, PageMgrInterface::NavLocList &nav_list, Pin &pin, int pin_idx, int nbr_pins, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list, const ToolsRouting::CnxSet &cnx_set);
+	void           list_pin_cnx (int &pos_y, PageMgrInterface::NavLocList &nav_list, Pin &pin, int pin_idx, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list, const ToolsRouting::CnxSet &cnx_set);
 	EvtProp        sel_pin_cnx (int node_id);
 
 	static int     conv_cnx_to_node_id (IoType type, piapi::Dir dir, int pin_idx, int cnx_idx);

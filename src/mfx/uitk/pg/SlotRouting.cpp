@@ -321,7 +321,7 @@ void	SlotRouting::list_pin (int &pos_y, PageMgrInterface::NavLocList &nav_list, 
 	if (node_flag && pin_idx < nbr_pins_gra)
 	{
 		list_pin_cnx (
-			pos_y, nav_list, pin, pin_idx, nbr_pins, dir,
+			pos_y, nav_list, pin, pin_idx, dir,
 			entry_list, it_node->second [dir] [pin_idx]
 		);
 	}
@@ -329,7 +329,7 @@ void	SlotRouting::list_pin (int &pos_y, PageMgrInterface::NavLocList &nav_list, 
 
 
 
-void	SlotRouting::list_pin_cnx (int &pos_y, PageMgrInterface::NavLocList &nav_list, Pin &pin, int pin_idx, int nbr_pins, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list, const ToolsRouting::CnxSet &cnx_set)
+void	SlotRouting::list_pin_cnx (int &pos_y, PageMgrInterface::NavLocList &nav_list, Pin &pin, int pin_idx, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list, const ToolsRouting::CnxSet &cnx_set)
 {
 	const int      scr_w   = _page_size [0];
 	const int      h_m     = _fnt_ptr->get_char_h ();
@@ -344,6 +344,7 @@ void	SlotRouting::list_pin_cnx (int &pos_y, PageMgrInterface::NavLocList &nav_li
 
 		const int      nid_cnx  =
 			conv_cnx_to_node_id (IoType_CNX, dir, pin_idx, cnx_idx);
+
 		Cnx &          cnx_data = pin._cnx_arr [cnx_idx];
 		cnx_data._cnx = *it_cnx;
 		TxtSPtr &      cnx_sptr = cnx_data._label_sptr;
@@ -352,7 +353,7 @@ void	SlotRouting::list_pin_cnx (int &pos_y, PageMgrInterface::NavLocList &nav_li
 		cnx_sptr->set_coord (Vec2d (0, pos_y));
 		cnx_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 		Tools::print_cnx_name (
-			*cnx_sptr, scr_w, entry_list, dir, cnx_end, _indent_0, nbr_pins
+			*cnx_sptr, scr_w, entry_list, dir, cnx_end, _indent_0, 0
 		);
 
 		_menu_sptr->push_back (cnx_sptr);
