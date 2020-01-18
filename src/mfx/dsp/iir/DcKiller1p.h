@@ -49,6 +49,7 @@ public:
 
 	void           set_sample_freq (double sample_freq);
 	void           set_cutoff_freq (float f0);
+	inline void    copy_z_eq (const DcKiller1p &other);
 	inline float   process_sample (float x);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 

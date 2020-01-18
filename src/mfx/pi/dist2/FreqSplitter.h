@@ -62,6 +62,7 @@ public:
 	void           clear_buffers ();
 	void           set_sample_freq (double sample_freq);
 	void           set_split_freq (float freq);
+	void           copy_z_eq (const FreqSplitter &other);
 	void           process_block (int chn, float dst_l_ptr [], float dst_h_ptr [], const float src_ptr [], int nbr_spl);
 
 

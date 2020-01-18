@@ -76,6 +76,30 @@ void	FreqSplitter::set_split_freq (float freq)
 
 
 
+void	FreqSplitter::copy_z_eq (const FreqSplitter &other)
+{
+	assert (_sample_freq > 0);
+	assert (other._sample_freq == _sample_freq);
+
+	_split_freq = other._split_freq;
+
+	const BandSplitApp &	src = other._band_split_arr [0];
+	const auto &   src_f0    = src.use_filter_0 ();
+	const auto &   f0e       = src_f0.use_filter ();
+	const auto &   f0o       = src_f0.use_filter (0);
+	const auto &   f1        = src.use_filter_1 ();
+	for (auto &splitter : _band_split_arr)
+	{
+		Filter0 &	filter_0 = splitter.use_filter_0 ();
+		Filter1 &	filter_1 = splitter.use_filter_1 ();
+		filter_0.use_filter ().copy_z_eq (f0e);
+		filter_0.use_filter (0).copy_z_eq (f0o);
+		filter_1.copy_z_eq (f1);
+	}
+}
+
+
+
 void	FreqSplitter::process_block (int chn, float dst_l_ptr [], float dst_h_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (chn >= 0);

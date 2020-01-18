@@ -58,6 +58,7 @@ public:
 	inline void    neutralise ();
 	inline void    set_z_eq (const float b [3], const float a [3]);
 	inline void    get_z_eq (float b [3], float a [3]) const;
+	inline void    copy_z_eq (const Biquad &other);
 	inline float   get_state_y () const;
 	inline void    set_state_y (float y);
 

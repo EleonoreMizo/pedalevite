@@ -54,6 +54,7 @@ public:
 
 	inline void    set_coef (float b0);
 	inline float   get_coef () const;
+	inline void    copy_z_eq (const AllPass1p &other);
 
 	inline float   process_sample (float x);
 	inline float   process_sample (float x, float inc_b0);

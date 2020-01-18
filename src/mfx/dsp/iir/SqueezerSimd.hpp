@@ -163,6 +163,29 @@ float	SqueezerSimd <BR, LFOP>::get_p1 () const
 
 
 template <bool BR, class LFOP>
+void	SqueezerSimd <BR, LFOP>::copy_z_eq (const SqueezerSimd <BR, LFOP> &other)
+{
+	assert (_fs == other._fs);
+
+	_r                  = other._r;          
+	_p                  = other._p;          
+	_g                  = other._g;          
+	_lofi_op            = other._lofi_op;    
+   _gain_out           = other._gain_out;   
+	_gain_out_cur       = other._gain_out_cur;
+   _gain_out_lerp_step = other._gain_out_lerp_step;
+	_br_scale           = other._br_scale;    
+	_br_scale_inv       = other._br_scale_inv;
+	_br_amt             = other._br_amt;      
+	_freq               = other._freq;        
+	_reso               = other._reso;        
+	_p1                 = other._p1;          
+
+}
+
+
+
+template <bool BR, class LFOP>
 void	SqueezerSimd <BR, LFOP>::update_eq ()
 {
 	update_internal_variables (

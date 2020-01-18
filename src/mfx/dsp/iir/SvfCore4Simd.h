@@ -148,6 +148,7 @@ public:
 	void           set_mix (const VectFloat4 v0m, const VectFloat4 v1m, const VectFloat4 v2m);
 	void           set_mix_one (int unit, float v0m, float v1m, float v2m);
 	void           get_mix_one (int unit, float &v0m, float &v1m, float &v2m) const;
+	void           copy_z_eq (const SvfCore4Simd <VD, VS, VP, MX> &other);
 
 	void           clear_buffers ();
 	void           clear_buffers_one (int unit);

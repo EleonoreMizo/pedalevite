@@ -77,6 +77,14 @@ void	AllPass2p::get_z_eq (float &b0, float &b1) const
 
 
 
+void	AllPass2p::copy_z_eq (const AllPass2p &other)
+{
+	_eq_z_b [0] = other._eq_z_b [0];
+	_eq_z_b [1] = other._eq_z_b [1];
+}
+
+
+
 float	AllPass2p::process_sample (float x)
 {
 	const int      alt_pos = 1 - _mem_pos;

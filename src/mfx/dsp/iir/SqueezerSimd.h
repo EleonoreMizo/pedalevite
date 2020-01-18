@@ -8,7 +8,7 @@ Template parameters:
 - BR: enables the bit reduction in the feedback path
 
 - LFOP: Lo-Fi operator. Typically one of the SqueezerOp*. Requires:
-   LFOP::LFOP ();
+   All ctor/dtor/assign
 	void LFOP::config (float reso, float p1);
 	float LFOP::process_sample (float x);
 
@@ -85,6 +85,7 @@ public:
 	inline float   get_reso () const;
 	inline void    set_p1 (float p1);
 	inline float   get_p1 () const;
+	inline void    copy_z_eq (const SqueezerSimd <BR, LFOP> &other);
 	fstb_FORCEINLINE void
 	               update_eq ();
 

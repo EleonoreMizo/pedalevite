@@ -845,6 +845,19 @@ void	Biquad4Simd <VD, VS, VP>::get_z_eq_one (int biq, float b [3], float a [3]) 
 
 
 template <class VD, class VS, class VP>
+void	Biquad4Simd <VD, VS, VP>::copy_z_eq (const Biquad4Simd <VD, VS, VP> &other)
+{
+	V128Par::store_f32 (_data._z_eq_b [0], V128Par::load_f32 (other._data._z_eq_b [0]));
+	V128Par::store_f32 (_data._z_eq_b [1], V128Par::load_f32 (other._data._z_eq_b [1]));
+	V128Par::store_f32 (_data._z_eq_b [2], V128Par::load_f32 (other._data._z_eq_b [2]));
+
+	V128Par::store_f32 (_data._z_eq_a [1], V128Par::load_f32 (other._data._z_eq_a [1]));
+	V128Par::store_f32 (_data._z_eq_a [2], V128Par::load_f32 (other._data._z_eq_a [2]));
+}
+
+
+
+template <class VD, class VS, class VP>
 void	Biquad4Simd <VD, VS, VP>::set_state_one (int biq, float const mem_x [2], const float mem_y [2])
 {
 	assert (biq >= 0);

@@ -72,6 +72,15 @@ void	OnePole::get_z_eq (float b [2], float a [2]) const
 
 
 
+void	OnePole::copy_z_eq (const OnePole &other)
+{
+	_eq_z_b [0] = other._eq_z_b [0];
+	_eq_z_b [1] = other._eq_z_b [1];
+	_eq_z_a [1] = other._eq_z_a [1];
+}
+
+
+
 float	OnePole::process_sample (float x)
 {
 	const float    y =   _eq_z_b [0] *      x

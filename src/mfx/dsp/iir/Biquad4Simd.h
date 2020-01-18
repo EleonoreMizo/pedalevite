@@ -100,6 +100,8 @@ public:
 	void           get_z_eq (VectFloat4 b [3], VectFloat4 a [3]) const;
 	void           get_z_eq_one (int biq, float b [3], float a [3]) const;
 
+	void           copy_z_eq (const Biquad4Simd <VD, VS, VP> &other);
+
 	void           set_state_one (int biq, float const mem_x [2], const float mem_y [2]);
 	void           get_state_one (int biq, float mem_x [2], float mem_y [2]) const;
 

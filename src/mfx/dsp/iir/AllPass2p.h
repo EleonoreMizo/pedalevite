@@ -56,6 +56,7 @@ public:
 
 	inline void    set_z_eq (float b0, float b1);
 	inline void    get_z_eq (float &b0, float &b1) const;
+	inline void    copy_z_eq (const AllPass2p &other);
 
 	inline float   process_sample (float x);
 	inline float   process_sample (float x, const float inc_b [2]);

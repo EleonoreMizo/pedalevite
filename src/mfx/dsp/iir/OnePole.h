@@ -57,6 +57,7 @@ public:
 	inline void    neutralise ();
 	inline void    set_z_eq (const float b [2], const float a [2]);
 	inline void    get_z_eq (float b [2], float a [2]) const;
+	inline void    copy_z_eq (const OnePole &other);
 
 	inline float   process_sample (float x);
 	inline float   process_sample (float x, const float inc_b [2], const float inc_a [2]);

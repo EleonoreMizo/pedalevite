@@ -78,6 +78,17 @@ void	Biquad::get_z_eq (float b [3], float a [3]) const
 
 
 
+void	Biquad::copy_z_eq (const Biquad &other)
+{
+	_eq_z_b [0] = other._eq_z_b [0];
+	_eq_z_b [1] = other._eq_z_b [1];
+	_eq_z_b [2] = other._eq_z_b [2];
+	_eq_z_a [1] = other._eq_z_a [1];
+	_eq_z_a [2] = other._eq_z_a [2];
+}
+
+
+
 float	Biquad::get_state_y () const
 {
 	return _mem_y [_mem_pos];

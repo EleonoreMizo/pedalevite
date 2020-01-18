@@ -37,6 +37,13 @@ namespace iir
 
 
 
+void	DcKiller1p::copy_z_eq (const DcKiller1p &other)
+{
+	_filter.copy_z_eq (other._filter);
+}
+
+
+
 float	DcKiller1p::process_sample (float x)
 {
 	assert (_sample_freq > 0);

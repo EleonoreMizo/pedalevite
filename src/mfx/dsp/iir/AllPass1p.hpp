@@ -71,6 +71,13 @@ float	AllPass1p::get_coef () const
 
 
 
+void	AllPass1p::copy_z_eq (const AllPass1p &other)
+{
+	_eq_z_b0 = other._eq_z_b0;
+}
+
+
+
 float	AllPass1p::process_sample (float x)
 {
 	const float    y = _eq_z_b0 * (x - _mem_y) + _mem_x;
