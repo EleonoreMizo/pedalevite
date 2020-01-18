@@ -774,6 +774,11 @@ commonsrc = \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.cpp \
         ../../src/mfx/pi/freqsh/FreqShiftDesc.h \
         ../../src/mfx/pi/freqsh/Param.h \
+        ../../src/mfx/pi/fsplit/FreqSplit.cpp \
+        ../../src/mfx/pi/fsplit/FreqSplit.h \
+        ../../src/mfx/pi/fsplit/FreqSplitDesc.cpp \
+        ../../src/mfx/pi/fsplit/FreqSplitDesc.h \
+        ../../src/mfx/pi/fsplit/Param.h \
         ../../src/mfx/pi/fv/Freeverb.cpp \
         ../../src/mfx/pi/fv/Freeverb.h \
         ../../src/mfx/pi/fv/FreeverbDesc.cpp \

@@ -51,6 +51,7 @@
 	<li><a href="#fx-flancho">FlanCho — Chorus and flanger</a></li>
 	<li><a href="#fx-freeverb">Freeverb — Reverberation</a></li>
 	<li><a href="#fx-freq-shift">Frequency Shifter</a></li>
+	<li><a href="#fx-freq-split">Frequency Splitter</a></li>
 	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Two-band tremolo</a></li>
 	<li><a href="#fx-hypercomb">Hypercomb — Polyphonic comb filter</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix</a></li>
@@ -348,6 +349,8 @@ settings.</p>
 saves the currently edited program.</p>
 <p>The following list is the effect chain, in processing order.
 The sound is processed from the top, down to the bottom of the list.
+Effects are shown as a linear list, but their routing can be much more
+complex, with multiple branchs (graph).
 Each line is a distinct effet.
 <span class="ui">&lt;Empty&gt;</span> indicates that there is no effect
 on the line and <span class="ui">&lt;End&gt;</span> terminates the list.
@@ -1449,6 +1452,20 @@ reflect the spectral image as is the case for the latter.</p>
 <p class="var">Frequency</p>
 <p>Shiftig frequency, in Hz.
 It can be negative or positive.</p>
+
+
+
+<h3><a id="fx-freq-split"></a>Frequency Splitter</h3>
+
+<p>This effect splits the sound frequency spectrum into two parts.
+There are two outputs.
+The spectral part below the cutoff frequency is sent to the first output, and
+the part above on the second output.</p>
+<p>A 5th order filter splits the spectrum.
+Both parts can be mixed together without any loss nor phasing issue.</p>
+
+<p class="var">Cutoff frequency</p>
+<p>The cutoff frequency, in Hz.</p>
 
 
 
@@ -2684,6 +2701,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r26, 2020-01-18</b></p>
+<ul>
+<li>Added Frequency splitter effect.</li>
+</ul>
 
 <p><b>r25, 2020-01-17</b></p>
 <ul>

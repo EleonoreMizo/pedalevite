@@ -51,6 +51,7 @@
 	<li><a href="#fx-flancho">FlanCho — Chorus et flanger</a></li>
 	<li><a href="#fx-freeverb">Freeverb — Réverbération</a></li>
 	<li><a href="#fx-freq-shift">Frequency Shifter — Translateur de fréquences</a></li>
+	<li><a href="#fx-freq-split">Frequency Splitter — Division spectrale</a></li>
 	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Trémolo bi-bande</a></li>
 	<li><a href="#fx-hypercomb">Hypercomb — Filtre en peigne polyphonique</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix — Adaptation d’impédance d’entrée</a></li>
@@ -368,6 +369,8 @@ permet de sauvegarder le programme en cours d’édition.</p>
 Il sont en général classés dans leur ordre de traitement&#8239;: le son
 arrive en haut sur le premier effet et descend vers le bas jusqu’au dernier
 effet.
+Cette représentation se fait sous forme linéaire, mais l’agencement des effets
+peut être beaucoup plus complexe, avec de multiples branches (graphe).
 Chaque effet occupe une ligne.
 <span class="ui">&lt;Empty&gt;</span> signale qu’il n’y a pas d’effet sur la
 ligne et <span class="ui">&lt;End&gt;</span> donne la fin de la liste.
@@ -1569,6 +1572,21 @@ réfléchit pas l’image spectrale comme c’est le cas pour ce dernier.</p>
 <p class="var">Frequency</p>
 <p>Fréquence de décalage, en Hz.
 Elle peut être négative ou positive.</p>
+
+
+
+<h3><a id="fx-freq-split"></a>Frequency Splitter — Division spectrale</h3>
+
+<p>Cet effet divise en deux le spectre du son.
+Il dispose de deux sorties.
+La partie du spectre en dessous de la fréquence de coupure est émise sur la
+première sortie, tandis que la partie au-dessus va sur la seconde sortie.</p>
+<p>La division spectrale est assurée par un filtre d’ordre 5.
+Les deux parties peuvent ensuite être mixées ensemble sans perte ni problème
+de phase.</p>
+
+<p class="var">Cutoff frequency</p>
+<p>Fréquence de coupure, en Hz.</p>
 
 
 
@@ -2876,6 +2894,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r26, 2020-01-18</b></p>
+<ul>
+<li>Ajout de l’effet Frequency splitter.</li>
+</ul>
 
 <p><b>r25, 2020-01-17</b></p>
 <ul>

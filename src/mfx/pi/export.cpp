@@ -60,6 +60,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/freqsh/FreqShiftDesc.h"
 #include "mfx/pi/flancho/Flancho.h"
 #include "mfx/pi/flancho/FlanchoDesc.h"
+#include "mfx/pi/fsplit/FreqSplit.h"
+#include "mfx/pi/fsplit/FreqSplitDesc.h"
 #include "mfx/pi/fv/Freeverb.h"
 #include "mfx/pi/fv/FreeverbDesc.h"
 #include "mfx/pi/hcomb/HyperComb.h"
@@ -170,6 +172,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::lfo1::LfoDesc <true>    , mfx::pi::lfo1::Lfo <true>         >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::adsr::EnvAdsrDesc       , mfx::pi::adsr::EnvAdsr            >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::dly0::DelayDesc         , mfx::pi::dly0::Delay              >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::fsplit::FreqSplitDesc   , mfx::pi::fsplit::FreqSplit        >::create ()
 		};
 
 		fact_list = l;

@@ -271,6 +271,9 @@
     <Filter Include="mfx\pi\cdsp\fv">
       <UniqueIdentifier>{e9318337-b614-458b-a5c5-ebcf4c9fa333}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\fsplit">
+      <UniqueIdentifier>{45030e73-f7b0-446a-9610-8ed85ed1af48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -3048,6 +3051,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.h">
       <Filter>mfx\pi\cdsp\fv</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\fsplit\FreqSplit.h">
+      <Filter>mfx\pi\fsplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\fsplit\FreqSplitDesc.h">
+      <Filter>mfx\pi\fsplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\fsplit\Param.h">
+      <Filter>mfx\pi\fsplit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4219,6 +4231,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayAllPassSimd.cpp">
       <Filter>mfx\pi\cdsp\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\fsplit\FreqSplit.cpp">
+      <Filter>mfx\pi\fsplit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\fsplit\FreqSplitDesc.cpp">
+      <Filter>mfx\pi\fsplit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
