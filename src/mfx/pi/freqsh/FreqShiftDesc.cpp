@@ -53,7 +53,7 @@ FreqShiftDesc::FreqShiftDesc ()
 
 	// Frequency
 	auto           pll_sptr = std::make_shared <TplPll> (
-		-_max_freq, _max_freq,
+		double (-_max_freq), double (_max_freq),
 		"Frequency\nFreq",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,

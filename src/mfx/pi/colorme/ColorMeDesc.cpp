@@ -96,7 +96,7 @@ ColorMeDesc::ColorMeDesc ()
 
 	// Number of formants
 	auto           int_sptr = std::make_shared <param::TplInt> (
-		2, Cst::_nbr_formants,
+		2, int (Cst::_nbr_formants),
 		"Number of formants\nN formants\nFormants\nFrm",
 		""
 	);
@@ -104,7 +104,7 @@ ColorMeDesc::ColorMeDesc ()
 
 	// Number of vowels
 	int_sptr = std::make_shared <param::TplInt> (
-		2, Cst::_nbr_vow_morph,
+		2, int (Cst::_nbr_vow_morph),
 		"Number of vowels\nN vowels\nVowels\nVow",
 		""
 	);

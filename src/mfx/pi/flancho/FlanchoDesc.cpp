@@ -135,7 +135,7 @@ FlanchoDesc::FlanchoDesc ()
 
 	// Number of voices
 	auto           int_sptr = std::make_shared <param::TplInt> (
-		1, Cst::_max_nbr_voices,
+		1, int (Cst::_max_nbr_voices),
 		"#\nVc#\nNumber of voices",
 		"",
 		0,

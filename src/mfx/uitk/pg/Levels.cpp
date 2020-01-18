@@ -502,7 +502,7 @@ void	Levels::draw_audio_meter (const DirInfo &info, int nbr_chn)
 				255
 			);
 		}
-		const int      x_pk_l = std::max (x_peak + ofs_pk_l, _scale);
+		const int      x_pk_l = std::max (x_peak + ofs_pk_l, int (_scale));
 		const int      x_pk_r = std::min (x_peak + ofs_pk_r, max_x);
 		if (x_pk_l < x_pk_r)
 		{
@@ -514,7 +514,7 @@ void	Levels::draw_audio_meter (const DirInfo &info, int nbr_chn)
 			);
 		}
 #if (PV_VERSION == 2)
-		const int      x_rms_clip = std::max (x_rms, _scale);
+		const int      x_rms_clip = std::max (x_rms, int (_scale));
 		if (x_rms_clip < x_pk_l)
 		{
 			grap::PrimBox::draw_filled (

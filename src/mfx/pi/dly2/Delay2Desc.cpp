@@ -119,7 +119,7 @@ Delay2Desc::Delay2Desc ()
 
 	// Number of feedback lines
 	auto           int_sptr = std::make_shared <param::TplInt> (
-		0, Cst::_nbr_lines,
+		0, int (Cst::_nbr_lines),
 		"Number of feedback lines\nNb of feedback lines\nFeedback lines"
 		"\nFdbk lines\nNLines\nNL",
 		"",
@@ -328,7 +328,7 @@ void	Delay2Desc::init_tap (int index)
 
 	// Tap low-cut frequency
 	pll_sptr = std::make_shared <TplPll> (
-		Cst::_eq_freq_min, Cst::_eq_freq_min * 1024.0,
+		double (Cst::_eq_freq_min), double (Cst::_eq_freq_min) * 1024,
 		"Tap %d low-cut frequency\nTap %d low-cut\nTap %d LC\nT%dLC",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
@@ -341,7 +341,7 @@ void	Delay2Desc::init_tap (int index)
 
 	// Tap high-cut frequency
 	pll_sptr = std::make_shared <TplPll> (
-		Cst::_eq_freq_max / 1024.0, Cst::_eq_freq_max,
+		double (Cst::_eq_freq_max) / 1024, double (Cst::_eq_freq_max),
 		"Tap %d high-cut frequency\nTap %d high-cut\nTap %d HC\nT%dHC",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
@@ -410,7 +410,7 @@ void	Delay2Desc::init_line (int index)
 
 	// Line speed
 	auto           log_sptr = std::make_shared <param::TplLog> (
-		0.25f, Cst::_max_bbd_speed,
+		0.25f, double (Cst::_max_bbd_speed),
 		"Line %d speed\nLine %d spd\nL%d spd\nL%dS",
 		"%",
 		param::HelperDispNum::Preset_FLOAT_PERCENT,
@@ -463,7 +463,7 @@ void	Delay2Desc::init_line (int index)
 
 	// Line low-cut frequency
 	pll_sptr = std::make_shared <TplPll> (
-		Cst::_eq_freq_min, Cst::_eq_freq_min * 1024.0,
+		double (Cst::_eq_freq_min), double (Cst::_eq_freq_min) * 1024,
 		"Line %d low-cut frequency\nLine %d low-cut\nLine %d LC\nL%dLC",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
@@ -476,7 +476,7 @@ void	Delay2Desc::init_line (int index)
 
 	// Line high-cut frequency
 	pll_sptr = std::make_shared <TplPll> (
-		Cst::_eq_freq_max / 1024.0, Cst::_eq_freq_max,
+		double (Cst::_eq_freq_max) / 1024, double (Cst::_eq_freq_max),
 		"Line %d high-cut frequency\nLine %d high-cut\nLine %d HC\nL%dHC",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
@@ -639,7 +639,7 @@ void	Delay2Desc::init_line (int index)
 
 	// Line frequency shifting
 	pll_sptr = std::make_shared <TplPll> (
-		-Cst::_max_freq_shift, Cst::_max_freq_shift,
+		double (-Cst::_max_freq_shift), double (Cst::_max_freq_shift),
 		"Line %d frequency shift\nLine %d freq shift\nLine %d f shift\nL%d f shift\nL%dFS",
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
