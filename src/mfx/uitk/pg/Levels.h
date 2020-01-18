@@ -104,6 +104,9 @@ private:
 		Entry_DSP_TXT,
 		Entry_DSP,
 		Entry_DSP_VAL
+#if (PV_VERSION == 2)
+		, Entry_GRAD
+#endif
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -123,6 +126,14 @@ private:
 		BitmapSPtr     _vum_sptr;
 		std::array <ChnInfo, Cst::_nbr_chn_inout>
 		               _chn_arr;
+#if (PV_VERSION == 2)
+		static const int  _nbr_grad = 14;
+		typedef std::array <TxtSPtr, _nbr_grad> GradArray;
+		GradArray      _grad_sptr_arr;
+		TxtSPtr        _clip_sptr;
+		static const std::array <int, _nbr_grad>
+		               _grad_db_arr;
+#endif // PV_VERSION
 	};
 
 	void           refresh_display ();
@@ -154,17 +165,24 @@ private:
 
 #if (PV_VERSION == 2)
 	static const int  _scale = 4;
+	static const int  _meter_audio_w  = _scale * 200;
+	static const int  _meter_m20db    = _scale * 128;
+	static const int  _meter_0db      = _scale * (128 + 48);
+	static const int  _meter_grad_h   = _scale * 1;
 #else  // PV_VERSION
 	static const int  _scale = 1;
+	static const int  _meter_audio_w  = _scale * 128;
+	static const int  _meter_m20db    = _scale * 40;
+	static const int  _meter_0db      = _scale * (40 + 64);
+	static const int  _meter_grad_h   = _scale * 7;
 #endif // PV_VERSION
 
-	static const int  _meter_audio_w  = _scale * 128;
-	static const int  _meter_grad_h   = _scale * 7;
 	static const int  _meter_audio_h  = _scale * 9;
-	static const int  _meter_dsp_w    = _scale * 86;
+	static const int  _meter_dsp_w    = _meter_audio_w - _scale * 42;
 	static const int  _meter_dsp_h    = _scale * 9;
-	static const int  _clip_audio_x   = _scale * 125;
+	static const int  _clip_audio_x   = _meter_audio_w - _scale * 3;
 
+#if (PV_VERSION == 1)
 	static const uint8_t
 	               _pic_meter_grad [_meter_audio_w * _meter_grad_h];
 	static const uint8_t
@@ -173,6 +191,7 @@ private:
 	               _pic_meter_stereo [_meter_audio_w * _meter_audio_h];
 	static const uint8_t
 	               _pic_meter_dsp [_meter_dsp_w * _meter_dsp_h];
+#endif
 
 
 
