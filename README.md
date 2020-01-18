@@ -12,6 +12,7 @@ Key features:
 - Fast and smooth transition between programs
 - Up to 3 expression pedals to drive effects like wha, volume, LFOs…
 - Infinite modulation possibilities
+- Free effect routing
 - Designed for stage and regular transport
 - Silent and accurate tuner activated with a footswitch
 - Standalone, no need for any external computer
