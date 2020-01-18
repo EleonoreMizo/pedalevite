@@ -14,7 +14,8 @@ if X86
 AM_CXXFLAGS += -msse2
 endif
 
-bin_PROGRAMS = pedalevite mfxtest
+bin_PROGRAMS = pedalevite
+check_PROGRAMS = mfxtest
 
 commonsrc = \
         ../../src/conc/AioAdd.h \
