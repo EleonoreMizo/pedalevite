@@ -344,6 +344,10 @@ void	ProgSettings::add_slots ()
 
 		routing._cnx_audio_set.insert (cnx_set.begin (), cnx_set.end ());
 		_model_ptr->set_routing (routing);
+
+		// Jumps to the program edit page so we can directly access the
+		// new slots.
+		_page_switcher.switch_to (pg::PageType_PROG_EDIT, nullptr);
 	}
 }
 
