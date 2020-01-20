@@ -1167,6 +1167,8 @@ commonsrc = \
         ../../src/mfx/ChnMode.h \
         ../../src/mfx/CmdLine.h \
         ../../src/mfx/CmdLine.cpp \
+        ../../src/mfx/CompressSimple.cpp \
+        ../../src/mfx/CompressSimple.h \
         ../../src/mfx/ControlCurve.h \
         ../../src/mfx/ControlCurve.cpp \
         ../../src/mfx/ControlledParam.cpp \
@@ -1226,6 +1228,9 @@ commonsrc = \
         ../../src/mfx/ToolsRouting.hpp \
         ../../src/mfx/UniqueProgList.cpp \
         ../../src/mfx/UniqueProgList.h \
+        ../../src/mfx/VideoRecorder.cpp \
+        ../../src/mfx/VideoRecorder.h \
+        ../../src/mfx/VidRecFmt.h \
         ../../src/mfx/View.cpp \
         ../../src/mfx/View.h \
         ../../src/mfx/WaMsg.h \

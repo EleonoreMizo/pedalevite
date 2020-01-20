@@ -361,6 +361,7 @@
     <ClInclude Include="..\..\..\src\mfx\cmd\PluginAux.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Router.h" />
     <ClInclude Include="..\..\..\src\mfx\cmd\Slot.h" />
+    <ClInclude Include="..\..\..\src\mfx\CompressSimple.h" />
     <ClInclude Include="..\..\..\src\mfx\ControlCurve.h" />
     <ClInclude Include="..\..\..\src\mfx\ControlledParam.h" />
     <ClInclude Include="..\..\..\src\mfx\ControllerType.h" />
@@ -729,6 +730,8 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRouting.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.h" />
     <ClInclude Include="..\..\..\src\mfx\ui\FontMapping8859.h" />
+    <ClInclude Include="..\..\..\src\mfx\VideoRecorder.h" />
+    <ClInclude Include="..\..\..\src\mfx\VidRecFmt.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsg.h" />
     <ClInclude Include="..\..\..\src\mfx\WaMsgQueue.h" />
     <ClInclude Include="..\..\..\src\mfx\PageSet.h" />
@@ -1127,6 +1130,7 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\Plugin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\PluginAux.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Router.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\CompressSimple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlSource.cpp" />
@@ -1526,6 +1530,7 @@
     <ClCompile Include="..\..\..\src\mfx\ui\UserInputMsg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\UserInputVoid.cpp" />
     <ClCompile Include="..\..\..\src\mfx\UniqueProgList.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\VideoRecorder.cpp" />
     <ClCompile Include="..\..\..\src\mfx\View.cpp" />
     <ClCompile Include="..\..\..\src\mfx\WorldAudio.cpp" />
   </ItemGroup>

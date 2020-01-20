@@ -26,13 +26,14 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/def.h"
 #include "fstb/fnc.h"
+#include "mfx/ui/Font.h"
 #include "mfx/uitk/pg/Rec2Disk.h"
 #include "mfx/uitk/NodeEvt.h"
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
-#include "mfx/ui/Font.h"
 #include "mfx/Cst.h"
 #include "mfx/Model.h"
+#include "mfx/VideoRecorder.h"
 
 #if fstb_IS (SYS, LINUX)
 #include <sys/statvfs.h>
@@ -63,8 +64,9 @@ namespace pg
 
 
 
-Rec2Disk::Rec2Disk (PageSwitcher &page_switcher)
+Rec2Disk::Rec2Disk (PageSwitcher &page_switcher, VideoRecorder *vid_rec_ptr)
 :	_page_switcher (page_switcher)
+,	_vid_rec_ptr (vid_rec_ptr)
 ,	_model_ptr (nullptr)
 ,	_view_ptr (nullptr)
 ,	_page_ptr (nullptr)
@@ -298,6 +300,10 @@ void	Rec2Disk::toggle_rec (int node_id)
 	if (_model_ptr->is_d2d_recording ())
 	{
 		ret_val = _model_ptr->stop_d2d_rec ();
+		if (_vid_rec_ptr != nullptr)
+		{
+			_vid_rec_ptr->rec_stop ();
+		}
 		if (ret_val != 0)
 		{
 			Question::msg_box (
@@ -312,6 +318,13 @@ void	Rec2Disk::toggle_rec (int node_id)
 		const int      fs = fstb::round_int (_model_ptr->get_sample_freq ());
 		const size_t   max_len = size_t (_time_limit * 60 * fs);
 		ret_val = _model_ptr->start_d2d_rec (pathname.c_str (), max_len);
+		if (ret_val == 0 && _vid_rec_ptr != nullptr)
+		{
+			// Ignores result, this is a superficial feature
+			_vid_rec_ptr->rec_start (
+				mfx::Cst::_audiodump_dir + "/video-rec.pvvid"
+			);
+		}
 		if (ret_val != 0)
 		{
 			Question::msg_box (

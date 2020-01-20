@@ -3060,6 +3060,15 @@
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\Param.h">
       <Filter>mfx\pi\fsplit</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\CompressSimple.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\VideoRecorder.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\VidRecFmt.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4237,6 +4246,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\fsplit\FreqSplitDesc.cpp">
       <Filter>mfx\pi\fsplit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\CompressSimple.cpp">
+      <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\VideoRecorder.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

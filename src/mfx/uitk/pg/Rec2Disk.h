@@ -37,6 +37,9 @@ http://www.wtfpl.net/ for more details.
 
 namespace mfx
 {
+
+class VideoRecorder;
+
 namespace uitk
 {
 
@@ -55,7 +58,7 @@ class Rec2Disk final
 
 public:
 
-	explicit       Rec2Disk (PageSwitcher &page_switcher);
+	explicit       Rec2Disk (PageSwitcher &page_switcher, VideoRecorder *vid_rec_ptr);
 
 
 
@@ -95,6 +98,7 @@ private:
 	int            conv_bytes_to_min (int64_t nbr_bytes) const;
 
 	PageSwitcher & _page_switcher;
+	VideoRecorder* _vid_rec_ptr;  // Can be 0.
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected

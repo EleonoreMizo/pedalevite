@@ -15,6 +15,10 @@
 // No I/O, audio only. Useful to debug soundcard-related problems.
 #undef MAIN_USE_VOID
 
+// Define this to record a video capture of the display in addition to the
+// audio streams
+#undef MAIN_REC_VIDEO
+
 
 
 #include "fstb/def.h"
@@ -145,16 +149,20 @@
 		#include	<new>
 	#endif	// _MSC_VER
 
-#else
+#else // fstb_SYS
 	#error Unsupported operating system
 
-#endif
+#endif // fstb_SYS
 
 #if defined (MAIN_USE_VOID)
 	#include "mfx/ui/DisplayVoid.h"
 	#include "mfx/ui/LedVoid.h"
 	#include "mfx/ui/UserInputVoid.h"
-#endif
+#endif // MAIN_USE_VOID
+
+#if defined (MAIN_REC_VIDEO)
+	#include "mfx/VideoRecorder.h"
+#endif // MAIN_REC_VIDEO
 
 #include <algorithm>
 #include <array>
@@ -175,7 +183,7 @@
 
 #if fstb_IS (SYS, LINUX) && ! defined (MAIN_USE_VOID)
 static const int  MAIN_pin_reset = 18;
-#endif
+#endif // fstb_SYS_LINUX, MAIN_USE_VOID
 
 
 
@@ -190,7 +198,7 @@ public:
 #if fstb_IS (SYS, LINUX)
 	mfx::ui::TimeShareThread
 	               _thread_spi;
-#endif
+#endif // fstb_SYS_LINUX
 	const int      _tuner_subspl  = 4;
 	std::vector <float, fstb::AllocAlign <float, 16 > >
 	               _buf_alig;
@@ -231,7 +239,7 @@ public:
 	               _user_input;
 	mfx::hw::LedPi3
 	               _leds;
-#else
+#else // fstb_SYS
 	mfx::hw::IoWindows
 	               _all_io;
 	mfx::ui::DisplayInterface &
@@ -241,13 +249,17 @@ public:
 	mfx::ui::LedInterface &
 	               _leds;
 #endif
+#if defined (MAIN_REC_VIDEO)
+	mfx::VideoRecorder
+	               _vid_rec;
+#endif // MAIN_REC_VIDEO
 #if fstb_IS (SYS, LINUX)
 	mfx::hw::FileIOPi3
 	               _file_io;
-#else
+#else // fstb_SYS_LINUX
 	mfx::hw::FileIOWindows
 	               _file_io;
-#endif
+#endif // fstb_SYS_LINUX
 
 	mfx::Model     _model;
 
@@ -274,7 +286,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_max_block_size (0)
 #if fstb_IS (SYS, LINUX)
 ,	_thread_spi (std::chrono::milliseconds (10))
-#endif
+#endif // fstb_SYS_LINUX
 ,	_buf_alig (4096 * 4)
 ,	_proc_ctx ()
 ,	_queue_input_to_gui ()
@@ -292,17 +304,26 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
  #endif // MAIN_DISP
 ,	_user_input (_thread_spi)
 ,	_leds ()
-#else
+#else // fstb_SYS
 ,	_all_io (_quit_flag)
 ,	_display (_all_io)
 ,	_user_input (_all_io)
 ,	_leds (_all_io)
-#endif
+#endif // fstb_SYS
+#if defined (MAIN_REC_VIDEO)
+,	_vid_rec (_display)
+#endif // MAIN_REC_VIDEO
 ,	_file_io (_leds)
 ,	_model (_queue_input_to_cmd, _queue_input_to_audio, _user_input, _file_io)
 ,	_view ()
 ,	_page_set (
-		_model, _view, _display, _queue_input_to_gui, _user_input, _leds, _cmd_line,
+		_model, _view,
+#if defined (MAIN_REC_VIDEO)
+		_vid_rec,
+#else // MAIN_REC_VIDEO
+		_display,
+#endif // MAIN_REC_VIDEO
+		_queue_input_to_gui, _user_input, _leds, _cmd_line,
 		snd_drv
 	)
 {

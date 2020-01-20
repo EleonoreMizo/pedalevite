@@ -62,6 +62,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\src\README.md = ..\..\src\README.md
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvvid2raw", "pvvid2raw\pvvid2raw.vcxproj", "{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -158,6 +160,14 @@ Global
 		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Release|Win32.Build.0 = Release|Win32
 		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Release|x64.ActiveCfg = Release|x64
 		{5EB04419-2CEE-49AF-A4FA-D7B209B3F505}.Release|x64.Build.0 = Release|x64
+		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Debug|Win32.ActiveCfg = Debug|Win32
+		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Debug|Win32.Build.0 = Debug|Win32
+		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Debug|x64.ActiveCfg = Debug|x64
+		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Debug|x64.Build.0 = Debug|x64
+		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Release|Win32.ActiveCfg = Release|Win32
+		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Release|Win32.Build.0 = Release|Win32
+		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Release|x64.ActiveCfg = Release|x64
+		{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/FontDataDefault.h"
 #include "mfx/Model.h"
 #include "mfx/PageSet.h"
+#include "mfx/VideoRecorder.h"
 
 #include <stdexcept>
 
@@ -112,7 +113,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_menu_backup (_page_switcher)
 ,	_page_edit_date (_page_switcher, cmd_line)
 ,	_page_prog_catalog (_page_switcher)
-,	_page_rec2disk (_page_switcher)
+,	_page_rec2disk (_page_switcher, dynamic_cast <VideoRecorder *> (&display))
 ,	_page_slot_routing (_page_switcher, _loc_edit)
 ,	_page_slot_rout_action (_page_switcher, _loc_edit)
 {
