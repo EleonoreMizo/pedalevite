@@ -56,6 +56,7 @@ VideoRecorder::VideoRecorder (DisplayInterface &display_main)
 ,	_s (0)
 ,	_buf_raw ()
 ,	_buf_cmp ()
+,	_buf_limit (0)
 {
 	// Nothing
 }
@@ -114,18 +115,20 @@ int	VideoRecorder::rec_start (std::string pathname)
 
 		// Should be slightly bigger than the raw data buffer to take the
 		// worst case into account.
-		_buf_cmp.resize (len * 5 / 4 + 16);
+		_buf_limit = std::max (len * 5 / 4 + 16, size_t (1) << 18);
 
-		VidRecFmt::HeaderFile   header;
+		// * 2 because we have to be prepared to get a big frame when _buf_pos
+		// is already close to _buf_limit.
+		_buf_cmp.resize (_buf_limit * 2);
+		_buf_pos = 0;
+
+		VidRecFmt::HeaderFile & header =
+			*reinterpret_cast <VidRecFmt::HeaderFile *> (&_buf_cmp [_buf_pos]);
 		header._version  = uint16_t (VidRecFmt::_fmt_version);
 		header._width    = uint16_t (_w);
 		header._height   = uint16_t (_h);
 		header._pix_code = uint16_t (VidRecFmt::PixCode_GREY8);
-
-		if (fwrite (&header, sizeof (header), 1, _f_ptr) != 1)
-		{
-			ret_val = -1;
-		}
+		_buf_pos += sizeof (header);
 	}
 
 	if (ret_val == 0)
@@ -241,6 +244,26 @@ int	VideoRecorder::dump_frame (int x, int y, int w, int h, std::chrono::steady_c
 {
 	int            ret_val = 0;
 
+	// Builds frame header
+	const Clk::duration  dur { t - _t_beg };
+	typedef std::ratio_divide <
+		Clk::period::type,
+		VidRecFmt::TimestampUnit::period::type
+	> Conv;
+	const uint64_t timestamp_us = uint64_t (
+		dur.count () * Conv::num / Conv::den
+	);
+
+	VidRecFmt::HeaderFrame &   header =
+		*reinterpret_cast <VidRecFmt::HeaderFrame *> (&_buf_cmp [_buf_pos]);
+	header._timestamp = timestamp_us;
+	header._x         = uint16_t (x);
+	header._y         = uint16_t (y);
+	header._w         = uint16_t (w);
+	header._h         = uint16_t (h);
+	_buf_pos += sizeof (header);
+	assert (_buf_pos <= _buf_cmp.size ());
+
 	// Gets picture data
 	size_t         pos = 0;
 	const uint8_t* scr_ptr = _disp.use_screen_buf ();
@@ -253,43 +276,21 @@ int	VideoRecorder::dump_frame (int x, int y, int w, int h, std::chrono::steady_c
 	}
 	const size_t   len_raw = pos;
 
-	// Compress it
+	// Compress the picture data
 	const size_t   len_cmp = CompressSimple::compress_frame (
-		_buf_cmp.data (), _buf_raw.data (), len_raw
+		&_buf_cmp [_buf_pos], _buf_raw.data (), len_raw
 	);
-	assert (len_cmp <= _buf_cmp.size ());
+	_buf_pos += len_cmp;
+	assert (_buf_pos <= _buf_cmp.size ());
 
-	// Builds frame header
-	const Clk::duration  dur { t - _t_beg };
-	typedef std::ratio_divide <
-		Clk::period::type,
-		VidRecFmt::TimestampUnit::period::type
-	> Conv;
-	const uint64_t timestamp_us = uint64_t (
-		dur.count () * Conv::num / Conv::den
-	);
-
-	VidRecFmt::HeaderFrame  header;
-	header._timestamp = timestamp_us;
-	header._x         = uint16_t (x);
-	header._y         = uint16_t (y);
-	header._w         = uint16_t (w);
-	header._h         = uint16_t (h);
-
-	// Writes on disk
-	if (ret_val == 0)
+	// Writes on disk if required
+	if (_buf_pos >= _buf_limit || len_raw == 0)
 	{
-		if (fwrite (&header, sizeof (header), 1, _f_ptr) != 1)
+		if (fwrite (_buf_cmp.data (), 1, _buf_pos, _f_ptr) != _buf_pos)
 		{
 			ret_val = -1;
 		}
-	}
-	if (ret_val == 0 && len_raw > 0)
-	{
-		if (fwrite (_buf_cmp.data (), 1, len_cmp, _f_ptr) != len_cmp)
-		{
-			ret_val = -1;
-		}
+		_buf_pos = 0;
 	}
 
 	return ret_val;

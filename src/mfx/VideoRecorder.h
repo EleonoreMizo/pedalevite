@@ -99,6 +99,11 @@ private:
 	               _buf_raw;
 	std::vector <uint8_t>
 	               _buf_cmp;
+	size_t         _buf_limit;
+
+	// Current position within the compressed buffer.
+	// When _buf_limit is reached, the buffer is flushed to the file.
+	size_t         _buf_pos;
 
 
 
