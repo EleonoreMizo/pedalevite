@@ -81,6 +81,11 @@ inline T       rcp_uint (int x);
 template <class T>
 inline T       lerp (T v0, T v1, T p);
 
+template <class T>
+inline T       read_unalign (const void *ptr);
+template <class T>
+inline void    write_unalign (void *ptr, T val);
+
 void           conv_to_lower_case (std::string &str);
 
 int            snprintf4all (char *out_0, size_t size, const char *format_0, ...);

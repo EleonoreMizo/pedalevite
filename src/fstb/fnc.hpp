@@ -40,6 +40,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <climits>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 
 
 
@@ -806,6 +807,28 @@ template <class T>
 T	lerp (T v0, T v1, T p)
 {
 	return v0 + p * (v1 - v0);
+}
+
+
+
+template <class T>
+T	read_unalign (const void *ptr)
+{
+	assert (ptr != nullptr);
+
+	T              val;
+	memcpy (&val, ptr, sizeof (val));
+	return val;
+}
+
+
+
+template <class T>
+void	write_unalign (void *ptr, T val)
+{
+	assert (ptr != nullptr);
+
+	memcpy (ptr, &val, sizeof (val));
 }
 
 

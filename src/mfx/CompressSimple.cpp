@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/CompressSimple.h"
 
 #include <cassert>
@@ -152,7 +153,7 @@ size_t	CompressSimple::compress_frame (uint8_t *cmp_ptr, const uint8_t *raw_ptr,
 		pos_seg += pos;
 	}
 
-	*reinterpret_cast <uint32_t *> (base_ptr) = uint32_t (cmp_ptr - org_ptr);
+	fstb::write_unalign (base_ptr, uint32_t (cmp_ptr - org_ptr));
 
 	return size_t (cmp_ptr - base_ptr);
 }
@@ -164,7 +165,7 @@ size_t	CompressSimple::read_compressed_frame_size (const uint8_t *cmp_ptr)
 {
 	assert (cmp_ptr != nullptr);
 
-	return *reinterpret_cast <const uint32_t *> (cmp_ptr);
+	return size_t (fstb::read_unalign <uint32_t> (cmp_ptr));
 }
 
 

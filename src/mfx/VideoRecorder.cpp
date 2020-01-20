@@ -122,12 +122,12 @@ int	VideoRecorder::rec_start (std::string pathname)
 		_buf_cmp.resize (_buf_limit * 2);
 		_buf_pos = 0;
 
-		VidRecFmt::HeaderFile & header =
-			*reinterpret_cast <VidRecFmt::HeaderFile *> (&_buf_cmp [_buf_pos]);
+		VidRecFmt::HeaderFile   header;
 		header._version  = uint16_t (VidRecFmt::_fmt_version);
 		header._width    = uint16_t (_w);
 		header._height   = uint16_t (_h);
 		header._pix_code = uint16_t (VidRecFmt::PixCode_GREY8);
+		memcpy (&_buf_cmp [_buf_pos], &header, sizeof (header));
 		_buf_pos += sizeof (header);
 	}
 
@@ -254,13 +254,13 @@ int	VideoRecorder::dump_frame (int x, int y, int w, int h, std::chrono::steady_c
 		dur.count () * Conv::num / Conv::den
 	);
 
-	VidRecFmt::HeaderFrame &   header =
-		*reinterpret_cast <VidRecFmt::HeaderFrame *> (&_buf_cmp [_buf_pos]);
+	VidRecFmt::HeaderFrame  header;
 	header._timestamp = timestamp_us;
 	header._x         = uint16_t (x);
 	header._y         = uint16_t (y);
 	header._w         = uint16_t (w);
 	header._h         = uint16_t (h);
+	memcpy (&_buf_cmp [_buf_pos], &header, sizeof (header));
 	_buf_pos += sizeof (header);
 	assert (_buf_pos <= _buf_cmp.size ());
 
