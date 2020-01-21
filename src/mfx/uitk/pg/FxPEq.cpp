@@ -81,8 +81,10 @@ FxPEq::FxPEq (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_cur_param (Param_RANGE)
 ,	_nbr_param (Param_BAND_BASE)
 ,	_nbr_bands (0)
+,	_cur_band (-1)
 ,	_range_db_idx (1) // Default: +/-12 dB
 ,	_prec_idx (0)
+,	_settings ()
 {
 	// Nothing
 }
@@ -117,6 +119,7 @@ void	FxPEq::do_connect (Model &model, const View &view, PageMgrInterface &page, 
 	_prec_sptr     ->set_font (*_fnt_s_ptr);
 	_prec_sptr     ->set_blend_mode (ui::DisplayInterface::BlendMode_MAX);
 
+	update_band_info ();
 	update_display ();
 }
 
@@ -147,12 +150,10 @@ MsgHandlerInterface::EvtProp	FxPEq::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			break;
 		case Button_U:
-			_cur_param = (_cur_param + _nbr_param - 1) % _nbr_param;
-			update_param_txt ();
+			move_param (-1);
 			break;
 		case Button_D:
-			_cur_param = (_cur_param              + 1) % _nbr_param;
-			update_param_txt ();
+			move_param (+1);
 			break;
 		case Button_L:
 			change_param (-1);
@@ -188,6 +189,7 @@ void	FxPEq::do_set_param (int slot_id, int index, float val, PiType type)
 
 	if (slot_id == _loc_edit._slot_id)
 	{
+		update_band_info ();
 		update_display ();
 	}
 }
@@ -208,6 +210,7 @@ void	FxPEq::do_remove_plugin (int slot_id)
 
 
 
+// Requires update_band_info() before
 void	FxPEq::update_display ()
 {
 	_page_ptr->clear_all_nodes ();
@@ -235,30 +238,19 @@ void	FxPEq::update_display ()
 	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
 	const doc::Slot &    slot    = preset.use_slot (slot_id);
 
-	auto           it_settings = slot._settings_all.find (slot._pi_model);
-	if (it_settings == slot._settings_all.end ())
+	if (_nbr_bands > 0)
 	{
-		_nbr_param = Param_BAND_BASE;
-		_nbr_bands = 0;
-	}
-	else
-	{
-		const doc::PluginSettings &   settings = it_settings->second;
 		const piapi::PluginDescInterface &   desc =
 			_model_ptr->get_model_desc (slot._pi_model);
 		const piapi::PluginDescInterface &   desc_mix =
 			_model_ptr->get_model_desc (Cst::_plugin_dwm);
-
-		const int      nbr_param = desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
-		_nbr_bands = nbr_param / pi::peq::Param_NBR_ELT;
-		_nbr_param = Param_BAND_BASE + _nbr_bands * pi::peq::Param_NBR_ELT;
 
 		const float    gain = get_param_nat (
 			slot._settings_mixer, desc_mix, pi::dwm::Param_GAIN
 		);
 
 		// Populates band parameters
-		auto           band_arr = create_bands (settings, desc);
+		auto           band_arr = create_bands (_settings, desc);
 
 		// Retrieve the z-equations as biquads
 		auto           biq_arr  = retrieve_z_eq (band_arr);
@@ -266,8 +258,21 @@ void	FxPEq::update_display ()
 		// Creates a frequency map
 		auto           puls_arr = create_freq_map (nbr_freq, f_beg, f_end);
 
-		// Computes the response (linear gain) for each frequency
+#if PV_VERSION == 2
+		// First, draws only the current band contribution
+		if (_cur_band >= 0)
+		{
+			std::vector <float>  lvl_arr (nbr_freq, 1);
+			compute_freq_resp (lvl_arr, puls_arr, biq_arr [_cur_band]);
+			std::vector <int32_t>   y_arr = compute_y_pos (lvl_arr, height);
+			Tools::draw_curve (y_arr, disp_ptr, height, stride, 96);
+		}
+#endif
+
+		// Now the main curve. Starts with the main gain
 		std::vector <float>  lvl_arr (nbr_freq, gain);
+
+		// Computes the response (linear gain) for each frequency
 		for (const auto &biq : biq_arr)
 		{
 			compute_freq_resp (lvl_arr, puls_arr, biq);
@@ -277,7 +282,7 @@ void	FxPEq::update_display ()
 		std::vector <int32_t>   y_arr = compute_y_pos (lvl_arr, height);
 
 		// Draws the curve
-		Tools::draw_curve (y_arr, disp_ptr, height, stride);
+		Tools::draw_curve (y_arr, disp_ptr, height, stride, 255);
 	}
 
 	update_param_txt ();
@@ -319,9 +324,9 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 			if (x >= 0 && x < nbr_freq)
 			{
 #if PV_VERSION == 2
-				const uint8_t  col = (m == 1) ? 64 : 32;
+				const uint8_t  col = (m == 1) ? 64 : 40;
 				grap::PrimLine::draw_v (ctx, x, 0, height, col, false);
-#endif
+#else
 				disp_ptr [ 0           * stride + x] = 255;
 				disp_ptr [(height - 1) * stride + x] = 255;
 				if (m == 1 || m == 5)
@@ -329,6 +334,7 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 					disp_ptr [ 1           * stride + x] = 255;
 					disp_ptr [(height - 2) * stride + x] = 255;
 				}
+#endif
 			}
 		}
 		const int      x = conv_freq_to_x (f, f_beg, f_end, nbr_freq);
@@ -354,10 +360,8 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 	}
 
 	// dB
+#if PV_VERSION != 2
 	const int      height_h = height / 2;
-#if PV_VERSION == 2
-	grap::PrimLine::draw_h (ctx, 0, height_h, nbr_freq, 64, false);
-#else
 	for (int x = 0; x < nbr_freq; x += 3)
 	{
 		disp_ptr [height_h * stride + x] = 255;
@@ -365,7 +369,12 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 #endif
 
 	char           txt_0 [127+1];
+#if PV_VERSION == 2
+	static const std::array <float, 7> db_arr =
+	{{ -1, -2/3.f, -1/3.f, 0, 1/3.f, 2/3.f, 1 }};
+#else
 	static const std::array <float, 4> db_arr = {{ -1, -0.5f, 0.5f, 1 }};
+#endif
 	for (int r_idx = 0; r_idx < int (db_arr.size ()); ++r_idx)
 	{
 		const float    db =
@@ -374,38 +383,35 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 			fstb::limit (conv_db_to_y (db, height), 0, height - 1);
 
 #if PV_VERSION == 2
-		if (y > 0 && y < height - 1)
-		{
-			grap::PrimLine::draw_h (ctx, 0, y, nbr_freq, 32, false);
-		}
-#endif
-
+		const uint8_t  col = fstb::is_null (db) ? 64 : 40;
+		grap::PrimLine::draw_h (ctx, 0, y, nbr_freq, col, false);
+#else
 		disp_ptr [y * stride +            0] = 255;
 		disp_ptr [y * stride +            1] = 255;
 		disp_ptr [y * stride + nbr_freq - 2] = 255;
 		disp_ptr [y * stride + nbr_freq - 1] = 255;
+#endif
 
-		if (y > h_t)
-		{
-			fstb::snprintf4all (
-				txt_0, sizeof (txt_0),
-				"%+.0f", db
-			);
+		fstb::snprintf4all (
+			txt_0, sizeof (txt_0),
+			"%+.0f", db
+		);
 
-			TxtSPtr        txt_sptr { std::make_shared <NText> (node_id) };
-			txt_sptr->set_justification (1, 1, false);
-			txt_sptr->set_font (*_fnt_t_ptr);
-			txt_sptr->set_coord (Vec2d (nbr_freq, y));
-			txt_sptr->set_blend_mode (ui::DisplayInterface::BlendMode_MAX);
-			txt_sptr->set_text (txt_0);
-			_legend_sptr_arr.push_back (txt_sptr);
-			_page_ptr->push_back (txt_sptr);
-			++ node_id;
-		}
+		TxtSPtr        txt_sptr { std::make_shared <NText> (node_id) };
+		txt_sptr->set_justification (1, (y > h_t) ? 1.f : 0.f, false);
+		txt_sptr->set_font (*_fnt_t_ptr);
+		txt_sptr->set_coord (Vec2d (nbr_freq, y));
+		txt_sptr->set_blend_mode (ui::DisplayInterface::BlendMode_MAX);
+		txt_sptr->set_text (txt_0);
+		_legend_sptr_arr.push_back (txt_sptr);
+		_page_ptr->push_back (txt_sptr);
+		++ node_id;
 	}
 }
 
 
+
+// Requires update_band_info() before
 void	FxPEq::update_param_txt ()
 {
 	_cur_param = fstb::limit (_cur_param, 0, _nbr_param - 1);
@@ -445,94 +451,83 @@ void	FxPEq::update_param_txt ()
 	// Band parameters
 	else
 	{
-		auto           it_settings = slot._settings_all.find (slot._pi_model);
-		if (it_settings == slot._settings_all.end ())
-		{
-			fstb::snprintf4all (txt_0, sizeof (txt_0), "---");
-		}
-		else
-		{
-			const doc::PluginSettings &   settings = it_settings->second;
-			const piapi::PluginDescInterface &   desc =
-				_model_ptr->get_model_desc (slot._pi_model);
+		const piapi::PluginDescInterface &   desc =
+			_model_ptr->get_model_desc (slot._pi_model);
 
-			const int      band_idx  =
-				(_cur_param - Param_BAND_BASE) / pi::peq::Param_NBR_ELT;
-			const int      param_idx =
-				(_cur_param - Param_BAND_BASE) % pi::peq::Param_NBR_ELT;
-			const float    nat       = get_param_nat (
-				settings, desc, band_idx * pi::peq::Param_NBR_ELT + param_idx);
-			switch (param_idx)
+		const int      param_idx =
+			(_cur_param - Param_BAND_BASE) % pi::peq::Param_NBR_ELT;
+		const float    nat       = get_param_nat (
+			_settings, desc, _cur_band * pi::peq::Param_NBR_ELT + param_idx);
+		switch (param_idx)
+		{
+		case pi::peq::Param_FREQ:
+			if (nat < 9999.5)
 			{
-			case pi::peq::Param_FREQ:
-				if (nat < 9999.5)
-				{
-					fstb::snprintf4all (
-						txt_0, sizeof (txt_0), "%dF %.0f", band_idx + 1, nat
-					);
-				}
-				else
-				{
-					const int      hecto = fstb::round_int (nat / 100);
-					const int      kilo  = hecto / 10;
-					const int      hectr = hecto % 10;
-					fstb::snprintf4all (
-						txt_0, sizeof (txt_0),
-						"%dF %dk%d", band_idx + 1, kilo, hectr
-					);
-				}
-				break;
-
-			case pi::peq::Param_Q:
 				fstb::snprintf4all (
-					txt_0, sizeof (txt_0), "%dQ %.2f", band_idx + 1, nat
+					txt_0, sizeof (txt_0), "%dF %.0f", _cur_band + 1, nat
 				);
-				break;
-
-			case pi::peq::Param_GAIN:
-				{
-					const float    db = float (20 * log10 (std::max (nat, 1e-9f)));
-					fstb::snprintf4all (
-						txt_0, sizeof (txt_0), "%dG %+.1f", band_idx + 1, db
-					);
-				}
-				break;
-
-			case pi::peq::Param_TYPE:
-				switch (fstb::round_int (nat))
-				{
-				case pi::peq::PEqType_PEAK:
-					fstb::snprintf4all (txt_0, sizeof (txt_0), "%dPeak", band_idx + 1);
-					break;
-				case pi::peq::PEqType_SHELF_LO:
-					fstb::snprintf4all (txt_0, sizeof (txt_0), "%dSh-L", band_idx + 1);
-					break;
-				case pi::peq::PEqType_HP:
-					fstb::snprintf4all (txt_0, sizeof (txt_0), "%dHPF" , band_idx + 1);
-					break;
-				case pi::peq::PEqType_SHELF_HI:
-					fstb::snprintf4all (txt_0, sizeof (txt_0), "%dSh-H", band_idx + 1);
-					break;
-				case pi::peq::PEqType_LP:
-					fstb::snprintf4all (txt_0, sizeof (txt_0), "%dLPF" , band_idx + 1);
-					break;
-				default:
-					assert (false);
-					break;
-				}
-				break;
-
-			case pi::peq::Param_BYPASS:
+			}
+			else
+			{
+				const int      hecto = fstb::round_int (nat / 100);
+				const int      kilo  = hecto / 10;
+				const int      hectr = hecto % 10;
 				fstb::snprintf4all (
 					txt_0, sizeof (txt_0),
-					"%d%s", band_idx + 1, (nat >= 0.5f) ? "Off" : "On"
+					"%dF %dk%d", _cur_band + 1, kilo, hectr
 				);
-				break;
+			}
+			break;
 
+		case pi::peq::Param_Q:
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0), "%dQ %.2f", _cur_band + 1, nat
+			);
+			break;
+
+		case pi::peq::Param_GAIN:
+			{
+				const float    db = float (20 * log10 (std::max (nat, 1e-9f)));
+				fstb::snprintf4all (
+					txt_0, sizeof (txt_0), "%dG %+.1f", _cur_band + 1, db
+				);
+			}
+			break;
+
+		case pi::peq::Param_TYPE:
+			switch (fstb::round_int (nat))
+			{
+			case pi::peq::PEqType_PEAK:
+				fstb::snprintf4all (txt_0, sizeof (txt_0), "%dPeak", _cur_band + 1);
+				break;
+			case pi::peq::PEqType_SHELF_LO:
+				fstb::snprintf4all (txt_0, sizeof (txt_0), "%dSh-L", _cur_band + 1);
+				break;
+			case pi::peq::PEqType_HP:
+				fstb::snprintf4all (txt_0, sizeof (txt_0), "%dHPF" , _cur_band + 1);
+				break;
+			case pi::peq::PEqType_SHELF_HI:
+				fstb::snprintf4all (txt_0, sizeof (txt_0), "%dSh-H", _cur_band + 1);
+				break;
+			case pi::peq::PEqType_LP:
+				fstb::snprintf4all (txt_0, sizeof (txt_0), "%dLPF" , _cur_band + 1);
+				break;
 			default:
 				assert (false);
 				break;
 			}
+			break;
+
+		case pi::peq::Param_BYPASS:
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0),
+				"%d%s", _cur_band + 1, (nat >= 0.5f) ? "Off" : "On"
+			);
+			break;
+
+		default:
+			assert (false);
+			break;
 		}
 		_cur_param_sptr->set_text (txt_0);
 	}
@@ -544,6 +539,53 @@ void	FxPEq::update_param_txt ()
 		txt_prec += "\xE2\x9A\xAB";   // MEDIUM BLACK CIRCLE U+26AB
 	}
 	_prec_sptr->set_text (txt_prec);
+}
+
+
+
+void	FxPEq::update_band_info ()
+{
+	const int            slot_id = _loc_edit._slot_id;
+	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
+	const doc::Slot &    slot    = preset.use_slot (slot_id);
+
+	auto           it_settings = slot._settings_all.find (slot._pi_model);
+	if (it_settings == slot._settings_all.end ())
+	{
+		_nbr_param = Param_BAND_BASE;
+		_nbr_bands = 0;
+	}
+	else
+	{
+		_settings = it_settings->second;
+		const piapi::PluginDescInterface &   desc =
+			_model_ptr->get_model_desc (slot._pi_model);
+		const int      nbr_param = desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
+		_nbr_bands = nbr_param / pi::peq::Param_NBR_ELT;
+		_nbr_param = Param_BAND_BASE + _nbr_bands * pi::peq::Param_NBR_ELT;
+	}
+
+	_cur_param = fstb::limit (_cur_param, 0, _nbr_param - 1);
+	if (_nbr_bands <= 0)
+	{
+		_cur_band  = -1;
+	}
+	else
+	{
+		if (_cur_param < Param_BAND_BASE)
+		{
+			_cur_band = -1;
+		}
+		else
+		{
+			_cur_band = (_cur_param - Param_BAND_BASE) / pi::peq::Param_NBR_ELT;
+			if (_cur_band >= _nbr_bands)
+			{
+				assert (false);
+				_cur_band = -1;
+			}
+		}
+	}
 }
 
 
@@ -652,6 +694,37 @@ std::vector <float>	FxPEq::create_freq_map (int nbr_freq, float f_beg, float f_e
 
 
 
+// Output positions can be located out of the rendering zone.
+std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, int pix_h) const
+{
+	const int      nbr_freq = int (lvl_arr.size ());
+	std::vector <int> y_arr (nbr_freq);
+
+	const float    range = float (_range_db_arr [_range_db_idx]);
+	const float    hh    = pix_h * 0.5f;
+	const auto     mul   = fstb::ToolsSimd::set1_f32 (float (
+		-20 * fstb::LOG10_2 * hh / range
+	));
+	const auto     ofs   = fstb::ToolsSimd::set1_f32 (hh);
+	const auto     secu  = fstb::ToolsSimd::set1_f32 (1e-15f);
+	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
+	{
+		const int      ns    = nbr_freq - f_idx;
+
+		auto           lvl   =
+			fstb::ToolsSimd::loadu_f32_part (&lvl_arr [f_idx], ns);
+		lvl = fstb::ToolsSimd::max_f32 (lvl, secu);
+		const auto     y_flt =
+			fstb::ToolsSimd::log2_approx (lvl) * mul + ofs;
+		const auto     y     = fstb::ToolsSimd::conv_f32_to_s32 (y_flt);
+		fstb::ToolsSimd::storeu_s32_part (&y_arr [f_idx], y, ns);
+	}
+
+	return y_arr;
+}
+
+
+
 /*
 H (z) = (b0 + b1 * z^-1 + b2 * z^-2) / (1 + a1 * z^-1 + a2 * z^-2)
 
@@ -733,33 +806,19 @@ int	FxPEq::conv_db_to_y (float db, int pix_h) const
 
 
 
-// Output positions can be located out of the rendering zone.
-std::vector <int32_t>	FxPEq::compute_y_pos (const std::vector <float> &lvl_arr, int pix_h) const
+void	FxPEq::move_param (int dir)
 {
-	const int      nbr_freq = int (lvl_arr.size ());
-	std::vector <int> y_arr (nbr_freq);
-
-	const float    range = float (_range_db_arr [_range_db_idx]);
-	const float    hh    = pix_h * 0.5f;
-	const auto     mul   = fstb::ToolsSimd::set1_f32 (float (
-		-20 * fstb::LOG10_2 * hh / range
-	));
-	const auto     ofs   = fstb::ToolsSimd::set1_f32 (hh);
-	const auto     secu  = fstb::ToolsSimd::set1_f32 (1e-15f);
-	for (int f_idx = 0; f_idx < nbr_freq; f_idx += 4)
+	const int      band_old = _cur_band;
+	_cur_param = (_cur_param + _nbr_param + dir) % _nbr_param;
+	update_band_info ();
+	if (_cur_band != band_old)
 	{
-		const int      ns    = nbr_freq - f_idx;
-
-		auto           lvl   =
-			fstb::ToolsSimd::loadu_f32_part (&lvl_arr [f_idx], ns);
-		lvl = fstb::ToolsSimd::max_f32 (lvl, secu);
-		const auto     y_flt =
-			fstb::ToolsSimd::log2_approx (lvl) * mul + ofs;
-		const auto     y     = fstb::ToolsSimd::conv_f32_to_s32 (y_flt);
-		fstb::ToolsSimd::storeu_s32_part (&y_arr [f_idx], y, ns);
+		update_display ();
 	}
-
-	return y_arr;
+	else
+	{
+		update_param_txt ();
+	}
 }
 
 

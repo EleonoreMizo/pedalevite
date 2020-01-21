@@ -246,7 +246,7 @@ void	FxLfo::update_display ()
 		std::vector <int32_t>   y_arr = build_values (scr_w, scr_h);
 
 		// Draws the curve
-		Tools::draw_curve (y_arr, disp_ptr, scr_h, stride);
+		Tools::draw_curve (y_arr, disp_ptr, scr_h, stride, 255);
 	}
 
 	// Scales

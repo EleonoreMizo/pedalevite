@@ -1249,7 +1249,7 @@ void	Tools::create_prog_list (TxtArray &prog_list, ContainerInterface &menu, Pag
 
 
 
-void	Tools::draw_curve (std::vector <int32_t> y_arr, uint8_t *disp_ptr, int height, int stride)
+void	Tools::draw_curve (std::vector <int32_t> y_arr, uint8_t *disp_ptr, int height, int stride, uint8_t c)
 {
 	const int      width = int (y_arr.size ());
 	for (int x = 0; x < width; ++x)
@@ -1257,22 +1257,22 @@ void	Tools::draw_curve (std::vector <int32_t> y_arr, uint8_t *disp_ptr, int heig
 		int            y = y_arr [x];
 		if (y >= 0 && y < height)
 		{
-			disp_ptr [y * stride + x] = 255;
+			disp_ptr [y * stride + x] = c;
 		}
 		if (x > 0)
 		{
-			complete_v_seg (disp_ptr, x, y, y_arr [x - 1], height, stride);
+			complete_v_seg (disp_ptr, x, y, y_arr [x - 1], height, stride, c);
 		}
 		if (x < width - 1)
 		{
-			complete_v_seg (disp_ptr, x, y, y_arr [x + 1], height, stride);
+			complete_v_seg (disp_ptr, x, y, y_arr [x + 1], height, stride, c);
 		}
 	}
 }
 
 
 
-void	Tools::complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height, int stride)
+void	Tools::complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height, int stride, uint8_t c)
 {
 	if (std::abs (yn - y) > 1)
 	{
@@ -1288,7 +1288,7 @@ void	Tools::complete_v_seg (uint8_t *disp_ptr, int x, int y, int yn, int height,
 			y_mid = fstb::limit (y_mid, 0, height - 1);
 			for (int yy = y; yy <= y_mid; ++yy)
 			{
-				disp_ptr [yy * stride + x] = 255;
+				disp_ptr [yy * stride + x] = c;
 			}
 		}
 	}

@@ -121,6 +121,7 @@ private:
 
 	void           update_display ();
 	void           update_param_txt ();
+	void           update_band_info ();
 	std::vector <pi::peq::BandParam>
 	               create_bands (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc) const;
 	float          get_param_nat (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc_pi, int index) const;
@@ -134,6 +135,7 @@ private:
 	void           display_graduations (float f_beg, float f_end, int nbr_freq);
 	int            conv_freq_to_x (float f, float f_beg, float f_end, int nbr_freq) const;
 	int            conv_db_to_y (float db, int pix_h) const;
+	void           move_param (int dir);
 	void           change_param (int dir);
 
 	PageSwitcher & _page_switcher;
@@ -156,8 +158,11 @@ private:
 	int            _cur_param;    // A Param enum value
 	int            _nbr_param;
 	int            _nbr_bands;
+	int            _cur_band;     // -1: not on a band
 	int            _range_db_idx; // Position within _range_db_arr, must be valid
 	int            _prec_idx;     // Precision for modifying parameters, [0 ; 3]
+	doc::PluginSettings           // Cached settings
+	               _settings;
 
 	static const std::array <double, 6> // Y range in dB (from -r to +r)
 	               _range_db_arr;
