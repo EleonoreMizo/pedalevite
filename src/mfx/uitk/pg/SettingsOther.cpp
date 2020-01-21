@@ -67,6 +67,7 @@ SettingsOther::SettingsOther (PageSwitcher &page_switcher)
 ,	_save_sptr (   std::make_shared <NText> (Entry_SAVE   ))
 ,	_backup_sptr ( std::make_shared <NText> (Entry_BACKUP ))
 ,	_record_sptr ( std::make_shared <NText> (Entry_RECORD ))
+,	_re_ovr_sptr ( std::make_shared <NText> (Entry_RE_OVR ))
 ,	_msg_arg ()
 {
 	_save_sptr->set_text ("Save settings");
@@ -99,18 +100,21 @@ void	SettingsOther::do_connect (Model &model, const View &view, PageMgrInterface
 	_save_sptr   ->set_font (fnt._m);
 	_backup_sptr ->set_font (fnt._m);
 	_record_sptr ->set_font (fnt._m);
+	_re_ovr_sptr ->set_font (fnt._m);
 
-	_tempo_i_sptr->set_coord (Vec2d ( 0      , 0 * h_m    ));
-	_tempo_f_sptr->set_coord (Vec2d (11 * w_m, 0 * h_m    ));
-	_click_sptr  ->set_coord (Vec2d ( 0      , 1 * h_m    ));
-	_save_sptr   ->set_coord (Vec2d ( 0      , 5 * h_m / 2));
-	_backup_sptr ->set_coord (Vec2d ( 0      , 7 * h_m / 2));
-	_record_sptr ->set_coord (Vec2d ( 0      , 9 * h_m / 2));
+	_tempo_i_sptr->set_coord (Vec2d ( 0      ,  0 * h_m    ));
+	_tempo_f_sptr->set_coord (Vec2d (11 * w_m,  0 * h_m    ));
+	_click_sptr  ->set_coord (Vec2d ( 0      ,  1 * h_m    ));
+	_save_sptr   ->set_coord (Vec2d ( 0      ,  5 * h_m / 2));
+	_backup_sptr ->set_coord (Vec2d ( 0      ,  7 * h_m / 2));
+	_record_sptr ->set_coord (Vec2d ( 0      ,  9 * h_m / 2));
+	_re_ovr_sptr ->set_coord (Vec2d ( 0      , 11 * h_m / 2));
 
 	_click_sptr  ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
 	_save_sptr   ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
 	_backup_sptr ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
 	_record_sptr ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
+	_re_ovr_sptr ->set_frame (Vec2d (w_34, 0), Vec2d (0, 0));
 
 	_page_ptr->push_back (_tempo_i_sptr);
 	_page_ptr->push_back (_tempo_f_sptr);
@@ -118,6 +122,7 @@ void	SettingsOther::do_connect (Model &model, const View &view, PageMgrInterface
 	_page_ptr->push_back (_save_sptr   );
 	_page_ptr->push_back (_backup_sptr );
 	_page_ptr->push_back (_record_sptr );
+	_page_ptr->push_back (_re_ovr_sptr );
 
 	PageMgrInterface::NavLocList  nav_list;
 	PageMgrInterface::add_nav (nav_list, Entry_TEMPO_I);
@@ -126,6 +131,7 @@ void	SettingsOther::do_connect (Model &model, const View &view, PageMgrInterface
 	PageMgrInterface::add_nav (nav_list, Entry_SAVE   );
 	PageMgrInterface::add_nav (nav_list, Entry_BACKUP );
 	PageMgrInterface::add_nav (nav_list, Entry_RECORD );
+	PageMgrInterface::add_nav (nav_list, Entry_RE_OVR );
 	page.set_nav_layout (nav_list);
 
 	refresh_display ();
@@ -193,6 +199,11 @@ MsgHandlerInterface::EvtProp	SettingsOther::do_handle_evt (const NodeEvt &evt)
 				break;
 			case Entry_RECORD:
 				_page_switcher.call_page (PageType_REC2DISK, nullptr, node_id);
+				break;
+			case Entry_RE_OVR:
+				_model_ptr->enable_auto_rotenc_override (
+					! _view_ptr->use_setup ()._auto_assign_rotenc_flag
+				);
 				break;
 			default:
 				ret_val = EvtProp_PASS;
@@ -265,17 +276,28 @@ void	SettingsOther::do_set_click (bool click_flag)
 
 
 
+void	SettingsOther::do_enable_auto_rotenc_override (bool ovr_flag)
+{
+	fstb::unused (ovr_flag);
+
+	refresh_display ();
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 void	SettingsOther::refresh_display ()
 {
-	const bool     click_flag = _view_ptr->is_click_active ();
-	const double   tempo      = _view_ptr->get_tempo ();
-	const int      tempo_x    = fstb::round_int (tempo * 1000);
-	const int      tempo_i    = tempo_x / 1000;
-	const int      tempo_f    = tempo_x - tempo_i * 1000;
+	const doc::Setup &   setup = _view_ptr->use_setup ();
+	const bool     click_flag  = _view_ptr->is_click_active ();
+	const bool     re_ovr_flag = setup._auto_assign_rotenc_flag;
+	const double   tempo       = _view_ptr->get_tempo ();
+	const int      tempo_x     = fstb::round_int (tempo * 1000);
+	const int      tempo_i     = tempo_x / 1000;
+	const int      tempo_f     = tempo_x - tempo_i * 1000;
 
 	char           txt_0 [255+1];
 	fstb::snprintf4all (txt_0, sizeof (txt_0), "Tempo: %4i", tempo_i);
@@ -284,15 +306,16 @@ void	SettingsOther::refresh_display ()
 	_tempo_f_sptr->set_text (txt_0);
 
 	std::string    click_txt = "Click: ";
-	if (click_flag)
-	{
-		click_txt += "On";
-	}
-	else
-	{
-		click_txt += "Off";
-	}
+	click_txt += (click_flag) ? "On" : "Off";
 	_click_sptr->set_text (click_txt);
+
+#if PV_VERSION == 2
+	std::string    re_ovr_txt = "Automatic param assign: ";
+#else
+	std::string    re_ovr_txt = "A. param assign: ";
+#endif
+	re_ovr_txt += (re_ovr_flag) ? "On" : "Off";
+	_re_ovr_sptr->set_text (re_ovr_txt);
 }
 
 

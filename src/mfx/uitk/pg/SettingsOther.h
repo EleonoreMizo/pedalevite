@@ -78,6 +78,7 @@ protected:
 	// mfx::ModelObserverInterface via mfx::uitk::PageInterface
 	void           do_set_tempo (double bpm) final;
 	void           do_set_click (bool click_flag) final;
+	void           do_enable_auto_rotenc_override (bool ovr_flag) final;
 
 
 
@@ -92,7 +93,8 @@ private:
 		Entry_CLICK,
 		Entry_SAVE,
 		Entry_BACKUP,
-		Entry_RECORD
+		Entry_RECORD,
+		Entry_RE_OVR
 	};
 
 	typedef std::shared_ptr <NText> TxtSPtr;
@@ -113,6 +115,7 @@ private:
 	TxtSPtr        _save_sptr;
 	TxtSPtr        _backup_sptr;
 	TxtSPtr        _record_sptr;
+	TxtSPtr        _re_ovr_sptr;
 
 	Question::QArg _msg_arg;
 

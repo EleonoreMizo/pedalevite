@@ -333,6 +333,16 @@ void	ProgEdit::do_set_param_ctrl (int slot_id, PiType type, int index, const doc
 
 
 
+void	ProgEdit::do_enable_auto_rotenc_override (bool ovr_flag)
+{
+	if (! ovr_flag)
+	{
+		_model_ptr->reset_all_overridden_param_ctrl ();
+	}
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -650,11 +660,13 @@ void	ProgEdit::update_rotenc_mapping ()
 	assert (_model_ptr != nullptr);
 	assert (_view_ptr  != nullptr);
 
+	const doc::Setup &   setup = _view_ptr->use_setup ();
+
 	if (_loc_edit._slot_id < 0)
 	{
 		_model_ptr->reset_all_overridden_param_ctrl ();
 	}
-	else
+	else if (setup._auto_assign_rotenc_flag)
 	{
 		Tools::assign_default_rotenc_mapping (
 			*_model_ptr, *_view_ptr, _loc_edit._slot_id, 0

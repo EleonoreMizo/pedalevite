@@ -1127,12 +1127,15 @@ void	Model::remove_ctrl_src (const ControlSource &src)
 
 
 // rotenc_index < 0: previous override is disabled, if existing.
+// One should not assign a valid override if
+// _setup._auto_assign_rotenc_flag is set.
 void	Model::override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index)
 {
 	assert (! _preset_cur.is_slot_empty (slot_id));
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
+	assert (rotenc_index < 0 || _setup._auto_assign_rotenc_flag);
 
 	if (override_param_ctrl_no_commit (slot_id, type, index, rotenc_index))
 	{
@@ -1190,6 +1193,8 @@ void	Model::reset_all_overridden_param_ctrl (int slot_id)
 
 
 
+// One should not assign a valid override if
+// _setup._auto_assign_rotenc_flag is set.
 void	Model::reset_and_override_param_ctrl_multi (const std::vector <RotEncOverride> &ovr_arr)
 {
 	std::vector <RotEncOverride>  ovr_notify_arr;
@@ -1394,6 +1399,18 @@ void	Model::load_plugin_settings (int slot_id, PiType type, const doc::PluginSet
 	{
 		set_plugin_mono (slot_id, settings._force_mono_flag);
 		set_plugin_reset (slot_id, settings._force_reset_flag);
+	}
+}
+
+
+
+void	Model::enable_auto_rotenc_override (bool ovr_flag)
+{
+	_setup._auto_assign_rotenc_flag = ovr_flag;
+
+	if (_obs_ptr != nullptr)
+	{
+		_obs_ptr->enable_auto_rotenc_override (ovr_flag);
 	}
 }
 
@@ -2956,6 +2973,7 @@ bool	Model::override_param_ctrl_no_commit (int slot_id, PiType type, int index, 
 	assert (type >= 0);
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
+	assert (rotenc_index < 0 || _setup._auto_assign_rotenc_flag);
 
 	bool           req_commit_flag = false;
 

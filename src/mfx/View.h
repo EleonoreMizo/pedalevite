@@ -148,6 +148,7 @@ protected:
 	void           do_remove_settings (std::string model, int index) override;
 	void           do_clear_all_settings () override;
 	void           do_set_click (bool click_flag) override;
+	void           do_enable_auto_rotenc_override (bool ovr_flag) override;
 
 
 

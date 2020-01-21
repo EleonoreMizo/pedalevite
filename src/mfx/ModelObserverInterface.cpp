@@ -417,6 +417,13 @@ void	ModelObserverInterface::set_click (bool click_flag)
 
 
 
+void	ModelObserverInterface::enable_auto_rotenc_override (bool ovr_flag)
+{
+	do_enable_auto_rotenc_override (ovr_flag);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

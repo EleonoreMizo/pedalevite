@@ -87,6 +87,7 @@ protected:
 	void           do_set_plugin (int slot_id, const PluginInitData &pi_data) final;
 	void           do_remove_plugin (int slot_id) final;
 	void           do_set_param_ctrl (int slot_id, PiType type, int index, const doc::CtrlLinkSet &cls) final;
+	void           do_enable_auto_rotenc_override (bool ovr_flag) final;
 
 
 

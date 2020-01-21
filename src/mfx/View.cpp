@@ -776,6 +776,15 @@ void	View::do_set_click (bool click_flag)
 
 
 
+void	View::do_enable_auto_rotenc_override (bool ovr_flag)
+{
+	_setup._auto_assign_rotenc_flag = ovr_flag;
+
+	mfx_View_PROPAGATE (enable_auto_rotenc_override (ovr_flag));
+}
+
+
+
 #undef mfx_View_PROPAGATE
 
 

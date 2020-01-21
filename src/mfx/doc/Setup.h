@@ -80,6 +80,10 @@ public:
 	double         _master_vol = 1;     // Linear, > 0
 	CpsMap         _map_plugin_settings;
 
+	// Indicates if the rotary encoders are automatically assigned to the
+	// parameters of the currently edited effect in the Program edit page.
+	bool           _auto_assign_rotenc_flag = false;
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
