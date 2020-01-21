@@ -103,6 +103,15 @@ public:
 		BankType_NBR_ELT
 	};
 
+	class RotEncOverride
+	{
+	public:
+		int            _slot_id      { -1 };
+		PiType         _pi_type      { PiType_INVALID };
+		int            _index        { -1 };
+		int            _rotenc_index { -1 };
+	};
+
 	typedef fstb::msg::QueueRetMgr <fstb::msg::MsgRet <ModelMsgCmdAsync> > CmdAsyncMgr;
 
 	explicit       Model (ui::UserInputInterface::MsgQueue &queue_input_to_cmd, ui::UserInputInterface::MsgQueue &queue_input_to_audio, ui::UserInputInterface &input_device, FileIOInterface &file_io);
@@ -165,6 +174,7 @@ public:
 	void           override_param_ctrl (int slot_id, PiType type, int index, int rotenc_index);
 	void           reset_all_overridden_param_ctrl ();
 	void           reset_all_overridden_param_ctrl (int slot_id);
+	void           reset_and_override_param_ctrl_multi (const std::vector <RotEncOverride> &ovr_arr);
 	void           set_signal_port (int port_id, const doc::SignalPort &port);
 	void           clear_signal_port (int port_id);
 	void           clear_all_signal_ports_for_slot (int slot_id);
@@ -307,6 +317,7 @@ private:
 	void           fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitData &pi_data);
 	bool           update_all_beat_parameters ();
 	void           update_all_overriden_param_ctrl ();
+	bool           override_param_ctrl_no_commit (int slot_id, PiType type, int index, int rotenc_index);
 	void           update_param_ctrl (const OverrideLoc &loc);
 	void           set_param_ctrl_with_override (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);
 	void           set_param_ctrl_internal (const doc::CtrlLinkSet &cls, int pi_id, int slot_id, PiType type, int index);

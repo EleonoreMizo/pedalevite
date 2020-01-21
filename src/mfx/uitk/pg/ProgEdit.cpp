@@ -177,7 +177,6 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 		   if (node_id >= 0 && node_id < int (_slot_list.size ()))
 			{
 				update_loc_edit (node_id);
-				update_rotenc_mapping ();
 				set_preset_info ();
 			}
 			else if (node_id >= Entry_WINDOW && _loc_edit._slot_id >= 0)

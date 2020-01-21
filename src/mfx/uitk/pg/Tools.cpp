@@ -658,7 +658,7 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 
 void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page)
 {
-	model.reset_all_overridden_param_ctrl ();
+	std::vector <Model::RotEncOverride> ovr_arr;
 
 	const doc::Preset &  preset = view.use_preset_cur ();
 
@@ -676,23 +676,25 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 		if (it_s != slot._settings_all.end ())
 		{
 			const int      nbr_param = int (it_s->second._param_list.size ());
-
+			ovr_arr.reserve (Cst::RotEnc_GEN);
 			for (int pos = 0; pos < Cst::RotEnc_NBR_GEN; ++pos)
 			{
 				const int      index = Cst::RotEnc_NBR_GEN * page + pos;
 				if (index < nbr_param)
 				{
 					const int      rotenc_index = Cst::RotEnc_GEN + pos;
-					model.override_param_ctrl (
+					ovr_arr.emplace_back (Model::RotEncOverride {
 						slot_id,
 						PiType_MAIN,
 						index,
 						rotenc_index
-					);
+					});
 				}
 			}
 		}
 	}
+
+	model.reset_and_override_param_ctrl_multi (ovr_arr);
 }
 
 

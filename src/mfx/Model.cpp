@@ -1134,27 +1134,8 @@ void	Model::override_param_ctrl (int slot_id, PiType type, int index, int rotenc
 	assert (type < PiType_NBR_ELT);
 	assert (index >= 0);
 
-	auto           it_id_map = _pi_id_map.find (slot_id);
-	assert (it_id_map != _pi_id_map.end ());
-	const int      pi_id     = it_id_map->second._pi_id_arr [type];
-	assert (pi_id >= 0);
-
-	const OverrideLoc loc { pi_id, index };
-
-	if (rotenc_index < 0)
+	if (override_param_ctrl_no_commit (slot_id, type, index, rotenc_index))
 	{
-		auto           it = _override_map.find (loc);
-		if (it != _override_map.end ())
-		{
-			_override_map.erase (it);
-			update_param_ctrl (loc);
-			_central.commit ();
-		}
-	}
-	else
-	{
-		_override_map [loc] = rotenc_index;
-		update_param_ctrl (loc);
 		_central.commit ();
 	}
 
@@ -1168,25 +1149,7 @@ void	Model::override_param_ctrl (int slot_id, PiType type, int index, int rotenc
 
 void	Model::reset_all_overridden_param_ctrl ()
 {
-	while (! _override_map.empty ())
-	{
-		const OverrideLoc &  loc     = _override_map.begin ()->first;
-		int                  slot_id = -1;
-		PiType               type    = PiType_INVALID;
-		find_slot_type_cur_preset (slot_id, type, loc._pi_id);
-		if (slot_id >= 0)
-		{
-			override_param_ctrl (slot_id, type, loc._index, -1);
-		}
-		else
-		{
-#if 0
-			_override_map.erase (_override_map.end ());
-#else
-			assert (false);
-#endif
-		}
-	}
+	reset_and_override_param_ctrl_multi (std::vector <RotEncOverride> ());
 }
 
 
@@ -1204,25 +1167,85 @@ void	Model::reset_all_overridden_param_ctrl (int slot_id)
 
 			if (pi_id >= 0)
 			{
-				bool           erase_flag = false;
-				do
+				auto           it = _override_map.begin ();
+				while (it != _override_map.end ())
 				{
-					const auto     it = std::find_if (
-						_override_map.begin (),
+					it = std::find_if (
+						it,
 						_override_map.end (),
 						[pi_id] (const std::pair <OverrideLoc, int> &x)
 						{
 							return (x.first._pi_id == pi_id);
 						}
 					);
-					erase_flag = (it != _override_map.end ());
-					if (erase_flag)
+					if (it != _override_map.end ())
 					{
-						_override_map.erase (it);
+						it = _override_map.erase (it);
 					}
 				}
-				while (erase_flag);
 			}
+		}
+	}
+}
+
+
+
+void	Model::reset_and_override_param_ctrl_multi (const std::vector <RotEncOverride> &ovr_arr)
+{
+	std::vector <RotEncOverride>  ovr_notify_arr;
+	ovr_notify_arr.reserve (_override_map.size () + ovr_arr.size ());
+
+	bool           req_commit_flag = false;
+
+	// Deletes all previous overrides
+	while (! _override_map.empty ())
+	{
+		const OverrideLoc &  loc     = _override_map.begin ()->first;
+		int                  slot_id = -1;
+		PiType               type    = PiType_INVALID;
+		find_slot_type_cur_preset (slot_id, type, loc._pi_id);
+		if (slot_id >= 0)
+		{
+			ovr_notify_arr.emplace_back (
+				RotEncOverride { slot_id, type, loc._index, -1 }
+			);
+			req_commit_flag |= override_param_ctrl_no_commit (
+				slot_id, type, loc._index, -1
+			); // loc becomes invalid after this call
+		}
+		else
+		{
+#if 0
+			_override_map.erase (_override_map.end ());
+#else
+			assert (false);
+#endif
+		}
+	}
+
+	// Adds the new overrides
+	for (const RotEncOverride &ovr : ovr_arr)
+	{
+		req_commit_flag |= override_param_ctrl_no_commit (
+			ovr._slot_id, ovr._pi_type, ovr._index, ovr._rotenc_index
+		);
+		ovr_notify_arr.push_back (ovr);
+	}
+
+	// Commits if something has changed
+	if (req_commit_flag)
+	{
+		_central.commit ();
+	}
+
+	// Notifications
+	if (_obs_ptr != nullptr)
+	{
+		for (const RotEncOverride &ovr : ovr_notify_arr)
+		{
+			_obs_ptr->override_param_ctrl (
+				ovr._slot_id, ovr._pi_type, ovr._index, ovr._rotenc_index
+			);
 		}
 	}
 }
@@ -2922,6 +2945,45 @@ void	Model::update_all_overriden_param_ctrl ()
 		const OverrideLoc &  loc = node.first;
 		update_param_ctrl (loc);
 	}
+}
+
+
+
+// Requires commit if true is returned
+bool	Model::override_param_ctrl_no_commit (int slot_id, PiType type, int index, int rotenc_index)
+{
+	assert (! _preset_cur.is_slot_empty (slot_id));
+	assert (type >= 0);
+	assert (type < PiType_NBR_ELT);
+	assert (index >= 0);
+
+	bool           req_commit_flag = false;
+
+	auto           it_id_map = _pi_id_map.find (slot_id);
+	assert (it_id_map != _pi_id_map.end ());
+	const int      pi_id     = it_id_map->second._pi_id_arr [type];
+	assert (pi_id >= 0);
+
+	const OverrideLoc loc { pi_id, index };
+
+	if (rotenc_index < 0)
+	{
+		auto           it = _override_map.find (loc);
+		if (it != _override_map.end ())
+		{
+			_override_map.erase (it);
+			update_param_ctrl (loc);
+			req_commit_flag = true;
+		}
+	}
+	else
+	{
+		_override_map [loc] = rotenc_index;
+		update_param_ctrl (loc);
+		req_commit_flag = true;
+	}
+
+	return req_commit_flag;
 }
 
 
