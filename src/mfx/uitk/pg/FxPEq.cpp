@@ -31,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/PluginDescInterface.h"
 #include "mfx/pi/dwm/Param.h"
 #include "mfx/pi/peq/Param.h"
+#include "mfx/uitk/grap/PrimLine.h"
+#include "mfx/uitk/grap/RenderCtx.h"
 #include "mfx/uitk/pg/FxPEq.h"
 #include "mfx/uitk/pg/Tools.h"
 #include "mfx/uitk/NodeEvt.h"
@@ -225,6 +227,10 @@ void	FxPEq::update_display ()
 	uint8_t *      disp_ptr = _content_sptr->use_buffer ();
 	memset (disp_ptr, 0, _page_size [0] * _page_size [1]);
 
+	// Graduations
+	display_graduations (f_beg, f_end, nbr_freq);
+
+	// Curve
 	const int            slot_id = _loc_edit._slot_id;
 	const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
 	const doc::Slot &    slot    = preset.use_slot (slot_id);
@@ -274,9 +280,6 @@ void	FxPEq::update_display ()
 		Tools::draw_curve (y_arr, disp_ptr, height, stride);
 	}
 
-	// Graduations
-	display_graduations (f_beg, f_end, nbr_freq);
-
 	update_param_txt ();
 
 	_content_sptr->invalidate_all ();
@@ -296,6 +299,12 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 	_legend_sptr_arr.clear ();
 	int            node_id  = Entry_LEGEND_BASE;
 
+#if PV_VERSION == 2
+	grap::RenderCtx   ctx {
+		disp_ptr, _content_sptr->get_bounding_box ().get_size (), stride
+	};
+#endif
+
 	// Hz
 	static const std::array <const char *, 5> freq_0_list =
 	{{
@@ -309,6 +318,10 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 			const int      x = conv_freq_to_x (f * m, f_beg, f_end, nbr_freq);
 			if (x >= 0 && x < nbr_freq)
 			{
+#if PV_VERSION == 2
+				const uint8_t  col = (m == 1) ? 64 : 32;
+				grap::PrimLine::draw_v (ctx, x, 0, height, col, false);
+#endif
 				disp_ptr [ 0           * stride + x] = 255;
 				disp_ptr [(height - 1) * stride + x] = 255;
 				if (m == 1 || m == 5)
@@ -321,10 +334,12 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 		const int      x = conv_freq_to_x (f, f_beg, f_end, nbr_freq);
 		if (x >= 0 && x < nbr_freq)
 		{
+#if PV_VERSION != 2
 			for (int y = 0; y < height; y += 4)
 			{
 				disp_ptr [y * stride + x] = 255;
 			}
+#endif
 
 			TxtSPtr        txt_sptr { std::make_shared <NText> (node_id) };
 			txt_sptr->set_justification (0.5f, 0, false);
@@ -340,10 +355,14 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 
 	// dB
 	const int      height_h = height / 2;
+#if PV_VERSION == 2
+	grap::PrimLine::draw_h (ctx, 0, height_h, nbr_freq, 64, false);
+#else
 	for (int x = 0; x < nbr_freq; x += 3)
 	{
 		disp_ptr [height_h * stride + x] = 255;
 	}
+#endif
 
 	char           txt_0 [127+1];
 	static const std::array <float, 4> db_arr = {{ -1, -0.5f, 0.5f, 1 }};
@@ -353,6 +372,13 @@ void	FxPEq::display_graduations (float f_beg, float f_end, int nbr_freq)
 			float (_range_db_arr [_range_db_idx]) * db_arr [r_idx];
 		const int      y  =
 			fstb::limit (conv_db_to_y (db, height), 0, height - 1);
+
+#if PV_VERSION == 2
+		if (y > 0 && y < height - 1)
+		{
+			grap::PrimLine::draw_h (ctx, 0, y, nbr_freq, 32, false);
+		}
+#endif
 
 		disp_ptr [y * stride +            0] = 255;
 		disp_ptr [y * stride +            1] = 255;
