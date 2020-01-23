@@ -60,7 +60,7 @@ public:
 	typedef std::map <int, SlotSPtr> SlotMap; // [slot_id] = SlotSPtr
 	typedef std::map <int, SignalPort> PortMap; // [port_index] = SignalPort
 
-	               Preset ()                   = default;
+	               Preset ();
 	               Preset (const Preset &other);
 	               Preset (Preset &&other)     = default;
 	               ~Preset ()                  = default;

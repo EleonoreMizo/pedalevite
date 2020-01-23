@@ -47,6 +47,16 @@ namespace doc
 
 
 
+Preset::Preset ()
+{
+	_routing._cnx_audio_set.insert (Cnx (
+		CnxEnd (CnxEnd::Type_IO, 0, 0),
+		CnxEnd (CnxEnd::Type_IO, 0, 0)
+	));
+}
+
+
+
 Preset::Preset (const Preset &other)
 :	_slot_map (other._slot_map)
 ,	_name (other._name)
