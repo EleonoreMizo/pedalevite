@@ -573,13 +573,15 @@ void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, s
 	const int      pos_menu = pos_list + 4 + skip;
 
 	// Main text
+	const int      txt_x    = w_m;
+	const int      margin   = w_m;
 	TxtSPtr        entry_sptr { std::make_shared <NText> (pos_list) };
-	entry_sptr->set_frame (Vec2d (scr_w - w_m, 0), Vec2d (w_m, 0));
-	entry_sptr->set_coord (Vec2d (w_m, h_m * pos_menu));
+	entry_sptr->set_frame (Vec2d (scr_w - txt_x, 0), Vec2d (margin, 0));
+	entry_sptr->set_coord (Vec2d (txt_x, h_m * pos_menu));
 	entry_sptr->set_font (*_fnt_ptr);
 	entry_sptr->set_bold (bold_flag, true);
 	std::string    txt = pi::param::Tools::print_name_bestfit (
-		scr_w, multilabel.c_str (),
+		scr_w - txt_x - margin, multilabel.c_str (),
 		*entry_sptr, &NText::get_char_width
 	);
 	entry_sptr->set_text (txt);
