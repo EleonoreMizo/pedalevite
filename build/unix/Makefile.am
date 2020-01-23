@@ -573,10 +573,24 @@ commonsrc = \
         ../../src/mfx/dsp/rspl/SnhTool.h \
         ../../src/mfx/dsp/rspl/Voice.cpp \
         ../../src/mfx/dsp/rspl/Voice.h \
+        ../../src/mfx/dsp/shape/DistAttract.cpp \
+        ../../src/mfx/dsp/shape/DistAttract.h \
+        ../../src/mfx/dsp/shape/DistAttract.hpp \
+        ../../src/mfx/dsp/shape/DistBounce.cpp \
+        ../../src/mfx/dsp/shape/DistBounce.h \
+        ../../src/mfx/dsp/shape/DistBounce.hpp \
+        ../../src/mfx/dsp/shape/DistRandWalk.cpp \
+        ../../src/mfx/dsp/shape/DistRandWalk.h \
+        ../../src/mfx/dsp/shape/DistRandWalk.hpp \
+        ../../src/mfx/dsp/shape/DistSlewRateLim.cpp \
+        ../../src/mfx/dsp/shape/DistSlewRateLim.h \
+        ../../src/mfx/dsp/shape/DistSlewRateLim.hpp \
         ../../src/mfx/dsp/shape/FncFiniteAsym.h \
         ../../src/mfx/dsp/shape/FncFiniteAsym.hpp \
         ../../src/mfx/dsp/shape/FncFiniteAsym2d.h \
         ../../src/mfx/dsp/shape/FncFiniteAsym2d.hpp \
+        ../../src/mfx/dsp/shape/FncLin0.h \
+        ../../src/mfx/dsp/shape/FncScale.h \
         ../../src/mfx/dsp/shape/Poly3L1Bias.h \
         ../../src/mfx/dsp/shape/Poly3L1Bias.hpp \
         ../../src/mfx/dsp/shape/MapSaturate.h \
@@ -585,12 +599,45 @@ commonsrc = \
         ../../src/mfx/dsp/shape/MapSaturateBipolar.hpp \
         ../../src/mfx/dsp/shape/SineQPoly3.h \
         ../../src/mfx/dsp/shape/SineQPoly3.hpp \
-        ../../src/mfx/dsp/shape/WsInterFtorAsym1.h \
-        ../../src/mfx/dsp/shape/WsInterFtorAsym1.hpp \
-        ../../src/mfx/dsp/shape/WsInterFtorAsym2.h \
-        ../../src/mfx/dsp/shape/WsInterFtorAsym2.hpp \
-        ../../src/mfx/dsp/shape/WsInterFtorAsym3.h \
-        ../../src/mfx/dsp/shape/WsInterFtorAsym3.hpp \
+        ../../src/mfx/dsp/shape/WsAsinh.h \
+        ../../src/mfx/dsp/shape/WsAsym1.h \
+        ../../src/mfx/dsp/shape/WsAsym1.hpp \
+        ../../src/mfx/dsp/shape/WsAsym11.h \
+        ../../src/mfx/dsp/shape/WsAsym11.hpp \
+        ../../src/mfx/dsp/shape/WsAsym12.h \
+        ../../src/mfx/dsp/shape/WsAsym12.hpp \
+        ../../src/mfx/dsp/shape/WsAsym13.h \
+        ../../src/mfx/dsp/shape/WsAsym13.hpp \
+        ../../src/mfx/dsp/shape/WsAsym2.h \
+        ../../src/mfx/dsp/shape/WsAtan.h \
+        ../../src/mfx/dsp/shape/WsBadmood.h \
+        ../../src/mfx/dsp/shape/WsBadmood.hpp \
+        ../../src/mfx/dsp/shape/WsBelt.h \
+        ../../src/mfx/dsp/shape/WsBelt.hpp \
+        ../../src/mfx/dsp/shape/WsBitcrush.h \
+        ../../src/mfx/dsp/shape/WsBitcrush.hpp \
+        ../../src/mfx/dsp/shape/WsBreakBase.h \
+        ../../src/mfx/dsp/shape/WsHardclip.h \
+        ../../src/mfx/dsp/shape/WsHardclip.hpp \
+        ../../src/mfx/dsp/shape/WsLight1.h \
+        ../../src/mfx/dsp/shape/WsLight1.hpp \
+        ../../src/mfx/dsp/shape/WsLight2.h \
+        ../../src/mfx/dsp/shape/WsLight2.hpp \
+        ../../src/mfx/dsp/shape/WsLight3.h \
+        ../../src/mfx/dsp/shape/WsLight3.hpp \
+        ../../src/mfx/dsp/shape/WsLopsided.h \
+        ../../src/mfx/dsp/shape/WsOvershootAsym.h \
+        ../../src/mfx/dsp/shape/WsProgClipper.h \
+        ../../src/mfx/dsp/shape/WsPuncherA.h \
+        ../../src/mfx/dsp/shape/WsPuncherB.h \
+        ../../src/mfx/dsp/shape/WsRcp1.h \
+        ../../src/mfx/dsp/shape/WsRcp1.hpp \
+        ../../src/mfx/dsp/shape/WsRcp2.h \
+        ../../src/mfx/dsp/shape/WsRcp2.hpp \
+        ../../src/mfx/dsp/shape/WsSmartE.h \
+        ../../src/mfx/dsp/shape/WsSqrt.h \
+        ../../src/mfx/dsp/shape/WsSqrt.hpp \
+        ../../src/mfx/dsp/shape/WsTanh.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.h \
@@ -675,15 +722,6 @@ commonsrc = \
         ../../src/mfx/pi/dist2/Disto2x.h \
         ../../src/mfx/pi/dist2/Disto2xDesc.cpp \
         ../../src/mfx/pi/dist2/Disto2xDesc.h \
-        ../../src/mfx/pi/dist2/DistoDspAttract.cpp \
-        ../../src/mfx/pi/dist2/DistoDspAttract.h \
-        ../../src/mfx/pi/dist2/DistoDspAttract.hpp \
-        ../../src/mfx/pi/dist2/DistoDspBounce.cpp \
-        ../../src/mfx/pi/dist2/DistoDspBounce.h \
-        ../../src/mfx/pi/dist2/DistoDspBounce.hpp \
-        ../../src/mfx/pi/dist2/DistoDspRandWalk.cpp \
-        ../../src/mfx/pi/dist2/DistoDspRandWalk.h \
-        ../../src/mfx/pi/dist2/DistoDspRandWalk.hpp \
         ../../src/mfx/pi/dist2/DistoStage.cpp \
         ../../src/mfx/pi/dist2/DistoStage.h \
         ../../src/mfx/pi/dist2/Param.h \

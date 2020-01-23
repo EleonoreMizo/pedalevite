@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DistoDspAttract.h
+        DistAttract.h
         Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dist2_DistoDspAttract_HEADER_INCLUDED)
-#define mfx_pi_dist2_DistoDspAttract_HEADER_INCLUDED
+#if ! defined (mfx_dsp_shape_DistAttract_HEADER_INCLUDED)
+#define mfx_dsp_shape_DistAttract_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -35,14 +35,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dist2
+namespace shape
 {
 
 
 
-class DistoDspAttract
+class DistAttract
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -97,7 +97,7 @@ private:
 
 	float          _cur_val       = 0;  // Output
 
-	dsp::dyn::EnvFollowerRmsSimple
+	dyn::EnvFollowerRmsSimple
 	               _env;
 
 
@@ -106,24 +106,24 @@ private:
 
 private:
 
-	bool           operator == (const DistoDspAttract &other) const = delete;
-	bool           operator != (const DistoDspAttract &other) const = delete;
+	bool           operator == (const DistAttract &other) const = delete;
+	bool           operator != (const DistAttract &other) const = delete;
 
-}; // class DistoDspAttract
+}; // class DistAttract
 
 
 
-}  // namespace dist2
-}  // namespace pi
+}  // namespace shape
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-#include "mfx/pi/dist2/DistoDspAttract.hpp"
+#include "mfx/dsp/shape/DistAttract.hpp"
 
 
 
-#endif   // mfx_pi_dist2_DistoDspAttract_HEADER_INCLUDED
+#endif   // mfx_dsp_shape_DistAttract_HEADER_INCLUDED
 
 
 

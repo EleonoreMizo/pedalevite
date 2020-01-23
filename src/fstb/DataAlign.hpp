@@ -46,9 +46,21 @@ ToolsSimd::VectF32	DataAlign <A>::load_f32 (const void *ptr)
 }
 
 template <bool A>
+ToolsSimd::VectS32	DataAlign <A>::load_s32 (const void *ptr)
+{
+	return ToolsSimd::load_s32 (ptr);
+}
+
+template <bool A>
 void	DataAlign <A>::store_f32 (void *ptr, ToolsSimd::VectF32 v)
 {
 	ToolsSimd::store_f32 (ptr, v);
+}
+
+template <bool A>
+void	DataAlign <A>::store_s32 (void *ptr, ToolsSimd::VectS32 v)
+{
+	ToolsSimd::store_s32 (ptr, v);
 }
 
 
@@ -66,9 +78,21 @@ inline ToolsSimd::VectF32	DataAlign <false>::load_f32 (const void *ptr)
 }
 
 template <>
+inline ToolsSimd::VectS32	DataAlign <false>::load_s32 (const void *ptr)
+{
+	return ToolsSimd::loadu_s32 (ptr);
+}
+
+template <>
 inline void	DataAlign <false>::store_f32 (void *ptr, ToolsSimd::VectF32 v)
 {
 	ToolsSimd::storeu_f32 (ptr, v);
+}
+
+template <>
+inline void	DataAlign <false>::store_s32 (void *ptr, ToolsSimd::VectS32 v)
+{
+	ToolsSimd::storeu_s32 (ptr, v);
 }
 
 

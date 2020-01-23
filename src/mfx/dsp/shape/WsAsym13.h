@@ -1,7 +1,19 @@
 /*****************************************************************************
 
-        DistoDspBounce.h
+        WsAsym13.h
         Author: Laurent de Soras, 2018
+
+Function fits in the following constraints:
+- Asymmetric
+- Bounded
+- Monotonic
+- Continuous C1
+- Interesting input range in [-1.5 ; +2.0]
+- Output range is roughly scaled in [-1.3 ; +0.8]
+- f(0) = 0
+- Slope is 1 at 0
+Mild hot biasing
+Curve: https://www.desmos.com/calculator/vdcy3npihw
 
 --- Legal stuff ---
 
@@ -16,8 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dist2_DistoDspBounce_HEADER_INCLUDED)
-#define mfx_pi_dist2_DistoDspBounce_HEADER_INCLUDED
+#if ! defined (mfx_dsp_shape_WsAsym13_HEADER_INCLUDED)
+#define mfx_dsp_shape_WsAsym13_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,30 +39,25 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
-
 
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dist2
+namespace shape
 {
 
 
 
-class DistoDspBounce
+class WsAsym13
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	void           set_sample_freq (double sample_freq);
-	void           clear_buffers ();
-	inline float   process_sample (float x);
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	inline double  operator () (double x) const;
 
 
 
@@ -64,17 +71,8 @@ protected:
 
 private:
 
-	fstb_FORCEINLINE float
-	               bounce (float val);
-
-	float          _sample_freq   = 44100;
-	float          _pos           = 0;
-	float          _speed         = 0;
-	float          _grav          = 25000000.0f / (_sample_freq * _sample_freq);
-	float          _bounce_rate   = 0.5f;  // [0 ; 1[
-	float          _prev_val      = 0;
-	float          _speed_max     = 2000.0f / _sample_freq;
-	float          _tunnel_height = 20.0f;
+	static inline double
+	               fnc (double x);
 
 
 
@@ -82,24 +80,24 @@ private:
 
 private:
 
-	bool           operator == (const DistoDspBounce &other) const = delete;
-	bool           operator != (const DistoDspBounce &other) const = delete;
+	bool           operator == (const WsAsym13 &other) const = delete;
+	bool           operator != (const WsAsym13 &other) const = delete;
 
-}; // class DistoDspBounce
+}; // class WsAsym13
 
 
 
-}  // namespace dist2
-}  // namespace pi
+}  // namespace shape
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-#include "mfx/pi/dist2/DistoDspBounce.hpp"
+#include "mfx/dsp/shape/WsAsym13.hpp"
 
 
 
-#endif   // mfx_pi_dist2_DistoDspBounce_HEADER_INCLUDED
+#endif   // mfx_dsp_shape_WsAsym13_HEADER_INCLUDED
 
 
 

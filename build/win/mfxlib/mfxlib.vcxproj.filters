@@ -2154,24 +2154,6 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.hpp">
       <Filter>mfx\dsp\dyn</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym1.h">
-      <Filter>mfx\dsp\shape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym1.hpp">
-      <Filter>mfx\dsp\shape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym2.h">
-      <Filter>mfx\dsp\shape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym2.hpp">
-      <Filter>mfx\dsp\shape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym3.h">
-      <Filter>mfx\dsp\shape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsInterFtorAsym3.hpp">
-      <Filter>mfx\dsp\shape</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h">
       <Filter>mfx\dsp\ana</Filter>
     </ClInclude>
@@ -2358,29 +2340,11 @@
     <ClInclude Include="..\..\..\src\fstb\lang\fnc.hpp">
       <Filter>fstb\lang</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.h">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.hpp">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\GaussFast.h">
       <Filter>mfx\dsp\nz</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\GaussFast.hpp">
       <Filter>mfx\dsp\nz</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.h">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.hpp">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.h">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.hpp">
-      <Filter>mfx\pi\dist2</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\hcomb\Param.h">
       <Filter>mfx\pi\hcomb</Filter>
@@ -3068,6 +3032,153 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\VidRecFmt.h">
       <Filter>mfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncLin0.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncScale.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsinh.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAtan.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBreakBase.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmartE.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanh.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym11.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym11.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym12.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym12.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym13.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym13.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym2.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLopsided.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsOvershootAsym.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsProgClipper.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsPuncherA.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsPuncherB.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym1.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBadmood.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBelt.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBitcrush.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsHardclip.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight1.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight2.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight3.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsRcp1.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsRcp2.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqrt.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsRcp1.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsRcp2.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqrt.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym1.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBadmood.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBitcrush.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsHardclip.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight1.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight2.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight3.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBelt.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistAttract.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistAttract.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistBounce.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistBounce.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistRandWalk.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistRandWalk.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.hpp">
+      <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3923,15 +4034,6 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\FxLfo.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspAttract.cpp">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspRandWalk.cpp">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoDspBounce.cpp">
-      <Filter>mfx\pi\dist2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\hcomb\HyperComb.cpp">
       <Filter>mfx\pi\hcomb</Filter>
     </ClCompile>
@@ -4252,6 +4354,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\VideoRecorder.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistAttract.cpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistBounce.cpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistRandWalk.cpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.cpp">
+      <Filter>mfx\dsp\shape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

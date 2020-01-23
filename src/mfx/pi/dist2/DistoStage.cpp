@@ -29,6 +29,17 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/mix/Align.h"
+#include "mfx/dsp/shape/WsAsym1.h"
+#include "mfx/dsp/shape/WsBadmood.h"
+#include "mfx/dsp/shape/WsBelt.h"
+#include "mfx/dsp/shape/WsBitcrush.h"
+#include "mfx/dsp/shape/WsHardclip.h"
+#include "mfx/dsp/shape/WsLight1.h"
+#include "mfx/dsp/shape/WsLight2.h"
+#include "mfx/dsp/shape/WsLight3.h"
+#include "mfx/dsp/shape/WsRcp1.h"
+#include "mfx/dsp/shape/WsRcp2.h"
+#include "mfx/dsp/shape/WsSqrt.h"
 #include "mfx/pi/dist2/DistoStage.h"
 
 #include <cassert>
@@ -61,7 +72,6 @@ DistoStage::DistoStage ()
 ,	_gain_post_old (_gain_post)
 ,	_bias (0)
 ,	_bias_old (_bias)
-,	_slew_rate_limit (1)
 ,	_type (Type_DIODE_CLIPPER)
 ,	_buf_x1 ()
 ,	_buf_ovr ()
@@ -96,7 +106,7 @@ void	DistoStage::reset (double sample_freq, int max_block_size, double &latency)
 	_buf_ovr.resize (mbs_align * _ovrspl);
 
 	// Let pass a sine of 100 Hz at 0 dB
-	_slew_rate_limit = float (100 * 2 * fstb::PI / fs_ovr);
+	const float    slew_rate_limit = float (100 * 2 * fstb::PI);
 
 	for (auto &chn : _chn_arr)
 	{
@@ -104,6 +114,8 @@ void	DistoStage::reset (double sample_freq, int max_block_size, double &latency)
 		chn._attractor.set_sample_freq (fs_ovr);
 		chn._random_walk.set_sample_freq (fs_ovr);
 		chn._bounce.set_sample_freq (fs_ovr);
+		chn._slew_rate_lim.set_sample_freq (fs_ovr);
+		chn._slew_rate_lim.set_rate_limit (slew_rate_limit);
 	}
 
 	clear_buffers ();
@@ -272,11 +284,11 @@ void	DistoStage::clear_buffers ()
 		chn._lpf_env.clear_buffers ();
 		chn._us.clear_buffers ();
 		chn._ds.clear_buffers ();
-		chn._slew_rate_val = 0;
 		chn._porridge_limiter.clear_buffers ();
 		chn._attractor.clear_buffers ();
 		chn._random_walk.clear_buffers ();
 		chn._bounce.clear_buffers ();
+		chn._slew_rate_lim.clear_buffers ();
 	}
 
 	_post_clear_flag = true;
@@ -386,8 +398,10 @@ void	DistoStage::update_lpf_bias ()
 
 void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	assert (fstb::DataAlign <true>::check_ptr (dst_ptr));
-	assert (fstb::DataAlign <true>::check_ptr (src_ptr));
+	typedef fstb::DataAlign <true> DA;
+
+	assert (DA::check_ptr (dst_ptr));
+	assert (DA::check_ptr (src_ptr));
 	assert (nbr_spl > 0);
 
 	switch (_type)
@@ -396,7 +410,7 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		distort_block_shaper (_shaper_diode_clipper, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_ASYM1:
-		distort_block_asym1 (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsAsym1::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PROG1:
 		distort_block_shaper (_shaper_prog1, dst_ptr, src_ptr, nbr_spl);
@@ -405,13 +419,13 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		distort_block_shaper (_shaper_prog2, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PROG3:
-		distort_block_rcp1 (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsRcp1::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_SUDDEN:
-		distort_block_rcp2 (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsRcp2::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_HARDCLIP:
-		distort_block_hardclip (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsHardclip::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PUNCHER1:
 		distort_block_shaper (_shaper_puncher1, dst_ptr, src_ptr, nbr_spl);
@@ -426,10 +440,10 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		distort_block_shaper (_shaper_overshoot, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_BITCRUSH:
-		distort_block_bitcrush (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsBitcrush::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_SLEWRATE:
-		distort_block_slewrate_limit (chn, dst_ptr, src_ptr, nbr_spl);
+		chn._slew_rate_lim.process_block (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_LOPSIDED:
 		distort_block_shaper (_shaper_lopsided, dst_ptr, src_ptr, nbr_spl);
@@ -451,26 +465,26 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		chn._random_walk.process_block (dst_ptr, dst_ptr, nbr_spl);
 		break;
 	case Type_SQRT:
-		distort_block_sqrt (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsSqrt::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_BELT:
-		distort_block_belt (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsBelt::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_BADMOOD:
-		distort_block_badmood (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsBadmood::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_BOUNCE:
 		chn._bounce.process_block (dst_ptr, src_ptr, nbr_spl);
 		distort_block_shaper (_shaper_tanh, dst_ptr, dst_ptr, nbr_spl);
 		break;
 	case Type_LIGHT1:
-		distort_block_light1 (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsLight1::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_LIGHT2:
-		distort_block_light2 (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsLight2::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_LIGHT3:
-		distort_block_light3 (chn, dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsLight3::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_TANH:
 		distort_block_shaper (_shaper_tanh, dst_ptr, src_ptr, nbr_spl);
@@ -505,332 +519,6 @@ void	DistoStage::distort_block_shaper (S &shaper, float dst_ptr [], const float 
 
 
 
-// x -> { x - x^9/9 if x >  0 (max: 0.89)
-//      { x + x^2/2 if x <= 0 (max: 0.5)
-// x * (1 - x^8/9)
-// https://www.desmos.com/calculator/jvnwxj1cja
-void	DistoStage::distort_block_asym1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f);
-	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f);
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
-	const auto     c_9  = fstb::ToolsSimd::set1_f32 (_asym1_m_9);
-	const auto     c_2  = fstb::ToolsSimd::set1_f32 (_asym1_m_2);
-	const auto     bias = fstb::ToolsSimd::set1_f32 ( 0.2f);
-
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-
-		x += bias;
-
-		x = fstb::ToolsSimd::min_f32 (x, ma);
-		x = fstb::ToolsSimd::max_f32 (x, mi);
-
-		const auto     x2  = x  * x;
-		const auto     x4  = x2 * x2;
-		const auto     x8  = x4 * x4;
-		const auto     x9  = x8 * x;
-		const auto     x_n = x + x2 * c_2;
-		const auto     x_p = x - x9 * c_9;
-		const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
-		x = fstb::ToolsSimd::select (t_0, x_p, x_n);
-
-		x -= bias;
-
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
-	}
-}
-
-
-
-// Asymptotes at -1 and +1
-// f(x) = x / (abs (x) + 1)
-void	DistoStage::distort_block_rcp1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto        one = fstb::ToolsSimd::set1_f32 (1.0f);
-
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-
-		const auto     d = fstb::ToolsSimd::abs (x) + one;
-		const auto     r = fstb::ToolsSimd::rcp_approx (d);
-		x *= r;
-
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
-	}
-}
-
-
-
-// Pure linear part in [-t ; t], asymptotes at -2t and +2t
-// t     = 0.5
-// f0(x) = t / max (abs (x), t)
-// f(x)  = x * f0(x) * (2 - f0(x))
-// https://www.desmos.com/calculator/xpjn6ut1j8
-void	DistoStage::distort_block_rcp2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto        t   = fstb::ToolsSimd::set1_f32 (0.5f);
-	const auto        two = fstb::ToolsSimd::set1_f32 (2);
-
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-
-		const auto     a = fstb::ToolsSimd::abs (x);
-		const auto     m = fstb::ToolsSimd::max_f32 (a, t);
-		const auto     f = t * fstb::ToolsSimd::rcp_approx (m);
-		const auto     g = f * (two - f);
-		x *= g;
-
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
-	}
-}
-
-
-
-void	DistoStage::distort_block_hardclip (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
-	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
-
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-
-		x = fstb::ToolsSimd::max_f32 (x, m1);
-		x = fstb::ToolsSimd::min_f32 (x, p1);
-
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
-	}
-}
-
-
-
-void	DistoStage::distort_block_bitcrush (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const float    s = 4;
-	const auto     scale     = fstb::ToolsSimd::set1_f32 (      s);
-	const auto     scale_inv = fstb::ToolsSimd::set1_f32 (1.f / s);
-	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
-	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
-
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
-
-		x  = fstb::ToolsSimd::max_f32 (x, m1);
-		x  = fstb::ToolsSimd::min_f32 (x, p1);
-		x *= scale;
-		x  = fstb::ToolsSimd::conv_s32_to_f32 (
-			fstb::ToolsSimd::round_f32_to_s32 (x)
-		);
-		x *= scale_inv;
-
-		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
-	}
-}
-
-
-
-void	DistoStage::distort_block_slewrate_limit (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	float          state = chn._slew_rate_val;
-
-	for (int pos = 0; pos < nbr_spl; ++pos)
-	{
-		const float    x   = src_ptr [pos];
-		const float    dif = x - state;
-		if (fabs (dif) < _slew_rate_limit)
-		{
-			state = x;
-		}
-		else
-		{
-			if (dif > 0)
-			{
-				state += _slew_rate_limit;
-			}
-			else
-			{
-				state -= _slew_rate_limit;
-			}
-		}
-		dst_ptr [pos] = state;
-	}
-
-	chn._slew_rate_val = state;
-}
-
-
-
-// Piece-wise linear approximation of a signed square root
-// https://www.desmos.com/calculator/n8vtrhf0da
-void	DistoStage::distort_block_sqrt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto     exp_mask = fstb::ToolsSimd::set1_s32 ( 0x7F800000);
-	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 ( 0x00800000);
-	const auto     exp_add  = fstb::ToolsSimd::set1_s32 ( 0x3F800000 >> 1);
-	const auto     sign_fix = fstb::ToolsSimd::set1_s32 (~0x40000000);
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
-		auto           exp_int = fstb::ToolsSimd::and_s32 (x_int, exp_mask);
-		auto           cond    = fstb::ToolsSimd::cmp_gt_s32 (exp_int, exp_lsb);
-		x_int >>= 1;
-		x_int   = fstb::ToolsSimd::and_s32 (x_int, sign_fix);
-		x_int  += exp_add;
-		x_int   = fstb::ToolsSimd::and_s32 (x_int, cond);
-		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
-	}
-}
-
-
-
-// https://www.desmos.com/calculator/n8vtrhf0da
-void	DistoStage::distort_block_belt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (0x7F800000);
-	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (0x00800000);
-	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (0x3F800000 >> 1);
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
-		auto           exp_int = fstb::ToolsSimd::and_s32 (x_int, exp_mask);
-		auto           cond    = fstb::ToolsSimd::cmp_gt_s32 (exp_int, exp_lsb);
-		x_int    -= exp_int;
-		exp_int >>= 1;
-		exp_int  += exp_add;
-		x_int    += exp_int;
-		x_int     = fstb::ToolsSimd::and_s32 (x_int, cond);
-		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
-	}
-}
-
-
-
-// Very interesting sound variations when changing the cutoff frequency
-// of the input HPF
-// https://www.desmos.com/calculator/n8vtrhf0da
-void	DistoStage::distort_block_badmood (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (0x7F800000);
-	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (0x00800000);
-	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (0x3F800000 >> 1);
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
-		auto           exp_int = fstb::ToolsSimd::and_s32 (x_int, exp_mask);
-		auto           rem     = fstb::ToolsSimd::and_s32 (x_int, exp_lsb);
-		auto           cond    = fstb::ToolsSimd::cmp_gt_s32 (exp_int, exp_lsb);
-		x_int    -= exp_int;
-		exp_int >>= 1;
-		exp_int  += exp_add;
-		x_int    += exp_int;
-		x_int     = fstb::ToolsSimd::xor_s32 (x_int, rem << 8);
-		x_int     = fstb::ToolsSimd::and_s32 (x_int, cond);
-		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
-	}
-}
-
-
-
-// https://www.desmos.com/calculator/n8vtrhf0da
-void	DistoStage::distort_block_light1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto     mnt_mask = fstb::ToolsSimd::set1_s32 (0x007FFFFF); // 23 bits
-	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
-		auto           mnt_int = fstb::ToolsSimd::and_s32 (x_int, mnt_mask);
-
-		// m^2
-		mnt_int >>= 23 - 15; // 0:15
-		mnt_int *= mnt_int;  // 0:30
-		mnt_int >>= 30 - 23; // 0:23
-		assert (! fstb::ToolsSimd::or_h (fstb::ToolsSimd::cmp_lt_s32 (mnt_int, fstb::ToolsSimd::set_s32_zero ())));
-
-		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
-		x_int = fstb::ToolsSimd::or_s32 (x_int, mnt_int);
-		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
-	}
-}
-
-
-
-// https://www.desmos.com/calculator/n8vtrhf0da
-void	DistoStage::distort_block_light2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto     mnt_mask = fstb::ToolsSimd::set1_s32 (0x007FFFFF); // 23 bits
-	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
-	// 6.75 is the exact value but rounding errors bring negative results
-	const auto     a        = fstb::ToolsSimd::set1_s32 (int (
-		6.74f * (1 << (23 - 18))
-	));
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
-		auto           mnt_int = fstb::ToolsSimd::and_s32 (x_int, mnt_mask);
-
-		// m - a * (m - m^2)^2 
-		auto           m  = mnt_int;
-		m >>= 23 - 15;       // 0:15
-		auto           m2 = m * m;    // 0:30
-		m2 >>= 30 - 15;      // 0:15
-		auto           mx = m - m2;   // 0:15
-		mx *= mx;            // 0:30
-		mx >>= 30 - 18;      // 0:18
-		mx *= a;             // 0:23
-		mnt_int -= mx;       // 0:23
-		assert (! fstb::ToolsSimd::or_h (fstb::ToolsSimd::cmp_lt_s32 (mnt_int, fstb::ToolsSimd::set_s32_zero ())));
-
-		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
-		x_int = fstb::ToolsSimd::or_s32 (x_int, mnt_int);
-		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
-	}
-}
-
-
-
-// https://www.desmos.com/calculator/n8vtrhf0da
-void	DistoStage::distort_block_light3 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl)
-{
-	fstb::unused (chn);
-
-	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
-	for (int pos = 0; pos < nbr_spl; pos += 4)
-	{
-		auto           x_int   = fstb::ToolsSimd::load_s32 (src_ptr + pos);
-		// Clears the mantissa
-		x_int = fstb::ToolsSimd::and_s32 (x_int, mnt_invm);
-		fstb::ToolsSimd::store_s32 (dst_ptr + pos, x_int);
-	}
-}
-
-
-
 bool	DistoStage::_coef_init_flag = false;
 std::array <double, DistoStage::_nbr_coef_42>	DistoStage::_coef_42;
 std::array <double, DistoStage::_nbr_coef_21>	DistoStage::_coef_21;
@@ -850,9 +538,6 @@ DistoStage::ShaperSmartE2	DistoStage::_shaper_smarte2;
 DistoStage::ShaperTanhLin	DistoStage::_shaper_tanhlin;
 DistoStage::ShaperBreak	DistoStage::_shaper_break;
 DistoStage::ShaperAsym2	DistoStage::_shaper_asym2;
-
-const float	DistoStage::_asym1_m_9 = 1.f / 9;
-const float	DistoStage::_asym1_m_2 = 1.f / 2;
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DistoDspAttract.hpp
+        DistAttract.hpp
         Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
@@ -15,8 +15,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (mfx_pi_dist2_DistoDspAttract_CODEHEADER_INCLUDED)
-#define mfx_pi_dist2_DistoDspAttract_CODEHEADER_INCLUDED
+#if ! defined (mfx_dsp_shape_DistAttract_CODEHEADER_INCLUDED)
+#define mfx_dsp_shape_DistAttract_CODEHEADER_INCLUDED
 
 
 
@@ -33,9 +33,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dist2
+namespace shape
 {
 
 
@@ -44,7 +44,7 @@ namespace dist2
 
 
 
-float	DistoDspAttract::process_sample (float x)
+float	DistAttract::process_sample (float x)
 {
 	const float    env_val = _env.process_sample (x) + 1e-5f;   // + small cst to avoid log(0) later
 
@@ -63,7 +63,7 @@ float	DistoDspAttract::process_sample (float x)
 
 
 
-void	DistoDspAttract::attract (float x, float env_val)
+void	DistAttract::attract (float x, float env_val)
 {
 	assert (env_val > 0);
 
@@ -130,14 +130,14 @@ void	DistoDspAttract::attract (float x, float env_val)
 
 
 
-DistoDspAttract::Polarity	DistoDspAttract::val_to_pol (float val)
+DistAttract::Polarity	DistAttract::val_to_pol (float val)
 {
 	return ((val < 0) ? Polarity_NEG : Polarity_POS);
 }
 
 
 
-float	DistoDspAttract::pol_to_val (Polarity polarity)
+float	DistAttract::pol_to_val (Polarity polarity)
 {
 	assert (polarity >= 0);
 	assert (polarity < Polarity_NBR_ELT);
@@ -147,13 +147,13 @@ float	DistoDspAttract::pol_to_val (Polarity polarity)
 
 
 
-}  // namespace dist2
-}  // namespace pi
+}  // namespace shape
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-#endif   // mfx_pi_dist2_DistoDspAttract_CODEHEADER_INCLUDED
+#endif   // mfx_dsp_shape_DistAttract_CODEHEADER_INCLUDED
 
 
 

@@ -126,6 +126,22 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const MEM *ptr)
 
 
 template <typename MEM>
+ToolsSimd::VectS32	ToolsSimd::loadu_s32 (const MEM *ptr)
+{
+	assert (ptr != nullptr);
+
+#if fstb_IS (ARCHI, X86)
+	return _mm_loadu_si128 (reinterpret_cast <const __m128i *> (ptr));
+#elif fstb_IS (ARCHI, ARM)
+	return vreinterpretq_s32_u8 (
+		vld1q_u8 (reinterpret_cast <const uint8_t *> (ptr))
+	);
+#endif // ff_arch_CPU
+}
+
+
+
+template <typename MEM>
 ToolsSimd::VectF32	ToolsSimd::loadu_f32_part (const MEM *ptr, int n)
 {
 	assert (n > 0);

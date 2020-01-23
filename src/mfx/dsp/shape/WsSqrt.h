@@ -1,19 +1,25 @@
 /*****************************************************************************
 
-        WsInterFtorAsym2.h
-        Author: Laurent de Soras, 2018
+        WsSqrt.h
+        Author: Laurent de Soras, 2020
 
-Function fits in the following constraints:
-- Asymmetric
-- Bounded
-- Monotonic
-- Continuous C1
-- Interesting input range in [-1.3 ; +0.9]
-- Output range is roughly scaled in [-1.8 ; +0.3]
-- f(0) = 0
-- Slope is 1 at 0
-The function is very asymmetrical (strong hot biasing)
-Curve: https://www.desmos.com/calculator/vdcy3npihw
+Piece-wise linear approximation of a signed square root.
+
+https://www.desmos.com/calculator/n8vtrhf0da
+
+Template parameters:
+
+- VD: class writing and reading memory with SIMD vectors (destination access).
+	Typically, the fstb::DataAlign classes for aligned and unaligned data.
+	Requires:
+	static bool VD::check_ptr (const void *ptr);
+	static fstb::ToolsSimd::VectS32 VD::load_s32 (const void *ptr);
+	static void VD::store_s32 (void *ptr, const fstb::ToolsSimd::VectS32 val);
+
+- VS: same as VD, but for reading only (source access)
+	Requires:
+	static bool VS::check_ptr (const void *ptr);
+	static fstb::ToolsSimd::VectS32 VS::load_s32 (const void *ptr);
 
 --- Legal stuff ---
 
@@ -21,19 +27,15 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
 #pragma once
-#if ! defined (mfx_dsp_shape_WsInterFtorAsym2_HEADER_INCLUDED)
-#define mfx_dsp_shape_WsInterFtorAsym2_HEADER_INCLUDED
-
-#if defined (_MSC_VER)
-	#pragma warning (4 : 4250)
-#endif
+#if ! defined (mfx_dsp_shape_WsSqrt_HEADER_INCLUDED)
+#define mfx_dsp_shape_WsSqrt_HEADER_INCLUDED
 
 
 
@@ -50,14 +52,15 @@ namespace shape
 
 
 
-class WsInterFtorAsym2
+class WsSqrt
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	inline double  operator () (double x) const;
+	template <typename VD, typename VS>
+	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 
 
@@ -71,19 +74,13 @@ protected:
 
 private:
 
-	static inline double
-	               fnc (double x);
-
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	bool           operator == (const WsInterFtorAsym2 &other) const = delete;
-	bool           operator != (const WsInterFtorAsym2 &other) const = delete;
-
-}; // class WsInterFtorAsym2
+}; // class WsSqrt
 
 
 
@@ -93,11 +90,11 @@ private:
 
 
 
-#include "mfx/dsp/shape/WsInterFtorAsym2.hpp"
+#include "mfx/dsp/shape/WsSqrt.hpp"
 
 
 
-#endif   // mfx_dsp_shape_WsInterFtorAsym2_HEADER_INCLUDED
+#endif   // mfx_dsp_shape_WsSqrt_HEADER_INCLUDED
 
 
 

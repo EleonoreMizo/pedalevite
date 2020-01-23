@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DistoDspRandWalk.h
+        DistSlewRateLim.h
         Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_dist2_DistoDspRandWalk_HEADER_INCLUDED)
-#define mfx_pi_dist2_DistoDspRandWalk_HEADER_INCLUDED
+#if ! defined (mfx_dsp_shape_DistSlewRateLim_HEADER_INCLUDED)
+#define mfx_dsp_shape_DistSlewRateLim_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,20 +27,20 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/nz/GaussFast.h"
+#include "fstb/def.h"
 
 
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dist2
+namespace shape
 {
 
 
 
-class DistoDspRandWalk
+class DistSlewRateLim
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -51,6 +51,8 @@ public:
 	void           clear_buffers ();
 	inline float   process_sample (float x);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+
+	void           set_rate_limit (float rate_max_s);
 
 
 
@@ -64,17 +66,14 @@ protected:
 
 private:
 
-	static const int  _freq       = 2300;     // Hz
+	void           update_rate ();
 
 	float          _sample_freq   = 44100;
-	dsp::nz::GaussFast <4>
-						_rnd;
-	float          _sum           = 0;
-	float          _val           = 0;
-	float          _inc           = 0;
-	float          _avg_per       = _sample_freq / float (_freq);
-	int            _pos           = 0;
-	int            _nbr_spl       = 1;
+	float          _inv_fs        = 1.f / _sample_freq;
+	float          _rate_max_s    = 1000;                  // units/s
+	float          _rate_max      = _rate_max_s * _inv_fs; // units/spl
+
+	float          _state         = 0;
 
 
 
@@ -82,24 +81,24 @@ private:
 
 private:
 
-	bool           operator == (const DistoDspRandWalk &other) const = delete;
-	bool           operator != (const DistoDspRandWalk &other) const = delete;
+	bool           operator == (const DistSlewRateLim &other) const = delete;
+	bool           operator != (const DistSlewRateLim &other) const = delete;
 
-}; // class DistoDspRandWalk
+}; // class DistSlewRateLim
 
 
 
-}  // namespace dist2
-}  // namespace pi
+}  // namespace shape
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-#include "mfx/pi/dist2/DistoDspRandWalk.hpp"
+#include "mfx/dsp/shape/DistSlewRateLim.hpp"
 
 
 
-#endif   // mfx_pi_dist2_DistoDspRandWalk_HEADER_INCLUDED
+#endif   // mfx_dsp_shape_DistSlewRateLim_HEADER_INCLUDED
 
 
 

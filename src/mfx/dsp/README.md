@@ -12,7 +12,7 @@
 - **`nz`**: Noise generators
 - **`osc`**: Oscillators
 - **`rspl`**: Resampling tools
-- **`shape`**: Waveshapers and look-up table functions
+- **`shape`**: Waveshaper, look-up table functions and distortions
 - **`spec`**: Spectral tools
 - **`wnd`**: Windows and similar shapes
 

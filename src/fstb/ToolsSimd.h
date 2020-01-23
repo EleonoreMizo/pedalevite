@@ -97,6 +97,9 @@ public:
 	static inline VectF32
 	               loadu_f32 (const MEM *ptr);
 	template <typename MEM>
+	static inline VectS32
+	               loadu_s32 (const MEM *ptr);
+	template <typename MEM>
 	static inline VectF32
 	               loadu_f32_part (const MEM *ptr, int n);
 	template <typename MEM>

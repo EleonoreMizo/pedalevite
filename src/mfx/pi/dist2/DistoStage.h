@@ -36,10 +36,23 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
+#include "mfx/dsp/shape/DistAttract.h"
+#include "mfx/dsp/shape/DistBounce.h"
+#include "mfx/dsp/shape/DistRandWalk.h"
+#include "mfx/dsp/shape/DistSlewRateLim.h"
 #include "mfx/dsp/shape/FncFiniteAsym.h"
-#include "mfx/pi/dist2/DistoDspAttract.h"
-#include "mfx/pi/dist2/DistoDspBounce.h"
-#include "mfx/pi/dist2/DistoDspRandWalk.h"
+#include "mfx/dsp/shape/FncLin0.h"
+#include "mfx/dsp/shape/WsAsinh.h"
+#include "mfx/dsp/shape/WsAsym2.h"
+#include "mfx/dsp/shape/WsAtan.h"
+#include "mfx/dsp/shape/WsBreakBase.h"
+#include "mfx/dsp/shape/WsLopsided.h"
+#include "mfx/dsp/shape/WsOvershootAsym.h"
+#include "mfx/dsp/shape/WsProgClipper.h"
+#include "mfx/dsp/shape/WsPuncherA.h"
+#include "mfx/dsp/shape/WsPuncherB.h"
+#include "mfx/dsp/shape/WsSmartE.h"
+#include "mfx/dsp/shape/WsTanh.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
@@ -149,213 +162,18 @@ private:
 		               _lpf_env;
 		UpSpl          _us;
 		DwSpl          _ds;
-		float          _slew_rate_val = 0;
 		dsp::dyn::LimiterRms
 		               _porridge_limiter;
-		DistoDspAttract
+		dsp::shape::DistAttract
 		               _attractor;
-		DistoDspRandWalk
+		dsp::shape::DistRandWalk
 		               _random_walk;
-		DistoDspBounce _bounce;
+		dsp::shape::DistBounce
+		               _bounce;
+		dsp::shape::DistSlewRateLim
+		               _slew_rate_lim;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
-
-	// Insert a linear segment at 0 in an existing shaper
-	// Shaper is assumed to reach unity at high input values (abs. val.)
-	// F: shaper function, C1 at 0, F(0) = 0 and F'(0) = 1
-	// R: amplitude of the linear part, as a std::ratio template
-	// https://www.desmos.com/calculator/96rydakrcg
-	template <typename F, typename R>
-	class FncLin0
-	{
-		static_assert (R::num >= 0, "");
-		static_assert (R::den > 0, "");
-		static_assert (R::num < R::den, "");
-	public:
-		double         operator () (double x)
-		{
-			F              f;
-			const double   r  = double (R::num) / double (R::den);
-			const double   xl = fstb::limit (x, -r, r);
-			const double   xs = (x - xl) / (1 - r);
-			return (1 - r) * f (xs) + xl;
-		}
-	};
-
-	class FncTanh
-	{
-	public:
-		double         operator () (double x)
-		{
-			return tanh (x);
-		}
-	};
-
-	class FncAtan
-	{
-	public:
-		double         operator () (double x)
-		{
-			return (2 / fstb::PI) * atan (fstb::PI * 0.5 * x);
-		}
-	};
-
-	class FncDiodeClipper
-	{
-	public:
-		double         operator () (double x)
-		{
-			return asinh (x);
-		}
-	};
-
-	// https://www.desmos.com/calculator/rl9itfoxsh
-	class FncBreakBase
-	{
-	public:
-		double         operator () (double x)
-		{
-			const double   f1 = tanh (x);
-			const double   f2 = x / (1 + fabs (x));
-			return (f1 + f2) * 0.5;
-		}
-	};
-
-	// A, B and C are std::ratio templates
-	// A controls the first shaper (closest to 0, fastest curve, slope 1).
-	// The smaller A, the longer the first shaper.
-	// A in [0 ; 1]
-	// B controls the second shaper (slowest curve, from the end of the first
-	// shaper up to saturation)
-	// The higher B, the slowest the curve
-	// B should be > 0
-	// C is the amount of additional ripples at 0.
-	// https://www.desmos.com/calculator/2abzjtlqhq
-	template <typename A, typename B, typename C>
-	class FncProgClipper
-	{
-		static_assert (A::num >= 0, "");
-		static_assert (A::den > 0, "");
-		static_assert (A::num <= A::den, "");
-		static_assert (B::num >= 0, "");
-		static_assert (B::den > 0, "");
-		static_assert (C::den != 0, "");
-	public:
-		double         operator () (double x)
-		{
-			const double   a  = double (A::num) / double (A::den);
-			const double   bi = double (B::den) / double (B::num);
-			const double   c  = double (C::num) / double (C::den);
-			const double   f1 = tanh (x * bi);
-			const double   f2 = (2 / fstb::PI) * atan (fstb::PI * 0.5 * x * (1 / (1 - a) - bi));
-			const double   x3 = x * x * x;
-			const double   z  = fabs (x * 2) + 1;
-			const double   z2 = z * z;
-			const double   z5 = z2 * z2 * z;
-			const double   f3 = 8 * x3 / z5;
-			const double   y  = a * f1 + (1 - a) * f2 - c * f3;
-			return y;
-		}
-	};
-
-	// Minimum input range: [-8; +8]
-	class FncPuncherA
-	{
-	public:
-		double         operator () (double x)
-		{
-			const double   xx = fstb::limit (
-				x,
-				double (fstb::PI * -2.5),
-				double (fstb::PI * +2.5)
-			);
-
-			return sin (xx);
-		}
-	};
-
-	// Minimum input range: [-20; +20]
-	// https://www.desmos.com/calculator/2y1tw4wque
-	template <int N>
-	class FncPuncherB
-	{
-		static_assert ((N >= 0), "");
-	public:
-		double         operator () (double x)
-		{
-			const double   m  = 20; // Range
-			const double   z  = log (m + 1);
-			const double   a  = ((1.5 + N) * fstb::PI - z) / (z * z);
-			const double   xx = fstb::limit (x, -m, +m);
-			const double   u  = log (fabs (xx) + 1);
-			const double   f  = sin ((a * u + 1) * u);
-
-			return (x < 0) ? -f : f;
-		}
-	};
-
-	// https://www.desmos.com/calculator/jwefh0phns
-	class FncOvershoot
-	{
-	public:
-		double         operator () (double x)
-		{
-			const double   a   = exp (x - 1);
-			const double   b   = exp (-x);
-			const double   num = a - b - (1 / fstb::EXP1) + 1;
-			const double   den = a + b;
-
-			return num / den;
-		}
-	};
-
-	// Minimum input range: [-8; +8]
-	// https://www.desmos.com/calculator/iv27lizdcd
-	template <int B>
-	class FncSmartE
-	{
-		static_assert ((B >= 1), "");
-	public:
-		double         operator () (double x)
-		{
-			const double   a    = -0.86;  // Range: [-0.86, 2.1]
-			const double   xabs = fabs (x);
-			const double   bx   = B * x;
-			const double   num  = bx * (xabs + a);
-			const double   den  = bx * x + xabs * (a - 1) + 1;
-
-			return num / den;
-		}
-	};
-
-	// https://www.desmos.com/calculator/4wwhgcvzoi
-	class FncLopsided
-	{
-	public:
-		double         operator () (double x)
-		{
-			return std::copysign (1 - cos (x) * exp (-fabs (x)), x);
-		}
-	};
-
-	// Minimum input range: [-256; +8]
-	// https://www.musicdsp.org/en/latest/Effects/86-waveshaper-gloubi-boulga.html
-	// https://www.desmos.com/calculator/1ewo3vxqmy
-	class FncAsym2
-	{
-	public:
-		double         operator () (double x)
-		{
-			x *= 2.0 / 3.0;
-			const double   a = 1 + exp (-0.75 * sqrt (fabs (x)));
-//			const double   n = exp (x) - exp (-a * x);
-//			const double   d = exp (x) + exp (-x);
-			const double   e = exp (x);
-			const double   n = e * (e - exp (-x * a));
-			const double   d = e * e + 1;
-			return n / d;
-		}
-	};
 
 	template <class FNC>
 	using ShaperLong = dsp::shape::FncFiniteAsym <
@@ -377,34 +195,40 @@ private:
 		-8, 8, FNC, 4
 	>;
 
-	typedef ShaperShort <FncTanh         > ShaperTanh;
-	typedef ShaperShort <FncLin0 <
-		FncTanh, std::ratio <1, 2>
+	typedef ShaperShort <dsp::shape::WsTanh>  ShaperTanh;
+	typedef ShaperShort <dsp::shape::FncLin0 <
+		dsp::shape::WsTanh, std::ratio <1, 2>
 	> > ShaperTanhLin;
-	typedef ShaperShort <FncLin0 <
-		FncBreakBase, std::ratio <3, 4>
+	typedef ShaperShort <dsp::shape::FncLin0 <
+		dsp::shape::WsBreakBase, std::ratio <3, 4>
 	> > ShaperBreak;
-	typedef ShaperStd <  FncAtan         > ShaperAtan;
-	typedef ShaperLong < FncDiodeClipper > ShaperDiode;
-	typedef ShaperStd <  FncProgClipper <
+	typedef ShaperStd <  dsp::shape::WsAtan>  ShaperAtan;
+	typedef ShaperLong < dsp::shape::WsAsinh> ShaperDiode;
+	typedef ShaperStd <  dsp::shape::WsProgClipper <
 		std::ratio < 2, 4>,
 		std::ratio < 4, 1>,
 		std::ratio < 2, 1>
 	> > ShaperProg1;
-	typedef ShaperStd <FncProgClipper <
+	typedef ShaperStd <dsp::shape::WsProgClipper <
 		std::ratio < 3, 4>,
 		std::ratio <10, 1>,
 		std::ratio < 0, 1>
 	> > ShaperProg2;
-	typedef ShaperStd <  FncPuncherB <0> > ShaperPuncher1;
-	typedef ShaperStd <  FncPuncherB <1> > ShaperPuncher2;
-	typedef ShaperShort <FncPuncherA     > ShaperPuncher3;
-	typedef ShaperShort <FncOvershoot    > ShaperOvershoot;
-	typedef ShaperShort <FncLopsided     > ShaperLopsided;
-	typedef ShaperRes <  FncSmartE <1>   > ShaperSmartE1;
-	typedef ShaperShort <FncSmartE <2>   > ShaperSmartE2;
+	typedef ShaperStd <  dsp::shape::WsPuncherB <0> > ShaperPuncher1;
+	typedef ShaperStd <  dsp::shape::WsPuncherB <1> > ShaperPuncher2;
+	typedef ShaperShort <dsp::shape::WsPuncherA     > ShaperPuncher3;
+	typedef ShaperShort <dsp::shape::WsOvershootAsym> ShaperOvershoot;
+	typedef ShaperShort <dsp::shape::WsLopsided     > ShaperLopsided;
+	typedef ShaperRes <  dsp::shape::WsSmartE <
+		std::ratio <-86, 100>,
+		std::ratio <  1,   1> >
+	> ShaperSmartE1;
+	typedef ShaperShort <dsp::shape::WsSmartE <
+		std::ratio <-86, 100>,
+		std::ratio <  2,   1> >
+	> ShaperSmartE2;
 	typedef dsp::shape::FncFiniteAsym <
-		-256, 8, FncAsym2, 2
+		-256, 8, dsp::shape::WsAsym2, 2
 	> ShaperAsym2;
 
 	void           init_coef ();
@@ -415,18 +239,6 @@ private:
 	void           distort_block (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 	template <typename S>
 	void           distort_block_shaper (S &shaper, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_asym1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_rcp1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_rcp2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_hardclip (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_bitcrush (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_slewrate_limit (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_sqrt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_belt (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_badmood (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_light1 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_light2 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
-	void           distort_block_light3 (Channel &chn, float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	ChannelArray   _chn_arr;
 	float          _sample_freq;
@@ -440,7 +252,6 @@ private:
 	float          _gain_post_old;
 	float          _bias;
 	float          _bias_old;
-	float          _slew_rate_limit; // Amplitude units per sample
 	Type           _type;
 	BufAlign       _buf_x1;
 	BufAlign       _buf_ovr;
@@ -482,11 +293,6 @@ private:
 	               _shaper_break;
 	static ShaperAsym2
 	               _shaper_asym2;
-
-	static const float
-	               _asym1_m_9;
-	static const float
-	               _asym1_m_2;
 
 
 

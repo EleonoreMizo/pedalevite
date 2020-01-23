@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DistoDspBounce.cpp
+        DistBounce.cpp
         Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/dist2/DistoDspBounce.h"
+#include "mfx/dsp/shape/DistBounce.h"
 
 #include <cassert>
 
@@ -32,9 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dist2
+namespace shape
 {
 
 
@@ -43,7 +43,7 @@ namespace dist2
 
 
 
-void	DistoDspBounce::set_sample_freq (double sample_freq)
+void	DistBounce::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
@@ -57,7 +57,7 @@ void	DistoDspBounce::set_sample_freq (double sample_freq)
 
 
 
-void	DistoDspBounce::clear_buffers ()
+void	DistBounce::clear_buffers ()
 {
 	_pos      = 0;
 	_speed    = 0;
@@ -66,7 +66,7 @@ void	DistoDspBounce::clear_buffers ()
 
 
 
-void	DistoDspBounce::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DistBounce::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);
@@ -88,8 +88,8 @@ void	DistoDspBounce::process_block (float dst_ptr [], const float src_ptr [], in
 
 
 
-}  // namespace dist2
-}  // namespace pi
+}  // namespace shape
+}  // namespace dsp
 }  // namespace mfx
 
 

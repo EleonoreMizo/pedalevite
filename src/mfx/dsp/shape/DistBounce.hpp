@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DistoDspBounce.hpp
+        DistBounce.hpp
         Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
@@ -15,8 +15,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (mfx_pi_dist2_DistoDspBounce_CODEHEADER_INCLUDED)
-#define mfx_pi_dist2_DistoDspBounce_CODEHEADER_INCLUDED
+#if ! defined (mfx_dsp_shape_DistBounce_CODEHEADER_INCLUDED)
+#define mfx_dsp_shape_DistBounce_CODEHEADER_INCLUDED
 
 
 
@@ -28,9 +28,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dist2
+namespace shape
 {
 
 
@@ -39,7 +39,7 @@ namespace dist2
 
 
 
-float	DistoDspBounce::process_sample (float x)
+float	DistBounce::process_sample (float x)
 {
 	// Updates the current ball position according ot its speed
 	_pos += _speed;
@@ -83,7 +83,7 @@ float	DistoDspBounce::process_sample (float x)
 
 
 
-float	DistoDspBounce::bounce (float val)
+float	DistBounce::bounce (float val)
 {
 	// Computes the ball speed according to the bounce angle on the curve and
 	// bounce rate.
@@ -99,13 +99,13 @@ float	DistoDspBounce::bounce (float val)
 
 
 
-}  // namespace dist2
-}  // namespace pi
+}  // namespace shape
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-#endif   // mfx_pi_dist2_DistoDspBounce_CODEHEADER_INCLUDED
+#endif   // mfx_dsp_shape_DistBounce_CODEHEADER_INCLUDED
 
 
 

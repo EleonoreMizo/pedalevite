@@ -52,8 +52,12 @@ public:
 		            check_ptr (const void *ptr);
 	static inline ToolsSimd::VectF32
 		            load_f32 (const void *ptr);
+	static inline ToolsSimd::VectS32
+		            load_s32 (const void *ptr);
 	static inline void
 		            store_f32 (void *ptr, ToolsSimd::VectF32 v);
+	static inline void
+		            store_s32 (void *ptr, ToolsSimd::VectS32 v);
 
 
 

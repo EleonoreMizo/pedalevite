@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DistoDspAttract.cpp
+        DistAttract.cpp
         Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/dist2/DistoDspAttract.h"
+#include "mfx/dsp/shape/DistAttract.h"
 
 #include <cassert>
 
@@ -32,9 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace dist2
+namespace shape
 {
 
 
@@ -43,7 +43,7 @@ namespace dist2
 
 
 
-void	DistoDspAttract::set_sample_freq (double sample_freq)
+void	DistAttract::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
@@ -56,7 +56,7 @@ void	DistoDspAttract::set_sample_freq (double sample_freq)
 
 
 
-void	DistoDspAttract::clear_buffers ()
+void	DistAttract::clear_buffers ()
 {
 	_mad_flag = false;
 	_cur_val = 0;
@@ -65,7 +65,7 @@ void	DistoDspAttract::clear_buffers ()
 
 
 
-void	DistoDspAttract::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void	DistAttract::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
 	assert (dst_ptr != nullptr);
@@ -106,8 +106,8 @@ void	DistoDspAttract::process_block (float dst_ptr [], const float src_ptr [], i
 
 
 
-}  // namespace dist2
-}  // namespace pi
+}  // namespace shape
+}  // namespace dsp
 }  // namespace mfx
 
 
