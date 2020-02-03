@@ -3180,6 +3180,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.hpp">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.h">
       <Filter>mfx\dsp\ctrl</Filter>
     </ClInclude>
@@ -4390,6 +4393,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.cpp">
       <Filter>mfx\dsp\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.cpp">
+      <Filter>mfx\pi\cdsp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

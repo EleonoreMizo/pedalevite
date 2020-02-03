@@ -717,6 +717,8 @@ commonsrc = \
         ../../src/mfx/pi/cdsp/FreqSplitter5.cpp \
         ../../src/mfx/pi/cdsp/FreqSplitter5.h \
         ../../src/mfx/pi/cdsp/PhaseHalfPi.h \
+        ../../src/mfx/pi/cdsp/ShaperBag.cpp \
+        ../../src/mfx/pi/cdsp/ShaperBag.h \
         ../../src/mfx/pi/cpx/Compex.cpp \
         ../../src/mfx/pi/cpx/Compex.h \
         ../../src/mfx/pi/cpx/CompexDesc.cpp \

@@ -760,6 +760,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimpleMod.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\PhaseHalfPi.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
@@ -1344,6 +1345,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimpleMod.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\Click.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\ClickDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\colorme\ColorMe.cpp" />
