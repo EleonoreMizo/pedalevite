@@ -680,6 +680,10 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsRcp2.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsRcp2.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmartE.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthAbs.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthAbs.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthMax0.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthMax0.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqrt.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqrt.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanh.h" />

@@ -3186,6 +3186,18 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.hpp">
       <Filter>mfx\dsp\ctrl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthMax0.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthMax0.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthAbs.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthAbs.hpp">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.h">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>

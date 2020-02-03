@@ -640,6 +640,10 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsRcp2.h \
         ../../src/mfx/dsp/shape/WsRcp2.hpp \
         ../../src/mfx/dsp/shape/WsSmartE.h \
+        ../../src/mfx/dsp/shape/WsSmthAbs.h \
+        ../../src/mfx/dsp/shape/WsSmthAbs.hpp \
+        ../../src/mfx/dsp/shape/WsSmthMax0.h \
+        ../../src/mfx/dsp/shape/WsSmthMax0.hpp \
         ../../src/mfx/dsp/shape/WsSqrt.h \
         ../../src/mfx/dsp/shape/WsSqrt.hpp \
         ../../src/mfx/dsp/shape/WsTanh.h \
