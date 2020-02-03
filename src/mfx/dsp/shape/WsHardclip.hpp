@@ -22,6 +22,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "fstb/ToolsSimd.h"
 
 #include <cassert>
@@ -38,6 +39,13 @@ namespace shape
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+float	WsHardclip::process_sample (float x)
+{
+	return fstb::limit (x, -1.f, +1.f);
+}
 
 
 

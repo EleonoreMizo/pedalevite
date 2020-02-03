@@ -39,6 +39,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -57,6 +59,8 @@ class WsLight2
 
 public:
 
+	static inline float
+	               process_sample (float x);
 	template <typename VD, typename VS>
 	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
@@ -71,6 +75,18 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	union Combo
+	{
+		int32_t        _i;
+		float          _f;
+	};
+
+	static const int32_t _m_mask = 0x007FFFFF; // 23 bits
+	static const int32_t _m_invm = 0xFF800000; // exponent and sign
+
+	// 6.75 is the exact value but rounding errors bring negative results
+	static const int32_t _a      = int32_t (6.74f * (1 << (23 - 18)));
 
 
 

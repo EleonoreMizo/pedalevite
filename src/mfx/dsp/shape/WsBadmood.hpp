@@ -41,6 +41,32 @@ namespace shape
 
 
 
+float	WsBadmood::process_sample (float x)
+{
+	Combo          c;
+	c._f = x;
+	int32_t        x_int   = c._i;
+	int32_t        exp_int = x_int & _e_mask;
+	if (exp_int <= _e_lsb)
+	{
+		x_int = 0;
+	}
+	else
+	{
+		const int32_t  rem = x_int & _e_lsb;
+		x_int    -= exp_int;
+		exp_int >>= 1;
+		exp_int  += _e_add;
+		x_int    += exp_int;
+		x_int    ^= rem << 8;
+	}
+	c._i = x_int;
+
+	return c._f;
+}
+
+
+
 template <typename VD, typename VS>
 void  WsBadmood::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
@@ -49,9 +75,9 @@ void  WsBadmood::process_block (float dst_ptr [], const float src_ptr [], int nb
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (0x7F800000);
-	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (0x00800000);
-	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (0x3F800000 >> 1);
+	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (_e_mask);
+	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (_e_lsb);
+	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (_e_add);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x_int   = VS::load_s32 (src_ptr + pos);

@@ -41,6 +41,17 @@ namespace shape
 
 
 
+float	WsLight3::process_sample (float x)
+{
+	Combo          c;
+	c._f = x;
+	c._i &= 0xFF800000;
+
+	return c._f;
+}
+
+
+
 template <typename VD, typename VS>
 void	WsLight3::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
@@ -49,7 +60,7 @@ void	WsLight3::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (0xFF800000); // exponent and sign
+	const auto     mnt_invm = fstb::ToolsSimd::set1_s32 (_m_invm);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x_int   = VS::load_s32 (src_ptr + pos);

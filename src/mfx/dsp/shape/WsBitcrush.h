@@ -37,6 +37,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <ratio>
+
 
 
 namespace mfx
@@ -55,6 +57,8 @@ class WsBitcrush
 
 public:
 
+	static inline float
+	               process_sample (float x);
 	template <typename VD, typename VS>
 	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
@@ -69,6 +73,8 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	typedef std::ratio <4, 1> Sc;
 
 
 

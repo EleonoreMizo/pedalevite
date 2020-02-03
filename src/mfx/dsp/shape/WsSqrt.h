@@ -41,6 +41,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -59,6 +61,8 @@ class WsSqrt
 
 public:
 
+	static inline float
+	               process_sample (float x);
 	template <typename VD, typename VS>
 	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
@@ -73,6 +77,17 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
+
+	union Combo
+	{
+		int32_t        _i;
+		float          _f;
+	};
+
+	static const int32_t _e_mask =  0x7F800000;
+	static const int32_t _e_lsb  =  0x00800000;
+	static const int32_t _e_add  =  0x3F800000 >> 1;
+	static const int32_t _s_fix  = ~0x40000000;
 
 
 

@@ -24,7 +24,10 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/ToolsSimd.h"
 
+#include <algorithm>
+
 #include <cassert>
+#include <cmath>
 
 
 
@@ -38,6 +41,20 @@ namespace shape
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+float	WsRcp2::process_sample (float x)
+{
+	const float    t = 0.5f;
+	const float    a = fabs (x);
+	const float    m = std::max (a, t);
+	const float    f = t / m;
+	const float    g = f * (2 - f);
+	x *= g;
+
+	return x;
+}
 
 
 

@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/ToolsSimd.h"
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -38,6 +39,13 @@ namespace shape
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+float	WsRcp1::process_sample (float x)
+{
+	return x / (fabs (x) + 1);
+}
 
 
 

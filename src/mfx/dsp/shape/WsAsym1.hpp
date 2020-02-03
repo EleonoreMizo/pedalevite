@@ -41,6 +41,27 @@ namespace shape
 
 
 
+float	WsAsym1::process_sample (float x)
+{
+	const float    x2 = x * x;
+	if (x <= 0)
+	{
+		const float    a2 = 1.f / 2;
+		x += x2 * a2;
+	}
+	else
+	{
+		const float   x4 = x2 * x2;
+		const float   x8 = x4 * x4;
+		const float   a9 = 1.f / 9;
+		x -= x * x8 * a9;
+	}
+
+	return x;
+}
+
+
+
 template <typename VD, typename VS>
 void  WsAsym1::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {

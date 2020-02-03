@@ -22,6 +22,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "fstb/ToolsSimd.h"
 
 #include <cassert>
@@ -41,6 +42,21 @@ namespace shape
 
 
 
+float	WsBitcrush::process_sample (float x)
+{
+	const float    scale     = float (Sc::num) / float (Sc::den);
+	const float    scale_inv = float (Sc::den) / float (Sc::num);
+
+	x = fstb::limit (x, -1.f, 1.f);
+	x *= scale;
+	x = float (fstb::round_int (x));
+	x *= scale_inv;
+
+	return x;
+}
+
+
+
 template <typename VD, typename VS>
 void  WsBitcrush::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
@@ -49,9 +65,10 @@ void  WsBitcrush::process_block (float dst_ptr [], const float src_ptr [], int n
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const float    s = 4;
-	const auto     scale     = fstb::ToolsSimd::set1_f32 (      s);
-	const auto     scale_inv = fstb::ToolsSimd::set1_f32 (1.f / s);
+	const auto     scale     =
+		fstb::ToolsSimd::set1_f32 (float (Sc::num) / float (Sc::den));
+	const auto     scale_inv =
+		fstb::ToolsSimd::set1_f32 (float (Sc::den) / float (Sc::num));
 	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
 	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
 

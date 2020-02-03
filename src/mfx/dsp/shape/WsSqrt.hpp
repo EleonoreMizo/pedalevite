@@ -41,6 +41,29 @@ namespace shape
 
 
 
+float	WsSqrt::process_sample (float x)
+{
+	Combo          c;
+	c._f = x;
+	int32_t        x_int   = c._i;
+	const int32_t  exp_int = x_int & _e_mask;
+	if (exp_int <= _e_lsb)
+	{
+		x_int = 0;
+	}
+	else
+	{
+		x_int >>= 1;
+		x_int  &= _s_fix;
+		x_int  += _e_add;
+	}
+	c._i = x_int;
+
+	return c._f;
+}
+
+
+
 template <typename VD, typename VS>
 void	WsSqrt::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
@@ -49,10 +72,10 @@ void	WsSqrt::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 	assert (nbr_spl > 0);
 	assert ((nbr_spl & 3) == 0);
 
-	const auto     exp_mask = fstb::ToolsSimd::set1_s32 ( 0x7F800000);
-	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 ( 0x00800000);
-	const auto     exp_add  = fstb::ToolsSimd::set1_s32 ( 0x3F800000 >> 1);
-	const auto     sign_fix = fstb::ToolsSimd::set1_s32 (~0x40000000);
+	const auto     exp_mask = fstb::ToolsSimd::set1_s32 (_e_mask);
+	const auto     exp_lsb  = fstb::ToolsSimd::set1_s32 (_e_lsb);
+	const auto     exp_add  = fstb::ToolsSimd::set1_s32 (_e_add);
+	const auto     sign_fix = fstb::ToolsSimd::set1_s32 (_s_fix);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x_int   = VS::load_s32 (src_ptr + pos);
