@@ -66,6 +66,7 @@
 #include "test/TestOscWavetable.h"
 #include "test/TestOscWavetableSub.h"
 #include "test/TestOscWavetableSyncHard.h"
+#include "test/TestPsu.h"
 #include "test/TestRemez.h"
 #include "test/TestSampleMipMapper.h"
 #include "test/TestSlidingMax.h"
@@ -1856,6 +1857,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 0
+	if (ret_val == 0) ret_val = TestPsu::perform_test ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = test_conv_int_fast ();

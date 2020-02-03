@@ -274,6 +274,9 @@
     <Filter Include="mfx\pi\fsplit">
       <UniqueIdentifier>{45030e73-f7b0-446a-9610-8ed85ed1af48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\dist3">
+      <UniqueIdentifier>{4761be45-3915-4273-917e-a33742ebb9c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -3180,6 +3183,18 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.hpp">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Dist3.h">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Dist3Desc.h">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Param.h">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Shaper.h">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.h">
       <Filter>mfx\pi\cdsp</Filter>
     </ClInclude>
@@ -3188,6 +3203,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.hpp">
       <Filter>mfx\dsp\ctrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Dist3Proc.h">
+      <Filter>mfx\pi\dist3</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthMax0.h">
       <Filter>mfx\dsp\shape</Filter>
@@ -3201,11 +3219,17 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthAbs.hpp">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\UpsplLerp4x.h">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.h">
       <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.hpp">
       <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Psu.h">
+      <Filter>mfx\pi\dist3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -4394,8 +4418,29 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.cpp">
       <Filter>mfx\dsp\shape</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Dist3.cpp">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Dist3Desc.cpp">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Shaper.cpp">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.cpp">
       <Filter>mfx\pi\cdsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Dist3Proc.cpp">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\UpsplLerp4x.cpp">
+      <Filter>mfx\pi\dist3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.cpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Psu.cpp">
+      <Filter>mfx\pi\dist3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

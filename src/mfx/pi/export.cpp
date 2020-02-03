@@ -38,6 +38,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dist1/DistoSimpleDesc.h"
 #include "mfx/pi/dist2/Disto2x.h"
 #include "mfx/pi/dist2/Disto2xDesc.h"
+#include "mfx/pi/dist3/Dist3.h"
+#include "mfx/pi/dist3/Dist3Desc.h"
 #include "mfx/pi/distapf/DistApf.h"
 #include "mfx/pi/distapf/DistApfDesc.h"
 #include "mfx/pi/distpwm/DistoPwm.h"
@@ -173,6 +175,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::adsr::EnvAdsrDesc       , mfx::pi::adsr::EnvAdsr            >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::dly0::DelayDesc         , mfx::pi::dly0::Delay              >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::fsplit::FreqSplitDesc   , mfx::pi::fsplit::FreqSplit        >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::dist3::Dist3Desc        , mfx::pi::dist3::Dist3             >::create ()
 		};
 
 		fact_list = l;

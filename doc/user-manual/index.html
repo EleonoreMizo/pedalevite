@@ -44,6 +44,7 @@
 	<li><a href="#fx-compex">CompEx — Compresseur/Expanseur</a></li>
 	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
 	<li><a href="#fx-delay">Delay — Écho stéréo</a></li>
+	<li><a href="#fx-disto3">Distortion 3</a></li>
 	<li><a href="#fx-disto-tone">Distortion Tone Stage — Tonalité pour distorsion</a></li>
 	<li><a href="#fx-disto2x">Double Distortion</a></li>
 	<li><a href="#fx-env-fol">Envelope Follower — Suiveur d’enveloppe</a></li>
@@ -1237,6 +1238,107 @@ Plus il est élevé en valeur absolue, plus le filtre coupe de fréquences.</p>
 À 100&#8239;%, les réinjection sont complètement croisées, ce qui
 donne l’impression que le son passe d’un canal à l’autre à chaque
 répétition.</p>
+
+
+
+<h3><a id="fx-disto3"></a>Distortion 3</h3>
+
+<p>Cet effet de distorsion inclut deux simulations spécifiques&#8239;: la
+<a href="https://en.wikipedia.org/wiki/Crossover_distortion">distorsion de
+raccordement</a> d’un amplificateur en classe B, ainsi que la surcharge
+d’une alimentation symétrique.</p>
+<p>Elle comporte en plus un limiteur de
+<a href="https://fr.wikipedia.org/wiki/Vitesse_de_balayage">vitesse de balayage</a>,
+permettant de lier l’atténuation des aigus au gain de la distorsion.</p>
+
+<p class="var">Input high-pass filter cutoff frequency</p>
+<p>Fréquence de coupure en Hz du filtre passe-haut permettant de retirer
+les basses fréquences à l’entrée de l’effet.
+Il s’agit en réalité d’un filtre en plateau qui est implicitement contrôlé
+par le paramètre <var>distortion gain</var>.
+Il est conçu de façon à ce que les basses fréquences ne soient pas réellement
+atténuées, mais qu’elles soient simplement moins amplifiées que les autres.
+Pour un réglage fixé, cela permet de conserver des graves quel que soit les
+variations que l’on fait subir au gain, en particulier quand le gain est
+faible.</p>
+
+<p class="var">Distortion gain</p>
+<p>Gain d’amplification en dB.
+C’est le paramètre principal de la distorsion.</p>
+
+<p class="var">Slew rate limiting, input</p>
+<p>Paramètre de limitation de la vitesse de balayage après gain et avant
+distorsion.
+Cette limitation permet de filtrer les aigus en fonction de la force du
+signal.
+Plus le son est fort, plus il est filtré.
+L’opération étant non-linéaire, d’autres salissures du son sont introduites
+à cet étape.
+Le paramètre s’exprime ici en Hz comme la fréquence d’un filtre passe-bas,
+bien que son interprétation soit en réalité assez dépendante du gain.
+La valeur maximale doit permettre d’atteindre la neutralité à un gain
+modéré.</p>
+
+<p class="var">Class</p>
+<p>Permet d’utiliser l’algorithme de distorsion sur une simulation
+d’amplificateur en classe A ou B.
+En classe B, deux modules de distorsion sont utilisés.
+Ce réglage influe principalement sur la manière dont le signal est affecté
+par les paramètres de bias.
+C’est en classe B qu’il peut y avoir une distorsion de raccordement.</p>
+
+<p class="var">Bias, static</p>
+<p>Ce paramètre en % permet d’introduire une composante fixe de
+polarisation dans la distorsion.
+En classe B, il permet de réduire la distorsion de raccordement pour les sons
+faibles, et pousse la structure vers la classe AB.</p>
+
+<p class="var">Bias, dynamic</p>
+<p>Ce paramètre en % permet d’ajuster la composante de polarisation
+en fonction du volume du son (avant ou après distorsion, selon <var>bias
+source</var>).
+Plus il est élevé, plus le bias va réagir, et plus la distorsion de
+raccordement va se manifester en classe B.</p>
+
+<p class="var">Bias low-pass filter cutoff frequency</p>
+<p>C’est la fréquence de coupure du filtre passe-bas filtrant
+la composante dynamique du bias.
+À très basse fréquence, le bias met du temps à réagir et provoque une
+variation de timbre au cours du temps.</p>
+
+<p class="var">Bias source</p>
+<p>Ce paramètre permet de changer la source du bias dynamique, en direct
+(<span class="ui">direct</span>, avant distorsion) ou en réaction 
+(<span class="ui">feedback</span>, après distorsion).
+En réaction, la distorsion peut se mettre à auto-osciller, en fonction des
+autres réglages.</p>
+
+<p class="var">Distortion type</p>
+<p>Algorithme de distorsion.</p>
+
+<p class="var">Slew rate limiting, output</p>
+<p>Limitation de la vitesse de balayage après distorsion.</p>
+
+<p class="var">PSU overload</p>
+<p>Active ou désactive la simulation d’alimentation surchargée.
+En surcharge, le signal est limité par ce que l’alimentation peut
+fournir.</p>
+
+<p class="var">PSU load amount</p>
+<p>Taux de charge de l’alimentation en %.
+Quand la surcharge est importante, la fréquence du secteur module le signal
+et donne une tonalité distincte.</p>
+
+<p class="var">PSU frequency</p>
+<p>Fréquence du secteur pour l’alimentation, en Hz.
+Habituellement cette fréquence est fixe (50 ou 60&#8239;Hz selon les pays),
+mais comme elle sert de modulation en cas de surcharge, il peut être
+intéressant de l’accorder sur une note particulière.</p>
+
+<p class="var">Low-pass filter cutoff frequency</p>
+<p>Fréquence de coupure du filtre passe-bas de sortie, en Hz.
+Il permet d’atténuer un excès de fréquences aigues générées par la
+distorsion.</p>
 
 
 
@@ -2904,6 +3006,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r28, 2020-02-02</b></p>
+<ul>
+<li>Ajout de l’effet Distortion 3.</li>
+</ul>
 
 <p><b>r27, 2020-01-21</b></p>
 <ul>

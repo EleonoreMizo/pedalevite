@@ -738,6 +738,19 @@ commonsrc = \
         ../../src/mfx/pi/dist2/Param.h \
         ../../src/mfx/pi/dist2/TransientAnalyser.cpp \
         ../../src/mfx/pi/dist2/TransientAnalyser.h \
+        ../../src/mfx/pi/dist3/Dist3.cpp \
+        ../../src/mfx/pi/dist3/Dist3.h \
+        ../../src/mfx/pi/dist3/Dist3Desc.cpp \
+        ../../src/mfx/pi/dist3/Dist3Desc.h \
+        ../../src/mfx/pi/dist3/Dist3Proc.cpp \
+        ../../src/mfx/pi/dist3/Dist3Proc.h \
+        ../../src/mfx/pi/dist3/Param.h \
+        ../../src/mfx/pi/dist3/Psu.cpp \
+        ../../src/mfx/pi/dist3/Psu.h \
+        ../../src/mfx/pi/dist3/Shaper.cpp \
+        ../../src/mfx/pi/dist3/Shaper.h \
+        ../../src/mfx/pi/dist3/UpsplLerp4x.cpp \
+        ../../src/mfx/pi/dist3/UpsplLerp4x.h \
         ../../src/mfx/pi/distapf/DistApf.cpp \
         ../../src/mfx/pi/distapf/DistApf.h \
         ../../src/mfx/pi/distapf/DistApfDesc.cpp \
@@ -1405,6 +1418,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestOscWavetableSub.h \
         ../../src/test/TestOscWavetableSyncHard.cpp \
         ../../src/test/TestOscWavetableSyncHard.h \
+        ../../src/test/TestPsu.cpp \
+        ../../src/test/TestPsu.h \
         ../../src/test/TestRemez.cpp \
         ../../src/test/TestRemez.h \
         ../../src/test/TestSampleMipMapper.cpp \

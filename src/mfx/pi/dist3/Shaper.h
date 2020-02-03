@@ -1,0 +1,116 @@
+/*****************************************************************************
+
+        Shaper.h
+        Author: Laurent de Soras, 2020
+
+--- Legal stuff ---
+
+This program is free software. It comes without any warranty, to
+the extent permitted by applicable law. You can redistribute it
+and/or modify it under the terms of the Do What The Fuck You Want
+To Public License, Version 2, as published by Sam Hocevar. See
+http://www.wtfpl.net/ for more details.
+
+*Tab=3***********************************************************************/
+
+
+
+#pragma once
+#if ! defined (mfx_pi_dist3_Shaper_HEADER_INCLUDED)
+#define mfx_pi_dist3_Shaper_HEADER_INCLUDED
+
+
+
+/*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include "mfx/pi/cdsp/ShaperBag.h"
+
+
+
+namespace mfx
+{
+namespace pi
+{
+namespace dist3
+{
+
+
+
+class Shaper
+{
+
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+public:
+
+	               Shaper ();
+	               ~Shaper () = default;
+
+	enum Type
+	{
+		Type_ASINH = 0,
+		Type_ASYM1,
+
+		Type_NBR_ELT
+	};
+
+	void           reset (double sample_freq, int max_block_size, double &latency);
+	void           set_type (Type type);
+	float          process_sample (float x);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           clear_buffers ();
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+protected:
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+private:
+
+	template <typename S>
+	void           distort_block_shaper (S &shaper, float dst_ptr [], const float src_ptr [], int nbr_spl);
+
+	cdsp::ShaperBag &
+	               _sbag;
+	float          _sample_freq;  // Hz, > 0. 0 = not initialised
+	float          _inv_fs;       // s, > 0. 0 = not initialised
+	Type           _type;
+
+
+
+/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+private:
+
+	               Shaper (const Shaper &other)            = delete;
+	               Shaper (Shaper &&other)                 = delete;
+	Shaper &       operator = (const Shaper &other)        = delete;
+	Shaper &       operator = (Shaper &&other)             = delete;
+	bool           operator == (const Shaper &other) const = delete;
+	bool           operator != (const Shaper &other) const = delete;
+
+}; // class Shaper
+
+
+
+}  // namespace dist3
+}  // namespace pi
+}  // namespace mfx
+
+
+
+//#include "mfx/pi/dist3/Shaper.hpp"
+
+
+
+#endif   // mfx_pi_dist3_Shaper_HEADER_INCLUDED
+
+
+
+/*\\\ EOF \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+

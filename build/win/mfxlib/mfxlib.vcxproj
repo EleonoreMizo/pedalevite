@@ -761,6 +761,13 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\PhaseHalfPi.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Dist3.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Dist3Desc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Dist3Proc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Psu.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\Shaper.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\dist3\UpsplLerp4x.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Delay.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\DelayDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly0\Param.h" />
@@ -1356,6 +1363,12 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2xDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\DistoStage.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\TransientAnalyser.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Dist3.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Dist3Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Dist3Proc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Psu.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\Shaper.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dist3\UpsplLerp4x.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApf.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApfDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.cpp" />
