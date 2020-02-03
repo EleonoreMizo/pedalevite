@@ -362,6 +362,8 @@ commonsrc = \
         ../../src/mfx/dsp/ctrl/InertiaRc.h \
         ../../src/mfx/dsp/ctrl/Ramp.h \
         ../../src/mfx/dsp/ctrl/Ramp.hpp \
+        ../../src/mfx/dsp/ctrl/VarBlock.h \
+        ../../src/mfx/dsp/ctrl/VarBlock.hpp \
         ../../src/mfx/dsp/dly/BbdLine.cpp \
         ../../src/mfx/dsp/dly/BbdLine.h \
         ../../src/mfx/dsp/dly/BbdLineReadable.cpp \

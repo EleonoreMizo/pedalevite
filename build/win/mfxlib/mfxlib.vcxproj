@@ -443,6 +443,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGenChaos.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\DenormStop.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLine.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.h" />
