@@ -60,7 +60,8 @@ namespace dist2
 
 
 DistoStage::DistoStage ()
-:	_chn_arr ()
+:	_sbag (cdsp::ShaperBag::use ())
+,	_chn_arr ()
 ,	_sample_freq (0)
 ,	_inv_fs (0)
 ,	_freq_hpf_pre (30)
@@ -407,16 +408,16 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 	switch (_type)
 	{
 	case Type_DIODE_CLIPPER:
-		distort_block_shaper (_shaper_diode_clipper, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_asinh, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_ASYM1:
 		dsp::shape::WsAsym1::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PROG1:
-		distort_block_shaper (_shaper_prog1, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_prog1, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PROG2:
-		distort_block_shaper (_shaper_prog2, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_prog2, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PROG3:
 		dsp::shape::WsRcp1::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
@@ -428,16 +429,16 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		dsp::shape::WsHardclip::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PUNCHER1:
-		distort_block_shaper (_shaper_puncher1, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_puncher1, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PUNCHER2:
-		distort_block_shaper (_shaper_puncher2, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_puncher2, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PUNCHER3:
-		distort_block_shaper (_shaper_puncher3, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_puncher3, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_OVERSHOOT:
-		distort_block_shaper (_shaper_overshoot, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_overshoot, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_BITCRUSH:
 		dsp::shape::WsBitcrush::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
@@ -446,22 +447,22 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		chn._slew_rate_lim.process_block (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_LOPSIDED:
-		distort_block_shaper (_shaper_lopsided, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_lopsided, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_PORRIDGE:
 		chn._porridge_limiter.process_block (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_SMARTE1:
-		distort_block_shaper (_shaper_smarte1, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_smarte1, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_SMARTE2:
-		distort_block_shaper (_shaper_smarte2, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_smarte2, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_ATTRACT:
 		chn._attractor.process_block (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_RANDWALK:
-		distort_block_shaper (_shaper_atan, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_atan, dst_ptr, src_ptr, nbr_spl);
 		chn._random_walk.process_block (dst_ptr, dst_ptr, nbr_spl);
 		break;
 	case Type_SQRT:
@@ -475,7 +476,7 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		break;
 	case Type_BOUNCE:
 		chn._bounce.process_block (dst_ptr, src_ptr, nbr_spl);
-		distort_block_shaper (_shaper_tanh, dst_ptr, dst_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_tanh, dst_ptr, dst_ptr, nbr_spl);
 		break;
 	case Type_LIGHT1:
 		dsp::shape::WsLight1::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
@@ -487,16 +488,16 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		dsp::shape::WsLight3::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_TANH:
-		distort_block_shaper (_shaper_tanh, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_tanh, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_TANHLIN:
-		distort_block_shaper (_shaper_tanhlin, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_tanhlin, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_BREAK:
-		distort_block_shaper (_shaper_break, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_break, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_ASYM2:
-		distort_block_shaper (_shaper_asym2, dst_ptr, src_ptr, nbr_spl);
+		distort_block_shaper (_sbag._s_asym2, dst_ptr, src_ptr, nbr_spl);
 		break;
 
 	default:
@@ -522,22 +523,6 @@ void	DistoStage::distort_block_shaper (S &shaper, float dst_ptr [], const float 
 bool	DistoStage::_coef_init_flag = false;
 std::array <double, DistoStage::_nbr_coef_42>	DistoStage::_coef_42;
 std::array <double, DistoStage::_nbr_coef_21>	DistoStage::_coef_21;
-
-DistoStage::ShaperTanh	DistoStage::_shaper_tanh;
-DistoStage::ShaperAtan	DistoStage::_shaper_atan;
-DistoStage::ShaperDiode	DistoStage::_shaper_diode_clipper;
-DistoStage::ShaperProg1	DistoStage::_shaper_prog1;
-DistoStage::ShaperProg2	DistoStage::_shaper_prog2;
-DistoStage::ShaperPuncher1	DistoStage::_shaper_puncher1;
-DistoStage::ShaperPuncher2	DistoStage::_shaper_puncher2;
-DistoStage::ShaperPuncher3	DistoStage::_shaper_puncher3;
-DistoStage::ShaperOvershoot	DistoStage::_shaper_overshoot;
-DistoStage::ShaperLopsided	DistoStage::_shaper_lopsided;
-DistoStage::ShaperSmartE1	DistoStage::_shaper_smarte1;
-DistoStage::ShaperSmartE2	DistoStage::_shaper_smarte2;
-DistoStage::ShaperTanhLin	DistoStage::_shaper_tanhlin;
-DistoStage::ShaperBreak	DistoStage::_shaper_break;
-DistoStage::ShaperAsym2	DistoStage::_shaper_asym2;
 
 
 

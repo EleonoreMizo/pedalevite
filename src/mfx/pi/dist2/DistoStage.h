@@ -40,19 +40,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/shape/DistBounce.h"
 #include "mfx/dsp/shape/DistRandWalk.h"
 #include "mfx/dsp/shape/DistSlewRateLim.h"
-#include "mfx/dsp/shape/FncFiniteAsym.h"
-#include "mfx/dsp/shape/FncLin0.h"
-#include "mfx/dsp/shape/WsAsinh.h"
-#include "mfx/dsp/shape/WsAsym2.h"
-#include "mfx/dsp/shape/WsAtan.h"
-#include "mfx/dsp/shape/WsBreakBase.h"
-#include "mfx/dsp/shape/WsLopsided.h"
-#include "mfx/dsp/shape/WsOvershootAsym.h"
-#include "mfx/dsp/shape/WsProgClipper.h"
-#include "mfx/dsp/shape/WsPuncherA.h"
-#include "mfx/dsp/shape/WsPuncherB.h"
-#include "mfx/dsp/shape/WsSmartE.h"
-#include "mfx/dsp/shape/WsTanh.h"
+#include "mfx/pi/cdsp/ShaperBag.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
@@ -175,62 +163,6 @@ private:
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 
-	template <class FNC>
-	using ShaperLong = dsp::shape::FncFiniteAsym <
-		-256, 256, FNC
-	>;
-
-	template <class FNC>
-	using ShaperStd = dsp::shape::FncFiniteAsym <
-		-20, 20, FNC, 2
-	>;
-
-	template <class FNC>
-	using ShaperRes = dsp::shape::FncFiniteAsym <
-		-16, 16, FNC, 4
-	>;
-
-	template <class FNC>
-	using ShaperShort = dsp::shape::FncFiniteAsym <
-		-8, 8, FNC, 4
-	>;
-
-	typedef ShaperShort <dsp::shape::WsTanh>  ShaperTanh;
-	typedef ShaperShort <dsp::shape::FncLin0 <
-		dsp::shape::WsTanh, std::ratio <1, 2>
-	> > ShaperTanhLin;
-	typedef ShaperShort <dsp::shape::FncLin0 <
-		dsp::shape::WsBreakBase, std::ratio <3, 4>
-	> > ShaperBreak;
-	typedef ShaperStd <  dsp::shape::WsAtan>  ShaperAtan;
-	typedef ShaperLong < dsp::shape::WsAsinh> ShaperDiode;
-	typedef ShaperStd <  dsp::shape::WsProgClipper <
-		std::ratio < 2, 4>,
-		std::ratio < 4, 1>,
-		std::ratio < 2, 1>
-	> > ShaperProg1;
-	typedef ShaperStd <dsp::shape::WsProgClipper <
-		std::ratio < 3, 4>,
-		std::ratio <10, 1>,
-		std::ratio < 0, 1>
-	> > ShaperProg2;
-	typedef ShaperStd <  dsp::shape::WsPuncherB <0> > ShaperPuncher1;
-	typedef ShaperStd <  dsp::shape::WsPuncherB <1> > ShaperPuncher2;
-	typedef ShaperShort <dsp::shape::WsPuncherA     > ShaperPuncher3;
-	typedef ShaperShort <dsp::shape::WsOvershootAsym> ShaperOvershoot;
-	typedef ShaperShort <dsp::shape::WsLopsided     > ShaperLopsided;
-	typedef ShaperRes <  dsp::shape::WsSmartE <
-		std::ratio <-86, 100>,
-		std::ratio <  1,   1> >
-	> ShaperSmartE1;
-	typedef ShaperShort <dsp::shape::WsSmartE <
-		std::ratio <-86, 100>,
-		std::ratio <  2,   1> >
-	> ShaperSmartE2;
-	typedef dsp::shape::FncFiniteAsym <
-		-256, 8, dsp::shape::WsAsym2, 2
-	> ShaperAsym2;
-
 	void           init_coef ();
 	void           set_next_block ();
 	void           update_hpf_pre ();
@@ -240,6 +172,8 @@ private:
 	template <typename S>
 	void           distort_block_shaper (S &shaper, float dst_ptr [], const float src_ptr [], int nbr_spl);
 
+	cdsp::ShaperBag &
+	               _sbag;
 	ChannelArray   _chn_arr;
 	float          _sample_freq;
 	float          _inv_fs;
@@ -262,37 +196,6 @@ private:
 	               _coef_42;
 	static std::array <double, _nbr_coef_21>
 	               _coef_21;
-
-	static ShaperTanh
-	               _shaper_tanh;
-	static ShaperAtan
-	               _shaper_atan;
-	static ShaperDiode
-	               _shaper_diode_clipper;
-	static ShaperProg1
-	               _shaper_prog1;
-	static ShaperProg2
-	               _shaper_prog2;
-	static ShaperPuncher1
-	               _shaper_puncher1;
-	static ShaperPuncher2
-	               _shaper_puncher2;
-	static ShaperPuncher3
-	               _shaper_puncher3;
-	static ShaperOvershoot
-	               _shaper_overshoot;
-	static ShaperLopsided
-	               _shaper_lopsided;
-	static ShaperSmartE1
-	               _shaper_smarte1;
-	static ShaperSmartE2
-	               _shaper_smarte2;
-	static ShaperTanhLin
-	               _shaper_tanhlin;
-	static ShaperBreak
-	               _shaper_break;
-	static ShaperAsym2
-	               _shaper_asym2;
 
 
 
