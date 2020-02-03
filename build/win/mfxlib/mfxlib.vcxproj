@@ -459,6 +459,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReaderPitch.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReaderPitch.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelaySimple.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelaySimple.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.h" />
@@ -1237,6 +1239,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReader.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelaySimple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\RingBufVectorizer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\Compander.cpp" />

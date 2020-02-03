@@ -382,6 +382,9 @@ commonsrc = \
         ../../src/mfx/dsp/dly/DelayLineReaderPitch.hpp \
         ../../src/mfx/dsp/dly/DelayLineReadInterface.cpp \
         ../../src/mfx/dsp/dly/DelayLineReadInterface.h \
+        ../../src/mfx/dsp/dly/DelayPushPop.cpp \
+        ../../src/mfx/dsp/dly/DelayPushPop.h \
+        ../../src/mfx/dsp/dly/DelayPushPop.hpp \
         ../../src/mfx/dsp/dly/DelaySimple.cpp \
         ../../src/mfx/dsp/dly/DelaySimple.h \
         ../../src/mfx/dsp/dly/DelaySimple.hpp \

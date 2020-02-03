@@ -3186,6 +3186,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.hpp">
       <Filter>mfx\dsp\ctrl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.h">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\DelayPushPop.hpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

@@ -9,5 +9,6 @@
 - **`DelayLineReader`**: Class for reading a delay line accessed with a `DelayLineReadInterface`. Handles slow and fast delay time changes, with interpolation and crossfade, respectively.
 - **`DelayLineReaderPitch`**: Same as above, with optional basic pitch shifting.
 - **`DelayLineReadInterface`**: An interface for reading a delay line, with random access and resampling, and maximum length estimation for block processing (needed when the line is fed back).
+- **`DelayPushPop`**: a basic and efficient delay class with a push/pop interface. Good for fixed feedback stuff. Does not handle smooth time changes, fractional delay nor resampling.
 - **`DelaySimple`**: a basic and efficient delay class. Does not handle smooth time changes, fractional delay nor resampling.
 - **`RingBufVectorizer`**: A utility class to handle several indexes within a ring buffer and compute the maximum block processing length before a cursor wraps back.
