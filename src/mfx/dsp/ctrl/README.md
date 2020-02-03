@@ -21,3 +21,4 @@
 - **`InertiaLin`**: a linear parameter smoother, the target value is reached in constant time.
 - **`InertiaRc`**: a parameter smoother using 1st order filters (RC section), with an adjustble end threshold.
 - **`Ramp`**: similar to `InertiaLin`, but specialized for length-variable block processing. You can set the length of the block and the value to reach at the end. It keeps track of the values at the beginning and the end of the block, so they can be fed directly to a block interpolation function.
+- **`VarBlock`**: Another class handling parameter changes across length-variable blocks, tracking begin and end values. Unlike `Ramp`, the transition length depends only on the block size.
