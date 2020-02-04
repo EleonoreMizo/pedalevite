@@ -82,7 +82,7 @@ private:
 
 	static const int32_t _e_mask =  0x7F800000;
 	static const int32_t _e_lsb  =  0x00800000;
-	static const int32_t _e_add  =  0x3F800000 >> 1;
+	static const int32_t _e_add  =  0x1F800000;
 
 
 

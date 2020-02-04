@@ -86,6 +86,9 @@ private:
 	static const int32_t _m_invm = 0xFF800000; // exponent and sign
 
 	// 6.75 is the exact value but rounding errors bring negative results
+	// Other interesting values, but not allowed with this implementation:
+	// (3/16) * (63 + 11 * sqrt (33)) = 23.6606604585
+	// (3/8)  * (63 + 11 * sqrt (33)) = 47.321320917
 	static const int32_t _a      = int32_t (6.74f * (1 << (23 - 18)));
 
 

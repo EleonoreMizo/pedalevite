@@ -55,6 +55,7 @@ float	WsBelt::process_sample (float x)
 	{
 		x_int    -= exp_int;
 		exp_int >>= 1;
+		exp_int  &= _e_mask;
 		exp_int  += _e_add;
 		x_int    += exp_int;
 	}
@@ -83,6 +84,7 @@ void  WsBelt::process_block (float dst_ptr [], const float src_ptr [], int nbr_s
 		auto           cond    = fstb::ToolsSimd::cmp_gt_s32 (exp_int, exp_lsb);
 		x_int    -= exp_int;
 		exp_int >>= 1;
+		exp_int   = fstb::ToolsSimd::and_s32 (exp_int, exp_mask);
 		exp_int  += exp_add;
 		x_int    += exp_int;
 		x_int     = fstb::ToolsSimd::and_s32 (x_int, cond);
