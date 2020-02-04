@@ -190,7 +190,7 @@ Dist3Desc::Dist3Desc ()
 		0,
 		"%4.0f"
 	);
-	pll_sptr->use_mapper ().gen_log (8);
+	pll_sptr->use_mapper ().gen_log (4);
 	_desc_set.add_glob (Param_PSU_LOAD, pll_sptr);
 
 	// PSU frequency
@@ -200,7 +200,7 @@ Dist3Desc::Dist3Desc ()
 		"Hz",
 		param::HelperDispNum::Preset_FLOAT_STD,
 		0,
-		"%5.0f"
+		"%5.1f"
 	);
 	log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
 	_desc_set.add_glob (Param_PSU_FREQ, log_sptr);
