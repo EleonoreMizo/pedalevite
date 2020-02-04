@@ -1314,8 +1314,11 @@ blacklist brcmutil
 #bluetooth
 blacklist btbcm
 blacklist hci_uart</pre>
-<p>Puis tapez:</p>
+<p>Puis taper&#8239;:</p>
 <pre class="term">sudo apt-get remove -y --purge pi-bluetooth</pre>
+<p>Et on redémarre une nouvelle fois pour prendre en compte toutes les
+modifications&#8239;:</p>
+<pre class="term">sudo shutdown -r now</pre>
 
 
 
@@ -1323,7 +1326,7 @@ blacklist hci_uart</pre>
 
 <p>Installer git, Jack2, ALSA et autoconf&#8239;:</p>
 <pre class="term">sudo apt-get -y install libjack-jackd2-dev libasound2-dev
-sudo apt-get -y install git git-core autoconf</pre>
+sudo apt-get -y install wiringpi git git-core autoconf</pre>
 <p>En principe wiringPi est maintenant livré en standard, mais la version
 incluse dans le système ne supporte pas forcément correctement le Pi 4.
 Taper&#8239;:</p>
