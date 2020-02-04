@@ -1314,7 +1314,9 @@ En réaction, la distorsion peut se mettre à auto-osciller, en fonction des
 autres réglages.</p>
 
 <p class="var">Distortion type</p>
-<p>Algorithme de distorsion.</p>
+<p>Algorithme de distorsion.
+Les courbes des distortions peuvent être consultées dans la section de l’effet
+<a href="#fx-disto2x-wslist">Double distortion</a>.</p>
 
 <p class="var">Slew rate limiting, output</p>
 <p>Limitation de la vitesse de balayage après distorsion.</p>
@@ -1383,7 +1385,6 @@ distordue.</p>
 <p>Un dispositif permet d’adapter le volume en fonction des dynamique et de
 modifier le gain en fonction des transitoires.<p>
 
-
 <p class="var">Crossover freq</p>
 <p>C’est la fréquence de séparation initiale en deux bandes.
 Il est ainsi possible de laisser les composantes les plus graves
@@ -1440,6 +1441,37 @@ Cela donne des sons un peu plus percussifs mais moins naturels.</p>
 <p class="var">Threshold</p>
 <p>Seuil en-dessous duquel le volume n’est pas réduit par le paramètre
 <var>Density</var>.</p>
+
+<h4><a id="fx-disto2x-wslist"></a>Liste des waveshapers</h4>
+
+<p>Seuls les waveshapers sans mémoire sont listés ici.</p>
+<figure><img src="shaper-asinh.png" />    <figcaption>Asinh</figcaption></figure>
+<figure><img src="shaper-asym1.png" />    <figcaption>Asym 1</figcaption></figure>
+<figure><img src="shaper-asym2.png" />    <figcaption>Asym 2</figcaption></figure>
+<figure><img src="shaper-atan.png" />     <figcaption>Atan</figcaption></figure>
+<figure><img src="shaper-badmood.png" />  <figcaption>Bad mood</figcaption></figure>
+<figure><img src="shaper-belt.png" />     <figcaption>Belt</figcaption></figure>
+<figure><img src="shaper-bitcrush.png" /> <figcaption>Bitcrush</figcaption></figure>
+<figure><img src="shaper-break.png" />    <figcaption>Break</figcaption></figure>
+<figure><img src="shaper-diode.png" />    <figcaption>Diode</figcaption></figure>
+<figure><img src="shaper-hardclip.png" /> <figcaption>Hardclip</figcaption></figure>
+<figure><img src="shaper-light1.png" />   <figcaption>Light 1</figcaption></figure>
+<figure><img src="shaper-light2.png" />   <figcaption>Light 2</figcaption></figure>
+<figure><img src="shaper-light3.png" />   <figcaption>Light 3</figcaption></figure>
+<figure><img src="shaper-lopsided.png" /> <figcaption>Lopsided</figcaption></figure>
+<figure><img src="shaper-overshoot.png" /><figcaption>Overshoot</figcaption></figure>
+<figure><img src="shaper-prog1.png" />    <figcaption>Prog 1</figcaption></figure>
+<figure><img src="shaper-prog2.png" />    <figcaption>Prog 2</figcaption></figure>
+<figure><img src="shaper-rcp1.png" />     <figcaption>Prog 3</figcaption></figure>
+<figure><img src="shaper-puncher1.png" /> <figcaption>Puncher 1</figcaption></figure>
+<figure><img src="shaper-puncher2.png" /> <figcaption>Puncher 2</figcaption></figure>
+<figure><img src="shaper-puncher3.png" /> <figcaption>Puncher 3</figcaption></figure>
+<figure><img src="shaper-rcp2.png" />     <figcaption>Sudden</figcaption></figure>
+<figure><img src="shaper-smarte1.png" />  <figcaption>SmartE 1</figcaption></figure>
+<figure><img src="shaper-smarte2.png" />  <figcaption>SmartE 2</figcaption></figure>
+<figure><img src="shaper-sqrt.png" />     <figcaption>Sq root</figcaption></figure>
+<figure><img src="shaper-tanh.png" />     <figcaption>Tanh</figcaption></figure>
+<figure><img src="shaper-tanhlin.png" />  <figcaption>Tanh+lin</figcaption></figure>
 
 
 
@@ -3006,6 +3038,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r29, 2020-02-04</b></p>
+<ul>
+<li>Ajout des courbes des waveshapers.</li>
+</ul>
 
 <p><b>r28, 2020-02-02</b></p>
 <ul>
