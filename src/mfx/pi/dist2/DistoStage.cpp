@@ -73,7 +73,7 @@ DistoStage::DistoStage ()
 ,	_gain_post_old (_gain_post)
 ,	_bias (0)
 ,	_bias_old (_bias)
-,	_type (Type_DIODE_CLIPPER)
+,	_type (Type_ASINH)
 ,	_buf_x1 ()
 ,	_buf_ovr ()
 ,	_post_clear_flag (true)
@@ -407,7 +407,7 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 
 	switch (_type)
 	{
-	case Type_DIODE_CLIPPER:
+	case Type_ASINH:
 		distort_block_shaper (_sbag._s_asinh, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_ASYM1:

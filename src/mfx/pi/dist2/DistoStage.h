@@ -71,7 +71,7 @@ public:
 
 	enum Type
 	{
-		Type_DIODE_CLIPPER = 0,
+		Type_ASINH = 0,
 		Type_ASYM1,
 		Type_PROG1,
 		Type_PROG2,

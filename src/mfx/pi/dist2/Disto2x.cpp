@@ -125,7 +125,7 @@ Disto2x::Disto2x ()
 		const int      base = _param_stage_base_arr [stage];
 		_state_set.set_val_nat (desc_set, base + ParamStage_HPF_PRE ,    30);
 		_state_set.set_val_nat (desc_set, base + ParamStage_BIAS    ,     0);
-		_state_set.set_val_nat (desc_set, base + ParamStage_TYPE    , DistoStage::Type_DIODE_CLIPPER);
+		_state_set.set_val_nat (desc_set, base + ParamStage_TYPE    , DistoStage::Type_ASINH);
 		_state_set.set_val_nat (desc_set, base + ParamStage_GAIN    ,     1);
 		_state_set.set_val_nat (desc_set, base + ParamStage_LPF_POST, 20480);
 
