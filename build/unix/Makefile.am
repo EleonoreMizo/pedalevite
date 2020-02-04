@@ -1391,6 +1391,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/Axis.h \
         ../../src/test/BufferFiller.cpp \
         ../../src/test/BufferFiller.h \
+        ../../src/test/DrawShapers.cpp \
+        ../../src/test/DrawShapers.h \
         ../../src/test/EPSPlot.h \
         ../../src/test/GraphPrim.cpp \
         ../../src/test/GraphPrim.h \

@@ -29,7 +29,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/osc/SweepingSin.h"
 #include "mfx/pi/dist3/Psu.h"
 #include "mfx/FileOpWav.h"
-#include "TestPsu.h"
+#include "test/TestPsu.h"
 
 #include	<vector>
 

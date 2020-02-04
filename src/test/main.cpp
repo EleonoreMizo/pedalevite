@@ -53,6 +53,7 @@
 #include "mfx/piapi/ProcInfo.h"
 #include "mfx/FileIOInterface.h"
 #include "mfx/FileOpWav.h"
+#include "test/DrawShapers.h"
 #include "test/EPSPlot.h"
 #include "test/Gridaxis.h"
 #include "test/TestApprox.h"
@@ -1857,6 +1858,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 0
+	if (ret_val == 0) ret_val = DrawShapers::draw_shapers ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = TestPsu::perform_test ();
