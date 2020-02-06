@@ -80,7 +80,7 @@ private:
 
 	dsp::dyn::EnvFollowerRmsSimple
 	               _env;
-	BufAlign       _buf { _tmp_buf_len };
+	BufAlign       _buf    = BufAlign (_tmp_buf_len);
 	float          _lvl    = 1;
 	float          _lvl_sq = 1;
 
