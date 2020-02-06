@@ -88,7 +88,7 @@ private:
 	int            _scan_beg { 0 }; // (_len-1)/2 or _len-1
 	DataType       _inmax    { 0 };
 	DataType       _scanmax  { 0 };
-	Buffer         _data     { 1, std::numeric_limits <DataType>::lowest () };
+	Buffer         _data     { Buffer (1, std::numeric_limits <DataType>::lowest ()) };
 
 
 
