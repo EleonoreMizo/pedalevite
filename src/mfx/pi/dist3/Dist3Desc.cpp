@@ -149,7 +149,10 @@ Dist3Desc::Dist3Desc ()
 	// Distortion type
 	auto           enue_sptr = std::make_shared <param::TplEnumEvol> (
 		2,
-		"Arcsinh\nAsym 1",
+		"Arcsinh\nAsym 1\nProg 1\nProg 2\nProg 3\nSudden\nHardclip\nPuncher 1"
+		"\nPuncher 2\nPuncher 3\nOvershoot\nBitcrush\nLopsided\nPorridge\nSmartE 1\nSmartE 2"
+		"\nAttract\nRandWalk\nSq Root\nBelt\nBad mood\nBounce\nLight 1\nLight 2"
+		"\nLight 3\nTanh\nTanh+lin\nBreak\nAsym 2",
 		"Distortion type\nDist type\nType",
 		"",
 		0,

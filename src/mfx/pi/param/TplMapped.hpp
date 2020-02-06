@@ -186,7 +186,7 @@ int32_t	TplMapped <T>::do_get_flags () const
 template <class T>
 double	TplMapped <T>::do_get_nat_min () const
 {
-	return (_phdn.get_val_min ());
+	return _phdn.get_val_min ();
 }
 
 
@@ -194,7 +194,7 @@ double	TplMapped <T>::do_get_nat_min () const
 template <class T>
 double	TplMapped <T>::do_get_nat_max () const
 {
-	return (_phdn.get_val_max ());
+	return _phdn.get_val_max ();
 }
 
 
@@ -207,7 +207,7 @@ std::string	TplMapped <T>::do_conv_nat_to_str (double nat, int len) const
 	len = (len > 0) ? std::min (len, max_len) : max_len;
 	_phdn.conv_to_str (nat, txt_0, len);
 
-	return (txt_0);
+	return txt_0;
 }
 
 
@@ -235,7 +235,7 @@ double	TplMapped <T>::do_conv_nrm_to_nat (double nrm) const
 #endif
 	nat = fstb::limit (nat, val_min, val_max);
 
-	return (nat);
+	return nat;
 }
 
 
@@ -251,7 +251,7 @@ double	TplMapped <T>::do_conv_nat_to_nrm (double nat) const
 #endif
 	nat = fstb::limit (nrm, 0.0, 1.0);
 
-	return (nrm);
+	return nrm;
 }
 
 

@@ -23,6 +23,10 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/dsp/dyn/LimiterRms.h"
+#include "mfx/dsp/shape/DistAttract.h"
+#include "mfx/dsp/shape/DistBounce.h"
+#include "mfx/dsp/shape/DistRandWalk.h"
 #include "mfx/pi/cdsp/ShaperBag.h"
 
 
@@ -50,6 +54,33 @@ public:
 	{
 		Type_ASINH = 0,
 		Type_ASYM1,
+		Type_PROG1,
+		Type_PROG2,
+		Type_PROG3,
+		Type_SUDDEN,
+		Type_HARDCLIP,
+		Type_PUNCHER1,
+		Type_PUNCHER2,
+		Type_PUNCHER3,
+		Type_OVERSHOOT,
+		Type_BITCRUSH,
+		Type_LOPSIDED,
+		Type_PORRIDGE,
+		Type_SMARTE1,
+		Type_SMARTE2,
+		Type_ATTRACT,
+		Type_RANDWALK,
+		Type_SQRT,
+		Type_BELT,
+		Type_BADMOOD,
+		Type_BOUNCE,
+		Type_LIGHT1,
+		Type_LIGHT2,
+		Type_LIGHT3,
+		Type_TANH,
+		Type_TANHLIN,
+		Type_BREAK,
+		Type_ASYM2,
 
 		Type_NBR_ELT
 	};
@@ -80,6 +111,15 @@ private:
 	float          _sample_freq;  // Hz, > 0. 0 = not initialised
 	float          _inv_fs;       // s, > 0. 0 = not initialised
 	Type           _type;
+
+	dsp::dyn::LimiterRms
+	               _porridge_limiter;
+	dsp::shape::DistAttract
+	               _attractor;
+	dsp::shape::DistRandWalk
+	               _random_walk;
+	dsp::shape::DistBounce
+	               _bounce;
 
 
 
