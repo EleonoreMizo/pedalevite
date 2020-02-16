@@ -654,8 +654,8 @@ std::vector <FxPEq::Biq>	FxPEq::retrieve_z_eq (const std::vector <pi::peq::BandP
 		if (! band.is_bypass ())
 		{
 			band.create_filter (&biq._b [0], &biq._a [0], fs, inv_fs);
-			biq_arr.push_back (biq);
 		}
+		biq_arr.push_back (biq);
 	}
 
 	return biq_arr;

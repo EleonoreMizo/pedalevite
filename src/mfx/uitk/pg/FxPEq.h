@@ -111,8 +111,8 @@ private:
 	{
 	public:
 		typedef std::array <float, 3> Poly;
-		Poly           _b;
-		Poly           _a;
+		Poly           _b {{ 1, 0, 0 }};
+		Poly           _a {{ 1, 0, 0 }};
 	};
 
 	typedef std::shared_ptr <NBitmap> BitmapSPtr;
