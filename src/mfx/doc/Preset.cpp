@@ -262,7 +262,17 @@ void	Preset::ser_write (SerWInterface &ser) const
 	{
 		ser.begin_list ();
 		ser.write (node.first);
-		node.second->ser_write (ser);
+		if (node.second.get () != nullptr)
+		{
+			node.second->ser_write (ser);
+		}
+		else
+		{
+			// If the shared pointer is empty, builds an empty slot to save it.
+			// Note: we shouldn't allow the shared_ptr to be empty.
+			Slot           slot_tmp;
+			slot_tmp.ser_write (ser);
+		}
 		ser.end_list ();
 	}
 	ser.end_list ();
