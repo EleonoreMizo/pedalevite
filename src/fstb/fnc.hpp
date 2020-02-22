@@ -674,6 +674,22 @@ T	sshift_r (T x)
 
 
 
+template <class T>
+T	sq (T x)
+{
+	return x * x;
+}
+
+
+
+template <class T>
+T	cube (T x)
+{
+	return x * x * x;
+}
+
+
+
 // U must be a signed integer type
 template <class T, class U>
 T	ipow (T x, U n)
