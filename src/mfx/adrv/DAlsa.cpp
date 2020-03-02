@@ -29,8 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/adrv/DAlsa.h"
 #include "mfx/hw/ThreadLinux.h"
 
-#include <signal.h>
-
 #include <chrono>
 #include <stdexcept>
 #include <thread>

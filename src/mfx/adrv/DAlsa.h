@@ -83,8 +83,6 @@ private:
 	void           process_audio ();
 	void           process_block (bool read_flag, bool write_flag);
 
-	static void    signal_handler (int sig);
-
 	CbInterface *  _cb_ptr;
 	int            _block_size;
 	double         _sample_freq;

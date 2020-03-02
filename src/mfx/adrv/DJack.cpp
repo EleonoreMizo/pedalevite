@@ -29,8 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/adrv/CbInterface.h"
 #include "mfx/adrv/DJack.h"
 
-#include <signal.h>
-
 #include <stdexcept>
 
 #include <cassert>
@@ -258,15 +256,6 @@ int	DJack::do_start ()
 	if (ret_val == 0)
 	{
 		fprintf (stderr, "Audio now running...\n");
-
-		signal (SIGINT,  &signal_handler);
-		signal (SIGTERM, &signal_handler);
-#if defined (WIN32) || defined (_WIN32) || defined (__CYGWIN__)
-		signal (SIGABRT, &signal_handler);
-#else
-		signal (SIGQUIT, &signal_handler);
-		signal (SIGHUP,  &signal_handler);
-#endif
 	}
 
 	return ret_val;
@@ -322,14 +311,6 @@ void	DJack::process_block (int nbr_spl)
 	}
 
 	_cb_ptr->process_block (&dst_arr [0], &src_arr [0], nbr_spl);
-}
-
-
-
-void	DJack::signal_handler (int sig)
-{
-	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
-	_instance_ptr->_cb_ptr->request_exit ();
 }
 
 

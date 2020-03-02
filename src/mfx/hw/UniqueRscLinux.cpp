@@ -26,9 +26,11 @@ http://www.wtfpl.net/ for more details.
 
 #include "mfx/hw/UniqueRscLinux.h"
 
+#include <fcntl.h>
 #include <unistd.h>
 
 #include <cassert>
+#include <cstdio>
 
 
 
@@ -46,19 +48,20 @@ namespace hw
 // Name should be a valid filename without any path.
 UniqueRscLinux::UniqueRscLinux (std::string name)
 :	_name (name)
+,	_pathname ("/run/lock/" + _name)
 ,	_lock_fd (-1)
 {
 	/*** To do: better check ***/
 	assert (! name.empty ());
 	assert (name.find ('/') == std::string::npos);
 
-	const std::string pathname = "/run/lock/" + _name;
 	_lock_fd = open (pathname.c_str (), O_CREAT | O_EXCL);
 	if (_lock_fd < 0)
 	{
 		throw Error (
 			"Resource \"" + name + "\" is already in use "
-		   "(" + filename + " locked).");
+			"(" + _pathname + " locked)."
+		);
 	}
 }
 
@@ -70,6 +73,7 @@ UniqueRscLinux::~UniqueRscLinux ()
 	{
 		close (_lock_fd);
 		_lock_fd = -1;
+		remove (_pathname.c_str ());
 	}
 }
 

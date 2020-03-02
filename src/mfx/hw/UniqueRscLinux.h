@@ -63,6 +63,7 @@ protected:
 private:
 
 	std::string    _name;
+	std::string    _pathname;
 	int            _lock_fd = -1;
 
 

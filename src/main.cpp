@@ -279,7 +279,24 @@ protected:
 	void           do_request_exit () final;
 private:
 	static void    init_empty_bank (mfx::doc::Bank &bank);
+#if fstb_IS (SYS, LINUX)
+	static void    signal_handler (int sig);
+	static Context *
+	               _instance_ptr;
+#endif
 };
+
+#if fstb_IS (SYS, LINUX)
+
+Context * Context::_instance_ptr = 0;
+
+void	Context::signal_handler (int sig)
+{
+	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
+	_instance_ptr->request_exit ();
+}
+
+#endif
 
 Context::Context (mfx::adrv::DriverInterface &snd_drv)
 :	_cmd_line ()
@@ -328,6 +345,14 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 		snd_drv
 	)
 {
+#if fstb_IS (SYS, LINUX)
+	_instance_ptr = this;
+	signal (SIGINT,  &signal_handler);
+	signal (SIGTERM, &signal_handler);
+	signal (SIGQUIT, &signal_handler);
+	signal (SIGHUP,  &signal_handler);
+#endif
+
 #if ! fstb_IS (SYS, LINUX)
 	_all_io.set_model (_model);
 #endif
@@ -773,19 +798,12 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 	MAIN_prog_init ();
 #endif
 
+	int            ret_val = 0;
+
 #if fstb_IS (SYS, LINUX)
-	std::shared_ptr <mfx::hw::UniqueRscLinux>  lock_sptr;
 	try
 	{
-		lock_sptr = std::make_shared <mfx::hw::UniqueRscLinux> (
-			"pedalevite-unique"
-		);
-	}
-	catch (mfx::hw::UniqueRscLinux::Error &e)
-	{
-		fprintf ("Pedale Vite is already running!\n");
-		throw;
-	}
+		mfx::hw::UniqueRscLinux unique_lock ("pedalevite-unique");
 #endif
 
 #if fstb_IS (SYS, LINUX) && ! defined (MAIN_USE_VOID)
@@ -795,7 +813,7 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 	if (::digitalRead (22) == LOW)
 	{
 		fprintf (stderr, "Emergency exit\n");
-		exit (0);
+		throw 0;
 	}
 
 	::pinMode (MAIN_pin_reset, OUTPUT);
@@ -837,8 +855,6 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 	ctx._cmd_line.set (argc, argv, envp);
 #endif
 
-	int            ret_val = 0;
-
 	if (! ctx._quit_flag)
 	{
 		double         sample_freq;
@@ -867,6 +883,23 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 	}
 
 	ctx_uptr.reset ();
+
+#if fstb_IS (SYS, LINUX)
+	}
+	catch (mfx::hw::UniqueRscLinux::Error &e)
+	{
+		fprintf (stderr, "Pedale Vite is already running!\n");
+	}
+	catch (int e)
+	{
+		fprintf (stderr, "Exception: int = %d\n", e);
+		ret_val = e;
+	}
+	catch (...)
+	{
+		fprintf (stderr, "Exception caught.\n");
+	}
+#endif
 
 	fprintf (stderr, "Exiting with code %d.\n", ret_val);
 

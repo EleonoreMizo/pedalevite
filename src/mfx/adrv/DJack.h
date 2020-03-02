@@ -75,7 +75,6 @@ private:
 
 	void           process_block (int nbr_spl);
 
-	static void    signal_handler (int sig);
 	static void    jack_shutdown (void *arg);
 	static int     notify_audio_dropout (void *arg);
 	static int     process_jack (::jack_nframes_t nbr_spl, void *arg);
