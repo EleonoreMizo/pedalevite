@@ -3231,6 +3231,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dist3\Psu.h">
       <Filter>mfx\pi\dist3</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\hw\UniqueRscLinux.h">
+      <Filter>mfx\hw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4441,6 +4444,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dist3\Psu.cpp">
       <Filter>mfx\pi\dist3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\hw\UniqueRscLinux.cpp">
+      <Filter>mfx\hw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

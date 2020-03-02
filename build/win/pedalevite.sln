@@ -16,6 +16,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj",
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "piapi2vst", "piapi2vst\piapi2vst.vcxproj", "{3A8EC9DB-9E71-4330-9682-52D6CAA05578}"
+	ProjectSection(ProjectDependencies) = postProject
+		{163F412F-8097-4D8B-B6A1-97B9A7356C76} = {163F412F-8097-4D8B-B6A1-97B9A7356C76}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pv_spkem", "pvvst\pv_spkem\pv_spkem.vcxproj", "{BCD44C2C-7381-4923-BAE7-6CEA74EF6F9E}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -63,6 +66,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvvid2raw", "pvvid2raw\pvvid2raw.vcxproj", "{662E4F3F-0026-4CAC-9C5C-A8BAC1717A23}"
+	ProjectSection(ProjectDependencies) = postProject
+		{163F412F-8097-4D8B-B6A1-97B9A7356C76} = {163F412F-8097-4D8B-B6A1-97B9A7356C76}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

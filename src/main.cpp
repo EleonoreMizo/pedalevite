@@ -101,6 +101,7 @@
 		#error Wrong MAIN_API value
 	#endif // MAIN_API
 	#include "mfx/hw/FileIOPi3.h"
+	#include "mfx/hw/UniqueRscLinux.h"
 
  #if ! defined (MAIN_USE_VOID)
   #if MAIN_DISP == MAIN_DISP_LINUXFB
@@ -770,6 +771,21 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 
 #if defined (_MSC_VER)
 	MAIN_prog_init ();
+#endif
+
+#if fstb_IS (SYS, LINUX)
+	std::shared_ptr <mfx::hw::UniqueRscLinux>  lock_sptr;
+	try
+	{
+		lock_sptr = std::make_shared <mfx::hw::UniqueRscLinux> (
+			"pedalevite-unique"
+		);
+	}
+	catch (mfx::hw::UniqueRscLinux::Error &e)
+	{
+		fprintf ("Pedale Vite is already running!\n");
+		throw;
+	}
 #endif
 
 #if fstb_IS (SYS, LINUX) && ! defined (MAIN_USE_VOID)

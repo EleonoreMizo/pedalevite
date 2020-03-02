@@ -1344,6 +1344,8 @@ commonsrc += \
         ../../src/mfx/hw/MmapPtr.hpp \
         ../../src/mfx/hw/ThreadLinux.cpp \
         ../../src/mfx/hw/ThreadLinux.h \
+        ../../src/mfx/hw/UniqueRscLinux.cpp \
+        ../../src/mfx/hw/UniqueRscLinux.h \
         ../../src/mfx/hw/UserInputPi3.cpp \
         ../../src/mfx/hw/UserInputPi3.h \
         ../../src/mailbox.c \
