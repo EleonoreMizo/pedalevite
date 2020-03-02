@@ -55,7 +55,7 @@ UniqueRscLinux::UniqueRscLinux (std::string name)
 	assert (! name.empty ());
 	assert (name.find ('/') == std::string::npos);
 
-	_lock_fd = open (pathname.c_str (), O_CREAT | O_EXCL);
+	_lock_fd = open (_pathname.c_str (), O_CREAT | O_EXCL);
 	if (_lock_fd < 0)
 	{
 		throw Error (

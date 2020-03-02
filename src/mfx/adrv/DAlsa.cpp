@@ -195,11 +195,6 @@ int	DAlsa::do_start ()
 	if (ret_val == 0)
 	{
 		fprintf (stderr, "Audio now running...\n");
-
-		signal (SIGINT,  &signal_handler);
-		signal (SIGTERM, &signal_handler);
-		signal (SIGQUIT, &signal_handler);
-		signal (SIGHUP,  &signal_handler);
 	}
 
 	return ret_val;
@@ -629,14 +624,6 @@ fprintf (stderr, "w Short write\n");
 			}
 		}
 	}
-}
-
-
-
-void	DAlsa::signal_handler (int sig)
-{
-	fprintf (stderr, "\nSignal %d received, exiting...\n", sig);
-	_instance_ptr->_cb_ptr->request_exit ();
 }
 
 
