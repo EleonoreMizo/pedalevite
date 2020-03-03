@@ -1353,8 +1353,10 @@ sudo dpkg --purge rsyslog</pre>
 
 <p>Edit the boot parameters:</p>
 <pre class="term">sudo nano /boot/cmdline.txt</pre>
-<p>Add <code>fastboot noswap ro logo.nologo</code> at the very end of the line:</p>
-<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fastboot noswap ro logo.nologo</span></pre>
+<p>Add
+<code>fsck.mode=skip noswap ro logo.nologo</code>
+at the very end of the line:</p>
+<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fsck.mode=skip noswap ro logo.nologo</span></pre>
 
 <p>Replace some <code>var</code> subfolders with symbolic links on the
 RAM-disk:</p>
@@ -1384,6 +1386,7 @@ sudo ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf</pre>
 <p>These lines may also start with <code>PARTUUID=</code>.
 Also add the lines:</p>
 <pre class="term">tmpfs           /tmp            tmpfs   nosuid,nodev         0       0
+tmpfs           /var/lib/systemd/timesync tmpfs   nosuid,nodev         0       0
 tmpfs           /var/log        tmpfs   nosuid,nodev         0       0
 tmpfs           /var/tmp        tmpfs   nosuid,nodev         0       0</pre>
 
@@ -1670,6 +1673,11 @@ connectors.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Version history</h2>
+
+<p><b>r7, 2020-03-03</b></p>
+<ul>
+<li>Updated the setup of the read-only filesystem.</li>
+</ul>
 
 <p><b>r6, 2020-01-16</b></p>
 <ul>

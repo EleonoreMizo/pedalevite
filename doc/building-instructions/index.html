@@ -1500,8 +1500,11 @@ sudo dpkg --purge rsyslog</pre>
 
 <p>On édite les paramètres de boot&#8239;:</p>
 <pre class="term">sudo nano /boot/cmdline.txt</pre>
-<p>Ajouter <code>fastboot noswap ro logo.nologo</code> tout à la fin de la ligne&#8239;:</p>
-<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fastboot noswap ro logo.nologo</span></pre>
+<p>Ajouter
+<code>fsck.mode=skip noswap ro logo.nologo</code>
+tout à la fin de la
+ligne (il n’y en a qu’une seule dans le texte qui suit)&#8239;:</p>
+<pre class="term">dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait <span class="termhl">fsck.mode=skip noswap ro logo.nologo</span></pre>
 
 <p>Remplacer certains sous-répertoires de <code>var</code> par des liens
 symboliques sur le lecteur RAM&#8239;:</p>
@@ -1532,6 +1535,7 @@ disque&#8239;:</p>
 <p>Il se peut que ces lignes commencent par <code>PARTUUID=</code>.
 Ajouter également les ligne&#8239;:</p>
 <pre class="term">tmpfs           /tmp            tmpfs   nosuid,nodev         0       0
+tmpfs           /var/libsystemd/timesync tmpfs   nosuid,nodev         0       0
 tmpfs           /var/log        tmpfs   nosuid,nodev         0       0
 tmpfs           /var/tmp        tmpfs   nosuid,nodev         0       0</pre>
 
@@ -1573,10 +1577,18 @@ Pédale Vite est à présent opérationnel.</p>
 
 <p>Quand bien même correctement configuré, <code>timesyncd</code> peut avoir
 des difficultés à se connecter à un serveurs NTP.
-Vérifier avec&#8239;:</p>
+Cela peut arriver après une mise à jour.
+Commencer par passer le disque en lecture/écriture&#8239;:</p>
+<pre class="term">sudo mount -o remount,rw /</pre>
+<p>Vérifier les paramètres de synchronisation de la date avec la commande
+suivante&#8239;:</p>
 <pre class="term">timedatectl status</pre>
-<p><code>NTP service</code> doit être sur <code>active</code>, mais
-<code>System clock synchronized</code> peut donner un <code>no</code>,
+<p><code>NTP service</code> doit être sur <code>active</code>.
+Si ce n’est pas le cas, tapez&#8239;:</p>
+<pre class="term">sudo timedatectl set-ntp 1</pre>
+<p>Revérifier en répétant la commande d’avant.
+Dans tous les cas, il est possible que
+<code>System clock synchronized</code> soit coincé sur <code>no</code>,
 ce qui indique un problème d’accès aux serveurs NTP.
 Dans ce cas&#8239;:</p>
 <pre class="term">timedatectl timesync-status</pre>
@@ -1588,8 +1600,7 @@ Poll interval: 0 (min: 32s; max 34min 8s)
 attribués par défaut par le fournisseur d’accès internet) qui ne résolvent pas
 les adresses de serveurs NTP, pour je ne sais quelles raisons.
 On peut essayer de fixer d’autres DNS explicitement:</p>
-<pre class="term">sudo mount -o remount,rw /
-sudo rm /etc/resolv.conf
+<pre class="term">sudo rm /etc/resolv.conf
 sudo nano /etc/resolv.conf</pre>
 <p>Ajouter les lignes suivantes.
 Vous pouvez y mettre n’importe quelle adresse de serveur DNS qui
@@ -1842,6 +1853,11 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r7, 2020-03-03</b></p>
+<ul>
+<li>Mise à jour du passage en lecture seule du système de fichiers.</li>
+</ul>
 
 <p><b>r6, 2020-01-16</b></p>
 <ul>
