@@ -300,6 +300,23 @@ float	Approx::exp2 (float val)
 
 
 
+// Approximation is good close to 0, but diverges for larger absolute values.
+// A is the approximation accuracy (the bigger, the larger the valid range)
+// A = 10 is a good start
+template <int A, typename T>
+T	Approx::exp_m (T val)
+{
+	static_assert (A > 0, "A must be strictly positive");
+	static_assert (A <= 16, "A is too large, precision will suffer.");
+
+	const int      p = 1 << A;
+	const T        x = T (1) + val * (T (1) / p);
+
+	return ipowpc <p> (x);
+}
+
+
+
 /*
 ==============================================================================
 Name: fast_partial_exp2_int_16_to_int_32
