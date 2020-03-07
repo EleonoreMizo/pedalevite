@@ -735,6 +735,30 @@ T	ipowp (T x, U n)
 
 
 
+// Result looks optimal with all optimisations enabled
+template <int N, class T>
+T	ipowpc (T x)
+{
+	if (N == 0)
+	{
+		return T (1);
+	}
+	else if (N > 1)
+	{
+		T              y = ipowpc <N / 2> (x);
+		y *= y;
+		if ((N & 1) != 0)
+		{
+			y *= x;
+		}
+		return y;
+	}
+
+	return x;
+}
+
+
+
 template <class T>
 T	rcp_uint (int x)
 {

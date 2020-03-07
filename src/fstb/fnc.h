@@ -80,6 +80,8 @@ template <class T, class U>
 inline T       ipow (T x, U n);
 template <class T, class U>
 inline T       ipowp (T x, U n);
+template <int N, class T>
+inline T       ipowpc (T x);
 template <class T>
 inline T       rcp_uint (int x);
 template <class T>
