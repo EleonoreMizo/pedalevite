@@ -739,6 +739,8 @@ T	ipowp (T x, U n)
 template <int N, class T>
 T	ipowpc (T x)
 {
+	static_assert (N >= 0, "N must be positive or null.");
+
 	if (N == 0)
 	{
 		return T (1);
