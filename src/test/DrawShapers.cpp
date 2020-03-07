@@ -124,7 +124,6 @@ int	DrawShapers::draw_func (F fnc, std::string pathname, float xmin, float xmax)
 	const BufAlign src_arr { create_src (xmin, xmax) };
 	BufAlign       dst_arr (src_arr.size ());
 
-	const int      nbr_spl_align = (_nbr_spl + 3) & ~3;
 	fnc (dst_arr.data (), src_arr.data (), int (dst_arr.size ()));
 
 	return save_shaper_drawing (pathname, src_arr, dst_arr);

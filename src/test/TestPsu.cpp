@@ -77,14 +77,15 @@ int	TestPsu::perform_test ()
 	{
 		mfx::dsp::osc::SweepingSin ssin (sample_freq, 20.0, 20000.0);
 		ssin.generate (src.data (), len);
-		int32_t        phase = 0;
+		uint32_t       phase = 0;
 		const float    smul  = float (1ULL << 32);
 		const float    pmul  = 1.f / smul;
-		const int32_t  step  = fstb::round_int (0.25f / sample_freq * smul);
+		const uint32_t step  = fstb::round_int (0.25f / sample_freq * smul);
 		for (int pos = 0; pos < len; ++pos)
 		{
-			src [pos] *=
-				  fstb::Approx::sin_nick_2pi (float (phase) * pmul) * 2.f;
+			src [pos] *= fstb::Approx::sin_nick_2pi (
+				float (static_cast <int32_t> (phase)) * pmul
+			) * 2.f;
 			phase += step;
 		}
 	}
