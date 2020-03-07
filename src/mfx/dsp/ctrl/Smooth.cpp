@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cmath>
 
 
 
