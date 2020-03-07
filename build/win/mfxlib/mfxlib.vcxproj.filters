@@ -3234,6 +3234,9 @@
     <ClInclude Include="..\..\..\src\mfx\hw\UniqueRscLinux.h">
       <Filter>mfx\hw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Smooth.h">
+      <Filter>mfx\dsp\ctrl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4447,6 +4450,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\hw\UniqueRscLinux.cpp">
       <Filter>mfx\hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\Smooth.cpp">
+      <Filter>mfx\dsp\ctrl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

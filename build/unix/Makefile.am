@@ -362,6 +362,8 @@ commonsrc = \
         ../../src/mfx/dsp/ctrl/InertiaRc.h \
         ../../src/mfx/dsp/ctrl/Ramp.h \
         ../../src/mfx/dsp/ctrl/Ramp.hpp \
+        ../../src/mfx/dsp/ctrl/Smooth.cpp \
+        ../../src/mfx/dsp/ctrl/Smooth.h \
         ../../src/mfx/dsp/ctrl/VarBlock.h \
         ../../src/mfx/dsp/ctrl/VarBlock.hpp \
         ../../src/mfx/dsp/dly/BbdLine.cpp \
@@ -1432,6 +1434,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSlidingMax.h \
         ../../src/test/TestSlidingOp.cpp \
         ../../src/test/TestSlidingOp.h \
+        ../../src/test/TestSmooth.cpp \
+        ../../src/test/TestSmooth.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \

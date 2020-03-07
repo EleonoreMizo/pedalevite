@@ -443,6 +443,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGenChaos.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Smooth.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\DenormStop.h" />
@@ -1246,6 +1247,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscTri.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\OscVariSlope.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\lfo\PhaseGenChaos.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\ctrl\Smooth.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\DenormStop.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLine.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.cpp" />
