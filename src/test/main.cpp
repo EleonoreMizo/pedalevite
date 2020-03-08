@@ -73,6 +73,7 @@
 #include "test/TestSlidingMax.h"
 #include "test/TestSlidingOp.h"
 #include "test/TestSmooth.h"
+#include "test/TestSvf.h"
 
 #if fstb_IS (SYS, LINUX)
 	#include "mfx/adrv/CbInterface.h"
@@ -1859,6 +1860,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 0
+	if (ret_val == 0) ret_val = TestSvf::perform_test ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = TestSmooth::perform_test ();

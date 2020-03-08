@@ -474,6 +474,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/SqueezerOpDefect.hpp \
         ../../src/mfx/dsp/iir/SqueezerSimd.h \
         ../../src/mfx/dsp/iir/SqueezerSimd.hpp \
+        ../../src/mfx/dsp/iir/SvfCore.h \
+        ../../src/mfx/dsp/iir/SvfCore.hpp \
         ../../src/mfx/dsp/iir/Svf2p.cpp \
         ../../src/mfx/dsp/iir/Svf2p.h \
         ../../src/mfx/dsp/iir/Svf2p.hpp \
@@ -1436,6 +1438,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSlidingOp.h \
         ../../src/test/TestSmooth.cpp \
         ../../src/test/TestSmooth.h \
+        ../../src/test/TestSvf.cpp \
+        ../../src/test/TestSvf.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \

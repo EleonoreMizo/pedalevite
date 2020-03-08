@@ -535,6 +535,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerOpDefect.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfCore.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfCore.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Svf2p.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Svf2p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SvfCore4Simd.h" />
