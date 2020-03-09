@@ -90,6 +90,7 @@ public:
 	static void    build_ordered_node_lists (std::vector <int> &audio_list, std::vector <int> &sig_list, const doc::Preset &prog, const NodeMap &graph, const std::set <std::string> &aud_pi_list);
 	static int     build_ordered_node_list (std::vector <int> &slot_id_list, bool audio_first_flag, const doc::Preset &prog, const std::vector <std::string> &pi_aud_list);
 	static void    insert_slot_before (CnxSet &cnx_set, int slot_id_new, int slot_id_aft);
+	static void    insert_slot_after (CnxSet &cnx_set, int slot_id_new, int slot_id_bfr);
 	static void    disconnect_slot (CnxSet &cnx_set, int slot_id);
 	static void    move_slot (CnxSet &cnx_set, int slot_id, int pos_aud, const std::vector <int> &slot_list_aud, const NodeMap &graph);
 	static void    find_coverage (std::set <Node> &node_list_u, std::set <Node> &node_list_d, const NodeMap &graph, int slot_id);

@@ -300,6 +300,56 @@ void	ToolsRouting::insert_slot_before (CnxSet &cnx_set, int slot_id_new, int slo
 
 
 
+// Same as insert_slot_before(), but with everything reverted.
+void	ToolsRouting::insert_slot_after (CnxSet &cnx_set, int slot_id_new, int slot_id_bfr)
+{
+	assert (slot_id_new >= 0);
+
+	int            pin_target    = 0;
+	int            pin_cnx_new_i = 0;
+	int            pin_cnx_new_o = 0;
+
+	const doc::CnxEnd::Type type_cur =
+		  (slot_id_bfr < 0)
+		? doc::CnxEnd::Type_IO
+		: doc::CnxEnd::Type_NORMAL;
+
+	// Lists input connections for a single pin
+	CnxSet         cnx_cur_set_tgt;
+	list_preferred_cnx <piapi::Dir_OUT> (
+		cnx_cur_set_tgt, cnx_set, slot_id_bfr, pin_target
+	);
+
+	// Replaces these connections with the ones to the new slot
+	for (const auto &cnx : cnx_cur_set_tgt)
+	{
+		const doc::CnxEnd cnx_src (
+			doc::CnxEnd::Type_NORMAL, slot_id_new, pin_cnx_new_o
+		);
+		const doc::Cnx cnx_new (cnx_src, cnx.use_dst ());
+
+		cnx_set.erase (cnx);
+		cnx_set.insert (cnx_new);
+	}
+
+	// New in-between connection (cur -> new), if any
+	if (pin_target >= 0)
+	{
+		// Fixes slot_id_bfr for the audio input
+		if (slot_id_bfr < 0)
+		{
+			slot_id_bfr = 0;
+		}
+
+		cnx_set.insert (doc::Cnx (
+			doc::CnxEnd (type_cur                , slot_id_bfr, pin_target   ),
+			doc::CnxEnd (doc::CnxEnd::Type_NORMAL, slot_id_new, pin_cnx_new_i)
+		));
+	}
+}
+
+
+
 /*
 Keeps only the connections from/to one pin per port.
 The new connections are a product of the deleted one to preserve

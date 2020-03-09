@@ -70,7 +70,8 @@ SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_save_slot_id (-1)
 ,	_menu_sptr (std::make_shared <NWindow> (Entry_WINDOW ))
 ,	_typ_sptr ( std::make_shared <NText  > (Entry_TYPE   ))
-,	_ins_sptr ( std::make_shared <NText  > (Entry_INSERT ))
+,	_inb_sptr ( std::make_shared <NText  > (Entry_INS_BFR))
+,	_ina_sptr ( std::make_shared <NText  > (Entry_INS_AFT))
 ,	_del_sptr ( std::make_shared <NText  > (Entry_DELETE ))
 ,	_rtn_sptr ( std::make_shared <NText  > (Entry_ROUTING))
 ,	_prs_sptr ( std::make_shared <NText  > (Entry_PRESETS))
@@ -80,13 +81,15 @@ SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_lbl_sptr ( std::make_shared <NText  > (Entry_LABEL  ))
 ,	_label_param ()
 {
+	_ina_sptr->set_text ("Insert after");
 	_del_sptr->set_text ("Delete");
 	_rtn_sptr->set_text ("Routing\xE2\x80\xA6");
 	_prs_sptr->set_text ("Presets\xE2\x80\xA6");
 	_rst_sptr->set_text ("Reset");
 
 	_menu_sptr->push_back (_typ_sptr);
-	_menu_sptr->push_back (_ins_sptr);
+	_menu_sptr->push_back (_inb_sptr);
+	_menu_sptr->push_back (_ina_sptr);
 	_menu_sptr->push_back (_del_sptr);
 	_menu_sptr->push_back (_rtn_sptr);
 	_menu_sptr->push_back (_prs_sptr);
@@ -135,7 +138,8 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	const int      h_m   = _fnt_ptr->get_char_h ();
 
 	_typ_sptr->set_font (*_fnt_ptr);
-	_ins_sptr->set_font (*_fnt_ptr);
+	_inb_sptr->set_font (*_fnt_ptr);
+	_ina_sptr->set_font (*_fnt_ptr);
 	_del_sptr->set_font (*_fnt_ptr);
 	_rtn_sptr->set_font (*_fnt_ptr);
 	_prs_sptr->set_font (*_fnt_ptr);
@@ -145,17 +149,18 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_lbl_sptr->set_font (*_fnt_ptr);
 
 	_typ_sptr->set_coord (Vec2d (0, h_m * 0));
-	_ins_sptr->set_coord (Vec2d (0, h_m * 1));
-	_del_sptr->set_coord (Vec2d (0, h_m * 2));
-	_rtn_sptr->set_coord (Vec2d (0, h_m * 3));
-	_prs_sptr->set_coord (Vec2d (0, h_m * 4));
-	_rst_sptr->set_coord (Vec2d (0, h_m * 5));
-	_chn_sptr->set_coord (Vec2d (0, h_m * 6));
-	_frs_sptr->set_coord (Vec2d (0, h_m * 7));
-	_lbl_sptr->set_coord (Vec2d (0, h_m * 8));
+	_inb_sptr->set_coord (Vec2d (0, h_m * 1));
+	_ina_sptr->set_coord (Vec2d (0, h_m * 2));
+	_del_sptr->set_coord (Vec2d (0, h_m * 3));
+	_rtn_sptr->set_coord (Vec2d (0, h_m * 4));
+	_prs_sptr->set_coord (Vec2d (0, h_m * 5));
+	_rst_sptr->set_coord (Vec2d (0, h_m * 6));
+	_chn_sptr->set_coord (Vec2d (0, h_m * 7));
+	_frs_sptr->set_coord (Vec2d (0, h_m * 8));
+	_lbl_sptr->set_coord (Vec2d (0, h_m * 9));
 
 	_typ_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
-	_ins_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
+	_inb_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_del_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_rtn_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
 	_prs_sptr->set_frame (Vec2d (scr_w, 0), Vec2d ());
@@ -193,8 +198,11 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			switch (node_id)
 			{
-			case Entry_INSERT:
-				insert_slot ();
+			case Entry_INS_BFR:
+				insert_slot_before ();
+				break;
+			case Entry_INS_AFT:
+				insert_slot_after ();
 				break;
 			case Entry_DELETE:
 				delete_slot ();
@@ -373,13 +381,18 @@ void	SlotMenu::update_display ()
 	_typ_sptr->set_text (txt);
 	PageMgrInterface::add_nav (nav_list, Entry_TYPE);
 
-	_ins_sptr->set_text (_loc_edit._audio_flag ? "Insert before" : "Insert");
-	PageMgrInterface::add_nav (nav_list, Entry_INSERT);
+	_inb_sptr->set_text (_loc_edit._audio_flag ? "Insert before" : "Insert");
+	PageMgrInterface::add_nav (nav_list, Entry_INS_BFR);
 
+	_ina_sptr->show (exist_flag && _loc_edit._audio_flag);
 	_del_sptr->show (exist_flag);
 	_rtn_sptr->show (exist_flag);
 	if (exist_flag)
 	{
+		if (_loc_edit._audio_flag)
+		{
+			PageMgrInterface::add_nav (nav_list, Entry_INS_AFT);
+		}
 		PageMgrInterface::add_nav (nav_list, Entry_DELETE);
 		PageMgrInterface::add_nav (nav_list, Entry_ROUTING);
 	}
@@ -485,7 +498,8 @@ void	SlotMenu::reset_plugin ()
 
 
 
-void	SlotMenu::insert_slot ()
+// Works also with non-audio slots
+void	SlotMenu::insert_slot_before ()
 {
 	const int      slot_id_new  = _model_ptr->add_slot ();
 	if (_loc_edit._audio_flag)
@@ -498,6 +512,24 @@ void	SlotMenu::insert_slot ()
 		);
 		_model_ptr->set_routing (routing);
 	}
+	_loc_edit._slot_id = slot_id_new;
+
+	update_display ();
+}
+
+
+
+void	SlotMenu::insert_slot_after ()
+{
+	const int      slot_id_new  = _model_ptr->add_slot ();
+	assert (_loc_edit._audio_flag);
+	const int      slot_id_old  = _loc_edit._slot_id;
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	doc::Routing   routing      = preset.use_routing (); // Copy
+	ToolsRouting::insert_slot_after (
+		routing._cnx_audio_set, slot_id_new, slot_id_old
+	);
+	_model_ptr->set_routing (routing);
 	_loc_edit._slot_id = slot_id_new;
 
 	update_display ();

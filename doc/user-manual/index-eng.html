@@ -590,7 +590,14 @@ specific validation to do.</p>
 horizontal arrows.</p>
 <p><span class="ui">Insert before</span> adds an empty block in the chain
 before the selected effect.
-This empty block becomes the current effect and is immediately editable.</p>
+This empty block becomes the current effect and is immediately editable.
+If the effect doesn’t use any audio source, its position is irrelevant and
+the entry is simply called <span class="ui">Insert</span>.</p>
+<p>The following menu entries may or may not appear, depending on the
+nature and the current state of the effect&#8239;:</p>
+<p><span class="ui">Insert after</span> adds an empty block in the chain
+after the selected effect.
+This empty block becomes the current effect.</p>
 <p><span class="ui">Routing…</span> reaches a the
 <a href="#screen-fx-routing">routing menu</a> to connect, disconnect and move
 the effect within the audio graph.</p>
@@ -2839,6 +2846,12 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r30, 2020-03-09</b></p>
+<ul>
+<li>Added the possibility to insert an effect after another and not only
+before.</li>
+</ul>
 
 <p><b>r29, 2020-02-04</b></p>
 <ul>

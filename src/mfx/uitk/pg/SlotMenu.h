@@ -98,7 +98,8 @@ private:
 	{
 		Entry_WINDOW = 0,
 		Entry_TYPE,
-		Entry_INSERT,
+		Entry_INS_BFR,
+		Entry_INS_AFT,
 		Entry_DELETE,
 		Entry_ROUTING,
 		Entry_PRESETS,
@@ -114,7 +115,8 @@ private:
 	void           update_display ();
 	EvtProp        change_type (int dir);
 	void           reset_plugin ();
-	void           insert_slot ();
+	void           insert_slot_before ();
+	void           insert_slot_after ();
 	void           delete_slot ();
 	void           change_chn_pref ();
 	void           change_state_mode ();
@@ -137,7 +139,8 @@ private:
 
 	WinSPtr        _menu_sptr;
 	TxtSPtr        _typ_sptr;
-	TxtSPtr        _ins_sptr;
+	TxtSPtr        _inb_sptr;
+	TxtSPtr        _ina_sptr;
 	TxtSPtr        _del_sptr;
 	TxtSPtr        _rtn_sptr;
 	TxtSPtr        _prs_sptr;

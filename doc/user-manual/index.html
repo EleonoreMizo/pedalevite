@@ -665,7 +665,15 @@ validation particulière à effectuer.</p>
 des flèches horizontales.</p>
 <p><span class="ui">Insert before</span> rajoute un bloc vide dans la chaîne
 avant l’effet sélectionné.
-Ce bloc vide devient l’effet courant et est donc éditable immédiatement.</p>
+Ce bloc vide devient l’effet courant et est donc éditable immédiatement.
+Dans le cas d’un effet n’utilisant pas de source audio, sa position est sans
+objet et l’entrée de menu est appelée simplement 
+<span class="ui">Insert</span>.</p>
+<p>Les entrées suivantes peuvent ou non apparaître sur le menu, en fonction
+de la nature et de l’état courant de l’effet&#8239;:</p>
+<p><span class="ui">Insert after</span> rajoute un bloc vide dans la chaîne
+après l’effet sélectionné.
+Ce bloc vide devient l’effet courant.</span>
 <p><span class="ui">Routing…</span> permet d’accéder au
 <a href="#screen-fx-routing">menu de routing</a> pour connecter et déconnecter
 l’effet ainsi que le déplacer dans le graphe audio.</p>
@@ -3038,6 +3046,12 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r30, 2020-03-09</b></p>
+<ul>
+<li>Ajout de la possibilité d’insérer un effet après un autre (plutôt
+qu’avant).</li>
+</ul>
 
 <p><b>r29, 2020-02-04</b></p>
 <ul>
