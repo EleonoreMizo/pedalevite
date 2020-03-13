@@ -39,7 +39,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "hiir/def.h"
-#include "hiir/StageDataNeon.h"
+#include "hiir/StageDataNeonV4.h"
 
 #include <arm_neon.h>
 
@@ -62,12 +62,20 @@ class PhaseHalfPiNeon
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 1;
+
 	enum {         NBR_COEFS = NC };
 
 	               PhaseHalfPiNeon ();
-	               PhaseHalfPiNeon (const PhaseHalfPiNeon &other) = default;
-	PhaseHalfPiNeon &
-	               operator = (const PhaseHalfPiNeon &other)      = default;
+	               PhaseHalfPiNeon (const PhaseHalfPiNeon <NC> &other) = default;
+	               PhaseHalfPiNeon (PhaseHalfPiNeon <NC> &&other)      = default;
+	               ~PhaseHalfPiNeon ()                                 = default;
+
+	PhaseHalfPiNeon <NC> &
+	               operator = (const PhaseHalfPiNeon <NC> &other)      = default;
+	PhaseHalfPiNeon <NC> &
+	               operator = (PhaseHalfPiNeon <NC> &&other)           = default;
 
 	void           set_coefs (const double coef_arr []);
 
@@ -93,7 +101,7 @@ private:
 	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH };
 	enum {         NBR_PHASES  = 2 };
 
-	typedef std::array <StageDataNeon, NBR_STAGES + 1> Filter;  // Stage 0 contains only input memory
+	typedef std::array <StageDataNeonV4, NBR_STAGES + 1> Filter;  // Stage 0 contains only input memory
    typedef std::array <Filter, NBR_PHASES> FilterBiPhase;
 
 	FilterBiPhase  _filter;    // Should be the first member (thus easier to align)

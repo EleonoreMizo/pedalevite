@@ -79,25 +79,25 @@ private:
 
 #if fstb_IS (ARCHI, X86)
 	using Dwnspl42 = typename std::conditional <
-		(NC42 >= 12)
+		(NC42 >= 4)
 	,	hiir::Downsampler2xSse <NC42>
 	,	hiir::Downsampler2xFpu <NC42>
 	>::type;
 	using Dwnspl21 = typename std::conditional <
-		(NC21 >= 12)
+		(NC21 >= 4)
 	,	hiir::Downsampler2xSse <NC21>
 	,	hiir::Downsampler2xFpu <NC21>
 	>::type;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_IS (ARCHI, ARM) && (defined (__clang__) || fstb_WORD_SIZE == 64)
 	using Dwnspl42 = typename std::conditional <
-		(NC42 >= 12)
+		(NC42 >= 16)
+	,	hiir::Downsampler2xNeonOld <NC42>
 	,	hiir::Downsampler2xNeon <NC42>
-	,	hiir::Downsampler2xFpu <NC42>
 	>::type;
 	using Dwnspl21 = typename std::conditional <
-		(NC21 >= 12)
+		(NC21 >= 16)
+	,	hiir::Downsampler2xNeonOld <NC21>
 	,	hiir::Downsampler2xNeon <NC21>
-	,	hiir::Downsampler2xFpu <NC21>
 	>::type;
 #else
 	typedef hiir::Downsampler2xFpu <NC42> Dwnspl42;

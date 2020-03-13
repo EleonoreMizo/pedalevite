@@ -74,9 +74,9 @@ Upsampler2x3dnow <NC>::Upsampler2x3dnow ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
       mentioned in the class template parameter.
@@ -87,13 +87,13 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x3dnow <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
 		const int      stage = (i / STAGE_WIDTH) + 1;
 		const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coefs.m64_f32 [pos] = float (coef_arr [i]);
+		_filter [stage]._coefs.m64_f32 [pos] = DataType (coef_arr [i]);
 	}
 }
 
@@ -119,13 +119,13 @@ void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float in
 	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
 
 	StageData3dnow *  filter_ptr = &_filter [0];
-   __m64          result;
+	__m64          result;
 
 	__asm
 	{
 		movd           mm0, input
 		mov            edx, filter_ptr
-      punpckldq      mm0, mm0
+		punpckldq      mm0, mm0
 	}
 	StageProc3dnow <NBR_STAGES>::process_sample_pos ();
 	__asm
@@ -135,8 +135,8 @@ void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float in
 		femms
 	}
 
-   out_0 = _filter [NBR_STAGES]._mem.m64_f32 [1];
-   out_1 = _filter [NBR_STAGES]._mem.m64_f32 [0];
+	out_0 = _filter [NBR_STAGES]._mem.m64_f32 [1];
+	out_1 = _filter [NBR_STAGES]._mem.m64_f32 [0];
 }
 
 
@@ -159,8 +159,8 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
@@ -181,7 +181,7 @@ void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr 
 	loop_sample:
 
 		movd           mm0, [esi + eax*4]
-      punpckldq      mm0, mm0
+		punpckldq      mm0, mm0
 	}
 #if defined (_MSC_VER) && ! defined (NDEBUG)
 	__asm push        eax
@@ -195,14 +195,14 @@ void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr 
 		inc            eax
 		movq           [edx + CURR_CELL + 1*8], mm0
 		movd           [edi + eax*8 + 4], mm0
-      punpckhdq      mm0, mm0
+		punpckhdq      mm0, mm0
 		movd           [edi + eax*8    ], mm0
 
 		jl             loop_sample
 
 		femms
 	}
-   // pswapd + movq would have been better to store result (but only for athlon)
+	// pswapd + movq would have been better to store result (but only for athlon)
 }
 
 // We could write the same specialisation for <7>
@@ -230,7 +230,7 @@ void	Upsampler2x3dnow <8>::process_block (float out_ptr [], const float in_ptr [
 	loop_sample:
 
 		movd           mm0, [esi + eax*4]
-      punpckldq      mm0, mm0
+		punpckldq      mm0, mm0
 
 		movq           mm1, mm2
 		movq           mm2, mm0
@@ -260,7 +260,7 @@ void	Upsampler2x3dnow <8>::process_block (float out_ptr [], const float in_ptr [
 		movq           mm6, mm0
 
 		movd           [edi + eax*8 + 4], mm0
-      punpckhdq      mm0, mm0
+		punpckhdq      mm0, mm0
 		movd           [edi + eax*8    ], mm0
 
 		jl             loop_sample

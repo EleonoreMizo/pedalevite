@@ -1,14 +1,11 @@
 /*****************************************************************************
 
         Upsampler2xNeon.h
-        Author: Laurent de Soras, 2016
+        Author: Laurent de Soras, 2020
 
 Upsamples by a factor 2 the input signal, using NEON instruction set.
 
 This object must be aligned on a 16-byte boundary!
-
-If the number of coefficients is 2 or 3 modulo 4, the output is delayed from
-1 sample, compared to the theoretical formula (or FPU implementation).
 
 Template parameters:
 	- NC: number of coefficients, > 0
@@ -37,7 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageDataNeon.h"
+#include "hiir/StageDataNeonV2.h"
 
 #include <array>
 
@@ -58,12 +55,20 @@ class Upsampler2xNeon
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 1;
+
 	enum {         NBR_COEFS = NC };
 
 	               Upsampler2xNeon ();
-	               Upsampler2xNeon (const Upsampler2xNeon &other)   = default;
-	Upsampler2xNeon &
-	               operator = (const Upsampler2xNeon &other)        = default;
+	               Upsampler2xNeon (const Upsampler2xNeon <NC> &other) = default;
+	               Upsampler2xNeon (Upsampler2xNeon <NC> &&other)      = default;
+	               ~Upsampler2xNeon ()                                 = default;
+
+	Upsampler2xNeon <NC> &
+	               operator = (const Upsampler2xNeon <NC> &other)      = default;
+	Upsampler2xNeon <NC> &
+	               operator = (Upsampler2xNeon <NC> &&other)           = default;
 
 	void           set_coefs (const double coef_arr [NBR_COEFS]);
 	inline void    process_sample (float &out_0, float &out_1, float input);
@@ -82,12 +87,13 @@ protected:
 
 private:
 
-	enum {         STAGE_WIDTH = 4 };
-	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH };
+	static const int  _stage_width = 2;
+	static const int  _nbr_stages  = (NBR_COEFS + _stage_width - 1) / _stage_width;
 
-	typedef	std::array <StageDataNeon, NBR_STAGES + 1>	Filter;	// Stage 0 contains only input memory
+	// Stage 0 contains only input memory
+	typedef std::array <StageDataNeonV2, _nbr_stages + 1> Filter;
 
-	Filter         _filter;    // Should be the first member (thus easier to align)
+	Filter         _filter;		// Should be the first member (thus easier to align)
 
 
 

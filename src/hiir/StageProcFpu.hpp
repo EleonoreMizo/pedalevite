@@ -42,34 +42,30 @@ namespace hiir
 
 
 
-template <>
-hiir_FORCEINLINE void	StageProcFpu <1>::process_sample_pos (const int nbr_coefs, float &spl_0, float &/*spl_1*/, const float coef [], float x [], float y [])
+template <typename DT>
+void	StageProcFpu <1, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &/*spl_1*/, const DT coef [], DT x [], DT y [])
 {
 	const int      last = nbr_coefs - 1;
-	const float    temp = (spl_0 - y [last]) * coef [last] + x [last];
+	const DT       temp = (spl_0 - y [last]) * coef [last] + x [last];
 	x [last] = spl_0;
 	y [last] = temp;
 	spl_0    = temp;
 }
 
-
-
-template <>
-hiir_FORCEINLINE void	StageProcFpu <0>::process_sample_pos (const int /*nbr_coefs*/, float &/*spl_0*/, float &/*spl_1*/, const float /*coef*/ [], float /*x*/ [], float /*y*/ [])
+template <typename DT>
+void	StageProcFpu <0, DT>::process_sample_pos (const int /*nbr_coefs*/, DT &/*spl_0*/, DT &/*spl_1*/, const DT /*coef*/ [], DT /*x*/ [], DT /*y*/ [])
 {
 	// Nothing (stops recursion)
 }
 
-
-
-template <int REMAINING>
-void	StageProcFpu <REMAINING>::process_sample_pos (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y [])
+template <int REMAINING, typename DT>
+void	StageProcFpu <REMAINING, DT>::process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y [])
 {
 	const int      cnt    = nbr_coefs - REMAINING;
 
-	const float    temp_0 =
+	const DT       temp_0 =
 		(spl_0 - y [cnt + 0]) * coef [cnt + 0] + x [cnt + 0];
-	const float    temp_1 =
+	const DT       temp_1 =
 		(spl_1 - y [cnt + 1]) * coef [cnt + 1] + x [cnt + 1];
 
 	x [cnt + 0] = spl_0;
@@ -81,7 +77,7 @@ void	StageProcFpu <REMAINING>::process_sample_pos (const int nbr_coefs, float &s
 	spl_0       = temp_0;
 	spl_1       = temp_1;
 
-	StageProcFpu <REMAINING - 2>::process_sample_pos (
+	StageProcFpu <REMAINING - 2, DT>::process_sample_pos (
 		nbr_coefs,
 		spl_0,
 		spl_1,
@@ -93,34 +89,30 @@ void	StageProcFpu <REMAINING>::process_sample_pos (const int nbr_coefs, float &s
 
 
 
-template <>
-hiir_FORCEINLINE void	StageProcFpu <1>::process_sample_neg (const int nbr_coefs, float &spl_0, float &/*spl_1*/, const float coef [], float x [], float y [])
+template <typename DT>
+void	StageProcFpu <1, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &/*spl_1*/, const DT coef [], DT x [], DT y [])
 {
 	const int      last = nbr_coefs - 1;
-	const float    temp = (spl_0 + y [last]) * coef [last] - x [last];
+	const DT       temp = (spl_0 + y [last]) * coef [last] - x [last];
 	x [last] = spl_0;
 	y [last] = temp;
 	spl_0    = temp;
 }
 
-
-
-template <>
-hiir_FORCEINLINE void	StageProcFpu <0>::process_sample_neg (const int /*nbr_coefs*/, float &/*spl_0*/, float &/*spl_1*/, const float /*coef*/ [], float /*x*/ [], float /*y*/ [])
+template <typename DT>
+void	StageProcFpu <0, DT>::process_sample_neg (const int /*nbr_coefs*/, DT &/*spl_0*/, DT &/*spl_1*/, const DT /*coef*/ [], DT /*x*/ [], DT /*y*/ [])
 {
 	// Nothing (stops recursion)
 }
 
-
-
-template <int REMAINING>
-void	StageProcFpu <REMAINING>::process_sample_neg (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y [])
+template <int REMAINING, typename DT>
+void	StageProcFpu <REMAINING, DT>::process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y [])
 {
 	const int      cnt    = nbr_coefs - REMAINING;
 
-	const float    temp_0 =
+	const DT       temp_0 =
 		(spl_0 + y [cnt + 0]) * coef [cnt + 0] - x [cnt + 0];
-	const float    temp_1 =
+	const DT       temp_1 =
 		(spl_1 + y [cnt + 1]) * coef [cnt + 1] - x [cnt + 1];
 
 	x [cnt + 0] = spl_0;
@@ -132,7 +124,7 @@ void	StageProcFpu <REMAINING>::process_sample_neg (const int nbr_coefs, float &s
 	spl_0       = temp_0;
 	spl_1       = temp_1;
 
-	StageProcFpu <REMAINING - 2>::process_sample_neg (
+	StageProcFpu <REMAINING - 2, DT>::process_sample_neg (
 		nbr_coefs,
 		spl_0,
 		spl_1,

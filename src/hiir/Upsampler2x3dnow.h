@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "hiir/def.h"
 #include "hiir/StageData3dnow.h"
 
 #include <array>
@@ -53,12 +54,24 @@ class Upsampler2x3dnow
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 1;
+
 	enum {         NBR_COEFS = NC };
 
 	               Upsampler2x3dnow ();
+	               Upsampler2x3dnow (const Upsampler2x3dnow <NC> &other) = default;
+	               Upsampler2x3dnow (Upsampler2x3dnow <NC> &&other)      = default;
+	               ~Upsampler2x3dnow ()                             = default;
+
+	Upsampler2x3dnow <NC> &
+	               operator = (const Upsampler2x3dnow <NC> &other)  = default;
+	Upsampler2x3dnow <NC> &
+	               operator = (Upsampler2x3dnow <NC> &&other)       = default;
 
 	void           set_coefs (const double coef_arr [NBR_COEFS]);
-	inline void    process_sample (float &out_0, float &out_1, float input);
+	hiir_FORCEINLINE void
+	               process_sample (float &out_0, float &out_1, float input);
 	void           process_block (float out_ptr [], const float in_ptr [], long nbr_spl);
 	void           clear_buffers ();
 
@@ -87,8 +100,8 @@ private:
 
 private:
 
-	bool           operator == (const Upsampler2x3dnow <NC> &other);
-	bool           operator != (const Upsampler2x3dnow <NC> &other);
+	bool           operator == (const Upsampler2x3dnow <NC> &other) = delete;
+	bool           operator != (const Upsampler2x3dnow <NC> &other) = delete;
 
 }; // class Upsampler2x3dnow
 

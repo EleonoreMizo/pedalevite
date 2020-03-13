@@ -55,9 +55,20 @@ class PhaseHalfPi3dnow
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 1;
+
 	enum {         NBR_COEFS = NC };
 
 	               PhaseHalfPi3dnow ();
+	               PhaseHalfPi3dnow (const PhaseHalfPi3dnow <NC> &other) = default;
+	               PhaseHalfPi3dnow (PhaseHalfPi3dnow <NC> &&other)      = default;
+	               ~PhaseHalfPi3dnow ()                            = default;
+
+	PhaseHalfPi3dnow <NC> &
+	               operator = (const PhaseHalfPi3dnow <NC> &other) = default;
+	PhaseHalfPi3dnow <NC> &
+	               operator = (PhaseHalfPi3dnow <NC> &&other)      = default;
 
 	void           set_coefs (const double coef_arr []);
 
@@ -96,8 +107,8 @@ private:
 
 private:
 
-	bool           operator == (const PhaseHalfPi3dnow <NC> &other);
-	bool           operator != (const PhaseHalfPi3dnow <NC> &other);
+	bool           operator == (const PhaseHalfPi3dnow <NC> &other) = delete;
+	bool           operator != (const PhaseHalfPi3dnow <NC> &other) = delete;
 
 }; // class PhaseHalfPi3dnow
 

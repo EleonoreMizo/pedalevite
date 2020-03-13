@@ -78,12 +78,12 @@ Downsampler2x3dnow <NC>::Downsampler2x3dnow ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
@@ -91,13 +91,13 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x3dnow <NC>::set_coefs (const double coef_arr [])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
 		const int      stage = (i / STAGE_WIDTH) + 1;
 		const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coefs.m64_f32 [pos] = float (coef_arr [i]);
+		_filter [stage]._coefs.m64_f32 [pos] = DataType (coef_arr [i]);
 	}
 }
 
@@ -107,7 +107,7 @@ void	Downsampler2x3dnow <NC>::set_coefs (const double coef_arr [])
 ==============================================================================
 Name: process_sample
 Description:
-   Downsamples (x2) one pair of samples, to generate one output sample.
+	Downsamples (x2) one pair of samples, to generate one output sample.
 Input parameters:
 	- in_ptr: pointer on the two samples to decimate
 Returns: Samplerate-reduced sample.
@@ -118,7 +118,7 @@ Throws: Nothing
 template <int NC>
 float	Downsampler2x3dnow <NC>::process_sample (const float in_ptr [2])
 {
-	assert (in_ptr != 0);
+	assert (in_ptr != nullptr);
 
 	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
 
@@ -152,7 +152,7 @@ float	Downsampler2x3dnow <NC>::process_sample (const float in_ptr [2])
 ==============================================================================
 Name: process_block
 Description:
-   Downsamples (x2) a block of samples.
+	Downsamples (x2) a block of samples.
 	Input and output blocks may overlap, see assert() for details.
 Input parameters:
 	- in_ptr: Input array, containing nbr_spl * 2 samples.
@@ -166,8 +166,8 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (in_ptr != 0);
-	assert (out_ptr != 0);
+	assert (in_ptr  != nullptr);
+	assert (out_ptr != nullptr);
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl * 2);
 	assert (nbr_spl > 0);
 
@@ -281,17 +281,18 @@ void	Downsampler2x3dnow <8>::process_block (float out_ptr [], const float in_ptr
 }
 
 
+
 /*
 ==============================================================================
 Name: process_sample_split
 Description:
-   Split (spectrum-wise) in half a pair of samples. The lower part of the
-   spectrum is a classic downsampling, equivalent to the output of
-   process_sample().
-   The higher part is the complementary signal: original filter response
-   is flipped from left to right, becoming a high-pass filter with the same
-   cutoff frequency. This signal is then critically sampled (decimation by 2),
-   flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
+	Split (spectrum-wise) in half a pair of samples. The lower part of the
+	spectrum is a classic downsampling, equivalent to the output of
+	process_sample().
+	The higher part is the complementary signal: original filter response
+	is flipped from left to right, becoming a high-pass filter with the same
+	cutoff frequency. This signal is then critically sampled (decimation by 2),
+	flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
 Input parameters:
 	- in_ptr: pointer on the pair of input samples
 Output parameters:
@@ -304,7 +305,7 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x3dnow <NC>::process_sample_split (float &low, float &high, const float in_ptr [2])
 {
-	assert (in_ptr != 0);
+	assert (in_ptr != nullptr);
 
 	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
 
@@ -344,22 +345,22 @@ void	Downsampler2x3dnow <NC>::process_sample_split (float &low, float &high, con
 ==============================================================================
 Name: process_block_split
 Description:
-   Split (spectrum-wise) in half a block of samples. The lower part of the
-   spectrum is a classic downsampling, equivalent to the output of
-   process_block().
-   The higher part is the complementary signal: original filter response
-   is flipped from left to right, becoming a high-pass filter with the same
-   cutoff frequency. This signal is then critically sampled (decimation by 2),
-   flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
+	Split (spectrum-wise) in half a block of samples. The lower part of the
+	spectrum is a classic downsampling, equivalent to the output of
+	process_block().
+	The higher part is the complementary signal: original filter response
+	is flipped from left to right, becoming a high-pass filter with the same
+	cutoff frequency. This signal is then critically sampled (decimation by 2),
+	flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
 	Input and output blocks may overlap, see assert() for details.
 Input parameters:
 	- in_ptr: Input array, containing nbr_spl * 2 samples.
 	- nbr_spl: Number of samples for each output, > 0
 Output parameters:
 	- out_l_ptr: Array for the output samples, lower part of the spectrum
-      (downsampling). Capacity: nbr_spl samples.
+		(downsampling). Capacity: nbr_spl samples.
 	- out_h_ptr: Array for the output samples, higher part of the spectrum.
-      Capacity: nbr_spl samples.
+		Capacity: nbr_spl samples.
 Throws: Nothing
 ==============================================================================
 */
@@ -367,10 +368,10 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x3dnow <NC>::process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (in_ptr != 0);
-	assert (out_l_ptr != 0);
+	assert (in_ptr    != nullptr);
+	assert (out_l_ptr != nullptr);
 	assert (out_l_ptr <= in_ptr || out_l_ptr >= in_ptr + nbr_spl * 2);
-	assert (out_h_ptr != 0);
+	assert (out_h_ptr != nullptr);
 	assert (out_h_ptr <= in_ptr || out_h_ptr >= in_ptr + nbr_spl * 2);
 	assert (out_h_ptr != out_l_ptr);
 	assert (nbr_spl > 0);

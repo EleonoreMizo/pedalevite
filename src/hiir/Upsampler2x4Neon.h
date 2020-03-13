@@ -36,7 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "hiir/def.h"
-#include "hiir/StageDataNeon.h"
+#include "hiir/StageDataNeonV4.h"
 
 #include <arm_neon.h>
 
@@ -59,9 +59,20 @@ class Upsampler2x4Neon
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 4;
+
 	enum {         NBR_COEFS = NC };
 
 	               Upsampler2x4Neon ();
+	               Upsampler2x4Neon (const Upsampler2x4Neon <NC> &other) = default;
+	               Upsampler2x4Neon (Upsampler2x4Neon <NC> &&other)      = default;
+	               ~Upsampler2x4Neon ()                            = default;
+
+	Upsampler2x4Neon <NC> &
+	               operator = (const Upsampler2x4Neon <NC> &other) = default;
+	Upsampler2x4Neon <NC> &
+	               operator = (Upsampler2x4Neon <NC> &&other)      = default;
 
 	void				set_coefs (const double coef_arr [NBR_COEFS]);
 	hiir_FORCEINLINE void
@@ -82,7 +93,7 @@ protected:
 
 private:
 
-	typedef std::array <StageDataNeon, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
+	typedef std::array <StageDataNeonV4, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
 
 	Filter         _filter; // Should be the first member (thus easier to align)
 

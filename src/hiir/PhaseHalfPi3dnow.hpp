@@ -79,12 +79,12 @@ PhaseHalfPi3dnow <NC>::PhaseHalfPi3dnow ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
@@ -92,7 +92,7 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPi3dnow <NC>::set_coefs (const double coef_arr [])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
    for (int phase = 0; phase < NBR_PHASES; ++phase)
    {
@@ -100,7 +100,7 @@ void	PhaseHalfPi3dnow <NC>::set_coefs (const double coef_arr [])
 	   {
 		   const int      stage = (i / STAGE_WIDTH) + 1;
 		   const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-		   _filter [phase] [stage]._coefs.m64_f32 [pos] = float (coef_arr [i]);
+		   _filter [phase] [stage]._coefs.m64_f32 [pos] = DataType (coef_arr [i]);
 	   }
    }
 }
@@ -111,7 +111,7 @@ void	PhaseHalfPi3dnow <NC>::set_coefs (const double coef_arr [])
 ==============================================================================
 Name: process_sample
 Description:
-	 From one input sample, generates two samples with a pi/2 phase shift.
+	From one input sample, generates two samples with a pi/2 phase shift.
 Input parameters:
 	- input: The input sample.
 Output parameters:
@@ -158,7 +158,7 @@ void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float in
 ==============================================================================
 Name: process_block
 Description:
-   From a block of samples, generates two blocks of samples, with a pi/2
+	From a block of samples, generates two blocks of samples, with a pi/2
 	phase shift between these signals.
 	Input and output blocks may overlap, see assert() for details.
 Input parameters:
@@ -179,9 +179,9 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (out_0_ptr != 0);
-	assert (out_1_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_0_ptr != nullptr);
+	assert (out_1_ptr != nullptr);
+	assert (in_ptr    != nullptr);
 	assert (out_0_ptr <= in_ptr || out_0_ptr >= in_ptr + nbr_spl);
 	assert (out_1_ptr <= in_ptr || out_1_ptr >= in_ptr + nbr_spl);
 	assert (out_0_ptr + nbr_spl <= out_1_ptr || out_1_ptr + nbr_spl <= out_0_ptr);
@@ -194,68 +194,68 @@ void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [
 		++ pos;
 	}
 
-   if (pos < nbr_spl)
-   {
-      float          prev = _prev;
+	if (pos < nbr_spl)
+	{
+		float          prev = _prev;
 
-	   enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]) };
+		enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]) };
 
-	   StageData3dnow *  filter_ptr = &_filter [0] [0];
-	   StageData3dnow *  filter2_ptr = &_filter [1] [0];
+		StageData3dnow *  filter_ptr = &_filter [0] [0];
+		StageData3dnow *  filter2_ptr = &_filter [1] [0];
 
-      __asm
-	   {
-         push           ebx
+		__asm
+		{
+			push           ebx
 
-		   mov            esi, in_ptr
-		   mov            edi, out_0_ptr
-         mov            ecx, out_1_ptr
-		   mov            eax, nbr_spl
-		   mov            edx, filter_ptr
-         mov            ebx, filter2_ptr
-		   lea            esi, [esi + eax*4]
-		   lea            edi, [edi + eax*4 - 4]
-		   lea            ecx, [ecx + eax*4 - 4]
-		   neg            eax
-         add            eax, pos
-         movd           mm0, prev
+			mov            esi, in_ptr
+			mov            edi, out_0_ptr
+			mov            ecx, out_1_ptr
+			mov            eax, nbr_spl
+			mov            edx, filter_ptr
+			mov            ebx, filter2_ptr
+			lea            esi, [esi + eax*4]
+			lea            edi, [edi + eax*4 - 4]
+			lea            ecx, [ecx + eax*4 - 4]
+			neg            eax
+			add            eax, pos
+			movd           mm0, prev
 
-	   loop_sample:
+		loop_sample:
 
-		   movd           mm3, [esi + eax*4]
-         punpckldq      mm0, mm3
-	   }
+			movd           mm3, [esi + eax*4]
+			punpckldq      mm0, mm3
+		}
 #if defined (_MSC_VER) && ! defined (NDEBUG)
-	   __asm push        eax
-	   __asm push        ecx
+		__asm push        eax
+		__asm push        ecx
 #endif
-	   StageProc3dnow <NBR_STAGES>::process_sample_neg ();
+		StageProc3dnow <NBR_STAGES>::process_sample_neg ();
 #if defined (_MSC_VER) && ! defined (NDEBUG)
-	   __asm pop         ecx
-	   __asm pop         eax
+		__asm pop         ecx
+		__asm pop         eax
 #endif
-	   __asm
-	   {
-		   inc            eax
-		   movq           [edx + CURR_CELL + 1*8], mm0
-         xchg           edx, ebx
-		   movd           [ecx + eax*4], mm0
-         punpckhdq      mm0, mm0
-		   movd           [edi + eax*4], mm0
+		__asm
+		{
+			inc            eax
+			movq           [edx + CURR_CELL + 1*8], mm0
+			xchg           edx, ebx
+			movd           [ecx + eax*4], mm0
+			punpckhdq      mm0, mm0
+			movd           [edi + eax*4], mm0
 
-         movq           mm0, mm3
+			movq           mm0, mm3
 
-		   jl             loop_sample
+			jl             loop_sample
 
-         movd           prev, mm3
+			movd           prev, mm3
 
-         femms
-         pop            ebx
-	   }
+			femms
+			pop            ebx
+		}
 
-      _phase = (nbr_spl - pos) & 1;
-      _prev  = prev;
-   }
+		_phase = (nbr_spl - pos) & 1;
+		_prev  = prev;
+	}
 }
 
 #if defined (_MSC_VER)
@@ -277,14 +277,14 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPi3dnow <NC>::clear_buffers ()
 {
-   for (int phase = 0; phase < NBR_PHASES; ++phase)
-   {
-	   for (int i = 0; i < NBR_STAGES + 1; ++i)
-	   {
-		   _filter [phase] [i]._mem.m64_f32 [0] = 0;
-		   _filter [phase] [i]._mem.m64_f32 [1] = 0;
-	   }
-   }
+	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	{
+		for (int i = 0; i < NBR_STAGES + 1; ++i)
+		{
+			_filter [phase] [i]._mem.m64_f32 [0] = 0;
+			_filter [phase] [i]._mem.m64_f32 [1] = 0;
+		}
+	}
 }
 
 

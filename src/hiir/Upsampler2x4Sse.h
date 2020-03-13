@@ -59,9 +59,20 @@ class Upsampler2x4Sse
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 4;
+
 	enum {         NBR_COEFS = NC };
 
 	               Upsampler2x4Sse ();
+	               Upsampler2x4Sse (const Upsampler2x4Sse <NC> &other) = default;
+	               Upsampler2x4Sse (Upsampler2x4Sse <NC> &&other)      = default;
+	               ~Upsampler2x4Sse ()                            = default;
+
+	Upsampler2x4Sse <NC> &
+	               operator = (const Upsampler2x4Sse <NC> &other) = default;
+	Upsampler2x4Sse <NC> &
+	               operator = (Upsampler2x4Sse <NC> &&other)      = default;
 
 	void				set_coefs (const double coef_arr [NBR_COEFS]);
 	hiir_FORCEINLINE void
@@ -91,8 +102,8 @@ private:
 
 private:
 
-	bool           operator == (const Upsampler2x4Sse <NC> &other) const;
-	bool           operator != (const Upsampler2x4Sse <NC> &other) const;
+	bool           operator == (const Upsampler2x4Sse <NC> &other) const = delete;
+	bool           operator != (const Upsampler2x4Sse <NC> &other) const = delete;
 
 }; // class Upsampler2x4Sse
 

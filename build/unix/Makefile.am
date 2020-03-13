@@ -176,33 +176,23 @@ commonsrc = \
         ../../src/fstb/ToolsSimd.h \
         ../../src/fstb/ToolsSimd.hpp \
         ../../src/hiir/def.h \
-        ../../src/hiir/Downsampler2x4Neon.h \
-        ../../src/hiir/Downsampler2x4Neon.hpp \
+        ../../src/hiir/Downsampler2xF64Fpu.h \
         ../../src/hiir/Downsampler2xFpu.h \
-        ../../src/hiir/Downsampler2xFpu.hpp \
-        ../../src/hiir/Downsampler2xNeon.h \
-        ../../src/hiir/Downsampler2xNeon.hpp \
+        ../../src/hiir/Downsampler2xFpuTpl.h \
+        ../../src/hiir/Downsampler2xFpuTpl.hpp \
         ../../src/hiir/fnc.h \
         ../../src/hiir/fnc.hpp \
+        ../../src/hiir/PhaseHalfPiF64Fpu.h \
         ../../src/hiir/PhaseHalfPiFpu.h \
-        ../../src/hiir/PhaseHalfPiFpu.hpp \
-        ../../src/hiir/PhaseHalfPiNeon.h \
-        ../../src/hiir/PhaseHalfPiNeon.hpp \
+        ../../src/hiir/PhaseHalfPiFpuTpl.h \
+        ../../src/hiir/PhaseHalfPiFpuTpl.hpp \
         ../../src/hiir/PolyphaseIir2Designer.cpp \
         ../../src/hiir/PolyphaseIir2Designer.h \
-        ../../src/hiir/StageDataNeon.h \
-        ../../src/hiir/StageProc4Neon.h \
-        ../../src/hiir/StageProc4Neon.hpp \
         ../../src/hiir/StageProcFpu.h \
         ../../src/hiir/StageProcFpu.hpp \
-        ../../src/hiir/StageProcNeon.h \
-        ../../src/hiir/StageProcNeon.hpp \
-        ../../src/hiir/Upsampler2x4Neon.h \
-        ../../src/hiir/Upsampler2x4Neon.hpp \
         ../../src/hiir/Upsampler2xFpu.h \
-        ../../src/hiir/Upsampler2xFpu.hpp \
-        ../../src/hiir/Upsampler2xNeon.h \
-        ../../src/hiir/Upsampler2xNeon.hpp \
+        ../../src/hiir/Upsampler2xFpuTpl.h \
+        ../../src/hiir/Upsampler2xFpuTpl.hpp \
         ../../src/mfx/adrv/CbInterface.cpp \
         ../../src/mfx/adrv/CbInterface.h \
         ../../src/mfx/adrv/DManual.cpp \
@@ -1303,6 +1293,85 @@ commonsrc = \
         ../../src/mfx/WaMsgQueue.h \
         ../../src/mfx/WorldAudio.cpp \
         ../../src/mfx/WorldAudio.h
+
+if ARM
+
+commonsrc += \
+        ../../src/hiir/Downsampler2x4Neon.h \
+        ../../src/hiir/Downsampler2x4Neon.hpp \
+        ../../src/hiir/Downsampler2xNeon.h \
+        ../../src/hiir/Downsampler2xNeon.hpp \
+        ../../src/hiir/Downsampler2xNeonOld.h \
+        ../../src/hiir/Downsampler2xNeonOld.hpp \
+        ../../src/hiir/fnc_neon.h \
+        ../../src/hiir/fnc_neon.hpp \
+        ../../src/hiir/PhaseHalfPi4Neon.h \
+        ../../src/hiir/PhaseHalfPi4Neon.hpp \
+        ../../src/hiir/PhaseHalfPiNeon.h \
+        ../../src/hiir/PhaseHalfPiNeon.hpp \
+        ../../src/hiir/StageDataNeonV2.h \
+        ../../src/hiir/StageDataNeonV4.h \
+        ../../src/hiir/StageProc4Neon.h \
+        ../../src/hiir/StageProc4Neon.hpp \
+        ../../src/hiir/StageProcNeonV2.h \
+        ../../src/hiir/StageProcNeonV2.hpp \
+        ../../src/hiir/StageProcNeonV4.h \
+        ../../src/hiir/StageProcNeonV4.hpp \
+        ../../src/hiir/Upsampler2x4Neon.h \
+        ../../src/hiir/Upsampler2x4Neon.hpp \
+        ../../src/hiir/Upsampler2xNeon.h \
+        ../../src/hiir/Upsampler2xNeon.hpp \
+        ../../src/hiir/Upsampler2xNeonOld.h \
+        ../../src/hiir/Upsampler2xNeonOld.hpp
+
+endif
+
+if X86
+
+commonsrc += \
+        ../../src/hiir/Downsampler2x2F64Sse2.h \
+        ../../src/hiir/Downsampler2x2F64Sse2.hpp \
+        ../../src/hiir/Downsampler2x4Sse.h \
+        ../../src/hiir/Downsampler2x4Sse.hpp \
+        ../../src/hiir/Downsampler2xF64Sse2.h \
+        ../../src/hiir/Downsampler2xF64Sse2.hpp \
+        ../../src/hiir/Downsampler2xSse.h \
+        ../../src/hiir/Downsampler2xSse.hpp \
+        ../../src/hiir/Downsampler2xSseOld.h \
+        ../../src/hiir/Downsampler2xSseOld.hpp \
+        ../../src/hiir/PhaseHalfPi2F64Sse2.h \
+        ../../src/hiir/PhaseHalfPi2F64Sse2.hpp \
+        ../../src/hiir/PhaseHalfPi4Sse.h \
+        ../../src/hiir/PhaseHalfPi4Sse.hpp \
+        ../../src/hiir/PhaseHalfPiF64Sse2.h \
+        ../../src/hiir/PhaseHalfPiF64Sse2.hpp \
+        ../../src/hiir/PhaseHalfPiSse.h \
+        ../../src/hiir/PhaseHalfPiSse.hpp \
+        ../../src/hiir/StageDataF64Sse2.h \
+        ../../src/hiir/StageDataSse.h \
+        ../../src/hiir/StageProc2F64Sse2.h \
+        ../../src/hiir/StageProc2F64Sse2.hpp \
+        ../../src/hiir/StageProc4Sse.h \
+        ../../src/hiir/StageProc4Sse.hpp \
+        ../../src/hiir/StageProcF64Sse2.h \
+        ../../src/hiir/StageProcF64Sse2.hpp \
+        ../../src/hiir/StageProcSseV2.h \
+        ../../src/hiir/StageProcSseV2.hpp \
+        ../../src/hiir/StageProcSseV4.h \
+        ../../src/hiir/StageProcSseV4.hpp \
+        ../../src/hiir/Upsampler2x2F64Sse2.h \
+        ../../src/hiir/Upsampler2x2F64Sse2.hpp \
+        ../../src/hiir/Upsampler2x4Sse.h \
+        ../../src/hiir/Upsampler2x4Sse.hpp \
+        ../../src/hiir/Upsampler2xF64Fpu.h \
+        ../../src/hiir/Upsampler2xF64Sse2.h \
+        ../../src/hiir/Upsampler2xF64Sse2.hpp \
+        ../../src/hiir/Upsampler2xSse.h \
+        ../../src/hiir/Upsampler2xSse.hpp \
+        ../../src/hiir/Upsampler2xSseOld.h \
+        ../../src/hiir/Upsampler2xSseOld.hpp
+
+endif
 
 if UNX
 

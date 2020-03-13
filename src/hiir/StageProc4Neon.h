@@ -39,7 +39,7 @@ namespace hiir
 
 
 
-class StageDataNeon;
+class StageDataNeonV4;
 
 template <int REMAINING>
 class StageProc4Neon
@@ -51,9 +51,9 @@ class StageProc4Neon
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr);
+	               process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr);
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr);
+	               process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr);
 
 
 
@@ -73,11 +73,14 @@ private:
 
 private:
 
-	               StageProc4Neon ()                                           = delete;
-	               StageProc4Neon (const StageProc4Neon <REMAINING> &other)    = delete;
-	               ~StageProc4Neon ()                                          = delete;
+	               StageProc4Neon ()                                        = delete;
+	               StageProc4Neon (const StageProc4Neon <REMAINING> &other) = delete;
+	               StageProc4Neon (StageProc4Neon <REMAINING> &&other)      = delete;
+	               ~StageProc4Neon ()                                       = delete;
 	StageProc4Neon <REMAINING> &
-	               operator = (const StageProc4Neon <REMAINING> &other)        = delete;
+	               operator = (const StageProc4Neon <REMAINING> &other)     = delete;
+	StageProc4Neon <REMAINING> &
+	               operator = (StageProc4Neon <REMAINING> &&other)          = delete;
 	bool           operator == (const StageProc4Neon <REMAINING> &other) const = delete;
 	bool           operator != (const StageProc4Neon <REMAINING> &other) const = delete;
 

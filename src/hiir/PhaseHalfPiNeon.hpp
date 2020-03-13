@@ -22,7 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcNeon.h"
+#include "hiir/fnc_neon.h"
+#include "hiir/StageProcNeonV4.h"
 
 #include <cassert>
 
@@ -50,11 +51,11 @@ PhaseHalfPiNeon <NC>::PhaseHalfPiNeon ()
 ,	_prev (0)
 ,	_phase (0)
 {
-   for (int phase = 0; phase < NBR_PHASES; ++phase)
-   {
+	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	{
 		for (int i = 0; i < NBR_STAGES + 1; ++i)
 		{
-			_filter [phase] [i]._coef4 = vdupq_n_f32 (0);
+			storea (_filter [phase] [i]._coef, vdupq_n_f32 (0));
 		}
 		if ((NBR_COEFS & 1) != 0)
 		{
@@ -72,12 +73,12 @@ PhaseHalfPiNeon <NC>::PhaseHalfPiNeon ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
@@ -85,15 +86,15 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPiNeon <NC>::set_coefs (const double coef_arr [])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
-   for (int phase = 0; phase < NBR_PHASES; ++phase)
-   {
+	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	{
 		for (int i = 0; i < NBR_COEFS; ++i)
 		{
 			const int      stage = (i / STAGE_WIDTH) + 1;
 			const int      pos   = (i ^ 1) & (STAGE_WIDTH - 1);
-			_filter [phase] [stage]._coef [pos] = float (coef_arr [i]);
+			_filter [phase] [stage]._coef [pos] = DataType (coef_arr [i]);
 		}
 	}
 }
@@ -104,7 +105,7 @@ void	PhaseHalfPiNeon <NC>::set_coefs (const double coef_arr [])
 ==============================================================================
 Name: process_sample
 Description:
-	 From one input sample, generates two samples with a pi/2 phase shift.
+	From one input sample, generates two samples with a pi/2 phase shift.
 Input parameters:
 	- input: The input sample.
 Output parameters:
@@ -117,15 +118,14 @@ Throws: Nothing
 template <int NC>
 hiir_FORCEINLINE void	PhaseHalfPiNeon <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	StageDataNeon *   filter_ptr = &_filter [_phase] [0];
+	StageDataNeonV4 * filter_ptr = &_filter [_phase] [0];
 
 	const float32x2_t comb    = vset_lane_f32 (input, vdup_n_f32 (_prev), 1);
 	const float32x2_t spl_mid = vget_low_f32 (filter_ptr [NBR_STAGES]._mem4);
 	float32x4_t       y       = vcombine_f32 (comb, spl_mid);
-	float32x4_t       mem     = filter_ptr [0]._mem4;
+	float32x4_t       mem     = load4a (filter_ptr [0]._mem);
 
-	StageProcNeon <NBR_STAGES>::process_sample_neg (&filter_ptr [0], y, mem);
-	filter_ptr [NBR_STAGES]._mem4 = y;
+	StageProcNeonV4 <NBR_STAGES>::process_sample_neg (&filter_ptr [0], y, mem);
 
 	out_0  = vgetq_lane_f32 (y, 3);
 	out_1  = vgetq_lane_f32 (y, 2);
@@ -140,7 +140,7 @@ hiir_FORCEINLINE void	PhaseHalfPiNeon <NC>::process_sample (float &out_0, float 
 ==============================================================================
 Name: process_block
 Description:
-   From a block of samples, generates two blocks of samples, with a pi/2
+	From a block of samples, generates two blocks of samples, with a pi/2
 	phase shift between these signals.
 	Input and output blocks may overlap, see assert() for details.
 Input parameters:
@@ -156,9 +156,9 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPiNeon <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (out_0_ptr != 0);
-	assert (out_1_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_0_ptr != nullptr);
+	assert (out_1_ptr != nullptr);
+	assert (in_ptr    != nullptr);
 	assert (out_0_ptr <= in_ptr || out_0_ptr >= in_ptr + nbr_spl);
 	assert (out_1_ptr <= in_ptr || out_1_ptr >= in_ptr + nbr_spl);
 	assert (out_0_ptr + nbr_spl <= out_1_ptr || out_1_ptr + nbr_spl <= out_0_ptr);
@@ -192,7 +192,7 @@ void	PhaseHalfPiNeon <NC>::clear_buffers ()
    {
 		for (int i = 0; i < NBR_STAGES + 1; ++i)
 		{
-			_filter [phase] [i]._mem4 = vdupq_n_f32 (0);
+			storea (_filter [phase] [i]._mem, vdupq_n_f32 (0));
 		}
 	}
 }

@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2xNeon.hpp
-        Author: Laurent de Soras, 2016
+        Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
 
@@ -22,7 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcNeon.h"
+#include "hiir/StageProcNeonV2.h"
 
 #include <arm_neon.h>
 
@@ -50,14 +50,14 @@ template <int NC>
 Upsampler2xNeon <NC>::Upsampler2xNeon ()
 :	_filter ()
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
-		_filter [i]._coef4 = vdupq_n_f32 (0);
+		storea (_filter [i]._coef, vdup_n_f32 (0));
 	}
 	if ((NBR_COEFS & 1) != 0)
 	{
-		const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
-		_filter [NBR_STAGES]._coef [pos] = 1;
+		const int      pos = (NBR_COEFS ^ 1) & (_stage_width - 1);
+		_filter [_nbr_stages]._coef [pos] = 1;
 	}
 
 	clear_buffers ();
@@ -69,12 +69,12 @@ Upsampler2xNeon <NC>::Upsampler2xNeon ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
@@ -82,13 +82,13 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xNeon <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int      stage = (i / STAGE_WIDTH) + 1;
-		const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = float (coef_arr [i]);
+		const int      stage = (i / _stage_width) + 1;
+		const int      pos   = (i ^ 1) & (_stage_width - 1);
+		_filter [stage]._coef [pos] = DataType (coef_arr [i]);
 	}
 }
 
@@ -111,16 +111,10 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xNeon <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	const float32x2_t spl_in = vdup_n_f32 (input);
-	const float32x2_t spl_mid = vget_low_f32 (_filter [NBR_STAGES]._mem4);
-	float32x4_t       y       = vcombine_f32 (spl_in, spl_mid);
-	float32x4_t       mem     = _filter [0]._mem4;
-
-	StageProcNeon <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
-	_filter [NBR_STAGES]._mem4 = y;
-
-	out_0 = vgetq_lane_f32 (y, 3);
-	out_1 = vgetq_lane_f32 (y, 2);
+	auto           x = vdup_n_f32 (input);
+	StageProcNeonV2 <_nbr_stages>::process_sample_pos (x, &_filter [0]);
+	out_0 = vget_lane_f32 (x, 1);
+	out_1 = vget_lane_f32 (x, 0);
 }
 
 
@@ -143,8 +137,8 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xNeon <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
@@ -172,9 +166,9 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xNeon <NC>::clear_buffers ()
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
-		_filter [i]._mem4 = vdupq_n_f32 (0);
+		storea (_filter [i]._mem, vdup_n_f32 (0));
 	}
 }
 

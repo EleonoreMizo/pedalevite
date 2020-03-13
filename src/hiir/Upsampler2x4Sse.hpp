@@ -62,12 +62,12 @@ Upsampler2x4Sse <NC>::Upsampler2x4Sse ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
@@ -75,11 +75,11 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x4Sse <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_mm_store_ps (_filter [i + 2]._coef, _mm_set1_ps (float (coef_arr [i])));
+		_mm_store_ps (_filter [i + 2]._coef, _mm_set1_ps (DataType (coef_arr [i])));
 	}
 }
 
@@ -136,9 +136,10 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x4Sse <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
-	assert (out_ptr >= in_ptr + nbr_spl * 4 || in_ptr >= out_ptr + nbr_spl * 4);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
+	assert (   out_ptr >= in_ptr + nbr_spl * _nbr_chn
+	        || in_ptr >= out_ptr + nbr_spl * _nbr_chn);
 	assert (nbr_spl > 0);
 
 	long           pos = 0;
@@ -146,10 +147,10 @@ void	Upsampler2x4Sse <NC>::process_block (float out_ptr [], const float in_ptr [
 	{
 		__m128         dst_0;
 		__m128         dst_1;
-		const __m128   src = _mm_loadu_ps (in_ptr + pos * 4);
+		const __m128   src = _mm_loadu_ps (in_ptr + pos * _nbr_chn);
 		process_sample (dst_0, dst_1, src);
-		_mm_storeu_ps (out_ptr + pos * 8    , dst_0);
-		_mm_storeu_ps (out_ptr + pos * 8 + 4, dst_1);
+		_mm_storeu_ps (out_ptr + pos * (_nbr_chn * 2)    , dst_0);
+		_mm_storeu_ps (out_ptr + pos * (_nbr_chn * 2) + 4, dst_1);
 		++ pos;
 	}
 	while (pos < nbr_spl);

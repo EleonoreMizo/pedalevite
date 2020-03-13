@@ -4,7 +4,12 @@
         Author: Laurent de Soras, 2005
 
 Template parameters:
-	- REMAINING: Number of remaining coefficients to process, >= 0
+
+- REMAINING: Number of remaining coefficients to process, >= 0
+
+- DT: Data type (float or double)
+
+
 
 --- Legal stuff ---
 
@@ -39,10 +44,9 @@ namespace hiir
 
 
 
-template <int REMAINING>
+template <int REMAINING, typename DT>
 class StageProcFpu
 {
-
 	static_assert ((REMAINING >= 0), "REMAINING must be >= 0");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -50,9 +54,9 @@ class StageProcFpu
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y []);
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, float &spl_0, float &spl_1, const float coef [], float x [], float y []);
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
 
 
 
@@ -72,14 +76,74 @@ private:
 
 private:
 
-	               StageProcFpu ();
-	               StageProcFpu (const StageProcFpu <REMAINING> &other);
-	StageProcFpu <REMAINING> &
-	               operator = (const StageProcFpu <REMAINING> &other);
-	bool           operator == (const StageProcFpu <REMAINING> &other);
-	bool           operator != (const StageProcFpu <REMAINING> &other);
+	               StageProcFpu ()                                          = delete;
+	               StageProcFpu (const StageProcFpu <REMAINING, DT> &other) = delete;
+	               StageProcFpu (StageProcFpu <REMAINING, DT> &&other)      = delete;
+	               ~StageProcFpu ()                                         = delete;
+	StageProcFpu <REMAINING, DT> &
+	               operator = (const StageProcFpu <REMAINING, DT> &other)   = delete;
+	StageProcFpu <REMAINING, DT> &
+	               operator = (StageProcFpu <REMAINING, DT> &&other)        = delete;
+	bool           operator == (const StageProcFpu <REMAINING, DT> &other)  = delete;
+	bool           operator != (const StageProcFpu <REMAINING, DT> &other)  = delete;
 
 }; // class StageProcFpu
+
+
+
+template <typename DT>
+class StageProcFpu <1, DT>
+{
+
+public:
+
+	static hiir_FORCEINLINE void
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
+	static hiir_FORCEINLINE void
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
+
+private:
+
+	               StageProcFpu ()                                  = delete;
+	               StageProcFpu (const StageProcFpu <1, DT> &other) = delete;
+	               StageProcFpu (StageProcFpu <1, DT> &&other)      = delete;
+	               ~StageProcFpu ()                                 = delete;
+	StageProcFpu <1, DT> &
+	               operator = (const StageProcFpu <1, DT> &other)   = delete;
+	StageProcFpu <1, DT> &
+	               operator = (StageProcFpu <1, DT> &&other)        = delete;
+	bool           operator == (const StageProcFpu <1, DT> &other)  = delete;
+	bool           operator != (const StageProcFpu <1, DT> &other)  = delete;
+
+}; // class StageProcFpu <1, DT>
+
+
+
+template <typename DT>
+class StageProcFpu <0, DT>
+{
+
+public:
+
+	static hiir_FORCEINLINE void
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
+	static hiir_FORCEINLINE void
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
+
+private:
+
+	               StageProcFpu ()                                  = delete;
+	               StageProcFpu (const StageProcFpu <0, DT> &other) = delete;
+	               StageProcFpu (StageProcFpu <0, DT> &&other)      = delete;
+	               ~StageProcFpu ()                                 = delete;
+	StageProcFpu <0, DT> &
+	               operator = (const StageProcFpu <0, DT> &other)   = delete;
+	StageProcFpu <0, DT> &
+	               operator = (StageProcFpu <0, DT> &&other)        = delete;
+	bool           operator == (const StageProcFpu <0, DT> &other)  = delete;
+	bool           operator != (const StageProcFpu <0, DT> &other)  = delete;
+
+}; // class StageProcFpu <1, DT>
 
 
 

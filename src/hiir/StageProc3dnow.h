@@ -72,12 +72,16 @@ private:
 
 private:
 
-	               StageProc3dnow ();
-	               StageProc3dnow (const StageProc3dnow <CUR> &other);
-	StageProc3dnow <CUR> &
-	               operator = (const StageProc3dnow <CUR> &other);
-	bool           operator == (const StageProc3dnow <CUR> &other);
-	bool           operator != (const StageProc3dnow <CUR> &other);
+	               StageProc3dnow ()                                     = delete;
+	               StageProc3dnow (const StageProc3dnow <CUR> &other)    = delete;
+	               StageProc3dnow (StageProc3dnow <CUR> &&other)         = delete;
+	               ~StageProc3dnow ()                                    = delete;
+	StageProc3dnow &
+	               operator = (const StageProc3dnow <CUR> &other)        = delete;
+	StageProc3dnow &
+	               operator = (StageProc3dnow <CUR> &&other)             = delete;
+	bool           operator == (const StageProc3dnow <CUR> &other) const = delete;
+	bool           operator != (const StageProc3dnow <CUR> &other) const = delete;
 
 }; // class StageProc3dnow
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        StageProcSse.hpp
+        StageProcSseV4.hpp
         Author: Laurent de Soras, 2005
 
 --- Legal stuff ---
@@ -15,13 +15,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (hiir_StageProcSse_CURRENT_CODEHEADER)
-	#error Recursive inclusion of StageProcSse code header.
+#if defined (hiir_StageProcSseV4_CURRENT_CODEHEADER)
+	#error Recursive inclusion of StageProcSseV4 code header.
 #endif
-#define hiir_StageProcSse_CURRENT_CODEHEADER
+#define hiir_StageProcSseV4_CURRENT_CODEHEADER
 
-#if ! defined (hiir_StageProcSse_CODEHEADER_INCLUDED)
-#define hiir_StageProcSse_CODEHEADER_INCLUDED
+#if ! defined (hiir_StageProcSseV4_CODEHEADER_INCLUDED)
+#define hiir_StageProcSseV4_CODEHEADER_INCLUDED
 
 
 
@@ -45,9 +45,9 @@ namespace hiir
 
 
 template <int CUR>
-void	StageProcSse <CUR>::process_sample_pos (StageDataSse *stage_ptr, __m128 &y, __m128 &mem)
+void	StageProcSseV4 <CUR>::process_sample_pos (StageDataSse *stage_ptr, __m128 &y, __m128 &mem)
 {
-	StageProcSse <CUR - 1>::process_sample_pos (stage_ptr, y, mem);
+	StageProcSseV4 <CUR - 1>::process_sample_pos (stage_ptr, y, mem);
 
 	const __m128   x    = mem;
 	_mm_store_ps (stage_ptr [PREV]._mem, y);
@@ -60,7 +60,7 @@ void	StageProcSse <CUR>::process_sample_pos (StageDataSse *stage_ptr, __m128 &y,
 }
 
 template <>
-hiir_FORCEINLINE void	StageProcSse <0>::process_sample_pos (StageDataSse * /* stage_ptr */, __m128 & /* y */, __m128 & /* mem */)
+hiir_FORCEINLINE void	StageProcSseV4 <0>::process_sample_pos (StageDataSse * /* stage_ptr */, __m128 & /* y */, __m128 & /* mem */)
 {
 	// Nothing, stops the recursion
 }
@@ -68,9 +68,9 @@ hiir_FORCEINLINE void	StageProcSse <0>::process_sample_pos (StageDataSse * /* st
 
 
 template <int CUR>
-void	StageProcSse <CUR>::process_sample_neg (StageDataSse *stage_ptr, __m128 &y, __m128 &mem)
+void	StageProcSseV4 <CUR>::process_sample_neg (StageDataSse *stage_ptr, __m128 &y, __m128 &mem)
 {
-	StageProcSse <CUR - 1>::process_sample_neg (stage_ptr, y, mem);
+	StageProcSseV4 <CUR - 1>::process_sample_neg (stage_ptr, y, mem);
 
 	const __m128   x    = mem;
 	_mm_store_ps (stage_ptr [PREV]._mem, y);
@@ -83,7 +83,7 @@ void	StageProcSse <CUR>::process_sample_neg (StageDataSse *stage_ptr, __m128 &y,
 }
 
 template <>
-hiir_FORCEINLINE void	StageProcSse <0>::process_sample_neg (StageDataSse * /* stage_ptr */, __m128 & /* y */, __m128 & /* mem */)
+hiir_FORCEINLINE void	StageProcSseV4 <0>::process_sample_neg (StageDataSse * /* stage_ptr */, __m128 & /* y */, __m128 & /* mem */)
 {
 	// Nothing, stops the recursion
 }
@@ -102,9 +102,9 @@ hiir_FORCEINLINE void	StageProcSse <0>::process_sample_neg (StageDataSse * /* st
 
 
 
-#endif   // hiir_StageProcSse_CODEHEADER_INCLUDED
+#endif   // hiir_StageProcSseV4_CODEHEADER_INCLUDED
 
-#undef hiir_StageProcSse_CURRENT_CODEHEADER
+#undef hiir_StageProcSseV4_CURRENT_CODEHEADER
 
 
 

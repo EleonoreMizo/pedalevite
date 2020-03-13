@@ -417,9 +417,9 @@ double	PolyphaseIir2Designer::compute_acc_den (double q, int order, int c)
 	assert (c >= 1);
 	assert (c < order * 2);
 
-	int            i = 1;
-	int            j = -1;
-	double         acc = 0;
+	int            i   =  1;
+	int            j   = -1;
+	double         acc =  0;
 	double         q_i2;
 	do
 	{

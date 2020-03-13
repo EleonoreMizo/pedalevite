@@ -76,25 +76,25 @@ private:
 
 #if fstb_IS (ARCHI, X86)
 	using Upspl42 = typename std::conditional <
-		(NC42 >= 12)
+		(NC42 >= 4)
 	,	hiir::Upsampler2xSse <NC42>
 	,	hiir::Upsampler2xFpu <NC42>
 	>::type;
 	using Upspl21 = typename std::conditional <
-		(NC21 >= 12)
+		(NC21 >= 4)
 	,	hiir::Upsampler2xSse <NC21>
 	,	hiir::Upsampler2xFpu <NC21>
 	>::type;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_IS (ARCHI, ARM) && (defined (__clang__) || fstb_WORD_SIZE == 64)
 	using Upspl42 = typename std::conditional <
 		(NC42 >= 12)
+	,	hiir::Upsampler2xNeonOld <NC42>
 	,	hiir::Upsampler2xNeon <NC42>
-	,	hiir::Upsampler2xFpu <NC42>
 	>::type;
 	using Upspl21 = typename std::conditional <
 		(NC21 >= 12)
-	,	hiir::Upsampler2xNeon <NC21>
-	,	hiir::Upsampler2xFpu <NC21>
+	,	hiir::Upsampler2xNeonOld <NC42>
+	,	hiir::Upsampler2xNeon <NC42>
 	>::type;
 #else
 	typedef hiir::Upsampler2xFpu <NC42> Upspl42;

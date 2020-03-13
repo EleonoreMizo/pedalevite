@@ -62,9 +62,20 @@ class PhaseHalfPiSse
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 1;
+
 	enum {         NBR_COEFS = NC };
 
 	               PhaseHalfPiSse ();
+	               PhaseHalfPiSse (const PhaseHalfPiSse <NC> &other) = default;
+	               PhaseHalfPiSse (PhaseHalfPiSse <NC> &&other)      = default;
+	               ~PhaseHalfPiSse ()                                = default;
+
+	PhaseHalfPiSse <NC> &
+	               operator = (const PhaseHalfPiSse <NC> &other)     = default;
+	PhaseHalfPiSse <NC> &
+	               operator = (PhaseHalfPiSse <NC> &&other)          = default;
 
 	void           set_coefs (const double coef_arr []);
 
@@ -103,8 +114,8 @@ private:
 
 private:
 
-	bool           operator == (const PhaseHalfPiSse <NC> &other);
-	bool           operator != (const PhaseHalfPiSse <NC> &other);
+	bool           operator == (const PhaseHalfPiSse <NC> &other) = delete;
+	bool           operator != (const PhaseHalfPiSse <NC> &other) = delete;
 
 }; // class PhaseHalfPiSse
 

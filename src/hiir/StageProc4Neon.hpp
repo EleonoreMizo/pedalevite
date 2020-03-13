@@ -22,7 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageDataNeon.h"
+#include "hiir/StageDataNeonV4.h"
 
 
 
@@ -36,19 +36,19 @@ namespace hiir
 
 
 template <>
-inline void	StageProc4Neon <1>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
+inline void	StageProc4Neon <1>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
 {
 	const int      cnt = nbr_coefs + 2 - 1;
 
 	const float32x4_t tmp_0 = vmlaq_f32 (
-		        stage_arr [cnt - 2]._mem4,
-		spl_0 - stage_arr [cnt    ]._mem4,
-		        stage_arr [cnt    ]._coef4
+		        load4a (stage_arr [cnt - 2]._mem ),
+		spl_0 - load4a (stage_arr [cnt    ]._mem ),
+		        load4a (stage_arr [cnt    ]._coef)
 	);
 
-	stage_arr [cnt - 2]._mem4 = spl_0;
-	stage_arr [cnt - 1]._mem4 = spl_1;
-	stage_arr [cnt    ]._mem4 = tmp_0;
+	storea (stage_arr [cnt - 2]._mem, spl_0);
+	storea (stage_arr [cnt - 1]._mem, spl_1);
+	storea (stage_arr [cnt    ]._mem, tmp_0);
 
 	spl_0 = tmp_0;
 }
@@ -56,34 +56,34 @@ inline void	StageProc4Neon <1>::process_sample_pos (const int nbr_coefs, float32
 
 
 template <>
-inline void	StageProc4Neon <0>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
+inline void	StageProc4Neon <0>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
 {
 	const int      cnt = nbr_coefs + 2;
 
-	stage_arr [cnt - 2]._mem4 = spl_0;
-	stage_arr [cnt - 1]._mem4 = spl_1;
+	storea (stage_arr [cnt - 2]._mem, spl_0);
+	storea (stage_arr [cnt - 1]._mem, spl_1);
 }
 
 
 
 template <int REMAINING>
-void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
+void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
 {
 	const int      cnt = nbr_coefs + 2 - REMAINING;
 
 	const float32x4_t tmp_0 = vmlaq_f32 (
-		        stage_arr [cnt - 2]._mem4,
-		spl_0 - stage_arr [cnt    ]._mem4,
-		        stage_arr [cnt    ]._coef4
+		        load4a (stage_arr [cnt - 2]._mem ),
+		spl_0 - load4a (stage_arr [cnt    ]._mem ),
+		        load4a (stage_arr [cnt    ]._coef)
 	);
 	const float32x4_t tmp_1 = vmlaq_f32 (
-		        stage_arr [cnt - 1]._mem4,
-		spl_1 - stage_arr [cnt + 1]._mem4,
-		        stage_arr [cnt + 1]._coef4
+		        load4a (stage_arr [cnt - 1]._mem ),
+		spl_1 - load4a (stage_arr [cnt + 1]._mem ),
+		        load4a (stage_arr [cnt + 1]._coef)
 	);
 
-	stage_arr [cnt - 2]._mem4 = spl_0;
-	stage_arr [cnt - 1]._mem4 = spl_1;
+	storea (stage_arr [cnt - 2]._mem, spl_0);
+	storea (stage_arr [cnt - 1]._mem, spl_1);
 
 	spl_0 = tmp_0;
 	spl_1 = tmp_1;
@@ -99,48 +99,48 @@ void	StageProc4Neon <REMAINING>::process_sample_pos (const int nbr_coefs, float3
 
 
 template <>
-inline void	StageProc4Neon <1>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
+inline void	StageProc4Neon <1>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
 {
 	const int      cnt = nbr_coefs + 2 - 1;
 
 	float32x4_t tmp_0 = spl_0;
-	tmp_0 += stage_arr [cnt    ]._mem4;
-	tmp_0 *= stage_arr [cnt    ]._coef4;
-	tmp_0 -= stage_arr [cnt - 2]._mem4;
+	tmp_0 += load4a (stage_arr [cnt    ]._mem );
+	tmp_0 *= load4a (stage_arr [cnt    ]._coef);
+	tmp_0 -= load4a (stage_arr [cnt - 2]._mem );
 
-	stage_arr [cnt - 2]._mem4 = spl_0;
-	stage_arr [cnt - 1]._mem4 = spl_1;
-	stage_arr [cnt    ]._mem4 = tmp_0;
+	storea (stage_arr [cnt - 2]._mem, spl_0);
+	storea (stage_arr [cnt - 1]._mem, spl_1);
+	storea (stage_arr [cnt    ]._mem, tmp_0);
 
 	spl_0 = tmp_0;
 }
 
 template <>
-inline void	StageProc4Neon <0>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
+inline void	StageProc4Neon <0>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
 {
 	const int      cnt = nbr_coefs + 2;
 
-	stage_arr [cnt - 2]._mem4 = spl_0;
-	stage_arr [cnt - 1]._mem4 = spl_1;
+	storea (stage_arr [cnt - 2]._mem, spl_0);
+	storea (stage_arr [cnt - 1]._mem, spl_1);
 }
 
 template <int REMAINING>
-void	StageProc4Neon <REMAINING>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeon *stage_arr)
+void	StageProc4Neon <REMAINING>::process_sample_neg (const int nbr_coefs, float32x4_t &spl_0, float32x4_t &spl_1, StageDataNeonV4 *stage_arr)
 {
 	const int      cnt = nbr_coefs + 2 - REMAINING;
 
 	float32x4_t tmp_0 = spl_0;
-	tmp_0 += stage_arr [cnt    ]._mem4;
-	tmp_0 *= stage_arr [cnt    ]._coef4;
-	tmp_0 -= stage_arr [cnt - 2]._mem4;
+	tmp_0 += load4a (stage_arr [cnt    ]._mem );
+	tmp_0 *= load4a (stage_arr [cnt    ]._coef);
+	tmp_0 -= load4a (stage_arr [cnt - 2]._mem );
 
 	float32x4_t tmp_1 = spl_1;
-	tmp_1 += stage_arr [cnt + 1]._mem4;
-	tmp_1 *= stage_arr [cnt + 1]._coef4;
-	tmp_1 -= stage_arr [cnt - 1]._mem4;
+	tmp_1 += load4a (stage_arr [cnt + 1]._mem );
+	tmp_1 *= load4a (stage_arr [cnt + 1]._coef);
+	tmp_1 -= load4a (stage_arr [cnt - 1]._mem );
 
-	stage_arr [cnt - 2]._mem4 = spl_0;
-	stage_arr [cnt - 1]._mem4 = spl_1;
+	storea (stage_arr [cnt - 2]._mem, spl_0);
+	storea (stage_arr [cnt - 1]._mem, spl_1);
 
 	spl_0 = tmp_0;
 	spl_1 = tmp_1;

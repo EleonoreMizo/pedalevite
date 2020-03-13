@@ -1,7 +1,8 @@
 /*****************************************************************************
 
-        Upsampler2xFpu.hpp
-        Author: Laurent de Soras, 2005
+        Upsampler2x4F64Avx.hpp
+        Port of Upsampler2x4Sse.hpp from float to double by Dario Mambro
+        Upsampler2x4Sse.hpp by Laurent de Soras, 2015
 
 --- Legal stuff ---
 
@@ -15,19 +16,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if defined (hiir_Upsampler2xFpu_CURRENT_CODEHEADER)
-	#error Recursive inclusion of Upsampler2xFpu code header.
-#endif
-#define	hiir_Upsampler2xFpu_CURRENT_CODEHEADER
-
-#if ! defined (hiir_Upsampler2xFpu_CODEHEADER_INCLUDED)
-#define	hiir_Upsampler2xFpu_CODEHEADER_INCLUDED
+#if ! defined (hiir_Upsampler2x4F64Avx_CODEHEADER_INCLUDED)
+#define hiir_Upsampler2x4F64Avx_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcFpu.h"
+#include "hiir/StageProc4F64Avx.h"
 
 #include <cassert>
 
@@ -50,15 +46,14 @@ Throws: Nothing
 */
 
 template <int NC>
-Upsampler2xFpu <NC>::Upsampler2xFpu ()
-:	_coef ()
-,	_x ()
-,	_y ()
+Upsampler2x4F64Avx <NC>::Upsampler2x4F64Avx ()
+:	_filter ()
 {
-	for (int i = 0; i < NBR_COEFS; ++i)
+	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_coef [i] = 0;
+		_mm256_store_pd (_filter [i]._coef, _mm256_setzero_pd ());
 	}
+
 	clear_buffers ();
 }
 
@@ -68,24 +63,26 @@ Upsampler2xFpu <NC>::Upsampler2xFpu ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
 
 template <int NC>
-void	Upsampler2xFpu <NC>::set_coefs (const double coef_arr [NBR_COEFS])
+void	Upsampler2x4F64Avx <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 {
 	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_coef [i] = float (coef_arr [i]);
+		_mm256_store_pd (
+			_filter [i + 2]._coef, _mm256_set1_pd (DataType (coef_arr [i]))
+		);
 	}
 }
 
@@ -95,28 +92,26 @@ void	Upsampler2xFpu <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 ==============================================================================
 Name: process_sample
 Description:
-	Upsamples (x2) the input sample, generating two output samples.
+	Upsamples (x2) the input vector, generating two output vectors.
 Input parameters:
-	- input: The input sample.
+	- input: The input vector.
 Output parameters:
-	- out_0: First output sample.
-	- out_1: Second output sample.
+	- out_0: First output vector.
+	- out_1: Second output vector.
 Throws: Nothing
 ==============================================================================
 */
 
 template <int NC>
-void	Upsampler2xFpu <NC>::process_sample (float &out_0, float &out_1, float input)
+void	Upsampler2x4F64Avx <NC>::process_sample (__m256d &out_0, __m256d &out_1, __m256d input)
 {
-	float          even = input;
-	float          odd  = input;
-	StageProcFpu <NBR_COEFS>::process_sample_pos (
+	__m256d         even = input;
+	__m256d         odd  = input;
+	StageProc4F64Avx <NBR_COEFS>::process_sample_pos (
 		NBR_COEFS,
 		even,
 		odd,
-		&_coef [0],
-		&_x [0],
-		&_y [0]
+		&_filter [0]
 	);
 	out_0 = even;
 	out_1 = odd;
@@ -128,33 +123,37 @@ void	Upsampler2xFpu <NC>::process_sample (float &out_0, float &out_1, float inpu
 ==============================================================================
 Name: process_block
 Description:
-	Upsamples (x2) the input sample block.
+	Upsamples (x2) the input vector block.
 	Input and output blocks may overlap, see assert() for details.
 Input parameters:
-	- in_ptr: Input array, containing nbr_spl samples.
-	- nbr_spl: Number of input samples to process, > 0
+	- in_ptr: Input array, containing nbr_spl vector.
+		No alignment constraint.
+	- nbr_spl: Number of input vectors to process, > 0
 Output parameters:
-	- out_0_ptr: Output sample array, capacity: nbr_spl * 2 samples.
+	- out_0_ptr: Output vector array, capacity: nbr_spl * 2 vectors.
+		No alignment constraint.
 Throws: Nothing
 ==============================================================================
 */
 
 template <int NC>
-void	Upsampler2xFpu <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
+void	Upsampler2x4F64Avx <NC>::process_block (double out_ptr [], const double in_ptr [], long nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
-	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
+	assert (   out_ptr >= in_ptr + nbr_spl * _nbr_chn
+	        || in_ptr >= out_ptr + nbr_spl * _nbr_chn);
 	assert (nbr_spl > 0);
 
 	long           pos = 0;
 	do
 	{
-		process_sample (
-			out_ptr [pos * 2    ],
-			out_ptr [pos * 2 + 1],
-			in_ptr [pos]
-		);
+		__m256d         dst_0;
+		__m256d         dst_1;
+		const __m256d   src = _mm256_loadu_pd (in_ptr + pos * _nbr_chn);
+		process_sample (dst_0, dst_1, src);
+		_mm256_storeu_pd (out_ptr + pos * (_nbr_chn * 2)           , dst_0);
+		_mm256_storeu_pd (out_ptr + pos * (_nbr_chn * 2) + _nbr_chn, dst_1);
 		++ pos;
 	}
 	while (pos < nbr_spl);
@@ -166,19 +165,18 @@ void	Upsampler2xFpu <NC>::process_block (float out_ptr [], const float in_ptr []
 ==============================================================================
 Name: clear_buffers
 Description:
-	Clears filter memory, as if it processed silence since an infinite amount
+	Clears filter memory, as if it proceAvxd silence since an infinite amount
 	of time.
 Throws: Nothing
 ==============================================================================
 */
 
 template <int NC>
-void	Upsampler2xFpu <NC>::clear_buffers ()
+void	Upsampler2x4F64Avx <NC>::clear_buffers ()
 {
-	for (int i = 0; i < NBR_COEFS; ++i)
+	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_x [i] = 0;
-		_y [i] = 0;
+		_mm256_store_pd (_filter [i]._mem, _mm256_setzero_pd ());
 	}
 }
 
@@ -196,9 +194,7 @@ void	Upsampler2xFpu <NC>::clear_buffers ()
 
 
 
-#endif   // hiir_Upsampler2xFpu_CODEHEADER_INCLUDED
-
-#undef hiir_Upsampler2xFpu_CURRENT_CODEHEADER
+#endif   // hiir_Upsampler2x4F64Avx_CODEHEADER_INCLUDED
 
 
 

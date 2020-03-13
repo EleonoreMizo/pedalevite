@@ -1,7 +1,7 @@
 /*****************************************************************************
 
         Upsampler2xSse.hpp
-        Author: Laurent de Soras, 2005
+        Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
 
@@ -9,16 +9,11 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
-
-#if defined (hiir_Upsampler2xSse_CURRENT_CODEHEADER)
-	#error Recursive inclusion of Upsampler2xSse code header.
-#endif
-#define hiir_Upsampler2xSse_CURRENT_CODEHEADER
 
 #if ! defined (hiir_Upsampler2xSse_CODEHEADER_INCLUDED)
 #define hiir_Upsampler2xSse_CODEHEADER_INCLUDED
@@ -27,7 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcSse.h"
+#include "hiir/StageProcSseV2.h"
 
 #include <xmmintrin.h>
 
@@ -55,17 +50,13 @@ template <int NC>
 Upsampler2xSse <NC>::Upsampler2xSse ()
 :	_filter ()
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
-		_filter [i]._coef [0] = 0;
-		_filter [i]._coef [1] = 0;
-		_filter [i]._coef [2] = 0;
-		_filter [i]._coef [3] = 0;
+		_mm_store_ps (_filter [i]._coef, _mm_setzero_ps ());
 	}
-	if ((NBR_COEFS & 1) != 0)
+	if (NBR_COEFS < _nbr_stages * 2)
 	{
-		const int      pos = (NBR_COEFS ^ 1) & (STAGE_WIDTH - 1);
-		_filter [NBR_STAGES]._coef [pos] = 1;
+		_filter [_nbr_stages]._coef [0] = 1;
 	}
 
 	clear_buffers ();
@@ -77,12 +68,12 @@ Upsampler2xSse <NC>::Upsampler2xSse ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
@@ -90,13 +81,13 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xSse <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		const int      stage = (i / STAGE_WIDTH) + 1;
-		const int      pos = (i ^ 1) & (STAGE_WIDTH - 1);
-		_filter [stage]._coef [pos] = float (coef_arr [i]);
+		const int      stage = (i / _stage_width) + 1;
+		const int      pos   = (i ^ 1) & (_stage_width - 1);
+		_filter [stage]._coef [pos] = DataType (coef_arr [i]);
 	}
 }
 
@@ -119,21 +110,11 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xSse <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	const __m128   spl_in  = _mm_set_ss (input);
-	const __m128   spl_mid = _mm_load_ps (_filter [NBR_STAGES]._mem);
-	__m128         y       = _mm_shuffle_ps (spl_in, spl_mid, 0x40);
-
-	__m128         mem     = _mm_load_ps (_filter [0]._mem);
-
-	StageProcSse <NBR_STAGES>::process_sample_pos (&_filter [0], y, mem);
-
-	_mm_store_ps (_filter [NBR_STAGES]._mem, y);
-
-	// The latest shufps/movss instruction pairs can be freely inverted
-	y = _mm_shuffle_ps (y, y, 0xE3);
-	_mm_store_ss (&out_0, y);
-	y = _mm_shuffle_ps (y, y, 0xE2);
-	_mm_store_ss (&out_1, y);
+	auto           x = _mm_set1_ps (input);
+	StageProcSseV2 <_nbr_stages>::process_sample_pos (x, &_filter [0]);
+	out_1 = _mm_cvtss_f32 (x);
+	x = _mm_shuffle_ps (x, x, 1);
+	out_0 = _mm_cvtss_f32 (x);
 }
 
 
@@ -156,18 +137,22 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xSse <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	long           pos = 0;
-	do
+	for (long pos = 0; pos < nbr_spl; ++pos)
 	{
+#if 0
 		process_sample (out_ptr [pos * 2], out_ptr [pos * 2 + 1], in_ptr [pos]);
-		++ pos;
+#else
+	auto           x = _mm_set1_ps (in_ptr [pos]);
+	StageProcSseV2 <_nbr_stages>::process_sample_pos (x, &_filter [0]);
+	x = _mm_shuffle_ps (x, x, 1);
+	_mm_storel_pi (reinterpret_cast <__m64 *> (out_ptr + pos * 2), x);
+#endif
 	}
-	while (pos < nbr_spl);
 }
 
 
@@ -185,12 +170,9 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2xSse <NC>::clear_buffers ()
 {
-	for (int i = 0; i < NBR_STAGES + 1; ++i)
+	for (int i = 0; i < _nbr_stages + 1; ++i)
 	{
-		_filter [i]._mem [0] = 0;
-		_filter [i]._mem [1] = 0;
-		_filter [i]._mem [2] = 0;
-		_filter [i]._mem [3] = 0;
+		_mm_store_ps (_filter [i]._mem, _mm_setzero_ps ());
 	}
 }
 
@@ -204,13 +186,11 @@ void	Upsampler2xSse <NC>::clear_buffers ()
 
 
 
-} // namespace hiir
+}  // namespace hiir
 
 
 
-#endif // hiir_Upsampler2xSse_CODEHEADER_INCLUDED
-
-#undef hiir_Upsampler2xSse_CURRENT_CODEHEADER
+#endif   // hiir_Upsampler2xSse_CODEHEADER_INCLUDED
 
 
 

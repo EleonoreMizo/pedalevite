@@ -22,6 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "hiir/fnc_neon.h"
 #include "hiir/StageProc4Neon.h"
 
 #include <cassert>
@@ -50,7 +51,7 @@ Downsampler2x4Neon <NC>::Downsampler2x4Neon ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._coef4 = vdupq_n_f32 (0);
+		storea (_filter [i]._coef, vdupq_n_f32 (0));
 	}
 
 	clear_buffers ();
@@ -62,12 +63,12 @@ Downsampler2x4Neon <NC>::Downsampler2x4Neon ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
@@ -75,11 +76,11 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Neon <NC>::set_coefs (const double coef_arr [])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_filter [i + 2]._coef4 = vdupq_n_f32 (float (coef_arr [i]));
+		storea (_filter [i + 2]._coef, vdupq_n_f32 (DataType (coef_arr [i])));
 	}
 }
 
@@ -89,7 +90,7 @@ void	Downsampler2x4Neon <NC>::set_coefs (const double coef_arr [])
 ==============================================================================
 Name: process_sample
 Description:
-   Downsamples (x2) one pair of vector of 4 samples, to generate one output
+	Downsamples (x2) one pair of vector of 4 samples, to generate one output
 	vector.
 Input parameters:
 	- in_ptr: pointer on the two vectors to decimate. No alignment constraint.
@@ -101,14 +102,10 @@ Throws: Nothing
 template <int NC>
 float32x4_t	Downsampler2x4Neon <NC>::process_sample (const float in_ptr [8])
 {
-	assert (in_ptr != 0);
+	assert (in_ptr != nullptr);
 
-	const float32x4_t in_0 = vreinterpretq_f32_u8 (
-		vld1q_u8 (reinterpret_cast <const uint8_t *> (in_ptr    ))
-	);
-	const float32x4_t in_1 = vreinterpretq_f32_u8 (
-		vld1q_u8 (reinterpret_cast <const uint8_t *> (in_ptr + 4))
-	);
+	const float32x4_t in_0 = load4u (in_ptr    );
+	const float32x4_t in_1 = load4u (in_ptr + 4);
 
 	return process_sample (in_0, in_1);
 }
@@ -119,7 +116,7 @@ float32x4_t	Downsampler2x4Neon <NC>::process_sample (const float in_ptr [8])
 ==============================================================================
 Name: process_sample
 Description:
-   Downsamples (x2) one pair of vector of 4 samples, to generate one output
+	Downsamples (x2) one pair of vector of 4 samples, to generate one output
 	vector.
 Input parameters:
 	- in_0: vector at t
@@ -151,7 +148,7 @@ float32x4_t	Downsampler2x4Neon <NC>::process_sample (float32x4_t in_0, float32x4
 ==============================================================================
 Name: process_block
 Description:
-   Downsamples (x2) a block of vectors of 4 samples.
+	Downsamples (x2) a block of vectors of 4 samples.
 	Input and output blocks may overlap, see assert() for details.
 Input parameters:
 	- in_ptr: Input array, containing nbr_spl * 2 vectors.
@@ -167,8 +164,8 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Neon <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (in_ptr != 0);
-	assert (out_ptr != 0);
+	assert (in_ptr  != nullptr);
+	assert (out_ptr != nullptr);
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl * 8);
 	assert (nbr_spl > 0);
 
@@ -176,10 +173,7 @@ void	Downsampler2x4Neon <NC>::process_block (float out_ptr [], const float in_pt
 	do
 	{
 		const float32x4_t val = process_sample (in_ptr + pos * 8);
-		vst1q_u8 (
-			reinterpret_cast <uint8_t *> (out_ptr + pos * 4),
-			vreinterpretq_u8_f32 (val)
-		);
+		storeu (out_ptr + pos * 4, val);
 		++ pos;
 	}
 	while (pos < nbr_spl);
@@ -191,13 +185,13 @@ void	Downsampler2x4Neon <NC>::process_block (float out_ptr [], const float in_pt
 ==============================================================================
 Name: process_sample_split
 Description:
-   Split (spectrum-wise) in half a pair of vector of 4 samples. The lower part
+	Split (spectrum-wise) in half a pair of vector of 4 samples. The lower part
 	of the spectrum is a classic downsampling, equivalent to the output of
-   process_sample().
-   The higher part is the complementary signal: original filter response
-   is flipped from left to right, becoming a high-pass filter with the same
-   cutoff frequency. This signal is then critically sampled (decimation by 2),
-   flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
+	process_sample().
+	The higher part is the complementary signal: original filter response
+	is flipped from left to right, becoming a high-pass filter with the same
+	cutoff frequency. This signal is then critically sampled (decimation by 2),
+	flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
 Input parameters:
 	- in_ptr: pointer on the pair of input vectors. No alignment constraint.
 Output parameters:
@@ -210,12 +204,10 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Neon <NC>::process_sample_split (float32x4_t &low, float32x4_t &high, const float in_ptr [8])
 {
-	assert (in_ptr != 0);
+	assert (in_ptr != nullptr);
 
-	const float32x4_t in_0 =
-		vreinterpretq_f32_u8 (*reinterpret_cast <const uint8x16_t *> (in_ptr    ));
-	const float32x4_t in_1 =
-		vreinterpretq_f32_u8 (*reinterpret_cast <const uint8x16_t *> (in_ptr + 4));
+	const float32x4_t in_0 = load4u (in_ptr    );
+	const float32x4_t in_1 = load4u (in_ptr + 4);
 
 	process_sample_split (low, high, in_0, in_1);
 }
@@ -226,13 +218,13 @@ void	Downsampler2x4Neon <NC>::process_sample_split (float32x4_t &low, float32x4_
 ==============================================================================
 Name: process_sample_split
 Description:
-   Split (spectrum-wise) in half a pair of vector of 4 samples. The lower part
+	Split (spectrum-wise) in half a pair of vector of 4 samples. The lower part
 	of the spectrum is a classic downsampling, equivalent to the output of
-   process_sample().
-   The higher part is the complementary signal: original filter response
-   is flipped from left to right, becoming a high-pass filter with the same
-   cutoff frequency. This signal is then critically sampled (decimation by 2),
-   flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
+	process_sample().
+	The higher part is the complementary signal: original filter response
+	is flipped from left to right, becoming a high-pass filter with the same
+	cutoff frequency. This signal is then critically sampled (decimation by 2),
+	flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
 Input parameters:
 	- in_0: vector at t
 	- in_1: vector at t + 1
@@ -264,13 +256,13 @@ void	Downsampler2x4Neon <NC>::process_sample_split (float32x4_t &low, float32x4_
 ==============================================================================
 Name: process_block_split
 Description:
-   Split (spectrum-wise) in half a pair of vector of 4 samples. The lower part
+	Split (spectrum-wise) in half a pair of vector of 4 samples. The lower part
 	of the spectrum is a classic downsampling, equivalent to the output of
-   process_block().
-   The higher part is the complementary signal: original filter response
-   is flipped from left to right, becoming a high-pass filter with the same
-   cutoff frequency. This signal is then critically sampled (decimation by 2),
-   flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
+	process_block().
+	The higher part is the complementary signal: original filter response
+	is flipped from left to right, becoming a high-pass filter with the same
+	cutoff frequency. This signal is then critically sampled (decimation by 2),
+	flipping the spectrum: Fs/4...Fs/2 becomes Fs/4...0.
 	Input and output blocks may overlap, see assert() for details.
 Input parameters:
 	- in_ptr: Input array, containing nbr_spl * 2 vectors.
@@ -278,10 +270,10 @@ Input parameters:
 	- nbr_spl: Number of vectors for each output, > 0
 Output parameters:
 	- out_l_ptr: Array for the output vectors, lower part of the spectrum
-      (downsampling). Capacity: nbr_spl vectors.
+		(downsampling). Capacity: nbr_spl vectors.
 		No alignment constraint.
 	- out_h_ptr: Array for the output vectors, higher part of the spectrum.
-      Capacity: nbr_spl vectors.
+		Capacity: nbr_spl vectors.
 		No alignment constraint.
 Throws: Nothing
 ==============================================================================
@@ -290,10 +282,10 @@ Throws: Nothing
 template <int NC>
 void	Downsampler2x4Neon <NC>::process_block_split (float out_l_ptr [], float out_h_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (in_ptr != 0);
-	assert (out_l_ptr != 0);
+	assert (in_ptr    != nullptr);
+	assert (out_l_ptr != nullptr);
 	assert (out_l_ptr <= in_ptr || out_l_ptr >= in_ptr + nbr_spl * 8);
-	assert (out_h_ptr != 0);
+	assert (out_h_ptr != nullptr);
 	assert (out_h_ptr <= in_ptr || out_h_ptr >= in_ptr + nbr_spl * 8);
 	assert (out_h_ptr != out_l_ptr);
 	assert (nbr_spl > 0);
@@ -304,10 +296,8 @@ void	Downsampler2x4Neon <NC>::process_block_split (float out_l_ptr [], float out
 		float32x4_t    low;
 		float32x4_t    high;
 		process_sample_split (low, high, in_ptr + pos * 8);
-		*reinterpret_cast <uint8x16_t *> (out_l_ptr + pos * 4) =
-			vreinterpretq_u8_f32 (low);
-		*reinterpret_cast <uint8x16_t *> (out_h_ptr + pos * 4) =
-			vreinterpretq_u8_f32 (high);
+		storeu (out_l_ptr + pos * 4, low );
+		storeu (out_h_ptr + pos * 4, high);
 		++ pos;
 	}
 	while (pos < nbr_spl);
@@ -330,7 +320,7 @@ void	Downsampler2x4Neon <NC>::clear_buffers ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._mem4 = vdupq_n_f32 (0);
+		storea (_filter [i]._mem, vdupq_n_f32 (0));
 	}
 }
 

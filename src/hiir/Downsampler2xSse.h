@@ -1,14 +1,11 @@
 /*****************************************************************************
 
         Downsampler2xSse.h
-        Author: Laurent de Soras, 2005
+        Author: Laurent de Soras, 2020
 
 Downsamples by a factor 2 the input signal, using SSE instruction set.
 
 This object must be aligned on a 16-byte boundary!
-
-If the number of coefficients is 2 or 3 modulo 4, the output is delayed from
-1 sample, compared to the theoretical formula (or FPU implementation).
 
 Template parameters:
 	- NC: number of coefficients, > 0
@@ -19,19 +16,15 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
+#pragma once
 #if ! defined (hiir_Downsampler2xSse_HEADER_INCLUDED)
 #define hiir_Downsampler2xSse_HEADER_INCLUDED
-
-#if defined (_MSC_VER)
-	#pragma once
-	#pragma warning (4 : 4250) // "Inherits via dominance."
-#endif
 
 
 
@@ -39,6 +32,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "hiir/def.h"
 #include "hiir/StageDataSse.h"
+
+#include <xmmintrin.h>
 
 #include <array>
 
@@ -59,13 +54,19 @@ class Downsampler2xSse
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 1;
+
 	enum {         NBR_COEFS = NC };
 
 	               Downsampler2xSse ();
-	               Downsampler2xSse (const Downsampler2xSse &other) = default;
+	               Downsampler2xSse (const Downsampler2xSse <NC> &other) = default;
+	               Downsampler2xSse (Downsampler2xSse <NC> &&other)      = default;
 
-	Downsampler2xSse &
-	               operator = (const Downsampler2xSse &other)       = default;
+	Downsampler2xSse <NC> &
+	               operator = (const Downsampler2xSse <NC> &other) = default;
+	Downsampler2xSse <NC> &
+	               operator = (Downsampler2xSse <NC> &&other)      = default;
 
 	void           set_coefs (const double coef_arr []);
 
@@ -91,12 +92,13 @@ protected:
 
 private:
 
-	enum {         STAGE_WIDTH	= 4 };
-	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH	 };
+	static const int  _stage_width = 2;
+	static const int  _nbr_stages  = (NBR_COEFS + _stage_width - 1) / _stage_width;
 
-	typedef	std::array <StageDataSse, NBR_STAGES + 1>	Filter;  // Stage 0 contains only input memory
+	// Stage 0 contains only input memory
+	typedef std::array <StageDataSse, _nbr_stages + 1> Filter;
 
-	Filter         _filter; // Should be the first member (thus easier to align)
+	Filter         _filter;		// Should be the first member (thus easier to align)
 
 
 
@@ -104,8 +106,8 @@ private:
 
 private:
 
-	bool           operator == (const Downsampler2xSse <NC> &other) = delete;
-	bool           operator != (const Downsampler2xSse <NC> &other) = delete;
+	bool           operator == (const Downsampler2xSse <NC> &other) const = delete;
+	bool           operator != (const Downsampler2xSse <NC> &other) const = delete;
 
 }; // class Downsampler2xSse
 

@@ -76,12 +76,16 @@ private:
 
 private:
 
-	               StageProc4Sse ();
-	               StageProc4Sse (const StageProc4Sse <REMAINING> &other);
+	               StageProc4Sse ()                                       = delete;
+	               StageProc4Sse (const StageProc4Sse <REMAINING> &other) = delete;
+	               StageProc4Sse (StageProc4Sse <REMAINING> &&other)    = delete;
+	               ~StageProc4Sse ()                                    = delete;
 	StageProc4Sse <REMAINING> &
-						operator = (const StageProc4Sse <REMAINING> &other);
-	bool           operator == (const StageProc4Sse <REMAINING> &other);
-	bool           operator != (const StageProc4Sse <REMAINING> &other);
+						operator = (const StageProc4Sse <REMAINING> &other)  = delete;
+	StageProc4Sse <REMAINING> &
+						operator = (StageProc4Sse <REMAINING> &&other)       = delete;
+	bool           operator == (const StageProc4Sse <REMAINING> &other) = delete;
+	bool           operator != (const StageProc4Sse <REMAINING> &other) = delete;
 
 }; // class StageProc4Sse
 

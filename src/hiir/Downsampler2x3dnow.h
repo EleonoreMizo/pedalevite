@@ -54,9 +54,20 @@ class Downsampler2x3dnow
 
 public:
 
+	typedef float DataType;
+	static const int  _nbr_chn = 1;
+
 	enum {         NBR_COEFS = NC };
 
 	               Downsampler2x3dnow ();
+	               Downsampler2x3dnow (const Downsampler2x3dnow <NC> &other) = default;
+	               Downsampler2x3dnow (Downsampler2x3dnow <NC> &&other)      = default;
+	               ~Downsampler2x3dnow ()                            = default;
+
+	Downsampler2x3dnow <NC> &
+	               operator = (const Downsampler2x3dnow <NC> &other) = default;
+	Downsampler2x3dnow <NC> &
+	               operator = (Downsampler2x3dnow <NC> &&other)      = default;
 
 	void           set_coefs (const double coef_arr []);
 
@@ -95,8 +106,8 @@ private:
 
 private:
 
-	bool           operator == (const Downsampler2x3dnow <NC> &other);
-	bool           operator != (const Downsampler2x3dnow <NC> &other);
+	bool           operator == (const Downsampler2x3dnow <NC> &other) = delete;
+	bool           operator != (const Downsampler2x3dnow <NC> &other) = delete;
 
 }; // class Downsampler2x3dnow
 

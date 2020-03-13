@@ -120,13 +120,16 @@ private:
 
 private:
 
-	               PolyphaseIir2Designer ();
-	               ~PolyphaseIir2Designer ();
-	               PolyphaseIir2Designer (const PolyphaseIir2Designer &other);
+	               PolyphaseIir2Designer ()  = delete;
+	               ~PolyphaseIir2Designer () = delete;
+	               PolyphaseIir2Designer (const PolyphaseIir2Designer &other) = delete;
+	               PolyphaseIir2Designer (PolyphaseIir2Designer &&other)      = delete;
 	PolyphaseIir2Designer &
-	               operator = (const PolyphaseIir2Designer &other);
-	bool           operator == (const PolyphaseIir2Designer &other);
-	bool           operator != (const PolyphaseIir2Designer &other);
+	               operator = (const PolyphaseIir2Designer &other)  = delete;
+	PolyphaseIir2Designer &
+	               operator = (PolyphaseIir2Designer &&other)       = delete;
+	bool           operator == (const PolyphaseIir2Designer &other) = delete;
+	bool           operator != (const PolyphaseIir2Designer &other) = delete;
 
 }; // class PolyphaseIir2Designer
 

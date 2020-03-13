@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        PhaseHalfPiFpu.hpp
-        Author: Laurent de Soras, 2005
+        PhaseHalfPiF64Sse2.hpp
+        Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
 
@@ -9,25 +9,22 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
-#if defined (hiir_PhaseHalfPiFpu_CURRENT_CODEHEADER)
-	#error Recursive inclusion of PhaseHalfPiFpu code header.
-#endif
-#define hiir_PhaseHalfPiFpu_CURRENT_CODEHEADER
-
-#if ! defined (hiir_PhaseHalfPiFpu_CODEHEADER_INCLUDED)
-#define hiir_PhaseHalfPiFpu_CODEHEADER_INCLUDED
+#if ! defined (hiir_PhaseHalfPiF64Sse2_CODEHEADER_INCLUDED)
+#define hiir_PhaseHalfPiF64Sse2_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "hiir/StageProcFpu.h"
+#include "hiir/StageProcF64Sse2.h"
+
+#include <cassert>
 
 
 
@@ -48,16 +45,23 @@ Throws: Nothing
 */
 
 template <int NC>
-PhaseHalfPiFpu <NC>::PhaseHalfPiFpu ()
-:	_coef ()
-,	_mem ()
+PhaseHalfPiF64Sse2 <NC>::PhaseHalfPiF64Sse2 ()
+:	_bifilter ()
 ,	_prev (0)
 ,	_phase (0)
 {
-	for (int i = 0; i < NBR_COEFS; ++i)
-	{
-		_coef [i] = 0;
-	}
+   for (int phase = 0; phase < _nbr_phases; ++phase)
+   {
+	   for (int i = 0; i < _nbr_stages + 1; ++i)
+	   {
+		   _mm_store_pd (_bifilter [phase] [i]._coef, _mm_setzero_pd ());
+	   }
+	   if (NBR_COEFS < _nbr_stages * 2)
+	   {
+		   _bifilter [phase] [_nbr_stages]._coef [0] = 1;
+	   }
+   }
+
 	clear_buffers ();
 }
 
@@ -67,25 +71,30 @@ PhaseHalfPiFpu <NC>::PhaseHalfPiFpu ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
 
 template <int NC>
-void	PhaseHalfPiFpu <NC>::set_coefs (const double coef_arr [])
+void	PhaseHalfPiF64Sse2 <NC>::set_coefs (const double coef_arr [])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
-	for (int i = 0; i < NBR_COEFS; ++i)
-	{
-		_coef [i] = float (coef_arr [i]);
-	}
+   for (int phase = 0; phase < _nbr_phases; ++phase)
+   {
+	   for (int i = 0; i < NBR_COEFS; ++i)
+	   {
+		   const int      stage = (i / _stage_width) + 1;
+		   const int      pos   = (i ^ 1) & (_stage_width - 1);
+		   _bifilter [phase] [stage]._coef [pos] = DataType (coef_arr [i]);
+	   }
+   }
 }
 
 
@@ -94,7 +103,7 @@ void	PhaseHalfPiFpu <NC>::set_coefs (const double coef_arr [])
 ==============================================================================
 Name: process_sample
 Description:
-	 From one input sample, generates two samples with a pi/2 phase shift.
+	From one input sample, generates two samples with a pi/2 phase shift.
 Input parameters:
 	- input: The input sample.
 Output parameters:
@@ -105,23 +114,14 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiFpu <NC>::process_sample (float &out_0, float &out_1, float input)
+void	PhaseHalfPiF64Sse2 <NC>::process_sample (double &out_0, double &out_1, double input)
 {
-	out_0 = input;   // Even coefs
-	out_1 = _prev;   // Odd coefs
-
-	#if defined (_MSC_VER)
-		#pragma inline_depth (255)
-	#endif   // _MSC_VER
-
-	StageProcFpu <NBR_COEFS>::process_sample_neg (
-		NBR_COEFS,
-		out_0,
-		out_1,
-		&_coef [0],
-		&_mem [_phase]._x [0],
-		&_mem [_phase]._y [0]
+	auto           x = _mm_set_pd (input, _prev);
+	StageProcF64Sse2 <_nbr_stages>::process_sample_neg (
+		x, &_bifilter [_phase] [0]
 	);
+	_mm_storel_pd (&out_1, x);
+	_mm_storeh_pd (&out_0, x);
 
 	_prev  = input;
 	_phase = 1 - _phase;
@@ -133,7 +133,7 @@ void	PhaseHalfPiFpu <NC>::process_sample (float &out_0, float &out_1, float inpu
 ==============================================================================
 Name: process_block
 Description:
-   From a block of samples, generates two blocks of samples, with a pi/2
+	From a block of samples, generates two blocks of samples, with a pi/2
 	phase shift between these signals.
 	Input and output blocks may overlap, see assert() for details.
 Input parameters:
@@ -147,11 +147,11 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiFpu <NC>::process_block (float out_0_ptr [], float out_1_ptr [], const float in_ptr [], long nbr_spl)
+void	PhaseHalfPiF64Sse2 <NC>::process_block (double out_0_ptr [], double out_1_ptr [], const double in_ptr [], long nbr_spl)
 {
-	assert (out_0_ptr != 0);
-	assert (out_1_ptr != 0);
-	assert (in_ptr != 0);
+	assert (out_0_ptr != nullptr);
+	assert (out_1_ptr != nullptr);
+	assert (in_ptr    != nullptr);
 	assert (out_0_ptr <= in_ptr || out_0_ptr >= in_ptr + nbr_spl);
 	assert (out_1_ptr <= in_ptr || out_1_ptr >= in_ptr + nbr_spl);
 	assert (out_0_ptr + nbr_spl <= out_1_ptr || out_1_ptr + nbr_spl <= out_0_ptr);
@@ -164,36 +164,30 @@ void	PhaseHalfPiFpu <NC>::process_block (float out_0_ptr [], float out_1_ptr [],
 		++ pos;
 	}
 
-	const long     end = ((nbr_spl - pos) & -NBR_PHASES) + pos;
+	const long     end  = ((nbr_spl - pos) & -_nbr_phases) + pos;
+	auto           prev = _mm_set1_pd (_prev);
 	while (pos < end)
 	{
-		const float    input_0 = in_ptr [pos];
-		out_0_ptr [pos] = input_0;
-		out_1_ptr [pos] = _prev;
-		StageProcFpu <NBR_COEFS>::process_sample_neg (
-			NBR_COEFS,
-			out_0_ptr [pos],
-			out_1_ptr [pos],
-			&_coef [0],
-			&_mem [0]._x [0],
-			&_mem [0]._y [0]
+		auto           input_0 = _mm_set1_pd (in_ptr [pos    ]);
+		auto           x       = _mm_shuffle_pd (prev, input_0, 1);
+		StageProcF64Sse2 <_nbr_stages>::process_sample_neg (
+			x, &_bifilter [0] [0]
 		);
+		_mm_storel_pd (out_1_ptr + pos    , x);
+		_mm_storeh_pd (out_0_ptr + pos    , x);
 
-		const float    input_1 = in_ptr [pos + 1];
-		out_0_ptr [pos + 1] = input_1;
-		out_1_ptr [pos + 1] = input_0;	// _prev
-		StageProcFpu <NBR_COEFS>::process_sample_neg (
-			NBR_COEFS,
-			out_0_ptr [pos + 1],
-			out_1_ptr [pos + 1],
-			&_coef [0],
-			&_mem [1]._x [0],
-			&_mem [1]._y [0]
+		auto           input_1 = _mm_set1_pd (in_ptr [pos + 1]);
+		x = _mm_shuffle_pd (input_0, input_1, 1); // prev = input_0
+		StageProcF64Sse2 <_nbr_stages>::process_sample_neg (
+			x, &_bifilter [1] [0]
 		);
-		_prev = input_1;
+		_mm_storel_pd (out_1_ptr + pos + 1, x);
+		_mm_storeh_pd (out_0_ptr + pos + 1, x);
 
 		pos += 2;
+		prev = input_1;
 	}
+	_mm_store_sd (&_prev, prev);
 
 	if (pos < nbr_spl)
 	{
@@ -215,19 +209,15 @@ Throws: Nothing
 */
 
 template <int NC>
-void	PhaseHalfPiFpu <NC>::clear_buffers ()
+void	PhaseHalfPiF64Sse2 <NC>::clear_buffers ()
 {
-	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	for (int phase = 0; phase < _nbr_phases; ++phase)
 	{
-		for (int i = 0; i < NBR_COEFS; ++i)
+		for (int i = 0; i < _nbr_stages + 1; ++i)
 		{
-			_mem [phase]._x [i] = 0;
-			_mem [phase]._y [i] = 0;
+			_mm_store_pd (_bifilter [phase] [i]._mem, _mm_setzero_pd ());
 		}
 	}
-
-	_prev  = 0;
-	_phase = 0;
 }
 
 
@@ -244,9 +234,7 @@ void	PhaseHalfPiFpu <NC>::clear_buffers ()
 
 
 
-#endif   // hiir_PhaseHalfPiFpu_CODEHEADER_INCLUDED
-
-#undef hiir_PhaseHalfPiFpu_CURRENT_CODEHEADER
+#endif   // hiir_PhaseHalfPiF64Sse2_CODEHEADER_INCLUDED
 
 
 

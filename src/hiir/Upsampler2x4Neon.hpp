@@ -22,6 +22,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "hiir/fnc_neon.h"
 #include "hiir/StageProc4Neon.h"
 
 #include <cassert>
@@ -50,7 +51,7 @@ Upsampler2x4Neon <NC>::Upsampler2x4Neon ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._coef4 = vdupq_n_f32 (0);
+		storea (_filter [i]._coef, vdupq_n_f32 (0));
 	}
 
 	clear_buffers ();
@@ -62,12 +63,12 @@ Upsampler2x4Neon <NC>::Upsampler2x4Neon ()
 ==============================================================================
 Name: set_coefs
 Description:
-   Sets filter coefficients. Generate them with the PolyphaseIir2Designer
-   class.
-   Call this function before doing any processing.
+	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
+	class.
+	Call this function before doing any processing.
 Input parameters:
 	- coef_arr: Array of coefficients. There should be as many coefficients as
-      mentioned in the class template parameter.
+		mentioned in the class template parameter.
 Throws: Nothing
 ==============================================================================
 */
@@ -75,11 +76,11 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x4Neon <NC>::set_coefs (const double coef_arr [NBR_COEFS])
 {
-	assert (coef_arr != 0);
+	assert (coef_arr != nullptr);
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_filter [i + 2]._coef4 = vdupq_n_f32 (float (coef_arr [i]));
+		storea (_filter [i + 2]._coef, vdupq_n_f32 (DataType (coef_arr [i])));
 	}
 }
 
@@ -136,28 +137,21 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x4Neon <NC>::process_block (float out_ptr [], const float in_ptr [], long nbr_spl)
 {
-	assert (out_ptr != 0);
-	assert (in_ptr != 0);
-	assert (out_ptr >= in_ptr + nbr_spl * 4 || in_ptr >= out_ptr + nbr_spl * 4);
+	assert (out_ptr != nullptr);
+	assert (in_ptr  != nullptr);
+	assert (   out_ptr >= in_ptr + nbr_spl * _nbr_chn
+	        || in_ptr >= out_ptr + nbr_spl * _nbr_chn);
 	assert (nbr_spl > 0);
 
 	long           pos = 0;
 	do
 	{
-		const float32x4_t src = vreinterpretq_f32_u8 (
-			vld1q_u8 (reinterpret_cast <const uint8_t *> (in_ptr + pos * 4))
-		);
+		const float32x4_t src = load4u (in_ptr + pos * _nbr_chn);
 		float32x4_t       dst_0;
 		float32x4_t       dst_1;
 		process_sample (dst_0, dst_1, src);
-		vst1q_u8 (
-			reinterpret_cast <uint8_t *> (out_ptr + pos * 8    ),
-			vreinterpretq_u8_f32 (dst_0)
-		);
-		vst1q_u8 (
-			reinterpret_cast <uint8_t *> (out_ptr + pos * 8 + 4),
-			vreinterpretq_u8_f32 (dst_1)
-		);
+		storeu (out_ptr + pos * (_nbr_chn * 2)    , dst_0);
+		storeu (out_ptr + pos * (_nbr_chn * 2) + 4, dst_1);
 		++ pos;
 	}
 	while (pos < nbr_spl);
@@ -180,7 +174,7 @@ void	Upsampler2x4Neon <NC>::clear_buffers ()
 {
 	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_filter [i]._mem4 = vdupq_n_f32 (0);
+		storea (_filter [i]._mem, vdupq_n_f32 (0));
 	}
 }
 

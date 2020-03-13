@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        StageProcSse.h
+        StageProcSseV4.h
         Author: Laurent de Soras, 2005
 
 Template parameters:
@@ -18,8 +18,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
-#if ! defined (hiir_StageProcSse_HEADER_INCLUDED)
-#define hiir_StageProcSse_HEADER_INCLUDED
+#if ! defined (hiir_StageProcSseV4_HEADER_INCLUDED)
+#define hiir_StageProcSseV4_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma once
@@ -44,7 +44,7 @@ namespace hiir
 class StageDataSse;
 
 template <int CUR>
-class StageProcSse
+class StageProcSseV4
 {
 
 	static_assert ((CUR >= 0), "CUR must be >= 0");
@@ -78,14 +78,18 @@ private:
 
 private:
 
-	               StageProcSse ();
-	               StageProcSse (const StageProcSse <CUR> &other);
-	StageProcSse <CUR> &
-	               operator = (const StageProcSse <CUR> &other);
-	bool           operator == (const StageProcSse <CUR> &other);
-	bool           operator != (const StageProcSse <CUR> &other);
+	               StageProcSseV4 ()                                 = delete;
+	               StageProcSseV4 (const StageProcSseV4 <CUR> &other) = delete;
+	               StageProcSseV4 (StageProcSseV4 <CUR> &&other)      = delete;
+	               ~StageProcSseV4 ()                                = delete;
+	StageProcSseV4 <CUR> &
+	               operator = (const StageProcSseV4 <CUR> &other)    = delete;
+	StageProcSseV4 <CUR> &
+	               operator = (StageProcSseV4 <CUR> &&other)         = delete;
+	bool           operator == (const StageProcSseV4 <CUR> &other)   = delete;
+	bool           operator != (const StageProcSseV4 <CUR> &other)   = delete;
 
-}; // class StageProcSse
+}; // class StageProcSseV4
 
 
 
@@ -93,11 +97,11 @@ private:
 
 
 
-#include "hiir/StageProcSse.hpp"
+#include "hiir/StageProcSseV4.hpp"
 
 
 
-#endif   // hiir_StageProcSse_HEADER_INCLUDED
+#endif   // hiir_StageProcSseV4_HEADER_INCLUDED
 
 
 

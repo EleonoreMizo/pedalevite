@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        StageDataNeon.h
+        StageDataNeonV4.h
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (hiir_StageDataNeon_HEADER_INCLUDED)
-#define hiir_StageDataNeon_HEADER_INCLUDED
+#if ! defined (hiir_StageDataNeonV4_HEADER_INCLUDED)
+#define hiir_StageDataNeonV4_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -36,7 +36,7 @@ namespace hiir
 
 
 
-class StageDataNeon
+class StageDataNeonV4
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -76,7 +76,7 @@ private:
 
 private:
 
-}; // class StageDataNeon
+}; // class StageDataNeonV4
 
 
 
@@ -84,11 +84,11 @@ private:
 
 
 
-//#include "hiir/StageDataNeon.hpp"
+//#include "hiir/StageDataNeonV4.hpp"
 
 
 
-#endif   // hiir_StageDataNeon_HEADER_INCLUDED
+#endif   // hiir_StageDataNeonV4_HEADER_INCLUDED
 
 
 
