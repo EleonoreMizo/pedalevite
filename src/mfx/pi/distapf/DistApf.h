@@ -112,7 +112,7 @@ private:
 		               _ovrspl_dw;
 	};
 
-	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
+	typedef std::vector <Channel, fstb::AllocAlign <Channel, 16> > ChannelArray;
 
 	void           update_param (bool force_flag = false);
 	void           update_freq ();

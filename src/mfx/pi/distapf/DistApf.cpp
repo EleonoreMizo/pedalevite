@@ -74,7 +74,7 @@ DistApf::DistApf ()
 ,	_param_change_flag_ovrspl ()
 ,	_sample_freq (44100)
 ,	_inv_fs (1 / _sample_freq)
-,	_chn_arr ()
+,	_chn_arr (_max_nbr_chn)
 ,	_buf_tmp ()
 ,	_buf_ovr ()
 ,	_gain_cur (1)
@@ -245,7 +245,7 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 			f   = chn._srl_state + dif;
 			chn._srl_state = f;
 
-#if 1
+#if 1 // SIMD version
 			_buf_tmp [pos] = f;
 		}
 
@@ -285,7 +285,7 @@ void	DistApf::do_process_block (piapi::ProcInfo &proc)
 				((0.0884f * f2 + 0.121f) * f2 + 0.3345f) * f2 * f + f;
 			b0 = fstb::limit (b0, -0.999f, +0.999f);
 
-#endif
+#endif // SIMD/Ref code
 
 			// All-pass filtering
 			const float    y = b0 * (x - chn._apf_mem_y) + chn._apf_mem_x;

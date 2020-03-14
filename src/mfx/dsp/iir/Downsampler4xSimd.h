@@ -3,6 +3,8 @@
         Downsampler4xSimd.h
         Author: Laurent de Soras, 2016
 
+This object must be aligned on a 16-byte boundary!
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
