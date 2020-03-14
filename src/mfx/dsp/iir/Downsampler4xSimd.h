@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 	#include "hiir/Downsampler2xSse.h"
 #elif fstb_IS (ARCHI, ARM)
 	#include "hiir/Downsampler2xNeon.h"
+	#include "hiir/Downsampler2xNeonOld.h"
 #endif
 
 #include <type_traits>
