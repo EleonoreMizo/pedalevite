@@ -577,6 +577,88 @@ ToolsSimd::VectF32	Approx::tanh_2dat (ToolsSimd::VectF32 x)
 
 
 
+// Approximation of the Wright Omega function:
+// omega (x) = W0 (exp (x))
+// where W0 is one of the Lambert W functions.
+// Formula from:
+// Stefano D'Angelo, Leonardo Gabrielli, Luca Turchet,
+// Fast Approximation of the Lambert W Function for Virtual Analog Modelling,
+// DAFx-19
+template <typename T>
+T	Approx::wright_omega_3 (T x)
+{
+	const T        a  = T (-1.314293149877800e-3);
+	const T        b  = T ( 4.775931364975583e-2);
+	const T        c  = T ( 3.631952663804445e-1);
+	const T        d  = T ( 6.313183464296682e-1);
+	const T        x1 = T (-3.341459552768620);
+	const T        x2 = T ( 8.0);
+
+	T              y  = T ( 0);
+	if (x >= x2)
+	{
+		y = x - T (Approx::log2 (float (x))) * T (LN2);
+	}
+	else if (x > x1)
+	{
+		y = (((a * x + b) * x) + c) * x + d;
+	}
+
+	return y;
+}
+
+ToolsSimd::VectF32	Approx::wright_omega_3 (ToolsSimd::VectF32 x)
+{
+	const auto     a   = ToolsSimd::set1_f32 (-1.314293149877800e-3f);
+	const auto     b   = ToolsSimd::set1_f32 ( 4.775931364975583e-2f);
+	const auto     c   = ToolsSimd::set1_f32 ( 3.631952663804445e-1f);
+	const auto     d   = ToolsSimd::set1_f32 ( 6.313183464296682e-1f);
+	const auto     x1  = ToolsSimd::set1_f32 (-3.341459552768620f);
+	const auto     x2  = ToolsSimd::set1_f32 ( 8.0f);
+	const auto     ln2 = ToolsSimd::set1_f32 (float (LN2));
+
+	const auto     y0  = ToolsSimd::set_f32_zero ();
+	const auto     y1  = (((a * x + b) * x) + c) * x + d;
+	const auto     y2  = x - (ToolsSimd::log2_approx (x)) * ln2;
+
+	const auto     tx1 = fstb::ToolsSimd::cmp_lt_f32 (x, x1);
+	const auto     tx2 = fstb::ToolsSimd::cmp_lt_f32 (x, x2);
+	auto           y   = y0;
+	y = fstb::ToolsSimd::select (tx1, y, y1);
+	y = fstb::ToolsSimd::select (tx2, y, y2);
+
+	return y;
+}
+
+
+
+// One Newton-Raphson iteration added
+template <typename T>
+T	Approx::wright_omega_4 (T x)
+{
+	T              y = wright_omega_3 (x);
+	y -=
+		  (y - Approx::exp2 (float (x - y) * float (LOG2_E)))
+		/ (y + T (1));
+
+	return y;
+}
+
+ToolsSimd::VectF32	Approx::wright_omega_4 (ToolsSimd::VectF32 x)
+{
+	const auto     one     = ToolsSimd::set1_f32 (1);
+	const auto     l2e     = ToolsSimd::set1_f32 (float (LOG2_E));
+
+	auto           y       = wright_omega_3 (x);
+	const auto     num     = y - ToolsSimd::exp2_approx ((x - y) * l2e);
+	const auto     den_inv = ToolsSimd::rcp_approx2 (y + one);
+	y -= num * den_inv;
+
+	return y;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

@@ -100,6 +100,18 @@ public:
 	static inline ToolsSimd::VectF32
 	               tanh_2dat (ToolsSimd::VectF32 x);
 
+	template <typename T>
+	static inline T
+	               wright_omega_3 (T x);
+	static inline ToolsSimd::VectF32
+	               wright_omega_3 (ToolsSimd::VectF32 x);
+
+	template <typename T>
+	static inline T
+	               wright_omega_4 (T x);
+	static inline ToolsSimd::VectF32
+	               wright_omega_4 (ToolsSimd::VectF32 x);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
