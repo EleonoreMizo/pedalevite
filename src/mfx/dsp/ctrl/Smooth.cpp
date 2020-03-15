@@ -73,7 +73,7 @@ void	Smooth::set_sample_freq (double sample_freq)
 Name: set_base_freq
 Description:
 	Sets the filter base frequency. This the low-pass filter cutoff frequency
-	used when the variations are extremely low.
+	used when the variations are extremely low (or null actually).
 Input parameters:
 	- freq: base frequency, in Hz.
 Throws: Nothing
@@ -97,7 +97,7 @@ Description:
 	Sets the sensibility to signal variation. When the signal changes, the low-
 	pass filter frequency is increased, depending on the amplitude of the
 	variations. This parameter controls the intensity of the filter reaction
-	presence of signal variations.
+	in presence of signal variations.
 Input parameters:
 	- s: the sensitivity, a positive value. 0 = no variation (static low-pass
 		filter)
