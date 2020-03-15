@@ -273,12 +273,6 @@ k = (1 - 1/b1) / g
 	// den(H(s)) = w0^2 + 2*r*w0 + s^2
 	const double   r   = 0.5f / q;
 
-	// Computes the levels for each component: LP, BP, HP
-	// Eq. 30, 35 and 37
-	const double   lvl_l = bs [0] / w02;
-	const double   lvl_b = bs [1] * q / w0;
-	const double   lvl_h = bs [2];
-
 	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 	// Poles
 
