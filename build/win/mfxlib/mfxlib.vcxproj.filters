@@ -277,6 +277,9 @@
     <Filter Include="mfx\pi\dist3">
       <UniqueIdentifier>{4761be45-3915-4273-917e-a33742ebb9c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\va">
+      <UniqueIdentifier>{38c9fc9a-1968-436f-b1fe-e95e1a86eb6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -3477,6 +3480,9 @@
     <ClInclude Include="..\..\..\src\hiir\Upsampler2xSseOld.hpp">
       <Filter>hiir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4693,6 +4699,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\hiir\PolyphaseIir2Designer.cpp">
       <Filter>hiir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp">
+      <Filter>mfx\dsp\va</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

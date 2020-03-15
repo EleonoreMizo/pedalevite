@@ -58,6 +58,7 @@
 #include "test/Gridaxis.h"
 #include "test/TestApprox.h"
 #include "test/TestConvolverFft.h"
+#include "test/TestDiodeClipDAngelo.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
 #include "test/TestLatAlgo.h"
@@ -1860,6 +1861,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 0
+	if (ret_val == 0) ret_val = TestDiodeClipDAngelo::perform_test ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = TestSvf::perform_test ();

@@ -643,6 +643,8 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsTanh.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
+        ../../src/mfx/dsp/va/DiodeClipDAngelo.cpp \
+        ../../src/mfx/dsp/va/DiodeClipDAngelo.h \
         ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.h \
         ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.hpp \
         ../../src/mfx/dsp/wnd/CoefGenBlackman.h \
@@ -1477,6 +1479,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestApprox.h \
         ../../src/test/TestConvolverFft.cpp \
         ../../src/test/TestConvolverFft.h \
+        ../../src/test/TestDiodeClipDAngelo.cpp \
+        ../../src/test/TestDiodeClipDAngelo.h \
         ../../src/test/TestInterpFtor.cpp \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
