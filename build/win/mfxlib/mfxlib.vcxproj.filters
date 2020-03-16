@@ -4756,5 +4756,8 @@
     <None Include="..\..\..\src\mfx\dsp\wnd\README.md">
       <Filter>mfx\dsp\wnd</Filter>
     </None>
+    <None Include="..\..\..\src\mfx\dsp\va\README.md">
+      <Filter>mfx\dsp\va</Filter>
+    </None>
   </ItemGroup>
 </Project>

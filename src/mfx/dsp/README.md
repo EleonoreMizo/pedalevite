@@ -14,6 +14,7 @@
 - **`rspl`**: Resampling tools
 - **`shape`**: Waveshaper, look-up table functions and distortions
 - **`spec`**: Spectral tools
+- **`va`**: Virtual analogue circuit modelisations
 - **`wnd`**: Windows and similar shapes
 
 ## Dependencies
