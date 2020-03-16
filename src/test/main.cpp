@@ -1863,6 +1863,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 0
+	if (ret_val == 0) ret_val = TestDiodeClipScreamer::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestDiodeClipDAngelo::perform_test ();
 #endif
 

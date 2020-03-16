@@ -3483,6 +3483,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.h">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4701,6 +4704,9 @@
       <Filter>hiir</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.cpp">
       <Filter>mfx\dsp\va</Filter>
     </ClCompile>
   </ItemGroup>
