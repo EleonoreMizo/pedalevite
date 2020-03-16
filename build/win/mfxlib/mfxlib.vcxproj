@@ -774,6 +774,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBHMinLobe.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBHMinLobe.hpp" />
@@ -1385,6 +1386,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />

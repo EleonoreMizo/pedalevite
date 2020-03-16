@@ -59,6 +59,8 @@
 #include "test/TestApprox.h"
 #include "test/TestConvolverFft.h"
 #include "test/TestDiodeClipDAngelo.h"
+#include "test/TestDiodeClipJcm.h"
+#include "test/TestDiodeClipScreamer.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
 #include "test/TestLatAlgo.h"
@@ -1861,6 +1863,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 0
+	if (ret_val == 0) ret_val = TestDiodeClipJcm::perform_test ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = TestDiodeClipScreamer::perform_test ();

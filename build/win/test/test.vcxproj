@@ -125,6 +125,7 @@
       <AssemblerOutput Condition="'$(Configuration)'=='Release'">AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
     <ClCompile Include="..\..\..\src\test\TestConvolverFft.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestDiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDiodeClipScreamer.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDisplayFrameBufSimple.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -162,6 +163,7 @@
     <ClInclude Include="..\..\..\src\test\Gridaxis.h" />
     <ClInclude Include="..\..\..\src\test\TestApprox.h" />
     <ClInclude Include="..\..\..\src\test\TestConvolverFft.h" />
+    <ClInclude Include="..\..\..\src\test\TestDiodeClipJcm.h" />
     <ClInclude Include="..\..\..\src\test\TestDiodeClipScreamer.h" />
     <ClInclude Include="..\..\..\src\test\TestDisplayFrameBufSimple.h" />
     <ClInclude Include="..\..\..\src\test\TestInterpFtor.h" />
