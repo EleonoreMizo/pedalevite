@@ -40,6 +40,11 @@ http://www.wtfpl.net/ for more details.
 
 
 
+// 1 or 4
+#define TestDiodeClipDAngelo_OVRSPL (4)
+
+
+
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -88,18 +93,18 @@ int	TestDiodeClipDAngelo::perform_test ()
 	updw->_dw.set_coefs (coef_42, coef_21);
 
 	mfx::dsp::va::DiodeClipDAngelo   dclip;
-	dclip.set_sample_freq (sample_freq);
+	dclip.set_sample_freq (sample_freq * TestDiodeClipDAngelo_OVRSPL);
 
 	float          gain = 1;
 	for (int pos = 0; pos < len; ++pos)
 	{
 		float           x = src [pos] * gain;
-#if 0 // W/o oversampling
+#if (TestDiodeClipDAngelo_OVRSPL == 1) // W/o oversampling
 		x = dclip.process_sample (x);
 #else // With oversampling
-		float       tmp [4];
+		float       tmp [TestDiodeClipDAngelo_OVRSPL];
 		updw->_up.process_sample (tmp, x);
-		for (int k = 0; k < 4; ++k)
+		for (int k = 0; k < TestDiodeClipDAngelo_OVRSPL; ++k)
 		{
 			tmp [k] = dclip.process_sample (tmp [k]);
 		}
@@ -119,12 +124,12 @@ int	TestDiodeClipDAngelo::perform_test ()
 		gain = fstb::Approx::exp2 (float (a * a) * 8 - 1);
 		dclip.set_capa (gain * 10e-9f);
 		float           x = src [pos] * gain;
-#if 0 // W/o oversampling
+#if (TestDiodeClipDAngelo_OVRSPL == 1) // W/o oversampling
 		x = dclip.process_sample (x);
 #else // With oversampling
-		float       tmp [4];
+		float       tmp [TestDiodeClipDAngelo_OVRSPL];
 		updw->_up.process_sample (tmp, x);
-		for (int k = 0; k < 4; ++k)
+		for (int k = 0; k < TestDiodeClipDAngelo_OVRSPL; ++k)
 		{
 			tmp [k] = dclip.process_sample (tmp [k]);
 		}

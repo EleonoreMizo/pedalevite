@@ -62,6 +62,9 @@ void	DiodeClipDAngelo::set_sample_freq (double sample_freq)
 
 
 
+// Approximative way to set the clipping level.
+// The knee theshold is just the level of the knee, after the nearly-linear
+// zone.
 void	DiodeClipDAngelo::set_knee_thr (float lvl)
 {
 	_vt = lvl * 0.04f;
@@ -86,8 +89,7 @@ void	DiodeClipDAngelo::set_cutoff_freq (float f)
 {
 	assert (f > 0);
 
-	_c = 1.0f / (float (2 * fstb::PI) * _r * f);
-	update_internal_coef ();
+	set_capa (1.0f / (float (2 * fstb::PI) * _r * f));
 }
 
 
