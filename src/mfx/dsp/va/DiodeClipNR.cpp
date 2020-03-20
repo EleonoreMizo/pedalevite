@@ -59,26 +59,43 @@ void	DiodeClipNR::set_sample_freq (double sample_freq)
 
 
 
-// Approximative way to set the clipping level.
-// The knee theshold is just the level of the knee, after the nearly-linear
-// zone.
-void	DiodeClipNR::set_knee_thr (float lvl)
+void	DiodeClipNR::set_d1_is (float is)
 {
-	_vt = lvl * 0.04f;
+	assert (is >= 1e-20f);
+	assert (is <= 0.1f);
+
+	_is1 = is;
 	update_internal_coef ();
 }
 
 
 
-// Sets the negative clipping level relative to the positive clipping level.
-// Makes the diodes different.
-// Positive dif makes the negative threshold smaller (in abs. value).
-void	DiodeClipNR::set_knee_dif_neg (float dif)
+void	DiodeClipNR::set_d2_is (float is)
 {
-	_is2 = _is1 * exp (dif / _vt);
-	assert (_is2 >= 1e-20f);
-	assert (_is2 <= 0.1f);
+	assert (is >= 1e-20f);
+	assert (is <= 0.1f);
 
+	_is2 = is;
+	update_internal_coef ();
+}
+
+
+
+void	DiodeClipNR::set_d1_n (float n)
+{
+	assert (n > 0);
+
+	_n1 = n;
+	update_internal_coef ();
+}
+
+
+
+void	DiodeClipNR::set_d2_n (float n)
+{
+	assert (n > 0);
+
+	_n2 = n;
 	update_internal_coef ();
 }
 
@@ -108,12 +125,10 @@ float	DiodeClipNR::process_sample (float x)
 	const float    gr    = 1 / _r;
 	const float    geqc  =        2 * _c / _inv_fs;
 	const float    ieqc  = _v2 * -2 * _c / _inv_fs - _ic;
-	const float    alpha = 2 * float (sqrt (_is1 * _is2));
-	const float    beta  = 0.5f * float (log (_is1 / _is2));
 
 	// Newton-Raphson iterations
 	const float    max_dif_a = 1e-6f;
-	const float    max_step  = _vt * 4;
+	const float    max_step  = _vt * (_n1 + _n2) * 2;
 	float          v2        = _v2; // Starts with the previous V2 value
 	float          v2_old    = v2;
 	int            nbr_it    = 0;
@@ -126,11 +141,10 @@ float	DiodeClipNR::process_sample (float x)
 			break;
 		}
 
-		// Possible approximations:
-		// sinh(x) ~ sgn (x) * 0.5 * (exp (abs (x)) - 1)
-		// cosh(x) ~           0.5 * (exp (abs (x)) - 1)
-		const float    id   = alpha * sinh (v2 / _vt + beta);
-		const float    geqd = (alpha / _vt) * cosh (v2 / _vt + beta);
+		const float    m1   = (v2 >= 0) ? _is1            : -_is2;
+		const float    m2   = (v2 >= 0) ? 1 / (_vt * _n1) : -1 / (_vt * _n2);
+		const float    id   =      m1 * (exp (v2 * m2) - 1);
+		const float    geqd = m2 * m1 * (exp (v2 * m2) - 1);
 		const float    ieqd = id - geqd * v2;
 		v2_old = v2;
 		v2 = (gr * x - ieqc - ieqd) / (gr + geqc + geqd);

@@ -15,15 +15,13 @@ Gnd ----------+---+---+
 
 Integration with the Trapezoidal Rule.
 Uses classical Newton-Raphson iterations to find the diode voltage.
-The anti-parallel diodes are considered like a single dipole, whose
-characteristic is approximed like this:
-Id = Id1 - Id2
-   = Is1 * (exp (Vd / Vt) - 1) - Is2 * exp (-Vd / Vt) - 1)
-	~ sqrt (Is1 * Is2) * 2 * sinh (Vd / Vt + 0.5 * ln (Is1 / Is2))
+The algorithm is loosely based on Modified Nodal Analysis (MNA)
 
-When the diodes have different thresholds, there is a difference with the
-equivalent circuit using identical diodes + fixed DC offset at input, but
-it is subtle.
+Ref:
+http://www.ecircuitcenter.com/SpiceTopics/Non-Linear%20Analysis/Non-Linear%20Analysis.htm
+http://qucs.sourceforge.net/tech/node14.html
+http://qucs.sourceforge.net/tech/node26.html
+http://qucs.sourceforge.net/tech/node16.html
 
 --- Legal stuff ---
 
@@ -73,8 +71,10 @@ public:
 	DiodeClipNR &  operator = (DiodeClipNR &&other)       = default;
 
 	void           set_sample_freq (double sample_freq);
-	void           set_knee_thr (float lvl);
-	void           set_knee_dif_neg (float dif);
+	void           set_d1_is (float is);
+	void           set_d2_is (float is);
+	void           set_d1_n (float n);
+	void           set_d2_n (float n);
 	void           set_capa (float c);
 	void           set_cutoff_freq (float f);
 	float          process_sample (float x);
@@ -101,7 +101,9 @@ private:
 	// Circuit parameters
 	float          _vt  = 0.026f;    // Diode thermal voltage, volt. Sets the diode clipping threshold, around 0.65 V for 0.026
 	float          _is1 = 0.1e-15f;  // Diode 1 saturation current, ampere
-	float          _is2 = 0.1e-15f;  // Diode 2 saturation current, ampere
+	float          _is2 = 0.1e-6f;   // Diode 2 saturation current, ampere
+	float          _n1  = 1;         // Diode 1 ideality factor
+	float          _n2  = 4;         // Diode 2 ideality factor
 	float          _r   = 2200;      // Serial resistor, ohm
 	float          _c   = 10e-9f;    // Parallel capacitor, farad
 
