@@ -647,6 +647,8 @@ commonsrc = \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.h \
         ../../src/mfx/dsp/va/DiodeClipJcm.cpp \
         ../../src/mfx/dsp/va/DiodeClipJcm.h \
+        ../../src/mfx/dsp/va/DiodeClipNR.cpp \
+        ../../src/mfx/dsp/va/DiodeClipNR.h \
         ../../src/mfx/dsp/va/DiodeClipScreamer.cpp \
         ../../src/mfx/dsp/va/DiodeClipScreamer.h \
         ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.h \
@@ -1487,6 +1489,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestDiodeClipDAngelo.h \
         ../../src/test/TestDiodeClipJcm.cpp \
         ../../src/test/TestDiodeClipJcm.h \
+        ../../src/test/TestDiodeClipNR.cpp \
+        ../../src/test/TestDiodeClipNR.h \
         ../../src/test/TestDiodeClipScreamer.cpp \
         ../../src/test/TestDiodeClipScreamer.h \
         ../../src/test/TestInterpFtor.cpp \

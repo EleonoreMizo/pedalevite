@@ -3489,6 +3489,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipNR.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4713,6 +4716,9 @@
       <Filter>mfx\dsp\va</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipNR.cpp">
       <Filter>mfx\dsp\va</Filter>
     </ClCompile>
   </ItemGroup>
