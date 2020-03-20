@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TestDiodeClipNR.cpp
+        TestRcClipGeneric.cpp
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -22,6 +22,11 @@ http://www.wtfpl.net/ for more details.
 
 
 
+// 1 or 4
+#define TestRcClipGeneric_OVRSPL (4)
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/Approx.h"
@@ -31,9 +36,11 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
 #include "mfx/dsp/osc/SweepingSin.h"
-#include "mfx/dsp/va/DiodeClipNR.h"
+#include "mfx/dsp/va/RcClipGeneric.h"
+#include "mfx/dsp/va/IvDiodeAntipar.h"
+#include "mfx/dsp/va/IvPoly.h"
 #include "mfx/FileOpWav.h"
-#include "test/TestDiodeClipNR.h"
+#include "test/TestRcClipGeneric.h"
 #include "test/TimerAccurate.h"
 
 #include <cassert>
@@ -42,20 +49,56 @@ http://www.wtfpl.net/ for more details.
 
 
 
-// 1 or 4
-#define TestDiodeClipNR_OVRSPL (4)
-
-
-
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
-int	TestDiodeClipNR::perform_test ()
+int	TestRcClipGeneric::perform_test ()
 {
 	int            ret_val = 0;
 
-	printf ("Testing dsp::va::DiodeClipNR...\n");
+	if (ret_val == 0)
+	{
+		ret_val = perform_test <mfx::dsp::va::IvDiodeAntipar> (
+			"mfx::dsp::va::IvDiodeAntipar", "diodeap"
+		);
+	}
+	if (ret_val == 0)
+	{
+		ret_val = perform_test <mfx::dsp::va::IvPoly <17, 5> > (
+			"mfx::dsp::va::IvPoly <17, 5>", "poly17o5o-"
+		);
+	}
+#if 0
+	if (ret_val == 0)
+	{
+		ret_val = perform_test <mfx::dsp::va::IvPoly <9, 2> > (
+			"mfx::dsp::va::IvPoly <9, 2>", "poly9o2o-"
+		);
+	}
+#endif
+
+	return ret_val;
+}
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <class T>
+int	TestRcClipGeneric::perform_test (const char classname_0 [], const char filename_0 [])
+{
+	int            ret_val = 0;
+
+	printf (
+		"Testing dsp::va::RcClipGeneric + mfx::dsp::va::%s...\n", classname_0
+	);
 
 	const double   sample_freq = 44100;
 	const int      ssin_len = fstb::round_int (sample_freq * 10);
@@ -96,19 +139,19 @@ int	TestDiodeClipNR::perform_test ()
 	updw->_up.set_coefs (coef_42, coef_21);
 	updw->_dw.set_coefs (coef_42, coef_21);
 
-	mfx::dsp::va::DiodeClipNR   dclip;
-	dclip.set_sample_freq (sample_freq * TestDiodeClipNR_OVRSPL);
+	mfx::dsp::va::RcClipGeneric <T>  dclip;
+	dclip.set_sample_freq (sample_freq * TestRcClipGeneric_OVRSPL);
 
 	float          gain = 1;
 	for (int pos = 0; pos < len; ++pos)
 	{
 		float           x = src [pos] * gain;
-#if (TestDiodeClipNR_OVRSPL == 1) // W/o oversampling
+#if (TestRcClipGeneric_OVRSPL == 1) // W/o oversampling
 		x = dclip.process_sample (x);
 #else // With oversampling
-		float       tmp [TestDiodeClipNR_OVRSPL];
+		float       tmp [TestRcClipGeneric_OVRSPL];
 		updw->_up.process_sample (tmp, x);
-		for (int k = 0; k < TestDiodeClipNR_OVRSPL; ++k)
+		for (int k = 0; k < TestRcClipGeneric_OVRSPL; ++k)
 		{
 			tmp [k] = dclip.process_sample (tmp [k]);
 		}
@@ -117,7 +160,10 @@ int	TestDiodeClipNR::perform_test ()
 		dst [pos] = x;
 	}
 
-	mfx::FileOpWav::save ("results/dclipnr1.wav", dst, sample_freq, 0.5f);
+	mfx::FileOpWav::save (
+		(std::string ("results/rclipgen") + filename_0 + "1.wav").c_str (),
+		dst, sample_freq, 0.5f
+	);
 
 	// Now with variable gain with fixed GBP (gain-bandwidth product)
 	const double per_spl = 2 * sample_freq;
@@ -128,12 +174,12 @@ int	TestDiodeClipNR::perform_test ()
 		gain = fstb::Approx::exp2 (float (a * a) * 8 - 1);
 		dclip.set_capa (gain * 10e-9f);
 		float           x = src [pos] * gain;
-#if (TestDiodeClipNR_OVRSPL == 1) // W/o oversampling
+#if (TestRcClipGeneric_OVRSPL == 1) // W/o oversampling
 		x = dclip.process_sample (x);
 #else // With oversampling
-		float       tmp [TestDiodeClipNR_OVRSPL];
+		float       tmp [TestRcClipGeneric_OVRSPL];
 		updw->_up.process_sample (tmp, x);
-		for (int k = 0; k < TestDiodeClipNR_OVRSPL; ++k)
+		for (int k = 0; k < TestRcClipGeneric_OVRSPL; ++k)
 		{
 			tmp [k] = dclip.process_sample (tmp [k]);
 		}
@@ -142,7 +188,10 @@ int	TestDiodeClipNR::perform_test ()
 		dst [pos] = x;
 	}
 
-	mfx::FileOpWav::save ("results/dclipnr2.wav", dst, sample_freq, 0.5f);
+	mfx::FileOpWav::save (
+		(std::string ("results/rclipgen") + filename_0 + "2.wav").c_str (),
+		dst, sample_freq, 0.5f
+	);
 
 	// Speed test
 	TimerAccurate  chrono;
@@ -172,15 +221,7 @@ int	TestDiodeClipNR::perform_test ()
 
 
 
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-void	TestDiodeClipNR::gen_saw (std::vector <float> &data, double sample_freq, double freq, int len)
+void	TestRcClipGeneric::gen_saw (std::vector <float> &data, double sample_freq, double freq, int len)
 {
 	const int      per = fstb::round_int (sample_freq / freq);
 	for (int pos = 0; pos < len; ++pos)

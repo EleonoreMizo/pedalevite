@@ -3489,10 +3489,27 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipNR.h">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\RcClipGeneric.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\RcClipGeneric.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\IvDiodeAntipar.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\IvDiodeAntipar.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.hpp">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
   </ItemGroup>
@@ -4719,9 +4736,6 @@
       <Filter>mfx\dsp\va</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp">
-      <Filter>mfx\dsp\va</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipNR.cpp">
       <Filter>mfx\dsp\va</Filter>
     </ClCompile>
   </ItemGroup>

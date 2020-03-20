@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DiodeClipNR.h
+        RcClipGeneric.h
         Author: Laurent de Soras, 2020
 
 Diode clipper with R in series and C in parallel with both diodes
@@ -13,9 +13,19 @@ In ---/\/\/\--+---+---+--- Out
 Gnd ----------+---+---+
                   D2  D1
 
+Characteristic of the diodes is a custom function, so fancy responses are
+possible.
+
 Integration with the Trapezoidal Rule.
 Uses classical Newton-Raphson iterations to find the diode voltage.
 The algorithm is loosely based on Modified Nodal Analysis (MNA)
+
+Template parameters:
+
+- F: class computing the characteristic function I = f(V) as well as df/dV.
+	Requires:
+	void F::eval (float &y, float &dy, float x);
+	float F::get_max_step (float x);
 
 Ref:
 http://www.ecircuitcenter.com/SpiceTopics/Non-Linear%20Analysis/Non-Linear%20Analysis.htm
@@ -36,8 +46,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_va_DiodeClipNR_HEADER_INCLUDED)
-#define mfx_dsp_va_DiodeClipNR_HEADER_INCLUDED
+#if ! defined (mfx_dsp_va_RcClipGeneric_HEADER_INCLUDED)
+#define mfx_dsp_va_RcClipGeneric_HEADER_INCLUDED
 
 
 
@@ -56,27 +66,32 @@ namespace va
 
 
 
-class DiodeClipNR
+template <class F>
+class RcClipGeneric
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	               DiodeClipNR ()                         = default;
-	               DiodeClipNR (const DiodeClipNR &other) = default;
-	               DiodeClipNR (DiodeClipNR &&other)      = default;
+	typedef F IvFunc;
 
-	               ~DiodeClipNR ()                        = default;
+	explicit       RcClipGeneric (IvFunc &&fnc);
+	               RcClipGeneric ()                               = default;
+	               RcClipGeneric (const RcClipGeneric <F> &other) = default;
+	               RcClipGeneric (RcClipGeneric <F> &&other)      = default;
 
-	DiodeClipNR &  operator = (const DiodeClipNR &other)  = default;
-	DiodeClipNR &  operator = (DiodeClipNR &&other)       = default;
+	               ~RcClipGeneric ()                              = default;
+
+	RcClipGeneric <F> &
+	               operator = (const RcClipGeneric <F> &other)    = default;
+	RcClipGeneric <F> &
+	               operator = (RcClipGeneric <F> &&other)         = default;
+
+	IvFunc &       use_fnc ();
+	const IvFunc & use_fnc () const;
 
 	void           set_sample_freq (double sample_freq);
-	void           set_d1_is (float is);
-	void           set_d2_is (float is);
-	void           set_d1_n (float n);
-	void           set_d2_n (float n);
 	void           set_capa (float c);
 	void           set_cutoff_freq (float f);
 	float          process_sample (float x);
@@ -95,28 +110,20 @@ protected:
 private:
 
 	void           update_internal_coef_rc ();
-	void           update_internal_coef_d ();
 
+	IvFunc         _fnc;
 	float          _sample_freq = 0; // Sampling rate, Hz. > 0. 0 = not init.
 
 	float          _max_it      = 10;    // Maximum number of NR iterations
 	float          _max_dif_a   = 1e-6f; // Absolute precision to reach
 
 	// Circuit parameters
-	float          _vt   = 0.026f;   // Diode thermal voltage, volt. Sets the diode clipping threshold, around 0.65 V for 0.026
-	float          _is1  = 0.1e-15f; // Diode 1 saturation current, ampere
-	float          _is2  = 0.1e-6f;  // Diode 2 saturation current, ampere
-	float          _n1   = 1;        // Diode 1 ideality factor (or scale, or serial multiplier)
-	float          _n2   = 4;        // Diode 2 ideality factor ( " )
 	float          _r    = 2200;     // Serial resistor, ohm
 	float          _c    = 10e-9f;   // Parallel capacitor, farad
 
 	// Internal variables
 	float          _inv_fs    = 0;     // Integration step, s. > 0. 0 = not init.
 	float          _gr        = 1.f / _r;
-	float          _max_step  = 0;     // Maximum v2 deviation between two iterations
-	float          _mv1       = 0;
-	float          _mv2       = 0;
 	float          _geqc      = 0;
 	float          _gr_p_geqc = 0;
 
@@ -130,10 +137,10 @@ private:
 
 private:
 
-	bool           operator == (const DiodeClipNR &other) const = delete;
-	bool           operator != (const DiodeClipNR &other) const = delete;
+	bool           operator == (const RcClipGeneric <F> &other) const = delete;
+	bool           operator != (const RcClipGeneric <F> &other) const = delete;
 
-}; // class DiodeClipNR
+}; // class RcClipGeneric
 
 
 
@@ -143,11 +150,11 @@ private:
 
 
 
-//#include "mfx/dsp/va/DiodeClipNR.hpp"
+#include "mfx/dsp/va/RcClipGeneric.hpp"
 
 
 
-#endif   // mfx_dsp_va_DiodeClipNR_HEADER_INCLUDED
+#endif   // mfx_dsp_va_RcClipGeneric_HEADER_INCLUDED
 
 
 

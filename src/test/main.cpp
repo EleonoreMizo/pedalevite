@@ -60,7 +60,6 @@
 #include "test/TestConvolverFft.h"
 #include "test/TestDiodeClipDAngelo.h"
 #include "test/TestDiodeClipJcm.h"
-#include "test/TestDiodeClipNR.h"
 #include "test/TestDiodeClipScreamer.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
@@ -72,6 +71,7 @@
 #include "test/TestOscWavetableSub.h"
 #include "test/TestOscWavetableSyncHard.h"
 #include "test/TestPsu.h"
+#include "test/TestRcClipGeneric.h"
 #include "test/TestRemez.h"
 #include "test/TestSampleMipMapper.h"
 #include "test/TestSlidingMax.h"
@@ -403,7 +403,7 @@ int	test_testgen ()
 				int (std::min (len - pos, size_t (max_block_size)));
 
 			proc_info._nbr_spl = block_len;
-		
+
 			memcpy (
 				src_arr [0],
 				&chn_arr [0] [pos],
@@ -466,7 +466,7 @@ int	test_disto ()
 				int (std::min (len - pos, size_t (max_block_size)));
 
 			proc_info._nbr_spl = block_len;
-		
+
 			memcpy (
 				src_arr [0],
 				&chn_arr [0] [pos],
@@ -533,7 +533,7 @@ int	test_phaser ()
 				int (std::min (len - pos, size_t (max_block_size)));
 
 			proc_info._nbr_spl = block_len;
-		
+
 			for (int chn = 0; chn < nbr_chn; ++chn)
 			{
 				memcpy (
@@ -609,7 +609,7 @@ int	test_noise_chlorine ()
 				int (std::min (len - pos, size_t (max_block_size)));
 
 			proc_info._nbr_spl = block_len;
-		
+
 			for (int chn = 0; chn < nbr_chn; ++chn)
 			{
 				memcpy (
@@ -683,7 +683,7 @@ int	test_noise_bleach ()
 				int (std::min (len - pos, size_t (max_block_size)));
 
 			proc_info._nbr_spl = block_len;
-		
+
 			for (int chn = 0; chn < nbr_chn; ++chn)
 			{
 				memcpy (
@@ -1055,7 +1055,7 @@ int	patch_setup_file ()
 		sss_uptr->ser_read (ser_r);
 		ret_val = ser_r.terminate ();
 	}
-	
+
 	// Put the code to change the settings here
 	if (ret_val == 0)
 	{
@@ -1286,7 +1286,7 @@ int	test_delay2 ()
 				int (std::min (len - pos, size_t (max_block_size)));
 
 			proc_info._nbr_spl = block_len;
-		
+
 			for (int chn = 0; chn < nbr_chn; ++chn)
 			{
 				memcpy (
@@ -1360,7 +1360,7 @@ int test_osdet ()
 				int (std::min (len - pos, size_t (max_block_size)));
 
 			proc_info._nbr_spl = block_len;
-		
+
 			for (int chn = 0; chn < nbr_chn; ++chn)
 			{
 				memcpy (
@@ -1866,7 +1866,7 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 0
-	if (ret_val == 0) ret_val = TestDiodeClipNR::perform_test ();
+	if (ret_val == 0) ret_val = TestRcClipGeneric::perform_test ();
 #endif
 
 #if 0

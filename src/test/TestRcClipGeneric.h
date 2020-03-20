@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        TestDiodeClipNR.h
+        TestRcClipGeneric.h
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (TestDiodeClipNR_HEADER_INCLUDED)
-#define TestDiodeClipNR_HEADER_INCLUDED
+#if ! defined (TestRcClipGeneric_HEADER_INCLUDED)
+#define TestRcClipGeneric_HEADER_INCLUDED
 
 
 
@@ -27,7 +27,7 @@ http://www.wtfpl.net/ for more details.
 
 
 
-class TestDiodeClipNR
+class TestRcClipGeneric
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -48,6 +48,9 @@ protected:
 
 private:
 
+	template <class T>
+	static int     perform_test (const char classname_0 [], const char filename_0 []);
+
 	static void    gen_saw (std::vector <float> &data, double sample_freq, double freq, int len);
 
 
@@ -56,26 +59,26 @@ private:
 
 private:
 
-	               TestDiodeClipNR ()                               = delete;
-	               TestDiodeClipNR (const TestDiodeClipNR &other) = delete;
-	               TestDiodeClipNR (TestDiodeClipNR &&other)      = delete;
-	               ~TestDiodeClipNR ()                              = delete;
-	TestDiodeClipNR &
-	               operator = (const TestDiodeClipNR &other)        = delete;
-	TestDiodeClipNR &
-	               operator = (TestDiodeClipNR &&other)             = delete;
-	bool           operator == (const TestDiodeClipNR &other) const = delete;
-	bool           operator != (const TestDiodeClipNR &other) const = delete;
+	               TestRcClipGeneric ()                               = delete;
+	               TestRcClipGeneric (const TestRcClipGeneric &other) = delete;
+	               TestRcClipGeneric (TestRcClipGeneric &&other)      = delete;
+	               ~TestRcClipGeneric ()                              = delete;
+	TestRcClipGeneric &
+	               operator = (const TestRcClipGeneric &other)        = delete;
+	TestRcClipGeneric &
+	               operator = (TestRcClipGeneric &&other)             = delete;
+	bool           operator == (const TestRcClipGeneric &other) const = delete;
+	bool           operator != (const TestRcClipGeneric &other) const = delete;
 
-}; // class TestDiodeClipNR
-
-
-
-//#include "test/TestDiodeClipNR.hpp"
+}; // class TestRcClipGeneric
 
 
 
-#endif   // TestDiodeClipNR_HEADER_INCLUDED
+//#include "test/TestRcClipGeneric.hpp"
+
+
+
+#endif   // TestRcClipGeneric_HEADER_INCLUDED
 
 
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DiodeClipNR.cpp
+        RcClipGeneric.hpp
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -15,21 +15,14 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
+#if ! defined (mfx_dsp_va_RcClipGeneric_CODEHEADER_INCLUDED)
+#define mfx_dsp_va_RcClipGeneric_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/Approx.h"
-#include "fstb/fnc.h"
-#include "mfx/dsp/va/DiodeClipNR.h"
-
-#include <cassert>
-#include <cmath>
+#include <utility>
 
 
 
@@ -46,61 +39,45 @@ namespace va
 
 
 
-void	DiodeClipNR::set_sample_freq (double sample_freq)
+template <class F>
+RcClipGeneric <F>::RcClipGeneric (IvFunc &&fnc)
+:	_fnc (std::move (fnc))
+{
+	// Nothing
+}
+
+
+
+template <class F>
+typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc ()
+{
+	return _fnc;
+}
+
+
+
+template <class F>
+typename const RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc () const
+{
+	return _fnc;
+}
+
+
+
+template <class F>
+void	RcClipGeneric <F>::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
 	_sample_freq = float (    sample_freq);
 	_inv_fs      = float (1 / sample_freq);
 	update_internal_coef_rc ();
-
-	// Required at least once before any use, could be called in a constructor
-	update_internal_coef_d ();
 }
 
 
 
-void	DiodeClipNR::set_d1_is (float is)
-{
-	assert (is >= 1e-20f);
-	assert (is <= 0.1f);
-
-	_is1 = is;
-}
-
-
-
-void	DiodeClipNR::set_d2_is (float is)
-{
-	assert (is >= 1e-20f);
-	assert (is <= 0.1f);
-
-	_is2 = is;
-}
-
-
-
-void	DiodeClipNR::set_d1_n (float n)
-{
-	assert (n > 0);
-
-	_n1 = n;
-	update_internal_coef_d ();
-}
-
-
-
-void	DiodeClipNR::set_d2_n (float n)
-{
-	assert (n > 0);
-
-	_n2 = n;
-	update_internal_coef_d ();
-}
-
-
-
-void	DiodeClipNR::set_capa (float c)
+template <class F>
+void	RcClipGeneric <F>::set_capa (float c)
 {
 	assert (c > 0);
 
@@ -110,7 +87,8 @@ void	DiodeClipNR::set_capa (float c)
 
 
 
-void	DiodeClipNR::set_cutoff_freq (float f)
+template <class F>
+void	RcClipGeneric <F>::set_cutoff_freq (float f)
 {
 	assert (f > 0);
 
@@ -119,7 +97,8 @@ void	DiodeClipNR::set_cutoff_freq (float f)
 
 
 
-float	DiodeClipNR::process_sample (float x)
+template <class F>
+float	RcClipGeneric <F>::process_sample (float x)
 {
 	assert (_sample_freq > 0);
 
@@ -139,15 +118,15 @@ float	DiodeClipNR::process_sample (float x)
 			break;
 		}
 
-		const float    me   = (v2 >= 0) ? _is1 : -_is2;
-		const float    mv   = (v2 >= 0) ? _mv1 :  _mv2;
-		const float    id   =
-			me * (fstb::Approx::exp2 (v2 * mv * float (fstb::LOG2_E)) - 1);
-		const float    geqd = mv * id;   // dId/dV
+		const float    max_step = _fnc.get_max_step (v2);
+		float          id;
+		float          geqd;
+		_fnc.eval (id, geqd, v2);
+
 		const float    ieqd = id - geqd * v2;
 		v2_old = v2;
 		v2 = (gr_x - ieqc - ieqd) / (_gr_p_geqc + geqd);
-		v2 = fstb::limit (v2, v2_old - _max_step, v2_old + _max_step);
+		v2 = fstb::limit (v2, v2_old - max_step, v2_old + max_step);
 		++ nbr_it;
 	}
 	while (fabs (v2 - v2_old) > _max_dif_a);
@@ -161,7 +140,8 @@ float	DiodeClipNR::process_sample (float x)
 
 
 
-void	DiodeClipNR::clear_buffers ()
+template <class F>
+void	RcClipGeneric <F>::clear_buffers ()
 {
 	_ic = 0;
 	_v2 = 0;
@@ -177,16 +157,8 @@ void	DiodeClipNR::clear_buffers ()
 
 
 
-void	DiodeClipNR::update_internal_coef_d ()
-{
-	_max_step  = _vt * (_n1 + _n2) * 2;
-	_mv1       =  1 / (_vt * _n1);
-	_mv2       = -1 / (_vt * _n2);
-}
-
-
-
-void	DiodeClipNR::update_internal_coef_rc ()
+template <class F>
+void	RcClipGeneric <F>::update_internal_coef_rc ()
 {
 	_geqc      = 2 * _c * _sample_freq;
 //	_gr        = 1.f / _r;
@@ -198,6 +170,10 @@ void	DiodeClipNR::update_internal_coef_rc ()
 }  // namespace va
 }  // namespace dsp
 }  // namespace mfx
+
+
+
+#endif   // mfx_dsp_va_RcClipGeneric_CODEHEADER_INCLUDED
 
 
 
