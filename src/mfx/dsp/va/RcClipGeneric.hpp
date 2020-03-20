@@ -57,7 +57,7 @@ typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc ()
 
 
 template <class F>
-typename const RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc () const
+const typename RcClipGeneric <F>::IvFunc &	RcClipGeneric <F>::use_fnc () const
 {
 	return _fnc;
 }
