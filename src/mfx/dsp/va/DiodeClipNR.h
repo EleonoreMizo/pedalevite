@@ -43,6 +43,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 
 
 namespace mfx
@@ -92,27 +94,35 @@ protected:
 
 private:
 
-	void           update_internal_coef ();
+	void           update_internal_coef_rc ();
+	void           update_internal_coef_d ();
 
 	float          _sample_freq = 0; // Sampling rate, Hz. > 0. 0 = not init.
 
-	float          _max_it = 10;
+	float          _max_it      = 10;    // Maximum number of NR iterations
+	float          _max_dif_a   = 1e-6f; // Absolute precision to reach
 
 	// Circuit parameters
-	float          _vt  = 0.026f;    // Diode thermal voltage, volt. Sets the diode clipping threshold, around 0.65 V for 0.026
-	float          _is1 = 0.1e-15f;  // Diode 1 saturation current, ampere
-	float          _is2 = 0.1e-6f;   // Diode 2 saturation current, ampere
-	float          _n1  = 1;         // Diode 1 ideality factor
-	float          _n2  = 4;         // Diode 2 ideality factor
-	float          _r   = 2200;      // Serial resistor, ohm
-	float          _c   = 10e-9f;    // Parallel capacitor, farad
+	float          _vt   = 0.026f;   // Diode thermal voltage, volt. Sets the diode clipping threshold, around 0.65 V for 0.026
+	float          _is1  = 0.1e-15f; // Diode 1 saturation current, ampere
+	float          _is2  = 0.1e-6f;  // Diode 2 saturation current, ampere
+	float          _n1   = 1;        // Diode 1 ideality factor (or scale, or serial multiplier)
+	float          _n2   = 4;        // Diode 2 ideality factor ( " )
+	float          _r    = 2200;     // Serial resistor, ohm
+	float          _c    = 10e-9f;   // Parallel capacitor, farad
 
 	// Internal variables
-	float          _inv_fs = 0;      // Integration step, s. > 0. 0 = not init.
+	float          _inv_fs    = 0;     // Integration step, s. > 0. 0 = not init.
+	float          _gr        = 1.f / _r;
+	float          _max_step  = 0;     // Maximum v2 deviation between two iterations
+	float          _mv1       = 0;
+	float          _mv2       = 0;
+	float          _geqc      = 0;
+	float          _gr_p_geqc = 0;
 
 	// States
-	float          _ic  = 0;
-	float          _v2  = 0;
+	float          _ic  = 0;   // Capacitor current
+	float          _v2  = 0;   // Diode voltage, stored to init the NR iteration for the next sample
 
 
 
