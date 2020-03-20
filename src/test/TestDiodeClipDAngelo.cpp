@@ -34,9 +34,11 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/va/DiodeClipDAngelo.h"
 #include "mfx/FileOpWav.h"
 #include "test/TestDiodeClipDAngelo.h"
+#include "test/TimerAccurate.h"
 
 #include <cassert>
 #include <cmath>
+#include <cstdio>
 
 
 
@@ -52,6 +54,8 @@ http://www.wtfpl.net/ for more details.
 int	TestDiodeClipDAngelo::perform_test ()
 {
 	int            ret_val = 0;
+
+	printf ("Testing dsp::va::DiodeClipDAngelo...\n");
 
 	const double   sample_freq = 44100;
 	const int      ssin_len = fstb::round_int (sample_freq * 10);
@@ -139,6 +143,29 @@ int	TestDiodeClipDAngelo::perform_test ()
 	}
 
 	mfx::FileOpWav::save ("results/dclipdangelo2.wav", dst, sample_freq, 0.5f);
+
+	// Speed test
+	TimerAccurate  chrono;
+	dclip.set_capa (10e-9f);
+	const int         nbr_passes = 10;
+	for (int g = 1; g <= 100; g *= 100)
+	{
+		float          acc_dummy = 0;
+		chrono.reset ();
+		chrono.start ();
+		for (int pass_cnt = 0; pass_cnt < nbr_passes; ++pass_cnt)
+		{
+			for (int pos = 0; pos < len; ++pos)
+			{
+				acc_dummy += dclip.process_sample (src [pos] * g);
+			}
+		}
+		chrono.stop ();
+		double	      spl_per_s = chrono.get_best_rate (len * nbr_passes);
+		spl_per_s += fstb::limit (acc_dummy, -1e-30f, 1e-30f); // Anti-optimizer trick
+		const double   mega_sps  = spl_per_s / 1000000.0;
+		printf ("Speed (gain = %4d):%9.3f Mspl/s\n", g, mega_sps);
+	}
 
 	return ret_val;
 }
