@@ -268,6 +268,26 @@ float	Approx::log2 (float val)
 
 
 
+/*
+Other possible coefficients (found by Andrew Simper):
+5th order, max error 2.44e-7:
+	1.000000000000000
+	0.69315168779795
+	0.2401596780318
+	0.055817593635
+	0.008992164746
+	0.001878875789
+7th order, max error 1.64e-7:
+	1.000000000000000
+	0.693147180559945
+	0.2402265069591007
+	0.0555044941070
+	0.009615262656
+	0.001341316600
+	0.000143623130
+	0.000021615988
+https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
+*/
 float	Approx::exp2 (float val)
 {
 	// Truncated val for integer power of 2

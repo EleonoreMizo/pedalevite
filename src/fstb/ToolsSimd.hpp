@@ -879,17 +879,28 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 
 
 // Formula by 2DaT
+// Coefficients fixed by Andrew Simper to achieve true C0 continuity
 // 3-4 ulp
 // https://www.kvraudio.com/forum/viewtopic.php?p=7161124#p7161124
+// https://www.kvraudio.com/forum/viewtopic.php?p=7677266#p7677266
 ToolsSimd::VectF32	ToolsSimd::exp2_approx2 (VectF32 v)
 {
 	// [-0.5, 0.5] 2^x approx polynomial ~ 2.4 ulp
-	const auto     c0 = set1_f32 (1.000000119e+00f);
-	const auto     c1 = set1_f32 (6.931469440e-01f);
-	const auto     c2 = set1_f32 (2.402212024e-01f);
-	const auto     c3 = set1_f32 (5.550713092e-02f);
-	const auto     c4 = set1_f32 (9.675540961e-03f);
-	const auto     c5 = set1_f32 (1.327647245e-03f);
+	const auto     c0 = set1_f32 (1.000000088673463f);
+	const auto     c1 = set1_f32 (0.69314693211407f);
+	const auto     c2 = set1_f32 (0.24022037362574f);
+	const auto     c3 = set1_f32 (0.0555072548370f);
+	const auto     c4 = set1_f32 (0.0096798351988f);
+	const auto     c5 = set1_f32 (0.0013285658116f);
+
+	// Note: the following set of coefficients has a larger error (0.00043
+	// cents, maybe 7 ulp?) but ensures C2 continuity:
+	// c0 = 1.000000237
+	// c1 = 0.69314655
+	// c2 = 0.24021519
+	// c3 = 0.05550965
+	// c4 = 0.00969821
+	// c5 = 0.00132508
 
 	// i = round (v)
 	// v = v - i   
