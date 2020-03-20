@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/Approx.h"
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/va/DiodeClipDAngelo.h"
 
@@ -47,6 +48,8 @@ namespace va
 
 void	DiodeClipDAngelo::set_sample_freq (double sample_freq)
 {
+	assert (sample_freq > 0);
+
 	_sample_freq = float (sample_freq);
 
 	// Trapezoidal rule
