@@ -645,6 +645,7 @@ commonsrc = \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.cpp \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.h \
+        ../../src/mfx/dsp/va/DiodeClipDAngelo.hpp \
         ../../src/mfx/dsp/va/DiodeClipJcm.cpp \
         ../../src/mfx/dsp/va/DiodeClipJcm.h \
         ../../src/mfx/dsp/va/DiodeClipNR.cpp \

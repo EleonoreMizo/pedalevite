@@ -774,6 +774,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipNR.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.h" />

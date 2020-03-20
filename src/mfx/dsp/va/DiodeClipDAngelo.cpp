@@ -51,27 +51,49 @@ void	DiodeClipDAngelo::set_sample_freq (double sample_freq)
 	assert (sample_freq > 0);
 
 	_sample_freq = float (sample_freq);
-
-	// Trapezoidal rule
-	// v[n] = v[n-1] + (T/2) * (v'[n] + v'[n-1])
-	// v'[n] = (2/T) * v[n] - (2/T) * v[n-1] - v'[n-1]
-	_b0 = _sample_freq * 2;
-	_b1 = -_b0;
-	_a1 = 1;
-
-	// Coefficient update
-	update_internal_coef ();
+	update_internal_coef_fs ();
 }
 
 
 
-// Approximative way to set the clipping level.
-// The knee theshold is just the level of the knee, after the nearly-linear
-// zone.
-void	DiodeClipDAngelo::set_knee_thr (float lvl)
+void	DiodeClipDAngelo::set_d1_is (float is)
 {
-	_vt = lvl * 0.04f;
-	update_internal_coef ();
+	assert (is >= 1e-20f);
+	assert (is <= 0.1f);
+
+	_is1        = is;
+	_dirty_flag = true;
+}
+
+
+
+void	DiodeClipDAngelo::set_d2_is (float is)
+{
+	assert (is >= 1e-20f);
+	assert (is <= 0.1f);
+
+	_is2        = is;
+	_dirty_flag = true;
+}
+
+
+
+void	DiodeClipDAngelo::set_d1_n (float n)
+{
+	assert (n > 0);
+
+	_n1         = n;
+	_dirty_flag = true;
+}
+
+
+
+void	DiodeClipDAngelo::set_d2_n (float n)
+{
+	assert (n > 0);
+
+	_n2         = n;
+	_dirty_flag = true;
 }
 
 
@@ -81,8 +103,8 @@ void	DiodeClipDAngelo::set_capa (float c)
 {
 	assert (c > 0);
 
-	_c = c;
-	update_internal_coef ();
+	_c          = c;
+	_dirty_flag = true;
 }
 
 
@@ -97,19 +119,23 @@ void	DiodeClipDAngelo::set_cutoff_freq (float f)
 
 
 
-float	DiodeClipDAngelo::process_sample (float x)
+void	DiodeClipDAngelo::process_block (float dst_ptr [], float src_ptr [], int nbr_spl)
 {
-	assert (_sample_freq > 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (nbr_spl > 0);
 
-	const float    q = _k1 * x - _mem_p;      // Eq. 27
-	const float    r = float (fstb::sgn (q)); // Eq. 26
-	const float    w = _k2 * q + _k3 * r;     // Eq. 25
-	const float    u = _k4 * r * w + _k5;                // Eq.24
-	const float    o = fstb::Approx::wright_omega_4 (u); // "
-	const float    y = w - _vt * r * o;                  // "
-	_mem_p = _k6 * y - _a1 * _mem_p;          // Eq. 28
+	if (_dirty_flag)
+	{
+		update_internal_coef ();
+	}
 
-	return y;
+	float          mem_p = _mem_p;
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		dst_ptr [pos] = process_sample_internal (src_ptr [pos], mem_p);
+	}
+	_mem_p = mem_p;
 }
 
 
@@ -129,16 +155,37 @@ void	DiodeClipDAngelo::clear_buffers ()
 
 
 
+void	DiodeClipDAngelo::update_internal_coef_fs ()
+{
+	// Trapezoidal rule
+	// v[n] = v[n-1] + (T/2) * (v'[n] + v'[n-1])
+	// v'[n] = (2/T) * v[n] - (2/T) * v[n-1] - v'[n-1]
+	_b0 = _sample_freq * 2;
+	_b1 = -_b0;
+	_a1 = 1;
+
+	_k6 = _b1 - _a1 * _b0;
+	_dirty_flag = true;
+}
+
+
+
 void	DiodeClipDAngelo::update_internal_coef ()
 {
 	const float    cr        = _c * _r;
 	const float    invb0crp1 = 1 / (_b0 * cr + 1);
-	_k1 = 1 / cr;
-	_k2 = cr * invb0crp1;
-	_k3 = _is * _r * invb0crp1;
-	_k4 = 1 / _vt;
-	_k5 = fstb::Approx::log2 (_k3 * _k4) * float (fstb::LN2);
-	_k6 = _b1 - _a1 * _b0;
+	_k1  = 1 / cr;
+	_k2  = cr * invb0crp1;
+	_k31 =  _is1 * _r * invb0crp1;
+	_k32 = -_is2 * _r * invb0crp1;
+	_k41 =  1 / (_vt * _n1);
+	_k42 = -1 / (_vt * _n2);
+	_k51 = fstb::Approx::log2 (_k31 * _k41) * float (fstb::LN2);
+	_k52 = fstb::Approx::log2 (_k32 * _k42) * float (fstb::LN2);
+	_k71 =  _vt * _n1;
+	_k72 = -_vt * _n2;
+
+	_dirty_flag = false;
 }
 
 

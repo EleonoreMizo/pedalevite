@@ -37,6 +37,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 
 
 namespace mfx
@@ -67,10 +69,15 @@ public:
 	               operator = (DiodeClipDAngelo &&other)            = default;
 
 	void           set_sample_freq (double sample_freq);
-	void           set_knee_thr (float lvl);
+	void           set_d1_is (float is);
+	void           set_d2_is (float is);
+	void           set_d1_n (float n);
+	void           set_d2_n (float n);
 	void           set_capa (float c);
 	void           set_cutoff_freq (float f);
-	float          process_sample (float x);
+	fstb_FORCEINLINE float
+	               process_sample (float x);
+	void           process_block (float dst_ptr [], float src_ptr [], int nbr_spl);
 	void           clear_buffers ();
 
 
@@ -85,7 +92,10 @@ protected:
 
 private:
 
+	void           update_internal_coef_fs ();
 	void           update_internal_coef ();
+	fstb_FORCEINLINE float
+	               process_sample_internal (float x, float &mem_p);
 
 	float          _sample_freq = 0; // Sampling rate, Hz. > 0. 0 = not init
 
@@ -97,21 +107,30 @@ private:
 	float          _a1 = 0;
 
 	// Circuit parameters
-	float          _vt = 0.026f;   // Diode thermal voltage, volt. Sets the diode clipping threshold, around 0.65 V for 0.026
-	float          _is = 0.1e-15f; // Diode saturation current, ampere
-	float          _r  = 2200;     // Serial resistor, ohm
-	float          _c  = 10e-9f;   // Parallel capacitor, farad
+	float          _vt  = 0.026f;   // Diode thermal voltage, volt. Sets the diode clipping threshold, around 0.65 V for 0.026
+	float          _is1 = 0.1e-15f; // Diode saturation current, ampere
+	float          _is2 = 0.1e-6f;  // Diode saturation current, ampere
+	float          _n1  = 1;
+	float          _n2  = 4;
+	float          _r   = 2200;     // Serial resistor, ohm
+	float          _c   = 10e-9f;   // Parallel capacitor, farad
 
 	// Internal coefficients
-	float          _k1 = 0;
-	float          _k2 = 0;
-	float          _k3 = 0;
-	float          _k4 = 0;
-	float          _k5 = 0;
-	float          _k6 = 0;
+	float          _k1  = 0;
+	float          _k2  = 0;
+	float          _k31 = 0;
+	float          _k32 = 0;
+	float          _k41 = 0;
+	float          _k42 = 0;
+	float          _k51 = 0;
+	float          _k52 = 0;
+	float          _k6  = 0;
+	float          _k71 = 0;
+	float          _k72 = 0;
 
-	// Memory
+	// State
 	float          _mem_p = 0;
+	bool           _dirty_flag = true;
 
 
 
@@ -132,7 +151,7 @@ private:
 
 
 
-//#include "mfx/dsp/va/DiodeClipDAngelo.hpp"
+#include "mfx/dsp/va/DiodeClipDAngelo.hpp"
 
 
 

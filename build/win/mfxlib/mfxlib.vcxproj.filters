@@ -3492,6 +3492,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipNR.h">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
