@@ -53,6 +53,8 @@ public:
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
 	void           set_rate_limit (float rate_max_s);
+	void           set_rate_limit_pos (float rate_max_s);
+	void           set_rate_limit_neg (float rate_max_s);
 
 
 
@@ -66,12 +68,15 @@ protected:
 
 private:
 
-	void           update_rate ();
+	void           update_rate_p ();
+	void           update_rate_n ();
 
 	float          _sample_freq   = 44100;
 	float          _inv_fs        = 1.f / _sample_freq;
-	float          _rate_max_s    = 1000;                  // units/s
-	float          _rate_max      = _rate_max_s * _inv_fs; // units/spl
+	float          _rate_max_p_s  = 1000;                    // Pos, units/s
+	float          _rate_max_n_s  = 1000;                    // Neg, units/s
+	float          _rate_max_p    = _rate_max_p_s * _inv_fs; // Pos, units/spl
+	float          _rate_max_n    = _rate_max_n_s * _inv_fs; // Neg, units/spl
 
 	float          _state         = 0;
 

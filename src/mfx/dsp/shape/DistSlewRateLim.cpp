@@ -49,7 +49,8 @@ void	DistSlewRateLim::set_sample_freq (double sample_freq)
 
 	_sample_freq = float (sample_freq);
 	_inv_fs      = float (1.0 / sample_freq);
-	update_rate ();
+	update_rate_p ();
+	update_rate_n ();
 }
 
 
@@ -72,8 +73,8 @@ void	DistSlewRateLim::process_block (float dst_ptr [], const float src_ptr [], i
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
 		const float    x       = src_ptr [pos];
-		const float    val_min = state - _rate_max;
-		const float    val_max = state + _rate_max;
+		const float    val_min = state - _rate_max_n;
+		const float    val_max = state + _rate_max_p;
 		state = fstb::limit (x, val_min, val_max);
 		dst_ptr [pos] = state;
 	}
@@ -87,8 +88,24 @@ void	DistSlewRateLim::set_rate_limit (float rate_max_s)
 {
 	assert (rate_max_s > 0);
 
-	_rate_max_s = rate_max_s;
-	update_rate ();
+	set_rate_limit_pos (rate_max_s);
+	set_rate_limit_neg (rate_max_s);
+}
+
+
+
+void	DistSlewRateLim::set_rate_limit_pos (float rate_max_s)
+{
+	_rate_max_p_s = rate_max_s;
+	update_rate_p ();
+}
+
+
+
+void	DistSlewRateLim::set_rate_limit_neg (float rate_max_s)
+{
+	_rate_max_n_s = rate_max_s;
+	update_rate_n ();
 }
 
 
@@ -101,9 +118,16 @@ void	DistSlewRateLim::set_rate_limit (float rate_max_s)
 
 
 
-void	DistSlewRateLim::update_rate ()
+void	DistSlewRateLim::update_rate_p ()
 {
-	_rate_max = _rate_max_s * _inv_fs;
+	_rate_max_p = _rate_max_p_s * _inv_fs;
+}
+
+
+
+void	DistSlewRateLim::update_rate_n ()
+{
+	_rate_max_n = _rate_max_n_s * _inv_fs;
 }
 
 

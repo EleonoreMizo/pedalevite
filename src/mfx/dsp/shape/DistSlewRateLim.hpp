@@ -41,8 +41,8 @@ namespace shape
 
 float	DistSlewRateLim::process_sample (float x)
 {
-	const float    val_min = _state - _rate_max;
-	const float    val_max = _state + _rate_max;
+	const float    val_min = _state - _rate_max_n;
+	const float    val_max = _state + _rate_max_p;
 	_state = fstb::limit (x, val_min, val_max);
 
 	return _state;
