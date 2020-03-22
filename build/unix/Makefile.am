@@ -662,6 +662,8 @@ commonsrc = \
         ../../src/mfx/dsp/va/IvDiodeAntipar.hpp \
         ../../src/mfx/dsp/va/IvPoly.h \
         ../../src/mfx/dsp/va/IvPoly.hpp \
+        ../../src/mfx/dsp/va/MoogLadderDAngelo.h \
+        ../../src/mfx/dsp/va/MoogLadderDAngelo.hpp \
         ../../src/mfx/dsp/va/RcClipGeneric.h \
         ../../src/mfx/dsp/va/RcClipGeneric.hpp \
         ../../src/mfx/dsp/va/SolverNR.h \
@@ -1514,6 +1516,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpPhase.hpp \
         ../../src/test/TestLatAlgo.cpp \
         ../../src/test/TestLatAlgo.h \
+        ../../src/test/TestMoogLadderDAngelo.cpp \
+        ../../src/test/TestMoogLadderDAngelo.h \
         ../../src/test/TestOscSample.cpp \
         ../../src/test/TestOscSample.h \
         ../../src/test/TestOscSampleSyncFade.cpp \
