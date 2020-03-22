@@ -643,6 +643,14 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsTanh.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
+        ../../src/mfx/dsp/va/AntisatAtanh.h \
+        ../../src/mfx/dsp/va/AntisatAtanh.hpp \
+        ../../src/mfx/dsp/va/AntisatRcp.h \
+        ../../src/mfx/dsp/va/AntisatRcp.hpp \
+        ../../src/mfx/dsp/va/AntisatSinh.h \
+        ../../src/mfx/dsp/va/AntisatSinh.hpp \
+        ../../src/mfx/dsp/va/AntisatSq.h \
+        ../../src/mfx/dsp/va/AntisatSq.hpp \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.cpp \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.h \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.hpp \
@@ -656,6 +664,10 @@ commonsrc = \
         ../../src/mfx/dsp/va/IvPoly.hpp \
         ../../src/mfx/dsp/va/RcClipGeneric.h \
         ../../src/mfx/dsp/va/RcClipGeneric.hpp \
+        ../../src/mfx/dsp/va/SolverNR.h \
+        ../../src/mfx/dsp/va/SolverNR.hpp \
+        ../../src/mfx/dsp/va/SvfAntisat.h \
+        ../../src/mfx/dsp/va/SvfAntisat.hpp \
         ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.h \
         ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.hpp \
         ../../src/mfx/dsp/wnd/CoefGenBlackman.h \
@@ -1530,6 +1542,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSmooth.h \
         ../../src/test/TestSvf.cpp \
         ../../src/test/TestSvf.h \
+        ../../src/test/TestSvfAntisat.cpp \
+        ../../src/test/TestSvfAntisat.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \

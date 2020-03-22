@@ -773,6 +773,14 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\StereoLevel.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatAtanh.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatAtanh.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatRcp.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatRcp.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSinh.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSinh.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSq.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSq.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h" />
@@ -783,6 +791,10 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\RcClipGeneric.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\RcClipGeneric.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\SolverNR.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\SolverNR.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\SvfAntisat.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\SvfAntisat.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBHMinLobe.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBHMinLobe.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBlackman.h" />

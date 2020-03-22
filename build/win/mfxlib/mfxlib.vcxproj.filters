@@ -3489,6 +3489,10 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\SolverNR.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\SolverNR.hpp">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.hpp">
@@ -3510,6 +3514,36 @@
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\SvfAntisat.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatAtanh.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatRcp.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSinh.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSq.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSq.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSinh.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatRcp.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatAtanh.hpp">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\SvfAntisat.hpp">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
   </ItemGroup>
