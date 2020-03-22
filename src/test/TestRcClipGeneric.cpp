@@ -60,20 +60,20 @@ int	TestRcClipGeneric::perform_test ()
 	if (ret_val == 0)
 	{
 		ret_val = perform_test <mfx::dsp::va::IvDiodeAntipar> (
-			"mfx::dsp::va::IvDiodeAntipar", "diodeap"
+			"IvDiodeAntipar", "diodeap"
 		);
 	}
 	if (ret_val == 0)
 	{
 		ret_val = perform_test <mfx::dsp::va::IvPoly <17, 5> > (
-			"mfx::dsp::va::IvPoly <17, 5>", "poly17o5o-"
+			"IvPoly <17, 5>", "poly17o5o-"
 		);
 	}
-#if 0
+#if 1
 	if (ret_val == 0)
 	{
 		ret_val = perform_test <mfx::dsp::va::IvPoly <9, 2> > (
-			"mfx::dsp::va::IvPoly <9, 2>", "poly9o2o-"
+			"IvPoly <9, 2>", "poly9o2o-"
 		);
 	}
 #endif
