@@ -96,7 +96,9 @@ private:
 	public:
 		typedef float DataType;
 		fstb_FORCEINLINE void
-		               set_ab (float a, float b);
+		               set_a (float a);
+		fstb_FORCEINLINE void
+		               set_b (float b);
 		fstb_FORCEINLINE void
 		               set_estimation (float y);
 		fstb_FORCEINLINE float
@@ -106,23 +108,20 @@ private:
 	private:
 		float          _a = 0;
 		float          _b = 1;
+		float          _one_over_b     = 1;
+		float          _one_over_1_m_b = 0;
 		float          _y = 0;
 	};
 
-	static fstb_FORCEINLINE float
-	               tanh_fast (float x);
-	static fstb_FORCEINLINE float
-	               atanh_fast (float x);
-	static fstb_FORCEINLINE float
-	               sinh_fast (float x);
-	static fstb_FORCEINLINE float
-	               asinh_fast (float x);
+	inline void    update_b ();
 
 	float          _sample_freq = 0;
 	float          _inv_fs      = 0;
 
-	float          _g = 0;
-	float          _k = 0;  // R - 1
+	float          _g     = 0;
+	float          _g_inv = 0;
+	float          _b     = 0;
+	float          _k     = 0;  // R - 1
 
 	SolverNR <EqBp, 50, true>
 	               _solver { EqBp (), 1e-6f, 0.2f };

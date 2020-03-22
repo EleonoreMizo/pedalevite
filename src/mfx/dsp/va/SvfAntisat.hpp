@@ -64,6 +64,7 @@ void	SvfAntisat <AS>::set_sample_freq (double sample_freq)
 
 	_sample_freq = float (    sample_freq);
 	_inv_fs      = float (1 / sample_freq);
+	update_b ();
 }
 
 
@@ -87,7 +88,9 @@ void	SvfAntisat <AS>::set_freq (float f)
 	assert (f > 0);
 	assert (f < _sample_freq * 0.5f);
 
-	_g = float (fstb::Approx::tan_mystran (float (fstb::PI) * f * _inv_fs));
+	_g     = float (fstb::Approx::tan_mystran (float (fstb::PI) * f * _inv_fs));
+	_g_inv = 1.f / _g;
+	update_b ();
 }
 
 
@@ -116,6 +119,7 @@ void	SvfAntisat <AS>::set_reso (float r)
 	assert (r <= 1.75f);
 
 	_k = -r;
+	update_b ();
 }
 
 
@@ -142,17 +146,15 @@ void	SvfAntisat <AS>::process_sample (float &lp, float &bp, float &hp, float x)
 {
 	assert (_sample_freq > 0);
 
-	const float    a = (_s1 + _g * (x  - _s2)) / _g;
-	const float    b = ( -1 - _g * (_g + _k )) / _g;
-
 	// Solve bp in: tanh (a + b * bp) - bp = 0
+	const float    a = (_s1 + _g * (x  - _s2)) * _g_inv;
 	EqBp &         fnc = _solver.use_fnc ();
-	fnc.set_ab (a, b);
+	fnc.set_a (a);
 	bp = _solver.slove ();
 	fnc.set_estimation (bp);
 	const float    at_bp = AS::eval_inv (bp);
 
-	lp = _g * bp + _s2;
+	lp =     _g * bp + _s2;
 	hp = x - _k * bp - at_bp - lp;
 
 	// Updates states
@@ -190,10 +192,31 @@ void	SvfAntisat <AS>::clear_buffers ()
 
 
 template <class AS>
-void	SvfAntisat <AS>::EqBp::set_ab (float a, float b)
+void	SvfAntisat <AS>::update_b ()
+{
+	_b = (-1 - _g * (_g + _k )) * _g_inv;
+	_solver.use_fnc ().set_b (_b);
+}
+
+
+
+template <class AS>
+void	SvfAntisat <AS>::EqBp::set_a (float a)
 {
 	_a = a;
+}
+
+
+
+template <class AS>
+void	SvfAntisat <AS>::EqBp::set_b (float b)
+{
 	_b = b;
+	_one_over_b = 1.f / b;
+	if (b != 1)
+	{
+		_one_over_1_m_b = 1.f / (1 - b);
+	}
 }
 
 
@@ -210,8 +233,8 @@ void	SvfAntisat <AS>::EqBp::set_estimation (float y)
 ==============================================================================
 Name: estimate
 Description:
-	Resturns an estimation of x for f(a + b*x) - x = 0. This value is fed to
-	the Newton-Raphson algorithm.
+	Resturns a quick estimation of x for f(a+b*x) - x = 0. This value is fed as
+	initial guess to the Newton-Raphson algorithm.
 	Uses a piece-wise linear approximation for tanh (or other similar
 	functions):
 	           { -1 for x <= -1
@@ -223,7 +246,7 @@ Description:
 
 	So we try to find x0 with the "inbetween" approx for f.
 	Then we check if a + b * x0 (the tanh argument) is in [-1 ; 1].
-	If yes, we keep the value. Otherwise, we retry with the constant approx,
+	If yes, we keep the value. Otherwise, we retry with the constant part,
 	depending on the a + b * x0 sign.
 Returns: the estimation
 Throws: Nothing
@@ -241,15 +264,15 @@ float	SvfAntisat <AS>::EqBp::estimate ()
 	// t0 = _a + _b * x0
 	else if (_a < _b - 1)      // t0 < -1
 	{
-		return (-1 - _a) / _b;
+		return (-1 - _a) * _one_over_b;
 	}
 	else if (_a > 1 - _b) // t0 > 1
 	{
-		return ( 1 - _a) / _b;
+		return ( 1 - _a) * _one_over_b;
 	}
 	else if (_b != 1)
 	{
-		return _a / (1 - _b);
+		return _a * _one_over_1_m_b;
 	}
 
 	return _y;
@@ -276,7 +299,7 @@ Throws: Nothing
 template <class AS>
 void	SvfAntisat <AS>::EqBp::eval (float &y, float &dy, float x)
 {
-	const float    lx   = _a + _b * x;
+	const float    lx = _a + _b * x;
 	AS::eval (y, dy, lx);
 	y  =       y - x;
 	dy = _b * dy - 1;
