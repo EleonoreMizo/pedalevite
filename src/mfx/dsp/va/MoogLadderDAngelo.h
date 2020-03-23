@@ -116,8 +116,9 @@ private:
 	void           update_coef ();
 	void           update_gaincomp ();
 	fstb_FORCEINLINE float
-	               process_sample_internal (float x, float k0s);
-	float          compute_k0_max (float fmax_over_fs);
+	               process_sample_internal (float x, float g, float k0s);
+	float          compute_g_max (float fmax_over_fs);
+	float          compute_k0_max (float gmax);
 	static float   compute_alpha (float k);
 	static float   compute_knorm_factor ();
 
@@ -143,10 +144,12 @@ private:
 	float          _alpha_inv   = 0;    // 1 / _alpha
 	const float    _knorm_factor = compute_knorm_factor ();
 	float          _g           = 0;
+	float          _gi          = 0;
+	float          _gmax        = compute_g_max (0.49f);  // Maximum value for the modulated g
 	const float    _vt2i        = 1 / (2 * _vt);
 	float          _k0s         = 0;    // Coefficient for the LPF
 	float          _k0si        = 0;    // _k0s derivative for 1 V/oct modulations
-	float          _k0smax      = compute_k0_max (0.49f); // Maximum value for the modulated k0s
+	float          _k0smax      = compute_k0_max (_gmax); // Maximum value for the modulated k0s
 	float          _k0g         = 0;
 	std::array <float, N>               // Direct filter coefficients
 	               _r_arr;
