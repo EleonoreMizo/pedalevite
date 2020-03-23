@@ -88,7 +88,7 @@ void	SvfAntisat <AS>::set_freq (float f)
 	assert (f > 0);
 	assert (f < _sample_freq * 0.5f);
 
-	_g     = float (fstb::Approx::tan_mystran (float (fstb::PI) * f * _inv_fs));
+	_g     = fstb::Approx::tan_mystran (float (fstb::PI) * f * _inv_fs);
 	_g_inv = 1.f / _g;
 	update_b ();
 }
