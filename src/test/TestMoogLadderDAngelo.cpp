@@ -29,6 +29,10 @@ http://www.wtfpl.net/ for more details.
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
+#include "mfx/dsp/shape/WsBitcrush.h"
+#include "mfx/dsp/shape/WsFloorOfs.h"
+#include "mfx/dsp/shape/WsNegCond.h"
+#include "mfx/dsp/shape/WsTruncMod.h"
 #include "mfx/dsp/va/MoogLadderDAngelo.h"
 #include "mfx/FileOpWav.h"
 #include "test/TestMoogLadderDAngelo.h"
@@ -106,6 +110,7 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 		mfx::dsp::iir::Downsampler4xSimd <nbr_coef_42, nbr_coef_21> _dw;
 	};
 	fstb::SingleObj <UpDown> updw;
+	fstb::SingleObj <UpDown> updw_mod;
 	double coef_42 [nbr_coef_42];
 	double coef_21 [nbr_coef_21];
 		hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
@@ -116,8 +121,18 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 		);
 	updw->_up.set_coefs (coef_42, coef_21);
 	updw->_dw.set_coefs (coef_42, coef_21);
+	updw_mod->_up.set_coefs (coef_42, coef_21);
+	updw_mod->_dw.set_coefs (coef_42, coef_21);
 
-	mfx::dsp::va::MoogLadderDAngelo <N> filter;
+	mfx::dsp::va::MoogLadderDAngelo <
+		N,
+		mfx::dsp::shape::WsSqLin,
+		mfx::dsp::shape::WsBypass
+		// mfx::dsp::shape::WsFloorOfs <std::ratio <0, 1> >
+		// mfx::dsp::shape::WsNegCond <std::ratio <1, 1>, std::ratio <2, 1> >
+		// mfx::dsp::shape::WsBitcrush <std::ratio <1, 2>, false>
+		// mfx::dsp::shape::WsTruncMod <std::ratio <-3, 4>, std::ratio <3, 4> >
+	> filter;
 	filter.set_sample_freq (sample_freq * ovrspl);
 	filter.set_reso_norm (0.75f);
 
@@ -141,6 +156,41 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 			  std::string ("results/moogladderdangelo")
 			+ char ('0' + N / 10) + char ('0' + N % 10)
 			+ "-1.wav"
+		).c_str (),
+		dst, sample_freq, 0.5f
+	);
+
+	filter.clear_buffers ();
+	filter.set_max_mod_freq (25000.f);
+	filter.set_reso_norm (1.5f);
+	updw->_up.clear_buffers ();
+	updw->_dw.clear_buffers ();
+	const float    mamp = 0.3f;
+	const float    mo1 = float (2 * fstb::PI * 55 * 5 / sample_freq);
+	const float    mo2 = float (2 * fstb::PI * 55 * 9 / sample_freq);
+	for (int pos = 0; pos < len; ++pos)
+	{
+		const float    freq = float (20 * pow (1000, double (pos) / len));
+		const float    mval = float (tanh ((sin (pos * mo1) + sin (pos * mo2)) * 2) * mamp);
+		filter.set_freq_compensated (freq);
+		float          x = src [pos];
+		std::array <float, ovrspl> tmp_s;
+		std::array <float, ovrspl> tmp_m;
+		updw->_up.process_sample (tmp_s.data (), x);
+		updw_mod->_up.process_sample (tmp_m.data (), mval);
+		for (int k = 0; k < ovrspl; ++k)
+		{
+			tmp_s [k] = filter.process_sample_pitch_mod (tmp_s [k], tmp_m [k]);
+		}
+		x = updw->_dw.process_sample (tmp_s.data ());
+		dst [pos] = x;
+	}
+
+	mfx::FileOpWav::save (
+		(
+			  std::string ("results/moogladderdangelo")
+			+ char ('0' + N / 10) + char ('0' + N % 10)
+			+ "-2.wav"
 		).c_str (),
 		dst, sample_freq, 0.5f
 	);

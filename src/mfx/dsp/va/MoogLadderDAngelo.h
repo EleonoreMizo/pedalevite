@@ -10,6 +10,26 @@ Template parameters:
 
 - N: filter order, >= 1
 
+- SL: lowpass and input saturator. Requires:
+	SL::SL ();
+	float SL::operator () (float x);
+	Suggestions:
+	- WsTanhFast for the tanh curve quoted in the paper. Tuning issues at high
+		resonance.
+	- WsSqLin for a faster approximation with less tuning issues.
+	- WsSq for an even faster approximation, but with same issues as tanh
+	- WsHardclip for good tuning but high aliasing and low harmonics
+
+- SF: feedback saturator. Requires:
+	SF::SF ();
+	float SF::operator () (float x);
+	Suggestions:
+	- WsBypass
+	- WsNegCond <std::ratio <1, 1>, std::ratio <2, 1> > for zipper noises
+	- WsBitcrush <std::ratio <1, 2>, false>
+	- WsFloorOfs <std::ratio <0, 1> >
+	- WsTruncMod <std::ratio <-3, 4>, std::ratio <3, 4> >
+
 Algorithm from:
 Stephano D'Angelo, Vesa Valimaki,
 Generalized Moog Ladder Filter: Part II -
@@ -38,7 +58,8 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/fnc.h"
+#include "mfx/dsp/shape/WsBypass.h"
+#include "mfx/dsp/shape/WsSqLin.h"
 
 #include <array>
 
@@ -53,7 +74,7 @@ namespace va
 
 
 
-template <int N>
+template <int N, class SL = shape::WsSqLin, class SF = shape::WsBypass>
 class MoogLadderDAngelo
 {
 	static_assert (N >=  1, "Filter order must be >= 1.");
@@ -64,13 +85,20 @@ class MoogLadderDAngelo
 
 public:
 
+	typedef SL ShaperLpf;
+	typedef SF ShaperFdbk;
+
 	void           set_sample_freq (double sample_freq);
 	void           set_freq_natural (float f);
 	void           set_freq_compensated (float f);
+	void           set_max_mod_freq (float f);
 	void           set_reso_raw (float k);
 	void           set_reso_norm (float kn);
 	void           set_gain_comp (float gc);
 	float          process_sample (float x);
+	float          process_sample_pitch_mod (float x, float m);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	void           process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl);
 	void           clear_buffers ();
 
 
@@ -87,10 +115,11 @@ private:
 
 	void           update_coef ();
 	void           update_gaincomp ();
-
+	fstb_FORCEINLINE float
+	               process_sample_internal (float x, float k0s);
+	float          compute_k0_max (float fmax_over_fs);
 	static float   compute_alpha (float k);
-	static fstb_FORCEINLINE float
-	               clip_sigmoid (float x);
+	static float   compute_knorm_factor ();
 
 	float          _sample_freq = 0;    // Sampling rate, Hz. > 0. 0 = not init.
 	float          _inv_fs      = 0;    // 1 / fs, > 0
@@ -99,18 +128,25 @@ private:
 	float          _k           = 0;    // Resonance/feedback, >= 0
 	float          _gaincomp    = 0;    // Gain compensation at DC, from 0 = none to 1 = full
 
+	ShaperLpf      _shaper_input;
+	std::array <ShaperLpf, N>
+	               _shaper_lpf_arr;
+	ShaperFdbk     _shaper_fdbk;
+
 	// Thermal voltage, volt. Should be 26 mV but actually defines the clipping
 	// level. So we set it to unity.
-	float          _vt          = 1;
+	const float    _vt          = 1;
 
 	bool           _dirty_flag  = true; // The variables below require an update
 	float          _gc_mul      = 1;    // Final multiplier for the gain compensation
 	float          _alpha       = 0;    // Depends on _k
 	float          _alpha_inv   = 0;    // 1 / _alpha
-	const float    _knorm_factor = 1.f / fstb::ipowp (float (cos (fstb::PI / N)), N);
+	const float    _knorm_factor = compute_knorm_factor ();
 	float          _g           = 0;
-	float          _vt2i        = 1 / (2 * _vt);
-	float          _k0s         = 0;
+	const float    _vt2i        = 1 / (2 * _vt);
+	float          _k0s         = 0;    // Coefficient for the LPF
+	float          _k0si        = 0;    // _k0s derivative for 1 V/oct modulations
+	float          _k0smax      = compute_k0_max (0.49f); // Maximum value for the modulated k0s
 	float          _k0g         = 0;
 	std::array <float, N>               // Direct filter coefficients
 	               _r_arr;
@@ -133,8 +169,8 @@ private:
 
 private:
 
-	bool           operator == (const MoogLadderDAngelo <N> &other) const = delete;
-	bool           operator != (const MoogLadderDAngelo <N> &other) const = delete;
+	bool           operator == (const MoogLadderDAngelo <N, SL, SF> &other) const = delete;
+	bool           operator != (const MoogLadderDAngelo <N, SL, SF> &other) const = delete;
 
 }; // class MoogLadderDAngelo
 

@@ -23,6 +23,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/Approx.h"
+#include "fstb/fnc.h"
 
 #include <cassert>
 #include <cmath>
@@ -43,8 +44,8 @@ namespace va
 
 
 
-template <int N>
-void	MoogLadderDAngelo <N>::set_sample_freq (double sample_freq)
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
@@ -70,8 +71,8 @@ void	MoogLadderDAngelo <N>::set_sample_freq (double sample_freq)
 
 
 
-template <int N>
-void	MoogLadderDAngelo <N>::set_freq_natural (float f)
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::set_freq_natural (float f)
 {
 	assert (_sample_freq > 0);
 	assert (f > 0);
@@ -84,8 +85,8 @@ void	MoogLadderDAngelo <N>::set_freq_natural (float f)
 
 
 
-template <int N>
-void	MoogLadderDAngelo <N>::set_freq_compensated (float f)
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::set_freq_compensated (float f)
 {
 	assert (_sample_freq > 0);
 	assert (f > 0);
@@ -99,8 +100,20 @@ void	MoogLadderDAngelo <N>::set_freq_compensated (float f)
 
 
 
-template <int N>
-void	MoogLadderDAngelo <N>::set_reso_raw (float k)
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::set_max_mod_freq (float f)
+{
+	assert (_sample_freq > 0);
+	assert (f > 0);
+	assert (f < _sample_freq * 0.5f);
+
+	_k0smax = compute_k0_max (f * _inv_fs);
+}
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::set_reso_raw (float k)
 {
 	assert (_sample_freq > 0);
 	assert (k >= 0);
@@ -114,8 +127,8 @@ void	MoogLadderDAngelo <N>::set_reso_raw (float k)
 
 
 
-template <int N>
-void	MoogLadderDAngelo <N>::set_reso_norm (float kn)
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::set_reso_norm (float kn)
 {
 	assert (_sample_freq > 0);
 	assert (kn >= 0);
@@ -125,8 +138,8 @@ void	MoogLadderDAngelo <N>::set_reso_norm (float kn)
 
 
 
-template <int N>
-void	MoogLadderDAngelo <N>::set_gain_comp (float gc)
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::set_gain_comp (float gc)
 {
 	assert (gc >= 0);
 	assert (gc <= 1);
@@ -137,25 +150,155 @@ void	MoogLadderDAngelo <N>::set_gain_comp (float gc)
 
 
 
-template <int N>
-float	MoogLadderDAngelo <N>::process_sample (float x)
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x)
 {
 	if (_dirty_flag)
 	{
 		update_coef ();
 	}
 
+	return process_sample_internal (x, _k0s);
+}
+
+
+
+// m = 1 V/oct pitch modulation (0 = neutral)
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m)
+{
+	if (_dirty_flag)
+	{
+		update_coef ();
+	}
+
+	const float    k0s = std::min (_k0s + _k0si * m, _k0smax);
+
+	return process_sample_internal (x, k0s);
+}
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (nbr_spl > 0);
+
+	if (_dirty_flag)
+	{
+		update_coef ();
+	}
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		dst_ptr [pos] = process_sample_internal (src_ptr [pos], _k0s);
+	}
+}
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl)
+{
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (mod_ptr != nullptr);
+	assert (nbr_spl > 0);
+
+	if (_dirty_flag)
+	{
+		update_coef ();
+	}
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		const float    k0s = std::min (_k0s + _k0si * mod_ptr [pos], _k0smax);
+		dst_ptr [pos] = process_sample_internal (src_ptr [pos], k0s);
+	}
+}
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::clear_buffers ()
+{
+	_si_arr.fill (0);
+	_sf_arr.fill (0);
+	_sg_arr.fill (0);
+}
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::update_coef ()
+{
+	const float    a = float (fstb::PI) * _fc * _inv_fs;
+	_g =   fstb::Approx::tan_mystran (a)
+	     * _alpha_inv;
+
+	// Computes the g derivative, for fast 1 V/oct local modulations
+	// z(x) = g(fc * 2^x) = tan (2^x * pi * fc / fs) = tan (a * 2^x)
+	// with a = pi * fc / fs
+	// z'(x) = a * ln (2) * 2^x / (cos (a * 2^x)) ^ 2
+	// Let's assume z' is constant for small variations of x:
+	// z'(0) = a * ln (2) * (g ^ 2 + 1)
+	const float    z   = a * float (fstb::LN2) * (_g * _g + 1);
+	const float    p0s = 1 / (1 + _g);
+	const float    k0m = 2 * _vt * p0s;
+	_k0s  = _g * k0m;
+	_k0si =  z * k0m;
+	const float    gn  = fstb::ipowp (1 - p0s, N);
+	const float    kgn = _k * gn;
+	const float    p0g = 1 / (1 + kgn);
+	
+	const float    gm1p0s   = (_g - 1) * p0s;
+	float          gm1p0s_n = gm1p0s;
+	for (int k = 0; k < N; ++k)
+	{
+		_r_arr [k] =            - _bin_arr [k] * kgn;
+		_q_arr [k] = _r_arr [k] - _bin_arr [k] * gm1p0s_n;
+		gm1p0s_n *= gm1p0s;
+	}
+	_k0g = -_vt2i * p0g;
+
+	_dirty_flag = false;
+}
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::update_gaincomp ()
+{
+	_gc_mul = 1 + _k * _gaincomp;
+}
+
+
+
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_internal (float x, float k0s)
+{
 	// Input processing
-	float          yo = clip_sigmoid (_k0g * (x + _sg_arr [0]));
+	const float    fdbk = _shaper_fdbk (_sg_arr [0]);
+	float          yo   = _shaper_input (_k0g * (x + fdbk));
 
 	// Ladder stages
 	float          y;
 	for (int n = 0; n < N; ++n)
 	{
 		const float    yi = yo;
-		const float    yd = _k0s * (yi + _sf_arr [n]);
+		const float    yd = k0s * (yi + _sf_arr [n]);
 		y  = yd + _si_arr [n];
-		yo = clip_sigmoid (_vt2i * y);
+		yo = _shaper_lpf_arr [n] (_vt2i * y);
 
 		_si_arr [n] = yd + y;
 		_sf_arr [n] = _g * (yo - yi) - yo;
@@ -177,60 +320,19 @@ float	MoogLadderDAngelo <N>::process_sample (float x)
 
 
 
-template <int N>
-void	MoogLadderDAngelo <N>::clear_buffers ()
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::compute_k0_max (float fmax_over_fs)
 {
-	_si_arr.fill (0);
-	_sf_arr.fill (0);
-	_sg_arr.fill (0);
+	assert (fmax_over_fs > 0);
+	assert (fmax_over_fs < 0.5f);
+
+	return 2 * _vt * float (1 - 1 / (1 + tan (fstb::PI * fmax_over_fs)));
 }
 
 
 
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-template <int N>
-void	MoogLadderDAngelo <N>::update_coef ()
-{
-	_g =   fstb::Approx::tan_mystran (float (fstb::PI) * _fc * _inv_fs)
-	     * _alpha_inv;
-	const float    p0s = 1 / (1 + _g);
-	_k0s = 2 * _vt * _g * p0s;
-	const float    gn = fstb::ipowp (1 - p0s, N);
-	const float    kgn = _k * gn;
-	const float    p0g = 1 / (1 + kgn);
-	
-	const float    gm1p0s   = (_g - 1) * p0s;
-	float          gm1p0s_n = gm1p0s;
-	for (int k = 0; k < N; ++k)
-	{
-		_r_arr [k] =            - _bin_arr [k] * kgn;
-		_q_arr [k] = _r_arr [k] - _bin_arr [k] * gm1p0s_n;
-		gm1p0s_n *= gm1p0s;
-	}
-	_k0g = -_vt2i * p0g;
-
-	_dirty_flag = false;
-}
-
-
-
-template <int N>
-void	MoogLadderDAngelo <N>::update_gaincomp ()
-{
-	_gc_mul = 1 + _k * _gaincomp;
-}
-
-
-
-template <int N>
-float	MoogLadderDAngelo <N>::compute_alpha (float k)
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::compute_alpha (float k)
 {
 	float          alpha = 1 + k;
 
@@ -245,26 +347,10 @@ float	MoogLadderDAngelo <N>::compute_alpha (float k)
 
 
 
-template <int N>
-float	MoogLadderDAngelo <N>::clip_sigmoid (float x)
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::compute_knorm_factor ()
 {
-#if 1
-	// Good compromise between harmonics and tuning
-	x = fstb::limit (x, -1.5f, 1.5f);
-	const float    u = fstb::limit (x, -0.5f, 0.5f);
-	x -= u;
-	return u + x * (1 - 0.5f * fabs (x));
-
-#elif 0
-	// Bad tuning, worse than tanh(), but lots of harmonics
-	x = fstb::limit (x, -2.f, 2.f);
-	return x * (1 - 0.25f * fabs (x));
-
-#else
-	// Good tuning but low harmonics and higher aliasing
-	return fstb::limit (x, -1.f, 1.f);
-
-#endif
+	return 1.f / fstb::ipowp (float (cos (fstb::PI / N)), N);
 }
 
 
