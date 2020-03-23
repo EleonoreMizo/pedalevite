@@ -37,6 +37,23 @@ Explicit Nonlinear Model through a Novel Delay-Free Loop Implementation Method,
 IEEE Transactions on Audio, Speech and Language Processing,
 vol. 22, no. 12, pp. 1873-1883, December 2014
 
+Other filter modes can be recreated by mixing the individual stage inputs
+and the global output together. Below is a weight table for N = 4:
+
+Filter      In0 In1 In2 In3 Out
+-------------------------------
+4-pole LPF   .   .   .   .   1
+2-pole LPF   .   .   1   .   .
+4-pole BPF   .   .   4  -8   4
+2-pole BPF   .   2  -2   .   .
+4-pole HPF   1  -4   6  -4   1
+2-pole HPF   1  -2   1   .   .
+
+Table from:
+Vesa Valimaki, Antto Huovilainen,
+Oscillator and Filter Algorithms for Virtual Analog Synthesis,
+Computer Music Journal, vol. 30, no. 2, pp. 19-31, June 2006
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -96,7 +113,9 @@ public:
 	void           set_reso_norm (float kn);
 	void           set_gain_comp (float gc);
 	float          process_sample (float x);
+	float          process_sample (float x, float stage_in_ptr [N]);
 	float          process_sample_pitch_mod (float x, float m);
+	float          process_sample_pitch_mod (float x, float m, float stage_in_ptr [N]);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl);
 	void           clear_buffers ();
@@ -113,10 +132,18 @@ protected:
 
 private:
 
+	fstb_FORCEINLINE void
+	               check_coef ();
 	void           update_coef ();
 	void           update_gaincomp ();
 	fstb_FORCEINLINE float
 	               process_sample_internal (float x, float g, float k0s);
+	fstb_FORCEINLINE float
+	               process_sample_input (float x);
+	fstb_FORCEINLINE void
+	               process_sample_stage (float &y, float &yo, int n, float g, float k0s);
+	fstb_FORCEINLINE float
+	               process_sample_fdbk (float x, float y);
 	float          compute_g_max (float fmax_over_fs);
 	float          compute_k0_max (float gmax);
 	static float   compute_alpha (float k);
@@ -146,7 +173,8 @@ private:
 	float          _g           = 0;
 	float          _gi          = 0;
 	float          _gmax        = compute_g_max (0.49f);  // Maximum value for the modulated g
-	const float    _vt2i        = 1 / (2 * _vt);
+	const float    _vt2         = 2 * _vt;
+	const float    _vt2i        = 1 / _vt2;
 	float          _k0s         = 0;    // Coefficient for the LPF
 	float          _k0si        = 0;    // _k0s derivative for 1 V/oct modulations
 	float          _k0smax      = compute_k0_max (_gmax); // Maximum value for the modulated k0s

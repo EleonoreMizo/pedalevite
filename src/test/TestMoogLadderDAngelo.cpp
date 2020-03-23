@@ -93,6 +93,7 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 
 	std::vector <float>  src (len);
 	std::vector <float>  dst (len);
+	std::vector <float>  dst2 (len);
 
 	// Sawtooth
 	const int      per  = fstb::round_int (sample_freq / 55.0);
@@ -110,7 +111,7 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 		mfx::dsp::iir::Downsampler4xSimd <nbr_coef_42, nbr_coef_21> _dw;
 	};
 	fstb::SingleObj <UpDown> updw;
-	fstb::SingleObj <UpDown> updw_mod;
+	fstb::SingleObj <UpDown> updw2;
 	double coef_42 [nbr_coef_42];
 	double coef_21 [nbr_coef_21];
 		hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
@@ -121,8 +122,8 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 		);
 	updw->_up.set_coefs (coef_42, coef_21);
 	updw->_dw.set_coefs (coef_42, coef_21);
-	updw_mod->_up.set_coefs (coef_42, coef_21);
-	updw_mod->_dw.set_coefs (coef_42, coef_21);
+	updw2->_up.set_coefs (coef_42, coef_21);
+	updw2->_dw.set_coefs (coef_42, coef_21);
 
 	mfx::dsp::va::MoogLadderDAngelo <
 		N,
@@ -136,19 +137,33 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 	filter.set_sample_freq (sample_freq * ovrspl);
 	filter.set_reso_norm (0.75f);
 
+	std::array <float, ovrspl> tmp1;
+	std::array <float, ovrspl> tmp2;
+	std::array <float, N     > in_arr;
 	for (int pos = 0; pos < len; ++pos)
 	{
 		const float    freq = float (20 * pow (1000, double (pos) / len));
 		filter.set_freq_compensated (freq);
 		float          x = src [pos];
-		std::array <float, ovrspl> tmp;
-		updw->_up.process_sample (tmp.data (), x);
+		updw->_up.process_sample (tmp1.data (), x);
 		for (int k = 0; k < ovrspl; ++k)
 		{
-			tmp [k] = filter.process_sample (tmp [k]);
+			tmp1 [k] = filter.process_sample (tmp1 [k], in_arr.data ());
+			if (N == 4)
+			{
+				tmp2 [k] =
+					      in_arr [0]
+					- 4 * in_arr [1]
+					+ 6 * in_arr [2]
+					- 4 * in_arr [3]
+					+     tmp1 [k];
+			}
 		}
-		x = updw->_dw.process_sample (tmp.data ());
-		dst [pos] = x;
+		dst [pos] = updw->_dw.process_sample (tmp1.data ());
+		if (N == 4)
+		{
+			dst2 [pos] = updw2->_dw.process_sample (tmp2.data ());
+		}
 	}
 
 	mfx::FileOpWav::save (
@@ -159,6 +174,17 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 		).c_str (),
 		dst, sample_freq, 0.5f
 	);
+	if (N == 4)
+	{
+		mfx::FileOpWav::save (
+			(
+				  std::string ("results/moogladderdangelo")
+				+ char ('0' + N / 10) + char ('0' + N % 10)
+				+ "-1hp4.wav"
+			).c_str (),
+			dst2, sample_freq, 0.5f
+		);
+	}
 
 	filter.clear_buffers ();
 	filter.set_max_mod_freq (25000.f);
@@ -174,16 +200,13 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 		const float    mval = float (tanh ((sin (pos * mo1) + sin (pos * mo2)) * 2) * mamp);
 		filter.set_freq_compensated (freq);
 		float          x = src [pos];
-		std::array <float, ovrspl> tmp_s;
-		std::array <float, ovrspl> tmp_m;
-		updw->_up.process_sample (tmp_s.data (), x);
-		updw_mod->_up.process_sample (tmp_m.data (), mval);
+		updw->_up.process_sample (tmp1.data (), x);
+		updw2->_up.process_sample (tmp2.data (), mval);
 		for (int k = 0; k < ovrspl; ++k)
 		{
-			tmp_s [k] = filter.process_sample_pitch_mod (tmp_s [k], tmp_m [k]);
+			tmp1 [k] = filter.process_sample_pitch_mod (tmp1 [k], tmp2 [k]);
 		}
-		x = updw->_dw.process_sample (tmp_s.data ());
-		dst [pos] = x;
+		dst [pos] = updw->_dw.process_sample (tmp1.data ());
 	}
 
 	mfx::FileOpWav::save (

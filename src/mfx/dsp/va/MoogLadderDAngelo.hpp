@@ -154,12 +154,28 @@ void	MoogLadderDAngelo <N, SL, SF>::set_gain_comp (float gc)
 template <int N, class SL, class SF>
 float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x)
 {
-	if (_dirty_flag)
-	{
-		update_coef ();
-	}
+	check_coef ();
 
 	return process_sample_internal (x, _g, _k0s);
+}
+
+
+
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x, float stage_in_ptr [N])
+{
+	check_coef ();
+
+	float          yo = process_sample_input (x);
+	float          y;
+	for (int n = 0; n < N; ++n)
+	{
+		stage_in_ptr [n] = yo * _vt2;
+		process_sample_stage (y, yo, n, _g, _k0s);
+	}
+	y = process_sample_fdbk (x, y);
+
+	return y;
 }
 
 
@@ -168,15 +184,32 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x)
 template <int N, class SL, class SF>
 float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m)
 {
-	if (_dirty_flag)
-	{
-		update_coef ();
-	}
-
+	check_coef ();
 	const float    k0s = fstb::limit (_k0s + _k0si * m, 0.f, _k0smax);
 	const float    g   = fstb::limit (_g   + _gi   * m, 0.f, _gmax  );
 
 	return process_sample_internal (x, g, k0s);
+}
+
+
+
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m, float stage_in_ptr [N])
+{
+	check_coef ();
+	const float    k0s = fstb::limit (_k0s + _k0si * m, 0.f, _k0smax);
+	const float    g   = fstb::limit (_g   + _gi   * m, 0.f, _gmax  );
+
+	float          yo = process_sample_input (x);
+	float          y;
+	for (int n = 0; n < N; ++n)
+	{
+		stage_in_ptr [n] = yo * _vt2;
+		process_sample_stage (y, yo, n, g, k0s);
+	}
+	y = process_sample_fdbk (x, y);
+
+	return y;
 }
 
 
@@ -188,11 +221,7 @@ void	MoogLadderDAngelo <N, SL, SF>::process_block (float dst_ptr [], const float
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	if (_dirty_flag)
-	{
-		update_coef ();
-	}
-
+	check_coef ();
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
 		dst_ptr [pos] = process_sample_internal (src_ptr [pos], _g, _k0s);
@@ -209,11 +238,7 @@ void	MoogLadderDAngelo <N, SL, SF>::process_block_pitch_mod (float dst_ptr [], c
 	assert (mod_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	if (_dirty_flag)
-	{
-		update_coef ();
-	}
-
+	check_coef ();
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
 		const float    m   = mod_ptr [pos];
@@ -240,6 +265,17 @@ void	MoogLadderDAngelo <N, SL, SF>::clear_buffers ()
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::check_coef ()
+{
+	if (_dirty_flag)
+	{
+		update_coef ();
+	}
+}
 
 
 
@@ -291,23 +327,47 @@ void	MoogLadderDAngelo <N, SL, SF>::update_gaincomp ()
 template <int N, class SL, class SF>
 float	MoogLadderDAngelo <N, SL, SF>::process_sample_internal (float x, float g, float k0s)
 {
-	// Input processing
-	const float    fdbk = _shaper_fdbk (_sg_arr [0]);
-	float          yo   = _shaper_input (_k0g * (x + fdbk));
-
-	// Ladder stages
+	float          yo = process_sample_input (x);
 	float          y;
 	for (int n = 0; n < N; ++n)
 	{
-		const float    yi = yo;
-		const float    yd = k0s * (yi + _sf_arr [n]);
-		y  = yd + _si_arr [n];
-		yo = _shaper_lpf_arr [n] (_vt2i * y);
-
-		_si_arr [n] = yd + y;
-		_sf_arr [n] = g * (yo - yi) - yo;
+		process_sample_stage (y, yo, n, g, k0s);
 	}
+	y = process_sample_fdbk (x, y);
 
+	return y;
+}
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::process_sample_stage (float &y, float &yo, int n, float g, float k0s)
+{
+	const float    yi = yo;
+	const float    yd = k0s * (yi + _sf_arr [n]);
+	y  = yd + _si_arr [n];
+	yo = _shaper_lpf_arr [n] (_vt2i * y);
+
+	_si_arr [n] = yd + y;
+	_sf_arr [n] = g * (yo - yi) - yo;
+}
+
+
+
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_input (float x)
+{
+	const float    fdbk = _shaper_fdbk (_sg_arr [0]);
+	const float    yo   = _shaper_input (_k0g * (x + fdbk));
+
+	return yo;
+}
+
+
+
+template <int N, class SL, class SF>
+float	MoogLadderDAngelo <N, SL, SF>::process_sample_fdbk (float x, float y)
+{
 	// Feedback
 	const float    yf = y * _k;
 	for (int n = 0; n < N - 1; ++n)
