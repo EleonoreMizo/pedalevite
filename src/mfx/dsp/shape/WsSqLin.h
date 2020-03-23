@@ -1,21 +1,7 @@
 /*****************************************************************************
 
-        WsHardclip.h
+        WsSqLin.h
         Author: Laurent de Soras, 2020
-
-Template parameters:
-
-- VD: class writing and reading memory with SIMD vectors (destination access).
-	Typically, the fstb::DataAlign classes for aligned and unaligned data.
-	Requires:
-	static bool VD::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr);
-	static void VD::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val);
-
-- VS: same as VD, but for reading only (source access)
-	Requires:
-	static bool VS::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr);
 
 --- Legal stuff ---
 
@@ -30,14 +16,17 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_shape_WsHardclip_HEADER_INCLUDED)
-#define mfx_dsp_shape_WsHardclip_HEADER_INCLUDED
+#if ! defined (mfx_dsp_shape_WsSqLin_HEADER_INCLUDED)
+#define mfx_dsp_shape_WsSqLin_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
+
+#include <cmath>
 
 
 
@@ -50,7 +39,7 @@ namespace shape
 
 
 
-class WsHardclip
+class WsSqLin
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -58,14 +47,19 @@ class WsHardclip
 public:
 
 	template <typename T>
-	fstb_FORCEINLINE T
-	               operator () (T x);
+	fstb_FORCEINLINE T operator () (T x)
+	{
+		return process_sample (x);
+	}
 
 	template <typename T>
-	static fstb_FORCEINLINE T
-	               process_sample (T x);
-	template <typename VD, typename VS>
-	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	static fstb_FORCEINLINE T process_sample (T x)
+	{
+		x = fstb::limit (x, T (-1.5f), T (1.5f));
+		const T        u = fstb::limit (x, T (-0.5f), T (0.5f));
+		x -= u;
+		return u + x * (T (1) - T (0.5f) * T (fabs (x)));
+	}
 
 
 
@@ -85,7 +79,7 @@ private:
 
 private:
 
-}; // class WsHardclip
+}; // class WsSqLin
 
 
 
@@ -95,11 +89,11 @@ private:
 
 
 
-#include "mfx/dsp/shape/WsHardclip.hpp"
+//#include "mfx/dsp/shape/WsSqLin.hpp"
 
 
 
-#endif   // mfx_dsp_shape_WsHardclip_HEADER_INCLUDED
+#endif   // mfx_dsp_shape_WsSqLin_HEADER_INCLUDED
 
 
 

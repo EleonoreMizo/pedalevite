@@ -81,7 +81,7 @@ int	DrawShapers::draw_shapers ()
 	draw_func (mfx::dsp::shape::WsRcp1::process_block <DA, DA>    , path + "rcp1.eps"    , -20.0f, 20.0f);
 	draw_func (mfx::dsp::shape::WsRcp2::process_block <DA, DA>    , path + "rcp2.eps"    , -10.0f, 10.0f);
 	draw_func (mfx::dsp::shape::WsHardclip::process_block <DA, DA>, path + "hardclip.eps", -2.0f, 2.0f);
-	draw_func (mfx::dsp::shape::WsBitcrush::process_block <DA, DA>, path + "bitcrush.eps", -2.0f, 2.0f);
+	draw_func (mfx::dsp::shape::WsBitcrush <std::ratio <4, 1>, true>::process_block <DA, DA>, path + "bitcrush.eps", -2.0f, 2.0f);
 	draw_func (mfx::dsp::shape::WsSqrt::process_block <DA, DA>    , path + "sqrt.eps"    , -6.0f, 6.0f);
 	draw_func (mfx::dsp::shape::WsBelt::process_block <DA, DA>    , path + "belt.eps"    , -6.0f, 6.0f);
 	draw_func (mfx::dsp::shape::WsBadmood::process_block <DA, DA> , path + "badmood.eps" , -6.0f, 6.0f);

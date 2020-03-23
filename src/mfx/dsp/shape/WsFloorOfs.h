@@ -1,25 +1,11 @@
 /*****************************************************************************
 
-        WsSmthMax0.h
+        WsFloorOfs.h
         Author: Laurent de Soras, 2020
-
-https://www.desmos.com/calculator/1cus9jejml
 
 Template parameters:
 
-- A: size of the curvature as a std::ratio. > 0
-
-- VD: class writing and reading memory with SIMD vectors (destination access).
-	Typically, the fstb::DataAlign classes for aligned and unaligned data.
-	Requires:
-	static bool VD::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectS32 VD::load_s32 (const void *ptr);
-	static void VD::store_s32 (void *ptr, const fstb::ToolsSimd::VectS32 val);
-
-- VS: same as VD, but for reading only (source access)
-	Requires:
-	static bool VS::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectS32 VS::load_s32 (const void *ptr);
+- O: offset to apply before the floor() function, as std::ratio
 
 --- Legal stuff ---
 
@@ -34,16 +20,15 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_shape_WsSmthMax0_HEADER_INCLUDED)
-#define mfx_dsp_shape_WsSmthMax0_HEADER_INCLUDED
+#if ! defined (mfx_dsp_shape_WsFloorOfs_HEADER_INCLUDED)
+#define mfx_dsp_shape_WsFloorOfs_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-
-#include <ratio>
+#include "fstb/fnc.h"
 
 
 
@@ -56,27 +41,26 @@ namespace shape
 
 
 
-template <typename A>
-class WsSmthMax0
+template <class O>
+class WsFloorOfs
 {
-	static_assert (
-		std::ratio_greater <A, std::ratio <0, 1> >::value,
-		"WsSmthMax0: A > 0"
-	);
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
 	template <typename T>
-	fstb_FORCEINLINE T
-	               operator () (T x);
+	fstb_FORCEINLINE T operator () (T x)
+	{
+		return process_sample (x);
+	}
 
 	template <typename T>
-	static fstb_FORCEINLINE T
-	               process_sample (T x);
-	template <typename VD, typename VS>
-	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	static fstb_FORCEINLINE T process_sample (T x)
+	{
+		const T         ofs = T (O::num) / T (O::den);
+		return T (fstb::floor_int (x + ofs));
+	}
 
 
 
@@ -96,7 +80,7 @@ private:
 
 private:
 
-}; // class WsSmthMax0
+}; // class WsFloorOfs
 
 
 
@@ -106,11 +90,11 @@ private:
 
 
 
-#include "mfx/dsp/shape/WsSmthMax0.hpp"
+//#include "mfx/dsp/shape/WsFloorOfs.hpp"
 
 
 
-#endif   // mfx_dsp_shape_WsSmthMax0_HEADER_INCLUDED
+#endif   // mfx_dsp_shape_WsFloorOfs_HEADER_INCLUDED
 
 
 

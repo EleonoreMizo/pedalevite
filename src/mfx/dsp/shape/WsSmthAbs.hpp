@@ -43,34 +43,24 @@ namespace shape
 
 
 template <typename A>
-double	WsSmthAbs <A>::operator () (double x)
+template <typename T>
+T	WsSmthAbs <A>::operator () (T x)
 {
-	const double   a     = double (A::num) / double (A::den);
-	const double   a_inv = double (A::den) / double (A::num);
-	const double   xabs  = fabs (x);
-	if (xabs < a * 0.5)
-	{
-		x = a * 0.25 + a_inv * x * x;
-	}
-	else
-	{
-		x = xabs;
-	}
-
-	return x;
+	return process_sample (x);
 }
 
 
 
 template <typename A>
-float	WsSmthAbs <A>::process_sample (float x)
+template <typename T>
+T	WsSmthAbs <A>::process_sample (T x)
 {
-	const float    a     = float (A::num) / float (A::den);
-	const float    a_inv = float (A::den) / float (A::num);
-	const float    xabs  = fabs (x);
-	if (xabs < a * 0.5f)
+	const T        a     = T (A::num) / T (A::den);
+	const T        a_inv = T (A::den) / T (A::num);
+	const T        xabs  = T (fabs (x));
+	if (xabs < a * T (0.5f))
 	{
-		x = a * 0.25f + a_inv * x * x;
+		x = a * T (0.25f) + a_inv * x * x;
 	}
 	else
 	{

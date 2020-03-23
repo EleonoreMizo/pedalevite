@@ -5,6 +5,10 @@
 
 Template parameters:
 
+- S: prescaling as std::ratio. Quantisation steps are 1/S. > 0.
+
+- L: flag to enable clipping between -1 and +1.
+
 - VD: class writing and reading memory with SIMD vectors (destination access).
 	Typically, the fstb::DataAlign classes for aligned and unaligned data.
 	Requires:
@@ -37,6 +41,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <ratio>
 
 
@@ -50,15 +56,25 @@ namespace shape
 
 
 
+template <class S, bool L>
 class WsBitcrush
 {
+	static_assert (
+		std::ratio_greater <S, std::ratio <0, 1> >::value,
+		"WsNegCond: S > 0"
+	);
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static inline float
-	               process_sample (float x);
+	template <typename T>
+	fstb_FORCEINLINE T
+	               operator () (T x);
+
+	template <typename T>
+	static fstb_FORCEINLINE T
+	               process_sample (T x);
 	template <typename VD, typename VS>
 	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 
@@ -74,7 +90,7 @@ protected:
 
 private:
 
-	typedef std::ratio <4, 1> Sc;
+	typedef S Scale;
 
 
 

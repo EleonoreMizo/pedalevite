@@ -1,21 +1,13 @@
 /*****************************************************************************
 
-        WsHardclip.h
+        WsTruncMod.h
         Author: Laurent de Soras, 2020
 
-Template parameters:
+- LB: lower bound of the skipped range as std::ratio
 
-- VD: class writing and reading memory with SIMD vectors (destination access).
-	Typically, the fstb::DataAlign classes for aligned and unaligned data.
-	Requires:
-	static bool VD::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectF32 VD::load_f32 (const void *ptr);
-	static void VD::store_f32 (void *ptr, const fstb::ToolsSimd::VectF32 val);
+- UB: upper bound of the skipped range as std::ratio
 
-- VS: same as VD, but for reading only (source access)
-	Requires:
-	static bool VS::check_ptr (const void *ptr);
-	static fstb::ToolsSimd::VectF32 VS::load_f32 (const void *ptr);
+Generally LB is in [-1 ; 0[ range and UB ]0 ; +1]
 
 --- Legal stuff ---
 
@@ -30,14 +22,15 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_shape_WsHardclip_HEADER_INCLUDED)
-#define mfx_dsp_shape_WsHardclip_HEADER_INCLUDED
+#if ! defined (mfx_dsp_shape_WsTruncMod_HEADER_INCLUDED)
+#define mfx_dsp_shape_WsTruncMod_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 
 
 
@@ -50,22 +43,40 @@ namespace shape
 
 
 
-class WsHardclip
+template <class LB, class UB>
+class WsTruncMod
 {
+
+	static_assert (
+		std::ratio_greater_equal <UB, LB>::value,
+		"WsTruncMod: LB <= UB"
+	);
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	template <typename T>
-	fstb_FORCEINLINE T
-	               operator () (T x);
+   template <typename T>
+   fstb_FORCEINLINE T operator () (T x)
+   {
+      return process_sample (x);
+   }
 
-	template <typename T>
-	static fstb_FORCEINLINE T
-	               process_sample (T x);
-	template <typename VD, typename VS>
-	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+   template <typename T>
+   static fstb_FORCEINLINE T process_sample (T x)
+   {
+		const T        lb = T (LB::num) / T (LB::den);
+		const T        ub = T (UB::num) / T (UB::den);
+      if (x <= lb)
+      {
+         x = T (fstb::trunc_int (x) - 1);
+      }
+      else if (x >= ub)
+      {
+         x = T (fstb::trunc_int (x) + 1);
+      }
+      return x;
+   }
 
 
 
@@ -85,7 +96,7 @@ private:
 
 private:
 
-}; // class WsHardclip
+}; // class WsTruncMod
 
 
 
@@ -95,11 +106,11 @@ private:
 
 
 
-#include "mfx/dsp/shape/WsHardclip.hpp"
+//#include "mfx/dsp/shape/WsTruncMod.hpp"
 
 
 
-#endif   // mfx_dsp_shape_WsHardclip_HEADER_INCLUDED
+#endif   // mfx_dsp_shape_WsTruncMod_HEADER_INCLUDED
 
 
 

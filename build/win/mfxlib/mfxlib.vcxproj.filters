@@ -3552,6 +3552,27 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngelo.hpp">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFast.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSq.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqLin.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsNegCond.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTruncMod.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsFloorOfs.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBypass.h">
+      <Filter>mfx\dsp\shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

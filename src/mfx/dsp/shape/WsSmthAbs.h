@@ -41,6 +41,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <ratio>
 
 
@@ -66,10 +68,13 @@ class WsSmthAbs
 
 public:
 
-	inline double  operator () (double x);
+	template <typename T>
+	fstb_FORCEINLINE T
+	               operator () (T x);
 
-	static inline float
-	               process_sample (float x);
+	template <typename T>
+	static fstb_FORCEINLINE T
+	               process_sample (T x);
 	template <typename VD, typename VS>
 	static void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 

@@ -42,14 +42,28 @@ namespace shape
 
 
 
-float	WsBitcrush::process_sample (float x)
+template <class S, bool L>
+template <typename T>
+T	WsBitcrush <S, L>::operator () (T x)
 {
-	const float    scale     = float (Sc::num) / float (Sc::den);
-	const float    scale_inv = float (Sc::den) / float (Sc::num);
+	return process_sample (x);
+}
 
-	x = fstb::limit (x, -1.f, 1.f);
+
+
+template <class S, bool L>
+template <typename T>
+T	WsBitcrush <S, L>::process_sample (T x)
+{
+	const T        scale     = T (Scale::num) / T (Scale::den);
+	const T        scale_inv = T (Scale::den) / T (Scale::num);
+
+	if (L)
+	{
+		x = fstb::limit (x, T (-1), T (+1));
+	}
 	x *= scale;
-	x = float (fstb::round_int (x));
+	x = T (fstb::round_int (x));
 	x *= scale_inv;
 
 	return x;
@@ -57,8 +71,9 @@ float	WsBitcrush::process_sample (float x)
 
 
 
+template <class S, bool L>
 template <typename VD, typename VS>
-void  WsBitcrush::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
+void  WsBitcrush <S, L>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (VD::check_ptr (dst_ptr));
 	assert (VS::check_ptr (src_ptr));
@@ -66,9 +81,9 @@ void  WsBitcrush::process_block (float dst_ptr [], const float src_ptr [], int n
 	assert ((nbr_spl & 3) == 0);
 
 	const auto     scale     =
-		fstb::ToolsSimd::set1_f32 (float (Sc::num) / float (Sc::den));
+		fstb::ToolsSimd::set1_f32 (float (Scale::num) / float (Scale::den));
 	const auto     scale_inv =
-		fstb::ToolsSimd::set1_f32 (float (Sc::den) / float (Sc::num));
+		fstb::ToolsSimd::set1_f32 (float (Scale::den) / float (Scale::num));
 	const auto     m1 = fstb::ToolsSimd::set1_f32 (-1);
 	const auto     p1 = fstb::ToolsSimd::set1_f32 (+1);
 
@@ -76,8 +91,11 @@ void  WsBitcrush::process_block (float dst_ptr [], const float src_ptr [], int n
 	{
 		auto           x = VS::load_f32 (src_ptr + pos);
 
-		x  = fstb::ToolsSimd::max_f32 (x, m1);
-		x  = fstb::ToolsSimd::min_f32 (x, p1);
+		if (L)
+		{
+			x  = fstb::ToolsSimd::max_f32 (x, m1);
+			x  = fstb::ToolsSimd::min_f32 (x, p1);
+		}
 		x *= scale;
 		x  = fstb::ToolsSimd::conv_s32_to_f32 (
 			fstb::ToolsSimd::round_f32_to_s32 (x)

@@ -42,9 +42,18 @@ namespace shape
 
 
 
-float	WsHardclip::process_sample (float x)
+template <typename T>
+T	WsHardclip::operator () (T x)
 {
-	return fstb::limit (x, -1.f, +1.f);
+	return process_sample (x);
+}
+
+
+
+template <typename T>
+T	WsHardclip::process_sample (T x)
+{
+	return fstb::limit (x, T (-1), T (+1));
 }
 
 

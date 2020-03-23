@@ -42,38 +42,28 @@ namespace shape
 
 
 template <typename A>
-double	WsSmthMax0 <A>::operator () (double x)
+template <typename T>
+T	WsSmthMax0 <A>::operator () (T x)
 {
-	const double   a     = double (A::num) / double (A::den);
-	const double   a_inv = double (A::den) / double (A::num);
-	if (x < a * -0.5)
-	{
-		x = 0;
-	}
-	else if (x < a * 0.5)
-	{
-		x += a * 0.5;
-		x  = a_inv * 0.5 * x * x;
-	}
-
-	return x;
+	return process_sample (x);
 }
 
 
 
 template <typename A>
-float	WsSmthMax0 <A>::process_sample (float x)
+template <typename T>
+T	WsSmthMax0 <A>::process_sample (T x)
 {
-	const float    a     = float (A::num) / float (A::den);
-	const float    a_inv = float (A::den) / float (A::num);
-	if (x < a * -0.5f)
+	const T        a     = T (A::num) / T (A::den);
+	const T        a_inv = T (A::den) / T (A::num);
+	if (x < a * T (-0.5f))
 	{
 		x = 0;
 	}
-	else if (x < a * 0.5f)
+	else if (x < a * T (0.5f))
 	{
-		x += a * 0.5f;
-		x  = a_inv * 0.5f * x * x;
+		x += a * T (0.5f);
+		x  = a_inv * T (0.5f) * x * x;
 	}
 
 	return x;

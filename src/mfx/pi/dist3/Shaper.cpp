@@ -168,7 +168,9 @@ void	Shaper::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 		distort_block_shaper (_sbag._s_overshoot, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_BITCRUSH:
-		dsp::shape::WsBitcrush::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsBitcrush <std::ratio <4, 1>, true>::process_block <DA, DA> (
+			dst_ptr, src_ptr, nbr_spl
+		);
 		break;
 	case Type_LOPSIDED:
 		distort_block_shaper (_sbag._s_lopsided, dst_ptr, src_ptr, nbr_spl);

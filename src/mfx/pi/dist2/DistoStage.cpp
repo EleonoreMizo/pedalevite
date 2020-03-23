@@ -441,7 +441,9 @@ void	DistoStage::distort_block (Channel &chn, float dst_ptr [], const float src_
 		distort_block_shaper (_sbag._s_overshoot, dst_ptr, src_ptr, nbr_spl);
 		break;
 	case Type_BITCRUSH:
-		dsp::shape::WsBitcrush::process_block <DA, DA> (dst_ptr, src_ptr, nbr_spl);
+		dsp::shape::WsBitcrush <std::ratio <4, 1>, true>::process_block <DA, DA> (
+			dst_ptr, src_ptr, nbr_spl
+		);
 		break;
 	case Type_SLEWRATE:
 		chn._slew_rate_lim.process_block (dst_ptr, src_ptr, nbr_spl);

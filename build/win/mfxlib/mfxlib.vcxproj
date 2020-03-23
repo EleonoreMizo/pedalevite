@@ -743,6 +743,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym12.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym13.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsAsym13.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBypass.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsFloorOfs.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsHardclip.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsHardclip.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight1.h" />
@@ -752,6 +754,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight3.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLight3.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsLopsided.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsNegCond.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsOvershootAsym.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsProgClipper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsPuncherA.h" />
@@ -765,9 +768,13 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthAbs.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthMax0.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSmthMax0.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSq.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqLin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqrt.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqrt.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanh.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFast.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTruncMod.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.h" />

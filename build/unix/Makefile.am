@@ -616,6 +616,8 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsBitcrush.h \
         ../../src/mfx/dsp/shape/WsBitcrush.hpp \
         ../../src/mfx/dsp/shape/WsBreakBase.h \
+        ../../src/mfx/dsp/shape/WsBypass.h \
+        ../../src/mfx/dsp/shape/WsFloorOfs.h \
         ../../src/mfx/dsp/shape/WsHardclip.h \
         ../../src/mfx/dsp/shape/WsHardclip.hpp \
         ../../src/mfx/dsp/shape/WsLight1.h \
@@ -625,6 +627,7 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsLight3.h \
         ../../src/mfx/dsp/shape/WsLight3.hpp \
         ../../src/mfx/dsp/shape/WsLopsided.h \
+        ../../src/mfx/dsp/shape/WsNegCond.h \
         ../../src/mfx/dsp/shape/WsOvershootAsym.h \
         ../../src/mfx/dsp/shape/WsProgClipper.h \
         ../../src/mfx/dsp/shape/WsPuncherA.h \
@@ -638,9 +641,13 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsSmthAbs.hpp \
         ../../src/mfx/dsp/shape/WsSmthMax0.h \
         ../../src/mfx/dsp/shape/WsSmthMax0.hpp \
+        ../../src/mfx/dsp/shape/WsSq.h \
+        ../../src/mfx/dsp/shape/WsSqLin.h \
         ../../src/mfx/dsp/shape/WsSqrt.h \
         ../../src/mfx/dsp/shape/WsSqrt.hpp \
         ../../src/mfx/dsp/shape/WsTanh.h \
+        ../../src/mfx/dsp/shape/WsTanhFast.h \
+        ../../src/mfx/dsp/shape/WsTruncMod.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/va/AntisatAtanh.h \

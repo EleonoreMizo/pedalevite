@@ -31,6 +31,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <ratio>
 
 #include <cmath>
@@ -63,14 +65,23 @@ class WsSmartE
 
 public:
 
-	double         operator () (double x)
+	template <typename T>
+	fstb_FORCEINLINE T
+	               operator () (T x)
 	{
-		const double   a    = double (A::num) / double (A::den);
-		const double   b    = double (B::num) / double (B::den);
-		const double   xabs = fabs (x);
-		const double   bx   = b * x;
-		const double   num  = bx * (xabs + a);
-		const double   den  = bx * x + xabs * (a - 1) + 1;
+		return process_sample (x);
+	}
+
+	template <typename T>
+	static fstb_FORCEINLINE T
+	               process_sample (T x)
+	{
+		const T        a    = T (A::num) / T (A::den);
+		const T        b    = T (B::num) / T (B::den);
+		const T        xabs = T (fabs (x));
+		const T        bx   = b  * x;
+		const T        num  = bx * (xabs + a);
+		const T        den  = bx * x + xabs * (a - 1) + 1;
 
 		return num / den;
 	}
