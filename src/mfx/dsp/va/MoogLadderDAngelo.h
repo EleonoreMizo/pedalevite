@@ -102,10 +102,12 @@ class MoogLadderDAngelo
 
 public:
 
+	static const int  _order = N;
 	typedef SL ShaperLpf;
 	typedef SF ShaperFdbk;
 
 	void           set_sample_freq (double sample_freq);
+	void           set_scale (float s);
 	void           set_freq_natural (float f);
 	void           set_freq_compensated (float f);
 	void           set_max_mod_freq (float f);
@@ -162,19 +164,20 @@ private:
 	ShaperFdbk     _shaper_fdbk;
 
 	// Thermal voltage, volt. Should be 26 mV but actually defines the clipping
-	// level. So we set it to unity.
-	const float    _vt          = 1;
+	// level. So we set it to unity by default.
+	float          _vt          = 1;
 
 	bool           _dirty_flag  = true; // The variables below require an update
 	float          _gc_mul      = 1;    // Final multiplier for the gain compensation
+	float          _gc_mul_s    = 1;    // Same, for the stages
 	float          _alpha       = 0;    // Depends on _k
 	float          _alpha_inv   = 0;    // 1 / _alpha
 	const float    _knorm_factor = compute_knorm_factor ();
 	float          _g           = 0;
 	float          _gi          = 0;
 	float          _gmax        = compute_g_max (0.49f);  // Maximum value for the modulated g
-	const float    _vt2         = 2 * _vt;
-	const float    _vt2i        = 1 / _vt2;
+	float          _vt2         = 2 * _vt;
+	float          _vt2i        = 1 / _vt2;
 	float          _k0s         = 0;    // Coefficient for the LPF
 	float          _k0si        = 0;    // _k0s derivative for 1 V/oct modulations
 	float          _k0smax      = compute_k0_max (_gmax); // Maximum value for the modulated k0s

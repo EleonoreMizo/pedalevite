@@ -25,6 +25,8 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/Approx.h"
 #include "fstb/fnc.h"
 
+#include <algorithm>
+
 #include <cassert>
 #include <cmath>
 #include <cstdint>
@@ -66,6 +68,20 @@ void	MoogLadderDAngelo <N, SL, SF>::set_sample_freq (double sample_freq)
 	}
 
 	clear_buffers ();
+	_dirty_flag = true;
+}
+
+
+
+template <int N, class SL, class SF>
+void	MoogLadderDAngelo <N, SL, SF>::set_scale (float s)
+{
+	assert (s > 0);
+
+	_vt         = s * 0.5f;
+	_vt2        = 2 * _vt;
+	_vt2i       = 1 / _vt2;
+	update_gaincomp ();
 	_dirty_flag = true;
 }
 
@@ -170,7 +186,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample (float x, float stage_in_ptr
 	float          y;
 	for (int n = 0; n < N; ++n)
 	{
-		stage_in_ptr [n] = yo * _vt2;
+		stage_in_ptr [n] = yo * _gc_mul_s;
 		process_sample_stage (y, yo, n, _g, _k0s);
 	}
 	y = process_sample_fdbk (x, y);
@@ -204,7 +220,7 @@ float	MoogLadderDAngelo <N, SL, SF>::process_sample_pitch_mod (float x, float m,
 	float          y;
 	for (int n = 0; n < N; ++n)
 	{
-		stage_in_ptr [n] = yo * _vt2;
+		stage_in_ptr [n] = yo * _gc_mul_s;
 		process_sample_stage (y, yo, n, g, k0s);
 	}
 	y = process_sample_fdbk (x, y);
@@ -319,7 +335,8 @@ void	MoogLadderDAngelo <N, SL, SF>::update_coef ()
 template <int N, class SL, class SF>
 void	MoogLadderDAngelo <N, SL, SF>::update_gaincomp ()
 {
-	_gc_mul = 1 + _k * _gaincomp;
+	_gc_mul   = 1 + std::min (_k, _knorm_factor) * _gaincomp;
+	_gc_mul_s = _gc_mul * _vt2;
 }
 
 
