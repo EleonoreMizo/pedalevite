@@ -101,6 +101,7 @@ MoogLpf::MoogLpf ()
 	_state_set.add_observer (Param_SIDEC_AMP, _param_change_flag_mod);
 	_state_set.add_observer (Param_SELF_ENA , _param_change_flag_mod);
 	_state_set.add_observer (Param_SELF_AMP , _param_change_flag_mod);
+	_state_set.add_observer (Param_SELF_LPF , _param_change_flag_mod);
 
 	_param_change_flag_type.add_observer (_param_change_flag);
 	_param_change_flag_param.add_observer (_param_change_flag);
@@ -364,7 +365,7 @@ void	MoogLpf::update_param (bool force_flag)
 
 void	MoogLpf::update_lpf_selfmod (float f)
 {
-	static const float   b_s [3]  = { 0,                   0, 1 };
+	static const float   b_s [3]  = { 1,                   0, 0 };
 	static const float   a_s [3]  = { 1, float (fstb::SQRT2), 1 };
 	float                b_z [3];
 	float                a_z [3];
