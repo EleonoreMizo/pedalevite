@@ -374,8 +374,8 @@ void	MoogLadderDAngelo <N, SL, SF>::process_sample_stage (float &y, float &yo, i
 template <int N, class SL, class SF>
 float	MoogLadderDAngelo <N, SL, SF>::process_sample_input (float x)
 {
-	const float    fdbk = _shaper_fdbk (_sg_arr [0]);
-	const float    yo   = _shaper_input (_k0g * (x + fdbk));
+	const float    fdbk = _shaper_fdbk (_k0g *_sg_arr [0]);
+	const float    yo   = _shaper_input (_k0g * x + fdbk);
 
 	return yo;
 }
