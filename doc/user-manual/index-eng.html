@@ -56,6 +56,7 @@
 	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Two-band tremolo</a></li>
 	<li><a href="#fx-hypercomb">Hypercomb — Polyphonic comb filter</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix</a></li>
+	<li><a href="#fx-moogflt">Moog Filter — Filter</a></li>
 	<li><a href="#fx-nzbl">Noise Bleach — Noise gate</a></li>
 	<li><a href="#fx-nzcl">Noise Chlorine — Noise gate</a></li>
 	<li><a href="#fx-onsetdetector">Onset detector</a></li>
@@ -1751,6 +1752,66 @@ from the pedalboard with just this effect.</p>
 
 
 
+<h3><a id="fx-moogflt"></a>Moog Filter — Filter</h3>
+
+<p>This is a realistic recreation of 4-pole Moog filter, with an audio-rate
+cutoff frequency modulation possibility.
+The filter has two inputs, the first one is the main filter input, and the
+other one can be used as a sidechain to modulate the cutoff frequency.</p>
+
+<p class="var">Mode</p>
+<p>This is the filter type derived from the original Moog filter.
+One can obtain different filter modes by mixing the signals taken from
+different stages of the original filter.
+The following modes are available&#8239;:</p>
+<table>
+<tr><td><span class="ui">LP4</span></td><td>4-poles low-pass. Version originale du filtre.</td></tr>
+<tr><td><span class="ui">LP2</span></td><td>2-poles low-pass</td></tr>
+<tr><td><span class="ui">BP4</span></td><td>4-poles band-pass</td></tr>
+<tr><td><span class="ui">BP2</span></td><td>2-poles band-pass</td></tr>
+<tr><td><span class="ui">HP4</span></td><td>4-poles high-pass</td></tr>
+<tr><td><span class="ui">HP2</span></td><td>2-poles high-pass</td></tr>
+</table>
+
+<p class="var">Cutoff frequency</p>
+<p>This is the cutoff frequceny, in Hz.
+When the resonance is strong (above about 95&#8239;%), the filter gets out of
+tune.</p>
+
+<p class="var">Resonance</p>
+<p>Sets the resonance level.
+From 100&#8239;% and above, the filter self-oscillates.</p>
+
+<p class="var">DC gain compensation</p>
+<p>This parameter keeps constant the output volume for the bass frequencies,
+whatever the resonance level.
+Indeed, with the original filter, increasing the resonance lowers the bass
+frequency response.</p>
+
+<p class="var">Side chain FM</p>
+<p>Activates the cutoff frequency modulation by the second input.</p>
+
+<p class="var">Side chain FM amplitude</p>
+<p>Sets the modulation depth from the second input.
+When this amplitude is 0&#8239;dB, a unit more or less shifts the cutoff
+frequency up or down of about one octave.</p>
+
+<p class="var">Self-FM</p>
+<p>Activates the cutoff frequency self-modulation.
+This functionality connects the filter output to its frequency control.</p>
+
+<p class="var">Self-FM amplitude</p>
+<p>Sets the self-modulation amplitude.
+This is the amount of signal modulating the cutoff frequency.
+It is internally clipped to ±1 octave.</p>
+
+<p class="var">Self-FM low-pass filter frequency</p>
+<p>Sets the frequency of the low-pass filter that is located between the
+main filter output and the cutoff control.
+This filters helps to remove the excess of high frequencies.</p>
+
+
+
 <h3><a id="fx-nzbl"></a>Noise Bleach — Noise gate</h3>
 
 <p>Noise Bleach is a kind of noise gate.
@@ -2846,6 +2907,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r31, 2020-03-24</b></p>
+<ul>
+<li>Added Moog filter simulation.</li>
+</ul>
 
 <p><b>r30, 2020-03-09</b></p>
 <ul>

@@ -887,6 +887,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\FreqSplit.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\FreqSplitDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltMode.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\MoogLpf.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\MoogLpfDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
@@ -1545,6 +1549,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpf.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpfDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.cpp" />

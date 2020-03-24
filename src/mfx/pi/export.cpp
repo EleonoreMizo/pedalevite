@@ -74,6 +74,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/lfo1/LfoDesc.h"
 #include "mfx/pi/lpfs/Squeezer.h"
 #include "mfx/pi/lpfs/SqueezerDesc.h"
+#include "mfx/pi/moog1/MoogLpf.h"
+#include "mfx/pi/moog1/MoogLpfDesc.h"
 #include "mfx/pi/nzbl/NoiseBleach.h"
 #include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/nzcl/NoiseChlorine.h"
@@ -176,6 +178,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::dly0::DelayDesc         , mfx::pi::dly0::Delay              >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::fsplit::FreqSplitDesc   , mfx::pi::fsplit::FreqSplit        >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::dist3::Dist3Desc        , mfx::pi::dist3::Dist3             >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::moog1::MoogLpfDesc      , mfx::pi::moog1::MoogLpf           >::create ()
 		};
 
 		fact_list = l;

@@ -280,6 +280,9 @@
     <Filter Include="mfx\dsp\va">
       <UniqueIdentifier>{38c9fc9a-1968-436f-b1fe-e95e1a86eb6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\moog1">
+      <UniqueIdentifier>{bca6c175-7c9a-4c2c-8533-22ae244dcd97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -3573,6 +3576,18 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsBypass.h">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\MoogLpf.h">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\MoogLpfDesc.h">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\Param.h">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltMode.h">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4798,6 +4813,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp">
       <Filter>mfx\dsp\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpf.cpp">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpfDesc.cpp">
+      <Filter>mfx\pi\moog1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

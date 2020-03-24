@@ -899,6 +899,12 @@ commonsrc = \
         ../../src/mfx/pi/lpfs/Squeezer.h \
         ../../src/mfx/pi/lpfs/SqueezerDesc.cpp \
         ../../src/mfx/pi/lpfs/SqueezerDesc.h \
+        ../../src/mfx/pi/moog1/FltMode.h \
+        ../../src/mfx/pi/moog1/Param.h \
+        ../../src/mfx/pi/moog1/MoogLpf.cpp \
+        ../../src/mfx/pi/moog1/MoogLpf.h \
+        ../../src/mfx/pi/moog1/MoogLpfDesc.cpp \
+        ../../src/mfx/pi/moog1/MoogLpfDesc.h \
         ../../src/mfx/pi/nzbl/Cst.h \
         ../../src/mfx/pi/nzbl/FilterBank.cpp \
         ../../src/mfx/pi/nzbl/FilterBank.h \
