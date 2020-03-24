@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -52,6 +53,7 @@ void	Ramp::set_time (int nbr_spl, float time_step)
 {
 	assert (nbr_spl > 0);
 	assert (time_step > 0);
+	assert (fabs (nbr_spl * time_step - 1) < 1e-6f);
 
 	if (nbr_spl != _ramp_time)
 	{
@@ -129,6 +131,13 @@ float	Ramp::get_tgt () const
 bool	Ramp::is_ramping () const
 {
 	return (_ramp_pos > 0);
+}
+
+
+
+float	Ramp::get_step () const
+{
+	return _step;
 }
 
 

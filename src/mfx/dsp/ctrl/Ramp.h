@@ -64,6 +64,7 @@ public:
 	inline float   get_end () const;
 	inline float   get_tgt () const;
 	inline bool    is_ramping () const;
+	inline float   get_step () const;
 	inline int     get_rem_len () const;
 
 
