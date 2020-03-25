@@ -671,6 +671,8 @@ commonsrc = \
         ../../src/mfx/dsp/va/IvPoly.hpp \
         ../../src/mfx/dsp/va/MoogLadderDAngelo.h \
         ../../src/mfx/dsp/va/MoogLadderDAngelo.hpp \
+        ../../src/mfx/dsp/va/MoogLadderDAngeloData.h \
+        ../../src/mfx/dsp/va/MoogLadderDAngeloData.hpp \
         ../../src/mfx/dsp/va/RcClipGeneric.h \
         ../../src/mfx/dsp/va/RcClipGeneric.hpp \
         ../../src/mfx/dsp/va/SolverNR.h \

@@ -798,6 +798,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngelo.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngelo.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngeloData.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngeloData.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\RcClipGeneric.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\RcClipGeneric.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\SolverNR.h" />
