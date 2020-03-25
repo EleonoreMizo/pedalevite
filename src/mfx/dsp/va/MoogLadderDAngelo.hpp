@@ -96,7 +96,7 @@ void	MoogLadderDAngelo <N, SL, SF>::set_freq_natural (float f)
 	// Maximum is Fs / 8, otherwise it's not stable
 	assert (f <= _sample_freq * 0.125f);
 
-	set_freq_compensated (f * _alpha);
+	set_freq_compensated (f * _d._alpha);
 }
 
 
