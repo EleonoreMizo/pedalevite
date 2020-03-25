@@ -504,6 +504,22 @@ std::array <double, MoogLpf::_nbr_coef_21>	MoogLpf::_coef_21;
 // Signal nominal level
 const float	MoogLpf::_sig_scale = 0.125f;
 
+/*
+x0 ... x4 weights of each stage:
+H(s) = x0 + x1/(1+s)^1 + x2/(1+s)^2 + x3/(1+s)^3 + x4/(1+s)^4
+
+Desired frequency response:
+       a*s^4 + b*s^3 + c*s^2 + d*s + e
+H(s) = -------------------------------
+         s^4 + 4*s^3 + 6*s^2 + 4*s + 1
+
+[1 1 1 1 1]   [x0] = [a]
+[4 3 2 1 0]   [x1] = [b]
+[6 3 1 0 0] * [x2] = [c]
+[4 1 0 0 0]   [x3] = [d]
+[1 0 0 0 0]   [x4] = [e]
+*/
+
 const std::array <MoogLpf::WeightList, FltMode_NBR_ELT>	MoogLpf::_weight_table =
 {{
 	{{ 0,  0,  0,  0,  1 }},
@@ -511,7 +527,21 @@ const std::array <MoogLpf::WeightList, FltMode_NBR_ELT>	MoogLpf::_weight_table =
 	{{ 0,  0,  4, -8,  4 }},
 	{{ 0,  2, -2,  0,  0 }},
 	{{ 1, -4,  6, -4,  1 }},
-	{{ 1, -2,  1,  0,  0 }}
+	{{ 1, -2,  1,  0,  0 }},
+	{{ 1, -4,  8, -8,  4 }},
+	{{ 1, -2,  2,  0,  0 }},
+	{{ 1, -4, 10.25, -12.5, 6.25 }}, // {{ 1, -4, 12, -16, 8 }},
+	{{ 1,  0,  0,  0,  0 }}
+
+// Other possible shapes:
+//	{{ 0,  0,  0,  1,  0 }} // LP3
+//	{{ 0,  1,  0,  0,  0 }} // LP1
+//	{{ 1, -1,  0,  0,  0 }} // HP1
+//	{{ 1, -3,  3, -1,  0 }} // HP3
+// {{ 0,  0,  0,  1, -1 }} // LP3 * HP1
+//	{{ 0,  1, -3,  3, -1 }} // LP1 * HP3
+// {{ 1, -4, 10,-12,  5 }} // HP2 * N2+
+// {{ 0,  0,  4, -8,  5 }} // LP2 * N2-
 }};
 
 

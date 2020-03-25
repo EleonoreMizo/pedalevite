@@ -57,7 +57,7 @@ MoogLpfDesc::MoogLpfDesc ()
 
 	// Mode
 	auto           enu_sptr = std::make_shared <param::TplEnum> (
-		"LP4\nLP2\nBP4\nBP2\nHP4\nHP2",
+		"LP4\nLP2\nBP4\nBP2\nHP4\nHP2\nN4\nN2\nN2X\nPK",
 		"Mode\nMo",
 		"",
 		0,

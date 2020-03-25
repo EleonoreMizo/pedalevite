@@ -1867,18 +1867,18 @@ Ce paramètre permet d’affecter des durées différentes à chaque note.</p>
 
 
 
-<h3><a id="fx-moogflt"></a>Moog Filter — Filter</h3>
+<h3><a id="fx-moogflt"></a>Moog Filter — Filtre résonant auto-oscillant</h3>
 
 <p>Il s’agit d’une recréation réaliste d’un filtre Moog à 4 pôles, avec des
 possibilités de modulation de la fréquence de coupure à des fréquences audio.
-Le filtre a deux entrée, l’une est l’entrée principale, et l’autre sert à la
+Le filtre a deux entrées, l’une est l’entrée principale, et l’autre sert à la
 modulation.</p>
 
 <p class="var">Mode</p>
 <p>Il s’agit du type de filtre dérivé du filtre Moog original.
-En effet en prélevant le signal à divers étages du filtre et en les mixant
+En effet en prélevant des signaux à divers étages du filtre et en les mixant
 ensemble, on peut obtenir d’autres formes que le passe-bas original.
-Les formes disponibles sont les suivantes&#8239;</p>
+Les formes disponibles sont les suivantes&#8239;:</p>
 <table>
 <tr><td><span class="ui">LP4</span></td><td>Passe-bas 4 pôles. Version originale du filtre.</td></tr>
 <tr><td><span class="ui">LP2</span></td><td>Passe-bas 2 pôles</td></tr>
@@ -1886,6 +1886,10 @@ Les formes disponibles sont les suivantes&#8239;</p>
 <tr><td><span class="ui">BP2</span></td><td>Passe-bande 2 pôles</td></tr>
 <tr><td><span class="ui">HP4</span></td><td>Passe-haut 4 pôles</td></tr>
 <tr><td><span class="ui">HP2</span></td><td>Passe-haut 2 pôles</td></tr>
+<tr><td><span class="ui">N4</span></td><td>Coupe-bande 4 pôles</td></tr>
+<tr><td><span class="ui">N2</span></td><td>Coupe-bande 2 pôles</td></tr>
+<tr><td><span class="ui">N2X</span></td><td>Double coupe-bande 2 pôles, 2 octaves d’écart</td></tr>
+<tr><td><span class="ui">PK</span></td><td>Pic résonant</td></tr>
 </table>
 
 <p class="var">Cutoff frequency</p>
@@ -1895,7 +1899,7 @@ désaccorde un petit peu vers le bas.</p>
 
 <p class="var">Resonance</p>
 <p>Fixe le niveau de résonance.
-À partir de 100&#8239;% et au-delà, le filtre entre en auto-oscillation.</p>
+À partir de 100&#8239;% et au-delà, le filtre entre en oscillations.</p>
 
 <p class="var">DC gain compensation</p>
 <p>Ce paramètre permet de garder constant le volume de sortie en basse

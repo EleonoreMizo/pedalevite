@@ -43,6 +43,10 @@ enum FltMode
    FltMode_BP2,
    FltMode_HP4,
    FltMode_HP2,
+   FltMode_N4,
+   FltMode_N2,
+   FltMode_N2X,
+   FltMode_PK,
 
    FltMode_NBR_ELT
 
