@@ -71,6 +71,7 @@ MoogLpf::MoogLpf ()
 ,	_param_change_flag_mod ()
 ,	_chn_arr (_max_nbr_chn)
 ,	_flt_mode (FltMode_LP4)
+,	_flt_variant (FltVariant_STD)
 ,	_mod_sc_amp (0)
 ,	_mod_self_amp (0)
 ,	_mod_sc_flag (false)
@@ -84,6 +85,7 @@ MoogLpf::MoogLpf ()
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
 	_state_set.set_val_nat (desc_set, Param_MODE     , FltMode_LP4);
+	_state_set.set_val_nat (desc_set, Param_VARIANT  , FltVariant_STD);
 	_state_set.set_val_nat (desc_set, Param_CUTOFF   , 20480);
 	_state_set.set_val_nat (desc_set, Param_RESO     , 0);
 	_state_set.set_val_nat (desc_set, Param_GCOMP    , 0.5);
@@ -94,6 +96,7 @@ MoogLpf::MoogLpf ()
 	_state_set.set_val_nat (desc_set, Param_SELF_LPF , 20480);
 
 	_state_set.add_observer (Param_MODE     , _param_change_flag_type);
+	_state_set.add_observer (Param_VARIANT  , _param_change_flag_type);
 	_state_set.add_observer (Param_CUTOFF   , _param_change_flag_param);
 	_state_set.add_observer (Param_RESO     , _param_change_flag_param);
 	_state_set.add_observer (Param_GCOMP    , _param_change_flag_param);
@@ -113,7 +116,6 @@ MoogLpf::MoogLpf ()
 	init_ovrspl_coef ();
 	for (auto &chn : _chn_arr)
 	{
-		chn._flt.set_scale (_sig_scale);
 		chn._upspl_m.set_coefs (&_coef_42 [0], &_coef_21 [0]);
 		chn._upspl_s.set_coefs (&_coef_42 [0], &_coef_21 [0]);
 		chn._dwspl.set_coefs (&_coef_42 [0], &_coef_21 [0]);
@@ -163,8 +165,7 @@ int	MoogLpf::do_reset (double sample_freq, int /* max_buf_len */, int &latency)
 
 	for (auto &chn : _chn_arr)
 	{
-		chn._flt.set_sample_freq (fs_ovr);
-		chn._flt.set_max_mod_freq (_sample_freq * 0.6f);
+		chn._flt_ptr->init (fs_ovr, _sample_freq * 0.6f, _sig_scale);
 		chn._dckill.set_sample_freq (fs_ovr);
 		chn._dckill.set_cutoff_freq (5);
 	}
@@ -291,7 +292,7 @@ void	MoogLpf::clear_buffers ()
 		chn._upspl_m.clear_buffers ();
 		chn._upspl_s.clear_buffers ();
 		chn._dwspl.clear_buffers ();
-		chn._flt.clear_buffers ();
+		chn._flt_ptr->clear_buffers ();
 		chn._dckill.clear_buffers ();
 		for (auto &biq : chn._lpf_selfmod_arr)
 		{
@@ -315,6 +316,30 @@ void	MoogLpf::update_param (bool force_flag)
 				_state_set.get_val_tgt_nat (Param_MODE)
 			));
 			set_stage_weights (_flt_mode);
+
+			FltVariant     var_new = static_cast <FltVariant> (fstb::round_int (
+				_state_set.get_val_tgt_nat (Param_VARIANT)
+			));
+			if (var_new != _flt_variant)
+			{
+				for (auto &chn : _chn_arr)
+				{
+					FltInterface *   flt_new_ptr = chn._flt_ptr;
+					switch (var_new)
+					{
+					case FltVariant_STD:   flt_new_ptr = &chn._flt_std  ; break;
+					case FltVariant_QUANT: flt_new_ptr = &chn._flt_quant; break;
+					case FltVariant_FLIP:  flt_new_ptr = &chn._flt_flip ; break;
+					default:
+						assert (false);
+						break;
+					}
+					flt_new_ptr->use_data () = chn._flt_ptr->use_data ();
+					chn._flt_ptr = flt_new_ptr;
+				}
+
+				_flt_variant = var_new;
+			}
 		}
 
 		if (_param_change_flag_param (true) || force_flag)
@@ -327,9 +352,7 @@ void	MoogLpf::update_param (bool force_flag)
 				float (_state_set.get_val_end_nat (Param_GCOMP));
 			for (auto &chn : _chn_arr)
 			{
-				chn._flt.set_freq_compensated (cutoff_freq);
-				chn._flt.set_reso_norm (reso);
-				chn._flt.set_gain_comp (gcomp);
+				chn._flt_ptr->set_param (cutoff_freq, reso, gcomp);
 			}
 		}
 
@@ -394,13 +417,13 @@ void	MoogLpf::process_subblock_lp4_no_self (Channel &chn, int nbr_spl)
 	if (_mod_sc_flag)
 	{
 		const float *  mod_ptr = _buf_arr [1].data ();
-		chn._flt.process_block_pitch_mod (sig_ptr, sig_ptr, mod_ptr, nbr_spl);
+		chn._flt_ptr->process_block_pitch_mod (sig_ptr, sig_ptr, mod_ptr, nbr_spl);
 	}
 
 	// No sidechain
 	else
 	{
-		chn._flt.process_block (sig_ptr, sig_ptr, nbr_spl);
+		chn._flt_ptr->process_block (sig_ptr, sig_ptr, nbr_spl);
 	}
 
 	chn._dckill.process_block (sig_ptr, sig_ptr, nbr_spl);
@@ -440,7 +463,7 @@ void	MoogLpf::process_subblock_standard (Channel &chn, int nbr_spl)
 		const float    mod_val = sc_val + sm_val;
 
 		// Main filter processing
-		float          val = chn._flt.process_sample_pitch_mod (
+		float          val = chn._flt_ptr->process_sample_pitch_mod (
 			sig_ptr [pos], mod_val, out_arr.data ()
 		);
 

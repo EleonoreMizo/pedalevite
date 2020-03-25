@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Param.h
+        FltVariant.h
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -16,8 +16,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_moog1_Param_HEADER_INCLUDED)
-#define mfx_pi_moog1_Param_HEADER_INCLUDED
+#if ! defined (mfx_pi_moog1_FltVariant_HEADER_INCLUDED)
+#define mfx_pi_moog1_FltVariant_HEADER_INCLUDED
 
 
 
@@ -34,23 +34,16 @@ namespace moog1
 
 
 
-enum Param
+enum FltVariant
 {
 
-	Param_MODE = 0,
-	Param_VARIANT,
-	Param_CUTOFF,
-	Param_RESO,
-	Param_GCOMP,
-	Param_SIDEC_ENA,
-	Param_SIDEC_AMP,
-	Param_SELF_ENA,
-	Param_SELF_AMP,
-	Param_SELF_LPF,
+   FltVariant_STD = 0,
+   FltVariant_QUANT,
+   FltVariant_FLIP,
 
-	Param_NBR_ELT
+   FltVariant_NBR_ELT
 
-}; // enum Param
+}; // enum FltVariant
 
 
 
@@ -60,11 +53,11 @@ enum Param
 
 
 
-//#include "mfx/pi/moog1/Param.hpp"
+//#include "mfx/pi/moog1/FltVariant.hpp"
 
 
 
-#endif   // mfx_pi_moog1_Param_HEADER_INCLUDED
+#endif   // mfx_pi_moog1_FltVariant_HEADER_INCLUDED
 
 
 

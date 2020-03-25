@@ -890,6 +890,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\FreqSplitDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltMode.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltVariant.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltWrap.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltWrap.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\MoogLpf.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\MoogLpfDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\Param.h" />

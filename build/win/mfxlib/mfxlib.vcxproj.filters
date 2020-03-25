@@ -3588,6 +3588,18 @@
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltMode.h">
       <Filter>mfx\pi\moog1</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltVariant.h">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltInterface.h">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltWrap.h">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\moog1\FltWrap.hpp">
+      <Filter>mfx\pi\moog1</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngeloData.h">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>

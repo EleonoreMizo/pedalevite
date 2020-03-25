@@ -31,8 +31,15 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/iir/DcKiller1p.h"
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
+#include "mfx/dsp/shape/WsBitcrush.h"
+#include "mfx/dsp/shape/WsBypass.h"
+#include "mfx/dsp/shape/WsNegCond.h"
+#include "mfx/dsp/shape/WsSqLin.h"
 #include "mfx/dsp/va/MoogLadderDAngelo.h"
+#include "mfx/pi/moog1/FltInterface.h"
 #include "mfx/pi/moog1/FltMode.h"
+#include "mfx/pi/moog1/FltVariant.h"
+#include "mfx/pi/moog1/FltWrap.h"
 #include "mfx/pi/moog1/MoogLpfDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -96,6 +103,11 @@ private:
 	class Channel
 	{
 	public:
+		template <class S>
+		using FilterWrapper = FltWrap <
+			dsp::va::MoogLadderDAngelo <4, dsp::shape::WsSqLin, S>
+		>;
+
 		UpSpl          _upspl_m;         // Main signal
 		UpSpl          _upspl_s;         // Sidechain
 		DwSpl          _dwspl;
@@ -103,8 +115,17 @@ private:
 		float          _self_mod_save;   // Output value from the previous sample
 
 		// The following filters are oversampled
-		dsp::va::MoogLadderDAngelo <4>
-		               _flt;
+		FilterWrapper <dsp::shape::WsBypass>
+		               _flt_std;
+		FilterWrapper <
+			dsp::shape::WsBitcrush <std::ratio <2, 1>, false>
+		>              _flt_quant;
+		FilterWrapper <
+			dsp::shape::WsNegCond <std::ratio <1, 4>, std::ratio <1, 2> >
+		>              _flt_flip;
+
+		FltInterface * _flt_ptr = &_flt_std; // Pointer on the current filter
+
 		dsp::iir::DcKiller1p
 		               _dckill;
 		std::array <dsp::iir::Biquad, 2>
@@ -143,6 +164,7 @@ private:
 	ChannelArray   _chn_arr;
 
 	FltMode        _flt_mode;
+	FltVariant     _flt_variant;
 	dsp::ctrl::Ramp
 	               _mod_sc_amp;
 	dsp::ctrl::Ramp

@@ -901,7 +901,11 @@ commonsrc = \
         ../../src/mfx/pi/lpfs/Squeezer.h \
         ../../src/mfx/pi/lpfs/SqueezerDesc.cpp \
         ../../src/mfx/pi/lpfs/SqueezerDesc.h \
+        ../../src/mfx/pi/moog1/FltInterface.h \
         ../../src/mfx/pi/moog1/FltMode.h \
+        ../../src/mfx/pi/moog1/FltVariant.h \
+        ../../src/mfx/pi/moog1/FltWrap.h \
+        ../../src/mfx/pi/moog1/FltWrap.hpp \
         ../../src/mfx/pi/moog1/Param.h \
         ../../src/mfx/pi/moog1/MoogLpf.cpp \
         ../../src/mfx/pi/moog1/MoogLpf.h \

@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/pi/moog1/FltMode.h"
+#include "mfx/pi/moog1/FltVariant.h"
 #include "mfx/pi/moog1/MoogLpfDesc.h"
 #include "mfx/pi/moog1/Param.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
@@ -65,6 +66,16 @@ MoogLpfDesc::MoogLpfDesc ()
 	);
 	assert (enu_sptr->get_nat_max () == FltMode_NBR_ELT - 1);
 	_desc_set.add_glob (Param_MODE, enu_sptr);
+
+	enu_sptr = std::make_shared <param::TplEnum> (
+		"Standard\nQuantize\nFlip",
+		"Variant\nVar",
+		"",
+		0,
+		"%s"
+	);
+	assert (enu_sptr->get_nat_max () == FltVariant_NBR_ELT - 1);
+	_desc_set.add_glob (Param_VARIANT, enu_sptr);
 
 	// Cutoff frequency
 	auto           log_sptr = std::make_shared <param::TplLog> (
