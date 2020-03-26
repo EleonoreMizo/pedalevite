@@ -754,6 +754,12 @@ commonsrc = \
         ../../src/mfx/pi/cpx/CompexDesc.cpp \
         ../../src/mfx/pi/cpx/CompexDesc.h \
         ../../src/mfx/pi/cpx/Param.h \
+        ../../src/mfx/pi/dclip/DiodeClipper.cpp \
+        ../../src/mfx/pi/dclip/DiodeClipper.h \
+        ../../src/mfx/pi/dclip/DiodeClipperDesc.cpp \
+        ../../src/mfx/pi/dclip/DiodeClipperDesc.h \
+        ../../src/mfx/pi/dclip/Param.h \
+        ../../src/mfx/pi/dclip/Shape.h \
         ../../src/mfx/pi/dist1/DistoSimple.cpp \
         ../../src/mfx/pi/dist1/DistoSimple.h \
         ../../src/mfx/pi/dist1/DistoSimpleDesc.cpp \

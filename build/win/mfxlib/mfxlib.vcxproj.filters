@@ -283,6 +283,9 @@
     <Filter Include="mfx\pi\moog1">
       <UniqueIdentifier>{bca6c175-7c9a-4c2c-8533-22ae244dcd97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\dclip">
+      <UniqueIdentifier>{d297136e-3cec-44aa-bedd-d8402fb1d53f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -3606,6 +3609,18 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngeloData.hpp">
       <Filter>mfx\dsp\va</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dclip\DiodeClipper.h">
+      <Filter>mfx\pi\dclip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dclip\DiodeClipperDesc.h">
+      <Filter>mfx\pi\dclip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dclip\Param.h">
+      <Filter>mfx\pi\dclip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\dclip\Shape.h">
+      <Filter>mfx\pi\dclip</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4837,6 +4852,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpfDesc.cpp">
       <Filter>mfx\pi\moog1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dclip\DiodeClipper.cpp">
+      <Filter>mfx\pi\dclip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dclip\DiodeClipperDesc.cpp">
+      <Filter>mfx\pi\dclip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
