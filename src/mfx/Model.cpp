@@ -2292,12 +2292,16 @@ void	Model::process_action_bank (const doc::ActionBank &action)
 
 void	Model::process_action_param (const doc::ActionParam &action)
 {
-	const int      slot_id = find_slot_cur_preset (action._fx_id);
-	if (slot_id >= 0)
+	std::array <int, Cst::_max_named_targets> result_arr;
+	int            nbr_results = 0;
+	find_slot_cur_preset (result_arr, nbr_results, action._fx_id);
+
+	for (int res_cnt = 0; res_cnt < nbr_results; ++res_cnt)
 	{
+		const int      slot_id   = result_arr [res_cnt];
 		const auto     it_id_map = _pi_id_map.find (slot_id);
 		assert (it_id_map != _pi_id_map.end ());
-		const int      pi_id =
+		const int      pi_id     =
 			it_id_map->second._pi_id_arr [action._fx_id._type];
 		assert (pi_id >= 0);
 
@@ -2395,9 +2399,14 @@ void	Model::process_action_settings (const doc::ActionSettings &action)
 {
 	assert (! action._relative_flag); /*** To do ***/
 
-	const int      slot_id = find_slot_cur_preset (action._fx_id);
-	if (slot_id >= 0)
+	std::array <int, Cst::_max_named_targets> result_arr;
+	int            nbr_results = 0;
+	find_slot_cur_preset (result_arr, nbr_results, action._fx_id);
+
+	for (int res_cnt = 0; res_cnt < nbr_results; ++res_cnt)
 	{
+		const int      slot_id = result_arr [res_cnt];
+
 		// Finds the preset
 		auto           it_slot = _preset_cur._slot_map.find (slot_id);
 		assert (it_slot != _preset_cur._slot_map.end ());
@@ -2512,18 +2521,18 @@ void	Model::notify_slot_info ()
 
 
 
-// Returns a slot_id, -1 if not found
-/*** To do: return a set instead of a single element ***/
-int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
+// result_arr is filled with found slot_id.
+// nbr_results is the number of slot_id found, limited by the array size.
+// Returns false if not all slots were scanned (limit reached before).
+bool	Model::find_slot_cur_preset (std::array <int, Cst::_max_named_targets> &result_arr, int &nbr_results, const doc::FxId &fx_id) const
 {
 	assert (fx_id._location_type >= 0);
 	assert (fx_id._location_type < doc::FxId::LocType_NBR_ELT);
 
-	int            found_slot_id = -1;
-
-	for (auto it = _preset_cur._slot_map.begin ()
-	;	it != _preset_cur._slot_map.end () && found_slot_id < 0
-	;	++ it)
+	nbr_results = 0;
+	auto           it = _preset_cur._slot_map.begin ();
+	while (   it != _preset_cur._slot_map.end ()
+	       && nbr_results < Cst::_max_named_targets)
 	{
 		if (! _preset_cur.is_slot_empty (it))
 		{
@@ -2533,20 +2542,25 @@ int	Model::find_slot_cur_preset (const doc::FxId &fx_id) const
 			{
 				if (slot._pi_model == fx_id._label_or_model)
 				{
-					found_slot_id = it->first;
+					result_arr [nbr_results] = it->first;
+					++ nbr_results;
 				}
 			}
 			else
 			{
 				if (! slot._label.empty () && fx_id._label_or_model == slot._label)
 				{
-					found_slot_id = it->first;
+					result_arr [nbr_results] = it->first;
+					++ nbr_results;
 				}
 			}
 		}
+
+		++ it;
 	}
 
-	return found_slot_id;
+	return (   nbr_results < Cst::_max_named_targets
+	        || it == _preset_cur._slot_map.end ());
 }
 
 

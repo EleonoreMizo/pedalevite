@@ -303,7 +303,7 @@ private:
 	void           process_action_tempo (double tempo);
 	void           build_slot_info ();
 	void           notify_slot_info ();
-	int            find_slot_cur_preset (const doc::FxId &fx_id) const;
+	bool           find_slot_cur_preset (std::array <int, Cst::_max_named_targets> &result_arr, int &nbr_results, const doc::FxId &fx_id) const;
 	void           find_slot_type_cur_preset (int &slot_id, PiType &type, int pi_id) const;
 	bool           set_param_pre_commit (int slot_id, int pi_id, PiType type, int index, float val);
 	bool           set_param_beats_pre_commit (int slot_id, int pi_id, int index, float val_beats, doc::ParamPresentation &pres, const piapi::PluginDescInterface &pi_desc, float &val_nrm);

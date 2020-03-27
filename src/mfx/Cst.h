@@ -101,6 +101,7 @@ public:
 	                  _key_time_hold;
 	static const std::chrono::microseconds    // Microseconds
 	                  _key_time_repeat;
+	static const int  _max_named_targets = 64;// Maximum number of effects that can be addressed simultaneously in the audio thread for a parameter change, for example
 
 	static const double  _step_param;         // Unit step on normalized parameter value
 
