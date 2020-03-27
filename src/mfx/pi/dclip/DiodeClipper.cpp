@@ -326,13 +326,16 @@ std::array <double, DiodeClipper::_nbr_coef_21>	DiodeClipper::_coef_21;
 // Signal nominal level
 const float	DiodeClipper::_sig_scale = 0.125f;
 
-const float	DiodeClipper::_diode_scale = 1.0f / 0.65f;
+// For 1 V input, output clips around 0.725 V for the hard symmetric clipper,
+// with a current of 0.125 mA. This is used as reference for the other levels.
+// https://www.desmos.com/calculator/pv5j8tvbpw
+const float	DiodeClipper::_diode_scale = 1.0f / 0.725f;
 const std::array <DiodeClipper::DiodeParam, Shape_NBR_ELT> DiodeClipper::_diode_param_arr =
 {{
 	{  0.1e-15f,  1 * _diode_scale,  0.1e-15f,  1 * _diode_scale },
 	{  0.1e-15f,  1 * _diode_scale,  0.1e-06f,  4 * _diode_scale },
-	{  5.0e-06f, 10 * _diode_scale,  5.0e-06f, 10 * _diode_scale },
-	{  1.0e-06f,  6 * _diode_scale, 10.0e-06f, 25 * _diode_scale }
+	{  8.0e-06f, 10 * _diode_scale,  8.0e-06f, 10 * _diode_scale },
+	{  5.0e-06f, 10 * _diode_scale, 10.0e-06f, 20 * _diode_scale }
 }};
 
 
