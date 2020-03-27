@@ -124,8 +124,6 @@ int	DiodeClipper::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	fstb::unused (max_buf_len);
 
-	latency = 0;
-
 	_sample_freq = float (    sample_freq);
 	_inv_fs      = float (1 / sample_freq);
 	const double   fs_ovr  = sample_freq * _ovrspl;
@@ -139,6 +137,16 @@ int	DiodeClipper::do_reset (double sample_freq, int max_buf_len, int &latency)
 		chn._dckill.set_sample_freq (sample_freq);
 		chn._dckill.set_cutoff_freq (5);
 	}
+
+	const double   f_fs   = 1000.0 / sample_freq;
+	const double   dly_42 = hiir::PolyphaseIir2Designer::compute_group_delay (
+		&_coef_42 [0], _nbr_coef_42, f_fs * 0.25f, false
+	);
+	const double   dly_21 = hiir::PolyphaseIir2Designer::compute_group_delay (
+		&_coef_21 [0], _nbr_coef_21, f_fs * 0.5f , false
+	);
+	const double   latency_f = (0.5f * dly_21 + 0.25f * dly_42) * 2;
+	latency = fstb::round_int (latency_f);
 
 	_param_change_flag.set ();
 
