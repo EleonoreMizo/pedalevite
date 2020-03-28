@@ -42,6 +42,7 @@ namespace doc
 
 
 
+class FxId;
 class SerRInterface;
 class SerWInterface;
 
@@ -76,6 +77,7 @@ public:
 	const PluginSettings *
 	               test_and_get_settings (PiType type) const;
 	bool           has_ctrl () const;
+	bool           is_referenced_by (const FxId &fx_id) const;
 
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser);

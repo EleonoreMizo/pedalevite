@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/doc/FxId.h"
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 #include "mfx/doc/Slot.h"
@@ -194,6 +195,24 @@ bool	Slot::has_ctrl () const
 	}
 
 	return ctrl_flag;
+}
+
+
+
+bool	Slot::is_referenced_by (const FxId &fx_id) const
+{
+	bool           ref_flag = false;
+
+	if (fx_id._location_type == doc::FxId::LocType_CATEGORY)
+	{
+		ref_flag = (fx_id._label_or_model == _pi_model);
+	}
+	else
+	{
+		ref_flag = (fx_id._label_or_model == _label);
+	}
+
+	return ref_flag;
 }
 
 
