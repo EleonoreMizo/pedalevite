@@ -2024,19 +2024,18 @@ bool	Model::has_mixer_plugin (const doc::Preset &preset, int slot_id)
 					const doc::PedalActionSingleInterface &   action = *(aa [u]);
 					if (action.get_type () == doc::ActionType_PARAM)
 					{
-						const doc::ActionParam &   ap =
+						const doc::ActionParam &   ac =
 							dynamic_cast <const doc::ActionParam &> (action);
-						if (ap._fx_id._type == PiType_MIX)
+						if (ac._fx_id._type == PiType_MIX)
 						{
-							if (ap._fx_id._location_type == doc::FxId::LocType_CATEGORY)
-							{
-								use_flag = (ap._fx_id._label_or_model == slot._pi_model);
-							}
-							else
-							{
-								use_flag = (ap._fx_id._label_or_model == slot._label);
-							}
+							use_flag = slot.is_referenced_by (ac._fx_id);
 						}
+					}
+					else if (action.get_type () == doc::ActionType_TOGGLE_FX)
+					{
+						const doc::ActionToggleFx &   ac =
+							dynamic_cast <const doc::ActionToggleFx &> (action);
+						use_flag = slot.is_referenced_by (ac._fx_id);
 					}
 				}
 			}
@@ -2384,7 +2383,7 @@ void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
 		const auto     it_id_map = _pi_id_map.find (slot_id);
 		assert (it_id_map != _pi_id_map.end ());
 		const int      pi_id     =
-			it_id_map->second._pi_id_arr [action._fx_id._type];
+			it_id_map->second._pi_id_arr [PiType_MIX];
 		assert (pi_id >= 0);
 
 		if (pi_id != _dummy_mix_id)
