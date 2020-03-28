@@ -49,6 +49,7 @@ class View;
 namespace doc
 {
 	class ActionParam;
+	class ActionToggleFx;
 	class FxId;
 	class PedalActionGroup;
 	class PedalActionSingleInterface;
@@ -125,7 +126,8 @@ public:
 	               find_fx_type (const doc::FxId &fx_id, const View &view);
 	static std::string
 	               find_fx_type_in_preset (const std::string &label, const doc::Preset &preset);
-	static void    print_param_action (std::string &model_name, std::string &param_name, const doc::ActionParam &param, const Model &model, const View &view);
+	static void    print_action_toggle_fx (std::string &model_name, const doc::ActionToggleFx &action, const Model &model, const View &view);
+	static void    print_action_param (std::string &model_name, std::string &param_name, const doc::ActionParam &action, const Model &model, const View &view);
 	static void    print_cnx_name (NText &txtbox, int width, const std::vector <Tools::NodeEntry> &entry_list, piapi::Dir dir, const doc::CnxEnd &cnx_end, const char prefix_0 [], int nbr_pins);
 
 	static void    create_bank_list (TxtArray &bank_list, ContainerInterface &menu, PageMgrInterface::NavLocList &nav_list, const View &view, const ui::Font &fnt, int y, int w, bool chk_cur_flag);
@@ -155,7 +157,9 @@ private:
 	static bool    is_pedal_momentary_button (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
 	static bool    is_pedal_toggle (const doc::PedalActionGroup &group, const Model &model, const View &view, std::string &name);
 	static std::string
-	               print_param_action (const doc::ActionParam &param, const Model &model, const View &view);
+	               print_action_toggle_fx (const doc::ActionToggleFx &action, const Model &model, const View &view);
+	static std::string
+	               print_action_param (const doc::ActionParam &action, const Model &model, const View &view);
 	static void    create_missing_signal_ports (Model &model, const View &view, int slot_id);
 
 

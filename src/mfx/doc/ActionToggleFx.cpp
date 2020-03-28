@@ -43,6 +43,22 @@ namespace doc
 
 
 
+ActionToggleFx::ActionToggleFx (const FxId &fx_id)
+:	_fx_id (fx_id)
+{
+	assert (fx_id._type == PiType_MAIN);
+}
+
+
+
+ActionToggleFx::ActionToggleFx (SerRInterface &ser)
+:	_fx_id (FxId::LocType_LABEL, "", PiType_MAIN)
+{
+	ser_read (ser);
+}
+
+
+
 void	ActionToggleFx::ser_write (SerWInterface &ser) const
 {
 	ser.begin_list ();

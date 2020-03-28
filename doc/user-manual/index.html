@@ -885,13 +885,18 @@ Les actions disponibles sont les suivantes&#8239;:</p>
 <tr><td><span class="ui">Bank</span></td><td>Active une banque fixe, ou passe à la précédente ou la suivante.</td></tr>
 <tr><td><span class="ui">Program</span></td><td>Active un programme fixe, ou passe au précédent ou au suivant.</td></tr>
 <tr><td><span class="ui">Tuner toggle</span></td><td>Active ou désactive l’accordeur.</td></tr>
-<tr><td><span class="ui">FX toggle</span></td><td>(pas encore disponible, utiliser à la place <span class="ui">Parameter</span> avec le paramètre de bypass)</td></tr>
+<tr><td><span class="ui">FX toggle</span></td><td>Active ou désactive un ou plusieurs effets.
+Les effets peuvent être identifiés par leur type ou par leur nom.
+Quand plusieurs effets sont concernés, tous les effets basculent vers le même état.
+S’il faut garder des états en opposition, autrement dit garder une série d’effets allumés pendant que l’autre est désactivée et inversement, utiliser un deuxième <span class="ui">FX toggle</span> associé à un deuxième nom pour basculer les effets dans l’état opposé.</td></tr>
 <tr><td><span class="ui">Loop record</span></td><td>(pas encore disponible)</td></tr>
 <tr><td><span class="ui">Loop play/stop</span></td><td>(pas encore disponible)</td></tr>
 <tr><td><span class="ui">Loop undo</span></td><td>(pas encore disponible)</td></tr>
-<tr><td><span class="ui">Parameter</span></td><td>Donne une valeur particulière à un paramètre d’un effet donné. L’effet peut être identifié par son type ou par son nom.</td></tr>
+<tr><td><span class="ui">Parameter</span></td><td>Donne une valeur particulière à un paramètre d’un ou plusieurs effets donnés.
+Les effets peuvent être identifiés par leur type ou par leur nom.</td></tr>
 <tr><td><span class="ui">Tempo tap</span></td><td>En associant cette fonction à une pédale, on peut fixer le tempo en battant le rythme sur ladite pédale.</td></tr>
-<tr><td><span class="ui">Preset</span></td><td>Active un preset pour un effet donné, avec un numéro fixe, ou en passant au précédent ou au suivant. L’effet peut être identifié par son type ou par son nom.</td></tr>
+<tr><td><span class="ui">Preset</span></td><td>Active un preset pour un ou plusieurs effets donnés, avec un numéro fixe, ou en passant au précédent ou au suivant.
+Les effets peuvent être identifiés par leur type ou par leur nom.</td></tr>
 <tr><td><span class="ui">Event</span></td><td>(pas encore disponible)</td></tr>
 <tr><td><span class="ui">Tempo set</span></td><td>Fixe le tempo à une valeur donnée.</td></tr>
 <tr><td><span class="ui">Click</span></td><td>Active ou désactive le métronome.</td></tr>
@@ -3155,6 +3160,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r33, 2020-03-08</b></p>
+<ul>
+<li>Ajout de l’action «&#8239;Toggle FX&#8239;» sur les pédales.</li>
+</ul>
 
 <p><b>r32, 2020-03-26</b></p>
 <ul>

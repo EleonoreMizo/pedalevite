@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionPreset.h"
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempoSet.h"
+#include "mfx/doc/ActionToggleFx.h"
 #include "mfx/pi/param/HelperDispNum.h"
 #include "mfx/pi/param/Tools.h"
 #include "mfx/piapi/ParamDescInterface.h"
@@ -821,7 +822,12 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 		break;
 
 	case doc::ActionType_TOGGLE_FX:
-		name = "FX" /*** To do ***/;
+		{
+			const doc::ActionToggleFx &  param =
+				dynamic_cast <const doc::ActionToggleFx &> (action);
+			name = print_action_toggle_fx (param, model, view);
+			name = "Toggle FX " + name;
+		}
 		break;
 
 	case doc::ActionType_LOOP_REC:
@@ -840,7 +846,7 @@ std::string	Tools::conv_pedal_action_to_short_txt (const doc::PedalActionSingleI
 		{
 			const doc::ActionParam &  param =
 				dynamic_cast <const doc::ActionParam &> (action);
-			name = print_param_action (param, model, view);
+			name = print_action_param (param, model, view);
 			name = "Set " + name;
 		}
 		break;
@@ -1063,39 +1069,66 @@ std::string	Tools::find_fx_type_in_preset (const std::string &label, const doc::
 
 // Returns model_name as a multi-label string
 // Returns empty strings if the effect cannot be located.
-void	Tools::print_param_action (std::string &model_name, std::string &param_name, const doc::ActionParam &param, const Model &model, const View &view)
+void	Tools::print_action_toggle_fx (std::string &model_name, const doc::ActionToggleFx &action, const Model &model, const View &view)
 {
 	model_name.clear ();
-	param_name.clear ();
-	const std::string model_id = find_fx_type (param._fx_id, view);
+	const std::string model_id = find_fx_type (action._fx_id, view);
 	if (! model_id.empty ())
 	{
 		const piapi::PluginDescInterface & desc_main =
 			model.get_model_desc (model_id);
-		if (param._fx_id._location_type == doc::FxId::LocType_CATEGORY)
+		if (action._fx_id._location_type == doc::FxId::LocType_CATEGORY)
 		{
 			model_name = desc_main.get_name ();
 		}
 		else
 		{
-			model_name = param._fx_id._label_or_model;
+			model_name  = "\xE2\x80\x9C"; // U+201C LEFT DOUBLE QUOTATION MARK
+			model_name += action._fx_id._label_or_model;
+			model_name += "\xE2\x80\x9D"; // U+201D RIGHT DOUBLE QUOTATION MARK
+		}
+	}
+}
+
+
+
+// Returns model_name as a multi-label string
+// Returns empty strings if the effect cannot be located.
+void	Tools::print_action_param (std::string &model_name, std::string &param_name, const doc::ActionParam &action, const Model &model, const View &view)
+{
+	model_name.clear ();
+	param_name.clear ();
+	const std::string model_id = find_fx_type (action._fx_id, view);
+	if (! model_id.empty ())
+	{
+		const piapi::PluginDescInterface & desc_main =
+			model.get_model_desc (model_id);
+		if (action._fx_id._location_type == doc::FxId::LocType_CATEGORY)
+		{
+			model_name = desc_main.get_name ();
+		}
+		else
+		{
+			model_name  = "\xE2\x80\x9C"; // U+201C LEFT DOUBLE QUOTATION MARK
+			model_name += action._fx_id._label_or_model;
+			model_name += "\xE2\x80\x9D"; // U+201D RIGHT DOUBLE QUOTATION MARK
 		}
 
 		const piapi::PluginDescInterface & desc = model.get_model_desc (
-			(param._fx_id._type == PiType_MAIN) ? model_id : Cst::_plugin_dwm
+			(action._fx_id._type == PiType_MAIN) ? model_id : Cst::_plugin_dwm
 		);
 		const int      nbr_param =
 			desc.get_nbr_param (piapi::ParamCateg_GLOBAL);
-		if (param._index < nbr_param)
+		if (action._index < nbr_param)
 		{
 			const piapi::ParamDescInterface & param_desc =
-				desc.get_param_info (piapi::ParamCateg_GLOBAL, param._index);
+				desc.get_param_info (piapi::ParamCateg_GLOBAL, action._index);
 			param_name = param_desc.get_name (0);
 		}
 		else
 		{
 			char           txt_0 [127+1];
-			fstb::snprintf4all (txt_0, sizeof (txt_0), "%d", param._index);
+			fstb::snprintf4all (txt_0, sizeof (txt_0), "%d", action._index);
 			param_name = txt_0;
 		}
 	}
@@ -1574,7 +1607,7 @@ bool	Tools::is_pedal_momentary_button (const doc::PedalActionGroup &group, const
 			if (ok_flag)
 			{
 				name  = "PBSet ";
-				name += print_param_action (p_0, model, view);
+				name += print_action_param (p_0, model, view);
 			}
 		}
 	}
@@ -1649,7 +1682,7 @@ bool	Tools::is_pedal_toggle (const doc::PedalActionGroup &group, const Model &mo
 			if (ok_flag)
 			{
 				name  = "Toggle ";
-				name += print_param_action (p_0, model, view);
+				name += print_action_param (p_0, model, view);
 			}
 		}
 	}
@@ -1659,17 +1692,29 @@ bool	Tools::is_pedal_toggle (const doc::PedalActionGroup &group, const Model &mo
 
 
 
-std::string	Tools::print_param_action (const doc::ActionParam &param, const Model &model, const View &view)
+std::string	Tools::print_action_toggle_fx (const doc::ActionToggleFx &action, const Model &model, const View &view)
+{
+	std::string    model_name;
+	print_action_toggle_fx (model_name, action, model, view);
+	model_name = pi::param::Tools::print_name_bestfit (
+		100, model_name.c_str ()
+	);
+	return model_name;
+}
+
+
+
+std::string	Tools::print_action_param (const doc::ActionParam &action, const Model &model, const View &view)
 {
 	std::string    model_name;
 	std::string    param_name;
-	print_param_action (model_name, param_name, param, model, view);
+	print_action_param (model_name, param_name, action, model, view);
 
 	model_name = pi::param::Tools::print_name_bestfit (
 		8, model_name.c_str ()
 	);
 	param_name = pi::param::Tools::print_name_bestfit (
-		1000, param_name.c_str ()
+		100, param_name.c_str ()
 	);
 
 	return model_name + " " + param_name;

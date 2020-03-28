@@ -2359,11 +2359,56 @@ void	Model::process_action_preset (const doc::ActionPreset &action)
 
 void	Model::process_action_toggle_fx (const doc::ActionToggleFx &action)
 {
-	fstb::unused (action);
+	std::array <int, Cst::_max_named_targets> result_arr;
+	int            nbr_results = 0;
+	find_slot_cur_preset (result_arr, nbr_results, action._fx_id);
 
+	float          bypass_val = 0;
+	for (int res_cnt = 0; res_cnt < nbr_results; ++res_cnt)
+	{
+		const int      slot_id = result_arr [res_cnt];
 
-	/*** To do ***/
+		// Retrieves the state of the plug-in's bypass and flips it
+		if (res_cnt == 0)
+		{
+			const doc::Slot &    slot = _preset_cur.use_slot (slot_id);
+			const doc::PluginSettings &   settings =
+				slot.use_settings (PiType_MIX);
+			if (settings._param_list [pi::dwm::Param_BYPASS] < 0.5f)
+			{
+				bypass_val = 1;
+			}
+		}
 
+		// Sets the new bypass value
+		const auto     it_id_map = _pi_id_map.find (slot_id);
+		assert (it_id_map != _pi_id_map.end ());
+		const int      pi_id     =
+			it_id_map->second._pi_id_arr [action._fx_id._type];
+		assert (pi_id >= 0);
+
+		if (pi_id != _dummy_mix_id)
+		{
+			const bool     ok_flag = set_param_pre_commit (
+				slot_id,
+				pi_id,
+				PiType_MIX,
+				pi::dwm::Param_BYPASS,
+				bypass_val
+			);
+			if (ok_flag)
+			{
+				push_set_param (
+					slot_id,
+					PiType_MIX,
+					pi::dwm::Param_BYPASS,
+					bypass_val,
+					false,
+					0
+				);
+			}
+		}
+	}
 }
 
 

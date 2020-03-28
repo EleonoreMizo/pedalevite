@@ -50,6 +50,8 @@ class ActionToggleFx final
 
 public:
 
+	explicit       ActionToggleFx (const FxId &fx_id);
+	explicit       ActionToggleFx (SerRInterface &ser);
 	               ActionToggleFx (const ActionToggleFx &other) = default;
 	               ActionToggleFx (ActionToggleFx &&other)      = default;
 
@@ -65,7 +67,7 @@ public:
 
 	void           ser_read (SerRInterface &ser);
 
-	FxId           _fx_id;
+	FxId           _fx_id; // _type is ignored, it is always the main plug-in.
 
 
 

@@ -142,6 +142,7 @@ private:
 	EvtProp        change_type (int dir);
 	EvtProp        change_bank (int node_id, int dir);
 	EvtProp        change_preset (int node_id, int dir);
+	EvtProp        change_fx (int node_id, int dir);
 	EvtProp        change_param (int node_id, int dir);
 	EvtProp        change_settings (int node_id, int dir);
 	EvtProp        change_tempo_set (int dir);

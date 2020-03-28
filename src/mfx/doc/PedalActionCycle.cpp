@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/ActionSettings.h"
 #include "mfx/doc/ActionTempo.h"
 #include "mfx/doc/ActionTempoSet.h"
+#include "mfx/doc/ActionToggleFx.h"
 #include "mfx/doc/ActionToggleTuner.h"
 #include "mfx/doc/PedalActionCycle.h"
 #include "mfx/doc/SerRInterface.h"
@@ -237,6 +238,9 @@ void	PedalActionCycle::ser_read (SerRInterface &ser)
 			case ActionType_PRESET:
 				a_sptr = std::make_shared <ActionPreset> (ser);
 				break;
+			case ActionType_TOGGLE_FX:
+				a_sptr = std::make_shared <ActionToggleFx> (ser);
+				break;
 			case ActionType_TOGGLE_TUNER:
 				a_sptr = std::make_shared <ActionToggleTuner> (ser);
 				break;
@@ -259,7 +263,6 @@ void	PedalActionCycle::ser_read (SerRInterface &ser)
 				a_sptr = std::make_shared <ActionClick> (ser);
 				break;
 
-			case ActionType_TOGGLE_FX:
 			case ActionType_LOOP_REC:
 			case ActionType_LOOP_PLAY_STOP:
 			case ActionType_LOOP_UNDO:

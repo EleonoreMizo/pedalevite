@@ -123,7 +123,13 @@ void	PedalEditAction::do_connect (Model &model, const View &view, PageMgrInterfa
 
 		if (_arg_edit_fxid._ok_flag)
 		{
-			if (action_type == doc::ActionType_PARAM)
+			if (action_type == doc::ActionType_TOGGLE_FX)
+			{
+				doc::ActionToggleFx &   action_real = 
+					dynamic_cast <doc::ActionToggleFx &> (action);
+				action_real._fx_id = _arg_edit_fxid._fx_id;
+			}
+			else if (action_type == doc::ActionType_PARAM)
 			{
 				doc::ActionParam &   action_real = 
 					dynamic_cast <doc::ActionParam &> (action);
@@ -431,11 +437,14 @@ void	PedalEditAction::display_fx (PageMgrInterface::NavLocList &nav_list, const 
 	// Action type
 	_type_sptr->set_text ("FX toggle");
 
+	// FX identifier
+	print_fx_id (action._fx_id);
 
-	/*** To do ***/
-	fstb::unused (nav_list, action);
-
-
+	const int      h_m   = _fnt_ptr->get_char_h ();
+	_label_sptr->set_coord (Vec2d (0, 2 * h_m));
+	_label_sptr->show (true);
+	_page_ptr->push_back (_label_sptr);
+	PageMgrInterface::add_nav (nav_list, Entry_LABEL);
 }
 
 
@@ -490,7 +499,7 @@ void	PedalEditAction::display_param (PageMgrInterface::NavLocList &nav_list, con
 	// Collects info
 	std::string    model_name;
 	std::string    param_name;
-	Tools::print_param_action (
+	Tools::print_action_param (
 		model_name, param_name, action, *_model_ptr, *_view_ptr
 	);
 
@@ -793,6 +802,9 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_value (int node_id, int dir
 		case doc::ActionType_PRESET:
 			ret_val = change_preset (node_id, dir);
 			break;
+		case doc::ActionType_TOGGLE_FX:
+			ret_val = change_fx (node_id, dir);
+			break;
 		case doc::ActionType_PARAM:
 			ret_val = change_param (node_id, dir);
 			break;
@@ -827,11 +839,12 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 	doc::ActionType   action_type = action_sptr->get_type ();
 
 	// Currently we only support this set of actions.
-	static const std::array <doc::ActionType, 9>  type_list =
+	static const std::array <doc::ActionType, 10>  type_list =
 	{{
 		doc::ActionType_BANK,
 		doc::ActionType_PRESET,
 		doc::ActionType_TOGGLE_TUNER,
+		doc::ActionType_TOGGLE_FX,
 		doc::ActionType_PARAM,
 		doc::ActionType_TEMPO,
 		doc::ActionType_SETTINGS,
@@ -880,6 +893,14 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 			action_sptr =
 				std::static_pointer_cast <doc::PedalActionSingleInterface> (
 					std::make_shared <doc::ActionToggleTuner> ()
+				);
+			break;
+		case doc::ActionType_TOGGLE_FX:
+			action_sptr =
+				std::static_pointer_cast <doc::PedalActionSingleInterface> (
+					std::make_shared <doc::ActionToggleFx> (doc::FxId (
+						doc::FxId::LocType_LABEL, "X", PiType_MAIN
+					))
 				);
 			break;
 		case doc::ActionType_PARAM:
@@ -933,8 +954,10 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_type (int dir)
 
 
 
-MsgHandlerInterface::EvtProp	PedalEditAction::change_bank (int /*node_id*/, int dir)
+MsgHandlerInterface::EvtProp	PedalEditAction::change_bank (int node_id, int dir)
 {
+	fstb::unused (node_id);
+
 	doc::PedalActionCycle & cycle =
 		_ctx._content._action_arr [_ctx._trigger];
 	doc::PedalActionCycle::ActionArray &   step =
@@ -974,8 +997,10 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_bank (int /*node_id*/, int 
 
 
 
-MsgHandlerInterface::EvtProp	PedalEditAction::change_preset (int /*node_id*/, int dir)
+MsgHandlerInterface::EvtProp	PedalEditAction::change_preset (int node_id, int dir)
 {
+	fstb::unused (node_id);
+
 	doc::PedalActionCycle & cycle =
 		_ctx._content._action_arr [_ctx._trigger];
 	doc::PedalActionCycle::ActionArray &   step =
@@ -1012,6 +1037,44 @@ MsgHandlerInterface::EvtProp	PedalEditAction::change_preset (int /*node_id*/, in
 	update_model ();
 
 	return EvtProp_CATCH;
+}
+
+
+
+MsgHandlerInterface::EvtProp	PedalEditAction::change_fx (int node_id, int dir)
+{
+	EvtProp        ret_val = EvtProp_PASS;
+
+	doc::PedalActionCycle & cycle =
+		_ctx._content._action_arr [_ctx._trigger];
+	doc::PedalActionCycle::ActionArray &   step =
+		cycle._cycle [_ctx._step_index];
+	doc::PedalActionCycle::ActionSPtr & action_sptr =
+		step [_ctx._action_index];
+	assert (action_sptr->get_type () == doc::ActionType_TOGGLE_FX);
+	doc::ActionToggleFx &   action =
+		dynamic_cast <doc::ActionToggleFx &> (*action_sptr);
+
+	// Effect type/label
+	if (node_id == Entry_LABEL)
+	{
+		if (dir == 0)
+		{
+			_arg_edit_fxid._cur_preset_flag = true;
+			_arg_edit_fxid._fx_id           = action._fx_id;
+			_state                          = State_EDIT_FXID;
+			_page_switcher.call_page (
+				PageType_EDIT_FXID, &_arg_edit_fxid, node_id
+			);
+			ret_val = EvtProp_CATCH;
+		}
+	}
+	else
+	{
+		assert (false);
+	}
+
+	return ret_val;
 }
 
 

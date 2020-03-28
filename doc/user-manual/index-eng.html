@@ -797,13 +797,19 @@ Below are the available actions:</p>
 <tr><td><span class="ui">Bank</span></td><td>Activates a given bank, or switches to the next or the previous one.</td></tr>
 <tr><td><span class="ui">Program</span></td><td>Activates a given program, or switches to the next or the previous one.</td></tr>
 <tr><td><span class="ui">Tuner toggle</span></td><td>Activates or deactivates the tuner.</td></tr>
-<tr><td><span class="ui">FX toggle</span></td><td>(not available yet, instead please use <span class="ui">Parameter</span> with the bypass parameter)</td></tr>
+<tr><td><span class="ui">FX toggle</span></td><td>Activates or deactivates effects. 
+The effects can be identified by their type or by their name.
+When several effects are targeted, they all switch to the same states.
+If some of the switching effects require to stay in the state opposite to the others, use a second <span class="ui">FX toggle</span> associated to a second label.</td></tr>
 <tr><td><span class="ui">Loop record</span></td><td>(not available yet)</td></tr>
 <tr><td><span class="ui">Loop play/stop</span></td><td>(not available yet)</td></tr>
 <tr><td><span class="ui">Loop undo</span></td><td>(not available yet)</td></tr>
-<tr><td><span class="ui">Parameter</span></td><td>Sets a parameter from a given effect. The effect can be identified by its type or by its name (<span class="ui">label</span>).</td></tr>
+<tr><td><span class="ui">Parameter</span></td><td>Sets a parameter from a given effect.
+The effect can be identified by its type or by its name (<span class="ui">label</span>).</td></tr>
 <tr><td><span class="ui">Tempo tap</span></td><td>When this function is associated to a footswitch, you can set the tempo by beating the switch.</td></tr>
-<tr><td><span class="ui">Preset</span></td><td>Activates a preset for a given effect. The preset can be fixed, or the next or the previous one. The effect can be identified by its type or by its name.</td></tr>
+<tr><td><span class="ui">Preset</span></td><td>Activates a preset for a given effect.
+The preset can be fixed, or the next or the previous one.
+The effect can be identified by its type or by its name.</td></tr>
 <tr><td><span class="ui">Event</span></td><td>(not available yet)</td></tr>
 <tr><td><span class="ui">Tempo set</span></td><td>Sets the tempo to a fixed value.</td></tr>
 <tr><td><span class="ui">Click</span></td><td>Activates or deactivates the click.</td></tr>
@@ -2949,6 +2955,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r33, 2020-03-08</b></p>
+<ul>
+<li>Added the «&#8239;Toggle FX&#8239;» pedal action.</li>
+</ul>
 
 <p><b>r32, 2020-03-26</b></p>
 <ul>
