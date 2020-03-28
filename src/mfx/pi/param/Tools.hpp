@@ -166,7 +166,7 @@ void	Tools::cut_str_bestfit (size_t &pos_utf8, size_t &len_utf8, size_t &len_met
 	}
 	while (! exit_flag);
 
-	assert (sel._len_utf <= max_len_metric);
+	assert (sel._len_ucs <= max_len_metric);
 	pos_utf8   = sel._pos;
 	len_utf8   = sel._len_utf;
 	len_metric = sel._len_brk;
