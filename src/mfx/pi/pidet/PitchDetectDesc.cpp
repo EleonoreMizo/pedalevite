@@ -49,7 +49,11 @@ namespace pidet
 
 PitchDetectDesc::PitchDetectDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "pidet";
+	_info._name      = "Pitch detector\nPitch det\nPitDet";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Minimum frequency
@@ -100,16 +104,9 @@ ParamDescSet &	PitchDetectDesc::use_desc_set ()
 
 
 
-std::string	PitchDetectDesc::do_get_unique_id () const
+piapi::PluginInfo	PitchDetectDesc::do_get_info () const
 {
-	return "pidet";
-}
-
-
-
-std::string	PitchDetectDesc::do_get_name () const
-{
-	return "Pitch detector\nPitch det\nPitDet";
+	return _info;
 }
 
 

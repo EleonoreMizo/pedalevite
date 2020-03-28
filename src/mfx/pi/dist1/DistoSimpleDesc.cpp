@@ -53,7 +53,11 @@ const double	DistoSimpleDesc::_gain_max = 1000;
 
 DistoSimpleDesc::DistoSimpleDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "dist1";
+	_info._name      = "Simple distortion\nSimple dist\nDist S";
+
 	// Gain
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		double (_gain_min), double (_gain_max),
@@ -105,16 +109,9 @@ ParamDescSet &	DistoSimpleDesc::use_desc_set ()
 
 
 
-std::string	DistoSimpleDesc::do_get_unique_id () const
+piapi::PluginInfo	DistoSimpleDesc::do_get_info () const
 {
-	return "dist1";
-}
-
-
-
-std::string	DistoSimpleDesc::do_get_name () const
-{
-	return "Simple distortion\nSimple dist\nDist S";
+	return _info;
 }
 
 

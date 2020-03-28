@@ -49,7 +49,11 @@ namespace lpfs
 
 SqueezerDesc::SqueezerDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "lpfs";
+	_info._name      = "Filter Squeezer\nSqueezer";
+
 	// Cutoff Frequency
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		20, 20 * 1024,
@@ -124,16 +128,9 @@ ParamDescSet &	SqueezerDesc::use_desc_set ()
 
 
 
-std::string	SqueezerDesc::do_get_unique_id () const
+piapi::PluginInfo	SqueezerDesc::do_get_info () const
 {
-	return "lpfs";
-}
-
-
-
-std::string	SqueezerDesc::do_get_name () const
-{
-	return "Filter Squeezer\nSqueezer";
+	return _info;
 }
 
 

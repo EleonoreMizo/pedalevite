@@ -52,7 +52,11 @@ namespace fv
 
 FreeverbDesc::FreeverbDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "freeverb";
+	_info._name      = "Freeverb";
+
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
 
@@ -161,16 +165,9 @@ ParamDescSet &	FreeverbDesc::use_desc_set ()
 
 
 
-std::string	FreeverbDesc::do_get_unique_id () const
+piapi::PluginInfo	FreeverbDesc::do_get_info () const
 {
-	return "freeverb";
-}
-
-
-
-std::string	FreeverbDesc::do_get_name () const
-{
-	return "Freeverb";
+	return _info;
 }
 
 

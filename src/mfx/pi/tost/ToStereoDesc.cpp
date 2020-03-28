@@ -45,8 +45,10 @@ namespace tost
 
 ToStereoDesc::ToStereoDesc ()
 :	_desc_set (0, 0)
+,	_info ()
 {
-	// Nothing
+	_info._unique_id = "tost";
+	_info._name      = "Convert to stereo\nConv to stereo\nTo stereo\nStereo";
 }
 
 
@@ -62,16 +64,9 @@ ParamDescSet &	ToStereoDesc::use_desc_set ()
 
 
 
-std::string	ToStereoDesc::do_get_unique_id () const
+piapi::PluginInfo	ToStereoDesc::do_get_info () const
 {
-	return "tost";
-}
-
-
-
-std::string	ToStereoDesc::do_get_name () const
-{
-	return "Convert to stereo\nConv to stereo\nTo stereo\nStereo";
+	return _info;
 }
 
 

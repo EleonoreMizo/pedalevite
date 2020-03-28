@@ -48,7 +48,11 @@ namespace distpwm
 
 DistoPwmDesc::DistoPwmDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "distpwm";
+	_info._name      = "Pulse Width Modulation distortion\nPWM distortion\nPWM disto";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Pulse Width
@@ -80,16 +84,9 @@ ParamDescSet &	DistoPwmDesc::use_desc_set ()
 
 
 
-std::string	DistoPwmDesc::do_get_unique_id () const
+piapi::PluginInfo	DistoPwmDesc::do_get_info () const
 {
-	return "distpwm";
-}
-
-
-
-std::string	DistoPwmDesc::do_get_name () const
-{
-	return "Pulse Width Modulation distortion\nPWM distortion\nPWM disto";
+	return _info;
 }
 
 

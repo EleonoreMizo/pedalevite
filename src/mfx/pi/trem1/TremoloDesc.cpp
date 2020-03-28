@@ -52,7 +52,11 @@ namespace trem1
 
 TremoloDesc::TremoloDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "tremolo1";
+	_info._name      = "Tremolo";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Speed
@@ -135,16 +139,9 @@ ParamDescSet & TremoloDesc::use_desc_set ()
 
 
 
-std::string	TremoloDesc::do_get_unique_id () const
+piapi::PluginInfo	TremoloDesc::do_get_info () const
 {
-	return "tremolo1";
-}
-
-
-
-std::string	TremoloDesc::do_get_name () const
-{
-	return "Tremolo";
+	return _info;
 }
 
 

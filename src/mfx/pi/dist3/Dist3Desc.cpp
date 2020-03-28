@@ -52,7 +52,11 @@ namespace dist3
 
 Dist3Desc::Dist3Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "dist3";
+	_info._name      = "Distortion 3\nDistort 3\nDisto 3\nDist 3\nD3";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Input high-pass filter cutoff frequency
@@ -235,16 +239,9 @@ ParamDescSet &	Dist3Desc::use_desc_set ()
 
 
 
-std::string	Dist3Desc::do_get_unique_id () const
+piapi::PluginInfo	Dist3Desc::do_get_info () const
 {
-	return "dist3";
-}
-
-
-
-std::string	Dist3Desc::do_get_name () const
-{
-	return "Distortion 3\nDistort 3\nDisto 3\nDist 3\nD3";
+	return _info;
 }
 
 

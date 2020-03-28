@@ -60,8 +60,8 @@ public:
 protected:
 
 	// mfx::piapi::PluginDescInterface
-	std::string    do_get_unique_id () const final;
-	std::string    do_get_name () const final;
+	piapi::PluginInfo
+	               do_get_info () const final;
 	void           do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const final;
 	bool           do_prefer_stereo () const final;
 	int            do_get_nbr_param (piapi::ParamCateg categ) const final;
@@ -80,6 +80,8 @@ private:
 	void           init_filter (int chn);
 
 	ParamDescSet   _desc_set;
+	piapi::PluginInfo
+	               _info;
 
 
 

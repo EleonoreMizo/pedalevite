@@ -46,7 +46,11 @@ namespace click
 
 ClickDesc::ClickDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "\?click";
+	_info._name      = "Click\nClic";
+
 	// Nothing
 }
 
@@ -63,16 +67,9 @@ ParamDescSet &	ClickDesc::use_desc_set ()
 
 
 
-std::string	ClickDesc::do_get_unique_id () const
+piapi::PluginInfo	ClickDesc::do_get_info () const
 {
-	return "\?click";
-}
-
-
-
-std::string	ClickDesc::do_get_name () const
-{
-	return "Click\nClic";
+	return _info;
 }
 
 

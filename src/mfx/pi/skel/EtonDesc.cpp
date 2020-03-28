@@ -47,7 +47,11 @@ namespace skel
 
 EtonDesc::EtonDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "";
+	_info._name      = "";
+
 	// XYZ
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.125, 8,
@@ -73,16 +77,9 @@ ParamDescSet &	EtonDesc::use_desc_set ()
 
 
 
-std::string	EtonDesc::do_get_unique_id () const
+piapi::PluginInfo	EtonDesc::do_get_info () const
 {
-	return "";
-}
-
-
-
-std::string	EtonDesc::do_get_name () const
-{
-	return "";
+	return _info;
 }
 
 

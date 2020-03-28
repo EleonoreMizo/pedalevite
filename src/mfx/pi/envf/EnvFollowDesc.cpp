@@ -54,7 +54,11 @@ namespace envf
 
 EnvFollowDesc::EnvFollowDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "envf";
+	_info._name      = "Envelope Follower\nEnvelope Fol\nEnv Fol";
+
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 
 	class ParamInfo
@@ -162,16 +166,9 @@ ParamDescSet &	EnvFollowDesc::use_desc_set ()
 
 
 
-std::string	EnvFollowDesc::do_get_unique_id () const
+piapi::PluginInfo	EnvFollowDesc::do_get_info () const
 {
-	return "envf";
-}
-
-
-
-std::string	EnvFollowDesc::do_get_name () const
-{
-	return "Envelope Follower\nEnvelope Fol\nEnv Fol";
+	return _info;
 }
 
 

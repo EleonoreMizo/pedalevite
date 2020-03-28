@@ -747,7 +747,8 @@ std::string	PedalEditAction::print_fx_id (const doc::FxId &fx_id) const
 			_model_ptr->get_model_desc (model_id);
 		if (fx_id._location_type == doc::FxId::LocType_CATEGORY)
 		{
-			model_name = desc_main.get_name ();
+			const piapi::PluginInfo pi_info { desc_main.get_info () };
+			model_name = pi_info._name;
 		}
 		else
 		{

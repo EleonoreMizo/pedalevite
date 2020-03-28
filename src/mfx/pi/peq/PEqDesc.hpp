@@ -48,7 +48,24 @@ namespace peq
 template <int NB>
 PEqDesc <NB>::PEqDesc ()
 :	_desc_set (Param_NBR_ELT * _nbr_bands, 0)
+,	_info ()
 {
+	_info._unique_id = "peq";
+	if (_nbr_bands == 4)
+	{
+		_info._name = "Parametric Equalizer\nParametric Eq\nParam Eq\nPEq";
+	}
+	else
+	{
+		const std::string s = print_nbr_bands ();
+		_info._unique_id += s;
+		_info._name       =
+			    "Parametric Equalizer " + s
+			+ "\nParametric Eq "        + s
+			+ "\nParam Eq "             + s
+			+ "\nPEq "                  + s;
+	}
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	for (int band = 0; band < _nbr_bands; ++band)
@@ -152,35 +169,10 @@ int	PEqDesc <NB>::compute_param_base (int band)
 
 
 template <int NB>
-std::string	PEqDesc <NB>::do_get_unique_id () const
+piapi::PluginInfo	PEqDesc <NB>::do_get_info () const
 {
-	std::string    result = "peq";
-	if (_nbr_bands != 4)
-	{
-		result += print_nbr_bands ();
-	}
 
-	return result;
-}
-
-
-
-template <int NB>
-std::string	PEqDesc <NB>::do_get_name () const
-{
-	if (_nbr_bands == 4)
-	{
-		return "Parametric Equalizer\nParametric Eq\nParam Eq\nPEq";
-	}
-	else
-	{
-		const std::string s = print_nbr_bands ();
-		return
-			    "Parametric Equalizer " + s
-			+ "\nParametric Eq "        + s
-			+ "\nParam Eq "             + s
-			+ "\nPEq "                  + s;
-	}
+	return _info;
 }
 
 

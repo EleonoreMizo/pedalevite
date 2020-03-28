@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/piapi/ParamCateg.h"
+#include "mfx/piapi/PluginInfo.h"
 
 #include <string>
 
@@ -60,8 +61,7 @@ public:
 	virtual PluginDescInterface &
 	               operator = (PluginDescInterface &&other)      = default;
 
-	std::string    get_unique_id () const;
-	std::string    get_name () const;
+	PluginInfo     get_info () const;
 
 	void           get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const;
 	bool           prefer_stereo () const;
@@ -76,10 +76,8 @@ public:
 
 protected:
 
-	virtual std::string
-	               do_get_unique_id () const = 0;
-	virtual std::string
-	               do_get_name () const = 0;
+	virtual PluginInfo
+	               do_get_info () const = 0;
 
 	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const = 0;
 	virtual bool   do_prefer_stereo () const = 0;

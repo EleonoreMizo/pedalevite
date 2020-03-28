@@ -50,7 +50,11 @@ namespace cpx
 
 CompexDesc::CompexDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "compex";
+	_info._name      = "CompEx";
+
 	typedef param::TplMapped <param::MapRatio> TplRat;
 
 	// Ratio, Low
@@ -152,16 +156,9 @@ ParamDescSet &	CompexDesc::use_desc_set ()
 
 
 
-std::string	CompexDesc::do_get_unique_id () const
+piapi::PluginInfo	CompexDesc::do_get_info () const
 {
-	return "compex";
-}
-
-
-
-std::string	CompexDesc::do_get_name () const
-{
-	return "CompEx";
+	return _info;
 }
 
 

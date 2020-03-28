@@ -695,7 +695,8 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 				const piapi::PluginDescInterface &   desc_main =
 					*plugin_pool.use_plugin (pi_id_main)._desc_ptr;
 				const bool     out_st_flag = desc_main.prefer_stereo ();
-				pi_model = desc_main.get_unique_id ();
+				const piapi::PluginInfo pi_info { desc_main.get_info () };
+				pi_model = pi_info._unique_id;
 				desc_main.get_nbr_io (main_nbr_i, main_nbr_o, main_nbr_s);
 
 				pi_id_mix  = slot._component_arr [PiType_MIX ]._pi_id;

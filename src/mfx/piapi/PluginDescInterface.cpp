@@ -41,23 +41,14 @@ namespace piapi
 
 
 
-// Internal plug-ins (not shown to the user) are prefixed with a '\?'
-std::string	PluginDescInterface::get_unique_id () const
+PluginInfo	PluginDescInterface::get_info () const
 {
-	std::string    uid = do_get_unique_id ();
-	assert (! uid.empty ());
+	const PluginInfo  info { do_get_info () };
 
-	return uid;
-}
+	assert (! info._unique_id.empty ());
+	assert (! info._name.empty ());
 
-
-
-std::string	PluginDescInterface::get_name () const
-{
-	std::string    name = do_get_name ();
-	assert (! name.empty ());
-
-	return name;
+	return info;
 }
 
 

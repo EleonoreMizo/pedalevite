@@ -53,7 +53,11 @@ namespace nzcl
 
 NoiseChlorineDesc::NoiseChlorineDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "noisechlorine";
+	_info._name      = "Noise chlorine\nNoise cl\nNoisCl";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Global level
@@ -100,16 +104,9 @@ int	NoiseChlorineDesc::get_base_notch (int index)
 
 
 
-std::string	NoiseChlorineDesc::do_get_unique_id () const
+piapi::PluginInfo	NoiseChlorineDesc::do_get_info () const
 {
-	return "noisechlorine";
-}
-
-
-
-std::string	NoiseChlorineDesc::do_get_name () const
-{
-	return "Noise chlorine\nNoise cl\nNoisCl";
+	return _info;
 }
 
 

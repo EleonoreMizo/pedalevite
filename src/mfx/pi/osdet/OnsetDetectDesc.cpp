@@ -49,7 +49,11 @@ namespace osdet
 
 OnsetDetectDesc::OnsetDetectDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "osdet";
+	_info._name      = "Onset detector\nOnset det\nOnset";
+
 	// Velocity clipping
 	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
@@ -119,16 +123,9 @@ ParamDescSet &	OnsetDetectDesc::use_desc_set ()
 
 
 
-std::string	OnsetDetectDesc::do_get_unique_id () const
+piapi::PluginInfo	OnsetDetectDesc::do_get_info () const
 {
-	return "osdet";
-}
-
-
-
-std::string	OnsetDetectDesc::do_get_name () const
-{
-	return "Onset detector\nOnset det\nOnset";
+	return _info;
 }
 
 

@@ -53,7 +53,11 @@ namespace nzbl
 
 NoiseBleachDesc::NoiseBleachDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "noisebleach";
+	_info._name      = "Noise bleach\nNoise bl\nNoisBl";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Global level
@@ -100,16 +104,9 @@ int	NoiseBleachDesc::get_base_band (int index)
 
 
 
-std::string	NoiseBleachDesc::do_get_unique_id () const
+piapi::PluginInfo	NoiseBleachDesc::do_get_info () const
 {
-	return "noisebleach";
-}
-
-
-
-std::string	NoiseBleachDesc::do_get_name () const
-{
-	return "Noise bleach\nNoise bl\nNoisBl";
+	return _info;
 }
 
 

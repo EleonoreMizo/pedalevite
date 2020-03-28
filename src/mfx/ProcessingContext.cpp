@@ -268,7 +268,8 @@ std::string	ProcessingContext::dump_ctrl (const PluginPool &plugin_pool) const
 				plugin_pool.use_plugin (pc._plugin_id);
 			assert (details._desc_ptr != nullptr);
 			const piapi::PluginDescInterface &  pi_desc = *details._desc_ptr;
-			const std::string pi_categ     = pi_desc.get_unique_id ();
+			const piapi::PluginInfo pi_info { pi_desc.get_info () };
+			const std::string pi_categ     = pi_info._unique_id;
 			const piapi::ParamDescInterface &   param_desc =
 				pi_desc.get_param_info (piapi::ParamCateg_GLOBAL, pc._param_index);
 			const std::string param_name = param_desc.get_name (10);

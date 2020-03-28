@@ -372,7 +372,8 @@ void	SlotMenu::update_display ()
 		const doc::Slot & slot = preset.use_slot (slot_id);
 		const piapi::PluginDescInterface &  desc =
 			_model_ptr->get_model_desc (slot._pi_model);
-		multilabel = desc.get_name ();
+		const piapi::PluginInfo pi_info { desc.get_info () };
+		multilabel = pi_info._name;
 	}
 	std::string    txt = pi::param::Tools::print_name_bestfit (
 		scr_w, multilabel.c_str (),

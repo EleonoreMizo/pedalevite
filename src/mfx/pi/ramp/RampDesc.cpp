@@ -52,7 +52,11 @@ namespace ramp
 
 RampDesc::RampDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "ramp";
+	_info._name      = "Control ramp\nCtrl ramp\nRamp";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Time
@@ -182,16 +186,9 @@ ParamDescSet &	RampDesc::use_desc_set ()
 
 
 
-std::string	RampDesc::do_get_unique_id () const
+piapi::PluginInfo	RampDesc::do_get_info () const
 {
-	return "ramp";
-}
-
-
-
-std::string	RampDesc::do_get_name () const
-{
-	return "Control ramp\nCtrl ramp\nRamp";
+	return _info;
 }
 
 

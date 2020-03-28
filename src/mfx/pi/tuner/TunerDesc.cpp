@@ -48,8 +48,10 @@ namespace tuner
 
 TunerDesc::TunerDesc ()
 :	_desc_set (0, 0)
+,	_info ()
 {
-	// Nothing
+	_info._unique_id = Cst::_plugin_tuner;
+	_info._name      = "Tuner";
 }
 
 
@@ -58,16 +60,9 @@ TunerDesc::TunerDesc ()
 
 
 
-std::string	TunerDesc::do_get_unique_id () const
+piapi::PluginInfo	TunerDesc::do_get_info () const
 {
-	return Cst::_plugin_tuner;
-}
-
-
-
-std::string	TunerDesc::do_get_name () const
-{
-	return "Tuner";
+	return _info;
 }
 
 

@@ -49,7 +49,11 @@ namespace spkem
 
 SpeakerEmuDesc::SpeakerEmuDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "spkemu1";
+	_info._name      = "Speaker emulator\nSpeaker emu\nSpk emu";
+
 	// Type
 	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"0\n1A\n1B",
@@ -144,16 +148,9 @@ ParamDescSet &	SpeakerEmuDesc::use_desc_set ()
 
 
 
-std::string	SpeakerEmuDesc::do_get_unique_id () const
+piapi::PluginInfo	SpeakerEmuDesc::do_get_info () const
 {
-	return "spkemu1";
-}
-
-
-
-std::string	SpeakerEmuDesc::do_get_name () const
-{
-	return "Speaker emulator\nSpeaker emu\nSpk emu";
+	return _info;
 }
 
 

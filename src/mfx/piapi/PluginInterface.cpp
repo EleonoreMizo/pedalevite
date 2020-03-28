@@ -46,7 +46,7 @@ namespace piapi
 
 PluginInterface::State	PluginInterface::get_state () const
 {
-	return (do_get_state ());
+	return do_get_state ();
 }
 
 
@@ -60,7 +60,7 @@ double	PluginInterface::get_param_val (ParamCateg categ, int index, int note_id)
 	assert (val >= 0);
 	assert (val <= 1);
 
-	return (val);
+	return val;
 }
 
 
@@ -76,7 +76,7 @@ int	PluginInterface::reset (double sample_freq, int max_block_size, int &latency
 	assert (ret_val != Err_OK || get_state () == State_ACTIVE );
 	assert (ret_val != Err_OK || latency >= 0);
 
-	return (ret_val);
+	return ret_val;
 }
 
 

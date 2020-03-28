@@ -3621,6 +3621,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dclip\Shape.h">
       <Filter>mfx\pi\dclip</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\PluginInfo.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4534,9 +4537,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApfDesc.cpp">
       <Filter>mfx\pi\distapf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp">
-      <Filter>mfx\pi\lfo1</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp">
       <Filter>mfx\pi\adsr</Filter>

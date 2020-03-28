@@ -48,9 +48,13 @@ namespace lfo1
 template <bool SLOW>
 LfoDesc <SLOW>::LfoDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
 	if (SLOW)
 	{
+		_info._unique_id = "lfo1slow";
+		_info._name      = "LFO Slow\nLFO S";
+
 		// Period
 		auto           log_sptr = std::make_shared <param::TplLog> (
 			0.1, 1000,
@@ -65,6 +69,9 @@ LfoDesc <SLOW>::LfoDesc ()
 	}
 	else
 	{
+		_info._unique_id = "lfo1";
+		_info._name      = "LFO";
+
 		// Speed
 		auto           log_sptr = std::make_shared <param::TplLog> (
 			0.01, 100,
@@ -238,6 +245,14 @@ ParamDescSet &	LfoDesc <SLOW>::use_desc_set ()
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <bool SLOW>
+piapi::PluginInfo	LfoDesc <SLOW>::do_get_info () const
+{
+	return _info;
+}
 
 
 

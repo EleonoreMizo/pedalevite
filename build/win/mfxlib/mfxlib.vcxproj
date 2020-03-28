@@ -866,6 +866,7 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\Dir.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\Err.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\EventReset.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\PluginInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqShift.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h" />
@@ -1558,7 +1559,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFix.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFixDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\lfo1\LfoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\SqueezerDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpf.cpp" />

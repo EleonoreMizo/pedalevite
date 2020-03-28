@@ -58,7 +58,11 @@ namespace dly2
 
 Delay2Desc::Delay2Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "dly2";
+	_info._name      = "SiemensGirlz\nSiemGirlz\nSGirlz";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 	typedef param::TplMapped <param::MapS <false> > TplS;
 
@@ -213,16 +217,9 @@ int	Delay2Desc::get_line_base (int index)
 
 
 
-std::string	Delay2Desc::do_get_unique_id () const
+piapi::PluginInfo	Delay2Desc::do_get_info () const
 {
-	return "dly2";
-}
-
-
-
-std::string	Delay2Desc::do_get_name () const
-{
-	return "SiemensGirlz\nSiemGirlz\nSGirlz";
+	return _info;
 }
 
 

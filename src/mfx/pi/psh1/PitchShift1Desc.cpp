@@ -49,7 +49,11 @@ namespace psh1
 
 PitchShift1Desc::PitchShift1Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "psh1";
+	_info._name      = "Pitch shifter\nPitch sh";
+
 	// Pitch
 	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-1, 1,
@@ -89,16 +93,9 @@ ParamDescSet &	PitchShift1Desc::use_desc_set ()
 
 
 
-std::string	PitchShift1Desc::do_get_unique_id () const
+piapi::PluginInfo	PitchShift1Desc::do_get_info () const
 {
-	return "psh1";
-}
-
-
-
-std::string	PitchShift1Desc::do_get_name () const
-{
-	return "Pitch shifter";
+	return _info;
 }
 
 

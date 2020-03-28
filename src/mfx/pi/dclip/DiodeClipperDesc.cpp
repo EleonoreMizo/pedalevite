@@ -54,7 +54,11 @@ const double	DiodeClipperDesc::_gain_max = 1000;
 
 DiodeClipperDesc::DiodeClipperDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "dclip";
+	_info._name      = "Diode clipper\nDiode clip\nD. clip\nDClip";
+
 	// Gain
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		double (_gain_min), double (_gain_max),
@@ -104,16 +108,9 @@ ParamDescSet &	DiodeClipperDesc::use_desc_set ()
 
 
 
-std::string	DiodeClipperDesc::do_get_unique_id () const
+piapi::PluginInfo	DiodeClipperDesc::do_get_info () const
 {
-	return "dclip";
-}
-
-
-
-std::string	DiodeClipperDesc::do_get_name () const
-{
-	return "Diode clipper\nDiode clip\nD. clip\nDClip";
+	return _info;
 }
 
 

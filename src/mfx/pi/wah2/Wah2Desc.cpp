@@ -48,7 +48,11 @@ namespace wah2
 
 Wah2Desc::Wah2Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "wah2";
+	_info._name      = "Wah-wah (CryBaby)";
+
 	// Position
 	auto           sim_sptr = std::make_shared <param::Simple> ("Position\nPos");
 	sim_sptr->set_flags (piapi::ParamDescInterface::Flags_AUTOLINK);
@@ -78,16 +82,9 @@ ParamDescSet &	Wah2Desc::use_desc_set ()
 
 
 
-std::string	Wah2Desc::do_get_unique_id () const
+piapi::PluginInfo	Wah2Desc::do_get_info () const
 {
-	return "wah2";
-}
-
-
-
-std::string	Wah2Desc::do_get_name () const
-{
-	return "Wah-wah (CryBaby)";
+	return _info;
 }
 
 

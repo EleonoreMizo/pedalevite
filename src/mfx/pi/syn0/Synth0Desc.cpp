@@ -47,7 +47,11 @@ namespace syn0
 
 Synth0Desc::Synth0Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "syn0";
+	_info._name      = "Synth Zero\nSynth 0\nSyn 0";
+
 	// Pitch
 	auto           lin_sptr = std::make_shared <param::TplLin> (
 		-3, 9,
@@ -92,16 +96,9 @@ ParamDescSet &	Synth0Desc::use_desc_set ()
 
 
 
-std::string	Synth0Desc::do_get_unique_id () const
+piapi::PluginInfo	Synth0Desc::do_get_info () const
 {
-	return "syn0";
-}
-
-
-
-std::string	Synth0Desc::do_get_name () const
-{
-	return "Synth Zero\nSynth 0\nSyn 0";
+	return _info;
 }
 
 

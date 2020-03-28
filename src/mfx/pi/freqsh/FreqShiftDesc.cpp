@@ -48,7 +48,11 @@ namespace freqsh
 
 FreqShiftDesc::FreqShiftDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "freqshift1";
+	_info._name      = "Frequency Shifter\nFreq Shift\nFShift";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Frequency
@@ -81,16 +85,9 @@ ParamDescSet &	FreqShiftDesc::use_desc_set ()
 
 
 
-std::string	FreqShiftDesc::do_get_unique_id () const
+piapi::PluginInfo	FreqShiftDesc::do_get_info () const
 {
-	return "freqshift1";
-}
-
-
-
-std::string	FreqShiftDesc::do_get_name () const
-{
-	return "Frequency Shifter\nFreq Shift\nFShift";
+	return _info;
 }
 
 

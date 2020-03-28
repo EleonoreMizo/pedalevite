@@ -54,7 +54,11 @@ namespace hcomb
 
 HyperCombDesc::HyperCombDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "hypercomb";
+	_info._name      = "Hypercomb\nHComb";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Tune
@@ -147,16 +151,9 @@ int	HyperCombDesc::get_base_voice (int index)
 
 
 
-std::string	HyperCombDesc::do_get_unique_id () const
+piapi::PluginInfo	HyperCombDesc::do_get_info () const
 {
-	return "hypercomb";
-}
-
-
-
-std::string	HyperCombDesc::do_get_name () const
-{
-	return "Hypercomb\nHComb";
+	return _info;
 }
 
 

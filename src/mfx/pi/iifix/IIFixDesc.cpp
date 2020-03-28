@@ -47,7 +47,11 @@ namespace iifix
 
 IIFixDesc::IIFixDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "iifix";
+	_info._name      = "Input Impedance Fix\nImpedance Fix\nImp Fix";
+
 	// Center
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		1000, 4000,
@@ -85,16 +89,9 @@ ParamDescSet &	IIFixDesc::use_desc_set ()
 
 
 
-std::string	IIFixDesc::do_get_unique_id () const
+piapi::PluginInfo	IIFixDesc::do_get_info () const
 {
-	return "iifix";
-}
-
-
-
-std::string	IIFixDesc::do_get_name () const
-{
-	return "Input Impedance Fix\nImpedance Fix\nImp Fix";
+	return _info;
 }
 
 

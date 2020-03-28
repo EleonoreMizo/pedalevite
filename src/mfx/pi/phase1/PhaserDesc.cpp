@@ -55,7 +55,11 @@ namespace phase1
 
 PhaserDesc::PhaserDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "phaser1";
+	_info._name      = "Phaser HT";
+
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
 
@@ -252,16 +256,9 @@ ParamDescSet &	PhaserDesc::use_desc_set ()
 
 
 
-std::string	PhaserDesc::do_get_unique_id () const
+piapi::PluginInfo	PhaserDesc::do_get_info () const
 {
-	return "phaser1";
-}
-
-
-
-std::string	PhaserDesc::do_get_name () const
-{
-	return "Phaser HT";
+	return _info;
 }
 
 

@@ -53,7 +53,11 @@ namespace moog1
 
 MoogLpfDesc::MoogLpfDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "moog1";
+	_info._name      = "Moog filter\nMoog flt\nMoogF";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Mode
@@ -185,16 +189,9 @@ ParamDescSet &	MoogLpfDesc::use_desc_set ()
 
 
 
-std::string	MoogLpfDesc::do_get_unique_id () const
+piapi::PluginInfo	MoogLpfDesc::do_get_info () const
 {
-	return "moog1";
-}
-
-
-
-std::string	MoogLpfDesc::do_get_name () const
-{
-	return "Moog filter\nMoog flt\nMoogF";
+	return _info;
 }
 
 

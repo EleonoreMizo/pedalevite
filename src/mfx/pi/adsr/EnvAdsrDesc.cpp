@@ -49,7 +49,11 @@ namespace adsr
 
 EnvAdsrDesc::EnvAdsrDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "adsr";
+	_info._name      = "ADSR";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Trigger On
@@ -170,16 +174,9 @@ ParamDescSet &	EnvAdsrDesc::use_desc_set ()
 
 
 
-std::string	EnvAdsrDesc::do_get_unique_id () const
+piapi::PluginInfo	EnvAdsrDesc::do_get_info () const
 {
-	return "adsr";
-}
-
-
-
-std::string	EnvAdsrDesc::do_get_name () const
-{
-	return "ADSR";
+	return _info;
 }
 
 

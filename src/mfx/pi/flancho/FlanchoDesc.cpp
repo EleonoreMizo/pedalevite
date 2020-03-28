@@ -55,7 +55,11 @@ namespace flancho
 
 FlanchoDesc::FlanchoDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "flancho";
+	_info._name      = "FlanCho";
+
 	typedef param::TplMapped <ParamMapFdbkBipolar> TplFdbk;
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
@@ -204,16 +208,9 @@ ParamDescSet &	FlanchoDesc::use_desc_set ()
 
 
 
-std::string	FlanchoDesc::do_get_unique_id () const
+piapi::PluginInfo	FlanchoDesc::do_get_info () const
 {
-	return "flancho";
-}
-
-
-
-std::string	FlanchoDesc::do_get_name () const
-{
-	return "FlanCho";
+	return _info;
 }
 
 

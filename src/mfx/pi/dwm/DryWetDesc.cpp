@@ -51,7 +51,11 @@ namespace dwm
 
 DryWetDesc::DryWetDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = Cst::_plugin_dwm;
+	_info._name      = "Dry/Wet mixer\nDry/Wet";
+
 	// Bypass
 	auto           enum_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
@@ -105,16 +109,9 @@ const float	DryWetDesc::_gain_neutral = 0.75f;
 
 
 
-std::string	DryWetDesc::do_get_unique_id () const
+piapi::PluginInfo	DryWetDesc::do_get_info () const
 {
-	return Cst::_plugin_dwm;
-}
-
-
-
-std::string	DryWetDesc::do_get_name () const
-{
-	return "Dry/Wet mixer\nDry/Wet";
+	return _info;
 }
 
 

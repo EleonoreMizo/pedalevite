@@ -69,7 +69,8 @@ PluginPool::PluginPool ()
 			);
 		}
 		const piapi::PluginDescInterface &  desc = sptr->describe ();
-		const std::string  model_id = desc.get_unique_id ();
+		const piapi::PluginInfo info { desc.get_info () };
+		const std::string  model_id = info._unique_id;
 		if (_map_model_to_factory.find (model_id) != _map_model_to_factory.end ())
 		{
 			assert (false);

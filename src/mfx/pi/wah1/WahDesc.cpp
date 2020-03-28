@@ -48,7 +48,11 @@ namespace wah1
 
 WahDesc::WahDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "wah1";
+	_info._name      = "Wah-wah";
+
 	// Frequency
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		120, 120 * 32,
@@ -87,16 +91,9 @@ ParamDescSet &	WahDesc::use_desc_set ()
 
 
 
-std::string	WahDesc::do_get_unique_id () const
+piapi::PluginInfo	WahDesc::do_get_info () const
 {
-	return "wah1";
-}
-
-
-
-std::string	WahDesc::do_get_name () const
-{
-	return "Wah-wah";
+	return _info;
 }
 
 

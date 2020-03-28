@@ -58,7 +58,12 @@ const double	Disto2xDesc::_gain_max = 1000;
 
 Disto2xDesc::Disto2xDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "dist2";
+	_info._name      = "Double distortion\nDouble dist\nDist2x";
+
+
 	typedef param::TplMapped <param::MapS <false> > TplMix;
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 
@@ -179,16 +184,9 @@ ParamDescSet &	Disto2xDesc::use_desc_set ()
 
 
 
-std::string	Disto2xDesc::do_get_unique_id () const
+piapi::PluginInfo	Disto2xDesc::do_get_info () const
 {
-	return "dist2";
-}
-
-
-
-std::string	Disto2xDesc::do_get_name () const
-{
-	return "Double distortion\nDouble dist\nDist2x";
+	return _info;
 }
 
 

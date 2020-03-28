@@ -51,7 +51,11 @@ namespace osdet2
 
 OnsetDetect2Desc::OnsetDetect2Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "osdet2";
+	_info._name      = "Onset detector II\nOnset det II\nOnset2\nOSD2";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Velocity clipping
@@ -176,16 +180,9 @@ ParamDescSet &	OnsetDetect2Desc::use_desc_set ()
 
 
 
-std::string	OnsetDetect2Desc::do_get_unique_id () const
+piapi::PluginInfo	OnsetDetect2Desc::do_get_info () const
 {
-	return "osdet2";
-}
-
-
-
-std::string	OnsetDetect2Desc::do_get_name () const
-{
-	return "Onset detector II\nOnset det II\nOnset2\nOSD2";
+	return _info;
 }
 
 

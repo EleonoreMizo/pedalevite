@@ -193,7 +193,8 @@ void	Tools::set_param_text (const Model &model, const View &view, int width, int
 		// Displays the main plug-in name, never the dry/wet mixer
 		const piapi::PluginDescInterface &  desc_pi_main =
 			model.get_model_desc (slot._pi_model);
-		std::string    pi_type_name = desc_pi_main.get_name ();
+		const piapi::PluginInfo pi_info { desc_pi_main.get_info () };
+		std::string    pi_type_name = pi_info._name;
 
 		pi_type_name = pi::param::Tools::print_name_bestfit (
 			rem_pix_fx_name, pi_type_name.c_str (),
@@ -467,7 +468,8 @@ std::vector <CtrlSrcNamed>	Tools::make_port_list (const Model &model, const View
 			int            nbr_s = 0;
 			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
 
-			std::string    multilabel = desc.get_name ();
+			const piapi::PluginInfo pi_info { desc.get_info () };
+			std::string    multilabel = pi_info._name;
 			std::string    txt_post;
 
 			// Checks if there are multiple instance of this model in the preset
@@ -932,7 +934,8 @@ int	Tools::extract_slot_list (std::vector <NodeEntry> &slot_list, const doc::Pre
 			entry._type = slot._pi_model;
 
 			const auto &   desc = model.get_model_desc (slot._pi_model);
-			entry._name_multilabel = desc.get_name ();
+			const piapi::PluginInfo pi_info { desc.get_info () };
+			entry._name_multilabel = pi_info._name;
 		}
 
 		auto           it_count = type_map.emplace (std::make_pair (
@@ -1079,7 +1082,8 @@ void	Tools::print_action_toggle_fx (std::string &model_name, const doc::ActionTo
 			model.get_model_desc (model_id);
 		if (action._fx_id._location_type == doc::FxId::LocType_CATEGORY)
 		{
-			model_name = desc_main.get_name ();
+			const piapi::PluginInfo pi_info { desc_main.get_info () };
+			model_name = pi_info._name;
 		}
 		else
 		{
@@ -1105,7 +1109,8 @@ void	Tools::print_action_param (std::string &model_name, std::string &param_name
 			model.get_model_desc (model_id);
 		if (action._fx_id._location_type == doc::FxId::LocType_CATEGORY)
 		{
-			model_name = desc_main.get_name ();
+			const piapi::PluginInfo pi_info { desc_main.get_info () };
+			model_name = pi_info._name;
 		}
 		else
 		{

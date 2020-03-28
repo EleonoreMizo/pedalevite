@@ -54,7 +54,11 @@ namespace dly1
 
 DelayDesc::DelayDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "delay1";
+	_info._name      = "Delay";
+
 	init_level (false);
 	init_level (true);
 	for (int chn = 0; chn < Cst::_nbr_lines; ++chn)
@@ -104,16 +108,9 @@ ParamDescSet &	DelayDesc::use_desc_set ()
 
 
 
-std::string	DelayDesc::do_get_unique_id () const
+piapi::PluginInfo	DelayDesc::do_get_info () const
 {
-	return "delay1";
-}
-
-
-
-std::string	DelayDesc::do_get_name () const
-{
-	return "Delay";
+	return _info;
 }
 
 

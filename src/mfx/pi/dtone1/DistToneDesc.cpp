@@ -48,7 +48,11 @@ namespace dtone1
 
 DistToneDesc::DistToneDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "dtone1";
+	_info._name      = "Distortion Tone Stage\nDistortion Tone\nDist Tone";
+
 	// Tone
 	auto           lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
@@ -102,16 +106,9 @@ ParamDescSet &	DistToneDesc::use_desc_set ()
 
 
 
-std::string	DistToneDesc::do_get_unique_id () const
+piapi::PluginInfo	DistToneDesc::do_get_info () const
 {
-	return "dtone1";
-}
-
-
-
-std::string	DistToneDesc::do_get_name () const
-{
-	return "Distortion Tone Stage\nDistortion Tone\nDist Tone";
+	return _info;
 }
 
 

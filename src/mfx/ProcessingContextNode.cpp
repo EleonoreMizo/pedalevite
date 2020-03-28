@@ -132,8 +132,9 @@ std::string	ProcessingContextNode::dump_as_str (const PluginPool &plugin_pool) c
 			plugin_pool.use_plugin (_pi_id);
 		assert (details._desc_ptr != nullptr);
 		const piapi::PluginDescInterface &  pi_desc = *details._desc_ptr;
-		const std::string pi_categ     = pi_desc.get_unique_id ();
-		const std::string pi_name_mlab = pi_desc.get_name ();
+		const piapi::PluginInfo pi_info { pi_desc.get_info () };
+		const std::string pi_categ     = pi_info._unique_id;
+		const std::string pi_name_mlab = pi_info._name;
 		const std::string pi_name      =
 			pi::param::Tools::extract_longest_str (pi_name_mlab.c_str (), '\n');
 		out += " (" + pi_categ + ", " + pi_name + ")";

@@ -52,7 +52,11 @@ namespace testgen
 
 TestGenDesc::TestGenDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "testgen";
+	_info._name      = "Test generator\nTest gen";
+
 	// State
 	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
@@ -142,16 +146,9 @@ ParamDescSet &	TestGenDesc::use_desc_set ()
 
 
 
-std::string	TestGenDesc::do_get_unique_id () const
+piapi::PluginInfo	TestGenDesc::do_get_info () const
 {
-	return "testgen";
-}
-
-
-
-std::string	TestGenDesc::do_get_name () const
-{
-	return "Test generator\nTest gen";
+	return _info;
 }
 
 

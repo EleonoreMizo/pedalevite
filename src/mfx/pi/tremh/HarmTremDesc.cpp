@@ -53,7 +53,11 @@ namespace tremh
 
 HarmTremDesc::HarmTremDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "harmotremo";
+	_info._name      = "Harmonic Tremolo\nHarmo Tremolo\nHarm Trem\nHTrem";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Speed
@@ -307,16 +311,9 @@ ParamDescSet &	HarmTremDesc::use_desc_set ()
 
 
 
-std::string	HarmTremDesc::do_get_unique_id () const
+piapi::PluginInfo	HarmTremDesc::do_get_info () const
 {
-	return "harmotremo";
-}
-
-
-
-std::string	HarmTremDesc::do_get_name () const
-{
-	return "Harmonic Tremolo\nHarmo Tremolo\nHarm Trem\nHTrem";
+	return _info;
 }
 
 

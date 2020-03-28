@@ -46,8 +46,12 @@ namespace dly0
 
 DelayDesc::DelayDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
-	// Nothing
+	_info._unique_id = "\?delay0";
+	_info._name      =
+		"Compensation delay\nCompens delay\nComp delay"
+		"\nComp dly\nCDelay\nCDly";
 }
 
 
@@ -63,18 +67,9 @@ ParamDescSet &	DelayDesc::use_desc_set ()
 
 
 
-std::string	DelayDesc::do_get_unique_id () const
+piapi::PluginInfo	DelayDesc::do_get_info () const
 {
-	return "\?delay0";
-}
-
-
-
-std::string	DelayDesc::do_get_name () const
-{
-	return
-		"Compensation delay\nCompens delay\nComp delay"
-		"\nComp dly\nCDelay\nCDly";
+	return _info;
 }
 
 

@@ -47,7 +47,11 @@ namespace fsplit
 
 FreqSplitDesc::FreqSplitDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "fsplit";
+	_info._name      = "Frequency splitter\nFreq splitter\nFreq split\nF split\nFSp";
+
 	// Cutoff frequency
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		20, 20480,
@@ -74,16 +78,9 @@ ParamDescSet &	FreqSplitDesc::use_desc_set ()
 
 
 
-std::string	FreqSplitDesc::do_get_unique_id () const
+piapi::PluginInfo	FreqSplitDesc::do_get_info () const
 {
-	return "fsplit";
-}
-
-
-
-std::string	FreqSplitDesc::do_get_name () const
-{
-	return "Frequency splitter\nFreq splitter\nFreq split\nF split\nFSp";
+	return _info;
 }
 
 

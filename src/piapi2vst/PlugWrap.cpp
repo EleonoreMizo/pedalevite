@@ -397,11 +397,11 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 
 ::VstInt32	PlugWrap::gen_vst_id (const mfx::piapi::PluginDescInterface &desc)
 {
-	std::string    plug_id = desc.get_unique_id ();
+	const mfx::piapi::PluginInfo pi_info { desc.get_info () };
 
 	// Simple hash value
 	uint32_t       hash = 1;
-	for (auto c : plug_id)
+	for (auto c : pi_info._unique_id)
 	{
 		hash *= uint8_t (c);
 	}
@@ -579,9 +579,9 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 	case ::effGetProductString:
 		{
 			const mfx::piapi::PluginDescInterface &   pi_desc = wrapper_ptr->_desc;
-			const std::string   name_multi = pi_desc.get_name ();
+			const mfx::piapi::PluginInfo pi_info { pi_desc.get_info () };
 			const std::string   name = mfx::pi::param::Tools::print_name_bestfit (
-				::kVstMaxProductStrLen - 1, name_multi.c_str ()
+				::kVstMaxProductStrLen - 1, pi_info._name.c_str ()
 			);
 			fstb::snprintf4all (
 				reinterpret_cast <char *> (ptr), ::kVstMaxProductStrLen,

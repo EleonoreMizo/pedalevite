@@ -49,7 +49,13 @@ namespace distapf
 
 DistApfDesc::DistApfDesc ()
 :	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
 {
+	_info._unique_id = "distapf";
+	_info._name      =
+		"All-pass filter distortion\nAll-pass distortion\n"
+		"All-pass dist\nAPF dist";
+
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Gain
@@ -100,16 +106,9 @@ ParamDescSet &	DistApfDesc::use_desc_set ()
 
 
 
-std::string	DistApfDesc::do_get_unique_id () const
+piapi::PluginInfo	DistApfDesc::do_get_info () const
 {
-	return "distapf";
-}
-
-
-
-std::string	DistApfDesc::do_get_name () const
-{
-	return "All-pass filter distortion\nAll-pass distortion\nAll-pass dist\nAPF dist";
+	return _info;
 }
 
 

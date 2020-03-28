@@ -897,7 +897,6 @@ commonsrc = \
         ../../src/mfx/pi/iifix/Param.h \
         ../../src/mfx/pi/lfo1/Lfo.h \
         ../../src/mfx/pi/lfo1/Lfo.hpp \
-        ../../src/mfx/pi/lfo1/LfoDesc.cpp \
         ../../src/mfx/pi/lfo1/LfoDesc.h \
         ../../src/mfx/pi/lfo1/LfoDesc.hpp \
         ../../src/mfx/pi/lfo1/LfoType.h \
@@ -1107,6 +1106,7 @@ commonsrc = \
         ../../src/mfx/piapi/ParamDescInterface.hpp \
         ../../src/mfx/piapi/PluginDescInterface.cpp \
         ../../src/mfx/piapi/PluginDescInterface.h \
+        ../../src/mfx/piapi/PluginInfo.h \
         ../../src/mfx/piapi/PluginInterface.cpp \
         ../../src/mfx/piapi/PluginInterface.h \
         ../../src/mfx/piapi/PluginState.h \

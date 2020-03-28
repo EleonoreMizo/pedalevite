@@ -153,9 +153,9 @@ void	Central::create_plugin_lists ()
 			int            nbr_s = 0;
 			desc.get_nbr_io (nbr_i, nbr_o, nbr_s);
 
-			std::string    name_all = desc.get_name ();
+			const piapi::PluginInfo pi_info { desc.get_info () };
 			std::string    name     = pi::param::Tools::extract_longest_str (
-				name_all.c_str (), '\n'
+				pi_info._name.c_str (), '\n'
 			);
 
 			if (nbr_i > 0 || nbr_o > 0)

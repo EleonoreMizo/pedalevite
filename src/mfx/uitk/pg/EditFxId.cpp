@@ -243,10 +243,10 @@ void	EditFxId::add_fx_list (const std::vector <std::string> &fx_list)
 	{
 		const piapi::PluginDescInterface &  desc =
 			_model_ptr->get_model_desc (plug_id);
-		const std::string name_multi = desc.get_name ();
+		const piapi::PluginInfo pi_info { desc.get_info () };
 
 		const std::string name       = pi::param::Tools::print_name_bestfit (
-			_chr_per_line, name_multi.c_str ()
+			_chr_per_line, pi_info._name.c_str ()
 		);
 
 		_arg_fx_type._choice_arr.push_back (name);
