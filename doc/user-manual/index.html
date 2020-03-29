@@ -1264,8 +1264,8 @@ pré-amplificateurs.
 Il dispose d’un filtre passe-bas intégré.</p>
 
 <p class="var">Gain</p>
-<p>Gain de la distortion, en dB.
-Plus le gain est élevé, plus l’effet de distortion est important.
+<p>Gain de la distorsion, en dB.
+Plus le gain est élevé, plus l’effet de distorsion est important.
 Quand ce paramètre est réglé en dessous de 0&#8239;dB, le gain est compensé en
 sortie, ce qui remonte le seuil de saturation sans diminuer le volume
 apparent.
@@ -1274,7 +1274,7 @@ Cela permet de libérer un peu de marge pour les signaux forts.</p>
 <p class="var">Low-pass filter cutoff frequency</p>
 <p>Fréquence de coupure du filtre passe-bas interne, en Hz.
 Ce filtre permet d’éliminer les fréquences aiguës les plus criardes
-générées par la distortion.
+générées par la distorsion.
 Comme son fonctionnement est étroitement lié au phénomène de saturation, son
 action est très dépendante du gain (ou de la puissance du signal entrant).
 Un gain très élevé atténue l’effet du filtre.</p>
@@ -1285,6 +1285,12 @@ Les modèles durs (<span class="ui">H</span>) saturent brutalement et
 conviennent très bien aux sons fortement distordus, alors que les modèles plus
 doux (<span class="ui">S</span>) ont une saturation plus progressive, plus
 adaptée aux sons un peu <i><span lang="en">crunch</span></i>.</p>
+
+<p class="var">Preclip level</p>
+<p>Seuil en dB à partir duquel le signal d’entrée est écrêté, avant de passer
+dans la distorsion à diodes.
+Ce paramètre permet de simuler la limitation du signal par la tension
+d’alimentation du circuit.</p>
 
 
 

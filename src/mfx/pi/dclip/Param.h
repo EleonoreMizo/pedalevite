@@ -40,6 +40,7 @@ enum Param
 	Param_GAIN = 0,
 	Param_CUTOFF,
 	Param_SHAPE,
+	Param_PRECLIP,
 
 	Param_NBR_ELT
 

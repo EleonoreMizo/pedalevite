@@ -27,8 +27,10 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/dclip/DiodeClipperDesc.h"
 #include "mfx/pi/dclip/Param.h"
 #include "mfx/pi/dclip/Shape.h"
+#include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplEnum.h"
+#include "mfx/pi/param/TplMapped.h"
 
 #include <cassert>
 
@@ -58,6 +60,8 @@ DiodeClipperDesc::DiodeClipperDesc ()
 {
 	_info._unique_id = "dclip";
 	_info._name      = "Diode clipper\nDiode clip\nD. clip\nDClip";
+
+	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
 	// Gain
 	auto           log_sptr = std::make_shared <param::TplLog> (
@@ -93,6 +97,18 @@ DiodeClipperDesc::DiodeClipperDesc ()
 	);
 	assert (enu_sptr->get_nat_max () == Shape_NBR_ELT - 1);
 	_desc_set.add_glob (Param_SHAPE, enu_sptr);
+
+	// Preclip level
+	auto           pll_sptr = std::make_shared <TplPll> (
+		1, 100,
+		"Preclip level\nPreclip lvl\nPreclip\nPCl",
+		"dB",
+		param::HelperDispNum::Preset_DB,
+		0,
+		"%+5.1f"
+	);
+	pll_sptr->use_mapper ().gen_log (8);
+	_desc_set.add_glob (Param_PRECLIP, pll_sptr);
 }
 
 

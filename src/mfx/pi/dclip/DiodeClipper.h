@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/iir/DcKiller1p.h"
 #include "mfx/dsp/iir/Downsampler4xSimd.h"
 #include "mfx/dsp/iir/Upsampler4xSimd.h"
+#include "mfx/dsp/shape/HardclipBl.h"
 #include "mfx/dsp/va/DiodeClipDAngelo.h"
 #include "mfx/pi/dclip/DiodeClipperDesc.h"
 #include "mfx/pi/dclip/Shape.h"
@@ -94,6 +95,8 @@ private:
 	public:
 		UpSpl          _upspl;
 		DwSpl          _dwspl;
+		dsp::shape::HardclipBl
+		               _preclip;
 		dsp::va::DiodeClipDAngelo
 		               _dist;
 		dsp::iir::DcKiller1p

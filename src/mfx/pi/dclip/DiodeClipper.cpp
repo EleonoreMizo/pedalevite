@@ -75,13 +75,15 @@ DiodeClipper::DiodeClipper ()
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
-	_state_set.set_val_nat (desc_set, Param_GAIN  , 1);
-	_state_set.set_val_nat (desc_set, Param_CUTOFF, 20480);
-	_state_set.set_val_nat (desc_set, Param_SHAPE , Shape_SYM_H);
+	_state_set.set_val_nat (desc_set, Param_GAIN   , 1);
+	_state_set.set_val_nat (desc_set, Param_CUTOFF , 20480);
+	_state_set.set_val_nat (desc_set, Param_SHAPE  , Shape_SYM_H);
+	_state_set.set_val_nat (desc_set, Param_PRECLIP, 10);
 
-	_state_set.add_observer (Param_GAIN  , _param_change_flag);
-	_state_set.add_observer (Param_CUTOFF, _param_change_flag);
-	_state_set.add_observer (Param_SHAPE , _param_change_flag);
+	_state_set.add_observer (Param_GAIN   , _param_change_flag);
+	_state_set.add_observer (Param_CUTOFF , _param_change_flag);
+	_state_set.add_observer (Param_SHAPE  , _param_change_flag);
+	_state_set.add_observer (Param_PRECLIP, _param_change_flag);
 
 	_state_set.set_ramp_time (Param_GAIN, 0.010);
 
@@ -145,7 +147,8 @@ int	DiodeClipper::do_reset (double sample_freq, int max_buf_len, int &latency)
 	const double   dly_21 = hiir::PolyphaseIir2Designer::compute_group_delay (
 		&_coef_21 [0], _nbr_coef_21, f_fs * 0.5f , false
 	);
-	const double   latency_f = (0.5f * dly_21 + 0.25f * dly_42) * 2;
+	double         latency_f = (0.5f * dly_21 + 0.25f * dly_42) * 2;
+	latency_f += 3 * 0.25f; // Hard-clipper
 	latency = fstb::round_int (latency_f);
 
 	_param_change_flag.set ();
@@ -214,6 +217,11 @@ void	DiodeClipper::do_process_block (piapi::ProcInfo &proc)
 			// Upsampling
 			chn._upspl.process_block (
 				_buf_ovr.data (), _buf_tmp.data (), len_blk
+			);
+
+			// Pre-clipping
+			chn._preclip.process_block (
+				_buf_ovr.data (), _buf_ovr.data (), len_blk_ovr
 			);
 
 			// Main distortion processing
@@ -292,6 +300,12 @@ void	DiodeClipper::update_param (bool force_flag)
 			chn._dist.set_d1_n ( par._n1 );
 			chn._dist.set_d2_is (par._is2);
 			chn._dist.set_d2_n ( par._n2 );
+		}
+
+		const float    pcl = float (_state_set.get_val_end_nat (Param_PRECLIP));
+		for (auto &chn : _chn_arr)
+		{
+			chn._preclip.set_clip_lvl (pcl);
 		}
 	}
 }
