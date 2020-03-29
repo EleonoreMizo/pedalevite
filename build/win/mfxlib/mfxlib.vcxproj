@@ -717,6 +717,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncFiniteAsym2d.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncLin0.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\FncScale.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\HardclipBl.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturate.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\MapSaturateBipolar.h" />
@@ -1427,6 +1428,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistBounce.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistRandWalk.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\shape\HardclipBl.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp" />

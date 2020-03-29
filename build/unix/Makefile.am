@@ -590,6 +590,8 @@ commonsrc = \
         ../../src/mfx/dsp/shape/FncFiniteAsym2d.hpp \
         ../../src/mfx/dsp/shape/FncLin0.h \
         ../../src/mfx/dsp/shape/FncScale.h \
+        ../../src/mfx/dsp/shape/HardclipBl.cpp \
+        ../../src/mfx/dsp/shape/HardclipBl.h \
         ../../src/mfx/dsp/shape/Poly3L1Bias.h \
         ../../src/mfx/dsp/shape/Poly3L1Bias.hpp \
         ../../src/mfx/dsp/shape/MapSaturate.h \
@@ -1535,6 +1537,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestDiodeClipJcm.h \
         ../../src/test/TestDiodeClipScreamer.cpp \
         ../../src/test/TestDiodeClipScreamer.h \
+        ../../src/test/TestHardclipBl.cpp \
+        ../../src/test/TestHardclipBl.h \
         ../../src/test/TestInterpFtor.cpp \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
