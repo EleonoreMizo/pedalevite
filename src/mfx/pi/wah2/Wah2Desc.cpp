@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/wah2/Param.h"
 #include "mfx/pi/param/Simple.h"
 #include "mfx/pi/param/TplEnum.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -52,6 +53,7 @@ Wah2Desc::Wah2Desc ()
 {
 	_info._unique_id = "wah2";
 	_info._name      = "Wah-wah (CryBaby)";
+	_info._tag_list  = { piapi::Tag::_eq_filter_0 };
 
 	// Position
 	auto           sim_sptr = std::make_shared <param::Simple> ("Position\nPos");

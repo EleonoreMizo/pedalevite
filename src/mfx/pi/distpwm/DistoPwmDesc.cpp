@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/distpwm/Param.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -52,6 +53,7 @@ DistoPwmDesc::DistoPwmDesc ()
 {
 	_info._unique_id = "distpwm";
 	_info._name      = "Pulse Width Modulation distortion\nPWM distortion\nPWM disto";
+	_info._tag_list  = { piapi::Tag::_distortion_0, piapi::Tag::_synth_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

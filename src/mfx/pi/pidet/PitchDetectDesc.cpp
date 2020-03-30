@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/pidet/Param.h"
 #include "mfx/pi/pidet/PitchDetectDesc.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -53,6 +54,7 @@ PitchDetectDesc::PitchDetectDesc ()
 {
 	_info._unique_id = "pidet";
 	_info._name      = "Pitch detector\nPitch det\nPitDet";
+	_info._tag_list  = { piapi::Tag::_analyser_0, piapi::Tag::_control_gen_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

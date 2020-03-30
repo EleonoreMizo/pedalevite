@@ -3624,6 +3624,9 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\PluginInfo.h">
       <Filter>mfx\piapi</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\piapi\Tag.h">
+      <Filter>mfx\piapi</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\HardclipBl.h">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
@@ -4861,6 +4864,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dclip\DiodeClipperDesc.cpp">
       <Filter>mfx\pi\dclip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\piapi\Tag.cpp">
+      <Filter>mfx\piapi</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\HardclipBl.cpp">
       <Filter>mfx\dsp\shape</Filter>

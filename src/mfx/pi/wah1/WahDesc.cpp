@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/wah1/Param.h"
 #include "mfx/pi/wah1/WahDesc.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -52,6 +53,7 @@ WahDesc::WahDesc ()
 {
 	_info._unique_id = "wah1";
 	_info._name      = "Wah-wah";
+	_info._tag_list  = { piapi::Tag::_eq_filter_0 };
 
 	// Frequency
 	auto           log_sptr = std::make_shared <param::TplLog> (

@@ -35,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/phase1/PhaserDesc.h"
 #include "mfx/pi/phase1/StereoOut.h"
 #include "mfx/pi/ParamMapFdbk.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -62,6 +63,7 @@ PhaserDesc::PhaserDesc ()
 
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
+	_info._tag_list  = { piapi::Tag::_modulation_0 };
 
 	// Speed
 	auto           log_sptr = std::make_shared <param::TplLog> (

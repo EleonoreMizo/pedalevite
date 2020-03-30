@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/tremh/HarmTremDesc.h"
 #include "mfx/pi/tremh/LfoType.h"
 #include "mfx/pi/tremh/Param.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -57,6 +58,7 @@ HarmTremDesc::HarmTremDesc ()
 {
 	_info._unique_id = "harmotremo";
 	_info._name      = "Harmonic Tremolo\nHarmo Tremolo\nHarm Trem\nHTrem";
+	_info._tag_list  = { piapi::Tag::_modulation_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

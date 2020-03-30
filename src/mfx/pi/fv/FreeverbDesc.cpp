@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/ParamMapFdbk.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -56,6 +57,7 @@ FreeverbDesc::FreeverbDesc ()
 {
 	_info._unique_id = "freeverb";
 	_info._name      = "Freeverb";
+	_info._tag_list  = { piapi::Tag::_reverb_0, piapi::Tag::_spatial_0 };
 
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;

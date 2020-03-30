@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/lfo1/LfoType.h"
 #include "mfx/pi/lfo1/Param.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -84,6 +85,7 @@ LfoDesc <SLOW>::LfoDesc ()
 		log_sptr->set_categ (piapi::ParamDescInterface::Categ_FREQ_HZ);
 		_desc_set.add_glob (Param_SPEED, log_sptr);
 	}
+	_info._tag_list = { piapi::Tag::_control_gen_0 };
 
 	// Amplitude
 	auto           lin_sptr = std::make_shared <param::TplLin> (

@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnumEvol.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/Simple.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -56,6 +57,7 @@ Dist3Desc::Dist3Desc ()
 {
 	_info._unique_id = "dist3";
 	_info._name      = "Distortion 3\nDistort 3\nDisto 3\nDist 3\nD3";
+	_info._tag_list  = { piapi::Tag::_distortion_0, piapi::Tag::_amp_simulator_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

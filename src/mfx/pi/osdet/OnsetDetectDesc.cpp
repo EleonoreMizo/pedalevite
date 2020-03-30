@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplLin.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -53,6 +54,7 @@ OnsetDetectDesc::OnsetDetectDesc ()
 {
 	_info._unique_id = "osdet";
 	_info._name      = "Onset detector\nOnset det\nOnset";
+	_info._tag_list  = { piapi::Tag::_analyser_0, piapi::Tag::_control_gen_0 };
 
 	// Velocity clipping
 	auto           enu_sptr = std::make_shared <param::TplEnum> (

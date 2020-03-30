@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include <string>
+#include <vector>
 
 
 
@@ -47,6 +48,9 @@ public:
 
 	// Must be defined. Multi-label.
 	std::string    _name;
+
+	std::vector <std::string>
+	               _tag_list;
 
 
 

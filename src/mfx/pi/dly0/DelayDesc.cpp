@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/dly0/DelayDesc.h"
 #include "mfx/pi/dly0/Param.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -52,6 +53,7 @@ DelayDesc::DelayDesc ()
 	_info._name      =
 		"Compensation delay\nCompens delay\nComp delay"
 		"\nComp dly\nCDelay\nCDly";
+	_info._tag_list  = { piapi::Tag::_delay_0, piapi::Tag::_utility_0 };
 }
 
 

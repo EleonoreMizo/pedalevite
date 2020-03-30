@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/freqsh/Param.h"
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -52,6 +53,7 @@ FreqShiftDesc::FreqShiftDesc ()
 {
 	_info._unique_id = "freqshift1";
 	_info._name      = "Frequency Shifter\nFreq Shift\nFShift";
+	_info._tag_list  = { piapi::Tag::_pitch_shift_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

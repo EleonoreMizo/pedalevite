@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/syn0/Synth0Desc.h"
 #include "mfx/pi/syn0/Param.h"
 #include "mfx/pi/param/TplLin.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -51,6 +52,7 @@ Synth0Desc::Synth0Desc ()
 {
 	_info._unique_id = "syn0";
 	_info._name      = "Synth Zero\nSynth 0\nSyn 0";
+	_info._tag_list  = { piapi::Tag::_synth_0, piapi::Tag::_instrument_0 };
 
 	// Pitch
 	auto           lin_sptr = std::make_shared <param::TplLin> (

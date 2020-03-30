@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dist1/Param.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -57,6 +58,7 @@ DistoSimpleDesc::DistoSimpleDesc ()
 {
 	_info._unique_id = "dist1";
 	_info._name      = "Simple distortion\nSimple dist\nDist S";
+	_info._tag_list  = { piapi::Tag::_distortion_0 };
 
 	// Gain
 	auto           log_sptr = std::make_shared <param::TplLog> (

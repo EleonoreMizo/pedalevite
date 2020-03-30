@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -59,6 +60,11 @@ DistoPwm2Desc::DistoPwm2Desc ()
 	_info._name      =
 		"Pulse Width Modulation distortion 2\nPWM distortion 2\n"
 		"PWM disto 2\nPWM dis2";
+	_info._tag_list  = {
+		piapi::Tag::_distortion_0,
+		piapi::Tag::_synth_0,
+		piapi::Tag::_subharmonic_0
+	};
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

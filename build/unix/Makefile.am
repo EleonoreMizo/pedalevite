@@ -1113,6 +1113,8 @@ commonsrc = \
         ../../src/mfx/piapi/PluginInterface.h \
         ../../src/mfx/piapi/PluginState.h \
         ../../src/mfx/piapi/ProcInfo.h \
+        ../../src/mfx/piapi/Tag.cpp \
+        ../../src/mfx/piapi/Tag.h \
         ../../src/mfx/ui/DisplayInterface.cpp \
         ../../src/mfx/ui/DisplayInterface.h \
         ../../src/mfx/ui/DisplayVoid.cpp \

@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/phase2/Param.h"
 #include "mfx/pi/phase2/Phaser2Desc.h"
 #include "mfx/pi/ParamMapFdbkBipolar.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -60,6 +61,7 @@ Phaser2Desc::Phaser2Desc ()
 {
 	_info._unique_id = "phaser2";
 	_info._name      = "Phaser AP";
+	_info._tag_list  = { piapi::Tag::_modulation_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 	typedef param::TplMapped <param::MapS <false> > TplMaps;

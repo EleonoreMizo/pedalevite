@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplLin.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -53,6 +54,7 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 {
 	_info._unique_id = "spkemu1";
 	_info._name      = "Speaker emulator\nSpeaker emu\nSpk emu";
+	_info._tag_list  = { piapi::Tag::_amp_simulator_0, piapi::Tag::_guitar_0 };
 
 	// Type
 	auto           enu_sptr = std::make_shared <param::TplEnum> (

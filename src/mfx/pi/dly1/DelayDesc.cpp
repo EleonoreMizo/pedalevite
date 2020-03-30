@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/ParamMapFdbk.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -58,6 +59,7 @@ DelayDesc::DelayDesc ()
 {
 	_info._unique_id = "delay1";
 	_info._name      = "Delay";
+	_info._tag_list  = { piapi::Tag::_delay_0 };
 
 	init_level (false);
 	init_level (true);

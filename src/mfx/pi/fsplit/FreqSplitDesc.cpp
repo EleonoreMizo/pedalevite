@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/fsplit/FreqSplitDesc.h"
 #include "mfx/pi/fsplit/Param.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -51,6 +52,7 @@ FreqSplitDesc::FreqSplitDesc ()
 {
 	_info._unique_id = "fsplit";
 	_info._name      = "Frequency splitter\nFreq splitter\nFreq split\nF split\nFSp";
+	_info._tag_list  = { piapi::Tag::_utility_0, piapi::Tag::_multiband_0 };
 
 	// Cutoff frequency
 	auto           log_sptr = std::make_shared <param::TplLog> (

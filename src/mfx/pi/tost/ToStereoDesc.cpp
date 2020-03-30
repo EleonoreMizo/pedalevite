@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/pi/tost/ToStereoDesc.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -49,6 +50,7 @@ ToStereoDesc::ToStereoDesc ()
 {
 	_info._unique_id = "tost";
 	_info._name      = "Convert to stereo\nConv to stereo\nTo stereo\nStereo";
+	_info._tag_list  = { piapi::Tag::_utility_0 };
 }
 
 

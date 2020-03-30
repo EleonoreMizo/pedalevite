@@ -27,6 +27,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/skel/EtonDesc.h"
 #include "mfx/pi/skel/Param.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -51,6 +52,7 @@ EtonDesc::EtonDesc ()
 {
 	_info._unique_id = "";
 	_info._name      = "";
+	_info._tag_list  = { piapi::Tag::_example_0 };
 
 	// XYZ
 	auto           log_sptr = std::make_shared <param::TplLog> (

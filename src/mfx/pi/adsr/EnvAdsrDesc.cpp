@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -53,6 +54,7 @@ EnvAdsrDesc::EnvAdsrDesc ()
 {
 	_info._unique_id = "adsr";
 	_info._name      = "ADSR";
+	_info._tag_list  = { piapi::Tag::_control_gen_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

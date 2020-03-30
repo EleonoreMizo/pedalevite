@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/param/TplEnum.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -55,6 +56,7 @@ DistApfDesc::DistApfDesc ()
 	_info._name      =
 		"All-pass filter distortion\nAll-pass distortion\n"
 		"All-pass dist\nAPF dist";
+	_info._tag_list  = { piapi::Tag::_distortion_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/pi/click/ClickDesc.h"
 #include "mfx/pi/click/Param.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -50,6 +51,7 @@ ClickDesc::ClickDesc ()
 {
 	_info._unique_id = "\?click";
 	_info._name      = "Click\nClic";
+	_info._tag_list  = { piapi::Tag::_utility_0, piapi::Tag::_synth_0 };
 
 	// Nothing
 }

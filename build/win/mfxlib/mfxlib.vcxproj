@@ -869,6 +869,7 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\EventReset.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\PluginInfo.h" />
     <ClInclude Include="..\..\..\src\mfx\piapi\ProcInfo.h" />
+    <ClInclude Include="..\..\..\src\mfx\piapi\Tag.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqShift.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayAllPassSimd.h" />
@@ -1480,6 +1481,7 @@
     <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ModelObserverInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\PageSet.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\piapi\Tag.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsr.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\adsr\EnvAdsrDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqShift.cpp" />

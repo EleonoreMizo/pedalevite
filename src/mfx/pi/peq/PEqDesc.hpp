@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -65,6 +66,7 @@ PEqDesc <NB>::PEqDesc ()
 			+ "\nParam Eq "             + s
 			+ "\nPEq "                  + s;
 	}
+	_info._tag_list = { piapi::Tag::_eq_parametric_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

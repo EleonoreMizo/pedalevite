@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/nzbl/Cst.h"
 #include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/nzbl/Param.h"
+#include "mfx/piapi/Tag.h"
 
 #include <array>
 
@@ -57,6 +58,10 @@ NoiseBleachDesc::NoiseBleachDesc ()
 {
 	_info._unique_id = "noisebleach";
 	_info._name      = "Noise bleach\nNoise bl\nNoisBl";
+	_info._tag_list  = {
+		piapi::Tag::_noise_reduction_0,
+		piapi::Tag::_dyn_gate_expander_0
+	};
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

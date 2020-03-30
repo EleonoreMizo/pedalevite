@@ -31,6 +31,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -60,6 +61,10 @@ DiodeClipperDesc::DiodeClipperDesc ()
 {
 	_info._unique_id = "dclip";
 	_info._name      = "Diode clipper\nDiode clip\nD. clip\nDClip";
+	_info._tag_list  = {
+		piapi::Tag::_distortion_0,
+		piapi::Tag::_amp_simulator_0
+	};
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

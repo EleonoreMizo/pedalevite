@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dtone1/Param.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -52,6 +53,7 @@ DistToneDesc::DistToneDesc ()
 {
 	_info._unique_id = "dtone1";
 	_info._name      = "Distortion Tone Stage\nDistortion Tone\nDist Tone";
+	_info._tag_list  = { piapi::Tag::_eq_tilt_0 };
 
 	// Tone
 	auto           lin_sptr = std::make_shared <param::TplLin> (

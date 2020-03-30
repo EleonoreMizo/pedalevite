@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <array>
 
@@ -58,6 +59,7 @@ EnvFollowDesc::EnvFollowDesc ()
 {
 	_info._unique_id = "envf";
 	_info._name      = "Envelope Follower\nEnvelope Fol\nEnv Fol";
+	_info._tag_list  = { piapi::Tag::_analyser_0, piapi::Tag::_control_gen_0 };
 
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 

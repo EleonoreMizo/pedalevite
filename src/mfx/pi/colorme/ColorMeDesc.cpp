@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplInt.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -55,6 +56,7 @@ ColorMeDesc::ColorMeDesc ()
 {
 	_info._unique_id = "colorme";
 	_info._name      = "Color Me\nColorMe\nColMe";
+	_info._tag_list  = { piapi::Tag::_eq_filter_0, piapi::Tag::_vocal_0 };
 
 	// Vowel morphing
 	auto           sim_sptr = std::make_shared <param::Simple> (

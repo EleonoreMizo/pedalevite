@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/iifix/IIFixDesc.h"
 #include "mfx/pi/iifix/Param.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -51,6 +52,7 @@ IIFixDesc::IIFixDesc ()
 {
 	_info._unique_id = "iifix";
 	_info._name      = "Input Impedance Fix\nImpedance Fix\nImp Fix";
+	_info._tag_list  = { piapi::Tag::_eq_tilt_0, piapi::Tag::_utility_0 };
 
 	// Center
 	auto           log_sptr = std::make_shared <param::TplLog> (

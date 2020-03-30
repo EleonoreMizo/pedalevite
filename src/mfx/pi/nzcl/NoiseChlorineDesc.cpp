@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/nzcl/Cst.h"
 #include "mfx/pi/nzcl/NoiseChlorineDesc.h"
 #include "mfx/pi/nzcl/Param.h"
+#include "mfx/piapi/Tag.h"
 
 #include <array>
 
@@ -57,6 +58,10 @@ NoiseChlorineDesc::NoiseChlorineDesc ()
 {
 	_info._unique_id = "noisechlorine";
 	_info._name      = "Noise chlorine\nNoise cl\nNoisCl";
+	_info._tag_list  = {
+		piapi::Tag::_noise_reduction_0,
+		piapi::Tag::_dyn_gate_expander_0
+	};
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

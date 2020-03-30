@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/tuner/TunerDesc.h"
+#include "mfx/piapi/Tag.h"
 #include "mfx/Cst.h"
 
 #include <cassert>
@@ -52,6 +53,7 @@ TunerDesc::TunerDesc ()
 {
 	_info._unique_id = Cst::_plugin_tuner;
 	_info._name      = "Tuner";
+	_info._tag_list  = { piapi::Tag::_tuner_0 };
 }
 
 

@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/ramp/CurveType.h"
 #include "mfx/pi/ramp/RampDesc.h"
 #include "mfx/pi/ramp/Param.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -56,6 +57,7 @@ RampDesc::RampDesc ()
 {
 	_info._unique_id = "ramp";
 	_info._name      = "Control ramp\nCtrl ramp\nRamp";
+	_info._tag_list  = { piapi::Tag::_control_gen_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 

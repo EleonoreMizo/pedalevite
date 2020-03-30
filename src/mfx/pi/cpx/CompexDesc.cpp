@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -54,6 +55,10 @@ CompexDesc::CompexDesc ()
 {
 	_info._unique_id = "compex";
 	_info._name      = "CompEx";
+	_info._tag_list  = {
+		piapi::Tag::_dyn_compressor_0,
+		piapi::Tag::_dyn_gate_expander_0
+	};
 
 	typedef param::TplMapped <param::MapRatio> TplRat;
 

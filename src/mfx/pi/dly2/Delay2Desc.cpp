@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplMapped.h"
 #include "mfx/pi/param/TplPan.h"
 #include "mfx/pi/ParamMapFdbk.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -62,6 +63,15 @@ Delay2Desc::Delay2Desc ()
 {
 	_info._unique_id = "dly2";
 	_info._name      = "SiemensGirlz\nSiemGirlz\nSGirlz";
+	_info._tag_list  = {
+		piapi::Tag::_delay_0,
+		piapi::Tag::_eq_filter_0,
+		piapi::Tag::_modulation_0,
+		piapi::Tag::_pitch_shift_0,
+		piapi::Tag::_reverb_0,
+		piapi::Tag::_spatial_0
+
+	};
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 	typedef param::TplMapped <param::MapS <false> > TplS;

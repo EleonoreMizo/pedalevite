@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/psh1/Param.h"
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -53,6 +54,7 @@ PitchShift1Desc::PitchShift1Desc ()
 {
 	_info._unique_id = "psh1";
 	_info._name      = "Pitch shifter\nPitch sh";
+	_info._tag_list  = { piapi::Tag::_pitch_shift_0 };
 
 	// Pitch
 	auto           lin_sptr = std::make_shared <param::TplLin> (

@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplLin.h"
 #include "mfx/pi/param/TplLog.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -62,7 +63,7 @@ Disto2xDesc::Disto2xDesc ()
 {
 	_info._unique_id = "dist2";
 	_info._name      = "Double distortion\nDouble dist\nDist2x";
-
+	_info._tag_list  = { piapi::Tag::_distortion_0 };
 
 	typedef param::TplMapped <param::MapS <false> > TplMix;
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;

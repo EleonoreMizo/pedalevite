@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplInt.h"
 #include "mfx/pi/param/TplMapped.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -55,6 +56,7 @@ OnsetDetect2Desc::OnsetDetect2Desc ()
 {
 	_info._unique_id = "osdet2";
 	_info._name      = "Onset detector II\nOnset det II\nOnset2\nOSD2";
+	_info._tag_list  = { piapi::Tag::_analyser_0, piapi::Tag::_control_gen_0 };
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
