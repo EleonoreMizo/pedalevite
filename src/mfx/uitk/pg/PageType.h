@@ -83,6 +83,7 @@ enum PageType
 	PageType_REC2DISK,
 	PageType_SLOT_ROUTING,
 	PageType_SLOT_ROUT_ACTION,
+	PageType_SELECT_FX,
 
 	PageType_NBR_ELT
 

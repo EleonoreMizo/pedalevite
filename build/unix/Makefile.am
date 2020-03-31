@@ -1225,6 +1225,8 @@ commonsrc = \
         ../../src/mfx/uitk/pg/Question.h \
         ../../src/mfx/uitk/pg/Rec2Disk.cpp \
         ../../src/mfx/uitk/pg/Rec2Disk.h \
+        ../../src/mfx/uitk/pg/SelectFx.cpp \
+        ../../src/mfx/uitk/pg/SelectFx.h \
         ../../src/mfx/uitk/pg/SettingsOther.cpp \
         ../../src/mfx/uitk/pg/SettingsOther.h \
         ../../src/mfx/uitk/pg/SlotMenu.cpp \

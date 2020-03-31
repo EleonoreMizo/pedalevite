@@ -3630,6 +3630,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\HardclipBl.h">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SelectFx.h">
+      <Filter>mfx\uitk\pg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4870,6 +4873,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\HardclipBl.cpp">
       <Filter>mfx\dsp\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SelectFx.cpp">
+      <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

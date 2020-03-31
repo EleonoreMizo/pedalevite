@@ -64,6 +64,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/ProgSettings.h"
 #include "mfx/uitk/pg/Question.h"
 #include "mfx/uitk/pg/Rec2Disk.h"
+#include "mfx/uitk/pg/SelectFx.h"
 #include "mfx/uitk/pg/SettingsOther.h"
 #include "mfx/uitk/pg/SlotMenu.h"
 #include "mfx/uitk/pg/SlotMove.h"
@@ -206,6 +207,8 @@ private:
 	               _page_slot_routing;
 	uitk::pg::SlotRoutingAction
 	               _page_slot_rout_action;
+	uitk::pg::SelectFx
+	               _page_select_fx;
 
 
 

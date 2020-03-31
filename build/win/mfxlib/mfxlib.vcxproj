@@ -915,6 +915,7 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderCtx.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderCtx.hpp" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\RenderInterface.h" />
+    <ClInclude Include="..\..\..\src\mfx\uitk\pg\SelectFx.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRouting.h" />
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.h" />
@@ -1675,6 +1676,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\BankMove.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\BankOrga.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlEdit.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\SelectFx.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgSettings.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\CtrlSrcNamed.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ProgCur.cpp" />
