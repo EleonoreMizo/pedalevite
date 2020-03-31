@@ -108,6 +108,7 @@ public:
 	static std::vector <CtrlSrcNamed>
 	               make_port_list (const Model &model, const View &view);
 	static int     change_plugin (Model &model, const View &view, int slot_id, int dir, const std::vector <std::string> &fx_list, bool chain_flag);
+	static int     change_plugin (Model &model, const View &view, int slot_id, std::string model_id, bool chain_flag);
 	static void    assign_default_rotenc_mapping (Model &model, const View &view, int slot_id, int page);
 	static bool    get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Preset &prog, Model &model);
 

@@ -529,30 +529,13 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 {
 	assert (dir != 0);
 
-	const doc::Preset &  preset = view.use_preset_cur ();
-	int            audio_size = int (view.use_slot_list_aud ().size ());
-
-	int            chain_pos = -1;
-	if (chain_flag)
-	{
-		if (slot_id >= 0)
-		{
-			chain_pos = find_linear_index_audio_graph (view, slot_id);
-			assert (chain_pos >= 0);
-			assert (chain_pos <= audio_size);
-		}
-		else
-		{
-			chain_pos = audio_size;
-		}
-	}
-
 	const int      nbr_types = int (fx_list.size ());
 
 	// Index within the official plug-in list. end = empty
 	int            pi_index  = nbr_types;
 	if (slot_id >= 0)
 	{
+		const doc::Preset &  preset = view.use_preset_cur ();
 		if (! preset.is_slot_empty (slot_id))
 		{
 			const doc::Slot & slot = preset.use_slot (slot_id);
@@ -575,8 +558,42 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 	pi_index += dir;
 	pi_index = (pi_index + mod_len) % mod_len;
 
+	std::string    model_id;
+	if (pi_index < nbr_types)
+	{
+		model_id = fx_list [pi_index];
+	}
+
+	return change_plugin (model, view, slot_id, model_id, chain_flag);
+}
+
+
+
+// model_id.empty (): delete plug-in (and possibly the slot if this is the
+// last one from the chain)
+int	Tools::change_plugin (Model &model, const View &view, int slot_id, std::string model_id, bool chain_flag)
+{
+	int            audio_size = int (view.use_slot_list_aud ().size ());
+
+	int            chain_pos = -1;
+	if (chain_flag)
+	{
+		if (slot_id >= 0)
+		{
+			chain_pos = find_linear_index_audio_graph (view, slot_id);
+			assert (chain_pos >= 0);
+			assert (chain_pos <= audio_size);
+		}
+		else
+		{
+			chain_pos = audio_size;
+		}
+	}
+
+	const doc::Preset &  preset = view.use_preset_cur ();
+
 	// We need to add a slot at the end?
-	if (pi_index != nbr_types)
+	if (! model_id.empty ())
 	{
 		if (chain_flag && chain_pos == audio_size)
 		{
@@ -596,18 +613,18 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, int dir, 
 		}
 	}
 
-	if (pi_index == nbr_types)
+	if (model_id.empty ())
 	{
 		model.remove_plugin (slot_id);
 	}
 	else
 	{
-		model.set_plugin (slot_id, fx_list [pi_index]);
+		model.set_plugin (slot_id, model_id);
 		create_missing_signal_ports (model, view, slot_id);
 	}
 
 	// Last slot needs to be removed?
-	if (pi_index == nbr_types)
+	if (model_id.empty ())
 	{
 		if (chain_flag && chain_pos == audio_size - 1)
 		{
