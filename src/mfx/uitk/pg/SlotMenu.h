@@ -28,6 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/uitk/pg/EditLabel.h"
+#include "mfx/uitk/pg/SelectFx.h"
 #include "mfx/uitk/NText.h"
 #include "mfx/uitk/NWindow.h"
 #include "mfx/uitk/PageInterface.h"
@@ -91,7 +92,8 @@ private:
 	enum State
 	{
 		State_NORMAL = 0,
-		State_EDIT_LABEL
+		State_EDIT_LABEL,
+		State_SELECT_PLUGIN
 	};
 
 	enum Entry
@@ -115,6 +117,7 @@ private:
 	void           update_display ();
 	EvtProp        change_type (int dir);
 	void           reset_plugin ();
+	void           select_plugin (int node_id);
 	void           insert_slot_before ();
 	void           insert_slot_after ();
 	void           delete_slot ();
@@ -151,6 +154,8 @@ private:
 
 	EditLabel::Param
 	               _label_param;
+	SelectFx::Param
+	               _selfx_param;
 
 
 

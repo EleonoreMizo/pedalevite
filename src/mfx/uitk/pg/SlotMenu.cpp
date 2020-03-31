@@ -80,6 +80,7 @@ SlotMenu::SlotMenu (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_frs_sptr ( std::make_shared <NText  > (Entry_FRESH  ))
 ,	_lbl_sptr ( std::make_shared <NText  > (Entry_LABEL  ))
 ,	_label_param ()
+,	_selfx_param ()
 {
 	_ina_sptr->set_text ("Insert after");
 	_del_sptr->set_text ("Delete");
@@ -124,6 +125,28 @@ void	SlotMenu::do_connect (Model &model, const View &view, PageMgrInterface &pag
 		    && _loc_edit._slot_id             == _save_slot_id)
 		{
 			_model_ptr->set_slot_label (_loc_edit._slot_id, _label_param._label);
+		}
+	}
+	else if (_state == State_SELECT_PLUGIN)
+	{
+		if (   _selfx_param._ok_flag
+		    && _view_ptr->get_bank_index ()   == _save_bank_index
+		    && _view_ptr->get_preset_index () == _save_preset_index
+		    && _loc_edit._slot_id             == _save_slot_id)
+		{
+			const int      slot_id_new = Tools::change_plugin (
+				*_model_ptr,
+				*_view_ptr,
+				_loc_edit._slot_id,
+				_selfx_param._model_id,
+				_loc_edit._audio_flag
+			);
+
+			if (slot_id_new != _loc_edit._slot_id)
+			{
+				_loc_edit._slot_id = slot_id_new;
+				_loc_edit.fix_audio_flag (*_view_ptr, *_model_ptr);
+			}
 		}
 	}
 	_state = State_NORMAL;
@@ -198,6 +221,9 @@ MsgHandlerInterface::EvtProp	SlotMenu::do_handle_evt (const NodeEvt &evt)
 			ret_val = EvtProp_CATCH;
 			switch (node_id)
 			{
+			case Entry_TYPE:
+				select_plugin (node_id);
+				break;
 			case Entry_INS_BFR:
 				insert_slot_before ();
 				break;
@@ -288,8 +314,10 @@ void	SlotMenu::do_remove_slot (int slot_id)
 
 
 
-void	SlotMenu::do_set_routing (const doc::Routing &/*routing*/)
+void	SlotMenu::do_set_routing (const doc::Routing &routing)
 {
+	fstb::unused (routing);
+
 	update_display ();
 }
 
@@ -329,8 +357,10 @@ void	SlotMenu::do_remove_plugin (int slot_id)
 
 
 
-void	SlotMenu::do_set_plugin_mono (int slot_id, bool /*mono_flag*/)
+void	SlotMenu::do_set_plugin_mono (int slot_id, bool mono_flag)
 {
+	fstb::unused (mono_flag);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();
@@ -339,8 +369,10 @@ void	SlotMenu::do_set_plugin_mono (int slot_id, bool /*mono_flag*/)
 
 
 
-void	SlotMenu::do_set_plugin_reset (int slot_id, bool /*reset_flag*/)
+void	SlotMenu::do_set_plugin_reset (int slot_id, bool reset_flag)
 {
+	fstb::unused (reset_flag);
+
 	if (slot_id == _loc_edit._slot_id)
 	{
 		update_display ();
@@ -495,6 +527,32 @@ void	SlotMenu::reset_plugin ()
 	}
 
 	update_display ();
+}
+
+
+
+void	SlotMenu::select_plugin (int node_id)
+{
+	_selfx_param._title         = "Category";
+	_selfx_param._audio_flag    = _loc_edit._audio_flag;
+	_selfx_param._auto_loc_flag = true;
+	_selfx_param._model_id.clear ();
+	if (_loc_edit._slot_id >= 0)
+	{
+		const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+		if (! preset.is_slot_empty (_loc_edit._slot_id))
+		{
+			const doc::Slot & slot = preset.use_slot (_loc_edit._slot_id);
+			_selfx_param._model_id = slot._pi_model;
+		}
+	}
+
+	_save_bank_index   = _view_ptr->get_bank_index ();
+	_save_preset_index = _view_ptr->get_preset_index ();
+	_save_slot_id      = _loc_edit._slot_id;
+	_state             = State_SELECT_PLUGIN;
+
+	_page_switcher.call_page (PageType_SELECT_FX, &_selfx_param, node_id);
 }
 
 
