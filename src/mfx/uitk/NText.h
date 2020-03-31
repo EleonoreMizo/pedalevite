@@ -78,6 +78,7 @@ public:
 	void           set_underline (bool underline_flag);
 
 	int            get_char_width (char32_t c) const;
+	int            get_active_width () const;
 
 
 

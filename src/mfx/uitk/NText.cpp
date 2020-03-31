@@ -246,6 +246,13 @@ int	NText::get_char_width (char32_t c) const
 
 
 
+int	NText::get_active_width () const
+{
+	return (_frame_size - _margin) [0];
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
