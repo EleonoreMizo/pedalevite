@@ -98,6 +98,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/psh1/PitchShift1Desc.h"
 #include "mfx/pi/ramp/Ramp.h"
 #include "mfx/pi/ramp/RampDesc.h"
+#include "mfx/pi/smood/SkoolMood.h"
+#include "mfx/pi/smood/SkoolMoodDesc.h"
 #include "mfx/pi/syn0/Synth0.h"
 #include "mfx/pi/syn0/Synth0Desc.h"
 #include "mfx/pi/spkem/SpeakerEmu.h"
@@ -182,6 +184,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::dist3::Dist3Desc        , mfx::pi::dist3::Dist3             >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::moog1::MoogLpfDesc      , mfx::pi::moog1::MoogLpf           >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::dclip::DiodeClipperDesc , mfx::pi::dclip::DiodeClipper      >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::smood::SkoolMoodDesc    , mfx::pi::smood::SkoolMood         >::create ()
 		};
 
 		fact_list = l;

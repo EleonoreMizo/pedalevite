@@ -67,6 +67,7 @@
 	<li><a href="#fx-pitchdetector">Pitch Detector — Détecteur de hauteur de note</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
 	<li><a href="#fx-distpwm2">Pulse Width Modulation Distortion 2</a></li>
+	<li><a href="#fx-skool-mood">Skool-Mood — Phaser</a></li>
 	<li><a href="#fx-sgirlz">SiemensGirlz — Écho créatif</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
@@ -2394,12 +2395,12 @@ tous les 4 fronts montants, abaissant la tonalité de deux octaves.</td></tr>
 </table>
 
 <p class="var">Pre-filter</p>
-L’entrée est filtrée par une combinaison de passe-bas et passe-haut afin de
+<p>L’entrée est filtrée par une combinaison de passe-bas et passe-haut afin de
 contenir un excès d’harmoniques qui peuvent être gênant et de retirer la
 composantes continue.
 Ce paramètre permet de sélectionner la force du filtrage.
 Un filtrage fort donne une onde plus pure, mais le sustain peut être raccourci
-sur les notes les plus hautes.<p>
+sur les notes les plus hautes.</p>
 <table>
 <tr><td><span class="ui">Weak</span></td><td>LPF 2 pôles à 1500&#8239;Hz</td></tr>
 <tr><td><span class="ui">Mild</span></td><td>LPF supplémentaire à 500&#8239;Hz et HPF à 5&#8239;Hz</td></tr>
@@ -2408,8 +2409,8 @@ supplémentaire est abaissée à 50&#8239;Hz</td></tr>
 </table>
 
 <p class="var">Detection method</p>
-Sélectionne la méthode utilisée pour détecter les fronts d’onde et déclancher
-les impulsions correspondantes.<p>
+<p>Sélectionne la méthode utilisée pour détecter les fronts d’onde et déclancher
+les impulsions correspondantes.</p>
 <table>
 <tr><td><span class="ui">0-X</span></td><td>La méthode des intersections avec
 zéro donne un contenu riche, en particulier avec les accords, mais est assez
@@ -2422,35 +2423,35 @@ accords sonnent de manière plus pauvre.</td></tr>
 </table>
 
 <p class="var">Threshold</p>
-Ce paramètre ne concerne que la méthode des intersections avec zéro.
+<p>Ce paramètre ne concerne que la méthode des intersections avec zéro.
 Il fixe le niveau (en dB) à franchir pour détecter un front d’onde.
 Plus le niveau est bas, plus la durée du sustain sera longue, mais plus le
 dispositif sera sensible au bruit résiduel.
 Signalons aussi que l’utilisation d’un filtre d’entrée fort peut nécessiter de
-descendre ce niveau.<p>
+descendre ce niveau.</p>
 
 <p class="var">Density</p>
-Permet d’ajuster le volume de la sortie à celui de l’entrée.
+<p>Permet d’ajuster le volume de la sortie à celui de l’entrée.
 Une valeur nulle compense totalement le volume, et la valeur maximale
 laisse la distorsion telle quelle.
-Cela donne des sons un peu plus percussifs mais moins naturels.<p>
+Cela donne des sons un peu plus percussifs mais moins naturels.</p>
 
 <p class="var">Sustain level</p>
-Quand le volume est compensé par <var>Density</var>, ce paramèter fixe un
+<p>Quand le volume est compensé par <var>Density</var>, ce paramèter fixe un
 niveau (en dB) en dessous duquel le volume cesse d’être réduit.
 C’est utile pour récupérer les attaques du son original tout en préservant
-le sustain d’une distorsion à gain élevé.<p>
+le sustain d’une distorsion à gain élevé.</p>
 
 <p class="var">Gate level</p>
-Niveau d’entrée en dB en dessous duquel le son est coupé.
+<p>Niveau d’entrée en dB en dessous duquel le son est coupé.
 Cela permet d’éviter les craquement intempestifs qui apparaissent quand le son
-d’entrée s’affaiblit et fait place au bruit de fond.<p>
+d’entrée s’affaiblit et fait place au bruit de fond.</p>
 
 <p class="var">Pulse type</p>
-Selectionne pour la voix choisie le type d’impulsion généré quand un front
+<p>Selectionne pour la voix choisie le type d’impulsion généré quand un front
 est détecté sur le signal d’entrée.
 Les impulsion simples sonnent comme de la synthèse PWM, et les ondes continues
-comme des oscillateurs sync.<p>
+comme des oscillateurs sync.</p>
 <table>
 <tr><td><span class="ui">Rect</span></td><td>C’est la forme d’onde d’origine,
 une simple impulsion carrée.
@@ -2465,7 +2466,7 @@ Son contenu harmonique est faible et donne un son plus doux.</td></tr>
 </table>
 
 <p class="var">Level</p>
-Volume de la voix, en dB.<p>
+<p>Volume de la voix, en dB.</p>
 
 <p class="var">Pulse frequency</p>
 <p>Fréquence de l’impulsion de la voix, en Hz.
@@ -2474,6 +2475,52 @@ PWM Distortion original.
 Plus la durée est courte, plus le spectre du son est chargé en particulier
 dans les aigus, et pour les impulsions simples, plus le volume apparent
 diminue.</p>
+
+
+
+<h3><a id="fx-skool-mood"></a>Skool-Mood — Phaser</h3>
+
+<p>Skool-Mood est une imitation augmentée du phaser Uni-Vibe d’Univox.
+Cet effet permet notamment le traitement stéréo et le contrôle de la
+rétroaction.</p>
+
+<p class="var">Speed</p>
+<p>Vitesse des oscillations, en Hz.</p>
+
+<p class="var">Width</p>
+<p>Amplitude des oscillations.</p>
+
+<p class="var">Depth</p>
+<p>Tonalité des oscillations.</p>
+
+<p class="var">Feedback level</p>
+<p>Dose de contre-réaction, en pourcentage.
+Le paramètre permet des rétroactions négatives et positives, qui ont
+des effets différents sur la tonalité.</p>
+
+<p class="var">Phase mix</p>
+<p>Quantité de signal déphasé ajoutée au signal d’origine.
+C’est le fait d’additionner les deux qui produit l’effet de phasing.
+Cet effet est maximum à 50&#8239;%.</p>
+
+<p class="var">Stereo difference</p>
+<p>Déphasage en degrés entre les LFO des canaux gauche et droit.
+Ce paramètre n’a d’effet qu’en stéréo.</p>
+
+<p class="var">Channel crossmix</p>
+<p>Permet de balancer le signal déphasé sur le canal opposé.
+Il est possible de changer sa polarité au passage (valeurs négatives).
+Ce paramètre n’a d’effet qu’en stéréo.</p>
+
+<p class="var">Stereo panning</p>
+<p>Balance panoramique du signal déphasé dans l’espace stéréo.
+Ce paramètre n’a d’effet qu’en stéréo.</p>
+
+<p class="var">Waveform, Sample and hold, Smoothing, Chaos amount, Phase
+distortion amount, Phase distortion offset, Sign, Variation 1, Variation 2,
+Phase set</p>
+<p>Ces paramètres contrôlent le LFO interne et sont identiques à ceux de
+l’effet <a href="#fx-lfo">LFO</a>.</p>
 
 
 
@@ -3171,6 +3218,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r34, 2020-04-03</b></p>
+<ul>
+<li>Ajout de Skool-Mood, une réplique du phaser Uni-Vibe.</li>
+</ul>
 
 <p><b>r33, 2020-03-08</b></p>
 <ul>

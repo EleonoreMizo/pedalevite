@@ -906,6 +906,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\smood\LfoType.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\smood\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMood.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
     <ClInclude Include="..\..\..\src\mfx\ToolsRouting.h" />
@@ -1608,6 +1612,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\skel\EtonDesc.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\smood\SkoolMood.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmu.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\spkem\SpeakerEmuDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\syn0\Synth0.cpp" />

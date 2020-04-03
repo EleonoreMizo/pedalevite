@@ -286,6 +286,9 @@
     <Filter Include="mfx\pi\dclip">
       <UniqueIdentifier>{d297136e-3cec-44aa-bedd-d8402fb1d53f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\smood">
+      <UniqueIdentifier>{bec20c8a-2789-44dd-93da-3d7cbfc5bb27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -3633,6 +3636,18 @@
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\SelectFx.h">
       <Filter>mfx\uitk\pg</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\smood\Param.h">
+      <Filter>mfx\pi\smood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\smood\LfoType.h">
+      <Filter>mfx\pi\smood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMood.h">
+      <Filter>mfx\pi\smood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.h">
+      <Filter>mfx\pi\smood</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -4876,6 +4891,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SelectFx.cpp">
       <Filter>mfx\uitk\pg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\smood\SkoolMood.cpp">
+      <Filter>mfx\pi\smood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.cpp">
+      <Filter>mfx\pi\smood</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

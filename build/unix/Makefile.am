@@ -1029,6 +1029,12 @@ commonsrc = \
         ../../src/mfx/pi/ramp/RampDesc.h \
         ../../src/mfx/pi/ramp/RampModule.cpp \
         ../../src/mfx/pi/ramp/RampModule.h \
+        ../../src/mfx/pi/smood/LfoType.h \
+        ../../src/mfx/pi/smood/Param.h \
+        ../../src/mfx/pi/smood/SkoolMood.cpp \
+        ../../src/mfx/pi/smood/SkoolMood.h \
+        ../../src/mfx/pi/smood/SkoolMoodDesc.cpp \
+        ../../src/mfx/pi/smood/SkoolMoodDesc.h \
         ../../src/mfx/pi/syn0/Param.h \
         ../../src/mfx/pi/syn0/Synth0.cpp \
         ../../src/mfx/pi/syn0/Synth0.h \
