@@ -168,7 +168,7 @@ FlanchoDesc::FlanchoDesc ()
 	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"P\nPh.Set\nPhase set",
-		"deg",
+		"\xC2\xB0", // U+00B0 DEGREE SIGN
 		0,
 		"%3.0f"
 	);

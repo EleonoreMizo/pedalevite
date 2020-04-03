@@ -282,7 +282,7 @@ Phaser2Desc::Phaser2Desc ()
 	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
 		"PS\nPh set\nPhase set",
-		"deg",
+		"\xC2\xB0", // U+00B0 DEGREE SIGN
 		0,
 		"%3.0f"
 	);
