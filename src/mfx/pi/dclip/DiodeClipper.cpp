@@ -78,7 +78,7 @@ DiodeClipper::DiodeClipper ()
 	_state_set.set_val_nat (desc_set, Param_GAIN   , 1);
 	_state_set.set_val_nat (desc_set, Param_CUTOFF , 20480);
 	_state_set.set_val_nat (desc_set, Param_SHAPE  , Shape_SYM_H);
-	_state_set.set_val_nat (desc_set, Param_PRECLIP, 10);
+	_state_set.set_val_nat (desc_set, Param_PRECLIP, 100);
 
 	_state_set.add_observer (Param_GAIN   , _param_change_flag);
 	_state_set.add_observer (Param_CUTOFF , _param_change_flag);
