@@ -169,7 +169,7 @@ void	DisplayPi3St7920::do_force_reset ()
 
 bool	DisplayPi3St7920::do_process_timeshare_op ()
 {
-	const state_now = _state;
+	const State    state_now = _state;
 	if (state_now == State_INIT)
 	{
 		init_device ();
@@ -277,7 +277,7 @@ void	DisplayPi3St7920::start_redraw (int x, int y, int w, int h)
 		const int        half_h = _scr_h / 2;
 		_redraw._nbr_pairs = h - half_h;
 	}
-	
+
 	_state = State_REDRAW;
 }
 
