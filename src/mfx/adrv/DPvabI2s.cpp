@@ -47,6 +47,7 @@ http://www.wtfpl.net/ for more details.
 #include <fcntl.h>
 
 #include <chrono>
+#include <stdexcept>
 #include <thread>
 
 #include <cassert>
@@ -66,7 +67,12 @@ namespace adrv
 
 DPvabI2s::DPvabI2s ()
 :	_periph_base_addr (::bcm_host_get_peripheral_address ())
-,	_pcm_mptr (_periph_base_addr + hw::bcm2837pcm::_pcm_ofs, hw::bcm2837pcm::_pcm_len, "/dev/mem", O_RDWR | O_SYNC)
+,	_pcm_mptr (
+		_periph_base_addr + hw::bcm2837pcm::_pcm_ofs,
+		hw::bcm2837pcm::_pcm_len,
+		"/dev/mem",
+		O_RDWR | O_SYNC
+	)
 ,	_gpio ()
 ,	_i2c_hnd (::wiringPiI2CSetup (_i2c_addr))
 ,	_cb_ptr (nullptr)
@@ -84,18 +90,24 @@ DPvabI2s::DPvabI2s ()
 ,	_blk_proc_cv ()
 ,	_proc_now_flag (false)
 {
-	// Nothing
+	if (   ! _exit_flag.is_lock_free ()
+	    || ! _proc_ex_flag.is_lock_free ()
+	    || ! _syncerr_flag.is_lock_free ()
+	    || ! _cur_buf.is_lock_free ()
+	    || ! _proc_now_flag.is_lock_free ())
+	{
+		close_i2c ();
+		throw std::runtime_error (
+			"std::atomic is not lock-free on this system."
+		);
+	}
 }
 
 
 
 DPvabI2s::~DPvabI2s ()
 {
-	if (_i2c_hnd != -1)
-	{
-		close (_i2c_hnd);
-		_i2c_hnd = -1;
-	}
+	close_i2c ();
 }
 
 
@@ -230,6 +242,17 @@ std::string	DPvabI2s::do_get_last_error () const
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	DPvabI2s::close_i2c ()
+{
+	if (_i2c_hnd != -1)
+	{
+		close (_i2c_hnd);
+		_i2c_hnd = -1;
+	}
+}
 
 
 

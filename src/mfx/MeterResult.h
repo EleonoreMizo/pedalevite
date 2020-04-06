@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <atomic>
+
 
 
 namespace mfx
@@ -41,8 +43,10 @@ class MeterResult
 
 public:
 
-	volatile float _peak = 0;
-	volatile float _rms  = 0;
+	std::atomic <float>
+	               _peak = 0;
+	std::atomic <float>
+	               _rms  = 0;
 
 
 

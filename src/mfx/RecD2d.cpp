@@ -51,9 +51,10 @@ RecD2d::~RecD2d ()
 
 	if (_queue_sptr.get () != nullptr)
 	{
-		if (_cell_ptr != nullptr)
+		typename D2dQueue::CellType * c_ptr = _cell_ptr;
+		if (c_ptr != nullptr)
 		{
-			_cell_ptr->_val.ret ();
+			c_ptr->_val.ret ();
 			_cell_ptr = nullptr;
 		}
 		
@@ -188,16 +189,18 @@ void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
 		int            pos = 0;
 		do
 		{
-			if (_cell_ptr == nullptr)
+			typename D2dQueue::CellType * c_ptr = _cell_ptr;
+			if (c_ptr == nullptr)
 			{
 				// Autogrow flag is set so the call to this function will not be
 				// RT-safe in case of cell starvation, but data won't be lost at
 				// this level.
-				_cell_ptr = _queue_mgr.use_pool ().take_cell (true);
-				assert (_cell_ptr != nullptr);
-				_cell_ptr->_val._content._len = 0;
+				c_ptr = _queue_mgr.use_pool ().take_cell (true);
+				assert (c_ptr != nullptr);
+				_cell_ptr = c_ptr;
+				c_ptr->_val._content._len = 0;
 			}
-			Buffer &       bc = _cell_ptr->_val._content;
+			Buffer &       bc = (*_cell_ptr)._val._content;
 
 			const int      work_len = std::min (
 				nbr_spl - pos,
@@ -239,10 +242,11 @@ void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
 		while (pos < nbr_spl);
 	}
 
-	if (! _write_flag && _cell_ptr != nullptr)
+	typename D2dQueue::CellType * c_ptr = _cell_ptr;
+	if (! _write_flag && c_ptr != nullptr)
 	{
-		_cell_ptr->_val._content._len = 0;
-		_queue_mgr.enqueue (*_cell_ptr, _queue_sptr);
+		c_ptr->_val._content._len = 0;
+		_queue_mgr.enqueue (*c_ptr, _queue_sptr);
 		_cell_ptr = nullptr;
 	}
 

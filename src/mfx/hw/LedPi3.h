@@ -31,6 +31,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/LedInterface.h"
 
 #include <array>
+#include <atomic>
 #include <thread>
 
 
@@ -90,7 +91,8 @@ private:
 	GpioPwm        _gpio_pwm;
 	StateArray     _state_arr;
 
-	volatile bool  _quit_flag;
+	std::atomic <bool>
+	               _quit_flag;
 	std::thread    _refresher;
 
 

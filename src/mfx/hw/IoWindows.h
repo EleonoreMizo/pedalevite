@@ -44,6 +44,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <Windows.h>
 
 #include <array>
+#include <atomic>
 #include <thread>
 #include <vector>
 
@@ -72,7 +73,7 @@ class IoWindows final
 
 public:
 
-	explicit       IoWindows (volatile bool &quit_request_flag);
+	explicit       IoWindows (std::atomic <bool> &quit_request_flag);
 	               ~IoWindows ();
 
 	void           set_model (Model &model);
@@ -274,13 +275,15 @@ private:
 
 	MsgPool        _msg_pool;
 	RecipientList  _recip_list;
-	int64_t        _clock_freq; // Hz
-	const SwLoc *  _pressed_sw_ptr;    // Current switch pressed with the mouse. 0 when no switch is pressed.
-	uint64_t       _sw_states;        // Each bit = current switch state (mouse or keyboard)
+	int64_t        _clock_freq;      // Hz
+	const SwLoc *  _pressed_sw_ptr;  // Current switch pressed with the mouse. 0 when no switch is pressed.
+	uint64_t       _sw_states;       // Each bit = current switch state (mouse or keyboard)
 
-	volatile bool& _quit_request_flag; // Application is requested to quit
+	std::atomic <bool> &             // Application is requested to quit
+	               _quit_request_flag;
 
-	volatile bool  _quit_flag;         // Thread should stop
+	std::atomic <bool>               // Thread should stop
+	               _quit_flag;
 	std::thread    _msg_loop_thread;
 
 	static const wchar_t

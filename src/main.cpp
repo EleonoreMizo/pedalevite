@@ -217,7 +217,8 @@ public:
 	               _queue_input_to_audio;
 
 	// Not for the audio thread
-	volatile bool	_quit_flag = false;
+	std::atomic <bool>
+	               _quit_flag = false;
 
 	// Controller
 #if defined (MAIN_USE_VOID)

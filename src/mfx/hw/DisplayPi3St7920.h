@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/TimeShareCbInterface.h"
 
 #include <array>
+#include <atomic>
 
 
 
@@ -210,7 +211,8 @@ private:
 
 	ui::TimeShareThread &
 	               _thread_spi;
-	volatile State _state;
+	std::atomic <State>
+	               _state;
 
 	std::array <uint8_t, _scr_w * _scr_h>
 	               _screen_buf;

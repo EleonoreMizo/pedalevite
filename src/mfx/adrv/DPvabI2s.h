@@ -115,6 +115,7 @@ private:
 		State_NBR_ELT
 	};
 
+	void           close_i2c ();
 	void           main_loop ();
 	void           proc_loop ();
 	inline void    write_reg (uint8_t reg, uint8_t val);

@@ -78,8 +78,7 @@ protected:
 private:
 
 	QueueSPtr      _ret_queue_sptr;
-	CellType * volatile
-	               _cell_ptr = nullptr;
+	CellType *     _cell_ptr = nullptr;
 
 
 

@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Cst.h"
 
 #include <array>
+#include <atomic>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -138,7 +139,8 @@ private:
 	{
 	public:
 		               SwitchState ();
-		volatile bool  _flag;
+		std::atomic <bool>
+			            _flag;
 		std::chrono::nanoseconds
 		               _time_last; // ns
 		bool           is_set () const;
@@ -149,7 +151,8 @@ private:
 	{
 	public:
 		static const int  _val_none = -666;
-		volatile int   _cur_val = _val_none;
+		std::atomic <int>
+		               _cur_val = _val_none;
 		int            _alt_val = _val_none;
 		bool           is_set () const { return _cur_val != _val_none; }
 	};
@@ -187,7 +190,8 @@ private:
 
 	MsgPool        _msg_pool;
 
-	volatile bool  _quit_flag;
+	std::atomic <bool>
+	               _quit_flag;
 	std::thread    _polling_thread;
 	int            _polling_count;
 

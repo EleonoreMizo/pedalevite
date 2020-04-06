@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 
 #include "mfx/ui/DisplayInterface.h"
 
+#include <atomic>
 #include <mutex>
 #include <chrono>
 #include <string>
@@ -87,7 +88,8 @@ private:
 
 	ui::DisplayInterface &
 	               _disp;
-	volatile bool  _rec_flag;
+	std::atomic <bool>
+	               _rec_flag;
 	Clk::time_point
 	               _t_beg;
 	FILE *         _f_ptr;

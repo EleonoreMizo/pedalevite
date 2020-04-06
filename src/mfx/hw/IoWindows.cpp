@@ -57,7 +57,7 @@ namespace hw
 
 
 
-IoWindows::IoWindows (volatile bool &quit_request_flag)
+IoWindows::IoWindows (std::atomic <bool> &quit_request_flag)
 :	_model_ptr (nullptr)
 ,	_screen_buf ()
 ,	_main_win (nullptr)
@@ -118,7 +118,7 @@ IoWindows::~IoWindows ()
 {
 	if (_msg_loop_thread.joinable ())
 	{
-		_quit_flag = true;
+		_quit_flag.store (true);
 		_msg_loop_thread.join ();
 	}
 
@@ -415,14 +415,14 @@ void	IoWindows::main_loop ()
 
 	::ShowWindow (_main_win, SW_SHOW);
 
-	while (! _quit_flag)
+	while (! _quit_flag.load ())
 	{
 		::MSG          msg;
 		const ::BOOL   gm_res = ::GetMessageW (&msg, nullptr, 0, 0);
 		if (gm_res == 0 || gm_res == -1)
 		{
-			_quit_flag         = true;
-			_quit_request_flag = true;
+			_quit_flag.store (true);
+			_quit_request_flag.store (true);
 		}
 		else
 		{
@@ -435,7 +435,7 @@ void	IoWindows::main_loop ()
 	::DestroyWindow (_main_win);
 	_main_win = nullptr;
 
-	_quit_flag = false;
+	_quit_flag.store (false);
 }
 
 
@@ -508,7 +508,7 @@ void	IoWindows::init_bitmap (int w, int h)
 	switch (message)
 	{
 	case WM_CLOSE:
-		_quit_request_flag = true;
+		_quit_request_flag.store (true);
 		::PostQuitMessage (0);
 		break;
 

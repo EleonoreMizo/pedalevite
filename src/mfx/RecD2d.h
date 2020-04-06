@@ -32,6 +32,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/FileOpWav.h"
 
 #include <array>
+#include <atomic>
 #include <vector>
 
 #include <cstdio>
@@ -98,9 +99,10 @@ private:
 	int            _max_frm_rt     = _buf_size; // Maximum number of frames per buffer
 	int            _max_frm_disk   = _page_size;
 	int            _buf_cur_len    = 0; // Sample frames
-	volatile bool  _write_flag     = false;
+	std::atomic <bool>
+	               _write_flag     = false;
 	FileOpWav      _file_writer;
-	typename D2dQueue::CellType * volatile
+	std::atomic <typename D2dQueue::CellType *>
 	               _cell_ptr       = nullptr;
 	int            _nbr_chn        = 0;
 	std::vector <float>

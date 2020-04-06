@@ -171,7 +171,8 @@ private:
 
 	LevelMeter     _lvl_meter;
 	MeterResultSet _meter_result;       // This structure can be accessed from any thread
-	volatile float _period_now;         // Ratio of the actual time / expected time between two calls. Useful to dectect a driver lag or sync errors
+	std::atomic <float>                 // Ratio of the actual time / expected time between two calls. Useful to dectect a driver lag or sync errors
+	               _period_now;
 	float          _rate_expected;      // 1e-6 * Fs / block size
 
 	EventArray     _evt_arr;            // Preallocated
@@ -198,10 +199,10 @@ private:
 	bool           _data_rec_flag;
 	std::vector <AlignedZone>           // One buffer per recorded channel (in/intermediate/out)
 	               _data_rec_arr;
-	volatile size_t                     // Current buffer being recorded. Reset at the beginning of each audio block.
+	std::atomic <size_t>                // Current buffer being recorded. Reset at the beginning of each audio block.
 	               _data_rec_cur_buf;
-	volatile size_t
-	               _data_rec_pos;       // Recording position in samples. Reset to 0 when the recording is saved to disk.
+	std::atomic <size_t>                // Recording position in samples. Reset to 0 when the recording is saved to disk.
+	               _data_rec_pos;
 	size_t         _data_rec_len;
 #endif
 

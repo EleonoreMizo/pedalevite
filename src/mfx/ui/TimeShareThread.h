@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <atomic>
 #include <chrono>
 #include <mutex>
 #include <thread>
@@ -99,7 +100,8 @@ private:
 	const std::chrono::nanoseconds
 	               _base_time;
 
-	volatile bool  _quit_flag;
+	std::atomic <bool>
+	               _quit_flag;
 	std::thread    _refresher;
 
 
