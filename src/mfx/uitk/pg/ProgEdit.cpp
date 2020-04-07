@@ -148,7 +148,14 @@ void	ProgEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_page_ptr->push_back (_menu_sptr);
 
+	// We need to save the slot_id because it will be reset during
+	// the set_nav_layout () in the set_preset_info ().
+	/*** To do: remove this infamous hack after the cleaning of
+	set_preset_info () ***/
+	const int      slot_id_save = _loc_edit._slot_id;
 	set_preset_info ();
+
+	_loc_edit._slot_id = slot_id_save;
 	_page_ptr->jump_to (conv_loc_edit_to_node_id ());
 }
 
@@ -346,6 +353,14 @@ void	ProgEdit::do_enable_auto_rotenc_override (bool ovr_flag)
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
+
+/*** To do:
+This code is wrong. We should split this function in two distinct ones:
+- Update of cached data after a model change.
+- Update of displayed information after user navigation.
+set_nav_layout () should belong to the first function, and
+update_rotenc_mapping () should belong to the second function.
+***/
 
 void	ProgEdit::set_preset_info ()
 {
