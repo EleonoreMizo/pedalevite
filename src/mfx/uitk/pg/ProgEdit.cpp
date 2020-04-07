@@ -384,7 +384,8 @@ void	ProgEdit::set_preset_info ()
 	Tools::extract_slot_list (entry_list, preset, *_model_ptr);
 	assert (nbr_slots == int (entry_list.size ()));
 
-	const std::vector <Link>   link_list (find_chain_links (entry_list));
+	std::vector <Link>   link_list (find_chain_links (entry_list));
+	find_broken_links (link_list, entry_list);
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
@@ -425,6 +426,7 @@ void	ProgEdit::set_preset_info ()
 		case Link_NONE:   /* Nothing */            break;
 		case Link_CHAIN:  link_0 = "\xE2\x9A\xAB"; break; // U+26AB MEDIUM BLACK CIRCLE
 		case Link_BRANCH: link_0 = "\xE2\x9A\xAC"; break; // U+26AC MEDIUM SMALL WHITE CIRCLE
+		case Link_BROKEN: link_0 = "\xC3\x97";     break; // U+00D7 MULTIPLICATION SIGN
 		default:          assert (false);          break;
 		}
 
@@ -559,6 +561,72 @@ void	ProgEdit::set_link (std::vector <Link> &link_list, int slot_id, Link link, 
 	assert (it != entry_list.end ());
 	const int      pos = int (it - entry_list.begin ());
 	link_list [pos] = link;
+}
+
+
+
+void	ProgEdit::find_broken_links (std::vector <Link> &link_list, const std::vector <Tools::NodeEntry> &entry_list) const
+{
+	assert (_view_ptr != 0);
+	assert (_model_ptr != 0);
+	assert (link_list.size () == entry_list.size ());
+	assert (_audio_list_len <= int (entry_list.size ()));
+
+	const ToolsRouting::NodeMap & graph = _view_ptr->use_graph ();
+	const doc::Preset &           prog  = _view_ptr->use_preset_cur ();
+
+	for (int slot_cnt = 0; slot_cnt < _audio_list_len; ++slot_cnt)
+	{
+		const int      slot_id     = entry_list [slot_cnt]._slot_id;
+		bool           broken_flag = false;
+
+		// Strategy should be synchronized to cmd::Router::visit_node (),
+		// buffer allocation part
+
+		// Graph connections
+		ToolsRouting::NodeMap::const_iterator it_node = graph.find (
+			ToolsRouting::Node (doc::CnxEnd::Type_NORMAL, slot_id)
+		);
+		const int      nbr_i_g = int (it_node->second [piapi::Dir_IN ].size ());
+		const int      nbr_o_g = int (it_node->second [piapi::Dir_OUT].size ());
+
+		// Finds physical ports of the associated plug-in, if any
+		std::array <int, piapi::Dir_NBR_ELT> nbr_pins_arr_phy =
+		{{
+			// Default values are the known graph connections
+			nbr_i_g, nbr_o_g
+		}};
+		int            nbr_s      = 0;
+		const bool     exist_flag = Tools::get_physical_io (
+			nbr_pins_arr_phy [piapi::Dir_IN], nbr_pins_arr_phy [piapi::Dir_OUT],
+			nbr_s, slot_id, prog, *_model_ptr
+		);
+
+		// There is a plug-in: checks the connections.
+		// We assume here that extra input pins on the plug-in are side-chains
+		// and leaving them unconnected does not break the signal path.
+		// Same for extra output pins, they could be auxiliary outputs.
+		if (exist_flag)
+		{
+			broken_flag = (
+				   nbr_i_g > nbr_pins_arr_phy [piapi::Dir_IN ]
+				|| nbr_o_g > nbr_pins_arr_phy [piapi::Dir_OUT]
+			);
+		}
+
+		// No plug-in
+		else
+		{
+			// May not be relevant, for example for potential side-chains,
+			// but it's better to report it anyway.
+			broken_flag = (nbr_o_g > nbr_i_g);
+		}
+
+		if (broken_flag)
+		{
+			link_list [slot_cnt] = Link_BROKEN;
+		}
+	}
 }
 
 
