@@ -76,6 +76,7 @@ ProgEdit::ProgEdit (PageSwitcher &page_switcher, LocEdit &loc_edit)
 ,	_slot_id_list ()
 ,	_audio_list_len (0)
 ,	_spi_flag (false)
+,	_reset_end_curs_flag (true)
 {
 	_prog_name_sptr->set_justification (0.5f, 0, false);
 	_settings_sptr ->set_justification (0.5f, 0, false);
@@ -148,15 +149,20 @@ void	ProgEdit::do_connect (Model &model, const View &view, PageMgrInterface &pag
 
 	_page_ptr->push_back (_menu_sptr);
 
-	// We need to save the slot_id because it will be reset during
-	// the set_nav_layout () in the set_preset_info ().
-	/*** To do: remove this infamous hack after the cleaning of
-	set_preset_info () ***/
-	const int      slot_id_save = _loc_edit._slot_id;
-	set_preset_info ();
+	const int      bank_index   = _view_ptr->get_bank_index ();
+	const int      preset_index = _view_ptr->get_preset_index ();
+	if (   bank_index   != _save_bank_index
+	    || preset_index != _save_preset_index)
+	{
+		_reset_end_curs_flag = true;
+	}
 
-	_loc_edit._slot_id = slot_id_save;
+	set_preset_info ();
 	_page_ptr->jump_to (conv_loc_edit_to_node_id ());
+
+	_reset_end_curs_flag = false;
+	_save_bank_index     = bank_index;
+	_save_preset_index   = preset_index;
 }
 
 
@@ -181,16 +187,15 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 	{
 		if (evt.get_cursor () == NodeEvt::Curs_ENTER)
 		{
-		   if (node_id >= 0 && node_id < int (_slot_list.size ()))
+		   if (is_node_id_from_slot_list (node_id))
 			{
 				update_loc_edit (node_id);
-				set_preset_info ();
 			}
 			else if (node_id >= Entry_WINDOW && _loc_edit._slot_id >= 0)
 			{
-				_loc_edit._slot_id = -1;
-				set_preset_info ();
+				// _loc_edit._slot_id = -1;
 			}
+			update_display ();
 		}
 	}
 
@@ -217,16 +222,19 @@ MsgHandlerInterface::EvtProp	ProgEdit::do_handle_evt (const NodeEvt &evt)
 				_save_bank_index   = _view_ptr->get_bank_index ();
 				_save_preset_index = _view_ptr->get_preset_index ();
 				_page_switcher.call_page (PageType_EDIT_TEXT, &_name_param, node_id);
+				_reset_end_curs_flag = true;
 			}
 			else if (node_id == Entry_SAVE)
 			{
 				_page_switcher.switch_to (PageType_PROG_SAVE, nullptr);
+				_reset_end_curs_flag = true;
 			}
 			else if (node_id == Entry_SETTINGS)
 			{
 				_page_switcher.switch_to (PageType_PROG_SETTINGS, nullptr);
+				_reset_end_curs_flag = true;
 			}
-			else if (node_id >= 0 && node_id < int (_slot_list.size ()))
+			else if (is_node_id_from_slot_list (node_id))
 			{
 				const doc::Preset &  preset  = _view_ptr->use_preset_cur ();
 				const int            slot_id = conv_node_id_to_slot_id (node_id);
@@ -272,7 +280,9 @@ void	ProgEdit::do_activate_preset (int index)
 {
 	fstb::unused (index);
 
+	_reset_end_curs_flag = true;
 	set_preset_info ();
+	_page_ptr->jump_to (conv_loc_edit_to_node_id ());
 }
 
 
@@ -354,13 +364,19 @@ void	ProgEdit::do_enable_auto_rotenc_override (bool ovr_flag)
 
 
 
-/*** To do:
-This code is wrong. We should split this function in two distinct ones:
-- Update of cached data after a model change.
-- Update of displayed information after user navigation.
-set_nav_layout () should belong to the first function, and
-update_rotenc_mapping () should belong to the second function.
-***/
+ProgEdit::SlotDispParam::SlotDispParam (int pos_list, int chain_size, const ui::Font &fnt, const Vec2d &page_size)
+:	_w_m (fnt.get_char_w ())
+,	_h_m (fnt.get_char_h ())
+,	_scr_w (page_size [0])
+,	_skip ((pos_list >= chain_size + 1) ? 1 : 0)
+,	_pos_menu (pos_list + 4 + _skip)
+,	_txt_x (_w_m)
+,	_margin (_w_m)
+{
+	// Nothing
+}
+
+
 
 void	ProgEdit::set_preset_info ()
 {
@@ -374,14 +390,12 @@ void	ProgEdit::set_preset_info ()
 	assert (_fnt_ptr != nullptr);
 
 	update_cached_pi_list ();
-	update_rotenc_mapping ();
 
 	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
-
 	_prog_name_sptr->set_text (preset._name);
 
 	const int      nbr_slots = int (_slot_id_list.size ());
-	PageMgrInterface::NavLocList  nav_list (nbr_slots + 5);
+	PageMgrInterface::NavLocList  nav_list;
 	_slot_list.resize (nbr_slots + 2);
 	_rout_list.resize (nbr_slots + 2);
 
@@ -391,16 +405,13 @@ void	ProgEdit::set_preset_info ()
 	_menu_sptr->push_back (_save_sptr);
 	_menu_sptr->push_back (_fx_list_sptr);
 	_menu_sptr->push_back (_ms_list_sptr);
-	nav_list [0]._node_id = Entry_PROG_NAME;
-	nav_list [1]._node_id = Entry_SETTINGS;
-	nav_list [2]._node_id = Entry_SAVE;
+	PageMgrInterface::add_nav (nav_list, Entry_PROG_NAME);
+	PageMgrInterface::add_nav (nav_list, Entry_SETTINGS);
+	PageMgrInterface::add_nav (nav_list, Entry_SAVE);
 
 	std::vector <Tools::NodeEntry>   entry_list;
 	Tools::extract_slot_list (entry_list, preset, *_model_ptr);
 	assert (nbr_slots == int (entry_list.size ()));
-
-	std::vector <Link>   link_list (find_chain_links (entry_list));
-	find_broken_links (link_list, entry_list);
 
 	const int      scr_w = _page_size [0];
 	const int      x_mid =  scr_w >> 1;
@@ -409,20 +420,15 @@ void	ProgEdit::set_preset_info ()
 
 	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
 	{
+		if (slot_index == _audio_list_len)
+		{
+			set_slot (nav_list, _audio_list_len, "<End>", "", false);
+		}
+
 		const Tools::NodeEntry &   entry = entry_list [slot_index];
 		assert (entry._slot_id == _slot_id_list [slot_index]);
 
-		const int      slot_id    = entry._slot_id;
 		std::string    multilabel = entry._name_multilabel;
-		bool           ctrl_flag  = false;
-
-		const auto     it_slot    = preset._slot_map.find (slot_id);
-		assert (it_slot != preset._slot_map.end ());
-		if (! entry._type.empty ())
-		{
-			const doc::Slot & slot = *(it_slot->second);
-			ctrl_flag  = slot.has_ctrl ();
-		}
 
 		if (entry._instance_nbr >= 0)
 		{
@@ -435,6 +441,55 @@ void	ProgEdit::set_preset_info ()
 			);
 		}
 
+		const int      pos_list = conv_slot_index_to_pos_list (slot_index);
+		add_slot (nav_list, multilabel, pos_list);
+	}
+
+	if (nbr_slots == _audio_list_len)
+	{
+		set_slot (nav_list, _audio_list_len, "<End>", "", false);
+	}
+
+	set_slot (nav_list, nbr_slots + 1, "<End>", "", false);
+
+	_page_ptr->set_nav_layout (nav_list);
+
+	_spi_flag = false;
+
+	update_display ();
+}
+
+
+
+void	ProgEdit::update_display ()
+{
+	assert (_fnt_ptr != nullptr);
+
+	update_rotenc_mapping ();
+
+	const int      nbr_slots = int (_slot_id_list.size ());
+	const doc::Preset &  preset = _view_ptr->use_preset_cur ();
+	std::vector <Tools::NodeEntry>   entry_list;
+	Tools::extract_slot_list (entry_list, preset, *_model_ptr);
+	assert (nbr_slots == int (entry_list.size ()));
+
+	std::vector <Link>   link_list (find_chain_links (entry_list));
+	find_broken_links (link_list, entry_list);
+
+	for (int slot_index = 0; slot_index < nbr_slots; ++slot_index)
+	{
+		const Tools::NodeEntry &   entry = entry_list [slot_index];
+		assert (entry._slot_id == _slot_id_list [slot_index]);
+
+		bool           ctrl_flag  = false;
+		const auto     it_slot    = preset._slot_map.find (entry._slot_id);
+		assert (it_slot != preset._slot_map.end ());
+		if (! entry._type.empty ())
+		{
+			const doc::Slot & slot = *(it_slot->second);
+			ctrl_flag  = slot.has_ctrl ();
+		}
+
 		const char *   link_0 = "";
 		switch (link_list [slot_index])
 		{
@@ -445,15 +500,9 @@ void	ProgEdit::set_preset_info ()
 		default:          assert (false);          break;
 		}
 
-		const int      skip     = (slot_index >= _audio_list_len) ? 1 : 0;
-		const int      pos_list = slot_index + skip;
-		set_slot (
-			nav_list, pos_list, multilabel, link_0, ctrl_flag, _audio_list_len
-		);
+		const int      pos_list = conv_slot_index_to_pos_list (slot_index);
+		update_slot (pos_list, link_0, ctrl_flag);
 	}
-
-	set_slot (nav_list, _audio_list_len, "<End>", "", false, _audio_list_len);
-	set_slot (nav_list, nbr_slots + 1  , "<End>", "", false, _audio_list_len);
 
 	if (ToolsRouting::are_audio_io_connected (_view_ptr->use_graph ()))
 	{
@@ -464,11 +513,7 @@ void	ProgEdit::set_preset_info ()
 		_fx_list_sptr->set_text ("---I/O not linked!---");
 	}
 
-	_page_ptr->set_nav_layout (nav_list);
-
 	_menu_sptr->invalidate_all ();
-
-	_spi_flag = false;
 }
 
 
@@ -599,11 +644,16 @@ void	ProgEdit::find_broken_links (std::vector <Link> &link_list, const std::vect
 		// buffer allocation part
 
 		// Graph connections
+		int            nbr_i_g = 0;
+		int            nbr_o_g = 0;
 		ToolsRouting::NodeMap::const_iterator it_node = graph.find (
 			ToolsRouting::Node (doc::CnxEnd::Type_NORMAL, slot_id)
 		);
-		const int      nbr_i_g = int (it_node->second [piapi::Dir_IN ].size ());
-		const int      nbr_o_g = int (it_node->second [piapi::Dir_OUT].size ());
+		if (it_node != graph.end ())
+		{
+			nbr_i_g = int (it_node->second [piapi::Dir_IN ].size ());
+			nbr_o_g = int (it_node->second [piapi::Dir_OUT].size ());
+		}
 
 		// Finds physical ports of the associated plug-in, if any
 		std::array <int, piapi::Dir_NBR_ELT> nbr_pins_arr_phy =
@@ -634,7 +684,7 @@ void	ProgEdit::find_broken_links (std::vector <Link> &link_list, const std::vect
 		{
 			// May not be relevant, for example for potential side-chains,
 			// but it's better to report it anyway.
-			broken_flag = (nbr_o_g > nbr_i_g);
+			broken_flag = (nbr_i_g > 0 && nbr_o_g > nbr_i_g);
 		}
 
 		if (broken_flag)
@@ -646,49 +696,63 @@ void	ProgEdit::find_broken_links (std::vector <Link> &link_list, const std::vect
 
 
 
-void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, std::string link_txt, bool bold_flag, int chain_size)
+void	ProgEdit::add_slot (PageMgrInterface::NavLocList &nav_list, std::string multilabel, int pos_list)
 {
-	const int      w_m      = _fnt_ptr->get_char_w ();
-	const int      h_m      = _fnt_ptr->get_char_h ();
-	const int      scr_w    = _page_size [0];
-	const int      pos_nav  = pos_list + 3; // In the nav_list
-	const int      skip     = (pos_list >= chain_size + 1) ? 1 : 0;
-	const int      pos_menu = pos_list + 4 + skip;
+	const SlotDispParam  sdp (pos_list, _audio_list_len, *_fnt_ptr, _page_size);
 
 	// Main text
-	const int      txt_x    = w_m;
-	const int      margin   = w_m;
 	TxtSPtr        entry_sptr { std::make_shared <NText> (pos_list) };
-	entry_sptr->set_frame (Vec2d (scr_w - txt_x, 0), Vec2d (margin, 0));
-	entry_sptr->set_coord (Vec2d (txt_x, h_m * pos_menu));
+	entry_sptr->set_frame (
+		Vec2d (sdp._scr_w - sdp._txt_x, 0), Vec2d (sdp._margin, 0)
+	);
+	entry_sptr->set_coord (Vec2d (sdp._txt_x, sdp._h_m * sdp._pos_menu));
 	entry_sptr->set_font (*_fnt_ptr);
-	entry_sptr->set_bold (bold_flag, true);
 	std::string    txt = pi::param::Tools::print_name_bestfit (
-		scr_w - txt_x - margin, multilabel.c_str (),
+		sdp._scr_w - sdp._txt_x - sdp._margin, multilabel.c_str (),
 		*entry_sptr, &NText::get_char_width
 	);
 	entry_sptr->set_text (txt);
 	_slot_list [pos_list] = entry_sptr;
-	nav_list [pos_nav]._node_id = pos_list;
-
-	_menu_sptr->push_back (entry_sptr);
 
 	// Link information
-	if (link_txt.empty ())
-	{
-		_rout_list [pos_list].reset ();
-	}
-	else
-	{
-		TxtSPtr        link_sptr {
-			std::make_shared <NText> (Entry_LINKS + pos_list) };
-		link_sptr->set_coord (Vec2d (0, h_m * pos_menu));
-		link_sptr->set_font (*_fnt_ptr);
-		link_sptr->set_text (link_txt);
-		_rout_list [pos_list] = link_sptr;
+	TxtSPtr        link_sptr {
+		std::make_shared <NText> (Entry_LINKS + pos_list)
+	};
+	link_sptr->set_coord (Vec2d (0, sdp._h_m * sdp._pos_menu));
+	link_sptr->set_font (*_fnt_ptr);
+	_rout_list [pos_list] = link_sptr;
 
-		_menu_sptr->push_back (link_sptr);
+	PageMgrInterface::add_nav (nav_list, pos_list);
+
+	_menu_sptr->push_back (entry_sptr);
+}
+
+
+
+void	ProgEdit::update_slot (int pos_list, std::string link_txt, bool bold_flag)
+{
+	assert (_slot_list [pos_list].get () != nullptr);
+
+	const SlotDispParam  sdp (pos_list, _audio_list_len, *_fnt_ptr, _page_size);
+
+	// Main text
+	_slot_list [pos_list]->set_bold (bold_flag, true);
+
+	// Link information
+	_rout_list [pos_list]->set_text (link_txt);
+	_menu_sptr->erase (_rout_list [pos_list]);
+	if (! link_txt.empty ())
+	{
+		_menu_sptr->push_back (_rout_list [pos_list]);
 	}
+}
+
+
+
+void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, std::string link_txt, bool bold_flag)
+{
+	add_slot (nav_list, multilabel, pos_list);
+	update_slot (pos_list, link_txt, bold_flag);
 }
 
 
@@ -698,28 +762,35 @@ MsgHandlerInterface::EvtProp	ProgEdit::change_effect (int node_id, int dir)
 	assert (node_id >= 0);
 	assert (dir != 0);
 
-	_model_ptr->reset_all_overridden_param_ctrl ();
+	EvtProp        ret_val = EvtProp_PASS;
 
-	_loc_edit._audio_flag = (node_id <= _audio_list_len);
+	if (is_node_id_from_slot_list (node_id))
+	{
+		_model_ptr->reset_all_overridden_param_ctrl ();
 
-	const std::vector <std::string> &   pi_list =
-		  (_loc_edit._audio_flag)
-		? _view_ptr->use_pi_aud_list ()
-		: _view_ptr->use_pi_sig_list ();
-	const int      slot_id = conv_node_id_to_slot_id (node_id);
-	Tools::change_plugin (
-		*_model_ptr,
-		*_view_ptr,
-		slot_id,
-		dir,
-		pi_list,
-		_loc_edit._audio_flag
-	);
+		_loc_edit._audio_flag = (node_id <= _audio_list_len);
 
-	update_cached_pi_list ();
-	update_rotenc_mapping ();
+		const std::vector <std::string> &   pi_list =
+			  (_loc_edit._audio_flag)
+			? _view_ptr->use_pi_aud_list ()
+			: _view_ptr->use_pi_sig_list ();
+		const int      slot_id = conv_node_id_to_slot_id (node_id);
+		Tools::change_plugin (
+			*_model_ptr,
+			*_view_ptr,
+			slot_id,
+			dir,
+			pi_list,
+			_loc_edit._audio_flag
+		);
 
-	return EvtProp_CATCH;
+		update_cached_pi_list ();
+		update_display ();
+
+		ret_val = EvtProp_CATCH;
+	}
+
+	return ret_val;
 }
 
 
@@ -761,6 +832,16 @@ void	ProgEdit::update_rotenc_mapping ()
 
 
 
+int	ProgEdit::conv_slot_index_to_pos_list (int slot_index) const
+{
+	const int      skip     = (slot_index >= _audio_list_len) ? 1 : 0;
+	const int      pos_list = slot_index + skip;
+
+	return pos_list;
+}
+
+
+
 int	ProgEdit::conv_node_id_to_slot_id (int node_id) const
 {
 	bool           chain_flag = true;
@@ -798,6 +879,8 @@ int	ProgEdit::conv_node_id_to_slot_id (int node_id, bool &chain_flag) const
 
 int	ProgEdit::conv_loc_edit_to_node_id () const
 {
+	int            node_id = 0;
+
 	if (_loc_edit._slot_id >= 0)
 	{
 		const auto     it_slot_id = std::find (
@@ -807,17 +890,26 @@ int	ProgEdit::conv_loc_edit_to_node_id () const
 		);
 		if (it_slot_id != _slot_id_list.end ())
 		{
-			int         pos = int (it_slot_id - _slot_id_list.begin ());
-			if (pos >= _audio_list_len)
-			{
-				++ pos;
-			}
-
-			return pos;
+			int            pos = int (it_slot_id - _slot_id_list.begin ());
+			node_id = conv_slot_index_to_pos_list (pos);
 		}
 	}
+	else if (! _reset_end_curs_flag)
+	{
+		node_id =
+			  (_loc_edit._audio_flag)
+			? _audio_list_len
+			: int (_slot_list.size ()) - 1;
+	}
 
-	return 0;
+	return node_id;
+}
+
+
+
+bool	ProgEdit::is_node_id_from_slot_list (int node_id) const
+{
+	return (node_id >= 0 && node_id < int (_slot_list.size ()));
 }
 
 

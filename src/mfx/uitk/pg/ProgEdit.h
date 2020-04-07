@@ -126,20 +126,38 @@ private:
 		Link_NBR_ELT
 	};
 
+	class SlotDispParam
+	{
+	public:
+		explicit       SlotDispParam (int pos_list, int chain_size, const ui::Font &fnt, const Vec2d &page_size);
+		const int      _w_m;
+		const int      _h_m;
+		const int      _scr_w;
+		const int      _skip;
+		const int      _pos_menu;
+		const int      _txt_x;
+		const int      _margin;
+	};
+
 	void           set_preset_info ();
+	void           update_display ();
 	std::vector <Link>
 	               find_chain_links (const std::vector <Tools::NodeEntry> &entry_list) const;
 	void           find_chain_links_dir (std::vector <Link> &link_list, int slot_id, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list) const;
 	void           set_link (std::vector <Link> &link_list, int slot_id, Link link, const std::vector <Tools::NodeEntry> &entry_list) const;
 	void           find_broken_links (std::vector <Link> &link_list, const std::vector <Tools::NodeEntry> &entry_list) const;
-	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, std::string link_txt, bool bold_flag, int chain_size);
+	void           add_slot (PageMgrInterface::NavLocList &nav_list, std::string multilabel, int pos_list);
+	void           update_slot (int pos_list, std::string link_txt, bool bold_flag);
+	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, std::string link_txt, bool bold_flag);
 	EvtProp        change_effect (int node_id, int dir);
 	void           update_loc_edit (int node_id);
 	void           update_cached_pi_list ();
 	void           update_rotenc_mapping ();
+	int            conv_slot_index_to_pos_list (int slot_index) const;
 	int            conv_node_id_to_slot_id (int node_id) const;
 	int            conv_node_id_to_slot_id (int node_id, bool &chain_flag) const;
 	int            conv_loc_edit_to_node_id () const;
+	bool           is_node_id_from_slot_list (int node_id) const;
 
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;
@@ -169,6 +187,7 @@ private:
 	               _slot_id_list;
 	int            _audio_list_len;  // Cached size of the audio part of the list
 	bool           _spi_flag;     // Indicates we're in set_preset_info(); avoids recursion.
+	bool           _reset_end_curs_flag; // When switching to a new preset and the cursor is on an <End> entry, put it at the beginning of the list
 
 
 
