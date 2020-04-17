@@ -53,6 +53,12 @@ private:
 
 	static void    gen_saw (std::vector <float> &data, double sample_freq, double freq, int len);
 
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	template <class T>
+	static void    print_stats (T &dclip, const char msg_0 []);
+	static void    print_histo (int hist_arr [], int nbr_bars, int nbr_spl);
+#endif // mfx_dsp_va_RcClipGeneric_STAT
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

@@ -142,6 +142,10 @@ int	TestRcClipGeneric::perform_test (const char classname_0 [], const char filen
 	mfx::dsp::va::RcClipGeneric <T>  dclip;
 	dclip.set_sample_freq (sample_freq * TestRcClipGeneric_OVRSPL);
 
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	dclip.reset_stat ();
+#endif // mfx_dsp_va_RcClipGeneric_STAT
+
 	float          gain = 1;
 	for (int pos = 0; pos < len; ++pos)
 	{
@@ -160,12 +164,49 @@ int	TestRcClipGeneric::perform_test (const char classname_0 [], const char filen
 		dst [pos] = x;
 	}
 
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	print_stats (dclip, "Standard");
+	dclip.reset_stat ();
+#endif // mfx_dsp_va_RcClipGeneric_STAT
+
 	mfx::FileOpWav::save (
 		(std::string ("results/rclipgen") + filename_0 + "1.wav").c_str (),
 		dst, sample_freq, 0.5f
 	);
 
+	// High gain (+40 dB)
+	dclip.clear_buffers ();
+	dclip.set_cutoff_freq (float (sample_freq * 0.49));
+	gain = 100;
+	for (int pos = 0; pos < len; ++pos)
+	{
+		float           x = src [pos] * gain;
+#if (TestRcClipGeneric_OVRSPL == 1) // W/o oversampling
+		x = dclip.process_sample (x);
+#else // With oversampling
+		float       tmp [TestRcClipGeneric_OVRSPL];
+		updw->_up.process_sample (tmp, x);
+		for (int k = 0; k < TestRcClipGeneric_OVRSPL; ++k)
+		{
+			tmp [k] = dclip.process_sample (tmp [k]);
+		}
+		x = updw->_dw.process_sample (tmp);
+#endif
+		dst [pos] = x;
+	}
+
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	print_stats (dclip, "High gain");
+	dclip.reset_stat ();
+#endif // mfx_dsp_va_RcClipGeneric_STAT
+
+	mfx::FileOpWav::save (
+		(std::string ("results/rclipgen") + filename_0 + "3.wav").c_str (),
+		dst, sample_freq, 0.5f
+	);
+
 	// Now with variable gain with fixed GBP (gain-bandwidth product)
+	dclip.clear_buffers ();
 	const double per_spl = 2 * sample_freq;
 	for (int pos = 0; pos < len; ++pos)
 	{
@@ -187,6 +228,11 @@ int	TestRcClipGeneric::perform_test (const char classname_0 [], const char filen
 #endif
 		dst [pos] = x;
 	}
+
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	print_stats (dclip, "Variable gain, fixed GBP");
+	dclip.reset_stat ();
+#endif // mfx_dsp_va_RcClipGeneric_STAT
 
 	mfx::FileOpWav::save (
 		(std::string ("results/rclipgen") + filename_0 + "2.wav").c_str (),
@@ -230,6 +276,68 @@ void	TestRcClipGeneric::gen_saw (std::vector <float> &data, double sample_freq, 
 		data.push_back (val);
 	}
 }
+
+
+
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+
+template <class T>
+void	TestRcClipGeneric::print_stats (T &dclip, const char msg_0 [])
+{
+	printf ("%s\n", msg_0);
+	
+	typename T::Stat  stat;
+	dclip.get_stats (stat);
+
+	printf ("=== Iterations ===\n");
+	print_histo (
+		stat._hist_it.data (),
+		int (stat._hist_it.size ()),
+		stat._nbr_spl_proc
+	);
+
+	printf ("\n");
+}
+
+
+
+void	TestRcClipGeneric::print_histo (int hist_arr [], int nbr_bars, int nbr_spl)
+{
+	int            bar_max = 0;
+	int            total   = 0;
+	for (int k = 0; k < nbr_bars; ++k)
+	{
+		const int       val = hist_arr [k];
+		bar_max = std::max (bar_max, val);
+		total  += val * k;
+	}
+
+	const int      bar_size = 64;
+	char           bar_0 [bar_size+1];
+	for (int k = 0; k < bar_size; ++k)
+	{
+		bar_0 [k] = '#';
+	}
+	bar_0 [bar_size] = '\0';
+
+	const double   nbr_spl_inv = 1.0 / double (nbr_spl);
+	const double   total_inv   = 1.0 / (double (total) + 1e-12);
+	const double   bar_scale   = double (bar_size) / double (bar_max);
+	printf ("Average: %.2f\n", double (total) * nbr_spl_inv);
+	for (int k = 0; k < nbr_bars; ++k)
+	{
+		const int      val = hist_arr [k];
+		if (val > 0)
+		{
+			const double   prop = double (val) * nbr_spl_inv;
+			printf ("%3d: %10d, %5.1f %% ", k, val, prop * 100);
+			const int      bar_len = fstb::round_int (val * bar_scale);
+			printf ("%s\n", bar_0 + bar_size - bar_len);
+		}
+	}
+}
+
+#endif // mfx_dsp_va_RcClipGeneric_STAT
 
 
 

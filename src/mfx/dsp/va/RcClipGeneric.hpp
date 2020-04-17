@@ -102,19 +102,40 @@ float	RcClipGeneric <F>::process_sample (float x)
 {
 	assert (_sample_freq > 0);
 
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	int            nbr_f0 = 0;
+	int            nbr_f1 = 0;
+#endif // mfx_dsp_va_RcClipGeneric_STAT
+
 	const float    gr_x = _gr * x;
-	const float    ieqc = -_v2 * _geqc - _ic;
+
+	// Initial estimate
+	float          v2 = _v2; // Starts with the previous V2 value
+	if (std::signbit (_iceq - gr_x) == std::signbit (v2))
+	{
+		// The sign of the offset iceq - gR * x should be opposite to the
+		// sign of the solution. If they are of the same sign, it is likely
+		// that the estimate will have to travel long before being meaningful,
+		// especially when coming from a zone with a huge derivative.
+		// So we fix v2 roughly by changing its sign.
+		// The additional 0.5 ratio proves to be a further improvement for both
+		// average convergence and the baddest cases.
+		v2 *= -0.5f;
+	}
 
 	// Newton-Raphson iterations
-	float          v2        = _v2; // Starts with the previous V2 value
-	float          v2_old    = v2;
-	int            nbr_it    = 0;
+	float          v2_old = v2;
+	int            nbr_it = 0;
 	do
 	{
-		// Check for convergence failure
+		// Checks for convergence failure
 		if (nbr_it >= _max_it)
 		{
-			v2 = _v2; // Reuses the previous value
+			if (fabs (_v2) < fabs (v2))
+			{
+				// We are really lost. Reuses the previous output value.
+				v2 = _v2;
+			}
 			break;
 		}
 
@@ -122,18 +143,29 @@ float	RcClipGeneric <F>::process_sample (float x)
 		float          id;
 		float          geqd;
 		_fnc.eval (id, geqd, v2);
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+		++ nbr_f0;
+		++ nbr_f1;
+#endif // mfx_dsp_va_RcClipGeneric_STAT
 
 		const float    ieqd = id - geqd * v2;
 		v2_old = v2;
-		v2 = (gr_x - ieqc - ieqd) / (_gr_p_geqc + geqd);
+		v2 = (gr_x - _iceq - ieqd) / (_gr_p_geqc + geqd);
 		v2 = fstb::limit (v2, v2_old - max_step, v2_old + max_step);
 		++ nbr_it;
 	}
 	while (fabs (v2 - v2_old) > _max_dif_a);
 
 	// Updates the Ic state (integration) and saves v2
-	_ic = _geqc * v2 + ieqc;
-	_v2 = v2;
+	_v2   = v2;
+	_iceq = -2 * v2 * _geqc - _iceq;
+
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	++ _st._hist_it [nbr_it];
+	++ _st._hist_f0 [nbr_f0];
+	++ _st._hist_f1 [nbr_f1];
+	++ _st._nbr_spl_proc;
+#endif // mfx_dsp_va_RcClipGeneric_STAT
 
 	return v2;
 }
@@ -143,9 +175,32 @@ float	RcClipGeneric <F>::process_sample (float x)
 template <class F>
 void	RcClipGeneric <F>::clear_buffers ()
 {
-	_ic = 0;
-	_v2 = 0;
+	_iceq = 0;
+	_v2   = 0;
 }
+
+
+
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+
+template <class F>
+void	RcClipGeneric <F>::reset_stat ()
+{
+	_st._hist_it.fill (0);
+	_st._hist_f0.fill (0);
+	_st._hist_f1.fill (0);
+	_st._nbr_spl_proc = 0;
+}
+
+
+
+template <class F>
+void	RcClipGeneric <F>::get_stats (Stat &stat) const
+{
+	stat = _st;
+}
+
+#endif // mfx_dsp_va_RcClipGeneric_STAT
 
 
 

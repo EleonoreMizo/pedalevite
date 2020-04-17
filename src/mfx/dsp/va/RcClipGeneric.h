@@ -51,9 +51,20 @@ http://www.wtfpl.net/ for more details.
 
 
 
+// Define this to enable the collection of equation solving statistics
+// Don't use it in production code: it slows down a bit the normal operations
+// and uses more memory.
+#undef mfx_dsp_va_RcClipGeneric_STAT
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+#include <array>
+#endif // mfx_dsp_va_RcClipGeneric_STAT
 
 
 
@@ -74,7 +85,23 @@ class RcClipGeneric
 
 public:
 
+	static const int  _max_it = 50;  // Maximum number of NR iterations
+
 	typedef F IvFunc;
+
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	typedef std::array <int, _max_it     +  1> HistIt;
+	typedef std::array <int, _max_it * 4 + 10> HistEval;
+	class Stat
+	{
+	public:
+		HistIt         _hist_it = {{ 0 }}; // Histogram for the number of NR iterations
+		HistEval       _hist_f0 = {{ 0 }}; // Histogram for the number of f evaluations
+		HistEval       _hist_f1 = {{ 0 }}; // Histogram for the number of f' evaluations
+		int            _nbr_spl_proc = 0;  // Number of processed samples since the statistics start
+	};
+#endif // mfx_dsp_va_RcClipGeneric_STAT
+
 
 	explicit       RcClipGeneric (IvFunc &&fnc);
 	               RcClipGeneric ()                               = default;
@@ -97,6 +124,11 @@ public:
 	float          process_sample (float x);
 	void           clear_buffers ();
 
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	void           reset_stat ();
+	void           get_stats (Stat &stat) const;
+#endif // mfx_dsp_va_RcClipGeneric_STAT
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -114,7 +146,6 @@ private:
 	IvFunc         _fnc;
 	float          _sample_freq = 0; // Sampling rate, Hz. > 0. 0 = not init.
 
-	float          _max_it      = 10;    // Maximum number of NR iterations
 	float          _max_dif_a   = 1e-6f; // Absolute precision to reach
 
 	// Circuit parameters
@@ -128,8 +159,12 @@ private:
 	float          _gr_p_geqc = 0;
 
 	// States
-	float          _ic  = 0;   // Capacitor current
-	float          _v2  = 0;   // Diode voltage, stored to init the NR iteration for the next sample
+	float          _iceq = 0;  // Capacitor current
+	float          _v2   = 0;  // Diode voltage, stored to init the NR iteration for the next sample
+
+#if defined (mfx_dsp_va_RcClipGeneric_STAT)
+	Stat           _st;
+#endif // mfx_dsp_va_RcClipGeneric_STAT
 
 
 
