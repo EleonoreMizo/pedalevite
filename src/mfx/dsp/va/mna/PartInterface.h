@@ -1,0 +1,122 @@
+/*****************************************************************************
+
+        PartInterface.h
+        Author: Laurent de Soras, 2020
+
+--- Legal stuff ---
+
+This program is free software. It comes without any warranty, to
+the extent permitted by applicable law. You can redistribute it
+and/or modify it under the terms of the Do What The Fuck You Want
+To Public License, Version 2, as published by Sam Hocevar. See
+http://www.wtfpl.net/ for more details.
+
+*Tab=3***********************************************************************/
+
+
+
+#pragma once
+#if ! defined (mfx_dsp_va_mna_PartInterface_HEADER_INCLUDED)
+#define mfx_dsp_va_mna_PartInterface_HEADER_INCLUDED
+
+
+
+/*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+#include <vector>
+
+
+
+namespace mfx
+{
+namespace dsp
+{
+namespace va
+{
+namespace mna
+{
+
+
+
+class SimulInterface;
+
+class PartInterface
+{
+
+/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+public:
+
+	typedef int IdNode;
+	static const IdNode  _nid_invalid = -1;
+	static const IdNode  _nid_gnd     = 0;
+
+	class PartInfo
+	{
+	public:
+		std::vector <IdNode>
+		               _nid_arr;
+		int            _nbr_src_v       = 0;
+		bool           _non_linear_flag = false;
+	};
+
+	class SimInfo
+	{
+	public:
+		double         _sample_freq = 0;
+		std::vector <int>
+		               _node_idx_arr;
+		std::vector <int>
+		               _src_v_idx_arr;
+	};
+
+	               PartInterface ()                               = default;
+	               PartInterface (const PartInterface &other)     = default;
+	               PartInterface (PartInterface &&other)          = default;
+	virtual        ~PartInterface ()                              = default;
+
+	virtual PartInterface &
+	               operator = (const PartInterface &other)        = default;
+	virtual PartInterface &
+	               operator = (PartInterface &&other)             = default;
+
+	void           get_info (PartInfo &info) const;
+	void           prepare (SimulInterface &sim, const SimInfo &info);
+	void           add_to_matrix ();
+	void           step ();
+	void           clear_buffers ();
+
+
+
+/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+protected:
+
+	virtual void   do_get_info (PartInfo &info) const = 0;
+	virtual void   do_prepare (SimulInterface &sim, const SimInfo &info) = 0;
+	virtual void   do_add_to_matrix () = 0;
+	virtual void   do_step () = 0;
+	virtual void   do_clear_buffers () = 0;
+
+
+
+}; // class PartInterface
+
+
+
+}  // namespace mna
+}  // namespace va
+}  // namespace dsp
+}  // namespace mfx
+
+
+
+//#include "mfx/dsp/va/mna/PartInterface.hpp"
+
+
+
+#endif   // mfx_dsp_va_mna_PartInterface_HEADER_INCLUDED
+
+
+
+/*\\\ EOF \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

@@ -652,6 +652,28 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsTruncMod.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
+        ../../src/mfx/dsp/va/mna/PartCapacitor.cpp \
+        ../../src/mfx/dsp/va/mna/PartCapacitor.h \
+        ../../src/mfx/dsp/va/mna/PartDiode.cpp \
+        ../../src/mfx/dsp/va/mna/PartDiode.h \
+        ../../src/mfx/dsp/va/mna/PartDiodeAntipar.cpp \
+        ../../src/mfx/dsp/va/mna/PartDiodeAntipar.h \
+        ../../src/mfx/dsp/va/mna/PartInterface.cpp \
+        ../../src/mfx/dsp/va/mna/PartInterface.h \
+        ../../src/mfx/dsp/va/mna/PartResistor.cpp \
+        ../../src/mfx/dsp/va/mna/PartResistor.h \
+        ../../src/mfx/dsp/va/mna/PartSrcCurrent.cpp \
+        ../../src/mfx/dsp/va/mna/PartSrcCurrent.h \
+        ../../src/mfx/dsp/va/mna/PartSrcVoltage.cpp \
+        ../../src/mfx/dsp/va/mna/PartSrcVoltage.h \
+        ../../src/mfx/dsp/va/mna/PartVccs.cpp \
+        ../../src/mfx/dsp/va/mna/PartVccs.h \
+        ../../src/mfx/dsp/va/mna/PartVcvs.cpp \
+        ../../src/mfx/dsp/va/mna/PartVcvs.h \
+        ../../src/mfx/dsp/va/mna/Simulator.cpp \
+        ../../src/mfx/dsp/va/mna/Simulator.h \
+        ../../src/mfx/dsp/va/mna/SimulInterface.cpp \
+        ../../src/mfx/dsp/va/mna/SimulInterface.h \
         ../../src/mfx/dsp/va/AntisatAtanh.h \
         ../../src/mfx/dsp/va/AntisatAtanh.hpp \
         ../../src/mfx/dsp/va/AntisatRcp.h \
@@ -669,6 +691,7 @@ commonsrc = \
         ../../src/mfx/dsp/va/DiodeClipScreamer.h \
         ../../src/mfx/dsp/va/IvDiodeAntipar.h \
         ../../src/mfx/dsp/va/IvDiodeAntipar.hpp \
+        ../../src/mfx/dsp/va/IvInterface.h \
         ../../src/mfx/dsp/va/IvPoly.h \
         ../../src/mfx/dsp/va/IvPoly.hpp \
         ../../src/mfx/dsp/va/MoogLadderDAngelo.h \
@@ -1577,6 +1600,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestRemez.h \
         ../../src/test/TestSampleMipMapper.cpp \
         ../../src/test/TestSampleMipMapper.h \
+        ../../src/test/TestMnaSimulator.cpp \
+        ../../src/test/TestMnaSimulator.h \
         ../../src/test/TestSlidingMax.cpp \
         ../../src/test/TestSlidingMax.h \
         ../../src/test/TestSlidingOp.cpp \

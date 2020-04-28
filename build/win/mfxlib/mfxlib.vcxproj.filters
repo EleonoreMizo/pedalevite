@@ -412,6 +412,9 @@
     <Filter Include="Eigen\src\LU\arch">
       <UniqueIdentifier>{b42cc8a8-fa1f-43b4-a46a-4bb8057dc2c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\va\mna">
+      <UniqueIdentifier>{5000dade-402c-4b91-97c4-6c9b908af409}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -3771,6 +3774,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.h">
       <Filter>mfx\pi\smood</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\IvInterface.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\Eigen\src\Cholesky\LDLT.h">
       <Filter>Eigen\src\Cholesky</Filter>
     </ClInclude>
@@ -4586,6 +4592,39 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\Eigen\src\SPQRSupport\SuiteSparseQRSupport.h">
       <Filter>Eigen\src\SPQRSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\Simulator.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartCapacitor.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartDiode.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartInterface.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartResistor.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartSrcCurrent.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartSrcVoltage.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\SimulInterface.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartDiodeAntipar.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartVccs.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartVcvs.h">
+      <Filter>mfx\dsp\va\mna</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -5836,6 +5875,39 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.cpp">
       <Filter>mfx\pi\smood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\Simulator.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartCapacitor.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartDiode.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartInterface.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartResistor.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartSrcCurrent.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartSrcVoltage.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\SimulInterface.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartDiodeAntipar.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartVccs.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartVcvs.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "mfx/dsp/va/IvInterface.h"
 
 
 
@@ -38,6 +39,7 @@ namespace va
 
 template <int OP = 17, int ON = 5>
 class IvPoly
+:	public IvInterface
 {
 	static_assert (OP > 0, "Positive order must be greater than 0.");
 	static_assert (ON > 0, "Negative order must be greater than 0.");
@@ -50,9 +52,9 @@ public:
 	inline void    set_atten_n (float a);
 
 	fstb_FORCEINLINE void
-	               eval (float &y, float &dy, float x) const;
+	               eval (float &y, float &dy, float x) const final;
 	fstb_FORCEINLINE float
-	               get_max_step (float x) const;
+	               get_max_step (float x) const final;
 
 
 
