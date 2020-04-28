@@ -7,7 +7,7 @@ Generates pink noise with a -3 dB curve on 12 octaves up to Nyquist (above
 5 Hz @ 44.1 kHz sampling rate).
 
 Algorithm "A New Shade of Pink" by Stefan Stenzel, 2014
-http://stenzel.waldorfmusic.de/post/pink/
+http://stenzel.waldorfmusic.de/post/a-new-shade-of-pink/
 
 --- Legal stuff ---
 

@@ -128,6 +128,7 @@
     <ClCompile Include="..\..\..\src\test\TestDiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\test\TestHardclipBl.cpp" />
     <ClCompile Include="..\..\..\src\test\TestMoogLadderDAngelo.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestPinkShade.cpp" />
     <ClCompile Include="..\..\..\src\test\TestRcClipGeneric.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDiodeClipScreamer.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDisplayFrameBufSimple.cpp">
@@ -170,6 +171,7 @@
     <ClInclude Include="..\..\..\src\test\TestDiodeClipJcm.h" />
     <ClInclude Include="..\..\..\src\test\TestHardclipBl.h" />
     <ClInclude Include="..\..\..\src\test\TestMoogLadderDAngelo.h" />
+    <ClInclude Include="..\..\..\src\test\TestPinkShade.h" />
     <ClInclude Include="..\..\..\src\test\TestRcClipGeneric.h" />
     <ClInclude Include="..\..\..\src\test\TestDiodeClipScreamer.h" />
     <ClInclude Include="..\..\..\src\test\TestDisplayFrameBufSimple.h" />

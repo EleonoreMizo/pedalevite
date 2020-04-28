@@ -72,6 +72,7 @@
 #include "test/TestOscWavetable.h"
 #include "test/TestOscWavetableSub.h"
 #include "test/TestOscWavetableSyncHard.h"
+#include "test/TestPinkShade.h"
 #include "test/TestPsu.h"
 #include "test/TestRcClipGeneric.h"
 #include "test/TestRemez.h"
@@ -1869,6 +1870,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestPinkShade::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestHardclipBl::perform_test ();
 #endif
 
