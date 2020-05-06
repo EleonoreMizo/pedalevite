@@ -676,6 +676,8 @@ commonsrc = \
         ../../src/mfx/dsp/va/MoogLadderDAngelo.hpp \
         ../../src/mfx/dsp/va/MoogLadderDAngeloData.h \
         ../../src/mfx/dsp/va/MoogLadderDAngeloData.hpp \
+        ../../src/mfx/dsp/va/MoogLadderMystran.cpp \
+        ../../src/mfx/dsp/va/MoogLadderMystran.h \
         ../../src/mfx/dsp/va/RcClipGeneric.h \
         ../../src/mfx/dsp/va/RcClipGeneric.hpp \
         ../../src/mfx/dsp/va/SolverNR.h \
@@ -1558,6 +1560,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestLatAlgo.h \
         ../../src/test/TestMoogLadderDAngelo.cpp \
         ../../src/test/TestMoogLadderDAngelo.h \
+        ../../src/test/TestMoogLadderMystran.cpp \
+        ../../src/test/TestMoogLadderMystran.h \
         ../../src/test/TestOscSample.cpp \
         ../../src/test/TestOscSample.h \
         ../../src/test/TestOscSampleSyncFade.cpp \

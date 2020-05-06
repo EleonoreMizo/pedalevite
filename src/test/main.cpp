@@ -66,6 +66,7 @@
 #include "test/TestInterpPhase.h"
 #include "test/TestLatAlgo.h"
 #include "test/TestMoogLadderDAngelo.h"
+#include "test/TestMoogLadderMystran.h"
 #include "test/TestOscSample.h"
 #include "test/TestOscSampleSyncFade.h"
 #include "test/TestOscSampleSyncHard.h"
@@ -1870,6 +1871,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestMoogLadderMystran::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestPinkShade::perform_test ();
 #endif
 

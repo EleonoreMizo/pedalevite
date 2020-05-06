@@ -802,6 +802,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngelo.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngeloData.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderDAngeloData.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderMystran.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\RcClipGeneric.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\RcClipGeneric.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\SolverNR.h" />
@@ -1440,6 +1441,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\MoogLadderMystran.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileOpWav.cpp" />

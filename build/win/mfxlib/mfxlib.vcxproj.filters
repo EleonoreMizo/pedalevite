@@ -3648,6 +3648,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.h">
       <Filter>mfx\pi\smood</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\MoogLadderMystran.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFastPade.h">
       <Filter>mfx\dsp\shape</Filter>
     </ClInclude>
@@ -4900,6 +4903,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.cpp">
       <Filter>mfx\pi\smood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\MoogLadderMystran.cpp">
+      <Filter>mfx\dsp\va</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
