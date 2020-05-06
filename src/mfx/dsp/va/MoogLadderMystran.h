@@ -98,7 +98,7 @@ private:
 	               process_sample_internal (float x, float f, float &xx, float &y0, float &y1, float &y2);
 	inline void    update_gaincomp ();
 	inline void    update_cutoff ();
-	inline float   compute_alpha (float k) const;
+	float          compute_alpha (float k) const;
 
 	static inline float
 	               tanh_xdx (float x);
