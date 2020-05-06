@@ -649,6 +649,7 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsSqrt.hpp \
         ../../src/mfx/dsp/shape/WsTanh.h \
         ../../src/mfx/dsp/shape/WsTanhFast.h \
+        ../../src/mfx/dsp/shape/WsTanhFastPade.h \
         ../../src/mfx/dsp/shape/WsTruncMod.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \

@@ -32,6 +32,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/shape/WsBitcrush.h"
 #include "mfx/dsp/shape/WsFloorOfs.h"
 #include "mfx/dsp/shape/WsNegCond.h"
+#include "mfx/dsp/shape/WsTanhFastPade.h"
 #include "mfx/dsp/shape/WsTruncMod.h"
 #include "mfx/dsp/va/MoogLadderDAngelo.h"
 #include "mfx/FileOpWav.h"
@@ -127,13 +128,17 @@ int	TestMoogLadderDAngelo::perform_test_n ()
 
 	mfx::dsp::va::MoogLadderDAngelo <
 		N,
-		mfx::dsp::shape::WsSqLin,
+
+		// mfx::dsp::shape::WsSqLin,
+		mfx::dsp::shape::WsTanhFastPade,
+
 		mfx::dsp::shape::WsBypass
 		// mfx::dsp::shape::WsFloorOfs <std::ratio <0, 1> >
 		// mfx::dsp::shape::WsNegCond <std::ratio <1, 1>, std::ratio <2, 1> >
 		// mfx::dsp::shape::WsBitcrush <std::ratio <1, 2>, false>
 		// mfx::dsp::shape::WsTruncMod <std::ratio <-3, 4>, std::ratio <3, 4> >
 	> filter;
+	filter.set_scale (1);
 	filter.set_sample_freq (sample_freq * ovrspl);
 	filter.set_reso_norm (0.75f);
 

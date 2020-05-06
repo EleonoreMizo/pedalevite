@@ -1877,7 +1877,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestHardclipBl::perform_test ();
 #endif
 
-#if 0
+#if 1
 	if (ret_val == 0) ret_val = TestMoogLadderDAngelo::perform_test ();
 #endif
 

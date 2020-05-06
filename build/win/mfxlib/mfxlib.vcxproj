@@ -775,6 +775,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsSqrt.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanh.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFast.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFastPade.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTruncMod.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.hpp" />
