@@ -34,17 +34,9 @@ http://www.wtfpl.net/ for more details.
 
 
 
-// Not very efficient actually.
-#undef mfx_dsp_va_MoogLadderMystran_USE_SIMD
-
-
-
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#if defined (mfx_dsp_va_MoogLadderMystran_USE_SIMD)
-#include "fstb/ToolsSimd.h"
-#endif // mfx_dsp_va_MoogLadderMystran_USE_SIMD
 
 #include <array>
 
@@ -98,10 +90,6 @@ private:
 
 	static inline float
 	               tanh_xdx (float x);
-#if defined (mfx_dsp_va_MoogLadderMystran_USE_SIMD)
-	static inline fstb::ToolsSimd::VectF32
-	               tanh_xdx (fstb::ToolsSimd::VectF32 x);
-#endif // mfx_dsp_va_MoogLadderMystran_USE_SIMD
 
 	float          _sample_freq = 0;    // Sampling rate, Hz. 0 = not set
 	float          _piofs       = 0;    // pi / fs. 0 = not set

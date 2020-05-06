@@ -147,25 +147,6 @@ float	MoogLadderMystran::process_sample_internal (float x, float &xx, float &y0,
 	const float    ih = 0.5f * (x + _zi);
 	_zi = x;
 
-#if defined (mfx_dsp_va_MoogLadderMystran_USE_SIMD)
-
-	const float    t0  = tanh_xdx (ih - _r * _s_arr [3]);
-	auto           sv  = fstb::ToolsSimd::loadu_f32 (_s_arr.data ());
-	const auto     tv  = tanh_xdx (sv);
-	const auto     one = fstb::ToolsSimd::set1_f32 (1);
-	const auto     fv  = fstb::ToolsSimd::set1_f32 (_f);
-	const auto     gv  = fstb::ToolsSimd::rcp_approx2 (one + fv * tv);
-	const float    g0  = fstb::ToolsSimd::Shift <0>::extract (gv);
-	const float    g1  = fstb::ToolsSimd::Shift <1>::extract (gv);
-	const float    g2  = fstb::ToolsSimd::Shift <2>::extract (gv);
-	const float    g3  = fstb::ToolsSimd::Shift <3>::extract (gv);
-	const float    t1  = fstb::ToolsSimd::Shift <0>::extract (tv);
-	const float    t2  = fstb::ToolsSimd::Shift <1>::extract (tv);
-	const float    t3  = fstb::ToolsSimd::Shift <2>::extract (tv);
-	const float    t4  = fstb::ToolsSimd::Shift <3>::extract (tv);
-
-#else // mfx_dsp_va_MoogLadderMystran_USE_SIMD
-
 	// Evaluates the non-linear gains
 	const float    t0 = tanh_xdx (ih - _r * _s_arr [3]);
 	const float    t1 = tanh_xdx (          _s_arr [0]);
@@ -179,8 +160,6 @@ float	MoogLadderMystran::process_sample_internal (float x, float &xx, float &y0,
 	const float    g2 = 1 / (1 + _f * t3);
 	const float    g3 = 1 / (1 + _f * t4);
 
-#endif // mfx_dsp_va_MoogLadderMystran_USE_SIMD
-        
 	// f# are just factored out of the feedback solution
 	const float    f3 = _f * t3 * g3;
 	const float    f2 = _f * t2 * g2 * f3;
@@ -256,27 +235,6 @@ float	MoogLadderMystran::tanh_xdx (float x)
 
 #endif
 }
-
-
-
-#if defined (mfx_dsp_va_MoogLadderMystran_USE_SIMD)
-
-fstb::ToolsSimd::VectF32	MoogLadderMystran::tanh_xdx (fstb::ToolsSimd::VectF32 x)
-{
-	const auto    c0  = fstb::ToolsSimd::set1_f32 (10395.f);
-	const auto    n2  = fstb::ToolsSimd::set1_f32 ( 1260.f);
-	const auto    d2  = fstb::ToolsSimd::set1_f32 ( 4725.f);
-	const auto    n4  = fstb::ToolsSimd::set1_f32 (   21.f);
-	const auto    d4  = fstb::ToolsSimd::set1_f32 (  210.f);
-	const auto    x2  = x * x;
-	const auto    num = (      n4  * x2 + n2) * x2 + c0;
-	const auto    den = ((x2 + d4) * x2 + d2) * x2 + c0;
-	const auto    y   = num * fstb::ToolsSimd::rcp_approx2 (den);
-
-	return y;
-}
-
-#endif // mfx_dsp_va_MoogLadderMystran_USE_SIMD
 
 
 
