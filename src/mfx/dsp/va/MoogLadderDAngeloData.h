@@ -61,8 +61,8 @@ public:
 	float          _gaincomp    = 0;    // Gain compensation at DC, from 0 = none to 1 = full
 
 	// Thermal voltage, volt. Should be 26 mV but actually defines the clipping
-	// level. So we set it to unity by default.
-	float          _vt          = 1;
+	// level (= 2 * _vt). So we set it to unity by default.
+	float          _vt          = 0.5f;
 
 	bool           _dirty_flag  = true; // The variables below require an update
 	float          _gc_mul      = 1;    // Final multiplier for the gain compensation

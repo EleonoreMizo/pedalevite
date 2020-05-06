@@ -79,8 +79,8 @@ void	MoogLadderDAngelo <N, SL, SF>::set_scale (float s)
 	assert (s > 0);
 
 	_d._vt         = s * 0.5f;
-	_d._vt2        = 2 * _d._vt;
-	_d._vt2i       = 1 / _d._vt2;
+	_d._vt2        = s;
+	_d._vt2i       = 1 / s;
 	update_gaincomp ();
 	_d._dirty_flag = true;
 }
