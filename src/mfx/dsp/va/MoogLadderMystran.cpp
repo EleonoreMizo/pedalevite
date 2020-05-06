@@ -61,7 +61,7 @@ void	MoogLadderMystran::set_freq (float freq)
 	assert (freq < _sample_freq * 0.5f);
 
 	_fc = freq;
-	_f  = fstb::Approx::tan_taylor5 (_piofs * freq);
+	_dirty_flag = true;
 }
 
 
@@ -69,24 +69,56 @@ void	MoogLadderMystran::set_freq (float freq)
 // Normalised resonance. 1 = self osc
 void	MoogLadderMystran::set_reso (float reso)
 {
-	assert (_sample_freq > 0);
 	assert (reso >= 0);
 	assert (reso <= float (_max_reso));
 
 	_reso = reso;
 	_r    = reso * 4;
 	update_gaincomp ();
+
+	_alpha      = compute_alpha (_r);
+	_alpha_inv  = 1.f / _alpha;
+	_dirty_flag = _freq_comp_flag;
+}
+
+
+
+void	MoogLadderMystran::set_gain_comp (float gc)
+{
+	assert (gc >= 0);
+	assert (gc <= 1);
+
+	_gaincomp = gc;
+	update_gaincomp ();
+}
+
+
+
+void	MoogLadderMystran::set_freq_comp (bool comp_flag)
+{
+	if (_freq_comp_flag != comp_flag)
+	{
+		_dirty_flag     = true;
+		_freq_comp_flag = comp_flag;
+	}
 }
 
 
 
 float	MoogLadderMystran::process_sample (float x)
 {
+	assert (_sample_freq > 0);
+
+	if (_dirty_flag)
+	{
+		update_cutoff ();
+	}
+
 	float          xx;
 	float          y0;
 	float          y1;
 	float          y2;
-	const float    y3 = process_sample_internal (x, xx, y0, y1, y2);
+	const float    y3 = process_sample_internal (x, _f, xx, y0, y1, y2);
 
 	return y3 * _gc_mul;
 }
@@ -95,11 +127,64 @@ float	MoogLadderMystran::process_sample (float x)
 
 float	MoogLadderMystran::process_sample (float x, float stage_in_ptr [4])
 {
+	assert (_sample_freq > 0);
+
+	if (_dirty_flag)
+	{
+		update_cutoff ();
+	}
+
 	float          xx;
 	float          y0;
 	float          y1;
 	float          y2;
-	const float    y3 = process_sample_internal (x, xx, y0, y1, y2);
+	const float    y3 = process_sample_internal (x, _f, xx, y0, y1, y2);
+	stage_in_ptr [0] = xx * _gc_mul;
+	stage_in_ptr [1] = y0 * _gc_mul;
+	stage_in_ptr [2] = y1 * _gc_mul;
+	stage_in_ptr [3] = y2 * _gc_mul;
+
+	return y3 * _gc_mul;
+}
+
+
+
+float	MoogLadderMystran::process_sample_pitch_mod (float x, float m)
+{
+	assert (_sample_freq > 0);
+
+	if (_dirty_flag)
+	{
+		update_cutoff ();
+	}
+
+	float          xx;
+	float          y0;
+	float          y1;
+	float          y2;
+	const float    f  = _f + _fi * m;
+	const float    y3 = process_sample_internal (x, f, xx, y0, y1, y2);
+
+	return y3 * _gc_mul;
+}
+
+
+
+float	MoogLadderMystran::process_sample_pitch_mod (float x, float m, float stage_in_ptr [4])
+{
+	assert (_sample_freq > 0);
+
+	if (_dirty_flag)
+	{
+		update_cutoff ();
+	}
+
+	float          xx;
+	float          y0;
+	float          y1;
+	float          y2;
+	const float    f  = _f + _fi * m;
+	const float    y3 = process_sample_internal (x, f, xx, y0, y1, y2);
 	stage_in_ptr [0] = xx * _gc_mul;
 	stage_in_ptr [1] = y0 * _gc_mul;
 	stage_in_ptr [2] = y1 * _gc_mul;
@@ -117,9 +202,46 @@ void	MoogLadderMystran::process_block (float dst_ptr [], const float src_ptr [],
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
+	if (_dirty_flag)
+	{
+		update_cutoff ();
+	}
+
+	float          xx;
+	float          y0;
+	float          y1;
+	float          y2;
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
-		dst_ptr [pos] = process_sample (src_ptr [pos]);
+		dst_ptr [pos] =
+			process_sample_internal (src_ptr [pos], _f, xx, y0, y1, y2);
+	}
+}
+
+
+
+void	MoogLadderMystran::process_block_pitch_mod (float dst_ptr [], const float src_ptr [], const float mod_ptr [], int nbr_spl)
+{
+	assert (_sample_freq > 0);
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (mod_ptr != nullptr);
+	assert (nbr_spl > 0);
+
+	if (_dirty_flag)
+	{
+		update_cutoff ();
+	}
+
+	float          xx;
+	float          y0;
+	float          y1;
+	float          y2;
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		const float    f = _f + _fi * mod_ptr [pos];
+		dst_ptr [pos] =
+			process_sample_internal (src_ptr [pos], f, xx, y0, y1, y2);
 	}
 }
 
@@ -141,7 +263,7 @@ void	MoogLadderMystran::clear_buffers ()
 
 
 
-float	MoogLadderMystran::process_sample_internal (float x, float &xx, float &y0, float &y1, float &y2)
+float	MoogLadderMystran::process_sample_internal (float x, float f, float &xx, float &y0, float &y1, float &y2)
 {
 	// Input with half delay, for non-linearities
 	const float    ih = 0.5f * (x + _zi);
@@ -155,16 +277,16 @@ float	MoogLadderMystran::process_sample_internal (float x, float &xx, float &y0,
 	const float    t4 = tanh_xdx (          _s_arr [3]);
 
 	// g# the denominators for solutions of individual stages
-	const float    g0 = 1 / (1 + _f * t1);
-	const float    g1 = 1 / (1 + _f * t2);
-	const float    g2 = 1 / (1 + _f * t3);
-	const float    g3 = 1 / (1 + _f * t4);
+	const float    g0 = 1 / (1 + f * t1);
+	const float    g1 = 1 / (1 + f * t2);
+	const float    g2 = 1 / (1 + f * t3);
+	const float    g3 = 1 / (1 + f * t4);
 
 	// f# are just factored out of the feedback solution
-	const float    f3 = _f * t3 * g3;
-	const float    f2 = _f * t2 * g2 * f3;
-	const float    f1 = _f * t1 * g1 * f2;
-	const float    f0 = _f * t0 * g0 * f1;
+	const float    f3 = f * t3 * g3;
+	const float    f2 = f * t2 * g2 * f3;
+	const float    f1 = f * t1 * g1 * f2;
+	const float    f0 = f * t0 * g0 * f1;
 
 	// Solves feedback
 	const float    y3n =
@@ -178,12 +300,12 @@ float	MoogLadderMystran::process_sample_internal (float x, float &xx, float &y0,
 
 	// Then solves the remaining outputs (with the non-linear gains here)
 	xx = t0 *      (x          - _r * y3);
-	y0 = t1 * g0 * (_s_arr [0] + _f * xx);
-	y1 = t2 * g1 * (_s_arr [1] + _f * y0);
-	y2 = t3 * g2 * (_s_arr [2] + _f * y1);
+	y0 = t1 * g0 * (_s_arr [0] + f * xx);
+	y1 = t2 * g1 * (_s_arr [1] + f * y0);
+	y2 = t3 * g2 * (_s_arr [2] + f * y1);
 
 	// Updates state
-	const float    fd = 2 * _f;
+	const float    fd = 2 * f;
 	_s_arr [0] += fd * (xx - y0);
 	_s_arr [1] += fd * (y0 - y1);
 	_s_arr [2] += fd * (y1 - y2);
@@ -197,6 +319,38 @@ float	MoogLadderMystran::process_sample_internal (float x, float &xx, float &y0,
 void	MoogLadderMystran::update_gaincomp ()
 {
 	_gc_mul = 1 + std::min (_r, 4.f) * _gaincomp;
+}
+
+
+
+void	MoogLadderMystran::update_cutoff ()
+{
+	const float    a = _piofs * _fc;
+	_f  = fstb::Approx::tan_taylor5 (a);
+	if (_freq_comp_flag)
+	{
+		_f *= _alpha_inv;
+	}
+
+	// Computes the f derivative, for fast 1 V/oct local modulations
+	// z(x) = f (fc * 2^x) = tan (2^x * pi * fc / fs) = tan (a * 2^x)
+	// with a = pi * fc / fs
+	// z'(x) = a * ln (2) * 2^x / (cos (a * 2^x)) ^ 2
+	// Let's assume z' is constant for small variations of x:
+	// z'(0) = a * ln (2) * (f ^ 2 + 1)
+	_fi = a * float (fstb::LN2) * (_f * _f + 1);
+}
+
+
+
+float	MoogLadderMystran::compute_alpha (float k) const
+{
+	const float    k_rt4 = float (sqrt (sqrt (k)));
+	const float    alpha = float (
+		sqrt (1 + k_rt4 * (k_rt4 - float (fstb::SQRT2)))
+	);
+
+	return alpha;
 }
 
 

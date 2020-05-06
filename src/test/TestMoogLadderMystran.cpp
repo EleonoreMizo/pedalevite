@@ -128,6 +128,32 @@ int	TestMoogLadderMystran::perform_test ()
 		"results/moogladdermystran-1hp4.wav", dst2, sample_freq, 0.5f
 	);
 
+	filter.clear_buffers ();
+	filter.set_reso (1.5f);
+	updw->_up.clear_buffers ();
+	updw->_dw.clear_buffers ();
+	const float    mamp = 0.3f;
+	const float    mo1 = float (2 * fstb::PI * 55 * 5 / sample_freq);
+	const float    mo2 = float (2 * fstb::PI * 55 * 9 / sample_freq);
+	for (int pos = 0; pos < len; ++pos)
+	{
+		const float    freq = float (20 * pow (1000, double (pos) / len));
+		const float    mval = float (tanh ((sin (pos * mo1) + sin (pos * mo2)) * 2) * mamp);
+		filter.set_freq (freq);
+		float          x = src [pos];
+		updw->_up.process_sample (tmp1.data (), x);
+		updw2->_up.process_sample (tmp2.data (), mval);
+		for (int k = 0; k < ovrspl; ++k)
+		{
+			tmp1 [k] = filter.process_sample_pitch_mod (tmp1 [k], tmp2 [k]);
+		}
+		dst [pos] = updw->_dw.process_sample (tmp1.data ());
+	}
+
+	mfx::FileOpWav::save (
+		"results/moogladdermystran-2.wav", dst, sample_freq, 0.5f
+	);
+
 	// Speed test
 	static const std::array <float, 2> reso_arr = { 0.0f, 1.0f };
 	TimerAccurate  chrono;
