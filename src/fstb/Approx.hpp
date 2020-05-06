@@ -500,6 +500,33 @@ ToolsSimd::VectF32	Approx::tan_mystran (ToolsSimd::VectF32 x)
 
 
 
+// Very high precision. Relative error is 1 % at 0.9993 * pi/2
+// PadeApproximant [Tan[x],{x,0,{5,5}}]
+float	Approx::tan_pade55 (float x)
+{
+	const float    x2  = x * x;
+	const float    num = (     x2 - 105) * x2 + 945;
+	const float    den = (15 * x2 - 420) * x2 + 945;
+
+	return x * num / den;
+}
+
+ToolsSimd::VectF32	Approx::tan_pade55 (ToolsSimd::VectF32 x)
+{
+	const auto     c0  = fstb::ToolsSimd::set1_f32 ( 945.f);
+	const auto     n2  = fstb::ToolsSimd::set1_f32 (-105.f);
+	const auto     d2  = fstb::ToolsSimd::set1_f32 (-420.f);
+	const auto     d4  = fstb::ToolsSimd::set1_f32 (  15.f);
+
+	const auto     x2  = x * x;
+	const auto     num = (     x2 + n2) * x2 + c0;
+	const auto     den = (d4 * x2 + d2) * x2 + c0;
+
+	return x * num * fstb::ToolsSimd::rcp_approx2 (den);
+}
+
+
+
 // Formula by mystran
 // https://www.kvraudio.com/forum/viewtopic.php?f=33&t=521377
 // s (x) = x / sqrt (1 + x^2)

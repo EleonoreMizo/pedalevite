@@ -90,6 +90,10 @@ public:
 	               tan_mystran (float x);
 	static inline ToolsSimd::VectF32
 	               tan_mystran (ToolsSimd::VectF32 x);
+	static inline float
+	               tan_pade55 (float x);
+	static inline ToolsSimd::VectF32
+	               tan_pade55 (ToolsSimd::VectF32 x);
 
 	static inline float
 	               tanh_mystran (float x);
