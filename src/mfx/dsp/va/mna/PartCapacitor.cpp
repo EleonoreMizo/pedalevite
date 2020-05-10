@@ -75,8 +75,10 @@ void	PartCapacitor::set_capacity (float c)
 
 
 
-void	PartCapacitor::do_get_info (PartInfo &info) const
+void	PartCapacitor::do_get_info (SimulInterface &sim, PartInfo &info)
 {
+	_sim_ptr = &sim;
+
 	info._nid_arr.clear ();
 	for (auto &nid : _nid_arr)
 	{
@@ -87,10 +89,8 @@ void	PartCapacitor::do_get_info (PartInfo &info) const
 
 
 
-void	PartCapacitor::do_prepare (SimulInterface &sim, const SimInfo &info)
+void	PartCapacitor::do_prepare (const SimInfo &info)
 {
-	_sim_ptr = &sim;
-
 	_sample_freq = float (info._sample_freq);
 	assert (info._node_idx_arr.size () == _node_arr.size ());
 	for (int pos = 0; pos < int (_node_arr.size ()); ++pos)

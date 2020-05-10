@@ -23,6 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/dsp/va/mna/PartInterface.h"
+
 
 
 namespace mfx
@@ -55,6 +57,8 @@ public:
 	virtual SimulInterface &
 	               operator = (SimulInterface &&other)             = default;
 
+	PartInterface::IdNode
+	               allocate_node ();
 	bool           is_node_gnd (int node_idx) const;
 	float          get_voltage (int node_idx) const;
 	float          get_voltage (int n1_idx, int n2_idx) const;
@@ -71,6 +75,8 @@ public:
 
 protected:
 
+	virtual PartInterface::IdNode
+	               do_allocate_node () = 0;
 	virtual bool   do_is_node_gnd (int node_idx) const = 0;
 	virtual float  do_get_voltage (int node_idx) const = 0;
 	virtual float  do_get_voltage (int n1_idx, int n2_idx) const = 0;

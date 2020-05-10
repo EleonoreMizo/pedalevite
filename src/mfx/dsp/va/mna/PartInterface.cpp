@@ -45,31 +45,30 @@ namespace mna
 
 
 
-void	PartInterface::get_info (PartInfo &info) const
+void	PartInterface::get_info (SimulInterface &sim, PartInfo &info)
 {
 	assert (info._nid_arr.empty ());
 	assert (info._nbr_src_v == 0);
 	assert (! info._non_linear_flag);
 
-	do_get_info (info);
+	do_get_info (sim, info);
 
-	assert (info._nid_arr.size () >= 2);
-	assert (info._nid_arr.front () >= 0);
-	assert (info._nid_arr.back ()  >= 0);
+	assert (info._subpart_arr.empty () || info._subpart_arr.front ().get () != nullptr);
+	assert (info._subpart_arr.empty () || info._subpart_arr.back ().get ()  != nullptr);
+	assert (info._nid_arr.empty () || info._nid_arr.front () >= 0);
+	assert (info._nid_arr.empty () || info._nid_arr.back ()  >= 0);
 	assert (info._nbr_src_v >= 0);
-	assert (info._nbr_src_v < int (info._nid_arr.size ()));
 }
 
 
 
-void	PartInterface::prepare (SimulInterface &sim, const SimInfo &info)
+void	PartInterface::prepare (const SimInfo &info)
 {
 	assert (info._sample_freq > 0);
-	assert (info._node_idx_arr.size () >= 2);
-	assert (info._node_idx_arr.front () >= 0);
-	assert (info._node_idx_arr.back ()  >= 0);
+	assert (info._node_idx_arr.empty () || info._node_idx_arr.front () >= 0);
+	assert (info._node_idx_arr.empty () || info._node_idx_arr.back ()  >= 0);
 
-	do_prepare (sim, info);
+	do_prepare (info);
 }
 
 

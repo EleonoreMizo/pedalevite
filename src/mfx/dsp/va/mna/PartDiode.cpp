@@ -90,8 +90,10 @@ void	PartDiode::set_n (float n)
 
 
 
-void	PartDiode::do_get_info (PartInfo &info) const
+void	PartDiode::do_get_info (SimulInterface &sim, PartInfo &info)
 {
+	_sim_ptr = &sim;
+
 	info._nid_arr.clear ();
 	for (auto &nid : _nid_arr)
 	{
@@ -103,10 +105,8 @@ void	PartDiode::do_get_info (PartInfo &info) const
 
 
 
-void	PartDiode::do_prepare (SimulInterface &sim, const SimInfo &info)
+void	PartDiode::do_prepare (const SimInfo &info)
 {
-	_sim_ptr = &sim;
-
 	assert (info._node_idx_arr.size () == _node_arr.size ());
 	for (int pos = 0; pos < int (_node_arr.size ()); ++pos)
 	{
@@ -119,7 +119,9 @@ void	PartDiode::do_prepare (SimulInterface &sim, const SimInfo &info)
 void	PartDiode::do_add_to_matrix ()
 {
 	const float    v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
-	const float    e   = _is * fstb::Approx::exp2 (v * _mul_e);
+	const float    ve  = v * _mul_e;
+	const float    e   =
+		(ve <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (v * _mul_e);
 	const float    s   = e - _is;
 	const float    sd  = _mul_e * e;
 

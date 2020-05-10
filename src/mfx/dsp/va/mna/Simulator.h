@@ -62,6 +62,7 @@ public:
 
 	static const IdNode  _nid_invalid = PartInterface::_nid_invalid;
 	static const IdNode  _nid_gnd     = PartInterface::_nid_gnd;
+	static const IdNode  _nid_internal = 1 << 24;
 
 	static const int     _max_it      = 100;
 
@@ -108,6 +109,8 @@ public:
 protected:
 
 	// SimulInterface
+	virtual PartInterface::IdNode
+	               do_allocate_node () final;
 	virtual bool   do_is_node_gnd (int node_idx) const final;
 	virtual float  do_get_voltage (int node_idx) const final;
 	virtual float  do_get_voltage (int n1_idx, int n2_idx) const final;
@@ -127,6 +130,7 @@ private:
 	std::map <IdNode, int>
 	               _nid_to_idx_map;
 
+	IdNode         _nid_int_cur = _nid_internal;
 	int            _nbr_nodes = 0;
 	int            _nbr_src_v = 0;
 	int            _idx_gnd   = 0;

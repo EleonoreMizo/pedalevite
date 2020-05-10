@@ -61,6 +61,7 @@ void	Simulator::add_part (PartSPtr part_sptr)
 
 
 
+// Do not add anything after this call
 void	Simulator::prepare (double sample_freq)
 {
 	assert (sample_freq > 0);
@@ -73,23 +74,29 @@ void	Simulator::prepare (double sample_freq)
 	_idx_gnd   = 0;
 	_nl_flag   = false;
 
-	const int      nbr_parts = int (_part_arr.size ());
-	std::vector <PartInterface::PartInfo>  part_info_list (nbr_parts);
-	std::vector <PartInterface::SimInfo>   sim_info_list (nbr_parts);
-	const IdNode   idx_gnd_tmp = -999666;
+	std::vector <PartInterface::PartInfo>  part_info_list;
+	std::vector <PartInterface::SimInfo>   sim_info_list;
+	const IdNode   idx_gnd_tmp = -666999666;
 
 	// First pass to collect information and compute some indexes
-	for (int part_cnt = 0; part_cnt < nbr_parts; ++part_cnt)
+	// _part_arr.size () not cached because _part_arr can grow within the loop
+	for (int part_cnt = 0; part_cnt < int (_part_arr.size ()); ++part_cnt)
 	{
 		PartInterface &   part = *_part_arr [part_cnt];
 
 		// Collects information
-		PartInterface::PartInfo &  part_info = part_info_list [part_cnt];
-		part.get_info (part_info);
+		PartInterface::PartInfo part_info;
+		part.get_info (*this, part_info);
+
+		// Sub-parts
+		for (auto &subpart_sptr : part_info._subpart_arr)
+		{
+			add_part (subpart_sptr);
+		}
 
 		_nl_flag |= part_info._non_linear_flag;
 
-		PartInterface::SimInfo &   sim_info  = sim_info_list [part_cnt];
+		PartInterface::SimInfo  sim_info;
 		sim_info._node_idx_arr.resize (part_info._nid_arr.size ());
 		sim_info._src_v_idx_arr.resize (part_info._nbr_src_v);
 
@@ -122,7 +129,13 @@ void	Simulator::prepare (double sample_freq)
 			sim_info._src_v_idx_arr [k] = _nbr_src_v;
 			++ _nbr_src_v;
 		}
+
+		part_info_list.push_back (part_info);
+		sim_info_list.push_back (sim_info);
 	}
+
+	assert (part_info_list.size () == _part_arr.size ());
+	assert (sim_info_list.size () == _part_arr.size ());
 
 	// Matrix size
 	_msize   = _nbr_nodes + _nbr_src_v;
@@ -135,6 +148,7 @@ void	Simulator::prepare (double sample_freq)
 	_vec_x_old.resize (_msize);
 
 	// Finalizes indexes and sends information back to the parts
+	const int      nbr_parts = int (_part_arr.size ());
 	for (int part_cnt = 0; part_cnt < nbr_parts; ++part_cnt)
 	{
 		PartInterface::SimInfo &   sim_info  = sim_info_list [part_cnt];
@@ -154,7 +168,7 @@ void	Simulator::prepare (double sample_freq)
 		}
 
 		PartInterface &   part = *_part_arr [part_cnt];
-		part.prepare (*this, sim_info);
+		part.prepare (sim_info);
 	}
 
 	// Starts with a fresh state
@@ -286,6 +300,16 @@ void	Simulator::get_stats (Stats &stats) const
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+PartInterface::IdNode	Simulator::do_allocate_node ()
+{
+	const IdNode   nid = _nid_int_cur;
+	++ _nid_int_cur;
+
+	return nid;
+}
 
 
 

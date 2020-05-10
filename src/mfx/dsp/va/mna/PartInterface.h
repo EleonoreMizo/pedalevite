@@ -23,8 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <memory>
 #include <vector>
-
 
 
 namespace mfx
@@ -47,6 +47,7 @@ class PartInterface
 
 public:
 
+	typedef std::shared_ptr <PartInterface> SPtr;
 	typedef int IdNode;
 	static const IdNode  _nid_invalid = -1;
 	static const IdNode  _nid_gnd     = 0;
@@ -54,6 +55,10 @@ public:
 	class PartInfo
 	{
 	public:
+		// Subparts are probbed directly by the simulator after return from
+		// the parent
+		std::vector <SPtr>
+		               _subpart_arr;
 		std::vector <IdNode>
 		               _nid_arr;
 		int            _nbr_src_v       = 0;
@@ -70,18 +75,18 @@ public:
 		               _src_v_idx_arr;
 	};
 
-	               PartInterface ()                               = default;
-	               PartInterface (const PartInterface &other)     = default;
-	               PartInterface (PartInterface &&other)          = default;
-	virtual        ~PartInterface ()                              = default;
+	               PartInterface ()                           = default;
+	               PartInterface (const PartInterface &other) = default;
+	               PartInterface (PartInterface &&other)      = default;
+	virtual        ~PartInterface ()                          = default;
 
 	virtual PartInterface &
-	               operator = (const PartInterface &other)        = default;
+	               operator = (const PartInterface &other)    = default;
 	virtual PartInterface &
-	               operator = (PartInterface &&other)             = default;
+	               operator = (PartInterface &&other)         = default;
 
-	void           get_info (PartInfo &info) const;
-	void           prepare (SimulInterface &sim, const SimInfo &info);
+	void           get_info (SimulInterface &sim, PartInfo &info);
+	void           prepare (const SimInfo &info);
 	void           add_to_matrix ();
 	void           step ();
 	void           clear_buffers ();
@@ -92,8 +97,8 @@ public:
 
 protected:
 
-	virtual void   do_get_info (PartInfo &info) const = 0;
-	virtual void   do_prepare (SimulInterface &sim, const SimInfo &info) = 0;
+	virtual void   do_get_info (SimulInterface &sim, PartInfo &info) = 0;
+	virtual void   do_prepare (const SimInfo &info) = 0;
 	virtual void   do_add_to_matrix () = 0;
 	virtual void   do_step () = 0;
 	virtual void   do_clear_buffers () = 0;

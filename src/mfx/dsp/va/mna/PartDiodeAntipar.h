@@ -63,8 +63,8 @@ public:
 protected:
 
 	// PartInterface
-	void           do_get_info (PartInfo &info) const final;
-	void           do_prepare (SimulInterface &sim, const SimInfo &info) final;
+	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
+	void           do_prepare (const SimInfo &info) final;
 	void           do_add_to_matrix () final;
 	void           do_step () final;
 	void           do_clear_buffers () final;

@@ -45,6 +45,17 @@ namespace mna
 
 
 
+PartInterface::IdNode	SimulInterface::allocate_node ()
+{
+	const PartInterface::IdNode nid = do_allocate_node ();
+	assert (nid >= 0);
+	assert (nid != PartInterface::_nid_gnd);
+
+	return nid;
+}
+
+
+
 bool	SimulInterface::is_node_gnd (int node_idx) const
 {
 	assert (node_idx >= 0);

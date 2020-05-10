@@ -73,8 +73,10 @@ void	PartVcvs::set_gain (float g)
 
 
 
-void	PartVcvs::do_get_info (PartInfo &info) const
+void	PartVcvs::do_get_info (SimulInterface &sim, PartInfo &info)
 {
+	_sim_ptr = &sim;
+
 	info._nid_arr.clear ();
 	for (auto &nid : _nid_i_arr)
 	{
@@ -90,10 +92,8 @@ void	PartVcvs::do_get_info (PartInfo &info) const
 
 
 
-void	PartVcvs::do_prepare (SimulInterface &sim, const SimInfo &info)
+void	PartVcvs::do_prepare (const SimInfo &info)
 {
-	_sim_ptr = &sim;
-
 	assert (info._node_idx_arr.size () == _node_i_arr.size () + _node_o_arr.size ());
 	for (int pos = 0; pos < int (_node_i_arr.size ()); ++pos)
 	{
