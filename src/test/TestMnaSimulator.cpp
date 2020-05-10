@@ -27,6 +27,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/fnc.h"
 #include "test/TestMnaSimulator.h"
 #include "mfx/dsp/osc/SweepingSin.h"
+#include "mfx/dsp/va/mna/PartBjt.h"
 #include "mfx/dsp/va/mna/PartCapacitor.h"
 #include "mfx/dsp/va/mna/PartDiodeAntipar.h"
 #include "mfx/dsp/va/mna/PartResistor.h"
@@ -102,10 +103,10 @@ int	TestMnaSimulator::perform_test ()
 		no_dst
 	};
 	auto  src_v_sptr = std::make_shared <mfx::dsp::va::mna::PartSrcVoltage> (
-		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0
+		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0.f
 	);
 	auto  r1_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_src, no_dst, 1000
+		no_src, no_dst, 1000.f
 	);
 	auto  c1_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
 		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e-9f
@@ -123,10 +124,10 @@ int	TestMnaSimulator::perform_test ()
 		no_dst
 	};
 	auto  src_v_sptr = std::make_shared <mfx::dsp::va::mna::PartSrcVoltage> (
-		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0
+		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0.f
 	);
 	auto  r1_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_src, no_buf, 1000
+		no_src, no_buf, 1000.f
 	);
 	auto  c1_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
 		no_buf, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e-9f
@@ -149,47 +150,40 @@ int	TestMnaSimulator::perform_test ()
 		no_dst
 	};
 	auto  src_v_sptr = std::make_shared <mfx::dsp::va::mna::PartSrcVoltage> (
-		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0
+		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0.f
 	);
 	auto  r1_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_src, no_dst, 1000
+		no_src, no_dst, 1000.f
 	);
 	auto  c1_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
 		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e-9f
 	);
 	auto  d1_sptr = std::make_shared <mfx::dsp::va::mna::PartDiodeAntipar> (
-		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0.1e-15f, 1, 0.1e-6f, 4
+		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd,
+		0.1e-15f, 1.f, 0.1e-6f, 4.f
 	);
 	mna.add_part (src_v_sptr);
 	mna.add_part (r1_sptr);
 	mna.add_part (c1_sptr);
 	mna.add_part (d1_sptr);
 	float          gain = 10;
-#else
+#elif 0
 	// Distopia clipping section
 	enum
 	{
-		elt_sv = 0,
-		elt_c9,
-		elt_d2_d3,
-		elt_r46_rv3,
-		elt_r14,
-		elt_d4_d5,
-		elt_c10,
-
 		no_src = 1,
 		no_hpf,     // Between C9 and R14
 		no_sqw,     // Between D2//D3 and R46+RV3
 		no_dst
 	};
 	auto  src_v_sptr = std::make_shared <mfx::dsp::va::mna::PartSrcVoltage> (
-		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0
+		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0.f
 	);
 	auto  r14_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_hpf, no_dst, 2200
+		no_hpf, no_dst, 2200.f
 	);
 	auto  r46rv3_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_sqw, no_dst, 100 // 100 - 10k
+		no_sqw, no_dst, 100.f // 100 - 10k
 	);
 	// Increasing C9 makes harder basses, with stronger even harmonics
 	// (octave-like tone)
@@ -200,10 +194,11 @@ int	TestMnaSimulator::perform_test ()
 		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd, 10e-9f
 	);
 	auto  d2_d3_sptr = std::make_shared <mfx::dsp::va::mna::PartDiodeAntipar> (
-		no_hpf, no_sqw, 0.1e-15f, 4, 0.1e-15f, 1
+		no_hpf, no_sqw, 0.1e-15f, 4.f, 0.1e-15f, 1.f
 	);
 	auto  d4_d5_sptr = std::make_shared <mfx::dsp::va::mna::PartDiodeAntipar> (
-		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0.1e-15f, 1, 0.1e-6f, 4
+		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd,
+		0.1e-15f, 1.f, 0.1e-6f, 4.f
 	);
 	mna.add_part (src_v_sptr);
 	mna.add_part (r14_sptr);
@@ -213,6 +208,32 @@ int	TestMnaSimulator::perform_test ()
 	mna.add_part (d2_d3_sptr);
 	mna.add_part (d4_d5_sptr);
 	float          gain = 10;
+#else
+	// Simple voltage follower (common collector BJT). No DC coupling
+	enum
+	{
+		no_vcc = 1,
+		no_src,
+		no_dst
+	};
+	auto  vcc_sptr = std::make_shared <mfx::dsp::va::mna::PartSrcVoltage> (
+		no_vcc, mfx::dsp::va::mna::PartInterface::_nid_gnd, 9.f
+	);
+	auto  src_v_sptr = std::make_shared <mfx::dsp::va::mna::PartSrcVoltage> (
+		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0.f
+	);
+	auto  re_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd, 1000.f
+	);
+	auto  bjt_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+		no_dst, no_src, no_vcc,
+		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+	);
+	mna.add_part (vcc_sptr);
+	mna.add_part (src_v_sptr);
+	mna.add_part (re_sptr);
+	mna.add_part (bjt_sptr);
+	float          gain = 2;
 #endif
 
 	mna.prepare (sample_freq);
@@ -304,7 +325,6 @@ void	TestMnaSimulator::print_histo (int hist_arr [], int nbr_bars, int nbr_spl)
 	bar_0 [bar_size] = '\0';
 
 	const double   nbr_spl_inv = 1.0 / double (nbr_spl);
-	const double   total_inv   = 1.0 / (double (total) + 1e-12);
 	const double   bar_scale   = double (bar_size) / double (bar_max);
 	printf ("Average: %.2f\n", double (total) * nbr_spl_inv);
 	for (int k = 0; k < nbr_bars; ++k)

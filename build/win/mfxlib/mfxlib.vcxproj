@@ -1070,7 +1070,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartBjt.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartCapacitor.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartCccs.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartDiode.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartDiodeAntipar.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartInterface.h" />
@@ -1723,7 +1725,9 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjt.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartCapacitor.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartCccs.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartDiode.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartDiodeAntipar.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartInterface.cpp" />

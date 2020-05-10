@@ -652,8 +652,12 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsTruncMod.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
+        ../../src/mfx/dsp/va/mna/PartBjt.cpp \
+        ../../src/mfx/dsp/va/mna/PartBjt.h \
         ../../src/mfx/dsp/va/mna/PartCapacitor.cpp \
         ../../src/mfx/dsp/va/mna/PartCapacitor.h \
+        ../../src/mfx/dsp/va/mna/PartCccs.cpp \
+        ../../src/mfx/dsp/va/mna/PartCccs.h \
         ../../src/mfx/dsp/va/mna/PartDiode.cpp \
         ../../src/mfx/dsp/va/mna/PartDiode.h \
         ../../src/mfx/dsp/va/mna/PartDiodeAntipar.cpp \
