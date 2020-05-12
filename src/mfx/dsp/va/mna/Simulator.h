@@ -97,6 +97,15 @@ public:
 
 	void           clear_buffers ();
 
+	// Information
+	int            get_matrix_size () const;
+	int            get_nbr_nodes () const;
+	int            get_nbr_src_v () const;
+	std::vector <float>
+	               get_matrix () const;
+	std::vector <float>
+	               get_vector () const;
+
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	void           reset_stats ();
 	void           get_stats (Stats &stats) const;

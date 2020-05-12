@@ -278,6 +278,58 @@ void	Simulator::clear_buffers ()
 
 
 
+int	Simulator::get_matrix_size () const
+{
+	return _msize;
+}
+
+
+
+int	Simulator::get_nbr_nodes () const
+{
+	return _nbr_nodes;
+}
+
+
+
+int	Simulator::get_nbr_src_v () const
+{
+	return _nbr_src_v;
+}
+
+
+
+std::vector <float>	Simulator::get_matrix () const
+{
+	std::vector <float> mat;
+
+	for (int y = 0; y < _msize; ++y)
+	{
+		for (int x = 0; x < _msize; ++x)
+		{
+			mat.push_back (_mat_a (y, x));
+		}
+	}
+
+	return mat;
+}
+
+
+
+std::vector <float>	Simulator::get_vector () const
+{
+	std::vector <float> vec;
+
+	for (int x = 0; x < _msize; ++x)
+	{
+		vec.push_back (_vec_z (x));
+	}
+
+	return vec;
+}
+
+
+
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 
 void	Simulator::reset_stats ()

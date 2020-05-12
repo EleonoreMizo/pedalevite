@@ -241,6 +241,16 @@ int	TestMnaSimulator::perform_test ()
 	mna.reset_stats ();
 #endif // mfx_dsp_va_mna_Simulator_STATS
 
+	const int      msize     = mna.get_matrix_size ();
+	const int      nbr_nodes = mna.get_nbr_nodes ();
+	const int      nbr_src_v = mna.get_nbr_src_v ();
+	printf ("Matrix size: %3d\n", msize);
+	printf ("Nodes      : %3d\n", nbr_nodes);
+	printf ("Voltage src: %3d\n", nbr_src_v);
+
+	printf ("Simulating...\n");
+	fflush (stdout);
+
 	for (int pos = 0; pos < len; ++pos)
 	{
 		float           x = src [pos] * gain;
@@ -248,6 +258,23 @@ int	TestMnaSimulator::perform_test ()
 		mna.process_sample ();
 		x = mna.get_node_voltage (no_dst);
 		dst [pos] = x;
+
+#if 0
+		if (pos == 1000)
+		{
+			const auto     mat = mna.get_matrix ();
+			const auto     vec = mna.get_vector ();
+
+			for (int r = 0; r < msize; ++r)
+			{
+				for (int c = 0; c < msize; ++c)
+				{
+					printf ("%10f ", mat [r * msize + c]);
+				}
+				printf ("| %10f\n", vec [r]);
+			}
+		}
+#endif
 	}
 
 	mfx::FileOpWav::save ("results/simulmna1.wav", dst, sample_freq, 0.5f);
