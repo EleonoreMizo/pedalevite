@@ -167,7 +167,7 @@ int	TestMnaSimulator::perform_test ()
 	mna.add_part (c1_sptr);
 	mna.add_part (d1_sptr);
 	float          gain = 10;
-#elif 0
+#elif 1
 	// Distopia clipping section
 	enum
 	{
@@ -208,7 +208,7 @@ int	TestMnaSimulator::perform_test ()
 	mna.add_part (d2_d3_sptr);
 	mna.add_part (d4_d5_sptr);
 	float          gain = 10;
-#else
+#elif 0
 	// Simple voltage follower (common collector BJT). No DC coupling
 	enum
 	{
@@ -234,6 +234,280 @@ int	TestMnaSimulator::perform_test ()
 	mna.add_part (re_sptr);
 	mna.add_part (bjt_sptr);
 	float          gain = 2;
+#else
+
+	// EHX Big Muff Pi V7C Tall Font Green Russian
+	// http://www.bigmuffpage.com/Big_Muff_Pi_versions_schematics_part3.html
+	// Warning: 50 min of simulation in release mode
+	enum
+	{
+		no_vcc = 1,
+		no_src,
+
+		// Input buffer
+		no_r2c1,
+		no_q4b,
+		no_q4c,
+		no_q4e,
+
+		// Sustain (gain) pot
+		no_sus3,
+		no_sus2,
+
+		// Distortion stage 1
+		no_c5r19,
+		no_q3b,
+		no_q3c,
+		no_q3e,
+		no_s1di,
+
+		// Distortion stage 2
+		no_c3r12,
+		no_q2b,
+		no_q2c,
+		no_q2e,
+		no_s2di,
+
+		// Tone stack
+		no_tone1,
+		no_tone2,
+		no_tone3,
+
+		// Output buffer
+		no_q1b,
+		no_q1c,
+		no_q1e,
+		no_vol2,
+		no_vol3,
+
+		no_dst = no_vol2
+	};
+
+	const float    pot_sus  = 1.f;
+	const float    pot_tone = 0.5f;
+	const float    pot_vol  = 0.25f;
+
+	auto  vcc_sptr = std::make_shared <mfx::dsp::va::mna::PartSrcVoltage> (
+		no_vcc, mfx::dsp::va::mna::PartInterface::_nid_gnd, 9.f
+	);
+	auto  src_v_sptr = std::make_shared <mfx::dsp::va::mna::PartSrcVoltage> (
+		no_src, mfx::dsp::va::mna::PartInterface::_nid_gnd, 0.f
+	);
+
+	// Input buffer + sustain pot
+	const float    r24 = 100e3f;
+	auto  r2_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_src, no_r2c1, 39e3f
+	);
+	auto  r9_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q4b, no_q4c, 470e3f
+	);
+	auto  r13_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_vcc, no_q4c, 12e3f
+	);
+	auto  r14_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q4b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e3f
+	);
+	auto  r22_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q4e, mfx::dsp::va::mna::PartInterface::_nid_gnd, 390.f
+	);
+	auto  r23r24ccw_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_sus2, mfx::dsp::va::mna::PartInterface::_nid_gnd, 1e3f + r24 * pot_sus
+	);
+	auto  r24cw_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_sus2, no_sus3, std::max (r24 * (1 - pot_sus), 1.f)
+	);
+	auto  c1_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_r2c1, no_q4b, 100e-9f
+	);
+	auto  c4_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q4c, no_sus3, 100e-9f
+	);
+	auto  c10_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q4b, no_q4c, 500e-12f
+	);
+	auto  q4_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+		no_q4e, no_q4b, no_q4c,
+		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+	);
+
+	// Distortion stage 1
+	auto  r17_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q3b, no_q3c, 470e3f
+	);
+	auto  r18_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_vcc, no_q3c, 12e3f
+	);
+	auto  r19_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_c5r19, no_q3b, 10e3f
+	);
+	auto  r20_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q3b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e3f
+	);
+	auto  r21_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q3e, mfx::dsp::va::mna::PartInterface::_nid_gnd, 390.f
+	);
+	auto  c5_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_sus2, no_c5r19, 100e-9f
+	);
+	auto  c6_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q3b, no_s1di, 47e-9f
+	);
+	auto  c12_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q3b, no_q3c, 500e-12f
+	);
+	auto  d3d4_sptr = std::make_shared <mfx::dsp::va::mna::PartDiodeAntipar> (
+		no_s1di, no_q3c,
+		4.352e-9f, 1.906f, 4.352e-9f, 1.906f // 2x 1N4148 (or 1N914)
+	);
+	auto  q3_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+		no_q3e, no_q3b, no_q3c,
+		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+	);
+
+	// Distortion stage 2
+	auto  r15_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q2b, no_q2c, 470e3f
+	);
+	auto  r11_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_vcc, no_q2c, 12e3f
+	);
+	auto  r12_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_c3r12, no_q2b, 10e3f
+	);
+	auto  r16_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q2b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e3f
+	);
+	auto  r10_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q2e, mfx::dsp::va::mna::PartInterface::_nid_gnd, 390.f
+	);
+	auto  c13_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q3c, no_c3r12, 100e-9f
+	);
+	auto  c7_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q2b, no_s2di, 47e-9f
+	);
+	auto  c11_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q2b, no_q2c, 500e-12f
+	);
+	auto  d1d2_sptr = std::make_shared <mfx::dsp::va::mna::PartDiodeAntipar> (
+		no_s2di, no_q2c,
+		4.352e-9f, 1.906f, 4.352e-9f, 1.906f // 2x 1N4148 (or 1N914)
+	);
+	auto  q2_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+		no_q2e, no_q2b, no_q2c,
+		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+	);
+
+	// Tone stack
+	const float    r25 = 100e3f;
+	auto  r5_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_tone3, mfx::dsp::va::mna::PartInterface::_nid_gnd, 22e3f
+	);
+	auto  r8_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q2c, no_tone1, 20e3f
+	);
+	auto  r25ccw_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_tone1, no_tone2, std::max (r25 * pot_tone, 1.f)
+	);
+	auto  r25cw_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_tone2, no_tone3, std::max (r25 * (1 - pot_tone), 1.f)
+	);
+	auto  c8_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_tone1, mfx::dsp::va::mna::PartInterface::_nid_gnd, 10e-9f
+	);
+	auto  c9_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q2c, no_tone3, 3.9e-9f
+	);
+
+	// Output buffer
+	const float    r26 = 100e3f;
+	auto  r3_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q1b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e3f
+	);
+	auto  r4_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_q1e, mfx::dsp::va::mna::PartInterface::_nid_gnd, 2.7e3f
+	);
+	auto  r6_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_vcc, no_q1c, 10e3f
+	);
+	auto  r7_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_vcc, no_q1b, 470e3f
+	);
+	auto  r26ccw_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_vol2, mfx::dsp::va::mna::PartInterface::_nid_gnd,
+		std::max (r26 * pot_vol, 1.f)
+	);
+	auto  r26cw_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
+		no_vol2, no_vol3, std::max (r26 * (1 - pot_vol), 1.f)
+	);
+	auto  c2_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_q1c, no_vol3, 100e-9f
+	);
+	auto  c3_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
+		no_tone2, no_q1b, 100e-9f
+	);
+	auto  q1_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+		no_q1e, no_q1b, no_q1c,
+		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+	);
+
+	mna.add_part (vcc_sptr);
+	mna.add_part (src_v_sptr);
+
+	mna.add_part (r2_sptr);
+	mna.add_part (r9_sptr);
+	mna.add_part (r13_sptr);
+	mna.add_part (r14_sptr);
+	mna.add_part (r22_sptr);
+	mna.add_part (r23r24ccw_sptr);
+	mna.add_part (r24cw_sptr);
+	mna.add_part (c1_sptr);
+	mna.add_part (c4_sptr);
+	mna.add_part (c10_sptr);
+	mna.add_part (q4_sptr);
+
+	mna.add_part (r17_sptr);
+	mna.add_part (r18_sptr);
+	mna.add_part (r19_sptr);
+	mna.add_part (r20_sptr);
+	mna.add_part (r21_sptr);
+	mna.add_part (c5_sptr);
+	mna.add_part (c6_sptr);
+	mna.add_part (c12_sptr);
+	mna.add_part (d3d4_sptr);
+	mna.add_part (q3_sptr);
+
+	mna.add_part (r15_sptr);
+	mna.add_part (r11_sptr);
+	mna.add_part (r12_sptr);
+	mna.add_part (r16_sptr);
+	mna.add_part (r10_sptr);
+	mna.add_part (c13_sptr);
+	mna.add_part (c7_sptr);
+	mna.add_part (c11_sptr);
+	mna.add_part (d1d2_sptr);
+	mna.add_part (q2_sptr);
+
+	mna.add_part (r5_sptr);
+	mna.add_part (r8_sptr);
+	mna.add_part (r25ccw_sptr);
+	mna.add_part (r25cw_sptr);
+	mna.add_part (c8_sptr);
+	mna.add_part (c9_sptr);
+
+	mna.add_part (r3_sptr);
+	mna.add_part (r4_sptr);
+	mna.add_part (r6_sptr);
+	mna.add_part (r7_sptr);
+	mna.add_part (r26ccw_sptr);
+	mna.add_part (r26cw_sptr);
+	mna.add_part (c2_sptr);
+	mna.add_part (c3_sptr);
+	mna.add_part (q1_sptr);
+
+	float          gain = 1;
+
 #endif
 
 	mna.prepare (sample_freq);
