@@ -4632,6 +4632,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartBjt.h">
       <Filter>mfx\dsp\va\mna</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartBjtNpn.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -5919,6 +5922,9 @@
       <Filter>mfx\dsp\va\mna</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjt.cpp">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjtNpn.cpp">
       <Filter>mfx\dsp\va\mna</Filter>
     </ClCompile>
   </ItemGroup>

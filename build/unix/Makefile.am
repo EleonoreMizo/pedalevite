@@ -654,6 +654,8 @@ commonsrc = \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/va/mna/PartBjt.cpp \
         ../../src/mfx/dsp/va/mna/PartBjt.h \
+        ../../src/mfx/dsp/va/mna/PartBjtNpn.cpp \
+        ../../src/mfx/dsp/va/mna/PartBjtNpn.h \
         ../../src/mfx/dsp/va/mna/PartCapacitor.cpp \
         ../../src/mfx/dsp/va/mna/PartCapacitor.h \
         ../../src/mfx/dsp/va/mna/PartCccs.cpp \

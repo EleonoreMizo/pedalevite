@@ -28,6 +28,7 @@ http://www.wtfpl.net/ for more details.
 #include "test/TestMnaSimulator.h"
 #include "mfx/dsp/osc/SweepingSin.h"
 #include "mfx/dsp/va/mna/PartBjt.h"
+#include "mfx/dsp/va/mna/PartBjtNpn.h"
 #include "mfx/dsp/va/mna/PartCapacitor.h"
 #include "mfx/dsp/va/mna/PartDiodeAntipar.h"
 #include "mfx/dsp/va/mna/PartResistor.h"
@@ -142,7 +143,7 @@ int	TestMnaSimulator::perform_test ()
 	mna.add_part (c1_sptr);
 	mna.add_part (buf_sptr);
 	float          gain = 1;
-#elif 0
+#elif 1
 	// RC low-pass filter + 2 diodes. Cutoff: 1.6 kHz
 	enum
 	{
@@ -167,7 +168,7 @@ int	TestMnaSimulator::perform_test ()
 	mna.add_part (c1_sptr);
 	mna.add_part (d1_sptr);
 	float          gain = 10;
-#elif 1
+#elif 0
 	// Distopia clipping section
 	enum
 	{
@@ -225,9 +226,9 @@ int	TestMnaSimulator::perform_test ()
 	auto  re_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
 		no_dst, mfx::dsp::va::mna::PartInterface::_nid_gnd, 1000.f
 	);
-	auto  bjt_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+	auto  bjt_sptr = std::make_shared <mfx::dsp::va::mna::PartBjtNpn> (
 		no_dst, no_src, no_vcc,
-		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+		5.911e-15f, 1122.f, 1.271f // 2N5089
 	);
 	mna.add_part (vcc_sptr);
 	mna.add_part (src_v_sptr);
@@ -238,7 +239,7 @@ int	TestMnaSimulator::perform_test ()
 
 	// EHX Big Muff Pi V7C Tall Font Green Russian
 	// http://www.bigmuffpage.com/Big_Muff_Pi_versions_schematics_part3.html
-	// Warning: 50 min of simulation in release mode
+	// Warning: 2 min 50 s of simulation in release mode
 	enum
 	{
 		no_vcc = 1,
@@ -326,9 +327,9 @@ int	TestMnaSimulator::perform_test ()
 	auto  c10_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
 		no_q4b, no_q4c, 500e-12f
 	);
-	auto  q4_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+	auto  q4_sptr = std::make_shared <mfx::dsp::va::mna::PartBjtNpn> (
 		no_q4e, no_q4b, no_q4c,
-		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+		5.911e-15f, 1122.f, 1.271f // 2N5089
 	);
 
 	// Distortion stage 1
@@ -360,9 +361,9 @@ int	TestMnaSimulator::perform_test ()
 		no_s1di, no_q3c,
 		4.352e-9f, 1.906f, 4.352e-9f, 1.906f // 2x 1N4148 (or 1N914)
 	);
-	auto  q3_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+	auto  q3_sptr = std::make_shared <mfx::dsp::va::mna::PartBjtNpn> (
 		no_q3e, no_q3b, no_q3c,
-		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+		5.911e-15f, 1122.f, 1.271f // 2N5089
 	);
 
 	// Distortion stage 2
@@ -394,9 +395,9 @@ int	TestMnaSimulator::perform_test ()
 		no_s2di, no_q2c,
 		4.352e-9f, 1.906f, 4.352e-9f, 1.906f // 2x 1N4148 (or 1N914)
 	);
-	auto  q2_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+	auto  q2_sptr = std::make_shared <mfx::dsp::va::mna::PartBjtNpn> (
 		no_q2e, no_q2b, no_q2c,
-		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+		5.911e-15f, 1122.f, 1.271f // 2N5089
 	);
 
 	// Tone stack
@@ -447,9 +448,9 @@ int	TestMnaSimulator::perform_test ()
 	auto  c3_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
 		no_tone2, no_q1b, 100e-9f
 	);
-	auto  q1_sptr = std::make_shared <mfx::dsp::va::mna::PartBjt> (
+	auto  q1_sptr = std::make_shared <mfx::dsp::va::mna::PartBjtNpn> (
 		no_q1e, no_q1b, no_q1c,
-		false, 5.911e-15f, 1122.f, 1.271f // 2N5089
+		5.911e-15f, 1122.f, 1.271f // 2N5089
 	);
 
 	mna.add_part (vcc_sptr);
@@ -533,7 +534,7 @@ int	TestMnaSimulator::perform_test ()
 		x = mna.get_node_voltage (no_dst);
 		dst [pos] = x;
 
-#if 0
+#if 0 // Displays the matrix in the middle of the run
 		if (pos == 1000)
 		{
 			const auto     mat = mna.get_matrix ();
