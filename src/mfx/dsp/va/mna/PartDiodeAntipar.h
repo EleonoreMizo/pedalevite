@@ -78,14 +78,18 @@ private:
 	class Direction
 	{
 	public:
-		float          compute_mul_e () const;
+		float          compute_nvt_inv () const;
+		float          compute_mul_v () const;
 		float          compute_vcrit () const;
 
 		const float    _vt      = 0.026f;   // Thermal voltage, volt
-		float          _is      = 0.1e-15f; // Inverse saturation current, ampere, > 0
+		float          _is      = 0.1e-15f; // Inverse saturation current, ampere, > 0 for direct, < 0 for inverse
 		float          _n       = 1;        // Quality factor, > 0
-		float          _mul_e   = compute_mul_e (); // Precalculed stuff
-		float          _vcrit   = compute_vcrit (); // Not used at the moment
+
+		// Precalculed stuff
+		float          _nvt_inv = compute_nvt_inv (); // Sign depends on the direction
+		float          _mul_v   = compute_mul_v ();   // Sign depends on the direction
+		float          _vcrit   = compute_vcrit ();   // Not used at the moment
 	};
 
 	std::array <IdNode, 2>

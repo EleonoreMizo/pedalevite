@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/va/mna/PartDiodeAntipar.h"
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -60,14 +61,15 @@ PartDiodeAntipar::PartDiodeAntipar (IdNode nid_1, IdNode nid_2, float is1, float
 	assert (is2 <= 1e-1f);
 	assert ( n2 > 0);
 
-	_dir_arr [0]._is = is1;
+	_dir_arr [0]._is = +is1;
 	_dir_arr [0]._n  =  n1;
-	_dir_arr [1]._is = is2;
+	_dir_arr [1]._is = -is2;
 	_dir_arr [1]._n  =  n2;
 	for (auto &d : _dir_arr)
 	{
-		d._mul_e = d.compute_mul_e ();
-		d._vcrit = d.compute_vcrit ();
+		d._nvt_inv = d.compute_nvt_inv ();
+		d._mul_v   = d.compute_mul_v ();
+		d._vcrit   = d.compute_vcrit ();
 	}
 }
 
@@ -81,7 +83,7 @@ void	PartDiodeAntipar::set_is (int dir, float is)
 	assert (is <= 1e-1f);
 
 	Direction &    d = _dir_arr [dir];
-	d._is    = is;
+	d._is    = (dir != 0) ? -is : is;
 	d._vcrit = d.compute_vcrit ();
 }
 
@@ -94,9 +96,10 @@ void	PartDiodeAntipar::set_n (int dir, float n)
 	assert (n > 0);
 
 	Direction &    d = _dir_arr [dir];
-	d._n     = n;
-	d._mul_e = d.compute_mul_e ();
-	d._vcrit = d.compute_vcrit ();
+	d._n       = n;
+	d._nvt_inv = d.compute_nvt_inv ();
+	d._mul_v   = d.compute_mul_v ();
+	d._vcrit   = d.compute_vcrit ();
 }
 
 
@@ -134,12 +137,14 @@ void	PartDiodeAntipar::do_prepare (const SimInfo &info)
 void	PartDiodeAntipar::do_add_to_matrix ()
 {
 	const float    v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
-	const float    is  = (v >= 0) ? _dir_arr [0]._is    : -_dir_arr [1]._is;
-	const float    me  = (v >= 0) ? _dir_arr [0]._mul_e : -_dir_arr [1]._mul_e;
+	const auto &   dir = _dir_arr [(v < 0) ? 1 : 0];
+	const float    is  = dir._is;
+	const float    mv  = dir._mul_v;
+	const float    nvi = dir._nvt_inv;
 
-	const float    e   = is * fstb::Approx::exp2 (v * me);
+	const float    e   = is * fstb::Approx::exp2 (v * mv);
 	const float    s   = e - is;
-	const float    sd  = me * e;
+	const float    sd  = nvi * e;
 
 	const float    geq = sd;
 	const float    ieq = s - sd * v;
@@ -167,9 +172,16 @@ void	PartDiodeAntipar::do_clear_buffers ()
 
 
 
-float	PartDiodeAntipar::Direction::compute_mul_e () const
+float	PartDiodeAntipar::Direction::compute_nvt_inv () const
 {
-	return float (1.0 / (_n * _vt * fstb::LN2));
+	return std::copysign (float (1.0 / (_n * _vt)), _is);
+}
+
+
+
+float	PartDiodeAntipar::Direction::compute_mul_v () const
+{
+	return std::copysign (float (1.0 / (_n * _vt * fstb::LN2)), _is);
 }
 
 
@@ -177,7 +189,7 @@ float	PartDiodeAntipar::Direction::compute_mul_e () const
 float	PartDiodeAntipar::Direction::compute_vcrit () const
 {
 	const float    nvt = _n * _vt;
-	const float    l2i = nvt / (_is * float (fstb::SQRT2));
+	const float    l2i = nvt / (fabs (_is) * float (fstb::SQRT2));
 	const float    l2o = nvt * float (fstb::LN2);
 
 	return l2o * fstb::Approx::log2 (l2i);

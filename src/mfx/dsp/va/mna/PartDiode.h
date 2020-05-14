@@ -75,6 +75,7 @@ protected:
 
 private:
 
+	float          compute_nvt_inv () const;
 	float          compute_mul_e () const;
 	float          compute_vcrit () const;
 
@@ -92,6 +93,7 @@ private:
 	float          _is      = 0.1e-15f; // Inverse saturation current, ampere, > 0
 	float          _n       = 1;        // Quality factor, > 0
 
+	float          _nvt_inv = compute_nvt_inv (); // Precalculed stuff
 	float          _mul_e   = compute_mul_e (); // Precalculed stuff
 	float          _vcrit   = compute_vcrit (); // Not used at the moment
 

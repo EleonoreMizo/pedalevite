@@ -121,9 +121,9 @@ void	PartDiode::do_add_to_matrix ()
 	const float    v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
 	const float    ve  = v * _mul_e;
 	const float    e   =
-		(ve <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (v * _mul_e);
+		(ve <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (ve);
 	const float    s   = e - _is;
-	const float    sd  = _mul_e * e;
+	const float    sd  = _nvt_inv * e;
 
 	const float    geq = sd;
 	const float    ieq = s - sd * v;
@@ -148,6 +148,13 @@ void	PartDiode::do_clear_buffers ()
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+float	PartDiode::compute_nvt_inv () const
+{
+	return float (1.0 / (_n * _vt));
+}
 
 
 
