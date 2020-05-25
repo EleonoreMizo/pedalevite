@@ -28,6 +28,8 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/Approx.h"
 #include "mfx/dsp/va/mna/PartDiodeAntipar.h"
 
+#include <algorithm>
+
 #include <cassert>
 #include <cmath>
 
@@ -70,6 +72,7 @@ PartDiodeAntipar::PartDiodeAntipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1,
 		d._nvt_inv = d.compute_nvt_inv ();
 		d._mul_v   = d.compute_mul_v ();
 		d._vcrit   = d.compute_vcrit ();
+		d._vmax    = d.compute_vmax ();
 	}
 }
 
@@ -85,6 +88,7 @@ void	PartDiodeAntipar::set_is (int dir, Flt is)
 	Direction &    d = _dir_arr [dir];
 	d._is    = (dir != 0) ? -is : is;
 	d._vcrit = d.compute_vcrit ();
+	d._vmax  = d.compute_vmax ();
 }
 
 
@@ -100,6 +104,20 @@ void	PartDiodeAntipar::set_n (int dir, Flt n)
 	d._nvt_inv = d.compute_nvt_inv ();
 	d._mul_v   = d.compute_mul_v ();
 	d._vcrit   = d.compute_vcrit ();
+	d._vmax    = d.compute_vmax ();
+}
+
+
+
+void	PartDiodeAntipar::set_imax (int dir, Flt imax)
+{
+	assert (dir >= 0);
+	assert (dir < int (_dir_arr.size ()));
+	assert (imax > 0);
+
+	Direction &    d = _dir_arr [dir];
+	d._imax = imax;
+	d._vmax = d.compute_vmax ();
 }
 
 
@@ -139,10 +157,23 @@ void	PartDiodeAntipar::do_add_to_matrix (int it_cnt)
 	fstb::unused (it_cnt);
 
 	Flt            v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
+	v = fstb::limit (v, _dir_arr [1]._vmax, _dir_arr [0]._vmax);
 	const auto &   dir = _dir_arr [(v < 0) ? 1 : 0];
 	const Flt      is  = dir._is;
 	const Flt      mv  = dir._mul_v;
 	const Flt      nvi = dir._nvt_inv;
+
+	if (   it_cnt > 0
+	    && std::signbit (v) == std::signbit (_v_prev)
+	    && fabs (v) > fabs (_v_prev)
+	    && fabs (v) > dir._vcrit)
+	{
+		// (3.47) from http://qucs.sourceforge.net/tech/node16.html
+		const Flt      vdif =
+			  std::copysign (dir._n * dir._vt, is)
+			* Flt (log ((v - _v_prev) * nvi + 1));
+		v = _v_prev + vdif;
+	}
 
 #if 1
 	const Flt      e   = is * fstb::Approx::exp2 (float (v * mv));
@@ -156,6 +187,8 @@ void	PartDiodeAntipar::do_add_to_matrix (int it_cnt)
 	const Flt      ieq = s - sd * v;
 
 	_sim_ptr->add_norton (_node_arr [0], _node_arr [1], geq, ieq);
+
+	_v_prev = v;
 }
 
 
@@ -169,7 +202,7 @@ void	PartDiodeAntipar::do_step ()
 
 void	PartDiodeAntipar::do_clear_buffers ()
 {
-	// Nothing
+	_v_prev = 0;
 }
 
 
@@ -200,6 +233,13 @@ Flt	PartDiodeAntipar::Direction::compute_vcrit () const
 	const Flt      l2o = nvt * Flt (fstb::LN2);
 
 	return l2o * fstb::Approx::log2 (float (l2i));
+}
+
+
+
+Flt	PartDiodeAntipar::Direction::compute_vmax ()
+{
+	return std::copysign (_n * _vt * Flt (log (1 + _imax / _is)), _is);
 }
 
 

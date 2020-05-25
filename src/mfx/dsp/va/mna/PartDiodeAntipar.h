@@ -55,6 +55,7 @@ public:
 
 	void           set_is (int dir, Flt is);
 	void           set_n (int dir, Flt n);
+	void           set_imax (int dir, Flt imax);
 
 
 
@@ -81,15 +82,18 @@ private:
 		Flt            compute_nvt_inv () const;
 		Flt            compute_mul_v () const;
 		Flt            compute_vcrit () const;
+		Flt            compute_vmax ();
 
 		const Flt      _vt      = Flt (0.026);    // Thermal voltage, volt
 		Flt            _is      = Flt (0.1e-15);  // Inverse saturation current, ampere, > 0 for direct, < 0 for inverse
 		Flt            _n       = Flt (1);        // Quality factor, > 0
+		Flt            _imax    = Flt (100);      // A, > 0
 
 		// Precalculed stuff
 		Flt            _nvt_inv = compute_nvt_inv (); // Sign depends on the direction
 		Flt            _mul_v   = compute_mul_v ();   // Sign depends on the direction
 		Flt            _vcrit   = compute_vcrit ();   // > 0
+		Flt            _vmax    = compute_vmax ();
 	};
 
 	std::array <IdNode, 2>
@@ -104,6 +108,7 @@ private:
 
 	std::array <Direction, 2>
 	               _dir_arr;
+	Flt            _v_prev  = 0;
 
 
 

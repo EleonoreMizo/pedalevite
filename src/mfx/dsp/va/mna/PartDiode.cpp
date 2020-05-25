@@ -28,7 +28,10 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/Approx.h"
 #include "mfx/dsp/va/mna/PartDiode.h"
 
+#include <algorithm>
+
 #include <cassert>
+#include <cmath>
 
 
 
@@ -53,6 +56,7 @@ PartDiode::PartDiode (IdNode nid_1, IdNode nid_2, Flt is, Flt n)
 ,	_n (n)
 ,	_mul_e (compute_mul_e ())
 ,	_vcrit (compute_vcrit ())
+,	_vmax (compute_vmax ())
 {
 	assert (nid_1 >= 0);
 	assert (nid_2 >= 0);
@@ -82,6 +86,16 @@ void	PartDiode::set_n (Flt n)
 	_n     = n;
 	_mul_e = compute_mul_e ();
 	_vcrit = compute_vcrit ();
+}
+
+
+
+void	PartDiode::set_imax (Flt imax)
+{
+	assert (imax > 0);
+
+	_imax = imax;
+	_vmax = compute_vmax ();
 }
 
 
@@ -121,6 +135,7 @@ void	PartDiode::do_add_to_matrix (int it_cnt)
 	fstb::unused (it_cnt);
 
 	Flt            v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
+	v = std::min (v, _vmax);
 	const Flt      ve  = v * _mul_e;
 	const Flt      e   =
 		(ve <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (float (ve));
@@ -175,7 +190,13 @@ Flt	PartDiode::compute_vcrit () const
 	const Flt      l2o = nvt * Flt (fstb::LN2);
 
 	return l2o * fstb::Approx::log2 (float (l2i));
+}
 
+
+
+Flt	PartDiode::compute_vmax () const
+{
+	return _n * _vt * Flt (log (1 + _imax / _is));
 }
 
 

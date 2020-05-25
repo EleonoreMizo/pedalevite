@@ -64,6 +64,7 @@ public:
 	void           set_is (Flt is);
 	void           set_beta_f (Flt beta);
 	void           set_beta_r (Flt beta);
+	void           set_imax (Flt imax);
 
 
 
@@ -89,6 +90,8 @@ private:
 
 	void           compute_param ();
 
+	static Flt     compute_vmax (Flt imax, Flt is, Flt vt, Flt n);
+
 	const Flt      _vt      = Flt (0.026); // Thermal voltage, volt
 
 	IdNode         _nid_e   = _nid_invalid;
@@ -101,6 +104,7 @@ private:
 	Flt            _is      = Flt (1e-15);
 	Flt            _beta_f  = Flt (200.);
 	Flt            _beta_r  = Flt (1.);
+	Flt            _imax    = Flt (100.);  // A
 
 	SimulInterface *
 	               _sim_ptr = nullptr;
@@ -112,6 +116,8 @@ private:
 	Flt            _br_inv  = 0;
 	Flt            _ni_o_bf = 0;
 	Flt            _ni_o_br = 0;
+	Flt            _vbe_max = compute_vmax (_imax, _is, _vt, 1);
+	Flt            _vbc_max = _vbe_max;
 
 
 

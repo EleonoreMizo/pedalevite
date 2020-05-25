@@ -55,6 +55,7 @@ public:
 
 	void           set_is (Flt is);
 	void           set_n (Flt n);
+	void           set_imax (Flt imax);
 
 
 
@@ -78,6 +79,7 @@ private:
 	Flt            compute_nvt_inv () const;
 	Flt            compute_mul_e () const;
 	Flt            compute_vcrit () const;
+	Flt            compute_vmax () const;
 
 	std::array <IdNode, 2>
 	               _nid_arr  = {{ _nid_invalid, _nid_invalid }};
@@ -92,10 +94,12 @@ private:
 	const Flt      _vt      = Flt (0.026);   // Thermal voltage, volt
 	Flt            _is      = Flt (0.1e-15); // Inverse saturation current, ampere, > 0
 	Flt            _n       = Flt (1);       // Quality factor, > 0
+	Flt            _imax    = Flt (100);     // A, > 0
 
 	Flt            _nvt_inv = compute_nvt_inv (); // Precalculed stuff
 	Flt            _mul_e   = compute_mul_e (); // Precalculed stuff
 	Flt            _vcrit   = compute_vcrit (); // Not used at the moment
+	Flt            _vmax    = compute_vmax ();
 
 
 

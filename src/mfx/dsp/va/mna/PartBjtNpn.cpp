@@ -28,6 +28,8 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/def.h"
 #include "mfx/dsp/va/mna/PartBjtNpn.h"
 
+#include <algorithm>
+
 #include <cassert>
 
 
@@ -98,6 +100,16 @@ void	PartBjtNpn::set_beta_r (Flt beta)
 
 
 
+void	PartBjtNpn::set_imax (Flt imax)
+{
+	assert (imax > 0);
+
+	_imax = imax;
+	compute_param ();
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -129,10 +141,13 @@ void	PartBjtNpn::do_prepare (const SimInfo &info)
 void	PartBjtNpn::do_add_to_matrix (int it_cnt)
 {
 	fstb::unused (it_cnt);
+
 	// Retrieves the voltages
 	const Flt      ve   = _sim_ptr->get_voltage (_idx_e);
 	const Flt      vb   = _sim_ptr->get_voltage (_idx_b);
 	const Flt      vc   = _sim_ptr->get_voltage (_idx_c);
+	const Flt      vbe  = std::min (vb - ve, _vbe_max);
+	const Flt      vbc  = std::min (vb - vc, _vbc_max);
 
 	// Computes the exp parts of the currents
 #if 1
@@ -160,12 +175,24 @@ void	PartBjtNpn::do_add_to_matrix (int it_cnt)
 	Flt            gbei = _ni_o_bf * pbe;  // 10.85
 	Flt            gbci = _ni_o_br * pbc;  // 10.90
 
+	// Uses the "line through the origin" method to avoid too small or null
+	// derivative.
+	if (vbe < 0)
+	{
+		gbei = i_f / vbe;
+	}
+	if (vbc < 0)
+	{
+		gbci = i_r / vbc;
+	}
+
 	const Flt      gpi  = gbei;            // 10.88
 	const Flt      gmu  = gbci;            // 10.93
 	const Flt      gif  = gbei * _beta_f;  // 10.100
 	const Flt      gir  = gbci * _beta_r;  // 10.101
 	const Flt      gmf  = +gif;            // 10.98
 	const Flt      gmr  = -gir;            // 10.99
+
 	// Linear companinon circuits
 	const Flt      ibeeq = ibe - gpi * vbe;               // 10.107
 	const Flt      ibceq = ibc - gmu * vbc;               // 10.108
@@ -212,6 +239,20 @@ void	PartBjtNpn::compute_param ()
 	_br_inv  = 1.f / _beta_r;
 	_ni_o_bf = _nvt_inv * _bf_inv;
 	_ni_o_br = _nvt_inv * _br_inv;
+	_vbe_max = compute_vmax (_imax, _is, _vt, 1);
+	_vbc_max = _vbe_max;
+}
+
+
+
+Flt	PartBjtNpn::compute_vmax (Flt imax, Flt is, Flt vt, Flt n)
+{
+	assert (is > 0);
+	assert (imax > 0);
+	assert (vt > 0);
+	assert (n > 0);
+
+	return n * vt * Flt (log (1 + imax / is));
 }
 
 
