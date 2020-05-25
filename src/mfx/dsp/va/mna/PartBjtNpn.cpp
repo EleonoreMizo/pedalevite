@@ -129,44 +129,46 @@ void	PartBjtNpn::do_prepare (const SimInfo &info)
 void	PartBjtNpn::do_add_to_matrix ()
 {
 	// Retrieves the voltages
-	const float    ve   = _sim_ptr->get_voltage (_idx_e);
-	const float    vb   = _sim_ptr->get_voltage (_idx_b);
-	const float    vc   = _sim_ptr->get_voltage (_idx_c);
-	const float    vbe  = vb - ve;
-	const float    vbc  = vb - vc;
-	const float    vce  = vc - ve;
+	const Flt      ve   = _sim_ptr->get_voltage (_idx_e);
+	const Flt      vb   = _sim_ptr->get_voltage (_idx_b);
+	const Flt      vc   = _sim_ptr->get_voltage (_idx_c);
 
 	// Computes the exp parts of the currents
-	const float    vbem = vbe * _mul_v;
-	const float    vbcm = vbc * _mul_v;
-	const float    pbe  =
-		(vbem <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (vbem);
-	const float    pbc  =
-		(vbcm <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (vbcm);
+#if 1
+	const Flt      vbem = vbe * _mul_v;
+	const Flt      vbcm = vbc * _mul_v;
+	const Flt      pbe  =
+		(vbem <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (float (vbem));
+	const Flt      pbc  =
+		(vbcm <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (float (vbcm));
+#else
+	const Flt      pbe  = Flt (_is * exp (vbe / _vt));
+	const Flt      pbc  = Flt (_is * exp (vbc / _vt));
+#endif
 
 	// Currents
-	const float    i_f  = pbe - _is;       // 10.84
-	const float    i_r  = pbc - _is;       // 10.89
-	const float    i_t  = i_f - i_r;       // 10.95 w/ QB = 1.
-	const float    ibei = i_f * _bf_inv;   // 10.85
-	const float    ibci = i_r * _br_inv;   // 10.90
-	const float    ibe  = ibei;            // 10.87
-	const float    ibc  = ibci;            // 10.92
+	const Flt      i_f  = pbe - _is;       // 10.84
+	const Flt      i_r  = pbc - _is;       // 10.89
+	const Flt      i_t  = i_f - i_r;       // 10.95 w/ QB = 1.
+	const Flt      ibei = i_f * _bf_inv;   // 10.85
+	const Flt      ibci = i_r * _br_inv;   // 10.90
+	const Flt      ibe  = ibei;            // 10.87
+	const Flt      ibc  = ibci;            // 10.92
 
 	// Current derivatives
-	const float    gbei = _ni_o_bf * pbe;  // 10.85
-	const float    gbci = _ni_o_br * pbc;  // 10.90
-	const float    gpi  = gbei;            // 10.88
-	const float    gmu  = gbci;            // 10.93
-	const float    gif  = gbei * _beta_f;  // 10.100
-	const float    gir  = gbci * _beta_r;  // 10.101
-	const float    gmf  = +gif;            // 10.98
-	const float    gmr  = -gir;            // 10.99
+	Flt            gbei = _ni_o_bf * pbe;  // 10.85
+	Flt            gbci = _ni_o_br * pbc;  // 10.90
 
+	const Flt      gpi  = gbei;            // 10.88
+	const Flt      gmu  = gbci;            // 10.93
+	const Flt      gif  = gbei * _beta_f;  // 10.100
+	const Flt      gir  = gbci * _beta_r;  // 10.101
+	const Flt      gmf  = +gif;            // 10.98
+	const Flt      gmr  = -gir;            // 10.99
 	// Linear companinon circuits
-	const float    ibeeq = ibe - gpi * vbe;               // 10.107
-	const float    ibceq = ibc - gmu * vbc;               // 10.108
-	const float    iceeq = i_t - gmf * vbe + gmr * vbc;   // 10.109
+	const Flt      ibeeq = ibe - gpi * vbe;               // 10.107
+	const Flt      ibceq = ibc - gmu * vbc;               // 10.108
+	const Flt      iceeq = i_t - gmf * vbe + gmr * vbc;   // 10.109
 
 	_sim_ptr->add_coef_mat (_idx_b, _idx_b, +gpi +gmu          );
 	_sim_ptr->add_coef_mat (_idx_b, _idx_c,      -gmu          );
