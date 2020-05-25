@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "mfx/dsp/va/mna/PartSrcVoltage.h"
 #include "mfx/dsp/va/mna/Simulator.h"
 
 #include <algorithm>
@@ -141,6 +142,8 @@ void	Simulator::prepare (double sample_freq)
 	_msize   = _nbr_nodes + _nbr_src_v;
 	_idx_gnd = _msize;
 
+	_known_voltage_arr.assign (_nbr_nodes, false);
+
 	// Creates the matrices
 	_mat_a.resize (_msize, _msize);
 	_vec_z.resize (_msize);
@@ -153,12 +156,14 @@ void	Simulator::prepare (double sample_freq)
 	{
 		PartInterface::SimInfo &   sim_info  = sim_info_list [part_cnt];
 		sim_info._sample_freq = sample_freq;
+		bool           gnd_flag = false;
 
 		for (auto &idx : sim_info._node_idx_arr)
 		{
 			if (idx == idx_gnd_tmp)
 			{
-				idx = _idx_gnd;
+				idx      = _idx_gnd;
+				gnd_flag = true;
 			}
 		}
 
@@ -169,6 +174,19 @@ void	Simulator::prepare (double sample_freq)
 
 		PartInterface &   part = *_part_arr [part_cnt];
 		part.prepare (sim_info);
+
+		// Checks if there are nodes with known voltages, too
+		if (gnd_flag && dynamic_cast <PartSrcVoltage *> (&part) != 0)
+		{
+			for (const auto &idx : sim_info._node_idx_arr)
+			{
+				if (idx != _idx_gnd)
+				{
+					assert (! _known_voltage_arr [idx]);
+					_known_voltage_arr [idx] = true;
+				}
+			}
+		}
 	}
 
 	// Starts with a fresh state
@@ -213,6 +231,7 @@ void	Simulator::process_sample ()
 			cont_flag = false;
 			for (int v_cnt = 0; v_cnt < _nbr_nodes; ++v_cnt)
 			{
+				if (! _known_voltage_arr [v_cnt])
 				{
 					Flt            v_cur = _vec_x (v_cnt);
 					const Flt      v_old = _vec_x_old (v_cnt);

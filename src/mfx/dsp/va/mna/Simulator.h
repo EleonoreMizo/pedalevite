@@ -152,6 +152,8 @@ private:
 
 	Flt            _max_dif   = Flt (0.15);
 
+	std::vector <bool>             // Indicates which voltage are fixed (independant voltage sources referenced to GND)
+	               _known_voltage_arr;
 	TypeMatrix     _mat_a;
 	TypeVector     _vec_z;
 	TypeVector     _vec_x;
