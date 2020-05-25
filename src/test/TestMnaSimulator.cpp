@@ -26,6 +26,7 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/fnc.h"
 #include "test/TestMnaSimulator.h"
+#include "test/TimerAccurate.h"
 #include "mfx/dsp/osc/SweepingSin.h"
 #include "mfx/dsp/va/mna/PartBjt.h"
 #include "mfx/dsp/va/mna/PartBjtNpn.h"
@@ -54,8 +55,9 @@ int	TestMnaSimulator::perform_test ()
 
 	printf ("Testing mfx::dsp::va::mna::Simulator...\n");
 
-	const double   sample_freq = 44100;
-	const int      ssin_len = fstb::round_int (sample_freq * 10);
+	const int      ovrspl      = 1;
+	const double   sample_freq = 44100 * ovrspl;
+	const int      ssin_len    = fstb::round_int (sample_freq * 10);
 
 	std::vector <float>  src (ssin_len);
 
@@ -143,7 +145,7 @@ int	TestMnaSimulator::perform_test ()
 	mna.add_part (c1_sptr);
 	mna.add_part (buf_sptr);
 	float          gain = 1;
-#elif 1
+#elif 0
 	// RC low-pass filter + 2 diodes. Cutoff: 1.6 kHz
 	enum
 	{
@@ -239,7 +241,7 @@ int	TestMnaSimulator::perform_test ()
 
 	// EHX Big Muff Pi V7C Tall Font Green Russian
 	// http://www.bigmuffpage.com/Big_Muff_Pi_versions_schematics_part3.html
-	// Warning: 2 min 50 s of simulation in release mode
+	// 40 s of simulation in release mode
 	enum
 	{
 		no_vcc = 1,
@@ -526,6 +528,10 @@ int	TestMnaSimulator::perform_test ()
 	printf ("Simulating...\n");
 	fflush (stdout);
 
+	TimerAccurate  tim;
+	tim.reset ();
+	tim.start ();
+
 	for (int pos = 0; pos < len; ++pos)
 	{
 		float           x = src [pos] * gain;
@@ -544,15 +550,22 @@ int	TestMnaSimulator::perform_test ()
 			{
 				for (int c = 0; c < msize; ++c)
 				{
-					printf ("%10f ", mat [r * msize + c]);
+					printf ("%-10g ", mat [r * msize + c]);
 				}
-				printf ("| %10f\n", vec [r]);
+				printf ("| %-10g\n", vec [r]);
 			}
 		}
 #endif
 	}
 
+	tim.stop ();
+	const double      spl_per_s = tim.get_best_rate (len);
+
 	mfx::FileOpWav::save ("results/simulmna1.wav", dst, sample_freq, 0.5f);
+
+	const double   mega_sps  = spl_per_s / 1000000.0;
+	const double   rt_mul    = spl_per_s / sample_freq;
+	printf ("Speed: %12.3f Mspl/s (x%.3f real-time).\n\n", mega_sps, rt_mul);
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	print_stats (mna, "Standard");
