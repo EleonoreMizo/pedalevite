@@ -430,14 +430,14 @@ void	Simulator::do_add_coef_vec (int row, Flt val)
 
 
 
-void	Simulator::build_matrix ()
+void	Simulator::build_matrix (int it_cnt)
 {
 	_mat_a.fill (0);
 	_vec_z.fill (0);
 
 	for (auto &part_sptr : _part_arr)
 	{
-		part_sptr->add_to_matrix ();
+		part_sptr->add_to_matrix (it_cnt);
 	}
 }
 

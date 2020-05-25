@@ -116,8 +116,9 @@ void	PartDiode::do_prepare (const SimInfo &info)
 
 
 
-void	PartDiode::do_add_to_matrix ()
+void	PartDiode::do_add_to_matrix (int it_cnt)
 {
+	fstb::unused (it_cnt);
 
 	Flt            v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
 	const Flt      ve  = v * _mul_e;

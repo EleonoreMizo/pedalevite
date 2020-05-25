@@ -73,9 +73,11 @@ void	PartInterface::prepare (const SimInfo &info)
 
 
 
-void	PartInterface::add_to_matrix ()
+void	PartInterface::add_to_matrix (int it_cnt)
 {
-	do_add_to_matrix ();
+	assert (it_cnt >= 0);
+
+	do_add_to_matrix (it_cnt);
 }
 
 

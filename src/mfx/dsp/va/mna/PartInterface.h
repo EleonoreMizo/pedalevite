@@ -29,6 +29,7 @@ http://www.wtfpl.net/ for more details.
 #include <vector>
 
 
+
 namespace mfx
 {
 namespace dsp
@@ -89,7 +90,7 @@ public:
 
 	void           get_info (SimulInterface &sim, PartInfo &info);
 	void           prepare (const SimInfo &info);
-	void           add_to_matrix ();
+	void           add_to_matrix (int it_cnt);
 	void           step ();
 	void           clear_buffers ();
 
@@ -101,7 +102,7 @@ protected:
 
 	virtual void   do_get_info (SimulInterface &sim, PartInfo &info) = 0;
 	virtual void   do_prepare (const SimInfo &info) = 0;
-	virtual void   do_add_to_matrix () = 0;
+	virtual void   do_add_to_matrix (int it_cnt) = 0;
 	virtual void   do_step () = 0;
 	virtual void   do_clear_buffers () = 0;
 

@@ -132,10 +132,10 @@ protected:
 
 private:
 
-	void           build_matrix ();
 	typedef Eigen::Matrix <Flt, Eigen::Dynamic, Eigen::Dynamic> TypeMatrix;
 	typedef Eigen::Matrix <Flt, Eigen::Dynamic, 1> TypeVector;
 
+	void           build_matrix (int it_cnt);
 
 	std::vector <PartSPtr>
 	               _part_arr;

@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/dsp/va/mna/PartCccs.h"
 
 #include <cassert>
@@ -107,8 +108,10 @@ void	PartCccs::do_prepare (const SimInfo &info)
 
 
 
-void	PartCccs::do_add_to_matrix ()
+void	PartCccs::do_add_to_matrix (int it_cnt)
 {
+	fstb::unused (it_cnt);
+
 	const Flt      g_inv = Flt (1) / _g;
 	_sim_ptr->add_coef_mat (_node_i_arr [0], _src_v_pos, +g_inv);
 	_sim_ptr->add_coef_mat (_node_i_arr [1], _src_v_pos, -g_inv);

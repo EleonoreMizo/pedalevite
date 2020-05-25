@@ -65,7 +65,7 @@ protected:
 	// PartInterface
 	void           do_get_info (SimulInterface &sim, PartInfo &info) final;
 	void           do_prepare (const SimInfo &info) final;
-	void           do_add_to_matrix () final;
+	void           do_add_to_matrix (int it_cnt) final;
 	void           do_step () final;
 	void           do_clear_buffers () final;
 

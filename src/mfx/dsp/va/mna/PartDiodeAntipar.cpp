@@ -134,8 +134,10 @@ void	PartDiodeAntipar::do_prepare (const SimInfo &info)
 
 
 
-void	PartDiodeAntipar::do_add_to_matrix ()
+void	PartDiodeAntipar::do_add_to_matrix (int it_cnt)
 {
+	fstb::unused (it_cnt);
+
 	Flt            v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
 	const auto &   dir = _dir_arr [(v < 0) ? 1 : 0];
 	const Flt      is  = dir._is;

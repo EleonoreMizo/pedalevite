@@ -142,8 +142,10 @@ void	PartBjt::do_prepare (const SimInfo &info)
 
 
 
-void	PartBjt::do_add_to_matrix ()
+void	PartBjt::do_add_to_matrix (int it_cnt)
 {
+	fstb::unused (it_cnt);
+
 	// Nothing
 }
 

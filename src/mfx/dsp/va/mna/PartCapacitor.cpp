@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/dsp/va/mna/PartCapacitor.h"
 #include "mfx/dsp/va/mna/SimulInterface.h"
 
@@ -103,8 +104,10 @@ void	PartCapacitor::do_prepare (const SimInfo &info)
 
 
 
-void	PartCapacitor::do_add_to_matrix ()
+void	PartCapacitor::do_add_to_matrix (int it_cnt)
 {
+	fstb::unused (it_cnt);
+
 	_sim_ptr->add_norton (_node_arr [0], _node_arr [1], _geq, _ieq);
 }
 

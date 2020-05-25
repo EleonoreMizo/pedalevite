@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/dsp/va/mna/PartSrcVoltage.h"
 #include "mfx/dsp/va/mna/SimulInterface.h"
 
@@ -94,8 +95,10 @@ void	PartSrcVoltage::do_prepare (const SimInfo &info)
 
 
 
-void	PartSrcVoltage::do_add_to_matrix ()
+void	PartSrcVoltage::do_add_to_matrix (int it_cnt)
 {
+	fstb::unused (it_cnt);
+
 	_sim_ptr->add_coef_mat (_node_arr [0], _src_v_pos, +1);
 	_sim_ptr->add_coef_mat (_src_v_pos, _node_arr [0], +1);
 	_sim_ptr->add_coef_mat (_node_arr [1], _src_v_pos, -1);

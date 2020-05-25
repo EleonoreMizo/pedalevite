@@ -126,8 +126,9 @@ void	PartBjtNpn::do_prepare (const SimInfo &info)
 
 
 
-void	PartBjtNpn::do_add_to_matrix ()
+void	PartBjtNpn::do_add_to_matrix (int it_cnt)
 {
+	fstb::unused (it_cnt);
 	// Retrieves the voltages
 	const Flt      ve   = _sim_ptr->get_voltage (_idx_e);
 	const Flt      vb   = _sim_ptr->get_voltage (_idx_b);

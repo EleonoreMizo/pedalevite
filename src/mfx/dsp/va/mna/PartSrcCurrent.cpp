@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/dsp/va/mna/PartSrcCurrent.h"
 #include "mfx/dsp/va/mna/SimulInterface.h"
 
@@ -93,8 +94,10 @@ void	PartSrcCurrent::do_prepare (const SimInfo &info)
 
 
 
-void	PartSrcCurrent::do_add_to_matrix ()
+void	PartSrcCurrent::do_add_to_matrix (int it_cnt)
 {
+	fstb::unused (it_cnt);
+
 	_sim_ptr->add_coef_vec (_node_arr [0], -_i);
 	_sim_ptr->add_coef_vec (_node_arr [1], +_i);
 }
