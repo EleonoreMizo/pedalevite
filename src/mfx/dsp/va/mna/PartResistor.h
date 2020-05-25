@@ -49,10 +49,10 @@ class PartResistor
 
 public:
 
-	explicit       PartResistor (IdNode nid_1, IdNode nid_2, float r);
+	explicit       PartResistor (IdNode nid_1, IdNode nid_2, Flt r);
 	virtual        ~PartResistor () = default;
 
-	void           set_resistance (float r);
+	void           set_resistance (Flt r);
 
 
 
@@ -82,8 +82,8 @@ private:
 	               }};
 	SimulInterface *
 	               _sim_ptr = nullptr;
-	float          _r       = 1000;     // Resistance, ohm. > 0
-	float          _g       = 1.f / _r; // Conductance, siemens. > 0
+	Flt            _r       = 1000;           // Resistance, ohm. > 0
+	Flt            _g       = Flt (1. / _r);  // Conductance, siemens. > 0
 
 
 

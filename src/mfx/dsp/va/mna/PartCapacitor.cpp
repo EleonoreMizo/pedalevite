@@ -46,7 +46,7 @@ namespace mna
 
 
 
-PartCapacitor::PartCapacitor (IdNode nid_1, IdNode nid_2, float c)
+PartCapacitor::PartCapacitor (IdNode nid_1, IdNode nid_2, Flt c)
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_c (c)
 {
@@ -58,7 +58,7 @@ PartCapacitor::PartCapacitor (IdNode nid_1, IdNode nid_2, float c)
 
 
 
-void	PartCapacitor::set_capacity (float c)
+void	PartCapacitor::set_capacity (Flt c)
 {
 	assert (c > 0);
 
@@ -91,7 +91,7 @@ void	PartCapacitor::do_get_info (SimulInterface &sim, PartInfo &info)
 
 void	PartCapacitor::do_prepare (const SimInfo &info)
 {
-	_sample_freq = float (info._sample_freq);
+	_sample_freq = Flt (info._sample_freq);
 	assert (info._node_idx_arr.size () == _node_arr.size ());
 	for (int pos = 0; pos < int (_node_arr.size ()); ++pos)
 	{
@@ -112,7 +112,7 @@ void	PartCapacitor::do_add_to_matrix ()
 
 void	PartCapacitor::do_step ()
 {
-	const float    v = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
+	const Flt      v = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
 	_ieq = -2 * _geq * v - _ieq;
 }
 

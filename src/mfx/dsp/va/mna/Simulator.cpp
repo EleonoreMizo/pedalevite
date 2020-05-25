@@ -66,7 +66,7 @@ void	Simulator::prepare (double sample_freq)
 {
 	assert (sample_freq > 0);
 
-	_sample_freq = float (sample_freq);
+	_sample_freq = Flt (sample_freq);
 
 	_nid_to_idx_map.clear ();
 	_nbr_nodes = 0;
@@ -187,9 +187,9 @@ void	Simulator::process_sample ()
 
 	if (! _nl_flag)
 	{
-		build_matrix ();
-		_qr.compute (_mat_a);
-		_vec_x = _qr.solve (_vec_z);
+		build_matrix (0);
+		_decomp.compute (_mat_a);
+		_vec_x = _decomp.solve (_vec_z);
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 		_st_nbr_it = 1;
 #endif
@@ -197,30 +197,33 @@ void	Simulator::process_sample ()
 	else
 	{
 		// Iterates to solve non-linear stuff
-		const float    tol_abs   = 1e-6f;
-		const float    tol_rel   = 1e-3f;
+		const Flt      tol_abs   = Flt (1e-6);
+		const Flt      tol_rel   = Flt (1e-3);
 		bool           cont_flag = false;
 		int            nbr_it    = 0;
 		do
 		{
 			_vec_x_old = _vec_x;
 
-			build_matrix ();
-			_qr.compute (_mat_a);
-			_vec_x = _qr.solve (_vec_z);
+			build_matrix (nbr_it);
+			_decomp.compute (_mat_a);
+			_vec_x = _decomp.solve (_vec_z);
 
 			// Limitation and convergence calculation
 			cont_flag = false;
 			for (int v_cnt = 0; v_cnt < _nbr_nodes; ++v_cnt)
 			{
-				float          v_cur = _vec_x (v_cnt);
-				const float    v_old = _vec_x_old (v_cnt);
-				v_cur = fstb::limit (v_cur, v_old - _max_dif, v_old + _max_dif);
-				_vec_x (v_cnt) = v_cur;
+				{
+					Flt            v_cur = _vec_x (v_cnt);
+					const Flt      v_old = _vec_x_old (v_cnt);
+					assert (std::isfinite (v_cur) && fabs (v_cur) < 1e6f);
+					v_cur = fstb::limit (v_cur, v_old - _max_dif, v_old + _max_dif);
+					_vec_x (v_cnt) = v_cur;
 
-				const float    dif  = v_cur - v_old;
-				const float    difa = fabs (dif);
-				cont_flag |= (difa >= tol_abs + tol_rel * fabs (v_cur));
+					const Flt      dif  = v_cur - v_old;
+					const Flt      difa = fabs (dif);
+					cont_flag |= (difa >= tol_abs && difa >= tol_rel * fabs (v_cur));
+				}
 			}
 
 			++ nbr_it;
@@ -247,11 +250,11 @@ void	Simulator::process_sample ()
 
 
 
-float	Simulator::get_node_voltage (IdNode nid) const
+Flt	Simulator::get_node_voltage (IdNode nid) const
 {
 	assert (nid >= 0);
 
-	float          v = 0;
+	Flt            v = 0;
 
 	if (nid != _nid_gnd)
 	{
@@ -299,9 +302,9 @@ int	Simulator::get_nbr_src_v () const
 
 
 
-std::vector <float>	Simulator::get_matrix () const
+std::vector <Flt>	Simulator::get_matrix () const
 {
-	std::vector <float> mat;
+	std::vector <Flt> mat;
 
 	for (int y = 0; y < _msize; ++y)
 	{
@@ -316,9 +319,9 @@ std::vector <float>	Simulator::get_matrix () const
 
 
 
-std::vector <float>	Simulator::get_vector () const
+std::vector <Flt>	Simulator::get_vector () const
 {
-	std::vector <float> vec;
+	std::vector <Flt> vec;
 
 	for (int x = 0; x < _msize; ++x)
 	{
@@ -372,11 +375,11 @@ bool	Simulator::do_is_node_gnd (int node_idx) const
 
 
 
-float	Simulator::do_get_voltage (int node_idx) const
+Flt	Simulator::do_get_voltage (int node_idx) const
 {
 	assert (node_idx < _nbr_nodes || is_node_gnd (node_idx));
 
-	float          v = 0;
+	Flt            v = 0;
 	if (! is_node_gnd (node_idx))
 	{
 		v = _vec_x (node_idx);
@@ -387,18 +390,18 @@ float	Simulator::do_get_voltage (int node_idx) const
 
 
 
-float	Simulator::do_get_voltage (int n1_idx, int n2_idx) const
+Flt	Simulator::do_get_voltage (int n1_idx, int n2_idx) const
 {
-	const float    v1 = get_voltage (n1_idx);
-	const float    v2 = get_voltage (n2_idx);
-	const float    v  = v1 - v2;
+	const Flt      v1 = get_voltage (n1_idx);
+	const Flt      v2 = get_voltage (n2_idx);
+	const Flt      v  = v1 - v2;
 
 	return v;
 }
 
 
 
-void	Simulator::do_add_coef_mat (int row, int col, float val)
+void	Simulator::do_add_coef_mat (int row, int col, Flt val)
 {
 	assert (row < _msize || row == _idx_gnd);
 	assert (col < _msize || col == _idx_gnd);
@@ -411,7 +414,7 @@ void	Simulator::do_add_coef_mat (int row, int col, float val)
 
 
 
-void	Simulator::do_add_coef_vec (int row, float val)
+void	Simulator::do_add_coef_vec (int row, Flt val)
 {
 	assert (row < _msize || row == _idx_gnd);
 

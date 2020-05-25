@@ -23,6 +23,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/dsp/va/mna/Flt.h"
 #include "mfx/dsp/va/mna/PartInterface.h"
 
 
@@ -60,14 +61,14 @@ public:
 	PartInterface::IdNode
 	               allocate_node ();
 	bool           is_node_gnd (int node_idx) const;
-	float          get_voltage (int node_idx) const;
-	float          get_voltage (int n1_idx, int n2_idx) const;
-	void           add_coef_mat (int row, int col, float val);
-	void           add_coef_vec (int row, float val);
+	Flt            get_voltage (int node_idx) const;
+	Flt            get_voltage (int n1_idx, int n2_idx) const;
+	void           add_coef_mat (int row, int col, Flt val);
+	void           add_coef_vec (int row, Flt val);
 
 	// Convenience functions
-	void           add_passive (int n1_idx, int n2_idx, float g);
-	void           add_norton (int n1_idx, int n2_idx, float geq, float ieq);
+	void           add_passive (int n1_idx, int n2_idx, Flt g);
+	void           add_norton (int n1_idx, int n2_idx, Flt geq, Flt ieq);
 
 
 
@@ -78,10 +79,10 @@ protected:
 	virtual PartInterface::IdNode
 	               do_allocate_node () = 0;
 	virtual bool   do_is_node_gnd (int node_idx) const = 0;
-	virtual float  do_get_voltage (int node_idx) const = 0;
-	virtual float  do_get_voltage (int n1_idx, int n2_idx) const = 0;
-	virtual void   do_add_coef_mat (int row, int col, float val) = 0;
-	virtual void   do_add_coef_vec (int row, float val) = 0;
+	virtual Flt    do_get_voltage (int node_idx) const = 0;
+	virtual Flt    do_get_voltage (int n1_idx, int n2_idx) const = 0;
+	virtual void   do_add_coef_mat (int row, int col, Flt val) = 0;
+	virtual void   do_add_coef_vec (int row, Flt val) = 0;
 
 
 

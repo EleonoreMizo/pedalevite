@@ -48,7 +48,7 @@ namespace mna
 
 
 
-PartDiodeAntipar::PartDiodeAntipar (IdNode nid_1, IdNode nid_2, float is1, float n1, float is2, float n2)
+PartDiodeAntipar::PartDiodeAntipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1, Flt is2, Flt n2)
 :	_nid_arr {{ nid_1, nid_2 }}
 {
 	assert (nid_1 >= 0);
@@ -75,7 +75,7 @@ PartDiodeAntipar::PartDiodeAntipar (IdNode nid_1, IdNode nid_2, float is1, float
 
 
 
-void	PartDiodeAntipar::set_is (int dir, float is)
+void	PartDiodeAntipar::set_is (int dir, Flt is)
 {
 	assert (dir >= 0);
 	assert (dir < int (_dir_arr.size ()));
@@ -89,7 +89,7 @@ void	PartDiodeAntipar::set_is (int dir, float is)
 
 
 
-void	PartDiodeAntipar::set_n (int dir, float n)
+void	PartDiodeAntipar::set_n (int dir, Flt n)
 {
 	assert (dir >= 0);
 	assert (dir < int (_dir_arr.size ()));
@@ -136,18 +136,22 @@ void	PartDiodeAntipar::do_prepare (const SimInfo &info)
 
 void	PartDiodeAntipar::do_add_to_matrix ()
 {
-	const float    v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
+	Flt            v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
 	const auto &   dir = _dir_arr [(v < 0) ? 1 : 0];
-	const float    is  = dir._is;
-	const float    mv  = dir._mul_v;
-	const float    nvi = dir._nvt_inv;
+	const Flt      is  = dir._is;
+	const Flt      mv  = dir._mul_v;
+	const Flt      nvi = dir._nvt_inv;
 
-	const float    e   = is * fstb::Approx::exp2 (v * mv);
-	const float    s   = e - is;
-	const float    sd  = nvi * e;
+#if 1
+	const Flt      e   = is * fstb::Approx::exp2 (float (v * mv));
+#else
+	const Flt      e   = is * Flt (exp (v / std::copysign (dir._n * dir._vt, is)));
+#endif
+	const Flt      s   = e - is;
+	Flt            sd  = nvi * e;
 
-	const float    geq = sd;
-	const float    ieq = s - sd * v;
+	const Flt      geq = sd;
+	const Flt      ieq = s - sd * v;
 
 	_sim_ptr->add_norton (_node_arr [0], _node_arr [1], geq, ieq);
 }
@@ -172,27 +176,28 @@ void	PartDiodeAntipar::do_clear_buffers ()
 
 
 
-float	PartDiodeAntipar::Direction::compute_nvt_inv () const
+Flt	PartDiodeAntipar::Direction::compute_nvt_inv () const
 {
-	return std::copysign (float (1.0 / (_n * _vt)), _is);
+	return std::copysign (Flt (1. / (_n * _vt)), _is);
 }
 
 
 
-float	PartDiodeAntipar::Direction::compute_mul_v () const
+Flt	PartDiodeAntipar::Direction::compute_mul_v () const
 {
-	return std::copysign (float (1.0 / (_n * _vt * fstb::LN2)), _is);
+	return std::copysign (Flt (1. / (_n * _vt * fstb::LN2)), _is);
 }
 
 
 
-float	PartDiodeAntipar::Direction::compute_vcrit () const
+// (3.55) from http://qucs.sourceforge.net/tech/node16.html
+Flt	PartDiodeAntipar::Direction::compute_vcrit () const
 {
-	const float    nvt = _n * _vt;
-	const float    l2i = nvt / (fabs (_is) * float (fstb::SQRT2));
-	const float    l2o = nvt * float (fstb::LN2);
+	const Flt      nvt = _n * _vt;
+	const Flt      l2i = nvt / (fabs (_is) * Flt (fstb::SQRT2));
+	const Flt      l2o = nvt * Flt (fstb::LN2);
 
-	return l2o * fstb::Approx::log2 (l2i);
+	return l2o * fstb::Approx::log2 (float (l2i));
 }
 
 

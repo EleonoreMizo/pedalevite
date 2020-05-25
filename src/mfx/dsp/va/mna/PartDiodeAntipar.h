@@ -50,11 +50,11 @@ class PartDiodeAntipar
 
 public:
 
-	explicit       PartDiodeAntipar (IdNode nid_1, IdNode nid_2, float is1, float n1, float is2, float n2);
+	explicit       PartDiodeAntipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1, Flt is2, Flt n2);
 	virtual        ~PartDiodeAntipar () = default;
 
-	void           set_is (int dir, float is);
-	void           set_n (int dir, float n);
+	void           set_is (int dir, Flt is);
+	void           set_n (int dir, Flt n);
 
 
 
@@ -78,18 +78,18 @@ private:
 	class Direction
 	{
 	public:
-		float          compute_nvt_inv () const;
-		float          compute_mul_v () const;
-		float          compute_vcrit () const;
+		Flt            compute_nvt_inv () const;
+		Flt            compute_mul_v () const;
+		Flt            compute_vcrit () const;
 
-		const float    _vt      = 0.026f;   // Thermal voltage, volt
-		float          _is      = 0.1e-15f; // Inverse saturation current, ampere, > 0 for direct, < 0 for inverse
-		float          _n       = 1;        // Quality factor, > 0
+		const Flt      _vt      = Flt (0.026);    // Thermal voltage, volt
+		Flt            _is      = Flt (0.1e-15);  // Inverse saturation current, ampere, > 0 for direct, < 0 for inverse
+		Flt            _n       = Flt (1);        // Quality factor, > 0
 
 		// Precalculed stuff
-		float          _nvt_inv = compute_nvt_inv (); // Sign depends on the direction
-		float          _mul_v   = compute_mul_v ();   // Sign depends on the direction
-		float          _vcrit   = compute_vcrit ();   // Not used at the moment
+		Flt            _nvt_inv = compute_nvt_inv (); // Sign depends on the direction
+		Flt            _mul_v   = compute_mul_v ();   // Sign depends on the direction
+		Flt            _vcrit   = compute_vcrit ();   // > 0
 	};
 
 	std::array <IdNode, 2>
@@ -112,10 +112,12 @@ private:
 private:
 
 	               PartDiodeAntipar ()                               = delete;
-	               PartDiodeAntipar (const PartDiodeAntipar &other)         = delete;
-	               PartDiodeAntipar (PartDiodeAntipar &&other)              = delete;
-	PartDiodeAntipar &    operator = (const PartDiodeAntipar &other)        = delete;
-	PartDiodeAntipar &    operator = (PartDiodeAntipar &&other)             = delete;
+	               PartDiodeAntipar (const PartDiodeAntipar &other)  = delete;
+	               PartDiodeAntipar (PartDiodeAntipar &&other)       = delete;
+	PartDiodeAntipar &
+	               operator = (const PartDiodeAntipar &other)        = delete;
+	PartDiodeAntipar &
+	               operator = (PartDiodeAntipar &&other)             = delete;
 	bool           operator == (const PartDiodeAntipar &other) const = delete;
 	bool           operator != (const PartDiodeAntipar &other) const = delete;
 

@@ -49,10 +49,10 @@ class PartSrcCurrent
 
 public:
 
-	explicit       PartSrcCurrent (IdNode nid_1, IdNode nid_2, float i);
+	explicit       PartSrcCurrent (IdNode nid_1, IdNode nid_2, Flt i);
 	virtual        ~PartSrcCurrent () = default;
 
-	void           set_current (float i);
+	void           set_current (Flt i);
 
 
 
@@ -82,7 +82,7 @@ private:
 	               }};
 	SimulInterface *
 	               _sim_ptr = nullptr;
-	float          _i       = 0;        // Amperes
+	Flt            _i       = 0;        // Amperes
 
 
 

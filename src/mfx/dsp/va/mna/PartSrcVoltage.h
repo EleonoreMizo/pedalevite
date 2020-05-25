@@ -49,10 +49,10 @@ class PartSrcVoltage
 
 public:
 
-	explicit       PartSrcVoltage (IdNode nid_1, IdNode nid_2, float v);
+	explicit       PartSrcVoltage (IdNode nid_1, IdNode nid_2, Flt v);
 	virtual        ~PartSrcVoltage () = default;
 
-	void           set_voltage (float v);
+	void           set_voltage (Flt v);
 
 
 
@@ -82,7 +82,7 @@ private:
 	               }};
 	SimulInterface *
 	               _sim_ptr   = nullptr;
-	float          _v         = 0;      // Volts
+	Flt            _v         = 0;      // Volts
 	int            _src_v_pos = SimulInterface::_node_invalid;
 
 

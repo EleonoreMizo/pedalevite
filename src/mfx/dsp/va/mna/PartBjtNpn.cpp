@@ -47,7 +47,7 @@ namespace mna
 
 
 
-PartBjtNpn::PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, float is, float beta_f, float beta_r)
+PartBjtNpn::PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, Flt is, Flt beta_f, Flt beta_r)
 :	_nid_e (nid_e)
 ,	_nid_b (nid_b)
 ,	_nid_c (nid_c)
@@ -68,7 +68,7 @@ PartBjtNpn::PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, float is, floa
 
 
 
-void	PartBjtNpn::set_is (float is)
+void	PartBjtNpn::set_is (Flt is)
 {
 	assert (is >= 1e-20f);
 	assert (is <= 1e-1f);
@@ -78,7 +78,7 @@ void	PartBjtNpn::set_is (float is)
 
 
 
-void	PartBjtNpn::set_beta_f (float beta)
+void	PartBjtNpn::set_beta_f (Flt beta)
 {
 	assert (beta > 0);
 
@@ -88,7 +88,7 @@ void	PartBjtNpn::set_beta_f (float beta)
 
 
 
-void	PartBjtNpn::set_beta_r (float beta)
+void	PartBjtNpn::set_beta_r (Flt beta)
 {
 	assert (beta >= 0);
 

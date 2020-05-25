@@ -652,6 +652,7 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsTruncMod.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
+        ../../src/mfx/dsp/va/mna/Flt.h \
         ../../src/mfx/dsp/va/mna/PartBjt.cpp \
         ../../src/mfx/dsp/va/mna/PartBjt.h \
         ../../src/mfx/dsp/va/mna/PartBjtNpn.cpp \

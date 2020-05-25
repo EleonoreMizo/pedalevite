@@ -49,10 +49,10 @@ class PartVccs
 
 public:
 
-	explicit       PartVccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, float g);
+	explicit       PartVccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g);
 	virtual        ~PartVccs () = default;
 
-	void           set_transconductance (float g);
+	void           set_transconductance (Flt g);
 
 
 
@@ -89,7 +89,7 @@ private:
 	               }};
 	SimulInterface *
 	               _sim_ptr = nullptr;
-	float          _g       = 1;
+	Flt            _g       = 1;
 
 
 

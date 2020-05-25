@@ -52,12 +52,12 @@ class PartBjt
 
 public:
 
-	explicit       PartBjt (IdNode nid_e, IdNode nid_b, IdNode nid_c, bool pnp_flag, float is, float beta_f, float beta_r);
+	explicit       PartBjt (IdNode nid_e, IdNode nid_b, IdNode nid_c, bool pnp_flag, Flt is, Flt beta_f, Flt beta_r);
 	virtual        ~PartBjt () = default;
 
-	void           set_is (float is);
-	void           set_beta_f (float beta);
-	void           set_beta_r (float beta);
+	void           set_is (Flt is);
+	void           set_beta_f (Flt beta);
+	void           set_beta_r (Flt beta);
 
 
 
@@ -81,8 +81,8 @@ private:
 	typedef std::shared_ptr <PartDiode> DiodeSPtr;
 	typedef std::shared_ptr <PartCccs> CccsSPtr;
 
-	static float   compute_alpha (float beta) { return beta / (1.f + beta); }
-	static float   compute_isx (float is, float alpha) { return is / alpha; }
+	static Flt     compute_alpha (Flt beta) { return beta / (1.f + beta); }
+	static Flt     compute_isx (Flt is, Flt alpha) { return is / alpha; }
 
 	IdNode         _nid_e    = _nid_invalid;
 	IdNode         _nid_b    = _nid_invalid;
@@ -91,9 +91,9 @@ private:
 	IdNode         _nid_ci   = _nid_invalid; // current flowing through the diodes
 
 	bool           _pnp_flag = false;
-	float          _is       = 1e-15f;
-	float          _beta_f   = 200.f;
-	float          _beta_r   = 1.f;
+	Flt            _is       = Flt (1e-15);
+	Flt            _beta_f   = Flt (200.);
+	Flt            _beta_r   = Flt (1.);
 
 	SimulInterface *
 	               _sim_ptr  = nullptr;
@@ -109,10 +109,10 @@ private:
 	PartInfo       _info_cs_c;
 
 	// Precomputed values
-	float          _alpha_f  = compute_alpha (_beta_f);
-	float          _alpha_r  = compute_alpha (_beta_r);
-	float          _ise      = compute_isx (_is, _alpha_f);
-	float          _isc      = compute_isx (_is, _alpha_r);
+	Flt            _alpha_f  = compute_alpha (_beta_f);
+	Flt            _alpha_r  = compute_alpha (_beta_r);
+	Flt            _ise      = compute_isx (_is, _alpha_f);
+	Flt            _isc      = compute_isx (_is, _alpha_r);
 
 
 

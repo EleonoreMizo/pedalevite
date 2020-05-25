@@ -45,7 +45,7 @@ namespace mna
 
 
 
-PartVccs::PartVccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, float g)
+PartVccs::PartVccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g)
 :	_nid_i_arr {{ nid_i_1, nid_i_2 }}
 ,	_nid_o_arr {{ nid_o_1, nid_o_2 }}
 ,	_g (g)
@@ -62,7 +62,7 @@ PartVccs::PartVccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o
 
 
 
-void	PartVccs::set_transconductance (float g)
+void	PartVccs::set_transconductance (Flt g)
 {
 	_g = g;
 }

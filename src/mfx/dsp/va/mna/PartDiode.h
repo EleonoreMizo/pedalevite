@@ -50,11 +50,11 @@ class PartDiode
 
 public:
 
-	explicit       PartDiode (IdNode nid_1, IdNode nid_2, float is, float n);
+	explicit       PartDiode (IdNode nid_1, IdNode nid_2, Flt is, Flt n);
 	virtual        ~PartDiode () = default;
 
-	void           set_is (float is);
-	void           set_n (float n);
+	void           set_is (Flt is);
+	void           set_n (Flt n);
 
 
 
@@ -75,9 +75,9 @@ protected:
 
 private:
 
-	float          compute_nvt_inv () const;
-	float          compute_mul_e () const;
-	float          compute_vcrit () const;
+	Flt            compute_nvt_inv () const;
+	Flt            compute_mul_e () const;
+	Flt            compute_vcrit () const;
 
 	std::array <IdNode, 2>
 	               _nid_arr  = {{ _nid_invalid, _nid_invalid }};
@@ -89,13 +89,13 @@ private:
 	SimulInterface *
 	               _sim_ptr = nullptr;
 
-	const float    _vt      = 0.026f;   // Thermal voltage, volt
-	float          _is      = 0.1e-15f; // Inverse saturation current, ampere, > 0
-	float          _n       = 1;        // Quality factor, > 0
+	const Flt      _vt      = Flt (0.026);   // Thermal voltage, volt
+	Flt            _is      = Flt (0.1e-15); // Inverse saturation current, ampere, > 0
+	Flt            _n       = Flt (1);       // Quality factor, > 0
 
-	float          _nvt_inv = compute_nvt_inv (); // Precalculed stuff
-	float          _mul_e   = compute_mul_e (); // Precalculed stuff
-	float          _vcrit   = compute_vcrit (); // Not used at the moment
+	Flt            _nvt_inv = compute_nvt_inv (); // Precalculed stuff
+	Flt            _mul_e   = compute_mul_e (); // Precalculed stuff
+	Flt            _vcrit   = compute_vcrit (); // Not used at the moment
 
 
 

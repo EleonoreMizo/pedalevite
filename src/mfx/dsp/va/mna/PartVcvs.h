@@ -49,10 +49,10 @@ class PartVcvs
 
 public:
 
-	explicit       PartVcvs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, float g);
+	explicit       PartVcvs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g);
 	virtual        ~PartVcvs () = default;
 
-	void           set_gain (float g);
+	void           set_gain (Flt g);
 
 
 
@@ -90,7 +90,7 @@ private:
 	int            _src_v_pos = SimulInterface::_node_invalid;
 	SimulInterface *
 	               _sim_ptr = nullptr;
-	float          _g       = 1;
+	Flt            _g       = 1;
 
 
 

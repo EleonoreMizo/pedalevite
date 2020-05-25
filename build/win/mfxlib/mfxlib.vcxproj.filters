@@ -4635,6 +4635,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartBjtNpn.h">
       <Filter>mfx\dsp\va\mna</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\Flt.h">
+      <Filter>mfx\dsp\va\mna</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

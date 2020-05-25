@@ -45,7 +45,7 @@ namespace mna
 
 
 
-PartCccs::PartCccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, float g)
+PartCccs::PartCccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o_2, Flt g)
 :	_nid_i_arr {{ nid_i_1, nid_i_2 }}
 ,	_nid_o_arr {{ nid_o_1, nid_o_2 }}
 ,	_g (g)
@@ -62,7 +62,7 @@ PartCccs::PartCccs (IdNode nid_i_1, IdNode nid_i_2, IdNode nid_o_1, IdNode nid_o
 
 
 
-void	PartCccs::set_gain (float g)
+void	PartCccs::set_gain (Flt g)
 {
 	assert (g != 0);
 
@@ -109,7 +109,7 @@ void	PartCccs::do_prepare (const SimInfo &info)
 
 void	PartCccs::do_add_to_matrix ()
 {
-	const float    g_inv = 1.f / _g;
+	const Flt      g_inv = Flt (1) / _g;
 	_sim_ptr->add_coef_mat (_node_i_arr [0], _src_v_pos, +g_inv);
 	_sim_ptr->add_coef_mat (_node_i_arr [1], _src_v_pos, -g_inv);
 	_sim_ptr->add_coef_mat (_node_o_arr [0], _src_v_pos, +1);

@@ -58,12 +58,12 @@ class PartBjtNpn
 
 public:
 
-	explicit       PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, float is, float beta_f, float beta_r);
+	explicit       PartBjtNpn (IdNode nid_e, IdNode nid_b, IdNode nid_c, Flt is, Flt beta_f, Flt beta_r);
 	virtual        ~PartBjtNpn () = default;
 
-	void           set_is (float is);
-	void           set_beta_f (float beta);
-	void           set_beta_r (float beta);
+	void           set_is (Flt is);
+	void           set_beta_f (Flt beta);
+	void           set_beta_r (Flt beta);
 
 
 
@@ -89,7 +89,7 @@ private:
 
 	void           compute_param ();
 
-	const float    _vt      = 0.026f;   // Thermal voltage, volt
+	const Flt      _vt      = Flt (0.026); // Thermal voltage, volt
 
 	IdNode         _nid_e   = _nid_invalid;
 	IdNode         _nid_b   = _nid_invalid;
@@ -98,20 +98,20 @@ private:
 	int            _idx_b   = SimulInterface::_node_invalid;
 	int            _idx_c   = SimulInterface::_node_invalid;
 
-	float          _is      = 1e-15f;
-	float          _beta_f  = 200.f;
-	float          _beta_r  = 1.f;
+	Flt            _is      = Flt (1e-15);
+	Flt            _beta_f  = Flt (200.);
+	Flt            _beta_r  = Flt (1.);
 
 	SimulInterface *
 	               _sim_ptr = nullptr;
 
 	// Precomputed values
-	const float    _nvt_inv = 1.f / _vt;
-	const float    _mul_v   = float (1.f / (_vt * fstb::LN2));
-	float          _bf_inv  = 0;
-	float          _br_inv  = 0;
-	float          _ni_o_bf = 0;
-	float          _ni_o_br = 0;
+	const Flt      _nvt_inv = 1.f / _vt;
+	const Flt      _mul_v   = Flt (1.f / (_vt * fstb::LN2));
+	Flt            _bf_inv  = 0;
+	Flt            _br_inv  = 0;
+	Flt            _ni_o_bf = 0;
+	Flt            _ni_o_br = 0;
 
 
 

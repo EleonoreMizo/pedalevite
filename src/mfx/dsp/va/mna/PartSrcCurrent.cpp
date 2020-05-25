@@ -46,7 +46,7 @@ namespace mna
 
 
 
-PartSrcCurrent::PartSrcCurrent (IdNode nid_1, IdNode nid_2, float i)
+PartSrcCurrent::PartSrcCurrent (IdNode nid_1, IdNode nid_2, Flt i)
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_i (i)
 {
@@ -57,7 +57,7 @@ PartSrcCurrent::PartSrcCurrent (IdNode nid_1, IdNode nid_2, float i)
 
 
 
-void	PartSrcCurrent::set_current (float i)
+void	PartSrcCurrent::set_current (Flt i)
 {
 	_i = i;
 }

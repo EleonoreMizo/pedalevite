@@ -531,7 +531,7 @@ int	TestMnaSimulator::perform_test ()
 		float           x = src [pos] * gain;
 		src_v_sptr->set_voltage (x);
 		mna.process_sample ();
-		x = mna.get_node_voltage (no_dst);
+		x = float (mna.get_node_voltage (no_dst));
 		dst [pos] = x;
 
 #if 0 // Displays the matrix in the middle of the run

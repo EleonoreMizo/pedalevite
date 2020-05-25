@@ -49,10 +49,10 @@ class PartCapacitor
 
 public:
 
-	explicit       PartCapacitor (IdNode nid_1, IdNode nid_2, float c);
+	explicit       PartCapacitor (IdNode nid_1, IdNode nid_2, Flt c);
 	virtual        ~PartCapacitor () = default;
 
-	void           set_capacity (float c);
+	void           set_capacity (Flt c);
 
 
 
@@ -84,12 +84,12 @@ private:
 	               }};
 	SimulInterface *
 	               _sim_ptr = nullptr;
-	float          _c       = 1e-9f;    // farad, > 0
-	float          _sample_freq = 0;    // Hz, > 0. 0 = not set.
+	Flt            _c       = Flt (1e-9);  // farad, > 0
+	Flt            _sample_freq = 0;       // Hz, > 0. 0 = not set.
 
 	// State
-	float          _geq     = 0;
-	float          _ieq     = 0;
+	Flt            _geq     = 0;
+	Flt            _ieq     = 0;
 
 
 

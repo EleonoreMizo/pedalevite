@@ -46,7 +46,7 @@ namespace mna
 
 
 
-PartResistor::PartResistor (IdNode nid_1, IdNode nid_2, float r)
+PartResistor::PartResistor (IdNode nid_1, IdNode nid_2, Flt r)
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_r (r)
 ,	_g (1.f / r)
@@ -59,12 +59,12 @@ PartResistor::PartResistor (IdNode nid_1, IdNode nid_2, float r)
 
 
 
-void	PartResistor::set_resistance (float r)
+void	PartResistor::set_resistance (Flt r)
 {
 	assert (r > 0);
 
 	_r = r;
-	_g = 1.f / r;
+	_g = Flt (1. / r);
 }
 
 

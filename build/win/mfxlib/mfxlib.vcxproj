@@ -1070,6 +1070,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvPoly.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\Flt.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartBjt.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartBjtNpn.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\PartCapacitor.h" />

@@ -46,7 +46,7 @@ namespace mna
 
 
 
-PartSrcVoltage::PartSrcVoltage (IdNode nid_1, IdNode nid_2, float v)
+PartSrcVoltage::PartSrcVoltage (IdNode nid_1, IdNode nid_2, Flt v)
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_v (v)
 {
@@ -57,7 +57,7 @@ PartSrcVoltage::PartSrcVoltage (IdNode nid_1, IdNode nid_2, float v)
 
 
 
-void	PartSrcVoltage::set_voltage (float v)
+void	PartSrcVoltage::set_voltage (Flt v)
 {
 	_v = v;
 }

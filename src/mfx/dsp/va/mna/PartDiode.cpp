@@ -47,7 +47,7 @@ namespace mna
 
 
 
-PartDiode::PartDiode (IdNode nid_1, IdNode nid_2, float is, float n)
+PartDiode::PartDiode (IdNode nid_1, IdNode nid_2, Flt is, Flt n)
 :	_nid_arr {{ nid_1, nid_2 }}
 ,	_is (is)
 ,	_n (n)
@@ -64,24 +64,24 @@ PartDiode::PartDiode (IdNode nid_1, IdNode nid_2, float is, float n)
 
 
 
-void	PartDiode::set_is (float is)
+void	PartDiode::set_is (Flt is)
 {
 	assert (is >= 1e-20f);
 	assert (is <= 1e-1f);
 
-	_is = is;
-	compute_vcrit ();
+	_is    = is;
+	_vcrit = compute_vcrit ();
 }
 
 
 
-void	PartDiode::set_n (float n)
+void	PartDiode::set_n (Flt n)
 {
 	assert (n > 0);
 
-	_n = n;
-	compute_mul_e ();
-	compute_vcrit ();
+	_n     = n;
+	_mul_e = compute_mul_e ();
+	_vcrit = compute_vcrit ();
 }
 
 
@@ -118,15 +118,16 @@ void	PartDiode::do_prepare (const SimInfo &info)
 
 void	PartDiode::do_add_to_matrix ()
 {
-	const float    v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
-	const float    ve  = v * _mul_e;
-	const float    e   =
-		(ve <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (ve);
-	const float    s   = e - _is;
-	const float    sd  = _nvt_inv * e;
 
-	const float    geq = sd;
-	const float    ieq = s - sd * v;
+	Flt            v   = _sim_ptr->get_voltage (_node_arr [0], _node_arr [1]);
+	const Flt      ve  = v * _mul_e;
+	const Flt      e   =
+		(ve <= -127.f) ? 0.f : _is * fstb::Approx::exp2 (float (ve));
+	const Flt      s   = e - _is;
+	const Flt      sd  = _nvt_inv * e;
+
+	const Flt      geq = sd;
+	const Flt      ieq = s - sd * v;
 
 	_sim_ptr->add_norton (_node_arr [0], _node_arr [1], geq, ieq);
 }
@@ -151,27 +152,29 @@ void	PartDiode::do_clear_buffers ()
 
 
 
-float	PartDiode::compute_nvt_inv () const
+Flt	PartDiode::compute_nvt_inv () const
 {
-	return float (1.0 / (_n * _vt));
+	return Flt (1. / (_n * _vt));
 }
 
 
 
-float	PartDiode::compute_mul_e () const
+Flt	PartDiode::compute_mul_e () const
 {
-	return float (1.0 / (_n * _vt * fstb::LN2));
+	return Flt (1. / (_n * _vt * fstb::LN2));
 }
 
 
 
-float	PartDiode::compute_vcrit () const
+// (3.55) from http://qucs.sourceforge.net/tech/node16.html
+Flt	PartDiode::compute_vcrit () const
 {
-	const float    nvt = _n * _vt;
-	const float    l2i = nvt / (_is * float (fstb::SQRT2));
-	const float    l2o = nvt * float (fstb::LN2);
+	const Flt      nvt = _n * _vt;
+	const Flt      l2i = nvt / (_is * Flt (fstb::SQRT2));
+	const Flt      l2o = nvt * Flt (fstb::LN2);
 
-	return l2o * fstb::Approx::log2 (l2i);
+	return l2o * fstb::Approx::log2 (float (l2i));
+
 }
 
 

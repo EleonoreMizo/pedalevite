@@ -64,7 +64,7 @@ public:
 	static const IdNode  _nid_gnd     = PartInterface::_nid_gnd;
 	static const IdNode  _nid_internal = 1 << 24;
 
-	static const int     _max_it      = 100;
+	static const int     _max_it      = 500;
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	typedef std::array <int, _max_it      +   1> HistIt;
@@ -93,7 +93,7 @@ public:
 	void           prepare (double sample_freq);
 
 	void           process_sample ();
-	float          get_node_voltage (IdNode nid) const;
+	Flt            get_node_voltage (IdNode nid) const;
 
 	void           clear_buffers ();
 
@@ -101,9 +101,9 @@ public:
 	int            get_matrix_size () const;
 	int            get_nbr_nodes () const;
 	int            get_nbr_src_v () const;
-	std::vector <float>
+	std::vector <Flt>
 	               get_matrix () const;
-	std::vector <float>
+	std::vector <Flt>
 	               get_vector () const;
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
@@ -121,10 +121,10 @@ protected:
 	virtual PartInterface::IdNode
 	               do_allocate_node () final;
 	virtual bool   do_is_node_gnd (int node_idx) const final;
-	virtual float  do_get_voltage (int node_idx) const final;
-	virtual float  do_get_voltage (int n1_idx, int n2_idx) const final;
-	virtual void   do_add_coef_mat (int row, int col, float val) final;
-	virtual void   do_add_coef_vec (int row, float val) final;
+	virtual Flt    do_get_voltage (int node_idx) const final;
+	virtual Flt    do_get_voltage (int n1_idx, int n2_idx) const final;
+	virtual void   do_add_coef_mat (int row, int col, Flt val) final;
+	virtual void   do_add_coef_vec (int row, Flt val) final;
 
 
 
@@ -133,6 +133,9 @@ protected:
 private:
 
 	void           build_matrix ();
+	typedef Eigen::Matrix <Flt, Eigen::Dynamic, Eigen::Dynamic> TypeMatrix;
+	typedef Eigen::Matrix <Flt, Eigen::Dynamic, 1> TypeVector;
+
 
 	std::vector <PartSPtr>
 	               _part_arr;
@@ -145,20 +148,16 @@ private:
 	int            _idx_gnd   = 0;
 	int            _msize     = 0; // _nbr_nodes + _nbr_src_v
 	bool           _nl_flag   = false;
-	float          _sample_freq = 0; // Hz, > 0. 0 = not set
+	Flt            _sample_freq = 0; // Hz, > 0. 0 = not set
 
-	float          _max_dif   = 0.1f;
+	Flt            _max_dif   = Flt (0.15);
 
-	Eigen::MatrixXf
-	               _mat_a;
-	Eigen::VectorXf
-	               _vec_z;
-	Eigen::VectorXf
-	               _vec_x;
-	Eigen::VectorXf
-	               _vec_x_old;
-	Eigen::ColPivHouseholderQR <Eigen::MatrixXf>
-	               _qr;
+	TypeMatrix     _mat_a;
+	TypeVector     _vec_z;
+	TypeVector     _vec_x;
+	TypeVector     _vec_x_old;
+	Eigen::PartialPivLU <TypeMatrix>
+	               _decomp;
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	Stats          _st;
