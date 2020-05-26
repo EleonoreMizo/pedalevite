@@ -563,12 +563,12 @@ int	TestMnaSimulator::perform_test ()
 
 	mfx::FileOpWav::save ("results/simulmna1.wav", dst, sample_freq, 0.5f);
 
-	const double   mega_sps  = spl_per_s / 1000000.0;
+	const double   kilo_sps  = spl_per_s / 1e3;
 	const double   rt_mul    = spl_per_s / sample_freq;
-	printf ("Speed: %12.3f Mspl/s (x%.3f real-time).\n\n", mega_sps, rt_mul);
+	printf ("Speed: %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
-	print_stats (mna, "Standard");
+	print_stats (mna);
 	mna.reset_stats ();
 #endif // mfx_dsp_va_mna_Simulator_STATS
 
@@ -601,10 +601,8 @@ void	TestMnaSimulator::gen_saw (std::vector <float> &data, double sample_freq, d
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 
-void	TestMnaSimulator::print_stats (mfx::dsp::va::mna::Simulator &mna, const char msg_0 [])
+void	TestMnaSimulator::print_stats (mfx::dsp::va::mna::Simulator &mna)
 {
-	printf ("%s\n", msg_0);
-	
 	mfx::dsp::va::mna::Simulator::Stats  stats;
 	mna.get_stats (stats);
 
