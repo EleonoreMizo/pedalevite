@@ -78,6 +78,7 @@
 #include "test/TestRcClipGeneric.h"
 #include "test/TestRemez.h"
 #include "test/TestSampleMipMapper.h"
+#include "test/TestMnaSimulator.h"
 #include "test/TestSlidingMax.h"
 #include "test/TestSlidingOp.h"
 #include "test/TestSmooth.h"
@@ -1871,6 +1872,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestMnaSimulator::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestMoogLadderMystran::perform_test ();
 #endif
 

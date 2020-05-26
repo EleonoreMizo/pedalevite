@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "mfx/dsp/va/IvInterface.h"
 
 
 
@@ -37,6 +38,7 @@ namespace va
 
 
 class IvDiodeAntipar
+:	public IvInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -48,10 +50,11 @@ public:
 	inline void    set_d1_n (float n);
 	inline void    set_d2_n (float n);
 
+	// mfx::dsp::va::IvInterface
 	fstb_FORCEINLINE void
-	               eval (float &y, float &dy, float x) const;
+	               eval (float &y, float &dy, float x) const final;
 	fstb_FORCEINLINE float
-	               get_max_step (float x) const;
+	               get_max_step (float x) const final;
 
 
 
