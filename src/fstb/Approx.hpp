@@ -268,6 +268,38 @@ float	Approx::log2 (float val)
 
 
 
+float	Approx::exp2 (float val)
+{
+	// Truncated val for integer power of 2
+	const int      tx = floor_int (val);
+
+	// Float remainder of power of 2
+	val -= static_cast <float> (tx);
+
+	// Quadratic approximation of 2^x in [0 ; 1]
+	const float    a = 1.0f / 3.0f;
+	const float    b = 2.0f / 3.0f;
+	const float    c = 1.0f;
+	val = (a * val + b) * val + c;
+
+	union
+	{
+		int32_t        _i;
+		float          _f;
+	}              combo;
+	combo._f = val;
+
+	// Add integer power of 2 to exponent
+	combo._i += tx << 23;
+	val       = combo._f;
+
+	assert (val >= 0);
+
+	return (val);
+}
+
+
+
 /*
 Other possible coefficients (found by Andrew Simper):
 5th order, max error 2.44e-7:
@@ -288,7 +320,7 @@ Other possible coefficients (found by Andrew Simper):
 	0.000021615988
 https://www.kvraudio.com/forum/viewtopic.php?p=7677357#p7677357
 */
-float	Approx::exp2 (float val)
+float	Approx::exp2_5th (float val)
 {
 	// Truncated val for integer power of 2
 	const int      tx = floor_int (val);
@@ -297,10 +329,13 @@ float	Approx::exp2 (float val)
 	val -= static_cast <float> (tx);
 
 	// Quadratic approximation of 2^x in [0 ; 1]
-	const float    a = 1.0f / 3.0f;
-	const float    b = 2.0f / 3.0f;
-	const float    c = 1.0f;
-	val = (a * val + b) * val + c;
+	const float    c0 = 1;
+	const float    c1 = 0.69315168779795f;
+	const float    c2 = 0.2401596780318f;
+	const float    c3 = 0.055817593635f;
+	const float    c4 = 0.008992164746f;
+	const float    c5 = 0.001878875789f;
+	val = ((((c5 * val + c4) * val + c3) * val + c2) * val + c1) * val + c0;
 
 	union
 	{

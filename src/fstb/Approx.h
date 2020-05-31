@@ -73,6 +73,8 @@ public:
 	               log2 (float val);
 	static inline float
 	               exp2 (float val);
+	static inline float
+	               exp2_5th (float val);
 	template <int A, typename T>
 	static inline T
 	               exp_m (T val);
