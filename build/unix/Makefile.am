@@ -653,6 +653,9 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsTruncMod.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
+        ../../src/mfx/dsp/va/dkm/Flt.h \
+        ../../src/mfx/dsp/va/dkm/Simulator.cpp \
+        ../../src/mfx/dsp/va/dkm/Simulator.h \
         ../../src/mfx/dsp/va/mna/Flt.h \
         ../../src/mfx/dsp/va/mna/PartBjt.cpp \
         ../../src/mfx/dsp/va/mna/PartBjt.h \
@@ -1580,6 +1583,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestDiodeClipJcm.h \
         ../../src/test/TestDiodeClipScreamer.cpp \
         ../../src/test/TestDiodeClipScreamer.h \
+        ../../src/test/TestDkmSimulator.cpp \
+        ../../src/test/TestDkmSimulator.h \
         ../../src/test/TestHardclipBl.cpp \
         ../../src/test/TestHardclipBl.h \
         ../../src/test/TestInterpFtor.cpp \

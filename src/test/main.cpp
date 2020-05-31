@@ -61,6 +61,7 @@
 #include "test/TestDiodeClipDAngelo.h"
 #include "test/TestDiodeClipJcm.h"
 #include "test/TestDiodeClipScreamer.h"
+#include "test/TestDkmSimulator.h"
 #include "test/TestHardclipBl.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
@@ -1872,6 +1873,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestDkmSimulator::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestMnaSimulator::perform_test ();
 #endif
 
@@ -1887,7 +1892,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0) ret_val = TestHardclipBl::perform_test ();
 #endif
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestMoogLadderDAngelo::perform_test ();
 #endif
 

@@ -415,6 +415,9 @@
     <Filter Include="mfx\dsp\va\mna">
       <UniqueIdentifier>{5000dade-402c-4b91-97c4-6c9b908af409}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\va\dkm">
+      <UniqueIdentifier>{ffba7720-82d3-4cba-947b-cd5166cbba95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -4644,6 +4647,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\mna\Flt.h">
       <Filter>mfx\dsp\va\mna</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\dkm\Simulator.h">
+      <Filter>mfx\dsp\va\dkm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\dkm\Flt.h">
+      <Filter>mfx\dsp\va\dkm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -5938,6 +5947,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjtNpn.cpp">
       <Filter>mfx\dsp\va\mna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\dkm\Simulator.cpp">
+      <Filter>mfx\dsp\va\dkm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

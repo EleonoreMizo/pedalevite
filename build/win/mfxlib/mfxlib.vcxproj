@@ -1066,6 +1066,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\dkm\Flt.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\dkm\Simulator.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvDiodeAntipar.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvDiodeAntipar.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\IvInterface.h" />
@@ -1729,6 +1731,10 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\dkm\Simulator.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\MoogLadderMystran.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjt.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjtNpn.cpp" />
@@ -1742,7 +1748,10 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartSrcVoltage.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartVccs.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartVcvs.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\Simulator.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\Simulator.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\SimulInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />
