@@ -77,7 +77,7 @@ void	Simulator::prepare (double sample_freq)
 
 	std::vector <PartInterface::PartInfo>  part_info_list;
 	std::vector <PartInterface::SimInfo>   sim_info_list;
-	const IdNode   idx_gnd_tmp = -666999666;
+	const int      idx_gnd_tmp = -666999666;
 
 	// First pass to collect information and compute some indexes
 	// _part_arr.size () not cached because _part_arr can grow within the loop
@@ -199,9 +199,7 @@ void	Simulator::process_sample ()
 {
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	_st_nbr_it = 0;
-	_st_nbr_f0 = 0;
-	_st_nbr_f1 = 0;
-#endif
+#endif // mfx_dsp_va_mna_Simulator_STATS
 
 	if (! _nl_flag)
 	{
@@ -210,7 +208,7 @@ void	Simulator::process_sample ()
 		_vec_x = _decomp.solve (_vec_z);
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 		_st_nbr_it = 1;
-#endif
+#endif // mfx_dsp_va_mna_Simulator_STATS
 	}
 	else
 	{
@@ -250,7 +248,7 @@ void	Simulator::process_sample ()
 		while (cont_flag && nbr_it < _max_it);
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 		_st_nbr_it = nbr_it;
-#endif
+#endif // mfx_dsp_va_mna_Simulator_STATS
 	}
 
 	// Integration step
@@ -261,10 +259,8 @@ void	Simulator::process_sample ()
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	++ _st._hist_it [_st_nbr_it];
-	++ _st._hist_f0 [_st_nbr_f0];
-	++ _st._hist_f1 [_st_nbr_f1];
 	++ _st._nbr_spl_proc;
-#endif
+#endif // mfx_dsp_va_mna_Simulator_STATS
 }
 
 
@@ -357,8 +353,6 @@ std::vector <Flt>	Simulator::get_vector () const
 void	Simulator::reset_stats ()
 {
 	_st._hist_it.fill (0);
-	_st._hist_f0.fill (0);
-	_st._hist_f1.fill (0);
 	_st._nbr_spl_proc = 0;
 }
 

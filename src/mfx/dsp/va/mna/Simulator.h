@@ -73,8 +73,6 @@ public:
 	{
 	public:
 		HistIt         _hist_it = {{ 0 }}; // Histogram for the number of NR iterations
-		HistEval       _hist_f0 = {{ 0 }}; // Histogram for the number of f evaluations
-		HistEval       _hist_f1 = {{ 0 }}; // Histogram for the number of f' evaluations
 		int            _nbr_spl_proc = 0;  // Number of processed samples since the statistics start
 	};
 #endif // mfx_dsp_va_mna_Simulator_STATS
@@ -164,8 +162,6 @@ private:
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	Stats          _st;
 	int            _st_nbr_it = 0;
-	int            _st_nbr_f0 = 0;
-	int            _st_nbr_f1 = 0;
 #endif // mfx_dsp_va_mna_Simulator_STATS
 
 
