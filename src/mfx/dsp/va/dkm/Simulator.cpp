@@ -249,6 +249,16 @@ void	Simulator::prepare (double sample_freq)
 
 
 
+void	Simulator::set_max_nbr_it (int max_it)
+{
+	assert (max_it > 0);
+	assert (max_it <= _limit_it);
+
+	_max_it = max_it;
+}
+
+
+
 void	Simulator::set_src_v (int idx, Flt v)
 {
 	assert (idx >= 0);
@@ -814,7 +824,9 @@ void	Simulator::build_s_0_inv ()
 	// If the matrix is not invertible, there are probably some unconnected
 	// nodes (for example, potentiometers absent from S0). Then one should
 	// add large resistors to make S0 invertible.
-	assert (_mat_s_0.determinant () != 0);
+	// Note: determinant calculation is not reliable in float, so it is skipped
+	// in this case.
+	assert ((sizeof (Flt) == sizeof (float)) || _mat_s_0.determinant () != 0);
 
 	_mat_s_0_inv = _mat_s_0.inverse ();
 }
@@ -1015,12 +1027,12 @@ void	Simulator::compute_nl_data_diode (int it_cnt, int idx_d)
 	const int      idx_n  = elt._base_idx;
 	const Flt      v      = _vec_v_n (idx_n);
 
-	Flt            i;
-	Flt            di;
+	JuncDataType   i;
+	JuncDataType   di;
 	compute_nl_data_junction (i, di, v, elt._junc, it_cnt);
 
-	_vec_i_n (idx_n)        = i;
-	_mat_j_f (idx_n, idx_n) = di;
+	_vec_i_n (idx_n)        = Flt (i );
+	_mat_j_f (idx_n, idx_n) = Flt (di);
 }
 
 
@@ -1041,16 +1053,16 @@ void	Simulator::compute_nl_data_diode_pair (int it_cnt, int idx_d)
 		dir   = 1;
 	}
 
-	Flt            i;
-	Flt            di;
+	JuncDataType   i;
+	JuncDataType   di;
 	compute_nl_data_junction (i, di, v_abs, elt._dir_arr [dir], it_cnt);
 	if (v < 0)
 	{
 		i = -i;
 	}
 
-	_vec_i_n (idx_n)        = i;
-	_mat_j_f (idx_n, idx_n) = di;
+	_vec_i_n (idx_n)        = Flt (i );
+	_mat_j_f (idx_n, idx_n) = Flt (di);
 }
 
 
@@ -1065,41 +1077,41 @@ void	Simulator::compute_nl_data_bjt_npn (int it_cnt, int idx_d)
 	const Flt      vbe    = _vec_v_n (idx_n    );
 	const Flt      vbc    = _vec_v_n (idx_n + 1);
 
-	Flt            ide;
-	Flt            dide;
+	JuncDataType   ide;
+	JuncDataType   dide;
 	compute_nl_data_junction (ide, dide, vbe, elt._junc_be, it_cnt);
-	Flt            idc;
-	Flt            didc;
+	JuncDataType   idc;
+	JuncDataType   didc;
 	compute_nl_data_junction (idc, didc, vbc, elt._junc_bc, it_cnt);
 
-	const Flt      afi = elt._alpha_f_inv;
-	const Flt      ari = elt._alpha_r_inv;
+	const JuncDataType   afi = elt._alpha_f_inv;
+	const JuncDataType   ari = elt._alpha_r_inv;
 
-	const Flt      ibe = ide * afi - idc;
-	const Flt      ibc = idc * ari - ide;
+	const JuncDataType   ibe = ide * afi - idc;
+	const JuncDataType   ibc = idc * ari - ide;
 
-	const Flt      die_dvbe = dide * afi;
-	const Flt      die_dvbc = -didc;
-	const Flt      dic_dvbe = -dide;
-	const Flt      dic_dvbc = didc * ari;
+	const JuncDataType   die_dvbe = dide * afi;
+	const JuncDataType   die_dvbc = -didc;
+	const JuncDataType   dic_dvbe = -dide;
+	const JuncDataType   dic_dvbc = didc * ari;
 
-	_vec_i_n (idx_n)                = ibe;
-	_vec_i_n (idx_n + 1)            = ibc;
-	_mat_j_f (idx_n,     idx_n)     = die_dvbe;
-	_mat_j_f (idx_n,     idx_n + 1) = die_dvbc;
-	_mat_j_f (idx_n + 1, idx_n)     = dic_dvbe;
-	_mat_j_f (idx_n + 1, idx_n + 1) = dic_dvbc;
+	_vec_i_n (idx_n)                = Flt (ibe     );
+	_vec_i_n (idx_n + 1)            = Flt (ibc     );
+	_mat_j_f (idx_n,     idx_n)     = Flt (die_dvbe);
+	_mat_j_f (idx_n,     idx_n + 1) = Flt (die_dvbc);
+	_mat_j_f (idx_n + 1, idx_n)     = Flt (dic_dvbe);
+	_mat_j_f (idx_n + 1, idx_n + 1) = Flt (dic_dvbc);
 }
 
 
 
-void	Simulator::compute_nl_data_junction (Flt &i, Flt &di, Flt v, const Junction &junc, int it_cnt)
+void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, JuncDataType v, const Junction &junc, int it_cnt)
 {
 	fstb::unused (it_cnt);
 
-	const Flt      is   = junc._is;
-	const Flt      va   = v * junc._mul_v;
-	const Flt      e    =
+	const JuncDataType   is = junc._is;
+	const JuncDataType   va = v * junc._mul_v;
+	const JuncDataType   e  =
 		(va <= -127.f) ? 0.f : is * fstb::Approx::exp2_5th (float (va));
 
 	i  = e - is;

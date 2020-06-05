@@ -89,11 +89,11 @@ public:
 	static const IdNode  _nid_invalid = -1;
 	static const IdNode  _nid_gnd     = 0;
 
-	static const int     _max_it      = 200;
+	static const int     _limit_it    = 200;
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
-	typedef std::array <int, _max_it      +   1> HistIt;
-	typedef std::array <int, _max_it * 16 + 100> HistEval;
+	typedef std::array <int, _limit_it      +   1> HistIt;
+	typedef std::array <int, _limit_it * 16 + 100> HistEval;
 	class Stats
 	{
 	public:
@@ -101,15 +101,6 @@ public:
 		int            _nbr_spl_proc = 0;  // Number of processed samples since the statistics start
 	};
 #endif // mfx_dsp_va_dkm_Simulator_STATS
-
-	               Simulator ()                        = default;
-	               Simulator (const Simulator &other)  = default;
-	               Simulator (Simulator &&other)       = default;
-
-	               ~Simulator ()                       = default;
-
-	Simulator &    operator = (const Simulator &other) = default;
-	Simulator &    operator = (Simulator &&other)      = default;
 
 	int            add_src_v (IdNode nid_1, IdNode nid_2, Flt v);
 	int            add_resistor (IdNode nid_1, IdNode nid_2, Flt r);
@@ -123,6 +114,7 @@ public:
 
 	void           prepare (double sample_freq);
 
+	void           set_max_nbr_it (int max_it);
 	void           set_src_v (int idx, Flt v);
 	void           set_pot (int idx, Flt pos);
 	void           process_sample ();
@@ -157,6 +149,8 @@ private:
 	typedef Eigen::Matrix <Flt, Eigen::Dynamic, Eigen::Dynamic> TypeMatrix;
 	typedef Eigen::Matrix <Flt, Eigen::Dynamic, 1> TypeVector;
 	typedef TypeMatrix TypeDiagonal;
+
+	typedef Flt JuncDataType;
 
 	static const int  _idx_gnd = -666999666;
 
@@ -291,7 +285,7 @@ private:
 	void           compute_nl_data_diode (int it_cnt, int idx_d);
 	void           compute_nl_data_diode_pair (int it_cnt, int idx_d);
 	void           compute_nl_data_bjt_npn (int it_cnt, int idx_d);
-	inline void    compute_nl_data_junction (Flt &i, Flt &di, Flt v, const Junction &junc, int it_cnt);
+	inline void    compute_nl_data_junction (JuncDataType &i, JuncDataType &di, JuncDataType v, const Junction &junc, int it_cnt);
 
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 	static void    print_vector (const TypeVector &v, const char *name_0);
@@ -300,10 +294,11 @@ private:
 
 	Flt            _max_dif     = Flt (0.25);
 
-	Flt            _sample_freq = 0; // Hz, > 0. 0 = not initialised
+	Flt            _sample_freq = 0;    // Hz, > 0. 0 = not initialised
 	Flt            _reltol      = Flt (1e-3);
 	Flt            _maxres      = Flt (1e-6);
-	bool           _linear_flag = false;
+	int            _max_it      = _limit_it;  // Maximum number of NR iterations. ]0 ; _limit_it]
+	bool           _linear_flag = false;      // Circuit contains only linear parts
 
 	std::map <IdNode, int>        // Node Id -> index
 	               _nid_to_idx_map;

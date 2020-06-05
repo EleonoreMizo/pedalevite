@@ -37,7 +37,7 @@ namespace dkm
 
 
 // float looks robust enough
-typedef float Flt;
+typedef double Flt;
 
 
 
