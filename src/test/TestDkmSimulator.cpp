@@ -325,7 +325,6 @@ int	TestDkmSimulator::perform_test ()
 	dkm.add_capacitor (no_q1c, no_vol3, 100e-9f); // C2
 	dkm.add_capacitor (no_tone2, no_q1b, 100e-9f); // C3
 	dkm.add_bjt_npn (no_q1e, no_q1b, no_q1c, 5.911e-15f, 1.f, 1122.f, 1.271f); // Q1, 2N5089
-	const int      no_dst = no_vol2;
 
 #if defined (TestDkmSimulator_BMP_MULTI_OUT)
 	std::array <std::vector <float>, 5> dst_arr;
@@ -344,6 +343,8 @@ int	TestDkmSimulator::perform_test ()
 		dckill_arr [out_cnt].set_sample_freq (sample_freq);
 		dckill_arr [out_cnt].set_cutoff_freq (4.25f);
 	}
+#else
+	const int      no_dst = no_vol2;
 #endif
 
 #endif // + output buffer
@@ -365,10 +366,18 @@ int	TestDkmSimulator::perform_test ()
 	dkm.reset_stats ();
 #endif // mfx_dsp_va_dkm_Simulator_STATS
 
-	const int      nbr_nodes = dkm.get_nbr_nodes ();
-	const int      nbr_src_v = dkm.get_nbr_src_v ();
+	const int      nbr_nodes   = dkm.get_nbr_nodes ();
+	const int      nbr_src_v   = dkm.get_nbr_src_v ();
+	const int      nbr_non_lin = dkm.get_nbr_non_lin ();
+	const int      nbr_pot     = dkm.get_nbr_pot ();
+	const int      nbr_ese     = dkm.get_nbr_ese ();
+	const int      nbr_out     = dkm.get_nbr_out ();
 	printf ("Nodes      : %3d\n", nbr_nodes);
 	printf ("Voltage src: %3d\n", nbr_src_v);
+	printf ("Pots       : %3d\n", nbr_pot);
+	printf ("Energy st  : %3d\n", nbr_ese);
+	printf ("Non-linear : %3d\n", nbr_non_lin);
+	printf ("Output     : %3d\n", nbr_out);
 
 	printf ("Simulating...\n");
 	fflush (stdout);

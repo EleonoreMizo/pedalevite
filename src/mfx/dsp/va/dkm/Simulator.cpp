@@ -359,6 +359,34 @@ int	Simulator::get_nbr_src_v () const
 
 
 
+int	Simulator::get_nbr_non_lin () const
+{
+	return _nbr_nl;
+}
+
+
+
+int	Simulator::get_nbr_pot () const
+{
+	return _nbr_pot;
+}
+
+
+
+int	Simulator::get_nbr_ese () const
+{
+	return _nbr_ese;
+}
+
+
+
+int	Simulator::get_nbr_out () const
+{
+	return _nbr_out;
+}
+
+
+
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 
 void	Simulator::print_all () const

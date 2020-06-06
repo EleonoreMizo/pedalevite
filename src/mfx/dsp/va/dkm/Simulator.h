@@ -124,6 +124,10 @@ public:
 
 	int            get_nbr_nodes () const;
 	int            get_nbr_src_v () const;
+	int            get_nbr_non_lin () const;
+	int            get_nbr_pot () const;
+	int            get_nbr_ese () const;
+	int            get_nbr_out () const;
 
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 	void           print_all () const;
