@@ -51,6 +51,11 @@ protected:
 private:
 
 	static void    gen_saw (std::vector <float> &data, double sample_freq, double freq, int len);
+	static void    gen_sq (std::vector <float> &data, double sample_freq, double freq, int len);
+	static void    gen_sine (std::vector <float> &data, double sample_freq, double freq, int len);
+	static void    gen_silence (std::vector <float> &data, int len);
+	static void    scale_vect (std::vector <float> &data, float scale);
+	static void    cat_vect (std::vector <float> &data, const std::vector <float> &more);
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
 	static void    print_stats (mfx::dsp::va::dkm::Simulator &dkm);
