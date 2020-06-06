@@ -22,9 +22,11 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#define TestDkmSimulator_LONG_TEST
+#undef TestDkmSimulator_INPUT_SPL
 
-#define TestDkmSimulator_BMP_MULTI_OUT
+#undef TestDkmSimulator_LONG_TEST
+
+#undef TestDkmSimulator_BMP_MULTI_OUT
 
 
 
@@ -54,6 +56,15 @@ int	TestDkmSimulator::perform_test ()
 	int            ret_val = 0;
 
 	printf ("Testing mfx::dsp::va::dkm::Simulator...\n");
+
+#if defined (TestDkmSimulator_INPUT_SPL)
+
+	double         sample_freq = 0;
+	std::vector <std::vector <float> >  chn_arr;
+	mfx::FileOpWav::load ("../../../src/test/samples/guitar-01.wav", chn_arr, sample_freq);
+	auto &         src (chn_arr [0]);
+
+#else // TestDkmSimulator_INPUT_SPL
 
 	const int      ovrspl      = 1;
 	const double   sample_freq = 44100 * ovrspl;
@@ -119,6 +130,8 @@ int	TestDkmSimulator::perform_test ()
 #endif
 
 #endif // TestDkmSimulator_LONG_TEST
+
+#endif // TestDkmSimulator_INPUT_SPL
 
 	mfx::FileOpWav::save ("results/simuldkm0.wav", src, sample_freq, 0.5f);
 
