@@ -1041,7 +1041,29 @@ void	Simulator::compute_nl_data (int it_cnt)
 	}
 
 	_vec_r   = _vec_p - _mat_k * _vec_i_n - _vec_v_n;
+#if 0
 	_mat_j_r =        - _mat_k * _mat_j_f - _dia_id_n;
+#else
+	// Attempt to optimize the multiplication with the sparse _mat_j_f
+	const int      ofs = int (_diode_arr.size () + _diode_pair_arr.size ());
+	for (int d = 0; d < ofs; ++d)
+	{
+		_mat_j_r.col (d) = -_mat_k.col (d) * _mat_j_f (d, d);
+		_mat_j_r (d, d) -= 1;
+	}
+	for (int d_cnt = 0; d_cnt < int (_bjt_npn_arr.size ()); ++d_cnt)
+	{
+		const int    d = ofs + d_cnt * 2;
+		_mat_j_r.col (d    ) =
+			  _mat_k.col (d    ) * -_mat_j_f (d    , d    )
+			+ _mat_k.col (d + 1) * -_mat_j_f (d + 1, d    );
+		_mat_j_r (d    , d    ) -= 1;
+		_mat_j_r.col (d + 1) =
+			  _mat_k.col (d    ) * -_mat_j_f (d    , d + 1)
+			+ _mat_k.col (d + 1) * -_mat_j_f (d + 1, d + 1);
+		_mat_j_r (d + 1, d + 1) -= 1;
+	}
+#endif
 }
 
 
