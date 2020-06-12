@@ -1185,7 +1185,7 @@ void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, Jun
 void	Simulator::print_vector (const TypeVector &v, const char *name_0)
 {
 	printf ("%s = ", name_0);
-	const int      len = v.rows () * v.cols ();
+	const int      len = int (v.rows () * v.cols ());
 	if (len == 0)
 	{
 		printf ("<null>");
