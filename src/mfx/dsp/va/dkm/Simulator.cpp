@@ -366,6 +366,13 @@ int	Simulator::get_nbr_non_lin () const
 
 
 
+int	Simulator::get_nbr_res () const
+{
+	return _nbr_res;
+}
+
+
+
 int	Simulator::get_nbr_pot () const
 {
 	return _nbr_pot;

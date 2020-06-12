@@ -125,6 +125,7 @@ public:
 	int            get_nbr_nodes () const;
 	int            get_nbr_src_v () const;
 	int            get_nbr_non_lin () const;
+	int            get_nbr_res () const;
 	int            get_nbr_pot () const;
 	int            get_nbr_ese () const;
 	int            get_nbr_out () const;
@@ -399,7 +400,7 @@ private:
 	TypeMatrix     _mat_u_u;
 	TypeMatrix     _mat_j_f;
 	TypeMatrix     _mat_j_r;
-	TypeMatrix     _dia_id_n;
+	TypeDiagonal   _dia_id_n;
 	TypeVector     _vec_r;
 	TypeVector     _vec_delta_x;
 	TypeMatrix     _mat_abc_tmp;
