@@ -1,162 +1,257 @@
-update=2019.10.28 11:38:48
+update=2020.06.14 13:58:21
 version=1
 last_client=kicad
-[pcbnew]
-version=1
-LastNetListRead=
-UseCmpFile=1
-PadDrill=0.600000000000
-PadDrillOvalY=0.600000000000
-PadSizeH=1.500000000000
-PadSizeV=1.500000000000
-PcbTextSizeV=1.500000000000
-PcbTextSizeH=1.500000000000
-PcbTextThickness=0.300000000000
-ModuleTextSizeV=1.000000000000
-ModuleTextSizeH=1.000000000000
-ModuleTextSizeThickness=0.150000000000
-SolderMaskClearance=0.000000000000
-SolderMaskMinWidth=0.000000000000
-DrawSegmentWidth=0.200000000000
-BoardOutlineThickness=0.100000000000
-ModuleOutlineThickness=0.150000000000
 [cvpcb]
 version=1
 NetIExt=net
 [general]
 version=1
+[eeschema]
+version=1
+LibDir=
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
 PlotDirectoryName=../exported/
 SubpartIdSeparator=0
 SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
+NetFmtName=Pcbnew
+SpiceAjustPassiveValues=0
 LabSize=60
-[eeschema]
+ERC_TestSimilarLabels=1
+[pcbnew]
 version=1
-LibDir=../kicad-lib
-[eeschema/libraries]
-LibName1=power
-LibName2=device
-LibName3=transistors
-LibName4=conn
-LibName5=linear
-LibName6=regul
-LibName7=74xx
-LibName8=cmos4000
-LibName9=adc-dac
-LibName10=memory
-LibName11=xilinx
-LibName12=microcontrollers
-LibName13=dsp
-LibName14=microchip
-LibName15=analog_switches
-LibName16=motorola
-LibName17=texas
-LibName18=intel
-LibName19=audio
-LibName20=interface
-LibName21=digital-audio
-LibName22=philips
-LibName23=display
-LibName24=cypress
-LibName25=siliconi
-LibName26=opto
-LibName27=atmel
-LibName28=contrib
-LibName29=valves
-LibName30=pedalevite
-LibName31=C:/Program Files/KiCad/share/kicad/library/74xgxx
-LibName32=C:/Program Files/KiCad/share/kicad/library/74xx
-LibName33=C:/Program Files/KiCad/share/kicad/library/ac-dc
-LibName34=C:/Program Files/KiCad/share/kicad/library/actel
-LibName35=C:/Program Files/KiCad/share/kicad/library/adc-dac
-LibName36=C:/Program Files/KiCad/share/kicad/library/allegro
-LibName37=C:/Program Files/KiCad/share/kicad/library/Altera
-LibName38=C:/Program Files/KiCad/share/kicad/library/analog_devices
-LibName39=C:/Program Files/KiCad/share/kicad/library/analog_switches
-LibName40=C:/Program Files/KiCad/share/kicad/library/atmel
-LibName41=C:/Program Files/KiCad/share/kicad/library/audio
-LibName42=C:/Program Files/KiCad/share/kicad/library/battery_management
-LibName43=C:/Program Files/KiCad/share/kicad/library/bbd
-LibName44=C:/Program Files/KiCad/share/kicad/library/bosch
-LibName45=C:/Program Files/KiCad/share/kicad/library/brooktre
-LibName46=C:/Program Files/KiCad/share/kicad/library/cmos_ieee
-LibName47=C:/Program Files/KiCad/share/kicad/library/cmos4000
-LibName48=C:/Program Files/KiCad/share/kicad/library/conn
-LibName49=C:/Program Files/KiCad/share/kicad/library/contrib
-LibName50=C:/Program Files/KiCad/share/kicad/library/cypress
-LibName51=C:/Program Files/KiCad/share/kicad/library/dc-dc
-LibName52=C:/Program Files/KiCad/share/kicad/library/device
-LibName53=C:/Program Files/KiCad/share/kicad/library/digital-audio
-LibName54=C:/Program Files/KiCad/share/kicad/library/diode
-LibName55=C:/Program Files/KiCad/share/kicad/library/display
-LibName56=C:/Program Files/KiCad/share/kicad/library/dsp
-LibName57=C:/Program Files/KiCad/share/kicad/library/elec-unifil
-LibName58=C:/Program Files/KiCad/share/kicad/library/ESD_Protection
-LibName59=C:/Program Files/KiCad/share/kicad/library/ftdi
-LibName60=C:/Program Files/KiCad/share/kicad/library/gennum
-LibName61=C:/Program Files/KiCad/share/kicad/library/graphic
-LibName62=C:/Program Files/KiCad/share/kicad/library/hc11
-LibName63=C:/Program Files/KiCad/share/kicad/library/intel
-LibName64=C:/Program Files/KiCad/share/kicad/library/interface
-LibName65=C:/Program Files/KiCad/share/kicad/library/ir
-LibName66=C:/Program Files/KiCad/share/kicad/library/Lattice
-LibName67=C:/Program Files/KiCad/share/kicad/library/leds
-LibName68=C:/Program Files/KiCad/share/kicad/library/linear
-LibName69=C:/Program Files/KiCad/share/kicad/library/logo
-LibName70=C:/Program Files/KiCad/share/kicad/library/maxim
-LibName71=C:/Program Files/KiCad/share/kicad/library/mechanical
-LibName72=C:/Program Files/KiCad/share/kicad/library/memory
-LibName73=C:/Program Files/KiCad/share/kicad/library/microchip
-LibName74=C:/Program Files/KiCad/share/kicad/library/microchip_dspic33dsc
-LibName75=C:/Program Files/KiCad/share/kicad/library/microchip_pic10mcu
-LibName76=C:/Program Files/KiCad/share/kicad/library/microchip_pic12mcu
-LibName77=C:/Program Files/KiCad/share/kicad/library/microchip_pic16mcu
-LibName78=C:/Program Files/KiCad/share/kicad/library/microchip_pic18mcu
-LibName79=C:/Program Files/KiCad/share/kicad/library/microchip_pic24mcu
-LibName80=C:/Program Files/KiCad/share/kicad/library/microchip_pic32mcu
-LibName81=C:/Program Files/KiCad/share/kicad/library/microcontrollers
-LibName82=C:/Program Files/KiCad/share/kicad/library/modules
-LibName83=C:/Program Files/KiCad/share/kicad/library/motor_drivers
-LibName84=C:/Program Files/KiCad/share/kicad/library/motorola
-LibName85=C:/Program Files/KiCad/share/kicad/library/motors
-LibName86=C:/Program Files/KiCad/share/kicad/library/msp430
-LibName87=C:/Program Files/KiCad/share/kicad/library/nordicsemi
-LibName88=C:/Program Files/KiCad/share/kicad/library/nxp
-LibName89=C:/Program Files/KiCad/share/kicad/library/nxp_armmcu
-LibName90=C:/Program Files/KiCad/share/kicad/library/onsemi
-LibName91=C:/Program Files/KiCad/share/kicad/library/opto
-LibName92=C:/Program Files/KiCad/share/kicad/library/Oscillators
-LibName93=C:/Program Files/KiCad/share/kicad/library/philips
-LibName94=C:/Program Files/KiCad/share/kicad/library/power
-LibName95=C:/Program Files/KiCad/share/kicad/library/Power_Management
-LibName96=C:/Program Files/KiCad/share/kicad/library/powerint
-LibName97=C:/Program Files/KiCad/share/kicad/library/pspice
-LibName98=C:/Program Files/KiCad/share/kicad/library/references
-LibName99=C:/Program Files/KiCad/share/kicad/library/regul
-LibName100=C:/Program Files/KiCad/share/kicad/library/relays
-LibName101=C:/Program Files/KiCad/share/kicad/library/rfcom
-LibName102=C:/Program Files/KiCad/share/kicad/library/sensors
-LibName103=C:/Program Files/KiCad/share/kicad/library/silabs
-LibName104=C:/Program Files/KiCad/share/kicad/library/siliconi
-LibName105=C:/Program Files/KiCad/share/kicad/library/stm8
-LibName106=C:/Program Files/KiCad/share/kicad/library/stm32
-LibName107=C:/Program Files/KiCad/share/kicad/library/supertex
-LibName108=C:/Program Files/KiCad/share/kicad/library/switches
-LibName109=C:/Program Files/KiCad/share/kicad/library/texas
-LibName110=C:/Program Files/KiCad/share/kicad/library/transf
-LibName111=C:/Program Files/KiCad/share/kicad/library/transistors
-LibName112=C:/Program Files/KiCad/share/kicad/library/triac_thyristor
-LibName113=C:/Program Files/KiCad/share/kicad/library/ttl_ieee
-LibName114=C:/Program Files/KiCad/share/kicad/library/valves
-LibName115=C:/Program Files/KiCad/share/kicad/library/video
-LibName116=C:/Program Files/KiCad/share/kicad/library/wiznet
-LibName117=C:/Program Files/KiCad/share/kicad/library/Worldsemi
-LibName118=C:/Program Files/KiCad/share/kicad/library/Xicor
-LibName119=C:/Program Files/KiCad/share/kicad/library/xilinx
-LibName120=C:/Program Files/KiCad/share/kicad/library/zetex
-LibName121=C:/Program Files/KiCad/share/kicad/library/Zilog
+PageLayoutDescrFile=
+LastNetListRead=main-board.net
+CopperLayerCount=2
+BoardThickness=1.6
+AllowMicroVias=0
+AllowBlindVias=0
+RequireCourtyardDefinitions=0
+ProhibitOverlappingCourtyards=0
+MinTrackWidth=0.2
+MinViaDiameter=0.4
+MinViaDrill=0.3
+MinMicroViaDiameter=0.2
+MinMicroViaDrill=0.09999999999999999
+MinHoleToHole=0.25
+TrackWidth1=0.25
+TrackWidth2=1
+ViaDiameter1=0.6
+ViaDrill1=0.4
+dPairWidth1=0.2
+dPairGap1=0.25
+dPairViaGap1=0.25
+SilkLineWidth=0.15
+SilkTextSizeV=1
+SilkTextSizeH=1
+SilkTextSizeThickness=0.15
+SilkTextItalic=0
+SilkTextUpright=1
+CopperLineWidth=0.2
+CopperTextSizeV=1.5
+CopperTextSizeH=1.5
+CopperTextThickness=0.3
+CopperTextItalic=0
+CopperTextUpright=1
+EdgeCutLineWidth=0.09999999999999999
+CourtyardLineWidth=0.05
+OthersLineWidth=0.15
+OthersTextSizeV=1
+OthersTextSizeH=1
+OthersTextSizeThickness=0.15
+OthersTextItalic=0
+OthersTextUpright=1
+SolderMaskClearance=0
+SolderMaskMinWidth=0
+SolderPasteClearance=0
+SolderPasteRatio=-0
+[pcbnew/Layer.F.Cu]
+Name=F.Cu
+Type=0
+Enabled=1
+[pcbnew/Layer.In1.Cu]
+Name=In1.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In2.Cu]
+Name=In2.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In3.Cu]
+Name=In3.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In4.Cu]
+Name=In4.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In5.Cu]
+Name=In5.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In6.Cu]
+Name=In6.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In7.Cu]
+Name=In7.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In8.Cu]
+Name=In8.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In9.Cu]
+Name=In9.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In10.Cu]
+Name=In10.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In11.Cu]
+Name=In11.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In12.Cu]
+Name=In12.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In13.Cu]
+Name=In13.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In14.Cu]
+Name=In14.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In15.Cu]
+Name=In15.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In16.Cu]
+Name=In16.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In17.Cu]
+Name=In17.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In18.Cu]
+Name=In18.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In19.Cu]
+Name=In19.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In20.Cu]
+Name=In20.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In21.Cu]
+Name=In21.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In22.Cu]
+Name=In22.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In23.Cu]
+Name=In23.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In24.Cu]
+Name=In24.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In25.Cu]
+Name=In25.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In26.Cu]
+Name=In26.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In27.Cu]
+Name=In27.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In28.Cu]
+Name=In28.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In29.Cu]
+Name=In29.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.In30.Cu]
+Name=In30.Cu
+Type=0
+Enabled=0
+[pcbnew/Layer.B.Cu]
+Name=B.Cu
+Type=0
+Enabled=1
+[pcbnew/Layer.B.Adhes]
+Enabled=1
+[pcbnew/Layer.F.Adhes]
+Enabled=1
+[pcbnew/Layer.B.Paste]
+Enabled=1
+[pcbnew/Layer.F.Paste]
+Enabled=1
+[pcbnew/Layer.B.SilkS]
+Enabled=1
+[pcbnew/Layer.F.SilkS]
+Enabled=1
+[pcbnew/Layer.B.Mask]
+Enabled=1
+[pcbnew/Layer.F.Mask]
+Enabled=1
+[pcbnew/Layer.Dwgs.User]
+Enabled=1
+[pcbnew/Layer.Cmts.User]
+Enabled=1
+[pcbnew/Layer.Eco1.User]
+Enabled=1
+[pcbnew/Layer.Eco2.User]
+Enabled=1
+[pcbnew/Layer.Edge.Cuts]
+Enabled=1
+[pcbnew/Layer.Margin]
+Enabled=1
+[pcbnew/Layer.B.CrtYd]
+Enabled=1
+[pcbnew/Layer.F.CrtYd]
+Enabled=1
+[pcbnew/Layer.B.Fab]
+Enabled=1
+[pcbnew/Layer.F.Fab]
+Enabled=1
+[pcbnew/Layer.Rescue]
+Enabled=0
+[pcbnew/Netclasses]
+[pcbnew/Netclasses/Default]
+Name=Default
+Clearance=0.2
+TrackWidth=0.25
+ViaDiameter=0.6
+ViaDrill=0.4
+uViaDiameter=0.3
+uViaDrill=0.1
+dPairWidth=0.2
+dPairGap=0.25
+dPairViaGap=0.25
+[pcbnew/Netclasses/1]
+Name=Power
+Clearance=0.2
+TrackWidth=0.45
+ViaDiameter=0.6
+ViaDrill=0.4
+uViaDiameter=0.3
+uViaDrill=0.1
+dPairWidth=0.2
+dPairGap=0.25
+dPairViaGap=0.25

@@ -1,101 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:pedalevite
-LIBS:switches
-LIBS:74xgxx
-LIBS:ac-dc
-LIBS:actel
-LIBS:allegro
-LIBS:Altera
-LIBS:analog_devices
-LIBS:battery_management
-LIBS:bbd
-LIBS:brooktre
-LIBS:cmos_ieee
-LIBS:dc-dc
-LIBS:diode
-LIBS:elec-unifil
-LIBS:ESD_Protection
-LIBS:ftdi
-LIBS:gennum
-LIBS:graphic
-LIBS:hc11
-LIBS:ir
-LIBS:Lattice
-LIBS:logo
-LIBS:maxim
-LIBS:mechanical
-LIBS:microchip_dspic33dsc
-LIBS:microchip_pic10mcu
-LIBS:microchip_pic12mcu
-LIBS:microchip_pic16mcu
-LIBS:microchip_pic18mcu
-LIBS:microchip_pic32mcu
-LIBS:motor_drivers
-LIBS:motors
-LIBS:msp430
-LIBS:nordicsemi
-LIBS:nxp_armmcu
-LIBS:onsemi
-LIBS:Oscillators
-LIBS:Power_Management
-LIBS:powerint
-LIBS:pspice
-LIBS:references
-LIBS:relays
-LIBS:rfcom
-LIBS:sensors
-LIBS:silabs
-LIBS:stm8
-LIBS:stm32
-LIBS:supertex
-LIBS:transf
-LIBS:ttl_ieee
-LIBS:video
-LIBS:wiznet
-LIBS:Worldsemi
-LIBS:Xicor
-LIBS:zetex
-LIBS:Zilog
-LIBS:Symbols_DCDC-ACDC-Converter_RevC_20Jul2012
-LIBS:Symbols_EN60617_13Mar2013
-LIBS:Symbols_EN60617-10_HF-Radio_DRAFT_12Sep2013
-LIBS:Symbols_ICs-Diskrete_RevD10
-LIBS:Symbols_ICs-Opto_RevB_16Sep2013
-LIBS:Symbols_Microcontroller_Philips-NXP_RevA_06Oct2013
-LIBS:Symbols_Socket-DIN41612_RevA
-LIBS:Symbols_Transformer-Diskrete_RevA
-LIBS:SymbolsSimilarEN60617+oldDIN617-RevE8
-LIBS:audio-board-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -118,7 +22,7 @@ AOUTB+
 Text GLabel 2100 4600 0    60   Input ~ 0
 AOUTB-
 $Comp
-L CP C90
+L Device:CP C90
 U 1 1 58BEB00F
 P 2450 1900
 F 0 "C90" V 2500 2000 50  0000 L CNN
@@ -129,7 +33,7 @@ F 3 "" H 2450 1900 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CP C91
+L Device:CP C91
 U 1 1 58BEB102
 P 2450 2300
 F 0 "C91" V 2500 2400 50  0000 L CNN
@@ -140,7 +44,7 @@ F 3 "" H 2450 2300 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R80
+L Device:R R80
 U 1 1 58BEB13E
 P 2850 1900
 F 0 "R80" V 2950 1900 50  0000 C CNN
@@ -151,7 +55,7 @@ F 3 "" H 2850 1900 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R81
+L Device:R R81
 U 1 1 58BEB185
 P 2850 2300
 F 0 "R81" V 2950 2300 50  0000 C CNN
@@ -162,7 +66,7 @@ F 3 "" H 2850 2300 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L C C92
+L Device:C C92
 U 1 1 58BEB1C8
 P 3100 2550
 F 0 "C92" H 3125 2650 50  0000 L CNN
@@ -173,7 +77,7 @@ F 3 "" H 3100 2550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C93
+L Device:C C93
 U 1 1 58BEB23B
 P 3400 2550
 F 0 "C93" H 3425 2650 50  0000 L CNN
@@ -184,7 +88,7 @@ F 3 "" H 3400 2550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R83
+L Device:R R83
 U 1 1 58BEB284
 P 3700 2550
 F 0 "R83" H 3850 2550 50  0000 C CNN
@@ -195,7 +99,7 @@ F 3 "" H 3700 2550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R82
+L Device:R R82
 U 1 1 58BEB2D0
 P 3700 1650
 F 0 "R82" H 3850 1650 50  0000 C CNN
@@ -206,7 +110,7 @@ F 3 "" H 3700 1650 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R84
+L Device:R R84
 U 1 1 58BEB31C
 P 3950 1900
 F 0 "R84" V 4030 1900 50  0000 C CNN
@@ -217,7 +121,7 @@ F 3 "" H 3950 1900 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R85
+L Device:R R85
 U 1 1 58BEB388
 P 3950 2300
 F 0 "R85" V 4030 2300 50  0000 C CNN
@@ -228,7 +132,7 @@ F 3 "" H 3950 2300 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L C C95
+L Device:C C95
 U 1 1 58BEB419
 P 4200 2550
 F 0 "C95" H 4225 2650 50  0000 L CNN
@@ -239,7 +143,7 @@ F 3 "" H 4200 2550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C94
+L Device:C C94
 U 1 1 58BEB471
 P 4200 1650
 F 0 "C94" H 4225 1750 50  0000 L CNN
@@ -250,7 +154,7 @@ F 3 "" H 4200 1650 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GNDA #PWR056
+L power:GNDA #PWR056
 U 1 1 58BEB683
 P 2300 2900
 F 0 "#PWR056" H 2300 2650 50  0001 C CNN
@@ -261,7 +165,7 @@ F 3 "" H 2300 2900 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L NE5532 IC15
+L linear:NE5532 IC15
 U 1 1 58BECDCA
 P 4600 2100
 F 0 "IC15" H 4600 2250 50  0000 L CNN
@@ -272,7 +176,7 @@ F 3 "" H 4600 2100 50  0000 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L +15V #PWR057
+L power:+15V #PWR057
 U 1 1 58BECDD1
 P 4500 2600
 F 0 "#PWR057" H 4500 2450 50  0001 C CNN
@@ -283,10 +187,10 @@ F 3 "" H 4500 2600 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L -15V #PWR62
+L power:-15V #PWR062
 U 1 1 58BECDD7
 P 4500 1600
-F 0 "#PWR62" H 4500 1450 50  0001 C CNN
+F 0 "#PWR062" H 4500 1450 50  0001 C CNN
 F 1 "-15V" H 4500 1740 50  0000 C CNN
 F 2 "" H 4500 1600 50  0000 C CNN
 F 3 "" H 4500 1600 50  0000 C CNN
@@ -294,7 +198,7 @@ F 3 "" H 4500 1600 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C96
+L Device:C C96
 U 1 1 58BECDDD
 P 4750 1700
 F 0 "C96" V 4800 1500 50  0000 L CNN
@@ -305,7 +209,7 @@ F 3 "" H 4750 1700 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L NE5532 IC16
+L linear:NE5532 IC16
 U 1 1 58BED0D8
 P 5700 2100
 F 0 "IC16" H 5700 2250 50  0000 L CNN
@@ -316,7 +220,7 @@ F 3 "" H 5700 2100 50  0000 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L +15V #PWR058
+L power:+15V #PWR058
 U 1 1 58BED0DE
 P 5600 2600
 F 0 "#PWR058" H 5600 2450 50  0001 C CNN
@@ -327,10 +231,10 @@ F 3 "" H 5600 2600 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L -15V #PWR63
+L power:-15V #PWR063
 U 1 1 58BED0E4
 P 5600 1600
-F 0 "#PWR63" H 5600 1450 50  0001 C CNN
+F 0 "#PWR063" H 5600 1450 50  0001 C CNN
 F 1 "-15V" H 5600 1740 50  0000 C CNN
 F 2 "" H 5600 1600 50  0000 C CNN
 F 3 "" H 5600 1600 50  0000 C CNN
@@ -338,7 +242,7 @@ F 3 "" H 5600 1600 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C97
+L Device:C C97
 U 1 1 58BED0EA
 P 5850 1700
 F 0 "C97" V 5900 1500 50  0000 L CNN
@@ -349,7 +253,7 @@ F 3 "" H 5850 1700 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L NE5532 IC17
+L linear:NE5532 IC17
 U 1 1 58BED37F
 P 6800 2100
 F 0 "IC17" H 6800 2250 50  0000 L CNN
@@ -360,7 +264,7 @@ F 3 "" H 6800 2100 50  0000 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L +15V #PWR059
+L power:+15V #PWR059
 U 1 1 58BED385
 P 6700 2600
 F 0 "#PWR059" H 6700 2450 50  0001 C CNN
@@ -371,10 +275,10 @@ F 3 "" H 6700 2600 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L -15V #PWR64
+L power:-15V #PWR064
 U 1 1 58BED38B
 P 6700 1600
-F 0 "#PWR64" H 6700 1450 50  0001 C CNN
+F 0 "#PWR064" H 6700 1450 50  0001 C CNN
 F 1 "-15V" H 6700 1740 50  0000 C CNN
 F 2 "" H 6700 1600 50  0000 C CNN
 F 3 "" H 6700 1600 50  0000 C CNN
@@ -382,7 +286,7 @@ F 3 "" H 6700 1600 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C98
+L Device:C C98
 U 1 1 58BED391
 P 6950 1700
 F 0 "C98" V 7000 1500 50  0000 L CNN
@@ -393,7 +297,7 @@ F 3 "" H 6950 1700 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R87
+L Device:R R87
 U 1 1 58BED73B
 P 5850 1400
 F 0 "R87" V 5950 1400 50  0000 C CNN
@@ -404,7 +308,7 @@ F 3 "" H 5850 1400 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R86
+L Device:R R86
 U 1 1 58BEDA2D
 P 5300 2550
 F 0 "R86" H 5450 2550 50  0000 C CNN
@@ -415,7 +319,7 @@ F 3 "" H 5300 2550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R89
+L Device:R R89
 U 1 1 58BEDCB2
 P 6950 1400
 F 0 "R89" V 7050 1400 50  0000 C CNN
@@ -426,7 +330,7 @@ F 3 "" H 6950 1400 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R88
+L Device:R R88
 U 1 1 58BEDD79
 P 6400 1150
 F 0 "R88" H 6550 1150 50  0000 C CNN
@@ -437,7 +341,7 @@ F 3 "" H 6400 1150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R90
+L Device:R R90
 U 1 1 58BEE289
 P 7550 900
 F 0 "R90" V 7650 900 50  0000 C CNN
@@ -448,7 +352,7 @@ F 3 "" H 7550 900 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R91
+L Device:R R91
 U 1 1 58BEE322
 P 7550 2100
 F 0 "R91" V 7650 2100 50  0000 C CNN
@@ -459,7 +363,7 @@ F 3 "" H 7550 2100 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R92
+L Device:R R92
 U 1 1 58BEE3A4
 P 7550 2600
 F 0 "R92" V 7650 2600 50  0000 C CNN
@@ -470,7 +374,7 @@ F 3 "" H 7550 2600 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L CP C100
+L Device:CP C100
 U 1 1 58BF0E03
 P 2450 4200
 F 0 "C100" V 2500 4300 50  0000 L CNN
@@ -481,7 +385,7 @@ F 3 "" H 2450 4200 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CP C101
+L Device:CP C101
 U 1 1 58BF0E09
 P 2450 4600
 F 0 "C101" V 2500 4700 50  0000 L CNN
@@ -492,7 +396,7 @@ F 3 "" H 2450 4600 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R R100
+L Device:R R100
 U 1 1 58BF0E0F
 P 2850 4200
 F 0 "R100" V 2950 4200 50  0000 C CNN
@@ -503,7 +407,7 @@ F 3 "" H 2850 4200 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R101
+L Device:R R101
 U 1 1 58BF0E15
 P 2850 4600
 F 0 "R101" V 2950 4600 50  0000 C CNN
@@ -514,7 +418,7 @@ F 3 "" H 2850 4600 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L C C102
+L Device:C C102
 U 1 1 58BF0E1B
 P 3100 4850
 F 0 "C102" H 3125 4950 50  0000 L CNN
@@ -525,7 +429,7 @@ F 3 "" H 3100 4850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C103
+L Device:C C103
 U 1 1 58BF0E21
 P 3400 4850
 F 0 "C103" H 3425 4950 50  0000 L CNN
@@ -536,7 +440,7 @@ F 3 "" H 3400 4850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R103
+L Device:R R103
 U 1 1 58BF0E27
 P 3700 4850
 F 0 "R103" H 3850 4850 50  0000 C CNN
@@ -547,7 +451,7 @@ F 3 "" H 3700 4850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R102
+L Device:R R102
 U 1 1 58BF0E2D
 P 3700 3950
 F 0 "R102" H 3850 3950 50  0000 C CNN
@@ -558,7 +462,7 @@ F 3 "" H 3700 3950 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R104
+L Device:R R104
 U 1 1 58BF0E33
 P 3950 4200
 F 0 "R104" V 4030 4200 50  0000 C CNN
@@ -569,7 +473,7 @@ F 3 "" H 3950 4200 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R105
+L Device:R R105
 U 1 1 58BF0E39
 P 3950 4600
 F 0 "R105" V 4030 4600 50  0000 C CNN
@@ -580,7 +484,7 @@ F 3 "" H 3950 4600 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L C C105
+L Device:C C105
 U 1 1 58BF0E3F
 P 4200 4850
 F 0 "C105" H 4225 4950 50  0000 L CNN
@@ -591,7 +495,7 @@ F 3 "" H 4200 4850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C104
+L Device:C C104
 U 1 1 58BF0E45
 P 4200 3950
 F 0 "C104" H 4225 4050 50  0000 L CNN
@@ -602,7 +506,7 @@ F 3 "" H 4200 3950 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GNDA #PWR060
+L power:GNDA #PWR060
 U 1 1 58BF0E4B
 P 2300 5200
 F 0 "#PWR060" H 2300 4950 50  0001 C CNN
@@ -613,7 +517,7 @@ F 3 "" H 2300 5200 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L NE5532 IC15
+L linear:NE5532 IC15
 U 2 1 58BF0E71
 P 4600 4400
 F 0 "IC15" H 4600 4550 50  0000 L CNN
@@ -624,7 +528,7 @@ F 3 "" H 4600 4400 50  0000 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L +15V #PWR061
+L power:+15V #PWR061
 U 1 1 58BF0E77
 P 4500 4800
 F 0 "#PWR061" H 4500 4650 50  0001 C CNN
@@ -635,10 +539,10 @@ F 3 "" H 4500 4800 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L -15V #PWR69
+L power:-15V #PWR069
 U 1 1 58BF0E7D
 P 4500 4000
-F 0 "#PWR69" H 4500 3850 50  0001 C CNN
+F 0 "#PWR069" H 4500 3850 50  0001 C CNN
 F 1 "-15V" H 4550 4150 50  0000 C CNN
 F 2 "" H 4500 4000 50  0000 C CNN
 F 3 "" H 4500 4000 50  0000 C CNN
@@ -646,7 +550,7 @@ F 3 "" H 4500 4000 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L NE5532 IC16
+L linear:NE5532 IC16
 U 2 1 58BF0E92
 P 5700 4400
 F 0 "IC16" H 5700 4550 50  0000 L CNN
@@ -657,10 +561,10 @@ F 3 "" H 5700 4400 50  0000 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L +15V #PWR062
+L power:+15V #PWR0125
 U 1 1 58BF0E98
 P 5600 4800
-F 0 "#PWR062" H 5600 4650 50  0001 C CNN
+F 0 "#PWR0125" H 5600 4650 50  0001 C CNN
 F 1 "+15V" H 5600 4940 50  0000 C CNN
 F 2 "" H 5600 4800 50  0000 C CNN
 F 3 "" H 5600 4800 50  0000 C CNN
@@ -668,10 +572,10 @@ F 3 "" H 5600 4800 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L -15V #PWR70
+L power:-15V #PWR070
 U 1 1 58BF0E9E
 P 5600 4000
-F 0 "#PWR70" H 5600 3850 50  0001 C CNN
+F 0 "#PWR070" H 5600 3850 50  0001 C CNN
 F 1 "-15V" H 5600 4140 50  0000 C CNN
 F 2 "" H 5600 4000 50  0000 C CNN
 F 3 "" H 5600 4000 50  0000 C CNN
@@ -679,7 +583,7 @@ F 3 "" H 5600 4000 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L NE5532 IC17
+L linear:NE5532 IC17
 U 2 1 58BF0EB3
 P 6800 4400
 F 0 "IC17" H 6800 4550 50  0000 L CNN
@@ -690,10 +594,10 @@ F 3 "" H 6800 4400 50  0000 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L +15V #PWR063
+L power:+15V #PWR0126
 U 1 1 58BF0EB9
 P 6700 4900
-F 0 "#PWR063" H 6700 4750 50  0001 C CNN
+F 0 "#PWR0126" H 6700 4750 50  0001 C CNN
 F 1 "+15V" H 6700 5040 50  0000 C CNN
 F 2 "" H 6700 4900 50  0000 C CNN
 F 3 "" H 6700 4900 50  0000 C CNN
@@ -701,10 +605,10 @@ F 3 "" H 6700 4900 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L -15V #PWR71
+L power:-15V #PWR071
 U 1 1 58BF0EBF
 P 6700 4000
-F 0 "#PWR71" H 6700 3850 50  0001 C CNN
+F 0 "#PWR071" H 6700 3850 50  0001 C CNN
 F 1 "-15V" H 6700 4140 50  0000 C CNN
 F 2 "" H 6700 4000 50  0000 C CNN
 F 3 "" H 6700 4000 50  0000 C CNN
@@ -712,7 +616,7 @@ F 3 "" H 6700 4000 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R107
+L Device:R R107
 U 1 1 58BF0ED6
 P 5850 3700
 F 0 "R107" V 5950 3700 50  0000 C CNN
@@ -723,7 +627,7 @@ F 3 "" H 5850 3700 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R106
+L Device:R R106
 U 1 1 58BF0EE3
 P 5300 4850
 F 0 "R106" H 5450 4850 50  0000 C CNN
@@ -734,7 +638,7 @@ F 3 "" H 5300 4850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R109
+L Device:R R109
 U 1 1 58BF0EEC
 P 6950 3700
 F 0 "R109" V 7050 3700 50  0000 C CNN
@@ -745,7 +649,7 @@ F 3 "" H 6950 3700 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R108
+L Device:R R108
 U 1 1 58BF0EF2
 P 6400 3450
 F 0 "R108" H 6550 3450 50  0000 C CNN
@@ -756,7 +660,7 @@ F 3 "" H 6400 3450 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R110
+L Device:R R110
 U 1 1 58BF0F04
 P 7550 3200
 F 0 "R110" V 7650 3200 50  0000 C CNN
@@ -767,7 +671,7 @@ F 3 "" H 7550 3200 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R111
+L Device:R R111
 U 1 1 58BF0F0A
 P 7550 4400
 F 0 "R111" V 7650 4400 50  0000 C CNN
@@ -778,7 +682,7 @@ F 3 "" H 7550 4400 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R112
+L Device:R R112
 U 1 1 58BF0F10
 P 7550 4900
 F 0 "R112" V 7650 4900 50  0000 C CNN

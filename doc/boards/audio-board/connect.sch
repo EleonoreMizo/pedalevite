@@ -1,106 +1,10 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:pedalevite
-LIBS:switches
-LIBS:74xgxx
-LIBS:ac-dc
-LIBS:actel
-LIBS:allegro
-LIBS:Altera
-LIBS:analog_devices
-LIBS:battery_management
-LIBS:bbd
-LIBS:brooktre
-LIBS:cmos_ieee
-LIBS:dc-dc
-LIBS:diode
-LIBS:elec-unifil
-LIBS:ESD_Protection
-LIBS:ftdi
-LIBS:gennum
-LIBS:graphic
-LIBS:hc11
-LIBS:ir
-LIBS:Lattice
-LIBS:logo
-LIBS:maxim
-LIBS:mechanical
-LIBS:microchip_dspic33dsc
-LIBS:microchip_pic10mcu
-LIBS:microchip_pic12mcu
-LIBS:microchip_pic16mcu
-LIBS:microchip_pic18mcu
-LIBS:microchip_pic32mcu
-LIBS:motor_drivers
-LIBS:motors
-LIBS:msp430
-LIBS:nordicsemi
-LIBS:nxp_armmcu
-LIBS:onsemi
-LIBS:Oscillators
-LIBS:Power_Management
-LIBS:powerint
-LIBS:pspice
-LIBS:references
-LIBS:relays
-LIBS:rfcom
-LIBS:sensors
-LIBS:silabs
-LIBS:stm8
-LIBS:stm32
-LIBS:supertex
-LIBS:transf
-LIBS:ttl_ieee
-LIBS:video
-LIBS:wiznet
-LIBS:Worldsemi
-LIBS:Xicor
-LIBS:zetex
-LIBS:Zilog
-LIBS:Symbols_DCDC-ACDC-Converter_RevC_20Jul2012
-LIBS:Symbols_EN60617_13Mar2013
-LIBS:Symbols_EN60617-10_HF-Radio_DRAFT_12Sep2013
-LIBS:Symbols_ICs-Diskrete_RevD10
-LIBS:Symbols_ICs-Opto_RevB_16Sep2013
-LIBS:Symbols_Microcontroller_Philips-NXP_RevA_06Oct2013
-LIBS:Symbols_Socket-DIN41612_RevA
-LIBS:Symbols_Transformer-Diskrete_RevA
-LIBS:SymbolsSimilarEN60617+oldDIN617-RevE8
-LIBS:audio-board-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 7
-Title "Pédale Vite v2 — Audio interface"
+Title "PÃ©dale Vite v2 â€” Audio interface"
 Date "2019-10-28"
 Rev ""
 Comp "Laurent DE SORAS"
@@ -110,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L CONN_01X02 P17
+L conn:CONN_01X02 P17
 U 1 1 58BC390A
 P 3100 3650
 F 0 "P17" H 3050 3800 50  0000 C CNN
@@ -121,7 +25,7 @@ F 3 "" H 3100 3650 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_01X02 P16
+L conn:CONN_01X02 P16
 U 1 1 58BC3904
 P 3000 3650
 F 0 "P16" H 2950 3800 50  0000 C CNN
@@ -132,7 +36,7 @@ F 3 "" H 3000 3650 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X02 P15
+L conn:CONN_01X02 P15
 U 1 1 58BC3860
 P 4150 2600
 F 0 "P15" H 4100 2750 50  0000 C CNN
@@ -143,7 +47,7 @@ F 3 "" H 4150 2600 50  0000 C CNN
 	0    1    -1   0   
 $EndComp
 $Comp
-L CONN_01X02 P14
+L conn:CONN_01X02 P14
 U 1 1 58BC385A
 P 1950 2600
 F 0 "P14" H 1900 2750 50  0000 C CNN
@@ -154,7 +58,7 @@ F 3 "" H 1950 2600 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_01X02 P9
+L conn:CONN_01X02 P9
 U 1 1 58BC3745
 P 4200 1250
 F 0 "P9" H 4150 1400 50  0000 C CNN
@@ -165,7 +69,7 @@ F 3 "" H 4200 1250 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_01X02 P8
+L conn:CONN_01X02 P8
 U 1 1 58BC36D9
 P 2000 1250
 F 0 "P8" H 1950 1400 50  0000 C CNN
@@ -176,7 +80,7 @@ F 3 "" H 2000 1250 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_02X03 P7
+L conn:CONN_02X03 P7
 U 1 1 58BC3653
 P 4150 1700
 F 0 "P7" H 4150 1900 50  0000 C CNN
@@ -187,7 +91,7 @@ F 3 "" H 4150 500 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_02X03 P6
+L conn:CONN_02X03 P6
 U 1 1 58BC34CB
 P 1950 1700
 F 0 "P6" H 1950 1900 50  0000 C CNN
@@ -198,7 +102,7 @@ F 3 "" H 1950 500 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X03 P19
+L conn:CONN_01X03 P19
 U 1 1 58BC33F1
 P 3100 4100
 F 0 "P19" H 3050 4300 50  0000 C CNN
@@ -209,7 +113,7 @@ F 3 "" H 3100 4100 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_01X03 P18
+L conn:CONN_01X03 P18
 U 1 1 58BC3378
 P 3000 4100
 F 0 "P18" H 2950 4300 50  0000 C CNN
@@ -272,7 +176,7 @@ IN1SWA2
 Text GLabel 2400 1200 2    60   Input ~ 0
 IN1SWA1
 $Comp
-L CONN_01X03 P5
+L conn:CONN_01X03 P5
 U 1 1 58BC244E
 P 4100 1200
 F 0 "P5" H 4050 1400 50  0000 C CNN
@@ -283,7 +187,7 @@ F 3 "" H 4100 1200 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X03 P4
+L conn:CONN_01X03 P4
 U 1 1 58BC2330
 P 1900 1200
 F 0 "P4" H 1850 1400 50  0000 C CNN
@@ -318,7 +222,7 @@ IN1XLR3
 Text GLabel 1500 1200 0    60   Input ~ 0
 IN1XLR2
 $Comp
-L GNDA #PWR01
+L power:GNDA #PWR01
 U 1 1 58D54B66
 P 1000 4700
 F 0 "#PWR01" H 1000 4450 50  0001 C CNN
@@ -446,7 +350,7 @@ Connection ~ 1000 3600
 Connection ~ 5200 3600
 Connection ~ 5200 4000
 $Comp
-L CONN_02X03 P10
+L conn:CONN_02X03 P10
 U 1 1 58D651CA
 P 1950 2200
 F 0 "P10" H 1950 2400 50  0000 C CNN
@@ -457,7 +361,7 @@ F 3 "" H 1950 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_02X03 P11
+L conn:CONN_02X03 P11
 U 1 1 58D653BE
 P 4150 2200
 F 0 "P11" H 4150 2400 50  0000 C CNN

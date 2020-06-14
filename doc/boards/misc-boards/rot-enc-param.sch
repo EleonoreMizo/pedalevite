@@ -1,98 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:pedalevite
-LIBS:74xgxx
-LIBS:ac-dc
-LIBS:actel
-LIBS:allegro
-LIBS:Altera
-LIBS:analog_devices
-LIBS:battery_management
-LIBS:bbd
-LIBS:bosch
-LIBS:brooktre
-LIBS:cmos_ieee
-LIBS:dc-dc
-LIBS:diode
-LIBS:elec-unifil
-LIBS:ESD_Protection
-LIBS:ftdi
-LIBS:gennum
-LIBS:graphic
-LIBS:hc11
-LIBS:ir
-LIBS:Lattice
-LIBS:leds
-LIBS:logo
-LIBS:maxim
-LIBS:mechanical
-LIBS:microchip_dspic33dsc
-LIBS:microchip_pic10mcu
-LIBS:microchip_pic12mcu
-LIBS:microchip_pic16mcu
-LIBS:microchip_pic18mcu
-LIBS:microchip_pic24mcu
-LIBS:microchip_pic32mcu
-LIBS:modules
-LIBS:motor_drivers
-LIBS:motors
-LIBS:msp430
-LIBS:nordicsemi
-LIBS:nxp
-LIBS:nxp_armmcu
-LIBS:onsemi
-LIBS:Oscillators
-LIBS:Power_Management
-LIBS:powerint
-LIBS:pspice
-LIBS:references
-LIBS:relays
-LIBS:rfcom
-LIBS:sensors
-LIBS:silabs
-LIBS:stm8
-LIBS:stm32
-LIBS:supertex
-LIBS:switches
-LIBS:transf
-LIBS:triac_thyristor
-LIBS:ttl_ieee
-LIBS:video
-LIBS:wiznet
-LIBS:Worldsemi
-LIBS:Xicor
-LIBS:zetex
-LIBS:Zilog
-LIBS:misc-boards-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -107,7 +14,7 @@ Comment3 ""
 Comment4 "Rotary encoders for parameters"
 $EndDescr
 $Comp
-L CONN_01X03 P204
+L conn:CONN_01X03 P204
 U 1 1 5D8A82DA
 P 4000 5600
 F 0 "P204" H 4000 5800 50  0000 C CNN
@@ -118,7 +25,7 @@ F 3 "" H 4000 5600 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_01X03 P200
+L conn:CONN_01X03 P200
 U 1 1 5D8A82E1
 P 4000 2800
 F 0 "P200" H 4000 3000 50  0000 C CNN
@@ -129,7 +36,7 @@ F 3 "" H 4000 2800 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_01X03 P201
+L conn:CONN_01X03 P201
 U 1 1 5D8A82E8
 P 4000 3500
 F 0 "P201" H 4000 3700 50  0000 C CNN
@@ -140,7 +47,7 @@ F 3 "" H 4000 3500 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_01X03 P202
+L conn:CONN_01X03 P202
 U 1 1 5D8A82EF
 P 4000 4200
 F 0 "P202" H 4000 4400 50  0000 C CNN
@@ -151,7 +58,7 @@ F 3 "" H 4000 4200 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_01X03 P203
+L conn:CONN_01X03 P203
 U 1 1 5D8A82F6
 P 4000 4900
 F 0 "P203" H 4000 5100 50  0000 C CNN
@@ -192,7 +99,7 @@ Wire Wire Line
 Wire Wire Line
 	5300 5700 4200 5700
 $Comp
-L Rotary_Encoder_Switch SW200
+L misc-boards-rescue:Rotary_Encoder_Switch SW200
 U 1 1 5D8B5CF1
 P 5600 2800
 F 0 "SW200" H 5600 3060 50  0000 C CNN
@@ -203,7 +110,7 @@ F 3 "" H 5600 3060 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Rotary_Encoder_Switch SW201
+L misc-boards-rescue:Rotary_Encoder_Switch SW201
 U 1 1 5D8B5E2F
 P 5600 3500
 F 0 "SW201" H 5600 3760 50  0000 C CNN
@@ -214,7 +121,7 @@ F 3 "" H 5600 3760 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Rotary_Encoder_Switch SW202
+L misc-boards-rescue:Rotary_Encoder_Switch SW202
 U 1 1 5D8B5E6E
 P 5600 4200
 F 0 "SW202" H 5600 4460 50  0000 C CNN
@@ -225,7 +132,7 @@ F 3 "" H 5600 4460 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Rotary_Encoder_Switch SW203
+L misc-boards-rescue:Rotary_Encoder_Switch SW203
 U 1 1 5D8B5EAE
 P 5600 4900
 F 0 "SW203" H 5600 5160 50  0000 C CNN
@@ -236,7 +143,7 @@ F 3 "" H 5600 5160 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Rotary_Encoder_Switch SW204
+L misc-boards-rescue:Rotary_Encoder_Switch SW204
 U 1 1 5D8B5EF0
 P 5600 5600
 F 0 "SW204" H 5600 5860 50  0000 C CNN

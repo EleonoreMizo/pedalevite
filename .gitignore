@@ -48,6 +48,7 @@ doc/v1/pcb*/*.bck
 doc/boards/*/*.bak
 doc/boards/*/*-bak
 doc/boards/*/*.bck
+doc/boards/*/*-rescue.lib
+doc/boards/*/rescue-backup
 build/win/.vs/
 build/win/fontgen/freetype/
-
