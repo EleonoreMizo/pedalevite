@@ -1356,13 +1356,35 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_hi (VectF32 i0, VectF32 i1)
 
 
 
+// Sources:
+// https://github.com/Maratyszcza/NNPACK/blob/master/src/neon/transpose.h
+// https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_MM_TRANSPOSE4_PS&expand=5915,5949
 void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a3)
 {
+#if fstb_IS (ARCHI, X86)
+	const __m128   tmp0 = _mm_unpacklo_ps (a0, a1);
+	const __m128   tmp2 = _mm_unpacklo_ps (a2, a3);
+	const __m128   tmp1 = _mm_unpackhi_ps (a0, a1);
+	const __m128   tmp3 = _mm_unpackhi_ps (a2, a3);
+	a0 = _mm_movelh_ps (tmp0, tmp2);
+	a1 = _mm_movehl_ps (tmp2, tmp0);
+	a2 = _mm_movelh_ps (tmp1, tmp3);
+	a3 = _mm_movehl_ps (tmp3, tmp1);
+#elif fstb_IS (ARCHI, ARM)
+	const float32x4x2_t a01 = vtrnq_f32 (a0, a1);
+	const float32x4x2_t a23 = vtrnq_f32 (a2, a3);
+	a0 = vcombine_f32 (vget_low_f32 (a01.val [0]), vget_low_f32 (a23.val [0]));
+	a1 = vcombine_f32 (vget_low_f32 (a01.val [1]), vget_low_f32 (a23.val [1]));
+	a2 = vcombine_f32 (vget_high_f32 (a01.val [0]), vget_high_f32 (a23.val [0]));
+	a3 = vcombine_f32 (vget_high_f32 (a01.val [1]), vget_high_f32 (a23.val [1]));
+#elif
+	// Generic form
 	VectF32        k0, k1, k2, k3;
 	interleave_f32 (k0, k1, a0, a2);
 	interleave_f32 (k2, k3, a1, a3);
 	interleave_f32 (a0, a1, k0, k2);
 	interleave_f32 (a2, a3, k1, k3);
+#endif // ff_arch_CPU
 }
 
 
