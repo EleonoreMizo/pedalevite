@@ -54,7 +54,8 @@ Description:
 	Finds the minimum number of coefficients for a given filter specification
 Input parameters:
 	- attenuation: stopband attenuation, dB. > 0.
-	- transition: normalized transition bandwith. Range ]0 ; 1/2[
+	- transition: normalized transition bandwith (% relative to Fs).
+		Range ]0 ; 1/2[
 Returns: Number of coefficients, > 0
 Throws: Nothing
 ==============================================================================
@@ -85,7 +86,8 @@ Description:
 	and the transition bandwith.
 Input parameters:
 	- nbr_coefs: Number of desired coefficients. > 0.
-	- transition: normalized transition bandwith. Range ]0 ; 1/2[
+	- transition: normalized transition bandwith (% relative to Fs).
+		Range ]0 ; 1/2[
 Returns: stopband attenuation, dB. > 0.
 Throws: Nothing
 ==============================================================================
@@ -117,7 +119,8 @@ Description:
 	Order is automatically calculated.
 Input parameters:
 	- attenuation: stopband attenuation, dB. > 0.
-	- transition: normalized transition bandwith. Range ]0 ; 1/2[
+	- transition: normalized transition bandwith (% relative to Fs).
+	Range ]0 ; 1/2[
 Output parameters:
 	- coef_arr: Coefficient list, must be large enough to store all the
 		coefficients. Filter order = nbr_coefs * 2 + 1
@@ -160,7 +163,8 @@ Description:
 	is set to the maximum value for these constraints.
 Input parameters:
 	- nbr_coefs: Number of desired coefficients. > 0.
-	- transition: normalized transition bandwith. Range ]0 ; 1/2[
+	- transition: normalized transition bandwith (% relative to Fs).
+		Range ]0 ; 1/2[
 Output parameters:
 	- coef_arr: Coefficient list, must be large enough to store all the
 		coefficients.
@@ -291,7 +295,7 @@ double	PolyphaseIir2Designer::compute_group_delay (const double coef_arr [], int
 	assert (f_fs < 0.5);
 
 	double         dly_total = 0;
-	for (int k = 0; k < nbr_coefs; ++k)
+	for (int k = 0; k < nbr_coefs; k += 2)
 	{
 		const double   dly = compute_group_delay (coef_arr [k], f_fs, ph_flag);
 		dly_total += dly;
