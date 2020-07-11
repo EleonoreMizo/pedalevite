@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "test/TestHiirDesigner.h"
 
@@ -71,6 +72,7 @@ int	TestHiirDesigner::perform_test ()
 		lb_coef.data (), nbr_coef, ft_rel, false
 	);
 	assert ((tg_gdly - ub_gdly) * (tg_gdly - lb_gdly) < 0);
+	fstb::unused (ub_gdly);
 
 	std::vector <double> rs_coef (nbr_coef);
 	double         rs_attn = 0;
