@@ -244,12 +244,7 @@ float	Approx::log2 (float val)
 {
 	assert (val > 0);
 
-	union
-	{
-		int32_t        _i;
-		float          _f;
-	}              combo;
-	combo._f = val;
+	Combo32        combo { val };
 	int            x     = combo._i;
 	const int      log_2 = ((x >> 23) & 255) - 128;
 	x        &= ~(255 << 23);
@@ -282,12 +277,7 @@ float	Approx::exp2 (float val)
 	const float    c = 1.0f;
 	val = (a * val + b) * val + c;
 
-	union
-	{
-		int32_t        _i;
-		float          _f;
-	}              combo;
-	combo._f = val;
+	Combo32        combo { val };
 
 	// Add integer power of 2 to exponent
 	combo._i += tx << 23;

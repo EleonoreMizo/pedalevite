@@ -130,6 +130,12 @@ protected:
 
 private:
 
+	union Combo32
+	{
+		float          _f;
+		int32_t        _i;
+	};
+
 	static inline ToolsSimd::VectF32
 	               restrict_angle_to_mpi_pi (ToolsSimd::VectF32 x, const ToolsSimd::VectF32 &pm, const ToolsSimd::VectF32 &p, const ToolsSimd::VectF32 &tp);
 	static inline ToolsSimd::VectF32
