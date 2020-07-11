@@ -63,6 +63,7 @@
 #include "test/TestDiodeClipScreamer.h"
 #include "test/TestDkmSimulator.h"
 #include "test/TestHardclipBl.h"
+#include "test/TestHiirDesigner.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
 #include "test/TestLatAlgo.h"

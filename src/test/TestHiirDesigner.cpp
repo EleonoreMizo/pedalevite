@@ -31,6 +31,7 @@ http://www.wtfpl.net/ for more details.
 
 #include <cassert>
 #include <cmath>
+#include <cstdio>
 
 
 
@@ -55,12 +56,6 @@ int	TestHiirDesigner::perform_test ()
 	// Simple bisection method
 	double         lb_tb    = 0.5e-3;    // Lower bound for the transition bandwidth
 	double         ub_tb    = 0.5 - lb_tb; // Upper bound for the transition bandwidth (exprimed as a fraction of the sample rate at full rate (2*fs))
-	const double   ub_attn  = hiir::PolyphaseIir2Designer::compute_atten_from_order_tbw (
-		nbr_coef, ub_tb
-	);
-	const double   lb_attn  = hiir::PolyphaseIir2Designer::compute_atten_from_order_tbw (
-		nbr_coef, lb_tb
-	);
 	std::vector <double> ub_coef (nbr_coef);
 	std::vector <double> lb_coef (nbr_coef);
 	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
