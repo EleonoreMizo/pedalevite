@@ -131,13 +131,16 @@ int	Squeezer::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.set_sample_freq (sample_freq);
 	_state_set.clear_buffers ();
 
+	// Rejection        : 77.1 dB
+	// Bandwidth        : 21.3 kHz @ 44.1 kHz
+	// Total group delay:  4.0 spl @ 1 kHz
 	double         coef_42 [_nbr_coef_42];
 	double         coef_21 [_nbr_coef_21];
 	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
-		coef_42, _nbr_coef_42, 1.0 / 5
+		coef_42, _nbr_coef_42, 0.225513
 	);
 	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
-		coef_21, _nbr_coef_21, 1.0 / 100
+		coef_21, _nbr_coef_21, 0.0159287
 	);
 	for (auto &c : _chn_arr)
 	{

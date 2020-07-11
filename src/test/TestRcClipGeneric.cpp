@@ -120,7 +120,7 @@ int	TestRcClipGeneric::perform_test (const char classname_0 [], const char filen
 	const int      len = int (src.size ());
 	std::vector <float>  dst (len);
 
-	const int      nbr_coef_42 = 3;
+	const int      nbr_coef_42 = 4;
 	const int      nbr_coef_21 = 8;
 	struct UpDown
 	{
@@ -130,12 +130,15 @@ int	TestRcClipGeneric::perform_test (const char classname_0 [], const char filen
 	fstb::SingleObj <UpDown> updw;
 	double coef_42 [nbr_coef_42];
 	double coef_21 [nbr_coef_21];
-		hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
-			&coef_42 [0], nbr_coef_42, 1.0 / 5
-		);
-		hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
-			&coef_21 [0], nbr_coef_21, 1.0 / 100
-		);
+	// Rejection        : 103.4 dB
+	// Bandwidth        :  20.0 kHz @ 44.1 kHz
+	// Total group delay:   5.0 spl @ 1 kHz
+	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
+		&coef_42 [0], nbr_coef_42, 0.216404
+	);
+	hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
+		&coef_21 [0], nbr_coef_21, 0.0455352
+	);
 	updw->_up.set_coefs (coef_42, coef_21);
 	updw->_dw.set_coefs (coef_42, coef_21);
 

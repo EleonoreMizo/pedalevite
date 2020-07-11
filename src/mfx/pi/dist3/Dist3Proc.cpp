@@ -748,11 +748,14 @@ void	Dist3Proc::init_ovrs_coef ()
 {
 	if (! _coef_init_flag)
 	{
+		// Rejection        : 77.1 dB
+		// Bandwidth        : 21.3 kHz @ 44.1 kHz
+		// Total group delay:  4.0 spl @ 1 kHz
 		hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
-			&_coef_42 [0], _nbr_coef_42, 1.0 / 5
+			&_coef_42 [0], _nbr_coef_42, 0.225513
 		);
 		hiir::PolyphaseIir2Designer::compute_coefs_spec_order_tbw (
-			&_coef_21 [0], _nbr_coef_21, 1.0 / 100
+			&_coef_21 [0], _nbr_coef_21, 0.0159287
 		);
 
 		_coef_init_flag = true;
