@@ -470,6 +470,8 @@
     <ClInclude Include="..\..\..\src\fstb\FixedPoint.hpp" />
     <ClInclude Include="..\..\..\src\fstb\fnc.h" />
     <ClInclude Include="..\..\..\src\fstb\fnc.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\Hash.h" />
+    <ClInclude Include="..\..\..\src\fstb\Hash.hpp" />
     <ClInclude Include="..\..\..\src\fstb\lang\fnc.h" />
     <ClInclude Include="..\..\..\src\fstb\lang\fnc.hpp" />
     <ClInclude Include="..\..\..\src\fstb\lang\NonConst.h" />
@@ -1062,6 +1064,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSinh.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSq.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSq.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\BigMuffPi.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h" />
@@ -1198,6 +1201,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\LfoType.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMood.h" />
@@ -1728,6 +1732,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\HardclipBl.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\BigMuffPi.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.cpp" />

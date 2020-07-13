@@ -119,7 +119,8 @@ private:
 
 	void           process_band (int band_idx, int nbr_spl);
 
-	static float   compute_split_freq (int split_idx);
+	static constexpr float
+	               compute_split_freq (int split_idx);
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 

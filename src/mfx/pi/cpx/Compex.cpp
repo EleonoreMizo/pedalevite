@@ -274,13 +274,13 @@ void	Compex::do_process_block (piapi::ProcInfo &proc)
 
 
 template <int NC>
-float	Compex::AddProc <NC>::process_scalar (float in)
+constexpr float	Compex::AddProc <NC>::process_scalar (float in)
 {
 	return (in);
 }
 
 template <>
-float	Compex::AddProc <2>::process_scalar (float in)
+constexpr float	Compex::AddProc <2>::process_scalar (float in)
 {
 	return (in * 0.5f);
 }

@@ -77,14 +77,14 @@ FixedPoint::FixedPoint (NoInit dummy)
 
 
 
-void	FixedPoint::set_val_int64 (int64_t val)
+constexpr void	FixedPoint::set_val_int64 (int64_t val)
 {
 	_val._all = val;
 }
 
 
 
-void	FixedPoint::clear ()
+constexpr void	FixedPoint::clear ()
 {
 	_val._all = 0;
 }
@@ -101,7 +101,7 @@ void	FixedPoint::set_val (double val)
 
 
 
-void	FixedPoint::set_val (int32_t int_val, uint32_t frac_val)
+constexpr void	FixedPoint::set_val (int32_t int_val, uint32_t frac_val)
 {
 	_val._part._msw = int_val;
 	_val._part._lsw = frac_val;
@@ -109,42 +109,42 @@ void	FixedPoint::set_val (int32_t int_val, uint32_t frac_val)
 
 
 
-int64_t	FixedPoint::get_val_int64 () const
+constexpr int64_t	FixedPoint::get_val_int64 () const
 {
 	return _val._all;
 }
 
 
 
-double	FixedPoint::get_val_dbl () const
+constexpr double	FixedPoint::get_val_dbl () const
 {
 	return _val._part._msw + get_frac_val_dbl ();
 }
 
 
 
-float	FixedPoint::get_val_flt () const
+constexpr float	FixedPoint::get_val_flt () const
 {
 	return _val._part._msw + get_frac_val_flt ();
 }
 
 
 
-void	FixedPoint::set_int_val (int32_t int_val)
+constexpr void	FixedPoint::set_int_val (int32_t int_val)
 {
 	_val._part._msw = int_val;
 }
 
 
 
-int32_t	FixedPoint::get_int_val () const
+constexpr int32_t	FixedPoint::get_int_val () const
 {
 	return _val._part._msw;
 }
 
 
 
-int32_t	FixedPoint::get_round () const
+constexpr int32_t	FixedPoint::get_round () const
 {
 	Fixed3232      temp (_val);
 	temp._all += 0x80000000U;
@@ -154,7 +154,7 @@ int32_t	FixedPoint::get_round () const
 
 
 
-int32_t	FixedPoint::get_ceil () const
+constexpr int32_t	FixedPoint::get_ceil () const
 {
 	Fixed3232      temp (_val);
 	temp._all += 0xFFFFFFFFU;
@@ -164,42 +164,42 @@ int32_t	FixedPoint::get_ceil () const
 
 
 
-void	FixedPoint::set_frac_val (uint32_t frac_val)
+constexpr void	FixedPoint::set_frac_val (uint32_t frac_val)
 {
 	_val._part._lsw = frac_val;
 }
 
 
 
-double	FixedPoint::get_frac_val_dbl () const
+constexpr double	FixedPoint::get_frac_val_dbl () const
 {
 	return _val._part._lsw * double (fstb::TWOPM32);
 }
 
 
 
-float	FixedPoint::get_frac_val_flt () const
+constexpr float	FixedPoint::get_frac_val_flt () const
 {
 	return float (_val._part._lsw * fstb::TWOPM32);
 }
 
 
 
-uint32_t	FixedPoint::get_frac_val () const
+constexpr uint32_t	FixedPoint::get_frac_val () const
 {
 	return _val._part._lsw;
 }
 
 
 
-void	FixedPoint::neg ()
+constexpr void	FixedPoint::neg ()
 {
 	_val._all = -_val._all;
 }
 
 
 
-void	FixedPoint::abs ()
+constexpr void	FixedPoint::abs ()
 {
 	if (_val._part._msw < 0)
 	{
@@ -210,7 +210,7 @@ void	FixedPoint::abs ()
 
 
 // Retruns positive or negative values, depending on the initial value sign
-void	FixedPoint::bound (int32_t len)
+constexpr void	FixedPoint::bound (int32_t len)
 {
 	assert (len > 0);
 
@@ -223,7 +223,7 @@ void	FixedPoint::bound (int32_t len)
 
 
 // Returns only positive values
-void	FixedPoint::bound_positive (int32_t len)
+constexpr void	FixedPoint::bound_positive (int32_t len)
 {
 	assert (len > 0);
 
@@ -239,21 +239,21 @@ void	FixedPoint::bound_positive (int32_t len)
 
 
 
-void	FixedPoint::bound_and (int32_t and_val)
+constexpr void	FixedPoint::bound_and (int32_t and_val)
 {
 	_val._part._msw &= and_val;
 }
 
 
 
-void	FixedPoint::add (const FixedPoint &val)
+constexpr void	FixedPoint::add (const FixedPoint &val)
 {
 	_val._all += val._val._all;
 }
 
 
 
-void	FixedPoint::add (const FixedPoint &val, int32_t and_val)
+constexpr void	FixedPoint::add (const FixedPoint &val, int32_t and_val)
 {
 	add (val);
 	bound_and (and_val);
@@ -261,14 +261,14 @@ void	FixedPoint::add (const FixedPoint &val, int32_t and_val)
 
 
 
-void	FixedPoint::add_int (int32_t int_val)
+constexpr void	FixedPoint::add_int (int32_t int_val)
 {
 	_val._part._msw += int_val;
 }
 
 
 
-void	FixedPoint::add_int (int32_t int_val, int32_t and_val)
+constexpr void	FixedPoint::add_int (int32_t int_val, int32_t and_val)
 {
 	add_int (int_val);
 	bound_and (and_val);
@@ -276,14 +276,14 @@ void	FixedPoint::add_int (int32_t int_val, int32_t and_val)
 
 
 
-void	FixedPoint::add_frac (uint32_t frac_val)
+constexpr void	FixedPoint::add_frac (uint32_t frac_val)
 {
 	_val._all += frac_val;
 }
 
 
 
-void	FixedPoint::add_frac (uint32_t frac_val, int32_t and_val)
+constexpr void	FixedPoint::add_frac (uint32_t frac_val, int32_t and_val)
 {
 	add_frac (frac_val);
 	bound_and (and_val);
@@ -291,7 +291,7 @@ void	FixedPoint::add_frac (uint32_t frac_val, int32_t and_val)
 
 
 
-FixedPoint &	FixedPoint::operator += (const FixedPoint &other)
+constexpr FixedPoint &	FixedPoint::operator += (const FixedPoint &other)
 {
 	add (other);
 
@@ -300,7 +300,7 @@ FixedPoint &	FixedPoint::operator += (const FixedPoint &other)
 
 
 
-FixedPoint &	FixedPoint::operator += (int32_t int_val)
+constexpr FixedPoint &	FixedPoint::operator += (int32_t int_val)
 {
 	add_int (int_val);
 
@@ -309,14 +309,14 @@ FixedPoint &	FixedPoint::operator += (int32_t int_val)
 
 
 
-void	FixedPoint::sub (const FixedPoint &val)
+constexpr void	FixedPoint::sub (const FixedPoint &val)
 {
 	_val._all -= val._val._all;
 }
 
 
 
-void	FixedPoint::sub (const FixedPoint &val, int32_t and_val)
+constexpr void	FixedPoint::sub (const FixedPoint &val, int32_t and_val)
 {
 	sub (val);
 	bound_and (and_val);
@@ -324,14 +324,14 @@ void	FixedPoint::sub (const FixedPoint &val, int32_t and_val)
 
 
 
-void	FixedPoint::sub_int (int32_t int_val)
+constexpr void	FixedPoint::sub_int (int32_t int_val)
 {
 	_val._part._msw -= int_val;
 }
 
 
 
-void	FixedPoint::sub_int (int32_t int_val, int32_t and_val)
+constexpr void	FixedPoint::sub_int (int32_t int_val, int32_t and_val)
 {
 	sub_int (int_val);
 	bound_and (and_val);
@@ -339,14 +339,14 @@ void	FixedPoint::sub_int (int32_t int_val, int32_t and_val)
 
 
 
-void	FixedPoint::sub_frac (uint32_t frac_val)
+constexpr void	FixedPoint::sub_frac (uint32_t frac_val)
 {
 	_val._all -= frac_val;
 }
 
 
 
-void	FixedPoint::sub_frac (uint32_t frac_val, int32_t and_val)
+constexpr void	FixedPoint::sub_frac (uint32_t frac_val, int32_t and_val)
 {
 	sub_frac (frac_val);
 	bound_and (and_val);
@@ -354,7 +354,7 @@ void	FixedPoint::sub_frac (uint32_t frac_val, int32_t and_val)
 
 
 
-FixedPoint &	FixedPoint::operator -= (const FixedPoint &other)
+constexpr FixedPoint &	FixedPoint::operator -= (const FixedPoint &other)
 {
 	sub (other);
 
@@ -363,7 +363,7 @@ FixedPoint &	FixedPoint::operator -= (const FixedPoint &other)
 
 
 
-FixedPoint &	FixedPoint::operator -= (int32_t int_val)
+constexpr FixedPoint &	FixedPoint::operator -= (int32_t int_val)
 {
 	sub_int (int_val);
 
@@ -372,7 +372,7 @@ FixedPoint &	FixedPoint::operator -= (int32_t int_val)
 
 
 
-void	FixedPoint::shift (int nbr_bits)
+constexpr void	FixedPoint::shift (int nbr_bits)
 {
 	if (nbr_bits > 0)
 	{
@@ -386,7 +386,7 @@ void	FixedPoint::shift (int nbr_bits)
 
 
 
-void	FixedPoint::shift_left (int nbr_bits)
+constexpr void	FixedPoint::shift_left (int nbr_bits)
 {
 	assert (nbr_bits >= 0);
 
@@ -395,7 +395,7 @@ void	FixedPoint::shift_left (int nbr_bits)
 
 
 
-void	FixedPoint::shift_right (int nbr_bits)
+constexpr void	FixedPoint::shift_right (int nbr_bits)
 {
 	assert (nbr_bits >= 0);
 
@@ -408,7 +408,7 @@ void	FixedPoint::shift_right (int nbr_bits)
 
 
 
-FixedPoint &	FixedPoint::operator <<= (int nbr_bits)
+constexpr FixedPoint &	FixedPoint::operator <<= (int nbr_bits)
 {
 	shift_left (nbr_bits);
 
@@ -417,7 +417,7 @@ FixedPoint &	FixedPoint::operator <<= (int nbr_bits)
 
 
 
-FixedPoint &	FixedPoint::operator >>= (int nbr_bits)
+constexpr FixedPoint &	FixedPoint::operator >>= (int nbr_bits)
 {
 	shift_right (nbr_bits);
 
@@ -426,7 +426,7 @@ FixedPoint &	FixedPoint::operator >>= (int nbr_bits)
 
 
 
-void	FixedPoint::mul_int (int32_t val)
+constexpr void	FixedPoint::mul_int (int32_t val)
 {
 	_val._all *= val;
 }

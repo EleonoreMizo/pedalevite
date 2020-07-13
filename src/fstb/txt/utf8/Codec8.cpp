@@ -45,7 +45,7 @@ namespace utf8
 
 
 
-bool	Codec8::is_valid_utf8_byte (char c)
+constexpr bool	Codec8::is_valid_utf8_byte (char c)
 {
 	const unsigned char  val (c);
 
@@ -54,7 +54,7 @@ bool	Codec8::is_valid_utf8_byte (char c)
 
 
 
-bool	Codec8::is_valid_utf8_lead_byte (char c)
+constexpr bool	Codec8::is_valid_utf8_lead_byte (char c)
 {
 	const unsigned char  val (c);
 
@@ -63,14 +63,14 @@ bool	Codec8::is_valid_utf8_lead_byte (char c)
 
 
 
-bool	Codec8::is_valid_utf8_follow_byte (char c)
+constexpr bool	Codec8::is_valid_utf8_follow_byte (char c)
 {
 	return ((c & 0xC0) == 0x80);
 }
 
 
 
-bool	Codec8::is_char_single_byte (char c)
+constexpr bool	Codec8::is_char_single_byte (char c)
 {
 	return ((c & 0x80) == 0);
 }

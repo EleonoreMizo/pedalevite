@@ -266,7 +266,7 @@ void	FreqPeak::update_input_filter ()
 
 
 
-float	FreqPeak::compute_median3 (float a0, float a1, float a2)
+constexpr float	FreqPeak::compute_median3 (float a0, float a1, float a2)
 {
 	const float    mi = std::min (a0, a1);
 	const float    ma = std::max (a0, a1);

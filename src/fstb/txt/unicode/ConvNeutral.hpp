@@ -42,7 +42,7 @@ namespace unicode
 
 
 
-char32_t	ConvNeutral::convert (char32_t c)
+constexpr char32_t	ConvNeutral::convert (char32_t c)
 {
 	return (c);
 }

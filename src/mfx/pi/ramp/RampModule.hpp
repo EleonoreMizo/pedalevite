@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        ConvNeutral.h
-        Author: Laurent de Soras, 2008
+        RampModule.hpp
+        Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
 
@@ -9,81 +9,73 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
-#if ! defined (fstb_txt_unicode_ConvNeutral_HEADER_INCLUDED)
-#define	fstb_txt_unicode_ConvNeutral_HEADER_INCLUDED
-
-#if defined (_MSC_VER)
-	#pragma once
-	#pragma warning (4 : 4250) // "Inherits via dominance."
-#endif
+#if ! defined (mfx_pi_ramp_RampModule_CODEHEADER_INCLUDED)
+#define mfx_pi_ramp_RampModule_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 
 
-namespace fstb
+
+namespace mfx
 {
-namespace txt
+namespace pi
 {
-namespace unicode
+namespace ramp
 {
 
 
-
-class ConvNeutral
-{
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-public:
-
-	static inline constexpr char32_t
-	               convert (char32_t c);
 
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-protected:
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-private:
+
+
+template <int P, int D>
+constexpr float	RampModule::accelerate (float x)
+{
+	return (x + (D - 1) * fstb::ipowp (x, P)) * (1.0f / D);
+}
 
 
 
-/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	bool				operator == (const ConvNeutral &other);
-	bool				operator != (const ConvNeutral &other);
-
-};	// class ConvNeutral
+constexpr float	RampModule::fast (float x)
+{
+	return x * x * (3 - 2 * x);
+}
 
 
 
-}	// namespace unicode
-}	// namespace txt
-}	// namespace fstb
+constexpr float	RampModule::slow (float x)
+{
+	return x * 2 - fast (x);
+}
 
 
 
-#include	"fstb/txt/unicode/ConvNeutral.hpp"
+}  // namespace ramp
+}  // namespace pi
+}  // namespace mfx
 
 
 
-#endif	// fstb_txt_unicode_ConvNeutral_HEADER_INCLUDED
+#endif   // mfx_pi_ramp_RampModule_CODEHEADER_INCLUDED
 
 
 

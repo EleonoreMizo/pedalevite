@@ -62,7 +62,7 @@ protected:
 
 private:
 
-	static inline double
+	static inline constexpr double
 	               map_direct (double x);
 	static inline double
 	               map_inv (double x);

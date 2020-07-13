@@ -53,7 +53,7 @@ public:
 	               ~FilterBypass ()                              = default;
 	FilterBypass & operator = (const FilterBypass &other)        = default;
 
-	static fstb_FORCEINLINE float
+	static fstb_FORCEINLINE constexpr float
 	               process_sample (float sample) { return (sample); }
 
 

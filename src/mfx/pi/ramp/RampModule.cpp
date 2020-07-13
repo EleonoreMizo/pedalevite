@@ -402,28 +402,6 @@ float	RampModule::get_raw_val () const
 
 
 
-template <int P, int D>
-float	RampModule::accelerate (float x)
-{
-	return (x + (D - 1) * fstb::ipowp (x, P)) * (1.0f / D);
-}
-
-
-
-float	RampModule::fast (float x)
-{
-	return x * x * (3 - 2 * x);
-}
-
-
-
-float	RampModule::slow (float x)
-{
-	return x * 2 - fast (x);
-}
-
-
-
 }  // namespace ramp
 }  // namespace pi
 }  // namespace mfx

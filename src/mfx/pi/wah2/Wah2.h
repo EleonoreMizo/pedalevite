@@ -130,9 +130,12 @@ private:
 	void           update_model (float f_hp, float f0, float q, float gf, float gi, float gbpf);
 	void           process_reso (Channel &chn, float spl_ptr [], int nbr_spl) const;
 
-	static float   para (float a, float b);
-	static float   para (float a, float b, float c);
-	static float   shaper (float x);
+	static constexpr float
+	               para (float a, float b);
+	static constexpr float
+	               para (float a, float b, float c);
+	static constexpr float
+	               shaper (float x);
 
 	State          _state;
 

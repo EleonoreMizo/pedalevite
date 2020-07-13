@@ -266,7 +266,7 @@ void	Psu::process_polarity (Smoother &voltage, float &charge, float &x, float ac
 
 
 
-float	Psu::clip (float x, float vmax)
+constexpr float	Psu::clip (float x, float vmax)
 {
 #if 0
 	x = std::min (x, vmax);

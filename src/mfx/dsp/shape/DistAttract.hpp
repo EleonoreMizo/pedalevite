@@ -130,14 +130,14 @@ void	DistAttract::attract (float x, float env_val)
 
 
 
-DistAttract::Polarity	DistAttract::val_to_pol (float val)
+constexpr DistAttract::Polarity	DistAttract::val_to_pol (float val)
 {
 	return ((val < 0) ? Polarity_NEG : Polarity_POS);
 }
 
 
 
-float	DistAttract::pol_to_val (Polarity polarity)
+constexpr float	DistAttract::pol_to_val (Polarity polarity)
 {
 	assert (polarity >= 0);
 	assert (polarity < Polarity_NBR_ELT);

@@ -357,7 +357,7 @@ float	MoogLadderMystran::compute_alpha (float k) const
 
 // tanh(x)/x approximation, flatline at very high inputs
 // so might not be safe for very large feedback gains.
-float	MoogLadderMystran::tanh_xdx (float x)
+constexpr float	MoogLadderMystran::tanh_xdx (float x)
 {
 	const float    x2 = x * x;
 

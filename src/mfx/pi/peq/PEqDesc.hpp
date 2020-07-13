@@ -159,7 +159,7 @@ ParamDescSet &	PEqDesc <NB>::use_desc_set ()
 
 
 template <int NB>
-int	PEqDesc <NB>::compute_param_base (int band)
+constexpr int	PEqDesc <NB>::compute_param_base (int band)
 {
 	return band * Param_NBR_ELT;
 }

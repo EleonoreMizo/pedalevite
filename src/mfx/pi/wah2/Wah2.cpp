@@ -385,21 +385,21 @@ void	Wah2::process_reso (Channel &chn, float spl_ptr [], int nbr_spl) const
 
 
 
-float	Wah2::para (float a, float b)
+constexpr float	Wah2::para (float a, float b)
 {
 	return (a * b) / (a + b);
 }
 
 
 
-float	Wah2::para (float a, float b, float c)
+constexpr float	Wah2::para (float a, float b, float c)
 {
 	return para (para (a, b), c);
 }
 
 
 
-float	Wah2::shaper (float x)
+constexpr float	Wah2::shaper (float x)
 {
 	x = fstb::limit (x, -1.12f, 1.2f);
 

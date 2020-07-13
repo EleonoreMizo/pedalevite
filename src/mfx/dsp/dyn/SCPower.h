@@ -51,9 +51,9 @@ namespace dyn
 class SPower_Bypass
 {
 public:
-	static inline float
+	static inline constexpr float
 	               process_scalar (float in) { return in; }
-	static inline fstb::ToolsSimd::VectF32
+	static inline constexpr fstb::ToolsSimd::VectF32
 	               process_vect (fstb::ToolsSimd::VectF32 in) { return in; }
 };
 

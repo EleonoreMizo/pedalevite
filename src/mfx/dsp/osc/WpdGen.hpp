@@ -57,7 +57,7 @@ void	WpdGen::build_blep_pure (T &steptable, wnd::WndInterface <double> &win_gen,
 	const int      table_sz_h = table_sz >> 1;
 	std::vector <double> temp_steptable (table_sz);
 
-	const int      ovr_l2 = fstb::limit (14 - Steptable::NBR_PHASES_LOG2, 2, 8);
+	constexpr int  ovr_l2 = fstb::limit (14 - Steptable::NBR_PHASES_LOG2, 2, 8);
 	const int      ovr    = 1 << ovr_l2;  // Oversampling, for integration
 	const int      table_ovr_sz   = table_sz * ovr;
 	const int      table_ovr_sz_h = table_ovr_sz >> 1;

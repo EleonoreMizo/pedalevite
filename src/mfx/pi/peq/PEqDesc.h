@@ -62,7 +62,8 @@ public:
 
 	ParamDescSet & use_desc_set ();
 
-	static int     compute_param_base (int band);
+	static constexpr int
+	               compute_param_base (int band);
 
 
 

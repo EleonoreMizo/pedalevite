@@ -81,7 +81,7 @@ double	MapS <INVFLAG>::conv_nat_to_norm (double nat) const
 
 
 template <bool INVFLAG>
-double	MapS <INVFLAG>::map_direct (double x)
+constexpr double	MapS <INVFLAG>::map_direct (double x)
 {
 	return (x < 0.5f) ? 2 * x * x       : (4 - 2 * x) * x - 1;
 }

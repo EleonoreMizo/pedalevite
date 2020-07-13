@@ -115,7 +115,7 @@ void	Approx::cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSim
 // x in [-1 ; 1]
 // Max error: 2.411e-8
 // Original formula
-float	Approx::sin_rbj_halfpi (float x)
+constexpr float	Approx::sin_rbj_halfpi (float x)
 {
 	const float   a  =  0.0001530302f;
 	const float   b  = -0.0046768800f;
@@ -465,7 +465,7 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32_4th (int val)
 // below 0.01% up to pi/8
 // below 1.33% up to pi/4
 // https://www.desmos.com/calculator/6ghwlhxumj
-float	Approx::tan_taylor5 (float x)
+constexpr float	Approx::tan_taylor5 (float x)
 {
 	const float    x_2 = x * x;
 	const float    c_1 = 1;
@@ -527,7 +527,7 @@ ToolsSimd::VectF32	Approx::tan_mystran (ToolsSimd::VectF32 x)
 
 // Very high precision. Relative error is 1 % at 0.9993 * pi/2
 // PadeApproximant [Tan[x],{x,0,{5,5}}]
-float	Approx::tan_pade55 (float x)
+constexpr float	Approx::tan_pade55 (float x)
 {
 	const float    x2  = x * x;
 	const float    num = (     x2 - 105) * x2 + 945;

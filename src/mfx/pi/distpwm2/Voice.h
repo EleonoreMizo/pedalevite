@@ -89,7 +89,7 @@ private:
 	               gen_wf (float pos);
 	static inline float
 	               gen_wf_multi (float pos);
-	static inline float
+	static inline constexpr float
 	               gen_poly (float x);
 
 	float          _lvl;       // Pulse amplitude

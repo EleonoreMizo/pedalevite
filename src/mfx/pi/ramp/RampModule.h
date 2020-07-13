@@ -89,9 +89,12 @@ private:
 	float          get_raw_val () const;
 
 	template <int P, int D>
-	static float   accelerate (float x);
-	static float   fast (float x);
-	static float   slow (float x);
+	static inline constexpr float
+	               accelerate (float x);
+	static inline constexpr float
+	               fast (float x);
+	static inline constexpr float
+	               slow (float x);
 
 	// Real parameters
 	double         _sample_freq;		// Hz, > 0
@@ -138,7 +141,7 @@ private:
 
 
 
-//#include "mfx/pi/ramp/RampModule.hpp"
+#include "mfx/pi/ramp/RampModule.hpp"
 
 
 

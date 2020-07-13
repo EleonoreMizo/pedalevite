@@ -98,7 +98,7 @@ private:
 	void           update_filter (float b0);
 	void           set_fdbk_pos (int pos);
 
-	static inline float
+	static inline constexpr float
 	               saturate (float x);
 
 	State          _state;

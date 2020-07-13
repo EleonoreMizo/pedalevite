@@ -71,7 +71,7 @@ template <typename T, int LL2, bool INT_FLAG>
 class Scale_Internal
 {
 public:
-	static fstb_FORCEINLINE T mul (T a, T b)
+	static constexpr fstb_FORCEINLINE T mul (T a, T b)
 	{
 		return a *= b;
 	}
@@ -82,7 +82,7 @@ template <typename T, int LL2>
 class Scale_Internal <T, LL2, true>
 {
 public:
-	static fstb_FORCEINLINE T mul (T a, T b)
+	static constexpr fstb_FORCEINLINE T mul (T a, T b)
 	{
 		typedef typename Scale_Int2x <T>::Ty T2;
 		return T ((T2 (a) * T2 (b)) >> LL2);
@@ -95,7 +95,7 @@ template <>
 class Scale_Internal <int32_t, 31, true>
 {
 public:
-	static fstb_FORCEINLINE int32_t mul (int32_t a, int32_t b)
+	static constexpr fstb_FORCEINLINE int32_t mul (int32_t a, int32_t b)
 	{
 		const auto     aa = vdup_n_s32 (a);
 		const auto     bb = vdup_n_s32 (b);
@@ -108,7 +108,7 @@ template <>
 class Scale_Internal <int32_t, 30, true>
 {
 public:
-	static fstb_FORCEINLINE int32_t mul (int32_t a, int32_t b)
+	static constexpr fstb_FORCEINLINE int32_t mul (int32_t a, int32_t b)
 	{
 		return Scale_Internal <int32_t, 31, true>::mul (a, b) << 1;
 	}
@@ -120,7 +120,7 @@ template <int LL2>
 class Scale_Internal <uint32_t, LL2, true>
 {
 public:
-	static fstb_FORCEINLINE uint32_t mul (uint32_t a, uint32_t b)
+	static constexpr fstb_FORCEINLINE uint32_t mul (uint32_t a, uint32_t b)
 	{
 		return uint32_t (__emulu (a, b) >> LL2);
 	}
@@ -151,7 +151,7 @@ public:
 
 template <int LL2>
 template <typename T>
-T	Scale <LL2>::mul (T a, T b)
+constexpr T	Scale <LL2>::mul (T a, T b)
 {
 	return Scale_Internal <T, LL2, std::is_integral <T>::value>::mul (a, b);
 }

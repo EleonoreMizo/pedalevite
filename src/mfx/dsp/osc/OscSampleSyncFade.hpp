@@ -365,14 +365,14 @@ template <typename T>
 class OscSampleSyncFade_ScaleHelper
 {
 public:
-	static fstb_FORCEINLINE T  get_scale_val ();
-	static fstb_FORCEINLINE T  scale (T data, T scale);
+	static fstb_FORCEINLINE constexpr T  get_scale_val ();
+	static fstb_FORCEINLINE constexpr T  scale (T data, T scale);
 	static fstb_FORCEINLINE T  invert_float_and_scale (float val);
 	static fstb_FORCEINLINE T  scale_float (T data, float scale);
 };
 
 template <typename T>
-T	OscSampleSyncFade_ScaleHelper <T>::get_scale_val ()
+constexpr T	OscSampleSyncFade_ScaleHelper <T>::get_scale_val ()
 {
 	return 1;
 }
@@ -380,7 +380,7 @@ T	OscSampleSyncFade_ScaleHelper <T>::get_scale_val ()
 
 
 template <>
-inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::get_scale_val ()
+inline constexpr int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::get_scale_val ()
 {
 	return 1 << 14;
 }
@@ -388,7 +388,7 @@ inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::get_scale_val ()
 
 
 template <typename T>
-T	OscSampleSyncFade_ScaleHelper <T>::scale (T data, T scale)
+constexpr T	OscSampleSyncFade_ScaleHelper <T>::scale (T data, T scale)
 {
 	return data * scale;
 }
@@ -399,7 +399,7 @@ T	OscSampleSyncFade_ScaleHelper <T>::scale (T data, T scale)
 // N should be less than 18
 // Mutiplication intermediate result is stored on 32 bit
 template <>
-inline int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale (int32_t data, int32_t scale)
+inline constexpr int32_t	OscSampleSyncFade_ScaleHelper <int32_t>::scale (int32_t data, int32_t scale)
 {
 	return (data * scale) >> 14;
 }

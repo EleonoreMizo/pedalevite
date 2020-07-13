@@ -47,24 +47,28 @@ class Codec8
 
 public:
 
-	static bool		is_valid_utf8_byte (char c);
-	static bool		is_valid_utf8_lead_byte (char c);
-	static bool		is_valid_utf8_follow_byte (char c);
-	static bool		is_char_single_byte (char c);
+	static constexpr bool
+	               is_valid_utf8_byte (char c);
+	static constexpr bool
+	               is_valid_utf8_lead_byte (char c);
+	static constexpr bool
+	               is_valid_utf8_follow_byte (char c);
+	static constexpr bool
+	               is_char_single_byte (char c);
 
-	static int		get_char_seq_len_ucs (int &len, char32_t ucs4);
-	static int		get_char_seq_len_utf (int &len, char utf8_lead_byte);
+	static int     get_char_seq_len_ucs (int &len, char32_t ucs4);
+	static int     get_char_seq_len_utf (int &len, char utf8_lead_byte);
 
-	static int		encode_char (std::string &utf8, char32_t ucs4);
-	static int		encode_char (char utf8_0 [], char32_t ucs4);
-	static int		encode_char (char utf8_ptr [], char32_t ucs4, int &len);
+	static int     encode_char (std::string &utf8, char32_t ucs4);
+	static int     encode_char (char utf8_0 [], char32_t ucs4);
+	static int     encode_char (char utf8_ptr [], char32_t ucs4, int &len);
 
-	static int		decode_char (char32_t &ucs4, const char utf8_ptr []);
-	static int		decode_char (char32_t &ucs4, const char utf8_ptr [], int &len);
+	static int     decode_char (char32_t &ucs4, const char utf8_ptr []);
+	static int     decode_char (char32_t &ucs4, const char utf8_ptr [], int &len);
 
-	static int		check_char_valid (const char utf8_ptr []);
-	static int		check_string_valid (const char utf8_0 []);
-	static int		check_string_valid (const std::string &utf8);
+	static int     check_char_valid (const char utf8_ptr []);
+	static int     check_string_valid (const char utf8_0 []);
+	static int     check_string_valid (const std::string &utf8);
 
 
 

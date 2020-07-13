@@ -507,7 +507,7 @@ void	PEq <NB>::cook_band (int band)
 
 
 template <int NB>
-bool	PEq <NB>::is_unit_gain (float gain)
+constexpr bool	PEq <NB>::is_unit_gain (float gain)
 {
 	assert (gain > 0);
 
@@ -517,7 +517,7 @@ bool	PEq <NB>::is_unit_gain (float gain)
 
 
 template <int NB>
-bool	PEq <NB>::is_ramping_ok (float a1d, float a2d, float a1s, float a2s)
+constexpr bool	PEq <NB>::is_ramping_ok (float a1d, float a2d, float a1s, float a2s)
 {
 	const float    dd = compute_pole_delta (a1d, a2d);
 	const float    ds = compute_pole_delta (a1s, a2s);
@@ -528,7 +528,7 @@ bool	PEq <NB>::is_ramping_ok (float a1d, float a2d, float a1s, float a2s)
 
 
 template <int NB>
-float	PEq <NB>::compute_pole_delta (float a1, float a2)
+constexpr float	PEq <NB>::compute_pole_delta (float a1, float a2)
 {
 	return a1 * a1 - 4 * a2;
 }

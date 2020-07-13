@@ -726,7 +726,7 @@ void	PhasedVoice::process_block_dist_mono (float dst_ptr [], int nbr_spl)
 
 
 
-float	PhasedVoice::clip_feedback (float x)
+constexpr float	PhasedVoice::clip_feedback (float x)
 {
 	const float    xl = fstb::limit (x, -1.5f, 1.5f);
 	const float    y  = xl * (1 - (4.0f / 27) * xl * xl);

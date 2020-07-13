@@ -753,7 +753,7 @@ void	SkoolMood::modulate (Channel &chn, float ldr)
 
 
 
-float	SkoolMood::shape_bjt (float x)
+constexpr float	SkoolMood::shape_bjt (float x)
 {
 	// PSU voltage
 	const float    a    = 15.f;
@@ -779,7 +779,7 @@ float	SkoolMood::shape_bjt (float x)
 
 // x in [-1 ; 1]
 // Returns the value for the left channel. Right channel = fnc (-x)
-float	SkoolMood::compute_pan_lvl (float x)
+constexpr float	SkoolMood::compute_pan_lvl (float x)
 {
 	assert (x >= -1);
 	assert (x <= 1);

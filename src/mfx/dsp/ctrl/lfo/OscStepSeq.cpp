@@ -207,7 +207,7 @@ void	OscStepSeq::do_clear_buffers ()
 
 
 
-double	OscStepSeq::map_pos (double pos, Curve c)
+constexpr double	OscStepSeq::map_pos (double pos, Curve c)
 {
 	assert (pos >= 0);
 	assert (pos <= 1);
@@ -240,7 +240,7 @@ double	OscStepSeq::map_pos (double pos, Curve c)
 
 
 
-double	OscStepSeq::smooth (double x)
+constexpr double	OscStepSeq::smooth (double x)
 {
 	const double   x2 = x * x;
 

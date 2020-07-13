@@ -79,7 +79,8 @@ private:
 
 	void           update_constants ();
 	void           process_polarity (Smoother &voltage, float &charge, float &x, float ac);
-	static float   clip (float x, float vmax);
+	static constexpr float
+	               clip (float x, float vmax);
 
 	float          _sample_freq = 0;    // 0 = not initialized
 	float          _ratio       = 0;    // 0 = not initialized

@@ -356,7 +356,7 @@ void	FilterBank::process_band (int band_idx, int nbr_spl)
 
 
 
-float	FilterBank::compute_split_freq (int split_idx)
+constexpr float	FilterBank::compute_split_freq (int split_idx)
 {
 	return float (125 << split_idx);
 }

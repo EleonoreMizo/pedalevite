@@ -37,7 +37,7 @@ namespace ffft
 
 
 
-static inline bool	FFTReal_is_pow2 (long x)
+static inline constexpr bool	FFTReal_is_pow2 (long x)
 {
 	assert (x > 0);
 
@@ -46,7 +46,7 @@ static inline bool	FFTReal_is_pow2 (long x)
 
 
 
-static inline int	FFTReal_get_next_pow2 (long x)
+static inline constexpr int	FFTReal_get_next_pow2 (long x)
 {
 	--x;
 

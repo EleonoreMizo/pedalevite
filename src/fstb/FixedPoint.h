@@ -63,63 +63,96 @@ public:
 
 	FixedPoint &   operator = (const FixedPoint &other) = default;
 
-	inline void    clear ();
+	inline constexpr void
+	               clear ();
 	inline void    set_val (double val);
-	inline void    set_val (int32_t int_val, uint32_t frac_val);
-	inline void    set_val_int64 (int64_t val);
-	inline double  get_val_dbl () const;
-	inline float   get_val_flt () const;
-	inline int64_t
+	inline constexpr void
+		            set_val (int32_t int_val, uint32_t frac_val);
+	inline constexpr void
+		            set_val_int64 (int64_t val);
+	inline constexpr double
+		            get_val_dbl () const;
+	inline constexpr float
+		            get_val_flt () const;
+	inline constexpr int64_t
 	               get_val_int64 () const;
 
-	inline void    set_int_val (int32_t int_val);
-	inline int32_t get_int_val () const;
-	inline int32_t get_round () const;
-	inline int32_t get_ceil () const;
-	inline void    set_frac_val (uint32_t frac_val);
-	inline uint32_t
+	inline constexpr void
+	               set_int_val (int32_t int_val);
+	inline constexpr int32_t
+	               get_int_val () const;
+	inline constexpr int32_t
+	               get_round () const;
+	inline constexpr int32_t
+	               get_ceil () const;
+	inline constexpr void
+	               set_frac_val (uint32_t frac_val);
+	inline constexpr uint32_t
 	               get_frac_val () const;
-	inline double  get_frac_val_dbl () const;
-	inline float   get_frac_val_flt () const;
+	inline constexpr double
+	               get_frac_val_dbl () const;
+	inline constexpr float
+	               get_frac_val_flt () const;
 
-	inline void    neg ();
-	inline void    abs ();
+	inline constexpr void
+	               neg ();
+	inline constexpr void
+	               abs ();
 
-	inline void    bound (int32_t len);
-	inline void    bound_positive (int32_t len);
-	inline void    bound_and (int32_t and_val);
+	inline constexpr void
+	               bound (int32_t len);
+	inline constexpr void
+	               bound_positive (int32_t len);
+	inline constexpr void
+	               bound_and (int32_t and_val);
 
-	inline void    add (const FixedPoint &val);
-	inline void    add (const FixedPoint &val, int32_t and_val);
-	inline void    add_int (int32_t int_val);
-	inline void    add_int (int32_t int_val, int32_t and_val);
-	inline void    add_frac (uint32_t frac_val);
-	inline void    add_frac (uint32_t frac_val, int32_t and_val);
-	inline FixedPoint &
+	inline constexpr void
+	               add (const FixedPoint &val);
+	inline constexpr void
+	               add (const FixedPoint &val, int32_t and_val);
+	inline constexpr void
+	               add_int (int32_t int_val);
+	inline constexpr void
+	               add_int (int32_t int_val, int32_t and_val);
+	inline constexpr void
+	               add_frac (uint32_t frac_val);
+	inline constexpr void
+	               add_frac (uint32_t frac_val, int32_t and_val);
+	inline constexpr FixedPoint &
 	               operator += (const FixedPoint &other);
-	inline FixedPoint &
+	inline constexpr FixedPoint &
 	               operator += (int32_t int_val);
 
-	inline void    sub (const FixedPoint &val);
-	inline void    sub (const FixedPoint &val, int32_t and_val);
-	inline void    sub_int (int32_t int_val);
-	inline void    sub_int (int32_t int_val, int32_t and_val);
-	inline void    sub_frac (uint32_t frac_val);
-	inline void    sub_frac (uint32_t frac_val, int32_t and_val);
-	inline FixedPoint &
+	inline constexpr void
+	               sub (const FixedPoint &val);
+	inline constexpr void
+	               sub (const FixedPoint &val, int32_t and_val);
+	inline constexpr void
+	               sub_int (int32_t int_val);
+	inline constexpr void
+	               sub_int (int32_t int_val, int32_t and_val);
+	inline constexpr void
+	               sub_frac (uint32_t frac_val);
+	inline constexpr void
+	               sub_frac (uint32_t frac_val, int32_t and_val);
+	inline constexpr FixedPoint &
 	               operator -= (const FixedPoint &other);
-	inline FixedPoint &
+	inline constexpr FixedPoint &
 	               operator -= (int32_t int_val);
 
-	inline void    shift (int nbr_bits);
-	inline void    shift_left (int nbr_bits);
-	inline void    shift_right (int nbr_bits);
-	inline FixedPoint &
+	inline constexpr void
+	               shift (int nbr_bits);
+	inline constexpr void
+	               shift_left (int nbr_bits);
+	inline constexpr void
+	               shift_right (int nbr_bits);
+	inline constexpr FixedPoint &
 	               operator <<= (int nbr_bits);
-	inline FixedPoint &
+	inline constexpr FixedPoint &
 	               operator >>= (int nbr_bits);
 
-	inline void    mul_int (int32_t val);
+	inline constexpr void
+	               mul_int (int32_t val);
 	inline void    mul_flt (double val);
 
 

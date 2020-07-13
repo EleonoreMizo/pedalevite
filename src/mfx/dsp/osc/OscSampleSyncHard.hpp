@@ -395,7 +395,7 @@ void	OscSampleSyncHard <OSC, STPPLEN, STPNPL2>::process_block (CalcDataType data
 
 
 template <typename T>
-static fstb_FORCEINLINE T	OscSampleSync_scale (T data, T scale)
+static fstb_FORCEINLINE constexpr T	OscSampleSync_scale (T data, T scale)
 {
 	return data * scale;
 }
@@ -406,7 +406,7 @@ static fstb_FORCEINLINE T	OscSampleSync_scale (T data, T scale)
 // N should be less than 18
 // Mutiplication intermediate result is stored on 32 bit
 template <>
-fstb_FORCEINLINE int32_t	OscSampleSync_scale (int32_t data, int32_t scale)
+fstb_FORCEINLINE constexpr int32_t	OscSampleSync_scale (int32_t data, int32_t scale)
 {
 	return (data * scale) >> (16-2);
 }

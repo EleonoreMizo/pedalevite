@@ -40,7 +40,7 @@ namespace ctrl
 
 
 
-Ramp::Ramp (float x)
+constexpr Ramp::Ramp (float x)
 {
 	_val_beg = x;
 	_val_end = x;

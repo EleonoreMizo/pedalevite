@@ -105,7 +105,7 @@ private:
 	class AddProc
 	{
 	public:
-		static fstb_FORCEINLINE float
+		static fstb_FORCEINLINE constexpr float
 		               process_scalar (float in);
 		static fstb_FORCEINLINE fstb::ToolsSimd::VectF32
 		               process_vect (const fstb::ToolsSimd::VectF32 &in);

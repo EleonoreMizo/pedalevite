@@ -78,9 +78,9 @@ private:
 
 	inline void		attract (float x, float env_val);
 
-	static inline Polarity
+	static inline constexpr Polarity
 						val_to_pol (float val);
-	static inline float
+	static inline constexpr float
 						pol_to_val (Polarity polarity);
 
 	float          _sample_freq   = 0;  // Hz. 0 = not set

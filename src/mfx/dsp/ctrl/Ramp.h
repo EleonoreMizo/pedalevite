@@ -46,7 +46,7 @@ class Ramp
 public:
 
 	               Ramp ()                        = default;
-	inline explicit
+	inline explicit constexpr
 	               Ramp (float x);
 	               Ramp (const Ramp &other)       = default;
 	               Ramp (Ramp &&other)            = default;
