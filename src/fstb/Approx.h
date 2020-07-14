@@ -72,12 +72,19 @@ public:
 	static inline float
 	               log2 (float val);
 	static inline float
+	               log2_crude (float val);
+	static inline float
 	               exp2 (float val);
+	static inline float
+	               exp2_crude (float val);
 	static inline float
 	               exp2_5th (float val);
 	template <int A, typename T>
 	static inline T
 	               exp_m (T val);
+
+	static inline double
+	               pow (double a, double b);
 
 	static inline uint32_t
 	               fast_partial_exp2_int_16_to_int_32 (int val);
@@ -105,6 +112,9 @@ public:
 	               tanh_2dat (float x);
 	static inline ToolsSimd::VectF32
 	               tanh_2dat (ToolsSimd::VectF32 x);
+	template <typename T>
+	static inline T
+	               tanh_andy (T x);
 
 	template <typename T>
 	static inline T

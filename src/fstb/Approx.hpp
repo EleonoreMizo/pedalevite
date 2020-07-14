@@ -263,6 +263,30 @@ float	Approx::log2 (float val)
 
 
 
+/*
+Piece-wise linear approximation
+Warning, log2_crude (1) != 0
+Errors:
+RMS:  0.0236228
+mean: -0.0145537
+min:  -0.0430415 @ 0.180279
+max:  0.0430603 @ 0.125
+Source: Evan Balster
+https://github.com/romeric/fastapprox/pull/5
+*/
+float	Approx::log2_crude (float val)
+{
+	assert (val > 0);
+
+	Combo32        xv { val };
+	Combo32        lv;
+	lv._i = 0x43800000 | (xv._i >> 8);
+
+	return lv._f - 382.95695f;
+}
+
+
+
 float	Approx::exp2 (float val)
 {
 	// Truncated val for integer power of 2
@@ -291,7 +315,28 @@ float	Approx::exp2 (float val)
 
 
 /*
-Other possible coefficients (found by Andrew Simper):
+Piece-wise linear approximation
+Warning, exp2_crude (0) != 1
+Errors:
+RMS:  0.0204659
+mean: 0.0103297
+min:  -0.0294163 @ 1.04308
+max:  0.0302728 @ 1.48549
+Source: Evan Balster
+https://github.com/romeric/fastapprox/pull/5
+*/
+float	Approx::exp2_crude (float val)
+{
+	Combo32        xv { val + 382.95695f };
+	xv._i = ((((xv._i < 0x43808000) ? 0 : xv._i) << 8) & 0x7FFFFF00);
+
+	return xv._f;
+}
+
+
+
+/*
+Possible coefficients (found by Andrew Simper):
 5th order, max error 2.44e-7:
 	1.000000000000000
 	0.69315168779795
@@ -358,6 +403,36 @@ T	Approx::exp_m (T val)
 	const T        x = T (1) + val * (T (1) / p);
 
 	return ipowpc <p> (x);
+}
+
+
+
+// Crude approximation, a > 0
+// Errors vary mostly with the absolute value of b
+// Source: Aleksey Voxengo
+double	Approx::pow (double a, double b)
+{
+	assert (a > 0);
+
+#if (fstb_ENDIAN == fstb_ENDIAN_BIG)
+	const int      lsw = 1;
+	const int      msw = 0;
+#else
+	const int      lsw = 0;
+	const int      msw = 1;
+#endif
+
+	union
+	{
+		double         _d;
+		int32_t        _x [2];
+	} u;
+
+	u._d       = a;
+	u._x [msw] = int32_t (b * (u._x [msw] - 0x3FEEC825) + 0x3FEEDD44);
+	u._x [lsw] = 0;
+
+	return u._d;
 }
 
 
@@ -645,6 +720,33 @@ ToolsSimd::VectF32	Approx::tanh_2dat (ToolsSimd::VectF32 x)
 	den  = fstb::ToolsSimd::fmadd (den, x2, d0);
 
 	return fstb::ToolsSimd::div_approx2 (num, den);
+}
+
+
+
+// This one fits in the range [0, 4] and matches the derivative at 4 to zero
+// so you have a smooth C1 at the point of clipping
+// ends at just under 1, but has a normalised error of +-6.5e-4
+// tanh_approx(4) = 0.9998
+// tanh(4) = 0.999329
+// Source: Andrew Simper
+// https://discord.com/channels/507604115854065674/507630527847596046/702375822941618207
+template <typename T>
+T	Approx::tanh_andy (T x)
+{
+	x = fstb::limit (x, T (-4), T (+4));
+
+	const T        n3 = T (0.0812081221471);
+	const T        n1 = T (1);
+	const T        d4 = T (0.00624523306500);
+	const T        d2 = T (0.412523749044);
+	const T        d0 = T (1);
+
+	const T        x2  = x * x;
+	const T        num = (n3 * x2 + n1) * x;
+	const T        den = (d4 * x2 + d2) * x2 + d0;
+
+	return num / den;
 }
 
 

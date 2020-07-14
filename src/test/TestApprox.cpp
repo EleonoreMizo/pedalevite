@@ -374,6 +374,12 @@ int	TestApprox::perform_test ()
 		"tanh_2dat (VectF32)", -10.f, 10.f
 	);
 
+	TestFncLogic <double, true>::test_op2 (
+		[] (double x, double y) { return pow (x, y); },
+		[] (double x, double y) { return fstb::Approx::pow (x, y); },
+		"pow (double)", 0.1f, 10.0f, -10.f, 10.f
+	);
+
 	return ret_val;
 }
 
@@ -510,6 +516,64 @@ void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op1 (const OPREF &op_ref, cons
 	}
 
 	const double   err_avg = err_tot / double (nbr_spl);
+	if (REL_FLAG)
+	{
+		printf ("Err max: %.3f%%, avg: %.3f%%\n", err_max * 100, err_avg * 100);
+	}
+	else
+	{
+		printf ("Err max: %.3g, avg: %.3g\n", err_max      , err_avg      );
+	}
+}
+
+
+
+template <typename T, bool REL_FLAG>
+template <typename OPTST, typename OPREF, typename S>
+void	TestApprox::TestFncLogic <T, REL_FLAG>::test_op2 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val1, S max_val1, S min_val2, S max_val2)
+{
+	printf ("Logic test %s... ", name_0);
+	fflush (stdout);
+
+	const int      nbr_spl = 2345;
+	const double   mul1    = double (max_val1 - min_val1) / double (nbr_spl - 1);
+	const double   add1    = double (min_val1);
+	const double   mul2    = double (max_val2 - min_val2) / double (nbr_spl - 1);
+	const double   add2    = double (min_val2);
+
+	double         err_max = 0;
+	double         err_tot = 0;
+	for (int pos1 = 0; pos1 < nbr_spl; ++pos1)
+	{
+		const double   val_src1 = pos1 * mul1 + add1;
+		const T        src_t1   = conv_s_to_t <T> (S (val_src1));
+
+		for (int pos2 = 0; pos2 < nbr_spl; ++pos2)
+		{
+			const double   val_src2 = pos2 * mul2 + add2;
+			const T        src_t2   = conv_s_to_t <T> (S (val_src2));
+
+
+			const double   val_ref = op_ref (val_src1, val_src2);
+
+			const T        dst_t = op_tst (src_t1, src_t2);
+			const double   val_tst = double (conv_t_to_s <S> (dst_t));
+
+			double         err_abs = fabs (val_tst - val_ref);
+			if (REL_FLAG)
+			{
+				if (val_ref != 0)
+				{
+					err_abs /= fabs (val_ref);
+				}
+			}
+			err_max  = std::max (err_max, err_abs);
+			err_tot += err_abs;
+		}
+	}
+
+	const double   ns2     = double (nbr_spl) * double (nbr_spl);
+	const double   err_avg = err_tot / ns2;
 	if (REL_FLAG)
 	{
 		printf ("Err max: %.3f%%, avg: %.3f%%\n", err_max * 100, err_avg * 100);

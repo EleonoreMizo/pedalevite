@@ -66,7 +66,12 @@ private:
 	public:
 		template <typename OPTST, typename OPREF, typename S>
 		static void    test_op1 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val, S max_val);
+
+		template <typename OPTST, typename OPREF, typename S>
+		static void    test_op2 (const OPREF &op_ref, const OPTST &op_tst, const char name_0 [], S min_val1, S max_val1, S min_val2, S max_val2);
 	};
+
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
