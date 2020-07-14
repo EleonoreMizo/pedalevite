@@ -601,7 +601,7 @@ void	TestMnaSimulator::gen_saw (std::vector <float> &data, double sample_freq, d
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 
-void	TestMnaSimulator::print_stats (mfx::dsp::va::mna::Simulator &mna)
+void	TestMnaSimulator::print_stats (const mfx::dsp::va::mna::Simulator &mna)
 {
 	mfx::dsp::va::mna::Simulator::Stats  stats;
 	mna.get_stats (stats);
@@ -618,7 +618,7 @@ void	TestMnaSimulator::print_stats (mfx::dsp::va::mna::Simulator &mna)
 
 
 
-void	TestMnaSimulator::print_histo (int hist_arr [], int nbr_bars, int nbr_spl)
+void	TestMnaSimulator::print_histo (const int hist_arr [], int nbr_bars, int nbr_spl)
 {
 	int            bar_max = 0;
 	int            total   = 0;

@@ -58,8 +58,9 @@ private:
 	static void    cat_vect (std::vector <float> &data, const std::vector <float> &more);
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
-	static void    print_stats (mfx::dsp::va::dkm::Simulator &dkm);
-	static void    print_histo (int hist_arr [], int nbr_bars, int nbr_spl);
+	template <class S>
+	static void    print_stats (S &dkm);
+	static void    print_histo (const int hist_arr [], int nbr_bars, int nbr_spl);
 #endif // mfx_dsp_va_dkm_Simulator_STATS
 
 

@@ -556,9 +556,10 @@ void	TestDkmSimulator::cat_vect (std::vector <float> &data, const std::vector <f
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
 
-void	TestDkmSimulator::print_stats (mfx::dsp::va::dkm::Simulator &dkm)
+template <class S>
+void	TestDkmSimulator::print_stats (S &dkm)
 {
-	mfx::dsp::va::dkm::Simulator::Stats  stats;
+	typename S::Stats  stats;
 	dkm.get_stats (stats);
 
 	printf ("=== Iterations ===\n");
@@ -573,7 +574,7 @@ void	TestDkmSimulator::print_stats (mfx::dsp::va::dkm::Simulator &dkm)
 
 
 
-void	TestDkmSimulator::print_histo (int hist_arr [], int nbr_bars, int nbr_spl)
+void	TestDkmSimulator::print_histo (const int hist_arr [], int nbr_bars, int nbr_spl)
 {
 	int            bar_max = 0;
 	int            total   = 0;
