@@ -85,11 +85,23 @@ class PolyphaseIir2Designer
 
 public:
 
+	// This should be enough for any purpose.
+	static const int  _max_order = 256;
+
+	enum ResCode : int
+	{
+		ResCode_FAIL_CONV   = -3,
+		ResCode_FAIL_ATTEN  = -2,
+		ResCode_FAIL_GD_TBW = -1,
+		ResCode_OK          =  0
+	};
+
 	static int     compute_nbr_coefs_from_proto (double attenuation, double transition);
 	static double  compute_atten_from_order_tbw (int nbr_coefs, double transition);
 
 	static int     compute_coefs (double coef_arr [], double attenuation, double transition);
 	static void    compute_coefs_spec_order_tbw (double coef_arr [], int nbr_coefs, double transition);
+	static ResCode compute_coefs_spec_order_gdly (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double group_delay, double f_rel, double prec = 1e-6, double atten_lb = 0.001, double atten_ub = 10000.0, double trans_lb = 0.001, double trans_ub = 0.499);
 
 	static double  compute_phase_delay (double a, double f_fs);
 	static double  compute_group_delay (double a, double f_fs, bool ph_flag);

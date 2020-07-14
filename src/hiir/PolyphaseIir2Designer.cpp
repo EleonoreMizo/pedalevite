@@ -33,6 +33,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "hiir/fnc.h"
 #include "hiir/PolyphaseIir2Designer.h"
 
+#include <array>
+
 #include <cassert>
 #include <cmath>
 
@@ -120,7 +122,7 @@ Description:
 Input parameters:
 	- attenuation: stopband attenuation, dB. > 0.
 	- transition: normalized transition bandwith (% relative to Fs).
-	Range ]0 ; 1/2[
+		Range ]0 ; 1/2[
 Output parameters:
 	- coef_arr: Coefficient list, must be large enough to store all the
 		coefficients. Filter order = nbr_coefs * 2 + 1
@@ -188,6 +190,149 @@ void	PolyphaseIir2Designer::compute_coefs_spec_order_tbw (double coef_arr [], in
 	{
 		coef_arr [index] = compute_coef (index, k, q, order);
 	}
+}
+
+
+
+/*
+==============================================================================
+Name: compute_coefs_spec_order_gdly
+Description:
+	Computes the coefficients for a half-band polyphase IIR filter by
+	specifying a group delay and the desired filter order.
+	It is also possible to specify the allowed ranges for attenuation and
+	transition bandwidth.
+	Group delay range is constrained by the filter order and the measurement
+	frequency, so the function may fail if the requirement cannot be met.
+Input parameters:
+	- nbr_coefs: Number of desired coefficients. > 0.
+	- group_delay: required group delay in samples. The group delay is measured
+		at f_rel, and is reached within +/-prec samples. > 0.
+	- f_rel: Normalised relative frequency for the group delay measurement.
+		Range is [0 ; 1[, where 1/2 is the Nyquist frequency for a full-rate
+		(not decimated) filter.
+	- prec: Precision of the group delay requirement, in samples. > 0.
+	- atten_lb: Lower bound for the stopband attenuation, in dB.
+		Range ]0 ; atten_ub[
+	- atten_ub: Upper bound for the stopband attenuation, in dB. > atten_lb.
+	- trans_lb: Lower bound for the normalized transition bandwidth (relative
+		to the sampling rate). Range ]0 ; trans_ub[
+	- trans_ub: Upper bound for the normalized transition bandwidth (relative
+		to the sampling rate). Range ]trans_lb ; 1/2[
+Output parameters:
+	- coef_arr: Coefficient list, must be large enough to store all the
+		coefficients.
+Input/output parameters:
+	- attenuation_ptr: if the function succeeds and attenuation_ptr is not 0,
+		the attenuation in dB for the designed filter is written on pointed
+		location.
+	- transition_ptr: if the function succeeds and transition_ptr is not 0,
+		the normalized transition bandwidth is written there.
+Returns:
+	- 0 on success,
+	- Negative number on failure, mainly because the constraints are too tight
+		or the requirements unreachable. In this case, the output parameters
+		should be considered as invalid.
+Throws: Nothing
+==============================================================================
+*/
+
+PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_gdly (double coef_arr [], double *attenuation_ptr, double *transition_ptr, int nbr_coefs, double group_delay, double f_rel, double prec, double atten_lb, double atten_ub, double trans_lb, double trans_ub)
+{
+	assert (nbr_coefs > 0);
+	assert (nbr_coefs <= _max_order);
+	assert (group_delay > 0);
+	assert (f_rel >= 0);
+	assert (f_rel < 1);
+	assert (prec > 0);
+	assert (atten_lb > 0);
+	assert (atten_lb < atten_ub);
+	assert (trans_lb > 0);
+	assert (trans_lb < trans_ub);
+	assert (trans_ub < 0.5);
+
+	ResCode        ret_val = ResCode_OK;
+
+	double         lb_tbw = trans_lb;
+	double         ub_tbw = trans_ub;
+	std::array <double, _max_order>  lb_coef_arr;
+	std::array <double, _max_order>  ub_coef_arr;
+
+	compute_coefs_spec_order_tbw (ub_coef_arr.data (), nbr_coefs, ub_tbw);
+	compute_coefs_spec_order_tbw (lb_coef_arr.data (), nbr_coefs, lb_tbw);
+
+	double         ub_gdly  =
+		compute_group_delay (ub_coef_arr.data (), nbr_coefs, f_rel, false);
+	double         lb_gdly  =
+		compute_group_delay (lb_coef_arr.data (), nbr_coefs, f_rel, false);
+
+	// Checks if the group delay and transition bandwidth requirements
+	// could be met
+	if ((ub_gdly - group_delay) * (group_delay - lb_gdly) <= 0)
+	{
+		ret_val = ResCode_FAIL_GD_TBW;
+	}
+
+	double         rs_attn = 0;
+	double         rs_tbw  = 0;
+
+	if (ret_val == ResCode_OK)
+	{
+		// Simple bisection method
+		const int      max_it    = 1000;
+		int            nbr_it    = 0;
+		double         rs_gdly   = 0;
+		bool           conv_flag = false;
+		do
+		{
+			rs_tbw  = (ub_tbw + lb_tbw) * 0.5;
+			rs_attn = compute_atten_from_order_tbw (nbr_coefs, rs_tbw);
+			compute_coefs_spec_order_tbw (coef_arr, nbr_coefs, rs_tbw);
+			rs_gdly = compute_group_delay (coef_arr, nbr_coefs, f_rel, false);
+
+			if ((group_delay - lb_gdly) * (group_delay - rs_gdly) < 0)
+			{
+				ub_tbw  = rs_tbw;
+				ub_gdly = rs_gdly;
+			}
+			else
+			{
+				lb_tbw  = rs_tbw;
+				lb_gdly = rs_gdly;
+			}
+
+			++ nbr_it;
+			conv_flag = (fabs (rs_gdly - group_delay) > prec);
+		}
+		while (conv_flag && nbr_it < max_it);
+
+		// Checks convergence
+		if (nbr_it >= max_it && ! conv_flag)
+		{
+			ret_val = ResCode_FAIL_CONV;
+		}
+
+		// Checks the attenuation requirement
+		else if (   rs_attn < atten_lb
+		         || rs_attn > atten_ub)
+		{
+			ret_val = ResCode_FAIL_ATTEN;
+		}
+	}
+
+	if (ret_val == ResCode_OK)
+	{
+		if (attenuation_ptr != nullptr)
+		{
+			*attenuation_ptr = rs_attn;
+		}
+		if (transition_ptr != nullptr)
+		{
+			*transition_ptr = rs_tbw;
+		}
+	}
+
+	return ret_val;
 }
 
 
