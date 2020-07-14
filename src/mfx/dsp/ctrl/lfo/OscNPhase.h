@@ -57,7 +57,7 @@ public:
 	               OscNPhase (bool biphase_flag = false);
 	               OscNPhase (const OscNPhase &other)  = default;
 	               OscNPhase (OscNPhase &&other     )  = default;
-	virtual        ~OscNPhase ()                       = default;
+	               ~OscNPhase ()                       = default;
 
 	OscNPhase &    operator = (const OscNPhase &other) = default;
 	OscNPhase &    operator = (OscNPhase &&other)      = default;

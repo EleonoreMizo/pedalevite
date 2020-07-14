@@ -319,7 +319,7 @@ int	SelectFx::update_display (std::string tag)
 
 void	SelectFx::build_tag_collection ()
 {
-	assert (_model_ptr != 0);
+	assert (_model_ptr != nullptr);
 
 	const std::array <std::vector <std::string>, PiCateg_NBR_ELT> base_list_arr =
 	{{

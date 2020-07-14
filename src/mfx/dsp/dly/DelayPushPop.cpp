@@ -101,8 +101,8 @@ void	DelayPushPop::pop_block (float dst_ptr [], int nbr_spl)
 	assert (nbr_spl > 0);
 	assert (((_pos_r - _pos_w) & _mask) + nbr_spl <= _len);
 
-	int            pos     = 0;
-	float * const  buf_ptr = _buf.data ();
+	int                  pos     = 0;
+	const float * const  buf_ptr = _buf.data ();
 	RingBufVectorizer rbv (_len);
 
 	for (rbv.start (nbr_spl, _pos_r)

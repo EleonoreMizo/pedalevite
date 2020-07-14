@@ -146,7 +146,7 @@ private:
 	void           find_chain_links_dir (std::vector <Link> &link_list, int slot_id, piapi::Dir dir, const std::vector <Tools::NodeEntry> &entry_list) const;
 	void           set_link (std::vector <Link> &link_list, int slot_id, Link link, const std::vector <Tools::NodeEntry> &entry_list) const;
 	void           find_broken_links (std::vector <Link> &link_list, const std::vector <Tools::NodeEntry> &entry_list) const;
-	void           add_slot (PageMgrInterface::NavLocList &nav_list, std::string multilabel, int pos_list);
+	void           add_slot_x (PageMgrInterface::NavLocList &nav_list, std::string multilabel, int pos_list);
 	void           update_slot (int pos_list, std::string link_txt, bool bold_flag);
 	void           set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, std::string link_txt, bool bold_flag);
 	EvtProp        change_effect (int node_id, int dir);

@@ -106,14 +106,14 @@ private:
 	void           connect_delays (Document &doc);
 	void           create_graph_context (Document &doc, const PluginPool &plugin_pool);
 	void           init_node_categ_list (const Document &doc, NodeCategList &categ_list) const;
-	void           allocate_buf_audio_i (Document &doc, BufAlloc &buf_alloc);
-	void           allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list);
-	void           free_buf_audio_i (Document &doc, BufAlloc &buf_alloc);
-	void           free_buf_audio_o (Document &doc, BufAlloc &buf_alloc);
+	void           allocate_buf_audio_i (const Document &doc, BufAlloc &buf_alloc);
+	void           allocate_buf_audio_o (const Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list);
+	void           free_buf_audio_i (const Document &doc, BufAlloc &buf_alloc);
+	void           free_buf_audio_o (const Document &doc, BufAlloc &buf_alloc);
 	void           visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, CnxEnd::SlotType slot_type, int slot_pos);
 	void           check_source_nodes (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, NodeInfo &node_info);
-	void           collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const;
-	void           free_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr);
+	void           collects_mix_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const;
+	void           free_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr);
 	const ProcessingContextNode::Side &
 	               use_source_side (const NodeCategList &categ_list, const ProcessingContext &ctx, const Cnx &cnx_src) const;
 	int            count_nbr_signal_buf (const Document &doc, const NodeCategList &categ_list) const;

@@ -69,7 +69,9 @@ EditDate::EditDate (PageSwitcher &page_switcher, const CmdLine &cmd_line)
 ,	_day_sptr (   std::make_shared <NText> (Entry_D  ))
 ,	_hour_sptr (  std::make_shared <NText> (Entry_H  ))
 ,	_minute_sptr (std::make_shared <NText> (Entry_MIN))
+,	_utc ()
 ,	_change_flag (false)
+,	_time_change_flag (false)
 {
 	_title_sptr->set_text ("UTC date + time");
 	_title_sptr->set_justification (0.5f, 0, false);

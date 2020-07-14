@@ -438,7 +438,7 @@ void	PedalEditAction::display_fx (PageMgrInterface::NavLocList &nav_list, const 
 	_type_sptr->set_text ("FX toggle");
 
 	// FX identifier
-	print_fx_id (action._fx_id);
+	(void) print_fx_id (action._fx_id);
 
 	const int      h_m   = _fnt_ptr->get_char_h ();
 	_label_sptr->set_coord (Vec2d (0, 2 * h_m));

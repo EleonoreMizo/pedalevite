@@ -535,7 +535,7 @@ void	Router::init_node_categ_list (const Document &doc, NodeCategList &categ_lis
 
 // We allocate only buffers we need, given the pin configuration.
 // Mixing or channel replication is handled by WorldAudio.
-void	Router::allocate_buf_audio_i (Document &doc, BufAlloc &buf_alloc)
+void	Router::allocate_buf_audio_i (const Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
 	ProcessingContextNode::Side & audio_i =
@@ -553,7 +553,7 @@ void	Router::allocate_buf_audio_i (Document &doc, BufAlloc &buf_alloc)
 
 
 // We allocate only buffers we need, given the pin configuration.
-void	Router::allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list)
+void	Router::allocate_buf_audio_o (const Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list)
 {
 	const NodeInfo &  node_info = categ_list [CnxEnd::SlotType_IO] [0];
 
@@ -593,7 +593,7 @@ void	Router::allocate_buf_audio_o (Document &doc, BufAlloc &buf_alloc, const Nod
 
 
 // Inverse of allocate_buf_audio_i
-void	Router::free_buf_audio_i (Document &doc, BufAlloc &buf_alloc)
+void	Router::free_buf_audio_i (const Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
 	ProcessingContextNode::Side & audio_i =
@@ -608,7 +608,7 @@ void	Router::free_buf_audio_i (Document &doc, BufAlloc &buf_alloc)
 
 
 // Inverse of allocate_buf_audio_o
-void	Router::free_buf_audio_o (Document &doc, BufAlloc &buf_alloc)
+void	Router::free_buf_audio_o (const Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
 	ProcessingContextNode::Side & audio_o =
@@ -1018,7 +1018,7 @@ void	Router::check_source_nodes (Document &doc, const PluginPool &plugin_pool, B
 
 
 
-void	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const
+void	Router::collects_mix_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const
 {
 	bool           mix_flag = false;
 	const int      nbr_pins_cnx = int (node_info._cnx_src_list.size ());
@@ -1101,7 +1101,7 @@ void	Router::collects_mix_source_buffers (ProcessingContext &ctx, BufAlloc &buf_
 
 
 
-void	Router::free_source_buffers (ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr)
+void	Router::free_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr)
 {
 	const bool     mix_flag = ! mix_in_arr.empty ();
 	const int      nbr_pins_cnx = int (node_info._cnx_src_list.size ());

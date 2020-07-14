@@ -355,7 +355,7 @@ int main (int argc, char *argv [])
 	if (ret_val == 0)
 	{
 #if fstb_SYS == fstb_SYS_WIN
-		_setmode (_fileno (stdout), O_BINARY);
+		(void) _setmode (_fileno (stdout), O_BINARY);
 #endif // fstb_SYS_WIN
 
 		VidDecomp      vid_dec (f_ptr, stdout, fps_num, fps_den);

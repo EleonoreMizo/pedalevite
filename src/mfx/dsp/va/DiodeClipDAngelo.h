@@ -77,7 +77,7 @@ public:
 	void           set_cutoff_freq (float f);
 	fstb_FORCEINLINE float
 	               process_sample (float x);
-	void           process_block (float dst_ptr [], float src_ptr [], int nbr_spl);
+	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           clear_buffers ();
 
 

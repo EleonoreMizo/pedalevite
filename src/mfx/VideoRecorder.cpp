@@ -57,6 +57,7 @@ VideoRecorder::VideoRecorder (DisplayInterface &display_main)
 ,	_buf_raw ()
 ,	_buf_cmp ()
 ,	_buf_limit (0)
+,	_buf_pos (0)
 {
 	// Nothing
 }

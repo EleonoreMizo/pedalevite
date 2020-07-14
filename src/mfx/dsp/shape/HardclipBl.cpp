@@ -276,7 +276,7 @@ void	HardclipBl::find_crossings (CrossingList &cxm, CrossingList &cxp, float xm1
 				if (x >= -0.5f && x < 0.5f)
 				{
 					const float    yd     = 2 * a * x + b;
-					Crossing *     cx_ptr = 0;
+					Crossing *     cx_ptr = nullptr;
 					if (x < 0)
 					{
 						// Makes negative x relative to xm1 instead of x0.

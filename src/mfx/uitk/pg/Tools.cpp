@@ -721,7 +721,7 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 
 // Returns true if data is available (slot not empty)
 // Otherwise data is left as it is
-bool	Tools::get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Preset &prog, Model &model)
+bool	Tools::get_physical_io (int &nbr_i, int &nbr_o, int &nbr_s, int slot_id, const doc::Preset &prog, const Model &model)
 {
 	const bool     exist_flag = ! prog.is_slot_empty (slot_id);
 	if (exist_flag)

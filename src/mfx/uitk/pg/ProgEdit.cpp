@@ -442,7 +442,7 @@ void	ProgEdit::set_preset_info ()
 		}
 
 		const int      pos_list = conv_slot_index_to_pos_list (slot_index);
-		add_slot (nav_list, multilabel, pos_list);
+		add_slot_x (nav_list, multilabel, pos_list);
 	}
 
 	if (nbr_slots == _audio_list_len)
@@ -627,8 +627,8 @@ void	ProgEdit::set_link (std::vector <Link> &link_list, int slot_id, Link link, 
 
 void	ProgEdit::find_broken_links (std::vector <Link> &link_list, const std::vector <Tools::NodeEntry> &entry_list) const
 {
-	assert (_view_ptr != 0);
-	assert (_model_ptr != 0);
+	assert (_view_ptr != nullptr);
+	assert (_model_ptr != nullptr);
 	assert (link_list.size () == entry_list.size ());
 	assert (_audio_list_len <= int (entry_list.size ()));
 
@@ -696,7 +696,7 @@ void	ProgEdit::find_broken_links (std::vector <Link> &link_list, const std::vect
 
 
 
-void	ProgEdit::add_slot (PageMgrInterface::NavLocList &nav_list, std::string multilabel, int pos_list)
+void	ProgEdit::add_slot_x (PageMgrInterface::NavLocList &nav_list, std::string multilabel, int pos_list)
 {
 	const SlotDispParam  sdp (pos_list, _audio_list_len, *_fnt_ptr, _page_size);
 
@@ -751,7 +751,7 @@ void	ProgEdit::update_slot (int pos_list, std::string link_txt, bool bold_flag)
 
 void	ProgEdit::set_slot (PageMgrInterface::NavLocList &nav_list, int pos_list, std::string multilabel, std::string link_txt, bool bold_flag)
 {
-	add_slot (nav_list, multilabel, pos_list);
+	add_slot_x (nav_list, multilabel, pos_list);
 	update_slot (pos_list, link_txt, bold_flag);
 }
 

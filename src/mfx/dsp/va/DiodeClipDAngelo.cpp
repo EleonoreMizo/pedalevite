@@ -119,7 +119,7 @@ void	DiodeClipDAngelo::set_cutoff_freq (float f)
 
 
 
-void	DiodeClipDAngelo::process_block (float dst_ptr [], float src_ptr [], int nbr_spl)
+void	DiodeClipDAngelo::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != nullptr);
 	assert (src_ptr != nullptr);

@@ -484,10 +484,10 @@ int	HelperDispNum::conv_from_str (const char txt_0 [], double &val) const
 					}
 					else
 					{
-						const long		midi_note = octave * 12 + note;
+						const long		      midi_note = octave * 12 + note;
 						val_p = double (midi_note);
-						char * const   cents_0 = end_0;
-						long           cents = strtol (cents_0, &end_0, 0);
+						const char * const   cents_0   = end_0;
+						long                 cents     = strtol (cents_0, &end_0, 0);
 						if (end_0 == cents_0)
 						{
 							cents = 0;

@@ -62,7 +62,7 @@ public:
 	               NText (const NText &other)      = default;
 	               NText (NText &&other)           = default;
 
-	virtual        ~NText ()                       = default;
+	               ~NText ()                       = default;
 
 	NText &        operator = (const NText &other) = default;
 	NText &        operator = (NText &&other)      = default;

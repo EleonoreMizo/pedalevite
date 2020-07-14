@@ -557,7 +557,7 @@ std::string ProgCur::get_ip_address ()
 #else
 
 	::WSADATA      wsa_data;
-	::WSAStartup (2, &wsa_data);
+	(void) ::WSAStartup (2, &wsa_data);
 	char           name_0 [255+1];
 	int            ret_val = gethostname (name_0, sizeof (name_0));
 	if (ret_val == 0)

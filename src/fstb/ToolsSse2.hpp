@@ -149,10 +149,10 @@ void	ToolsSse2::store_8_16ml (void *msb_ptr, void *lsb_ptr, __m128i val, __m128i
 	msb = _mm_srli_si128 (msb, 1);
 
 	__m128i        tmp = _mm_packus_epi16 (lsb, msb);
-	_mm_storel_epi64 (reinterpret_cast <__m128i *> (lsb_ptr), tmp);
+	_mm_storel_epi64 (static_cast <__m128i *> (lsb_ptr), tmp);
 
 	tmp = _mm_unpackhi_epi64 (tmp, tmp);
-	_mm_storel_epi64 (reinterpret_cast <__m128i *> (msb_ptr), tmp);
+	_mm_storel_epi64 (static_cast <__m128i *> (msb_ptr), tmp);
 }
 
 
@@ -165,7 +165,7 @@ void	ToolsSse2::store_8_16m (void *msb_ptr, __m128i val, __m128i mask_lsb)
 	__m128i        msb = _mm_andnot_si128 (mask_lsb, val);
 	msb = _mm_srli_si128 (msb, 1);
 	msb = _mm_packus_epi16 (msb, msb);
-	_mm_storel_epi64 (reinterpret_cast <__m128i *> (msb_ptr), msb);
+	_mm_storel_epi64 (static_cast <__m128i *> (msb_ptr), msb);
 }
 
 
@@ -177,7 +177,7 @@ void	ToolsSse2::store_8_16l (void *lsb_ptr, __m128i val, __m128i mask_lsb)
 
 	__m128i        lsb = _mm_and_si128 (mask_lsb, val);
 	lsb = _mm_packus_epi16 (lsb, lsb);
-	_mm_storel_epi64 (reinterpret_cast <__m128i *> (lsb_ptr), lsb);
+	_mm_storel_epi64 (static_cast <__m128i *> (lsb_ptr), lsb);
 }
 
 
