@@ -77,14 +77,19 @@ static inline constexpr T	Hash_reverse_xor_shift (T y, int shift)
 	assert (shift < resol);
 
 	int            delta    = resol - shift;
-	int            reversed = shift;
 	T              x        = (y >> delta) << delta;
+	int            reversed = shift;
 	delta -= shift;
 	do
 	{
-		x +=
-			  ((y << reversed) >> reversed)
-			^ ((((x << (reversed - shift)) >> reversed) >> delta) << delta);
+		T              xd =
+			  ((y <<  reversed         ) >> reversed)
+			^ ((x << (reversed - shift)) >> reversed);
+		if (delta > 0)
+		{
+			xd = (xd >> delta) << delta;
+		}
+		x        += xd;
 		delta    -= shift;
 		reversed += shift;
 	}
@@ -114,11 +119,19 @@ constexpr uint32_t	Hash::hash (uint32_t x)
 
 constexpr uint32_t	Hash::hash_inv (uint32_t x)
 {
+#if 0
+	x  = Hash_reverse_xor_shift (x, 16);
+	x *= uint32_t (0x43021123lu);
+	x  = Hash_reverse_xor_shift (x, 15);
+	x *= uint32_t (0x1D69E2A5lu);
+	x  = Hash_reverse_xor_shift (x, 16);
+#else
 	x ^= x >> 16;
 	x *= uint32_t (0x43021123lu);
 	x ^= x >> 15 ^ x >> 30;
 	x *= uint32_t (0x1D69E2A5lu);
 	x ^= x >> 16;
+#endif
 
 	return x;
 }
@@ -144,9 +157,9 @@ constexpr uint64_t	Hash::hash (uint64_t x)
 constexpr uint64_t	Hash::hash_inv (uint64_t x)
 {
 	x  = Hash_reverse_xor_shift (x, 31);
-	x *= Hash_find_inverse (0x94D049BB133111EBllu);
+	x *= Hash_find_inverse (uint64_t (0x94D049BB133111EBllu));
 	x  = Hash_reverse_xor_shift (x, 27);
-	x *= Hash_find_inverse (0xBF58476D1CE4E5B9llu);
+	x *= Hash_find_inverse (uint64_t (0xBF58476D1CE4E5B9llu));
 	x  = Hash_reverse_xor_shift (x, 30);
 
 	return x;
