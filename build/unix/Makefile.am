@@ -1590,6 +1590,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestDkmSimulator.h \
         ../../src/test/TestHardclipBl.cpp \
         ../../src/test/TestHardclipBl.h \
+        ../../src/test/TestHash.cpp \
+        ../../src/test/TestHash.h \
         ../../src/test/TestHiirDesigner.cpp \
         ../../src/test/TestHiirDesigner.h \
         ../../src/test/TestInterpFtor.cpp \
