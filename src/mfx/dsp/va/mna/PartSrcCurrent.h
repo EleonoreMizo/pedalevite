@@ -50,7 +50,7 @@ class PartSrcCurrent
 public:
 
 	explicit       PartSrcCurrent (IdNode nid_1, IdNode nid_2, Flt i);
-	virtual        ~PartSrcCurrent () = default;
+	               ~PartSrcCurrent () = default;
 
 	void           set_current (Flt i);
 

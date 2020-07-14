@@ -176,7 +176,7 @@ void	Simulator::prepare (double sample_freq)
 		part.prepare (sim_info);
 
 		// Checks if there are nodes with known voltages, too
-		if (gnd_flag && dynamic_cast <PartSrcVoltage *> (&part) != 0)
+		if (gnd_flag && dynamic_cast <PartSrcVoltage *> (&part) != nullptr)
 		{
 			for (const auto &idx : sim_info._node_idx_arr)
 			{

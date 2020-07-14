@@ -116,13 +116,13 @@ public:
 protected:
 
 	// SimulInterface
-	virtual PartInterface::IdNode
+	PartInterface::IdNode
 	               do_allocate_node () final;
-	virtual bool   do_is_node_gnd (int node_idx) const final;
-	virtual Flt    do_get_voltage (int node_idx) const final;
-	virtual Flt    do_get_voltage (int n1_idx, int n2_idx) const final;
-	virtual void   do_add_coef_mat (int row, int col, Flt val) final;
-	virtual void   do_add_coef_vec (int row, Flt val) final;
+	bool           do_is_node_gnd (int node_idx) const final;
+	Flt            do_get_voltage (int node_idx) const final;
+	Flt            do_get_voltage (int n1_idx, int n2_idx) const final;
+	void           do_add_coef_mat (int row, int col, Flt val) final;
+	void           do_add_coef_vec (int row, Flt val) final;
 
 
 

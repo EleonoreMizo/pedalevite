@@ -81,8 +81,10 @@ private:
 	typedef std::shared_ptr <PartDiode> DiodeSPtr;
 	typedef std::shared_ptr <PartCccs> CccsSPtr;
 
-	static Flt     compute_alpha (Flt beta) { return beta / (1.f + beta); }
-	static Flt     compute_isx (Flt is, Flt alpha) { return is / alpha; }
+	static constexpr Flt
+	               compute_alpha (Flt beta) { return beta / (1.f + beta); }
+	static constexpr Flt
+	               compute_isx (Flt is, Flt alpha) { return is / alpha; }
 
 	IdNode         _nid_e    = _nid_invalid;
 	IdNode         _nid_b    = _nid_invalid;
