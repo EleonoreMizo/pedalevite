@@ -58,7 +58,8 @@ class Scale
 {
 public:
 	template <typename T>
-	static constexpr fstb_FORCEINLINE T mul (T a, T b);
+	static fstb_FORCEINLINE T
+	               mul (T a, T b);
 }; // class Scale
 
 
