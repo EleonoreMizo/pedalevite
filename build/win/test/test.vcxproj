@@ -129,6 +129,7 @@
     <ClCompile Include="..\..\..\src\test\TestDiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\test\TestDkmSimulator.cpp" />
     <ClCompile Include="..\..\..\src\test\TestHardclipBl.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestHash.cpp" />
     <ClCompile Include="..\..\..\src\test\TestHiirDesigner.cpp" />
     <ClCompile Include="..\..\..\src\test\TestMoogLadderDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\test\TestMoogLadderMystran.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\..\..\src\test\TestDiodeClipJcm.h" />
     <ClInclude Include="..\..\..\src\test\TestDkmSimulator.h" />
     <ClInclude Include="..\..\..\src\test\TestHardclipBl.h" />
+    <ClInclude Include="..\..\..\src\test\TestHash.h" />
     <ClInclude Include="..\..\..\src\test\TestHiirDesigner.h" />
     <ClInclude Include="..\..\..\src\test\TestMoogLadderDAngelo.h" />
     <ClInclude Include="..\..\..\src\test\TestMoogLadderMystran.h" />

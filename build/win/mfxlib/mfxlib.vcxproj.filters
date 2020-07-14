@@ -4653,6 +4653,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\dkm\Flt.h">
       <Filter>mfx\dsp\va\dkm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\Hash.h">
+      <Filter>fstb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\fstb\Hash.hpp">
+      <Filter>fstb</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.hpp">
       <Filter>mfx\pi\ramp</Filter>
     </ClInclude>
