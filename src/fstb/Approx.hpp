@@ -23,11 +23,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 
 #if defined (_MSC_VER)
 	#include <intrin.h>
 #endif
 
+#include <cassert>
 #include <cmath>
 
 
