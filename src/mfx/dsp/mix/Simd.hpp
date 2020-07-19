@@ -318,7 +318,7 @@ void	Simd <VD, VS>::copy_1_1_v (float out_ptr [], const float in_ptr [], int nbr
 		const int		nbr_loop = nbr_spl >> 2;
 		int				pos = 0;
 		
-		const auto	vec_vol = fstb::ToolsSimd::set1_f32 (vol);
+		const auto     vec_vol = fstb::ToolsSimd::set1_f32 (vol);
 
 		while (pos < nbr_loop)
 		{
@@ -2106,21 +2106,13 @@ void	Simd <VD, VS>::copy_4i2_2 (float out_1_ptr [], float out_2_ptr [], const fl
 		auto           a3 = V128Src::load_f32 (in_ptr +  8);	// C1 C2 xx xx
 		auto           a4 = V128Src::load_f32 (in_ptr + 12);	// D1 D2 xx xx
 
-#if fstb_IS (ARCHI, X86)
 		fstb::ToolsSimd::VectF32   k1;	// A1 B1 A2 B2
 		fstb::ToolsSimd::VectF32   k2;	// C1 D1 C2 D2
 		fstb::ToolsSimd::VectF32   dummy;
 		fstb::ToolsSimd::interleave_f32 (k1, dummy, a1, a2);
 		fstb::ToolsSimd::interleave_f32 (k2, dummy, a3, a4);
-
-		const int		pack_lo = (0<<0) | (1<<2) | (0<<4) | (1<<6);
-		const int		pack_hi = (3<<0) | (3<<2) | (2<<4) | (3<<6);
-		a1 = _mm_shuffle_ps (k1, k2, pack_lo);	// A1 B1 C1 D1
-		a2 = _mm_shuffle_ps (k1, k2, pack_hi);	// A2 B2 C2 D2
-#else
-		fstb::ToolsSimd::transpose_f32 (a1, a2, a3, a4);
-#endif
-
+		a1 = fstb::ToolsSimd::interleave_2f32_lo (k1, k2);
+		a2 = fstb::ToolsSimd::interleave_2f32_hi (k1, k2);
 		V128Dst::store_f32 (out_1_ptr, a1);
 		V128Dst::store_f32 (out_2_ptr, a2);
 
