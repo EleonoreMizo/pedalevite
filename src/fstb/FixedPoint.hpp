@@ -458,7 +458,7 @@ bool	operator == (const FixedPoint &left, const FixedPoint &right)
 
 bool	operator != (const FixedPoint &left, const FixedPoint &right)
 {
-	return left._val._all != right._val._all;
+	return ! (left == right);
 }
 
 
@@ -472,39 +472,39 @@ bool	operator < (const FixedPoint &left, const FixedPoint &right)
 
 bool	operator <= (const FixedPoint &left, const FixedPoint &right)
 {
-	return left._val._all <= right._val._all;
+	return ! (left > right);
 }
 
 
 
 bool	operator > (const FixedPoint &left, const FixedPoint &right)
 {
-	return left._val._all > right._val._all;
+	return right < left;
 }
 
 
 
 bool	operator >= (const FixedPoint &left, const FixedPoint &right)
 {
-	return left._val._all >= right._val._all;
+	return ! (left < right);
 }
 
 
 
-const FixedPoint	operator + (const FixedPoint &left, const FixedPoint &right)
+FixedPoint	operator + (FixedPoint left, const FixedPoint &right)
 {
-	FixedPoint	temp (left);
+	left += right;
 
-	return temp += right;
+	return left;
 }
 
 
 
-const FixedPoint	operator - (const FixedPoint &left, const FixedPoint &right)
+FixedPoint	operator - (FixedPoint left, const FixedPoint &right)
 {
-	FixedPoint	temp (left);
+	left -= right;
 
-	return temp -= right;
+	return left;
 }
 
 

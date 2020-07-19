@@ -173,7 +173,7 @@ private:
 		int64_t        _all;
 		struct
 		{
-#if fstb_IS (ENDIAN, BIG)
+#if fstb_ENDIAN == fstb_ENDIAN_BIG
 			int32_t        _msw;
 			uint32_t       _lsw;
 #else
@@ -211,8 +211,8 @@ inline bool	operator <= (const FixedPoint &left, const FixedPoint &right);
 inline bool	operator > (const FixedPoint &left, const FixedPoint &right); 
 inline bool	operator >= (const FixedPoint &left, const FixedPoint &right); 
 
-inline const FixedPoint	operator + (const FixedPoint &left, const FixedPoint &right);
-inline const FixedPoint	operator - (const FixedPoint &left, const FixedPoint &right);
+inline FixedPoint	operator + (FixedPoint left, const FixedPoint &right);
+inline FixedPoint	operator - (FixedPoint left, const FixedPoint &right);
 
 
 
