@@ -174,6 +174,28 @@ namespace fstb
 
 
 
+// SIMD instruction set availability
+#undef fstb_HAS_SIMD
+#if fstb_ARCHI == fstb_ARCHI_ARM
+	#if defined (__ARM_NEON_FP)
+		#define fstb_HAS_SIMD (1)
+	#endif
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	#if (fstb_WORD_SIZE == 64)
+		#define fstb_HAS_SIMD (1)
+	#elif fstb_COMPILER == fstb_COMPILER_MSVC
+		#if defined (_M_IX86_FP) && _M_IX86_FP >= 2
+			#define fstb_HAS_SIMD (1)
+		#endif
+	#else
+		#if defined (__SSE2__)
+			#define fstb_HAS_SIMD (1)
+		#endif
+	#endif
+#endif
+
+
+
 // Convenient helper to declare unused function parameters
 template <typename... T> inline void unused (T &&...) {}
 

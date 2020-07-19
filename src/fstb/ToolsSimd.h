@@ -29,7 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
-#if (fstb_ARCHI == fstb_ARCHI_X86)
+#if ! defined (fstb_HAS_SIMD)
+	// Nothing here
+#elif (fstb_ARCHI == fstb_ARCHI_X86)
 	#include <emmintrin.h>
 #elif (fstb_ARCHI == fstb_ARCHI_ARM)
 	#include <arm_neon.h>
@@ -54,14 +56,34 @@ class ToolsSimd
 
 public:
 
-#if fstb_ARCHI == fstb_ARCHI_X86
-	typedef __m128i     VectU32;
-	typedef __m128i     VectS32;
-	typedef __m128      VectF32;
+	class VectU32Scalar
+	{
+	public:
+		uint32_t       _ [4];
+	};
+	class VectS32Scalar
+	{
+	public:
+		int32_t        _ [4];
+	};
+	class VectF32Scalar
+	{
+	public:
+		float          _ [4];
+	};
+
+#if ! defined (fstb_HAS_SIMD)
+	typedef VectU32Scalar  VectU32;
+	typedef VectS32Scalar  VectS32;
+	typedef VectF32Scalar  VectF32;
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	typedef __m128i        VectU32;
+	typedef __m128i        VectS32;
+	typedef __m128         VectF32;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	typedef uint32x4_t  VectU32;
-	typedef int32x4_t   VectS32;
-	typedef float32x4_t VectF32;
+	typedef uint32x4_t     VectU32;
+	typedef int32x4_t      VectS32;
+	typedef float32x4_t    VectF32;
 #else
 	#error
 #endif
@@ -358,29 +380,55 @@ private:
 
 
 
-#if fstb_COMPILER == fstb_COMPILER_MSVC
+/*
+Namespace and type issue:
+- Vect* are typedef'd to __m128*, which are in the global namespace
+- Vect*Scalar are defined in the fstb namespace.
+The namespace where the operators are defined should be the same as the type
+of the operands, otherwise the name lookup may fail.
+So we have to use the following trick to define everything in the right
+namespace.
+See also:
+https://stackoverflow.com/questions/5195512/namespaces-and-operator-resolution
+*/
 
-inline fstb::ToolsSimd::VectF32 & operator += (fstb::ToolsSimd::VectF32 &lhs, fstb::ToolsSimd::VectF32 rhs);
-inline fstb::ToolsSimd::VectF32 & operator -= (fstb::ToolsSimd::VectF32 &lhs, fstb::ToolsSimd::VectF32 rhs);
-inline fstb::ToolsSimd::VectF32 & operator *= (fstb::ToolsSimd::VectF32 &lhs, fstb::ToolsSimd::VectF32 rhs);
+#if ! defined (fstb_HAS_SIMD)
+#define fstb_ToolsSimd_OPNS_BEG  namespace fstb {
+#define fstb_ToolsSimd_OPNS( x)  ToolsSimd::x
+#define fstb_ToolsSimd_OPNS_END  }
+#elif fstb_COMPILER == fstb_COMPILER_MSVC
+#define fstb_ToolsSimd_OPNS_BEG
+#define fstb_ToolsSimd_OPNS(x)   fstb::ToolsSimd::x
+#define fstb_ToolsSimd_OPNS_END
+#endif
 
-inline fstb::ToolsSimd::VectF32 operator + (fstb::ToolsSimd::VectF32 lhs, fstb::ToolsSimd::VectF32 rhs);
-inline fstb::ToolsSimd::VectF32 operator - (fstb::ToolsSimd::VectF32 lhs, fstb::ToolsSimd::VectF32 rhs);
-inline fstb::ToolsSimd::VectF32 operator * (fstb::ToolsSimd::VectF32 lhs, fstb::ToolsSimd::VectF32 rhs);
+#if ! defined (fstb_HAS_SIMD) || (fstb_COMPILER == fstb_COMPILER_MSVC)
 
-inline fstb::ToolsSimd::VectS32 & operator += (fstb::ToolsSimd::VectS32 &lhs, fstb::ToolsSimd::VectS32 rhs);
-inline fstb::ToolsSimd::VectS32 & operator -= (fstb::ToolsSimd::VectS32 &lhs, fstb::ToolsSimd::VectS32 rhs);
-inline fstb::ToolsSimd::VectS32 & operator *= (fstb::ToolsSimd::VectS32 &lhs, fstb::ToolsSimd::VectS32 rhs);
-inline fstb::ToolsSimd::VectS32 & operator >>= (fstb::ToolsSimd::VectS32 &x, int scalar);
-inline fstb::ToolsSimd::VectS32 & operator <<= (fstb::ToolsSimd::VectS32 &x, int scalar);
+fstb_ToolsSimd_OPNS_BEG
 
-inline fstb::ToolsSimd::VectS32 operator + (fstb::ToolsSimd::VectS32 lhs, fstb::ToolsSimd::VectS32 rhs);
-inline fstb::ToolsSimd::VectS32 operator - (fstb::ToolsSimd::VectS32 lhs, fstb::ToolsSimd::VectS32 rhs);
-inline fstb::ToolsSimd::VectS32 operator * (fstb::ToolsSimd::VectS32 lhs, fstb::ToolsSimd::VectS32 rhs);
-inline fstb::ToolsSimd::VectS32 operator >> (fstb::ToolsSimd::VectS32 x, int scalar);
-inline fstb::ToolsSimd::VectS32 operator << (fstb::ToolsSimd::VectS32 x, int scalar);
+inline fstb_ToolsSimd_OPNS (VectF32) & operator += (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectF32) & operator -= (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectF32) & operator *= (fstb_ToolsSimd_OPNS (VectF32) &lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
 
-#endif // MSVC
+inline fstb_ToolsSimd_OPNS (VectF32) operator + (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectF32) operator - (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectF32) operator * (fstb_ToolsSimd_OPNS (VectF32) lhs, const fstb_ToolsSimd_OPNS (VectF32) &rhs);
+
+inline fstb_ToolsSimd_OPNS (VectS32) & operator += (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectS32) & operator -= (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectS32) & operator *= (fstb_ToolsSimd_OPNS (VectS32) &lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectS32) & operator >>= (fstb_ToolsSimd_OPNS (VectS32) &x, int scalar);
+inline fstb_ToolsSimd_OPNS (VectS32) & operator <<= (fstb_ToolsSimd_OPNS (VectS32) &x, int scalar);
+
+inline fstb_ToolsSimd_OPNS (VectS32) operator + (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectS32) operator - (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectS32) operator * (fstb_ToolsSimd_OPNS (VectS32) lhs, const fstb_ToolsSimd_OPNS (VectS32) &rhs);
+inline fstb_ToolsSimd_OPNS (VectS32) operator >> (fstb_ToolsSimd_OPNS (VectS32) x, int scalar);
+inline fstb_ToolsSimd_OPNS (VectS32) operator << (fstb_ToolsSimd_OPNS (VectS32) x, int scalar);
+
+fstb_ToolsSimd_OPNS_END
+
+#endif // Operators
 
 
 

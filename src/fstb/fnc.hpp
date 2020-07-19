@@ -27,6 +27,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 #include <type_traits>
 
+#if (fstb_ARCHI == fstb_ARCHI_X86)
+	#if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
+		#include <emmintrin.h>
+	#endif
+#endif
+
 #if defined (_MSC_VER)
 	#if (fstb_ARCHI == fstb_ARCHI_X86)
 		#include <intrin.h>
@@ -56,7 +62,7 @@ namespace fstb
 template <class T>
 constexpr int	sgn (T x)
 {
-	return (x < T (0) ? -1 : x > T (0) ? 1 : 0);
+	return x < T (0) ? -1 : x > T (0) ? 1 : 0;
 }
 
 
@@ -64,7 +70,7 @@ constexpr int	sgn (T x)
 template <class T>
 constexpr T	limit (T x, T mi, T ma)
 {
-	return ((x < mi) ? mi : ((x > ma) ? ma : x));
+	return (x < mi) ? mi : ((x > ma) ? ma : x);
 }
 
 
@@ -96,7 +102,7 @@ constexpr bool	is_pow_2 (T x)
 
 double	round (double x)
 {
-	return (floor (x + 0.5));
+	return floor (x + 0.5);
 }
 
 
@@ -108,22 +114,21 @@ int	round_int (double x)
 
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 
- #if defined (_MSC_VER)
+ #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
+
+	static const float	round_to_nearest = 0.5f;
+	const double	xx     = x + x + round_to_nearest;
+	const __m128d	x_128d = _mm_set_sd (xx);
+	const int      i      = _mm_cvtsd_si32 (x_128d) >> 1;
+	return i;
+
+ #elif defined (_MSC_VER)
 
 	assert (x <= double (INT_MAX/2));
 	assert (x >= double (INT_MIN/2));
 
 	static const float	round_to_nearest = 0.5f;
 	int				i;
-
-  #if defined (_WIN64) || defined (__64BIT__) || defined (__amd64__) || defined (__x86_64__)
-
-	const double	xx = x + x + round_to_nearest;
-	const __m128d	x_128d = _mm_set_sd (xx);
-	i = _mm_cvtsd_si32 (x_128d);
-	i >>= 1;
-
-  #else
 
 	__asm
 	{
@@ -134,11 +139,9 @@ int	round_int (double x)
 		sar            i, 1
 	}
 
-  #endif
-
 	assert (i == int (floor (x + 0.5)));
 
-	return (i);
+	return i;
 
  #elif defined (__GNUC__)
 
@@ -161,19 +164,19 @@ int	round_int (double x)
 
 	assert (i == int (floor (x + 0.5)));
 
-	return (i);
+	return i;
 
  #else
 
 	// Slow
-	return (int (floor (x + 0.5)));
+	return int (floor (x + 0.5));
 
  #endif  // Compiler
 
 #else // fstb_ARCHI_X86
 
 	// Slow
-	return (int (floor (x + 0.5)));
+	return int (floor (x + 0.5));
 
 #endif // fstb_ARCHI_X86
 }
@@ -182,7 +185,7 @@ int	round_int (double x)
 
 int64_t round_int64 (double x)
 {
-	return (int64_t (round (x)));
+	return int64_t (round (x));
 }
 
 
@@ -195,22 +198,21 @@ int	floor_int (double x)
 
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 
- #if defined (_MSC_VER)
+ #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
+
+	static const float   round_toward_m_i = -0.5f;
+	const double   xx     = x + x + round_toward_m_i;
+	const __m128d  x_128d = _mm_set_sd (xx);
+	const int      i      = _mm_cvtsd_si32 (x_128d) >> 1;
+	return i;
+
+ #elif defined (_MSC_VER)
 
 	assert (x <= double (INT_MAX/2));
 	assert (x >= double (INT_MIN/2));
 
 	int            i;
 	static const float   round_toward_m_i = -0.5f;
-
-  #if defined (_WIN64) || defined (__64BIT__) || defined (__amd64__) || defined (__x86_64__)
-
-	const double   xx = x + x + round_toward_m_i;
-	const __m128d  x_128d = _mm_set_sd (xx);
-	i = _mm_cvtsd_si32 (x_128d);
-	i >>= 1;
-
-  #else
 
 	__asm
 	{
@@ -221,11 +223,9 @@ int	floor_int (double x)
 		sar            i, 1
 	}
 
-  #endif
-
 	assert (i == int (floor (x)) || fabs (i - x) < 1e-10);
 
-	return (i);
+	return i;
 
  #elif defined (__GNUC__)
 
@@ -249,19 +249,19 @@ int	floor_int (double x)
 	
 	assert (i == int (floor (x)) || fabs (i - x) < 1e-10);
 
-	return (i);
+	return i;
 
  #else
 
 	// Slow
-	return (int (floor (x)));
+	return int (floor (x));
 
  #endif // Compiler
 
 #else  // fstb_ARCHI_X86
 
 	// Slow
-	return (int (floor (x)));
+	return int (floor (x));
 
 #endif // fstb_ARCHI_X86
 }
@@ -270,7 +270,7 @@ int	floor_int (double x)
 
 int64_t	floor_int64 (double x)
 {
-	return (int64_t (floor (x)));
+	return int64_t (floor (x));
 }
 
 
@@ -283,22 +283,21 @@ int	ceil_int (double x)
 
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 
- #if (defined (_MSC_VER))
+ #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
+
+	const float    round_toward_p_i = -0.5f;
+	const double   xx     = round_toward_p_i - (x + x);
+	const __m128d  x_128d = _mm_set_sd (xx);
+	const int      i      = _mm_cvtsd_si32 (x_128d) >> 1;
+	return i;
+
+ #elif (defined (_MSC_VER))
 
 	assert (x <= double (INT_MAX/2));
 	assert (x >= double (INT_MIN/2));
 
 	int            i;
 	static const float   round_toward_p_i = -0.5f;
-
-  #if defined (_WIN64) || defined (__64BIT__) || defined (__amd64__) || defined (__x86_64__)
-
-	const double   xx = round_toward_p_i - (x + x);
-	const __m128d  x_128d = _mm_set_sd (xx);
-	i = _mm_cvtsd_si32 (x_128d);
-	i >>= 1;
-
-  #else
 
 	__asm
 	{
@@ -309,11 +308,9 @@ int	ceil_int (double x)
 		sar            i, 1
 	}
 
-  #endif
-
 	assert (-i == int (ceil (x)) || fabs (-i - x) < 1e-10);
 
-	return (-i);
+	return -i;
 
  #elif defined (__GNUC__)
 
@@ -337,19 +334,19 @@ int	ceil_int (double x)
 
 	assert (-i == int (ceil (x)) || fabs (-i - x) < 1e-10);
 
-	return (-i);
+	return -i;
 
  #else
 
 	// Slow
-	return (int (ceil (x)));
+	return int (ceil (x));
 
  #endif
 
 #else
 
 	// Slow
-	return (int (ceil (x)));
+	return int (ceil (x)));
 
 #endif
 }
@@ -359,7 +356,7 @@ int	ceil_int (double x)
 template <class T>
 constexpr int	trunc_int (T x)
 {
-#if (fstb_ARCHI == fstb_ARCHI_X86) && (fstb_WORD_SIZE == 32)
+#if (fstb_ARCHI == fstb_ARCHI_X86) && (defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64)
 	return _mm_cvtt_ss2si (_mm_set1_ps (float (x)));
 #else
 	return int (x);
@@ -418,7 +415,7 @@ int	conv_int_fast (T x)
 
 #endif
 
-	return (p);
+	return p;
 }
 
 
@@ -440,7 +437,7 @@ constexpr bool	is_eq (T v1, T v2, T eps)
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
 	assert (eps >= 0);
 
-	return (is_null (v2 - v1, eps));
+	return is_null (v2 - v1, eps);
 }
 
 
@@ -455,7 +452,7 @@ constexpr bool	is_eq_rel (T v1, T v2, T tol)
 	const T        v2a = T (fabs (v2));
 	const T        eps = std::max (v1a, v2a) * tol;
 
-	return (is_eq (v1, v2, eps));
+	return is_eq (v1, v2, eps);
 }
 
 
@@ -518,7 +515,7 @@ int	get_prev_pow_2 (uint32_t x)
 
 #endif
 
-	return (int (p));
+	return int (p);
 }
 
 
@@ -599,7 +596,7 @@ int	get_next_pow_2 (uint32_t x)
 
 #endif
 
-	return (int (p));
+	return int (p);
 }
 
 
@@ -608,12 +605,12 @@ constexpr double	sinc (double x)
 {
 	if (x == 0)
 	{
-		return (1);
+		return 1;
 	}
 
 	const double   xp = x * PI;
 
-	return (sin (xp) / xp);
+	return sin (xp) / xp;
 }
 
 
@@ -626,7 +623,7 @@ double  pseudo_exp (double x, double c)
 	const double   num = exp (c * x) - 1;
 	const double   den = exp (c    ) - 1;
 
-	return (num / den);
+	return num / den;
 }
 
 
@@ -638,7 +635,7 @@ double  pseudo_log (double y, double c)
 
 	const double   num = log (y * (exp (c) - 1) + 1);
 
-	return (num / c);
+	return num / c;
 }
 
 
@@ -648,28 +645,28 @@ class fnc_ShiftGeneric
 {
 public:
 	static_assert (S < int (sizeof (T) * CHAR_BIT), "Shift too large");
-	static constexpr T sh (T x) { return (x << S); }
+	static constexpr T sh (T x) { return x << S; }
 };
 template <class T, int S>
 class fnc_ShiftGeneric <T, S, false>
 {
 public:
 	static_assert (S < int (sizeof (T) * CHAR_BIT), "Shift too large");
-	static constexpr T sh (T x) { return (x >> S); }
+	static constexpr T sh (T x) { return x >> S; }
 };
 
 template <class T, int S>
 constexpr T	sshift_l (T x)
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
-	return (fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S > 0)>::sh (x));
+	return fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S > 0)>::sh (x);
 }
 
 template <class T, int S>
 constexpr T	sshift_r (T x)
 {
 	static_assert (std::is_integral <T>::value, "T must be integer");
-	return (fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S < 0)>::sh (x));
+	return fnc_ShiftGeneric <T, (S < 0) ? -S : S, (S < 0)>::sh (x);
 }
 
 
@@ -697,7 +694,7 @@ constexpr T	ipow (T x, U n)
 	const U			abs_n = std::abs (n);
 	const T			z (ipowp (x, abs_n));
 
-	return ((n < U (0)) ? T (1) / z : z);
+	return (n < U (0)) ? T (1) / z : z;
 }
 
 
@@ -730,7 +727,7 @@ constexpr T	ipowp (T x, U n)
 	}
 #endif
 
-	return (z);
+	return z;
 }
 
 
@@ -881,7 +878,10 @@ bool	is_ptr_align_nz (const T *ptr, int a)
 	assert (a > 0);
 	assert (is_pow_2 (a));
 
-	return (ptr != nullptr && (reinterpret_cast <intptr_t> (ptr) & (a - 1)) == 0);
+	return (
+		   ptr != nullptr
+		&& (reinterpret_cast <intptr_t> (ptr) & (a - 1)) == 0
+	);
 }
 
 
