@@ -1687,10 +1687,10 @@ int	ToolsSimd::count_bits (VectS32 x)
 	v1 = (v1 & 0x33333333) + ((v1 >> 2) & 0x33333333);
 	v2 = (v2 & 0x33333333) + ((v2 >> 2) & 0x33333333);
 	v3 = (v3 & 0x33333333) + ((v3 >> 2) & 0x33333333);
-	const int      c0 = ((v0 + (v0 >> 4) & 0xF0F0F0FU) * 0x1010101) >> 24;
-	const int      c1 = ((v1 + (v1 >> 4) & 0xF0F0F0FU) * 0x1010101) >> 24;
-	const int      c2 = ((v2 + (v2 >> 4) & 0xF0F0F0FU) * 0x1010101) >> 24;
-	const int      c3 = ((v3 + (v3 >> 4) & 0xF0F0F0FU) * 0x1010101) >> 24;
+	const int      c0 = (((v0 + (v0 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
+	const int      c1 = (((v1 + (v1 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
+	const int      c2 = (((v2 + (v2 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
+	const int      c3 = (((v3 + (v3 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
 	return (c0 + c2) + (c1 + c3);
 #elif fstb_IS (ARCHI, X86)
 	// https://stackoverflow.com/questions/17354971/fast-counting-the-number-of-set-bits-in-m128i-register
