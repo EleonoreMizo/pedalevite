@@ -1162,7 +1162,7 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 	return _mm_castsi128_ps (xi);
 #elif fstb_IS (ARCHI, ARM)
 	xi  = vshlq_n_s32 (xi, 23);
-	xi += vreinterpretq_s32_f32 (poly)
+	xi += vreinterpretq_s32_f32 (poly);
 	return vreinterpretq_f32_s32 (xi);
 #endif // ff_arch_CPU
 

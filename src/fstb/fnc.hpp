@@ -346,7 +346,7 @@ int	ceil_int (double x)
 #else
 
 	// Slow
-	return int (ceil (x)));
+	return int (ceil (x));
 
 #endif
 }
