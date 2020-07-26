@@ -225,11 +225,11 @@ void	DelayLineBbdPitch::set_grain_pitch (float ratio)
 	{
 		if (_ps_flag && ! ps_flag_old)
 		{
-			_xfade_pos = fstb::floor_int (_xfade_pos * _xfade_dp / _xfade_dn);
+			_xfade_pos = _xfade_pos * _xfade_dp / _xfade_dn;
 		}
 		else if (! _ps_flag && ps_flag_old)
 		{
-			_xfade_pos = fstb::floor_int (_xfade_pos * _xfade_dn / _xfade_dp);
+			_xfade_pos = _xfade_pos * _xfade_dn / _xfade_dp;
 		}
 		assert (_xfade_pos < get_xfade_len ());
 	}
