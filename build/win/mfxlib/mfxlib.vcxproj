@@ -1276,7 +1276,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\FxSection.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\StageTaps.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\dly2\TapUnit.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\DistTone.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dtone1\Param.h" />
@@ -1866,7 +1865,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\FxDisto.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\FxSection.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\StageTaps.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\dly2\TapUnit.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistTone.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\envf\Cst.cpp" />

@@ -2037,9 +2037,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\StageTaps.h">
       <Filter>mfx\pi\dly2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\dly2\TapUnit.h">
-      <Filter>mfx\pi\dly2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\dly2\DelayLineBbd.h">
       <Filter>mfx\pi\dly2</Filter>
     </ClInclude>
@@ -5400,9 +5397,6 @@
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\StageTaps.cpp">
-      <Filter>mfx\pi\dly2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dly2\TapUnit.cpp">
       <Filter>mfx\pi\dly2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\DelayLineBbd.cpp">

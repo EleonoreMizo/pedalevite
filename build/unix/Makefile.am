@@ -879,8 +879,6 @@ commonsrc = \
         ../../src/mfx/pi/dly2/Param.h \
         ../../src/mfx/pi/dly2/StageTaps.cpp \
         ../../src/mfx/pi/dly2/StageTaps.h \
-        ../../src/mfx/pi/dly2/TapUnit.cpp \
-        ../../src/mfx/pi/dly2/TapUnit.h \
         ../../src/mfx/pi/dtone1/DistTone.cpp \
         ../../src/mfx/pi/dtone1/DistTone.h \
         ../../src/mfx/pi/dtone1/DistToneDesc.cpp \
