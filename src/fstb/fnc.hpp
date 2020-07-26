@@ -289,7 +289,7 @@ int	ceil_int (double x)
 	const double   xx     = round_toward_p_i - (x + x);
 	const __m128d  x_128d = _mm_set_sd (xx);
 	const int      i      = _mm_cvtsd_si32 (x_128d) >> 1;
-	return i;
+	return -i;
 
  #elif (defined (_MSC_VER))
 
