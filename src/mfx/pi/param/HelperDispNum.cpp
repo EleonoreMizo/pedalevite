@@ -584,8 +584,8 @@ std::string	HelperDispNum::print_frac (double val, long max_len) const
 	const long     delim_len = long (strlen (delim_0));
 
 	// Separates int and frac values
-	const double val_abs = fabs (val);
-	long 	         val_abs_int = fstb::floor_int (val);
+	const double   val_abs = fabs (val);
+	long 	         val_abs_int  = fstb::floor_int_accurate (val);
 	double         val_abs_frac = val_abs - val_abs_int;
 
 	// Finds the fraction
@@ -598,7 +598,7 @@ std::string	HelperDispNum::print_frac (double val, long max_len) const
 		if (val_abs_int > 0)
 		{
 			const int      nbr_dgt_int =
-				1 + fstb::floor_int (log10 (double (val_abs_int)));
+				1 + fstb::floor_int_accurate (log10 (double (val_abs_int)));
 			frac_len -= nbr_dgt_int;
 		}
 		frac_len -= delim_len;

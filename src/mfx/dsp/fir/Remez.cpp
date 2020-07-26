@@ -287,10 +287,10 @@ int	Remez::estimate_order (double ripple_db, double atten_db, double trans_band)
 	const double   delta_p = 0.5 * (1.0 - pow (10.0, ripple_db / -20.0));
 	const double   delta_s =              pow (10.0,  atten_db / -20.0);
 
-	const int      order = fstb::round_int (
+	const int      order = int (fstb::round (
 		  (-10.0 * log10 (delta_p * delta_s) - 13)
 		/ ( 14.6 * trans_band)
-	);
+	));
 
 	return order;
 }
@@ -362,7 +362,7 @@ void	Remez::create_dense_grid (int r, int nbr_coefs, const RemezSpec &spec, int 
 			lowf = delf;
 		}
 
-		int            k = fstb::round_int ((highf - lowf) / delf);
+		int            k = int (fstb::round ((highf - lowf) / delf));
 		_grid [j] = lowf;
 		for (int i = 0; i < k; ++i)
 		{

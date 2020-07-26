@@ -48,9 +48,14 @@ inline constexpr void    sort_2_elt (T &mi,T &ma, T a, T b);
 template <class T>
 inline constexpr bool    is_pow_2 (T x);
 inline double  round (double x);
+inline float   round (float x);
+inline int     round_int (float x);
 inline int     round_int (double x);
+inline int     round_int_accurate (double x);
 inline int64_t round_int64 (double x);
+inline int     floor_int (float x);
 inline int     floor_int (double x);
+inline int     floor_int_accurate (double x);
 inline int64_t floor_int64 (double x);
 inline int     ceil_int (double x);
 template <class T>

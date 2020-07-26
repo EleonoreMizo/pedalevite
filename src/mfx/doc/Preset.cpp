@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ToolsRouting.h"
 
 #include <utility>
+#include <stdexcept>
 
 #include <cassert>
 #include <climits>

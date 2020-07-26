@@ -110,7 +110,7 @@ void	DelayLineReaderPitch <TC>::set_crossfade_normal (int nbr_spl, const float s
 	// If a crossfading is currently running, tries to arrange it.
 	if (_xfade_pos >= 0 && ! _ps_flag)
 	{
-		_xfade_pos = fstb::round_int (_xfade_pos * nbr_spl / _xfade_dn);
+		_xfade_pos = _xfade_pos * nbr_spl / _xfade_dn;
 	}
 	_xfade_dn     = nbr_spl;
 	_xfade_sn_ptr = shape_ptr;
@@ -127,7 +127,7 @@ void	DelayLineReaderPitch <TC>::set_crossfade_pitchshift (int nbr_spl, const flo
 	// If a crossfading is currently running, tries to arrange it.
 	if (_xfade_pos >= 0 && _ps_flag)
 	{
-		_xfade_pos = fstb::round_int (_xfade_pos * nbr_spl / _xfade_dp);
+		_xfade_pos = _xfade_pos * nbr_spl / _xfade_dp;
 	}
 	_xfade_dp     = nbr_spl;
 	_xfade_sp_ptr = shape_ptr;
@@ -173,11 +173,11 @@ void	DelayLineReaderPitch <TC>::set_grain_pitch (float ratio)
 	{
 		if (_ps_flag && ! ps_flag_old)
 		{
-			_xfade_pos = fstb::floor_int (_xfade_pos * _xfade_dp / _xfade_dn);
+			_xfade_pos = _xfade_pos * _xfade_dp / _xfade_dn;
 		}
 		else if (! _ps_flag && ps_flag_old)
 		{
-			_xfade_pos = fstb::floor_int (_xfade_pos * _xfade_dn / _xfade_dp);
+			_xfade_pos = _xfade_pos * _xfade_dn / _xfade_dp;
 		}
 		assert (_xfade_pos < get_xfade_len ());
 	}

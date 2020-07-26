@@ -102,12 +102,63 @@ constexpr bool	is_pow_2 (T x)
 
 double	round (double x)
 {
-	return floor (x + 0.5);
+	return floor (x + 0.5f);
+}
+
+
+
+float	round (float x)
+{
+	return floorf (x + 0.5f);
+}
+
+
+
+int	round_int (float x)
+{
+	assert (x <= double (INT_MAX));
+	assert (x >= static_cast <double> (INT_MIN));
+
+#if (fstb_ARCHI == fstb_ARCHI_X86)
+
+ #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
+
+	return _mm_cvtss_si32 (_mm_set_ss (x));
+
+ #elif defined (_MSC_VER)
+
+	__asm
+	{
+		fld            x
+		fistp          i
+	}
+
+	return i;
+
+ #else
+
+	return int (floorf (x + 0.5f));
+
+ #endif  // Compiler
+
+#else // fstb_ARCHI_X86
+
+	// Slow
+	return int (floorf (x + 0.5f));
+
+#endif // fstb_ARCHI_X86
 }
 
 
 
 int	round_int (double x)
+{
+	return round_int (float (x));
+}
+
+
+
+int	round_int_accurate (double x)
 {
 	assert (x <= double (INT_MAX));
 	assert (x >= static_cast <double> (INT_MIN));
@@ -191,7 +242,78 @@ int64_t round_int64 (double x)
 
 
 // May not give the right result for very small negative values.
+int	floor_int (float x)
+{
+	assert (x <= double (INT_MAX));
+	assert (x >= static_cast <double> (INT_MIN));
+
+#if (fstb_ARCHI == fstb_ARCHI_X86)
+
+ #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
+
+	constexpr float   round_toward_m_i = -0.5f;
+	return _mm_cvtss_si32 (_mm_add_ss (
+		_mm_set_ss (x), _mm_set_ss (round_toward_m_i)
+	));
+
+ #elif defined (_MSC_VER)
+
+	assert (x <= double (INT_MAX/2));
+	assert (x >= double (INT_MIN/2));
+
+	int            i;
+	constexpr float   round_toward_m_i = -0.5f;
+
+	__asm
+	{
+		fld            x
+		fadd           round_toward_m_i
+		fistp          i
+	}
+
+	return i;
+
+ #elif defined (__GNUC__)
+
+	int				i;
+	
+	static const float	round_toward_m_i = -0.5f;
+	asm (
+		"fldl				%[x]				\n"
+		"fadds			(%[rm])				\n"
+		"fistpl			%[i]				\n"
+	:	[i]	"=m"	(i)
+ 	:	[rm]	"r"	(&round_toward_m_i)
+	,	[x]	"m"	(x)
+	:	//"st"
+	);
+	
+	return i;
+
+ #else
+
+	return int (floorf (x));
+
+ #endif // Compiler
+
+#else  // fstb_ARCHI_X86
+
+	return int (floorf (x));
+
+#endif // fstb_ARCHI_X86
+}
+
+
+
 int	floor_int (double x)
+{
+	return floor_int (float (x));
+}
+
+
+
+// May not give the right result for very small negative values.
+int	floor_int_accurate (double x)
 {
 	assert (x <= double (INT_MAX));
 	assert (x >= static_cast <double> (INT_MIN));

@@ -95,7 +95,7 @@ void	FixedPoint::set_val (double val)
 {
 	const double	uint_scale = fstb::TWOP32;
 
-	_val._part._msw = fstb::floor_int (val);
+	_val._part._msw = fstb::floor_int_accurate (val);
 	_val._part._lsw = uint32_t ((val - _val._part._msw) * uint_scale);
 }
 
