@@ -116,7 +116,7 @@ int	round_int (double x)
 
  #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
 
-	static const float	round_to_nearest = 0.5f;
+	constexpr float   round_to_nearest = 0.5f;
 	const double	xx     = x + x + round_to_nearest;
 	const __m128d	x_128d = _mm_set_sd (xx);
 	const int      i      = _mm_cvtsd_si32 (x_128d) >> 1;
@@ -200,7 +200,7 @@ int	floor_int (double x)
 
  #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
 
-	static const float   round_toward_m_i = -0.5f;
+	constexpr float   round_toward_m_i = -0.5f;
 	const double   xx     = x + x + round_toward_m_i;
 	const __m128d  x_128d = _mm_set_sd (xx);
 	const int      i      = _mm_cvtsd_si32 (x_128d) >> 1;
@@ -285,7 +285,7 @@ int	ceil_int (double x)
 
  #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
 
-	const float    round_toward_p_i = -0.5f;
+	constexpr float   round_toward_p_i = -0.5f;
 	const double   xx     = round_toward_p_i - (x + x);
 	const __m128d  x_128d = _mm_set_sd (xx);
 	const int      i      = _mm_cvtsd_si32 (x_128d) >> 1;
