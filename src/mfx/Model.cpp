@@ -1211,10 +1211,13 @@ void	Model::reset_and_override_param_ctrl_multi (const std::vector <RotEncOverri
 		find_slot_type_cur_preset (slot_id, type, loc._pi_id);
 		if (slot_id >= 0)
 		{
-			ovr_notify_arr.emplace_back (
-				RotEncOverride { slot_id, type, loc._index, -1 }
-			);
-			req_commit_flag |= override_param_ctrl_no_commit (
+			RotEncOverride reo;
+			reo._slot_id      = slot_id;
+			reo._pi_type      = type;
+			reo._index        = loc._index;
+			reo._rotenc_index = -1;
+			ovr_notify_arr.push_back (reo);
+			req_commit_flag  |= override_param_ctrl_no_commit (
 				slot_id, type, loc._index, -1
 			); // loc becomes invalid after this call
 		}

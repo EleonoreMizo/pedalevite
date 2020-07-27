@@ -129,8 +129,7 @@ private:
 	void           process_block_fx (float * const dst_ptr_arr [_nbr_chn_out], int nbr_spl);
 	void           process_block_dist_mono (float dst_ptr [], int nbr_spl);
 
-	static constexpr float
-	               clip_feedback (float x);
+	static float   clip_feedback (float x);
 
 	float          _sample_freq;        // Hz, > 0
 	float          _inv_fs;             // 1 / _sample_freq

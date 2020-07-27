@@ -49,14 +49,14 @@ class Hash
 
 public:
 
-	static fstb_FORCEINLINE constexpr uint32_t
+	static fstb_FORCEINLINE fstb_CONSTEXPR14 uint32_t
 	               hash (uint32_t x);
-	static fstb_FORCEINLINE constexpr uint32_t
+	static fstb_FORCEINLINE fstb_CONSTEXPR14 uint32_t
 	               hash_inv (uint32_t x);
 
-	static fstb_FORCEINLINE constexpr uint64_t
+	static fstb_FORCEINLINE fstb_CONSTEXPR14 uint64_t
 	               hash (uint64_t x);
-	static fstb_FORCEINLINE constexpr uint64_t
+	static fstb_FORCEINLINE fstb_CONSTEXPR14 uint64_t
 	               hash_inv (uint64_t x);
 
 

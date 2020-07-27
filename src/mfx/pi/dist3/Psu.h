@@ -23,6 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <cstdint>
 
 #include <array>
@@ -79,7 +81,7 @@ private:
 
 	void           update_constants ();
 	void           process_polarity (Smoother &voltage, float &charge, float &x, float ac);
-	static constexpr float
+	static fstb_CONSTEXPR14 float
 	               clip (float x, float vmax);
 
 	float          _sample_freq = 0;    // 0 = not initialized

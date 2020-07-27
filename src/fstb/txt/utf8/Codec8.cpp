@@ -47,18 +47,22 @@ namespace utf8
 
 constexpr bool	Codec8::is_valid_utf8_byte (char c)
 {
-	const unsigned char  val (c);
-
-	return (val != 0xC0 && val != 0xC1 && val <= 0xF4);
+	return (
+		   static_cast <unsigned char> (c) != 0xC0
+		&& static_cast <unsigned char> (c) != 0xC1
+		&& static_cast <unsigned char> (c) <= 0xF4
+	);
 }
 
 
 
 constexpr bool	Codec8::is_valid_utf8_lead_byte (char c)
 {
-	const unsigned char  val (c);
-
-	return (val < 0x80 || (val >= 0xC2 && val <= 0xF4));
+	return (
+		   static_cast <unsigned char> (c) < 0x80
+		|| (  static_cast <unsigned char> (c) >= 0xC2
+			&& static_cast <unsigned char> (c) <= 0xF4)
+		);
 }
 
 

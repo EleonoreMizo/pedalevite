@@ -50,7 +50,7 @@ namespace ramp
 template <int P, int D>
 constexpr float	RampModule::accelerate (float x)
 {
-	return (x + (D - 1) * fstb::ipowp (x, P)) * (1.0f / D);
+	return (x + (D - 1) * fstb::ipowpc <P> (x)) * (1.0f / D);
 }
 
 

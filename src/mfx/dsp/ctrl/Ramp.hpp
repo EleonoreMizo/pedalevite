@@ -41,10 +41,11 @@ namespace ctrl
 
 
 constexpr Ramp::Ramp (float x)
+:	_val_beg (x)
+,	_val_end (x)
+,	_val_tgt (x)
 {
-	_val_beg = x;
-	_val_end = x;
-	_val_tgt = x;
+	// Nothing
 }
 
 

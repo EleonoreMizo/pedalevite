@@ -121,6 +121,13 @@ namespace fstb
 	#define fstb_COMPILER fstb_COMPILER_GCC
 #elif defined (_MSC_VER)
 	#define fstb_COMPILER fstb_COMPILER_MSVC
+	#if _MSC_VER >= 2000 && __cplusplus < 201402L
+		// The MS compiler keeps __cplusplus at 199711L, even if C++14 or above
+		// is enforced and standard compliance is activated. C++11 is not
+		// officially supported, but almost works with _MSC_VER >= 1900.
+		// /Zc:__cplusplus sets the macro to the right value for C++ >= 2014.
+		#error Please compile with /Zc:__cplusplus
+	#endif
 #else
 	#error
 #endif
@@ -170,6 +177,15 @@ namespace fstb
 	#endif
 #else
 	#define fstb_EXPORT(f) extern "C" __attribute__((visibility("default"))) f
+#endif
+
+
+
+// constexpr functions without too much restrictions
+#if (__cplusplus >= 201402L)
+	#define fstb_CONSTEXPR14 constexpr
+#else
+	#define fstb_CONSTEXPR14
 #endif
 
 

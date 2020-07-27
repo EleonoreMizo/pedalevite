@@ -390,9 +390,6 @@ void	DistoSimple::distort_block (float dst_ptr [], const float src_ptr [], int n
 
 
 
-const float	DistoSimple::_attn = 8;
-const float	DistoSimple::_m_9  = fstb::ipowp (_attn, 9 - 1) / 9;
-const float	DistoSimple::_m_2  = fstb::ipowp (_attn, 2 - 1) / 2;
 
 
 

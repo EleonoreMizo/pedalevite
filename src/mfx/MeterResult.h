@@ -44,9 +44,9 @@ class MeterResult
 public:
 
 	std::atomic <float>
-	               _peak = 0;
+	               _peak { 0 };
 	std::atomic <float>
-	               _rms  = 0;
+	               _rms  { 0 };
 
 
 

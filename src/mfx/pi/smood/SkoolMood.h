@@ -149,9 +149,9 @@ private:
 	float          get_lfo (const dsp::ctrl::lfo::LfoModule &lfo) const;
 	void           modulate (Channel &chn, float ldr);
 
-	static inline constexpr float
+	static inline float
 	               shape_bjt (float x);
-	static inline constexpr float
+	static inline float
 	               compute_pan_lvl (float x);
 
 	State          _state;

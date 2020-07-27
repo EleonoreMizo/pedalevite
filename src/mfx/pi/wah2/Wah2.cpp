@@ -399,7 +399,7 @@ constexpr float	Wah2::para (float a, float b, float c)
 
 
 
-constexpr float	Wah2::shaper (float x)
+fstb_CONSTEXPR14 float	Wah2::shaper (float x)
 {
 	x = fstb::limit (x, -1.12f, 1.2f);
 

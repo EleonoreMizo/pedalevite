@@ -62,7 +62,7 @@ int	Simulator::add_src_v (IdNode nid_1, IdNode nid_2, Flt v)
 	use_or_create_node (nid_2);
 
 	const int      idx = int (_src_v_arr.size ());
-	_src_v_arr.push_back ({ nid_1, nid_2, v });
+	_src_v_arr.push_back (SrcV { nid_1, nid_2, v });
 
 	return idx;
 }
@@ -80,7 +80,7 @@ int	Simulator::add_resistor (IdNode nid_1, IdNode nid_2, Flt r)
 	use_or_create_node (nid_2);
 
 	const int      idx = int (_resistor_arr.size ());
-	_resistor_arr.push_back ({ nid_1, nid_2, r });
+	_resistor_arr.push_back (Resistor { nid_1, nid_2, r });
 
 	return idx;
 }
@@ -101,7 +101,7 @@ int	Simulator::add_pot (IdNode nid_1, IdNode nid_2, Flt rmin, Flt rmax, Flt pos)
 	use_or_create_node (nid_2);
 
 	const int      idx = int (_pot_arr.size ());
-	_pot_arr.push_back ({ nid_1, nid_2, rmin, rmax, pos });
+	_pot_arr.push_back (Potentiometer { nid_1, nid_2, rmin, rmax, pos });
 
 	_rv_val_a_arr.push_back (rmax - rmin);
 	_rv_val_b_arr.push_back (rmin);
@@ -123,7 +123,11 @@ int	Simulator::add_capacitor (IdNode nid_1, IdNode nid_2, Flt c)
 	use_or_create_node (nid_2);
 
 	const int      idx = int (_capa_arr.size ());
-	_capa_arr.push_back ({ nid_1, nid_2, c });
+	Capacitor      part;
+	part._nid_1 = nid_1;
+	part._nid_2 = nid_2;
+	part._c     = c;
+	_capa_arr.push_back (part);
 
 	return idx;
 }
@@ -141,7 +145,11 @@ int	Simulator::add_inductor (IdNode nid_1, IdNode nid_2, Flt l)
 	use_or_create_node (nid_2);
 
 	const int      idx = int (_inductor_arr.size ());
-	_inductor_arr.push_back ({ nid_1, nid_2, l });
+	Inductor       part;
+	part._nid_1 = nid_1;
+	part._nid_2 = nid_2;
+	part._l     = l;
+	_inductor_arr.push_back (part);
 
 	return idx;
 }
@@ -161,8 +169,11 @@ int	Simulator::add_diode (IdNode nid_1, IdNode nid_2, Flt is, Flt n)
 	use_or_create_node (nid_2);
 
 	const int      idx = int (_diode_arr.size ());
-	_diode_arr.push_back ({ nid_1, nid_2 });
-	_diode_arr.back ()._junc.set_param (is, n, 100);
+	Diode          part;
+	part._nid_1 = nid_1;
+	part._nid_2 = nid_2;
+	part._junc.set_param (is, n, 100);
+	_diode_arr.push_back (part);
 
 	return idx;
 }
@@ -185,9 +196,12 @@ int	Simulator::add_diode_antipar (IdNode nid_1, IdNode nid_2, Flt is1, Flt n1, F
 	use_or_create_node (nid_2);
 
 	const int      idx = int (_diode_pair_arr.size ());
-	_diode_pair_arr.push_back ({ nid_1, nid_2 });
-	_diode_pair_arr.back ()._dir_arr [0].set_param (is1, n1, 100);
-	_diode_pair_arr.back ()._dir_arr [1].set_param (is2, n2, 100);
+	DiodeAntipar   part;
+	part._nid_1 = nid_1;
+	part._nid_2 = nid_2;
+	part._dir_arr [0].set_param (is1, n1, 100);
+	part._dir_arr [1].set_param (is2, n2, 100);
+	_diode_pair_arr.push_back (part);
 
 	return idx;
 }
@@ -211,11 +225,17 @@ int	Simulator::add_bjt_npn (IdNode nid_e, IdNode nid_b, IdNode nid_c, Flt is, Fl
 	use_or_create_node (nid_c);
 
 	const int      idx = int (_bjt_npn_arr.size ());
-	_bjt_npn_arr.push_back ({ nid_e, nid_b, nid_c, beta_f, beta_r });
-	_bjt_npn_arr.back ()._junc_be.set_param (is, n, 100);
-	_bjt_npn_arr.back ()._junc_bc.set_param (is, n, 100);
-	_bjt_npn_arr.back ()._alpha_f_inv = (1 + beta_f) / beta_f;
-	_bjt_npn_arr.back ()._alpha_r_inv = (1 + beta_r) / beta_r;
+	BjtNpn         part;
+	part._nid_e  = nid_e;
+	part._nid_b  = nid_b;
+	part._nid_c  = nid_c;
+	part._beta_f = beta_f;
+	part._beta_r = beta_r;
+	part._junc_be.set_param (is, n, 100);
+	part._junc_bc.set_param (is, n, 100);
+	part._alpha_f_inv = (1 + beta_f) / beta_f;
+	part._alpha_r_inv = (1 + beta_r) / beta_r;
+	_bjt_npn_arr.push_back (part);
 
 	return idx;
 }
@@ -231,7 +251,7 @@ int	Simulator::add_output (IdNode nid_1, IdNode nid_2)
 	use_or_create_node (nid_2);
 
 	const int      idx = int (_output_arr.size ());
-	_output_arr.push_back ({ nid_1, nid_2 });
+	_output_arr.push_back (Output { nid_1, nid_2 });
 
 	return idx;
 }

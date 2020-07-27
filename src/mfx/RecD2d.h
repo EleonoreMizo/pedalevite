@@ -100,10 +100,10 @@ private:
 	int            _max_frm_disk   = _page_size;
 	int            _buf_cur_len    = 0; // Sample frames
 	std::atomic <bool>
-	               _write_flag     = false;
+	               _write_flag { false };
 	FileOpWav      _file_writer;
 	std::atomic <typename D2dQueue::CellType *>
-	               _cell_ptr       = nullptr;
+	               _cell_ptr { nullptr };
 	int            _nbr_chn        = 0;
 	std::vector <float>
 	               _buf_disk;

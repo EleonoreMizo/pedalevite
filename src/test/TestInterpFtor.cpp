@@ -50,7 +50,7 @@ int	TestInterpFtor::perform_test ()
 	const int      frac_bits = 8;
 	const int      nbr_frac  = 1 << frac_bits;
 	const uint32_t frac_mul_u32 = 0xFFFFFFFFU / (nbr_frac - 1);
-	const float    frac_mul_flt = frac_mul_u32 * float (fstb::TWOPM32);
+	const float    frac_mul_flt = float (frac_mul_u32 * fstb::TWOPM32);
 	const int32_t  scale_int16  = 0x8000;
 
 	typedef mfx::dsp::rspl::InterpFtor::CubicHermite Interp;

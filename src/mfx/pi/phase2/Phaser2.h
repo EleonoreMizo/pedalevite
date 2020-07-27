@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
@@ -98,7 +99,7 @@ private:
 	void           update_filter (float b0);
 	void           set_fdbk_pos (int pos);
 
-	static inline constexpr float
+	static inline fstb_CONSTEXPR14 float
 	               saturate (float x);
 
 	State          _state;

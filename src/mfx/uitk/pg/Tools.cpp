@@ -703,12 +703,12 @@ void	Tools::assign_default_rotenc_mapping (Model &model, const View &view, int s
 				if (index < nbr_param)
 				{
 					const int      rotenc_index = Cst::RotEnc_GEN + pos;
-					ovr_arr.emplace_back (Model::RotEncOverride {
-						slot_id,
-						PiType_MAIN,
-						index,
-						rotenc_index
-					});
+					Model::RotEncOverride   reo;
+					reo._slot_id      = slot_id;
+					reo._pi_type      = PiType_MAIN;
+					reo._index        = index;
+					reo._rotenc_index = rotenc_index;
+					ovr_arr.push_back (reo);
 				}
 			}
 		}

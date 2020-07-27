@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/util/NotificationFlag.h"
 #include "mfx/dsp/nz/PinkShade.h"
 #include "mfx/dsp/nz/WhiteFast.h"
@@ -105,7 +106,7 @@ private:
 	void           dup_mono_out (piapi::ProcInfo &proc);
 	uint32_t       compute_phase_step (int pos);
 
-	static inline constexpr float
+	static inline fstb_CONSTEXPR14 float
 	               compute_cos (uint32_t phase);
 
 	State          _state;

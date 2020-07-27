@@ -107,10 +107,10 @@ private:
 	class DiodeParam
 	{
 	public:
-		float          _is1 = 0.1e-15f;
-		float          _n1  = 1;
-		float          _is2 = 0.1e-15f;
-		float          _n2  = 1;
+		float          _is1; // Reverse bias saturation current, A, > 0
+		float          _n1;  // Ideality factor, no unit, > 0
+		float          _is2;
+		float          _n2;
 	};
 
 	void           clear_buffers ();

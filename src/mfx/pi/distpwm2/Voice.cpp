@@ -426,7 +426,7 @@ float	Voice::gen_wf_multi (float pos)
 
 
 
-constexpr float	Voice::gen_poly (float x)
+float	Voice::gen_poly (float x)
 {
 	float          a  = -15 + 6 * x;
 	float          b  =      10 * x;

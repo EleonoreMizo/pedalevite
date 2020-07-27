@@ -282,7 +282,7 @@ std::string	ProcessingContext::dump_ctrl (const PluginPool &plugin_pool) const
 			// Controllers
 			const ControlledParam::CtrlUnitList & cul = cp.use_unit_list ();
 			bool        first_flag = true;
-			for (const auto ctrl_sptr : cul)
+			for (const auto &ctrl_sptr : cul)
 			{
 				const CtrlUnit &  ctrl = *ctrl_sptr;
 				if (ctrl._abs_flag)

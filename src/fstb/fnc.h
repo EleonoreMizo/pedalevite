@@ -27,6 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <string>
 
 #include <cstdint>
@@ -44,7 +46,7 @@ inline constexpr int     sgn (T x);
 template <class T>
 inline constexpr T       limit (T x, T mi, T ma);
 template <class T>
-inline constexpr void    sort_2_elt (T &mi,T &ma, T a, T b);
+inline fstb_CONSTEXPR14 void    sort_2_elt (T &mi,T &ma, T a, T b);
 template <class T>
 inline constexpr bool    is_pow_2 (T x);
 inline double  round (double x);
@@ -59,18 +61,18 @@ inline int     floor_int_accurate (double x);
 inline int64_t floor_int64 (double x);
 inline int     ceil_int (double x);
 template <class T>
-inline constexpr int     trunc_int (T x);
+inline int     trunc_int (T x);
 template <class T>
 inline int     conv_int_fast (T x);
 template <class T>
-inline constexpr bool    is_null (T val, T eps = T (1e-9));
+inline fstb_CONSTEXPR14 bool    is_null (T val, T eps = T (1e-9));
 template <class T>
-inline constexpr bool    is_eq (T v1, T v2, T eps = T (1e-9));
+inline fstb_CONSTEXPR14 bool    is_eq (T v1, T v2, T eps = T (1e-9));
 template <class T>
-inline constexpr bool    is_eq_rel (T v1, T v2, T tol = T (1e-6));
+inline fstb_CONSTEXPR14 bool    is_eq_rel (T v1, T v2, T tol = T (1e-6));
 inline int     get_prev_pow_2 (uint32_t x);
 inline int     get_next_pow_2 (uint32_t x);
-inline constexpr double  sinc (double x);
+inline fstb_CONSTEXPR14 double  sinc (double x);
 inline double  pseudo_exp (double x, double c);
 inline double  pseudo_log (double y, double c);
 template <class T, int S>
@@ -82,13 +84,13 @@ inline constexpr T       sq (T x);
 template <class T>
 inline constexpr T       cube (T x);
 template <class T, class U>
-inline constexpr T       ipow (T x, U n);
+inline fstb_CONSTEXPR14 T       ipow (T x, U n);
 template <class T, class U>
-inline constexpr T       ipowp (T x, U n);
+inline fstb_CONSTEXPR14 T       ipowp (T x, U n);
 template <int N, class T>
 inline constexpr T       ipowpc (T x);
 template <class T>
-inline constexpr T       rcp_uint (int x);
+inline fstb_CONSTEXPR14 T       rcp_uint (int x);
 template <class T>
 inline constexpr T       lerp (T v0, T v1, T p);
 

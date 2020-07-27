@@ -37,7 +37,15 @@ namespace ffft
 
 
 
-static inline constexpr bool	FFTReal_is_pow2 (long x)
+#if (__cplusplus >= 201402L)
+	#define ffft_CONSTEXPR14 constexpr
+#else
+	#define ffft_CONSTEXPR14
+#endif
+
+
+
+static inline ffft_CONSTEXPR14 bool	FFTReal_is_pow2 (long x)
 {
 	assert (x > 0);
 
@@ -46,7 +54,7 @@ static inline constexpr bool	FFTReal_is_pow2 (long x)
 
 
 
-static inline constexpr int	FFTReal_get_next_pow2 (long x)
+static inline ffft_CONSTEXPR14 int	FFTReal_get_next_pow2 (long x)
 {
 	--x;
 

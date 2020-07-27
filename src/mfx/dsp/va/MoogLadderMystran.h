@@ -100,7 +100,7 @@ private:
 	inline void    update_cutoff ();
 	float          compute_alpha (float k) const;
 
-	static inline constexpr float
+	static inline fstb_CONSTEXPR14 float
 	               tanh_xdx (float x);
 
 	float          _sample_freq = 0;    // Sampling rate, Hz. 0 = not set

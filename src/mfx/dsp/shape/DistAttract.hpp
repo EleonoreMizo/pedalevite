@@ -139,8 +139,10 @@ constexpr DistAttract::Polarity	DistAttract::val_to_pol (float val)
 
 constexpr float	DistAttract::pol_to_val (Polarity polarity)
 {
+#if __cplusplus >= 201402L
 	assert (polarity >= 0);
 	assert (polarity < Polarity_NBR_ELT);
+#endif
 
 	return (polarity != Polarity_POS) ? -1.f : 1.f;
 }

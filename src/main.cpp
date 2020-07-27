@@ -218,7 +218,7 @@ public:
 
 	// Not for the audio thread
 	std::atomic <bool>
-	               _quit_flag = false;
+	               _quit_flag { false };
 
 	// Controller
 #if defined (MAIN_USE_VOID)

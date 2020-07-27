@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/SingleObj.h"
@@ -86,9 +87,9 @@ private:
 
 	// Attenuation. 1/_attn is the maximum volume that the disortion can reach,
 	// while gain at 0 remains unchanged.
-	static const float   _attn;
-	static const float   _m_9;
-	static const float   _m_2;
+	static constexpr float   _attn = 8;
+	static constexpr float   _m_9  = fstb::ipowpc <9 - 1> (_attn) / 9;
+	static constexpr float   _m_2  = fstb::ipowpc <2 - 1> (_attn) / 2;
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 

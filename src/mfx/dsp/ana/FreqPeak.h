@@ -90,7 +90,7 @@ private:
 
 	void           update_input_filter ();
 
-	static inline constexpr float
+	static inline float
 	               compute_median3 (float a0, float a1, float a2);
 	static inline float
 	               compute_median5 (float a0, float a1, float a2, float a3, float a4);
