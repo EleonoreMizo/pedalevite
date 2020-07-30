@@ -64,7 +64,13 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 
 	const size_t   nbr_bytes = sizeof (T) * n;
 
-#if defined (_MSC_VER)
+#if defined (fstb_AllocAlign_CUSTOM_ALLOCATOR)
+
+	zone_ptr = reinterpret_cast <pointer> (
+		fstb_AllocAlign_CUSTOM_ALLOCATOR (nbr_bytes, size_t (ALIG))
+	);
+
+#elif defined (_MSC_VER)
 
 	pointer        zone_ptr = static_cast <pointer> (
 		_aligned_malloc (nbr_bytes, ALIG)
@@ -116,7 +122,13 @@ void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type n)
 	if (ptr != nullptr)
 	{
 
-#if defined (_MSC_VER)
+#if defined (fstb_AllocAlign_CUSTOM_ALLOCATOR)
+
+	#if defined (fstb_AllocAlign_CUSTOM_DEALLOCATOR)
+		fstb_AllocAlign_CUSTOM_DEALLOCATOR (ptr);
+	#endif
+
+#elif defined (_MSC_VER)
 
 		try
 		{

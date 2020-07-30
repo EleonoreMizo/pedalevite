@@ -3,6 +3,13 @@
         AllocAlign.h
         Author: Laurent de Soras, 2011
 
+Two macros can be defined on a global level to override the default behaviour:
+
+- fstb_AllocAlign_CUSTOM_ALLOCATOR
+	as a void * (size_t sz, size_t align) function name
+- fstb_AllocAlign_CUSTOM_DEALLOCATOR
+	as a void (void *ptr) function name
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
