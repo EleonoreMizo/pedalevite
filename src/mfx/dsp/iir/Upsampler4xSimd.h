@@ -32,9 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 
 #include "hiir/Upsampler2xFpu.h"
-#if fstb_IS (ARCHI, X86)
+#if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
 	#include "hiir/Upsampler2xSse.h"
-#elif fstb_IS (ARCHI, ARM)
+#elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM
 	#include "hiir/Upsampler2xNeon.h"
 	#include "hiir/Upsampler2xNeonOld.h"
 #endif
@@ -77,7 +77,7 @@ protected:
 
 private:
 
-#if fstb_IS (ARCHI, X86)
+#if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
 	using Upspl42 = typename std::conditional <
 		(NC42 >= 4)
 	,	hiir::Upsampler2xSse <NC42>
@@ -88,7 +88,7 @@ private:
 	,	hiir::Upsampler2xSse <NC21>
 	,	hiir::Upsampler2xFpu <NC21>
 	>::type;
-#elif fstb_IS (ARCHI, ARM) && (defined (__clang__) || fstb_WORD_SIZE == 64)
+#elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM && (defined (__clang__) || fstb_WORD_SIZE == 64)
 	using Upspl42 = typename std::conditional <
 		(NC42 >= 12)
 	,	hiir::Upsampler2xNeonOld <NC42>

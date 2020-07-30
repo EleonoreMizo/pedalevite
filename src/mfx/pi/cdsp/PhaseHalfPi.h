@@ -29,9 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
-#if fstb_IS (ARCHI, X86)
+#if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
 	#include "hiir/PhaseHalfPiSse.h"
-#elif fstb_IS (ARCHI, ARM)
+#elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM
 	#include "hiir/PhaseHalfPiNeon.h"
 #else
 	#include "hiir/PhaseHalfPiFpu.h"
@@ -50,9 +50,9 @@ namespace cdsp
 
 template <int N>
 using PhaseHalfPi =
-#if fstb_IS (ARCHI, X86)
+#if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
 	hiir::PhaseHalfPiSse <N>;
-#elif fstb_IS (ARCHI, ARM)
+#elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM
 	hiir::PhaseHalfPiNeon <N>;
 #else
 	hiir::PhaseHalfPiFpu <N>;

@@ -137,6 +137,8 @@ void	FreqShift::process_block (float * const dst_ptr_arr [], const float * const
 		);
 
 		float *        dst_ptr = dst_ptr_arr [c];
+
+#if 1
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			const auto     co  = fstb::ToolsSimd::load_f32 (&_buf_arr [Buf_COS] [pos]);
@@ -146,6 +148,19 @@ void	FreqShift::process_block (float * const dst_ptr_arr [], const float * const
 			const auto     val = co * x + si * y;
 			fstb::ToolsSimd::store_f32 (dst_ptr + pos, val);
 		}
+
+#else // Reference implementation
+		for (int pos = 0; pos < nbr_spl; ++pos)
+		{
+			const float   co  = _buf_arr [Buf_COS] [pos];
+			const float   si  = _buf_arr [Buf_SIN] [pos];
+			const float   x   = _buf_arr [Buf_PHC] [pos];
+			const float   y   = _buf_arr [Buf_PHS] [pos];
+			const float   val = co * x + si * y;
+			dst_ptr [pos] = val;
+		}
+
+#endif
 	}
 }
 

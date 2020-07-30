@@ -43,6 +43,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dist2/DistoStage.h"
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -235,12 +236,19 @@ void	DistoStage::process_block (float * const dst_ptr_arr [], const float * cons
 		chn._hpf_pre.process_block (&_buf_x1 [0], src_ptr, nbr_spl);
 
 		// Crude envelope extraction for the bias
+#if 1
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           val = fstb::ToolsSimd::load_f32 (&_buf_x1 [pos]);
 			val = fstb::ToolsSimd::abs (val);
 			fstb::ToolsSimd::store_f32 (&dst_ptr [pos], val);
 		}
+#else // Reference implementation
+		for (int pos = 0; pos < nbr_spl; ++pos)
+		{
+			dst_ptr [pos] = fabsf (_buf_x1 [pos]);
+		}
+#endif
 		chn._lpf_env.process_block (dst_ptr, dst_ptr, nbr_spl);
 
 		// Bias

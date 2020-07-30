@@ -120,6 +120,8 @@ void	XFadeShape::make_shape ()
 		const int      len_margin = len + 3;
 		_shape.resize (len_margin);
 
+#if 1
+
 		const float    p    = 0.25f / _fade_ratio;
 		fstb::ToolsSimd::VectF32   x;
 		fstb::ToolsSimd::VectF32   step;
@@ -139,6 +141,24 @@ void	XFadeShape::make_shape ()
 
 			x += step;
 		}
+
+#else // Reference implementation
+
+		const float    p    = 0.25f / _fade_ratio;
+		const float    dif  = p * 2;
+		const float    step = dif * fstb::rcp_uint <float> (len);
+		const float    x    = -p;
+
+		for (int pos = 0; pos < len; ++pos)
+		{
+			const float    xx = fstb::limit (x, -0.25f, +0.25f);
+			const float    v  = fstb::Approx::sin_nick_2pi (xx) * 0.5f + 0.5f;
+			_shape [pos] = v;
+
+			x += step;
+		}
+
+#endif
 	}
 }
 

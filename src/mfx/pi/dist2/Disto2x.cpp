@@ -311,12 +311,12 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 	}
 
 	// Input LPF and transcient processing
-	for (int chn = 0; chn < nbr_chn_src; ++chn)
+	for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
 	{
-		_proc->_chn_arr [chn]._lpf_pre.process_block (
-			stage_io_arr [0] [chn],
-			stage_io_arr [0] [chn],
-			nbr_spl
+		float *        stio_ptr = stage_io_arr [0] [chn_cnt];
+
+		_proc->_chn_arr [chn_cnt]._lpf_pre.process_block (
+			stio_ptr, stio_ptr, nbr_spl
 		);
 
 		// Transient processing
@@ -324,6 +324,7 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 		//         clip (log2 (tr_atk)) * log2 (atk)
 		//       + clip (log2 (tr_sus)) * log2 (sus)
 		//      )
+#if 1
 		const auto     atk_l2     = fstb::ToolsSimd::set1_f32 (_gmod_atk_l2);
 		const auto     sus_l2     = fstb::ToolsSimd::set1_f32 (_gmod_sus_l2);
 		const auto     atk_max_l2 = fstb::ToolsSimd::set1_f32 (_gmod_atk_max_l2);
@@ -331,7 +332,7 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           x =
-				fstb::ToolsSimd::load_f32 (&stage_io_arr [0] [chn] [pos]);
+				fstb::ToolsSimd::load_f32 (&stio_ptr [pos]);
 			auto           tra_l2 =
 				fstb::ToolsSimd::load_f32 (&_buf_trans_atk [pos]);
 			auto           trs_l2 =
@@ -341,8 +342,22 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 			const auto     mul_l2 = tra_l2 * atk_l2 + trs_l2 * sus_l2;
 			const auto     mul    = fstb::ToolsSimd::exp2_approx (mul_l2);
 			x *= mul;
-			fstb::ToolsSimd::store_f32 (&stage_io_arr [0] [chn] [pos], x);
+			fstb::ToolsSimd::store_f32 (&stio_ptr [pos], x);
 		}
+#else // Reference implementation
+		for (int pos = 0; pos < nbr_spl; ++pos)
+		{
+			float          x      = stio_ptr [pos];
+			float          tra_l2 = _buf_trans_atk [pos];
+			float          trs_l2 = _buf_trans_sus [pos];
+			tra_l2 = std::min (tra_l2, _gmod_atk_max_l2);
+			trs_l2 = std::min (trs_l2, _gmod_sus_max_l2);
+			const float    mul_l2 = tra_l2 * atk_l2 + trs_l2 * sus_l2;
+			const float    mul    = Approx::exp2 (mul_l2);
+			x *= mul;
+			stio_ptr [pos] = x;
+		}
+#endif
 	}
 
 	// Distortion stages 1 and 2
@@ -391,11 +406,16 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 		lvl_post_sq = _env_post.analyse_block_raw (&_buf_rms_post [0], nbr_spl);
 
 		// Fix gain calculation
+#if 1
 		const auto     lvl_sq   =
 			fstb::ToolsSimd::set_2f32 (lvl_pre_sq, lvl_post_sq);
 		const auto     lvl      = fstb::ToolsSimd::sqrt (lvl_sq);
 		const float    lvl_pre  = fstb::ToolsSimd::Shift <0>::extract (lvl);
 		const float    lvl_post = fstb::ToolsSimd::Shift <1>::extract (lvl);
+#else // Reference implementation
+		const float    lvl_pre  = sqrtf (lvl_pre_sq);
+		const float    lvl_post = sqrtf (lvl_post_sq);
+#endif
 		const float    lvl_lim  = 2; // Limiter
 
 		assert (lvl_post > 0);

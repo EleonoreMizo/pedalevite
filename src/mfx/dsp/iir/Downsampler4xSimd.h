@@ -32,9 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 
 #include "hiir/Downsampler2xFpu.h"
-#if fstb_IS (ARCHI, X86)
+#if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
 	#include "hiir/Downsampler2xSse.h"
-#elif fstb_IS (ARCHI, ARM)
+#elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM
 	#include "hiir/Downsampler2xNeon.h"
 	#include "hiir/Downsampler2xNeonOld.h"
 #endif
@@ -80,7 +80,7 @@ private:
 
 	static const int  _buf_len = 64;
 
-#if fstb_IS (ARCHI, X86)
+#if defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_X86
 	using Dwnspl42 = typename std::conditional <
 		(NC42 >= 4)
 	,	hiir::Downsampler2xSse <NC42>
@@ -91,7 +91,7 @@ private:
 	,	hiir::Downsampler2xSse <NC21>
 	,	hiir::Downsampler2xFpu <NC21>
 	>::type;
-#elif fstb_IS (ARCHI, ARM) && (defined (__clang__) || fstb_WORD_SIZE == 64)
+#elif defined (fstb_HAS_SIMD) && fstb_ARCHI == fstb_ARCHI_ARM && (defined (__clang__) || fstb_WORD_SIZE == 64)
 	using Dwnspl42 = typename std::conditional <
 		(NC42 >= 16)
 	,	hiir::Downsampler2xNeonOld <NC42>

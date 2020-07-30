@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/Approx.h"
 #include "fstb/DataAlign.h"
 #include "fstb/ToolsSimd.h"
@@ -34,6 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -200,30 +202,48 @@ void	FxDisto::process_block_sub (float data_ptr [], int nbr_spl)
 	float          comp_gain_end = 0;
 	if (! fstb::is_null (vol_post_beg_sq + vol_post_end_sq))
 	{
+		const float    nodiv0     = 1e-20f;
 		const float    lim_lvl_sq = _limiter_level * _limiter_level;
+
+#if defined (fstb_HAS_SIMD)
+
 		const auto     lls_v = fstb::ToolsSimd::set1_f32 (lim_lvl_sq);
 		const auto     vol_pre_sq  =
 			fstb::ToolsSimd::set_2f32 (vol_pre_beg_sq, vol_pre_end_sq);
 		auto           vol_post_sq =
 			fstb::ToolsSimd::set_2f32 (vol_post_beg_sq, vol_post_end_sq);
-		const auto     nodiv0      = fstb::ToolsSimd::set1_f32 (1e-20f);
-		vol_post_sq = fstb::ToolsSimd::max_f32 (vol_post_sq, nodiv0);
+		const auto     nodiv0_v    = fstb::ToolsSimd::set1_f32 (nodiv0);
+		vol_post_sq = fstb::ToolsSimd::max_f32 (vol_post_sq, nodiv0_v);
 		auto           comp_gain   = fstb::ToolsSimd::sqrt (
 			  fstb::ToolsSimd::min_f32 (vol_pre_sq, lls_v)
 			* fstb::ToolsSimd::rcp_approx2 (vol_post_sq)
 		);
 
-#if 0 // Not needed anymore because of the _env_post update
+#	if 0 // Not needed anymore because of the _env_post update
 		// We need to limit the gain because sometimes (when the distortion
 		// is turned on and the post-envelope is empty) both post- and pre-
 		// volumes are very low, causing a sharp transient if the post-
 		// volume is significantly lower.
 		const auto     max_gain    = fstb::ToolsSimd::set1_f32 (_gain_max_comp);
 		comp_gain = fstb::ToolsSimd::min_f32 (comp_gain, max_gain);
-#endif
+#	endif
 
 		comp_gain_beg = fstb::ToolsSimd::Shift <0>::extract (comp_gain);
 		comp_gain_end = fstb::ToolsSimd::Shift <1>::extract (comp_gain);
+
+#else // Reference implementation
+
+		comp_gain_beg = sqrt (
+			  std::min (vol_pre_beg_sq, lim_lvl_sq)
+			/ std::max (vol_post_beg_sq, nodiv0)
+		);
+		comp_gain_end = sqrt (
+			  std::min (vol_pre_end_sq, lim_lvl_sq)
+			/ std::max (vol_post_end_sq, nodiv0)
+		);
+
+#endif
+
 		if (dist_flag)
 		{
 			// We must apply the post-scaling here
@@ -264,19 +284,37 @@ void	FxDisto::process_softclip (float data_ptr [], int nbr_spl)
 	assert (fstb::DataAlign <true>::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
 
-	const auto     a  = fstb::ToolsSimd::set1_f32 (-4.0f / 27);
-	const auto     mi = fstb::ToolsSimd::set1_f32 (-1.5f);
-	const auto     ma = fstb::ToolsSimd::set1_f32 (+1.5f);
+	const float    a  = -4.0f / 27;
+	const float    mi = -1.5f;
+	const float    ma = +1.5f;
+
+#if 1
+	const auto     v_a  = fstb::ToolsSimd::set1_f32 (a);
+	const auto     v_mi = fstb::ToolsSimd::set1_f32 (mi);
+	const auto     v_ma = fstb::ToolsSimd::set1_f32 (ma);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
-		x = fstb::ToolsSimd::min_f32 (x, ma);
-		x = fstb::ToolsSimd::max_f32 (x, mi);
+		x = fstb::ToolsSimd::min_f32 (x, v_ma);
+		x = fstb::ToolsSimd::max_f32 (x, v_mi);
 
-		fstb::ToolsSimd::mac (x, a * x, x * x);
+		fstb::ToolsSimd::mac (x, v_a * x, x * x);
 		fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
 	}
+
+#else // Reference implementation
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		float          x = data_ptr [pos];
+		x  = std::min (x, ma);
+		x  = std::max (x, mi);
+		x += (a * x) * (x * x);
+		data_ptr [pos] = x;
+	}
+
+#endif
 }
 
 
@@ -288,33 +326,60 @@ void	FxDisto::process_foldback (float data_ptr [], int nbr_spl)
 	assert (fstb::DataAlign <true>::check_ptr (data_ptr));
 	assert (nbr_spl > 0);
 
-	const auto     a    = fstb::ToolsSimd::set1_f32 (-4.0f / 27);
-	const auto     mi   = fstb::ToolsSimd::set1_f32 (-_clip_val);
-	const auto     ma   = fstb::ToolsSimd::set1_f32 ( _clip_val);
-	const auto     c1_6 = fstb::ToolsSimd::set1_f32 ( 1.0f / 6 );
-	const auto     c6_1 = fstb::ToolsSimd::set1_f32 (-6.0f);
-	const auto     ofs1 = fstb::ToolsSimd::set1_f32 ( 1.5f);
-	const auto     ofs2 = fstb::ToolsSimd::set1_f32 ( 3.0f);
+	const float    a    = -4.0f / 27;
+	const float    mi   = -_clip_val;
+	const float    ma   =  _clip_val;
+	const float    c1_6 =  1.0f / 6 ;
+	const float    c6_1 = -6.0f;
+	const float    ofs1 =  1.5f;
+	const float    ofs2 =  3.0f;
+
+#if 1
+
+	const auto     v_a    = fstb::ToolsSimd::set1_f32 (a   );
+	const auto     v_mi   = fstb::ToolsSimd::set1_f32 (mi  );
+	const auto     v_ma   = fstb::ToolsSimd::set1_f32 (ma  );
+	const auto     v_c1_6 = fstb::ToolsSimd::set1_f32 (c1_6);
+	const auto     v_c6_1 = fstb::ToolsSimd::set1_f32 (c6_1);
+	const auto     v_ofs1 = fstb::ToolsSimd::set1_f32 (ofs1);
+	const auto     v_ofs2 = fstb::ToolsSimd::set1_f32 (ofs2);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x  = fstb::ToolsSimd::load_f32 (data_ptr + pos);
-		x = fstb::ToolsSimd::min_f32 (x, ma);
-		x = fstb::ToolsSimd::max_f32 (x, mi);
+		x = fstb::ToolsSimd::min_f32 (x, v_ma);
+		x = fstb::ToolsSimd::max_f32 (x, v_mi);
 
 		const auto     u  = fstb::ToolsSimd::conv_s32_to_f32 (
-			fstb::ToolsSimd::round_f32_to_s32 (x * c1_6)
+			fstb::ToolsSimd::round_f32_to_s32 (x * v_c1_6)
 		);
-		fstb::ToolsSimd::mac (x, u, c6_1);
-		x -= ofs1;
+		fstb::ToolsSimd::mac (x, u, v_c6_1);
+		x -= v_ofs1;
 		x  = fstb::ToolsSimd::abs (x);
-		x -= ofs2;
+		x -= v_ofs2;
 		x  = fstb::ToolsSimd::abs (x);
-		x -= ofs1;
+		x -= v_ofs1;
 
-		fstb::ToolsSimd::mac (x, a * x, x * x);
+		fstb::ToolsSimd::mac (x, v_a * x, x * x);
 		fstb::ToolsSimd::store_f32 (data_ptr + pos, x);
 	}
+
+#else // Reference implementation
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		float          x = data_ptr [pos];
+
+		x = std::min (x, ma);
+		x = std::max (x, mi);
+		const float    u = fstb::round (x * c1_6);
+		x = fabsf (fabsf (x + u * c6_1 - ofs1) - ofs2) - ofs1;
+		x += (a * x) * (x * x);
+
+		data_ptr [pos] = x;
+	}
+
+#endif
 }
 
 

@@ -25,7 +25,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#include "fstb/fnc.h"
 #include "fstb/ToolsSimd.h"
 #include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
@@ -37,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/piapi/ProcInfo.h"
 
 #include <cassert>
+#include <cmath>
 #include <cstring>
 
 
@@ -211,38 +211,42 @@ void	DistoSimple::do_process_block (piapi::ProcInfo &proc)
 		bias_end = 2 * float (_state_set.get_val_end_nat (Param_BIAS));
 	}
 
-	for (int chn = 0; chn < nbr_chn_src; ++chn)
+	for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
 	{
+		Channel &      chn = _chn_arr [chn_cnt];
+
 		// High-pass filtering
-		dsp::iir::OnePole &  hpf = _chn_arr [chn]._hpf_in;
+		dsp::iir::OnePole &  hpf = chn._hpf_in;
 		hpf.process_block (
-			&_chn_arr [chn]._buf [0],
-			&proc._src_arr [chn] [0],
+			&chn._buf [0],
+			&proc._src_arr [chn_cnt] [0],
 			nbr_spl
 		);
 
 		// Crude envelope extraction
+#if 1
 		for (int pos = 0; pos < nbr_spl; pos += 4)
 		{
 			auto           val =
-				fstb::ToolsSimd::load_f32 (&_chn_arr [chn]._buf [pos]);
+				fstb::ToolsSimd::load_f32 (&chn._buf [pos]);
 			val = fstb::ToolsSimd::abs (val);
-			fstb::ToolsSimd::store_f32 (&_chn_arr [chn]._buf_env [pos], val);
+			fstb::ToolsSimd::store_f32 (&chn._buf_env [pos], val);
 		}
-		dsp::iir::Biquad &   lpf = _chn_arr [chn]._env_lpf;
-		lpf.process_block (
-			&_chn_arr [chn]._buf_env [0],
-			&_chn_arr [chn]._buf_env [0],
-			nbr_spl
+#else // Reference implementation
+		for (int pos = 0; pos < nbr_spl; ++pos)
+		{
+			chn._buf_env [pos] = fabs (chn._buf [pos]);
+		}
+#endif
+		chn._env_lpf.process_block (
+			&chn._buf_env [0], &chn._buf_env [0], nbr_spl
 		);
 
 		// Bias
 		dsp::mix::Align::mix_1_1_vlrauto (
-			&_chn_arr [chn]._buf [0],
-			&_chn_arr [chn]._buf_env [0],
+			&chn._buf [0], &chn._buf_env [0],
 			nbr_spl,
-			bias_beg,
-			bias_end
+			bias_beg, bias_end
 		);
 	}
 	_bias = bias_end;
@@ -357,39 +361,64 @@ void	DistoSimple::update_filter_in ()
 // a = attenuation (inverse of gain). 8 = -18 dB
 void	DistoSimple::distort_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
-	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f / _attn);
-	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f / _attn);
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
-	const auto     c_9  = fstb::ToolsSimd::set1_f32 (_m_9);
-	const auto     c_2  = fstb::ToolsSimd::set1_f32 (_m_2);
-	const auto     bias = fstb::ToolsSimd::set1_f32 ( 0.2f / _attn);
+	constexpr float   mi   = -1.0f / _attn;
+	constexpr float   ma   =  1.0f / _attn;
+	constexpr float   bias =  0.2f / _attn;
+
+#if 1
+
+	const auto     v_mi   = fstb::ToolsSimd::set1_f32 (mi);
+	const auto     v_ma   = fstb::ToolsSimd::set1_f32 (ma);
+	const auto     v_zero = fstb::ToolsSimd::set_f32_zero ();
+	const auto     v_c_9  = fstb::ToolsSimd::set1_f32 (_m_9);
+	const auto     v_c_2  = fstb::ToolsSimd::set1_f32 (_m_2);
+	const auto     v_bias = fstb::ToolsSimd::set1_f32 (bias);
 
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
 		auto           x = fstb::ToolsSimd::load_f32 (src_ptr + pos);
 
-		x += bias;
+		x += v_bias;
 
-		x = fstb::ToolsSimd::min_f32 (x, ma);
-		x = fstb::ToolsSimd::max_f32 (x, mi);
+		x  = fstb::ToolsSimd::min_f32 (x, v_ma);
+		x  = fstb::ToolsSimd::max_f32 (x, v_mi);
 
 		const auto     x2  = x  * x;
 		const auto     x4  = x2 * x2;
 		const auto     x8  = x4 * x4;
 		const auto     x9  = x8 * x;
-		const auto     x_n = x + x2 * c_2;
-		const auto     x_p = x - x9 * c_9;
-		const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
-		x = fstb::ToolsSimd::select (t_0, x_p, x_n);
+		const auto     x_n = x + x2 * v_c_2;
+		const auto     x_p = x - x9 * v_c_9;
+		const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, v_zero);
+		x  = fstb::ToolsSimd::select (t_0, x_p, x_n);
 
-		x -= bias;
+		x -= v_bias;
 
 		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
 	}
+
+#else // Reference implementation
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		float          x = src_ptr [pos];
+
+		x += bias;
+		x  = fstb::limit (x, mi, ma);
+		const float    x2  = x  * x;
+		const float    x4  = x2 * x2;
+		const float    x8  = x4 * x4;
+		const float    x9  = x8 * x;
+		const float    x_n = x + x2 * _m_2;
+		const float    x_p = x - x9 * _m_9;
+		x  = (x > 0) ? x_p : x_n;
+		x -= bias;
+
+		dst_ptr [pos] = x;
+	}
+
+#endif
 }
-
-
-
 
 
 

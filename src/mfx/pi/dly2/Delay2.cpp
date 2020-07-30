@@ -770,6 +770,7 @@ void	Delay2::square_block (float dst_ptr [], const float * const src_ptr_arr [],
 // Buffer must be aligned in address and size
 void	Delay2::min_block (float dst_ptr [], int nbr_spl, float val_max)
 {
+#if 1
 	const auto     vm = fstb::ToolsSimd::set1_f32 (val_max);
 	for (int pos = 0; pos < nbr_spl; pos += 4)
 	{
@@ -777,6 +778,14 @@ void	Delay2::min_block (float dst_ptr [], int nbr_spl, float val_max)
 		x = fstb::ToolsSimd::min_f32 (x, vm);
 		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);
 	}
+
+#else // Reference implementation
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		dst_ptr [pos] = std::min (dst_ptr [pos], val_max);
+	}
+
+#endif
 }
 
 

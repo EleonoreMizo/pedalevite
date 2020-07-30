@@ -24,12 +24,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/fnc.h"
 #include "mfx/pi/dly2/Cst.h"
 #include "mfx/pi/dly2/Delay2Desc.h"
 #include "mfx/pi/dly2/DelayLineBbd.h"
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -379,6 +381,8 @@ void	DelayLineBbd::finish_processing (float * const out_ptr_arr [2], const float
 	{
 		float          env_beg  = duck_ptr [0             ];
 		float          env_end  = duck_ptr [_block_len - 1];
+
+#if defined (fstb_HAS_SIMD)
 		auto           env      = fstb::ToolsSimd::set_2f32 (env_beg, env_end);
 		env  = fstb::ToolsSimd::sqrt_approx (env);
 		env *= fstb::ToolsSimd::set1_f32 (_duck_sens_inv);
@@ -391,6 +395,16 @@ void	DelayLineBbd::finish_processing (float * const out_ptr_arr [2], const float
 		auto           vol      = fstb::ToolsSimd::set_2f32 (vol_beg, vol_end);
 		vol *= dvol;
 		fstb::ToolsSimd::extract_2f32 (vol_beg, vol_end, vol);
+
+#else // Reference implementation
+		env_beg = sqrtf (env_beg) * _duck_sens_inv;
+		env_end = sqrtf (env_end) * _duck_sens_inv;
+		const float    dvol_beg = std::max (1.f - duck_amt_beg * env_beg, 0.f);
+		const float    dvol_end = std::max (1.f - duck_amt_end * env_end, 0.f);
+		vol_beg *= dvol_beg;
+		vol_end *= dvol_end;
+
+#endif
 	}
 
 	// Stereo output
