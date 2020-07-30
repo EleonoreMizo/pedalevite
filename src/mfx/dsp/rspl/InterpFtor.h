@@ -88,6 +88,17 @@ public:
 		               operator () (uint32_t frac_pos, const int16_t data []) const;
 	};
 
+	class CubicCatmullRom
+	{
+	public:
+		static const int  DATA_PRE  = 1;
+		static const int  DATA_POST = 2;
+		fstb_FORCEINLINE float
+		               operator () (float frac_pos, const float data []) const;
+		fstb_FORCEINLINE float
+		               operator () (uint32_t frac_pos, const float data []) const;
+	};
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

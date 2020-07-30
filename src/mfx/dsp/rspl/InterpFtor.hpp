@@ -3,6 +3,10 @@
         InterpFtor.hpp
         Author: Laurent de Soras, 2019
 
+To do: implements parametrized Catmull-Rom splines:
+https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
+More for graphics than for audio.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -221,6 +225,36 @@ int32_t	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const int16_t 
 	return v;
 
 #endif
+}
+
+
+
+float	InterpFtor::CubicCatmullRom::operator () (float frac_pos, const float data []) const
+{
+	assert (frac_pos >= 0);
+	assert (frac_pos <= 1);
+	assert (data != nullptr);
+
+	const float    xm1 = data [-1];
+	const float    x0  = data [ 0];
+	const float    x1  = data [ 1];
+	const float    x2  = data [ 2];
+
+	const float    a3  = -0.5f * xm1 + 1.5f * x0 - 1.5f * x1 + 0.5f * x2;
+	const float    a2  =         xm1 - 2.5f * x0 + 2.0f * x1 - 0.5f * x2;
+	const float    a1  = -0.5f * xm1                         + 0.5f * x2;
+	const float    a0  = x0;
+
+	const float    y   = ((a3 * frac_pos + a2) * frac_pos + a1) * frac_pos + a0;
+
+	return y;
+}
+
+
+
+float	InterpFtor::CubicCatmullRom::operator () (uint32_t frac_pos, const float data []) const
+{
+	return operator () (frac_pos * float (fstb::TWOPM32), data);
 }
 
 
