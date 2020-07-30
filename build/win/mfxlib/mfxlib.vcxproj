@@ -1067,7 +1067,6 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSinh.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSq.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\AntisatSq.hpp" />
-    <ClInclude Include="..\..\..\src\mfx\dsp\va\BigMuffPi.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.h" />
@@ -1734,7 +1733,6 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\HardclipBl.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\dsp\va\BigMuffPi.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.cpp" />
