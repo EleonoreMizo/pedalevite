@@ -309,7 +309,7 @@ int	TestMnaSimulator::perform_test ()
 		no_vcc, no_q4c, 12e3f
 	);
 	auto  r14_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_q4b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e3f
+		no_q4b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 102e3f
 	);
 	auto  r22_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
 		no_q4e, mfx::dsp::va::mna::PartInterface::_nid_gnd, 390.f
@@ -321,13 +321,13 @@ int	TestMnaSimulator::perform_test ()
 		no_sus2, no_sus3, std::max (r24 * (1 - pot_sus), 1.f)
 	);
 	auto  c1_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
-		no_r2c1, no_q4b, 100e-9f
+		no_r2c1, no_q4b, 140e-9f
 	);
 	auto  c4_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
 		no_q4c, no_sus3, 100e-9f
 	);
 	auto  c10_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
-		no_q4b, no_q4c, 500e-12f
+		no_q4b, no_q4c, 450e-12f
 	);
 	auto  q4_sptr = std::make_shared <mfx::dsp::va::mna::PartBjtNpn> (
 		no_q4e, no_q4b, no_q4c,
@@ -336,13 +336,13 @@ int	TestMnaSimulator::perform_test ()
 
 	// Distortion stage 1
 	auto  r17_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_q3b, no_q3c, 470e3f
+		no_q3b, no_q3c, 500e3f
 	);
 	auto  r18_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
 		no_vcc, no_q3c, 12e3f
 	);
 	auto  r19_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_c5r19, no_q3b, 10e3f
+		no_c5r19, no_q3b, 12e3f
 	);
 	auto  r20_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
 		no_q3b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e3f
@@ -351,13 +351,13 @@ int	TestMnaSimulator::perform_test ()
 		no_q3e, mfx::dsp::va::mna::PartInterface::_nid_gnd, 390.f
 	);
 	auto  c5_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
-		no_sus2, no_c5r19, 100e-9f
+		no_sus2, no_c5r19, 125e-9f
 	);
 	auto  c6_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
-		no_q3b, no_s1di, 47e-9f
+		no_q3b, no_s1di, 55e-9f
 	);
 	auto  c12_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
-		no_q3b, no_q3c, 500e-12f
+		no_q3b, no_q3c, 510e-12f
 	);
 	auto  d3d4_sptr = std::make_shared <mfx::dsp::va::mna::PartDiodeAntipar> (
 		no_s1di, no_q3c,
@@ -379,19 +379,19 @@ int	TestMnaSimulator::perform_test ()
 		no_c3r12, no_q2b, 10e3f
 	);
 	auto  r16_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
-		no_q2b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 100e3f
+		no_q2b, mfx::dsp::va::mna::PartInterface::_nid_gnd, 90e3f
 	);
 	auto  r10_sptr = std::make_shared <mfx::dsp::va::mna::PartResistor> (
 		no_q2e, mfx::dsp::va::mna::PartInterface::_nid_gnd, 390.f
 	);
 	auto  c13_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
-		no_q3c, no_c3r12, 100e-9f
+		no_q3c, no_c3r12, 115e-9f
 	);
 	auto  c7_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
-		no_q2b, no_s2di, 47e-9f
+		no_q2b, no_s2di, 52e-9f
 	);
 	auto  c11_sptr = std::make_shared <mfx::dsp::va::mna::PartCapacitor> (
-		no_q2b, no_q2c, 500e-12f
+		no_q2b, no_q2c, 510e-12f
 	);
 	auto  d1d2_sptr = std::make_shared <mfx::dsp::va::mna::PartDiodeAntipar> (
 		no_s2di, no_q2c,
