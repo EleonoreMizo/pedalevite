@@ -51,11 +51,12 @@ output = v0 * v0m + v1 * v1m + v2 * v2m
 
 Specifically, for the output:
 
-low   =                v2
-band  =           v1
-high  = v0 -  k * v1 - v2
-notch = v0 -  k * v1      = low + high
-bell  = v0 + gi * v1      = input + gi * band
+low   =                   v2
+band  =              v1
+high  = v0 -     k * v1 - v2
+notch = v0 -     k * v1      = low + high
+bell  = v0 +    gi * v1      = input + gi * band
+allp  = v0 - 2 * k * v1      = 2 * notch - input
 
 Coefficients are not calculated in this class and should follow:
 

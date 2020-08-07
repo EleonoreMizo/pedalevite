@@ -55,6 +55,7 @@ public:
 		Type_BANDPASS,
 		Type_LOWSHELF,
 		Type_HIGHSHELF,
+		Type_ALLPASS,
 
 		Type_NBR_ELT
 	};

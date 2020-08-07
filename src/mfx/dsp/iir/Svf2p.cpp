@@ -72,31 +72,31 @@ void	Svf2p::update_eq ()
 
 	switch (_type)
 	{
-	case	Type_LOWPASS:
+	case Type_LOWPASS:
 		_v0m = 0;
 		_v1m = 0;
 		_v2m = 1;
 		break;
 
-	case	Type_HIGHPASS:
+	case Type_HIGHPASS:
 		_v0m =  1;
 		_v1m = -k;
 		_v2m = -1;
 		break;
 
-	case	Type_RESONATOR:
+	case Type_RESONATOR:
 		_v0m = 1;
 		_v1m = (_reso - 1) * k;	// _reso = 0: -k, _reso = 1: 0
 		_v2m = 0;
 		break;
 
-	case	Type_BANDPASS:
+	case Type_BANDPASS:
 		_v0m = 0;
 		_v1m = 1;
 		_v2m = 0;
 		break;
 
-	case	Type_LOWSHELF:
+	case Type_LOWSHELF:
 		{
 			const float    r_s2 = float (sqrt (_reso));
 			_v0m = 1;
@@ -105,7 +105,7 @@ void	Svf2p::update_eq ()
 		}
 		break;
 
-	case	Type_HIGHSHELF:
+	case Type_HIGHSHELF:
 		{
 			const float    r_s2 = float (sqrt (_reso));
 			_v0m = _reso;
@@ -113,6 +113,12 @@ void	Svf2p::update_eq ()
 			_v2m = 1 - _reso;
 		}
 		break;
+
+	case Type_ALLPASS:
+		_v0m = 1;
+		_v1m = -2 * k;
+		_v2m = 0;
+		break:
 
 	default:
 		assert (false);
