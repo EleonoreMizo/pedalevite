@@ -127,12 +127,12 @@ int	round_int (float x)
 
  #elif defined (_MSC_VER)
 
+	int            i;
 	__asm
 	{
 		fld            x
 		fistp          i
 	}
-
 	return i;
 
  #else
@@ -252,9 +252,10 @@ int	floor_int (float x)
  #if defined (fstb_HAS_SIMD) || fstb_WORD_SIZE == 64
 
 	constexpr float   round_toward_m_i = -0.5f;
-	return _mm_cvtss_si32 (_mm_add_ss (
-		_mm_set_ss (x), _mm_set_ss (round_toward_m_i)
-	));
+	const float    xx     = x + x + round_toward_m_i;
+	const __m128   x_128  = _mm_set_ss (xx);
+	const int      i      = _mm_cvt_ss2si (x_128) >> 1;
+	return i;
 
  #elif defined (_MSC_VER)
 
@@ -263,20 +264,19 @@ int	floor_int (float x)
 
 	int            i;
 	constexpr float   round_toward_m_i = -0.5f;
-
 	__asm
 	{
 		fld            x
 		fadd           round_toward_m_i
 		fistp          i
 	}
-
 	return i;
 
  #elif defined (__GNUC__)
 
+	assert (x <= double (INT_MAX/2));
+	assert (x >= double (INT_MIN/2));
 	int				i;
-	
 	static const float	round_toward_m_i = -0.5f;
 	asm (
 		"fldl				%[x]				\n"
@@ -287,7 +287,6 @@ int	floor_int (float x)
 	,	[x]	"m"	(x)
 	:	//"st"
 	);
-	
 	return i;
 
  #else
@@ -332,10 +331,8 @@ int	floor_int_accurate (double x)
 
 	assert (x <= double (INT_MAX/2));
 	assert (x >= double (INT_MIN/2));
-
 	int            i;
 	static const float   round_toward_m_i = -0.5f;
-
 	__asm
 	{
 		fld            x
@@ -344,18 +341,14 @@ int	floor_int_accurate (double x)
 		fistp          i
 		sar            i, 1
 	}
-
 	assert (i == int (floor (x)) || fabs (i - x) < 1e-10);
-
 	return i;
 
  #elif defined (__GNUC__)
 
 	assert (x <= double (INT_MAX/2));
 	assert (x >= double (INT_MIN/2));
-
-	int				i;
-	
+	int				i;	
 	static const float	round_toward_m_i = -0.5f;
 	asm (
 		"fldl				%[x]				\n"
@@ -420,7 +413,6 @@ int	ceil_int (double x)
 
 	int            i;
 	static const float   round_toward_p_i = -0.5f;
-
 	__asm
 	{
 		fld            x
@@ -429,18 +421,14 @@ int	ceil_int (double x)
 		fistp          i
 		sar            i, 1
 	}
-
 	assert (-i == int (ceil (x)) || fabs (-i - x) < 1e-10);
-
 	return -i;
 
  #elif defined (__GNUC__)
 
 	assert (x <= double (INT_MAX/2));
 	assert (x >= double (INT_MIN/2));
-
 	int				i;
-
 	static const float	round_toward_p_i = -0.5f;
 	asm (
 		"fldl				%[x]				\n"
@@ -453,9 +441,7 @@ int	ceil_int (double x)
 	,	[x]	"m"	(x)
 	:	//"st"
 	);
-
 	assert (-i == int (ceil (x)) || fabs (-i - x) < 1e-10);
-
 	return -i;
 
  #else
