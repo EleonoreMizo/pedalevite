@@ -27,6 +27,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
+#if ! defined (fstb_HAS_SIMD)
+#include "mfx/dsp/mix/Fpu.h"
+#endif
+
 
 
 namespace mfx
@@ -40,6 +46,11 @@ namespace mix
 {
 
 
+#if ! defined (fstb_HAS_SIMD)
+
+using Generic = Fpu;
+
+#else // fstb_HAS_SIMD
 
 class Generic
 {
@@ -262,6 +273,8 @@ private:
 	bool           operator != (const Generic &other) const = delete;
 
 }; // class Generic
+
+#endif // fstb_HAS_SIMD
 
 
 

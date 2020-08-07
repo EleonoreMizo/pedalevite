@@ -26,6 +26,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#if defined (fstb_HAS_SIMD)
+
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/mix/Simd.h"
@@ -632,6 +634,8 @@ Align &	Align::use_instance ()
 }  // namespace mix
 }  // namespace dsp
 }  // namespace mfx
+
+#endif // fstb_HAS_SIMD
 
 
 

@@ -24,6 +24,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
+#if defined (fstb_HAS_SIMD)
+
 #include "mfx/dsp/mix/Fpu.h"
 #include "mfx/dsp/mix/Generic.h"
 #include "fstb/def.h"
@@ -436,6 +440,8 @@ Generic &	Generic::use_instance ()
 }  // namespace mix
 }  // namespace dsp
 }  // namespace mfx
+
+#endif // fstb_HAS_SIMD
 
 
 

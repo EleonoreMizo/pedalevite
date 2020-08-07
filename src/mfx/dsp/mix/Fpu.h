@@ -48,6 +48,12 @@ class Fpu
 
 public:
 
+	// For compatibility with other implementations
+	static inline bool
+	               is_ready () { return true; }
+	static inline void
+	               setup () {}
+
 	// Scale
 	static void		scale_1_v (float data_ptr [], int nbr_spl, float vol);
 	static void		scale_1_vlr (float data_ptr [], int nbr_spl, float s_vol, float e_vol);

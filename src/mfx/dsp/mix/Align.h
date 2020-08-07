@@ -29,6 +29,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#if ! defined (fstb_HAS_SIMD)
+#include "mfx/dsp/mix/Fpu.h"
+#endif
+
 
 
 namespace mfx
@@ -42,6 +46,12 @@ namespace mix
 {
 
 
+
+#if ! defined (fstb_HAS_SIMD)
+
+using Align = Fpu;
+
+#else // fstb_HAS_SIMD
 
 class Align
 {
@@ -266,6 +276,8 @@ private:
 	bool           operator != (const Align &other) const = delete;
 
 }; // class Align
+
+#endif // fstb_HAS_SIMD
 
 
 

@@ -43,6 +43,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
+#if ! defined (fstb_HAS_SIMD)
+#include "mfx/dsp/mix/Fpu.h"
+#endif
+
 
 
 namespace mfx
@@ -56,6 +60,13 @@ namespace mix
 {
 
 
+
+#if ! defined (fstb_HAS_SIMD)
+
+template <class VD, class VS>
+using Simd = Fpu;
+
+#else // fstb_HAS_SIMD
 
 template <class VD, class VS>
 class Simd
@@ -262,6 +273,8 @@ private:
 
 }; // class Simd
 
+#endif // fstb_HAS_SIMD
+
 
 
 }  // namespace mix
@@ -270,7 +283,9 @@ private:
 
 
 
+#if defined (fstb_HAS_SIMD)
 #include "mfx/dsp/mix/Simd.hpp"
+#endif
 
 
 
