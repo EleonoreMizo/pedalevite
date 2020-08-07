@@ -114,8 +114,8 @@ protected:
 
 private:
 
-	static const int  _dspl_rate_l2 = 6;   // Must be > 2
-	static const int  _dspl_rate    = 1 << _dspl_rate_l2;
+	static constexpr int _dspl_rate_l2 = 6;   // Must be > 2
+	static constexpr int _dspl_rate    = 1 << _dspl_rate_l2;
 
 	void           process_band (int band_idx, int nbr_spl);
 

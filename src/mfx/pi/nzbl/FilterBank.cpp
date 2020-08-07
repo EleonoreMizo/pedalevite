@@ -323,7 +323,7 @@ void	FilterBank::process_band (int band_idx, int nbr_spl)
 			auto           sum_v     = fstb::ToolsSimd::set_f32_zero ();
 			for (int pos = 0; pos < block_len; pos += 4)
 			{
-				const auto     x = fstb::ToolsSimd::load_f32 (buf_ptr + pos);
+				const auto     x = fstb::ToolsSimd::load_f32 (buf2_ptr + pos);
 				sum_v += x * x;
 			}
 			const float    avg = fstb::ToolsSimd::sum_h_flt (sum_v) * blen_inv;
