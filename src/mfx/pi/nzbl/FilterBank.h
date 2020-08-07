@@ -151,7 +151,7 @@ private:
 	float          _sample_freq;  // Sample frequency, Hz. > 0. 0 = not set
 	float          _inv_fs;       // 1 / _sample_freq. 0 = not set
 	int            _max_block_size;
-	float          _rel_thr;      // Threshold (relatvie to _lvl) above which the notch has no effect
+	float          _rel_thr;      // Threshold (relative to _lvl) above which the notch has no effect
 	SplitArray     _split_arr;
 	BandArray      _band_arr;
 	BufAlign       _buf;          // Stereo content (size 2x)

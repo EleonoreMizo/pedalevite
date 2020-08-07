@@ -217,7 +217,6 @@ template <typename... T> inline void unused (T &&...) {}
 
 
 
-
 constexpr double PI      = 3.1415926535897932384626433832795;
 constexpr double LN2     = 0.69314718055994530941723212145818;
 constexpr double LN10    = 2.3025850929940456840179914546844;
