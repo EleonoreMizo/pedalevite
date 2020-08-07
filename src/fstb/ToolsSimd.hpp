@@ -1876,7 +1876,6 @@ void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a
 	a1 = interleave_2f32_hi (tmp0, tmp2);
 	a2 = interleave_2f32_lo (tmp1, tmp3);
 	a3 = interleave_2f32_hi (tmp1, tmp3);
-	assert (false);
 #elif fstb_IS (ARCHI, X86)
 	const __m128   tmp0 = _mm_unpacklo_ps (a0, a1);
 	const __m128   tmp2 = _mm_unpacklo_ps (a2, a3);
