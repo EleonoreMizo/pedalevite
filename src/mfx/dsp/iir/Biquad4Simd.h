@@ -110,40 +110,40 @@ public:
 	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl);
 	void           process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_parallel (const fstb::ToolsSimd::VectF32 &x);
+	               process_sample_parallel (const fstb::ToolsSimd::VectF32 &x);
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_parallel (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	               process_sample_parallel (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 
-	void				process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void				process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	void           process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_serial_latency (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 	fstb_FORCEINLINE float
-						process_sample_serial_latency (float x_s);
+	               process_sample_serial_latency (float x_s);
 	fstb_FORCEINLINE float
-						process_sample_serial_latency (float x_s, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	               process_sample_serial_latency (float x_s, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 
-	void				process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void				process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	void           process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_serial_immediate (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 	fstb_FORCEINLINE float
-						process_sample_serial_immediate (float x_s);
+	               process_sample_serial_immediate (float x_s);
 	fstb_FORCEINLINE float
-						process_sample_serial_immediate (float x_s, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	               process_sample_serial_immediate (float x_s, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 
-	void				process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void				process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	void           process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_2x2_latency (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_2x2_latency (const fstb::ToolsSimd::VectF32 &x);
+	               process_sample_2x2_latency (const fstb::ToolsSimd::VectF32 &x);
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_2x2_latency (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	               process_sample_2x2_latency (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 
-	void				process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl);
-	void				process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	void           process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl);
+	void           process_block_2x2_immediate (float out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_2x2_immediate (const fstb::ToolsSimd::VectF32 &x);
+	               process_sample_2x2_immediate (const fstb::ToolsSimd::VectF32 &x);
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-						process_sample_2x2_immediate (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
+	               process_sample_2x2_immediate (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3]);
 
-	void				clear_buffers ();
-	void				clear_buffers_one (int biq);
+	void           clear_buffers ();
+	void           clear_buffers_one (int biq);
 
 	fstb_FORCEINLINE static bool
 	               check_stability (float a1, float a2);
