@@ -291,7 +291,7 @@ void	DelayLineData <T, AL>::clear_buffers ()
 	const size_t   len = _buf.size ();
 	for (size_t pos = 0; pos < len; ++pos)
 	{
-		_buf [pos] = ValueType (0);
+		_buf [pos] = ValueType (int32_t (0));
 	}
 }
 

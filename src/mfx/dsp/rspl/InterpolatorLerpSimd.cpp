@@ -67,7 +67,7 @@ int	InterpolatorLerpSimd::do_get_impulse_len () const
 
 fstb::FixedPoint	InterpolatorLerpSimd::do_get_group_delay () const
 {
-	return fstb::FixedPoint (0);
+	return fstb::FixedPoint (0, 0);
 }
 
 

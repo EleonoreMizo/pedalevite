@@ -66,7 +66,7 @@ int	InterpolatorLerp::do_get_impulse_len () const
 
 fstb::FixedPoint	InterpolatorLerp::do_get_group_delay () const
 {
-	return fstb::FixedPoint (0);
+	return fstb::FixedPoint (0, 0);
 }
 
 

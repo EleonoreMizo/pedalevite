@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 #include "mfx/dsp/dly/DelayLine.h"
 #include "mfx/dsp/mix/Generic.h"
-#include	"mfx/dsp/rspl/InterpolatorInterface.h"
+#include "mfx/dsp/rspl/InterpolatorInterface.h"
 
 #include <algorithm>
 
@@ -299,7 +299,7 @@ void	DelayLine::do_read_block (float dst_ptr [], int nbr_spl, double dly_beg, do
 	const double   dly_end_spl    = dly_end * _sample_freq;
 
 	const fstb::FixedPoint  dcur (dly_beg_spl);
-	fstb::FixedPoint        rate (1);
+	fstb::FixedPoint        rate (1, 0);
 	rate >>= _ovrspl_l2;
 	rate += fstb::FixedPoint ((dly_beg_spl - dly_end_spl) / nbr_spl);
 

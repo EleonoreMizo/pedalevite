@@ -97,7 +97,7 @@ private:
 	               _interp_ptr   = nullptr;
 	int            _imp_len      = 1;      // Impulse length, samples. > 0
 	fstb::FixedPoint                       // Group delay, samples. [0 ; _imp_len - 1]
-	               _group_dly    = fstb::FixedPoint (0);
+	               _group_dly    = fstb::FixedPoint (0, 0);
 
 	DelayLineData <float>
 	               _line_data;
