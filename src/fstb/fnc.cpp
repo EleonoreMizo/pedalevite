@@ -103,9 +103,13 @@ FILE *	fopen_utf8 (const char *filename_0, const char *mode_0)
 
 #else
 
+ #if fstb_COMPILER == fstb_COMPILER_GCC && defined (__USE_FILE_OFFSET64)
 	// fopen64 needed with the GNU/LibC to overcome the 2GB limit
 	// https://www.gnu.org/software/libc/manual/html_node/Opening-Streams.html#index-fopen64
 	f_ptr = fopen64 (filename_0, mode_0);
+ #else
+	f_ptr = fopen (filename_0, mode_0);
+ #endif
 
 #endif
 
