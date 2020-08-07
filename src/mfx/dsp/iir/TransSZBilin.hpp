@@ -320,10 +320,14 @@ float	TransSZBilin::compute_k_approx (float f)
 
 	const float    f2       = f * f;
 	const float    num      = (f2 * c4 + c2) * f2 + c0;
+#if defined (fstb_HAS_SIMD)
 	const auto     den_v    = fstb::ToolsSimd::set1_f32 (f);
 	const auto     invden_v = fstb::ToolsSimd::rcp_approx (den_v);
 	const float    invden   = fstb::ToolsSimd::Shift <0>::extract (invden_v);
 	const float    k        = num * invden;
+#else
+	const float    k        = num / f;
+#endif
 
 	return k;
 }
