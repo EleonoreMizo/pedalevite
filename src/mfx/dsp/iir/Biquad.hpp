@@ -103,6 +103,28 @@ void	Biquad::set_state_y (float y)
 
 
 
+void	Biquad::get_state (float mem_x [2], float mem_y [2]) const
+{
+	const int      alt_pos = 1 - _mem_pos;
+	mem_x [0] = _mem_x [_mem_pos];
+	mem_x [1] = _mem_x [ alt_pos];
+	mem_y [0] = _mem_y [_mem_pos];
+	mem_y [1] = _mem_y [ alt_pos];
+}
+
+
+
+void	Biquad::set_state (const float mem_x [2], const float mem_y [2])
+{
+	const int      alt_pos = 1 - _mem_pos;
+	_mem_x [_mem_pos] = mem_x [0];
+	_mem_x [ alt_pos] = mem_x [1];
+	_mem_y [_mem_pos] = mem_y [0];
+	_mem_y [ alt_pos] = mem_y [1];
+}
+
+
+
 float	Biquad::process_sample (float x)
 {
 	const int      alt_pos = 1 - _mem_pos;

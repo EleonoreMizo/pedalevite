@@ -61,6 +61,8 @@ public:
 	inline void    copy_z_eq (const Biquad &other);
 	inline float   get_state_y () const;
 	inline void    set_state_y (float y);
+	inline void    get_state (float mem_x [2], float mem_y [2]) const;
+	inline void    set_state (const float mem_x [2], const float mem_y [2]);
 
 	inline float   process_sample (float x);
 	inline float   process_sample (float x, const float inc_b [3], const float inc_a [3]);

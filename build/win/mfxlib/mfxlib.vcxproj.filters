@@ -4665,6 +4665,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerARHelper.hpp">
       <Filter>mfx\dsp\dyn</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -5959,6 +5965,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\dkm\Simulator.cpp">
       <Filter>mfx\dsp\va\dkm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad4.cpp">
+      <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

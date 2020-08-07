@@ -443,6 +443,9 @@ commonsrc = \
         ../../src/mfx/dsp/iir/Biquad.cpp \
         ../../src/mfx/dsp/iir/Biquad.h \
         ../../src/mfx/dsp/iir/Biquad.hpp \
+        ../../src/mfx/dsp/iir/Biquad4.cpp \
+        ../../src/mfx/dsp/iir/Biquad4.h \
+        ../../src/mfx/dsp/iir/Biquad4.hpp \
         ../../src/mfx/dsp/iir/Biquad4Simd.h \
         ../../src/mfx/dsp/iir/Biquad4Simd.hpp \
         ../../src/mfx/dsp/iir/Biquad4SimdData.h \

@@ -870,6 +870,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\AllPass2p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4Simd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4Simd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4SimdData.h" />
@@ -1705,6 +1707,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass1pChain.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\AllPass2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad4.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DcKiller1p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\OnePole.cpp" />
