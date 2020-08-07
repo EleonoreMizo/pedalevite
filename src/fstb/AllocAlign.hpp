@@ -64,19 +64,14 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 
 	const size_t   nbr_bytes = sizeof (T) * n;
 
-#if defined (fstb_AllocAlign_CUSTOM_ALLOCATOR)
-
-	zone_ptr = reinterpret_cast <pointer> (
-		fstb_AllocAlign_CUSTOM_ALLOCATOR (nbr_bytes, size_t (ALIG))
-	);
-
-#elif defined (_MSC_VER)
+#if defined (_MSC_VER)
 
 	pointer        zone_ptr = static_cast <pointer> (
 		_aligned_malloc (nbr_bytes, ALIG)
 	);
 
-#elif ! defined (__MINGW32__) && ! defined (__MINGW64__) && ! defined (__CYGWIN__)
+//#elif ! defined (__MINGW32__) && ! defined (__MINGW64__) && ! defined (__CYGWIN__)
+#elif defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L
 
 	pointer        zone_ptr = 0;
 	void *         tmp_ptr;
@@ -106,7 +101,9 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 
 	if (zone_ptr == nullptr)
 	{
+#if defined (__cpp_exceptions) || ! defined (__GNUC__)
 		throw std::bad_alloc ();
+#endif
 	}
 
 	return (zone_ptr);
@@ -122,13 +119,7 @@ void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type n)
 	if (ptr != nullptr)
 	{
 
-#if defined (fstb_AllocAlign_CUSTOM_ALLOCATOR)
-
-	#if defined (fstb_AllocAlign_CUSTOM_DEALLOCATOR)
-		fstb_AllocAlign_CUSTOM_DEALLOCATOR (ptr);
-	#endif
-
-#elif defined (_MSC_VER)
+#if defined (_MSC_VER)
 
 		try
 		{
@@ -139,7 +130,8 @@ void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type n)
 			assert (false);
 		}
 
-#elif ! defined (__MINGW32__) && ! defined (__MINGW64__) && ! defined (__CYGWIN__)
+//#elif ! defined (__MINGW32__) && ! defined (__MINGW64__) && ! defined (__CYGWIN__)
+#elif defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L
 
 		free (ptr);
 
