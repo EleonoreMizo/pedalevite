@@ -42,18 +42,24 @@ SingleObj <T, A>::SingleObj ()
 {
 	if (_obj_ptr == nullptr)
 	{
+#if defined (__cpp_exceptions) || ! defined (__GNUC__)
 		throw std::bad_alloc ();
+#endif
 	}
 
+#if defined (__cpp_exceptions) || ! defined (__GNUC__)
 	try
+#endif
 	{
 		new (_obj_ptr) T ();
 	}
+#if defined (__cpp_exceptions) || ! defined (__GNUC__)
 	catch (...)
 	{
 		_allo.deallocate (_obj_ptr, 1);
 		throw;
 	}
+#endif
 }
 
 
