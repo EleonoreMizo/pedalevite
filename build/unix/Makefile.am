@@ -393,6 +393,8 @@ commonsrc = \
         ../../src/mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.h \
         ../../src/mfx/dsp/dyn/EnvFollowerAR4SimdHelper.hpp \
+        ../../src/mfx/dsp/dyn/EnvFollowerARHelper.h \
+        ../../src/mfx/dsp/dyn/EnvFollowerARHelper.hpp \
         ../../src/mfx/dsp/dyn/EnvFollowerPeak.cpp \
         ../../src/mfx/dsp/dyn/EnvFollowerPeak.h \
         ../../src/mfx/dsp/dyn/EnvFollowerPeak.hpp \

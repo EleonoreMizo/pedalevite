@@ -828,6 +828,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAHR4SimdHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerAR4SimdHelper.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerARHelper.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerARHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerPeak.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerPeak.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerRms.h" />

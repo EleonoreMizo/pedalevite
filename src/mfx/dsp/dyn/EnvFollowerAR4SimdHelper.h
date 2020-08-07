@@ -74,7 +74,7 @@ class EnvFollowerAR4SimdHelper
 
 public:
 
-	static const int  _nbr_env = 4;  // Number of processing units
+	static constexpr int _nbr_env = 4;  // Number of processing units
 
 	typedef VD V128Dest;
 	typedef VS V128Src;
