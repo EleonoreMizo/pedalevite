@@ -40,15 +40,15 @@ namespace shape
 
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturate <T, C, XS, YS>::saturate (T x)
+fstb_CONSTEXPR14 T	MapSaturate <T, C, XS, YS>::saturate (T x)
 {
 	assert (x / get_xs () >= 0);
 	assert (x / get_xs () <= 1);
 
-	const T        sx = get_xs ();
-	const T        sy = get_ys ();
-	const T        cc = get_c ();
-	const T        c1 = cc + T (1);
+	constexpr T    sx = get_xs ();
+	constexpr T    sy = get_ys ();
+	constexpr T    cc = get_c ();
+	constexpr T    c1 = cc + T (1);
 
 	const T        y  = c1*sy - cc*c1*sx*sy / (x + cc*sx);
 
@@ -61,15 +61,15 @@ T	MapSaturate <T, C, XS, YS>::saturate (T x)
 
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturate <T, C, XS, YS>::desaturate (T y)
+fstb_CONSTEXPR14 T	MapSaturate <T, C, XS, YS>::desaturate (T y)
 {
 	assert (y / get_ys () >= 0);
 	assert (y / get_ys () <= 1);
 
-	const T        sx = get_xs ();
-	const T        sy = get_ys ();
-	const T        cc = get_c ();
-	const T        c1 = cc + T (1);
+	constexpr T    sx = get_xs ();
+	constexpr T    sy = get_ys ();
+	constexpr T    cc = get_c ();
+	constexpr T    c1 = cc + T (1);
 
 	const T        x  = cc*c1*sx*sy / (c1*sy - y) - cc*sx;
 
@@ -82,19 +82,19 @@ T	MapSaturate <T, C, XS, YS>::desaturate (T y)
 
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturate <T, C, XS, YS>::get_c ()
+constexpr T	MapSaturate <T, C, XS, YS>::get_c ()
 {
 	return T (C::num) / T (C::den);
 }
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturate <T, C, XS, YS>::get_xs ()
+constexpr T	MapSaturate <T, C, XS, YS>::get_xs ()
 {
 	return T (XS::num) / T (XS::den);
 }
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturate <T, C, XS, YS>::get_ys ()
+constexpr T	MapSaturate <T, C, XS, YS>::get_ys ()
 {
 	return T (YS::num) / T (YS::den);
 }

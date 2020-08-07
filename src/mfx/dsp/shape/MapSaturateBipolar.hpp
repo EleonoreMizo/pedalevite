@@ -40,9 +40,9 @@ namespace shape
 
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturateBipolar <T, C, XS, YS>::saturate (T x)
+fstb_CONSTEXPR14 T	MapSaturateBipolar <T, C, XS, YS>::saturate (T x)
 {
-	static const int  sgn_x = (std::ratio_less <XS, R0>::value) ? -1 : 1;
+	constexpr int  sgn_x = (std::ratio_less <XS, R0>::value) ? -1 : 1;
 
 	typedef MapSaturate <
 		T, C,
@@ -66,9 +66,9 @@ T	MapSaturateBipolar <T, C, XS, YS>::saturate (T x)
 
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturateBipolar <T, C, XS, YS>::desaturate (T y)
+fstb_CONSTEXPR14 T	MapSaturateBipolar <T, C, XS, YS>::desaturate (T y)
 {
-	static const int  sgn_y = (std::ratio_less <YS, R0>::value) ? -1 : 1;
+	constexpr int  sgn_y = (std::ratio_less <YS, R0>::value) ? -1 : 1;
 
 	typedef MapSaturate <
 		T, C,
@@ -92,19 +92,19 @@ T	MapSaturateBipolar <T, C, XS, YS>::desaturate (T y)
 
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturateBipolar <T, C, XS, YS>::get_c ()
+constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_c ()
 {
 	return T (C::num) / T (C::den);
 }
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturateBipolar <T, C, XS, YS>::get_xs ()
+constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_xs ()
 {
 	return T (XS::num) / T (XS::den);
 }
 
 template <typename T, class C, class XS, class YS>
-T	MapSaturateBipolar <T, C, XS, YS>::get_ys ()
+constexpr T	MapSaturateBipolar <T, C, XS, YS>::get_ys ()
 {
 	return T (YS::num) / T (YS::den);
 }
