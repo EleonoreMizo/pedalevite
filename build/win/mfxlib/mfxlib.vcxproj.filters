@@ -4673,6 +4673,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Biquad4.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\FilterBankSimd.h">
+      <Filter>mfx\pi\nzbl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -5964,6 +5967,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad4.cpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBankSimd.cpp">
+      <Filter>mfx\pi\nzbl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

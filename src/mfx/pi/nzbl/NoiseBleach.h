@@ -27,11 +27,16 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
 #include "mfx/pi/nzbl/Cst.h"
+#if defined (fstb_HAS_SIMD)
+#include "mfx/pi/nzbl/FilterBankSimd.h"
+#else
 #include "mfx/pi/nzbl/FilterBank.h"
+#endif
 #include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -81,7 +86,11 @@ private:
 	class Channel
 	{
 	public:
+#if defined (fstb_HAS_SIMD)
+		FilterBankSimd _filter_bank;
+#else
 		FilterBank     _filter_bank;
+#endif
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
 

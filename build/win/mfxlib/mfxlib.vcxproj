@@ -1207,6 +1207,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\MoogLpf.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\MoogLpfDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\moog1\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\nzbl\FilterBankSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.hpp" />
@@ -1896,6 +1897,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpf.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\moog1\MoogLpfDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBank.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBankSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleach.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\NoiseBleachDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\nzcl\NoiseChlorine.cpp" />

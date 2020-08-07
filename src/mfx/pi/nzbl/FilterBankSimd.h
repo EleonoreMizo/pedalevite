@@ -1,9 +1,9 @@
 /*****************************************************************************
 
-        FilterBank.h
+        FilterBankSimd.h
         Author: Laurent de Soras, 2017
 
-Multi-band noise gate. Monophonic.
+Multi-band noise gate. Monophonic. SIMD version.
 
 The signal is split into spectrum bands that can be summed with a gain of 1 on
 the full spectrum and some phasing. Each band is processed individually.
@@ -50,8 +50,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_nzbl_FilterBank_HEADER_INCLUDED)
-#define mfx_pi_nzbl_FilterBank_HEADER_INCLUDED
+#if ! defined (mfx_pi_nzbl_FilterBankSimd_HEADER_INCLUDED)
+#define mfx_pi_nzbl_FilterBankSimd_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -61,12 +61,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
-#include "mfx/dsp/iir/Biquad.h"
+#include "mfx/dsp/iir/Biquad4Simd.h"
 #include "mfx/pi/nzbl/Cst.h"
 
-#include <array>
+#include <vector>
 
 
 
@@ -79,18 +80,27 @@ namespace nzbl
 
 
 
-class FilterBank
+class FilterBankSimd
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static const int  _nbr_bands = Cst::_nbr_bands;
-	static const int  _nbr_split = _nbr_bands - 1;
+	static constexpr int _nbr_bands = Cst::_nbr_bands;
+	static constexpr int _nbr_split = _nbr_bands - 1;
+
+	               FilterBankSimd ();
+	               FilterBankSimd (const FilterBankSimd &other) = default;
+	               FilterBankSimd (FilterBankSimd &&other)      = default;
+
+	               ~FilterBankSimd ()                           = default;
+
+	FilterBankSimd &   operator = (const FilterBankSimd &other) = default;
+	FilterBankSimd &   operator = (FilterBankSimd &&other)      = default;
 
 	void           reset (double sample_freq, int max_buf_len, double &latency);
-	void           set_threshold (int band_idx, float thr);
+	void           set_level (int band_idx, float lvl);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           clear_buffers ();
 
@@ -106,46 +116,47 @@ protected:
 
 private:
 
-	static constexpr int _dspl_rate_l2 = 6;   // Must be > 0
+	static constexpr int _dspl_rate_l2 = 6;   // Must be > 2
 	static constexpr int _dspl_rate    = 1 << _dspl_rate_l2;
-	static constexpr int _nbr_stages   = 2;
-	static constexpr int _max_blk_size = 64; // Samples
 
-	void           process_band (int band_idx, int nbr_spl, int sub_block_len);
+	void           process_band (int band_idx, int nbr_spl);
 
 	static constexpr float
 	               compute_split_freq (int split_idx);
 
-	typedef std::array <float, _max_blk_size> Buf;
+	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
 
-	typedef std::array <mfx::dsp::iir::Biquad, _nbr_stages> Biq2;
+	typedef dsp::iir::Biquad4Simd <
+		fstb::DataAlign <true>,
+		fstb::DataAlign <true>,
+		fstb::DataAlign <true>
+	> Biq4;
 
 	class Split
 	{
 	public:
-		Biq2           _lpf;
-		Biq2           _hpf;
-		Biq2           _fix;
+		Biq4           _main;      // 2x2 processing: left = LP, right = HP
+		Biq4           _fix;       // 1x2 serial processing
 	};
-	typedef std::array <Split, _nbr_bands - 1> SplitArray;
+	typedef std::vector <Split, fstb::AllocAlign <Split, 16> > SplitArray;
 
 	class Band
 	{
 	public:
-		float          _thr   = 0; // >=0. 0 = inactive band.
-		float          _g_old = 0; // Gain at the end of the previous block
-		mfx::dsp::dyn::EnvFollowerRms
+		float          _lvl = 0;
+		dsp::dyn::EnvFollowerRms
 		               _env;
-		Buf            _buf;       // Band content
+		BufAlign       _buf;       // Band content
 	};
-	typedef std::array <Band, _nbr_bands> BandArray;
+	typedef std::vector <Band, fstb::AllocAlign <Band, 16> > BandArray;
 
-	float          _sample_freq = 0; // Sample frequency, Hz. > 0. 0 = not set
-	float          _inv_fs      = 0; // 1 / _sample_freq. 0 = not set
-	float          _thr_hi_rel  = 20; // Threshold (relative to _thr) above which the notch has no effect
-	float          _mul_thr_hi  = 1.0f / (_thr_hi_rel - 1); // Precomputed stuff
+	float          _sample_freq;  // Sample frequency, Hz. > 0. 0 = not set
+	float          _inv_fs;       // 1 / _sample_freq. 0 = not set
+	int            _max_block_size;
+	float          _rel_thr;      // Threshold (relative to _lvl) above which the notch has no effect
 	SplitArray     _split_arr;
 	BandArray      _band_arr;
+	BufAlign       _buf;          // Stereo content (size 2x)
 
 
 
@@ -153,10 +164,10 @@ private:
 
 private:
 
-	bool           operator == (const FilterBank &other) const = delete;
-	bool           operator != (const FilterBank &other) const = delete;
+	bool           operator == (const FilterBankSimd &other) const = delete;
+	bool           operator != (const FilterBankSimd &other) const = delete;
 
-}; // class FilterBank
+}; // class FilterBankSimd
 
 
 
@@ -166,11 +177,11 @@ private:
 
 
 
-//#include "mfx/pi/nzbl/FilterBank.hpp"
+//#include "mfx/pi/nzbl/FilterBankSimd.hpp"
 
 
 
-#endif   // mfx_pi_nzbl_FilterBank_HEADER_INCLUDED
+#endif   // mfx_pi_nzbl_FilterBankSimd_HEADER_INCLUDED
 
 
 
