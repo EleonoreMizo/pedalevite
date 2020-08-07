@@ -1177,7 +1177,7 @@ int	test_bbd_line ()
 	float          fdbk    = 1;
 #endif
 
-	mfx::dsp::dly::BbdLine delay;
+	mfx::dsp::dly::BbdLine <> delay;
 	if (ret_val == 0)
 	{
 		chn_arr.resize (1);
@@ -1189,9 +1189,9 @@ int	test_bbd_line ()
 		delay.clear_buffers ();
 
 		const int      buf_len   =
-			bbd_size << -mfx::dsp::dly::BbdLine::_min_speed_l2;
+			bbd_size << -mfx::dsp::dly::BbdLine <>::_min_speed_l2;
 		std::vector <float>  buf (buf_len);
-		const float    spd_min   = 1.0f / (1 << -mfx::dsp::dly::BbdLine::_min_speed_l2);
+		const float    spd_min   = 1.0f / (1 << -mfx::dsp::dly::BbdLine <>::_min_speed_l2);
 		const float    spd_max   = 64;
 
 		float          dly_time  = float (bbd_size);

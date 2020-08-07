@@ -4659,6 +4659,8 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.hpp">
       <Filter>mfx\pi\ramp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLine.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerARHelper.h">
       <Filter>mfx\dsp\dyn</Filter>
     </ClInclude>
@@ -5240,9 +5242,6 @@
     <ClCompile Include="..\..\..\src\mfx\doc\Routing.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLine.cpp">
-      <Filter>mfx\dsp\dly</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\SignalPort.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
@@ -5427,9 +5426,6 @@
       <Filter>mfx\pi\dly2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelayLineReadInterface.cpp">
-      <Filter>mfx\dsp\dly</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.cpp">
       <Filter>mfx\dsp\dly</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp">

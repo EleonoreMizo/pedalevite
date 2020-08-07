@@ -417,7 +417,7 @@ void	Delay2Desc::init_line (int index)
 
 	// Line speed
 	auto           log_sptr = std::make_shared <param::TplLog> (
-		0.25f, double (Cst::_max_bbd_speed),
+		1.0 / (1 << -Cst::_min_bbd_spd_l2), double (Cst::_max_bbd_speed),
 		"Line %d speed\nLine %d spd\nL%d spd\nL%dS",
 		"%",
 		param::HelperDispNum::Preset_FLOAT_PERCENT,

@@ -45,8 +45,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "fstb/FixedPoint.h"
 #include "mfx/dsp/dly/DelayLineData.h"
-#include "mfx/dsp/rspl/SnhTool.h"
 
+#include <memory>
 #include <vector>
 
 
@@ -66,15 +66,17 @@ namespace dly
 
 
 
+template <int MSL2 = -4, typename AL = std::allocator <float> >
 class BbdLine
 {
+	static_assert (MSL2 <= 0, "Log2 of the minimum BBD speed must be <= 0.");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
 	// Log2 of the minimum BBD speed, <= 0. Impacts data buffer size.
-	static const int  _min_speed_l2  = -4;
+	static constexpr int  _min_speed_l2 = MSL2;
 
 	void           init (int max_bbd_size, rspl::InterpolatorInterface &interp, int ovrspl_l2);
 	int            get_ovrspl_l2 () const;
@@ -106,10 +108,11 @@ protected:
 
 private:
 
-	typedef dsp::dly::DelayLineData <fstb::FixedPoint> TimestampLine;
-	typedef dsp::dly::DelayLineData <float> DataLine;
-
-	typedef std::vector <float> Buffer;
+	typedef dsp::dly::DelayLineData <
+		fstb::FixedPoint,
+		typename std::allocator_traits <AL>::template rebind_alloc <fstb::FixedPoint>
+	> TimestampLine;
+	typedef dsp::dly::DelayLineData <float, AL> DataLine;
 
 	fstb_FORCEINLINE void
 	               push_timestamps (int nbr_spl);
@@ -129,8 +132,9 @@ private:
 	float          _ts_pos_w     = 0;   // Writing position within the BBD line for the beginning of the block. [0 ; _bbd_size[
 	int            _data_pos_w   = 0;   // Writing position within the data line.
 	int            _ovrspl_l2    = 0;   // Base-2 logarithm of the oversampling. >= 0.
+	float          _ovrspl_inv   = 0;   // 1.f / (1 << _ovrspl_l2)
 	fstb::FixedPoint
-	               _group_dly    = fstb::FixedPoint (0);  // Interpolator group delay
+	               _group_dly    = fstb::FixedPoint (0, 0);  // Interpolator group delay
 	int            _imp_len      = 1;   // Interpolator impulse length, >= 1
 
 
@@ -139,8 +143,8 @@ private:
 
 private:
 
-	bool           operator == (const BbdLine &other) const = delete;
-	bool           operator != (const BbdLine &other) const = delete;
+	bool           operator == (const BbdLine <MSL2, AL> &other) const = delete;
+	bool           operator != (const BbdLine <MSL2, AL> &other) const = delete;
 
 }; // class BbdLine
 
@@ -152,7 +156,7 @@ private:
 
 
 
-//#include "mfx/dsp/dly/BbdLine.hpp"
+#include "mfx/dsp/dly/BbdLine.hpp"
 
 
 

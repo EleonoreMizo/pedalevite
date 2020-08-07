@@ -49,6 +49,7 @@ public:
 	static const int  _nbr_lines      =     2;
 	static const int  _max_delay      =  4000;   // ms
 	static const int  _max_bbd_speed  =    64;
+	static const int  _min_bbd_spd_l2 =    -2;
 	static const int  _max_frame_size =    64;   // Samples, for internal processing
 	static const int  _eq_freq_min    =    16;
 	static const int  _eq_freq_max    = 20480;

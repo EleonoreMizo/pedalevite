@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        BbdLine.cpp
+        BbdLine.hpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -9,16 +9,14 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
-#if defined (_MSC_VER)
-	#pragma warning (1 : 4130 4223 4705 4706)
-	#pragma warning (4 : 4355 4786 4800)
-#endif
+#if ! defined (mfx_dsp_dly_BbdLine_CODEHEADER_INCLUDED)
+#define mfx_dsp_dly_BbdLine_CODEHEADER_INCLUDED
 
 
 
@@ -27,8 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/Approx.h"
 #include "fstb/fnc.h"
 #include "mfx/dsp/mix/Generic.h"
-#include "mfx/dsp/dly/BbdLine.h"
-#include	"mfx/dsp/rspl/InterpolatorInterface.h"
+#include "mfx/dsp/rspl/InterpolatorInterface.h"
 
 #include <algorithm>
 
@@ -49,7 +46,8 @@ namespace dly
 
 
 
-void	BbdLine::init (int max_bbd_size, rspl::InterpolatorInterface &interp, int ovrspl_l2)
+template <int MSL2, typename AL>
+void	BbdLine <MSL2, AL>::init (int max_bbd_size, rspl::InterpolatorInterface &interp, int ovrspl_l2)
 {
 	assert (max_bbd_size > 1);
 	assert (ovrspl_l2 >= 0);
@@ -57,31 +55,33 @@ void	BbdLine::init (int max_bbd_size, rspl::InterpolatorInterface &interp, int o
 	const int      margin = 256;
 
 	_ovrspl_l2  = ovrspl_l2;
+	_ovrspl_inv = fstb::ipowp (0.5f, ovrspl_l2);
 	_interp_ptr = &interp;
 	_interp_ptr->set_ovrspl_l2 (_ovrspl_l2);
 	_interp_ptr->start (1);
 
 	_max_bbd_size = max_bbd_size;
-	_line_ts.set_sample_freq (1);
 	_line_ts.set_extra_len (margin);
+	_line_ts.set_sample_freq (1);
 	set_bbd_size (_max_bbd_size);
 
-	_line_data.set_sample_freq (1);
-	_line_data.set_max_delay_time (_max_bbd_size << -_min_speed_l2);
 	_imp_len = int (_interp_ptr->get_impulse_len ());
 	_group_dly = _interp_ptr->get_group_delay ();
 	assert (_group_dly.get_ceil () < _imp_len);
 	_line_data.set_unroll_pre (0);
 	_line_data.set_unroll_post (_imp_len);
 	_line_data.set_extra_len (_imp_len + margin);
-	_line_data.update_buffer_size ();
+	_line_data.set_sample_freq (1);
+	_line_data.set_max_delay_time (_max_bbd_size << -_min_speed_l2);
+//	_line_data.update_buffer_size ();
 
 	clear_buffers ();
 }
 
 
 
-const rspl::InterpolatorInterface &	BbdLine::use_interpolator () const
+template <int MSL2, typename AL>
+const rspl::InterpolatorInterface &	BbdLine <MSL2, AL>::use_interpolator () const
 {
 	assert (_interp_ptr != nullptr);
 
@@ -90,7 +90,8 @@ const rspl::InterpolatorInterface &	BbdLine::use_interpolator () const
 
 
 
-int	BbdLine::get_ovrspl_l2 () const
+template <int MSL2, typename AL>
+int	BbdLine <MSL2, AL>::get_ovrspl_l2 () const
 {
 	assert (_ovrspl_l2 >= 0);
 
@@ -101,20 +102,22 @@ int	BbdLine::get_ovrspl_l2 () const
 
 // May cause some transients when the size is increased. It's safer to call
 // clear_buffers() after.
-void	BbdLine::set_bbd_size (int bbd_size)
+template <int MSL2, typename AL>
+void	BbdLine <MSL2, AL>::set_bbd_size (int bbd_size)
 {
 	assert (bbd_size > 1);
 	assert (bbd_size <= _max_bbd_size);
 
 	_bbd_size = bbd_size;
 	_line_ts.set_max_delay_time (bbd_size);
-	_line_ts.update_buffer_size ();
+//	_line_ts.update_buffer_size ();
 	_line_ts.update_unroll ();
 }
 
 
 
-int	BbdLine::get_bbd_size () const
+template <int MSL2, typename AL>
+int	BbdLine <MSL2, AL>::get_bbd_size () const
 {
 	assert (_bbd_size > 1);
 
@@ -125,7 +128,8 @@ int	BbdLine::get_bbd_size () const
 
 // Call this first, before any other function.
 // speed indicates the rate of the BDD relative to the in/out sampling freq.
-void	BbdLine::set_speed (float speed)
+template <int MSL2, typename AL>
+void	BbdLine <MSL2, AL>::set_speed (float speed)
 {
 	assert (speed * (1 << -_min_speed_l2) >= 1);
 
@@ -137,7 +141,8 @@ void	BbdLine::set_speed (float speed)
 
 // Valid for the current speed
 // delay in samples
-float	BbdLine::compute_min_delay () const
+template <int MSL2, typename AL>
+float	BbdLine <MSL2, AL>::compute_min_delay () const
 {
 	return std::max (
 		(_imp_len - _group_dly.get_val_flt ()) * _speed,
@@ -151,7 +156,8 @@ float	BbdLine::compute_min_delay () const
 // May return 0 or less if the delay is really small, below
 // compute_min_delay ().
 // dly_min in samples
-int	BbdLine::estimate_max_one_shot_proc_w_feedback (float dly_min) const
+template <int MSL2, typename AL>
+int	BbdLine <MSL2, AL>::estimate_max_one_shot_proc_w_feedback (float dly_min) const
 {
 	assert (dly_min >= 1);
 
@@ -185,7 +191,8 @@ speed is difficult to evaluate, even if we keep track of it for every
 BBD bin.
 */
 
-void	BbdLine::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const
+template <int MSL2, typename AL>
+void	BbdLine <MSL2, AL>::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float dly_end, int pos_in_block) const
 {
 	assert (dst_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -217,7 +224,8 @@ void	BbdLine::read_block (float dst_ptr [], long nbr_spl, float dly_beg, float d
 
 
 
-float	BbdLine::read_sample (float dly) const
+template <int MSL2, typename AL>
+float	BbdLine <MSL2, AL>::read_sample (float dly) const
 {
 	assert (dly >= 1);
 	assert (dly >= (_imp_len - _group_dly.get_val_flt ()) * _speed);
@@ -236,7 +244,8 @@ float	BbdLine::read_sample (float dly) const
 
 
 
-void	BbdLine::push_block (const float src_ptr [], int nbr_spl)
+template <int MSL2, typename AL>
+void	BbdLine <MSL2, AL>::push_block (const float src_ptr [], int nbr_spl)
 {
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
@@ -270,7 +279,8 @@ void	BbdLine::push_block (const float src_ptr [], int nbr_spl)
 
 
 
-void	BbdLine::push_sample (float x)
+template <int MSL2, typename AL>
+void	BbdLine <MSL2, AL>::push_sample (float x)
 {
 	push_timestamps (1);
 
@@ -288,7 +298,8 @@ void	BbdLine::push_sample (float x)
 
 
 
-void	BbdLine::clear_buffers ()
+template <int MSL2, typename AL>
+void	BbdLine <MSL2, AL>::clear_buffers ()
 {
 	_line_ts.clear_buffers ();
 	_line_data.clear_buffers ();
@@ -306,11 +317,12 @@ void	BbdLine::clear_buffers ()
 
 
 
-float	BbdLine::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr [], int pos_in_block) const
+template <int MSL2, typename AL>
+float	BbdLine <MSL2, AL>::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint ts_buf_ptr [], int data_mask, int data_len, const float data_buf_ptr [], int pos_in_block) const
 {
 	assert (dly_cur >= 1);
 
-	const float    pib_sc     = std::scalbn (float (pos_in_block), -_ovrspl_l2); // pos_in_block * fstb::ipowp (0.5f, _ovrspl_l2);
+	const float    pib_sc     = float (pos_in_block) * _ovrspl_inv;
 	const float    read_pos_f = _ts_pos_w - dly_cur + pib_sc;
 	const int      read_pos_i = fstb::floor_int (read_pos_f);
 	const float    read_pos_r = read_pos_f - read_pos_i;
@@ -330,7 +342,7 @@ float	BbdLine::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint t
 	ts -= _group_dly;
 	ts.bound_and (data_mask);
 
-	const fstb::FixedPoint  rate (/*** To do: guess the actual playback rate ***/ 1);
+	const fstb::FixedPoint  rate (/*** To do: guess the actual playback rate ***/ 1, 0);
 	const float       y =
 		_interp_ptr->process_sample (data_buf_ptr, ts, rate);
 
@@ -339,7 +351,8 @@ float	BbdLine::read_sample (float dly_cur, int ts_mask, const fstb::FixedPoint t
 
 
 
-void	BbdLine::push_timestamps (int nbr_spl)
+template <int MSL2, typename AL>
+void	BbdLine <MSL2, AL>::push_timestamps (int nbr_spl)
 {
 	assert (nbr_spl > 0);
 
@@ -381,6 +394,10 @@ void	BbdLine::push_timestamps (int nbr_spl)
 }  // namespace dly
 }  // namespace dsp
 }  // namespace mfx
+
+
+
+#endif   // mfx_dsp_dly_BbdLine_CODEHEADER_INCLUDED
 
 
 

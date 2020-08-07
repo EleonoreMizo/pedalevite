@@ -3,6 +3,10 @@
         BbdLineReadable.h
         Author: Laurent de Soras, 2017
 
+Template parameters:
+
+- BBD: type of the BbdLine to wrap
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -41,6 +45,7 @@ namespace dly
 
 
 
+template <class BBD = BbdLine <> >
 class BbdLineReadable final
 :	public DelayLineReadInterface
 {
@@ -49,7 +54,9 @@ class BbdLineReadable final
 
 public:
 
-	static const int  _min_speed_l2 = BbdLine::_min_speed_l2;
+	typedef BBD BbdType;
+
+	static constexpr int  _min_speed_l2 = BbdType::_min_speed_l2;
 
 	void           init (int max_bbd_size, double sample_freq, rspl::InterpolatorInterface &interp, int ovrspl_l2);
 	const rspl::InterpolatorInterface &
@@ -86,7 +93,7 @@ private:
 
 	float          _sample_freq    = 0; // Hz, > 0. 0 = not initialised
 	float          _speed          = 0; // 0 = not initialised
-	BbdLine        _bbd;
+	BbdType        _bbd;
 	float          _min_dly_time   = -1;
 	float          _max_dly_time   = -1;
 
@@ -96,8 +103,8 @@ private:
 
 private:
 
-	bool           operator == (const BbdLineReadable &other) const = delete;
-	bool           operator != (const BbdLineReadable &other) const = delete;
+	bool           operator == (const BbdLineReadable <BBD> &other) const = delete;
+	bool           operator != (const BbdLineReadable <BBD> &other) const = delete;
 
 }; // class BbdLineReadable
 
@@ -109,7 +116,7 @@ private:
 
 
 
-//#include "mfx/dsp/dly/BbdLineReadable.hpp"
+#include "mfx/dsp/dly/BbdLineReadable.hpp"
 
 
 

@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
 #include "mfx/dsp/wnd/XFadeShape.h"
+#include "mfx/pi/dly2/Cst.h"
 #include "mfx/pi/dly2/Eq.h"
 #include "mfx/pi/dly2/FilterType.h"
 #include "mfx/pi/dly2/FxSection.h"
@@ -136,7 +137,7 @@ private:
 
 	mfx::dsp::rspl::InterpolatorHermite43
 	               _interp;
-	dsp::dly::BbdLine
+	dsp::dly::BbdLine <Cst::_min_bbd_spd_l2>
 	               _bbd;
 	FxSection      _fx;
 	Eq             _eq;
