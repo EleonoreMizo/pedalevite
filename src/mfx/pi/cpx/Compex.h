@@ -27,23 +27,29 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
-#include "fstb/def.h"
 #include "fstb/SingleObj.h"
 #include "fstb/ToolsSimd.h"
-#include "mfx/dsp/dyn/EnvFollowerAR4SimdHelper.h"
+#include "mfx/dsp/dyn/EnvFollowerARHelper.h"
 #include "mfx/dsp/dyn/SCPower.h"
-#include "mfx/dsp/iir/Biquad4Simd.h"
 #include "mfx/pi/cpx/CompexDesc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/piapi/PluginInterface.h"
 
+#if defined (fstb_HAS_SIMD)
+	#include "mfx/dsp/iir/Biquad4Simd.h"
+	#include <vector>
+#else
+	#include "mfx/dsp/iir/Biquad.h"
+#endif
+
 #include <array>
-#include <vector>
 
 
 
@@ -84,22 +90,45 @@ protected:
 
 private:
 
-	static const int  _update_resol = 64;  // Must be a multiple of 4
+	// Is also the buffer length
+	// Must be a multiple of 4
+	static constexpr int _update_resol = 64;
+
+	typedef dsp::dyn::EnvFollowerARHelper <1> EnvFollower;
+
+#if defined (fstb_HAS_SIMD)
 
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > SplBuf;
-
-	typedef dsp::dyn::EnvFollowerAR4SimdHelper <
-		fstb::DataAlign <true>,
-		fstb::DataAlign <true>,
-		fstb::DataAlign <true>,
-		1
-	> EnvFollower;
 
 	typedef dsp::iir::Biquad4Simd <
 		fstb::DataAlign <true>,
 		fstb::DataAlign <true>,
 		fstb::DataAlign <true>
 	> Smoother;
+
+	template <class T>
+	using WrapperAlign = fstb::SingleObj <T, fstb::AllocAlign <T, 16> >;
+
+#else // fstb_HAS_SIMD
+
+	typedef std::array <float, _update_resol> SplBuf;
+
+	class Smoother
+	{
+	public:
+		static constexpr int _nbr_units = 4;
+		void           set_z_eq_same (const float bz [3], const float az [3]);
+		void           clear_buffers ();
+		void           process_block_serial_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	private:
+		typedef std::array <dsp::iir::Biquad, _nbr_units> BiquadArray;
+		BiquadArray    _biq_arr;
+	};
+
+	template <class T>
+	using WrapperAlign = T;
+
+#endif // fstb_HAS_SIMD
 
 	template <int NC>
 	class AddProc
@@ -120,8 +149,15 @@ private:
 	void           process_block_part (float * const out_ptr_arr [], const float * const in_ptr_arr [], const float * const sc_ptr_arr [], int pos_beg, int pos_end);
 	void           conv_env_to_log (int nbr_spl);
 	template <bool store_flag>
+	fstb_FORCEINLINE float
+	               compute_gain (float env_2l2);
+	template <bool store_flag>
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
 	               compute_gain (const fstb::ToolsSimd::VectF32 env_2l2);
+
+	template <class T>
+	static fstb_FORCEINLINE T &
+	               usew (WrapperAlign <T> &wrap);
 
 	State          _state;
 
@@ -142,9 +178,9 @@ private:
 	int            _nbr_chn_in;         // > 0
 	int            _nbr_chn_ana;			// > 0
 
-	fstb::SingleObj <EnvFollower, fstb::AllocAlign <EnvFollower, 16> >
+	WrapperAlign <EnvFollower>
 						_env_fol_xptr;
-	fstb::SingleObj <Smoother, fstb::AllocAlign <Smoother, 16> >
+	WrapperAlign <Smoother>
 						_smoother_xptr;
 	bool				_use_side_chain_flag;
 
@@ -156,9 +192,9 @@ private:
 	               _knee_coef_arr;
 	float          _knee_th_abs;        // knee_lvl(dB) * 0.5 / 6.0206. * 0.5 because it's a radius.
 
-	dsp::dyn::SCPower <AddProc <1> >
+	dsp::dyn::SCPower <AddProc <1> >    // Power extraction from the analysed signal, mono
 	               _sc_power_1;
-	dsp::dyn::SCPower <AddProc <2> >
+	dsp::dyn::SCPower <AddProc <2> >    // Same for setero signals
 	               _sc_power_2;
 	SplBuf         _buf_tmp;
 	float          _cur_gain;           // Stored as log2.

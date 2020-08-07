@@ -110,6 +110,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include <algorithm>
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -175,7 +176,7 @@ Compex::Compex ()
 	_param_change_flag_vol_curves_ss.add_observer (_param_change_flag);
 
 	static const float  abz [3] = { 1, 0, 0 };
-	_smoother_xptr->set_z_eq_same (abz, abz);
+	usew (_smoother_xptr).set_z_eq_same (abz, abz);
 }
 
 
@@ -205,8 +206,15 @@ int	Compex::do_reset (double sample_freq, int max_buf_len, int &latency)
 {
 	latency = 0;
 
-	const int      buf_len = (max_buf_len + 3) & ~3;
+#if defined (fstb_HAS_SIMD)
+	const int      buf_len = std::min (
+		(max_buf_len + 3) & ~3,
+		int (_update_resol)
+	);
 	_buf_tmp.resize (buf_len);
+#else
+	fstb::unused (max_buf_len);
+#endif
 
 	_sample_freq = float (sample_freq);
 
@@ -257,7 +265,7 @@ void	Compex::do_process_block (piapi::ProcInfo &proc)
 		process_block_part (
 			proc._dst_arr,
 			proc._src_arr,
-			proc._src_arr,
+			proc._src_arr + nbr_chn_in,
 			pos,
 			pos + work_len
 		);
@@ -300,10 +308,46 @@ fstb::ToolsSimd::VectF32	Compex::AddProc <2>::process_vect (const fstb::ToolsSim
 }
 
 
+
+#if ! defined (fstb_HAS_SIMD)
+
+
+
+void	Compex::Smoother::set_z_eq_same (const float bz [3], const float az [3])
+{
+	for (auto &biq : _biq_arr)
+	{
+		biq.set_z_eq (bz, az);
+	}
+}
+
+void	Compex::Smoother::clear_buffers ()
+{
+	for (auto &biq : _biq_arr)
+	{
+		biq.clear_buffers ();
+	}
+}
+
+void	Compex::Smoother::process_block_serial_immediate (float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	for (auto &biq : _biq_arr)
+	{
+		biq.process_block (dst_ptr, src_ptr, nbr_spl);
+		src_ptr = dst_ptr;
+	}
+}
+
+
+
+#endif // fstb_HAS_SIMD
+
+
+
 void	Compex::clear_buffers ()
 {
-	_env_fol_xptr->clear_buffers ();
-	_smoother_xptr->clear_buffers ();
+	usew (_env_fol_xptr).clear_buffers ();
+	usew (_smoother_xptr).clear_buffers ();
 
 	_cur_gain = 0;
 }
@@ -329,11 +373,11 @@ void	Compex::update_param_ar ()
 {
 	const float    atk_t = float (_state_set.get_val_tgt_nat (Param_ATTACK));
 	const float    atk_coef = compute_env_coef (atk_t);
-	_env_fol_xptr->set_atk_coef (0,atk_coef);
+	usew (_env_fol_xptr).set_atk_coef (atk_coef);
 
 	const float    rls_t = float (_state_set.get_val_tgt_nat (Param_RELEASE));
 	const float    rls_coef = compute_env_coef (rls_t);
-	_env_fol_xptr->set_rls_coef (0, rls_coef);
+	usew (_env_fol_xptr).set_rls_coef (rls_coef);
 
 	// Smoother
 	const float    min_time = std::min (atk_t, rls_t);
@@ -350,7 +394,7 @@ void	Compex::update_param_ar ()
 		f0 / _sample_freq
 	));
 	dsp::iir::TransSZBilin::map_s_to_z_approx (bz, az, bs, as, k);
-	_smoother_xptr->set_z_eq_same (bz, az);
+	usew (_smoother_xptr).set_z_eq_same (bz, az);
 }
 
 
@@ -453,8 +497,8 @@ void	Compex::process_block_part (float * const out_ptr_arr [], const float * con
 
 	float *        tmp_ptr = &_buf_tmp [0];
 	const int      nbr_spl = pos_end - pos_beg;
-	_env_fol_xptr->process_block_1_chn (tmp_ptr, tmp_ptr, nbr_spl);
-	_smoother_xptr->process_block_serial_immediate (tmp_ptr, tmp_ptr, nbr_spl);
+	usew (_env_fol_xptr).process_block (tmp_ptr, tmp_ptr, nbr_spl);
+	usew (_smoother_xptr).process_block_serial_immediate (tmp_ptr, tmp_ptr, nbr_spl);
 	conv_env_to_log (nbr_spl);
 
 	const int      pos_block_end = (nbr_spl + 3) & ~3;
@@ -533,6 +577,58 @@ void	Compex::conv_env_to_log (int nbr_spl)
 // Input: env_2l2 = 2 * log2 (linear volume envelope).
 // An arbitrary negative value corresponds to zero.
 template <bool store_flag>
+float	Compex::compute_gain (float env_2l2)
+{
+	// Shifts volume in order to have the threshold at 0
+	const float    env_l2 = env_2l2 * 0.5f;
+	const float    el2    = env_l2 - _vol_offset_pre;
+
+	// Knee polynomial
+	const float    c2   = _knee_coef_arr [2];
+	const float    c1   = _knee_coef_arr [1];
+	const float    c0   = _knee_coef_arr [0];
+	const float    poly = (el2 * c2 + c1) * el2 + c0;
+
+	// Linear ratios
+	const float    ratio  = (el2 < 0) ? _ratio_lo : _ratio_hi;
+	const float    linear = el2 * ratio;
+
+	// Selects result
+	const float    vl2 = (fabsf (el2) < _knee_th_abs) ? poly : linear;
+
+	// Computes and limits gain
+	float          gain_l2 = fstb::limit (vl2 - el2, _gain_min_l2, _gain_max_l2);
+	// Another solution would be mirroring before minimising:
+	// gain_top_l2 - abs (gain_l2 - gain_top_l2) with gain_top_l2 > gain_max_l2.
+	// Quickest solution but may generate very low signals turning later into denormals.
+
+	// Handles the case where detected volume is close to 0 (-oo dB).
+	// Smoothly fades the gain to 0 dB.
+	// g = g * limit ((v - v0) / (v1 - v0), 0, 1)
+	auto           active_rate   = (env_l2 - _active_thr_l2) * _active_mul;
+	active_rate  = fstb::limit (active_rate, 0.f, 1.f);
+	gain_l2     *= active_rate;
+
+	// Stores the gain adjustment if requested
+	if (store_flag)
+	{
+		_cur_gain = gain_l2;
+	}
+
+	// Additional gain (manual + auto)
+	gain_l2 += _vol_offset_post;
+
+	// Conversion to linear, multiplicative volume
+	const float    gain = fstb::Approx::exp2 (gain_l2);
+
+	return gain;
+}
+
+
+
+// Input: env_2l2 = 2 * log2 (linear volume envelope).
+// An arbitrary negative value corresponds to zero.
+template <bool store_flag>
 fstb::ToolsSimd::VectF32	Compex::compute_gain (const fstb::ToolsSimd::VectF32 env_2l2)
 {
 	// Shifts volume in order to have the threshold at 0
@@ -597,6 +693,18 @@ fstb::ToolsSimd::VectF32	Compex::compute_gain (const fstb::ToolsSimd::VectF32 en
 	const auto     gain = fstb::ToolsSimd::exp2_approx (gain_l2);
 
 	return gain;
+}
+
+
+
+template <class T>
+T &	Compex::usew (WrapperAlign <T> &wrap)
+{
+#if defined (fstb_HAS_SIMD)
+	return *wrap;
+#else
+	return wrap;
+#endif
 }
 
 

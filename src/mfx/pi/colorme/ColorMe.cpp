@@ -68,7 +68,11 @@ ColorMe::ColorMe ()
 ,	_param_change_flag_vow ()
 ,	_param_change_flag_vow_misc ()
 ,	_param_change_flag_vow_type ()
+#if defined (fstb_HAS_SIMD)
 ,	_chn_arr (_max_nbr_chn)
+#else
+,	_chn_arr ()
+#endif
 ,	_vow_morph (0)
 ,	_vow_reso (10)
 ,	_vow_q (10)
@@ -221,6 +225,53 @@ void	ColorMe::do_process_block (piapi::ProcInfo &proc)
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+#if ! defined (fstb_HAS_SIMD)
+
+void	ColorMe::Channel::FormantFilter::neutralise ()
+{
+	for (auto &biq : _biq_arr)
+	{
+		biq.neutralise ();
+	}
+}
+
+void	ColorMe::Channel::FormantFilter::set_coefs_one (int unit, float g0, float g1, float g2)
+{
+	assert (unit >= 0);
+	assert (unit < int (_biq_arr.size ()));
+
+	_biq_arr [unit].set_coefs (g0, g1, g2);
+}
+
+void	ColorMe::Channel::FormantFilter::set_mix_one (int unit, float v0m, float v1m, float v2m)
+{
+	assert (unit >= 0);
+	assert (unit < int (_biq_arr.size ()));
+
+	_biq_arr [unit].set_mix (v0m, v1m, v2m);
+}
+
+void	ColorMe::Channel::FormantFilter::process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	for (int unit_idx = 0; unit_idx < int (_biq_arr.size ()); ++unit_idx)
+	{
+		_biq_arr [unit_idx].process_block (dst_ptr, src_ptr, nbr_spl);
+		src_ptr = dst_ptr;
+	}
+}
+
+void	ColorMe::Channel::FormantFilter::clear_buffers ()
+{
+	for (auto &biq : _biq_arr)
+	{
+		biq.clear_buffers ();
+	}
+}
+
+#endif
 
 
 

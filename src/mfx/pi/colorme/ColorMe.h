@@ -27,11 +27,10 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
-#include "fstb/AllocAlign.h"
-#include "fstb/DataAlign.h"
-#include "mfx/dsp/iir/SvfCore4Simd.h"
 #include "mfx/dsp/iir/SvfMixerPeak.h"
 #include "mfx/pi/colorme/ColorMeDesc.h"
 #include "mfx/pi/colorme/Cst.h"
@@ -39,8 +38,19 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/piapi/PluginInterface.h"
 
+#if defined (fstb_HAS_SIMD)
+	#include "fstb/AllocAlign.h"
+	#include "fstb/DataAlign.h"
+	#include "mfx/dsp/iir/SvfCore4Simd.h"
+
+	#include <vector>
+
+#else
+	#include "mfx/dsp/iir/SvfCore.h"
+
+#endif
+
 #include <array>
-#include <vector>
 
 
 
@@ -81,19 +91,40 @@ protected:
 
 private:
 
-	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-
 	class Channel
 	{
 	public:
-		dsp::iir::SvfCore4Simd <
+#if defined (fstb_HAS_SIMD)
+		typedef dsp::iir::SvfCore4Simd <
 			fstb::DataAlign <true>,
 			fstb::DataAlign <true>,
 			fstb::DataAlign <true>,
 			dsp::iir::SvfMixerPeak
-		>              _formant_filter;
+		> FormantFilter;
+#else
+		class FormantFilter
+		{
+		public:
+			void           neutralise ();
+			void           set_coefs_one (int unit, float g0, float g1, float g2);
+			void           set_mix_one (int unit, float v0m, float v1m, float v2m);
+			void           process_block_ser_imm (float dst_ptr [], const float src_ptr [], int nbr_spl);
+			void           clear_buffers ();
+		private:
+			typedef std::array <
+				dsp::iir::SvfCore <dsp::iir::SvfMixerPeak>,
+				Cst::_nbr_formants
+			> SvfArray;
+			SvfArray       _biq_arr;
+		};
+#endif
+		FormantFilter  _formant_filter;
 	};
+#if defined (fstb_HAS_SIMD)
 	typedef std::vector <Channel, fstb::AllocAlign <Channel, 16> > ChannelArray;
+#else
+	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
+#endif
 
 	class VowelDesc
 	{
