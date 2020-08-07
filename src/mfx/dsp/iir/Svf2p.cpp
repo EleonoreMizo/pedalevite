@@ -118,7 +118,7 @@ void	Svf2p::update_eq ()
 		_v0m = 1;
 		_v1m = -2 * k;
 		_v2m = 0;
-		break:
+		break;
 
 	default:
 		assert (false);
