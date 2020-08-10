@@ -98,26 +98,27 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 		do
 		{
+			const float    x0 = src_ptr [index    ];
+			const float    x1 = src_ptr [index + 1];
+
 			// First sample
-			float          x = src_ptr [index];
-			mem_y [1] =      _eq_z_b [0] *     x
+			mem_y [1] =      _eq_z_b [0] *     x0
 			            + (  _eq_z_b [1] * mem_x [0]
 			               + _eq_z_b [2] * mem_x [1])
 			            - (  _eq_z_a [1] * mem_y [0]
 			               + _eq_z_a [2] * mem_y [1]);
 
-			mem_x [1] = x;
+			mem_x [1] = x0;
 			dst_ptr [index    ] = mem_y [1];
 
 			// Second sample
-			x = src_ptr [index + 1];
-			mem_y [0] =      _eq_z_b [0] *     x
+			mem_y [0] =      _eq_z_b [0] *     x1
 			            + (  _eq_z_b [1] * mem_x [1]
 			               + _eq_z_b [2] * mem_x [0])
 			            - (  _eq_z_a [1] * mem_y [1]
 			               + _eq_z_a [2] * mem_y [0]);
 
-			mem_x [0] = x;
+			mem_x [0] = x1;
 			dst_ptr [index + 1] = mem_y [0];
 
 			index += 2;
@@ -171,27 +172,28 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 		do
 		{
+			const float    x0 = src_ptr [index    ];
+			const float    x1 = src_ptr [index + 1];
+
 			// First sample
-			float				x = src_ptr [index];
-			mem_y [1] =      _eq_z_b [0] *     x
+			mem_y [1] =      _eq_z_b [0] *     x0
 			            + (  _eq_z_b [1] * mem_x [0]
 			               + _eq_z_b [2] * mem_x [1])
 			            - (  _eq_z_a [1] * mem_y [0]
 			               + _eq_z_a [2] * mem_y [1]);
 
-			mem_x [1] = x;
+			mem_x [1] = x0;
 			dst_ptr [index    ] = mem_y [1];
 			step_z_eq (inc_b, inc_a);
 
 			// Second sample
-			x = src_ptr [index + 1];
-			mem_y [0] =      _eq_z_b [0] *     x
+			mem_y [0] =      _eq_z_b [0] *     x1
 			            + (  _eq_z_b [1] * mem_x [1]
 			               + _eq_z_b [2] * mem_x [0])
 			            - (  _eq_z_a [1] * mem_y [1]
 			               + _eq_z_a [2] * mem_y [0]);
 
-			mem_x [0] = x;
+			mem_x [0] = x1;
 			dst_ptr [index + 1] = mem_y [0];
 			step_z_eq (inc_b, inc_a);
 
@@ -245,30 +247,31 @@ void	Biquad::process_block (float dst_ptr [], const float src_ptr [], int nbr_sp
 
 		do
 		{
+			const float    x0 = src_ptr [index    ];
+			const float    x1 = src_ptr [index + 1];
+
 			// First sample
-			float          x = src_ptr [index];
 			mem_y [1] = shaper (
-				     _eq_z_b [0] *     x
+				     _eq_z_b [0] *     x0
 				+ (  _eq_z_b [1] * mem_x [0]
 				   + _eq_z_b [2] * mem_x [1])
 				- (  _eq_z_a [1] * mem_y [0]
 				   + _eq_z_a [2] * mem_y [1])
 			);
 
-			mem_x [1] = x;
+			mem_x [1] = x0;
 			dst_ptr [index    ] = mem_y [1];
 
 			// Second sample
-			x = src_ptr [index + 1];
 			mem_y [0] = shaper (
-					  _eq_z_b [0] *     x
+					  _eq_z_b [0] *     x1
 				+ (  _eq_z_b [1] * mem_x [1]
 				   + _eq_z_b [2] * mem_x [0])
 				- (  _eq_z_a [1] * mem_y [1]
 				   + _eq_z_a [2] * mem_y [0])
 			);
 
-			mem_x [0] = x;
+			mem_x [0] = x1;
 			dst_ptr [index + 1] = mem_y [0];
 
 			index += 2;

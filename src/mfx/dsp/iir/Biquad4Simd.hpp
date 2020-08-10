@@ -379,9 +379,12 @@ void	Biquad4Simd_Proc <STP>::process_block_serial_latency (Biquad4SimdData &data
 
 		do
 		{
+			const float    src_0 = in_ptr [index + 0];
+			const float    src_1 = in_ptr [index + 1];
+
 			auto           tmp { fstb::ToolsSimd::Shift <1>::rotate (y1) };
 			auto           x {
-				fstb::ToolsSimd::Shift <0>::insert (tmp, in_ptr [index + 0]) };
+				fstb::ToolsSimd::Shift <0>::insert (tmp, src_0) };
 			auto           sb { b1 * x1 +  b2 * x2 };
 			auto           sa { a1 * y1 +  a2 * y2 };
 			y2  = b0 * x  + (sb - sa);
@@ -390,7 +393,7 @@ void	Biquad4Simd_Proc <STP>::process_block_serial_latency (Biquad4SimdData &data
 			STP::step_z_eq (b0, b1, b2, a1, a2, b_inc, a_inc);
 
 			tmp = fstb::ToolsSimd::Shift <1>::rotate (y2);
-			x   = fstb::ToolsSimd::Shift <0>::insert (tmp, in_ptr [index + 1]);
+			x   = fstb::ToolsSimd::Shift <0>::insert (tmp, src_1);
 			sb  = b1 * x2 +  b2 * x1;
 			sa  = a1 * y2 +  a2 * y1;
 			y1  = b0 * x  + (sb - sa);
@@ -535,7 +538,15 @@ void	Biquad4Simd_Proc <STP>::process_block_2x2_latency (Biquad4SimdData &data, f
 
 		do
 		{
-			auto           x { fstb::ToolsSimd::loadu_2f32 (&in_ptr [index + 0]) };
+#if 0
+			const auto     src_0 = fstb::ToolsSimd::loadu_2f32 (&in_ptr [index + 0]);
+			const auto     src_1 = fstb::ToolsSimd::loadu_2f32 (&in_ptr [index + 2]);
+#else
+			const auto     src_0 = fstb::ToolsSimd::loadu_f32 (&in_ptr [index]);
+			const auto     src_1 = fstb::ToolsSimd::swap_2f32 (src_0);
+#endif
+
+			auto           x = src_0;
 			x  = fstb::ToolsSimd::interleave_2f32_lo (x, y1);		// y1[1 0] x[1 0]
 			auto           sb { b1 * x1 +  b2 * x2 };
 			auto           sa { a1 * y1 +  a2 * y2 };
@@ -545,7 +556,7 @@ void	Biquad4Simd_Proc <STP>::process_block_2x2_latency (Biquad4SimdData &data, f
 			fstb::ToolsSimd::storeu_2f32 (&out_ptr [index + 0], y);
 			STP::step_z_eq (b0, b1, b2, a1, a2, b_inc, a_inc);
 
-			x  = fstb::ToolsSimd::loadu_2f32 (&in_ptr [index + 2]);
+			x  = src_1;
 			x  = fstb::ToolsSimd::interleave_2f32_lo (x, y2);
 			sb = b1 * x2 +  b2 * x1;
 			sa = a1 * y2 +  a2 * y1;
