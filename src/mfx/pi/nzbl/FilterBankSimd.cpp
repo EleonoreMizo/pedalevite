@@ -91,10 +91,15 @@ void	FilterBankSimd::reset (double sample_freq, int max_buf_len, double &latency
 		{
 			f = compute_split_freq (band_cnt - 1);
 		}
-		const int      mult  = 16;
-		float          t     = float (mult / (2 * fstb::PI)) / f;
-		t = std::max (t, 0.005f);
-		band._env.set_times (t, t);
+		const int      mult   = 16;
+		float          t      = float (mult / (2 * fstb::PI)) / f;
+		// Longer release helps preventing amplitude modulation on periodic
+		// noise bursts
+		const float    min_at = 0.005f;
+		const float    min_rt = 0.050f;
+		const float    at = std::max (t, min_at);
+		const float    rt = std::max (t, min_rt);
+		band._env.set_times (at, rt);
 	}
 
 	const float          k        = 0.65f;

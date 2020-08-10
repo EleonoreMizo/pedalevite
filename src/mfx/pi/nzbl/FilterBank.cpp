@@ -80,10 +80,15 @@ void	FilterBank::reset (double sample_freq, int max_buf_len, double &latency)
 		{
 			f = compute_split_freq (band_cnt - 1);
 		}
-		const int      mult  = 16;
-		float          t     = float (mult / (2 * fstb::PI)) / f;
-		t = std::max (t, 0.005f);
-		band._env.set_times (t, t);
+		const int      mult   = 16;
+		float          t      = float (mult / (2 * fstb::PI)) / f;
+		// Longer release helps preventing amplitude modulation on periodic
+		// noise bursts
+		const float    min_at = 0.005f;
+		const float    min_rt = 0.050f;
+		const float    at = std::max (t, min_at);
+		const float    rt = std::max (t, min_rt);
+		band._env.set_times (at, rt);
 	}
 
 	constexpr float      k      = 0.65f; // Thiele coefficient
@@ -162,8 +167,8 @@ void	FilterBank::set_threshold (int band_idx, float thr)
 void	FilterBank::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
-	assert (fstb::DataAlign <true>::check_ptr (dst_ptr));
-	assert (fstb::DataAlign <true>::check_ptr (src_ptr));
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 	assert (nbr_spl <= _max_blk_size);
 

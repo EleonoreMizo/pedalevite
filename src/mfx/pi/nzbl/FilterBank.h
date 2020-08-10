@@ -61,7 +61,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/DataAlign.h"
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/dsp/iir/Biquad.h"
 #include "mfx/pi/nzbl/Cst.h"
