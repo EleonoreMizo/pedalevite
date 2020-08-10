@@ -49,8 +49,12 @@ http://www.wtfpl.net/ for more details.
 // Define this to enable convergence statistics. Very light overhead.
 #define mfx_dsp_va_dkm_Simulator_STATS
 
+// Builds pivot statistics too. Not suitable for real-time use.
+// Ignored if mfx_dsp_va_dkm_Simulator_STATS is not defined
+#define mfx_dsp_va_dkm_Simulator_STATS_PIV
+
 // Enables matrix display functions for debugging
-#undef mfx_dsp_va_dkm_Simulator_DISPLAY
+#define mfx_dsp_va_dkm_Simulator_DISPLAY
 
 
 
@@ -94,11 +98,15 @@ public:
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
 	typedef std::array <int, _limit_it      +   1> HistIt;
 	typedef std::array <int, _limit_it * 16 + 100> HistEval;
+	typedef std::map <std::vector <int>, int> PivotMap; // [reorder_vec] = nbr
 	class Stats
 	{
 	public:
 		HistIt         _hist_it = {{ 0 }}; // Histogram for the number of NR iterations
 		int            _nbr_spl_proc = 0;  // Number of processed samples since the statistics start
+#if defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
+		PivotMap       _piv_map;
+#endif
 	};
 #endif // mfx_dsp_va_dkm_Simulator_STATS
 
@@ -154,6 +162,8 @@ private:
 	typedef Eigen::Matrix <Flt, Eigen::Dynamic, Eigen::Dynamic> TypeMatrix;
 	typedef Eigen::Matrix <Flt, Eigen::Dynamic, 1> TypeVector;
 	typedef TypeMatrix TypeDiagonal;
+
+	typedef Eigen::Matrix <Flt, Eigen::Dynamic, Eigen::Dynamic, Eigen::DontAlign | Eigen::RowMajor> TypeMatrixRm;
 
 	typedef Flt JuncDataType;
 
@@ -291,6 +301,8 @@ private:
 	void           compute_nl_data_diode_pair (int it_cnt, int idx_d);
 	void           compute_nl_data_bjt_npn (int it_cnt, int idx_d);
 	inline void    compute_nl_data_junction (JuncDataType &i, JuncDataType &di, JuncDataType v, const Junction &junc, int it_cnt);
+	void           decompose_lu (TypeMatrixRm &lu, std::vector <int> &r);
+	void           traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatrixRm &lu, const std::vector <int> &r, TypeVector &y);
 
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 	static void    print_vector (const TypeVector &v, const char *name_0);
@@ -399,9 +411,9 @@ private:
 	TypeMatrix     _mat_u_n;
 	TypeMatrix     _mat_u_u;
 	TypeMatrix     _mat_j_f;
-	TypeMatrix     _mat_j_r;
+	TypeMatrixRm   _mat_j_r;
 	TypeDiagonal   _dia_id_n;
-	TypeVector     _vec_r;
+	TypeVector     _vec_r_neg;       // Opposite of R(v_n)
 	TypeVector     _vec_delta_x;
 	TypeMatrix     _mat_abc_tmp;
 	TypeMatrix     _mat_def_tmp;
@@ -414,6 +426,12 @@ private:
 	TypeMatrix     _mat_u_tmp;       // S0^-1 * (Nv 0)T
 	Eigen::PartialPivLU <TypeMatrix>
 	               _decomp_delta_x;
+#if defined (mfx_dsp_va_dkm_Simulator_STATS) \
+ && defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
+	std::vector <int>
+	               _vec_lu_r;        // Row reordering
+	TypeVector     _vec_lu_y;        // Temporary vector
+#endif // mfx_dsp_va_dkm_Simulator_STATS_PIV
 
 	bool           _r_v_dirty_flag = true; // Indicates _mat_r_v and dependencies must be recomputed
 

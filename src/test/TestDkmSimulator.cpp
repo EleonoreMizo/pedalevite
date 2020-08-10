@@ -38,6 +38,7 @@ http://www.wtfpl.net/ for more details.
 #include "test/TimerAccurate.h"
 #include "mfx/dsp/iir/DcKiller1p.h"
 #include "mfx/dsp/osc/SweepingSin.h"
+#include "mfx/dsp/va/dkm/Simulator.h"
 #include "mfx/FileOpWav.h"
 
 #include <memory>
@@ -382,13 +383,15 @@ int	TestDkmSimulator::perform_test ()
 	const int      nbr_nodes   = dkm.get_nbr_nodes ();
 	const int      nbr_src_v   = dkm.get_nbr_src_v ();
 	const int      nbr_non_lin = dkm.get_nbr_non_lin ();
+	const int      nbr_res     = dkm.get_nbr_res ();
 	const int      nbr_pot     = dkm.get_nbr_pot ();
 	const int      nbr_ese     = dkm.get_nbr_ese ();
 	const int      nbr_out     = dkm.get_nbr_out ();
 	printf ("Nodes      : %3d\n", nbr_nodes);
 	printf ("Voltage src: %3d\n", nbr_src_v);
-	printf ("Pots       : %3d\n", nbr_pot);
-	printf ("Energy st  : %3d\n", nbr_ese);
+	printf ("Resistors  : %3d\n", nbr_res);
+	printf ("Var. res.  : %3d\n", nbr_pot);
+	printf ("Energy st. : %3d\n", nbr_ese);
 	printf ("Non-linear : %3d\n", nbr_non_lin);
 	printf ("Output     : %3d\n", nbr_out);
 
@@ -414,10 +417,12 @@ int	TestDkmSimulator::perform_test ()
 
 		float           x = src [pos] * gain;
 #if 0 // Audio-rate modulation
-		const int per = 337;
-		dkm.set_pot (1, 0.5f + 0.5f * fstb::Approx::sin_nick_2pi (
+		const int per = int (337.12301738808010316066030456259 + 0.5);
+		const float     pval = 0.5f + 0.5f * fstb::Approx::sin_nick_2pi (
 			float (pos % per) * (1.f / float (per)) - 0.5f
-		));
+		);
+		dkm.set_pot (2, pval);
+		dkm.set_pot (3, pval);
 #endif
 		dkm.set_src_v (idx_src, x);
 		dkm.process_sample ();
@@ -569,6 +574,11 @@ void	TestDkmSimulator::print_stats (S &dkm)
 		stats._nbr_spl_proc
 	);
 
+#if defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
+	printf ("=== Pivots ===\n");
+	print_pivot_list (stats._piv_map);
+#endif // mfx_dsp_va_dkm_Simulator_STATS_PIV
+
 	printf ("\n");
 }
 
@@ -608,6 +618,44 @@ void	TestDkmSimulator::print_histo (const int hist_arr [], int nbr_bars, int nbr
 		}
 	}
 }
+
+
+
+void	TestDkmSimulator::print_pivot_list (const std::map <std::vector <int>, int> &piv_map)
+{
+	const int      max_nbr_piv_disp = 10;
+	const int      nbr_piv          = int (piv_map.size ());
+	int            nbr_piv_total    = 0;
+	std::multimap <int, std::vector <int> > map_piv_inv;
+	for (auto &vt : piv_map)
+	{
+		nbr_piv_total += vt.second;
+		map_piv_inv.insert (std::make_pair (vt.second, vt.first));
+		while (map_piv_inv.size () > max_nbr_piv_disp)
+		{
+			map_piv_inv.erase (map_piv_inv.begin ());
+		}
+	}
+	printf (
+		"%d different pivot combinations (total: %d), %d first below:\n",
+		nbr_piv,
+		nbr_piv_total,
+		std::min (max_nbr_piv_disp, nbr_piv)
+	);
+	for (auto it = map_piv_inv.rbegin (); it != map_piv_inv.rend (); ++it)
+	{
+		const int      count = it->first;
+		printf ("%10d: { ", count);
+		const auto &   vec   = it->second;
+		const int      nbr_elt = int (vec.size ());
+		for (int pos = 0; pos < nbr_elt; ++pos)
+		{
+			printf ("%2d%s", vec [pos], (pos == nbr_elt - 1) ? " }\n" : ", ");
+		}
+	}
+}
+
+
 
 #endif // mfx_dsp_va_dkm_Simulator_STATS
 

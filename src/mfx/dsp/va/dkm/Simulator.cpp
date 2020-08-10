@@ -464,7 +464,7 @@ void	Simulator::print_all () const
 	print_matrix (_mat_j_f       , "_mat_j_f"       );
 	print_matrix (_mat_j_r       , "_mat_j_r"       );
 	print_matrix (_dia_id_n      , "_dia_id_n"      );
-	print_vector (_vec_r         , "_vec_r"         );
+	print_vector (_vec_r_neg     , "_vec_r_neg"     );
 	print_vector (_vec_delta_x   , "_vec_delta_x"   );
 	print_matrix (_mat_abc_tmp   , "_mat_abc_tmp"   );
 	print_matrix (_mat_def_tmp   , "_mat_def_tmp"   );
@@ -486,6 +486,7 @@ void	Simulator::reset_stats ()
 {
 	_st._hist_it.fill (0);
 	_st._nbr_spl_proc = 0;
+	_st._piv_map.clear ();
 }
 
 
@@ -598,7 +599,7 @@ void	Simulator::resize_and_clear_mat_vec ()
 	_mat_j_f.resize (_nbr_nl, _nbr_nl);
 	_mat_j_r.resizeLike (_mat_j_f);
 	_dia_id_n.resizeLike (_mat_j_f);
-	_vec_r.resizeLike (_vec_v_n);
+	_vec_r_neg.resizeLike (_vec_v_n);
 	_vec_delta_x.resizeLike (_vec_v_n);
 	_mat_abc_tmp.resize (_nbr_ese, _nbr_pot);
 	_mat_def_tmp.resize (_nbr_out, _nbr_pot);
@@ -608,6 +609,12 @@ void	Simulator::resize_and_clear_mat_vec ()
 	_mat_def_0_tmp.resizeLike (_mat_n_o);
 	_mat_ghk_0_tmp.resizeLike (_mat_n_n);
 	_mat_u_tmp.resize (_nbr_nodes, _nbr_pot);
+
+#if defined (mfx_dsp_va_dkm_Simulator_STATS) \
+ && defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
+	_vec_lu_r.resize (_nbr_nl);
+	_vec_lu_y.resize (_nbr_nl);
+#endif // mfx_dsp_va_dkm_Simulator_STATS_PIV
 
 	// Resets everything
 	_vec_x_cur.setZero ();
@@ -662,7 +669,7 @@ void	Simulator::resize_and_clear_mat_vec ()
 	_mat_j_f.setZero ();
 	_mat_j_r.setZero ();
 	_dia_id_n.setIdentity ();
-	_vec_r.setZero ();
+	_vec_r_neg.setZero ();
 	_vec_delta_x.setZero ();
 	_mat_abc_tmp.setZero ();
 	_mat_def_tmp.setZero ();
@@ -672,6 +679,11 @@ void	Simulator::resize_and_clear_mat_vec ()
 	_mat_def_0_tmp.setZero ();
 	_mat_ghk_0_tmp.setZero ();
 	_mat_u_tmp.setZero ();
+#if defined (mfx_dsp_va_dkm_Simulator_STATS) \
+ && defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
+	std::fill (_vec_lu_r.begin (), _vec_lu_r.end (), 0);
+	_vec_lu_y.setZero ();
+#endif // mfx_dsp_va_dkm_Simulator_STATS_PIV
 }
 
 
@@ -998,10 +1010,25 @@ void	Simulator::solve_nl ()
 	do
 	{
 		compute_nl_data (it_cnt);
+
+#if defined (mfx_dsp_va_dkm_Simulator_STATS) \
+ && defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
+		// Manual LU decomposition and traversal, to build statistics
+		decompose_lu (_mat_j_r, _vec_lu_r);
+		auto           ib = _st._piv_map.insert (std::make_pair (_vec_lu_r, 1));
+		if (! ib.second)
+		{
+			++ ib.first->second;
+		}
+		traverse_lu (_vec_delta_x, _vec_r_neg, _mat_j_r, _vec_lu_r, _vec_lu_y);
+#else
 		_decomp_delta_x.compute (_mat_j_r);
-		_vec_delta_x = _decomp_delta_x.solve (-_vec_r);
+		_vec_delta_x = _decomp_delta_x.solve (_vec_r_neg);
+#endif
 
 #if 1
+		// Difference limiting. Helps convergence when the signal input is high
+		// and the solution of the NL equations moves quickly.
 		res_chg_flag = false;
 		for (int k = 0; k < _vec_delta_x.rows (); ++k)
 		{
@@ -1021,7 +1048,7 @@ void	Simulator::solve_nl ()
 #endif
 
 		const Flt      dif_abs = _vec_delta_x.lpNorm <Eigen::Infinity> ();
-		const Flt      dif_rel = _vec_r.lpNorm <Eigen::Infinity> ();
+		const Flt      dif_rel = _vec_r_neg.lpNorm <Eigen::Infinity> ();
 
 		_vec_v_n += _vec_delta_x;
 		++ it_cnt;
@@ -1047,7 +1074,7 @@ void	Simulator::solve_nl ()
 
 
 
-// Fills _vec_i_n, _mat_j_f, _mat_j_r, _vec_r
+// Fills _vec_i_n, _mat_j_f, _mat_j_r, _vec_r_neg
 void	Simulator::compute_nl_data (int it_cnt)
 {
 	assert (it_cnt >= 0);
@@ -1067,9 +1094,9 @@ void	Simulator::compute_nl_data (int it_cnt)
 		compute_nl_data_bjt_npn (it_cnt, d_cnt);
 	}
 
-	_vec_r   = _vec_p - _mat_k * _vec_i_n - _vec_v_n;
+	_vec_r_neg =   _mat_k * _vec_i_n + _vec_v_n - _vec_p;
 #if 0
-	_mat_j_r =        - _mat_k * _mat_j_f - _dia_id_n;
+	_mat_j_r   = - _mat_k * _mat_j_f - _dia_id_n;
 #else
 	// Attempt to optimize the multiplication with the sparse _mat_j_f
 	const int      ofs = int (_diode_arr.size () + _diode_pair_arr.size ());
@@ -1196,6 +1223,107 @@ void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, Jun
 	// When v is negative, di/dv is very tiny. So we use the "line through the
 	// origin" method to avoid too small or null derivative.
 	di = (v < 0) ? i / v : e * junc._nvt_inv;
+}
+
+
+
+// In-place LU decomposition.
+// On output, lu contains both the L and U matrices, but L is without the
+// identity diagonal row. The rows are kept at their original location.
+// r is the reordering vector indicating the order of the matrix rows for up
+// and down traversal.
+void	Simulator::decompose_lu (TypeMatrixRm &lu, std::vector <int> &r)
+{
+	const int      n = lu.rows ();
+	assert (lu.cols () == n);
+	assert (int (r.size ()) == n);
+
+	// Sets up the reordering vector
+	for (int k = 0; k < n; ++ k)
+	{
+		r [k] = k;
+	}
+
+	for (int k = 0; k < n - 1; ++k)
+	{
+		// Finds a suitable pivot
+		int         idx = k;
+		double      mag = fabs (lu (r [k], k));
+		for (int j = k + 1; j < n; ++j)
+		{
+			const double mag_tst = fabs (lu (r [j], k));
+			if (mag_tst > mag)
+			{
+				mag = mag_tst;
+				idx = j;
+			}
+		}
+		assert (mag > 0);
+
+		// Swaps rows to put the pivot on k
+		std::swap (r [k], r [idx]);
+
+		// Subtracts the other rows
+		const int       r_k     = r [k];
+		const double    ukk_inv = 1. / lu (r_k, k);
+		for (int j = k + 1; j < n; ++j)
+		{
+			const int       r_j = r [j];
+
+			// L
+			const double    ljk = lu (r_j, k) * ukk_inv;
+			lu (r_j, k) = ljk;
+
+			// U
+			for (int d = k + 1; d < n; ++d)
+			{
+				lu (r_j, d) -= ljk * lu (r_k, d);
+			}
+		}
+	}
+}
+
+
+
+// Solves lu * x = b
+// x  = unknown vector
+// b  = right-hand side of the equation
+// lu = main matrix, in an LU-decomposed form (see decompose_lu)
+// r  = row-reordering indexes
+// y  = temporary vector
+void	Simulator::traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatrixRm &lu, const std::vector <int> &r, TypeVector &y)
+{
+	const int      n = int (b.rows ());
+	assert (x.rows () == n);
+	assert (lu.rows () == n);
+	assert (lu.cols () == n);
+	assert (int (r.size ()) == n);
+	assert (y.rows () == n);
+
+	// Down: L * y = b
+	for (int i = 0; i < n; ++i)
+	{
+		const int      r_i = r [i];
+		double         s   = b (r_i);
+		for (int j = 0; j < i; ++j)
+		{
+			s -= y (j) * lu (r_i, j);
+		}
+		y (i) = s;
+	}
+
+	// Up: U * x = y
+	for (int i = n - 1; i >= 0; --i)
+	{
+		const int      r_i = r [i];
+		double         s   = y (i);
+		for (int j = i + 1; j < n; ++j)
+		{
+			s -= x (j) * lu (r_i, j);
+		}
+		assert (lu (r_i, i) != 0);
+		x (i) = s / lu (r_i, i);
+	}
 }
 
 

@@ -61,6 +61,7 @@ private:
 	template <class S>
 	static void    print_stats (S &dkm);
 	static void    print_histo (const int hist_arr [], int nbr_bars, int nbr_spl);
+	static void    print_pivot_list (const std::map <std::vector <int>, int> &piv_map);
 #endif // mfx_dsp_va_dkm_Simulator_STATS
 
 
