@@ -300,10 +300,12 @@ void	CharDataBuilder::extract_main_data (InfoList &info_list, const Sheet &sheet
 	assert (&info_list != 0);
 	assert (&sheet != 0);
 
+	constexpr char32_t   range_not_started = 0xFFFFFFFFU;
+
 	info_list.clear ();
 	info_list.resize (CharData::MAX_NBR_CODE_POINTS, _not_assigned);
 
-	char32_t       range_beg = -1;	// -1 = range not started
+	char32_t       range_beg = range_not_started;
 
 	const long     nbr_lines = long (sheet.size ());
 	for (long line_cnt = 0; line_cnt < nbr_lines; ++line_cnt)
@@ -326,13 +328,13 @@ void	CharDataBuilder::extract_main_data (InfoList &info_list, const Sheet &sheet
 		}
 		else
 		{
-			if (range_beg >= 0)
+			if (range_beg == range_not_started)
 			{
-				assert (line [Field_NAME].find ("Last>") != std::string::npos);
+				range_beg = code_point;
 			}
 			else
 			{
-				range_beg = code_point;
+				assert (line [Field_NAME].find ("Last>") != std::string::npos);
 			}
 
 			CharDataInfo	info = _not_assigned;
@@ -345,7 +347,7 @@ void	CharDataBuilder::extract_main_data (InfoList &info_list, const Sheet &sheet
 			{
 				if (line [Field_CATEG] == _categ_list [categ_cnt]._name_0)
 				{
-					info._categ = _categ_list [categ_cnt]._value;
+					info._categ = uint8_t (_categ_list [categ_cnt]._value);
 					found_flag = true;
 				}
 			}
@@ -358,7 +360,7 @@ void	CharDataBuilder::extract_main_data (InfoList &info_list, const Sheet &sheet
 			{
 				if (line [Field_BIDI_CLASS] == _bidi_class_list [bidi_cnt]._name_0)
 				{
-					info._bidi_class = _bidi_class_list [bidi_cnt]._value;
+					info._bidi_class = uint8_t (_bidi_class_list [bidi_cnt]._value);
 					found_flag = true;
 				}
 			}
@@ -383,7 +385,7 @@ void	CharDataBuilder::extract_main_data (InfoList &info_list, const Sheet &sheet
 				info_list [pos] = info;
 			}
 
-			range_beg = -1;
+			range_beg = range_not_started;
 		}
 	}
 }
@@ -407,9 +409,9 @@ void	CharDataBuilder::extract_grapheme_break_data (InfoList &info_list, const Sh
 		detect_range (range_first, range_last, line [0].c_str ());
 
 		// Category
-		const std::string	name  = neutral::trim_spaces (line [1].c_str ());
+		const std::string	name    = neutral::trim_spaces (line [1].c_str ());
 		bool				found_flag = false;
-		GraphemeBreakProp	gbp;
+		GraphemeBreakProp	gbp     = GraphemeBreakProp_OTHER;
 		for (int categ_cnt = 0
 		;	_grapheme_break_prop_list [categ_cnt]._name_0 != 0 && ! found_flag
 		;	++ categ_cnt)
@@ -428,7 +430,7 @@ void	CharDataBuilder::extract_grapheme_break_data (InfoList &info_list, const Sh
 		;	++code_point)
 		{
 			CharDataInfo &	info = info_list [code_point];
-			info._grapheme_break_prop = gbp;
+			info._grapheme_break_prop = uint8_t (gbp);
 		}
 	}
 }
@@ -452,9 +454,9 @@ void	CharDataBuilder::extract_line_break_data (InfoList &info_list, const Sheet 
 		detect_range (range_first, range_last, line [0].c_str ());
 
 		// Category
-		const std::string	name  = neutral::trim_spaces (line [1].c_str ());
+		const std::string	name    = neutral::trim_spaces (line [1].c_str ());
 		bool				found_flag = false;
-		LineBreakProp	lbp;
+		LineBreakProp	lbp        = LineBreakProp_OP;
 		for (int categ_cnt = 0
 		;	_line_break_prop_list [categ_cnt]._name_0 != 0 && ! found_flag
 		;	++ categ_cnt)
@@ -473,7 +475,7 @@ void	CharDataBuilder::extract_line_break_data (InfoList &info_list, const Sheet 
 		;	++code_point)
 		{
 			CharDataInfo &	info = info_list [code_point];
-			info._line_break_prop = lbp;
+			info._line_break_prop = uint8_t (lbp);
 		}
 	}
 }
@@ -497,9 +499,9 @@ void	CharDataBuilder::extract_word_break_data (InfoList &info_list, const Sheet 
 		detect_range (range_first, range_last, line [0].c_str ());
 
 		// Category
-		const std::string	name  = neutral::trim_spaces (line [1].c_str ());
+		const std::string	name    = neutral::trim_spaces (line [1].c_str ());
 		bool				found_flag = false;
-		WordBreakProp	wbp;
+		WordBreakProp	wbp        = WordBreakProp_OTHER;
 		for (int categ_cnt = 0
 		;	_word_break_prop_list [categ_cnt]._name_0 != 0 && ! found_flag
 		;	++ categ_cnt)
@@ -518,7 +520,7 @@ void	CharDataBuilder::extract_word_break_data (InfoList &info_list, const Sheet 
 		;	++code_point)
 		{
 			CharDataInfo &	info = info_list [code_point];
-			info._word_break_prop = wbp;
+			info._word_break_prop = uint8_t (wbp);
 		}
 	}
 }

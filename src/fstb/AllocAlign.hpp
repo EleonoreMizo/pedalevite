@@ -71,7 +71,8 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 	);
 
 //#elif ! defined (__MINGW32__) && ! defined (__MINGW64__) && ! defined (__CYGWIN__)
-#elif defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L
+#elif (defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L) \
+	&& ! defined (STM32H750xx)
 
 	pointer        zone_ptr = 0;
 	void *         tmp_ptr;
@@ -131,7 +132,8 @@ void	AllocAlign <T, ALIG>::deallocate (pointer ptr, size_type n)
 		}
 
 //#elif ! defined (__MINGW32__) && ! defined (__MINGW64__) && ! defined (__CYGWIN__)
-#elif defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L
+#elif (defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 200112L) \
+	&& ! defined (STM32H750xx)
 
 		free (ptr);
 
