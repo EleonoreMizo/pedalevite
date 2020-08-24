@@ -602,13 +602,29 @@ ToolsSimd::VectF32	Approx::tan_mystran (ToolsSimd::VectF32 x)
 
 
 
-// Very high precision. Relative error is 1 % at 0.9993 * pi/2
-// PadeApproximant [Tan[x],{x,0,{5,5}}]
-fstb_CONSTEXPR14 float	Approx::tan_pade55 (float x)
+/*
+Very high precision. Relative error is 1 % at 0.9993 * pi/2
+PadeApproximant [Tan[x],{x,0,{5,5}}]
+With a = 15, maximum relative error: -1.35e-8 on range [-pi/4 ; pi/4]
+
+If we use the identity tan (x) = sign (x) / tan (pi/2 - |x|), we can
+make the function continuous (C1 at least) by using
+a = (-967680 + 241920 * pi + 26880 * pi^2 - 1680 * pi^3 + pi^5) / (4 * pi^4)
+  = 14.999975509385927280627711005255
+Maximum relative error becomes 4.081e-9 on the whole ]-pi/2 ; pi/2[ range.
+Actually the function behaves globally better on the whole range even when the
+identity is not used. The relative error is larger below +/-0.7, but this is
+not really a problem as the precision was unnecessary high near 0.
+*/
+
+template <typename T>
+fstb_CONSTEXPR14 T	Approx::tan_pade55 (T x)
 {
-	const float    x2  = x * x;
-	const float    num = (     x2 - 105) * x2 + 945;
-	const float    den = (15 * x2 - 420) * x2 + 945;
+//	constexpr T    a   = 15;
+	constexpr T    a   = T (14.999975509385927280627711005255);
+	const T        x2  = x * x;
+	const T        num = (    x2 - 105) * x2 + 945;
+	const T        den = (a * x2 - 420) * x2 + 945;
 
 	return x * num / den;
 }
@@ -618,7 +634,8 @@ ToolsSimd::VectF32	Approx::tan_pade55 (ToolsSimd::VectF32 x)
 	const auto     c0  = fstb::ToolsSimd::set1_f32 ( 945.f);
 	const auto     n2  = fstb::ToolsSimd::set1_f32 (-105.f);
 	const auto     d2  = fstb::ToolsSimd::set1_f32 (-420.f);
-	const auto     d4  = fstb::ToolsSimd::set1_f32 (  15.f);
+//	const auto     d4  = fstb::ToolsSimd::set1_f32 (  15.f);
+	const auto     d4  = fstb::ToolsSimd::set1_f32 (14.999975509385927280627711005255f);
 
 	const auto     x2  = x * x;
 	const auto     num = (     x2 + n2) * x2 + c0;

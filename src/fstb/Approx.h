@@ -99,8 +99,10 @@ public:
 	               tan_mystran (float x);
 	static inline ToolsSimd::VectF32
 	               tan_mystran (ToolsSimd::VectF32 x);
-	static inline fstb_CONSTEXPR14 float
-	               tan_pade55 (float x);
+
+	template <typename T>
+	static inline fstb_CONSTEXPR14 T
+	               tan_pade55 (T x);
 	static inline ToolsSimd::VectF32
 	               tan_pade55 (ToolsSimd::VectF32 x);
 
