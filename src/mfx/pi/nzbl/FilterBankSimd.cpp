@@ -342,7 +342,7 @@ void	FilterBankSimd::process_band (int band_idx, int nbr_spl)
 			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
 			const auto     g0 = fstb::ToolsSimd::rcp_approx (et) * lvl;
 
-			// gain = (1 - max ((thr * g0 - 1) / (g0 - 1), 0)) ^ 4
+			// gain = (1 - max ((thr * g0 - 1) / (_rel_thr - 1), 0)) ^ 4
 			auto           gt = (thr * g0 - one) * mul;
 			gt = one - fstb::ToolsSimd::max_f32 (gt, zero);
 			gt = gt * gt;

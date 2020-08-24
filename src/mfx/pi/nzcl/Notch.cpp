@@ -186,7 +186,7 @@ Not sure if the benefit is interesting, especially for small buffers.
 			const auto     et = fstb::ToolsSimd::max_f32 (e, lvl);
 			const auto     g0 = fstb::ToolsSimd::rcp_approx (et) * lvl;
 
-			// gain = max ((thr * g0 - 1) / (g0 - 1), 0)
+			// gain = max ((thr * g0 - 1) / (_rel_thr - 1), 0)
 			auto           gt = (thr * g0 - one) * mul;
 			gt = fstb::ToolsSimd::max_f32 (gt, zero);
 

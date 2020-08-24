@@ -255,6 +255,13 @@ void	FilterBank::clear_buffers ()
 
 
 
+/*
+Other possible formula for the gain shape:
+x = (limit (env / thr, 1, _thr_hi_rel) - 1) / (_thr_hi_rel - 1)
+g = 0.5 * ((1 - (1 - x) ^ 8) ^ 2 + (1 - (1 - x) ^ 3) ^ 2)
+No div, but 1 / thr must be precalculated too
+*/
+
 void	FilterBank::process_band (int band_idx, int nbr_spl, int sub_block_len)
 {
 	assert (band_idx >= 0);
@@ -293,7 +300,7 @@ void	FilterBank::process_band (int band_idx, int nbr_spl, int sub_block_len)
 			// g0 = thr / max (env, thr)
 			const float    g0 = thr / std::max (env, thr);
 
-			// gain = (1 - max ((_thr_hi_rel * g0 - 1) / (g0 - 1), 0)) ^ 4
+			// gain = (1 - max ((_thr_hi_rel * g0 - 1) / (_thr_hi_rel - 1), 0)) ^ 4
 			float          g  = (_thr_hi_rel * g0 - 1) * _mul_thr_hi;
 			g = fstb::ipowpc <4> (1 - std::max (g, 0.f));
 
