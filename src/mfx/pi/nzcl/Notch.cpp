@@ -31,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/mix/Align.h"
 #include "mfx/pi/nzcl/Notch.h"
 
+#include <algorithm>
+
 #include <cassert>
 #include <cmath>
 #include <cstring>
@@ -252,9 +254,14 @@ void	Notch::update_filter ()
 	const int      mult  = 16;
 	const float    delta = sqrt (4 * _q * _q + 1);
 	const float    f1    = _freq * (delta - 1) * bw_rel * 0.5f; // Lowest freq at -3 dB
-	float          t     = float (mult / (2 * fstb::PI)) / f1;
-	t = std::max (t, 0.005f);
-	_env.set_times (t, t);
+	const float    t     = float (mult / (2 * fstb::PI)) / f1;
+	// Longer release helps preventing amplitude modulation on periodic
+	// noise bursts
+	const float    min_at = 0.005f;
+	const float    min_rt = 0.050f;
+	const float    at = std::max (t, min_at);
+	const float    rt = std::max (t, min_rt);
+	_env.set_times (at, rt);
 
 	_flt_dirty_flag = false;
 }
