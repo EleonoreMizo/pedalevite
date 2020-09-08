@@ -33,6 +33,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "hiir/def.h"
+#include "hiir/StageDataFpu.h"
 
 #include <array>
 
@@ -58,16 +59,6 @@ public:
 
 	enum {         NBR_COEFS	= NC	};
 
-	               Upsampler2xFpuTpl ();
-	               Upsampler2xFpuTpl (const Upsampler2xFpuTpl <NC, DT> &other) = default;
-	               Upsampler2xFpuTpl (Upsampler2xFpuTpl <NC, DT> &&other)      = default;
-	               ~Upsampler2xFpuTpl ()                                = default;
-
-	Upsampler2xFpuTpl <NC, DT> &
-	               operator = (const Upsampler2xFpuTpl <NC, DT> &other) = default;
-	Upsampler2xFpuTpl <NC, DT> &
-	               operator = (Upsampler2xFpuTpl <NC, DT> &&other)      = default;
-
 	void           set_coefs (const double coef_arr [NBR_COEFS]);
 	hiir_FORCEINLINE void
 	               process_sample (DataType &out_0, DataType &out_1, DataType input);
@@ -86,11 +77,10 @@ protected:
 
 private:
 
-	typedef std::array <DataType, NBR_COEFS> HyperGluar;
+	// Stages 0 and 1 contain only input memories
+	typedef std::array <StageDataFpu <DataType>, NBR_COEFS + 2> Filter;
 
-	HyperGluar     _coef;
-	HyperGluar     _x;
-	HyperGluar     _y;
+	Filter         _filter;
 
 
 

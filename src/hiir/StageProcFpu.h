@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "hiir/def.h"
+#include "hiir/StageDataFpu.h"
 
 
 
@@ -47,6 +48,7 @@ namespace hiir
 template <int REMAINING, typename DT>
 class StageProcFpu
 {
+
 	static_assert ((REMAINING >= 0), "REMAINING must be >= 0");
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -54,9 +56,9 @@ class StageProcFpu
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
 
 
 
@@ -89,36 +91,6 @@ private:
 
 }; // class StageProcFpu
 
-
-
-template <typename DT>
-class StageProcFpu <1, DT>
-{
-
-public:
-
-	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
-	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
-
-private:
-
-	               StageProcFpu ()                                  = delete;
-	               StageProcFpu (const StageProcFpu <1, DT> &other) = delete;
-	               StageProcFpu (StageProcFpu <1, DT> &&other)      = delete;
-	               ~StageProcFpu ()                                 = delete;
-	StageProcFpu <1, DT> &
-	               operator = (const StageProcFpu <1, DT> &other)   = delete;
-	StageProcFpu <1, DT> &
-	               operator = (StageProcFpu <1, DT> &&other)        = delete;
-	bool           operator == (const StageProcFpu <1, DT> &other)  = delete;
-	bool           operator != (const StageProcFpu <1, DT> &other)  = delete;
-
-}; // class StageProcFpu <1, DT>
-
-
-
 template <typename DT>
 class StageProcFpu <0, DT>
 {
@@ -126,9 +98,9 @@ class StageProcFpu <0, DT>
 public:
 
 	static hiir_FORCEINLINE void
-	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
 	static hiir_FORCEINLINE void
-	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, const DT coef [], DT x [], DT y []);
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
 
 private:
 
@@ -143,7 +115,35 @@ private:
 	bool           operator == (const StageProcFpu <0, DT> &other)  = delete;
 	bool           operator != (const StageProcFpu <0, DT> &other)  = delete;
 
-}; // class StageProcFpu <1, DT>
+
+}; // class StageProcFpu
+
+template <typename DT>
+class StageProcFpu <1, DT>
+{
+
+public:
+
+	static hiir_FORCEINLINE void
+	               process_sample_pos (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
+	static hiir_FORCEINLINE void
+	               process_sample_neg (const int nbr_coefs, DT &spl_0, DT &spl_1, StageDataFpu <DT> *stage_arr);
+
+private:
+
+	               StageProcFpu ()                                  = delete;
+	               StageProcFpu (const StageProcFpu <1, DT> &other) = delete;
+	               StageProcFpu (StageProcFpu <1, DT> &&other)      = delete;
+	               ~StageProcFpu ()                                 = delete;
+	StageProcFpu <1, DT> &
+	               operator = (const StageProcFpu <1, DT> &other)   = delete;
+	StageProcFpu <1, DT> &
+	               operator = (StageProcFpu <1, DT> &&other)        = delete;
+	bool           operator == (const StageProcFpu <1, DT> &other)  = delete;
+	bool           operator != (const StageProcFpu <1, DT> &other)  = delete;
+
+
+}; // class StageProcFpu
 
 
 

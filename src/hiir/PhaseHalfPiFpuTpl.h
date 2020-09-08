@@ -34,6 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "hiir/def.h"
+#include "hiir/StageDataFpu.h"
 
 #include <array>
 
@@ -59,16 +60,6 @@ public:
 
 	enum {         NBR_COEFS = NC };
 
-	               PhaseHalfPiFpuTpl ();
-	               PhaseHalfPiFpuTpl (const PhaseHalfPiFpuTpl <NC, DT> &other) = default;
-	               PhaseHalfPiFpuTpl (PhaseHalfPiFpuTpl <NC, DT> &&other)      = default;
-	               ~PhaseHalfPiFpuTpl ()                                = default;
-
-	PhaseHalfPiFpuTpl <NC, DT> &
-	               operator = (const PhaseHalfPiFpuTpl <NC, DT> &other) = default;
-	PhaseHalfPiFpuTpl <NC, DT> &
-	               operator = (PhaseHalfPiFpuTpl <NC, DT> &&other)      = default;
-
 	void           set_coefs (const double coef_arr []);
 
 	hiir_FORCEINLINE void
@@ -89,21 +80,14 @@ protected:
 
 private:
 
-	enum {         NBR_PHASES = 2 };
+	static const int  _nbr_phases = 2;
 
-	typedef std::array <DataType, NBR_COEFS> HyperGluar;
+	// Stages 0 and 1 contain only input memories
+	typedef std::array <StageDataFpu <DataType>, NBR_COEFS + 2> Filter;
 
-	class Memory
-	{
-	public:
-		HyperGluar     _x;
-		HyperGluar     _y;
-	};
+	typedef	std::array <Filter, _nbr_phases>	FilterBiPhase;
 
-	typedef	std::array <Memory, NBR_PHASES>	MemoryBiPhase;
-
-	HyperGluar     _coef;
-	MemoryBiPhase  _mem;
+	FilterBiPhase  _bifilter;
 	DataType       _prev;
 	int            _phase;			// 0 or 1
 

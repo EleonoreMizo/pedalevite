@@ -621,6 +621,7 @@
     <ClInclude Include="..\..\..\src\hiir\StageDataF64Avx.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataF64Avx512.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataF64Sse2.h" />
+    <ClInclude Include="..\..\..\src\hiir\StageDataFpu.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataNeonV2.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataNeonV4.h" />
     <ClInclude Include="..\..\..\src\hiir\StageDataSse.h" />

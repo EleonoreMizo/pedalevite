@@ -192,6 +192,7 @@ commonsrc = \
         ../../src/hiir/PhaseHalfPiFpuTpl.hpp \
         ../../src/hiir/PolyphaseIir2Designer.cpp \
         ../../src/hiir/PolyphaseIir2Designer.h \
+        ../../src/hiir/StageDataFpu.h \
         ../../src/hiir/StageProcFpu.h \
         ../../src/hiir/StageProcFpu.hpp \
         ../../src/hiir/Upsampler2xFpu.h \

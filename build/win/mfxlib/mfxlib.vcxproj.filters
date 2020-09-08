@@ -4682,6 +4682,9 @@
     <ClInclude Include="..\..\..\src\fstb\RndXoroshiro128p.hpp">
       <Filter>fstb</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\hiir\StageDataFpu.h">
+      <Filter>hiir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

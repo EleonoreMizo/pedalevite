@@ -44,28 +44,6 @@ namespace hiir
 
 /*
 ==============================================================================
-Name: ctor
-Throws: Nothing
-==============================================================================
-*/
-
-template <int NC, typename DT>
-Downsampler2xFpuTpl <NC, DT>::Downsampler2xFpuTpl ()
-:	_coef ()
-,	_x ()
-,	_y ()
-{
-	for (int i = 0; i < NBR_COEFS; ++i)
-	{
-		_coef [i] = 0;
-	}
-	clear_buffers ();
-}
-
-
-
-/*
-==============================================================================
 Name: set_coefs
 Description:
 	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
@@ -85,7 +63,7 @@ void	Downsampler2xFpuTpl <NC, DT>::set_coefs (const double coef_arr [])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_coef [i] = DataType (coef_arr [i]);
+		_filter [i + 2]._coef = DataType (coef_arr [i]);
 	}
 }
 
@@ -111,17 +89,8 @@ typename Downsampler2xFpuTpl <NC, DT>::DataType	Downsampler2xFpuTpl <NC, DT>::pr
 	DataType       spl_0 (in_ptr [1]);
 	DataType       spl_1 (in_ptr [0]);
 
-	#if defined (_MSC_VER)
-		#pragma inline_depth (255)
-	#endif   // _MSC_VER
-
 	StageProcFpu <NBR_COEFS, DataType>::process_sample_pos (
-		NBR_COEFS,
-		spl_0,
-		spl_1,
-		&_coef [0],
-		&_x [0],
-		&_y [0]
+		NBR_COEFS, spl_0, spl_1, _filter.data ()
 	);
 
 	return 0.5f * (spl_0 + spl_1);
@@ -191,17 +160,8 @@ void	Downsampler2xFpuTpl <NC, DT>::process_sample_split (DataType &low, DataType
 	DataType       spl_0 = in_ptr [1];
 	DataType       spl_1 = in_ptr [0];
 
-	#if defined (_MSC_VER)
-		#pragma inline_depth (255)
-	#endif	// _MSC_VER
-
 	StageProcFpu <NBR_COEFS, DataType>::process_sample_pos (
-		NBR_COEFS,
-		spl_0,
-		spl_1,
-		&_coef [0],
-		&_x [0],
-		&_y [0]
+		NBR_COEFS, spl_0, spl_1, _filter.data ()
 	);
 
 	low  = (spl_0 + spl_1) * 0.5f;
@@ -273,10 +233,9 @@ Throws: Nothing
 template <int NC, typename DT>
 void	Downsampler2xFpuTpl <NC, DT>::clear_buffers ()
 {
-	for (int i = 0; i < NBR_COEFS; ++i)
+	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_x [i] = 0;
-		_y [i] = 0;
+		_filter [i]._mem = 0;
 	}
 }
 

@@ -42,29 +42,6 @@ namespace hiir
 
 /*
 ==============================================================================
-Name: ctor
-Throws: Nothing
-==============================================================================
-*/
-
-template <int NC, typename DT>
-PhaseHalfPiFpuTpl <NC, DT>::PhaseHalfPiFpuTpl ()
-:	_coef ()
-,	_mem ()
-,	_prev (0)
-,	_phase (0)
-{
-	for (int i = 0; i < NBR_COEFS; ++i)
-	{
-		_coef [i] = 0;
-	}
-	clear_buffers ();
-}
-
-
-
-/*
-==============================================================================
 Name: set_coefs
 Description:
 	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
@@ -84,7 +61,9 @@ void	PhaseHalfPiFpuTpl <NC, DT>::set_coefs (const double coef_arr [])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_coef [i] = DataType (coef_arr [i]);
+		const DataType c = DataType (coef_arr [i]);
+		_bifilter [0] [i + 2]._coef = c;
+		_bifilter [1] [i + 2]._coef = c;
 	}
 }
 
@@ -110,17 +89,8 @@ void	PhaseHalfPiFpuTpl <NC, DT>::process_sample (DataType &out_0, DataType &out_
 	out_0 = input;   // Even coefs
 	out_1 = _prev;   // Odd coefs
 
-	#if defined (_MSC_VER)
-		#pragma inline_depth (255)
-	#endif   // _MSC_VER
-
 	StageProcFpu <NBR_COEFS, DataType>::process_sample_neg (
-		NBR_COEFS,
-		out_0,
-		out_1,
-		&_coef [0],
-		&_mem [_phase]._x [0],
-		&_mem [_phase]._y [0]
+		NBR_COEFS, out_0, out_1, _bifilter [_phase].data ()
 	);
 
 	_prev  = input;
@@ -164,7 +134,7 @@ void	PhaseHalfPiFpuTpl <NC, DT>::process_block (DataType out_0_ptr [], DataType 
 		++ pos;
 	}
 
-	const long     end = ((nbr_spl - pos) & -NBR_PHASES) + pos;
+	const long     end = ((nbr_spl - pos) & -_nbr_phases) + pos;
 	while (pos < end)
 	{
 		const DataType input_0 = in_ptr [pos];
@@ -174,9 +144,7 @@ void	PhaseHalfPiFpuTpl <NC, DT>::process_block (DataType out_0_ptr [], DataType 
 			NBR_COEFS,
 			out_0_ptr [pos],
 			out_1_ptr [pos],
-			&_coef [0],
-			&_mem [0]._x [0],
-			&_mem [0]._y [0]
+			_bifilter [0].data ()
 		);
 
 		const DataType input_1 = in_ptr [pos + 1];
@@ -186,9 +154,7 @@ void	PhaseHalfPiFpuTpl <NC, DT>::process_block (DataType out_0_ptr [], DataType 
 			NBR_COEFS,
 			out_0_ptr [pos + 1],
 			out_1_ptr [pos + 1],
-			&_coef [0],
-			&_mem [1]._x [0],
-			&_mem [1]._y [0]
+			_bifilter [1].data ()
 		);
 		_prev = input_1;
 
@@ -217,13 +183,10 @@ Throws: Nothing
 template <int NC, typename DT>
 void	PhaseHalfPiFpuTpl <NC, DT>::clear_buffers ()
 {
-	for (int phase = 0; phase < NBR_PHASES; ++phase)
+	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		for (int i = 0; i < NBR_COEFS; ++i)
-		{
-			_mem [phase]._x [i] = 0;
-			_mem [phase]._y [i] = 0;
-		}
+		_bifilter [0] [i]._mem = 0;
+		_bifilter [1] [i]._mem = 0;
 	}
 
 	_prev  = 0;

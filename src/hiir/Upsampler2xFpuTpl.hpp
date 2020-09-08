@@ -44,28 +44,6 @@ namespace hiir
 
 /*
 ==============================================================================
-Name: ctor
-Throws: Nothing
-==============================================================================
-*/
-
-template <int NC, typename DT>
-Upsampler2xFpuTpl <NC, DT>::Upsampler2xFpuTpl ()
-:	_coef ()
-,	_x ()
-,	_y ()
-{
-	for (int i = 0; i < NBR_COEFS; ++i)
-	{
-		_coef [i] = 0;
-	}
-	clear_buffers ();
-}
-
-
-
-/*
-==============================================================================
 Name: set_coefs
 Description:
 	Sets filter coefficients. Generate them with the PolyphaseIir2Designer
@@ -85,7 +63,7 @@ void	Upsampler2xFpuTpl <NC, DT>::set_coefs (const double coef_arr [NBR_COEFS])
 
 	for (int i = 0; i < NBR_COEFS; ++i)
 	{
-		_coef [i] = DataType (coef_arr [i]);
+		_filter [i + 2]._coef = DataType (coef_arr [i]);
 	}
 }
 
@@ -114,9 +92,7 @@ void	Upsampler2xFpuTpl <NC, DT>::process_sample (DataType &out_0, DataType &out_
 		NBR_COEFS,
 		even,
 		odd,
-		&_coef [0],
-		&_x [0],
-		&_y [0]
+		_filter.data ()
 	);
 	out_0 = even;
 	out_1 = odd;
@@ -175,10 +151,9 @@ Throws: Nothing
 template <int NC, typename DT>
 void	Upsampler2xFpuTpl <NC, DT>::clear_buffers ()
 {
-	for (int i = 0; i < NBR_COEFS; ++i)
+	for (int i = 0; i < NBR_COEFS + 2; ++i)
 	{
-		_x [i] = 0;
-		_y [i] = 0;
+		_filter [i]._mem = 0;
 	}
 }
 
