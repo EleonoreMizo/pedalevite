@@ -43,6 +43,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ToolsParam.h"
 #include "mfx/View.h"
 
+#include <memory>
+
 #include <cassert>
 
 
@@ -1236,8 +1238,8 @@ void	Tools::create_bank_list (TxtArray &bank_list, ContainerInterface &menu, Pag
 	const int      bank_index_cur = view.get_bank_index ();
 	for (int bank_index = 0; bank_index < Cst::_nbr_banks; ++bank_index)
 	{
-		const int      node_id = bank_index;
-		TxtSPtr        name_sptr (new NText (node_id));
+		const int      node_id   = bank_index;
+		TxtSPtr        name_sptr = std::make_shared <NText> (node_id);
 
 		char           txt_0 [255+1];
 		const doc::Bank & bank = setup._bank_arr [bank_index];
@@ -1281,8 +1283,8 @@ void	Tools::create_prog_list (TxtArray &prog_list, ContainerInterface &menu, Pag
 
 	for (int prog_index = 0; prog_index < Cst::_nbr_presets_per_bank; ++prog_index)
 	{
-		const int      node_id = prog_index;
-		TxtSPtr        name_sptr (new NText (node_id));
+		const int      node_id   = prog_index;
+		TxtSPtr        name_sptr = std::make_shared <NText> (node_id);
 
 		char           txt_0 [255+1];
 		const doc::Preset &  preset = bank._preset_arr [prog_index];
