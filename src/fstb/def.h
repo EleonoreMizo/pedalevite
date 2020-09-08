@@ -225,8 +225,14 @@ constexpr double LOG2_E  = 1.0  / LN2;
 constexpr double LOG2_10 = LN10 / LN2;
 constexpr double EXP1    = 2.7182818284590452353602874713527;
 constexpr double SQRT2   = 1.4142135623730950488016887242097;
-constexpr double TWOP32  = 256.0 * 256 * 256 * 256;
-constexpr double TWOPM32 = 1.0 / TWOP32;
+
+// Exact representation in 32-bit float
+constexpr float  TWOP16  = 65536.f;
+constexpr float  TWOP32  = TWOP16 * TWOP16;
+constexpr float  TWOP64  = TWOP32 * TWOP32;
+constexpr float  TWOPM16 = 1.f / TWOP16;
+constexpr float  TWOPM32 = 1.f / TWOP32;
+constexpr float  TWOPM64 = 1.f / TWOP64;
 
 constexpr float  ANTI_DENORMAL_F32     = 1e-20f;
 constexpr double ANTI_DENORMAL_F64     = 1e-290;
