@@ -170,6 +170,8 @@ commonsrc = \
         ../../src/fstb/fnc.hpp \
         ../../src/fstb/Hash.h \
         ../../src/fstb/Hash.hpp \
+        ../../src/fstb/RndXoroshiro128p.h \
+        ../../src/fstb/RndXoroshiro128p.hpp \
         ../../src/fstb/Scale.h \
         ../../src/fstb/Scale.hpp \
         ../../src/fstb/SingleObj.h \
@@ -1629,6 +1631,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestRcClipGeneric.h \
         ../../src/test/TestRemez.cpp \
         ../../src/test/TestRemez.h \
+        ../../src/test/TestRndXoroshiro128p.cpp \
+        ../../src/test/TestRndXoroshiro128p.h \
         ../../src/test/TestSampleMipMapper.cpp \
         ../../src/test/TestSampleMipMapper.h \
         ../../src/test/TestMnaSimulator.cpp \

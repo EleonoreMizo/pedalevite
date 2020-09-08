@@ -483,6 +483,8 @@
     <ClInclude Include="..\..\..\src\fstb\msg\MsgRet.hpp" />
     <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.h" />
     <ClInclude Include="..\..\..\src\fstb\msg\QueueRetMgr.hpp" />
+    <ClInclude Include="..\..\..\src\fstb\RndXoroshiro128p.h" />
+    <ClInclude Include="..\..\..\src\fstb\RndXoroshiro128p.hpp" />
     <ClInclude Include="..\..\..\src\fstb\Scale.h" />
     <ClInclude Include="..\..\..\src\fstb\Scale.hpp" />
     <ClInclude Include="..\..\..\src\fstb\SingleObj.h" />
