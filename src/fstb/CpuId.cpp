@@ -115,7 +115,7 @@ void	CpuId::call_cpuid (unsigned int fnc_nbr, unsigned int subfnc_nbr, unsigned 
 	__cpuid (fnc_nbr, v_eax, v_ebx, v_ecx, v_edx);
 	#endif
 
-#elif (_MSC_VER)
+#elif defined (_MSC_VER)
 
 	int            cpu_info [4];
 	__cpuidex (cpu_info, fnc_nbr, subfnc_nbr);
