@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <tuple>
+
 #include <cassert>
 
 
@@ -103,23 +105,17 @@ bool  operator < (const CnxEnd &lhs, const CnxEnd &rhs)
 	assert (lhs.is_valid ());
 	assert (rhs.is_valid ());
 
-	if (lhs.get_type () < rhs.get_type ())
-	{
-		return true;
-	}
-	else if (lhs.get_type () == rhs.get_type ())
-	{
-		if (lhs.get_slot_id () < rhs.get_slot_id ())
-		{
-			return true;
-		}
-		else if (lhs.get_slot_id () == rhs.get_slot_id ())
-		{
-			return (lhs.get_pin () < rhs.get_pin ());
-		}
-	}
+	const CnxEnd::Type   l_type = lhs.get_type ();
+	const CnxEnd::Type   r_type = rhs.get_type ();
+	const int            l_slid = lhs.get_slot_id ();
+	const int            r_slid = rhs.get_slot_id ();
+	const int            l_pin  = lhs.get_pin ();
+	const int            r_pin  = rhs.get_pin ();
 
-	return false;
+	return (
+		  std::tie (l_type, l_slid, l_pin)
+		< std::tie (r_type, r_slid, r_pin)
+	);
 }
 
 

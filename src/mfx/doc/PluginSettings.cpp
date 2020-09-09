@@ -30,6 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerWInterface.h"
 
 #include <algorithm>
+#include <tuple>
 
 #include <cassert>
 
@@ -390,21 +391,18 @@ bool	operator < (const PluginSettings &lhs, const PluginSettings &rhs)
 		lhs._force_mono_flag + (lhs._force_reset_flag << 1);
 	const int      flags_r =
 		rhs._force_mono_flag + (rhs._force_reset_flag << 1);
-	if (flags_l < flags_r) { return true; }
-	else if (flags_l == flags_r)
-	{
-		if (lhs._param_list < rhs._param_list) { return true; }
-		else if (lhs._param_list == rhs._param_list)
-		{
-			if (lhs._map_param_ctrl < rhs._map_param_ctrl) { return true; }
-			else if (lhs._map_param_ctrl == rhs._map_param_ctrl)
-			{
-				return (lhs._map_param_pres < rhs._map_param_pres);
-			}
-		}
-	}
 
-	return false;
+	return (std::tie (
+		flags_l,
+		lhs._param_list,
+		lhs._map_param_ctrl,
+		lhs._map_param_pres
+	) < std::tie (
+		flags_r,
+		rhs._param_list,
+		rhs._map_param_ctrl,
+		rhs._map_param_pres
+	));
 }
 
 

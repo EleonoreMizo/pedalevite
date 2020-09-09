@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <tuple>
+
 
 
 namespace mfx
@@ -37,22 +39,10 @@ namespace cmd
 
 bool	Cnx::operator < (const Cnx &other) const
 {
-	bool           inf_flag = false;
-
-	if (_src < other._src)
-	{
-		inf_flag = true;
-	}
-	else if (_src == other._src)
-	{
-		if (_dst < other._dst)
-		{
-			inf_flag = true;
-		}
-	}
-
-
-	return inf_flag;
+	return (
+		  std::tie (      _src,       _dst)
+		< std::tie (other._src, other._dst)
+	);
 }
 
 

@@ -22,6 +22,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <tuple>
+
 
 
 namespace mfx
@@ -64,8 +66,8 @@ inline bool	ParamCoord::is_valid () const
 inline bool	operator < (const ParamCoord &lhs, const ParamCoord &rhs)
 {
 	return (
-		    lhs._plugin_id <  rhs._plugin_id
-		|| (lhs._plugin_id == rhs._plugin_id && lhs._param_index < rhs._param_index)
+		  std::tie (lhs._plugin_id, lhs._param_index)
+		< std::tie (rhs._plugin_id, rhs._param_index)
 	);
 }
 

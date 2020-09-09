@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <tuple>
+
 #include <cassert>
 
 
@@ -172,16 +174,10 @@ bool	operator < (const Cnx &lhs, const Cnx &rhs)
 	assert (lhs.is_valid ());
 	assert (rhs.is_valid ());
 
-	if (lhs.use_src () < rhs.use_src ())
-	{
-		return true;
-	}
-	else if (lhs.use_src () == rhs.use_src ())
-	{
-		return (lhs.use_dst () < rhs.use_dst ());
-	}
-
-	return false;
+	return (
+		  std::tie (lhs.use_src (), lhs.use_dst ())
+		< std::tie (rhs.use_src (), rhs.use_dst ())
+	);
 }
 
 

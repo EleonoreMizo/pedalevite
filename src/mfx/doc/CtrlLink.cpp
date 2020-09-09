@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
+#include <tuple>
+
 #include <cassert>
 
 
@@ -199,53 +201,33 @@ void	CtrlLink::ser_read (SerRInterface &ser)
 
 bool	operator < (const CtrlLink &lhs, const CtrlLink &rhs)
 {
-	if (lhs._source < rhs._source) { return true; }
-	else if (lhs._source == rhs._source)
-	{
-		if (lhs._step < rhs._step)	{ return true; }
-		else if (lhs._step == rhs._step)
-		{
-			if (lhs._curve < rhs._curve) { return true; }
-			else if (lhs._curve == rhs._curve)
-			{
-				if (lhs._base < rhs._base ) { return true; }
-				else if (lhs._base == rhs._base )
-				{
-					if (lhs._amp < rhs._amp ) { return true; }
-					else if (lhs._amp == rhs._amp )
-					{
-						if (lhs._u2b_flag < rhs._u2b_flag ) { return true; }
-						else if (lhs._u2b_flag == rhs._u2b_flag )
-						{
-							if (lhs._clip_flag < rhs._clip_flag ) { return true; }
-							else if (lhs._clip_flag == rhs._clip_flag )
-							{
-	if (lhs._clip_src_beg < rhs._clip_src_beg ) { return true; }
-	else if (lhs._clip_src_beg == rhs._clip_src_beg )
-	{
-		if (lhs._clip_src_end < rhs._clip_src_end ) { return true; }
-		else if (lhs._clip_src_end == rhs._clip_src_end )
-		{
-			if (lhs._clip_dst_beg < rhs._clip_dst_beg ) { return true; }
-			else if (lhs._clip_dst_beg == rhs._clip_dst_beg )
-			{
-				if (lhs._clip_dst_end < rhs._clip_dst_end ) { return true; }
-				else if (lhs._clip_dst_end == rhs._clip_dst_end )
-				{
-					return (lhs._notch_list < rhs._notch_list);
-				}
-			}
-		}
-	}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return false;
+	return (std::tie (
+		lhs._source,
+		lhs._step,
+		lhs._curve,
+		lhs._base,
+		lhs._amp,
+		lhs._u2b_flag,
+		lhs._clip_flag,
+		lhs._clip_src_beg,
+		lhs._clip_src_end,
+		lhs._clip_dst_beg,
+		lhs._clip_dst_end,
+		lhs._notch_list
+	) < std::tie (
+		rhs._source,
+		rhs._step,
+		rhs._curve,
+		rhs._base,
+		rhs._amp,
+		rhs._u2b_flag,
+		rhs._clip_flag,
+		rhs._clip_src_beg,
+		rhs._clip_src_end,
+		rhs._clip_dst_beg,
+		rhs._clip_dst_end,
+		rhs._notch_list
+	));
 }
 
 

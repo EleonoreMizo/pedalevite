@@ -24,6 +24,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "mfx/ui/UserInputType.h"
 
+#include <tuple>
+
 #include <cassert>
 
 
@@ -104,8 +106,10 @@ bool	ControlSource::operator != (const ControlSource &other) const
 
 bool	operator < (const ControlSource &lhs, const ControlSource &rhs)
 {
-	return (    lhs._type <  rhs._type
-	        || (lhs._type == rhs._type && lhs._index < rhs._index));
+	return (
+		  std::tie (lhs._type, lhs._index)
+		< std::tie (rhs._type, rhs._index)
+	);
 }
 
 

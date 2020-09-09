@@ -28,6 +28,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerWInterface.h"
 #include "mfx/doc/SignalPort.h"
 
+#include <tuple>
+
 #include <cassert>
 
 
@@ -59,16 +61,10 @@ bool	SignalPort::operator != (const SignalPort &other) const
 
 bool	SignalPort::operator < (const SignalPort &other) const
 {
-	if (_slot_id < other._slot_id)
-	{
-		return true;
-	}
-	else if (_slot_id == other._slot_id)
-	{
-		return _sig_index < other._sig_index;
-	}
-
-	return false;
+	return (
+		  std::tie (      _slot_id,       _sig_index)
+		< std::tie (other._slot_id, other._sig_index)
+	);
 }
 
 

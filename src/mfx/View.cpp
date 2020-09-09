@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/View.h"
 
 #include <algorithm>
+#include <tuple>
 
 #include <cassert>
 
@@ -887,23 +888,10 @@ void	View::collect_labels (std::set <std::string> &labels, const doc::FxId &fx_i
 
 bool	View::OverrideLoc::operator < (const OverrideLoc &rhs) const
 {
-	if (_slot_id < rhs._slot_id)
-	{
-		return true;
-	}
-	else if (_slot_id == rhs._slot_id)
-	{
-		if (_type < rhs._type)
-		{
-			return true;
-		}
-		else if (_type == rhs._type)
-		{
-			return (_index < rhs._index);
-		}
-	}
-
-	return false;
+	return (
+		  std::tie (    _slot_id,     _type,     _index)
+		< std::tie (rhs._slot_id, rhs._type, rhs._index)
+	);
 }
 
 

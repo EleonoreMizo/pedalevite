@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <tuple>
+
 
 
 namespace mfx
@@ -37,28 +39,10 @@ namespace cmd
 
 bool	CnxEnd::operator < (const CnxEnd &other) const
 {
-	bool           inf_flag = false;
-
-	if (_slot_type < other._slot_type)
-	{
-		inf_flag = true;
-	}
-	else if (_slot_type == other._slot_type)
-	{
-		if (_slot_pos < other._slot_pos)
-		{
-			inf_flag = true;
-		}
-		else if (_slot_pos == other._slot_pos)
-		{
-			if (_pin < other._pin)
-			{
-				inf_flag = true;
-			}
-		}
-	}
-
-	return inf_flag;
+	return (
+		  std::tie (      _slot_type,       _slot_pos,       _pin)
+		< std::tie (other._slot_type, other._slot_pos, other._pin)
+	);
 }
 
 

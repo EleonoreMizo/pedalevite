@@ -29,6 +29,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/doc/SerRInterface.h"
 #include "mfx/doc/SerWInterface.h"
 
+#include <tuple>
+
 #include <cassert>
 
 
@@ -115,13 +117,10 @@ void	ParamPresentation::ser_read (SerRInterface &ser)
 
 bool	operator < (const ParamPresentation &lhs, const ParamPresentation &rhs)
 {
-	if (lhs._disp_mode < rhs._disp_mode) { return true; }
-	else if (lhs._disp_mode == rhs._disp_mode)
-	{
-		return (lhs._ref_beats < rhs._ref_beats);
-	}
-
-	return false;
+	return (
+		  std::tie (lhs._disp_mode, lhs._ref_beats)
+		< std::tie (rhs._disp_mode, rhs._ref_beats)
+	);
 }
 
 

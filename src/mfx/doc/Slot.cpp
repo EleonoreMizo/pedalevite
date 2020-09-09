@@ -31,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dwm/DryWetDesc.h"
 #include "mfx/pi/dwm/Param.h"
 
+#include <tuple>
+
 #include <cassert>
 
 
@@ -287,21 +289,17 @@ void	Slot::ser_read (SerRInterface &ser)
 
 bool	operator < (const Slot &lhs, const Slot &rhs)
 {
-	if (lhs._pi_model < rhs._pi_model ) { return true; }
-	else if (lhs._pi_model == rhs._pi_model)
-	{
-		if (lhs._settings_all < rhs._settings_all ) { return true; }
-		else if (lhs._settings_all == rhs._settings_all)
-		{
-			if (lhs._settings_mixer < rhs._settings_mixer ) { return true; }
-			else if (lhs._settings_mixer == rhs._settings_mixer)
-			{
-				return (lhs._label < rhs._label);
-			}
-		}
-	}
-
-	return false;
+	return (std::tie (
+		lhs._pi_model,
+		lhs._settings_all,
+		lhs._settings_mixer,
+		lhs._label
+	) < std::tie (
+		rhs._pi_model,
+		rhs._settings_all,
+		rhs._settings_mixer,
+		rhs._label
+	));
 }
 
 

@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <tuple>
+
 
 
 namespace mfx
@@ -66,18 +68,15 @@ int	ToolsRouting::Node::get_slot_id () const
 }
 
 
+
 bool	operator < (const ToolsRouting::Node &lhs, const ToolsRouting::Node &rhs)
 {
-   if (lhs.get_type () < rhs.get_type ())
-   {
-      return true;
-   }
-   else if (lhs.get_type () == rhs.get_type ())
-   {
-      return (lhs.get_slot_id () < rhs.get_slot_id ());
-   }
+   const doc::CnxEnd::Type l_type = lhs.get_type ();
+   const doc::CnxEnd::Type r_type = rhs.get_type ();
+   const int               l_slid = lhs.get_slot_id ();
+   const int               r_slid = rhs.get_slot_id ();
 
-   return false;
+   return (std::tie (l_type, l_slid) < std::tie (r_type, r_slid));
 }
 
 

@@ -50,6 +50,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <algorithm>
 #include <set>
+#include <tuple>
 
 #include <cassert>
 
@@ -1596,16 +1597,10 @@ Model::PedalState::PedalState ()
 
 bool	Model::OverrideLoc::operator < (const OverrideLoc &rhs) const
 {
-	if (_pi_id < rhs._pi_id)
-	{
-		return true;
-	}
-	else if (_pi_id == rhs._pi_id)
-	{
-		return (_index < rhs._index);
-	}
-
-	return false;
+	return (
+		  std::tie (    _pi_id,     _index)
+		< std::tie (rhs._pi_id, rhs._index)
+	);
 }
 
 
