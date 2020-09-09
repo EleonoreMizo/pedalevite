@@ -4,6 +4,7 @@
 - **`AllPass1pChain`**: Chain of several single-pole all-pass filters
 - **`AllPass2p`**: 2-pole all-pass filter
 - **`Biquad`**: Direct Form 2 biquad (2 poles and 2 zeros) implementation
+- **`Biquad4`**: Processes 4 biquads in parallel. The interface is compatible with `Biquad4Simd`.
 - **`Biquad4Simd`**: Processes 4 biquads simultaneously. They can be arranged in parallel, series or both. Serial arrangements can be with or without latency compensation.
 - **`Biquad4SimdMorph`**: Same as above, with automatic coefficient ramping when they are changed.
 - **`BiquadPackSimd`**: Processes N channels with M biquads, for an almost optimal usage of the SIMD instructions. The (N, M) configuration can be smoothly changed, as well as each filter coefficient. This is the core engine of any complex equalizer.

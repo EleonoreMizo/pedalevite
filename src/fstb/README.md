@@ -19,8 +19,10 @@ The classes:
 - **`Crc32`**: a class to compute simple CRC32 (using the 0xEDB88320 polynomial).
 - **`DataAlign`**: A helper class to load and save float data and check pointers, their alignment being a bool template parameter.
 - **`FixedPoint`**: A class handling 32:32 fixed point data with all required operations.
-- **`SingleObj`**: A class to wrap any object with aligned memory. Easier than using a single-element vector.
+- **`Hash`**: A fast, reversible 32 and 64-bit bijective hash function.
+- **`RndXoroshiro128p`**: xoroshiro128+, a fast and compact 64-bit random generator.
 - **`Scale`**: A way to multiply two numbers whatever their type; integers are considered as fixed point data. This class simplifies template constructions
+- **`SingleObj`**: A class to wrap any object with aligned memory. Easier than using a single-element vector.
 - **`ToolsSimd`**: Functions abstracting operations using SSE/SSE2 or NEON, depending on the architecture. 
 - **`ToolsSse2`**, **`ToolsAvx2`**: provide various functions using SSE2 and AVX2 instructions. These classes were written mainly with 16-bit pixel processing in mind.
 
