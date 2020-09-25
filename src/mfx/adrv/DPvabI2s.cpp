@@ -451,15 +451,16 @@ void	DPvabI2s::proc_loop ()
 		&_buf_flt_i [_block_size_a]
 	};
 
-	const float    scale_o = float (1U << (_resol - 1));
+	const float    scale_o = float ((1U << (_resol - 1)) - 1);
 	const float    scale_i = 1.0f / scale_o;
-	const float    max_flt = (scale_o - 1) * scale_i;
+	const float    min_flt = -1.0f;
+	const float    max_flt = +1.0f;
 
 #if defined (mfx_adrv_DPvabI2s_USE_SIMD)
 	const auto     sc_o_v = fstb::ToolsSimd::set1_f32 (scale_o);
 	const auto     sc_i_v = fstb::ToolsSimd::set1_f32 (scale_i);
 	const auto     maxf_v = fstb::ToolsSimd::set1_f32 (max_flt);
-	const auto     mone_v = fstb::ToolsSimd::set1_f32 (-1);
+	const auto     minf_v = fstb::ToolsSimd::set1_f32 (min_flt);
 #endif // mfx_adrv_DPvabI2s_USE_SIMD
 
 	float *        buf_flt_i_ptr = &_buf_flt_i [0];
@@ -531,8 +532,8 @@ void	DPvabI2s::proc_loop ()
 				fstb::ToolsSimd::load_f32 (buf_flt_o_ptr +                 pos);
 			auto           xr_flt =
 				fstb::ToolsSimd::load_f32 (buf_flt_o_ptr + _block_size_a + pos);
-			xl_flt  = fstb::ToolsSimd::max_f32 (xl_flt, mone_v);
-			xr_flt  = fstb::ToolsSimd::max_f32 (xr_flt, mone_v);
+			xl_flt  = fstb::ToolsSimd::max_f32 (xl_flt, minf_v);
+			xr_flt  = fstb::ToolsSimd::max_f32 (xr_flt, minf_v);
 			xl_flt  = fstb::ToolsSimd::min_f32 (xl_flt, maxf_v);
 			xr_flt  = fstb::ToolsSimd::min_f32 (xr_flt, maxf_v);
 			xl_flt *= sc_o_v;
@@ -550,8 +551,8 @@ void	DPvabI2s::proc_loop ()
 		{
 			float          xl_flt = buf_flt_o_ptr [                pos];
 			float          xr_flt = buf_flt_o_ptr [_block_size_a + pos];
-			xl_flt  = fstb::limit (xl_flt, -1.f, max_flt);
-			xr_flt  = fstb::limit (xr_flt, -1.f, max_flt);
+			xl_flt  = fstb::limit (xl_flt, min_flt, max_flt);
+			xr_flt  = fstb::limit (xr_flt, min_flt, max_flt);
 			xl_flt *= scale_o;
 			xr_flt *= scale_o;
 			const int32_t  xl_int = fstb::conv_int_fast (xl_flt);
