@@ -46,6 +46,7 @@ enum ToneFreq
 	ToneFreq_50,
 	ToneFreq_100,
 	ToneFreq_500,
+	ToneFreq_997,
 	ToneFreq_1K,
 	ToneFreq_3K,
 	ToneFreq_10K,

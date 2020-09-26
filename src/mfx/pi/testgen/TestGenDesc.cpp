@@ -103,7 +103,7 @@ TestGenDesc::TestGenDesc ()
 
 	// Tone frequency
 	enu_sptr = std::make_shared <param::TplEnum> (
-		"30\n40\n50\n100\n500\n1k\n3k\n10k\n15k",
+		"30\n40\n50\n100\n500\n997\n1k\n3k\n10k\n15k",
 		"Tone frequency\nTone freq\nTF",
 		"Hz",
 		0,

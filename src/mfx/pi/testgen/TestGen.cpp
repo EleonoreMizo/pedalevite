@@ -90,7 +90,7 @@ TestGen::TestGen ()
 	_state_set.set_val_nat (desc_set, Param_TYPE      , Type_N_PNK);
 	_state_set.set_val_nat (desc_set, Param_LVL       , 0.1);
 	_state_set.set_val_nat (desc_set, Param_NZ_COR    , 0);
-	_state_set.set_val_nat (desc_set, Param_TONE_FRQ  , ToneFreq_1K);
+	_state_set.set_val_nat (desc_set, Param_TONE_FRQ  , ToneFreq_997);
 	_state_set.set_val_nat (desc_set, Param_SWEEP_DUR , SweepDur_30);
 	_state_set.set_val_nat (desc_set, Param_LOOP_PAUSE, LoopPause_1);
 
@@ -540,7 +540,7 @@ fstb_CONSTEXPR14 float	TestGen::compute_cos (uint32_t phase)
 
 const std::array <float, ToneFreq_NBR_ELT>	TestGen::_tone_freq_table =
 {{
-	30, 40, 50, 100, 500, 1000, 3000, 10000, 15000
+	30, 40, 50, 100, 500, 997, 1000, 3000, 10000, 15000
 }};
 const std::array <float, SweepDur_NBR_ELT>	TestGen::_duration_table =
 {{
