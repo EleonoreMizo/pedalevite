@@ -932,6 +932,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\GaussFast.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\PinkShade.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\PinkShade.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteAccurate.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteAccurate.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\nz\WhiteFast.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\osc\OscSample.h" />
@@ -1722,6 +1724,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\mix\Fpu.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\mix\Generic.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\nz\PinkShade.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\nz\WhiteAccurate.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\nz\WhiteFast.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\osc\OscSinCosEulerSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\osc\OscSinCosStableSimd.cpp" />

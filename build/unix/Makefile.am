@@ -514,6 +514,9 @@ commonsrc = \
         ../../src/mfx/dsp/nz/PinkShade.cpp \
         ../../src/mfx/dsp/nz/PinkShade.h \
         ../../src/mfx/dsp/nz/PinkShade.hpp \
+        ../../src/mfx/dsp/nz/WhiteAccurate.cpp \
+        ../../src/mfx/dsp/nz/WhiteAccurate.h \
+        ../../src/mfx/dsp/nz/WhiteAccurate.hpp \
         ../../src/mfx/dsp/nz/WhiteFast.cpp \
         ../../src/mfx/dsp/nz/WhiteFast.h \
         ../../src/mfx/dsp/nz/WhiteFast.hpp \
