@@ -30,7 +30,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "fstb/util/NotificationFlag.h"
 #include "mfx/dsp/nz/PinkShade.h"
-#include "mfx/dsp/nz/WhiteFast.h"
+#include "mfx/dsp/nz/WhiteAccurate.h"
 #include "mfx/pi/testgen/LoopPause.h"
 #include "mfx/pi/testgen/SweepDur.h"
 #include "mfx/pi/testgen/TestGenDesc.h"
@@ -88,7 +88,7 @@ private:
 	public:
 		dsp::nz::PinkShade
 		               _nz_pink;
-		dsp::nz::WhiteFast
+		dsp::nz::WhiteAccurate
 		               _nz_white;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
