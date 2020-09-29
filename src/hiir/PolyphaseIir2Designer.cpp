@@ -293,7 +293,7 @@ PolyphaseIir2Designer::ResCode	PolyphaseIir2Designer::compute_coefs_spec_order_g
 			if ((group_delay - lb_gdly) * (group_delay - rs_gdly) < 0)
 			{
 				ub_tbw  = rs_tbw;
-				ub_gdly = rs_gdly;
+//				ub_gdly = rs_gdly; // ub_gdly not used in the loop actually
 			}
 			else
 			{
