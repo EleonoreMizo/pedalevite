@@ -1653,9 +1653,15 @@ int	test_queue_ret ()
 	for (int i = 0; i < nbr_a && ret_val == 0; ++i)
 	{
 		auto           cell_ptr = queue_mgr.use_pool ().take_cell (true);
-		assert (cell_ptr != nullptr);
-		cell_ptr->_val._content.set_data (idx_s);
-		queue_mgr.enqueue (*cell_ptr, q_sptr);
+		if (cell_ptr == nullptr)
+		{
+			assert (false);
+		}
+		else
+		{
+			cell_ptr->_val._content.set_data (idx_s);
+			queue_mgr.enqueue (*cell_ptr, q_sptr);
+		}
 		++ idx_s;
 
 		if ((i & 7) == 5)

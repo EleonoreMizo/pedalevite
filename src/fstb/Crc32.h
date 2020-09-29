@@ -39,12 +39,6 @@ class Crc32
 
 public:
 
-	               Crc32 ()                        = default;
-	               Crc32 (const Crc32 &other)      = default;
-	virtual        ~Crc32 ()                       = default;
-
-	Crc32 &        operator = (const Crc32 &other) = default;
-
 	inline void    reset ();
 	inline void    process_byte (int data_byte);
 	template <typename T>
@@ -75,8 +69,6 @@ private:
 
 private:
 
-	               Crc32 (const Crc32 &&other)            = delete;
-	Crc32 &        operator = (const Crc32 &&other)       = delete;
 	bool           operator == (const Crc32 &other) const = delete;
 	bool           operator != (const Crc32 &other) const = delete;
 

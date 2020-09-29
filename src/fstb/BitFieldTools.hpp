@@ -90,7 +90,7 @@ bool	BitFieldTools <T, DL2>::get_bit (const GroupType bit_arr [], int pos)
 template <typename T, int DL2>
 void	BitFieldTools <T, DL2>::set_bit (GroupType bit_arr [], int pos, bool flag)
 {
-	assert (&bit_arr != 0);
+	assert (bit_arr != nullptr);
 	assert (pos >= 0);
 
 	int            group;
@@ -112,7 +112,7 @@ void	BitFieldTools <T, DL2>::set_bit (GroupType bit_arr [], int pos, bool flag)
 template <typename T, int DL2>
 void	BitFieldTools <T, DL2>::clear_bit (GroupType bit_arr [], int pos)
 {
-	assert (&bit_arr != 0);
+	assert (bit_arr != nullptr);
 	assert (pos >= 0);
 
 	int            group;
@@ -126,7 +126,7 @@ void	BitFieldTools <T, DL2>::clear_bit (GroupType bit_arr [], int pos)
 template <typename T, int DL2>
 void	BitFieldTools <T, DL2>::fill_bit (GroupType bit_arr [], int pos)
 {
-	assert (&bit_arr != 0);
+	assert (bit_arr != nullptr);
 	assert (pos >= 0);
 
 	int            group;
@@ -183,7 +183,7 @@ void	BitFieldTools <T, DL2>::activate_range (GroupType bit_arr [], int pos, int 
 template <typename T, int DL2>
 void	BitFieldTools <T, DL2>::deactivate_range (GroupType bit_arr [], int pos, int nbr_elt)
 {
-	assert (bit_arr != 0);
+	assert (bit_arr != nullptr);
 	assert (pos >= 0);
 	assert (nbr_elt > 0);
 

@@ -64,8 +64,6 @@ InterpolatorFir <IT>::InterpolatorFir ()
 template <class IT>
 void	InterpolatorFir <IT>::set_convolver (IT &convolver)
 {
-	assert (&convolver != 0);
-
 	_conv_ptr = &convolver;
 }
 
@@ -85,7 +83,7 @@ void	InterpolatorFir <IT>::set_group_delay (double grp_dly)
 template <class IT>
 bool	InterpolatorFir <IT>::is_ready () const
 {
-	return (_conv_ptr != 0);
+	return (_conv_ptr != nullptr);
 }
 
 

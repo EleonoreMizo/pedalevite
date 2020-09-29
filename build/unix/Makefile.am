@@ -1,12 +1,21 @@
 ACLOCAL_AMFLAGS = -I m4
 
-warningflags = -Wall -Wextra -Wshadow -Wno-missing-field-initializers
+warningflags = \
+        -Wall \
+        -Wextra \
+        -Wshadow \
+        -Wunused \
+        -Wmisleading-indentation \
+        -Wnull-dereference \
+        -Wvla \
+        $(COMPWARNFLAGS)
+warnflagscpp =
 includeflags = -I$(srcdir)/../../src
 if WIN
 includeflags += -I$(srcdir)/../../src/asiosdk2/common -I$(srcdir)/../../src/asiosdk2/host -I$(srcdir)/../../src/asiosdk2/host/pc
 endif
 commoncflags = $(DEBUGCFLAGS) $(MFLAGS) $(warningflags) $(includeflags) $(STACKREALIGN) $(PTHREAD_CFLAGS)
-AM_CXXFLAGS  = -std=$(CXXSTD) $(commoncflags) $(EXTRA_CXXFLAGS)
+AM_CXXFLAGS  = -std=$(CXXSTD) $(commoncflags) $(warnflagscpp) $(EXTRA_CXXFLAGS)
 AM_CFLAGS    = $(commoncflags)
 AM_LDFLAGS   = $(PTHREAD_LIBS) $(PLUGINLDFLAGS)
 

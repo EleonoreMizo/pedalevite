@@ -196,9 +196,15 @@ void	RecD2d::write_data (const float * const chn_arr [], int nbr_spl)
 				// RT-safe in case of cell starvation, but data won't be lost at
 				// this level.
 				c_ptr = _queue_mgr.use_pool ().take_cell (true);
-				assert (c_ptr != nullptr);
-				_cell_ptr = c_ptr;
-				c_ptr->_val._content._len = 0;
+				if (c_ptr == nullptr)
+				{
+					assert (false);
+				}
+				else
+				{
+					_cell_ptr = c_ptr;
+					c_ptr->_val._content._len = 0;
+				}
 			}
 			Buffer &       bc = (*_cell_ptr)._val._content;
 

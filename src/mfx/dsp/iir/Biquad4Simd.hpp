@@ -934,6 +934,7 @@ void	Biquad4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 
 
 
 
+// Input samples are broadcasted over the 4 biquads
 template <class VD, class VS, class VP>
 void	Biquad4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl)
 {
@@ -950,6 +951,7 @@ void	Biquad4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 
 
 
 
+// Input samples are broadcasted over the 4 biquads
 template <class VD, class VS, class VP>
 void	Biquad4Simd <VD, VS, VP>::process_block_parallel (fstb::ToolsSimd::VectF32 out_ptr [], const float in_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 b_inc [3], const fstb::ToolsSimd::VectF32 a_inc [3])
 {

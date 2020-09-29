@@ -1190,7 +1190,10 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_
 					index,
 					plug._param_list [index]
 				);
-				msg_list.push_back (msg_ptr);
+				if (msg_ptr != nullptr)
+				{
+					msg_list.push_back (msg_ptr);
+				}
 			}
 
 			plug._param_list.clear ();
@@ -1203,7 +1206,10 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_
 					true,
 					(type_cnt == PiType_MIX)
 				);
-				msg_list.push_back (msg_ptr);
+				if (msg_ptr != nullptr)
+				{
+					msg_list.push_back (msg_ptr);
+				}
 			}
 		}
 	}
@@ -1211,30 +1217,38 @@ void	Central::create_param_msg (std::vector <conc::LockFreeCell <WaMsg> *> &msg_
 
 
 
+// May return nullptr (unexpected failure)
 conc::LockFreeCell <WaMsg> *	Central::make_param_msg (int pi_id, int index, float val)
 {
 	conc::LockFreeCell <WaMsg> * cell_ptr =
 		_msg_pool.take_cell (true);
-	cell_ptr->_val._sender = WaMsg::Sender_CMD;
-	cell_ptr->_val._type   = WaMsg::Type_PARAM;
-	cell_ptr->_val._content._param._plugin_id = pi_id;
-	cell_ptr->_val._content._param._index     = index;
-	cell_ptr->_val._content._param._val       = val;
+	if (cell_ptr != nullptr)
+	{
+		cell_ptr->_val._sender = WaMsg::Sender_CMD;
+		cell_ptr->_val._type   = WaMsg::Type_PARAM;
+		cell_ptr->_val._content._param._plugin_id = pi_id;
+		cell_ptr->_val._content._param._index     = index;
+		cell_ptr->_val._content._param._val       = val;
+	}
 
 	return cell_ptr;
 }
 
 
 
+// May return nullptr (unexpected failure)
 conc::LockFreeCell <WaMsg> *	Central::make_reset_msg (int pi_id, bool steady_flag, bool full_flag)
 {
 	conc::LockFreeCell <WaMsg> * cell_ptr =
 		_msg_pool.take_cell (true);
-	cell_ptr->_val._sender = WaMsg::Sender_CMD;
-	cell_ptr->_val._type   = WaMsg::Type_RESET;
-	cell_ptr->_val._content._reset._plugin_id   = pi_id;
-	cell_ptr->_val._content._reset._steady_flag = steady_flag;
-	cell_ptr->_val._content._reset._full_flag   = full_flag;
+	if (cell_ptr != nullptr)
+	{
+		cell_ptr->_val._sender = WaMsg::Sender_CMD;
+		cell_ptr->_val._type   = WaMsg::Type_RESET;
+		cell_ptr->_val._content._reset._plugin_id   = pi_id;
+		cell_ptr->_val._content._reset._steady_flag = steady_flag;
+		cell_ptr->_val._content._reset._full_flag   = full_flag;
+	}
 
 	return cell_ptr;
 }

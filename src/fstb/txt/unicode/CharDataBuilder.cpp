@@ -59,11 +59,10 @@ CharDataBuilder::CharDataBuilder ()
 
 int	CharDataBuilder::build_tables_from_unicode_ref_data (std::string &source, const char unicode_data_txt_filename_0 [], const char grapheme_break_property_txt_filename_0 [], const char line_break_txt_filename_0 [], const char word_break_property_txt_filename_0 [])
 {
-	assert (&source != 0);
-	assert (unicode_data_txt_filename_0 != 0);
-	assert (grapheme_break_property_txt_filename_0 != 0);
-	assert (line_break_txt_filename_0 != 0);
-	assert (word_break_property_txt_filename_0 != 0);
+	assert (unicode_data_txt_filename_0 != nullptr);
+	assert (grapheme_break_property_txt_filename_0 != nullptr);
+	assert (line_break_txt_filename_0 != nullptr);
+	assert (word_break_property_txt_filename_0 != nullptr);
 
 	int				ret_val = Err_OK;
 
@@ -154,8 +153,7 @@ int	CharDataBuilder::build_tables_from_unicode_ref_data (std::string &source, co
 
 int	CharDataBuilder::read_file_as_string (std::string &data, const char unicode_data_txt_filename_0 [])
 {
-	assert (&data != 0);
-	assert (unicode_data_txt_filename_0 != 0);
+	assert (unicode_data_txt_filename_0 != nullptr);
 
 	int				ret_val = Err_OK;
 
@@ -196,9 +194,6 @@ int	CharDataBuilder::read_file_as_string (std::string &data, const char unicode_
 
 void	CharDataBuilder::conv_semicolon_file_as_string_to_sheet (Sheet &sheet, const std::string &data)
 {
-	assert (&sheet != 0);
-	assert (&data != 0);
-
 	sheet.clear ();
    sheet.reserve (20000);	// Reserves memory for 20000 lines
 
@@ -241,8 +236,6 @@ void	CharDataBuilder::conv_semicolon_file_as_string_to_sheet (Sheet &sheet, cons
 
 void	CharDataBuilder::remove_comments (Sheet &sheet)
 {
-	assert (&sheet != 0);
-
 	const long		nbr_lines = long (sheet.size ());
 	for (long line_pos = 0; line_pos < nbr_lines; ++line_pos)
 	{
@@ -275,8 +268,6 @@ void	CharDataBuilder::remove_comments (Sheet &sheet)
 
 void	CharDataBuilder::remove_empty_lines (Sheet &sheet)
 {
-	assert (&sheet != 0);
-
 	Sheet::size_type	line_pos = 0;
 	while (line_pos < sheet.size ())
 	{
@@ -297,9 +288,6 @@ void	CharDataBuilder::remove_empty_lines (Sheet &sheet)
 
 void	CharDataBuilder::extract_main_data (InfoList &info_list, const Sheet &sheet)
 {
-	assert (&info_list != 0);
-	assert (&sheet != 0);
-
 	constexpr char32_t   range_not_started = 0xFFFFFFFFU;
 
 	info_list.clear ();
@@ -394,8 +382,6 @@ void	CharDataBuilder::extract_main_data (InfoList &info_list, const Sheet &sheet
 
 void	CharDataBuilder::extract_grapheme_break_data (InfoList &info_list, const Sheet &sheet)
 {
-	assert (&info_list != 0);
-	assert (&sheet != 0);
 	assert (info_list.size () == CharData::MAX_NBR_CODE_POINTS);
 
 	for (Sheet::size_type line_pos = 0; line_pos < sheet.size (); ++line_pos)
@@ -439,8 +425,6 @@ void	CharDataBuilder::extract_grapheme_break_data (InfoList &info_list, const Sh
 
 void	CharDataBuilder::extract_line_break_data (InfoList &info_list, const Sheet &sheet)
 {
-	assert (&info_list != 0);
-	assert (&sheet != 0);
 	assert (info_list.size () == CharData::MAX_NBR_CODE_POINTS);
 
 	for (Sheet::size_type line_pos = 0; line_pos < sheet.size (); ++line_pos)
@@ -484,8 +468,6 @@ void	CharDataBuilder::extract_line_break_data (InfoList &info_list, const Sheet 
 
 void	CharDataBuilder::extract_word_break_data (InfoList &info_list, const Sheet &sheet)
 {
-	assert (&info_list != 0);
-	assert (&sheet != 0);
 	assert (info_list.size () == CharData::MAX_NBR_CODE_POINTS);
 
 	for (Sheet::size_type line_pos = 0; line_pos < sheet.size (); ++line_pos)
@@ -529,8 +511,6 @@ void	CharDataBuilder::extract_word_break_data (InfoList &info_list, const Sheet 
 
 void	CharDataBuilder::shrink_char_info_set (InfoList &info_list, RefList &ref_list)
 {
-	assert (&info_list != 0);
-	assert (&ref_list != 0);
 	assert (info_list.size () == CharData::MAX_NBR_CODE_POINTS);
 
 	InfoList		shrunk_info_list;
@@ -571,9 +551,6 @@ void	CharDataBuilder::shrink_char_info_set (InfoList &info_list, RefList &ref_li
 
 void	CharDataBuilder::compact_data (std::vector <long> &index_page_list, std::vector <long> &index_info_list, const InfoList &info_list, const RefList &ref_list)
 {
-	assert (&info_list != 0);
-	assert (&ref_list != 0);
-
 	const long		nbr_pages =
 		CharData::MAX_NBR_CODE_POINTS >> CharData::PAGE_SIZE_L2;
 	index_page_list.resize (nbr_pages);
@@ -638,8 +615,6 @@ void	CharDataBuilder::compact_data (std::vector <long> &index_page_list, std::ve
 
 void	CharDataBuilder::build_table_break_grapheme (TableBreakGrapheme &table)
 {
-	assert (&table != 0);
-
 	for (int prev = 0; prev < GraphemeBreakProp_NBR_ELT; ++prev)
 	{
 		for (int next = 0; next < GraphemeBreakProp_NBR_ELT; ++next)
@@ -722,8 +697,6 @@ void	CharDataBuilder::build_table_break_grapheme (TableBreakGrapheme &table)
 
 void	CharDataBuilder::build_table_break_word (TableBreakWord &table)
 {
-	assert (&table != 0);
-
 	for (int prev = 0; prev < WordBreakPropTablePrev_NBR_ELT; ++prev)
 	{
 		for (int next = 0; next < WordBreakPropTableNext_NBR_ELT; ++next)
@@ -825,8 +798,6 @@ void	CharDataBuilder::build_table_break_word (TableBreakWord &table)
 
 void	CharDataBuilder::print_begin (std::string &source)
 {
-	assert (&source != 0);
-
 	source = "// Begin: automatically generated data\n\n\n\n";
 }
 
@@ -834,9 +805,6 @@ void	CharDataBuilder::print_begin (std::string &source)
 
 void	CharDataBuilder::print_info_unique_list (std::string &source, const InfoList &info_list)
 {
-	assert (&source != 0);
-	assert (&info_list != 0);
-
 	ValueNameMap	cat_name_map;
 	cat_name_map [Categ_LETTER_UPPERCASE         ] = "Categ_LETTER_UPPERCASE";
 	cat_name_map [Categ_LETTER_LOWERCASE         ] = "Categ_LETTER_LOWERCASE";
@@ -1003,9 +971,6 @@ void	CharDataBuilder::print_info_unique_list (std::string &source, const InfoLis
 
 void	CharDataBuilder::print_index_info_list (std::string &source, const std::vector <long> &index_info_list)
 {
-	assert (&source != 0);
-	assert (&index_info_list != 0);
-
 	char           txt_0 [1023+1];
 
 	const long		page_mask = PAGE_SIZE_X - 1;
@@ -1057,9 +1022,6 @@ void	CharDataBuilder::print_index_info_list (std::string &source, const std::vec
 
 void	CharDataBuilder::print_index_page_list (std::string &source, const std::vector <long> &index_page_list)
 {
-	assert (&source != 0);
-	assert (&index_page_list != 0);
-
 	char           txt_0 [1023+1];
 
 	source +=
@@ -1132,9 +1094,6 @@ void	CharDataBuilder::print_index_page_list (std::string &source, const std::vec
 
 void	CharDataBuilder::print_table_break_grapheme (std::string &source, const TableBreakGrapheme table_break_grapheme)
 {
-	assert (&source != 0);
-	assert (&table_break_grapheme != 0);
-
 	char           txt_0 [1023+1];
 
 	source +=
@@ -1171,9 +1130,6 @@ void	CharDataBuilder::print_table_break_grapheme (std::string &source, const Tab
 
 void	CharDataBuilder::print_table_break_word (std::string &source, const TableBreakWord table_break_word)
 {
-	assert (&source != 0);
-	assert (&table_break_word != 0);
-
 	char           txt_0 [1023+1];
 
 	source +=
@@ -1210,8 +1166,6 @@ void	CharDataBuilder::print_table_break_word (std::string &source, const TableBr
 
 void	CharDataBuilder::print_end (std::string &source)
 {
-	assert (&source != 0);
-
 	source += "\n\n// End: automatically generated data\n\n\n\n";
 }
 
@@ -1219,9 +1173,7 @@ void	CharDataBuilder::print_end (std::string &source)
 
 void	CharDataBuilder::detect_range (char32_t &range_first, char32_t &range_last, const char field_0 [])
 {
-	assert (&range_first != 0);
-	assert (&range_last != 0);
-	assert (field_0 != 0);
+	assert (field_0 != nullptr);
 
 	const std::string	range = neutral::trim_spaces (field_0);
 
@@ -1247,8 +1199,6 @@ void	CharDataBuilder::detect_range (char32_t &range_first, char32_t &range_last,
 
 bool	CharDataBuilder::ZoneContent::operator < (const ZoneContent &other) const
 {
-	assert (&other != 0);
-
 	for (int cnt = 0; cnt < PAGE_SIZE_X ; ++cnt)
 	{
 		const long		val_lhs = _val_arr [cnt];

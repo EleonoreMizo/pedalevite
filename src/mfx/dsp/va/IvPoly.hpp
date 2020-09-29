@@ -79,7 +79,9 @@ void	IvPoly <OP, ON>::eval (float &y, float &dy, float x) const
 template <int OP, int ON>
 float	IvPoly <OP, ON>::get_max_step (float x) const
 {
-	return (x < 0) ? 0.1f : 0.1f;
+	fstb::unused (x);
+
+	return 0.1f;
 }
 
 

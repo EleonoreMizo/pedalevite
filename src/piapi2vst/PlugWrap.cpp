@@ -283,8 +283,6 @@ void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 
 void	PlugWrap::process_vst_events (const ::VstEvents &evt_list)
 {
-	assert (&evt_list != nullptr);
-
 	for (int evt_cnt = 0; evt_cnt < evt_list.numEvents; ++evt_cnt)
 	{
 		const ::VstEvent &   evt_gen = *(evt_list.events [evt_cnt]);

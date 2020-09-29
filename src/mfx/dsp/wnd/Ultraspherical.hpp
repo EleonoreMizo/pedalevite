@@ -166,8 +166,6 @@ double	Ultraspherical <T>::compute_c (int n, double mu, double x)
 template <class T>
 void	Ultraspherical <T>::compute_c (double &c_n, double &c_n_m_1, int n, double mu, double x)
 {
-	assert (&c_n != 0);
-	assert (&c_n_m_1 != 0);
 	assert (n >= 0);
 
 	if (n == 0)

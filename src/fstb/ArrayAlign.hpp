@@ -86,8 +86,6 @@ ArrayAlign <T, LEN, AL>::ArrayAlign (const ArrayAlign <T, LEN, AL> &other)
 :/*	_data ()
 ,*/	_data_ptr (0)
 {
-	assert (&other != 0);
-
 	_data_ptr = reinterpret_cast <Element *> (
 		reinterpret_cast <ptrdiff_t> (&_data [ALIGNMENT - 1]) & -ALIGNMENT
 	);
@@ -119,8 +117,6 @@ ArrayAlign <T, LEN, AL>::~ArrayAlign ()
 template <typename T, long LEN, long AL>
 ArrayAlign <T, LEN, AL> &	ArrayAlign <T, LEN, AL>::operator = (const ArrayAlign <T, LEN, AL> &other)
 {
-	assert (&other != 0);
-
 	if (this != &other)
 	{
 		for (long pos = 0; pos < NBR_ELT; ++pos)

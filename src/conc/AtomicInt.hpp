@@ -80,7 +80,6 @@ AtomicInt <T>::AtomicInt (const AtomicInt <T> &other)
 #if (conc_ARCHI == conc_ARCHI_X86)
 	assert (is_ptr_aligned_nz ((const void *) (&_val), sizeof (_val)));
 #endif // conc_ARCHI
-	assert (&other != 0);
 }
 
 

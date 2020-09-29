@@ -38,8 +38,10 @@ AS_IF(
         CC="clang"
         LD="clang++"
         EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -stdlib=libc++"
+        COMPWARNFLAGS=""
         AC_MSG_NOTICE([Using clang as compiler.])
-    ]
+    ],
+    [COMPWARNFLAGS="-Wduplicated-cond -Wduplicated-branches -Wlogical-op"]
 )
 
 
