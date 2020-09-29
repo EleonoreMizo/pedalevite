@@ -2154,6 +2154,8 @@ void	Fpu::clear (float out_ptr [], int nbr_spl)
 
 
 
+// Clears clear_len samples at the beginning of every clear_len + skip_len
+// blocks. nbr_spl = number of blocks
 void	Fpu::clear_nim (float out_ptr [], int nbr_spl, int clear_len, int skip_len)
 {
 	assert (out_ptr != nullptr);
@@ -2169,8 +2171,8 @@ void	Fpu::clear_nim (float out_ptr [], int nbr_spl, int clear_len, int skip_len)
 	else
 	{
 		const int		stride = clear_len + skip_len;
-		const int		len = nbr_spl * stride;
-		int				pos = 0;
+		const int		len    = nbr_spl * stride;
+		int				pos    = 0;
 		do
 		{
 			int				pos_clear = 0;
@@ -2181,7 +2183,7 @@ void	Fpu::clear_nim (float out_ptr [], int nbr_spl, int clear_len, int skip_len)
 			}
 			while (pos_clear < clear_len);
 
-			pos_clear += stride;
+			pos += stride;
 		}
 		while (pos < len);
 	}
