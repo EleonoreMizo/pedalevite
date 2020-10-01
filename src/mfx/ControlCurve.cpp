@@ -24,9 +24,11 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
 #include "mfx/dsp/shape/MapSaturateBipolar.h"
 #include "mfx/ControlCurve.h"
 
+#include <algorithm>
 #include <complex>
 
 #include <cassert>
@@ -39,26 +41,100 @@ namespace mfx
 
 
 
-// 3x^2 - 2x^3 - a = 0
-// d = cbrt (2 * sqrt (a * (a - 1)) - 2 * a + 1)
-// | x = 0.5 + 0.5 * (d + 1 / d)
-// | x = -0.25 * (1 - i * sqrt (3)) * d - 0.25*(1 + i * sqrt(3)) / d + 0.5
-// | x = -0.25 * (1 + i * sqrt (3)) * d - 0.25*(1 - i * sqrt(3)) / d + 0.5 <-- this one
-static double	ControlCurve_invert_s1 (double val)
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+namespace
 {
-	const double                  a_r = fabs (val);
+
+
+
+// In/out range: [-1 ; 1], with internal mirroring around 0
+template <typename T>
+static T	ControlCurve_s1 (T x)
+{
+	const T        xa = T (fabs (x));
+	assert (xa <= T (1));
+
+	return std::copysign (x * x * (3 - 2 * xa), x);
+}
+
+
+
+// In/out range: [-1 ; 1], with internal mirroring around 0
+static float	ControlCurve_invert_s1 (float val)
+{
+	const float    a_r = fabsf (val);
+	assert (a_r <= 1);
+
+#if 1
+
+	// https://en.wikipedia.org/wiki/Smoothstep#Inverse_Smoothstep
+	// Most likely cheaper than the other version
+	const float    x = 0.5f - sinf (asinf (1.f - 2.f * a_r) / 3.f);
+
+#else
+
+	// 3x^2 - 2x^3 - a = 0
+	// d = cbrt (2 * sqrt (a * (a - 1)) - 2 * a + 1)
+	// | x = 0.5 + 0.5 * (d + 1 / d)
+	// | x = -0.25 * (1 - i * sqrt (3)) * d - 0.25*(1 + i * sqrt(3)) / d + 0.5
+	// | x = -0.25 * (1 + i * sqrt (3)) * d - 0.25*(1 - i * sqrt(3)) / d + 0.5 <-- this one
 	const std::complex <double>   a (a_r, 0);
-	const std::complex <double>   aam1 (a_r * (a_r - 1.));
+	const std::complex <double>   aam1 (a_r * (a_r - 1.f));
 	const std::complex <double>   d   =
 		std::pow ((std::sqrt (aam1) - a) * 2. + 1., 1 / 3.0);
 	const double      s3 = sqrt (3);
-	const double      x  =
-		(- 0.25 * std::complex <double> (1,  s3) * d
-		 - 0.25 * std::complex <double> (1, -s3) / d).real ()
-		+ 0.5;
+	const float       x  = 0.5f - 0.25f * float ((
+		  std::complex <double> (1,  s3) * d
+		+ std::complex <double> (1, -s3) / d
+	).real ());
+
+#endif
 	
 	return std::copysign (x, val);
 }
+
+
+
+template <int N> using MapSatBipolN = dsp::shape::MapSaturateBipolar <
+	float,
+	std::ratio <1, (N << 1) - 1>,
+	std::ratio <1, 1>,
+	std::ratio <1, 1>
+>;
+
+
+
+template <typename T, typename FNC>
+fstb_FORCEINLINE T	ControlCurve_map_range_bip (T val, FNC f)
+{
+	if (val >= T (-1) && val <= T (1))
+	{
+		val = f (val);
+	}
+
+	return val;
+}
+
+
+
+template <typename T, typename FNC>
+fstb_FORCEINLINE T	ControlCurve_map_range_mon (T val, FNC f)
+{
+	const T        va = fabs (val);
+	if (va <= T (1))
+	{
+		val = std::copysign (f (va), val);
+	}
+
+	return val;
+}
+
+
+
+} // namespace
 
 
 
@@ -100,17 +176,9 @@ const char *  ControlCurve_get_name (ControlCurve c)
 
 
 
-namespace
-{
-	template <int N> using MapSatBipolN = dsp::shape::MapSaturateBipolar <
-		float,
-		std::ratio <1, (N << 1) - 1>,
-		std::ratio <1, 1>,
-		std::ratio <1, 1>
-	>;
-}
-
 // Input is not range-restricted, it can be bipolar too.
+// As general rule, "saturating" curves have their input clipped to [-1 ; +1],
+// whereas other curves have linear mapping for input values out of [-1 ; +1].
 float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 {
 	static const int  inv = 1000;
@@ -137,83 +205,97 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 
 	case ControlCurve_SQINV:
 		{
-			const float    vx = 1 - fabs (val);
+			const float    vx = 1 - std::min (fabs (val), 1.f);
 			val = std::copysign (1 - vx * vx, val);
 		}
 		break;
 	case ControlCurve_SQINV + inv:
 		{
-			const float    vy = fabs (val);
-			val = std::copysign (1 - sqrt (1 - vy), val);
+			val = ControlCurve_map_range_mon (val, [] (float x) {
+				return 1 - sqrt (1 - x);
+			});
 		}
 		break;
 
 	case ControlCurve_CBINV:
 		{
-			const float    vx = 1 - fabs (val);
+			const float    vx = 1 - std::min (fabs (val), 1.f);
 			val = std::copysign (1 - vx * vx * vx, val);
 		}
 		break;
 	case ControlCurve_CBINV + inv:
 		{
-			const float    vy = fabs (val);
-			val = std::copysign (1 - cbrt (1 - vy), val);
+			val = ControlCurve_map_range_mon (val, [] (float x) {
+				return 1 - cbrt (1 - x);
+			});
 		}
 		break;
 
 	case ControlCurve_S1:
 	case ControlCurve_FLAT1 + inv:
-		val = std::copysign (val * val * (3 - 2 * fabs (val)), val);
+		val = ControlCurve_s1 (fstb::limit (val, -1.f, +1.f));
 		break;
 	case ControlCurve_S1 + inv:
 	case ControlCurve_FLAT1:
-		val = float (ControlCurve_invert_s1 (val));
+		val = ControlCurve_map_range_bip (val, [] (float x) {
+			return ControlCurve_invert_s1 (x);
+		});
 		break;
 
 	case ControlCurve_S2:
 	case ControlCurve_FLAT2 + inv:
-		val = ControlCurve_apply_curve (val, ControlCurve_S1, false);
-		val = ControlCurve_apply_curve (val, ControlCurve_S1, false);
+		val = ControlCurve_s1 (fstb::limit (val, -1.f, +1.f));
+		val = ControlCurve_s1 (val);
 		break;
 	case ControlCurve_S2 + inv:
 	case ControlCurve_FLAT2:
-		val = float (ControlCurve_invert_s1 (ControlCurve_invert_s1 (val)));
+		val = ControlCurve_map_range_bip (val, [] (float x) {
+			return ControlCurve_invert_s1 (ControlCurve_invert_s1 (x));
+		});
 		break;
 
 	case ControlCurve_DES1:
 	case ControlCurve_SAT1 + inv:
-		val = MapSatBipolN <1>::desaturate (val);
+		val = ControlCurve_map_range_bip (val, [] (float x) {
+			return MapSatBipolN <1>::desaturate (x);
+		});
 		break;
 	case ControlCurve_DES1 + inv:
 	case ControlCurve_SAT1:
-		val = MapSatBipolN <1>::saturate (val);
+		val = MapSatBipolN <1>::saturate (fstb::limit (val, -1.f, +1.f));
 		break;
 
 	case ControlCurve_DES2:
 	case ControlCurve_SAT2 + inv:
-		val = MapSatBipolN <2>::desaturate (val);
+		val = ControlCurve_map_range_bip (val, [] (float x) {
+			return MapSatBipolN <2>::desaturate (x);
+		});
 		break;
 	case ControlCurve_DES2 + inv:
 	case ControlCurve_SAT2:
-		val = MapSatBipolN <2>::saturate (val);
+		val = MapSatBipolN <2>::saturate (fstb::limit (val, -1.f, +1.f));
 		break;
 
 	case ControlCurve_DES3:
 	case ControlCurve_SAT3 + inv:
-		val = MapSatBipolN <3>::desaturate (val);
+		val = ControlCurve_map_range_bip (val, [] (float x) {
+			return MapSatBipolN <3>::desaturate (x);
+		});
 		break;
 	case ControlCurve_DES3 + inv:
 	case ControlCurve_SAT3:
-		val = MapSatBipolN <3>::saturate (val);
+		val = MapSatBipolN <3>::saturate (fstb::limit (val, -1.f, +1.f));
 		break;
 
 	case ControlCurve_DES4:
 	case ControlCurve_SAT4 + inv:
-		val = MapSatBipolN <4>::desaturate (val);
+		val = ControlCurve_map_range_bip (val, [] (float x) {
+			return MapSatBipolN <4>::desaturate (x);
+		});
 		break;
 	case ControlCurve_DES4 + inv:
 	case ControlCurve_SAT4:
-		val = MapSatBipolN <4>::saturate (val);
+		val = MapSatBipolN <4>::saturate (fstb::limit (val, -1.f, +1.f));
 		break;
 
 	default:
@@ -223,14 +305,6 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 
 	return val;
 }
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
