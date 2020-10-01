@@ -98,6 +98,50 @@ static float	ControlCurve_invert_s1 (float val)
 
 
 
+template <typename T, typename FNC>
+fstb_FORCEINLINE T	ControlCurve_step1 (T x, FNC f)
+{
+	if (x < 0.5f)
+	{
+		return 0.5f - 0.5f * f (1 - 2 * x);
+	}
+	else
+	{
+		return 0.5f + 0.5f * f (2 * x - 1);
+	}
+}
+
+
+
+template <typename T, typename FNC>
+fstb_FORCEINLINE T	ControlCurve_step2 (T x, FNC f)
+{
+	if (x < 0.5f)
+	{
+		if (x < 0.25f)
+		{
+			return         0.25f * f (4 * x    );
+		}
+		else
+		{
+			return 0.50f - 0.25f * f (2 - 4 * x);
+		}
+	}
+	else
+	{
+		if (x < 0.75f)
+		{
+			return 0.50f + 0.25f * f (4 * x - 2);
+		}
+		else
+		{
+			return 1.00f - 0.25f * f (4 - 4 * x);
+		}
+	}
+}
+
+
+
 template <int N> using MapSatBipolN = dsp::shape::MapSaturateBipolar <
 	float,
 	std::ratio <1, (N << 1) - 1>,
@@ -123,7 +167,7 @@ fstb_FORCEINLINE T	ControlCurve_map_range_bip (T val, FNC f)
 template <typename T, typename FNC>
 fstb_FORCEINLINE T	ControlCurve_map_range_mon (T val, FNC f)
 {
-	const T        va = fabs (val);
+	const T        va = T (fabs (val));
 	if (va <= T (1))
 	{
 		val = std::copysign (f (va), val);
@@ -166,6 +210,8 @@ const char *  ControlCurve_get_name (ControlCurve c)
 	case ControlCurve_SAT3:   return ("Sat 3" ); break;
 	case ControlCurve_DES4:   return ("Prog 4"); break;
 	case ControlCurve_SAT4:   return ("Sat 4" ); break;
+	case ControlCurve_STEP1:  return ("Step 1"); break;
+	case ControlCurve_STEP2:  return ("Step 2"); break;
 	default:
 		assert (false);
 		break;
@@ -190,10 +236,10 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 		break;
 
 	case ControlCurve_SQ:
-		val = fabs (val) * val;
+		val = fabsf (val) * val;
 		break;
 	case ControlCurve_SQ + inv:
-		val = std::copysign (sqrt (fabs (val)), val);
+		val = std::copysign (sqrtf (fabsf (val)), val);
 		break;
 
 	case ControlCurve_CB:
@@ -205,21 +251,21 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 
 	case ControlCurve_SQINV:
 		{
-			const float    vx = 1 - std::min (fabs (val), 1.f);
+			const float    vx = 1 - std::min (fabsf (val), 1.f);
 			val = std::copysign (1 - vx * vx, val);
 		}
 		break;
 	case ControlCurve_SQINV + inv:
 		{
 			val = ControlCurve_map_range_mon (val, [] (float x) {
-				return 1 - sqrt (1 - x);
+				return 1 - sqrtf (1 - x);
 			});
 		}
 		break;
 
 	case ControlCurve_CBINV:
 		{
-			const float    vx = 1 - std::min (fabs (val), 1.f);
+			const float    vx = 1 - std::min (fabsf (val), 1.f);
 			val = std::copysign (1 - vx * vx * vx, val);
 		}
 		break;
@@ -296,6 +342,34 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 	case ControlCurve_DES4 + inv:
 	case ControlCurve_SAT4:
 		val = MapSatBipolN <4>::saturate (fstb::limit (val, -1.f, +1.f));
+		break;
+
+	case ControlCurve_STEP1:
+		val = std::copysign (ControlCurve_step1 (
+			std::min (fabsf (val), 1.f),
+			[] (float x) { return fstb::ipowpc <4> (x); }
+		), val);
+		break;
+	case ControlCurve_STEP1 + inv:
+		val = ControlCurve_map_range_mon (val, [] (float x) {
+			return ControlCurve_step1 (x, [] (float x) {
+				return sqrtf (sqrtf (x));
+			});
+		});
+		break;
+
+	case ControlCurve_STEP2:
+		val = std::copysign (ControlCurve_step2 (
+			std::min (fabsf (val), 1.f),
+			[] (float x) { return fstb::ipowpc <4> (x); }
+		), val);
+		break;
+	case ControlCurve_STEP2 + inv:
+		val = ControlCurve_map_range_mon (val, [] (float x) {
+			return ControlCurve_step2 (x, [] (float x) {
+				return sqrtf (sqrtf (x));
+			});
+		});
 		break;
 
 	default:

@@ -56,9 +56,10 @@ enum ControlCurve
 	ControlCurve_SAT3,
 	ControlCurve_DES4,
 	ControlCurve_SAT4,
+	ControlCurve_STEP1,
+	ControlCurve_STEP2,
 
 	ControlCurve_NBR_ELT
-
 
 }; // enum ControlCurve
 
