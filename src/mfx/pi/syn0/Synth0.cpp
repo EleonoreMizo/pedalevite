@@ -69,6 +69,7 @@ Synth0::Synth0 ()
 ,	_env_amp ()
 ,	_osc_stp (0.002f)
 ,	_osc_pos (0)
+,	_osc_stp_inv (1.f / _osc_stp)
 {
 	dsp::mix::Align::setup ();
 
@@ -168,9 +169,28 @@ void	Synth0::do_process_block (piapi::ProcInfo &proc)
 	// Waveform
 	for (int pos = 0; pos < nbr_spl; ++pos)
 	{
+		constexpr float   duty = 0.5f; // Dutycycle
+
 		// Dirty aliased square wave. I hope you like aliasing.
-		float          x = (_osc_pos < 0.5f) ? -1.f : 1.f;
+		float          x = (_osc_pos < duty) ? -1.f : 1.f;
+
+		// Now, tries to fix naive pulsewave synthesis with PolyBLEPs
+		// Rising edge
+		float          pos_rise = _osc_pos - duty;
+		if (pos_rise < 0)
+		{
+			pos_rise += 1;
+		}
+		auto           add = [] (float a, float b) { return a + b; };
+		fix_edge_polyblep (x, pos_rise, add);
+
+		// Falling edge
+		auto           sub = [] (float a, float b) { return a - b; };
+		fix_edge_polyblep (x, _osc_pos, sub);
+
+		// Velocity
 		x *= _velo;
+
 		_buf_syn [pos] = x;
 
 		_osc_pos += _osc_stp;
@@ -231,9 +251,13 @@ void	Synth0::update_param (bool force_flag)
 {
 	if (_param_change_flag (true) || force_flag)
 	{
-		_pitch_oct = float (_state_set.get_val_tgt_nat (Param_PITCH));
-		const float    freq = 220 * exp2 (_pitch_oct + 0.25f);
-		_osc_stp   = freq * _inv_fs;
+		constexpr float   c2a   = (12 - 9) / 12.f; // From C to A, octaves
+		constexpr float   f_a   = 220;             // A below Middle C, Hz
+
+		_pitch_oct   = float (_state_set.get_val_tgt_nat (Param_PITCH));
+		const float    freq = f_a * fstb::Approx::exp2_5th (_pitch_oct + c2a);
+		_osc_stp     = std::min (freq * _inv_fs, 0.5f); // Max freq: Nyquist
+		_osc_stp_inv = 1.f / _osc_stp;
 
 		const float    velo = float (_state_set.get_val_tgt_nat (Param_TRIG_ON));
 		const bool     note_on_flag = (velo > 0);
@@ -249,6 +273,24 @@ void	Synth0::update_param (bool force_flag)
 		{
 			_env_amp.note_off ();
 		}
+	}
+}
+
+
+
+// OP is addition or subtraction
+template <typename OP>
+void	Synth0::fix_edge_polyblep (float &x, float &pos, OP op)
+{
+	if (pos < _osc_stp)
+	{
+		const float    t = pos * _osc_stp_inv;
+		x = op (x, t+t - t*t - 1);
+	}
+	else if (pos > 1 - _osc_stp)
+	{
+		const float    t = (pos - 1) * _osc_stp_inv;
+		x = op (x, t+t + t*t + 1);
 	}
 }
 

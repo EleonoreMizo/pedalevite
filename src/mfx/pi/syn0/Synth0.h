@@ -80,6 +80,8 @@ private:
 
 	void           clear_buffers ();
 	void           update_param (bool force_flag = false);
+	template <typename OP>
+	inline void    fix_edge_polyblep (float &x, float &pos, OP op);
 
 	State          _state;
 
@@ -101,6 +103,8 @@ private:
 	float          _osc_pos;            // [0 ; 1[
 	BufAlign       _buf_syn;
 	BufAlign       _buf_env_amp;
+
+	float          _osc_stp_inv;
 
 
 
