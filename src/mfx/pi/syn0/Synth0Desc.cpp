@@ -72,6 +72,9 @@ Synth0Desc::Synth0Desc ()
 		0,
 		"%+6.1f"
 	);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
 	_desc_set.add_glob (Param_TRIG_ON, lin_sptr);
 
 	// Trigger Off
@@ -81,6 +84,9 @@ Synth0Desc::Synth0Desc ()
 		"%",
 		0,
 		"%+6.1f"
+	);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
 	);
 	_desc_set.add_glob (Param_TRIG_OFF, lin_sptr);
 }
