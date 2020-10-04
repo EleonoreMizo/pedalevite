@@ -139,7 +139,7 @@ AS_IF(
             [
                 MFLAGS="$MFLAGS -mtune=cortex-a72"
                 # Clang doesn't support the +crc+simd arch extensions
-		AX_CHECK_COMPILE_FLAG(
+                AX_CHECK_COMPILE_FLAG(
                     [-march=armv8-a+crc+simd],
                     [MFLAGS="$MFLAGS -march=armv8-a+crc+simd"],
                     [MFLAGS="$MFLAGS -march=armv8-a"]

@@ -9,6 +9,7 @@
 - **`Biquad4SimdMorph`**: Same as above, with automatic coefficient ramping when they are changed.
 - **`BiquadPackSimd`**: Processes N channels with M biquads, for an almost optimal usage of the SIMD instructions. The (N, M) configuration can be smoothly changed, as well as each filter coefficient. This is the core engine of any complex equalizer.
 - **`DcKiller1p`**: single-pole DC removal.
+- **`DcKiller2p`**: 2-pole DC removal.
 - **`DesignEq2p`**: s-plane design functions for basic filters (butterworth, equalizer…), including Orfanidis’ corrected filters at Nyquist frequency.
 - **`Downsampler4xSimd`**, **`Upsampler4xSimd`**: Convenience wrappers on the HIIR functions to achieve fast and high-quality 4x-up and downsampling.
 - **`FilterComb`**: Sub-sample comb filter with custom interpolator.

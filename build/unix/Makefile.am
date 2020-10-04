@@ -468,6 +468,9 @@ commonsrc = \
         ../../src/mfx/dsp/iir/DcKiller1p.cpp \
         ../../src/mfx/dsp/iir/DcKiller1p.h \
         ../../src/mfx/dsp/iir/DcKiller1p.hpp \
+        ../../src/mfx/dsp/iir/DcKiller2p.cpp \
+        ../../src/mfx/dsp/iir/DcKiller2p.h \
+        ../../src/mfx/dsp/iir/DcKiller2p.hpp \
         ../../src/mfx/dsp/iir/DesignEq2p.cpp \
         ../../src/mfx/dsp/iir/DesignEq2p.h \
         ../../src/mfx/dsp/iir/DesignEq2p.hpp \
