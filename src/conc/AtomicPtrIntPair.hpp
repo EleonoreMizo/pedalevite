@@ -44,16 +44,16 @@ AtomicPtrIntPair <T>::AtomicPtrIntPair ()
 
 
 template <class T>
-void	AtomicPtrIntPair <T>::set (T * ptr, ptrdiff_t val)
+void	AtomicPtrIntPair <T>::set (T * ptr, intptr_t val)
 {
+	const RealContent content = { ptr, val };
+
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
-	_data._content._ptr = ptr;
-	_data._content._val = val;
+	_data._content = content;
 
 #else  // conc_ARCHI
 
-	const RealContent content = { ptr, val };
 	_data.store (content);
 
 #endif // conc_ARCHI
@@ -62,7 +62,7 @@ void	AtomicPtrIntPair <T>::set (T * ptr, ptrdiff_t val)
 
 
 template <class T>
-void	AtomicPtrIntPair <T>::get (T * &ptr, ptrdiff_t &val) const
+void	AtomicPtrIntPair <T>::get (T * &ptr, intptr_t &val) const
 {
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
@@ -108,7 +108,7 @@ T *	AtomicPtrIntPair <T>::get_ptr () const
 
 
 template <class T>
-ptrdiff_t	AtomicPtrIntPair <T>::get_val () const
+intptr_t	AtomicPtrIntPair <T>::get_val () const
 {
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
@@ -126,7 +126,7 @@ ptrdiff_t	AtomicPtrIntPair <T>::get_val () const
 
 
 template <class T>
-bool	AtomicPtrIntPair <T>::cas2 (T *new_ptr, ptrdiff_t new_val, T *comp_ptr, ptrdiff_t comp_val)
+bool	AtomicPtrIntPair <T>::cas2 (T *new_ptr, intptr_t new_val, T *comp_ptr, intptr_t comp_val)
 {
 #if (conc_ARCHI == conc_ARCHI_X86 || ! conc_USE_STD_ATOMIC_128BITS)
 
@@ -148,7 +148,9 @@ bool	AtomicPtrIntPair <T>::cas2 (T *new_ptr, ptrdiff_t new_val, T *comp_ptr, ptr
 	const RealContent val      = { new_ptr , new_val  };
 	RealContent       expected = { comp_ptr, comp_val };
 
-	return (_data.compare_exchange_weak (expected, val));
+	// Some algorithms do something specific upon failure, so we need to
+	// use the strong version.
+	return (_data.compare_exchange_strong (expected, val));
 
 #endif // conc_ARCHI
 }

@@ -23,7 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include <cassert>
-#include <cstddef>
+#include <cstdint>
 
 
 
@@ -38,7 +38,7 @@ bool	is_ptr_aligned (const T *ptr, int align)
 	assert (align > 0);
 	assert ((align & -align) == align);
 
-	return ((reinterpret_cast <ptrdiff_t> (ptr) & (align - 1)) == 0);
+	return ((reinterpret_cast <intptr_t> (ptr) & (align - 1)) == 0);
 }
 
 template <class T>

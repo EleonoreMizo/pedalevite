@@ -52,13 +52,14 @@ void	LockFreeQueue <T>::enqueue (CellType &cell)
 	cell._next_ptr = nullptr;  // set the cell next pointer to NULL
 
 	CellType *     tail_ptr = nullptr;
-	ptrdiff_t      icount   = 0;
+	intptr_t       icount   = 0;
 
 	bool           cont_flag = true;
 	do	// try until enqueue is done
 	{
-		icount   = _m_ptr->_tail.get_val ();	// read the tail modification count
-		tail_ptr = _m_ptr->_tail.get_ptr ();	// read the tail cell
+		// read the tail modification count
+		// read the tail cell
+		_m_ptr->_tail.get (tail_ptr, icount);
 
 		// try to link the cell to the tail cell
 		void *         old_ptr = tail_ptr->_next_ptr.cas (&cell, nullptr);
@@ -84,19 +85,23 @@ void	LockFreeQueue <T>::enqueue (CellType &cell)
 template <class T>
 typename LockFreeQueue <T>::CellType *	LockFreeQueue <T>::dequeue ()
 {
-	ptrdiff_t      ocount   = 0;
-	ptrdiff_t      icount   = 0;
+	constexpr int  max_loop = 100;
+	int            loop_cnt = 0;
+	intptr_t       ocount   = 0;
+	intptr_t       icount   = 0;
 	CellType *     head_ptr = nullptr;
 	CellType *     next_ptr = nullptr;
 
 	do	// try until dequeue is done
 	{
-		ocount   = _m_ptr->_head.get_val ();   // read the head modification count
+		// read the head modification count
+		// read the head cell
+		_m_ptr->_head.get (head_ptr, ocount);
 		icount   = _m_ptr->_tail.get_val ();   // read the tail modification count
-		head_ptr = _m_ptr->_head.get_ptr ();   // read the head cell
 		next_ptr = head_ptr->_next_ptr;        // read the next cell
 
-		if (ocount == _m_ptr->_head.get_val ())  // ensures that next is a valid pointer to avoid failure when reading next value
+		const intptr_t ocount_tst = _m_ptr->_head.get_val ();
+		if (ocount == ocount_tst)  // ensures that next is a valid pointer to avoid failure when reading next value
 		{
 			if (head_ptr == _m_ptr->_tail.get_ptr ())   // is queue empty or tail falling behind ?
 			{
@@ -115,6 +120,16 @@ typename LockFreeQueue <T>::CellType *	LockFreeQueue <T>::dequeue ()
 					break;   // dequeue done, exit the loop
 				}
 			}
+		}
+
+		++ loop_cnt;
+		if (loop_cnt >= max_loop)
+		{
+			// This could indicate that the queue is:
+			// - corrupted
+			// - or in heavy contention
+			assert (false);
+			return nullptr;
 		}
 	}
 	while (true);

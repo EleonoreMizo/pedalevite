@@ -46,7 +46,7 @@ template <class T>
 void	LockFreeStack <T>::push (CellType &cell)
 {
 	CellType *     head_ptr = nullptr;
-	ptrdiff_t      count    = 0;
+	intptr_t       count    = 0;
 	do
 	{
 		head_ptr = _head_ptr_ptr->get_ptr ();
@@ -75,7 +75,7 @@ typename LockFreeStack <T>::CellType *	LockFreeStack <T>::pop ()
 
 		else
 		{
-			const ptrdiff_t   count = _head_ptr_ptr->get_val ();
+			const intptr_t    count = _head_ptr_ptr->get_val ();
 			if (cell_ptr != nullptr)
 			{
 				CellType *     next_ptr = cell_ptr->_next_ptr;

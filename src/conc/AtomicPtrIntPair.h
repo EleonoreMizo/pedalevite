@@ -62,11 +62,11 @@ public:
 
 	               AtomicPtrIntPair ();
 
-	void           set (T * ptr, ptrdiff_t val);
-	void           get (T * &ptr, ptrdiff_t &val) const;
+	void           set (T * ptr, intptr_t val);
+	void           get (T * &ptr, intptr_t &val) const;
 	T *            get_ptr () const;
-	ptrdiff_t      get_val () const;
-	bool           cas2 (T *new_ptr, ptrdiff_t new_val, T *comp_ptr, ptrdiff_t comp_val);
+	intptr_t       get_val () const;
+	bool           cas2 (T *new_ptr, intptr_t new_val, T *comp_ptr, intptr_t comp_val);
 
 
 
@@ -101,9 +101,8 @@ private:
 	class RealContent
 	{
 	public:
-		T * volatile   _ptr;
-		volatile intptr_t
-		               _val;
+		T *            _ptr;
+		intptr_t       _val;
 	};
 	static_assert (sizeof (RealContent) <= sizeof (DataType), "");
 

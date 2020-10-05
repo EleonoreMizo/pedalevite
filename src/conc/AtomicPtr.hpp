@@ -132,7 +132,9 @@ T *	AtomicPtr <T>::cas (T *other_ptr, T *comp_ptr)
 		comp_ptr
 	)));
 #else  // conc_ARCHI
-	_ptr.compare_exchange_weak (comp_ptr, other_ptr);
+	// Some algorithms do something specific upon failure, so we need to
+	// use the strong version.
+	_ptr.compare_exchange_strong (comp_ptr, other_ptr);
 	return (comp_ptr);
 #endif // conc_ARCHI
 }

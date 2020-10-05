@@ -128,7 +128,9 @@ T	AtomicInt <T>::cas (T other, T comp)
 #if (conc_ARCHI == conc_ARCHI_X86)
 	return (T (StoredTypeWrapper::cas (_val, other, comp)));
 #else  // conc_ARCHI
-	_val.compare_exchange_weak (comp, other);
+	// Some algorithms do something specific upon failure, so we need to
+	// use the strong version.
+	_val.compare_exchange_strong (comp, other);
 	return (comp);
 #endif // conc_ARCHI
 }
