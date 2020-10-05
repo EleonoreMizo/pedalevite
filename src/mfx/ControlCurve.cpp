@@ -352,8 +352,8 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 		break;
 	case ControlCurve_STEP1 + inv:
 		val = ControlCurve_map_range_mon (val, [] (float x) {
-			return ControlCurve_step1 (x, [] (float x) {
-				return sqrtf (sqrtf (x));
+			return ControlCurve_step1 (x, [] (float va) {
+				return sqrtf (sqrtf (va));
 			});
 		});
 		break;
@@ -366,8 +366,8 @@ float	ControlCurve_apply_curve (float val, ControlCurve curve, bool invert_flag)
 		break;
 	case ControlCurve_STEP2 + inv:
 		val = ControlCurve_map_range_mon (val, [] (float x) {
-			return ControlCurve_step2 (x, [] (float x) {
-				return sqrtf (sqrtf (x));
+			return ControlCurve_step2 (x, [] (float va) {
+				return sqrtf (sqrtf (va));
 			});
 		});
 		break;
