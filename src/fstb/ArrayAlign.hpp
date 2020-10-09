@@ -52,7 +52,7 @@ class DestroyAux <true>
 public:
 	template <typename T>
 	static inline void
-	               destroy_elt (T *ptr)
+	               destroy_elt (T * /*ptr*/)
 	{
 		// Nothing
 	}

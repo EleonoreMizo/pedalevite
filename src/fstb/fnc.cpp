@@ -98,7 +98,10 @@ FILE *	fopen_utf8 (const char *filename_0, const char *mode_0)
 	if (   Conv::utf8_to_utf16 (filename_utf16, filename_0) == fstb::Err_OK
 	    && Conv::utf8_to_utf16 (mode_utf16    , mode_0    ) == fstb::Err_OK)
 	{
-		f_ptr = _wfopen (filename_utf16.c_str (), mode_utf16.c_str ());
+		if (_wfopen_s (&f_ptr, filename_utf16.c_str (), mode_utf16.c_str ()) != 0)
+		{
+			f_ptr = nullptr;
+		}
 	}
 
 #else

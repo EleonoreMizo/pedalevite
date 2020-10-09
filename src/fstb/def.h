@@ -145,7 +145,7 @@ namespace fstb
 
 
 
-// Alignment
+// Alignment. Or better directly use alignas()
 #if defined (_MSC_VER)
 	#define	fstb_TYPEDEF_ALIGN( alignsize, srctype, dsttype)	\
 		typedef __declspec (align (alignsize)) srctype dsttype
