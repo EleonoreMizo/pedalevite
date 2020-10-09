@@ -72,9 +72,10 @@ AS_CASE(
 
 
 AC_LANG_PUSH([C++])
+AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++20], [CXXSTD="c++20"]))
 AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++17], [CXXSTD="c++17"]))
-AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++11], [CXXSTD="c++11"]))
-AS_IF([test "x$CXXSTD" = "x"], AC_MSG_ERROR([Minimum requirement: C++11]))
+AS_IF([test "x$CXXSTD" = "x"], AX_CHECK_COMPILE_FLAG([-std=c++14], [CXXSTD="c++14"]))
+AS_IF([test "x$CXXSTD" = "x"], AC_MSG_ERROR([Minimum requirement: C++14]))
 AX_CHECK_COMPILE_FLAG([-Wunused-private-field]        , [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-unused-private-field"]        , , [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument], [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-unused-command-line-argument"], , [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wexpansion-to-defined]        , [EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -Wno-expansion-to-defined"]        , , [-Werror])
