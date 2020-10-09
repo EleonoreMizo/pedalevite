@@ -56,8 +56,8 @@ void	StageProc3dnow <CUR>::process_sample_pos ()
 {
 	StageProc3dnow <CUR - 1>::process_sample_pos ();
 
-	enum { PREV_CELL = (CUR - 1) * sizeof (StageData3dnow) };
-	enum { CURR_CELL =  CUR      * sizeof (StageData3dnow) };
+	constexpr int  PREV_CELL = (CUR - 1) * sizeof (StageData3dnow);
+	constexpr int  CURR_CELL =  CUR      * sizeof (StageData3dnow);
 
 	__asm
 	{
@@ -83,8 +83,8 @@ void	StageProc3dnow <CUR>::process_sample_neg ()
 {
 	StageProc3dnow <CUR - 1>::process_sample_neg ();
 
-	enum { PREV_CELL = (CUR - 1) * sizeof (StageData3dnow) };
-	enum { CURR_CELL =  CUR      * sizeof (StageData3dnow) };
+	constexpr int  PREV_CELL = (CUR - 1) * sizeof (StageData3dnow);
+	constexpr int  CURR_CELL =  CUR      * sizeof (StageData3dnow);
 
 	__asm
 	{

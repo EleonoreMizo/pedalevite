@@ -50,10 +50,12 @@ class BitFieldTools
 
 public:
 
-   enum {         BITDEPTH_L2 = DL2 };
-   enum {         BITDEPTH    = 1 << BITDEPTH_L2 };
+   static constexpr int BITDEPTH_L2 = DL2;
+   static constexpr int BITDEPTH    = 1 << BITDEPTH_L2;
 
    typedef  T  GroupType;
+
+	static_assert (BITDEPTH <= sizeof (GroupType) * CHAR_BIT, "BITDEPTH");
 
 	static int     calculate_nbr_groups (int nbr_elt);
    static inline void
@@ -82,8 +84,6 @@ protected:
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
-
-	static_assert (BITDEPTH <= sizeof (GroupType) * CHAR_BIT, "BITDEPTH");
 
 
 

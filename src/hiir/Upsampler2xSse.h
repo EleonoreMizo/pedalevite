@@ -55,9 +55,8 @@ class Upsampler2xSse
 public:
 
 	typedef float DataType;
-	static const int  _nbr_chn = 1;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int _nbr_chn  = 1;
+	static constexpr int NBR_COEFS = NC;
 
 	               Upsampler2xSse ();
 	               Upsampler2xSse (const Upsampler2xSse &other)    = default;
@@ -89,8 +88,9 @@ protected:
 
 private:
 
-	static const int  _stage_width = 2;
-	static const int  _nbr_stages  = (NBR_COEFS + _stage_width - 1) / _stage_width;
+	static constexpr int _stage_width = 2;
+	static constexpr int _nbr_stages  =
+		(NBR_COEFS + _stage_width - 1) / _stage_width;
 
 	// Stage 0 contains only input memory
 	typedef std::array <StageDataSse, _nbr_stages + 1> Filter;

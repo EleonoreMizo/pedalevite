@@ -56,9 +56,8 @@ class PhaseHalfPi8Avx
 public:
 
 	typedef float DataType;
-	static const int  _nbr_chn = 8;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int _nbr_chn  = 8;
+	static constexpr int NBR_COEFS = NC;
 
 	               PhaseHalfPi8Avx ();
 	               PhaseHalfPi8Avx (const PhaseHalfPi8Avx <NC> &other) = default;
@@ -90,7 +89,7 @@ protected:
 
 private:
 
-	static const int  _nbr_phases = 2;
+	static constexpr int _nbr_phases = 2;
 
 	typedef std::array <StageDataAvx, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
 

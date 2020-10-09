@@ -116,7 +116,7 @@ Throws: Nothing
 template <int NC>
 void	Upsampler2x3dnow <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
+	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [0];
 	__m64          result;
@@ -164,7 +164,7 @@ void	Upsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_ptr 
 	assert (out_ptr >= in_ptr + nbr_spl || in_ptr >= out_ptr + nbr_spl);
 	assert (nbr_spl > 0);
 
-	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
+	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [0];
 

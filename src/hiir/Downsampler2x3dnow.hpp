@@ -120,7 +120,7 @@ float	Downsampler2x3dnow <NC>::process_sample (const float in_ptr [2])
 {
 	assert (in_ptr != nullptr);
 
-	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
+	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [0];
 	float           result;
@@ -171,7 +171,7 @@ void	Downsampler2x3dnow <NC>::process_block (float out_ptr [], const float in_pt
 	assert (out_ptr <= in_ptr || out_ptr >= in_ptr + nbr_spl * 2);
 	assert (nbr_spl > 0);
 
-	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
+	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
 
 	StageData3dnow *	filter_ptr = &_filter [0];
 
@@ -307,7 +307,7 @@ void	Downsampler2x3dnow <NC>::process_sample_split (float &low, float &high, con
 {
 	assert (in_ptr != nullptr);
 
-	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
+	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [0];
 
@@ -376,7 +376,7 @@ void	Downsampler2x3dnow <NC>::process_block_split (float out_l_ptr [], float out
 	assert (out_h_ptr != out_l_ptr);
 	assert (nbr_spl > 0);
 
-	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0]) };
+	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [0];
 

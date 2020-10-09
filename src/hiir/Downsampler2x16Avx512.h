@@ -60,9 +60,8 @@ class Downsampler2x16Avx512
 public:
 
 	typedef float DataType;
-	static const int  _nbr_chn = 16;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int _nbr_chn  = 16;
+	static constexpr int NBR_COEFS = NC;
 
 	               Downsampler2x16Avx512 ();
 	               Downsampler2x16Avx512 (const Downsampler2x16Avx512 <NC> &other) = default;

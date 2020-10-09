@@ -56,9 +56,8 @@ class PhaseHalfPi8F64Avx512
 public:
 
 	typedef double DataType;
-	static const int  _nbr_chn = 8;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int _nbr_chn  = 8;
+	static constexpr int NBR_COEFS = NC;
 
 	               PhaseHalfPi8F64Avx512 ();
 	               PhaseHalfPi8F64Avx512 (const PhaseHalfPi8F64Avx512 <NC> &other) = default;
@@ -90,7 +89,7 @@ protected:
 
 private:
 
-	static const int  _nbr_phases = 2;
+	static constexpr int _nbr_phases = 2;
 
 	typedef std::array <StageDataF64Avx512, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
 

@@ -60,9 +60,8 @@ class Downsampler2x4Neon
 public:
 
 	typedef float DataType;
-	static const int  _nbr_chn = 4;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int  _nbr_chn  = 4;
+	static constexpr int  NBR_COEFS = NC;
 
 	               Downsampler2x4Neon ();
 	               Downsampler2x4Neon (const Downsampler2x4Neon <NC> &other) = default;

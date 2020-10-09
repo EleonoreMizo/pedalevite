@@ -134,8 +134,8 @@ void	FFTRealPassDirect <PASS>::process (long len, DataType dest_ptr [], DataType
 	const long		cend = dist * 4;
 	const long		table_step = cos_len >> (PASS - 1);
 
-   enum {	TRIGO_OSC		= PASS - FFTRealFixLenParam::TRIGO_BD_LIMIT	};
-	enum {	TRIGO_DIRECT	= (TRIGO_OSC >= 0) ? 1 : 0	};
+   constexpr int  TRIGO_OSC    = PASS - FFTRealFixLenParam::TRIGO_BD_LIMIT;
+	constexpr int  TRIGO_DIRECT = (TRIGO_OSC >= 0) ? 1 : 0;
 
 	long				coef_index = 0;
 	do

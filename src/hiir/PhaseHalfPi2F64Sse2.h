@@ -56,9 +56,8 @@ class PhaseHalfPi2F64Sse2
 public:
 
 	typedef double DataType;
-	static const int  _nbr_chn = 2;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int _nbr_chn  = 2;
+	static constexpr int NBR_COEFS = NC;
 
 	               PhaseHalfPi2F64Sse2 ();
 	               PhaseHalfPi2F64Sse2 (const PhaseHalfPi2F64Sse2 <NC> &other) = default;
@@ -90,7 +89,7 @@ protected:
 
 private:
 
-	static const int  _nbr_phases = 2;
+	static constexpr int _nbr_phases = 2;
 
 	typedef std::array <StageDataF64Sse2, NBR_COEFS + 2> Filter;   // Stages 0 and 1 contain only input memories
 

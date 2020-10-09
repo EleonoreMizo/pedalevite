@@ -47,7 +47,8 @@ class FFTReal
 
 public:
 
-	enum {			MAX_BIT_DEPTH	= 30	};	// So length can be represented as long int
+	// So length can be represented as long int
+	static constexpr int MAX_BIT_DEPTH = 30;
 
 	typedef	DT	DataType;
 
@@ -79,7 +80,7 @@ protected:
 private:
 
    // Over this bit depth, we use direct calculation for sin/cos
-   enum {	      TRIGO_BD_LIMIT	= 12  };
+   static constexpr int TRIGO_BD_LIMIT	= 12;
 
 	typedef	OscSinCos <DataType>	OscType;
 

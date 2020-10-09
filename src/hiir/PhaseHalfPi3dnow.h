@@ -56,9 +56,8 @@ class PhaseHalfPi3dnow
 public:
 
 	typedef float DataType;
-	static const int  _nbr_chn = 1;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int _nbr_chn  = 1;
+	static constexpr int NBR_COEFS = NC;
 
 	               PhaseHalfPi3dnow ();
 	               PhaseHalfPi3dnow (const PhaseHalfPi3dnow <NC> &other) = default;
@@ -90,9 +89,9 @@ protected:
 
 private:
 
-	enum {         STAGE_WIDTH = 2 };
-	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH };
-	enum {         NBR_PHASES  = 2 };
+	static constexpr int STAGE_WIDTH = 2;
+	static constexpr int NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH;
+	static constexpr int NBR_PHASES  = 2;
 
 	typedef	std::array <StageData3dnow, NBR_STAGES + 1>	Filter;	// Stage 0 contains only input memory
    typedef  std::array <Filter, NBR_PHASES> FilterBiPhase;

@@ -60,9 +60,8 @@ class Downsampler2xSseOld
 public:
 
 	typedef float DataType;
-	static const int  _nbr_chn = 1;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int  _nbr_chn  = 1;
+	static constexpr int  NBR_COEFS = NC;
 
 	               Downsampler2xSseOld ();
 	               Downsampler2xSseOld (const Downsampler2xSseOld <NC> &other) = default;
@@ -98,8 +97,9 @@ protected:
 
 private:
 
-	enum {         STAGE_WIDTH	= 4 };
-	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH	 };
+	static constexpr int  STAGE_WIDTH = 4;
+	static constexpr int  NBR_STAGES  =
+		(NBR_COEFS + STAGE_WIDTH - 1) / STAGE_WIDTH;
 
 	typedef	std::array <StageDataSse, NBR_STAGES + 1>	Filter;  // Stage 0 contains only input memory
 

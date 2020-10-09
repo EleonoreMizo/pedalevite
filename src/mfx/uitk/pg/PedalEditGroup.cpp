@@ -133,7 +133,7 @@ MsgHandlerInterface::EvtProp	PedalEditGroup::do_handle_evt (const NodeEvt &evt)
 		{
 		case Button_S:
 			if (   node_id >= Entry_TRIG_BEG
-			    && node_id <  Entry_TRIG_BEG + doc::ActionTrigger_NBR_ELT)
+			    && node_id < int (Entry_TRIG_BEG) + int (doc::ActionTrigger_NBR_ELT))
 			{
 				_ctx._trigger = doc::ActionTrigger (node_id - Entry_TRIG_BEG);
 				_page_switcher.call_page (

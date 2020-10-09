@@ -105,13 +105,14 @@ private:
 
 #if (conc_ARCHI == conc_ARCHI_X86)
 
-	enum {			SZ  = sizeof (T)	};
-	enum {			SL2 =    (SZ > 16) ? -1
-						      : ((SZ >  8) ?  4
-						      : ((SZ >  4) ?  3
-						      : ((SZ >  2) ?  2
-						      : ((SZ >  1) ?  1
-						      :               0))))	};
+	static constexpr int SZ  = int (sizeof (T));
+	static constexpr int SL2 =
+		   (SZ > 16) ? -1
+		: ((SZ >  8) ?  4
+		: ((SZ >  4) ?  3
+		: ((SZ >  2) ?  2
+		: ((SZ >  1) ?  1
+		:               0))));
 
 	typedef	AtomicMem <SL2>	StoredTypeWrapper;
 	typedef	typename StoredTypeWrapper::DataType	StoredType;

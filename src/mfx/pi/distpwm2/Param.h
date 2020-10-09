@@ -58,12 +58,12 @@ enum Param
 	Param_SUST,
 	Param_GATE,
 	Param_OSC_BASE,
-	Param_OSC_STD  = Param_OSC_BASE + OscType_STD  * ParamOsc_NBR_ELT,
-	Param_OSC_OCT  = Param_OSC_BASE + OscType_OCT  * ParamOsc_NBR_ELT,
-	Param_OSC_SUB1 = Param_OSC_BASE + OscType_SUB1 * ParamOsc_NBR_ELT,
-	Param_OSC_SUB2 = Param_OSC_BASE + OscType_SUB2 * ParamOsc_NBR_ELT,
+	Param_OSC_STD  = int (Param_OSC_BASE) + int (OscType_STD ) * int (ParamOsc_NBR_ELT),
+	Param_OSC_OCT  = int (Param_OSC_BASE) + int (OscType_OCT ) * int (ParamOsc_NBR_ELT),
+	Param_OSC_SUB1 = int (Param_OSC_BASE) + int (OscType_SUB1) * int (ParamOsc_NBR_ELT),
+	Param_OSC_SUB2 = int (Param_OSC_BASE) + int (OscType_SUB2) * int (ParamOsc_NBR_ELT),
 
-	Param_NBR_ELT  = Param_OSC_BASE + OscType_NBR_ELT * ParamOsc_NBR_ELT
+	Param_NBR_ELT  = int (Param_OSC_BASE) + int (OscType_NBR_ELT) * int (ParamOsc_NBR_ELT)
 
 }; // enum Param
 

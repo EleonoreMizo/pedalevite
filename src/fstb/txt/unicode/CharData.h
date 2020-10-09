@@ -62,7 +62,7 @@ public:
 
 	typedef	size_t	FindCplxBreakFnc (LineBreakAction action_arr [], const LineBreakProp prop_arr [], LineBreakProp cls, size_t len);
 
-	enum {			MAX_NBR_CODE_POINTS	= 0x110000	};
+	static constexpr int MAX_NBR_CODE_POINTS	= 0x110000;
 
 	static Categ	get_categ (char32_t c);
 	static char32_t
@@ -96,8 +96,8 @@ protected:
 
 private:
 
-	enum {			PAGE_SIZE_L2	= 8	};
-	enum {			DIRECT_L2		= 15	};	// Bit must fit in an archi::UInt16
+	static constexpr int PAGE_SIZE_L2 = 8;
+	static constexpr int DIRECT_L2    = 15; // Bit must fit in an archi::UInt16
 
 	static const CharDataInfo &
 						use_info (char32_t c);
@@ -135,11 +135,14 @@ private:
 
 private:
 
-						CharData ();
-						CharData (const CharData &other);
-	CharData &		operator = (const CharData &other);
-	bool				operator == (const CharData &other);
-	bool				operator != (const CharData &other);
+						~CharData ()                        = delete;
+						CharData ()                         = delete;
+						CharData (const CharData &other)    = delete;
+						CharData (CharData &&other)         = delete;
+	CharData &		operator = (const CharData &other)  = delete;
+	CharData &		operator = (CharData &&other)       = delete;
+	bool				operator == (const CharData &other) = delete;
+	bool				operator != (const CharData &other) = delete;
 
 };	// class CharData
 

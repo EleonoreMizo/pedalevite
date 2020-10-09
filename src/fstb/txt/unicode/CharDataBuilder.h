@@ -60,7 +60,7 @@ class CharDataBuilder
 
 public:
 
-	enum {			PAGE_SIZE_X	= 1L << CharData::PAGE_SIZE_L2	};
+	static constexpr int PAGE_SIZE_X = 1L << CharData::PAGE_SIZE_L2;
 
 	static int		build_tables_from_unicode_ref_data (std::string &source, const char unicode_data_txt_filename_0 [], const char grapheme_break_property_txt_filename_0 [], const char line_break_txt_filename_0 [], const char word_break_property_txt_filename_0 []);
 

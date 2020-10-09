@@ -63,9 +63,8 @@ class PhaseHalfPiNeon
 public:
 
 	typedef float DataType;
-	static const int  _nbr_chn = 1;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int _nbr_chn  = 1;
+	static constexpr int NBR_COEFS = NC;
 
 	               PhaseHalfPiNeon ();
 	               PhaseHalfPiNeon (const PhaseHalfPiNeon <NC> &other) = default;
@@ -97,9 +96,9 @@ protected:
 
 private:
 
-	enum {         STAGE_WIDTH = 4 };
-	enum {         NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH };
-	enum {         NBR_PHASES  = 2 };
+	static constexpr int STAGE_WIDTH = 4;
+	static constexpr int NBR_STAGES  = (NBR_COEFS + STAGE_WIDTH-1) / STAGE_WIDTH;
+	static constexpr int NBR_PHASES  = 2;
 
 	typedef std::array <StageDataNeonV4, NBR_STAGES + 1> Filter;  // Stage 0 contains only input memory
    typedef std::array <Filter, NBR_PHASES> FilterBiPhase;

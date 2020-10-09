@@ -212,7 +212,7 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		"Rect\nRamp\nCycle\nSine\nSaw", name_pulse.c_str (), ""
 	);
 	assert (enu_sptr->get_nbr_elt () == PulseType_NBR_ELT);
-	_desc_set.add_glob (base + ParamOsc_PULSE, enu_sptr);
+	_desc_set.add_glob (base + int (ParamOsc_PULSE), enu_sptr);
 
 	// Level
 	const std::string name_lvl =
@@ -228,7 +228,7 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		0,
 		"%+5.1f"
 	);
-	_desc_set.add_glob (base + ParamOsc_LVL, sq_sptr);
+	_desc_set.add_glob (base + int (ParamOsc_LVL), sq_sptr);
 
 	// Pulse frequency
 	const std::string name_pw =
@@ -246,7 +246,7 @@ void	DistoPwm2Desc::init_osc (Param base, std::string name_l, std::string name_s
 		"%7.1f"
 	);
 	pll_sptr->use_mapper ().gen_log (10);
-	_desc_set.add_glob (base + ParamOsc_PF, pll_sptr);
+	_desc_set.add_glob (base + int (ParamOsc_PF), pll_sptr);
 }
 
 

@@ -52,8 +52,8 @@ public:
    typedef	FFTRealFixLenParam::DataType   DataType;
 	typedef	OscSinCos <DataType>	OscType;
 
-	enum {			FFT_LEN_L2	= LL2	};
-	enum {			FFT_LEN		= 1 << FFT_LEN_L2	};
+	static constexpr int FFT_LEN_L2 = LL2;
+	static constexpr int FFT_LEN    = 1 << FFT_LEN_L2;
 
 						FFTRealFixLen ();
 						~FFTRealFixLen ()                          = default;
@@ -80,19 +80,24 @@ protected:
 
 private:
 
-	enum {			TRIGO_BD_LIMIT	= FFTRealFixLenParam::TRIGO_BD_LIMIT	};
+	static constexpr int TRIGO_BD_LIMIT = FFTRealFixLenParam::TRIGO_BD_LIMIT;
 
-	enum {			BR_ARR_SIZE_L2	= ((FFT_LEN_L2 - 3) < 0) ? 0 : (FFT_LEN_L2 - 2)	};
-	enum {			BR_ARR_SIZE		= 1 << BR_ARR_SIZE_L2	};
+	static constexpr int BR_ARR_SIZE_L2 =
+		((FFT_LEN_L2 - 3) < 0) ? 0 : (FFT_LEN_L2 - 2);
+	static constexpr int BR_ARR_SIZE    = 1 << BR_ARR_SIZE_L2;
 
-   enum {			TRIGO_BD			=   ((FFT_LEN_L2 - TRIGO_BD_LIMIT) < 0)
-											  ? (int)FFT_LEN_L2
-											  : (int)TRIGO_BD_LIMIT };
-	enum {			TRIGO_TABLE_ARR_SIZE_L2	= (LL2 < 4) ? 0 : (TRIGO_BD - 2)	};
-	enum {			TRIGO_TABLE_ARR_SIZE	= 1 << TRIGO_TABLE_ARR_SIZE_L2	};
+   static constexpr int TRIGO_BD			=
+		  ((FFT_LEN_L2 - TRIGO_BD_LIMIT) < 0)
+		? (int)FFT_LEN_L2
+		: (int)TRIGO_BD_LIMIT;
+	static constexpr int TRIGO_TABLE_ARR_SIZE_L2 =
+		(LL2 < 4) ? 0 : (TRIGO_BD - 2);
+	static constexpr int TRIGO_TABLE_ARR_SIZE    =
+		1 << TRIGO_TABLE_ARR_SIZE_L2;
 
-	enum {			NBR_TRIGO_OSC			= FFT_LEN_L2 - TRIGO_BD	};
-	enum {			TRIGO_OSC_ARR_SIZE	=	(NBR_TRIGO_OSC > 0) ? NBR_TRIGO_OSC : 1	};
+	static constexpr int NBR_TRIGO_OSC      = FFT_LEN_L2 - TRIGO_BD;
+	static constexpr int TRIGO_OSC_ARR_SIZE =
+		(NBR_TRIGO_OSC > 0) ? NBR_TRIGO_OSC : 1;
 
 	void				build_br_lut ();
 	void				build_trigo_lut ();
@@ -113,8 +118,8 @@ private:
 
 private:
 
-	bool				operator == (const FFTRealFixLen &other);
-	bool				operator != (const FFTRealFixLen &other);
+	bool				operator == (const FFTRealFixLen &other) = delete;
+	bool				operator != (const FFTRealFixLen &other) = delete;
 
 };	// class FFTRealFixLen
 

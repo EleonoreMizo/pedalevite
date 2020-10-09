@@ -81,8 +81,8 @@ protected:
 
 private:
 
-   enum {         BITDEPTH_L2 = 5 };  // 32 bits
-   enum {         BITDEPTH    = 1 << BITDEPTH_L2 };
+   static constexpr int BITDEPTH_L2 = 5;  // 32 bits
+   static constexpr int BITDEPTH    = 1 << BITDEPTH_L2;
 
 	typedef	uint32_t	GroupType;
 

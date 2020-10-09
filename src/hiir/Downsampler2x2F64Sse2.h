@@ -61,9 +61,8 @@ class Downsampler2x2F64Sse2
 public:
 
 	typedef double DataType;
-	static const int  _nbr_chn = 2;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int  _nbr_chn  = 2;
+	static constexpr int  NBR_COEFS = NC;
 
 	               Downsampler2x2F64Sse2 ();
 	               Downsampler2x2F64Sse2 (const Downsampler2x2F64Sse2 <NC> &other) = default;

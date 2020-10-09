@@ -70,7 +70,7 @@ protected:
 
 private:
 
-	enum {         PREV = CUR - 1 };
+	static constexpr int PREV = CUR - 1;
 
 
 

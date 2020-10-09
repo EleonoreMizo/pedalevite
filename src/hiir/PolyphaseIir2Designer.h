@@ -86,7 +86,7 @@ class PolyphaseIir2Designer
 public:
 
 	// This should be enough for any purpose.
-	static const int  _max_order = 256;
+	static constexpr int _max_order = 256;
 
 	enum ResCode : int
 	{

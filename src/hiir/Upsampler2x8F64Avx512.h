@@ -60,9 +60,8 @@ class Upsampler2x8F64Avx512
 public:
 
 	typedef double DataType;
-	static const int  _nbr_chn = 8;
-
-	enum {         NBR_COEFS = NC };
+	static constexpr int _nbr_chn  = 8;
+	static constexpr int NBR_COEFS = NC;
 
 	               Upsampler2x8F64Avx512 ();
 	               Upsampler2x8F64Avx512 (const Upsampler2x8F64Avx512 <NC> &other) = default;

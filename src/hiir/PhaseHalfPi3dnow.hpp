@@ -124,7 +124,7 @@ Throws: Nothing
 template <int NC>
 void	PhaseHalfPi3dnow <NC>::process_sample (float &out_0, float &out_1, float input)
 {
-	enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]) };
+	constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]);
 
 	StageData3dnow *  filter_ptr = &_filter [_phase] [0];
    __m64           result;
@@ -198,7 +198,7 @@ void	PhaseHalfPi3dnow <NC>::process_block (float out_0_ptr [], float out_1_ptr [
 	{
 		float          prev = _prev;
 
-		enum { CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]) };
+		constexpr int  CURR_CELL = NBR_STAGES * sizeof (_filter [0] [0]);
 
 		StageData3dnow *  filter_ptr = &_filter [0] [0];
 		StageData3dnow *  filter2_ptr = &_filter [1] [0];
