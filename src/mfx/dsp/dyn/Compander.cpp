@@ -97,7 +97,7 @@ float	Compander::process_sample (float x)
 
 	float          y = x;
 
-	if (_state == Type_EXP)
+	if (_type == Type_EXP)
 	{
 		if (_state >= _lvl_thr)
 		{
@@ -124,7 +124,7 @@ void	Compander::process_block (float dst_ptr [], const float src_ptr [], int nbr
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	if (_state == Type_EXP)
+	if (_type == Type_EXP)
 	{
 		for (int pos = 0; pos < nbr_spl; ++pos)
 		{
