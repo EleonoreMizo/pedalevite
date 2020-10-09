@@ -57,9 +57,17 @@ typename AllocAlign <T, ALIG>::const_pointer	AllocAlign <T, ALIG>::address (cons
 
 
 template <class T, long ALIG>
-typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type n, typename std::allocator <void>::const_pointer ptr)
+typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type n, const void *ptr)
 {
 	fstb::unused (ptr);
+	return allocate (n);
+}
+
+
+
+template <class T, long ALIG>
+typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type n)
+{
 	assert (n >= 0);
 
 	const size_t   nbr_bytes = sizeof (T) * n;
@@ -83,11 +91,11 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 
 #else // Platform-independent implementation
 
-	const size_t   ptr_size = sizeof (void *);
-	const size_t   offset = ptr_size + ALIG - 1;
+	const size_t   ptr_size    = sizeof (void *);
+	const size_t   offset      = ptr_size + ALIG - 1;
 	const size_t   alloc_bytes = offset + nbr_bytes;
-	void *         alloc_ptr = new char [alloc_bytes];
-	pointer        zone_ptr = 0;
+	void *         alloc_ptr   = new char [alloc_bytes];
+	pointer        zone_ptr    = 0;
 	if (alloc_ptr != 0)
 	{
 		const intptr_t    alloc_l = reinterpret_cast <intptr_t> (alloc_ptr);

@@ -47,7 +47,7 @@ class AllocAlign
 
 public:
 
-	static const long ALIGNMENT = ALIG;
+	static constexpr long ALIGNMENT = ALIG;
 
 	typedef	T	value_type;
 	typedef	value_type *	pointer;
@@ -64,21 +64,26 @@ public:
 	               ~AllocAlign ()                                  = default;
 
 	// Address
-	inline pointer address (reference r);
-	inline const_pointer
+	[[deprecated]] inline pointer
+	               address (reference r);
+	[[deprecated]] inline const_pointer
 	               address (const_reference r);
 
 	// Memory allocation
-	inline pointer allocate (size_type n, typename std::allocator <void>::const_pointer ptr = nullptr);
+	[[deprecated]] inline pointer
+	               allocate (size_type n, const void *ptr);
+	inline pointer allocate (size_type n);
 	inline void    deallocate (pointer p, size_type n);
 
 	// Size
-	inline size_type
-	               max_size() const;
+	[[deprecated]] inline size_type
+	               max_size () const;
 
 	// Construction/destruction
-	inline void    construct (pointer ptr, const T & t);
-	inline void    destroy (pointer ptr);
+	[[deprecated]] inline void
+	               construct (pointer ptr, const T & t);
+	[[deprecated]] inline void
+	               destroy (pointer ptr);
 
 	inline bool    operator == (AllocAlign <T, ALIG> const &other);
 	inline bool    operator != (AllocAlign <T, ALIG> const &other);
