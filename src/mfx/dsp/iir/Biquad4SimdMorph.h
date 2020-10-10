@@ -58,7 +58,6 @@ public:
 
 	typedef	Biquad4Simd <V128Dest, V128Src, V128Par>	BiqSimd;
 	typedef	Biquad4SimdData::VectFloat4	VectFlt4;
-	typedef	Biquad4SimdData::VectFloat4Aligned	VectFlt4A;
 
 	               Biquad4SimdMorph () = default;
 	               Biquad4SimdMorph (const Biquad4SimdMorph <VD, VS, VP> &other);
@@ -117,16 +116,24 @@ private:
 
 	BiqSimd        _biq;
 
-	VectFlt4A      _step_b [3];   // Step for the current ramp
-	VectFlt4A      _step_a [3];
-	VectFlt4A      _target_b [3]; // Target Z-equation for the current ramp.
-	VectFlt4A      _target_a [3];
+	alignas (16) VectFlt4
+	               _step_b [3];   // Step for the current ramp
+	alignas (16) VectFlt4
+	               _step_a [3];
+	alignas (16) VectFlt4
+	               _target_b [3]; // Target Z-equation for the current ramp.
+	alignas (16) VectFlt4
+	               _target_a [3];
 
-	VectFlt4A      _prog_b [3];   // Target Z-equation for the subsequent ramp.
-	VectFlt4A      _prog_a [3];
+	alignas (16) VectFlt4
+	               _prog_b [3];   // Target Z-equation for the subsequent ramp.
+	alignas (16) VectFlt4
+	               _prog_a [3];
 
-	VectFlt4A      _tmp_b [3];
-	VectFlt4A      _tmp_a [3];
+	alignas (16) VectFlt4
+	               _tmp_b [3];
+	alignas (16) VectFlt4
+	               _tmp_a [3];
 
 	int            _nbr_rem_spl = 0;     // Number of remaining samples for the current ramp. 0 = no ramping.
 	int            _ramp_len    = 64;    // > 0

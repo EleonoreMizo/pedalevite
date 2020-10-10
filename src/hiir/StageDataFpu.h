@@ -36,7 +36,7 @@ class StageDataFpu
 
 public:
 
-   DT             _coef = 0;  // a_{n}
+   DT             _coef = 0;  // a_{n-2}
    DT             _mem  = 0;  // y of the stage
 
 }; // class StageDataFpu

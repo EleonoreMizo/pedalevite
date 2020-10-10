@@ -31,7 +31,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/DataAlign.h"
 #include "fstb/AllocAlign.h"
-#include "fstb/SingleObj.h"
 #include "fstb/ToolsSimd.h"
 #include "mfx/dsp/dyn/EnvFollowerAHR4SimdHelper.h"
 #include "mfx/dsp/iir/OnePole.h"
@@ -101,7 +100,6 @@ private:
 		fstb::DataAlign <true>,
 		2
 	> EnvHelper;
-	typedef fstb::SingleObj <EnvHelper, fstb::AllocAlign <EnvHelper, 16> > EnvHelperAlign;
 
 	float          compute_coef (float t) const;
 	void           prefilter_block (const float * const src_ptr_arr [], int nbr_chn, int nbr_spl);
@@ -110,7 +108,7 @@ private:
 	static inline void
 	               spread_and_store (fstb::ToolsSimd::VectF32 dst_ptr [], fstb::ToolsSimd::VectF32 x);
 
-	EnvHelperAlign _env_helper;         // 0 = fast env, 1 = slow env
+	EnvHelper      _env_helper;         // 0 = fast env, 1 = slow env
 	Buffer4        _buf;
 	ChnArray       _chn_arr;
 	BufRefArray    _buf_filter_ref_arr {};

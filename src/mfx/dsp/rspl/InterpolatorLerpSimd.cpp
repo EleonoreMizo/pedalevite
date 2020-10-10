@@ -82,11 +82,9 @@ void	InterpolatorLerpSimd::do_start (int nbr_chn)
 int	InterpolatorLerpSimd::do_process_block (float * const dest_ptr_arr [], const float * const src_ptr_arr [], int pos_dest, fstb::FixedPoint pos_src, int end_dest, int beg_src, int end_src, fstb::FixedPoint rate, fstb::FixedPoint rate_step)
 {
 	typedef	float	Buffer [4];
-	fstb_TYPEDEF_ALIGN (16, Buffer, BufAlign);
-
-	BufAlign       in_0_arr;
-	BufAlign       in_1_arr;
-	BufAlign       q_arr;
+	alignas (16) Buffer  in_0_arr;
+	alignas (16) Buffer  in_1_arr;
+	alignas (16) Buffer  q_arr;
 	int            pos_src_arr [4];
 
 	const int      pos_dest_old = pos_dest;

@@ -47,7 +47,7 @@ int	TestInterpPhase <T, NPL2>::perform_test ()
 	int            ret_val = 0;
 
 	const std::string class_name =
-		fstb::lang::type_name <InterpPhaseUnaligned> ().to_str ();
+		fstb::lang::type_name <InterpPhase> ().to_str ();
 	printf ("Testing %s...\n", class_name.c_str ());
 
 	if (ret_val == 0)
@@ -99,16 +99,14 @@ int	TestInterpPhase <T, NPL2>::perform_test_performance ()
 {
 	int            ret_val = 0;
 
-	fstb_TYPEDEF_ALIGN (16, InterpPhaseUnaligned, InterpPhase);
 	typedef mfx::dsp::rspl::InterpFirPolyphase <
 		InterpPhase, NBR_PHASES_L2
-	> InterpFirUnaligned;
-	fstb_TYPEDEF_ALIGN (16, InterpFirUnaligned, IntFir);
+	> InterpFir;
 
-	IntFir         interp;
+	InterpFir      interp;
 
-	const int      impulse_len = IntFir::IMPULSE_LEN;
-	const int      nbr_phases  = IntFir::NBR_PHASES;
+	const int      impulse_len = InterpFir::IMPULSE_LEN;
+	const int      nbr_phases  = InterpFir::NBR_PHASES;
 	double         impulse [impulse_len];
 	for (int pos = 0; pos < impulse_len; ++pos)
 	{

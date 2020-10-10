@@ -42,16 +42,10 @@ class StageDataF64Avx
 
 public:
 
-	union
-	{
-		__m256d        _coef4;     // Just to ensure alignement
-		double         _coef [4];
-	};
-	union
-	{
-		__m256d        _mem4;
-		double         _mem [4];   // y of the stage
-	};
+	alignas (32) double
+	               _coef [4];
+	alignas (32) double
+	               _mem [4];   // y of the stage
 
 }; // class StageDataF64Avx
 

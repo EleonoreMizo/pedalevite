@@ -83,10 +83,8 @@ int	InterpolatorHermite43Simd::do_process_block (float * const dest_ptr_arr [], 
 {
 	const auto     half = fstb::ToolsSimd::set1_f32 (0.5);
 
-	typedef	float	Buffer [4];
-	fstb_TYPEDEF_ALIGN (16, Buffer, BufAlign);
-
-	BufAlign       q_arr;
+	typedef float Buffer [4];
+	alignas (16) Buffer  q_arr;
 	int            pos_src_arr [4];
 
 	const int      pos_dest_old = pos_dest;

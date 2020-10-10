@@ -57,12 +57,11 @@ class InterpPhaseSimd
 
 public:
 
-	static const int  PHASE_LEN      = PL;                   // Samples
-	static const int  PHASE_LEN_V128 = (PHASE_LEN + 3) >> 2; // Vectors
-	static const int  ARRAY_LEN      = PHASE_LEN_V128 * 4;
+	static constexpr int PHASE_LEN      = PL;                   // Samples
+	static constexpr int PHASE_LEN_V128 = (PHASE_LEN + 3) >> 2; // Vectors
+	static constexpr int ARRAY_LEN      = PHASE_LEN_V128 * 4;
 
-	typedef std::array <float, ARRAY_LEN> BufferUnaligned;
-	fstb_TYPEDEF_ALIGN (16, BufferUnaligned, Buffer);
+	typedef std::array <float, ARRAY_LEN> Buffer;
 
 	inline void		set_data (int pos, float imp, float dif);
 	fstb_FORCEINLINE void
@@ -84,10 +83,12 @@ protected:
 
 private:
 
-	static const int  CHK_IMPULSE_NOT_SET = 12345;
+	static constexpr int CHK_IMPULSE_NOT_SET = 12345;
 
-	Buffer         _imp = Buffer {{ float (CHK_IMPULSE_NOT_SET) }}; // Impulse
-	Buffer         _dif; // Difference between next impulse and current impulse
+	alignas (16) Buffer  // Impulse
+	               _imp = Buffer {{ float (CHK_IMPULSE_NOT_SET) }};
+	alignas (16) Buffer  // Difference between next impulse and current impulse
+	               _dif;
 
 
 

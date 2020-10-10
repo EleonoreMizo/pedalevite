@@ -42,16 +42,10 @@ class StageDataAvx
 
 public:
 
-	union
-	{
-		__m256         _coef8;     // Just to ensure alignement
-		float          _coef [8];
-	};
-	union
-	{
-		__m256         _mem8;
-		float          _mem [8];   // y of the stage
-	};
+	alignas (32) float
+	               _coef [8];
+	alignas (32) float
+                  _mem [8];   // y of the stage
 
 }; // class StageDataAvx
 

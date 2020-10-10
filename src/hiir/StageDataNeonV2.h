@@ -38,43 +38,12 @@ namespace hiir
 
 class StageDataNeonV2
 {
-
-/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
 public:
 
-	union
-	{
-		__attribute__ ((aligned (16))) float32x2_t
-		               _coef2;
-		__attribute__ ((aligned (16))) float
-		               _coef [2];
-	};
-	union
-	{
-		__attribute__ ((aligned (16))) float32x2_t
-		               _mem2;
-		__attribute__ ((aligned (16))) float
-		               _mem [2];   // y of the stage
-	};
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-protected:
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-
-
-/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
+	alignas (16) float
+	               _coef [2];
+	alignas (16) float
+	               _mem [2];   // y of the stage
 
 }; // class StageDataNeonV2
 

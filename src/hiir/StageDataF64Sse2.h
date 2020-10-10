@@ -42,16 +42,10 @@ class StageDataF64Sse2
 
 public:
 
-	union
-	{
-		__m128d        _coef2;     // Just to ensure alignement
-		double         _coef [2];  
-	};
-	union
-	{
-		__m128d        _mem2;
-		double         _mem [2];   // y of the stage
-	};
+	alignas (16) double
+	               _coef [2];  
+	alignas (16) double
+	               _mem [2];   // y of the stage
 
 }; // class StageDataF64Sse2
 

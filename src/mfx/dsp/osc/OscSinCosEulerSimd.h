@@ -29,7 +29,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 
 
@@ -87,12 +86,12 @@ protected:
 
 private:
 
-	fstb_TYPEDEF_ALIGN (16, fstb::ToolsSimd::VectF32, VectF32Align);
-
 	void           resync (float c0, float s0);
 
-	VectF32Align   _pos_cos;
-	VectF32Align   _pos_sin;
+	alignas (16) fstb::ToolsSimd::VectF32
+	               _pos_cos;
+	alignas (16) fstb::ToolsSimd::VectF32
+	               _pos_sin;
 	float          _step_cosn;
 	float          _step_sinn;
 	float          _step_cos1;

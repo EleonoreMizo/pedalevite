@@ -27,8 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
-
 
 
 namespace mfx
@@ -40,7 +38,7 @@ namespace iir
 
 
 
-class Biquad4SimdData
+class alignas (16) Biquad4SimdData
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -50,30 +48,17 @@ public:
 	static const int  _nbr_units = 4;   // Number of processing units, running parallel or serial
 
 	typedef float VectFloat4 [4];
-	fstb_TYPEDEF_ALIGN (16, VectFloat4, VectFloat4Aligned);
 
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _z_eq_b [3];   // Direct coefficients, order z^(-n)
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _z_eq_a [3];   // Recursive coefficients, order z^(-n). Content of index 0 is actually ignored.
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _mem_x [2];    // Ring buffer for input memory
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _mem_y [2];    // Ring buffer for output memory
 
-#if defined (_MSC_VER)
-#pragma warning (push)
-#pragma warning (disable : 4324)
-#endif
-	union
-	{
-		int            _mem_pos;   // Write position in ring buffers. 0 or 1.
-		VectFloat4Aligned
-		               _pad;
-	};
-#if defined (_MSC_VER)
-#pragma warning (pop)
-#endif
+	int            _mem_pos;   // Write position in ring buffers. 0 or 1.
 
 
 

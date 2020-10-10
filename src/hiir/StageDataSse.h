@@ -41,16 +41,10 @@ class StageDataSse
 
 public:
 
-	union
-	{
-		__m128         _coef4;     // Just to ensure alignement
-		float          _coef [4];  // a_{4n+1}, a_{4n}, a_{4n+3}, a_{4n+2}
-	};
-	union
-	{
-		__m128         _mem4;
-		float          _mem [4];   // y of the stage
-	};
+	alignas (16) float
+	               _coef [4];  // a_{4n+1}, a_{4n}, a_{4n+3}, a_{4n+2}
+	alignas (16) float
+	               _mem [4];   // y of the stage
 
 }; // class StageDataSse
 

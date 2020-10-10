@@ -27,7 +27,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
 #include "fstb/ToolsSimd.h"
 
 
@@ -51,31 +50,30 @@ public:
 	static const int  _nbr_units = 4;   // Number of processing units, running parallel or serial
 
 	typedef float VectFloat4 [4];
-	fstb_TYPEDEF_ALIGN (16, VectFloat4, VectFloat4Aligned);
 
 	// Coefficients
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _g0;
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _g1;
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _g2;
 
 	// Mixers
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _v0m;
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _v1m;
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _v2m;
 
 	// Internal states
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _ic1eq;
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _ic2eq;
-	VectFloat4Aligned    // In    2x2 mode: mix state from this unit
-	               _y;   // In serial mode: mix state from the previous unit in the processing chain
+	alignas (16) VectFloat4 // In    2x2 mode: mix state from this unit
+	               _y;      // In serial mode: mix state from the previous unit in the processing chain
 
 
 

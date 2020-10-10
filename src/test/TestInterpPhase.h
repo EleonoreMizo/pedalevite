@@ -43,10 +43,10 @@ class TestInterpPhase
 
 public:
 
-	typedef T InterpPhaseUnaligned;
+	typedef T InterpPhase;
 
-	static const int  PHASE_LEN     = InterpPhaseUnaligned::PHASE_LEN;
-	static const int  NBR_PHASES_L2 = NPL2;
+	static constexpr int PHASE_LEN     = InterpPhase::PHASE_LEN;
+	static constexpr int NBR_PHASES_L2 = NPL2;
 
 	static int		perform_test ();
 

@@ -106,21 +106,20 @@ protected:
 
 private:
 
-	typedef	float	VectFloat4 [4];
-	fstb_TYPEDEF_ALIGN (16, VectFloat4, VectFloat4Aligned);
+	typedef float VectFloat4 [4];
 
 	fstb_FORCEINLINE static bool
 	               test_ge_0 (const fstb::ToolsSimd::VectF32 &in);
 
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _state [ORD];
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _coef_atk;
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _coef_rls;
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _hold_time;    // Counter for holding time (samples). Set to the maximum at a peak, and decreased.
-	VectFloat4Aligned
+	alignas (16) VectFloat4
 	               _hold_counter; // Samples
 
 

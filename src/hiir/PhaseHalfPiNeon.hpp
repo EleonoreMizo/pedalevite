@@ -121,7 +121,14 @@ hiir_FORCEINLINE void	PhaseHalfPiNeon <NC>::process_sample (float &out_0, float 
 	StageDataNeonV4 * filter_ptr = &_filter [_phase] [0];
 
 	const float32x2_t comb    = vset_lane_f32 (input, vdup_n_f32 (_prev), 1);
-	const float32x2_t spl_mid = vget_low_f32 (filter_ptr [NBR_STAGES]._mem4);
+	const float32x2_t spl_mid =
+#if ! defined (__BYTE_ORDER__) || (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+		// Requires a little-endian architecture, which is generally the case
+		load2a (filter_ptr [NBR_STAGES]._mem);
+#else
+		// Safe on any platform, but possibly slower.
+		vget_low_f32 (load4a (filter_ptr [NBR_STAGES]._mem));
+#endif
 	float32x4_t       y       = vcombine_f32 (comb, spl_mid);
 	float32x4_t       mem     = load4a (filter_ptr [0]._mem);
 
