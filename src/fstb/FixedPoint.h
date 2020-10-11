@@ -63,12 +63,12 @@ public:
 
 	FixedPoint &   operator = (const FixedPoint &other) = default;
 
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               clear ();
 	inline void    set_val (double val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 		            set_val (int32_t int_val, uint32_t frac_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 		            set_val_int64 (int64_t val);
 	inline constexpr double
 		            get_val_dbl () const;
@@ -77,15 +77,15 @@ public:
 	inline constexpr int64_t
 	               get_val_int64 () const;
 
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               set_int_val (int32_t int_val);
 	inline constexpr int32_t
 	               get_int_val () const;
-	inline fstb_CONSTEXPR14 int32_t
+	inline constexpr int32_t
 	               get_round () const;
-	inline fstb_CONSTEXPR14 int32_t
+	inline constexpr int32_t
 	               get_ceil () const;
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               set_frac_val (uint32_t frac_val);
 	inline constexpr uint32_t
 	               get_frac_val () const;
@@ -94,64 +94,64 @@ public:
 	inline constexpr float
 	               get_frac_val_flt () const;
 
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               neg ();
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               abs ();
 
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               bound (int32_t len);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               bound_positive (int32_t len);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               bound_and (int32_t and_val);
 
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               add (const FixedPoint &val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               add (const FixedPoint &val, int32_t and_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               add_int (int32_t int_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               add_int (int32_t int_val, int32_t and_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               add_frac (uint32_t frac_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               add_frac (uint32_t frac_val, int32_t and_val);
-	inline fstb_CONSTEXPR14 FixedPoint &
+	inline constexpr FixedPoint &
 	               operator += (const FixedPoint &other);
-	inline fstb_CONSTEXPR14 FixedPoint &
+	inline constexpr FixedPoint &
 	               operator += (int32_t int_val);
 
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               sub (const FixedPoint &val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               sub (const FixedPoint &val, int32_t and_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               sub_int (int32_t int_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               sub_int (int32_t int_val, int32_t and_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               sub_frac (uint32_t frac_val);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               sub_frac (uint32_t frac_val, int32_t and_val);
-	inline fstb_CONSTEXPR14 FixedPoint &
+	inline constexpr FixedPoint &
 	               operator -= (const FixedPoint &other);
-	inline fstb_CONSTEXPR14 FixedPoint &
+	inline constexpr FixedPoint &
 	               operator -= (int32_t int_val);
 
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               shift (int nbr_bits);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               shift_left (int nbr_bits);
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               shift_right (int nbr_bits);
-	inline fstb_CONSTEXPR14 FixedPoint &
+	inline constexpr FixedPoint &
 	               operator <<= (int nbr_bits);
-	inline fstb_CONSTEXPR14 FixedPoint &
+	inline constexpr FixedPoint &
 	               operator >>= (int nbr_bits);
 
-	inline fstb_CONSTEXPR14 void
+	inline constexpr void
 	               mul_int (int32_t val);
 	inline void    mul_flt (double val);
 

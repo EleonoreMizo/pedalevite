@@ -99,7 +99,7 @@ private:
 	void           update_filter (float b0);
 	void           set_fdbk_pos (int pos);
 
-	static inline fstb_CONSTEXPR14 float
+	static inline constexpr float
 	               saturate (float x);
 
 	State          _state;

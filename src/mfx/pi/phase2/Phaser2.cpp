@@ -460,7 +460,7 @@ void	Phaser2::set_fdbk_pos (int pos)
 
 
 
-fstb_CONSTEXPR14 float   Phaser2::saturate (float x)
+constexpr float   Phaser2::saturate (float x)
 {
 	const float    bias = 0.1f;
 	x += bias;

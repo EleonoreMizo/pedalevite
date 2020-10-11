@@ -30,8 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
-
 #include <ratio>
 
 
@@ -53,9 +51,9 @@ class MapSaturateBipolar
 
 public:
 
-	static fstb_CONSTEXPR14 inline T
+	static constexpr inline T
 						saturate (T x);
-	static fstb_CONSTEXPR14 inline T
+	static constexpr inline T
 						desaturate (T y);
 
 	static constexpr inline T

@@ -49,8 +49,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
-
 #include <ratio>
 
 
@@ -82,9 +80,9 @@ public:
 	typedef XS ValXS;
 	typedef YS ValYS;
 
-	static fstb_CONSTEXPR14 inline T
+	static constexpr inline T
 	               saturate (T x);
-	static fstb_CONSTEXPR14 inline T
+	static constexpr inline T
 	               desaturate (T y);
 
 	static constexpr inline T

@@ -76,7 +76,7 @@ constexpr T	limit (T x, T mi, T ma)
 
 
 template <class T>
-fstb_CONSTEXPR14 void	sort_2_elt (T &mi, T &ma, T a, T b)
+constexpr void	sort_2_elt (T &mi, T &ma, T a, T b)
 {
 	if (a < b)
 	{
@@ -529,7 +529,7 @@ int	conv_int_fast (T x)
 
 
 template <class T>
-fstb_CONSTEXPR14 bool	is_null (T val, T eps)
+constexpr bool	is_null (T val, T eps)
 {
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
 	assert (eps >= 0);
@@ -540,7 +540,7 @@ fstb_CONSTEXPR14 bool	is_null (T val, T eps)
 
 
 template <class T>
-fstb_CONSTEXPR14 bool	is_eq (T v1, T v2, T eps)
+constexpr bool	is_eq (T v1, T v2, T eps)
 {
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
 	assert (eps >= 0);
@@ -551,7 +551,7 @@ fstb_CONSTEXPR14 bool	is_eq (T v1, T v2, T eps)
 
 
 template <class T>
-fstb_CONSTEXPR14 bool	is_eq_rel (T v1, T v2, T tol)
+constexpr bool	is_eq_rel (T v1, T v2, T tol)
 {
 	static_assert (std::is_floating_point <T>::value, "T must be floating point");
 	assert (tol >= 0);
@@ -709,7 +709,7 @@ int	get_next_pow_2 (uint32_t x)
 
 
 
-fstb_CONSTEXPR14 double	sinc (double x)
+constexpr double	sinc (double x)
 {
 	if (x == 0)
 	{
@@ -797,7 +797,7 @@ constexpr T	cube (T x)
 
 // U must be a signed integer type
 template <class T, class U>
-fstb_CONSTEXPR14 T	ipow (T x, U n)
+constexpr T	ipow (T x, U n)
 {
 	const U			abs_n = std::abs (n);
 	const T			z (ipowp (x, abs_n));
@@ -809,7 +809,7 @@ fstb_CONSTEXPR14 T	ipow (T x, U n)
 
 // U must be an integer type (signed or not)
 template <class T, class U>
-fstb_CONSTEXPR14 T	ipowp (T x, U n)
+constexpr T	ipowp (T x, U n)
 {
 	assert (! (n < U (0)));
 
@@ -874,7 +874,7 @@ constexpr T	ipowpc (T x)
 
 
 template <class T>
-fstb_CONSTEXPR14 T	rcp_uint (int x)
+constexpr T	rcp_uint (int x)
 {
 	constexpr int  table_len           = 256;
 	constexpr T    rcp_arr [table_len] =

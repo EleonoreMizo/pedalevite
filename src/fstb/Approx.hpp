@@ -117,7 +117,7 @@ void	Approx::cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSim
 // x in [-1 ; 1]
 // Max error: 2.411e-8
 // Original formula
-fstb_CONSTEXPR14 float	Approx::sin_rbj_halfpi (float x)
+constexpr float	Approx::sin_rbj_halfpi (float x)
 {
 	const float   a  =  0.0001530302f;
 	const float   b  = -0.0046768800f;
@@ -542,7 +542,7 @@ uint32_t	Approx::fast_partial_exp2_int_16_to_int_32_4th (int val)
 // below 0.01% up to pi/8
 // below 1.33% up to pi/4
 // https://www.desmos.com/calculator/6ghwlhxumj
-fstb_CONSTEXPR14 float	Approx::tan_taylor5 (float x)
+constexpr float	Approx::tan_taylor5 (float x)
 {
 	const float    x_2 = x * x;
 	const float    c_1 = 1;
@@ -618,7 +618,7 @@ not really a problem as the precision was unnecessary high near 0.
 */
 
 template <typename T>
-fstb_CONSTEXPR14 T	Approx::tan_pade55 (T x)
+constexpr T	Approx::tan_pade55 (T x)
 {
 //	constexpr T    a   = 15;
 	constexpr T    a   = T (14.999975509385927280627711005255);

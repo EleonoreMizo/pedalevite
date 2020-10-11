@@ -40,7 +40,7 @@ namespace shape
 
 
 template <typename T, class C, class XS, class YS>
-fstb_CONSTEXPR14 T	MapSaturate <T, C, XS, YS>::saturate (T x)
+constexpr T	MapSaturate <T, C, XS, YS>::saturate (T x)
 {
 	assert (x / get_xs () >= 0);
 	assert (x / get_xs () <= 1);
@@ -61,7 +61,7 @@ fstb_CONSTEXPR14 T	MapSaturate <T, C, XS, YS>::saturate (T x)
 
 
 template <typename T, class C, class XS, class YS>
-fstb_CONSTEXPR14 T	MapSaturate <T, C, XS, YS>::desaturate (T y)
+constexpr T	MapSaturate <T, C, XS, YS>::desaturate (T y)
 {
 	assert (y / get_ys () >= 0);
 	assert (y / get_ys () <= 1);

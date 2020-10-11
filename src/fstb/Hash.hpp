@@ -42,7 +42,7 @@ inline constexpr T	Hash_nr_int (T x, T y)
 
 
 template <typename T>
-inline fstb_CONSTEXPR14 T	Hash_find_inverse_n (T x, int n)
+inline constexpr T	Hash_find_inverse_n (T x, int n)
 {
 	T              y = x;
 
@@ -56,14 +56,14 @@ inline fstb_CONSTEXPR14 T	Hash_find_inverse_n (T x, int n)
 
 
 
-inline fstb_CONSTEXPR14 uint32_t	Hash_find_inverse (uint32_t x)
+inline constexpr uint32_t	Hash_find_inverse (uint32_t x)
 {
 	return Hash_find_inverse_n (x, 4);
 }
 
 
 
-inline fstb_CONSTEXPR14 uint64_t	Hash_find_inverse (uint64_t x)
+inline constexpr uint64_t	Hash_find_inverse (uint64_t x)
 {
 	return Hash_find_inverse_n (x, 5);
 }
@@ -71,7 +71,7 @@ inline fstb_CONSTEXPR14 uint64_t	Hash_find_inverse (uint64_t x)
 
 
 template <typename T>
-static inline fstb_CONSTEXPR14 T	Hash_reverse_xor_shift (T y, int shift)
+static inline constexpr T	Hash_reverse_xor_shift (T y, int shift)
 {
 	constexpr int  resol    = CHAR_BIT * sizeof (T);
 	assert (shift < resol);
@@ -104,7 +104,7 @@ static inline fstb_CONSTEXPR14 T	Hash_reverse_xor_shift (T y, int shift)
 
 
 
-fstb_CONSTEXPR14 uint32_t	Hash::hash (uint32_t x)
+constexpr uint32_t	Hash::hash (uint32_t x)
 {
 	x ^= x >> 16;
 	x *= uint32_t (0x7FEB352Dlu);
@@ -117,7 +117,7 @@ fstb_CONSTEXPR14 uint32_t	Hash::hash (uint32_t x)
 
 
 
-fstb_CONSTEXPR14 uint32_t	Hash::hash_inv (uint32_t x)
+constexpr uint32_t	Hash::hash_inv (uint32_t x)
 {
 #if 0
 	x  = Hash_reverse_xor_shift (x, 16);
@@ -139,7 +139,7 @@ fstb_CONSTEXPR14 uint32_t	Hash::hash_inv (uint32_t x)
 
 
 // SplittableRandom / SplitMix64
-fstb_CONSTEXPR14 uint64_t	Hash::hash (uint64_t x)
+constexpr uint64_t	Hash::hash (uint64_t x)
 {
 	x ^= x >> 30;
 	x *= uint64_t (0xBF58476D1CE4E5B9llu);
@@ -154,7 +154,7 @@ fstb_CONSTEXPR14 uint64_t	Hash::hash (uint64_t x)
 
 // Source:
 // https://www.vincent-lunot.com/post/playing-with-pseudo-random-number-generators-part-3/
-fstb_CONSTEXPR14 uint64_t	Hash::hash_inv (uint64_t x)
+constexpr uint64_t	Hash::hash_inv (uint64_t x)
 {
 	x  = Hash_reverse_xor_shift (x, 31);
 	x *= Hash_find_inverse (uint64_t (0x94D049BB133111EBllu));

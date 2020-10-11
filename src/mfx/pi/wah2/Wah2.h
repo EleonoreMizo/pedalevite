@@ -30,7 +30,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "fstb/def.h"
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/util/NotificationFlagCascadeSingle.h"
 #include "fstb/AllocAlign.h"
@@ -135,7 +134,7 @@ private:
 	               para (float a, float b);
 	static constexpr float
 	               para (float a, float b, float c);
-	static fstb_CONSTEXPR14 float
+	static constexpr float
 	               shaper (float x);
 
 	State          _state;

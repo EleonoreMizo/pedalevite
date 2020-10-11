@@ -107,9 +107,9 @@ private:
 	};
 	typedef std::array <Step, _max_nbr_steps> StepArray;
 
-	static fstb_CONSTEXPR14 double
+	static constexpr double
 	               map_pos (double pos, Curve c);
-	static fstb_CONSTEXPR14 double
+	static constexpr double
 	               smooth (double x);
 
 	PhaseGenChaos  _phase_gen;

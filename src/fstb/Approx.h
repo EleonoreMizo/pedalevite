@@ -51,7 +51,7 @@ public:
 	               cos_rbj (ToolsSimd::VectF32 x);
 	static inline void
 	               cos_sin_rbj (ToolsSimd::VectF32 &c, ToolsSimd::VectF32 &s, ToolsSimd::VectF32 x);
-	static inline fstb_CONSTEXPR14 float
+	static inline constexpr float
 	               sin_rbj_halfpi (float x);
 	static inline ToolsSimd::VectF32
 	               sin_rbj_halfpi (ToolsSimd::VectF32 x);
@@ -91,7 +91,7 @@ public:
 	static inline uint32_t
 	               fast_partial_exp2_int_16_to_int_32_4th (int val);
 
-	static inline fstb_CONSTEXPR14 float
+	static inline constexpr float
 	               tan_taylor5 (float x);
 	static inline ToolsSimd::VectF32
 	               tan_taylor5 (ToolsSimd::VectF32 x);
@@ -101,7 +101,7 @@ public:
 	               tan_mystran (ToolsSimd::VectF32 x);
 
 	template <typename T>
-	static inline fstb_CONSTEXPR14 T
+	static inline constexpr T
 	               tan_pade55 (T x);
 	static inline ToolsSimd::VectF32
 	               tan_pade55 (ToolsSimd::VectF32 x);

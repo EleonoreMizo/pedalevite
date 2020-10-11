@@ -34,7 +34,7 @@ namespace fstb
 
 
 
-enum Err
+enum Err : int
 {
 	Err_OK = 0,
 

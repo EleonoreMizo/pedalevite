@@ -41,7 +41,7 @@ namespace shape
 
 
 
-fstb_CONSTEXPR14 float	WsAsym1::process_sample (float x)
+constexpr float	WsAsym1::process_sample (float x)
 {
 	const float    x2 = x * x;
 	if (x <= 0)
