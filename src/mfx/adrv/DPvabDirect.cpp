@@ -411,10 +411,10 @@ void	DPvabDirect::GpioAccess::pull (int gpio, Pull p) const
 	const uint32_t mask = uint32_t (1) << gpio;
 	_gpio_ptr [_ofs_reg_pull] = uint32_t (p);
 	std::this_thread::sleep_for (wait_time);
-	_gpio_ptr [_ofs_reg_pclk] |= mask;
+	_gpio_ptr [_ofs_reg_pclk] = _gpio_ptr [_ofs_reg_pclk] |  mask;
 	std::this_thread::sleep_for (wait_time);
 	_gpio_ptr [_ofs_reg_pull] = uint32_t (Pull_NONE);
-	_gpio_ptr [_ofs_reg_pclk] &= ~mask;
+	_gpio_ptr [_ofs_reg_pclk] = _gpio_ptr [_ofs_reg_pclk] & ~mask;
 #endif // mfx_adrv_DPvabDirect_TEST
 }
 
