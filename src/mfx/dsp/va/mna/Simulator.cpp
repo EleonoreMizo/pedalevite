@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "lal/op.h"
 #include "mfx/dsp/va/mna/PartSrcVoltage.h"
 #include "mfx/dsp/va/mna/Simulator.h"
 
@@ -150,6 +151,17 @@ void	Simulator::prepare (double sample_freq)
 	_vec_x.resize (_msize);
 	_vec_x_old.resize (_msize);
 
+	_tmp_y.resize (_msize);
+	_reorder_r_arr.resize (_msize);
+	_reorder_c_arr.resize (_msize);
+
+	// Pivots, default
+	for (int k = 0; k < _msize; ++k)
+	{
+		_reorder_r_arr [k] = k;
+		_reorder_c_arr [k] = k;
+	}
+
 	// Finalizes indexes and sends information back to the parts
 	const int      nbr_parts = int (_part_arr.size ());
 	for (int part_cnt = 0; part_cnt < nbr_parts; ++part_cnt)
@@ -189,8 +201,11 @@ void	Simulator::prepare (double sample_freq)
 		}
 	}
 
+	/*** To do: find good pivots ***/
+
 	// Starts with a fresh state
 	clear_buffers ();
+	_matrix_ok_flag = false;
 }
 
 
@@ -204,8 +219,10 @@ void	Simulator::process_sample ()
 	if (! _nl_flag)
 	{
 		build_matrix (0);
-		_decomp.compute (_mat_a);
-		_vec_x = _decomp.solve (_vec_z);
+		lal::decompose_lu (_mat_a, _reorder_r_arr, _reorder_c_arr);
+		lal::traverse_lu (
+			_vec_x, _tmp_y, _vec_z, _mat_a, _reorder_r_arr, _reorder_c_arr
+		);
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 		_st_nbr_it = 1;
 #endif // mfx_dsp_va_mna_Simulator_STATS
@@ -222,8 +239,10 @@ void	Simulator::process_sample ()
 			_vec_x_old = _vec_x;
 
 			build_matrix (nbr_it);
-			_decomp.compute (_mat_a);
-			_vec_x = _decomp.solve (_vec_z);
+			lal::decompose_lu (_mat_a, _reorder_r_arr, _reorder_c_arr);
+			lal::traverse_lu (
+				_vec_x, _tmp_y, _vec_z, _mat_a, _reorder_r_arr, _reorder_c_arr
+			);
 
 			// Limitation and convergence calculation
 			cont_flag = false;
@@ -231,11 +250,11 @@ void	Simulator::process_sample ()
 			{
 				if (! _known_voltage_arr [v_cnt])
 				{
-					Flt            v_cur = _vec_x (v_cnt);
-					const Flt      v_old = _vec_x_old (v_cnt);
+					Flt            v_cur = _vec_x [v_cnt];
+					const Flt      v_old = _vec_x_old [v_cnt];
 					assert (std::isfinite (v_cur) && fabs (v_cur) < 1e6f);
 					v_cur = fstb::limit (v_cur, v_old - _max_dif, v_old + _max_dif);
-					_vec_x (v_cnt) = v_cur;
+					_vec_x [v_cnt] = v_cur;
 
 					const Flt      dif  = v_cur - v_old;
 					const Flt      difa = fabs (dif);
@@ -261,6 +280,8 @@ void	Simulator::process_sample ()
 	++ _st._hist_it [_st_nbr_it];
 	++ _st._nbr_spl_proc;
 #endif // mfx_dsp_va_mna_Simulator_STATS
+
+	_matrix_ok_flag = false;
 }
 
 
@@ -276,7 +297,7 @@ Flt	Simulator::get_node_voltage (IdNode nid) const
 		const auto     it = _nid_to_idx_map.find (nid);
 		assert (it != _nid_to_idx_map.end ());
 		const int      idx = it->second;
-		v = _vec_x (idx);
+		v = _vec_x [idx];
 	}
 
 	return v;
@@ -290,8 +311,8 @@ void	Simulator::clear_buffers ()
 	{
 		part_sptr->clear_buffers ();
 	}
-	_vec_x.fill (0);
-	_vec_x_old.fill (0);
+	std::fill (_vec_x.begin ()    , _vec_x.end ()    , Flt (0));
+	std::fill (_vec_x_old.begin (), _vec_x_old.end (), Flt (0));
 }
 
 
@@ -319,6 +340,8 @@ int	Simulator::get_nbr_src_v () const
 
 std::vector <Flt>	Simulator::get_matrix () const
 {
+	assert (_matrix_ok_flag);
+
 	std::vector <Flt> mat;
 
 	for (int y = 0; y < _msize; ++y)
@@ -336,14 +359,7 @@ std::vector <Flt>	Simulator::get_matrix () const
 
 std::vector <Flt>	Simulator::get_vector () const
 {
-	std::vector <Flt> vec;
-
-	for (int x = 0; x < _msize; ++x)
-	{
-		vec.push_back (_vec_z (x));
-	}
-
-	return vec;
+	return _vec_z;
 }
 
 
@@ -395,7 +411,7 @@ Flt	Simulator::do_get_voltage (int node_idx) const
 	Flt            v = 0;
 	if (! is_node_gnd (node_idx))
 	{
-		v = _vec_x (node_idx);
+		v = _vec_x [node_idx];
 	}
 
 	return v;
@@ -433,7 +449,7 @@ void	Simulator::do_add_coef_vec (int row, Flt val)
 
 	if (row != _idx_gnd)
 	{
-		_vec_z (row) += val;
+		_vec_z [row] += val;
 	}
 }
 
@@ -445,13 +461,15 @@ void	Simulator::do_add_coef_vec (int row, Flt val)
 
 void	Simulator::build_matrix (int it_cnt)
 {
-	_mat_a.fill (0);
-	_vec_z.fill (0);
+	lal::fill (_mat_a, Flt (0));
+	std::fill (_vec_z.begin (), _vec_z.end (), Flt (0));
 
 	for (auto &part_sptr : _part_arr)
 	{
 		part_sptr->add_to_matrix (it_cnt);
 	}
+
+	_matrix_ok_flag = true;
 }
 
 

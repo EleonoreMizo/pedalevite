@@ -27,9 +27,9 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "lal/Mat.h"
 #include "mfx/dsp/va/mna/PartInterface.h"
 #include "mfx/dsp/va/mna/SimulInterface.h"
-#include "Eigen/Dense"
 
 #include <array>
 #include <map>
@@ -130,8 +130,8 @@ protected:
 
 private:
 
-	typedef Eigen::Matrix <Flt, Eigen::Dynamic, Eigen::Dynamic> TypeMatrix;
-	typedef Eigen::Matrix <Flt, Eigen::Dynamic, 1> TypeVector;
+	typedef lal::Mat <Flt> TypeMatrix;
+	typedef std::vector <Flt> TypeVector;
 
 	void           build_matrix (int it_cnt);
 
@@ -146,6 +146,7 @@ private:
 	int            _idx_gnd   = 0;
 	int            _msize     = 0; // _nbr_nodes + _nbr_src_v
 	bool           _nl_flag   = false;
+	bool           _matrix_ok_flag = false; // Indicates the matrix content is valid (and not an LU decomposition)
 	Flt            _sample_freq = 0; // Hz, > 0. 0 = not set
 
 	Flt            _max_dif   = Flt (0.15);
@@ -156,8 +157,12 @@ private:
 	TypeVector     _vec_z;
 	TypeVector     _vec_x;
 	TypeVector     _vec_x_old;
-	Eigen::PartialPivLU <TypeMatrix>
-	               _decomp;
+
+	TypeVector     _tmp_y;
+	std::vector <int>
+	               _reorder_r_arr;
+	std::vector <int>
+	               _reorder_c_arr;
 
 #if defined (mfx_dsp_va_mna_Simulator_STATS)
 	Stats          _st;
