@@ -1632,8 +1632,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
-        ../../src/test/TestLal.cpp \
-        ../../src/test/TestLal.h \
+        ../../src/test/Testlal.cpp \
+        ../../src/test/Testlal.h \
         ../../src/test/TestLatAlgo.cpp \
         ../../src/test/TestLatAlgo.h \
         ../../src/test/TestMoogLadderDAngelo.cpp \
