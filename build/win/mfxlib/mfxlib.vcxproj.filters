@@ -418,6 +418,9 @@
     <Filter Include="mfx\dsp\va\dkm">
       <UniqueIdentifier>{ffba7720-82d3-4cba-947b-cd5166cbba95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lal">
+      <UniqueIdentifier>{06f12d11-e32d-4a7b-a53b-2dbf0e35796e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -4696,6 +4699,39 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DcKiller2p.hpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\op.h">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\op.hpp">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\Dir.h">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatView.h">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatView.hpp">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatInterface.h">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatInterface.hpp">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\Mat.h">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\Mat.hpp">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatResizableInterface.h">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatResizableInterface.hpp">
+      <Filter>lal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

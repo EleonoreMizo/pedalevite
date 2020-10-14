@@ -67,6 +67,7 @@
 #include "test/TestHiirDesigner.h"
 #include "test/TestInterpFtor.h"
 #include "test/TestInterpPhase.h"
+#include "test/Testlal.h"
 #include "test/TestLatAlgo.h"
 #include "test/TestMoogLadderDAngelo.h"
 #include "test/TestMoogLadderMystran.h"
@@ -1882,6 +1883,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+#if 0
+	if (ret_val == 0) ret_val = Testlal::perform_test ();
+#endif
+
 	if (ret_val == 0) ret_val = TestRndXoroshiro128p::perform_test ();
 #endif
 

@@ -207,6 +207,17 @@ commonsrc = \
         ../../src/hiir/Upsampler2xFpu.h \
         ../../src/hiir/Upsampler2xFpuTpl.h \
         ../../src/hiir/Upsampler2xFpuTpl.hpp \
+        ../../src/lal/Dir.h \
+        ../../src/lal/Mat.h \
+        ../../src/lal/Mat.hpp \
+        ../../src/lal/MatInterface.h \
+        ../../src/lal/MatInterface.hpp \
+        ../../src/lal/MatResizableInterface.h \
+        ../../src/lal/MatResizableInterface.hpp \
+        ../../src/lal/MatView.h \
+        ../../src/lal/MatView.hpp \
+        ../../src/lal/op.h \
+        ../../src/lal/op.hpp \
         ../../src/mfx/adrv/CbInterface.cpp \
         ../../src/mfx/adrv/CbInterface.h \
         ../../src/mfx/adrv/DManual.cpp \
@@ -1621,6 +1632,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestInterpFtor.h \
         ../../src/test/TestInterpPhase.h \
         ../../src/test/TestInterpPhase.hpp \
+        ../../src/test/TestLal.cpp \
+        ../../src/test/TestLal.h \
         ../../src/test/TestLatAlgo.cpp \
         ../../src/test/TestLatAlgo.h \
         ../../src/test/TestMoogLadderDAngelo.cpp \
