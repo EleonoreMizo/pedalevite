@@ -70,7 +70,7 @@ private:
 	int            _rows       = 0;
 	int            _cols       = 0;
 	int            _stride     = 0;
-	T *            _data_ptr   = &_dummy_scalar;
+	T *            _data_ptr   = &this->_dummy_scalar;
 	bool           _const_flag = false;
 
 

@@ -77,13 +77,6 @@ protected:
 
 private:
 
-	               MatInterface (const MatInterface <T> &other) = delete;
-	               MatInterface (MatInterface <T> &&other)      = delete;
-	MatInterface <T> &
-	               operator = (const MatInterface <T> &other)   = delete;
-	MatInterface <T> &
-	               operator = (MatInterface <T> &&other)        = delete;
-
 }; // class MatInterface
 
 
