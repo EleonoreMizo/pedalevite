@@ -153,7 +153,7 @@ COM_DECLSPEC_NOTHROW STDMETHODIMP_(ULONG) CUnknown::NonDelegatingRelease()
         // once we know we will delete the object.
         // for an example aggregator see filgraph\distrib.cpp.
 
-        m_cRef++;
+        m_cRef = m_cRef + 1; // ++ on volatile causes a warning with modern compilers
 
         delete this;
         return ULONG(0);
