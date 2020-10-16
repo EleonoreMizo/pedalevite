@@ -4662,8 +4662,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.hpp">
       <Filter>mfx\pi\ramp</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLine.hpp" />
-    <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\EnvFollowerARHelper.h">
       <Filter>mfx\dsp\dyn</Filter>
     </ClInclude>
@@ -4699,6 +4697,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DcKiller2p.hpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLine.hpp">
+      <Filter>mfx\dsp\dly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\dly\BbdLineReadable.hpp">
+      <Filter>mfx\dsp\dly</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\lal\op.h">
       <Filter>lal</Filter>
