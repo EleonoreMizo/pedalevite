@@ -60,7 +60,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "Eigen/Dense"
+#include "lal/Mat.h"
+#include "lal/MatView.h"
 #include "mfx/dsp/va/dkm/Flt.h"
 
 #include <array>
@@ -157,11 +158,10 @@ protected:
 
 private:
 
-	typedef Eigen::Matrix <Flt, Eigen::Dynamic, Eigen::Dynamic> TypeMatrix;
-	typedef Eigen::Matrix <Flt, Eigen::Dynamic, 1> TypeVector;
-	typedef TypeMatrix TypeDiagonal;
-
-	typedef Eigen::Matrix <Flt, Eigen::Dynamic, Eigen::Dynamic, Eigen::DontAlign | Eigen::RowMajor> TypeMatrixRm;
+	typedef lal::Mat <Flt> TypeMatrix;
+	typedef std::vector <Flt> TypeVector;
+	typedef TypeVector TypeDiagonal;
+	typedef TypeMatrix TypeMatrixRm;
 
 	typedef Flt JuncDataType;
 
@@ -302,6 +302,9 @@ private:
 	void           decompose_lu (TypeMatrixRm &lu, std::vector <int> &r);
 	void           traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatrixRm &lu, const std::vector <int> &r, TypeVector &y);
 
+	template <typename D>
+	static void    mul_oim (D &dst, D &tmp, const TypeMatrix &lhs, const TypeVector &vec, const TypeMatrix &rhs);
+
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 	static void    print_vector (const TypeVector &v, const char *name_0);
 	static void    print_matrix (const TypeMatrix &m, const char *name_0);
@@ -356,6 +359,16 @@ private:
 	TypeVector     _vec_v_o;      // Output voltages
 	TypeVector     _vec_p;        // Input for the non-linear solving
 
+	// Temporary data
+	TypeVector     _tmp_v_o_u;
+	TypeVector     _tmp_v_o_x;
+	TypeVector     _tmp_v_o_i;
+	TypeVector     _tmp_x_u;
+	TypeVector     _tmp_x_x;
+	TypeVector     _tmp_x_i;
+	TypeVector     _tmp_p_u;
+	TypeVector     _tmp_p_x;
+
 	// Main DK matrices
 	TypeMatrix     _mat_a;        // states      -> states
 	TypeMatrix     _mat_b;        // voltage src -> states
@@ -395,6 +408,12 @@ private:
 	TypeMatrix     _mat_s_0_inv;
 	TypeMatrix     _mat_q;
 	TypeMatrix     _mat_r_v_q_inv;// (Rv + Q)^-1
+	TypeMatrix     _mat_r_v_q_lu;
+	std::vector <int>
+	               _r_v_q_r_arr;
+	std::vector <int>
+	               _r_v_q_c_arr;
+	TypeVector     _r_v_q_y;
 	TypeMatrix     _mat_a_0;
 	TypeMatrix     _mat_b_0;
 	TypeMatrix     _mat_c_0;
@@ -409,9 +428,11 @@ private:
 	TypeMatrix     _mat_u_n;
 	TypeMatrix     _mat_u_u;
 	TypeMatrix     _mat_j_f;
-	TypeMatrixRm   _mat_j_r;
-	TypeDiagonal   _dia_id_n;
+	TypeMatrixRm   _mat_j_r;         // Recomputed at each iteration, then in-place decomposed into LU
+	TypeMatrix     _dia_id_n;
 	TypeVector     _vec_r_neg;       // Opposite of R(v_n)
+	TypeVector     _vec_r_neg_tmp1;
+	TypeVector     _vec_r_neg_tmp2;
 	TypeVector     _vec_delta_x;
 	TypeMatrix     _mat_abc_tmp;
 	TypeMatrix     _mat_def_tmp;
@@ -422,14 +443,11 @@ private:
 	TypeMatrix     _mat_def_0_tmp;   // (No 0) * S0^-1
 	TypeMatrix     _mat_ghk_0_tmp;   // (Nn 0) * S0^-1
 	TypeMatrix     _mat_u_tmp;       // S0^-1 * (Nv 0)T
-	Eigen::PartialPivLU <TypeMatrix>
-	               _decomp_delta_x;
-#if defined (mfx_dsp_va_dkm_Simulator_STATS) \
- && defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
 	std::vector <int>
-	               _vec_lu_r;        // Row reordering
-	TypeVector     _vec_lu_y;        // Temporary vector
-#endif // mfx_dsp_va_dkm_Simulator_STATS_PIV
+	               _j_r_r_arr;
+	std::vector <int>
+	               _j_r_c_arr;
+	TypeVector     _j_r_y;           // Temporary
 
 	bool           _r_v_dirty_flag = true; // Indicates _mat_r_v and dependencies must be recomputed
 

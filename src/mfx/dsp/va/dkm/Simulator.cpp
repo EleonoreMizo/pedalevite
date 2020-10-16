@@ -26,6 +26,7 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/def.h"
 #include "fstb/Approx.h"
+#include "lal/op.h"
 #include "mfx/dsp/va/dkm/Simulator.h"
 
 #include <cassert>
@@ -284,7 +285,7 @@ void	Simulator::set_src_v (int idx, Flt v)
 	assert (idx >= 0);
 	assert (idx < _nbr_src_v);
 
-	_vec_u (idx) = v;
+	_vec_u [idx] = v;
 }
 
 
@@ -316,8 +317,15 @@ void	Simulator::process_sample ()
 	// Linear system
 	if (_linear_flag)
 	{
-		_vec_v_o   = _mat_e * _vec_u + _mat_d * _vec_x_prv;
-		_vec_x_cur = _mat_b * _vec_u + _mat_a * _vec_x_prv;
+		// _vec_v_o   = _mat_e * _vec_u + _mat_d * _vec_x_prv;
+		lal::mul (_tmp_v_o_u, _mat_e, _vec_u);
+		lal::mul (_tmp_v_o_x, _mat_d, _vec_x_prv);
+		lal::add (_vec_v_o, _tmp_v_o_u, _tmp_v_o_x);
+
+		// _vec_x_cur = _mat_b * _vec_u + _mat_a * _vec_x_prv;
+		lal::mul (_tmp_x_u, _mat_b, _vec_u);
+		lal::mul (_tmp_x_x, _mat_a, _vec_x_prv);
+		lal::add (_vec_x_cur, _tmp_x_u, _tmp_x_x);
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
 		_st_nbr_it = 1;
@@ -328,14 +336,28 @@ void	Simulator::process_sample ()
 	else
 	{
 		// Finds voltages across the non-linear elements
-		_vec_p = _mat_h * _vec_u + _mat_g * _vec_x_prv;
+		// _vec_p = _mat_h * _vec_u + _mat_g * _vec_x_prv;
+		lal::mul (_tmp_p_u, _mat_h, _vec_u);
+		lal::mul (_tmp_p_x, _mat_g, _vec_x_prv);
+		lal::add (_vec_p, _tmp_p_u, _tmp_p_x);
 		solve_nl ();
 
-		_vec_v_o   = _mat_e * _vec_u - _mat_f * _vec_i_n + _mat_d * _vec_x_prv;
-		_vec_x_cur = _mat_b * _vec_u - _mat_c * _vec_i_n + _mat_a * _vec_x_prv;
+		// _vec_v_o   = _mat_e * _vec_u - _mat_f * _vec_i_n + _mat_d * _vec_x_prv;
+		lal::mul (_tmp_v_o_u, _mat_e, _vec_u);
+		lal::mul (_tmp_v_o_x, _mat_d, _vec_x_prv);
+		lal::add (_vec_v_o, _tmp_v_o_u, _tmp_v_o_x);
+		lal::mul (_tmp_v_o_i, _mat_f, _vec_i_n);
+		lal::sub (_vec_v_o, _vec_v_o, _tmp_v_o_i);
+
+		// _vec_x_cur = _mat_b * _vec_u - _mat_c * _vec_i_n + _mat_a * _vec_x_prv;
+		lal::mul (_tmp_x_u, _mat_b, _vec_u);
+		lal::mul (_tmp_x_x, _mat_a, _vec_x_prv);
+		lal::add (_vec_x_cur, _tmp_x_u, _tmp_x_x);
+		lal::mul (_tmp_x_i, _mat_c, _vec_i_n);
+		lal::sub (_vec_x_cur, _vec_x_cur, _tmp_x_i);
 	}
 
-	_vec_x_prv = _vec_x_cur;
+	lal::copy (_vec_x_prv, _vec_x_cur);
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
 	++ _st._hist_it [_st_nbr_it];
@@ -350,17 +372,17 @@ Flt	Simulator::get_output (int idx) const
 	assert (idx >= 0);
 	assert (idx < _nbr_out);
 
-	return _vec_v_o (idx);
+	return _vec_v_o [idx];
 }
 
 
 
 void	Simulator::clear_buffers ()
 {
-	_vec_x_cur.setZero ();
-	_vec_x_prv.setZero ();
-	_vec_v_o.setZero ();
-	_vec_v_n.setZero ();
+	std::fill (_vec_x_cur.begin (), _vec_x_cur.end (), Flt (0));
+	std::fill (_vec_x_prv.begin (), _vec_x_prv.end (), Flt (0));
+	std::fill (_vec_v_o.begin ()  , _vec_v_o.end ()  , Flt (0));
+	std::fill (_vec_v_n.begin ()  , _vec_v_n.end ()  , Flt (0));
 }
 
 
@@ -434,10 +456,10 @@ void	Simulator::print_all () const
 	print_matrix (_mat_g         , "_mat_g"         );
 	print_matrix (_mat_h         , "_mat_h"         );
 	print_matrix (_mat_k         , "_mat_k"         );
-	print_matrix (_dia_g_r       , "_dia_g_r"       );
-	print_matrix (_dia_g_x       , "_dia_g_x"       );
-	print_matrix (_dia_z         , "_dia_z"         );
-	print_matrix (_dia_r_v       , "_dia_r_v"       );
+	print_vector (_dia_g_r       , "_dia_g_r"       );
+	print_vector (_dia_g_x       , "_dia_g_x"       );
+	print_vector (_dia_z         , "_dia_z"         );
+	print_vector (_dia_r_v       , "_dia_r_v"       );
 	print_matrix (_mat_n_x       , "_mat_n_x"       );
 	print_matrix (_mat_n_o       , "_mat_n_o"       );
 	print_matrix (_mat_n_n       , "_mat_n_n"       );
@@ -553,7 +575,7 @@ void	Simulator::resize_and_clear_mat_vec ()
 	_vec_x_prv.resize (_nbr_ese);
 	_vec_u.resize (_nbr_src_v);
 	_vec_v_n.resize (_nbr_nl);
-	_vec_i_n.resizeLike (_vec_v_n);
+	_vec_i_n.resize (_vec_v_n.size ());
 	_vec_v_o.resize (_nbr_out);
 	_vec_p.resize (_nbr_nl);
 
@@ -569,10 +591,10 @@ void	Simulator::resize_and_clear_mat_vec ()
 	_mat_h.resize (_nbr_nl , _nbr_src_v);
 	_mat_k.resize (_nbr_nl , _nbr_nl);
 
-	_dia_g_r.resize (_nbr_res, _nbr_res);
-	_dia_g_x.resize (_nbr_ese, _nbr_ese);
-	_dia_z.resize (_nbr_ese, _nbr_ese);
-	_dia_r_v.resize (_nbr_pot, _nbr_pot);
+	_dia_g_r.resize (_nbr_res);
+	_dia_g_x.resize (_nbr_ese);
+	_dia_z.resize (_nbr_ese);
+	_dia_r_v.resize (_nbr_pot);
 
 	_mat_n_x.resize (_nbr_ese  , _nbr_nodes);
 	_mat_n_o.resize (_nbr_out  , _nbr_nodes);
@@ -582,110 +604,128 @@ void	Simulator::resize_and_clear_mat_vec ()
 	_mat_n_r.resize (_nbr_res  , _nbr_nodes);
 
 	_mat_s_0.resize (msize, msize);
-	_mat_s_0_inv.resizeLike (_mat_s_0);
-	_mat_q.resizeLike (_dia_r_v);
-	_mat_r_v_q_inv.resizeLike (_dia_r_v);
-	_mat_a_0.resizeLike (_mat_a);
-	_mat_b_0.resizeLike (_mat_b);
-	_mat_c_0.resizeLike (_mat_c);
-	_mat_d_0.resizeLike (_mat_d);
-	_mat_e_0.resizeLike (_mat_e);
-	_mat_f_0.resizeLike (_mat_f);
-	_mat_g_0.resizeLike (_mat_g);
-	_mat_h_0.resizeLike (_mat_h);
-	_mat_k_0.resizeLike (_mat_k);
+	_mat_s_0_inv.resize (_mat_s_0);
+	_mat_q.resize (int (_dia_r_v.size ()), int (_dia_r_v.size ()));
+	_mat_r_v_q_inv.resize (_mat_q);
+	_mat_r_v_q_lu.resize (_mat_q);
+	_r_v_q_r_arr.resize (_mat_r_v_q_lu.get_rows ());
+	_r_v_q_c_arr.resize (_mat_r_v_q_lu.get_cols ());
+	for (int k = 0; k < int (_dia_r_v.size ()); ++k)
+	{
+		_r_v_q_r_arr [k] = k;
+		_r_v_q_c_arr [k] = k;
+	}
+	_r_v_q_y.resize (_dia_r_v.size ());
+	_mat_a_0.resize (_mat_a);
+	_mat_b_0.resize (_mat_b);
+	_mat_c_0.resize (_mat_c);
+	_mat_d_0.resize (_mat_d);
+	_mat_e_0.resize (_mat_e);
+	_mat_f_0.resize (_mat_f);
+	_mat_g_0.resize (_mat_g);
+	_mat_h_0.resize (_mat_h);
+	_mat_k_0.resize (_mat_k);
 	_mat_u_x.resize (_nbr_ese, _nbr_pot);
 	_mat_u_o.resize (_nbr_out, _nbr_pot);
 	_mat_u_n.resize (_nbr_nl, _nbr_pot);
 	_mat_u_u.resize (_nbr_src_v, _nbr_pot);
 	_mat_j_f.resize (_nbr_nl, _nbr_nl);
-	_mat_j_r.resizeLike (_mat_j_f);
-	_dia_id_n.resizeLike (_mat_j_f);
-	_vec_r_neg.resizeLike (_vec_v_n);
-	_vec_delta_x.resizeLike (_vec_v_n);
+	_mat_j_r.resize (_mat_j_f);
+	_dia_id_n.resize (_mat_j_f);
+	_vec_r_neg.resize (_vec_v_n.size ());
+	_vec_r_neg_tmp1.resize (_vec_r_neg.size ());
+	_vec_r_neg_tmp2.resize (_vec_r_neg.size ());
+	_vec_delta_x.resize (_vec_v_n.size ());
 	_mat_abc_tmp.resize (_nbr_ese, _nbr_pot);
 	_mat_def_tmp.resize (_nbr_out, _nbr_pot);
 	_mat_ghk_tmp.resize (_nbr_nl , _nbr_pot);
-	_mat_abc_0_tmp1.resizeLike (_mat_n_x);
-	_mat_abc_0_tmp2.resizeLike (_mat_n_x);
-	_mat_def_0_tmp.resizeLike (_mat_n_o);
-	_mat_ghk_0_tmp.resizeLike (_mat_n_n);
+	_mat_abc_0_tmp1.resize (_mat_n_x);
+	_mat_abc_0_tmp2.resize (_mat_n_x);
+	_mat_def_0_tmp.resize (_mat_n_o);
+	_mat_ghk_0_tmp.resize (_mat_n_n);
 	_mat_u_tmp.resize (_nbr_nodes, _nbr_pot);
+	_j_r_r_arr.resize (_nbr_nl);
+	_j_r_c_arr.resize (_nbr_nl);
+	for (int k = 0; k < _nbr_nl; ++k)
+	{
+		_j_r_r_arr [k] = k;
+		_j_r_c_arr [k] = k;
+	}
+	_j_r_y.resize (_nbr_nl);
 
-#if defined (mfx_dsp_va_dkm_Simulator_STATS) \
- && defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
-	_vec_lu_r.resize (_nbr_nl);
-	_vec_lu_y.resize (_nbr_nl);
-#endif // mfx_dsp_va_dkm_Simulator_STATS_PIV
+	// Temporary data
+	_tmp_v_o_u.resize (_vec_v_o.size ());
+	_tmp_v_o_x.resize (_vec_v_o.size ());
+	_tmp_v_o_i.resize (_vec_v_o.size ());
+	_tmp_x_u.resize (_vec_x_cur.size ());
+	_tmp_x_x.resize (_vec_x_cur.size ());
+	_tmp_x_i.resize (_vec_x_cur.size ());
+	_tmp_p_u.resize (_vec_p.size ());
+	_tmp_p_x.resize (_vec_p.size ());
 
 	// Resets everything
-	_vec_x_cur.setZero ();
-	_vec_x_prv.setZero ();
-	_vec_u.setZero ();
-	_vec_v_n.setZero ();
-	_vec_i_n.setZero ();
-	_vec_v_o.setZero ();
-	_vec_p.setZero ();
+	lal::fill (_vec_x_cur, Flt (0));
+	lal::fill (_vec_x_prv, Flt (0));
+	lal::fill (_vec_u, Flt (0));
+	lal::fill (_vec_v_n, Flt (0));
+	lal::fill (_vec_i_n, Flt (0));
+	lal::fill (_vec_v_o, Flt (0));
+	lal::fill (_vec_p, Flt (0));
 
-	_mat_a.setZero ();
-	_mat_b.setZero ();
-	_mat_c.setZero ();
+	lal::fill (_mat_a, Flt (0));
+	lal::fill (_mat_b, Flt (0));
+	lal::fill (_mat_c, Flt (0));
 
-	_mat_d.setZero ();
-	_mat_e.setZero ();
-	_mat_f.setZero ();
+	lal::fill (_mat_d, Flt (0));
+	lal::fill (_mat_e, Flt (0));
+	lal::fill (_mat_f, Flt (0));
 
-	_mat_g.setZero ();
-	_mat_h.setZero ();
-	_mat_k.setZero ();
+	lal::fill (_mat_g, Flt (0));
+	lal::fill (_mat_h, Flt (0));
+	lal::fill (_mat_k, Flt (0));
 
-	_dia_g_r.setZero ();
-	_dia_g_x.setZero ();
-	_dia_z.setZero ();
-	_dia_r_v.setZero ();
+	lal::fill (_dia_g_r, Flt (0));
+	lal::fill (_dia_g_x, Flt (0));
+	lal::fill (_dia_z, Flt (0));
+	lal::fill (_dia_r_v, Flt (0));
 
-	_mat_n_x.setZero ();
-	_mat_n_o.setZero ();
-	_mat_n_n.setZero ();
-	_mat_n_u.setZero ();
-	_mat_n_v.setZero ();
-	_mat_n_r.setZero ();
+	lal::fill (_mat_n_x, Flt (0));
+	lal::fill (_mat_n_o, Flt (0));
+	lal::fill (_mat_n_n, Flt (0));
+	lal::fill (_mat_n_u, Flt (0));
+	lal::fill (_mat_n_v, Flt (0));
+	lal::fill (_mat_n_r, Flt (0));
 
-	_mat_s_0.setZero ();
-	_mat_s_0_inv.setZero ();
-	_mat_q.setZero ();
-	_mat_r_v_q_inv.setZero ();
-	_mat_a_0.setZero ();
-	_mat_b_0.setZero ();
-	_mat_c_0.setZero ();
-	_mat_d_0.setZero ();
-	_mat_e_0.setZero ();
-	_mat_f_0.setZero ();
-	_mat_g_0.setZero ();
-	_mat_h_0.setZero ();
-	_mat_k_0.setZero ();
-	_mat_u_x.setZero ();
-	_mat_u_o.setZero ();
-	_mat_u_n.setZero ();
-	_mat_u_u.setZero ();
-	_mat_j_f.setZero ();
-	_mat_j_r.setZero ();
-	_dia_id_n.setIdentity ();
-	_vec_r_neg.setZero ();
-	_vec_delta_x.setZero ();
-	_mat_abc_tmp.setZero ();
-	_mat_def_tmp.setZero ();
-	_mat_ghk_tmp.setZero ();
-	_mat_abc_0_tmp1.setZero ();
-	_mat_abc_0_tmp2.setZero ();
-	_mat_def_0_tmp.setZero ();
-	_mat_ghk_0_tmp.setZero ();
-	_mat_u_tmp.setZero ();
-#if defined (mfx_dsp_va_dkm_Simulator_STATS) \
- && defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
-	std::fill (_vec_lu_r.begin (), _vec_lu_r.end (), 0);
-	_vec_lu_y.setZero ();
-#endif // mfx_dsp_va_dkm_Simulator_STATS_PIV
+	lal::fill (_mat_s_0, Flt (0));
+	lal::fill (_mat_s_0_inv, Flt (0));
+	lal::fill (_mat_q, Flt (0));
+	lal::fill (_mat_r_v_q_inv, Flt (0));
+	lal::fill (_mat_a_0, Flt (0));
+	lal::fill (_mat_b_0, Flt (0));
+	lal::fill (_mat_c_0, Flt (0));
+	lal::fill (_mat_d_0, Flt (0));
+	lal::fill (_mat_e_0, Flt (0));
+	lal::fill (_mat_f_0, Flt (0));
+	lal::fill (_mat_g_0, Flt (0));
+	lal::fill (_mat_h_0, Flt (0));
+	lal::fill (_mat_k_0, Flt (0));
+	lal::fill (_mat_u_x, Flt (0));
+	lal::fill (_mat_u_o, Flt (0));
+	lal::fill (_mat_u_n, Flt (0));
+	lal::fill (_mat_u_u, Flt (0));
+	lal::fill (_mat_j_f, Flt (0));
+	lal::fill (_mat_j_r, Flt (0));
+	_dia_id_n.set_id ();
+	lal::fill (_vec_r_neg, Flt (0));
+	lal::fill (_vec_delta_x, Flt (0));
+	lal::fill (_mat_abc_tmp, Flt (0));
+	lal::fill (_mat_def_tmp, Flt (0));
+	lal::fill (_mat_ghk_tmp, Flt (0));
+	lal::fill (_mat_abc_0_tmp1, Flt (0));
+	lal::fill (_mat_abc_0_tmp2, Flt (0));
+	lal::fill (_mat_def_0_tmp, Flt (0));
+	lal::fill (_mat_ghk_0_tmp, Flt (0));
+	lal::fill (_mat_u_tmp, Flt (0));
 }
 
 
@@ -696,7 +736,7 @@ void	Simulator::setup_src_v ()
 	{
 		auto &         elt = _src_v_arr [idx];
 		add_oim_entry (_mat_n_u, idx, elt._nid_1, elt._nid_2);
-		_vec_u (idx) = elt._v;
+		_vec_u [idx] = elt._v;
 	}
 }
 
@@ -708,7 +748,7 @@ void	Simulator::setup_res ()
 	{
 		auto &         elt = _resistor_arr [idx];
 		add_oim_entry (_mat_n_r, idx, elt._nid_1, elt._nid_2);
-		_dia_g_r (idx, idx) = 1.f / elt._r;
+		_dia_g_r [idx] = 1.f / elt._r;
 	}
 }
 
@@ -733,9 +773,9 @@ void	Simulator::setup_ese ()
 	{
 		auto &         elt = _capa_arr [c_cnt];
 		add_oim_entry (_mat_n_x, idx, elt._nid_1, elt._nid_2);
-		_dia_g_x (idx, idx) = Flt (2 * elt._c * _sample_freq);
-		_dia_z (idx, idx)   = Flt (+1);
-		elt._base_idx       = idx;
+		_dia_g_x [idx] = Flt (2 * elt._c * _sample_freq);
+		_dia_z [idx]   = Flt (+1);
+		elt._base_idx  = idx;
 		++ idx;
 	}
 
@@ -743,9 +783,9 @@ void	Simulator::setup_ese ()
 	{
 		auto &         elt = _inductor_arr [l_cnt];
 		add_oim_entry (_mat_n_x, idx, elt._nid_1, elt._nid_2);
-		_dia_g_x (idx, idx) = Flt (_sample_freq / (2 * elt._l));
-		_dia_z (idx, idx)   = Flt (-1);
-		elt._base_idx       = idx;
+		_dia_g_x [idx] = Flt (_sample_freq / (2 * elt._l));
+		_dia_z [idx]   = Flt (-1);
+		elt._base_idx  = idx;
 		++ idx;
 	}
 
@@ -808,9 +848,9 @@ void	Simulator::setup_outputs ()
 
 void	Simulator::add_oim_entry (TypeMatrix &m, int row, IdNode nid_1, IdNode nid_2)
 {
-	assert (m.cols () == _nbr_nodes);
+	assert (m.get_cols () == _nbr_nodes);
 	assert (row >= 0);
-	assert (row < m.rows ());
+	assert (row < m.get_rows ());
 	assert (nid_1 >= 0);
 	assert (nid_2 >= 0);
 	assert (nid_1 != nid_2);
@@ -841,7 +881,7 @@ int	Simulator::use_or_create_node (IdNode nid)
 	int            idx = _idx_gnd;
 	if (nid != _nid_gnd)
 	{
-		auto           it  = _nid_to_idx_map.find (nid);
+		auto           it = _nid_to_idx_map.find (nid);
 		if (it != _nid_to_idx_map.end ())
 		{
 			idx = it->second;
@@ -865,7 +905,7 @@ int	Simulator::use_node (IdNode nid) const
 	int            idx = _idx_gnd;
 	if (nid != _nid_gnd)
 	{
-		auto           it  = _nid_to_idx_map.find (nid);
+		auto           it = _nid_to_idx_map.find (nid);
 		if (it == _nid_to_idx_map.end ())
 		{
 			assert (false);
@@ -883,21 +923,48 @@ int	Simulator::use_node (IdNode nid) const
 
 void	Simulator::build_s_0_inv ()
 {
-	_mat_s_0.topLeftCorner (_nbr_nodes, _nbr_nodes) =
-		  _mat_n_r.transpose () * _dia_g_r * _mat_n_r
-		+ _mat_n_x.transpose () * _dia_g_x * _mat_n_x;
-	_mat_s_0.topRightCorner (_nbr_nodes, _nbr_src_v)   = _mat_n_u.transpose ();
-	_mat_s_0.bottomLeftCorner (_nbr_src_v, _nbr_nodes) = _mat_n_u;
-	_mat_s_0.bottomRightCorner (_nbr_src_v, _nbr_src_v).fill (0);
+	auto           s_0_tl =
+		_mat_s_0.make_sub (0, 0, _nbr_nodes, _nbr_nodes);
+	auto           s_0_tr =
+		_mat_s_0.make_sub (0, _nbr_nodes, _nbr_nodes, _nbr_src_v);
+	auto           s_0_bl =
+		_mat_s_0.make_sub (_nbr_nodes, 0, _nbr_src_v, _nbr_nodes);
+	auto           s_0_br =
+		_mat_s_0.make_sub (_nbr_nodes, _nbr_nodes, _nbr_src_v, _nbr_src_v);
+
+	// _mat_s_0.topLeftCorner (_nbr_nodes, _nbr_nodes) =
+	// 	  _mat_n_r.transpose () * _dia_g_r * _mat_n_r
+	// 	+ _mat_n_x.transpose () * _dia_g_x * _mat_n_x;
+	TypeMatrix     tmp;
+	TypeMatrix     tmp_tl_r;
+	mul_oim (tmp_tl_r, tmp, _mat_n_r, _dia_g_r, _mat_n_r);
+	TypeMatrix     tmp_tl_x;
+	mul_oim (tmp_tl_x, tmp, _mat_n_x, _dia_g_x, _mat_n_x);
+	lal::add (s_0_tl, tmp_tl_r, tmp_tl_x);
+
+	lal::transpose (s_0_tr, _mat_n_u);
+	lal::copy (s_0_bl, _mat_n_u);
+	lal::fill (s_0_br, Flt (0));
 
 	// If the matrix is not invertible, there are probably some unconnected
 	// nodes (for example, potentiometers absent from S0). Then one should
 	// add large resistors to make S0 invertible.
 	// Note: determinant calculation is not reliable in float, so it is skipped
 	// in this case.
-	assert ((sizeof (Flt) == sizeof (float)) || _mat_s_0.determinant () != 0);
+//	assert ((sizeof (Flt) == sizeof (float)) || _mat_s_0.determinant () != 0);
 
-	_mat_s_0_inv = _mat_s_0.inverse ();
+	const int      mat_sz = _mat_s_0.get_rows ();
+	std::vector <int> r_arr (mat_sz);
+	std::vector <int> c_arr (mat_sz);
+	for (int k = 0; k < mat_sz; ++k)
+	{
+		r_arr [k] = k;
+		c_arr [k] = k;
+	}
+	lal::copy (tmp, _mat_s_0);
+	lal::decompose_lu (tmp, r_arr, c_arr);
+	TypeVector    y;
+	lal::invert (_mat_s_0_inv, y, tmp, r_arr, c_arr);
 }
 
 
@@ -905,46 +972,99 @@ void	Simulator::build_s_0_inv ()
 // Requires _mat_s_0_inv to be ready
 void	Simulator::prepare_dk_const_matrices ()
 {
-	_mat_abc_0_tmp1 = 2 * _dia_z * _dia_g_x * _mat_n_x;
-	_mat_abc_0_tmp2 =
-		  _mat_abc_0_tmp1
-		* _mat_s_0_inv.topLeftCorner (_nbr_nodes, _nbr_nodes);
-	_mat_a_0 = _mat_abc_0_tmp2 * _mat_n_x.transpose () - _dia_z;
-	_mat_c_0 = _mat_abc_0_tmp2 * _mat_n_n.transpose ();
-	_mat_b_0 = _mat_abc_0_tmp1 * _mat_s_0_inv.topRightCorner (_nbr_nodes, _nbr_src_v);
+	TypeVector     tmp_vec;
+	TypeMatrix     tmp_mat;
 
-	_mat_def_0_tmp =
-		  _mat_n_o
-		* _mat_s_0_inv.topLeftCorner (_nbr_nodes, _nbr_nodes);
-	_mat_d_0 = _mat_def_0_tmp * _mat_n_x.transpose ();
-	_mat_f_0 = _mat_def_0_tmp * _mat_n_n.transpose ();
-	_mat_e_0 = _mat_n_o * _mat_s_0_inv.topRightCorner (_nbr_nodes, _nbr_src_v);
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-	_mat_ghk_0_tmp =
-		  _mat_n_n
-		* _mat_s_0_inv.topLeftCorner (_nbr_nodes, _nbr_nodes);
-	_mat_g_0 = _mat_ghk_0_tmp * _mat_n_x.transpose ();
-	_mat_k_0 = _mat_ghk_0_tmp * _mat_n_n.transpose ();
-	_mat_h_0 = _mat_n_n * _mat_s_0_inv.topRightCorner (_nbr_nodes, _nbr_src_v);
+	// _mat_abc_0_tmp1 = 2 * _dia_z * _dia_g_x * _mat_n_x;
+	lal::mul_cw (tmp_vec, _dia_z, _dia_g_x);
+	lal::mul (tmp_vec, tmp_vec, Flt (2));
+	lal::vec_to_mat (tmp_mat, tmp_vec, lal::Dir::D);
+	lal::mul (_mat_abc_0_tmp1, tmp_mat, _mat_n_x);
 
-	_mat_u_tmp =
-		  _mat_s_0_inv.topLeftCorner (_nbr_nodes, _nbr_nodes)
-		* _mat_n_v.transpose ();
-	_mat_u_x = _mat_n_x * _mat_u_tmp;
-	_mat_u_o = _mat_n_o * _mat_u_tmp;
-	_mat_u_n = _mat_n_n * _mat_u_tmp;
-	_mat_u_u =
-		  _mat_s_0_inv.bottomLeftCorner (_nbr_src_v, _nbr_nodes)
-		* _mat_n_v.transpose ();
+	lal::mul (
+		_mat_abc_0_tmp2,
+		_mat_abc_0_tmp1,
+		_mat_s_0_inv.make_sub (0, 0, _nbr_nodes, _nbr_nodes)
+	);
+
+	// _mat_a_0 = _mat_abc_0_tmp2 * _mat_n_x.transpose () - _dia_z;
+	lal::mul_transp_rhs (_mat_a_0, _mat_abc_0_tmp2, _mat_n_x);
+	lal::vec_to_mat (tmp_mat, _dia_z, lal::Dir::D);
+	lal::sub (_mat_a_0, _mat_a_0, tmp_mat);
+
+	lal::mul_transp_rhs (_mat_c_0, _mat_abc_0_tmp2, _mat_n_n);
+
+	lal::mul (
+		_mat_b_0,
+		_mat_abc_0_tmp1,
+		_mat_s_0_inv.make_sub (0, _nbr_nodes, _nbr_nodes, _nbr_src_v)
+	);
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+	lal::mul (
+		_mat_def_0_tmp,
+		_mat_n_o,
+		_mat_s_0_inv.make_sub (0, 0, _nbr_nodes, _nbr_nodes)
+	);
+
+	lal::mul_transp_rhs (_mat_d_0, _mat_def_0_tmp, _mat_n_x);
+	lal::mul_transp_rhs (_mat_f_0, _mat_def_0_tmp, _mat_n_n);
+	lal::mul (
+		_mat_e_0,
+		_mat_n_o,
+		_mat_s_0_inv.make_sub (0, _nbr_nodes, _nbr_nodes, _nbr_src_v)
+	);
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+	lal::mul (
+		_mat_ghk_0_tmp,
+		_mat_n_n,
+		_mat_s_0_inv.make_sub (0, 0, _nbr_nodes, _nbr_nodes)
+	);
+	lal::mul_transp_rhs (_mat_g_0, _mat_ghk_0_tmp, _mat_n_x);
+	lal::mul_transp_rhs (_mat_k_0, _mat_ghk_0_tmp, _mat_n_n);
+	lal::mul (
+		_mat_h_0,
+		_mat_n_n,
+		_mat_s_0_inv.make_sub (0, _nbr_nodes, _nbr_nodes, _nbr_src_v)
+	);
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+	lal::mul_transp_rhs (
+		_mat_u_tmp,
+		_mat_s_0_inv.make_sub (0, 0, _nbr_nodes, _nbr_nodes),
+		_mat_n_v
+	);
+	lal::mul (_mat_u_x, _mat_n_x, _mat_u_tmp);
+	lal::mul (_mat_u_o, _mat_n_o, _mat_u_tmp);
+	lal::mul (_mat_u_n, _mat_n_n, _mat_u_tmp);
+	lal::mul_transp_rhs (
+		_mat_u_u,
+		_mat_s_0_inv.make_sub (_nbr_nodes, 0, _nbr_src_v, _nbr_nodes),
+		_mat_n_v
+	);
+
+	// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 	if (_nbr_pot > 0)
 	{
-		_mat_q = 
-			  _mat_n_v
-			* _mat_s_0_inv.topLeftCorner (_nbr_nodes, _nbr_nodes)
-			* _mat_n_v.transpose ();
+		lal::mul (
+			tmp_mat,
+			_mat_n_v,
+			_mat_s_0_inv.make_sub (0, 0, _nbr_nodes, _nbr_nodes)
+		);
+		lal::mul_transp_rhs (_mat_q, tmp_mat, _mat_n_v);
 
-		_mat_2zgxux = _dia_z * _dia_g_x * _mat_u_x * 2;
+		// _mat_2zgxux = _dia_z * _dia_g_x * _mat_u_x * 2;
+		lal::mul_cw (tmp_vec, _dia_z, _dia_g_x);
+		lal::mul (tmp_vec, tmp_vec, Flt (2));
+		lal::vec_to_mat (tmp_mat, tmp_vec, lal::Dir::D);
+		lal::mul (_mat_2zgxux, tmp_mat, _mat_u_x);
 	}
 }
 
@@ -952,17 +1072,17 @@ void	Simulator::prepare_dk_const_matrices ()
 
 void	Simulator::update_r_v ()
 {
-	_mat_a = _mat_a_0;
-	_mat_b = _mat_b_0;
-	_mat_d = _mat_d_0;
-	_mat_e = _mat_e_0;
-	_mat_g = _mat_g_0;
-	_mat_h = _mat_h_0;
+	lal::copy (_mat_a, _mat_a_0);
+	lal::copy (_mat_b, _mat_b_0);
+	lal::copy (_mat_d, _mat_d_0);
+	lal::copy (_mat_e, _mat_e_0);
+	lal::copy (_mat_g, _mat_g_0);
+	lal::copy (_mat_h, _mat_h_0);
 	if (! _linear_flag)
 	{
-		_mat_c = _mat_c_0;
-		_mat_f = _mat_f_0;
-		_mat_k = _mat_k_0;
+		lal::copy (_mat_c, _mat_c_0);
+		lal::copy (_mat_f, _mat_f_0);
+		lal::copy (_mat_k, _mat_k_0);
 	}
 
 	if (_nbr_pot > 0)
@@ -973,27 +1093,33 @@ void	Simulator::update_r_v ()
 			const Flt      a   = _rv_val_a_arr [idx];
 			const Flt      b   = _rv_val_b_arr [idx];
 			const Flt      pos = _rv_pos_arr [idx];
-			_dia_r_v (idx, idx) = a * pos + b;
+			_dia_r_v [idx] = a * pos + b;
 		}
 
 		// (Rv + Q)^-1
-		_mat_r_v_q_inv = (_mat_q + _dia_r_v).inverse ();
+		lal::vec_to_mat (_mat_r_v_q_lu, _dia_r_v, lal::Dir::D);
+		lal::add (_mat_r_v_q_lu, _mat_r_v_q_lu, _mat_q);
+		lal::decompose_lu (_mat_r_v_q_lu, _r_v_q_r_arr, _r_v_q_c_arr);
+		lal::invert (
+			_mat_r_v_q_inv, _r_v_q_y,
+			_mat_r_v_q_lu, _r_v_q_r_arr, _r_v_q_c_arr
+		);
 
 		// Updates the main DK matrices
-		_mat_abc_tmp = _mat_2zgxux * _mat_r_v_q_inv;
-		_mat_def_tmp =    _mat_u_o * _mat_r_v_q_inv;
-		_mat_ghk_tmp =    _mat_u_n * _mat_r_v_q_inv;
-		_mat_a -= _mat_abc_tmp * _mat_u_x.transpose ();
-		_mat_b -= _mat_abc_tmp * _mat_u_u.transpose ();
-		_mat_d -= _mat_def_tmp * _mat_u_x.transpose ();
-		_mat_e -= _mat_def_tmp * _mat_u_u.transpose ();
-		_mat_g -= _mat_ghk_tmp * _mat_u_x.transpose ();
-		_mat_h -= _mat_ghk_tmp * _mat_u_u.transpose ();
+		lal::mul (_mat_abc_tmp, _mat_2zgxux, _mat_r_v_q_inv);
+		lal::mul (_mat_def_tmp,    _mat_u_o, _mat_r_v_q_inv);
+		lal::mul (_mat_ghk_tmp,    _mat_u_n, _mat_r_v_q_inv);
+		lal::mul_transp_rhs (_mat_a, _mat_abc_tmp, _mat_u_x, lal::res_sub <Flt>);
+		lal::mul_transp_rhs (_mat_b, _mat_abc_tmp, _mat_u_u, lal::res_sub <Flt>);
+		lal::mul_transp_rhs (_mat_d, _mat_def_tmp, _mat_u_x, lal::res_sub <Flt>);
+		lal::mul_transp_rhs (_mat_e, _mat_def_tmp, _mat_u_u, lal::res_sub <Flt>);
+		lal::mul_transp_rhs (_mat_g, _mat_ghk_tmp, _mat_u_x, lal::res_sub <Flt>);
+		lal::mul_transp_rhs (_mat_h, _mat_ghk_tmp, _mat_u_u, lal::res_sub <Flt>);
 		if (! _linear_flag)
 		{
-			_mat_c -= _mat_abc_tmp * _mat_u_n.transpose ();
-			_mat_f -= _mat_def_tmp * _mat_u_n.transpose ();
-			_mat_k -= _mat_ghk_tmp * _mat_u_n.transpose ();
+			lal::mul_transp_rhs (_mat_c, _mat_abc_tmp, _mat_u_n, lal::res_sub <Flt>);
+			lal::mul_transp_rhs (_mat_f, _mat_def_tmp, _mat_u_n, lal::res_sub <Flt>);
+			lal::mul_transp_rhs (_mat_k, _mat_ghk_tmp, _mat_u_n, lal::res_sub <Flt>);
 		}
 	}
 
@@ -1016,25 +1142,27 @@ void	Simulator::solve_nl ()
 #if defined (mfx_dsp_va_dkm_Simulator_STATS) \
  && defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
 		// Manual LU decomposition and traversal, to build statistics
-		decompose_lu (_mat_j_r, _vec_lu_r);
-		auto           ib = _st._piv_map.insert (std::make_pair (_vec_lu_r, 1));
+		decompose_lu (_mat_j_r, _j_r_r_arr);
+		auto           ib = _st._piv_map.insert (std::make_pair (_j_r_r_arr, 1));
 		if (! ib.second)
 		{
 			++ ib.first->second;
 		}
-		traverse_lu (_vec_delta_x, _vec_r_neg, _mat_j_r, _vec_lu_r, _vec_lu_y);
+		traverse_lu (_vec_delta_x, _vec_r_neg, _mat_j_r, _j_r_r_arr, _j_r_y);
 #else
-		_decomp_delta_x.compute (_mat_j_r);
-		_vec_delta_x = _decomp_delta_x.solve (_vec_r_neg);
+		lal::decompose_lu (_mat_j_r, _j_r_r_arr, _j_r_c_arr);
+		lal::traverse_lu (
+			_vec_delta_x, _j_r_y, _vec_r_neg, _mat_j_r, _j_r_r_arr, _j_r_c_arr
+		);
 #endif
 
 #if 1
 		// Difference limiting. Helps convergence when the signal input is high
 		// and the solution of the NL equations moves quickly.
 		res_chg_flag = false;
-		for (int k = 0; k < _vec_delta_x.rows (); ++k)
+		for (int k = 0; k < int (_vec_delta_x.size ()); ++k)
 		{
-			Flt            delta = _vec_delta_x (k);
+			Flt            delta = _vec_delta_x [k];
 			if (delta > _max_dif)
 			{
 				delta        = _max_dif;
@@ -1045,14 +1173,14 @@ void	Simulator::solve_nl ()
 				delta        = -_max_dif;
 				res_chg_flag = true;
 			}
-			_vec_delta_x (k) = delta;
+			_vec_delta_x [k] = delta;
 		}
 #endif
 
-		const Flt      dif_abs = _vec_delta_x.lpNorm <Eigen::Infinity> ();
-		const Flt      dif_rel = _vec_r_neg.lpNorm <Eigen::Infinity> ();
+		const Flt      dif_abs = lal::norm_inf (_vec_delta_x);
+		const Flt      dif_rel = lal::norm_inf (_vec_r_neg);
 
-		_vec_v_n += _vec_delta_x;
+		lal::add (_vec_v_n, _vec_v_n, _vec_delta_x);
 		++ it_cnt;
 
 		cont_flag = (
@@ -1081,7 +1209,7 @@ void	Simulator::compute_nl_data (int it_cnt)
 {
 	assert (it_cnt >= 0);
 
-	_mat_j_f.setZero ();
+	_mat_j_f.set_zero ();
 
 	for (int d_cnt = 0; d_cnt < int (_diode_arr.size ()); ++d_cnt)
 	{
@@ -1096,27 +1224,61 @@ void	Simulator::compute_nl_data (int it_cnt)
 		compute_nl_data_bjt_npn (it_cnt, d_cnt);
 	}
 
-	_vec_r_neg =   _mat_k * _vec_i_n + _vec_v_n - _vec_p;
+	// _vec_r_neg =   _mat_k * _vec_i_n + _vec_v_n - _vec_p;
+	lal::mul (_vec_r_neg_tmp1, _mat_k, _vec_i_n);
+	lal::sub (_vec_r_neg_tmp2, _vec_v_n, _vec_p);
+	lal::add (_vec_r_neg, _vec_r_neg_tmp1, _vec_r_neg_tmp2);
 #if 0
-	_mat_j_r   = - _mat_k * _mat_j_f - _dia_id_n;
+	// _mat_j_r   = - _mat_k * _mat_j_f - _dia_id_n;
+	lal::mul (_mat_j_r, mat_k, _mat_j_f);
+	lal::add (_mat_j_r, _mat_j_r, _dia_id_n);
+	lal::neg (_mat_j_r, _mat_j_r);
 #else
 	// Attempt to optimize the multiplication with the sparse _mat_j_f
 	const int      ofs = int (_diode_arr.size () + _diode_pair_arr.size ());
+	const Flt *    data_k_ptr   = _mat_k.get_data ();
+	const int      stride_k     = _mat_k.get_stride ();
+	const Flt *    data_j_f_ptr = _mat_j_f.get_data ();
+	const int      stride_j_f   = _mat_j_f.get_stride ();
+	Flt *          data_j_r_ptr = _mat_j_r.get_data ();
+	const int      stride_j_r   = _mat_j_r.get_stride ();
 	for (int d = 0; d < ofs; ++d)
 	{
-		_mat_j_r.col (d) = -_mat_k.col (d) * _mat_j_f (d, d);
+		const Flt      j_f_d_d_neg = -_mat_j_f (d, d);
+		const Flt *    k_i_d_ptr   = data_k_ptr + d;
+		Flt *          j_r_i_d_ptr = data_j_r_ptr + d;
+		for (int i = 0; i < _mat_j_r.get_rows (); ++i)
+		{
+			*j_r_i_d_ptr = *k_i_d_ptr * j_f_d_d_neg;
+			k_i_d_ptr   += stride_k;
+			j_r_i_d_ptr += stride_j_r;
+		}
 		_mat_j_r (d, d) -= 1;
 	}
 	for (int d_cnt = 0; d_cnt < int (_bjt_npn_arr.size ()); ++d_cnt)
 	{
-		const int    d = ofs + d_cnt * 2;
-		_mat_j_r.col (d    ) =
-			  _mat_k.col (d    ) * -_mat_j_f (d    , d    )
-			+ _mat_k.col (d + 1) * -_mat_j_f (d + 1, d    );
+		const int      d = ofs + d_cnt * 2;
+		const Flt *    j_f_d_d_ptr   = data_j_f_ptr + d * stride_j_f + d;
+		const Flt      j_f_d0_d0_neg = -j_f_d_d_ptr [0];
+		const Flt      j_f_d0_d1_neg = -j_f_d_d_ptr [1];
+		const Flt      j_f_d1_d0_neg = -j_f_d_d_ptr [stride_j_f    ];
+		const Flt      j_f_d1_d1_neg = -j_f_d_d_ptr [stride_j_f + 1];
+		const Flt *    k_i_d_ptr     = data_k_ptr + d;
+		Flt *          j_r_i_d_ptr   = data_j_r_ptr + d;
+		for (int i = 0; i < _mat_j_r.get_rows (); ++i)
+		{
+			const Flt      k_i_d0 = k_i_d_ptr [0];
+			const Flt      k_i_d1 = k_i_d_ptr [1];
+			j_r_i_d_ptr [0] =
+				  k_i_d0 * j_f_d0_d0_neg
+				+ k_i_d1 * j_f_d1_d0_neg;
+			j_r_i_d_ptr [1] =
+				  k_i_d0 * j_f_d0_d1_neg
+				+ k_i_d1 * j_f_d1_d1_neg;
+			k_i_d_ptr    += stride_k;
+			j_r_i_d_ptr  += stride_j_r;
+		}
 		_mat_j_r (d    , d    ) -= 1;
-		_mat_j_r.col (d + 1) =
-			  _mat_k.col (d    ) * -_mat_j_f (d    , d + 1)
-			+ _mat_k.col (d + 1) * -_mat_j_f (d + 1, d + 1);
 		_mat_j_r (d + 1, d + 1) -= 1;
 	}
 #endif
@@ -1131,13 +1293,13 @@ void	Simulator::compute_nl_data_diode (int it_cnt, int idx_d)
 
 	Diode &        elt    = _diode_arr [idx_d];
 	const int      idx_n  = elt._base_idx;
-	const Flt      v      = _vec_v_n (idx_n);
+	const Flt      v      = _vec_v_n [idx_n];
 
 	JuncDataType   i;
 	JuncDataType   di;
 	compute_nl_data_junction (i, di, v, elt._junc, it_cnt);
 
-	_vec_i_n (idx_n)        = Flt (i );
+	_vec_i_n [idx_n]        = Flt (i );
 	_mat_j_f (idx_n, idx_n) = Flt (di);
 }
 
@@ -1150,7 +1312,7 @@ void	Simulator::compute_nl_data_diode_pair (int it_cnt, int idx_d)
 
 	DiodeAntipar & elt    = _diode_pair_arr [idx_d];
 	const int      idx_n  = elt._base_idx;
-	const Flt      v      = _vec_v_n (idx_n);
+	const Flt      v      = _vec_v_n [idx_n];
 	Flt            v_abs  = v;
 	int            dir    = 0;
 	if (v < 0)
@@ -1167,7 +1329,7 @@ void	Simulator::compute_nl_data_diode_pair (int it_cnt, int idx_d)
 		i = -i;
 	}
 
-	_vec_i_n (idx_n)        = Flt (i );
+	_vec_i_n [idx_n]        = Flt (i );
 	_mat_j_f (idx_n, idx_n) = Flt (di);
 }
 
@@ -1180,8 +1342,8 @@ void	Simulator::compute_nl_data_bjt_npn (int it_cnt, int idx_d)
 
 	BjtNpn &       elt    = _bjt_npn_arr [idx_d];
 	const int      idx_n  = elt._base_idx;
-	const Flt      vbe    = _vec_v_n (idx_n    );
-	const Flt      vbc    = _vec_v_n (idx_n + 1);
+	const Flt      vbe    = _vec_v_n [idx_n    ];
+	const Flt      vbc    = _vec_v_n [idx_n + 1];
 
 	JuncDataType   ide;
 	JuncDataType   dide;
@@ -1201,8 +1363,8 @@ void	Simulator::compute_nl_data_bjt_npn (int it_cnt, int idx_d)
 	const JuncDataType   dic_dvbe = -dide;
 	const JuncDataType   dic_dvbc = didc * ari;
 
-	_vec_i_n (idx_n)                = Flt (ibe     );
-	_vec_i_n (idx_n + 1)            = Flt (ibc     );
+	_vec_i_n [idx_n    ]            = Flt (ibe     );
+	_vec_i_n [idx_n + 1]            = Flt (ibc     );
 	_mat_j_f (idx_n,     idx_n)     = Flt (die_dvbe);
 	_mat_j_f (idx_n,     idx_n + 1) = Flt (die_dvbc);
 	_mat_j_f (idx_n + 1, idx_n)     = Flt (dic_dvbe);
@@ -1236,8 +1398,8 @@ void	Simulator::compute_nl_data_junction (JuncDataType &i, JuncDataType &di, Jun
 // and down traversal.
 void	Simulator::decompose_lu (TypeMatrixRm &lu, std::vector <int> &r)
 {
-	const int      n = lu.rows ();
-	assert (lu.cols () == n);
+	const int      n = int (lu.get_rows ());
+	assert (int (lu.get_cols ()) == n);
 	assert (int (r.size ()) == n);
 
 	// Sets up the reordering vector
@@ -1245,6 +1407,9 @@ void	Simulator::decompose_lu (TypeMatrixRm &lu, std::vector <int> &r)
 	{
 		r [k] = k;
 	}
+
+	Flt *          data_ptr = lu.get_data ();
+	const int      stride   = lu.get_stride ();
 
 	for (int k = 0; k < n - 1; ++k)
 	{
@@ -1267,19 +1432,21 @@ void	Simulator::decompose_lu (TypeMatrixRm &lu, std::vector <int> &r)
 
 		// Subtracts the other rows
 		const int       r_k     = r [k];
-		const double    ukk_inv = 1. / lu (r_k, k);
+		Flt *           r_k_ptr = data_ptr + r_k * stride;
+		const double    ukk_inv = 1. / r_k_ptr [k];
 		for (int j = k + 1; j < n; ++j)
 		{
-			const int       r_j = r [j];
+			const int       r_j     = r [j];
+			Flt *           r_j_ptr = data_ptr + r_j * stride;
 
 			// L
-			const double    ljk = lu (r_j, k) * ukk_inv;
-			lu (r_j, k) = ljk;
+			const double    ljk     = r_j_ptr [k] * ukk_inv;
+			r_j_ptr [k] = ljk;
 
 			// U
 			for (int d = k + 1; d < n; ++d)
 			{
-				lu (r_j, d) -= ljk * lu (r_k, d);
+				r_j_ptr [d] -= ljk * r_k_ptr [d];
 			}
 		}
 	}
@@ -1295,37 +1462,51 @@ void	Simulator::decompose_lu (TypeMatrixRm &lu, std::vector <int> &r)
 // y  = temporary vector
 void	Simulator::traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatrixRm &lu, const std::vector <int> &r, TypeVector &y)
 {
-	const int      n = int (b.rows ());
-	assert (x.rows () == n);
-	assert (lu.rows () == n);
-	assert (lu.cols () == n);
+	const int      n = int (b.size ());
+	assert (int (x.size ()) == n);
+	assert (lu.get_rows () == n);
+	assert (lu.get_cols () == n);
 	assert (int (r.size ()) == n);
-	assert (y.rows () == n);
+	assert (int (y.size ()) == n);
+
+	const Flt *    data_ptr = lu.get_data ();
+	const int      stride   = lu.get_stride ();
 
 	// Down: L * y = b
 	for (int i = 0; i < n; ++i)
 	{
-		const int      r_i = r [i];
-		double         s   = b (r_i);
+		const int      r_i     = r [i];
+		const Flt *    r_i_ptr = data_ptr + r_i * stride;
+		double         s       = b [r_i];
 		for (int j = 0; j < i; ++j)
 		{
-			s -= y (j) * lu (r_i, j);
+			s -= y [j] * r_i_ptr [j];
 		}
-		y (i) = s;
+		y [i] = s;
 	}
 
 	// Up: U * x = y
 	for (int i = n - 1; i >= 0; --i)
 	{
-		const int      r_i = r [i];
-		double         s   = y (i);
+		const int      r_i     = r [i];
+		const Flt *    r_i_ptr = data_ptr + r_i * stride;
+		double         s       = y [i];
 		for (int j = i + 1; j < n; ++j)
 		{
-			s -= x (j) * lu (r_i, j);
+			s -= x [j] * r_i_ptr [j];
 		}
-		assert (lu (r_i, i) != 0);
-		x (i) = s / lu (r_i, i);
+		assert (r_i_ptr [i] != 0);
+		x [i] = s / r_i_ptr [i];
 	}
+}
+
+
+
+template <typename D>
+void	Simulator::mul_oim (D &dst, D &tmp, const TypeMatrix &lhs, const TypeVector &vec, const TypeMatrix &rhs)
+{
+	lal::mul_transp_lhs_dia (tmp, lhs, vec);
+	lal::mul (dst, tmp, rhs);
 }
 
 
@@ -1335,7 +1516,7 @@ void	Simulator::traverse_lu (TypeVector &x, const TypeVector &b, const TypeMatri
 void	Simulator::print_vector (const TypeVector &v, const char *name_0)
 {
 	printf ("%s = ", name_0);
-	const int      len = int (v.rows () * v.cols ());
+	const int      len = int (v.size ());
 	if (len == 0)
 	{
 		printf ("<null>");
@@ -1345,11 +1526,7 @@ void	Simulator::print_vector (const TypeVector &v, const char *name_0)
 		printf ("(");
 		for (int i = 0; i < len; ++i)
 		{
-			printf ("%10g%s", v (i), (i == len - 1) ? ")" : "\t");
-		}
-		if (v.rows () > 1)
-		{
-			printf ("T");
+			printf ("%10g%s", v [i], (i == len - 1) ? ")" : "\t");
 		}
 	}
 	printf ("\n");
@@ -1359,14 +1536,16 @@ void	Simulator::print_vector (const TypeVector &v, const char *name_0)
 
 void	Simulator::print_matrix (const TypeMatrix &m, const char *name_0)
 {
-	printf ("%s =%s\n", name_0, (m.rows () * m.cols () == 0) ? " <null>" : "");
-	for (int i = 0; i < m.rows (); ++i)
+	const int      rows = m.get_rows ();
+	const int      cols = m.get_cols ();
+	printf ("%s =%s\n", name_0, (rows * cols == 0) ? " <null>" : "");
+	for (int i = 0; i < rows; ++i)
 	{
-		for (int j = 0; j < m.cols (); ++j)
+		for (int j = 0; j < cols; ++j)
 		{
 			printf ("\t%10g", m (i, j));
 		}
-		if (m.cols () > 0)
+		if (cols > 0)
 		{
 			printf ("\n");
 		}
