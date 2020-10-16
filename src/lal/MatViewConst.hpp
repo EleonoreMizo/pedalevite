@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MatView.hpp
+        MatViewConst.hpp
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -15,8 +15,8 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#if ! defined (lal_MatView_CODEHEADER_INCLUDED)
-#define lal_MatView_CODEHEADER_INCLUDED
+#if ! defined (lal_MatViewConst_CODEHEADER_INCLUDED)
+#define lal_MatViewConst_CODEHEADER_INCLUDED
 
 
 
@@ -36,7 +36,7 @@ namespace lal
 
 
 template <typename T>
-void	MatView <T>::setup (int rows, int cols, T *data_ptr, int stride)
+void	MatViewConst <T>::setup (int rows, int cols, T *data_ptr, int stride)
 {
 	assert (rows >= 0);
 	assert (cols >= 0);
@@ -45,7 +45,7 @@ void	MatView <T>::setup (int rows, int cols, T *data_ptr, int stride)
 	_rows       = rows;
 	_cols       = cols;
 	_stride     = (rows == 0 || cols == 0) ? 0 : stride;
-	_data_ptr   = (rows == 0 || cols == 0) ? &MatView <T>::_dummy_scalar : data_ptr;
+	_data_ptr   = (rows == 0 || cols == 0) ? &MatViewConst <T>::_dummy_scalar : data_ptr;
 }
 
 
@@ -55,7 +55,7 @@ void	MatView <T>::setup (int rows, int cols, T *data_ptr, int stride)
 
 
 template <typename T>
-int	MatView <T>::do_get_rows () const
+int	MatViewConst <T>::do_get_rows () const
 {
 	return _rows;
 }
@@ -63,7 +63,7 @@ int	MatView <T>::do_get_rows () const
 
 
 template <typename T>
-int	MatView <T>::do_get_cols () const
+int	MatViewConst <T>::do_get_cols () const
 {
 	return _cols;
 }
@@ -71,7 +71,7 @@ int	MatView <T>::do_get_cols () const
 
 
 template <typename T>
-T &	MatView <T>::do_at (int r, int c)
+const T &	MatViewConst <T>::do_at (int r, int c) const
 {
 	assert (r < _rows);
 	assert (c < _cols);
@@ -84,20 +84,7 @@ T &	MatView <T>::do_at (int r, int c)
 
 
 template <typename T>
-const T &	MatView <T>::do_at (int r, int c) const
-{
-	assert (r < _rows);
-	assert (c < _cols);
-
-	const int      pos = conv_coord_to_pos (r, c);
-
-	return _data_ptr [pos];
-}
-
-
-
-template <typename T>
-T *	MatView <T>::do_get_data ()
+const T *	MatViewConst <T>::do_get_data () const
 {
 	return _data_ptr;
 }
@@ -105,15 +92,7 @@ T *	MatView <T>::do_get_data ()
 
 
 template <typename T>
-const T *	MatView <T>::do_get_data () const
-{
-	return _data_ptr;
-}
-
-
-
-template <typename T>
-int	MatView <T>::do_get_stride () const
+int	MatViewConst <T>::do_get_stride () const
 {
 	return _stride;
 }
@@ -125,7 +104,7 @@ int	MatView <T>::do_get_stride () const
 
 
 template <typename T>
-int	MatView <T>::conv_coord_to_pos (int r, int c) const
+int	MatViewConst <T>::conv_coord_to_pos (int r, int c) const
 {
 	assert (r >= 0);
 	assert (r < _rows);
@@ -141,7 +120,7 @@ int	MatView <T>::conv_coord_to_pos (int r, int c) const
 
 
 
-#endif   // lal_MatView_CODEHEADER_INCLUDED
+#endif   // lal_MatViewConst_CODEHEADER_INCLUDED
 
 
 

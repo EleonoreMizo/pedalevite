@@ -41,7 +41,7 @@ class MatView
 
 public:
 
-	void           setup (int rows, int cols, bool const_flag, T *data_ptr, int stride);
+	void           setup (int rows, int cols, T *data_ptr, int stride);
 
 
 
@@ -49,12 +49,13 @@ public:
 
 protected:
 
-	// lal::MatInterface
+	// lal::MatConstInterface
 	int            do_get_rows () const override;
 	int            do_get_cols () const override;
 	T &            do_at (int r, int c) override;
 	const T &      do_at (int r, int c) const override;
 
+	// lal::MatInterface
 	T *            do_get_data () override;
 	const T *      do_get_data () const override;
 	int            do_get_stride () const override;
@@ -71,7 +72,6 @@ private:
 	int            _cols       = 0;
 	int            _stride     = 0;
 	T *            _data_ptr   = &this->_dummy_scalar;
-	bool           _const_flag = false;
 
 
 

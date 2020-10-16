@@ -57,7 +57,7 @@ MatView <T>	Mat <T>::make_sub (int r, int c, int h, int w)
 		assert (data_ptr != nullptr);
 		data_ptr += stride * r + c;
 	}
-	view.setup (h, w, false, data_ptr, stride);
+	view.setup (h, w, data_ptr, stride);
 
 	return view;
 }
@@ -65,7 +65,7 @@ MatView <T>	Mat <T>::make_sub (int r, int c, int h, int w)
 
 
 template <typename T>
-const MatView <T>	Mat <T>::make_sub (int r, int c, int h, int w) const
+MatViewConst <T>	Mat <T>::make_sub (int r, int c, int h, int w) const
 {
 	assert (r >= 0);
 	assert (c >= 0);
@@ -74,7 +74,7 @@ const MatView <T>	Mat <T>::make_sub (int r, int c, int h, int w) const
 	assert (r + h <= _rows);
 	assert (c + w <= _cols);
 
-	MatView <T>    view;
+	MatViewConst <T>  view;
 	T *            data_ptr = this->get_data ();
 	const int      stride   = this->get_stride ();
 	if (_rows > 0 && _cols > 0)
@@ -82,9 +82,34 @@ const MatView <T>	Mat <T>::make_sub (int r, int c, int h, int w) const
 		assert (data_ptr != nullptr);
 		data_ptr += stride * r + c;
 	}
-	view.setup (h, w, true, data_ptr, stride);
+	view.setup (h, w, data_ptr, stride);
 
 	return view;
+}
+
+
+
+template <typename T>
+void	Mat <T>::set_zero ()
+{
+	std::fill (_data.begin (), _data.end (), T (0));
+}
+
+
+
+template <typename T>
+void	Mat <T>::set_id ()
+{
+	set_zero ();
+	const int      len      = std::min (_rows, _cols);
+	T *            data_ptr = this->get_data ();
+	const int      stride   = this->get_stride ();
+	const int      step     = stride + 1;
+	const int      len_s    = len * step;
+	for (int pos = 0; pos < len_s; pos += step)
+	{
+		data_ptr [pos] = T (1);
+	}
 }
 
 
@@ -110,19 +135,6 @@ int	Mat <T>::do_get_cols () const
 
 
 template <typename T>
-T &	Mat <T>::do_at (int r, int c)
-{
-	assert (r < _rows);
-	assert (c < _cols);
-
-	const int      pos = conv_coord_to_pos (r, c);
-
-	return _data [pos];
-}
-
-
-
-template <typename T>
 const T &	Mat <T>::do_at (int r, int c) const
 {
 	assert (r < _rows);
@@ -131,14 +143,6 @@ const T &	Mat <T>::do_at (int r, int c) const
 	const int      pos = conv_coord_to_pos (r, c);
 
 	return _data [pos];
-}
-
-
-
-template <typename T>
-T *	Mat <T>::do_get_data ()
-{
-	return _data.data ();
 }
 
 
@@ -155,6 +159,27 @@ template <typename T>
 int	Mat <T>::do_get_stride () const
 {
 	return _cols;
+}
+
+
+
+template <typename T>
+T &	Mat <T>::do_at (int r, int c)
+{
+	assert (r < _rows);
+	assert (c < _cols);
+
+	const int      pos = conv_coord_to_pos (r, c);
+
+	return _data [pos];
+}
+
+
+
+template <typename T>
+T *	Mat <T>::do_get_data ()
+{
+	return _data.data ();
 }
 
 

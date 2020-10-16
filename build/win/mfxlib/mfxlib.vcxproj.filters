@@ -4737,6 +4737,18 @@
     <ClInclude Include="..\..\..\src\lal\MatResizableInterface.hpp">
       <Filter>lal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatConstInterface.h">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatConstInterface.hpp">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatViewConst.h">
+      <Filter>lal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\lal\MatViewConst.hpp">
+      <Filter>lal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

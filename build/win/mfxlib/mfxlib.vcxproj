@@ -691,12 +691,16 @@
     <ClInclude Include="..\..\..\src\lal\Dir.h" />
     <ClInclude Include="..\..\..\src\lal\Mat.h" />
     <ClInclude Include="..\..\..\src\lal\Mat.hpp" />
+    <ClInclude Include="..\..\..\src\lal\MatConstInterface.h" />
+    <ClInclude Include="..\..\..\src\lal\MatConstInterface.hpp" />
     <ClInclude Include="..\..\..\src\lal\MatInterface.h" />
     <ClInclude Include="..\..\..\src\lal\MatInterface.hpp" />
     <ClInclude Include="..\..\..\src\lal\MatResizableInterface.h" />
     <ClInclude Include="..\..\..\src\lal\MatResizableInterface.hpp" />
     <ClInclude Include="..\..\..\src\lal\MatView.h" />
     <ClInclude Include="..\..\..\src\lal\MatView.hpp" />
+    <ClInclude Include="..\..\..\src\lal\MatViewConst.h" />
+    <ClInclude Include="..\..\..\src\lal\MatViewConst.hpp" />
     <ClInclude Include="..\..\..\src\lal\op.h" />
     <ClInclude Include="..\..\..\src\lal\op.hpp" />
     <ClInclude Include="..\..\..\src\mfx\adrv\CbInterface.h" />

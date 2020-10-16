@@ -24,9 +24,11 @@ http://www.wtfpl.net/ for more details.
 
 #include "lal/Dir.h"
 
+#include <algorithm>
 #include <numeric>
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -39,12 +41,31 @@ namespace lal
 
 
 
-template <typename T, typename F>
-void	op_unary (MatResizableInterface <T> &dst, const MatInterface <T> &other, F fnc)
+template <typename T>
+void	resize_check (MatResizableInterface <T> &dst, int rows, int cols)
+{
+	dst.resize (rows, cols);
+}
+
+template <typename T>
+#if defined (NDEBUG)
+void	resize_check (MatInterface <T> &, int, int) { }
+#else
+void	resize_check (MatInterface <T> &dst, int rows, int cols)
+{
+	assert (dst.get_rows () == rows);
+	assert (dst.get_cols () == cols);
+}
+#endif
+
+
+
+template <typename D, typename T, typename F>
+void	op_unary (D &dst, const MatConstInterface <T> &other, F fnc)
 {
 	const int      rows = other.get_rows ();
 	const int      cols = other.get_cols ();
-	dst.resize (rows, cols);
+	resize_check (dst, rows, cols);
 
 	T *            dst_ptr  = dst.get_data ();
 	const T *      src_ptr  = other.get_data ();
@@ -64,14 +85,14 @@ void	op_unary (MatResizableInterface <T> &dst, const MatInterface <T> &other, F 
 
 
 
-template <typename T, typename F>
-void	op_binary (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, const MatInterface <T> &rhs, F fnc)
+template <typename D, typename T, typename F>
+void	op_binary (D &dst, const MatConstInterface <T> &lhs, const MatConstInterface <T> &rhs, F fnc)
 {
 	const int      rows = lhs.get_rows ();
 	const int      cols = lhs.get_cols ();
 	assert (rows == rhs.get_rows ());
 	assert (cols == rhs.get_cols ());
-	dst.resize (rows, cols);
+	resize_check (dst, rows, cols);
 
 	T *            dst_ptr   = dst.get_data ();
 	const T *      src1_ptr  = lhs.get_data ();
@@ -89,6 +110,35 @@ void	op_binary (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, con
 		dst_ptr  += stride_d;
 		src1_ptr += stride_s1;
 		src2_ptr += stride_s2;
+	}
+}
+
+
+
+template <typename T, typename F>
+void	op_unary (std::vector <T> &dst, const std::vector <T> &other, F fnc)
+{
+	const int      len = int (other.size ());
+	dst.resize (len);
+
+	for (int pos = 0; pos < len; ++pos)
+	{
+		dst [pos] = fnc (other [pos]);
+	}
+}
+
+
+
+template <typename T, typename F>
+void	op_binary (std::vector <T> &dst, const std::vector <T> &lhs, const std::vector <T> &rhs, F fnc)
+{
+	const int      len = int (lhs.size ());
+	assert (int (rhs.size ()) == len);
+	dst.resize (len);
+
+	for (int pos = 0; pos < len; ++pos)
+	{
+		dst [pos] = fnc (lhs [pos], rhs [pos]);
 	}
 }
 
@@ -115,7 +165,7 @@ MatView <T>	vec_to_matview (std::vector <T> &v, Dir dir)
 
 
 template <typename T>
-const MatView <T>	vec_to_matview (const std::vector <T> &v, Dir dir)
+MatViewConst <T>	vec_to_matview (const std::vector <T> &v, Dir dir)
 {
 	assert (dir != Dir::D);
 
@@ -130,8 +180,51 @@ const MatView <T>	vec_to_matview (const std::vector <T> &v, Dir dir)
 
 
 
+template <typename T, typename D>
+void	vec_to_mat (D &dst, const std::vector <T> &v, Dir dir)
+{
+	const int      len = int (v.size ());
+	int            dr  = 0;
+	int            dc  = 0;
+	switch (dir)
+	{
+	case Dir::V: dr = 1; dc = 0; break;
+	case Dir::H: dr = 0; dc = 1; break;
+	case Dir::D: dr = 1; dc = 1; break;
+	}
+	const int      rows    = dr * len;
+	const int      cols    = dc * len;
+	resize_check (dst, rows, cols);
+	fill (dst, T (0));
+	T *            dst_ptr = dst.get_data ();
+	const int      stride  = dst.get_stride ();
+	const int      step    = dr * stride + dc;
+	for (int k = 0; k < len; ++k)
+	{
+		*dst_ptr = v [k];
+		dst_ptr += step;
+	}
+}
+
+
+
 template <typename T>
-void	fill (MatResizableInterface <T> &dst, T val)
+T	norm_inf (const std::vector <T> &v)
+{
+	T              norm { 0 };
+
+	std::for_each (v.begin (), v.end (), [&norm] (T x) {
+		norm = std::max (norm, T (fabs (x)));
+	});
+
+	return norm;
+}
+
+
+
+
+template <typename T>
+void	fill (MatInterface <T> &dst, T val)
 {
 	const int      rows     = dst.get_rows ();
 	const int      cols     = dst.get_cols ();
@@ -151,11 +244,19 @@ void	fill (MatResizableInterface <T> &dst, T val)
 
 
 template <typename T>
-void	transpose (MatResizableInterface <T> &dst, const MatInterface <T> &other)
+void	fill (std::vector <T> &dst, T val)
+{
+	std::fill (dst.begin (), dst.end (), val);
+}
+
+
+
+template <typename T, typename D>
+void	transpose (D &dst, const MatConstInterface <T> &other)
 {
 	const int      rows = other.get_cols (); // Inverted on purpose
 	const int      cols = other.get_rows (); // --"--
-	dst.resize (rows, cols);
+	resize_check (dst, rows, cols);
 
 	T *            dst_ptr  = dst.get_data ();
 	const T *      src_ptr  = other.get_data ();
@@ -176,8 +277,8 @@ void	transpose (MatResizableInterface <T> &dst, const MatInterface <T> &other)
 
 
 
-template <typename T>
-void	copy (MatResizableInterface <T> &dst, const MatInterface <T> &other)
+template <typename T, typename D>
+void	copy (D &dst, const MatConstInterface <T> &other)
 {
 	op_unary (dst, other, [] (T x) { return x; });
 }
@@ -185,15 +286,31 @@ void	copy (MatResizableInterface <T> &dst, const MatInterface <T> &other)
 
 
 template <typename T>
-void	neg (MatResizableInterface <T> &dst, const MatInterface <T> &other)
+void	copy (std::vector <T> &dst, const std::vector <T> &other)
+{
+	op_unary (dst, other, [] (T x) { return x; });
+}
+
+
+
+template <typename T>
+void	mul_cw (std::vector <T> &dst, const std::vector <T> &lhs, const std::vector <T> &rhs)
+{
+	op_binary (dst, lhs, rhs, [] (T x1, T x2) { return x1 * x2; });
+}
+
+
+
+template <typename T, typename D>
+void	neg (D &dst, const MatConstInterface <T> &other)
 {
 	op_unary (dst, other, [] (T x) { return -x; });
 }
 
 
 
-template <typename T>
-void	add (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, T rhs)
+template <typename T, typename D>
+void	add (D &dst, const MatConstInterface <T> &lhs, T rhs)
 {
 	op_unary (dst, lhs, [rhs] (T x) { return x + rhs; });
 }
@@ -201,7 +318,7 @@ void	add (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, T rhs)
 
 
 template <typename T>
-void	add (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, const MatInterface <T> &rhs)
+void	add (std::vector <T> &dst, const std::vector <T> &lhs, const std::vector <T> &rhs)
 {
 	op_binary (dst, lhs, rhs, [] (T x1, T x2) { return x1 + x2; });
 }
@@ -209,7 +326,23 @@ void	add (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, const Mat
 
 
 template <typename T>
-void	sub (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, const MatInterface <T> &rhs)
+void	sub (std::vector <T> &dst, const std::vector <T> &lhs, const std::vector <T> &rhs)
+{
+	op_binary (dst, lhs, rhs, [] (T x1, T x2) { return x1 - x2; });
+}
+
+
+
+template <typename T, typename D>
+void	add (D &dst, const MatConstInterface <T> &lhs, const MatConstInterface <T> &rhs)
+{
+	op_binary (dst, lhs, rhs, [] (T x1, T x2) { return x1 + x2; });
+}
+
+
+
+template <typename T, typename D>
+void	sub (D &dst, const MatConstInterface <T> &lhs, const MatConstInterface <T> &rhs)
 {
 	op_binary (dst, lhs, rhs, [] (T x1, T x2) { return x1 - x2; });
 }
@@ -217,21 +350,81 @@ void	sub (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, const Mat
 
 
 template <typename T>
-void	mul (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, T rhs)
+void	mul (std::vector <T> &dst, const std::vector <T> &lhs, T rhs)
 {
 	op_unary (dst, lhs, [rhs] (T x) { return x * rhs; });
 }
 
 
 
+template <typename T, typename D>
+void	mul (D &dst, const MatConstInterface <T> &lhs, T rhs)
+{
+	op_unary (dst, lhs, [rhs] (T x) { return x * rhs; });
+}
+
+
+
+template <typename T, typename D>
+void	mul_lhs_dia (D &dst, const std::vector <T> &lhs, const MatConstInterface <T> &rhs)
+{
+	const int      len = lhs.get_rows ();
+	assert (int (lhs.get_cols ()) == len);
+	assert (int (rhs.size ()) == len);
+	resize_check (dst, len, len);
+
+	T *            dst_ptr   = dst.get_data ();
+	const T *      src1_ptr  = lhs.get_data ();
+	const int      stride_d  = dst.get_stride ();
+	const int      stride_s1 = lhs.get_stride ();
+
+	for (int r = 0; r < len; ++r)
+	{
+		for (int c = 0; c < len; ++c)
+		{
+			dst_ptr [c] = src1_ptr [c] * rhs [c];
+		}
+		dst_ptr  += stride_d;
+		src1_ptr += stride_s1;
+	}
+}
+
+
+
+// vertical vect = mat * vertical vect
 template <typename T>
-void	mul (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, const MatInterface <T> &rhs)
+void	mul (std::vector <T> &dst, const MatConstInterface <T> &lhs, const std::vector <T> &rhs)
+{
+	const int      rows = lhs.get_rows ();
+	const int      cols = lhs.get_cols ();
+	assert (int (rhs.size ()) == cols);
+	dst.resize (rows);
+
+	const T *      src1_ptr  = lhs.get_data ();
+	const int      stride_s1 = lhs.get_stride ();
+
+	for (int r = 0; r < rows; ++r)
+	{
+		T           sum = T (0);
+		for (int c = 0; c < cols; ++c)
+		{
+			sum += src1_ptr [c] * rhs [c];
+		}
+		dst [r] = sum;
+		src1_ptr += stride_s1;
+	}
+}
+
+
+
+template <typename T, typename D>
+void	mul (D &dst, const MatConstInterface <T> &lhs, const MatConstInterface <T> &rhs)
 {
 	const int      rows = lhs.get_rows ();
 	const int      cols = rhs.get_cols ();
 	const int      len  = lhs.get_cols ();
 	assert (len == rhs.get_rows ());
-	dst.resize (rows, cols);
+	resize_check (dst, rows, cols);
 
 	T *            dst_ptr   = dst.get_data ();
 	const T *      src1_ptr  = lhs.get_data ();
@@ -261,15 +454,85 @@ void	mul (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, const Mat
 
 
 
-// dst = lhs * transpose (rhs)
-template <typename T>
-void	mul_transp (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, const MatInterface <T> &rhs)
+// dst = transpose (lhs) * rhs_as_diagonal_matrix
+template <typename T, typename D>
+void	mul_transp_lhs_dia (D &dst, const MatConstInterface <T> &lhs, const std::vector <T> &rhs)
+{
+	const int      rows = lhs.get_cols ();
+	const int      cols = int (rhs.size ());
+	assert (int (rhs.size ()) == lhs.get_rows ());
+	resize_check (dst, rows, cols);
+
+	T *            dst_ptr   = dst.get_data ();
+	const T *      src1_ptr  = lhs.get_data ();
+	const int      stride_d  = dst.get_stride ();
+	const int      stride_s1 = lhs.get_stride ();
+
+	for (int r = 0; r < rows; ++r)
+	{
+		const T *      src1r_ptr = src1_ptr + r;
+
+		for (int c = 0; c < cols; ++c)
+		{
+			dst_ptr [c] = (*src1r_ptr) * rhs [c];
+			src1r_ptr += stride_s1;
+		}
+
+		dst_ptr += stride_d;
+	}
+}
+
+
+
+// dst = transpose (lhs) * rhs
+template <typename T, typename D>
+void	mul_transp_lhs (D &dst, const MatConstInterface <T> &lhs, const MatConstInterface <T> &rhs)
+{
+	const int      rows = lhs.get_cols ();
+	const int      cols = rhs.get_cols ();
+	const int      len  = lhs.get_rows ();
+	assert (len == rhs.get_rows ());
+	resize_check (dst, rows, cols);
+
+	T *            dst_ptr   = dst.get_data ();
+	const T *      src1_ptr  = lhs.get_data ();
+	const T *      src2_ptr  = rhs.get_data ();
+	const int      stride_d  = dst.get_stride ();
+	const int      stride_s1 = lhs.get_stride ();
+	const int      stride_s2 = rhs.get_stride ();
+
+	for (int r = 0; r < rows; ++r)
+	{
+		for (int c = 0; c < cols; ++c)
+		{
+			T              sum       = T (0);
+			const T *      src1r_ptr = src1_ptr + r;
+			const T *      src2c_ptr = src2_ptr + c;
+			for (int k = 0; k < len; ++k)
+			{
+				sum += *src1r_ptr * *src2c_ptr;
+				src1r_ptr += stride_s1;
+				src2c_ptr += stride_s2;
+			}
+			dst_ptr [c] = sum;
+		}
+
+		dst_ptr += stride_d;
+	}
+}
+
+
+
+// fnc (dst, lhs * transpose (rhs))
+// where fnc is an assignment function (res_assign/add/sub)
+template <typename T, typename D>
+void	mul_transp_rhs (D &dst, const MatConstInterface <T> &lhs, const MatConstInterface <T> &rhs, decltype (res_assign <T>) fnc)
 {
 	const int      rows = lhs.get_rows ();
 	const int      cols = rhs.get_rows ();
 	const int      len  = lhs.get_cols ();
 	assert (len == rhs.get_cols ());
-	dst.resize (rows, cols);
+	resize_check (dst, rows, cols);
 
 	T *            dst_ptr   = dst.get_data ();
 	const T *      src1_ptr  = lhs.get_data ();
@@ -284,12 +547,12 @@ void	mul_transp (MatResizableInterface <T> &dst, const MatInterface <T> &lhs, co
 		int            pos_2 = 0;
 		for (int c = 0; c < cols; ++c)
 		{
-			T              sum   = T (0);
+			T              sum = T (0);
 			for (int k = 0; k < len; ++k)
 			{
 				sum += src1_ptr [pos_1 + k] * src2_ptr [pos_2 + k];
 			}
-			dst_ptr [c] = sum;
+			fnc (dst_ptr [c], sum);
 			pos_2 += stride_s2;
 		}
 
@@ -357,7 +620,7 @@ void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const 
 // r_arr and c_arr should be the same as the decompose_lu() call.
 // Result: a vector x, same size and same row ordering as b (c_arr).
 template <typename T>
-void	traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> &b, const MatInterface <T> &lu, const std::vector <int> &r_arr, const std::vector <int> &c_arr)
+void	traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> &b, const MatConstInterface <T> &lu, const std::vector <int> &r_arr, const std::vector <int> &c_arr)
 {
 	const int      n = lu.get_rows ();
 	assert (lu.get_cols () == n);
@@ -411,8 +674,8 @@ void	traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> 
 // lu is the result of the decompose_lu() call.
 // inv is the result of the inversion.
 // Other parameters are the same as traverse_lu().
-template <typename T>
-void	invert (MatResizableInterface <T> &inv, std::vector <T> &y, const MatInterface <T> &lu, const std::vector <int> &r_arr, const std::vector <int> &c_arr)
+template <typename T, typename D>
+void	invert (D &inv, std::vector <T> &y, const MatConstInterface <T> &lu, const std::vector <int> &r_arr, const std::vector <int> &c_arr)
 {
 	const int      n = lu.get_rows ();
 	assert (lu.get_cols () == n);
@@ -421,7 +684,7 @@ void	invert (MatResizableInterface <T> &inv, std::vector <T> &y, const MatInterf
 	assert (std::accumulate (r_arr.begin (), r_arr.end (), 0) == n * (n - 1) / 2);
 	assert (std::accumulate (c_arr.begin (), c_arr.end (), 0) == n * (n - 1) / 2);
 
-	inv.resize (n, n);
+	resize_check (inv, n, n);
 	y.resize (n);
 
 	const T *      lu_ptr   = lu.get_data ();

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MatResizableInterface.h
+        MatConstInterface.h
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -16,15 +16,14 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (lal_MatResizableInterface_HEADER_INCLUDED)
-#define lal_MatResizableInterface_HEADER_INCLUDED
+#if ! defined (lal_MatConstInterface_HEADER_INCLUDED)
+#define lal_MatConstInterface_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "lal/Dir.h"
-#include "lal/MatInterface.h"
+
 
 namespace lal
 {
@@ -32,20 +31,25 @@ namespace lal
 
 
 template <typename T>
-class MatResizableInterface
-:	public MatInterface <T>
+class MatConstInterface
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	void           reserve (int r, int c);
-	void           resize (int r, int c);
-	void           resize (int n, Dir dir);
+	typedef T Scalar;
 
-	// Convenience function
-	void           resize (const MatResizableInterface <T> &other);
+	               MatConstInterface ()  = default;
+	virtual        ~MatConstInterface () = default;
+
+	int            get_rows () const;
+	int            get_cols () const;
+
+	const T &      operator () (int r, int c) const;
+
+	const T *      get_data () const;
+	int            get_stride () const;
 
 
 
@@ -53,9 +57,15 @@ public:
 
 protected:
 
-	virtual void   do_reserve (int r, int c) = 0;
-	virtual void   do_resize (int r, int c) = 0;
-	virtual void   do_resize (int n, Dir dir) = 0;
+	virtual int    do_get_rows () const = 0;
+	virtual int    do_get_cols () const = 0;
+	virtual const T &
+	               do_at (int r, int c) const = 0;
+	virtual const T *
+	               do_get_data () const = 0;
+	virtual int    do_get_stride () const = 0;
+
+	static T       _dummy_scalar;
 
 
 
@@ -63,7 +73,8 @@ protected:
 
 private:
 
-}; // class MatResizableInterface
+
+}; // class MatConstInterface
 
 
 
@@ -71,11 +82,11 @@ private:
 
 
 
-#include "lal/MatResizableInterface.hpp"
+#include "lal/MatConstInterface.hpp"
 
 
 
-#endif   // lal_MatResizableInterface_HEADER_INCLUDED
+#endif   // lal_MatConstInterface_HEADER_INCLUDED
 
 
 

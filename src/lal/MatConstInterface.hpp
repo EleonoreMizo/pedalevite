@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        MatResizableInterface.hpp
+        MatConstInterface.hpp
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -15,8 +15,8 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#if ! defined (lal_MatResizableInterface_CODEHEADER_INCLUDED)
-#define lal_MatResizableInterface_CODEHEADER_INCLUDED
+#if ! defined (lal_MatConstInterface_CODEHEADER_INCLUDED)
+#define lal_MatConstInterface_CODEHEADER_INCLUDED
 
 
 
@@ -35,43 +35,54 @@ namespace lal
 
 
 
-template <class T>
-void	MatResizableInterface <T>::reserve (int r, int c)
+template <typename T>
+int	MatConstInterface <T>::get_rows () const
+{
+	const int      rows = do_get_rows ();
+	assert (rows >= 0);
+
+	return rows;
+}
+
+
+
+template <typename T>
+int	MatConstInterface <T>::get_cols () const
+{
+	const int      cols = do_get_cols ();
+	assert (cols >= 0);
+
+	return cols;
+}
+
+
+
+template <typename T>
+const T &	MatConstInterface <T>::operator () (int r, int c) const
 {
 	assert (r >= 0);
 	assert (c >= 0);
 
-	do_reserve (r, c);
+	return do_at (r, c);
 }
 
 
 
-template <class T>
-void	MatResizableInterface <T>::resize (int r, int c)
+template <typename T>
+const T *	MatConstInterface <T>::get_data () const
 {
-	assert (r >= 0);
-	assert (c >= 0);
+	const T *      ptr = do_get_data ();
+	assert (do_get_rows () == 0 || do_get_cols () == 0 || ptr != nullptr);
 
-	do_resize (r, c);
+	return ptr;
 }
 
 
 
-// Makes a vector
-template <class T>
-void	MatResizableInterface <T>::resize (int n, Dir dir)
+template <typename T>
+int	MatConstInterface <T>::get_stride () const
 {
-	assert (n >= 0);
-
-	do_resize (n, dir);
-}
-
-
-
-template <class T>
-void	MatResizableInterface <T>::resize (const MatResizableInterface <T> &other)
-{
-	resize (other.get_rows (), other.get_cols ());
+	return do_get_stride ();
 }
 
 
@@ -80,11 +91,16 @@ void	MatResizableInterface <T>::resize (const MatResizableInterface <T> &other)
 
 
 
+template <typename T>
+T	MatConstInterface <T>::_dummy_scalar { 0 };
+
+
+
 }  // namespace lal
 
 
 
-#endif   // lal_MatResizableInterface_CODEHEADER_INCLUDED
+#endif   // lal_MatConstInterface_CODEHEADER_INCLUDED
 
 
 

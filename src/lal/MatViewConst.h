@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Mat.h
+        MatViewConst.h
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -16,16 +16,14 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (lal_Mat_HEADER_INCLUDED)
-#define lal_Mat_HEADER_INCLUDED
+#if ! defined (lal_MatViewConst_HEADER_INCLUDED)
+#define lal_MatViewConst_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "lal/MatResizableInterface.h"
-
-#include <vector>
+#include "lal/MatConstInterface.h"
 
 
 
@@ -34,24 +32,16 @@ namespace lal
 
 
 
-template <typename T> class MatView;
-template <typename T> class MatViewConst;
-
 template <typename T>
-class Mat
-:	public MatResizableInterface <T>
+class MatViewConst
+:	public MatConstInterface <T>
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	MatView <T>    make_sub (int r, int c, int h, int w);
-	MatViewConst <T>
-	               make_sub (int r, int c, int h, int w) const;
-
-	void           set_zero ();
-	void           set_id ();
+	void           setup (int rows, int cols, T *data_ptr, int stride);
 
 
 
@@ -66,27 +56,18 @@ protected:
 	const T *      do_get_data () const override;
 	int            do_get_stride () const override;
 
-	// lal::MatInterface
-	T &            do_at (int r, int c) override;
-	T *            do_get_data () override;
-
-	// lal::MatResizableInterface
-	void           do_reserve (int r, int c) override;
-	void           do_resize (int r, int c) override;
-	void           do_resize (int n, Dir dir) override;
-
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 private:
 
-	int            conv_coord_to_pos (int r, int c) const;
+	int           conv_coord_to_pos (int r, int c) const;
 
-	int            _rows = 0;  // >= 0
-	int            _cols = 0;  // >= 0
-	std::vector <T>
-	               _data;
+	int            _rows       = 0;
+	int            _cols       = 0;
+	int            _stride     = 0;
+	T *            _data_ptr   = &this->_dummy_scalar;
 
 
 
@@ -94,10 +75,15 @@ private:
 
 private:
 
-	bool           operator == (const Mat &other) const = delete;
-	bool           operator != (const Mat &other) const = delete;
+	               MatViewConst ()                               = delete;
+	               MatViewConst (const MatViewConst &other)      = delete;
+	               MatViewConst (MatViewConst &&other)           = delete;
+	MatViewConst & operator = (const MatViewConst &other)        = delete;
+	MatViewConst & operator = (MatViewConst &&other)             = delete;
+	bool           operator == (const MatViewConst &other) const = delete;
+	bool           operator != (const MatViewConst &other) const = delete;
 
-}; // class Mat
+}; // class MatViewConst
 
 
 
@@ -105,11 +91,11 @@ private:
 
 
 
-#include "lal/Mat.hpp"
+#include "lal/MatViewConst.hpp"
 
 
 
-#endif   // lal_Mat_HEADER_INCLUDED
+#endif   // lal_MatViewConst_HEADER_INCLUDED
 
 
 

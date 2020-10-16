@@ -36,23 +36,9 @@ namespace lal
 
 
 template <typename T>
-int	MatInterface <T>::get_rows () const
+const T &	MatInterface <T>::operator () (int r, int c) const
 {
-	const int      rows = do_get_rows ();
-	assert (rows >= 0);
-
-	return rows;
-}
-
-
-
-template <typename T>
-int	MatInterface <T>::get_cols () const
-{
-	const int      cols = do_get_cols ();
-	assert (cols >= 0);
-
-	return cols;
+	return Inherited::operator () (r, c);
 }
 
 
@@ -69,12 +55,9 @@ T &	MatInterface <T>::operator () (int r, int c)
 
 
 template <typename T>
-const T &	MatInterface <T>::operator () (int r, int c) const
+const T *	MatInterface <T>::get_data () const
 {
-	assert (r >= 0);
-	assert (c >= 0);
-
-	return do_at (r, c);
+	return Inherited::get_data ();
 }
 
 
@@ -90,31 +73,7 @@ T *	MatInterface <T>::get_data ()
 
 
 
-template <typename T>
-const T *	MatInterface <T>::get_data () const
-{
-	const T *      ptr = do_get_data ();
-	assert (do_get_rows () == 0 || do_get_cols () == 0 || ptr != nullptr);
-
-	return ptr;
-}
-
-
-
-template <typename T>
-int	MatInterface <T>::get_stride () const
-{
-	return do_get_stride ();
-}
-
-
-
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-template <typename T>
-T	MatInterface <T>::_dummy_scalar { 0 };
 
 
 

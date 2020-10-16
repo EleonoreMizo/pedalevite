@@ -23,6 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "lal/MatConstInterface.h"
+
 
 
 namespace lal
@@ -32,25 +34,20 @@ namespace lal
 
 template <typename T>
 class MatInterface
+:	public MatConstInterface <T>
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	typedef T Scalar;
-
 	               MatInterface ()  = default;
 	virtual        ~MatInterface () = default;
 
-	int            get_rows () const;
-	int            get_cols () const;
-	T &            operator () (int r, int c);
 	const T &      operator () (int r, int c) const;
-
-	T *            get_data ();
+	T &            operator () (int r, int c);
 	const T *      get_data () const;
-	int            get_stride () const;
+	T *            get_data ();
 
 
 
@@ -58,18 +55,18 @@ public:
 
 protected:
 
-	virtual int    do_get_rows () const = 0;
-	virtual int    do_get_cols () const = 0;
-	virtual T &    do_at (int r, int c) = 0;
-	virtual const T &
+	const virtual T &
 	               do_at (int r, int c) const = 0;
-
-	virtual T *    do_get_data () = 0;
-	virtual const T *
+	virtual T &    do_at (int r, int c) = 0;
+	const virtual T *
 	               do_get_data () const = 0;
-	virtual int    do_get_stride () const = 0;
+	virtual T *    do_get_data () = 0;
 
-	static T       _dummy_scalar;
+
+
+/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+	typedef MatConstInterface <T> Inherited;
 
 
 

@@ -210,12 +210,16 @@ commonsrc = \
         ../../src/lal/Dir.h \
         ../../src/lal/Mat.h \
         ../../src/lal/Mat.hpp \
+        ../../src/lal/MatConstInterface.h \
+        ../../src/lal/MatConstInterface.hpp \
         ../../src/lal/MatInterface.h \
         ../../src/lal/MatInterface.hpp \
         ../../src/lal/MatResizableInterface.h \
         ../../src/lal/MatResizableInterface.hpp \
         ../../src/lal/MatView.h \
         ../../src/lal/MatView.hpp \
+        ../../src/lal/MatViewConst.h \
+        ../../src/lal/MatViewConst.hpp \
         ../../src/lal/op.h \
         ../../src/lal/op.hpp \
         ../../src/mfx/adrv/CbInterface.cpp \
