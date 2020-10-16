@@ -63,9 +63,7 @@ http://www.wtfpl.net/ for more details.
 #include "Eigen/Dense"
 #include "mfx/dsp/va/dkm/Flt.h"
 
-#if defined (mfx_dsp_va_dkm_Simulator_STATS)
-	#include <array>
-#endif // mfx_dsp_va_dkm_Simulator_STATS
+#include <array>
 #include <map>
 #include <vector>
 

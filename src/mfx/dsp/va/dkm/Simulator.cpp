@@ -486,7 +486,9 @@ void	Simulator::reset_stats ()
 {
 	_st._hist_it.fill (0);
 	_st._nbr_spl_proc = 0;
+#if defined (mfx_dsp_va_dkm_Simulator_STATS_PIV)
 	_st._piv_map.clear ();
+#endif
 }
 
 
