@@ -2613,7 +2613,7 @@ a guitar amp.</p>
 <p class="var">Type</p>
 <p>The current test signal:</p>
 <table>
-<tr><td><span class="ui">Pink noise </span></td><td>Pink noise (&minus;3&#8239;dB/oct) covering 12 octaves</td></tr>
+<tr><td><span class="ui">Pink noise </span></td><td>Pink noise (&minus;3&#8239;dB/oct) covering 12 octaves up to the Nyquist frequency</td></tr>
 <tr><td><span class="ui">White noise</span></td><td>White noise</td></tr>
 <tr><td><span class="ui">Tone       </span></td><td>Single fixed sine tone</td></tr>
 <tr><td><span class="ui">Sweep      </span></td><td>Sine tone sweeping across the whole spectrum</td></tr>
@@ -2628,7 +2628,7 @@ a guitar amp.</p>
 or uncorrelated source.</p>
 
 <p class="var">Tone frequency</p>
-<p>Frequency in Hz of the fixe tone signal.</p>
+<p>Frequency in Hz of the fixed tone signal.</p>
 
 <p class="var">Sweep duration</p>
 <p>Duration of a frequency sweep in seconds.</p>
@@ -2748,6 +2748,9 @@ The parameter value also gives the note velocity.</p>
 <p class="var">Trigger Off</p>
 <p>When this parameter is set to a non-null value, the envelope generator
 is fed with a Note Off event.</p>
+
+<p class="var">Amplitude</p>
+<p>Overall envelope amplitude.</p>
 
 <p class="var">Velocity sensitivity</p>
 <p>This indicates a which point the envelope follows the note velocity
@@ -3012,6 +3015,11 @@ This precision can be changed with <span class="keya">Select</span>.
 <p>Coming soon… (or not?)</p>
 
 
+
+<p><b>r35, 2020-11-02</b></p>
+<ul>
+<li>Added an amplitude parameter to the ADSR envelope generator.</li>
+</ul>
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
 

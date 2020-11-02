@@ -62,12 +62,14 @@ EnvAdsr::EnvAdsr ()
 ,	_env ()
 ,	_velo (1)
 ,	_velo_sens (0)
+,	_amp (1)
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
 
 	_state_set.set_val_nat (desc_set, Param_TRIG_ON  ,   0);
 	_state_set.set_val_nat (desc_set, Param_TRIG_OFF ,   0);
+	_state_set.set_val_nat (desc_set, Param_AMP      ,   1);
 	_state_set.set_val_nat (desc_set, Param_VELO_SENS,   0);
 	_state_set.set_val_nat (desc_set, Param_ATK_T    ,   0.01);
 	_state_set.set_val_nat (desc_set, Param_DCY_T    ,   0.1);
@@ -77,6 +79,7 @@ EnvAdsr::EnvAdsr ()
 
 	_state_set.add_observer (Param_TRIG_ON  , _param_change_flag_trig);
 	_state_set.add_observer (Param_TRIG_OFF , _param_change_flag_trig);
+	_state_set.add_observer (Param_AMP      , _param_change_flag_adsr);
 	_state_set.add_observer (Param_VELO_SENS, _param_change_flag_adsr);
 	_state_set.add_observer (Param_ATK_T    , _param_change_flag_adsr);
 	_state_set.add_observer (Param_DCY_T    , _param_change_flag_adsr);
@@ -153,9 +156,9 @@ void	EnvAdsr::do_process_block (piapi::ProcInfo &proc)
 	}
 
 	// Signal processing
-	const float    amp     = 1 + (_velo - 1) * _velo_sens;
+	const float    vel_amp = 1 + (_velo - 1) * _velo_sens;
 	const float    val_env = _env.get_val ();
-	proc._sig_arr [0] [0]  = val_env * amp;
+	proc._sig_arr [0] [0]  = val_env * vel_amp * _amp;
 
 	_env.skip_block (proc._nbr_spl);
 }
@@ -179,6 +182,7 @@ void	EnvAdsr::update_param (bool force_flag)
 	{
 		if (_param_change_flag_adsr (true) || force_flag)
 		{
+			_amp       = float (_state_set.get_val_end_nat (Param_AMP      ));
 			_velo_sens = float (_state_set.get_val_end_nat (Param_VELO_SENS));
 			const float    at =
 				float (_state_set.get_val_end_nat (Param_ATK_T));

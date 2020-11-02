@@ -2790,7 +2790,7 @@ et l’autre cananl sur un ampli de guitare.</p>
 <p class="var">Type</p>
 <p>Le signal de test:</p>
 <table>
-<tr><td><span class="ui">Pink noise </span></td><td>Bruit rose (&minus;3&#8239;dB/octave) couvrant 12 octaves</td></tr>
+<tr><td><span class="ui">Pink noise </span></td><td>Bruit rose (&minus;3&#8239;dB/octave) couvrant 12 octaves jusqu’à la fréquence de Nyquist</td></tr>
 <tr><td><span class="ui">White noise</span></td><td>Bruit blanc</td></tr>
 <tr><td><span class="ui">Tone       </span></td><td>Onde sinusoïdale fixe</td></tr>
 <tr><td><span class="ui">Sweep      </span></td><td>Balayage progressif du spectre par une onde sinusoïdale</td></tr>
@@ -2939,6 +2939,9 @@ La valeur du paramètre donne également la vélocité de la note.</p>
 <p>Quand ce paramètre est mis à une valeur différente de 0, un événement
 <i><span lang="en">Note Off</span></i> est fourni au générateur
 d’enveloppe.</p>
+
+<p class="var">Amplitude</p>
+<p>Amplitude générale de l’enveloppe.</p>
 
 <p class="var">Velocity sensitivity</p>
 <p>Ce paramètre indique à quel point l’enveloppe suit la vélocité de la note
@@ -3218,6 +3221,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r35, 2020-11-02</b></p>
+<ul>
+<li>Ajout d’un paramètre d’amplitude au générateur d’enveloppe ADSR.</li>
+</ul>
 
 <p><b>r34, 2020-04-03</b></p>
 <ul>

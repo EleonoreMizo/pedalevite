@@ -42,6 +42,7 @@ enum Param
 {
 	Param_TRIG_ON = 0,
 	Param_TRIG_OFF,
+	Param_AMP,
 	Param_VELO_SENS,
 	Param_ATK_T,
 	Param_DCY_T,

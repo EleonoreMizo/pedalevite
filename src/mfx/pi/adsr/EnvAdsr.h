@@ -101,6 +101,7 @@ private:
 	               _env;
 	float          _velo;               // ]0 ; 1]
 	float          _velo_sens;          // [0 ; 1]. 0: _amp is always 1, 1: _amp = _velo
+	float          _amp;                // [0 ; 1]
 
 
 

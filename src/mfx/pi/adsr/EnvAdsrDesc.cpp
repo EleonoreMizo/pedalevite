@@ -84,6 +84,19 @@ EnvAdsrDesc::EnvAdsrDesc ()
 	);
 	_desc_set.add_glob (Param_TRIG_OFF, lin_sptr);
 
+	// Amplitude
+	lin_sptr = std::make_shared <param::TplLin> (
+		0, 1,
+		"A\nAmp\nAmplitude",
+		"%",
+		0,
+		"%5.1f"
+	);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_FLOAT_PERCENT
+	);
+	_desc_set.add_glob (Param_AMP, lin_sptr);
+
 	// Velocity sensitivity
 	lin_sptr = std::make_shared <param::TplLin> (
 		0, 1,
