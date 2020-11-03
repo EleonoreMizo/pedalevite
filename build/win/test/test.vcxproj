@@ -167,6 +167,7 @@
     <ClCompile Include="..\..\..\src\test\TestUserInputPi3.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\test\TestWindows.cpp" />
     <ClCompile Include="..\..\..\src\test\TimerAccurate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +214,7 @@
     <ClInclude Include="..\..\..\src\test\TestSvf.h" />
     <ClInclude Include="..\..\..\src\test\TestSvfAntisat.h" />
     <ClInclude Include="..\..\..\src\test\TestUserInputPi3.h" />
+    <ClInclude Include="..\..\..\src\test\TestWindows.h" />
     <ClInclude Include="..\..\..\src\test\TimerAccurate.h" />
     <ClInclude Include="..\..\..\src\test\TimerAccurate.hpp" />
   </ItemGroup>

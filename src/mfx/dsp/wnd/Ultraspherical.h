@@ -5,19 +5,15 @@
 
 From the following articles:
 
+Stuart W. A. Bergen and Andreas Antoniou,
+Design of Ultraspherical Window Functions with Prescribed Spectral
+Characteristics,
+EURASIP Journal on Applied Signal Processing 2004:13, 2053–2065, 2004-10
+
+Stuart W. A. Bergen and Andreas Antoniou
 Generation Of Ultraspherical Window Functions
-Stuart W. A. Bergen and Andreas Antoniou, 2002
 Proceedings of the 11th European Signal Processing Conference (EUSIPCO),
-Volume II p. 607-610
-http://www.eurasip.org/content/Eusipco/2002/articles/paper144.html
-
-On The Ultraspherical Family Of Window Functions
-Stuart W. A. Bergen and Andreas Antoniou, 2003
-University of Victoria
-
-Note: not sure the implementation is totally correct. It seems the functions
-using prescribed specifications give wrong results for mu = 0 (Dolph-Chebyshev
-case). To be checked more deeply.
+Volume II p. 607-610, 2002
 
 --- Legal stuff ---
 
@@ -68,6 +64,7 @@ public:
 	void           set_mu (double mu);
 	void           set_x_mu (double x_mu);
 
+	static double  compute_x_mu_for_prescribed_null_to_null_width (int len, double mu, double w);
 	static double  compute_x_mu_for_prescribed_main_lobe_width (int len, double mu, double w);
 	static double  compute_x_mu_for_prescribed_ripple_ratio (int len, double mu, double r);
 
@@ -86,10 +83,16 @@ protected:
 
 private:
 
+	static constexpr double
+	               msgn (double x);
+	static double  compute_t (int n, double x);
+	static void    compute_t (double &t_n, double &t_n_m_1, int n, double x);
 	static double  compute_c (int n, double mu, double x);
 	static void    compute_c (double &c_n, double &c_n_m_1, int n, double mu, double x);
 	static double  compute_a (int len, double mu, double epsilon);
-	static double  compute_largest_zero_of_c (int n, double mu, double a, double epsilon);
+	static double  compute_b (int len, double mu, double epsilon);
+	static double  compute_v (int len, double mu, double epsilon, int l);
+	static double  compute_zero_of_c (int n, int l, double mu, double param, double epsilon, double r);
 
 	double         _mu   = 1;
 	double         _x_mu = 1;

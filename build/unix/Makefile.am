@@ -1680,6 +1680,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSvf.h \
         ../../src/test/TestSvfAntisat.cpp \
         ../../src/test/TestSvfAntisat.h \
+        ../../src/test/TestWindows.cpp \
+        ../../src/test/TestWindows.h \
         ../../src/test/TimerAccurate.cpp \
         ../../src/test/TimerAccurate.h \
         ../../src/test/TimerAccurate.hpp \

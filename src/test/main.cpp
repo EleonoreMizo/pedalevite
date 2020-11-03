@@ -89,6 +89,7 @@
 #include "test/TestSmooth.h"
 #include "test/TestSvf.h"
 #include "test/TestSvfAntisat.h"
+#include "test/TestWindows.h"
 
 #if fstb_IS (SYS, LINUX)
 	#include "mfx/adrv/CbInterface.h"
@@ -1881,6 +1882,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 0
+	if (ret_val == 0) ret_val = TestWindows::perform_test ();
+#endif
 
 #if 0
 	if (ret_val == 0) ret_val = Testlal::perform_test ();

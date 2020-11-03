@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 
 #include <vector>
 
@@ -44,6 +45,13 @@ namespace wnd
 
 
 
+/*
+mu indicates the behaviour of the side lobes with increasing frequency:
+mu >  0: side lobes are decreasing
+mu <  0: side lobes are increasing
+mu == 0: side lobes are flat
+*/
+
 template <class T>
 void	Ultraspherical <T>::set_mu (double mu)
 {
@@ -60,17 +68,43 @@ void	Ultraspherical <T>::set_x_mu (double x_mu)
 
 
 
-// w = main lobe width
+// w = null-to-null half width, in rad/s
+// Integer negative mu will cause calculation issues.
+template <class T>
+double	Ultraspherical <T>::compute_x_mu_for_prescribed_null_to_null_width (int len, double mu, double w)
+{
+	assert (len >= 3);
+	assert (mu >= 0 || mu != fstb::round (mu));
+	assert (w > 0);
+	assert (w < fstb::PI);
+
+	const double   z    = compute_zero_of_c (len - 1, 1, mu, 0, 1e-6, 0);
+
+	// Eq. 29
+	const double   x_mu = z / cos (w * 0.5);
+
+	return x_mu;
+}
+
+
+
+// w = main lobe half width, in rad/s
+// Integer negative mu will cause calculation issues.
 template <class T>
 double	Ultraspherical <T>::compute_x_mu_for_prescribed_main_lobe_width (int len, double mu, double w)
 {
 	assert (len >= 3);
+	assert (mu >= 0 || mu != fstb::round (mu));
 	assert (w > 0);
-	assert (w < 1);
+	assert (w < fstb::PI);
 
 	const double   a    = compute_a (len, mu, 1e-6);
-	const double   x_a  = compute_largest_zero_of_c (len - 1, mu, a, 1e-6);
-	const double   x_mu = x_a / cos (w * (fstb::PI * 0.5));
+	const double   b    = compute_b (len, mu, 1e-6);
+	const double   par  = msgn (mu) * std::max (a, b);
+	const double   x_a  = compute_zero_of_c (len - 1, 1, mu, par, 1e-6, 0);
+
+	// Eq. 30
+	const double   x_mu = x_a / cos (w * 0.5);
 
 	return x_mu;
 }
@@ -78,15 +112,29 @@ double	Ultraspherical <T>::compute_x_mu_for_prescribed_main_lobe_width (int len,
 
 
 // r = ripple ratio (max_side_lobe_amp / main_lobe_amp)
+// Integer negative mu will cause calculation issues.
 template <class T>
 double	Ultraspherical <T>::compute_x_mu_for_prescribed_ripple_ratio (int len, double mu, double r)
 {
 	assert (len >= 3);
+	assert (mu >= 0 || mu != fstb::round (mu));
 	assert (r > 0);
 	assert (r < 1);
 
-	const double   a    = compute_a (len, mu, 1e-6);
-	const double   x_mu = compute_largest_zero_of_c (len - 1, mu, a / r, 1e-6);
+	double         x_mu = 1;
+	if (fstb::is_null (mu))
+	{
+		// Eq. 19
+		x_mu = cosh (acosh (1 / r) / (len - 1));
+	}
+	else
+	{
+		// Eq. 32
+		const double   a    = compute_a (len, mu, 1e-6);
+		const double   b    = compute_b (len, mu, 1e-6);
+		const double   par  = msgn (mu) * std::max (a, b) / r;
+		x_mu = compute_zero_of_c (len - 2, 1, mu, par, 1e-6, r);
+	}
 
 	return x_mu;
 }
@@ -94,6 +142,14 @@ double	Ultraspherical <T>::compute_x_mu_for_prescribed_ripple_ratio (int len, do
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <class T>
+constexpr double	Ultraspherical <T>::msgn (double x)
+{
+	return (x < 0) ? -1 : 1;
+}
 
 
 
@@ -108,7 +164,15 @@ void	Ultraspherical <T>::do_make_win (T data_ptr [], int len)
 	for (int s = 0; s <= m; ++s)
 	{
 		const double   x = _x_mu * cos (s * cos_mult_1);
-		double         c = compute_c (2 * m, _mu, x);
+		double         c = 0;
+		if (fstb::is_null (_mu))
+		{
+			c = compute_t (2 * m, x);
+		}
+		else
+		{
+			c = compute_c (2 * m, _mu, x);
+		}
 		if (s > 0)
 		{
 			c *= 2;
@@ -150,6 +214,45 @@ void	Ultraspherical <T>::do_make_win (T data_ptr [], int len)
 
 
 template <class T>
+double	Ultraspherical <T>::compute_t (int n, double x)
+{
+	assert (n >= 0);
+
+	double         dummy;
+	double         t;
+	compute_t (t, dummy, n, x);
+
+	return t;
+}
+
+
+
+template <class T>
+void	Ultraspherical <T>::compute_t (double &t_n, double &t_n_m_1, int n, double x)
+{
+	assert (n >= 0);
+
+	if (n == 0)
+	{
+		t_n     = 1;
+		t_n_m_1 = 0;   // Not defined actually
+	}
+	else if (n == 1)
+	{
+		t_n     = x;
+		t_n_m_1 = 1;
+	}
+	else
+	{
+		double         t_n_m_2;
+		compute_t (t_n_m_1, t_n_m_2, n - 1, x);
+		t_n = 2 * x * t_n_m_1 - t_n_m_2;
+	}
+}
+
+
+
+template <class T>
 double	Ultraspherical <T>::compute_c (int n, double mu, double x)
 {
 	assert (n >= 0);
@@ -170,7 +273,7 @@ void	Ultraspherical <T>::compute_c (double &c_n, double &c_n_m_1, int n, double 
 
 	if (n == 0)
 	{
-		c_n = 1;
+		c_n     = 1;
 		c_n_m_1 = 0;   // Not defined actually
 	}
 
@@ -185,6 +288,7 @@ void	Ultraspherical <T>::compute_c (double &c_n, double &c_n_m_1, int n, double 
 		double         c_n_m_2;
 		compute_c (c_n_m_1, c_n_m_2, n - 1, mu, x);
 
+		// Eq. 14
 		const double   a = 2 * x * (n - 1 + mu);
 		const double   b = n - 2 + 2 * mu;
 		c_n = (a * c_n_m_1 - b * c_n_m_2) / n;
@@ -196,42 +300,87 @@ void	Ultraspherical <T>::compute_c (double &c_n, double &c_n_m_1, int n, double 
 template <class T>
 double	Ultraspherical <T>::compute_a (int len, double mu, double epsilon)
 {
-	assert (len >= 3);
-	assert (epsilon > 0);
-
-	const double	z = compute_largest_zero_of_c (len - 2, mu + 1, 0, 1e-6);
-	const double	a = fabs (compute_c (len - 1, mu, z));
-
-	return a;
+	return compute_v (len, mu, epsilon, 1);
 }
 
 
 
 template <class T>
-double	Ultraspherical <T>::compute_largest_zero_of_c (int n, double mu, double a, double epsilon)
+double	Ultraspherical <T>::compute_b (int len, double mu, double epsilon)
+{
+	const int      l = (len - 2 + 1) / 2;
+
+	return compute_v (len, mu, epsilon, l);
+}
+
+
+
+template <class T>
+double	Ultraspherical <T>::compute_v (int len, double mu, double epsilon, int l)
+{
+	assert (len >= 3);
+	assert (epsilon > 0);
+	assert (l >= 1);
+	assert (l <= (len - 2 + 1) / 2);
+
+	const double	z = compute_zero_of_c (len - 2, l, mu + 1, 0, epsilon, 0);
+	const double	v = fabs (compute_c (len - 1, mu, z));
+
+	return v;
+}
+
+
+
+// param may be 0, a or a / r
+// r > 0 indicates a modification of the starting point for the prescribed
+// ripple ratio mode.
+template <class T>
+double	Ultraspherical <T>::compute_zero_of_c (int n, int l, double mu, double param, double epsilon, double r)
 {
 	assert (n >= 1);
-	assert (a >= 0);
+	assert (l >= 1);
 	assert (epsilon > 0);
 
 	double         y;
-	if (mu == 0)
+
+	if (fstb::is_null (mu))
 	{
-		y = cos (fstb::PI * 0.5 / n);
+		y = cos (fstb::PI * (l - 0.5) / n);
+	}
+
+	// This formula looks wrong in some cases.
+	// Used in x_mu calculation for a prescribed ripple ratio, it gives an
+	// x_mu < 1 for mu = 1. The generic case doesn't have this problem and
+	// outputs an x_mu slightly > 1, as expected.
+	// Adding an extra condition with r == 0 makes it work.
+	else if (fstb::is_eq (mu, 1.0) && r == 0)
+	{
+		y = cos (l * fstb::PI / (n + 1));
 	}
 
 	else
 	{
 		const double   n2 = static_cast <double> (n) * n;
-		y = sqrt (n2 + 2*n*mu - 2*mu - 1) / (n + mu);
+		if (r > 0)
+		{
+			// Eq. 33
+			y  = cosh (acosh (1 / r) / (n - 1));
+		}
+		else
+		{
+			// Eq. 12
+			y  = sqrt (n2 + 2*n*mu - 2*mu - 1) / (n + mu);
+			y *= cos ((l - 1) * fstb::PI / (n + 1));
+		}
 
 		double         dif;
 		do
 		{
-			const double   c_n_mu    = compute_c (n, mu, y);
+			// Eq. 13
+			const double   c_n_mu     = compute_c (n, mu, y);
 			const double   c_nm1_mup1 = compute_c (n - 1, mu + 1, y);
 			assert (c_nm1_mup1 != 0);
-			dif = (c_n_mu - a) / (2 * mu * c_nm1_mup1);
+			dif = (c_n_mu - param) / (2 * mu * c_nm1_mup1);
 
 			y -= dif;
 		}
