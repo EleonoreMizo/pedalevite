@@ -1150,6 +1150,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\HannPoisson.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Kaiser.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Kaiser.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Taylor.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Taylor.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Ultraspherical.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Ultraspherical.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.h" />

@@ -24,6 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/dsp/wnd/Taylor.h"
 #include "mfx/dsp/wnd/Ultraspherical.h"
 #include "mfx/FileOpWav.h"
 #include "test/TestWindows.h"
@@ -32,6 +33,7 @@ http://www.wtfpl.net/ for more details.
 #include <vector>
 
 #include <cassert>
+#include <cmath>
 
 
 
@@ -56,7 +58,10 @@ int	TestWindows::perform_test ()
 		const double	r    = 1e-3;	// -60 dB
 		const double	x_mu =
 			WinUltraS::compute_x_mu_for_prescribed_ripple_ratio (win_len, mu, r);
-		printf ("Ultraspherical: len = %d, mu = %f, x_mu = %f\n", win_len, mu, x_mu);
+		printf (
+			"Ultraspherical: len = %d, mu = %f, x_mu = %f\n",
+			win_len, mu, x_mu
+		);
 		win_u.set_mu (mu);
 		win_u.set_x_mu (x_mu);
 		win_u.make_win (win_data.data (), win_len);
@@ -65,6 +70,27 @@ int	TestWindows::perform_test ()
 
 	mfx::FileOpWav::save (
 		"results/win-ultraspherical1.wav", dst, sample_freq, 0.5f
+	);
+
+	dst.clear ();
+	typedef mfx::dsp::wnd::Taylor <Flt> WinTaylor;
+	WinTaylor      win_t;
+	for (int db = -40; db >= -100; db -= 2)
+	{
+		const double   lvl  = pow (10, double (db) / 20);
+		win_t.set_side_lobe_lvl (lvl);
+		const int      nbar = win_t.compute_nbar_min (lvl);
+		win_t.set_nbar (nbar);
+		printf (
+			"Taylor: len = %d, lvl_db = %-04d, nbar = %3d\n",
+			win_len, db, nbar
+		);
+		win_t.make_win (win_data.data (), win_len);
+		dst.insert (dst.end (), win_data.begin (), win_data.end ());
+	}
+
+	mfx::FileOpWav::save (
+		"results/win-taylor1.wav", dst, sample_freq, 0.5f
 	);
 
 	return 0;
