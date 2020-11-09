@@ -1136,6 +1136,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBHMinLobe.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBlackman.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenBlackman.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenFlatTop.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenFlatTop.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenHann.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CoefGenHann.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\CosineSum.h" />

@@ -761,6 +761,8 @@ commonsrc = \
         ../../src/mfx/dsp/wnd/CoefGenBHMinLobe.hpp \
         ../../src/mfx/dsp/wnd/CoefGenBlackman.h \
         ../../src/mfx/dsp/wnd/CoefGenBlackman.hpp \
+        ../../src/mfx/dsp/wnd/CoefGenFlatTop.h \
+        ../../src/mfx/dsp/wnd/CoefGenFlatTop.hpp \
         ../../src/mfx/dsp/wnd/CoefGenHann.h \
         ../../src/mfx/dsp/wnd/CoefGenHann.hpp \
         ../../src/mfx/dsp/wnd/CosineSum.h \
