@@ -4,7 +4,8 @@
         Author: Laurent de Soras, 2018
 
 Blackmann-Harris window "minimum 4-term".
-1st side lobe at -93 dB, but slow rolloff
+1st side lobe at -93 dB, but slow rolloff.
+Also called Nuttall window.
 
 From:
 Richard Lyons, "Windowing Functions Improve FFT Results - Part I", Test &
