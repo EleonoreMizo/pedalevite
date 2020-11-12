@@ -881,15 +881,26 @@ void	WorldAudio::process_single_plugin (int plugin_id, piapi::ProcInfo &proc_inf
 		proc_info._evt_arr = &_evt_ptr_arr [0];
 	}
 
+#if 0 // No need to sort anything because all the timestamps were set to 0.
+	std::sort (
+		_evt_ptr_arr.begin (),
+		_evt_ptr_arr.begin () + proc_info._nbr_evt,
+		[] (const piapi::EventTs *lhs_ptr, const piapi::EventTs *rhs_ptr)
+		{
+			return (lhs_ptr->_timestamp < rhs_ptr->_timestamp);
+		}
+	);
+#endif
+
 	// Audio processing now
 	piapi::PluginInterface &  plugin = *(details._pi_uptr);
 	plugin.process_block (proc_info);
 
-	// Checks the output
+	// Checks the output for suspicious values
 	if (proc_info._dir_arr [Dir_OUT]._nbr_chn > 0)
 	{
-		const float          val = proc_info._dst_arr [0] [0];
-		static const float   thr = 1e9f;
+		const float       val = proc_info._dst_arr [0] [0];
+		constexpr float   thr = 1e9f;
 		if (! std::isfinite (val) || val < -thr || val > thr)
 		{
 			_reset_flag = true;

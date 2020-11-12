@@ -13,6 +13,13 @@ estimate_max_one_shot_proc_w_feedback()
 read_block()
 push_block()
 
+Template parameters:
+
+- MSL2: Log2 of the minimum BBD speed, <= 0. The lower, the bigger the buffer
+	size.
+
+- AL: allocator for the buffers
+
 Reference:
 
 Antti Huovilainen, Enhanced Digital Models for Analog Modulation Effects,

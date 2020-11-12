@@ -245,7 +245,7 @@ void	FxPEq::update_display ()
 		const piapi::PluginDescInterface &   desc_mix =
 			_model_ptr->get_model_desc (Cst::_plugin_dwm);
 
-		const float    gain = get_param_nat (
+		const float    gain = get_param (
 			slot._settings_mixer, desc_mix, pi::dwm::Param_GAIN
 		);
 
@@ -437,7 +437,7 @@ void	FxPEq::update_param_txt ()
 	{
 		const piapi::PluginDescInterface &   desc_mix =
 			_model_ptr->get_model_desc (Cst::_plugin_dwm);
-		const float    gain    = get_param_nat (
+		const float    gain    = get_param (
 			slot._settings_mixer, desc_mix, pi::dwm::Param_GAIN
 		);
 		const float    gain_db = float (20 * log10 (gain));
@@ -456,7 +456,7 @@ void	FxPEq::update_param_txt ()
 
 		const int      param_idx =
 			(_cur_param - Param_BAND_BASE) % pi::peq::Param_NBR_ELT;
-		const float    nat       = get_param_nat (
+		const float    nat       = get_param (
 			_settings, desc, _cur_band * pi::peq::Param_NBR_ELT + param_idx);
 		switch (param_idx)
 		{
@@ -603,15 +603,15 @@ std::vector <pi::peq::BandParam>	FxPEq::create_bands (const doc::PluginSettings 
 		auto &         band   = band_arr [b_cnt];
 
 		const float    freq   =
-			get_param_nat (settings, desc, base + pi::peq::Param_FREQ);
+			get_param (settings, desc, base + pi::peq::Param_FREQ);
 		const float    q      =
-			get_param_nat (settings, desc, base + pi::peq::Param_Q);
+			get_param (settings, desc, base + pi::peq::Param_Q);
 		const float    gain   =
-			get_param_nat (settings, desc, base + pi::peq::Param_GAIN);
+			get_param (settings, desc, base + pi::peq::Param_GAIN);
 		const float    type   =
-			get_param_nat (settings, desc, base + pi::peq::Param_TYPE);
+			get_param (settings, desc, base + pi::peq::Param_TYPE);
 		const float    bypass =
-			get_param_nat (settings, desc, base + pi::peq::Param_BYPASS);
+			get_param (settings, desc, base + pi::peq::Param_BYPASS);
 
 		band.set_freq (freq);
 		band.set_q    (q);
@@ -621,21 +621,6 @@ std::vector <pi::peq::BandParam>	FxPEq::create_bands (const doc::PluginSettings 
 	}
 
 	return band_arr;
-}
-
-
-
-float	FxPEq::get_param_nat (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc_pi, int index) const
-{
-	assert (index >= 0);
-	assert (index < int (settings._param_list.size ()));
-
-	const float       nrm = settings._param_list [index];
-	const piapi::ParamDescInterface &   desc_param =
-		desc_pi.get_param_info (piapi::ParamCateg_GLOBAL, index);
-	const float       nat = float (desc_param.conv_nrm_to_nat (nrm));
-
-	return nat;
 }
 
 
@@ -857,6 +842,13 @@ void	FxPEq::change_param (int dir)
 			index, step, _prec_idx, dir
 		);
 	}
+}
+
+
+
+float	FxPEq::get_param (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc_pi, int index)
+{
+	return float (Tools::get_param_nat (settings, desc_pi, index));
 }
 
 

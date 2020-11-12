@@ -323,8 +323,8 @@ void	FxLfo::update_param_txt ()
 			assert (width > 0);
 			Tools::set_param_text (
 				*_model_ptr, *_view_ptr, width, param_idx, val_nrm,
-				slot_id, PiType_MAIN, 0, *_cur_param_sptr,
-				0, 0, true
+				slot_id, PiType_MAIN, nullptr, *_cur_param_sptr,
+				nullptr, nullptr, true
 			);
 			
 			_cur_param_sptr->set_text (name + _cur_param_sptr->get_text ());
@@ -415,7 +415,7 @@ std::vector <int32_t>	FxLfo::build_values (int nbr_steps, int h)
 	assert (nbr_steps > 0);
 	assert (h >= 2);
 
-	std::vector <int32_t>   y_arr;
+	std::vector <int32_t>   y_arr (nbr_steps);
 
 	std::vector <const piapi::EventTs *>   evt_ptr_list;
 	for (const auto &evt : _evt_list)
@@ -448,7 +448,7 @@ std::vector <int32_t>	FxLfo::build_values (int nbr_steps, int h)
 		_lfo.process_block (proc_info);
 		const float    val = buf_sig [0];
 		const int      y   = conv_val_to_y (val, h);
-		y_arr.push_back (y);
+		y_arr [x] = y;
 	}
 
 	return y_arr;

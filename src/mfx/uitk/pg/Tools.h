@@ -95,6 +95,7 @@ public:
 		std::string    _name_multilabel { "<Empty>" };
 	};
 
+	static double  get_param_nat (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc_pi, int index);
 	static void    set_param_text (const Model &model, const View &view, int width, int index, float val, int slot_id, PiType type, NText *param_name_ptr, NText &param_val, NText *param_unit_ptr, NText *fx_name_ptr, bool group_unit_val_flag);
 	static void    print_param_with_pres (std::string &val_s, std::string &unit, const Model &model, const View &view, const doc::Preset &preset, int slot_id, PiType type, int index, float val);
 	static MsgHandlerInterface::EvtProp

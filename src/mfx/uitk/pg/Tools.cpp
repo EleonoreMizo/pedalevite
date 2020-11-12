@@ -62,6 +62,21 @@ namespace pg
 
 
 
+double	Tools::get_param_nat (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc_pi, int index)
+{
+	assert (index >= 0);
+	assert (index < int (settings._param_list.size ()));
+
+	const auto     val_nrm = settings._param_list [index];
+	const piapi::ParamDescInterface &   desc_param =
+		desc_pi.get_param_info (piapi::ParamCateg_GLOBAL, index);
+	const double   val_nat = desc_param.conv_nrm_to_nat (val_nrm);
+
+	return val_nat;
+}
+
+
+
 // val is a normalized value
 // val = -1: use the settings content
 // width in pixels

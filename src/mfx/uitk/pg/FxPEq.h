@@ -124,7 +124,6 @@ private:
 	void           update_band_info ();
 	std::vector <pi::peq::BandParam>
 	               create_bands (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc) const;
-	float          get_param_nat (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc_pi, int index) const;
 	std::vector <Biq>
 	               retrieve_z_eq (const std::vector <pi::peq::BandParam> &band_arr) const;
 	std::vector <float>
@@ -137,6 +136,8 @@ private:
 	int            conv_db_to_y (float db, int pix_h) const;
 	void           move_param (int dir);
 	void           change_param (int dir);
+
+	static float   get_param (const doc::PluginSettings &settings, const piapi::PluginDescInterface &desc_pi, int index);
 
 	PageSwitcher & _page_switcher;
 	LocEdit &      _loc_edit;

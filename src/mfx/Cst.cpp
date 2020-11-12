@@ -36,8 +36,10 @@ namespace mfx
 
 #if fstb_IS (SYS, LINUX)
 #define mfx_Cst_ROOT_DIR "/opt/pedalevite/"
-#else
+#elif defined (_MSC_VER)
 #define mfx_Cst_ROOT_DIR "../../../"
+#else // For Mingw on Windows
+#define mfx_Cst_ROOT_DIR "../../"
 #endif
 
 
