@@ -82,7 +82,7 @@ int	TestWindows::perform_test ()
 		const int      nbar = win_t.compute_nbar_min (lvl);
 		win_t.set_nbar (nbar);
 		printf (
-			"Taylor: len = %d, lvl_db = %-04d, nbar = %3d\n",
+			"Taylor: len = %d, lvl_db = %-4d, nbar = %3d\n",
 			win_len, db, nbar
 		);
 		win_t.make_win (win_data.data (), win_len);
