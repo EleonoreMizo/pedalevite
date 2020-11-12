@@ -117,6 +117,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_slot_routing (_page_switcher, _loc_edit)
 ,	_page_slot_rout_action (_page_switcher, _loc_edit)
 ,	_page_select_fx (_page_switcher)
+,	_page_fx_cpx (_page_switcher, _loc_edit)
 {
 #if (PV_VERSION == 2)
  #if 1
@@ -239,6 +240,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 	_page_switcher.add_page (uitk::pg::PageType_SLOT_ROUTING     , _page_slot_routing     );
 	_page_switcher.add_page (uitk::pg::PageType_SLOT_ROUT_ACTION , _page_slot_rout_action );
 	_page_switcher.add_page (uitk::pg::PageType_SELECT_FX        , _page_select_fx        );
+	_page_switcher.add_page (uitk::pg::PageType_FX_CPX           , _page_fx_cpx           );
 }
 
 

@@ -84,6 +84,7 @@ enum PageType
 	PageType_SLOT_ROUTING,
 	PageType_SLOT_ROUT_ACTION,
 	PageType_SELECT_FX,
+	PageType_FX_CPX,
 
 	PageType_NBR_ELT
 

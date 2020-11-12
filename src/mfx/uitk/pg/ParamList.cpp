@@ -290,6 +290,11 @@ void	ParamList::check_gui (const std::string &pi_model)
 		_gui_flag = true;
 		_gui_page = PageType_FX_LFO;
 	}
+	else if (pi_model == "compex")
+	{
+		_gui_flag = true;
+		_gui_page = PageType_FX_CPX;
+	}
 }
 
 

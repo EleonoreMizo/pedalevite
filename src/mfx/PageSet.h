@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/pg/EditLabel.h"
 #include "mfx/uitk/pg/EditText.h"
 #include "mfx/uitk/pg/EndMsg.h"
+#include "mfx/uitk/pg/FxCpx.h"
 #include "mfx/uitk/pg/FxLfo.h"
 #include "mfx/uitk/pg/FxPEq.h"
 #include "mfx/uitk/pg/Levels.h"
@@ -209,6 +210,8 @@ private:
 	               _page_slot_rout_action;
 	uitk::pg::SelectFx
 	               _page_select_fx;
+	uitk::pg::FxCpx
+	               _page_fx_cpx;
 
 
 
