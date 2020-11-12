@@ -99,19 +99,6 @@ CompexDesc::CompexDesc ()
 	);
 	_desc_set.add_glob (Param_KNEE_LVL, lin_sptr);
 
-	// Knee Shape
-	lin_sptr = std::make_shared <param::TplLin> (
-		0, 2,
-		"KS\nKnSh\nKnee S\nKnee shape",
-		"dB",
-		0,
-		"%4.1f"
-	);
-	lin_sptr->use_disp_num ().set_preset (
-		param::HelperDispNum::Preset_DB_FROM_LOG2
-	);
-	_desc_set.add_glob (Param_KNEE_SHAPE, lin_sptr);
-
 	// Attack Time
 	auto           log_sptr = std::make_shared <param::TplLog> (
 		0.0001, 0.1,
@@ -146,6 +133,20 @@ CompexDesc::CompexDesc ()
 		param::HelperDispNum::Preset_DB_FROM_LOG2
 	);
 	_desc_set.add_glob (Param_GAIN, lin_sptr);
+
+	// Knee Shape
+	lin_sptr = std::make_shared <param::TplLin> (
+		0, 4,
+		"KS\nKnSh\nKnee S\nKnee shape",
+		"dB",
+		0,
+		"%4.1f"
+	);
+	lin_sptr->use_disp_num ().set_preset (
+		param::HelperDispNum::Preset_DB_FROM_LOG2
+	);
+	_desc_set.add_glob (Param_KNEE_SHAPE, lin_sptr);
+
 }
 
 
