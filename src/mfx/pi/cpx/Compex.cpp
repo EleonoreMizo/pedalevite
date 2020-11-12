@@ -3,76 +3,6 @@
         Compex.cpp
         Author: Laurent de Soras, 2016
 
-Knee formula calculation
-------------------------
-
-hard knee is supposed to be at (0, 0)
-rl = ratio, low, expressed as a slope (0 = infinite ratio)
-rh = ratio, high (slope too)
-k = knee radius, relative to the input level. Knee operates in [-k ; +k]
-
-f(x) = a*x^3 + b*x^2 + c*x + d
-f'(x) = 3*a*x^2 + 2*b*x + c
-
-f(k) = k * rh  	<=>	a*k^3 + b*k^2 + c*k + d = k * rh
-f(-k) = -k * rl	<=>	-a*k^3 + b*k^2 - c*k + d = -k * rl
-f'(k) = rh     	<=>	3*a*k^2 + 2*b*k + c = rh
-f'(-k) = rl    	<=>	3*a*k^2 - 2*b*k + c = rl
-
-   k^3 * a +   k^2 * b +   k * c + d = k * rh
-  -k^3 * a +   k^2 * b -   k * c + d = -k * rl
- 3*k^2 * a + 2*k   * b +       c     = rh
- 3*k^2 * a - 2*k   * b +       c     = rl
-
-   k^3 * a +   k^2 * b +   k * c + d = k * rh
- 2*k^3 * a             + 2*k * c     = k * (rh + rl)		[l1 - l2]
- 3*k^2 * a + 2*k   * b +       c     = rh
- 3*k^2 * a - 2*k   * b +       c     = rl
-
-   k^3 * a +   k^2 * b +   k * c + d = k * rh
- 2*k^2 * a             + 2   * c     = rh + rl      		[l2 / k]
- 3*k^2 * a + 2*k   * b +       c     = rh
- 3*k^2 * a - 2*k   * b +       c     = rl
-
-   k^3 * a +   k^2 * b +   k * c + d = k * rh
--4*k^2 * a + 4*k   * b               = rh - rl      		[l2 - 2 * l4]
-             4*k   * b               = rh - rl   			[l3 - l4]
- 3*k^2 * a - 2*k   * b +       c     = rl
-
-   k^3 * a +   k^2 * b +   k * c + d = k * rh
--4*k^2 * a + 4*k   * b               = rh - rl
-                     b               = (rh - rl) / (4*k)
- 3*k^2 * a - 2*k   * b +       c     = rl
-
-   k^3 * a +   k^2 * b +   k * c + d = k * rh
-         a                           = 0
-                     b               = (rh - rl) / (4*k)
- 3*k^2 * a - 2*k   * b +       c     = rl
-
-   k^3 * a +   k^2 * b +   k * c + d = k * rh
-         a                           = 0
-                     b               = (rh - rl) / (4*k)
-                               c     = (rh + rl) / 2
-
-                                   d = (rh - rl) * k / 4
-         a                           = 0
-                     b               = (rh - rl) / (4*k)
-                               c     = (rh + rl) / 2
-
-Conclusion:
-a = 0
-b = (rh - rl) / (k * 4)
-c = (rh + rl) / 2
-d = (rh - rl) * k / 4
-2nd order polynomial is enough.
-
-Example:
-rl = 3, rh = 1/5, k = 2
-b = -7/20
-c = 8/5
-d = -7/5
-f(x) = -7/20*x^2 + 8/5*x - 7/5
-
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -142,16 +72,9 @@ Compex::Compex ()
 ,	_env_fol_xptr ()
 ,	_smoother_xptr ()
 ,	_use_side_chain_flag (false)
-,	_vol_offset_pre (-2)
-,	_vol_offset_post (-2)
-,	_ratio_hi (1)
-,	_ratio_lo (1)
-,	_knee_coef_arr ({{ 0, 1, 0 }})
-,	_knee_th_abs (-0.5f)
 ,	_sc_power_1 ()
 ,	_sc_power_2 ()
 ,	_buf_tmp ()
-,	_cur_gain (0)
 {
 	const ParamDescSet & desc_set = _desc.use_desc_set ();
 	_state_set.init (piapi::ParamCateg_GLOBAL, desc_set);
@@ -349,7 +272,7 @@ void	Compex::clear_buffers ()
 	usew (_env_fol_xptr).clear_buffers ();
 	usew (_smoother_xptr).clear_buffers ();
 
-	_cur_gain = 0;
+	_gain_fnc.clear_buffers ();
 }
 
 
@@ -406,46 +329,24 @@ void	Compex::update_param_vol_curves_ss ()
 	const float    rh = float (_state_set.get_val_tgt_nat (Param_RATIO_H));
 
 	// Knee shape
-	float          knee_shape_l2 = float (_state_set.get_val_tgt_nat (Param_KNEE_SHAPE));
-	knee_shape_l2 = std::max (knee_shape_l2, 0.01f);
+	const float    knee_shape_l2 = float (_state_set.get_val_tgt_nat (Param_KNEE_SHAPE));
 
-	const float    k = knee_shape_l2 * 0.5f;  // 0.5 for diameter to radius conversion
-
-	_knee_th_abs = k;
-	_ratio_lo    = rl;
-	_ratio_hi    = rh;
-
-	const float    c2 = (rh - rl) / (k * 4);
-	const float    c1 = (rh + rl) * 0.5f;
-	const float    c0 = (rh - rl) * k * 0.25f;
-
-	_knee_coef_arr [0] = c0;
-	_knee_coef_arr [1] = c1;
-	_knee_coef_arr [2] = c2;
-
-	const float    threshold_l2 =
+	const float    threshold_l2  =
 		float (_state_set.get_val_tgt_nat (Param_KNEE_LVL));
-
-	const float    gain_l2      =
+	const float    gain_l2       =
 		float (_state_set.get_val_tgt_nat (Param_GAIN));
 
-	_vol_offset_pre = threshold_l2;
+	bool           autofix_flag  = true;
 
 #if 0
 	const float    param_sc = float (_state_set.get_val_tgt_nat (Param_SIDECHAIN));
 	_use_side_chain_flag = (param_sc >= 0.5f);
 #endif
 
-	float          fixed_gain = gain_l2;
-	if (! _use_side_chain_flag)
-	{
-		const float    thr_dist     = threshold_l2 - _lvl_ref_l2;
-		const float    ratio_at_ref = (thr_dist < 0) ? rh : rl;
-		const float    gain_at_ref  = thr_dist * (1 - ratio_at_ref);
-		fixed_gain -= gain_at_ref;
-	}
-
-	_vol_offset_post = fixed_gain;
+	_gain_fnc.update_curve (
+		rl, rh, threshold_l2, gain_l2, knee_shape_l2,
+		autofix_flag && ! _use_side_chain_flag
+	);
 }
 
 
@@ -507,7 +408,7 @@ void	Compex::process_block_part (float * const out_ptr_arr [], const float * con
 	// Special case for the first group of sample: we store the gain change.
 	{
 		const auto     x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
-		const auto     y = compute_gain <true> (x);
+		const auto     y = _gain_fnc.compute_gain <true> (x);
 		fstb::ToolsSimd::store_f32 (tmp_ptr + pos, y);
 
 		pos += 4;
@@ -516,7 +417,7 @@ void	Compex::process_block_part (float * const out_ptr_arr [], const float * con
 	while (pos < pos_block_end)
 	{
 		const auto     x = fstb::ToolsSimd::load_f32 (tmp_ptr + pos);
-		const auto     y = compute_gain <false> (x);
+		const auto     y = _gain_fnc.compute_gain <false> (x);
 		fstb::ToolsSimd::store_f32 (tmp_ptr + pos, y);
 
 		pos += 4;
@@ -574,129 +475,6 @@ void	Compex::conv_env_to_log (int nbr_spl)
 
 
 
-// Input: env_2l2 = 2 * log2 (linear volume envelope).
-// An arbitrary negative value corresponds to zero.
-template <bool store_flag>
-float	Compex::compute_gain (float env_2l2)
-{
-	// Shifts volume in order to have the threshold at 0
-	const float    env_l2 = env_2l2 * 0.5f;
-	const float    el2    = env_l2 - _vol_offset_pre;
-
-	// Knee polynomial
-	const float    c2   = _knee_coef_arr [2];
-	const float    c1   = _knee_coef_arr [1];
-	const float    c0   = _knee_coef_arr [0];
-	const float    poly = (el2 * c2 + c1) * el2 + c0;
-
-	// Linear ratios
-	const float    ratio  = (el2 < 0) ? _ratio_lo : _ratio_hi;
-	const float    linear = el2 * ratio;
-
-	// Selects result
-	const float    vl2 = (fabsf (el2) < _knee_th_abs) ? poly : linear;
-
-	// Computes and limits gain
-	float          gain_l2 = fstb::limit (vl2 - el2, _gain_min_l2, _gain_max_l2);
-	// Another solution would be mirroring before minimising:
-	// gain_top_l2 - abs (gain_l2 - gain_top_l2) with gain_top_l2 > gain_max_l2.
-	// Quickest solution but may generate very low signals turning later into denormals.
-
-	// Handles the case where detected volume is close to 0 (-oo dB).
-	// Smoothly fades the gain to 0 dB.
-	// g = g * limit ((v - v0) / (v1 - v0), 0, 1)
-	auto           active_rate   = (env_l2 - _active_thr_l2) * _active_mul;
-	active_rate  = fstb::limit (active_rate, 0.f, 1.f);
-	gain_l2     *= active_rate;
-
-	// Stores the gain adjustment if requested
-	if (store_flag)
-	{
-		_cur_gain = gain_l2;
-	}
-
-	// Additional gain (manual + auto)
-	gain_l2 += _vol_offset_post;
-
-	// Conversion to linear, multiplicative volume
-	const float    gain = fstb::Approx::exp2 (gain_l2);
-
-	return gain;
-}
-
-
-
-// Input: env_2l2 = 2 * log2 (linear volume envelope).
-// An arbitrary negative value corresponds to zero.
-template <bool store_flag>
-fstb::ToolsSimd::VectF32	Compex::compute_gain (const fstb::ToolsSimd::VectF32 env_2l2)
-{
-	// Shifts volume in order to have the threshold at 0
-	const auto     half = fstb::ToolsSimd::set1_f32 (0.5f);
-	const auto     env_l2 = env_2l2 * half;
-	const auto     vol_offset_pre = fstb::ToolsSimd::set1_f32 (_vol_offset_pre);
-	const auto     el2 = env_l2 - vol_offset_pre;
-
-	// Knee polynomial
-	const auto     c2 = fstb::ToolsSimd::set1_f32 (_knee_coef_arr [2]);
-	auto           poly = el2 * c2;
-	const auto     c1 = fstb::ToolsSimd::set1_f32 (_knee_coef_arr [1]);
-	poly += c1;
-	poly *= el2;
-	const auto     c0 = fstb::ToolsSimd::set1_f32 (_knee_coef_arr [0]);
-	poly += c0;
-
-	// Linear ratios
-	const auto     zero     = fstb::ToolsSimd::set_f32_zero ();
-	const auto     tst_pos  = fstb::ToolsSimd::cmp_lt_f32 (el2, zero);
-	auto           ratio_lo = fstb::ToolsSimd::set1_f32 (_ratio_lo);
-	auto           ratio_hi = fstb::ToolsSimd::set1_f32 (_ratio_hi);
-	const auto     ratio    = fstb::ToolsSimd::select (tst_pos, ratio_lo, ratio_hi);
-	auto           linear   = el2 * ratio;
-
-	// Selects result
-	const auto     knee_th_abs = fstb::ToolsSimd::set1_f32 (_knee_th_abs);
-	const auto     el2_abs     = fstb::ToolsSimd::abs (el2);
-	const auto     tst_knee    = fstb::ToolsSimd::cmp_lt_f32 (el2_abs, knee_th_abs);
-	const auto     vl2         = fstb::ToolsSimd::select (tst_knee, poly, linear);
-
-	// Computes and limits gain
-	auto           gain_l2     = vl2 - el2;
-	const auto     gain_min_l2 = fstb::ToolsSimd::set1_f32 (_gain_min_l2);
-	const auto     gain_max_l2 = fstb::ToolsSimd::set1_f32 (_gain_max_l2);
-	gain_l2 = fstb::ToolsSimd::min_f32 (gain_l2, gain_max_l2);	// Another solution would be mirroring before minimising: gain_top_l2 - abs (gain_l2 - gain_top_l2) with gain_top_l2 > gain_max_l2.
-	gain_l2 = fstb::ToolsSimd::max_f32 (gain_l2, gain_min_l2);	// Quickest solution but may generate very low signals turning later into denormals.
-
-	// Handles the case where detected volume is close to 0 (-oo dB).
-	// Smoothly fades the gain to 0 dB.
-	// g = g * limit ((v - v0) / (v1 - v0), 0, 1)
-	const auto     active_thr_l2 = fstb::ToolsSimd::set1_f32 (_active_thr_l2);
-	const auto     active_mul    = fstb::ToolsSimd::set1_f32 (_active_mul);
-	const auto     one           = fstb::ToolsSimd::set1_f32 (1);
-	auto           active_rate   = env_l2 - active_thr_l2;
-	active_rate *= active_mul;
-	active_rate  = fstb::ToolsSimd::min_f32 (active_rate, one);
-	active_rate  = fstb::ToolsSimd::max_f32 (active_rate, zero);
-	gain_l2     *= active_rate;
-
-	// Stores the gain adjustment if requested
-	if (store_flag)
-	{
-		_cur_gain = fstb::ToolsSimd::Shift <0>::extract (gain_l2);
-	}
-
-	// Additional gain (manual + auto)
-	const auto     vol_offset_post = fstb::ToolsSimd::set1_f32 (_vol_offset_post);
-	gain_l2 += vol_offset_post;
-
-	// Conversion to linear, multiplicative volume
-	const auto     gain = fstb::ToolsSimd::exp2_approx (gain_l2);
-
-	return gain;
-}
-
-
-
 template <class T>
 T &	Compex::usew (WrapperAlign <T> &wrap)
 {
@@ -706,14 +484,6 @@ T &	Compex::usew (WrapperAlign <T> &wrap)
 	return wrap;
 #endif
 }
-
-
-
-const float	Compex::_gain_min_l2   = -16;
-const float	Compex::_gain_max_l2   =   8;
-const float	Compex::_active_thr_l2 = -14;
-const float	Compex::_lvl_ref_l2    =  -4; // -24 dB
-const float	Compex::_active_mul    = 1.0f / (-10 - -14);	// -60 -> -84 dB;
 
 
 

@@ -1208,6 +1208,8 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\PhaseHalfPi.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexGainFnc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexGainFnc.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\dclip\DiodeClipper.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dclip\DiodeClipperDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\dclip\Param.h" />
@@ -1856,6 +1858,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\colorme\ColorMeDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\Compex.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexGainFnc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dclip\DiodeClipper.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dclip\DiodeClipperDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dist2\Disto2x.cpp" />

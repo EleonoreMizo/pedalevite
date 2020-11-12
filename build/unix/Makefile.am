@@ -835,6 +835,9 @@ commonsrc = \
         ../../src/mfx/pi/cpx/Compex.h \
         ../../src/mfx/pi/cpx/CompexDesc.cpp \
         ../../src/mfx/pi/cpx/CompexDesc.h \
+        ../../src/mfx/pi/cpx/CompexGainFnc.cpp \
+        ../../src/mfx/pi/cpx/CompexGainFnc.h \
+        ../../src/mfx/pi/cpx/CompexGainFnc.hpp \
         ../../src/mfx/pi/cpx/Param.h \
         ../../src/mfx/pi/dclip/DiodeClipper.cpp \
         ../../src/mfx/pi/dclip/DiodeClipper.h \

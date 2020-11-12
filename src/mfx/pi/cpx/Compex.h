@@ -38,6 +38,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/dyn/EnvFollowerARHelper.h"
 #include "mfx/dsp/dyn/SCPower.h"
 #include "mfx/pi/cpx/CompexDesc.h"
+#include "mfx/pi/cpx/CompexGainFnc.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/piapi/PluginInterface.h"
@@ -90,8 +91,7 @@ protected:
 
 private:
 
-	// Is also the buffer length
-	// Must be a multiple of 4
+	// Is also the buffer length. Must be a multiple of 4
 	static constexpr int _update_resol = 64;
 
 	typedef dsp::dyn::EnvFollowerARHelper <1> EnvFollower;
@@ -148,12 +148,6 @@ private:
 
 	void           process_block_part (float * const out_ptr_arr [], const float * const in_ptr_arr [], const float * const sc_ptr_arr [], int pos_beg, int pos_end);
 	void           conv_env_to_log (int nbr_spl);
-	template <bool store_flag>
-	fstb_FORCEINLINE float
-	               compute_gain (float env_2l2);
-	template <bool store_flag>
-	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
-	               compute_gain (const fstb::ToolsSimd::VectF32 env_2l2);
 
 	template <class T>
 	static fstb_FORCEINLINE T &
@@ -184,32 +178,13 @@ private:
 						_smoother_xptr;
 	bool				_use_side_chain_flag;
 
-	float          _vol_offset_pre;     // log2 (threshold)
-	float          _vol_offset_post;    // log2 (threshold) + log2 (gain)
-	float          _ratio_hi;           // 1 / ratio_hi(dB)
-	float          _ratio_lo;           // 1 / ratio_lo(dB)
-	std::array <float, 3>               // Knee formula with log2(vol) as input and log2(vol) as output. Index = coef order
-	               _knee_coef_arr;
-	float          _knee_th_abs;        // knee_lvl(dB) * 0.5 / 6.0206. * 0.5 because it's a radius.
+	CompexGainFnc  _gain_fnc;
 
 	dsp::dyn::SCPower <AddProc <1> >    // Power extraction from the analysed signal, mono
 	               _sc_power_1;
 	dsp::dyn::SCPower <AddProc <2> >    // Same for setero signals
 	               _sc_power_2;
 	SplBuf         _buf_tmp;
-	float          _cur_gain;           // Stored as log2.
-
-	static const float
-	               _gain_min_l2;
-	static const float
-	               _gain_max_l2;
-	static const float                  // Gain is always 0 dB for detected volum below this value.
-	               _active_thr_l2;
-	static const float
-	               _active_mul;
-	static const float                  // Reference level, does not move when the ratio are changed.
-	               _lvl_ref_l2;
-
 
 
 
