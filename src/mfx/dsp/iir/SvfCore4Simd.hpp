@@ -298,6 +298,53 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_inc (
 
 
 
+// Multi-mode output. Returns v1 (band) as first and v2 (low) as second.
+// Mixer is not taken into account
+template <class VD, class VS, class VP, class MX>
+std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x)
+{
+	auto           g0    = V128Par::load_f32 (_data._g0   );
+	auto           g1    = V128Par::load_f32 (_data._g1   );
+	auto           g2    = V128Par::load_f32 (_data._g2   );
+
+	return process_sample_mm_par (x, g0, g1, g2);
+}
+
+
+
+template <class VD, class VS, class VP, class MX>
+std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2)
+{
+	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
+	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
+	fstb::ToolsSimd::VectF32   v1;
+	fstb::ToolsSimd::VectF32   v2;
+	iterate_parallel (x, v1, v2, ic1eq, ic2eq, g0, g1, g2);
+	V128Par::store_f32 (_data._ic1eq, ic1eq);
+	V128Par::store_f32 (_data._ic2eq, ic2eq);
+
+	return std::make_pair (v1, v2);
+}
+
+
+
+template <class VD, class VS, class VP, class MX>
+std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i)
+{
+	auto           g0    = V128Par::load_f32 (_data._g0   );
+	auto           g1    = V128Par::load_f32 (_data._g1   );
+	auto           g2    = V128Par::load_f32 (_data._g2   );
+	const auto     v1v2  { process_sample_par_mm (x, g0, g1, g2) };
+	increment (g0, g1, g2, g0i, g1i, g2i);
+	V128Par::store_f32 (_data._g0   , g0   );
+	V128Par::store_f32 (_data._g1   , g1   );
+	V128Par::store_f32 (_data._g2   , g2   );
+
+	return v1v2;
+}
+
+
+
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl)
 {
@@ -1463,10 +1510,18 @@ void	SvfCore4Simd <VD, VS, VP, MX>::increment (SvfCore4SimdData &data, const fst
 template <class VD, class VS, class VP, class MX>
 void	SvfCore4Simd <VD, VS, VP, MX>::increment (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 &v0m, fstb::ToolsSimd::VectF32 &v1m, fstb::ToolsSimd::VectF32 &v2m, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi)
 {
+	increment (g0, g1, g2, g0i, g1i, g2i);
+	Mixer::inc (v0m, v1m, v2m, v0mi, v1mi, v2mi);
+}
+
+
+
+template <class VD, class VS, class VP, class MX>
+void	SvfCore4Simd <VD, VS, VP, MX>::increment (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i)
+{
 	g0 += g0i;
 	g1 += g1i;
 	g2 += g2i;
-	Mixer::inc (v0m, v1m, v2m, v0mi, v1mi, v2mi);
 }
 
 

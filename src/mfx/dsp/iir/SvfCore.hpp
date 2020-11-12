@@ -154,6 +154,39 @@ float	SvfCore <MX>::process_sample_inc (float x, float g0i, float g1i, float g2i
 
 
 
+// Multi-mode output. Returns v1 (band) as first and v2 (low) as second.
+// Mixer is not taken into account
+template <class MX>
+std::pair <float, float>	SvfCore <MX>::process_sample_mm (float x)
+{
+	return process_sample_mm (x, _g0, _g1, _g2);
+}
+
+
+
+template <class MX>
+std::pair <float, float>	SvfCore <MX>::process_sample_mm (float x, float g0, float g1, float g2)
+{
+	float          v1;
+	float          v2;
+	iterate (x, v1, v2, g0, g1, g2);
+
+	return std::make_pair (v1, v2);
+}
+
+
+
+template <class MX>
+std::pair <float, float>	SvfCore <MX>::process_sample_mm_inc (float x, float g0i, float g1i, float g2i)
+{
+	const auto     v1v2 { process_sample_mm (x) };
+	increment (_g0, _g1, _g2, g0i, g1i, g2i);
+
+	return v1v2;
+}
+
+
+
 // Can work in-place
 template <class MX>
 void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
@@ -263,10 +296,18 @@ void	SvfCore <MX>::iterate (float v0, float &v1, float &v2, float g0, float g1, 
 template <class MX>
 void	SvfCore <MX>::increment (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi)
 {
+	increment (g0, g1, g2, g0i, g1i, g2i);
+	Mixer::inc (v0m, v1m, v2m, v0mi, v1mi, v2mi);
+}
+
+
+
+template <class MX>
+void	SvfCore <MX>::increment (float &g0, float &g1, float &g2, float g0i, float g1i, float g2i)
+{
 	g0 += g0i;
 	g1 += g1i;
 	g2 += g2i;
-	Mixer::inc (v0m, v1m, v2m, v0mi, v1mi, v2mi);
 }
 
 

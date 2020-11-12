@@ -104,6 +104,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/SvfCore4SimdData.h"
 #include "mfx/dsp/iir/SvfMixerDefault.h"
 
+#include <utility>
+
 
 
 namespace mfx
@@ -163,6 +165,13 @@ public:
 	               process_sample_par (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &v0m, const fstb::ToolsSimd::VectF32 &v1m, const fstb::ToolsSimd::VectF32 &v2m);
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
 	               process_sample_par_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi);
+
+	fstb_FORCEINLINE std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>
+	               process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x);
+	fstb_FORCEINLINE std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>
+	               process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2);
+	fstb_FORCEINLINE std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>
+	               process_sample_par_mm_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i);
 
 	void           process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl);
 	void           process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl, const fstb::ToolsSimd::VectF32 g0_ptr [], const fstb::ToolsSimd::VectF32 g1_ptr [], const fstb::ToolsSimd::VectF32 g2_ptr []);
@@ -251,9 +260,8 @@ private:
 	               increment (SvfCore4SimdData &data, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi);
 	static fstb_FORCEINLINE void
 	               increment (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, fstb::ToolsSimd::VectF32 &v0m, fstb::ToolsSimd::VectF32 &v1m, fstb::ToolsSimd::VectF32 &v2m, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi);
-
 	static fstb_FORCEINLINE void
-	               save_sample_pair (float out_ptr [2], const fstb::ToolsSimd::VectF32 &x);
+	               increment (fstb::ToolsSimd::VectF32 &g0, fstb::ToolsSimd::VectF32 &g1, fstb::ToolsSimd::VectF32 &g2, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i);
 
 	SvfCore4SimdData
 	               _data;

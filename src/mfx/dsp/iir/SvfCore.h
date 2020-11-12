@@ -74,6 +74,8 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/def.h"
 #include "mfx/dsp/iir/SvfMixerDefault.h"
 
+#include <utility>
+
 
 
 namespace mfx
@@ -121,6 +123,13 @@ public:
 	fstb_FORCEINLINE float
 	               process_sample_inc (float x, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi);
 
+	fstb_FORCEINLINE std::pair <float, float>
+	               process_sample_mm (float x);
+	fstb_FORCEINLINE std::pair <float, float>
+	               process_sample_mm (float x, float g0, float g1, float g2);
+	fstb_FORCEINLINE std::pair <float, float>
+	               process_sample_mm_inc (float x, float g0i, float g1i, float g2i);
+
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr []);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [], const float v0m_ptr [], const float v1m_ptr [], const float v2m_ptr []);
@@ -142,6 +151,8 @@ private:
 	               iterate (float v0, float &v1, float &v2, float g0, float g1, float g2);
 	static fstb_FORCEINLINE void
 	               increment (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi);
+	static fstb_FORCEINLINE void
+	               increment (float &g0, float &g1, float &g2, float g0i, float g1i, float g2i);
 
 	// Coefficients
 	float          _g0    = 0;
