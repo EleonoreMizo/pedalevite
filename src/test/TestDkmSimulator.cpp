@@ -404,11 +404,12 @@ int	TestDkmSimulator::perform_test ()
 
 	for (int pos = 0; pos < len; ++pos)
 	{
-#if 0
+#if 0 && defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 		if (pos >= 500 && pos <= 500)
 		{
 			printf ("*** Before %d ***\n", pos);
-			dkm.print_all ();
+			std::string    txt = dkm.print_all ();
+			printf ("%s", txt.c_str ());
 #if ! defined (NDEBUG)
 			__debugbreak ();
 #endif

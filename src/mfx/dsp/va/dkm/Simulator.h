@@ -51,10 +51,10 @@ http://www.wtfpl.net/ for more details.
 
 // Builds pivot statistics too. Not suitable for real-time use.
 // Ignored if mfx_dsp_va_dkm_Simulator_STATS is not defined
-#define mfx_dsp_va_dkm_Simulator_STATS_PIV
+#undef mfx_dsp_va_dkm_Simulator_STATS_PIV
 
 // Enables matrix display functions for debugging
-#define mfx_dsp_va_dkm_Simulator_DISPLAY
+#undef mfx_dsp_va_dkm_Simulator_DISPLAY
 
 
 
@@ -67,6 +67,10 @@ http://www.wtfpl.net/ for more details.
 #include <array>
 #include <map>
 #include <vector>
+
+#if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
+	#include <string>
+#endif // mfx_dsp_va_dkm_Simulator_DISPLAY
 
 
 
@@ -138,7 +142,7 @@ public:
 	int            get_nbr_out () const;
 
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
-	void           print_all () const;
+	std::string    print_all () const;
 #endif // mfx_dsp_va_dkm_Simulator_DISPLAY
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
@@ -306,8 +310,10 @@ private:
 	static void    mul_oim (D &dst, D &tmp, const TypeMatrix &lhs, const TypeVector &vec, const TypeMatrix &rhs);
 
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
-	static void    print_vector (const TypeVector &v, const char *name_0);
-	static void    print_matrix (const TypeMatrix &m, const char *name_0);
+	static std::string
+	               print_vector (const TypeVector &v, const char *name_0);
+	static std::string
+	               print_matrix (const TypeMatrix &m, const char *name_0);
 #endif // mfx_dsp_va_dkm_Simulator_DISPLAY
 
 	Flt            _max_dif     = Flt (0.25);

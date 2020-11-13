@@ -25,16 +25,13 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
+#include "fstb/fnc.h"
 #include "fstb/Approx.h"
 #include "lal/op.h"
 #include "mfx/dsp/va/dkm/Simulator.h"
 
 #include <cassert>
 #include <cmath>
-
-#if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
-#include <cstdio>
-#endif // mfx_dsp_va_dkm_Simulator_DISPLAY
 
 
 
@@ -438,64 +435,68 @@ int	Simulator::get_nbr_out () const
 
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 
-void	Simulator::print_all () const
+std::string	Simulator::print_all () const
 {
-	print_vector (_vec_x_cur     , "_vec_x_cur"     );
-	print_vector (_vec_x_prv     , "_vec_x_prv"     );
-	print_vector (_vec_u         , "_vec_u"         );
-	print_vector (_vec_v_n       , "_vec_v_n"       );
-	print_vector (_vec_i_n       , "_vec_i_n"       );
-	print_vector (_vec_v_o       , "_vec_v_o"       );
-	print_vector (_vec_p         , "_vec_p"         );
-	print_matrix (_mat_a         , "_mat_a"         );
-	print_matrix (_mat_b         , "_mat_b"         );
-	print_matrix (_mat_c         , "_mat_c"         );
-	print_matrix (_mat_d         , "_mat_d"         );
-	print_matrix (_mat_e         , "_mat_e"         );
-	print_matrix (_mat_f         , "_mat_f"         );
-	print_matrix (_mat_g         , "_mat_g"         );
-	print_matrix (_mat_h         , "_mat_h"         );
-	print_matrix (_mat_k         , "_mat_k"         );
-	print_vector (_dia_g_r       , "_dia_g_r"       );
-	print_vector (_dia_g_x       , "_dia_g_x"       );
-	print_vector (_dia_z         , "_dia_z"         );
-	print_vector (_dia_r_v       , "_dia_r_v"       );
-	print_matrix (_mat_n_x       , "_mat_n_x"       );
-	print_matrix (_mat_n_o       , "_mat_n_o"       );
-	print_matrix (_mat_n_n       , "_mat_n_n"       );
-	print_matrix (_mat_n_u       , "_mat_n_u"       );
-	print_matrix (_mat_n_v       , "_mat_n_v"       );
-	print_matrix (_mat_n_r       , "_mat_n_r"       );
-	print_matrix (_mat_s_0       , "_mat_s_0"       );
-	print_matrix (_mat_s_0_inv   , "_mat_s_0_inv"   );
-	print_matrix (_mat_q         , "_mat_q"         );
-	print_matrix (_mat_r_v_q_inv , "_mat_r_v_q_inv" );
-	print_matrix (_mat_a_0       , "_mat_a_0"       );
-	print_matrix (_mat_b_0       , "_mat_b_0"       );
-	print_matrix (_mat_c_0       , "_mat_c_0"       );
-	print_matrix (_mat_d_0       , "_mat_d_0"       );
-	print_matrix (_mat_e_0       , "_mat_e_0"       );
-	print_matrix (_mat_f_0       , "_mat_f_0"       );
-	print_matrix (_mat_g_0       , "_mat_g_0"       );
-	print_matrix (_mat_h_0       , "_mat_h_0"       );
-	print_matrix (_mat_k_0       , "_mat_k_0"       );
-	print_matrix (_mat_u_x       , "_mat_u_x"       );
-	print_matrix (_mat_u_o       , "_mat_u_o"       );
-	print_matrix (_mat_u_n       , "_mat_u_n"       );
-	print_matrix (_mat_u_u       , "_mat_u_u"       );
-	print_matrix (_mat_j_f       , "_mat_j_f"       );
-	print_matrix (_mat_j_r       , "_mat_j_r"       );
-	print_matrix (_dia_id_n      , "_dia_id_n"      );
-	print_vector (_vec_r_neg     , "_vec_r_neg"     );
-	print_vector (_vec_delta_x   , "_vec_delta_x"   );
-	print_matrix (_mat_abc_tmp   , "_mat_abc_tmp"   );
-	print_matrix (_mat_def_tmp   , "_mat_def_tmp"   );
-	print_matrix (_mat_ghk_tmp   , "_mat_ghk_tmp"   );
-	print_matrix (_mat_abc_0_tmp1, "_mat_abc_0_tmp1");
-	print_matrix (_mat_abc_0_tmp2, "_mat_abc_0_tmp2");
-	print_matrix (_mat_def_0_tmp , "_mat_def_0_tmp" );
-	print_matrix (_mat_ghk_0_tmp , "_mat_ghk_0_tmp" );
-	print_matrix (_mat_u_tmp     , "_mat_u_tmp"     );
+	std::string    txt;
+
+	txt += print_vector (_vec_x_cur     , "_vec_x_cur"     );
+	txt += print_vector (_vec_x_prv     , "_vec_x_prv"     );
+	txt += print_vector (_vec_u         , "_vec_u"         );
+	txt += print_vector (_vec_v_n       , "_vec_v_n"       );
+	txt += print_vector (_vec_i_n       , "_vec_i_n"       );
+	txt += print_vector (_vec_v_o       , "_vec_v_o"       );
+	txt += print_vector (_vec_p         , "_vec_p"         );
+	txt += print_matrix (_mat_a         , "_mat_a"         );
+	txt += print_matrix (_mat_b         , "_mat_b"         );
+	txt += print_matrix (_mat_c         , "_mat_c"         );
+	txt += print_matrix (_mat_d         , "_mat_d"         );
+	txt += print_matrix (_mat_e         , "_mat_e"         );
+	txt += print_matrix (_mat_f         , "_mat_f"         );
+	txt += print_matrix (_mat_g         , "_mat_g"         );
+	txt += print_matrix (_mat_h         , "_mat_h"         );
+	txt += print_matrix (_mat_k         , "_mat_k"         );
+	txt += print_vector (_dia_g_r       , "_dia_g_r"       );
+	txt += print_vector (_dia_g_x       , "_dia_g_x"       );
+	txt += print_vector (_dia_z         , "_dia_z"         );
+	txt += print_vector (_dia_r_v       , "_dia_r_v"       );
+	txt += print_matrix (_mat_n_x       , "_mat_n_x"       );
+	txt += print_matrix (_mat_n_o       , "_mat_n_o"       );
+	txt += print_matrix (_mat_n_n       , "_mat_n_n"       );
+	txt += print_matrix (_mat_n_u       , "_mat_n_u"       );
+	txt += print_matrix (_mat_n_v       , "_mat_n_v"       );
+	txt += print_matrix (_mat_n_r       , "_mat_n_r"       );
+	txt += print_matrix (_mat_s_0       , "_mat_s_0"       );
+	txt += print_matrix (_mat_s_0_inv   , "_mat_s_0_inv"   );
+	txt += print_matrix (_mat_q         , "_mat_q"         );
+	txt += print_matrix (_mat_r_v_q_inv , "_mat_r_v_q_inv" );
+	txt += print_matrix (_mat_a_0       , "_mat_a_0"       );
+	txt += print_matrix (_mat_b_0       , "_mat_b_0"       );
+	txt += print_matrix (_mat_c_0       , "_mat_c_0"       );
+	txt += print_matrix (_mat_d_0       , "_mat_d_0"       );
+	txt += print_matrix (_mat_e_0       , "_mat_e_0"       );
+	txt += print_matrix (_mat_f_0       , "_mat_f_0"       );
+	txt += print_matrix (_mat_g_0       , "_mat_g_0"       );
+	txt += print_matrix (_mat_h_0       , "_mat_h_0"       );
+	txt += print_matrix (_mat_k_0       , "_mat_k_0"       );
+	txt += print_matrix (_mat_u_x       , "_mat_u_x"       );
+	txt += print_matrix (_mat_u_o       , "_mat_u_o"       );
+	txt += print_matrix (_mat_u_n       , "_mat_u_n"       );
+	txt += print_matrix (_mat_u_u       , "_mat_u_u"       );
+	txt += print_matrix (_mat_j_f       , "_mat_j_f"       );
+	txt += print_matrix (_mat_j_r       , "_mat_j_r"       );
+	txt += print_matrix (_dia_id_n      , "_dia_id_n"      );
+	txt += print_vector (_vec_r_neg     , "_vec_r_neg"     );
+	txt += print_vector (_vec_delta_x   , "_vec_delta_x"   );
+	txt += print_matrix (_mat_abc_tmp   , "_mat_abc_tmp"   );
+	txt += print_matrix (_mat_def_tmp   , "_mat_def_tmp"   );
+	txt += print_matrix (_mat_ghk_tmp   , "_mat_ghk_tmp"   );
+	txt += print_matrix (_mat_abc_0_tmp1, "_mat_abc_0_tmp1");
+	txt += print_matrix (_mat_abc_0_tmp2, "_mat_abc_0_tmp2");
+	txt += print_matrix (_mat_def_0_tmp , "_mat_def_0_tmp" );
+	txt += print_matrix (_mat_ghk_0_tmp , "_mat_ghk_0_tmp" );
+	txt += print_matrix (_mat_u_tmp     , "_mat_u_tmp"     );
+
+	return txt;
 }
 
 #endif // mfx_dsp_va_dkm_Simulator_DISPLAY
@@ -1513,43 +1514,68 @@ void	Simulator::mul_oim (D &dst, D &tmp, const TypeMatrix &lhs, const TypeVector
 
 #if defined (mfx_dsp_va_dkm_Simulator_DISPLAY)
 
-void	Simulator::print_vector (const TypeVector &v, const char *name_0)
+std::string	Simulator::print_vector (const TypeVector &v, const char *name_0)
 {
-	printf ("%s = ", name_0);
+	std::string    txt;
+
+	txt += name_0;
+	txt += " = ";
 	const int      len = int (v.size ());
 	if (len == 0)
 	{
-		printf ("<null>");
+		txt += "<null>";
 	}
 	else
 	{
-		printf ("(");
+		txt += "(";
+		char           txt_0 [1023+1];
 		for (int i = 0; i < len; ++i)
 		{
-			printf ("%10g%s", v [i], (i == len - 1) ? ")" : "\t");
+			fstb::snprintf4all (
+				txt_0, sizeof (txt_0),
+				"%10g%s", v [i], (i == len - 1) ? ")" : "\t"
+			);
+			txt += txt_0;
 		}
 	}
-	printf ("\n");
+	txt += "\n";
+
+	return txt;
 }
 
 
 
-void	Simulator::print_matrix (const TypeMatrix &m, const char *name_0)
+std::string	Simulator::print_matrix (const TypeMatrix &m, const char *name_0)
 {
+	std::string    txt;
+
 	const int      rows = m.get_rows ();
 	const int      cols = m.get_cols ();
-	printf ("%s =%s\n", name_0, (rows * cols == 0) ? " <null>" : "");
-	for (int i = 0; i < rows; ++i)
+	txt += name_0;
+	txt += " =";
+	if (rows * cols == 0)
 	{
-		for (int j = 0; j < cols; ++j)
+		txt += " <null>\n";
+	}
+	else
+	{
+		txt += "\n";
+		char           txt_0 [1023+1];
+		for (int i = 0; i < rows; ++i)
 		{
-			printf ("\t%10g", m (i, j));
-		}
-		if (cols > 0)
-		{
-			printf ("\n");
+			for (int j = 0; j < cols; ++j)
+			{
+				fstb::snprintf4all (txt_0, sizeof (txt_0), "\t%10g", m (i, j));
+				txt += txt_0;
+			}
+			if (cols > 0)
+			{
+				txt += "\n";
+			}
 		}
 	}
+
+	return txt;
 }
 
 #endif // mfx_dsp_va_dkm_Simulator_DISPLAY
