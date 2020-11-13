@@ -95,8 +95,12 @@ void           mul_transp_lhs (D &dst, const MatConstInterface <T> &lhs, const M
 template <typename T, typename D>
 void           mul_transp_rhs (D &dst, const MatConstInterface <T> &lhs, const MatConstInterface <T> &rhs, decltype (res_assign <T>) fnc = res_assign <T>);
 
+template <typename T, typename FR, typename FC>
+void           decompose_lu (MatInterface <T> &mat, FR fnc_r, FC fnc_c);
 template <typename T>
 void           decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const std::vector <int> &c_arr);
+template <typename T, typename FR, typename FC>
+void           traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> &b, const MatConstInterface <T> &mat, FR fnc_r, FC fnc_c);
 template <typename T>
 void           traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> &b, const MatConstInterface <T> &mat, const std::vector <int> &r_arr, const std::vector <int> &c_arr);
 template <typename T, typename D>

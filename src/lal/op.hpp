@@ -564,20 +564,17 @@ void	mul_transp_rhs (D &dst, const MatConstInterface <T> &lhs, const MatConstInt
 
 // LU decomposition of a matrix, given an entierly known list of pivots
 // mat is the square matrix to decompose, in-place.
-// r_arr and c_arr are pre-filled reordering vectors for the rows and columns,
-// same size as mat.
+// fnc_r and fnc_c are functions for reordering the rows and vectors
+// (pivot coordinate mapping), for rows and columns respectively.
+// Prototype: int f (int x)
 // As output, mat is the L and U combination, without the identity part for L
 // The result cells keep the same order as mat, so the matrices do not look
-// triangular. r_arr and c_arr must be used to retrieve the triangular forms.
-template <typename T>
-void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const std::vector <int> &c_arr)
+// triangular. fnc_r and fnc_c must be used to retrieve the triangular forms.
+template <typename T, typename FR, typename FC>
+void	decompose_lu (MatInterface <T> &mat, FR fnc_r, FC fnc_c)
 {
 	const int      n = mat.get_rows ();
 	assert (mat.get_cols () == n);
-	assert (int (r_arr.size ()) == n);
-	assert (int (c_arr.size ()) == n);
-	assert (std::accumulate (r_arr.begin (), r_arr.end (), 0) == n * (n - 1) / 2);
-	assert (std::accumulate (c_arr.begin (), c_arr.end (), 0) == n * (n - 1) / 2);
 
 	T *            mat_ptr = mat.get_data ();
 	const int      stride  = mat.get_stride ();
@@ -585,15 +582,15 @@ void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const 
 	for (int k = 0; k < n - 1; ++k)
 	{
 		// The pivot
-		const int      r_k     = r_arr [k];
-		const int      c_k     = c_arr [k];
+		const int      r_k     = fnc_r (k);
+		const int      c_k     = fnc_c (k);
 		T *            r_k_ptr = mat_ptr + r_k * stride;
 		const T        ukk_inv = T (1) / r_k_ptr [c_k];
 
 		// Subtract the other rows
 		for (int j = k + 1; j < n; ++j)
 		{
-			const int      r_j     = r_arr [j];
+			const int      r_j     = fnc_r (j);
 			T *            r_j_ptr = mat_ptr + r_j * stride;
 
 			// L
@@ -603,10 +600,88 @@ void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const 
 			// U
 			for (int d = k + 1; d < n; ++d)
 			{
-				const int      c_d = c_arr [d];
+				const int      c_d = fnc_c (d);
 				r_j_ptr [c_d] -= ljk * r_k_ptr [c_d];
 			}
 		}
+	}
+}
+
+
+
+// r_arr and c_arr are pre-filled reordering vectors for the rows and columns,
+// same size as mat.
+template <typename T>
+void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const std::vector <int> &c_arr)
+{
+#if ! defined (NDEBUG)
+	const int      n = mat.get_rows ();
+	assert (mat.get_cols () == n);
+	assert (int (r_arr.size ()) == n);
+	assert (int (c_arr.size ()) == n);
+	assert (std::accumulate (r_arr.begin (), r_arr.end (), 0) == n * (n - 1) / 2);
+	assert (std::accumulate (c_arr.begin (), c_arr.end (), 0) == n * (n - 1) / 2);
+#endif // NDEBUG
+
+	decompose_lu (
+		mat,
+		[&r_arr] (int r) { return r_arr [r]; },
+		[&c_arr] (int c) { return c_arr [c]; }
+	);
+}
+
+
+
+// Solves L * U * x = b with implicit row and column reordering
+// lu is the result of the decompose_lu() call.
+// b is the vector of the same number of rows as lu, whose rows are reorderd
+// with fnc_c.
+// y is a temporary vector of the same size as b
+// fnc_r and fnc_c should be the same as the decompose_lu() call.
+// Result: a vector x, same size and same row ordering as b (fnc_c).
+template <typename T, typename FR, typename FC>
+void	traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> &b, const MatConstInterface <T> &lu, FR fnc_r, FC fnc_c)
+{
+	const int      n = lu.get_rows ();
+	assert (lu.get_cols () == n);
+	assert (int (b.size ()) == n);
+
+	x.resize (n);
+	y.resize (n);
+
+	const T *      lu_ptr = lu.get_data ();
+	const int      stride = lu.get_stride ();
+
+	// Down: L * y = b
+	for (int i = 0; i < n; ++i)
+	{
+		const int      r_i     = fnc_r (i);
+		const T *      r_i_ptr = lu_ptr + r_i * stride;
+
+		T              sum     = b [r_i];
+		for (int j = 0; j < i; ++j)
+		{
+			const int      c_j = fnc_c (j);
+			sum -= y [j] * r_i_ptr [c_j];
+		}
+		y [i] = sum;
+	}
+
+	// Up: U * x = y
+	for (int i = n - 1; i >= 0; --i)
+	{
+		const int      r_i     = fnc_r (i);
+		const T *      r_i_ptr = lu_ptr + r_i * stride;
+
+		T              sum     = y [i];
+		for (int j = i + 1; j < n; ++j)
+		{
+			const int      c_j = fnc_c (j);
+			sum -= x [c_j] * r_i_ptr [c_j];
+		}
+		const int      c_i = fnc_c (i);
+		assert (r_i_ptr [c_i] != 0);
+		x [c_i] = sum / r_i_ptr [c_i];
 	}
 }
 
@@ -622,6 +697,7 @@ void	decompose_lu (MatInterface <T> &mat, const std::vector <int> &r_arr, const 
 template <typename T>
 void	traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> &b, const MatConstInterface <T> &lu, const std::vector <int> &r_arr, const std::vector <int> &c_arr)
 {
+#if ! defined (NDEBUG)
 	const int      n = lu.get_rows ();
 	assert (lu.get_cols () == n);
 	assert (int (b.size ()) == n);
@@ -629,44 +705,13 @@ void	traverse_lu (std::vector <T> &x, std::vector <T> &y, const std::vector <T> 
 	assert (int (c_arr.size ()) == n);
 	assert (std::accumulate (r_arr.begin (), r_arr.end (), 0) == n * (n - 1) / 2);
 	assert (std::accumulate (c_arr.begin (), c_arr.end (), 0) == n * (n - 1) / 2);
+#endif // NDEBUG
 
-	x.resize (n);
-	y.resize (n);
-
-	const T *      lu_ptr = lu.get_data ();
-	const int      stride = lu.get_stride ();
-
-	// Down: L * y = b
-	for (int i = 0; i < n; ++i)
-	{
-		const int      r_i     = r_arr [i];
-		const T *      r_i_ptr = lu_ptr + r_i * stride;
-
-		T              sum     = b [r_i];
-		for (int j = 0; j < i; ++j)
-		{
-			const int      c_j = c_arr [j];
-			sum -= y [j] * r_i_ptr [c_j];
-		}
-		y [i] = sum;
-	}
-
-	// Up: U * x = y
-	for (int i = n - 1; i >= 0; --i)
-	{
-		const int      r_i     = r_arr [i];
-		const T *      r_i_ptr = lu_ptr + r_i * stride;
-
-		T              sum     = y [i];
-		for (int j = i + 1; j < n; ++j)
-		{
-			const int      c_j = c_arr [j];
-			sum -= x [c_j] * r_i_ptr [c_j];
-		}
-		const int      c_i = c_arr [i];
-		assert (r_i_ptr [c_i] != 0);
-		x [c_i] = sum / r_i_ptr [c_i];
-	}
+	traverse_lu (
+		x, y, b, lu,
+		[&r_arr] (int r) { return r_arr [r]; },
+		[&c_arr] (int c) { return c_arr [c]; }
+	);
 }
 
 
