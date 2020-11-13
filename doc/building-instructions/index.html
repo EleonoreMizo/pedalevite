@@ -850,7 +850,7 @@ Il sera donc nécessaire de couper le plan de masse au niveau de chaque
 «&#8239;oreille&#8239;» de fixation, des deux côtés du PCB.
 Utiliser pour cela un cutter bien affûté ou l’angle d’une lime.
 Vérifier au multimètre que chaque oreille se retrouve bien isolée.</li>
-<li>L’écran a une double connexion avec le Pi&#8239; une directement par le
+<li>L’écran a une double connexion avec le Pi&#8239;: une directement par le
 câble HDMI, qui véhicule une masse, et l’autre par les câbles d’alimentation
 et de signaux pour le capteur tactile (via la carte principale).
 Là aussi une masse est véhiculée, il est préférable de ne pas la
@@ -1349,31 +1349,33 @@ Clang.
 Cette étape est facultative, mais Clang permet une accélération substantielle
 (environ +25&#8239;% selon mes mesures) du programme Pédale Vite par rapport à
 GCC, le compilateur installé par défaut.
-Ici, nous allons installer Clang 9.0.0, la dernière version en date, mais il
+Ici, nous allons installer Clang 11.0.0, la dernière version en date, mais il
 est probable que des versions plus récentes soient
 <a href="http://releases.llvm.org">disponibles</a> à l’heure où vous lisez
 ces lignes.
-Si c’est le cas, remplacer les <code>9.0.0</code> dans les lignes suivantes
+Si c’est le cas, remplacer les <code>11.0.0</code> dans les lignes suivantes
 par le numéro de version en question.
-Il est aussi possible de rester sur Clang 9.0.0, qui conviendra très bien.</p>
+Il est aussi possible de rester sur Clang 11.0.0, qui conviendra très bien.</p>
 <p>Vérifier au préalable qu’il y a suffisamment d’espace sur le disque si
-celui-ci est de faible capacité&#8239;: Clang nécessite environ 3&#8239;Go de
-libre.</p>
+celui-ci est de faible capacité&#8239;: installer Clang nécessite environ
+3&#8239;Go de libre.</p>
 <pre class="term">cd ~
-wget http://releases.llvm.org/9.0.0/clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
-tar -xvf clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
-rm clang+llvm-9.0.0-armv7a-linux-gnueabihf.tar.xz
-mv clang+llvm-9.0.0-armv7a-linux-gnueabihf clang_9.0.0
-sudo mv clang_9.0.0 /usr/local
-echo 'export PATH=/usr/local/clang_9.0.0/bin:$PATH' >> .bashrc
-echo 'export LD_LIBRARY_PATH=/usr/local/clang_9.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
+tar -xvf clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
+rm clang+llvm-11.0.0-armv7a-linux-gnueabihf.tar.xz
+mv clang+llvm-11.0.0-armv7a-linux-gnueabihf clang_11.0.0
+sudo mv clang_11.0.0 /usr/local
+echo 'export PATH=/usr/local/clang_11.0.0/bin:$PATH' >> .bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/clang_11.0.0/lib:$LD_LIBRARY_PATH' >> .bashrc
 . .bashrc
 clang++ --version</pre>
-<p>En principe, tout devrait marcher correctement, cependant j’ai eu des
+<p>La partie commençant par <code>wget</code> et finissant par <code>.xz</code>
+tient sur une seule ligne.
+En principe, tout devrait marcher correctement, cependant j’ai eu des
 problèmes à lancer des exécutables utilisant la libc++ intégrée à Clang, qui
 n’était pas trouvée.
 Les lignes suivantes pallieront le problème&#8239;:</p>
-<pre class="term">echo '/usr/local/clang_9.0.0/lib/' > ./clang.conf
+<pre class="term">echo '/usr/local/clang_11.0.0/lib/' > ./clang.conf
 sudo mv ./clang.conf /etc/ld.so.conf.d/
 sudo ldconfig</pre>
 
@@ -1573,6 +1575,39 @@ Pédale Vite est à présent opérationnel.</p>
 
 <h4>Problèmes connus</h4>
 
+<h5>Réseau non disponible</h5>
+
+<p>Pour une raison inconnue, le système n’arrive pas à se connecter au réseau
+au démarrage.
+En général, un redémarrage règle le problème.</p>
+
+<h5>Le programme Pédale Vite refuse de redémarrer après un crash</h5>
+
+<p>Quand Pédale Vite se lance, il crée un fichier temporaire indiquant qu’une
+instance du programme est lancée, ce qui empêche de lancer plusieurs instances
+à la fois.
+Ce fichier est supprimé quand Pédale Vite se termine, normalement ou par
+<span class="keya">Ctrl</span>&nbsp;+ <span class="keya">C</span>.
+Cependant en cas de crash, le fichier n’est pas effacé et Pédale Vite se
+termine immédiatement en affichant&#8239;:<p>
+<pre class="term">Pedale Vite is already running!</pre>
+<p>Il suffit de le supprimer manuellement&#8239;:</p>
+<pre class="term">sudo rm /var/lock/pedalevite-unique</pre>
+
+<h5>Au démarrage, la mise à jour de l’EEPROM du RPi4 échoue</h5>
+
+<p>Ce problème peut arriver pendant les démarrages qui suivent une mise à jour
+du système.
+La cause de l’erreur est le fonctionnement en lecture seule du système de
+fichiers.
+Pour y remédier, il suffit de passer le système en lecture-écriture et de
+forcer la mise à jour&#8239;:</p>
+<pre class="term">sudo mount -o remount,ro /
+sudo mount -o remount,ro /boot
+sudo systemctl restart rpi-eeprom-update.service</pre>
+<p>On peut vérifier que l’opération s’est bien passée&#8239;:</p>
+<pre class="term">sudo systemctl status rpi-eeprom-update.service</pre>
+
 <h5>La date n’est pas mise à jour quand la machine est connectée à internet</h5>
 
 <p>Quand bien même correctement configuré, <code>timesyncd</code> peut avoir
@@ -1609,6 +1644,8 @@ fonctionne&#8239;:</p>
 nameserver 80.67.169.12
 nameserver 80.67.169.40</pre>
 <p>Redémarrer la machine ou seulement les services adéquats.</p>
+<p><strong>Note importante&#8239;:</strong> il peut être nécessaire de refaire cette
+opération après une mise à jour du système.</p>
 
 <h3><a id="source-code"></a>Code source</h3>
 
@@ -1617,17 +1654,21 @@ il s’agit quand même essentiellement d’un projet logiciel.
 Cette partie décrit succintement l’architecture du programme ainsi que ce
 qu’il faut savoir pour l’adapter facilement à des modifications du 
 matériel.
-Pour mettre à jour le code&#8239;:</p>
-<pre class="term">chmod +x ./fs-rw.sh</pre>
+Pour mettre à jour le code depuis le dépôt Git&#8239;:</p>
+<pre class="term">cd ~/Documents/pedalevite
+git pull</pre>
 <p>Sans oublier auparavant de passer le système en lecture-écriture avec&#8239;:</p>
 <pre class="term">~/fs-rw.sh</pre>
 
 <h4>Compilation</h4>
 
+<p>Le logiciel est écrit en C++.
+Le compilateur doit supporter C++14 au minimum.
+Les fichiers de projet se trouvent dans le répertoire
+<code>pedalevite/build</code>.</p>
+
 <h5>Linux</h5>
 
-<p>Les fichiers de projet se trouvent dans le répertoire
-<code>pedalevite/build</code>.</p>
 <p>Le sous-répertoire <code>unix</code> contient ce qu’il faut pour compiler
 sur le Pi et à destination du Pi.
 <code>Makefile.am</code> est le fichier à modifier pour ajouter les fichiers
@@ -1641,7 +1682,7 @@ Voir aussi les instructions d’installation logicielle.</p>
 
 <h5>Windows</h5>
 
-<p><code>win</code> contient les projets pour Visual Studio 2017.
+<p><code>win</code> contient les projets pour Visual Studio 2019.
 Les sources sont divisées en plusieurs catégories&#8239;:</p>
 <ul>
 <li><code>mfxlib</code> est un projet regroupant la plupart des sources
@@ -1855,6 +1896,12 @@ Mais peut-être que d’autres types de connecteurs seront plus adaptés.</p>
 
 
 <h2><a id="changelog"></a>VII.&emsp;Historique des versions</h2>
+
+<p><b>r8, 2020-10-02</b></p>
+<ul>
+<li>Ajouts dans la section des diagnostics.</li>
+<li>Mise à jour de l’installation de Clang en version 11.0.0</li>
+</ul>
 
 <p><b>r7, 2020-03-03</b></p>
 <ul>
