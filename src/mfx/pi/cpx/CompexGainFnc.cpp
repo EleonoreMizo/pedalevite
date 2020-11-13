@@ -143,7 +143,7 @@ void	CompexGainFnc::update_curve (float rl, float rh, float thr_l2, float gain_l
 	if (autofix_flag)
 	{
 		const float    thr_dist     = thr_l2 - _lvl_ref_l2;
-		const float    ratio_at_ref = (thr_dist < 0) ? rh : rl;
+		const float    ratio_at_ref = (thr_dist < 0) ? rh : 1;
 		const float    gain_at_ref  = thr_dist * (1 - ratio_at_ref);
 		fixed_gain -= gain_at_ref;
 	}
