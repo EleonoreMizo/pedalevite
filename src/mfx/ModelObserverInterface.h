@@ -90,7 +90,6 @@ public:
 		int            _nbr_sig = 0;       // Number of signal outputs
 		std::array <int, piapi::ParamCateg_NBR_ELT>
 		               _nbr_param_arr {};
-		bool           _prefer_stereo_flag = false;
 	};
 
 	               ModelObserverInterface ()                        = default;

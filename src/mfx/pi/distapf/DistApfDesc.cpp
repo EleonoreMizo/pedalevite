@@ -57,6 +57,7 @@ DistApfDesc::DistApfDesc ()
 		"All-pass filter distortion\nAll-pass distortion\n"
 		"All-pass dist\nAPF dist";
 	_info._tag_list  = { piapi::Tag::_distortion_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
@@ -120,13 +121,6 @@ void	DistApfDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	DistApfDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

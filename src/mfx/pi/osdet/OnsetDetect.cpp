@@ -208,6 +208,8 @@ void	OnsetDetect::do_process_block (piapi::ProcInfo &proc)
 
 	const int      nbr_spl = proc._nbr_spl;
 
+	// Rectifies the input signal and delays it, this is for the volume
+	// detection
 	_env_vol.process_block_no_sqrt (
 		_buf_env_vol.data (), proc._src_arr [0], nbr_spl
 	);
@@ -221,6 +223,7 @@ void	OnsetDetect::do_process_block (piapi::ProcInfo &proc)
 	_env_os.process_block (
 		_buf_env_os.data (), _buf_tmp.data (), nbr_spl
 	);
+	// Delays the result
 	_dly_os.process_block (
 		_buf_old_os.data (), _buf_env_os.data (), nbr_spl
 	);

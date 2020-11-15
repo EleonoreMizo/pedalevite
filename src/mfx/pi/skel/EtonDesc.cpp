@@ -53,6 +53,7 @@ EtonDesc::EtonDesc ()
 	_info._unique_id = "";
 	_info._name      = "";
 	_info._tag_list  = { piapi::Tag::_example_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// XYZ
 	auto           log_sptr = std::make_shared <param::TplLog> (
@@ -91,13 +92,6 @@ void	EtonDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	EtonDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

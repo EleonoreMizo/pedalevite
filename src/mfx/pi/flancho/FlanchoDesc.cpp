@@ -61,6 +61,7 @@ FlanchoDesc::FlanchoDesc ()
 	_info._unique_id = "flancho";
 	_info._name      = "FlanCho";
 	_info._tag_list  = { piapi::Tag::_modulation_0 };
+	_info._chn_pref  = piapi::ChnPref::STEREO;
 
 	typedef param::TplMapped <ParamMapFdbkBipolar> TplFdbk;
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
@@ -222,13 +223,6 @@ void	FlanchoDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	FlanchoDesc::do_prefer_stereo () const
-{
-	return true;
 }
 
 

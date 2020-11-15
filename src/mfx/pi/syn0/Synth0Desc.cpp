@@ -53,6 +53,7 @@ Synth0Desc::Synth0Desc ()
 	_info._unique_id = "syn0";
 	_info._name      = "Synth Zero\nSynth 0\nSyn 0";
 	_info._tag_list  = { piapi::Tag::_synth_0, piapi::Tag::_instrument_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Pitch
 	auto           lin_sptr = std::make_shared <param::TplLin> (
@@ -116,13 +117,6 @@ void	Synth0Desc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	Synth0Desc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

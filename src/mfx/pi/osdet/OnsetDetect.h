@@ -3,6 +3,8 @@
         OnsetDetect.h
         Author: Laurent de Soras, 2018
 
+Works by comparing the signal envelope with itself, delayed by 15 ms.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to

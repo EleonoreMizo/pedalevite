@@ -55,6 +55,7 @@ EnvAdsrDesc::EnvAdsrDesc ()
 	_info._unique_id = "adsr";
 	_info._name      = "ADSR";
 	_info._tag_list  = { piapi::Tag::_control_gen_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
@@ -201,13 +202,6 @@ void	EnvAdsrDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 0;
 	nbr_o = 0;
 	nbr_s = 1;
-}
-
-
-
-bool	EnvAdsrDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

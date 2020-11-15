@@ -53,6 +53,7 @@ FreqSplitDesc::FreqSplitDesc ()
 	_info._unique_id = "fsplit";
 	_info._name      = "Frequency splitter\nFreq splitter\nFreq split\nF split\nFSp";
 	_info._tag_list  = { piapi::Tag::_utility_0, piapi::Tag::_multiband_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Cutoff frequency
 	auto           log_sptr = std::make_shared <param::TplLog> (
@@ -92,13 +93,6 @@ void	FreqSplitDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 2;
 	nbr_s = 0;
-}
-
-
-
-bool	FreqSplitDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

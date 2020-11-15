@@ -60,6 +60,7 @@ DelayDesc::DelayDesc ()
 	_info._unique_id = "delay1";
 	_info._name      = "Delay";
 	_info._tag_list  = { piapi::Tag::_delay_0 };
+	_info._chn_pref  = piapi::ChnPref::STEREO;
 
 	init_level (false);
 	init_level (true);
@@ -122,13 +123,6 @@ void	DelayDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	DelayDesc::do_prefer_stereo () const
-{
-	return true;
 }
 
 

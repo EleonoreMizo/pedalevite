@@ -62,6 +62,7 @@ NoiseBleachDesc::NoiseBleachDesc ()
 		piapi::Tag::_noise_reduction_0,
 		piapi::Tag::_dyn_gate_expander_0
 	};
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
@@ -121,13 +122,6 @@ void	NoiseBleachDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	NoiseBleachDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

@@ -54,6 +54,7 @@ DistoPwmDesc::DistoPwmDesc ()
 	_info._unique_id = "distpwm";
 	_info._name      = "Pulse Width Modulation distortion\nPWM distortion\nPWM disto";
 	_info._tag_list  = { piapi::Tag::_distortion_0, piapi::Tag::_synth_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
@@ -98,13 +99,6 @@ void	DistoPwmDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	DistoPwmDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

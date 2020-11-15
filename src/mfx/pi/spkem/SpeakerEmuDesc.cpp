@@ -55,6 +55,7 @@ SpeakerEmuDesc::SpeakerEmuDesc ()
 	_info._unique_id = "spkemu1";
 	_info._name      = "Speaker emulator\nSpeaker emu\nSpk emu";
 	_info._tag_list  = { piapi::Tag::_amp_simulator_0, piapi::Tag::_guitar_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Type
 	auto           enu_sptr = std::make_shared <param::TplEnum> (
@@ -162,13 +163,6 @@ void	SpeakerEmuDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	SpeakerEmuDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

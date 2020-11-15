@@ -55,6 +55,7 @@ PitchShift1Desc::PitchShift1Desc ()
 	_info._unique_id = "psh1";
 	_info._name      = "Pitch shifter\nPitch sh";
 	_info._tag_list  = { piapi::Tag::_pitch_shift_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Pitch
 	auto           lin_sptr = std::make_shared <param::TplLin> (
@@ -107,13 +108,6 @@ void	PitchShift1Desc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	PitchShift1Desc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

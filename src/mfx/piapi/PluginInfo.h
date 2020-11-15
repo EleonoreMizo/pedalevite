@@ -23,6 +23,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/piapi/ChnPref.h"
+
 #include <string>
 #include <vector>
 
@@ -51,6 +53,8 @@ public:
 
 	std::vector <std::string>
 	               _tag_list;
+
+	ChnPref        _chn_pref = ChnPref::NONE;
 
 
 

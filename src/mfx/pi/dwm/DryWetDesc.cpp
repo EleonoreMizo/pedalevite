@@ -57,6 +57,7 @@ DryWetDesc::DryWetDesc ()
 	_info._unique_id = Cst::_plugin_dwm;
 	_info._name      = "Dry/Wet mixer\nDry/Wet";
 	_info._tag_list  = { piapi::Tag::_utility_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Bypass
 	auto           enum_sptr = std::make_shared <param::TplEnum> (
@@ -123,13 +124,6 @@ void	DryWetDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 2;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	DryWetDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

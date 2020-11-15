@@ -59,6 +59,7 @@ HarmTremDesc::HarmTremDesc ()
 	_info._unique_id = "harmotremo";
 	_info._name      = "Harmonic Tremolo\nHarmo Tremolo\nHarm Trem\nHTrem";
 	_info._tag_list  = { piapi::Tag::_modulation_0 };
+	_info._chn_pref  = piapi::ChnPref::STEREO;
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
@@ -325,13 +326,6 @@ void	HarmTremDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	HarmTremDesc::do_prefer_stereo () const
-{
-	return true;
 }
 
 

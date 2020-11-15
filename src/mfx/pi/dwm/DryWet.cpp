@@ -269,11 +269,11 @@ void	DryWet::set_dw_param (float &dry, float &wet, bool end_flag) const
 
 void	DryWet::copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float lvl)
 {
-	static const int  o_out = 1;
+	constexpr int  o_out = 1;
 
 	const int            nbr_in  = proc._dir_arr [piapi::Dir_IN ]._nbr_chn;
 	const int            nbr_out = proc._dir_arr [piapi::Dir_OUT]._nbr_chn;
-	assert (nbr_in == nbr_out); /*** To do: why? ***/
+	assert (nbr_in == nbr_out);
 	const int            pin_ofs_src = pin_idx * nbr_in * 2;
 	const int            pin_ofs_dst = pin_idx * nbr_out;
 	const int            vol     = fstb::is_eq (lvl, 1.0f, 1e-3f) ? 0 : 1;
@@ -307,7 +307,7 @@ void	DryWet::copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float 
 	{
 	// Mono to mono
 	case (1 << o_out) + 0:
-		if (src_arr != dst_arr)
+		if (src_arr [0] != dst_arr [0])
 		{
 			dsp::mix::Align::copy_1_1 (
 				dst_arr [0],
@@ -318,7 +318,7 @@ void	DryWet::copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float 
 		break;
 
 	case (1 << o_out) + 1:
-		if (src_arr != dst_arr)
+		if (src_arr [0] != dst_arr [0])
 		{
 			dsp::mix::Align::copy_1_1_v (
 				dst_arr [0],
@@ -339,7 +339,8 @@ void	DryWet::copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float 
 
 	// Stereo to stereo
 	case (2 << o_out) + 0:
-		if (src_arr != dst_arr)
+		if (   src_arr [0] != dst_arr [0]
+		    || src_arr [1] != dst_arr [1])
 		{
 			dsp::mix::Align::copy_2_2 (
 				dst_arr [0], dst_arr [1],
@@ -350,7 +351,8 @@ void	DryWet::copy (int pin_idx, const piapi::ProcInfo &proc, int chn_ofs, float 
 		break;
 
 	case (2 << o_out) + 1:
-		if (src_arr != dst_arr)
+		if (   src_arr [0] != dst_arr [0]
+		    || src_arr [1] != dst_arr [1])
 		{
 			dsp::mix::Align::copy_2_2_v (
 				dst_arr [0], dst_arr [1],
@@ -413,8 +415,10 @@ void	DryWet::mix (int pin_idx, const piapi::ProcInfo &proc, float lvl_wet_beg, f
 	switch ((nbr_in << o_in) + (nbr_out << o_out))
 	{
 	// Mono to mono
+	// Stereo to mono
 	case (1 << o_in) + (1 << o_out):
-		if (dst_arr != dry_arr)
+	case (2 << o_in) + (1 << o_out):
+		if (dst_arr [0] != dry_arr [0])
 		{
 			dsp::mix::Align::copy_1_1_vlrauto (
 				dst_arr [0],
@@ -441,7 +445,7 @@ void	DryWet::mix (int pin_idx, const piapi::ProcInfo &proc, float lvl_wet_beg, f
 
 	// Mono to stereo
 	case (1 << o_in) + (2 << o_out):
-		if (dst_arr != dry_arr)
+		if (dst_arr [0] != dry_arr [0])
 		{
 			dsp::mix::Align::copy_1_1_vlrauto (
 				dst_arr [0],
@@ -469,7 +473,8 @@ void	DryWet::mix (int pin_idx, const piapi::ProcInfo &proc, float lvl_wet_beg, f
 
 	// Stereo to stereo
 	case (2 << o_in) + (2 << o_out):
-		if (dst_arr != dry_arr)
+		if (   dst_arr [0] != dry_arr [0]
+		    || dst_arr [1] != dry_arr [1])
 		{
 			dsp::mix::Align::copy_2_2_vlrauto (
 				dst_arr [0], dst_arr [1],

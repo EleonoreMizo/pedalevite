@@ -58,6 +58,7 @@ TestGenDesc::TestGenDesc ()
 	_info._unique_id = "testgen";
 	_info._name      = "Test generator\nTest gen";
 	_info._tag_list  = { piapi::Tag::_utility_0, piapi::Tag::_synth_0 };
+	_info._chn_pref  = piapi::ChnPref::STEREO;
 
 	// State
 	auto           enu_sptr = std::make_shared <param::TplEnum> (
@@ -160,13 +161,6 @@ void	TestGenDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	TestGenDesc::do_prefer_stereo () const
-{
-	return true;
 }
 
 

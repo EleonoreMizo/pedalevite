@@ -2958,7 +2958,6 @@ void	Model::fill_pi_init_data (int slot_id, ModelObserverInterface::PluginInitDa
 		pi_data._nbr_param_arr [categ] =
 			details._desc_ptr->get_nbr_param (piapi::ParamCateg (categ));
 	}
-	pi_data._prefer_stereo_flag = details._desc_ptr->prefer_stereo ();
 }
 
 

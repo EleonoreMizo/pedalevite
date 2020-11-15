@@ -60,10 +60,11 @@ PhaserDesc::PhaserDesc ()
 {
 	_info._unique_id = "phaser1";
 	_info._name      = "Phaser HT";
+	_info._tag_list  = { piapi::Tag::_modulation_0 };
+	_info._chn_pref  = piapi::ChnPref::STEREO;
 
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
-	_info._tag_list  = { piapi::Tag::_modulation_0 };
 
 	// Speed
 	auto           log_sptr = std::make_shared <param::TplLog> (
@@ -270,13 +271,6 @@ void	PhaserDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	PhaserDesc::do_prefer_stereo () const
-{
-	return true;
 }
 
 

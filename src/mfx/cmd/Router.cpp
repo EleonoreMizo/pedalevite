@@ -923,7 +923,6 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 
 				const piapi::PluginDescInterface &   desc_main =
 					*plugin_pool.use_plugin (pi_id_main)._desc_ptr;
-				const bool     out_st_flag = desc_main.prefer_stereo ();
 				const piapi::PluginInfo pi_info { desc_main.get_info () };
 				pi_model = pi_info._unique_id;
 				desc_main.get_nbr_io (main_nbr_i, main_nbr_o, main_nbr_s);
@@ -931,7 +930,12 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 				pi_id_mix  = slot._component_arr [PiType_MIX ]._pi_id;
 				latency    = slot._component_arr [PiType_MAIN]._latency;
 				nbr_chn_o  = nbr_chn_i;
-				if (out_st_flag && ! slot._force_mono_flag)
+				if (pi_info._chn_pref == piapi::ChnPref::MONO)
+				{
+					nbr_chn_o = 1;
+				}
+				else if (   pi_info._chn_pref == piapi::ChnPref::STEREO
+				         && ! slot._force_mono_flag)
 				{
 					// At this time the number of channels can be only 1 or 2.
 					// So the number of channels for the audio output will
@@ -939,6 +943,9 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 					// Either we stay in mono up to the end, either we go directly
 					// stereo if the audio output is stereo.
 					nbr_chn_o = ChnMode_get_nbr_chn (doc._chn_mode, piapi::Dir_OUT);
+
+					// Makes sure we don't reduce the number of channels here.
+					nbr_chn_o = std::max (nbr_chn_o, nbr_chn_i);
 				}
 			}
 		}

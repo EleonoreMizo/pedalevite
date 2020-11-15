@@ -54,6 +54,7 @@ Wah2Desc::Wah2Desc ()
 	_info._unique_id = "wah2";
 	_info._name      = "Wah-wah (CryBaby)";
 	_info._tag_list  = { piapi::Tag::_eq_filter_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Position
 	auto           sim_sptr = std::make_shared <param::Simple> ("Position\nPos");
@@ -96,13 +97,6 @@ void	Wah2Desc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	Wah2Desc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

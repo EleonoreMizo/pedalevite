@@ -61,6 +61,7 @@ SkoolMoodDesc::SkoolMoodDesc ()
 	_info._unique_id = "smood";
 	_info._name      = "Skool-Mood\nSklMood\nSMood";
 	_info._tag_list  = { piapi::Tag::_modulation_0, piapi::Tag::_spatial_0 };
+	_info._chn_pref  = piapi::ChnPref::STEREO;
 
 	typedef param::TplMapped <param::MapS <false> > TplMaps;
 	typedef param::TplMapped <ParamMapFdbkBipolar> TplFdbk;
@@ -329,13 +330,6 @@ void	SkoolMoodDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	SkoolMoodDesc::do_prefer_stereo () const
-{
-	return true;
 }
 
 

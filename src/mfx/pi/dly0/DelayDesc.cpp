@@ -54,6 +54,7 @@ DelayDesc::DelayDesc ()
 		"Compensation delay\nCompens delay\nComp delay"
 		"\nComp dly\nCDelay\nCDly";
 	_info._tag_list  = { piapi::Tag::_delay_0, piapi::Tag::_utility_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 }
 
 
@@ -81,13 +82,6 @@ void	DelayDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	DelayDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

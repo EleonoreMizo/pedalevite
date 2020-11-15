@@ -64,7 +64,6 @@ public:
 	PluginInfo     get_info () const;
 
 	void           get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const;
-	bool           prefer_stereo () const;
 
 	int            get_nbr_param (ParamCateg categ) const;
 	const ParamDescInterface &
@@ -80,7 +79,6 @@ protected:
 	               do_get_info () const = 0;
 
 	virtual void   do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const = 0;
-	virtual bool   do_prefer_stereo () const = 0;
 
 	virtual int    do_get_nbr_param (ParamCateg categ) const = 0;
 	virtual const ParamDescInterface &

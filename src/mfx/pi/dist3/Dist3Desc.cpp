@@ -58,6 +58,7 @@ Dist3Desc::Dist3Desc ()
 	_info._unique_id = "dist3";
 	_info._name      = "Distortion 3\nDistort 3\nDisto 3\nDist 3\nD3";
 	_info._tag_list  = { piapi::Tag::_distortion_0, piapi::Tag::_amp_simulator_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	typedef param::TplMapped <param::MapPiecewiseLinLog> TplPll;
 
@@ -253,13 +254,6 @@ void	Dist3Desc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	Dist3Desc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

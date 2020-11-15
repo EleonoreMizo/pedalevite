@@ -66,7 +66,6 @@ protected:
 	piapi::PluginInfo
 	               do_get_info () const final;
 	void           do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const final;
-	bool           do_prefer_stereo () const final;
 	int            do_get_nbr_param (piapi::ParamCateg categ) const final;
 	const piapi::ParamDescInterface &
 	               do_get_param_info (piapi::ParamCateg categ, int index) const final;

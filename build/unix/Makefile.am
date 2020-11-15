@@ -1179,6 +1179,7 @@ commonsrc = \
         ../../src/mfx/pi/ParamStateSet.cpp \
         ../../src/mfx/pi/ParamStateSet.h \
         ../../src/mfx/piapi/BypassState.h \
+        ../../src/mfx/piapi/ChnPref.h \
         ../../src/mfx/piapi/Dir.h \
         ../../src/mfx/piapi/Err.h \
         ../../src/mfx/piapi/Event.h \

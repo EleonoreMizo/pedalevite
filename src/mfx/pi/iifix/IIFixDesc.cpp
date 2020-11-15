@@ -53,6 +53,7 @@ IIFixDesc::IIFixDesc ()
 	_info._unique_id = "iifix";
 	_info._name      = "Input Impedance Fix\nImpedance Fix\nImp Fix";
 	_info._tag_list  = { piapi::Tag::_eq_tilt_0, piapi::Tag::_utility_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Center
 	auto           log_sptr = std::make_shared <param::TplLog> (
@@ -103,13 +104,6 @@ void	IIFixDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	IIFixDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

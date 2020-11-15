@@ -54,6 +54,7 @@ DistToneDesc::DistToneDesc ()
 	_info._unique_id = "dtone1";
 	_info._name      = "Distortion Tone Stage\nDistortion Tone\nDist Tone";
 	_info._tag_list  = { piapi::Tag::_eq_tilt_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 
 	// Tone
 	auto           lin_sptr = std::make_shared <param::TplLin> (
@@ -120,13 +121,6 @@ void	DistToneDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	DistToneDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

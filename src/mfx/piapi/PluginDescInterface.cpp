@@ -67,13 +67,6 @@ void	PluginDescInterface::get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 
 
 
-bool	PluginDescInterface::prefer_stereo () const
-{
-	return do_prefer_stereo ();
-}
-
-
-
 int	PluginDescInterface::get_nbr_param (ParamCateg categ) const
 {
 	assert (categ >= 0);

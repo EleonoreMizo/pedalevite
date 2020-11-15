@@ -58,6 +58,7 @@ FreeverbDesc::FreeverbDesc ()
 	_info._unique_id = "freeverb";
 	_info._name      = "Freeverb";
 	_info._tag_list  = { piapi::Tag::_reverb_0, piapi::Tag::_spatial_0 };
+	_info._chn_pref  = piapi::ChnPref::STEREO;
 
 	typedef param::TplMapped <param::MapPseudoLog> TplPsl;
 	typedef param::TplMapped <ParamMapFdbk> TplFdbk;
@@ -179,13 +180,6 @@ void	FreeverbDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	FreeverbDesc::do_prefer_stereo () const
-{
-	return true;
 }
 
 

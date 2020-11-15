@@ -54,6 +54,7 @@ TunerDesc::TunerDesc ()
 	_info._unique_id = Cst::_plugin_tuner;
 	_info._name      = "Tuner";
 	_info._tag_list  = { piapi::Tag::_tuner_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
 }
 
 
@@ -74,13 +75,6 @@ void	TunerDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 1;
 	nbr_o = 1;
 	nbr_s = 0;
-}
-
-
-
-bool	TunerDesc::do_prefer_stereo () const
-{
-	return false;
 }
 
 

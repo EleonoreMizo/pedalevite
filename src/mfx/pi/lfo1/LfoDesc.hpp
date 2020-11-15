@@ -86,6 +86,7 @@ LfoDesc <SLOW>::LfoDesc ()
 		_desc_set.add_glob (Param_SPEED, log_sptr);
 	}
 	_info._tag_list = { piapi::Tag::_control_gen_0 };
+	_info._chn_pref = piapi::ChnPref::NONE;
 
 	// Amplitude
 	auto           lin_sptr = std::make_shared <param::TplLin> (
@@ -264,14 +265,6 @@ void	LfoDesc <SLOW>::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 	nbr_i = 0;
 	nbr_o = 0;
 	nbr_s = 1;
-}
-
-
-
-template <bool SLOW>
-bool	LfoDesc <SLOW>::do_prefer_stereo () const
-{
-	return false;
 }
 
 
