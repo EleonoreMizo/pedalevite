@@ -53,6 +53,18 @@ namespace cmd
 
 
 
+/*
+==============================================================================
+Name: set_process_info
+Description:
+	Sets the information required to initialize auxiliary plug-ins.
+Input parameters:
+	- sample_freq: Sampling frequency, Hz. > 0.
+	- max_block_size: Maximum number of processed samples per block. > 0.
+Throws: Nothing
+==============================================================================
+*/
+
 void	Router::set_process_info (double sample_freq, int max_block_size)
 {
 	assert (sample_freq > 0);
@@ -63,6 +75,22 @@ void	Router::set_process_info (double sample_freq, int max_block_size)
 }
 
 
+
+/*
+==============================================================================
+Name: create_routing
+Description:
+	Public function for creating the full routing for the current state.
+	_crc_cur is updated to reflect any real change in the graph.
+Input/output parameters:
+	- doc: object describing the current graph structure.
+		On output, _ctx_sptr is filled with the processing information and
+		_plugin_dly_list contains the additional delay plug-ins.
+		_cnx_list is modified too.
+	- plugin_pool: contains methods to create and access plug-ins.
+Throws: standard container exceptions
+==============================================================================
+*/
 
 void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 {
@@ -85,6 +113,21 @@ void	Router::create_routing (Document &doc, PluginPool &plugin_pool)
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
+
+/*
+==============================================================================
+Name: create_routing_graph
+Description:
+	Creates the full routing for the current state.
+Input/output parameters:
+	- doc: object describing the current graph structure.
+		On output, _ctx_sptr is filled with the processing information and
+		_plugin_dly_list contains the additional delay plug-ins.
+		_cnx_list is modified too.
+	- plugin_pool: contains methods to create and access plug-ins.
+Throws: standard container exceptions
+==============================================================================
+*/
 
 void	Router::create_routing_graph (Document &doc, PluginPool &plugin_pool)
 {
@@ -120,6 +163,21 @@ void	Router::create_routing_graph (Document &doc, PluginPool &plugin_pool)
 
 
 
+/*
+==============================================================================
+Name: add_aux_plugins
+Description:
+	Checks if there are delays to add for latency compensation,
+	then creates and inserts the required plug-ins into the graphe.
+Input/output parameters:
+	- doc: object describing the current graph structure.
+		On output, _plugin_dly_list contains the additional delay plug-ins.
+		_cnx_list is modified too.
+	- plugin_pool: contains methods to create and access plug-ins.
+Throws: standard container exceptions
+==============================================================================
+*/
+
 void	Router::add_aux_plugins (Document &doc, PluginPool &plugin_pool)
 {
 	// Computes the plug-in latencies across the graph to evaluate where
@@ -137,7 +195,19 @@ void	Router::add_aux_plugins (Document &doc, PluginPool &plugin_pool)
 
 
 
-// See conv_doc_slot_to_lat_node_index () for the node order in _lat_algo
+/*
+==============================================================================
+Name: prepare_graph_for_latency_analysis
+Description:
+	Initializes _lat_algo with the current graph described by _cnx_list and
+	_slot_list.
+	See conv_doc_slot_to_lat_node_index () for the node order in _lat_algo
+Input parameters:
+	- doc: object describing the current graph structure.
+Throws: standard container exceptions
+==============================================================================
+*/
+
 void	Router::prepare_graph_for_latency_analysis (const Document &doc)
 {
 	_lat_algo.reset ();
@@ -206,11 +276,21 @@ void	Router::prepare_graph_for_latency_analysis (const Document &doc)
 
 
 /*
-Maps the document slot indexes to lat::Algo node indexes.
-In this order:
-- Standard plug-in slots
-- Audio inputs
-- Audio outputs
+==============================================================================
+Name: conv_doc_slot_to_lat_node_index
+Description:
+	Maps the document slot indexes to lat::Algo node indexes. In this order:
+	- Standard plug-in slots
+	- Audio inputs
+	- Audio outputs
+Input parameters:
+	- dir: desired direction of the connection, relative to a node.
+		IN = src, OUT = dst
+	- cnx: describes a connection between two nodes.
+Returns:
+	The lat::Algo node index.
+Throws: Nothing
+==============================================================================
 */
 
 int	Router::conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx) const
@@ -245,6 +325,20 @@ int	Router::conv_doc_slot_to_lat_node_index (piapi::Dir dir, const Cnx &cnx) con
 
 
 
+/*
+==============================================================================
+Name: conv_io_pin_to_lat_node_index
+Description:
+	Maps the document I/O pin indexes to lat::Algo node indexes.
+Input parameters:
+	- dir: desired direction of the connection, relative to the whole graph.
+	- pin: index of the pin in the given direction.
+Returns:
+	The lat::Algo node index.
+Throws: Nothing
+==============================================================================
+*/
+
 int	Router::conv_io_pin_to_lat_node_index (piapi::Dir dir, int pin) const
 {
 	int            node_index = _nbr_slots + pin;
@@ -258,9 +352,26 @@ int	Router::conv_io_pin_to_lat_node_index (piapi::Dir dir, int pin) const
 
 
 
-// When we add delay plug-ins, we should take care to ensure a continuity
-// between the successive configurations. We try to use the same delays
-// in the same connections, so minor changes in the graph are glitch-free.
+/*
+==============================================================================
+Name: add_aux_plugins_delays
+Description:
+	Updates the list of delay plug-ins. Some may be created, some removed, and
+	some may be assigned to a different location.
+	This functions does not connect anything.
+	When we add delay plug-ins, we should take care to ensure a continuity
+	between the successive configurations. We try to use the same delays
+	in the same connections, so minor changes in the graph remain glitch-free.
+	Removed plug-ins are just flagged as "not in use", it is up to the caller
+	to actually delete them if necessary.
+Input/output parameters:
+	- doc: on the input, we read the calculated delays from _lat_algo.
+		On the output, _plugin_dly_list and _map_model_id are updated.
+	- plugin_pool: contains methods to create and access plug-ins.
+Throws: standard container exceptions
+==============================================================================
+*/
+
 void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 {
 	// Lists the connections requiring a compensation delay.
@@ -368,8 +479,25 @@ void	Router::add_aux_plugins_delays (Document &doc, PluginPool &plugin_pool)
 
 
 
-// The plug-in is inserted at the back of the list
-// It is registred in the Document object as "in use".
+/*
+==============================================================================
+Name: create_plugin_aux
+Description:
+	Creates a new auxiliary (delay) plug-in, not connected to anything.
+	It is registred in the Document object as "in use".
+Input parameters:
+	- model: type of the inserted plug-in. Only Cst::_plugin_dly at the moment.
+Input/output parameters:
+	- doc: _map_model_id is updated.
+	- plugin_pool: contains methods to create and access plug-ins.
+	- aux_list: the additional plug-in list. The plug-in is inserted at the
+		back of this list. May be mapped to doc._plugin_dly_list.
+Returns:
+	A reference on the new plug-in (taken from aux_list).
+Throws: standard container exceptions
+==============================================================================
+*/
+
 PluginAux &	Router::create_plugin_aux (Document &doc, PluginPool &plugin_pool, Document::PluginAuxList &aux_list, std::string model)
 {
 	// Currently we only support delays as auxiliary plug-ins
@@ -397,8 +525,18 @@ PluginAux &	Router::create_plugin_aux (Document &doc, PluginPool &plugin_pool, D
 
 
 
-// Generates additional connections to _cnx_list.
-void	Router::connect_delays (Document &doc)
+/*
+==============================================================================
+Name: connect_delays
+Description:
+	Generates additional connections to _cnx_list.
+Input parameters:
+	- doc: _plugin_dly_list is read to find all the delay plug-ins.
+Throws: standard container exceptions
+==============================================================================
+*/
+
+void	Router::connect_delays (const Document &doc)
 {
 	const int      nbr_plug = int (doc._plugin_dly_list.size ());
 	for (int plug_idx = 0; plug_idx < nbr_plug; ++plug_idx)
@@ -425,15 +563,31 @@ void	Router::connect_delays (Document &doc)
 
 
 /*
-Graph course starts from the sink nodes and traces back recursively up to
-the source nodes. ProcessingContextNode are created during the down-stream
-descent (end of the recursion) so their order correspounds to the processing
-order.
+==============================================================================
+Name: create_graph_context
+Description:
+	Builds the ProcessingContext object from the graph information, so the
+	audio thread can follow linearly all the steps required to process the
+	graph in the right order.
 
-Buffers are allocated on request and deallocated when their use is terminated
-during the graph traversal. Audio input and output buffers should stay
-allocated during the traversal. They are freed only at the end.
-Signal buffers stay allocated too.
+	Graph course starts from the sink nodes and traces back recursively up to
+	the source nodes. ProcessingContextNode are created during the down-stream
+	descent (end of the recursion) so their order correspounds to the
+	processing order. Plug-in without audio output (signal analysis) are
+	considered as first sink nodes.
+
+	Buffers are allocated on request and deallocated when their use is
+	terminated during the graph traversal. Audio input and output buffers
+	should stay allocated during the traversal. They are freed only at the end.
+	Signal buffers stay allocated too.
+Input parameters:
+	- plugin_pool: contains methods to create and access plug-ins.
+Input/output parameters:
+	- doc: on input, _plugin_dly_list should be ready, as well as
+		_map_model_id.
+		On output, _ctx_sptr is updated.
+Throws: standard container exceptions
+==============================================================================
 */
 
 void	Router::create_graph_context (Document &doc, const PluginPool &plugin_pool)
@@ -484,9 +638,23 @@ void	Router::create_graph_context (Document &doc, const PluginPool &plugin_pool)
 
 
 
-// categ_list is an internal node list, sorted by categories.
-// A node is a plug-in, aux or not, or an audio input or output.
-// Connections are given by _cnx_list.
+/*
+==============================================================================
+Name: init_node_categ_list
+Description:
+	Initialises all the NodeInfo, sorted by category.
+	categ_list is an internal node list, sorted by categories.
+	A node is a plug-in, auxiliary or standard, or an audio input or output.
+	Connections are given by doc._cnx_list.
+Input parameters:
+	- doc: the final graph structure, including auxiliary plug-ins
+Output parameters:
+	- categ_list: NodeInfo lists for all the node categories. Order is the same
+		as the doc._slot_list and doc._plugin_dly_list containers.
+Throws: standard container exceptions
+==============================================================================
+*/
+
 void	Router::init_node_categ_list (const Document &doc, NodeCategList &categ_list) const
 {
 	for (auto &categ : categ_list)
@@ -533,8 +701,19 @@ void	Router::init_node_categ_list (const Document &doc, NodeCategList &categ_lis
 
 
 
-// We allocate only buffers we need, given the pin configuration.
-// Mixing or channel replication is handled by WorldAudio.
+/*
+==============================================================================
+Name: allocate_buf_audio_i
+Description:
+	We allocate only the buffers we need, given the pin configuration.
+	Mixing or channel replication is handled by WorldAudio.
+Input/output parameters:
+	- doc: processing context to be modified.
+	- buf_alloc: buffer allocator.
+Throws: Nothing
+==============================================================================
+*/
+
 void	Router::allocate_buf_audio_i (const Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
@@ -552,7 +731,20 @@ void	Router::allocate_buf_audio_i (const Document &doc, BufAlloc &buf_alloc)
 
 
 
-// We allocate only buffers we need, given the pin configuration.
+/*
+==============================================================================
+Name: allocate_buf_audio_o
+Description:
+	We allocate only buffers we need, given the pin configuration.
+Input parameters:
+	- categ_list: NodeInfo lists for all the node categories
+Input/output parameters:
+	- doc: processing context to be modified.
+	- buf_alloc: buffer allocator.
+Throws: standard container exceptions
+==============================================================================
+*/
+
 void	Router::allocate_buf_audio_o (const Document &doc, BufAlloc &buf_alloc, const NodeCategList &categ_list)
 {
 	const NodeInfo &  node_info = categ_list [CnxEnd::SlotType_IO] [0];
@@ -592,7 +784,18 @@ void	Router::allocate_buf_audio_o (const Document &doc, BufAlloc &buf_alloc, con
 
 
 
-// Inverse of allocate_buf_audio_i
+/*
+==============================================================================
+Name: free_buf_audio_i
+Description:
+	Inverse of allocate_buf_audio_i
+Input/output parameters:
+	- doc: processing context to be modified.
+	- buf_alloc: buffer allocator.
+Throws: Nothing
+==============================================================================
+*/
+
 void	Router::free_buf_audio_i (const Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
@@ -607,7 +810,18 @@ void	Router::free_buf_audio_i (const Document &doc, BufAlloc &buf_alloc)
 
 
 
-// Inverse of allocate_buf_audio_o
+/*
+==============================================================================
+Name: free_buf_audio_o
+Description:
+	Inverse of allocate_buf_audio_o
+Input/output parameters:
+	- doc: processing context to be modified.
+	- buf_alloc: buffer allocator.
+Throws: Nothing
+==============================================================================
+*/
+
 void	Router::free_buf_audio_o (const Document &doc, BufAlloc &buf_alloc)
 {
 	ProcessingContext &  ctx = *doc._ctx_sptr;
@@ -623,9 +837,24 @@ void	Router::free_buf_audio_o (const Document &doc, BufAlloc &buf_alloc)
 
 
 /*
-Recursive traversal of the nodes.
-There is nothing to do if the node has already been visited, buffers
-are already allocated.
+==============================================================================
+Name: visit_node
+Description:
+	Recursive traversal of the nodes.
+	There is nothing to do if the node has already been visited, buffers are
+	already allocated.
+	Fills the corresponding NodeInfo and ProcessingContext::PluginContext
+	(main and mixer plug-ins).
+Input parameters:
+	- plugin_pool: contains methods to create and access plug-ins.
+	- slot_type: type of the node (standard plug-in or delay only)
+	- slot_pos: index of the node within categ_list
+Input/output parameters:
+	- doc: processing context to be modified.
+	- buf_alloc: buffer allocator.
+	- categ_list: NodeInfo lists for all the node categories.
+Throws: standard container exceptions
+==============================================================================
 */
 
 void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, CnxEnd::SlotType slot_type, int slot_pos)
@@ -980,6 +1209,24 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 
 
 
+/*
+==============================================================================
+Name: check_source_nodes
+Description:
+	Recursive traversal of the nodes, starting from the source(s) of the
+	give node. The current node is not processed.
+	Computes the number of output channels of the node.
+Input parameters:
+	- plugin_pool: contains methods to create and access plug-ins.
+Input/output parameters:
+	- doc: processing context to be modified.
+	- buf_alloc: buffer allocator.
+	- categ_list: NodeInfo lists for all the node categories.
+	- node_info: information on the target node.
+Throws: standard container exceptions
+==============================================================================
+*/
+
 void	Router::check_source_nodes (Document &doc, const PluginPool &plugin_pool, BufAlloc &buf_alloc, NodeCategList &categ_list, NodeInfo &node_info)
 {
 	int         nbr_chn = 1;
@@ -1017,6 +1264,33 @@ void	Router::check_source_nodes (Document &doc, const PluginPool &plugin_pool, B
 }
 
 
+
+/*
+==============================================================================
+Name: collects_mix_source_buffers
+Description:
+	Finds all the source buffers for a node and fills its processing context.
+	Checks if a mix between multiple sources should occur. If yes, mixing
+	information are collected.
+	Source nodes should already have been processed so the buffers actually
+	exist.
+Input parameters:
+	- ctx: main processing context
+	- categ_list: NodeInfo lists for all the node categories
+	- node_info: The target node, an element from categ_list
+	- nbr_pins_ctx: Number of pins from the context. May be different from the
+		number of pins of the attached plug-in.
+	- nbr_chn: Number of channels per source pins
+Input/output parameters:
+	- buf_alloc: buffer allocator.
+	- side: the input side of the target node.
+Output parameters:
+	- mix_in_arr: if a mix should occur, contains the buffers that should be
+		mixed together for each input channel. If there is no mix to do, the
+		array is returned empty.
+Throws: standard container exceptions
+==============================================================================
+*/
 
 void	Router::collects_mix_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr) const
 {
@@ -1101,7 +1375,30 @@ void	Router::collects_mix_source_buffers (const ProcessingContext &ctx, BufAlloc
 
 
 
-void	Router::free_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, ProcessingContext::PluginContext::MixInputArray &mix_in_arr)
+/*
+==============================================================================
+Name: free_source_buffers
+Description:
+	This function should be called once a node has been processed.
+	It releases its source buffers.
+Input parameters:
+	- ctx: main processing context
+	- categ_list: NodeInfo lists for all the node categories
+	- node_info: The target node, an element from categ_list
+	- side: the input side of the target node.
+	- nbr_pins_ctx: Number of pins from the context. May be different from the
+		number of pins of the attached plug-in.
+	- nbr_chn: Number of channels per source pins
+	- mix_in_arr: an empty array if there was no mix involved with the source
+		buffers. It a mix occured, this should contain the mixed buffers.
+		This is the same array as the one from collects_mix_source_buffers().
+Input/output parameters:
+	- buf_alloc: buffer allocator, the buffers are returned here.
+Throws: Nothing
+==============================================================================
+*/
+
+void	Router::free_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_alloc, const NodeCategList &categ_list, const NodeInfo &node_info, const ProcessingContextNode::Side &side, int nbr_pins_ctx, int nbr_chn, const ProcessingContext::PluginContext::MixInputArray &mix_in_arr)
 {
 	const bool     mix_flag = ! mix_in_arr.empty ();
 	const int      nbr_pins_cnx = int (node_info._cnx_src_list.size ());
@@ -1147,6 +1444,22 @@ void	Router::free_source_buffers (const ProcessingContext &ctx, BufAlloc &buf_al
 
 
 
+/*
+==============================================================================
+Name: use_source_side
+Description:
+	Accesses the output part of a source node from a processing context
+	for a specified connection.
+Input parameters:
+	- categ_list: NodeInfo lists for all the node categories
+	- ctx: the main processing context
+	- cnx_src: connection descriptor
+Returns:
+	A reference on the output side.
+Throws: Nothing
+==============================================================================
+*/
+
 const ProcessingContextNode::Side &	Router::use_source_side (const NodeCategList &categ_list, const ProcessingContext &ctx, const Cnx &cnx_src) const
 {
 	const NodeInfo &  node_src =
@@ -1175,7 +1488,21 @@ const ProcessingContextNode::Side &	Router::use_source_side (const NodeCategList
 
 
 
-// This function is used only for debugging purpose.
+/*
+==============================================================================
+Name: count_nbr_signal_buf
+Description:
+	Computes the total number of signal buffers.
+	This function is used only for debugging purpose.
+Input parameters:
+	- doc: document with valid _ctx_sptr
+	- categ_list: NodeInfo lists for all the node categories.
+Returns:
+	Total number of signal buffers, >= 0.
+Throws: Nothing
+==============================================================================
+*/
+
 int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &categ_list) const
 {
 	int            nbr_buf = 0;
@@ -1209,8 +1536,27 @@ int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &cate
 
 
 
+/*
+==============================================================================
+Name: clip_channel
+Description:
+	Makes sure a channel index stays within a given range.
+	The current implementation maps the out-of-range channels with the last
+	channel.
+Input parameters:
+	- chn_idx: index of the channel to remap. >= 0.
+	- nbr_chn: maximum number of channels, > 0.
+Returns:
+	A valid channel index.
+Throws: Nothing
+==============================================================================
+*/
+
 int	Router::clip_channel (int chn_idx, int nbr_chn)
 {
+	assert (chn_idx >= 0);
+	assert (nbr_chn > 0);
+
 	return std::min (chn_idx, nbr_chn - 1);
 }
 
