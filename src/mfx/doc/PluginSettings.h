@@ -86,7 +86,7 @@ public:
 	void           ser_write (SerWInterface &ser) const;
 	void           ser_read (SerRInterface &ser, std::string model_id);
 
-	bool           _force_mono_flag  = false;
+	bool           _force_mono_flag  = false; // User prefers that the plug-in outputs a mono signal if possible
 	bool           _force_reset_flag = false;
 	ParamList      _param_list;
 	MapParamCtrl   _map_param_ctrl;     // Parameter index -> controller list

@@ -50,7 +50,7 @@ public:
 
 	std::array <Plugin, PiType_NBR_ELT>
 	               _component_arr;
-	bool           _force_mono_flag = false;
+	bool           _force_mono_flag = false; // User settings (preference for mono output)
 	bool           _gen_audio_flag  = true;
 
 

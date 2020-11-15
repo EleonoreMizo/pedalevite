@@ -387,18 +387,15 @@ void	PluginSettings::ser_read (SerRInterface &ser, std::string model_id)
 
 bool	operator < (const PluginSettings &lhs, const PluginSettings &rhs)
 {
-	const int      flags_l =
-		lhs._force_mono_flag + (lhs._force_reset_flag << 1);
-	const int      flags_r =
-		rhs._force_mono_flag + (rhs._force_reset_flag << 1);
-
 	return (std::tie (
-		flags_l,
+		lhs._force_mono_flag,
+		lhs._force_reset_flag,
 		lhs._param_list,
 		lhs._map_param_ctrl,
 		lhs._map_param_pres
 	) < std::tie (
-		flags_r,
+		rhs._force_mono_flag,
+		rhs._force_reset_flag,
 		rhs._param_list,
 		rhs._map_param_ctrl,
 		rhs._map_param_pres
