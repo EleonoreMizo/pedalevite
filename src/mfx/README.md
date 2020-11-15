@@ -6,6 +6,7 @@ This is the main Pédale Vite source code.
 - **`cmd`**: the layer commanding the audio thread.
 - **`doc`**: the internal document structure, with serialization facilities.
 - **`dsp`**: a library containing all the digital signal processing parts.
+- **`hw`**: platform-specific and hardware-related code.
 - **`pi`**: a set of audio effects (and more) used in the pedalboard, designed as plug-ins.
 - **`piapi`**: the plug-in API for the audio effects.
 - **`ui`**: user interface basics. Mostly deals with hardware (display, switches…)
