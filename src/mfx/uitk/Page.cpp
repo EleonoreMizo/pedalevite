@@ -65,6 +65,7 @@ Page::Page (Model &model, View &view, ui::DisplayInterface &display, ui::UserInp
 ,	_curs_pos (-1)
 ,	_curs_id (-1)
 ,	_timer_set ()
+,	_timer_mod_flag (false)
 ,	_but_hold (Button_INVALID)
 ,	_but_hold_date (INT64_MIN)
 ,	_but_hold_count (0)
@@ -176,8 +177,12 @@ void	Page::process_messages ()
 	// Redraw
 	handle_redraw ();
 
-	for (int node_id : _timer_set)
+	_timer_mod_flag = false;
+	auto           it_nid = _timer_set.begin ();
+	while (! _timer_mod_flag && it_nid != _timer_set.end ())
 	{
+		const int      node_id = *it_nid;
+		++ it_nid;
 		NodeEvt        evt (NodeEvt::create_timer (node_id));
 		send_event (evt);
 	}
@@ -224,7 +229,8 @@ void	Page::do_set_timer (int node_id, bool enable_flag)
 {
 	if (enable_flag)
 	{
-		_timer_set.insert (node_id);
+		const bool     ins_flag = _timer_set.insert (node_id).second;
+		_timer_mod_flag |= ins_flag;
 	}
 	else
 	{
@@ -232,6 +238,7 @@ void	Page::do_set_timer (int node_id, bool enable_flag)
 		if (it != _timer_set.end ())
 		{
 			_timer_set.erase (it);
+			_timer_mod_flag = true;
 		}
 	}
 }

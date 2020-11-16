@@ -140,6 +140,7 @@ private:
 	int            _curs_pos;           // -1 = not shown
 	int            _curs_id;            // -1 = not shown
 	std::set <int> _timer_set;
+	bool           _timer_mod_flag;     // Indicates we modified _timer_set while scanning it.
 
 	Button         _but_hold;
 	std::chrono::microseconds           // Microseconds, beginning of the hold position
