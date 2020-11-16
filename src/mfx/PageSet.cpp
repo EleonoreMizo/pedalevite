@@ -44,7 +44,7 @@ namespace mfx
 
 
 
-PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, const CmdLine &cmd_line, adrv::DriverInterface &snd_drv)
+PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, Stop &stop, adrv::DriverInterface &snd_drv)
 :	_model (model)
 ,	_fnt_8x12 ()
 ,	_fnt_6x8 ()
@@ -89,7 +89,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_slot_menu (_page_switcher, _loc_edit)
 ,	_page_edit_text (_page_switcher)
 ,	_page_prog_save (_page_switcher)
-,	_page_end_msg (_page_switcher, cmd_line)
+,	_page_end_msg (_page_switcher, stop)
 ,	_page_levels (_page_switcher, snd_drv)
 ,	_page_pedalboard_config (_page_switcher, _loc_edit_pedal)
 ,	_page_pedal_action_type (_page_switcher, _loc_edit_pedal)
@@ -111,7 +111,7 @@ PageSet::PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::U
 ,	_page_prog_move (_page_switcher)
 ,	_page_fx_lfo (_page_switcher, _loc_edit)
 ,	_page_menu_backup (_page_switcher)
-,	_page_edit_date (_page_switcher, cmd_line)
+,	_page_edit_date (_page_switcher, stop)
 ,	_page_prog_catalog (_page_switcher)
 ,	_page_rec2disk (_page_switcher, dynamic_cast <VideoRecorder *> (&display))
 ,	_page_slot_routing (_page_switcher, _loc_edit)

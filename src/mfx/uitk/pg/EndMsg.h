@@ -42,7 +42,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
-class CmdLine;
+class Stop;
 
 namespace uitk
 {
@@ -65,6 +65,7 @@ public:
 	enum EndType
 	{
 		EndType_NONE = 0,
+		EndType_QUIT,
 		EndType_RESTART,
 		EndType_REBOOT,
 		EndType_SHUTDOWN,
@@ -72,7 +73,7 @@ public:
 		EndType_NBR_ELT
 	};
 
-	explicit       EndMsg (PageSwitcher &page_switcher, const CmdLine &cmd_line);
+	explicit       EndMsg (PageSwitcher &page_switcher, Stop &stop);
 
 
 
@@ -97,7 +98,7 @@ private:
 	typedef std::vector <TxtSPtr> TxtArray;
 
 	PageSwitcher & _page_switcher;
-	const CmdLine& _cmd_line;
+	Stop &         _stop;
 	Model *        _model_ptr;    // 0 = not connected
 	const View *   _view_ptr;     // 0 = not connected
 	PageMgrInterface *            // 0 = not connected

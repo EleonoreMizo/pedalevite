@@ -105,9 +105,14 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	{
 		if (_reboot_arg._ok_flag)
 		{
-#if fstb_IS (SYS, LINUX)
 			switch (_reboot_arg._selection)
 			{
+			case RestartMenu_QUIT:
+				_page_switcher.switch_to (
+					PageType_END_MSG,
+					reinterpret_cast <void *> (EndMsg::EndType_QUIT)
+				);
+				break;
 			case RestartMenu_RESTART:
 				_page_switcher.switch_to (
 					PageType_END_MSG,
@@ -130,9 +135,6 @@ void	MenuMain::do_connect (Model &model, const View &view, PageMgrInterface &pag
 				// Nothing
 				break;
 			}
-#else
-			_page_switcher.call_page (PageType_NOT_YET, nullptr, -1);
-#endif
 		}
 	}
 	_state = State_NORMAL;
@@ -231,7 +233,8 @@ MsgHandlerInterface::EvtProp	MenuMain::do_handle_evt (const NodeEvt &evt)
 				_reboot_arg._title      = "RESTART";
 				_reboot_arg._ok_flag    = false;
 				_reboot_arg._selection  = 0;
-				_reboot_arg._choice_arr = { "Cancel", "Restart", "Reboot", "Shutdown" };
+				_reboot_arg._choice_arr =
+					{ "Cancel", "Quit", "Restart", "Reboot", "Shutdown" };
 				_page_switcher.call_page (PageType_QUESTION, &_reboot_arg);
 				_state = State_REBOOT;
 				break;

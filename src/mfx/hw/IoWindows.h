@@ -40,6 +40,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/UserInputInterface.h"
 #include "mfx/ModelMsgCmdAsync.h"
 #include "mfx/ModelMsgCmdCbInterface.h"
+#include "mfx/Stop.h"
 
 #include <Windows.h>
 
@@ -73,7 +74,7 @@ class IoWindows final
 
 public:
 
-	explicit       IoWindows (std::atomic <bool> &quit_request_flag);
+	explicit       IoWindows (Stop &stop);
 	               ~IoWindows ();
 
 	void           set_model (Model &model);
@@ -279,8 +280,7 @@ private:
 	const SwLoc *  _pressed_sw_ptr;  // Current switch pressed with the mouse. 0 when no switch is pressed.
 	uint64_t       _sw_states;       // Each bit = current switch state (mouse or keyboard)
 
-	std::atomic <bool> &             // Application is requested to quit
-	               _quit_request_flag;
+	Stop &         _stop;            // Application is requested to quit
 
 	std::atomic <bool>               // Thread should stop
 	               _quit_flag;

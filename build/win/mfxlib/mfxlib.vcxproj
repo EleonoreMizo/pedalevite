@@ -1246,6 +1246,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\ProgSwitcher.h" />
     <ClInclude Include="..\..\..\src\mfx\RecD2d.h" />
+    <ClInclude Include="..\..\..\src\mfx\Stop.h" />
     <ClInclude Include="..\..\..\src\mfx\ToolsRouting.h" />
     <ClInclude Include="..\..\..\src\mfx\ToolsRouting.hpp" />
     <ClInclude Include="..\..\..\src\mfx\uitk\grap\PrimBox.h" />
@@ -1987,6 +1988,7 @@
     <ClCompile Include="..\..\..\src\mfx\ProcessingContext.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ProgSwitcher.cpp" />
     <ClCompile Include="..\..\..\src\mfx\RecD2d.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\Stop.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsRouting.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ToolsParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\piapi\FactoryInterface.cpp" />

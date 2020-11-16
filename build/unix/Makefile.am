@@ -1428,6 +1428,8 @@ commonsrc = \
         ../../src/mfx/RecD2d.cpp \
         ../../src/mfx/RecD2d.h \
         ../../src/mfx/SharedRscState.h \
+        ../../src/mfx/Stop.cpp \
+        ../../src/mfx/Stop.h \
         ../../src/mfx/ToolsParam.cpp \
         ../../src/mfx/ToolsParam.h \
         ../../src/mfx/ToolsRouting.cpp \

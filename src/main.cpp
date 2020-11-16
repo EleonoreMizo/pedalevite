@@ -84,6 +84,7 @@
 #include "mfx/PageSet.h"
 #include "mfx/PluginPool.h"
 #include "mfx/ProcessingContext.h"
+#include "mfx/Stop.h"
 #include "mfx/View.h"
 #include "mfx/WaMsgQueue.h"
 #include "mfx/WorldAudio.h"
@@ -193,7 +194,7 @@ class Context
 ,	public mfx::adrv::CbInterface
 {
 public:
-	mfx::CmdLine   _cmd_line;
+	mfx::Stop &    _stop;
 	double         _sample_freq;
 	int            _max_block_size;
 #if fstb_IS (SYS, LINUX)
@@ -215,10 +216,6 @@ public:
 	               _queue_input_to_cmd;
 	mfx::ui::UserInputInterface::MsgQueue
 	               _queue_input_to_audio;
-
-	// Not for the audio thread
-	std::atomic <bool>
-	               _quit_flag { false };
 
 	// Controller
 #if defined (MAIN_USE_VOID)
@@ -269,7 +266,7 @@ public:
 	mfx::View      _view;
 	mfx::PageSet   _page_set;
 
-	explicit       Context (mfx::adrv::DriverInterface &snd_drv);
+	explicit       Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop);
 	void           set_proc_info (double sample_freq, int max_block_size);
 protected:
 	// mfx::ModelObserverDefault
@@ -299,8 +296,8 @@ void	Context::signal_handler (int sig)
 
 #endif
 
-Context::Context (mfx::adrv::DriverInterface &snd_drv)
-:	_cmd_line ()
+Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop)
+:	_stop (stop)
 ,	_sample_freq (0)
 ,	_max_block_size (0)
 #if fstb_IS (SYS, LINUX)
@@ -324,7 +321,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 ,	_user_input (_thread_spi)
 ,	_leds ()
 #else // fstb_SYS
-,	_all_io (_quit_flag)
+,	_all_io (_stop)
 ,	_display (_all_io)
 ,	_user_input (_all_io)
 ,	_leds (_all_io)
@@ -342,8 +339,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 #else // MAIN_REC_VIDEO
 		_display,
 #endif // MAIN_REC_VIDEO
-		_queue_input_to_gui, _user_input, _leds, _cmd_line,
-		snd_drv
+		_queue_input_to_gui, _user_input, _leds, _stop, snd_drv
 	)
 {
 #if fstb_IS (SYS, LINUX)
@@ -380,7 +376,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv)
 fprintf (stderr, "Reading ESC button...\n");
 				if (val > 0.5f)
 				{
-					_quit_flag = true;
+					stop.request (mfx::Stop::Type::QUIT);
 					fprintf (stderr, "Exit requested.\n");
 				}
 				scan_flag = false;
@@ -509,7 +505,7 @@ void	Context::do_notify_dropout ()
 
 void	Context::do_request_exit ()
 {
-	_quit_flag = true;
+	_stop.request (mfx::Stop::Type::QUIT);
 }
 
 
@@ -538,7 +534,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 	int            restart_count   =  0;
 	int            restart_limit   = 32;
 
-	while (ret_val == 0 && ! ctx._quit_flag)
+	while (ret_val == 0 && ! ctx._stop.is_exit_requested ())
 	{
 		int            wait_ms = 100; // Milliseconds
 
@@ -799,15 +795,19 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 	MAIN_prog_init ();
 #endif
 
+	mfx::Stop      stop;
+
 	int            ret_val = 0;
 
-#if fstb_IS (SYS, LINUX)
 	try
 	{
+#if fstb_SYS == fstb_SYS_LINUX
+		stop.use_cmd_line ().set (argc, argv, envp);
+
 		mfx::hw::UniqueRscLinux unique_lock ("pedalevite-unique");
 #endif
 
-#if fstb_IS (SYS, LINUX) && ! defined (MAIN_USE_VOID)
+#if fstb_SYS == fstb_SYS_LINUX && ! defined (MAIN_USE_VOID)
 	::wiringPiSetupPhys ();
 
 	::pinMode (22, INPUT);
@@ -847,16 +847,13 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 
 
 #if __cplusplus >= 201402
-	auto           ctx_uptr (std::make_unique <Context> (snd_drv));
+	auto           ctx_uptr (std::make_unique <Context> (snd_drv, stop));
 #else // __cplusplus
-	std::unique_ptr <Context>  ctx_uptr (new Context (snd_drv));
+	std::unique_ptr <Context>  ctx_uptr (new Context (snd_drv, stop));
 #endif // __cplusplus
 	Context &      ctx = *ctx_uptr;
-#if fstb_IS (SYS, LINUX)
-	ctx._cmd_line.set (argc, argv, envp);
-#endif
 
-	if (! ctx._quit_flag)
+	if (! ctx._stop.is_exit_requested ())
 	{
 		double         sample_freq;
 		int            max_block_size;
@@ -885,12 +882,13 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 
 	ctx_uptr.reset ();
 
+	} // try
 #if fstb_IS (SYS, LINUX)
-	}
 	catch (mfx::hw::UniqueRscLinux::Error &e)
 	{
 		fprintf (stderr, "Pedale Vite is already running!\n");
 	}
+#endif
 	catch (int e)
 	{
 		fprintf (stderr, "Exception: int = %d\n", e);
@@ -900,9 +898,10 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 	{
 		fprintf (stderr, "Exception caught.\n");
 	}
-#endif
 
 	fprintf (stderr, "Exiting with code %d.\n", ret_val);
+
+	stop.process_request ();
 
 #if defined (_MSC_VER)
 	MAIN_prog_end ();

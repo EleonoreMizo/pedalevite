@@ -31,15 +31,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/uitk/PageMgrInterface.h"
 #include "mfx/uitk/PageSwitcher.h"
 #include "mfx/ui/Font.h"
-#include "mfx/CmdLine.h"
 #include "mfx/Model.h"
+#include "mfx/Stop.h"
 #include "mfx/View.h"
-
-#if fstb_IS (SYS, LINUX)
-	#include <unistd.h>
-
-	#include <future>
-#endif
 
 #include <vector>
 
@@ -61,9 +55,9 @@ namespace pg
 
 
 
-EndMsg::EndMsg (PageSwitcher &page_switcher, const CmdLine &cmd_line)
+EndMsg::EndMsg (PageSwitcher &page_switcher, Stop &stop)
 :	_page_switcher (page_switcher)
-,	_cmd_line (cmd_line)
+,	_stop (stop)
 ,	_model_ptr (nullptr)
 ,	_view_ptr (nullptr)
 ,	_page_ptr (nullptr)
@@ -95,6 +89,9 @@ void	EndMsg::do_connect (Model &model, const View &view, PageMgrInterface &page,
 	std::string    txt;
 	switch (_end_type)
 	{
+	case EndType_QUIT:
+		txt = "Quitting\xE2\x80\xA6";
+		break;
 	case EndType_RESTART:
 		txt = "Restarting\xE2\x80\xA6";
 		break;
@@ -170,41 +167,27 @@ MsgHandlerInterface::EvtProp	EndMsg::do_handle_evt (const NodeEvt &evt)
 
 	if (evt.is_timer ())
 	{
-#if fstb_IS (SYS, LINUX)
 		const auto     cur_date = _model_ptr->get_cur_date ();
 		if (cur_date >= _action_date)
 		{
-			int            ret_val_sys = 0;
-
 			switch (_end_type)
 			{
+			case EndType_QUIT:
+				_stop.request (Stop::Type::QUIT);
+				break;
 			case EndType_RESTART:
-				{
-					char * const * argv = _cmd_line.use_argv ();
-					char * const * envp = _cmd_line.use_envp ();
-					ret_val_sys = execve (argv [0], argv, envp);
-				}
+				_stop.request (Stop::Type::RESTART);
 				break;
 			case EndType_REBOOT:
-				ret_val_sys = system ("sudo shutdown -r now");
+				_stop.request (Stop::Type::REBOOT);
 				break;
 			case EndType_SHUTDOWN:
-				ret_val_sys = system ("sudo shutdown -h now");
+				_stop.request (Stop::Type::SHUTDOWN);
 				break;
 			default:
 				break;
 			}
-
-			if (ret_val_sys != 0)
-			{
-				const int      node_id = evt.get_target ();
-				Question::msg_box (
-					"Command failed.", "Cancel",
-					_msg_arg, _page_switcher, node_id
-				);
-			}
 		}
-#endif
 
 		ret_val = EvtProp_CATCH;
 	}

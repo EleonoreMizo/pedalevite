@@ -93,7 +93,7 @@ class PageSet
 
 public:
 
-	explicit       PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, const CmdLine &cmd_line, adrv::DriverInterface &snd_drv);
+	explicit       PageSet (Model &model, View &view, ui::DisplayInterface &display, ui::UserInputInterface::MsgQueue &queue_input_to_gui, ui::UserInputInterface &input_device, ui::LedInterface &leds, Stop &stop, adrv::DriverInterface &snd_drv);
 
 	uitk::Page &   use_page_mgr ();
 	uitk::PageSwitcher &

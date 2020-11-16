@@ -86,6 +86,7 @@ private:
 	enum RestartMenu
 	{
 		RestartMenu_CANCEL = 0,
+		RestartMenu_QUIT,
 		RestartMenu_RESTART,
 		RestartMenu_REBOOT,
 		RestartMenu_SHUTDOWN,

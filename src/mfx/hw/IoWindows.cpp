@@ -57,7 +57,7 @@ namespace hw
 
 
 
-IoWindows::IoWindows (std::atomic <bool> &quit_request_flag)
+IoWindows::IoWindows (Stop &stop)
 :	_model_ptr (nullptr)
 ,	_screen_buf ()
 ,	_main_win (nullptr)
@@ -70,7 +70,7 @@ IoWindows::IoWindows (std::atomic <bool> &quit_request_flag)
 ,	_clock_freq (0)
 ,	_pressed_sw_ptr (nullptr)
 ,	_sw_states (0)
-,	_quit_request_flag (quit_request_flag)
+,	_stop (stop)
 ,	_quit_flag ()
 #if defined (_MSC_VER)
 #pragma warning (push)
@@ -422,7 +422,7 @@ void	IoWindows::main_loop ()
 		if (gm_res == 0 || gm_res == -1)
 		{
 			_quit_flag.store (true);
-			_quit_request_flag.store (true);
+			_stop.request (Stop::Type::QUIT);
 		}
 		else
 		{
@@ -508,7 +508,7 @@ void	IoWindows::init_bitmap (int w, int h)
 	switch (message)
 	{
 	case WM_CLOSE:
-		_quit_request_flag.store (true);
+		_stop.request (Stop::Type::QUIT);
 		::PostQuitMessage (0);
 		break;
 

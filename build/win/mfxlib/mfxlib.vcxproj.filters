@@ -4773,6 +4773,9 @@
     <ClInclude Include="..\..\..\src\mfx\piapi\ChnPref.h">
       <Filter>mfx\piapi</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\Stop.h">
+      <Filter>mfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6079,6 +6082,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\cpx\CompexGainFnc.cpp">
       <Filter>mfx\pi\cpx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\Stop.cpp">
+      <Filter>mfx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
