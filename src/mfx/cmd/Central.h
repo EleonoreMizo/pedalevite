@@ -124,7 +124,7 @@ public:
 	void           set_tempo (float bpm);
 
 	// Call this regularly
-	void           process_queue_audio_to_cmd ();
+	bool           process_queue_audio_to_cmd ();
 
 	// Misc
 	PluginPool &   use_pi_pool ();

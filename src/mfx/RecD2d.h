@@ -33,6 +33,7 @@ http://www.wtfpl.net/ for more details.
 
 #include <array>
 #include <atomic>
+#include <utility>
 #include <vector>
 
 #include <cstdio>
@@ -57,7 +58,8 @@ public:
 
 	int            create_file (const char pathname_0 [], int nbr_chn, double sample_freq, size_t max_len = ~size_t (0));
 	int            close_file ();
-	int            process_messages ();
+	std::pair <bool, int>
+	               process_messages ();
 	bool           is_recording () const;
 	int64_t        get_size_frames () const;
 

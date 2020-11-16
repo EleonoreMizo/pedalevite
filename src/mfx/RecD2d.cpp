@@ -118,9 +118,12 @@ int	RecD2d::close_file ()
 
 
 
-int	RecD2d::process_messages ()
+// first  = at least one message processed
+// second = error code
+std::pair <bool, int>	RecD2d::process_messages ()
 {
-	int            ret_val = 0;
+	bool           proc_flag = false;
+	int            ret_val   = 0;
 
 	D2dQueue::CellType * cell_ptr = nullptr;
 	do
@@ -128,6 +131,7 @@ int	RecD2d::process_messages ()
 		cell_ptr = _queue_mgr.dequeue ();
 		if (cell_ptr != nullptr)
 		{
+			proc_flag = true;
 			if (_file_writer.is_open ())
 			{
 				Buffer &       bc = cell_ptr->_val._content;
@@ -160,7 +164,7 @@ int	RecD2d::process_messages ()
 	}
 	while (cell_ptr != nullptr);
 
-	return ret_val;
+	return std::make_pair (proc_flag, ret_val);
 }
 
 

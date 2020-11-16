@@ -201,10 +201,12 @@ const piapi::PluginState &	Model::use_default_settings (std::string model) const
 
 
 
-void	Model::process_messages ()
+bool	Model::process_messages ()
 {
-	_central.process_queue_audio_to_cmd ();
-	process_msg_ui ();
+	bool           proc_flag = false;
+
+	proc_flag |= _central.process_queue_audio_to_cmd ();
+	proc_flag |= process_msg_ui ();
 
 	// Checks hold state for pedals
 	const std::chrono::microseconds  date_us (_central.get_cur_date ());
@@ -227,7 +229,9 @@ void	Model::process_messages ()
 	}
 
 	// Asynchronious commands
-	process_async_cmd ();
+	proc_flag |= process_async_cmd ();
+
+	return proc_flag;
 }
 
 
@@ -2077,14 +2081,18 @@ void	Model::send_effect_settings (int pi_id, int slot_id, PiType type, const doc
 
 
 
-void	Model::process_msg_ui ()
+bool	Model::process_msg_ui ()
 {
+	bool           proc_flag = false;
+
 	ui::UserInputInterface::MsgCell * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _queue_input_to_cmd.dequeue ();
 		if (cell_ptr != nullptr)
 		{
+			proc_flag = true;
+
 			const ui::UserInputType type = cell_ptr->_val.get_type ();
 			if (type == ui::UserInputType_SW)
 			{
@@ -2113,6 +2121,8 @@ void	Model::process_msg_ui ()
 		}
 	}
 	while (cell_ptr != nullptr);
+
+	return proc_flag;
 }
 
 
@@ -3436,19 +3446,24 @@ void		Model::apply_plugin_settings (int slot_id, PiType type, const doc::PluginS
 
 
 
-void	Model::process_async_cmd ()
+bool	Model::process_async_cmd ()
 {
+	bool           proc_flag = false;
+
 	CmdAsyncMgr::CellType * cell_ptr = nullptr;
 	do
 	{
 		cell_ptr = _async_cmd.dequeue ();
 		if (cell_ptr != nullptr)
 		{
+			proc_flag = true;
 			cell_ptr->_val._content._msg_sptr->process (*this);
 			cell_ptr->_val.ret ();
 		}
 	}
 	while (cell_ptr != nullptr);
+
+	return proc_flag;
 }
 
 

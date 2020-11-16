@@ -74,7 +74,7 @@ public:
 	int            get_cursor_node () const;
 	void           clear (bool evt_flag = true);
 
-	void           process_messages ();
+	bool           process_messages ();
 
 
 
@@ -113,7 +113,7 @@ private:
 		void *         _usr_ptr;
 	};
 
-	void           process_input ();
+	bool           process_input ();
 	void           handle_redraw ();
 	void           send_button (int node_id, Button but);
 	void           send_event (const NodeEvt &evt);

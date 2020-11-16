@@ -693,8 +693,11 @@ void	Central::set_tempo (float bpm)
 
 
 
-void	Central::process_queue_audio_to_cmd ()
+// Returns true if at least one message has been processed.
+bool	Central::process_queue_audio_to_cmd ()
 {
+	bool           proc_flag = false;
+
 	const std::chrono::microseconds  timeout (150 * 1000);
 	std::chrono::microseconds        t_beg = get_cur_date ();
 
@@ -706,6 +709,7 @@ void	Central::process_queue_audio_to_cmd ()
 		cell_ptr = _queue_audio_to_cmd.dequeue ();
 		if (cell_ptr != nullptr)
 		{
+			proc_flag = true;
 			if (cell_ptr->_val._sender == WaMsg::Sender_CMD)
 			{
 				if (cell_ptr->_val._type == WaMsg::Type_CTX)
@@ -761,7 +765,9 @@ void	Central::process_queue_audio_to_cmd ()
 	}
 	while (cell_ptr != nullptr);
 
-	_d2d_rec.process_messages ();
+	proc_flag |= _d2d_rec.process_messages ().first;
+
+	return proc_flag;
 }
 
 

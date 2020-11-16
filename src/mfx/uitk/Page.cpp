@@ -169,10 +169,10 @@ void	Page::clear (bool evt_flag)
 
 
 
-void	Page::process_messages ()
+bool	Page::process_messages ()
 {
 	// Messages from the user input
-	process_input ();
+	bool           proc_flag = process_input ();
 
 	// Redraw
 	handle_redraw ();
@@ -186,6 +186,8 @@ void	Page::process_messages ()
 		NodeEvt        evt (NodeEvt::create_timer (node_id));
 		send_event (evt);
 	}
+
+	return proc_flag;
 }
 
 
@@ -313,8 +315,9 @@ ContainerInterface::NodeSPtr	Page::do_use_node (int pos)
 
 
 
-void	Page::process_input ()
+bool	Page::process_input ()
 {
+	bool           proc_flag       = false;
 	bool           check_hold_flag = true;
 
 	ui::UserInputInterface::MsgCell * cell_ptr = nullptr;
@@ -323,6 +326,8 @@ void	Page::process_input ()
 		cell_ptr = _queue_input_to_gui.dequeue ();
 		if (cell_ptr != nullptr)
 		{
+			proc_flag = true;
+
 			const ui::UserInputType type  = cell_ptr->_val.get_type ();
 			const int               index = cell_ptr->_val.get_index ();
 			const float             val   = cell_ptr->_val.get_val ();
@@ -429,6 +434,8 @@ void	Page::process_input ()
 			}
 		}
 	}
+
+	return proc_flag;
 }
 
 

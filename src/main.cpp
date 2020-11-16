@@ -880,6 +880,13 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 		snd_drv.stop ();
 	}
 
+	// Flushes all message queues
+	while (   ctx._model.process_messages ()
+	       || ctx._page_set.use_page_mgr ().process_messages ())
+	{
+		continue;
+	}
+
 	ctx_uptr.reset ();
 
 	} // try

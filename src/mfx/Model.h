@@ -133,7 +133,7 @@ public:
 	const piapi::PluginState &
 	               use_default_settings (std::string model) const;
 
-	void           process_messages (); // Call this regularly
+	bool           process_messages (); // Call this regularly
 
 	int            save_to_disk ();
 	int            save_to_disk (std::string pathname);
@@ -286,7 +286,7 @@ private:
 	void           check_mixer_plugin (int slot_id, int slot_index_central, int chain_flag);
 	bool           has_mixer_plugin (const doc::Preset &preset, int slot_id);
 	void           send_effect_settings (int pi_id, int slot_id, PiType type, const doc::PluginSettings &settings);
-	void           process_msg_ui ();
+	bool           process_msg_ui ();
 	int            find_pedal (int switch_index) const;
 	void           process_pedal (int pedal_index, bool set_flag, std::chrono::microseconds date);
 	bool           process_pedal_event (int pedal_index, doc::ActionTrigger trigger);
@@ -325,7 +325,7 @@ private:
 	void           add_default_ctrl (int selected_slot_id = -1);
 	void           clear_signal_port (int port_id, bool req_exist_flag);
 	void           apply_plugin_settings (int slot_id, PiType type, const doc::PluginSettings &settings, bool ctrl_flag, bool pres_flag);
-	void           process_async_cmd ();
+	bool           process_async_cmd ();
 
 	static cmd::Cnx
 	               convert_connection (const doc::Cnx &cnx_doc, const SlotIdToPosMap &pos_map);
