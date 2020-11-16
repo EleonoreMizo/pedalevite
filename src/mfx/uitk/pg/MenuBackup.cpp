@@ -180,21 +180,23 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 			case Entry_EXPORT:
 #if fstb_IS (SYS, LINUX)
 				{
-					int            ret_sc =
+					int            ret_sc_mnt =
 						system ("sudo mount -t vfat /dev/sda1 /mnt/sda1");
+					int            ret_sc_sv = 0;
 					int            ret_sc_um = 0;
-					if (ret_sc == 0)
+					if (ret_sc_mnt == 0)
 					{
 						std::string    pathname ("/mnt/sda1/");
 						pathname += make_backup_filename ();
-						ret_sc    = _model_ptr->save_to_disk (pathname);
+						ret_sc_sv = _model_ptr->save_to_disk (pathname);
 						ret_sc_um = system ("sudo umount /mnt/sda1");
 					}
 					Question::msg_box (
 						"Saved to USB",
-						  (ret_sc    != 0) ? "Failed"
-						: (ret_sc_um != 0) ? "umount failed"
-						:                    "OK",
+						  (ret_sc_sv  != 0) ? "Failed"
+						: (ret_sc_mnt != 0) ? "mount failed"
+						: (ret_sc_um  != 0) ? "umount failed"
+						:                     "OK",
 						_msg_arg, _page_switcher, node_id
 					);
 				}

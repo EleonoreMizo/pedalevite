@@ -733,6 +733,8 @@ commonsrc = \
         ../../src/mfx/dsp/va/AntisatSinh.hpp \
         ../../src/mfx/dsp/va/AntisatSq.h \
         ../../src/mfx/dsp/va/AntisatSq.hpp \
+        ../../src/mfx/dsp/va/BigMuffPi.cpp \
+        ../../src/mfx/dsp/va/BigMuffPi.h \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.cpp \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.h \
         ../../src/mfx/dsp/va/DiodeClipDAngelo.hpp \
@@ -1017,16 +1019,16 @@ commonsrc = \
         ../../src/mfx/pi/nzcl/Notch.cpp \
         ../../src/mfx/pi/nzcl/Notch.h \
         ../../src/mfx/pi/nzcl/Param.h \
-        ../../src/mfx/pi/osdet/Param.h \
         ../../src/mfx/pi/osdet/OnsetDetect.cpp \
         ../../src/mfx/pi/osdet/OnsetDetect.h \
         ../../src/mfx/pi/osdet/OnsetDetectDesc.cpp \
         ../../src/mfx/pi/osdet/OnsetDetectDesc.h \
-        ../../src/mfx/pi/osdet2/Param.h \
+        ../../src/mfx/pi/osdet/Param.h \
         ../../src/mfx/pi/osdet2/OnsetDetect2.cpp \
         ../../src/mfx/pi/osdet2/OnsetDetect2.h \
         ../../src/mfx/pi/osdet2/OnsetDetect2Desc.cpp \
         ../../src/mfx/pi/osdet2/OnsetDetect2Desc.h \
+        ../../src/mfx/pi/osdet2/Param.h \
         ../../src/mfx/pi/peq/BandParam.cpp \
         ../../src/mfx/pi/peq/BandParam.h \
         ../../src/mfx/pi/peq/PEq.h \
@@ -1628,6 +1630,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/Gridaxis.h \
         ../../src/test/TestApprox.cpp \
         ../../src/test/TestApprox.h \
+        ../../src/test/TestBigMuffPi.cpp \
+        ../../src/test/TestBigMuffPi.h \
         ../../src/test/TestConvolverFft.cpp \
         ../../src/test/TestConvolverFft.h \
         ../../src/test/TestDiodeClipDAngelo.cpp \

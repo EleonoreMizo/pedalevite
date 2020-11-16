@@ -1,11 +1,11 @@
 
-#include "fstb/def.h"
-
 #include "fstb/msg/MsgRet.h"
 #include "fstb/msg/QueueRetMgr.h"
 #include "fstb/AllocAlign.h"
 #include "fstb/DataAlign.h"
 #include "fstb/fnc.h"
+#include "hiir/Upsampler2xFpu.h"
+#include "hiir/PolyphaseIir2Designer.h"
 #include "mfx/doc/SerRText.h"
 #include "mfx/doc/SerWText.h"
 #include "mfx/doc/Setup.h"
@@ -22,6 +22,7 @@
 #include "mfx/dsp/mix/Generic.h"
 #include "mfx/dsp/nz/WhiteFast.h"
 #include "mfx/dsp/osc/OscSinCosStableSimd.h"
+#include "mfx/dsp/osc/SweepingSin.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
 #include "mfx/dsp/rspl/InterpPhaseFpu.h"
 #include "mfx/dsp/rspl/InterpPhaseSimd.h"
@@ -57,6 +58,7 @@
 #include "test/EPSPlot.h"
 #include "test/Gridaxis.h"
 #include "test/TestApprox.h"
+#include "test/TestBigMuffPi.h"
 #include "test/TestConvolverFft.h"
 #include "test/TestDiodeClipDAngelo.h"
 #include "test/TestDiodeClipJcm.h"
@@ -1883,7 +1885,7 @@ int main (int argc, char *argv [])
 
 	int            ret_val = 0;
 
-#if 0
+#if 1
 	if (ret_val == 0) ret_val = TestWindows::perform_test ();
 #endif
 
@@ -1901,6 +1903,10 @@ int main (int argc, char *argv [])
 
 #if 0
 	if (ret_val == 0) ret_val = TestHiirDesigner::perform_test ();
+#endif
+
+#if 0
+	if (ret_val == 0) ret_val = TestBigMuffPi::perform_test ();
 #endif
 
 #if 0

@@ -4653,6 +4653,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\va\dkm\Flt.h">
       <Filter>mfx\dsp\va\dkm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\va\BigMuffPi.h">
+      <Filter>mfx\dsp\va</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\fstb\Hash.h">
       <Filter>fstb</Filter>
     </ClInclude>
@@ -6064,6 +6067,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\dkm\Simulator.cpp">
       <Filter>mfx\dsp\va\dkm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\BigMuffPi.cpp">
+      <Filter>mfx\dsp\va</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Biquad4.cpp">
       <Filter>mfx\dsp\iir</Filter>
