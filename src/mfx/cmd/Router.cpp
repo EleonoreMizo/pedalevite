@@ -1009,9 +1009,10 @@ void	Router::visit_node (Document &doc, const PluginPool &plugin_pool, BufAlloc 
 			}
 
 			// Allocates buffers for this pin, depending on various situations.
-			// In case of allocation, we reference them nbr_times. They will be
-			// released each time a destination node is visited during the input
-			// buffer allocation (even if the node is not really using them).
+			// In case of allocation, we reference them nbr_dst times. They will
+			// be released each time a destination node is visited during the
+			// input buffer allocation (even if the node is not really using
+			// them).
 			for (int chn_cnt = 0; chn_cnt < nbr_chn_o; ++chn_cnt)
 			{
 				int            buf = Cst::BufSpecial_TRASH;
@@ -1548,7 +1549,7 @@ int	Router::count_nbr_signal_buf (const Document &doc, const NodeCategList &cate
 Name: clip_channel
 Description:
 	Makes sure a channel index stays within a given range.
-	The current implementation maps the out-of-range channels with the last
+	The current implementation maps the out-of-range channels on the last
 	channel.
 Input parameters:
 	- chn_idx: index of the channel to remap. >= 0.
