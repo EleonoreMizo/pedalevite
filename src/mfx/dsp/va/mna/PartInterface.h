@@ -52,8 +52,8 @@ public:
 
 	typedef std::shared_ptr <PartInterface> SPtr;
 	typedef int IdNode;
-	static const IdNode  _nid_invalid = -1;
-	static const IdNode  _nid_gnd     = 0;
+	static constexpr IdNode _nid_invalid = -1;
+	static constexpr IdNode _nid_gnd     = 0;
 
 	class PartInfo
 	{
