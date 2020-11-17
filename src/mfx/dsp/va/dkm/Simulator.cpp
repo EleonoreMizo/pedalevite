@@ -271,6 +271,7 @@ void	Simulator::prepare (double sample_freq)
 
 void	Simulator::set_reordering_jacobian (const std::vector <int> &r_arr, const std::vector <int> &c_arr)
 {
+#if ! defined (NDEBUG)
 	assert (_sample_freq > 0);
 	assert (r_arr.size () == _j_r_r_arr.size ());
 	assert (c_arr.size () == _j_r_c_arr.size ());
@@ -278,6 +279,7 @@ void	Simulator::set_reordering_jacobian (const std::vector <int> &r_arr, const s
 	const int      nc = int (c_arr.size ());
 	assert (std::accumulate (r_arr.begin (), r_arr.end (), 0) == nr * (nr - 1) / 2);
 	assert (std::accumulate (c_arr.begin (), c_arr.end (), 0) == nc * (nc - 1) / 2);
+#endif
 
 	_j_r_r_arr = r_arr;
 	_j_r_c_arr = c_arr;
