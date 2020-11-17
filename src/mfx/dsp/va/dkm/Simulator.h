@@ -124,6 +124,7 @@ public:
 	int            add_output (IdNode nid_1, IdNode nid_2);
 
 	void           prepare (double sample_freq);
+	void           set_reordering_jacobian (const std::vector <int> &r_arr, const std::vector <int> &c_arr);
 
 	void           set_max_nbr_it (int max_it);
 	void           set_src_v (int idx, Flt v);
