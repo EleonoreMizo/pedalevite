@@ -35,7 +35,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/Model.h"
 #include "mfx/VideoRecorder.h"
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 #include <sys/statvfs.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -209,7 +209,7 @@ void	Rec2Disk::update_display ()
 		PageMgrInterface::add_nav (nav_list, Entry_MAX_DUR);
 	}
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 
 	int64_t        bytes_avail = 0;
 	if (! rec_flag)

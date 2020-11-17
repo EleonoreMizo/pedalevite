@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
-#if fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI == fstb_ARCHI_ARM
 	#include <arm_neon.h>
 #endif
 #if defined (_MSC_VER)
@@ -89,7 +89,7 @@ public:
 	}
 };
 
-#if fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI == fstb_ARCHI_ARM
 
 template <>
 class Scale_Internal <int32_t, 31, true>
@@ -114,7 +114,7 @@ public:
 	}
 };
 
-#elif fstb_IS (ARCHI, X86) && defined (_MSC_VER)
+#elif fstb_ARCHI == fstb_ARCHI_X86 && defined (_MSC_VER)
 
 template <int LL2>
 class Scale_Internal <uint32_t, LL2, true>

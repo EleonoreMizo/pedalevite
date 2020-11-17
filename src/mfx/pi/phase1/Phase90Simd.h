@@ -29,9 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/def.h"
 
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	#include "hiir/PhaseHalfPiSse.h"
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	#include "hiir/PhaseHalfPiNeon.h"
 #else
 	#include "hiir/PhaseHalfPiFpu.h"
@@ -78,9 +78,9 @@ protected:
 
 private:
 
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	typedef hiir::PhaseHalfPiSse <NC>  Phaser;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	typedef hiir::PhaseHalfPiNeon <NC> Phaser;
 #else
 	typedef hiir::PhaseHalfPiFpu <NC>  Phaser;

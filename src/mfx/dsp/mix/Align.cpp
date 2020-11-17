@@ -256,9 +256,9 @@ void	Align::setup_internal ()
 		setup_unaligned ();
 
 		fstb::CpuId    cpuid;
-#if fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI == fstb_ARCHI_ARM
 		setup_simd ();
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 		if (cpuid._sse_flag)
 		{
 			setup_simd ();
@@ -443,7 +443,7 @@ void	Align::setup_unaligned ()
 
 
 
-#if fstb_IS (ARCHI, X86) || fstb_IS (ARCHI, ARM)
+#if (fstb_ARCHI == fstb_ARCHI_X86) || (fstb_ARCHI == fstb_ARCHI_ARM)
 
 void	Align::setup_simd ()
 {

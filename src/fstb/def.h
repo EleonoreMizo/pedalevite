@@ -34,8 +34,6 @@ namespace fstb
 
 
 
-#define fstb_IS(prop, val) (defined (fstb_##prop##_##val) && (fstb_##prop) == (fstb_##prop##_##val))
-
 #define fstb_ARCHI_X86	(1)
 #define fstb_ARCHI_ARM	(2)
 
@@ -169,7 +167,7 @@ namespace fstb
 #else
 	#define fstb_CDECL
 #endif
-#if fstb_IS (SYS, WIN)
+#if fstb_IS_SYS == fstb_IS_SYS_WIN
 	#if defined (__GNUC__)
 		#define fstb_EXPORT(f) extern "C" __attribute__((dllexport)) f
 	#else

@@ -31,9 +31,9 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/def.h"
 #include "mfx/hw/DisplayLinuxFrameBuf.h"
 
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	#include <emmintrin.h>
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	#include <arm_neon.h>
 #else
 	#error architecture not defined
@@ -318,7 +318,7 @@ void	DisplayLinuxFrameBuf::refresh_z1 (int x, int y, int w, int h)
 
 	const uint8_t* src_ptr = _fb_int.data () + y * _stride_i +  x;
 	uint8_t *      dst_ptr = _pix_fb_ptr     + y * _stride_s + (x << bypp_l2);
-#if fstb_IS (ARCHI, X86) || fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI == fstb_ARCHI_X86 || fstb_ARCHI == fstb_ARCHI_ARM
 	const int      w32     = w & ~31;
 #else
 	const int      w32     = 0;
@@ -329,7 +329,7 @@ void	DisplayLinuxFrameBuf::refresh_z1 (int x, int y, int w, int h)
 		uint32_t *     dpix_ptr = reinterpret_cast <uint32_t *> (dst_ptr);
 
 		// Starts with chunks of 32 pixels
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 
 		for (int px = 0; px < w32; px += 32)
 		{
@@ -364,7 +364,7 @@ void	DisplayLinuxFrameBuf::refresh_z1 (int x, int y, int w, int h)
 			_mm_storeu_si128 (reinterpret_cast <__m128i *> (dpix_ptr + px + 28), d2831);
 		}
 
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 
 		for (int px = 0; px < w32; px += 32)
 		{
@@ -413,7 +413,7 @@ void	DisplayLinuxFrameBuf::refresh_z4 (int x, int y, int w, int h)
 	assert (_disp_w * _zoom <= _true_w);
 	assert (_disp_h * _zoom <= _true_h);
 
-#if ! fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI != fstb_ARCHI_ARM
 
 	refresh_zn (x, y, w, h);
 

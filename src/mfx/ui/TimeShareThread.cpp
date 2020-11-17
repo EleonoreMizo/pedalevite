@@ -29,9 +29,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/ui/TimeShareCbInterface.h"
 #include "mfx/ui/TimeShareThread.h"
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 	#include <wiringPi.h>
-#elif fstb_IS (SYS, WIN)
+#elif fstb_SYS == fstb_SYS_WIN
 	#include <Windows.h>
 #else
 	#error Unsupported system
@@ -205,14 +205,14 @@ void	TimeShareThread::fix_scanpos (int &scan_pos)
 // Nanoseconds
 std::chrono::nanoseconds	TimeShareThread::get_time ()
 {
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 	timespec       tp;
 	clock_gettime (CLOCK_REALTIME, &tp);
 
 	const long     ns_mul = 1000L * 1000L * 1000L;
 	return std::chrono::nanoseconds (int64_t (tp.tv_sec) * ns_mul + tp.tv_nsec);
 
-#elif fstb_IS (SYS, WIN)
+#elif fstb_SYS == fstb_SYS_WIN
 	::LARGE_INTEGER t;
 	::QueryPerformanceCounter (&t);
 	static double per = 0;

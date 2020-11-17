@@ -25,7 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/def.h"
-#if fstb_IS (SYS, WIN)
+#if fstb_SYS == fstb_SYS_WIN
 	#define NOMINMAX
 	#define WIN32_LEAN_AND_MEAN
 #endif
@@ -45,7 +45,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Model.h"
 #include "mfx/View.h"
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 	#include <arpa/inet.h>
 	#include <net/if.h>
 	#include <netinet/in.h>
@@ -53,7 +53,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 	#include <sys/socket.h>
 	#include <sys/ioctl.h>
 	#include <unistd.h>
-#elif fstb_IS (SYS, WIN)
+#elif fstb_SYS == fstb_SYS_WIN
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
 #else
@@ -539,7 +539,7 @@ std::string ProgCur::get_ip_address ()
 {
 	std::string    ip_addr;
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 
 	// Source:
 	// http://www.geekpage.jp/en/programming/linux-network/get-ipaddr.php

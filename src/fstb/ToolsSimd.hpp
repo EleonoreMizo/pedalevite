@@ -46,9 +46,9 @@ ToolsSimd::VectF32	ToolsSimd::load_f32 (const MEM *ptr)
 
 #if ! defined (fstb_HAS_SIMD)
 	return *reinterpret_cast <const VectF32 *> (ptr);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_load_ps (reinterpret_cast <const float *> (ptr));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vld1q_f32 (reinterpret_cast <const float32_t *> (ptr));
 #endif // ff_arch_CPU
 }
@@ -62,9 +62,9 @@ ToolsSimd::VectS32	ToolsSimd::load_s32 (const MEM *ptr)
 
 #if ! defined (fstb_HAS_SIMD)
 	return *reinterpret_cast <const VectS32 *> (ptr);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_load_si128 (reinterpret_cast <const __m128i *> (ptr));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vld1q_s32 (reinterpret_cast <const int32_t *> (ptr));
 #endif // ff_arch_CPU
 }
@@ -78,9 +78,9 @@ void	ToolsSimd::store_f32 (MEM *ptr, VectF32 v)
 
 #if ! defined (fstb_HAS_SIMD)
 	*reinterpret_cast <VectF32 *> (ptr) = v;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_store_ps (reinterpret_cast <float *> (ptr), v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	vst1q_f32 (reinterpret_cast <float32_t *> (ptr), v);
 #endif // ff_arch_CPU
 }
@@ -94,9 +94,9 @@ void	ToolsSimd::store_s32 (MEM *ptr, VectS32 v)
 
 #if ! defined (fstb_HAS_SIMD)
 	*reinterpret_cast <VectS32 *> (ptr) = v;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_store_si128 (reinterpret_cast <__m128i *> (ptr), v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	vst1q_s32 (reinterpret_cast <int32_t *> (ptr), v);
 #endif // ff_arch_CPU
 }
@@ -128,9 +128,9 @@ ToolsSimd::VectF32	ToolsSimd::loadu_f32 (const MEM *ptr)
 
 #if ! defined (fstb_HAS_SIMD)
 	return *reinterpret_cast <const VectF32 *> (ptr);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_loadu_ps (reinterpret_cast <const float *> (ptr));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u8 (
 		vld1q_u8 (reinterpret_cast <const uint8_t *> (ptr))
 	);
@@ -146,9 +146,9 @@ ToolsSimd::VectS32	ToolsSimd::loadu_s32 (const MEM *ptr)
 
 #if ! defined (fstb_HAS_SIMD)
 	return *reinterpret_cast <const VectS32 *> (ptr);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_loadu_si128 (reinterpret_cast <const __m128i *> (ptr));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_s32_u8 (
 		vld1q_u8 (reinterpret_cast <const uint8_t *> (ptr))
 	);
@@ -179,9 +179,9 @@ void	ToolsSimd::storeu_f32 (MEM *ptr, VectF32 v)
 
 #if ! defined (fstb_HAS_SIMD)
 	*reinterpret_cast <VectF32 *> (ptr) = v;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_storeu_ps (reinterpret_cast <float *> (ptr), v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_f32 (v));
 #endif // ff_arch_CPU
 }
@@ -195,9 +195,9 @@ void	ToolsSimd::storeu_s32 (MEM *ptr, VectS32 v)
 
 #if ! defined (fstb_HAS_SIMD)
 	*reinterpret_cast <VectS32 *> (ptr) = v;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_storeu_si128 (reinterpret_cast <__m128i *> (ptr), v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	vst1q_u8 (reinterpret_cast <uint8_t *> (ptr), vreinterpretq_u8_s32 (v));
 #endif // ff_arch_CPU
 }
@@ -249,12 +249,12 @@ ToolsSimd::VectF32	ToolsSimd::loadu_2f32 (const MEM *ptr)
 #if ! defined (fstb_HAS_SIMD)
 	auto           p = reinterpret_cast <const float *> (ptr);
 	return VectF32 { { p [0], p [1] } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     x_0 = _mm_load_ss (reinterpret_cast <const float *> (ptr)    );
 	const auto     x_1 = _mm_load_ss (reinterpret_cast <const float *> (ptr) + 1);
 	const auto     x   = _mm_unpacklo_ps (x_0, x_1);
 	return x;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x2_t x = vreinterpret_f32_u8 (
 		vld1_u8 (reinterpret_cast <const uint8_t *> (ptr))
 	);
@@ -275,11 +275,11 @@ void	ToolsSimd::storeu_2f32 (MEM *ptr, VectF32 v)
 	auto           p = reinterpret_cast <float *> (ptr);
 	p [0] = v._ [0];
 	p [1] = v._ [1];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_store_ss (reinterpret_cast <float *> (ptr)    , v );
 	const auto     v1 = _mm_shuffle_ps (v, v, 1 << 0);
 	_mm_store_ss (reinterpret_cast <float *> (ptr) + 1, v1);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	vst1_u8 (
 		reinterpret_cast <uint8_t *> (ptr),
 		vreinterpret_u8_f32 (vget_low_f32 (v))
@@ -297,9 +297,9 @@ void	ToolsSimd::storeu_1f32 (MEM *ptr, VectF32 v)
 
 #if ! defined (fstb_HAS_SIMD)
 	reinterpret_cast <float *> (ptr) [0] = v._ [0];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	_mm_store_ss (reinterpret_cast <float *> (ptr), v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	vst1q_lane_f32 (reinterpret_cast <float32_t *> (ptr), v, 0);
 #endif // ff_arch_CPU
 }
@@ -310,9 +310,9 @@ ToolsSimd::VectF32	ToolsSimd::set_f32_zero ()
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { 0, 0, 0, 0 } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_setzero_ps ();
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_f32 (0);
 #endif // ff_arch_CPU
 }
@@ -323,9 +323,9 @@ ToolsSimd::VectS32	ToolsSimd::set_s32_zero ()
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectS32 { { 0, 0, 0, 0 } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_setzero_si128 ();
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_s32 (0);
 #endif // ff_arch_CPU
 }
@@ -337,9 +337,9 @@ ToolsSimd::VectF32	ToolsSimd::set1_f32 (float a)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { a, a, a, a } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_set1_ps (a);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_f32 (a);
 #endif // ff_arch_CPU
 }
@@ -351,9 +351,9 @@ ToolsSimd::VectS32	ToolsSimd::set1_s32 (int32_t a)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectS32 { { a, a, a, a } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_set1_epi32 (a);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_s32 (a);
 #endif // ff_arch_CPU
 }
@@ -365,9 +365,9 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { a0, a1, a2, a3 } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_set_ps (a3, a2, a1, a0);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
  #if 1
 	float32x2_t    v01 = vdup_n_f32 (a0);
 	float32x2_t    v23 = vdup_n_f32 (a2);
@@ -394,9 +394,9 @@ ToolsSimd::VectF32	ToolsSimd::set_2f32 (float a0, float a1)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { a0, a1 } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_unpacklo_ps (_mm_set_ss (a0), _mm_set_ss (a1));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vsetq_lane_f32 (a1, vdupq_n_f32 (a0), 1);
 #endif // ff_arch_CPU
 }
@@ -408,9 +408,9 @@ ToolsSimd::VectF32	ToolsSimd::set_2f32_fill (float a02, float a13)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { a02, a13, a02, a13 } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_unpacklo_ps (_mm_set1_ps (a02), _mm_set1_ps (a13));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x2_t v01 = vset_lane_f32 (a13, vdup_n_f32 (a02), 1);
 	return vcombine_f32 (v01, v01);
 #endif // ff_arch_CPU
@@ -423,9 +423,9 @@ ToolsSimd::VectF32	ToolsSimd::set_2f32_dbl (float a01, float a23)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { a01, a01, a23, a23 } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (_mm_set_ss (a01), _mm_set_ss (a23), 0x00);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vcombine_f32 (vdup_n_f32 (a01), vdup_n_f32 (a23));
 #endif // ff_arch_CPU
 }
@@ -436,9 +436,9 @@ ToolsSimd::VectF32	ToolsSimd::swap_2f32 (VectF32 v)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { v._ [2], v._ [3], v._ [0], v._ [1] } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (v, v, (2<<0) + (3<<2) + (0<<4) + (1<<6));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x2_t v01 = vget_low_f32 (v);
 	const float32x2_t v23 = vget_high_f32 (v);
 	return vcombine_f32 (v23, v01);
@@ -452,10 +452,10 @@ void	ToolsSimd::extract_2f32 (float &a0, float &a1, VectF32 v)
 #if ! defined (fstb_HAS_SIMD)
 	a0 = v._ [0];
 	a1 = v._ [1];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	a0 = _mm_cvtss_f32 (v);
 	a1 = _mm_cvtss_f32 (_mm_shuffle_ps (v, v, 1));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	a0 = vgetq_lane_f32 (v, 0);
 	a1 = vgetq_lane_f32 (v, 1);
 #endif // ff_arch_CPU
@@ -476,10 +476,10 @@ void	ToolsSimd::spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v)
 	rb._ [1] = v._ [3];
 	rb._ [2] = v._ [2];
 	rb._ [3] = v._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	ra = _mm_shuffle_ps (v, v, (0<<0) + (1<<2) + (0<<4) + (1<<6));
 	rb = _mm_shuffle_ps (v, v, (2<<0) + (3<<2) + (2<<4) + (3<<6));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x2_t v01 = vget_low_f32 (v);
 	const float32x2_t v23 = vget_high_f32 (v);
 	ra = vcombine_f32 (v01, v01);
@@ -496,9 +496,9 @@ void	ToolsSimd::mac (VectF32 &s, VectF32 a, VectF32 b)
 	s._ [1] += a._ [1] * b._ [1];
 	s._ [2] += a._ [2] * b._ [2];
 	s._ [3] += a._ [3] * b._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	s = _mm_add_ps (s, _mm_mul_ps (a, b));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	s = vmlaq_f32 (s, a, b);
 #endif // ff_arch_CPU
 }
@@ -512,9 +512,9 @@ void	ToolsSimd::msu (VectF32 &s, VectF32 a, VectF32 b)
 	s._ [1] -= a._ [1] * b._ [1];
 	s._ [2] -= a._ [2] * b._ [2];
 	s._ [3] -= a._ [3] * b._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	s = _mm_sub_ps (s, _mm_mul_ps (a, b));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	s = vmlsq_f32 (s, a, b);
 #endif // ff_arch_CPU
 }
@@ -530,9 +530,9 @@ ToolsSimd::VectF32	ToolsSimd::fmadd (VectF32 x, VectF32 a, VectF32 b)
 		x._ [2] * a._ [2] + b._ [2],
 		x._ [3] * a._ [3] + b._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_add_ps (_mm_mul_ps (x, a), b);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vmlaq_f32 (b, x, a);
 #endif // ff_arch_CPU
 }
@@ -548,9 +548,9 @@ ToolsSimd::VectF32	ToolsSimd::fmsub (VectF32 x, VectF32 a, VectF32 b)
 		x._ [2] * a._ [2] - b._ [2],
 		x._ [3] * a._ [3] - b._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_sub_ps (_mm_mul_ps (x, a), b);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vmlsq_f32 (b, x, a);
 #endif // ff_arch_CPU
 }
@@ -566,9 +566,9 @@ ToolsSimd::VectF32	ToolsSimd::min_f32 (VectF32 lhs, VectF32 rhs)
 		std::min (lhs._ [2], rhs._ [2]),
 		std::min (lhs._ [3], rhs._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_min_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vminq_f32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -584,9 +584,9 @@ ToolsSimd::VectF32	ToolsSimd::max_f32 (VectF32 lhs, VectF32 rhs)
 		std::max (lhs._ [2], rhs._ [2]),
 		std::max (lhs._ [3], rhs._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_max_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vmaxq_f32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -597,10 +597,10 @@ float	ToolsSimd::sum_h_flt (VectF32 v)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return (v._ [0] + v._ [2]) + (v._ [1] + v._ [3]);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	v = _mm_add_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
 	return _mm_cvtss_f32 (_mm_add_ss (v, _mm_shuffle_ps (v, v, 1)));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x2_t    v2 = vadd_f32 (vget_high_f32 (v), vget_low_f32 (v));
 	return vget_lane_f32 (vpadd_f32 (v2, v2), 0);
 #endif // ff_arch_CPU
@@ -612,10 +612,10 @@ float	ToolsSimd::min_h_flt (VectF32 v)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return std::min (std::min (v._ [0], v._ [2]), std::min (v._ [1], v._ [3]));
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	v = _mm_min_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
 	return _mm_cvtss_f32 (_mm_min_ss (v, _mm_shuffle_ps (v, v, 1)));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x2_t    v2 = vmin_f32 (vget_high_f32 (v), vget_low_f32 (v));
 	return vget_lane_f32 (vpmin_f32 (v2, v2), 0);
 #endif // ff_arch_CPU
@@ -627,10 +627,10 @@ float	ToolsSimd::max_h_flt (VectF32 v)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return std::max (std::max (v._ [0], v._ [2]), std::max (v._ [1], v._ [3]));
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	v = _mm_max_ps (v, _mm_shuffle_ps (v, v, (3 << 2) | 2));
 	return _mm_cvtss_f32 (_mm_max_ss (v, _mm_shuffle_ps (v, v, 1)));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x2_t    v2 = vmax_f32 (vget_high_f32 (v), vget_low_f32 (v));
 	return vget_lane_f32 (vpmax_f32 (v2, v2), 0);
 #endif // ff_arch_CPU
@@ -648,9 +648,9 @@ ToolsSimd::VectF32	ToolsSimd::round (VectF32 v)
 		roundf (v._ [2]),
 		roundf (v._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cvtepi32_ps (_mm_cvtps_epi32 (v));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const auto     zero = vdupq_n_f32 ( 0.0f);
 	const auto     m    = vdupq_n_f32 (-0.5f);
 	const auto     p    = vdupq_n_f32 (+0.5f);
@@ -672,9 +672,9 @@ ToolsSimd::VectF32	ToolsSimd::abs (VectF32 v)
 		fabsf (v._ [2]),
 		fabsf (v._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_andnot_ps (signbit_mask_f32 (), v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vabsq_f32 (v);
 #endif // ff_arch_CPU
 }
@@ -690,9 +690,9 @@ ToolsSimd::VectF32	ToolsSimd::signbit (VectF32 v)
 		copysignf (0.f, v._ [2]),
 		copysignf (0.f, v._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_and_ps (signbit_mask_f32 (), v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (vandq_u32 (
 		vreinterpretq_u32_f32 (v),
 		vdupq_n_u32 (0x80000000U)
@@ -711,10 +711,10 @@ ToolsSimd::VectF32	ToolsSimd::signbit_mask_f32 ()
 	c._u32 [2] = 0x80000000U;
 	c._u32 [3] = 0x80000000U;
 	return c._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 //	return _mm_set1_ps (-0.f);
 	return _mm_castsi128_ps (_mm_set1_epi32 (0x80000000));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (vdupq_n_u32 (0x80000000U)); 
 #endif // ff_arch_CPU
 }
@@ -730,9 +730,9 @@ ToolsSimd::VectF32	ToolsSimd::rcp_approx (VectF32 v)
 		sqrtf (v._ [2]),
 		sqrtf (v._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_rcp_ps (v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x4_t    r = vrecpeq_f32 (v);
 	r = vmulq_f32 (vrecpsq_f32 (v, r), r);
 //	r = vmulq_f32 (vrecpsq_f32 (v, r), r); // Only one step needed?
@@ -752,11 +752,11 @@ ToolsSimd::VectF32	ToolsSimd::rcp_approx2 (VectF32 v)
 		1.f / v._ [2],
 		1.f / v._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	__m128         r = _mm_rcp_ps (v);
 	r *= ToolsSimd::set1_f32 (2) - v * r;
 	return r;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x4_t    r = vrecpeq_f32 (v);
 	r = vmulq_f32 (vrecpsq_f32 (v, r), r);
 	r = vmulq_f32 (vrecpsq_f32 (v, r), r);
@@ -775,9 +775,9 @@ ToolsSimd::VectF32	ToolsSimd::div_approx (VectF32 n, VectF32 d)
 		n._ [2] / d._ [2],
 		n._ [3] / d._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_div_ps (n, d);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return n * rcp_approx (d);
 #endif // ff_arch_CPU
 }
@@ -794,9 +794,9 @@ ToolsSimd::VectF32	ToolsSimd::div_approx2 (VectF32 n, VectF32 d)
 		n._ [2] / d._ [2],
 		n._ [3] / d._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_div_ps (n, d);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return n * rcp_approx2 (d);
 #endif // ff_arch_CPU
 }
@@ -812,9 +812,9 @@ ToolsSimd::VectF32	ToolsSimd::sqrt (VectF32 v)
 		sqrtf (v._ [2]),
 		sqrtf (v._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_sqrt_ps (v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const uint32x4_t  nz_flag = vtstq_u32 (
 		vreinterpretq_u32_f32 (v),
 		vreinterpretq_u32_f32 (v)
@@ -842,11 +842,11 @@ ToolsSimd::VectF32	ToolsSimd::sqrt_approx (VectF32 v)
 		sqrtf (v._ [2]),
 		sqrtf (v._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	const __m128   nz_flag = _mm_cmpgt_ps (v, _mm_setzero_ps ());
 	const __m128   sqrt_a  = _mm_mul_ps (v, _mm_rsqrt_ps (v));
 	return _mm_and_ps (sqrt_a, nz_flag);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const uint32x4_t  nz_flag = vtstq_u32 (
 		vreinterpretq_u32_f32 (v),
 		vreinterpretq_u32_f32 (v)
@@ -886,9 +886,9 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx (VectF32 v)
 	x2 *= 1.5f - xh2 * x2 * x2;
 	x3 *= 1.5f - xh3 * x3 * x3;
 	return VectF32 { { x0, x1, x2, x3 } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_rsqrt_ps (v);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x4_t    rs = vrsqrteq_f32 (v);
 	rs *= vrsqrtsq_f32 (rs * v, rs);
 	return rs;
@@ -906,11 +906,11 @@ ToolsSimd::VectF32	ToolsSimd::rsqrt_approx2 (VectF32 v)
 		1.f / sqrtf (v._ [2]),
 		1.f / sqrtf (v._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	__m128         rs = _mm_rsqrt_ps (v);
 	rs = _mm_set1_ps (0.5f) * rs * (_mm_set1_ps (3) - v * rs * rs);
 	return rs;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x4_t    rs = vrsqrteq_f32 (v);
 	rs *= vrsqrtsq_f32 (rs * v, rs);
 	rs *= vrsqrtsq_f32 (rs * v, rs);
@@ -975,7 +975,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
 
 #else // fstb_HAS_SIMD
 
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 
 	// Extracts the exponent (actually log2_int = exponent - 1)
 	__m128i        xi = _mm_castps_si128 (v);
@@ -984,7 +984,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx (VectF32 v)
 	xi = _mm_sub_epi32 (xi, l2_sub);
 	const auto     log2_int = _mm_cvtepi32_ps (xi);
 
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 
 	int32x4_t      xi = vreinterpretq_s32_f32 (v);
 	xi = vshrq_n_s32 (xi, 23);
@@ -1054,7 +1054,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v)
 	const auto     multi = set1_f32 (1.41421356237f);
 	const auto     mantissa_mask = set1_s32 ((1 << 23) - 1);
 
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 
 	__m128i        x_i           = _mm_castps_si128 (v);
 	__m128i        spl_exp       = _mm_castps_si128 (v * multi);
@@ -1064,7 +1064,7 @@ ToolsSimd::VectF32	ToolsSimd::log2_approx2 (VectF32 v)
 	spl_exp = _mm_srai_epi32 (spl_exp, 23);
 	const __m128   log2_exponent = _mm_cvtepi32_ps (spl_exp);
 
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 
 	const int32x4_t   x_i        = vreinterpretq_s32_f32 (v);
 	int32x4_t      spl_exp       = vreinterpretq_s32_f32 (v * multi);
@@ -1130,11 +1130,11 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 #else // fstb_HAS_SIMD
 
 	// Separates the integer and fractional parts
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	const auto     round_toward_m_i = set1_f32 (-0.5f);
 	auto           xi        = _mm_cvtps_epi32 (v + round_toward_m_i);
 	const auto     val_floor = _mm_cvtepi32_ps (xi);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const int      round_ofs = 256;
 	int32x4_t      xi = vcvtq_s32_f32 (v + set1_f32 (round_ofs));
 	xi -= vdupq_n_s32 (round_ofs);
@@ -1156,11 +1156,11 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx (VectF32 v)
 	poly = fmadd (poly, frac, c);
 
 	// Integer part
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	xi  = _mm_slli_epi32 (xi, 23);
 	xi += _mm_castps_si128 (poly);
 	return _mm_castsi128_ps (xi);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	xi  = vshlq_n_s32 (xi, 23);
 	xi += vreinterpretq_s32_f32 (poly);
 	return vreinterpretq_f32_s32 (xi);
@@ -1209,10 +1209,10 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx2 (VectF32 v)
 
 	// i = round (v)
 	// v = v - i   
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	auto           i = _mm_cvtps_epi32 (v);          
 	v -= _mm_cvtepi32_ps (i);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const int      round_ofs = 256;
 	const auto     r = set1_f32 (round_ofs + 0.5f);
 	auto           i = vcvtq_s32_f32 (v + r);
@@ -1231,10 +1231,10 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx2 (VectF32 v)
 	// i << 23
 	// r = (2^i) * (2^v)
 	// directly in floating point exponent
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	i = _mm_slli_epi32 (i, 23);
 	return _mm_castsi128_ps (i + _mm_castps_si128 (p));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	i = vshlq_n_s32 (i, 23);
 	return vreinterpretq_f32_s32 (i + vreinterpretq_s32_f32 (p));
 #endif // ff_arch_CPU
@@ -1259,11 +1259,11 @@ ToolsSimd::VectF32	ToolsSimd::select (VectF32 cond, VectF32 v_t, VectF32 v_f)
 	r._s32 [2] = (ct._s32 [2] & cc._s32 [2]) | (cf._s32 [2] & ~cc._s32 [2]);
 	r._s32 [3] = (ct._s32 [3] & cc._s32 [3]) | (cf._s32 [3] & ~cc._s32 [3]);
 	return r._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     cond_1 = _mm_and_ps (cond, v_t);
 	const auto     cond_0 = _mm_andnot_ps (cond, v_f);
 	return _mm_or_ps (cond_0, cond_1);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vbslq_f32 (vreinterpretq_u32_f32 (cond), v_t, v_f);
 #endif // ff_arch_CPU
 }
@@ -1279,9 +1279,9 @@ ToolsSimd::VectF32	ToolsSimd::cmp_gt_f32 (VectF32 lhs, VectF32 rhs)
 	r._s32 [2] = (lhs._ [2] > rhs._ [2]) ? -1 : 0;
 	r._s32 [3] = (lhs._ [3] > rhs._ [3]) ? -1 : 0;
 	return r._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cmpgt_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (vcgtq_f32 (lhs, rhs));
 #endif // ff_arch_CPU
 }
@@ -1297,9 +1297,9 @@ ToolsSimd::VectS32	ToolsSimd::cmp_gt_s32 (VectS32 lhs, VectS32 rhs)
 		(lhs._ [2] > rhs._ [2]) ? -1 : 0,
 		(lhs._ [3] > rhs._ [3]) ? -1 : 0
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cmpgt_epi32 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_s32_u32 (vcgtq_s32 (lhs, rhs));
 #endif // ff_arch_CPU
 }
@@ -1315,9 +1315,9 @@ ToolsSimd::VectF32	ToolsSimd::cmp_lt_f32 (VectF32 lhs, VectF32 rhs)
 	r._s32 [2] = (lhs._ [2] < rhs._ [2]) ? -1 : 0;
 	r._s32 [3] = (lhs._ [3] < rhs._ [3]) ? -1 : 0;
 	return r._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cmplt_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (vcltq_f32 (lhs, rhs));
 #endif // ff_arch_CPU
 }
@@ -1333,9 +1333,9 @@ ToolsSimd::VectS32	ToolsSimd::cmp_lt_s32 (VectS32 lhs, VectS32 rhs)
 		(lhs._ [2] < rhs._ [2]) ? -1 : 0,
 		(lhs._ [3] < rhs._ [3]) ? -1 : 0
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cmplt_epi32 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_s32_u32 (vcltq_s32 (lhs, rhs));
 #endif // ff_arch_CPU
 }
@@ -1351,9 +1351,9 @@ ToolsSimd::VectF32	ToolsSimd::cmp_eq_f32 (VectF32 lhs, VectF32 rhs)
 	r._s32 [2] = (lhs._ [2] == rhs._ [2]) ? -1 : 0;
 	r._s32 [3] = (lhs._ [3] == rhs._ [3]) ? -1 : 0;
 	return r._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cmpeq_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (vceqq_f32 (lhs, rhs));
 #endif // ff_arch_CPU
 }
@@ -1369,9 +1369,9 @@ ToolsSimd::VectS32	ToolsSimd::cmp_eq_s32 (VectS32 lhs, VectS32 rhs)
 		(lhs._ [2] == rhs._ [2]) ? -1 : 0,
 		(lhs._ [3] == rhs._ [3]) ? -1 : 0
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cmpeq_epi32 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_s32_u32 (vceqq_s32 (lhs, rhs));
 #endif // ff_arch_CPU
 }
@@ -1387,9 +1387,9 @@ ToolsSimd::VectF32	ToolsSimd::cmp_ne_f32 (VectF32 lhs, VectF32 rhs)
 	r._s32 [2] = (lhs._ [2] != rhs._ [2]) ? -1 : 0;
 	r._s32 [3] = (lhs._ [3] != rhs._ [3]) ? -1 : 0;
 	return r._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cmpneq_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (vmvnq_u32 (vceqq_f32 (lhs, rhs)));
 #endif // ff_arch_CPU
 }
@@ -1405,10 +1405,10 @@ ToolsSimd::VectS32	ToolsSimd::cmp_ne_s32 (VectS32 lhs, VectS32 rhs)
 		(lhs._ [2] != rhs._ [2]) ? -1 : 0,
 		(lhs._ [3] != rhs._ [3]) ? -1 : 0
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     eq = _mm_cmpeq_epi32 (lhs, rhs);
 	return _mm_xor_si128 (eq, _mm_set1_epi32 (-1));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_s32_u32 (vmvnq_u32 (vceqq_s32 (lhs, rhs)));
 #endif // ff_arch_CPU
 }
@@ -1428,9 +1428,9 @@ ToolsSimd::VectF32	ToolsSimd::and_f32 (VectF32 lhs, VectF32 rhs)
 	r._s32 [2] = al._s32 [2] & ar._s32 [2];
 	r._s32 [3] = al._s32 [3] & ar._s32 [3];
 	return r._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_and_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (vandq_u32 (
 		vreinterpretq_u32_f32 (lhs),
 		vreinterpretq_u32_f32 (rhs)
@@ -1449,9 +1449,9 @@ ToolsSimd::VectS32	ToolsSimd::and_s32 (VectS32 lhs, VectS32 rhs)
 		lhs._ [2] & rhs._ [2],
 		lhs._ [3] & rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_and_si128 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vandq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -1471,9 +1471,9 @@ ToolsSimd::VectF32	ToolsSimd::or_f32 (VectF32 lhs, VectF32 rhs)
 	r._s32 [2] = al._s32 [2] | ar._s32 [2];
 	r._s32 [3] = al._s32 [3] | ar._s32 [3];
 	return r._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_or_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (vorrq_u32 (
 		vreinterpretq_u32_f32 (lhs),
 		vreinterpretq_u32_f32 (rhs)
@@ -1492,9 +1492,9 @@ ToolsSimd::VectS32	ToolsSimd::or_s32 (VectS32 lhs, VectS32 rhs)
 		lhs._ [2] | rhs._ [2],
 		lhs._ [3] | rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_or_si128 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vorrq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -1514,9 +1514,9 @@ ToolsSimd::VectF32	ToolsSimd::xor_f32 (VectF32 lhs, VectF32 rhs)
 	r._s32 [2] = al._s32 [2] ^ ar._s32 [2];
 	r._s32 [3] = al._s32 [3] ^ ar._s32 [3];
 	return r._vf32;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_xor_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vreinterpretq_f32_u32 (veorq_u32 (
 		vreinterpretq_u32_f32 (lhs),
 		vreinterpretq_u32_f32 (rhs)
@@ -1535,9 +1535,9 @@ ToolsSimd::VectS32	ToolsSimd::xor_s32 (VectS32 lhs, VectS32 rhs)
 		lhs._ [2] ^ rhs._ [2],
 		lhs._ [3] ^ rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_xor_si128 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return veorq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -1553,9 +1553,9 @@ bool	ToolsSimd::and_h (VectF32 cond)
 	c._vf32 = cond;
 	const int32_t  t = (c._s32 [0] & c._s32 [1]) & (c._s32 [2] & c._s32 [3]);
 	return (t == -1);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return (_mm_movemask_ps (cond) == 15);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const uint32x2_t  tmp = vreinterpret_u32_u16 (
 		vqmovn_u32 (vreinterpretq_u32_f32 (cond))
 	);
@@ -1575,9 +1575,9 @@ bool	ToolsSimd::or_h (VectF32 cond)
 	c._vf32 = cond;
 	const int32_t  t = (c._s32 [0] | c._s32 [1]) | (c._s32 [2] | c._s32 [3]);
 	return (t != 0);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return (_mm_movemask_ps (cond) != 0);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const uint32x2_t  tmp = vreinterpret_u32_u16 (
 		vqmovn_u32 (vreinterpretq_u32_f32 (cond))
 	);
@@ -1595,9 +1595,9 @@ bool	ToolsSimd::and_h (VectS32 cond)
 #if ! defined (fstb_HAS_SIMD)
 	const int32_t  t = (cond._ [0] & cond._ [1]) & (cond._ [2] & cond._ [3]);
 	return (t == -1);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return (_mm_movemask_epi8 (cond) == 0xFFFF);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const uint32x2_t  tmp = vreinterpret_u32_u16 (
 		vqmovn_u32 (vreinterpretq_u32_s32 (cond))
 	);
@@ -1615,9 +1615,9 @@ bool	ToolsSimd::or_h (VectS32 cond)
 #if ! defined (fstb_HAS_SIMD)
 	const int32_t  t = (cond._ [0] | cond._ [1]) | (cond._ [2] | cond._ [3]);
 	return (t != 0);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return (_mm_movemask_epi8 (cond) != 0);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const uint32x2_t  tmp = vreinterpret_u32_u16 (
 		vqmovn_u32 (vreinterpretq_u32_s32 (cond))
 	);
@@ -1639,12 +1639,12 @@ ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3)
 	c._s32 [3] = -int32_t (m3);
 	return c._vf32;
 #elif 1 // Fast version
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_castsi128_ps (_mm_sub_epi32 (
 		_mm_setzero_si128 (),
 		_mm_set_epi32 (m3, m2, m1, m0)
 	));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x2_t    v01 = vdup_n_f32 (m0);
 	float32x2_t    v23 = vdup_n_f32 (m2);
 	v01 = vset_lane_f32 (m1, v01, 1);
@@ -1654,12 +1654,12 @@ ToolsSimd::VectF32	ToolsSimd::set_mask_f32 (bool m0, bool m1, bool m2, bool m3)
 	)));
 #endif
 #else // Safer but slower version
-#if fstb_IS (ARCHI, X86)
+#if fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_castsi128_ps (_mm_sub_epi32 (
 		_mm_set_epi32 (!m3, !m2, !m1, !m0),
 		_mm_set1_epi32 (1)
 	));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	float32x2_t    v01 = vdup_n_f32 (!m0);
 	float32x2_t    v23 = vdup_n_f32 (!m2);
 	v01 = vset_lane_f32 (!m1, v01, 1);
@@ -1692,7 +1692,7 @@ int	ToolsSimd::count_bits (VectS32 x)
 	const int      c2 = (((v2 + (v2 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
 	const int      c3 = (((v3 + (v3 >> 4)) & 0xF0F0F0FU) * 0x1010101) >> 24;
 	return (c0 + c2) + (c1 + c3);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	// https://stackoverflow.com/questions/17354971/fast-counting-the-number-of-set-bits-in-m128i-register
 	static const __m128i  popcount_mask1 = _mm_set1_epi8 (0x77);
 	static const __m128i  popcount_mask2 = _mm_set1_epi8 (0x0F);
@@ -1713,7 +1713,7 @@ int	ToolsSimd::count_bits (VectS32 x)
 	// Counts the number of bits in the whole 128-bit register
 	n = _mm_add_epi32 (n, _mm_unpackhi_epi64 (n, n));
 	return _mm_cvtsi128_si32 (n);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const uint8x16_t  cnt_8  = vcntq_u8 (vreinterpretq_u8_s32 (x));
 	const uint16x8_t  cnt_16 = vpaddlq_u8 (cnt_8);
 	const uint32x4_t  cnt_32 = vpaddlq_u16 (cnt_16);
@@ -1737,9 +1737,9 @@ unsigned int	ToolsSimd::movemask_f32 (VectF32 x)
 		| ((c._u32 [0] >> 30) & 2)
 		| ((c._u32 [0] >> 29) & 4)
 		| ((c._u32 [0] >> 28) & 8);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return (unsigned int) (_mm_movemask_ps (x));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	uint64x2_t     tmp1 =
 		vreinterpretq_u64_f32 (x);    // ddd...ddd ccc...ccc bbb...bbb aaa...aaa
 	tmp1 = vshrq_n_u64 (tmp1, 31);   // 000...00d ddd...ddc 000...00b bbb...bba
@@ -1759,10 +1759,10 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_lo (VectF32 p0, VectF32 p1)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { p0._ [0], p0._ [1], p1._ [0], p1._ [1] } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (p0, p1, (1<<6) + (0<<4) + (1<<2) + (0<<0));
 	// return _mm_movelh_ps (p0, p1);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x2_t  p0x = vget_low_f32 (p0);
 	const float32x2_t  p1x = vget_low_f32 (p1);
 	return vcombine_f32 (p0x, p1x);
@@ -1776,10 +1776,10 @@ ToolsSimd::VectF32	ToolsSimd::interleave_2f32_hi (VectF32 p0, VectF32 p1)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { p0._ [2], p0._ [3], p1._ [2], p1._ [3] } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (p0, p1, (3<<6) + (2<<4) + (3<<2) + (2<<0));
 	// return _mm_movehl_ps (p1, p0);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x2_t  p0x = vget_high_f32 (p0);
 	const float32x2_t  p1x = vget_high_f32 (p1);
 	return vcombine_f32 (p0x, p1x);
@@ -1799,10 +1799,10 @@ void	ToolsSimd::interleave_f32 (VectF32 &i0, VectF32 &i1, VectF32 p0, VectF32 p1
 	i1._ [1] = p1._ [2];
 	i1._ [2] = p0._ [3];
 	i1._ [3] = p1._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	i0 = _mm_unpacklo_ps (p0, p1);
 	i1 = _mm_unpackhi_ps (p0, p1);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x4x2_t  tmp = vzipq_f32 (p0, p1);
 	i0 = tmp.val [0];
 	i1 = tmp.val [1];
@@ -1822,10 +1822,10 @@ void	ToolsSimd::deinterleave_f32 (VectF32 &p0, VectF32 &p1, VectF32 i0, VectF32 
 	p1._ [2] = i1._ [1];
 	p0._ [3] = i1._ [2];
 	p1._ [3] = i1._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	p0 = _mm_shuffle_ps (i0, i1, 0x88);
 	p1 = _mm_shuffle_ps (i0, i1, 0xDD);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x4x2_t  tmp = vuzpq_f32 (i0, i1);
 	p0 = tmp.val [0];
 	p1 = tmp.val [1];
@@ -1838,9 +1838,9 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_lo (VectF32 i0, VectF32 i1)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { i0._ [0], i0._ [2], i1._ [0], i1._ [2] } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (i0, i1, 0x88);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vuzpq_f32 (i0, i1).val [0];
 #endif // ff_arch_CPU
 }
@@ -1851,9 +1851,9 @@ ToolsSimd::VectF32	ToolsSimd::deinterleave_f32_hi (VectF32 i0, VectF32 i1)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { i0._ [1], i0._ [3], i1._ [1], i1._ [3] } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (i0, i1, 0xDD);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vuzpq_f32 (i0, i1).val [1];
 #endif // ff_arch_CPU
 }
@@ -1876,7 +1876,7 @@ void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a
 	a1 = interleave_2f32_hi (tmp0, tmp2);
 	a2 = interleave_2f32_lo (tmp1, tmp3);
 	a3 = interleave_2f32_hi (tmp1, tmp3);
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	const __m128   tmp0 = _mm_unpacklo_ps (a0, a1);
 	const __m128   tmp2 = _mm_unpacklo_ps (a2, a3);
 	const __m128   tmp1 = _mm_unpackhi_ps (a0, a1);
@@ -1885,7 +1885,7 @@ void	ToolsSimd::transpose_f32 (VectF32 &a0, VectF32 &a1, VectF32 &a2, VectF32 &a
 	a1 = _mm_movehl_ps (tmp2, tmp0);
 	a2 = _mm_movelh_ps (tmp1, tmp3);
 	a3 = _mm_movehl_ps (tmp3, tmp1);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const float32x4x2_t a01 = vtrnq_f32 (a0, a1);
 	const float32x4x2_t a23 = vtrnq_f32 (a2, a3);
 	a0 = vcombine_f32 (vget_low_f32 (a01.val [0]), vget_low_f32 (a23.val [0]));
@@ -1908,9 +1908,9 @@ ToolsSimd::VectF32	ToolsSimd::monofy_2f32_lo (VectF32 v)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { v._ [0], v._ [0], v._ [2], v._ [2] } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (v, v, 0xA0);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vuzpq_f32 (v, v).val [0];
 #endif // ff_arch_CPU
 }
@@ -1921,9 +1921,9 @@ ToolsSimd::VectF32	ToolsSimd::monofy_2f32_hi (VectF32 v)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return VectF32 { { v._ [1], v._ [1], v._ [3], v._ [3] } };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (v, v, 0xF5);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vuzpq_f32 (v, v).val [1];
 #endif // ff_arch_CPU
 }
@@ -1940,9 +1940,9 @@ ToolsSimd::VectS32	ToolsSimd::conv_f32_to_s32 (VectF32 x)
 		conv_int_fast (x._ [2]),
 		conv_int_fast (x._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cvtps_epi32 (x);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vcvtq_s32_f32 (x);
 #endif // ff_arch_CPU
 }
@@ -1960,9 +1960,9 @@ ToolsSimd::VectS32	ToolsSimd::round_f32_to_s32 (VectF32 x)
 		round_int (x._ [2]),
 		round_int (x._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cvtps_epi32 (x);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const auto     zero = vdupq_n_f32 ( 0.0f);
 	const auto     m    = vdupq_n_f32 (-0.5f);
 	const auto     p    = vdupq_n_f32 (+0.5f);
@@ -1986,10 +1986,10 @@ ToolsSimd::VectS32	ToolsSimd::floor_f32_to_s32 (VectF32 x)
 		floor_int (x._ [2]),
 		floor_int (x._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	x = _mm_add_ps (x, _mm_set1_ps (-0.5f));
 	return _mm_cvtps_epi32 (x);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	const auto     zero = vdupq_n_f32 (0.0f);
 	const auto     one  = vdupq_n_f32 (1.0f);
 	const auto     gt0  = vcgtq_f32 (x, zero);
@@ -2011,9 +2011,9 @@ ToolsSimd::VectF32	ToolsSimd::conv_s32_to_f32 (VectS32 x)
 		float (x._ [2]),
 		float (x._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cvtepi32_ps (x);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vcvtq_f32_s32 (x);
 #endif // ff_arch_CPU
 }
@@ -2046,11 +2046,11 @@ ToolsSimd::VectS32	ToolsSimd::select (VectS32 cond, VectS32 v_t, VectS32 v_f)
 		(cond._ [2] & v_t._ [2]) | (~cond._ [2] & v_f._ [2]),
 		(cond._ [3] & v_t._ [3]) | (~cond._ [3] & v_f._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     cond_1 = _mm_and_si128 (cond, v_t);
 	const auto     cond_0 = _mm_andnot_si128 (cond, v_f);
 	return _mm_or_si128 (cond_0, cond_1);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vbslq_s32 (vreinterpretq_u32_s32 (cond), v_t, v_f);
 #endif // ff_arch_CPU
 }
@@ -2066,10 +2066,10 @@ ToolsSimd::VectS32	ToolsSimd::min_s32 (VectS32 lhs, VectS32 rhs)
 		std::min (lhs._ [2], rhs._ [2]),
 		std::min (lhs._ [3], rhs._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     gt = _mm_cmpgt_epi32 (lhs, rhs);
 	return select (gt, lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vminq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -2085,10 +2085,10 @@ ToolsSimd::VectS32	ToolsSimd::max_s32 (VectS32 lhs, VectS32 rhs)
 		std::max (lhs._ [2], rhs._ [2]),
 		std::max (lhs._ [3], rhs._ [3])
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	const auto     lt = _mm_cmplt_epi32 (lhs, rhs);
 	return select (lt, lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vmaxq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -2106,7 +2106,7 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a)
 		a._ [(2 - SHIFT) & 3],
 		a._ [(3 - SHIFT) & 3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	switch (SHIFT & 3)
 	{
 	case 1:  return _mm_shuffle_ps (a, a, (2<<6) | (1<<4) | (0<<2) | (3<<0));
@@ -2114,7 +2114,7 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a)
 	case 3:  return _mm_shuffle_ps (a, a, (0<<6) | (3<<4) | (2<<2) | (1<<0));
 	default: return a;
 	}
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	int32x4_t     aa = vreinterpretq_s32_f32 (a);
 	switch (SHIFT & 3)
 	{
@@ -2134,7 +2134,7 @@ float	ToolsSimd::Shift <SHIFT>::extract (VectF32 a)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return a._ [SHIFT & 3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	switch (SHIFT & 3)
 	{
 	case 1:  a = _mm_shuffle_ps (a, a, 1);	break;
@@ -2143,7 +2143,7 @@ float	ToolsSimd::Shift <SHIFT>::extract (VectF32 a)
 	default: /* Nothing */                 break;
 	}
 	return _mm_cvtss_f32 (a);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vgetq_lane_f32 (a, SHIFT & 3);
 #endif // ff_arch_CPU
 }
@@ -2156,12 +2156,12 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::insert (VectF32 a, float val)
 #if ! defined (fstb_HAS_SIMD)
 	a._ [SHIFT & 3] = val;
 	return a;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	a = Shift <(-SHIFT) & 3>::rotate (a);
 	a = _mm_move_ss (a, _mm_set_ss (val));
 	a = Shift <  SHIFT     >::rotate (a);
 	return a;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vsetq_lane_f32 (val, a, SHIFT & 3);
 #endif // ff_arch_CPU
 }
@@ -2173,9 +2173,9 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::spread (VectF32 a)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return set1_f32 (extract (a));
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_ps (a, a, 0x55 * (SHIFT & 3));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_f32 (vgetq_lane_f32 (a, SHIFT & 3));
 #endif // ff_arch_CPU
 }
@@ -2193,7 +2193,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::rotate (VectS32 a)
 		a._ [(2 - SHIFT) & 3],
 		a._ [(3 - SHIFT) & 3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	switch (SHIFT & 3)
 	{
 	case 1:  return _mm_shuffle_epi32 (a, (2<<6) | (1<<4) | (0<<2) | (3<<0));
@@ -2201,7 +2201,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::rotate (VectS32 a)
 	case 3:  return _mm_shuffle_epi32 (a, (0<<6) | (3<<4) | (2<<2) | (1<<0));
 	default: return a;
 	}
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	switch (SHIFT & 3)
 	{
 	case 1:  a = vextq_s32 (a, a, 3); break;
@@ -2220,7 +2220,7 @@ int32_t	ToolsSimd::Shift <SHIFT>::extract (VectS32 a)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return a._ [SHIFT & 3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	switch (SHIFT & 3)
 	{
 	case 1:  a = _mm_shuffle_epi32 (a, 1);	break;
@@ -2229,7 +2229,7 @@ int32_t	ToolsSimd::Shift <SHIFT>::extract (VectS32 a)
 	default: /* Nothing */                 break;
 	}
 	return _mm_cvtsi128_si32 (a);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vgetq_lane_s32 (a, SHIFT & 3);
 #endif // ff_arch_CPU
 }
@@ -2242,7 +2242,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::insert (VectS32 a, int32_t val)
 #if ! defined (fstb_HAS_SIMD)
 	a._ [SHIFT & 3] = val;
 	return a;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	a = Shift <(-SHIFT) & 3>::rotate (a);
 	a = _mm_castps_si128 (_mm_move_ss (
 		_mm_castsi128_ps (a),
@@ -2250,7 +2250,7 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::insert (VectS32 a, int32_t val)
 	));
 	a = Shift <  SHIFT     >::rotate (a);
 	return a;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vsetq_lane_s32 (val, a, SHIFT & 3);
 #endif // ff_arch_CPU
 }
@@ -2262,9 +2262,9 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::spread (VectS32 a)
 {
 #if ! defined (fstb_HAS_SIMD)
 	return set1_s32 (extract (a));
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_shuffle_epi32 (a, 0x55 * (SHIFT & 3));
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_s32 (vgetq_lane_s32 (a, SHIFT & 3));
 #endif // ff_arch_CPU
 }
@@ -2294,7 +2294,7 @@ void	ToolsSimd::store_f32_part_n13 (MEM *ptr, VectF32 v, int n)
 		f_ptr [i] = v._ [i];
 	}
 
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 
 	vst1q_lane_f32 (f_ptr + 0, v, 0);
 	if (n >= 2)
@@ -2334,7 +2334,7 @@ void	ToolsSimd::store_s32_part_n13 (MEM *ptr, VectS32 v, int n)
 		f_ptr [i] = v._ [i];
 	}
 
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 
 	vst1q_lane_s32 (f_ptr + 0, v, 0);
 	if (n >= 2)
@@ -2373,7 +2373,7 @@ ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const MEM *ptr, int n)
 	{
 		v._ [i] = f_ptr [i];
 	}
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	switch (n)
 	{
 	case 1:
@@ -2397,7 +2397,7 @@ ToolsSimd::VectF32	ToolsSimd::load_f32_part_n13 (const MEM *ptr, int n)
 		v = set1_f32 (f_ptr [0]);
 		break;
 	}
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	v = vmovq_n_f32 (f_ptr [0]);
 	if (n >= 2)
 	{
@@ -2431,9 +2431,9 @@ fstb_ToolsSimd_OPNS (VectF32) &	operator += (fstb_ToolsSimd_OPNS (VectF32) &lhs,
 	lhs._ [1] += rhs._ [1];
 	lhs._ [2] += rhs._ [2];
 	lhs._ [3] += rhs._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	lhs = _mm_add_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	lhs = vaddq_f32 (lhs, rhs);
 #endif // ff_arch_CPU
 	return lhs;
@@ -2448,9 +2448,9 @@ fstb_ToolsSimd_OPNS (VectF32) &	operator -= (fstb_ToolsSimd_OPNS (VectF32) &lhs,
 	lhs._ [1] -= rhs._ [1];
 	lhs._ [2] -= rhs._ [2];
 	lhs._ [3] -= rhs._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	lhs = _mm_sub_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	lhs = vsubq_f32 (lhs, rhs);
 #endif // ff_arch_CPU
 	return lhs;
@@ -2465,9 +2465,9 @@ fstb_ToolsSimd_OPNS (VectF32) &	operator *= (fstb_ToolsSimd_OPNS (VectF32) &lhs,
 	lhs._ [1] *= rhs._ [1];
 	lhs._ [2] *= rhs._ [2];
 	lhs._ [3] *= rhs._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	lhs = _mm_mul_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	lhs = vmulq_f32 (lhs, rhs);
 #endif // ff_arch_CPU
 	return lhs;
@@ -2484,9 +2484,9 @@ fstb_ToolsSimd_OPNS (VectF32) operator + (fstb_ToolsSimd_OPNS (VectF32) lhs, con
 		lhs._ [2] + rhs._ [2],
 		lhs._ [3] + rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_add_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vaddq_f32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -2502,9 +2502,9 @@ fstb_ToolsSimd_OPNS (VectF32) operator - (fstb_ToolsSimd_OPNS (VectF32) lhs, con
 		lhs._ [2] - rhs._ [2],
 		lhs._ [3] - rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_sub_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vsubq_f32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -2520,9 +2520,9 @@ fstb_ToolsSimd_OPNS (VectF32) operator * (fstb_ToolsSimd_OPNS (VectF32) lhs, con
 		lhs._ [2] * rhs._ [2],
 		lhs._ [3] * rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_mul_ps (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vmulq_f32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -2536,9 +2536,9 @@ fstb_ToolsSimd_OPNS (VectS32) &	operator += (fstb_ToolsSimd_OPNS (VectS32) &lhs,
 	lhs._ [1] += rhs._ [1];
 	lhs._ [2] += rhs._ [2];
 	lhs._ [3] += rhs._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	lhs = _mm_add_epi32 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	lhs = vaddq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 	return lhs;
@@ -2553,9 +2553,9 @@ fstb_ToolsSimd_OPNS (VectS32) &	operator -= (fstb_ToolsSimd_OPNS (VectS32) &lhs,
 	lhs._ [1] -= rhs._ [1];
 	lhs._ [2] -= rhs._ [2];
 	lhs._ [3] -= rhs._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	lhs = _mm_sub_epi32 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	lhs = vsubq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 	return lhs;
@@ -2570,7 +2570,7 @@ fstb_ToolsSimd_OPNS (VectS32) &	operator *= (fstb_ToolsSimd_OPNS (VectS32) &lhs,
 	lhs._ [1] *= rhs._ [1];
 	lhs._ [2] *= rhs._ [2];
 	lhs._ [3] *= rhs._ [3];
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	// mullo_epi32
 	// Code of this function shamelessly borrowed from tp7
 	// https://github.com/tp7/masktools/blob/16bit/masktools/common/simd.h
@@ -2581,7 +2581,7 @@ fstb_ToolsSimd_OPNS (VectS32) &	operator *= (fstb_ToolsSimd_OPNS (VectS32) &lhs,
 	const __m128i  prod01 = _mm_unpacklo_epi32 (prod02, prod13); // (-,-,a1*b1,a0*b0)
 	const __m128i  prod23 = _mm_unpackhi_epi32 (prod02, prod13); // (-,-,a3*b3,a2*b2)
 	lhs                   = _mm_unpacklo_epi64 (prod01 ,prod23); // (ab3,ab2,ab1,ab0)
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	lhs = vmulq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 	return lhs;
@@ -2597,9 +2597,9 @@ fstb_ToolsSimd_OPNS (VectS32) & operator >>= (fstb_ToolsSimd_OPNS (VectS32) &x, 
 	x._ [1] >>= scalar;
 	x._ [2] >>= scalar;
 	x._ [3] >>= scalar;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	x = _mm_srai_epi32 (x, scalar);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	x = vshrq_n_s32 (x, scalar);
 #endif // ff_arch_CPU
 	return x;
@@ -2615,9 +2615,9 @@ fstb_ToolsSimd_OPNS (VectS32) & operator <<= (fstb_ToolsSimd_OPNS (VectS32) &x, 
 	x._ [1] <<= scalar;
 	x._ [2] <<= scalar;
 	x._ [3] <<= scalar;
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	x = _mm_slli_epi32 (x, scalar);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	x = vshlq_n_s32 (x, scalar);
 #endif // ff_arch_CPU
 	return x;
@@ -2634,9 +2634,9 @@ fstb_ToolsSimd_OPNS (VectS32) operator + (fstb_ToolsSimd_OPNS (VectS32) lhs, con
 		lhs._ [2] + rhs._ [2],
 		lhs._ [3] + rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_add_epi32 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vaddq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -2652,9 +2652,9 @@ fstb_ToolsSimd_OPNS (VectS32) operator - (fstb_ToolsSimd_OPNS (VectS32) lhs, con
 		lhs._ [2] - rhs._ [2],
 		lhs._ [3] - rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_sub_epi32 (lhs, rhs);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vsubq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -2670,9 +2670,9 @@ fstb_ToolsSimd_OPNS (VectS32) operator * (fstb_ToolsSimd_OPNS (VectS32) lhs, con
 		lhs._ [2] * rhs._ [2],
 		lhs._ [3] * rhs._ [3]
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return lhs *= rhs;
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vmulq_s32 (lhs, rhs);
 #endif // ff_arch_CPU
 }
@@ -2689,9 +2689,9 @@ fstb_ToolsSimd_OPNS (VectS32) operator >> (fstb_ToolsSimd_OPNS (VectS32) x, int 
 		x._ [2] >> scalar,
 		x._ [3] >> scalar
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_srai_epi32 (x, scalar);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vshrq_n_s32 (x, scalar);
 #endif // ff_arch_CPU
 }
@@ -2708,9 +2708,9 @@ fstb_ToolsSimd_OPNS (VectS32) operator << (fstb_ToolsSimd_OPNS (VectS32) x, int 
 		x._ [2] << scalar,
 		x._ [3] << scalar
 	} };
-#elif fstb_IS (ARCHI, X86)
+#elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_slli_epi32 (x, scalar);
-#elif fstb_IS (ARCHI, ARM)
+#elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vshlq_n_s32 (x, scalar);
 #endif // ff_arch_CPU
 }

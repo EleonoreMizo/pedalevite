@@ -34,7 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 namespace mfx
 {
 
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 #define mfx_Cst_ROOT_DIR "/opt/pedalevite/"
 #elif defined (_MSC_VER)
 #define mfx_Cst_ROOT_DIR "../../../"

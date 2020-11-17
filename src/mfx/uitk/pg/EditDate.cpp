@@ -34,7 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Stop.h"
 
 #include <cassert>
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 #include <cstdlib>
 #endif
 
@@ -124,7 +124,7 @@ void	EditDate::do_connect (Model &model, const View &view, PageMgrInterface &pag
 	_page_ptr->push_back (_hour_sptr  );
 	_page_ptr->push_back (_minute_sptr);
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 
 	PageMgrInterface::NavLocList  nav_list;
 	PageMgrInterface::add_nav (nav_list, Entry_Y  );
@@ -146,7 +146,7 @@ void	EditDate::do_disconnect ()
 {
 	_page_ptr->set_timer (Entry_T, false);
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 
 	if (_change_flag)
 	{

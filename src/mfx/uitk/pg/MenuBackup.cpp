@@ -34,7 +34,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/Model.h"
 
 #include <cassert>
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 #include <cstdlib>
 #include <ctime>
 #endif
@@ -157,7 +157,7 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 				_page_switcher.call_page (PageType_EDIT_DATE, nullptr, node_id);
 				break;
 			case Entry_SAVE:
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 				{
 					std::string    pathname (Cst::_config_dir);
 					pathname += '/';
@@ -169,16 +169,16 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 						_msg_arg, _page_switcher, node_id
 					);
 				}
-#else // fstb_IS (SYS, LINUX)
+#else // fstb_SYS
 				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
-#endif // fstb_IS (SYS, LINUX)
+#endif // fstb_SYS
 				break;
 			case Entry_RESTORE:
 				/*** To do ***/
 				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
 				break;
 			case Entry_EXPORT:
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 				{
 					int            ret_sc_mnt =
 						system ("sudo mount -t vfat /dev/sda1 /mnt/sda1");
@@ -200,9 +200,9 @@ MsgHandlerInterface::EvtProp	MenuBackup::do_handle_evt (const NodeEvt &evt)
 						_msg_arg, _page_switcher, node_id
 					);
 				}
-#else // fstb_IS (SYS, LINUX)
+#else // fstb_SYS
 				_page_switcher.call_page (PageType_NOT_YET, nullptr, node_id);
-#endif // fstb_IS (SYS, LINUX)
+#endif // fstb_SYS
 				break;
 			default:
 				ret_val = EvtProp_PASS;

@@ -93,7 +93,7 @@
 #include "test/TestSvfAntisat.h"
 #include "test/TestWindows.h"
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 	#include "mfx/adrv/CbInterface.h"
 	#include "mfx/adrv/DPvabDirect.h"
 	#include "test/TestDisplayFrameBufSimple.h"
@@ -1508,7 +1508,7 @@ int	test_envelope_detector ()
 
 
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 
 class CbDPvabDirect
 :	public mfx::adrv::CbInterface
@@ -1978,25 +1978,25 @@ int main (int argc, char *argv [])
 #endif
 
 #if 0
-	#if fstb_IS (SYS, LINUX)
+	#if fstb_SYS == fstb_SYS_LINUX
 	if (ret_val == 0) ret_val = test_file_write_fs_ro ();
 	#endif
 #endif
 
 #if 0
-	#if fstb_IS (SYS, LINUX)
+	#if fstb_SYS == fstb_SYS_LINUX
 	if (ret_val == 0) ret_val = TestUserInputPi3::perform_test ();
 	#endif
 #endif
 
 #if 0
-	#if fstb_IS (SYS, LINUX)
+	#if fstb_SYS == fstb_SYS_LINUX
 	if (ret_val == 0) ret_val = TestLedSimple::perform_test ();
 	#endif
 #endif
 
 #if 0
-	#if fstb_IS (SYS, LINUX)
+	#if fstb_SYS == fstb_SYS_LINUX
 	if (ret_val == 0) ret_val = TestDisplayFrameBufSimple::perform_test ();
 	#endif
 #endif
@@ -2075,7 +2075,7 @@ int main (int argc, char *argv [])
 #endif
 
 #if 0
-	#if fstb_IS (SYS, LINUX)
+	#if fstb_SYS == fstb_SYS_LINUX
 	if (ret_val == 0) ret_val = test_adrv_dpvab ();
 	#endif
 #endif

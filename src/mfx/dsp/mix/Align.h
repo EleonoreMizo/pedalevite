@@ -254,7 +254,7 @@ private:
 	void           setup_internal ();
 
 	static void    setup_unaligned ();
-#if fstb_IS (ARCHI, X86) || fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI == fstb_ARCHI_X86 || fstb_ARCHI == fstb_ARCHI_ARM
 	static void    setup_simd ();
 #endif
 

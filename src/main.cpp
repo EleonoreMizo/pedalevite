@@ -22,7 +22,7 @@
 
 
 #include "fstb/def.h"
-#if fstb_IS (SYS, WIN)
+#if fstb_SYS == fstb_SYS_WIN
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 #endif
@@ -43,7 +43,7 @@
 #define MAIN_API_PVAB   (5)
 #if 0 // For debugging complex audio things
 	#define MAIN_API MAIN_API_MANUAL
-#elif fstb_IS (SYS, LINUX)
+#elif fstb_SYS == fstb_SYS_LINUX
 	#if (PV_VERSION == 2)
 		#define MAIN_API MAIN_API_PVAB
 	#else
@@ -89,7 +89,7 @@
 #include "mfx/WaMsgQueue.h"
 #include "mfx/WorldAudio.h"
 
-#if fstb_IS (SYS, LINUX)
+#if fstb_SYS == fstb_SYS_LINUX
 	#if (MAIN_API == MAIN_API_JACK)
 		#include "mfx/adrv/DJack.h"
 	#elif (MAIN_API == MAIN_API_ALSA)
@@ -129,7 +129,7 @@
 	#include <unistd.h>
 	#include <signal.h>
 
-#elif fstb_IS (SYS, WIN)
+#elif (fstb_SYS == fstb_SYS_WIN)
 	#include "mfx/hw/FileIOWindows.h"
 	#include "mfx/hw/IoWindows.h"
 
@@ -183,7 +183,7 @@
 
 
 
-#if fstb_IS (SYS, LINUX) && ! defined (MAIN_USE_VOID)
+#if (fstb_SYS == fstb_SYS_LINUX) && ! defined (MAIN_USE_VOID)
 static const int  MAIN_pin_reset = 18;
 #endif // fstb_SYS_LINUX, MAIN_USE_VOID
 
@@ -197,7 +197,7 @@ public:
 	mfx::Stop &    _stop;
 	double         _sample_freq;
 	int            _max_block_size;
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 	mfx::ui::TimeShareThread
 	               _thread_spi;
 #endif // fstb_SYS_LINUX
@@ -225,7 +225,7 @@ public:
 	               _user_input;
 	mfx::ui::LedVoid
 	               _leds;
-#elif fstb_IS (SYS, LINUX)
+#elif (fstb_SYS == fstb_SYS_LINUX)
  #if (MAIN_DISP == MAIN_DISP_LINUXFB)
 	mfx::hw::DisplayLinuxFrameBuf
  #elif (MAIN_DISP == MAIN_DISP_PCD8544)
@@ -252,7 +252,7 @@ public:
 	mfx::VideoRecorder
 	               _vid_rec;
 #endif // MAIN_REC_VIDEO
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 	mfx::hw::FileIOPi3
 	               _file_io;
 #else // fstb_SYS_LINUX
@@ -277,14 +277,14 @@ protected:
 	void           do_request_exit () final;
 private:
 	static void    init_empty_bank (mfx::doc::Bank &bank);
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 	static void    signal_handler (int sig);
 	static Context *
 	               _instance_ptr;
 #endif
 };
 
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 
 Context * Context::_instance_ptr = 0;
 
@@ -300,7 +300,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop)
 :	_stop (stop)
 ,	_sample_freq (0)
 ,	_max_block_size (0)
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 ,	_thread_spi (std::chrono::milliseconds (10))
 #endif // fstb_SYS_LINUX
 ,	_buf_alig (4096 * 4)
@@ -312,7 +312,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop)
 ,	_display ()
 ,	_user_input ()
 ,	_leds ()
-#elif fstb_IS (SYS, LINUX)
+#elif (fstb_SYS == fstb_SYS_LINUX)
  #if (MAIN_DISP == MAIN_DISP_LINUXFB)
 ,	_display ("/dev/fb0")
  #else // MAIN_DISP
@@ -342,7 +342,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop)
 		_queue_input_to_gui, _user_input, _leds, _stop, snd_drv
 	)
 {
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 	_instance_ptr = this;
 	signal (SIGINT,  &signal_handler);
 	signal (SIGTERM, &signal_handler);
@@ -350,7 +350,7 @@ Context::Context (mfx::adrv::DriverInterface &snd_drv, mfx::Stop &stop)
 	signal (SIGHUP,  &signal_handler);
 #endif
 
-#if ! fstb_IS (SYS, LINUX)
+#if ! (fstb_SYS == fstb_SYS_LINUX)
 	_all_io.set_model (_model);
 #endif
 
@@ -610,7 +610,7 @@ static int MAIN_main_loop (Context &ctx, mfx::adrv::DriverInterface &snd_drv)
 		}
 
 // Pollutes the logs when run in init.d
-#if defined (MAIN_USE_VOID) || ! fstb_IS (SYS, LINUX)
+#if defined (MAIN_USE_VOID) || ! (fstb_SYS == fstb_SYS_LINUX)
 		const float  usage_max  = meters._dsp_use._peak;
 		const float  usage_avg  = meters._dsp_use._rms;
 		const float  period_now = ctx._model.get_audio_period_ratio ();
@@ -782,7 +782,7 @@ void MAIN_prog_end ()
 
 
 
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 int main (int argc, char *argv [], char *envp [])
 {
 #else
@@ -890,7 +890,7 @@ int WINAPI WinMain (::HINSTANCE instance, ::HINSTANCE prev_instance, ::LPSTR cmd
 	ctx_uptr.reset ();
 
 	} // try
-#if fstb_IS (SYS, LINUX)
+#if (fstb_SYS == fstb_SYS_LINUX)
 	catch (mfx::hw::UniqueRscLinux::Error &e)
 	{
 		fprintf (stderr, "Pedale Vite is already running!\n");

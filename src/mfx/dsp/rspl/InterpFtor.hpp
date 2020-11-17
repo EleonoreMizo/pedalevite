@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/def.h"
 #include "fstb/Scale.h"
 
-#if fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI == fstb_ARCHI_ARM
 	#include <arm_neon.h>
 #endif
 
@@ -100,7 +100,7 @@ int32_t	InterpFtor::Linear::operator () (uint32_t frac_pos, const int16_t data [
 {
 	assert (data != nullptr);
 
-#if fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI == fstb_ARCHI_ARM
 
 	const int32_t     x0 = data [0];
 	const int32_t     x1 = data [1];
@@ -185,7 +185,7 @@ int32_t	InterpFtor::CubicHermite::operator () (uint32_t frac_pos, const int16_t 
 	const int32_t  x1  = data [ 1];
 	const int32_t  x2  = data [ 2];
 
-#if fstb_IS (ARCHI, ARM)
+#if fstb_ARCHI == fstb_ARCHI_ARM
 
 	const int32_t  c = (x1 - xm1) >> 1;
 	const int32_t  a = (3 * (x0 - x1) + (x2 - xm1)) >> 1;
