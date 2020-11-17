@@ -62,7 +62,7 @@ public:
 
 #if defined (mfx_dsp_va_dkm_Simulator_STATS)
 	void           reset_stats ();
-	void           get_stats (dkm::Simulator::Stats &st_in, dkm::Simulator::Stats &st_dfirst, dkm::Simulator::Stats &st_dlast, dkm::Simulator::Stats &st_out) const;
+	void           get_stats (dkm::Simulator::Stats &st) const;
 #endif // mfx_dsp_va_dkm_Simulator_STATS
 
 
@@ -77,28 +77,14 @@ protected:
 
 private:
 
+	static constexpr int _max_it = 20;
+
 	void           setup_circuit ();
 
-	static const int  _nbr_dist_stages = 2;
-	static const int  _max_it          = 20;
-
-	class DistStage
-	{
-	public:
-		dkm::Simulator _dist;
-		int            _idx_i = -1;
-		int            _idx_o = -1;
-	};
-	typedef std::array <DistStage, _nbr_dist_stages> DistStageArray;
-
-	dkm::Simulator _buf_in;
-	DistStageArray _dist_arr;
-	dkm::Simulator _buf_out;
+	dkm::Simulator _dkm;
 	bool           _constructed_flag = false;
-	int            _idx_buf_in_i  = -1;
-	int            _idx_buf_in_o  = -1;
-	int            _idx_buf_out_i = -1;
-	int            _idx_buf_out_o = -1;
+	int            _idx_in  = -1;
+	int            _idx_out = -1;
 
 
 

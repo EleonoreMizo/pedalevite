@@ -146,17 +146,10 @@ void	TestBigMuffPi::gen_saw (std::vector <float> &data, double sample_freq, doub
 
 void	TestBigMuffPi::print_stats (const mfx::dsp::va::BigMuffPi &muff)
 {
-	mfx::dsp::va::dkm::Simulator::Stats  st_in;
-	mfx::dsp::va::dkm::Simulator::Stats  st_dfirst;
-	mfx::dsp::va::dkm::Simulator::Stats  st_dlast;
-	mfx::dsp::va::dkm::Simulator::Stats  st_out;
-	muff.get_stats (st_in, st_dfirst, st_dlast, st_out);
+	mfx::dsp::va::dkm::Simulator::Stats  st;
+	muff.get_stats (st);
 
-	print_stats (st_in, "input buffer");
-	print_stats (st_dfirst, "fist distortion stage");
-	print_stats (st_dlast, "last distortion stage");
-	print_stats (st_out, "output buffer");
-
+	print_stats (st, "global");
 }
 
 
