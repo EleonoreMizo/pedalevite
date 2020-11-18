@@ -124,6 +124,7 @@ public:
 	int            add_output (IdNode nid_1, IdNode nid_2);
 
 	void           prepare (double sample_freq);
+	void           update_sample_freq (double sample_freq);
 	void           set_reordering_jacobian (const std::vector <int> &r_arr, const std::vector <int> &c_arr);
 
 	void           set_max_nbr_it (int max_it);
@@ -295,6 +296,7 @@ private:
 	void           add_oim_entry (TypeMatrix &m, int row, IdNode nid_1, IdNode nid_2);
 	int            use_or_create_node (IdNode nid);
 	int            use_node (IdNode nid) const;
+	void           finalize_matrices ();
 	void           build_s_0_inv ();
 	void           prepare_dk_const_matrices ();
 	void           update_r_v ();

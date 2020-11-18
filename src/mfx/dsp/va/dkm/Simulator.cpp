@@ -269,6 +269,21 @@ void	Simulator::prepare (double sample_freq)
 
 
 
+void	Simulator::update_sample_freq (double sample_freq)
+{
+	assert (_sample_freq > 0);
+	assert (sample_freq > 0);
+
+	_sample_freq = Flt (sample_freq);
+
+	// Updates sampling-rate dependent matrices
+	setup_ese ();
+
+	finalize_matrices ();
+}
+
+
+
 void	Simulator::set_reordering_jacobian (const std::vector <int> &r_arr, const std::vector <int> &c_arr)
 {
 #if ! defined (NDEBUG)
@@ -580,9 +595,7 @@ void	Simulator::build_matrices ()
 	setup_outputs ();
 
 	// Last things
-	build_s_0_inv ();
-	prepare_dk_const_matrices ();
-	update_r_v ();
+	finalize_matrices ();
 }
 
 
@@ -938,6 +951,15 @@ int	Simulator::use_node (IdNode nid) const
 	}
 
 	return idx;
+}
+
+
+
+void	Simulator::finalize_matrices ()
+{
+	build_s_0_inv ();
+	prepare_dk_const_matrices ();
+	update_r_v ();
 }
 
 
