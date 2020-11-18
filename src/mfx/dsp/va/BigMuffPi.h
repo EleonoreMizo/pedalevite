@@ -86,6 +86,14 @@ private:
 	int            _idx_in  = -1;
 	int            _idx_out = -1;
 
+	// For each pot, we have two values:
+	// - between the CCW pin and the cursor
+	// - between the cursor and the CW pin
+	// The second value is re-inverted in the construction, so both internal
+	// pots should be set at the same value.
+	std::array <std::array <int, 2>, Pot_NBR_ELT * 2>
+	               _idx_pot_arr {{ {{ -1, -1 }}, {{ -1, -1 }}, {{ -1, -1 }} }};
+
 
 
 /*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

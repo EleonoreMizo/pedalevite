@@ -47,18 +47,24 @@ void	BigMuffPi::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
-	if (! _constructed_flag)
+	if (_constructed_flag)
+	{
+		_dkm.update_sample_freq (sample_freq);
+	}
+	else
 	{
 		setup_circuit ();
+
+		_dkm.prepare (sample_freq);
+		_dkm.set_reordering_jacobian (
+			{  0,  1,  2,  3,  4,  5,  6,  7,  9,  8 },
+			{  0,  1,  2,  3,  4,  5,  6,  7,  9,  8 }
+		);
+
+		clear_buffers ();
+
+		_constructed_flag = true;
 	}
-
-	_dkm.prepare (sample_freq);
-	_dkm.set_reordering_jacobian (
-		{  0,  1,  2,  3,  4,  5,  6,  7,  9,  8 },
-		{  0,  1,  2,  3,  4,  5,  6,  7,  9,  8 }
-	);
-
-	clear_buffers ();
 }
 
 
@@ -77,7 +83,9 @@ void	BigMuffPi::set_pot (Pot pot, float val)
 	assert (val >= 0);
 	assert (val <= 1);
 
-	_dkm.set_pot (pot, val);
+	const auto &   pot_idx_pair = _idx_pot_arr [pot];
+	_dkm.set_pot (pot_idx_pair [0], val);
+	_dkm.set_pot (pot_idx_pair [1], val);
 }
 
 
@@ -185,11 +193,11 @@ void	BigMuffPi::setup_circuit ()
 	const auto     nid_dst = nid_vol2;
 
 	// Default values
-	const float    v_psu    = 9.2f;
-	const float    pot_sus  = 1.f;
-	const float    pot_tone = 0.5f;
-	const float    pot_vol  = 0.25f;
-	const float    pot_val  = 150e3f;
+	constexpr float   v_psu    = 9.2f;
+	constexpr float   pot_sus  = 1.f;
+	constexpr float   pot_tone = 0.5f;
+	constexpr float   pot_vol  = 0.25f;
+	constexpr float   pot_val  = 150e3f;
 
 	// Input buffer + sustain pot
 	const float    r24 = pot_val;
@@ -198,8 +206,10 @@ void	BigMuffPi::setup_circuit ()
 	_dkm.add_resistor (nid_vcc, nid_q4c, 12e3f); // R13
 	_dkm.add_resistor (nid_q4b, nid_gnd, 102e3f); // R14 (orig: 100k)
 	_dkm.add_resistor (nid_q4e, nid_gnd, 390.f); // R22
-	_dkm.add_pot (nid_sus2, nid_gnd, 1e3f, 1e3f + r24, pot_sus); // R23 + R24CCW
-	_dkm.add_pot (nid_sus2, nid_sus3, r24, 1.f, pot_sus); // R24CW
+	_idx_pot_arr [Pot_SUS] [0] =
+		_dkm.add_pot (nid_sus2, nid_gnd, 1e3f, 1e3f + r24, pot_sus); // R23 + R24CCW
+	_idx_pot_arr [Pot_SUS] [1] =
+		_dkm.add_pot (nid_sus2, nid_sus3, r24, 1.f, pot_sus); // R24CW
 	_dkm.add_resistor (nid_sus2, nid_gnd, 1e9f); // Makes the matrix invertible
 	_dkm.add_capacitor (nid_r2c1, nid_q4b, 140e-9f); // C1 (orig: 100n)
 	_dkm.add_capacitor (nid_q4c, nid_sus3, 100e-9f); // C4
@@ -234,8 +244,10 @@ void	BigMuffPi::setup_circuit ()
 	const float    r25 = pot_val;
 	_dkm.add_resistor (nid_tone3, nid_gnd, 22e3f); // R5
 	_dkm.add_resistor (nid_q2c, nid_tone1, 20e3f); // R8
-	_dkm.add_pot (nid_tone1, nid_tone2, 1.f, r25, pot_tone); // R25CCW
-	_dkm.add_pot (nid_tone2, nid_tone3, r25, 1.f, pot_tone); // R25CW
+	_idx_pot_arr [Pot_TONE] [0] =
+		_dkm.add_pot (nid_tone1, nid_tone2, 1.f, r25, pot_tone); // R25CCW
+	_idx_pot_arr [Pot_TONE] [1] =
+		_dkm.add_pot (nid_tone2, nid_tone3, r25, 1.f, pot_tone); // R25CW
 	_dkm.add_resistor (nid_tone1, nid_tone3, 1e9f); // Makes the matrix invertible
 	_dkm.add_capacitor (nid_tone1, nid_gnd, 10e-9f); // C8
 	_dkm.add_capacitor (nid_q2c, nid_tone3, 3.9e-9f); // C9
@@ -246,8 +258,10 @@ void	BigMuffPi::setup_circuit ()
 	_dkm.add_resistor (nid_q1e, nid_gnd, 2.7e3f); // R4
 	_dkm.add_resistor (nid_vcc, nid_q1c, 10e3f); // R6
 	_dkm.add_resistor (nid_vcc, nid_q1b, 470e3f); // R7
-	_dkm.add_pot (nid_vol2, nid_gnd, 1.f, r26, pot_vol); // R26CCW
-	_dkm.add_pot (nid_vol2, nid_vol3, r26, 1.f, pot_vol); // R26CW
+	_idx_pot_arr [Pot_VOL] [0] =
+		_dkm.add_pot (nid_vol2, nid_gnd, 1.f, r26, pot_vol); // R26CCW
+	_idx_pot_arr [Pot_VOL] [1] =
+		_dkm.add_pot (nid_vol2, nid_vol3, r26, 1.f, pot_vol); // R26CW
 	_dkm.add_resistor (nid_vol2, nid_gnd, 1e9f); // Makes the matrix invertible
 	_dkm.add_capacitor (nid_q1c, nid_vol3, 100e-9f); // C2
 	_dkm.add_capacitor (nid_tone2, nid_q1b, 100e-9f); // C3
@@ -258,9 +272,6 @@ void	BigMuffPi::setup_circuit ()
 	_dkm.add_src_v (nid_vcc, nid_gnd, v_psu);
 	_idx_in  = _dkm.add_src_v (nid_src, nid_gnd, 0.f);
 	_idx_out = _dkm.add_output (nid_dst, nid_gnd);
-
-	// Done
-	_constructed_flag = true;
 }
 
 
