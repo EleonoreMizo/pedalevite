@@ -167,7 +167,7 @@ namespace fstb
 #else
 	#define fstb_CDECL
 #endif
-#if fstb_IS_SYS == fstb_IS_SYS_WIN
+#if fstb_SYS == fstb_SYS_WIN
 	#if defined (__GNUC__)
 		#define fstb_EXPORT(f) extern "C" __attribute__((dllexport)) f
 	#else
