@@ -421,6 +421,9 @@
     <Filter Include="lal">
       <UniqueIdentifier>{06f12d11-e32d-4a7b-a53b-2dbf0e35796e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\bmp1">
+      <UniqueIdentifier>{d549aeb0-6355-43bc-bc0c-a8f29c6df451}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -4779,6 +4782,18 @@
     <ClInclude Include="..\..\..\src\mfx\Stop.h">
       <Filter>mfx</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\bmp1\BigMuff1.h">
+      <Filter>mfx\pi\bmp1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\bmp1\BigMuff1Desc.h">
+      <Filter>mfx\pi\bmp1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Param.h">
+      <Filter>mfx\pi\bmp1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Ovrspl.h">
+      <Filter>mfx\pi\bmp1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6091,6 +6106,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\Stop.cpp">
       <Filter>mfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\bmp1\BigMuff1.cpp">
+      <Filter>mfx\pi\bmp1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\bmp1\BigMuff1Desc.cpp">
+      <Filter>mfx\pi\bmp1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

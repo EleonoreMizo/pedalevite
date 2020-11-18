@@ -40,6 +40,7 @@
 <li class="tcont"><a href="#effect-list">Available effects</a>
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
 	<li><a href="#fx-distapf">All-Pass Distortion</a></li>
+	<li><a href="#fx-bigmuffpi1">Big Muff Pi — Distortion</a></li>
 	<li><a href="#fx-colorme">Color Me — Vocal filter</a></li>
 	<li><a href="#fx-compex">CompEx — Dynamics compressor/expander</a></li>
 	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
@@ -986,6 +987,36 @@ The more gain, the more harmonic are produced.</p>
 <p>This parameter limits the highest frequencies in the modulation signal,
 reducing harsh tones.
 The lower the rate, the softer the tones.</p>
+
+
+
+<h3><a id="fx-bigmuffpi1"></a>Big Muff Pi — Distortion</h3>
+
+<p>This is an accurate emulation of the Big Muff Pi distorsion (Green Russian
+Tall Font model).</p>
+
+<p class="var">Sustain</p>
+<p>Distorsion gain, dB.</p>
+
+<p class="var">Tone</p>
+<p>Tone contrôle, in percent.
+This is a kind of equalizer balancing bass and treble.
+When the parameter is low, the bass part of the sound is amplified and the
+treble part attenuated.
+When it is high, it is the opposite.</p>
+
+<p class="var">Volume</p>
+<p>Output volume, dB.</p>
+
+<p class="var">Oversampling rate</p>
+<p>The choices are 1 (no oversampling), 2 or 4.
+The higher the rate, the higher the emulation fidelity and the overall sound
+quality, but at the expense of the CPU usage.</p>
+
+<p class="var">Pre-gain</p>
+<p>Linear gain applied just before the device input, in dB.
+This parameter extends the <var>sustain</var> range.
+Beware, with very high gains, the sound becomes muffled.</p>
 
 
 
@@ -3030,6 +3061,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r37, 2020-11-18</b></p>
+<ul>
+<li>Added the Big Muff Pi emulation.</li>
+</ul>
 
 <p><b>r36, 2020-11-13</b></p>
 <ul>

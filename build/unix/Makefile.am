@@ -805,6 +805,12 @@ commonsrc = \
         ../../src/mfx/pi/adsr/EnvAdsrDesc.cpp \
         ../../src/mfx/pi/adsr/EnvAdsrDesc.h \
         ../../src/mfx/pi/adsr/Param.h \
+        ../../src/mfx/pi/bmp1/BigMuff1.cpp \
+        ../../src/mfx/pi/bmp1/BigMuff1.h \
+        ../../src/mfx/pi/bmp1/BigMuff1Desc.cpp \
+        ../../src/mfx/pi/bmp1/BigMuff1Desc.h \
+        ../../src/mfx/pi/bmp1/Ovrspl.h \
+        ../../src/mfx/pi/bmp1/Param.h \
         ../../src/mfx/pi/click/Click.cpp \
         ../../src/mfx/pi/click/Click.h \
         ../../src/mfx/pi/click/ClickDesc.cpp \

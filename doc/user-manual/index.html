@@ -40,6 +40,7 @@
 <li class="tcont"><a href="#effect-list">Effets disponibles</a>
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
 	<li><a href="#fx-distapf">All-Pass Distortion — Distorsion</a></li>
+	<li><a href="#fx-bigmuffpi1">Big Muff Pi — Distorsion</a></li>
 	<li><a href="#fx-colorme">Color Me — Filtre de coloration vocale</a></li>
 	<li><a href="#fx-compex">CompEx — Compresseur/Expanseur</a></li>
 	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
@@ -1087,6 +1088,38 @@ Plus le gain est élevé, plus il y a d’harmoniques produites.</p>
 <p>Ce paramètre limite les plus hautes fréquence dans le signal de modulation,
 réduisant les tonalités dures.
 Plus le paramètre est bas, plus le timbre est adouci.</p>
+
+
+
+<h3><a id="fx-bigmuffpi1"></a>Big Muff Pi — Distorsion</h3>
+
+<p>Il s’agit d’une imitation fidèle de la pédale de distorsion Big Muff Pi
+(modèle Green Russian Tall Font).</p>
+
+<p class="var">Sustain</p>
+<p>Gain de la distorsion, en dB.</p>
+
+<p class="var">Tone</p>
+<p>Contrôle de tonalité, en pourcentage.
+C’est une sorte d’égaliseur équilibrant les graves et les aigus.
+Quand le contrôle de tonalité est faible, le son est plutôt relevé dans les
+grave et atténué dans les aigus, et quand il est élevé, c’est l’inverse.</p>
+
+<p class="var">Volume</p>
+<p>Volume de sortie, en dB.</p>
+
+<p class="var">Oversampling rate</p>
+<p>Taux de suréchantillonnage.
+Il est possible de choisir 1 (aucun suréchantillonnage), 2 ou 4.
+Plus le taux est élevé, plus la qualité du son et de l’imitation en
+général est élevée, mais plus il prend de la puissance de calcul.</p>
+
+<p class="var">Pre-gain</p>
+<p>Gain linéaire appliqué avant l’entrée dans l’appareil, en dB.
+Ce contrôle permet de d’étendre la plage de variation du paramètre
+de <var>sustain</var>.
+Attention, avec des gains très élevés, le son a tendance à devenir
+sourd.</p>
 
 
 
@@ -3236,6 +3269,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r37, 2020-11-18</b></p>
+<ul>
+<li>Ajout de l’imitation de Big Muff Pi.</li>
+</ul>
 
 <p><b>r36, 2020-11-13</b></p>
 <ul>
