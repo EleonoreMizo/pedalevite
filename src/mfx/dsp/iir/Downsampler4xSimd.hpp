@@ -100,6 +100,30 @@ void	Downsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const floa
 
 
 template <int NC42, int NC21>
+float	Downsampler4xSimd <NC42, NC21>::process_sample_2x (const float src_ptr [2])
+{
+	return _ds_21.process_sample (src_ptr);
+}
+
+
+
+template <int NC42, int NC21>
+void	Downsampler4xSimd <NC42, NC21>::process_block_2x (float data_ptr [], int nbr_spl)
+{
+	_ds_21.process_block (data_ptr, data_ptr, nbr_spl);
+}
+
+
+
+template <int NC42, int NC21>
+void	Downsampler4xSimd <NC42, NC21>::process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	_ds_21.process_block (dst_ptr, src_ptr, nbr_spl);
+}
+
+
+
+template <int NC42, int NC21>
 void	Downsampler4xSimd <NC42, NC21>::clear_buffers ()
 {
 	_ds_42.clear_buffers ();

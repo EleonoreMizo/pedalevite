@@ -77,6 +77,28 @@ void	Upsampler4xSimd <NC42, NC21>::process_block (float dst_ptr [], const float 
 
 
 template <int NC42, int NC21>
+void	Upsampler4xSimd <NC42, NC21>::process_sample_2x (float dst_ptr [2], float src)
+{
+	assert (dst_ptr != nullptr);
+
+	_us_21.process_sample (dst_ptr [0], dst_ptr [1], src);
+}
+
+
+
+template <int NC42, int NC21>
+void	Upsampler4xSimd <NC42, NC21>::process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl)
+{
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (nbr_spl > 0);
+
+	_us_21.process_block (dst_ptr, src_ptr, nbr_spl);
+}
+
+
+
+template <int NC42, int NC21>
 void	Upsampler4xSimd <NC42, NC21>::clear_buffers ()
 {
 	_us_21.clear_buffers ();

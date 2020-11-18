@@ -61,8 +61,13 @@ class Upsampler4xSimd
 public:
 
 	void           set_coefs (const double coef_42 [NC42], const double coef_21 [NC21]);
+
 	inline void    process_sample (float dst_ptr [4], float src);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+
+	inline void    process_sample_2x (float dst_ptr [2], float src);
+	void           process_block_2x (float dst_ptr [], const float src_ptr [], int nbr_spl);
+
 	void           clear_buffers ();
 
 
