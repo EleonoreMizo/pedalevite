@@ -59,9 +59,16 @@ PlugWrap::PlugWrap (audioMasterCallback audio_master, mfx::piapi::FactoryInterfa
 :	_audio_master (audio_master)
 ,	_desc (factory.describe ())
 ,	_plugin_aptr (factory.create ())
+,	_info (_desc.get_info ())
 ,	_nbr_i (1)
 ,	_nbr_o (1)
 ,	_nbr_s (0)
+,	_max_nbr_chn_i (_max_nbr_chn)
+,	_max_nbr_chn_o (
+		  (_info._chn_pref == mfx::piapi::ChnPref::MONO)
+		? 1
+		: _max_nbr_chn
+	)
 ,	_latency (0)
 ,	_proc ()
 ,	_vst ()
@@ -91,8 +98,8 @@ PlugWrap::PlugWrap (audioMasterCallback audio_master, mfx::piapi::FactoryInterfa
 	_vst.getParameter     = vst_get_param;
 	_vst.numPrograms      = 1;
 	_vst.numParams        = nbr_param;
-	_vst.numInputs        = _nbr_i * _max_nbr_chn;
-	_vst.numOutputs       = _nbr_o * _max_nbr_chn + _nbr_s;
+	_vst.numInputs        = _nbr_i * _max_nbr_chn_i;
+	_vst.numOutputs       = _nbr_o * _max_nbr_chn_o + _nbr_s;
 	_vst.DECLARE_VST_DEPRECATED (ioRatio) = 1.f;
 	_vst.object           = this;
 	_vst.user             = nullptr;
@@ -149,8 +156,8 @@ void	PlugWrap::update_max_block_size (int max_block_size)
 
 	_max_block_size = max_block_size;
 
-	_src_arr.resize (_nbr_i * _max_nbr_chn);
-	_dst_arr.resize (_nbr_o * _max_nbr_chn);
+	_src_arr.resize (_nbr_i * _max_nbr_chn_i);
+	_dst_arr.resize (_nbr_o * _max_nbr_chn_o);
 	_sig_arr.resize (_nbr_s);
 	_proc._src_arr = nullptr;
 	_proc._dst_arr = nullptr;
@@ -169,15 +176,19 @@ void	PlugWrap::update_max_block_size (int max_block_size)
 	}
 
 	const int      mbs_alig = (max_block_size + 3) & ~3;
-	_mix_buf.resize (mbs_alig * (_max_nbr_chn * (_nbr_i + _nbr_o) + _nbr_s));
+	_mix_buf.resize (mbs_alig * (
+		  _max_nbr_chn_i * _nbr_i
+		+ _max_nbr_chn_o * _nbr_o
+		+                  _nbr_s
+	));
 
 	int            chn_index = 0;
-	for (int chn_cnt = 0; chn_cnt < _nbr_i * _max_nbr_chn; ++chn_cnt)
+	for (int chn_cnt = 0; chn_cnt < _nbr_i * _max_nbr_chn_i; ++chn_cnt)
 	{
 		_src_arr [chn_cnt] = &_mix_buf [chn_index * mbs_alig];
 		++ chn_index;
 	}
-	for (int chn_cnt = 0; chn_cnt < _nbr_o * _max_nbr_chn; ++chn_cnt)
+	for (int chn_cnt = 0; chn_cnt < _nbr_o * _max_nbr_chn_o; ++chn_cnt)
 	{
 		_dst_arr [chn_cnt] = &_mix_buf [chn_index * mbs_alig];
 		++ chn_index;
@@ -196,7 +207,15 @@ void	PlugWrap::process_block (float** inputs, ::VstInt32 sampleFrames)
 	// Checks if pins are mono or stereo
 	_proc._dir_arr [mfx::piapi::Dir_IN ]._nbr_chn = 1;
 	_proc._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn = 1;
-	if (_nbr_o > 0)
+	if (_nbr_i == 0)
+	{
+		_proc._dir_arr [mfx::piapi::Dir_IN ]._nbr_chn = 0;
+	}
+	if (_nbr_o == 0)
+	{
+		_proc._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn = 0;
+	}
+	else
 	{
 		const ::VstIntPtr res_o = _audio_master (
 			&_vst,
@@ -362,12 +381,13 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 {
 	assert (index >= 0);
 
-	const int      chn      = index % _max_nbr_chn;
-	int            pin      = index / _max_nbr_chn;
+	const int      max_nbr_chn = (in_flag) ? _max_nbr_chn_i : _max_nbr_chn_o;
+	const int      chn      = index % max_nbr_chn;
+	int            pin      = index / max_nbr_chn;
 	const bool     sig_flag = (! in_flag && pin >= _nbr_o);
 	if (sig_flag)
 	{
-		pin -= _nbr_o;
+		pin = index - _nbr_o * _max_nbr_chn_o;
 	}
 	prop.label [0]       = char ('1' + pin);
 	prop.label [1]       = (sig_flag) ? 'S' : ((chn == 0) ? 'L' : 'R');
@@ -381,7 +401,7 @@ void	PlugWrap::fill_pin_prop (::VstPinProperties &prop, bool in_flag, int index)
 	{
 		prop.arrangementType = ::kSpeakerArrMono;
 	}
-	else if (_max_nbr_chn == 2)
+	else if (max_nbr_chn == 2)
 	{
 		prop.arrangementType = ::kSpeakerArrStereo;
 		if (chn == 0)
@@ -698,16 +718,34 @@ void	PlugWrap::DECLARE_VST_DEPRECATED (vst_process) (::AEffect* e, float** input
 	const int      nbr_chn_per_pin =
 		wrapper_ptr->_proc._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn;
 	const int      nbr_chn = wrapper_ptr->_nbr_o * nbr_chn_per_pin;
-	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
+	int            chn_src_idx = 0;
+	int            chn_dst_idx = 0;
+	for (int pin_cnt = 0; pin_cnt < wrapper_ptr->_nbr_o; ++pin_cnt)
 	{
-		mfx::dsp::mix::Simd <
-			fstb::DataAlign <false>,
-			fstb::DataAlign <true>
-		>::mix_1_1 (
-			outputs [chn_cnt],
-			wrapper_ptr->_dst_arr [chn_cnt],
-			sampleFrames
-		);
+		for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
+		{
+			mfx::dsp::mix::Simd <
+				fstb::DataAlign <false>,
+				fstb::DataAlign <true>
+			>::mix_1_1 (
+				outputs [chn_dst_idx],
+				wrapper_ptr->_dst_arr [chn_src_idx],
+				sampleFrames
+			);
+			++ chn_src_idx;
+			++ chn_dst_idx;
+		}
+		chn_dst_idx += wrapper_ptr->_max_nbr_chn_o - nbr_chn_per_pin;
+	}
+	for (int chn_cnt = 0; chn_cnt < wrapper_ptr->_nbr_s; ++chn_cnt)
+	{
+		const float    val     = wrapper_ptr->_sig_arr [chn_cnt] [0];
+		float *        dst_ptr = outputs [chn_dst_idx];
+		for (::VstInt32 pos = 0; pos < sampleFrames; ++pos)
+		{
+			dst_ptr [pos] += val;
+		}
+		++ chn_dst_idx;
 	}
 }
 
@@ -724,16 +762,36 @@ void	PlugWrap::vst_process_replacing (::AEffect* e, float** inputs, float** outp
 	const int      nbr_chn_per_pin =
 		wrapper_ptr->_proc._dir_arr [mfx::piapi::Dir_OUT]._nbr_chn;
 	const int      nbr_chn = wrapper_ptr->_nbr_o * nbr_chn_per_pin;
-	for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
+	int            chn_src_idx = 0;
+	int            chn_dst_idx = 0;
+	for (int pin_cnt = 0; pin_cnt < wrapper_ptr->_nbr_o; ++pin_cnt)
+	{
+		for (int chn_cnt = 0; chn_cnt < nbr_chn; ++chn_cnt)
+		{
+			mfx::dsp::mix::Simd <
+				fstb::DataAlign <false>,
+				fstb::DataAlign <true>
+			>::copy_1_1 (
+				outputs [chn_dst_idx],
+				wrapper_ptr->_dst_arr [chn_src_idx],
+				sampleFrames
+			);
+			++ chn_src_idx;
+			++ chn_dst_idx;
+		}
+		chn_dst_idx += wrapper_ptr->_max_nbr_chn_o - nbr_chn_per_pin;
+	}
+	for (int chn_cnt = 0; chn_cnt < wrapper_ptr->_nbr_s; ++chn_cnt)
 	{
 		mfx::dsp::mix::Simd <
 			fstb::DataAlign <false>,
 			fstb::DataAlign <true>
-		>::copy_1_1 (
-			outputs [chn_cnt],
-			wrapper_ptr->_dst_arr [chn_cnt],
-			sampleFrames
+		>::fill (
+			outputs [chn_dst_idx],
+			sampleFrames,
+			wrapper_ptr->_sig_arr [chn_cnt] [0]
 		);
+		++ chn_dst_idx;
 	}
 }
 

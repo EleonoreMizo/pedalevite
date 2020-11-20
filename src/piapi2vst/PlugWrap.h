@@ -135,9 +135,13 @@ private:
 	               _plugin_aptr;
 	::AEffect      _vst;
 
+	mfx::piapi::PluginInfo
+	               _info;
 	int            _nbr_i;              // Pins. Each pin can be mono or stereo
 	int            _nbr_o;
 	int            _nbr_s;              // Signal pins are always "mono"
+	int            _max_nbr_chn_i;
+	int            _max_nbr_chn_o;
 	int            _latency;
 	mfx::piapi::ProcInfo
 	               _proc;
