@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_cdsp_fv_DelayComb_HEADER_INCLUDED)
-#define mfx_pi_cdsp_fv_DelayComb_HEADER_INCLUDED
+#if ! defined (mfx_dsp_spat_fv_DelayComb_HEADER_INCLUDED)
+#define mfx_dsp_spat_fv_DelayComb_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -27,15 +27,15 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/cdsp/fv/DelayLineSimple.h"
+#include "mfx/dsp/spat/fv/DelayLineSimple.h"
 
 
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace cdsp
+namespace spat
 {
 namespace fv
 {
@@ -91,16 +91,16 @@ private:
 
 }  // namespace fv
 }  // namespace cdso
-}  // namespace pi
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/cdsp/fv/DelayComb.hpp"
+//#include "mfx/dsp/spat/fv/DelayComb.hpp"
 
 
 
-#endif   // mfx_pi_cdsp_fv_DelayComb_HEADER_INCLUDED
+#endif   // mfx_dsp_spat_fv_DelayComb_HEADER_INCLUDED
 
 
 

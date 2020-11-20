@@ -35,7 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dly2/Delay2Desc.h"
 #include "mfx/pi/dly2/DelayLineBbdPitch.h"
 #include "mfx/pi/dly2/StageTaps.h"
-#include "mfx/pi/cdsp/fv/FreeverbCore.h"
+#include "mfx/dsp/spat/fv/FreeverbCore.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/PluginInterface.h"
@@ -154,7 +154,7 @@ private:
 	TapArray       _tap_arr;
 	LineArray      _line_arr;
 	StageTaps      _taps;
-	cdsp::fv::FreeverbCore
+	dsp::spat::fv::FreeverbCore
 	               _reverb;
 	dsp::dyn::EnvFollowerRms
 	               _env_duck;

@@ -395,8 +395,8 @@ void	Delay2::do_process_block (piapi::ProcInfo &proc)
 				&_buf_tap_arr [line_index] [0],
 				&_buf_tmp_zone [0],
 				proc._nbr_spl,
-				wet_beg * cdsp::fv::FreeverbCore::_scalein,
-				wet_end * cdsp::fv::FreeverbCore::_scalein
+				wet_beg * dsp::spat::fv::FreeverbCore::_scalein,
+				wet_end * dsp::spat::fv::FreeverbCore::_scalein
 			);
 		}
 	}

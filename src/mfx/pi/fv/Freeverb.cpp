@@ -70,7 +70,7 @@ Freeverb::Freeverb ()
 ,	_chn_arr ()
 ,	_src_lvl (1)
 ,	_dry_lvl (1)
-,	_wet_lvl_direct (cdsp::fv::FreeverbCore::_scalewet)
+,	_wet_lvl_direct (dsp::spat::fv::FreeverbCore::_scalewet)
 ,	_wet_lvl_cross (0)
 ,	_flt_flag (false)
 {
@@ -283,7 +283,7 @@ void	Freeverb::update_param ()
 		_dry_lvl = float (_state_set.get_val_tgt_nat (Param_DRY));
 
 		float          wet_lvl = float (_state_set.get_val_tgt_nat (Param_WET));
-		wet_lvl *= cdsp::fv::FreeverbCore::_scalewet;
+		wet_lvl *= dsp::spat::fv::FreeverbCore::_scalewet;
 
 		_wet_lvl_direct = wet_lvl * (0.5f + hwidth);
 		_wet_lvl_cross  = wet_lvl * (0.5f - hwidth);
@@ -329,7 +329,7 @@ void	Freeverb::update_param ()
 		}
 		else
 		{
-			_src_lvl = cdsp::fv::FreeverbCore::_scalein;
+			_src_lvl = dsp::spat::fv::FreeverbCore::_scalein;
 			damp = std::min (damp, 0.99f);
 		}
 

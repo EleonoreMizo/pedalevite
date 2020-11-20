@@ -1082,6 +1082,11 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFast.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFastPade.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTruncMod.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayAllPassSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayComb.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimple.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimpleMod.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.h" />
@@ -1207,11 +1212,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqShift.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayAllPassSimd.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayComb.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimple.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimpleMod.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\PhaseHalfPi.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cpx\CompexGainFnc.h" />
@@ -1776,6 +1776,11 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistRandWalk.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistSlewRateLim.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\HardclipBl.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayAllPassSimd.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayComb.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimple.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimpleMod.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\BigMuffPi.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
@@ -1857,11 +1862,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\bmp1\BigMuff1Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqShift.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayAllPassSimd.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayComb.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimple.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimpleMod.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\Click.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\ClickDesc.cpp" />

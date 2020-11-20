@@ -691,6 +691,16 @@ commonsrc = \
         ../../src/mfx/dsp/shape/WsTanhFast.h \
         ../../src/mfx/dsp/shape/WsTanhFastPade.h \
         ../../src/mfx/dsp/shape/WsTruncMod.h \
+        ../../src/mfx/dsp/spat/fv/DelayAllPassSimd.cpp \
+        ../../src/mfx/dsp/spat/fv/DelayAllPassSimd.h \
+        ../../src/mfx/dsp/spat/fv/DelayComb.cpp \
+        ../../src/mfx/dsp/spat/fv/DelayComb.h \
+        ../../src/mfx/dsp/spat/fv/DelayLineSimple.cpp \
+        ../../src/mfx/dsp/spat/fv/DelayLineSimple.h \
+        ../../src/mfx/dsp/spat/fv/DelayLineSimpleMod.cpp \
+        ../../src/mfx/dsp/spat/fv/DelayLineSimpleMod.h \
+        ../../src/mfx/dsp/spat/fv/FreeverbCore.cpp \
+        ../../src/mfx/dsp/spat/fv/FreeverbCore.h \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/va/dkm/Flt.h \
@@ -822,16 +832,6 @@ commonsrc = \
         ../../src/mfx/pi/colorme/ColorMeDesc.h \
         ../../src/mfx/pi/colorme/Cst.h \
         ../../src/mfx/pi/colorme/Param.h \
-        ../../src/mfx/pi/cdsp/fv/DelayAllPassSimd.cpp \
-        ../../src/mfx/pi/cdsp/fv/DelayAllPassSimd.h \
-        ../../src/mfx/pi/cdsp/fv/DelayComb.cpp \
-        ../../src/mfx/pi/cdsp/fv/DelayComb.h \
-        ../../src/mfx/pi/cdsp/fv/DelayLineSimple.cpp \
-        ../../src/mfx/pi/cdsp/fv/DelayLineSimple.h \
-        ../../src/mfx/pi/cdsp/fv/DelayLineSimpleMod.cpp \
-        ../../src/mfx/pi/cdsp/fv/DelayLineSimpleMod.h \
-        ../../src/mfx/pi/cdsp/fv/FreeverbCore.cpp \
-        ../../src/mfx/pi/cdsp/fv/FreeverbCore.h \
         ../../src/mfx/pi/cdsp/FreqShift.cpp \
         ../../src/mfx/pi/cdsp/FreqShift.h \
         ../../src/mfx/pi/cdsp/FreqSplitter5.cpp \

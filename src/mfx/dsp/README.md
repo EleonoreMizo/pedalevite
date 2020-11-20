@@ -13,6 +13,7 @@
 - **`osc`**: Oscillators
 - **`rspl`**: Resampling tools
 - **`shape`**: Waveshaper, look-up table functions and distortions
+- **`spat`**: Spatialisation, environment
 - **`spec`**: Spectral tools
 - **`va`**: Virtual analogue circuit modelisations
 - **`wnd`**: Windows and similar shapes

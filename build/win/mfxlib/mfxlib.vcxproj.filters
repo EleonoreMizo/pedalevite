@@ -268,9 +268,6 @@
     <Filter Include="mfx\pi\cdsp">
       <UniqueIdentifier>{ea91aef9-e1b3-4d1d-ba86-35c5a0db19d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mfx\pi\cdsp\fv">
-      <UniqueIdentifier>{e9318337-b614-458b-a5c5-ebcf4c9fa333}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mfx\pi\fsplit">
       <UniqueIdentifier>{45030e73-f7b0-446a-9610-8ed85ed1af48}</UniqueIdentifier>
     </Filter>
@@ -423,6 +420,12 @@
     </Filter>
     <Filter Include="mfx\pi\bmp1">
       <UniqueIdentifier>{d549aeb0-6355-43bc-bc0c-a8f29c6df451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\spat">
+      <UniqueIdentifier>{a9b95fb7-e80f-4fab-845e-f8b687d88108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\dsp\spat\fv">
+      <UniqueIdentifier>{e9318337-b614-458b-a5c5-ebcf4c9fa333}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2994,21 +2997,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqShift.h">
       <Filter>mfx\pi\cdsp</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayAllPassSimd.h">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayComb.h">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimple.h">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimpleMod.h">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.h">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\fsplit\FreqSplit.h">
       <Filter>mfx\pi\fsplit</Filter>
     </ClInclude>
@@ -4794,6 +4782,21 @@
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Ovrspl.h">
       <Filter>mfx\pi\bmp1</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayAllPassSimd.h">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayComb.h">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimple.h">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimpleMod.h">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.h">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -5927,21 +5930,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqShift.cpp">
       <Filter>mfx\pi\cdsp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayComb.cpp">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimple.cpp">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayLineSimpleMod.cpp">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\FreeverbCore.cpp">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\fv\DelayAllPassSimd.cpp">
-      <Filter>mfx\pi\cdsp\fv</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\fsplit\FreqSplit.cpp">
       <Filter>mfx\pi\fsplit</Filter>
     </ClCompile>
@@ -6112,6 +6100,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\bmp1\BigMuff1Desc.cpp">
       <Filter>mfx\pi\bmp1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayAllPassSimd.cpp">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayComb.cpp">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimple.cpp">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimpleMod.cpp">
+      <Filter>mfx\dsp\spat\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.cpp">
+      <Filter>mfx\dsp\spat\fv</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

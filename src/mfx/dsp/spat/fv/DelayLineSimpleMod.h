@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        DelayLineSimple.h
-        Author: Laurent de Soras, 2016
+        DelayLineSimpleMod.h
+        Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
 
@@ -16,8 +16,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_cdsp_fv_DelayLineSimple_HEADER_INCLUDED)
-#define mfx_pi_cdsp_fv_DelayLineSimple_HEADER_INCLUDED
+#if ! defined (mfx_dsp_spat_fv_DelayLineSimpleMod_HEADER_INCLUDED)
+#define mfx_dsp_spat_fv_DelayLineSimpleMod_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -33,23 +33,26 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 namespace mfx
 {
-namespace pi
+namespace dsp
 {
-namespace cdsp
+namespace spat
 {
 namespace fv
 {
 
 
 
-class DelayLineSimple
+class DelayLineSimpleMod
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	void           set_delay (int len);
+	               DelayLineSimpleMod ()  = default;
+	virtual        ~DelayLineSimpleMod () = default;
+
+	void           set_delay (int len, int mod_per, int mod_depth);
 
 	void           clear_buffers ();
 
@@ -71,8 +74,15 @@ protected:
 private:
 
 	inline int     compute_read_pos () const;
+	inline int     compute_read_pos (int dly_cur) const;
+	inline int     compute_delay () const;
 
 	int            _delay      = 0;
+	int            _mod_per    = 0;
+	int            _mod_depth  = 0;
+	int            _mod_pos_t  = 0;
+	int            _mod_pos_d  = 0;
+	int            _mod_dir    = 0;
 	int            _write_pos  = 0;
 	int            _line_size  = 0;
 	int            _line_mask  = 0;
@@ -85,25 +95,28 @@ private:
 
 private:
 
-	bool           operator == (const DelayLineSimple &other) const = delete;
-	bool           operator != (const DelayLineSimple &other) const = delete;
+	               DelayLineSimpleMod (const DelayLineSimpleMod &other) = delete;
+	DelayLineSimpleMod &
+	               operator = (const DelayLineSimpleMod &other)        = delete;
+	bool           operator == (const DelayLineSimpleMod &other) const = delete;
+	bool           operator != (const DelayLineSimpleMod &other) const = delete;
 
-}; // class DelayLineSimple
+}; // class DelayLineSimpleMod
 
 
 
 }  // namespace fv
-}  // namespace cdsp
-}  // namespace pi
+}  // namespace spat
+}  // namespace dsp
 }  // namespace mfx
 
 
 
-//#include "mfx/pi/cdsp/fv/DelayLineSimple.hpp"
+//#include "mfx/dsp/spat/fv/DelayLineSimpleMod.hpp"
 
 
 
-#endif   // mfx_pi_cdsp_fv_DelayLineSimple_HEADER_INCLUDED
+#endif   // mfx_dsp_spat_fv_DelayLineSimpleMod_HEADER_INCLUDED
 
 
 
