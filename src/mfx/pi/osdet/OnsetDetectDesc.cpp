@@ -60,7 +60,7 @@ OnsetDetectDesc::OnsetDetectDesc ()
 	// Velocity clipping
 	auto           enu_sptr = std::make_shared <param::TplEnum> (
 		"Off\nOn",
-		"Velocity clipping",
+		"Velocity clipping\nVelo clip\nVel clp\nVClip\nVC",
 		"",
 		0,
 		"%s"
