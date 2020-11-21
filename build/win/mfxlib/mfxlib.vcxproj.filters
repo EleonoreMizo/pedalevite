@@ -4797,6 +4797,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.h">
       <Filter>mfx\dsp\spat\fv</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Bigverb.h">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Bigverb.hpp">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

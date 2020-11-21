@@ -701,6 +701,8 @@ commonsrc = \
         ../../src/mfx/dsp/spat/fv/DelayLineSimpleMod.h \
         ../../src/mfx/dsp/spat/fv/FreeverbCore.cpp \
         ../../src/mfx/dsp/spat/fv/FreeverbCore.h \
+        ../../src/mfx/dsp/spat/Bigverb.h \
+        ../../src/mfx/dsp/spat/Bigverb.hpp \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/va/dkm/Flt.h \
@@ -1692,6 +1694,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSampleMipMapper.h \
         ../../src/test/TestMnaSimulator.cpp \
         ../../src/test/TestMnaSimulator.h \
+        ../../src/test/TestReverb.cpp \
+        ../../src/test/TestReverb.h \
         ../../src/test/TestSlidingMax.cpp \
         ../../src/test/TestSlidingMax.h \
         ../../src/test/TestSlidingOp.cpp \

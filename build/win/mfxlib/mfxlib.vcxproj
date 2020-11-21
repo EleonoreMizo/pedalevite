@@ -1082,6 +1082,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFast.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFastPade.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTruncMod.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Bigverb.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Bigverb.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayAllPassSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayComb.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimple.h" />

@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\..\src\test\TestOscWavetableSyncHard.cpp" />
     <ClCompile Include="..\..\..\src\test\TestPsu.cpp" />
     <ClCompile Include="..\..\..\src\test\TestRemez.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestReverb.cpp" />
     <ClCompile Include="..\..\..\src\test\TestRndXoroshiro128p.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSampleMipMapper.cpp" />
     <ClCompile Include="..\..\..\src\test\TestMnaSimulator.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="..\..\..\src\test\TestOscWavetableSyncHard.h" />
     <ClInclude Include="..\..\..\src\test\TestPsu.h" />
     <ClInclude Include="..\..\..\src\test\TestRemez.h" />
+    <ClInclude Include="..\..\..\src\test\TestReverb.h" />
     <ClInclude Include="..\..\..\src\test\TestRndXoroshiro128p.h" />
     <ClInclude Include="..\..\..\src\test\TestSampleMipMapper.h" />
     <ClInclude Include="..\..\..\src\test\TestMnaSimulator.h" />
