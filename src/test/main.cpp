@@ -770,23 +770,23 @@ int	test_transients ()
 		const int      hold_time = fstb::round_int (sample_freq / min_freq);
 
 		// Attack, fast envelope
-		env.set_atk_coef (0, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.0001f, order), sample_freq)));
-		env.set_rls_coef (0, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050f , order), sample_freq)));
+		env.set_atk_coef (0, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.0001, order), sample_freq)));
+		env.set_rls_coef (0, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050 , order), sample_freq)));
 		env.set_hold_time (0, hold_time);
 
 		// Attack, slow envelope
-		env.set_atk_coef (1, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050f , order), sample_freq)));
-		env.set_rls_coef (1, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050f , order), sample_freq)));
+		env.set_atk_coef (1, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050 , order), sample_freq)));
+		env.set_rls_coef (1, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.050 , order), sample_freq)));
 		env.set_hold_time (1, hold_time);
 
 		// Sustain, fast envelope
-		env.set_atk_coef (2, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.005f , order), sample_freq)));
-		env.set_rls_coef (2, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.200f , order), sample_freq)));
+		env.set_atk_coef (2, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.005 , order), sample_freq)));
+		env.set_rls_coef (2, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.200 , order), sample_freq)));
 		env.set_hold_time (2, hold_time);
 
 		// Sustain, slow envelope
-		env.set_atk_coef (3, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.005f , order), sample_freq)));
-		env.set_rls_coef (3, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.600f , order), sample_freq)));
+		env.set_atk_coef (3, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.005 , order), sample_freq)));
+		env.set_rls_coef (3, float (mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (mfx::dsp::dyn::EnvHelper::compensate_order (0.600 , order), sample_freq)));
 		env.set_hold_time (3, hold_time);
 
 		mfx::dsp::iir::OnePole  hpf;
@@ -1464,13 +1464,13 @@ int	test_envelope_detector ()
 
 		env_hlp.set_atk_coef (float (
 			mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (
-				mfx::dsp::dyn::EnvHelper::compensate_order (0.001f, order),
+				mfx::dsp::dyn::EnvHelper::compensate_order (0.001, order),
 				sample_freq
 			)
 		));
 		env_hlp.set_rls_coef (float (
 			mfx::dsp::dyn::EnvHelper::compute_env_coef_simple (
-				mfx::dsp::dyn::EnvHelper::compensate_order (0.100f, order),
+				mfx::dsp::dyn::EnvHelper::compensate_order (0.100, order),
 				sample_freq
 			)
 		));

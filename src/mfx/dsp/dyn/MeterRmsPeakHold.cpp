@@ -205,15 +205,12 @@ void	MeterRmsPeakHold::clear_peak ()
 void	MeterRmsPeakHold::update_times ()
 {
 	_hold_time  = fstb::ceil_int (_sample_freq * _hold_time_s);
-	_coef_r    = float (
-		EnvHelper::compute_env_coef_simple (_release_time_s, _sample_freq)
-	);
-	_coef_r2   = float (
-		EnvHelper::compute_env_coef_simple (_release_time_s, _sample_freq * 0.5)
-	);
-	_coef_a2   = float (
-		EnvHelper::compute_env_coef_simple (_attack_time_s, _sample_freq * 0.5)
-	);
+	_coef_r     =
+		EnvHelper::compute_env_coef_simple (_release_time_s, _sample_freq);
+	_coef_r2   =
+		EnvHelper::compute_env_coef_simple (_release_time_s, _sample_freq * 0.5);
+	_coef_a2    =
+		EnvHelper::compute_env_coef_simple (_attack_time_s, _sample_freq * 0.5);
 }
 
 

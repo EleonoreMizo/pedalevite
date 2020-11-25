@@ -165,10 +165,10 @@ void	Compander::update_coef ()
 {
 	if (_sample_freq > 0)
 	{
-		_coef = float (EnvHelper::compute_env_coef_simple (
+		_coef = EnvHelper::compute_env_coef_simple (
 			_avg_time,
-			_sample_freq
-		));
+			float (_sample_freq)
+		);
 	}
 }
 

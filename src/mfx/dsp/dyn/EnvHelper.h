@@ -45,12 +45,15 @@ class EnvHelper
 
 public:
 
-	static inline double
-	               compute_env_coef_simple (double t, double fs);
-	static inline double
-	               compute_env_coef_w_zero (double t, double fs);
-	static inline double
-	               compensate_order (double t, int ord);
+	template <typename T>
+	static inline T
+	               compute_env_coef_simple (T t, T fs);
+	template <typename T>
+	static inline T
+	               compute_env_coef_w_zero (T t, T fs);
+	template <typename T>
+	static inline T
+	               compensate_order (T t, int ord);
 
 
 

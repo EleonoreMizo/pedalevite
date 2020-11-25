@@ -267,12 +267,8 @@ void	EnvFollowerRms::clear_buffers ()
 
 void	EnvFollowerRms::update_parameters ()
 {
-	_coef_a = float (
-		EnvHelper::compute_env_coef_simple (_time_a, _sample_freq)
-	);
-	_coef_r = float (
-		EnvHelper::compute_env_coef_simple (_time_r, _sample_freq)
-	);
+	_coef_a = EnvHelper::compute_env_coef_simple (_time_a, _sample_freq);
+	_coef_r = EnvHelper::compute_env_coef_simple (_time_r, _sample_freq);
 }
 
 

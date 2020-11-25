@@ -94,7 +94,7 @@ private:
 
 	float          _state       = 0;          // Sample ^ 2
 	float          _coef        =
-		float (EnvHelper::compute_env_coef_simple (_time, _sample_freq));
+		EnvHelper::compute_env_coef_simple (_time, _sample_freq);
 
 
 

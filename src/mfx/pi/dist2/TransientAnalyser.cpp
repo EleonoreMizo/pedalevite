@@ -204,9 +204,7 @@ float	TransientAnalyser::compute_coef (float t) const
 {
 	assert (_sample_freq > 0);
 
-	return float (
-		dsp::dyn::EnvHelper::compute_env_coef_simple (t, _sample_freq)
-	);
+	return dsp::dyn::EnvHelper::compute_env_coef_simple (t, _sample_freq);
 }
 
 
