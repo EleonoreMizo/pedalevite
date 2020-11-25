@@ -4815,6 +4815,18 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\SmootherLpf.hpp">
       <Filter>mfx\dsp\ctrl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\DelayAllPass.h">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\DelayAllPass.hpp">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\DelayFrac.h">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\DelayFrac.hpp">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

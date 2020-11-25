@@ -707,6 +707,10 @@ commonsrc = \
         ../../src/mfx/dsp/spat/fv/FreeverbCore.h \
         ../../src/mfx/dsp/spat/Bigverb.h \
         ../../src/mfx/dsp/spat/Bigverb.hpp \
+        ../../src/mfx/dsp/spat/DelayAllPass.h \
+        ../../src/mfx/dsp/spat/DelayAllPass.hpp \
+        ../../src/mfx/dsp/spat/DelayFrac.h \
+        ../../src/mfx/dsp/spat/DelayFrac.hpp \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/va/dkm/Flt.h \

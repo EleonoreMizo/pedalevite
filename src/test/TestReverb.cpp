@@ -26,11 +26,14 @@ http://www.wtfpl.net/ for more details.
 
 #include "mfx/dsp/spat/Bigverb.h"
 #include "mfx/dsp/spat/fv/FreeverbCore.h"
+#include "mfx/dsp/spat/DelayAllPass.h"
+#include "mfx/dsp/spat/DelayFrac.h"
 #include "mfx/FileOpWav.h"
 #include "test/TestReverb.h"
 #include "test/TimerAccurate.h"
 
 #include <cassert>
+#include <cmath>
 #include <cstdio>
 
 
@@ -45,6 +48,14 @@ int	TestReverb::perform_test ()
 
 	printf ("Testing reverberators...\n");
 
+	if (ret_val == 0)
+	{
+		ret_val = test_delay_frac ();
+	}
+	if (ret_val == 0)
+	{
+		ret_val = test_delay_apf ();
+	}
 	if (ret_val == 0)
 	{
 		ret_val = test_freeverb ();
@@ -197,6 +208,124 @@ int	TestReverb::test_bigverb ()
 	const double   kilo_sps  = spl_per_s / 1e3;
 	const double   rt_mul    = spl_per_s / sample_freq;
 	printf ("Speed: %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
+
+	return ret_val;
+}
+
+
+
+int	TestReverb::test_delay_frac ()
+{
+	int            ret_val = 0;
+
+	printf ("DelayFrac\n");
+
+	constexpr double  sample_freq = 44100;
+
+	const int      len = fstb::round_int (sample_freq * 10);
+	std::vector <float>  src (len);
+	std::vector <float>  dst (len);
+	constexpr int     p0 = 100;
+	constexpr double  p1 = sample_freq / 15000.f;
+	for (int pos = 0; pos < len; ++pos)
+	{
+		if (pos < len / 2)
+		{
+			src [pos] = ((pos % p0) < (p0 / 2)) ? 1.f : -1.f;
+		}
+		else if (pos < len * 3 / 4)
+		{
+			src [pos] = float (sin (pos * (2 * fstb::PI / double (p0))));
+		}
+		else
+		{
+			src [pos] = float (sin (pos * (2 * fstb::PI / p1)));
+		}
+	}
+
+	typedef mfx::dsp::spat::DelayFrac <float, 6> Delay;
+	Delay          delay;
+	constexpr int  max_dly_spl = 50;
+	delay.set_max_len (max_dly_spl);
+	int            dly_fix = fstb::round_int (1.875f * Delay::_nbr_phases);
+	delay.set_delay_fix (dly_fix);
+	int            dir = 1;
+	for (int pos = 0; pos < len; ++pos)
+	{
+		dst [pos] = delay.process_sample (src [pos]);
+		if (pos >= 1000)
+		{
+			if (   dly_fix <= Delay::_delay_min * Delay::_nbr_phases
+			    || dly_fix >= max_dly_spl       * Delay::_nbr_phases)
+			{
+				dir = -dir;
+			}
+			dly_fix += dir;
+			delay.set_delay_fix (dly_fix);
+		}
+	}
+
+	mfx::FileOpWav::save ("results/delayfrac0.wav", src, sample_freq, 0.5f);
+	mfx::FileOpWav::save ("results/delayfrac1.wav", dst, sample_freq, 0.5f);
+
+	return ret_val;
+}
+
+
+
+int	TestReverb::test_delay_apf ()
+{
+	int            ret_val = 0;
+
+	printf ("DelayFrac\n");
+
+	constexpr double  sample_freq = 44100;
+
+	const int      len = fstb::round_int (sample_freq * 10);
+	std::vector <float>  src (len);
+	std::vector <float>  dst (len);
+	constexpr int     p0 = 100;
+	constexpr double  p1 = sample_freq / 15000.f;
+	for (int pos = 0; pos < len; ++pos)
+	{
+		if (pos < len / 2)
+		{
+			src [pos] = ((pos % p0) < (p0 / 2)) ? 1.f : -1.f;
+		}
+		else if (pos < len * 3 / 4)
+		{
+			src [pos] = float (sin (pos * (2 * fstb::PI / double (p0))));
+		}
+		else
+		{
+			src [pos] = float (sin (pos * (2 * fstb::PI / p1)));
+		}
+	}
+
+	typedef mfx::dsp::spat::DelayAllPass <float, 6> Delay;
+	Delay          delay;
+	delay.set_coef (0.5f);
+	constexpr int  max_dly_spl = 50;
+	delay.set_max_len (max_dly_spl);
+	int            dly_fix = fstb::round_int (2.875f * Delay::_nbr_phases);
+	delay.set_delay_fix (dly_fix);
+	int            dir = 1;
+	for (int pos = 0; pos < len; ++pos)
+	{
+		dst [pos] = delay.process_sample (src [pos]);
+		if (pos >= 1000)
+		{
+			if (   dly_fix <= Delay::_delay_min * Delay::_nbr_phases
+			    || dly_fix >= max_dly_spl       * Delay::_nbr_phases)
+			{
+				dir = -dir;
+			}
+			dly_fix += dir;
+			delay.set_delay_fix (dly_fix);
+		}
+	}
+
+	mfx::FileOpWav::save ("results/delayapf0.wav", dst, sample_freq, 0.5f);
 
 	return ret_val;
 }

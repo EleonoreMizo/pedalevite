@@ -51,6 +51,8 @@ private:
 
 	static int     test_freeverb ();
 	static int     test_bigverb ();
+	static int     test_delay_frac ();
+	static int     test_delay_apf ();
 
 
 
