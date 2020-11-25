@@ -1088,6 +1088,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTruncMod.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Cascade.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Cascade.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\DelayAllPass.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\DelayAllPass.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\DelayFrac.h" />
@@ -1097,6 +1099,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimple.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimpleMod.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\Lattice.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\Lattice.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeReverb.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeReverb.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeStereo.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeStereo.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spec\StftHelper.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.h" />

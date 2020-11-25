@@ -705,6 +705,14 @@ commonsrc = \
         ../../src/mfx/dsp/spat/fv/DelayLineSimpleMod.h \
         ../../src/mfx/dsp/spat/fv/FreeverbCore.cpp \
         ../../src/mfx/dsp/spat/fv/FreeverbCore.h \
+        ../../src/mfx/dsp/spat/ltc/Lattice.h \
+        ../../src/mfx/dsp/spat/ltc/Lattice.hpp \
+        ../../src/mfx/dsp/spat/ltc/LatticeReverb.h \
+        ../../src/mfx/dsp/spat/ltc/LatticeReverb.hpp \
+        ../../src/mfx/dsp/spat/ltc/LatticeStereo.h \
+        ../../src/mfx/dsp/spat/ltc/LatticeStereo.hpp \
+        ../../src/mfx/dsp/spat/Cascade.h \
+        ../../src/mfx/dsp/spat/Cascade.hpp \
         ../../src/mfx/dsp/spat/DelayAllPass.h \
         ../../src/mfx/dsp/spat/DelayAllPass.hpp \
         ../../src/mfx/dsp/spat/DelayFrac.h \

@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/dsp/spat/fv/FreeverbCore.h"
+#include "mfx/dsp/spat/ltc/LatticeReverb.h"
 #include "mfx/dsp/spat/DelayAllPass.h"
 #include "mfx/dsp/spat/DelayFrac.h"
 #include "mfx/dsp/spat/ReverbSC.h"
@@ -63,6 +64,10 @@ int	TestReverb::perform_test ()
 	if (ret_val == 0)
 	{
 		ret_val = test_reverbsc ();
+	}
+	if (ret_val == 0)
+	{
+		ret_val = test_latticereverb ();
 	}
 
 	printf ("Done.\n");
@@ -201,6 +206,68 @@ int	TestReverb::test_reverbsc ()
 	for (int count = 0; count < 32; ++count)
 	{
 		TestReverb_process_reverbsc (reverb, dst_arr, src_arr, len);
+		tim.stop_lap ();
+	}
+
+	const double   spl_per_s = tim.get_best_rate (len);
+	const double   kilo_sps  = spl_per_s / 1e3;
+	const double   rt_mul    = spl_per_s / sample_freq;
+	printf ("Speed: %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
+
+	return ret_val;
+}
+
+
+
+static void	TestReverb_process_latticereverb (mfx::dsp::spat::ltc::LatticeReverb <float, 16> &reverb, std::vector <std::vector <float> > &dst_arr, const std::vector <std::vector <float> > &src_arr, int len)
+{
+	for (int pos = 0; pos < len; ++pos)
+	{
+		std::tie (dst_arr [0] [pos], dst_arr [1] [pos]) =
+			reverb.process_sample (src_arr [0] [pos], src_arr [1] [pos]);
+	}
+}
+
+
+
+int	TestReverb::test_latticereverb ()
+{
+	int            ret_val = 0;
+
+	printf ("Lattice reverb\n");
+
+	const double   sample_freq = 44100;
+
+	mfx::dsp::spat::ltc::LatticeReverb <float, 16> reverb;
+
+	reverb.set_sample_freq (sample_freq);
+	reverb.clear_buffers ();
+
+	constexpr float   vol  = 1.f;
+	const int      len     = fstb::round_int (sample_freq * 10);
+	const int      imp_pos = fstb::round_int (sample_freq * 1);
+	std::vector <std::vector <float> >  src_arr (_nbr_chn);
+	std::vector <std::vector <float> >  dst_arr (_nbr_chn);
+	for (int chn = 0; chn < _nbr_chn; ++chn)
+	{
+		src_arr [chn].assign (len, 0);
+		dst_arr [chn].resize (len);
+
+		src_arr [chn] [imp_pos] = vol;
+	}
+	src_arr [0] [len - imp_pos] = vol;
+
+	TestReverb_process_latticereverb (reverb, dst_arr, src_arr, len);
+
+	mfx::FileOpWav::save ("results/latticereverb0.wav", dst_arr, sample_freq, 0.5f);
+
+	// Speed test
+	TimerAccurate  tim;
+	tim.reset ();
+	tim.start ();
+	for (int count = 0; count < 8; ++count)
+	{
+		TestReverb_process_latticereverb (reverb, dst_arr, src_arr, len);
 		tim.stop_lap ();
 	}
 

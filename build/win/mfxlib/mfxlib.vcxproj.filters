@@ -427,6 +427,9 @@
     <Filter Include="mfx\dsp\spat\fv">
       <UniqueIdentifier>{e9318337-b614-458b-a5c5-ebcf4c9fa333}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\dsp\spat\ltc">
+      <UniqueIdentifier>{383499e8-66fe-4831-9d12-3762c8435ed0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -4803,6 +4806,24 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.h">
       <Filter>mfx\dsp\spat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\Lattice.h">
+      <Filter>mfx\dsp\spat\ltc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\Lattice.hpp">
+      <Filter>mfx\dsp\spat\ltc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeStereo.h">
+      <Filter>mfx\dsp\spat\ltc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeStereo.hpp">
+      <Filter>mfx\dsp\spat\ltc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeReverb.h">
+      <Filter>mfx\dsp\spat\ltc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ltc\LatticeReverb.hpp">
+      <Filter>mfx\dsp\spat\ltc</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Lpf1p.h">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
@@ -4814,6 +4835,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\SmootherLpf.hpp">
       <Filter>mfx\dsp\ctrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Cascade.h">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Cascade.hpp">
+      <Filter>mfx\dsp\spat</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\DelayAllPass.h">
       <Filter>mfx\dsp\spat</Filter>

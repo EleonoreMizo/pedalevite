@@ -1,7 +1,18 @@
 /*****************************************************************************
 
-        TestReverb.h
+        Cascade.h
         Author: Laurent de Soras, 2020
+
+Template parameters:
+
+- D1: first processor. Requires:
+	D1::D1 ();
+	D1::~D1 ();
+	typename D1::DataType;
+	D1::DataType D1::process_sample (D1::DataType);
+	void D1::clear_buffers ();
+
+- D2: same as D1, but processed with the output of D1
 
 --- Legal stuff ---
 
@@ -16,26 +27,42 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (TestReverb_HEADER_INCLUDED)
-#define TestReverb_HEADER_INCLUDED
+#if ! defined (mfx_dsp_spat_Cascade_HEADER_INCLUDED)
+#define mfx_dsp_spat_Cascade_HEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 
 
-class TestReverb
+
+namespace mfx
+{
+namespace dsp
+{
+namespace spat
+{
+
+
+
+template <class D1, class D2>
+class Cascade
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 public:
 
-	static constexpr int _max_block_len = 1024;
-	static constexpr int _nbr_chn       = 2;
+	typedef typename D1::DataType DataType;
 
-	static int     perform_test ();
+	D1 &           use_proc_1 ();
+	D2 &           use_proc_2 ();
+
+	fstb_FORCEINLINE DataType
+	               process_sample (DataType x);
+	void           clear_buffers ();
 
 
 
@@ -49,11 +76,8 @@ protected:
 
 private:
 
-	static int     test_freeverb ();
-	static int     test_reverbsc ();
-	static int     test_latticereverb ();
-	static int     test_delay_frac ();
-	static int     test_delay_apf ();
+	D1             _d1;
+	D2             _d2;
 
 
 
@@ -61,23 +85,24 @@ private:
 
 private:
 
-	               TestReverb ()                               = delete;
-	               TestReverb (const TestReverb &other)        = delete;
-	               TestReverb (TestReverb &&other)             = delete;
-	TestReverb &   operator = (const TestReverb &other)        = delete;
-	TestReverb &   operator = (TestReverb &&other)             = delete;
-	bool           operator == (const TestReverb &other) const = delete;
-	bool           operator != (const TestReverb &other) const = delete;
+	bool           operator == (const Cascade &other) const = delete;
+	bool           operator != (const Cascade &other) const = delete;
 
-}; // class TestReverb
+}; // class Cascade
 
 
 
-//#include "test/TestReverb.hpp"
+}  // namespace spat
+}  // namespace dsp
+}  // namespace mfx
 
 
 
-#endif   // TestReverb_HEADER_INCLUDED
+#include "mfx/dsp/spat/Cascade.hpp"
+
+
+
+#endif   // mfx_dsp_spat_Cascade_HEADER_INCLUDED
 
 
 
