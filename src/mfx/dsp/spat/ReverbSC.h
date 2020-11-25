@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Bigverb.h
+        ReverbSC.h
         Author: Laurent de Soras, 2020
 
 Template parameters:
@@ -66,8 +66,8 @@ http://www.wtfpl.net/ for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_spat_Bigverb_HEADER_INCLUDED)
-#define mfx_dsp_spat_Bigverb_HEADER_INCLUDED
+#if ! defined (mfx_dsp_spat_ReverbSC_HEADER_INCLUDED)
+#define mfx_dsp_spat_ReverbSC_HEADER_INCLUDED
 
 
 
@@ -87,7 +87,7 @@ namespace spat
 
 
 template <typename T>
-class Bigverb
+class ReverbSC
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -191,10 +191,10 @@ private:
 
 private:
 
-	bool           operator == (const Bigverb &other) const = delete;
-	bool           operator != (const Bigverb &other) const = delete;
+	bool           operator == (const ReverbSC &other) const = delete;
+	bool           operator != (const ReverbSC &other) const = delete;
 
-}; // class Bigverb
+}; // class ReverbSC
 
 
 
@@ -204,11 +204,11 @@ private:
 
 
 
-#include "mfx/dsp/spat/Bigverb.hpp"
+#include "mfx/dsp/spat/ReverbSC.hpp"
 
 
 
-#endif   // mfx_dsp_spat_Bigverb_HEADER_INCLUDED
+#endif   // mfx_dsp_spat_ReverbSC_HEADER_INCLUDED
 
 
 

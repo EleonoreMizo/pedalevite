@@ -24,10 +24,10 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/spat/Bigverb.h"
 #include "mfx/dsp/spat/fv/FreeverbCore.h"
 #include "mfx/dsp/spat/DelayAllPass.h"
 #include "mfx/dsp/spat/DelayFrac.h"
+#include "mfx/dsp/spat/ReverbSC.h"
 #include "mfx/FileOpWav.h"
 #include "test/TestReverb.h"
 #include "test/TimerAccurate.h"
@@ -62,7 +62,7 @@ int	TestReverb::perform_test ()
 	}
 	if (ret_val == 0)
 	{
-		ret_val = test_bigverb ();
+		ret_val = test_reverbsc ();
 	}
 
 	printf ("Done.\n");
@@ -149,7 +149,7 @@ int	TestReverb::test_freeverb ()
 
 
 
-static void	TestReverb_process_bigverb (mfx::dsp::spat::Bigverb <float> &reverb, std::vector <std::vector <float> > &dst_arr, const std::vector <std::vector <float> > &src_arr, int len)
+static void	TestReverb_process_reverbsc (mfx::dsp::spat::ReverbSC <float> &reverb, std::vector <std::vector <float> > &dst_arr, const std::vector <std::vector <float> > &src_arr, int len)
 {
 	for (int pos = 0; pos < len; ++pos)
 	{
@@ -162,15 +162,15 @@ static void	TestReverb_process_bigverb (mfx::dsp::spat::Bigverb <float> &reverb,
 
 
 
-int	TestReverb::test_bigverb ()
+int	TestReverb::test_reverbsc ()
 {
 	int            ret_val = 0;
 
-	printf ("Bigverb\n");
+	printf ("ReverbSC\n");
 
 	const double   sample_freq = 44100;
 
-	mfx::dsp::spat::Bigverb <float> reverb;
+	mfx::dsp::spat::ReverbSC <float> reverb;
 
 	reverb.set_sample_freq (sample_freq);
 	reverb.set_cutoff (float (sample_freq * 0.499));
@@ -190,9 +190,9 @@ int	TestReverb::test_bigverb ()
 	}
 	src_arr [0] [len - imp_pos] = vol;
 
-	TestReverb_process_bigverb (reverb, dst_arr, src_arr, len);
+	TestReverb_process_reverbsc (reverb, dst_arr, src_arr, len);
 
-	mfx::FileOpWav::save ("results/bigverb0.wav", dst_arr, sample_freq, 0.5f);
+	mfx::FileOpWav::save ("results/reverbsc0.wav", dst_arr, sample_freq, 0.5f);
 
 	// Speed test
 	TimerAccurate  tim;
@@ -200,7 +200,7 @@ int	TestReverb::test_bigverb ()
 	tim.start ();
 	for (int count = 0; count < 32; ++count)
 	{
-		TestReverb_process_bigverb (reverb, dst_arr, src_arr, len);
+		TestReverb_process_reverbsc (reverb, dst_arr, src_arr, len);
 		tim.stop_lap ();
 	}
 
@@ -277,7 +277,7 @@ int	TestReverb::test_delay_apf ()
 {
 	int            ret_val = 0;
 
-	printf ("DelayFrac\n");
+	printf ("DelayAllPass\n");
 
 	constexpr double  sample_freq = 44100;
 

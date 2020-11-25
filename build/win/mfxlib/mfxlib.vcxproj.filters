@@ -4797,10 +4797,10 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.h">
       <Filter>mfx\dsp\spat\fv</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Bigverb.h">
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.hpp">
       <Filter>mfx\dsp\spat</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\spat\Bigverb.hpp">
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.h">
       <Filter>mfx\dsp\spat</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Lpf1p.h">

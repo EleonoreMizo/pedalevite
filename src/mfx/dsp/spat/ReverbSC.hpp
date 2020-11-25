@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Bigverb.hpp
+        ReverbSC.hpp
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
@@ -15,8 +15,8 @@ http://www.wtfpl.net/ for more details.
 
 
 
-#if ! defined (mfx_dsp_spat_Bigverb_CODEHEADER_INCLUDED)
-#define mfx_dsp_spat_Bigverb_CODEHEADER_INCLUDED
+#if ! defined (mfx_dsp_spat_ReverbSC_CODEHEADER_INCLUDED)
+#define mfx_dsp_spat_ReverbSC_CODEHEADER_INCLUDED
 
 
 
@@ -46,7 +46,7 @@ namespace spat
 
 
 template <typename T>
-void	Bigverb <T>::set_sample_freq (double sample_freq)
+void	ReverbSC <T>::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
@@ -61,7 +61,7 @@ void	Bigverb <T>::set_sample_freq (double sample_freq)
 
 
 template <typename T>
-void	Bigverb <T>::set_size (float size)
+void	ReverbSC <T>::set_size (float size)
 {
 	assert (_sr > 0);
 	assert (_size >= 0);
@@ -73,7 +73,7 @@ void	Bigverb <T>::set_size (float size)
 
 
 template <typename T>
-void	Bigverb <T>::set_cutoff (float cutoff)
+void	ReverbSC <T>::set_cutoff (float cutoff)
 {
 	assert (_sr > 0);
 	assert (cutoff > 0);
@@ -85,7 +85,7 @@ void	Bigverb <T>::set_cutoff (float cutoff)
 
 
 template <typename T>
-void	Bigverb <T>::process_sample (T *outL, T *outR, T inL, T inR)
+void	ReverbSC <T>::process_sample (T *outL, T *outR, T inL, T inR)
 {
 	assert (_sr > 0);
 
@@ -132,7 +132,7 @@ void	Bigverb <T>::process_sample (T *outL, T *outR, T inL, T inR)
 
 
 template <typename T>
-void	Bigverb <T>::clear_buffers ()
+void	ReverbSC <T>::clear_buffers ()
 {
 	for (auto &delay : _delay)
 	{
@@ -152,7 +152,7 @@ void	Bigverb <T>::clear_buffers ()
 
 // Calculates the length of the delay line
 template <typename T>
-int	Bigverb <T>::ParamSet::get_delay_size (float sr) const
+int	ReverbSC <T>::ParamSet::get_delay_size (float sr) const
 {
 	float          sz = _delay + _drift * 1.125f;
 
@@ -162,7 +162,7 @@ int	Bigverb <T>::ParamSet::get_delay_size (float sr) const
 
 
 template <typename T>
-void	Bigverb <T>::Delay::init (const ParamSet &p, int sz, float sr)
+void	ReverbSC <T>::Delay::init (const ParamSet &p, int sz, float sr)
 {
 	_buf.resize (sz);
 	_sz = sz;
@@ -185,7 +185,7 @@ void	Bigverb <T>::Delay::init (const ParamSet &p, int sz, float sr)
 
 
 template <typename T>
-T	Bigverb <T>::Delay::compute (T in, T fdbk, T filt, float sr)
+T	ReverbSC <T>::Delay::compute (T in, T fdbk, T filt, float sr)
 {
 	// Sends input signal and feedback to delay line
 	_buf [_wpos] = in - _y;
@@ -269,7 +269,7 @@ T	Bigverb <T>::Delay::compute (T in, T fdbk, T filt, float sr)
 
 
 template <typename T>
-void	Bigverb <T>::Delay::generate_next_line (float sr)
+void	ReverbSC <T>::Delay::generate_next_line (float sr)
 {
 	// Updates random seed
 	constexpr int  mul = fstb::ipowpc <6> (5); // 5^6;
@@ -302,7 +302,7 @@ void	Bigverb <T>::Delay::generate_next_line (float sr)
 
 
 template <typename T>
-float	Bigverb <T>::Delay::calculate_drift () const
+float	ReverbSC <T>::Delay::calculate_drift () const
 {
 	return _drift * float (_rng) / float (_rng_scale);
 }
@@ -310,7 +310,7 @@ float	Bigverb <T>::Delay::calculate_drift () const
 
 
 template <typename T>
-void	Bigverb <T>::Delay::clear_buffers ()
+void	ReverbSC <T>::Delay::clear_buffers ()
 {
 	std::fill (_buf.begin (), _buf.end (), T (0));
 	_rng = _seed;
@@ -325,7 +325,7 @@ void	Bigverb <T>::Delay::clear_buffers ()
 
 
 
-#endif   // mfx_dsp_spat_Bigverb_CODEHEADER_INCLUDED
+#endif   // mfx_dsp_spat_ReverbSC_CODEHEADER_INCLUDED
 
 
 
