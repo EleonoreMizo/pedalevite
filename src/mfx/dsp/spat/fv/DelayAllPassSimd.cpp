@@ -72,6 +72,17 @@ void	DelayAllPassSimd::clear_buffers ()
 
 
 
+/*
+Note: the implementation in the original version (by "Jezar at Dreampoint")
+is not really an all-pass filter.
+It becomes a flat filter (APF with an additional gain) only if the feedback
+coefficient is the golden ratio: _fdbk = 0.5 * (sqrt (5) - 1)
+
+See also:
+https://ccrma.stanford.edu/~jos/pasp/Freeverb_Allpass_Approximation.html
+http://freeverb3vst.osdn.jp/tips/allpass.shtml
+*/
+
 void	DelayAllPassSimd::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (dst_ptr != nullptr);
