@@ -383,6 +383,8 @@ commonsrc = \
         ../../src/mfx/dsp/ctrl/Ramp.hpp \
         ../../src/mfx/dsp/ctrl/Smooth.cpp \
         ../../src/mfx/dsp/ctrl/Smooth.h \
+        ../../src/mfx/dsp/ctrl/SmootherLpf.h \
+        ../../src/mfx/dsp/ctrl/SmootherLpf.hpp \
         ../../src/mfx/dsp/ctrl/VarBlock.h \
         ../../src/mfx/dsp/ctrl/VarBlock.hpp \
         ../../src/mfx/dsp/dly/BbdLine.h \
@@ -493,6 +495,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/Downsampler4xSimd.hpp \
         ../../src/mfx/dsp/iir/FilterComb.h \
         ../../src/mfx/dsp/iir/FilterComb.hpp \
+        ../../src/mfx/dsp/iir/Lpf1p.h \
+        ../../src/mfx/dsp/iir/Lpf1p.hpp \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \

@@ -817,6 +817,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Ramp.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\Smooth.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\SmootherLpf.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\SmootherLpf.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\ctrl\VarBlock.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\DenormStop.h" />
@@ -909,6 +911,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler4xSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\FilterComb.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\FilterComb.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Lpf1p.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Lpf1p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerOpBypass.h" />
