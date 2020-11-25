@@ -65,7 +65,10 @@ class RndXoroshiro128p
 
 public:
 
-	inline void    set_seed (uint64_t s0, uint64_t s1);
+	static constexpr uint64_t  _seed_0_def = 0x0123456789ABCDEFULL;
+	static constexpr uint64_t  _seed_1_def = 0xFEDCBA9876543210ULL;
+
+	inline void    set_seed (uint64_t s0 = _seed_0_def, uint64_t s1 = _seed_1_def);
 	inline uint64_t
 	               gen_int ();
 	inline float   gen_flt ();
@@ -94,7 +97,7 @@ private:
 	static inline uint64_t
 	               rotl (uint64_t x, int k);
 
-	Storage        _s {{ 0x0123456789ABCDEFULL, 0xFEDCBA9876543210ULL }};
+	Storage        _s {{ _seed_0_def, _seed_1_def }};
 
 
 
