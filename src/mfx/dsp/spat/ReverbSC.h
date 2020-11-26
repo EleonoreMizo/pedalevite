@@ -73,6 +73,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <array>
 #include <vector>
 
 
@@ -115,8 +116,9 @@ protected:
 
 private:
 
-	static constexpr T  _output_gain = T (0.35);
-	static constexpr T  _jp_scale    = T (0.25);
+	static constexpr int _nbr_delays  = 8;
+	static constexpr T   _output_gain = T (0.35);
+	static constexpr T   _jp_scale    = T (0.25);
 
 	struct ParamSet
 	{
@@ -168,22 +170,8 @@ private:
 	float          _cutoff  = 10000.f;
 	float          _pcutoff = -1.f;
 	T              _filt    = T (1.f);
-	Delay          _delay [8];
-
-	static constexpr ParamSet _params [8] =
-	{
-		//    delay        drift  randfreq  seed
-		{ 2473 / 44100.f, 1.0e-3f, 3.100f,  1966 },
-		{ 2767 / 44100.f, 1.1e-3f, 3.500f, 29491 },
-		{ 3217 / 44100.f, 1.7e-3f, 1.110f, 22937 },
-		{ 3557 / 44100.f, 0.6e-3f, 3.973f,  9830 },
-		{ 3907 / 44100.f, 1.0e-3f, 2.341f, 20643 },
-		{ 4127 / 44100.f, 1.1e-3f, 1.897f, 22937 },
-		{ 2143 / 44100.f, 1.7e-3f, 0.891f, 29491 },
-		{ 1933 / 44100.f, 0.6e-3f, 3.221f, 14417 }
-	};
-
-
+	std::array <Delay, _nbr_delays>
+	               _delay;
 
 
 

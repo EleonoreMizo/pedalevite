@@ -50,11 +50,24 @@ void	ReverbSC <T>::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
+	static constexpr std::array <ParamSet, _nbr_delays> params
+	{{
+		//    delay        drift  randfreq  seed
+		{ 2473 / 44100.f, 1.0e-3f, 3.100f,  1966 },
+		{ 2767 / 44100.f, 1.1e-3f, 3.500f, 29491 },
+		{ 3217 / 44100.f, 1.7e-3f, 1.110f, 22937 },
+		{ 3557 / 44100.f, 0.6e-3f, 3.973f,  9830 },
+		{ 3907 / 44100.f, 1.0e-3f, 2.341f, 20643 },
+		{ 4127 / 44100.f, 1.1e-3f, 1.897f, 22937 },
+		{ 2143 / 44100.f, 1.7e-3f, 0.891f, 29491 },
+		{ 1933 / 44100.f, 0.6e-3f, 3.221f, 14417 }
+	}};
+
 	_sr = float (sample_freq);
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < _nbr_delays; ++i)
 	{
-		const int      sz = _params [i].get_delay_size (_sr);
-		_delay [i].init (_params [i], sz, _sr);
+		const int      sz = params [i].get_delay_size (_sr);
+		_delay [i].init (params [i], sz, _sr);
 	}
 }
 
@@ -102,7 +115,7 @@ void	ReverbSC <T>::process_sample (T *outL, T *outR, T inL, T inR)
 
 	// Calculates "resultant junction pressure" and mix to input signals
 	T jp = 0;
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < _nbr_delays; ++i)
 	{
 		jp += _delay [i]._y;
 	}
@@ -112,7 +125,7 @@ void	ReverbSC <T>::process_sample (T *outL, T *outR, T inL, T inR)
 	inR += jp;
 
 	// Loops through all delay lines
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < _nbr_delays; ++i)
 	{
 		// Mix to output
 		if (i & 1)
