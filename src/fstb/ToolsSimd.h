@@ -319,6 +319,8 @@ public:
 		               insert (VectF32 a, float val);
 		static inline VectF32
 		               spread (VectF32 a);
+		static inline VectF32
+		               compose (VectF32 a, VectF32 b);
 
 		static inline VectS32
 		               rotate (VectS32 a);
@@ -328,6 +330,8 @@ public:
 		               insert (VectS32 a, int32_t val);
 		static inline VectS32
 		               spread (VectS32 a);
+		static inline VectS32
+		               compose (VectS32 a, VectS32 b);
 	};
 
 

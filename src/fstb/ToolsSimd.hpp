@@ -2095,7 +2095,7 @@ ToolsSimd::VectS32	ToolsSimd::max_s32 (VectS32 lhs, VectS32 rhs)
 
 
 
-// Positive = left
+// Positive = to the left, rotates towards the higher indexes
 template <int SHIFT>
 ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::rotate (VectF32 a)
 {
@@ -2177,6 +2177,51 @@ ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::spread (VectF32 a)
 	return _mm_shuffle_ps (a, a, 0x55 * (SHIFT & 3));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_f32 (vgetq_lane_f32 (a, SHIFT & 3));
+#endif // ff_arch_CPU
+}
+
+
+
+// Extracts the vector at the position SHIFT from the double-width vector {a b}
+// Concatenates a [SHIFT...3] with b [0...3-SHIFT]
+template <int SHIFT>
+ToolsSimd::VectF32	ToolsSimd::Shift <SHIFT>::compose (VectF32 a, VectF32 b)
+{
+#if ! defined (fstb_HAS_SIMD)
+	switch (SHIFT & 3)
+	{
+	case 1: a._ [0] = a._[1]; a._ [1] = a._[2]; a._ [2] = a._[3]; a._ [3] = b._[0]; break;
+	case 2: a._ [0] = a._[2]; a._ [1] = a._[3]; a._ [2] = b._[0]; a._ [3] = b._[1]; break;
+	case 3: a._ [0] = a._[3]; a._ [1] = b._[0]; a._ [2] = b._[1]; a._ [3] = b._[2]; break;
+	default: break;
+	}
+	return a;
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	switch (SHIFT & 3)
+	{
+	case 1:
+		a = _mm_move_ss (a, b);
+		return _mm_shuffle_ps (a, a, (0<<6) | (3<<4) | (2<<2) | (1<<0));
+	case 2:
+		return _mm_shuffle_ps (a, b, (1<<6) | (0<<4) | (3<<2) | (2<<0));
+	case 3:
+		a = _mm_shuffle_ps (a, a, (2<<6) | (1<<4) | (0<<2) | (3<<0));
+		b = _mm_shuffle_ps (b, b, (2<<6) | (1<<4) | (0<<2) | (3<<0));
+		return _mm_move_ss (b, a);
+	default:
+		return a;
+	}
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	int32x4_t        aa = vreinterpretq_s32_f32 (a);
+	const int32x4_t  bb = vreinterpretq_s32_f32 (b);
+	switch (SHIFT & 3)
+	{
+	case 1:  aa = vextq_s32 (aa, bb, 1); break;
+	case 2:  aa = vextq_s32 (aa, bb, 2); break;
+	case 3:  aa = vextq_s32 (aa, bb, 3); break;
+	default: /* Nothing */               break;
+	}
+	return vreinterpretq_f32_s32 (aa);
 #endif // ff_arch_CPU
 }
 
@@ -2266,6 +2311,57 @@ ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::spread (VectS32 a)
 	return _mm_shuffle_epi32 (a, 0x55 * (SHIFT & 3));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vdupq_n_s32 (vgetq_lane_s32 (a, SHIFT & 3));
+#endif // ff_arch_CPU
+}
+
+
+
+// Extracts the vector at the position SHIFT from the double-width vector {a b}
+// Concatenates a [SHIFT...3] with b [0...3-SHIFT]
+template <int SHIFT>
+ToolsSimd::VectS32	ToolsSimd::Shift <SHIFT>::compose (VectS32 a, VectS32 b)
+{
+#if ! defined (fstb_HAS_SIMD)
+	switch (SHIFT & 3)
+	{
+	case 1: a._ [0] = a._[1]; a._ [1] = a._[2]; a._ [2] = a._[3]; a._ [3] = b._[0]; break;
+	case 2: a._ [0] = a._[2]; a._ [1] = a._[3]; a._ [2] = b._[0]; a._ [3] = b._[1]; break;
+	case 3: a._ [0] = a._[3]; a._ [1] = b._[0]; a._ [2] = b._[1]; a._ [3] = b._[2]; break;
+	default: break;
+	}
+	return a;
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	switch (SHIFT & 3)
+	{
+	case 1:
+		a = _mm_castps_si128 (_mm_move_ss (
+			_mm_castsi128_ps (a), _mm_castsi128_ps (b)
+		));
+		return _mm_shuffle_epi32 (a, (0<<6) | (3<<4) | (2<<2) | (1<<0));
+	case 2:
+		return _mm_castps_si128 (_mm_shuffle_ps (
+			_mm_castsi128_ps (a),
+			_mm_castsi128_ps (b),
+			(1<<6) | (0<<4) | (3<<2) | (2<<0)
+		));
+	case 3:
+		a = _mm_shuffle_epi32 (a, (2<<6) | (1<<4) | (0<<2) | (3<<0));
+		b = _mm_shuffle_epi32 (b, (2<<6) | (1<<4) | (0<<2) | (3<<0));
+		return _mm_castps_si128 (_mm_move_ss (
+			_mm_castsi128_ps (b), _mm_castsi128_ps (a)
+		));
+	default:
+		return a;
+	}
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	switch (SHIFT & 3)
+	{
+	case 1:  a = vextq_s32 (a, b, 1); break;
+	case 2:  a = vextq_s32 (a, b, 2); break;
+	case 3:  a = vextq_s32 (a, b, 3); break;
+	default: /* Nothing */            break;
+	}
+	return a;
 #endif // ff_arch_CPU
 }
 
