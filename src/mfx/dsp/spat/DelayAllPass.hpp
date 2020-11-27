@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ToolsSimd.h"
+
 #include <algorithm>
 #include <array>
 
@@ -35,6 +37,70 @@ namespace dsp
 {
 namespace spat
 {
+
+
+
+template <typename T>
+fstb_FORCEINLINE void	DelayAllPass_mac_vec_std (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_1_ptr, const T * fstb_RESTRICT src_2_ptr, T coef, int nbr_spl)
+{
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		dst_ptr [pos] = src_1_ptr [pos] + src_2_ptr [pos] * coef;
+	}
+}
+
+template <typename T>
+fstb_FORCEINLINE void	DelayAllPass_mac_vec (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_1_ptr, const T * fstb_RESTRICT src_2_ptr, T coef, int nbr_spl)
+{
+	assert (dst_ptr != src_1_ptr);
+	assert (dst_ptr != src_2_ptr);
+	assert (src_1_ptr != src_2_ptr);
+
+	DelayAllPass_mac_vec_std (dst_ptr, src_1_ptr, src_2_ptr, coef, nbr_spl);
+}
+
+#if defined (fstb_HAS_SIMD)
+
+template <>
+fstb_FORCEINLINE void	DelayAllPass_mac_vec (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_1_ptr, const float * fstb_RESTRICT src_2_ptr, float coef, int nbr_spl)
+{
+	const auto        c = fstb::ToolsSimd::set1_f32 (coef);
+
+	const int         len_m16 = nbr_spl & ~15;
+	for (int pos = 0; pos < len_m16; pos += 16)
+	{
+		auto              x0 = fstb::ToolsSimd::loadu_f32 (src_1_ptr + pos     );
+		auto              x1 = fstb::ToolsSimd::loadu_f32 (src_1_ptr + pos +  4);
+		auto              x2 = fstb::ToolsSimd::loadu_f32 (src_1_ptr + pos +  8);
+		auto              x3 = fstb::ToolsSimd::loadu_f32 (src_1_ptr + pos + 12);
+		const auto        b0 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos     );
+		const auto        b1 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos +  4);
+		const auto        b2 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos +  8);
+		const auto        b3 = fstb::ToolsSimd::loadu_f32 (src_2_ptr + pos + 12);
+		fstb::ToolsSimd::mac (x0, b0, c);
+		fstb::ToolsSimd::mac (x1, b1, c);
+		fstb::ToolsSimd::mac (x2, b2, c);
+		fstb::ToolsSimd::mac (x3, b3, c);
+		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos     , x0);
+		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos +  4, x1);
+		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos +  8, x2);
+		fstb::ToolsSimd::storeu_f32 (dst_ptr + pos + 12, x3);
+	}
+
+	const int      rem = nbr_spl - len_m16;
+	if (rem > 0)
+	{
+		DelayAllPass_mac_vec_std (
+			dst_ptr   + len_m16,
+			src_1_ptr + len_m16,
+			src_2_ptr + len_m16,
+			coef,
+			rem
+		);
+	}
+}
+
+#endif // fstb_HAS_SIMD
 
 
 
@@ -140,6 +206,7 @@ int	DelayAllPass <T, NPL2>::get_max_block_len () const
 
 
 
+
 template <typename T, int NPL2>
 void	DelayAllPass <T, NPL2>::process_block (T dst_ptr [], const T src_ptr [], int nbr_spl)
 {
@@ -160,22 +227,14 @@ void	DelayAllPass <T, NPL2>::process_block (T dst_ptr [], const T src_ptr [], in
 		const int      work_len = std::min (nbr_spl - pos, buf_len);
 
 		_delay.read_block (buf_y_ptr, work_len);
-		{
-			const T * fstb_RESTRICT src_r_ptr = src_ptr + pos;
-			for (int k = 0; k < work_len; ++k)
-			{
-				buf_x_ptr [k] = src_r_ptr [k] - buf_y_ptr [k] * _coef;
-			}
-		}
+		DelayAllPass_mac_vec (
+			buf_x_ptr, src_ptr + pos, buf_y_ptr, -_coef, work_len
+		);
 		_delay.write_block (buf_x_ptr, work_len);
 		_delay.step_block (work_len);
-		{
-			T * fstb_RESTRICT dst_r_ptr = dst_ptr + pos;
-			for (int k = 0; k < work_len; ++k)
-			{
-				dst_r_ptr [k] = buf_y_ptr [k] + buf_x_ptr [k] * _coef;
-			}
-		}
+		DelayAllPass_mac_vec (
+			dst_ptr + pos, buf_y_ptr, buf_x_ptr, +_coef, work_len
+		);
 
 		pos += work_len;
 	}
