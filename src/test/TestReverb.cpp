@@ -382,7 +382,7 @@ int	TestReverb::test_delay_frac ()
 	{
 		tim.reset ();
 		tim.start ();
-		for (int count = 0; count < 256; ++count)
+		for (int count = 0; count < 32; ++count)
 		{
 			pos = 0;
 			do
@@ -445,9 +445,27 @@ int	TestReverb::test_delay_apf ()
 	int            dly_fix = fstb::round_int (2.875f * Delay::_nbr_phases);
 	delay.set_delay_fix (dly_fix);
 	int            dir = 1;
-	for (int pos = 0; pos < len; ++pos)
+	int            pos = 0;
+	while (pos < len)
 	{
-		dst [pos] = delay.process_sample (src [pos]);
+		int            work_len   = 1;
+		const int      max_blk_len = delay.get_max_block_len ();
+		if (pos < len * 5 / 8)
+		{
+			dst [pos] = delay.process_sample (src [pos]);
+		}
+		else
+		{
+			if (max_blk_len <= 0)
+			{
+				work_len = 0;
+			}
+			else
+			{
+				work_len = std::min (len - pos, max_blk_len);
+				delay.process_block (&dst [pos], &src [pos], work_len);
+			}
+		}
 		if (pos >= 1000)
 		{
 			if (   dly_fix <= Delay::_delay_min * Delay::_nbr_phases
@@ -458,9 +476,55 @@ int	TestReverb::test_delay_apf ()
 			dly_fix += dir;
 			delay.set_delay_fix (dly_fix);
 		}
+
+		pos += work_len;
 	}
 
 	mfx::FileOpWav::save ("results/delayapf0.wav", dst, sample_freq, 0.5f);
+
+	// Speed test
+	delay.set_max_len (256);
+	constexpr int  len_block = 87;
+	delay.set_delay_flt (len_block + 16);
+	TimerAccurate  tim;
+	{
+		tim.reset ();
+		tim.start ();
+		for (int count = 0; count < 256; ++count)
+		{
+			for (pos = 0; pos < len; ++pos)
+			{
+				dst [pos] = delay.process_sample (src [pos]);
+			}
+			tim.stop_lap ();
+		}
+
+		const double   spl_per_s = tim.get_best_rate (len);
+		const double   kilo_sps  = spl_per_s / 1e3;
+		const double   rt_mul    = spl_per_s / sample_freq;
+		printf ("Speed (sample): %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
+	}
+	{
+		tim.reset ();
+		tim.start ();
+		for (int count = 0; count < 32; ++count)
+		{
+			pos = 0;
+			do
+			{
+				const int      work_len = std::min (len - pos, len_block);
+				delay.process_block (&dst [pos], &src [pos], work_len);
+				pos += work_len;
+			}
+			while (pos < len);
+			tim.stop_lap ();
+		}
+
+		const double   spl_per_s = tim.get_best_rate (len);
+		const double   kilo_sps  = spl_per_s / 1e3;
+		const double   rt_mul    = spl_per_s / sample_freq;
+		printf ("Speed (block): %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
+	}
 
 	return ret_val;
 }

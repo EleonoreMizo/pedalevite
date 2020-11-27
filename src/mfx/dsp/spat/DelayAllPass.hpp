@@ -22,6 +22,9 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include <algorithm>
+#include <array>
+
 #include <cassert>
 
 
@@ -125,6 +128,58 @@ T	DelayAllPass <T, NPL2>::process_sample (T x)
 	_delay.step ();
 
 	return y;
+}
+
+
+
+template <typename T, int NPL2>
+int	DelayAllPass <T, NPL2>::get_max_block_len () const
+{
+	return _delay.get_max_block_len ();
+}
+
+
+
+template <typename T, int NPL2>
+void	DelayAllPass <T, NPL2>::process_block (T dst_ptr [], const T src_ptr [], int nbr_spl)
+{
+	assert (src_ptr != nullptr);
+	assert (dst_ptr != nullptr);
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= get_max_block_len ());
+
+	constexpr int  buf_len = 128;
+	std::array <T, buf_len> buf_x;
+	std::array <T, buf_len> buf_y;
+	T * fstb_RESTRICT buf_x_ptr = buf_x.data ();
+	T * fstb_RESTRICT buf_y_ptr = buf_y.data ();
+
+	int            pos = 0;
+	do
+	{
+		const int      work_len = std::min (nbr_spl - pos, buf_len);
+
+		_delay.read_block (buf_y_ptr, work_len);
+		{
+			const T * fstb_RESTRICT src_r_ptr = src_ptr + pos;
+			for (int k = 0; k < work_len; ++k)
+			{
+				buf_x_ptr [k] = src_r_ptr [k] - buf_y_ptr [k] * _coef;
+			}
+		}
+		_delay.write_block (buf_x_ptr, work_len);
+		_delay.step_block (work_len);
+		{
+			T * fstb_RESTRICT dst_r_ptr = dst_ptr + pos;
+			for (int k = 0; k < work_len; ++k)
+			{
+				dst_r_ptr [k] = buf_y_ptr [k] + buf_x_ptr [k] * _coef;
+			}
+		}
+
+		pos += work_len;
+	}
+	while (pos < nbr_spl);
 }
 
 

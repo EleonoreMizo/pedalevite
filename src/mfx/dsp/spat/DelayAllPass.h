@@ -77,6 +77,11 @@ public:
 	               step ();
 	fstb_FORCEINLINE T
 	               process_sample (T x);
+
+	fstb_FORCEINLINE int
+	               get_max_block_len () const;
+	void           process_block (T dst_ptr [], const T src_ptr [], int nbr_spl);
+
 	void           clear_buffers ();
 
 
