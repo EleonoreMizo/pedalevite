@@ -96,29 +96,17 @@ void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * f
 	const auto     i2 = fstb::ToolsSimd::set1_f32 (phase_ptr [2]);
 	const auto     i3 = fstb::ToolsSimd::set1_f32 (phase_ptr [3]);
 
-	const int      len_m16 = len & ~15;
+#if fstb_ARCHI == fstb_ARCHI_ARM
+
+	// len - 1 because vg collects an extra sample
+	const int      len_m16 = (len - 1) & ~15;
+	auto           v0 = fstb::ToolsSimd::loadu_f32 (src_ptr);
 	for (int pos = 0; pos < len_m16; pos += 16)
 	{
-		const auto     v0 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos     ]);
 		const auto     v4 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  4]);
 		const auto     v8 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  8]);
 		const auto     vc = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 12]);
-#if 1
-		const auto     v1 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  1]);
-		const auto     v2 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  2]);
-		const auto     v3 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  3]);
-		const auto     v5 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  5]);
-		const auto     v6 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  6]);
-		const auto     v7 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  7]);
-		const auto     v9 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  9]);
-		const auto     va = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 10]);
-		const auto     vb = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 11]);
-		const auto     vd = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 13]);
-		const auto     ve = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 14]);
-		const auto     vf = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 15]);
-#else
-		const auto     vf = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 15]);
-		const auto     vg = fstb::ToolsSimd::Shift <3>::rotate (vf);
+		const auto     vg = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 16]);
 		const auto     v1 = fstb::ToolsSimd::Shift <1>::compose (v0, v4);
 		const auto     v2 = fstb::ToolsSimd::Shift <2>::compose (v0, v4);
 		const auto     v3 = fstb::ToolsSimd::Shift <3>::compose (v0, v4);
@@ -130,7 +118,39 @@ void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * f
 		const auto     vb = fstb::ToolsSimd::Shift <3>::compose (v8, vc);
 		const auto     vd = fstb::ToolsSimd::Shift <1>::compose (vc, vg);
 		const auto     ve = fstb::ToolsSimd::Shift <2>::compose (vc, vg);
-#endif
+		const auto     vf = fstb::ToolsSimd::Shift <3>::compose (vc, vg);
+		const auto     x0 = (v0 * i0 + v1 * i1) + (v2 * i2 + v3 * i3);
+		const auto     x4 = (v4 * i0 + v5 * i1) + (v6 * i2 + v7 * i3);
+		const auto     x8 = (v8 * i0 + v9 * i1) + (va * i2 + vb * i3);
+		const auto     xc = (vc * i0 + vd * i1) + (ve * i2 + vf * i3);
+		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos     ], x0);
+		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos +  4], x4);
+		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos +  8], x8);
+		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos + 12], xc);
+		v0 = vg;
+	}
+
+#else // fstb_ARCHI
+
+	const int      len_m16 = len & ~15;
+	for (int pos = 0; pos < len_m16; pos += 16)
+	{
+		const auto     v0 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos     ]);
+		const auto     v1 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  1]);
+		const auto     v2 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  2]);
+		const auto     v3 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  3]);
+		const auto     v4 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  4]);
+		const auto     v5 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  5]);
+		const auto     v6 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  6]);
+		const auto     v7 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  7]);
+		const auto     v8 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  8]);
+		const auto     v9 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  9]);
+		const auto     va = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 10]);
+		const auto     vb = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 11]);
+		const auto     vc = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 12]);
+		const auto     vd = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 13]);
+		const auto     ve = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 14]);
+		const auto     vf = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 15]);
 		const auto     x0 = (v0 * i0 + v1 * i1) + (v2 * i2 + v3 * i3);
 		const auto     x4 = (v4 * i0 + v5 * i1) + (v6 * i2 + v7 * i3);
 		const auto     x8 = (v8 * i0 + v9 * i1) + (va * i2 + vb * i3);
@@ -140,6 +160,8 @@ void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * f
 		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos +  8], x8);
 		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos + 12], xc);
 	}
+
+#endif // fstb_ARCHI
 
 	const int      rem = len - len_m16;
 	if (rem > 0)
