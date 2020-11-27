@@ -23,7 +23,10 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/fnc.h"
+#include "fstb/ToolsSimd.h"
 #include "mfx/dsp/rspl/InterpFtor.h"
+
+#include <algorithm>
 
 #include <cassert>
 
@@ -35,6 +38,119 @@ namespace dsp
 {
 namespace spat
 {
+
+
+
+template <typename T>
+static void	DelayFrac_interpolate_block_std (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len)
+{
+	const T        i0 { phase_ptr [0] };
+	const T        i1 { phase_ptr [1] };
+	const T        i2 { phase_ptr [2] };
+	const T        i3 { phase_ptr [3] };
+
+	T              v0 { src_ptr [0] };
+	T              v1 { src_ptr [1] };
+	T              v2 { src_ptr [2] };
+	const int      len_m4 = len & ~3;
+	for (int pos = 0; pos < len_m4; pos += 4)
+	{
+		const T        v3 { src_ptr [pos + 3] };
+		const T        x0 { (v0 * i0 + v1 * i1) + (v2 * i2 + v3 * i3) };
+		v0 = src_ptr [pos + 4];
+		const T        x1 { (v1 * i0 + v2 * i1) + (v3 * i2 + v0 * i3) };
+		v1 = src_ptr [pos + 5];
+		const T        x2 { (v2 * i0 + v3 * i1) + (v0 * i2 + v1 * i3) };
+		v2 = src_ptr [pos + 6];
+		const T        x3 { (v3 * i0 + v0 * i1) + (v1 * i2 + v2 * i3) };
+		dst_ptr [pos    ] = x0;
+		dst_ptr [pos + 1] = x1;
+		dst_ptr [pos + 2] = x2;
+		dst_ptr [pos + 3] = x3;
+	}
+	for (int pos = len_m4; pos < len; ++pos)
+	{
+		const T        v3 { src_ptr [pos + 3] };
+		dst_ptr [pos] = (v0 * i0 + v1 * i1) + (v2 * i2 + v3 * i3);
+		v0 = v1;
+		v1 = v2;
+		v2 = v3;
+	}
+}
+
+
+
+template <typename T>
+static fstb_FORCEINLINE void	DelayFrac_interpolate_block (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len)
+{
+	DelayFrac_interpolate_block_std (dst_ptr, src_ptr, phase_ptr, len);
+}
+
+#if defined (fstb_HAS_SIMD)
+
+template <>
+void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len)
+{
+	const auto     i0 = fstb::ToolsSimd::set1_f32 (phase_ptr [0]);
+	const auto     i1 = fstb::ToolsSimd::set1_f32 (phase_ptr [1]);
+	const auto     i2 = fstb::ToolsSimd::set1_f32 (phase_ptr [2]);
+	const auto     i3 = fstb::ToolsSimd::set1_f32 (phase_ptr [3]);
+
+	const int      len_m16 = len & ~15;
+	for (int pos = 0; pos < len_m16; pos += 16)
+	{
+		const auto     v0 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos     ]);
+		const auto     v4 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  4]);
+		const auto     v8 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  8]);
+		const auto     vc = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 12]);
+#if 1
+		const auto     v1 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  1]);
+		const auto     v2 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  2]);
+		const auto     v3 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  3]);
+		const auto     v5 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  5]);
+		const auto     v6 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  6]);
+		const auto     v7 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  7]);
+		const auto     v9 = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos +  9]);
+		const auto     va = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 10]);
+		const auto     vb = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 11]);
+		const auto     vd = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 13]);
+		const auto     ve = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 14]);
+		const auto     vf = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 15]);
+#else
+		const auto     vf = fstb::ToolsSimd::loadu_f32 (&src_ptr [pos + 15]);
+		const auto     vg = fstb::ToolsSimd::Shift <3>::rotate (vf);
+		const auto     v1 = fstb::ToolsSimd::Shift <1>::compose (v0, v4);
+		const auto     v2 = fstb::ToolsSimd::Shift <2>::compose (v0, v4);
+		const auto     v3 = fstb::ToolsSimd::Shift <3>::compose (v0, v4);
+		const auto     v5 = fstb::ToolsSimd::Shift <1>::compose (v4, v8);
+		const auto     v6 = fstb::ToolsSimd::Shift <2>::compose (v4, v8);
+		const auto     v7 = fstb::ToolsSimd::Shift <3>::compose (v4, v8);
+		const auto     v9 = fstb::ToolsSimd::Shift <1>::compose (v8, vc);
+		const auto     va = fstb::ToolsSimd::Shift <2>::compose (v8, vc);
+		const auto     vb = fstb::ToolsSimd::Shift <3>::compose (v8, vc);
+		const auto     vd = fstb::ToolsSimd::Shift <1>::compose (vc, vg);
+		const auto     ve = fstb::ToolsSimd::Shift <2>::compose (vc, vg);
+#endif
+		const auto     x0 = (v0 * i0 + v1 * i1) + (v2 * i2 + v3 * i3);
+		const auto     x4 = (v4 * i0 + v5 * i1) + (v6 * i2 + v7 * i3);
+		const auto     x8 = (v8 * i0 + v9 * i1) + (va * i2 + vb * i3);
+		const auto     xc = (vc * i0 + vd * i1) + (ve * i2 + vf * i3);
+		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos     ], x0);
+		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos +  4], x4);
+		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos +  8], x8);
+		fstb::ToolsSimd::storeu_f32 (&dst_ptr [pos + 12], xc);
+	}
+
+	const int      rem = len - len_m16;
+	if (rem > 0)
+	{
+		DelayFrac_interpolate_block_std (
+			dst_ptr + len_m16, src_ptr + len_m16, phase_ptr, rem
+		);
+	}
+}
+
+#endif // fstb_HAS_SIMD
 
 
 
@@ -64,7 +180,6 @@ void	DelayFrac <T, NPL2>::set_max_len (int len)
 
 
 
-// ones.
 template <typename T, int NPL2>
 void	DelayFrac <T, NPL2>::set_delay_flt (float len_spl)
 {
@@ -87,34 +202,23 @@ void	DelayFrac <T, NPL2>::set_delay_fix (int len_fixp)
 
 
 
+// Returns the integer part of the current delay.
+template <typename T, int NPL2>
+int	DelayFrac <T, NPL2>::get_delay_len_int () const
+{
+	assert (_phase_ptr != nullptr);
+
+	return _delay_int;
+}
+
+
+
 template <typename T, int NPL2>
 T	DelayFrac <T, NPL2>::read () const
 {
 	assert (_phase_ptr != nullptr);
 
-	const int      pos_read = _pos_write - _delay_int;
-	const T        v0 { _buffer [(pos_read - 2) & _buf_msk] };
-	const T        v1 { _buffer [(pos_read - 1) & _buf_msk] };
-	const T        v2 { _buffer [(pos_read    ) & _buf_msk] };
-	const T        v3 { _buffer [(pos_read + 1) & _buf_msk] };
-
-#if 1
-
-	// FIR interpolation
-	const Phase &  phase = *_phase_ptr;
-	const T        i0 { phase [0] };
-	const T        i1 { phase [1] };
-	const T        i2 { phase [2] };
-	const T        i3 { phase [3] };
-
-	return (v0 * i0 + v1 * i1) + (v2 * i2 + v3 * i3);
-
-#else
-
-	// Simple linear interpolation, for testing
-	return v2 + _delay_frc * (v1 - v2) * T (1.f / _nbr_phases);
-
-#endif
+	return read_safe (_pos_write - _delay_int);
 }
 
 
@@ -153,6 +257,94 @@ T	DelayFrac <T, NPL2>::process_sample (T x)
 
 
 
+// Returns the maximum block length when processing with feedback
+template <typename T, int NPL2>
+int	DelayFrac <T, NPL2>::get_max_block_len () const
+{
+	assert (_phase_ptr != nullptr);
+
+	return _delay_int - (_phase_len - 1);
+}
+
+
+
+template <typename T, int NPL2>
+void	DelayFrac <T, NPL2>::read_block (T dst_ptr [], int len) const
+{
+	assert (_phase_ptr != nullptr);
+	assert (len > 0);
+	assert (len <= _delay_len);
+
+	const int      buf_len  = int (_buffer.size ());
+	int            pos_read = (_pos_write - _delay_int) & _buf_msk;
+	int            pos      = 0; // Position within the block
+	do
+	{
+		const int      room     = buf_len - (pos_read + _ph_post);
+		const int      rem      = len - pos;
+		int            len_part = std::min (rem, room);
+
+		// Read without pointer wrap
+		if (pos_read >= _ph_pre && len_part > 0)
+		{
+			DelayFrac_interpolate_block (
+				dst_ptr + pos,
+				&_buffer [pos_read] - _ph_pre,
+				_phase_ptr->data (),
+				len_part
+			);
+		}
+
+		// Read with pointer wrap
+		else
+		{
+			len_part = std::min (rem, _phase_len);
+			for (int k = 0; k < len_part; ++k)
+			{
+				dst_ptr [pos + k] = read_safe (pos_read + k);
+			}
+		}
+
+		pos     += len_part;
+		pos_read = (pos_read + len_part) & _buf_msk;
+	}
+	while (pos < len);
+}
+
+
+
+template <typename T, int NPL2>
+void	DelayFrac <T, NPL2>::write_block (const T src_ptr [], int len)
+{
+	assert (_phase_ptr != nullptr);
+	assert (src_ptr != 0);
+	assert (len > 0);
+	assert (len <= _delay_len);
+
+	const int      buf_len = int (_buffer.size ());
+	const int      room    = buf_len - _pos_write;
+	const int      len_1   = std::min (len, room);
+	std::copy (src_ptr, src_ptr + len_1, &_buffer [_pos_write]);
+	if (len_1 < len)
+	{
+		std::copy (src_ptr + len_1, src_ptr + len, _buffer.data ());
+	}
+}
+
+
+
+template <typename T, int NPL2>
+void	DelayFrac <T, NPL2>::step_block (int len)
+{
+	assert (_phase_ptr != nullptr);
+	assert (len > 0);
+	assert (len <= _delay_len);
+
+	_pos_write = (_pos_write + len) & _buf_msk;
+}
+
+
+
 template <typename T, int NPL2>
 void	DelayFrac <T, NPL2>::clear_buffers ()
 {
@@ -175,6 +367,35 @@ bool	DelayFrac <T, NPL2>::_interp_init_flag = false;
 
 template <typename T, int NPL2>
 typename DelayFrac <T, NPL2>::PhaseArray	DelayFrac <T, NPL2>::_phase_arr;
+
+
+
+template <typename T, int NPL2>
+T	DelayFrac <T, NPL2>::read_safe (int pos_read) const
+{
+	const T        v0 { _buffer [(pos_read - 2) & _buf_msk] };
+	const T        v1 { _buffer [(pos_read - 1) & _buf_msk] };
+	const T        v2 { _buffer [(pos_read    ) & _buf_msk] };
+	const T        v3 { _buffer [(pos_read + 1) & _buf_msk] };
+
+#if 1
+
+	// FIR interpolation
+	const Phase &  phase = *_phase_ptr;
+	const T        i0 { phase [0] };
+	const T        i1 { phase [1] };
+	const T        i2 { phase [2] };
+	const T        i3 { phase [3] };
+
+	return (v0 * i0 + v1 * i1) + (v2 * i2 + v3 * i3);
+
+#else
+
+	// Simple linear interpolation, for testing
+	return v2 + _delay_frc * (v1 - v2) * T (1.f / _nbr_phases);
+
+#endif
+}
 
 
 
