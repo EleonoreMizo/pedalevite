@@ -85,6 +85,8 @@ public:
 
 	fstb_FORCEINLINE T
 	               read () const;
+	fstb_FORCEINLINE T
+	               read_at (int delay) const;
 	fstb_FORCEINLINE void
 	               write (T x);
 	fstb_FORCEINLINE void
@@ -96,6 +98,8 @@ public:
 	               get_max_block_len () const;
 	fstb_FORCEINLINE void
 	               read_block (T dst_ptr [], int len) const;
+	fstb_FORCEINLINE void
+	               read_block_at (T dst_ptr [], int delay, int len) const;
 	fstb_FORCEINLINE void
 	               write_block (const T src_ptr [], int len);
 	fstb_FORCEINLINE void

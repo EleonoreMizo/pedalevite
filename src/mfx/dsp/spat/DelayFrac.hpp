@@ -89,7 +89,7 @@ static fstb_FORCEINLINE void	DelayFrac_interpolate_block (T * fstb_RESTRICT dst_
 #if defined (fstb_HAS_SIMD)
 
 template <>
-void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len)
+inline void	DelayFrac_interpolate_block (float * fstb_RESTRICT dst_ptr, const float * fstb_RESTRICT src_ptr, const float * fstb_RESTRICT phase_ptr, int len)
 {
 	const auto     i0 = fstb::ToolsSimd::set1_f32 (phase_ptr [0]);
 	const auto     i1 = fstb::ToolsSimd::set1_f32 (phase_ptr [1]);
@@ -245,6 +245,19 @@ T	DelayFrac <T, NPL2>::read () const
 
 
 
+// Non-interpolated read at random position
+// Not constrained by the current delay length
+template <typename T, int NPL2>
+T	DelayFrac <T, NPL2>::read_at (int delay) const
+{
+	assert (delay > 0);
+	assert (delay <= _delay_len);
+
+	return _buffer [(_pos_write - delay) & _buf_msk];
+}
+
+
+
 template <typename T, int NPL2>
 void	DelayFrac <T, NPL2>::write (T x)
 {
@@ -331,6 +344,29 @@ void	DelayFrac <T, NPL2>::read_block (T dst_ptr [], int len) const
 		pos_read = (pos_read + len_part) & _buf_msk;
 	}
 	while (pos < len);
+}
+
+
+
+// Non-interpolated read at random position
+// Not constrained by the current delay length
+template <typename T, int NPL2>
+void	DelayFrac <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) const
+{
+	assert (delay >= 0);
+	assert (delay <= _delay_len);
+	assert (len > 0);
+	assert (len <= delay + 1);
+
+	const int      buf_len  = int (_buffer.size ());
+	int            pos_read = (_pos_write - delay) & _buf_msk;
+	const int      room     = buf_len - pos_read;
+	const int      len_1    = std::min (len, room);
+	std::copy (&_buffer [pos_read], &_buffer [pos_read + len_1], dst_ptr);
+	if (len_1 < len)
+	{
+		std::copy (_buffer.data (), &_buffer [len - len_1], dst_ptr + len_1);
+	}
 }
 
 
