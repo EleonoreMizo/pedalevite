@@ -89,7 +89,7 @@ std::pair <typename LatticeStereo <D, N>::DataType, typename LatticeStereo <D, N
 	{
 		const DataType    fl = _ltc_arr [0].use_delay_output (idx);
 		const DataType    fr = _ltc_arr [1].use_delay_output (idx);
-#if 0
+#if 1
 		// Positive cross-feedback
 		const DataType    cs = _cross_fdbk * (fl - fr);
 		const DataType    yl = fl - cs;

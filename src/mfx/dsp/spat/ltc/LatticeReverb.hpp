@@ -91,7 +91,7 @@ LatticeReverb <T, N, MAXDT>::LatticeReverb ()
 
 	_lfo_freq  = 0.01f;
 
-	_cross_fdbk.set_val (T (0.5f));
+	_cross_fdbk.set_val (T (0.125f));
 	_stereo_spread.set_val (T (0.5f));
 
 	_rnd_gen.set_seed (); // Uses default seed values
