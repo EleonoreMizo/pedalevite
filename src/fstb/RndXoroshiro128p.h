@@ -66,7 +66,7 @@ class RndXoroshiro128p
 public:
 
 	static constexpr uint64_t  _seed_0_def = 0x0123456789ABCDEFULL;
-	static constexpr uint64_t  _seed_1_def = 0xFEDCBA9876543210ULL;
+	static constexpr uint64_t  _seed_1_def = 0xB50A4F93E82D71C6ULL;
 
 	inline void    set_seed (uint64_t s0 = _seed_0_def, uint64_t s1 = _seed_1_def);
 	inline uint64_t
