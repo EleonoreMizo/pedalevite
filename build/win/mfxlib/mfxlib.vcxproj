@@ -1088,6 +1088,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTruncMod.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ApfLine.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ApfLine.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbDattorro.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\Cascade.h" />
@@ -1801,6 +1802,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimple.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\DelayLineSimpleMod.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\ReverbDattorro.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\SplDataRetrievalInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\BigMuffPi.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />

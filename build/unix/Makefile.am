@@ -719,6 +719,8 @@ commonsrc = \
         ../../src/mfx/dsp/spat/DelayAllPass.hpp \
         ../../src/mfx/dsp/spat/DelayFrac.h \
         ../../src/mfx/dsp/spat/DelayFrac.hpp \
+        ../../src/mfx/dsp/spat/ReverbDattorro.cpp \
+        ../../src/mfx/dsp/spat/ReverbDattorro.h \
         ../../src/mfx/dsp/spat/ReverbSc.h \
         ../../src/mfx/dsp/spat/ReverbSc.hpp \
         ../../src/mfx/dsp/spec/StftHelper.h \

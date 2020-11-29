@@ -4860,6 +4860,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ApfLine.hpp">
       <Filter>mfx\dsp\spat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbDattorro.h">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6178,6 +6181,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\spat\fv\FreeverbCore.cpp">
       <Filter>mfx\dsp\spat\fv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\spat\ReverbDattorro.cpp">
+      <Filter>mfx\dsp\spat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -51,6 +51,7 @@ private:
 
 	static int     test_freeverb ();
 	static int     test_reverbsc ();
+	static int     test_reverbdattorro ();
 	static int     test_latticereverb ();
 	static int     test_delay_frac ();
 	static int     test_delay_apf ();
