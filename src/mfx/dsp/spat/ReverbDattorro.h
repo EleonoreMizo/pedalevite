@@ -63,7 +63,6 @@ public:
 	static constexpr int    _nbr_chn       = 2;
 	static constexpr float  _min_room_size = 0.0025f; // As a ratio of the original size
 	static constexpr float  _max_room_size = 4.f;
-	static constexpr float  _max_predelay_time = 0.250f; // s
 
 	void           set_sample_freq (double sample_freq);
 
@@ -130,7 +129,7 @@ private:
 	class Channel
 	{
 	public:
-		ApfLine <_nbr_input_apd, true, true>
+		ApfLine <_nbr_input_apd, false, true>
 		               _input;
 		ApfLine <1, true, true>
 		               _tank_1;

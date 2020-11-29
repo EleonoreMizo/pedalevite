@@ -56,7 +56,7 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 
 	static constexpr float  fs_ref = 29761.f;
 
-	// Predelay times, seconds
+	// Input all-pass delay times, seconds
 	static constexpr std::array <float, _nbr_input_apd> dly_pre_arr
 	{{
 		142 / fs_ref,
@@ -122,10 +122,6 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 			chn._input.set_apd_max_delay (apd_cnt, fstb::ceil_int (dly_spl));
 			chn._input.set_apd_delay_flt (apd_cnt, dly_spl);
 		}
-		chn._input.set_delay_max (fstb::ceil_int (
-			_max_predelay_time * _sample_freq
-		));
-		chn._input.set_delay (0);
 
 		chn._dly_1_nosz = dly_tnk_arr [chn_cnt] [0] [1] * _sample_freq;
 		chn._dly_2_nosz = dly_tnk_arr [chn_cnt] [1] [1] * _sample_freq;
@@ -170,21 +166,6 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 	update_filter_bp (_filt_spec_input, &ReverbDattorro::set_filter_input_coefs);
 	update_filter_bp (_filt_spec_tank, &ReverbDattorro::set_filter_tank_coefs);
 	clear_buffers ();
-}
-
-
-
-void	ReverbDattorro::set_predelay_time (float t)
-{
-	assert (_sample_freq > 0);
-	assert (t >= 0);
-	assert (t <= _max_predelay_time);
-
-	const int      t_spl = fstb::round_int (t * _sample_freq);
-	for (auto &chn : _chn_arr)
-	{
-		chn._input.set_delay (t_spl);
-	}
 }
 
 
