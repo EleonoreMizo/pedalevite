@@ -55,6 +55,11 @@ namespace spat
 
 
 
+// Maximum processing block size
+constexpr int ApfLine_max_blk_size = 64;
+
+
+
 template <int NAPD, bool DF, bool FF>
 class ApfLine
 {
@@ -65,9 +70,7 @@ class ApfLine
 public:
 
 	static constexpr int _nbr_apd      = NAPD;
-
-	// Maximum processing block size
-	static constexpr int _max_blk_size = 64;
+	static constexpr int _max_blk_size = ApfLine_max_blk_size;
 
 	typedef DelayAllPass <float, 6> ApdType;
 

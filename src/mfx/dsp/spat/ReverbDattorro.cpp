@@ -54,6 +54,9 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 	_lfo_max_depth_spl = _lfo_max_depth_s * _sample_freq;
 	_min_mod_dly_time  = 0.001f * _sample_freq;
 
+	_state.setup (_max_blk_size, _max_blk_size);
+	_state.set_delay (_max_blk_size);
+
 	static constexpr float  fs_ref = 29761.f;
 
 	// Input all-pass delay times, seconds
@@ -306,6 +309,7 @@ void	ReverbDattorro::set_filter_tank_coefs (float g0, float g1, float g2, float 
 // extremly slow when put first (total time x6~x7). The slowness doesn't occur
 // if this processing is done after the tank, and the result is the same,
 // given the parameters stay constant (LTI system).
+// The problem only appears on x86 architecture.
 #define mfx_dsp_spat_ReverbDattorro_INVERSE_ORDER
 
 std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr)
@@ -327,7 +331,7 @@ std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr)
 	process_predelay (xl, xr);
 #endif
 
-	float          x = _state;
+	float          x = _state.read_at (_max_blk_size);
 
 	x  = _chn_arr [0]._tank_1.process_sample (x + xr);
 	x *= _decay;
@@ -339,7 +343,7 @@ std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr)
 	x  = _chn_arr [1]._tank_2.process_sample (x);
 	x *= _decay;
 
-	_state = x;
+	_state.process_sample (x);
 
 	// Output
 	xl  = _chn_arr [1]._tank_1.read_delay ( _chn_arr [0]._tap_dly_arr [0]);
@@ -377,9 +381,9 @@ void	ReverbDattorro::clear_buffers ()
 		chn._tank_1.clear_buffers ();
 		chn._tank_2.clear_buffers ();
 	}
+	_state.clear_buffers ();
 	reset_lfo ();
 
-	_state = 0;
 	_rnd_gen.set_seed ();
 }
 
@@ -425,10 +429,18 @@ void	ReverbDattorro::update_delay_times ()
 {
 	assert (_sample_freq > 0);
 
-	for (auto &chn : _chn_arr)
+	for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
 	{
-		chn._tank_1.set_delay (fstb::round_int (chn._dly_1_nosz * _room_size));
-		chn._tank_2.set_delay (fstb::round_int (chn._dly_2_nosz * _room_size));
+		auto &         chn = _chn_arr [chn_cnt];
+
+		const int      d1  = fstb::round_int (chn._dly_1_nosz * _room_size);
+		int            d2  = fstb::round_int (chn._dly_2_nosz * _room_size);
+		if (chn_cnt == 1)
+		{
+			d2 -= _max_blk_size;
+		}
+		chn._tank_1.set_delay (d1);
+		chn._tank_2.set_delay (d2);
 		chn._lfo_arr [0]._dly_nomod = chn._lfo_arr [0]._dly_nosz * _room_size;
 		chn._lfo_arr [1]._dly_nomod = chn._lfo_arr [1]._dly_nosz * _room_size;
 	}

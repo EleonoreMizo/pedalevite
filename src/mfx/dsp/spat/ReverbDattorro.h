@@ -37,6 +37,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/RndXoroshiro128p.h"
+#include "mfx/dsp/dly/DelaySimple.h"
 #include "mfx/dsp/spat/ApfLine.h"
 
 #include <array>
@@ -66,7 +67,6 @@ public:
 
 	void           set_sample_freq (double sample_freq);
 
-	void           set_predelay_time (float t);
 	void           set_room_size (float sz);
 	void           set_decay (float decay);
 	void           set_shimmer_pitch (float cents);
@@ -94,6 +94,7 @@ protected:
 
 private:
 
+	static constexpr int _max_blk_size    = ApfLine_max_blk_size;
 	static constexpr int _nbr_apd_per_chn = 2;
 	static constexpr int _nbr_lfo_tot     = _nbr_chn * _nbr_apd_per_chn;
 	static constexpr int _nbr_input_apd   = 4; // Number of allpass delays in the input line
@@ -108,8 +109,9 @@ private:
 	static constexpr float  _lfo_per_base = 1.f;
 
 	// Maximum random excursion within the delay line, in s
-	// Equivalent to 8 samples at 29.8 kHz (note 14)
-	static constexpr float  _rnd_max_depth_s = 8.f / 29800.f; 
+	// Note 14 suggests the equivalent to 8 samples at 29.8 kHz (268 us),
+	// but it seems that a longer excursion sounds more diffuse.
+	static constexpr float  _rnd_max_depth_s = 1.5e-3f; 
 
 	// Same for the pitch shifting LFO, larger values here
 	static constexpr float  _lfo_max_depth_s = 0.030f; 
@@ -175,7 +177,12 @@ private:
 	float          _lfo_speed   = 1.f;  // Hz, >= 0
 	float          _lfo_depth   = 0.f;  // Samples, positive or negative
 
-	float          _state       = 0; // Previous output of right tank 2
+	// Previous output of channel 1 tank 2. The length of this delay, which is
+	// _max_blk_size, is subtracted from channel 1 tank 2 delay, so the overall
+	// delay is kept constant.
+	dly::DelaySimple
+	               _state;
+
 	float          _lfo_step    = 0; // Per sample, >= 0
 
 	fstb::RndXoroshiro128p           // Random generator for the delay modulation
