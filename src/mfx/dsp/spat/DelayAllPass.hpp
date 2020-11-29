@@ -169,6 +169,14 @@ std::pair <T, T>	DelayAllPass <T, NPL2>::read (T x) const
 
 
 template <typename T, int NPL2>
+T	DelayAllPass <T, NPL2>::read_at (int delay) const
+{
+	return _delay.read_at (delay);
+}
+
+
+
+template <typename T, int NPL2>
 void	DelayAllPass <T, NPL2>::write (T v)
 {
 	_delay.write (v);
@@ -204,6 +212,14 @@ int	DelayAllPass <T, NPL2>::get_max_block_len () const
 	return _delay.get_max_block_len ();
 }
 
+
+
+
+template <typename T, int NPL2>
+void	DelayAllPass <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) const
+{
+	_delay.read_block_at (dst_ptr, delay, len);
+}
 
 
 

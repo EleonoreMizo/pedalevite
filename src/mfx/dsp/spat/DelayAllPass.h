@@ -71,6 +71,8 @@ public:
 
 	fstb_FORCEINLINE std::pair <T, T>
 	               read (T x) const;
+	fstb_FORCEINLINE T
+	               read_at (int delay) const;
 	fstb_FORCEINLINE void
 	               write (T v);
 	fstb_FORCEINLINE void
@@ -80,6 +82,8 @@ public:
 
 	fstb_FORCEINLINE int
 	               get_max_block_len () const;
+	fstb_FORCEINLINE void
+	               read_block_at (T dst_ptr [], int delay, int len) const;
 	void           process_block (T dst_ptr [], const T src_ptr [], int nbr_spl);
 
 	void           clear_buffers ();
