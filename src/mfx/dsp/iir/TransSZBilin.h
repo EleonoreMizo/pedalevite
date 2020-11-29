@@ -53,6 +53,8 @@ public:
 	static double  prewarp_freq_rel (double f0, double fref, double fs);
 	static double  prewarp_freq_rel_mul (double f0, double fref, double fs);
 	static void    prewarp_biquad (double b [3], double a [3], double fref, double fs);
+	static inline double
+	               unwarp_freq (double f_w, double fs);
 
 	template <class TS, class TZ>
 	static void    map_s_to_z (TZ z_eq_b [3], TZ z_eq_a [3], const TS s_eq_b [3], const TS s_eq_a [3], double f0, double fs);

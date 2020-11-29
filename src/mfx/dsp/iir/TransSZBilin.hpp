@@ -46,16 +46,60 @@ namespace iir
 
 
 
+/*
+==============================================================================
+Name: prewarp_freq
+Description:
+	Warp a frequency against half the sampling rate.
+	This function helps to design bilinear-transfored or trapezoidal-integrated
+	filters from an analogue prototypes.
+	After the transform, frequencies at half the sampling rate are mapped to
+	infinity. The design should be done in the warped domain to get some
+	specific frequencies mapped correctly.
+Input parameters:
+	- f0: Frequency to be warped, in [0 ; fs/2[
+	- fs: Sampling frequency, Hz, > 0.
+Returns: the warped frequency, Hz, in [0 ; +oo[
+Throws: Nothing
+==============================================================================
+*/
+
 double	TransSZBilin::prewarp_freq (double f0, double fs)
 {
-	assert (f0 > 0);
+	assert (f0 >= 0);
 	assert (f0 < fs * 0.5);
 	assert (fs > 0);
 
 	const double   f_w = tan (f0 * fstb::PI / fs);
-	assert (f_w > 0);
+	assert (f_w >= 0);
 
 	return f_w;
+}
+
+
+
+/*
+==============================================================================
+Name: unwarp_freq
+Description:
+	Inverse frequency warping.
+Input parameters:
+	- f_w: Warped frequency, Hz, in [0 ; +oo[
+	- fs: Sampling frequency, Hz, > 0.
+Returns: Frequency, Hz, in [0 ; fs/2[
+Throws: Nothing
+==============================================================================
+*/
+
+double	TransSZBilin::unwarp_freq (double f_w, double fs)
+{
+	assert (f_w >= 0);
+
+	const double   f0 = atan (f_w) * fs / fstb::PI;
+	assert (f0 < fs * 0.5);
+	assert (f0 >= 0);
+
+	return f0;
 }
 
 
