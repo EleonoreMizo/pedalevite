@@ -1086,6 +1086,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFast.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTanhFastPade.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\shape\WsTruncMod.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ApfLine.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\ApfLine.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbSC.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\Cascade.h" />

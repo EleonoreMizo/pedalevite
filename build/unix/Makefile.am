@@ -711,6 +711,8 @@ commonsrc = \
         ../../src/mfx/dsp/spat/ltc/LatticeReverb.hpp \
         ../../src/mfx/dsp/spat/ltc/LatticeStereo.h \
         ../../src/mfx/dsp/spat/ltc/LatticeStereo.hpp \
+        ../../src/mfx/dsp/spat/ApfLine.h \
+        ../../src/mfx/dsp/spat/ApfLine.hpp \
         ../../src/mfx/dsp/spat/Cascade.h \
         ../../src/mfx/dsp/spat/Cascade.hpp \
         ../../src/mfx/dsp/spat/DelayAllPass.h \
