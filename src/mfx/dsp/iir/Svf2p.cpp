@@ -162,11 +162,11 @@ high = v0 - k * v1 - v2
 
 result = v0 * v0m + v1 * v1m  + v2 * v2m
 
-result = b0 * low + b1 * band + b2 * high
-		 = b0 * v2 +  b1 * v1   + b2 * (v0 - k * v1 - v2)
-		 = v0 * b2 + v1 * (b1 - k * b2) + v2 * (b0 - b2)
+result = b0 * low + b1 * f * band + b2 * high
+		 = b0 * v2 +  b1 * f * v1   + b2 * (v0 - k * v1 - v2)
+		 = v0 * b2 + v1 * (b1 * f - k * b2) + v2 * (b0 - b2)
 v0m = b2
-v1m = b1 - k * b2
+v1m = b1 * f - k * b2
 v2m = b0 - b2
 */
 
@@ -197,9 +197,9 @@ void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float
 
 	conv_poles (g0, g1, g2, freq * f0 / fs, float (k));
 
-	v0m = float (              b2);
-	v1m = float (     b1 - k * b2);
-	v2m = float (b0      -     b2);
+	v0m = float (                   b2);
+	v1m = float (     b1 * f0 - k * b2);
+	v2m = float (b0           -     b2);
 }
 
 
