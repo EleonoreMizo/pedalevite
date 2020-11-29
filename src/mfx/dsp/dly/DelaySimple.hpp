@@ -37,6 +37,16 @@ namespace dly
 
 
 
+float	DelaySimple::read_at (int d) const
+{
+	assert (d >= 0);
+	assert (d <= _max_dly);
+
+	return _buf [(_pos_w - d) & _mask];
+}
+
+
+
 float	DelaySimple::process_sample (float x)
 {
 	_buf [_pos_w] = x;

@@ -51,7 +51,9 @@ public:
 	void           setup (int max_dly, int max_block_len);
 
 	void           set_delay (int d);
+	inline float   read_at (int d) const;
 	inline float   process_sample (float x);
+	void           read_block_at (float dst_ptr [], int d, int nbr_spl) const;
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
 	void           clear_buffers ();
 	void           clear_buffers_quick ();

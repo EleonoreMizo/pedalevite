@@ -69,6 +69,26 @@ void	DelaySimple::set_delay (int d)
 
 
 
+void	DelaySimple::read_block_at (float dst_ptr [], int d, int nbr_spl) const
+{
+	assert (d >= 0);
+	assert (d <= _max_dly);
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= d + 1);
+
+	int            pos_r = (_pos_w - d) & _mask;
+	const int      room  = _len - pos_r;
+	const int      len_1 = std::min (nbr_spl, room);
+	const int      len_2 = nbr_spl - len_1;
+	memcpy (dst_ptr, &_buf [pos_r], len_1 * sizeof (*dst_ptr));
+	if (len_2 > 0)
+	{
+		memcpy (dst_ptr + len_1, _buf.data (), len_2 * sizeof (*dst_ptr));
+	}
+}
+
+
+
 // Can work in-place
 void	DelaySimple::process_block (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
