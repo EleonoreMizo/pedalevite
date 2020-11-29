@@ -25,6 +25,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/Approx.h"
+#include "fstb/fnc.h"
 #include "mfx/dsp/iir/Svf2p.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/dsp/spat/ReverbDattorro.h"
@@ -56,6 +57,9 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 
 	_state.setup (_max_blk_size, _max_blk_size);
 	_state.set_delay (_max_blk_size);
+
+	_freeze.set_sample_freq (sample_freq);
+	_freeze.set_time (0.010f);
 
 	static constexpr float  fs_ref = 29761.f;
 
@@ -305,6 +309,13 @@ void	ReverbDattorro::set_filter_tank_coefs (float g0, float g1, float g2, float 
 
 
 
+void	ReverbDattorro::freeze_tank (bool freeze_flag)
+{
+	_freeze.set_val ((freeze_flag) ? 1.f : 0.f);
+}
+
+
+
 // For an unknown reason, all-pass delay filtering in the predelay part is
 // extremly slow when put first (total time x6~x7). The slowness doesn't occur
 // if this processing is done after the tank, and the result is the same,
@@ -331,17 +342,23 @@ std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr)
 	process_predelay (xl, xr);
 #endif
 
+	const float    decay   = (_freeze.get_val_tgt () < 0.5f) ? _decay : 1.f;
+	const float    frz_val = _freeze.process_sample ();
+	const float    vol_in  = 1 - frz_val;
+	xl *= vol_in;
+	xr *= vol_in;
+
 	float          x = _state.read_at (_max_blk_size);
 
 	x  = _chn_arr [0]._tank_1.process_sample (x + xr);
-	x *= _decay;
+	x *= decay;
 	x  = _chn_arr [0]._tank_2.process_sample (x);
-	x *= _decay;
+	x *= decay;
 
 	x  = _chn_arr [1]._tank_1.process_sample (x + xl);
-	x *= _decay;
+	x *= decay;
 	x  = _chn_arr [1]._tank_2.process_sample (x);
-	x *= _decay;
+	x *= decay;
 
 	_state.process_sample (x);
 
@@ -373,7 +390,7 @@ std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr)
 
 
 
-void	ReverbDattorro::clear_buffers ()
+void	ReverbDattorro::flush_tank ()
 {
 	for (auto &chn : _chn_arr)
 	{
@@ -382,8 +399,15 @@ void	ReverbDattorro::clear_buffers ()
 		chn._tank_2.clear_buffers ();
 	}
 	_state.clear_buffers ();
-	reset_lfo ();
+}
 
+
+
+void	ReverbDattorro::clear_buffers ()
+{
+	flush_tank ();
+	reset_lfo ();
+	_freeze.clear_buffers ();
 	_rnd_gen.set_seed ();
 }
 

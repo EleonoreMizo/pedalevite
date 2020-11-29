@@ -228,6 +228,16 @@ static void	TestReverb_process_reverbdattorro (mfx::dsp::spat::ReverbDattorro &r
 {
 	for (int pos = 0; pos < len; ++pos)
 	{
+#if 0
+		if (pos == len / 3)
+		{
+			reverb.freeze_tank (true);
+		}
+		else if (pos == len * 2 / 3)
+		{
+			reverb.freeze_tank (false);
+		}
+#endif
 		std::tie (dst_arr [0] [pos], dst_arr [1] [pos]) = 
 			reverb.process_sample (src_arr [0] [pos], src_arr [1] [pos]);
 	}
@@ -254,7 +264,7 @@ int	TestReverb::test_reverbdattorro ()
 //	reverb.set_filter_input_bp (1000, float (sample_freq * 0.499));
 //	reverb.set_filter_tank_bp (1000, float (sample_freq * 0.499));
 
-	constexpr float   vol  = 5.62f; // +15 dB
+	constexpr float   vol  = 4.f;
 	const int      len     = fstb::round_int (sample_freq * 10);
 	const int      imp_pos = fstb::round_int (sample_freq * 1);
 	std::vector <std::vector <float> >  src_arr (_nbr_chn);

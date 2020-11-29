@@ -37,6 +37,7 @@ http://www.wtfpl.net/ for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/RndXoroshiro128p.h"
+#include "mfx/dsp/ctrl/SmootherLpf.h"
 #include "mfx/dsp/dly/DelaySimple.h"
 #include "mfx/dsp/spat/ApfLine.h"
 
@@ -76,9 +77,11 @@ public:
 	void           set_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
 	void           set_filter_tank_bp (float lo, float hi);
 	void           set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
-
+	void           freeze_tank (bool freeze_flag);
+	
 	std::pair <float, float>
 	               process_sample (float xl, float xr);
+	void           flush_tank ();
 
 	void           clear_buffers ();
 
@@ -176,6 +179,8 @@ private:
 	float          _lfo_shape   = 0.f;  // Saw-triangle shape. Gives the middle point coordinate in [0 ; 1]
 	float          _lfo_speed   = 1.f;  // Hz, >= 0
 	float          _lfo_depth   = 0.f;  // Samples, positive or negative
+	ctrl::SmootherLpf <float>
+	               _freeze;
 
 	// Previous output of channel 1 tank 2. The length of this delay, which is
 	// _max_blk_size, is subtracted from channel 1 tank 2 delay, so the overall
