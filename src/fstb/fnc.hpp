@@ -987,6 +987,27 @@ void	write_unalign (void *ptr, T val)
 
 
 
+// std::copy is already optimized like this but uses memmove instead of
+// memcpy.
+template <typename T>
+void    copy_no_overlap (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, int nbr_elt)
+{
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (nbr_elt > 0);
+
+	if (std::is_trivially_copyable <T>::value)
+	{
+		memcpy (dst_ptr, src_ptr, nbr_elt * sizeof (*dst_ptr));
+	}
+	else
+	{
+		std::copy (src_ptr, src_ptr + nbr_elt, dst_ptr);
+	}
+}
+
+
+
 template <typename T>
 bool	is_ptr_align_nz (const T *ptr, int a)
 {

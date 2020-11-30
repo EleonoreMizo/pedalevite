@@ -98,6 +98,8 @@ template <class T>
 inline T       read_unalign (const void *ptr);
 template <class T>
 inline void    write_unalign (void *ptr, T val);
+template <typename T>
+inline void    copy_no_overlap (T * fstb_RESTRICT dst_ptr, const T * fstb_RESTRICT src_ptr, int nbr_elt);
 
 void           conv_to_lower_case (std::string &str);
 
