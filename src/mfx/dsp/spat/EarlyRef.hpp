@@ -150,7 +150,7 @@ std::pair <T, T>	EarlyRef <T>::process_sample (T x)
 {
 	assert (_nbr_taps > 0);
 
-	const T        d = _delay.process_sample ();
+	const T        d = _delay.process_sample (x);
 	T              e = T (0);
 
 	const int      offset = _predelay_spl + 1;
