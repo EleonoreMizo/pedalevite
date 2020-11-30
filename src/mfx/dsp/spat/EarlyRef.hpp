@@ -22,9 +22,10 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/DataAlign.h"
 #include "fstb/fnc.h"
 #include "fstb/Hash.h"
-#include "mfx/dsp/mix/Generic.h"
+#include "mfx/dsp/mix/Simd.h"
 
 #include <algorithm>
 
@@ -53,8 +54,6 @@ void	EarlyRef <T>::reset (double sample_freq, double max_predelay_time, double m
 	assert (sample_freq > 0);
 	assert (max_predelay_time >= 0);
 	assert (max_duration > 0);
-
-	dsp::mix::Generic::setup ();
 
 	_sample_freq       = sample_freq;
 	_max_predelay_time = max_predelay_time;
@@ -173,7 +172,8 @@ void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr []
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	std::array <T, _max_blk_size> buf;
+	alignas (16) std::array <T, _max_blk_size>   buf;
+
 	int            pos = 0;
 	do
 	{
@@ -185,16 +185,21 @@ void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr []
 		bool           empty_flag = true;
 		for (const auto &tap : _tap_arr)
 		{
+			using Mix = dsp::mix::Simd <
+				fstb::DataAlign <false>,
+				fstb::DataAlign <true>
+			>;
+
 			const float    g = tap._gain;
 			_delay.read_block_at (buf.data (), tap._pos + offset, work_len);
 			if (empty_flag)
 			{
-				dsp::mix::Generic::copy_1_1_v (erf_ptr, buf.data (), work_len, g);
+				Mix::copy_1_1_v (erf_ptr, buf.data (), work_len, g);
 				empty_flag = false;
 			}
 			else
 			{
-				dsp::mix::Generic::mix_1_1_v (erf_ptr, buf.data (), work_len, g);
+				Mix::mix_1_1_v (erf_ptr, buf.data (), work_len, g);
 			}
 		}
 
