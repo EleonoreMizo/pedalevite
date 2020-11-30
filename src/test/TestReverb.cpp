@@ -28,6 +28,7 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/spat/ltc/LatticeReverb.h"
 #include "mfx/dsp/spat/DelayAllPass.h"
 #include "mfx/dsp/spat/DelayFrac.h"
+#include "mfx/dsp/spat/EarlyRef.h"
 #include "mfx/dsp/spat/ReverbDattorro.h"
 #include "mfx/dsp/spat/ReverbSC.h"
 #include "mfx/FileOpWav.h"
@@ -57,6 +58,10 @@ int	TestReverb::perform_test ()
 	if (ret_val == 0)
 	{
 		ret_val = test_delay_apf ();
+	}
+	if (ret_val == 0)
+	{
+		ret_val = test_early_ref ();
 	}
 	if (ret_val == 0)
 	{
@@ -111,7 +116,7 @@ int	TestReverb::test_freeverb ()
 {
 	int            ret_val = 0;
 
-	printf ("Freeverb\n");
+	printf ("mfx::dsp::spat::fv::FreeverbCore\n");
 
 	const double   sample_freq = 44100;
 
@@ -176,7 +181,7 @@ int	TestReverb::test_reverbsc ()
 {
 	int            ret_val = 0;
 
-	printf ("ReverbSC\n");
+	printf ("mfx::dsp::spat::ReverbSC\n");
 
 	const double   sample_freq = 44100;
 
@@ -249,20 +254,20 @@ int	TestReverb::test_reverbdattorro ()
 {
 	int            ret_val = 0;
 
-	printf ("ReverbDattorro\n");
+	printf ("mfx::dsp::spat::ReverbDattorro\n");
 
 	const double   sample_freq = 44100;
 
 	mfx::dsp::spat::ReverbDattorro reverb;
 
 	reverb.set_sample_freq (sample_freq);
-	reverb.set_decay (0.9f);
+	reverb.set_decay (0.85f);
 	reverb.set_room_size (1.f);
 	reverb.set_shimmer_pitch (+100);
 //	reverb.set_diffusion_input (0);
 //	reverb.set_diffusion_tank (0);
 //	reverb.set_filter_input_bp (1000, float (sample_freq * 0.499));
-//	reverb.set_filter_tank_bp (1000, float (sample_freq * 0.499));
+	reverb.set_filter_tank_bp (1, float (sample_freq * 0.15));
 
 	constexpr float   vol  = 4.f;
 	const int      len     = fstb::round_int (sample_freq * 10);
@@ -277,10 +282,13 @@ int	TestReverb::test_reverbdattorro ()
 		src_arr [chn] [imp_pos] = vol;
 	}
 	src_arr [0] [len - imp_pos] = vol;
+
+#if 0
 	for (int pos = 0; pos < 5000; ++ pos)
 	{
 		src_arr [0] [imp_pos + pos] = 0.25f * float (sin (pos * 2 * fstb::PI * 440 / sample_freq));
 	}
+#endif
 
 	TestReverb_process_reverbdattorro (reverb, dst_arr, src_arr, len);
 
@@ -321,7 +329,7 @@ int	TestReverb::test_latticereverb ()
 {
 	int            ret_val = 0;
 
-	printf ("Lattice reverb\n");
+	printf ("mfx::dsp::spat::ltc::LatticeReverb\n");
 
 	const double   sample_freq = 44100;
 
@@ -372,7 +380,7 @@ int	TestReverb::test_delay_frac ()
 {
 	int            ret_val = 0;
 
-	printf ("DelayFrac\n");
+	printf ("mfx::dsp::spat::DelayFrac\n");
 
 	constexpr double  sample_freq = 44100;
 
@@ -499,7 +507,7 @@ int	TestReverb::test_delay_apf ()
 {
 	int            ret_val = 0;
 
-	printf ("DelayAllPass\n");
+	printf ("mfx::dsp::spat::DelayAllPass\n");
 
 	constexpr double  sample_freq = 44100;
 
@@ -612,6 +620,66 @@ int	TestReverb::test_delay_apf ()
 		const double   rt_mul    = spl_per_s / sample_freq;
 		printf ("Speed (block): %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
 	}
+
+	return ret_val;
+}
+
+
+
+int	TestReverb::test_early_ref ()
+{
+	int            ret_val = 0;
+
+	printf ("mfx::dsp::spat::EarlyRef\n");
+
+	const double   sample_freq = 44100;
+
+	mfx::dsp::spat::EarlyRef <float> reverb;
+
+	reverb.reset (sample_freq, 0.5, 0.5);
+	reverb.generate_taps (0, 32, 0.15f, 0.01f, 1);
+	reverb.set_predelay (0.050f);
+	reverb.clear_buffers ();
+
+	constexpr float   vol  = 1.f;
+	const int      len     = fstb::round_int (sample_freq * 10);
+	const int      imp_pos = fstb::round_int (sample_freq * 1);
+	std::vector <float>  src (len, 0);
+	std::vector <std::vector <float> >  dst_arr (_nbr_chn);
+	src [imp_pos] = vol;
+	for (auto &dst : dst_arr)
+	{
+		dst.resize (len);
+	}
+
+	reverb.process_block (
+		dst_arr [0].data (),
+		dst_arr [1].data (),
+		src.data (),
+		len
+	);
+
+	mfx::FileOpWav::save ("results/earlyref0.wav", dst_arr, sample_freq, 0.5f);
+
+	// Speed test
+	TimerAccurate  tim;
+	tim.reset ();
+	tim.start ();
+	for (int count = 0; count < 8; ++count)
+	{
+		reverb.process_block (
+			dst_arr [0].data (),
+			dst_arr [1].data (),
+			src.data (),
+			len
+		);
+		tim.stop_lap ();
+	}
+
+	const double   spl_per_s = tim.get_best_rate (len);
+	const double   kilo_sps  = spl_per_s / 1e3;
+	const double   rt_mul    = spl_per_s / sample_freq;
+	printf ("Speed: %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
 
 	return ret_val;
 }

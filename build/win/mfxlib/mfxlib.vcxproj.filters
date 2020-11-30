@@ -4863,6 +4863,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\ReverbDattorro.h">
       <Filter>mfx\dsp\spat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\EarlyRef.h">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\spat\EarlyRef.hpp">
+      <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">

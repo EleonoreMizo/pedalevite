@@ -55,6 +55,7 @@ private:
 	static int     test_latticereverb ();
 	static int     test_delay_frac ();
 	static int     test_delay_apf ();
+	static int     test_early_ref ();
 
 
 
