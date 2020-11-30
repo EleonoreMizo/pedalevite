@@ -125,7 +125,7 @@ private:
 	               _prefilter;
 	dsp::dyn::EnvFollowerRms
 	               _env_vol;
-	dsp::dly::DelaySimple
+	dsp::dly::DelaySimple <float>
 	               _dly_vol;
 
 	dsp::dyn::EnvFollowerRms
@@ -136,7 +136,7 @@ private:
 	               _flt_sum;
 	dsp::fir::RankSelL
 	               _flt_med;
-	dsp::dly::DelaySimple
+	dsp::dly::DelaySimple <float>
 	               _dly_pk;
 
 	bool           _velo_clip_flag;

@@ -111,9 +111,9 @@ private:
 	               _env_vol;
 	dsp::dyn::EnvFollowerPeak
 	               _env_os;
-	dsp::dly::DelaySimple
+	dsp::dly::DelaySimple <float>
 	               _dly_vol;
-	dsp::dly::DelaySimple
+	dsp::dly::DelaySimple <float>
 	               _dly_os;
 
 	bool           _velo_clip_flag;

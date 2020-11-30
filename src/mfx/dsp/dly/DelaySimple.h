@@ -3,6 +3,10 @@
         DelaySimple.h
         Author: Laurent de Soras, 2019
 
+Template parameters:
+
+- T: Stored data type.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -27,6 +31,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
+
 #include <vector>
 
 
@@ -40,6 +46,7 @@ namespace dly
 
 
 
+template <typename T>
 class DelaySimple
 {
 
@@ -47,14 +54,18 @@ class DelaySimple
 
 public:
 
+	typedef T DataType;
+
 	// Mandatory call
 	void           setup (int max_dly, int max_block_len);
 
 	void           set_delay (int d);
-	inline float   read_at (int d) const;
-	inline float   process_sample (float x);
-	void           read_block_at (float dst_ptr [], int d, int nbr_spl) const;
-	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	fstb_FORCEINLINE T
+	               read_at (int d) const;
+	fstb_FORCEINLINE T
+	               process_sample (T x);
+	void           read_block_at (T dst_ptr [], int d, int nbr_spl) const;
+	void           process_block (T dst_ptr [], const T src_ptr [], int nbr_spl);
 	void           clear_buffers ();
 	void           clear_buffers_quick ();
 
@@ -70,10 +81,11 @@ protected:
 
 private:
 
-	typedef std::vector <float> Buffer;
+	typedef std::vector <T> Buffer;
 
 	void           update_buf ();
-	inline int     delay (int pos) const;
+	fstb_FORCEINLINE int
+	               delay (int pos) const;
 
 	Buffer         _buf           = Buffer (64, 0);
 	int            _len           = 64; // Buffer length in samples, power of 2, > 0

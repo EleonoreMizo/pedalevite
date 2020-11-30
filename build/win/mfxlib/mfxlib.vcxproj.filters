@@ -5759,9 +5759,6 @@
     <ClCompile Include="..\..\..\src\mfx\pi\osdet2\OnsetDetect2Desc.cpp">
       <Filter>mfx\pi\osdet2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\dly\DelaySimple.cpp">
-      <Filter>mfx\dsp\dly</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApf.cpp">
       <Filter>mfx\pi\distapf</Filter>
     </ClCompile>

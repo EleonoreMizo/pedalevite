@@ -185,7 +185,7 @@ private:
 	// Previous output of channel 1 tank 2. The length of this delay, which is
 	// _max_blk_size, is subtracted from channel 1 tank 2 delay, so the overall
 	// delay is kept constant.
-	dly::DelaySimple
+	dly::DelaySimple <float>
 	               _state;
 
 	float          _lfo_step    = 0; // Per sample, >= 0

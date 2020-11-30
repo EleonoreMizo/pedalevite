@@ -120,7 +120,7 @@ private:
 	typedef std::array <ApdType, _nbr_apd> ApdArray;
 
 	ApdArray       _apd_arr;
-	dly::DelaySimple
+	dly::DelaySimple <float>
 	               _delay;
 	iir::SvfCore<> _filter;
 

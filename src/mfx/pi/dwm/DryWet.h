@@ -81,7 +81,7 @@ private:
 	class Channel
 	{
 	public:
-		mfx::dsp::dly::DelaySimple
+		mfx::dsp::dly::DelaySimple <float>
 		               _delay;
 	};
 	typedef std::array <Channel, _max_nbr_chn> ChannelArray;
