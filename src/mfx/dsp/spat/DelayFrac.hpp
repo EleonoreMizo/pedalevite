@@ -362,10 +362,11 @@ void	DelayFrac <T, NPL2>::read_block_at (T dst_ptr [], int delay, int len) const
 	int            pos_read = (_pos_write - delay) & _buf_msk;
 	const int      room     = buf_len - pos_read;
 	const int      len_1    = std::min (len, room);
-	std::copy (&_buffer [pos_read], &_buffer [pos_read + len_1], dst_ptr);
-	if (len_1 < len)
+	const int      len_2    = len - len_1;
+	fstb::copy_no_overlap (dst_ptr, &_buffer [pos_read], len_1);
+	if (len_2 > 0)
 	{
-		std::copy (_buffer.data (), &_buffer [len - len_1], dst_ptr + len_1);
+		fstb::copy_no_overlap (dst_ptr + len_1, _buffer.data (), len_2);
 	}
 }
 
@@ -382,10 +383,11 @@ void	DelayFrac <T, NPL2>::write_block (const T src_ptr [], int len)
 	const int      buf_len = int (_buffer.size ());
 	const int      room    = buf_len - _pos_write;
 	const int      len_1   = std::min (len, room);
-	std::copy (src_ptr, src_ptr + len_1, &_buffer [_pos_write]);
-	if (len_1 < len)
+	const int      len_2    = len - len_1;
+	fstb::copy_no_overlap (&_buffer [_pos_write], src_ptr, len_1);
+	if (len_2 > 0)
 	{
-		std::copy (src_ptr + len_1, src_ptr + len, _buffer.data ());
+		fstb::copy_no_overlap (_buffer.data (), src_ptr + len_1, len_2);
 	}
 }
 
