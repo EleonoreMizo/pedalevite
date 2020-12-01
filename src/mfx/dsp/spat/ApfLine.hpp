@@ -204,6 +204,35 @@ void	ApfLine <NAPD, DF, FF>::process_block (float dst_ptr [], const float src_pt
 
 
 
+template <int NAPD, bool DF, bool FF>
+void	ApfLine <NAPD, DF, FF>::process_block_var_dly (float dst_ptr [], const float src_ptr [], const int32_t * const * dly_frc_arr_ptr, int nbr_spl)
+{
+	assert (dst_ptr != nullptr);
+	assert (src_ptr != nullptr);
+	assert (dly_frc_arr_ptr != nullptr);
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= compute_max_block_len ());
+
+	for (int apd_idx = 0; apd_idx < int (_apd_arr.size ()); ++apd_idx)
+	{
+		auto &         apd         = _apd_arr [apd_idx];
+		const int32_t* dly_frc_ptr = dly_frc_arr_ptr [apd_idx];
+		assert (dly_frc_ptr != nullptr);
+		apd.process_block_var_dly (dst_ptr, src_ptr, dly_frc_ptr, nbr_spl);
+		src_ptr = dst_ptr;
+	}
+	if (DF)
+	{
+		_delay.process_block (dst_ptr, dst_ptr, nbr_spl);
+	}
+	if (FF)
+	{
+		_filter.process_block (dst_ptr, dst_ptr, nbr_spl);
+	}
+}
+
+
+
 // Reading the line is meant to occur after process_block()
 // For consistent results, nbr_spl should be the same in both calls
 template <int NAPD, bool DF, bool FF>

@@ -56,7 +56,9 @@ namespace spat
 
 
 // Maximum processing block size
-constexpr int ApfLine_max_blk_size = 64;
+constexpr int ApfLine_max_blk_size  = 64;
+constexpr int ApfLine_nbr_phases_l2 = 6;
+constexpr int ApfLine_nbr_phases    = 1 << ApfLine_nbr_phases_l2;
 
 
 
@@ -72,7 +74,7 @@ public:
 	static constexpr int _nbr_apd      = NAPD;
 	static constexpr int _max_blk_size = ApfLine_max_blk_size;
 
-	typedef DelayAllPass <float, 6> ApdType;
+	typedef DelayAllPass <float, ApfLine_nbr_phases_l2> ApdType;
 
 	void           set_delay_max (int len);
 	void           set_apd_max_delay (int idx, int len);
@@ -100,6 +102,7 @@ public:
 	fstb_FORCEINLINE int
 	               compute_max_block_len () const;
 	inline void    process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);
+	inline void    process_block_var_dly (float dst_ptr [], const float src_ptr [], const int32_t * const * dly_frc_arr_ptr, int nbr_spl);
 	inline void    read_apd_block (float dst_ptr [], int idx, int delay, int nbr_spl) const;
 	inline void    read_delay_block (float dst_ptr [], int delay, int nbr_spl) const;
 
