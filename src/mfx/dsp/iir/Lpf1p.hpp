@@ -22,6 +22,8 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/fnc.h"
+
 #include <cassert>
 
 
@@ -56,6 +58,20 @@ template <typename T>
 T	Lpf1p <T>::process_sample (T x)
 {
    const T        y { _mem_y + (x - _mem_y) * _coef };
+   _mem_y = y;
+
+   return y;
+}
+
+
+
+template <typename T>
+T	Lpf1p <T>::constant_block (T x, int nbr_spl)
+{
+   assert (nbr_spl > 0);
+
+   const T        c_n { T (1.f) - fstb::ipowp (T (1.f) - _coef, nbr_spl) };
+   const T        y { _mem_y + (x - _mem_y) * c_n };
    _mem_y = y;
 
    return y;

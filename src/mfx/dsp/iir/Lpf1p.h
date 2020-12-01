@@ -59,6 +59,8 @@ public:
 	               set_coef (T c);
 	fstb_FORCEINLINE T
 	               process_sample (T x);
+	fstb_FORCEINLINE T
+	               constant_block (T x, int nbr_spl);
 	fstb_FORCEINLINE T &
 	               use_state ();
 	fstb_FORCEINLINE const T &
