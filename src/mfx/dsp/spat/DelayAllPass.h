@@ -33,6 +33,8 @@ http://www.wtfpl.net/ for more details.
 
 #include <utility>
 
+#include <cstdint>
+
 
 
 namespace mfx
@@ -85,6 +87,7 @@ public:
 	fstb_FORCEINLINE void
 	               read_block_at (T dst_ptr [], int delay, int len) const;
 	void           process_block (T dst_ptr [], const T src_ptr [], int nbr_spl);
+	void           process_block_var_dly (T dst_ptr [], const T src_ptr [], const int32_t dly_frc_ptr [], int nbr_spl);
 
 	void           clear_buffers ();
 

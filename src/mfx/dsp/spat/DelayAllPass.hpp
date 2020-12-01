@@ -260,6 +260,43 @@ void	DelayAllPass <T, NPL2>::process_block (T dst_ptr [], const T src_ptr [], in
 
 
 template <typename T, int NPL2>
+void	DelayAllPass <T, NPL2>::process_block_var_dly (T dst_ptr [], const T src_ptr [], const int32_t dly_frc_ptr [], int nbr_spl)
+{
+	assert (src_ptr != nullptr);
+	assert (dst_ptr != nullptr);
+	assert (dly_frc_ptr != nullptr);
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= get_max_block_len ());
+
+	constexpr int  buf_len = 128;
+	std::array <T, buf_len> buf_x;
+	std::array <T, buf_len> buf_y;
+	T * fstb_RESTRICT buf_x_ptr = buf_x.data ();
+	T * fstb_RESTRICT buf_y_ptr = buf_y.data ();
+
+	int            pos = 0;
+	do
+	{
+		const int      work_len = std::min (nbr_spl - pos, buf_len);
+
+		_delay.read_block_var_dly (buf_y_ptr, dly_frc_ptr + pos, work_len);
+		DelayAllPass_mac_vec (
+			buf_x_ptr, src_ptr + pos, buf_y_ptr, -_coef, work_len
+		);
+		_delay.write_block (buf_x_ptr, work_len);
+		_delay.step_block (work_len);
+		DelayAllPass_mac_vec (
+			dst_ptr + pos, buf_y_ptr, buf_x_ptr, +_coef, work_len
+		);
+
+		pos += work_len;
+	}
+	while (pos < nbr_spl);
+}
+
+
+
+template <typename T, int NPL2>
 void	DelayAllPass <T, NPL2>::clear_buffers ()
 {
 	_delay.clear_buffers ();
