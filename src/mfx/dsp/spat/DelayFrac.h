@@ -99,6 +99,8 @@ public:
 	fstb_FORCEINLINE void
 	               read_block (T dst_ptr [], int len) const;
 	fstb_FORCEINLINE void
+	               read_block_var_dly (T dst_ptr [], const int32_t dly_fix_ptr [], int len);
+	fstb_FORCEINLINE void
 	               read_block_at (T dst_ptr [], int delay, int len) const;
 	fstb_FORCEINLINE void
 	               write_block (const T src_ptr [], int len);
@@ -128,7 +130,11 @@ private:
 	typedef std::array <Phase, _nbr_phases> PhaseArray;
 
 	fstb_FORCEINLINE T
-	               read_safe (int pos_read) const;
+	               read_safe (int pos_read, const Phase &phase) const;
+	fstb_FORCEINLINE T
+	               read_nocheck (int pos_read, const Phase &phase) const;
+	fstb_FORCEINLINE void
+	               find_phase_and_delay (const Phase * &phase_ptr, int &delay_int, int &delay_frc, int len_fixp) const;
 
 	static void    init_interpolator ();
 

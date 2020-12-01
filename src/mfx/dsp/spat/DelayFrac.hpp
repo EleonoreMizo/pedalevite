@@ -216,10 +216,7 @@ void	DelayFrac <T, NPL2>::set_delay_fix (int len_fixp)
 {
 	assert (len_fixp >= _delay_min * _nbr_phases);
 
-	_delay_frc = len_fixp & _phase_msk;
-	_phase_ptr = &_phase_arr [_delay_frc];
-	_delay_int = len_fixp >> _nbr_phases_l2;
-	assert (_delay_int <= _delay_len);
+	find_phase_and_delay (_phase_ptr, _delay_int, _delay_frc, len_fixp);
 }
 
 
@@ -240,7 +237,7 @@ T	DelayFrac <T, NPL2>::read () const
 {
 	assert (_phase_ptr != nullptr);
 
-	return read_safe (_pos_write - _delay_int);
+	return read_safe (_pos_write - _delay_int, *_phase_ptr);
 }
 
 
@@ -336,7 +333,7 @@ void	DelayFrac <T, NPL2>::read_block (T dst_ptr [], int len) const
 			len_part = std::min (rem, _phase_len);
 			for (int k = 0; k < len_part; ++k)
 			{
-				dst_ptr [pos + k] = read_safe (pos_read + k);
+				dst_ptr [pos + k] = read_safe (pos_read + k, *_phase_ptr);
 			}
 		}
 
@@ -344,6 +341,31 @@ void	DelayFrac <T, NPL2>::read_block (T dst_ptr [], int len) const
 		pos_read = (pos_read + len_part) & _buf_msk;
 	}
 	while (pos < len);
+}
+
+
+
+// Delay is updated with the last dly_fix_ptr value
+template <typename T, int NPL2>
+void	DelayFrac <T, NPL2>::read_block_var_dly (T dst_ptr [], const int32_t dly_fix_ptr [], int len)
+{
+	assert (_phase_ptr != nullptr);
+	assert (len > 0);
+	assert (len <= _delay_len);
+
+	const Phase *  phase_ptr = _phase_ptr;
+	int            delay_int = _delay_int;
+	int            delay_frc = _delay_frc;
+
+	for (int pos = 0; pos < len; ++pos)
+	{
+		find_phase_and_delay (phase_ptr, delay_int, delay_frc, dly_fix_ptr [pos]);
+		dst_ptr [pos] = read_safe (_pos_write - delay_int + pos, *phase_ptr);
+	}
+
+	_phase_ptr = phase_ptr;
+	_delay_int = delay_int;
+	_delay_frc = delay_frc;
 }
 
 
@@ -431,7 +453,7 @@ typename DelayFrac <T, NPL2>::PhaseArray	DelayFrac <T, NPL2>::_phase_arr;
 
 
 template <typename T, int NPL2>
-T	DelayFrac <T, NPL2>::read_safe (int pos_read) const
+T	DelayFrac <T, NPL2>::read_safe (int pos_read, const Phase &phase) const
 {
 	const T        v0 { _buffer [(pos_read - 2) & _buf_msk] };
 	const T        v1 { _buffer [(pos_read - 1) & _buf_msk] };
@@ -441,7 +463,6 @@ T	DelayFrac <T, NPL2>::read_safe (int pos_read) const
 #if 1
 
 	// FIR interpolation
-	const Phase &  phase = *_phase_ptr;
 	const T        i0 { phase [0] };
 	const T        i1 { phase [1] };
 	const T        i2 { phase [2] };
@@ -455,6 +476,38 @@ T	DelayFrac <T, NPL2>::read_safe (int pos_read) const
 	return v2 + _delay_frc * (v1 - v2) * T (1.f / _nbr_phases);
 
 #endif
+}
+
+
+
+template <typename T, int NPL2>
+T	DelayFrac <T, NPL2>::read_nocheck (int pos_read, const Phase &phase) const
+{
+	const T        v0 { _buffer [pos_read - 2] };
+	const T        v1 { _buffer [pos_read - 1] };
+	const T        v2 { _buffer [pos_read    ] };
+	const T        v3 { _buffer [pos_read + 1] };
+
+	// FIR interpolation
+	const T        i0 { phase [0] };
+	const T        i1 { phase [1] };
+	const T        i2 { phase [2] };
+	const T        i3 { phase [3] };
+
+	return (v0 * i0 + v1 * i1) + (v2 * i2 + v3 * i3);
+}
+
+
+
+template <typename T, int NPL2>
+void  DelayFrac <T, NPL2>::find_phase_and_delay (const Phase * &phase_ptr, int &delay_int, int &delay_frc, int len_fixp) const
+{
+	assert (len_fixp >= _delay_min * _nbr_phases);
+
+	delay_frc = len_fixp & _phase_msk;
+	phase_ptr = &_phase_arr [delay_frc];
+	delay_int = len_fixp >> _nbr_phases_l2;
+	assert (delay_int <= _delay_len);
 }
 
 
