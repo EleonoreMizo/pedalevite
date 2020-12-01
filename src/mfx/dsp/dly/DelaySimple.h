@@ -66,6 +66,7 @@ public:
 	               process_sample (T x);
 	void           read_block_at (T dst_ptr [], int d, int nbr_spl) const;
 	void           process_block (T dst_ptr [], const T src_ptr [], int nbr_spl);
+	void           push_block (const T src_ptr [], int nbr_spl);
 	void           clear_buffers ();
 	void           clear_buffers_quick ();
 

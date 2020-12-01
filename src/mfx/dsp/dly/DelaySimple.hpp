@@ -146,6 +146,34 @@ void	DelaySimple <T>::process_block (T dst_ptr [], const T src_ptr [], int nbr_s
 
 
 template <typename T>
+void	DelaySimple <T>::push_block (const T src_ptr [], int nbr_spl)
+{
+	assert (src_ptr != nullptr);
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= _max_block_len);
+
+	int            pos     = 0;
+	T * const      buf_ptr = _buf.data ();
+	RingBufVectorizer rbv (_len);
+
+	for (rbv.start (nbr_spl, _pos_w)
+	;	rbv.end ()
+	;	rbv.next ())
+	{
+		const int      work_len = rbv.get_seg_len ();
+		const int      pos_w    = rbv.get_curs_pos (0);
+
+		fstb::copy_no_overlap (buf_ptr + pos_w, src_ptr + pos, work_len);
+
+		pos += work_len;
+	}
+
+	_pos_w = rbv.get_curs_pos (0);
+}
+
+
+
+template <typename T>
 void	DelaySimple <T>::clear_buffers ()
 {
 	std::fill (_buf.data (), _buf.data () + _buf.size (), DataType (0.f));
