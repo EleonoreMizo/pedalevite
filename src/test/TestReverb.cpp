@@ -231,6 +231,13 @@ int	TestReverb::test_reverbsc ()
 
 static void	TestReverb_process_reverbdattorro (mfx::dsp::spat::ReverbDattorro &reverb, std::vector <std::vector <float> > &dst_arr, const std::vector <std::vector <float> > &src_arr, int len)
 {
+#if 1
+	reverb.process_block (
+		dst_arr [0].data (), dst_arr [1].data (),
+		src_arr [0].data (), src_arr [1].data (),
+		len
+	);
+#else
 	for (int pos = 0; pos < len; ++pos)
 	{
 #if 0
@@ -246,6 +253,7 @@ static void	TestReverb_process_reverbdattorro (mfx::dsp::spat::ReverbDattorro &r
 		std::tie (dst_arr [0] [pos], dst_arr [1] [pos]) = 
 			reverb.process_sample (src_arr [0] [pos], src_arr [1] [pos]);
 	}
+#endif
 }
 
 

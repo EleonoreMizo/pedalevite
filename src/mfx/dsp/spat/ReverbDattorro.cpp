@@ -26,8 +26,11 @@ http://www.wtfpl.net/ for more details.
 
 #include "fstb/Approx.h"
 #include "fstb/fnc.h"
+#include "fstb/DataAlign.h"
+#include "fstb/ToolsSimd.h"
 #include "mfx/dsp/iir/Svf2p.h"
 #include "mfx/dsp/iir/TransSZBilin.h"
+#include "mfx/dsp/mix/Simd.h"
 #include "mfx/dsp/spat/ReverbDattorro.h"
 
 #include <cassert>
@@ -173,6 +176,12 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 	update_filter_bp (_filt_spec_input, &ReverbDattorro::set_filter_input_coefs);
 	update_filter_bp (_filt_spec_tank, &ReverbDattorro::set_filter_tank_coefs);
 	clear_buffers ();
+
+	// Makes sure the delays are initialized
+	_chn_arr [0]._tank_1.set_apd_delay_flt (0, _chn_arr [0]._lfo_arr [0]._dly_nomod);
+	_chn_arr [0]._tank_2.set_apd_delay_flt (0, _chn_arr [0]._lfo_arr [1]._dly_nomod);
+	_chn_arr [1]._tank_1.set_apd_delay_flt (0, _chn_arr [1]._lfo_arr [0]._dly_nomod);
+	_chn_arr [1]._tank_2.set_apd_delay_flt (0, _chn_arr [1]._lfo_arr [1]._dly_nomod);
 }
 
 
@@ -386,6 +395,142 @@ std::pair <float, float>	ReverbDattorro::process_sample (float xl, float xr)
 	return std::make_pair (xl, xr);
 }
 
+
+
+void	ReverbDattorro::process_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl)
+{
+	assert (_sample_freq > 0);
+	assert (dst_l_ptr != nullptr);
+	assert (dst_r_ptr != nullptr);
+	assert (src_l_ptr != nullptr);
+	assert (src_r_ptr != nullptr);
+	assert (nbr_spl > 0);
+
+	alignas (16) std::array <int32_t, _max_blk_size>   dly_apd_01;
+	alignas (16) std::array <int32_t, _max_blk_size>   dly_apd_02;
+	alignas (16) std::array <int32_t, _max_blk_size>   dly_apd_11;
+	alignas (16) std::array <int32_t, _max_blk_size>   dly_apd_12;
+	alignas (16) std::array <float  , _max_blk_size>   buf_l;
+	alignas (16) std::array <float  , _max_blk_size>   buf_r;
+	alignas (16) std::array <float  , _max_blk_size>   buf_a;
+	alignas (16) std::array <float  , _max_blk_size>   buf_b;
+
+	const int32_t * const   dly_apd_01_ptr = dly_apd_01.data ();
+	const int32_t * const   dly_apd_02_ptr = dly_apd_02.data ();
+	const int32_t * const   dly_apd_11_ptr = dly_apd_11.data ();
+	const int32_t * const   dly_apd_12_ptr = dly_apd_12.data ();
+
+	using MixUs = mix::Simd <fstb::DataAlign <true >, fstb::DataAlign <false> >;
+	using MixUd = mix::Simd <fstb::DataAlign <false>, fstb::DataAlign <true > >;
+	using MixA  = mix::Simd <fstb::DataAlign <true >, fstb::DataAlign <true > >;
+
+	const float    decay  = (_freeze.get_val_tgt () < 0.5f) ? _decay : 1.f;
+	float          vol_in = 1 - _freeze.get_val_cur ();
+
+	int            pos_blk = 0;
+	do
+	{
+		int            work_len   = std::min (nbr_spl - pos_blk, _max_blk_size);
+		work_len = std::min (work_len, _chn_arr [0]._tank_1.compute_max_block_len ());
+		work_len = std::min (work_len, _chn_arr [0]._tank_2.compute_max_block_len ());
+		work_len = std::min (work_len, _chn_arr [1]._tank_1.compute_max_block_len ());
+		work_len = std::min (work_len, _chn_arr [1]._tank_2.compute_max_block_len ());
+
+		const float    vol_in_end = 1 - _freeze.skip_block (work_len);
+
+		process_modulation_block (dly_apd_01.data (), _chn_arr [0]._lfo_arr [0], work_len);
+		process_modulation_block (dly_apd_02.data (), _chn_arr [0]._lfo_arr [1], work_len);
+		process_modulation_block (dly_apd_11.data (), _chn_arr [1]._lfo_arr [0], work_len);
+		process_modulation_block (dly_apd_12.data (), _chn_arr [1]._lfo_arr [1], work_len);
+
+		const float *  src2_l_ptr = src_l_ptr + pos_blk;
+		const float *  src2_r_ptr = src_r_ptr + pos_blk;
+		float *        dst2_l_ptr = dst_l_ptr + pos_blk;
+		float *        dst2_r_ptr = dst_r_ptr + pos_blk;
+
+#if ! defined (mfx_dsp_spat_ReverbDattorro_INVERSE_ORDER)
+		process_predelay_block (
+			buf_l.data (), buf_r.data (), src2_l_ptr, src2_r_ptr, work_len
+		);
+		MixA::scale_2_vlrauto (
+			buf_l.data (), buf_r.data (),
+			work_len,
+			vol_in, vol_in_end
+		);
+#else // mfx_dsp_spat_ReverbDattorro_INVERSE_ORDER
+		MixUs::copy_2_2_vlrauto (
+			buf_l.data (), buf_r.data (),
+			src2_l_ptr, src2_r_ptr,
+			work_len,
+			vol_in, vol_in_end
+		);
+#endif // mfx_dsp_spat_ReverbDattorro_INVERSE_ORDER
+
+		_state.read_block_at (buf_a.data (), _max_blk_size, work_len);
+
+		MixA::mix_1_1 (buf_a.data (), buf_r.data (), work_len);
+		_chn_arr [0]._tank_1.process_block_var_dly (
+			buf_a.data (), buf_a.data (), &dly_apd_01_ptr, work_len
+		);
+		MixA::scale_1_v (buf_a.data (), work_len, decay);
+		_chn_arr [0]._tank_2.process_block_var_dly (
+			buf_a.data (), buf_a.data (), &dly_apd_02_ptr, work_len
+		);
+		MixA::scale_1_v (buf_a.data (), work_len, decay);
+
+		MixA::mix_1_1 (buf_a.data (), buf_l.data (), work_len);
+		_chn_arr [1]._tank_1.process_block_var_dly (
+			buf_a.data (), buf_a.data (), &dly_apd_11_ptr, work_len
+		);
+		MixA::scale_1_v (buf_a.data (), work_len, decay);
+		_chn_arr [1]._tank_2.process_block_var_dly (
+			buf_a.data (), buf_a.data (), &dly_apd_12_ptr, work_len
+		);
+		MixA::scale_1_v (buf_a.data (), work_len, decay);
+
+		_state.push_block (buf_a.data (), work_len);
+
+		// Output, negative taps
+		_chn_arr [1]._tank_2.read_apd_block (buf_l.data (), 0, _chn_arr [0]._tap_dly_arr [2], work_len);
+		_chn_arr [0]._tank_2.read_apd_block (buf_r.data (), 0, _chn_arr [1]._tap_dly_arr [2], work_len);
+		_chn_arr [0]._tank_2.read_delay_block (buf_a.data (), _chn_arr [0]._tap_dly_arr [4], work_len);
+		_chn_arr [1]._tank_2.read_delay_block (buf_b.data (), _chn_arr [1]._tap_dly_arr [4], work_len);
+		MixA::mix_2_2 (buf_l.data (), buf_r.data (), buf_a.data (), buf_b.data (), work_len);
+		_chn_arr [0]._tank_2.read_apd_block (buf_a.data (), 0, _chn_arr [0]._tap_dly_arr [5], work_len);
+		_chn_arr [1]._tank_2.read_apd_block (buf_b.data (), 0, _chn_arr [1]._tap_dly_arr [5], work_len);
+		MixA::mix_2_2 (buf_l.data (), buf_r.data (), buf_a.data (), buf_b.data (), work_len);
+		_chn_arr [0]._tank_1.read_delay_block (buf_a.data (), _chn_arr [0]._tap_dly_arr [6], work_len);
+		_chn_arr [1]._tank_1.read_delay_block (buf_b.data (), _chn_arr [1]._tap_dly_arr [6], work_len);
+		MixA::mix_2_2 (buf_l.data (), buf_r.data (), buf_a.data (), buf_b.data (), work_len);
+
+		// Tap inversion
+		MixUd::copy_2_2_v (dst2_l_ptr, dst2_r_ptr, buf_l.data (), buf_r.data (), work_len, -1);
+
+		// Output, positive taps
+		_chn_arr [1]._tank_1.read_delay_block (buf_l.data (), _chn_arr [0]._tap_dly_arr [0], work_len);
+		_chn_arr [0]._tank_1.read_delay_block (buf_r.data (), _chn_arr [1]._tap_dly_arr [0], work_len);
+		_chn_arr [1]._tank_1.read_delay_block (buf_a.data (), _chn_arr [0]._tap_dly_arr [1], work_len);
+		_chn_arr [0]._tank_1.read_delay_block (buf_b.data (), _chn_arr [1]._tap_dly_arr [1], work_len);
+		MixA::mix_2_2 (buf_l.data (), buf_r.data (), buf_a.data (), buf_b.data (), work_len);
+		_chn_arr [1]._tank_2.read_delay_block (buf_a.data (), _chn_arr [0]._tap_dly_arr [3], work_len);
+		_chn_arr [0]._tank_2.read_delay_block (buf_b.data (), _chn_arr [1]._tap_dly_arr [3], work_len);
+		MixUd::mix_2_1 (dst2_l_ptr, buf_l.data (), buf_a.data (), work_len);
+		MixUd::mix_2_1 (dst2_r_ptr, buf_r.data (), buf_b.data (), work_len);
+
+#if defined (mfx_dsp_spat_ReverbDattorro_INVERSE_ORDER)
+		process_predelay_block (
+			dst2_l_ptr, dst2_r_ptr, dst2_l_ptr, dst2_r_ptr, work_len
+		);
+#endif
+
+		pos_blk += work_len;
+		vol_in   = vol_in_end;
+	}
+	while (pos_blk < nbr_spl);
+}
+
+
+
 #undef mfx_dsp_spat_ReverbDattorro_INVERSE_ORDER
 
 
@@ -567,25 +712,21 @@ void	ReverbDattorro::process_predelay (float &xl, float &xr)
 
 
 
+void	ReverbDattorro::process_predelay_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl)
+{
+	_chn_arr [0]._input.process_block (dst_l_ptr, src_l_ptr, nbr_spl);
+	_chn_arr [1]._input.process_block (dst_r_ptr, src_r_ptr, nbr_spl);
+}
+
+
+
 // Returns the modulated delay time, in samples
 float	ReverbDattorro::process_modulation (ModDlyState &mds)
 {
-	// LFO
 	mds._lfo_val += _lfo_step;
-	while (mds._lfo_val >= 1)
-	{
-		mds._lfo_val -= 2;
-	}
-
-	// Random modulation
 	mds._rnd_val += mds._rnd_step;
 	++ mds._rnd_pos;
-	if (mds._rnd_pos >= mds._rnd_per)
-	{
-		mds._rnd_pos  = 0;
-		const float    val_tgt = _rnd_gen.gen_flt () * 2 - 1;
-		mds._rnd_step = (val_tgt - mds._rnd_val) / mds._rnd_per;
-	}
+	check_mod_counters (mds);
 
 	// Final delay value
 	float          dly_mod =
@@ -595,6 +736,102 @@ float	ReverbDattorro::process_modulation (ModDlyState &mds)
 	dly_mod = std::max (dly_mod, _min_mod_dly_time);
 
 	return dly_mod;
+}
+
+
+
+// dly_ptr must be aligned on a 16-byte boundary, and the allocated zone must
+// be a multiple of 16
+void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &mds, int nbr_spl)
+{
+	assert (fstb::is_ptr_align_nz (dly_ptr, 16));
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= _max_blk_size);
+
+	const float    dly_mod_fix_min = _min_mod_dly_time * ApfLine_nbr_phases;
+
+	static_assert (
+		((_max_blk_size & 15) == 0),
+		"_max_blk_size must be a multiple of 16"
+	);
+	alignas (16) std::array <float, _max_blk_size> dly_fix_flt;
+
+	// First, computes all the delays as floating point data, premultiplied
+	int            pos_blk = 0;
+	do
+	{
+		check_mod_counters (mds);
+
+		int            work_len    = nbr_spl - pos_blk;
+		const int      rem_len_rnd = mds._rnd_per - mds._rnd_pos;
+		work_len = std::min (work_len, rem_len_rnd);
+		if (_lfo_step > 0)
+		{
+			const int      rem_len_lfo =
+				fstb::ceil_int ((1 - mds._lfo_val) / _lfo_step);
+			work_len = std::min (work_len, rem_len_lfo);
+		}
+
+		const float    dly_mod =
+			  mds._dly_nomod
+			+ mds._lfo_val * _lfo_depth
+			+ mds._rnd_pos * _rnd_depth;
+		const float    dly_inc =
+			  _lfo_step     * _lfo_depth
+			+ mds._rnd_step * _rnd_depth;
+		float          dly_mod_fix = dly_mod * ApfLine_nbr_phases;
+		const float    dly_inc_fix = dly_inc * ApfLine_nbr_phases;
+		const int      blk_end = pos_blk + work_len;
+		for (int pos = pos_blk; pos < blk_end; ++pos)
+		{
+			dly_fix_flt [pos] = std::max (dly_mod_fix, dly_mod_fix_min);
+			dly_mod_fix += dly_inc_fix;
+		}
+
+		mds._lfo_val += work_len * _lfo_step;
+		mds._rnd_val += work_len * mds._rnd_step;
+		mds._rnd_pos += work_len;
+		pos_blk      += work_len;
+	}
+	while (pos_blk < nbr_spl);
+
+	check_mod_counters (mds);
+
+	// Now converts everything to integer in one pass
+	for (int pos = 0; pos < nbr_spl; pos += 16)
+	{
+		const auto     x0f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos     ]);
+		const auto     x4f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  4]);
+		const auto     x8f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  8]);
+		const auto     xcf = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos + 12]);
+		const auto     x0i = fstb::ToolsSimd::conv_f32_to_s32 (x0f);
+		const auto     x4i = fstb::ToolsSimd::conv_f32_to_s32 (x4f);
+		const auto     x8i = fstb::ToolsSimd::conv_f32_to_s32 (x8f);
+		const auto     xci = fstb::ToolsSimd::conv_f32_to_s32 (xcf);
+		fstb::ToolsSimd::store_s32 (dly_ptr + pos     , x0i);
+		fstb::ToolsSimd::store_s32 (dly_ptr + pos +  4, x4i);
+		fstb::ToolsSimd::store_s32 (dly_ptr + pos +  8, x8i);
+		fstb::ToolsSimd::store_s32 (dly_ptr + pos + 12, xci);
+	}
+}
+
+
+
+void	ReverbDattorro::check_mod_counters (ModDlyState &mds)
+{
+	// LFO
+	while (mds._lfo_val >= 1)
+	{
+		mds._lfo_val -= 2;
+	}
+
+	// Random modulation
+	if (mds._rnd_pos >= mds._rnd_per)
+	{
+		mds._rnd_pos  = 0;
+		const float    val_tgt = _rnd_gen.gen_flt () * 2 - 1;
+		mds._rnd_step = (val_tgt - mds._rnd_val) / mds._rnd_per;
+	}
 }
 
 

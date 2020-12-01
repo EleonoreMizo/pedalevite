@@ -81,6 +81,7 @@ public:
 	
 	std::pair <float, float>
 	               process_sample (float xl, float xr);
+	void           process_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl);
 	void           flush_tank ();
 
 	void           clear_buffers ();
@@ -164,7 +165,10 @@ private:
 	void           compute_filter_coef (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const BPFilterSpec &spec) const;
 	void           reset_lfo ();
 	inline void    process_predelay (float &xl, float &xr);
+	void           process_predelay_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl);
 	float          process_modulation (ModDlyState &mds);
+	void           process_modulation_block (int32_t dly_ptr [], ModDlyState &mds, int nbr_spl);
+	inline void    check_mod_counters (ModDlyState &mds);
 
 	float          _sample_freq = 0; // Hz, > 0. 0 = not set
 	float          _inv_fs      = 0; // s, > 0. 0 = not set
