@@ -87,6 +87,14 @@ T	SmootherLpf <T>::process_sample ()
 
 
 template <typename T>
+T	SmootherLpf <T>::skip_block (int nbr_spl)
+{
+	return _lpf.constant_block (_val_tgt, nbr_spl);
+}
+
+
+
+template <typename T>
 T	SmootherLpf <T>::get_val_cur () const
 {
 	return _lpf.use_state ();

@@ -55,6 +55,8 @@ public:
 	fstb_FORCEINLINE T
 	               process_sample ();
 	fstb_FORCEINLINE T
+	               skip_block (int nbr_spl);
+	fstb_FORCEINLINE T
 	               get_val_cur () const;
 	fstb_FORCEINLINE T
 	               get_val_tgt () const;
