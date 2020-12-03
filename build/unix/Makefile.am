@@ -1078,6 +1078,10 @@ commonsrc = \
         ../../src/mfx/pi/param/MapRatio.h \
         ../../src/mfx/pi/param/MapS.h \
         ../../src/mfx/pi/param/MapS.hpp \
+        ../../src/mfx/pi/param/MapSat.h \
+        ../../src/mfx/pi/param/MapSat.hpp \
+        ../../src/mfx/pi/param/MapSatBipolar.h \
+        ../../src/mfx/pi/param/MapSatBipolar.hpp \
         ../../src/mfx/pi/param/MapSq.h \
         ../../src/mfx/pi/param/MapSq.hpp \
         ../../src/mfx/pi/param/Simple.cpp \
@@ -1200,9 +1204,7 @@ commonsrc = \
         ../../src/mfx/pi/ParamDescSet.h \
         ../../src/mfx/pi/ParamDescSet.hpp \
         ../../src/mfx/pi/ParamMapFdbk.h \
-        ../../src/mfx/pi/ParamMapFdbk.hpp \
         ../../src/mfx/pi/ParamMapFdbkBipolar.h \
-        ../../src/mfx/pi/ParamMapFdbkBipolar.hpp \
         ../../src/mfx/pi/ParamProcSimple.cpp \
         ../../src/mfx/pi/ParamProcSimple.h \
         ../../src/mfx/pi/ParamState.cpp \

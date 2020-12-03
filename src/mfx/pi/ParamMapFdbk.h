@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"mfx/dsp/shape/MapSaturate.h"
+#include	"mfx/pi/param/MapSat.h"
 
 
 
@@ -38,51 +38,10 @@ namespace pi
 
 
 
-class ParamMapFdbk
-{
-
-/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-public:
-
-	inline void    config (double val_min, double val_max);
-	inline double  conv_norm_to_nat (double norm) const;
-	inline double  conv_nat_to_norm (double nat) const;
-
-	static inline double 
-	               get_nat_min ();
-	static inline double 
-	               get_nat_max ();
-
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-protected:
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	typedef	dsp::shape::MapSaturate <
-		double,
-		std::ratio <  1,    2>,
-		std::ratio <  1,    1>,
-		std::ratio <995, 1000>
-	>	Mapper;
-
-
-
-/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	bool           operator == (const ParamMapFdbk &other) const = delete;
-	bool           operator != (const ParamMapFdbk &other) const = delete;
-
-};	// class ParamMapFdbk
+typedef param::MapSat <
+   std::ratio <995, 1000>,
+   std::ratio <1, 2>
+> ParamMapFdbk;
 
 
 
@@ -91,7 +50,7 @@ private:
 
 
 
-#include	"mfx/pi/ParamMapFdbk.hpp"
+//#include	"mfx/pi/ParamMapFdbk.hpp"
 
 
 

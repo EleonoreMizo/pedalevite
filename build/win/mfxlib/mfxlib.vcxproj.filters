@@ -1533,13 +1533,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.h">
       <Filter>mfx\pi</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.hpp">
-      <Filter>mfx\pi</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbkBipolar.h">
-      <Filter>mfx\pi</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbkBipolar.hpp">
       <Filter>mfx\pi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\uitk\pg\Levels.h">
@@ -4868,6 +4862,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\EarlyRef.hpp">
       <Filter>mfx\dsp\spat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSat.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSat.hpp">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.h">
+      <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.hpp">
+      <Filter>mfx\pi\param</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

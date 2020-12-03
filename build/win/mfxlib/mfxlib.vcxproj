@@ -1267,6 +1267,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\nzbl\FilterBankSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamProcSimple.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSat.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSat.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\LfoType.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\Param.h" />
@@ -1394,9 +1398,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\osdet\OnsetDetectDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\osdet\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbk.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbkBipolar.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\ParamMapFdbkBipolar.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapPseudoLog.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapPseudoLog.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapRatio.h" />

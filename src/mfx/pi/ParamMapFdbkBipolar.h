@@ -27,9 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"mfx/dsp/shape/MapSaturate.h"
-
-#include <ratio>
+#include	"mfx/pi/param/MapSatBipolar.h"
 
 
 
@@ -40,50 +38,10 @@ namespace pi
 
 
 
-class ParamMapFdbkBipolar
-{
-
-/*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-public:
-
-	inline void    config (double val_min, double val_max);
-	inline double  conv_norm_to_nat (double norm) const;
-	inline double  conv_nat_to_norm (double nat) const;
-
-	static inline double 
-	               get_nat_min ();
-	static inline double 
-	               get_nat_max ();
-
-
-/*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-protected:
-
-
-
-/*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	typedef	dsp::shape::MapSaturate <
-		double,
-		std::ratio <  1,    2>,
-		std::ratio <  1,    2>,
-		std::ratio <995, 1000>
-	>	Mapper;
-
-
-
-/*\\\ FORBIDDEN MEMBER FUNCTIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-private:
-
-	bool				operator == (const ParamMapFdbkBipolar &other) const   = delete;
-	bool				operator != (const ParamMapFdbkBipolar &other) const   = delete;
-
-};	// class ParamMapFdbkBipolar
+typedef param::MapSatBipolar <
+   std::ratio <995, 1000>,
+   std::ratio <1, 2>
+> ParamMapFdbkBipolar;
 
 
 
@@ -92,7 +50,7 @@ private:
 
 
 
-#include	"mfx/pi/ParamMapFdbkBipolar.hpp"
+//#include	"mfx/pi/ParamMapFdbkBipolar.hpp"
 
 
 

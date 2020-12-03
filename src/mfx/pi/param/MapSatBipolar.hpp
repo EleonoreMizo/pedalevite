@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        ParamMapFdbkBipolar.hpp
-        Author: Laurent de Soras, 2016
+        MapSatBipolar.hpp
+        Author: Laurent de Soras, 2020
 
 --- Legal stuff ---
 
@@ -9,20 +9,18 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+http://www.wtfpl.net/ for more details.
 
 *Tab=3***********************************************************************/
 
 
 
-#if ! defined (mfx_pi_ParamMapFdbkBipolar_CODEHEADER_INCLUDED)
-#define	mfx_pi_ParamMapFdbkBipolar_CODEHEADER_INCLUDED
+#if ! defined (mfx_pi_param_MapSatBipolar_CODEHEADER_INCLUDED)
+#define mfx_pi_param_MapSatBipolar_CODEHEADER_INCLUDED
 
 
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#include	<cmath>
 
 #include <stdexcept>
 
@@ -34,6 +32,8 @@ namespace mfx
 {
 namespace pi
 {
+namespace param
+{
 
 
 
@@ -41,7 +41,8 @@ namespace pi
 
 
 
-void	ParamMapFdbkBipolar::config (double val_min, double val_max)
+template <class NATS, class C>
+void	MapSatBipolar <NATS, C>::config (double val_min, double val_max)
 {
 	if (val_min != -val_max || val_max != Mapper::get_ys ())
 	{
@@ -51,7 +52,8 @@ void	ParamMapFdbkBipolar::config (double val_min, double val_max)
 
 
 
-double	ParamMapFdbkBipolar::conv_norm_to_nat (double norm) const
+template <class NATS, class C>
+double	MapSatBipolar <NATS, C>::conv_norm_to_nat (double norm) const
 {
 	const double	norm_bip = norm - 0.5;
 	const double	norm_mon = fabs (norm_bip);
@@ -63,7 +65,8 @@ double	ParamMapFdbkBipolar::conv_norm_to_nat (double norm) const
 
 
 
-double	ParamMapFdbkBipolar::conv_nat_to_norm (double nat) const
+template <class NATS, class C>
+double	MapSatBipolar <NATS, C>::conv_nat_to_norm (double nat) const
 {
 	const double	nat_mon  = fabs (nat);
 	const double	norm_mon = Mapper::desaturate (nat_mon);
@@ -75,14 +78,16 @@ double	ParamMapFdbkBipolar::conv_nat_to_norm (double nat) const
 
 
 
-double	ParamMapFdbkBipolar::get_nat_min ()
+template <class NATS, class C>
+double	MapSatBipolar <NATS, C>::get_nat_min ()
 {
 	return -get_nat_max ();
 }
 
 
 
-double	ParamMapFdbkBipolar::get_nat_max ()
+template <class NATS, class C>
+double	MapSatBipolar <NATS, C>::get_nat_max ()
 {
 	return Mapper::get_ys ();
 }
@@ -97,12 +102,13 @@ double	ParamMapFdbkBipolar::get_nat_max ()
 
 
 
-}	// namespace pi
-}	// namespace mfx
+}  // namespace param
+}  // namespace pi
+}  // namespace mfx
 
 
 
-#endif	// mfx_pi_ParamMapFdbkBipolar_CODEHEADER_INCLUDED
+#endif   // mfx_pi_param_MapSatBipolar_CODEHEADER_INCLUDED
 
 
 
