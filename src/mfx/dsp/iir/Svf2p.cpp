@@ -172,11 +172,8 @@ v2m = b0 - b2
 
 void	Svf2p::conv_s_eq_to_svf (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const double b [3], const double a [3], double freq, double fs)
 {
-	assert (v0m != 0);
-	assert (v1m != 0);
-	assert (v2m != 0);
-	assert (b   != nullptr);
-	assert (a   != nullptr);
+	assert (b != nullptr);
+	assert (a != nullptr);
 	assert (a [0] != 0);
 	assert (freq > 0);
 	assert (fs > 0);
