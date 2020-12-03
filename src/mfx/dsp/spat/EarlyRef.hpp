@@ -83,7 +83,7 @@ void	EarlyRef <T>::generate_taps (uint32_t seed, int nbr_taps, float duration, f
 	// Random generator
 	constexpr int  rnd_inc = 4321;
 	uint32_t       rnd_idx = seed;
-	auto           rnd     = [&rnd_idx, rnd_inc] ()
+	auto           rnd     = [=, &rnd_idx] ()
 	{
 		const uint32_t val = fstb::Hash::hash (rnd_idx);
 		rnd_idx += rnd_inc;
