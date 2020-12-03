@@ -606,7 +606,14 @@ void	ReverbDattorro::update_delay_times ()
 		int            d2  = fstb::round_int (chn._dly_2_nosz * _room_size);
 		if (chn_cnt == 1)
 		{
+			// Last delay of channel 1 is shortened to make room for _state.
+			// The smallest room sizes make the delay negative, so we have to
+			// fix it. However the induced error is not compensated anywhere.
+			// Ideally, it would be easier to deal with this if all the delay
+			// lines involved in the reverberator were sharing a single buffer
+			// with multiple R/W cursors.
 			d2 -= _max_blk_size;
+			d2  = std::max (d2, 0);
 		}
 		chn._tank_1.set_delay (d1);
 		chn._tank_2.set_delay (d2);
@@ -775,7 +782,7 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 		const float    dly_mod =
 			  mds._dly_nomod
 			+ mds._lfo_val * _lfo_depth
-			+ mds._rnd_pos * _rnd_depth;
+			+ mds._rnd_val * _rnd_depth;
 		const float    dly_inc =
 			  _lfo_step     * _lfo_depth
 			+ mds._rnd_step * _rnd_depth;
