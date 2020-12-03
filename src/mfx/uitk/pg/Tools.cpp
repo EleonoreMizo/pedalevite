@@ -632,7 +632,10 @@ int	Tools::change_plugin (Model &model, const View &view, int slot_id, std::stri
 
 	if (model_id.empty ())
 	{
-		model.remove_plugin (slot_id);
+		if (slot_id >= 0)
+		{
+			model.remove_plugin (slot_id);
+		}
 	}
 	else
 	{
