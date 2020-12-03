@@ -50,11 +50,14 @@ class EarlyRef
 
 public:
 
+	typedef EarlyRef <T> ThisType;
+
 	static constexpr int _max_nbr_taps = 64;
 
 	void           reset (double sample_freq, double max_predelay_time, double max_duration);
 
 	void           generate_taps (uint32_t seed, int nbr_taps, float duration, float lvl_end, float gain);
+	void           morph_taps_to (const ThisType &other, float lerp);
 	void           set_predelay (float delay);
 
 	fstb_FORCEINLINE std::pair <T, T>

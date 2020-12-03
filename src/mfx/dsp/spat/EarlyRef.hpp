@@ -130,6 +130,42 @@ void	EarlyRef <T>::generate_taps (uint32_t seed, int nbr_taps, float duration, f
 
 
 template <typename T>
+void	EarlyRef <T>::morph_taps_to (const ThisType &other, float lerp)
+{
+	assert (lerp >= 0);
+	assert (lerp <= 1);
+
+	const int      nbr_taps = std::max (_nbr_taps, other._nbr_taps);
+
+	for (int k = 0; k < _nbr_taps; ++k)
+	{
+		if (k >= other._nbr_taps)
+		{
+			_tap_arr [k]._gain *= 1 - lerp;
+		}
+		else if (k >= _nbr_taps)
+		{
+			_tap_arr [k]._pos  = other._tap_arr [k]._pos;
+			_tap_arr [k]._gain = other._tap_arr [k]._gain * T (lerp);
+		}
+		else
+		{
+			_tap_arr [k]._pos = fstb::round_int (fstb::lerp (
+				float (_tap_arr [k]._pos), float (other._tap_arr [k]._pos), lerp
+			));
+			_tap_arr [k]._gain = fstb::lerp (
+				_tap_arr [k]._gain, other._tap_arr [k]._gain, T (lerp)
+			);
+		}
+	}
+
+	_nbr_taps = nbr_taps;
+
+}
+
+
+
+template <typename T>
 void	EarlyRef <T>::set_predelay (float delay)
 {
 	assert (_sample_freq > 0);
