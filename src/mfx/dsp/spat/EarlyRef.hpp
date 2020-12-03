@@ -47,7 +47,6 @@ namespace spat
 
 
 
-// Should be followed by a generate_taps()
 template <typename T>
 void	EarlyRef <T>::reset (double sample_freq, double max_predelay_time, double max_duration)
 {
@@ -73,7 +72,7 @@ template <typename T>
 void	EarlyRef <T>::generate_taps (uint32_t seed, int nbr_taps, float duration, float lvl_end, float gain)
 {
 	assert (_sample_freq > 0);
-	assert (nbr_taps > 0);
+	assert (nbr_taps >= 0);
 	assert (nbr_taps <= _max_nbr_taps);
 	assert (duration > 0);
 	assert (lvl_end > 0);
@@ -147,7 +146,7 @@ void	EarlyRef <T>::set_predelay (float delay)
 template <typename T>
 std::pair <T, T>	EarlyRef <T>::process_sample (T x)
 {
-	assert (_nbr_taps > 0);
+	assert (_sample_freq > 0);
 
 	const T        d = _delay.process_sample (x);
 	T              e = T (0);
@@ -166,13 +165,18 @@ std::pair <T, T>	EarlyRef <T>::process_sample (T x)
 template <typename T>
 void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr [], int nbr_spl)
 {
-	assert (_nbr_taps > 0);
+	assert (_sample_freq > 0);
 	assert (dly_ptr != nullptr);
 	assert (erf_ptr != nullptr);
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
 	alignas (16) std::array <T, _max_blk_size>   buf;
+
+	using Mix = dsp::mix::Simd <
+		fstb::DataAlign <false>,
+		fstb::DataAlign <true>
+	>;
 
 	int            pos = 0;
 	do
@@ -185,11 +189,6 @@ void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr []
 		bool           empty_flag = true;
 		for (const auto &tap : _tap_arr)
 		{
-			using Mix = dsp::mix::Simd <
-				fstb::DataAlign <false>,
-				fstb::DataAlign <true>
-			>;
-
 			const float    g = tap._gain;
 			_delay.read_block_at (buf.data (), tap._pos + offset, work_len);
 			if (empty_flag)
@@ -201,6 +200,10 @@ void	EarlyRef <T>::process_block (T dly_ptr [], T erf_ptr [], const T src_ptr []
 			{
 				Mix::mix_1_1_v (erf_ptr, buf.data (), work_len, g);
 			}
+		}
+		if (empty_flag)
+		{
+			Mix::clear (erf_ptr, work_len);
 		}
 
 		pos     += work_len;

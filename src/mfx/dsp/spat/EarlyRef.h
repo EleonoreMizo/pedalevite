@@ -91,7 +91,7 @@ private:
 	double            _max_predelay_time = 0; // s, >= 0
 	double            _max_duration = 0; // s, >= 0. 0 = not set
 	TapArray          _tap_arr;
-	int               _nbr_taps     = 0; // [1 ; _max_nbr_taps]. 0 = not set
+	int               _nbr_taps     = 0; // [0 ; _max_nbr_taps].
 	DelayType         _delay;
 	int               _predelay_spl = 0;
 
