@@ -76,7 +76,7 @@ public:
 	void           set_filter_input_bp (float lo, float hi);
 	void           set_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
 	void           set_filter_tank_bp (float lo, float hi);
-	void           set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
+	void           set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m, bool override_freeze_flag = false);
 	void           freeze_tank (bool freeze_flag);
 	
 	std::pair <float, float>
@@ -153,18 +153,27 @@ private:
 	};
 	typedef std::array <Channel, _nbr_chn> ChannelArray;
 
-	class BPFilterSpec
+	class FilterSpec
 	{
 	public:
-		float          _f_lo = 0;     // Hz, > 0.  0 = user-provided coefs
-		float          _f_hi = 0;     // Hz, > lo. 0 = user-provided coefs
+		float          _f_lo = 0;     // Hz, > 0. 0 = user-provided coefs
+		float          _f_hi = 0;     // Hz, > 0. 0 = user-provided coefs
+
+		float          _g0   = 0;     // SVF coefficients
+		float          _g1   = 0;
+		float          _g2   = 0;
+		float          _v0m  = 1;     // SVF mixing values. Default = neutral
+		float          _v1m  = 0;     // (out = in)
+		float          _v2m  = 0;
 	};
 
 	void           update_diffusion_input ();
 	void           update_diffusion_tank ();
 	void           update_delay_times ();
-	void           update_filter_bp (const BPFilterSpec &spec, void (ReverbDattorro::*set_coefs) (float g0, float g1, float g2, float v0m, float v1m, float v2m));
-	void           compute_filter_coef (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const BPFilterSpec &spec) const;
+	void           compute_update_filter (FilterSpec &spec, void (ReverbDattorro::*set_coefs) (float g0, float g1, float g2, float v0m, float v1m, float v2m));
+	void           compute_filter_coef (FilterSpec &spec) const;
+	void           update_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
+	void           update_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m);
 	void           reset_lfo ();
 	inline void    process_predelay (float &xl, float &xr);
 	void           process_predelay_block (float dst_l_ptr [], float dst_r_ptr [], const float src_l_ptr [], const float src_r_ptr [], int nbr_spl);
@@ -183,7 +192,7 @@ private:
 	float          _diffuse_tnk = 1.f;  // [0 ; 1]
 	float          _room_size   = 1.f;  // Time scale on the delays and allpass, [0.0025 ; 4.0]
 	float          _lfo_speed   = 1.f;  // Hz, >= 0
-	float          _lfo_depth  = 0.f;   // Samples, positive or negative
+	float          _lfo_depth   = 0.f;  // Samples, positive or negative
 	ctrl::SmootherLpf <float>
 	               _freeze;
 
@@ -197,8 +206,8 @@ private:
 	               _rnd_gen;
 	float          _rnd_depth   = _rnd_max_depth_s;
 
-	BPFilterSpec   _filt_spec_input;
-	BPFilterSpec   _filt_spec_tank;
+	FilterSpec     _filt_spec_input;
+	FilterSpec     _filt_spec_tank;
 
 
 

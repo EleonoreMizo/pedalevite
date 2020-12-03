@@ -168,8 +168,12 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 	update_diffusion_input ();
 	update_diffusion_tank ();
 	update_delay_times ();
-	update_filter_bp (_filt_spec_input, &ReverbDattorro::set_filter_input_coefs);
-	update_filter_bp (_filt_spec_tank, &ReverbDattorro::set_filter_tank_coefs);
+	compute_update_filter (
+		_filt_spec_input, &ReverbDattorro::update_filter_input_coefs
+	);
+	compute_update_filter (
+		_filt_spec_tank, &ReverbDattorro::update_filter_tank_coefs
+	);
 	clear_buffers ();
 
 	// Makes sure the delays are initialized
@@ -289,15 +293,20 @@ void	ReverbDattorro::set_diffusion_tank (float amount)
 
 
 
+// If lo <= hi, the filter is a band-pass
+// if lo >  hi, the filter is a notch
 void	ReverbDattorro::set_filter_input_bp (float lo, float hi)
 {
 	assert (lo >= 1);
+	assert (lo < _sample_freq * 0.5f);
+	assert (hi >= 1);
 	assert (hi < _sample_freq * 0.5f);
-	assert (lo < hi);
 
 	_filt_spec_input._f_lo = lo;
 	_filt_spec_input._f_hi = hi;
-	update_filter_bp (_filt_spec_input, &ReverbDattorro::set_filter_input_coefs);
+	compute_update_filter (
+		_filt_spec_input, &ReverbDattorro::update_filter_input_coefs
+	);
 }
 
 
@@ -306,11 +315,13 @@ void	ReverbDattorro::set_filter_input_bp (float lo, float hi)
 // See iir::Svf2p to compute them from basic parameters
 void	ReverbDattorro::set_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m)
 {
-	for (auto &chn : _chn_arr)
-	{
-		chn._input.set_filter_coefs (g0, g1, g2);
-		chn._input.set_filter_mix (v0m, v1m, v2m);
-	}
+	_filt_spec_input._g0  = g0;
+	_filt_spec_input._g1  = g1;
+	_filt_spec_input._g2  = g2;
+	_filt_spec_input._v0m = v0m;
+	_filt_spec_input._v1m = v1m;
+	_filt_spec_input._v2m = v2m;
+	update_filter_input_coefs (g0, g1, g2, v0m, v1m, v2m);
 }
 
 
@@ -318,12 +329,15 @@ void	ReverbDattorro::set_filter_input_coefs (float g0, float g1, float g2, float
 void	ReverbDattorro::set_filter_tank_bp (float lo, float hi)
 {
 	assert (lo >= 1);
+	assert (lo < _sample_freq * 0.5f);
+	assert (hi >= 1);
 	assert (hi < _sample_freq * 0.5f);
-	assert (lo < hi);
 
 	_filt_spec_tank._f_lo = lo;
 	_filt_spec_tank._f_hi = hi;
-	update_filter_bp (_filt_spec_tank, &ReverbDattorro::set_filter_tank_coefs);
+	compute_update_filter (
+		_filt_spec_tank, &ReverbDattorro::update_filter_tank_coefs
+	);
 }
 
 
@@ -331,20 +345,40 @@ void	ReverbDattorro::set_filter_tank_bp (float lo, float hi)
 // Trapezoidal-integrated SVF coefficients and mixers
 // See iir::Svf2p to compute them from basic parameters
 // Avoid gain > 1 for any frequency band
-void	ReverbDattorro::set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m)
+// override_freeze_flag sets the filter even if the freeze mode is activated.
+void	ReverbDattorro::set_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m, bool override_freeze_flag)
 {
-	for (auto &chn : _chn_arr)
+	_filt_spec_tank._g0  = g0;
+	_filt_spec_tank._g1  = g1;
+	_filt_spec_tank._g2  = g2;
+	_filt_spec_tank._v0m = v0m;
+	_filt_spec_tank._v1m = v1m;
+	_filt_spec_tank._v2m = v2m;
+	if (_freeze.get_val_tgt () < 0.5f || override_freeze_flag)
 	{
-		chn._tank_1.set_filter_coefs (g0, g1, g2);
-		chn._tank_1.set_filter_mix (v0m, v1m, v2m);
+		update_filter_tank_coefs (g0, g1, g2, v0m, v1m, v2m);
 	}
 }
 
 
 
+// Tank filter is set to "neutral" during freeze. However it is possible
+// to set the filter afterwards.
 void	ReverbDattorro::freeze_tank (bool freeze_flag)
 {
-	_freeze.set_val ((freeze_flag) ? 1.f : 0.f);
+	if (freeze_flag)
+	{
+		_freeze.set_val (1.f);
+		update_filter_tank_coefs (0, 0, 0, 1, 0, 0);
+	}
+	else
+	{
+		_freeze.set_val (0.f);
+		update_filter_tank_coefs (
+			_filt_spec_tank._g0, _filt_spec_tank._g1, _filt_spec_tank._g2,
+			_filt_spec_tank._v0m, _filt_spec_tank._v1m, _filt_spec_tank._v2m
+		);
+	}
 }
 
 
@@ -607,8 +641,8 @@ void	ReverbDattorro::update_diffusion_input ()
 
 void	ReverbDattorro::update_diffusion_tank ()
 {
-	const float    coef_1 = 0.750f * _diffuse_tnk;
-	const float    coef_2 = 0.625f * _diffuse_tnk;
+	const float    coef_1 = -0.750f * _diffuse_tnk;
+	const float    coef_2 =  0.625f * _diffuse_tnk;
 	for (auto &chn : _chn_arr)
 	{
 		chn._tank_1.set_apd_coef (0, coef_1);
@@ -648,27 +682,25 @@ void	ReverbDattorro::update_delay_times ()
 
 
 
-void	ReverbDattorro::update_filter_bp (const BPFilterSpec &spec, void (ReverbDattorro::*set_coefs) (float g0, float g1, float g2, float v0m, float v1m, float v2m))
+void	ReverbDattorro::compute_update_filter (FilterSpec &spec, void (ReverbDattorro::*set_coefs) (float g0, float g1, float g2, float v0m, float v1m, float v2m))
 {
 	if (spec._f_hi > 0)
 	{
-		float          g0;
-		float          g1;
-		float          g2;
-		float          v0m;
-		float          v1m;
-		float          v2m;
-		compute_filter_coef (g0, g1, g2, v0m, v1m, v2m, spec);
-		(this->*set_coefs) (g0, g1, g2, v0m, v1m, v2m);
+		compute_filter_coef (spec);
+		(this->*set_coefs) (
+			spec._g0, spec._g1, spec._g2,
+			spec._v0m, spec._v1m, spec._v2m
+		);
 	}
 }
 
 
 
-void	ReverbDattorro::compute_filter_coef (float &g0, float &g1, float &g2, float &v0m, float &v1m, float &v2m, const BPFilterSpec &spec) const
+void	ReverbDattorro::compute_filter_coef (FilterSpec &spec) const
 {
 	assert (spec._f_lo > 0);
-	assert (spec._f_lo < spec._f_hi);
+	assert (spec._f_lo < _sample_freq * 0.5f);
+	assert (spec._f_hi > 0);
 	assert (spec._f_hi < _sample_freq * 0.5f);
 
 	// Frequency prewarping
@@ -692,13 +724,22 @@ void	ReverbDattorro::compute_filter_coef (float &g0, float &g1, float &g2, float
 	const double   ah [2] = { 1, t_hi };
 
 	// Convolve both into a biquad
-	const double   b [3]  =
+	double         b [3];
+	if (spec._f_lo <= spec._f_hi)
 	{
-		bl [0] * bh [0],
-		bl [0] * bh [1] + bl [1] * bh [0],
-		bl [1] * bh [1]
+		// Multiplication
+		b [0] = bl [0] * bh [0];
+		b [1] = bl [0] * bh [1] + bl [1] * bh [0];
+		b [2] = bl [1] * bh [1];
+	}
+	else
+	{
+		// Sum
+		b [0] = bl [0] * ah [0]                   + bh [0] * al [0];
+		b [1] = bl [0] * ah [1] + bl [1] * ah [0] + bh [0] * al [1] + bh [1] * al [0];
+		b [2] = bl [1] * ah [1]                   + bh [1] * al [1];
 	};
-	const double   a [3]  =
+	const double   a [3] =
 	{
 		al [0] * ah [0],
 		al [0] * ah [1] + al [1] * ah [0],
@@ -710,9 +751,32 @@ void	ReverbDattorro::compute_filter_coef (float &g0, float &g1, float &g2, float
 
 	// Conversion from analogue biquad to filter coefficients
 	iir::Svf2p::conv_s_eq_to_svf (
-		g0, g1, g2, v0m, v1m, v2m,
+		spec._g0, spec._g1, spec._g2,
+		spec._v0m, spec._v1m, spec._v2m,
 		b, a, f0, _sample_freq
 	);
+}
+
+
+
+void	ReverbDattorro::update_filter_input_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m)
+{
+	for (auto &chn : _chn_arr)
+	{
+		chn._input.set_filter_coefs (g0, g1, g2);
+		chn._input.set_filter_mix (v0m, v1m, v2m);
+	}
+}
+
+
+
+void	ReverbDattorro::update_filter_tank_coefs (float g0, float g1, float g2, float v0m, float v1m, float v2m)
+{
+	for (auto &chn : _chn_arr)
+	{
+		chn._tank_1.set_filter_coefs (g0, g1, g2);
+		chn._tank_1.set_filter_mix (v0m, v1m, v2m);
+	}
 }
 
 
