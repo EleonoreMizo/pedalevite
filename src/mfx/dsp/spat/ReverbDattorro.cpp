@@ -141,6 +141,7 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 			auto &         mds = chn._lfo_arr [lfo_cnt];
 			mds._dly_nosz = dly_tnk_arr [chn_cnt] [lfo_cnt] [0] * _sample_freq;
 			mds._lfo_val  = 0;
+			mds._dly_max  = fstb::ceil_int (mds._dly_nosz * _max_room_size + margin);
 			mds._rnd_per  = fstb::round_int (_lfo_per_base * _sample_freq);
 			mds._rnd_pos  = 0;
 			mds._rnd_step = 0;
@@ -153,14 +154,8 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 		chn._tank_2.set_delay_max (
 			fstb::ceil_int (chn._dly_2_nosz * _max_room_size)
 		);
-		chn._tank_1.set_apd_max_delay (
-			0,
-			fstb::ceil_int (chn._lfo_arr [0]._dly_nosz * _max_room_size + margin)
-		);
-		chn._tank_2.set_apd_max_delay (
-			0,
-			fstb::ceil_int (chn._lfo_arr [1]._dly_nosz * _max_room_size + margin)
-		);
+		chn._tank_1.set_apd_max_delay (0, chn._lfo_arr [0]._dly_max);
+		chn._tank_2.set_apd_max_delay (0, chn._lfo_arr [1]._dly_max);
 
 		for (int k = 0; k < _nbr_taps_out; ++k)
 		{
@@ -740,7 +735,7 @@ float	ReverbDattorro::process_modulation (ModDlyState &mds)
 		  mds._dly_nomod
 		+ mds._lfo_val * _lfo_depth
 		+ mds._rnd_pos * _rnd_depth;
-	dly_mod = std::max (dly_mod, _min_mod_dly_time);
+	dly_mod = fstb::limit (dly_mod, _min_mod_dly_time, float (mds._dly_max));
 
 	return dly_mod;
 }
@@ -756,6 +751,7 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 	assert (nbr_spl <= _max_blk_size);
 
 	const float    dly_mod_fix_min = _min_mod_dly_time * ApfLine_nbr_phases;
+	const float    dly_mod_fix_max = float (mds._dly_max * ApfLine_nbr_phases);
 
 	static_assert (
 		((_max_blk_size & 15) == 0),
@@ -791,7 +787,7 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 		const int      blk_end = pos_blk + work_len;
 		for (int pos = pos_blk; pos < blk_end; ++pos)
 		{
-			dly_fix_flt [pos] = std::max (dly_mod_fix, dly_mod_fix_min);
+			dly_fix_flt [pos] = dly_mod_fix;
 			dly_mod_fix += dly_inc_fix;
 		}
 
@@ -804,13 +800,23 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 
 	check_mod_counters (mds);
 
-	// Now converts everything to integer in one pass
+	// Now converts everything to integer in one pass with bound checking
+	const auto     dly_min_v = fstb::ToolsSimd::set1_f32 (dly_mod_fix_min);
+	const auto     dly_max_v = fstb::ToolsSimd::set1_f32 (dly_mod_fix_max);
 	for (int pos = 0; pos < nbr_spl; pos += 16)
 	{
-		const auto     x0f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos     ]);
-		const auto     x4f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  4]);
-		const auto     x8f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  8]);
-		const auto     xcf = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos + 12]);
+		auto           x0f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos     ]);
+		auto           x4f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  4]);
+		auto           x8f = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos +  8]);
+		auto           xcf = fstb::ToolsSimd::load_f32 (&dly_fix_flt [pos + 12]);
+		x0f = fstb::ToolsSimd::min_f32 (x0f, dly_max_v);
+		x4f = fstb::ToolsSimd::min_f32 (x4f, dly_max_v);
+		x8f = fstb::ToolsSimd::min_f32 (x8f, dly_max_v);
+		xcf = fstb::ToolsSimd::min_f32 (xcf, dly_max_v);
+		x0f = fstb::ToolsSimd::max_f32 (x0f, dly_min_v);
+		x4f = fstb::ToolsSimd::max_f32 (x4f, dly_min_v);
+		x8f = fstb::ToolsSimd::max_f32 (x8f, dly_min_v);
+		xcf = fstb::ToolsSimd::max_f32 (xcf, dly_min_v);
 		const auto     x0i = fstb::ToolsSimd::conv_f32_to_s32 (x0f);
 		const auto     x4i = fstb::ToolsSimd::conv_f32_to_s32 (x4f);
 		const auto     x8i = fstb::ToolsSimd::conv_f32_to_s32 (x8f);

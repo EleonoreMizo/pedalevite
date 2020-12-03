@@ -126,6 +126,7 @@ private:
 		float          _dly_nosz   = 1000; // Allpass delay base (unsized), samples
 		float          _dly_nomod  = 1000; // Allpass delay base (unmodulated), samples
 		float          _lfo_val    = 0;    // [-1 ; 1]
+		int            _dly_max    = 1000;  // Maximum delay, samples
 		int            _rnd_per    = 10000; // Period between 2 random points, samples
 		int            _rnd_pos    = 0;    // Within the period, samples
 		float          _rnd_step   = 0;    // Per sample
