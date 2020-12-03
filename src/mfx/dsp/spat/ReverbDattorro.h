@@ -70,7 +70,7 @@ public:
 
 	void           set_room_size (float sz);
 	void           set_decay (float decay);
-	void           set_shimmer_pitch (float cents);
+	void           set_shimmer_pitch (float cents, bool all_flag);
 	void           set_diffusion_input (float amount);
 	void           set_diffusion_tank (float amount);
 	void           set_filter_input_bp (float lo, float hi);
@@ -123,27 +123,28 @@ private:
 	class ModDlyState
 	{
 	public:
-		float          _dly_nosz   = 1000; // Allpass delay base (unsized), samples
-		float          _dly_nomod  = 1000; // Allpass delay base (unmodulated), samples
-		float          _lfo_val    = 0;    // [-1 ; 1]
+		float          _dly_nosz   = 1000;  // Allpass delay base (unsized), samples
+		float          _dly_nomod  = 1000;  // Allpass delay base (unmodulated), samples
 		int            _dly_max    = 1000;  // Maximum delay, samples
+		float          _lfo_val    = 0;     // [-1 ; 1]
+		float          _lfo_step   = 0;     // Per sample, >= 0
 		int            _rnd_per    = 10000; // Period between 2 random points, samples
-		int            _rnd_pos    = 0;    // Within the period, samples
-		float          _rnd_step   = 0;    // Per sample
-		float          _rnd_val    = 0;    // Samples
+		int            _rnd_pos    = 0;     // Within the period, samples
+		float          _rnd_step   = 0;     // Per sample
+		float          _rnd_val    = 0;     // Samples
 	};
 
 	class Channel
 	{
 	public:
+		typedef std::array <ModDlyState, _nbr_apd_per_chn> MdsArray;
 		ApfLine <_nbr_input_apd, false, true>
 		               _input;
 		ApfLine <1, true, true>
 		               _tank_1;
 		ApfLine <1, true, false>
 		               _tank_2;
-		std::array <ModDlyState, _nbr_apd_per_chn>
-		               _lfo_arr;      // For the all-pass delay of each tank part
+		MdsArray       _lfo_arr;      // For the all-pass delay of each tank part
 		float          _dly_1_nosz = 1000; // Delay time unsized, samples
 		float          _dly_2_nosz = 1000;
 
@@ -181,9 +182,8 @@ private:
 	float          _diffuse_in  = 1.f;  // [0 ; 1]
 	float          _diffuse_tnk = 1.f;  // [0 ; 1]
 	float          _room_size   = 1.f;  // Time scale on the delays and allpass, [0.0025 ; 4.0]
-	float          _lfo_shape   = 0.f;  // Saw-triangle shape. Gives the middle point coordinate in [0 ; 1]
 	float          _lfo_speed   = 1.f;  // Hz, >= 0
-	float          _lfo_depth   = 0.f;  // Samples, positive or negative
+	float          _lfo_depth  = 0.f;   // Samples, positive or negative
 	ctrl::SmootherLpf <float>
 	               _freeze;
 
@@ -192,8 +192,6 @@ private:
 	// delay is kept constant.
 	dly::DelaySimple <float>
 	               _state;
-
-	float          _lfo_step    = 0; // Per sample, >= 0
 
 	fstb::RndXoroshiro128p           // Random generator for the delay modulation
 	               _rnd_gen;

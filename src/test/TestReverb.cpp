@@ -271,7 +271,7 @@ int	TestReverb::test_reverbdattorro ()
 	reverb.set_sample_freq (sample_freq);
 	reverb.set_decay (0.85f);
 	reverb.set_room_size (1.f);
-	reverb.set_shimmer_pitch (+100);
+//	reverb.set_shimmer_pitch (+100, true);
 //	reverb.set_diffusion_input (0);
 //	reverb.set_diffusion_tank (0);
 //	reverb.set_filter_input_bp (1000, float (sample_freq * 0.499));

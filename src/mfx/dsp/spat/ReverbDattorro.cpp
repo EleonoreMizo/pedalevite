@@ -202,11 +202,23 @@ void	ReverbDattorro::set_decay (float decay)
 
 
 
-void	ReverbDattorro::set_shimmer_pitch (float cents)
+// all_flag: indicates we want to spread the shift on all the all-pass delays
+// and not just one of them.
+void	ReverbDattorro::set_shimmer_pitch (float cents, bool all_flag)
 {
 	constexpr int  cents_per_octave = 12 * 100;
 	assert (cents >= -1 * cents_per_octave);
 	assert (cents <= +1 * cents_per_octave);
+
+	if (all_flag)
+	{
+		// Divides the shift by the number of modulated delays. This helps
+		// keeping the same apparent pitch shift independent of the method.
+		constexpr auto div =
+			  std::tuple_size <ChannelArray>::value
+			* std::tuple_size <Channel::MdsArray>::value;
+		cents *= 1.f / float (div);
+	}
 
 	// Converts the pitch in cents to a playback rate
 	const float    p_oct  = cents * (1.f / float (cents_per_octave));
@@ -215,8 +227,9 @@ void	ReverbDattorro::set_shimmer_pitch (float cents)
 	// Equivalent number of additional samples in an LFO period
 	const float    spl_pp = (pb_spd - 1) * _sample_freq * _lfo_per_base;
 
-	// Bipolar depth in samples. The value is added to the delay (positive is
-	// running backward), so we have to flip the sign.
+	// Depth (multiplier of a bipolar value, hence the 0.5) in samples. The
+	// value is added to the delay (positive is running backward), so we have
+	// to flip the sign.
 	_lfo_depth = spl_pp * -0.5f;
 
 	const float    depth_abs = fabsf (_lfo_depth);
@@ -232,8 +245,24 @@ void	ReverbDattorro::set_shimmer_pitch (float cents)
 		_lfo_depth = std::copysign (_lfo_max_depth_spl, _lfo_depth);
 	}
 
-	// Computes the LFO step
-	_lfo_step = 2.f * _lfo_speed * _inv_fs; 
+	// Computes the corresponding LFO step.
+	// 2 because raw values go from -1 to +1.
+	const float    lfo_step = 2.f * _lfo_speed * _inv_fs;
+
+	// Sets the value according to all_flag
+	const float    lfo_step_fill = (all_flag) ? lfo_step : 0.f;
+	for (auto &chn : _chn_arr)
+	{
+		for (auto &mds : chn._lfo_arr)
+		{
+			mds._lfo_step = lfo_step_fill;
+		}
+	}
+
+	// In single shifter mode, we use the 2nd all-pass delay of channel 1
+	// because it has the longest base delay, and this will help preserving
+	// the functionality with small room sizes.
+	_chn_arr [1]._lfo_arr [1]._lfo_step = lfo_step;
 }
 
 
@@ -725,7 +754,7 @@ void	ReverbDattorro::process_predelay_block (float dst_l_ptr [], float dst_r_ptr
 // Returns the modulated delay time, in samples
 float	ReverbDattorro::process_modulation (ModDlyState &mds)
 {
-	mds._lfo_val += _lfo_step;
+	mds._lfo_val += mds._lfo_step;
 	mds._rnd_val += mds._rnd_step;
 	++ mds._rnd_pos;
 	check_mod_counters (mds);
@@ -768,10 +797,10 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 		int            work_len    = nbr_spl - pos_blk;
 		const int      rem_len_rnd = mds._rnd_per - mds._rnd_pos;
 		work_len = std::min (work_len, rem_len_rnd);
-		if (_lfo_step > 0)
+		if (mds._lfo_step > 0)
 		{
 			const int      rem_len_lfo =
-				fstb::ceil_int ((1 - mds._lfo_val) / _lfo_step);
+				fstb::ceil_int ((1 - mds._lfo_val) / mds._lfo_step);
 			work_len = std::min (work_len, rem_len_lfo);
 		}
 
@@ -780,7 +809,7 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 			+ mds._lfo_val * _lfo_depth
 			+ mds._rnd_val * _rnd_depth;
 		const float    dly_inc =
-			  _lfo_step     * _lfo_depth
+			  mds._lfo_step * _lfo_depth
 			+ mds._rnd_step * _rnd_depth;
 		float          dly_mod_fix = dly_mod * ApfLine_nbr_phases;
 		const float    dly_inc_fix = dly_inc * ApfLine_nbr_phases;
@@ -791,7 +820,7 @@ void	ReverbDattorro::process_modulation_block (int32_t dly_ptr [], ModDlyState &
 			dly_mod_fix += dly_inc_fix;
 		}
 
-		mds._lfo_val += work_len * _lfo_step;
+		mds._lfo_val += work_len * mds._lfo_step;
 		mds._rnd_val += work_len * mds._rnd_step;
 		mds._rnd_pos += work_len;
 		pos_blk      += work_len;
