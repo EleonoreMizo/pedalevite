@@ -81,11 +81,12 @@ void	EarlyRef <T>::generate_taps (uint32_t seed, int nbr_taps, float duration, f
 	_nbr_taps = nbr_taps;
 
 	// Random generator
+	constexpr int  rnd_inc = 4321;
 	uint32_t       rnd_idx = seed;
-	auto           rnd     = [&rnd_idx] ()
+	auto           rnd     = [&rnd_idx, rnd_inc] ()
 	{
 		const uint32_t val = fstb::Hash::hash (rnd_idx);
-		++ rnd_idx;
+		rnd_idx += rnd_inc;
 		return double (val) * fstb::TWOPM32;
 	};
 
@@ -111,7 +112,7 @@ void	EarlyRef <T>::generate_taps (uint32_t seed, int nbr_taps, float duration, f
 
 	// Now resets the random generator to make sure the gain series is
 	// independant of the number of taps. So each tap keeps the same gain.
-	rnd_idx = seed + _max_nbr_taps;
+	rnd_idx = seed + _max_nbr_taps * rnd_inc;
 
 	// Sets the gains
 	constexpr double  epsilon = 1e-9;
