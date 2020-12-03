@@ -74,6 +74,9 @@ public:
 	double         get_val_beg_nat (int index) const;
 	double         get_val_end_nat (int index) const;
 	double         get_val_tgt_nat (int index) const;
+	template <typename T>
+	inline T       get_val_enum (int index) const;
+	int            get_val_int (int index) const;
 	bool           check_change (int index);
 
 
@@ -115,7 +118,7 @@ private:
 
 
 
-//#include "mfx/pi/ParamStateSet.hpp"
+#include "mfx/pi/ParamStateSet.hpp"
 
 
 

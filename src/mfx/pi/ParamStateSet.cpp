@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/BitFieldSparseIterator.h"
+#include "fstb/fnc.h"
 #include "mfx/pi/ParamDescSet.h"
 #include "mfx/pi/ParamStateSet.h"
 #include "mfx/piapi/ParamDescInterface.h"
@@ -256,6 +257,17 @@ double	ParamStateSet::get_val_tgt_nat (int index) const
 	const double   val_nat = desc.conv_nrm_to_nat (val_nrm);
 
 	return val_nat;
+}
+
+
+
+// Always the natural value
+int	ParamStateSet::get_val_int (int index) const
+{
+	assert (index >= 0);
+	assert (index < int (_state_arr.size ()));
+
+	return fstb::round_int (get_val_tgt_nat (index));
 }
 
 
