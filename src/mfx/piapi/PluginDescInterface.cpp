@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "mfx/piapi/PluginDescInterface.h"
+#include "mfx/piapi/PluginInterface.h"
 
 #include <cassert>
 
@@ -61,8 +62,11 @@ void	PluginDescInterface::get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 
 	do_get_nbr_io (nbr_i, nbr_o, nbr_s);
 	assert (nbr_i >= 0);
+	assert (nbr_i <= PluginInterface::_max_nbr_pins);
 	assert (nbr_o >= 0);
+	assert (nbr_o <= PluginInterface::_max_nbr_pins);
 	assert (nbr_s >= 0);
+	assert (nbr_s <= PluginInterface::_max_nbr_sig);
 }
 
 

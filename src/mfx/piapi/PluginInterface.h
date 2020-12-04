@@ -59,6 +59,7 @@ public:
 
 	static const int  _max_nbr_chn  =  2;
 	static const int  _max_nbr_pins =  4;
+	static const int  _max_nbr_sig  = 16;
 
 	               PluginInterface ()                             = default;
 	               PluginInterface (const PluginInterface &other) = default;

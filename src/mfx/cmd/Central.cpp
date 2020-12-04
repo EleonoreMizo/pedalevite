@@ -399,24 +399,36 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 	std::vector <piapi::EventTs> evt_list;
 	std::vector <const piapi::EventTs *> evt_ptr_list;
 
+	constexpr int     nbr_chn_tot =
+		  piapi::PluginInterface::_max_nbr_chn
+		* piapi::PluginInterface::_max_nbr_pins;
+	constexpr int     nbr_sig_tot = piapi::PluginInterface::_max_nbr_sig;
+	constexpr int     nbr_buf_tot = nbr_chn_tot * 2 + nbr_sig_tot;
 	typedef std::vector <float, fstb::AllocAlign <float, 16> > BufAlign;
-	std::array <BufAlign, 6>  buf_arr;
-	std::array <const float *, 2> src_ptr_arr = {{ nullptr, nullptr }};
-	std::array <      float *, 2> dst_ptr_arr = {{ nullptr, nullptr }};
-	std::array <      float *, 2> sig_ptr_arr = {{ nullptr, nullptr }};
+	BufAlign          buf;
+	std::array <const float *, nbr_chn_tot> src_ptr_arr {};
+	std::array <      float *, nbr_chn_tot> dst_ptr_arr {};
+	std::array <      float *, nbr_sig_tot> sig_ptr_arr {};
 	if (_sample_freq > 0)
 	{
-		const int      mbs_alig = (_max_block_size + 3) & ~3;
-		for (auto &buf : buf_arr)
+		const int      mbs_align = (_max_block_size + 3) & ~3;
+		buf.resize (mbs_align * nbr_buf_tot, 0);
+		int            buf_idx = 0;
+		for (auto &ptr : src_ptr_arr)
 		{
-			buf.resize (mbs_alig, 0);
+			ptr = &buf [buf_idx * mbs_align];
+			++ buf_idx;
 		}
-		src_ptr_arr [0] = &buf_arr [0] [0];
-		src_ptr_arr [1] = &buf_arr [1] [0];
-		dst_ptr_arr [0] = &buf_arr [2] [0];
-		dst_ptr_arr [1] = &buf_arr [3] [0];
-		sig_ptr_arr [0] = &buf_arr [4] [0];
-		sig_ptr_arr [1] = &buf_arr [5] [0];
+		for (auto &ptr : dst_ptr_arr)
+		{
+			ptr = &buf [buf_idx * mbs_align];
+			++ buf_idx;
+		}
+		for (auto &ptr : sig_ptr_arr)
+		{
+			ptr = &buf [buf_idx * mbs_align];
+			++ buf_idx;
+		}
 	}
 
 	for (int pi_cnt = 0; pi_cnt < nbr_inst; ++ pi_cnt)
@@ -464,13 +476,21 @@ void	Central::preinstantiate_plugins (std::string model, int count, const piapi:
 				evt._evt._param._val     = float (state_ptr->_param_list [index]);
 			}
 
+			const int         nbr_chn_i = 2;
+			int               nbr_chn_o = 2;
+			piapi::PluginInfo info { details._desc_ptr->get_info () };
+			if (info._chn_pref == piapi::ChnPref::MONO)
+			{
+				nbr_chn_o = 1;
+			}
+
 			piapi::ProcInfo   proc_info;
 			proc_info._byp_arr   = nullptr;
 			proc_info._byp_state = piapi::BypassState_IGNORE;
 			proc_info._dst_arr   = &dst_ptr_arr [0];
 			proc_info._evt_arr   = (nbr_param > 0) ? &evt_ptr_list [0] : nullptr;
-			proc_info._dir_arr [piapi::Dir_IN ]._nbr_chn = 2;
-			proc_info._dir_arr [piapi::Dir_OUT]._nbr_chn = 2;
+			proc_info._dir_arr [piapi::Dir_IN ]._nbr_chn = nbr_chn_i;
+			proc_info._dir_arr [piapi::Dir_OUT]._nbr_chn = nbr_chn_o;
 			proc_info._nbr_evt   = int (evt_ptr_list.size ());
 			proc_info._nbr_spl   = _max_block_size;
 			proc_info._sig_arr   = &sig_ptr_arr [0];
