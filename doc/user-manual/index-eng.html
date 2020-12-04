@@ -66,6 +66,7 @@
 	<li><a href="#fx-phaserap">Phaser AP</a></li>
 	<li><a href="#fx-phaserht">Phaser HT</a></li>
 	<li><a href="#fx-pitchdetector">Pitch Detector</a></li>
+	<li><a href="#fx-platitude">Platitude — Plate reverberator</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
 	<li><a href="#fx-distpwm2">Pulse Width Modulation Distortion 2</a></li>
 	<li><a href="#fx-skool-mood">Skool-Mood — Phaser</a></li>
@@ -2248,6 +2249,140 @@ If there isn’t any last known note, the signal is 0.</td></tr>
 
 
 
+<h3><a id="fx-platitude"></a>Platitude — Plate reverberator</h3>
+
+<p>Platitude is an algorithmic plate reverberator, which was described by
+Jon Dattorro in 1997.
+It is also capable of shimmer effect, that is change the pitch of the sound
+circulating in the reverberation tail, giving the impression that the tone
+keeps going up or down.</p>
+
+<p class="var">Dry level</p>
+<p>Level of the unprocessed sound in the final mix, in dB.</p>
+
+<p class="var">Early reflection level</p>
+<p>The level of the early reflections in the final mix, in dB.
+This is the sound that reflected only a few times within the room before
+reaching the listener’s ears.
+They are like very short echoes following shortly the direct sound.</p>
+
+<p class="var">Diffuse field level</p>
+<p>Level of the diffuse field in the final mix, in dB.
+This is all the complex, rich and numerous reflections occuring after the
+early ones.
+It gives the typical diffuse sound of the reverberation tail.</p>
+
+<p class="var">Predelay time</p>
+<p>This is an additional delay between the source sound and the reverberation
+process.
+The shorter, the further the sound appears (with levels set to suitable
+values).</p>
+
+<p class="var">Number of taps</p>
+<p>This is the number of individual echoes forming the early reflections.
+These echoes are randomly spread in time.
+Their volume is also randomly chosen, following a curve decaying with
+time.</p>
+
+<p class="var">Early reflection duration</p>
+<p>This is the duration in milliseconds between the first and last echoes of
+the early reflections.</p>
+
+<p class="var">Early reflection decay</p>
+<p>This is the level in dB of the last early reflection, relative to the first
+one.</p>
+
+<p class="var">Early reflection stereo depth</p>
+<p>This percentage indicate how stereo the early reflections will sound.
+The lower, the more the left and right echoes will tend to be identical.
+The higher, the more independently the echoes are spread between both
+channels.</p>
+
+<p class="var">Input low-cut frequency</p>
+<p>Cutoff frequency for the low-cut (or high-pass) filter at the input of the
+“tank” generating the diffuse field.
+Cutting at tens or hundreds of Hz make the sound lighter and less muffled
+in presence of heavy content in the lower part of the spectrum.</p>
+
+<p class="var">Input high-cut frequency</p>
+<p>Cutoff frequency for the high-cut (or low-pass) filter at the input of the
+tank.
+Cutting the high avoids the reverberation to have more presence than
+required for mixing purpose.</p>
+
+<p class="var">Input diffusion</p>
+<p>Before recirculating in the tank, the sound is pre-diffused.
+This rate indicates at which point.</p>
+
+<p class="var">Decay coefficient</p>
+<p>This is the tank feedback coefficient.
+The closer to 1, the longer the diffuse field will last, giving the impression
+of a large space.
+Beware when this coefficient reaches 1 without filtering nor transposition,
+the sound will accumulate indefinitely and never decay.</p>
+
+<p class="var">Room size</p>
+<p>This ratio (percent) indicates how big the room is, relatively to its
+original dimensions.
+Like <var>Decay</var>, this coefficient allows changing the reverberation tail
+duration.
+However it works by lengthening or shortening the internal delay lines.
+When this coefficient is very low, it is possible that the transposition
+functions may be attenuated or altered.</p>
+
+<p class="var">Pitch shift</p>
+<p>This is the number of cents (of a semi-tone) of transposition applied
+during each loop of the sound in the tank.
+The tone rise or fall speed is also influenced by the <var>Room size</var>
+parameter.</p>
+
+<p class="var">Pitch shift mode</p>
+<p>This parameter indicates if the transposition affect a single delay
+line (<span class="ui">Single</span>) or all of them at the same time
+(<span class="ui">Multi</span>).
+In the latter case, the parameter is internally adapted to match the
+<span class="ui">Single</span> mode.
+It gives a smoother but blurrier transposition.</p>
+
+<p class="var">Tank low-cut frequency</p>
+<p>Cutoff frequency for the low-cut (or high-pass) filter located in the
+reverberation tank.</p>
+
+<p class="var">Tank high-cut frequency</p>
+<p>Cutoff frequency for the high-cut (or low-pass) tank filter.
+The sound is processed by the filter at each loop, transforming it
+progressively.
+Room walls are often absoring high frequencies, leading to their progressive
+attenuation, before the lower part of the spectrum.
+This filter simulates this behaviour.</p>
+
+<p class="var">Tank diffusion</p>
+<p>This ratio sets how the tank makes the sound diffuse.
+When set to 0, the tank sounds like short regenerating echoes.</p>
+
+<p class="var">Freeze</p>
+<p>When this state is set, the tank is frozen and the reverberation sounds
+fixed in time.
+More specifically&#8239;:</p>
+<ul>
+<li>The tank input is cut and silent.</li>
+<li>The <var>Decay</var> is internally set to 1, making the sound circulating almost infinitely.</li>
+<li>The filter is bypassed, becoming neutral.</li>
+</ul>
+<p>These parameters come back to their original values as soon as the freeze
+state is deactivated.
+The pitch shift is still working in frozen mode.
+Same for the diffusion, causing very slight losses in the sound.
+After a few minutes, a slight loss of volume can become apparent.</p>
+
+<p class="var">Flush</p>
+<p>This parameter, when switched from off to on, flushes the tank delay lines,
+making them silent.
+This allows to take back control when the effect is becoming wild, or more
+simply, to create specific rythmic effects.</p>
+
+
+
 <h3><a id="fx-distpwm"></a>Pulse Width Modulation Distortion</h3>
 
 <p>This is an almost infinite-gain distortion, the output signal is
@@ -3061,6 +3196,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r38, 2020-12-04</b></p>
+<ul>
+<li>Added the Platitude reverberation effect.</li>
+</ul>
 
 <p><b>r37, 2020-11-18</b></p>
 <ul>

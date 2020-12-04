@@ -66,6 +66,7 @@
 	<li><a href="#fx-phaserap">Phaser AP</a></li>
 	<li><a href="#fx-phaserht">Phaser HT</a></li>
 	<li><a href="#fx-pitchdetector">Pitch Detector — Détecteur de hauteur de note</a></li>
+	<li><a href="#fx-platitude">Platitude — Réverbération à plaque</a></li>
 	<li><a href="#fx-distpwm">Pulse Width Modulation Distortion</a></li>
 	<li><a href="#fx-distpwm2">Pulse Width Modulation Distortion 2</a></li>
 	<li><a href="#fx-skool-mood">Skool-Mood — Phaser</a></li>
@@ -2407,6 +2408,160 @@ Si aucune note n’a jamais été détectée, le signal est nul.</td></tr>
 
 
 
+<h3><a id="fx-platitude"></a>Platitude — Réverbération à plaque</h3>
+
+<p>Platitude est un effet de réverbération de type
+<i><span lang="en">plate</span></i>.
+Il s’agit d’une réverbération algorithmique dont le schéma a été décrit par
+Jon Dattorro en 1997.
+Elle est en outre capable de <i><span lang="en">shimmer</span></i>,
+c’est-à-dire de changer la hauteur du son circulant dans la queue de la
+réverbération, donnant l’impression que le timbre monte ou descend de plus en
+plus.</p>
+
+<p class="var">Dry level</p>
+<p>Niveau du son non traité dans la sortie, en dB.</p>
+
+<p class="var">Early reflection level</p>
+<p>Niveau des réflections précosses dans la sortie, en dB.
+Les réflections précosses correspondent au son qui s’est réfléchi très peu
+de fois dans la pièce avant d’atteindre les oreilles de l’auditoire.
+On peut les assimiler à de courts échos suivant de très près le son
+direct.</p>
+
+<p class="var">Diffuse field level</p>
+<p>Niveau du champ diffus dans la sortie, en dB.
+Il s’agit de l’ensemble des réflections riches, complexes et nombreuses
+qui suivent les réflections précoces, et qui donnent le son diffus typique
+formant la queue de la réverbération.</p>
+
+<p class="var">Predelay time</p>
+<p>Il s’agit du temps de retard intercalaire, en ms, entre le son direct
+et la réverbération proprement dite.
+Plus ce temps est court, plus le son paraît éloigné (avec les niveaux
+adéquats).
+Quand il est plus long, le son direct donne l’impression d’être plus proche de
+l’auditoire.</p>
+
+<p class="var">Number of taps</p>
+<p>C’est le nombre d’échos constituant les réflections précoces.
+Ces échos sont distribués aléatoirement dans le temps.
+Leur volume est également aléatoire, suivant une courbe décroissante avec le
+temps.</p>
+
+<p class="var">Early reflection duration</p>
+<p>Il s’agit de la durée en millisecondes entre le premier et le dernier écho
+des réflections précoces.</p>
+
+<p class="var">Early reflection decay</p>
+<p>C’est le niveau en dB de la dernière réflection, relativement à la
+première.
+De manière générale, plus les réflections durent longtemps, plus cette
+atténuation doit être importante.</p>
+
+<p class="var">Early reflection stereo depth</p>
+<p>Ce pourcentage représente la distribution panoramique des réflections
+précoces.
+Plus le pourcentage est faible, et plus les échos à gauche et à droite sont
+identiques.
+Plus il est élevé, et plus ces échos sont distribués indépendamment sur les
+deux canaux.</p>
+
+<p class="var">Input low-cut frequency</p>
+<p>Fréquence de coupure en Hz du filtre coupe-bas (passe-haut) à l’entrée
+du champ diffus.
+Couper à quelques dizaines ou quelques centaines de Hz permet d’alléger le son
+et de retirer toute la boue qui peut l’assourdir.</p>
+
+<p class="var">Input high-cut frequency</p>
+<p>Fréquence de coupure en Hz du filtre coupe-haut (passe-bas) à l’entrée
+du champ diffus.
+Couper les aigus peut éviter à la réverbération d’être plus présente que
+nécessaire.</p>
+
+<p class="var">Input diffusion</p>
+<p>Avant de se mettre à circuler dans le «&#8239;réservoir&#8239;», le son est
+déjà rendu diffus.
+Ce pourcentage permet de choisir à quel point.</p>
+
+<p class="var">Decay coefficient</p>
+<p>C’est le coefficient de rétroaction du réservoir.
+Plus ce coefficient est proche de 1, plus le champ diffus va durer longtemps,
+donnant l’impression d’un grand espace.
+Attention toutefois, il est possible de passer ce coefficient à 1, et en
+l’absence de filtrage ou de transposition (<i><span lang="en">pitch
+shift</span></i>) dans le réservoir, le son va s’accumuler sans jamais
+décroître.</p>
+
+<p class="var">Room size</p>
+<p>Ce pourcentage représente la taille relative de la pièce par rapport aux
+réglages d’origine.
+Comme <var>Decay</var>, ce coefficient permet de changer la longueur de la
+queue de la réverbération.
+Cependant il fonctionne en réduisant ou en allongeant la durée des lignes
+à retard internes.
+Quand ce coefficient est fixé à une valeur très faible, il est possible que
+les fonctionnalités de transposition soient réduites ou altérées.</p>
+
+<p class="var">Pitch shift</p>
+<p>C’est le nombre de centièmes de demi-tons de transposition qui est
+appliquée à chaque recirculation du son dans le réservoir.
+La vitesse de montée ou de descente est également conditionnée par le
+paramètre <var>Room size</var>.</p>
+
+<p class="var">Pitch shift mode</p>
+<p>Ce paramètre indique si les transpositions n’arrivent que sur une
+seule ligne à retard (<span class="ui">Single</span>), ou sur toutes à la fois
+(<span class="ui">Multi</span>).
+Dans ce dernier cas, le paramètre est adapté en interne pour que la
+transposition globle reste similiaire au mode
+<span class="ui">Single</span>.
+Ce mode donne une transposition plus fluide, mais aussi plus
+«&#8239;floue&#8239;».</p>
+
+<p class="var">Tank low-cut frequency</p>
+<p>Fréquence de coupure en Hz du filtre coupe-haut (passe-bas) à l’intérieur
+du réservoir de production champ diffus.</p>
+
+<p class="var">Tank high-cut frequency</p>
+<p>Fréquence de coupure en Hz du filtre coupe-bas (passe-haut) à l’intérieur
+du réservoir de production champ diffus.
+Le son passe dans ce filtre à chaque recirculation et génère une
+transformation progressive.
+Souvent, les parois d’une pièce sont moins réflective pour les aigus ce qui
+entraîne leur absorbtion progressive.
+Ce filtre permet de simuler efficacement cette caractéristique.</p>
+
+<p class="var">Tank diffusion</p>
+<p>Ce taux en pourcents permet de régler à quel point le réservoir diffuse le
+son, le rend plus trouble.
+Quand il est à 0, le réservoir sonne plus comme un écho multiple.</p>
+
+<p class="var">Freeze</p>
+<p>Quand cet état est activé, le réservoir est gelé et le son de la
+réverbération semble figé dans le temps.
+Plus précisément&#8239;:</p>
+<ul>
+<li>L’entrée du réservoir est coupée, silencieuse.</li>
+<li>Le <var>Decay</var> est mis à 1 en interne, ce qui provoque une recirculation quasi-infinie du son.</li>
+<li>Le filtre est suspendu, il devient neutre.</li>
+</ul>
+<p>Ces paramètres reviennent à leurs réglages d’origine dès que l’état est
+désactivé.
+En mode gelé, la transposition fonctionne toujours.
+Il faut aussi considérer que les opérations de diffusion ont toujours lieu sur
+le son, occasionnant de très légères pertes.
+Au bout de plusieurs minutes, une légère perte de volume peut commencer à se
+faire sentir.</p>
+
+<p class="var">Flush</p>
+<p>Ce paramètre, quand il passe de l’état inactif à actif, permet de vider les
+lignes à retard du réservoir, les rendant ainsi silencieuses.
+Cela permet de reprendre le contrôle quand l’effet s’emballe, ou tout
+simplement de créer des effets rythmiques spécifiques.</p>
+
+
+
 <h3><a id="fx-distpwm"></a>Pulse Width Modulation Distortion</h3>
 
 <p>Il s’agit d’une distortion à gain quasi-infini, le signal de sortie est
@@ -3269,6 +3424,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r38, 2020-12-04</b></p>
+<ul>
+<li>Ajout de Platitude, un effet de réverbération.</li>
+</ul>
 
 <p><b>r37, 2020-11-18</b></p>
 <ul>

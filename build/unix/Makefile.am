@@ -1188,6 +1188,12 @@ commonsrc = \
         ../../src/mfx/pi/tuner/Tuner.h \
         ../../src/mfx/pi/tuner/TunerDesc.cpp \
         ../../src/mfx/pi/tuner/TunerDesc.h \
+        ../../src/mfx/pi/verb2/Cst.h \
+        ../../src/mfx/pi/verb2/Param.h \
+        ../../src/mfx/pi/verb2/Platitude.cpp \
+        ../../src/mfx/pi/verb2/Platitude.h \
+        ../../src/mfx/pi/verb2/PlatitudeDesc.cpp \
+        ../../src/mfx/pi/verb2/PlatitudeDesc.h \
         ../../src/mfx/pi/wah1/Param.h \
         ../../src/mfx/pi/wah1/Wah.cpp \
         ../../src/mfx/pi/wah1/Wah.h \

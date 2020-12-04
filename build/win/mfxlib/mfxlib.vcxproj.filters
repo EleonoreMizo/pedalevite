@@ -430,6 +430,9 @@
     <Filter Include="mfx\dsp\spat\ltc">
       <UniqueIdentifier>{383499e8-66fe-4831-9d12-3762c8435ed0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\verb2">
+      <UniqueIdentifier>{497b447c-f123-4996-b3b3-4fa09cb2cea4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -4863,6 +4866,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\spat\EarlyRef.hpp">
       <Filter>mfx\dsp\spat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\verb2\Param.h">
+      <Filter>mfx\pi\verb2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\verb2\Platitude.h">
+      <Filter>mfx\pi\verb2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\verb2\PlatitudeDesc.h">
+      <Filter>mfx\pi\verb2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSat.h">
       <Filter>mfx\pi\param</Filter>
     </ClInclude>
@@ -4874,6 +4886,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.hpp">
       <Filter>mfx\pi\param</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\verb2\Cst.h">
+      <Filter>mfx\pi\verb2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\ParamStateSet.hpp">
+      <Filter>mfx\pi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6193,6 +6211,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\spat\ReverbDattorro.cpp">
       <Filter>mfx\dsp\spat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\verb2\Platitude.cpp">
+      <Filter>mfx\pi\verb2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\verb2\PlatitudeDesc.cpp">
+      <Filter>mfx\pi\verb2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
