@@ -120,7 +120,8 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 		}
 	}};
 
-	constexpr float   margin = _lfo_max_depth_s + _rnd_max_depth_s;
+	constexpr float   margin_s   = _lfo_max_depth_s + _rnd_max_depth_s;
+	const float       margin_spl = margin_s * _sample_freq;
 
 	for (int chn_cnt = 0; chn_cnt < _nbr_chn; ++chn_cnt)
 	{
@@ -141,7 +142,8 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 			auto &         mds = chn._lfo_arr [lfo_cnt];
 			mds._dly_nosz = dly_tnk_arr [chn_cnt] [lfo_cnt] [0] * _sample_freq;
 			mds._lfo_val  = 0;
-			mds._dly_max  = fstb::ceil_int (mds._dly_nosz * _max_room_size + margin);
+			mds._dly_max  =
+				fstb::ceil_int (mds._dly_nosz * _max_room_size + margin_spl);
 			mds._rnd_per  = fstb::round_int (_lfo_per_base * _sample_freq);
 			mds._rnd_pos  = 0;
 			mds._rnd_step = 0;
@@ -164,6 +166,8 @@ void	ReverbDattorro::set_sample_freq (double sample_freq)
 			);
 		}
 	}
+
+	_rnd_depth = _rnd_max_depth_s * _sample_freq;
 
 	update_diffusion_input ();
 	update_diffusion_tank ();
@@ -827,7 +831,7 @@ float	ReverbDattorro::process_modulation (ModDlyState &mds)
 	float          dly_mod =
 		  mds._dly_nomod
 		+ mds._lfo_val * _lfo_depth
-		+ mds._rnd_pos * _rnd_depth;
+		+ mds._rnd_val * _rnd_depth;
 	dly_mod = fstb::limit (dly_mod, _min_mod_dly_time, float (mds._dly_max));
 
 	return dly_mod;

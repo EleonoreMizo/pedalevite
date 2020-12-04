@@ -12,10 +12,6 @@ TO DO:
 - Crossfading when reaching an edge of the LFO shape to smooth the
 	discontinuity
 
-- Block processing
-
-- Freeze/flush modes
-
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -115,7 +111,7 @@ private:
 	// Maximum random excursion within the delay line, in s
 	// Note 14 suggests the equivalent to 8 samples at 29.8 kHz (268 us),
 	// but it seems that a longer excursion sounds more diffuse.
-	static constexpr float  _rnd_max_depth_s = 1.5e-3f; 
+	static constexpr float  _rnd_max_depth_s = 0.005f; 
 
 	// Same for the pitch shifting LFO, larger values here
 	static constexpr float  _lfo_max_depth_s = 0.030f; 
@@ -204,7 +200,7 @@ private:
 
 	fstb::RndXoroshiro128p           // Random generator for the delay modulation
 	               _rnd_gen;
-	float          _rnd_depth   = _rnd_max_depth_s;
+	float          _rnd_depth   = 0;
 
 	FilterSpec     _filt_spec_input;
 	FilterSpec     _filt_spec_tank;
