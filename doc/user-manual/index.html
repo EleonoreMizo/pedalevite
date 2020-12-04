@@ -75,6 +75,7 @@
 	<li><a href="#fx-speaker-emu">Speaker Emulator — Émulation de haut-parleur</a></li>
 	<li><a href="#fx-testgen">Test Generator — Générateur de tonalités de test</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
+	<li><a href="#fx-volumeclone">Volume Clone — Suiveur de volume</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
 	<li><a href="#fx-adsr">ADSR — Enveloppe de contrôle</a></li>
@@ -3063,6 +3064,51 @@ temps d’ouverture.</p>
 
 
 
+<h3><a id="fx-volumeclone"></a>Volume Clone — Suiveur de volume</h3>
+
+<p>Cet effet essentiellement utilitaire permet de calquer le volume de
+l’entrée auxiliaire sur le signal arrivant à l’entrée principale.</p>
+
+<p class="var">Multiply-copy</p>
+<p>Permet de choisir tous les degrés possible entre les deux
+modes d’action de l’effet.
+En mode multiplication (paramètre au minimum), le volume de l’entrée
+auxiliaire se multiplie à celui de la source principale.
+Le volume «&#8239;neutre&#8239;» est situé à &minus;18&#8239;dB.
+En mode copie (paramètre au maximum), le volume de l’entrée auxiliaire est
+recopié sur l’entrée principale.</p>
+
+<p class="var">Strength</p>
+<p>Intensité de la modification de volume, en pourcentage.</p>
+
+<p class="var">Channel mode</p>
+<p>Ce paramètre sert à indiquer comment sont détectés les volumes sur un
+signal stéréo.</p>
+<table>
+<tr><td><span class="ui">Linked</span></td><td>Le volume est détecté sur un mélange des deux canaux et s’applique identiquement aux deux canaux de la source.</td></tr>
+<tr><td><span class="ui">Indep </span></td><td>Chaque canal est modulé indépendamment de l’autre.</td></tr>
+<tr><td><span class="ui">Left  </span></td><td>Le canal gauche de l’entrée auxiliaire sert de référence aux deux canaux de la source.</td></tr>
+<tr><td><span class="ui">Right </span></td><td>Idem, mais canal droit.</td></tr>
+</table>
+
+<p class="var">Minimum gain</p>
+<p>Limite inférieure de gain appliqué au signal source, en dB.</p>
+
+<p class="var">Maximum gain</p>
+<p>Limite supérieure de gain appliqué au signal source, en dB.</p>
+
+<p class="var">Attack time</p>
+<p>Temps d’attaque du détecteur de volume, en millisecondes.</p>
+
+<p class="var">Release time</p>
+<p>Temps de rétablissement du détecteur de volume, en millisecondes.</p>
+
+<p class="var">Hold time</p>
+<p>Temps en millisecondes entre la section d’attaque et de rétablissement
+pendant lequel le volume détecté est considéré comme constant.</p>
+
+
+
 <h3><a id="fx-wah"></a>Wah-wah</h3>
 
 <p>Il s’agit d’une wah-wah plus ou moins calquée sur la Cry Baby.
@@ -3424,6 +3470,11 @@ de l’effet.</p>
 
 
 <h2><a id="changelog"></a>VI.&emsp;Historique des versions</h2>
+
+<p><b>r39, 2020-12-05</b></p>
+<ul>
+<li>Ajout de l’effet utilitaire Volume Clone.</li>
+</ul>
 
 <p><b>r38, 2020-12-04</b></p>
 <ul>

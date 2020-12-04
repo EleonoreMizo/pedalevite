@@ -75,6 +75,7 @@
 	<li><a href="#fx-speaker-emu">Speaker Emulator</a></li>
 	<li><a href="#fx-testgen">Test Generator — Test signal generator</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
+	<li><a href="#fx-volumeclone">Volume Clone — Volume follower utility</a></li>
 	<li><a href="#fx-wah">Wah-wah</a></li>
 	<li><a href="#fx-wah2">Wah-wah (CryBaby)</a></li>
 	<li><a href="#fx-adsr">ADSR — Control envelope</a></li>
@@ -2857,6 +2858,50 @@ its opening time.</p>
 
 
 
+<h3><a id="fx-volumeclone"></a>Volume Clone — Volume follower utility</h3>
+
+<p>This effect can copy the volume from the auxiliary input to the main input
+signal.</p>
+
+<p class="var">Multiply-copy</p>
+<p>This parameter selects a mode between two possible action modes.
+In multiplicative mode, (0&#8239;%), the auxiliary input volume is
+just multiplied to the main source.
+The neutral volume is about &minus;18&#8239;dB.
+In copy mode (100&#8239;%), the auxiliary input volume is copied onto the
+main input signal.</p>
+
+<p class="var">Strength</p>
+<p>Modification strength, in percent.</p>
+
+<p class="var">Channel mode</p>
+<p>This parameter selects how volumes are detected and how they apply with
+stereo signals.</p>
+<table>
+<tr><td><span class="ui">Linked</span></td><td>The volume is detected on a mix of both channels. It applies identically to both source channels.</td></tr>
+<tr><td><span class="ui">Indep </span></td><td>Each channel is modulated independently of the other one.</td></tr>
+<tr><td><span class="ui">Left  </span></td><td>The auxiliary input left channel is the reference for both source channels.</td></tr>
+<tr><td><span class="ui">Right </span></td><td>Same, but with the right auxiliary channel.</td></tr>
+</table>
+
+<p class="var">Minimum gain</p>
+<p>Lower limit for the gain applied to the source signal, in dB.</p>
+
+<p class="var">Maximum gain</p>
+<p>Upper limit for the gain applied to the source signal, in dB.</p>
+
+<p class="var">Attack time</p>
+<p>Attack time in milliseconds for the volume dectector.</p>
+
+<p class="var">Release time</p>
+<p>Release time in milliseconds for the volume dectector.</p>
+
+<p class="var">Hold time</p>
+<p>Duration in milliseconds between the attack and release sections, during
+which the detected volume is considered as constant.</p>
+
+
+
 <h3><a id="fx-wah"></a>Wah-wah</h3>
 
 <p>It is a wah-wah effect more or less modelled on the Cry Baby pedal.
@@ -3196,6 +3241,11 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r39, 2020-12-05</b></p>
+<ul>
+<li>Added the Volume Clone effect.</li>
+</ul>
 
 <p><b>r38, 2020-12-04</b></p>
 <ul>

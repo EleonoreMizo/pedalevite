@@ -116,6 +116,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/tremh/HarmTremDesc.h"
 #include "mfx/pi/tuner/Tuner.h"
 #include "mfx/pi/tuner/TunerDesc.h"
+#include "mfx/pi/vclone/VolumeClone.h"
+#include "mfx/pi/vclone/VolumeCloneDesc.h"
 #include "mfx/pi/verb2/Platitude.h"
 #include "mfx/pi/verb2/PlatitudeDesc.h"
 #include "mfx/pi/wah1/Wah.h"
@@ -191,6 +193,7 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::smood::SkoolMoodDesc    , mfx::pi::smood::SkoolMood         >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::bmp1::BigMuff1Desc      , mfx::pi::bmp1::BigMuff1           >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::verb2::PlatitudeDesc    , mfx::pi::verb2::Platitude         >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::vclone::VolumeCloneDesc , mfx::pi::vclone::VolumeClone      >::create ()
 		};
 
 		fact_list = l;

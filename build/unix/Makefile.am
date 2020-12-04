@@ -1188,6 +1188,12 @@ commonsrc = \
         ../../src/mfx/pi/tuner/Tuner.h \
         ../../src/mfx/pi/tuner/TunerDesc.cpp \
         ../../src/mfx/pi/tuner/TunerDesc.h \
+        ../../src/mfx/pi/vclone/Param.h \
+        ../../src/mfx/pi/vclone/ChnMode.h \
+        ../../src/mfx/pi/vclone/VolumeClone.cpp \
+        ../../src/mfx/pi/vclone/VolumeClone.h \
+        ../../src/mfx/pi/vclone/VolumeCloneDesc.cpp \
+        ../../src/mfx/pi/vclone/VolumeCloneDesc.h \
         ../../src/mfx/pi/verb2/Cst.h \
         ../../src/mfx/pi/verb2/Param.h \
         ../../src/mfx/pi/verb2/Platitude.cpp \

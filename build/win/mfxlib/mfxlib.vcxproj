@@ -1277,6 +1277,10 @@
     <ClInclude Include="..\..\..\src\mfx\pi\smood\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMood.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\SkoolMoodDesc.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\vclone\ChnMode.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\vclone\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\vclone\VolumeClone.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\vclone\VolumeCloneDesc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\verb2\Cst.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\verb2\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\verb2\Platitude.h" />
@@ -2021,6 +2025,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\tost\ToStereoDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTrem.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tremh\HarmTremDesc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\vclone\VolumeClone.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\vclone\VolumeCloneDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\verb2\Platitude.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\verb2\PlatitudeDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2.cpp" />
