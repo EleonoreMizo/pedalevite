@@ -150,10 +150,10 @@ private:
 	class PotState
 	{
 	public:
-		static const int  _val_none = -666;
+		static constexpr int _val_none = -666;
 		std::atomic <int>
-		               _cur_val = _val_none;
-		int            _alt_val = _val_none;
+		               _cur_val { _val_none };
+		int            _alt_val { _val_none };
 		bool           is_set () const { return _cur_val != _val_none; }
 	};
 	typedef std::array <PotState, _nbr_adc> PotStateArray;

@@ -177,7 +177,9 @@ int	Platitude::do_reset (double sample_freq, int max_buf_len, int &latency)
 	for (auto &chn : _chn_arr)
 	{
 		chn._early_reflections.reset (
-			sample_freq, Cst::_max_predelay_time, Cst::_max_er_duration
+			sample_freq,
+			double (Cst::_max_predelay_time_ms) / 1000.0,
+			double (Cst::_max_er_duration_ms  ) / 1000.0
 		);
 		chn._buf_tmp.resize (mbs_align);
 		chn._buf_erf.resize (mbs_align);

@@ -115,7 +115,7 @@ PlatitudeDesc::PlatitudeDesc ()
 
 	// Predelay time
 	pll_sptr = std::make_shared <TplPll> (
-		0, Cst::_max_predelay_time,
+		0, double (Cst::_max_predelay_time_ms) / 1000.0,
 		"Predelay time\nPredelay T\nPredelay\nPredly\nPdl",
 		"ms",
 		param::HelperDispNum::Preset_FLOAT_MILLI,
@@ -138,7 +138,7 @@ PlatitudeDesc::PlatitudeDesc ()
 
 	// Early reflection duration
 	pll_sptr = std::make_shared <TplPll> (
-		0.001, Cst::_max_er_duration,
+		0.001, double (Cst::_max_er_duration_ms) / 1000.0,
 		"Early reflection duration\nEarly ref duration\nEarly ref dur\nER dur\nEDu",
 		"ms",
 		param::HelperDispNum::Preset_FLOAT_MILLI,

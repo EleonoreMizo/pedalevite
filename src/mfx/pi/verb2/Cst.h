@@ -41,8 +41,8 @@ class Cst
 
 public:
 
-	static constexpr double _max_predelay_time = 0.5; // s
-	static constexpr double _max_er_duration   = 0.5; // s
+	static constexpr int _max_predelay_time_ms = 500; // ms
+	static constexpr int _max_er_duration_ms   = 500; // ms
 
 
 
