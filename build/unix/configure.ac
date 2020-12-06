@@ -37,7 +37,8 @@ AS_IF(
         CXX="clang++"
         CC="clang"
         LD="clang++"
-        EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -stdlib=libc++"
+        EXTRA_CXXFLAGS="$EXTRA_CXXFLAGS -stdlib=libc++ -D_LIBCPP_ABI_ENABLE_UNIQUE_PTR_TRIVIAL_ABI -D_LIBCPP_ABI_ENABLE_SHARED_PTR_TRIVIAL_ABI"
+        MFLAGS="$MFLAGS -fexperimental-new-pass-manager -mllvm -inline-threshold=1000"
         COMPWARNFLAGS=""
         AC_MSG_NOTICE([Using clang as compiler.])
     ],
