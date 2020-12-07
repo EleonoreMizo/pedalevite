@@ -87,6 +87,11 @@ int	TestReverb::perform_test ()
 
 
 
+constexpr int	TestReverb::_max_block_len;
+constexpr int	TestReverb::_nbr_chn;
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

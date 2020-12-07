@@ -80,19 +80,19 @@ template <typename FNC, int MAXIT, bool PVF>
 typename SolverNR <FNC, MAXIT, PVF>::DataType SolverNR <FNC, MAXIT, PVF>::slove ()
 {
 	DataType       x = _fnc.estimate ();
-	assert (isfinite (x));
+	assert (std::isfinite (x));
 	int            it_cnt = 0;
 	do
 	{
 		DataType       y;
 		DataType       yd;
 		_fnc.eval (y, yd, x);
-		assert (isfinite (y));
-		assert (isfinite (yd));
+		assert (std::isfinite (y));
+		assert (std::isfinite (yd));
 		assert (yd != 0);
 
  		DataType       dif_x = y / yd;
- 		assert (isfinite (dif_x));
+ 		assert (std::isfinite (dif_x));
  		dif_x = fstb::limit (dif_x, -_max_dif, _max_dif);
  		x -= dif_x;
 

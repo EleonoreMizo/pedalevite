@@ -247,6 +247,13 @@ void	FFTRealFixLen <LL2>::rescale (DataType x []) const
 
 
 
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::FFT_LEN_L2;
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::FFT_LEN;
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -307,6 +314,25 @@ void	FFTRealFixLen <LL2>::build_trigo_osc ()
 		osc.set_step (mul);
 	}
 }
+
+
+
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::TRIGO_BD_LIMIT;
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::BR_ARR_SIZE_L2;
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::BR_ARR_SIZE;
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::TRIGO_BD;
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::TRIGO_TABLE_ARR_SIZE_L2;
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::TRIGO_TABLE_ARR_SIZE;
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::NBR_TRIGO_OSC;
+template <int LL2>
+constexpr int	FFTRealFixLen <LL2>::TRIGO_OSC_ARR_SIZE;
 
 
 

@@ -436,6 +436,15 @@ void	DelayFrac <T, NPL2>::clear_buffers ()
 
 
 
+template <typename T, int NPL2>
+constexpr int	DelayFrac <T, NPL2>::_nbr_phases_l2;
+template <typename T, int NPL2>
+constexpr int	DelayFrac <T, NPL2>::_nbr_phases;
+template <typename T, int NPL2>
+constexpr int	DelayFrac <T, NPL2>::_delay_min;
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -534,6 +543,17 @@ void  DelayFrac <T, NPL2>::init_interpolator ()
 
 	_interp_init_flag = true;
 }
+
+
+
+template <typename T, int NPL2>
+constexpr int DelayFrac <T, NPL2>::_phase_len;
+template <typename T, int NPL2>
+constexpr int DelayFrac <T, NPL2>::_ph_pre;
+template <typename T, int NPL2>
+constexpr int DelayFrac <T, NPL2>::_ph_post;
+template <typename T, int NPL2>
+constexpr int DelayFrac <T, NPL2>::_phase_msk;
 
 
 

@@ -45,7 +45,6 @@ size_t	CompressSimple::compress_frame (uint8_t *cmp_ptr, const uint8_t *raw_ptr,
 {
 	assert (cmp_ptr != nullptr);
 	assert (raw_ptr != nullptr || len_raw == 0);
-	assert (len_raw >= 0);
 
 	uint8_t *      base_ptr = cmp_ptr;
 	cmp_ptr += _frame_header_len;

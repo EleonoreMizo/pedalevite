@@ -96,6 +96,11 @@ void	PartInterface::clear_buffers ()
 
 
 
+constexpr PartInterface::IdNode	PartInterface::_nid_invalid;
+constexpr PartInterface::IdNode	PartInterface::_nid_gnd;
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

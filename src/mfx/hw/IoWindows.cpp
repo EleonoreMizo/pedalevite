@@ -1340,6 +1340,41 @@ int	IoWindows::select_file (std::string &pathname, bool save_flag, std::string t
 
 
 
+constexpr int	IoWindows::_scr_w;
+constexpr int	IoWindows::_scr_h;
+constexpr int	IoWindows::_col_bkg;
+constexpr int	IoWindows::_col_min;
+constexpr int	IoWindows::_col_max;
+constexpr int	IoWindows::_zoom;
+constexpr int	IoWindows::_scr_s;
+constexpr int	IoWindows::_nbr_led;
+constexpr int	IoWindows::_nbr_fsw_row;
+constexpr int	IoWindows::_nbr_fsw_col;
+constexpr int	IoWindows::_nbr_but_row;
+constexpr int	IoWindows::_nbr_but_col;
+constexpr int	IoWindows::_nbr_lsc_row;
+constexpr int	IoWindows::_led_h_max;
+constexpr int	IoWindows::_led_h_tmp;
+constexpr int	IoWindows::_led_h;
+constexpr int	IoWindows::_led_y;
+constexpr int	IoWindows::_sw_gap;
+constexpr int	IoWindows::_sw_l_max;
+constexpr int	IoWindows::_sw_l_tmp;
+constexpr int	IoWindows::_sw_l;
+constexpr int	IoWindows::_sw_w;
+constexpr int	IoWindows::_sw_h;
+constexpr int	IoWindows::_sw_r_max;
+constexpr int	IoWindows::_sw_h_tot;
+constexpr int	IoWindows::_sw_y;
+constexpr int	IoWindows::_lsc_x;
+constexpr int	IoWindows::_lsc_y;
+constexpr int	IoWindows::_lsc_w;
+constexpr int	IoWindows::_lsc_h;
+constexpr int	IoWindows::_disp_w;
+constexpr int	IoWindows::_disp_h;
+
+
+
 }  // namespace hw
 }  // namespace mfx
 

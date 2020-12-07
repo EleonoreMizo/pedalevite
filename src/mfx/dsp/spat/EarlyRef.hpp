@@ -261,11 +261,21 @@ void	EarlyRef <T>::clear_buffers ()
 
 
 
+template <typename T>
+constexpr int	EarlyRef <T>::_max_nbr_taps;
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+template <typename T>
+constexpr int	EarlyRef <T>::_max_blk_size;
 
 
 

@@ -322,6 +322,11 @@ typename FFTReal <DT>::DataType *	FFTReal <DT>::use_buffer () const
 
 
 
+template <class DT>
+constexpr int	FFTReal <DT>::MAX_BIT_DEPTH;
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -907,6 +912,11 @@ void	FFTReal <DT>::compute_inverse_pass_1_2 (DataType x [], const DataType sf []
 	}
 	while (coef_index < _length);
 }
+
+
+
+template <class DT>
+constexpr int	FFTReal <DT>::TRIGO_BD_LIMIT;
 
 
 

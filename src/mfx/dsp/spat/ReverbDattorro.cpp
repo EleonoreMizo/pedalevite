@@ -620,6 +620,12 @@ void	ReverbDattorro::clear_buffers ()
 
 
 
+constexpr int	ReverbDattorro::_nbr_chn;
+constexpr float	ReverbDattorro::_min_room_size;
+constexpr float	ReverbDattorro::_max_room_size;
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
@@ -943,6 +949,14 @@ void	ReverbDattorro::check_mod_counters (ModDlyState &mds)
 		mds._rnd_step = (val_tgt - mds._rnd_val) / mds._rnd_per;
 	}
 }
+
+
+
+constexpr int	ReverbDattorro::_max_blk_size;
+constexpr int	ReverbDattorro::_nbr_apd_per_chn;
+constexpr int	ReverbDattorro::_nbr_lfo_tot;
+constexpr int	ReverbDattorro::_nbr_input_apd;
+constexpr int	ReverbDattorro::_nbr_taps_out;
 
 
 

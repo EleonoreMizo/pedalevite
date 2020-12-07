@@ -68,8 +68,6 @@ typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type
 template <class T, long ALIG>
 typename AllocAlign <T, ALIG>::pointer	AllocAlign <T, ALIG>::allocate (size_type n)
 {
-	assert (n >= 0);
-
 	const size_t   nbr_bytes = sizeof (T) * n;
 
 #if defined (_MSC_VER)

@@ -172,51 +172,51 @@ private:
 	};
 
 #if (PV_VERSION == 2)
-	static const int  _scr_w     = 800;
-	static const int  _scr_h     = 480;
-	static const int  _col_bkg   = 0x000000; // 0xRRGGBB
-	static const int  _col_min   = 0x000000;
-	static const int  _col_max   = 0xFFFFFF;
-	static const int  _zoom      = 1;
+	static constexpr int _scr_w     = 800;
+	static constexpr int _scr_h     = 480;
+	static constexpr int _col_bkg   = 0x000000; // 0xRRGGBB
+	static constexpr int _col_min   = 0x000000;
+	static constexpr int _col_max   = 0xFFFFFF;
+	static constexpr int _zoom      = 1;
 #else // PV_VERSION
-	static const int  _scr_w     = 128;
-	static const int  _scr_h     =  64;
-	static const int  _col_bkg   = 0x0000FF; // 0xRRGGBB
-	static const int  _col_min   = 0x2000C0;
-	static const int  _col_max   = 0xFFFFFF;
-	static const int  _zoom      = 4;
+	static constexpr int _scr_w     = 128;
+	static constexpr int _scr_h     =  64;
+	static constexpr int _col_bkg   = 0x0000FF; // 0xRRGGBB
+	static constexpr int _col_min   = 0x2000C0;
+	static constexpr int _col_max   = 0xFFFFFF;
+	static constexpr int _zoom      = 4;
 #endif // PV_VERSION
-	static const int  _scr_s     = _scr_w;
-	static const int  _nbr_led   = 3;
-	static const int  _nbr_fsw_row = 2; // Two rows of 6 footswitches
-	static const int  _nbr_fsw_col = 6;
-	static const int  _nbr_but_row = 2; // Two rows of 3 buttons for the UI
-	static const int  _nbr_but_col = 3;
-	static const int  _nbr_lsc_row = 2; // Two rows for load/save config
+	static constexpr int _scr_s     = _scr_w;
+	static constexpr int _nbr_led   = 3;
+	static constexpr int _nbr_fsw_row = 2; // Two rows of 6 footswitches
+	static constexpr int _nbr_fsw_col = 6;
+	static constexpr int _nbr_but_row = 2; // Two rows of 3 buttons for the UI
+	static constexpr int _nbr_but_col = 3;
+	static constexpr int _nbr_lsc_row = 2; // Two rows for load/save config
 
-	static const int  _led_h_max = 32;
-	static const int  _led_h_tmp = _scr_h * _zoom / 2;
-	static const int  _led_h     = (_led_h_tmp < _led_h_max) ? _led_h_tmp : _led_h_max;
-	static const int  _led_y     = _scr_h * _zoom;
+	static constexpr int _led_h_max = 32;
+	static constexpr int _led_h_tmp = _scr_h * _zoom / 2;
+	static constexpr int _led_h     = (_led_h_tmp < _led_h_max) ? _led_h_tmp : _led_h_max;
+	static constexpr int _led_y     = _scr_h * _zoom;
 
-	static const int  _sw_gap    = 16;  // Between the two groups of switches
-	static const int  _sw_l_max  = 32;
-	static const int  _sw_l_tmp  =
+	static constexpr int _sw_gap    = 16;  // Between the two groups of switches
+	static constexpr int _sw_l_max  = 32;
+	static constexpr int _sw_l_tmp  =
 		(_scr_w * _zoom - _sw_gap * 2) / (_nbr_fsw_col + _nbr_but_col + _nbr_lsc_row);
-	static const int  _sw_l      = (_sw_l_tmp < _sw_l_max) ? _sw_l_tmp : _sw_l_max;
-	static const int  _sw_w      = _sw_l;
-	static const int  _sw_h      = _sw_l;
-	static const int  _sw_r_max  = (_nbr_fsw_row < _nbr_but_row) ? _nbr_but_row : _nbr_fsw_row;
-	static const int  _sw_h_tot  = _sw_r_max * _sw_h;
-	static const int  _sw_y      = _led_y + _led_h;
+	static constexpr int _sw_l      = (_sw_l_tmp < _sw_l_max) ? _sw_l_tmp : _sw_l_max;
+	static constexpr int _sw_w      = _sw_l;
+	static constexpr int _sw_h      = _sw_l;
+	static constexpr int _sw_r_max  = (_nbr_fsw_row < _nbr_but_row) ? _nbr_but_row : _nbr_fsw_row;
+	static constexpr int _sw_h_tot  = _sw_r_max * _sw_h;
+	static constexpr int _sw_y      = _led_y + _led_h;
 
-	static const int  _lsc_x     = _sw_w * (_nbr_fsw_col + _nbr_but_col) + _sw_gap * 2;
-	static const int  _lsc_y     = _sw_y;
-	static const int  _lsc_w     = _sw_w;
-	static const int  _lsc_h     = _sw_h;
+	static constexpr int _lsc_x     = _sw_w * (_nbr_fsw_col + _nbr_but_col) + _sw_gap * 2;
+	static constexpr int _lsc_y     = _sw_y;
+	static constexpr int _lsc_w     = _sw_w;
+	static constexpr int _lsc_h     = _sw_h;
 
-	static const int  _disp_w    = _scr_w * _zoom;
-	static const int  _disp_h    = _scr_h * _zoom + _led_h + _sw_h_tot;
+	static constexpr int _disp_w    = _scr_w * _zoom;
+	static constexpr int _disp_h    = _scr_h * _zoom + _led_h + _sw_h_tot;
 
 	typedef std::array <uint8_t, _scr_s * _scr_h> ScreenBuffer;
 

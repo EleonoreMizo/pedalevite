@@ -318,6 +318,14 @@ void	BigMuff1::update_oversampling ()
 
 
 
+constexpr int	BigMuff1::_ovrspl_ratio_max;
+constexpr int	BigMuff1::_nbr_coef_42;
+constexpr int	BigMuff1::_nbr_coef_21;
+constexpr std::array <double, BigMuff1::_nbr_coef_42>	BigMuff1::_coef_42;
+constexpr std::array <double, BigMuff1::_nbr_coef_21>	BigMuff1::_coef_21;
+
+
+
 }  // namespace bmp1
 }  // namespace pi
 }  // namespace mfx
