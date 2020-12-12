@@ -436,6 +436,21 @@
     <Filter Include="mfx\pi\vclone">
       <UniqueIdentifier>{773f2549-90dd-434a-9fb9-0c7c95bad84b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\tomo">
+      <UniqueIdentifier>{bab15b54-29a5-4587-8349-cdcf6bce1d8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\cmerge">
+      <UniqueIdentifier>{8b655c1a-2b3f-41ec-a15f-6bf6c53ea8ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\csplit">
+      <UniqueIdentifier>{9eafe6f3-1eb8-4359-88f5-50a2ce6285a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\pan">
+      <UniqueIdentifier>{8dd271c1-3067-4c46-acb2-e02932568d29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mfx\pi\ms">
+      <UniqueIdentifier>{52b46ca0-5bb9-46ea-9494-99458070960e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -4908,6 +4923,51 @@
     <ClInclude Include="..\..\..\src\mfx\pi\vclone\ChnMode.h">
       <Filter>mfx\pi\vclone</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\tomo\ToMono.h">
+      <Filter>mfx\pi\tomo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\tomo\ToMonoDesc.h">
+      <Filter>mfx\pi\tomo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\tomo\Param.h">
+      <Filter>mfx\pi\tomo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\tomo\Source.h">
+      <Filter>mfx\pi\tomo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cmerge\ChnMerge.h">
+      <Filter>mfx\pi\cmerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cmerge\ChnMergeDesc.h">
+      <Filter>mfx\pi\cmerge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\csplit\ChnSplit.h">
+      <Filter>mfx\pi\csplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\csplit\ChnSplitDesc.h">
+      <Filter>mfx\pi\csplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pan\Param.h">
+      <Filter>mfx\pi\pan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pan\StereoPan.h">
+      <Filter>mfx\pi\pan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pan\StereoPanDesc.h">
+      <Filter>mfx\pi\pan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\ms\MidSide.h">
+      <Filter>mfx\pi\ms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\ms\MidSideDesc.h">
+      <Filter>mfx\pi\ms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\ms\Op.h">
+      <Filter>mfx\pi\ms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\ms\Param.h">
+      <Filter>mfx\pi\ms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6238,6 +6298,36 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\vclone\VolumeCloneDesc.cpp">
       <Filter>mfx\pi\vclone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\tomo\ToMono.cpp">
+      <Filter>mfx\pi\tomo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\tomo\ToMonoDesc.cpp">
+      <Filter>mfx\pi\tomo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cmerge\ChnMerge.cpp">
+      <Filter>mfx\pi\cmerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cmerge\ChnMergeDesc.cpp">
+      <Filter>mfx\pi\cmerge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\csplit\ChnSplit.cpp">
+      <Filter>mfx\pi\csplit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\csplit\ChnSplitDesc.cpp">
+      <Filter>mfx\pi\csplit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\pan\StereoPan.cpp">
+      <Filter>mfx\pi\pan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\pan\StereoPanDesc.cpp">
+      <Filter>mfx\pi\pan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\ms\MidSide.cpp">
+      <Filter>mfx\pi\ms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\ms\MidSideDesc.cpp">
+      <Filter>mfx\pi\ms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

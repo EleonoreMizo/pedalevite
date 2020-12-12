@@ -849,6 +849,10 @@ commonsrc = \
         ../../src/mfx/pi/click/ClickDesc.cpp \
         ../../src/mfx/pi/click/ClickDesc.h \
         ../../src/mfx/pi/click/Param.h \
+        ../../src/mfx/pi/cmerge/ChnMerge.cpp \
+        ../../src/mfx/pi/cmerge/ChnMerge.h \
+        ../../src/mfx/pi/cmerge/ChnMergeDesc.cpp \
+        ../../src/mfx/pi/cmerge/ChnMergeDesc.h \
         ../../src/mfx/pi/colorme/ColorMe.cpp \
         ../../src/mfx/pi/colorme/ColorMe.h \
         ../../src/mfx/pi/colorme/ColorMeDesc.cpp \
@@ -870,6 +874,10 @@ commonsrc = \
         ../../src/mfx/pi/cpx/CompexGainFnc.h \
         ../../src/mfx/pi/cpx/CompexGainFnc.hpp \
         ../../src/mfx/pi/cpx/Param.h \
+        ../../src/mfx/pi/csplit/ChnSplit.cpp \
+        ../../src/mfx/pi/csplit/ChnSplit.h \
+        ../../src/mfx/pi/csplit/ChnSplitDesc.cpp \
+        ../../src/mfx/pi/csplit/ChnSplitDesc.h \
         ../../src/mfx/pi/dclip/DiodeClipper.cpp \
         ../../src/mfx/pi/dclip/DiodeClipper.h \
         ../../src/mfx/pi/dclip/DiodeClipperDesc.cpp \
@@ -1048,6 +1056,12 @@ commonsrc = \
         ../../src/mfx/pi/nzcl/Notch.cpp \
         ../../src/mfx/pi/nzcl/Notch.h \
         ../../src/mfx/pi/nzcl/Param.h \
+        ../../src/mfx/pi/ms/MidSide.cpp \
+        ../../src/mfx/pi/ms/MidSide.h \
+        ../../src/mfx/pi/ms/MidSideDesc.cpp \
+        ../../src/mfx/pi/ms/MidSideDesc.h \
+        ../../src/mfx/pi/ms/Op.h \
+        ../../src/mfx/pi/ms/Param.h \
         ../../src/mfx/pi/osdet/OnsetDetect.cpp \
         ../../src/mfx/pi/osdet/OnsetDetect.h \
         ../../src/mfx/pi/osdet/OnsetDetectDesc.cpp \
@@ -1066,6 +1080,11 @@ commonsrc = \
         ../../src/mfx/pi/peq/PEqDesc.hpp \
         ../../src/mfx/pi/peq/PEqType.h \
         ../../src/mfx/pi/peq/Param.h \
+        ../../src/mfx/pi/pan/StereoPan.cpp \
+        ../../src/mfx/pi/pan/StereoPan.h \
+        ../../src/mfx/pi/pan/StereoPanDesc.cpp \
+        ../../src/mfx/pi/pan/StereoPanDesc.h \
+        ../../src/mfx/pi/pan/Param.h \
         ../../src/mfx/pi/param/HelperDispNum.cpp \
         ../../src/mfx/pi/param/HelperDispNum.h \
         ../../src/mfx/pi/param/MapLog.h \
@@ -1168,6 +1187,12 @@ commonsrc = \
         ../../src/mfx/pi/testgen/TestGenDesc.h \
         ../../src/mfx/pi/testgen/ToneFreq.h \
         ../../src/mfx/pi/testgen/Type.h \
+        ../../src/mfx/pi/tomo/Param.h \
+        ../../src/mfx/pi/tomo/Source.h \
+        ../../src/mfx/pi/tomo/ToMono.cpp \
+        ../../src/mfx/pi/tomo/ToMono.h \
+        ../../src/mfx/pi/tomo/ToMonoDesc.cpp \
+        ../../src/mfx/pi/tomo/ToMonoDesc.h \
         ../../src/mfx/pi/tost/ToStereo.cpp \
         ../../src/mfx/pi/tost/ToStereo.h \
         ../../src/mfx/pi/tost/ToStereoDesc.cpp \

@@ -41,8 +41,11 @@
 	<ol style="list-style-type:decimal; margin-top:0.5em;">
 	<li><a href="#fx-distapf">All-Pass Distortion</a></li>
 	<li><a href="#fx-bigmuffpi1">Big Muff Pi — Distortion</a></li>
+	<li><a href="#fx-chnmerge">Channel Merge</a></li>
+	<li><a href="#fx-chnsplit">Channel Split</a></li>
 	<li><a href="#fx-colorme">Color Me — Vocal filter</a></li>
 	<li><a href="#fx-compex">CompEx — Dynamics compressor/expander</a></li>
+	<li><a href="#fx-convert-mono">Convert To Mono</a></li>
 	<li><a href="#fx-convert-stereo">Convert To Stereo</a></li>
 	<li><a href="#fx-delay">Delay — Stereo delay</a></li>
 	<li><a href="#fx-dclip">Diode clipper — Diode distortion</a></li>
@@ -58,6 +61,7 @@
 	<li><a href="#fx-tremolo-harm">Harmonic Tremolo — Two-band tremolo</a></li>
 	<li><a href="#fx-hypercomb">Hypercomb — Polyphonic comb filter</a></li>
 	<li><a href="#fx-imp-fix">Input Impedance Fix</a></li>
+	<li><a href="#fx-midside">Mid Side Coder</a></li>
 	<li><a href="#fx-moogflt">Moog Filter — Filter</a></li>
 	<li><a href="#fx-nzbl">Noise Bleach — Noise gate</a></li>
 	<li><a href="#fx-nzcl">Noise Chlorine — Noise gate</a></li>
@@ -73,6 +77,7 @@
 	<li><a href="#fx-sgirlz">SiemensGirlz — Creative delay</a></li>
 	<li><a href="#fx-disto">Simple Distortion</a></li>
 	<li><a href="#fx-speaker-emu">Speaker Emulator</a></li>
+	<li><a href="#fx-pan">Stereo Panning</a></li>
 	<li><a href="#fx-testgen">Test Generator — Test signal generator</a></li>
 	<li><a href="#fx-tremolo">Tremolo</a></li>
 	<li><a href="#fx-volumeclone">Volume Clone — Volume follower utility</a></li>
@@ -1022,6 +1027,23 @@ Beware, with very high gains, the sound becomes muffled.</p>
 
 
 
+<h3><a id="fx-chnmerge"></a>Channel Merge</h3>
+
+<p>This utility effect takes two mono inputs to merge them into a stereo
+output.
+The first input goes to the left and the second one to the right.</p>
+
+
+
+<h3><a id="fx-chnsplit"></a>Channel Split</h3>
+
+<p>This utility effect takes a stereo input and splits the channels into two
+mono outputs.
+The left channel goes to the first output and the right channel to the second
+output.</p>
+
+
+
 <h3><a id="fx-colorme"></a>Color Me — Vocal filter</h3>
 
 <p>Color Me sculpts the sound spectrum with formants (resonant bumps centered
@@ -1150,12 +1172,27 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 
+<h3><a id="fx-convert-mono"></a>Convert To Mono</h3>
+
+<p>This effects turns a stereo input into a mono output.</p>
+
+<p class="var">Source</p>
+<p>Selects the conversion methode&#8239;:</p>
+<table>
+<tr><td><span class="ui">Mix-6</span></td><td>Both channels are mixed to constant amplitude (ajustment to &minus;6&#8239;dB). This mode is for phase-coherent channels.</td></tr>
+<tr><td><span class="ui">Mix-3</span></td><td>Les deux canaux sont mélangés à puissance égale (ajustement à &minus;3&#8239;dB). This mode is for phase-independent channels.</td></tr>
+<tr><td><span class="ui">Left </span></td><td>Keeps only the left channel.</td></tr>
+<tr><td><span class="ui">Right</span></td><td>Keeps only the right channel.</td></tr>
+</table>
+
+
+
 <h3><a id="fx-convert-stereo"></a>Convert To Stereo</h3>
 
 <p>It’s not really an effect, it’s a device to help changing a mono source
 to stereo.
-The setting in the <a href="#screen-fx-setup">effect configuration</a>
-is overriding the effect.
+With a mono input, the setting in the <a href="#screen-fx-setup">effect
+configuration</a> is overriding the effect.
 So please ensure that you are in <span class="ui">Auto</span>.</p>
 
 
@@ -1842,6 +1879,36 @@ from the pedalboard with just this effect.</p>
 
 <p class="var">Level</p>
 <p>Treble amplification level.</p>
+
+
+
+<h3><a id="fx-midside"></a>Mid Side Coder</h3>
+
+<p>This effect, usually working on a bi-channel source, can encode or decode
+mid-side signals.</p>
+<p>It is also possible to swap the left and right channels as well as invert
+their polarity.
+The polarity inversion is done before swapping them, if both operations are
+enabled.
+When coding or decoding, these auxiliary operations are always done on the
+stereo side of the coding, not on the mid-side channels.</p>
+
+<p class="var">Operation</p>
+<p>Selects which operation is done&#8239;:</p>
+<table>
+<tr><td><span class="ui">None</span></td><td>No specific coding</td></tr>
+<tr><td><span class="ui">St->MS</span></td><td>Stereo to mid-side encoding</td></tr>
+<tr><td><span class="ui">MS->St</span></td><td>Mid-side to stereo decoding</td></tr>
+</table>
+
+<p class="var">Channel swap</p>
+<p>Swaps the left and right channels.</p>
+
+<p class="var">Left polarity</p>
+<p>Invert the left channel polarity.</p>
+
+<p class="var">Right polarity</p>
+<p>Invert the right channel polarity.</p>
 
 
 
@@ -2785,6 +2852,36 @@ a guitar amp.</p>
 
 
 
+<h3><a id="fx-pan"></a>Stereo Panning</h3>
+
+<p>This effect sets the stereo balance of a signal, and sets the position of
+each channel of a stereo source.</p>
+<p>For a mono input, only the balance function is available.
+It sets the input channel position in the stereo field.
+The setting in the <a href="#screen-fx-setup">effect
+configuration</a> is overriding the effect.
+So please ensure that you are in <span class="ui">Auto</span>.</p>
+<p>For a stereo input, the position of each channel can be set beforhand, as
+they were two distinct mono inputs.
+The the balance is applied on this mix, setting the left and right
+volumes.</p>
+
+<p class="var">Balance</p>
+<p>Position in the stereo field of the mono input or stereo input pre-mix.</p>
+
+<p class="var">Position, left channel</p>
+<p>Position in the stereo field of the left channel, stereo input only.</p>
+
+<p class="var">Position, right channel</p>
+<p>Position in the stereo field of the right channel, stereo input only.</p>
+
+<p class="var">Panning law</p>
+<p>Sets the level of the middle position, between &minus;6&#8239;dB (equal
+amplitude) and &minus;3&#8239;dB (equal power).
+The most suitable value depends on the input content.</p>
+
+
+
 <h3><a id="fx-testgen"></a>Test Generator — Test signal generator</h3>
 
 <p class="var">State</p>
@@ -3241,6 +3338,13 @@ This precision can be changed with <span class="keya">Select</span>.
 
 
 <h2><a id="changelog"></a>VI.&emsp;Change log</h2>
+
+<p><b>r40, 2020-12-12</b></p>
+<ul>
+<li>Added several utility effects&#8239;:
+Channel merge, Channel split, Convert to mono, Mid-side coder and Stereo
+panning.</li>
+</ul>
 
 <p><b>r39, 2020-12-05</b></p>
 <ul>

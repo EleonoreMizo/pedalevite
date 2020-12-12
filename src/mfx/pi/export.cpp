@@ -32,10 +32,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/bmp1/BigMuff1Desc.h"
 #include "mfx/pi/click/Click.h"
 #include "mfx/pi/click/ClickDesc.h"
+#include "mfx/pi/cmerge/ChnMerge.h"
+#include "mfx/pi/cmerge/ChnMergeDesc.h"
 #include "mfx/pi/colorme/ColorMe.h"
 #include "mfx/pi/colorme/ColorMeDesc.h"
 #include "mfx/pi/cpx/Compex.h"
 #include "mfx/pi/cpx/CompexDesc.h"
+#include "mfx/pi/csplit/ChnSplit.h"
+#include "mfx/pi/csplit/ChnSplitDesc.h"
 #include "mfx/pi/dclip/DiodeClipper.h"
 #include "mfx/pi/dclip/DiodeClipperDesc.h"
 #include "mfx/pi/dist1/DistoSimple.h"
@@ -84,10 +88,14 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/nzbl/NoiseBleachDesc.h"
 #include "mfx/pi/nzcl/NoiseChlorine.h"
 #include "mfx/pi/nzcl/NoiseChlorineDesc.h"
+#include "mfx/pi/ms/MidSide.h"
+#include "mfx/pi/ms/MidSideDesc.h"
 #include "mfx/pi/osdet/OnsetDetect.h"
 #include "mfx/pi/osdet/OnsetDetectDesc.h"
 //#include "mfx/pi/osdet2/OnsetDetect2.h"
 //#include "mfx/pi/osdet2/OnsetDetect2Desc.h"
+#include "mfx/pi/pan/StereoPan.h"
+#include "mfx/pi/pan/StereoPanDesc.h"
 #include "mfx/pi/peq/PEq.h"
 #include "mfx/pi/peq/PEqDesc.h"
 #include "mfx/pi/phase1/Phaser.h"
@@ -108,6 +116,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/spkem/SpeakerEmuDesc.h"
 #include "mfx/pi/testgen/TestGen.h"
 #include "mfx/pi/testgen/TestGenDesc.h"
+#include "mfx/pi/tomo/ToMono.h"
+#include "mfx/pi/tomo/ToMonoDesc.h"
 #include "mfx/pi/tost/ToStereo.h"
 #include "mfx/pi/tost/ToStereoDesc.h"
 #include "mfx/pi/trem1/Tremolo.h"
@@ -194,6 +204,11 @@ fstb_EXPORT (int fstb_CDECL enum_factories (std::vector <std::shared_ptr <mfx::p
 		,	mfx::piapi::FactoryTpl <mfx::pi::bmp1::BigMuff1Desc      , mfx::pi::bmp1::BigMuff1           >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::verb2::PlatitudeDesc    , mfx::pi::verb2::Platitude         >::create ()
 		,	mfx::piapi::FactoryTpl <mfx::pi::vclone::VolumeCloneDesc , mfx::pi::vclone::VolumeClone      >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::cmerge::ChnMergeDesc    , mfx::pi::cmerge::ChnMerge         >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::csplit::ChnSplitDesc    , mfx::pi::csplit::ChnSplit         >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::ms::MidSideDesc         , mfx::pi::ms::MidSide              >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::pan::StereoPanDesc      , mfx::pi::pan::StereoPan           >::create ()
+		,	mfx::piapi::FactoryTpl <mfx::pi::tomo::ToMonoDesc        , mfx::pi::tomo::ToMono             >::create ()
 		};
 
 		fact_list = l;
