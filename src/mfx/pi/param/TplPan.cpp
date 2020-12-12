@@ -201,11 +201,17 @@ bool	TplPan::do_conv_str_to_nat (double &nat, const std::string &txt) const
 }
 
 
+// https://www.desmos.com/calculator/59hwbbtnki
+#undef mfx_pi_param_TplPan_OLD_MAPPING
+#undef mfx_pi_param_TplPan_NO_MAPPING
 
 double	TplPan::do_conv_nrm_to_nat (double nrm) const
 {
 	double         nat = 0;
 
+#if defined (mfx_pi_param_TplPan_NO_MAPPING)
+	nat = nrm * 2 - 1;
+#elif defined (mfx_pi_param_TplPan_OLD_MAPPING)
 	if (nrm < 0.375f)
 	{
 		if (nrm < 1.0 / 6)
@@ -232,6 +238,34 @@ double	TplPan::do_conv_nrm_to_nat (double nrm) const
 	{
 		nat = nrm * 4 - 2;
 	}
+#else // mfx_pi_param_TplPan_*_MAPPING
+	if (nrm < 7.f / 32)
+	{
+		if (nrm < 1.f / 8)
+		{
+			nat = nrm * 0.5f - 1;
+		}
+		else
+		{
+			nat = nrm * 4 - 23.f / 16;
+		}
+	}
+	else if (nrm > 25.f / 32)
+	{
+		if (nrm < 7.f / 8)
+		{
+			nat = nrm * 4 - 41.f / 16;
+		}
+		else
+		{
+			nat = nrm * 0.5f + 0.5f;
+		}
+	}
+	else
+	{
+		nat = nrm * 2 - 1;
+	}
+#endif // mfx_pi_param_TplPan_*_MAPPING
 
 	return nat;
 }
@@ -242,6 +276,9 @@ double	TplPan::do_conv_nat_to_nrm (double nat) const
 {
 	double         nrm = 0;
 
+#if defined (mfx_pi_param_TplPan_NO_MAPPING)
+	nrm = nat * 0.5f + 0.5f;
+#elif defined (mfx_pi_param_TplPan_OLD_MAPPING)
 	if (nat < -0.5f)
 	{
 		if (nat < -11.0 / 12)
@@ -268,9 +305,40 @@ double	TplPan::do_conv_nat_to_nrm (double nat) const
 	{
 		nrm = nat * 0.25f + 0.5f;
 	}
+#else // mfx_pi_param_TplPan_*_MAPPING
+	if (nat < -9.f / 16)
+	{
+		if (nat < -15.f / 16)
+		{
+			nrm = nat * 2 + 2;
+		}
+		else
+		{
+			nrm = nat * 0.25f + 23.f / 64;
+		}
+	}
+	else if (nat > 9.f / 16)
+	{
+		if (nat < 15.f / 16)
+		{
+			nrm = nat * 0.25f + 41.f / 64;
+		}
+		else
+		{
+			nrm = nat * 2 - 1;
+		}
+	}
+	else
+	{
+		nrm = nat * 0.5f + 0.5f;
+	}
+#endif // mfx_pi_param_TplPan_*_MAPPING
 
 	return nrm;
 }
+
+#undef mfx_pi_param_TplPan_OLD_MAPPING
+#undef mfx_pi_param_TplPan_NO_MAPPING
 
 
 
