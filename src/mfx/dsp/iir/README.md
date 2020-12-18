@@ -13,6 +13,7 @@
 - **`DesignEq2p`**: s-plane design functions for basic filters (butterworth, equalizer…), including Orfanidis’ corrected filters at Nyquist frequency.
 - **`Downsampler4xSimd`**, **`Upsampler4xSimd`**: Convenience wrappers on the HIIR functions to achieve fast and high-quality 4x-up and downsampling.
 - **`FilterComb`**: Sub-sample comb filter with custom interpolator.
+- **`Lpf1p`**: Simple smoothing low-pass filter with one pole and no zero
 - **`OnePole`**: Direct Form 2 implementation of 1st order filter.
 - **`SqueezerSimd`**: 4-pole Moog low-pass filter emulation with optional, custom dirt. **`SqueezerOpDefect`** (radical shaping and polarity inversion) can be used for this purpose.
 - **`Svf2p`**: class to design SVFs from basic parameters or s-plane equations

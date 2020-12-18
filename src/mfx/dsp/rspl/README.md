@@ -1,5 +1,6 @@
 ## rspl — resampling tools
 
+- **`InterpFtor`**: simple functors for polynomial interpolation
 - **`InterpFirMakerHermite4`**: Utility class for building a 3rd-order cubic hermite interpolator as a 4-tap FIR
 - **`InterpFirMakerLagrange4`**: Utility class for building a 3rd-order lagrange interpolator as a 4-tap FIR
 - **`InterpFirPolyphase`**: Interpolator using a FIR polyphase filter. Phase data are implemented with `InterpPhase*`, taken as template parameter.

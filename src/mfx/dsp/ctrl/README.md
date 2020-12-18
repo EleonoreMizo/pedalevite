@@ -22,4 +22,5 @@
 - **`InertiaRc`**: a parameter smoother using 1st order filters (RC section), with an adjustble end threshold.
 - **`Ramp`**: similar to `InertiaLin`, but specialized for length-variable block processing. You can set the length of the block and the value to reach at the end. It keeps track of the values at the beginning and the end of the block, so they can be fed directly to a block interpolation function.
 - **`Smooth`**: an adaptative filter for effective parameter smoothing. Extremely useful for denoising analogue inputs or smoothing stepped values like MIDI controllers.
+- **`SmootherLpf`**: elementary parameter smoother using a single-pole LPF
 - **`VarBlock`**: Another class handling parameter changes across length-variable blocks, tracking begin and end values. Unlike `Ramp`, the transition length depends only on the block size.
