@@ -158,6 +158,24 @@ void	OscSinCosEulerSimd::correct ()
 
 
 
+// Uses a single-step Newton-Raphson approximation of 1 / sqrt (1 + r ^ 2)
+// with 1 as initial guess for the corrective term.
+void	OscSinCosEulerSimd::correct_fast ()
+{
+	auto           c  = fstb::ToolsSimd::load_f32 (&_pos_cos);
+	auto           s  = fstb::ToolsSimd::load_f32 (&_pos_sin);
+	const auto     r2 = c * c + s * s;
+	const auto     a3 = fstb::ToolsSimd::set1_f32 (3.f);
+	const auto     ah = fstb::ToolsSimd::set1_f32 (0.5f);
+	const auto     ni = (a3 - r2) * ah;
+	c *= ni;
+	s *= ni;
+	fstb::ToolsSimd::store_f32 (&_pos_cos, c);
+	fstb::ToolsSimd::store_f32 (&_pos_sin, s);
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

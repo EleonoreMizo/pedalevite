@@ -73,6 +73,7 @@ public:
 	               get_sin () const;
 	void           process_block (float cos_ptr [], float sin_ptr [], int nbr_vec);
 	void           correct ();
+	void           correct_fast ();
 
 
 

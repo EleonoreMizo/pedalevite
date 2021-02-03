@@ -529,7 +529,7 @@ void	PhasedVoice::process_osc (int nbr_spl)
 		buf_s_ptr,
 		nbr_spl >> Osc::_nbr_units_l2
 	);
-	_osc_phase.correct ();
+	_osc_phase.correct_fast ();
 }
 
 

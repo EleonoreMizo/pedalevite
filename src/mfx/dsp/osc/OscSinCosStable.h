@@ -75,6 +75,7 @@ public:
 
 	void inline    clear_buffers ();
 	void inline    correct ();
+	void inline    correct_fast ();
 
 
 

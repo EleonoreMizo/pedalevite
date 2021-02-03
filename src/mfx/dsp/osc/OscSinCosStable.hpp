@@ -113,6 +113,20 @@ void	OscSinCosStable <T>::correct ()
 
 
 
+// Uses a single-step Newton-Raphson approximation of 1 / sqrt (1 + r ^ 2)
+// with 1 as initial guess for the corrective term.
+template <class T>
+void	OscSinCosStable <T>::correct_fast ()
+{
+	const double   norm_sq = double (_pos_cos * _pos_cos + _pos_sin * _pos_sin);
+	const DataType mult    = DataType ((3.0 - norm_sq) * 0.5);
+
+	_pos_cos *= mult;
+	_pos_sin *= mult;
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
