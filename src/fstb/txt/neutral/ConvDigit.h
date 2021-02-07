@@ -70,11 +70,13 @@ private:
 
 private:
 
-						ConvDigit ();
-						ConvDigit (const ConvDigit &other);
-	ConvDigit &		operator = (const ConvDigit &other);
-	bool				operator == (const ConvDigit &other);
-	bool				operator != (const ConvDigit &other);
+	               ConvDigit ()                         = delete;
+	               ConvDigit (const ConvDigit &other)   = delete;
+	               ConvDigit (ConvDigit &&other)        = delete;
+	ConvDigit &    operator = (const ConvDigit &other)  = delete;
+	ConvDigit &    operator = (ConvDigit &&other)       = delete;
+	bool           operator == (const ConvDigit &other) = delete;
+	bool           operator != (const ConvDigit &other) = delete;
 
 };	// class ConvDigit
 

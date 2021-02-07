@@ -88,11 +88,13 @@ private:
 
 private:
 
-						Codec8 ();
-						Codec8 (const Codec8 &other);
-	Codec8 &			operator = (const Codec8 &other);
-	bool				operator == (const Codec8 &other);
-	bool				operator != (const Codec8 &other);
+						Codec8 ()                         = delete;
+						Codec8 (const Codec8 &other)      = delete;
+						Codec8 (Codec8 &&other)           = delete;
+	Codec8 &			operator = (const Codec8 &other)  = delete;
+	Codec8 &			operator = (Codec8 &&other)       = delete;
+	bool				operator == (const Codec8 &other) = delete;
+	bool				operator != (const Codec8 &other) = delete;
 
 };	// class Codec8
 

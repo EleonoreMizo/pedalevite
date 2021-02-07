@@ -69,11 +69,13 @@ private:
 
 private:
 
-						ConvNum ();
-						ConvNum (const ConvNum &other);
-	ConvNum &		operator = (const ConvNum &other);
-	bool				operator == (const ConvNum &other);
-	bool				operator != (const ConvNum &other);
+	               ConvNum ()                         = delete;
+	               ConvNum (const ConvNum &other)     = delete;
+	               ConvNum (ConvNum &&other)          = delete;
+	ConvNum &      operator = (const ConvNum &other)  = delete;
+	ConvNum &      operator = (ConvNum &&other)       = delete;
+	bool           operator == (const ConvNum &other) = delete;
+	bool           operator != (const ConvNum &other) = delete;
 
 };	// class ConvNum
 

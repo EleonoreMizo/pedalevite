@@ -70,11 +70,13 @@ private:
 
 private:
 
-						PredLt ();
-						PredLt (const PredLt &other);
-	PredLt &			operator = (const PredLt &other);
-	bool				operator == (const PredLt &other);
-	bool				operator != (const PredLt &other);
+						PredLt ()                         = delete;
+						PredLt (const PredLt &other)      = delete;
+						PredLt (PredLt &&other)           = delete;
+	PredLt &			operator = (const PredLt &other)  = delete;
+	PredLt &			operator = (PredLt &&other)       = delete;
+	bool				operator == (const PredLt &other) = delete;
+	bool				operator != (const PredLt &other) = delete;
 
 };	// class PredLt
 
