@@ -389,6 +389,24 @@ ToolsSimd::VectF32	ToolsSimd::set_f32 (float a0, float a1, float a2, float a3)
 
 
 
+// Returns a0 | a1 | a2 | a3
+ToolsSimd::VectS32	ToolsSimd::set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3)
+{
+#if ! defined (fstb_HAS_SIMD)
+	return VectS32 { { a0, a1, a2, a3 } };
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	return _mm_set_epi32 (a3, a2, a1, a0);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	int32x2_t      v01 = vdup_n_s32 (a0);
+	int32x2_t      v23 = vdup_n_s32 (a2);
+	v01 = vset_lane_s32 (a1, v01, 1);
+	v23 = vset_lane_s32 (a3, v23, 1);
+	return vcombine_s32 (v01, v23);
+#endif // ff_arch_CPU
+}
+
+
+
 // Returns a0 | a1 | ? | ?
 ToolsSimd::VectF32	ToolsSimd::set_2f32 (float a0, float a1)
 {

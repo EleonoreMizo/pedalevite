@@ -158,6 +158,8 @@ public:
 	               set1_s32 (int32_t a);
 	static inline VectF32
 	               set_f32 (float a0, float a1, float a2, float a3);
+	static inline VectS32
+	               set_s32 (int32_t a0, int32_t a1, int32_t a2, int32_t a3);
 	static inline VectF32
 	               set_2f32 (float a0, float a1);
 	static inline VectF32
