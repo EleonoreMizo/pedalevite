@@ -131,8 +131,7 @@ fstb::ToolsSimd::VectF32	CompexGainFnc::compute_gain (const fstb::ToolsSimd::Vec
 	poly += c0;
 
 	// Linear ratios
-	const auto     zero     = fstb::ToolsSimd::set_f32_zero ();
-	const auto     tst_pos  = fstb::ToolsSimd::cmp_lt_f32 (el2, zero);
+	const auto     tst_pos  = fstb::ToolsSimd::cmp_lt0_f32 (el2);
 	auto           ratio_lo = fstb::ToolsSimd::set1_f32 (_ratio_lo);
 	auto           ratio_hi = fstb::ToolsSimd::set1_f32 (_ratio_hi);
 	const auto     ratio    = fstb::ToolsSimd::select (tst_pos, ratio_lo, ratio_hi);
@@ -157,6 +156,7 @@ fstb::ToolsSimd::VectF32	CompexGainFnc::compute_gain (const fstb::ToolsSimd::Vec
 	const auto     active_thr_l2 = fstb::ToolsSimd::set1_f32 (_active_thr_l2);
 	const auto     active_mul    = fstb::ToolsSimd::set1_f32 (_active_mul);
 	const auto     one           = fstb::ToolsSimd::set1_f32 (1);
+	const auto     zero          = fstb::ToolsSimd::set_f32_zero ();
 	auto           active_rate   = env_l2 - active_thr_l2;
 	active_rate *= active_mul;
 	active_rate  = fstb::ToolsSimd::min_f32 (active_rate, one);

@@ -203,8 +203,8 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in)
 
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls
-		delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
-		coef       = fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
+		const auto     delta_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta);
+		coef = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
 
 		// state += coef * (x - state)
 		fstb::ToolsSimd::mac (state, delta, coef);
@@ -225,9 +225,9 @@ float	EnvFollowerAHR1LrSimdHelper <VP, ORD>::process_sample (float in)
 #define mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_PROC( flt, fltn) \
 	if (flt < ORD) \
 	{ \
-		delta      = state##flt - state##fltn; \
-		delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero); \
-		coef       = fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r); \
+		delta = state##flt - state##fltn; \
+		const auto     delta_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta); \
+		coef  = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
 		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAHR1LrSimdHelper_RESULT( ord) \

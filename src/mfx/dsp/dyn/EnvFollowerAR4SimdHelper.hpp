@@ -86,11 +86,10 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sam
 {
 	assert (test_ge_0 (in));
 
-	const auto     zero       = fstb::ToolsSimd::set_f32_zero ();
-	const auto     coef_a     = V128Par::load_f32 (_coef_atk);
-	const auto     coef_r     = V128Par::load_f32 (_coef_rls);
+	const auto     coef_a = V128Par::load_f32 (_coef_atk);
+	const auto     coef_r = V128Par::load_f32 (_coef_rls);
 
-	auto           state      = in;
+	auto           state  = in;
 
 	for (int flt = 0; flt < ORD; ++flt)
 	{
@@ -100,9 +99,9 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sam
 
 		// delta >  0 (attack)       ---> coef = _coef_atk
 		// delta <= 0 (release/hold) ---> coef = _coef_rls
-		const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
+		const auto     delta_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta);
 		const auto     coef       =
-			fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r);
+			fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a);
 
 		// state += coef * (in - state)
 		fstb::ToolsSimd::mac (state, delta, coef);
@@ -124,8 +123,8 @@ fstb::ToolsSimd::VectF32	EnvFollowerAR4SimdHelper <VD, VS, VP, ORD>::process_sam
 	if (flt < ORD) \
 	{ \
 		const auto     delta      = state##flt - state##fltn; \
-		const auto     delta_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero); \
-		const auto     coef       = fstb::ToolsSimd::select (delta_gt_0, coef_a, coef_r); \
+		const auto     delta_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta); \
+		const auto     coef       = fstb::ToolsSimd::select (delta_lt_0, coef_r, coef_a); \
 		fstb::ToolsSimd::mac (state##fltn, delta, coef); \
 	}
 #define mfx_dsp_dyn_EnvFollowerAR4SimdHelper_RESULT( ord) \

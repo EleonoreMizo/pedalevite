@@ -302,13 +302,12 @@ void	MeterRmsPeakHold4Simd::process_sample_rms (fstb::ToolsSimd::VectF32 x, fstb
 {
 	const auto     coef_r2   = fstb::ToolsSimd::set1_f32 (_coef_r2);
 	const auto     coef_a2   = fstb::ToolsSimd::set1_f32 (_coef_a2);
-	const auto     zero      = fstb::ToolsSimd::set_f32_zero ();
 
 	// RMS
 	const auto     x_2      = x * x;
 	const auto     delta    = x_2 - _rms_sq;
-	const auto     del_gt_0 = fstb::ToolsSimd::cmp_gt_f32 (delta, zero);
-	const auto     coef     = fstb::ToolsSimd::select (del_gt_0, coef_a2, coef_r2);
+	const auto     del_lt_0 = fstb::ToolsSimd::cmp_lt0_f32 (delta);
+	const auto     coef     = fstb::ToolsSimd::select (del_lt_0, coef_r2, coef_a2);
 	fstb::ToolsSimd::mac (rms_sq, delta, coef);
 }
 

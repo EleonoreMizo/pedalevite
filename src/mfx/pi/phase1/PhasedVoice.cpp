@@ -705,7 +705,6 @@ void	PhasedVoice::process_block_dist_mono (float dst_ptr [], int nbr_spl)
 {
 	const auto     mi   = fstb::ToolsSimd::set1_f32 (-5.0f);
 	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 2.0f);
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
 	const auto     c_p  = fstb::ToolsSimd::set1_f32 (-1.0f /  4);
 	const auto     c_n  = fstb::ToolsSimd::set1_f32 ( 1.0f / 10);
 
@@ -716,8 +715,8 @@ void	PhasedVoice::process_block_dist_mono (float dst_ptr [], int nbr_spl)
 		x = fstb::ToolsSimd::min_f32 (x, ma);
 		x = fstb::ToolsSimd::max_f32 (x, mi);
 
-		const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
-		const auto     c   = fstb::ToolsSimd::select (t_0, c_p, c_n);
+		const auto     t_0 = fstb::ToolsSimd::cmp_lt0_f32 (x);
+		const auto     c   = fstb::ToolsSimd::select (t_0, c_n, c_p);
 		fstb::ToolsSimd::mac (x, c, x * x);
 
 		fstb::ToolsSimd::store_f32 (dst_ptr + pos, x);

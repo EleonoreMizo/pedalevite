@@ -72,7 +72,6 @@ void  WsAsym1::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 
 	const auto     mi   = fstb::ToolsSimd::set1_f32 (-1.0f);
 	const auto     ma   = fstb::ToolsSimd::set1_f32 ( 1.0f);
-	const auto     zero = fstb::ToolsSimd::set_f32_zero ();
 	const auto     c_9  = fstb::ToolsSimd::set1_f32 (1.f / 9);
 	const auto     c_2  = fstb::ToolsSimd::set1_f32 (1.f / 2);
 	const auto     bias = fstb::ToolsSimd::set1_f32 ( 0.2f);
@@ -92,8 +91,8 @@ void  WsAsym1::process_block (float dst_ptr [], const float src_ptr [], int nbr_
 		const auto     x9  = x8 * x;
 		const auto     x_n = x + x2 * c_2;
 		const auto     x_p = x - x9 * c_9;
-		const auto     t_0 = fstb::ToolsSimd::cmp_gt_f32 (x, zero);
-		x = fstb::ToolsSimd::select (t_0, x_p, x_n);
+		const auto     t_0 = fstb::ToolsSimd::cmp_lt0_f32 (x);
+		x = fstb::ToolsSimd::select (t_0, x_n, x_p);
 
 		x -= bias;
 
