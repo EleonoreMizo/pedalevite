@@ -1390,7 +1390,7 @@ ToolsSimd::VectS32	ToolsSimd::cmp_lt0_s32 (VectS32 lhs)
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_cmplt_epi32 (lhs, _mm_setzero_si128 ());
 #elif fstb_ARCHI == fstb_ARCHI_ARM
-	return vshrq_n_s32 (lhs, 31));
+	return vshrq_n_s32 (lhs, 31);
 #endif // ff_arch_CPU
 }
 
