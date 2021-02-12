@@ -2222,6 +2222,7 @@
     <None Include="..\..\..\src\mfx\dsp\README.md" />
     <None Include="..\..\..\src\mfx\dsp\rspl\README.md" />
     <None Include="..\..\..\src\mfx\dsp\shape\README.md" />
+    <None Include="..\..\..\src\mfx\dsp\spat\README.md" />
     <None Include="..\..\..\src\mfx\dsp\spec\README.md" />
     <None Include="..\..\..\src\mfx\dsp\va\README.md" />
     <None Include="..\..\..\src\mfx\dsp\wnd\README.md" />

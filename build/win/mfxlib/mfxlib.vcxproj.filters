@@ -6472,6 +6472,9 @@
     <None Include="..\..\..\src\Eigen\UmfPackSupport">
       <Filter>Eigen</Filter>
     </None>
+    <None Include="..\..\..\src\mfx\dsp\spat\README.md">
+      <Filter>mfx\dsp\spat</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\src\Eigen\CMakeLists.txt">
