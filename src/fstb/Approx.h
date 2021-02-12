@@ -106,6 +106,12 @@ public:
 	static inline ToolsSimd::VectF32
 	               tan_pade55 (ToolsSimd::VectF32 x);
 
+	template <typename T>
+	static inline constexpr T
+	               atan2_3th (T y, T x);
+	static inline ToolsSimd::VectF32
+	               atan2_3th (ToolsSimd::VectF32 y, ToolsSimd::VectF32 x);
+
 	static inline float
 	               tanh_mystran (float x);
 	static inline ToolsSimd::VectF32
