@@ -816,8 +816,16 @@ commonsrc = \
         ../../src/mfx/dsp/wnd/Ultraspherical.hpp \
         ../../src/mfx/dsp/wnd/WndInterface.h \
         ../../src/mfx/dsp/wnd/WndInterface.hpp \
-        ../../src/mfx/dsp/wnd/XFadeShape.cpp \
         ../../src/mfx/dsp/wnd/XFadeShape.h \
+        ../../src/mfx/dsp/wnd/XFadeShape.hpp \
+        ../../src/mfx/dsp/wnd/XFadeEqAmpLin.h \
+        ../../src/mfx/dsp/wnd/XFadeEqAmpLin.hpp \
+        ../../src/mfx/dsp/wnd/XFadeEqAmpPoly3.h \
+        ../../src/mfx/dsp/wnd/XFadeEqAmpPoly3.hpp \
+        ../../src/mfx/dsp/wnd/XFadeEqAmpSin.h \
+        ../../src/mfx/dsp/wnd/XFadeEqAmpSin.hpp \
+        ../../src/mfx/dsp/wnd/XFadeEqPowPoly8.h \
+        ../../src/mfx/dsp/wnd/XFadeEqPowPoly8.hpp \
         ../../src/mfx/dsp/BandSplitAllPassPair.h \
         ../../src/mfx/dsp/BandSplitAllPassPair.hpp \
         ../../src/mfx/dsp/DenormStop.cpp \

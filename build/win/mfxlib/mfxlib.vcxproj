@@ -1185,7 +1185,16 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\Ultraspherical.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\WndInterface.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpLin.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpPoly3.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpPoly3.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpSin.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpSin.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowPoly8.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowPoly8.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpLin.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.hpp" />
     <ClInclude Include="..\..\..\src\mfx\FileIOInterface.h" />
     <ClInclude Include="..\..\..\src\mfx\FileOpWav.h" />
     <ClInclude Include="..\..\..\src\mfx\hw\bcm2837.h" />
@@ -1857,7 +1866,6 @@
       <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\SimulInterface.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileOpWav.cpp" />
     <ClCompile Include="..\..\..\src\mfx\hw\DisplayLinuxFrameBuf.cpp">

@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/dly/DelayLine.h"
 #include "mfx/dsp/dly/DelayLineReaderPitch.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
+#include "mfx/dsp/wnd/XFadeEqAmpPoly3.h"
 #include "mfx/dsp/wnd/XFadeShape.h"
 #include "mfx/pi/psh1/PitchShift1Desc.h"
 #include "mfx/pi/ParamProcSimple.h"
@@ -112,7 +113,7 @@ private:
 	ChannelArray   _chn_arr;
 	mfx::dsp::rspl::InterpolatorHermite43
 	               _interp;
-	dsp::wnd::XFadeShape
+	dsp::wnd::XFadeShape <dsp::wnd::XFadeEqAmpPoly3>
 	               _xfade_shape;
 	BufAlign       _tmp_buf;
 

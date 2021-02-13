@@ -32,6 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/dly/BbdLine.h"
 #include "mfx/dsp/mix/Simd.h"
 #include "mfx/dsp/rspl/InterpolatorHermite43.h"
+#include "mfx/dsp/wnd/XFadeEqAmpPoly3.h"
 #include "mfx/dsp/wnd/XFadeShape.h"
 #include "mfx/pi/dly2/Cst.h"
 #include "mfx/pi/dly2/Eq.h"
@@ -165,9 +166,9 @@ private:
 	float          _dly_max;
 	float          _dly_min_assumed;    // Minimum delay for the frame, guessed but not exact. Clips the actual delay to keep the BBD happy.
 
-	dsp::wnd::XFadeShape
+	dsp::wnd::XFadeShape <dsp::wnd::XFadeEqAmpPoly3>
 	               _xfade_shape_sn;
-	dsp::wnd::XFadeShape
+	dsp::wnd::XFadeShape <dsp::wnd::XFadeEqAmpPoly3>
 	               _xfade_shape_sp;
 
 	GrainArray     _grain_arr;

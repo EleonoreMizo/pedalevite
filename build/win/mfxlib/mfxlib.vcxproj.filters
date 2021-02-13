@@ -4968,6 +4968,33 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ms\Param.h">
       <Filter>mfx\pi\ms</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowPoly8.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqPowPoly8.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpLin.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpPoly3.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpPoly3.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpLin.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpSin.h">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeEqAmpSin.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.hpp">
+      <Filter>mfx\dsp\wnd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -5833,9 +5860,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\psh1\PitchShift1Desc.cpp">
       <Filter>mfx\pi\psh1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.cpp">
-      <Filter>mfx\dsp\wnd</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqAmGha.cpp">
       <Filter>mfx\dsp\ana</Filter>

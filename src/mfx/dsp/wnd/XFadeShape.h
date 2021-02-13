@@ -3,6 +3,12 @@
         XFadeShape.h
         Author: Laurent de Soras, 2017
 
+Template parameters:
+
+- OP: operation class. Requires:
+	static std::array <float, 2> OP::compute_gain (float x);
+	static std::array <fstb::ToolsSimd::VectF32, 2> OP::compute_gain (fstb::ToolsSimd::VectF32 x);
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
@@ -42,6 +48,7 @@ namespace wnd
 
 
 
+template <typename SHP>
 class XFadeShape
 {
 
@@ -49,12 +56,15 @@ class XFadeShape
 
 public:
 
+	typedef SHP Shape;
+
 	void           set_duration (double duration, float fade_ratio = 1);
 	void           set_sample_freq (double sample_freq);
 
-	bool           is_ready () const;
-	int            get_len () const;
-	const float *  use_shape () const;
+	inline bool    is_ready () const;
+	inline int     get_len () const;
+	inline const float *
+	               use_shape () const;
 
 
 
@@ -97,7 +107,7 @@ private:
 
 
 
-//#include "mfx/dsp/wnd/XFadeShape.hpp"
+#include "mfx/dsp/wnd/XFadeShape.hpp"
 
 
 

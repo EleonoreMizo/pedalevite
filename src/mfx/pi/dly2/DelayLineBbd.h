@@ -36,6 +36,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/dly2/Eq.h"
 #include "mfx/pi/dly2/FilterType.h"
 #include "mfx/pi/dly2/FxSection.h"
+#include "mfx/dsp/wnd/XFadeEqAmpPoly3.h"
 #include "mfx/dsp/wnd/XFadeShape.h"
 
 #include <vector>
@@ -145,7 +146,7 @@ private:
 	int            _xfade_pos;          // > 0: cross-fading between _xfade_dly_old et _xfade_dly_new
 	float          _xfade_dly_old;      // Samples
 
-	dsp::wnd::XFadeShape
+	dsp::wnd::XFadeShape <dsp::wnd::XFadeEqAmpPoly3>
 	               _xfade_shape;
 
 	static const float
