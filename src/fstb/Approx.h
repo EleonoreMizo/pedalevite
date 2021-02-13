@@ -124,6 +124,13 @@ public:
 	static inline T
 	               tanh_andy (T x);
 
+	template <int P = 1>
+	static inline float
+	               rsqrt (float x);
+	template <int P = 1>
+	static inline double
+	               rsqrt (double x);
+
 	template <typename T>
 	static inline T
 	               wright_omega_3 (T x);

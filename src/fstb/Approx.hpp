@@ -862,6 +862,63 @@ T	Approx::tanh_andy (T x)
 }
 
 
+// Approximates 1 / sqrt (x)
+// Ref: Chris Lomont, Fast Inverse Square Root, 2003-02
+template <int P>
+float	Approx::rsqrt (float x)
+{
+	static_assert (
+		(P >= 0 && P <= 4),
+		"The number of Newton iterations must be in [0 ; 4]"
+	);
+	assert (x >= 0);
+
+	const float    xh = x * 0.5f;
+	union
+	{
+		int32_t        _i;
+		float          _f;
+	}              c;
+	c._f = x;
+	c._i = 0x5F375A86 - (c._i >> 1);
+	x    = c._f;
+
+	if (P > 0) { x *= 1.5f - xh * x * x; }
+	if (P > 1) { x *= 1.5f - xh * x * x; }
+	if (P > 2) { x *= 1.5f - xh * x * x; }
+	if (P > 3) { x *= 1.5f - xh * x * x; }
+
+	return x;
+}
+
+template <int P>
+double	Approx::rsqrt (double x)
+{
+	static_assert (
+		(P >= 0 && P <= 4),
+		"The number of Newton iterations must be in [0 ; 4]"
+	);
+	assert (x >= 0);
+
+	const double   xh = x * 0.5;
+	union
+	{
+		int64_t        _i;
+		double         _f;
+	}              c;
+	c._f = x;
+	c._i = 0x5FE6EC85E7DE30DALL - (c._i >> 1);
+	x    = c._f;
+
+	if (P > 0) { x *= 1.5 - xh * x * x; }
+	if (P > 1) { x *= 1.5 - xh * x * x; }
+	if (P > 2) { x *= 1.5 - xh * x * x; }
+	if (P > 3) { x *= 1.5 - xh * x * x; }
+
+	return x;
+}
+
+
 
 // Approximation of the Wright Omega function:
 // omega (x) = W0 (exp (x))
