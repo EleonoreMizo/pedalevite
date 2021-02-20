@@ -517,7 +517,11 @@ void	ToolsSimd::mac (VectF32 &s, VectF32 a, VectF32 b)
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	s = _mm_add_ps (s, _mm_mul_ps (a, b));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
+	#if defined (__ARM_FEATURE_FMA)
+	s = vfmaq_f32 (s, a, b);
+	#else
 	s = vmlaq_f32 (s, a, b);
+	#endif
 #endif // ff_arch_CPU
 }
 
@@ -533,7 +537,11 @@ void	ToolsSimd::msu (VectF32 &s, VectF32 a, VectF32 b)
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	s = _mm_sub_ps (s, _mm_mul_ps (a, b));
 #elif fstb_ARCHI == fstb_ARCHI_ARM
+	#if defined (__ARM_FEATURE_FMA)
+	s = vfmsq_f32 (s, a, b);
+	#else
 	s = vmlsq_f32 (s, a, b);
+	#endif
 #endif // ff_arch_CPU
 }
 
@@ -551,7 +559,11 @@ ToolsSimd::VectF32	ToolsSimd::fmadd (VectF32 x, VectF32 a, VectF32 b)
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_add_ps (_mm_mul_ps (x, a), b);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
+	#if defined (__ARM_FEATURE_FMA)
+	return vfmaq_f32 (b, x, a);
+	#else
 	return vmlaq_f32 (b, x, a);
+	#endif
 #endif // ff_arch_CPU
 }
 
@@ -569,7 +581,11 @@ ToolsSimd::VectF32	ToolsSimd::fmsub (VectF32 x, VectF32 a, VectF32 b)
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_sub_ps (_mm_mul_ps (x, a), b);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
+	#if defined (__ARM_FEATURE_FMA)
+	return vfmsq_f32 (b, x, a);
+	#else
 	return vmlsq_f32 (b, x, a);
+	#endif
 #endif // ff_arch_CPU
 }
 
