@@ -67,7 +67,7 @@ namespace fstb
 #if (fstb_ARCHI == fstb_ARCHI_X86)
 	#define fstb_ENDIAN fstb_ENDIAN_LITTLE
 #elif (fstb_ARCHI == fstb_ARCHI_ARM)
-	#if defined (__ARMEL__) || defined (__LITTLE_ENDIAN__)
+	#if ! defined (__ARM_BIG_ENDIAN) || defined (__ARMEL__) || defined (__LITTLE_ENDIAN__)
 		#define fstb_ENDIAN fstb_ENDIAN_LITTLE
 	#else
 		#define fstb_ENDIAN fstb_ENDIAN_BIG
