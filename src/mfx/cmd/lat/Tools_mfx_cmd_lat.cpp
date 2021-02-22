@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Tools.cpp
+        Tools_mfx_cmd_lat.cpp
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---

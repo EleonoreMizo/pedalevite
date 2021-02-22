@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        Cnx.cpp
-        Author: Laurent de Soras, 2019
+        Cst_mfx_pi_envf.cpp
+        Author: Laurent de Soras, 2017
 
 --- Legal stuff ---
 
@@ -9,7 +9,7 @@ This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
 To Public License, Version 2, as published by Sam Hocevar. See
-http://www.wtfpl.net/ for more details.
+http://sam.zoy.org/wtfpl/COPYING for more details.
 
 *Tab=3***********************************************************************/
 
@@ -24,7 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/cmd/lat/Cnx.h"
+#include "mfx/pi/envf/Cst.h"
 
 #include <cassert>
 
@@ -32,9 +32,9 @@ http://www.wtfpl.net/ for more details.
 
 namespace mfx
 {
-namespace cmd
+namespace pi
 {
-namespace lat
+namespace envf
 {
 
 
@@ -43,43 +43,8 @@ namespace lat
 
 
 
-void	Cnx::set_node (piapi::Dir dir, int node_index)
-{
-	assert (dir >= 0);
-   assert (dir < piapi::Dir_NBR_ELT);
-	assert (node_index >= 0);
-
-	_end_arr [dir] = node_index;
-}
-
-
-
-int	Cnx::get_node (piapi::Dir dir) const
-{
-	assert (dir >= 0);
-   assert (dir < piapi::Dir_NBR_ELT);
-
-   const int      node_index = _end_arr [dir];
-	assert (node_index >= 0);
-
-	return node_index;
-}
-
-
-
-void	Cnx::set_comp_delay (int dly_spl)
-{
-	assert (dly_spl >= 0);
-
-	_comp_delay = dly_spl;
-}
-
-
-
-int	Cnx::get_comp_delay () const
-{
-	return _comp_delay;
-}
+const float	Cst::_clip_max    = 10;
+const float	Cst::_lc_freq_min = 4;
 
 
 
@@ -91,8 +56,8 @@ int	Cnx::get_comp_delay () const
 
 
 
-}  // namespace lat
-}  // namespace cmd
+}  // namespace envf
+}  // namespace pi
 }  // namespace mfx
 
 

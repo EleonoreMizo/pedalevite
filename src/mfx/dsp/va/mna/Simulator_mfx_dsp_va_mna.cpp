@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Simulator.cpp
+        Simulator_mfx_dsp_va_mna.cpp
         Author: Laurent de Soras, 2020
 
 --- Legal stuff ---

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Voice.cpp
+        Voice_mfx_pi_distpwm2.cpp
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---

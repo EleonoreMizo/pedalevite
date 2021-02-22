@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        utf16_fnc.cpp
+        fnc_fstb_txt_utf16.cpp
         Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
@@ -27,7 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/txt/unicode/ConvCi.h"
 #include "fstb/txt/unicode/PredEq.h"
 #include "fstb/txt/utf16/Codec16.h"
-#include "fstb/txt/utf16/utf16_fnc.h"
+#include "fstb/txt/utf16/fnc.h"
 #include "fstb/Err.h"
 
 #include <cassert>

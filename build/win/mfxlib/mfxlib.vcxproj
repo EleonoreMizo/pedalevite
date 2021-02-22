@@ -1654,30 +1654,21 @@
     <ClCompile Include="..\..\..\src\fstb\BitFieldSparse.cpp" />
     <ClCompile Include="..\..\..\src\fstb\CpuId.cpp" />
     <ClCompile Include="..\..\..\src\fstb\Crc32.cpp" />
-    <ClCompile Include="..\..\..\src\fstb\fnc.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\fnc_fstb.cpp" />
     <ClCompile Include="..\..\..\src\fstb\ToolsAvx2.cpp" />
     <ClCompile Include="..\..\..\src\fstb\ToolsSimd.cpp" />
     <ClCompile Include="..\..\..\src\fstb\ToolsSse2.cpp" />
-    <ClCompile Include="..\..\..\src\fstb\txt\neutral\fnc.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\txt\neutral\fnc_fstb_txt_neutral.cpp" />
     <ClCompile Include="..\..\..\src\fstb\txt\unicode\CharData.cpp" />
     <ClCompile Include="..\..\..\src\fstb\txt\unicode\CharDataBuilder.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\txt\unicode\unicode.cpp" />
-    <ClCompile Include="..\..\..\src\fstb\txt\utf16\utf16_fnc.cpp" />
+    <ClCompile Include="..\..\..\src\fstb\txt\utf16\fnc_fstb_txt_utf16.cpp" />
     <ClCompile Include="..\..\..\src\fstb\txt\utf8\Codec8.cpp" />
     <ClCompile Include="..\..\..\src\fstb\txt\utf8\ConvNum.cpp" />
     <ClCompile Include="..\..\..\src\fstb\txt\utf8\def.cpp" />
-    <ClCompile Include="..\..\..\src\fstb\txt\utf8\fnc.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)3.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)3.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\fstb\txt\utf8\fnc_fstb_txt_utf8.cpp" />
     <ClCompile Include="..\..\..\src\fstb\util\ObservableMultiMixin.cpp" />
     <ClCompile Include="..\..\..\src\hiir\PolyphaseIir2Designer.cpp" />
     <ClCompile Include="..\..\..\src\mfx\adrv\CbInterface.cpp" />
@@ -1705,13 +1696,10 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\DelayInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Document.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Algo.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx_mfx_cmd_lat.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\GraphInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools_mfx_cmd_lat.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\Plugin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\cmd\PluginAux.cpp" />
@@ -1720,10 +1708,7 @@
     <ClCompile Include="..\..\..\src\mfx\ControlCurve.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlledParam.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ControlSource.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\Cst.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\Cst_mfx.cpp" />
     <ClCompile Include="..\..\..\src\mfx\CtrlUnit.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionBank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\ActionClick.cpp" />
@@ -1737,10 +1722,7 @@
     <ClCompile Include="..\..\..\src\mfx\doc\ActionTrigger.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\Bank.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CatalogPluginSettings.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\doc\Cnx.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\doc\Cnx_mfx_doc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CnxEnd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CtrlLink.cpp" />
     <ClCompile Include="..\..\..\src\mfx\doc\CtrlLinkSet.cpp" />
@@ -1824,10 +1806,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerp.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorLerpSimd.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\SnhTool.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\Voice.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\Voice_mfx_dsp_rspl.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistAttract.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistBounce.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\shape\DistRandWalk.cpp" />
@@ -1844,10 +1823,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipDAngelo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipJcm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\DiodeClipScreamer.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\dsp\va\dkm\Simulator.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\dkm\Simulator_mfx_dsp_va_dkm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\MoogLadderMystran.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjt.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjtNpn.cpp" />
@@ -1861,10 +1837,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartSrcVoltage.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartVccs.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartVcvs.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\Simulator.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\Simulator_mfx_dsp_va_mna.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\SimulInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileIOInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\FileOpWav.cpp" />
@@ -1947,26 +1920,14 @@
     <ClCompile Include="..\..\..\src\mfx\pi\distapf\DistApfDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2Desc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\Voice.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\Voice_mfx_pi_distpwm2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwm.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm\DistoPwmDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\dly0\Delay.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)0.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)0.xdc</XMLDocumentationFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dly0\DelayDesc.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)0.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)0.xdc</XMLDocumentationFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\Delay_mfx_pi_dly0.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\DelayDesc_mfx_pi_dly0.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay_mfx_pi_dly1.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayChn.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc_mfx_pi_dly1.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\Delay2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\Delay2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\DelayLineBbd.cpp" />
@@ -1977,7 +1938,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\dly2\StageTaps.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistTone.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\dtone1\DistToneDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\envf\Cst.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\envf\Cst_mfx_pi_envf.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\envf\EnvFollow.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\envf\EnvFollowDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\flancho\Flancho.cpp" />
@@ -1989,10 +1950,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\fv\FreeverbDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\hcomb\HyperComb.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\hcomb\HyperCombDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\hcomb\Voice.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\hcomb\Voice_mfx_pi_hcomb.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFix.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\iifix\IIFixDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\lpfs\Squeezer.cpp" />
@@ -2021,10 +1979,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplInt.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplPan.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\peq\BandParam.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\phase1\Cst.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\phase1\Cst_mfx_pi_phase1.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phase90Interface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhasedVoice.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\Phaser.cpp" />
@@ -2085,15 +2040,12 @@
     <ClCompile Include="..\..\..\src\mfx\pi\ParamStateSet.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\HelperDispNum.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\MapPiecewiseLinLog.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\param\Tools.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\param\Tools_mfx_pi_param.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplEnum.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\param\TplLin.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\trem1\Tremolo.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\trem1\TremoloDesc.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\tuner\Tuner.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\tuner\Tuner_mfx_pi_tuner.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\tuner\TunerDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah1\Wah.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\wah1\WahDesc.cpp" />
@@ -2160,14 +2112,8 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SettingsOther.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRouting.cpp" />
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tuner.cpp">
-      <ObjectFileName>$(IntDir)%(Filename)2.obj</ObjectFileName>
-      <XMLDocumentationFileName>$(IntDir)%(Filename)2.xdc</XMLDocumentationFileName>
-    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools_mfx_uitk_pg.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tuner_mfx_uitk_pg.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayInterface.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\DisplayVoid.cpp" />
     <ClCompile Include="..\..\..\src\mfx\ui\Font.cpp" />

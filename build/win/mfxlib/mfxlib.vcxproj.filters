@@ -5003,7 +5003,7 @@
     <ClCompile Include="..\..\..\src\fstb\CpuId.cpp">
       <Filter>fstb</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\fstb\fnc.cpp">
+    <ClCompile Include="..\..\..\src\fstb\fnc_fstb.cpp">
       <Filter>fstb</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\ToolsAvx2.cpp">
@@ -5036,7 +5036,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\param\HelperDispNum.cpp">
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\param\Tools.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\param\Tools_mfx_pi_param.cpp">
       <Filter>mfx\pi\param</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\txt\unicode\CharData.cpp">
@@ -5057,10 +5057,10 @@
     <ClCompile Include="..\..\..\src\fstb\txt\utf8\def.cpp">
       <Filter>fstb\txt\utf8</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\fstb\txt\utf8\fnc.cpp">
+    <ClCompile Include="..\..\..\src\fstb\txt\utf8\fnc_fstb_txt_utf8.cpp">
       <Filter>fstb\txt\utf8</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\fstb\txt\neutral\fnc.cpp">
+    <ClCompile Include="..\..\..\src\fstb\txt\neutral\fnc_fstb_txt_neutral.cpp">
       <Filter>fstb\txt\neutral</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\fstb\util\ObservableMultiMixin.cpp">
@@ -5264,7 +5264,7 @@
     <ClCompile Include="..\..\..\src\mfx\View.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tuner.cpp">
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tuner_mfx_uitk_pg.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\PageInterface.cpp">
@@ -5285,7 +5285,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamList.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools.cpp">
+    <ClCompile Include="..\..\..\src\mfx\uitk\pg\Tools_mfx_uitk_pg.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamEdit.cpp">
@@ -5300,7 +5300,7 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\ParamControllers.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\Cst.cpp">
+    <ClCompile Include="..\..\..\src\mfx\Cst_mfx.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\PluginSettings.cpp">
@@ -5330,7 +5330,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\freqsh\FrequencyShifter.cpp">
       <Filter>mfx\pi\freqsh</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\tuner\Tuner.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\tuner\Tuner_mfx_pi_tuner.cpp">
       <Filter>mfx\pi\tuner</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\trem1\Tremolo.cpp">
@@ -5435,7 +5435,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\SnhTool.cpp">
       <Filter>mfx\dsp\rspl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\Voice.cpp">
+    <ClCompile Include="..\..\..\src\mfx\dsp\rspl\Voice_mfx_dsp_rspl.cpp">
       <Filter>mfx\dsp\rspl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\rspl\InterpolatorHermite43Simd.cpp">
@@ -5498,10 +5498,10 @@
     <ClCompile Include="..\..\..\src\mfx\MeterResultSet.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\Delay_mfx_pi_dly1.cpp">
       <Filter>mfx\pi\dly1</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayDesc_mfx_pi_dly1.cpp">
       <Filter>mfx\pi\dly1</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\dly1\DelayChn.cpp">
@@ -5675,7 +5675,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\nz\WhiteFast.cpp">
       <Filter>mfx\dsp\nz</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\phase1\Cst.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\phase1\Cst_mfx_pi_phase1.cpp">
       <Filter>mfx\pi\phase1</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\nzbl\FilterBank.cpp">
@@ -5756,7 +5756,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\wah2\Wah2Desc.cpp">
       <Filter>mfx\pi\wah2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\envf\Cst.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\envf\Cst_mfx_pi_envf.cpp">
       <Filter>mfx\pi\envf</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\ramp\Ramp.cpp">
@@ -5843,7 +5843,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\hcomb\HyperCombDesc.cpp">
       <Filter>mfx\pi\hcomb</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\hcomb\Voice.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\hcomb\Voice_mfx_pi_hcomb.cpp">
       <Filter>mfx\pi\hcomb</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\nz\PinkShade.cpp">
@@ -5870,7 +5870,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\DistoPwm2Desc.cpp">
       <Filter>mfx\pi\distpwm2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\Voice.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\distpwm2\Voice_mfx_pi_distpwm2.cpp">
       <Filter>mfx\pi\distpwm2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqPeak.cpp">
@@ -5930,7 +5930,7 @@
     <ClCompile Include="..\..\..\src\mfx\ModelMsgCmdCbInterface.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\fstb\txt\utf16\utf16_fnc.cpp">
+    <ClCompile Include="..\..\..\src\fstb\txt\utf16\fnc_fstb_txt_utf16.cpp">
       <Filter>fstb\txt\utf16</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\ana\ClipDetect.cpp">
@@ -6002,16 +6002,16 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\Rec2Disk.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dly0\Delay.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\Delay_mfx_pi_dly0.cpp">
       <Filter>mfx\pi\dly0</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\dly0\DelayDesc.cpp">
+    <ClCompile Include="..\..\..\src\mfx\pi\dly0\DelayDesc_mfx_pi_dly0.cpp">
       <Filter>mfx\pi\dly0</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Algo.cpp">
       <Filter>mfx\cmd\lat</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx.cpp">
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Cnx_mfx_cmd_lat.cpp">
       <Filter>mfx\cmd\lat</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\GraphInterface.cpp">
@@ -6020,7 +6020,7 @@
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\Node.cpp">
       <Filter>mfx\cmd\lat</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools.cpp">
+    <ClCompile Include="..\..\..\src\mfx\cmd\lat\Tools_mfx_cmd_lat.cpp">
       <Filter>mfx\cmd\lat</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\cmd\lat\TreeList.cpp">
@@ -6104,7 +6104,7 @@
     <ClCompile Include="..\..\..\src\mfx\LocEdit.cpp">
       <Filter>mfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\doc\Cnx.cpp">
+    <ClCompile Include="..\..\..\src\mfx\doc\Cnx_mfx_doc.cpp">
       <Filter>mfx\doc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\doc\CnxEnd.cpp">
@@ -6218,7 +6218,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\va\MoogLadderMystran.cpp">
       <Filter>mfx\dsp\va</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\Simulator.cpp">
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\Simulator_mfx_dsp_va_mna.cpp">
       <Filter>mfx\dsp\va\mna</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartCapacitor.cpp">
@@ -6260,7 +6260,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\va\mna\PartBjtNpn.cpp">
       <Filter>mfx\dsp\va\mna</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\va\dkm\Simulator.cpp">
+    <ClCompile Include="..\..\..\src\mfx\dsp\va\dkm\Simulator_mfx_dsp_va_dkm.cpp">
       <Filter>mfx\dsp\va\dkm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\va\BigMuffPi.cpp">

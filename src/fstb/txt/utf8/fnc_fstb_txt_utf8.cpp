@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        fnc.cpp
+        fnc_fstb_txt_utf8.cpp
         Author: Laurent de Soras, 2007
 
 Ref: Internet Society RFC-2279 and RFC-3629

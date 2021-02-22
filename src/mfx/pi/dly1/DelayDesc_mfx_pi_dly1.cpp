@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        DelayDesc.cpp
+        DelayDesc_mfx_pi_dly1.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---

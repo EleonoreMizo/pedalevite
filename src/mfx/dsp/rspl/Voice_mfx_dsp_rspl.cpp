@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Voice.cpp
+        Voice_mfx_dsp_rspl.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---

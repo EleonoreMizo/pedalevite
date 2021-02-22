@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        Cst.cpp
-        Author: Laurent de Soras, 2017
+        DelayDesc_mfx_pi_dly0.cpp
+        Author: Laurent de Soras, 2018
 
 --- Legal stuff ---
 
@@ -24,7 +24,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/pi/envf/Cst.h"
+#include "mfx/pi/dly0/DelayDesc.h"
+#include "mfx/pi/dly0/Param.h"
+#include "mfx/piapi/Tag.h"
 
 #include <cassert>
 
@@ -34,7 +36,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace envf
+namespace dly0
 {
 
 
@@ -43,8 +45,24 @@ namespace envf
 
 
 
-const float	Cst::_clip_max    = 10;
-const float	Cst::_lc_freq_min = 4;
+DelayDesc::DelayDesc ()
+:	_desc_set (Param_NBR_ELT, 0)
+,	_info ()
+{
+	_info._unique_id = "\?delay0";
+	_info._name      =
+		"Compensation delay\nCompens delay\nComp delay"
+		"\nComp dly\nCDelay\nCDly";
+	_info._tag_list  = { piapi::Tag::_delay_0, piapi::Tag::_utility_0 };
+	_info._chn_pref  = piapi::ChnPref::NONE;
+}
+
+
+
+ParamDescSet &	DelayDesc::use_desc_set ()
+{
+	return _desc_set;
+}
 
 
 
@@ -52,11 +70,41 @@ const float	Cst::_lc_freq_min = 4;
 
 
 
+piapi::PluginInfo	DelayDesc::do_get_info () const
+{
+	return _info;
+}
+
+
+
+void	DelayDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
+{
+	nbr_i = 1;
+	nbr_o = 1;
+	nbr_s = 0;
+}
+
+
+
+int	DelayDesc::do_get_nbr_param (piapi::ParamCateg categ) const
+{
+	return _desc_set.get_nbr_param (categ);
+}
+
+
+
+const piapi::ParamDescInterface &	DelayDesc::do_get_param_info (piapi::ParamCateg categ, int index) const
+{
+	return _desc_set.use_param (categ, index);
+}
+
+
+
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 
 
-}  // namespace envf
+}  // namespace dly0
 }  // namespace pi
 }  // namespace mfx
 

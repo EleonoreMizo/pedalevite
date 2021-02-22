@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Tuner.cpp
+        Tuner_mfx_pi_tuner.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---

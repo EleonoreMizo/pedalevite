@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        fnc.cpp
+        fnc_fstb_txt_neutral.cpp
         Author: Laurent de Soras, 2008
 
 --- Legal stuff ---

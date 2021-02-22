@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        Voice.cpp
+        Voice_mfx_pi_hcomb.cpp
         Author: Laurent de Soras, 2018
 
 --- Legal stuff ---

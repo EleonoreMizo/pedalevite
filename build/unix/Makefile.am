@@ -87,9 +87,9 @@ commonsrc = \
         ../../src/fstb/msg/QueueRetMgr.hpp \
         ../../src/fstb/txt/neutral/ConvDigit.h \
         ../../src/fstb/txt/neutral/ConvDigit.hpp \
-        ../../src/fstb/txt/neutral/fnc.cpp \
         ../../src/fstb/txt/neutral/fnc.h \
         ../../src/fstb/txt/neutral/fnc.hpp \
+        ../../src/fstb/txt/neutral/fnc_fstb_txt_neutral.cpp \
         ../../src/fstb/txt/unicode/BidiClass.h \
         ../../src/fstb/txt/unicode/Categ.h \
         ../../src/fstb/txt/unicode/Categ.hpp \
@@ -125,13 +125,13 @@ commonsrc = \
         ../../src/fstb/txt/utf8/PredStringCiLt.hpp \
         ../../src/fstb/txt/utf8/def.cpp \
         ../../src/fstb/txt/utf8/def.h \
-        ../../src/fstb/txt/utf8/fnc.cpp \
         ../../src/fstb/txt/utf8/fnc.h \
+        ../../src/fstb/txt/utf8/fnc_fstb_txt_utf8.cpp \
         ../../src/fstb/txt/utf16/Codec16.h \
         ../../src/fstb/txt/utf16/Codec16.hpp \
         ../../src/fstb/txt/utf16/def.h \
-        ../../src/fstb/txt/utf16/utf16_fnc.cpp \
-        ../../src/fstb/txt/utf16/utf16_fnc.h \
+        ../../src/fstb/txt/utf16/fnc.h \
+        ../../src/fstb/txt/utf16/fnc_fstb_txt_utf16.cpp \
         ../../src/fstb/txt/Char16.h \
         ../../src/fstb/txt/Conv.h \
         ../../src/fstb/txt/Conv.hpp \
@@ -174,9 +174,9 @@ commonsrc = \
         ../../src/fstb/Err.h \
         ../../src/fstb/FixedPoint.h \
         ../../src/fstb/FixedPoint.hpp \
-        ../../src/fstb/fnc.cpp \
         ../../src/fstb/fnc.h \
         ../../src/fstb/fnc.hpp \
+        ../../src/fstb/fnc_fstb.cpp \
         ../../src/fstb/Hash.h \
         ../../src/fstb/Hash.hpp \
         ../../src/fstb/RndXoroshiro128p.h \
@@ -230,14 +230,14 @@ commonsrc = \
         ../../src/mfx/adrv/DriverInterface.h \
         ../../src/mfx/cmd/lat/Algo.cpp \
         ../../src/mfx/cmd/lat/Algo.h \
-        ../../src/mfx/cmd/lat/Cnx.cpp \
         ../../src/mfx/cmd/lat/Cnx.h \
+        ../../src/mfx/cmd/lat/Cnx_mfx_cmd_lat.cpp \
         ../../src/mfx/cmd/lat/GraphInterface.cpp \
         ../../src/mfx/cmd/lat/GraphInterface.h \
         ../../src/mfx/cmd/lat/Node.cpp \
         ../../src/mfx/cmd/lat/Node.h \
-        ../../src/mfx/cmd/lat/Tools.cpp \
         ../../src/mfx/cmd/lat/Tools.h \
+        ../../src/mfx/cmd/lat/Tools_mfx_cmd_lat.cpp \
         ../../src/mfx/cmd/lat/TreeList.cpp \
         ../../src/mfx/cmd/lat/TreeList.h \
         ../../src/mfx/cmd/BufAlloc.cpp \
@@ -285,9 +285,9 @@ commonsrc = \
         ../../src/mfx/doc/Bank.h \
         ../../src/mfx/doc/CatalogPluginSettings.cpp \
         ../../src/mfx/doc/CatalogPluginSettings.h \
-        ../../src/mfx/doc/Cnx.cpp \
         ../../src/mfx/doc/Cnx.h \
         ../../src/mfx/doc/Cnx.hpp \
+        ../../src/mfx/doc/Cnx_mfx_doc.cpp \
         ../../src/mfx/doc/CnxEnd.cpp \
         ../../src/mfx/doc/CnxEnd.h \
         ../../src/mfx/doc/CnxEnd.hpp \
@@ -613,8 +613,8 @@ commonsrc = \
         ../../src/mfx/dsp/rspl/InterpPhaseSimd.hpp \
         ../../src/mfx/dsp/rspl/SnhTool.cpp \
         ../../src/mfx/dsp/rspl/SnhTool.h \
-        ../../src/mfx/dsp/rspl/Voice.cpp \
         ../../src/mfx/dsp/rspl/Voice.h \
+        ../../src/mfx/dsp/rspl/Voice_mfx_dsp_rspl.cpp \
         ../../src/mfx/dsp/shape/DistAttract.cpp \
         ../../src/mfx/dsp/shape/DistAttract.h \
         ../../src/mfx/dsp/shape/DistAttract.hpp \
@@ -727,8 +727,8 @@ commonsrc = \
         ../../src/mfx/dsp/spec/StftHelper.h \
         ../../src/mfx/dsp/spec/StftHelper.hpp \
         ../../src/mfx/dsp/va/dkm/Flt.h \
-        ../../src/mfx/dsp/va/dkm/Simulator.cpp \
         ../../src/mfx/dsp/va/dkm/Simulator.h \
+        ../../src/mfx/dsp/va/dkm/Simulator_mfx_dsp_va_dkm.cpp \
         ../../src/mfx/dsp/va/mna/Flt.h \
         ../../src/mfx/dsp/va/mna/PartBjt.cpp \
         ../../src/mfx/dsp/va/mna/PartBjt.h \
@@ -754,8 +754,8 @@ commonsrc = \
         ../../src/mfx/dsp/va/mna/PartVccs.h \
         ../../src/mfx/dsp/va/mna/PartVcvs.cpp \
         ../../src/mfx/dsp/va/mna/PartVcvs.h \
-        ../../src/mfx/dsp/va/mna/Simulator.cpp \
         ../../src/mfx/dsp/va/mna/Simulator.h \
+        ../../src/mfx/dsp/va/mna/Simulator_mfx_dsp_va_mna.cpp \
         ../../src/mfx/dsp/va/mna/SimulInterface.cpp \
         ../../src/mfx/dsp/va/mna/SimulInterface.h \
         ../../src/mfx/dsp/va/AntisatAtanh.h \
@@ -938,20 +938,20 @@ commonsrc = \
         ../../src/mfx/pi/distpwm2/Param.h \
         ../../src/mfx/pi/distpwm2/PreFilterType.h \
         ../../src/mfx/pi/distpwm2/PulseType.h \
-        ../../src/mfx/pi/distpwm2/Voice.cpp \
         ../../src/mfx/pi/distpwm2/Voice.h \
-        ../../src/mfx/pi/dly0/Delay.cpp \
+        ../../src/mfx/pi/distpwm2/Voice_mfx_pi_distpwm2.cpp \
         ../../src/mfx/pi/dly0/Delay.h \
-        ../../src/mfx/pi/dly0/DelayDesc.cpp \
+        ../../src/mfx/pi/dly0/Delay_mfx_pi_dly0.cpp \
         ../../src/mfx/pi/dly0/DelayDesc.h \
+        ../../src/mfx/pi/dly0/DelayDesc_mfx_pi_dly0.cpp \
         ../../src/mfx/pi/dly0/Param.h \
         ../../src/mfx/pi/dly1/Cst.h \
-        ../../src/mfx/pi/dly1/Delay.cpp \
         ../../src/mfx/pi/dly1/Delay.h \
+        ../../src/mfx/pi/dly1/Delay_mfx_pi_dly1.cpp \
         ../../src/mfx/pi/dly1/DelayChn.cpp \
         ../../src/mfx/pi/dly1/DelayChn.h \
-        ../../src/mfx/pi/dly1/DelayDesc.cpp \
         ../../src/mfx/pi/dly1/DelayDesc.h \
+        ../../src/mfx/pi/dly1/DelayDesc_mfx_pi_dly1.cpp \
         ../../src/mfx/pi/dly1/Param.h \
         ../../src/mfx/pi/dly2/Delay2.cpp \
         ../../src/mfx/pi/dly2/Delay2.h \
@@ -981,8 +981,8 @@ commonsrc = \
         ../../src/mfx/pi/dwm/DryWetDesc.cpp \
         ../../src/mfx/pi/dwm/DryWetDesc.h \
         ../../src/mfx/pi/dwm/Param.h \
-        ../../src/mfx/pi/envf/Cst.cpp \
         ../../src/mfx/pi/envf/Cst.h \
+        ../../src/mfx/pi/envf/Cst_mfx_pi_envf.cpp \
         ../../src/mfx/pi/envf/EnvFollow.cpp \
         ../../src/mfx/pi/envf/EnvFollow.h \
         ../../src/mfx/pi/envf/EnvFollowDesc.cpp \
@@ -1018,8 +1018,8 @@ commonsrc = \
         ../../src/mfx/pi/hcomb/HyperCombDesc.cpp \
         ../../src/mfx/pi/hcomb/HyperCombDesc.h \
         ../../src/mfx/pi/hcomb/Param.h \
-        ../../src/mfx/pi/hcomb/Voice.cpp \
         ../../src/mfx/pi/hcomb/Voice.h \
+        ../../src/mfx/pi/hcomb/Voice_mfx_pi_hcomb.cpp \
         ../../src/mfx/pi/iifix/IIFix.cpp \
         ../../src/mfx/pi/iifix/IIFix.h \
         ../../src/mfx/pi/iifix/IIFixDesc.cpp \
@@ -1113,9 +1113,9 @@ commonsrc = \
         ../../src/mfx/pi/param/MapSq.hpp \
         ../../src/mfx/pi/param/Simple.cpp \
         ../../src/mfx/pi/param/Simple.h \
-        ../../src/mfx/pi/param/Tools.cpp \
         ../../src/mfx/pi/param/Tools.h \
         ../../src/mfx/pi/param/Tools.hpp \
+        ../../src/mfx/pi/param/Tools_mfx_pi_param.cpp \
         ../../src/mfx/pi/param/TplEnum.cpp \
         ../../src/mfx/pi/param/TplEnum.h \
         ../../src/mfx/pi/param/TplEnumEvol.cpp \
@@ -1130,8 +1130,8 @@ commonsrc = \
         ../../src/mfx/pi/param/TplPan.cpp \
         ../../src/mfx/pi/param/TplPan.h \
         ../../src/mfx/pi/param/TplSq.h \
-        ../../src/mfx/pi/phase1/Cst.cpp \
         ../../src/mfx/pi/phase1/Cst.h \
+        ../../src/mfx/pi/phase1/Cst_mfx_pi_phase1.cpp \
         ../../src/mfx/pi/phase1/Param.h \
         ../../src/mfx/pi/phase1/Phase90Interface.cpp \
         ../../src/mfx/pi/phase1/Phase90Interface.h \
@@ -1217,8 +1217,8 @@ commonsrc = \
         ../../src/mfx/pi/tremh/HarmTremDesc.h \
         ../../src/mfx/pi/tremh/LfoType.h \
         ../../src/mfx/pi/tremh/Param.h \
-        ../../src/mfx/pi/tuner/Tuner.cpp \
         ../../src/mfx/pi/tuner/Tuner.h \
+        ../../src/mfx/pi/tuner/Tuner_mfx_pi_tuner.cpp \
         ../../src/mfx/pi/tuner/TunerDesc.cpp \
         ../../src/mfx/pi/tuner/TunerDesc.h \
         ../../src/mfx/pi/vclone/Param.h \
@@ -1409,10 +1409,10 @@ commonsrc = \
         ../../src/mfx/uitk/pg/SlotRouting.h \
         ../../src/mfx/uitk/pg/SlotRoutingAction.cpp \
         ../../src/mfx/uitk/pg/SlotRoutingAction.h \
-        ../../src/mfx/uitk/pg/Tools.cpp \
         ../../src/mfx/uitk/pg/Tools.h \
-        ../../src/mfx/uitk/pg/Tuner.cpp \
+        ../../src/mfx/uitk/pg/Tools_mfx_uitk_pg.cpp \
         ../../src/mfx/uitk/pg/Tuner.h \
+        ../../src/mfx/uitk/pg/Tuner_mfx_uitk_pg.cpp \
         ../../src/mfx/uitk/Button.h \
         ../../src/mfx/uitk/ContainerInterface.cpp \
         ../../src/mfx/uitk/ContainerInterface.h \
@@ -1463,8 +1463,8 @@ commonsrc = \
         ../../src/mfx/ControlSource.cpp \
         ../../src/mfx/ControlSource.h \
         ../../src/mfx/ControlSource.hpp \
-        ../../src/mfx/Cst.cpp \
         ../../src/mfx/Cst.h \
+        ../../src/mfx/Cst_mfx.cpp \
         ../../src/mfx/Dir.h \
         ../../src/mfx/CtrlUnit.cpp \
         ../../src/mfx/CtrlUnit.h \

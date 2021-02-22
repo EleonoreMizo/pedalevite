@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        Cnx.cpp
-        Author: Laurent de Soras, 2020
+        Cnx_mfx_cmd_lat.cpp
+        Author: Laurent de Soras, 2019
 
 --- Legal stuff ---
 
@@ -24,9 +24,7 @@ http://www.wtfpl.net/ for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/doc/Cnx.h"
-#include "mfx/doc/SerRInterface.h"
-#include "mfx/doc/SerWInterface.h"
+#include "mfx/cmd/lat/Cnx.h"
 
 #include <cassert>
 
@@ -34,7 +32,9 @@ http://www.wtfpl.net/ for more details.
 
 namespace mfx
 {
-namespace doc
+namespace cmd
+{
+namespace lat
 {
 
 
@@ -43,36 +43,42 @@ namespace doc
 
 
 
-Cnx::Cnx (const CnxEnd &src, const CnxEnd &dst)
-:	_src (src)
-,	_dst (dst)
+void	Cnx::set_node (piapi::Dir dir, int node_index)
 {
-	assert (src.is_valid ());
-	assert (dst.is_valid ());
+	assert (dir >= 0);
+   assert (dir < piapi::Dir_NBR_ELT);
+	assert (node_index >= 0);
+
+	_end_arr [dir] = node_index;
 }
 
 
 
-void	Cnx::ser_write (SerWInterface &ser) const
+int	Cnx::get_node (piapi::Dir dir) const
 {
-	ser.begin_list ();
+	assert (dir >= 0);
+   assert (dir < piapi::Dir_NBR_ELT);
 
-	_src.ser_write (ser);
-	_dst.ser_write (ser);
+   const int      node_index = _end_arr [dir];
+	assert (node_index >= 0);
 
-	ser.end_list ();
+	return node_index;
 }
 
 
 
-void	Cnx::ser_read (SerRInterface &ser)
+void	Cnx::set_comp_delay (int dly_spl)
 {
-	ser.begin_list ();
+	assert (dly_spl >= 0);
 
-	_src.ser_read (ser);
-	_dst.ser_read (ser);
+	_comp_delay = dly_spl;
+}
 
-	ser.end_list ();
+
+
+int	Cnx::get_comp_delay () const
+{
+	return _comp_delay;
 }
 
 
@@ -85,7 +91,8 @@ void	Cnx::ser_read (SerRInterface &ser)
 
 
 
-}  // namespace doc
+}  // namespace lat
+}  // namespace cmd
 }  // namespace mfx
 
 
