@@ -37,6 +37,11 @@ performances. We use here 4th order Thiele filters (modified L-R filters) with
 a coefficient of 0.65. With such a setting, their single performances are
 poorly balanced but these filters become interesting when grouped in the bank.
 
+Ref:
+Neville Thiele, Loudspeaker Crossovers with Notched Response,
+Journal of the Audio Engineering Society, vol. 48, no. 9, pp. 786-799,
+2000-09
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to
