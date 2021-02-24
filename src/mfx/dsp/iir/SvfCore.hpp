@@ -159,7 +159,7 @@ float	SvfCore <MX>::process_sample_inc (float x, float g0i, float g1i, float g2i
 // Multi-mode output. Returns v1 (band) as first and v2 (low) as second.
 // Mixer is not taken into account
 template <class MX>
-std::pair <float, float>	SvfCore <MX>::process_sample_mm (float x)
+std::array <float, 2>	SvfCore <MX>::process_sample_mm (float x)
 {
 	return process_sample_mm (x, _g0, _g1, _g2);
 }
@@ -167,19 +167,19 @@ std::pair <float, float>	SvfCore <MX>::process_sample_mm (float x)
 
 
 template <class MX>
-std::pair <float, float>	SvfCore <MX>::process_sample_mm (float x, float g0, float g1, float g2)
+std::array <float, 2>	SvfCore <MX>::process_sample_mm (float x, float g0, float g1, float g2)
 {
 	float          v1;
 	float          v2;
 	iterate (x, v1, v2, g0, g1, g2);
 
-	return std::make_pair (v1, v2);
+	return std::array <float, 2> {{ v1, v2 }};
 }
 
 
 
 template <class MX>
-std::pair <float, float>	SvfCore <MX>::process_sample_mm_inc (float x, float g0i, float g1i, float g2i)
+std::array <float, 2>	SvfCore <MX>::process_sample_mm_inc (float x, float g0i, float g1i, float g2i)
 {
 	const auto     v1v2 { process_sample_mm (x) };
 	increment (_g0, _g1, _g2, g0i, g1i, g2i);

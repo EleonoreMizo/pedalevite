@@ -74,7 +74,7 @@ http://www.wtfpl.net/ for more details.
 #include "fstb/def.h"
 #include "mfx/dsp/iir/SvfMixerDefault.h"
 
-#include <utility>
+#include <array>
 
 
 
@@ -123,11 +123,11 @@ public:
 	fstb_FORCEINLINE float
 	               process_sample_inc (float x, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi);
 
-	fstb_FORCEINLINE std::pair <float, float>
+	fstb_FORCEINLINE std::array <float, 2>
 	               process_sample_mm (float x);
-	fstb_FORCEINLINE std::pair <float, float>
+	fstb_FORCEINLINE std::array <float, 2>
 	               process_sample_mm (float x, float g0, float g1, float g2);
-	fstb_FORCEINLINE std::pair <float, float>
+	fstb_FORCEINLINE std::array <float, 2>
 	               process_sample_mm_inc (float x, float g0i, float g1i, float g2i);
 
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl);

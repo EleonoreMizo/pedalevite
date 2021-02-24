@@ -104,7 +104,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/iir/SvfCore4SimdData.h"
 #include "mfx/dsp/iir/SvfMixerDefault.h"
 
-#include <utility>
+#include <array>
 
 
 
@@ -166,11 +166,11 @@ public:
 	fstb_FORCEINLINE fstb::ToolsSimd::VectF32
 	               process_sample_par_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i, const fstb::ToolsSimd::VectF32 &v0mi, const fstb::ToolsSimd::VectF32 &v1mi, const fstb::ToolsSimd::VectF32 &v2mi);
 
-	fstb_FORCEINLINE std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>
+	fstb_FORCEINLINE std::array <fstb::ToolsSimd::VectF32, 2>
 	               process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x);
-	fstb_FORCEINLINE std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>
+	fstb_FORCEINLINE std::array <fstb::ToolsSimd::VectF32, 2>
 	               process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2);
-	fstb_FORCEINLINE std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>
+	fstb_FORCEINLINE std::array <fstb::ToolsSimd::VectF32, 2>
 	               process_sample_par_mm_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i);
 
 	void           process_block_par (fstb::ToolsSimd::VectF32 dst_ptr [], const fstb::ToolsSimd::VectF32 src_ptr [], int nbr_spl);

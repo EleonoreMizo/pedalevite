@@ -301,7 +301,7 @@ fstb::ToolsSimd::VectF32	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_inc (
 // Multi-mode output. Returns v1 (band) as first and v2 (low) as second.
 // Mixer is not taken into account
 template <class VD, class VS, class VP, class MX>
-std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x)
+std::array <fstb::ToolsSimd::VectF32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x)
 {
 	auto           g0    = V128Par::load_f32 (_data._g0   );
 	auto           g1    = V128Par::load_f32 (_data._g1   );
@@ -313,7 +313,7 @@ std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>	SvfCore4Simd <VD,
 
 
 template <class VD, class VS, class VP, class MX>
-std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2)
+std::array <fstb::ToolsSimd::VectF32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0, const fstb::ToolsSimd::VectF32 &g1, const fstb::ToolsSimd::VectF32 &g2)
 {
 	auto           ic1eq = V128Par::load_f32 (_data._ic1eq);
 	auto           ic2eq = V128Par::load_f32 (_data._ic2eq);
@@ -323,13 +323,13 @@ std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>	SvfCore4Simd <VD,
 	V128Par::store_f32 (_data._ic1eq, ic1eq);
 	V128Par::store_f32 (_data._ic2eq, ic2eq);
 
-	return std::make_pair (v1, v2);
+	return std::array <fstb::ToolsSimd::VectF32, 2> {{ v1, v2 }};
 }
 
 
 
 template <class VD, class VS, class VP, class MX>
-std::pair <fstb::ToolsSimd::VectF32, fstb::ToolsSimd::VectF32>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i)
+std::array <fstb::ToolsSimd::VectF32, 2>	SvfCore4Simd <VD, VS, VP, MX>::process_sample_par_mm_inc (const fstb::ToolsSimd::VectF32 &x, const fstb::ToolsSimd::VectF32 &g0i, const fstb::ToolsSimd::VectF32 &g1i, const fstb::ToolsSimd::VectF32 &g2i)
 {
 	auto           g0    = V128Par::load_f32 (_data._g0   );
 	auto           g1    = V128Par::load_f32 (_data._g1   );
