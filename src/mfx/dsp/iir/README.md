@@ -15,6 +15,7 @@
 - **`FilterComb`**: Sub-sample comb filter with custom interpolator.
 - **`Lpf1p`**: Simple smoothing low-pass filter with one pole and no zero
 - **`OnePole`**: Direct Form 2 implementation of 1st order filter.
+- **`SplitLR8`**: Linkwitz-Riley or Thiele 8th-order crossover filter.
 - **`SqueezerSimd`**: 4-pole Moog low-pass filter emulation with optional, custom dirt. **`SqueezerOpDefect`** (radical shaping and polarity inversion) can be used for this purpose.
 - **`Svf2p`**: class to design SVFs from basic parameters or s-plane equations
 - **`SvfCore`**: Like `Biquad`, but using Andrew Simper’s Linear Trapezoidal State Variable Filters (SVFs) instead of biquads. Filter and mixer coefficients can be computed with `Svf2p`. Generic mixer can be optimised with **`SvfMixer*`** classes if only a fixed output is required.

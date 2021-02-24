@@ -499,6 +499,9 @@ commonsrc = \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \
+        ../../src/mfx/dsp/iir/SplitThiele8.cpp \
+        ../../src/mfx/dsp/iir/SplitThiele8.h \
+        ../../src/mfx/dsp/iir/SplitThiele8.hpp \
         ../../src/mfx/dsp/iir/SqueezerOpBypass.h \
         ../../src/mfx/dsp/iir/SqueezerOpDefect.h \
         ../../src/mfx/dsp/iir/SqueezerOpDefect.hpp \
@@ -1771,6 +1774,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSlidingOp.h \
         ../../src/test/TestSmooth.cpp \
         ../../src/test/TestSmooth.h \
+        ../../src/test/TestSplitThiele8.cpp \
+        ../../src/test/TestSplitThiele8.h \
         ../../src/test/TestSvf.cpp \
         ../../src/test/TestSvf.h \
         ../../src/test/TestSvfAntisat.cpp \

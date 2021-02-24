@@ -4995,6 +4995,12 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\wnd\XFadeShape.hpp">
       <Filter>mfx\dsp\wnd</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.h">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.hpp">
+      <Filter>mfx\dsp\iir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6352,6 +6358,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\ms\MidSideDesc.cpp">
       <Filter>mfx\pi\ms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.cpp">
+      <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
