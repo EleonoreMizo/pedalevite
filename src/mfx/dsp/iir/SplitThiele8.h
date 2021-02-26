@@ -5,14 +5,43 @@
 
 8th-order crossover Thiele filter implemented with 4x 2-pole SVFs.
 
-Implementation reference:
-Andrew Simper, Teemu Voipio, Vadim Zavalishin,
-https://www.kvraudio.com/forum/viewtopic.php?p=7017185#p7017185
-
 Thiele filters:
 Neville Thiele, Loudspeaker Crossovers with Notched Response,
 Journal of the Audio Engineering Society, vol. 48, no. 9, pp. 786-799,
 2000-09
+
+Implementation reference:
+Andrew Simper, Teemu Voipio, Vadim Zavalishin,
+https://www.kvraudio.com/forum/viewtopic.php?p=7017185#p7017185
+
+Original formula:
+
+SVF2pole1 (in , R1 -> lp2, bp2   , hp2   )
+SVF2pole2 (lp2, R2 -> lp4, lp2bp2, lp2hp2)
+SVF2pole3 (lp4, R1 -> lp6)
+SVF2pole4 (lp6, R2 -> lp8)
+ap4 = m0 * hp2 + m1 * bp2 + m3 * lp2hp2 + m4 * lp2bp2 + m5 * lp4
+hp8 = ap4 - lp8
+with:
+hp2    = in  - R1 * bp2    - lp2
+lp2hp2 = lp2 - R2 * lp2bp2 - lp4
+and:
+ap4 =   ((1 - R1 * s + s^2) * (1 - R2 * s + s^2))
+      / ((1 + R1 * s + s^2) * (1 + R2 * s + s^2))
+therefore:
+m0 = 1
+m1 = -R1 - 2 * R2
+m3 = 1 + 2 * R2 * (R1 + R2)
+m4 = R2
+m5 = 1
+
+Simplification:
+
+ap4 = in + (m1 - R1) * bp2 + (1 - m3) * (lp4 - lp2) + (m4 - m3 * R2) * lp2bp2
+ap4 = in + n1 * bp2 + n4 * (lp4 - lp2) + n3 * lp2bp2
+n1  = m1 - R1      = -2 * (R1 + R2)          
+n4  =  1 - m3      = -2 * (R1 + R2) * R2     
+n3  = m4 - m3 * R2 = -2 * (R1 + R2) * R2 * R2
 
 --- Legal stuff ---
 
@@ -84,7 +113,7 @@ private:
 
 	void           update_filters ();
 	inline std::array <float, 2>
-	               compute_ap4_lp4 (float x, SvfCore <> &flt_1, SvfCore <> &flt_2);
+	               compute_ap4_lp4 (float x, SvfCore <> &filt_1, SvfCore <> &filt_2);
 
 	float          _sample_freq = 0; // Hz, > 0. 0 = not set
 	float          _inv_fs      = 0; // s, > 0. 0 = not set
@@ -98,9 +127,9 @@ private:
 
 	float          _r1          = 0; // 1 / Q1
 	float          _r2          = 0; // 1 / Q2
-	float          _m1          = 0;
-	float          _m3          = 0;
-	float          _m4          = 0;
+	float          _n1          = 0;
+	float          _n3          = 0;
+	float          _n4          = 0;
 
 	// Main filters
 	SvfCore <>     _split_1;   // Multimode output (LPF, BPF, HPF)

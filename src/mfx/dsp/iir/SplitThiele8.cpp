@@ -27,6 +27,8 @@ http://www.wtfpl.net/ for more details.
 #include "mfx/dsp/iir/SplitThiele8.h"
 #include "mfx/dsp/iir/Svf2p.h"
 
+#include <algorithm>
+
 #include <cassert>
 #include <cmath>
 
@@ -103,7 +105,6 @@ void	SplitThiele8::clear_buffers ()
 
 
 
-/*** To do: optimize this naive implementation ***/
 void	SplitThiele8::process_block_split (float lo_ptr [], float hi_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (! _dirty_flag);
@@ -123,7 +124,6 @@ void	SplitThiele8::process_block_split (float lo_ptr [], float hi_ptr [], const 
 
 
 
-/*** To do: optimize this naive implementation ***/
 void	SplitThiele8::process_block_compensate (float dst_ptr [], const float src_ptr [], int nbr_spl)
 {
 	assert (! _dirty_flag);
@@ -158,9 +158,9 @@ void	SplitThiele8::update_filters ()
 	_r1 = float (sqrt (d0 + d1));
 	_r2 = float (sqrt (d0 - d1));
 
-	_m1 = -_r1 - 2 * _r2;
-	_m3 = 1 + 2 * _r2 * (_r1 + _r2);
-	_m4 = _r2;
+	_n1 = -2  * (_r1 + _r2);
+	_n4 = _r2 * _n1;
+	_n3 = _r2 * _n4;
 
 	const float    f0_fs = _split_freq * _inv_fs;
 	float          g0_1  = 0;
