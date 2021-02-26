@@ -273,6 +273,54 @@ void	SvfCore <MX>::process_block (float dst_ptr [], const float src_ptr [], int 
 
 
 
+template <class MX>
+void	SvfCore <MX>::process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl)
+{
+	assert (v1_ptr  != nullptr);
+	assert (v2_ptr  != nullptr);
+	assert (src_ptr != nullptr);
+	assert (nbr_spl > 0);
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		const float    x = src_ptr [pos];
+		float          v1;
+		float          v2;
+		iterate (x, v1, v2, _g0, _g1, _g2);
+		v1_ptr [pos] = v1;
+		v2_ptr [pos] = v2;
+	}
+}
+
+
+
+template <class MX>
+void	SvfCore <MX>::process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [])
+{
+	assert (v1_ptr  != nullptr);
+	assert (v2_ptr  != nullptr);
+	assert (src_ptr != nullptr);
+	assert (nbr_spl > 0);
+	assert (g0_ptr  != nullptr);
+	assert (g1_ptr  != nullptr);
+	assert (g2_ptr  != nullptr);
+
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		const float    x  = src_ptr [pos];
+		const float    g0 = g0_ptr [pos];
+		const float    g1 = g1_ptr [pos];
+		const float    g2 = g2_ptr [pos];
+		float          v1;
+		float          v2;
+		iterate (x, v1, v2, g0, g1, g2);
+		v1_ptr [pos] = v1;
+		v2_ptr [pos] = v2;
+	}
+}
+
+
+
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 

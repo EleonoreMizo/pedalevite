@@ -135,6 +135,9 @@ public:
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr [], const float v0m_ptr [], const float v1m_ptr [], const float v2m_ptr []);
 	void           process_block (float dst_ptr [], const float src_ptr [], int nbr_spl, float g0i, float g1i, float g2i, float v0mi, float v1mi, float v2mi);
 
+	void           process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl);
+	void           process_block_mm (float v1_ptr [], float v2_ptr [], const float src_ptr [], int nbr_spl, const float g0_ptr [], const float g1_ptr [], const float g2_ptr []);
+
 
 
 /*\\\ PROTECTED \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
