@@ -1247,7 +1247,7 @@
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Ovrspl.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\bmp1\Param.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqShift.h" />
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter8.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\PhaseHalfPi.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\cmerge\ChnMerge.h" />
@@ -1897,7 +1897,7 @@
     <ClCompile Include="..\..\..\src\mfx\pi\bmp1\BigMuff1.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\bmp1\BigMuff1Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqShift.cpp" />
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter8.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\ShaperBag.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\Click.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\click\ClickDesc.cpp" />

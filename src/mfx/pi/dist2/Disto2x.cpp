@@ -213,6 +213,7 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_proc->_trans_ana.reset (sample_freq, max_buf_len);
 	_proc->_freq_split.set_sample_freq (sample_freq);
+	_proc->_freq_split.set_thiele_coef (float (0.5f * fstb::SQRT2));
 	for (auto &stage : _proc->_stage_arr)
 	{
 		double         stage_lat = 0;

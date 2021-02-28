@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FreqSplitter5.h
+        FreqSplitter8.h
         Author: Laurent de Soras, 2016
 
 The group delay depends on the splitting frequency. Approximate figures:
@@ -21,8 +21,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_pi_cdsp_FreqSplitter5_HEADER_INCLUDED)
-#define mfx_pi_cdsp_FreqSplitter5_HEADER_INCLUDED
+#if ! defined (mfx_pi_cdsp_FreqSplitter8_HEADER_INCLUDED)
+#define mfx_pi_cdsp_FreqSplitter8_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -32,7 +32,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/iir/SplitAp5.h"
+#include "mfx/dsp/iir/SplitThiele8.h"
 #include "mfx/piapi/PluginInterface.h"
 
 #include <array>
@@ -48,7 +48,7 @@ namespace cdsp
 
 
 
-class FreqSplitter5
+class FreqSplitter8
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -58,7 +58,8 @@ public:
 	void           clear_buffers ();
 	void           set_sample_freq (double sample_freq);
 	void           set_split_freq (float freq);
-	void           copy_z_eq (const FreqSplitter5 &other);
+	void           set_thiele_coef (float k);
+	void           copy_z_eq (const FreqSplitter8 &other);
 	void           process_block (int chn, float dst_l_ptr [], float dst_h_ptr [], const float src_ptr [], int nbr_spl);
 
 
@@ -74,7 +75,7 @@ protected:
 private:
 
 	typedef std::array <
-		dsp::iir::SplitAp5, piapi::PluginInterface::_max_nbr_chn
+		dsp::iir::SplitThiele8, piapi::PluginInterface::_max_nbr_chn
 	> SplitArray;
 
 	SplitArray     _band_split_arr;     // One per channel
@@ -85,10 +86,10 @@ private:
 
 private:
 
-	bool           operator == (const FreqSplitter5 &other) const = delete;
-	bool           operator != (const FreqSplitter5 &other) const = delete;
+	bool           operator == (const FreqSplitter8 &other) const = delete;
+	bool           operator != (const FreqSplitter8 &other) const = delete;
 
-}; // class FreqSplitter5
+}; // class FreqSplitter8
 
 
 
@@ -98,11 +99,11 @@ private:
 
 
 
-//#include "mfx/pi/cdsp/FreqSplitter5.hpp"
+//#include "mfx/pi/cdsp/FreqSplitter8.hpp"
 
 
 
-#endif   // mfx_pi_cdsp_FreqSplitter5_HEADER_INCLUDED
+#endif   // mfx_pi_cdsp_FreqSplitter8_HEADER_INCLUDED
 
 
 

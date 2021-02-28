@@ -3006,9 +3006,6 @@
     <ClInclude Include="..\..\..\src\mfx\pi\ParamDescSet.hpp">
       <Filter>mfx\pi</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h">
-      <Filter>mfx\pi\cdsp</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\PhaseHalfPi.h">
       <Filter>mfx\pi\cdsp</Filter>
     </ClInclude>
@@ -5007,6 +5004,9 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitAp5.hpp">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter8.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6128,9 +6128,6 @@
     <ClCompile Include="..\..\..\src\mfx\uitk\pg\SlotRoutingAction.cpp">
       <Filter>mfx\uitk\pg</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp">
-      <Filter>mfx\pi\cdsp</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqShift.cpp">
       <Filter>mfx\pi\cdsp</Filter>
     </ClCompile>
@@ -6370,6 +6367,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\SplitAp5.cpp">
       <Filter>mfx\dsp\iir</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter8.cpp">
+      <Filter>mfx\pi\cdsp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

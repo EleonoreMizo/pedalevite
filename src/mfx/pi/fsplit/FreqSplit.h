@@ -29,7 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include "fstb/util/NotificationFlag.h"
 #include "fstb/AllocAlign.h"
-#include "mfx/pi/cdsp/FreqSplitter5.h"
+#include "mfx/pi/cdsp/FreqSplitter8.h"
 #include "mfx/pi/fsplit/FreqSplitDesc.h"
 #include "mfx/pi/ParamProcSimple.h"
 #include "mfx/pi/ParamStateSet.h"
@@ -95,7 +95,7 @@ private:
 	fstb::util::NotificationFlag
 	               _param_change_flag;
 
-	cdsp::FreqSplitter5
+	cdsp::FreqSplitter8
 	               _freq_split;
 
 

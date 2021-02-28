@@ -112,6 +112,7 @@ int	FreqSplit::do_reset (double sample_freq, int max_buf_len, int &latency)
 	_state_set.clear_buffers ();
 
 	_freq_split.set_sample_freq (sample_freq);
+	_freq_split.set_thiele_coef (float (0.5 * fstb::SQRT2));
 
 	update_param (true);
 	_param_proc.req_steady ();

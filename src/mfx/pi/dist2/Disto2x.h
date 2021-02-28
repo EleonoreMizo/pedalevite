@@ -35,7 +35,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/dsp/dyn/EnvFollowerRms.h"
 #include "mfx/dsp/iir/OnePole.h"
 #include "mfx/dsp/iir/Biquad.h"
-#include "mfx/pi/cdsp/FreqSplitter5.h"
+#include "mfx/pi/cdsp/FreqSplitter8.h"
 #include "mfx/pi/dist2/Disto2xDesc.h"
 #include "mfx/pi/dist2/DistoStage.h"
 #include "mfx/pi/dist2/TransientAnalyser.h"
@@ -114,7 +114,7 @@ private:
 		ChannelArray   _chn_arr;
 		TransientAnalyserAlign
 		               _trans_ana;
-		cdsp::FreqSplitter5
+		cdsp::FreqSplitter8
 		               _freq_split;
 		std::array <DistoStage, Disto2x::_nbr_stages>
 		               _stage_arr;
