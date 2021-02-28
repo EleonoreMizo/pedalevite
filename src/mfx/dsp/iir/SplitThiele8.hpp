@@ -39,6 +39,13 @@ namespace iir
 
 
 
+bool	SplitThiele8::is_dirty () const
+{
+	return _dirty_flag;
+}
+
+
+
 // Returns { low, high }
 std::array <float, 2>	SplitThiele8::process_sample_split (float x)
 {

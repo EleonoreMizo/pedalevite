@@ -90,7 +90,9 @@ public:
 	void           set_sample_freq (double sample_freq);
 	void           set_split_freq (float f);
 	void           set_thiele_coef (float k);
+	inline bool    is_dirty () const;
 	void           update_coef ();
+	void           copy_param_from (const SplitThiele8 &other);
 
 	void           clear_buffers ();
 	inline std::array <float, 2>

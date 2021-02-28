@@ -92,6 +92,36 @@ void	SplitThiele8::update_coef ()
 
 
 
+void	SplitThiele8::copy_param_from (const SplitThiele8 &other)
+{
+	assert (_sample_freq > 0);
+	assert (_sample_freq == other._sample_freq);
+	assert (! other._dirty_flag);
+
+	_thiele_k   = other._thiele_k;
+	_split_freq = other._split_freq;
+	_dirty_flag = other._dirty_flag;
+
+	if (! _dirty_flag)
+	{
+		_r1 = other._r1;
+		_r2 = other._r2;
+		_n1 = other._n1;
+		_n3 = other._n3;
+		_n4 = other._n4;
+
+		_split_1.copy_z_eq (other._split_1);
+		_split_2.copy_z_eq (other._split_2);
+		_split_3.copy_z_eq (other._split_3);
+		_split_4.copy_z_eq (other._split_4);
+
+		_comp_1.copy_z_eq (other._comp_1);
+		_comp_2.copy_z_eq (other._comp_2);
+	}
+}
+
+
+
 void	SplitThiele8::clear_buffers ()
 {
 	_split_1.clear_buffers ();
@@ -149,6 +179,8 @@ void	SplitThiele8::process_block_compensate (float dst_ptr [], const float src_p
 
 void	SplitThiele8::update_filters ()
 {
+	assert (_sample_freq > 0);
+
 	// _r1 and _r2 need to be calculated as accurately as possible,
 	// to make sure (_r1 * _r2) ^ 2 == 2
 	const double   k2 = double (_thiele_k) * double (_thiele_k);
