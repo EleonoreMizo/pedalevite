@@ -877,9 +877,13 @@ ToolsSimd::VectF32	ToolsSimd::sqrt_approx (VectF32 v)
 		sqrtf (v._ [3])
 	} };
 #elif fstb_ARCHI == fstb_ARCHI_X86
-	const __m128   nz_flag = _mm_cmpgt_ps (v, _mm_setzero_ps ());
-	const __m128   sqrt_a  = _mm_mul_ps (v, _mm_rsqrt_ps (v));
-	return _mm_and_ps (sqrt_a, nz_flag);
+	// Zero and denormal values will produce INF with _mm_rsqrt_ps(), so
+	// we need a mask.
+	const __m128   z_flag  = _mm_cmplt_ps (v, _mm_set1_ps (FLT_MIN));
+	const __m128   rsqrt_a = _mm_rsqrt_ps (v);
+	const __m128   sqrt_a  = _mm_mul_ps (v, rsqrt_a);
+	const __m128   sqrt_m  = _mm_andnot_ps (z_flag, sqrt_a);
+	return sqrt_m;
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	const uint32x4_t  nz_flag = vtstq_u32 (
 		vreinterpretq_u32_f32 (v),
