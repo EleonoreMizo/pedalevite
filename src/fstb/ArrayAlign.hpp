@@ -125,7 +125,7 @@ ArrayAlign <T, LEN, AL> &	ArrayAlign <T, LEN, AL>::operator = (const ArrayAlign 
 		}
 	}
 
-	return (*this);
+	return *this;
 }
 
 
@@ -137,7 +137,7 @@ const typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::opera
 	assert (pos >= 0);
 	assert (pos < NBR_ELT);
 
-	return (_data_ptr [pos]);
+	return _data_ptr [pos];
 }
 
 
@@ -149,7 +149,27 @@ typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::operator []
 	assert (pos >= 0);
 	assert (pos < NBR_ELT);
 
-	return (_data_ptr [pos]);
+	return _data_ptr [pos];
+}
+
+
+
+template <typename T, long LEN, long AL>
+const typename ArrayAlign <T, LEN, AL>::Element *	ArrayAlign <T, LEN, AL>::data () const
+{
+	assert (_data_ptr != 0);
+
+	return _data_ptr;
+}
+
+
+
+template <typename T, long LEN, long AL>
+typename ArrayAlign <T, LEN, AL>::Element *	ArrayAlign <T, LEN, AL>::data ()
+{
+	assert (_data_ptr != 0);
+
+	return _data_ptr;
 }
 
 
@@ -157,7 +177,7 @@ typename ArrayAlign <T, LEN, AL>::Element &	ArrayAlign <T, LEN, AL>::operator []
 template <typename T, long LEN, long AL>
 long	ArrayAlign <T, LEN, AL>::size ()
 {
-	return (NBR_ELT);
+	return NBR_ELT;
 }
 
 
@@ -165,7 +185,7 @@ long	ArrayAlign <T, LEN, AL>::size ()
 template <typename T, long LEN, long AL>
 long	ArrayAlign <T, LEN, AL>::length ()
 {
-	return (NBR_ELT);
+	return NBR_ELT;
 }
 
 
@@ -173,7 +193,7 @@ long	ArrayAlign <T, LEN, AL>::length ()
 template <typename T, long LEN, long AL>
 long	ArrayAlign <T, LEN, AL>::get_alignment ()
 {
-	return (ALIGNMENT);
+	return ALIGNMENT;
 }
 
 

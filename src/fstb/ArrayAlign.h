@@ -67,6 +67,11 @@ public:
 	inline Element &
 	               operator [] (long pos);
 
+	inline const Element *
+	               data () const;
+	inline Element *
+	               data ();
+
 	static inline long
 	               size ();
 	static inline long
