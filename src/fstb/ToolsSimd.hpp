@@ -26,6 +26,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 #include <algorithm>
 
+#include <cfloat>
 #include <cmath>
 
 
