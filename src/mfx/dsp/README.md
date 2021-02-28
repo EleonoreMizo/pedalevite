@@ -23,7 +23,8 @@
 The **`dsp`** lib depends on several other libraries:
 - **`ffft`**: Fast Fourier Transforms
 - **`fstb`**: Miscellaneous support functions and generic tools
-- **`hiir`**: half-band IIR filters and Hilbert transforms
+- **`hiir`**: Half-band IIR filters and Hilbert transforms
+- **`lal`**: Minimalist linear algebra library
 
 ## Unsorted classes
 
