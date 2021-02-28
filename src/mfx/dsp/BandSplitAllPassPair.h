@@ -3,12 +3,16 @@
         BandSplitAllPassPair.h
         Author: Laurent de Soras, 2016
 
+Template parameters:
+
 - AP0, AP1: a pair of all-pass filters. Requirements on AP0 and AP1 :
 	AP0::AP0 ();
 	AP0::~AP0 ();
 	void AP0::process_block (float *, const float *, int);
 	float AP0::process_sample (float);
 	void AP0::clear_buffers ();
+	It is recommended to set the lightest filter to AP0, because it is used
+	for phase compensation too.
 
 - VFF: volume fix flag. When set to false, the split result has a x2 gain
 	(and a gain).

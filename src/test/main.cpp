@@ -90,6 +90,7 @@
 #include "test/TestSlidingMax.h"
 #include "test/TestSlidingOp.h"
 #include "test/TestSmooth.h"
+#include "test/TestSplitAp5.h"
 #include "test/TestSplitThiele8.h"
 #include "test/TestSvf.h"
 #include "test/TestSvfAntisat.h"
@@ -1886,6 +1887,10 @@ int main (int argc, char *argv [])
 	mfx::dsp::mix::Generic::setup ();
 
 	int            ret_val = 0;
+
+#if 1
+	if (ret_val == 0) ret_val = TestSplitAp5::perform_test ();
+#endif
 
 #if 1
 	if (ret_val == 0) ret_val = TestSplitThiele8::perform_test ();

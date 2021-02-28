@@ -32,13 +32,9 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/iir/AllPass1p.h"
-#include "mfx/dsp/iir/AllPass2p.h"
-#include "mfx/dsp/BandSplitAllPassPair.h"
-#include "mfx/dsp/FilterCascadeIdOdd.h"
+#include "mfx/dsp/iir/SplitAp5.h"
 #include "mfx/piapi/PluginInterface.h"
 
-#include <memory>
 #include <array>
 
 
@@ -77,21 +73,11 @@ protected:
 
 private:
 
-	typedef dsp::FilterCascadeIdOdd <
-		dsp::iir::AllPass1p,
-		dsp::iir::AllPass2p,
-		1
-	> Filter0;
-	typedef dsp::iir::AllPass2p	Filter1;
-	typedef dsp::BandSplitAllPassPair <Filter0, Filter1, true> BandSplitApp;
-	typedef std::array <BandSplitApp, piapi::PluginInterface::_max_nbr_chn> SplitArray;
-
-	void           update_filter ();
+	typedef std::array <
+		dsp::iir::SplitAp5, piapi::PluginInterface::_max_nbr_chn
+	> SplitArray;
 
 	SplitArray     _band_split_arr;     // One per channel
-	float          _sample_freq    = 0; // Hz, > 0. 0 = not set
-	float          _inv_fs         = 0;
-	float          _split_freq     = 5; // Hz, > 0. 0 = not set
 
 
 

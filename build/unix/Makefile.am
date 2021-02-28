@@ -499,6 +499,9 @@ commonsrc = \
         ../../src/mfx/dsp/iir/OnePole.cpp \
         ../../src/mfx/dsp/iir/OnePole.h \
         ../../src/mfx/dsp/iir/OnePole.hpp \
+        ../../src/mfx/dsp/iir/SplitAp5.cpp \
+        ../../src/mfx/dsp/iir/SplitAp5.h \
+        ../../src/mfx/dsp/iir/SplitAp5.hpp \
         ../../src/mfx/dsp/iir/SplitThiele8.cpp \
         ../../src/mfx/dsp/iir/SplitThiele8.h \
         ../../src/mfx/dsp/iir/SplitThiele8.hpp \
@@ -1774,6 +1777,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/TestSlidingOp.h \
         ../../src/test/TestSmooth.cpp \
         ../../src/test/TestSmooth.h \
+        ../../src/test/TestSplitAp5.cpp \
+        ../../src/test/TestSplitAp5.h \
         ../../src/test/TestSplitThiele8.cpp \
         ../../src/test/TestSplitThiele8.h \
         ../../src/test/TestSvf.cpp \

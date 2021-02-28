@@ -24,7 +24,6 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/iir/TransSZBilin.h"
 #include "mfx/pi/cdsp/FreqSplitter5.h"
 
 #include <cassert>
@@ -58,9 +57,10 @@ void	FreqSplitter5::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
-	_sample_freq = float (      sample_freq);
-	_inv_fs      = float (1.0 / sample_freq);
-	update_filter ();
+	for (auto &band : _band_split_arr)
+	{
+		band.set_sample_freq (sample_freq);
+	}
 }
 
 
@@ -68,33 +68,20 @@ void	FreqSplitter5::set_sample_freq (double sample_freq)
 void	FreqSplitter5::set_split_freq (float freq)
 {
 	assert (freq > 0);
-	assert (freq < _sample_freq * 0.5f);
 
-	_split_freq = freq;
-	update_filter ();
+	for (auto &band : _band_split_arr)
+	{
+		band.set_split_freq (freq);
+	}
 }
 
 
 
 void	FreqSplitter5::copy_z_eq (const FreqSplitter5 &other)
 {
-	assert (_sample_freq > 0);
-	assert (other._sample_freq == _sample_freq);
-
-	_split_freq = other._split_freq;
-
-	const BandSplitApp &	src = other._band_split_arr [0];
-	const auto &   src_f0    = src.use_filter_0 ();
-	const auto &   f0e       = src_f0.use_filter ();
-	const auto &   f0o       = src_f0.use_filter (0);
-	const auto &   f1        = src.use_filter_1 ();
-	for (auto &splitter : _band_split_arr)
+	for (size_t b_cnt = 0; b_cnt < _band_split_arr.size (); ++b_cnt)
 	{
-		Filter0 &	filter_0 = splitter.use_filter_0 ();
-		Filter1 &	filter_1 = splitter.use_filter_1 ();
-		filter_0.use_filter ().copy_z_eq (f0e);
-		filter_0.use_filter (0).copy_z_eq (f0o);
-		filter_1.copy_z_eq (f1);
+		_band_split_arr [b_cnt].copy_param_from (other._band_split_arr [b_cnt]);
 	}
 }
 
@@ -109,9 +96,12 @@ void	FreqSplitter5::process_block (int chn, float dst_l_ptr [], float dst_h_ptr 
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	BandSplitApp & splitter = _band_split_arr [chn];
-
-	splitter.split_block (dst_l_ptr, dst_h_ptr, src_ptr, nbr_spl);
+	auto &         splitter = _band_split_arr [chn];
+	if (splitter.is_dirty ())
+	{
+		splitter.update_coef ();
+	}
+	splitter.process_block_split (dst_l_ptr, dst_h_ptr, src_ptr, nbr_spl);
 }
 
 
@@ -121,45 +111,6 @@ void	FreqSplitter5::process_block (int chn, float dst_l_ptr [], float dst_h_ptr 
 
 
 /*\\\ PRIVATE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
-
-void	FreqSplitter5::update_filter ()
-{
-	assert (_sample_freq > 0);
-	assert (_inv_fs      > 0);
-	assert (_split_freq  > 0);
-
-	// Filter design           ka     , kb
-	// Butterworth -30 dB/oct: 0.61804, 1.0
-	// Steep with ripples:     0.35   , 0.99
-	// Compromise:             0.5    , 1.0
-	const float		ka = 0.61804f;
-	const float		kb = 1.0f;
-	const float		x1 = ka + kb;
-	const float		x2 = ka;
-
-	// Bilinear transform
-	const float    k =
-		dsp::iir::TransSZBilin::compute_k_approx (_split_freq * _inv_fs);
-
-	float          zb_0o [3];
-	float          zb_0e [2];
-	float          zb_1 [3];
-	dsp::iir::TransSZBilin::map_s_to_z_ap1_approx (zb_0e,     k);
-	dsp::iir::TransSZBilin::map_s_to_z_ap2_approx (zb_0o, x2, k);
-	dsp::iir::TransSZBilin::map_s_to_z_ap2_approx (zb_1 , x1, k);
-
-	// Sets all the channels
-	for (auto &splitter : _band_split_arr)
-	{
-		Filter0 &	filter_0 = splitter.use_filter_0 ();
-		Filter1 &	filter_1 = splitter.use_filter_1 ();
-		filter_0.use_filter ().set_coef (zb_0e [0]);
-		filter_0.use_filter (0).set_z_eq (zb_0o [0], zb_0o [1]);
-		filter_1.set_z_eq (zb_1 [0], zb_1 [1]);
-	}
-}
 
 
 

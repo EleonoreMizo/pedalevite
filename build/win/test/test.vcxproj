@@ -164,6 +164,7 @@
     <ClCompile Include="..\..\..\src\test\TestSlidingMax.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSlidingOp.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSmooth.cpp" />
+    <ClCompile Include="..\..\..\src\test\TestSplitAp5.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSplitThiele8.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSvf.cpp" />
     <ClCompile Include="..\..\..\src\test\TestSvfAntisat.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="..\..\..\src\test\TestSlidingMax.h" />
     <ClInclude Include="..\..\..\src\test\TestSlidingOp.h" />
     <ClInclude Include="..\..\..\src\test\TestSmooth.h" />
+    <ClInclude Include="..\..\..\src\test\TestSplitAp5.h" />
     <ClInclude Include="..\..\..\src\test\TestSplitThiele8.h" />
     <ClInclude Include="..\..\..\src\test\TestSvf.h" />
     <ClInclude Include="..\..\..\src\test\TestSvfAntisat.h" />

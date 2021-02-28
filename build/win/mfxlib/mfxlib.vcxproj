@@ -915,6 +915,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Lpf1p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\OnePole.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitAp5.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitAp5.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\SqueezerOpBypass.h" />
@@ -1790,6 +1792,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DcKiller2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\OnePole.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\dsp\iir\SplitAp5.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\SplitThiele8.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\Svf2p.cpp" />
     <ClCompile Include="..\..\..\src\mfx\dsp\iir\TransS.cpp" />
