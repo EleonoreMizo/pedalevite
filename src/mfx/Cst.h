@@ -27,6 +27,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "mfx/piapi/PluginInterface.h"
 #include "mfx/ui/UserInputType.h"
 
 #include <array>
@@ -76,10 +77,10 @@ public:
 		UserInputQueueType_NBR_ELT
 	};
 
-	static const int  _max_input_param = 24; // Maximum number of input parameter for each type (switches, expression pedals, rotary encoders...)
+	static const int  _max_input_param =  24; // Maximum number of input parameter for each type (switches, expression pedals, rotary encoders...)
 	static const int  _max_nbr_buf     = 256; // Number of buffers in the audio graph processing
-	static const int  _max_nbr_input   =   1; // Per real plug-in (not dry/wet/bypass mixer)
-	static const int  _max_nbr_output  =   1; // Per real plug-in (not dry/wet/bypass mixer)
+	static const int  _max_nbr_input   = piapi::PluginInterface::_max_nbr_pins; // Per real plug-in (not dry/wet/bypass mixer)
+	static const int  _max_nbr_output  = piapi::PluginInterface::_max_nbr_pins; // Per real plug-in (not dry/wet/bypass mixer)
 	static const int  _max_nbr_sig     =   4;
 	static const int  _max_nbr_sig_ports = 256;
 	static const int  _max_nbr_plugins = 256;
