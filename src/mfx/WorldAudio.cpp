@@ -185,6 +185,7 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 		fstb::ToolsSimd::disable_denorm ();
 		_denorm_conf_flag = true;
 	}
+
 	bool           ctx_update_flag = _prog_switcher.frame_beg ();
 
 	// A problem occured...
@@ -637,6 +638,24 @@ void	WorldAudio::check_signal_level (float * const * dst_arr, const float * cons
 
 
 
+// Returns false if the silent buffer has been corrupted.
+bool	WorldAudio::check_silent_buffer () const
+{
+	const float *  ptr     = _buf_pack.use (Cst::BufSpecial_SILENCE);
+	bool           ok_flag = true;
+	for (int pos = 0; pos < _max_block_size && ok_flag; ++pos)
+	{
+		if (ptr [pos] != 0)
+		{
+			ok_flag = false;
+		}
+	}
+
+	return ok_flag;
+}
+
+
+
 void	WorldAudio::copy_output (float * const * dst_arr, int nbr_spl)
 {
 	typedef dsp::mix::Simd <
@@ -795,6 +814,9 @@ void	WorldAudio::process_plugin_bundle (const ProcessingContext::PluginContext &
 			process_single_plugin (pi_ctx._node_arr [PiType_MIX]._pi_id, proc_info);
 		}
 	}
+
+	// Makes sure the silent buffer hasn't been corrupted.
+	//assert (check_silent_buffer ());
 }
 
 
