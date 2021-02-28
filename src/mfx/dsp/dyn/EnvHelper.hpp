@@ -47,6 +47,7 @@ namespace dyn
 // Approximates c = 1 - exp (-1 / (fs * t))
 // Coefficient in ]0 ; 1]
 // https://www.desmos.com/calculator/t46nefssqd
+// t is the 63 % rise time
 template <typename T>
 inline T	EnvHelper::compute_env_coef_simple (T t, T fs)
 {
@@ -84,6 +85,7 @@ inline T	EnvHelper::compute_env_coef_simple (T t, T fs)
 // Approximates c = 2 / (1 + k) with k = 1 / tan (1 / (fs * t * 2))
 // Coefficient in ]0 ; 1.99], requires putting a zero at nyquist, prefiltering
 // the input with { 0.5, 0.5 }
+// t is the 63 % rise time
 template <typename T>
 inline T	EnvHelper::compute_env_coef_w_zero (T t, T fs)
 {
@@ -107,7 +109,14 @@ inline T	EnvHelper::compensate_order (T t, int ord)
 {
 	assert (ord >= 1);
 
-	return t * 3 / T (ord * 2 + 1);
+#if 1
+	const T        s = T (3) * fstb::rcp_uint <T> (ord * 2 + 1);
+#else
+	// Slightly better approximation
+	const T        s = T (6.82f + ord * 0.18f) * fstb::rcp_uint <T> (ord * 5 + 2);
+#endif
+
+	return t * s;
 }
 
 
