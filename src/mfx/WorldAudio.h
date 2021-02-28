@@ -181,6 +181,7 @@ private:
 	float          _tempo_new;          // BPM. 0 when nothing new
 	float          _tempo_cur;          // BPM, > 0
 
+	bool           _denorm_conf_flag;   // Indicates we have configured the denormal stuff for the processing thread
 	std::chrono::microseconds
 	               _proc_date_beg;
 	std::chrono::microseconds

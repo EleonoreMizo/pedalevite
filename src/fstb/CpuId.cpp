@@ -64,6 +64,7 @@ CpuId::CpuId ()
 	call_cpuid (0x00000001, 0, eax, ebx, ecx, edx);
 
 	_mmx_flag     = ((edx & (1L << 23)) != 0);
+	_fxsr_flag    = ((edx & (1L << 24)) != 0);
 	_sse_flag     = ((edx & (1L << 25)) != 0);
 	_sse2_flag    = ((edx & (1L << 26)) != 0);
 	_sse3_flag    = ((ecx & (1L <<  0)) != 0);

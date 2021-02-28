@@ -24,7 +24,13 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/ArrayAlign.h"
+#include "fstb/CpuId.h"
 #include "fstb/ToolsSimd.h"
+
+#if (fstb_ARCHI == fstb_ARCHI_X86)
+#include <immintrin.h>
+#endif // fstb_ARCHI
 
 #include <cassert>
 
@@ -36,6 +42,42 @@ namespace fstb
 
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+
+void	ToolsSimd::disable_denorm ()
+{
+#if (fstb_ARCHI == fstb_ARCHI_X86)
+
+	// Gets the MXCSR_MASK to know which features are supported
+	uint32_t       mxcsr_mask = 0;
+	fstb::CpuId    cpuid;
+	if (cpuid._fxsr_flag)
+	{
+		ArrayAlign <uint8_t, 512, 16> fxsave_img;
+		_fxsave (fxsave_img.data ());
+		mxcsr_mask = *reinterpret_cast <const uint32_t *> (&fxsave_img [28]);
+	}
+	if (mxcsr_mask == 0)
+	{
+		mxcsr_mask = 0x0000FFBF;
+	}
+
+	// Sets denormal behaviour for SSE operations
+	auto           reg_mxcsr = _mm_getcsr ();
+	reg_mxcsr |= 1 << 15;   // FTZ - Flush To Zero
+	reg_mxcsr |= 1 <<  6;   // DAZ - Denormals Are Zero
+	// DAZ is not supported on all CPUs, we have to mask it
+	reg_mxcsr &= mxcsr_mask;
+	_mm_setcsr (reg_mxcsr);
+
+	// On MacOS (not tested):
+	// #include <cfenv>
+	// #pragma STDC FENV_ACCESS ON
+	// fesetenv (_FE_DFL_DISABLE_SSE_DENORMS_ENV);
+
+#endif
+}
 
 
 

@@ -53,6 +53,7 @@ public:
 #endif
 
 	bool           _mmx_flag     = false;
+	bool           _fxsr_flag    = false;  // FXSAVE, FXRESTOR, CR4 bit 9
 	bool           _3dnow_flag   = false;
 	bool           _isse_flag    = false;
 	bool           _sse_flag     = false;

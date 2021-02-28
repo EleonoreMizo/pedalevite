@@ -100,6 +100,8 @@ public:
 		uint16_t       _u16 [8];
 	};
 
+	static void    disable_denorm ();
+
 	template <typename MEM>
 	static inline VectF32
 	               load_f32 (const MEM *ptr);

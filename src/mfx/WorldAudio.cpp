@@ -73,6 +73,7 @@ WorldAudio::WorldAudio (PluginPool &plugin_pool, WaMsgQueue &queue_from_cmd, WaM
 ,	_evt_ptr_arr ()
 ,	_tempo_new (0)
 ,	_tempo_cur (float (Cst::_tempo_ref))
+,	_denorm_conf_flag (false)
 ,	_proc_date_beg (0)
 ,	_proc_date_end (0)
 ,	_proc_analyser ()
@@ -179,6 +180,11 @@ void	WorldAudio::process_block (float * const * dst_arr, const float * const * s
 	}
 	_proc_date_beg = date_beg;
 
+	if (! _denorm_conf_flag)
+	{
+		fstb::ToolsSimd::disable_denorm ();
+		_denorm_conf_flag = true;
+	}
 	bool           ctx_update_flag = _prog_switcher.frame_beg ();
 
 	// A problem occured...
