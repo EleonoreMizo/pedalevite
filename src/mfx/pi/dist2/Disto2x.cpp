@@ -213,7 +213,6 @@ int	Disto2x::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 	_proc->_trans_ana.reset (sample_freq, max_buf_len);
 	_proc->_freq_split.set_sample_freq (sample_freq);
-	_proc->_freq_split.set_thiele_coef (float (0.5f * fstb::SQRT2));
 	for (auto &stage : _proc->_stage_arr)
 	{
 		double         stage_lat = 0;
@@ -311,7 +310,7 @@ void	Disto2x::do_process_block (piapi::ProcInfo &proc)
 		lvl_pre_sq = _env_pre.analyse_block_raw (&_buf_rms_pre [0], nbr_spl);
 	}
 
-	// Input LPF and transcient processing
+	// Input LPF and transient processing
 	for (int chn_cnt = 0; chn_cnt < nbr_chn_src; ++chn_cnt)
 	{
 		float *        stio_ptr = stage_io_arr [0] [chn_cnt];

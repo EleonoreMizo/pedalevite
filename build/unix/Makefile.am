@@ -875,6 +875,8 @@ commonsrc = \
         ../../src/mfx/pi/colorme/Param.h \
         ../../src/mfx/pi/cdsp/FreqShift.cpp \
         ../../src/mfx/pi/cdsp/FreqShift.h \
+        ../../src/mfx/pi/cdsp/FreqSplitter5.cpp \
+        ../../src/mfx/pi/cdsp/FreqSplitter5.h \
         ../../src/mfx/pi/cdsp/FreqSplitter8.cpp \
         ../../src/mfx/pi/cdsp/FreqSplitter8.h \
         ../../src/mfx/pi/cdsp/PhaseHalfPi.h \

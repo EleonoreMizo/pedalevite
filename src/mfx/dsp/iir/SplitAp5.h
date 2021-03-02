@@ -25,8 +25,6 @@ http://www.wtfpl.net/ for more details.
 
 #include "mfx/dsp/iir/AllPass1p.h"
 #include "mfx/dsp/iir/AllPass2p.h"
-#include "mfx/dsp/BandSplitAllPassPair.h"
-#include "mfx/dsp/FilterCascadeIdOdd.h"
 
 #include <array>
 
@@ -74,14 +72,6 @@ protected:
 
 private:
 
-	typedef dsp::iir::AllPass2p	Filter0;
-	typedef dsp::FilterCascadeIdOdd <
-		dsp::iir::AllPass1p,
-		dsp::iir::AllPass2p,
-		1
-	> Filter1;
-	typedef dsp::BandSplitAllPassPair <Filter0, Filter1, true> BandSplitApp;
-
 	void           update_filters ();
 
 	float          _sample_freq = 0;    // Hz, > 0. 0 = not set
@@ -91,8 +81,17 @@ private:
 	float          _ka          = 0.5f;
 	float          _kb          = 1.f;
 
-	BandSplitApp   _band_split;
 	bool           _dirty_flag  = true; // Filters require an update
+
+	dsp::iir::AllPass2p                 // Path 0
+	               _ap0;
+	dsp::iir::AllPass1p                 // Path 1.1
+	               _ap1;
+	dsp::iir::AllPass2p                 // Path 1.2
+	               _ap2;
+
+	dsp::iir::AllPass2p                 // Same as path 0
+	               _comp;
 
 
 

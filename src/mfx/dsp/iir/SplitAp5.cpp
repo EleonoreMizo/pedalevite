@@ -102,18 +102,10 @@ void	SplitAp5::copy_param_from (const SplitAp5 &other)
 
 	if (! _dirty_flag)
 	{
-		const auto &   f0     = other._band_split.use_filter_0 ();
-		const auto &   src_f1 = other._band_split.use_filter_1 ();
-		const auto &   f1e    = src_f1.use_filter ();
-		const auto &   f1o    = src_f1.use_filter (0);
-
-		Filter0 &	filter_0 = _band_split.use_filter_0 ();
-		Filter1 &	filter_1 = _band_split.use_filter_1 ();
-		Filter0 &   filter_f = _band_split.use_fix_filter ();
-		filter_0.copy_z_eq (f0);
-		filter_1.use_filter ().copy_z_eq (f1e);
-		filter_1.use_filter (0).copy_z_eq (f1o);
-		filter_f.copy_z_eq (f0);
+		_ap0.copy_z_eq (other._ap0);
+		_ap1.copy_z_eq (other._ap1);
+		_ap2.copy_z_eq (other._ap2);
+		_comp.copy_z_eq (other._comp);
 	}
 }
 
@@ -121,7 +113,10 @@ void	SplitAp5::copy_param_from (const SplitAp5 &other)
 
 void	SplitAp5::clear_buffers ()
 {
-	_band_split.clear_buffers ();
+	_ap0.clear_buffers ();
+	_ap1.clear_buffers ();
+	_ap2.clear_buffers ();
+	_comp.clear_buffers ();
 }
 
 
@@ -135,7 +130,12 @@ void	SplitAp5::process_block_split (float lo_ptr [], float hi_ptr [], const floa
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	_band_split.split_block (lo_ptr, hi_ptr, src_ptr, nbr_spl);
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		const auto     both { process_sample_split (src_ptr [pos]) };
+		lo_ptr [pos] = both [0];
+		hi_ptr [pos] = both [1];
+	}
 }
 
 
@@ -147,7 +147,10 @@ void	SplitAp5::process_block_compensate (float dst_ptr [], const float src_ptr [
 	assert (src_ptr != nullptr);
 	assert (nbr_spl > 0);
 
-	_band_split.compensate_block (dst_ptr, src_ptr, nbr_spl);
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		dst_ptr [pos] = process_sample_compensate (src_ptr [pos]);
+	}
 }
 
 
@@ -179,13 +182,10 @@ void	SplitAp5::update_filters ()
 	dsp::iir::TransSZBilin::map_s_to_z_ap2_approx (zb_1o, x2, k);
 	dsp::iir::TransSZBilin::map_s_to_z_ap2_approx (zb_0 , x1, k);
 
-	Filter0 &	filter_0 = _band_split.use_filter_0 ();
-	Filter1 &	filter_1 = _band_split.use_filter_1 ();
-	Filter0 &	filter_f = _band_split.use_fix_filter ();
-	filter_1.use_filter ().set_coef (zb_1e [0]);
-	filter_1.use_filter (0).set_z_eq (zb_1o [0], zb_1o [1]);
-	filter_0.set_z_eq (zb_0 [0], zb_0 [1]);
-	filter_f.set_z_eq (zb_0 [0], zb_0 [1]);
+	_ap1.set_coef (zb_1e [0]);
+	_ap2.set_z_eq (zb_1o [0], zb_1o [1]);
+	_ap0.set_z_eq (zb_0 [0], zb_0 [1]);
+	_comp.set_z_eq (zb_0 [0], zb_0 [1]);
 }
 
 

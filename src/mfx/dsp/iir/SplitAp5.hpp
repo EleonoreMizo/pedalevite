@@ -50,11 +50,11 @@ std::array <float, 2>	SplitAp5::process_sample_split (float x)
 {
 	assert (! _dirty_flag);
 
-	float          lp;
-	float          hp;
-	_band_split.split_sample (lp, hp, x);
+	const float    xh = x * 0.5f;
+	const float    p0 = _ap0.process_sample (xh);
+	const float    p1 = _ap2.process_sample (_ap1.process_sample (xh));
 
-	return std::array <float, 2> {{ lp, hp }};
+	return std::array <float, 2> {{ p0 + p1, p0 - p1 }};
 }
 
 
@@ -63,7 +63,7 @@ float	SplitAp5::process_sample_compensate (float x)
 {
 	assert (! _dirty_flag);
 
-	return _band_split.compensate_sample (x);
+	return _comp.process_sample (x);
 }
 
 

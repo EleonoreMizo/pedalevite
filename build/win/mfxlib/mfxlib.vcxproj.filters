@@ -5007,6 +5007,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter8.h">
       <Filter>mfx\pi\cdsp</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.h">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\mfx\piapi\PluginInterface.cpp">
@@ -6369,6 +6372,9 @@
       <Filter>mfx\dsp\iir</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter8.cpp">
+      <Filter>mfx\pi\cdsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp">
       <Filter>mfx\pi\cdsp</Filter>
     </ClCompile>
   </ItemGroup>
