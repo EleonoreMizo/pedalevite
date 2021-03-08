@@ -336,6 +336,8 @@ commonsrc = \
         ../../src/mfx/dsp/ana/FreqFast.h \
         ../../src/mfx/dsp/ana/FreqPeak.cpp \
         ../../src/mfx/dsp/ana/FreqPeak.h \
+        ../../src/mfx/dsp/ana/FreqYin.cpp \
+        ../../src/mfx/dsp/ana/FreqYin.h \
         ../../src/mfx/dsp/ana/FreqYinCheap.cpp \
         ../../src/mfx/dsp/ana/FreqYinCheap.h \
         ../../src/mfx/dsp/ana/ValSmooth.h \
@@ -1713,6 +1715,8 @@ mfxtest_SOURCES = $(commonsrc) \
         ../../src/test/GraphPrim.h \
         ../../src/test/Gridaxis.cpp \
         ../../src/test/Gridaxis.h \
+        ../../src/test/TestAnalysisFreq.cpp \
+        ../../src/test/TestAnalysisFreq.h \
         ../../src/test/TestApprox.cpp \
         ../../src/test/TestApprox.h \
         ../../src/test/TestBigMuffPi.cpp \

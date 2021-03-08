@@ -57,6 +57,7 @@
 #include "test/DrawShapers.h"
 #include "test/EPSPlot.h"
 #include "test/Gridaxis.h"
+#include "test/TestAnalysisFreq.h"
 #include "test/TestApprox.h"
 #include "test/TestBigMuffPi.h"
 #include "test/TestConvolverFft.h"
@@ -1889,10 +1890,14 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestAnalysisFreq::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestSplitAp5::perform_test ();
 #endif
 
-#if 1
+#if 0
 	if (ret_val == 0) ret_val = TestSplitThiele8::perform_test ();
 #endif
 
