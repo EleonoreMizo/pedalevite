@@ -2169,7 +2169,7 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.hpp">
       <Filter>mfx\dsp\dyn</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h">
+    <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYinCheap.h">
       <Filter>mfx\dsp\ana</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\pi\pidet\PitchDetect.h">
@@ -5810,7 +5810,7 @@
     <ClCompile Include="..\..\..\src\mfx\dsp\dyn\LimiterRms.cpp">
       <Filter>mfx\dsp\dyn</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYin.cpp">
+    <ClCompile Include="..\..\..\src\mfx\dsp\ana\FreqYinCheap.cpp">
       <Filter>mfx\dsp\ana</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetect.cpp">

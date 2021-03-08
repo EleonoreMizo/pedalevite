@@ -28,7 +28,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include "fstb/AllocAlign.h"
-#include "mfx/dsp/ana/FreqYin.h"
+#include "mfx/dsp/ana/FreqYinCheap.h"
 #include "mfx/pi/tuner/TunerDesc.h"
 #include "mfx/piapi/PluginInterface.h"
 
@@ -85,7 +85,7 @@ private:
 	TunerDesc      _desc;
 	State          _state   = State_CREATED;
 
-	dsp::ana::FreqYin
+	dsp::ana::FreqYinCheap
 	               _analyser;
 	float          _freq    = 0;        // Hz. 0 = not found
 	BufAlign       _buffer;

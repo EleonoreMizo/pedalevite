@@ -104,6 +104,8 @@ int	Tuner::do_reset (double sample_freq, int max_buf_len, int &latency)
 
 void	Tuner::do_process_block (piapi::ProcInfo &proc)
 {
+	assert ((proc._nbr_spl & (_sub_spl - 1)) == 0);
+
 	const int      nbr_spl_s = proc._nbr_spl / _sub_spl;
 	const float *  src_ptr   = proc._src_arr [0];
 	for (int k = 0; k < nbr_spl_s; ++k)

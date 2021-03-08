@@ -336,8 +336,8 @@ commonsrc = \
         ../../src/mfx/dsp/ana/FreqFast.h \
         ../../src/mfx/dsp/ana/FreqPeak.cpp \
         ../../src/mfx/dsp/ana/FreqPeak.h \
-        ../../src/mfx/dsp/ana/FreqYin.cpp \
-        ../../src/mfx/dsp/ana/FreqYin.h \
+        ../../src/mfx/dsp/ana/FreqYinCheap.cpp \
+        ../../src/mfx/dsp/ana/FreqYinCheap.h \
         ../../src/mfx/dsp/ana/ValSmooth.h \
         ../../src/mfx/dsp/ana/ValSmooth.hpp \
         ../../src/mfx/dsp/ctrl/env/AdsrRc.cpp \

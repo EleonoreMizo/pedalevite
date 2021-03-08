@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FreqYin.h
+        FreqYinCheap.h
         Author: Laurent de Soras, 2016
 
 Based on:
@@ -27,8 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 #pragma once
-#if ! defined (mfx_dsp_ana_FreqYin_HEADER_INCLUDED)
-#define mfx_dsp_ana_FreqYin_HEADER_INCLUDED
+#if ! defined (mfx_dsp_ana_FreqYinCheap_HEADER_INCLUDED)
+#define mfx_dsp_ana_FreqYinCheap_HEADER_INCLUDED
 
 #if defined (_MSC_VER)
 	#pragma warning (4 : 4250)
@@ -59,7 +59,7 @@ namespace ana
 
 
 
-class FreqYin
+class FreqYinCheap
 {
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -124,10 +124,10 @@ private:
 
 private:
 
-	bool           operator == (const FreqYin &other) const = delete;
-	bool           operator != (const FreqYin &other) const = delete;
+	bool           operator == (const FreqYinCheap &other) const = delete;
+	bool           operator != (const FreqYinCheap &other) const = delete;
 
-}; // class FreqYin
+}; // class FreqYinCheap
 
 
 
@@ -137,11 +137,11 @@ private:
 
 
 
-//#include "mfx/dsp/ana/FreqYin.hpp"
+//#include "mfx/dsp/ana/FreqYinCheap.hpp"
 
 
 
-#endif   // mfx_dsp_ana_FreqYin_HEADER_INCLUDED
+#endif   // mfx_dsp_ana_FreqYinCheap_HEADER_INCLUDED
 
 
 

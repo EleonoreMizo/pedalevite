@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-        FreqYin.cpp
+        FreqYinCheap.cpp
         Author: Laurent de Soras, 2016
 
 --- Legal stuff ---
@@ -24,7 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include "mfx/dsp/ana/FreqYin.h"
+#include "mfx/dsp/ana/FreqYinCheap.h"
 #if defined (mfx_dsp_ana_USE_SIMD)
 #include "fstb/ToolsSimd.h"
 #endif
@@ -50,7 +50,7 @@ namespace ana
 
 
 
-void	FreqYin::set_sample_freq (double sample_freq)
+void	FreqYinCheap::set_sample_freq (double sample_freq)
 {
 	assert (sample_freq > 0);
 
@@ -82,7 +82,7 @@ void	FreqYin::set_sample_freq (double sample_freq)
 
 
 
-void	FreqYin::set_freq_bot (float f)
+void	FreqYinCheap::set_freq_bot (float f)
 {
 	_freq_bot = f;
 	if (_sample_freq > 0)
@@ -93,7 +93,7 @@ void	FreqYin::set_freq_bot (float f)
 
 
 
-void	FreqYin::set_freq_top (float f)
+void	FreqYinCheap::set_freq_top (float f)
 {
 	_freq_top = f;
 	if (_sample_freq > 0)
@@ -104,7 +104,7 @@ void	FreqYin::set_freq_top (float f)
 
 
 
-void	FreqYin::set_smoothing (float responsiveness, float thr)
+void	FreqYinCheap::set_smoothing (float responsiveness, float thr)
 {
 	assert (responsiveness > 0);
 	assert (responsiveness <= 1);
@@ -116,7 +116,7 @@ void	FreqYin::set_smoothing (float responsiveness, float thr)
 
 
 
-void	FreqYin::clear_buffers ()
+void	FreqYinCheap::clear_buffers ()
 {
 #if defined (mfx_dsp_ana_USE_SIMD)
 	for (BufAlign &buf : _buf_arr)
@@ -135,7 +135,7 @@ void	FreqYin::clear_buffers ()
 
 
 
-float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
+float	FreqYinCheap::process_block (const float spl_ptr [], int nbr_spl)
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
@@ -152,7 +152,7 @@ float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
 
 
 
-float	FreqYin::process_sample (float x)
+float	FreqYinCheap::process_sample (float x)
 {
 	assert (_sample_freq > 0);
 	assert (_freq_bot < _freq_top);
@@ -189,7 +189,7 @@ float	FreqYin::process_sample (float x)
 
 
 
-void	FreqYin::update_freq_bot_param ()
+void	FreqYinCheap::update_freq_bot_param ()
 {
 	assert (_sample_freq > 0);
 
@@ -203,7 +203,7 @@ void	FreqYin::update_freq_bot_param ()
 
 
 
-void	FreqYin::update_freq_top_param ()
+void	FreqYinCheap::update_freq_top_param ()
 {
 	assert (_sample_freq > 0);
 
@@ -212,7 +212,7 @@ void	FreqYin::update_freq_top_param ()
 
 
 
-void	FreqYin::analyse_sample ()
+void	FreqYinCheap::analyse_sample ()
 {
 	if (_delta <= 1)
 	{
