@@ -175,6 +175,10 @@ public:
 	static inline void
 	               spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v);
 
+	static inline VectF32
+	               reverse_f32 (VectF32 x);
+	static inline VectS32
+	               reverse_s32 (VectS32 x);
 
 	static inline void
 	               mac (VectF32 &s, VectF32 a, VectF32 b);

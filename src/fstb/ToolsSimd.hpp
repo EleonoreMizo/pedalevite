@@ -25,6 +25,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "fstb/fnc.h"
 
 #include <algorithm>
+#include <utility>
 
 #include <cfloat>
 #include <cmath>
@@ -504,6 +505,36 @@ void	ToolsSimd::spread_2f32 (VectF32 &ra, VectF32 &rb, VectF32 v)
 	ra = vcombine_f32 (v01, v01);
 	rb = vcombine_f32 (v23, v23);
 #endif // fstb_ARCHI
+}
+
+
+
+ToolsSimd::VectF32	ToolsSimd::reverse_f32 (VectF32 x)
+{
+#if ! defined (fstb_HAS_SIMD)
+	std::swap (x._ [0], x._ [3]);
+	std::swap (x._ [1], x._ [2]);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	x = _mm_shuffle_ps (x, x, (3<<0) + (2<<2) + (1<<4) + (0<<6));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	x = vrev64q_f32 (vcombine_f32 (vget_high_f32 (x), vget_low_f32 (x)));
+#endif // fstb_ARCHI
+	return x;
+}
+
+
+
+ToolsSimd::VectS32	ToolsSimd::reverse_s32 (VectS32 x)
+{
+#if ! defined (fstb_HAS_SIMD)
+	std::swap (x._ [0], x._ [3]);
+	std::swap (x._ [1], x._ [2]);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	x = _mm_shuffle_epi32 (x, (3<<0) + (2<<2) + (1<<4) + (0<<6));
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	x = vrev64q_s32 (vcombine_s32 (vget_high_s32 (x), vget_low_s32 (x)));
+#endif // fstb_ARCHI
+	return x;
 }
 
 
