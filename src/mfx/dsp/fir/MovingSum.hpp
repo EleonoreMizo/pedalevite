@@ -23,6 +23,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include <algorithm>
+#include <utility>
 
 #include <cassert>
 #include <cstring>
@@ -118,7 +119,7 @@ void	MovingSum <DT, ST>::process_block (SumType dst_ptr [], const DataType src_p
 template <typename DT, typename ST>
 void	MovingSum <DT, ST>::clear_buffers ()
 {
-	memset (_buf.data (), 0, sizeof (_buf [0]) * _win_len);
+	std::fill (_buf.begin (), _buf.end (), DataType (0));
 	_pos_rw = 0;
 	_sum_u  = 0;
 	_sum_d  = 0;

@@ -112,8 +112,7 @@ int	TestSplitAp5::perform_test ()
 		tim.stop_lap ();
 	}
 
-	const double      spl_per_s = tim.get_best_rate (len);
-
+	const double   spl_per_s = tim.get_best_rate (len);
 	const double   kilo_sps  = spl_per_s / 1e3;
 	const double   rt_mul    = spl_per_s / sample_freq;
 	printf ("Speed: %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);

@@ -12,6 +12,8 @@ Template parameters:
 
 - ST: Sum type (output). Should be same or more accurate than DT.
 
+Algorithm: Evan Balster on the Music-DSP mailing list,
+"Re: [music-dsp] highly optimised variable rms and more", 2016-07-19
 
 --- Legal stuff ---
 
@@ -81,7 +83,7 @@ private:
 
 	typedef std::vector <DataType> SplArray;
 
-	SplArray      _buf = SplArray (1, 0);
+	SplArray      _buf     = SplArray (1, 0);
 	int           _win_len = 1;         // Samples, > 0
 	int           _pos_rw  = 0;         // Reading and writing pos
 	SumType       _sum_u   = 0;
