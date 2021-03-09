@@ -108,14 +108,8 @@ int	TestAnalysisFreq::perform_test ()
 		const double   rt_mul    = spl_per_s / sample_freq;
 		printf ("Speed: %12.3f kspl/s (x%.3f real-time).\n", kilo_sps, rt_mul);
 
-		if (ret_val == 0)
-		{
-			ret_val = mfx::FileOpWav::save ("results/freqyin1a.wav", dst_sig, sample_freq, 0.5f);
-		}
-		if (ret_val == 0)
-		{
-			ret_val = mfx::FileOpWav::save ("results/freqyin1b.wav", dst_pitch, sample_freq, 1.f);
-		}
+		mfx::FileOpWav::save ("results/freqyin1a.wav", dst_sig, sample_freq, 0.5f);
+		mfx::FileOpWav::save ("results/freqyin1b.wav", dst_pitch, sample_freq, 1.f);
 	}
 
 	printf ("%s\n\n", (ret_val == 0) ? "Done." : "*** Error ***");
