@@ -24,6 +24,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+#include "fstb/def.h"
 #include "mfx/dsp/ana/FreqYin.h"
 
 #include <algorithm>
@@ -225,7 +226,13 @@ void	FreqYin::update_difference_functions ()
 	p_ref_o -= _vec_size - 1;
 	p_ref_i -= _vec_size - 1;
 
+#if fstb_ARCHI == fstb_ARCHI_X86
+	// For some reasons, reaching data forward is faster on x86 and
+	// backwards faster on ARM.
+	for (int delta = _max_delta & ~_vec_mask; delta >= 0; delta -= _vec_size)
+#else
 	for (int delta = 0; delta <= _max_delta; delta += _vec_size)
+#endif // fstb_ARCHI
 	{
 		Delta &        d_info  = _delta_arr [delta >> _vec_size_l2];
 		auto           sum_u   = TS::load_f32 (d_info._sum_u.data ());
@@ -262,7 +269,7 @@ void	FreqYin::update_difference_functions_block (int nbr_spl)
 	const int      buf_pos_r_m_1 = _buf_pos_w - _win_len - 1; // May be negative
 	int            p_ref_o = buf_pos_r_m_1;
 	int            p_ref_i = buf_pos_r_m_1 + _win_len;
-	
+
 	typedef std::array <float, _max_blk_size> SrcCache;
 	SrcCache       v_ref_o_arr;
 	SrcCache       v_ref_i_arr;
@@ -277,7 +284,13 @@ void	FreqYin::update_difference_functions_block (int nbr_spl)
 	p_ref_o -= _vec_size - 1;
 	p_ref_i -= _vec_size - 1;
 
+#if fstb_ARCHI == fstb_ARCHI_X86
+	// For some reasons, reaching data forward is faster on x86 and
+	// backwards faster on ARM.
+	for (int delta = _max_delta & ~_vec_mask; delta >= 0; delta -= _vec_size)
+#else
 	for (int delta = 0; delta <= _max_delta; delta += _vec_size)
+#endif // fstb_ARCHI
 	{
 		Delta &        d_info  = _delta_arr [delta >> _vec_size_l2];
 		auto           sum_u   = TS::load_f32 (d_info._sum_u.data ());
