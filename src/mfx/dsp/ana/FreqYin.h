@@ -81,9 +81,10 @@ private:
 
 	using TS = fstb::ToolsSimd;
 
-	static constexpr int _vec_size_l2 = 2;
-	static constexpr int _vec_size    = 1 << _vec_size_l2;
-	static constexpr int _vec_mask    = _vec_size - 1;
+	static constexpr int _vec_size_l2  = 2;
+	static constexpr int _vec_size     = 1 << _vec_size_l2;
+	static constexpr int _vec_mask     = _vec_size - 1;
+	static constexpr int _max_blk_size = 64;
 
 	class Delta
 	{
@@ -99,6 +100,9 @@ private:
 	void           update_freq_bot_param ();
 	void           update_freq_top_param ();
 	void           update_difference_functions ();
+	void           update_difference_functions_block (int nbr_spl);
+	void           check_sum_position ();
+	void           check_ana_position ();
 	void           analyse ();
 	float          get_cmndf (int delta) const;
 
@@ -111,8 +115,9 @@ private:
 	int            _buf_mask    = 0;
 	int            _buf_pos_w   = 0;    // Writing position within the buffer
 	float          _sample_freq = 0;    // Hz. 0 = not set
-	int            _win_len     = 0;    // Samples
-	int            _min_delta   = 0;    // >= 2
+	int            _max_delta   = 0;    // Highest tested offset for the autocor. Samples, > _min_delta
+	int            _min_delta   = 0;    // Lowest tested offset for the autocor. Samples, >= 2
+	int            _win_len     = 0;    // Window length for the autocorrelation. Samples, generally equal to _max_delta
 	int            _ana_per     = 64;   // Period between two analysis, in samples. >= 1
 	int            _ana_pos     = 0;    // Position within the analysis period, [0 ; _ana_per[
 	int            _sum_pos     = 0;    // Counter for the cumulated sum. Reset when reaching _win_len

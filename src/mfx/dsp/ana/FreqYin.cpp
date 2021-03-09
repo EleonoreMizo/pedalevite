@@ -53,7 +53,7 @@ void	FreqYin::set_sample_freq (double sample_freq)
 
 	_sample_freq = float (sample_freq);
 	const int      win_len_max = int (sample_freq / _min_freq) + 1;
-	_buf_len     = 1 << int (ceil (log2 (win_len_max * 3)));
+	_buf_len     = 1 << int (ceil (log2 (win_len_max * 3 + (_max_blk_size - 1))));
 	_buffer.resize (_buf_len + _vec_size - 1, 0);
 	_buf_mask    = _buf_len - 1;
 	_buf_pos_w   = _buf_pos_w & _buf_mask;
@@ -128,10 +128,34 @@ float	FreqYin::process_block (const float spl_ptr [], int nbr_spl)
 	assert (spl_ptr != nullptr);
 	assert (nbr_spl >= 0);
 
-	for (int pos = 0; pos < nbr_spl; ++pos)
+	int            pos_blk = 0;
+	do
 	{
-		process_sample (spl_ptr [pos]);
+		int            work_len = nbr_spl - pos_blk;
+		work_len = std::min (work_len, _ana_per - _ana_pos);
+		work_len = std::min (work_len, _win_len - _sum_pos);
+		work_len = std::min (work_len, int (_max_blk_size));
+
+		for (int pos = 0; pos < work_len; ++pos)
+		{
+			const float    x     = spl_ptr [pos_blk + pos];
+			const int      pos_w = (_buf_pos_w + pos) & _buf_mask;
+			_buffer [pos_w] = x;
+			if (pos_w < _vec_size - 1)
+			{
+				_buffer [_buf_len + pos_w] = x;
+			}
+		}
+
+		update_difference_functions_block (work_len);
+
+		_ana_pos  += work_len;
+		check_ana_position ();
+
+		_buf_pos_w = (_buf_pos_w + work_len) & _buf_mask;
+		pos_blk   += work_len;
 	}
+	while (pos_blk < nbr_spl);
 
 	return _freq_smooth.get_val ();
 }
@@ -153,11 +177,7 @@ float	FreqYin::process_sample (float x)
 	update_difference_functions ();
 
 	++ _ana_pos;
-	if (_ana_pos >= _ana_per)
-	{
-		analyse ();
-		_ana_pos = 0;
-	}
+	check_ana_position ();
 
 	return _freq_smooth.get_val ();
 }
@@ -176,8 +196,9 @@ void	FreqYin::update_freq_bot_param ()
 {
 	assert (_sample_freq > 0);
 
-	_win_len   = int (_sample_freq / _freq_bot) + 1;
-	assert (_win_len <= _buf_mask);
+	_max_delta = int (_sample_freq / _freq_bot) + 1;
+	_win_len   = _max_delta;
+	assert (_win_len + _max_delta <= _buf_mask);
 }
 
 
@@ -204,7 +225,7 @@ void	FreqYin::update_difference_functions ()
 	p_ref_o -= _vec_size - 1;
 	p_ref_i -= _vec_size - 1;
 
-	for (int delta = 0; delta <= _win_len; delta += _vec_size)
+	for (int delta = 0; delta <= _max_delta; delta += _vec_size)
 	{
 		Delta &        d_info  = _delta_arr [delta >> _vec_size_l2];
 		auto           sum_u   = TS::load_f32 (d_info._sum_u.data ());
@@ -228,8 +249,77 @@ void	FreqYin::update_difference_functions ()
 	}
 
 	++ _sum_pos;
+	check_sum_position ();
+}
+
+
+
+void	FreqYin::update_difference_functions_block (int nbr_spl)
+{
+	assert (nbr_spl > 0);
+	assert (nbr_spl <= _max_blk_size);
+
+	const int      buf_pos_r_m_1 = _buf_pos_w - _win_len - 1; // May be negative
+	int            p_ref_o = buf_pos_r_m_1;
+	int            p_ref_i = buf_pos_r_m_1 + _win_len;
+	
+	typedef std::array <float, _max_blk_size> SrcCache;
+	SrcCache       v_ref_o_arr;
+	SrcCache       v_ref_i_arr;
+	for (int pos = 0; pos < nbr_spl; ++pos)
+	{
+		v_ref_o_arr [pos] = _buffer [(p_ref_o + pos) & _buf_mask];
+		v_ref_i_arr [pos] = _buffer [(p_ref_i + pos) & _buf_mask];
+	}
+
+	// Because we're going backward, we have to offset the reading position.
+	// We'll have to reverse the vectors after reading.
+	p_ref_o -= _vec_size - 1;
+	p_ref_i -= _vec_size - 1;
+
+	for (int delta = 0; delta <= _max_delta; delta += _vec_size)
+	{
+		Delta &        d_info  = _delta_arr [delta >> _vec_size_l2];
+		auto           sum_u   = TS::load_f32 (d_info._sum_u.data ());
+		auto           sum_d   = TS::load_f32 (d_info._sum_d.data ());
+		sum_u = TS::reverse_f32 (sum_u);
+		sum_d = TS::reverse_f32 (sum_d);
+
+		const int      p_tst_o_base = p_ref_o - delta;
+		const int      p_tst_i_base = p_ref_i - delta;
+		for (int pos = 0; pos < nbr_spl; ++pos)
+		{
+			const auto     v_ref_o = TS::set1_f32 (v_ref_o_arr [pos]);
+			const auto     v_ref_i = TS::set1_f32 (v_ref_i_arr [pos]);
+			const int      p_tst_o = p_tst_o_base + pos;
+			const int      p_tst_i = p_tst_i_base + pos;
+			const auto     v_tst_o = TS::loadu_f32 (&_buffer [p_tst_o & _buf_mask]);
+			const auto     v_tst_i = TS::loadu_f32 (&_buffer [p_tst_i & _buf_mask]);
+			const auto     dif1_i  = v_ref_i - v_tst_i;
+			const auto     dif1_o  = v_ref_o - v_tst_o;
+			const auto     dif2_i  = dif1_i * dif1_i;
+			const auto     dif2_o  = dif1_i * dif1_o;
+			sum_u += dif2_i;
+			sum_d -= dif2_o;
+		}
+
+		sum_u = TS::reverse_f32 (sum_u);
+		sum_d = TS::reverse_f32 (sum_d);
+		TS::store_f32 (d_info._sum_u.data (), sum_u);
+		TS::store_f32 (d_info._sum_d.data (), sum_d);
+	}
+
+	_sum_pos += nbr_spl;
+	check_sum_position ();
+}
+
+
+
+void	FreqYin::check_sum_position ()
+{
 	if (_sum_pos >= _win_len)
 	{
+		assert (_sum_pos == _win_len);
 		for (int delta = 0; delta <= _win_len; delta += _vec_size)
 		{
 			Delta &        d_info = _delta_arr [delta >> _vec_size_l2];
@@ -243,13 +333,24 @@ void	FreqYin::update_difference_functions ()
 
 
 
+void	FreqYin::check_ana_position ()
+{
+	if (_ana_pos >= _ana_per)
+	{
+		analyse ();
+		_ana_pos = 0;
+	}
+}
+
+
+
 void	FreqYin::analyse ()
 {
 	float          freq    = 0; // 0 = not found yet
 	float          dif_sum = 0;
 	_delta_arr [0]._cmndf [0] = 1;
 
-	for (int delta = 1; delta <= _win_len; ++delta)
+	for (int delta = 1; delta <= _max_delta; ++delta)
 	{
 		Delta &        d_info  = _delta_arr [delta >> _vec_size_l2];
 		const int      s_idx   = delta & _vec_mask;
@@ -287,7 +388,7 @@ void	FreqYin::analyse ()
 float	FreqYin::get_cmndf (int delta) const
 {
 	assert (delta >= 0);
-	assert (delta <= _win_len);
+	assert (delta <= _max_delta);
 
 	const int      d_idx  = delta >> _vec_size_l2;
 	const int      s_idx  = delta & _vec_mask;

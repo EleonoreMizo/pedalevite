@@ -67,29 +67,39 @@ int	TestAnalysisFreq::perform_test ()
 		double         phi  = 0;
 		const double   fmul = 2 * fstb::PI / sample_freq;
 		float          freq = 0;
+		const int      blk_size = 32;
 
 		TimerAccurate  tim;
 		tim.reset ();
 		tim.start ();
 
-		for (int pos = 0; pos < len; ++pos)
+		int            pos = 0;
+		do
 		{
-			const float    freq_tst = fdet.process_sample (chn_arr [0] [pos]);
+			const int      work_len = std::min (blk_size, len - pos);
+			const float    freq_tst = fdet.process_block (&chn_arr [0] [pos], work_len);
+
 			const float    note =
 				fstb::Approx::log2 (std::max (freq_tst, 1.f) * (1.f / 440)) * 12 + 69;
-			dst_sig [pos]   = fstb::Approx::sin_nick (float (phi)) * 0.25f;
-			dst_pitch [pos] = (freq_tst <= 0) ? -1.f : note * (1 / 100.f);
 
-			if (freq_tst > 0)
+			for (int k = 0; k < work_len; ++k)
 			{
-				freq = freq_tst;
-			}
-			phi += freq * fmul;
-			if (phi > fstb::PI)
-			{
-				phi -= 2 * fstb::PI;
+				dst_sig [pos]   = fstb::Approx::sin_nick (float (phi)) * 0.25f;
+				dst_pitch [pos] = (freq_tst <= 0) ? -1.f : note * (1 / 100.f);
+
+				if (freq_tst > 0)
+				{
+					freq = freq_tst;
+				}
+				phi += freq * fmul;
+				if (phi > fstb::PI)
+				{
+					phi -= 2 * fstb::PI;
+				}
+				++ pos;
 			}
 		}
+		while (pos < len);
 
 		tim.stop ();
 
