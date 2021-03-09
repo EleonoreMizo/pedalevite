@@ -106,6 +106,10 @@ void	FreqYin::set_analysis_period (int per)
 	assert (per > 0);
 
 	_ana_per = per;
+	if (_ana_pos >= _ana_per)
+	{
+		_ana_pos = 0;
+	}
 }
 
 
@@ -199,7 +203,13 @@ void	FreqYin::update_freq_bot_param ()
 
 	_max_delta = int (_sample_freq / _freq_bot) + 1;
 	_win_len   = _max_delta;
-	assert (_win_len + _max_delta <= _buf_mask);
+	assert (_win_len + _max_delta + _max_blk_size <= _buf_mask);
+	if (_sum_pos >= _win_len)
+	{
+		// We don't reset the full state here because all running sums will be
+		// reset within two periods anyway.
+		_sum_pos = 0;
+	}
 }
 
 

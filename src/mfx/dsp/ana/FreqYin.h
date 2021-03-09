@@ -91,9 +91,9 @@ private:
 	public:
 		typedef std::array <float, _vec_size> VF32;
 		// Difference function = _sum_u + _sum_d
-		VF32           _sum_u {{ 0, 0, 0, 0 }};
-		VF32           _sum_d {{ 0, 0, 0, 0 }};
-		VF32           _cmndf {{ 0, 0, 0, 0 }};
+		alignas (16) VF32 _sum_u {{ 0, 0, 0, 0 }};
+		alignas (16) VF32 _sum_d {{ 0, 0, 0, 0 }};
+		alignas (16) VF32 _cmndf {{ 0, 0, 0, 0 }};
 	};
 	typedef std::vector <Delta, fstb::AllocAlign <Delta, 16> > DeltaArray;
 
@@ -120,7 +120,7 @@ private:
 	int            _win_len     = 0;    // Window length for the autocorrelation. Samples, generally equal to _max_delta
 	int            _ana_per     = 64;   // Period between two analysis, in samples. >= 1
 	int            _ana_pos     = 0;    // Position within the analysis period, [0 ; _ana_per[
-	int            _sum_pos     = 0;    // Counter for the cumulated sum. Reset when reaching _win_len
+	int            _sum_pos     = 0;    // Counter for the running sums. [0 ; _win_len[
 
 	float          _freq_bot    = _min_freq; // Hz, > 0
 	float          _freq_top    = 1000; // Hz, > _freq_bot
