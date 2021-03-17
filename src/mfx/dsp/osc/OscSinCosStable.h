@@ -8,6 +8,9 @@ Jorg Arndt, "Matters Computational", chapter 21.3.2 (Fast Transforms / The
 Fourier transform / Saving trigonometric computations / Recursive generation)
 http://www.jjj.de/fxt/fxtpage.html#fxtbook
 
+To do: compare with the Martin Vicanek's oscillator (A New Recursive Quadrature
+Oscillator), if it is fast and stable enough.
+
 --- Legal stuff ---
 
 This program is free software. It comes without any warranty, to

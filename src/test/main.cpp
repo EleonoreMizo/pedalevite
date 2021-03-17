@@ -77,6 +77,7 @@
 #include "test/TestOscSample.h"
 #include "test/TestOscSampleSyncFade.h"
 #include "test/TestOscSampleSyncHard.h"
+#include "test/TestOscSinCosStable.h"
 #include "test/TestOscWavetable.h"
 #include "test/TestOscWavetableSub.h"
 #include "test/TestOscWavetableSyncHard.h"
@@ -1890,6 +1891,10 @@ int main (int argc, char *argv [])
 	int            ret_val = 0;
 
 #if 1
+	if (ret_val == 0) ret_val = TestOscSinCosStable::perform_test ();
+#endif
+
+#if 0
 	if (ret_val == 0) ret_val = TestAnalysisFreq::perform_test ();
 #endif
 

@@ -20,6 +20,12 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 
 
 
+// 1 = Jorg Arndt
+// 2 = Martin Vicanek
+#define mfx_dsp_osc_OscSinCosStable_TYPE 1
+
+
+
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 #include <cmath>
@@ -120,6 +126,7 @@ void	OscSinCosStable <T>::correct_fast ()
 {
 	const double   norm_sq = double (_pos_cos * _pos_cos + _pos_sin * _pos_sin);
 	const DataType mult    = DataType ((3.0 - norm_sq) * 0.5);
+	// 2nd order approx: mult = (3/8) * norm_sq^2 - (10/8) * norm_sq + (15/8)
 
 	_pos_cos *= mult;
 	_pos_sin *= mult;
@@ -138,11 +145,17 @@ void	OscSinCosStable <T>::correct_fast ()
 template <class T>
 void	OscSinCosStable <T>::step (DataType alpha, DataType beta)
 {
+#if mfx_dsp_osc_OscSinCosStable_TYPE == 1
 	const DataType old_cos = _pos_cos;
 	const DataType old_sin = _pos_sin;
 
 	_pos_cos = old_cos - (alpha * old_cos + beta * old_sin);
 	_pos_sin = old_sin - (alpha * old_sin - beta * old_cos);
+#else
+	const DataType tmp = _pos_cos - alpha * _pos_sin;
+	_pos_sin += beta * tmp;
+	_pos_cos  = tmp - alpha * _pos_sin;
+#endif
 }
 
 
@@ -150,9 +163,15 @@ void	OscSinCosStable <T>::step (DataType alpha, DataType beta)
 template <class T>
 void	OscSinCosStable <T>::compute_step (DataType &alpha, DataType &beta, DataType angle_rad)
 {
+#if mfx_dsp_osc_OscSinCosStable_TYPE == 1
 	const double	s = sin (angle_rad * 0.5f);
 	alpha = DataType (s * s * 2);
 	beta  = DataType (sin (angle_rad));
+#else
+	alpha = DataType (tan (angle_rad * 0.5f));
+	beta  = DataType (sin (angle_rad));
+//	beta  = DataType (2 * alpha / (1 + alpha * alpha));
+#endif
 }
 
 
