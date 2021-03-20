@@ -39,6 +39,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 	#error
 #endif
 
+#include <tuple>
+
 #include <cstddef>
 #include <cstdint>
 
@@ -233,6 +235,8 @@ public:
 
 	static inline VectF32
 	               select (VectF32 cond, VectF32 v_t, VectF32 v_f);
+	static inline std::tuple <VectF32, VectF32>
+	               swap_cond (VectF32 cond, VectF32 lhs, VectF32 rhs);
 	static inline VectF32
 	               cmp_gt_f32 (VectF32 lhs, VectF32 rhs);
 	static inline VectS32
@@ -314,6 +318,8 @@ public:
 
 	static inline VectS32
 	               select (VectS32 cond, VectS32 v_t, VectS32 v_f);
+	static inline std::tuple <VectS32, VectS32>
+	               swap_cond (VectS32 cond, VectS32 lhs, VectS32 rhs);
 	static inline VectS32
 	               min_s32 (VectS32 lhs, VectS32 rhs);
 	static inline VectS32

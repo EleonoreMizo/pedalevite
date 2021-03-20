@@ -1317,6 +1317,7 @@ ToolsSimd::VectF32	ToolsSimd::exp2_approx2 (VectF32 v)
 ToolsSimd::VectF32	ToolsSimd::select (VectF32 cond, VectF32 v_t, VectF32 v_f)
 {
 #if ! defined (fstb_HAS_SIMD)
+	/*** To do: implement as r = v_f ^ ((v_f ^ v_t) & cond) ***/
 	Combo          cc;
 	Combo          ct;
 	Combo          cf;
@@ -1335,6 +1336,33 @@ ToolsSimd::VectF32	ToolsSimd::select (VectF32 cond, VectF32 v_t, VectF32 v_f)
 	return _mm_or_ps (cond_0, cond_1);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vbslq_f32 (vreinterpretq_u32_f32 (cond), v_t, v_f);
+#endif // fstb_ARCHI
+}
+
+
+
+std::tuple <ToolsSimd::VectF32, ToolsSimd::VectF32>	ToolsSimd::swap_cond (VectF32 cond, VectF32 lhs, VectF32 rhs)
+{
+#if ! defined (fstb_HAS_SIMD)
+	Combo          cc;
+	cc._vf32 = cond;
+	if (cc._s32 [0] != 0) { std::swap (lhs [0], rhs [0]); }
+	if (cc._s32 [1] != 0) { std::swap (lhs [1], rhs [1]); }
+	if (cc._s32 [2] != 0) { std::swap (lhs [2], rhs [2]); }
+	if (cc._s32 [3] != 0) { std::swap (lhs [3], rhs [3]); }
+	return std::make_tuple (lhs, rhs);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto     inv = _mm_and_ps (_mm_xor_ps (lhs, rhs), cond);
+	return std::make_tuple (
+		_mm_xor_ps (lhs, inv),
+		_mm_xor_ps (rhs, inv)
+	);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	const auto     cu32 = vreinterpretq_u32_f32 (cond);
+	return std::make_tuple (
+		vbslq_f32 (cu32, rhs, lhs),
+		vbslq_f32 (cu32, lhs, rhs)
+	);
 #endif // fstb_ARCHI
 }
 
@@ -2146,6 +2174,7 @@ void	ToolsSimd::start_lerp (VectF32 &val_cur, VectF32 &step, float val_beg, floa
 ToolsSimd::VectS32	ToolsSimd::select (VectS32 cond, VectS32 v_t, VectS32 v_f)
 {
 #if ! defined (fstb_HAS_SIMD)
+	/*** To do: implement as r = v_f ^ ((v_f ^ v_t) & cond) ***/
 	return VectS32 { {
 		(cond._ [0] & v_t._ [0]) | (~cond._ [0] & v_f._ [0]),
 		(cond._ [1] & v_t._ [1]) | (~cond._ [1] & v_f._ [1]),
@@ -2158,6 +2187,30 @@ ToolsSimd::VectS32	ToolsSimd::select (VectS32 cond, VectS32 v_t, VectS32 v_f)
 	return _mm_or_si128 (cond_0, cond_1);
 #elif fstb_ARCHI == fstb_ARCHI_ARM
 	return vbslq_s32 (vreinterpretq_u32_s32 (cond), v_t, v_f);
+#endif // fstb_ARCHI
+}
+
+
+
+std::tuple <ToolsSimd::VectS32, ToolsSimd::VectS32>	ToolsSimd::swap_cond (VectS32 cond, VectS32 lhs, VectS32 rhs)
+{
+#if ! defined (fstb_HAS_SIMD)
+	if (cond._ [0] != 0) { std::swap (lhs [0], rhs [0]); }
+	if (cond._ [1] != 0) { std::swap (lhs [1], rhs [1]); }
+	if (cond._ [2] != 0) { std::swap (lhs [2], rhs [2]); }
+	if (cond._ [3] != 0) { std::swap (lhs [3], rhs [3]); }
+	return std::make_tuple (lhs, rhs);
+#elif fstb_ARCHI == fstb_ARCHI_X86
+	const auto     inv = _mm_and_si128 (_mm_xor_si128 (lhs, rhs), cond);
+	return std::make_tuple (
+		_mm_xor_si128 (lhs, inv),
+		_mm_xor_si128 (rhs, inv)
+	);
+#elif fstb_ARCHI == fstb_ARCHI_ARM
+	return std::make_tuple (
+		vbslq_s32 (cond, rhs, lhs),
+		vbslq_s32 (cond, lhs, rhs)
+	);
 #endif // fstb_ARCHI
 }
 
