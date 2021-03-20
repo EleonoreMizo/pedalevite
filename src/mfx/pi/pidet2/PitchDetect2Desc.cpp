@@ -1,7 +1,7 @@
 /*****************************************************************************
 
-        PitchDetectDesc.cpp
-        Author: Laurent de Soras, 2018
+        PitchDetect2Desc.cpp
+        Author: Laurent de Soras, 2021
 
 --- Legal stuff ---
 
@@ -27,8 +27,8 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include "mfx/pi/param/MapPiecewiseLinLog.h"
 #include "mfx/pi/param/TplEnum.h"
 #include "mfx/pi/param/TplMapped.h"
-#include "mfx/pi/pidet/Param.h"
-#include "mfx/pi/pidet/PitchDetectDesc.h"
+#include "mfx/pi/pidet2/Param.h"
+#include "mfx/pi/pidet2/PitchDetect2Desc.h"
 #include "mfx/piapi/Tag.h"
 
 #include <cassert>
@@ -39,7 +39,7 @@ namespace mfx
 {
 namespace pi
 {
-namespace pidet
+namespace pidet2
 {
 
 
@@ -48,12 +48,12 @@ namespace pidet
 
 
 
-PitchDetectDesc::PitchDetectDesc ()
+PitchDetect2Desc::PitchDetect2Desc ()
 :	_desc_set (Param_NBR_ELT, 0)
 ,	_info ()
 {
-	_info._unique_id = "pidet";
-	_info._name      = "Pitch detector (fast)\nPitch det fast\nPitDetF";
+	_info._unique_id = "pidet2";
+	_info._name      = "Pitch detector (YIN)\nPitch det YIN\nPitDetY";
 	_info._tag_list  = { piapi::Tag::_analyser_0, piapi::Tag::_control_gen_0 };
 	_info._chn_pref  = piapi::ChnPref::NONE;
 
@@ -96,7 +96,7 @@ PitchDetectDesc::PitchDetectDesc ()
 
 
 
-ParamDescSet &	PitchDetectDesc::use_desc_set ()
+ParamDescSet &	PitchDetect2Desc::use_desc_set ()
 {
 	return _desc_set;
 }
@@ -107,14 +107,14 @@ ParamDescSet &	PitchDetectDesc::use_desc_set ()
 
 
 
-piapi::PluginInfo	PitchDetectDesc::do_get_info () const
+piapi::PluginInfo	PitchDetect2Desc::do_get_info () const
 {
 	return _info;
 }
 
 
 
-void	PitchDetectDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
+void	PitchDetect2Desc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 {
 	nbr_i = 1;
 	nbr_o = 0;
@@ -123,14 +123,14 @@ void	PitchDetectDesc::do_get_nbr_io (int &nbr_i, int &nbr_o, int &nbr_s) const
 
 
 
-int	PitchDetectDesc::do_get_nbr_param (piapi::ParamCateg categ) const
+int	PitchDetect2Desc::do_get_nbr_param (piapi::ParamCateg categ) const
 {
 	return _desc_set.get_nbr_param (categ);
 }
 
 
 
-const piapi::ParamDescInterface &	PitchDetectDesc::do_get_param_info (piapi::ParamCateg categ, int index) const
+const piapi::ParamDescInterface &	PitchDetect2Desc::do_get_param_info (piapi::ParamCateg categ, int index) const
 {
 	return _desc_set.use_param (categ, index);
 }
@@ -141,7 +141,7 @@ const piapi::ParamDescInterface &	PitchDetectDesc::do_get_param_info (piapi::Par
 
 
 
-}  // namespace pidet
+}  // namespace pidet2
 }  // namespace pi
 }  // namespace mfx
 

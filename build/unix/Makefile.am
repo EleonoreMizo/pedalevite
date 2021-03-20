@@ -1167,6 +1167,11 @@ commonsrc = \
         ../../src/mfx/pi/pidet/PitchDetect.h \
         ../../src/mfx/pi/pidet/PitchDetectDesc.cpp \
         ../../src/mfx/pi/pidet/PitchDetectDesc.h \
+        ../../src/mfx/pi/pidet2/Param.h \
+        ../../src/mfx/pi/pidet2/PitchDetect2.cpp \
+        ../../src/mfx/pi/pidet2/PitchDetect2.h \
+        ../../src/mfx/pi/pidet2/PitchDetect2Desc.cpp \
+        ../../src/mfx/pi/pidet2/PitchDetect2Desc.h \
         ../../src/mfx/pi/psh1/Cst.h \
         ../../src/mfx/pi/psh1/Param.h \
         ../../src/mfx/pi/psh1/PitchShift1.cpp \

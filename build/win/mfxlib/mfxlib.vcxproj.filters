@@ -451,6 +451,9 @@
     <Filter Include="mfx\pi\ms">
       <UniqueIdentifier>{52b46ca0-5bb9-46ea-9494-99458070960e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mfx\pi\pidet2">
+      <UniqueIdentifier>{45d3e4e1-552e-44a9-975c-15e8f4ca9dc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\mfx\piapi\Event.h">
@@ -5013,6 +5016,15 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\ana\FreqYin.h">
       <Filter>mfx\dsp\ana</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet2\Param.h">
+      <Filter>mfx\pi\pidet2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2.h">
+      <Filter>mfx\pi\pidet2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2Desc.h">
+      <Filter>mfx\pi\pidet2</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler8xSimd.h">
       <Filter>mfx\dsp\iir</Filter>
     </ClInclude>
@@ -6388,6 +6400,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\mfx\pi\cdsp\FreqSplitter5.cpp">
       <Filter>mfx\pi\cdsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2.cpp">
+      <Filter>mfx\pi\pidet2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2Desc.cpp">
+      <Filter>mfx\pi\pidet2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

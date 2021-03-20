@@ -1301,6 +1301,9 @@
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSat.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\param\MapSatBipolar.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet2\Param.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2.h" />
+    <ClInclude Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2Desc.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\ramp\RampModule.hpp" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\LfoType.h" />
     <ClInclude Include="..\..\..\src\mfx\pi\smood\Param.h" />
@@ -1998,6 +2001,8 @@
     <ClCompile Include="..\..\..\src\mfx\pi\phase1\PhaserDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\phase2\Phaser2Desc.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2.cpp" />
+    <ClCompile Include="..\..\..\src\mfx\pi\pidet2\PitchDetect2Desc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetect.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\pidet\PitchDetectDesc.cpp" />
     <ClCompile Include="..\..\..\src\mfx\pi\psh1\PitchShift1.cpp" />
