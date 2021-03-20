@@ -29,6 +29,7 @@ http://sam.zoy.org/wtfpl/COPYING for more details.
 #include	"fstb/txt/unicode/CharData.h"
 #include	"fstb/txt/unicode/CharDataInfo.h"
 #include	"fstb/txt/unicode/CharDataBuilder.h"
+#include "fstb/def.h"
 #include	"fstb/Err.h"
 #include	"fstb/fnc.h"
 
@@ -551,6 +552,8 @@ void	CharDataBuilder::shrink_char_info_set (InfoList &info_list, RefList &ref_li
 
 void	CharDataBuilder::compact_data (std::vector <long> &index_page_list, std::vector <long> &index_info_list, const InfoList &info_list, const RefList &ref_list)
 {
+	fstb::unused (info_list);
+
 	const long		nbr_pages =
 		CharData::MAX_NBR_CODE_POINTS >> CharData::PAGE_SIZE_L2;
 	index_page_list.resize (nbr_pages);
