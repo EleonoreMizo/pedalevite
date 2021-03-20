@@ -128,7 +128,7 @@ constexpr float	Approx::sin_rbj_halfpi (float x)
 
 	return (((((a * x2 + b) * x2 + c) * x2 + d) * x2) + e) * x;
 
-	// Other coefficients found by Ollie Niemitalo
+	// Other coefficients found by Olli Niemitalo
 	// Constaints: f(0) = 0, f(1) = 1, f'(1) = 0, odd-symmetry
 	// https://dsp.stackexchange.com/questions/46629/finding-polynomial-approximations-of-a-sine-wave/46761#46761
 	// 5th order, continuous derivative, peak harmonic distortion -78.99 dB
@@ -862,16 +862,29 @@ T	Approx::tanh_andy (T x)
 }
 
 
+
 // Approximates 1 / sqrt (x)
-// Ref: Chris Lomont, Fast Inverse Square Root, 2003-02
+// P  relative error
+// 0: 3.5e-2
+// 1: 8.92e-4
+// 2: 4.7e-6
+// 3: ?
+// Ref:
+// Chris Lomont, Fast Inverse Square Root, 2003-02
+// Robin Green, Even Faster Math Functions, 2020-03, GDC
 template <int P>
 float	Approx::rsqrt (float x)
 {
 	static_assert (
-		(P >= 0 && P <= 4),
-		"The number of Newton iterations must be in [0 ; 4]"
+		(P >= 0 && P <= 3),
+		"The number of Newton iterations must be in [0 ; 3]"
 	);
 	assert (x >= 0);
+
+	constexpr int     cs  =
+		  (P == 0) ? 0x5F37624F
+		: (P == 2) ? 0x5F37599E
+		:            0x5F375A86;
 
 	const float    xh = x * 0.5f;
 	union
@@ -880,13 +893,13 @@ float	Approx::rsqrt (float x)
 		float          _f;
 	}              c;
 	c._f = x;
-	c._i = 0x5F375A86 - (c._i >> 1);
+	c._i = cs - (c._i >> 1);
 	x    = c._f;
 
-	if (P > 0) { x *= 1.5f - xh * x * x; }
+	constexpr float   nr1 = (P == 1) ? 1.5008909f : 1.5f;
+	if (P > 0) { x *= nr1  - xh * x * x; }
 	if (P > 1) { x *= 1.5f - xh * x * x; }
 	if (P > 2) { x *= 1.5f - xh * x * x; }
-	if (P > 3) { x *= 1.5f - xh * x * x; }
 
 	return x;
 }

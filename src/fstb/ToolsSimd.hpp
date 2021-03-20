@@ -936,25 +936,27 @@ ToolsSimd::VectF32	ToolsSimd::sqrt_approx (VectF32 v)
 ToolsSimd::VectF32	ToolsSimd::rsqrt_approx (VectF32 v)
 {
 #if ! defined (fstb_HAS_SIMD)
-	// Ref: Chris Lomont, Fast Inverse Square Root, 2003-02
+	// Ref:
+	// Robin Green, Even Faster Math Functions, 2020-03, GDC
+	// Chris Lomont, Fast Inverse Square Root, 2003-02
 	const float    xh0 = v._ [0] * 0.5f;
 	const float    xh1 = v._ [1] * 0.5f;
 	const float    xh2 = v._ [2] * 0.5f;
 	const float    xh3 = v._ [3] * 0.5f;
 	Combo          c;
 	c._vf32    = v;
-	c._s32 [0] = 0x5F375A86 - (c._s32 [0] >> 1);
-	c._s32 [1] = 0x5F375A86 - (c._s32 [1] >> 1);
-	c._s32 [2] = 0x5F375A86 - (c._s32 [2] >> 1);
-	c._s32 [3] = 0x5F375A86 - (c._s32 [3] >> 1);
+	c._s32 [0] = 0x5F375A82 - (c._s32 [0] >> 1);
+	c._s32 [1] = 0x5F375A82 - (c._s32 [1] >> 1);
+	c._s32 [2] = 0x5F375A82 - (c._s32 [2] >> 1);
+	c._s32 [3] = 0x5F375A82 - (c._s32 [3] >> 1);
 	float          x0 = c._f32 [0];
 	float          x1 = c._f32 [1];
 	float          x2 = c._f32 [2];
 	float          x3 = c._f32 [3];
-	x0 *= 1.5f - xh0 * x0 * x0;
-	x1 *= 1.5f - xh1 * x1 * x1;
-	x2 *= 1.5f - xh2 * x2 * x2;
-	x3 *= 1.5f - xh3 * x3 * x3;
+	x0 *= 1.5008909f - xh0 * x0 * x0;
+	x1 *= 1.5008909f - xh1 * x1 * x1;
+	x2 *= 1.5008909f - xh2 * x2 * x2;
+	x3 *= 1.5008909f - xh3 * x3 * x3;
 	return VectF32 { { x0, x1, x2, x3 } };
 #elif fstb_ARCHI == fstb_ARCHI_X86
 	return _mm_rsqrt_ps (v);
