@@ -494,6 +494,8 @@ commonsrc = \
         ../../src/mfx/dsp/iir/DesignEq2p.hpp \
         ../../src/mfx/dsp/iir/Downsampler4xSimd.h \
         ../../src/mfx/dsp/iir/Downsampler4xSimd.hpp \
+        ../../src/mfx/dsp/iir/Downsampler8xSimd.h \
+        ../../src/mfx/dsp/iir/Downsampler8xSimd.hpp \
         ../../src/mfx/dsp/iir/FilterComb.h \
         ../../src/mfx/dsp/iir/FilterComb.hpp \
         ../../src/mfx/dsp/iir/Lpf1p.h \

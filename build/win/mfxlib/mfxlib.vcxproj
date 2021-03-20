@@ -910,6 +910,8 @@
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\DesignEq2p.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler4xSimd.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler4xSimd.hpp" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler8xSimd.h" />
+    <ClInclude Include="..\..\..\src\mfx\dsp\iir\Downsampler8xSimd.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\FilterComb.h" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\FilterComb.hpp" />
     <ClInclude Include="..\..\..\src\mfx\dsp\iir\Lpf1p.h" />
