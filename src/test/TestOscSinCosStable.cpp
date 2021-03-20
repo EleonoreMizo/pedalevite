@@ -56,7 +56,7 @@ int	TestOscSinCosStable::perform_test ()
 	double         spl_per_s = 0;
 	for (auto angle : angle_arr)
 	{
-		printf ("Angle: %10g...", double (angle));
+		printf ("Angle: %10g rad/spl... ", double (angle));
 		fflush (stdout);
 
 		mfx::dsp::osc::OscSinCosStable <float> osc;
